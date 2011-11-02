@@ -9,3 +9,5 @@
 *.suo
 *.testsettings
 *.vsmdi
+/CSPspEmu.Sandbox/bin
+/CSPspEmu.Sandbox/obj
