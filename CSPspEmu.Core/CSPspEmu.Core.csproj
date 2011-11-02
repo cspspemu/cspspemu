@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Roslyn.Compilers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Roslyn.Compilers.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Roslyn.Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Roslyn.Services.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,10 +45,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cpu\Registers.cs" />
-    <Compile Include="Cpu\Table\AddressType.cs" />
+    <Compile Include="Cpu\Emiter\Emiters\Arithmetic.cs" />
+    <Compile Include="Cpu\Emiter\Emiters\Branches.cs" />
+    <Compile Include="Cpu\Emiter\Emiters\Cop0.cs" />
+    <Compile Include="Cpu\Emiter\Emiters\Fpu.cs" />
+    <Compile Include="Cpu\Emiter\Emiters\LoadStore.cs" />
+    <Compile Include="Cpu\Emiter\Emiters\Special.cs" />
+    <Compile Include="Cpu\Emiter\Emiters\Vfpu.cs" />
+    <Compile Include="Cpu\Emiter\Emiters\Vfpu_Branches.cs" />
+    <Compile Include="Cpu\Emiter\MipsEmiter.cs" />
+    <Compile Include="Cpu\Emiter\MipsMethodEmiter.cs" />
+    <Compile Include="Cpu\Processor.cs" />
     <Compile Include="Cpu\Table\InstructionInfo.cs" />
-    <Compile Include="Cpu\Table\Instruction.cs" />
+    <Compile Include="Cpu\Table\InstructionTable.cs" />
+    <Compile Include="Cpu\Switch\EmitLookupGenerator.cs" />
+    <Compile Include="Cpu\Switch\RoslynLookupGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
