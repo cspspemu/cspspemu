@@ -1,0 +1,11 @@
+
+/CSPspEmu/bin
+/CSPspEmu/obj
+/CSPspEmu.Core/bin
+/CSPspEmu.Core/obj
+/CSPspEmu.Core.Tests/bin
+/CSPspEmu.Core.Tests/obj
+/TestResults
+*.suo
+*.testsettings
+*.vsmdi
