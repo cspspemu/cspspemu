@@ -7,12 +7,13 @@ using CSPspEmu.Core.Cpu.Table;
 using System.IO;
 using CSPspEmu.Core.Cpu.Assembler;
 using CSharpUtils.Extensions;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Cpu
 {
 	static public class ProcessorExtensions
 	{
-		static public void ExecuteAssembly(this Processor Processor, String Assembly)
+		static public void ExecuteAssembly(this Processor Processor, String Assembly, bool BreakPoint = false)
 		{
 			var MipsEmiter = new MipsEmiter();
 			var MipsMethodEmiter = new MipsMethodEmiter(MipsEmiter);
@@ -36,7 +37,19 @@ namespace CSPspEmu.Core.Cpu
 				CpuEmiterInstruction(CpuEmiter.Instruction.Value = InstructionValue, CpuEmiter);
 			}
 
+			if (BreakPoint) IsDebuggerPresentDebugBreak();
 			MipsMethodEmiter.CreateDelegate()(Processor);
 		}
+
+		static public void IsDebuggerPresentDebugBreak()
+		{
+			if (IsDebuggerPresent()) DebugBreak();
+		}
+
+		[DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+		internal static extern bool IsDebuggerPresent();
+
+		[DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+		internal static extern void DebugBreak();
 	}
 }

@@ -43,5 +43,31 @@ namespace CSPspEmu.Core.Cpu
 		{
 			Processor.GPR_Ptr[1] = Processor.GPR_Ptr[2] + Processor.GPR_Ptr[2];
 		}
+
+		Dictionary<int, Action<int, Processor>> RegisteredNativeSyscalls = new Dictionary<int, Action<int, Processor>>();
+
+		public Processor RegisterNativeSyscall(int Code, Action Callback)
+		{
+			return RegisterNativeSyscall(Code, (_Code, _Processor) => Callback());
+		}
+
+		public Processor RegisterNativeSyscall(int Code, Action<int, Processor> Callback)
+		{
+			RegisteredNativeSyscalls[Code] = Callback;
+			return this;
+		}
+
+		public void Syscall(int Code)
+		{
+			Action<int, Processor> Callback;
+			if (RegisteredNativeSyscalls.TryGetValue(Code, out Callback))
+			{
+				Callback(Code, this);
+			}
+			else
+			{
+				Console.WriteLine("Undefined syscall: {0}", Code);
+			}
+		}
 	}
 }

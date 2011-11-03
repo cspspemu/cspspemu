@@ -2,13 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection.Emit;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
 	sealed public partial class CpuEmiter
 	{
 		// Syscall
-		public void syscall() { throw(new NotImplementedException()); }
+		public void syscall()
+		{
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.CODE);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(Processor).GetMethod("Syscall"));
+		}
 
 		public void cache() { throw(new NotImplementedException()); }
 		public void sync() { throw(new NotImplementedException()); }

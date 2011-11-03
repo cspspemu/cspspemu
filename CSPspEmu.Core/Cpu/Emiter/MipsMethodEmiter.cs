@@ -34,7 +34,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			ILGenerator = MethodBuilder.GetILGenerator();
 		}
 
-		protected void LoadGPRPtr(int R)
+		public void LoadGPRPtr(int R)
 		{
 			ILGenerator.Emit(OpCodes.Ldarg_0);
 			ILGenerator.Emit(OpCodes.Ldfld, Field_GPR_Ptr);
@@ -43,7 +43,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			ILGenerator.Emit(OpCodes.Add);
 		}
 
-		protected void LoadGPR(int R)
+		public void LoadGPR(int R)
 		{
 			if (R == 0)
 			//if (false)
@@ -57,7 +57,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		protected void SavePtr()
+		public void SavePtr()
 		{
 			ILGenerator.Emit(OpCodes.Stind_I4);
 		}
@@ -81,6 +81,26 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			ILGenerator.Emit(OpCode);
 			SavePtr();
 		}
+
+		public void OP_2REG_IMMU(int RT, int RS, uint Immediate, OpCode OpCode)
+		{
+			if (RT == 0) return;
+			LoadGPRPtr(RT);
+			LoadGPR(RS);
+			ILGenerator.Emit(OpCodes.Ldc_I4, (uint)Immediate);
+			ILGenerator.Emit(OpCodes.Conv_U4);
+			ILGenerator.Emit(OpCode);
+			SavePtr();
+		}
+
+		public void SET(int RT, uint Value)
+		{
+			if (RT == 0) return;
+			LoadGPRPtr(RT);
+			ILGenerator.Emit(OpCodes.Ldc_I4, Value);
+			SavePtr();
+		}
+
 
 		public Action<Processor> CreateDelegate()
 		{

@@ -42,16 +42,19 @@ namespace CSPspEmu.Core.Cpu
 		public int RS { get { return (int)get(11 + 5 * 2, 5); } set { set(11 + 5 * 2, 5, (uint)value); } }
 
 		// Type Float Register.
-		public uint FD { get { return get(6 + 5 * 0, 5); } }
-		public uint FS { get { return get(6 + 5 * 1, 5); } }
-		public uint FT { get { return get(6 + 5 * 2, 5); } }
+		public uint FD { get { return get(6 + 5 * 0, 5); } set { set(6 + 5 * 0, 5, (uint)value); } }
+		public uint FS { get { return get(6 + 5 * 1, 5); } set { set(6 + 5 * 1, 5, (uint)value); } }
+		public uint FT { get { return get(6 + 5 * 2, 5); } set { set(6 + 5 * 2, 5, (uint)value); } }
 
 		// Type Immediate (Unsigned).
 		public int IMM { get { return (int)(short)(ushort)get(0, 16); } set { set(0, 16, (uint)value); } }
-		public uint IMMU { get { return get(0, 16); } }
+		public uint IMMU { get { return get(0, 16); } set { set(0, 16, (uint)value); } }
 
 		// JUMP 26 bits.
 		public uint JUMP { get { return get(0, 26); } }
+
+		// CODE
+		public uint CODE { get { return get(6, 20); } set { set(6, 20, value); } }
 
 		// Immediate 7 bits.
 		// VFPU
@@ -73,9 +76,6 @@ namespace CSPspEmu.Core.Cpu
 		~ bitslice!("v", uint, "VS",  8, 7)
 		~ bitslice!("v", uint, "TWO", 15, 1)
 		~ bitslice!("v", uint, "VT",  16, 7)
-
-		// CODE
-		~ bitslice!("v", uint, "CODE", 6, 20)
 
 		// C1CR
 		~ bitslice!("v", uint, "C1CR", 6 + 5 * 1, 5)

@@ -53,7 +53,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public void andi()
 		{
-			MipsMethodEmiter.OP_2REG_IMM(RT, RS, (short)IMM, OpCodes.And);
+			MipsMethodEmiter.OP_2REG_IMMU(RT, RS, IMMU, OpCodes.And);
 		}
 
 		public void or()
@@ -63,7 +63,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public void ori()
 		{
-			MipsMethodEmiter.OP_2REG_IMM(RT, RS, (short)IMM, OpCodes.Or);
+			MipsMethodEmiter.OP_2REG_IMMU(RT, RS, IMMU, OpCodes.Or);
 		}
 
 		public void xor()
@@ -73,7 +73,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public void xori()
 		{
-			MipsMethodEmiter.OP_2REG_IMM(RT, RS, (short)IMM, OpCodes.Xor);
+			MipsMethodEmiter.OP_2REG_IMMU(RT, RS, IMMU, OpCodes.Xor);
 		}
 
 		public void nor()
@@ -106,7 +106,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Load Upper Immediate.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void lui() { throw (new NotImplementedException()); }
+		public void lui()
+		{
+			MipsMethodEmiter.SET(RT, IMMU << 16);
+		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Sign Extend Byte/Half word.

@@ -6,6 +6,7 @@ using CSPspEmu.Core.Cpu.Assembler;
 using CSPspEmu.Core.Cpu;
 using System.IO;
 using CSharpUtils.Extensions;
+using System.Collections.Generic;
 
 namespace CSPspEmu.Core.Tests
 {
@@ -13,7 +14,7 @@ namespace CSPspEmu.Core.Tests
 	public class CpuEmiterTest
 	{
 		[TestMethod]
-		public void CpuEmiterTestTest()
+		public void ArithmeticTest()
 		{
 			var Processor = new Processor();
 
@@ -35,6 +36,31 @@ namespace CSPspEmu.Core.Tests
 			Assert.AreEqual(12, Processor.GPR[2]);
 			Assert.AreEqual(1, Processor.GPR[3]);
 			Assert.AreEqual(1234, Processor.GPR[4]);
+		}
+
+		[TestMethod]
+		public void SyscallTest()
+		{
+			var Events = new List<int>();
+
+			var Processor = new Processor();
+
+			Processor.RegisterNativeSyscall(1, () =>
+			{
+				Events.Add(1);
+			});
+
+			Processor.RegisterNativeSyscall(1000, () =>
+			{
+				Events.Add(1000);
+			});
+
+			Processor.ExecuteAssembly(@"
+				syscall 1
+				syscall 1000
+			");
+
+			Assert.AreEqual("[1,1000]", Events.ToJson());
 		}
 	}
 }
