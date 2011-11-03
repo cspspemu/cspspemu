@@ -19,6 +19,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public ILGenerator ILGenerator;
 		protected String MethodName;
 		static protected FieldInfo Field_GPR_Ptr = typeof(Processor).GetField("GPR_Ptr");
+		static protected FieldInfo Field_BranchFlag = typeof(Processor).GetField("BranchFlag");
 		static private ulong UniqueCounter = 0;
 
 		public MipsMethodEmiter(MipsEmiter MipsEmiter)
@@ -41,6 +42,19 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			ILGenerator.Emit(OpCodes.Ldc_I4, R * 4);
 			ILGenerator.Emit(OpCodes.Conv_I);
 			ILGenerator.Emit(OpCodes.Add);
+		}
+
+		public void LoadBranchFlag()
+		{
+			ILGenerator.Emit(OpCodes.Ldarg_0);
+			ILGenerator.Emit(OpCodes.Ldfld, Field_BranchFlag);
+		}
+
+		public void StoreBranchFlag(Action Action)
+		{
+			ILGenerator.Emit(OpCodes.Ldarg_0);
+			Action();
+			ILGenerator.Emit(OpCodes.Stfld, Field_BranchFlag);
 		}
 
 		public void LoadGPR(int R)

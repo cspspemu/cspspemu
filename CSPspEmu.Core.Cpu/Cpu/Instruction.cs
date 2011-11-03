@@ -56,6 +56,11 @@ namespace CSPspEmu.Core.Cpu
 		// CODE
 		public uint CODE { get { return get(6, 20); } set { set(6, 20, value); } }
 
+		public uint GetBranchAddress(uint PC)
+		{
+			return (uint)(PC + IMM * 4);
+		}
+
 		// Immediate 7 bits.
 		// VFPU
 		/*

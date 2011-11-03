@@ -2,14 +2,48 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection.Emit;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
 	sealed public partial class CpuEmiter
 	{
+		// Code executed after the delayed slot.
+		public void _branch_post(Label Label)
+		{
+			MipsMethodEmiter.LoadBranchFlag();
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Brtrue, Label);
+		}
+
+		private void _branch_pre_vv(Action Action)
+		{
+			MipsMethodEmiter.StoreBranchFlag(() =>
+			{
+				MipsMethodEmiter.LoadGPR(RS);
+				MipsMethodEmiter.LoadGPR(RT);
+				Action();
+			});
+		}
+
+		private void _branch_pre_v0(Action Action)
+		{
+			MipsMethodEmiter.StoreBranchFlag(() =>
+			{
+				MipsMethodEmiter.LoadGPR(RS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_0);
+				Action();
+			});
+		}
+
 		// Branch on EQuals (Likely).
-		public void beq() { throw (new NotImplementedException()); }
-		public void beql() { throw (new NotImplementedException()); }
+		public void beq() {
+			_branch_pre_vv(() => {
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ceq);
+			});
+		}
+		public void beql() {
+			beq();
+		}
 
 		// Branch on Greater Equal Zero (And Link) (Likely).
 		public void bgez() { throw (new NotImplementedException()); }
@@ -32,8 +66,20 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void bgtzl() { throw (new NotImplementedException()); }
 
 		// Branch on Not Equals (Likely).
-		public void bne() { throw (new NotImplementedException()); }
-		public void bnel() { throw (new NotImplementedException()); }
+		public void bne()
+		{
+			_branch_pre_vv(() =>
+			{
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ceq);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_0);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ceq);
+				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Not);
+			});
+		}
+		public void bnel()
+		{
+			bne();
+		}
 
 		// Jump (And Link) (Register).
 		public void j() { throw (new NotImplementedException()); }

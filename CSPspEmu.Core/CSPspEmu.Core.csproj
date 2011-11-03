@@ -42,25 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Memory\AbstractPspMemory.cs" />
-    <Compile Include="Cpu\Assembler\MipsAssembler.cs" />
-    <Compile Include="Cpu\Assembler\MipsDisassembler.cs" />
-    <Compile Include="Cpu\Emiter\CpuEmiter.cs" />
-    <Compile Include="Cpu\Emiter\Emiters\Arithmetic.cs" />
-    <Compile Include="Cpu\Emiter\Emiters\Branches.cs" />
-    <Compile Include="Cpu\Emiter\Emiters\Cop0.cs" />
-    <Compile Include="Cpu\Emiter\Emiters\Fpu.cs" />
-    <Compile Include="Cpu\Emiter\Emiters\LoadStore.cs" />
-    <Compile Include="Cpu\Emiter\Emiters\Special.cs" />
-    <Compile Include="Cpu\Emiter\Emiters\Vfpu.cs" />
-    <Compile Include="Cpu\Emiter\Emiters\Vfpu_Branches.cs" />
-    <Compile Include="Cpu\Emiter\MipsEmiter.cs" />
-    <Compile Include="Cpu\Emiter\MipsMethodEmiter.cs" />
-    <Compile Include="Cpu\Instruction.cs" />
-    <Compile Include="Cpu\Processor.cs" />
-    <Compile Include="Cpu\ProcessorExtensions.cs" />
-    <Compile Include="Cpu\Table\InstructionInfo.cs" />
-    <Compile Include="Cpu\Table\InstructionTable.cs" />
-    <Compile Include="Cpu\Switch\EmitLookupGenerator.cs" />
     <Compile Include="Memory\FastPspMemory.cs" />
     <Compile Include="Memory\NormalPspMemory.cs" />
     <Compile Include="Memory\PspMemoryStream.cs" />

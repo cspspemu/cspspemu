@@ -38,6 +38,29 @@ namespace CSPspEmu.Core.Cpu.Table
 			return (Action<uint, TType>)DynamicMethod.CreateDelegate(typeof(Action<uint, TType>));
 		}
 
+		static public Func<uint, TType, TRetType> GenerateSwitchDelegateReturn<TType, TRetType>(IEnumerable<InstructionInfo> InstructionInfoList, Action<ILGenerator, InstructionInfo> GenerateCallDelegate)
+		{
+			var DynamicMethod = new DynamicMethod("", typeof(TRetType), new Type[] { typeof(uint), typeof(TType) });
+			var ILGenerator = DynamicMethod.GetILGenerator();
+			GenerateSwitchCode(ILGenerator, InstructionInfoList, GenerateCallDelegate);
+			return (Func<uint, TType, TRetType>)DynamicMethod.CreateDelegate(typeof(Func<uint, TType, TRetType>));
+		}
+
+		static public Func<uint, TRetType> GenerateSwitchDelegateReturn<TRetType>(IEnumerable<InstructionInfo> InstructionInfoList, Action<ILGenerator, InstructionInfo> GenerateCallDelegate)
+		{
+			var DynamicMethod = new DynamicMethod("", typeof(TRetType), new Type[] { typeof(uint) });
+			var ILGenerator = DynamicMethod.GetILGenerator();
+			GenerateSwitchCode(ILGenerator, InstructionInfoList, GenerateCallDelegate);
+			return (Func<uint, TRetType>)DynamicMethod.CreateDelegate(typeof(Func<uint, TRetType>));
+		}
+
+		/// <summary>
+		/// Generates an assembly code that will decode an integer with a set of InstructionInfo.
+		/// </summary>
+		/// <param name="ILGenerator"></param>
+		/// <param name="InstructionInfoList"></param>
+		/// <param name="GenerateCallDelegate"></param>
+		/// <param name="Level"></param>
 		static public void GenerateSwitchCode(ILGenerator ILGenerator, IEnumerable<InstructionInfo> InstructionInfoList, Action<ILGenerator, InstructionInfo> GenerateCallDelegate, int Level = 0)
 		{
 			var CommonMask = InstructionInfoList.Aggregate(0xFFFFFFFF, (Base, InstructionInfo) => Base & InstructionInfo.Mask);

@@ -19,7 +19,7 @@ namespace CSPspEmu.Core.Cpu.Table
 
 		static private InstructionInfo ID(String Name, String BinaryEncoding, String AsmEncoding, AddressType AddressType, InstructionType InstructionType)
 		{
-			return new InstructionInfo() { Name = Name, BinaryEncoding = BinaryEncoding, AsmEncoding = AsmEncoding, AddressType = AddressType };
+			return new InstructionInfo() { Name = Name, BinaryEncoding = BinaryEncoding, AsmEncoding = AsmEncoding, AddressType = AddressType, InstructionType = InstructionType };
 		}
 
 		static private String VM(string BinaryEncoding)

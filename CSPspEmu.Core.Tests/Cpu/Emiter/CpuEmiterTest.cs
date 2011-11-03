@@ -62,5 +62,43 @@ namespace CSPspEmu.Core.Tests
 
 			Assert.AreEqual("[1,1000]", Events.ToJson());
 		}
+
+		[TestMethod]
+		public void BranchTest()
+		{
+			var Processor = new Processor();
+
+			Processor.ExecuteAssembly(@"
+				beq r3, r0, label1
+				li r3, 1
+				li r1, 1
+			label1:
+				li r2, 1
+			");
+
+			Assert.AreEqual(0, Processor.GPR[1]);
+			Assert.AreEqual(1, Processor.GPR[2]);
+			Assert.AreEqual(1, Processor.GPR[3]);
+
+			//Assert.AreEqual("[1,1000]", Events.ToJson());
+		}
+
+		[TestMethod]
+		public void LoopTest()
+		{
+			var Processor = new Processor();
+
+			Processor.ExecuteAssembly(@"
+				li r1, 10
+				li r2, 0
+			loop:
+				addi r2, r2, 1
+				bne r1, r0, loop
+				addi r1, r1, -1
+			");
+
+			Assert.AreEqual(-1, Processor.GPR[1]);
+			Assert.AreEqual(11, Processor.GPR[2]);
+		}
 	}
 }

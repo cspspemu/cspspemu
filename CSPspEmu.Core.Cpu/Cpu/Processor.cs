@@ -7,6 +7,13 @@ namespace CSPspEmu.Core.Cpu
 {
 	unsafe sealed public class Processor
 	{
+		public uint PC;
+		public uint nPC;
+
+		public uint HI, LO;
+
+		public bool BranchFlag;
+
 		public uint *GPR_Ptr;
 		public float* FPR_Ptr;
 		readonly public int[] GPR = new int[32];
@@ -37,6 +44,11 @@ namespace CSPspEmu.Core.Cpu
 		public void SaveGPR(int R, uint V)
 		{
 			GPR_Ptr[R] = V;
+		}
+
+		static public void TestBranchFlag(Processor Processor)
+		{
+			Processor.BranchFlag = (Processor.GPR_Ptr[2] == Processor.GPR_Ptr[2]);
 		}
 
 		static public void TestGPR(Processor Processor)

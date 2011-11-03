@@ -15,6 +15,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 	{
 		protected Stream OutputStream;
 		protected BinaryWriter BinaryWriter;
+		protected BinaryReader BinaryReader;
 		protected Dictionary<String, InstructionInfo> Instructions;
 
 		public MipsAssembler(Stream OutputStream)
@@ -22,6 +23,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			this.Instructions = InstructionTable.ALL.ToDictionary((InstructionInfo) => InstructionInfo.Name);
 			this.OutputStream = OutputStream;
 			this.BinaryWriter = new BinaryWriter(this.OutputStream);
+			this.BinaryReader = new BinaryReader(this.OutputStream);
 		}
 
 		static public IEnumerable<String> Tokenize(String Line)
@@ -91,7 +93,26 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			return AssembleInstructions(Line)[0];
 		}
 
+		public enum PatchType
+		{
+			REL_16 = 0,
+			ABS_26 = 1,
+			ABS_32 = 2,
+		}
+
+		public class Patch {
+			public uint Address;
+			public PatchType Type;
+			public String LabelName;
+		}
+
 		public Instruction[] AssembleInstructions(String Line)
+		{
+			uint PC = 0;
+			return AssembleInstructions(ref PC, Line, null);
+		}
+
+		public Instruction[] AssembleInstructions(ref uint PC, String Line, List<Patch> Patches = null)
 		{
 			Line = Line.Trim();
 			if (Line.Length == 0) return new Instruction[] {};
@@ -115,15 +136,33 @@ namespace CSPspEmu.Core.Cpu.Assembler
 						case "%C": Instruction.CODE = (uint)ParseIntegerConstant(Match.Item2); break;
 						case "%i": Instruction.IMM = ParseIntegerConstant(Match.Item2); break;
 						case "%I": Instruction.IMMU = (uint)ParseIntegerConstant(Match.Item2); break;
+						case "%O":
+							Patches.Add(new Patch() { Address = PC, LabelName = Match.Item2, Type = PatchType.REL_16 });
+						break;
 						default: throw (new InvalidDataException("Unknown format '" + Match.Item1 + "'"));
 					}
 				}
+				/*
+				if ((InstructionInfo.InstructionType & InstructionType.B) != 0)
+				{
+					//Patches.Add(new Patch() { Address = PC, LabelName =  });
+				}
+				else if ((InstructionInfo.InstructionType & InstructionType.Jump) != 0)
+				{
+				}
+				*/
+				PC += 4;
 				return new Instruction[] { Instruction };
 			}
 			else
 			{
 				switch (InstructionName)
 				{
+					case "nop":
+					{
+						//return AssembleInstructions(ref PC, "sll r0, r0, r0");
+						return AssembleInstructions(ref PC, "and r0, r0, r0");
+					}
 					case "li":
 					{
 						var Info = MatchFormatDictionary("%d, %i", LineTokens[1]);
@@ -133,14 +172,14 @@ namespace CSPspEmu.Core.Cpu.Assembler
 						if ((short)Value != Value)
 						{
 							var List = new List<Instruction>();
-							List.AddRange(AssembleInstructions("lui " + DestReg + ", " + ((Value >> 16) & 0xFFFF)));
-							List.AddRange(AssembleInstructions("ori " + DestReg + ", " + DestReg + ", " + (Value & 0xFFFF)));
+							List.AddRange(AssembleInstructions(ref PC, "lui " + DestReg + ", " + ((Value >> 16) & 0xFFFF)));
+							List.AddRange(AssembleInstructions(ref PC, "ori " + DestReg + ", " + DestReg + ", " + (Value & 0xFFFF)));
 							//Console.WriteLine(List.ToJson());
 							return List.ToArray();
 						}
 						else
 						{
-							return AssembleInstructions("addi " + DestReg + ", r0, " + Value);
+							return AssembleInstructions(ref PC, "addi " + DestReg + ", r0, " + Value);
 						}
 					}
 					default:
@@ -151,12 +190,68 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
 		public void Assemble(String Lines)
 		{
+			var Labels = new Dictionary<String, uint>();
+			var Patches = new List<Patch>();
+
 			foreach (var Line in Lines.Split(new char[] { '\n' }).Select(Str => Str.Trim()).Where(Str => Str.Length > 0))
 			{
-				var Instructions = AssembleInstructions(Line);
-				foreach (var Instruction in Instructions)
+				// Directive
+				if (Line[0] == '.')
 				{
+					throw(new NotImplementedException("Directives not supported yet"));
+				}
+				else
+				{
+					// Strip comments.
+					var Parts = Line.Split(new string[] { ";", "#" }, 2, StringSplitOptions.None);
+					var RealLine = Parts[0].Trim();
+
+					// Label
+					if (RealLine.Substr(-1) == ":")
+					{
+						Labels[RealLine.Substr(0, -1).Trim()] = (uint)OutputStream.Position;
+					}
+					// Instruction
+					else
+					{
+						uint PC = (uint)OutputStream.Position;
+						var Instructions = AssembleInstructions(ref PC, RealLine, Patches);
+						foreach (var Instruction in Instructions)
+						{
+							BinaryWriter.Write(Instruction.Value);
+						}
+					}
+				}
+			}
+
+			foreach (var Patch in Patches)
+			{
+				uint LabelAddress;
+				if (Labels.TryGetValue(Patch.LabelName, out LabelAddress))
+				{
+					OutputStream.Position = Patch.Address;
+					Instruction Instruction;
+					Instruction.Value = BinaryReader.ReadUInt32();
+
+					switch (Patch.Type)
+					{
+						case PatchType.REL_16:
+							Instruction.IMM = ((int)LabelAddress - (int)Patch.Address) / 4;
+							break;
+						case PatchType.ABS_26:
+							throw(new NotImplementedException());
+							//break;
+						case PatchType.ABS_32:
+							Instruction.Value = LabelAddress;
+							break;
+					}
+
+					OutputStream.Position = Patch.Address;
 					BinaryWriter.Write(Instruction.Value);
+				}
+				else
+				{
+					throw(new KeyNotFoundException("Can't find label '" + Patch.LabelName + "'"));
 				}
 			}
 		}

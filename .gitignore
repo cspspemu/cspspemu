@@ -11,3 +11,7 @@
 *.vsmdi
 /CSPspEmu.Sandbox/bin
 /CSPspEmu.Sandbox/obj
+/CSPspEmu.Core.Gpu/obj
+/CSPspEmu.Core.Gpu/bin
+/CSPspEmu.Core.Cpu/bin
+/CSPspEmu.Core.Cpu/obj

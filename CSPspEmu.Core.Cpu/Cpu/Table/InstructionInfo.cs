@@ -31,6 +31,7 @@ namespace CSPspEmu.Core.Cpu.Table
 		protected String _BinaryEncoding;
 		public String AsmEncoding;
 		public AddressType AddressType;
+		public InstructionType InstructionType;
 
 		protected void ParseBinaryEncoding(string Encoding)
 		{
