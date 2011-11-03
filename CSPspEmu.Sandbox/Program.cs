@@ -6,6 +6,10 @@ using System.Reflection.Emit;
 using CSPspEmu.Core.Cpu.Table;
 using System.Runtime.InteropServices;
 using CSPspEmu.Core.Cpu;
+using CSPspEmu.Core;
+using CSPspEmu.Core.Memory;
+using System.IO;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Sandbox
 {
@@ -19,7 +23,24 @@ namespace CSPspEmu.Sandbox
 		/// <param name="args"></param>
 		static void Main(string[] args)
 		{
+			var Memory = new FastPspMemory();
+			var MemoryStream = new PspMemoryStream(Memory);
+			var BinaryWriter = new BinaryWriter(MemoryStream);
+			var BinaryReader = new BinaryReader(MemoryStream);
+			//var Memory = new NormalMemory();
 			var Processor = new Processor();
+
+			BinaryWriter.BaseStream.Position = FastPspMemory.MainOffset;
+			BinaryWriter.BaseStream.PreservePositionAndLock(() =>
+			{
+				BinaryWriter.Write((uint)0xFFFFFFFF);
+			});
+
+			Console.WriteLine("{0:X}", BinaryReader.ReadUInt32());
+
+			Memory.Write4(FastPspMemory.MainOffset, 0x12345678);
+			Console.WriteLine("{0:X}", Memory.Read4(FastPspMemory.MainOffset));
+
 			Processor.RegisterNativeSyscall(100, () =>
 			{
 				Console.WriteLine("syscall!");
