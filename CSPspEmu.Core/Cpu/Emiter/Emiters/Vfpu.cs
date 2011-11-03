@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CSPspEmu.Core.Cpu.Emiter.Emiters
+namespace CSPspEmu.Core.Cpu.Emiter
 {
-	public partial class CpuEmiter
+	sealed public partial class CpuEmiter
 	{
 		// Move From/to Vfpu (C?)_
 		public void mfv() { throw (new NotImplementedException()); }

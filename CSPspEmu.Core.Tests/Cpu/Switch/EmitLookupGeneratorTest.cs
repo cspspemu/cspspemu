@@ -12,22 +12,22 @@ namespace CSPspEmu.Core.Tests
 		{
 			public List<int> Values = new List<int>();
 
-			public void Test1()
+			public void test1()
 			{
 				Values.Add(1);
 			}
 
-			public void Test2()
+			public void test2()
 			{
 				Values.Add(2);
 			}
 
-			public void Test3()
+			public void test3()
 			{
 				Values.Add(3);
 			}
 
-			public void Default()
+			public void unknown()
 			{
 				Values.Add(0);
 			}
@@ -40,15 +40,15 @@ namespace CSPspEmu.Core.Tests
 			var Callback = EmitLookupGenerator.GenerateSwitchDelegate<HandlerClass>(new InstructionInfo[] {
 				new InstructionInfo() {
 					BinaryEncoding = "----------------------------0001",
-					Name = "Test1"
+					Name = "test1"
 				},
 				new InstructionInfo() {
 					BinaryEncoding = "----------------------------0010",
-					Name = "Test2"
+					Name = "test2"
 				},
 				new InstructionInfo() {
 					BinaryEncoding = "----------------------------01--",
-					Name = "Test3"
+					Name = "test3"
 				},
 			});
 			

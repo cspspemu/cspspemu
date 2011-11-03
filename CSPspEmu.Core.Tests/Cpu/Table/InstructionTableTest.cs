@@ -6,13 +6,12 @@ using System.Collections.Generic;
 namespace CSPspEmu.Core.Tests
 {
 	[TestClass]
-	public class LookupGeneratorTest
+	public class InstructionTableTest
 	{
 		[TestMethod]
-		public void GenerateSwitchCodeTest()
+		public void PspInstructionsTest()
 		{
-			var LookupGenerator = new RoslynLookupGenerator();
-			LookupGenerator.GenerateSwitchCode(new List<InstructionInfo>() { });
+			var Instructions = InstructionTable.ALL;
 		}
 	}
 }

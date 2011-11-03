@@ -9,14 +9,14 @@ namespace CSPspEmu.Core.Cpu
 	{
 		public uint *GPR_Ptr;
 		public float* FPR_Ptr;
-		public uint[] GPR = new uint[32];
+		public int[] GPR = new int[32];
 		public float[] FPR = new float[32];
 
 		public Processor()
 		{
-			fixed (uint* Ptr = &GPR[0])
+			fixed (int* Ptr = &GPR[0])
 			{
-				GPR_Ptr = Ptr;
+				GPR_Ptr = (uint *)Ptr;
 			}
 			fixed (float* Ptr = &FPR[0])
 			{

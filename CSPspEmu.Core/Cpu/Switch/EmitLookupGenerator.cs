@@ -8,16 +8,19 @@ namespace CSPspEmu.Core.Cpu.Table
 {
 	public class EmitLookupGenerator
 	{
-		public Action<uint, TType> GenerateSwitchDelegate<TType>(IEnumerable<InstructionInfo> InstructionInfoList)
+		static public Action<uint, TType> GenerateSwitchDelegate<TType>(IEnumerable<InstructionInfo> InstructionInfoList)
 		{
-			return GenerateSwitchDelegate<TType>(InstructionInfoList, Name => Name);
+			return GenerateSwitchDelegate<TType>(InstructionInfoList, Name =>
+			{
+				if (Name == "Default") return "unknown";
+				if (Name == "break") return "_break";
+				return Name.Replace('.', '_');
+			});
 		}
 
-		public Action<uint, TType> GenerateSwitchDelegate<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Func<String, String> NameConverter)
+		static public Action<uint, TType> GenerateSwitchDelegate<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Func<String, String> NameConverter)
 		{
-			var DynamicMethod = new DynamicMethod("", typeof(void), new Type[] { typeof(uint), typeof(TType) });
-			var ILGenerator = DynamicMethod.GetILGenerator();
-			GenerateSwitchCode(ILGenerator, InstructionInfoList, (CurrentILGenerator, InstructionInfo) =>
+			return GenerateSwitchDelegate<TType>(InstructionInfoList, (ILGenerator, InstructionInfo) =>
 			{
 				var InstructionInfoName = NameConverter((InstructionInfo != null) ? InstructionInfo.Name : "Default");
 				ILGenerator.Emit(OpCodes.Ldarg_1);
@@ -25,10 +28,17 @@ namespace CSPspEmu.Core.Cpu.Table
 				if (MethodInfo == null) throw (new Exception("Cannot find method '" + InstructionInfoName + "' on type '" + typeof(TType).Name + "'"));
 				ILGenerator.Emit(OpCodes.Call, MethodInfo);
 			});
+		}
+
+		static public Action<uint, TType> GenerateSwitchDelegate<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Action<ILGenerator, InstructionInfo> GenerateCallDelegate)
+		{
+			var DynamicMethod = new DynamicMethod("", typeof(void), new Type[] { typeof(uint), typeof(TType) });
+			var ILGenerator = DynamicMethod.GetILGenerator();
+			GenerateSwitchCode(ILGenerator, InstructionInfoList, GenerateCallDelegate);
 			return (Action<uint, TType>)DynamicMethod.CreateDelegate(typeof(Action<uint, TType>));
 		}
 
-		public void GenerateSwitchCode(ILGenerator ILGenerator, IEnumerable<InstructionInfo> InstructionInfoList, Action<ILGenerator, InstructionInfo> GenerateCallDelegate, int Level = 0)
+		static public void GenerateSwitchCode(ILGenerator ILGenerator, IEnumerable<InstructionInfo> InstructionInfoList, Action<ILGenerator, InstructionInfo> GenerateCallDelegate, int Level = 0)
 		{
 			var CommonMask = InstructionInfoList.Aggregate(0xFFFFFFFF, (Base, InstructionInfo) => Base & InstructionInfo.Mask);
 			var MaskGroups = InstructionInfoList.GroupBy((InstructionInfo) => InstructionInfo.Value & CommonMask);

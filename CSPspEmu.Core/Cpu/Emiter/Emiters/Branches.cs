@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CSPspEmu.Core.Cpu.Emiter.Emiters
+namespace CSPspEmu.Core.Cpu.Emiter
 {
-	public partial class CpuEmiter
+	sealed public partial class CpuEmiter
 	{
 		// Branch on EQuals (Likely).
 		public void beq() { throw (new NotImplementedException()); }

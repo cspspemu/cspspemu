@@ -16,7 +16,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		protected TypeBuilder TypeBuilder;
 		protected MethodBuilder MethodBuilder;
 		//protected DynamicMethod DynamicMethod;
-		protected ILGenerator ILGenerator;
+		public ILGenerator ILGenerator;
 		protected String MethodName;
 		static protected FieldInfo Field_GPR_Ptr = typeof(Processor).GetField("GPR_Ptr");
 		static private ulong UniqueCounter = 0;
@@ -31,50 +31,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				returnType     : typeof(void),
 				parameterTypes : new Type[] { typeof(Processor) }
 			);
-			//typeof(MipsEmiter).
 			ILGenerator = MethodBuilder.GetILGenerator();
-
-
-			//var TypeBuilder = TypeBuilder
-			//MethodBuilder = new MethodBuilder();
-			/*
-			DynamicMethod = new DynamicMethod(
-				"",
-				//MethodAttributes.Static | MethodAttributes.Public | MethodAttributes.UnmanagedExport,
-				//CallingConventions.Standard,
-				typeof(void),
-				new Type[] { typeof(Processor) }
-				//typeof(MipsEmiter).Module,
-				//true
-			);
-			ILGenerator = DynamicMethod.GetILGenerator();
-			*/
 		}
-
-		/*
-IL_0001: ldarg.0
-IL_0002: ldfld uint32* CSPspEmu.Core.Cpu.Processor::GPR_Ptr
-IL_0007: ldc.i4.4
-IL_0008: conv.i
-IL_0009: add
-
-IL_000a: ldarg.0
-IL_000b: ldfld uint32* CSPspEmu.Core.Cpu.Processor::GPR_Ptr
-IL_0010: ldc.i4.8
-IL_0011: conv.i
-IL_0012: add
-IL_0013: ldind.u4
-
-IL_0014: ldarg.0
-IL_0015: ldfld uint32* CSPspEmu.Core.Cpu.Processor::GPR_Ptr
-IL_001a: ldc.i4.8
-IL_001b: conv.i
-IL_001c: add
-IL_001d: ldind.u4
-
-IL_001e: add
-IL_001f: stind.i4
-		*/
 
 		protected void LoadGPRPtr(int R)
 		{
@@ -88,6 +46,7 @@ IL_001f: stind.i4
 		protected void LoadGPR(int R)
 		{
 			if (R == 0)
+			//if (false)
 			{
 				ILGenerator.Emit(OpCodes.Ldc_I4_0);
 			}
@@ -103,7 +62,7 @@ IL_001f: stind.i4
 			ILGenerator.Emit(OpCodes.Stind_I4);
 		}
 
-		protected void _3REG_OP(int RD, int RS, int RT, OpCode OpCode)
+		public void OP_3REG(int RD, int RS, int RT, OpCode OpCode)
 		{
 			if (RD == 0) return;
 			LoadGPRPtr(RD);
@@ -113,7 +72,7 @@ IL_001f: stind.i4
 			SavePtr();
 		}
 
-		protected void _2REG_PLUS_IMM_OP(int RT, int RS, short Immediate, OpCode OpCode)
+		public void OP_2REG_IMM(int RT, int RS, short Immediate, OpCode OpCode)
 		{
 			if (RT == 0) return;
 			LoadGPRPtr(RT);
@@ -122,45 +81,6 @@ IL_001f: stind.i4
 			ILGenerator.Emit(OpCode);
 			SavePtr();
 		}
-
-		public void ADDI(int RT, int RS, short Immediate)
-		{
-			_2REG_PLUS_IMM_OP(RT, RS, Immediate, OpCodes.Add);
-		}
-
-		public void ADD(int RD, int RS, int RT)
-		{
-			_3REG_OP(RD, RS, RT, OpCodes.Add);
-		}
-
-		public void SUB(int RD, int RS, int RT)
-		{
-			_3REG_OP(RD, RS, RT, OpCodes.Sub);
-		}
-
-		public void XOR(int RD, int RS, int RT)
-		{
-			_3REG_OP(RD, RS, RT, OpCodes.Xor);
-		}
-
-		public void OR(int RD, int RS, int RT)
-		{
-			_3REG_OP(RD, RS, RT, OpCodes.Or);
-		}
-
-		public void AND(int RD, int RS, int RT)
-		{
-			_3REG_OP(RD, RS, RT, OpCodes.And);
-		}
-
-		/*
-		public void Sub(int RD, int RS, int RT)
-		{
-			if (RD == 0) return;
-			LoadGPRPtr(RD);
-			LoadGPR(RS); LoadGPR(RT); ILGenerator.Emit(OpCodes.Sub); SavePtr();
-		}
-		*/
 
 		public Action<Processor> CreateDelegate()
 		{

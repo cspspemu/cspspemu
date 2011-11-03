@@ -18,7 +18,7 @@ namespace CSPspEmu.Sandbox
 		static void Main(string[] args)
 		{
 			Console.WriteLine("[.]");
-			var Instructions = InstructionTable.ALL();
+			var Instructions = InstructionTable.ALL;
 			Console.WriteLine("[.]");
 			Console.ReadKey();
 		}

@@ -32,10 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Roslyn.Compilers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="Roslyn.Compilers.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="Roslyn.Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="Roslyn.Services.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cpu\Assembler\MipsAssembler.cs" />
+    <Compile Include="Cpu\Assembler\MipsDisassembler.cs" />
+    <Compile Include="Cpu\Emiter\CpuEmiter.cs" />
     <Compile Include="Cpu\Emiter\Emiters\Arithmetic.cs" />
     <Compile Include="Cpu\Emiter\Emiters\Branches.cs" />
     <Compile Include="Cpu\Emiter\Emiters\Cop0.cs" />
@@ -55,12 +54,19 @@
     <Compile Include="Cpu\Emiter\Emiters\Vfpu_Branches.cs" />
     <Compile Include="Cpu\Emiter\MipsEmiter.cs" />
     <Compile Include="Cpu\Emiter\MipsMethodEmiter.cs" />
+    <Compile Include="Cpu\Instruction.cs" />
     <Compile Include="Cpu\Processor.cs" />
+    <Compile Include="Cpu\ProcessorExtensions.cs" />
     <Compile Include="Cpu\Table\InstructionInfo.cs" />
     <Compile Include="Cpu\Table\InstructionTable.cs" />
     <Compile Include="Cpu\Switch\EmitLookupGenerator.cs" />
-    <Compile Include="Cpu\Switch\RoslynLookupGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
+      <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
+      <Name>CSharpUtils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

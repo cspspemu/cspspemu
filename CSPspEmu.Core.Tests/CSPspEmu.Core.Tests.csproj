@@ -54,19 +54,25 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EmitLookupGeneratorTest.cs" />
-    <Compile Include="InstructionTableTest.cs" />
-    <Compile Include="InstructionTest.cs" />
-    <Compile Include="LookupGeneratorTest.cs" />
-    <Compile Include="MipsEmiterTest.cs" />
+    <Compile Include="Cpu\Emiter\CpuEmiterTest.cs" />
+    <Compile Include="Cpu\Switch\EmitLookupGeneratorTest.cs" />
+    <Compile Include="Cpu\Table\InstructionTableTest.cs" />
+    <Compile Include="Cpu\InstructionTest.cs" />
+    <Compile Include="Cpu\Assembler\MipsAssemblerTest.cs" />
+    <Compile Include="Cpu\Emiter\MipsEmiterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
+      <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
+      <Name>CSharpUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
