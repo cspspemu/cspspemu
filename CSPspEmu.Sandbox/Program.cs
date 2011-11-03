@@ -10,18 +10,13 @@ using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
 using System.IO;
 using CSharpUtils.Extensions;
+using CSPspEmu.Core.Tests;
 
 namespace CSPspEmu.Sandbox
 {
-	class Program
+	unsafe class Program
 	{
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <see cref="http://en.wikipedia.org/wiki/Common_Intermediate_Language"/>
-		/// <see cref="http://en.wikipedia.org/wiki/List_of_CIL_instructions"/>
-		/// <param name="args"></param>
-		static void Main(string[] args)
+		static void Test()
 		{
 			var Memory = new FastPspMemory();
 			var MemoryStream = new PspMemoryStream(Memory);
@@ -62,6 +57,20 @@ namespace CSPspEmu.Sandbox
 			Console.WriteLine("{0:X}", Processor.GPR[8]);
 			Console.WriteLine("{0:X}", Processor.GPR[9]);
 			Console.WriteLine("{0}", Processor.GPR[10]);
+			Console.ReadKey();
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <see cref="http://en.wikipedia.org/wiki/Common_Intermediate_Language"/>
+		/// <see cref="http://en.wikipedia.org/wiki/List_of_CIL_instructions"/>
+		/// <param name="args"></param>
+		static void Main(string[] args)
+		{
+			Console.WriteLine("[1]");
+			new CpuEmiterTest().BranchFullTest();
+			Console.WriteLine("[2]");
 			Console.ReadKey();
 		}
 	}

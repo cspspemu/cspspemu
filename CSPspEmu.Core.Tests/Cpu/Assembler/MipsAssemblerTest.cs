@@ -53,14 +53,19 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void TokenizeTest()
 		{
-			CollectionAssert.AreEquivalent(
-				new List<String>(new String[] { "add", "r1", ",", "r2", ",", "r3" }),
-				new List<String>(MipsAssembler.Tokenize("  add r1, r2,   r3   "))
+			Assert.AreEqual(
+				"add:r1:,:r2:,:r3",
+				String.Join(":", MipsAssembler.Tokenize("  add r1, r2,   r3   ").ToArray())
 			);
 
-			CollectionAssert.AreEquivalent(
-				new List<String>(new String[] { ",", ",", ",", ",", ".", ".", ".", "[", "]" }),
-				new List<String>(MipsAssembler.Tokenize("  ,, , , .. .[]\t"))
+			Assert.AreEqual(
+				",:,:,:,:.:.:.:[:]",
+				String.Join(":", MipsAssembler.Tokenize("  ,, , , .. .[]\t"))
+			);
+
+			Assert.AreEqual(
+				"%s:,:%t",
+				String.Join(":", MipsAssembler.Tokenize("%s, %t"))
 			);
 		}
 	}

@@ -14,6 +14,7 @@ namespace CSPspEmu.Core.Cpu.Table
 
 		private const InstructionType INSTR_TYPE_PSP = InstructionType.Psp;
 		private const InstructionType INSTR_TYPE_B = InstructionType.B;
+		private const InstructionType INSTR_TYPE_LIKELY = InstructionType.Likely;
 		private const InstructionType INSTR_TYPE_JAL = InstructionType.Jal;
 		private const InstructionType INSTR_TYPE_JUMP = InstructionType.Jump;
 
@@ -162,31 +163,31 @@ namespace CSPspEmu.Core.Cpu.Table
 					_BCU = new InstructionInfo[] {
 						// Branch on EQuals (Likely).
 						ID("beq",     VM("000100:rs:rt:imm16"   ), "%s, %t, %O", ADDR_TYPE_16,  INSTR_TYPE_B),
-						ID("beql",    VM("010100:rs:rt:imm16"   ), "%s, %t, %O", ADDR_TYPE_16,  INSTR_TYPE_B),
+						ID("beql",    VM("010100:rs:rt:imm16"   ), "%s, %t, %O", ADDR_TYPE_16,  INSTR_TYPE_B | INSTR_TYPE_LIKELY),
 
 						// Branch on Greater Equal Zero (And Link) (Likely).
 						ID("bgez",    VM("000001:rs:00001:imm16"), "%s, %O",     ADDR_TYPE_16,  INSTR_TYPE_B),
-						ID("bgezl",   VM("000001:rs:00011:imm16"), "%s, %O",     ADDR_TYPE_16,  INSTR_TYPE_B),
+						ID("bgezl",   VM("000001:rs:00011:imm16"), "%s, %O",     ADDR_TYPE_16,  INSTR_TYPE_B | INSTR_TYPE_LIKELY),
 						ID("bgezal",  VM("000001:rs:10001:imm16"), "%s, %O",     ADDR_TYPE_16,  INSTR_TYPE_JAL),
-						ID("bgezall", VM("000001:rs:10011:imm16"), "%s, %O",     ADDR_TYPE_16,  INSTR_TYPE_JAL),
+						ID("bgezall", VM("000001:rs:10011:imm16"), "%s, %O",     ADDR_TYPE_16,  INSTR_TYPE_JAL | INSTR_TYPE_LIKELY),
 
 						// Branch on Less Than Zero (And Link) (Likely).
 						ID("bltz",    VM("000001:rs:00000:imm16"), "%s, %O",     ADDR_TYPE_16,  INSTR_TYPE_B),
-						ID("bltzl",   VM("000001:rs:00010:imm16"), "%s, %O",     ADDR_TYPE_16,  INSTR_TYPE_B),
+						ID("bltzl",   VM("000001:rs:00010:imm16"), "%s, %O",     ADDR_TYPE_16,  INSTR_TYPE_B | INSTR_TYPE_LIKELY),
 						ID("bltzal",  VM("000001:rs:10000:imm16"), "%s, %O",     ADDR_TYPE_16,  INSTR_TYPE_JAL),
-						ID("bltzall", VM("000001:rs:10010:imm16"), "%s, %O",     ADDR_TYPE_16,  INSTR_TYPE_JAL),
+						ID("bltzall", VM("000001:rs:10010:imm16"), "%s, %O",     ADDR_TYPE_16,  INSTR_TYPE_JAL | INSTR_TYPE_LIKELY),
 
 						// Branch on Less Or Equals than Zero (Likely).
 						ID("blez",    VM("000110:rs:00000:imm16"), "%s, %O",     ADDR_TYPE_16,  INSTR_TYPE_B),
-						ID("blezl",   VM("010110:rs:00000:imm16"), "%s, %O",     ADDR_TYPE_16,  INSTR_TYPE_B),
+						ID("blezl",   VM("010110:rs:00000:imm16"), "%s, %O",     ADDR_TYPE_16,  INSTR_TYPE_B | INSTR_TYPE_LIKELY),
 
 						// Branch on Great Than Zero (Likely).
 						ID("bgtz",    VM("000111:rs:00000:imm16"), "%s, %O",     ADDR_TYPE_16,  INSTR_TYPE_B),
-						ID("bgtzl",   VM("010111:rs:00000:imm16"), "%s, %O",     ADDR_TYPE_16,  INSTR_TYPE_B),
+						ID("bgtzl",   VM("010111:rs:00000:imm16"), "%s, %O",     ADDR_TYPE_16,  INSTR_TYPE_B | INSTR_TYPE_LIKELY),
 
 						// Branch on Not Equals (Likely).
 						ID("bne",     VM("000101:rs:rt:imm16"   ), "%s, %t, %O", ADDR_TYPE_16,  INSTR_TYPE_B),
-						ID("bnel",    VM("010101:rs:rt:imm16"   ), "%s, %t, %O", ADDR_TYPE_16,  INSTR_TYPE_B),
+						ID("bnel",    VM("010101:rs:rt:imm16"   ), "%s, %t, %O", ADDR_TYPE_16,  INSTR_TYPE_B | INSTR_TYPE_LIKELY),
 
 						// Jump (And Link) (Register).
 						ID("j",       VM("000010:imm26"         ), "%j",                ADDR_TYPE_26,  INSTR_TYPE_JUMP),
@@ -547,9 +548,9 @@ namespace CSPspEmu.Core.Cpu.Table
 				{
 					return new InstructionInfo[] {
 						ID("bvf",         VM("010010:01:000:imm3:00:imm16"), "%Zc, %O", ADDR_TYPE_16, INSTR_TYPE_PSP | INSTR_TYPE_B),
-						ID("bvfl",        VM("010010:01:000:imm3:10:imm16"), "%Zc, %O", ADDR_TYPE_16, INSTR_TYPE_PSP | INSTR_TYPE_B),
+						ID("bvfl",        VM("010010:01:000:imm3:10:imm16"), "%Zc, %O", ADDR_TYPE_16, INSTR_TYPE_PSP | INSTR_TYPE_B | INSTR_TYPE_LIKELY),
 						ID("bvt",         VM("010010:01:000:imm3:01:imm16"), "%Zc, %O", ADDR_TYPE_16, INSTR_TYPE_PSP | INSTR_TYPE_B),
-						ID("bvtl",        VM("010010:01:000:imm3:11:imm16"), "%Zc, %O", ADDR_TYPE_16, INSTR_TYPE_PSP | INSTR_TYPE_B),
+						ID("bvtl",        VM("010010:01:000:imm3:11:imm16"), "%Zc, %O", ADDR_TYPE_16, INSTR_TYPE_PSP | INSTR_TYPE_B | INSTR_TYPE_LIKELY),
 					};
 				}
 				return _VFPU_BRANCH;

@@ -16,11 +16,12 @@ namespace CSPspEmu.Core.Cpu.Table
 
 	public enum InstructionType
 	{
-		None  = 0x00,
-		B     = 0x01,
-		Jump  = 0x02,
-		Jal   = 0x02 | 0x04,
-		Psp   = 0x80,
+		None   = 0x00,
+		B      = (1 << 0),
+		Jump   = (1 << 1),
+		Jal    = (1 << 2) | (1 << 3),
+		Likely = (1 << 4),
+		Psp    = (1 << 8),
 	}
 
 	public class InstructionInfo : Attribute

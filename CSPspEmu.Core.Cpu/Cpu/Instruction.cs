@@ -16,7 +16,6 @@ namespace CSPspEmu.Core.Cpu
 			this.Value |= (SetValue & Mask) << Offset;
 		}
 
-
 		private uint get(int Offset, int Count)
 		{
 			return (uint)((Value >> Offset) & ((1 << Count) - 1));

@@ -26,13 +26,54 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			this.BinaryReader = new BinaryReader(this.OutputStream);
 		}
 
-		static public IEnumerable<String> Tokenize(String Line)
+		static protected bool IsIdent(char C)
 		{
-			var Matches = new Regex(@"(-\d+|[%\w]+|\S)", RegexOptions.Compiled).Matches(Line);
+			return ((C == '_') || (C == '%') || (C == '+') || (C == '-') || (C >= '0' && C <= '9') || (C >= 'a' && C <= 'z') || (C >= 'A' && C <= 'Z'));
+		}
+
+		static protected bool IsSpace(char C)
+		{
+			return ((C == ' ') || (C == '\t'));
+		}
+
+		/*
+		static public IEnumerable<String> TokenizeRegex(String Line)
+		{
+			var Matches = new Regex(@"(\+\d+|-\d+|[%\w]+|\S)", RegexOptions.Compiled).Matches(Line);
 			var Ret = new String[Matches.Count];
 			for (int n = 0; n < Matches.Count; n++) Ret[n] = Matches[n].Value;
 			return Ret;
 		}
+		*/
+
+		static public IEnumerable<String> TokenizeFast(String Line)
+		{
+			var Parts = new List<String>();
+			for (int n = 0; n < Line.Length; n++)
+			{
+				if (IsIdent(Line[n]))
+				{
+					int m = n;
+					for (; n < Line.Length && IsIdent(Line[n]); n++) { }
+					Parts.Add(Line.Substr(m, n - m));
+					n--;
+				}
+				else
+				{
+					if (!IsSpace(Line[n]))
+					{
+						Parts.Add("" + Line[n]);
+					}
+				}
+			}
+			return Parts;
+		}
+
+		static public IEnumerable<String> Tokenize(String Line)
+		{
+			return TokenizeFast(Line);
+		}
+
 
 		static public List<Tuple<String, String>> MatchFormat(String Format, String Line)
 		{
@@ -83,6 +124,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 		public int ParseIntegerConstant(String Value)
 		{
 			if (Value.Substr(0, 1) == "-") return -ParseIntegerConstant(Value.Substr(1));
+			if (Value.Substr(0, 1) == "+") return +ParseIntegerConstant(Value.Substr(1));
 			if (Value.Substr(0, 2) == "0x") return Convert.ToInt32(Value.Substr(2), 16);
 			if (Value.Substr(0, 2) == "0b") return Convert.ToInt32(Value.Substr(2), 2);
 			return Convert.ToInt32(Value, 10);
@@ -112,7 +154,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			return AssembleInstructions(ref PC, Line, null);
 		}
 
-		public Instruction[] AssembleInstructions(ref uint PC, String Line, List<Patch> Patches = null)
+		public Instruction[] AssembleInstructions(ref uint PC, String Line, List<Patch> Patches)
 		{
 			Line = Line.Trim();
 			if (Line.Length == 0) return new Instruction[] {};
@@ -161,7 +203,12 @@ namespace CSPspEmu.Core.Cpu.Assembler
 					case "nop":
 					{
 						//return AssembleInstructions(ref PC, "sll r0, r0, r0");
-						return AssembleInstructions(ref PC, "and r0, r0, r0");
+						return AssembleInstructions(ref PC, "and r0, r0, r0", Patches);
+					}
+					case "b":
+					{
+						var Info = MatchFormatDictionary("%O", LineTokens[1]);
+						return AssembleInstructions(ref PC, "beq r0, r0, " + Info["%O"], Patches);
 					}
 					case "li":
 					{
@@ -172,14 +219,14 @@ namespace CSPspEmu.Core.Cpu.Assembler
 						if ((short)Value != Value)
 						{
 							var List = new List<Instruction>();
-							List.AddRange(AssembleInstructions(ref PC, "lui " + DestReg + ", " + ((Value >> 16) & 0xFFFF)));
-							List.AddRange(AssembleInstructions(ref PC, "ori " + DestReg + ", " + DestReg + ", " + (Value & 0xFFFF)));
+							List.AddRange(AssembleInstructions(ref PC, "lui " + DestReg + ", " + ((Value >> 16) & 0xFFFF), Patches));
+							List.AddRange(AssembleInstructions(ref PC, "ori " + DestReg + ", " + DestReg + ", " + (Value & 0xFFFF), Patches));
 							//Console.WriteLine(List.ToJson());
 							return List.ToArray();
 						}
 						else
 						{
-							return AssembleInstructions(ref PC, "addi " + DestReg + ", r0, " + Value);
+							return AssembleInstructions(ref PC, "addi " + DestReg + ", r0, " + Value, Patches);
 						}
 					}
 					default:

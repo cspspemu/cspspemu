@@ -15,9 +15,9 @@ namespace CSPspEmu.Core
 
 		//static public Segment ScratchPadSegment = new Segment() { Offset = 0x00010000, Size = 4 * 1024 };
 
-		public const uint ScratchPadSize = 4 * 1024; // 4KB
-		public const uint FrameBufferSize = 2 * 0x100000; // 2MB
-		public const uint MainSize = 64 * 0x100000; // 64MB (SLIM)
+		public const int ScratchPadSize = 4 * 1024; // 4KB
+		public const int FrameBufferSize = 2 * 0x100000; // 2MB
+		public const int MainSize = 64 * 0x100000; // 64MB (SLIM)
 
 		public const uint ScratchPadOffset = 0x00010000;
 		public const uint FrameBufferOffset = 0x04000000;

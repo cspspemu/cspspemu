@@ -2,20 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core
 {
 	unsafe public class NormalPspMemory : AbstractPspMemory
 	{
-		readonly protected byte[] ScratchPad = new byte[ScratchPadSize];
-		readonly protected byte[] FrameBuffer = new byte[FrameBufferSize];
-		readonly protected byte[] Main = new byte[MainSize];
-
 		public NormalPspMemory()
 		{
-			fixed (byte* Ptr = &ScratchPad[0]) ScratchPadPtr = Ptr;
-			fixed (byte* Ptr = &FrameBuffer[0]) FrameBufferPtr = Ptr;
-			fixed (byte* Ptr = &Main[0]) MainPtr = Ptr;
+			ScratchPadPtr  = (byte*)(Marshal.AllocHGlobal(ScratchPadSize).ToPointer());
+			FrameBufferPtr = (byte*)(Marshal.AllocHGlobal(FrameBufferSize).ToPointer());
+			MainPtr        = (byte*)(Marshal.AllocHGlobal(MainSize).ToPointer());
+		}
+
+		~NormalPspMemory()
+		{
+			Marshal.FreeHGlobal(new IntPtr(ScratchPadPtr));
+			Marshal.FreeHGlobal(new IntPtr(FrameBufferPtr));
+			Marshal.FreeHGlobal(new IntPtr(MainPtr));
 		}
 
 		override public uint PointerToPspAddress(void* Pointer)

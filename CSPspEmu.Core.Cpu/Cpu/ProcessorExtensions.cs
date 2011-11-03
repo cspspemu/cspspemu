@@ -15,11 +15,19 @@ namespace CSPspEmu.Core.Cpu
 {
 	static public class ProcessorExtensions
 	{
+		static public MipsEmiter MipsEmiter = new MipsEmiter();
 		static public Action<uint, CpuEmiter> CpuEmiterInstruction = EmitLookupGenerator.GenerateSwitchDelegate<CpuEmiter>(InstructionTable.ALL);
-		static public Func<uint, bool> IsDelayedBranchInstruction = EmitLookupGenerator.GenerateSwitchDelegateReturn<bool>(InstructionTable.ALL, (ILGenerator, InstructionInfo) =>
+		//static public Func<uint, bool> IsDelayedBranchInstruction = EmitLookupGenerator.GenerateSwitchDelegateReturn<bool>(InstructionTable.ALL, (ILGenerator, InstructionInfo) =>
+		static public Func<uint, bool> IsDelayedBranchInstruction = EmitLookupGenerator.GenerateSwitchDelegateReturn<bool>(InstructionTable.ALL_BRANCHES, (ILGenerator, InstructionInfo) =>
 		{
 			var IsBranch = ((InstructionInfo != null) && (InstructionInfo.InstructionType & InstructionType.B) != 0);
 			ILGenerator.Emit(IsBranch ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
+		});
+
+		static public Func<uint, bool> IsLikelyInstruction = EmitLookupGenerator.GenerateSwitchDelegateReturn<bool>(InstructionTable.ALL_BRANCHES, (ILGenerator, InstructionInfo) =>
+		{
+			var IsLikely = ((InstructionInfo != null) && (InstructionInfo.InstructionType & InstructionType.Likely) != 0);
+			ILGenerator.Emit(IsLikely ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
 		});
 
 		static public void ExecuteAssembly(this Processor Processor, String Assembly, bool BreakPoint = false)
@@ -36,9 +44,10 @@ namespace CSPspEmu.Core.Cpu
 
 		static public Action<Processor> CreateDelegateForPC(this Processor Processor, Stream MemoryStream, uint StartPC)
 		{
-			var MipsEmiter = new MipsEmiter();
+			//var MipsEmiter = new MipsEmiter();
 			var InstructionReader = new InstructionReader(MemoryStream);
 			var MipsMethodEmiter = new MipsMethodEmiter(MipsEmiter);
+			var ILGenerator = MipsMethodEmiter.ILGenerator;
 			var CpuEmiter = new CpuEmiter(MipsMethodEmiter);
 
 			uint PC;
@@ -71,11 +80,11 @@ namespace CSPspEmu.Core.Cpu
 
 					CpuEmiter.Instruction = InstructionReader[PC];
 
-					// Delayed branch instruction.
+					// Branch instruction.
 					if (IsDelayedBranchInstruction(CpuEmiter.Instruction.Value))
 					{
 						var BranchAddress = CpuEmiter.Instruction.GetBranchAddress(PC);
-						Labels[BranchAddress] = MipsMethodEmiter.ILGenerator.DefineLabel();
+						Labels[BranchAddress] = ILGenerator.DefineLabel();
 						BranchesToAnalyze.Enqueue(BranchAddress);
 					}
 
@@ -86,6 +95,12 @@ namespace CSPspEmu.Core.Cpu
 			// PASS2: Generate code and put labels;
 			Action EmitCpuInstruction = () =>
 			{
+				// Marks label.
+				if (Labels.ContainsKey(PC))
+				{
+					ILGenerator.MarkLabel(Labels[PC]);
+				}
+
 				CpuEmiter.Instruction = InstructionReader[PC];
 				CpuEmiterInstruction(CpuEmiter.Instruction.Value, CpuEmiter);
 				//Console.WriteLine("{0:X}", CpuEmiter.Instruction.Value);
@@ -96,24 +111,38 @@ namespace CSPspEmu.Core.Cpu
 
 			for (PC = MinPC; PC <= MaxPC; )
 			{
-				// Marks label.
-				if (Labels.ContainsKey(PC))
-				{
-					MipsMethodEmiter.ILGenerator.MarkLabel(Labels[PC]);
-				}
+				uint CurrentInstructionPC = PC;
+				Instruction CurrentInstruction = InstructionReader[PC];
 
 				// Delayed branch instruction.
-				if (IsDelayedBranchInstruction(InstructionReader[PC].Value))
+				if (IsDelayedBranchInstruction(CurrentInstruction.Value))
 				{
-					var BranchAddress = InstructionReader[PC].GetBranchAddress(PC);
+					var BranchAddress = CurrentInstruction.GetBranchAddress(PC);
 
 					// Branch instruction.
 					EmitCpuInstruction();
 
-					// Delayed instruction.
-					EmitCpuInstruction();
+					if (IsLikelyInstruction(CurrentInstruction.Value))
+					{
+						//Console.WriteLine("Likely");
+						// Delayed instruction.
+						CpuEmiter._branch_likely(() =>
+						{
+							EmitCpuInstruction();
+						});
+					}
+					else
+					{
+						//Console.WriteLine("Not Likely");
+						// Delayed instruction.
+						EmitCpuInstruction();
 
-					CpuEmiter._branch_post(Labels[BranchAddress]);
+					}
+
+					if (CurrentInstructionPC + 4 != BranchAddress)
+					{
+						CpuEmiter._branch_post(Labels[BranchAddress]);
+					}
 				}
 				// Normal instruction.
 				else
@@ -123,7 +152,8 @@ namespace CSPspEmu.Core.Cpu
 			}
 
 			//if (BreakPoint) IsDebuggerPresentDebugBreak();
-			return MipsMethodEmiter.CreateDelegate();
+			Action<Processor> Delegate = MipsMethodEmiter.CreateDelegate();
+			return Delegate;
 		}
 
 		static public void IsDebuggerPresentDebugBreak()

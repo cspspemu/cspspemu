@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -16,19 +17,34 @@ namespace CSPspEmu.Core.Cpu
 
 		public uint *GPR_Ptr;
 		public float* FPR_Ptr;
-		readonly public int[] GPR = new int[32];
-		readonly public float[] FPR = new float[32];
+
+		readonly public int* GPR;
+		readonly public float* FPR;
+
+		public IEnumerable<int> GPRList(params int[] Indexes)
+		{
+			return Indexes.Select(Index => GPR[Index]);
+		}
 
 		public Processor()
 		{
-			fixed (int* Ptr = &GPR[0])
+			GPR = (int * )Marshal.AllocHGlobal(32 * sizeof(uint)).ToPointer();
+			GPR_Ptr = (uint *)GPR;
+
+			FPR = (float*)Marshal.AllocHGlobal(32 * sizeof(uint)).ToPointer();
+			FPR_Ptr = (float*)FPR;
+
+			for (int n = 0; n < 32; n++)
 			{
-				GPR_Ptr = (uint *)Ptr;
+				GPR[n] = 0;
+				FPR[n] = 0;
 			}
-			fixed (float* Ptr = &FPR[0])
-			{
-				FPR_Ptr = Ptr;
-			}
+		}
+
+		~Processor()
+		{
+			Marshal.FreeHGlobal(new IntPtr(GPR));
+			Marshal.FreeHGlobal(new IntPtr(FPR));
 		}
 
 		public void Test()

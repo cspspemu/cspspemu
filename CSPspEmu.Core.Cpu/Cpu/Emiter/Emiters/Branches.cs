@@ -15,71 +15,70 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Brtrue, Label);
 		}
 
-		private void _branch_pre_vv(Action Action)
+		public void _branch_likely(Action Action)
+		{
+			var NullifyDelayedLabel = MipsMethodEmiter.ILGenerator.DefineLabel();
+			MipsMethodEmiter.LoadBranchFlag();
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Brfalse, NullifyDelayedLabel);
+			{
+				Action();
+			}
+			MipsMethodEmiter.ILGenerator.MarkLabel(NullifyDelayedLabel);
+		}
+
+		private void _branch_pre_vv(params OpCode[] OpCodeList)
 		{
 			MipsMethodEmiter.StoreBranchFlag(() =>
 			{
 				MipsMethodEmiter.LoadGPR(RS);
 				MipsMethodEmiter.LoadGPR(RT);
-				Action();
+				foreach (var OpCode in OpCodeList)
+				{
+					MipsMethodEmiter.ILGenerator.Emit(OpCode);
+				}
 			});
 		}
 
-		private void _branch_pre_v0(Action Action)
+		private void _branch_pre_v0(params OpCode[] OpCodeList)
 		{
 			MipsMethodEmiter.StoreBranchFlag(() =>
 			{
 				MipsMethodEmiter.LoadGPR(RS);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_0);
-				Action();
+				foreach (var OpCode in OpCodeList)
+				{
+					MipsMethodEmiter.ILGenerator.Emit(OpCode);
+				}
 			});
 		}
 
 		// Branch on EQuals (Likely).
-		public void beq() {
-			_branch_pre_vv(() => {
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ceq);
-			});
-		}
-		public void beql() {
-			beq();
-		}
-
-		// Branch on Greater Equal Zero (And Link) (Likely).
-		public void bgez() { throw (new NotImplementedException()); }
-		public void bgezl() { throw (new NotImplementedException()); }
-		public void bgezal() { throw (new NotImplementedException()); }
-		public void bgezall() { throw (new NotImplementedException()); }
-
-		// Branch on Less Than Zero (And Link) (Likely).
-		public void bltz() { throw (new NotImplementedException()); }
-		public void bltzl() { throw (new NotImplementedException()); }
-		public void bltzal() { throw (new NotImplementedException()); }
-		public void bltzall() { throw (new NotImplementedException()); }
-
-		// Branch on Less Or Equals than Zero (Likely).
-		public void blez() { throw (new NotImplementedException()); }
-		public void blezl() { throw (new NotImplementedException()); }
-
-		// Branch on Great Than Zero (Likely).
-		public void bgtz() { throw (new NotImplementedException()); }
-		public void bgtzl() { throw (new NotImplementedException()); }
+		public void beq() { _branch_pre_vv(OpCodes.Ceq); }
+		public void beql() { beq(); }
 
 		// Branch on Not Equals (Likely).
-		public void bne()
-		{
-			_branch_pre_vv(() =>
-			{
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ceq);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_0);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ceq);
-				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Not);
-			});
-		}
-		public void bnel()
-		{
-			bne();
-		}
+		public void bne() { _branch_pre_vv(OpCodes.Ceq, OpCodes.Ldc_I4_0, OpCodes.Ceq); }
+		public void bnel() { bne(); }
+
+		// Branch on Less Than Zero (And Link) (Likely).
+		public void bltz() { _branch_pre_v0(OpCodes.Clt); }
+		public void bltzl() { bltz(); }
+		public void bltzal() { throw (new NotImplementedException()); }
+		public void bltzall() { bltzall(); }
+
+		// Branch on Less Or Equals than Zero (Likely).
+		public void blez() { _branch_pre_v0(OpCodes.Cgt, OpCodes.Ldc_I4_0, OpCodes.Ceq); }
+		public void blezl() { blezl(); }
+
+		// Branch on Great Than Zero (Likely).
+		public void bgtz() { _branch_pre_v0(OpCodes.Cgt); }
+		public void bgtzl() { bgtz(); }
+
+		// Branch on Greater Equal Zero (And Link) (Likely).
+		public void bgez() { _branch_pre_v0(OpCodes.Clt, OpCodes.Ldc_I4_0, OpCodes.Ceq); }
+		public void bgezl() { bgez(); }
+		public void bgezal() { throw (new NotImplementedException()); }
+		public void bgezall() { bgezal(); }
 
 		// Jump (And Link) (Register).
 		public void j() { throw (new NotImplementedException()); }
@@ -90,7 +89,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Branch on C1 False/True (Likely).
 		public void bc1f() { throw (new NotImplementedException()); }
 		public void bc1t() { throw (new NotImplementedException()); }
-		public void bc1fl() { throw (new NotImplementedException()); }
-		public void bc1tl() { throw (new NotImplementedException()); }
+		public void bc1fl() { bc1f(); }
+		public void bc1tl() { bc1t(); }
 	}
 }

@@ -7,7 +7,7 @@ using System.Reflection.Emit;
 namespace CSPspEmu.Core.Tests
 {
 	[TestClass]
-	public class MipsEmiterTest
+	unsafe public class MipsEmiterTest
 	{
 		[TestMethod]
 		public void CreateDelegateTest()

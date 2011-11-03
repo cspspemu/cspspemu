@@ -25,10 +25,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public MipsMethodEmiter(MipsEmiter MipsEmiter)
 		{
 			UniqueCounter++;
-			TypeBuilder = MipsEmiter.ModuleBuilder.DefineType("type" + UniqueCounter);
+			TypeBuilder = MipsEmiter.ModuleBuilder.DefineType("type" + UniqueCounter, TypeAttributes.Sealed | TypeAttributes.Public);
 			MethodBuilder = TypeBuilder.DefineMethod(
 				name           : MethodName = "method" + UniqueCounter,
-				attributes     : MethodAttributes.Static | MethodAttributes.Public | MethodAttributes.UnmanagedExport,
+				attributes     : MethodAttributes.Static | MethodAttributes.Public | MethodAttributes.UnmanagedExport | MethodAttributes.Final,
 				returnType     : typeof(void),
 				parameterTypes : new Type[] { typeof(Processor) }
 			);
