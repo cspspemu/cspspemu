@@ -2,22 +2,42 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection.Emit;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
 	sealed public partial class CpuEmiter
 	{
 		// Binary Floating Point Unit Operations
-		public void add_s() { throw (new NotImplementedException()); }
-		public void sub_s() { throw (new NotImplementedException()); }
-		public void mul_s() { throw (new NotImplementedException()); }
-		public void div_s() { throw (new NotImplementedException()); }
+		public void add_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Add); }
+		public void sub_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Sub); }
+		public void mul_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Mul); }
+		public void div_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Div); }
 
 		// Unary Floating Point Unit Operations
-		public void sqrt_s() { throw (new NotImplementedException()); }
-		public void abs_s() { throw (new NotImplementedException()); }
-		public void mov_s() { throw (new NotImplementedException()); }
-		public void neg_s() { throw (new NotImplementedException()); }
+		public void sqrt_s() {
+			MipsMethodEmiter.OP_2REG_F(FD, FS, () => {
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("sqrt_s_impl"));
+			});
+		}
+		static public float sqrt_s_impl(float v)
+		{
+			return (float)Math.Sqrt((float)v);
+		}
+
+		public void abs_s() {
+			MipsMethodEmiter.OP_2REG_F(FD, FS, () =>
+			{
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("abs_s_impl"));
+			});
+		}
+		static public float abs_s_impl(float v)
+		{
+			return (float)Math.Abs((float)v);
+		}
+
+		public void mov_s() { MipsMethodEmiter.OP_2REG_F(FD, FS, () => { }); }
+		public void neg_s() { MipsMethodEmiter.OP_2REG_F(FD, FS, () => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Neg); }); }
 		public void round_w_s() { throw (new NotImplementedException()); }
 		public void trunc_w_s() { throw (new NotImplementedException()); }
 		public void ceil_w_s() { throw (new NotImplementedException()); }

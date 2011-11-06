@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection.Emit;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -13,7 +14,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.CODE);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(Processor).GetMethod("Syscall"));
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, MipsMethodEmiter.Method_Syscall);
 		}
 
 		public void cache() { throw(new NotImplementedException()); }
@@ -37,7 +38,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public void unknown()
 		{
-			throw(new NotImplementedException());
+			throw (new NotImplementedException("%08X : %032b".Sprintf(Instruction.Value, Instruction.Value)));
 		}
 	}
 }

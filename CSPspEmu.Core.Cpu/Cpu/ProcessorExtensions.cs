@@ -42,7 +42,7 @@ namespace CSPspEmu.Core.Cpu
 			Processor.CreateDelegateForPC(MemoryStream, 0)(Processor);
 		}
 
-		static public Action<Processor> CreateDelegateForPC(this Processor Processor, Stream MemoryStream, uint StartPC)
+		static public Action<Processor> CreateDelegateForPC(this Processor Processor, Stream MemoryStream, uint EntryPC)
 		{
 			//var MipsEmiter = new MipsEmiter();
 			var InstructionReader = new InstructionReader(MemoryStream);
@@ -58,10 +58,12 @@ namespace CSPspEmu.Core.Cpu
 			var BranchesToAnalyze = new Queue<uint>();
 			var AnalyzedPC = new HashSet<uint>();
 
-			BranchesToAnalyze.Enqueue(StartPC);
+			Labels[EntryPC] = ILGenerator.DefineLabel();
+
+			BranchesToAnalyze.Enqueue(EntryPC);
 
 			// PASS1: Analyze and find labels.
-			PC = StartPC;
+			PC = EntryPC;
 			//Console.WriteLine("PASS1: (PC={0:X}, EndPC={1:X})", PC, EndPC);
 			while (BranchesToAnalyze.Count > 0)
 			{
@@ -108,6 +110,9 @@ namespace CSPspEmu.Core.Cpu
 			};
 
 			//Console.WriteLine("PASS2: MinPC:{0:X}, MaxPC:{1:X}", MinPC, MaxPC);
+
+			// Jumps to the entry point.
+			ILGenerator.Emit(OpCodes.Br, Labels[EntryPC]);
 
 			for (PC = MinPC; PC <= MaxPC; )
 			{

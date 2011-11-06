@@ -41,9 +41,9 @@ namespace CSPspEmu.Core.Cpu
 		public int RS { get { return (int)get(11 + 5 * 2, 5); } set { set(11 + 5 * 2, 5, (uint)value); } }
 
 		// Type Float Register.
-		public uint FD { get { return get(6 + 5 * 0, 5); } set { set(6 + 5 * 0, 5, (uint)value); } }
-		public uint FS { get { return get(6 + 5 * 1, 5); } set { set(6 + 5 * 1, 5, (uint)value); } }
-		public uint FT { get { return get(6 + 5 * 2, 5); } set { set(6 + 5 * 2, 5, (uint)value); } }
+		public int FD { get { return (int)get(6 + 5 * 0, 5); } set { set(6 + 5 * 0, 5, (uint)value); } }
+		public int FS { get { return (int)get(6 + 5 * 1, 5); } set { set(6 + 5 * 1, 5, (uint)value); } }
+		public int FT { get { return (int)get(6 + 5 * 2, 5); } set { set(6 + 5 * 2, 5, (uint)value); } }
 
 		// Type Immediate (Unsigned).
 		public int IMM { get { return (int)(short)(ushort)get(0, 16); } set { set(0, 16, (uint)value); } }

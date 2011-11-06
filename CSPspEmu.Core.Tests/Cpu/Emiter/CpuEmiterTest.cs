@@ -212,5 +212,69 @@ namespace CSPspEmu.Core.Tests
 			Assert.AreEqual(-1, Processor.GPR[1]);
 			Assert.AreEqual(11, Processor.GPR[2]);
 		}
+
+		[TestMethod]
+		public void BitrevTest()
+		{
+			var Processor = new Processor();
+
+			Processor.ExecuteAssembly(@"
+				li r1, 0b_00000011111101111101111011101101
+				bitrev r2, r1
+			");
+
+			Assert.AreEqual("00000011111101111101111011101101", "%032b".Sprintf(Processor.GPR[1]));
+			Assert.AreEqual("10110111011110111110111111000000", "%032b".Sprintf(Processor.GPR[2]));
+		}
+
+		[TestMethod]
+		public void LoadStoreTest()
+		{
+			var Processor = new Processor();
+
+			Processor.ExecuteAssembly(@"
+				li r1, 0x12345678
+				li r2, 0x88000000
+				sw r1, 0(r2)
+				lb r3, 0(r2)          ; Little Endian
+			");
+			
+			Assert.AreEqual("12345678", "%08X".Sprintf(Processor.GPR[1]));
+			Assert.AreEqual("88000000", "%08X".Sprintf(Processor.GPR[2]));
+			Assert.AreEqual("00000078", "%08X".Sprintf(Processor.GPR[3]));
+		}
+
+		[TestMethod]
+		public void FloatTest()
+		{
+			var Processor = new Processor();
+
+			Processor.FPR[29] = 81.0f;
+			Processor.FPR[30] = -1.0f;
+			Processor.FPR[31] = 3.5f;
+
+			Processor.ExecuteAssembly(@"
+				; Unary
+				mov.s  f0, f30
+				neg.s  f1, f31
+				sqrt.s f2, f29
+				abs.s  f3, f30
+				abs.s  f4, f31
+
+				; Binary
+				add.s f10, f30, f31
+				sub.s f11, f30, f31
+			");
+
+			// Unary
+			Assert.AreEqual(Processor.FPR[0], Processor.FPR[30]);
+			Assert.AreEqual(Processor.FPR[1], -Processor.FPR[31]);
+			Assert.AreEqual(Processor.FPR[2], Math.Sqrt(Processor.FPR[29]));
+			Assert.AreEqual(Processor.FPR[3], Math.Abs(Processor.FPR[30]));
+			Assert.AreEqual(Processor.FPR[4], Math.Abs(Processor.FPR[31]));
+
+			Assert.AreEqual(Processor.FPR[10], Processor.FPR[30] + Processor.FPR[31]);
+			Assert.AreEqual(Processor.FPR[11], Processor.FPR[30] - Processor.FPR[31]);
+		}
 	}
 }

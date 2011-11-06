@@ -21,13 +21,26 @@ namespace CSPspEmu.Core.Cpu
 		readonly public int* GPR;
 		readonly public float* FPR;
 
+		private NormalPspMemory Memory;
+
+		public void* GetMemoryPtr(uint Address)
+		{
+			if (Memory == null)
+			{
+				Memory = new NormalPspMemory();
+			}
+			return Memory.PspAddressToPointer(Address);
+		}
+
 		public IEnumerable<int> GPRList(params int[] Indexes)
 		{
 			return Indexes.Select(Index => GPR[Index]);
 		}
 
-		public Processor()
+		public Processor(NormalPspMemory Memory = null)
 		{
+			this.Memory = Memory;
+
 			GPR = (int * )Marshal.AllocHGlobal(32 * sizeof(uint)).ToPointer();
 			GPR_Ptr = (uint *)GPR;
 
@@ -96,6 +109,10 @@ namespace CSPspEmu.Core.Cpu
 			{
 				Console.WriteLine("Undefined syscall: {0}", Code);
 			}
+		}
+
+		public void BreakpointIfEnabled()
+		{
 		}
 	}
 }

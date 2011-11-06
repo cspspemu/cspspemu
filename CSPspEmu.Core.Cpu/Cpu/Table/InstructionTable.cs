@@ -214,20 +214,20 @@ namespace CSPspEmu.Core.Cpu.Table
 				{
 					_LSU = new InstructionInfo[] {
 						// Load Byte/Half word/Word (Left/Right/Unsigned).
-						ID("lb",   VM("100000:rs:rt:imm16"), "%t, %o", ADDR_TYPE_NONE, 0),
-						ID("lh",   VM("100001:rs:rt:imm16"), "%t, %o", ADDR_TYPE_NONE, 0),
-						ID("lw",   VM("100011:rs:rt:imm16"), "%t, %o", ADDR_TYPE_NONE, 0),
-						ID("lwl",  VM("100010:rs:rt:imm16"), "%t, %o", ADDR_TYPE_NONE, 0),
-						ID("lwr",  VM("100110:rs:rt:imm16"), "%t, %o", ADDR_TYPE_NONE, 0),
-						ID("lbu",  VM("100100:rs:rt:imm16"), "%t, %o", ADDR_TYPE_NONE, 0),
-						ID("lhu",  VM("100101:rs:rt:imm16"), "%t, %o", ADDR_TYPE_NONE, 0),
+						ID("lb",   VM("100000:rs:rt:imm16"), "%t, %i(%s)", ADDR_TYPE_NONE, 0),
+						ID("lh",   VM("100001:rs:rt:imm16"), "%t, %i(%s)", ADDR_TYPE_NONE, 0),
+						ID("lw",   VM("100011:rs:rt:imm16"), "%t, %i(%s)", ADDR_TYPE_NONE, 0),
+						ID("lwl",  VM("100010:rs:rt:imm16"), "%t, %i(%s)", ADDR_TYPE_NONE, 0),
+						ID("lwr",  VM("100110:rs:rt:imm16"), "%t, %i(%s)", ADDR_TYPE_NONE, 0),
+						ID("lbu",  VM("100100:rs:rt:imm16"), "%t, %i(%s)", ADDR_TYPE_NONE, 0),
+						ID("lhu",  VM("100101:rs:rt:imm16"), "%t, %i(%s)", ADDR_TYPE_NONE, 0),
 
 						// Store Byte/Half word/Word (Left/Right).
-						ID("sb",   VM("101000:rs:rt:imm16"), "%t, %o", ADDR_TYPE_NONE, 0),
-						ID("sh",   VM("101001:rs:rt:imm16"), "%t, %o", ADDR_TYPE_NONE, 0),
-						ID("sw",   VM("101011:rs:rt:imm16"), "%t, %o", ADDR_TYPE_NONE, 0),
-						ID("swl",  VM("101010:rs:rt:imm16"), "%t, %o", ADDR_TYPE_NONE, 0),
-						ID("swr",  VM("101110:rs:rt:imm16"), "%t, %o", ADDR_TYPE_NONE, 0),
+						ID("sb",   VM("101000:rs:rt:imm16"), "%t, %i(%s)", ADDR_TYPE_NONE, 0),
+						ID("sh",   VM("101001:rs:rt:imm16"), "%t, %i(%s)", ADDR_TYPE_NONE, 0),
+						ID("sw",   VM("101011:rs:rt:imm16"), "%t, %i(%s)", ADDR_TYPE_NONE, 0),
+						ID("swl",  VM("101010:rs:rt:imm16"), "%t, %i(%s)", ADDR_TYPE_NONE, 0),
+						ID("swr",  VM("101110:rs:rt:imm16"), "%t, %i(%s)", ADDR_TYPE_NONE, 0),
 
 						// Load Linked word.
 						// Store Conditional word.

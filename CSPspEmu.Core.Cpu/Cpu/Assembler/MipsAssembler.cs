@@ -89,11 +89,15 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
 				switch (CurrentFormat)
 				{
-					case ",":
-						if (CurrentLine != ",") throw (new InvalidDataException());
-						break;
 					default:
-						Matches.Add(new Tuple<String, String>(CurrentFormat, CurrentLine));
+						if (CurrentFormat[0] == '%')
+						{
+							Matches.Add(new Tuple<String, String>(CurrentFormat, CurrentLine));
+						}
+						else
+						{
+							if (CurrentLine != CurrentFormat) throw (new InvalidDataException());
+						}
 						break;
 				}
 			}
@@ -111,8 +115,16 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			return Dictionary;
 		}
 
+		static public int ParseFprName(String RegisterName)
+		{
+			if (RegisterName[0] == 'f')
+			{
+				return Convert.ToInt32(RegisterName.Substring(1));
+			}
+			throw (new InvalidDataException());
+		}
 
-		static public int ParseRegisterName(String RegisterName)
+		static public int ParseGprName(String RegisterName)
 		{
 			if (RegisterName[0] == 'r')
 			{
@@ -123,6 +135,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
 		public int ParseIntegerConstant(String Value)
 		{
+			Value = Value.Replace("_", "");
 			if (Value.Substr(0, 1) == "-") return -ParseIntegerConstant(Value.Substr(1));
 			if (Value.Substr(0, 1) == "+") return +ParseIntegerConstant(Value.Substr(1));
 			if (Value.Substr(0, 2) == "0x") return Convert.ToInt32(Value.Substr(2), 16);
@@ -172,16 +185,21 @@ namespace CSPspEmu.Core.Cpu.Assembler
 				{
 					switch (Match.Item1)
 					{
-						case "%d": Instruction.RD = ParseRegisterName(Match.Item2); break;
-						case "%s": Instruction.RS = ParseRegisterName(Match.Item2); break;
-						case "%t": Instruction.RT = ParseRegisterName(Match.Item2); break;
+						case "%D": Instruction.FD = ParseFprName(Match.Item2); break;
+						case "%S": Instruction.FS = ParseFprName(Match.Item2); break;
+						case "%T": Instruction.FT = ParseFprName(Match.Item2); break;
+
+						case "%d": Instruction.RD = ParseGprName(Match.Item2); break;
+						case "%s": Instruction.RS = ParseGprName(Match.Item2); break;
+						case "%t": Instruction.RT = ParseGprName(Match.Item2); break;
+
 						case "%C": Instruction.CODE = (uint)ParseIntegerConstant(Match.Item2); break;
 						case "%i": Instruction.IMM = ParseIntegerConstant(Match.Item2); break;
 						case "%I": Instruction.IMMU = (uint)ParseIntegerConstant(Match.Item2); break;
 						case "%O":
 							Patches.Add(new Patch() { Address = PC, LabelName = Match.Item2, Type = PatchType.REL_16 });
 						break;
-						default: throw (new InvalidDataException("Unknown format '" + Match.Item1 + "'"));
+						default: throw (new InvalidDataException("Unknown format '" + Match.Item1 + "' : " + InstructionInfo.AsmEncoding));
 					}
 				}
 				/*

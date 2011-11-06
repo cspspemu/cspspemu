@@ -19,7 +19,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public ILGenerator ILGenerator;
 		protected String MethodName;
 		static protected FieldInfo Field_GPR_Ptr = typeof(Processor).GetField("GPR_Ptr");
+		static protected FieldInfo Field_FPR_Ptr = typeof(Processor).GetField("FPR_Ptr");
 		static protected FieldInfo Field_BranchFlag = typeof(Processor).GetField("BranchFlag");
+		static public MethodInfo Method_Syscall = typeof(Processor).GetMethod("Syscall");
 		static private ulong UniqueCounter = 0;
 
 		public MipsMethodEmiter(MipsEmiter MipsEmiter)
@@ -35,12 +37,19 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			ILGenerator = MethodBuilder.GetILGenerator();
 		}
 
-		public void LoadGPRPtr(int R)
+		protected void LoadGPRPtr(int R)
 		{
 			ILGenerator.Emit(OpCodes.Ldarg_0);
 			ILGenerator.Emit(OpCodes.Ldfld, Field_GPR_Ptr);
 			ILGenerator.Emit(OpCodes.Ldc_I4, R * 4);
-			ILGenerator.Emit(OpCodes.Conv_I);
+			ILGenerator.Emit(OpCodes.Add);
+		}
+
+		protected void LoadFPRPtr(int R)
+		{
+			ILGenerator.Emit(OpCodes.Ldarg_0);
+			ILGenerator.Emit(OpCodes.Ldfld, Field_FPR_Ptr);
+			ILGenerator.Emit(OpCodes.Ldc_I4, R * 4);
 			ILGenerator.Emit(OpCodes.Add);
 		}
 
@@ -57,6 +66,24 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			ILGenerator.Emit(OpCodes.Stfld, Field_BranchFlag);
 		}
 
+		public void SaveGPR(int R, Action Action)
+		{
+			LoadGPRPtr(R);
+			{
+				Action();
+			}
+			ILGenerator.Emit(OpCodes.Stind_I4);
+		}
+
+		public void SaveFPR(int R, Action Action)
+		{
+			LoadFPRPtr(R);
+			{
+				Action();
+			}
+			ILGenerator.Emit(OpCodes.Stind_R4);
+		}
+
 		public void LoadGPR(int R)
 		{
 			if (R == 0)
@@ -71,48 +98,91 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
+		public void LoadFPR(int R)
+		{
+			LoadFPRPtr(R);
+			ILGenerator.Emit(OpCodes.Ldind_R4);
+		}
+
+
+
+		/*
 		public void SavePtr()
 		{
 			ILGenerator.Emit(OpCodes.Stind_I4);
 		}
+		*/
 
 		public void OP_3REG(int RD, int RS, int RT, OpCode OpCode)
 		{
 			if (RD == 0) return;
-			LoadGPRPtr(RD);
-			LoadGPR(RS);
-			LoadGPR(RT);
-			ILGenerator.Emit(OpCode);
-			SavePtr();
+			SaveGPR(RD, () =>
+			{
+				LoadGPR(RS);
+				LoadGPR(RT);
+				ILGenerator.Emit(OpCode);
+			});
+		}
+
+		public void OP_3REG_F(int FD, int FS, int FT, OpCode OpCode)
+		{
+			SaveFPR(FD, () =>
+			{
+				LoadFPR(FS);
+				LoadFPR(FT);
+				ILGenerator.Emit(OpCode);
+			});
+		}
+
+		public void OP_2REG_IMM_F(int FD, int FS, float Immediate, OpCode OpCode)
+		{
+			SaveFPR(FD, () =>
+			{
+				LoadFPR(FS);
+				ILGenerator.Emit(OpCodes.Ldc_R4, Immediate);
+				ILGenerator.Emit(OpCode);
+			});
+		}
+
+		public void OP_2REG_F(int FD, int FS, Action Action)
+		{
+			SaveFPR(FD, () =>
+			{
+				LoadFPR(FS);
+				Action();
+			});
 		}
 
 		public void OP_2REG_IMM(int RT, int RS, short Immediate, OpCode OpCode)
 		{
 			if (RT == 0) return;
-			LoadGPRPtr(RT);
-			LoadGPR(RS);
-			ILGenerator.Emit(OpCodes.Ldc_I4, (int)Immediate);
-			ILGenerator.Emit(OpCode);
-			SavePtr();
+			SaveGPR(RT, () =>
+			{
+				LoadGPR(RS);
+				ILGenerator.Emit(OpCodes.Ldc_I4, (int)Immediate);
+				ILGenerator.Emit(OpCode);
+			});
 		}
 
 		public void OP_2REG_IMMU(int RT, int RS, uint Immediate, OpCode OpCode)
 		{
 			if (RT == 0) return;
-			LoadGPRPtr(RT);
-			LoadGPR(RS);
-			ILGenerator.Emit(OpCodes.Ldc_I4, (uint)Immediate);
-			ILGenerator.Emit(OpCodes.Conv_U4);
-			ILGenerator.Emit(OpCode);
-			SavePtr();
+			SaveGPR(RT, () =>
+			{
+				LoadGPR(RS);
+				ILGenerator.Emit(OpCodes.Ldc_I4, (uint)Immediate);
+				ILGenerator.Emit(OpCodes.Conv_U4);
+				ILGenerator.Emit(OpCode);
+			});
 		}
 
 		public void SET(int RT, uint Value)
 		{
 			if (RT == 0) return;
-			LoadGPRPtr(RT);
-			ILGenerator.Emit(OpCodes.Ldc_I4, Value);
-			SavePtr();
+			SaveGPR(RT, () =>
+			{
+				ILGenerator.Emit(OpCodes.Ldc_I4, Value);
+			});
 		}
 
 

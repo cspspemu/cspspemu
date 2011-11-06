@@ -16,6 +16,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public int IMM { get { return Instruction.IMM; } }
 		public uint IMMU { get { return Instruction.IMMU; } }
 
+		public int FT { get { return Instruction.FT; } }
+		public int FD { get { return Instruction.FD; } }
+		public int FS { get { return Instruction.FS; } }
+
 		public CpuEmiter(MipsMethodEmiter MipsMethodEmiter)
 		{
 			this.MipsMethodEmiter = MipsMethodEmiter;
