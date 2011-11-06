@@ -6,13 +6,27 @@ using System.Reflection.Emit;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
-	sealed public partial class CpuEmiter
+	unsafe sealed public partial class CpuEmiter
 	{
 		private void _getmemptr(Action Action)
 		{
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-			Action();
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(Processor).GetMethod("GetMemoryPtr"));
+			if (MipsMethodEmiter.Processor.Memory is FastPspMemory)
+			{
+				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (int)((FastPspMemory)MipsMethodEmiter.Processor.Memory).Base);
+				Action();
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (int)0x1FFFFFFF);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+			}
+			else
+			{
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+				{
+					Action();
+				}
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(Processor).GetMethod("GetMemoryPtr"));
+			}
 		}
 
 		private void _load(Action Action)

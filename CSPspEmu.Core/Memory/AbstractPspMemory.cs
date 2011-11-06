@@ -7,11 +7,13 @@ namespace CSPspEmu.Core
 {
 	unsafe abstract public class AbstractPspMemory
 	{
+		/*
 		public struct Segment
 		{
 			public uint Offset;
 			public uint Size;
 		}
+		*/
 
 		//static public Segment ScratchPadSegment = new Segment() { Offset = 0x00010000, Size = 4 * 1024 };
 

@@ -93,36 +93,6 @@ namespace CSPspEmu.Core.Cpu.Table
 
 			GenerateCallDelegate(ILGenerator, null);
 			ILGenerator.Emit(OpCodes.Ret);
-
-			/*
-			var DefaultLabel = ILGenerator.DefineLabel();
-			var SwitchLabels = new Label[MaskGroupsCount];
-			for (var n = 0; n < MaskGroupsCount; n++) SwitchLabels[n] = ILGenerator.DefineLabel();
-
-			ILGenerator.Emit(OpCodes.Switch, SwitchLabels);
-			ILGenerator.Emit(OpCodes.Br_S, DefaultLabel);
-
-			uint Case = 0;
-			foreach (var MaskGroup in MaskGroups.Select(MaskGroup => MaskGroup.ToArray()))
-			{
-				ILGenerator.MarkLabel(SwitchLabels[Case]);
-				
-				if (MaskGroup.Length > 1)
-				{
-					GenerateSwitchCode(ILGenerator, MaskGroup, GenerateCallDelegate);
-				}
-				else
-				{
-					GenerateCallDelegate(ILGenerator, MaskGroup[0]);
-				}
-				ILGenerator.Emit(OpCodes.Ret);
-
-				Case++;
-			}
-
-			ILGenerator.MarkLabel(DefaultLabel);
-			ILGenerator.Emit(OpCodes.Ret);
-			*/
 		}
 	}
 }

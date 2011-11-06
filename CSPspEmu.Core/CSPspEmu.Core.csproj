@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Memory\AbstractPspMemory.cs" />
+    <Compile Include="Memory\LazyPspMemory.cs" />
     <Compile Include="Memory\FastPspMemory.cs" />
     <Compile Include="Memory\NormalPspMemory.cs" />
     <Compile Include="Memory\PspMemoryStream.cs" />

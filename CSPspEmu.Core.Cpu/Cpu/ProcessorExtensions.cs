@@ -10,6 +10,7 @@ using CSharpUtils.Extensions;
 using System.Runtime.InteropServices;
 using CSPspEmu.Core.Cpu.Cpu;
 using System.Reflection.Emit;
+using System.Threading;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -32,6 +33,11 @@ namespace CSPspEmu.Core.Cpu
 
 		static public void ExecuteAssembly(this Processor Processor, String Assembly, bool BreakPoint = false)
 		{
+			Processor.CreateDelegateForString(Assembly, BreakPoint)(Processor);
+		}
+
+		static public Action<Processor> CreateDelegateForString(this Processor Processor, String Assembly, bool BreakPoint = false)
+		{
 			var MemoryStream = new MemoryStream();
 			MemoryStream.PreservePositionAndLock(() =>
 			{
@@ -39,14 +45,14 @@ namespace CSPspEmu.Core.Cpu
 
 				MipsAssembler.Assemble(Assembly);
 			});
-			Processor.CreateDelegateForPC(MemoryStream, 0)(Processor);
+			return Processor.CreateDelegateForPC(MemoryStream, 0);
 		}
 
 		static public Action<Processor> CreateDelegateForPC(this Processor Processor, Stream MemoryStream, uint EntryPC)
 		{
 			//var MipsEmiter = new MipsEmiter();
 			var InstructionReader = new InstructionReader(MemoryStream);
-			var MipsMethodEmiter = new MipsMethodEmiter(MipsEmiter);
+			var MipsMethodEmiter = new MipsMethodEmiter(MipsEmiter, Processor);
 			var ILGenerator = MipsMethodEmiter.ILGenerator;
 			var CpuEmiter = new CpuEmiter(MipsMethodEmiter);
 
@@ -112,6 +118,10 @@ namespace CSPspEmu.Core.Cpu
 			//Console.WriteLine("PASS2: MinPC:{0:X}, MaxPC:{1:X}", MinPC, MaxPC);
 
 			// Jumps to the entry point.
+
+
+
+			ILGenerator.Emit(OpCodes.Call, typeof(ProcessorExtensions).GetMethod("IsDebuggerPresentDebugBreak"));
 			ILGenerator.Emit(OpCodes.Br, Labels[EntryPC]);
 
 			for (PC = MinPC; PC <= MaxPC; )
@@ -141,7 +151,6 @@ namespace CSPspEmu.Core.Cpu
 						//Console.WriteLine("Not Likely");
 						// Delayed instruction.
 						EmitCpuInstruction();
-
 					}
 
 					if (CurrentInstructionPC + 4 != BranchAddress)
@@ -163,7 +172,7 @@ namespace CSPspEmu.Core.Cpu
 
 		static public void IsDebuggerPresentDebugBreak()
 		{
-			if (IsDebuggerPresent()) DebugBreak();
+			//if (IsDebuggerPresent()) DebugBreak();
 		}
 
 		[DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]

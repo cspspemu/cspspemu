@@ -16,3 +16,7 @@
 /CSPspEmu.Core.Cpu/bin
 /CSPspEmu.Core.Cpu/obj
 /Docs
+/CSPspEmu.Hle.Modules/obj
+/CSPspEmu.Hle.Modules/bin
+/CSPspEmu.Hle/bin
+/CSPspEmu.Hle/obj

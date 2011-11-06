@@ -18,14 +18,40 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		//protected DynamicMethod DynamicMethod;
 		public ILGenerator ILGenerator;
 		protected String MethodName;
-		static protected FieldInfo Field_GPR_Ptr = typeof(Processor).GetField("GPR_Ptr");
-		static protected FieldInfo Field_FPR_Ptr = typeof(Processor).GetField("FPR_Ptr");
+		public Processor Processor;
+		//static protected FieldInfo Field_GPR_Ptr = typeof(Processor).GetField("GPR_Ptr");
+		//static protected FieldInfo Field_FPR_Ptr = typeof(Processor).GetField("FPR_Ptr");
 		static protected FieldInfo Field_BranchFlag = typeof(Processor).GetField("BranchFlag");
 		static public MethodInfo Method_Syscall = typeof(Processor).GetMethod("Syscall");
 		static private ulong UniqueCounter = 0;
 
-		public MipsMethodEmiter(MipsEmiter MipsEmiter)
+		static protected bool InitializedOnce = false;
+		static protected FieldInfo[] Field_GPRList;
+		static protected FieldInfo[] Field_FPRList;
+
+		/*
+		static public MipsMethodEmiter()
 		{
+		}
+		*/
+
+		public MipsMethodEmiter(MipsEmiter MipsEmiter, Processor Processor)
+		{
+			this.Processor = Processor;
+
+			if (!InitializedOnce)
+			{
+				Field_GPRList = new FieldInfo[32];
+				Field_FPRList = new FieldInfo[32];
+				for (int n = 0; n < 32; n++)
+				{
+					Field_GPRList[n] = typeof(Processor).GetField("GPR" + n);
+					Field_FPRList[n] = typeof(Processor).GetField("FPR" + n);
+				}
+
+				InitializedOnce = true;
+			}
+
 			UniqueCounter++;
 			TypeBuilder = MipsEmiter.ModuleBuilder.DefineType("type" + UniqueCounter, TypeAttributes.Sealed | TypeAttributes.Public);
 			MethodBuilder = TypeBuilder.DefineMethod(
@@ -40,17 +66,19 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		protected void LoadGPRPtr(int R)
 		{
 			ILGenerator.Emit(OpCodes.Ldarg_0);
-			ILGenerator.Emit(OpCodes.Ldfld, Field_GPR_Ptr);
-			ILGenerator.Emit(OpCodes.Ldc_I4, R * 4);
-			ILGenerator.Emit(OpCodes.Add);
+			//ILGenerator.Emit(OpCodes.Ldfld, Field_GPR_Ptr);
+			//ILGenerator.Emit(OpCodes.Ldc_I4, R * 4);
+			//ILGenerator.Emit(OpCodes.Add);
+			ILGenerator.Emit(OpCodes.Ldflda, Field_GPRList[R]);
 		}
 
 		protected void LoadFPRPtr(int R)
 		{
 			ILGenerator.Emit(OpCodes.Ldarg_0);
-			ILGenerator.Emit(OpCodes.Ldfld, Field_FPR_Ptr);
-			ILGenerator.Emit(OpCodes.Ldc_I4, R * 4);
-			ILGenerator.Emit(OpCodes.Add);
+			//ILGenerator.Emit(OpCodes.Ldfld, Field_FPR_Ptr);
+			//ILGenerator.Emit(OpCodes.Ldc_I4, R * 4);
+			//ILGenerator.Emit(OpCodes.Add);
+			ILGenerator.Emit(OpCodes.Ldflda, Field_FPRList[R]);
 		}
 
 		public void LoadBranchFlag()
@@ -103,8 +131,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			LoadFPRPtr(R);
 			ILGenerator.Emit(OpCodes.Ldind_R4);
 		}
-
-
 
 		/*
 		public void SavePtr()

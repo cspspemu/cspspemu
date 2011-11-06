@@ -45,7 +45,7 @@ namespace CSPspEmu.Core
 
 		public override void* PspAddressToPointer(uint Address)
 		{
-			return Base + Address;
+			return Base + (Address & 0x1FFFFFFF);
 		}
 	}
 }

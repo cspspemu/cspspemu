@@ -33,7 +33,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		static public float abs_s_impl(float v)
 		{
-			return (float)Math.Abs((float)v);
+			return (v >= 0) ? v : -v;
 		}
 
 		public void mov_s() { MipsMethodEmiter.OP_2REG_F(FD, FS, () => { }); }

@@ -12,8 +12,9 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void CreateDelegateTest()
 		{
-			var Processor = new Processor();
-			var MipsEmiter = new MipsMethodEmiter(new MipsEmiter());
+			var Memory = new NormalPspMemory();
+			var Processor = new Processor(Memory);
+			var MipsEmiter = new MipsMethodEmiter(new MipsEmiter(), Processor);
 			Processor.GPR[1] = 1;
 			Processor.GPR[2] = 2;
 			Processor.GPR[3] = 3;

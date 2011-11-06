@@ -7,6 +7,7 @@ using CSPspEmu.Core.Cpu;
 using System.IO;
 using CSharpUtils.Extensions;
 using System.Collections.Generic;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Tests
 {
@@ -16,7 +17,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void ArithmeticTest()
 		{
-			var Processor = new Processor();
+			var Processor = new Processor(new LazyPspMemory());
 
 			Processor.GPR[1] = -1;
 			Processor.GPR[2] = -1;
@@ -43,7 +44,7 @@ namespace CSPspEmu.Core.Tests
 		{
 			var Events = new List<int>();
 
-			var Processor = new Processor();
+			var Processor = new Processor(new LazyPspMemory());
 
 			Processor.RegisterNativeSyscall(1, () =>
 			{
@@ -66,7 +67,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void BranchTest()
 		{
-			var Processor = new Processor();
+			var Processor = new Processor(new LazyPspMemory());
 
 			Processor.ExecuteAssembly(@"
 				beq r3, r0, label1
@@ -87,7 +88,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void Branch2Test()
 		{
-			var Processor = new Processor();
+			var Processor = new Processor(new LazyPspMemory());
 
 			Processor.ExecuteAssembly(@"
 				li r1, 1
@@ -106,7 +107,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void BranchLikelyTest()
 		{
-			var Processor = new Processor();
+			var Processor = new Processor(new LazyPspMemory());
 
 			Processor.ExecuteAssembly(@"
 				li r1, 1
@@ -126,7 +127,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void BranchFullTest()
 		{
-			var Processor = new Processor();
+			var Processor = new Processor(new LazyPspMemory());
 
 			var RegsV = new String[] {
 				"r10, r10",
@@ -198,7 +199,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void LoopTest()
 		{
-			var Processor = new Processor();
+			var Processor = new Processor(new LazyPspMemory());
 
 			Processor.ExecuteAssembly(@"
 				li r1, 10
@@ -216,7 +217,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void BitrevTest()
 		{
-			var Processor = new Processor();
+			var Processor = new Processor(new LazyPspMemory());
 
 			Processor.ExecuteAssembly(@"
 				li r1, 0b_00000011111101111101111011101101
@@ -230,7 +231,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void LoadStoreTest()
 		{
-			var Processor = new Processor();
+			var Processor = new Processor(new LazyPspMemory());
 
 			Processor.ExecuteAssembly(@"
 				li r1, 0x12345678
@@ -247,7 +248,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void FloatTest()
 		{
-			var Processor = new Processor();
+			var Processor = new Processor(new LazyPspMemory());
 
 			Processor.FPR[29] = 81.0f;
 			Processor.FPR[30] = -1.0f;
