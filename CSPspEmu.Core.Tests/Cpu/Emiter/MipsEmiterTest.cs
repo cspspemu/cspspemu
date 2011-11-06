@@ -14,17 +14,18 @@ namespace CSPspEmu.Core.Tests
 		{
 			var Memory = new NormalPspMemory();
 			var Processor = new Processor(Memory);
-			var MipsEmiter = new MipsMethodEmiter(new MipsEmiter(), Processor);
-			Processor.GPR[1] = 1;
-			Processor.GPR[2] = 2;
-			Processor.GPR[3] = 3;
+			var CpuThreadState = new CpuThreadState(Processor);
+			var MipsEmiter = new MipsMethodEmiter(new MipsEmiter(), CpuThreadState);
+			CpuThreadState.GPR[1] = 1;
+			CpuThreadState.GPR[2] = 2;
+			CpuThreadState.GPR[3] = 3;
 			MipsEmiter.OP_3REG(1, 2, 2, OpCodes.Add);
 			MipsEmiter.OP_3REG(0, 2, 2, OpCodes.Add);
 			MipsEmiter.OP_2REG_IMM(10, 0, 1000, OpCodes.Add);
-			MipsEmiter.CreateDelegate()(Processor);
-			Assert.AreEqual(4, Processor.GPR[1]);
-			Assert.AreEqual(0, Processor.GPR[0]);
-			Assert.AreEqual(1000, Processor.GPR[10]);
+			MipsEmiter.CreateDelegate()(CpuThreadState);
+			Assert.AreEqual(4, CpuThreadState.GPR[1]);
+			Assert.AreEqual(0, CpuThreadState.GPR[0]);
+			Assert.AreEqual(1000, CpuThreadState.GPR[10]);
 		}
 	}
 }

@@ -10,10 +10,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 	{
 		private void _getmemptr(Action Action)
 		{
-			if (MipsMethodEmiter.Processor.Memory is FastPspMemory)
+			if (MipsMethodEmiter.CpuThreadState.Processor.Memory is FastPspMemory)
 			{
 				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (int)((FastPspMemory)MipsMethodEmiter.Processor.Memory).Base);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (int)((FastPspMemory)MipsMethodEmiter.CpuThreadState.Processor.Memory).Base);
 				Action();
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (int)0x1FFFFFFF);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
@@ -25,7 +25,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				{
 					Action();
 				}
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(Processor).GetMethod("GetMemoryPtr"));
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("GetMemoryPtr"));
 			}
 		}
 

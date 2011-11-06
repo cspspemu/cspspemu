@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -44,6 +45,18 @@
     <Compile Include="wlan\sceWlan_Driver.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CSPspEmu.Core.Cpu\CSPspEmu.Core.Cpu.csproj">
+      <Project>{827779A5-F05C-41C6-9FF9-FD274224A7AE}</Project>
+      <Name>CSPspEmu.Core.Cpu</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">
+      <Project>{9A30EBF3-B702-47D9-AAFC-E3E02B410DAD}</Project>
+      <Name>CSPspEmu.Core.Gpu</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
+      <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
+      <Name>CSPspEmu.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Hle\CSPspEmu.Hle.csproj">
       <Project>{288AF89E-B41A-4253-A8F7-43D1371516E9}</Project>
       <Name>CSPspEmu.Hle</Name>

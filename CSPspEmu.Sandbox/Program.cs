@@ -12,6 +12,8 @@ using System.IO;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Tests;
 using System.Diagnostics;
+using CSPspEmu.Hle;
+using CSPspEmu.Core.Cpu.Cpu;
 
 namespace CSPspEmu.Sandbox
 {
@@ -23,8 +25,8 @@ namespace CSPspEmu.Sandbox
 			var MemoryStream = new PspMemoryStream(Memory);
 			var BinaryWriter = new BinaryWriter(MemoryStream);
 			var BinaryReader = new BinaryReader(MemoryStream);
-			//var Memory = new NormalMemory();
 			var Processor = new Processor(Memory);
+			var CpuThreadState = new CpuThreadState(Processor);
 
 			BinaryWriter.BaseStream.Position = FastPspMemory.MainOffset;
 			BinaryWriter.BaseStream.PreservePositionAndLock(() =>
@@ -37,13 +39,13 @@ namespace CSPspEmu.Sandbox
 			Memory.Write4(FastPspMemory.MainOffset, 0x12345678);
 			Console.WriteLine("{0:X}", Memory.Read4(FastPspMemory.MainOffset));
 
-			Processor.RegisterNativeSyscall(100, () =>
+			CpuThreadState.RegisterNativeSyscall(100, () =>
 			{
 				Console.WriteLine("syscall!");
 			});
-			Processor.GPR[2] = 10;
-			Processor.GPR[3] = 20;
-			Processor.ExecuteAssembly(@"
+			CpuThreadState.GPR[2] = 10;
+			CpuThreadState.GPR[3] = 20;
+			CpuThreadState.ExecuteAssembly(@"
 				add r1, r2, r3
 				addi r4, r1, 1000
 				li r7, 777
@@ -53,11 +55,11 @@ namespace CSPspEmu.Sandbox
 				li r10, -3
 				syscall 100
 			");
-			Console.WriteLine("{0}", Processor.GPR[4]);
-			Console.WriteLine("{0}", Processor.GPR[7]);
-			Console.WriteLine("{0:X}", Processor.GPR[8]);
-			Console.WriteLine("{0:X}", Processor.GPR[9]);
-			Console.WriteLine("{0}", Processor.GPR[10]);
+			Console.WriteLine("{0}", CpuThreadState.GPR[4]);
+			Console.WriteLine("{0}", CpuThreadState.GPR[7]);
+			Console.WriteLine("{0:X}", CpuThreadState.GPR[8]);
+			Console.WriteLine("{0:X}", CpuThreadState.GPR[9]);
+			Console.WriteLine("{0}", CpuThreadState.GPR[10]);
 			Console.ReadKey();
 		}
 
@@ -134,11 +136,12 @@ namespace CSPspEmu.Sandbox
 			//var Memory = new NormalPspMemory();
 			//var Memory = new LazyPspMemory();
 			var Processor = new Processor(Memory);
+			var CpuThreadState = new CpuThreadState(Processor);
 			//var Processor = new Processor(new NormalPspMemory());
 			Memory.Write4(0x04000000, 0x12345678);
 			Console.WriteLine("[b]");
 
-			var Action = Processor.CreateDelegateForString(@"
+			var Action = CpuThreadState.CreateDelegateForString(@"
 				li r1, 139264
 				li r2, 0x04000000
 				li r3, 0x77
@@ -153,16 +156,24 @@ namespace CSPspEmu.Sandbox
 
 			var Stopwatch = new Stopwatch();
 			Stopwatch.Start();
-			Action(Processor);
-			Action(Processor);
-			Action(Processor);
-			Action(Processor);
+			Action(CpuThreadState);
+			Action(CpuThreadState);
+			Action(CpuThreadState);
+			Action(CpuThreadState);
 			Stopwatch.Stop();
 
 			Console.WriteLine("%08X".Sprintf(Memory.Read4(0x04000000)));
 
 			Console.WriteLine(Stopwatch.Elapsed);
 			Console.WriteLine(Stopwatch.ElapsedMilliseconds);
+		}
+
+		static void ThreadTest()
+		{
+			var Memory = new LazyPspMemory();
+			var Processor = new Processor(Memory);
+			var CpuThreadState = new CpuThreadState(Processor);
+			var Thread = new HlePspThread(CpuThreadState);
 		}
 
 		/// <summary>
@@ -173,7 +184,10 @@ namespace CSPspEmu.Sandbox
 		/// <param name="args"></param>
 		static void Main(string[] args)
 		{
+			//var Processor = new Processor(new LazyPspMemory());
+			//Processor.TestLoadReg(Processor);
 			PerfTest();
+			//ThreadTest();
 			Console.ReadKey();
 			/*
 			Console.WriteLine("[1]");

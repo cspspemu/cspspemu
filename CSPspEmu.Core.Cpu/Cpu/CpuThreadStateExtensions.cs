@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using CSPspEmu.Core.Cpu.Cpu;
 using System.Reflection.Emit;
 using System.Threading;
+using CSPspEmu.Core.Debug;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -31,12 +32,12 @@ namespace CSPspEmu.Core.Cpu
 			ILGenerator.Emit(IsLikely ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
 		});
 
-		static public void ExecuteAssembly(this Processor Processor, String Assembly, bool BreakPoint = false)
+		static public void ExecuteAssembly(this CpuThreadState Processor, String Assembly, bool BreakPoint = false)
 		{
 			Processor.CreateDelegateForString(Assembly, BreakPoint)(Processor);
 		}
 
-		static public Action<Processor> CreateDelegateForString(this Processor Processor, String Assembly, bool BreakPoint = false)
+		static public Action<CpuThreadState> CreateDelegateForString(this CpuThreadState Processor, String Assembly, bool BreakPoint = false)
 		{
 			var MemoryStream = new MemoryStream();
 			MemoryStream.PreservePositionAndLock(() =>
@@ -48,7 +49,7 @@ namespace CSPspEmu.Core.Cpu
 			return Processor.CreateDelegateForPC(MemoryStream, 0);
 		}
 
-		static public Action<Processor> CreateDelegateForPC(this Processor Processor, Stream MemoryStream, uint EntryPC)
+		static public Action<CpuThreadState> CreateDelegateForPC(this CpuThreadState Processor, Stream MemoryStream, uint EntryPC)
 		{
 			//var MipsEmiter = new MipsEmiter();
 			var InstructionReader = new InstructionReader(MemoryStream);
@@ -166,19 +167,13 @@ namespace CSPspEmu.Core.Cpu
 			}
 
 			//if (BreakPoint) IsDebuggerPresentDebugBreak();
-			Action<Processor> Delegate = MipsMethodEmiter.CreateDelegate();
+			Action<CpuThreadState> Delegate = MipsMethodEmiter.CreateDelegate();
 			return Delegate;
 		}
 
 		static public void IsDebuggerPresentDebugBreak()
 		{
-			//if (IsDebuggerPresent()) DebugBreak();
+			//DebugUtils.IsDebuggerPresentDebugBreak();
 		}
-
-		[DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-		internal static extern bool IsDebuggerPresent();
-
-		[DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-		internal static extern void DebugBreak();
 	}
 }

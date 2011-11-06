@@ -57,8 +57,9 @@
     <Compile Include="Cpu\Emiter\MipsMethodEmiter.cs" />
     <Compile Include="Cpu\Instruction.cs" />
     <Compile Include="Cpu\InstructionReader.cs" />
+    <Compile Include="Cpu\CpuThreadState.cs" />
+    <Compile Include="Cpu\CpuThreadStateExtensions.cs" />
     <Compile Include="Cpu\Processor.cs" />
-    <Compile Include="Cpu\ProcessorExtensions.cs" />
     <Compile Include="Cpu\Switch\EmitLookupGenerator.cs" />
     <Compile Include="Cpu\Table\InstructionInfo.cs" />
     <Compile Include="Cpu\Table\InstructionTable.cs" />

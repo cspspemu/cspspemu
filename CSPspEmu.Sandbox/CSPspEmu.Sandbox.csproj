@@ -73,6 +73,14 @@
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Hle.Modules\CSPspEmu.Hle.Modules.csproj">
+      <Project>{295B7BF1-1130-4098-B0FC-00555DDB09DD}</Project>
+      <Name>CSPspEmu.Hle.Modules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Hle\CSPspEmu.Hle.csproj">
+      <Project>{288AF89E-B41A-4253-A8F7-43D1371516E9}</Project>
+      <Name>CSPspEmu.Hle</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

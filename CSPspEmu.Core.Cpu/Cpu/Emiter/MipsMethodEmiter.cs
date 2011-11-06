@@ -18,11 +18,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		//protected DynamicMethod DynamicMethod;
 		public ILGenerator ILGenerator;
 		protected String MethodName;
-		public Processor Processor;
+		public CpuThreadState CpuThreadState;
 		//static protected FieldInfo Field_GPR_Ptr = typeof(Processor).GetField("GPR_Ptr");
 		//static protected FieldInfo Field_FPR_Ptr = typeof(Processor).GetField("FPR_Ptr");
-		static protected FieldInfo Field_BranchFlag = typeof(Processor).GetField("BranchFlag");
-		static public MethodInfo Method_Syscall = typeof(Processor).GetMethod("Syscall");
+		static protected FieldInfo Field_BranchFlag = typeof(CpuThreadState).GetField("BranchFlag");
+		static public MethodInfo Method_Syscall = typeof(CpuThreadState).GetMethod("Syscall");
 		static private ulong UniqueCounter = 0;
 
 		static protected bool InitializedOnce = false;
@@ -35,9 +35,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		*/
 
-		public MipsMethodEmiter(MipsEmiter MipsEmiter, Processor Processor)
+		public MipsMethodEmiter(MipsEmiter MipsEmiter, CpuThreadState Processor)
 		{
-			this.Processor = Processor;
+			this.CpuThreadState = Processor;
 
 			if (!InitializedOnce)
 			{
@@ -45,8 +45,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				Field_FPRList = new FieldInfo[32];
 				for (int n = 0; n < 32; n++)
 				{
-					Field_GPRList[n] = typeof(Processor).GetField("GPR" + n);
-					Field_FPRList[n] = typeof(Processor).GetField("FPR" + n);
+					Field_GPRList[n] = typeof(CpuThreadState).GetField("GPR" + n);
+					Field_FPRList[n] = typeof(CpuThreadState).GetField("FPR" + n);
 				}
 
 				InitializedOnce = true;
@@ -58,7 +58,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				name           : MethodName = "method" + UniqueCounter,
 				attributes     : MethodAttributes.Static | MethodAttributes.Public | MethodAttributes.UnmanagedExport | MethodAttributes.Final,
 				returnType     : typeof(void),
-				parameterTypes : new Type[] { typeof(Processor) }
+				parameterTypes : new Type[] { typeof(CpuThreadState) }
 			);
 			ILGenerator = MethodBuilder.GetILGenerator();
 		}
@@ -212,12 +212,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 
-		public Action<Processor> CreateDelegate()
+		public Action<CpuThreadState> CreateDelegate()
 		{
 			ILGenerator.Emit(OpCodes.Ret);
 
 			var Type = TypeBuilder.CreateType();
-			return (Action<Processor>)Delegate.CreateDelegate(typeof(Action<Processor>), Type.GetMethod(MethodName));
+			return (Action<CpuThreadState>)Delegate.CreateDelegate(typeof(Action<CpuThreadState>), Type.GetMethod(MethodName));
 			//return (Action<Processor>)DynamicMethod.CreateDelegate(typeof(Action<Processor>));
 		}
 	}

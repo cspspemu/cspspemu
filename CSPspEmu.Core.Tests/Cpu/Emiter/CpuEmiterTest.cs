@@ -14,29 +14,39 @@ namespace CSPspEmu.Core.Tests
 	[TestClass]
 	unsafe public class CpuEmiterTest
 	{
+		protected AbstractPspMemory Memory;
+		protected Processor Processor;
+		protected CpuThreadState CpuThreadState;
+
+		[TestInitialize]
+		public void SetUp()
+		{
+			Memory = new LazyPspMemory();
+			Processor = new Processor(Memory);
+			CpuThreadState = new CpuThreadState(Processor);
+		}
+
 		[TestMethod]
 		public void ArithmeticTest()
 		{
-			var Processor = new Processor(new LazyPspMemory());
+			CpuThreadState.GPR[1] = -1;
+			CpuThreadState.GPR[2] = -1;
+			CpuThreadState.GPR[3] = -1;
+			CpuThreadState.GPR[4] = -1;
+			CpuThreadState.GPR[11] = 11;
+			CpuThreadState.GPR[12] = 12;
 
-			Processor.GPR[1] = -1;
-			Processor.GPR[2] = -1;
-			Processor.GPR[3] = -1;
-			Processor.GPR[4] = -1;
-			Processor.GPR[11] = 11;
-			Processor.GPR[12] = 12;
-
-			Processor.ExecuteAssembly(@"
+			CpuThreadState.ExecuteAssembly(@"
 				add  r1, r0, r11
 				add  r2, r0, r12
 				sub  r3, r2, r1
 				addi r4, r0, 1234
 			");
 
-			Assert.AreEqual(11, Processor.GPR[1]);
-			Assert.AreEqual(12, Processor.GPR[2]);
-			Assert.AreEqual(1, Processor.GPR[3]);
-			Assert.AreEqual(1234, Processor.GPR[4]);
+			Assert.AreEqual(11, CpuThreadState.GPR[1]);
+			Assert.AreEqual(12, CpuThreadState.GPR[2]);
+			Assert.AreEqual(1, CpuThreadState.GPR[3]);
+			Assert.AreEqual(1234, CpuThreadState.GPR[4]);
 		}
 
 		[TestMethod]
@@ -44,19 +54,17 @@ namespace CSPspEmu.Core.Tests
 		{
 			var Events = new List<int>();
 
-			var Processor = new Processor(new LazyPspMemory());
-
-			Processor.RegisterNativeSyscall(1, () =>
+			CpuThreadState.RegisterNativeSyscall(1, () =>
 			{
 				Events.Add(1);
 			});
 
-			Processor.RegisterNativeSyscall(1000, () =>
+			CpuThreadState.RegisterNativeSyscall(1000, () =>
 			{
 				Events.Add(1000);
 			});
 
-			Processor.ExecuteAssembly(@"
+			CpuThreadState.ExecuteAssembly(@"
 				syscall 1
 				syscall 1000
 			");
@@ -67,9 +75,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void BranchTest()
 		{
-			var Processor = new Processor(new LazyPspMemory());
-
-			Processor.ExecuteAssembly(@"
+			CpuThreadState.ExecuteAssembly(@"
 				beq r3, r0, label1
 				li r3, 1
 				li r1, 1
@@ -79,7 +85,7 @@ namespace CSPspEmu.Core.Tests
 
 			Assert.AreEqual(
 				"[0,1,1]",
-				Processor.GPRList(1, 2, 3).ToJson()
+				CpuThreadState.GPRList(1, 2, 3).ToJson()
 			);
 
 			//Assert.AreEqual("[1,1000]", Events.ToJson());
@@ -88,9 +94,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void Branch2Test()
 		{
-			var Processor = new Processor(new LazyPspMemory());
-
-			Processor.ExecuteAssembly(@"
+			CpuThreadState.ExecuteAssembly(@"
 				li r1, 1
 				beq r0, r0, label1 ; Taken. Should skip a +1 and the r2=1
 				addi r1, r1, 1
@@ -100,16 +104,14 @@ namespace CSPspEmu.Core.Tests
 				nop
 			");
 
-			Assert.AreEqual(2, Processor.GPR[1]);
-			Assert.AreEqual(0, Processor.GPR[2]);
+			Assert.AreEqual(2, CpuThreadState.GPR[1]);
+			Assert.AreEqual(0, CpuThreadState.GPR[2]);
 		}
 
 		[TestMethod]
 		public void BranchLikelyTest()
 		{
-			var Processor = new Processor(new LazyPspMemory());
-
-			Processor.ExecuteAssembly(@"
+			CpuThreadState.ExecuteAssembly(@"
 				li r1, 1
 				beql r1, r1, label1 ; Taken. The delayed branch is executed.
 				li r2, 1
@@ -120,15 +122,13 @@ namespace CSPspEmu.Core.Tests
 				nop
 			");
 
-			Assert.AreEqual(1, Processor.GPR[2]);
-			Assert.AreEqual(0, Processor.GPR[3]);
+			Assert.AreEqual(1, CpuThreadState.GPR[2]);
+			Assert.AreEqual(0, CpuThreadState.GPR[3]);
 		}
 
 		[TestMethod]
 		public void BranchFullTest()
 		{
-			var Processor = new Processor(new LazyPspMemory());
-
 			var RegsV = new String[] {
 				"r10, r10",
 				"r10, r11",
@@ -154,7 +154,7 @@ namespace CSPspEmu.Core.Tests
 				var Results = new List<int>();
 				foreach (var Regs in RegsList)
 				{
-					Processor.ExecuteAssembly(
+					CpuThreadState.ExecuteAssembly(
 						@"
 							li r10, -1
 							li r11,  0
@@ -181,7 +181,7 @@ namespace CSPspEmu.Core.Tests
 						.Replace("%REGS%", Regs)
 					);
 
-					Results.Add(Processor.GPR[1]);
+					Results.Add(CpuThreadState.GPR[1]);
 				}
 
 				return Results;
@@ -199,9 +199,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void LoopTest()
 		{
-			var Processor = new Processor(new LazyPspMemory());
-
-			Processor.ExecuteAssembly(@"
+			CpuThreadState.ExecuteAssembly(@"
 				li r1, 10
 				li r2, 0
 			loop:
@@ -210,51 +208,45 @@ namespace CSPspEmu.Core.Tests
 				addi r1, r1, -1
 			");
 
-			Assert.AreEqual(-1, Processor.GPR[1]);
-			Assert.AreEqual(11, Processor.GPR[2]);
+			Assert.AreEqual(-1, CpuThreadState.GPR[1]);
+			Assert.AreEqual(11, CpuThreadState.GPR[2]);
 		}
 
 		[TestMethod]
 		public void BitrevTest()
 		{
-			var Processor = new Processor(new LazyPspMemory());
-
-			Processor.ExecuteAssembly(@"
+			CpuThreadState.ExecuteAssembly(@"
 				li r1, 0b_00000011111101111101111011101101
 				bitrev r2, r1
 			");
 
-			Assert.AreEqual("00000011111101111101111011101101", "%032b".Sprintf(Processor.GPR[1]));
-			Assert.AreEqual("10110111011110111110111111000000", "%032b".Sprintf(Processor.GPR[2]));
+			Assert.AreEqual("00000011111101111101111011101101", "%032b".Sprintf(CpuThreadState.GPR[1]));
+			Assert.AreEqual("10110111011110111110111111000000", "%032b".Sprintf(CpuThreadState.GPR[2]));
 		}
 
 		[TestMethod]
 		public void LoadStoreTest()
 		{
-			var Processor = new Processor(new LazyPspMemory());
-
-			Processor.ExecuteAssembly(@"
+			CpuThreadState.ExecuteAssembly(@"
 				li r1, 0x12345678
 				li r2, 0x88000000
 				sw r1, 0(r2)
 				lb r3, 0(r2)          ; Little Endian
 			");
 			
-			Assert.AreEqual("12345678", "%08X".Sprintf(Processor.GPR[1]));
-			Assert.AreEqual("88000000", "%08X".Sprintf(Processor.GPR[2]));
-			Assert.AreEqual("00000078", "%08X".Sprintf(Processor.GPR[3]));
+			Assert.AreEqual("12345678", "%08X".Sprintf(CpuThreadState.GPR[1]));
+			Assert.AreEqual("88000000", "%08X".Sprintf(CpuThreadState.GPR[2]));
+			Assert.AreEqual("00000078", "%08X".Sprintf(CpuThreadState.GPR[3]));
 		}
 
 		[TestMethod]
 		public void FloatTest()
 		{
-			var Processor = new Processor(new LazyPspMemory());
+			CpuThreadState.FPR[29] = 81.0f;
+			CpuThreadState.FPR[30] = -1.0f;
+			CpuThreadState.FPR[31] = 3.5f;
 
-			Processor.FPR[29] = 81.0f;
-			Processor.FPR[30] = -1.0f;
-			Processor.FPR[31] = 3.5f;
-
-			Processor.ExecuteAssembly(@"
+			CpuThreadState.ExecuteAssembly(@"
 				; Unary
 				mov.s  f0, f30
 				neg.s  f1, f31
@@ -268,14 +260,14 @@ namespace CSPspEmu.Core.Tests
 			");
 
 			// Unary
-			Assert.AreEqual(Processor.FPR[0], Processor.FPR[30]);
-			Assert.AreEqual(Processor.FPR[1], -Processor.FPR[31]);
-			Assert.AreEqual(Processor.FPR[2], Math.Sqrt(Processor.FPR[29]));
-			Assert.AreEqual(Processor.FPR[3], Math.Abs(Processor.FPR[30]));
-			Assert.AreEqual(Processor.FPR[4], Math.Abs(Processor.FPR[31]));
+			Assert.AreEqual(CpuThreadState.FPR[0], CpuThreadState.FPR[30]);
+			Assert.AreEqual(CpuThreadState.FPR[1], -CpuThreadState.FPR[31]);
+			Assert.AreEqual(CpuThreadState.FPR[2], Math.Sqrt(CpuThreadState.FPR[29]));
+			Assert.AreEqual(CpuThreadState.FPR[3], Math.Abs(CpuThreadState.FPR[30]));
+			Assert.AreEqual(CpuThreadState.FPR[4], Math.Abs(CpuThreadState.FPR[31]));
 
-			Assert.AreEqual(Processor.FPR[10], Processor.FPR[30] + Processor.FPR[31]);
-			Assert.AreEqual(Processor.FPR[11], Processor.FPR[30] - Processor.FPR[31]);
+			Assert.AreEqual(CpuThreadState.FPR[10], CpuThreadState.FPR[30] + CpuThreadState.FPR[31]);
+			Assert.AreEqual(CpuThreadState.FPR[11], CpuThreadState.FPR[30] - CpuThreadState.FPR[31]);
 		}
 	}
 }
