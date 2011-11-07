@@ -55,6 +55,10 @@ namespace CSPspEmu.Core.Cpu
 		// CODE
 		public uint CODE { get { return get(6, 20); } set { set(6, 20, value); } }
 
+		public uint POS { get { return get(6 + 5 * 0, 5); } set { set(6 + 5 * 0, 5, value); } }
+		public uint LSB { get { return get(6 + 5 * 0, 5); } set { set(6 + 5 * 0, 5, value); } }
+		public uint MSB { get { return get(6 + 5 * 1, 5); } set { set(6 + 5 * 1, 5, value); } }
+
 		public uint GetBranchAddress(uint PC)
 		{
 			return (uint)(PC + IMM * 4);

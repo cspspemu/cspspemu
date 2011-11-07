@@ -175,7 +175,7 @@ namespace CSPspEmu.Core.Cpu
 			}
 			else
 			{
-				Console.WriteLine("Undefined syscall: {0}", Code);
+				Console.WriteLine("Undefined syscall: {0:X}", Code);
 			}
 		}
 

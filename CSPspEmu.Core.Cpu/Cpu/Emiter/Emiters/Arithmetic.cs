@@ -86,22 +86,56 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Shift Left/Right Logical/Arithmethic (Variable).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 
-		public void sll() { throw (new NotImplementedException()); }
-		public void sllv() { throw(new NotImplementedException()); }
-		public void sra() { throw(new NotImplementedException()); }
-		public void srav() { throw(new NotImplementedException()); }
-		public void srl() { throw(new NotImplementedException()); }
-		public void srlv() { throw(new NotImplementedException()); }
+		public void sll() {
+			MipsMethodEmiter.OP_2REG_IMMU(RD, RT, Instruction.POS, OpCodes.Shl);
+		}
+		public void sllv() {
+			MipsMethodEmiter.OP_3REG(RD, RT, RS, OpCodes.Shl);
+		}
+		public void sra() {
+			MipsMethodEmiter.OP_2REG_IMMU(RD, RT, Instruction.POS, OpCodes.Shr);
+		}
+		public void srav() {
+			MipsMethodEmiter.OP_3REG(RD, RT, RS, OpCodes.Shr);
+		}
+		public void srl() {
+			MipsMethodEmiter.OP_2REG_IMMU(RD, RT, Instruction.POS, OpCodes.Shr_Un);
+		}
+		public void srlv() {
+			MipsMethodEmiter.OP_3REG(RD, RT, RS, OpCodes.Shr_Un);
+		}
 		public void rotr() { throw(new NotImplementedException()); }
 		public void rotrv() { throw(new NotImplementedException()); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Set Less Than (Immediate) (Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void slt() { throw (new NotImplementedException()); }
-		public void slti() { throw(new NotImplementedException()); }
-		public void sltu() { throw(new NotImplementedException()); }
-		public void sltiu() { throw(new NotImplementedException()); }
+		public void slt() {
+			MipsMethodEmiter.SaveGPR(RD, () =>
+			{
+				MipsMethodEmiter.LoadGPR(RS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_I4);
+				MipsMethodEmiter.LoadGPR(RT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_I4);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Clt);
+			});
+		}
+		public void sltu()
+		{
+			MipsMethodEmiter.SaveGPR(RD, () =>
+			{
+				MipsMethodEmiter.LoadGPR(RS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_U4);
+				MipsMethodEmiter.LoadGPR(RT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_U4);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Clt);
+			});
+		}
+
+		public void slti() {
+			MipsMethodEmiter.OP_2REG_IMM(RT, RS, (short)Instruction.IMM, OpCodes.Clt);
+		}
+		public void sltiu() { MipsMethodEmiter.OP_2REG_IMMU(RT, RS, Instruction.IMMU, OpCodes.Clt); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Load Upper Immediate.
@@ -148,8 +182,34 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// DIVide (Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void div() { throw (new NotImplementedException()); }
-		public void divu() { throw(new NotImplementedException()); }
+		public void div() {
+			MipsMethodEmiter.SaveHI(() =>
+			{
+				MipsMethodEmiter.LoadGPR_Signed(RS);
+				MipsMethodEmiter.LoadGPR_Signed(RT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Rem);
+			});
+			MipsMethodEmiter.SaveLO(() =>
+			{
+				MipsMethodEmiter.LoadGPR_Signed(RS);
+				MipsMethodEmiter.LoadGPR_Signed(RT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Div);
+			});
+		}
+		public void divu() {
+			MipsMethodEmiter.SaveHI(() =>
+			{
+				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmiter.LoadGPR_Unsigned(RT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Rem);
+			});
+			MipsMethodEmiter.SaveLO(() =>
+			{
+				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmiter.LoadGPR_Unsigned(RT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Div);
+			});
+		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// MULTiply (Unsigned).
@@ -168,10 +228,30 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move To/From HI/LO.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void mfhi() { throw (new NotImplementedException()); }
-		public void mflo() { throw(new NotImplementedException()); }
-		public void mthi() { throw(new NotImplementedException()); }
-		public void mtlo() { throw(new NotImplementedException()); }
+		public void mfhi() {
+			MipsMethodEmiter.SaveGPR(RD, () =>
+			{
+				MipsMethodEmiter.LoadHI();
+			});
+		}
+		public void mflo() {
+			MipsMethodEmiter.SaveGPR(RD, () =>
+			{
+				MipsMethodEmiter.LoadLO();
+			});
+		}
+		public void mthi() {
+			MipsMethodEmiter.SaveHI(() =>
+			{
+				MipsMethodEmiter.LoadGPR(RS);
+			});
+		}
+		public void mtlo() {
+			MipsMethodEmiter.SaveLO(() =>
+			{
+				MipsMethodEmiter.LoadGPR(RS);
+			});
+		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move if Zero/Non zero.

@@ -291,5 +291,84 @@ namespace CSPspEmu.Core.Tests
 			Assert.AreEqual(4 * 4, (int)CpuThreadState.GPR[31]);
 			Assert.AreEqual(5 * 4, (int)CpuThreadState.PC);
 		}
+
+		[TestMethod]
+		public void ShiftTest()
+		{
+			CpuThreadState.ExecuteAssembly(@"
+				li   r10, 0b_10110111011110111110111111000000
+				li   r11, 0b_01011011101111011111011111100000
+				li   r12, 7
+
+				sll  r1, r10, 7
+				sllv r2, r10, r12
+				srl  r3, r10, 7
+				srlv r4, r10, r12
+				sra  r5, r10, 7
+				srav r6, r10, r12
+				sra  r7, r11, 7
+				srav r8, r11, r12
+			");
+
+			// Check input not modified.
+			Assert.AreEqual("10110111011110111110111111000000", "%032b".Sprintf(CpuThreadState.GPR[10]));
+			Assert.AreEqual(7, CpuThreadState.GPR[12]);
+
+			Assert.AreEqual("10111101111101111110000000000000", "%032b".Sprintf(CpuThreadState.GPR[1]));
+			Assert.AreEqual("10111101111101111110000000000000", "%032b".Sprintf(CpuThreadState.GPR[2]));
+			Assert.AreEqual("00000001011011101111011111011111", "%032b".Sprintf(CpuThreadState.GPR[3]));
+			Assert.AreEqual("00000001011011101111011111011111", "%032b".Sprintf(CpuThreadState.GPR[4]));
+			Assert.AreEqual("11111111011011101111011111011111", "%032b".Sprintf(CpuThreadState.GPR[5]));
+			Assert.AreEqual("11111111011011101111011111011111", "%032b".Sprintf(CpuThreadState.GPR[6]));
+			Assert.AreEqual("00000000101101110111101111101111", "%032b".Sprintf(CpuThreadState.GPR[7]));
+			Assert.AreEqual("00000000101101110111101111101111", "%032b".Sprintf(CpuThreadState.GPR[8]));
+		}
+
+		[TestMethod]
+		public void SetLessThanTest()
+		{
+			CpuThreadState.ExecuteAssembly(@"
+				li r1, 0x77777777
+				li r10, 0
+				li r11, -100
+				li r12, +100
+				sltiu r1, r10, 0
+				sltiu r2, r10, 7
+				sltiu r3, r11, -200
+				slti  r4, r11, -200
+			");
+
+			Assert.AreEqual(0, CpuThreadState.GPR[1]);
+			Assert.AreEqual(1, CpuThreadState.GPR[2]);
+			Assert.AreEqual(1, CpuThreadState.GPR[3]);
+			Assert.AreEqual(0, CpuThreadState.GPR[4]);
+		}
+
+		[TestMethod]
+		public void SetMultTest()
+		{
+			CpuThreadState.ExecuteAssembly(@"
+				li r10, 100
+				li r11, 12
+				div r10, r11
+				mflo r20
+				mfhi r21
+			");
+
+			Assert.AreEqual(4, (int)CpuThreadState.HI);
+			Assert.AreEqual(8, (int)CpuThreadState.LO);
+			Assert.AreEqual((uint)CpuThreadState.GPR[20], (uint)CpuThreadState.LO);
+			Assert.AreEqual((uint)CpuThreadState.GPR[21], (uint)CpuThreadState.HI);
+		}
+
+		[TestMethod]
+		public void TrySet0()
+		{
+			CpuThreadState.ExecuteAssembly(@"
+				li r0, 0x12345678
+			");
+
+			Assert.AreEqual(0, CpuThreadState.GPR[0]);
+		}
 	}
 }

@@ -20,7 +20,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void cache() { throw(new NotImplementedException()); }
 		public void sync() { throw(new NotImplementedException()); }
 
-		public void _break() { throw(new NotImplementedException()); }
+		public void _break() {
+			//throw(new NotImplementedException());
+		}
 		public void dbreak() { throw(new NotImplementedException()); }
 		public void halt() { throw(new NotImplementedException()); }
 

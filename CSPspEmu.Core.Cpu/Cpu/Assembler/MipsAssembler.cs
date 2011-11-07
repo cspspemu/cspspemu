@@ -102,6 +102,11 @@ namespace CSPspEmu.Core.Cpu.Assembler
 				}
 			}
 
+			if (LineChunks.Count > 0)
+			{
+				throw (new InvalidDataException("Unexpected token '" + LineChunks.Dequeue() + "' on '" + Line + "' for format '" + Format + "'"));
+			}
+
 			return Matches;
 		}
 
@@ -130,7 +135,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			{
 				return Convert.ToInt32(RegisterName.Substring(1));
 			}
-			throw(new InvalidDataException());
+			throw(new InvalidDataException("Invalid Register Name '" + RegisterName + "'"));
 		}
 
 		public int ParseIntegerConstant(String Value)
@@ -183,27 +188,32 @@ namespace CSPspEmu.Core.Cpu.Assembler
 				var Matches = MatchFormat(InstructionInfo.AsmEncoding, LineTokens[1]);
 				foreach (var Match in Matches)
 				{
-					switch (Match.Item1)
+					var Key = Match.Item1;
+					var Value = Match.Item2;
+
+					switch (Key)
 					{
-						case "%S": Instruction.FS = ParseFprName(Match.Item2); break;
-						case "%D": Instruction.FD = ParseFprName(Match.Item2); break;
-						case "%T": Instruction.FT = ParseFprName(Match.Item2); break;
+						case "%S": Instruction.FS = ParseFprName(Value); break;
+						case "%D": Instruction.FD = ParseFprName(Value); break;
+						case "%T": Instruction.FT = ParseFprName(Value); break;
 
 						case "%J":
-						case "%s": Instruction.RS = ParseGprName(Match.Item2); break;
-						case "%d": Instruction.RD = ParseGprName(Match.Item2); break;
-						case "%t": Instruction.RT = ParseGprName(Match.Item2); break;
+						case "%s": Instruction.RS = ParseGprName(Value); break;
+						case "%d": Instruction.RD = ParseGprName(Value); break;
+						case "%t": Instruction.RT = ParseGprName(Value); break;
 
-						case "%C": Instruction.CODE = (uint)ParseIntegerConstant(Match.Item2); break;
-						case "%i": Instruction.IMM = ParseIntegerConstant(Match.Item2); break;
-						case "%I": Instruction.IMMU = (uint)ParseIntegerConstant(Match.Item2); break;
+						case "%a": Instruction.POS = (uint)ParseIntegerConstant(Value); break;
+
+						case "%C": Instruction.CODE = (uint)ParseIntegerConstant(Value); break;
+						case "%i": Instruction.IMM = ParseIntegerConstant(Value); break;
+						case "%I": Instruction.IMMU = (uint)ParseIntegerConstant(Value); break;
 						case "%j":
-							Patches.Add(new Patch() { Address = PC, LabelName = Match.Item2, Type = PatchType.ABS_26 });
+							Patches.Add(new Patch() { Address = PC, LabelName = Value, Type = PatchType.ABS_26 });
 						break;
 						case "%O":
-							Patches.Add(new Patch() { Address = PC, LabelName = Match.Item2, Type = PatchType.REL_16 });
+						Patches.Add(new Patch() { Address = PC, LabelName = Value, Type = PatchType.REL_16 });
 						break;
-						default: throw (new InvalidDataException("Unknown format '" + Match.Item1 + "' <-- (" + InstructionInfo.AsmEncoding + ")"));
+						default: throw (new InvalidDataException("Unknown format '" + Key + "' <-- (" + InstructionInfo.AsmEncoding + ")"));
 					}
 				}
 				/*
