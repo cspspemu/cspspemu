@@ -18,44 +18,68 @@ namespace CSPspEmu.Hle
 		protected MethodCache MethodCache;
 		protected int MinimalInstructionCountForYield = 1000000;
 		public int Id;
+		public Status CurrentStatus;
+		public WaitType CurrentWaitType;
+		public DateTime AwakeOnTime;
+
+		public enum WaitType
+		{
+			None = 0,
+			Timer = 1,
+		}
+
+		public enum Status {
+			Running = 1,
+			Ready = 2,
+			Waiting = 4,
+			Suspend = 8,
+			Stopped = 16,
+			Killed = 32,
+		}
 
 		public HlePspThread(CpuThreadState CpuThreadState)
 		{
 			this.GreenThread = new GreenThread();
 			this.CpuThreadState = CpuThreadState;
 			this.MethodCache = CpuThreadState.Processor.MethodCache;
-			GreenThread.InitAndStartStopped(() =>
+			this.PrepareThread();
+		}
+
+		protected void PrepareThread()
+		{
+			GreenThread.InitAndStartStopped(MainLoop);
+		}
+
+		protected void MainLoop()
+		{
+			while (true)
 			{
-				while (true)
+				//Console.WriteLine("aa");
+				GetDelegateAt(CpuThreadState.PC)(CpuThreadState);
+			}
+			/*
+			long InstructionCountAfterLastYield = 0;
+			while (true)
+			{
+				GetDelegateAt(CpuThreadState.PC)(CpuThreadState);
+
+				int CurrentStepInstructionCount = CpuThreadState.StepInstructionCount;
+				CpuThreadState.TotalInstructionCount += CurrentStepInstructionCount;
+				InstructionCountAfterLastYield += CurrentStepInstructionCount;
+
+				CpuThreadState.StepInstructionCount = 0;
+				//Console.WriteLine(CurrentStepInstructionCount);
+
+				if (InstructionCountAfterLastYield >= MinimalInstructionCountForYield)
 				{
-					//Console.WriteLine("aa");
-					GetDelegateAt(CpuThreadState.PC)(CpuThreadState);
-					//Console.WriteLine(CpuThreadState.StepInstructionCount);
+					GreenThread.Yield();
+					InstructionCountAfterLastYield = 0;
 				}
-				/*
-				long InstructionCountAfterLastYield = 0;
-				while (true)
-				{
-					GetDelegateAt(CpuThreadState.PC)(CpuThreadState);
 
-					int CurrentStepInstructionCount = CpuThreadState.StepInstructionCount;
-					CpuThreadState.TotalInstructionCount += CurrentStepInstructionCount;
-					InstructionCountAfterLastYield += CurrentStepInstructionCount;
-
-					CpuThreadState.StepInstructionCount = 0;
-					//Console.WriteLine(CurrentStepInstructionCount);
-
-					if (InstructionCountAfterLastYield >= MinimalInstructionCountForYield)
-					{
-						GreenThread.Yield();
-						InstructionCountAfterLastYield = 0;
-					}
-
-					//Console.WriteLine(CpuThreadState.StepInstructionCount);
-					//GreenThread.Yield();
-				}
-				*/
-			});
+				//Console.WriteLine(CpuThreadState.StepInstructionCount);
+				//GreenThread.Yield();
+			}
+			*/
 		}
 
 		public Action<CpuThreadState> GetDelegateAt(uint PC)

@@ -54,12 +54,12 @@ namespace CSPspEmu.Core.Tests
 		{
 			var Events = new List<int>();
 
-			CpuThreadState.RegisterNativeSyscall(1, () =>
+			Processor.RegisterNativeSyscall(1, () =>
 			{
 				Events.Add(1);
 			});
 
-			CpuThreadState.RegisterNativeSyscall(1000, () =>
+			Processor.RegisterNativeSyscall(1000, () =>
 			{
 				Events.Add(1000);
 			});
@@ -369,6 +369,17 @@ namespace CSPspEmu.Core.Tests
 			");
 
 			Assert.AreEqual(0, CpuThreadState.GPR[0]);
+		}
+
+		[TestMethod]
+		public void TryDecWithAdd()
+		{
+			CpuThreadState.ExecuteAssembly(@"
+				li r1, 100
+				addiu r1, r1, -1
+			");
+
+			Assert.AreEqual(99, CpuThreadState.GPR[1]);
 		}
 	}
 }

@@ -37,7 +37,7 @@ namespace CSPspEmu.Core.Cpu.Table
 			});
 		}
 
-		static public Func<uint, TType, TRetType> GenerateSwitchDelegateReturn<TType, TRetType>(IEnumerable<InstructionInfo> InstructionInfoList, Func<String, String> NameConverter = null)
+		static public Func<uint, TType, TRetType> GenerateSwitchDelegateReturn<TType, TRetType>(IEnumerable<InstructionInfo> InstructionInfoList, Func<String, String> NameConverter = null, bool ThrowOnUnexistent = true)
 		{
 			if (NameConverter == null)
 			{
@@ -53,7 +53,16 @@ namespace CSPspEmu.Core.Cpu.Table
 				var InstructionInfoName = NameConverter((InstructionInfo != null) ? InstructionInfo.Name : "Default");
 				ILGenerator.Emit(OpCodes.Ldarg_1);
 				var MethodInfo = typeof(TType).GetMethod(InstructionInfoName);
-				if (MethodInfo == null) throw (new Exception("Cannot find method '" + InstructionInfoName + "' on type '" + typeof(TType).Name + "'"));
+
+				if (MethodInfo == null && !ThrowOnUnexistent)
+				{
+					MethodInfo = typeof(TType).GetMethod("unhandled");
+				}
+
+				if (MethodInfo == null)
+				{
+					throw (new Exception("Cannot find method '" + InstructionInfoName + "' on type '" + typeof(TType).Name + "'"));
+				}
 				ILGenerator.Emit(OpCodes.Call, MethodInfo);
 			});
 		}

@@ -26,6 +26,25 @@ namespace CSPspEmu.Core.Cpu
 		public uint GPR0, GPR1, GPR2, GPR3, GPR4, GPR5, GPR6, GPR7, GPR8, GPR9, GPR10, GPR11, GPR12, GPR13, GPR14, GPR15, GPR16, GPR17, GPR18, GPR19, GPR20, GPR21, GPR22, GPR23, GPR24, GPR25, GPR26, GPR27, GPR28, GPR29, GPR30, GPR31;
 		public float FPR0, FPR1, FPR2, FPR3, FPR4, FPR5, FPR6, FPR7, FPR8, FPR9, FPR10, FPR11, FPR12, FPR13, FPR14, FPR15, FPR16, FPR17, FPR18, FPR19, FPR20, FPR21, FPR22, FPR23, FPR24, FPR25, FPR26, FPR27, FPR28, FPR29, FPR30, FPR31;
 
+		// http://msdn.microsoft.com/en-us/library/ms253512(v=vs.80).aspx
+		public uint GP
+		{
+			get { return GPR28; }
+			set { GPR28 = value; }
+		}
+
+		public uint SP
+		{
+			get { return GPR29; }
+			set { GPR29 = value; }
+		}
+
+		public uint RA
+		{
+			get { return GPR31; }
+			set { GPR31 = value; }
+		}
+
 		/*
 		public struct FixedRegisters
 		{
@@ -153,36 +172,17 @@ namespace CSPspEmu.Core.Cpu
 		}
 		*/
 
-		Dictionary<int, Action<int, CpuThreadState>> RegisteredNativeSyscalls = new Dictionary<int, Action<int, CpuThreadState>>();
-
-		public CpuThreadState RegisterNativeSyscall(int Code, Action Callback)
-		{
-			return RegisterNativeSyscall(Code, (_Code, _Processor) => Callback());
-		}
-
-		public CpuThreadState RegisterNativeSyscall(int Code, Action<int, CpuThreadState> Callback)
-		{
-			RegisteredNativeSyscalls[Code] = Callback;
-			return this;
-		}
-
 		public void Syscall(int Code)
 		{
-			Action<int, CpuThreadState> Callback;
-			if (RegisteredNativeSyscalls.TryGetValue(Code, out Callback))
-			{
-				Callback(Code, this);
-			}
-			else
-			{
-				Console.WriteLine("Undefined syscall: {0:X}", Code);
-			}
+			Processor.Syscall(Code, this);
 		}
 
+		/*
 		static public void TestMemset(CpuThreadState Processor)
 		{
 			*((byte*)Processor.GetMemoryPtr(0x04000000)) = 0x77;
 		}
+		*/
 
 		public void Yield()
 		{

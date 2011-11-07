@@ -323,7 +323,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 					switch (Patch.Type)
 					{
 						case PatchType.REL_16:
-							Instruction.IMM = ((int)LabelAddress - (int)Patch.Address) / 4;
+							Instruction.IMM = ((int)LabelAddress - (int)Patch.Address - 4) / 4;
 							break;
 						case PatchType.ABS_26:
 							Instruction.JUMP = (LabelAddress & 0x1FFFFFFF) / 4;

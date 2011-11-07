@@ -61,7 +61,7 @@ namespace CSPspEmu.Core.Cpu
 
 		public uint GetBranchAddress(uint PC)
 		{
-			return (uint)(PC + IMM * 4);
+			return (uint)(PC + 4 + IMM * 4);
 		}
 
 		// Immediate 7 bits.

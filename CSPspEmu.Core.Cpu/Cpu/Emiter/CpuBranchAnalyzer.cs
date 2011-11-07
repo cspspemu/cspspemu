@@ -13,13 +13,15 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 		{
 			NormalInstruction = (1 << 0),
 			BranchOrJumpInstruction = (1 << 1),
-			JumpInstruction = (1 << 2),
-			JumpAlways = (1 << 3),
-			Likely = (1 << 4),
-			AndLink = (1 << 5),
+			SyscallInstruction = (1 << 2),
+			JumpInstruction = (1 << 3),
+
+			JumpAlways = (1 << 10),
+			Likely = (1 << 11),
+			AndLink = (1 << 12),
 
 			FixedJump = 0,
-			DynamicJump = (1 << 6),
+			DynamicJump = (1 << 20),
 		}
 
 		public Flags bvf() { throw (new NotImplementedException()); }
@@ -57,6 +59,9 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 		public Flags bc1fl() { throw (new NotImplementedException()); }
 		public Flags bc1tl() { throw (new NotImplementedException()); }
 
-		public Flags unknown() { return Flags.NormalInstruction; }
+		public Flags syscall() { return Flags.SyscallInstruction; }
+
+		public Flags unhandled() { return Flags.NormalInstruction; }
+		public Flags unknown() { throw (new InvalidOperationException()); }
 	}
 }

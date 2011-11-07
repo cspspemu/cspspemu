@@ -22,16 +22,7 @@ namespace CSPspEmu.Core.Cpu
 	{
 		static public MipsEmiter MipsEmiter = new MipsEmiter();
 		static public Action<uint, CpuEmiter> CpuEmiterInstruction = EmitLookupGenerator.GenerateSwitchDelegate<CpuEmiter>(InstructionTable.ALL);
-		//static public Func<uint, bool> IsDelayedBranchInstruction = EmitLookupGenerator.GenerateSwitchDelegateReturn<bool>(InstructionTable.ALL, (ILGenerator, InstructionInfo) =>
-		/*
-		static public Func<uint, bool> IsDelayedBranchInstruction = EmitLookupGenerator.GenerateSwitchDelegateReturn<bool>(InstructionTable.ALL_BRANCHES, (ILGenerator, InstructionInfo) =>
-		{
-			var IsBranch = ((InstructionInfo != null) && (InstructionInfo.InstructionType & InstructionType.B) != 0);
-			ILGenerator.Emit(IsBranch ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
-		});
-		*/
-
-		static public Func<uint, CpuBranchAnalyzer.Flags> GetBranchInfo = EmitLookupGenerator.GenerateInfoDelegate<CpuBranchAnalyzer, CpuBranchAnalyzer.Flags>(EmitLookupGenerator.GenerateSwitchDelegateReturn<CpuBranchAnalyzer, CpuBranchAnalyzer.Flags>(InstructionTable.ALL_BRANCHES), new CpuBranchAnalyzer());
+		static public Func<uint, CpuBranchAnalyzer.Flags> GetBranchInfo = EmitLookupGenerator.GenerateInfoDelegate<CpuBranchAnalyzer, CpuBranchAnalyzer.Flags>(EmitLookupGenerator.GenerateSwitchDelegateReturn<CpuBranchAnalyzer, CpuBranchAnalyzer.Flags>(InstructionTable.ALL, ThrowOnUnexistent: false), new CpuBranchAnalyzer());
 
 		static public void ExecuteAssembly(this CpuThreadState Processor, String Assembly, bool BreakPoint = false)
 		{
@@ -55,10 +46,10 @@ namespace CSPspEmu.Core.Cpu
 			};
 		}
 
-		static public Action<CpuThreadState> CreateDelegateForPC(this CpuThreadState Processor, Stream MemoryStream, uint EntryPC)
+		static public Action<CpuThreadState> CreateDelegateForPC(this CpuThreadState CpuThreadState, Stream MemoryStream, uint EntryPC)
 		{
 			var InstructionReader = new InstructionReader(MemoryStream);
-			var MipsMethodEmiter = new MipsMethodEmiter(MipsEmiter, Processor);
+			var MipsMethodEmiter = new MipsMethodEmiter(MipsEmiter, CpuThreadState);
 			var ILGenerator = MipsMethodEmiter.ILGenerator;
 			var CpuEmiter = new CpuEmiter(MipsMethodEmiter, InstructionReader);
 
@@ -145,6 +136,14 @@ namespace CSPspEmu.Core.Cpu
 
 			uint InstructionsEmitedSinceLastWaypoint = 0;
 
+			Action StorePC = () =>
+			{
+				MipsMethodEmiter.SavePC(() =>
+				{
+					ILGenerator.Emit(OpCodes.Ldc_I4, PC);
+				});
+			};
+
 			Action<bool> EmiteInstructionCountIncrement = (bool CheckForYield) =>
 			{
 				//Console.WriteLine("EmiteInstructionCountIncrement: {0},{1}", InstructionsEmitedSinceLastWaypoint, CheckForYield);
@@ -174,6 +173,7 @@ namespace CSPspEmu.Core.Cpu
 					{
 						ILGenerator.Emit(OpCodes.Ldc_I4_0);
 					});
+					StorePC();
 					ILGenerator.Emit(OpCodes.Ldarg_0);
 					ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("Yield"));
 					//ILGenerator.Emit(OpCodes.Call, typeof(GreenThread).GetMethod("Yield"));
@@ -183,6 +183,11 @@ namespace CSPspEmu.Core.Cpu
 
 			Action EmitCpuInstruction = () =>
 			{
+				if (CpuThreadState.Processor.NativeBreakpoints.Contains(PC))
+				{
+					ILGenerator.Emit(OpCodes.Call, typeof(ProcessorExtensions).GetMethod("IsDebuggerPresentDebugBreak"));	
+				}
+
 				// Marks label.
 				if (Labels.ContainsKey(PC))
 				{
@@ -198,7 +203,7 @@ namespace CSPspEmu.Core.Cpu
 			Debug.WriteLine("PASS2: MinPC:{0:X}, MaxPC:{1:X}", MinPC, MaxPC);
 
 			// Jumps to the entry point.
-			ILGenerator.Emit(OpCodes.Call, typeof(ProcessorExtensions).GetMethod("IsDebuggerPresentDebugBreak"));
+			//ILGenerator.Emit(OpCodes.Call, typeof(ProcessorExtensions).GetMethod("IsDebuggerPresentDebugBreak"));
 			ILGenerator.Emit(OpCodes.Br, Labels[EntryPC]);
 
 			for (PC = MinPC; PC <= MaxPC; )
@@ -273,6 +278,11 @@ namespace CSPspEmu.Core.Cpu
 				// Normal instruction.
 				else
 				{
+					// Syscall instruction.
+					if ((BranchInfo & CpuBranchAnalyzer.Flags.SyscallInstruction) != 0)
+					{
+						StorePC();
+					}
 					EmitCpuInstruction();
 				}
 			}
@@ -284,7 +294,7 @@ namespace CSPspEmu.Core.Cpu
 
 		static public void IsDebuggerPresentDebugBreak()
 		{
-			//DebugUtils.IsDebuggerPresentDebugBreak();
+			DebugUtils.IsDebuggerPresentDebugBreak();
 		}
 	}
 }

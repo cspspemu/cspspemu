@@ -20,3 +20,5 @@
 /CSPspEmu.Hle.Modules/bin
 /CSPspEmu.Hle/bin
 /CSPspEmu.Hle/obj
+/CSPspEmu.Gui.Winforms/obj
+/CSPspEmu.Gui.Winforms/bin

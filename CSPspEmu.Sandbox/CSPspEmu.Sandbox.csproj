@@ -41,11 +41,13 @@
     <Reference Include="Roslyn.Compilers.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cpu\Switch\RoslynLookupGenerator.cs" />
@@ -72,6 +74,10 @@
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Gui.Winforms\CSPspEmu.Gui.Winforms.csproj">
+      <Project>{550E4F4E-704E-48EB-8392-C1EB229348CF}</Project>
+      <Name>CSPspEmu.Gui.Winforms</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Hle.Modules\CSPspEmu.Hle.Modules.csproj">
       <Project>{295B7BF1-1130-4098-B0FC-00555DDB09DD}</Project>

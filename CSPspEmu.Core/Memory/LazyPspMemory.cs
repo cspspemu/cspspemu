@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Memory
 {
@@ -41,11 +42,11 @@ namespace CSPspEmu.Core.Memory
 			throw (new InvalidOperationException());
 		}
 
-		override public void* PspAddressToPointer(uint Address)
+		override public void* PspAddressToPointer(uint _Address)
 		{
 			LazyCreateMemory();
 			// Ignore last 3 bits (cache / kernel)
-			Address &= 0x1FFFFFFF;
+			var Address = _Address & 0x1FFFFFFF;
 			switch (Address >> 24)
 			{
 				/////// hp
@@ -69,7 +70,7 @@ namespace CSPspEmu.Core.Memory
 				default:
 					break;
 			}
-			throw (new InvalidOperationException());
+			throw (new InvalidOperationException("Invalid Address : 0x%08X".Sprintf(_Address)));
 		}
 	}
 }

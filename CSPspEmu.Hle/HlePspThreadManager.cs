@@ -5,6 +5,7 @@ using System.Text;
 using CSharpUtils;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Cpu;
+using System.Threading;
 
 namespace CSPspEmu.Hle
 {
@@ -12,17 +13,26 @@ namespace CSPspEmu.Hle
 	{
 		protected Processor Processor;
 		protected List<HlePspThread> Threads = new List<HlePspThread>();
-		protected int LastId = 0;
+		protected int LastId = 1;
+		public HlePspThread Current;
+		protected HlePspRtc HlePspRtc;
 
-		public HlePspThreadManager(Processor Processor)
+		public HlePspThreadManager(Processor Processor, HlePspRtc HlePspRtc)
 		{
+			this.HlePspRtc = HlePspRtc;
 			this.Processor = Processor;
+		}
+
+		public HlePspThread GetThreadById(int Id)
+		{
+			return Threads.First((Thread) => Thread.Id == Id);
 		}
 
 		public HlePspThread Create()
 		{
 			var HlePspThread = new HlePspThread(new CpuThreadState(Processor));
 			HlePspThread.Id = LastId++;
+			HlePspThread.CurrentStatus = Hle.HlePspThread.Status.Stopped;
 			Threads.Add(HlePspThread);
 			return HlePspThread;
 		}
@@ -42,25 +52,74 @@ namespace CSPspEmu.Hle
 
 		private HlePspThread CalculateNext()
 		{
-			HlePspThread MinThread = Threads[0];
+			HlePspThread MinThread = null;
 			foreach (var Thread in Threads)
 			{
-				if (Thread.PriorityValue < MinThread.PriorityValue)
+				if (Thread.CurrentStatus == HlePspThread.Status.Ready)
 				{
-					MinThread = Thread;
+					if (MinThread == null || Thread.PriorityValue < MinThread.PriorityValue)
+					{
+						MinThread = Thread;
+					}
 				}
 			}
 			return MinThread;
 		}
 
+		public IEnumerable<HlePspThread> WaitingThreads
+		{
+			get
+			{
+				return Threads.Where(Thread => Thread.CurrentStatus == HlePspThread.Status.Waiting);
+			}
+		}
+
+		private void AwakeOnTimeThreads()
+		{
+			foreach (var Thread in WaitingThreads)
+			{
+				if (Thread.CurrentWaitType == HlePspThread.WaitType.Timer)
+				{
+					if (HlePspRtc.StepDateTime >= Thread.AwakeOnTime)
+					{
+						Thread.CurrentStatus = HlePspThread.Status.Ready;
+					}
+				}
+			}
+		}
+
 		public void StepNext()
 		{
+			AwakeOnTimeThreads();
+
 			// Select the thread with the lowest PriorityValue
 			var NextThread = Next;
 			//Console.WriteLine("NextThread: {0} : {1}", NextThread.Id, NextThread.PriorityValue);
 
+			// No thread found.
+			if (NextThread == null)
+			{
+				Thread.Sleep(1);
+				return;
+			}
+
 			// Run that thread
-			NextThread.Step();
+			Current = NextThread;
+			{
+				Current.CurrentStatus = HlePspThread.Status.Running;
+				try
+				{
+					NextThread.Step();
+				}
+				finally
+				{
+					if (Current.CurrentStatus == HlePspThread.Status.Running)
+					{
+						Current.CurrentStatus = HlePspThread.Status.Ready;
+					}
+				}
+			}
+			Current = null;
 
 			// Decrement all threads by that PriorityValue.
 			int DecrementValue = NextThread.PriorityValue;
@@ -75,6 +134,15 @@ namespace CSPspEmu.Hle
 
 			// Invalidate next.
 			_Next = null;
+		}
+
+		public void Exit(HlePspThread HlePspThread)
+		{
+			Threads.Remove(HlePspThread);
+			if (HlePspThread == Current)
+			{
+				HlePspThread.CpuThreadState.Yield();
+			}
 		}
 	}
 }
