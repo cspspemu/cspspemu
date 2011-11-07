@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Cpu\Assembler\MipsAssembler.cs" />
     <Compile Include="Cpu\Assembler\MipsDisassembler.cs" />
+    <Compile Include="Cpu\Emiter\CpuBranchAnalyzer.cs" />
     <Compile Include="Cpu\Emiter\CpuEmiter.cs" />
     <Compile Include="Cpu\Emiter\Emiters\Arithmetic.cs" />
     <Compile Include="Cpu\Emiter\Emiters\Branches.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="Cpu\Emiter\Emiters\Special.cs" />
     <Compile Include="Cpu\Emiter\Emiters\Vfpu.cs" />
     <Compile Include="Cpu\Emiter\Emiters\Vfpu_Branches.cs" />
+    <Compile Include="Cpu\MethodCache.cs" />
     <Compile Include="Cpu\Emiter\MipsEmiter.cs" />
     <Compile Include="Cpu\Emiter\MipsMethodEmiter.cs" />
     <Compile Include="Cpu\Instruction.cs" />
@@ -75,6 +77,7 @@
       <Name>CSPspEmu.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

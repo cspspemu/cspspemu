@@ -37,7 +37,8 @@ namespace CSPspEmu.Core.Memory
 
 		public override long Length
 		{
-			get { return unchecked(0xFFFFFFFF + 1); }
+			//get { return unchecked(0xFFFFFFFF + 1); }
+			get { return unchecked(0xFFFFFFF0); }
 		}
 
 		public override long Position

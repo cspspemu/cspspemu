@@ -62,6 +62,8 @@
     <Compile Include="Cpu\InstructionTest.cs" />
     <Compile Include="Cpu\Assembler\MipsAssemblerTest.cs" />
     <Compile Include="Cpu\Emiter\MipsEmiterTest.cs" />
+    <Compile Include="Hle\HlePspThreadManagerTest.cs" />
+    <Compile Include="Hle\HlePspThreadTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -73,12 +75,23 @@
       <Project>{827779A5-F05C-41C6-9FF9-FD274224A7AE}</Project>
       <Name>CSPspEmu.Core.Cpu</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">
+      <Project>{9A30EBF3-B702-47D9-AAFC-E3E02B410DAD}</Project>
+      <Name>CSPspEmu.Core.Gpu</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Hle.Modules\CSPspEmu.Hle.Modules.csproj">
+      <Project>{295B7BF1-1130-4098-B0FC-00555DDB09DD}</Project>
+      <Name>CSPspEmu.Hle.Modules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Hle\CSPspEmu.Hle.csproj">
+      <Project>{288AF89E-B41A-4253-A8F7-43D1371516E9}</Project>
+      <Name>CSPspEmu.Hle</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -50,7 +50,7 @@ namespace CSPspEmu.Core.Cpu
 		public uint IMMU { get { return get(0, 16); } set { set(0, 16, (uint)value); } }
 
 		// JUMP 26 bits.
-		public uint JUMP { get { return get(0, 26); } }
+		public uint JUMP { get { return get(0, 26); } set { set(0, 26, value); } }
 
 		// CODE
 		public uint CODE { get { return get(6, 20); } set { set(6, 20, value); } }

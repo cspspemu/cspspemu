@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace CSPspEmu.Core.Debug
+namespace CSPspEmu.Core
 {
 	public class DebugUtils
 	{

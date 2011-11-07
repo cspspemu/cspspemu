@@ -185,21 +185,25 @@ namespace CSPspEmu.Core.Cpu.Assembler
 				{
 					switch (Match.Item1)
 					{
-						case "%D": Instruction.FD = ParseFprName(Match.Item2); break;
 						case "%S": Instruction.FS = ParseFprName(Match.Item2); break;
+						case "%D": Instruction.FD = ParseFprName(Match.Item2); break;
 						case "%T": Instruction.FT = ParseFprName(Match.Item2); break;
 
-						case "%d": Instruction.RD = ParseGprName(Match.Item2); break;
+						case "%J":
 						case "%s": Instruction.RS = ParseGprName(Match.Item2); break;
+						case "%d": Instruction.RD = ParseGprName(Match.Item2); break;
 						case "%t": Instruction.RT = ParseGprName(Match.Item2); break;
 
 						case "%C": Instruction.CODE = (uint)ParseIntegerConstant(Match.Item2); break;
 						case "%i": Instruction.IMM = ParseIntegerConstant(Match.Item2); break;
 						case "%I": Instruction.IMMU = (uint)ParseIntegerConstant(Match.Item2); break;
+						case "%j":
+							Patches.Add(new Patch() { Address = PC, LabelName = Match.Item2, Type = PatchType.ABS_26 });
+						break;
 						case "%O":
 							Patches.Add(new Patch() { Address = PC, LabelName = Match.Item2, Type = PatchType.REL_16 });
 						break;
-						default: throw (new InvalidDataException("Unknown format '" + Match.Item1 + "' : " + InstructionInfo.AsmEncoding));
+						default: throw (new InvalidDataException("Unknown format '" + Match.Item1 + "' <-- (" + InstructionInfo.AsmEncoding + ")"));
 					}
 				}
 				/*
@@ -260,17 +264,25 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
 			foreach (var Line in Lines.Split(new char[] { '\n' }).Select(Str => Str.Trim()).Where(Str => Str.Length > 0))
 			{
+				// Strip comments.
+				var Parts = Line.Split(new string[] { ";", "#" }, 2, StringSplitOptions.None);
+				var RealLine = Parts[0].Trim();
+
 				// Directive
 				if (Line[0] == '.')
 				{
-					throw(new NotImplementedException("Directives not supported yet"));
+					var LineTokens = Line.Split(new char[] { ' ', '\t' }, 2);
+					switch (LineTokens[0])
+					{
+						case ".code":
+							OutputStream.Position = ParseIntegerConstant(LineTokens[1]);
+							break;
+						default:
+							throw (new NotImplementedException("Unsupported directive '" + LineTokens[0] + "'"));
+					}
 				}
 				else
 				{
-					// Strip comments.
-					var Parts = Line.Split(new string[] { ";", "#" }, 2, StringSplitOptions.None);
-					var RealLine = Parts[0].Trim();
-
 					// Label
 					if (RealLine.Substr(-1) == ":")
 					{
@@ -304,8 +316,8 @@ namespace CSPspEmu.Core.Cpu.Assembler
 							Instruction.IMM = ((int)LabelAddress - (int)Patch.Address) / 4;
 							break;
 						case PatchType.ABS_26:
-							throw(new NotImplementedException());
-							//break;
+							Instruction.JUMP = (LabelAddress & 0x1FFFFFFF) / 4;
+							break;
 						case PatchType.ABS_32:
 							Instruction.Value = LabelAddress;
 							break;

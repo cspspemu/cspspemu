@@ -22,6 +22,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		//static protected FieldInfo Field_GPR_Ptr = typeof(Processor).GetField("GPR_Ptr");
 		//static protected FieldInfo Field_FPR_Ptr = typeof(Processor).GetField("FPR_Ptr");
 		static protected FieldInfo Field_BranchFlag = typeof(CpuThreadState).GetField("BranchFlag");
+		static protected FieldInfo Field_PC = typeof(CpuThreadState).GetField("PC");
+		static protected FieldInfo Field_StepInstructionCount = typeof(CpuThreadState).GetField("StepInstructionCount");
 		static public MethodInfo Method_Syscall = typeof(CpuThreadState).GetMethod("Syscall");
 		static private ulong UniqueCounter = 0;
 
@@ -66,19 +68,38 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		protected void LoadGPRPtr(int R)
 		{
 			ILGenerator.Emit(OpCodes.Ldarg_0);
-			//ILGenerator.Emit(OpCodes.Ldfld, Field_GPR_Ptr);
-			//ILGenerator.Emit(OpCodes.Ldc_I4, R * 4);
-			//ILGenerator.Emit(OpCodes.Add);
 			ILGenerator.Emit(OpCodes.Ldflda, Field_GPRList[R]);
 		}
 
 		protected void LoadFPRPtr(int R)
 		{
 			ILGenerator.Emit(OpCodes.Ldarg_0);
-			//ILGenerator.Emit(OpCodes.Ldfld, Field_FPR_Ptr);
-			//ILGenerator.Emit(OpCodes.Ldc_I4, R * 4);
-			//ILGenerator.Emit(OpCodes.Add);
 			ILGenerator.Emit(OpCodes.Ldflda, Field_FPRList[R]);
+		}
+
+		protected void LoadPCPtr()
+		{
+			ILGenerator.Emit(OpCodes.Ldarg_0);
+			ILGenerator.Emit(OpCodes.Ldflda, Field_PC);
+		}
+
+		protected void LoadStepInstructionCountPtr()
+		{
+			ILGenerator.Emit(OpCodes.Ldarg_0);
+			ILGenerator.Emit(OpCodes.Ldflda, Field_StepInstructionCount);
+		}
+
+		public void LoadStepInstructionCount()
+		{
+			LoadStepInstructionCountPtr();
+			ILGenerator.Emit(OpCodes.Ldind_I4);
+		}
+
+		public void SaveStepInstructionCount(Action Action)
+		{
+			LoadStepInstructionCountPtr();
+			Action();
+			ILGenerator.Emit(OpCodes.Stind_I4);
 		}
 
 		public void LoadBranchFlag()
@@ -93,6 +114,16 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			Action();
 			ILGenerator.Emit(OpCodes.Stfld, Field_BranchFlag);
 		}
+
+		public void SavePC(Action Action)
+		{
+			LoadPCPtr();
+			{
+				Action();
+			}
+			ILGenerator.Emit(OpCodes.Stind_I4);
+		}
+
 
 		public void SaveGPR(int R, Action Action)
 		{
@@ -132,12 +163,18 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			ILGenerator.Emit(OpCodes.Ldind_R4);
 		}
 
-		/*
-		public void SavePtr()
+		public void LoadPC()
 		{
-			ILGenerator.Emit(OpCodes.Stind_I4);
+			LoadPCPtr();
+			ILGenerator.Emit(OpCodes.Ldind_U4);
 		}
-		*/
+
+		/*
+				public void SavePtr()
+				{
+					ILGenerator.Emit(OpCodes.Stind_I4);
+				}
+				*/
 
 		public void OP_3REG(int RD, int RS, int RT, OpCode OpCode)
 		{

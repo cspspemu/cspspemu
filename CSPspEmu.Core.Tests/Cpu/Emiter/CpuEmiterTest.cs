@@ -269,5 +269,27 @@ namespace CSPspEmu.Core.Tests
 			Assert.AreEqual(CpuThreadState.FPR[10], CpuThreadState.FPR[30] + CpuThreadState.FPR[31]);
 			Assert.AreEqual(CpuThreadState.FPR[11], CpuThreadState.FPR[30] - CpuThreadState.FPR[31]);
 		}
+
+		[TestMethod]
+		public void JumpTest()
+		{
+			CpuThreadState.ExecuteAssembly(@"
+				li r1, 1
+				li r2, 1
+
+				jal test
+				nop
+			ret:
+				li r1, 2
+			test:
+				li r2, 2
+				nop
+			");
+
+			Assert.AreEqual(1, CpuThreadState.GPR[1]);
+			Assert.AreEqual(1, CpuThreadState.GPR[2]);
+			Assert.AreEqual(4 * 4, (int)CpuThreadState.GPR[31]);
+			Assert.AreEqual(5 * 4, (int)CpuThreadState.PC);
+		}
 	}
 }

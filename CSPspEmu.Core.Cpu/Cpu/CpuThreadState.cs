@@ -5,13 +5,19 @@ using System.Text;
 using System.Runtime.InteropServices;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Cpu.Cpu;
+using CSharpUtils.Threading;
 
 namespace CSPspEmu.Core.Cpu
 {
 	unsafe sealed public class CpuThreadState
 	{
+		public Processor Processor;
+
+		public int StepInstructionCount;
+		public long TotalInstructionCount;
+
 		public uint PC;
-		public uint nPC;
+		//public uint nPC;
 
 		public uint HI, LO;
 
@@ -82,8 +88,6 @@ namespace CSPspEmu.Core.Cpu
 		public GprList GPR;
 		public FprList FPR;
 		//readonly public float* FPR;
-
-		public Processor Processor;
 
 		public void* GetMemoryPtr(uint Address)
 		{
@@ -178,6 +182,13 @@ namespace CSPspEmu.Core.Cpu
 		static public void TestMemset(CpuThreadState Processor)
 		{
 			*((byte*)Processor.GetMemoryPtr(0x04000000)) = 0x77;
+		}
+
+		public void Yield()
+		{
+			//Console.WriteLine(StepInstructionCount);
+			GreenThread.Yield();
+			//Console.WriteLine(StepInstructionCount);
 		}
 
 		public void BreakpointIfEnabled()

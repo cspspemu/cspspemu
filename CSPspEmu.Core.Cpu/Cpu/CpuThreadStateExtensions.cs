@@ -11,7 +11,10 @@ using System.Runtime.InteropServices;
 using CSPspEmu.Core.Cpu.Cpu;
 using System.Reflection.Emit;
 using System.Threading;
-using CSPspEmu.Core.Debug;
+using CSPspEmu.Core;
+using CSPspEmu.Core.Cpu.Cpu.Emiter;
+using System.Diagnostics;
+using CSharpUtils.Threading;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -20,17 +23,15 @@ namespace CSPspEmu.Core.Cpu
 		static public MipsEmiter MipsEmiter = new MipsEmiter();
 		static public Action<uint, CpuEmiter> CpuEmiterInstruction = EmitLookupGenerator.GenerateSwitchDelegate<CpuEmiter>(InstructionTable.ALL);
 		//static public Func<uint, bool> IsDelayedBranchInstruction = EmitLookupGenerator.GenerateSwitchDelegateReturn<bool>(InstructionTable.ALL, (ILGenerator, InstructionInfo) =>
+		/*
 		static public Func<uint, bool> IsDelayedBranchInstruction = EmitLookupGenerator.GenerateSwitchDelegateReturn<bool>(InstructionTable.ALL_BRANCHES, (ILGenerator, InstructionInfo) =>
 		{
 			var IsBranch = ((InstructionInfo != null) && (InstructionInfo.InstructionType & InstructionType.B) != 0);
 			ILGenerator.Emit(IsBranch ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
 		});
+		*/
 
-		static public Func<uint, bool> IsLikelyInstruction = EmitLookupGenerator.GenerateSwitchDelegateReturn<bool>(InstructionTable.ALL_BRANCHES, (ILGenerator, InstructionInfo) =>
-		{
-			var IsLikely = ((InstructionInfo != null) && (InstructionInfo.InstructionType & InstructionType.Likely) != 0);
-			ILGenerator.Emit(IsLikely ? OpCodes.Ldc_I4_1 : OpCodes.Ldc_I4_0);
-		});
+		static public Func<uint, CpuBranchAnalyzer.Flags> GetBranchInfo = EmitLookupGenerator.GenerateInfoDelegate<CpuBranchAnalyzer, CpuBranchAnalyzer.Flags>(EmitLookupGenerator.GenerateSwitchDelegateReturn<CpuBranchAnalyzer, CpuBranchAnalyzer.Flags>(InstructionTable.ALL_BRANCHES), new CpuBranchAnalyzer());
 
 		static public void ExecuteAssembly(this CpuThreadState Processor, String Assembly, bool BreakPoint = false)
 		{
@@ -46,16 +47,20 @@ namespace CSPspEmu.Core.Cpu
 
 				MipsAssembler.Assemble(Assembly);
 			});
-			return Processor.CreateDelegateForPC(MemoryStream, 0);
+			var Delegate = Processor.CreateDelegateForPC(MemoryStream, 0);
+			return (CpuThreadState) =>
+			{
+				CpuThreadState.StepInstructionCount = 1000000;
+				Delegate(CpuThreadState);
+			};
 		}
 
 		static public Action<CpuThreadState> CreateDelegateForPC(this CpuThreadState Processor, Stream MemoryStream, uint EntryPC)
 		{
-			//var MipsEmiter = new MipsEmiter();
 			var InstructionReader = new InstructionReader(MemoryStream);
 			var MipsMethodEmiter = new MipsMethodEmiter(MipsEmiter, Processor);
 			var ILGenerator = MipsMethodEmiter.ILGenerator;
-			var CpuEmiter = new CpuEmiter(MipsMethodEmiter);
+			var CpuEmiter = new CpuEmiter(MipsMethodEmiter, InstructionReader);
 
 			uint PC;
 			uint EndPC = (uint)MemoryStream.Length;
@@ -71,57 +76,128 @@ namespace CSPspEmu.Core.Cpu
 
 			// PASS1: Analyze and find labels.
 			PC = EntryPC;
-			//Console.WriteLine("PASS1: (PC={0:X}, EndPC={1:X})", PC, EndPC);
+			Debug.WriteLine("PASS1: (PC={0:X}, EndPC={1:X})", PC, EndPC);
+
 			while (BranchesToAnalyze.Count > 0)
 			{
-				PC = BranchesToAnalyze.Dequeue();
+				bool EndOfBranchFound = false;
 
-				while (PC < EndPC)
+				for (PC = BranchesToAnalyze.Dequeue(); PC < EndPC; PC += 4)
 				{
 					// If already analyzed, stop scanning this branch.
 					if (AnalyzedPC.Contains(PC)) break;
 					AnalyzedPC.Add(PC);
+					//Console.WriteLine("%08X".Sprintf(PC));
+
+					if (AnalyzedPC.Count > 8 * 1024)
+					//if (AnalyzedPC.Count > 64)
+					{
+						throw(new InvalidDataException());
+					}
 
 					MinPC = Math.Min(MinPC, PC);
 					MaxPC = Math.Max(MaxPC, PC);
 
 					//Console.WriteLine("    PC:{0:X}", PC);
 
-					CpuEmiter.Instruction = InstructionReader[PC];
+					CpuEmiter.LoadAT(PC);
+
+					var BranchInfo = GetBranchInfo(CpuEmiter.Instruction.Value);
 
 					// Branch instruction.
-					if (IsDelayedBranchInstruction(CpuEmiter.Instruction.Value))
+					if ((BranchInfo & CpuBranchAnalyzer.Flags.JumpInstruction) != 0)
+					{
+						//Console.WriteLine("Instruction");
+						EndOfBranchFound = true;
+						continue;
+					}
+					else if ((BranchInfo & CpuBranchAnalyzer.Flags.BranchOrJumpInstruction) != 0)
 					{
 						var BranchAddress = CpuEmiter.Instruction.GetBranchAddress(PC);
 						Labels[BranchAddress] = ILGenerator.DefineLabel();
 						BranchesToAnalyze.Enqueue(BranchAddress);
+
+						// Jump Always performed.
+						/*
+						if ((BranchInfo & CpuBranchAnalyzer.Flags.JumpAlways) != 0)
+						{
+							EndOfBranchFound = true;
+							continue;
+						}
+						*/
 					}
 
-					PC += 4;
+					// A Jump Always found. And we have also processed the delayed branch slot. End the branch.
+					if (EndOfBranchFound)
+					{
+						EndOfBranchFound = false;
+						break;
+					}
 				}
 			}
 
 			// PASS2: Generate code and put labels;
+			Action<uint> _EmitCpuInstructionAT = (_PC) =>
+			{
+				CpuEmiter.LoadAT(_PC);
+				CpuEmiterInstruction(CpuEmiter.Instruction.Value, CpuEmiter);
+			};
+
+			uint InstructionsEmitedSinceLastWaypoint = 0;
+
+			Action<bool> EmiteInstructionCountIncrement = (bool CheckForYield) =>
+			{
+				//Console.WriteLine("EmiteInstructionCountIncrement: {0},{1}", InstructionsEmitedSinceLastWaypoint, CheckForYield);
+				if (InstructionsEmitedSinceLastWaypoint > 0)
+				{
+					MipsMethodEmiter.SaveStepInstructionCount(() =>
+					{
+						MipsMethodEmiter.LoadStepInstructionCount();
+						ILGenerator.Emit(OpCodes.Ldc_I4, InstructionsEmitedSinceLastWaypoint);
+						//ILGenerator.Emit(OpCodes.Add);
+						ILGenerator.Emit(OpCodes.Sub);
+					});
+					//ILGenerator.Emit(OpCodes.Ldc_I4, 100);
+					//ILGenerator.EmitCall(OpCodes.Call, typeof(Console).GetMethod("WriteLine"), new Type[] { typeof(int) });
+					InstructionsEmitedSinceLastWaypoint = 0;
+				}
+
+				if (CheckForYield)
+				{
+					var NoYieldLabel = ILGenerator.DefineLabel();
+					MipsMethodEmiter.LoadStepInstructionCount();
+					ILGenerator.Emit(OpCodes.Ldc_I4_0);
+					ILGenerator.Emit(OpCodes.Bgt, NoYieldLabel);
+					//ILGenerator.Emit(OpCodes.Ldc_I4, 1000000);
+					//ILGenerator.Emit(OpCodes.Blt, NoYieldLabel);
+					MipsMethodEmiter.SaveStepInstructionCount(() =>
+					{
+						ILGenerator.Emit(OpCodes.Ldc_I4_0);
+					});
+					ILGenerator.Emit(OpCodes.Ldarg_0);
+					ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("Yield"));
+					//ILGenerator.Emit(OpCodes.Call, typeof(GreenThread).GetMethod("Yield"));
+					ILGenerator.MarkLabel(NoYieldLabel);
+				}
+			};
+
 			Action EmitCpuInstruction = () =>
 			{
 				// Marks label.
 				if (Labels.ContainsKey(PC))
 				{
+					EmiteInstructionCountIncrement(false);
 					ILGenerator.MarkLabel(Labels[PC]);
 				}
 
-				CpuEmiter.Instruction = InstructionReader[PC];
-				CpuEmiterInstruction(CpuEmiter.Instruction.Value, CpuEmiter);
-				//Console.WriteLine("{0:X}", CpuEmiter.Instruction.Value);
+				_EmitCpuInstructionAT(PC);
 				PC += 4;
+				InstructionsEmitedSinceLastWaypoint++;
 			};
 
-			//Console.WriteLine("PASS2: MinPC:{0:X}, MaxPC:{1:X}", MinPC, MaxPC);
+			Debug.WriteLine("PASS2: MinPC:{0:X}, MaxPC:{1:X}", MinPC, MaxPC);
 
 			// Jumps to the entry point.
-
-
-
 			ILGenerator.Emit(OpCodes.Call, typeof(ProcessorExtensions).GetMethod("IsDebuggerPresentDebugBreak"));
 			ILGenerator.Emit(OpCodes.Br, Labels[EntryPC]);
 
@@ -130,33 +206,68 @@ namespace CSPspEmu.Core.Cpu
 				uint CurrentInstructionPC = PC;
 				Instruction CurrentInstruction = InstructionReader[PC];
 
-				// Delayed branch instruction.
-				if (IsDelayedBranchInstruction(CurrentInstruction.Value))
+				/*
+				if (!AnalyzedPC.Contains(CurrentInstructionPC))
 				{
+					// Marks label.
+					if (Labels.ContainsKey(PC))
+					{
+						ILGenerator.MarkLabel(Labels[PC]);
+					}
+
+
+					PC += 4;
+					continue;
+				}
+				*/
+
+				var BranchInfo = GetBranchInfo(CurrentInstruction.Value);
+
+				// Delayed branch instruction.
+				if ((BranchInfo & CpuBranchAnalyzer.Flags.BranchOrJumpInstruction) != 0)
+				{
+					InstructionsEmitedSinceLastWaypoint += 2;
+					EmiteInstructionCountIncrement(true);
+
 					var BranchAddress = CurrentInstruction.GetBranchAddress(PC);
 
-					// Branch instruction.
-					EmitCpuInstruction();
-
-					if (IsLikelyInstruction(CurrentInstruction.Value))
+					if ((BranchInfo & CpuBranchAnalyzer.Flags.JumpInstruction) != 0)
 					{
-						//Console.WriteLine("Likely");
-						// Delayed instruction.
-						CpuEmiter._branch_likely(() =>
+						// Marks label.
+						if (Labels.ContainsKey(PC))
 						{
-							EmitCpuInstruction();
-						});
+							ILGenerator.MarkLabel(Labels[PC]);
+						}
+
+						_EmitCpuInstructionAT(PC + 4);
+						_EmitCpuInstructionAT(PC + 0);
+						PC += 8;
 					}
 					else
 					{
-						//Console.WriteLine("Not Likely");
-						// Delayed instruction.
+						// Branch instruction.
 						EmitCpuInstruction();
-					}
 
-					if (CurrentInstructionPC + 4 != BranchAddress)
-					{
-						CpuEmiter._branch_post(Labels[BranchAddress]);
+						if ((BranchInfo & CpuBranchAnalyzer.Flags.Likely) != 0)
+						{
+							//Console.WriteLine("Likely");
+							// Delayed instruction.
+							CpuEmiter._branch_likely(() =>
+							{
+								EmitCpuInstruction();
+							});
+						}
+						else
+						{
+							//Console.WriteLine("Not Likely");
+							// Delayed instruction.
+							EmitCpuInstruction();
+						}
+
+						if (CurrentInstructionPC + 4 != BranchAddress)
+						{
+							CpuEmiter._branch_post(Labels[BranchAddress]);
+						}
 					}
 				}
 				// Normal instruction.

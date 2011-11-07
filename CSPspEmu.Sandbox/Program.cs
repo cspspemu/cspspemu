@@ -14,11 +14,76 @@ using CSPspEmu.Core.Tests;
 using System.Diagnostics;
 using CSPspEmu.Hle;
 using CSPspEmu.Core.Cpu.Cpu;
+using CSPspEmu.Core.Cpu.Assembler;
+using System.Threading;
 
 namespace CSPspEmu.Sandbox
 {
 	unsafe class Program
 	{
+		static void ThreadTest()
+		{
+			var Memory = new LazyPspMemory();
+			var Processor = new Processor(Memory);
+			var CpuThreadState = new CpuThreadState(Processor);
+
+			var MipsAssembler = new MipsAssembler(new PspMemoryStream(Memory));
+
+			MipsAssembler.Assemble(@"
+			.code 0x08000000
+				li r31, 0x08000000
+			start:
+				li r1, 139264
+				li r2, 0x04000000
+				li r3, 0x77
+			loop:
+				sb r3, 0(r2)
+				addi r1, r1, -1
+				bgez r1, loop
+				addi r2, r2, 1
+				j start
+				;jr r31
+				nop
+			");
+
+			MipsAssembler.Assemble(@"
+			.code 0x08000800
+				li r31, 0x08000800
+			start:
+				li r1, 139264
+				li r2, 0x04000000
+				li r3, 0x77
+			loop:
+				sb r3, 0(r2)
+				addi r1, r1, -1
+				bgez r1, loop
+				addi r2, r2, 1
+				j start
+				;jr r31
+				nop
+			");
+
+			var ThreadManager = new HlePspThreadManager(Processor);
+			var Thread1 = ThreadManager.Create();
+			Thread1.CpuThreadState.PC = 0x08000000;
+
+			var Thread2 = ThreadManager.Create();
+			Thread2.CpuThreadState.PC = 0x08000800;
+
+			while (true)
+			{
+				Console.WriteLine("%08X".Sprintf(ThreadManager.Next.CpuThreadState.PC));
+				ThreadManager.StepNext();
+				//Thread.Sleep(500);
+				/*
+				Thread1.Step();
+				Console.WriteLine("Thread1.PC: %08X".Sprintf(Thread1.CpuThreadState.PC));
+				Thread2.Step();
+				Console.WriteLine("Thread2.PC: %08X".Sprintf(Thread2.CpuThreadState.PC));
+				*/
+			}
+		}
+
 		static void Test()
 		{
 			var Memory = new FastPspMemory();
@@ -168,14 +233,6 @@ namespace CSPspEmu.Sandbox
 			Console.WriteLine(Stopwatch.ElapsedMilliseconds);
 		}
 
-		static void ThreadTest()
-		{
-			var Memory = new LazyPspMemory();
-			var Processor = new Processor(Memory);
-			var CpuThreadState = new CpuThreadState(Processor);
-			var Thread = new HlePspThread(CpuThreadState);
-		}
-
 		/// <summary>
 		/// 
 		/// </summary>
@@ -186,9 +243,12 @@ namespace CSPspEmu.Sandbox
 		{
 			//var Processor = new Processor(new LazyPspMemory());
 			//Processor.TestLoadReg(Processor);
-			PerfTest();
+			//PerfTest();
 			//ThreadTest();
+			var HlePspThreadTest = new HlePspThreadTest(); HlePspThreadTest.SetUp(); HlePspThreadTest.CpuThreadStateTest();
+			Console.WriteLine("... Ended");
 			Console.ReadKey();
+
 			/*
 			Console.WriteLine("[1]");
 			new CpuEmiterTest().BranchFullTest();

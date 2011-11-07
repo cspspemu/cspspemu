@@ -2,13 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Cpu.Cpu;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
 	sealed public partial class CpuEmiter
 	{
 		private MipsMethodEmiter MipsMethodEmiter;
-		public Instruction Instruction;
+		private InstructionReader InstructionReader;
+		public Instruction Instruction { private set; get; }
+		public uint PC { private set; get; }
+
+		public void LoadAT(uint PC)
+		{
+			this.PC = PC;
+			this.Instruction = InstructionReader[PC];
+		}
 
 		public int RT { get { return Instruction.RT; } }
 		public int RD { get { return Instruction.RD; } }
@@ -20,9 +29,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public int FD { get { return Instruction.FD; } }
 		public int FS { get { return Instruction.FS; } }
 
-		public CpuEmiter(MipsMethodEmiter MipsMethodEmiter)
+		public CpuEmiter(MipsMethodEmiter MipsMethodEmiter, InstructionReader InstructionReader)
 		{
 			this.MipsMethodEmiter = MipsMethodEmiter;
+			this.InstructionReader = InstructionReader;
 		}
 	}
 }

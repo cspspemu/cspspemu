@@ -80,11 +80,50 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void bgezal() { throw (new NotImplementedException()); }
 		public void bgezall() { bgezal(); }
 
+		private uint GetJumpAddress()
+		{
+			//Console.WriteLine("Instruction.JUMP: {0:X}", Instruction.JUMP);
+			return (uint)(PC & ~0x1FFFFFFF) | (Instruction.JUMP << 2);
+		}
+
+		private void _link()
+		{
+			//Console.WriteLine("LINK: {0:X}", PC);
+			MipsMethodEmiter.SaveGPR(31, () =>
+			{
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, PC + 8);
+			});
+		}
+
 		// Jump (And Link) (Register).
-		public void j() { throw (new NotImplementedException()); }
-		public void jr() { throw (new NotImplementedException()); }
-		public void jalr() { throw (new NotImplementedException()); }
-		public void jal() { throw (new NotImplementedException()); }
+		public void j()
+		{
+			//Console.WriteLine("JUMP_ADDR: {0:X}", GetJumpAddress());
+			MipsMethodEmiter.SavePC(() =>
+			{
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, GetJumpAddress());
+			});
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ret);
+		}
+		public void jr() {
+			MipsMethodEmiter.SavePC(() =>
+			{
+				MipsMethodEmiter.LoadGPR(RS);
+			});
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ret);
+		}
+
+		public void jalr()
+		{
+			_link();
+			jr();
+		}
+
+		public void jal()
+		{
+			_link();
+			j();
+		}
 
 		// Branch on C1 False/True (Likely).
 		public void bc1f() { throw (new NotImplementedException()); }

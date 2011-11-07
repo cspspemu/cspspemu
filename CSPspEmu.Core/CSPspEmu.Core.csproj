@@ -42,7 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Debug\DebugUtils.cs" />
+    <Compile Include="DebugUtils.cs" />
     <Compile Include="Memory\AbstractPspMemory.cs" />
     <Compile Include="Memory\LazyPspMemory.cs" />
     <Compile Include="Memory\FastPspMemory.cs" />

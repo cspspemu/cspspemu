@@ -8,19 +8,47 @@ namespace CSPspEmu.Core.Cpu.Table
 {
 	public class EmitLookupGenerator
 	{
-		static public Action<uint, TType> GenerateSwitchDelegate<TType>(IEnumerable<InstructionInfo> InstructionInfoList)
+		static public Func<uint, TRetType> GenerateInfoDelegate<TType, TRetType>(Func<uint, TType, TRetType> Callback, TType Instance)
 		{
-			return GenerateSwitchDelegate<TType>(InstructionInfoList, Name =>
+			return V =>
 			{
-				if (Name == "Default") return "unknown";
-				if (Name == "break") return "_break";
-				return Name.Replace('.', '_');
+				return Callback(V, Instance);
+			};
+		}
+
+		static public Action<uint, TType> GenerateSwitchDelegate<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Func<String, String> NameConverter = null)
+		{
+			if (NameConverter == null)
+			{
+				NameConverter = Name =>
+				{
+					if (Name == "Default") return "unknown";
+					if (Name == "break") return "_break";
+					return Name.Replace('.', '_');
+				};
+			}
+			return GenerateSwitchDelegate<TType>(InstructionInfoList, (ILGenerator, InstructionInfo) =>
+			{
+				var InstructionInfoName = NameConverter((InstructionInfo != null) ? InstructionInfo.Name : "Default");
+				ILGenerator.Emit(OpCodes.Ldarg_1);
+				var MethodInfo = typeof(TType).GetMethod(InstructionInfoName);
+				if (MethodInfo == null) throw (new Exception("Cannot find method '" + InstructionInfoName + "' on type '" + typeof(TType).Name + "'"));
+				ILGenerator.Emit(OpCodes.Call, MethodInfo);
 			});
 		}
 
-		static public Action<uint, TType> GenerateSwitchDelegate<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Func<String, String> NameConverter)
+		static public Func<uint, TType, TRetType> GenerateSwitchDelegateReturn<TType, TRetType>(IEnumerable<InstructionInfo> InstructionInfoList, Func<String, String> NameConverter = null)
 		{
-			return GenerateSwitchDelegate<TType>(InstructionInfoList, (ILGenerator, InstructionInfo) =>
+			if (NameConverter == null)
+			{
+				NameConverter = Name =>
+				{
+					if (Name == "Default") return "unknown";
+					if (Name == "break") return "_break";
+					return Name.Replace('.', '_');
+				};
+			}
+			return GenerateSwitchDelegateReturn<TType, TRetType>(InstructionInfoList, (ILGenerator, InstructionInfo) =>
 			{
 				var InstructionInfoName = NameConverter((InstructionInfo != null) ? InstructionInfo.Name : "Default");
 				ILGenerator.Emit(OpCodes.Ldarg_1);
