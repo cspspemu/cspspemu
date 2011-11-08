@@ -91,7 +91,7 @@ namespace CSPspEmu.Hle.Loader
 				var SectionHeaderFileStream = FileStream.SliceWithLength(SectionHeader.Offset, SectionHeader.Size);
 				var SectionHeaderMemoryStream = MemoryStream.SliceWithLength(SectionHeader.Address, SectionHeader.Size);
 
-				//Console.WriteLine("WriteToMemory('{0:X}') : 0x{1:X} : {2}", NameAt(SectionHeader.Name), SectionHeader.Address, SectionHeader.Type);
+				Console.WriteLine("WriteToMemory('{0:X}') : 0x{1:X} : {2}", NameAt(SectionHeader.Name), SectionHeader.Address, SectionHeader.Type);
 
 				switch (SectionHeader.Type)
 				{

@@ -72,21 +72,48 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			if (EnableRefreshing)
 			{
-				Buffer.LockBitsUnlock(System.Drawing.Imaging.PixelFormat.Format32bppArgb, (BitmapData) =>
+				try
 				{
-					var BitmapDataPtr = (byte*)BitmapData.Scan0.ToPointer();
-					var Address = PspDisplay.CurrentInfo.Address;
-					//Console.WriteLine("{0:X}", Address);
-					var FrameBuffer = (byte*)Memory.PspAddressToPointer(Address);
-					var Count = 512 * 272;
-					for (int n = 0; n < Count; n++)
+					Buffer.LockBitsUnlock(System.Drawing.Imaging.PixelFormat.Format32bppArgb, (BitmapData) =>
 					{
-						BitmapDataPtr[n * 4 + 3] = 0xFF;
-						BitmapDataPtr[n * 4 + 0] = FrameBuffer[n * 4 + 2];
-						BitmapDataPtr[n * 4 + 1] = FrameBuffer[n * 4 + 1];
-						BitmapDataPtr[n * 4 + 2] = FrameBuffer[n * 4 + 0];
-					}
-				});
+						var BitmapDataPtr = (byte*)BitmapData.Scan0.ToPointer();
+						var Address = PspDisplay.CurrentInfo.Address;
+						//var Address = Memory.FrameBufferSegment.Low;
+						//Console.WriteLine("{0:X}", Address);
+						var FrameBuffer = (byte*)Memory.PspAddressToPointer(Address);
+						var Count = 512 * 272;
+						switch (PspDisplay.CurrentInfo.PixelFormat)
+						{
+							case Hle.PspDisplay.PixelFormats.RGBA_8888:
+								for (int n = 0; n < Count; n++)
+								{
+									BitmapDataPtr[n * 4 + 3] = 0xFF;
+									BitmapDataPtr[n * 4 + 0] = FrameBuffer[n * 4 + 2];
+									BitmapDataPtr[n * 4 + 1] = FrameBuffer[n * 4 + 1];
+									BitmapDataPtr[n * 4 + 2] = FrameBuffer[n * 4 + 0];
+								}
+								break;
+							case Hle.PspDisplay.PixelFormats.RGBA_5551:
+								for (int n = 0; n < Count; n++)
+								{
+									ushort Value = *(ushort*)&FrameBuffer[n * 2];
+									BitmapDataPtr[n * 4 + 3] = 0xFF;
+									BitmapDataPtr[n * 4 + 0] = (byte)Value.ExtractUnsignedScale(10, 5, 255);
+									BitmapDataPtr[n * 4 + 1] = (byte)Value.ExtractUnsignedScale(5, 5, 255);
+									BitmapDataPtr[n * 4 + 2] = (byte)Value.ExtractUnsignedScale(0, 5, 255);
+								}
+								break;
+							default:
+								//throw(new NotImplementedException("Not implemented PixelFormat '" + PspDisplay.CurrentInfo.PixelFormat + "'"));
+								Console.Error.WriteLine("Not implemented PixelFormat '" + PspDisplay.CurrentInfo.PixelFormat + "'");
+								break;
+						}
+					});
+				}
+				catch (Exception Exception)
+				{
+					Console.WriteLine(Exception);
+				}
 			}
 			//Console.WriteLine(this.ClientRectangle);
 			PaintEventArgs.Graphics.DrawImage(Buffer, this.ClientRectangle);

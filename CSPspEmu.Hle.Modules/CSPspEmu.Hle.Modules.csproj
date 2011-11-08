@@ -51,6 +51,7 @@
     <Compile Include="stdio\StdioForUser.cs" />
     <Compile Include="sysmem\SysMemUserForUser.cs" />
     <Compile Include="threadman\ThreadManForUser.cs" />
+    <Compile Include="threadman\ThreadManForUser_Callbacks.cs" />
     <Compile Include="threadman\ThreadManForUser_Threads.cs" />
     <Compile Include="utils\UtilsForUser.cs" />
     <Compile Include="wlan\sceWlan_Driver.cs" />

@@ -32,8 +32,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Console.Write("PC(0x{0:X}) : ", CpuThreadState.RA);
 			Console.WriteLine("ThreadManForUser.sceKernelCreateThread('{0}', {1:X}, {2:X}, {3:X}, {4:X}, {5:X})", Name, EntryPoint, InitPriority, StackSize, Attribute, (uint)Option);
 
-			var Thread = HleState.HleThreadManager.Create();
-			Thread.Stack = HleState.HleMemoryManager.RootPartition.Allocate(StackSize, MemoryPartition.Anchor.High);
+			var Thread = HleState.ThreadManager.Create();
+			Thread.Stack = HleState.MemoryManager.RootPartition.Allocate(StackSize, MemoryPartition.Anchor.High);
 			Thread.CpuThreadState.PC = (uint)EntryPoint;
 			Thread.CpuThreadState.GP = (uint)CpuThreadState.GP;
 			Thread.CpuThreadState.SP = (uint)(Thread.Stack.High);
@@ -58,7 +58,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			Console.WriteLine("ThreadManForUser.sceKernelStartThread({0:X}, {1:X}, {2:X})", ThreadId, ArgumentsLength, (uint)ArgumentsPointer);
 
-			HleState.HleThreadManager.GetThreadById((int)ThreadId).CurrentStatus = HleThread.Status.Ready;
+			HleState.ThreadManager.GetThreadById((int)ThreadId).CurrentStatus = HleThread.Status.Ready;
 
 			return 0;
 		}
@@ -72,7 +72,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelExitDeleteThread(int Status)
 		{
 			Console.WriteLine("ThreadManForUser.sceKernelExitThread({0:X})", Status);
-			HleState.HleThreadManager.Exit(HleState.HleThreadManager.Current);
+			HleState.ThreadManager.Exit(HleState.ThreadManager.Current);
 			return 0;
 		}
 
@@ -85,6 +85,23 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelExitThread(int status)
 		{
 			throw (new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Sleep thread but service any callbacks as necessary
+		/// </summary>
+		/// <example>
+		///		// Once all callbacks have been setup call this function
+		///		sceKernelSleepThreadCB();
+		/// </example>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x82826F70, FirmwareVersion = 150)]
+		public int sceKernelSleepThreadCB(CpuThreadState CpuThreadState)
+		{
+			HleState.ThreadManager.Current.CurrentStatus = HleThread.Status.Waiting;
+			HleState.ThreadManager.Current.CurrentWaitType = HleThread.WaitType.None;
+			CpuThreadState.Yield();
+			return 0;
 		}
 	}
 }

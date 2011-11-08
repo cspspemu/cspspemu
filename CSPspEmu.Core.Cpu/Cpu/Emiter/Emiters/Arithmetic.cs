@@ -188,8 +188,38 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// MAXimum/MINimum.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void max() { throw (new NotImplementedException()); }
-		public void min() { throw(new NotImplementedException()); }
+		private void _max_min(OpCode BranchOpCode)
+		{
+			var LabelIf = MipsMethodEmiter.ILGenerator.DefineLabel();
+			var LabelElse = MipsMethodEmiter.ILGenerator.DefineLabel();
+			var LabelEnd = MipsMethodEmiter.ILGenerator.DefineLabel();
+
+			MipsMethodEmiter.LoadGPR(RS);
+			MipsMethodEmiter.LoadGPR(RT);
+			MipsMethodEmiter.ILGenerator.Emit(BranchOpCode, LabelElse);
+
+			// IF
+			MipsMethodEmiter.ILGenerator.MarkLabel(LabelIf);
+			MipsMethodEmiter.SaveGPR(RD, () =>
+			{
+				MipsMethodEmiter.LoadGPR(RS);
+			});
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Br, LabelEnd);
+
+			// ELSE
+			MipsMethodEmiter.ILGenerator.MarkLabel(LabelElse);
+			MipsMethodEmiter.SaveGPR(RD, () =>
+			{
+				MipsMethodEmiter.LoadGPR(RT);
+			});
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Br, LabelEnd);
+
+			// END
+			MipsMethodEmiter.ILGenerator.MarkLabel(LabelEnd);
+		}
+
+		public void max() { _max_min(OpCodes.Blt); }
+		public void min() { _max_min(OpCodes.Bgt); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// DIVide (Unsigned).
@@ -209,6 +239,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			});
 		}
 		public void divu() {
+			div();
+			/*
 			MipsMethodEmiter.SaveHI(() =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
@@ -221,12 +253,34 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Div);
 			});
+			*/
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// MULTiply (Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void mult() { throw (new NotImplementedException()); }
+		public void mult() {
+			MipsMethodEmiter.SaveLO(() =>
+			{
+				MipsMethodEmiter.LoadGPR_Signed(RS);
+				MipsMethodEmiter.LoadGPR_Signed(RT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_0);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shr);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_M1);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
+			});
+			MipsMethodEmiter.SaveHI(() =>
+			{
+				MipsMethodEmiter.LoadGPR_Signed(RS);
+				MipsMethodEmiter.LoadGPR_Signed(RT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 32);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shr);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_M1);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
+			});
+		}
 		public void multu() { throw(new NotImplementedException()); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -268,8 +322,22 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move if Zero/Non zero.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void movz() { throw (new NotImplementedException()); }
-		public void movn() { throw(new NotImplementedException()); }
+		private void _movzn(OpCode OpCode)
+		{
+			var SkipMoveLabel = MipsMethodEmiter.ILGenerator.DefineLabel();
+			MipsMethodEmiter.LoadGPR(RT);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_0);
+			MipsMethodEmiter.ILGenerator.Emit(OpCode, SkipMoveLabel);
+			MipsMethodEmiter.SET_REG(RD, RS);
+			MipsMethodEmiter.ILGenerator.MarkLabel(SkipMoveLabel);
+		}
+
+		public void movz() {
+			_movzn(OpCodes.Bne_Un);
+		}
+		public void movn() {
+			_movzn(OpCodes.Beq);
+		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// EXTract/INSert.

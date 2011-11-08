@@ -311,75 +311,76 @@ namespace CSPspEmu.Sandbox
 			//Processor.TraceJIT = true;
 			var HleState = new HleState(Processor);
 			var HlePspRtc = HleState.PspRtc;
-			var ThreadManager = HleState.HleThreadManager;
+			var ThreadManager = HleState.ThreadManager;
 			var Assembler = new MipsAssembler(MemoryStream);
 
 			//var ElfStream = new MemoryStream(MiniFireElfBin);
-			var ElfStream = File.OpenRead("../../../TestInput/HelloWorld.elf");
+			//var ElfStream = File.OpenRead("../../../TestInput/HelloWorld.elf");
 			//var ElfStream = File.OpenRead("../../../TestInput/minifire.elf");
+			var ElfStream = File.OpenRead("../../../TestInput/HelloWorldPSP.elf");
 
 			Loader.LoadAllocateAndWrite(
 				ElfStream,
 				MemoryStream,
-				HleState.HleMemoryManager.RootPartition
+				HleState.MemoryManager.RootPartition
 			);
 
-			Loader.UpdateModuleImports(new PspMemoryStream(Memory), HleState.HleModuleManager);
+			Loader.UpdateModuleImports(new PspMemoryStream(Memory), HleState.ModuleManager);
 
 			Console.WriteLine("{0:X}", Loader.InitInfo.PC);
 			Console.WriteLine("{0:X}", Memory.Read4(Loader.InitInfo.PC));
 
-			var ThreadManForUser = HleState.HleModuleManager.GetModule<ThreadManForUser>();
+			var ThreadManForUser = HleState.ModuleManager.GetModule<ThreadManForUser>();
 
 
 			Processor.RegisterNativeSyscall(0x206D, (Code, CpuThreadState) =>
 			{
-				HleState.HleModuleManager.GetModuleDelegate<ThreadManForUser>("sceKernelCreateThread")(CpuThreadState);
+				HleState.ModuleManager.GetModuleDelegate<ThreadManForUser>("sceKernelCreateThread")(CpuThreadState);
 			});
 
 			Processor.RegisterNativeSyscall(0x206F, (Code, CpuThreadState) =>
 			{
-				HleState.HleModuleManager.GetModuleDelegate<ThreadManForUser>("sceKernelStartThread")(CpuThreadState);
+				HleState.ModuleManager.GetModuleDelegate<ThreadManForUser>("sceKernelStartThread")(CpuThreadState);
 			});
 
 			Processor.RegisterNativeSyscall(0x2071, (Code, CpuThreadState) =>
 			{
-				HleState.HleModuleManager.GetModuleDelegate<ThreadManForUser>("sceKernelExitDeleteThread")(CpuThreadState);
+				HleState.ModuleManager.GetModuleDelegate<ThreadManForUser>("sceKernelExitDeleteThread")(CpuThreadState);
 			});
 
 			Processor.RegisterNativeSyscall(0x20BF, (Code, CpuThreadState) =>
 			{
-				HleState.HleModuleManager.GetModuleDelegate<UtilsForUser>("sceKernelUtilsMt19937Init")(CpuThreadState);
+				HleState.ModuleManager.GetModuleDelegate<UtilsForUser>("sceKernelUtilsMt19937Init")(CpuThreadState);
 			});
 
 			Processor.RegisterNativeSyscall(0x20C0, (Code, CpuThreadState) =>
 			{
-				HleState.HleModuleManager.GetModuleDelegate<UtilsForUser>("sceKernelUtilsMt19937UInt")(CpuThreadState);
+				HleState.ModuleManager.GetModuleDelegate<UtilsForUser>("sceKernelUtilsMt19937UInt")(CpuThreadState);
 			});
 
 			Processor.RegisterNativeSyscall(0x213A, (Code, CpuThreadState) =>
 			{
-				HleState.HleModuleManager.GetModuleDelegate<sceDisplay>("sceDisplaySetMode")(CpuThreadState);
+				HleState.ModuleManager.GetModuleDelegate<sceDisplay>("sceDisplaySetMode")(CpuThreadState);
 			});
 
 			Processor.RegisterNativeSyscall(0x2147, (Code, CpuThreadState) =>
 			{
-				HleState.HleModuleManager.GetModuleDelegate<sceDisplay>("sceDisplayWaitVblankStart")(CpuThreadState);
+				HleState.ModuleManager.GetModuleDelegate<sceDisplay>("sceDisplayWaitVblankStart")(CpuThreadState);
 			});
 
 			Processor.RegisterNativeSyscall(0x213f, (Code, CpuThreadState) =>
 			{
-				HleState.HleModuleManager.GetModuleDelegate<sceDisplay>("sceDisplaySetFrameBuf")(CpuThreadState);
+				HleState.ModuleManager.GetModuleDelegate<sceDisplay>("sceDisplaySetFrameBuf")(CpuThreadState);
 			});
 
 			Processor.RegisterNativeSyscall(0x20eb, (Code, CpuThreadState) =>
 			{
-				HleState.HleModuleManager.GetModuleDelegate<LoadExecForUser>("sceKernelExitGame")(CpuThreadState);
+				HleState.ModuleManager.GetModuleDelegate<LoadExecForUser>("sceKernelExitGame")(CpuThreadState);
 			});
 
 			Processor.RegisterNativeSyscall(0x2150, (Code, CpuThreadState) =>
 			{
-				HleState.HleModuleManager.GetModuleDelegate<sceCtrl>("sceCtrlPeekBufferPositive")(CpuThreadState);
+				HleState.ModuleManager.GetModuleDelegate<sceCtrl>("sceCtrlPeekBufferPositive")(CpuThreadState);
 			});
 
 			var MainThread = ThreadManager.Create();
@@ -397,7 +398,7 @@ namespace CSPspEmu.Sandbox
 
 			Processor.RegisterNativeSyscall(0x7777, (Code, CpuThreadState) =>
 			{
-				var SleepThread = HleState.HleThreadManager.Current;
+				var SleepThread = HleState.ThreadManager.Current;
 				SleepThread.CurrentStatus = HleThread.Status.Waiting;
 				SleepThread.CurrentWaitType = HleThread.WaitType.None;
 				CpuThreadState.Yield();

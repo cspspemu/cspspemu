@@ -42,7 +42,7 @@ namespace CSPspEmu.Hle.Managers
 			{
 				uint Info = CpuThreadState.Processor.Memory.Read4(CpuThreadState.PC + 4);
 				{
-					Console.WriteLine("{0:X}", CpuThreadState.RA);
+					//Console.WriteLine("{0:X}", CpuThreadState.RA);
 					DelegateTable[Info](CpuThreadState);
 				}
 				CpuThreadState.PC = CpuThreadState.RA;

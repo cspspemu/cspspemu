@@ -15,9 +15,10 @@ namespace CSPspEmu.Hle
 		public PspRtc PspRtc;
 		public PspDisplay PspDisplay;
 		public PspController PspController;
-		public HleThreadManager HleThreadManager;
-		public HleMemoryManager HleMemoryManager;
-		public HleModuleManager HleModuleManager;
+		public HleThreadManager ThreadManager;
+		public HleMemoryManager MemoryManager;
+		public HleModuleManager ModuleManager;
+		public HleCallbackManager CallbackManager;
 
 		public HleState(Processor Processor)
 		{
@@ -26,9 +27,10 @@ namespace CSPspEmu.Hle
 			this.PspRtc = new PspRtc();
 			this.PspDisplay = new PspDisplay(this.PspRtc);
 			this.PspController = new PspController();
-			this.HleThreadManager = new HleThreadManager(this.Processor, this.PspRtc);
-			this.HleMemoryManager = new HleMemoryManager(this.Processor.Memory);
-			this.HleModuleManager = new HleModuleManager(this);
+			this.ThreadManager = new HleThreadManager(this.Processor, this.PspRtc);
+			this.MemoryManager = new HleMemoryManager(this.Processor.Memory);
+			this.ModuleManager = new HleModuleManager(this);
+			this.CallbackManager = new HleCallbackManager(this);
 		}
 	}
 }

@@ -279,6 +279,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			});
 		}
 
+		public void SET_REG(int RT, int RS)
+		{
+			SaveGPR(RT, () => { LoadGPR(RS); });
+		}
+
 		public Action<CpuThreadState> CreateDelegate()
 		{
 			ILGenerator.Emit(OpCodes.Ret);

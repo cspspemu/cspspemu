@@ -35,7 +35,7 @@ namespace CSPspEmu.Hle.Modules.display
 		{
 			if (HleState.PspDisplay.Vsync)
 			{
-				var SleepThread = HleState.HleThreadManager.Current;
+				var SleepThread = HleState.ThreadManager.Current;
 				SleepThread.CurrentStatus = HleThread.Status.Waiting;
 				SleepThread.CurrentWaitType = HleThread.WaitType.Timer;
 				SleepThread.AwakeOnTime = HleState.PspRtc.CurrentDateTime + TimeSpan.FromMilliseconds(1000 / 60);
@@ -56,7 +56,7 @@ namespace CSPspEmu.Hle.Modules.display
 		[HlePspFunction(NID = 0x289D82FE, FirmwareVersion = 150)]
 		public int sceDisplaySetFrameBuf(uint Address, int BufferWidth, PspDisplay.PixelFormats PixelFormat, PspDisplay.SyncMode Sync)
 		{
-			//Console.WriteLine("sceDisplay.sceDisplaySetFrameBuf {0:X}", Address);
+			Console.WriteLine("sceDisplay.sceDisplaySetFrameBuf {0:X},{1},{2},{3}", Address, BufferWidth, PixelFormat, Sync);
 			HleState.PspDisplay.CurrentInfo.Address = Address;
 			HleState.PspDisplay.CurrentInfo.BufferWidth = BufferWidth;
 			HleState.PspDisplay.CurrentInfo.PixelFormat = PixelFormat;

@@ -44,17 +44,20 @@
     <Compile Include="Attributes\HlePspFunctionAttribute.cs" />
     <Compile Include="Formats\Elf.cs" />
     <Compile Include="Formats\ElfPsp.cs" />
+    <Compile Include="HleCallback.cs" />
     <Compile Include="HleModule.cs" />
     <Compile Include="HleModuleHost.cs" />
     <Compile Include="HleLibrary.cs" />
     <Compile Include="Loader\ElfLoader.cs" />
     <Compile Include="Loader\ElfPspLoader.cs" />
+    <Compile Include="Managers\HleCallbackManager.cs" />
     <Compile Include="Managers\HleMemoryManager.cs" />
     <Compile Include="HleModuleGuest.cs" />
     <Compile Include="Managers\HleModuleManager.cs" />
     <Compile Include="HleThread.cs" />
     <Compile Include="Managers\HleThreadManager.cs" />
     <Compile Include="HleState.cs" />
+    <Compile Include="Managers\HleUidPool.cs" />
     <Compile Include="MemoryPartition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

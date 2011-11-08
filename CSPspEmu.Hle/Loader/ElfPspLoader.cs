@@ -71,7 +71,14 @@ namespace CSPspEmu.Hle.Loader
 					CallStreamWriter.Write((uint)(0x0000000C | (FunctionGenerator.NativeCallSyscallCode << 6))); // syscall 0x2307
 					CallStreamWriter.Write(
 						(uint)ModuleManager.AllocDelegateSlot(
-							Module.DelegatesByNID.GetOrDefault(NID, null),
+							(CpuThreadState) => {
+								Console.WriteLine(
+									"Thread({0}):{1}:{2}",
+									ModuleManager.HleState.ThreadManager.Current.Id,
+									ModuleImportName, NIDName
+								);
+								Module.DelegatesByNID.GetOrDefault(NID, null)(CpuThreadState);
+							},
 							String.Format("{0}:{1}", ModuleImportName, NIDName)
 						)
 					);

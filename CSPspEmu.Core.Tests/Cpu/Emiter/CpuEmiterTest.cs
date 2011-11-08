@@ -345,20 +345,39 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
-		public void SetMultTest()
+		public void SetDivTest()
 		{
 			CpuThreadState.ExecuteAssembly(@"
 				li r10, 100
 				li r11, 12
 				div r10, r11
-				mflo r20
-				mfhi r21
+				mflo r1
+				mfhi r2
 			");
 
 			Assert.AreEqual(4, (int)CpuThreadState.HI);
 			Assert.AreEqual(8, (int)CpuThreadState.LO);
-			Assert.AreEqual((uint)CpuThreadState.GPR[20], (uint)CpuThreadState.LO);
-			Assert.AreEqual((uint)CpuThreadState.GPR[21], (uint)CpuThreadState.HI);
+			Assert.AreEqual((uint)CpuThreadState.GPR[1], (uint)CpuThreadState.LO);
+			Assert.AreEqual((uint)CpuThreadState.GPR[2], (uint)CpuThreadState.HI);
+		}
+
+		[TestMethod]
+		public void SetMulTest()
+		{
+			CpuThreadState.ExecuteAssembly(@"
+				li r10, 987654321
+				li r11, 123456789
+				mult r10, r11
+				mflo r1
+				mfhi r2
+			");
+
+			long Expected = 123456789L * 987654321L;
+
+			Assert.AreEqual((uint)((Expected >> 0) & 0xFFFFFFFF), (uint)CpuThreadState.HI);
+			Assert.AreEqual((uint)((Expected >> 32) & 0xFFFFFFFF), (uint)CpuThreadState.LO);
+			Assert.AreEqual((uint)CpuThreadState.GPR[1], (uint)CpuThreadState.LO);
+			Assert.AreEqual((uint)CpuThreadState.GPR[2], (uint)CpuThreadState.HI);
 		}
 
 		[TestMethod]
@@ -398,6 +417,42 @@ namespace CSPspEmu.Core.Tests
 			Assert.AreEqual((uint)0xFFFFFFFF, (uint)CpuThreadState.GPR[2]);
 			Assert.AreEqual((uint)0x0000FFFF, (uint)CpuThreadState.GPR[3]);
 			Assert.AreEqual((uint)0xFFFFFFFF, (uint)CpuThreadState.GPR[4]);
+		}
+
+		[TestMethod]
+		public void MovZeroNumberTest()
+		{
+			CpuThreadState.ExecuteAssembly(@"
+				li  r10, 0xFF
+				li  r11, 0x777
+				movz r1, r11, r10
+				movn r2, r11, r10
+			");
+
+			Assert.AreEqual(0x000, (int)CpuThreadState.GPR[1]);
+			Assert.AreEqual(0x777, (int)CpuThreadState.GPR[2]);
+			//auto OP_MOVZ() { mixin(CE("if ($rt == 0) $rd = $rs;")); }
+			//auto OP_MOVN() { mixin(CE("if ($rt != 0) $rd = $rs;")); }
+
+		}
+
+		[TestMethod]
+		public void MinMaxTest()
+		{
+			CpuThreadState.ExecuteAssembly(@"
+				li  r10, -100
+				li  r11, 0
+				li  r12, +100
+				max r1, r10, r12
+				max r2, r12, r10
+				min r3, r10, r12
+				min r4, r12, r10
+			");
+
+			Assert.AreEqual(+100, (int)CpuThreadState.GPR[1]);
+			Assert.AreEqual(+100, (int)CpuThreadState.GPR[2]);
+			Assert.AreEqual(-100, (int)CpuThreadState.GPR[3]);
+			Assert.AreEqual(-100, (int)CpuThreadState.GPR[4]);
 		}
 	}
 }
