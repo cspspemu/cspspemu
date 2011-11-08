@@ -11,6 +11,28 @@ namespace CSPspEmu.Hle.Managers
 		protected Dictionary<Type, HleModuleHost> HleModules = new Dictionary<Type, HleModuleHost>();
 		public HleState HleState;
 
+		static public IEnumerable<Type> GetAllHleModules()
+		{
+			var FindType = typeof(HleModuleHost);
+			return AppDomain.CurrentDomain.GetAssemblies()
+				.SelectMany(Assembly => Assembly.GetTypes())
+				.Where(Type => FindType.IsAssignableFrom(Type))
+			;
+		}
+
+		static private Dictionary<String, Type> _HleModuleTypes;
+		static public Dictionary<String, Type> HleModuleTypes
+		{
+			get {
+				if (_HleModuleTypes == null)
+				{
+					_HleModuleTypes = GetAllHleModules().ToDictionary(Type => Type.Name);
+				}
+				return _HleModuleTypes;
+			}
+		}
+		
+
 		public HleModuleManager(HleState HleState)
 		{
 			this.HleState = HleState;
@@ -18,13 +40,27 @@ namespace CSPspEmu.Hle.Managers
 
 		public TType GetModule<TType>() where TType : HleModuleHost
 		{
-			if (!HleModules.ContainsKey(typeof(TType)))
+			return (TType)GetModuleByType(typeof(TType));
+		}
+
+		public HleModuleHost GetModuleByType(Type Type)
+		{
+			if (!HleModules.ContainsKey(Type))
 			{
-				var HleModule = HleModules[typeof(TType)] = Activator.CreateInstance<TType>();
+				var HleModule = HleModules[Type] = (HleModuleHost)Activator.CreateInstance(Type);
 				HleModule.Initialize(HleState);
 			}
 
-			return (TType)HleModules[typeof(TType)];
+			return (HleModuleHost)HleModules[Type];
+		}
+
+		public HleModuleHost GetModuleByName(String ModuleNameToFind)
+		{
+			if (!HleModuleTypes.ContainsKey(ModuleNameToFind))
+			{
+				throw (new KeyNotFoundException("Can't find module '" + ModuleNameToFind + "'"));
+			}
+			return GetModuleByType(HleModuleTypes[ModuleNameToFind]);
 		}
 
 		public Action<CpuThreadState> GetModuleDelegate<TType>(String FunctionName) where TType : HleModuleHost

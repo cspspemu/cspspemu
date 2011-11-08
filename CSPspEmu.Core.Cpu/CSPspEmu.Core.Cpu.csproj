@@ -54,6 +54,7 @@
     <Compile Include="Cpu\Emiter\Emiters\Special.cs" />
     <Compile Include="Cpu\Emiter\Emiters\Vfpu.cs" />
     <Compile Include="Cpu\Emiter\Emiters\Vfpu_Branches.cs" />
+    <Compile Include="Cpu\Emiter\FunctionGenerator.cs" />
     <Compile Include="Cpu\MethodCache.cs" />
     <Compile Include="Cpu\Emiter\MipsEmiter.cs" />
     <Compile Include="Cpu\Emiter\MipsMethodEmiter.cs" />

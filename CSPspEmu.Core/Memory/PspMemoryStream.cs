@@ -9,11 +9,11 @@ namespace CSPspEmu.Core.Memory
 	unsafe public class PspMemoryStream : Stream
 	{
 		protected uint _Position;
-		protected PspMemory PspMemory;
+		protected PspMemory Memory;
 
-		public PspMemoryStream(PspMemory AbstractPspMemory)
+		public PspMemoryStream(PspMemory Memory)
 		{
-			this.PspMemory = AbstractPspMemory;
+			this.Memory = Memory;
 		}
 
 		public override bool CanRead
@@ -55,7 +55,11 @@ namespace CSPspEmu.Core.Memory
 
 		public override int Read(byte[] buffer, int offset, int count)
 		{
-			byte *Ptr = (byte*)PspMemory.PspAddressToPointer(_Position);
+			if (!Memory.IsAddressValid(_Position))
+			{
+				throw (new InvalidOperationException(String.Format("Can't read from invalid address 0x{0:X}", _Position)));
+			}
+			byte *Ptr = (byte*)Memory.PspAddressToPointer(_Position);
 			for (int n = 0; n < count; n++) buffer[n + offset] = Ptr[n];
 			_Position += (uint)count;
 			return count;
@@ -85,7 +89,7 @@ namespace CSPspEmu.Core.Memory
 
 		public override void Write(byte[] buffer, int offset, int count)
 		{
-			byte* Ptr = (byte*)PspMemory.PspAddressToPointer(_Position);
+			byte* Ptr = (byte*)Memory.PspAddressToPointer(_Position);
 			for (int n = 0; n < count; n++) Ptr[n] = buffer[n + offset];
 			_Position += (uint)count;
 		}

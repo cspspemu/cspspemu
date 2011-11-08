@@ -7,13 +7,27 @@ namespace CSPspEmu.Core
 {
 	unsafe abstract public class PspMemory
 	{
-		/*
-		public struct Segment
+		sealed public class Segment
 		{
-			public uint Offset;
-			public uint Size;
+			public uint Low { get; private set; }
+			public uint High { get; private set; }
+			public uint Size { get { return High - Low; } }
+
+			public Segment(uint Offset, uint Size)
+			{
+				this.Low = Offset;
+				this.High = Offset + Size;
+			}
+
+			public bool Contains(uint Address)
+			{
+				return (Address >= Low && Address < High);
+			}
 		}
-		*/
+
+		public Segment ScratchPadSegment = new Segment(ScratchPadOffset, ScratchPadSize);
+		public Segment MainSegment = new Segment(MainOffset, MainSize);
+		public Segment FrameBufferSegment = new Segment(FrameBufferOffset, FrameBufferSize);
 
 		//static public Segment ScratchPadSegment = new Segment() { Offset = 0x00010000, Size = 4 * 1024 };
 
@@ -31,6 +45,15 @@ namespace CSPspEmu.Core
 
 		abstract public uint PointerToPspAddress(void* Pointer);
 		abstract public void* PspAddressToPointer(uint Address);
+
+		public bool IsAddressValid(uint _Address)
+		{
+			var Address = _Address & 0x1FFFFFFF;
+			if (MainSegment.Contains(Address)) return true;
+			if (FrameBufferSegment.Contains(Address)) return true;
+			if (ScratchPadSegment.Contains(Address)) return true;
+			return false;
+		}
 
 		public void Write1(uint Address, byte Value)
 		{

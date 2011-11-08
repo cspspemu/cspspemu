@@ -311,11 +311,16 @@ namespace CSPspEmu.Sandbox
 			var HlePspRtc = HleState.PspRtc;
 			var ThreadManager = HleState.HleThreadManager;
 
+			//var ElfStream = new MemoryStream(MiniFireElfBin);
+			var ElfStream = File.OpenRead("../../../TestInput/HelloWorld.elf");
+
 			Loader.LoadAllocateAndWrite(
-				new MemoryStream(MiniFireElfBin),
+				ElfStream,
 				new PspMemoryStream(Memory),
 				HleState.HleMemoryManager.RootPartition
 			);
+
+			Loader.UpdateModuleImports(new PspMemoryStream(Memory), HleState.HleModuleManager);
 
 			Console.WriteLine("{0:X}", Loader.InitInfo.PC);
 			Console.WriteLine("{0:X}", Memory.Read4(Loader.InitInfo.PC));
@@ -409,6 +414,7 @@ namespace CSPspEmu.Sandbox
 		[STAThread]
 		static void Main(string[] args)
 		{
+			Console.SetWindowSize(160, 60);
 			//var Processor = new Processor(new LazyPspMemory());
 			//Processor.TestLoadReg(Processor);
 			//PerfTest();

@@ -6,6 +6,7 @@ using CSharpUtils.Threading;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
+using System.Diagnostics;
 
 namespace CSPspEmu.Hle
 {
@@ -54,32 +55,9 @@ namespace CSPspEmu.Hle
 		{
 			while (true)
 			{
-				//Console.WriteLine("aa");
+				Debug.WriteLine("Thread({0:X}) : PC: {1:X}", this.Id, CpuThreadState.PC);
 				GetDelegateAt(CpuThreadState.PC)(CpuThreadState);
 			}
-			/*
-			long InstructionCountAfterLastYield = 0;
-			while (true)
-			{
-				GetDelegateAt(CpuThreadState.PC)(CpuThreadState);
-
-				int CurrentStepInstructionCount = CpuThreadState.StepInstructionCount;
-				CpuThreadState.TotalInstructionCount += CurrentStepInstructionCount;
-				InstructionCountAfterLastYield += CurrentStepInstructionCount;
-
-				CpuThreadState.StepInstructionCount = 0;
-				//Console.WriteLine(CurrentStepInstructionCount);
-
-				if (InstructionCountAfterLastYield >= MinimalInstructionCountForYield)
-				{
-					GreenThread.Yield();
-					InstructionCountAfterLastYield = 0;
-				}
-
-				//Console.WriteLine(CpuThreadState.StepInstructionCount);
-				//GreenThread.Yield();
-			}
-			*/
 		}
 
 		public Action<CpuThreadState> GetDelegateAt(uint PC)

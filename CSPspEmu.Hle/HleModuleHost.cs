@@ -11,9 +11,10 @@ using CSharpUtils;
 
 namespace CSPspEmu.Hle
 {
-	unsafe public class HleModuleHost
+	unsafe public class HleModuleHost : HleModule
 	{
 		public HleState HleState;
+		public Dictionary<uint, String> NamesByNID = new Dictionary<uint, String>();
 		public Dictionary<uint, Action<CpuThreadState>> DelegatesByNID = new Dictionary<uint, Action<CpuThreadState>>();
 		public Dictionary<string, Action<CpuThreadState>> DelegatesByName = new Dictionary<string, Action<CpuThreadState>>();
 
@@ -36,6 +37,7 @@ namespace CSPspEmu.Hle
 					{
 						//Console.WriteLine(Attribute.NID);
 						DelegatesByNID[Attribute.NID] = Delegate;
+						NamesByNID[Attribute.NID] = MethodInfo.Name;
 					}
 				}
 			}
@@ -108,66 +110,6 @@ namespace CSPspEmu.Hle
 				CpuThreadState.ModuleObject = this;
 				Delegate(CpuThreadState);
 			};
-
-			/*
-			int GprIndex = 4;
-			var ParameterTypes = MethodInfo.GetParameters().Select(ParameterInfo => ParameterInfo.ParameterType).ToArray();
-			int ParametersCount = ParameterTypes.Length;
-			object[] Parameters = new object[ParametersCount];
-			int[] ParameterIndex = new int[ParametersCount];
-			for (int n = 0; n < ParametersCount; n++)
-			{
-				ParameterIndex[n] = GprIndex;
-				GprIndex++;
-			}
-
-			return (CpuThreadState) => 
-			{
-				for (int n = 0; n < ParametersCount; n++)
-				{
-					Parameters[n] = CpuThreadState.GPR[ParameterIndex[n]];
-					if (ParameterTypes[n] == typeof(int)) {
-						Parameters[n] = (int)Parameters[n];
-					} else if (ParameterTypes[n] == typeof(uint)) {
-						Parameters[n] = (uint)Parameters[n];
-					}
-				}
-				var ReturnValue = MethodInfo.Invoke(this, Parameters);
-				if (MethodInfo.ReturnType != typeof(void))
-				{
-					if (MethodInfo.ReturnType == typeof(long))
-					{
-						CpuThreadState.GPR[2] = (int)(((uint)ReturnValue >> 0) & 0xFFFFFFFF);
-						CpuThreadState.GPR[3] = (int)(((uint)ReturnValue >> 32) & 0xFFFFFFFF);
-					}
-					else
-					{
-						CpuThreadState.GPR[2] = (int)ReturnValue;
-					}
-				}
-			};
-			*/
 		}
-
-		/*
-		public Action<CpuThreadState> CreateMethodForNid(uint NID)
-		{
-			throw (new NotImplementedException());
-		}
-
-		public Action<CpuThreadState> CreateMethodForMethodName(string MethodName)
-		{
-			return CreateMethodForMethodInfo(this.GetType().GetMethod(MethodName));
-		}
-
-		public Action<CpuThreadState> CreateMethodForMethodInfo(MethodInfo MethodInfo)
-		{
-			if (MethodInfo == null)
-			{
-				throw(new ArgumentNullException());
-			}
-			throw (new NotImplementedException());
-		}
-		*/
 	}
 }
