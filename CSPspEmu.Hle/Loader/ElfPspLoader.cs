@@ -8,6 +8,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using CSPspEmu.Hle.Managers;
+using CSPspEmu.Core.Cpu.Cpu.Emiter;
 
 namespace CSPspEmu.Hle.Loader
 {
@@ -65,6 +66,16 @@ namespace CSPspEmu.Hle.Loader
 				for (int n = 0; n < ModuleImport.FunctionCount; n++)
 				{
 					uint NID = NidStreamReader.ReadUInt32();
+					var NIDName = Module.NamesByNID.GetOrDefault(NID, String.Format("<unknown:{0:X}>", NID));
+					//var Delegate = Module.DelegatesByNID.GetOrDefault(NID, null);
+					CallStreamWriter.Write((uint)(0x0000000C | (FunctionGenerator.NativeCallSyscallCode << 6))); // syscall 0x2307
+					CallStreamWriter.Write(
+						(uint)ModuleManager.AllocDelegateSlot(
+							Module.DelegatesByNID.GetOrDefault(NID, null),
+							String.Format("{0}:{1}", ModuleImportName, NIDName)
+						)
+					);
+
 					Console.WriteLine(
 						"    CODE_ADDR({0:X})  :  NID(0x{1,8:X}) : {2}",
 						ModuleImport.CallAddress + n * 8,
@@ -74,7 +85,7 @@ namespace CSPspEmu.Hle.Loader
 				}
 			}
 
-			Console.ReadKey();
+			//Console.ReadKey();
 		}
 	}
 }

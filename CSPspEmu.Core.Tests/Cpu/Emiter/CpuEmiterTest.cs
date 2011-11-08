@@ -362,7 +362,7 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
-		public void TrySet0()
+		public void TrySet0Test()
 		{
 			CpuThreadState.ExecuteAssembly(@"
 				li r0, 0x12345678
@@ -372,7 +372,7 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
-		public void TryDecWithAdd()
+		public void TryDecWithAddTest()
 		{
 			CpuThreadState.ExecuteAssembly(@"
 				li r1, 100
@@ -380,6 +380,24 @@ namespace CSPspEmu.Core.Tests
 			");
 
 			Assert.AreEqual(99, CpuThreadState.GPR[1]);
+		}
+
+		[TestMethod]
+		public void SignExtendTest()
+		{
+			CpuThreadState.ExecuteAssembly(@"
+				li  r10, 0xFF
+				li  r11, 0xFFFF
+				or  r1, r0, r10
+				seb r2, r10
+				or  r3, r0, r11
+				seh r4, r11
+			");
+
+			Assert.AreEqual((uint)0x000000FF, (uint)CpuThreadState.GPR[1]);
+			Assert.AreEqual((uint)0xFFFFFFFF, (uint)CpuThreadState.GPR[2]);
+			Assert.AreEqual((uint)0x0000FFFF, (uint)CpuThreadState.GPR[3]);
+			Assert.AreEqual((uint)0xFFFFFFFF, (uint)CpuThreadState.GPR[4]);
 		}
 	}
 }

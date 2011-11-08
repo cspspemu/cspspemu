@@ -27,15 +27,19 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Option">Additional options specified by ::SceKernelThreadOptParam.</param>
 		/// <returns>UID of the created thread, or an error code.</returns>
 		[HlePspFunction(NID = 0x446D8DE6, FirmwareVersion = 150)]
-		public uint sceKernelCreateThread(CpuThreadState CpuThreadState, string Name, uint EntryPoint, int InitPriority, int StackSize, uint Attribute, SceKernelThreadOptParam* Option)
+		public uint sceKernelCreateThread(CpuThreadState CpuThreadState, string Name, uint EntryPoint, int InitPriority, uint StackSize, uint Attribute, SceKernelThreadOptParam* Option)
 		{
-			Console.WriteLine("ThreadManForUser.sceKernelCreateThread({0:X}, {1:X}, {2:X}, {3:X}, {4:X}, {5:X})", Name, EntryPoint, InitPriority, StackSize, Attribute, (uint)Option);
+			Console.Write("PC(0x{0:X}) : ", CpuThreadState.RA);
+			Console.WriteLine("ThreadManForUser.sceKernelCreateThread('{0}', {1:X}, {2:X}, {3:X}, {4:X}, {5:X})", Name, EntryPoint, InitPriority, StackSize, Attribute, (uint)Option);
 
 			var Thread = HleState.HleThreadManager.Create();
+			Thread.Stack = HleState.HleMemoryManager.RootPartition.Allocate(StackSize, MemoryPartition.Anchor.High);
 			Thread.CpuThreadState.PC = (uint)EntryPoint;
 			Thread.CpuThreadState.GP = (uint)CpuThreadState.GP;
-			Thread.CpuThreadState.SP = (uint)(0x09000000 - StackSize);
+			Thread.CpuThreadState.SP = (uint)(Thread.Stack.High);
 			Thread.CpuThreadState.RA = (uint)0;
+
+			Console.WriteLine("    : {0}", Thread.Id);
 
 			return (uint)Thread.Id;
 		}
@@ -48,8 +52,10 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="ArgumentsPointer">Pointer to the arguments.</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xF475845D, FirmwareVersion = 150)]
-		public int sceKernelStartThread(uint ThreadId, uint ArgumentsLength, void* ArgumentsPointer)
+		public int sceKernelStartThread(CpuThreadState CpuThreadState, uint ThreadId, uint ArgumentsLength, void* ArgumentsPointer)
 		{
+			Console.Write("PC(0x{0:X}) : ", CpuThreadState.RA);
+
 			Console.WriteLine("ThreadManForUser.sceKernelStartThread({0:X}, {1:X}, {2:X})", ThreadId, ArgumentsLength, (uint)ArgumentsPointer);
 
 			HleState.HleThreadManager.GetThreadById((int)ThreadId).CurrentStatus = HleThread.Status.Ready;

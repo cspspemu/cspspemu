@@ -28,18 +28,39 @@ namespace CSPspEmu.Core.Cpu
 		public float FPR0, FPR1, FPR2, FPR3, FPR4, FPR5, FPR6, FPR7, FPR8, FPR9, FPR10, FPR11, FPR12, FPR13, FPR14, FPR15, FPR16, FPR17, FPR18, FPR19, FPR20, FPR21, FPR22, FPR23, FPR24, FPR25, FPR26, FPR27, FPR28, FPR29, FPR30, FPR31;
 
 		// http://msdn.microsoft.com/en-us/library/ms253512(v=vs.80).aspx
+		// http://logos.cs.uic.edu/366/notes/mips%20quick%20tutorial.htm
+
+		/// <summary>
+		/// Points to the middle of the 64K block of memory in the static data segment.
+		/// </summary>
 		public uint GP
 		{
 			get { return GPR28; }
 			set { GPR28 = value; }
 		}
 
+		/// <summary>
+		/// Points to last location on the stack.
+		/// </summary>
 		public uint SP
 		{
 			get { return GPR29; }
 			set { GPR29 = value; }
 		}
 
+		/// <summary>
+		/// saved value / frame pointer
+		/// Preserved across procedure calls
+		/// </summary>
+		public uint FP
+		{
+			get { return GPR30; }
+			set { GPR30 = value; }
+		}
+
+		/// <summary>
+		/// Return Address
+		/// </summary>
 		public uint RA
 		{
 			get { return GPR31; }
@@ -190,6 +211,11 @@ namespace CSPspEmu.Core.Cpu
 			//Console.WriteLine(StepInstructionCount);
 			GreenThread.Yield();
 			//Console.WriteLine(StepInstructionCount);
+		}
+
+		public void Trace(uint PC)
+		{
+			Console.WriteLine("  Trace: {0:X}", PC);
 		}
 
 		public void BreakpointIfEnabled()

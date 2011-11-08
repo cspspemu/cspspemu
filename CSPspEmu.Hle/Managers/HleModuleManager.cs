@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Cpu;
+using CSPspEmu.Core.Cpu.Cpu.Emiter;
 
 namespace CSPspEmu.Hle.Managers
 {
@@ -10,6 +11,8 @@ namespace CSPspEmu.Hle.Managers
 	{
 		protected Dictionary<Type, HleModuleHost> HleModules = new Dictionary<Type, HleModuleHost>();
 		public HleState HleState;
+		public uint DelegateLastId = 0;
+		public Dictionary<uint, Action<CpuThreadState>> DelegateTable = new Dictionary<uint, Action<CpuThreadState>>();
 
 		static public IEnumerable<Type> GetAllHleModules()
 		{
@@ -31,11 +34,19 @@ namespace CSPspEmu.Hle.Managers
 				return _HleModuleTypes;
 			}
 		}
-		
 
 		public HleModuleManager(HleState HleState)
 		{
 			this.HleState = HleState;
+			HleState.Processor.RegisterNativeSyscall(FunctionGenerator.NativeCallSyscallCode, (Code, CpuThreadState) =>
+			{
+				uint Info = CpuThreadState.Processor.Memory.Read4(CpuThreadState.PC + 4);
+				{
+					Console.WriteLine("{0:X}", CpuThreadState.RA);
+					DelegateTable[Info](CpuThreadState);
+				}
+				CpuThreadState.PC = CpuThreadState.RA;
+			});
 		}
 
 		public TType GetModule<TType>() where TType : HleModuleHost
@@ -66,6 +77,20 @@ namespace CSPspEmu.Hle.Managers
 		public Action<CpuThreadState> GetModuleDelegate<TType>(String FunctionName) where TType : HleModuleHost
 		{
 			return GetModule<TType>().DelegatesByName[FunctionName];
+		}
+
+		public uint AllocDelegateSlot(Action<CpuThreadState> Action, string Info)
+		{
+			uint DelegateId = DelegateLastId++;
+			if (Action == null)
+			{
+				Action = (CpuThreadState) =>
+				{
+					throw (new NotImplementedException("Not Implemented Syscall '" + Info + "'"));
+				};
+			}
+			DelegateTable[DelegateId] = Action;
+			return DelegateId;
 		}
 	}
 }

@@ -22,6 +22,7 @@ namespace CSPspEmu.Hle
 		public Status CurrentStatus;
 		public WaitType CurrentWaitType;
 		public DateTime AwakeOnTime;
+		public MemoryPartition Stack;
 
 		public enum WaitType
 		{
@@ -55,7 +56,7 @@ namespace CSPspEmu.Hle
 		{
 			while (true)
 			{
-				Debug.WriteLine("Thread({0:X}) : PC: {1:X}", this.Id, CpuThreadState.PC);
+				//Debug.WriteLine("Thread({0:X}) : PC: {1:X}", this.Id, CpuThreadState.PC);
 				GetDelegateAt(CpuThreadState.PC)(CpuThreadState);
 			}
 		}

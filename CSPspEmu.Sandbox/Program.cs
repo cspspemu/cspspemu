@@ -304,19 +304,23 @@ namespace CSPspEmu.Sandbox
 			};
 
 			var Memory = new FastPspMemory();
+			var MemoryStream = new PspMemoryStream(Memory);
 			var Loader = new ElfPspLoader();
 			//var Memory = new LazyPspMemory();
 			var Processor = new Processor(Memory);
+			//Processor.TraceJIT = true;
 			var HleState = new HleState(Processor);
 			var HlePspRtc = HleState.PspRtc;
 			var ThreadManager = HleState.HleThreadManager;
+			var Assembler = new MipsAssembler(MemoryStream);
 
 			//var ElfStream = new MemoryStream(MiniFireElfBin);
 			var ElfStream = File.OpenRead("../../../TestInput/HelloWorld.elf");
+			//var ElfStream = File.OpenRead("../../../TestInput/minifire.elf");
 
 			Loader.LoadAllocateAndWrite(
 				ElfStream,
-				new PspMemoryStream(Memory),
+				MemoryStream,
 				HleState.HleMemoryManager.RootPartition
 			);
 
@@ -382,7 +386,23 @@ namespace CSPspEmu.Sandbox
 			MainThread.CpuThreadState.PC = Loader.InitInfo.PC;
 			MainThread.CpuThreadState.GP = Loader.InitInfo.GP;
 			MainThread.CpuThreadState.SP = (uint)(0x09000000 - 10000);
-			MainThread.CpuThreadState.RA = (uint)0;
+			MainThread.CpuThreadState.RA = (uint)0x08000000;
+
+			Assembler.Assemble(@"
+				.code 0x08000000
+				syscall 0x7777
+				jr r31
+				nop
+			");
+
+			Processor.RegisterNativeSyscall(0x7777, (Code, CpuThreadState) =>
+			{
+				var SleepThread = HleState.HleThreadManager.Current;
+				SleepThread.CurrentStatus = HleThread.Status.Waiting;
+				SleepThread.CurrentWaitType = HleThread.WaitType.None;
+				CpuThreadState.Yield();
+			});
+
 
 			MainThread.CurrentStatus = HleThread.Status.Ready;
 			bool Running = true;
@@ -390,10 +410,19 @@ namespace CSPspEmu.Sandbox
 			// Execution Thread.
 			new Thread(() =>
 			{
-				while (Running)
+				try
 				{
-					HlePspRtc.Update();
-					ThreadManager.StepNext();
+					while (Running)
+					{
+						HlePspRtc.Update();
+						ThreadManager.StepNext();
+					}
+				}
+				catch (Exception Exception)
+				{
+					Console.WriteLine(Exception);
+					//throw (new Exception("Unhandled Exception " + Exception.ToString(), Exception));
+					//throw (new Exception(Exception.InnerException.ToString(), Exception.InnerException));
 				}
 			}).Start();
 

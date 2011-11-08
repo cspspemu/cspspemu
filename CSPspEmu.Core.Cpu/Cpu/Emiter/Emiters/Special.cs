@@ -40,7 +40,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public void unknown()
 		{
-			throw (new NotImplementedException("%08X : %032b".Sprintf(Instruction.Value, Instruction.Value)));
+			throw (new NotImplementedException("0x%08X : %032b at 0x%08X".Sprintf(Instruction.Value, Instruction.Value, PC)));
 		}
 	}
 }

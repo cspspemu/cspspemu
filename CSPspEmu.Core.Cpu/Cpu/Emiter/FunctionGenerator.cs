@@ -6,6 +6,7 @@ using System.IO;
 using CSPspEmu.Core.Cpu.Emiter;
 using System.Reflection.Emit;
 using CSPspEmu.Core.Cpu.Table;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 {
@@ -15,11 +16,21 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 		static public Action<uint, CpuEmiter> CpuEmiterInstruction = EmitLookupGenerator.GenerateSwitchDelegate<CpuEmiter>(InstructionTable.ALL);
 		static public Func<uint, CpuBranchAnalyzer.Flags> GetBranchInfo = EmitLookupGenerator.GenerateInfoDelegate<CpuBranchAnalyzer, CpuBranchAnalyzer.Flags>(EmitLookupGenerator.GenerateSwitchDelegateReturn<CpuBranchAnalyzer, CpuBranchAnalyzer.Flags>(InstructionTable.ALL, ThrowOnUnexistent: false), new CpuBranchAnalyzer());
 
+		public const ushort NativeCallSyscallCode = 0x1234;
+
 		static public Action<CpuThreadState> CreateDelegateForPC(CpuThreadState CpuThreadState, Stream MemoryStream, uint EntryPC)
 		{
 			if (EntryPC == 0)
 			{
-				//throw (new InvalidOperationException("EntryPC can't be NULL"));
+				if (MemoryStream is PspMemoryStream)
+				{
+					throw (new InvalidOperationException("EntryPC can't be NULL"));
+				}
+			}
+
+			if (CpuThreadState.Processor.TraceJIT)
+			{
+				Console.WriteLine("Emiting EntryPC=0x{0:X}", EntryPC);
 			}
 
 			MemoryStream.Position = EntryPC;
@@ -110,6 +121,14 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 			// PASS2: Generate code and put labels;
 			Action<uint> _EmitCpuInstructionAT = (_PC) =>
 			{
+				if (CpuThreadState.Processor.TraceJIT)
+				{
+					ILGenerator.Emit(OpCodes.Ldarg_0);
+					ILGenerator.Emit(OpCodes.Ldc_I4, _PC);
+					ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("Trace"));
+					Console.WriteLine("     PC=0x{0:X}", _PC);
+				}
+
 				CpuEmiter.LoadAT(_PC);
 				CpuEmiterInstruction(CpuEmiter.Instruction.Value, CpuEmiter);
 			};
@@ -271,6 +290,15 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 						StorePC();
 					}
 					EmitCpuInstruction();
+					if ((BranchInfo & CpuBranchAnalyzer.Flags.SyscallInstruction) != 0)
+					{
+						// On this special Syscall
+						if (CurrentInstruction.CODE == FunctionGenerator.NativeCallSyscallCode)
+						{
+							//PC += 4;
+							break;
+						}
+					}
 				}
 			}
 

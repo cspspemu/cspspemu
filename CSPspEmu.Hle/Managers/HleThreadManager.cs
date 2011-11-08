@@ -6,6 +6,7 @@ using CSharpUtils;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Cpu;
 using System.Threading;
+using System.Diagnostics;
 
 namespace CSPspEmu.Hle.Managers
 {
@@ -25,7 +26,8 @@ namespace CSPspEmu.Hle.Managers
 
 		public HleThread GetThreadById(int Id)
 		{
-			return Threads.First((Thread) => Thread.Id == Id);
+			//Debug.WriteLine(Threads.Count);
+			return Threads.FirstOrDefault((Thread) => Thread.Id == Id);
 		}
 
 		public HleThread Create()

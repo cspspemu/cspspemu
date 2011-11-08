@@ -148,8 +148,20 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Sign Extend Byte/Half word.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void seb() { throw (new NotImplementedException()); }
-		public void seh() { throw(new NotImplementedException()); }
+		public void seb() {
+			MipsMethodEmiter.SaveGPR(RD, () =>
+			{
+				MipsMethodEmiter.LoadGPR(RT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_I1);
+			});
+		}
+		public void seh() {
+			MipsMethodEmiter.SaveGPR(RD, () =>
+			{
+				MipsMethodEmiter.LoadGPR(RT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_I2);
+			});
+		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// BIT REVerse.

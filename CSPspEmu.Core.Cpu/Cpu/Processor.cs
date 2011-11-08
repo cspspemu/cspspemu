@@ -9,6 +9,7 @@ namespace CSPspEmu.Core.Cpu
 {
 	unsafe sealed public class Processor
 	{
+		public bool TraceJIT = false;
 		public PspMemory Memory;
 		public MethodCache MethodCache;
 		private Dictionary<int, Action<int, CpuThreadState>> RegisteredNativeSyscalls = new Dictionary<int, Action<int, CpuThreadState>>();

@@ -62,6 +62,7 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 		public Flags syscall() { return Flags.SyscallInstruction; }
 
 		public Flags unhandled() { return Flags.NormalInstruction; }
-		public Flags unknown() { throw (new InvalidOperationException()); }
+		//public Flags unknown() { throw (new InvalidOperationException()); }
+		public Flags unknown() { return Flags.NormalInstruction; }
 	}
 }
