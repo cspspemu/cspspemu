@@ -29,7 +29,6 @@
 		private void InitializeComponent()
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PspDisplayForm));
-			this.splitter1 = new System.Windows.Forms.Splitter();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,14 +40,6 @@
 			this.websiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// splitter1
-			// 
-			this.splitter1.Location = new System.Drawing.Point(0, 24);
-			this.splitter1.Name = "splitter1";
-			this.splitter1.Size = new System.Drawing.Size(3, 267);
-			this.splitter1.TabIndex = 0;
-			this.splitter1.TabStop = false;
 			// 
 			// menuStrip1
 			// 
@@ -121,7 +112,7 @@
 			// websiteToolStripMenuItem
 			// 
 			this.websiteToolStripMenuItem.Name = "websiteToolStripMenuItem";
-			this.websiteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.websiteToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
 			this.websiteToolStripMenuItem.Text = "&Website";
 			this.websiteToolStripMenuItem.Click += new System.EventHandler(this.websiteToolStripMenuItem_Click);
 			// 
@@ -130,7 +121,6 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(525, 291);
-			this.Controls.Add(this.splitter1);
 			this.Controls.Add(this.menuStrip1);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menuStrip1;
@@ -147,7 +137,6 @@
 
 		#endregion
 
-		private System.Windows.Forms.Splitter splitter1;
 		private System.Windows.Forms.MenuStrip menuStrip1;
 		private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;

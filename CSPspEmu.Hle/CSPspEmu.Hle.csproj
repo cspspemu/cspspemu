@@ -44,6 +44,7 @@
     <Compile Include="Attributes\HlePspFunctionAttribute.cs" />
     <Compile Include="HlePspHleModule.cs" />
     <Compile Include="HlePspLibrary.cs" />
+    <Compile Include="Loader\ElfLoader.cs" />
     <Compile Include="Managers\HlePspMemoryManager.cs" />
     <Compile Include="HlePspModule.cs" />
     <Compile Include="Managers\HlePspModuleManager.cs" />
