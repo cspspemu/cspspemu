@@ -18,7 +18,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		//protected DynamicMethod DynamicMethod;
 		public ILGenerator ILGenerator;
 		protected String MethodName;
-		public CpuThreadState CpuThreadState;
+		//public CpuThreadState CpuThreadState;
+		public Processor Processor;
+		
 		//static protected FieldInfo Field_GPR_Ptr = typeof(Processor).GetField("GPR_Ptr");
 		//static protected FieldInfo Field_FPR_Ptr = typeof(Processor).GetField("FPR_Ptr");
 		static protected FieldInfo Field_BranchFlag = typeof(CpuThreadState).GetField("BranchFlag");
@@ -39,9 +41,30 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		*/
 
-		public MipsMethodEmiter(MipsEmiter MipsEmiter, CpuThreadState Processor)
+		public void _getmemptr(Action Action)
 		{
-			this.CpuThreadState = Processor;
+			if (Processor.Memory is FastPspMemory)
+			{
+				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+				ILGenerator.Emit(OpCodes.Ldc_I4, (int)((FastPspMemory)Processor.Memory).Base);
+				Action();
+				ILGenerator.Emit(OpCodes.Ldc_I4, (int)0x1FFFFFFF);
+				ILGenerator.Emit(OpCodes.And);
+				ILGenerator.Emit(OpCodes.Add);
+			}
+			else
+			{
+				ILGenerator.Emit(OpCodes.Ldarg_0);
+				{
+					Action();
+				}
+				ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("GetMemoryPtr"));
+			}
+		}
+
+		public MipsMethodEmiter(MipsEmiter MipsEmiter, Processor Processor)
+		{
+			this.Processor = Processor;
 
 			if (!InitializedOnce)
 			{
@@ -67,7 +90,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			ILGenerator = MethodBuilder.GetILGenerator();
 		}
 
-		protected void LoadFieldPtr(FieldInfo FieldInfo) { ILGenerator.Emit(OpCodes.Ldarg_0); ILGenerator.Emit(OpCodes.Ldflda, FieldInfo); }
+		public void LoadFieldPtr(FieldInfo FieldInfo) { ILGenerator.Emit(OpCodes.Ldarg_0); ILGenerator.Emit(OpCodes.Ldflda, FieldInfo); }
 
 		protected void LoadGPR_Ptr(int R) { LoadFieldPtr(Field_GPRList[R]); }
 		protected void LoadFPR_Ptr(int R) { LoadFieldPtr(Field_FPRList[R]); }

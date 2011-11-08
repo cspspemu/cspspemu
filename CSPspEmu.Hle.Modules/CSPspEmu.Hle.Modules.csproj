@@ -41,7 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ctrl\sceCtrl.cs" />
+    <Compile Include="display\sceDisplay.cs" />
+    <Compile Include="loadexec\LoadExecForUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="threadman\ThreadManForUser.cs" />
+    <Compile Include="utils\UtilsForUser.cs" />
     <Compile Include="wlan\sceWlan_Driver.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -15,7 +15,7 @@ namespace CSPspEmu.Core.Tests
 			var Memory = new NormalPspMemory();
 			var Processor = new Processor(Memory);
 			var CpuThreadState = new CpuThreadState(Processor);
-			var MipsEmiter = new MipsMethodEmiter(new MipsEmiter(), CpuThreadState);
+			var MipsEmiter = new MipsMethodEmiter(new MipsEmiter(), Processor);
 			CpuThreadState.GPR[1] = 1;
 			CpuThreadState.GPR[2] = 2;
 			CpuThreadState.GPR[3] = 3;

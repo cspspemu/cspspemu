@@ -8,32 +8,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 {
 	unsafe sealed public partial class CpuEmiter
 	{
-		private void _getmemptr(Action Action)
-		{
-			if (MipsMethodEmiter.CpuThreadState.Processor.Memory is FastPspMemory)
-			{
-				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (int)((FastPspMemory)MipsMethodEmiter.CpuThreadState.Processor.Memory).Base);
-				Action();
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (int)0x1FFFFFFF);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
-			}
-			else
-			{
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-				{
-					Action();
-				}
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("GetMemoryPtr"));
-			}
-		}
-
 		private void _load(Action Action)
 		{
 			MipsMethodEmiter.SaveGPR(RT, () =>
 			{
-				_getmemptr(() =>
+				MipsMethodEmiter._getmemptr(() =>
 				{
 					MipsMethodEmiter.LoadGPR(RS);
 					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
@@ -45,7 +24,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		private void _save(Action Action)
 		{
-			_getmemptr(() =>
+			MipsMethodEmiter._getmemptr(() =>
 			{
 				MipsMethodEmiter.LoadGPR(RS);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);

@@ -14,7 +14,7 @@ namespace CSPspEmu.Core.Tests
 	[TestClass]
 	unsafe public class CpuEmiterTest
 	{
-		protected AbstractPspMemory Memory;
+		protected PspMemory Memory;
 		protected Processor Processor;
 		protected CpuThreadState CpuThreadState;
 

@@ -7,7 +7,7 @@ using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Memory
 {
-	unsafe public class LazyPspMemory : AbstractPspMemory
+	unsafe public class LazyPspMemory : PspMemory
 	{
 		public LazyPspMemory()
 		{

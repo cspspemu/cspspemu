@@ -9,7 +9,7 @@ namespace CSPspEmu.Hle.Modules.wlan
 	/// <summary>
 	/// Functions related to Wlan.
 	/// </summary>
-	unsafe public class sceWlanDrv
+	unsafe public class sceWlanDrv : HlePspHleModule
 	{
 		/// <summary>
 		/// Determine the state of the Wlan power switch

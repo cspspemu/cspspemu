@@ -41,13 +41,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HlePspFunctionAttribute.cs" />
+    <Compile Include="Attributes\HlePspFunctionAttribute.cs" />
+    <Compile Include="HlePspHleModule.cs" />
     <Compile Include="HlePspLibrary.cs" />
-    <Compile Include="HlePspMemoryManager.cs" />
+    <Compile Include="Managers\HlePspMemoryManager.cs" />
     <Compile Include="HlePspModule.cs" />
-    <Compile Include="HlePspRtc.cs" />
+    <Compile Include="Managers\HlePspModuleManager.cs" />
     <Compile Include="HlePspThread.cs" />
-    <Compile Include="HlePspThreadManager.cs" />
+    <Compile Include="Managers\HlePspThreadManager.cs" />
+    <Compile Include="HleState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

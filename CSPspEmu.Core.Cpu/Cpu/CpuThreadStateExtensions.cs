@@ -49,7 +49,7 @@ namespace CSPspEmu.Core.Cpu
 		static public Action<CpuThreadState> CreateDelegateForPC(this CpuThreadState CpuThreadState, Stream MemoryStream, uint EntryPC)
 		{
 			var InstructionReader = new InstructionReader(MemoryStream);
-			var MipsMethodEmiter = new MipsMethodEmiter(MipsEmiter, CpuThreadState);
+			var MipsMethodEmiter = new MipsMethodEmiter(MipsEmiter, CpuThreadState.Processor);
 			var ILGenerator = MipsMethodEmiter.ILGenerator;
 			var CpuEmiter = new CpuEmiter(MipsMethodEmiter, InstructionReader);
 

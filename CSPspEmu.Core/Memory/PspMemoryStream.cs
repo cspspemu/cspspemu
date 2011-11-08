@@ -9,9 +9,9 @@ namespace CSPspEmu.Core.Memory
 	unsafe public class PspMemoryStream : Stream
 	{
 		protected uint _Position;
-		protected AbstractPspMemory PspMemory;
+		protected PspMemory PspMemory;
 
-		public PspMemoryStream(AbstractPspMemory AbstractPspMemory)
+		public PspMemoryStream(PspMemory AbstractPspMemory)
 		{
 			this.PspMemory = AbstractPspMemory;
 		}

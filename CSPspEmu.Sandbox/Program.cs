@@ -18,6 +18,12 @@ using CSPspEmu.Core.Cpu.Assembler;
 using System.Threading;
 using System.Windows.Forms;
 using CSPspEmu.Gui.Winforms;
+using CSPspEmu.Hle.Modules.threadman;
+using CSPspEmu.Hle.Modules.utils;
+using CSPspEmu.Hle.Modules.display;
+using CSPspEmu.Hle.Modules.loadexec;
+using CSPspEmu.Hle.Modules.ctrl;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Sandbox
 {
@@ -65,7 +71,7 @@ namespace CSPspEmu.Sandbox
 				nop
 			");
 
-			var ThreadManager = new HlePspThreadManager(Processor, new HlePspRtc());
+			var ThreadManager = new HlePspThreadManager(Processor, new PspRtc());
 			var Thread1 = ThreadManager.Create();
 			Thread1.CpuThreadState.PC = 0x08000000;
 
@@ -290,89 +296,62 @@ namespace CSPspEmu.Sandbox
 			var BinaryWriter = new BinaryWriter(MemoryStream);
 			var BinaryReader = new BinaryReader(MemoryStream);
 			var Processor = new Processor(Memory);
-			var HlePspRtc = new HlePspRtc();
-			var ThreadManager = new HlePspThreadManager(Processor, HlePspRtc);
+			var HleState = new HleState(Processor);
+			var HlePspRtc = HleState.PspRtc;
+			var ThreadManager = HleState.HlePspThreadManager;
+			var MipsAssembler = new MipsAssembler(MemoryStream);
 
-			// SceUID 	sceKernelCreateThread (const char *name, SceKernelThreadEntry entry, int initPriority, int stackSize, SceUInt attr, SceKernelThreadOptParam *option)
+			var ThreadManForUser = HleState.HlePspModuleManager.GetModule<ThreadManForUser>();
+
+
 			Processor.RegisterNativeSyscall(0x206D, (Code, CpuThreadState) =>
 			{
-				var Name = CpuThreadState.GPR[4];
-				var Entry = CpuThreadState.GPR[5];
-				var InitPriority = CpuThreadState.GPR[6];
-				var StackSize = CpuThreadState.GPR[7];
-				var Attr = CpuThreadState.GPR[8];
-				var OptionsPtr = CpuThreadState.GPR[9];
-				Console.WriteLine("ThreadManForUser.sceKernelCreateThread({0:X}, {1:X}, {2:X}, {3:X}, {4:X}, {5:X})", Name, Entry, InitPriority, StackSize, Attr, OptionsPtr);
-				var Thread = ThreadManager.Create();
-				Thread.CpuThreadState.PC = (uint)Entry;
-				Thread.CpuThreadState.GP = (uint)Entry;
-				Thread.CpuThreadState.SP = (uint)(0x09000000 - StackSize);
-				Thread.CpuThreadState.RA = (uint)0;
-
-				CpuThreadState.GPR[2] = Thread.Id;
+				HleState.HlePspModuleManager.GetModule<ThreadManForUser>().DelegatesByName["sceKernelCreateThread"](CpuThreadState);
 			});
 
 			Processor.RegisterNativeSyscall(0x206F, (Code, CpuThreadState) =>
 			{
-				// int 	sceKernelStartThread (SceUID thid, SceSize arglen, void *argp)
-				var ThreadId = CpuThreadState.GPR[4];
-				var ArgLength = CpuThreadState.GPR[5];
-				var ArgPointer = CpuThreadState.GPR[6];
-
-				ThreadManager.GetThreadById(ThreadId).CurrentStatus = HlePspThread.Status.Ready;
-
-				Console.WriteLine("ThreadManForUser.sceKernelStartThread({0:X}, {1:X}, {2:X})", ThreadId, ArgLength, ArgPointer);
+				HleState.HlePspModuleManager.GetModule<ThreadManForUser>().DelegatesByName["sceKernelStartThread"](CpuThreadState);
 			});
 
 			Processor.RegisterNativeSyscall(0x2071, (Code, CpuThreadState) =>
 			{
-				// int 	sceKernelExitThread (int status)
-				var Status = CpuThreadState.GPR[4];
-				Console.WriteLine("ThreadManForUser.sceKernelExitThread({0:X})", Status);
-				ThreadManager.Exit(ThreadManager.Current);
+				HleState.HlePspModuleManager.GetModule<ThreadManForUser>().DelegatesByName["sceKernelExitDeleteThread"](CpuThreadState);
 			});
 
 			Processor.RegisterNativeSyscall(0x20BF, (Code, CpuThreadState) =>
 			{
-				Console.WriteLine("UtilsForUser.sceKernelUtilsMt19937Init");
+				HleState.HlePspModuleManager.GetModule<UtilsForUser>().DelegatesByName["sceKernelUtilsMt19937Init"](CpuThreadState);
 			});
-
-			var Random = new Random();
 
 			Processor.RegisterNativeSyscall(0x20C0, (Code, CpuThreadState) =>
 			{
-				//Console.WriteLine("UtilsForUser.sceKernelUtilsMt19937UInt");
-				CpuThreadState.GPR[2] = Random.Next();
-				//Console.WriteLine(CpuThreadState.GPR[2]);
+				HleState.HlePspModuleManager.GetModule<UtilsForUser>().DelegatesByName["sceKernelUtilsMt19937UInt"](CpuThreadState);
 			});
 
 			Processor.RegisterNativeSyscall(0x213A, (Code, CpuThreadState) =>
 			{
-				Console.WriteLine("sceDisplay.sceDisplaySetMode");
+				HleState.HlePspModuleManager.GetModule<sceDisplay>().DelegatesByName["sceDisplaySetMode"](CpuThreadState);
 			});
 
 			Processor.RegisterNativeSyscall(0x2147, (Code, CpuThreadState) =>
 			{
-				var SleepThread = ThreadManager.Current;
-				SleepThread.CurrentStatus = HlePspThread.Status.Waiting;
-				SleepThread.CurrentWaitType = HlePspThread.WaitType.Timer;
-				SleepThread.AwakeOnTime = HlePspRtc.StepDateTime + TimeSpan.FromMilliseconds(1000 / 60);
-				CpuThreadState.Yield();
+				HleState.HlePspModuleManager.GetModule<sceDisplay>().DelegatesByName["sceDisplayWaitVblankStart"](CpuThreadState);
 			});
 
 			Processor.RegisterNativeSyscall(0x213f, (Code, CpuThreadState) =>
 			{
-				//Console.WriteLine("sceDisplay.sceDisplaySetFrameBuf");
+				HleState.HlePspModuleManager.GetModule<sceDisplay>().DelegatesByName["sceDisplaySetFrameBuf"](CpuThreadState);
 			});
 
 			Processor.RegisterNativeSyscall(0x20eb, (Code, CpuThreadState) =>
 			{
-				Console.WriteLine("LoadExecForUser.sceKernelExitGame");
+				HleState.HlePspModuleManager.GetModule<LoadExecForUser>().DelegatesByName["sceKernelExitGame"](CpuThreadState);
 			});
 
 			Processor.RegisterNativeSyscall(0x2150, (Code, CpuThreadState) =>
 			{
-				//Console.WriteLine("sceCtrl.sceCtrlPeekBufferPositive");
+				HleState.HlePspModuleManager.GetModule<sceCtrl>().DelegatesByName["sceCtrlPeekBufferPositive"](CpuThreadState);
 			});
 
 			/*
@@ -399,28 +378,28 @@ namespace CSPspEmu.Sandbox
 
 			new Thread(() =>
 			{
-				Application.EnableVisualStyles();
-				Application.SetCompatibleTextRenderingDefault(false);
-				Application.Run(new PspDisplayForm(Memory));
-				Running = false;
+				while (Running)
+				{
+					/*
+					var NextThread = ThreadManager.Next;
+					Console.WriteLine(
+						"ThreadId({0})(PC:{3:X}): {1:X},{2:X}",
+						NextThread.Id,
+						NextThread.CpuThreadState.GPR[2],
+						NextThread.CpuThreadState.GPR[8],
+						NextThread.CpuThreadState.PC
+					);
+					*/
+					HlePspRtc.Update();
+					ThreadManager.StepNext();
+				}
 			}).Start();
 			//Processor.NativeBreakpoints.Add(0x08900080);
 
-			while (Running)
-			{
-				/*
-				var NextThread = ThreadManager.Next;
-				Console.WriteLine(
-					"ThreadId({0})(PC:{3:X}): {1:X},{2:X}",
-					NextThread.Id,
-					NextThread.CpuThreadState.GPR[2],
-					NextThread.CpuThreadState.GPR[8],
-					NextThread.CpuThreadState.PC
-				);
-				*/
-				HlePspRtc.Update();
-				ThreadManager.StepNext();
-			}
+			Application.EnableVisualStyles();
+			Application.SetCompatibleTextRenderingDefault(false);
+			Application.Run(new PspDisplayForm(Memory, HleState.PspDisplay));
+			Running = false;
 
 			/*
 			while (true)
@@ -438,6 +417,7 @@ namespace CSPspEmu.Sandbox
 		/// <see cref="http://en.wikipedia.org/wiki/Common_Intermediate_Language"/>
 		/// <see cref="http://en.wikipedia.org/wiki/List_of_CIL_instructions"/>
 		/// <param name="args"></param>
+		[STAThread]
 		static void Main(string[] args)
 		{
 			//var Processor = new Processor(new LazyPspMemory());

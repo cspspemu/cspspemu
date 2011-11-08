@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Core
 {
-	unsafe abstract public class AbstractPspMemory
+	unsafe abstract public class PspMemory
 	{
 		/*
 		public struct Segment

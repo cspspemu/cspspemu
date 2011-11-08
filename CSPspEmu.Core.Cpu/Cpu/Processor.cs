@@ -9,12 +9,12 @@ namespace CSPspEmu.Core.Cpu
 {
 	unsafe sealed public class Processor
 	{
-		public AbstractPspMemory Memory;
+		public PspMemory Memory;
 		public MethodCache MethodCache;
 		private Dictionary<int, Action<int, CpuThreadState>> RegisteredNativeSyscalls = new Dictionary<int, Action<int, CpuThreadState>>();
 		public HashSet<uint> NativeBreakpoints = new HashSet<uint>();
 
-		public Processor(AbstractPspMemory Memory)
+		public Processor(PspMemory Memory)
 		{
 			this.Memory = Memory;
 			this.MethodCache = new MethodCache();

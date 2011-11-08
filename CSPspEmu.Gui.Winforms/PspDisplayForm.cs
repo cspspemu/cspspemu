@@ -9,6 +9,9 @@ using System.Windows.Forms;
 using CSharpUtils.Extensions;
 using CSharpUtils;
 using CSPspEmu.Core;
+using System.Drawing.Imaging;
+using CSPspEmu.Hle;
+using System.Diagnostics;
 
 namespace CSPspEmu.Gui.Winforms
 {
@@ -16,11 +19,13 @@ namespace CSPspEmu.Gui.Winforms
 	{
 		public Bitmap Buffer = new Bitmap(512, 272);
 		public Graphics BufferGraphics;
-		public AbstractPspMemory Memory;
+		public PspMemory Memory;
+		public PspDisplay PspDisplay;
 
-		public PspDisplayForm(AbstractPspMemory Memory)
+		public PspDisplayForm(PspMemory Memory, PspDisplay PspDisplay)
 		{
 			this.Memory = Memory;
+			this.PspDisplay = PspDisplay;
 
 			InitializeComponent();
 			SetClientSizeCore(480, 272);
@@ -43,22 +48,29 @@ namespace CSPspEmu.Gui.Winforms
 
 		protected override void OnPaintBackground(PaintEventArgs PaintEventArgs)
 		{
-			Buffer.LockBitsUnlock(System.Drawing.Imaging.PixelFormat.Format32bppArgb, (BitmapData) =>
+			if (EnableRefreshing)
 			{
-				var BitmapDataPtr = (byte*)BitmapData.Scan0.ToPointer();
-				var FrameBuffer = (byte*)Memory.PspAddressToPointer(AbstractPspMemory.FrameBufferOffset);
-				var Count = 512 * 272;
-				for (int n = 0; n < Count; n++)
+				Buffer.LockBitsUnlock(System.Drawing.Imaging.PixelFormat.Format32bppArgb, (BitmapData) =>
 				{
-					BitmapDataPtr[n * 4 + 3] = 0xFF;
-					BitmapDataPtr[n * 4 + 0] = FrameBuffer[n * 4 + 2];
-					BitmapDataPtr[n * 4 + 1] = FrameBuffer[n * 4 + 1];
-					BitmapDataPtr[n * 4 + 2] = FrameBuffer[n * 4 + 0];
-				}
-			});
+					var BitmapDataPtr = (byte*)BitmapData.Scan0.ToPointer();
+					var Address = PspDisplay.CurrentInfo.Address;
+					//Console.WriteLine("{0:X}", Address);
+					var FrameBuffer = (byte*)Memory.PspAddressToPointer(Address);
+					var Count = 512 * 272;
+					for (int n = 0; n < Count; n++)
+					{
+						BitmapDataPtr[n * 4 + 3] = 0xFF;
+						BitmapDataPtr[n * 4 + 0] = FrameBuffer[n * 4 + 2];
+						BitmapDataPtr[n * 4 + 1] = FrameBuffer[n * 4 + 1];
+						BitmapDataPtr[n * 4 + 2] = FrameBuffer[n * 4 + 0];
+					}
+				});
+			}
 			PaintEventArgs.Graphics.DrawImage(Buffer, new Point(0, 0));
 			//base.OnPaintBackground(e);
 		}
+
+		protected bool EnableRefreshing = true;
 
 		void Timer_Tick(object sender, EventArgs e)
 		{
@@ -67,6 +79,49 @@ namespace CSPspEmu.Gui.Winforms
 			//g.DrawImage();
 			//var Bitmap = new Bitmap();
 			//Bitmap.LockBits(
+		}
+
+		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.Close();
+		}
+
+		private void takeScreenshotToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				EnableRefreshing = false;
+				var SaveFileDialog = new SaveFileDialog();
+				SaveFileDialog.Filter = "PNG|*.png|All Files|*.*";
+				SaveFileDialog.FileName = "screenshot.png";
+				SaveFileDialog.AddExtension = true;
+				SaveFileDialog.DefaultExt = "png";
+				if (SaveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+				{
+					var Buffer2 = new Bitmap(480, 272);
+					Graphics.FromImage(Buffer2).DrawImage(Buffer, Point.Empty);
+					Buffer2.Save(SaveFileDialog.FileName, ImageFormat.Png);
+				}
+			}
+			finally
+			{
+				EnableRefreshing = true;
+			}
+		}
+
+		private void PspDisplayForm_KeyDown(object sender, KeyEventArgs e)
+		{
+			Console.WriteLine(e);
+		}
+
+		private void frameSkippingToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.PspDisplay.Vsync = frameSkippingToolStripMenuItem.Checked;
+		}
+
+		private void websiteToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Process.Start("http://cspspemu.soywiz.com/");
 		}
 	}
 }

@@ -7,7 +7,7 @@ using CSharpUtils.Extensions;
 using CSPspEmu.Core.Cpu;
 using System.Threading;
 
-namespace CSPspEmu.Hle
+namespace CSPspEmu.Hle.Managers
 {
 	public class HlePspThreadManager
 	{
@@ -15,9 +15,9 @@ namespace CSPspEmu.Hle
 		protected List<HlePspThread> Threads = new List<HlePspThread>();
 		protected int LastId = 1;
 		public HlePspThread Current;
-		protected HlePspRtc HlePspRtc;
+		protected PspRtc HlePspRtc;
 
-		public HlePspThreadManager(Processor Processor, HlePspRtc HlePspRtc)
+		public HlePspThreadManager(Processor Processor, PspRtc HlePspRtc)
 		{
 			this.HlePspRtc = HlePspRtc;
 			this.Processor = Processor;
@@ -80,7 +80,7 @@ namespace CSPspEmu.Hle
 			{
 				if (Thread.CurrentWaitType == HlePspThread.WaitType.Timer)
 				{
-					if (HlePspRtc.StepDateTime >= Thread.AwakeOnTime)
+					if (HlePspRtc.CurrentDateTime >= Thread.AwakeOnTime)
 					{
 						Thread.CurrentStatus = HlePspThread.Status.Ready;
 					}

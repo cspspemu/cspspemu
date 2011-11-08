@@ -12,6 +12,7 @@ namespace CSPspEmu.Core.Cpu
 	unsafe sealed public class CpuThreadState
 	{
 		public Processor Processor;
+		public object ModuleObject;
 
 		public int StepInstructionCount;
 		public long TotalInstructionCount;

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core
 {
-	unsafe public class NormalPspMemory : AbstractPspMemory
+	unsafe public class NormalPspMemory : PspMemory
 	{
 		public NormalPspMemory()
 		{
