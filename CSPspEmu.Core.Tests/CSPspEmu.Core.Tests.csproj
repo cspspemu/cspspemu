@@ -62,8 +62,10 @@
     <Compile Include="Cpu\InstructionTest.cs" />
     <Compile Include="Cpu\Assembler\MipsAssemblerTest.cs" />
     <Compile Include="Cpu\Emiter\MipsEmiterTest.cs" />
+    <Compile Include="Hle\Loader\ElfLoaderTest.cs" />
     <Compile Include="Hle\HlePspThreadManagerTest.cs" />
     <Compile Include="Hle\HlePspThreadTest.cs" />
+    <Compile Include="Hle\MemoryPartitionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -92,6 +94,7 @@
       <Name>CSPspEmu.Hle</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

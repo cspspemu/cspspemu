@@ -38,6 +38,11 @@
 			this.frameSkippingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.websiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.displayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.xToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.xToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.xToolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+			this.xToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -72,6 +77,7 @@
 			// utilsToolStripMenuItem
 			// 
 			this.utilsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.displayToolStripMenuItem,
             this.takeScreenshotToolStripMenuItem,
             this.toolStripMenuItem1,
             this.frameSkippingToolStripMenuItem});
@@ -112,9 +118,48 @@
 			// websiteToolStripMenuItem
 			// 
 			this.websiteToolStripMenuItem.Name = "websiteToolStripMenuItem";
-			this.websiteToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+			this.websiteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.websiteToolStripMenuItem.Text = "&Website";
 			this.websiteToolStripMenuItem.Click += new System.EventHandler(this.websiteToolStripMenuItem_Click);
+			// 
+			// displayToolStripMenuItem
+			// 
+			this.displayToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.xToolStripMenuItem1,
+            this.xToolStripMenuItem2,
+            this.xToolStripMenuItem3,
+            this.xToolStripMenuItem4});
+			this.displayToolStripMenuItem.Name = "displayToolStripMenuItem";
+			this.displayToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+			this.displayToolStripMenuItem.Text = "&Display";
+			// 
+			// xToolStripMenuItem1
+			// 
+			this.xToolStripMenuItem1.Name = "xToolStripMenuItem1";
+			this.xToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+			this.xToolStripMenuItem1.Text = "&1x";
+			this.xToolStripMenuItem1.Click += new System.EventHandler(this.xToolStripMenuItem1_Click);
+			// 
+			// xToolStripMenuItem2
+			// 
+			this.xToolStripMenuItem2.Name = "xToolStripMenuItem2";
+			this.xToolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
+			this.xToolStripMenuItem2.Text = "&2x";
+			this.xToolStripMenuItem2.Click += new System.EventHandler(this.xToolStripMenuItem2_Click);
+			// 
+			// xToolStripMenuItem4
+			// 
+			this.xToolStripMenuItem4.Name = "xToolStripMenuItem4";
+			this.xToolStripMenuItem4.Size = new System.Drawing.Size(152, 22);
+			this.xToolStripMenuItem4.Text = "&4x";
+			this.xToolStripMenuItem4.Click += new System.EventHandler(this.xToolStripMenuItem4_Click);
+			// 
+			// xToolStripMenuItem3
+			// 
+			this.xToolStripMenuItem3.Name = "xToolStripMenuItem3";
+			this.xToolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
+			this.xToolStripMenuItem3.Text = "&3x";
+			this.xToolStripMenuItem3.Click += new System.EventHandler(this.xToolStripMenuItem3_Click);
 			// 
 			// PspDisplayForm
 			// 
@@ -146,5 +191,10 @@
 		private System.Windows.Forms.ToolStripMenuItem frameSkippingToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem websiteToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem displayToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem xToolStripMenuItem1;
+		private System.Windows.Forms.ToolStripMenuItem xToolStripMenuItem2;
+		private System.Windows.Forms.ToolStripMenuItem xToolStripMenuItem4;
+		private System.Windows.Forms.ToolStripMenuItem xToolStripMenuItem3;
 	}
 }

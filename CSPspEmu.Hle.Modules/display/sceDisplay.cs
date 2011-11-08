@@ -6,7 +6,7 @@ using CSPspEmu.Core.Cpu;
 
 namespace CSPspEmu.Hle.Modules.display
 {
-	public class sceDisplay : HlePspHleModule
+	public class sceDisplay : HleModuleHost
 	{
 		/// <summary>
 		/// Set display mode
@@ -35,9 +35,9 @@ namespace CSPspEmu.Hle.Modules.display
 		{
 			if (HleState.PspDisplay.Vsync)
 			{
-				var SleepThread = HleState.HlePspThreadManager.Current;
-				SleepThread.CurrentStatus = HlePspThread.Status.Waiting;
-				SleepThread.CurrentWaitType = HlePspThread.WaitType.Timer;
+				var SleepThread = HleState.HleThreadManager.Current;
+				SleepThread.CurrentStatus = HleThread.Status.Waiting;
+				SleepThread.CurrentWaitType = HleThread.WaitType.Timer;
 				SleepThread.AwakeOnTime = HleState.PspRtc.CurrentDateTime + TimeSpan.FromMilliseconds(1000 / 60);
 			}
 			CpuThreadState.Yield();

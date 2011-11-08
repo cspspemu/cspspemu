@@ -6,7 +6,7 @@ using CSPspEmu.Core.Cpu;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
-	unsafe public class ThreadManForUser : HlePspHleModule
+	unsafe public class ThreadManForUser : HleModuleHost
 	{
 		public struct SceKernelThreadOptParam
 		{
@@ -38,7 +38,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		{
 			Console.WriteLine("ThreadManForUser.sceKernelCreateThread({0:X}, {1:X}, {2:X}, {3:X}, {4:X}, {5:X})", Name, EntryPoint, InitPriority, StackSize, Attribute, (uint)Option);
 
-			var Thread = HleState.HlePspThreadManager.Create();
+			var Thread = HleState.HleThreadManager.Create();
 			Thread.CpuThreadState.PC = (uint)EntryPoint;
 			Thread.CpuThreadState.GP = (uint)CpuThreadState.GP;
 			Thread.CpuThreadState.SP = (uint)(0x09000000 - StackSize);
@@ -59,7 +59,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		{
 			Console.WriteLine("ThreadManForUser.sceKernelStartThread({0:X}, {1:X}, {2:X})", ThreadId, ArgumentsLength, (uint)ArgumentsPointer);
 
-			HleState.HlePspThreadManager.GetThreadById((int)ThreadId).CurrentStatus = HlePspThread.Status.Ready;
+			HleState.HleThreadManager.GetThreadById((int)ThreadId).CurrentStatus = HleThread.Status.Ready;
 
 			return 0;
 		}
@@ -73,7 +73,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelExitDeleteThread(int Status)
 		{
 			Console.WriteLine("ThreadManForUser.sceKernelExitThread({0:X})", Status);
-			HleState.HlePspThreadManager.Exit(HleState.HlePspThreadManager.Current);
+			HleState.HleThreadManager.Exit(HleState.HleThreadManager.Current);
 			return 0;
 		}
 

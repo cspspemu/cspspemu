@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Hle.Modules.loadexec
 {
-	public class LoadExecForUser : HlePspHleModule
+	public class LoadExecForUser : HleModuleHost
 	{
 		/// <summary>
 		/// Exit game and go back to the PSP browser.

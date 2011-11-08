@@ -9,36 +9,36 @@ using System.Threading;
 
 namespace CSPspEmu.Hle.Managers
 {
-	public class HlePspThreadManager
+	public class HleThreadManager
 	{
 		protected Processor Processor;
-		protected List<HlePspThread> Threads = new List<HlePspThread>();
+		protected List<HleThread> Threads = new List<HleThread>();
 		protected int LastId = 1;
-		public HlePspThread Current;
+		public HleThread Current;
 		protected PspRtc HlePspRtc;
 
-		public HlePspThreadManager(Processor Processor, PspRtc HlePspRtc)
+		public HleThreadManager(Processor Processor, PspRtc HlePspRtc)
 		{
 			this.HlePspRtc = HlePspRtc;
 			this.Processor = Processor;
 		}
 
-		public HlePspThread GetThreadById(int Id)
+		public HleThread GetThreadById(int Id)
 		{
 			return Threads.First((Thread) => Thread.Id == Id);
 		}
 
-		public HlePspThread Create()
+		public HleThread Create()
 		{
-			var HlePspThread = new HlePspThread(new CpuThreadState(Processor));
+			var HlePspThread = new HleThread(new CpuThreadState(Processor));
 			HlePspThread.Id = LastId++;
-			HlePspThread.CurrentStatus = Hle.HlePspThread.Status.Stopped;
+			HlePspThread.CurrentStatus = Hle.HleThread.Status.Stopped;
 			Threads.Add(HlePspThread);
 			return HlePspThread;
 		}
 
-		private HlePspThread _Next;
-		public HlePspThread Next
+		private HleThread _Next;
+		public HleThread Next
 		{
 			get
 			{
@@ -50,12 +50,12 @@ namespace CSPspEmu.Hle.Managers
 			}
 		}
 
-		private HlePspThread CalculateNext()
+		private HleThread CalculateNext()
 		{
-			HlePspThread MinThread = null;
+			HleThread MinThread = null;
 			foreach (var Thread in Threads)
 			{
-				if (Thread.CurrentStatus == HlePspThread.Status.Ready)
+				if (Thread.CurrentStatus == HleThread.Status.Ready)
 				{
 					if (MinThread == null || Thread.PriorityValue < MinThread.PriorityValue)
 					{
@@ -66,11 +66,11 @@ namespace CSPspEmu.Hle.Managers
 			return MinThread;
 		}
 
-		public IEnumerable<HlePspThread> WaitingThreads
+		public IEnumerable<HleThread> WaitingThreads
 		{
 			get
 			{
-				return Threads.Where(Thread => Thread.CurrentStatus == HlePspThread.Status.Waiting);
+				return Threads.Where(Thread => Thread.CurrentStatus == HleThread.Status.Waiting);
 			}
 		}
 
@@ -78,11 +78,11 @@ namespace CSPspEmu.Hle.Managers
 		{
 			foreach (var Thread in WaitingThreads)
 			{
-				if (Thread.CurrentWaitType == HlePspThread.WaitType.Timer)
+				if (Thread.CurrentWaitType == HleThread.WaitType.Timer)
 				{
 					if (HlePspRtc.CurrentDateTime >= Thread.AwakeOnTime)
 					{
-						Thread.CurrentStatus = HlePspThread.Status.Ready;
+						Thread.CurrentStatus = HleThread.Status.Ready;
 					}
 				}
 			}
@@ -106,16 +106,16 @@ namespace CSPspEmu.Hle.Managers
 			// Run that thread
 			Current = NextThread;
 			{
-				Current.CurrentStatus = HlePspThread.Status.Running;
+				Current.CurrentStatus = HleThread.Status.Running;
 				try
 				{
 					NextThread.Step();
 				}
 				finally
 				{
-					if (Current.CurrentStatus == HlePspThread.Status.Running)
+					if (Current.CurrentStatus == HleThread.Status.Running)
 					{
-						Current.CurrentStatus = HlePspThread.Status.Ready;
+						Current.CurrentStatus = HleThread.Status.Ready;
 					}
 				}
 			}
@@ -136,7 +136,7 @@ namespace CSPspEmu.Hle.Managers
 			_Next = null;
 		}
 
-		public void Exit(HlePspThread HlePspThread)
+		public void Exit(HleThread HlePspThread)
 		{
 			Threads.Remove(HlePspThread);
 			if (HlePspThread == Current)

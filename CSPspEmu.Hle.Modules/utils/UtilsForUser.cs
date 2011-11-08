@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Hle.Modules.utils
 {
-	unsafe public class UtilsForUser : HlePspHleModule
+	unsafe public class UtilsForUser : HleModuleHost
 	{
 		public struct timeval
 		{

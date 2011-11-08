@@ -7,16 +7,17 @@ using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Cpu.Emiter;
 using System.Reflection.Emit;
 using System.Runtime.InteropServices;
+using CSharpUtils;
 
 namespace CSPspEmu.Hle
 {
-	unsafe public class HlePspHleModule
+	unsafe public class HleModuleHost
 	{
 		public HleState HleState;
 		public Dictionary<uint, Action<CpuThreadState>> DelegatesByNID = new Dictionary<uint, Action<CpuThreadState>>();
 		public Dictionary<string, Action<CpuThreadState>> DelegatesByName = new Dictionary<string, Action<CpuThreadState>>();
 
-		public HlePspHleModule()
+		public HleModuleHost()
 		{
 		}
 
@@ -43,12 +44,7 @@ namespace CSPspEmu.Hle
 		static public string StringFromAddress(CpuThreadState CpuThreadState, uint Address)
 		{
 			if (Address == 0) return null;
-			var Bytes = new List<byte>();
-			for (var Ptr = (byte*)CpuThreadState.GetMemoryPtr(Address); *Ptr != 0; Ptr++)
-			{
-				Bytes.Add(*Ptr);
-			}
-			return Encoding.UTF8.GetString(Bytes.ToArray());
+			return PointerUtils.PtrToString((byte*)CpuThreadState.GetMemoryPtr(Address), Encoding.UTF8);
 		}
 
 		private Action<CpuThreadState> CreateDelegateForMethodInfo(MethodInfo MethodInfo)
@@ -72,7 +68,7 @@ namespace CSPspEmu.Hle
 					{
 						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
 						MipsMethodEmiter.LoadGPR(GprIndex);
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(HlePspHleModule).GetMethod("StringFromAddress"));
+						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(HleModuleHost).GetMethod("StringFromAddress"));
 						GprIndex++;
 					}
 					else if (ParameterType.IsPointer)

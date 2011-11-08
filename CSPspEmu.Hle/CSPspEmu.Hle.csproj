@@ -42,15 +42,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\HlePspFunctionAttribute.cs" />
-    <Compile Include="HlePspHleModule.cs" />
-    <Compile Include="HlePspLibrary.cs" />
+    <Compile Include="Formats\Elf.cs" />
+    <Compile Include="Formats\ElfPsp.cs" />
+    <Compile Include="HleModuleHost.cs" />
+    <Compile Include="HleLibrary.cs" />
     <Compile Include="Loader\ElfLoader.cs" />
-    <Compile Include="Managers\HlePspMemoryManager.cs" />
-    <Compile Include="HlePspModule.cs" />
-    <Compile Include="Managers\HlePspModuleManager.cs" />
-    <Compile Include="HlePspThread.cs" />
-    <Compile Include="Managers\HlePspThreadManager.cs" />
+    <Compile Include="Loader\ElfPspLoader.cs" />
+    <Compile Include="Managers\HleMemoryManager.cs" />
+    <Compile Include="HleModuleGuest.cs" />
+    <Compile Include="Managers\HleModuleManager.cs" />
+    <Compile Include="HleThread.cs" />
+    <Compile Include="Managers\HleThreadManager.cs" />
     <Compile Include="HleState.cs" />
+    <Compile Include="MemoryPartition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

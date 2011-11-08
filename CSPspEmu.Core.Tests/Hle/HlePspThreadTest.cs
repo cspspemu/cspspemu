@@ -25,7 +25,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod()]
 		public void CpuThreadStateTest()
 		{
-			var HlePspThread = new HlePspThread(new CpuThreadState(Processor));
+			var HlePspThread = new HleThread(new CpuThreadState(Processor));
 
 			MipsAssembler.Assemble(@"
 			.code 0x08000000
@@ -45,7 +45,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod()]
 		public void CpuThreadStateBugTest()
 		{
-			var HlePspThread = new HlePspThread(new CpuThreadState(Processor));
+			var HlePspThread = new HleThread(new CpuThreadState(Processor));
 
 			MipsAssembler.Assemble(@"
 			.code 0x08000000

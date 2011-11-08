@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Modules.ctrl
 {
-	unsafe public class sceCtrl : HlePspHleModule
+	unsafe public class sceCtrl : HleModuleHost
 	{
 		/// <summary>
 		/// 

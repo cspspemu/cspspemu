@@ -28,11 +28,8 @@ namespace CSPspEmu.Gui.Winforms
 			this.PspDisplay = PspDisplay;
 
 			InitializeComponent();
-			SetClientSizeCore(480, 272);
-			MinimumSize = Size;
-			MaximumSize = Size;
-			
-			CenterToScreen();
+			DisplayScale = 2;
+
 			BufferGraphics = Graphics.FromImage(Buffer);
 			BufferGraphics.Clear(Color.Red);
 
@@ -40,6 +37,31 @@ namespace CSPspEmu.Gui.Winforms
 			Timer.Interval = 1000 / 60;
 			Timer.Tick += new EventHandler(Timer_Tick);
 			Timer.Start();
+		}
+
+		private int _DisplayScale;
+
+		public int DisplayScale
+		{
+			set
+			{
+				_DisplayScale = value;
+				var InnerSize = new Size(480 * _DisplayScale, 272 * _DisplayScale);
+				MinimumSize = new Size(1, 1);
+				MaximumSize = new Size(2048, 2048);
+				SetClientSizeCore(InnerSize.Width, InnerSize.Height);
+				MinimumSize = MaximumSize = Size;
+				CenterToScreen();
+
+				xToolStripMenuItem1.Checked = (_DisplayScale == 1);
+				xToolStripMenuItem2.Checked = (_DisplayScale == 2);
+				xToolStripMenuItem3.Checked = (_DisplayScale == 3);
+				xToolStripMenuItem4.Checked = (_DisplayScale == 4);
+			}
+			get
+			{
+				return _DisplayScale;
+			}
 		}
 
 		protected override void OnPaint(PaintEventArgs e)
@@ -66,8 +88,8 @@ namespace CSPspEmu.Gui.Winforms
 					}
 				});
 			}
-			PaintEventArgs.Graphics.DrawImage(Buffer, new Point(0, 0));
-			//base.OnPaintBackground(e);
+			//Console.WriteLine(this.ClientRectangle);
+			PaintEventArgs.Graphics.DrawImage(Buffer, this.ClientRectangle);
 		}
 
 		protected bool EnableRefreshing = true;
@@ -111,6 +133,23 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void PspDisplayForm_KeyDown(object sender, KeyEventArgs e)
 		{
+			if (e.KeyCode == Keys.D1)
+			{
+				DisplayScale = 1;
+			}
+			if (e.KeyCode == Keys.D2)
+			{
+				DisplayScale = 2;
+			}
+			if (e.KeyCode == Keys.D3)
+			{
+				DisplayScale = 3;
+			}
+			if (e.KeyCode == Keys.D4)
+			{
+				DisplayScale = 4;
+			}
+
 			Console.WriteLine(e);
 		}
 
@@ -122,6 +161,26 @@ namespace CSPspEmu.Gui.Winforms
 		private void websiteToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			Process.Start("http://cspspemu.soywiz.com/");
+		}
+
+		private void xToolStripMenuItem1_Click(object sender, EventArgs e)
+		{
+			DisplayScale = 1;
+		}
+
+		private void xToolStripMenuItem2_Click(object sender, EventArgs e)
+		{
+			DisplayScale = 2;
+		}
+
+		private void xToolStripMenuItem3_Click(object sender, EventArgs e)
+		{
+			DisplayScale = 3;
+		}
+
+		private void xToolStripMenuItem4_Click(object sender, EventArgs e)
+		{
+			DisplayScale = 4;
 		}
 	}
 }

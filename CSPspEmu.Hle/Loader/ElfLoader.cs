@@ -2,92 +2,110 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils.Extensions;
+using System.IO;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using CSPspEmu.Hle.Formats;
+using CSharpUtils.Streams;
+using CSharpUtils;
 
 namespace CSPspEmu.Hle.Loader
 {
-	unsafe public class Elf
+	unsafe abstract public class ElfLoader
 	{
-		public struct Header
+		public Stream FileStream;
+		public Elf.Header Header;
+		public Elf.SectionHeader[] SectionHeaders;
+		public Elf.ProgramHeader[] ProgramHeaders;
+		public Elf.SectionHeader NamesSectionHeader;
+		public Dictionary<string, Elf.SectionHeader> SectionHeadersByName;
+		public byte[] Names;
+
+		public String NameAt(uint Index)
 		{
-			public enum TypeEnum    : ushort { Executable = 0x0002, Prx = 0xFFA0 }
-			public enum MachineEnum : ushort { ALLEGREX = 8 }
-
-			// e_ident 16 bytes.
-			public fixed byte Magic[4];                    ///  = [0x7F, 'E', 'L', 'F']
-			public byte Class;                             ///
-			public byte Data;                              ///
-			public byte IdVersion;                         ///
-			public fixed byte Padding[9];                  /// Padding.
-
-			public TypeEnum Type;                          /// Identifies object file type
-			public MachineEnum Machine;                    /// Architecture build  = Machine.ALLEGREX
-			public uint Version;                           /// Object file version
-			public uint EntryPoint;                        /// Virtual address of code entry. Module EntryPoint (PC)
-			public uint ProgramHeaderOffset;               /// Program header table's file offset in bytes
-			public uint SectionHeaderOffset;               /// Section header table's file offset in bytes
-			public uint Flags;                             /// Processor specific flags
-			public ushort ElfHeaderSize;                   /// ELF header size in bytes
-
-			// Program Header.
-			public ushort ProgramHeaderEntrySize;          /// Program header size (all the same size)
-			public ushort ProgramHeaderCount;              /// Number of program headers
-
-			// Section Header.
-			public ushort SectionHeaderEntrySize;          /// Section header size (all the same size)
-			public ushort SectionHeaderCount;              /// Number of section headers
-			public ushort SectionHeaderStringTable;        /// Section header table index of the entry associated with the section name string table
+			fixed (byte* NamePointer = &Names[Index])
+			{
+				return PointerUtils.PtrToString(NamePointer, Encoding.ASCII);
+			}
 		}
 
-		public struct ProgramHeader
+		public void LoadAllocateAndWrite(Stream FileStream, Stream MemoryStream, MemoryPartition MemoryPartition)
 		{
-			public enum TypeEnum : uint { NoLoad = 0, Load = 1 }
-
-			public TypeEnum Type;        /// Type of segment
-			public uint Offset;          /// Offset for segment's first byte in file
-			public uint VirtualAddress;  /// Virtual address for segment
-			public uint PsysicalAddress; /// Physical address for segment
-			public uint FileSize;        /// Segment image size in file
-			public uint MemorySize;      /// Segment image size in memory
-			public uint Flags;           /// Flags
-			public uint Alignment;       /// Alignment
+			Load(FileStream);
+			AllocateMemory(MemoryPartition);
+			WriteToMemory(MemoryStream);
 		}
 
-		public struct SectionHeader { // ELF Section Header
-			public enum TypeEnum : uint {
-				NULL = 0, PROGBITS = 1, SYMTAB = 2, STRTAB = 3, RELA = 4, HASH = 5, DYNAMIC = 6, NOTE = 7, NOBITS = 8, REL = 9, SHLIB = 10, DYNSYM = 11,
-
-				LOPROC = 0x70000000, HIPROC = 0x7FFFFFFF,
-				LOUSER = 0x80000000, HIUSER = 0xFFFFFFFF,
-
-				PRXRELOC = (LOPROC | 0xA0),
+		virtual public void Load(Stream FileStream)
+		{
+			this.FileStream = FileStream;
+			this.Header = FileStream.ReadStruct<Elf.Header>();
+			if (this.Header.Magic != Elf.Header.ExpectedMagic)
+			{
+				throw(new InvalidProgramException("Not an ELF File"));
 			}
 
-			public enum FlagsEnum : uint { None = 0, Write = 1, Allocate = 2, Execute = 4 }
+			if (this.Header.Machine != Elf.Header.MachineEnum.ALLEGREX)
+			{
+				throw (new InvalidProgramException("Invalid Elf.Header.Machine"));
+			}
 
-			public uint Name;          /// Position relative to .shstrtab of a stringz with the name.
-			public TypeEnum Type;      /// Type of this section header.
-			public FlagsEnum Flags;    /// Flags associated to this section header.
-			public uint Address;       /// Memory address where it should be stored.
-			public uint Offset;        /// File position where is the data related to this section header.
-			public uint Size;          /// Size of the section header.
-			public uint Link;          ///
-			public uint Info;          ///
-			public uint AddressAlign;  ///
-			public uint EntitySize;    ///
+			this.ProgramHeaders = FileStream.ReadStructVectorAt<Elf.ProgramHeader>(Header.ProgramHeaderOffset, Header.ProgramHeaderCount, Header.ProgramHeaderEntrySize);
+			this.SectionHeaders = FileStream.ReadStructVectorAt<Elf.SectionHeader>(Header.SectionHeaderOffset, Header.SectionHeaderCount, Header.SectionHeaderEntrySize);
+
+			this.NamesSectionHeader = this.SectionHeaders[Header.SectionHeaderStringTable];
+			this.Names = FileStream.SliceWithLength(this.NamesSectionHeader.Offset, this.NamesSectionHeader.Size).ReadAll();
+
+			this.SectionHeadersByName = new Dictionary<string, Elf.SectionHeader>();
+			foreach (var SectionHeader in this.SectionHeaders)
+			{
+				var SectionHeaderName = NameAt(SectionHeader.Name);
+				this.SectionHeadersByName[SectionHeaderName] = SectionHeader;
+			}
 		}
 
-		public enum ModuleNids : uint {
-			MODULE_INFO                   = 0xF01D73A7,
-			MODULE_BOOTSTART              = 0xD3744BE0,
-			MODULE_REBOOT_BEFORE          = 0x2F064FA6,
-			MODULE_START                  = 0xD632ACDB,
-			MODULE_START_THREAD_PARAMETER = 0x0F7C276C,
-			MODULE_STOP                   = 0xCEE8593C,
-			MODULE_STOP_THREAD_PARAMETER  = 0xCF0CC697,
+		public Stream SliceStreamForSectionHeader(Elf.SectionHeader SectionHeader)
+		{
+			return this.FileStream.SliceWithLength(SectionHeader.Offset, SectionHeader.Size);
 		}
-	}
 
-	public class ElfLoader
-	{
+		public IEnumerable<Elf.SectionHeader> SectionHeadersWithFlag(Elf.SectionHeader.FlagsSet Flag)
+		{
+			return SectionHeaders.Where(SectionHeader => SectionHeader.Flags.HasFlag(Flag));
+		}
+
+		public void AllocateMemory(MemoryPartition MemoryPartition)
+		{
+			foreach (var SectionHeader in SectionHeadersWithFlag(Elf.SectionHeader.FlagsSet.Allocate))
+			{
+				//Console.WriteLine("Address:{0:X}", SectionHeader.Address);
+				MemoryPartition.AllocateLowSize(SectionHeader.Address, SectionHeader.Size);
+			}
+		}
+
+		public void WriteToMemory(Stream MemoryStream)
+		{
+			foreach (var SectionHeader in SectionHeadersWithFlag(Elf.SectionHeader.FlagsSet.Allocate))
+			{
+				var SectionHeaderFileStream = FileStream.SliceWithLength(SectionHeader.Offset, SectionHeader.Size);
+				var SectionHeaderMemoryStream = MemoryStream.SliceWithLength(SectionHeader.Address, SectionHeader.Size);
+
+				//Console.WriteLine(SectionHeader.Type);
+
+				switch (SectionHeader.Type)
+				{
+					case Elf.SectionHeader.TypeEnum.ProgramBits:
+						//Console.WriteLine(SectionHeaderFileStream.ReadAll().ToHexString());
+						SectionHeaderMemoryStream.WriteStream(SectionHeaderFileStream);
+						break;
+					case Elf.SectionHeader.TypeEnum.NoBits:
+						SectionHeaderMemoryStream.WriteByteRepeated(0, SectionHeader.Size);
+						break;
+					default:
+						break;
+				}
+			}
+		}
 	}
 }

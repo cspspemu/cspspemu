@@ -9,7 +9,7 @@ using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle
 {
-	public class HlePspThread
+	public class HleThread
 	{
 		public int Priority = 1;
 		public int PriorityValue;
@@ -37,7 +37,7 @@ namespace CSPspEmu.Hle
 			Killed = 32,
 		}
 
-		public HlePspThread(CpuThreadState CpuThreadState)
+		public HleThread(CpuThreadState CpuThreadState)
 		{
 			this.GreenThread = new GreenThread();
 			this.CpuThreadState = CpuThreadState;
