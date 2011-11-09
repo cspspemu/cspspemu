@@ -78,8 +78,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public void nor()
 		{
-			or();
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Not);
+			MipsMethodEmiter.OP_3REG(RD, RS, RT, OpCodes.Or, OpCodes.Not);
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,7 +109,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Set Less Than (Immediate) (Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void slt() {
+		public void slt()
+		{
 			MipsMethodEmiter.SaveGPR(RD, () =>
 			{
 				MipsMethodEmiter.LoadGPR(RS);
@@ -133,9 +133,26 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		public void slti() {
-			MipsMethodEmiter.OP_2REG_IMM(RT, RS, (short)Instruction.IMM, OpCodes.Clt);
+			MipsMethodEmiter.SaveGPR(RT, () =>
+			{
+				MipsMethodEmiter.LoadGPR(RS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_I4);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.IMM);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_I4);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Clt);
+			});
 		}
-		public void sltiu() { MipsMethodEmiter.OP_2REG_IMMU(RT, RS, Instruction.IMMU, OpCodes.Clt); }
+		public void sltiu() {
+			MipsMethodEmiter.SaveGPR(RT, () =>
+			{
+				MipsMethodEmiter.LoadGPR(RS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_U4);
+				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.IMM);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.IMMU);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_U4);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Clt);
+			});
+		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Load Upper Immediate.
@@ -262,19 +279,27 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		unsafe static public void _mult_impl(CpuThreadState CpuThreadState, int Left, int Right)
 		{
 			long Result = (long)Left * (long)Right;
+			CpuThreadState.LO = (int)((((ulong)Result) >> 0) & 0xFFFFFFFF);
+			CpuThreadState.HI = (int)((((ulong)Result) >> 32) & 0xFFFFFFFF);
+			/*
 			fixed (int* Ptr = &CpuThreadState.LO)
 			{
 				*((long*)Ptr) = Result;
 			}
+			*/
 		}
 
 		unsafe static public void _multu_impl(CpuThreadState CpuThreadState, uint Left, uint Right)
 		{
 			ulong Result = (ulong)Left * (ulong)Right;
+			CpuThreadState.LO = (int)((((ulong)Result) >> 0) & 0xFFFFFFFF);
+			CpuThreadState.HI = (int)((((ulong)Result) >> 32) & 0xFFFFFFFF);
+			/*
 			fixed (int* Ptr = &CpuThreadState.LO)
 			{
 				*((ulong*)Ptr) = Result;
 			}
+			*/
 		}
 
 		public void mult() {
@@ -350,13 +375,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// EXTract/INSert.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		public void ext() { throw (new NotImplementedException()); }
-		public void ins() { throw(new NotImplementedException()); }
+		public void ins() { throw (new NotImplementedException()); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Count Leading Ones/Zeros in word.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		public void clz() { throw (new NotImplementedException()); }
-		public void clo() { throw(new NotImplementedException()); }
+		public void clo() { throw (new NotImplementedException()); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Word Swap Bytes Within Halfwords/Words.

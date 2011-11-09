@@ -11,6 +11,7 @@ namespace CSPspEmu.Core.Cpu
 	{
 		public bool TraceJIT = false;
 		public bool CountInstructionsAndYield = true;
+		public bool ShowInstructionStats = false;
 		public PspMemory Memory;
 		public MethodCache MethodCache;
 		private Dictionary<int, Action<int, CpuThreadState>> RegisteredNativeSyscalls = new Dictionary<int, Action<int, CpuThreadState>>();

@@ -384,7 +384,7 @@ namespace CSPspEmu.Core.Tests
 				mult r10, r11
 			");
 
-			long Expected = (CpuThreadState.GPR[10] * CpuThreadState.GPR[11]);
+			long Expected = ((long)CpuThreadState.GPR[10] * (long)CpuThreadState.GPR[11]);
 
 			Assert.AreEqual((uint)((Expected >> 0) & 0xFFFFFFFF), (uint)CpuThreadState.LO);
 			Assert.AreEqual((uint)((Expected >> 32) & 0xFFFFFFFF), (uint)CpuThreadState.HI);
@@ -394,15 +394,19 @@ namespace CSPspEmu.Core.Tests
 		public void SetMulTest()
 		{
 			CpuThreadState.ExecuteAssembly(@"
-				li r10, 987654321
-				li r11, 123456789
+				li r10, 0x12345678
+				li r11, 0x87654321
 				mult r10, r11
 			");
 
-			ulong Expected = (ulong)(CpuThreadState.GPR[10] * CpuThreadState.GPR[11]);
+			long Expected = ((long)CpuThreadState.GPR[10] * (long)CpuThreadState.GPR[11]);
 
-			Assert.AreEqual((uint)((Expected >> 0) & 0xFFFFFFFF), (uint)CpuThreadState.LO);
-			Assert.AreEqual((uint)((Expected >> 32) & 0xFFFFFFFF), (uint)CpuThreadState.HI);
+			//Console.WriteLine(CpuThreadState.GPR[10]);
+			//Console.WriteLine(CpuThreadState.GPR[11]);
+			//Console.WriteLine(Expected);
+
+			Assert.AreEqual((uint)((((long)Expected) >> 0) & 0xFFFFFFFF), (uint)CpuThreadState.LO);
+			Assert.AreEqual((uint)((((long)Expected) >> 32) & 0xFFFFFFFF), (uint)CpuThreadState.HI);
 		}
 
 		[TestMethod]
@@ -452,13 +456,15 @@ namespace CSPspEmu.Core.Tests
 				li  r11, 0x777
 				movz r1, r11, r10
 				movn r2, r11, r10
+				movz r3, r11, r0
+				movn r4, r11, r0
 			");
 
 			Assert.AreEqual(0x000, (int)CpuThreadState.GPR[1]);
 			Assert.AreEqual(0x777, (int)CpuThreadState.GPR[2]);
-			//auto OP_MOVZ() { mixin(CE("if ($rt == 0) $rd = $rs;")); }
-			//auto OP_MOVN() { mixin(CE("if ($rt != 0) $rd = $rs;")); }
 
+			Assert.AreEqual(0x777, (int)CpuThreadState.GPR[3]);
+			Assert.AreEqual(0x000, (int)CpuThreadState.GPR[4]);
 		}
 
 		[TestMethod]
@@ -491,6 +497,33 @@ namespace CSPspEmu.Core.Tests
 			");
 			Assert.AreEqual(0x3F800000, (int)CpuThreadState.Processor.Memory.Read4(0x08000000));
 			Assert.AreEqual(CpuThreadState.FPR[1], CpuThreadState.FPR[0]);
+		}
+
+		[TestMethod]
+		public void MoveFPUTest()
+		{
+			CpuThreadState.GPR[1] = 17;
+			CpuThreadState.FPR[2] = 8.3f;
+			CpuThreadState.ExecuteAssembly(@"
+				mtc1 r1, f1
+				mfc1 r2, f2
+			");
+			Assert.AreEqual(17.0f, CpuThreadState.FPR[1]);
+			Assert.AreEqual(8, CpuThreadState.GPR[2]);
+		}
+
+		[TestMethod]
+		public void LoginTest()
+		{
+			CpuThreadState.ExecuteAssembly(@"
+				li r20, 0b_11000110001100011000110001100011
+				li r21, 0b_00010000100001000010000100001000
+				or  r1, r20, r21
+				nor r2, r20, r21
+			");
+
+			Assert.AreEqual("11010110101101011010110101101011", "%032b".Sprintf(CpuThreadState.GPR[1]));
+			Assert.AreEqual("00101001010010100101001010010100", "%032b".Sprintf(CpuThreadState.GPR[2]));
 		}
 	}
 }

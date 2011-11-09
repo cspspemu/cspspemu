@@ -273,9 +273,10 @@ namespace CSPspEmu.Core.Cpu.Table
 						ID("cvt.w.s",     VM("010001:10000:00000:fs:fd:100100"), "%D, %S",     ADDR_TYPE_NONE, 0),
 
 						// Move float point registers
-						ID("mfc1",        VM("010001:00000:rt:c1dr:00000:000000"), "%t, %1",   ADDR_TYPE_NONE, 0),
+						ID("mfc1",        VM("010001:00000:rt:c1dr:00000:000000"), "%t, %S",   ADDR_TYPE_NONE, 0),
+						ID("mtc1",        VM("010001:00100:rt:c1dr:00000:000000"), "%t, %S",   ADDR_TYPE_NONE, 0),
+						// CFC1 -- move Control word from/to floating point (C1)
 						ID("cfc1",        VM("010001:00010:rt:c1cr:00000:000000"), "%t, %p",   ADDR_TYPE_NONE, 0),
-						ID("mtc1",        VM("010001:00100:rt:c1dr:00000:000000"), "%t, %1",   ADDR_TYPE_NONE, 0),
 						ID("ctc1",        VM("010001:00110:rt:c1cr:00000:000000"), "%t, %p",   ADDR_TYPE_NONE, 0),
 
 						// Compare <condition> Single.

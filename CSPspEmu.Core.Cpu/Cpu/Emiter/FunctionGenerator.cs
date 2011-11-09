@@ -7,6 +7,7 @@ using CSPspEmu.Core.Cpu.Emiter;
 using System.Reflection.Emit;
 using CSPspEmu.Core.Cpu.Table;
 using CSPspEmu.Core.Memory;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 {
@@ -14,7 +15,19 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 	{
 		static public MipsEmiter MipsEmiter = new MipsEmiter();
 		static public Action<uint, CpuEmiter> CpuEmiterInstruction = EmitLookupGenerator.GenerateSwitchDelegate<CpuEmiter>(InstructionTable.ALL);
-		static public Func<uint, CpuBranchAnalyzer.Flags> GetBranchInfo = EmitLookupGenerator.GenerateInfoDelegate<CpuBranchAnalyzer, CpuBranchAnalyzer.Flags>(EmitLookupGenerator.GenerateSwitchDelegateReturn<CpuBranchAnalyzer, CpuBranchAnalyzer.Flags>(InstructionTable.ALL, ThrowOnUnexistent: false), new CpuBranchAnalyzer());
+		static public Func<uint, CpuBranchAnalyzer.Flags> GetBranchInfo = EmitLookupGenerator.GenerateInfoDelegate<CpuBranchAnalyzer, CpuBranchAnalyzer.Flags>(
+			EmitLookupGenerator.GenerateSwitchDelegateReturn<CpuBranchAnalyzer, CpuBranchAnalyzer.Flags>(
+				InstructionTable.ALL, ThrowOnUnexistent: false
+			),
+			new CpuBranchAnalyzer()
+		);
+		static public Func<uint, Object, String> GetInstructionName = EmitLookupGenerator.GenerateSwitchDelegateReturn<Object, String>(
+			InstructionTable.ALL,
+			(ILGenerator, InstructionInfo) =>
+			{
+				ILGenerator.Emit(OpCodes.Ldstr, (InstructionInfo != null) ? InstructionInfo.Name : "unknown");
+			}
+		);
 
 		public const ushort NativeCallSyscallCode = 0x1234;
 
@@ -34,7 +47,7 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 			}
 
 			MemoryStream.Position = EntryPC;
-			if (new BinaryReader(MemoryStream).ReadUInt64() == 0x0000000003E00008)
+			if ((MemoryStream.Length >= 8) && new BinaryReader(MemoryStream).ReadUInt64() == 0x0000000003E00008)
 			{
 				Console.WriteLine("NullSub detected at 0x{0:X}!", EntryPC);
 			}
@@ -59,6 +72,8 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 			// PASS1: Analyze and find labels.
 			PC = EntryPC;
 			//Debug.WriteLine("PASS1: (PC={0:X}, EndPC={1:X})", PC, EndPC);
+
+			var InstructionStats = new Dictionary<string, uint>();
 
 			while (BranchesToAnalyze.Count > 0)
 			{
@@ -85,6 +100,12 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 					CpuEmiter.LoadAT(PC);
 
 					var BranchInfo = GetBranchInfo(CpuEmiter.Instruction.Value);
+					if (CpuThreadState.Processor.ShowInstructionStats)
+					{
+						var InstuctionName = GetInstructionName(CpuEmiter.Instruction.Value, null);
+						if (!InstructionStats.ContainsKey(InstuctionName)) InstructionStats[InstuctionName] = 0;
+						InstructionStats[InstuctionName]++;
+					}
 
 					// Branch instruction.
 					if ((BranchInfo & CpuBranchAnalyzer.Flags.JumpInstruction) != 0)
@@ -107,6 +128,15 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 							continue;
 						}
 						*/
+					}
+					else if ((BranchInfo & CpuBranchAnalyzer.Flags.SyscallInstruction) != 0)
+					{
+						// On this special Syscall
+						if (CpuEmiter.Instruction.CODE == FunctionGenerator.NativeCallSyscallCode)
+						{
+							//PC += 4;
+							break;
+						}
 					}
 
 					// A Jump Always found. And we have also processed the delayed branch slot. End the branch.
@@ -304,6 +334,16 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 							break;
 						}
 					}
+				}
+			}
+
+
+			if (CpuThreadState.Processor.ShowInstructionStats)
+			{
+				Console.WriteLine("--------------------------");
+				foreach (var Pair in InstructionStats.OrderByDescending(Item => Item.Value))
+				{
+					Console.WriteLine("{0} : {1}", Pair.Key, Pair.Value);
 				}
 			}
 

@@ -192,13 +192,16 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			ILGenerator.Emit(OpCodes.Ldind_U4);
 		}
 
-		public void OP_3REG(int RD, int RS, int RT, OpCode OpCode)
+		public void OP_3REG(int RD, int RS, int RT, params OpCode[] OpCodes)
 		{
 			SaveGPR(RD, () =>
 			{
 				LoadGPR(RS);
 				LoadGPR(RT);
-				ILGenerator.Emit(OpCode);
+				foreach (var OpCode in OpCodes)
+				{
+					ILGenerator.Emit(OpCode);
+				}
 			});
 		}
 

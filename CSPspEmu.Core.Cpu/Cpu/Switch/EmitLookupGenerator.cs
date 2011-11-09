@@ -10,9 +10,9 @@ namespace CSPspEmu.Core.Cpu.Table
 	{
 		static public Func<uint, TRetType> GenerateInfoDelegate<TType, TRetType>(Func<uint, TType, TRetType> Callback, TType Instance)
 		{
-			return V =>
+			return Value =>
 			{
-				return Callback(V, Instance);
+				return Callback(Value, Instance);
 			};
 		}
 

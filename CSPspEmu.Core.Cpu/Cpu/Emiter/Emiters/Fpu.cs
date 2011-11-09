@@ -48,9 +48,22 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void cvt_w_s() { throw (new NotImplementedException()); }
 
 		// Move float point registers
-		public void mfc1() { throw (new NotImplementedException()); }
+		public void mfc1() {
+			MipsMethodEmiter.SaveGPR(RT, () =>
+			{
+				MipsMethodEmiter.LoadFPR(FS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_I4);
+			});
+		}
+		public void mtc1() {
+			MipsMethodEmiter.SaveFPR(FS, () =>
+			{
+				MipsMethodEmiter.LoadGPR(RT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_R4);
+			});
+		}
+		// CFC1 -- move Control word from/to floating point (C1)
 		public void cfc1() { throw (new NotImplementedException()); }
-		public void mtc1() { throw (new NotImplementedException()); }
 		public void ctc1() { throw (new NotImplementedException()); }
 
 		// Compare <condition> Single_
