@@ -9,7 +9,7 @@ using CSPspEmu.Core.Cpu.Table;
 using CSPspEmu.Core.Memory;
 using CSharpUtils.Extensions;
 
-namespace CSPspEmu.Core.Cpu.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emiter
 {
 	public class FunctionGenerator
 	{

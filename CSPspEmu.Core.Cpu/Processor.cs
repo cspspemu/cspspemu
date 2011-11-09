@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CSPspEmu.Core.Cpu.Cpu.Emiter;
+using CSPspEmu.Core.Cpu.Emiter;
 using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Cpu

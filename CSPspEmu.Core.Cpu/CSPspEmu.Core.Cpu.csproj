@@ -42,30 +42,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cpu\Assembler\MipsAssembler.cs" />
-    <Compile Include="Cpu\Assembler\MipsDisassembler.cs" />
-    <Compile Include="Cpu\Emiter\CpuBranchAnalyzer.cs" />
-    <Compile Include="Cpu\Emiter\CpuEmiter.cs" />
-    <Compile Include="Cpu\Emiter\Emiters\CpuEmiter_ArithmeticLogic.cs" />
-    <Compile Include="Cpu\Emiter\Emiters\CpuEmiter_Branches.cs" />
-    <Compile Include="Cpu\Emiter\Emiters\CpuEmiter_Cop0.cs" />
-    <Compile Include="Cpu\Emiter\Emiters\CpuEmiter_FloatingPoint.cs" />
-    <Compile Include="Cpu\Emiter\Emiters\CpuEmiter_LoadStore.cs" />
-    <Compile Include="Cpu\Emiter\Emiters\CpuEmiter_Special.cs" />
-    <Compile Include="Cpu\Emiter\Emiters\CpuEmiter_Vfpu.cs" />
-    <Compile Include="Cpu\Emiter\Emiters\CpuEmiter_Vfpu_Branches.cs" />
-    <Compile Include="Cpu\Emiter\FunctionGenerator.cs" />
-    <Compile Include="Cpu\MethodCache.cs" />
-    <Compile Include="Cpu\Emiter\MipsEmiter.cs" />
-    <Compile Include="Cpu\Emiter\MipsMethodEmiter.cs" />
-    <Compile Include="Cpu\Instruction.cs" />
-    <Compile Include="Cpu\InstructionReader.cs" />
-    <Compile Include="Cpu\CpuThreadState.cs" />
-    <Compile Include="Cpu\CpuThreadStateExtensions.cs" />
-    <Compile Include="Cpu\Processor.cs" />
-    <Compile Include="Cpu\Switch\EmitLookupGenerator.cs" />
-    <Compile Include="Cpu\Table\InstructionInfo.cs" />
-    <Compile Include="Cpu\Table\InstructionTable.cs" />
+    <Compile Include="Assembler\MipsAssembler.cs" />
+    <Compile Include="Assembler\MipsDisassembler.cs" />
+    <Compile Include="Emiter\CpuBranchAnalyzer.cs" />
+    <Compile Include="Emiter\CpuEmiter.cs" />
+    <Compile Include="Emiter\Emiters\CpuEmiter_ArithmeticLogic.cs" />
+    <Compile Include="Emiter\Emiters\CpuEmiter_Branches.cs" />
+    <Compile Include="Emiter\Emiters\CpuEmiter_Cop0.cs" />
+    <Compile Include="Emiter\Emiters\CpuEmiter_FloatingPoint.cs" />
+    <Compile Include="Emiter\Emiters\CpuEmiter_LoadStore.cs" />
+    <Compile Include="Emiter\Emiters\CpuEmiter_Special.cs" />
+    <Compile Include="Emiter\Emiters\CpuEmiter_Vfpu.cs" />
+    <Compile Include="Emiter\Emiters\CpuEmiter_Vfpu_Branches.cs" />
+    <Compile Include="Emiter\FunctionGenerator.cs" />
+    <Compile Include="MethodCache.cs" />
+    <Compile Include="Emiter\MipsEmiter.cs" />
+    <Compile Include="Emiter\MipsMethodEmiter.cs" />
+    <Compile Include="Instruction.cs" />
+    <Compile Include="InstructionReader.cs" />
+    <Compile Include="CpuThreadState.cs" />
+    <Compile Include="CpuThreadStateExtensions.cs" />
+    <Compile Include="Processor.cs" />
+    <Compile Include="Switch\EmitLookupGenerator.cs" />
+    <Compile Include="Table\InstructionInfo.cs" />
+    <Compile Include="Table\InstructionTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Cpu;
-using CSPspEmu.Core.Cpu.Cpu.Emiter;
+using CSPspEmu.Core.Cpu.Emiter;
 using System.Reflection;
 
 namespace CSPspEmu.Hle.Managers

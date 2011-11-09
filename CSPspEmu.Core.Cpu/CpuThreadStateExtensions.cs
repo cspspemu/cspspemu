@@ -8,11 +8,10 @@ using System.IO;
 using CSPspEmu.Core.Cpu.Assembler;
 using CSharpUtils.Extensions;
 using System.Runtime.InteropServices;
-using CSPspEmu.Core.Cpu.Cpu;
+using CSPspEmu.Core.Cpu;
 using System.Reflection.Emit;
 using System.Threading;
 using CSPspEmu.Core;
-using CSPspEmu.Core.Cpu.Cpu.Emiter;
 using System.Diagnostics;
 using CSharpUtils.Threading;
 

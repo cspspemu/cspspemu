@@ -13,7 +13,6 @@ using CSharpUtils.Extensions;
 using CSPspEmu.Core.Tests;
 using System.Diagnostics;
 using CSPspEmu.Hle;
-using CSPspEmu.Core.Cpu.Cpu;
 using CSPspEmu.Core.Cpu.Assembler;
 using System.Threading;
 using System.Windows.Forms;
@@ -142,10 +141,6 @@ namespace CSPspEmu.Sandbox
 			Processor.Reset();
 			Memory.Reset();
 			CreateNewHleState();
-			Processor.PspConfig.DebugSyscalls = true;
-			//Processor.PspConfig.ShowInstructionStats = true;
-			//Processor.PspConfig.TraceJIT = true;
-			//Processor.PspConfig.CountInstructionsAndYield = false;
 
 			var ElfStream = File.OpenRead(FileName);
 
@@ -254,6 +249,11 @@ namespace CSPspEmu.Sandbox
 			MemoryStream = new PspMemoryStream(Memory);
 			Processor = new Processor(PspConfig, Memory);
 			CreateNewHleState();
+
+			PspConfig.DebugSyscalls = true;
+			//PspConfig.ShowInstructionStats = true;
+			//PspConfig.TraceJIT = true;
+			//PspConfig.CountInstructionsAndYield = false;
 
 			Thread.CurrentThread.Name = "GuiThread";
 

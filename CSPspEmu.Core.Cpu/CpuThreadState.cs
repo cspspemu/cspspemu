@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 using CSharpUtils.Extensions;
-using CSPspEmu.Core.Cpu.Cpu;
+using CSPspEmu.Core.Cpu;
 using CSharpUtils.Threading;
 using CSharpUtils;
 

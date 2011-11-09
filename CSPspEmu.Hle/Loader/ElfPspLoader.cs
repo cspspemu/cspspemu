@@ -8,7 +8,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Core.Cpu.Cpu.Emiter;
+using CSPspEmu.Core.Cpu.Emiter;
 using CSPspEmu.Core.Cpu;
 using CSharpUtils;
 

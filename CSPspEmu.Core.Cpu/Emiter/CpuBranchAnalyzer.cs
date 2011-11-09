@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CSPspEmu.Core.Cpu.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emiter
 {
 	sealed public class CpuBranchAnalyzer
 	{

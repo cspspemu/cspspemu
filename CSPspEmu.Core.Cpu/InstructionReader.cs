@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace CSPspEmu.Core.Cpu.Cpu
+namespace CSPspEmu.Core.Cpu
 {
 	public class InstructionReader
 	{

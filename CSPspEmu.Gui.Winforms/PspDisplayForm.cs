@@ -45,6 +45,7 @@ namespace CSPspEmu.Gui.Winforms
 			BufferGraphics.Clear(Color.Red);
 
 			updateResumePause();
+			updateDebugSyscalls();
 
 			var Timer = new Timer();
 			Timer.Interval = 1000 / 60;
@@ -309,6 +310,11 @@ namespace CSPspEmu.Gui.Winforms
 			resumeToolStripMenuItem.Checked = !Paused;
 		}
 
+		private void updateDebugSyscalls()
+		{
+			traceSyscallsToolStripMenuItem.Checked = PspConfig.DebugSyscalls;
+		}
+
 		private void resumeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			IGuiExternalInterface.Resume();
@@ -333,7 +339,8 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void traceSyscallsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-
+			PspConfig.DebugSyscalls = !PspConfig.DebugSyscalls;
+			updateDebugSyscalls();
 		}
 	}
 }
