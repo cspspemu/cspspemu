@@ -34,6 +34,7 @@ namespace CSPspEmu.Hle.Managers
 		{
 			var HlePspThread = new HleThread(new CpuThreadState(Processor));
 			HlePspThread.Id = LastId++;
+			HlePspThread.Name = "Thread-" + HlePspThread.Id;
 			HlePspThread.CurrentStatus = Hle.HleThread.Status.Stopped;
 			Threads.Add(HlePspThread);
 			return HlePspThread;

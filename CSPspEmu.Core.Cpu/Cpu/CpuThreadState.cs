@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Cpu.Cpu;
 using CSharpUtils.Threading;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -26,6 +27,66 @@ namespace CSPspEmu.Core.Cpu
 
 		public uint GPR0, GPR1, GPR2, GPR3, GPR4, GPR5, GPR6, GPR7, GPR8, GPR9, GPR10, GPR11, GPR12, GPR13, GPR14, GPR15, GPR16, GPR17, GPR18, GPR19, GPR20, GPR21, GPR22, GPR23, GPR24, GPR25, GPR26, GPR27, GPR28, GPR29, GPR30, GPR31;
 		public float FPR0, FPR1, FPR2, FPR3, FPR4, FPR5, FPR6, FPR7, FPR8, FPR9, FPR10, FPR11, FPR12, FPR13, FPR14, FPR15, FPR16, FPR17, FPR18, FPR19, FPR20, FPR21, FPR22, FPR23, FPR24, FPR25, FPR26, FPR27, FPR28, FPR29, FPR30, FPR31;
+
+
+		public struct FCR31
+		{
+			public enum TypeEnum : uint {
+				Rint = 0,
+				Cast = 1,
+				Ceil = 2,
+				Floor = 3,
+			}
+			public uint Value;
+
+			// 0b_0000000_F_C_000000000000000000000_RM
+			/*
+				// 0b_0000000_1_1_000000000000000000000_11
+				Type, "RM", 2,
+				uint, "",   21,
+				bool, "C" , 1,
+				bool, "FS", 1,
+				uint, "",   7
+			*/
+
+			public TypeEnum RM
+			{
+				get
+				{
+					return (TypeEnum)BitUtils.Extract(Value, 0, 2);
+				}
+				set
+				{
+					Value = BitUtils.Insert(Value, 0, 2, (uint)value);
+				}
+			}
+
+
+			public bool CC {
+				get
+				{
+					return (BitUtils.Extract(Value, 23, 1) != 0);
+				}
+				set
+				{
+					Value = BitUtils.Insert(Value, 23, 1, (uint)(value ? 1 : 0));
+				}
+			}
+
+			public bool FS
+			{
+				get
+				{
+					return (BitUtils.Extract(Value, 24, 1) != 0);
+				}
+				set
+				{
+					Value = BitUtils.Insert(Value, 24, 1, (uint)(value ? 1 : 0));
+				}
+			}
+		}
+
+		public FCR31 Fcr31;
 
 		// http://msdn.microsoft.com/en-us/library/ms253512(v=vs.80).aspx
 		// http://logos.cs.uic.edu/366/notes/mips%20quick%20tutorial.htm
@@ -123,11 +184,35 @@ namespace CSPspEmu.Core.Cpu
 			}
 		}
 
+		public class FprListInteger
+		{
+			public CpuThreadState Processor;
+
+			public int this[int Index]
+			{
+				get
+				{
+					fixed (float* PTR = &Processor.FPR0)
+					{
+						return ((int *)PTR)[Index];
+					}
+				}
+				set
+				{
+					fixed (float* PTR = &Processor.FPR0)
+					{
+						((int*)PTR)[Index] = value;
+					}
+				}
+			}
+		}
+
 		//public uint *GPR_Ptr;
 		//public float* FPR_Ptr;
 
 		public GprList GPR;
 		public FprList FPR;
+		public FprListInteger FPR_I;
 		//readonly public float* FPR;
 
 		public void* GetMemoryPtr(uint Address)
@@ -153,6 +238,7 @@ namespace CSPspEmu.Core.Cpu
 
 			GPR = new GprList() { Processor = this };
 			FPR = new FprList() { Processor = this };
+			FPR_I = new FprListInteger() { Processor = this };
 
 			for (int n = 0; n < 32; n++)
 			{

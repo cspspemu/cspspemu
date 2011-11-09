@@ -19,10 +19,14 @@ namespace CSPspEmu.Hle
 		protected MethodCache MethodCache;
 		protected int MinimalInstructionCountForYield = 1000000;
 		public int Id;
+		public String Name;
 		public Status CurrentStatus;
 		public WaitType CurrentWaitType;
 		public DateTime AwakeOnTime;
 		public MemoryPartition Stack;
+		public uint EntryPoint;
+		public int InitPriority;
+		public uint Attribute;
 
 		public enum WaitType
 		{
@@ -60,6 +64,8 @@ namespace CSPspEmu.Hle
 				GetDelegateAt(CpuThreadState.PC)(CpuThreadState);
 			}
 		}
+
+		// 8903E08
 
 		public Action<CpuThreadState> GetDelegateAt(uint PC)
 		{

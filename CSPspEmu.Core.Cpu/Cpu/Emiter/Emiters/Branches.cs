@@ -126,8 +126,21 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		// Branch on C1 False/True (Likely).
-		public void bc1f() { throw (new NotImplementedException()); }
-		public void bc1t() { throw (new NotImplementedException()); }
+		public void bc1f()
+		{
+			MipsMethodEmiter.StoreBranchFlag(() =>
+			{
+				MipsMethodEmiter.LoadFCR31_CC();
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_0);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ceq);
+			});
+		}
+		public void bc1t() {
+			MipsMethodEmiter.StoreBranchFlag(() =>
+			{
+				MipsMethodEmiter.LoadFCR31_CC();
+			});
+		}
 		public void bc1fl() { bc1f(); }
 		public void bc1tl() { bc1t(); }
 	}

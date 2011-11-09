@@ -63,6 +63,9 @@ namespace CSPspEmu.Hle.Loader
 				var SectionHeaderName = NameAt(SectionHeader.Name);
 				this.SectionHeadersByName[SectionHeaderName] = SectionHeader;
 			}
+
+			Console.WriteLine("ProgramHeaders:{0}", this.ProgramHeaders.Length);
+			Console.WriteLine("SectionHeaders:{0}", this.SectionHeaders.Length);
 		}
 
 		public Stream SliceStreamForSectionHeader(Elf.SectionHeader SectionHeader)

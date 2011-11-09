@@ -8,6 +8,14 @@ namespace CSPspEmu.Hle.Modules.ctrl
 {
 	unsafe public class sceCtrl : HleModuleHost
 	{
+		protected void _ReadCount(SceCtrlData* SceCtrlData, int Count, bool Peek, bool Positive)
+		{
+			for (int n = 0; n < Count; n++)
+			{
+				SceCtrlData[n] = HleState.PspController.GetSceCtrlDataAt(n);
+			}
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -16,14 +24,31 @@ namespace CSPspEmu.Hle.Modules.ctrl
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x3A622550, FirmwareVersion = 150)]
 		public int sceCtrlPeekBufferPositive(SceCtrlData* SceCtrlData, int Count) {
-			//SceCtrlData[0].Buttons = 0xFFFFFFFF;
-			//throw(new NotImplementedException());
-			SceCtrlData[0] = HleState.PspController.SceCtrlData;
-			return 0;
-			//readBufferedFrames(pad_data, count, true);
-			//return count;
+			_ReadCount(SceCtrlData, Count, Peek: true, Positive: true);
+			return Count;
 		}
 
+		// sceCtrlReadBufferPositive () is blocking and waits for vblank (slower).
+		/// <summary>
+		/// Read buffer positive
+		/// </summary>
+		/// <example>
+		///		SceCtrlData pad;
+		///		
+		///		sceCtrlSetSamplingCycle(0);
+		///		sceCtrlSetSamplingMode(1);
+		///		sceCtrlReadBufferPositive(&pad, 1);
+		///		// Do something with the read controller data
+		/// </example>
+		/// <param name="pad_data">Pointer to a ::SceCtrlData structure used hold the returned pad data.</param>
+		/// <param name="count">Number of ::SceCtrlData buffers to read.</param>
+		/// <returns>Count?</returns>
+		[HlePspFunction(NID = 0x1F803938, FirmwareVersion = 150)]
+		public int sceCtrlReadBufferPositive(SceCtrlData* SceCtrlData, int Count)
+		{
+			_ReadCount(SceCtrlData, Count, Peek: false, Positive: true);
+			return Count;
+		}
 
 		/// <summary>
 		/// Set the controller mode.

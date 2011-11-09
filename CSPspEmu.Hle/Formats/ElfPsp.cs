@@ -99,40 +99,53 @@ namespace CSPspEmu.Hle.Formats
 			/// </summary>
 			public uint CallAddress;
 		}
-	
+
+		// http://hitmen.c02.at/files/yapspd/psp_doc/chap26.html
+		// 26.2.2.8
 		public struct ModuleInfo {
-			/// <summary>
-			/// ?
-			/// </summary>
-			public uint Flags;
+			public enum AtributesEnum : ushort
+			{
+				UserMode = 0x0000,
+				KernelMode = 0x100,
+			}
 
 			/// <summary>
-			/// Name of the module.
+			/// Module Attributes
+			/// </summary>
+			public AtributesEnum ModuleAtributes;
+
+			/// <summary>
+			/// Module Version
+			/// </summary>
+			public ushort ModuleVersion;
+
+			/// <summary>
+			/// Module Name (0 terminated)
 			/// </summary>
 			public fixed byte Name[28];
 
 			/// <summary>
-			/// Global Pointer initial value.
+			/// Initial value for GP (Global Pointer).
 			/// </summary>
 			public uint GP;
 
 			/// <summary>
-			/// ?
+			/// Address of section .lib.ent
 			/// </summary>
 			public uint ExportsStart;
 
 			/// <summary>
-			/// ?
+			/// Address of section .lib.ent.btm
 			/// </summary>
 			public uint ExportsEnd;
 
 			/// <summary>
-			/// ?
+			/// Address of section .lib.stub
 			/// </summary>
 			public uint ImportsStart;
 
 			/// <summary>
-			/// ?
+			/// Address of section .lib.stub.btm
 			/// </summary>
 			public uint ImportsEnd;
 		}

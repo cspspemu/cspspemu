@@ -50,8 +50,9 @@ namespace CSPspEmu.Hle.Loader
 			return (CpuThreadState) =>
 			{
 				Console.WriteLine(
-					"Thread({0}):{1}:{2}",
+					"Thread({0}:'{1}'):{2}:{3}",
 					ModuleManager.HleState.ThreadManager.Current.Id,
+					ModuleManager.HleState.ThreadManager.Current.Name,
 					ModuleImportName, NIDName
 				);
 

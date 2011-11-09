@@ -7,7 +7,29 @@ namespace CSPspEmu.Hle
 {
 	unsafe public class PspController
 	{
-		public SceCtrlData SceCtrlData;
+		public const int MaxStoredFrames = 128;
+
+		protected List<SceCtrlData> SceCtrlDataBuffer = new List<SceCtrlData>();
+
+		public PspController()
+		{
+			SceCtrlData SceCtrlData = default(SceCtrlData);
+			for (int n = 0; n < MaxStoredFrames; n++)
+			{
+				InsertSceCtrlData(SceCtrlData);
+			}
+		}
+
+		public void InsertSceCtrlData(SceCtrlData SceCtrlData)
+		{
+			SceCtrlDataBuffer.Add(SceCtrlData);
+			if (SceCtrlDataBuffer.Count > MaxStoredFrames) SceCtrlDataBuffer.RemoveAt(0);
+		}
+
+		public SceCtrlData GetSceCtrlDataAt(int Index)
+		{
+			return SceCtrlDataBuffer[SceCtrlDataBuffer.Count - Index - 1];
+		}
 	}
 
 	public enum PspCtrlButtons : uint
@@ -152,6 +174,9 @@ namespace CSPspEmu.Hle
 		/// </summary>
 		public fixed byte Rsrv[6];
 
+		/// <summary>
+		/// Analog X : [-1.0, +1.0]
+		/// </summary>
 		public float X
 		{
 			get
@@ -164,6 +189,9 @@ namespace CSPspEmu.Hle
 			}
 		}
 
+		/// <summary>
+		/// Analog Y : [-1.0, +1.0]
+		/// </summary>
 		public float Y
 		{
 			get
@@ -173,6 +201,18 @@ namespace CSPspEmu.Hle
 			set
 			{
 				Ly = (byte)(((value / 2.0f) + 0.5f) * 255.0f);
+			}
+		}
+
+		public void UpdateButtons(PspCtrlButtons Buttons, bool Pressed)
+		{
+			if (Pressed)
+			{
+				this.Buttons |= Buttons;
+			}
+			else
+			{
+				this.Buttons &= ~Buttons;
 			}
 		}
 	}

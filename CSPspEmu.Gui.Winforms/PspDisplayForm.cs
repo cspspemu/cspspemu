@@ -13,6 +13,7 @@ using System.Drawing.Imaging;
 using CSPspEmu.Hle;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Gui.Winforms
 {
@@ -22,14 +23,22 @@ namespace CSPspEmu.Gui.Winforms
 		public Graphics BufferGraphics;
 		public PspMemory Memory;
 		public PspDisplay PspDisplay;
+		public PspController PspController;
+		public SceCtrlData SceCtrlData;
 
-		public PspDisplayForm(PspMemory Memory, PspDisplay PspDisplay)
+		public void SendControllerFrame()
+		{
+			this.PspController.InsertSceCtrlData(SceCtrlData);
+		}
+
+		public PspDisplayForm(PspMemory Memory, PspDisplay PspDisplay, PspController PspController)
 		{
 			this.Memory = Memory;
 			this.PspDisplay = PspDisplay;
+			this.PspController = PspController;
 
 			InitializeComponent();
-			DisplayScale = 2;
+			DisplayScale = 1;
 
 			BufferGraphics = Graphics.FromImage(Buffer);
 			BufferGraphics.Clear(Color.Red);
@@ -134,6 +143,7 @@ namespace CSPspEmu.Gui.Winforms
 
 		void Timer_Tick(object sender, EventArgs e)
 		{
+			SendControllerFrame();
 			Refresh();
 			//var g = Graphics.FromHdc(this.Handle);
 			//g.DrawImage();
@@ -169,27 +179,12 @@ namespace CSPspEmu.Gui.Winforms
 			}
 		}
 
-		private void PspDisplayForm_KeyDown(object sender, KeyEventArgs e)
+		/*
+		public void UpdateFlags(PspCtrlButtons PspCtrlButtons)
 		{
-			if (e.KeyCode == Keys.D1)
-			{
-				DisplayScale = 1;
-			}
-			if (e.KeyCode == Keys.D2)
-			{
-				DisplayScale = 2;
-			}
-			if (e.KeyCode == Keys.D3)
-			{
-				DisplayScale = 3;
-			}
-			if (e.KeyCode == Keys.D4)
-			{
-				DisplayScale = 4;
-			}
-
-			Console.WriteLine(e);
+			SceCtrlData.Buttons
 		}
+		*/
 
 		private void frameSkippingToolStripMenuItem_Click(object sender, EventArgs e)
 		{
@@ -219,6 +214,68 @@ namespace CSPspEmu.Gui.Winforms
 		private void xToolStripMenuItem4_Click(object sender, EventArgs e)
 		{
 			DisplayScale = 4;
+		}
+
+		private void dumpRamToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				EnableRefreshing = false;
+				var SaveFileDialog = new SaveFileDialog();
+				SaveFileDialog.Filter = "DUMP|*.dump|All Files|*.*";
+				SaveFileDialog.FileName = String.Format("memory-{0}.dump", (long)(DateTime.UtcNow - new DateTime(0)).TotalMilliseconds);
+				SaveFileDialog.AddExtension = true;
+				SaveFileDialog.DefaultExt = "dump";
+				if (SaveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+				{
+					var Stream = SaveFileDialog.OpenFile();
+					Stream.WriteStream(new PspMemoryStream(Memory).SliceWithBounds(Memory.MainSegment.Low, Memory.MainSegment.High - 1));
+					Stream.Flush();
+					Stream.Close();
+				}
+			}
+			finally
+			{
+				EnableRefreshing = true;
+			}
+		}
+
+		private PspCtrlButtons GetButtonsFromKeys(Keys Key)
+		{
+			switch (Key)
+			{
+				case Keys.W: return PspCtrlButtons.Triangle;
+				case Keys.S: return PspCtrlButtons.Cross;
+				case Keys.A: return PspCtrlButtons.Square;
+				case Keys.D: return PspCtrlButtons.Circle;
+				case Keys.Q: return PspCtrlButtons.LeftTrigger;
+				case Keys.E: return PspCtrlButtons.RightTrigger;
+				case Keys.Up: return PspCtrlButtons.Up;
+				case Keys.Return: return PspCtrlButtons.Start;
+				case Keys.Space: return PspCtrlButtons.Select;
+				case Keys.Right: return PspCtrlButtons.Right;
+				case Keys.Down: return PspCtrlButtons.Down;
+				case Keys.Left: return PspCtrlButtons.Left;
+			}
+			return PspCtrlButtons.None;
+		}
+
+		private void PspDisplayForm_KeyDown(object sender, KeyEventArgs e)
+		{
+			switch (e.KeyCode)
+			{
+				case Keys.D1: DisplayScale = 1; break;
+				case Keys.D2: DisplayScale = 2; break;
+				case Keys.D3: DisplayScale = 3; break;
+				case Keys.D4: DisplayScale = 4; break;
+			}
+
+			SceCtrlData.UpdateButtons(GetButtonsFromKeys(e.KeyCode), true);
+		}
+
+		private void PspDisplayForm_KeyUp(object sender, KeyEventArgs e)
+		{
+			SceCtrlData.UpdateButtons(GetButtonsFromKeys(e.KeyCode), false);
 		}
 	}
 }

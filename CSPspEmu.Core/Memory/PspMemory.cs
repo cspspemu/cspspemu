@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.InteropServices;
+using CSharpUtils;
 
 namespace CSPspEmu.Core
 {
@@ -23,6 +25,18 @@ namespace CSPspEmu.Core
 			{
 				return (Address >= Low && Address < High);
 			}
+		}
+
+		public void Reset()
+		{
+			ZeroFillSegment(ScratchPadSegment);
+			ZeroFillSegment(MainSegment);
+			ZeroFillSegment(FrameBufferSegment);
+		}
+
+		public void ZeroFillSegment(Segment Segment)
+		{
+			PointerUtils.Memset((byte *)PspAddressToPointer(Segment.Low), 0, Segment.Size);
 		}
 
 		public Segment ScratchPadSegment = new Segment(ScratchPadOffset, ScratchPadSize);

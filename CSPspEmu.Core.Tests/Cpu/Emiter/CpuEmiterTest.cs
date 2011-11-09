@@ -129,7 +129,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void BranchFullTest()
 		{
-			var RegsV = new String[] {
+			var RegsV = new[] {
 				"r10, r10",
 				"r10, r11",
 				"r10, r12",
@@ -143,7 +143,7 @@ namespace CSPspEmu.Core.Tests
 				"r12, r12",
 			};
 
-			var Regs0 = new String[] {
+			var Regs0 = new[] {
 				"r10",
 				"r11",
 				"r12",
@@ -524,6 +524,70 @@ namespace CSPspEmu.Core.Tests
 
 			Assert.AreEqual("11010110101101011010110101101011", "%032b".Sprintf(CpuThreadState.GPR[1]));
 			Assert.AreEqual("00101001010010100101001010010100", "%032b".Sprintf(CpuThreadState.GPR[2]));
+		}
+
+		[TestMethod]
+		public void ExtractInsertTest()
+		{
+			// %t, %s, %a, %ne
+			CpuThreadState.ExecuteAssembly(@"
+				li r2, 0b_11000011001000000011111011101101
+				ext r1, r2, 3, 10
+			");
+
+			Assert.AreEqual("1111011101", "%010b".Sprintf(CpuThreadState.GPR[1]));
+		}
+
+		[TestMethod]
+		public void FloatCompTest()
+		{
+			// %t, %s, %a, %ne
+			CpuThreadState.FPR[1] = 1.0f;
+			CpuThreadState.FPR[2] = 2.0f;
+
+			CpuThreadState.ExecuteAssembly("c.eq.s f1, f2");
+			Assert.AreEqual(false, CpuThreadState.Fcr31.CC);
+
+			CpuThreadState.ExecuteAssembly("c.eq.s f1, f1");
+			Assert.AreEqual(true, CpuThreadState.Fcr31.CC);
+
+			Action<String> Gen = (INSTRUCTION_NAME) =>
+			{
+				CpuThreadState.ExecuteAssembly(@"
+					li r1, -1
+					c.eq.s f1, f1
+					%INSTRUCTION_NAME% label
+					nop
+					li r1, 0
+					b end
+					nop
+				label:
+					li r1, 1
+					b end
+					nop
+				end:
+					nop
+				".Replace("%INSTRUCTION_NAME%", INSTRUCTION_NAME));
+			};
+
+			Gen("bc1t");
+			Assert.AreEqual(1, CpuThreadState.GPR[1]);
+
+			Gen("bc1f");
+			Assert.AreEqual(0, CpuThreadState.GPR[1]);
+		}
+
+		[TestMethod]
+		public void FloatControlRegisterTest()
+		{
+			CpuThreadState.Fcr31.Value = 0x12345678;
+			CpuThreadState.ExecuteAssembly(@"
+				li r2, 0x87654321
+				cfc1 r1, 31
+				ctc1 r2, 31
+			");
+			Assert.AreEqual(0x12345678, CpuThreadState.GPR[1]);
+			Assert.AreEqual(0x87654321, CpuThreadState.Fcr31.Value);
 		}
 	}
 }

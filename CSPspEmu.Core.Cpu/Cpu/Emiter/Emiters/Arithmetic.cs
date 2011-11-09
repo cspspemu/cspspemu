@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection.Emit;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -241,36 +242,29 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// DIVide (Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
+		unsafe static public void _div_impl(CpuThreadState CpuThreadState, int Left, int Right)
+		{
+			CpuThreadState.LO = Left / Right;
+			CpuThreadState.HI = Left % Right;
+		}
+
+		unsafe static public void _divu_impl(CpuThreadState CpuThreadState, uint Left, uint Right)
+		{
+			CpuThreadState.LO = (int)(Left / Right);
+			CpuThreadState.HI = (int)(Left % Right);
+		}
+
 		public void div() {
-			MipsMethodEmiter.SaveHI(() =>
-			{
-				MipsMethodEmiter.LoadGPR_Signed(RS);
-				MipsMethodEmiter.LoadGPR_Signed(RT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Rem);
-			});
-			MipsMethodEmiter.SaveLO(() =>
-			{
-				MipsMethodEmiter.LoadGPR_Signed(RS);
-				MipsMethodEmiter.LoadGPR_Signed(RT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Div);
-			});
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+			MipsMethodEmiter.LoadGPR_Signed(RS);
+			MipsMethodEmiter.LoadGPR_Signed(RT);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_div_impl"));
 		}
 		public void divu() {
-			div();
-			/*
-			MipsMethodEmiter.SaveHI(() =>
-			{
-				MipsMethodEmiter.LoadGPR_Unsigned(RS);
-				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Rem);
-			});
-			MipsMethodEmiter.SaveLO(() =>
-			{
-				MipsMethodEmiter.LoadGPR_Unsigned(RS);
-				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Div);
-			});
-			*/
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+			MipsMethodEmiter.LoadGPR_Signed(RS);
+			MipsMethodEmiter.LoadGPR_Signed(RT);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_divu_impl"));
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -374,7 +368,35 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// EXTract/INSert.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void ext() { throw (new NotImplementedException()); }
+		/*
+		auto OP_EXT() { mixin(CE("EXT($rt, $rs, $ps, $ne);")); }
+		auto OP_INS() { mixin(CE("INS($rt, $rs, $ps, $ni);")); }
+		void EXT(ref uint base, uint data, uint pos, uint size) {
+			base = (data >>> pos) & MASK(size);
+		}
+		void INS(ref uint base, uint data, uint pos, uint size) {
+			uint mask = MASK(size);
+			//writefln("base=%08X, data=%08X, pos=%d, size=%d", base, data, pos, size);
+			base &= ~(mask << pos);
+			base |= (data & mask) << pos;
+		}
+		*/
+		static public uint _ext_impl(uint Data, int Pos, int Size)
+		{
+			return (Data >> Pos) & BitUtils.CreateMask(Size);
+		}
+
+		public void ext()
+		{
+			MipsMethodEmiter.SaveGPR(RT, () =>
+			{
+				MipsMethodEmiter.LoadGPR(RS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.POS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.SIZE_E);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_ext_impl"));
+			});
+			//throw (new NotImplementedException());
+		}
 		public void ins() { throw (new NotImplementedException()); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////

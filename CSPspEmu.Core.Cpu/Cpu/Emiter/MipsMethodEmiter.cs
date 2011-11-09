@@ -143,6 +143,17 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			ILGenerator.Emit(OpCodes.Stind_R4);
 		}
 
+		static public bool _LoadFcr31CC(CpuThreadState CpuThreadState)
+		{
+			return CpuThreadState.Fcr31.CC;
+		}
+
+		public void LoadFCR31_CC()
+		{
+			ILGenerator.Emit(OpCodes.Ldarg_0);
+			ILGenerator.Emit(OpCodes.Call, typeof(MipsMethodEmiter).GetMethod("_LoadFcr31CC"));
+		}
+
 		public void LoadGPR(int R)
 		{
 			if (R == 0)

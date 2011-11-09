@@ -33,6 +33,10 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Console.WriteLine("ThreadManForUser.sceKernelCreateThread('{0}', {1:X}, {2:X}, {3:X}, {4:X}, {5:X})", Name, EntryPoint, InitPriority, StackSize, Attribute, (uint)Option);
 
 			var Thread = HleState.ThreadManager.Create();
+			Thread.Name = Name;
+			Thread.EntryPoint = EntryPoint;
+			Thread.InitPriority = InitPriority;
+			Thread.Attribute = Attribute;
 			Thread.Stack = HleState.MemoryManager.RootPartition.Allocate(StackSize, MemoryPartition.Anchor.High);
 			Thread.CpuThreadState.PC = (uint)EntryPoint;
 			Thread.CpuThreadState.GP = (uint)CpuThreadState.GP;

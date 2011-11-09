@@ -63,5 +63,14 @@ namespace CSPspEmu.Hle.Modules.display
 			HleState.PspDisplay.CurrentInfo.Sync = Sync;
 			return 0;
 		}
+
+		/// <summary>
+		/// Wait for vertical blank
+		/// </summary>
+		[HlePspFunction(NID = 0x36CDFADE, FirmwareVersion = 150)]
+		public int sceDisplayWaitVblank(CpuThreadState CpuThreadState)
+		{
+			return sceDisplayWaitVblankStart(CpuThreadState);
+		}
 	}
 }

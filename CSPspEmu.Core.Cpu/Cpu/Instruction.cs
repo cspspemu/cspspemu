@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -11,25 +12,17 @@ namespace CSPspEmu.Core.Cpu
 
 		private void set(int Offset, int Count, uint SetValue)
 		{
-			uint Mask = (uint)((1 << Count) - 1);
-			this.Value &= ~(Mask << Offset);
-			this.Value |= (SetValue & Mask) << Offset;
+			this.Value = BitUtils.Insert(this.Value, Offset, Count, SetValue);
 		}
 
 		private uint get(int Offset, int Count)
 		{
-			return (uint)((Value >> Offset) & ((1 << Count) - 1));
+			return BitUtils.Extract(this.Value, Offset, Count);
 		}
 
 		private int get_s(int Offset, int Count)
 		{
-			uint SignBit = (uint)(1 << (Offset + (Count - 1)));
-			int _Value = (int)((Value >> Offset) & ((1 << Count) - 1));
-			if ((_Value & SignBit) != 0)
-			{
-				throw (new NotImplementedException());
-			}
-			return _Value;
+			return BitUtils.ExtractSigned(this.Value, Offset, Count);
 		}
 
 		public uint OP1 { get { return get(26, 6); } set { set(26, 6, value); } }
@@ -55,7 +48,10 @@ namespace CSPspEmu.Core.Cpu
 		// CODE
 		public uint CODE { get { return get(6, 20); } set { set(6, 20, value); } }
 
-		public uint POS { get { return get(6 + 5 * 0, 5); } set { set(6 + 5 * 0, 5, value); } }
+		public uint POS { get { return LSB; } set { LSB = value; } }
+		public uint SIZE_E { get { return MSB + 1; } set { MSB = value - 1; } }
+		public uint SIZE_I { get { return MSB - LSB + 1; } set { MSB = LSB + value - 1; } }
+
 		public uint LSB { get { return get(6 + 5 * 0, 5); } set { set(6 + 5 * 0, 5, value); } }
 		public uint MSB { get { return get(6 + 5 * 1, 5); } set { set(6 + 5 * 1, 5, value); } }
 

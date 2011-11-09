@@ -210,6 +210,10 @@ namespace CSPspEmu.Core.Cpu.Assembler
 						case "%t": Instruction.RT = ParseGprName(Value); break;
 
 						case "%a": Instruction.POS = (uint)ParseIntegerConstant(Value); break;
+						case "%ne": Instruction.SIZE_E = (uint)ParseIntegerConstant(Value); break;
+						case "%ni": Instruction.SIZE_I = (uint)ParseIntegerConstant(Value); break;
+
+						case "%p": Instruction.RD = (int)ParseIntegerConstant(Value); break;
 
 						case "%C": Instruction.CODE = (uint)ParseIntegerConstant(Value); break;
 						case "%i": Instruction.IMM = ParseIntegerConstant(Value); break;
