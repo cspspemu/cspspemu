@@ -13,7 +13,8 @@ namespace CSPspEmu.Core.Tests
 		public void CreateDelegateTest()
 		{
 			var Memory = new NormalPspMemory();
-			var Processor = new Processor(Memory);
+			var PspConfig = new PspConfig();
+			var Processor = new Processor(PspConfig, Memory);
 			var CpuThreadState = new CpuThreadState(Processor);
 			var MipsEmiter = new MipsMethodEmiter(new MipsEmiter(), Processor);
 			CpuThreadState.GPR[1] = 1;

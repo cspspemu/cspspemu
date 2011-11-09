@@ -10,6 +10,7 @@ namespace CSPspEmu.Core.Tests
 	[TestClass]
 	public class HlePspThreadManagerTest
 	{
+		protected PspConfig PspConfig;
 		protected LazyPspMemory Memory;
 		protected Processor Processor;
 		protected MipsAssembler MipsAssembler;
@@ -18,7 +19,8 @@ namespace CSPspEmu.Core.Tests
 		public void SetUp()
 		{
 			Memory = new LazyPspMemory();
-			Processor = new Processor(Memory);
+			PspConfig = new PspConfig();
+			Processor = new Processor(PspConfig, Memory);
 			MipsAssembler = new MipsAssembler(new PspMemoryStream(Memory));
 		}
 

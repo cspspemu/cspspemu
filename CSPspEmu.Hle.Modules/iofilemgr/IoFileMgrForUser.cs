@@ -40,7 +40,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 				switch ((EmulatorDevclEnum)Command)
 				{
 					case EmulatorDevclEnum.GetHasDisplay:
-						*((int*)OutputPtr) = HleState.Processor.HasDisplay ? 1 : 0;
+						*((int*)OutputPtr) = HleState.Processor.PspConfig.HasDisplay ? 1 : 0;
 						break;
 					case EmulatorDevclEnum.SendOutput:
 						Console.WriteLine("   OUTPUT:  {0}", new String((sbyte*)InputPtr, 0, InputLength, Encoding.ASCII));

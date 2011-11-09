@@ -25,6 +25,7 @@ namespace CSPspEmu.Gui.Winforms
 
 		public PspMemory Memory { get { return IGuiExternalInterface.GetMemory(); } }
 		public PspDisplay PspDisplay { get { return IGuiExternalInterface.GetDisplay(); } }
+		public PspConfig PspConfig { get { return IGuiExternalInterface.GetConfig(); } }
 		public PspController PspController { get { return IGuiExternalInterface.GetController(); } }
 		
 
@@ -42,6 +43,8 @@ namespace CSPspEmu.Gui.Winforms
 
 			BufferGraphics = Graphics.FromImage(Buffer);
 			BufferGraphics.Clear(Color.Red);
+
+			updateResumePause();
 
 			var Timer = new Timer();
 			Timer.Interval = 1000 / 60;
@@ -196,12 +199,12 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void frameSkippingToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			this.PspDisplay.Vsync = frameSkippingToolStripMenuItem.Checked;
+			this.PspConfig.VerticalSyn = frameSkippingToolStripMenuItem.Checked;
 		}
 
 		private void websiteToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Process.Start("http://cspspemu.soywiz.com/");
+			Process.Start(@"http://en.blog.cballesterosvelasco.es/search/label/pspemu/?rf=csp");
 		}
 
 		private void xToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -299,14 +302,38 @@ namespace CSPspEmu.Gui.Winforms
 			new AboutForm().ShowDialog();
 		}
 
+		private void updateResumePause()
+		{
+			var Paused = IGuiExternalInterface.IsPaused();
+			pauseToolStripMenuItem.Checked = Paused;
+			resumeToolStripMenuItem.Checked = !Paused;
+		}
+
 		private void resumeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			IGuiExternalInterface.Resume();
+			updateResumePause();
 		}
 
 		private void pauseToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			IGuiExternalInterface.Pause();
+			updateResumePause();
+		}
+
+		private void indieGamesToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Process.Start(@"http://kawagames.com/?rf=csp");
+		}
+
+		private void blogcballesterosvelascoesToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Process.Start(@"http://en.blog.cballesterosvelasco.es/?rf=csp");
+		}
+
+		private void traceSyscallsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

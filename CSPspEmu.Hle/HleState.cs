@@ -6,6 +6,7 @@ using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Cpu.Emiter;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core;
+using System.Reflection;
 
 namespace CSPspEmu.Hle
 {
@@ -16,6 +17,7 @@ namespace CSPspEmu.Hle
 		public PspRtc PspRtc;
 		public PspDisplay PspDisplay;
 		public PspController PspController;
+		public PspConfig PspConfig;
 
 		public MipsEmiter MipsEmiter;
 
@@ -25,10 +27,11 @@ namespace CSPspEmu.Hle
 		public HleModuleManager ModuleManager;
 		public HleCallbackManager CallbackManager;
 
-		public HleState(Processor Processor, PspRtc PspRtc, PspDisplay PspDisplay, PspController PspController)
+		public HleState(Processor Processor, PspConfig PspConfig, PspRtc PspRtc, PspDisplay PspDisplay, PspController PspController, Assembly ModulesAssembly)
 		{
 			this.IsRunning = true;
 			this.Processor = Processor;
+			this.PspConfig = PspConfig;
 			this.PspRtc = PspRtc;
 			this.PspDisplay = PspDisplay;
 			this.PspController = PspController;
@@ -37,7 +40,7 @@ namespace CSPspEmu.Hle
 
 			this.ThreadManager = new HleThreadManager(this.Processor, this.PspRtc);
 			this.MemoryManager = new HleMemoryManager(this.Processor.Memory);
-			this.ModuleManager = new HleModuleManager(this);
+			this.ModuleManager = new HleModuleManager(this, ModulesAssembly);
 			this.CallbackManager = new HleCallbackManager(this);
 		}
 	}

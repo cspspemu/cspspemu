@@ -34,7 +34,7 @@ namespace CSPspEmu.Hle.Modules.display
 		[HlePspFunction(NID = 0x984C27E7, FirmwareVersion = 150)]
 		public int sceDisplayWaitVblankStart(CpuThreadState CpuThreadState)
 		{
-			if (HleState.PspDisplay.Vsync)
+			if (HleState.PspConfig.VerticalSyn)
 			{
 				var SleepThread = HleState.ThreadManager.Current;
 				SleepThread.CurrentStatus = HleThread.Status.Waiting;

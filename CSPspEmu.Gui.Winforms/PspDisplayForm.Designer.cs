@@ -45,13 +45,18 @@
 			this.dumpRamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.frameSkippingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.resumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.pauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.websiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
+			this.indieGamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.blogcballesterosvelascoesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.pauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.resumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.traceSyscallsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -62,6 +67,7 @@
             this.fileToolStripMenuItem,
             this.utilsToolStripMenuItem,
             this.runToolStripMenuItem,
+            this.debugToolStripMenuItem,
             this.helpToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
@@ -184,35 +190,6 @@
 			this.frameSkippingToolStripMenuItem.Text = "&VSync";
 			this.frameSkippingToolStripMenuItem.Click += new System.EventHandler(this.frameSkippingToolStripMenuItem_Click);
 			// 
-			// helpToolStripMenuItem
-			// 
-			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.websiteToolStripMenuItem,
-            this.toolStripMenuItem4,
-            this.aboutToolStripMenuItem});
-			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-			this.helpToolStripMenuItem.Text = "&Help";
-			// 
-			// websiteToolStripMenuItem
-			// 
-			this.websiteToolStripMenuItem.Name = "websiteToolStripMenuItem";
-			this.websiteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.websiteToolStripMenuItem.Text = "&Website";
-			this.websiteToolStripMenuItem.Click += new System.EventHandler(this.websiteToolStripMenuItem_Click);
-			// 
-			// toolStripMenuItem4
-			// 
-			this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-			this.toolStripMenuItem4.Size = new System.Drawing.Size(149, 6);
-			// 
-			// aboutToolStripMenuItem
-			// 
-			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.aboutToolStripMenuItem.Text = "&About...";
-			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-			// 
 			// runToolStripMenuItem
 			// 
 			this.runToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -222,19 +199,85 @@
 			this.runToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
 			this.runToolStripMenuItem.Text = "&Run";
 			// 
-			// pauseToolStripMenuItem
-			// 
-			this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
-			this.pauseToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.pauseToolStripMenuItem.Text = "&Pause";
-			this.pauseToolStripMenuItem.Click += new System.EventHandler(this.pauseToolStripMenuItem_Click);
-			// 
 			// resumeToolStripMenuItem
 			// 
 			this.resumeToolStripMenuItem.Name = "resumeToolStripMenuItem";
-			this.resumeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.resumeToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
 			this.resumeToolStripMenuItem.Text = "&Run/Resume";
 			this.resumeToolStripMenuItem.Click += new System.EventHandler(this.resumeToolStripMenuItem_Click);
+			// 
+			// pauseToolStripMenuItem
+			// 
+			this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
+			this.pauseToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+			this.pauseToolStripMenuItem.Text = "&Pause";
+			this.pauseToolStripMenuItem.Click += new System.EventHandler(this.pauseToolStripMenuItem_Click);
+			// 
+			// debugToolStripMenuItem
+			// 
+			this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.traceSyscallsToolStripMenuItem});
+			this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
+			this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+			this.debugToolStripMenuItem.Text = "&Debug";
+			// 
+			// helpToolStripMenuItem
+			// 
+			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.websiteToolStripMenuItem,
+            this.toolStripMenuItem5,
+            this.indieGamesToolStripMenuItem,
+            this.blogcballesterosvelascoesToolStripMenuItem,
+            this.toolStripMenuItem4,
+            this.aboutToolStripMenuItem});
+			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+			this.helpToolStripMenuItem.Text = "&Help";
+			// 
+			// websiteToolStripMenuItem
+			// 
+			this.websiteToolStripMenuItem.Name = "websiteToolStripMenuItem";
+			this.websiteToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+			this.websiteToolStripMenuItem.Text = "&Website";
+			this.websiteToolStripMenuItem.Click += new System.EventHandler(this.websiteToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem5
+			// 
+			this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+			this.toolStripMenuItem5.Size = new System.Drawing.Size(229, 6);
+			// 
+			// indieGamesToolStripMenuItem
+			// 
+			this.indieGamesToolStripMenuItem.Name = "indieGamesToolStripMenuItem";
+			this.indieGamesToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+			this.indieGamesToolStripMenuItem.Text = "&kawagames.com";
+			this.indieGamesToolStripMenuItem.Click += new System.EventHandler(this.indieGamesToolStripMenuItem_Click);
+			// 
+			// blogcballesterosvelascoesToolStripMenuItem
+			// 
+			this.blogcballesterosvelascoesToolStripMenuItem.Name = "blogcballesterosvelascoesToolStripMenuItem";
+			this.blogcballesterosvelascoesToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+			this.blogcballesterosvelascoesToolStripMenuItem.Text = "en.blog.cballesterosvelasco.es";
+			this.blogcballesterosvelascoesToolStripMenuItem.Click += new System.EventHandler(this.blogcballesterosvelascoesToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem4
+			// 
+			this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+			this.toolStripMenuItem4.Size = new System.Drawing.Size(229, 6);
+			// 
+			// aboutToolStripMenuItem
+			// 
+			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+			this.aboutToolStripMenuItem.Text = "&About...";
+			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+			// 
+			// traceSyscallsToolStripMenuItem
+			// 
+			this.traceSyscallsToolStripMenuItem.Name = "traceSyscallsToolStripMenuItem";
+			this.traceSyscallsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.traceSyscallsToolStripMenuItem.Text = "Trace &Syscalls";
+			this.traceSyscallsToolStripMenuItem.Click += new System.EventHandler(this.traceSyscallsToolStripMenuItem_Click);
 			// 
 			// PspDisplayForm
 			// 
@@ -281,5 +324,10 @@
 		private System.Windows.Forms.ToolStripMenuItem runToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem resumeToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem pauseToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
+		private System.Windows.Forms.ToolStripMenuItem indieGamesToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem blogcballesterosvelascoesToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem traceSyscallsToolStripMenuItem;
 	}
 }

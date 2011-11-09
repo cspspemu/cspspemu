@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Cpu.Cpu.Emiter;
+using System.Reflection;
 
 namespace CSPspEmu.Hle.Managers
 {
@@ -14,20 +15,17 @@ namespace CSPspEmu.Hle.Managers
 		public uint DelegateLastId = 0;
 		public Dictionary<uint, Action<CpuThreadState>> DelegateTable = new Dictionary<uint, Action<CpuThreadState>>();
 
-		static public IEnumerable<Type> GetAllHleModules()
+		static public IEnumerable<Type> GetAllHleModules(Assembly ModulesAssembly)
 		{
 			var FindType = typeof(HleModuleHost);
-			return AppDomain.CurrentDomain.GetAssemblies()
-				.SelectMany(Assembly => Assembly.GetTypes())
-				.Where(Type => FindType.IsAssignableFrom(Type))
-			;
+			return ModulesAssembly.GetTypes().Where(Type => FindType.IsAssignableFrom(Type));
 		}
 
 		public Dictionary<String, Type> HleModuleTypes;
 
-		public HleModuleManager(HleState HleState)
+		public HleModuleManager(HleState HleState, Assembly ModulesAssembly)
 		{
-			HleModuleTypes = GetAllHleModules().ToDictionary(Type => Type.Name);
+			HleModuleTypes = GetAllHleModules(ModulesAssembly).ToDictionary(Type => Type.Name);
 			Console.WriteLine("HleModuleTypes: {0}", HleModuleTypes.Count);
 
 			this.HleState = HleState;

@@ -52,7 +52,7 @@ namespace CSPspEmu.Hle.Loader
 			{
 				if (Callback == null)
 				{
-					if (CpuThreadState.Processor.DebugSyscalls)
+					if (CpuThreadState.Processor.PspConfig.DebugSyscalls)
 					{
 						Console.WriteLine(
 							"Thread({0}:'{1}'):{2}:{3}",

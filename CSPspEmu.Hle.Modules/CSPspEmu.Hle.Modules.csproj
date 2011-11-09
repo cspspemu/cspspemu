@@ -44,6 +44,7 @@
     <Compile Include="ctrl\sceCtrl.cs" />
     <Compile Include="display\sceDisplay.cs" />
     <Compile Include="ge\sceGe_user.cs" />
+    <Compile Include="HleModulesInfo.cs" />
     <Compile Include="iofilemgr\IoFileMgrForUser.cs" />
     <Compile Include="loadexec\LoadExecForUser.cs" />
     <Compile Include="modulemgr\ModuleMgrForUser.cs" />

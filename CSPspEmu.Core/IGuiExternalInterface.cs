@@ -7,12 +7,19 @@ namespace CSPspEmu.Core
 {
 	public interface IGuiExternalInterface
 	{
-		void LoadFile(String FileName);
+		// Get Object Methods
 		PspMemory GetMemory();
 		PspDisplay GetDisplay();
 		PspController GetController();
+		PspConfig GetConfig();
+
+		// Load Methods
+		void LoadFile(String FileName);
+
+		// Running Methods
 		void Pause();
 		void Resume();
 		void PauseResume(Action Action);
+		bool IsPaused();
 	}
 }

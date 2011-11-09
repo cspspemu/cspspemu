@@ -7,9 +7,6 @@ namespace CSPspEmu.Core
 {
 	public class PspDisplay
 	{
-		/// <summary>
-		/// 
-		/// </summary>
 		public PspRtc HlePspRtc;
 
 		public Info CurrentInfo = new Info()
@@ -22,8 +19,6 @@ namespace CSPspEmu.Core
 			Width = 480,
 			Height = 272,
 		};
-
-		public bool Vsync = true;
 
 		public enum SyncMode : int
 		{

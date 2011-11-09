@@ -9,19 +9,16 @@ namespace CSPspEmu.Core.Cpu
 {
 	unsafe sealed public class Processor : IResetable
 	{
-		public bool TraceJIT = false;
-		public bool CountInstructionsAndYield = true;
-		public bool ShowInstructionStats = false;
-		public bool HasDisplay = true;
-		public bool DebugSyscalls = false;
+		public PspConfig PspConfig;
 		public PspMemory Memory;
 		public MethodCache MethodCache;
 		private Dictionary<int, Action<int, CpuThreadState>> RegisteredNativeSyscalls;
 		public HashSet<uint> NativeBreakpoints;
 		public bool IsRunning;
-		
-		public Processor(PspMemory Memory)
+
+		public Processor(PspConfig PspConfig, PspMemory Memory)
 		{
+			this.PspConfig = PspConfig;
 			this.Memory = Memory;
 			Reset();
 		}

@@ -14,6 +14,7 @@ namespace CSPspEmu.Core.Tests
 	[TestClass]
 	unsafe public class CpuEmiterTest
 	{
+		protected PspConfig PspConfig;
 		protected PspMemory Memory;
 		protected Processor Processor;
 		protected CpuThreadState CpuThreadState;
@@ -21,8 +22,9 @@ namespace CSPspEmu.Core.Tests
 		[TestInitialize]
 		public void SetUp()
 		{
+			PspConfig = new PspConfig();
 			Memory = new LazyPspMemory();
-			Processor = new Processor(Memory);
+			Processor = new Processor(PspConfig, Memory);
 			CpuThreadState = new CpuThreadState(Processor);
 		}
 

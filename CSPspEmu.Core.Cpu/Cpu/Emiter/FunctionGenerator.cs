@@ -41,7 +41,7 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 				}
 			}
 
-			if (CpuThreadState.Processor.TraceJIT)
+			if (CpuThreadState.Processor.PspConfig.TraceJIT)
 			{
 				Console.WriteLine("Emiting EntryPC=0x{0:X}", EntryPC);
 			}
@@ -100,7 +100,7 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 					CpuEmiter.LoadAT(PC);
 
 					var BranchInfo = GetBranchInfo(CpuEmiter.Instruction.Value);
-					if (CpuThreadState.Processor.ShowInstructionStats)
+					if (CpuThreadState.Processor.PspConfig.ShowInstructionStats)
 					{
 						var InstuctionName = GetInstructionName(CpuEmiter.Instruction.Value, null);
 						if (!InstructionStats.ContainsKey(InstuctionName)) InstructionStats[InstuctionName] = 0;
@@ -151,7 +151,7 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 			// PASS2: Generate code and put labels;
 			Action<uint> _EmitCpuInstructionAT = (_PC) =>
 			{
-				if (CpuThreadState.Processor.TraceJIT)
+				if (CpuThreadState.Processor.PspConfig.TraceJIT)
 				{
 					ILGenerator.Emit(OpCodes.Ldarg_0);
 					ILGenerator.Emit(OpCodes.Ldc_I4, _PC);
@@ -172,7 +172,7 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 
 			Action<bool> EmitInstructionCountIncrement = (bool CheckForYield) =>
 			{
-				if (!CpuThreadState.Processor.CountInstructionsAndYield)
+				if (!CpuThreadState.Processor.PspConfig.CountInstructionsAndYield)
 				{
 					return;
 				}
@@ -335,7 +335,7 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 			}
 
 
-			if (CpuThreadState.Processor.ShowInstructionStats)
+			if (CpuThreadState.Processor.PspConfig.ShowInstructionStats)
 			{
 				Console.WriteLine("--------------------------");
 				foreach (var Pair in InstructionStats.OrderByDescending(Item => Item.Value))
