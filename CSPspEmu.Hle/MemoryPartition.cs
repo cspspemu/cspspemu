@@ -129,7 +129,7 @@ namespace CSPspEmu.Hle
 			}
 			catch (InvalidOperationException)
 			{
-				throw(new InvalidOperationException("Can't allocate " + Size));
+				throw(new InvalidOperationException("Can't allocate " + Size + " : " + AllocateAnchor + " : " + Position));
 			}
 			_ChildPartitions.Remove(OldFreePartition);
 

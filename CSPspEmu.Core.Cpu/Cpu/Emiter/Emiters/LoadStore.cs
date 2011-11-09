@@ -8,7 +8,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 {
 	unsafe sealed public partial class CpuEmiter
 	{
-		private void _load(Action Action)
+		private void _load_i(Action Action)
 		{
 			MipsMethodEmiter.SaveGPR(RT, () =>
 			{
@@ -22,7 +22,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			});
 		}
 
-		private void _save(Action Action)
+		private void _save_common(Action Action)
 		{
 			MipsMethodEmiter._getmemptr(() =>
 			{
@@ -30,23 +30,31 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
 			});
-			MipsMethodEmiter.LoadGPR(RT);
 			Action();
 		}
 
+		private void _save_i(OpCode OpCode)
+		{
+			_save_common(() =>
+			{
+				MipsMethodEmiter.LoadGPR(RT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCode);
+			});
+		}
+
 		// Load Byte/Half word/Word (Left/Right/Unsigned).
-		public void lb() { _load(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I1); }); }
-		public void lh() { _load(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I2); }); }
-		public void lw() { _load(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I4); }); }
+		public void lb() { _load_i(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I1); }); }
+		public void lh() { _load_i(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I2); }); }
+		public void lw() { _load_i(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I4); }); }
 		public void lwl() { throw (new NotImplementedException()); }
 		public void lwr() { throw (new NotImplementedException()); }
-		public void lbu() { _load(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_U1); }); }
-		public void lhu() { _load(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_U2); }); }
+		public void lbu() { _load_i(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_U1); }); }
+		public void lhu() { _load_i(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_U2); }); }
 
 		// Store Byte/Half word/Word (Left/Right).
-		public void sb() { _save(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I1); }); }
-		public void sh() { _save(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I2); }); }
-		public void sw() { _save(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I4); }); }
+		public void sb() { _save_i(OpCodes.Stind_I1); }
+		public void sh() { _save_i(OpCodes.Stind_I2); }
+		public void sw() { _save_i(OpCodes.Stind_I4); }
 		public void swl() { throw (new NotImplementedException()); }
 		public void swr() { throw (new NotImplementedException()); }
 
@@ -57,7 +65,25 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		// Load Word to Cop1 floating point.
 		// Store Word from Cop1 floating point.
-		public void lwc1() { throw (new NotImplementedException()); }
-		public void swc1() { throw (new NotImplementedException()); }
+		public void lwc1()
+		{
+			MipsMethodEmiter.SaveFPR(FT, () =>
+			{
+				MipsMethodEmiter._getmemptr(() =>
+				{
+					MipsMethodEmiter.LoadGPR(RS);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+				});
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
+			});
+		}
+		public void swc1() {
+			_save_common(() =>
+			{
+				MipsMethodEmiter.LoadFPR(FT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_R4); 
+			});
+		}
 	}
 }

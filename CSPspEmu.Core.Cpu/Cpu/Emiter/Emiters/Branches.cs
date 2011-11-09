@@ -68,7 +68,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		// Branch on Less Or Equals than Zero (Likely).
 		public void blez() { _branch_pre_v0(OpCodes.Cgt, OpCodes.Ldc_I4_0, OpCodes.Ceq); }
-		public void blezl() { blezl(); }
+		public void blezl() { blez(); }
 
 		// Branch on Great Than Zero (Likely).
 		public void bgtz() { _branch_pre_v0(OpCodes.Cgt); }

@@ -20,7 +20,7 @@ namespace CSPspEmu.Core.Cpu
 		public uint PC;
 		//public uint nPC;
 
-		public uint HI, LO;
+		public int LO, HI;
 
 		public bool BranchFlag;
 

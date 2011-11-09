@@ -143,8 +143,13 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 				});
 			};
 
-			Action<bool> EmiteInstructionCountIncrement = (bool CheckForYield) =>
+			Action<bool> EmitInstructionCountIncrement = (bool CheckForYield) =>
 			{
+				if (!CpuThreadState.Processor.CountInstructionsAndYield)
+				{
+					return;
+				}
+
 				//Console.WriteLine("EmiteInstructionCountIncrement: {0},{1}", InstructionsEmitedSinceLastWaypoint, CheckForYield);
 				if (InstructionsEmitedSinceLastWaypoint > 0)
 				{
@@ -190,7 +195,7 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 				// Marks label.
 				if (Labels.ContainsKey(PC))
 				{
-					EmiteInstructionCountIncrement(false);
+					EmitInstructionCountIncrement(false);
 					ILGenerator.MarkLabel(Labels[PC]);
 				}
 
@@ -231,7 +236,7 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 				if ((BranchInfo & CpuBranchAnalyzer.Flags.BranchOrJumpInstruction) != 0)
 				{
 					InstructionsEmitedSinceLastWaypoint += 2;
-					EmiteInstructionCountIncrement(true);
+					EmitInstructionCountIncrement(true);
 
 					var BranchAddress = CurrentInstruction.GetBranchAddress(PC);
 

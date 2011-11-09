@@ -309,6 +309,7 @@ namespace CSPspEmu.Sandbox
 			//var Memory = new LazyPspMemory();
 			var Processor = new Processor(Memory);
 			//Processor.TraceJIT = true;
+			//Processor.CountInstructionsAndYield = false;
 			var HleState = new HleState(Processor);
 			var HlePspRtc = HleState.PspRtc;
 			var ThreadManager = HleState.ThreadManager;
@@ -317,7 +318,12 @@ namespace CSPspEmu.Sandbox
 			//var ElfStream = new MemoryStream(MiniFireElfBin);
 			//var ElfStream = File.OpenRead("../../../TestInput/HelloWorld.elf");
 			//var ElfStream = File.OpenRead("../../../TestInput/minifire.elf");
-			var ElfStream = File.OpenRead("../../../TestInput/HelloWorldPSP.elf");
+			//var ElfStream = File.OpenRead("../../../TestInput/HelloWorldPSP.elf");
+			//var ElfStream = File.OpenRead("../../../TestInput/counter.elf");
+			//var ElfStream = File.OpenRead(@"C:\juegos\jpcsp2\demos\compilerPerf.elf");
+			var ElfStream = File.OpenRead(@"C:\juegos\jpcsp2\demos\fputest.elf");
+			//var ElfStream = File.OpenRead(@"C:\projects\pspemu\pspautotests\demos\mytest.elf");
+			//var ElfStream = File.OpenRead(@"C:\projects\pspemu\demos\dumper.elf");
 
 			Loader.LoadAllocateAndWrite(
 				ElfStream,

@@ -259,29 +259,36 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// MULTiply (Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void mult() {
-			MipsMethodEmiter.SaveLO(() =>
+		unsafe static public void _mult_impl(CpuThreadState CpuThreadState, int Left, int Right)
+		{
+			long Result = (long)Left * (long)Right;
+			fixed (int* Ptr = &CpuThreadState.LO)
 			{
-				MipsMethodEmiter.LoadGPR_Signed(RS);
-				MipsMethodEmiter.LoadGPR_Signed(RT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_0);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shr);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_M1);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-			});
-			MipsMethodEmiter.SaveHI(() =>
-			{
-				MipsMethodEmiter.LoadGPR_Signed(RS);
-				MipsMethodEmiter.LoadGPR_Signed(RT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 32);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shr);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_M1);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-			});
+				*((long*)Ptr) = Result;
+			}
 		}
-		public void multu() { throw(new NotImplementedException()); }
+
+		unsafe static public void _multu_impl(CpuThreadState CpuThreadState, uint Left, uint Right)
+		{
+			ulong Result = (ulong)Left * (ulong)Right;
+			fixed (int* Ptr = &CpuThreadState.LO)
+			{
+				*((ulong*)Ptr) = Result;
+			}
+		}
+
+		public void mult() {
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+			MipsMethodEmiter.LoadGPR_Signed(RS);
+			MipsMethodEmiter.LoadGPR_Signed(RT);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_mult_impl"));
+		}
+		public void multu() {
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+			MipsMethodEmiter.LoadGPR_Signed(RS);
+			MipsMethodEmiter.LoadGPR_Signed(RT);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_multu_impl"));
+		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Multiply ADD/SUBstract (Unsigned).

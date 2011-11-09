@@ -345,20 +345,49 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
+		public void MoveLoHiTest()
+		{
+			CpuThreadState.ExecuteAssembly(@"
+				li r21, 0x12345678
+				li r22, 0x87654321
+				mtlo r21
+				mthi r22
+				mflo r1
+				mfhi r2
+			");
+
+			Assert.AreEqual(CpuThreadState.GPR[21], CpuThreadState.LO);
+			Assert.AreEqual(CpuThreadState.GPR[22], CpuThreadState.HI);
+			Assert.AreEqual(CpuThreadState.GPR[1], CpuThreadState.LO);
+			Assert.AreEqual(CpuThreadState.GPR[2], CpuThreadState.HI);
+		}
+
+		[TestMethod]
 		public void SetDivTest()
 		{
 			CpuThreadState.ExecuteAssembly(@"
 				li r10, 100
 				li r11, 12
 				div r10, r11
-				mflo r1
-				mfhi r2
 			");
 
 			Assert.AreEqual(4, (int)CpuThreadState.HI);
 			Assert.AreEqual(8, (int)CpuThreadState.LO);
-			Assert.AreEqual((uint)CpuThreadState.GPR[1], (uint)CpuThreadState.LO);
-			Assert.AreEqual((uint)CpuThreadState.GPR[2], (uint)CpuThreadState.HI);
+		}
+
+		[TestMethod]
+		public void SetMulSimpleTest()
+		{
+			CpuThreadState.ExecuteAssembly(@"
+				li r10, 7
+				li r11, 13
+				mult r10, r11
+			");
+
+			long Expected = (CpuThreadState.GPR[10] * CpuThreadState.GPR[11]);
+
+			Assert.AreEqual((uint)((Expected >> 0) & 0xFFFFFFFF), (uint)CpuThreadState.LO);
+			Assert.AreEqual((uint)((Expected >> 32) & 0xFFFFFFFF), (uint)CpuThreadState.HI);
 		}
 
 		[TestMethod]
@@ -368,16 +397,12 @@ namespace CSPspEmu.Core.Tests
 				li r10, 987654321
 				li r11, 123456789
 				mult r10, r11
-				mflo r1
-				mfhi r2
 			");
 
-			long Expected = 123456789L * 987654321L;
+			ulong Expected = (ulong)(CpuThreadState.GPR[10] * CpuThreadState.GPR[11]);
 
-			Assert.AreEqual((uint)((Expected >> 0) & 0xFFFFFFFF), (uint)CpuThreadState.HI);
-			Assert.AreEqual((uint)((Expected >> 32) & 0xFFFFFFFF), (uint)CpuThreadState.LO);
-			Assert.AreEqual((uint)CpuThreadState.GPR[1], (uint)CpuThreadState.LO);
-			Assert.AreEqual((uint)CpuThreadState.GPR[2], (uint)CpuThreadState.HI);
+			Assert.AreEqual((uint)((Expected >> 0) & 0xFFFFFFFF), (uint)CpuThreadState.LO);
+			Assert.AreEqual((uint)((Expected >> 32) & 0xFFFFFFFF), (uint)CpuThreadState.HI);
 		}
 
 		[TestMethod]
@@ -453,6 +478,19 @@ namespace CSPspEmu.Core.Tests
 			Assert.AreEqual(+100, (int)CpuThreadState.GPR[2]);
 			Assert.AreEqual(-100, (int)CpuThreadState.GPR[3]);
 			Assert.AreEqual(-100, (int)CpuThreadState.GPR[4]);
+		}
+
+		[TestMethod]
+		public void LoadStoreFPUTest()
+		{
+			CpuThreadState.FPR[0] = 1.0f;
+			CpuThreadState.ExecuteAssembly(@"
+				li r1, 0x08000000
+				swc1 f0, 0(r1)
+				lwc1 f1, 0(r1)
+			");
+			Assert.AreEqual(0x3F800000, (int)CpuThreadState.Processor.Memory.Read4(0x08000000));
+			Assert.AreEqual(CpuThreadState.FPR[1], CpuThreadState.FPR[0]);
 		}
 	}
 }

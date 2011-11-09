@@ -236,8 +236,8 @@ namespace CSPspEmu.Core.Cpu.Table
 
 						// Load Word to Cop1 floating point.
 						// Store Word from Cop1 floating point.
-						ID("lwc1", VM("110001:rs:ft:imm16"), "%T, %o", ADDR_TYPE_NONE, 0),
-						ID("swc1", VM("111001:rs:ft:imm16"), "%T, %o", ADDR_TYPE_NONE, 0),
+						ID("lwc1", VM("110001:rs:ft:imm16"), "%T, %i(%s)", ADDR_TYPE_NONE, 0),
+						ID("swc1", VM("111001:rs:ft:imm16"), "%T, %i(%s)", ADDR_TYPE_NONE, 0),
 					};
 				}
 				return _LSU;

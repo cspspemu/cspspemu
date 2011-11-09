@@ -12,6 +12,7 @@ using CSPspEmu.Core;
 using System.Drawing.Imaging;
 using CSPspEmu.Hle;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
 
 namespace CSPspEmu.Gui.Winforms
 {
@@ -46,7 +47,7 @@ namespace CSPspEmu.Gui.Winforms
 			set
 			{
 				_DisplayScale = value;
-				var InnerSize = new Size(480 * _DisplayScale, 272 * _DisplayScale);
+				var InnerSize = new Size(480 * _DisplayScale, 272 * _DisplayScale + menuStrip1.Height);
 				MinimumSize = new Size(1, 1);
 				MaximumSize = new Size(2048, 2048);
 				SetClientSizeCore(InnerSize.Width, InnerSize.Height);
@@ -116,7 +117,17 @@ namespace CSPspEmu.Gui.Winforms
 				}
 			}
 			//Console.WriteLine(this.ClientRectangle);
-			PaintEventArgs.Graphics.DrawImage(Buffer, this.ClientRectangle);
+			PaintEventArgs.Graphics.CompositingMode = CompositingMode.SourceCopy;
+			PaintEventArgs.Graphics.CompositingQuality = CompositingQuality.HighSpeed;
+			PaintEventArgs.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
+			PaintEventArgs.Graphics.DrawImage(
+				Buffer,
+				new Rectangle(
+					0, menuStrip1.Height,
+					512 * DisplayScale, 272 * DisplayScale
+				)
+			);
+			//PaintEventArgs.Graphics.DrawImageUnscaled(Buffer, new Point(0, menuStrip1.Height));
 		}
 
 		protected bool EnableRefreshing = true;
