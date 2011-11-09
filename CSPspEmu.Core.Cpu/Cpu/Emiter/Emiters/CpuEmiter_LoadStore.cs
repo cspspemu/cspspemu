@@ -10,6 +10,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 	{
 		private void _load_i(Action Action)
 		{
+			if (!(MipsMethodEmiter.Processor.Memory is FastPspMemory))
+			{
+				MipsMethodEmiter.SavePC(PC);
+			}
+
 			MipsMethodEmiter.SaveGPR(RT, () =>
 			{
 				MipsMethodEmiter._getmemptr(() =>

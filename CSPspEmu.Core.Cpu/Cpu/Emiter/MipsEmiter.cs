@@ -14,6 +14,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public MipsEmiter()
 		{
+			Reset();
+		}
+
+		public void Reset()
+		{
 			UniqueCounter++;
 			var CurrentAppDomain = AppDomain.CurrentDomain;
 			var AssemblyBuilder = CurrentAppDomain.DefineDynamicAssembly(new AssemblyName("assembly" + UniqueCounter), AssemblyBuilderAccess.RunAndSave);

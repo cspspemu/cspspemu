@@ -29,9 +29,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x446D8DE6, FirmwareVersion = 150)]
 		public uint sceKernelCreateThread(CpuThreadState CpuThreadState, string Name, uint EntryPoint, int InitPriority, uint StackSize, uint Attribute, SceKernelThreadOptParam* Option)
 		{
-			Console.Write("PC(0x{0:X}) : ", CpuThreadState.RA);
-			Console.WriteLine("ThreadManForUser.sceKernelCreateThread('{0}', {1:X}, {2:X}, {3:X}, {4:X}, {5:X})", Name, EntryPoint, InitPriority, StackSize, Attribute, (uint)Option);
-
 			var Thread = HleState.ThreadManager.Create();
 			Thread.Name = Name;
 			Thread.EntryPoint = EntryPoint;
@@ -42,8 +39,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Thread.CpuThreadState.GP = (uint)CpuThreadState.GP;
 			Thread.CpuThreadState.SP = (uint)(Thread.Stack.High);
 			Thread.CpuThreadState.RA = (uint)0;
-
-			Console.WriteLine("    : {0}", Thread.Id);
 
 			return (uint)Thread.Id;
 		}
@@ -58,10 +53,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0xF475845D, FirmwareVersion = 150)]
 		public int sceKernelStartThread(CpuThreadState CpuThreadState, uint ThreadId, uint ArgumentsLength, void* ArgumentsPointer)
 		{
-			Console.Write("PC(0x{0:X}) : ", CpuThreadState.RA);
-
-			Console.WriteLine("ThreadManForUser.sceKernelStartThread({0:X}, {1:X}, {2:X})", ThreadId, ArgumentsLength, (uint)ArgumentsPointer);
-
 			HleState.ThreadManager.GetThreadById((int)ThreadId).CurrentStatus = HleThread.Status.Ready;
 
 			return 0;
@@ -75,7 +66,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x809CE29B, FirmwareVersion = 150)]
 		public int sceKernelExitDeleteThread(int Status)
 		{
-			Console.WriteLine("ThreadManForUser.sceKernelExitThread({0:X})", Status);
 			HleState.ThreadManager.Exit(HleState.ThreadManager.Current);
 			return 0;
 		}

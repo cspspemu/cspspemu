@@ -131,7 +131,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		 * @param ctx - Pointer to a pre-initialised context.
 		 * @return A pseudo random number (between 0 and MAX_INT).
 		 */
-		[HlePspFunction(NID = 0x06FB8A63, FirmwareVersion = 150)]
+		[HlePspFunction(NID = 0x06FB8A63, FirmwareVersion = 150, SkipLog = true)]
 		public uint sceKernelUtilsMt19937UInt(SceKernelUtilsMt19937Context* ctx)
 		{
 			//throw(new NotImplementedException());

@@ -17,5 +17,10 @@ namespace CSPspEmu.Hle
 		/// Firmware Version where the function starts to appear.
 		/// </summary>
 		public uint FirmwareVersion = 150;
+
+		/// <summary>
+		/// Avoids being logged.
+		/// </summary>
+		public bool SkipLog = false;
 	}
 }

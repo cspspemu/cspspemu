@@ -168,59 +168,55 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// MULTiply (Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		unsafe static public void _mult_impl(CpuThreadState CpuThreadState, int Left, int Right)
+		public void _mult_common_op(OpCode ConvOp)
 		{
-			long Result = (long)Left * (long)Right;
-			CpuThreadState.LO = (int)((((ulong)Result) >> 0) & 0xFFFFFFFF);
-			CpuThreadState.HI = (int)((((ulong)Result) >> 32) & 0xFFFFFFFF);
-		}
-
-		unsafe static public void _multu_impl(CpuThreadState CpuThreadState, uint Left, uint Right)
-		{
-			ulong Result = (ulong)Left * (ulong)Right;
-			CpuThreadState.LO = (int)((((ulong)Result) >> 0) & 0xFFFFFFFF);
-			CpuThreadState.HI = (int)((((ulong)Result) >> 32) & 0xFFFFFFFF);
-		}
-
-		public void mult() {
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
 			MipsMethodEmiter.LoadGPR_Signed(RS);
+			MipsMethodEmiter.ILGenerator.Emit(ConvOp);
 			MipsMethodEmiter.LoadGPR_Signed(RT);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_mult_impl"));
+			MipsMethodEmiter.ILGenerator.Emit(ConvOp);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
 		}
-		public void multu() {
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-			MipsMethodEmiter.LoadGPR_Unsigned(RS);
-			MipsMethodEmiter.LoadGPR_Unsigned(RT);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_multu_impl"));
+
+		public void _mult_common(OpCode ConvOp)
+		{
+			MipsMethodEmiter.SaveHI_LO(() =>
+			{
+				_mult_common_op(ConvOp);
+			});
 		}
+
+		public void _mult_common_op(OpCode ConvOp, params OpCode[] OpCodes)
+		{
+			MipsMethodEmiter.SaveHI_LO(() =>
+			{
+				MipsMethodEmiter.LoadHI_LO();
+				MipsMethodEmiter.ILGenerator.Emit(ConvOp);
+				_mult_common_op(ConvOp);
+				foreach (var OpCode in OpCodes)
+				{
+					MipsMethodEmiter.ILGenerator.Emit(OpCode);
+				}
+			});
+		}
+
+		public void mult() { _mult_common(OpCodes.Conv_I8); }
+		public void multu() { _mult_common(OpCodes.Conv_U8); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Multiply ADD/SUBstract (Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void madd() { throw (new NotImplementedException()); }
-		public void maddu() { throw(new NotImplementedException()); }
-		public void msub() { throw(new NotImplementedException()); }
-		public void msubu() { throw(new NotImplementedException()); }
+		public void madd() { _mult_common_op(OpCodes.Conv_I8, OpCodes.Add); }
+		public void maddu() { _mult_common_op(OpCodes.Conv_U8, OpCodes.Add); }
+		public void msub() { _mult_common_op(OpCodes.Conv_I8, OpCodes.Sub); }
+		public void msubu() { _mult_common_op(OpCodes.Conv_U8, OpCodes.Sub); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move To/From HI/LO.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void mfhi() {
-			MipsMethodEmiter.SaveGPR(RD, () =>
-			{
-				MipsMethodEmiter.LoadHI();
-			});
-		}
-		public void mflo() {
-			MipsMethodEmiter.SaveGPR(RD, () => { MipsMethodEmiter.LoadLO(); });
-		}
-		public void mthi() {
-			MipsMethodEmiter.SaveHI(() => { MipsMethodEmiter.LoadGPR_Unsigned(RS); });
-		}
-		public void mtlo() {
-			MipsMethodEmiter.SaveLO(() => { MipsMethodEmiter.LoadGPR_Unsigned(RS); });
-		}
+		public void mfhi() { MipsMethodEmiter.SaveGPR(RD, () => { MipsMethodEmiter.LoadHI(); }); }
+		public void mflo() { MipsMethodEmiter.SaveGPR(RD, () => { MipsMethodEmiter.LoadLO(); }); }
+		public void mthi() { MipsMethodEmiter.SaveHI(() => { MipsMethodEmiter.LoadGPR_Unsigned(RS); }); }
+		public void mtlo() { MipsMethodEmiter.SaveLO(() => { MipsMethodEmiter.LoadGPR_Unsigned(RS); }); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move if Zero/Non zero.
@@ -245,22 +241,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// EXTract/INSert.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		/*
-		auto OP_EXT() { mixin(CE("EXT($rt, $rs, $ps, $ne);")); }
-		auto OP_INS() { mixin(CE("INS($rt, $rs, $ps, $ni);")); }
-		void EXT(ref uint base, uint data, uint pos, uint size) {
-			base = (data >>> pos) & MASK(size);
-		}
-		void INS(ref uint base, uint data, uint pos, uint size) {
-			uint mask = MASK(size);
-			//writefln("base=%08X, data=%08X, pos=%d, size=%d", base, data, pos, size);
-			base &= ~(mask << pos);
-			base |= (data & mask) << pos;
-		}
-		*/
 		static public uint _ext_impl(uint Data, int Pos, int Size)
 		{
-			return (Data >> Pos) & BitUtils.CreateMask(Size);
+			return BitUtils.Extract(Data, Pos, Size);
+		}
+
+		static public uint _ins_impl(uint InitialData, uint Data, int Pos, int Size)
+		{
+			return BitUtils.Insert(InitialData, Pos, Size, Data);
 		}
 
 		public void ext()
@@ -272,9 +260,18 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.SIZE_E);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_ext_impl"));
 			});
-			//throw (new NotImplementedException());
 		}
-		public void ins() { throw (new NotImplementedException()); }
+		public void ins()
+		{
+			MipsMethodEmiter.SaveGPR(RT, () =>
+			{
+				MipsMethodEmiter.LoadGPR_Unsigned(RT);
+				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.POS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.SIZE_I);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_ins_impl"));
+			});
+		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Count Leading Ones/Zeros in word.

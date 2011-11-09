@@ -10,6 +10,7 @@ using System.Diagnostics;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core.Cpu.Cpu.Emiter;
 using CSPspEmu.Core.Cpu;
+using CSharpUtils;
 
 namespace CSPspEmu.Hle.Loader
 {
@@ -49,15 +50,17 @@ namespace CSPspEmu.Hle.Loader
 
 			return (CpuThreadState) =>
 			{
-				Console.WriteLine(
-					"Thread({0}:'{1}'):{2}:{3}",
-					ModuleManager.HleState.ThreadManager.Current.Id,
-					ModuleManager.HleState.ThreadManager.Current.Name,
-					ModuleImportName, NIDName
-				);
-
 				if (Callback == null)
 				{
+					if (CpuThreadState.Processor.DebugSyscalls)
+					{
+						Console.WriteLine(
+							"Thread({0}:'{1}'):{2}:{3}",
+							ModuleManager.HleState.ThreadManager.Current.Id,
+							ModuleManager.HleState.ThreadManager.Current.Name,
+							ModuleImportName, NIDName
+						);
+					} 
 					throw (new NotImplementedException("Not Implemented '" + String.Format("{0}:{1}", ModuleImportName, NIDName) + "'"));
 				}
 				else
@@ -68,6 +71,15 @@ namespace CSPspEmu.Hle.Loader
 		}
 
 		public void UpdateModuleImports(Stream MemoryStream, HleModuleManager ModuleManager)
+		{
+			ConsoleUtils.SaveRestoreConsoleState(() =>
+			{
+				Console.ForegroundColor = ConsoleColor.DarkCyan;
+				_UpdateModuleImports(MemoryStream, ModuleManager);
+			});
+		}
+
+		private void _UpdateModuleImports(Stream MemoryStream, HleModuleManager ModuleManager)
 		{
 			var ImportsStream = MemoryStream.SliceWithBounds(ModuleInfo.ImportsStart, ModuleInfo.ImportsEnd);
 			var ExportsStream = MemoryStream.SliceWithBounds(ModuleInfo.ImportsStart, ModuleInfo.ImportsEnd);

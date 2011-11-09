@@ -43,6 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DebugUtils.cs" />
+    <Compile Include="IGuiExternalInterface.cs" />
+    <Compile Include="IResetable.cs" />
     <Compile Include="Memory\PspMemory.cs" />
     <Compile Include="Memory\LazyPspMemory.cs" />
     <Compile Include="Memory\FastPspMemory.cs" />

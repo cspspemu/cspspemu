@@ -17,8 +17,7 @@ namespace CSPspEmu.Hle.Modules.loadexec
 		[HlePspFunction(NID = 0x05572A5F, FirmwareVersion = 150)]
 		public void sceKernelExitGame()
 		{
-			//throw (new HaltException("sceKernelExitGame"));
-			throw(new NotImplementedException());
+			HleState.IsRunning = false;
 		}
 
 		/// <summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Cpu;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.display
 {
@@ -18,7 +19,7 @@ namespace CSPspEmu.Hle.Modules.display
 		[HlePspFunction(NID = 0x0E20F177, FirmwareVersion = 150)]
 		public int sceDisplaySetMode(int Mode, int Width, int Height)
 		{
-			Console.WriteLine("sceDisplay.sceDisplaySetMode");
+			//Console.WriteLine("sceDisplay.sceDisplaySetMode");
 
 			HleState.PspDisplay.CurrentInfo.Mode = Mode;
 			HleState.PspDisplay.CurrentInfo.Width = Width;
@@ -56,7 +57,7 @@ namespace CSPspEmu.Hle.Modules.display
 		[HlePspFunction(NID = 0x289D82FE, FirmwareVersion = 150)]
 		public int sceDisplaySetFrameBuf(uint Address, int BufferWidth, PspDisplay.PixelFormats PixelFormat, PspDisplay.SyncMode Sync)
 		{
-			Console.WriteLine("sceDisplay.sceDisplaySetFrameBuf {0:X},{1},{2},{3}", Address, BufferWidth, PixelFormat, Sync);
+			//Console.WriteLine("sceDisplay.sceDisplaySetFrameBuf {0:X},{1},{2},{3}", Address, BufferWidth, PixelFormat, Sync);
 			HleState.PspDisplay.CurrentInfo.Address = Address;
 			HleState.PspDisplay.CurrentInfo.BufferWidth = BufferWidth;
 			HleState.PspDisplay.CurrentInfo.PixelFormat = PixelFormat;

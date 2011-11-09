@@ -25,39 +25,119 @@ using CSPspEmu.Hle.Modules.loadexec;
 using CSPspEmu.Hle.Modules.ctrl;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Loader;
+using CSharpUtils;
+using CSharpUtils.Threading;
+using System.Reflection;
 
 namespace CSPspEmu.Sandbox
 {
-	unsafe class Program
+	unsafe class Program : IGuiExternalInterface
 	{
-		static void MiniFire()
-		{
-			var Memory = new FastPspMemory();
-			//var Memory = new LazyPspMemory();
-			//var Memory = new NormalPspMemory();
-			Memory.Reset();
+		PspRtc PspRtc;
+		PspDisplay PspDisplay;
+		PspController PspController;
+		PspMemory Memory;
+		Processor Processor;
+		PspMemoryStream MemoryStream;
+		HleState HleState;
+		TaskQueue CpuTaskQueue = new TaskQueue();
+		Assembly HleModulesDll;
+		AutoResetEvent PauseEvent;
 
-			var MemoryStream = new PspMemoryStream(Memory);
-			var Loader = new ElfPspLoader();
-			var Processor = new Processor(Memory);
+		PspMemory IGuiExternalInterface.GetMemory()
+		{
+			return Memory;
+		}
+
+		public PspDisplay GetDisplay()
+		{
+			return PspDisplay;
+		}
+
+		public PspController GetController()
+		{
+			return PspController;
+		}
+
+		public void PauseResume(Action Action)
+		{
+			if (Paused)
+			{
+				Action();
+			}
+			else
+			{
+				Pause();
+				try
+				{
+					Action();
+				}
+				finally
+				{
+					Resume();
+				}
+			}
+		}
+
+		public bool Paused
+		{
+			get
+			{
+				return (PauseEvent != null);
+			}
+		}
+
+		public void Pause()
+		{
+			if (!Paused)
+			{
+				PauseEvent = new AutoResetEvent(false);
+
+				CpuTaskQueue.EnqueueAndWaitStarted(() =>
+				{
+					while (!PauseEvent.WaitOne(TimeSpan.FromMilliseconds(10)))
+					{
+						if (!Processor.IsRunning) break;
+					}
+					PauseEvent = null;
+				});
+			}
+		}
+
+		public void Resume()
+		{
+			if (Paused)
+			{
+				PauseEvent.Set();
+			}
+		}
+
+		public void LoadFile(String FileName)
+		{
+			CpuTaskQueue.Enqueue(() =>
+			{
+				_LoadFile(FileName);
+			});
+		}
+
+		private void _LoadFile(String FileName)
+		{
+			if (HleModulesDll == null)
+			{
+				HleModulesDll = Assembly.LoadFile(Path.GetDirectoryName(typeof(Program).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll");
+			}
+
+			Processor.Reset();
+			Memory.Reset();
+			HleState = new HleState(Processor, PspRtc, PspDisplay, PspController);
+			Processor.DebugSyscalls = true;
 			//Processor.ShowInstructionStats = true;
 			//Processor.TraceJIT = true;
 			//Processor.CountInstructionsAndYield = false;
-			var HleState = new HleState(Processor);
-			var HlePspRtc = HleState.PspRtc;
-			var ThreadManager = HleState.ThreadManager;
-			var Assembler = new MipsAssembler(MemoryStream);
 
-			//var ElfStream = File.OpenRead("../../../TestInput/HelloWorld.elf");
-			//var ElfStream = File.OpenRead("../../../TestInput/minifire.elf");
-			//var ElfStream = File.OpenRead("../../../TestInput/HelloWorldPSP.elf");
-			var ElfStream = File.OpenRead("../../../TestInput/counter.elf");
-			//var ElfStream = File.OpenRead(@"C:\projects\pspemu\pspautotests\tests\string\string.elf");
-			//var ElfStream = File.OpenRead(@"C:\juegos\jpcsp2\demos\compilerPerf.elf");
-			//var ElfStream = File.OpenRead(@"C:\juegos\jpcsp2\demos\fputest.elf");
-			//var ElfStream = File.OpenRead(@"C:\projects\pspemu\pspautotests\demos\mytest.elf");
-			//var ElfStream = File.OpenRead(@"C:\projects\pspemu\demos\dumper.elf");
-			//var ElfStream = File.OpenRead(@"C:\projects\pspemu\pspautotests\tests\cpu\cpu\cpu.elf");
+			var ElfStream = File.OpenRead(FileName);
+
+			var Loader = new ElfPspLoader();
 
 			Loader.LoadAllocateAndWrite(
 				ElfStream,
@@ -67,11 +147,34 @@ namespace CSPspEmu.Sandbox
 
 			Loader.UpdateModuleImports(new PspMemoryStream(Memory), HleState.ModuleManager);
 
-			Console.WriteLine("{0:X}", Loader.InitInfo.PC);
-			Console.WriteLine("{0:X}", Memory.Read4(Loader.InitInfo.PC));
+			var MainThread = HleState.ThreadManager.Create();
+			MainThread.CpuThreadState.PC = Loader.InitInfo.PC;
+			MainThread.CpuThreadState.GP = Loader.InitInfo.GP;
+			MainThread.CpuThreadState.SP = (uint)(0x09000000 - 10000);
+			MainThread.CpuThreadState.RA = (uint)0x08000000;
+			MainThread.CurrentStatus = HleThread.Status.Ready;
+
+			RegisterSyscalls();
+		}
+
+		void RegisterSyscalls()
+		{
+			new MipsAssembler(MemoryStream).Assemble(@"
+			.code 0x08000000
+				syscall 0x7777
+				jr r31
+				nop
+			");
+
+			Processor.RegisterNativeSyscall(0x7777, (Code, CpuThreadState) =>
+			{
+				var SleepThread = HleState.ThreadManager.Current;
+				SleepThread.CurrentStatus = HleThread.Status.Waiting;
+				SleepThread.CurrentWaitType = HleThread.WaitType.None;
+				CpuThreadState.Yield();
+			});
 
 			var ThreadManForUser = HleState.ModuleManager.GetModule<ThreadManForUser>();
-
 
 			Processor.RegisterNativeSyscall(0x206D, (Code, CpuThreadState) =>
 			{
@@ -122,56 +225,84 @@ namespace CSPspEmu.Sandbox
 			{
 				HleState.ModuleManager.GetModuleDelegate<sceCtrl>("sceCtrlPeekBufferPositive")(CpuThreadState);
 			});
+		}
 
-			var MainThread = ThreadManager.Create();
-			MainThread.CpuThreadState.PC = Loader.InitInfo.PC;
-			MainThread.CpuThreadState.GP = Loader.InitInfo.GP;
-			MainThread.CpuThreadState.SP = (uint)(0x09000000 - 10000);
-			MainThread.CpuThreadState.RA = (uint)0x08000000;
+		void Execute()
+		{
+			PspRtc = new PspRtc();
+			PspDisplay = new PspDisplay(PspRtc);
+			PspController = new PspController();
+			Memory = new FastPspMemory();
+			MemoryStream = new PspMemoryStream(Memory);
+			Processor = new Processor(Memory);
+			HleState = new HleState(Processor, PspRtc, PspDisplay, PspController);
 
-			Assembler.Assemble(@"
-				.code 0x08000000
-				syscall 0x7777
-				jr r31
-				nop
-			");
+			//LoadFile("../../../TestInput/minifire.elf");
 
-			Processor.RegisterNativeSyscall(0x7777, (Code, CpuThreadState) =>
+			/*
+			CpuTaskQueue.Enqueue(() =>
 			{
-				var SleepThread = HleState.ThreadManager.Current;
-				SleepThread.CurrentStatus = HleThread.Status.Waiting;
-				SleepThread.CurrentWaitType = HleThread.WaitType.None;
-				CpuThreadState.Yield();
+				LoadFile("../../../TestInput/minifire.elf");
+				//var ElfStream = File.OpenRead("../../../TestInput/HelloWorld.elf");
+				//var ElfStream = File.OpenRead("../../../TestInput/HelloWorldPSP.elf");
+				//var ElfStream = File.OpenRead("../../../TestInput/counter.elf");
+				//var ElfStream = File.OpenRead(@"C:\projects\pspemu\pspautotests\tests\string\string.elf");
+				//var ElfStream = File.OpenRead(@"C:\juegos\jpcsp2\demos\compilerPerf.elf");
+				//var ElfStream = File.OpenRead(@"C:\juegos\jpcsp2\demos\fputest.elf");
+				//var ElfStream = File.OpenRead(@"C:\projects\pspemu\pspautotests\demos\mytest.elf");
+				//var ElfStream = File.OpenRead(@"C:\projects\pspemu\demos\dumper.elf");
+				//var ElfStream = File.OpenRead(@"C:\projects\pspemu\pspautotests\tests\cpu\cpu\cpu.elf");
 			});
-
-
-			MainThread.CurrentStatus = HleThread.Status.Ready;
-			bool Running = true;
+			*/
 
 			// Execution Thread.
 			new Thread(() =>
 			{
-				try
+				while (Processor.IsRunning)
 				{
-					while (Running)
+					try
 					{
-						HlePspRtc.Update();
-						ThreadManager.StepNext();
+						while (Processor.IsRunning)
+						{
+							CpuTaskQueue.HandleEnqueued();
+							if (!Processor.IsRunning) break;
+							HleState.PspRtc.Update();
+							HleState.ThreadManager.StepNext();
+						}
 					}
-				}
-				catch (Exception Exception)
-				{
-					Console.WriteLine(Exception);
-					//throw (new Exception("Unhandled Exception " + Exception.ToString(), Exception));
-					//throw (new Exception(Exception.InnerException.ToString(), Exception.InnerException));
+					catch (Exception Exception)
+					{
+						ConsoleUtils.SaveRestoreConsoleState(() =>
+						{
+							Console.ForegroundColor = ConsoleColor.Red;
+
+							Console.WriteLine(Exception);
+
+							try
+							{
+								HleState.ThreadManager.Current.CpuThreadState.DumpRegisters();
+
+								Console.WriteLine(
+									"Last registered PC = 0x{0:X}, RA = 0x{1:X}",
+									HleState.ThreadManager.Current.CpuThreadState.PC,
+									HleState.ThreadManager.Current.CpuThreadState.RA
+								);
+							}
+							catch
+							{
+							}
+						});
+						//throw (new Exception("Unhandled Exception " + Exception.ToString(), Exception));
+						//throw (new Exception(Exception.InnerException.ToString(), Exception.InnerException));
+					}
 				}
 			}).Start();
 
 			// GUI Thread.
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new PspDisplayForm(Memory, HleState.PspDisplay, HleState.PspController));
-			Running = false;
+			Application.Run(new PspDisplayForm(this));
+			try { Processor.IsRunning = false; } catch { }
 		}
 
 
@@ -185,7 +316,8 @@ namespace CSPspEmu.Sandbox
 		static void Main(string[] args)
 		{
 			Console.SetWindowSize(160, 60);
-			MiniFire();
+			Console.SetBufferSize(160, 2000);
+			new Program().Execute();
 		}
 	}
 }

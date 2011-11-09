@@ -23,20 +23,13 @@ namespace CSPspEmu.Hle.Managers
 			;
 		}
 
-		static private Dictionary<String, Type> _HleModuleTypes;
-		static public Dictionary<String, Type> HleModuleTypes
-		{
-			get {
-				if (_HleModuleTypes == null)
-				{
-					_HleModuleTypes = GetAllHleModules().ToDictionary(Type => Type.Name);
-				}
-				return _HleModuleTypes;
-			}
-		}
+		public Dictionary<String, Type> HleModuleTypes;
 
 		public HleModuleManager(HleState HleState)
 		{
+			HleModuleTypes = GetAllHleModules().ToDictionary(Type => Type.Name);
+			Console.WriteLine("HleModuleTypes: {0}", HleModuleTypes.Count);
+
 			this.HleState = HleState;
 			HleState.Processor.RegisterNativeSyscall(FunctionGenerator.NativeCallSyscallCode, (Code, CpuThreadState) =>
 			{

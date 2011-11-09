@@ -167,10 +167,7 @@ namespace CSPspEmu.Core.Cpu.Cpu.Emiter
 
 			Action StorePC = () =>
 			{
-				MipsMethodEmiter.SavePC(() =>
-				{
-					ILGenerator.Emit(OpCodes.Ldc_I4, PC);
-				});
+				MipsMethodEmiter.SavePC(PC);
 			};
 
 			Action<bool> EmitInstructionCountIncrement = (bool CheckForYield) =>

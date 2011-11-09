@@ -10,7 +10,6 @@ using CSharpUtils.Extensions;
 using CSharpUtils;
 using CSPspEmu.Core;
 using System.Drawing.Imaging;
-using CSPspEmu.Hle;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using CSPspEmu.Core.Memory;
@@ -21,21 +20,22 @@ namespace CSPspEmu.Gui.Winforms
 	{
 		public Bitmap Buffer = new Bitmap(512, 272);
 		public Graphics BufferGraphics;
-		public PspMemory Memory;
-		public PspDisplay PspDisplay;
-		public PspController PspController;
 		public SceCtrlData SceCtrlData;
+		public IGuiExternalInterface IGuiExternalInterface;
+
+		public PspMemory Memory { get { return IGuiExternalInterface.GetMemory(); } }
+		public PspDisplay PspDisplay { get { return IGuiExternalInterface.GetDisplay(); } }
+		public PspController PspController { get { return IGuiExternalInterface.GetController(); } }
+		
 
 		public void SendControllerFrame()
 		{
 			this.PspController.InsertSceCtrlData(SceCtrlData);
 		}
 
-		public PspDisplayForm(PspMemory Memory, PspDisplay PspDisplay, PspController PspController)
+		public PspDisplayForm(IGuiExternalInterface IGuiExternalInterface)
 		{
-			this.Memory = Memory;
-			this.PspDisplay = PspDisplay;
-			this.PspController = PspController;
+			this.IGuiExternalInterface = IGuiExternalInterface;
 
 			InitializeComponent();
 			DisplayScale = 1;
@@ -94,7 +94,7 @@ namespace CSPspEmu.Gui.Winforms
 						var Count = 512 * 272;
 						switch (PspDisplay.CurrentInfo.PixelFormat)
 						{
-							case Hle.PspDisplay.PixelFormats.RGBA_8888:
+							case PspDisplay.PixelFormats.RGBA_8888:
 								for (int n = 0; n < Count; n++)
 								{
 									BitmapDataPtr[n * 4 + 3] = 0xFF;
@@ -103,7 +103,7 @@ namespace CSPspEmu.Gui.Winforms
 									BitmapDataPtr[n * 4 + 2] = FrameBuffer[n * 4 + 0];
 								}
 								break;
-							case Hle.PspDisplay.PixelFormats.RGBA_5551:
+							case PspDisplay.PixelFormats.RGBA_5551:
 								for (int n = 0; n < Count; n++)
 								{
 									ushort Value = *(ushort*)&FrameBuffer[n * 2];
@@ -156,11 +156,23 @@ namespace CSPspEmu.Gui.Winforms
 			this.Close();
 		}
 
-		private void takeScreenshotToolStripMenuItem_Click(object sender, EventArgs e)
+		protected void PauseResume(Action Action)
 		{
 			try
 			{
 				EnableRefreshing = false;
+				IGuiExternalInterface.PauseResume(Action);
+			}
+			finally
+			{
+				EnableRefreshing = true;
+			}
+		}
+
+		private void takeScreenshotToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			PauseResume(() =>
+			{
 				var SaveFileDialog = new SaveFileDialog();
 				SaveFileDialog.Filter = "PNG|*.png|All Files|*.*";
 				SaveFileDialog.FileName = "screenshot.png";
@@ -172,11 +184,7 @@ namespace CSPspEmu.Gui.Winforms
 					Graphics.FromImage(Buffer2).DrawImage(Buffer, Point.Empty);
 					Buffer2.Save(SaveFileDialog.FileName, ImageFormat.Png);
 				}
-			}
-			finally
-			{
-				EnableRefreshing = true;
-			}
+			});
 		}
 
 		/*
@@ -218,9 +226,8 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void dumpRamToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			try
+			PauseResume(() =>
 			{
-				EnableRefreshing = false;
 				var SaveFileDialog = new SaveFileDialog();
 				SaveFileDialog.Filter = "DUMP|*.dump|All Files|*.*";
 				SaveFileDialog.FileName = String.Format("memory-{0}.dump", (long)(DateTime.UtcNow - new DateTime(0)).TotalMilliseconds);
@@ -233,11 +240,7 @@ namespace CSPspEmu.Gui.Winforms
 					Stream.Flush();
 					Stream.Close();
 				}
-			}
-			finally
-			{
-				EnableRefreshing = true;
-			}
+			});
 		}
 
 		private PspCtrlButtons GetButtonsFromKeys(Keys Key)
@@ -276,6 +279,34 @@ namespace CSPspEmu.Gui.Winforms
 		private void PspDisplayForm_KeyUp(object sender, KeyEventArgs e)
 		{
 			SceCtrlData.UpdateButtons(GetButtonsFromKeys(e.KeyCode), false);
+		}
+
+		private void openToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			PauseResume(() =>
+			{
+				var OpenFileDialog = new OpenFileDialog();
+				OpenFileDialog.Filter = "Compatible Formats (*.elf, *.pbp, *.iso, *.cso, *.dax)|*.elf;*.pbp;*.iso;*.cso;*.dax|All Files|*.*";
+				if (OpenFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+				{
+					IGuiExternalInterface.LoadFile(OpenFileDialog.FileName);
+				}
+			});
+		}
+
+		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			new AboutForm().ShowDialog();
+		}
+
+		private void resumeToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			IGuiExternalInterface.Resume();
+		}
+
+		private void pauseToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			IGuiExternalInterface.Pause();
 		}
 	}
 }

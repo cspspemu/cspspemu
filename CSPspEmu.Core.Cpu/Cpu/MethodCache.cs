@@ -16,6 +16,7 @@ namespace CSPspEmu.Core.Cpu
 
 		public Action<CpuThreadState> TryGetMethodAt(uint PC)
 		{
+			//return null;
 			Action<CpuThreadState> Delegate;
 			if (Methods.TryGetValue(PC, out Delegate))
 			{

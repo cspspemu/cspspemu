@@ -131,8 +131,22 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		public void SavePC(Action Action) { SaveFieldI4(Field_PC, Action); }
+		public void SavePC(uint PC) { SaveFieldI4(Field_PC, () => { ILGenerator.Emit(OpCodes.Ldc_I4, PC); }); }
 		public void SaveLO(Action Action) { SaveFieldI4(Field_LO, Action); }
 		public void SaveHI(Action Action) { SaveFieldI4(Field_HI, Action); }
+
+		public void SaveHI_LO(Action Action) {
+			LoadFieldPtr(Field_LO);
+			Action();
+			ILGenerator.Emit(OpCodes.Stind_I8);
+		}
+
+		public void LoadHI_LO()
+		{
+			LoadFieldPtr(Field_LO);
+			ILGenerator.Emit(OpCodes.Ldind_I8);
+		}
+
 		public void SaveGPR(int R, Action Action) { if (R != 0) SaveFieldI4(Field_GPRList[R], Action); }
 		public void SaveFPR(int R, Action Action)
 		{

@@ -307,5 +307,16 @@ namespace CSPspEmu.Core.Cpu
 		public void BreakpointIfEnabled()
 		{
 		}
+
+		public void DumpRegisters()
+		{
+			for (int n = 0; n < 32; n++)
+			{
+				if (n % 4 != 0) Console.Write(", ");
+				Console.Write("r{0,2} : {1:X}", n, "0x%08X".Sprintf(GPR[n]));
+				if (n % 4 == 3) Console.WriteLine();
+			}
+			Console.WriteLine();
+		}
 	}
 }

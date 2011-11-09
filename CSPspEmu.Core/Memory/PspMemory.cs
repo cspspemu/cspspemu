@@ -7,8 +7,13 @@ using CSharpUtils;
 
 namespace CSPspEmu.Core
 {
-	unsafe abstract public class PspMemory
+	unsafe abstract public class PspMemory : IResetable
 	{
+		public class InvalidAddressException : Exception {
+			public InvalidAddressException(string message) : base (message) { }
+			public InvalidAddressException(string message, Exception innerException) : base(message, innerException) { }
+		}
+
 		sealed public class Segment
 		{
 			public uint Low { get; private set; }

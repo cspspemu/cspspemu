@@ -7,6 +7,7 @@ using CSharpUtils.Extensions;
 using CSPspEmu.Core.Cpu;
 using System.Threading;
 using System.Diagnostics;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Managers
 {

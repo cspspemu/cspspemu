@@ -7,21 +7,31 @@ using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Cpu
 {
-	unsafe sealed public class Processor
+	unsafe sealed public class Processor : IResetable
 	{
 		public bool TraceJIT = false;
 		public bool CountInstructionsAndYield = true;
 		public bool ShowInstructionStats = false;
 		public bool HasDisplay = true;
+		public bool DebugSyscalls = false;
 		public PspMemory Memory;
 		public MethodCache MethodCache;
-		private Dictionary<int, Action<int, CpuThreadState>> RegisteredNativeSyscalls = new Dictionary<int, Action<int, CpuThreadState>>();
-		public HashSet<uint> NativeBreakpoints = new HashSet<uint>();
-
+		private Dictionary<int, Action<int, CpuThreadState>> RegisteredNativeSyscalls;
+		public HashSet<uint> NativeBreakpoints;
+		public bool IsRunning;
+		
 		public Processor(PspMemory Memory)
 		{
 			this.Memory = Memory;
-			this.MethodCache = new MethodCache();
+			Reset();
+		}
+
+		public void Reset()
+		{
+			MethodCache = new MethodCache();
+			NativeBreakpoints = new HashSet<uint>();
+			RegisteredNativeSyscalls = new Dictionary<int, Action<int, CpuThreadState>>();
+			IsRunning = true;
 		}
 
 		public Processor RegisterNativeSyscall(int Code, Action Callback)
