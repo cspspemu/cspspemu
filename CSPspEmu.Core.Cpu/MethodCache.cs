@@ -9,6 +9,14 @@ namespace CSPspEmu.Core.Cpu
 	{
 		private Dictionary<uint, Action<CpuThreadState>> Methods = new Dictionary<uint, Action<CpuThreadState>>();
 
+		public void ClearRange(uint Low, uint High)
+		{
+			foreach (var Key in Methods.Where(Pair => (Pair.Key >= Low && Pair.Key < High)).Select(Pair => Pair.Key))
+			{
+				Methods.Remove(Key);
+			}
+		}
+
 		public void Clear()
 		{
 			Methods.Clear();

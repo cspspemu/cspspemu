@@ -12,7 +12,7 @@ namespace CSPspEmu.Core.Tests
 	{
 		protected PspConfig PspConfig;
 		protected LazyPspMemory Memory;
-		protected Processor Processor;
+		protected CpuProcessor Processor;
 		protected MipsAssembler MipsAssembler;
 
 		[TestInitialize()]
@@ -20,7 +20,7 @@ namespace CSPspEmu.Core.Tests
 		{
 			Memory = new LazyPspMemory();
 			PspConfig = new PspConfig();
-			Processor = new Processor(PspConfig, Memory);
+			Processor = new CpuProcessor(PspConfig, Memory);
 			MipsAssembler = new MipsAssembler(new PspMemoryStream(Memory));
 		}
 

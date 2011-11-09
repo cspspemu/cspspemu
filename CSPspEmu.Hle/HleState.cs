@@ -13,7 +13,7 @@ namespace CSPspEmu.Hle
 	public class HleState
 	{
 		public bool IsRunning;
-		public Processor Processor;
+		public CpuProcessor Processor;
 		public PspRtc PspRtc;
 		public PspDisplay PspDisplay;
 		public PspController PspController;
@@ -27,7 +27,7 @@ namespace CSPspEmu.Hle
 		public HleModuleManager ModuleManager;
 		public HleCallbackManager CallbackManager;
 
-		public HleState(Processor Processor, PspConfig PspConfig, PspRtc PspRtc, PspDisplay PspDisplay, PspController PspController, Assembly ModulesAssembly)
+		public HleState(CpuProcessor Processor, PspConfig PspConfig, PspRtc PspRtc, PspDisplay PspDisplay, PspController PspController, Assembly ModulesAssembly)
 		{
 			this.IsRunning = true;
 			this.Processor = Processor;

@@ -7,7 +7,7 @@ using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Cpu
 {
-	unsafe sealed public class Processor : IResetable
+	unsafe sealed public class CpuProcessor : IResetable
 	{
 		public PspConfig PspConfig;
 		public PspMemory Memory;
@@ -16,7 +16,7 @@ namespace CSPspEmu.Core.Cpu
 		public HashSet<uint> NativeBreakpoints;
 		public bool IsRunning;
 
-		public Processor(PspConfig PspConfig, PspMemory Memory)
+		public CpuProcessor(PspConfig PspConfig, PspMemory Memory)
 		{
 			this.PspConfig = PspConfig;
 			this.Memory = Memory;
@@ -31,12 +31,12 @@ namespace CSPspEmu.Core.Cpu
 			IsRunning = true;
 		}
 
-		public Processor RegisterNativeSyscall(int Code, Action Callback)
+		public CpuProcessor RegisterNativeSyscall(int Code, Action Callback)
 		{
 			return RegisterNativeSyscall(Code, (_Code, _Processor) => Callback());
 		}
 
-		public Processor RegisterNativeSyscall(int Code, Action<int, CpuThreadState> Callback)
+		public CpuProcessor RegisterNativeSyscall(int Code, Action<int, CpuThreadState> Callback)
 		{
 			RegisteredNativeSyscalls[Code] = Callback;
 			return this;
@@ -53,6 +53,26 @@ namespace CSPspEmu.Core.Cpu
 			{
 				Console.WriteLine("Undefined syscall: %06X at 0x%08X".Sprintf(Code, CpuThreadState.PC));
 			}
+		}
+
+		public void sceKernelDcacheWritebackInvalidateAll()
+		{
+		}
+
+		public unsafe void sceKernelDcacheWritebackRange(void* Pointer, uint Size)
+		{
+		}
+
+		public unsafe void sceKernelDcacheWritebackInvalidateRange(void* Pointer, uint Size)
+		{
+		}
+
+		public unsafe void sceKernelDcacheInvalidateRange(void* Pointer, uint Size)
+		{
+		}
+
+		public void sceKernelDcacheWritebackAll()
+		{
 		}
 	}
 }

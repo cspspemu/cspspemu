@@ -13,13 +13,13 @@ namespace CSPspEmu.Hle.Managers
 {
 	public class HleThreadManager
 	{
-		protected Processor Processor;
+		protected CpuProcessor Processor;
 		protected List<HleThread> Threads = new List<HleThread>();
 		protected int LastId = 1;
 		public HleThread Current;
 		protected PspRtc HlePspRtc;
 
-		public HleThreadManager(Processor Processor, PspRtc HlePspRtc)
+		public HleThreadManager(CpuProcessor Processor, PspRtc HlePspRtc)
 		{
 			this.HlePspRtc = HlePspRtc;
 			this.Processor = Processor;

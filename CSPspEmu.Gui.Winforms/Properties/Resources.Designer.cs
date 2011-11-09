@@ -59,5 +59,12 @@ namespace CSPspEmu.Gui.Winforms.Properties {
                 resourceCulture = value;
             }
         }
+        
+        internal static System.Drawing.Bitmap btn_donate_LG {
+            get {
+                object obj = ResourceManager.GetObject("btn_donate_LG", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

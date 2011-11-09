@@ -19,7 +19,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public ILGenerator ILGenerator;
 		protected String MethodName;
 		//public CpuThreadState CpuThreadState;
-		public Processor Processor;
+		public CpuProcessor Processor;
 		
 		//static protected FieldInfo Field_GPR_Ptr = typeof(Processor).GetField("GPR_Ptr");
 		//static protected FieldInfo Field_FPR_Ptr = typeof(Processor).GetField("FPR_Ptr");
@@ -62,7 +62,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		public MipsMethodEmiter(MipsEmiter MipsEmiter, Processor Processor)
+		public MipsMethodEmiter(MipsEmiter MipsEmiter, CpuProcessor Processor)
 		{
 			this.Processor = Processor;
 

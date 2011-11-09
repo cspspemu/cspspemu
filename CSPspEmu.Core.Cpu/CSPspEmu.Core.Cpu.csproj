@@ -62,7 +62,7 @@
     <Compile Include="InstructionReader.cs" />
     <Compile Include="CpuThreadState.cs" />
     <Compile Include="CpuThreadStateExtensions.cs" />
-    <Compile Include="Processor.cs" />
+    <Compile Include="CpuProcessor.cs" />
     <Compile Include="Switch\EmitLookupGenerator.cs" />
     <Compile Include="Table\InstructionInfo.cs" />
     <Compile Include="Table\InstructionTable.cs" />

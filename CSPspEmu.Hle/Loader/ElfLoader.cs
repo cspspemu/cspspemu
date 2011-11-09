@@ -15,7 +15,7 @@ namespace CSPspEmu.Hle.Loader
 	unsafe abstract public class ElfLoader
 	{
 		public Stream FileStream;
-		public Elf.Header Header;
+		public Elf.HeaderStruct Header;
 		public Elf.SectionHeader[] SectionHeaders;
 		public Elf.ProgramHeader[] ProgramHeaders;
 		public Elf.SectionHeader NamesSectionHeader;
@@ -40,13 +40,13 @@ namespace CSPspEmu.Hle.Loader
 		virtual public void Load(Stream FileStream)
 		{
 			this.FileStream = FileStream;
-			this.Header = FileStream.ReadStruct<Elf.Header>();
-			if (this.Header.Magic != Elf.Header.ExpectedMagic)
+			this.Header = FileStream.ReadStruct<Elf.HeaderStruct>();
+			if (this.Header.Magic != Elf.HeaderStruct.MagicEnum.ExpectedValue)
 			{
 				throw(new InvalidProgramException("Not an ELF File"));
 			}
 
-			if (this.Header.Machine != Elf.Header.MachineEnum.ALLEGREX)
+			if (this.Header.Machine != Elf.HeaderStruct.MachineEnum.ALLEGREX)
 			{
 				throw (new InvalidProgramException("Invalid Elf.Header.Machine"));
 			}

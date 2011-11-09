@@ -27,6 +27,7 @@ using CSPspEmu.Hle.Loader;
 using CSharpUtils;
 using CSharpUtils.Threading;
 using System.Reflection;
+using CSPspEmu.Hle.Formats;
 
 namespace CSPspEmu.Sandbox
 {
@@ -37,7 +38,7 @@ namespace CSPspEmu.Sandbox
 		PspDisplay PspDisplay;
 		PspController PspController;
 		PspMemory Memory;
-		Processor Processor;
+		CpuProcessor Processor;
 		PspMemoryStream MemoryStream;
 		HleState HleState;
 		TaskQueue CpuTaskQueue = new TaskQueue();
@@ -142,12 +143,25 @@ namespace CSPspEmu.Sandbox
 			Memory.Reset();
 			CreateNewHleState();
 
-			var ElfStream = File.OpenRead(FileName);
-
 			var Loader = new ElfPspLoader();
+			Stream LoadStream = File.OpenRead(FileName);
+			Stream ElfLoadStream = null;
+
+			var Format = new FormatDetector().Detect(LoadStream);
+			switch (Format)
+			{
+				case "Pbp":
+					ElfLoadStream = new Pbp().Load(LoadStream)["psp.data"];
+					break;
+				case "Elf":
+					ElfLoadStream = LoadStream;
+					break;
+				default:
+					throw (new NotImplementedException("Can't load format '" + Format + "'"));
+			}
 
 			Loader.LoadAllocateAndWrite(
-				ElfStream,
+				ElfLoadStream,
 				MemoryStream,
 				HleState.MemoryManager.RootPartition
 			);
@@ -247,7 +261,7 @@ namespace CSPspEmu.Sandbox
 			PspController = new PspController();
 			Memory = new FastPspMemory();
 			MemoryStream = new PspMemoryStream(Memory);
-			Processor = new Processor(PspConfig, Memory);
+			Processor = new CpuProcessor(PspConfig, Memory);
 			CreateNewHleState();
 
 			PspConfig.DebugSyscalls = true;
@@ -280,7 +294,10 @@ namespace CSPspEmu.Sandbox
 				{
 					try
 					{
-						CpuTaskQueue.HandleEnqueued();
+						if (CpuTaskQueue != null)
+						{
+							CpuTaskQueue.HandleEnqueued();
+						}
 						CpuTaskQueue = new TaskQueue();
 
 						while (Processor.IsRunning)
@@ -326,15 +343,15 @@ namespace CSPspEmu.Sandbox
 
 		protected void OnInit()
 		{
-			Console.WriteLine("OnInit");
-			LoadFile(@"../../../TestInput/minifire.elf");
+			//Console.WriteLine("OnInit");
+			//LoadFile(@"../../../TestInput/minifire.elf");
 			//LoadFile(@"../../../TestInput/HelloWorld.elf");
 			//LoadFile(@"../../../TestInput/HelloWorldPSP.elf");
 			//LoadFile(@"../../../TestInput/counter.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\string\string.elf");
 			//LoadFile(@"C:\juegos\jpcsp2\demos\compilerPerf.elf");
 			//LoadFile(@"C:\juegos\jpcsp2\demos\fputest.elf");
-			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\mytest.elf");
+			LoadFile(@"C:\projects\pspemu\pspautotests\demos\mytest.elf");
 			//LoadFile(@"C:\projects\pspemu\demos\dumper.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\cpu\cpu\cpu.elf");
 		}

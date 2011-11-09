@@ -171,7 +171,7 @@ namespace CSPspEmu.Hle
 			var Delegate = MipsMethodEmiter.CreateDelegate();
 			return (CpuThreadState) =>
 			{
-				if (!SkipLog && CpuThreadState.Processor.PspConfig.DebugSyscalls)
+				if (!SkipLog && CpuThreadState.CpuProcessor.PspConfig.DebugSyscalls)
 				{
 					Console.Write(
 						"Thread({0}:'{1}') : RA(0x{2:X}) : {3}.{4}",
@@ -219,7 +219,7 @@ namespace CSPspEmu.Hle
 				}
 				finally
 				{
-					if (!SkipLog && CpuThreadState.Processor.PspConfig.DebugSyscalls)
+					if (!SkipLog && CpuThreadState.CpuProcessor.PspConfig.DebugSyscalls)
 					{
 						Console.Write(" : ");
 

@@ -66,6 +66,7 @@
     <Compile Include="Hle\HlePspThreadManagerTest.cs" />
     <Compile Include="Hle\HlePspThreadTest.cs" />
     <Compile Include="Hle\MemoryPartitionTest.cs" />
+    <Compile Include="PbpTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

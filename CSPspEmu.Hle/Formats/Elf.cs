@@ -7,10 +7,15 @@ using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Formats
 {
-	unsafe public class Elf
+	unsafe public class Elf : IFormatDetector
 	{
-		public struct Header
+		public struct HeaderStruct
 		{
+			public enum MagicEnum : uint
+			{
+				ExpectedValue = 0x464C457F
+			}
+
 			public enum TypeEnum : ushort
 			{
 				Executable = 0x0002,
@@ -21,14 +26,12 @@ namespace CSPspEmu.Hle.Formats
 				ALLEGREX = 8,
 			}
 
-			public const uint ExpectedMagic = 0x464C457F;
-
 			// e_ident 16 bytes.
 
 			/// <summary>
 			/// Magic identifying the file : [0x7F, 'E', 'L', 'F']
 			/// </summary>
-			public uint Magic;
+			public MagicEnum Magic;
 
 			/// <summary>
 			/// ?

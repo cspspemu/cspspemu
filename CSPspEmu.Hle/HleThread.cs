@@ -12,11 +12,12 @@ namespace CSPspEmu.Hle
 {
 	public class HleThread
 	{
+		protected MethodCache MethodCache;
+
 		public int Priority = 1;
 		public int PriorityValue;
 		protected GreenThread GreenThread;
 		public CpuThreadState CpuThreadState { get; protected set; }
-		protected MethodCache MethodCache;
 		protected int MinimalInstructionCountForYield = 1000000;
 		public int Id;
 		public String Name;
@@ -45,9 +46,9 @@ namespace CSPspEmu.Hle
 
 		public HleThread(CpuThreadState CpuThreadState)
 		{
+			this.MethodCache = CpuThreadState.CpuProcessor.MethodCache;
 			this.GreenThread = new GreenThread();
 			this.CpuThreadState = CpuThreadState;
-			this.MethodCache = CpuThreadState.Processor.MethodCache;
 			this.PrepareThread();
 		}
 
@@ -69,12 +70,14 @@ namespace CSPspEmu.Hle
 
 		public Action<CpuThreadState> GetDelegateAt(uint PC)
 		{
+			//var MethodCache = CpuThreadState.CpuProcessor.MethodCache;
+
 			var Delegate = MethodCache.TryGetMethodAt(PC);
 			if (Delegate == null)
 			{
 				MethodCache.SetMethodAt(
 					PC,
-					Delegate = CpuThreadState.CreateDelegateForPC(new PspMemoryStream(CpuThreadState.Processor.Memory), PC)
+					Delegate = CpuThreadState.CreateDelegateForPC(new PspMemoryStream(CpuThreadState.CpuProcessor.Memory), PC)
 				);
 			}
 

@@ -41,7 +41,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				}
 			}
 
-			if (CpuThreadState.Processor.PspConfig.TraceJIT)
+			if (CpuThreadState.CpuProcessor.PspConfig.TraceJIT)
 			{
 				Console.WriteLine("Emiting EntryPC=0x{0:X}", EntryPC);
 			}
@@ -53,7 +53,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 
 			var InstructionReader = new InstructionReader(MemoryStream);
-			var MipsMethodEmiter = new MipsMethodEmiter(MipsEmiter, CpuThreadState.Processor);
+			var MipsMethodEmiter = new MipsMethodEmiter(MipsEmiter, CpuThreadState.CpuProcessor);
 			var ILGenerator = MipsMethodEmiter.ILGenerator;
 			var CpuEmiter = new CpuEmiter(MipsMethodEmiter, InstructionReader);
 
@@ -100,7 +100,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					CpuEmiter.LoadAT(PC);
 
 					var BranchInfo = GetBranchInfo(CpuEmiter.Instruction.Value);
-					if (CpuThreadState.Processor.PspConfig.ShowInstructionStats)
+					if (CpuThreadState.CpuProcessor.PspConfig.ShowInstructionStats)
 					{
 						var InstuctionName = GetInstructionName(CpuEmiter.Instruction.Value, null);
 						if (!InstructionStats.ContainsKey(InstuctionName)) InstructionStats[InstuctionName] = 0;
@@ -151,7 +151,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			// PASS2: Generate code and put labels;
 			Action<uint> _EmitCpuInstructionAT = (_PC) =>
 			{
-				if (CpuThreadState.Processor.PspConfig.TraceJIT)
+				if (CpuThreadState.CpuProcessor.PspConfig.TraceJIT)
 				{
 					ILGenerator.Emit(OpCodes.Ldarg_0);
 					ILGenerator.Emit(OpCodes.Ldc_I4, _PC);
@@ -172,7 +172,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 			Action<bool> EmitInstructionCountIncrement = (bool CheckForYield) =>
 			{
-				if (!CpuThreadState.Processor.PspConfig.CountInstructionsAndYield)
+				if (!CpuThreadState.CpuProcessor.PspConfig.CountInstructionsAndYield)
 				{
 					return;
 				}
@@ -214,7 +214,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 			Action EmitCpuInstruction = () =>
 			{
-				if (CpuThreadState.Processor.NativeBreakpoints.Contains(PC))
+				if (CpuThreadState.CpuProcessor.NativeBreakpoints.Contains(PC))
 				{
 					ILGenerator.Emit(OpCodes.Call, typeof(ProcessorExtensions).GetMethod("IsDebuggerPresentDebugBreak"));
 				}
@@ -335,7 +335,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 
 
-			if (CpuThreadState.Processor.PspConfig.ShowInstructionStats)
+			if (CpuThreadState.CpuProcessor.PspConfig.ShowInstructionStats)
 			{
 				Console.WriteLine("--------------------------");
 				foreach (var Pair in InstructionStats.OrderByDescending(Item => Item.Value))

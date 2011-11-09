@@ -19,9 +19,8 @@ namespace CSPspEmu.Hle.Modules.utils
 			public int tz_dsttime;
 		}
 
-		public struct time_t
+		public enum time_t : uint
 		{
-			public uint Value;
 		}
 
 		public struct clock_t
@@ -33,11 +32,10 @@ namespace CSPspEmu.Hle.Modules.utils
 		{
 		}
 
-		protected Random Random;
+		protected Dictionary<uint, Random> Randoms = new Dictionary<uint, Random>();
 
 		public UtilsForUser() : base()
 		{
-			Random = new Random();
 		}
 
 		/// <summary>
@@ -55,8 +53,9 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// Write back the data cache to memory
 		/// </summary>
 		[HlePspFunction(NID = 0x79D1C3FA, FirmwareVersion = 150)]
-		public void sceKernelDcacheWritebackAll() {
-			throw(new NotImplementedException());
+		public void sceKernelDcacheWritebackAll()
+		{
+			HleState.Processor.sceKernelDcacheWritebackAll();
 		}
 
 		/// <summary>
@@ -65,8 +64,9 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// <param name="Pointer"></param>
 		/// <param name="Size"></param>
 		[HlePspFunction(NID = 0xBFA98062, FirmwareVersion = 150)]
-		public void sceKernelDcacheInvalidateRange(void* Pointer, uint Size) {
-			throw(new NotImplementedException());
+		public void sceKernelDcacheInvalidateRange(void* Pointer, uint Size)
+		{
+			HleState.Processor.sceKernelDcacheInvalidateRange(Pointer, Size);
 		}
 
 		/// <summary>
@@ -76,7 +76,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// <param name="Size"></param>
 		[HlePspFunction(NID = 0x34B9FA9E, FirmwareVersion = 150)]
 		public void sceKernelDcacheWritebackInvalidateRange(void* Pointer, uint Size) {
-			throw(new NotImplementedException());
+			HleState.Processor.sceKernelDcacheWritebackInvalidateRange(Pointer, Size);
 		}
 
 		/// <summary>
@@ -86,7 +86,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// <param name="Size"></param>
 		[HlePspFunction(NID = 0xB435DEC5, FirmwareVersion = 150)]
 		public void sceKernelDcacheWritebackRange(void* Pointer, uint Size) {
-			throw(new NotImplementedException());
+			HleState.Processor.sceKernelDcacheWritebackRange(Pointer, Size);
 		}
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// </summary>
 		[HlePspFunction(NID = 0x3EE30821, FirmwareVersion = 150)]
 		public void sceKernelDcacheWritebackInvalidateAll() {
-			throw(new NotImplementedException());
+			HleState.Processor.sceKernelDcacheWritebackInvalidateAll();
 		}
 
 		/** 
@@ -114,14 +114,9 @@ namespace CSPspEmu.Hle.Modules.utils
 		 */
 		[HlePspFunction(NID = 0x27CC57F0, FirmwareVersion = 150)]
 		[HlePspFunction(NID = 0xE860E75E, FirmwareVersion = 150)]
-		public int sceKernelUtilsMt19937Init(SceKernelUtilsMt19937Context* ctx, uint seed)
+		public int sceKernelUtilsMt19937Init(SceKernelUtilsMt19937Context* Context, uint Seed)
 		{
-			/*
-			if (ctx is null) return -1;
-			(cast(std.random.Mt19937 *)ctx).seed(seed);
-			return 0;
-			*/
-			//throw(new NotImplementedException());
+			Randoms.Add((uint)Context, new Random((int)Seed));
 			return 0;
 		}
 
@@ -132,21 +127,19 @@ namespace CSPspEmu.Hle.Modules.utils
 		 * @return A pseudo random number (between 0 and MAX_INT).
 		 */
 		[HlePspFunction(NID = 0x06FB8A63, FirmwareVersion = 150, SkipLog = true)]
-		public uint sceKernelUtilsMt19937UInt(SceKernelUtilsMt19937Context* ctx)
+		public uint sceKernelUtilsMt19937UInt(SceKernelUtilsMt19937Context* Context)
 		{
-			//throw(new NotImplementedException());
+			var Random = Randoms[(uint)Context];
 			return (uint)Random.Next();
 		}
 
 		/**
 		 * Get the time in seconds since the epoc (1st Jan 1970)
-		 *
 		 */
 		[HlePspFunction(NID = 0x27CC57F0, FirmwareVersion = 150)]
 		public time_t sceKernelLibcTime(time_t* t)
-		{ 
-			//return time(t);
-			throw(new NotImplementedException());
+		{
+			return (time_t)HleState.PspRtc.UnixTimeStamp;
 		}
 
 		/** 

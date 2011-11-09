@@ -12,7 +12,7 @@ namespace CSPspEmu.Core.Cpu
 {
 	unsafe sealed public class CpuThreadState
 	{
-		public Processor Processor;
+		public CpuProcessor CpuProcessor;
 		public object ModuleObject;
 
 		public int StepInstructionCount;
@@ -217,7 +217,7 @@ namespace CSPspEmu.Core.Cpu
 
 		public void* GetMemoryPtr(uint Address)
 		{
-			var Pointer = Processor.Memory.PspAddressToPointer(Address);
+			var Pointer = CpuProcessor.Memory.PspAddressToPointer(Address);
 			//Console.WriteLine("%08X".Sprintf((uint)Pointer));
 			return Pointer;
 		}
@@ -232,9 +232,9 @@ namespace CSPspEmu.Core.Cpu
 			});
 		}
 
-		public CpuThreadState(Processor Processor)
+		public CpuThreadState(CpuProcessor Processor)
 		{
-			this.Processor = Processor;
+			this.CpuProcessor = Processor;
 
 			GPR = new GprList() { Processor = this };
 			FPR = new FprList() { Processor = this };
@@ -282,7 +282,7 @@ namespace CSPspEmu.Core.Cpu
 
 		public void Syscall(int Code)
 		{
-			Processor.Syscall(Code, this);
+			CpuProcessor.Syscall(Code, this);
 		}
 
 		/*
