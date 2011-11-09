@@ -51,10 +51,10 @@ namespace CSPspEmu.Sandbox
 			//var ElfStream = File.OpenRead("../../../TestInput/HelloWorld.elf");
 			//var ElfStream = File.OpenRead("../../../TestInput/minifire.elf");
 			//var ElfStream = File.OpenRead("../../../TestInput/HelloWorldPSP.elf");
-			//var ElfStream = File.OpenRead("../../../TestInput/counter.elf");
+			var ElfStream = File.OpenRead("../../../TestInput/counter.elf");
 			//var ElfStream = File.OpenRead(@"C:\projects\pspemu\pspautotests\tests\string\string.elf");
 			//var ElfStream = File.OpenRead(@"C:\juegos\jpcsp2\demos\compilerPerf.elf");
-			var ElfStream = File.OpenRead(@"C:\juegos\jpcsp2\demos\fputest.elf");
+			//var ElfStream = File.OpenRead(@"C:\juegos\jpcsp2\demos\fputest.elf");
 			//var ElfStream = File.OpenRead(@"C:\projects\pspemu\pspautotests\demos\mytest.elf");
 			//var ElfStream = File.OpenRead(@"C:\projects\pspemu\demos\dumper.elf");
 			//var ElfStream = File.OpenRead(@"C:\projects\pspemu\pspautotests\tests\cpu\cpu\cpu.elf");

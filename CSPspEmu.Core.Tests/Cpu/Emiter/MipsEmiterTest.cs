@@ -19,9 +19,9 @@ namespace CSPspEmu.Core.Tests
 			CpuThreadState.GPR[1] = 1;
 			CpuThreadState.GPR[2] = 2;
 			CpuThreadState.GPR[3] = 3;
-			MipsEmiter.OP_3REG(1, 2, 2, OpCodes.Add);
-			MipsEmiter.OP_3REG(0, 2, 2, OpCodes.Add);
-			MipsEmiter.OP_2REG_IMM(10, 0, 1000, OpCodes.Add);
+			MipsEmiter.OP_3REG_Unsigned(1, 2, 2, OpCodes.Add);
+			MipsEmiter.OP_3REG_Unsigned(0, 2, 2, OpCodes.Add);
+			MipsEmiter.OP_2REG_IMM_Signed(10, 0, 1000, OpCodes.Add);
 			MipsEmiter.CreateDelegate()(CpuThreadState);
 			Assert.AreEqual(4, CpuThreadState.GPR[1]);
 			Assert.AreEqual(0, CpuThreadState.GPR[0]);

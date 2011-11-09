@@ -14,7 +14,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				MipsMethodEmiter._getmemptr(() =>
 				{
-					MipsMethodEmiter.LoadGPR(RS);
+					MipsMethodEmiter.LoadGPR_Unsigned(RS);
 					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
 					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
 				});
@@ -26,7 +26,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			MipsMethodEmiter._getmemptr(() =>
 			{
-				MipsMethodEmiter.LoadGPR(RS);
+				MipsMethodEmiter.LoadGPR_Unsigned(RS);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
 			});
@@ -37,7 +37,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			_save_common(() =>
 			{
-				MipsMethodEmiter.LoadGPR(RT);
+				MipsMethodEmiter.LoadGPR_Unsigned(RT);
 				MipsMethodEmiter.ILGenerator.Emit(OpCode);
 			});
 		}
@@ -71,7 +71,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				MipsMethodEmiter._getmemptr(() =>
 				{
-					MipsMethodEmiter.LoadGPR(RS);
+					MipsMethodEmiter.LoadGPR_Unsigned(RS);
 					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
 					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
 				});

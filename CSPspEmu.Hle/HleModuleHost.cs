@@ -69,7 +69,7 @@ namespace CSPspEmu.Hle
 					else if (ParameterType == typeof(string))
 					{
 						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-						MipsMethodEmiter.LoadGPR(GprIndex);
+						MipsMethodEmiter.LoadGPR_Unsigned(GprIndex);
 						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(HleModuleHost).GetMethod("StringFromAddress"));
 						GprIndex++;
 					}
@@ -77,13 +77,13 @@ namespace CSPspEmu.Hle
 					{
 						MipsMethodEmiter._getmemptr(() =>
 						{
-							MipsMethodEmiter.LoadGPR(GprIndex);
+							MipsMethodEmiter.LoadGPR_Unsigned(GprIndex);
 						});
 						GprIndex++;
 					}
 					else
 					{
-						MipsMethodEmiter.LoadGPR(GprIndex);
+						MipsMethodEmiter.LoadGPR_Unsigned(GprIndex);
 						GprIndex++;
 					}
 					//MipsMethodEmiter.ILGenerator.Emit(OpCodes.ld

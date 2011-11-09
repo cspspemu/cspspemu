@@ -30,8 +30,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			MipsMethodEmiter.StoreBranchFlag(() =>
 			{
-				MipsMethodEmiter.LoadGPR(RS);
-				MipsMethodEmiter.LoadGPR(RT);
+				MipsMethodEmiter.LoadGPR_Signed(RS);
+				MipsMethodEmiter.LoadGPR_Signed(RT);
 				foreach (var OpCode in OpCodeList)
 				{
 					MipsMethodEmiter.ILGenerator.Emit(OpCode);
@@ -43,7 +43,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			MipsMethodEmiter.StoreBranchFlag(() =>
 			{
-				MipsMethodEmiter.LoadGPR(RS);
+				MipsMethodEmiter.LoadGPR_Signed(RS);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_0);
 				foreach (var OpCode in OpCodeList)
 				{
@@ -64,7 +64,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void bltz() { _branch_pre_v0(OpCodes.Clt); }
 		public void bltzl() { bltz(); }
 		public void bltzal() { throw (new NotImplementedException()); }
-		public void bltzall() { bltzall(); }
+		public void bltzall() { bltzal(); }
 
 		// Branch on Less Or Equals than Zero (Likely).
 		public void blez() { _branch_pre_v0(OpCodes.Cgt, OpCodes.Ldc_I4_0, OpCodes.Ceq); }
@@ -108,7 +108,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void jr() {
 			MipsMethodEmiter.SavePC(() =>
 			{
-				MipsMethodEmiter.LoadGPR(RS);
+				MipsMethodEmiter.LoadGPR_Unsigned(RS);
 			});
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ret);
 		}

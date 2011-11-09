@@ -86,7 +86,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void mtc1() {
 			MipsMethodEmiter.SaveFPR(FS, () =>
 			{
-				MipsMethodEmiter.LoadGPR(RT);
+				MipsMethodEmiter.LoadGPR_Unsigned(RT);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_R4);
 			});
 		}
