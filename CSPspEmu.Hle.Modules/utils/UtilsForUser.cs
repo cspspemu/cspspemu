@@ -7,16 +7,16 @@ namespace CSPspEmu.Hle.Modules.utils
 {
 	unsafe public class UtilsForUser : HleModuleHost
 	{
-		public struct timeval
+		public struct TimeValStruct
 		{
-			public uint tv_sec;
-			public uint tv_usec;
+			public uint Seconds;
+			public uint Microseconds;
 		}
 
-		public struct timezone
+		public struct TimeZoneStruct
 		{
-			public int tz_minuteswest;
-			public int tz_dsttime;
+			public int MinutesWest;
+			public int DstTime;
 		}
 
 		public enum time_t : uint
@@ -41,12 +41,24 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// <summary>
 		/// Get the current time of time and time zone information
 		/// </summary>
-		/// <param name="tp"></param>
-		/// <param name="tzp"></param>
+		/// <param name="TimeVal"></param>
+		/// <param name="TimeZone"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x71EC4271, FirmwareVersion = 150)]
-		public int sceKernelLibcGettimeofday(timeval* tp, timezone* tzp) {
-			throw(new NotImplementedException());
+		public int sceKernelLibcGettimeofday(TimeValStruct* TimeVal, TimeZoneStruct* TimeZone)
+		{
+			if (TimeVal != null)
+			{
+				HleState.PspRtc.Update();
+				ulong MicroSeconds = (ulong)(HleState.PspRtc.Elapsed.TotalMilliseconds * 1000);
+				TimeVal[0].Seconds = (uint)(MicroSeconds / (1000 * 1000));
+				TimeVal[0].Microseconds = (uint)(MicroSeconds % (1000 * 1000));
+			}
+			if (TimeZone != null)
+			{
+			}
+			//throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -75,7 +87,8 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// <param name="Pointer"></param>
 		/// <param name="Size"></param>
 		[HlePspFunction(NID = 0x34B9FA9E, FirmwareVersion = 150)]
-		public void sceKernelDcacheWritebackInvalidateRange(void* Pointer, uint Size) {
+		public void sceKernelDcacheWritebackInvalidateRange(void* Pointer, uint Size)
+		{
 			HleState.Processor.sceKernelDcacheWritebackInvalidateRange(Pointer, Size);
 		}
 
@@ -85,7 +98,8 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// <param name="Pointer"></param>
 		/// <param name="Size"></param>
 		[HlePspFunction(NID = 0xB435DEC5, FirmwareVersion = 150)]
-		public void sceKernelDcacheWritebackRange(void* Pointer, uint Size) {
+		public void sceKernelDcacheWritebackRange(void* Pointer, uint Size)
+		{
 			HleState.Processor.sceKernelDcacheWritebackRange(Pointer, Size);
 		}
 
@@ -93,7 +107,8 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// Write back and invalidate the data cache
 		/// </summary>
 		[HlePspFunction(NID = 0x3EE30821, FirmwareVersion = 150)]
-		public void sceKernelDcacheWritebackInvalidateAll() {
+		public void sceKernelDcacheWritebackInvalidateAll()
+		{
 			HleState.Processor.sceKernelDcacheWritebackInvalidateAll();
 		}
 
@@ -139,6 +154,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		[HlePspFunction(NID = 0x27CC57F0, FirmwareVersion = 150)]
 		public time_t sceKernelLibcTime(time_t* t)
 		{
+			HleState.PspRtc.Update();
 			return (time_t)HleState.PspRtc.UnixTimeStamp;
 		}
 
@@ -148,6 +164,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		[HlePspFunction(NID = 0x91E4F6A7, FirmwareVersion = 150)]
 		public clock_t sceKernelLibcClock()
 		{
+			HleState.PspRtc.Update();
 			/*
 			unimplemented();
 			return -1;
@@ -190,7 +207,8 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// <param name="Digest">Pointer to a 20 byte array for storing the digest</param>
 		/// <returns>&lt; 0 on error</returns>
 		[HlePspFunction(NID = 0x840259F1, FirmwareVersion = 150)]
-		public int sceKernelUtilsSha1Digest(byte* Data, uint Size, byte* Digest) {
+		public int sceKernelUtilsSha1Digest(byte* Data, uint Size, byte* Digest)
+		{
 			throw(new NotImplementedException());
 		}
 	}

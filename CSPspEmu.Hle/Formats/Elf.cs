@@ -128,6 +128,8 @@ namespace CSPspEmu.Hle.Formats
 			{
 				NoLoad = 0,
 				Load = 1,
+				Reloc1 = 0x700000A0,
+				Reloc2 = 0x700000A1,
 			}
 
 			/// <summary>
@@ -187,14 +189,14 @@ namespace CSPspEmu.Hle.Formats
 				DYNAMIC = 6,
 				NOTE = 7,
 				NoBits = 8,
-				REL = 9,
+				Relocation = 9,
 				SHLIB = 10,
 				DYNSYM = 11,
 
 				LOPROC = 0x70000000, HIPROC = 0x7FFFFFFF,
 				LOUSER = 0x80000000, HIUSER = 0xFFFFFFFF,
 
-				PRXRELOC = (LOPROC | 0xA0),
+				PrxRelocation = (LOPROC | 0xA0),
 			}
 
 			public enum FlagsSet : uint
@@ -261,17 +263,6 @@ namespace CSPspEmu.Hle.Formats
 			}
 		}
 
-		public enum ModuleNids : uint
-		{
-			MODULE_INFO = 0xF01D73A7,
-			MODULE_BOOTSTART = 0xD3744BE0,
-			MODULE_REBOOT_BEFORE = 0x2F064FA6,
-			MODULE_START = 0xD632ACDB,
-			MODULE_START_THREAD_PARAMETER = 0x0F7C276C,
-			MODULE_STOP = 0xCEE8593C,
-			MODULE_STOP_THREAD_PARAMETER = 0xCF0CC697,
-		}
-
 		public struct Reloc
 		{
 			public enum TypeEnum : byte
@@ -294,7 +285,7 @@ namespace CSPspEmu.Hle.Formats
 			/// <summary>
 			/// ?
 			/// </summary>
-			public uint Offset;
+			public uint Address;
 
 			/// <summary>
 			/// ?
@@ -304,12 +295,22 @@ namespace CSPspEmu.Hle.Formats
 			/// <summary>
 			/// ?
 			/// </summary>
-			public uint SymbolIndex { get { return Info >> 8; } }
+			public uint AddressBase { get { return (Info >> 16) & 0xFF; } }
 
 			/// <summary>
 			/// ?
 			/// </summary>
-			public TypeEnum Type { get { return (TypeEnum)(Info & 0xFF); } }
+			public uint OffsetBase { get { return (Info >> 8) & 0xFF; } }
+
+			/// <summary>
+			/// ?
+			/// </summary>
+			public TypeEnum Type { get { return (TypeEnum)((Info >> 0) & 0xFF); } }
+
+			public uint GetRelocatedAddress(uint BaseAddress)
+			{
+				return BaseAddress + Address;
+			}
 		}
 
 		public struct Symbol

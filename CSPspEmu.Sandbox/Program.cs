@@ -163,13 +163,12 @@ namespace CSPspEmu.Sandbox
 					throw (new NotImplementedException("Can't load format '" + Format + "'"));
 			}
 
-			Loader.LoadAllocateAndWrite(
+			Loader.Load(
 				ElfLoadStream,
 				MemoryStream,
-				HleState.MemoryManager.RootPartition
+				HleState.MemoryManager.RootPartition,
+				HleState.ModuleManager
 			);
-
-			Loader.UpdateModuleImports(new PspMemoryStream(Memory), HleState.ModuleManager);
 
 			var MainThread = HleState.ThreadManager.Create();
 			MainThread.CpuThreadState.PC = Loader.InitInfo.PC;
@@ -263,11 +262,12 @@ namespace CSPspEmu.Sandbox
 			PspDisplay = new PspDisplay(PspRtc);
 			PspController = new PspController();
 			Memory = new FastPspMemory();
+			//Memory = new NormalPspMemory();
 			MemoryStream = new PspMemoryStream(Memory);
 			Processor = new CpuProcessor(PspConfig, Memory);
 			CreateNewHleState();
 
-			PspConfig.DebugSyscalls = true;
+			//PspConfig.DebugSyscalls = true;
 			//PspConfig.ShowInstructionStats = true;
 			//PspConfig.TraceJIT = true;
 			//PspConfig.CountInstructionsAndYield = false;

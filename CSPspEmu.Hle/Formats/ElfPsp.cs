@@ -20,6 +20,17 @@ namespace CSPspEmu.Hle.Formats
 			SysLib     = 0x8000,
 		}
 
+		public enum ModuleNids : uint
+		{
+			MODULE_INFO = 0xF01D73A7,
+			MODULE_BOOTSTART = 0xD3744BE0,
+			MODULE_REBOOT_BEFORE = 0x2F064FA6,
+			MODULE_START = 0xD632ACDB,
+			MODULE_START_THREAD_PARAMETER = 0x0F7C276C,
+			MODULE_STOP = 0xCEE8593C,
+			MODULE_STOP_THREAD_PARAMETER = 0xCF0CC697,
+		}
+
 		public struct ModuleExport {
 			/// <summary>
 			/// Address to a stringz with the module.

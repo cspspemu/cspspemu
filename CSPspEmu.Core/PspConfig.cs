@@ -18,5 +18,6 @@ namespace CSPspEmu.Core
 		/// </summary>
 		public bool HasDisplay = true;
 		public bool DebugSyscalls = false;
+		public int CpuFrequency = 222;
 	}
 }

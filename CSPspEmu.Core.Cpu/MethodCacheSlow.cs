@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Core.Cpu
 {
-	sealed public class MethodCache
+	sealed public class MethodCacheSlow
 	{
 		private Dictionary<uint, Action<CpuThreadState>> Methods = new Dictionary<uint, Action<CpuThreadState>>();
 
@@ -35,6 +35,7 @@ namespace CSPspEmu.Core.Cpu
 
 		public void SetMethodAt(uint PC, Action<CpuThreadState> Action)
 		{
+			//Methods2[(PC - PspMemory.MainOffset) / 4] = Action;
 			Methods[PC] = Action;
 		}
 	}

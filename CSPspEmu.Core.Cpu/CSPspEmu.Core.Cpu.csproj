@@ -16,7 +16,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -55,7 +55,8 @@
     <Compile Include="Emiter\Emiters\CpuEmiter_Vfpu.cs" />
     <Compile Include="Emiter\Emiters\CpuEmiter_Vfpu_Branches.cs" />
     <Compile Include="Emiter\FunctionGenerator.cs" />
-    <Compile Include="MethodCache.cs" />
+    <Compile Include="MethodCacheFast.cs" />
+    <Compile Include="MethodCacheSlow.cs" />
     <Compile Include="Emiter\MipsEmiter.cs" />
     <Compile Include="Emiter\MipsMethodEmiter.cs" />
     <Compile Include="Instruction.cs" />

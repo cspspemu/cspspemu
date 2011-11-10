@@ -16,7 +16,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -48,6 +48,7 @@
     <Compile Include="iofilemgr\IoFileMgrForUser.cs" />
     <Compile Include="loadexec\LoadExecForUser.cs" />
     <Compile Include="modulemgr\ModuleMgrForUser.cs" />
+    <Compile Include="power\scePower.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="stdio\StdioForUser.cs" />
     <Compile Include="sysmem\SysMemUserForUser.cs" />

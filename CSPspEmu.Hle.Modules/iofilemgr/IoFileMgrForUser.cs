@@ -8,6 +8,8 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 {
 	unsafe public class IoFileMgrForUser : HleModuleHost
 	{
+		public enum SceMode { }
+
 		/// <summary>
 		/// Open a directory
 		/// </summary>
@@ -153,6 +155,63 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 				return devices[dev].sceIoDevctl(cmd, (cast(ubyte*)indata)[0..inlen], (cast(ubyte*)outdata)[0..outlen]);
 			} catch (Exception e) {
 				writefln("sceIoDevctl: %s", e);
+				return -1;
+			}
+			*/
+		}
+
+		/// <summary>
+		/// Open or create a file for reading or writing
+		/// </summary>
+		/// <example>
+		///		// Example1: Open a file for reading
+		///		if (!(fd = sceIoOpen("device:/path/to/file", O_RDONLY, 0777)) {
+		///			// error
+		///		}
+		///		
+		///		// Example2: Open a file for writing, creating it if it doesnt exist
+		///		if (!(fd = sceIoOpen("device:/path/to/file", O_WRONLY|O_CREAT, 0777)) {
+		///			// error
+		///		}
+		/// </example>
+		/// <param name="FileName">Pointer to a string holding the name of the file to open</param>
+		/// <param name="Flags">Libc styled flags that are or'ed together</param>
+		/// <param name="Mode">File access mode.</param>
+		/// <returns>A non-negative integer is a valid fd, anything else an error</returns>
+		[HlePspFunction(NID = 0x109F50BC, FirmwareVersion = 150)]
+		public int sceIoOpen(string FileName, int Flags, SceMode Mode)
+		{
+			return 1;
+			throw(new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Write output
+		/// </summary>
+		/// <example>
+		///		bytes_written = sceIoWrite(fd, data, 100);
+		/// </example>
+		/// <param name="FileHandler">Opened file descriptor to write to</param>
+		/// <param name="DataPtr">Pointer to the data to write</param>
+		/// <param name="DataSize">Size of data to write</param>
+		/// <returns>The number of bytes written</returns>
+		[HlePspFunction(NID = 0x42EC03AC, FirmwareVersion = 150)]
+		public int sceIoWrite(int FileHandler, void* DataPtr, int DataSize) {
+			return DataSize;
+			/*
+			if (fd < 0) return -1;
+			if (data is null) return -1;
+			auto stream = getStreamFromFD(fd);
+
+			// Less than 256 MB.
+			if (stream.position >= 256 * 1024 * 1024) {
+				throw(new Exception(std.string.format("Write position over 256MB! There was a prolem with sceIoWrite: position(%d)", stream.position)));
+			}
+
+			try {
+				return stream.write((cast(ubyte *)data)[0..size]);
+			} catch (Object o) {
+				throw(o);
 				return -1;
 			}
 			*/

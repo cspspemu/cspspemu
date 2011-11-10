@@ -12,7 +12,7 @@ namespace CSPspEmu.Hle
 {
 	public class HleThread
 	{
-		protected MethodCache MethodCache;
+		protected MethodCacheFast MethodCache;
 
 		public int Priority = 1;
 		public int PriorityValue;
@@ -77,7 +77,7 @@ namespace CSPspEmu.Hle
 			{
 				MethodCache.SetMethodAt(
 					PC,
-					Delegate = CpuThreadState.CreateDelegateForPC(new PspMemoryStream(CpuThreadState.CpuProcessor.Memory), PC)
+					Delegate = CpuThreadState.CpuProcessor.CreateDelegateForPC(new PspMemoryStream(CpuThreadState.CpuProcessor.Memory), PC)
 				);
 			}
 

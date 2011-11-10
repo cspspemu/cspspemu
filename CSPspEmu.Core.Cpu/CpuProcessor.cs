@@ -11,7 +11,7 @@ namespace CSPspEmu.Core.Cpu
 	{
 		public PspConfig PspConfig;
 		public PspMemory Memory;
-		public MethodCache MethodCache;
+		public MethodCacheFast MethodCache;
 		private Dictionary<int, Action<int, CpuThreadState>> RegisteredNativeSyscalls;
 		public HashSet<uint> NativeBreakpoints;
 		public bool IsRunning;
@@ -25,7 +25,7 @@ namespace CSPspEmu.Core.Cpu
 
 		public void Reset()
 		{
-			MethodCache = new MethodCache();
+			MethodCache = new MethodCacheFast();
 			NativeBreakpoints = new HashSet<uint>();
 			RegisteredNativeSyscalls = new Dictionary<int, Action<int, CpuThreadState>>();
 			IsRunning = true;

@@ -13,7 +13,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 	/// </summary>
 	unsafe public class MipsMethodEmiter
 	{
-		protected TypeBuilder TypeBuilder;
+		public TypeBuilder TypeBuilder;
 		protected MethodBuilder MethodBuilder;
 		//protected DynamicMethod DynamicMethod;
 		public ILGenerator ILGenerator;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection.Emit;
+using System.Reflection;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -103,9 +104,26 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, GetJumpAddress());
 			});
+
+			//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Jmp);
+			//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+			//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldobj, (object)CpuProcessor.CreateAndCacheDelegateForPC(MemoryStream, GetJumpAddress()));
+			//var FieldBuilder = MipsMethodEmiter.TypeBuilder.DefineField("testField", typeof(int), FieldAttributes.Static);
+			//FieldBuilder.SetValue(null, CpuProcessor.CreateAndCacheDelegateForPC(MemoryStream, GetJumpAddress()));
+			//FieldBuilder.SetValue(null, 1);
+			
+			//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Callvirt);
+
+
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ret);
 		}
-		public void jr() {
+		public void jr() 
+		{
+			// RETURN
+			if (RS == 31)
+			{
+			}
+
 			MipsMethodEmiter.SavePC(() =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);

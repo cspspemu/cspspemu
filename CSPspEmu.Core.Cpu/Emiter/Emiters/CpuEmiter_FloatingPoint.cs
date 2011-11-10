@@ -9,11 +9,49 @@ namespace CSPspEmu.Core.Cpu.Emiter
 {
 	sealed public partial class CpuEmiter
 	{
+		/*
+		static public float _mul_s_impl(float a, float b)
+		{
+			//Console.WriteLine("MUL: {0} * {1} = {2}", a, b, a * b);
+			return a * b;
+		}
+
+		static public float _div_s_impl(CpuThreadState CpuThreadState, float a, float b)
+		{
+			//Console.WriteLine("{0}", CpuThreadState.FPR[2]);
+			//Console.WriteLine("DIV: {0} / {1} = {2}", a, b, a / b);
+			return a / b;
+		}
+		*/
+
 		// Binary Floating Point Unit Operations
 		public void add_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Add); }
 		public void sub_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Sub); }
-		public void mul_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Mul); }
-		public void div_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Div); }
+		public void mul_s() {
+			MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Mul);
+
+			/*
+			MipsMethodEmiter.SaveFPR(FD, () =>
+			{
+				MipsMethodEmiter.LoadFPR(FS);
+				MipsMethodEmiter.LoadFPR(FT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_mul_s_impl"));
+			});
+			*/
+		}
+		public void div_s() {
+			MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Div);
+
+			/*
+			MipsMethodEmiter.SaveFPR(FD, () =>
+			{
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+				MipsMethodEmiter.LoadFPR(FS);
+				MipsMethodEmiter.LoadFPR(FT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_div_s_impl"));
+			});
+			*/
+		}
 
 		// Unary Floating Point Unit Operations
 		public void sqrt_s() {
@@ -44,11 +82,27 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void ceil_w_s() { throw (new NotImplementedException()); }
 		public void floor_w_s() { throw (new NotImplementedException()); }
 
+		static public void _cvt_s_w_impl()
+		{
+		}
+
 		// Convert
-		public void cvt_s_w() { throw (new NotImplementedException()); }
+		public void cvt_s_w()
+		{
+			MipsMethodEmiter.SaveFPR(FD, () =>
+			{
+				MipsMethodEmiter.LoadFPR(FS);
+				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(MathFloat).GetMethod("ReinterpretFloatAsUInt"));
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(MathFloat).GetMethod("Rint"));
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_R4);
+			});
+			//mixin(CE("$fd = cast(float)reinterpret!(int)($fs);"));
+			//throw (new NotImplementedException());
+		}
 
 		static public void _cvt_w_s_impl(CpuThreadState CpuThreadState, int FD, int FS)
 		{
+			//Console.WriteLine("_cvt_w_s_impl: {0}", CpuThreadState.FPR[FS]);
 			switch (CpuThreadState.Fcr31.RM)
 			{
 				case CpuThreadState.FCR31.TypeEnum.Rint:
@@ -81,6 +135,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				MipsMethodEmiter.LoadFPR(FS);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_I4);
+
+				/*
+				MipsMethodEmiter.LoadFPR(FS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(MathFloat).GetMethod("ReinterpretFloatAsUInt"));
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_R4);
+				*/
 			});
 		}
 		public void mtc1() {
@@ -88,6 +148,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_R4);
+
+				/*
+				MipsMethodEmiter.LoadFPR(FS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(MathFloat).GetMethod("ReinterpretUIntAsFloat"));
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_R4);
+				*/
+
 			});
 		}
 		// CFC1 -- move Control word from/to floating point (C1)
