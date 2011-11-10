@@ -5,34 +5,8 @@ using System.Text;
 
 namespace CSPspEmu.Hle.Modules.ge
 {
-	unsafe public class sceGe_user : HleModuleHost
+	unsafe public partial class sceGe_user : HleModuleHost
 	{
-		// alias void function(int id, void *arg) PspGeCallback;
-		public enum PspGeCallback : uint { }
-
-		public struct PspGeCallbackData
-		{
-			/// <summary>
-			/// GE callback for the signal interrupt
-			/// </summary>
-			public PspGeCallback SignalFunction;
-
-			/// <summary>
-			/// GE callback argument for signal interrupt
-			/// </summary>
-			public uint SignalArgument;
-
-			/// <summary>
-			/// GE callback for the finish interrupt
-			/// </summary>
-			public PspGeCallback FinishFunction;
-			
-			/// <summary>
-			/// GE callback argument for finish interrupt
-			/// </summary>
-			public uint FinishArgument;
-		}
-
 		/// <summary>
 		/// Get the address of VRAM.
 		/// </summary>
@@ -44,37 +18,114 @@ namespace CSPspEmu.Hle.Modules.ge
 		}
 
 		/// <summary>
-		/// Register callback handlers for the the Ge
+		/// Enqueue a display list at the tail of the GE display list queue.
 		/// </summary>
-		/// <param name="PspGeCallbackData">Configured callback data structure</param>
-		/// <returns>The callback ID, less than 0 on error</returns>
-		[HlePspFunction(NID = 0xA4FC06A4, FirmwareVersion = 150)]
-		int sceGeSetCallback(PspGeCallbackData* PspGeCallbackData)
+		/// <param name="InstructionAddressStart">The head of the list to queue.</param>
+		/// <param name="InstructionAddressStall">
+		///		The stall address.
+		///		If NULL then no stall address set and the list is transferred immediately.
+		///	</param>
+		/// <param name="CallbackId">ID of the callback set by calling sceGeSetCallback</param>
+		/// <param name="Args">Structure containing GE context buffer address</param>
+		/// <returns>The ID of the queue.</returns>
+		[HlePspFunction(NID = 0xAB49E76A, FirmwareVersion = 150)]
+		public int sceGeListEnQueue(void* InstructionAddressStart, void* InstructionAddressStall, int CallbackId, PspGeListArgs *Args)
 		{
+			throw(new NotImplementedException());
 			/*
-			int n;
-			PspGeCallbackData* callbackDataPtr;
-			for (n = 0; n < callbackDataList.length; n++) {
-				callbackDataPtr = &callbackDataList[n];
-				if (*callbackDataPtr == PspGeCallbackData.init) {
-					*callbackDataPtr = *cb;
-					break;
-				}
-			}
-
-			if (n == callbackDataList.length) {
-				callbackDataList ~= *cb;
-				callbackDataPtr = &callbackDataList[$ - 1];
-			}
-		
-			return cast(int)cast(void *)callbackDataPtr;
+			return cast(int)cast(void*)cpu.gpu.sceGeListEnQueue(list, stall);
 			*/
-			HleState.CallbackManager.Callbacks.Create(new HleCallback()
-			{
-				Function = (uint)PspGeCallbackData[0].FinishFunction,
-				Argument = PspGeCallbackData[0].FinishArgument,
-			});
-			return 1;
+		}
+
+		/// <summary>
+		/// Update the stall address for the specified queue.
+		/// </summary>
+		/// <param name="QueueId">The ID of the queue.</param>
+		/// <param name="StallAddress">The stall address to update</param>
+		/// <returns>Unknown. Probably 0 if successful.</returns>
+		[HlePspFunction(NID = 0xE0D68148, FirmwareVersion = 150)]
+		public int sceGeListUpdateStallAddr(int QueueId, void *StallAddress)
+		{
+			throw(new NotImplementedException());
+			/*
+			cpu.gpu.sceGeListUpdateStallAddr(cast(DisplayList*)qid, stall);
+			return 0;
+			*/
+		}
+
+		/// <summary>
+		/// Wait for syncronisation of a list.
+		/// </summary>
+		/// <param name="QueueId">The queue ID of the list to sync.</param>
+		/// <param name="SyncType">Specifies the condition to wait on.  One of ::PspGeSyncType.</param>
+		/// <returns>???</returns>
+		[HlePspFunction(NID = 0x03444EB4, FirmwareVersion = 150)]
+		public int sceGeListSync(int QueueId, SyncTypeEnum SyncType)
+		{
+			throw(new NotImplementedException());
+			/*
+			bool waiting = true;
+			(new Thread({
+				cpu.gpu.sceGeListSync(cast(DisplayList*)qid, syncType);
+				waiting = false;
+			})).start();
+
+			return moduleManager.get!(ThreadManForUser).threadManager.currentThread.pauseAndYield(
+				"sceGeListSync", (PspThread pausedThread) {
+					if (!waiting) {
+						pausedThread.resumeAndReturn(0);
+					}
+				}
+			);
+			*/
+		}
+
+		/// <summary>
+		/// Wait for drawing to complete.
+		/// </summary>
+		/// <param name="SyncType">Specifies the condition to wait on.  One of ::PspGeSyncType.</param>
+		/// <returns>???</returns>
+		[HlePspFunction(NID = 0xB287BD61, FirmwareVersion = 150)]
+		public int sceGeDrawSync(SyncTypeEnum SyncType)
+		{
+			throw(new NotImplementedException());
+			/*
+			bool waiting = true;
+			(new Thread({
+				cpu.gpu.sceGeDrawSync(syncType);
+				waiting = false;
+			})).start();
+
+			return moduleManager.get!(ThreadManForUser).threadManager.currentThread.pauseAndYield(
+				"sceGeDrawSync", (PspThread pausedThread) {
+					if (!waiting) {
+						pausedThread.resumeAndReturn(0);
+					}
+				}
+			);
+			*/
+		}
+
+		public struct PspGeListArgs
+		{
+			/// <summary>
+			/// Size
+			/// </summary>
+			public uint Size;
+
+			/// <summary>
+			/// Pointer to a GpuStateStruct
+			/// </summary>
+			public uint GpuStateStructPointer;
+		}
+
+		public enum SyncTypeEnum : uint
+		{
+			ListDone = 0,
+			ListQueued = 1,
+			ListDrawingDone = 2,
+			ListStallReached = 3,
+			ListCancelDone = 4,
 		}
 	}
 }

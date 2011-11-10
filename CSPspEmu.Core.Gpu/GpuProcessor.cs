@@ -7,14 +7,14 @@ namespace CSPspEmu.Core.Gpu
 {
 	unsafe public class GpuProcessor
 	{
-		public uint* CurrentAddress;
-		public uint* StallAddress;
+		public uint* InstructionAddressCurrent;
+		public uint* InstructionAddressStall;
 
 		public void Process()
 		{
-			for (; CurrentAddress < StallAddress; CurrentAddress++)
+			for (; InstructionAddressCurrent < InstructionAddressStall; InstructionAddressCurrent++)
 			{
-				uint Instruction = *CurrentAddress;
+				uint Instruction = *InstructionAddressCurrent;
 				var GpuCommand = (GpuCommands)(Instruction & 0xFF);
 			}
 		}

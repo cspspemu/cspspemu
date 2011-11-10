@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="ctrl\sceCtrl.cs" />
     <Compile Include="display\sceDisplay.cs" />
+    <Compile Include="ge\sceGe_user.Callbacks.cs" />
     <Compile Include="ge\sceGe_user.cs" />
     <Compile Include="iofilemgr\IoFileMgrForUser.cs" />
     <Compile Include="loadexec\LoadExecForUser.cs" />

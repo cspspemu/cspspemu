@@ -125,7 +125,10 @@ namespace CSPspEmu.Sandbox
 			if (Paused)
 			{
 				PauseEvent.Set();
-				ResumeEvent.WaitOne();
+				while (!ResumeEvent.WaitOne(TimeSpan.FromMilliseconds(10)))
+				{
+					if (!Processor.IsRunning) break;
+				}
 			}
 		}
 
@@ -271,13 +274,13 @@ namespace CSPspEmu.Sandbox
 
 			Thread.CurrentThread.Name = "GuiThread";
 
+			OnInit();
+
 			CpuThread = new Thread(CpuThreadEntryPoint)
 			{
 				Name = "CpuThread",
 			};
 			CpuThread.Start();
-
-			OnInit();
 
 			// GUI Thread.
 			Application.EnableVisualStyles();
@@ -349,9 +352,10 @@ namespace CSPspEmu.Sandbox
 			//LoadFile(@"../../../TestInput/HelloWorldPSP.elf");
 			//LoadFile(@"../../../TestInput/counter.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\string\string.elf");
-			//LoadFile(@"C:\juegos\jpcsp2\demos\compilerPerf.elf");
+			LoadFile(@"C:\juegos\jpcsp2\demos\compilerPerf.elf");
 			//LoadFile(@"C:\juegos\jpcsp2\demos\fputest.elf");
-			LoadFile(@"C:\projects\pspemu\pspautotests\demos\mytest.elf");
+			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\mytest.elf");
+			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\cube.pbp");
 			//LoadFile(@"C:\projects\pspemu\demos\dumper.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\cpu\cpu\cpu.elf");
 		}

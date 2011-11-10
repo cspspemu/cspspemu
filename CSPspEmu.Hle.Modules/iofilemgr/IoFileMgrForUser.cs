@@ -8,6 +8,101 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 {
 	unsafe public class IoFileMgrForUser : HleModuleHost
 	{
+		/// <summary>
+		/// Open a directory
+		/// </summary>
+		/// <example>
+		///		int dfd;
+		///		dfd = sceIoDopen("device:/");
+		///		if (dfd >= 0) { Do something with the file descriptor }
+		/// </example>
+		/// <param name="DirectoryPath">The directory to open for reading.</param>
+		/// <returns>If greater or equal to 0 then a valid file descriptor, otherwise a Sony error code.</returns>
+		[HlePspFunction(NID = 0xB29DDF9C, FirmwareVersion = 150)]
+		public int sceIoDopen(string DirectoryPath)
+		{
+			throw(new NotImplementedException());
+			/*
+			try {
+				SceUID uid = openedDirectories.length + 1;
+				openedDirectories[uid] = new DirectoryIterator(DirectoryName);
+				return uid;
+			} catch (Object o) {
+				writefln("sceIoDopen: %s", o);
+				return -1;
+			}
+			*/
+		}
+
+		/// <summary>
+		/// Reads an entry from an opened file descriptor.
+		/// </summary>
+		/// <param name="FileHandle">Already opened file descriptor (using sceIoDopen)</param>
+		/// <param name="dir">Pointer to an io_dirent_t structure to hold the file information</param>
+		/// <returns>
+		///		Read status
+		///		Equal to   0 - No more directory entries left
+		///		Great than 0 - More directory entired to go
+		///		Less  than 0 - Error
+		/// </returns>
+		[HlePspFunction(NID = 0xE3EB004C, FirmwareVersion = 150)]
+		public int sceIoDread(int FileHandle, /*SceIoDirent*/void *dir)
+		{
+			throw(new NotImplementedException());
+			/*
+			if (fd !in openedDirectories) return -1;
+			auto cdir = openedDirectories[fd];
+			uint lastLeft = cdir.left;
+			if (lastLeft) {
+				auto entry = cdir.extract;
+
+				fillStats(&dir.d_stat, entry.stats);
+				putStringz(dir.d_name, entry.name);
+				dir.d_private = null;
+				dir.dummy = 0;
+				//writefln(""); writefln("sceIoDread:'%s':'%s'", entry.name, dir.d_name[0]);
+			}
+			return lastLeft;
+			*/
+		}
+
+		/// <summary>
+		/// Close an opened directory file descriptor
+		/// </summary>
+		/// <param name="FileHandle">Already opened file descriptor (using sceIoDopen)</param>
+		/// <returns>Less than 0 on error</returns>
+		[HlePspFunction(NID = 0xEB092469, FirmwareVersion = 150)]
+		public int sceIoDclose(int FileHandle)
+		{
+			throw(new NotImplementedException());
+			/*
+			if (fd !in openedDirectories) return -1;
+			openedDirectories.remove(fd);
+			return 0;
+			*/
+		}
+
+		/// <summary>
+		/// Change the current directory.
+		/// </summary>
+		/// <param name="DirectoryPath">The path to change to.</param>
+		/// <returns>less than 0 on error.</returns>
+		[HlePspFunction(NID = 0x55F4717D, FirmwareVersion = 150)]
+		public int sceIoChdir(string DirectoryPath)
+		{
+			throw (new NotImplementedException());
+			/*
+			try {
+				fsroot.access(path);
+				fscurdir = path;
+				return 0;
+			} catch (Object o) {
+				writefln("sceIoChdir: %s", o);
+				return -1;
+			}
+			*/
+		}
+
 		public enum EmulatorDevclEnum : int
 		{
 			GetHasDisplay = 1,
