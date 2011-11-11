@@ -10,6 +10,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 	public class MipsEmiter
 	{
 		static private ulong UniqueCounter = 0;
+		internal AssemblyBuilder AssemblyBuilder;
 		internal ModuleBuilder ModuleBuilder;
 
 		public MipsEmiter()
@@ -21,7 +22,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			UniqueCounter++;
 			var CurrentAppDomain = AppDomain.CurrentDomain;
-			var AssemblyBuilder = CurrentAppDomain.DefineDynamicAssembly(new AssemblyName("assembly" + UniqueCounter), AssemblyBuilderAccess.RunAndSave);
+			AssemblyBuilder = CurrentAppDomain.DefineDynamicAssembly(new AssemblyName("assembly" + UniqueCounter), AssemblyBuilderAccess.RunAndSave);
 			ModuleBuilder = AssemblyBuilder.DefineDynamicModule("module" + UniqueCounter);
 		}
 	}

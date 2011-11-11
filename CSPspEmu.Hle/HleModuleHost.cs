@@ -67,6 +67,7 @@ namespace CSPspEmu.Hle
 			var MipsMethodEmiter = new MipsMethodEmiter(HleState.MipsEmiter, HleState.Processor);
 			int GprIndex = 4;
 
+			bool NotImplemented = (MethodInfo.GetCustomAttributes(typeof(HlePspNotImplementedAttribute), true).FirstOrDefault() != null);
 			bool SkipLog = HlePspFunctionAttribute.SkipLog;
 
 			var ParamInfoList = new List<ParamInfo>();
@@ -171,7 +172,22 @@ namespace CSPspEmu.Hle
 			var Delegate = MipsMethodEmiter.CreateDelegate();
 			return (CpuThreadState) =>
 			{
-				if (!SkipLog && CpuThreadState.CpuProcessor.PspConfig.DebugSyscalls)
+				bool Trace = (!SkipLog && CpuThreadState.CpuProcessor.PspConfig.DebugSyscalls);
+
+				if (NotImplemented)
+				{
+					Trace = true;
+					ConsoleUtils.SaveRestoreConsoleState(() =>
+					{
+						Console.ForegroundColor = ConsoleColor.Yellow;
+						Console.WriteLine(
+							"Not implemented {0}.{1}",
+							MethodInfo.DeclaringType.Name, MethodInfo.Name
+						);
+					});
+				}
+
+				if (Trace)
 				{
 					Console.Write(
 						"Thread({0}:'{1}') : RA(0x{2:X}) : {3}.{4}",
@@ -219,7 +235,7 @@ namespace CSPspEmu.Hle
 				}
 				finally
 				{
-					if (!SkipLog && CpuThreadState.CpuProcessor.PspConfig.DebugSyscalls)
+					if (Trace)
 					{
 						Console.Write(" : ");
 

@@ -94,15 +94,15 @@ namespace CSPspEmu.Hle
 
 		public MemoryPartition AllocateLowHigh(uint Low, uint High)
 		{
-			return Allocate(High - Low, Anchor.Set, Low);
+			return Allocate((int)(High - Low), Anchor.Set, Low);
 		}
 
-		public MemoryPartition AllocateLowSize(uint Low, uint Size)
+		public MemoryPartition AllocateLowSize(uint Low, int Size)
 		{
 			return Allocate(Size, Anchor.Set, Low);
 		}
 
-		public MemoryPartition Allocate(uint Size, Anchor AllocateAnchor = Anchor.Low, uint Position = 0)
+		public MemoryPartition Allocate(int Size, Anchor AllocateAnchor = Anchor.Low, uint Position = 0)
 		{
 			if (_ChildPartitions.Count == 0)
 			{
@@ -142,17 +142,17 @@ namespace CSPspEmu.Hle
 			{
 				default:
 				case Anchor.Low:
-					_ChildPartitions.Add(NewPartiton = new MemoryPartition(OldFreePartition.Low, OldFreePartition.Low + Size, true));
-					_ChildPartitions.Add(new MemoryPartition(OldFreePartition.Low + Size, OldFreePartition.High, false));
+					_ChildPartitions.Add(NewPartiton = new MemoryPartition(OldFreePartition.Low, (uint)(OldFreePartition.Low + Size), true));
+					_ChildPartitions.Add(new MemoryPartition((uint)(OldFreePartition.Low + Size), OldFreePartition.High, false));
 					break;
 				case Anchor.High:
-					_ChildPartitions.Add(NewPartiton = new MemoryPartition(OldFreePartition.Low, OldFreePartition.High - Size, true));
-					_ChildPartitions.Add(new MemoryPartition(OldFreePartition.High - Size, OldFreePartition.High, false));
+					_ChildPartitions.Add(NewPartiton = new MemoryPartition(OldFreePartition.Low, (uint)(OldFreePartition.High - Size), true));
+					_ChildPartitions.Add(new MemoryPartition((uint)(OldFreePartition.High - Size), OldFreePartition.High, false));
 					break;
 				case Anchor.Set:
 					_ChildPartitions.Add(new MemoryPartition(OldFreePartition.Low, Position, false));
-					_ChildPartitions.Add(NewPartiton = new MemoryPartition(Position, Position + Size, true));
-					_ChildPartitions.Add(new MemoryPartition(Position + Size, OldFreePartition.High, false));
+					_ChildPartitions.Add(NewPartiton = new MemoryPartition(Position, (uint)(Position + Size), true));
+					_ChildPartitions.Add(new MemoryPartition((uint)(Position + Size), OldFreePartition.High, false));
 					break;
 			}
 

@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GpuCommands.cs" />
+    <Compile Include="GpuDisplayList.cs" />
     <Compile Include="GpuProcessor.cs" />
     <Compile Include="State\GpuMatrixStruct.cs" />
     <Compile Include="State\GpuRectStruct.cs" />

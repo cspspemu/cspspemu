@@ -327,6 +327,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			SaveGPR(RT, () => { LoadGPR_Unsigned(RS); });
 		}
 
+		public void CallMethod(Type Class, String MethodName)
+		{
+			ILGenerator.Emit(OpCodes.Call, Class.GetMethod(MethodName));
+		}
+
 		public Action<CpuThreadState> CreateDelegate()
 		{
 			ILGenerator.Emit(OpCodes.Ret);

@@ -27,7 +27,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Option">Additional options specified by ::SceKernelThreadOptParam.</param>
 		/// <returns>UID of the created thread, or an error code.</returns>
 		[HlePspFunction(NID = 0x446D8DE6, FirmwareVersion = 150)]
-		public uint sceKernelCreateThread(CpuThreadState CpuThreadState, string Name, uint EntryPoint, int InitPriority, uint StackSize, uint Attribute, SceKernelThreadOptParam* Option)
+		public uint sceKernelCreateThread(CpuThreadState CpuThreadState, string Name, uint EntryPoint, int InitPriority, int StackSize, uint Attribute, SceKernelThreadOptParam* Option)
 		{
 			var Thread = HleState.ThreadManager.Create();
 			Thread.Name = Name;
@@ -76,6 +76,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="status">Exit status.</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xAA73C935, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceKernelExitThread(int status)
 		{
 			throw (new NotImplementedException());

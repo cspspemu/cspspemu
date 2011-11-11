@@ -18,114 +18,48 @@ namespace CSPspEmu.Hle.Modules.ge
 		}
 
 		/// <summary>
-		/// Enqueue a display list at the tail of the GE display list queue.
+		/// Get the size of VRAM.
 		/// </summary>
-		/// <param name="InstructionAddressStart">The head of the list to queue.</param>
-		/// <param name="InstructionAddressStall">
-		///		The stall address.
-		///		If NULL then no stall address set and the list is transferred immediately.
-		///	</param>
-		/// <param name="CallbackId">ID of the callback set by calling sceGeSetCallback</param>
-		/// <param name="Args">Structure containing GE context buffer address</param>
-		/// <returns>The ID of the queue.</returns>
-		[HlePspFunction(NID = 0xAB49E76A, FirmwareVersion = 150)]
-		public int sceGeListEnQueue(void* InstructionAddressStart, void* InstructionAddressStall, int CallbackId, PspGeListArgs *Args)
+		/// <returns>The size of VRAM (in bytes).</returns>
+		[HlePspFunction(NID = 0x1F6752AD, FirmwareVersion = 150)]
+		public int sceGeEdramGetSize()
 		{
-			throw(new NotImplementedException());
-			/*
-			return cast(int)cast(void*)cpu.gpu.sceGeListEnQueue(list, stall);
-			*/
+			return HleState.Processor.Memory.FrameBufferSegment.Size;
 		}
 
 		/// <summary>
-		/// Update the stall address for the specified queue.
+		/// 
 		/// </summary>
-		/// <param name="QueueId">The ID of the queue.</param>
-		/// <param name="StallAddress">The stall address to update</param>
-		/// <returns>Unknown. Probably 0 if successful.</returns>
-		[HlePspFunction(NID = 0xE0D68148, FirmwareVersion = 150)]
-		public int sceGeListUpdateStallAddr(int QueueId, void *StallAddress)
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xB77905EA, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceGeEdramSetAddrTranslation()
 		{
 			throw(new NotImplementedException());
-			/*
-			cpu.gpu.sceGeListUpdateStallAddr(cast(DisplayList*)qid, stall);
-			return 0;
-			*/
 		}
 
 		/// <summary>
-		/// Wait for syncronisation of a list.
+		/// 
 		/// </summary>
-		/// <param name="QueueId">The queue ID of the list to sync.</param>
-		/// <param name="SyncType">Specifies the condition to wait on.  One of ::PspGeSyncType.</param>
-		/// <returns>???</returns>
-		[HlePspFunction(NID = 0x03444EB4, FirmwareVersion = 150)]
-		public int sceGeListSync(int QueueId, SyncTypeEnum SyncType)
+		/// <param name="mode"></param>
+		/// <param name="brk_addr"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xB448EC0D, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceGeBreak(int mode, void* brk_addr)
 		{
 			throw(new NotImplementedException());
-			/*
-			bool waiting = true;
-			(new Thread({
-				cpu.gpu.sceGeListSync(cast(DisplayList*)qid, syncType);
-				waiting = false;
-			})).start();
-
-			return moduleManager.get!(ThreadManForUser).threadManager.currentThread.pauseAndYield(
-				"sceGeListSync", (PspThread pausedThread) {
-					if (!waiting) {
-						pausedThread.resumeAndReturn(0);
-					}
-				}
-			);
-			*/
 		}
 
 		/// <summary>
-		/// Wait for drawing to complete.
+		/// 
 		/// </summary>
-		/// <param name="SyncType">Specifies the condition to wait on.  One of ::PspGeSyncType.</param>
-		/// <returns>???</returns>
-		[HlePspFunction(NID = 0xB287BD61, FirmwareVersion = 150)]
-		public int sceGeDrawSync(SyncTypeEnum SyncType)
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x4C06E472, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceGeContinue()
 		{
-			throw(new NotImplementedException());
-			/*
-			bool waiting = true;
-			(new Thread({
-				cpu.gpu.sceGeDrawSync(syncType);
-				waiting = false;
-			})).start();
-
-			return moduleManager.get!(ThreadManForUser).threadManager.currentThread.pauseAndYield(
-				"sceGeDrawSync", (PspThread pausedThread) {
-					if (!waiting) {
-						pausedThread.resumeAndReturn(0);
-					}
-				}
-			);
-			*/
-		}
-
-		public struct PspGeListArgs
-		{
-			/// <summary>
-			/// Size
-			/// </summary>
-			public uint Size;
-
-			/// <summary>
-			/// Pointer to a GpuStateStruct
-			/// </summary>
-			public uint GpuStateStructPointer;
-		}
-
-		public enum SyncTypeEnum : uint
-		{
-			ListDone = 0,
-			ListQueued = 1,
-			ListDrawingDone = 2,
-			ListStallReached = 3,
-			ListCancelDone = 4,
+			throw (new NotImplementedException());
 		}
 	}
 }

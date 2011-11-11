@@ -56,11 +56,5 @@ namespace CSPspEmu.Core.Cpu
 			}
 			return Delegate;
 		}
-
-
-		static public void IsDebuggerPresentDebugBreak()
-		{
-			DebugUtils.IsDebuggerPresentDebugBreak();
-		}
 	}
 }

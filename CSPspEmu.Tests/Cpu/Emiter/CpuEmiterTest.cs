@@ -28,6 +28,11 @@ namespace CSPspEmu.Core.Tests
 			CpuThreadState = new CpuThreadState(Processor);
 		}
 
+		protected void ExecuteAssembly(String Assembly)
+		{
+			CpuThreadState.ExecuteAssembly(Assembly);
+		}
+
 		[TestMethod]
 		public void ArithmeticTest()
 		{
@@ -38,7 +43,7 @@ namespace CSPspEmu.Core.Tests
 			CpuThreadState.GPR[11] = 11;
 			CpuThreadState.GPR[12] = 12;
 
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				add  r1, r0, r11
 				add  r2, r0, r12
 				sub  r3, r2, r1
@@ -66,7 +71,7 @@ namespace CSPspEmu.Core.Tests
 				Events.Add(1000);
 			});
 
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				syscall 1
 				syscall 1000
 			");
@@ -77,7 +82,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void BranchTest()
 		{
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				beq r3, r0, label1
 				li r3, 1
 				li r1, 1
@@ -96,7 +101,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void Branch2Test()
 		{
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li r1, 1
 				beq r0, r0, label1 ; Taken. Should skip a +1 and the r2=1
 				addi r1, r1, 1
@@ -113,7 +118,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void BranchLikelyTest()
 		{
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li r1, 1
 				beql r1, r1, label1 ; Taken. The delayed branch is executed.
 				li r2, 1
@@ -156,7 +161,7 @@ namespace CSPspEmu.Core.Tests
 				var Results = new List<int>();
 				foreach (var Regs in RegsList)
 				{
-					CpuThreadState.ExecuteAssembly(
+					ExecuteAssembly(
 						@"
 							li r10, -1
 							li r11,  0
@@ -201,7 +206,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void LoopTest()
 		{
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li r1, 10
 				li r2, 0
 			loop:
@@ -217,7 +222,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void BitrevTest()
 		{
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li r1, 0b_00000011111101111101111011101101
 				bitrev r2, r1
 			");
@@ -229,7 +234,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void LoadStoreTest()
 		{
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li r1, 0x12345678
 				li r2, 0x88000000
 				sw r1, 0(r2)
@@ -248,7 +253,7 @@ namespace CSPspEmu.Core.Tests
 			CpuThreadState.FPR[30] = -1.0f;
 			CpuThreadState.FPR[31] = 3.5f;
 
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				; Unary
 				mov.s  f0, f30
 				neg.s  f1, f31
@@ -275,7 +280,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void JumpTest()
 		{
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li r1, 1
 				li r2, 1
 
@@ -297,7 +302,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void ShiftTest()
 		{
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li   r10, 0b_10110111011110111110111111000000
 				li   r11, 0b_01011011101111011111011111100000
 				li   r12, 7
@@ -329,7 +334,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void SetLessThanTest()
 		{
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li r1, 0x77777777
 				li r10, 0
 				li r11, -100
@@ -349,7 +354,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void MoveLoHiTest()
 		{
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li r21, 0x12345678
 				li r22, 0x87654321
 				mtlo r21
@@ -367,7 +372,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void SetDivTest()
 		{
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li r10, 100
 				li r11, 12
 				div r10, r11
@@ -380,7 +385,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void SetMulSimpleTest()
 		{
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li r10, 7
 				li r11, 13
 				mult r10, r11
@@ -395,7 +400,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void SetMulTest()
 		{
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li r10, 0x12345678
 				li r11, 0x87654321
 				mult r10, r11
@@ -414,7 +419,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void TrySet0Test()
 		{
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li r0, 0x12345678
 			");
 
@@ -424,7 +429,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void TryDecWithAddTest()
 		{
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li r1, 100
 				addiu r1, r1, -1
 			");
@@ -435,7 +440,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void SignExtendTest()
 		{
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li  r10, 0xFF
 				li  r11, 0xFFFF
 				or  r1, r0, r10
@@ -453,7 +458,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void MovZeroNumberTest()
 		{
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li  r10, 0xFF
 				li  r11, 0x777
 				movz r1, r11, r10
@@ -472,7 +477,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void MinMaxTest()
 		{
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li  r10, -100
 				li  r11, 0
 				li  r12, +100
@@ -492,7 +497,7 @@ namespace CSPspEmu.Core.Tests
 		public void LoadStoreFPUTest()
 		{
 			CpuThreadState.FPR[0] = 1.0f;
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li r1, 0x08000000
 				swc1 f0, 0(r1)
 				lwc1 f1, 0(r1)
@@ -506,7 +511,7 @@ namespace CSPspEmu.Core.Tests
 		{
 			CpuThreadState.GPR[1] = 17;
 			CpuThreadState.FPR[2] = 8.3f;
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				mtc1 r1, f1
 				mfc1 r2, f2
 			");
@@ -517,7 +522,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void LoginTest()
 		{
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li r20, 0b_11000110001100011000110001100011
 				li r21, 0b_00010000100001000010000100001000
 				or  r1, r20, r21
@@ -532,7 +537,7 @@ namespace CSPspEmu.Core.Tests
 		public void ExtractInsertTest()
 		{
 			// %t, %s, %a, %ne
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li r2, 0b_11000011001000000011111011101101
 				ext r1, r2, 3, 10
 			");
@@ -547,15 +552,15 @@ namespace CSPspEmu.Core.Tests
 			CpuThreadState.FPR[1] = 1.0f;
 			CpuThreadState.FPR[2] = 2.0f;
 
-			CpuThreadState.ExecuteAssembly("c.eq.s f1, f2");
+			ExecuteAssembly("c.eq.s f1, f2");
 			Assert.AreEqual(false, CpuThreadState.Fcr31.CC);
 
-			CpuThreadState.ExecuteAssembly("c.eq.s f1, f1");
+			ExecuteAssembly("c.eq.s f1, f1");
 			Assert.AreEqual(true, CpuThreadState.Fcr31.CC);
 
 			Action<String> Gen = (INSTRUCTION_NAME) =>
 			{
-				CpuThreadState.ExecuteAssembly(@"
+				ExecuteAssembly(@"
 					li r1, -1
 					c.eq.s f1, f1
 					%INSTRUCTION_NAME% label
@@ -583,13 +588,43 @@ namespace CSPspEmu.Core.Tests
 		public void FloatControlRegisterTest()
 		{
 			CpuThreadState.Fcr31.Value = 0x12345678;
-			CpuThreadState.ExecuteAssembly(@"
+			ExecuteAssembly(@"
 				li r2, 0x87654321
 				cfc1 r1, 31
 				ctc1 r2, 31
 			");
 			Assert.AreEqual(0x12345678, CpuThreadState.GPR[1]);
 			Assert.AreEqual(0x87654321, CpuThreadState.Fcr31.Value);
+		}
+
+		[TestMethod]
+		public void JalTest()
+		{
+			ExecuteAssembly(@"
+				li r1, 100
+				syscall 1
+
+				jal function1
+				nop
+				jal function1
+				nop
+				jal function1
+				nop
+
+			j end
+			nop
+
+			function1:
+				syscall 2
+				addi r1, r1, 1
+				jr r31
+				nop
+
+			end:
+				nop
+			");
+
+			Assert.AreEqual(103, CpuThreadState.GPR[1]);
 		}
 	}
 }

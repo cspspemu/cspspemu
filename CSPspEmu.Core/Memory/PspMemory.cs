@@ -18,7 +18,7 @@ namespace CSPspEmu.Core
 		{
 			public uint Low { get; private set; }
 			public uint High { get; private set; }
-			public uint Size { get { return High - Low; } }
+			public int Size { get { return (int)(High - Low); } }
 
 			public Segment(uint Offset, uint Size)
 			{

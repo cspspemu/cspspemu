@@ -77,10 +77,34 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public void mov_s() { MipsMethodEmiter.OP_2REG_F(FD, FS, () => { }); }
 		public void neg_s() { MipsMethodEmiter.OP_2REG_F(FD, FS, () => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Neg); }); }
-		public void round_w_s() { throw (new NotImplementedException()); }
-		public void trunc_w_s() { throw (new NotImplementedException()); }
-		public void ceil_w_s() { throw (new NotImplementedException()); }
-		public void floor_w_s() { throw (new NotImplementedException()); }
+		public void trunc_w_s()
+		{
+			floor_w_s();
+		}
+		public void round_w_s()
+		{
+			MipsMethodEmiter.SaveFPR(FD, () =>
+			{
+				MipsMethodEmiter.LoadFPR(FS);
+				MipsMethodEmiter.CallMethod(typeof(MathFloat), "Round");
+			});
+		}
+		public void ceil_w_s()
+		{
+			MipsMethodEmiter.SaveFPR(FD, () =>
+			{
+				MipsMethodEmiter.LoadFPR(FS);
+				MipsMethodEmiter.CallMethod(typeof(MathFloat), "Ceil");
+			});
+		}
+		public void floor_w_s()
+		{
+			MipsMethodEmiter.SaveFPR(FD, () =>
+			{
+				MipsMethodEmiter.LoadFPR(FS);
+				MipsMethodEmiter.CallMethod(typeof(MathFloat), "Floor");
+			});
+		}
 
 		static public void _cvt_s_w_impl()
 		{

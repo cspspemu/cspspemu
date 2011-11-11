@@ -235,7 +235,7 @@ namespace CSPspEmu.Hle.Formats
 			/// <summary>
 			/// Size of the section header.
 			/// </summary>
-			public uint Size;
+			public int Size;
 
 			/// <summary>
 			/// ?

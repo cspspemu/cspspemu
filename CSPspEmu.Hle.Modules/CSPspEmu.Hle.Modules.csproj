@@ -44,7 +44,9 @@
     <Compile Include="ctrl\sceCtrl.cs" />
     <Compile Include="display\sceDisplay.cs" />
     <Compile Include="ge\sceGe_user.Callbacks.cs" />
+    <Compile Include="ge\sceGe_user.Context.cs" />
     <Compile Include="ge\sceGe_user.cs" />
+    <Compile Include="ge\sceGe_user.DisplayList.cs" />
     <Compile Include="iofilemgr\IoFileMgrForUser.cs" />
     <Compile Include="loadexec\LoadExecForUser.cs" />
     <Compile Include="modulemgr\ModuleMgrForUser.cs" />
@@ -54,6 +56,7 @@
     <Compile Include="sysmem\SysMemUserForUser.cs" />
     <Compile Include="threadman\ThreadManForUser.cs" />
     <Compile Include="threadman\ThreadManForUser.Callbacks.cs" />
+    <Compile Include="threadman\ThreadManForUser.EventFlag.cs" />
     <Compile Include="threadman\ThreadManForUser.Threads.cs" />
     <Compile Include="utils\UtilsForUser.cs" />
     <Compile Include="wlan\sceWlan_Driver.cs" />

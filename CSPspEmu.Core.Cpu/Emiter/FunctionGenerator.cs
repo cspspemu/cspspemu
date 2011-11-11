@@ -220,7 +220,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				if (CpuProcessor.NativeBreakpoints.Contains(PC))
 				{
-					ILGenerator.Emit(OpCodes.Call, typeof(ProcessorExtensions).GetMethod("IsDebuggerPresentDebugBreak"));
+					ILGenerator.Emit(OpCodes.Call, typeof(DebugUtils).GetMethod("IsDebuggerPresentDebugBreak"));
 				}
 
 				// Marks label.
@@ -238,7 +238,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			//Debug.WriteLine("PASS2: MinPC:{0:X}, MaxPC:{1:X}", MinPC, MaxPC);
 
 			// Jumps to the entry point.
-			//ILGenerator.Emit(OpCodes.Call, typeof(ProcessorExtensions).GetMethod("IsDebuggerPresentDebugBreak"));
 			ILGenerator.Emit(OpCodes.Br, Labels[EntryPC]);
 
 			for (PC = MinPC; PC <= MaxPC; )
@@ -350,6 +349,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 			//if (BreakPoint) IsDebuggerPresentDebugBreak();
 			Action<CpuThreadState> Delegate = MipsMethodEmiter.CreateDelegate();
+
 			return Delegate;
 		}
 	}
