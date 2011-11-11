@@ -26,3 +26,5 @@
 *.vsp
 *.userprefs
 *.dump
+/CSPspEmu.Tests/obj
+/CSPspEmu.Tests/bin

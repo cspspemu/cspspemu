@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Core", "CSPspEmu.Core\CSPspEmu.Core.csproj", "{F783ECD3-0F79-43CC-ABD0-D356A64049C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Tests", "CSPspEmu.Core.Tests\CSPspEmu.Tests.csproj", "{37463C84-1A96-4A1A-BD02-2A131D11B9EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Tests", "CSPspEmu.Tests\CSPspEmu.Tests.csproj", "{37463C84-1A96-4A1A-BD02-2A131D11B9EA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DD95073C-D439-4DB5-B465-2DEFAF839C4D}"
 	ProjectSection(SolutionItems) = preProject
