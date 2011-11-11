@@ -22,3 +22,7 @@
 /CSPspEmu.Hle/obj
 /CSPspEmu.Gui.Winforms/obj
 /CSPspEmu.Gui.Winforms/bin
+*.pidb
+*.vsp
+*.userprefs
+*.dump

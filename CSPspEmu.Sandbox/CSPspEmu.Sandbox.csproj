@@ -70,9 +70,9 @@
       <Project>{9A30EBF3-B702-47D9-AAFC-E3E02B410DAD}</Project>
       <Name>CSPspEmu.Core.Gpu</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Tests\CSPspEmu.Core.Tests.csproj">
+    <ProjectReference Include="..\CSPspEmu.Core.Tests\CSPspEmu.Tests.csproj">
       <Project>{37463C84-1A96-4A1A-BD02-2A131D11B9EA}</Project>
-      <Name>CSPspEmu.Core.Tests</Name>
+      <Name>CSPspEmu.Tests</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
