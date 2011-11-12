@@ -125,7 +125,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.LoadFieldPtr(typeof(CpuThreadState).GetField("VFR" + RegisterIndex));
 		}
 
-		private void _vop(Action Action)
+		private void _VectorOperation2Registers(Action Action)
 		{
 			var VectorSize = Instruction.ONE_TWO;
 
@@ -167,14 +167,32 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/// </summary>
 		public void vadd()
 		{
-			_vop(() =>
+			_VectorOperation2Registers(() =>
 			{
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
 			});
 		}
-		public void vsub() { throw (new NotImplementedException()); }
-		public void vdiv() { throw (new NotImplementedException()); }
-		public void vmul() { throw (new NotImplementedException()); }
+		public void vsub()
+		{
+			_VectorOperation2Registers(() =>
+			{
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Sub);
+			});
+		}
+		public void vdiv()
+		{
+			_VectorOperation2Registers(() =>
+			{
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Div);
+			});
+		}
+		public void vmul()
+		{
+			_VectorOperation2Registers(() =>
+			{
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+			});
+		}
 
 		// Vfpu (Matrix) IDenTity
 		public void vidt() { throw (new NotImplementedException()); }

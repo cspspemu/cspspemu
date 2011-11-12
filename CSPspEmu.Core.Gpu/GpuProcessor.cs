@@ -104,6 +104,8 @@ namespace CSPspEmu.Core.Gpu
 
 		public void Process()
 		{
+			GpuDisplayList.InstructionSwitch = GpuDisplayList.GenerateSwitch();
+
 			while (true)
 			{
 				DisplayListQueueUpdated.WaitOne();
@@ -112,7 +114,7 @@ namespace CSPspEmu.Core.Gpu
 				{
 					GpuDisplayList CurrentGpuDisplayList;
 
-					Console.WriteLine("**********************************************");
+					//Console.WriteLine("**********************************************");
 					lock (this)
 					{
 						CurrentGpuDisplayList = DisplayListQueue.First.Value;

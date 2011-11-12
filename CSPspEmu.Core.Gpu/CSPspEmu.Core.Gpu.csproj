@@ -46,6 +46,9 @@
     <Compile Include="GpuOpCodes.cs" />
     <Compile Include="GpuDisplayList.cs" />
     <Compile Include="GpuProcessor.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Flow.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Special.cs" />
     <Compile Include="State\GpuMatrixStruct.cs" />
     <Compile Include="State\GpuRectStruct.cs" />
     <Compile Include="State\GpuVectorStruct.cs" />

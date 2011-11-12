@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading;
 using CSPspEmu.Core.Threading.Synchronization;
 using CSPspEmu.Core.Gpu.State;
+using System.Reflection.Emit;
+using CSPspEmu.Core.Gpu.Run;
 
 namespace CSPspEmu.Core.Gpu
 {
@@ -65,24 +67,51 @@ namespace CSPspEmu.Core.Gpu
 		public OptionalParams pspGeListOptParam;
 
 		/// <summary>
+		/// 
+		/// </summary>
+		internal bool Done;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		GpuDisplayListRunner GpuDisplayListRunner;
+
+		//Action[] InstructionSwitch = new Action[256];
+
+		/// <summary>
 		/// Constructor
 		/// </summary>
 		internal GpuDisplayList()
 		{
-		}
+			GpuDisplayListRunner = new GpuDisplayListRunner()
+			{
+				GpuDisplayList = this,
+			};
 
-		bool Done;
+			/*
+			var Names = typeof(GpuOpCodes).GetEnumNames();
+
+			for (int n = 0; n < InstructionSwitch.Length; n++)
+			{
+				var MethodInfo = typeof(GpuDisplayListRunner).GetMethod(Names[n]);
+				if (MethodInfo == null)
+				{
+					MethodInfo = typeof(GpuDisplayListRunner).GetMethod("UNKNOWN");
+				}
+				InstructionSwitch[n] = (Action)Delegate.CreateDelegate(typeof(Action), GpuDisplayListRunner, MethodInfo);
+			}
+			*/
+		}
 
 		/// <summary>
 		/// Executes this Display List.
 		/// </summary>
 		internal void Process()
 		{
-
 			for (Done = false; !Done ; InstructionAddressCurrent++)
 			{
 				if ((InstructionAddressStall != null) && (InstructionAddressCurrent >= InstructionAddressStall)) break;
-				ProcessInstruction(*InstructionAddressCurrent);
+				ProcessInstruction();
 			}
 
 			if (InstructionAddressStall == null)
@@ -98,19 +127,62 @@ namespace CSPspEmu.Core.Gpu
 			}
 		}
 
-		private void ProcessInstruction(uint Instruction)
+		public delegate void GpuDisplayListRunnerDelegate(GpuDisplayListRunner GpuDisplayListRunner, GpuOpCodes GpuOpCode, uint Params);
+
+		static public GpuDisplayListRunnerDelegate InstructionSwitch;
+
+		static public GpuDisplayListRunnerDelegate GenerateSwitch()
 		{
-			var OpCode = (GpuOpCodes)(Instruction & 0xFF);
-
-			Console.WriteLine(OpCode);
-
-			switch (OpCode)
+			//GpuDisplayListRunnerDelegate.
+			var DynamicMethod = new DynamicMethod("", typeof(void), new Type[] { typeof(GpuDisplayListRunner), typeof(GpuOpCodes), typeof(uint) });
+			ILGenerator ILGenerator = DynamicMethod.GetILGenerator();
+			var SwitchLabels = new Label[typeof(GpuOpCodes).GetEnumValues().Length];
+			var Names = typeof(GpuOpCodes).GetEnumNames();
+			for (int n = 0; n < SwitchLabels.Length; n++)
 			{
-				case GpuOpCodes.END:
-					Console.WriteLine("END!");
-					Done = true;
-					break;
+				SwitchLabels[n] = ILGenerator.DefineLabel();
 			}
+			ILGenerator.Emit(OpCodes.Ldarg_1);
+			ILGenerator.Emit(OpCodes.Switch, SwitchLabels);
+			ILGenerator.Emit(OpCodes.Ret);
+
+			for (int n = 0; n < SwitchLabels.Length; n++)
+			{
+				ILGenerator.MarkLabel(SwitchLabels[n]);
+				var MethodInfo = typeof(GpuDisplayListRunner).GetMethod("OP_" + Names[n]);
+				if (MethodInfo == null)
+				{
+					Console.Error.WriteLine("Warning! Can't find Gpu.OpCode '" + Names[n] + "'");
+					MethodInfo = typeof(GpuDisplayListRunner).GetMethod("OP_UNKNOWN");
+				}
+				ILGenerator.Emit(OpCodes.Ldarg_0);
+				//ILGenerator.Emit(OpCodes.Ldarg_1);
+				//ILGenerator.Emit(OpCodes.Ldarg_2);
+				ILGenerator.Emit(OpCodes.Call, MethodInfo);
+				ILGenerator.Emit(OpCodes.Ret);
+			}
+
+			return (GpuDisplayListRunnerDelegate)DynamicMethod.CreateDelegate(typeof(GpuDisplayListRunnerDelegate));
+		}
+
+		private void ProcessInstruction()
+		{
+			var Instruction = *InstructionAddressCurrent;
+			var OpCode = (GpuOpCodes)((Instruction >> 24) & 0xFF);
+			var Params = ((Instruction) & 0xFFFFFF);
+
+			/*
+			if (OpCode == GpuOpCodes.END)
+			{
+				Done = true;
+				return;
+			}
+			*/
+
+			GpuDisplayListRunner.OpCode = OpCode;
+			GpuDisplayListRunner.Params = Params;
+			//InstructionSwitch[(int)OpCode]();
+			InstructionSwitch(GpuDisplayListRunner, OpCode, Params);
 		}
 	}
 }

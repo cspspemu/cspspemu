@@ -22,7 +22,7 @@ namespace CSPspEmu.Hle.Modules.ge
 				}
 				else
 				{
-					DisplayList.GpuStateStructPointer = null;
+					DisplayList.GpuStateStructPointer = (GpuStateStruct*)HleState.CpuProcessor.Memory.PspAddressToPointerSafe(0x08107000);
 				}
 				Action(DisplayList);
 			}

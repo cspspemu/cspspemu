@@ -387,8 +387,8 @@ namespace CSPspEmu.Sandbox
 			//LoadFile(@"../../../TestInput/HelloWorldPSP.elf");
 			//LoadFile(@"../../../TestInput/counter.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\string\string.elf");
-			LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
-			//LoadFile(@"C:\juegos\jpcsp2\demos\cube.pbp");
+			//LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
+			LoadFile(@"C:\juegos\jpcsp2\demos\cube.pbp");
 			//LoadFile(@"C:\juegos\jpcsp2\demos\fputest.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\mytest.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\cube.pbp");
