@@ -19,5 +19,15 @@ namespace CSPspEmu.Core.Gpu.Run
 		{
 			return (byte)(Params >> Offset);
 		}
+
+		public void UNIMPLEMENTED_NOTICE()
+		{
+			Console.WriteLine("Unimplemented GpuOpCode: {0} : {1:X}", OpCode, Params);
+		}
+
+		public void OP_UNKNOWN()
+		{
+			Console.WriteLine("Unhandled GpuOpCode: {0} : {1:X}", OpCode, Params);
+		}
 	}
 }

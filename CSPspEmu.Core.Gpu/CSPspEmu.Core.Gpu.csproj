@@ -45,10 +45,24 @@
   <ItemGroup>
     <Compile Include="GpuOpCodes.cs" />
     <Compile Include="GpuDisplayList.cs" />
+    <Compile Include="GpuOpCodesNotImplementedAttribute.cs" />
     <Compile Include="GpuProcessor.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Clut.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Color.cs" />
     <Compile Include="Run\GpuDisplayListRunner.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Depth.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Dither.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Draw.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Enable.cs" />
     <Compile Include="Run\GpuDisplayListRunner.Flow.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Fog.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Lights.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Matrix.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Morph.cs" />
     <Compile Include="Run\GpuDisplayListRunner.Special.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Spline.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Texture.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Unknown.cs" />
     <Compile Include="State\GpuMatrixStruct.cs" />
     <Compile Include="State\GpuRectStruct.cs" />
     <Compile Include="State\GpuVectorStruct.cs" />

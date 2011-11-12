@@ -85,6 +85,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		 **/
 		// void sceGuSendList(int mode, const void* list, PspGeContext* context);
 
+		[GpuOpCodesNotImplemented]
 		public void OP_JUMP()
 		{
 			/*
@@ -94,11 +95,13 @@ namespace CSPspEmu.Core.Gpu.Run
 			*/
 		}
 
+		[GpuOpCodesNotImplemented]
 		public void OP_END()
 		{
 			GpuDisplayList.Done = true;
 		}
 
+		[GpuOpCodesNotImplemented]
 		public void OP_FINISH()
 		{
 			//gpu.storeFrameBuffer();
@@ -108,6 +111,7 @@ namespace CSPspEmu.Core.Gpu.Run
 			*/
 		}
 
+		[GpuOpCodesNotImplemented]
 		public void OP_CALL()
 		{
 			/*
@@ -117,6 +121,7 @@ namespace CSPspEmu.Core.Gpu.Run
 			*/
 		}
 
+		[GpuOpCodesNotImplemented]
 		public void OP_RET()
 		{
 			//displayList.ret();
@@ -138,6 +143,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		 * @param behavior - Behavior type
 		 **/
 		// void sceGuSignal(int signal, int behavior);
+		[GpuOpCodesNotImplemented]
 		public void OP_SIGNAL()
 		{
 			/*

@@ -155,10 +155,20 @@ namespace CSPspEmu.Core.Gpu
 					Console.Error.WriteLine("Warning! Can't find Gpu.OpCode '" + Names[n] + "'");
 					MethodInfo = typeof(GpuDisplayListRunner).GetMethod("OP_UNKNOWN");
 				}
-				ILGenerator.Emit(OpCodes.Ldarg_0);
-				//ILGenerator.Emit(OpCodes.Ldarg_1);
-				//ILGenerator.Emit(OpCodes.Ldarg_2);
-				ILGenerator.Emit(OpCodes.Call, MethodInfo);
+				if (MethodInfo.GetCustomAttributes(typeof(GpuOpCodesNotImplementedAttribute), true).Length > 0)
+				{
+					var MethodInfo2 = typeof(GpuDisplayListRunner).GetMethod("UNIMPLEMENTED_NOTICE");
+					ILGenerator.Emit(OpCodes.Ldarg_0);
+					//ILGenerator.Emit(OpCodes.Ldarg_1);
+					//ILGenerator.Emit(OpCodes.Ldarg_2);
+					ILGenerator.Emit(OpCodes.Call, MethodInfo2);
+				}
+				{
+					ILGenerator.Emit(OpCodes.Ldarg_0);
+					//ILGenerator.Emit(OpCodes.Ldarg_1);
+					//ILGenerator.Emit(OpCodes.Ldarg_2);
+					ILGenerator.Emit(OpCodes.Call, MethodInfo);
+				}
 				ILGenerator.Emit(OpCodes.Ret);
 			}
 

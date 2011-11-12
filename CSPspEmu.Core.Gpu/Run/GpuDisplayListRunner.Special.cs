@@ -27,17 +27,20 @@ namespace CSPspEmu.Core.Gpu.Run
 		 **/
 		// void sceGuDrawBuffer(int psm, void* fbp, int fbw);
 
+		[GpuOpCodesNotImplemented]
 		public void OP_NOP()
 		{
 		}
 
 		// Frame Buffer Pointer
+		[GpuOpCodesNotImplemented]
 		public void OP_FBP()
 		{
 			(*GpuDisplayList.GpuStateStructPointer).DrawBufferState.LowAddress = Params;
 		}
 
 		// Frame Buffer Width
+		[GpuOpCodesNotImplemented]
 		public void OP_FBW()
 		{
 			(*GpuDisplayList.GpuStateStructPointer).DrawBufferState.HighAddress = Param8(16);
@@ -46,6 +49,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		}
 
 		// frame buffer Pixel Storage Mode
+		[GpuOpCodesNotImplemented]
 		public void OP_PSM()
 		{
 			//gpu.state.drawBuffer.format = command.extractEnum!(PixelFormats);
@@ -53,11 +57,13 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		// void drawRegion(int x, int y, int width, int height)
 		// void sceGuDispBuffer(int width, int height, void* dispbp, int dispbw)
+		[GpuOpCodesNotImplemented]
 		public void OP_REGION1()
 		{
 			//int x1 = command.extract!(ushort,  0, 10);
 			//int y1 = command.extract!(ushort, 10, 10);
 		}
+		[GpuOpCodesNotImplemented]
 		public void OP_REGION2()
 		{
 			//int x2 = command.extract!(ushort,  0, 10) + 1;
@@ -77,6 +83,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuScissor(int x, int y, int stopX, int stopY); // OP_SCISSOR1 + OP_SCISSOR2
 
 		// SCISSOR start (1)
+		[GpuOpCodesNotImplemented]
 		public void OP_SCISSOR1()
 		{
 			/*
@@ -88,6 +95,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		}
 
 		// SCISSOR end (2)
+		[GpuOpCodesNotImplemented]
 		public void OP_SCISSOR2()
 		{
 			/*
@@ -117,27 +125,33 @@ namespace CSPspEmu.Core.Gpu.Run
 		// sendCommandf(69,(float)cx);
 		// sendCommandf(70,(float)cy);
 
+		[GpuOpCodesNotImplemented]
 		public void OP_XSCALE()
 		{
 			//gpu.state.viewport.sx = command.float1 * 2;
 		}
+		[GpuOpCodesNotImplemented]
 		public void OP_YSCALE()
 		{
 			//gpu.state.viewport.sy = -command.float1 * 2;
 		}
+		[GpuOpCodesNotImplemented]
 		public void OP_ZSCALE()
 		{
 			//gpu.state.viewport.sz = command.extractFixedFloat!(0, 16);
 		}
 
+		[GpuOpCodesNotImplemented]
 		public void OP_XPOS()
 		{
 			//gpu.state.viewport.px = command.float1;
 		}
+		[GpuOpCodesNotImplemented]
 		public void OP_YPOS()
 		{
 			// gpu.state.viewport.py = command.float1;
 		}
+		[GpuOpCodesNotImplemented]
 		public void OP_ZPOS()
 		{
 			//gpu.state.viewport.pz = command.extractFixedFloat!(0, 16);
@@ -155,6 +169,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		 * @param order - Which order to use
 		 **/
 		// void sceGuFrontFace(int order); // OP_FFACE
+		[GpuOpCodesNotImplemented]
 		public void OP_FFACE()
 		{
 			//gpu.state.frontFaceDirection = command.extractEnum!(FrontFaceDirection);
@@ -170,12 +185,14 @@ namespace CSPspEmu.Core.Gpu.Run
 		 * @param mode - Which mode to use
 		**/
 		// void sceGuShadeModel(int mode); // OP_SHADE
+		[GpuOpCodesNotImplemented]
 		public void OP_SHADE()
 		{
 			//gpu.state.shadeModel = command.extractEnum!(ShadingModel);
 		}
 
 		// Logical Operation Enable (GL_COLOR_LOGIC_OP)
+		[GpuOpCodesNotImplemented]
 		public void OP_LOE()
 		{
 			//gpu.state.logicalOperation.enabled = command.bool1;
@@ -208,6 +225,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		 **/
 		// void sceGuLogicalOp(int op); // OP_LOP
 		// Logical Operation
+		[GpuOpCodesNotImplemented]
 		public void OP_LOP()
 		{
 			//gpu.state.logicalOperation.operation = command.extractEnum!(LogicalOperation);
@@ -228,18 +246,15 @@ namespace CSPspEmu.Core.Gpu.Run
 		 */
 		//void sceGuOffset(unsigned int x, unsigned int y); // OP_OFFSETX + OP_OFFSETY
 
+		[GpuOpCodesNotImplemented]
 		public void OP_OFFSETX()
 		{
 			//gpu.state.offsetX = command.extract!(uint, 0, 4);
 		}
+		[GpuOpCodesNotImplemented]
 		public void OP_OFFSETY()
 		{
 			//gpu.state.offsetY = command.extract!(uint, 0, 4);
-		}
-
-		public void OP_UNKNOWN()
-		{
-			Console.WriteLine("Unhandled GpuOpCode: {0} : {1:X}", OpCode, Params);
 		}
 	}
 }
