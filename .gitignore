@@ -28,3 +28,5 @@
 *.dump
 /CSPspEmu.Tests/obj
 /CSPspEmu.Tests/bin
+/CSPspEmu.Core.Gpu.Impl.Opengl/obj
+/CSPspEmu.Core.Gpu.Impl.Opengl/bin

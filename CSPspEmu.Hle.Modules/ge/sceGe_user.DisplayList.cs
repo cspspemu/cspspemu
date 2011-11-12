@@ -116,6 +116,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		[HlePspNotImplemented(PartialImplemented = true, Notice = false)]
 		public int sceGeDrawSync(GpuProcessor.SyncTypeEnum SyncType)
 		{
+			//return 0;
 			var CurrentThread = HleState.ThreadManager.Current;
 			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeDrawSync", (WakeUpCallback) =>
 			{
