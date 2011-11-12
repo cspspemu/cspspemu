@@ -29,7 +29,7 @@ namespace CSPspEmu.Hle.Managers
 			Console.WriteLine("HleModuleTypes: {0}", HleModuleTypes.Count);
 
 			this.HleState = HleState;
-			HleState.Processor.RegisterNativeSyscall(FunctionGenerator.NativeCallSyscallCode, (Code, CpuThreadState) =>
+			HleState.CpuProcessor.RegisterNativeSyscall(FunctionGenerator.NativeCallSyscallCode, (Code, CpuThreadState) =>
 			{
 				uint Info = CpuThreadState.CpuProcessor.Memory.Read4(CpuThreadState.PC + 4);
 				{

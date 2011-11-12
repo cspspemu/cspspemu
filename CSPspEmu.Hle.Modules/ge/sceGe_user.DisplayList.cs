@@ -2,11 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Gpu;
+using CSPspEmu.Core.Gpu.State;
 
 namespace CSPspEmu.Hle.Modules.ge
 {
 	unsafe public partial class sceGe_user
 	{
+		public int _sceGeListEnQueue(uint* InstructionAddressStart, uint* InstructionAddressStall, int CallbackId, PspGeListArgs* Args, Action<GpuDisplayList> Action)
+		{
+			var DisplayList = HleState.GpuProcessor.DequeueFreeDisplayList();
+			{
+				DisplayList.InstructionAddressStart = InstructionAddressStart;
+				DisplayList.InstructionAddressCurrent = InstructionAddressStart;
+				DisplayList.InstructionAddressStall = InstructionAddressStall;
+				if (Args != null)
+				{
+					DisplayList.GpuStateStructPointer = (GpuStateStruct*)HleState.CpuProcessor.Memory.PspAddressToPointer(Args[0].GpuStateStructAddress);
+				}
+				else
+				{
+					DisplayList.GpuStateStructPointer = null;
+				}
+				Action(DisplayList);
+			}
+			return DisplayList.Id;
+		}
+
 		/// <summary>
 		/// Enqueue a display list at the tail of the GE display list queue.
 		/// </summary>
@@ -14,13 +36,15 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <param name="InstructionAddressStall">The stall address. If NULL then no stall address set and the list is transferred immediately.</param>
 		/// <param name="CallbackId">ID of the callback set by calling sceGeSetCallback</param>
 		/// <param name="Args">Structure containing GE context buffer address</param>
-		/// <returns>The ID of the queue.</returns>
+		/// <returns>The DisplayList Id</returns>
 		[HlePspFunction(NID = 0xAB49E76A, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceGeListEnQueue(void* InstructionAddressStart, void* InstructionAddressStall, int CallbackId, PspGeListArgs* Args)
+		[HlePspNotImplemented(PartialImplemented = true, Notice = true)]
+		public int sceGeListEnQueue(uint* InstructionAddressStart, uint* InstructionAddressStall, int CallbackId, PspGeListArgs* Args)
 		{
-			//throw (new NotImplementedException());
-			return 0;
+			return _sceGeListEnQueue(InstructionAddressStart, InstructionAddressStall, CallbackId, Args, (DisplayList) =>
+			{
+				HleState.GpuProcessor.EnqueueDisplayListLast(DisplayList);
+			});
 		}
 
 		/// <summary>
@@ -30,49 +54,54 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <param name="InstructionAddressStall">The stall address. If NULL then no stall address set and the list is transferred immediately.</param>
 		/// <param name="CallbackId">ID of the callback set by calling sceGeSetCallback</param>
 		/// <param name="Args">Structure containing GE context buffer address</param>
-		/// <returns>The ID of the queue.</returns>
+		/// <returns>The DisplayList Id</returns>
 		[HlePspFunction(NID = 0x1C0D95A6, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceGeListEnQueueHead(void* InstructionAddressStart, void* InstructionAddressStall, int CallbackId, PspGeListArgs* Args)
+		[HlePspNotImplemented(PartialImplemented = true, Notice = false)]
+		public int sceGeListEnQueueHead(uint* InstructionAddressStart, uint* InstructionAddressStall, int CallbackId, PspGeListArgs* Args)
 		{
-			throw (new NotImplementedException());
+			return _sceGeListEnQueue(InstructionAddressStart, InstructionAddressStall, CallbackId, Args, (DisplayList) =>
+			{
+				HleState.GpuProcessor.EnqueueDisplayListFirst(DisplayList);
+			});
 		}
 
 		/// <summary>
 		/// Cancel a queued or running list.
 		/// </summary>
-		/// <param name="id">The ID of the queue.</param>
+		/// <param name="DisplayListId">A DisplayList Id</param>
 		/// <returns>???</returns>
 		[HlePspFunction(NID = 0x5FB86AB0, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceGeListDeQueue(int id)
+		[HlePspNotImplemented(PartialImplemented = true)]
+		public int sceGeListDeQueue(int DisplayListId)
 		{
-			throw (new NotImplementedException());
+			var DisplayList = HleState.GpuProcessor.DisplayLists[DisplayListId];
+			HleState.GpuProcessor.DisplayListQueue.Remove(DisplayList);
+			return 0;
 		}
 
 		/// <summary>
 		/// Update the stall address for the specified queue.
 		/// </summary>
-		/// <param name="QueueId">The ID of the queue.</param>
-		/// <param name="StallAddress">The stall address to update</param>
+		/// <param name="DisplayListId">The ID of the queue.</param>
+		/// <param name="InstructionAddressStall">The stall address to update</param>
 		/// <returns>Unknown. Probably 0 if successful.</returns>
 		[HlePspFunction(NID = 0xE0D68148, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceGeListUpdateStallAddr(int QueueId, void* StallAddress)
+		public int sceGeListUpdateStallAddr(int DisplayListId, uint* InstructionAddressStall)
 		{
-			//throw (new NotImplementedException());
+			var DisplayList = HleState.GpuProcessor.DisplayLists[DisplayListId];
+			DisplayList.InstructionAddressStall = InstructionAddressStall;
 			return 0;
 		}
 
 		/// <summary>
 		/// Wait for syncronisation of a list.
 		/// </summary>
-		/// <param name="QueueId">The queue ID of the list to sync.</param>
+		/// <param name="DisplayListId">The queue ID of the list to sync.</param>
 		/// <param name="SyncType">Specifies the condition to wait on.  One of ::PspGeSyncType.</param>
 		/// <returns>???</returns>
 		[HlePspFunction(NID = 0x03444EB4, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceGeListSync(int QueueId, SyncTypeEnum SyncType)
+		public int sceGeListSync(int DisplayListId, GpuProcessor.SyncTypeEnum SyncType)
 		{
 			//throw (new NotImplementedException());
 			return 0;
@@ -84,10 +113,24 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <param name="SyncType">Specifies the condition to wait on.  One of ::PspGeSyncType.</param>
 		/// <returns>???</returns>
 		[HlePspFunction(NID = 0xB287BD61, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceGeDrawSync(SyncTypeEnum SyncType)
+		[HlePspNotImplemented(PartialImplemented = true, Notice = false)]
+		public int sceGeDrawSync(GpuProcessor.SyncTypeEnum SyncType)
 		{
-			//throw (new NotImplementedException());
+			var CurrentThread = HleState.ThreadManager.Current;
+			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeDrawSync", (WakeUpCallback) =>
+			{
+				if (HleState.GpuProcessor.DisplayListQueue.Count > 0)
+				{
+					Action WakeUpCallbackOnce = null;
+					WakeUpCallbackOnce = () =>
+					{
+						HleState.GpuProcessor.DrawSync -= WakeUpCallbackOnce;
+						WakeUpCallback();
+					};
+
+					HleState.GpuProcessor.DrawSync += WakeUpCallbackOnce;
+				}
+			});
 			return 0;
 		}
 
@@ -104,38 +147,7 @@ namespace CSPspEmu.Hle.Modules.ge
 			/// <summary>
 			/// Pointer to a GpuStateStruct
 			/// </summary>
-			public uint GpuStateStructPointer;
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public enum SyncTypeEnum : uint
-		{
-			/// <summary>
-			/// 
-			/// </summary>
-			ListDone = 0,
-
-			/// <summary>
-			/// 
-			/// </summary>
-			ListQueued = 1,
-
-			/// <summary>
-			/// 
-			/// </summary>
-			ListDrawingDone = 2,
-
-			/// <summary>
-			/// 
-			/// </summary>
-			ListStallReached = 3,
-
-			/// <summary>
-			/// 
-			/// </summary>
-			ListCancelDone = 4,
+			public uint GpuStateStructAddress;
 		}
 	}
 }

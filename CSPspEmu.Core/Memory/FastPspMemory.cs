@@ -44,10 +44,11 @@ namespace CSPspEmu.Core
 			return (uint)((byte*)Pointer - Base);
 		}
 
-		public override void* PspAddressToPointer(uint Address)
+		public override void* PspAddressToPointer(uint _Address)
 		{
+			var Address = (_Address & 0x1FFFFFFF);
 			if (Address == 0) return null;
-			return Base + (Address & 0x1FFFFFFF);
+			return Base + Address;
 		}
 	}
 }

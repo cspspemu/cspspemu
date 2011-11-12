@@ -54,6 +54,7 @@
     <Compile Include="PspConfig.cs" />
     <Compile Include="PspController.cs" />
     <Compile Include="PspDisplay.cs" />
+    <Compile Include="PspEmulatorState.cs" />
     <Compile Include="PspRtc.cs" />
     <Compile Include="Threading\Synchronization\WaitableStateMachine.cs" />
   </ItemGroup>

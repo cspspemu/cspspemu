@@ -10,6 +10,8 @@ using System.Diagnostics;
 
 namespace CSPspEmu.Hle
 {
+	public delegate void WakeUpCallbackDelegate();
+
 	public class HleThread
 	{
 		protected MethodCacheFast MethodCache;
@@ -25,6 +27,7 @@ namespace CSPspEmu.Hle
 		public WaitType CurrentWaitType;
 		public DateTime AwakeOnTime;
 		public MemoryPartition Stack;
+		public String WaitDescription;
 		public uint EntryPoint;
 		public int InitPriority;
 		public uint Attribute;
@@ -33,6 +36,7 @@ namespace CSPspEmu.Hle
 		{
 			None = 0,
 			Timer = 1,
+			GraphicEngine = 2,
 		}
 
 		public enum Status {
@@ -89,6 +93,30 @@ namespace CSPspEmu.Hle
 			CpuThreadState.StepInstructionCount = InstructionCountForYield;
 			//this.MinimalInstructionCountForYield = InstructionCountForYield;
 			GreenThread.SwitchTo();
+		}
+
+		public void WakeUp()
+		{
+			if (this.CurrentStatus != Status.Waiting)
+			{
+				throw (new InvalidOperationException("Trying to awake a non waiting thread '" + this.CurrentStatus + "'"));
+			}
+			this.CurrentStatus = Status.Ready;
+		}
+
+		public void SetWaitAndPrepareWakeUp(WaitType WaitType, String WaitDescription, Action<WakeUpCallbackDelegate> PrepareCallback)
+		{
+			PrepareCallback(WakeUp);
+			SetWait(WaitType, WaitDescription);
+		}
+
+
+		public void SetWait(WaitType WaitType, String WaitDescription)
+		{
+			this.CurrentStatus = Status.Waiting;
+			this.CurrentWaitType = WaitType;
+			this.WaitDescription = WaitDescription;
+			CpuThreadState.Yield();
 		}
 	}
 }

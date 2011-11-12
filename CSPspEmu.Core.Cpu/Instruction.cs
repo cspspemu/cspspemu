@@ -60,6 +60,14 @@ namespace CSPspEmu.Core.Cpu
 			return (uint)(PC + 4 + IMM * 4);
 		}
 
+		public uint VD { get { return get(0, 7); } set { set(0, 7, value); } }
+		public uint ONE { get { return get(7, 1); } set { set(7, 1, value); } }
+		public uint VS { get { return get(8, 7); } set { set(8, 7, value); } }
+		public uint TWO { get { return get(15, 1); } set { set(15, 1, value); } }
+		public uint VT { get { return get(16, 7); } set { set(16, 7, value); } }
+
+		public uint ONE_TWO { get { return 1 + 1 * ONE + 2 * TWO; } }
+
 		// Immediate 7 bits.
 		// VFPU
 		/*
@@ -74,12 +82,6 @@ namespace CSPspEmu.Core.Cpu
 		~ bitslice!("v", uint, "IMM4",  0, 4)
 
 		~ bitslice!("v", uint, "IMM3",  16, 3)
-
-		~ bitslice!("v", uint, "VD",  0, 7)
-		~ bitslice!("v", uint, "ONE", 7, 1)
-		~ bitslice!("v", uint, "VS",  8, 7)
-		~ bitslice!("v", uint, "TWO", 15, 1)
-		~ bitslice!("v", uint, "VT",  16, 7)
 
 		// C1CR
 		~ bitslice!("v", uint, "C1CR", 6 + 5 * 1, 5)

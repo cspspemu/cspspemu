@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core
 {
@@ -12,6 +13,8 @@ namespace CSPspEmu.Core
 		public class InvalidAddressException : Exception {
 			public InvalidAddressException(string message) : base (message) { }
 			public InvalidAddressException(string message, Exception innerException) : base(message, innerException) { }
+			public InvalidAddressException(uint Address) : base(String.Format("Invalid Address : 0x%08X".Sprintf(Address))) {
+			}
 		}
 
 		sealed public class Segment
@@ -64,6 +67,13 @@ namespace CSPspEmu.Core
 
 		abstract public uint PointerToPspAddress(void* Pointer);
 		abstract public void* PspAddressToPointer(uint Address);
+
+		virtual public void* PspAddressToPointerSafe(uint Address)
+		{
+			if (Address == 0) return null;
+			if (!IsAddressValid(Address)) throw(new InvalidAddressException(Address));
+			return PspAddressToPointer(Address);
+		}
 
 		public bool IsAddressValid(uint _Address)
 		{

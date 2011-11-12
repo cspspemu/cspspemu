@@ -67,7 +67,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		[HlePspFunction(NID = 0x79D1C3FA, FirmwareVersion = 150)]
 		public void sceKernelDcacheWritebackAll()
 		{
-			HleState.Processor.sceKernelDcacheWritebackAll();
+			HleState.CpuProcessor.sceKernelDcacheWritebackAll();
 		}
 
 		/// <summary>
@@ -78,7 +78,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		[HlePspFunction(NID = 0xBFA98062, FirmwareVersion = 150)]
 		public void sceKernelDcacheInvalidateRange(void* Pointer, uint Size)
 		{
-			HleState.Processor.sceKernelDcacheInvalidateRange(Pointer, Size);
+			HleState.CpuProcessor.sceKernelDcacheInvalidateRange(Pointer, Size);
 		}
 
 		/// <summary>
@@ -89,7 +89,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		[HlePspFunction(NID = 0x34B9FA9E, FirmwareVersion = 150)]
 		public void sceKernelDcacheWritebackInvalidateRange(void* Pointer, uint Size)
 		{
-			HleState.Processor.sceKernelDcacheWritebackInvalidateRange(Pointer, Size);
+			HleState.CpuProcessor.sceKernelDcacheWritebackInvalidateRange(Pointer, Size);
 		}
 
 		/// <summary>
@@ -100,7 +100,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		[HlePspFunction(NID = 0xB435DEC5, FirmwareVersion = 150)]
 		public void sceKernelDcacheWritebackRange(void* Pointer, uint Size)
 		{
-			HleState.Processor.sceKernelDcacheWritebackRange(Pointer, Size);
+			HleState.CpuProcessor.sceKernelDcacheWritebackRange(Pointer, Size);
 		}
 
 		/// <summary>
@@ -109,7 +109,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		[HlePspFunction(NID = 0x3EE30821, FirmwareVersion = 150)]
 		public void sceKernelDcacheWritebackInvalidateAll()
 		{
-			HleState.Processor.sceKernelDcacheWritebackInvalidateAll();
+			HleState.CpuProcessor.sceKernelDcacheWritebackInvalidateAll();
 		}
 
 		/** 

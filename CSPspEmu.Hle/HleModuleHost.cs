@@ -64,10 +64,11 @@ namespace CSPspEmu.Hle
 
 		private Action<CpuThreadState> CreateDelegateForMethodInfo(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute)
 		{
-			var MipsMethodEmiter = new MipsMethodEmiter(HleState.MipsEmiter, HleState.Processor);
+			var MipsMethodEmiter = new MipsMethodEmiter(HleState.MipsEmiter, HleState.CpuProcessor);
 			int GprIndex = 4;
 
-			bool NotImplemented = (MethodInfo.GetCustomAttributes(typeof(HlePspNotImplementedAttribute), true).FirstOrDefault() != null);
+			var NotImplementedAttribute = (HlePspNotImplementedAttribute)MethodInfo.GetCustomAttributes(typeof(HlePspNotImplementedAttribute), true).FirstOrDefault();
+			bool NotImplemented = (NotImplementedAttribute != null) ? NotImplementedAttribute.Notice : false;
 			bool SkipLog = HlePspFunctionAttribute.SkipLog;
 
 			var ParamInfoList = new List<ParamInfo>();
@@ -114,7 +115,7 @@ namespace CSPspEmu.Hle
 						MipsMethodEmiter._getmemptr(() =>
 						{
 							MipsMethodEmiter.LoadGPR_Unsigned(GprIndex);
-						});
+						}, Safe: true);
 						GprIndex++;
 					}
 					// A long type
@@ -206,18 +207,7 @@ namespace CSPspEmu.Hle
 						{
 							case HleModuleHost.ParamInfo.RegisterTypeEnum.Gpr:
 								uint Value4 = (uint)CpuThreadState.GPR[ParamInfo.RegisterIndex];
-								if (ParamInfo.ParameterType == typeof(string))
-								{
-									Console.Write("'{0}'", StringFromAddress(CpuThreadState, Value4));
-								}
-								else if (ParamInfo.ParameterType == typeof(int))
-								{
-									Console.Write("{0}", (int)Value4);
-								}
-								else
-								{
-									Console.Write("0x%08X".Sprintf(Value4));
-								}
+								Console.Write("{0}", ToNormalizedTypeString(ParamInfo.ParameterType, CpuThreadState, Value4));
 								break;
 							default:
 								throw(new NotImplementedException());
@@ -237,27 +227,41 @@ namespace CSPspEmu.Hle
 				{
 					if (Trace)
 					{
-						Console.Write(" : ");
-
-						if (MethodInfo.ReturnType == typeof(void))
-						{
-						}
-						else if (MethodInfo.ReturnType == typeof(long))
-						{
-						}
-						else if (MethodInfo.ReturnType == typeof(uint))
-						{
-							Console.Write("0x%08X".Sprintf(CpuThreadState.GPR[2]));
-						}
-						else
-						{
-							Console.Write(CpuThreadState.GPR[2]);
-						}
-
+						Console.WriteLine(" : {0}", ToNormalizedTypeString(MethodInfo.ReturnType, CpuThreadState, (uint)CpuThreadState.GPR[2]));
 						Console.WriteLine("");
 					}
 				}
 			};
+		}
+
+		static public string ToNormalizedTypeString(Type ParameterType, CpuThreadState CpuThreadState, uint Value4)
+		{
+			if (ParameterType == typeof(void))
+			{
+				return "void";
+			}
+
+			if (ParameterType == typeof(string))
+			{
+				return String.Format("'{0}'", StringFromAddress(CpuThreadState, Value4));
+			}
+
+			if (ParameterType == typeof(int))
+			{
+				return String.Format("{0}", (int)Value4);
+			}
+
+			if (ParameterType.IsEnum)
+			{
+				return ParameterType.GetEnumName(Value4);
+			}
+
+			if (ParameterType.IsPointer)
+			{
+				return "0x%08X".Sprintf(CpuThreadState.CpuProcessor.Memory.PointerToPspAddress((void*)Value4));
+			}
+
+			return "0x%08X".Sprintf(Value4);
 		}
 	}
 }

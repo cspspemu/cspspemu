@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Core.Gpu.State.SubStates
 {
-	public class TextureStateStruct
+	public struct TextureStateStruct
 	{
 		/*
 		// Format of the texture data.

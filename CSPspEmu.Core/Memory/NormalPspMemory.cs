@@ -87,7 +87,7 @@ namespace CSPspEmu.Core
 						break;
 				}
 			}
-			throw (new InvalidAddressException("Invalid Address : 0x%08X".Sprintf(_Address)));
+			throw (new InvalidAddressException(_Address));
 		}
 	}
 }

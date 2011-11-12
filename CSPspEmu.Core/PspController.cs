@@ -22,13 +22,19 @@ namespace CSPspEmu.Core
 
 		public void InsertSceCtrlData(SceCtrlData SceCtrlData)
 		{
-			SceCtrlDataBuffer.Add(SceCtrlData);
-			if (SceCtrlDataBuffer.Count > MaxStoredFrames) SceCtrlDataBuffer.RemoveAt(0);
+			lock (this)
+			{
+				SceCtrlDataBuffer.Add(SceCtrlData);
+				if (SceCtrlDataBuffer.Count > MaxStoredFrames) SceCtrlDataBuffer.RemoveAt(0);
+			}
 		}
 
 		public SceCtrlData GetSceCtrlDataAt(int Index)
 		{
-			return SceCtrlDataBuffer[SceCtrlDataBuffer.Count - Index - 1];
+			lock (this)
+			{
+				return SceCtrlDataBuffer[SceCtrlDataBuffer.Count - Index - 1];
+			}
 		}
 	}
 

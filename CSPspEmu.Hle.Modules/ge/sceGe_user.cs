@@ -14,7 +14,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		[HlePspFunction(NID = 0xE47E40E4, FirmwareVersion = 150)]
 		public uint sceGeEdramGetAddr()
 		{
-			return HleState.Processor.Memory.FrameBufferSegment.Low;
+			return HleState.CpuProcessor.Memory.FrameBufferSegment.Low;
 		}
 
 		/// <summary>
@@ -24,7 +24,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		[HlePspFunction(NID = 0x1F6752AD, FirmwareVersion = 150)]
 		public int sceGeEdramGetSize()
 		{
-			return HleState.Processor.Memory.FrameBufferSegment.Size;
+			return HleState.CpuProcessor.Memory.FrameBufferSegment.Size;
 		}
 
 		/// <summary>
@@ -41,12 +41,12 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="mode"></param>
-		/// <param name="brk_addr"></param>
+		/// <param name="Mode"></param>
+		/// <param name="BreakAddress"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xB448EC0D, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceGeBreak(int mode, void* brk_addr)
+		public int sceGeBreak(int Mode, void* BreakAddress)
 		{
 			throw(new NotImplementedException());
 		}

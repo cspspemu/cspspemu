@@ -41,13 +41,20 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		*/
 
-		public void _getmemptr(Action Action)
+		public void _getmemptr(Action Action, bool Safe = false)
 		{
-			if (Processor.Memory is FastPspMemory)
+			if (Safe)
 			{
-				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-				ILGenerator.Emit(OpCodes.Ldc_I4, (int)((FastPspMemory)Processor.Memory).Base);
+				ILGenerator.Emit(OpCodes.Ldarg_0);
 				Action();
+				ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("GetMemoryPtrSafe"));
+			}
+			else if (Processor.Memory is FastPspMemory)
+			{
+				ILGenerator.Emit(OpCodes.Ldc_I4, (int)((FastPspMemory)Processor.Memory).Base);
+				{
+					Action();
+				}
 				ILGenerator.Emit(OpCodes.Ldc_I4, (int)0x1FFFFFFF);
 				ILGenerator.Emit(OpCodes.And);
 				ILGenerator.Emit(OpCodes.Add);
@@ -90,7 +97,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			ILGenerator = MethodBuilder.GetILGenerator();
 		}
 
-		public void LoadFieldPtr(FieldInfo FieldInfo) { ILGenerator.Emit(OpCodes.Ldarg_0); ILGenerator.Emit(OpCodes.Ldflda, FieldInfo); }
+		public void LoadFieldPtr(FieldInfo FieldInfo)
+		{
+			ILGenerator.Emit(OpCodes.Ldarg_0);
+			if (FieldInfo == null) throw (new InvalidCastException());
+			if (FieldInfo.DeclaringType != typeof(CpuThreadState)) throw(new InvalidCastException());
+			ILGenerator.Emit(OpCodes.Ldflda, FieldInfo);
+		}
 
 		protected void LoadGPR_Ptr(int R) { LoadFieldPtr(Field_GPRList[R]); }
 		protected void LoadFPR_Ptr(int R) { LoadFieldPtr(Field_FPRList[R]); }
@@ -128,6 +141,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void SaveFieldI4(FieldInfo FieldInfo, Action Action)
 		{
 			LoadFieldPtr(FieldInfo); Action(); ILGenerator.Emit(OpCodes.Stind_I4);
+		}
+
+		public void SaveFieldR4(FieldInfo FieldInfo, Action Action)
+		{
+			LoadFieldPtr(FieldInfo); Action(); ILGenerator.Emit(OpCodes.Stind_R4);
 		}
 
 		public void SavePC(Action Action) { SaveFieldI4(Field_PC, Action); }

@@ -28,6 +28,7 @@ using CSharpUtils;
 using CSharpUtils.Threading;
 using System.Reflection;
 using CSPspEmu.Hle.Formats;
+using CSPspEmu.Core.Gpu;
 
 namespace CSPspEmu.Sandbox
 {
@@ -38,7 +39,8 @@ namespace CSPspEmu.Sandbox
 		PspDisplay PspDisplay;
 		PspController PspController;
 		PspMemory Memory;
-		CpuProcessor Processor;
+		CpuProcessor CpuProcessor;
+		GpuProcessor GpuProcessor;
 		PspMemoryStream MemoryStream;
 		HleState HleState;
 		TaskQueue CpuTaskQueue = new TaskQueue();
@@ -47,6 +49,7 @@ namespace CSPspEmu.Sandbox
 		AutoResetEvent ResumeEvent;
 
 		Thread CpuThread;
+		Thread GpuThread;
 
 		PspMemory IGuiExternalInterface.GetMemory()
 		{
@@ -112,7 +115,7 @@ namespace CSPspEmu.Sandbox
 				{
 					while (!PauseEvent.WaitOne(TimeSpan.FromMilliseconds(10)))
 					{
-						if (!Processor.IsRunning) break;
+						if (!CpuProcessor.IsRunning) break;
 					}
 					PauseEvent = null;
 					ResumeEvent.Set();
@@ -127,7 +130,7 @@ namespace CSPspEmu.Sandbox
 				PauseEvent.Set();
 				while (!ResumeEvent.WaitOne(TimeSpan.FromMilliseconds(10)))
 				{
-					if (!Processor.IsRunning) break;
+					if (!CpuProcessor.IsRunning) break;
 				}
 			}
 		}
@@ -142,7 +145,7 @@ namespace CSPspEmu.Sandbox
 
 		private void _LoadFile(String FileName)
 		{
-			Processor.Reset();
+			CpuProcessor.Reset();
 			Memory.Reset();
 			CreateNewHleState();
 
@@ -170,12 +173,29 @@ namespace CSPspEmu.Sandbox
 				HleState.ModuleManager
 			);
 
+			uint argc = 1;
+			uint argv = 0x08001000;
+
+			new StreamWriter(MemoryStream.SliceWithLength(0x08001000, 1000)).Write("/PSP/GAME/virtual/EBOOT.PBP\0");
+
 			var MainThread = HleState.ThreadManager.Create();
 			MainThread.CpuThreadState.PC = Loader.InitInfo.PC;
 			MainThread.CpuThreadState.GP = Loader.InitInfo.GP;
-			MainThread.CpuThreadState.SP = (uint)(0x09000000 - 10000);
+			MainThread.CpuThreadState.SP = HleState.MemoryManager.RootPartition.Allocate(0x1000, MemoryPartition.Anchor.High).High;
+			MainThread.CpuThreadState.K0 = MainThread.CpuThreadState.SP;
 			MainThread.CpuThreadState.RA = (uint)0x08000000;
+			MainThread.CpuThreadState.GPR[4] = (int)argc;
+			MainThread.CpuThreadState.GPR[5] = (int)argv;
 			MainThread.CurrentStatus = HleThread.Status.Ready;
+
+			/*
+			registers.GP = modulePsp.sceModule.gp_value;
+			registers.SP = hleEmulatorState.memoryManager.allocStack(PspPartition.User, "Stack for main thread", 0x4000) - 0x10;
+			registers.K0 = registers.SP;
+			registers.RA = ModuleManager.CODE_PTR_EXIT_THREAD;
+			registers.A0 = argc;
+			registers.A1 = argv;
+			*/
 
 			RegisterSyscalls();
 		}
@@ -189,7 +209,7 @@ namespace CSPspEmu.Sandbox
 				nop
 			");
 
-			Processor.RegisterNativeSyscall(0x7777, (Code, CpuThreadState) =>
+			CpuProcessor.RegisterNativeSyscall(0x7777, (Code, CpuThreadState) =>
 			{
 				var SleepThread = HleState.ThreadManager.Current;
 				SleepThread.CurrentStatus = HleThread.Status.Waiting;
@@ -199,59 +219,59 @@ namespace CSPspEmu.Sandbox
 
 			var ThreadManForUser = HleState.ModuleManager.GetModule<ThreadManForUser>();
 
-			Processor.RegisterNativeSyscall(0x206D, (Code, CpuThreadState) =>
+			CpuProcessor.RegisterNativeSyscall(0x206D, (Code, CpuThreadState) =>
 			{
 				HleState.ModuleManager.GetModuleDelegate<ThreadManForUser>("sceKernelCreateThread")(CpuThreadState);
 			});
 
-			Processor.RegisterNativeSyscall(0x206F, (Code, CpuThreadState) =>
+			CpuProcessor.RegisterNativeSyscall(0x206F, (Code, CpuThreadState) =>
 			{
 				HleState.ModuleManager.GetModuleDelegate<ThreadManForUser>("sceKernelStartThread")(CpuThreadState);
 			});
 
-			Processor.RegisterNativeSyscall(0x2071, (Code, CpuThreadState) =>
+			CpuProcessor.RegisterNativeSyscall(0x2071, (Code, CpuThreadState) =>
 			{
 				HleState.ModuleManager.GetModuleDelegate<ThreadManForUser>("sceKernelExitDeleteThread")(CpuThreadState);
 			});
 
-			Processor.RegisterNativeSyscall(0x20BF, (Code, CpuThreadState) =>
+			CpuProcessor.RegisterNativeSyscall(0x20BF, (Code, CpuThreadState) =>
 			{
 				HleState.ModuleManager.GetModuleDelegate<UtilsForUser>("sceKernelUtilsMt19937Init")(CpuThreadState);
 			});
 
-			Processor.RegisterNativeSyscall(0x20C0, (Code, CpuThreadState) =>
+			CpuProcessor.RegisterNativeSyscall(0x20C0, (Code, CpuThreadState) =>
 			{
 				HleState.ModuleManager.GetModuleDelegate<UtilsForUser>("sceKernelUtilsMt19937UInt")(CpuThreadState);
 			});
 
-			Processor.RegisterNativeSyscall(0x213A, (Code, CpuThreadState) =>
+			CpuProcessor.RegisterNativeSyscall(0x213A, (Code, CpuThreadState) =>
 			{
 				HleState.ModuleManager.GetModuleDelegate<sceDisplay>("sceDisplaySetMode")(CpuThreadState);
 			});
 
-			Processor.RegisterNativeSyscall(0x2147, (Code, CpuThreadState) =>
+			CpuProcessor.RegisterNativeSyscall(0x2147, (Code, CpuThreadState) =>
 			{
 				HleState.ModuleManager.GetModuleDelegate<sceDisplay>("sceDisplayWaitVblankStart")(CpuThreadState);
 			});
 
-			Processor.RegisterNativeSyscall(0x213f, (Code, CpuThreadState) =>
+			CpuProcessor.RegisterNativeSyscall(0x213f, (Code, CpuThreadState) =>
 			{
 				HleState.ModuleManager.GetModuleDelegate<sceDisplay>("sceDisplaySetFrameBuf")(CpuThreadState);
 			});
 
-			Processor.RegisterNativeSyscall(0x20eb, (Code, CpuThreadState) =>
+			CpuProcessor.RegisterNativeSyscall(0x20eb, (Code, CpuThreadState) =>
 			{
 				HleState.ModuleManager.GetModuleDelegate<LoadExecForUser>("sceKernelExitGame")(CpuThreadState);
 			});
 
-			Processor.RegisterNativeSyscall(0x2150, (Code, CpuThreadState) =>
+			CpuProcessor.RegisterNativeSyscall(0x2150, (Code, CpuThreadState) =>
 			{
 				HleState.ModuleManager.GetModuleDelegate<sceCtrl>("sceCtrlPeekBufferPositive")(CpuThreadState);
 			});
 		}
 
 		void CreateNewHleState() {
-			HleState = new HleState(Processor, PspConfig, PspRtc, PspDisplay, PspController, HleModulesDll);
+			HleState = new HleState(CpuProcessor, GpuProcessor, PspConfig, PspRtc, PspDisplay, PspController, HleModulesDll);
 		}
 
 		void Execute()
@@ -264,7 +284,8 @@ namespace CSPspEmu.Sandbox
 			Memory = new FastPspMemory();
 			//Memory = new NormalPspMemory();
 			MemoryStream = new PspMemoryStream(Memory);
-			Processor = new CpuProcessor(PspConfig, Memory);
+			CpuProcessor = new CpuProcessor(PspConfig, Memory);
+			GpuProcessor = new GpuProcessor(PspConfig, Memory);
 			CreateNewHleState();
 
 			//PspConfig.DebugSyscalls = true;
@@ -276,6 +297,12 @@ namespace CSPspEmu.Sandbox
 
 			OnInit();
 
+			GpuThread = new Thread(GpuThreadEntryPoint)
+			{
+				Name = "GpuThread",
+			};
+			GpuThread.Start();
+
 			CpuThread = new Thread(CpuThreadEntryPoint)
 			{
 				Name = "CpuThread",
@@ -286,12 +313,20 @@ namespace CSPspEmu.Sandbox
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new PspDisplayForm(this));
-			try { Processor.IsRunning = false; } catch { }
+			try { CpuProcessor.IsRunning = false; } catch { }
+		}
+
+		protected void GpuThreadEntryPoint()
+		{
+			while (CpuProcessor.IsRunning)
+			{
+				GpuProcessor.Process();
+			}
 		}
 
 		protected void CpuThreadEntryPoint()
 		{
-			while (Processor.IsRunning)
+			while (CpuProcessor.IsRunning)
 			{
 				try
 				{
@@ -303,10 +338,10 @@ namespace CSPspEmu.Sandbox
 						}
 						CpuTaskQueue = new TaskQueue();
 
-						while (Processor.IsRunning)
+						while (CpuProcessor.IsRunning)
 						{
 							CpuTaskQueue.HandleEnqueued();
-							if (!Processor.IsRunning) break;
+							if (!CpuProcessor.IsRunning) break;
 							HleState.PspRtc.Update();
 							HleState.ThreadManager.StepNext();
 						}
@@ -352,8 +387,8 @@ namespace CSPspEmu.Sandbox
 			//LoadFile(@"../../../TestInput/HelloWorldPSP.elf");
 			//LoadFile(@"../../../TestInput/counter.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\string\string.elf");
-			//LoadFile(@"C:\juegos\jpcsp2\demos\compilerPerf.elf");
-			LoadFile(@"C:\juegos\jpcsp2\demos\cube.pbp");
+			LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
+			//LoadFile(@"C:\juegos\jpcsp2\demos\cube.pbp");
 			//LoadFile(@"C:\juegos\jpcsp2\demos\fputest.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\mytest.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\cube.pbp");

@@ -51,8 +51,70 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void lb() { _load_i(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I1); }); }
 		public void lh() { _load_i(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I2); }); }
 		public void lw() { _load_i(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I4); }); }
-		public void lwl() { throw (new NotImplementedException()); }
-		public void lwr() { throw (new NotImplementedException()); }
+		/*
+		 * registers[instruction.RT] = (
+		 *     (registers[instruction.RT] & 0x_0000_FFFF) |
+		 *     ((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 1) << 16) & 0x_FFFF_0000)
+		 * );
+		 */
+		public void lwl()
+		{
+			MipsMethodEmiter.SaveGPR(RT, () =>
+			{
+				// registers[instruction.RT] & 0x_0000_FFFF
+				MipsMethodEmiter.LoadGPR_Unsigned(RT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0x0000FFFF);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
+
+				// ((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 1) << 16) & 0x_FFFF_0000)
+				MipsMethodEmiter._getmemptr(() =>
+				{
+					MipsMethodEmiter.LoadGPR_Unsigned(RS);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM - 1);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+				});
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I2);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 16);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shl);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xFFFF0000);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
+
+				// OR
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
+			});
+		}
+		/*
+		 * registers[instruction.RT] = (
+		 *     (registers[instruction.RT] & 0x_FFFF_0000) |
+		 *     ((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 0) << 0) & 0x_0000_FFFF)
+		 * );
+		 */
+		public void lwr()
+		{
+			MipsMethodEmiter.SaveGPR(RT, () =>
+			{
+				// registers[instruction.RT] & 0x_FFFF_0000
+				MipsMethodEmiter.LoadGPR_Unsigned(RT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xFFFF0000);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
+
+				// ((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 0) << 0) & 0x_0000_FFFF)
+				MipsMethodEmiter._getmemptr(() =>
+				{
+					MipsMethodEmiter.LoadGPR_Unsigned(RS);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM - 0);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+				});
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I2);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_0);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shl);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0x0000FFFF);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
+
+				// OR
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
+			});	
+		}
 		public void lbu() { _load_i(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_U1); }); }
 		public void lhu() { _load_i(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_U2); }); }
 

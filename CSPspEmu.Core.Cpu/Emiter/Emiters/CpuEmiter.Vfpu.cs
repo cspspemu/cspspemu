@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection.Emit;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -86,7 +87,91 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Vfpu MINimum/MAXium/ADD/SUB/DIV/MUL
 		public void vmin() { throw (new NotImplementedException()); }
 		public void vmax() { throw (new NotImplementedException()); }
-		public void vadd() { throw (new NotImplementedException()); }
+
+		public enum LineType
+		{
+			None = 0,
+			Row = 1,
+			Column = 2,
+		}
+
+		private void _VfpuLoadVectorWithIndexPointer(uint R, uint Index, uint Size)
+		{
+			uint Line   = (R >> 0) & 3; // 0-3
+			uint Matrix = (R >> 2) & 7; // 0-7
+			uint Offset;
+			LineType LineType;
+
+			if (Size == 1) {
+				Offset = (R >> 5) & 3;
+				LineType = LineType.None;
+			} else {
+				Offset = (R & 64) >> (int)(3 + Size);
+				LineType = ((R & 32) != 0) ? LineType.Row : LineType.Column;
+			}
+		
+			uint Row;
+			uint Column;
+			if (LineType == LineType.Row) {
+				Column = Offset;
+				Row = Index;
+			} else {
+				Column = Index;
+				Row = Offset;
+			}
+
+			uint RegisterIndex = Matrix * 8 + Row * 4 + Column;
+			//if (Reg == null) throw(new InvalidOperationException("Invalid Vfpu register"));
+			MipsMethodEmiter.LoadFieldPtr(typeof(CpuThreadState).GetField("VFR" + RegisterIndex));
+		}
+
+		private void _vop(Action Action)
+		{
+			var VectorSize = Instruction.ONE_TWO;
+
+			for (uint Index = 0; Index < VectorSize; Index++)
+			{
+				_VfpuLoadVectorWithIndexPointer(Instruction.VD, Index, VectorSize);
+				{
+					_VfpuLoadVectorWithIndexPointer(Instruction.VS, Index, VectorSize);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
+					_VfpuLoadVectorWithIndexPointer(Instruction.VT, Index, VectorSize);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
+					{
+						Action();
+					}
+				}
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_R4);
+			}
+		}
+
+		/// <summary>
+		/// 	+----------------------+--------------+----+--------------+---+--------------+
+		///     |31                 23 | 22        16 | 15 | 14         8 | 7 | 6         0  |
+		///     +----------------------+--------------+----+--------------+---+--------------+
+		///     |  opcode 0x60000000   | vfpu_rt[6-0] |    | vfpu_rs[6-0] |   | vfpu_rd[6-0] |
+		///     +----------------------+--------------+----+--------------+---+--------------+
+		///     
+		///     VectorAdd.Single/Pair/Triple/Quad
+		///     
+		///     vadd.s %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Single
+		///     vadd.p %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Pair
+		///     vadd.t %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Triple
+		///     vadd.q %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Quad
+		///     
+		///     %vfpu_rt:	VFPU Vector Source Register ([s|p|t|q]reg 0..127)
+		///     %vfpu_rs:	VFPU Vector Source Register ([s|p|t|q]reg 0..127)
+		///     %vfpu_rd:	VFPU Vector Destination Register ([s|p|t|q]reg 0..127)
+		///     
+		///     vfpu_regs[%vfpu_rd] <- vfpu_regs[%vfpu_rs] + vfpu_regs[%vfpu_rt]
+		/// </summary>
+		public void vadd()
+		{
+			_vop(() =>
+			{
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+			});
+		}
 		public void vsub() { throw (new NotImplementedException()); }
 		public void vdiv() { throw (new NotImplementedException()); }
 		public void vmul() { throw (new NotImplementedException()); }

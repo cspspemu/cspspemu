@@ -25,9 +25,20 @@ namespace CSPspEmu.Core.Cpu
 
 		public bool BranchFlag;
 
+		/// <summary>
+		/// General Purporse Registers
+		/// </summary>
 		public uint GPR0, GPR1, GPR2, GPR3, GPR4, GPR5, GPR6, GPR7, GPR8, GPR9, GPR10, GPR11, GPR12, GPR13, GPR14, GPR15, GPR16, GPR17, GPR18, GPR19, GPR20, GPR21, GPR22, GPR23, GPR24, GPR25, GPR26, GPR27, GPR28, GPR29, GPR30, GPR31;
+
+		/// <summary>
+		/// Floating Point Registers
+		/// </summary>
 		public float FPR0, FPR1, FPR2, FPR3, FPR4, FPR5, FPR6, FPR7, FPR8, FPR9, FPR10, FPR11, FPR12, FPR13, FPR14, FPR15, FPR16, FPR17, FPR18, FPR19, FPR20, FPR21, FPR22, FPR23, FPR24, FPR25, FPR26, FPR27, FPR28, FPR29, FPR30, FPR31;
 
+		/// <summary>
+		/// Vfpu registers
+		/// </summary>
+		public float VFR0, VFR1, VFR2, VFR3, VFR4, VFR5, VFR6, VFR7, VFR8, VFR9, VFR10, VFR11, VFR12, VFR13, VFR14, VFR15, VFR16, VFR17, VFR18, VFR19, VFR20, VFR21, VFR22, VFR23, VFR24, VFR25, VFR26, VFR27, VFR28, VFR29, VFR30, VFR31, VFR32, VFR33, VFR34, VFR35, VFR36, VFR37, VFR38, VFR39, VFR40, VFR41, VFR42, VFR43, VFR44, VFR45, VFR46, VFR47, VFR48, VFR49, VFR50, VFR51, VFR52, VFR53, VFR54, VFR55, VFR56, VFR57, VFR58, VFR59, VFR60, VFR61, VFR62, VFR63, VFR64, VFR65, VFR66, VFR67, VFR68, VFR69, VFR70, VFR71, VFR72, VFR73, VFR74, VFR75, VFR76, VFR77, VFR78, VFR79, VFR80, VFR81, VFR82, VFR83, VFR84, VFR85, VFR86, VFR87, VFR88, VFR89, VFR90, VFR91, VFR92, VFR93, VFR94, VFR95, VFR96, VFR97, VFR98, VFR99, VFR100, VFR101, VFR102, VFR103, VFR104, VFR105, VFR106, VFR107, VFR108, VFR109, VFR110, VFR111, VFR112, VFR113, VFR114, VFR115, VFR116, VFR117, VFR118, VFR119, VFR120, VFR121, VFR122, VFR123, VFR124, VFR125, VFR126, VFR127;
 
 		public struct FCR31
 		{
@@ -107,6 +118,15 @@ namespace CSPspEmu.Core.Cpu
 		{
 			get { return GPR29; }
 			set { GPR29 = value; }
+		}
+
+		/// <summary>
+		/// Reserved for use by the interrupt/trap handler 
+		/// </summary>
+		public uint K0
+		{
+			get { return GPR26; }
+			set { GPR26 = value; }
 		}
 
 		/// <summary>
@@ -221,6 +241,12 @@ namespace CSPspEmu.Core.Cpu
 			//Console.WriteLine("%08X".Sprintf((uint)Pointer));
 			return Pointer;
 		}
+
+		public void* GetMemoryPtrSafe(uint Address)
+		{
+			return CpuProcessor.Memory.PspAddressToPointerSafe(Address);
+		}
+
 
 		public IEnumerable<int> GPRList(params int[] Indexes)
 		{

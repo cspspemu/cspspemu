@@ -79,12 +79,11 @@ namespace CSPspEmu.Core.Gpu.State
 		public ViewportStruct Viewport;
 		public PointI Offset;
 		public bool ToggleUpdateState;
-
 		public ClearBufferSet ClearFlags;
 		public bool ClearingMode;
-
 		// Sub States.
 		public VertexStateStruct VertexState;
+
 		public FogStateStruct FogState;
 		public BlendingStateStruct BlendingState;
 		public StencilStateStruct StencilState;
@@ -93,7 +92,6 @@ namespace CSPspEmu.Core.Gpu.State
 		public DepthTestStateStruct DepthTestState;
 		public LightingStateStruct LightingState;
 		public MorphingStateStruct MorphingState;
-		public TextureMappingStateStruct TextureMappingState;
 		public DitheringStateStruct DitheringState;
 		public LineSmoothStateStruct LineSmoothState;
 		public ClipPlaneStateStruct ClipPlaneState;
@@ -101,5 +99,7 @@ namespace CSPspEmu.Core.Gpu.State
 
 		// State.
 		public ColorfStruct fixColorSrc, fixColorDst;
+
+		public TextureMappingStateStruct TextureMappingState;
 	}
 }

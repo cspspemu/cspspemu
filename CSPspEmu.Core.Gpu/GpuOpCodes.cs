@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Core.Gpu
 {
-	public enum GpuCommands : byte
+	public enum GpuOpCodes : byte
 	{
 		/// <summary>
 		/// 0x00 - NOP
