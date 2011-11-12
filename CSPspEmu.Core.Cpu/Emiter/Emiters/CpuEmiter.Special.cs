@@ -31,8 +31,21 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void eret() { throw(new NotImplementedException()); }
 
 		// Move (From/To) IC
-		public void mfic() { throw(new NotImplementedException()); }
-		public void mtic() { throw(new NotImplementedException()); }
+		public void mfic()
+		{
+			MipsMethodEmiter.SaveGPR(RT, () =>
+			{
+				MipsMethodEmiter.LoadFieldPtr(typeof(CpuThreadState).GetField("IC"));
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I4);
+			});
+		}
+		public void mtic()
+		{
+			MipsMethodEmiter.SaveFieldI4(typeof(CpuThreadState).GetField("IC"), () =>
+			{
+				MipsMethodEmiter.LoadGPR_Unsigned(RT);
+			});
+		}
 
 		// Move (From/To) DR
 		public void mfdr() { throw(new NotImplementedException()); }

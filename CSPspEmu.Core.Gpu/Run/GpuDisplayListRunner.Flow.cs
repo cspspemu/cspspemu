@@ -85,17 +85,13 @@ namespace CSPspEmu.Core.Gpu.Run
 		 **/
 		// void sceGuSendList(int mode, const void* list, PspGeContext* context);
 
-		[GpuOpCodesNotImplemented]
 		public void OP_JUMP()
 		{
-			/*
-			auto address = (gpu.state.baseAddress | command.param24) & (~0b_11);
-			displayList.jump(gpu.memory.getPointer(address));
-			//writefln("   JUMP:%08X", address);
-			*/
+			GpuDisplayList.Jump((uint)(
+				GpuDisplayList.GpuStateStructPointer[0].BaseAddress | (Params24 & ~3)
+			));
 		}
 
-		[GpuOpCodesNotImplemented]
 		public void OP_END()
 		{
 			GpuDisplayList.Done = true;

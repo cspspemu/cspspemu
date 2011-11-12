@@ -13,7 +13,16 @@ namespace CSPspEmu.Core.Gpu.Run
 		[GpuOpCodesNotImplemented]
 		public void OP_TME()
 		{
-			//gpu.state.texture.enabled = command.bool1;
+			GpuDisplayList.GpuStateStructPointer[0].TextureMappingState.Enabled = Bool1;
+		}
+
+		public void OP_TMS()
+		{
+			GpuDisplayList.GpuStateStructPointer[0].TextureMappingState.Matrix.Reset();
+		}
+		public void OP_TMATRIX()
+		{
+			GpuDisplayList.GpuStateStructPointer[0].TextureMappingState.Matrix.Write(Float1);
 		}
 
 		/**

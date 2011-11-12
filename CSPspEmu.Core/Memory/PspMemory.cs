@@ -13,8 +13,8 @@ namespace CSPspEmu.Core
 		public class InvalidAddressException : Exception {
 			public InvalidAddressException(string message) : base (message) { }
 			public InvalidAddressException(string message, Exception innerException) : base(message, innerException) { }
-			public InvalidAddressException(uint Address) : base(String.Format("Invalid Address : 0x%08X".Sprintf(Address))) {
-			}
+			public InvalidAddressException(uint Address) : base(String.Format("Invalid Address : 0x%08X".Sprintf(Address))) { }
+			public InvalidAddressException(uint Address, Exception innerException) : base(String.Format("Invalid Address : 0x%08X".Sprintf(Address)), innerException) { }
 		}
 
 		sealed public class Segment

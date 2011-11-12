@@ -27,24 +27,27 @@ namespace CSPspEmu.Core.Gpu.Run
 		 **/
 		// void sceGuDrawBuffer(int psm, void* fbp, int fbw);
 
-		[GpuOpCodesNotImplemented]
 		public void OP_NOP()
 		{
 		}
 
+		// Base Address Register
+		public void OP_BASE()
+		{
+			GpuDisplayList.GpuStateStructPointer[0].BaseAddress = (Params24 << 8);
+		}
+
 		// Frame Buffer Pointer
-		[GpuOpCodesNotImplemented]
 		public void OP_FBP()
 		{
-			(*GpuDisplayList.GpuStateStructPointer).DrawBufferState.LowAddress = Params;
+			GpuDisplayList.GpuStateStructPointer[0].DrawBufferState.LowAddress = Params24;
 		}
 
 		// Frame Buffer Width
-		[GpuOpCodesNotImplemented]
 		public void OP_FBW()
 		{
-			(*GpuDisplayList.GpuStateStructPointer).DrawBufferState.HighAddress = Param8(16);
-			(*GpuDisplayList.GpuStateStructPointer).DrawBufferState.Width = Param16(0);
+			GpuDisplayList.GpuStateStructPointer[0].DrawBufferState.HighAddress = Param8(16);
+			GpuDisplayList.GpuStateStructPointer[0].DrawBufferState.Width = Param16(0);
 			//gpu.markBufferOp(BufferOperation.LOAD, BufferType.COLOR);
 		}
 

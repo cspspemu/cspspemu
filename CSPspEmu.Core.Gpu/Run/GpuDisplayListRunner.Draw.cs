@@ -43,6 +43,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		[GpuOpCodesNotImplemented]
 		public void OP_CLEAR()
 		{
+
 		}
 
 		/**
@@ -115,26 +116,21 @@ namespace CSPspEmu.Core.Gpu.Run
 		//void sceGuDrawArray(int prim, int vtype, int count, const void* indices, const void* vertices);
 
 		// Vertex Type
-		[GpuOpCodesNotImplemented]
 		public void OP_VTYPE()
 		{
+			GpuDisplayList.GpuStateStructPointer[0].VertexState.Type.Value = Params24;
 			//gpu.state.vertexType.v  = command.extract!(uint, 0, 24);
 			//writefln("VTYPE:%032b", command.param24);
 			//writefln("     :%d", gpu.state.vertexType.position);
 		}
 
-		// Base Address Register
-		[GpuOpCodesNotImplemented]
-		public void OP_BASE()
-		{
-			//gpu.state.baseAddress = (command.param24 << 8);
-		}
-
 		// Vertex List (Base Address)
-		[GpuOpCodesNotImplemented]
 		public void OP_VADDR()
 		{
-			//gpu.state.vertexAddress = gpu.state.baseAddress + command.param24;
+			// + or |?
+			GpuDisplayList.GpuStateStructPointer[0].VertexAddress = (
+				GpuDisplayList.GpuStateStructPointer[0].BaseAddress | Params24
+			);
 		}
 
 		// Index List (Base Address)
@@ -189,6 +185,16 @@ namespace CSPspEmu.Core.Gpu.Run
 		[GpuOpCodesNotImplemented]
 		public void OP_PRIM()
 		{
+			/*
+			auto primitiveType = command.extractEnum!(PrimitiveType, 16);
+			auto vertexType    = gpu.state.vertexType;
+			int  vertexSize    = vertexType.vertexSize;
+			auto vertexCount   = command.param16;
+			*/
+			var PrimitiveType = (PrimitiveType)Param8(16);
+			var VertexCount = Param16(0);
+
+			GpuDisplayList.GpuProcessor.GpuImpl.Prim(GpuDisplayList.GpuStateStructPointer, PrimitiveType, VertexCount);
 		}
 
 		/**

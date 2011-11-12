@@ -12,6 +12,9 @@ namespace CSPspEmu.Core.Gpu
 {
 	sealed unsafe public class GpuDisplayList
 	{
+		/// <summary>
+		/// 
+		/// </summary>
 		public struct OptionalParams
 		{
 			public int ContextAddress;
@@ -19,6 +22,9 @@ namespace CSPspEmu.Core.Gpu
 			public int StackAddress;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public enum StatusEnum
 		{
 			Done = 0,
@@ -33,10 +39,96 @@ namespace CSPspEmu.Core.Gpu
 		/// </summary>
 		public int Id;
 
-		public uint* InstructionAddressStart;
-		public uint* InstructionAddressCurrent;
-		public uint* InstructionAddressStall;
-		public GpuStateStruct* GpuStateStructPointer;
+		/// <summary>
+		/// 
+		/// </summary>
+		public GpuProcessor GpuProcessor;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		private uint* _InstructionAddressStart;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		private uint* _InstructionAddressCurrent;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		private uint* _InstructionAddressStall;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		AutoResetEvent StallAddressUpdated = new AutoResetEvent(false);
+
+		/// <summary>
+		/// 
+		/// </summary>
+		private GpuStateStruct* _GpuStateStructPointer;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public uint* InstructionAddressStart
+		{
+			get
+			{
+				return _InstructionAddressStart;
+			}
+			set
+			{
+				_InstructionAddressStart = value;
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public uint* InstructionAddressCurrent
+		{
+			get
+			{
+				return _InstructionAddressCurrent;
+			}
+			set
+			{
+				_InstructionAddressCurrent = value;
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public uint* InstructionAddressStall
+		{
+			get
+			{
+				return _InstructionAddressStall;
+			}
+			set
+			{
+				_InstructionAddressStall = value;
+				StallAddressUpdated.Set();
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public GpuStateStruct* GpuStateStructPointer
+		{
+			get
+			{
+				return _GpuStateStructPointer;
+			}
+			set
+			{
+				_GpuStateStructPointer = value;
+			}
+		}
 
 		/// <summary>
 		/// Stack with the InstructionAddressCurrent for the CALL/RET opcodes.
@@ -81,8 +173,10 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		internal GpuDisplayList()
+		internal GpuDisplayList(GpuProcessor GpuProcessor, int Id)
 		{
+			this.GpuProcessor = GpuProcessor;
+			this.Id = Id;
 			GpuDisplayListRunner = new GpuDisplayListRunner()
 			{
 				GpuDisplayList = this,
@@ -108,10 +202,16 @@ namespace CSPspEmu.Core.Gpu
 		/// </summary>
 		internal void Process()
 		{
+		Loop:
 			for (Done = false; !Done ; InstructionAddressCurrent++)
 			{
 				if ((InstructionAddressStall != null) && (InstructionAddressCurrent >= InstructionAddressStall)) break;
 				ProcessInstruction();
+			}
+
+			if (Done)
+			{
+				return;
 			}
 
 			if (InstructionAddressStall == null)
@@ -123,7 +223,8 @@ namespace CSPspEmu.Core.Gpu
 			if (InstructionAddressCurrent == InstructionAddressStall)
 			{
 				Status.Value = StatusEnum.StallReached;
-				return;
+				StallAddressUpdated.WaitOne();
+				goto Loop;
 			}
 		}
 
@@ -190,9 +291,15 @@ namespace CSPspEmu.Core.Gpu
 			*/
 
 			GpuDisplayListRunner.OpCode = OpCode;
-			GpuDisplayListRunner.Params = Params;
+			GpuDisplayListRunner.Params24 = Params;
 			//InstructionSwitch[(int)OpCode]();
 			InstructionSwitch(GpuDisplayListRunner, OpCode, Params);
+		}
+
+		internal void Jump(uint Address)
+		{
+			InstructionAddressCurrent = ((uint *)GpuProcessor.Memory.PspAddressToPointerSafe(Address)) - 1;
+			//throw new NotImplementedException();
 		}
 	}
 }

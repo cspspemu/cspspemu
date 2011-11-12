@@ -21,48 +21,31 @@ namespace CSPspEmu.Core.Gpu.Run
 		 **/
 		// void sceGuSetMatrix(int type, const ScePspFMatrix4* matrix);
 
-		[GpuOpCodesNotImplemented]
 		public void OP_VMS()
 		{
-			//gpu.state.viewMatrix.reset(Matrix.WriteMode.M4x3);
+			GpuDisplayList.GpuStateStructPointer[0].VertexState.ViewMatrix.Reset();
 		}
-		[GpuOpCodesNotImplemented]
 		public void OP_VIEW()
 		{
-			//gpu.state.viewMatrix.write(command.float1);
+			GpuDisplayList.GpuStateStructPointer[0].VertexState.ViewMatrix.Write(Float1);
 		}
 
-		[GpuOpCodesNotImplemented]
 		public void OP_WMS()
 		{
-			//gpu.state.worldMatrix.reset(Matrix.WriteMode.M4x3);
+			GpuDisplayList.GpuStateStructPointer[0].VertexState.WorldMatrix.Reset();
 		}
-		[GpuOpCodesNotImplemented]
 		public void OP_WORLD()
 		{
-			//gpu.state.worldMatrix.write(command.float1);
+			GpuDisplayList.GpuStateStructPointer[0].VertexState.WorldMatrix.Write(Float1);
 		}
 
-		[GpuOpCodesNotImplemented]
 		public void OP_PMS()
 		{
-			//gpu.state.projectionMatrix.reset(Matrix.WriteMode.M4x4);
+			GpuDisplayList.GpuStateStructPointer[0].VertexState.ProjectionMatrix.Reset();
 		}
-		[GpuOpCodesNotImplemented]
 		public void OP_PROJ()
 		{
-			//gpu.state.projectionMatrix.write(command.float1);
-		}
-
-		[GpuOpCodesNotImplemented]
-		public void OP_TMS()
-		{
-			//gpu.state.texture.matrix.reset(Matrix.WriteMode.M4x3);
-		}
-		[GpuOpCodesNotImplemented]
-		public void OP_TMATRIX()
-		{
-			//gpu.state.texture.matrix.write(command.float1);
+			GpuDisplayList.GpuStateStructPointer[0].VertexState.ProjectionMatrix.Write(Float1);
 		}
 
 		/**

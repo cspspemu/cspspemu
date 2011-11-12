@@ -15,7 +15,7 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 		/// <summary>
 		/// 
 		/// </summary>
-		public GpuMatrixStruct Matrix;
+		public GpuMatrix4x4Struct Matrix;
 
 		/// <summary>
 		/// 

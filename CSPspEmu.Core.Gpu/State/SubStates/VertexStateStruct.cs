@@ -40,17 +40,17 @@ namespace CSPspEmu.Core.Gpu.State
 		/// <summary>
 		/// 
 		/// </summary>
-		public GpuMatrixStruct ProjectionMatrix;
+		public GpuMatrix4x4Struct ProjectionMatrix;
 		
 		/// <summary>
 		/// 
 		/// </summary>
-		public GpuMatrixStruct WorldMatrix;
+		public GpuMatrix4x3Struct WorldMatrix;
 		
 		/// <summary>
 		/// 
 		/// </summary>
-		public GpuMatrixStruct ViewMatrix;
+		public GpuMatrix4x3Struct ViewMatrix;
 
 		/// <summary>
 		/// 

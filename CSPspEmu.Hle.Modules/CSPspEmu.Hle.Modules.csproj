@@ -52,6 +52,7 @@
     <Compile Include="modulemgr\ModuleMgrForUser.cs" />
     <Compile Include="power\scePower.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="rtc\sceRtc.cs" />
     <Compile Include="stdio\StdioForUser.cs" />
     <Compile Include="sysmem\SysMemUserForUser.cs" />
     <Compile Include="threadman\ThreadManForUser.cs" />

@@ -7,6 +7,9 @@ using CSharpUtils.Extensions;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.ExceptionServices;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle
 {
@@ -61,12 +64,23 @@ namespace CSPspEmu.Hle
 			GreenThread.InitAndStartStopped(MainLoop);
 		}
 
+		[HandleProcessCorruptedStateExceptions()]
 		protected void MainLoop()
 		{
-			while (true)
+			try
 			{
-				//Debug.WriteLine("Thread({0:X}) : PC: {1:X}", this.Id, CpuThreadState.PC);
-				GetDelegateAt(CpuThreadState.PC)(CpuThreadState);
+				while (true)
+				{
+					//Debug.WriteLine("Thread({0:X}) : PC: {1:X}", this.Id, CpuThreadState.PC);
+					GetDelegateAt(CpuThreadState.PC)(CpuThreadState);
+				}
+			}
+			catch (AccessViolationException AccessViolationException)
+			{
+				var Field = typeof(AccessViolationException).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(FieldInfo => FieldInfo.Name == "_target").Single();
+				uint Address = (uint)((IntPtr)Field.GetValue(AccessViolationException)).ToInt32();
+				throw (new PspMemory.InvalidAddressException(Address, AccessViolationException));
+				//AccessViolationException.
 			}
 		}
 

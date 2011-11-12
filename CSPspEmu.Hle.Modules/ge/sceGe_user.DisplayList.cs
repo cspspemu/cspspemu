@@ -18,7 +18,8 @@ namespace CSPspEmu.Hle.Modules.ge
 				DisplayList.InstructionAddressStall = InstructionAddressStall;
 				if (Args != null)
 				{
-					DisplayList.GpuStateStructPointer = (GpuStateStruct*)HleState.CpuProcessor.Memory.PspAddressToPointer(Args[0].GpuStateStructAddress);
+					//DisplayList.GpuStateStructPointer = (GpuStateStruct*)HleState.CpuProcessor.Memory.PspAddressToPointer(Args[0].GpuStateStructAddress);
+					throw(new NotImplementedException());
 				}
 				else
 				{
@@ -38,7 +39,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <param name="Args">Structure containing GE context buffer address</param>
 		/// <returns>The DisplayList Id</returns>
 		[HlePspFunction(NID = 0xAB49E76A, FirmwareVersion = 150)]
-		[HlePspNotImplemented(PartialImplemented = true, Notice = true)]
+		[HlePspNotImplemented(PartialImplemented = true, Notice = false)]
 		public int sceGeListEnQueue(uint* InstructionAddressStart, uint* InstructionAddressStall, int CallbackId, PspGeListArgs* Args)
 		{
 			return _sceGeListEnQueue(InstructionAddressStart, InstructionAddressStall, CallbackId, Args, (DisplayList) =>
@@ -117,6 +118,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		public int sceGeDrawSync(GpuProcessor.SyncTypeEnum SyncType)
 		{
 			//return 0;
+			/*
 			var CurrentThread = HleState.ThreadManager.Current;
 			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeDrawSync", (WakeUpCallback) =>
 			{
@@ -132,6 +134,7 @@ namespace CSPspEmu.Hle.Modules.ge
 					HleState.GpuProcessor.DrawSync += WakeUpCallbackOnce;
 				}
 			});
+			 * */
 			return 0;
 		}
 

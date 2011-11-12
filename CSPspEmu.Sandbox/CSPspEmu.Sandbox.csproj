@@ -39,6 +39,9 @@
   <PropertyGroup>
     <ApplicationIcon>psp.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>CSPspEmu.Sandbox.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Roslyn.Compilers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Roslyn.Compilers.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -65,6 +68,10 @@
     <ProjectReference Include="..\CSPspEmu.Core.Cpu\CSPspEmu.Core.Cpu.csproj">
       <Project>{827779A5-F05C-41C6-9FF9-FD274224A7AE}</Project>
       <Name>CSPspEmu.Core.Cpu</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Gpu.Impl.Opengl\CSPspEmu.Core.Gpu.Impl.Opengl.csproj">
+      <Project>{72f560e3-9101-426b-b3e5-b83b78e536db}</Project>
+      <Name>CSPspEmu.Core.Gpu.Impl.Opengl</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">
       <Project>{9A30EBF3-B702-47D9-AAFC-E3E02B410DAD}</Project>

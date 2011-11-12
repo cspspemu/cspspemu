@@ -18,19 +18,51 @@ namespace CSPspEmu.Gui.Winforms
 {
 	unsafe public partial class PspDisplayForm : Form
 	{
+		/// <summary>
+		/// 
+		/// </summary>
 		public Bitmap Buffer = new Bitmap(512, 272);
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public Graphics BufferGraphics;
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public SceCtrlData SceCtrlData;
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public IGuiExternalInterface IGuiExternalInterface;
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public PspMemory Memory { get { return IGuiExternalInterface.GetMemory(); } }
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public PspDisplay PspDisplay { get { return IGuiExternalInterface.GetDisplay(); } }
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public PspConfig PspConfig { get { return IGuiExternalInterface.GetConfig(); } }
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public PspController PspController { get { return IGuiExternalInterface.GetController(); } }
 		
 
 		public void SendControllerFrame()
 		{
+			SceCtrlData.X = 0;
+			SceCtrlData.Y = 0;
 			this.PspController.InsertSceCtrlData(SceCtrlData);
 		}
 

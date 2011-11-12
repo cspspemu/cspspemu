@@ -29,6 +29,7 @@ using CSharpUtils.Threading;
 using System.Reflection;
 using CSPspEmu.Hle.Formats;
 using CSPspEmu.Core.Gpu;
+using CSPspEmu.Core.Gpu.Impl.Opengl;
 
 namespace CSPspEmu.Sandbox
 {
@@ -40,6 +41,7 @@ namespace CSPspEmu.Sandbox
 		PspController PspController;
 		PspMemory Memory;
 		CpuProcessor CpuProcessor;
+		OpenglGpuImpl GpuImpl;
 		GpuProcessor GpuProcessor;
 		PspMemoryStream MemoryStream;
 		HleState HleState;
@@ -176,7 +178,8 @@ namespace CSPspEmu.Sandbox
 			uint argc = 1;
 			uint argv = 0x08001000;
 
-			new StreamWriter(MemoryStream.SliceWithLength(0x08001000, 1000)).Write("/PSP/GAME/virtual/EBOOT.PBP\0");
+			new BinaryWriter(MemoryStream.SliceWithLength(0x08001000)).Write((uint)0x08001004);
+			new StreamWriter(MemoryStream.SliceWithLength(0x08001004, 1000)).Write("/PSP/GAME/virtual/EBOOT.PBP\0");
 
 			var MainThread = HleState.ThreadManager.Create();
 			MainThread.CpuThreadState.PC = Loader.InitInfo.PC;
@@ -274,6 +277,9 @@ namespace CSPspEmu.Sandbox
 			HleState = new HleState(CpuProcessor, GpuProcessor, PspConfig, PspRtc, PspDisplay, PspController, HleModulesDll);
 		}
 
+		AutoResetEvent GpuInitializedCompleteEvent = new AutoResetEvent(false);
+		AutoResetEvent CpuInitializedCompleteEvent = new AutoResetEvent(false);
+
 		void Execute()
 		{
 			HleModulesDll = Assembly.LoadFile(Path.GetDirectoryName(typeof(Program).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll");
@@ -285,7 +291,8 @@ namespace CSPspEmu.Sandbox
 			//Memory = new NormalPspMemory();
 			MemoryStream = new PspMemoryStream(Memory);
 			CpuProcessor = new CpuProcessor(PspConfig, Memory);
-			GpuProcessor = new GpuProcessor(PspConfig, Memory);
+			GpuImpl = new OpenglGpuImpl(PspConfig, Memory);
+			GpuProcessor = new GpuProcessor(PspConfig, Memory, GpuImpl);
 			CreateNewHleState();
 
 			//PspConfig.DebugSyscalls = true;
@@ -302,22 +309,34 @@ namespace CSPspEmu.Sandbox
 				Name = "GpuThread",
 			};
 			GpuThread.Start();
+			GpuInitializedCompleteEvent.WaitOne();
 
 			CpuThread = new Thread(CpuThreadEntryPoint)
 			{
 				Name = "CpuThread",
 			};
 			CpuThread.Start();
+			CpuInitializedCompleteEvent.WaitOne();
 
 			// GUI Thread.
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new PspDisplayForm(this));
+			var Form = new PspDisplayForm(this);
+			/*
+			Form.Shown += new EventHandler((o, ea) =>
+			{
+				Form.Focus();
+			});
+			*/
+			Application.Run(Form);
 			try { CpuProcessor.IsRunning = false; } catch { }
 		}
 
 		protected void GpuThreadEntryPoint()
 		{
+			GpuImpl.Init();
+			GpuInitializedCompleteEvent.Set();
+
 			while (CpuProcessor.IsRunning)
 			{
 				GpuProcessor.Process();
@@ -326,6 +345,7 @@ namespace CSPspEmu.Sandbox
 
 		protected void CpuThreadEntryPoint()
 		{
+			CpuInitializedCompleteEvent.Set();
 			while (CpuProcessor.IsRunning)
 			{
 				try
@@ -381,19 +401,21 @@ namespace CSPspEmu.Sandbox
 
 		protected void OnInit()
 		{
-			//Console.WriteLine("OnInit");
+			//LoadFile(@"C:\juegos\jpcsp2\demos\ortho.pbp");
+			LoadFile(@"C:\projects\pspemu\pspautotests\tests\cpu\cpu\cpu.elf");
+
 			//LoadFile(@"../../../TestInput/minifire.elf");
 			//LoadFile(@"../../../TestInput/HelloWorld.elf");
 			//LoadFile(@"../../../TestInput/HelloWorldPSP.elf");
 			//LoadFile(@"../../../TestInput/counter.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\string\string.elf");
 			//LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
-			LoadFile(@"C:\juegos\jpcsp2\demos\cube.pbp");
+			//LoadFile(@"C:\juegos\jpcsp2\demos\cube.pbp");
+			//LoadFile(@"C:\juegos\jpcsp2\demos\nehetutorial02.pbp");
 			//LoadFile(@"C:\juegos\jpcsp2\demos\fputest.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\mytest.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\cube.pbp");
 			//LoadFile(@"C:\projects\pspemu\demos\dumper.elf");
-			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\cpu\cpu\cpu.elf");
 		}
 		/// <summary>
 		/// 

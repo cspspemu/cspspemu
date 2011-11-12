@@ -19,5 +19,8 @@ namespace CSPspEmu.Core
 		public bool HasDisplay = true;
 		public bool DebugSyscalls = false;
 		public int CpuFrequency = 222;
+
+		//public bool NoticeUnimplementedGpuCommands = true;
+		public bool NoticeUnimplementedGpuCommands = false;
 	}
 }
