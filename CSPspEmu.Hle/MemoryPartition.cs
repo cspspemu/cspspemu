@@ -16,6 +16,7 @@ namespace CSPspEmu.Hle
 		}
 
 		public bool Allocated;
+		public String Name;
 		public uint Low { get; protected set; }
 		public uint High { get; protected set; }
 		public int Size { get { return (int)(High - Low); } }
@@ -29,9 +30,10 @@ namespace CSPspEmu.Hle
 			}
 		}
 
-		public MemoryPartition(uint Low, uint High, bool Allocated = true)
+		public MemoryPartition(uint Low, uint High, bool Allocated = true, string Name = "Unknown")
 		{
 			if (Low > High) throw (new InvalidOperationException());
+			this.Name = Name;
 			this.Low = Low;
 			this.High = High;
 			this.Allocated = Allocated;

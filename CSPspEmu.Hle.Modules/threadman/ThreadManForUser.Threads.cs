@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Cpu;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
@@ -34,10 +35,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Thread.EntryPoint = EntryPoint;
 			Thread.InitPriority = InitPriority;
 			Thread.Attribute = Attribute;
-			Thread.Stack = HleState.MemoryManager.RootPartition.Allocate(StackSize, MemoryPartition.Anchor.High);
+			Thread.Stack = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Allocate(StackSize, MemoryPartition.Anchor.High);
 			Thread.CpuThreadState.PC = (uint)EntryPoint;
 			Thread.CpuThreadState.GP = (uint)CpuThreadState.GP;
 			Thread.CpuThreadState.SP = (uint)(Thread.Stack.High & ~(uint)0xFF);
+			//Thread.CpuThreadState.SP = (uint)(Thread.Stack.High);
 			Thread.CpuThreadState.RA = (uint)0x08000000;
 			//Thread.CpuThreadState.RA = (uint)0;
 
@@ -56,10 +58,10 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0xF475845D, FirmwareVersion = 150)]
 		public int sceKernelStartThread(CpuThreadState CpuThreadState, uint ThreadId, uint ArgumentsLength, uint ArgumentsPointer)
 		{
-			var Thread = HleState.ThreadManager.GetThreadById((int)ThreadId);
-			Thread.CpuThreadState.GPR[4] = (int)ArgumentsLength;
-			Thread.CpuThreadState.GPR[5] = (int)ArgumentsPointer;
-			Thread.CurrentStatus = HleThread.Status.Ready;
+			var ThreadToStart = HleState.ThreadManager.GetThreadById((int)ThreadId);
+			ThreadToStart.CpuThreadState.GPR[4] = (int)ArgumentsLength;
+			ThreadToStart.CpuThreadState.GPR[5] = (int)ArgumentsPointer;
+			ThreadToStart.CurrentStatus = HleThread.Status.Ready;
 
 			// Schedule new thread?
 			CpuThreadState.Yield();

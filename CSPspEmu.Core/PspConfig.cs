@@ -24,11 +24,19 @@ namespace CSPspEmu.Core
 		public bool NoticeUnimplementedGpuCommands = false;
 
 		//public bool UseFastAndUnsaferMemory = true;
-		public bool UseFastAndUnsaferMemory = false;
+		//public bool UseFastAndUnsaferMemory = false;
+		public bool UseFastAndUnsaferMemory = true;
 
 		/// <summary>
 		/// Writes a line each time a JAL is executed
 		/// </summary>
 		public bool TraceJal = false;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool DebugThreadSwitching = false;
+
+		//public bool TraceJal = true;
 	}
 }

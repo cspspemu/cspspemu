@@ -19,7 +19,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 			//foreach (var Partition in HleState.MemoryManager.RootPartition.ChildPartitions) Console.WriteLine(Partition);
 			//return 24 * 1024 * 1024;
 
-			return HleState.MemoryManager.RootPartition.ChildPartitions
+			return HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).ChildPartitions
 				.Where(Partition => !Partition.Allocated)
 				.OrderByDescending(Partition => Partition.Size)
 				.First()
@@ -48,22 +48,15 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// <param name="Address">If type is PSP_SMEM_Addr, then addr specifies the lowest address allocate the block from. If not, the alignment size.</param>
 		/// <returns>The UID of the new block, or if less than 0 an error.</returns>
 		[HlePspFunction(NID = 0x237DBD4F, FirmwareVersion = 150)]
-		public int sceKernelAllocPartitionMemory(int PartitionId, string Name, HleMemoryManager.BlockTypeEnum Type, int Size, /* void* */uint Address)
+		public int sceKernelAllocPartitionMemory(HleMemoryManager.Partitions PartitionId, string Name, HleMemoryManager.BlockTypeEnum Type, int Size, /* void* */uint Address)
 		{
 			if (Type != HleMemoryManager.BlockTypeEnum.Low)
 			{
 				throw(new NotImplementedException());
 			}
 
-			if (PartitionId != 2)
-			{
-				throw (new NotImplementedException());
-			}
-
-			;
-
 			return (int)HleState.MemoryManager.MemoryPartitionsUid.Create(
-				HleState.MemoryManager.RootPartition.Allocate(Size, MemoryPartition.Anchor.Low)
+				HleState.MemoryManager.GetPartition(PartitionId).Allocate(Size, MemoryPartition.Anchor.Low)
 			);
 
 			/*

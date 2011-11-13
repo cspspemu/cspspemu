@@ -113,6 +113,14 @@ namespace CSPspEmu.Hle.Managers
 				Current.CurrentStatus = HleThread.Status.Running;
 				try
 				{
+					if (Processor.PspConfig.DebugThreadSwitching)
+					{
+						ConsoleUtils.SaveRestoreConsoleState(() =>
+						{
+							Console.ForegroundColor = ConsoleColor.Yellow;
+							Console.WriteLine("Execute: {0} : PC: 0x{1:X}", NextThread, NextThread.CpuThreadState.PC);
+						});
+					}
 					NextThread.Step();
 				}
 				finally

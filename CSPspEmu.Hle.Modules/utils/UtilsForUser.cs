@@ -44,7 +44,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// <param name="TimeVal"></param>
 		/// <param name="TimeZone"></param>
 		/// <returns></returns>
-		[HlePspFunction(NID = 0x71EC4271, FirmwareVersion = 150)]
+		[HlePspFunction(NID = 0x71EC4271, FirmwareVersion = 150, SkipLog = true)]
 		public int sceKernelLibcGettimeofday(TimeValStruct* TimeVal, TimeZoneStruct* TimeZone)
 		{
 			if (TimeVal != null)

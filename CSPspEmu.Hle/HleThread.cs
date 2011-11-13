@@ -72,6 +72,7 @@ namespace CSPspEmu.Hle
 				while (true)
 				{
 					//Debug.WriteLine("Thread({0:X}) : PC: {1:X}", this.Id, CpuThreadState.PC);
+					//Console.WriteLine("PC:{0:X}", CpuThreadState.PC);
 					GetDelegateAt(CpuThreadState.PC)(CpuThreadState);
 				}
 			}
@@ -131,6 +132,11 @@ namespace CSPspEmu.Hle
 			this.CurrentWaitType = WaitType;
 			this.WaitDescription = WaitDescription;
 			CpuThreadState.Yield();
+		}
+
+		public override string ToString()
+		{
+			return String.Format("HleThread(Id={0}, Name='{1}')", Id, Name);
 		}
 	}
 }

@@ -279,8 +279,36 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Count Leading Ones/Zeros in word.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void clz() { throw (new NotImplementedException()); }
-		public void clo() { throw (new NotImplementedException()); }
+		static public uint _clz_impl(uint x)
+		{
+			x = x - ((x >> 1) & 0x55555555);
+			x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
+			x = (x + (x >> 4)) & 0x0F0F0F0F;
+			x = x + (x << 8);
+			x = x + (x << 16);
+			return x >> 24;
+		}
+		static public uint _clo_impl(uint x)
+		{
+			return _clz_impl(~x);
+		}
+
+		public void clz()
+		{
+			MipsMethodEmiter.SaveGPR(RD, () =>
+			{
+				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_clz_impl"));
+			});
+		}
+		public void clo()
+		{
+			MipsMethodEmiter.SaveGPR(RD, () =>
+			{
+				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_clo_impl"));
+			});
+		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Word Swap Bytes Within Halfwords/Words.

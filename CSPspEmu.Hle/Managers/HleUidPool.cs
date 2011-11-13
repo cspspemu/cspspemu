@@ -10,8 +10,16 @@ namespace CSPspEmu.Hle.Managers
 		protected int LastId = 1;
 		protected Dictionary<int, TType> Items = new Dictionary<int, TType>();
 
-		public HleUidPool()
+		public HleUidPool(int FirstId = 1)
 		{
+			this.LastId = FirstId;
+		}
+
+		public TType Set(int Id, TType Value)
+		{
+			Items[Id] = Value;
+			if (LastId < Id + 1) LastId = Id + 1;
+			return Value;
 		}
 
 		public TType Get(int Id)

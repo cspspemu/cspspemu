@@ -172,7 +172,7 @@ namespace CSPspEmu.Sandbox
 			Loader.Load(
 				ElfLoadStream,
 				MemoryStream,
-				HleState.MemoryManager.RootPartition,
+				HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User),
 				HleState.ModuleManager
 			);
 
@@ -185,7 +185,7 @@ namespace CSPspEmu.Sandbox
 			var MainThread = HleState.ThreadManager.Create();
 			MainThread.CpuThreadState.PC = Loader.InitInfo.PC;
 			MainThread.CpuThreadState.GP = Loader.InitInfo.GP;
-			MainThread.CpuThreadState.SP = HleState.MemoryManager.RootPartition.Allocate(0x1000, MemoryPartition.Anchor.High).Low & (uint)(~(uint)0x77);
+			MainThread.CpuThreadState.SP = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Allocate(0x1000, MemoryPartition.Anchor.High).High & (uint)(~(uint)0x77);
 			MainThread.CpuThreadState.K0 = MainThread.CpuThreadState.SP;
 			MainThread.CpuThreadState.RA = (uint)0x08000000;
 			MainThread.CpuThreadState.GPR[4] = (int)argc;
@@ -222,14 +222,6 @@ namespace CSPspEmu.Sandbox
 				nop
 			");
 
-			CpuProcessor.RegisterNativeSyscall(0x7777, (Code, CpuThreadState) =>
-			{
-				var SleepThread = HleState.ThreadManager.Current;
-				SleepThread.CurrentStatus = HleThread.Status.Waiting;
-				SleepThread.CurrentWaitType = HleThread.WaitType.None;
-				CpuThreadState.Yield();
-			});
-
 			//var ThreadManForUser = HleState.ModuleManager.GetModule<ThreadManForUser>();
 
 			RegisterModuleSyscall<ThreadManForUser>(0x206D, "sceKernelCreateThread");
@@ -253,6 +245,7 @@ namespace CSPspEmu.Sandbox
 			RegisterModuleSyscall<Emulator>(0x1013, "emitMemoryBlock");
 			RegisterModuleSyscall<Emulator>(0x1014, "emitHex");
 			RegisterModuleSyscall<Emulator>(0x1015, "emitUInt");
+			RegisterModuleSyscall<Emulator>(0x7777, "waitThreadForever");
 		}
 
 		void CreateNewHleState() {
@@ -353,7 +346,9 @@ namespace CSPspEmu.Sandbox
 							CpuTaskQueue.HandleEnqueued();
 							if (!CpuProcessor.IsRunning) break;
 							HleState.PspRtc.Update();
-							HleState.ThreadManager.StepNext();
+							{
+								HleState.ThreadManager.StepNext();
+							}
 						}
 					}
 					finally
@@ -367,10 +362,12 @@ namespace CSPspEmu.Sandbox
 					{
 						Console.ForegroundColor = ConsoleColor.Red;
 
-						Console.WriteLine(Exception);
-
 						try
 						{
+							Console.WriteLine("Error on thread {0}", HleState.ThreadManager.Current);
+
+							Console.WriteLine(Exception);
+
 							HleState.ThreadManager.Current.CpuThreadState.DumpRegisters();
 
 							Console.WriteLine(
@@ -379,8 +376,9 @@ namespace CSPspEmu.Sandbox
 								HleState.ThreadManager.Current.CpuThreadState.RA
 							);
 						}
-						catch
+						catch (Exception Exception2)
 						{
+							Console.WriteLine("{0}", Exception2);
 						}
 					});
 					//throw (new Exception("Unhandled Exception " + Exception.ToString(), Exception));
@@ -393,18 +391,18 @@ namespace CSPspEmu.Sandbox
 		{
 			//LoadFile(@"C:\juegos\jpcsp2\demos\ortho.pbp");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\cpu\cpu\cpu.elf");
-			LoadFile(@"C:\projects\pspemu\pspautotests\tests\malloc\malloc.elf");
+			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\malloc\malloc.elf");
 			
 			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\args.elf");
 			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\alu.elf");
 			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\fpu.elf");
 			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\malloc.elf");
 
-			//LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
-			//PspConfig.ShowInstructionStats = true;
-			PspConfig.DebugSyscalls = true;
-
+			LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
 			//LoadFile(@"../../../TestInput/minifire.elf");
+			//PspConfig.ShowInstructionStats = true;
+			//PspConfig.DebugSyscalls = true;
+
 			//LoadFile(@"../../../TestInput/HelloWorld.elf");
 			//LoadFile(@"../../../TestInput/HelloWorldPSP.elf");
 			//LoadFile(@"../../../TestInput/counter.elf");
