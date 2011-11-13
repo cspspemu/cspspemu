@@ -67,7 +67,19 @@ namespace CSPspEmu.Hle.Managers
 
 		public Action<CpuThreadState> GetModuleDelegate<TType>(String FunctionName) where TType : HleModuleHost
 		{
-			return GetModule<TType>().DelegatesByName[FunctionName];
+			var Module = GetModule<TType>();
+			var DelegatesByName = Module.DelegatesByName;
+			if (!DelegatesByName.ContainsKey(FunctionName))
+			{
+				throw (new KeyNotFoundException(
+					String.Format(
+						"Can't find method '{0}' on module '{1}'",
+						FunctionName,
+						Module.GetType().Name
+					)
+				));
+			}
+			return DelegatesByName[FunctionName];
 		}
 
 		public uint AllocDelegateSlot(Action<CpuThreadState> Action, string Info)

@@ -40,6 +40,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		private void _save_i(OpCode OpCode)
 		{
+			if (!(MipsMethodEmiter.Processor.Memory is FastPspMemory))
+			{
+				MipsMethodEmiter.SavePC(PC);
+			}
+
 			_save_common(() =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
@@ -50,7 +55,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Load Byte/Half word/Word (Left/Right/Unsigned).
 		public void lb() { _load_i(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I1); }); }
 		public void lh() { _load_i(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I2); }); }
-		public void lw() { _load_i(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I4); }); }
+		public void lw() {
+			//MipsMethodEmiter.ILGenerator.EmitWriteLine(String.Format("PC(0x{0:X}) : LW: rt={1}, rs={2}, imm={3}", PC, RT, RS, Instruction.IMM));
+			_load_i(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I4); });
+		}
 		/*
 		 * registers[instruction.RT] = (
 		 *     (registers[instruction.RT] & 0x_0000_FFFF) |
@@ -121,9 +129,43 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Store Byte/Half word/Word (Left/Right).
 		public void sb() { _save_i(OpCodes.Stind_I1); }
 		public void sh() { _save_i(OpCodes.Stind_I2); }
-		public void sw() { _save_i(OpCodes.Stind_I4); }
-		public void swl() { throw (new NotImplementedException()); }
-		public void swr() { throw (new NotImplementedException()); }
+		public void sw()
+		{
+			//MipsMethodEmiter.ILGenerator.EmitWriteLine(String.Format("PC(0x{0:X}) : SW: rt={1}, rs={2}, imm={3}", PC, RT, RS, Instruction.IMM));
+			_save_i(OpCodes.Stind_I4);
+		}
+		public void swl()
+		{
+			MipsMethodEmiter._getmemptr(() =>
+			{
+				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM - 1);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+			});
+
+			MipsMethodEmiter.LoadGPR_Unsigned(RT);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 16);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shr);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0x0000FFFF);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I4);
+		}
+		public void swr()
+		{
+			MipsMethodEmiter._getmemptr(() =>
+			{
+				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM - 0);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+			});
+
+			MipsMethodEmiter.LoadGPR_Unsigned(RT);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shr);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0x0000FFFF);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I4);
+		}
 
 		// Load Linked word.
 		// Store Conditional word.

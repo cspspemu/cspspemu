@@ -34,12 +34,14 @@ namespace CSPspEmu.Core.Cpu
 
 		public Action<CpuThreadState> TryGetMethodAt(uint PC)
 		{
+			if (PC < PspMemory.MainOffset) throw (new PspMemory.InvalidAddressException(PC));
 			uint Index = (PC - PspMemory.MainOffset) / 4;
 			return Methods2[Index];
 		}
 
 		public void SetMethodAt(uint PC, Action<CpuThreadState> Action)
 		{
+			if (PC < PspMemory.MainOffset) throw (new PspMemory.InvalidAddressException(PC));
 			uint Index = (PC - PspMemory.MainOffset) / 4;
 			Methods2[Index] = Action;
 			MethodsInList.Add(Index);

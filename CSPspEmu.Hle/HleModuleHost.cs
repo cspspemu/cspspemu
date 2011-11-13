@@ -66,6 +66,7 @@ namespace CSPspEmu.Hle
 		{
 			var MipsMethodEmiter = new MipsMethodEmiter(HleState.MipsEmiter, HleState.CpuProcessor);
 			int GprIndex = 4;
+			int FprIndex = 0;
 
 			var NotImplementedAttribute = (HlePspNotImplementedAttribute)MethodInfo.GetCustomAttributes(typeof(HlePspNotImplementedAttribute), true).FirstOrDefault();
 			bool NotImplemented = (NotImplementedAttribute != null) ? NotImplementedAttribute.Notice : false;
@@ -138,6 +139,20 @@ namespace CSPspEmu.Hle
 						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
 						GprIndex += 2;
 					}
+					// A float register.
+					else if (ParameterType == typeof(float))
+					{
+						ParamInfoList.Add(new ParamInfo()
+						{
+							ParameterName = ParameterInfo.Name,
+							RegisterType = ParamInfo.RegisterTypeEnum.Fpr,
+							RegisterIndex = FprIndex,
+							ParameterType = ParameterType,
+						});
+
+						MipsMethodEmiter.LoadFPR(FprIndex);
+						FprIndex++;
+					}
 					// An integer register
 					else
 					{
@@ -205,9 +220,11 @@ namespace CSPspEmu.Hle
 						Console.Write("{0}:", ParamInfo.ParameterName);
 						switch (ParamInfo.RegisterType)
 						{
+							case HleModuleHost.ParamInfo.RegisterTypeEnum.Fpr:
 							case HleModuleHost.ParamInfo.RegisterTypeEnum.Gpr:
-								uint Value4 = (uint)CpuThreadState.GPR[ParamInfo.RegisterIndex];
-								Console.Write("{0}", ToNormalizedTypeString(ParamInfo.ParameterType, CpuThreadState, Value4));
+								uint Int4 = (uint)CpuThreadState.GPR[ParamInfo.RegisterIndex];
+								uint Float4 = (uint)CpuThreadState.FPR[ParamInfo.RegisterIndex];
+								Console.Write("{0}", ToNormalizedTypeString(ParamInfo.ParameterType, CpuThreadState, Int4, Float4));
 								break;
 							default:
 								throw(new NotImplementedException());
@@ -227,14 +244,14 @@ namespace CSPspEmu.Hle
 				{
 					if (Trace)
 					{
-						Console.WriteLine(" : {0}", ToNormalizedTypeString(MethodInfo.ReturnType, CpuThreadState, (uint)CpuThreadState.GPR[2]));
+						Console.WriteLine(" : {0}", ToNormalizedTypeString(MethodInfo.ReturnType, CpuThreadState, (uint)CpuThreadState.GPR[2], (float)CpuThreadState.FPR[0]));
 						Console.WriteLine("");
 					}
 				}
 			};
 		}
 
-		static public string ToNormalizedTypeString(Type ParameterType, CpuThreadState CpuThreadState, uint Value4)
+		static public string ToNormalizedTypeString(Type ParameterType, CpuThreadState CpuThreadState, uint Int4, float Float4)
 		{
 			if (ParameterType == typeof(void))
 			{
@@ -243,25 +260,30 @@ namespace CSPspEmu.Hle
 
 			if (ParameterType == typeof(string))
 			{
-				return String.Format("'{0}'", StringFromAddress(CpuThreadState, Value4));
+				return String.Format("'{0}'", StringFromAddress(CpuThreadState, Int4));
 			}
 
 			if (ParameterType == typeof(int))
 			{
-				return String.Format("{0}", (int)Value4);
+				return String.Format("{0}", (int)Int4);
 			}
 
 			if (ParameterType.IsEnum)
 			{
-				return ParameterType.GetEnumName(Value4);
+				return ParameterType.GetEnumName(Int4);
 			}
 
 			if (ParameterType.IsPointer)
 			{
-				return "0x%08X".Sprintf(CpuThreadState.CpuProcessor.Memory.PointerToPspAddress((void*)Value4));
+				return "0x%08X".Sprintf(CpuThreadState.CpuProcessor.Memory.PointerToPspAddress((void*)Int4));
 			}
 
-			return "0x%08X".Sprintf(Value4);
+			if (ParameterType == typeof(float))
+			{
+				return String.Format("{0}", Float4);
+			}
+
+			return "0x%08X".Sprintf(Int4);
 		}
 	}
 }

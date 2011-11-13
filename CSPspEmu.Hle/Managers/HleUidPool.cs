@@ -7,26 +7,26 @@ namespace CSPspEmu.Hle.Managers
 {
 	public class HleUidPool<TType>
 	{
-		protected uint LastId = 0;
-		protected Dictionary<uint, TType> Items = new Dictionary<uint, TType>();
+		protected int LastId = 1;
+		protected Dictionary<int, TType> Items = new Dictionary<int, TType>();
 
 		public HleUidPool()
 		{
 		}
 
-		public TType Get(uint Id)
+		public TType Get(int Id)
 		{
 			return Items[Id];
 		}
 
-		public uint Create(TType Item)
+		public int Create(TType Item)
 		{
 			var Id = LastId++;
 			Items[Id] = Item;
 			return Id;
 		}
 
-		public void Remove(uint Id)
+		public void Remove(int Id)
 		{
 			Items.Remove(Id);
 		}

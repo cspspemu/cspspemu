@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpUtils.Drawing", "..\c
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Core.Gpu.Impl.Opengl", "CSPspEmu.Core.Gpu.Impl.Opengl\CSPspEmu.Core.Gpu.Impl.Opengl.csproj", "{72F560E3-9101-426B-B3E5-B83B78E536DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.TestsAuto", "CSPspEmu.AutoTests\CSPspEmu.TestsAuto.csproj", "{AD6A52A7-E83F-48E7-A85F-232D738EC949}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = CSPspEmu.vsmdi
@@ -133,6 +135,16 @@ Global
 		{9B217880-48AE-43B6-AE1F-DC732FCCBC7A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{9B217880-48AE-43B6-AE1F-DC732FCCBC7A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9B217880-48AE-43B6-AE1F-DC732FCCBC7A}.Release|x86.ActiveCfg = Release|Any CPU
+		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Release|x86.ActiveCfg = Release|Any CPU
 		{B4C3D929-6A7E-4A71-B896-D2C1C36C4554}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{B4C3D929-6A7E-4A71-B896-D2C1C36C4554}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{B4C3D929-6A7E-4A71-B896-D2C1C36C4554}.Debug|Mixed Platforms.Build.0 = Debug|x86

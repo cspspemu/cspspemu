@@ -37,8 +37,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Thread.Stack = HleState.MemoryManager.RootPartition.Allocate(StackSize, MemoryPartition.Anchor.High);
 			Thread.CpuThreadState.PC = (uint)EntryPoint;
 			Thread.CpuThreadState.GP = (uint)CpuThreadState.GP;
-			Thread.CpuThreadState.SP = (uint)(Thread.Stack.High);
-			Thread.CpuThreadState.RA = (uint)0;
+			Thread.CpuThreadState.SP = (uint)(Thread.Stack.High & ~(uint)0xFF);
+			Thread.CpuThreadState.RA = (uint)0x08000000;
+			//Thread.CpuThreadState.RA = (uint)0;
+
+			//Console.WriteLine("STACK: {0:X}", Thread.CpuThreadState.SP);
 
 			return (uint)Thread.Id;
 		}

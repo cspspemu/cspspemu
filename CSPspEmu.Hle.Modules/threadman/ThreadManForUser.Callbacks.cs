@@ -23,7 +23,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="arg">Argument for the callback ?</param>
 		/// <returns>&gt;= 0 A callback id which can be used in subsequent functions, < 0 an error.</returns>
 		[HlePspFunction(NID = 0xE81CAF8F, FirmwareVersion = 150)]
-		public uint sceKernelCreateCallback(string Name, SceKernelCallbackFunction Function, uint Argument)
+		public int sceKernelCreateCallback(string Name, SceKernelCallbackFunction Function, uint Argument)
 		{
 			return HleState.CallbackManager.Callbacks.Create(new HleCallback()
 			{

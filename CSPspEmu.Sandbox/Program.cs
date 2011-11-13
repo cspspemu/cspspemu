@@ -30,6 +30,7 @@ using System.Reflection;
 using CSPspEmu.Hle.Formats;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Gpu.Impl.Opengl;
+using CSPspEmu.Hle.Modules.emulator;
 
 namespace CSPspEmu.Sandbox
 {
@@ -203,6 +204,15 @@ namespace CSPspEmu.Sandbox
 			RegisterSyscalls();
 		}
 
+		void RegisterModuleSyscall<TType>(int SyscallCode, string FunctionName) where TType : HleModuleHost
+		{
+			var Delegate = HleState.ModuleManager.GetModuleDelegate<TType>(FunctionName);
+			CpuProcessor.RegisterNativeSyscall(SyscallCode, (Code, CpuThreadState) =>
+			{
+				Delegate(CpuThreadState);
+			});
+		}
+
 		void RegisterSyscalls()
 		{
 			new MipsAssembler(MemoryStream).Assemble(@"
@@ -220,57 +230,29 @@ namespace CSPspEmu.Sandbox
 				CpuThreadState.Yield();
 			});
 
-			var ThreadManForUser = HleState.ModuleManager.GetModule<ThreadManForUser>();
+			//var ThreadManForUser = HleState.ModuleManager.GetModule<ThreadManForUser>();
 
-			CpuProcessor.RegisterNativeSyscall(0x206D, (Code, CpuThreadState) =>
-			{
-				HleState.ModuleManager.GetModuleDelegate<ThreadManForUser>("sceKernelCreateThread")(CpuThreadState);
-			});
+			RegisterModuleSyscall<ThreadManForUser>(0x206D, "sceKernelCreateThread");
+			RegisterModuleSyscall<ThreadManForUser>(0x206F, "sceKernelStartThread");
+			RegisterModuleSyscall<ThreadManForUser>(0x2071, "sceKernelExitDeleteThread");
 
-			CpuProcessor.RegisterNativeSyscall(0x206F, (Code, CpuThreadState) =>
-			{
-				HleState.ModuleManager.GetModuleDelegate<ThreadManForUser>("sceKernelStartThread")(CpuThreadState);
-			});
+			RegisterModuleSyscall<UtilsForUser>(0x20BF, "sceKernelUtilsMt19937Init");
+			RegisterModuleSyscall<UtilsForUser>(0x20C0, "sceKernelUtilsMt19937UInt");
 
-			CpuProcessor.RegisterNativeSyscall(0x2071, (Code, CpuThreadState) =>
-			{
-				HleState.ModuleManager.GetModuleDelegate<ThreadManForUser>("sceKernelExitDeleteThread")(CpuThreadState);
-			});
+			RegisterModuleSyscall<sceDisplay>(0x213A, "sceDisplaySetMode");
+			RegisterModuleSyscall<sceDisplay>(0x2147, "sceDisplayWaitVblankStart");
+			RegisterModuleSyscall<sceDisplay>(0x213F, "sceDisplaySetFrameBuf");
 
-			CpuProcessor.RegisterNativeSyscall(0x20BF, (Code, CpuThreadState) =>
-			{
-				HleState.ModuleManager.GetModuleDelegate<UtilsForUser>("sceKernelUtilsMt19937Init")(CpuThreadState);
-			});
+			RegisterModuleSyscall<LoadExecForUser>(0x20EB, "sceKernelExitGame");
+			
+			RegisterModuleSyscall<sceCtrl>(0x2150, "sceCtrlPeekBufferPositive");
 
-			CpuProcessor.RegisterNativeSyscall(0x20C0, (Code, CpuThreadState) =>
-			{
-				HleState.ModuleManager.GetModuleDelegate<UtilsForUser>("sceKernelUtilsMt19937UInt")(CpuThreadState);
-			});
-
-			CpuProcessor.RegisterNativeSyscall(0x213A, (Code, CpuThreadState) =>
-			{
-				HleState.ModuleManager.GetModuleDelegate<sceDisplay>("sceDisplaySetMode")(CpuThreadState);
-			});
-
-			CpuProcessor.RegisterNativeSyscall(0x2147, (Code, CpuThreadState) =>
-			{
-				HleState.ModuleManager.GetModuleDelegate<sceDisplay>("sceDisplayWaitVblankStart")(CpuThreadState);
-			});
-
-			CpuProcessor.RegisterNativeSyscall(0x213f, (Code, CpuThreadState) =>
-			{
-				HleState.ModuleManager.GetModuleDelegate<sceDisplay>("sceDisplaySetFrameBuf")(CpuThreadState);
-			});
-
-			CpuProcessor.RegisterNativeSyscall(0x20eb, (Code, CpuThreadState) =>
-			{
-				HleState.ModuleManager.GetModuleDelegate<LoadExecForUser>("sceKernelExitGame")(CpuThreadState);
-			});
-
-			CpuProcessor.RegisterNativeSyscall(0x2150, (Code, CpuThreadState) =>
-			{
-				HleState.ModuleManager.GetModuleDelegate<sceCtrl>("sceCtrlPeekBufferPositive")(CpuThreadState);
-			});
+			RegisterModuleSyscall<Emulator>(0x1010, "emitInt");
+			RegisterModuleSyscall<Emulator>(0x1011, "emitFloat");
+			RegisterModuleSyscall<Emulator>(0x1012, "emitString");
+			RegisterModuleSyscall<Emulator>(0x1013, "emitMemoryBlock");
+			RegisterModuleSyscall<Emulator>(0x1014, "emitHex");
+			RegisterModuleSyscall<Emulator>(0x1015, "emitUInt");
 		}
 
 		void CreateNewHleState() {
@@ -410,7 +392,14 @@ namespace CSPspEmu.Sandbox
 		protected void OnInit()
 		{
 			//LoadFile(@"C:\juegos\jpcsp2\demos\ortho.pbp");
-			LoadFile(@"C:\projects\pspemu\pspautotests\tests\cpu\cpu\cpu.elf");
+			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\cpu\cpu\cpu.elf");
+			LoadFile(@"C:\projects\pspemu\pspautotests\tests\malloc\malloc.elf");
+			
+			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\args.elf");
+			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\alu.elf");
+			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\fpu.elf");
+			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\malloc.elf");
+
 			//LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
 			//PspConfig.ShowInstructionStats = true;
 			PspConfig.DebugSyscalls = true;

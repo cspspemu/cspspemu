@@ -35,7 +35,7 @@ namespace CSPspEmu.Hle.Modules.loadexec
 		/// <param name="CallbackId">Callback id</param>
 		/// <returns>&lt; 0 on error</returns>
 		[HlePspFunction(NID = 0x4AC57943, FirmwareVersion = 150)]
-		public int sceKernelRegisterExitCallback(uint CallbackId)
+		public int sceKernelRegisterExitCallback(int CallbackId)
 		{
 			var Callback = HleState.CallbackManager.Callbacks.Get(CallbackId);
 			//throw(new NotImplementedException());

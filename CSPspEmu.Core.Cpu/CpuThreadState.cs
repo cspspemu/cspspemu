@@ -274,7 +274,7 @@ namespace CSPspEmu.Core.Cpu
 			for (int n = 0; n < 32; n++)
 			{
 				GPR[n] = 0;
-				FPR[n] = 0;
+				FPR[n] = 0.0f;
 			}
 		}
 
@@ -345,6 +345,14 @@ namespace CSPspEmu.Core.Cpu
 			{
 				if (n % 4 != 0) Console.Write(", ");
 				Console.Write("r{0,2} : {1:X}", n, "0x%08X".Sprintf(GPR[n]));
+				if (n % 4 == 3) Console.WriteLine();
+			}
+
+			Console.WriteLine();
+			for (int n = 0; n < 32; n++)
+			{
+				if (n % 4 != 0) Console.Write(", ");
+				Console.Write("f{0,2} : {1}", n, FPR[n]);
 				if (n % 4 == 3) Console.WriteLine();
 			}
 			Console.WriteLine();
