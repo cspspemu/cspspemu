@@ -14,6 +14,9 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		[HlePspFunction(NID = 0xA291F107, FirmwareVersion = 150)]
 		public int sceKernelMaxFreeMemSize()
 		{
+			//foreach (var Partition in HleState.MemoryManager.RootPartition.ChildPartitions) Console.WriteLine(Partition);
+			//return 24 * 1024 * 1024;
+
 			return HleState.MemoryManager.RootPartition.ChildPartitions
 				.Where(Partition => !Partition.Allocated)
 				.OrderByDescending(Partition => Partition.Size)
@@ -28,6 +31,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// <param name="blockid">UID of the block to free.</param>
 		/// <returns>? on success, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0x237DBD4F, FirmwareVersion = 150)]
+		//[HlePspNotImplemented]
 		public int sceKernelFreePartitionMemory(uint blockid)
 		{
 			//reinterpret!(MemorySegment)(blockid).free();

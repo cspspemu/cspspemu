@@ -184,7 +184,7 @@ namespace CSPspEmu.Sandbox
 			var MainThread = HleState.ThreadManager.Create();
 			MainThread.CpuThreadState.PC = Loader.InitInfo.PC;
 			MainThread.CpuThreadState.GP = Loader.InitInfo.GP;
-			MainThread.CpuThreadState.SP = HleState.MemoryManager.RootPartition.Allocate(0x1000, MemoryPartition.Anchor.High).High;
+			MainThread.CpuThreadState.SP = HleState.MemoryManager.RootPartition.Allocate(0x1000, MemoryPartition.Anchor.High).Low & (uint)(~(uint)0x77);
 			MainThread.CpuThreadState.K0 = MainThread.CpuThreadState.SP;
 			MainThread.CpuThreadState.RA = (uint)0x08000000;
 			MainThread.CpuThreadState.GPR[4] = (int)argc;
@@ -287,8 +287,16 @@ namespace CSPspEmu.Sandbox
 			PspRtc = new PspRtc();
 			PspDisplay = new PspDisplay(PspRtc);
 			PspController = new PspController();
-			Memory = new FastPspMemory();
-			//Memory = new NormalPspMemory();
+
+			if (PspConfig.UseFastAndUnsaferMemory)
+			{
+				Memory = new FastPspMemory();
+			}
+			else
+			{
+				Memory = new NormalPspMemory();
+			}
+
 			MemoryStream = new PspMemoryStream(Memory);
 			CpuProcessor = new CpuProcessor(PspConfig, Memory);
 			GpuImpl = new OpenglGpuImpl(PspConfig, Memory);
@@ -403,13 +411,15 @@ namespace CSPspEmu.Sandbox
 		{
 			//LoadFile(@"C:\juegos\jpcsp2\demos\ortho.pbp");
 			LoadFile(@"C:\projects\pspemu\pspautotests\tests\cpu\cpu\cpu.elf");
+			//LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
+			//PspConfig.ShowInstructionStats = true;
+			PspConfig.DebugSyscalls = true;
 
 			//LoadFile(@"../../../TestInput/minifire.elf");
 			//LoadFile(@"../../../TestInput/HelloWorld.elf");
 			//LoadFile(@"../../../TestInput/HelloWorldPSP.elf");
 			//LoadFile(@"../../../TestInput/counter.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\string\string.elf");
-			//LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
 			//LoadFile(@"C:\juegos\jpcsp2\demos\cube.pbp");
 			//LoadFile(@"C:\juegos\jpcsp2\demos\nehetutorial02.pbp");
 			//LoadFile(@"C:\juegos\jpcsp2\demos\fputest.elf");

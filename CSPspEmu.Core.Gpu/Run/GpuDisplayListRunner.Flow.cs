@@ -100,6 +100,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		[GpuOpCodesNotImplemented]
 		public void OP_FINISH()
 		{
+			GpuDisplayList.GpuProcessor.GpuImpl.Finish(GpuDisplayList.GpuStateStructPointer);
 			//gpu.storeFrameBuffer();
 			/*
 			gpu.impl.flush();
@@ -123,7 +124,8 @@ namespace CSPspEmu.Core.Gpu.Run
 			//displayList.ret();
 		}
 
-		enum GU_BEHAVIOR {
+		enum GU_BEHAVIOR
+		{
 			GU_BEHAVIOR_SUSPEND = 1,
 			GU_BEHAVIOR_CONTINUE = 2
 		}

@@ -347,7 +347,7 @@ namespace CSPspEmu.Core.Tests
 
 			Assert.AreEqual(0, CpuThreadState.GPR[1]);
 			Assert.AreEqual(1, CpuThreadState.GPR[2]);
-			Assert.AreEqual(1, CpuThreadState.GPR[3]);
+			Assert.AreEqual(0, CpuThreadState.GPR[3]);
 			Assert.AreEqual(0, CpuThreadState.GPR[4]);
 		}
 

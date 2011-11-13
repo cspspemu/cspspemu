@@ -55,7 +55,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void sltu() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RS, RT, OpCodes.Clt_Un);  }
 
 		public void slti() { MipsMethodEmiter.OP_2REG_IMM_Signed(RT, RS, (short)Instruction.IMM, OpCodes.Clt); }
-		public void sltiu() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RT, RS, (uint)Instruction.IMM, OpCodes.Clt_Un); }
+		public void sltiu() {
+			//Console.WriteLine("SLTIU: {0} : {1}", Instruction.IMM, (uint)Instruction.IMM);
+			MipsMethodEmiter.OP_2REG_IMM_Unsigned(RT, RS, (uint)Instruction.IMM, OpCodes.Clt_Un);
+		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Load Upper Immediate.

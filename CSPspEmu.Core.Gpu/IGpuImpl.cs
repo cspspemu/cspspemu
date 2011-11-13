@@ -9,5 +9,6 @@ namespace CSPspEmu.Core.Gpu
 	unsafe public interface IGpuImpl
 	{
 		void Prim(GpuStateStruct* GpuState, PrimitiveType PrimitiveType, ushort VertexCount);
+		void Finish(GpuStateStruct* GpuState);
 	}
 }

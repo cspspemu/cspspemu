@@ -22,5 +22,8 @@ namespace CSPspEmu.Core
 
 		//public bool NoticeUnimplementedGpuCommands = true;
 		public bool NoticeUnimplementedGpuCommands = false;
+
+		//public bool UseFastAndUnsaferMemory = true;
+		public bool UseFastAndUnsaferMemory = false;
 	}
 }

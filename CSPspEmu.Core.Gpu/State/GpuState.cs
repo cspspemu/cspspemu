@@ -16,19 +16,28 @@ namespace CSPspEmu.Core.Gpu.State
 		public uint X, Y;
 	}
 
+	public struct Vector3f
+	{
+		public float X, Y, Z;
+	}
+
 	public struct ViewportStruct
 	{
-		public float PX, PY, PZ;
-		public float SX, SY, SZ;
+		public Vector3f Position;
+		public Vector3f Scale;
 	}
 
 	public struct ColorfStruct
 	{
 		public float Red, Green, Blue, Alpha;
-	}
 
-	public struct LightingState
-	{
+		public void SetRGB(uint Params24)
+		{
+			Red = ((float)((Params24 >> 0) & 0xFF)) / 255.0f;
+			Green = ((float)((Params24 >> 8) & 0xFF)) / 255.0f;
+			Blue = ((float)((Params24 >> 16) & 0xFF)) / 255.0f;
+			Alpha = 1.0f;
+		}
 	}
 
 	public enum LogicalOperationEnum
@@ -135,8 +144,18 @@ namespace CSPspEmu.Core.Gpu.State
 		public ViewportStruct Viewport;
 		public PointI Offset;
 		public bool ToggleUpdateState;
+
+		/// <summary>
+		/// A set of flags related to the clearing mode. Generally which buffers to clear.
+		/// </summary>
 		public ClearBufferSet ClearFlags;
+
+		/// <summary>
+		/// When set, this will changes the Draw behaviour.
+		/// </summary>
 		public bool ClearingMode;
+
+
 		// Sub States.
 		public VertexStateStruct VertexState;
 

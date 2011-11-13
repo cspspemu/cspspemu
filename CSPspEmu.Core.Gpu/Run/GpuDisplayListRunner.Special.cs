@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -34,20 +35,20 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Base Address Register
 		public void OP_BASE()
 		{
-			GpuDisplayList.GpuStateStructPointer[0].BaseAddress = (Params24 << 8);
+			GpuState[0].BaseAddress = (Params24 << 8);
 		}
 
 		// Frame Buffer Pointer
 		public void OP_FBP()
 		{
-			GpuDisplayList.GpuStateStructPointer[0].DrawBufferState.LowAddress = Params24;
+			GpuState[0].DrawBufferState.LowAddress = Params24;
 		}
 
 		// Frame Buffer Width
 		public void OP_FBW()
 		{
-			GpuDisplayList.GpuStateStructPointer[0].DrawBufferState.HighAddress = Param8(16);
-			GpuDisplayList.GpuStateStructPointer[0].DrawBufferState.Width = Param16(0);
+			GpuState[0].DrawBufferState.HighAddress = Param8(16);
+			GpuState[0].DrawBufferState.Width = Param16(0);
 			//gpu.markBufferOp(BufferOperation.LOAD, BufferType.COLOR);
 		}
 
@@ -89,24 +90,16 @@ namespace CSPspEmu.Core.Gpu.Run
 		[GpuOpCodesNotImplemented]
 		public void OP_SCISSOR1()
 		{
-			/*
-			with (gpu.state) {
-				scissor.x1 = command.extract!(ushort,  0, 10);
-				scissor.y1 = command.extract!(ushort, 10, 20);
-			}
-			*/
+			GpuState[0].ClipPlaneState.Scissor.Left = BitUtils.Extract(Params24, 0, 10);
+			GpuState[0].ClipPlaneState.Scissor.Top = BitUtils.Extract(Params24, 10, 10);
 		}
 
 		// SCISSOR end (2)
 		[GpuOpCodesNotImplemented]
 		public void OP_SCISSOR2()
 		{
-			/*
-			with (gpu.state) {
-				scissor.x2 = command.extract!(ushort,  0, 10);
-				scissor.y2 = command.extract!(ushort, 10, 20);
-			}
-			*/
+			GpuState[0].ClipPlaneState.Scissor.Right = BitUtils.Extract(Params24, 0, 10);
+			GpuState[0].ClipPlaneState.Scissor.Bottom = BitUtils.Extract(Params24, 10, 10);
 		}
 
 		/**
@@ -131,6 +124,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		[GpuOpCodesNotImplemented]
 		public void OP_XSCALE()
 		{
+			GpuState[0].Viewport.Scale.X = Float1;
 			//gpu.state.viewport.sx = command.float1 * 2;
 		}
 		[GpuOpCodesNotImplemented]
@@ -144,15 +138,13 @@ namespace CSPspEmu.Core.Gpu.Run
 			//gpu.state.viewport.sz = command.extractFixedFloat!(0, 16);
 		}
 
-		[GpuOpCodesNotImplemented]
 		public void OP_XPOS()
 		{
-			//gpu.state.viewport.px = command.float1;
+			GpuState[0].Viewport.Position.X = Float1;
 		}
-		[GpuOpCodesNotImplemented]
 		public void OP_YPOS()
 		{
-			// gpu.state.viewport.py = command.float1;
+			GpuState[0].Viewport.Position.Y = Float1;
 		}
 		[GpuOpCodesNotImplemented]
 		public void OP_ZPOS()

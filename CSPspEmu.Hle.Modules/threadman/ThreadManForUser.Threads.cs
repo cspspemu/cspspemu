@@ -51,10 +51,15 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="ArgumentsPointer">Pointer to the arguments.</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xF475845D, FirmwareVersion = 150)]
-		public int sceKernelStartThread(CpuThreadState CpuThreadState, uint ThreadId, uint ArgumentsLength, void* ArgumentsPointer)
+		public int sceKernelStartThread(CpuThreadState CpuThreadState, uint ThreadId, uint ArgumentsLength, uint ArgumentsPointer)
 		{
-			HleState.ThreadManager.GetThreadById((int)ThreadId).CurrentStatus = HleThread.Status.Ready;
+			var Thread = HleState.ThreadManager.GetThreadById((int)ThreadId);
+			Thread.CpuThreadState.GPR[4] = (int)ArgumentsLength;
+			Thread.CpuThreadState.GPR[5] = (int)ArgumentsPointer;
+			Thread.CurrentStatus = HleThread.Status.Ready;
 
+			// Schedule new thread?
+			CpuThreadState.Yield();
 			return 0;
 		}
 

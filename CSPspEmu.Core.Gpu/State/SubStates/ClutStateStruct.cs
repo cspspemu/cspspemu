@@ -5,14 +5,16 @@ using System.Text;
 
 namespace CSPspEmu.Core.Gpu.State.SubStates
 {
-	public struct ClutStateStruct
+	unsafe public struct ClutStateStruct
 	{
+		public uint Address;
+		public uint Shift;
+		public uint Mask;
+		public uint Start;
+		public PspDisplay.PixelFormats Format;
+		public byte* Data;
 		/*
-		public uint address;
 		public PixelFormats format;
-		public uint shift;
-		public uint mask;
-		public uint start;
 		public ubyte[] data;
 
 		public int colorEntrySize() { return PixelFormatSize(format, 1); }

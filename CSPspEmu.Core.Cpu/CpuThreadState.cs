@@ -101,6 +101,9 @@ namespace CSPspEmu.Core.Cpu
 
 		public FCR31 Fcr31;
 
+		//public fixed uint PcStack[1024];
+		//public uint PcStackOffset;
+
 		// http://msdn.microsoft.com/en-us/library/ms253512(v=vs.80).aspx
 		// http://logos.cs.uic.edu/366/notes/mips%20quick%20tutorial.htm
 

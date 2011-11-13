@@ -23,6 +23,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		[GpuOpCodesNotImplemented]
 		public void OP_DMC()
 		{
+			GpuState[0].LightingState.DiffuseModelColor.SetRGB(Params24);
 			//gpu.state.diffuseModelColor.rgba[] = command.float4[];
 		}
 

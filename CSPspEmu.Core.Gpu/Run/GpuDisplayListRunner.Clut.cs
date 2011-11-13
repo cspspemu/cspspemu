@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -22,15 +23,17 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		// Clut Buffer Pointer (High)
 		// Clut LOAD
-		[GpuOpCodesNotImplemented]
 		public void OP_CBP()
 		{
-			//gpu.state.clut.address = (gpu.state.clut.address & 0xFF000000) | (command.param24 << 0);
+			GpuState[0].TextureMappingState.ClutState.Address
+				= (GpuState[0].TextureMappingState.ClutState.Address & 0xFF000000) | ((Params24 << 0) & 0x00FFFFFF);
+			;
 		}
-		[GpuOpCodesNotImplemented]
 		public void OP_CBPH()
 		{
-			//gpu.state.clut.address = (gpu.state.clut.address & 0x00FFFFFF) | (command.param24 << 8);
+			GpuState[0].TextureMappingState.ClutState.Address
+				= (GpuState[0].TextureMappingState.ClutState.Address & 0x00FFFFFF) | ((Params24 << 24) & 0xFF000000);
+			;
 		}
 		[GpuOpCodesNotImplemented]
 		public void OP_CLOAD()
@@ -66,21 +69,12 @@ namespace CSPspEmu.Core.Gpu.Run
 		///void sceGuClutMode(uint cpsm, uint shift, uint mask, uint a3); // OP_CMODE
 
 		// Clut MODE
-		[GpuOpCodesNotImplemented]
 		public void OP_CMODE()
 		{
-			/*
-			gpu.state.clut.format = command.extract!(PixelFormats, 0, 2);
-			gpu.state.clut.shift  = command.extract!(uint,  2, 5);
-			gpu.state.clut.mask   = command.extract!(uint,  8, 8);
-			gpu.state.clut.start  = command.extract!(uint, 16, 5);
-		
-			if (gpu.state.clut.format == PixelFormats.GU_PSM_5551) {
-				//gpu.state.clut.mask = 0x7;
-				//gpu.state.clut.start = 8;
-			}
-			//gpu.state.clut.start  = command.extract!(uint, 16, 5) << gpu.state.clut.shift;
-			*/
+			GpuState[0].TextureMappingState.ClutState.Format = (PspDisplay.PixelFormats)BitUtils.Extract(Params24, 0, 2);
+			GpuState[0].TextureMappingState.ClutState.Shift = (uint)BitUtils.Extract(Params24, 2, 5);
+			GpuState[0].TextureMappingState.ClutState.Mask = (uint)BitUtils.Extract(Params24, 8, 8);
+			GpuState[0].TextureMappingState.ClutState.Start = (uint)BitUtils.Extract(Params24, 16, 5);
 		}
 	}
 }

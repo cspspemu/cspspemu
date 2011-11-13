@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Gpu.State;
+using OpenTK.Graphics.OpenGL;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -40,10 +42,18 @@ namespace CSPspEmu.Core.Gpu.Run
 		 **/
 		// void sceGuClear(int flags);
 
-		[GpuOpCodesNotImplemented]
 		public void OP_CLEAR()
 		{
-
+			// Set flags and Start the clearing mode.
+			if ((Params24 & 1) != 0)
+			{
+				GpuState[0].ClearFlags = (ClearBufferSet)Param8(8);
+				GpuState[0].ClearingMode = true;
+			}
+			// Stop the clearing mode.
+			else {
+				GpuState[0].ClearingMode = false;
+			}
 		}
 
 		/**
@@ -118,7 +128,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Vertex Type
 		public void OP_VTYPE()
 		{
-			GpuDisplayList.GpuStateStructPointer[0].VertexState.Type.Value = Params24;
+			GpuState[0].VertexState.Type.Value = Params24;
 			//gpu.state.vertexType.v  = command.extract!(uint, 0, 24);
 			//writefln("VTYPE:%032b", command.param24);
 			//writefln("     :%d", gpu.state.vertexType.position);
@@ -128,16 +138,17 @@ namespace CSPspEmu.Core.Gpu.Run
 		public void OP_VADDR()
 		{
 			// + or |?
-			GpuDisplayList.GpuStateStructPointer[0].VertexAddress = (
+			GpuState[0].VertexAddress = (
 				GpuDisplayList.GpuStateStructPointer[0].BaseAddress | Params24
 			);
 		}
 
 		// Index List (Base Address)
-		[GpuOpCodesNotImplemented]
 		public void OP_IADDR()
 		{
-			//gpu.state.indexAddress = gpu.state.baseAddress + command.param24;
+			GpuState[0].IndexAddress = (
+				GpuDisplayList.GpuStateStructPointer[0].BaseAddress | Params24
+			);
 		}
 	
 		/*

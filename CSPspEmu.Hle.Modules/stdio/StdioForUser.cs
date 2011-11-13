@@ -7,7 +7,8 @@ namespace CSPspEmu.Hle.Modules.stdio
 {
 	public class StdioForUser : HleModuleHost
 	{
-		public enum StdHandle : int {
+		public enum StdHandle : int
+		{
 			In  = -1,
 			Out = -2,
 			Error = -3

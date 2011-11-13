@@ -45,6 +45,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		}
 		public void OP_PROJ()
 		{
+			Console.WriteLine("Proj: {0:X}, {1}", Params24, Float1);
 			GpuDisplayList.GpuStateStructPointer[0].VertexState.ProjectionMatrix.Write(Float1);
 		}
 

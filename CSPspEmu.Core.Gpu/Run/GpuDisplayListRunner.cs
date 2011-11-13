@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
+using CSPspEmu.Core.Gpu.State;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -19,6 +20,14 @@ namespace CSPspEmu.Core.Gpu.Run
 		public byte Param8(int Offset)
 		{
 			return (byte)(Params24 >> Offset);
+		}
+
+		public GpuStateStruct* GpuState
+		{
+			get
+			{
+				return GpuDisplayList.GpuStateStructPointer;
+			}
 		}
 
 		public float Float1

@@ -75,6 +75,11 @@ namespace CSPspEmu.Core
 			return PspAddressToPointer(Address);
 		}
 
+		public void CheckAndEnforceAddressValid(uint Address)
+		{
+			if (!IsAddressValid(Address)) throw(new InvalidAddressException(Address));
+		}
+
 		public bool IsAddressValid(uint _Address)
 		{
 			var Address = _Address & 0x1FFFFFFF;
