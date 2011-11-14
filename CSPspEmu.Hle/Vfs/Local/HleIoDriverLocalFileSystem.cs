@@ -9,11 +9,11 @@ namespace CSPspEmu.Hle.Vfs.Local
 {
 	public class HleIoDriverLocalFileSystem : IHleIoDriver
 	{
-		protected string LocalPath;
+		protected string BasePath;
 
-		public HleIoDriverLocalFileSystem(string LocalPath)
+		public HleIoDriverLocalFileSystem(string BasePath)
 		{
-			this.LocalPath = LocalPath;
+			this.BasePath = BasePath;
 		}
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 
 		protected string GetFullNormalizedAndSanitizedPath(string Path)
 		{
-			return LocalPath + "/" + Path;
+			return BasePath + "/" + GetSanitizedPath(Path);
 		}
 
 		public unsafe int IoInit()
@@ -83,7 +83,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 
 			try
 			{
-				HleIoDrvFileArg.FileArgument = File.Open(RealFileName, FileMode, FileAccess);
+				HleIoDrvFileArg.FileArgument = File.Open(RealFileName, FileMode, FileAccess, FileShare.Read);
 				return 0;
 			}
 			catch (IOException IOException)
@@ -122,10 +122,11 @@ namespace CSPspEmu.Hle.Vfs.Local
 			try
 			{
 				var Buffer = new byte[InputLength];
-				for (int n = 0; n < InputLength; n++) *InputPointer++ = Buffer[n];
+				for (int n = 0; n < InputLength; n++) Buffer[n]  = * InputPointer++;
 
 				var FileStream = ((FileStream)HleIoDrvFileArg.FileArgument);
 				FileStream.Write(Buffer, 0, InputLength);
+				FileStream.Flush();
 				return InputLength;
 			}
 			catch (Exception Exception)

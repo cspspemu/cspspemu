@@ -265,7 +265,13 @@ namespace CSPspEmu.Sandbox
 
 		void CreateNewHleState() {
 			HleState = new HleState(CpuProcessor, GpuProcessor, PspConfig, PspRtc, PspDisplay, PspController, HleModulesDll);
-			HleState.HleIoManager.AddDriver("ms:", new HleIoDriverLocalFileSystem("C:/$INVALID$PATH$").AsReadonlyHleIoDriver());
+			//Console.WriteLine();
+			//Console.ReadKey();
+			string VirtualDirectory = Path.GetDirectoryName(Application.ExecutablePath);
+			try { Directory.CreateDirectory(VirtualDirectory + "/PSP/GAME/virtual"); }
+			catch { }
+
+			HleState.HleIoManager.AddDriver("ms:", new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
 			HleState.HleIoManager.AddDriver("emulator:", new HleIoDriverEmulator(HleState));
 		}
 
