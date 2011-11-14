@@ -31,6 +31,7 @@ namespace CSPspEmu.Core
 		/// Writes a line each time a JAL is executed
 		/// </summary>
 		public bool TraceJal = false;
+		//public bool TraceJal = true;
 
 		/// <summary>
 		/// 

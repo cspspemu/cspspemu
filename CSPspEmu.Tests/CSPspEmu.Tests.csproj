@@ -63,6 +63,7 @@
     <Compile Include="Cpu\Assembler\MipsAssemblerTest.cs" />
     <Compile Include="Cpu\Emiter\MipsEmiterTest.cs" />
     <Compile Include="Gpu\GpuProcessorTest.cs" />
+    <Compile Include="Hle\Vfs\HleIoManagerTest.cs" />
     <Compile Include="Hle\Loader\ElfLoaderTest.cs" />
     <Compile Include="Hle\HlePspThreadManagerTest.cs" />
     <Compile Include="Hle\HlePspThreadTest.cs" />

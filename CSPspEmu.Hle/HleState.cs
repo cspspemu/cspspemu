@@ -28,6 +28,7 @@ namespace CSPspEmu.Hle
 		public HleMemoryManager MemoryManager;
 		public HleModuleManager ModuleManager;
 		public HleCallbackManager CallbackManager;
+		public HleIoManager HleIoManager;
 
 		public HleState(CpuProcessor CpuProcessor, GpuProcessor GpuProcessor, PspConfig PspConfig, PspRtc PspRtc, PspDisplay PspDisplay, PspController PspController, Assembly ModulesAssembly)
 		{
@@ -45,6 +46,7 @@ namespace CSPspEmu.Hle
 			this.MemoryManager = new HleMemoryManager(this.CpuProcessor.Memory);
 			this.ModuleManager = new HleModuleManager(this, ModulesAssembly);
 			this.CallbackManager = new HleCallbackManager(this);
+			this.HleIoManager = new HleIoManager();
 		}
 	}
 }

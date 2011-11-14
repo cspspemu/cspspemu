@@ -104,7 +104,7 @@ namespace CSPspEmu.Hle
 			return Allocate(Size, Anchor.Set, Low);
 		}
 
-		public MemoryPartition Allocate(int Size, Anchor AllocateAnchor = Anchor.Low, uint Position = 0)
+		public MemoryPartition Allocate(int Size, Anchor AllocateAnchor = Anchor.Low, uint Position = 0, int Alignment = 1)
 		{
 			if (_ChildPartitions.Count == 0)
 			{
@@ -115,17 +115,24 @@ namespace CSPspEmu.Hle
 
 			try
 			{
+				var SizeCheck = Size;
+
+				// As much we will need those space.
+				SizeCheck += (Alignment - 1);
+
+				var AcceptablePartitions = _ChildPartitions.Where(Partition => !Partition.Allocated && Partition.Size >= SizeCheck);
+
 				switch (AllocateAnchor)
 				{
 					default:
 					case Anchor.Low:
-						OldFreePartition = _ChildPartitions.First(Partition => !Partition.Allocated && Partition.Size >= Size);
+						OldFreePartition = AcceptablePartitions.First();
 						break;
 					case Anchor.High:
-						OldFreePartition = _ChildPartitions.Last(Partition => !Partition.Allocated && Partition.Size >= Size);
+						OldFreePartition = AcceptablePartitions.Last();
 						break;
 					case Anchor.Set:
-						OldFreePartition = _ChildPartitions.Single(Partition => !Partition.Allocated && (Partition.Low <= Position) && (Partition.High >= Position + Size));
+						OldFreePartition = AcceptablePartitions.Where(Partition => (Partition.Low <= Position) && (Partition.High >= Position + Size)).Single();
 						break;
 				}
 			}
@@ -138,6 +145,27 @@ namespace CSPspEmu.Hle
 					)
 				));
 			}
+
+			if (Alignment > 1)
+			{
+				switch (AllocateAnchor)
+				{
+					default:
+					case Anchor.Low:
+						{
+							var Low = MathUtils.NextAligned(OldFreePartition.Low, Alignment);
+							var High = (uint)(Low + Size);
+							return AllocateLowHigh(Low, High);
+						}
+					case Anchor.High:
+						{
+							var High = MathUtils.PrevAligned(OldFreePartition.High, Alignment);
+							var Low = (uint)(High - Size);
+							return AllocateLowHigh(Low, High);
+						}
+				}
+			}
+
 			_ChildPartitions.Remove(OldFreePartition);
 
 			switch (AllocateAnchor)

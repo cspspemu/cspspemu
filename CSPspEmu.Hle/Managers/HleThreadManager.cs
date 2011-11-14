@@ -142,7 +142,7 @@ namespace CSPspEmu.Hle.Managers
 			}
 
 			// Increment.
-			NextThread.PriorityValue += DecrementValue + NextThread.Priority + 1;
+			NextThread.PriorityValue += DecrementValue + NextThread.Info.PriorityCurrent + 1;
 
 			// Invalidate next.
 			_Next = null;

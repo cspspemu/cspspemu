@@ -60,6 +60,7 @@
     <Compile Include="threadman\ThreadManForUser.cs" />
     <Compile Include="threadman\ThreadManForUser.Callbacks.cs" />
     <Compile Include="threadman\ThreadManForUser.EventFlag.cs" />
+    <Compile Include="threadman\ThreadManForUser.Fpl.cs" />
     <Compile Include="threadman\ThreadManForUser.Threads.cs" />
     <Compile Include="utils\UtilsForUser.cs" />
     <Compile Include="wlan\sceWlan_Driver.cs" />

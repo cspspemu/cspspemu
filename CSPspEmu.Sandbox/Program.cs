@@ -31,6 +31,9 @@ using CSPspEmu.Hle.Formats;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Hle.Modules.emulator;
+using CSPspEmu.Hle.Vfs.Local;
+using CSPspEmu.Hle.Vfs;
+using CSPspEmu.Hle.Vfs.Emulator;
 
 namespace CSPspEmu.Sandbox
 {
@@ -176,16 +179,28 @@ namespace CSPspEmu.Sandbox
 				HleState.ModuleManager
 			);
 
-			uint argc = 1;
-			uint argv = 0x08001000;
+			RegisterSyscalls();
 
-			new BinaryWriter(MemoryStream.SliceWithLength(0x08001000)).Write((uint)0x08001004);
-			new StreamWriter(MemoryStream.SliceWithLength(0x08001004, 1000)).Write("/PSP/GAME/virtual/EBOOT.PBP\0");
+
+			uint CODE_PTR_ARGUMENTS = 0x08000100;
+
+			{
+				var BinaryWriter = new BinaryWriter(MemoryStream);
+				var StreamWriter = new StreamWriter(MemoryStream); StreamWriter.AutoFlush = true;
+				MemoryStream.Position = CODE_PTR_ARGUMENTS;
+
+				BinaryWriter.Write((uint)(CODE_PTR_ARGUMENTS + 4)); BinaryWriter.Flush();
+				StreamWriter.Write("ms0:/PSP/GAME/virtual/EBOOT.PBP\0"); StreamWriter.Flush();
+			}
+
+			uint argc = 1;
+			uint argv = CODE_PTR_ARGUMENTS + 4;
+			//uint argv = CODE_PTR_ARGUMENTS;
 
 			var MainThread = HleState.ThreadManager.Create();
 			MainThread.CpuThreadState.PC = Loader.InitInfo.PC;
 			MainThread.CpuThreadState.GP = Loader.InitInfo.GP;
-			MainThread.CpuThreadState.SP = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Allocate(0x1000, MemoryPartition.Anchor.High).High & (uint)(~(uint)0x77);
+			MainThread.CpuThreadState.SP = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Allocate(0x1000, MemoryPartition.Anchor.High, Alignment: 0x100).High;
 			MainThread.CpuThreadState.K0 = MainThread.CpuThreadState.SP;
 			MainThread.CpuThreadState.RA = (uint)0x08000000;
 			MainThread.CpuThreadState.GPR[4] = (int)argc;
@@ -200,8 +215,6 @@ namespace CSPspEmu.Sandbox
 			registers.A0 = argc;
 			registers.A1 = argv;
 			*/
-
-			RegisterSyscalls();
 		}
 
 		void RegisterModuleSyscall<TType>(int SyscallCode, string FunctionName) where TType : HleModuleHost
@@ -250,6 +263,8 @@ namespace CSPspEmu.Sandbox
 
 		void CreateNewHleState() {
 			HleState = new HleState(CpuProcessor, GpuProcessor, PspConfig, PspRtc, PspDisplay, PspController, HleModulesDll);
+			HleState.HleIoManager.AddDriver("ms:", new HleIoDriverLocalFileSystem("C:/$INVALID$PATH$").AsReadonlyHleIoDriver());
+			HleState.HleIoManager.AddDriver("emulator:", new HleIoDriverEmulator(HleState));
 		}
 
 		AutoResetEvent GpuInitializedCompleteEvent = new AutoResetEvent(false);
@@ -391,6 +406,9 @@ namespace CSPspEmu.Sandbox
 		{
 			//LoadFile(@"C:\juegos\jpcsp2\demos\ortho.pbp");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\cpu\cpu\cpu.elf");
+			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\threadstatus.pbp");
+			LoadFile(@"C:\projects\pspemu\pspautotests\tests\io\io\io.elf");
+			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\cpu\fpu\fpu.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\malloc\malloc.elf");
 			
 			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\args.elf");
@@ -398,10 +416,10 @@ namespace CSPspEmu.Sandbox
 			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\fpu.elf");
 			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\malloc.elf");
 
-			LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
+			//LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
 			//LoadFile(@"../../../TestInput/minifire.elf");
 			//PspConfig.ShowInstructionStats = true;
-			//PspConfig.DebugSyscalls = true;
+			PspConfig.DebugSyscalls = true;
 
 			//LoadFile(@"../../../TestInput/HelloWorld.elf");
 			//LoadFile(@"../../../TestInput/HelloWorldPSP.elf");

@@ -10,30 +10,53 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using CSPspEmu.Core;
+using CSharpUtils;
 
 namespace CSPspEmu.Hle
 {
 	public delegate void WakeUpCallbackDelegate();
 
-	public class HleThread
+	unsafe public class HleThread
 	{
 		protected MethodCacheFast MethodCache;
 
-		public int Priority = 1;
+		/// <summary>
+		/// Value used to schedule threads.
+		/// </summary>
 		public int PriorityValue;
+
+		//public int Priority = 1;
 		protected GreenThread GreenThread;
 		public CpuThreadState CpuThreadState { get; protected set; }
 		protected int MinimalInstructionCountForYield = 1000000;
 		public int Id;
-		public String Name;
+		//public String Name;
 		public Status CurrentStatus;
 		public WaitType CurrentWaitType;
 		public DateTime AwakeOnTime;
 		public MemoryPartition Stack;
 		public String WaitDescription;
-		public uint EntryPoint;
-		public int InitPriority;
+		//public int InitPriority;
 		public uint Attribute;
+		public SceKernelThreadInfo Info;
+
+		public uint GP
+		{
+			get { return Info.GP; }
+			set { Info.GP = value; CpuThreadState.GP = value;  }
+		}
+
+		public String Name
+		{
+			get
+			{
+				fixed (byte* NamePtr = Info.Name) return PointerUtils.PtrToString(NamePtr, Encoding.ASCII);
+			}
+			set
+			{
+				fixed (byte* NamePtr = Info.Name) PointerUtils.StoreStringOnPtr(value, Encoding.ASCII, NamePtr);
+			}
+		}
 
 		public enum WaitType
 		{
@@ -138,5 +161,150 @@ namespace CSPspEmu.Hle
 		{
 			return String.Format("HleThread(Id={0}, Name='{1}')", Id, Name);
 		}
+	}
+
+	public struct SceKernelSysClock
+	{
+		//ulong Value;
+		public uint Low;
+		public uint High;
+	}
+
+	/// <summary>
+	/// Event flag wait types
+	/// </summary>
+	public enum PspEventFlagWaitTypes : uint
+	{
+		/// <summary>
+		/// Wait for all bits in the pattern to be set 
+		/// </summary>
+		PSP_EVENT_WAITAND = 0x00,
+
+		/// <summary>
+		/// Wait for one or more bits in the pattern to be set
+		/// </summary>
+		PSP_EVENT_WAITOR = 0x01,
+
+		/// <summary>
+		/// Clear all the wait pattern when it matches
+		/// </summary>
+		PSP_EVENT_WAITCLEARALL = 0x10,
+
+		/// <summary>
+		/// Clear the wait pattern when it matches
+		/// </summary>
+		PSP_EVENT_WAITCLEAR = 0x20,
+	};
+
+	public enum PspThreadStatus : uint
+	{
+		PSP_THREAD_RUNNING = 1,
+		PSP_THREAD_READY = 2,
+		PSP_THREAD_WAITING = 4,
+		PSP_THREAD_SUSPEND = 8,
+		PSP_THREAD_STOPPED = 16, // Before startThread
+		PSP_THREAD_KILLED = 32, // Thread manager has killed the thread (stack overflow)
+	}
+
+	//alias int function(SceSize args, void* argp) SceKernelThreadEntry;
+	public enum SceKernelThreadEntry : uint
+	{
+	}
+
+	unsafe public struct SceKernelThreadInfo
+	{
+		/// <summary>
+		/// Size of the structure
+		/// </summary>
+		public int Size;
+
+		/// <summary>
+		/// Null terminated name of the thread
+		/// </summary>
+		public fixed byte Name[32];
+
+		/// <summary>
+		/// Thread attributes
+		/// </summary>
+		public uint Attributes;
+
+		/// <summary>
+		/// Thread status
+		/// </summary>
+		public PspThreadStatus Status;
+
+		/// <summary>
+		/// Thread entry point
+		/// </summary>
+		public SceKernelThreadEntry EntryPoint;
+
+		/// <summary>
+		/// Thread stack pointer
+		/// </summary>
+		public uint StackPointer;
+
+		/// <summary>
+		/// Thread stack size
+		/// </summary>
+		public int StackSize;
+
+		/// <summary>
+		/// Pointer to the gp
+		/// </summary>
+		public uint GP;
+
+		/// <summary>
+		/// Initial Priority
+		/// </summary>
+		public int PriorityInitially;
+
+		/// <summary>
+		/// Current Priority
+		/// </summary>
+		public int PriorityCurrent;
+
+		/// <summary>
+		/// Wait Type
+		/// </summary>
+		public PspEventFlagWaitTypes WaitType;
+
+		/// <summary>
+		/// Wait id
+		/// </summary>
+		public int WaitId;
+
+		/// <summary>
+		/// Wakeup count
+		/// </summary>
+		public int WakeupCount;
+
+		/// <summary>
+		/// Exit status of the thread
+		/// </summary>
+		public int ExitStatus;
+
+		/// <summary>
+		/// Number of clock cycles run
+		/// </summary>
+		public SceKernelSysClock RunClocks;
+
+		/// <summary>
+		/// Interrupt preemption count
+		/// </summary>
+		public int InterruptPreemptionCount;
+
+		/// <summary>
+		/// Thread preemption count
+		/// </summary>
+		public int ThreadPreemptionCount;
+
+		/// <summary>
+		/// Release count
+		/// </summary>
+		public int ReleaseCount;
+	}
+
+	public struct SceKernelThreadOptParam
+	{
 	}
 }

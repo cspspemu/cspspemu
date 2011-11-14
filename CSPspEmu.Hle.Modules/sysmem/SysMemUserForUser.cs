@@ -28,6 +28,19 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		}
 
 		/// <summary>
+		/// Get the total amount of free memory.
+		/// </summary>
+		/// <returns>The total amount of free memory, in bytes.</returns>
+		[HlePspFunction(NID = 0xF919F628, FirmwareVersion = 150)]
+		public int sceKernelTotalFreeMemSize()
+		{
+			return HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).ChildPartitions
+				.Where(Partition => !Partition.Allocated)
+				.Aggregate(0, (Accumulated, Partition) => Accumulated + Partition.Size)
+			;
+		}
+
+		/// <summary>
 		/// Get the address of a memory block.
 		/// </summary>
 		/// <param name="BlockId">UID of the memory block.</param>

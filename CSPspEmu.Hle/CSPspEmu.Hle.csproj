@@ -54,6 +54,7 @@
     <Compile Include="Loader\ElfLoader.cs" />
     <Compile Include="Loader\ElfPspLoader.cs" />
     <Compile Include="Managers\HleCallbackManager.cs" />
+    <Compile Include="Managers\HleIoManager.cs" />
     <Compile Include="Managers\HleMemoryManager.cs" />
     <Compile Include="HleModuleGuest.cs" />
     <Compile Include="Managers\HleModuleManager.cs" />
@@ -63,6 +64,13 @@
     <Compile Include="Managers\HleUidPool.cs" />
     <Compile Include="MemoryPartition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Vfs\Emulator\HleIoDriverEmulator.cs" />
+    <Compile Include="Vfs\HleIoDriverExtensions.cs" />
+    <Compile Include="Vfs\IHleIoDriver.cs" />
+    <Compile Include="Vfs\Local\HleIoDriverLocalFileSystem.cs" />
+    <Compile Include="Vfs\ProxyHleIoDriver.cs" />
+    <Compile Include="Vfs\PspIoDriverRaw.cs" />
+    <Compile Include="Vfs\ReadonlyHleIoDriver.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
