@@ -16,6 +16,28 @@ namespace CSPspEmu.Hle.Vfs.Local
 			this.LocalPath = LocalPath;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Path"></param>
+		/// <returns></returns>
+		static public string GetSanitizedPath(string Path)
+		{
+			var Parts = new Stack<string>();
+			foreach (var Part in Path.Split('/', '\\'))
+			{
+				switch (Part)
+				{
+					case "": if (Parts.Count == 0) Parts.Push(""); break;
+					case ".": break;
+					case "..": if (Parts.Count > 0) Parts.Pop(); break;
+					default: Parts.Push(Part); break;
+				}
+			}
+
+			return String.Join("/", Parts.Reverse());
+		}
+
 		protected string GetFullNormalizedAndSanitizedPath(string Path)
 		{
 			return LocalPath + "/" + Path;
