@@ -407,7 +407,7 @@ namespace CSPspEmu.Sandbox
 			//LoadFile(@"C:\juegos\jpcsp2\demos\ortho.pbp");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\cpu\cpu\cpu.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\threadstatus.pbp");
-			LoadFile(@"C:\projects\pspemu\pspautotests\tests\io\io\io.elf");
+			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\io\io\io.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\cpu\fpu\fpu.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\malloc\malloc.elf");
 			
@@ -416,7 +416,7 @@ namespace CSPspEmu.Sandbox
 			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\fpu.elf");
 			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\malloc.elf");
 
-			//LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
+			LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
 			//LoadFile(@"../../../TestInput/minifire.elf");
 			//PspConfig.ShowInstructionStats = true;
 			PspConfig.DebugSyscalls = true;

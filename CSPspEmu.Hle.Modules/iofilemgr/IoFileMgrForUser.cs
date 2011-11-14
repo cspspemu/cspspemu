@@ -33,7 +33,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// Reads an entry from an opened file descriptor.
 		/// </summary>
 		/// <param name="FileHandle">Already opened file descriptor (using sceIoDopen)</param>
-		/// <param name="dir">Pointer to an io_dirent_t structure to hold the file information</param>
+		/// <param name="IoDirent">Pointer to an io_dirent_t structure to hold the file information</param>
 		/// <returns>
 		///		Read status
 		///		Equal to   0 - No more directory entries left
@@ -41,10 +41,10 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		///		Less  than 0 - Error
 		/// </returns>
 		[HlePspFunction(NID = 0xE3EB004C, FirmwareVersion = 150)]
-		public int sceIoDread(int FileHandle, HleIoDirent* dir)
+		public int sceIoDread(int FileHandle, HleIoDirent* IoDirent)
 		{
 			var HleIoDrvFileArg = GetFileArgFromHandle(FileHandle);
-			return HleIoDrvFileArg.HleIoDriver.IoDread(HleIoDrvFileArg, dir);
+			return HleIoDrvFileArg.HleIoDriver.IoDread(HleIoDrvFileArg, IoDirent);
 		}
 
 		/// <summary>
