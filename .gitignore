@@ -32,3 +32,5 @@
 /CSPspEmu.Core.Gpu.Impl.Opengl/bin
 /CSPspEmu.AutoTests/obj
 /CSPspEmu.AutoTests/bin
+/CSPspEmu.TestsAuto/bin
+/CSPspEmu.TestsAuto/obj

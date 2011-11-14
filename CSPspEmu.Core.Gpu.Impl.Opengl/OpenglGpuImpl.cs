@@ -14,8 +14,8 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
-using Cloo;
-using Cloo.Bindings;
+//using Cloo;
+//using Cloo.Bindings;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
