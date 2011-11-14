@@ -33,6 +33,10 @@ namespace CSPspEmu.Hle.Managers
 		/// <returns></returns>
 		public ParsePathInfo ParsePath(string FullPath)
 		{
+			if (FullPath.IndexOf(':') == -1)
+			{
+				FullPath = CurrentDirectoryPath + "/" + FullPath;
+			}
 			var Match = new Regex(@"^(\w+)(\d+):(.*)$").Match(FullPath);
 			var DriverName = Match.Groups[1].Value + ":";
 			int FileSystemNumber = 0;
@@ -87,6 +91,20 @@ namespace CSPspEmu.Hle.Managers
 				},
 				LocalPath = "",
 			};
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public string CurrentDirectoryPath = "";
+
+		/// <summary>
+		/// Changes the current directory.
+		/// </summary>
+		/// <param name="DirectoryPath"></param>
+		public void Chdir(string DirectoryPath)
+		{
+			CurrentDirectoryPath = DirectoryPath;
 		}
 	}
 }

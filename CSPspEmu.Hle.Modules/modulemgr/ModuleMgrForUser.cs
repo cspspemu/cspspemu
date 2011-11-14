@@ -18,7 +18,6 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		public int sceKernelSelfStopUnloadModule(int unknown, int argsize, uint argp)
 		{
 			throw (new Exception("sceKernelSelfStopUnloadModule"));
-			return 0;
 		}
 	}
 }

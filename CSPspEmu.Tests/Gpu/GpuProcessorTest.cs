@@ -11,8 +11,8 @@ namespace CSPspEmu.Core.Tests.Gpu
 	[TestClass]
 	public class GpuProcessorTest
 	{
-		PspMemory Memory;
-		GpuProcessor Gpu;
+		//PspMemory Memory;
+		//GpuProcessor Gpu;
 
 		[TestInitialize]
 		public void SetUp()

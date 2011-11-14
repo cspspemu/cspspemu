@@ -8,12 +8,14 @@ using System.IO;
 using CSharpUtils.Extensions;
 using System.Collections.Generic;
 using CSPspEmu.Core.Memory;
+using CSharpUtils.Factory;
 
 namespace CSPspEmu.Core.Tests
 {
 	[TestClass]
 	unsafe public class CpuEmiterTest
 	{
+		protected MockeableFactory MockeableFactory;
 		protected PspConfig PspConfig;
 		protected PspMemory Memory;
 		protected CpuProcessor Processor;
@@ -22,7 +24,8 @@ namespace CSPspEmu.Core.Tests
 		[TestInitialize]
 		public void SetUp()
 		{
-			PspConfig = new PspConfig();
+			MockeableFactory = new MockeableFactory();
+			PspConfig = new PspConfig(MockeableFactory);
 			Memory = new LazyPspMemory();
 			Processor = new CpuProcessor(PspConfig, Memory);
 			CpuThreadState = new CpuThreadState(Processor);

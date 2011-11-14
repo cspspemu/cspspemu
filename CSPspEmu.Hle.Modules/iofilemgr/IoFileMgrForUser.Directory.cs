@@ -65,6 +65,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspNotImplemented]
 		public int sceIoChdir(string DirectoryPath)
 		{
+			HleState.HleIoManager.Chdir(DirectoryPath);
 			//var Info = HleState.HleIoManager.ParsePath(DirectoryPath);
 			//return Info.HleIoDriver.IoChdir(Info.HleIoDrvFileArg, Info.LocalPath);
 			return 0;

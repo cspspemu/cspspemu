@@ -34,28 +34,30 @@ using CSPspEmu.Hle.Modules.emulator;
 using CSPspEmu.Hle.Vfs.Local;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Hle.Vfs.Emulator;
+using CSharpUtils.Factory;
 
 namespace CSPspEmu.Sandbox
 {
 	unsafe class Program : IGuiExternalInterface
 	{
-		PspConfig PspConfig;
-		PspRtc PspRtc;
-		PspDisplay PspDisplay;
-		PspController PspController;
-		PspMemory Memory;
-		CpuProcessor CpuProcessor;
-		OpenglGpuImpl GpuImpl;
-		GpuProcessor GpuProcessor;
-		PspMemoryStream MemoryStream;
-		HleState HleState;
-		TaskQueue CpuTaskQueue = new TaskQueue();
-		Assembly HleModulesDll;
-		AutoResetEvent PauseEvent;
-		AutoResetEvent ResumeEvent;
+		protected Factory Factory;
+		protected PspConfig PspConfig;
+		protected PspRtc PspRtc;
+		protected PspDisplay PspDisplay;
+		protected PspController PspController;
+		protected PspMemory Memory;
+		protected CpuProcessor CpuProcessor;
+		protected OpenglGpuImpl GpuImpl;
+		protected GpuProcessor GpuProcessor;
+		protected PspMemoryStream MemoryStream;
+		protected HleState HleState;
+		protected TaskQueue CpuTaskQueue = new TaskQueue();
+		protected Assembly HleModulesDll;
+		protected AutoResetEvent PauseEvent;
+		protected AutoResetEvent ResumeEvent;
 
-		Thread CpuThread;
-		Thread GpuThread;
+		protected Thread CpuThread;
+		protected Thread GpuThread;
 
 		PspMemory IGuiExternalInterface.GetMemory()
 		{
@@ -273,7 +275,8 @@ namespace CSPspEmu.Sandbox
 		void Execute()
 		{
 			HleModulesDll = Assembly.LoadFile(Path.GetDirectoryName(typeof(Program).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll");
-			PspConfig = new PspConfig();
+			Factory = new Factory();
+			PspConfig = new PspConfig(Factory);
 			PspRtc = new PspRtc();
 			PspDisplay = new PspDisplay(PspRtc);
 			PspController = new PspController();

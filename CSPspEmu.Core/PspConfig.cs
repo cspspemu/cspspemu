@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils.Factory;
 
 namespace CSPspEmu.Core
 {
@@ -37,6 +38,13 @@ namespace CSPspEmu.Core
 		/// 
 		/// </summary>
 		public bool DebugThreadSwitching = false;
+
+		public Factory Factory;
+
+		public PspConfig(Factory Factory)
+		{
+			this.Factory = Factory;
+		}
 
 		//public bool TraceJal = true;
 	}

@@ -59,8 +59,16 @@ namespace CSPspEmu.Hle.Vfs.Local
 			if (Write) FileAccess |= FileAccess.Write;
 			//if (Append) FileMode |= FileMode.Open;
 
-			HleIoDrvFileArg.FileArgument = File.Open(RealFileName, FileMode, FileAccess);
-			return 0;
+			try
+			{
+				HleIoDrvFileArg.FileArgument = File.Open(RealFileName, FileMode, FileAccess);
+				return 0;
+			}
+			catch (IOException IOException)
+			{
+				Console.WriteLine(IOException);
+				return -1;
+			}
 		}
 
 		public unsafe int IoClose(HleIoDrvFileArg HleIoDrvFileArg)
@@ -72,16 +80,37 @@ namespace CSPspEmu.Hle.Vfs.Local
 
 		public unsafe int IoRead(HleIoDrvFileArg HleIoDrvFileArg, byte* OutputPointer, int OutputLength)
 		{
-			var Buffer = new byte[OutputLength];
-			var FileStream = ((FileStream)HleIoDrvFileArg.FileArgument);
-			int Readed = FileStream.Read(Buffer, 0, OutputLength);
-			for (int n = 0; n < Readed; n++) *OutputPointer++ = Buffer[n];
-			return Readed;
+			try
+			{
+				var Buffer = new byte[OutputLength];
+				var FileStream = ((FileStream)HleIoDrvFileArg.FileArgument);
+				int Readed = FileStream.Read(Buffer, 0, OutputLength);
+				for (int n = 0; n < Readed; n++) *OutputPointer++ = Buffer[n];
+				return Readed;
+			}
+			catch (Exception Exception)
+			{
+				Console.WriteLine(Exception);
+				return -1;
+			}
 		}
 
 		public unsafe int IoWrite(HleIoDrvFileArg HleIoDrvFileArg, byte* InputPointer, int InputLength)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				var Buffer = new byte[InputLength];
+				for (int n = 0; n < InputLength; n++) *InputPointer++ = Buffer[n];
+
+				var FileStream = ((FileStream)HleIoDrvFileArg.FileArgument);
+				FileStream.Write(Buffer, 0, InputLength);
+				return InputLength;
+			}
+			catch (Exception Exception)
+			{
+				Console.WriteLine(Exception);
+				return -1;
+			}
 		}
 
 		public unsafe int IoLseek(HleIoDrvFileArg HleIoDrvFileArg, long Offset, int Whence)
