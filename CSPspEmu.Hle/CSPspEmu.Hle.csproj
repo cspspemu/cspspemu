@@ -42,7 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\HlePspFunctionAttribute.cs" />
-    <Compile Include="Attributes\HlePspNotImplementedAttribute.cs" />
+    <Compile Include="Attributes\HlePspNotImplementedAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Attributes\HlePspUnknownDefinitionAttribute.cs" />
     <Compile Include="Formats\FormatDetector.cs" />
     <Compile Include="Formats\Elf.cs" />
     <Compile Include="Formats\ElfPsp.cs" />

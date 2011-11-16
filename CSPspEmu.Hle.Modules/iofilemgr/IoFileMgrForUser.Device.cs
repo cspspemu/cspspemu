@@ -8,6 +8,22 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 	unsafe public partial class IoFileMgrForUser
 	{
 		/// <summary>
+		/// Perform an ioctl on a device.
+		/// </summary>
+		/// <param name="fd">Opened file descriptor to ioctl to</param>
+		/// <param name="cmd">The command to send to the device</param>
+		/// <param name="indata">A data block to send to the device, if NULL sends no data</param>
+		/// <param name="inlen">Length of indata, if 0 sends no data</param>
+		/// <param name="outdata">A data block to receive the result of a command, if NULL receives no data</param>
+		/// <param name="outlen">Length of outdata, if 0 receives no data</param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0x63632449, FirmwareVersion = 150)]
+		public int sceIoIoctl(SceUID fd, uint cmd, void* indata, int inlen, void* outdata, int outlen)
+		{
+			throw(new NotImplementedException());
+		}
+
+		/// <summary>
 		/// Send a devctl command to a device.
 		/// </summary>
 		/// <example>

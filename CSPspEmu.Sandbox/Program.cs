@@ -427,7 +427,9 @@ namespace CSPspEmu.Sandbox
 
 			//LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
 			//LoadFile(@"C:\pspsdk\psp\sdk\samples\kernel\sysevent\EBOOT.PBP");
-			LoadFile(@"C:\pspsdk\psp\sdk\samples\kernel\systimer\EBOOT.PBP");
+			//LoadFile(@"C:\pspsdk\psp\sdk\samples\kernel\systimer\EBOOT.PBP");
+			//LoadFile(@"C:\pspsdk\psp\sdk\samples\kernel\loadmodule\EBOOT.PBP");
+			LoadFile(@"C:\pspsdk\psp\sdk\samples\prx\prx_loader\EBOOT.PBP");
 			//LoadFile(@"../../../TestInput/minifire.elf");
 			//PspConfig.ShowInstructionStats = true;
 			PspConfig.DebugSyscalls = true;
