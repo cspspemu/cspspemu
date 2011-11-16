@@ -46,7 +46,7 @@ namespace CSPspEmu.Core
 
 		public override void* PspAddressToPointer(uint _Address)
 		{
-			var Address = (_Address & 0x1FFFFFFF);
+			var Address = (_Address & PspMemory.MemoryMask);
 			if (Address == 0) return null;
 			return Base + Address;
 		}

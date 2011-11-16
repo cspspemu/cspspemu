@@ -337,7 +337,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 							Instruction.IMM = ((int)LabelAddress - (int)Patch.Address - 4) / 4;
 							break;
 						case PatchType.ABS_26:
-							Instruction.JUMP = (LabelAddress & 0x1FFFFFFF) / 4;
+							Instruction.JUMP = (LabelAddress & PspMemory.MemoryMask) / 4;
 							break;
 						case PatchType.ABS_32:
 							Instruction.Value = LabelAddress;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -34,13 +35,22 @@ namespace CSPspEmu.Core.Cpu
 
 		public Action<CpuThreadState> TryGetMethodAt(uint PC)
 		{
+			//PC &= PspMemory.MemoryMask;
 			if (PC < PspMemory.MainOffset) throw (new PspMemory.InvalidAddressException(PC));
 			uint Index = (PC - PspMemory.MainOffset) / 4;
-			return Methods2[Index];
+			if (Index < 0 || Index >= PspMemory.MainSize / 4)
+			{
+				throw(new IndexOutOfRangeException(
+					String.Format("Can't jump to '{0}'. Invalid address.", "0x%08X".Sprintf(PC))
+				));
+			}
+			Action<CpuThreadState> Action = Methods2[Index];
+			return Action;
 		}
 
 		public void SetMethodAt(uint PC, Action<CpuThreadState> Action)
 		{
+			//PC &= PspMemory.MemoryMask;
 			if (PC < PspMemory.MainOffset) throw (new PspMemory.InvalidAddressException(PC));
 			uint Index = (PC - PspMemory.MainOffset) / 4;
 			Methods2[Index] = Action;

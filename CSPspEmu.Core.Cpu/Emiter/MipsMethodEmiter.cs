@@ -55,7 +55,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				{
 					Action();
 				}
-				ILGenerator.Emit(OpCodes.Ldc_I4, (int)0x1FFFFFFF);
+				ILGenerator.Emit(OpCodes.Ldc_I4, (int)PspMemory.MemoryMask);
 				ILGenerator.Emit(OpCodes.And);
 				ILGenerator.Emit(OpCodes.Add);
 			}

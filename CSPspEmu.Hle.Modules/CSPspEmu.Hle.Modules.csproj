@@ -59,7 +59,9 @@
     <Compile Include="rtc\sceRtc.cs" />
     <Compile Include="stdio\StdioForUser.cs" />
     <Compile Include="sysmem\KDebugForKernel.cs" />
+    <Compile Include="sysmem\sceSysEventForKernel.cs" />
     <Compile Include="sysmem\SysMemUserForUser.cs" />
+    <Compile Include="systimer\SysTimerForKernel.cs" />
     <Compile Include="threadman\ThreadManForUser.cs" />
     <Compile Include="threadman\ThreadManForUser.Callbacks.cs" />
     <Compile Include="threadman\ThreadManForUser.EventFlag.cs" />

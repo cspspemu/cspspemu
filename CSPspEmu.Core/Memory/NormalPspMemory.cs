@@ -58,7 +58,7 @@ namespace CSPspEmu.Core
 			//if (IsAddressValid(_Address))
 			{
 				// Ignore last 3 bits (cache / kernel)
-				var Address = _Address & 0x1FFFFFFF;
+				var Address = _Address & PspMemory.MemoryMask;
 				switch (Address >> 24)
 				{
 					/////// hp

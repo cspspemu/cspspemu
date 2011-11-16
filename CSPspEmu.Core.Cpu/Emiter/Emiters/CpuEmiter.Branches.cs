@@ -84,7 +84,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		private uint GetJumpAddress()
 		{
 			//Console.WriteLine("Instruction.JUMP: {0:X}", Instruction.JUMP);
-			return (uint)(PC & ~0x1FFFFFFF) | (Instruction.JUMP << 2);
+			return (uint)(PC & ~PspMemory.MemoryMask) | (Instruction.JUMP << 2);
 		}
 
 		private void _link()

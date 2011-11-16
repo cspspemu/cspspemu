@@ -96,7 +96,7 @@ namespace CSPspEmu.Hle
 				{
 					//Debug.WriteLine("Thread({0:X}) : PC: {1:X}", this.Id, CpuThreadState.PC);
 					//Console.WriteLine("PC:{0:X}", CpuThreadState.PC);
-					GetDelegateAt(CpuThreadState.PC)(CpuThreadState);
+					GetDelegateAt(CpuThreadState.PC & PspMemory.MemoryMask)(CpuThreadState);
 				}
 			}
 			catch (AccessViolationException AccessViolationException)

@@ -425,7 +425,9 @@ namespace CSPspEmu.Sandbox
 			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\fpu.elf");
 			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\malloc.elf");
 
-			LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
+			//LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
+			//LoadFile(@"C:\pspsdk\psp\sdk\samples\kernel\sysevent\EBOOT.PBP");
+			LoadFile(@"C:\pspsdk\psp\sdk\samples\kernel\systimer\EBOOT.PBP");
 			//LoadFile(@"../../../TestInput/minifire.elf");
 			//PspConfig.ShowInstructionStats = true;
 			PspConfig.DebugSyscalls = true;

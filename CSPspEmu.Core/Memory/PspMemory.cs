@@ -10,6 +10,8 @@ namespace CSPspEmu.Core
 {
 	unsafe abstract public class PspMemory : IResetable
 	{
+		public const uint MemoryMask = 0x1FFFFFFF;
+
 		public class InvalidAddressException : Exception {
 			public InvalidAddressException(string message) : base (message) { }
 			public InvalidAddressException(string message, Exception innerException) : base(message, innerException) { }
@@ -82,7 +84,7 @@ namespace CSPspEmu.Core
 
 		public bool IsAddressValid(uint _Address)
 		{
-			var Address = _Address & 0x1FFFFFFF;
+			var Address = _Address & PspMemory.MemoryMask;
 			if (MainSegment.Contains(Address)) return true;
 			if (FrameBufferSegment.Contains(Address)) return true;
 			if (ScratchPadSegment.Contains(Address)) return true;
