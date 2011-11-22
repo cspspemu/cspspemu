@@ -413,7 +413,7 @@ namespace CSPspEmu.Sandbox
 
 		protected void OnInit()
 		{
-			//LoadFile(@"C:\juegos\jpcsp2\demos\ortho.pbp");
+			LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\ortho.pbp");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\cpu\cpu\cpu.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\threadstatus.pbp");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\io\io\io.elf");
@@ -429,7 +429,8 @@ namespace CSPspEmu.Sandbox
 			//LoadFile(@"C:\pspsdk\psp\sdk\samples\kernel\sysevent\EBOOT.PBP");
 			//LoadFile(@"C:\pspsdk\psp\sdk\samples\kernel\systimer\EBOOT.PBP");
 			//LoadFile(@"C:\pspsdk\psp\sdk\samples\kernel\loadmodule\EBOOT.PBP");
-			LoadFile(@"C:\pspsdk\psp\sdk\samples\prx\prx_loader\EBOOT.PBP");
+			//LoadFile(@"C:\pspsdk\psp\sdk\samples\prx\prx_loader\EBOOT.PBP");
+			//LoadFile(@"C:\pspsdk\psp\sdk\samples\prx\prx_loader\EBOOT.PBP");
 			//LoadFile(@"../../../TestInput/minifire.elf");
 			//PspConfig.ShowInstructionStats = true;
 			PspConfig.DebugSyscalls = true;
