@@ -11,6 +11,8 @@ namespace CSPspEmu.Core
 		public bool VerticalSyn = true;
 		public bool TraceJIT = false;
 		public bool CountInstructionsAndYield = true;
+
+		//public bool ShowInstructionStats = true;
 		public bool ShowInstructionStats = false;
 
 		/// <summary>
@@ -38,6 +40,7 @@ namespace CSPspEmu.Core
 		/// 
 		/// </summary>
 		public bool DebugThreadSwitching = false;
+		//public bool DebugThreadSwitching = true;
 
 		public Factory Factory;
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Cpu;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Modules.emulator
 {
@@ -39,9 +40,9 @@ namespace CSPspEmu.Hle.Modules.emulator
 		}
 
 		[HlePspFunction(NID = 0x00000005, FirmwareVersion = 150)]
-		public void emitUInt(byte* Value, uint Size)
+		public void emitUInt(uint Value)
 		{
-			throw(new NotImplementedException());
+			Console.WriteLine("emitUInt: {0}", "0x%08X".Sprintf(Value));
 		}
 
 		[HlePspFunction(NID = 0x10000000, FirmwareVersion = 150)]
