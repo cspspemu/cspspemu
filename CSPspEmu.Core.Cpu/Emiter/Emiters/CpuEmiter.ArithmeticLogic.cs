@@ -279,7 +279,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Count Leading Ones/Zeros in word.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		static public uint _clz_impl(uint x)
+		static public uint _clo_impl(uint x)
 		{
 			x = x - ((x >> 1) & 0x55555555);
 			x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
@@ -288,9 +288,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			x = x + (x << 16);
 			return x >> 24;
 		}
-		static public uint _clo_impl(uint x)
+		static public uint _clz_impl(uint x)
 		{
-			return _clz_impl(~x);
+			return _clo_impl(~x);
 		}
 
 		public void clz()

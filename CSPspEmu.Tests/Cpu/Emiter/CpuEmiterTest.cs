@@ -606,6 +606,17 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
+		public void CountLeadingZeroes()
+		{
+			ExecuteAssembly(@"
+				clz r1, r0
+				clo r2, r0
+			");
+			Assert.AreEqual(32, CpuThreadState.GPR[1]);
+			Assert.AreEqual(0, CpuThreadState.GPR[2]);
+		}
+
+		[TestMethod]
 		public void JalTest()
 		{
 			ExecuteAssembly(@"

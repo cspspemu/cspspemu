@@ -415,8 +415,8 @@ namespace CSPspEmu.Sandbox
 
 		protected void OnInit()
 		{
-			LoadFile(@"C:\projects\cspspemu\PspAutoTests\alu.elf");
-			//LoadFile(@"C:\projects\cspspemu\PspAutoTests\fpu.elf");
+			//LoadFile(@"C:\projects\cspspemu\PspAutoTests\alu.elf");
+			LoadFile(@"C:\projects\cspspemu\PspAutoTests\fpu.elf");
 			//LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\ortho.pbp");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\cpu\cpu\cpu.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\threadstatus.pbp");
