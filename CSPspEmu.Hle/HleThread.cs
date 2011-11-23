@@ -11,6 +11,8 @@ using System.Reflection;
 using System.Runtime.ExceptionServices;
 using CSPspEmu.Core;
 using CSharpUtils;
+using System.Globalization;
+using System.Threading;
 
 namespace CSPspEmu.Hle
 {
@@ -90,6 +92,7 @@ namespace CSPspEmu.Hle
 		[HandleProcessCorruptedStateExceptions()]
 		protected void MainLoop()
 		{
+			Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.CultureName);
 			try
 			{
 				while (true)
@@ -144,17 +147,29 @@ namespace CSPspEmu.Hle
 
 		public void SetWaitAndPrepareWakeUp(WaitType WaitType, String WaitDescription, Action<WakeUpCallbackDelegate> PrepareCallback)
 		{
-			PrepareCallback(WakeUp);
-			SetWait(WaitType, WaitDescription);
+			SetWait0(WaitType, WaitDescription);
+			{
+				PrepareCallback(WakeUp);
+			}
+			SetWait1();
 		}
 
-
-		public void SetWait(WaitType WaitType, String WaitDescription)
+		protected void SetWait0(WaitType WaitType, String WaitDescription)
 		{
 			this.CurrentStatus = Status.Waiting;
 			this.CurrentWaitType = WaitType;
 			this.WaitDescription = WaitDescription;
+		}
+
+		protected void SetWait1()
+		{
 			CpuThreadState.Yield();
+		}
+
+		public void SetWait(WaitType WaitType, String WaitDescription)
+		{
+			SetWait0(WaitType, WaitDescription);
+			SetWait1();
 		}
 
 		public override string ToString()

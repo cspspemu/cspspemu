@@ -4,11 +4,16 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Gpu.State;
+using CSPspEmu.Core.Cpu;
 
 namespace CSPspEmu.Hle.Modules.ge
 {
 	unsafe public partial class sceGe_user
 	{
+		private GpuDisplayList GetDisplayListFromId(int DisplayListId) {
+			return HleState.GpuProcessor.DisplayLists[DisplayListId];
+		}
+
 		public int _sceGeListEnQueue(uint* InstructionAddressStart, uint* InstructionAddressStall, int CallbackId, PspGeListArgs* Args, Action<GpuDisplayList> Action)
 		{
 			var DisplayList = HleState.GpuProcessor.DequeueFreeDisplayList();
@@ -75,7 +80,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		[HlePspNotImplemented(PartialImplemented = true)]
 		public int sceGeListDeQueue(int DisplayListId)
 		{
-			var DisplayList = HleState.GpuProcessor.DisplayLists[DisplayListId];
+			var DisplayList = GetDisplayListFromId(DisplayListId);
 			HleState.GpuProcessor.DisplayListQueue.Remove(DisplayList);
 			return 0;
 		}
@@ -89,7 +94,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		[HlePspFunction(NID = 0xE0D68148, FirmwareVersion = 150)]
 		public int sceGeListUpdateStallAddr(int DisplayListId, uint* InstructionAddressStall)
 		{
-			var DisplayList = HleState.GpuProcessor.DisplayLists[DisplayListId];
+			var DisplayList = GetDisplayListFromId(DisplayListId);
 			DisplayList.InstructionAddressStall = InstructionAddressStall;
 			return 0;
 		}
@@ -104,7 +109,16 @@ namespace CSPspEmu.Hle.Modules.ge
 		[HlePspNotImplemented]
 		public int sceGeListSync(int DisplayListId, GpuProcessor.SyncTypeEnum SyncType)
 		{
-			//throw (new NotImplementedException());
+			var DisplayList = GetDisplayListFromId(DisplayListId);
+
+			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeListSync", (WakeUpCallbackDelegate) =>
+			{
+				DisplayList.GeListSync(SyncType, () =>
+				{
+					WakeUpCallbackDelegate();
+				});
+			});
+
 			return 0;
 		}
 
@@ -117,24 +131,14 @@ namespace CSPspEmu.Hle.Modules.ge
 		[HlePspNotImplemented(PartialImplemented = true, Notice = false)]
 		public int sceGeDrawSync(GpuProcessor.SyncTypeEnum SyncType)
 		{
-			//return 0;
-			/*
-			var CurrentThread = HleState.ThreadManager.Current;
-			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeDrawSync", (WakeUpCallback) =>
+			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeDrawSync", (WakeUpCallbackDelegate) =>
 			{
-				if (HleState.GpuProcessor.DisplayListQueue.Count > 0)
+				HleState.GpuProcessor.GeDrawSync(SyncType, () =>
 				{
-					Action WakeUpCallbackOnce = null;
-					WakeUpCallbackOnce = () =>
-					{
-						HleState.GpuProcessor.DrawSync -= WakeUpCallbackOnce;
-						WakeUpCallback();
-					};
-
-					HleState.GpuProcessor.DrawSync += WakeUpCallbackOnce;
-				}
+					WakeUpCallbackDelegate();
+				});
 			});
-			 * */
+
 			return 0;
 		}
 

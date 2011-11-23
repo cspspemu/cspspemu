@@ -8,6 +8,8 @@ namespace CSPspEmu.Core
 {
 	public class PspConfig
 	{
+		static public string CultureName = "en";
+
 		public bool VerticalSyn = true;
 		public bool TraceJIT = false;
 		public bool CountInstructionsAndYield = true;
@@ -27,8 +29,7 @@ namespace CSPspEmu.Core
 		public bool NoticeUnimplementedGpuCommands = false;
 
 		//public bool UseFastAndUnsaferMemory = true;
-		//public bool UseFastAndUnsaferMemory = false;
-		public bool UseFastAndUnsaferMemory = true;
+		public bool UseFastAndUnsaferMemory = false;
 
 		/// <summary>
 		/// Writes a line each time a JAL is executed

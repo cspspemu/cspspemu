@@ -37,6 +37,6 @@ int main(int argc, char **argv) {
 	sprintf(temp, "%.6f", (float)(floatValues[0] * 300 / 1000));
 	emitFloat(98765.43210);
 	emitString(temp);
-	emitFloat(12345.67890);
+	emitFloat(123.4567890);
 	return 0;
 }

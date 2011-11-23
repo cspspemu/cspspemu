@@ -35,6 +35,7 @@ using CSPspEmu.Hle.Vfs.Local;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Hle.Vfs.Emulator;
 using CSharpUtils.Factory;
+using System.Globalization;
 
 namespace CSPspEmu.Sandbox
 {
@@ -343,6 +344,7 @@ namespace CSPspEmu.Sandbox
 
 		protected void GpuThreadEntryPoint()
 		{
+			Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.CultureName);
 			GpuImpl.Init();
 			GpuInitializedCompleteEvent.Set();
 
@@ -354,6 +356,7 @@ namespace CSPspEmu.Sandbox
 
 		protected void CpuThreadEntryPoint()
 		{
+			Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.CultureName);
 			CpuInitializedCompleteEvent.Set();
 			while (CpuProcessor.IsRunning)
 			{
@@ -416,8 +419,10 @@ namespace CSPspEmu.Sandbox
 		protected void OnInit()
 		{
 			//LoadFile(@"C:\projects\cspspemu\PspAutoTests\alu.elf");
-			LoadFile(@"C:\projects\cspspemu\PspAutoTests\fpu.elf");
-			//LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\ortho.pbp");
+			//LoadFile(@"C:\projects\cspspemu\PspAutoTests\fpu.elf");
+			//LoadFile(@"C:\projects\cspspemu\PspAutoTests\gum.elf");
+			LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\ortho.pbp");
+			//LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\cube.pbp");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\cpu\cpu\cpu.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\threadstatus.pbp");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\io\io\io.elf");

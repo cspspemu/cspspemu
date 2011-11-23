@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Cpu;
 using CSharpUtils.Extensions;
+using System.Threading;
+using System.Globalization;
 
 namespace CSPspEmu.Hle.Modules.emulator
 {

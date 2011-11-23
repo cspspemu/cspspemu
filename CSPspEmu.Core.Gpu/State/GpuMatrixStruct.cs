@@ -55,7 +55,7 @@ namespace CSPspEmu.Core.Gpu.State
 		/// <param name="Value"></param>
 		internal void Write(float Value)
 		{
-			//if (Index < 16)
+			if (Index < 16)
 			{
 				fixed (float* ValuesPtr = Values)
 				{

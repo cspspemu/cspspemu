@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using CSPspEmu.Core.Gpu.State;
+using CSPspEmu.Core.Threading.Synchronization;
 
 namespace CSPspEmu.Core.Gpu
 {
@@ -70,10 +71,17 @@ namespace CSPspEmu.Core.Gpu
 		/// </summary>
 		readonly public GpuDisplayList[] DisplayLists = new GpuDisplayList[64];
 
+		public enum StatusEnum
+		{
+			Drawing = 0,
+			Completed = 1,
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
-		public event Action DrawSync;
+		//public event Action DrawSync;
+		readonly public WaitableStateMachine<StatusEnum> Status = new WaitableStateMachine<StatusEnum>(Debug: false);
 
 		/// <summary>
 		/// 
@@ -153,10 +161,13 @@ namespace CSPspEmu.Core.Gpu
 
 			while (true)
 			{
+				Status.SetValue(StatusEnum.Completed);
+
 				DisplayListQueueUpdated.WaitOne();
 
 				while (DisplayListQueue.Count > 0)
 				{
+					Status.SetValue(StatusEnum.Drawing);
 					GpuDisplayList CurrentGpuDisplayList;
 
 					//Console.WriteLine("**********************************************");
@@ -166,13 +177,25 @@ namespace CSPspEmu.Core.Gpu
 					}
 					DisplayListQueue.RemoveFirst();
 					{
+						//Console.WriteLine("YYYYYYYYYYYYYYYYYYYYYYYYYYY");
 						CurrentGpuDisplayList.Process();
+						//Console.WriteLine("ZZZZZZZZZZZZZZZZZZZZZZZZZZ");
 					}
 					EnqueueFreeDisplayList(CurrentGpuDisplayList);
 				}
 
-				if (DrawSync != null) DrawSync();
+				//if (DrawSync != null) DrawSync();
 			}
+		}
+
+		public void GeDrawSync(SyncTypeEnum SyncType, Action SyncCallback)
+		{
+			if (SyncType != SyncTypeEnum.ListDone) throw new NotImplementedException();
+			Status.CallbackOnStateOnce(StatusEnum.Completed, () =>
+			{
+				//Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				SyncCallback();
+			});
 		}
 	}
 }

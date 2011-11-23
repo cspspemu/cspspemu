@@ -173,7 +173,7 @@ namespace CSPspEmu.Core.Gpu.State
 		public PatchCullingStateStruct PatchCullingState;
 
 		// State.
-		public ColorfStruct fixColorSrc, fixColorDst;
+		public ColorfStruct FixColorSource, FixColorDestination;
 
 		public TextureMappingStateStruct TextureMappingState;
 	}

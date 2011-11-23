@@ -205,24 +205,29 @@ namespace CSPspEmu.Core.Gpu
 		Loop:
 			for (Done = false; !Done ; InstructionAddressCurrent++)
 			{
+				//Console.WriteLine("{0:X}", (uint)InstructionAddressCurrent);
 				if ((InstructionAddressStall != null) && (InstructionAddressCurrent >= InstructionAddressStall)) break;
 				ProcessInstruction();
 			}
 
 			if (Done)
 			{
+				//Console.WriteLine("- DONE -----------------------------------------------------------------------");
+				Status.SetValue(StatusEnum.Done);
 				return;
 			}
 
 			if (InstructionAddressStall == null)
 			{
-				Status.Value = StatusEnum.Done;
+				//Console.WriteLine("- DONE -----------------------------------------------------------------------");
+				Status.SetValue(StatusEnum.Done);
 				return;
 			}
 
 			if (InstructionAddressCurrent == InstructionAddressStall)
 			{
-				Status.Value = StatusEnum.StallReached;
+				//Console.WriteLine("- STALLED --------------------------------------------------------------------");
+				Status.SetValue(StatusEnum.StallReached);
 				StallAddressUpdated.WaitOne();
 				goto Loop;
 			}
@@ -250,25 +255,25 @@ namespace CSPspEmu.Core.Gpu
 			for (int n = 0; n < SwitchLabels.Length; n++)
 			{
 				ILGenerator.MarkLabel(SwitchLabels[n]);
-				var MethodInfo = typeof(GpuDisplayListRunner).GetMethod("OP_" + Names[n]);
-				if (MethodInfo == null)
+				var MethodInfo_Operation = typeof(GpuDisplayListRunner).GetMethod("OP_" + Names[n]);
+				if (MethodInfo_Operation == null)
 				{
 					Console.Error.WriteLine("Warning! Can't find Gpu.OpCode '" + Names[n] + "'");
-					MethodInfo = typeof(GpuDisplayListRunner).GetMethod("OP_UNKNOWN");
+					MethodInfo_Operation = typeof(GpuDisplayListRunner).GetMethod("OP_UNKNOWN");
 				}
-				if (MethodInfo.GetCustomAttributes(typeof(GpuOpCodesNotImplementedAttribute), true).Length > 0)
+				if (MethodInfo_Operation.GetCustomAttributes(typeof(GpuOpCodesNotImplementedAttribute), true).Length > 0)
 				{
-					var MethodInfo2 = typeof(GpuDisplayListRunner).GetMethod("UNIMPLEMENTED_NOTICE");
+					var MethodInfo_Unimplemented = typeof(GpuDisplayListRunner).GetMethod("UNIMPLEMENTED_NOTICE");
 					ILGenerator.Emit(OpCodes.Ldarg_0);
 					//ILGenerator.Emit(OpCodes.Ldarg_1);
 					//ILGenerator.Emit(OpCodes.Ldarg_2);
-					ILGenerator.Emit(OpCodes.Call, MethodInfo2);
+					ILGenerator.Emit(OpCodes.Call, MethodInfo_Unimplemented);
 				}
 				{
 					ILGenerator.Emit(OpCodes.Ldarg_0);
 					//ILGenerator.Emit(OpCodes.Ldarg_1);
 					//ILGenerator.Emit(OpCodes.Ldarg_2);
-					ILGenerator.Emit(OpCodes.Call, MethodInfo);
+					ILGenerator.Emit(OpCodes.Call, MethodInfo_Operation);
 				}
 				ILGenerator.Emit(OpCodes.Ret);
 			}
@@ -300,6 +305,18 @@ namespace CSPspEmu.Core.Gpu
 		{
 			InstructionAddressCurrent = ((uint *)GpuProcessor.Memory.PspAddressToPointerSafe(Address)) - 1;
 			//throw new NotImplementedException();
+		}
+
+		public void GeListSync(Gpu.GpuProcessor.SyncTypeEnum SyncType, Action NotifyOnceCallback)
+		{
+			if (SyncType != Gpu.GpuProcessor.SyncTypeEnum.ListDone) throw new NotImplementedException();
+			Status.CallbackOnStateOnce(StatusEnum.Done, NotifyOnceCallback);
+			/*
+			CallbackOnStateOnce
+			Console.WriteLine("Waiting for DONE");
+			Status.WaitForState(StatusEnum.Done);
+			Console.WriteLine("Ended Waiting for DONE");
+			*/
 		}
 	}
 }

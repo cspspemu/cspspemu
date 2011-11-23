@@ -54,6 +54,15 @@ void test() {
 	emitInt(v);
 }
 
+void checkFloat24(float argument)
+{
+	union { float f; unsigned int i; } t;
+	t.f = argument;
+	emitUInt(t.i >> 8);
+}
+
+float GlobalFloat = 4.0f;
+
 int main(int argc, char **argv) {
 	char buffer[1024];
 	int decpt, sign;
@@ -71,6 +80,8 @@ dtoa(double d, int mode, int ndigits, int *decpt, int *sign, char **rve);
 	emitLong(0x0123456789ABCDEFL);
 	emitLong(testArguments(0x100, 0x1234567800000000L, 9.0f));
 	test();
+	checkFloat24(1.0f);
+	emitFloat(2.0f / GlobalFloat);
 	//emitString(dtoa(1234.567, 0, 10, &decpt, &sign, &rve));
 
 	return 0;

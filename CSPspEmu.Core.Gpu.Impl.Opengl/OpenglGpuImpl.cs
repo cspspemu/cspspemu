@@ -14,6 +14,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
+using System.Globalization;
 //using Cloo;
 //using Cloo.Bindings;
 
@@ -127,6 +128,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <param name="GpuState"></param>
 		public unsafe void Prim(GpuStateStruct* GpuState, PrimitiveType PrimitiveType, ushort VertexCount)
 		{
+			return;
+
 			if (GpuState[0].ClearingMode)
 			{
 				GraphicsContext.MakeCurrent(NativeWindow.WindowInfo);
@@ -147,9 +150,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				}
 				else
 				{
+					Console.WriteLine("[1]");
 					GL.MatrixMode(MatrixMode.Projection); GL.LoadIdentity();
-					GL.MultMatrix(GpuState[0].VertexState.ProjectionMatrix.Values);
-					GpuState[0].VertexState.ProjectionMatrix.Dump();
+					Console.WriteLine("[2]");
+					{
+						GL.MultMatrix(GpuState[0].VertexState.ProjectionMatrix.Values);
+						GpuState[0].VertexState.ProjectionMatrix.Dump();
+					}
 
 					GL.MatrixMode(MatrixMode.Modelview); GL.LoadIdentity();
 					GL.MultMatrix(GpuState[0].VertexState.ViewMatrix.Values);
@@ -191,17 +198,23 @@ struct Vertex
 		[HandleProcessCorruptedStateExceptions()]
 		public void Finish(GpuStateStruct* GpuState)
 		{
+			return;
+
 			//if (GpuState[0].DrawBufferState.LowAddress != 0)
 			{
 				var Address = PspMemory.FrameBufferOffset | GpuState[0].DrawBufferState.LowAddress;
 				try
 				{
-					//Console.WriteLine("{0:X}", Address);
+					Console.WriteLine("{0:X}", Address);
+					Memory.CheckAndEnforceAddressValid(Address);
 					GL.ReadPixels(0, 0, 512, 272, PixelFormat.Rgba, PixelType.UnsignedInt8888, new IntPtr(Memory.PspAddressToPointerSafe(Address)));
 				}
 				catch (Exception Exception)
 				{
+					// 0x04000000
+					Console.WriteLine("Address: {0:X}", Address);
 					Console.WriteLine(Exception);
+					//throw(Exception);
 				}
 			}
 		}
@@ -215,6 +228,7 @@ struct Vertex
 			AutoResetEvent CompletedEvent = new AutoResetEvent(false);
 			var CThread = new Thread(() =>
 			{
+				Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.CultureName);
 				NativeWindow = new OpenTK.NativeWindow(512, 272, "PspGraphicEngine", GameWindowFlags.Default, GraphicsMode.Default, DisplayDevice.Default);
 				NativeWindow.Visible = false;
 				GraphicsContext = new GraphicsContext(GraphicsMode.Default, NativeWindow.WindowInfo);
