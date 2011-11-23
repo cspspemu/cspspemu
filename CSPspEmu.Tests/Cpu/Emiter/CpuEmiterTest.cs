@@ -606,14 +606,50 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
-		public void CountLeadingZeroes()
+		public void CountLeadingOnesAndZeros()
 		{
 			ExecuteAssembly(@"
-				clz r1, r0
-				clo r2, r0
+				li  r11, 0b_00000000000000000000000000000000
+				li  r12, 0b_11111111111111111111111111111111
+				li  r13, 0b_11100000000000000000000000000111
+				li  r14, 0b_00011111111111111111111111111000
+				li  r15, 0b_00011111111111111111111111111111
+				li  r16, 0b_11100000000000000000000000000000
+
+				clz r1, r11
+				clo r2, r11
+
+				clz r3, r12
+				clo r4, r12
+
+				clz r5, r13
+				clo r6, r13
+
+				clz r7, r14
+				clo r8, r14
+
+				clz r9, r15
+				clo r10, r15
 			");
+			// r11
 			Assert.AreEqual(32, CpuThreadState.GPR[1]);
 			Assert.AreEqual(0, CpuThreadState.GPR[2]);
+	
+			// r12
+			Assert.AreEqual(0, CpuThreadState.GPR[3]);
+			Assert.AreEqual(32, CpuThreadState.GPR[4]);
+
+			// r13
+			Assert.AreEqual(0, CpuThreadState.GPR[5]);
+			Assert.AreEqual(3, CpuThreadState.GPR[6]);
+
+			// r14
+			Assert.AreEqual(3, CpuThreadState.GPR[7]);
+			Assert.AreEqual(0, CpuThreadState.GPR[8]);
+
+			// r15
+			Assert.AreEqual(3, CpuThreadState.GPR[9]);
+			Assert.AreEqual(0, CpuThreadState.GPR[10]);
 		}
 
 		[TestMethod]
