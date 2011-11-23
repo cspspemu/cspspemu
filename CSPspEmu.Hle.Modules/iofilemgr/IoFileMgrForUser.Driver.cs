@@ -22,18 +22,9 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <returns>Less than 0 on error.</returns>
 		[HlePspFunction(NID = 0x8E982A74, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceIoAddDrv(PspIoDrv* drv)
+		public int sceIoAddDrv(PspIoDrv* PspIoDrv)
 		{
-			/*
-			string name  = to!string(cast(char *)currentCpuThread().memory.getPointer(cast(uint)drv.name));
-			string name2 = to!string(cast(char *)currentCpuThread().memory.getPointer(cast(uint)drv.name2));
-			PspIoDrvFuncs* funcs = cast(PspIoDrvFuncs*)currentCpuThread().memory.getPointer(cast(uint)drv.funcs);
-			rootFileSystem().addDriver(name, new IoDevice(hleEmulatorState, new PspVirtualFileSystem(hleEmulatorState, name, drv, funcs)));
-			logWarning("sceIoAddDrv('%s', '%s', ...)", name, name2);
-			return 0;
-			*/
-			//throw (new NotImplementedException());
-			return 0;
+			throw (new NotImplementedException());
 		}
 
 		/// <summary>
@@ -41,19 +32,13 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// 
 		/// @note This is only exported in the kernel version of IoFileMgr
 		/// </summary>
-		/// <param name="drv_name">Name of the driver to delete.</param>
+		/// <param name="DriverName">Name of the driver to delete.</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xC7F35804, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceIoDelDrv(string drv_name)
+		public int sceIoDelDrv(string DriverName)
 		{
-			/*
-			logWarning("sceIoDelDrv('%s')", drv_name);
-			rootFileSystem().delDriver(drv_name);
-			return 0;
-			*/
-			//throw (new NotImplementedException());
-			return 0;
+			throw (new NotImplementedException());
 		}
 	}
 }

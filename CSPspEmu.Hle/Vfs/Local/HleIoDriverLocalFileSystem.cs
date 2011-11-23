@@ -136,7 +136,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 			}
 		}
 
-		public unsafe int IoLseek(HleIoDrvFileArg HleIoDrvFileArg, long Offset, int Whence)
+		public unsafe long IoLseek(HleIoDrvFileArg HleIoDrvFileArg, long Offset, int Whence)
 		{
 			throw new NotImplementedException();
 		}

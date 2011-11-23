@@ -195,7 +195,7 @@ namespace CSPspEmu.Hle.Vfs
 		/// <param name="Offset"></param>
 		/// <param name="Whence"></param>
 		/// <returns></returns>
-		int IoLseek(HleIoDrvFileArg HleIoDrvFileArg, long Offset, int Whence);
+		long IoLseek(HleIoDrvFileArg HleIoDrvFileArg, long Offset, int Whence);
 
 		/// <summary>
 		/// Sends a command to the driver.

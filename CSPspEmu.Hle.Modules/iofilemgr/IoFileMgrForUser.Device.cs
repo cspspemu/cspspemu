@@ -10,17 +10,18 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <summary>
 		/// Perform an ioctl on a device.
 		/// </summary>
-		/// <param name="fd">Opened file descriptor to ioctl to</param>
-		/// <param name="cmd">The command to send to the device</param>
-		/// <param name="indata">A data block to send to the device, if NULL sends no data</param>
-		/// <param name="inlen">Length of indata, if 0 sends no data</param>
-		/// <param name="outdata">A data block to receive the result of a command, if NULL receives no data</param>
-		/// <param name="outlen">Length of outdata, if 0 receives no data</param>
+		/// <param name="FileHandle">Opened file descriptor to ioctl to</param>
+		/// <param name="Command">The command to send to the device</param>
+		/// <param name="InputPointer">A data block to send to the device, if NULL sends no data</param>
+		/// <param name="InputLength">Length of indata, if 0 sends no data</param>
+		/// <param name="OutputPointer">A data block to receive the result of a command, if NULL receives no data</param>
+		/// <param name="OutputLength">Length of outdata, if 0 receives no data</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x63632449, FirmwareVersion = 150)]
-		public int sceIoIoctl(SceUID fd, uint cmd, void* indata, int inlen, void* outdata, int outlen)
+		public int sceIoIoctl(int FileHandle, uint Command, byte* InputPointer, int InputLength, byte* OutputPointer, int OutputLength)
 		{
-			throw(new NotImplementedException());
+			var HleIoDrvFileArg = GetFileArgFromHandle(FileHandle);
+			return HleIoDrvFileArg.HleIoDriver.IoIoctl(HleIoDrvFileArg, Command, InputPointer, InputLength, OutputPointer, OutputLength);
 		}
 
 		/// <summary>
