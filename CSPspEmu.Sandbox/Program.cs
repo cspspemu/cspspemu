@@ -260,6 +260,8 @@ namespace CSPspEmu.Sandbox
 			RegisterModuleSyscall<Emulator>(0x1013, "emitMemoryBlock");
 			RegisterModuleSyscall<Emulator>(0x1014, "emitHex");
 			RegisterModuleSyscall<Emulator>(0x1015, "emitUInt");
+			RegisterModuleSyscall<Emulator>(0x1016, "emitLong");
+			RegisterModuleSyscall<Emulator>(0x1017, "testArguments");
 			RegisterModuleSyscall<Emulator>(0x7777, "waitThreadForever");
 		}
 

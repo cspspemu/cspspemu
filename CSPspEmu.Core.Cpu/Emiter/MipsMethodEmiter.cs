@@ -143,6 +143,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			LoadFieldPtr(FieldInfo); Action(); ILGenerator.Emit(OpCodes.Stind_I4);
 		}
 
+		public void SaveFieldI8(FieldInfo FieldInfo, Action Action)
+		{
+			LoadFieldPtr(FieldInfo); Action(); ILGenerator.Emit(OpCodes.Stind_I8);
+		}
+
 		public void SaveFieldR4(FieldInfo FieldInfo, Action Action)
 		{
 			LoadFieldPtr(FieldInfo); Action(); ILGenerator.Emit(OpCodes.Stind_R4);
@@ -166,6 +171,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		public void SaveGPR(int R, Action Action) { if (R != 0) SaveFieldI4(Field_GPRList[R], Action); }
+		public void SaveGPRLong(int R, Action Action) { if (R != 0) SaveFieldI8(Field_GPRList[R], Action); }
 		public void SaveFPR(int R, Action Action)
 		{
 			LoadFPR_Ptr(R);
@@ -212,6 +218,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				ILGenerator.Emit(OpCodes.Ldind_U4);
 			}
 		}
+
+		public void LoadGPRLong_Signed(int R)
+		{
+			LoadGPR_Ptr(R);
+			ILGenerator.Emit(OpCodes.Ldind_I8);
+		}
+
 
 		public void LoadFPR(int R)
 		{

@@ -17,16 +17,21 @@ namespace CSPspEmu.Core.Tests
 	{
 		protected MockeableFactory MockeableFactory;
 		protected PspConfig PspConfig;
-		protected PspMemory Memory;
+		static protected PspMemory Memory;
 		protected CpuProcessor Processor;
 		protected CpuThreadState CpuThreadState;
+
+		[ClassInitialize]
+		public static void ClassInit(TestContext context)
+		{
+			Memory = new LazyPspMemory();
+		}
 
 		[TestInitialize]
 		public void SetUp()
 		{
 			MockeableFactory = new MockeableFactory();
 			PspConfig = new PspConfig(MockeableFactory);
-			Memory = new LazyPspMemory();
 			Processor = new CpuProcessor(PspConfig, Memory);
 			CpuThreadState = new CpuThreadState(Processor);
 		}

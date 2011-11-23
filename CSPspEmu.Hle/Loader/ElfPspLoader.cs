@@ -185,9 +185,10 @@ namespace CSPspEmu.Hle.Loader
 				{
 					Module = ModuleManager.GetModuleByName(ModuleImportName);
 				}
-				catch (Exception)
+				catch (Exception Exception)
 				{
-					//throw(new Exception(Exception.Message, Exception));
+					Console.WriteLine(Exception);
+					throw(new Exception(Exception.Message, Exception));
 				}
 
 				Console.WriteLine("{0:X}:'{1}'", ModuleImport.Name, ModuleImportName);

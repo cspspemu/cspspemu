@@ -58,6 +58,8 @@ dtoa(double d, int mode, int ndigits, int *decpt, int *sign, char **rve);
 */
 	
 	emitString((char *)_itoa(12345678, buffer, 10));
+	emitLong(0x0123456789ABCDEFL);
+	emitLong(testArguments(0x100, 0x1234567800000000L, 9.0f));
 	//emitString(dtoa(1234.567, 0, 10, &decpt, &sign, &rve));
 
 	return 0;

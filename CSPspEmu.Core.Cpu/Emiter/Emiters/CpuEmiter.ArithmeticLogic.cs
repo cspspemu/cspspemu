@@ -313,7 +313,37 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Word Swap Bytes Within Halfwords/Words.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void wsbh() { throw (new NotImplementedException()); }
-		public void wsbw() { throw (new NotImplementedException()); }
+		uint _wsbh_impl(uint v)
+		{
+			// swap bytes
+			return ((v & 0xFF00FF00) >> 8) | ((v & 0x00FF00FF) << 8);
+		}
+		uint _wsbw_impl(uint v)
+		{
+			// BSWAP
+			return (
+				((v & 0xFF000000) >> 24) |
+				((v & 0x00FF0000) >> 8) |
+				((v & 0x0000FF00) << 8) |
+				((v & 0x000000FF) << 24)
+			);
+		}
+
+		public void wsbh()
+		{
+			MipsMethodEmiter.SaveGPR(RD, () =>
+			{
+				MipsMethodEmiter.LoadGPR_Unsigned(RT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_wsbh_impl"));
+			});
+		}
+		public void wsbw()
+		{
+			MipsMethodEmiter.SaveGPR(RD, () =>
+			{
+				MipsMethodEmiter.LoadGPR_Unsigned(RT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_wsbw_impl"));
+			});
+		}
 	}
 }

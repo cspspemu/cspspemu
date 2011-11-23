@@ -29,6 +29,8 @@ PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
 	extern void emitMemoryBlock(void *address, unsigned int size);
 	extern void emitHex(void *address, unsigned int size);
 	extern void emitUInt(unsigned int v);
+	extern void emitLong(long long int v);
+	extern long long int testArguments(int arg1, long long int arg2, float arg3);
 #else
 	void emitInt(int v) { asm("syscall 0x1010"); }
 	void emitFloat(float v) { asm("syscall 0x1011"); }
@@ -37,6 +39,8 @@ PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER | THREAD_ATTR_VFPU);
 	void emitMemoryBlock(void *address, unsigned int size) { asm("syscall 0x1013"); }
 	void emitHex(void *address, unsigned int size) { asm("syscall 0x1014"); }
 	void emitUInt(unsigned int v) { asm("syscall 0x1015"); }
+	void emitLong(long long int v) { asm("syscall 0x1016"); }
+	 long long int testArguments(int arg1, long long int arg2, float arg3) { asm("syscall 0x1017"); }
 #endif
 
 #define lengthof(K) (sizeof((K)) / sizeof((K)[0]))

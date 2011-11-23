@@ -9,3 +9,7 @@ IMPORT_FUNC	 "Emulator",0x00000002,emitString
 IMPORT_FUNC	 "Emulator",0x00000003,emitMemoryBlock
 IMPORT_FUNC	 "Emulator",0x00000004,emitHex
 IMPORT_FUNC	 "Emulator",0x00000005,emitUInt
+IMPORT_FUNC	 "Emulator",0x00000006,emitLong
+IMPORT_FUNC	 "Emulator",0x10000010,testArguments
+IMPORT_FUNC	 "Emulator",0x10000000,waitThreadForever
+

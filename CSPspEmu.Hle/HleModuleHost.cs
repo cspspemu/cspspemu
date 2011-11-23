@@ -27,20 +27,32 @@ namespace CSPspEmu.Hle
 		{
 			this.HleState = HleState;
 
-			foreach (var MethodInfo in this.GetType().GetMethods())
+			try
 			{
-				var Attributes = MethodInfo.GetCustomAttributes(typeof(HlePspFunctionAttribute), true).Cast<HlePspFunctionAttribute>();
-				if (Attributes.Count() > 0)
+				foreach (var MethodInfo in this.GetType().GetMethods())
 				{
-					var Delegate = CreateDelegateForMethodInfo(MethodInfo, Attributes.First());
-					DelegatesByName[MethodInfo.Name] = Delegate;
-					foreach (var Attribute in Attributes)
+					var Attributes = MethodInfo.GetCustomAttributes(typeof(HlePspFunctionAttribute), true).Cast<HlePspFunctionAttribute>();
+					if (Attributes.Count() > 0)
 					{
-						//Console.WriteLine(Attribute.NID);
-						DelegatesByNID[Attribute.NID] = Delegate;
-						NamesByNID[Attribute.NID] = MethodInfo.Name;
+						var Delegate = CreateDelegateForMethodInfo(MethodInfo, Attributes.First());
+						DelegatesByName[MethodInfo.Name] = Delegate;
+						foreach (var Attribute in Attributes)
+						{
+							//Console.WriteLine("HleModuleHost: {0}, {1}", "0x%08X".Sprintf(Attribute.NID), MethodInfo.Name);
+							DelegatesByNID[Attribute.NID] = Delegate;
+							NamesByNID[Attribute.NID] = MethodInfo.Name;
+						}
+					}
+					else
+					{
+						//Console.WriteLine("HleModuleHost: NO: {0}", MethodInfo.Name);
 					}
 				}
+			}
+			catch (Exception Exception)
+			{
+				Console.WriteLine(Exception);
+				throw (Exception);
 			}
 		}
 
@@ -132,11 +144,15 @@ namespace CSPspEmu.Hle
 							ParameterType = ParameterType,
 						});
 
+
+						MipsMethodEmiter.LoadGPRLong_Signed(GprIndex + 0);
+						/*
 						MipsMethodEmiter.LoadGPR_Unsigned(GprIndex + 0);
 						MipsMethodEmiter.LoadGPR_Unsigned(GprIndex + 1);
 						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 32);
 						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shl);
 						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
+						*/
 						GprIndex += 2;
 					}
 					// A float register.
@@ -178,7 +194,7 @@ namespace CSPspEmu.Hle
 			}
 			else if (MethodInfo.ReturnType == typeof(long))
 			{
-				throw(new NotImplementedException());
+				MipsMethodEmiter.SaveGPRLong(2, CallAction);
 			}
 			else
 			{

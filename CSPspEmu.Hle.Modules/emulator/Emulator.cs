@@ -45,6 +45,18 @@ namespace CSPspEmu.Hle.Modules.emulator
 			Console.WriteLine("emitUInt: {0}", "0x%08X".Sprintf(Value));
 		}
 
+		[HlePspFunction(NID = 0x00000006, FirmwareVersion = 150)]
+		public void emitLong(long Value)
+		{
+			Console.WriteLine("emitLong: {0}", "0x%016X".Sprintf(Value));
+		}
+
+		[HlePspFunction(NID = 0x10000010, FirmwareVersion = 150)]
+		public long testArguments(int Argument1, long Argument2, float Argument3)
+		{
+			return (long)Argument1 + (long)Argument2 + (long)Argument3;
+		}
+
 		[HlePspFunction(NID = 0x10000000, FirmwareVersion = 150)]
 		public void waitThreadForever(CpuThreadState CpuThreadState)
 		{
