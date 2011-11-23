@@ -3,13 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</ProjectGuid>
+    <ProjectGuid>{07C4AE15-8E61-4740-B5A9-44DB87CECB46}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CSPspEmu.Core</RootNamespace>
-    <AssemblyName>CSPspEmu.Core</AssemblyName>
+    <RootNamespace>CSPspEmu.Core.Audio.Imple.Openal</RootNamespace>
+    <AssemblyName>CSPspEmu.Core.Audio.Imple.Openal</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,9 +28,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OpenTK, Version=1.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,27 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DebugUtils.cs" />
-    <Compile Include="IGuiExternalInterface.cs" />
-    <Compile Include="IResetable.cs" />
-    <Compile Include="Memory\PspMemory.cs" />
-    <Compile Include="Memory\LazyPspMemory.cs" />
-    <Compile Include="Memory\FastPspMemory.cs" />
-    <Compile Include="Memory\NormalPspMemory.cs" />
-    <Compile Include="Memory\PspMemoryStream.cs" />
+    <Compile Include="PspAudioOpenalImpl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PspAudio.cs" />
-    <Compile Include="PspConfig.cs" />
-    <Compile Include="PspController.cs" />
-    <Compile Include="PspDisplay.cs" />
-    <Compile Include="PspEmulatorState.cs" />
-    <Compile Include="PspRtc.cs" />
-    <Compile Include="Threading\Synchronization\WaitableStateMachine.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
-      <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
+      <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
       <Name>CSharpUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
+      <Project>{f783ecd3-0f79-43cc-abd0-d356a64049c4}</Project>
+      <Name>CSPspEmu.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

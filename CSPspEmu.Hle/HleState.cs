@@ -18,6 +18,7 @@ namespace CSPspEmu.Hle
 		public GpuProcessor GpuProcessor;
 		public PspRtc PspRtc;
 		public PspDisplay PspDisplay;
+		public PspAudio PspAudio;
 		public PspController PspController;
 		public PspConfig PspConfig;
 
@@ -30,11 +31,12 @@ namespace CSPspEmu.Hle
 		public HleCallbackManager CallbackManager;
 		public HleIoManager HleIoManager;
 
-		public HleState(CpuProcessor CpuProcessor, GpuProcessor GpuProcessor, PspConfig PspConfig, PspRtc PspRtc, PspDisplay PspDisplay, PspController PspController, Assembly ModulesAssembly)
+		public HleState(CpuProcessor CpuProcessor, GpuProcessor GpuProcessor, PspAudio PspAudio, PspConfig PspConfig, PspRtc PspRtc, PspDisplay PspDisplay, PspController PspController, Assembly ModulesAssembly)
 		{
 			this.IsRunning = true;
 			this.CpuProcessor = CpuProcessor;
 			this.GpuProcessor = GpuProcessor;
+			this.PspAudio = PspAudio;
 			this.PspConfig = PspConfig;
 			this.PspRtc = PspRtc;
 			this.PspDisplay = PspDisplay;

@@ -339,12 +339,23 @@ namespace CSPspEmu.Core.Cpu
 		{
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <see cref="http://msdn.microsoft.com/en-us/library/ms253512(v=vs.80).aspx"/>
+		string[] RegisterMnemonicNames = new string[] {
+			"zr", "at", "v0", "v1", "a0", "a1", "a2", "a3",
+			"t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",
+			"s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
+			"t8", "t9", "k0", "k1", "gp", "sp", "fp", "ra", 
+		};
+
 		public void DumpRegisters()
 		{
 			for (int n = 0; n < 32; n++)
 			{
 				if (n % 4 != 0) Console.Write(", ");
-				Console.Write("r{0,2} : {1:X}", n, "0x%08X".Sprintf(GPR[n]));
+				Console.Write("r{0,2}({1}) : {2}", n, RegisterMnemonicNames[n], "0x%08X".Sprintf(GPR[n]));
 				if (n % 4 == 3) Console.WriteLine();
 			}
 
@@ -352,7 +363,7 @@ namespace CSPspEmu.Core.Cpu
 			for (int n = 0; n < 32; n++)
 			{
 				if (n % 4 != 0) Console.Write(", ");
-				Console.Write("f{0,2} : {1}", n, FPR[n]);
+				Console.Write("f{0,2} : {1}, {2}", n, "0x%08X".Sprintf(FPR_I[n]), FPR[n]);
 				if (n % 4 == 3) Console.WriteLine();
 			}
 			Console.WriteLine();

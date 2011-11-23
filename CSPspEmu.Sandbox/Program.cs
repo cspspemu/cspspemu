@@ -36,6 +36,7 @@ using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Hle.Vfs.Emulator;
 using CSharpUtils.Factory;
 using System.Globalization;
+using CSPspEmu.Core.Audio.Imple.Openal;
 
 namespace CSPspEmu.Sandbox
 {
@@ -48,8 +49,13 @@ namespace CSPspEmu.Sandbox
 		protected PspController PspController;
 		protected PspMemory Memory;
 		protected CpuProcessor CpuProcessor;
+		
 		protected OpenglGpuImpl GpuImpl;
 		protected GpuProcessor GpuProcessor;
+
+		protected PspAudioOpenalImpl PspAudioImpl;
+		protected PspAudio PspAudio;
+
 		protected PspMemoryStream MemoryStream;
 		protected HleState HleState;
 		protected TaskQueue CpuTaskQueue = new TaskQueue();
@@ -267,7 +273,7 @@ namespace CSPspEmu.Sandbox
 		}
 
 		void CreateNewHleState() {
-			HleState = new HleState(CpuProcessor, GpuProcessor, PspConfig, PspRtc, PspDisplay, PspController, HleModulesDll);
+			HleState = new HleState(CpuProcessor, GpuProcessor, PspAudio, PspConfig, PspRtc, PspDisplay, PspController, HleModulesDll);
 			//Console.WriteLine();
 			//Console.ReadKey();
 			string VirtualDirectory = Path.GetDirectoryName(Application.ExecutablePath);
@@ -301,8 +307,15 @@ namespace CSPspEmu.Sandbox
 
 			MemoryStream = new PspMemoryStream(Memory);
 			CpuProcessor = new CpuProcessor(PspConfig, Memory);
+
+			// Gpu
 			GpuImpl = new OpenglGpuImpl(PspConfig, Memory);
 			GpuProcessor = new GpuProcessor(PspConfig, Memory, GpuImpl);
+
+			// Audio
+			PspAudioImpl = new PspAudioOpenalImpl();
+			PspAudio = new PspAudio(PspAudioImpl);
+
 			CreateNewHleState();
 
 			//PspConfig.DebugSyscalls = true;
@@ -418,10 +431,15 @@ namespace CSPspEmu.Sandbox
 
 		protected void OnInit()
 		{
+			//LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
+			//LoadFile(@"C:\juegos\jpcsp2\demos\fputest.elf");
 			//LoadFile(@"C:\projects\cspspemu\PspAutoTests\alu.elf");
-			//LoadFile(@"C:\projects\cspspemu\PspAutoTests\fpu.elf");
+			LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\fpu.elf");
 			//LoadFile(@"C:\projects\cspspemu\PspAutoTests\gum.elf");
-			LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\ortho.pbp");
+			//LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\ortho.pbp");
+			//LoadFile(@"C:\juegos\pspemu\demos\controller.pbp");
+			//LoadFile(@"C:\pspsdk\psp\sdk\samples\audio\polyphonic\polyphonic.elf");
+			//LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\sound.prx");
 			//LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\cube.pbp");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\cpu\cpu\cpu.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\threadstatus.pbp");
@@ -434,7 +452,6 @@ namespace CSPspEmu.Sandbox
 			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\fpu.elf");
 			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\malloc.elf");
 
-			//LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
 			//LoadFile(@"C:\pspsdk\psp\sdk\samples\kernel\sysevent\EBOOT.PBP");
 			//LoadFile(@"C:\pspsdk\psp\sdk\samples\kernel\systimer\EBOOT.PBP");
 			//LoadFile(@"C:\pspsdk\psp\sdk\samples\kernel\loadmodule\EBOOT.PBP");
@@ -450,7 +467,6 @@ namespace CSPspEmu.Sandbox
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\string\string.elf");
 			//LoadFile(@"C:\juegos\jpcsp2\demos\cube.pbp");
 			//LoadFile(@"C:\juegos\jpcsp2\demos\nehetutorial02.pbp");
-			//LoadFile(@"C:\juegos\jpcsp2\demos\fputest.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\mytest.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\cube.pbp");
 			//LoadFile(@"C:\projects\pspemu\demos\dumper.elf");
@@ -467,6 +483,7 @@ namespace CSPspEmu.Sandbox
 			Console.SetWindowSize(160, 60);
 			Console.SetBufferSize(160, 2000);
 			new Program().Execute();
+			//var PspAudioImpl = new PspAudioOpenalImpl(); Thread.Sleep(int.MaxValue);
 		}
 	}
 }

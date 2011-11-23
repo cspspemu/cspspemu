@@ -9,7 +9,15 @@ namespace CSPspEmu.Core
 	{
 		public const int MaxStoredFrames = 128;
 
+		public enum SamplingModeEnum
+		{
+			Digital = 0,
+			Analogic = 1,
+		}
+
 		protected List<SceCtrlData> SceCtrlDataBuffer = new List<SceCtrlData>();
+		public int SamplingCycle;
+		public SamplingModeEnum SamplingMode;
 
 		public PspController()
 		{

@@ -8,13 +8,17 @@ namespace CSPspEmu.Core.Cpu.Emiter
 {
 	unsafe sealed public partial class CpuEmiter
 	{
-		private void _load_i(Action Action)
+		private void _save_pc()
 		{
 			if (!(MipsMethodEmiter.Processor.Memory is FastPspMemory))
 			{
 				MipsMethodEmiter.SavePC(PC);
 			}
+		}
 
+		private void _load_i(Action Action)
+		{
+			_save_pc();
 			MipsMethodEmiter.SaveGPR(RT, () =>
 			{
 				MipsMethodEmiter._getmemptr(() =>
@@ -29,6 +33,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		private void _save_common(Action Action)
 		{
+			_save_pc();
 			MipsMethodEmiter._getmemptr(() =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
@@ -40,11 +45,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		private void _save_i(OpCode OpCode)
 		{
-			if (!(MipsMethodEmiter.Processor.Memory is FastPspMemory))
-			{
-				MipsMethodEmiter.SavePC(PC);
-			}
-
 			_save_common(() =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
@@ -75,6 +75,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
 
 				// ((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 1) << 16) & 0x_FFFF_0000)
+				_save_pc();
 				MipsMethodEmiter._getmemptr(() =>
 				{
 					MipsMethodEmiter.LoadGPR_Unsigned(RS);
@@ -107,6 +108,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
 
 				// ((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 0) << 0) & 0x_0000_FFFF)
+				_save_pc();
 				MipsMethodEmiter._getmemptr(() =>
 				{
 					MipsMethodEmiter.LoadGPR_Unsigned(RS);
@@ -136,6 +138,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		public void swl()
 		{
+			_save_pc();
 			MipsMethodEmiter._getmemptr(() =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
@@ -152,6 +155,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		public void swr()
 		{
+			_save_pc();
 			MipsMethodEmiter._getmemptr(() =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
@@ -178,6 +182,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			MipsMethodEmiter.SaveFPR(FT, () =>
 			{
+				_save_pc();
 				MipsMethodEmiter._getmemptr(() =>
 				{
 					MipsMethodEmiter.LoadGPR_Unsigned(RS);

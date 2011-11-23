@@ -1,6 +1,7 @@
 ﻿using CSPspEmu.Hle;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Tests
 {
@@ -68,6 +69,19 @@ namespace CSPspEmu.Core.Tests
 				"])",
 				PartitionRoot.ToString()
 			);
+		}
+
+		[TestMethod]
+		public void MathUtilsPrevAlignedTest()
+		{
+			Assert.AreEqual(0x200, (int)MathUtils.PrevAligned(0x260, 0x100));
+		}
+
+		[TestMethod]
+		public void AllocateAlignedStackOnNonAlignedSegmentTest()
+		{
+			PartitionRoot = new MemoryPartition(0x000, 0x260);
+			PartitionRoot.Allocate(0x100, MemoryPartition.Anchor.High, Alignment: 0x100);
 		}
 	}
 }

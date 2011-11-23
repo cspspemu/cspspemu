@@ -65,6 +65,7 @@ namespace CSPspEmu.Hle
 			None = 0,
 			Timer = 1,
 			GraphicEngine = 2,
+			Audio = 3,
 		}
 
 		public enum Status {

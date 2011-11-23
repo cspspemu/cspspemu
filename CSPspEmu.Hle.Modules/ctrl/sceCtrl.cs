@@ -54,7 +54,7 @@ namespace CSPspEmu.Hle.Modules.ctrl
 		/// <summary>
 		/// Set the controller mode.
 		/// </summary>
-		/// <param name="mode">
+		/// <param name="SamplingMode">
 		/// One of ::PspCtrlMode.
 		/// PSP_CTRL_MODE_DIGITAL = 0
 		/// PSP_CTRL_MODE_ANALOG  = 1
@@ -64,35 +64,38 @@ namespace CSPspEmu.Hle.Modules.ctrl
 		/// </param>
 		/// <returns>The previous mode.</returns>
 		[HlePspFunction(NID = 0x1F4011E6, FirmwareVersion = 150)]
-		public int sceCtrlSetSamplingMode(int mode)
+		public PspController.SamplingModeEnum sceCtrlSetSamplingMode(PspController.SamplingModeEnum SamplingMode)
 		{
-			/*
-			uint previouseMode = cast(int)cpu.controller.samplingMode;
-			cpu.controller.samplingMode = cast(Controller.Mode)mode;
-			return previouseMode;
-			*/
-			return 0;
+			try
+			{
+				return HleState.PspController.SamplingMode;
+			}
+			finally
+			{
+				HleState.PspController.SamplingMode = SamplingMode;
+			}
 		}
 
 		/// <summary>
 		/// Set the controller cycle setting.
 		/// </summary>
-		/// <param name="cycle">
+		/// <param name="SamplingCycle">
 		/// Cycle. Normally set to 0.
 		/// 
 		/// @TODO Unknown what this means exactly.
 		/// </param>
 		/// <returns>The previous cycle setting.</returns>
 		[HlePspFunction(NID = 0x6A2774F3, FirmwareVersion = 150)]
-		public int sceCtrlSetSamplingCycle(int cycle)
+		public int sceCtrlSetSamplingCycle(int SamplingCycle)
 		{
-			/*
-			int previousCycle = cpu.controller.samplingCycle;
-			cpu.controller.samplingCycle = cycle;
-			if (cycle != 0) writefln("sceCtrlSetSamplingCycle != 0! :: %d", cycle);
-			return previousCycle;
-			*/
-			return 0;
+			try
+			{
+				return HleState.PspController.SamplingCycle;
+			}
+			finally
+			{
+				HleState.PspController.SamplingCycle = SamplingCycle;
+			}
 		}
 	}
 }

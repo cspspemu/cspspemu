@@ -110,18 +110,17 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 		}
 
-		// Convert
+		/// <summary>
+		/// Convert FS register (stored as an int) to float and stores the result on FD.
+		/// </summary>
 		public void cvt_s_w()
 		{
 			MipsMethodEmiter.SaveFPR(FD, () =>
 			{
 				MipsMethodEmiter.LoadFPR(FS);
-				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(MathFloat).GetMethod("ReinterpretFloatAsUInt"));
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(MathFloat).GetMethod("Rint"));
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(MathFloat).GetMethod("ReinterpretFloatAsUInt"));
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_R4);
 			});
-			//mixin(CE("$fd = cast(float)reinterpret!(int)($fs);"));
-			//throw (new NotImplementedException());
 		}
 
 		static public void _cvt_w_s_impl(CpuThreadState CpuThreadState, int FD, int FS)
@@ -129,18 +128,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			//Console.WriteLine("_cvt_w_s_impl: {0}", CpuThreadState.FPR[FS]);
 			switch (CpuThreadState.Fcr31.RM)
 			{
-				case CpuThreadState.FCR31.TypeEnum.Rint:
-					CpuThreadState.FPR_I[FD] = (int)MathFloat.Rint(CpuThreadState.FPR[FS]);
-					break;
-				case CpuThreadState.FCR31.TypeEnum.Cast:
-					CpuThreadState.FPR_I[FD] = (int)CpuThreadState.FPR[FS];
-					break;
-				case CpuThreadState.FCR31.TypeEnum.Ceil:
-					CpuThreadState.FPR_I[FD] = (int)MathFloat.Ceil(CpuThreadState.FPR[FS]);
-					break;
-				case CpuThreadState.FCR31.TypeEnum.Floor:
-					CpuThreadState.FPR_I[FD] = (int)MathFloat.Floor(CpuThreadState.FPR[FS]);
-					break;
+				case CpuThreadState.FCR31.TypeEnum.Rint: CpuThreadState.FPR_I[FD] = (int)MathFloat.Rint(CpuThreadState.FPR[FS]); break;
+				case CpuThreadState.FCR31.TypeEnum.Cast: CpuThreadState.FPR_I[FD] = (int)CpuThreadState.FPR[FS]; break;
+				case CpuThreadState.FCR31.TypeEnum.Ceil: CpuThreadState.FPR_I[FD] = (int)MathFloat.Ceil(CpuThreadState.FPR[FS]); break;
+				case CpuThreadState.FCR31.TypeEnum.Floor: CpuThreadState.FPR_I[FD] = (int)MathFloat.Floor(CpuThreadState.FPR[FS]); break;
 			}
 		}
 

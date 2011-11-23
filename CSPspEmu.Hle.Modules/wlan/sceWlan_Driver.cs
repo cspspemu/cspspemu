@@ -30,7 +30,8 @@ namespace CSPspEmu.Hle.Modules.wlan
 		/// </param>
 		/// <returns>0 on success, < 0 on error</returns>
 		[HlePspFunction(NID = 0x0C622081, FirmwareVersion = 150)]
-		public int sceWlanGetEtherAddr(byte* EthernetAddress) {
+		public int sceWlanGetEtherAddr(byte* EthernetAddress)
+		{
 			foreach (var ThisNetworkInterface in NetworkInterface.GetAllNetworkInterfaces())
 			{
 				if (ThisNetworkInterface.OperationalStatus == OperationalStatus.Up)

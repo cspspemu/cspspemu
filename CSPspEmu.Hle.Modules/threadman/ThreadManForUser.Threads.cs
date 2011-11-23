@@ -40,6 +40,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Thread.CpuThreadState.GP = (uint)CpuThreadState.GP;
 			Thread.CpuThreadState.SP = (uint)(Thread.Stack.High);
 			Thread.CpuThreadState.RA = (uint)0x08000000;
+			Thread.CurrentStatus = HleThread.Status.Stopped;
 			//Thread.CpuThreadState.RA = (uint)0;
 
 			//Console.WriteLine("STACK: {0:X}", Thread.CpuThreadState.SP);

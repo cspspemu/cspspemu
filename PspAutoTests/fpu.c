@@ -24,6 +24,34 @@ void checkSetLessThan() {
 }
 */
 
+float performanceSum = 100000.0f;
+int performanceCount = 100000;
+float performanceCountf = 100000.0f;
+
+char *testNames[] = { "", "Empty loop", "Simple loop", "read32", "read16", "read8", "write32", "write16", "write8",
+                      "Function call no params", "Function call with params",
+					  "FPU add.s", "FPU mul.s",
+					  "VFPU vadd.s", "VFPU vadd.p", "VFPU vadd.t", "VFPU vadd.q", "VFPU vadd.q sequence",
+					  "LWC1", "SWC1",
+					  "memcpy (native)", "memset (native)", "strcpy (native)",
+					  "memcpy (non-native)", "memset (non-native)", "strcpy (non-native)",
+                    };
+float pspDurationMillis[] = { 0, 910, 1138, 1215, 1024, 989, 1229, 962, 1007, 1066, 1365, 682, 682, 819, 819, 819, 819, 682, 1214, 1229, 866, 1072, 1361, 792, 770, 846 };
+
+void test2() {
+	char s[1024];
+	int testNumber = 1;
+	int startSystemTime = 0;
+	int endSystemTime = 1000000; // 1 million microseconds = 1 second
+	int durationMicros = endSystemTime - startSystemTime;
+	int durationMillis = (durationMicros + 500) / 1000;
+	float pspReference = pspDurationMillis[testNumber] / durationMillis;
+
+	sprintf(s, "(%4.0f%%)\n", pspReference * 100);
+	sprintf(s, "%-25s: %4d ms (%4.0f%%) @ %d MHz\n", testNames[testNumber], durationMillis, pspReference * 100, scePowerGetCpuClockFrequencyInt());
+	emitString(s);
+}
+
 int main(int argc, char **argv) {
 	char temp[1024];
 	emitFloat(floatValues[0]);
@@ -38,5 +66,14 @@ int main(int argc, char **argv) {
 	emitFloat(98765.43210);
 	emitString(temp);
 	emitFloat(123.4567890);
+	
+	//pspDebugScreenPrintf("Overall performance index: %3.0f%%\n", performanceSum * 100 / performanceCount);
+	sprintf(temp, "%3.0f%%", performanceSum * 100 / performanceCount);
+	emitString(temp);
+	emitFloat(performanceSum * 100 / performanceCount);
+	emitFloat(performanceSum * 100 / performanceCountf);
+	
+	test2();
+	
 	return 0;
 }

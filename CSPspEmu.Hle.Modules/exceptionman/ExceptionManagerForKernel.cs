@@ -18,13 +18,6 @@ namespace CSPspEmu.Hle.Modules.exceptionman
 		[HlePspNotImplemented]
 		public int sceKernelRegisterDefaultExceptionHandler(uint ExceptionHandlerFunction)
 		{
-			/*
-			if (ExceptionHandlerFunction is null) return -1;
-			exceptionHandler = ExceptionHandlerFunction;
-			//unimplemented();
-			return 0;
-			*/
-			//throw(new NotImplementedException());
 			return 0;
 		}
 	}
