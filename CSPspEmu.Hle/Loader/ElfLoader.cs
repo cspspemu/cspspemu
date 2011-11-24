@@ -11,6 +11,7 @@ using CSharpUtils.Streams;
 using CSharpUtils;
 using CSPspEmu.Core;
 using CSPspEmu.Hle.Managers;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Loader
 {

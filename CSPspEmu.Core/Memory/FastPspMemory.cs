@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace CSPspEmu.Core
+namespace CSPspEmu.Core.Memory
 {
 	unsafe sealed public class FastPspMemory : PspMemory
 	{

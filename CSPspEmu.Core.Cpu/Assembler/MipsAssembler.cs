@@ -8,6 +8,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using CSharpUtils.Streams;
 using CSharpUtils.Extensions;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu.Assembler
 {

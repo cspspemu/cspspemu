@@ -296,19 +296,19 @@ namespace CSPspEmu.Sandbox
 			PspConfig = new PspConfig();
 			PspEmulatorContext = new PspEmulatorContext(PspConfig);
 
+			if (PspConfig.UseFastAndUnsaferMemory)
+			{
+				PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();
+			}
+			else
+			{
+				PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
+			}
+
 			HleModulesDll = Assembly.LoadFile(Path.GetDirectoryName(typeof(Program).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll");
 			PspRtc = PspEmulatorContext.GetInstance<PspRtc>();
 			PspDisplay = PspEmulatorContext.GetInstance<PspDisplay>();
 			PspController = PspEmulatorContext.GetInstance<PspController>();
-
-			if (PspConfig.UseFastAndUnsaferMemory)
-			{
-				PspEmulatorContext.SetInstance<PspMemory>(new FastPspMemory(PspEmulatorContext));
-			}
-			else
-			{
-				PspEmulatorContext.SetInstance<PspMemory>(new NormalPspMemory(PspEmulatorContext));
-			}
 
 			MemoryStream = new PspMemoryStream(PspEmulatorContext.GetInstance<PspMemory>());
 			CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();

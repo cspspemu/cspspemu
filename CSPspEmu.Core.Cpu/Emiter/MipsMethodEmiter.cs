@@ -5,6 +5,7 @@ using System.Text;
 using System.Reflection.Emit;
 using System.Linq.Expressions;
 using System.Reflection;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {

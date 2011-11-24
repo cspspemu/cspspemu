@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection.Emit;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {

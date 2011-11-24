@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Threading.Synchronization;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Gpu
 {

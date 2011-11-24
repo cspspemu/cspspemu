@@ -15,6 +15,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
 using System.Globalization;
+using CSPspEmu.Core.Memory;
 //using Cloo;
 //using Cloo.Bindings;
 

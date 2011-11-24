@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection.Emit;
 using System.Reflection;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {

@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using CSPspEmu.Core.Cpu;
 using System.Reflection.Emit;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Tests
 {
@@ -14,7 +15,7 @@ namespace CSPspEmu.Core.Tests
 		{
 			var PspConfig = new PspConfig();
 			var PspEmulatorContext = new PspEmulatorContext(PspConfig);
-			var Memory = PspEmulatorContext.GetInstance<NormalPspMemory>();
+			var Memory = PspEmulatorContext.SetInstance<PspMemory>(new LazyPspMemory(PspEmulatorContext));
 			var Processor = PspEmulatorContext.GetInstance<CpuProcessor>();
 			var CpuThreadState = new CpuThreadState(Processor);
 			var MipsEmiter = new MipsMethodEmiter(new MipsEmiter(), Processor);

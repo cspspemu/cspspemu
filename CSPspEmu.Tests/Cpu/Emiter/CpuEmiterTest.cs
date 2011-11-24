@@ -27,7 +27,7 @@ namespace CSPspEmu.Core.Tests
 		{
 			PspConfig = new PspConfig();
 			PspEmulatorContext = new PspEmulatorContext(PspConfig);
-			Memory = PspEmulatorContext.GetInstance<PspMemory>();
+			Memory = PspEmulatorContext.SetInstance<PspMemory>(new LazyPspMemory(PspEmulatorContext));
 		}
 
 		[TestInitialize]

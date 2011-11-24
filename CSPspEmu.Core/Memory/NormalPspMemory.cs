@@ -5,7 +5,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using CSharpUtils.Extensions;
 
-namespace CSPspEmu.Core
+namespace CSPspEmu.Core.Memory
 {
 	unsafe public class NormalPspMemory : PspMemory
 	{

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using CSharpUtils;
 using CSharpUtils.Extensions;
 
-namespace CSPspEmu.Core
+namespace CSPspEmu.Core.Memory
 {
 	unsafe abstract public class PspMemory : PspEmulatorComponent, IResetable
 	{

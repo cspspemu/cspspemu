@@ -79,6 +79,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 			var InstructionStats = new Dictionary<string, uint>();
 
+			int MaxNumberOfInstructions = 8 * 1024;
+			//int MaxNumberOfInstructions = 60;
+
 			while (BranchesToAnalyze.Count > 0)
 			{
 				bool EndOfBranchFound = false;
@@ -90,10 +93,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					AnalyzedPC.Add(PC);
 					//Console.WriteLine("%08X".Sprintf(PC));
 
-					if (AnalyzedPC.Count > 8 * 1024)
-					//if (AnalyzedPC.Count > 64)
+					if (AnalyzedPC.Count > MaxNumberOfInstructions)
 					{
-						throw (new InvalidDataException());
+						throw (new InvalidDataException("Code sequence too long: >= " + MaxNumberOfInstructions + ""));
 					}
 
 					MinPC = Math.Min(MinPC, PC);
