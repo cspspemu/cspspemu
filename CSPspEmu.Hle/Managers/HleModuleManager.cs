@@ -5,13 +5,13 @@ using System.Text;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Cpu.Emiter;
 using System.Reflection;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Managers
 {
-	public class HleModuleManager
+	public class HleModuleManager : PspEmulatorComponent
 	{
 		protected Dictionary<Type, HleModuleHost> HleModules = new Dictionary<Type, HleModuleHost>();
-		public HleState HleState;
 		public uint DelegateLastId = 0;
 		public Dictionary<uint, Action<CpuThreadState>> DelegateTable = new Dictionary<uint, Action<CpuThreadState>>();
 
@@ -23,13 +23,13 @@ namespace CSPspEmu.Hle.Managers
 
 		public Dictionary<String, Type> HleModuleTypes;
 
-		public HleModuleManager(HleState HleState, Assembly ModulesAssembly)
+		// new HleModuleManager(this, PspConfig.HleModulesDll);
+		public HleModuleManager(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
 		{
-			HleModuleTypes = GetAllHleModules(ModulesAssembly).ToDictionary(Type => Type.Name);
+			HleModuleTypes = GetAllHleModules(PspEmulatorContext.PspConfig.HleModulesDll).ToDictionary(Type => Type.Name);
 			Console.WriteLine("HleModuleTypes: {0}", HleModuleTypes.Count);
 
-			this.HleState = HleState;
-			HleState.CpuProcessor.RegisterNativeSyscall(FunctionGenerator.NativeCallSyscallCode, (Code, CpuThreadState) =>
+			PspEmulatorContext.GetInstance<CpuProcessor>().RegisterNativeSyscall(FunctionGenerator.NativeCallSyscallCode, (Code, CpuThreadState) =>
 			{
 				uint Info = CpuThreadState.CpuProcessor.Memory.Read4(CpuThreadState.PC + 4);
 				{
@@ -50,7 +50,7 @@ namespace CSPspEmu.Hle.Managers
 			if (!HleModules.ContainsKey(Type))
 			{
 				var HleModule = HleModules[Type] = (HleModuleHost)Activator.CreateInstance(Type);
-				HleModule.Initialize(HleState);
+				HleModule.Initialize(PspEmulatorContext.GetInstance<HleState>());
 			}
 
 			return (HleModuleHost)HleModules[Type];

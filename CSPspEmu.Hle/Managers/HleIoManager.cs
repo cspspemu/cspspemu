@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using CSPspEmu.Hle.Vfs;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Managers
 {
@@ -20,11 +21,15 @@ namespace CSPspEmu.Hle.Managers
 		}
 	}
 
-	public class HleIoManager
+	public class HleIoManager : PspEmulatorComponent
 	{
 		protected Dictionary<string, IHleIoDriver> Drivers = new Dictionary<string, IHleIoDriver>();
 
 		public HleUidPool<HleIoDrvFileArg> HleIoDrvFileArgPool = new HleUidPool<HleIoDrvFileArg>();
+
+		public HleIoManager(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		{
+		}
 
 		/// <summary>
 		/// Returns a tuple of Driver/Index/path.
@@ -66,7 +71,8 @@ namespace CSPspEmu.Hle.Managers
 		/// <param name="Driver"></param>
 		public void AddDriver(string Name, IHleIoDriver Driver)
 		{
-			Drivers.Add(Name, Driver);
+			//Drivers.Add(Name, Driver);
+			Drivers[Name] = Driver;
 			Driver.IoInit();
 		}
 

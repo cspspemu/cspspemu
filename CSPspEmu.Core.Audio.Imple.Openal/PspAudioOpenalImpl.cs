@@ -10,7 +10,7 @@ using OpenTK.Audio.OpenAL;
 
 namespace CSPspEmu.Core.Audio.Imple.Openal
 {
-	unsafe public class PspAudioOpenalImpl : IPspAudioImpl
+	unsafe public class PspAudioOpenalImpl : PspAudioImpl
 	{
 		protected AudioContext AudioContext;
 		protected XRamExtension XRam;
@@ -157,7 +157,7 @@ namespace CSPspEmu.Core.Audio.Imple.Openal
 			}
 		}
 
-		public PspAudioOpenalImpl()
+		public PspAudioOpenalImpl(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
 		{
 			AudioContext = new AudioContext();
 			XRam = new XRamExtension();
@@ -201,7 +201,7 @@ namespace CSPspEmu.Core.Audio.Imple.Openal
 			}
 		}
 
-		public void OutputStereo16_48000(int ChannelId, short[] Samples, Action Callback)
+		override public void OutputStereo16_48000(int ChannelId, short[] Samples, Action Callback)
 		{
 			//Console.WriteLine("*******************************************************************");
 			Channels[ChannelId].Output(Samples, Callback);

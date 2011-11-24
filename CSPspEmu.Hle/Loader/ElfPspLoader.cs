@@ -11,15 +11,20 @@ using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core.Cpu.Emiter;
 using CSPspEmu.Core.Cpu;
 using CSharpUtils;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Loader
 {
-	unsafe public class ElfPspLoader
+	unsafe public class ElfPspLoader : PspEmulatorComponent
 	{
 		public struct InitInfoStruct
 		{
 			public uint PC;
 			public uint GP;
+		}
+
+		public ElfPspLoader(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		{
 		}
 
 		protected uint BaseAddress;
@@ -232,8 +237,8 @@ namespace CSPspEmu.Hle.Loader
 					{
 						Console.WriteLine(
 							"Thread({0}:'{1}'):{2}:{3}",
-							ModuleManager.HleState.ThreadManager.Current.Id,
-							ModuleManager.HleState.ThreadManager.Current.Name,
+							PspEmulatorContext.GetInstance<HleThreadManager>().Current.Id,
+							PspEmulatorContext.GetInstance<HleThreadManager>().Current.Name,
 							ModuleImportName, NIDName
 						);
 					}

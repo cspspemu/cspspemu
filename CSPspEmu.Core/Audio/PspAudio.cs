@@ -5,12 +5,16 @@ using System.Text;
 
 namespace CSPspEmu.Core.Audio
 {
-	public interface IPspAudioImpl
+	abstract public class PspAudioImpl : PspEmulatorComponent
 	{
-		void OutputStereo16_48000(int ChannelId, short[] Samples, Action Callback);
+		public PspAudioImpl(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		{
+		}
+
+		abstract public void OutputStereo16_48000(int ChannelId, short[] Samples, Action Callback);
 	}
 
-	unsafe public class PspAudio
+	unsafe public class PspAudio : PspEmulatorComponent
 	{
 		/// <summary>
 		/// 
@@ -114,11 +118,11 @@ namespace CSPspEmu.Core.Audio
 
 		public Channel[] Channels;
 
-		public IPspAudioImpl PspAudioImpl;
+		public PspAudioImpl PspAudioImpl;
 
-		public PspAudio(IPspAudioImpl PspAudioImpl)
+		public PspAudio(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
 		{
-			this.PspAudioImpl = PspAudioImpl;
+			this.PspAudioImpl = PspEmulatorContext.GetInstance<PspAudioImpl>();
 			Initialize();
 		}
 

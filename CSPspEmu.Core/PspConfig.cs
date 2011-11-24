@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils.Factory;
+using System.Reflection;
 
 namespace CSPspEmu.Core
 {
@@ -42,6 +43,11 @@ namespace CSPspEmu.Core
 		/// </summary>
 		public bool DebugThreadSwitching = false;
 		//public bool DebugThreadSwitching = true;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public Assembly HleModulesDll;
 
 		public PspConfig()
 		{

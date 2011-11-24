@@ -34,7 +34,6 @@ using CSPspEmu.Hle.Modules.emulator;
 using CSPspEmu.Hle.Vfs.Local;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Hle.Vfs.Emulator;
-using CSharpUtils.Factory;
 using System.Globalization;
 using CSPspEmu.Core.Audio.Imple.Openal;
 using CSPspEmu.Core.Rtc;
@@ -46,23 +45,18 @@ namespace CSPspEmu.Sandbox
 {
 	unsafe class Program : IGuiExternalInterface
 	{
-		protected Factory Factory;
 		protected PspConfig PspConfig;
-		protected PspRtc PspRtc;
 		protected PspDisplay PspDisplay;
 		protected PspController PspController;
 		protected CpuProcessor CpuProcessor;
 
-		protected GpuImpl GpuImpl;
 		protected GpuProcessor GpuProcessor;
 
-		protected PspAudioOpenalImpl PspAudioImpl;
 		protected PspAudio PspAudio;
 
 		protected PspMemoryStream MemoryStream;
 		protected HleState HleState;
 		protected TaskQueue CpuTaskQueue = new TaskQueue();
-		protected Assembly HleModulesDll;
 		protected AutoResetEvent PauseEvent;
 		protected AutoResetEvent ResumeEvent;
 
@@ -167,7 +161,7 @@ namespace CSPspEmu.Sandbox
 			PspEmulatorContext.GetInstance<PspMemory>().Reset();
 			CreateNewHleState();
 
-			var Loader = new ElfPspLoader();
+			var Loader = PspEmulatorContext.NewInstance<ElfPspLoader>();
 			Stream LoadStream = File.OpenRead(FileName);
 			Stream ElfLoadStream = null;
 
@@ -276,7 +270,7 @@ namespace CSPspEmu.Sandbox
 		}
 
 		void CreateNewHleState() {
-			HleState = new HleState(CpuProcessor, GpuProcessor, PspAudio, PspConfig, PspRtc, PspDisplay, PspController, HleModulesDll);
+			HleState = PspEmulatorContext.NewInstance<HleState>();
 			//Console.WriteLine();
 			//Console.ReadKey();
 			string VirtualDirectory = Path.GetDirectoryName(Application.ExecutablePath);
@@ -294,19 +288,26 @@ namespace CSPspEmu.Sandbox
 		void Execute()
 		{
 			PspConfig = new PspConfig();
+			PspConfig.HleModulesDll = Assembly.LoadFile(Path.GetDirectoryName(typeof(Program).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll");
+
 			PspEmulatorContext = new PspEmulatorContext(PspConfig);
 
-			if (PspConfig.UseFastAndUnsaferMemory)
 			{
-				PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();
-			}
-			else
-			{
-				PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
+				PspEmulatorContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
+				PspEmulatorContext.SetInstanceType<PspAudioImpl, PspAudioOpenalImpl>();
+
+				if (PspConfig.UseFastAndUnsaferMemory)
+				{
+					PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();
+				}
+				else
+				{
+					PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
+				}
 			}
 
-			HleModulesDll = Assembly.LoadFile(Path.GetDirectoryName(typeof(Program).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll");
-			PspRtc = PspEmulatorContext.GetInstance<PspRtc>();
+
+			//PspRtc = PspEmulatorContext.GetInstance<PspRtc>();
 			PspDisplay = PspEmulatorContext.GetInstance<PspDisplay>();
 			PspController = PspEmulatorContext.GetInstance<PspController>();
 
@@ -314,12 +315,10 @@ namespace CSPspEmu.Sandbox
 			CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();
 
 			// Gpu
-			GpuImpl = PspEmulatorContext.SetInstance<GpuImpl>(new OpenglGpuImpl(PspEmulatorContext));
 			GpuProcessor = PspEmulatorContext.GetInstance<GpuProcessor>();
 
 			// Audio
-			PspAudioImpl = new PspAudioOpenalImpl();
-			PspAudio = new PspAudio(PspAudioImpl);
+			PspAudio = PspEmulatorContext.GetInstance<PspAudio>();
 
 			CreateNewHleState();
 
@@ -357,13 +356,14 @@ namespace CSPspEmu.Sandbox
 			});
 			*/
 			Application.Run(Form);
-			try { CpuProcessor.IsRunning = false; } catch { }
+			try { CpuProcessor.IsRunning = false; }
+			catch { }
 		}
 
 		protected void GpuThreadEntryPoint()
 		{
 			Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.CultureName);
-			GpuImpl.Init();
+			PspEmulatorContext.GetInstance<GpuImpl>().Init();
 			GpuInitializedCompleteEvent.Set();
 
 			while (CpuProcessor.IsRunning)
@@ -392,7 +392,7 @@ namespace CSPspEmu.Sandbox
 						{
 							CpuTaskQueue.HandleEnqueued();
 							if (!CpuProcessor.IsRunning) break;
-							HleState.PspRtc.Update();
+							PspEmulatorContext.GetInstance<PspRtc>().Update();
 							{
 								HleState.ThreadManager.StepNext();
 							}

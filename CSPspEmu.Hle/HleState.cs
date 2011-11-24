@@ -15,7 +15,7 @@ using CSPspEmu.Core.Controller;
 
 namespace CSPspEmu.Hle
 {
-	public class HleState
+	public class HleState : PspEmulatorComponent
 	{
 		public bool IsRunning;
 		public CpuProcessor CpuProcessor;
@@ -35,24 +35,25 @@ namespace CSPspEmu.Hle
 		public HleCallbackManager CallbackManager;
 		public HleIoManager HleIoManager;
 
-		public HleState(CpuProcessor CpuProcessor, GpuProcessor GpuProcessor, PspAudio PspAudio, PspConfig PspConfig, PspRtc PspRtc, PspDisplay PspDisplay, PspController PspController, Assembly ModulesAssembly)
+		public HleState(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
 		{
 			this.IsRunning = true;
-			this.CpuProcessor = CpuProcessor;
-			this.GpuProcessor = GpuProcessor;
-			this.PspAudio = PspAudio;
-			this.PspConfig = PspConfig;
-			this.PspRtc = PspRtc;
-			this.PspDisplay = PspDisplay;
-			this.PspController = PspController;
-	
+			this.CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();
+			this.GpuProcessor = PspEmulatorContext.GetInstance<GpuProcessor>();
+			this.PspAudio = PspEmulatorContext.GetInstance<PspAudio>();
+			this.PspConfig = PspEmulatorContext.PspConfig;
+			this.PspRtc = PspEmulatorContext.GetInstance<PspRtc>();
+			this.PspDisplay = PspEmulatorContext.GetInstance<PspDisplay>();
+			this.PspController = PspEmulatorContext.GetInstance<PspController>();
+
 			this.MipsEmiter = new MipsEmiter();
 
-			this.ThreadManager = new HleThreadManager(this.CpuProcessor, this.PspRtc);
+			// @TODO FIX! New Instances!?
+			this.ThreadManager = PspEmulatorContext.NewInstance<HleThreadManager>();
 			this.MemoryManager = new HleMemoryManager(this.CpuProcessor.Memory);
-			this.ModuleManager = new HleModuleManager(this, ModulesAssembly);
-			this.CallbackManager = new HleCallbackManager(this);
-			this.HleIoManager = new HleIoManager();
+			this.ModuleManager = PspEmulatorContext.NewInstance<HleModuleManager>();
+			this.CallbackManager = PspEmulatorContext.NewInstance<HleCallbackManager>();
+			this.HleIoManager = PspEmulatorContext.NewInstance<HleIoManager>();
 		}
 	}
 }

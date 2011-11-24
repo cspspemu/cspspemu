@@ -27,11 +27,11 @@ namespace CSPspEmu.Core
 				Console.WriteLine("GetInstance<{0}>: Miss!", typeof(TType));
 				if (TypesByType.ContainsKey(typeof(TType)))
 				{
-					return SetInstance<TType>(Activator.CreateInstance(TypesByType[typeof(TType)], this));
+					return _SetInstance<TType>(Activator.CreateInstance(TypesByType[typeof(TType)], this));
 				}
 				else
 				{
-					return SetInstance<TType>(Activator.CreateInstance(typeof(TType), this));
+					return _SetInstance<TType>(Activator.CreateInstance(typeof(TType), this));
 				}
 			}
 
@@ -46,6 +46,11 @@ namespace CSPspEmu.Core
 				Console.WriteLine("PspEmulatorContext.SetInstance<{0}>", typeof(TType));
 				//Console.WriteLine(Environment.StackTrace);
 			});
+			return _SetInstance<TType>(Instance);
+		}
+
+		protected TType _SetInstance<TType>(object Instance)
+		{
 			if (ObjectsByType.ContainsKey(typeof(TType)))
 			{
 				throw(new InvalidOperationException());
@@ -57,6 +62,12 @@ namespace CSPspEmu.Core
 		public void SetInstanceType<TType1, TType2>() where TType1 : PspEmulatorComponent
 		{
 			TypesByType[typeof(TType1)] = typeof(TType2);
+		}
+
+		public TType NewInstance<TType>() where TType : PspEmulatorComponent
+		{
+			ObjectsByType.Remove(typeof(TType));
+			return GetInstance<TType>();
 		}
 	}
 }

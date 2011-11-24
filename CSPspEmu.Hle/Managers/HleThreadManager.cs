@@ -12,7 +12,7 @@ using CSPspEmu.Core.Rtc;
 
 namespace CSPspEmu.Hle.Managers
 {
-	public class HleThreadManager
+	public class HleThreadManager : PspEmulatorComponent
 	{
 		protected CpuProcessor Processor;
 		protected List<HleThread> Threads = new List<HleThread>();
@@ -20,10 +20,10 @@ namespace CSPspEmu.Hle.Managers
 		public HleThread Current;
 		protected PspRtc HlePspRtc;
 
-		public HleThreadManager(CpuProcessor Processor, PspRtc HlePspRtc)
+		public HleThreadManager(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
 		{
-			this.HlePspRtc = HlePspRtc;
-			this.Processor = Processor;
+			this.HlePspRtc = PspEmulatorContext.GetInstance<PspRtc>();
+			this.Processor = PspEmulatorContext.GetInstance<CpuProcessor>();
 		}
 
 		public HleThread GetThreadById(int Id)
