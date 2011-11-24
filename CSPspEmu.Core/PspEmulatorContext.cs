@@ -20,15 +20,18 @@ namespace CSPspEmu.Core
 
 		public TType GetInstance<TType>() where TType : PspEmulatorComponent
 		{
-			object Output = null;
-
-			if (!ObjectsByType.TryGetValue(typeof(TType), out Output))
+			if (!ObjectsByType.ContainsKey(typeof(TType)))
 			{
-				Output = Activator.CreateInstance(typeof(TType), this);
-				//Output = new TType();
+				SetInstance<TType>(Activator.CreateInstance(typeof(TType), this));
 			}
 
-			return (TType)Output;
+			return (TType)ObjectsByType[typeof(TType)];
+		}
+
+		public TType SetInstance<TType>(object Instance)
+		{
+			ObjectsByType[typeof(TType)] = Instance;
+			return (TType)Instance;
 		}
 	}
 }

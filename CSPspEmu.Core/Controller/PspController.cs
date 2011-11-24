@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Core.Controller
 {
-	unsafe public class PspController
+	unsafe public class PspController : PspEmulatorComponent
 	{
 		public const int MaxStoredFrames = 128;
 
@@ -19,7 +19,7 @@ namespace CSPspEmu.Core.Controller
 		public int SamplingCycle;
 		public SamplingModeEnum SamplingMode;
 
-		public PspController()
+		public PspController(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
 		{
 			SceCtrlData SceCtrlData = default(SceCtrlData);
 			for (int n = 0; n < MaxStoredFrames; n++)

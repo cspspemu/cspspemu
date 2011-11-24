@@ -6,7 +6,7 @@ using CSPspEmu.Core.Rtc;
 
 namespace CSPspEmu.Core.Display
 {
-	public class PspDisplay
+	public class PspDisplay : PspEmulatorComponent
 	{
 		public PspRtc HlePspRtc;
 
@@ -45,9 +45,9 @@ namespace CSPspEmu.Core.Display
 			public int Height;
 		}
 
-		public PspDisplay(PspRtc HlePspRtc)
+		public PspDisplay(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
 		{
-			this.HlePspRtc = HlePspRtc;
+			this.HlePspRtc = PspEmulatorContext.GetInstance<PspRtc>();
 		}
 
 		public int VblankCount

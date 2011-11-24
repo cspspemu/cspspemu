@@ -43,11 +43,8 @@ namespace CSPspEmu.Core
 		public bool DebugThreadSwitching = false;
 		//public bool DebugThreadSwitching = true;
 
-		public Factory Factory;
-
-		public PspConfig(Factory Factory)
+		public PspConfig()
 		{
-			this.Factory = Factory;
 		}
 
 		//public bool TraceJal = true;

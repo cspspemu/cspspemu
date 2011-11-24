@@ -51,10 +51,9 @@ namespace CSPspEmu.Sandbox
 		protected PspRtc PspRtc;
 		protected PspDisplay PspDisplay;
 		protected PspController PspController;
-		protected PspMemory Memory;
 		protected CpuProcessor CpuProcessor;
-		
-		protected OpenglGpuImpl GpuImpl;
+
+		protected GpuImpl GpuImpl;
 		protected GpuProcessor GpuProcessor;
 
 		protected PspAudioOpenalImpl PspAudioImpl;
@@ -72,7 +71,7 @@ namespace CSPspEmu.Sandbox
 
 		PspMemory IGuiExternalInterface.GetMemory()
 		{
-			return Memory;
+			return PspEmulatorContext.GetInstance<PspMemory>();
 		}
 
 		public PspDisplay GetDisplay()
@@ -165,7 +164,7 @@ namespace CSPspEmu.Sandbox
 		private void _LoadFile(String FileName)
 		{
 			CpuProcessor.Reset();
-			Memory.Reset();
+			PspEmulatorContext.GetInstance<PspMemory>().Reset();
 			CreateNewHleState();
 
 			var Loader = new ElfPspLoader();
@@ -290,31 +289,33 @@ namespace CSPspEmu.Sandbox
 
 		AutoResetEvent GpuInitializedCompleteEvent = new AutoResetEvent(false);
 		AutoResetEvent CpuInitializedCompleteEvent = new AutoResetEvent(false);
+		private PspEmulatorContext PspEmulatorContext;
 
 		void Execute()
 		{
+			PspConfig = new PspConfig();
+			PspEmulatorContext = new PspEmulatorContext(PspConfig);
+
 			HleModulesDll = Assembly.LoadFile(Path.GetDirectoryName(typeof(Program).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll");
-			Factory = new Factory();
-			PspConfig = new PspConfig(Factory);
-			PspRtc = new PspRtc();
-			PspDisplay = new PspDisplay(PspRtc);
-			PspController = new PspController();
+			PspRtc = PspEmulatorContext.GetInstance<PspRtc>();
+			PspDisplay = PspEmulatorContext.GetInstance<PspDisplay>();
+			PspController = PspEmulatorContext.GetInstance<PspController>();
 
 			if (PspConfig.UseFastAndUnsaferMemory)
 			{
-				Memory = new FastPspMemory();
+				PspEmulatorContext.SetInstance<PspMemory>(new FastPspMemory(PspEmulatorContext));
 			}
 			else
 			{
-				Memory = new NormalPspMemory();
+				PspEmulatorContext.SetInstance<PspMemory>(new NormalPspMemory(PspEmulatorContext));
 			}
 
-			MemoryStream = new PspMemoryStream(Memory);
-			CpuProcessor = new CpuProcessor(PspConfig, Memory);
+			MemoryStream = new PspMemoryStream(PspEmulatorContext.GetInstance<PspMemory>());
+			CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();
 
 			// Gpu
-			GpuImpl = new OpenglGpuImpl(PspConfig, Memory);
-			GpuProcessor = new GpuProcessor(PspConfig, Memory, GpuImpl);
+			GpuImpl = PspEmulatorContext.SetInstance<GpuImpl>(new OpenglGpuImpl(PspEmulatorContext));
+			GpuProcessor = PspEmulatorContext.GetInstance<GpuProcessor>();
 
 			// Audio
 			PspAudioImpl = new PspAudioOpenalImpl();

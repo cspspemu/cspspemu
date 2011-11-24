@@ -4,14 +4,13 @@ using System;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Cpu.Assembler;
-using CSharpUtils.Factory;
 
 namespace CSPspEmu.Core.Tests
 {
 	[TestClass]
 	public class HlePspThreadManagerTest
 	{
-		protected MockeableFactory MockeableFactory;
+		protected PspEmulatorContext PspEmulatorContext;
 		protected PspConfig PspConfig;
 		protected LazyPspMemory Memory;
 		protected CpuProcessor Processor;
@@ -20,10 +19,11 @@ namespace CSPspEmu.Core.Tests
 		[TestInitialize()]
 		public void SetUp()
 		{
-			MockeableFactory = new MockeableFactory();
-			Memory = new LazyPspMemory();
-			PspConfig = new PspConfig(MockeableFactory);
-			Processor = new CpuProcessor(PspConfig, Memory);
+			PspConfig = new PspConfig();
+			PspEmulatorContext = new PspEmulatorContext(PspConfig);
+			Memory = PspEmulatorContext.GetInstance<LazyPspMemory>();
+
+			Processor = PspEmulatorContext.GetInstance<CpuProcessor>();
 			MipsAssembler = new MipsAssembler(new PspMemoryStream(Memory));
 		}
 

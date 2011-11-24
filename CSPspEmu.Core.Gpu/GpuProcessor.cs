@@ -8,7 +8,7 @@ using CSPspEmu.Core.Threading.Synchronization;
 
 namespace CSPspEmu.Core.Gpu
 {
-	unsafe public class GpuProcessor
+	unsafe public class GpuProcessor : PspEmulatorComponent
 	{
 		/// <summary>
 		/// 
@@ -86,23 +86,23 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
-		public IGpuImpl GpuImpl;
+		public GpuImpl GpuImpl;
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="PspConfig"></param>
 		/// <param name="Memory"></param>
-		public GpuProcessor(PspConfig PspConfig, PspMemory Memory, IGpuImpl GpuImpl)
+		public GpuProcessor(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
 		{
 			if (sizeof(GpuStateStruct) > sizeof(uint) * 512)
 			{
 				throw(new InvalidProgramException());
 			}
 
-			this.PspConfig = PspConfig;
-			this.Memory = Memory;
-			this.GpuImpl = GpuImpl;
+			this.PspConfig = PspEmulatorContext.PspConfig;
+			this.Memory = PspEmulatorContext.GetInstance<PspMemory>();
+			this.GpuImpl = PspEmulatorContext.GetInstance<GpuImpl>();
 			this.DisplayListQueue = new LinkedList<GpuDisplayList>();
 			this.DisplayListFreeQueue = new Queue<GpuDisplayList>();
 			for (int n = 0; n < DisplayLists.Length; n++)

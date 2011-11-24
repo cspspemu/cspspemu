@@ -7,7 +7,7 @@ using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Cpu
 {
-	unsafe sealed public class CpuProcessor : IResetable
+	unsafe sealed public class CpuProcessor : PspEmulatorComponent, IResetable
 	{
 		public PspConfig PspConfig;
 		public PspMemory Memory;
@@ -16,10 +16,10 @@ namespace CSPspEmu.Core.Cpu
 		public HashSet<uint> NativeBreakpoints;
 		public bool IsRunning;
 
-		public CpuProcessor(PspConfig PspConfig, PspMemory Memory)
+		public CpuProcessor(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
 		{
-			this.PspConfig = PspConfig;
-			this.Memory = Memory;
+			this.PspConfig = PspEmulatorContext.PspConfig;
+			this.Memory = PspEmulatorContext.GetInstance<PspMemory>();
 			Reset();
 		}
 

@@ -20,7 +20,7 @@ using System.Globalization;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-	sealed unsafe public class OpenglGpuImpl : IGpuImpl
+	sealed unsafe public class OpenglGpuImpl : GpuImpl
 	{
 		/// <summary>
 		/// 
@@ -67,10 +67,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// </summary>
 		/// <param name="Config"></param>
 		/// <param name="Memory"></param>
-		public OpenglGpuImpl(PspConfig Config, PspMemory Memory)
+		public OpenglGpuImpl(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
 		{
-			this.Config = Config;
-			this.Memory = Memory;
+			this.Config = PspEmulatorContext.PspConfig;
+			this.Memory = PspEmulatorContext.GetInstance<PspMemory>();
 		}
 
 		private void PrepareShaders()
@@ -131,7 +131,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// 
 		/// </summary>
 		/// <param name="GpuState"></param>
-		public unsafe void Prim(GpuStateStruct* GpuState, PrimitiveType PrimitiveType, ushort VertexCount)
+		override public unsafe void Prim(GpuStateStruct* GpuState, PrimitiveType PrimitiveType, ushort VertexCount)
 		{
 			//return;
 			PrepareRead(GpuState);
@@ -231,7 +231,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		}
 
 		[HandleProcessCorruptedStateExceptions()]
-		public void Finish(GpuStateStruct* GpuState)
+		override public void Finish(GpuStateStruct* GpuState)
 		{
 			//return;
 			/*
@@ -260,7 +260,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// 
 		/// </summary>
 		/// <see cref="http://www.opentk.com/doc/graphics/graphicscontext"/>
-		public void Init()
+		override public void Init()
 		{
 			AutoResetEvent CompletedEvent = new AutoResetEvent(false);
 			var CThread = new Thread(() =>

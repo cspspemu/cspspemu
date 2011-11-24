@@ -16,7 +16,9 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void ElfLoaderConstructorTest()
 		{
-			var Memory = new LazyPspMemory();
+			var PspConfig = new PspConfig();
+			var PspEmulatorContext = new PspEmulatorContext(PspConfig);
+			var Memory = PspEmulatorContext.GetInstance<LazyPspMemory>();
 			var MemoryStream = new PspMemoryStream(Memory);
 			var MemoryPartition = new MemoryPartition(PspMemory.MainOffset, PspMemory.MainOffset + PspMemory.MainSize);
 

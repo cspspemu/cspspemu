@@ -15,24 +15,25 @@ namespace CSPspEmu.Core.Tests
 	[TestClass]
 	unsafe public class CpuEmiterTest
 	{
-		protected MockeableFactory MockeableFactory;
-		protected PspConfig PspConfig;
-		static protected PspMemory Memory;
 		protected CpuProcessor Processor;
 		protected CpuThreadState CpuThreadState;
+
+		static protected PspConfig PspConfig;
+		static protected PspEmulatorContext PspEmulatorContext;
+		static protected PspMemory Memory;
 
 		[ClassInitialize]
 		public static void ClassInit(TestContext context)
 		{
-			Memory = new LazyPspMemory();
+			PspConfig = new PspConfig();
+			PspEmulatorContext = new PspEmulatorContext(PspConfig);
+			Memory = PspEmulatorContext.GetInstance<PspMemory>();
 		}
 
 		[TestInitialize]
 		public void SetUp()
 		{
-			MockeableFactory = new MockeableFactory();
-			PspConfig = new PspConfig(MockeableFactory);
-			Processor = new CpuProcessor(PspConfig, Memory);
+			Processor = PspEmulatorContext.GetInstance<CpuProcessor>();
 			CpuThreadState = new CpuThreadState(Processor);
 		}
 

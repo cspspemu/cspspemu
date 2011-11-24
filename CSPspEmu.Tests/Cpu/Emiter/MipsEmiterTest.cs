@@ -3,22 +3,19 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using CSPspEmu.Core.Cpu;
 using System.Reflection.Emit;
-using CSharpUtils.Factory;
 
 namespace CSPspEmu.Core.Tests
 {
 	[TestClass]
 	unsafe public class MipsEmiterTest
 	{
-		protected MockeableFactory MockeableFactory;
-
 		[TestMethod]
 		public void CreateDelegateTest()
 		{
-			MockeableFactory = new MockeableFactory();
-			var Memory = new NormalPspMemory();
-			var PspConfig = new PspConfig(MockeableFactory);
-			var Processor = new CpuProcessor(PspConfig, Memory);
+			var PspConfig = new PspConfig();
+			var PspEmulatorContext = new PspEmulatorContext(PspConfig);
+			var Memory = PspEmulatorContext.GetInstance<NormalPspMemory>();
+			var Processor = PspEmulatorContext.GetInstance<CpuProcessor>();
 			var CpuThreadState = new CpuThreadState(Processor);
 			var MipsEmiter = new MipsMethodEmiter(new MipsEmiter(), Processor);
 			CpuThreadState.GPR[1] = 1;

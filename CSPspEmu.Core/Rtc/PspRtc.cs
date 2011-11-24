@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Core.Rtc
 {
-	public class PspRtc
+	public class PspRtc : PspEmulatorComponent
 	{
 		protected List<Tuple<DateTime, Action>> Timers = new List<Tuple<DateTime, Action>>();
 		public DateTime StartDateTime;
@@ -25,7 +25,7 @@ namespace CSPspEmu.Core.Rtc
 			}
 		}
 
-		public PspRtc()
+		public PspRtc(PspEmulatorContext PspEmulatorContext) : base (PspEmulatorContext)
 		{
 			Start();
 		}

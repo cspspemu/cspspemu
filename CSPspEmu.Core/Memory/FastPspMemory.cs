@@ -23,7 +23,7 @@ namespace CSPspEmu.Core
 		const uint MEM_DECOMMIT = 0x4000;
 		const uint MEM_RELEASE = 0x8000;
 
-		public FastPspMemory()
+		public FastPspMemory(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
 		{
 			ScratchPadPtr  = VirtualAlloc(Base + ScratchPadOffset , ScratchPadSize , MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 			FrameBufferPtr = VirtualAlloc(Base + FrameBufferOffset, FrameBufferSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);

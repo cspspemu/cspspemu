@@ -8,9 +8,13 @@ using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core
 {
-	unsafe abstract public class PspMemory : IResetable
+	unsafe abstract public class PspMemory : PspEmulatorComponent, IResetable
 	{
 		public const uint MemoryMask = 0x1FFFFFFF;
+
+		public PspMemory(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		{
+		}
 
 		public class InvalidAddressException : Exception {
 			public InvalidAddressException(string message) : base (message) { }

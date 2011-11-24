@@ -43,11 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GpuImpl.cs" />
     <Compile Include="GpuOpCodes.cs" />
     <Compile Include="GpuDisplayList.cs" />
     <Compile Include="GpuOpCodesNotImplementedAttribute.cs" />
     <Compile Include="GpuProcessor.cs" />
-    <Compile Include="IGpuImpl.cs" />
     <Compile Include="PrimitiveTypeEnum.cs" />
     <Compile Include="Run\GpuDisplayListRunner.Clut.cs" />
     <Compile Include="Run\GpuDisplayListRunner.Color.cs" />
