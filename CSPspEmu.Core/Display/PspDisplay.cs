@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Rtc;
 
-namespace CSPspEmu.Core
+namespace CSPspEmu.Core.Display
 {
 	public class PspDisplay
 	{

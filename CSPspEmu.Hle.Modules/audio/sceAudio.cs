@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core;
+using CSPspEmu.Core.Audio;
 
 namespace CSPspEmu.Hle.Modules.audio
 {

@@ -180,6 +180,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 			ILGenerator.Emit(OpCodes.Stind_R4);
 		}
+		public void SaveFPR_I(int R, Action Action)
+		{
+			LoadFPR_Ptr(R);
+			{
+				Action();
+			}
+			ILGenerator.Emit(OpCodes.Stind_I4);
+		}
 
 		static public bool _LoadFcr31CC(CpuThreadState CpuThreadState)
 		{
@@ -230,6 +238,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			LoadFPR_Ptr(R);
 			ILGenerator.Emit(OpCodes.Ldind_R4);
+		}
+
+		public void LoadFPR_I(int R)
+		{
+			LoadFPR_Ptr(R);
+			ILGenerator.Emit(OpCodes.Ldind_U4);
 		}
 
 		public void LoadPC()

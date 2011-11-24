@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CSPspEmu.Core
+namespace CSPspEmu.Core.Rtc
 {
 	public class PspRtc
 	{

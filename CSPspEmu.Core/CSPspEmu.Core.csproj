@@ -51,12 +51,13 @@
     <Compile Include="Memory\NormalPspMemory.cs" />
     <Compile Include="Memory\PspMemoryStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PspAudio.cs" />
+    <Compile Include="Audio\PspAudio.cs" />
     <Compile Include="PspConfig.cs" />
-    <Compile Include="PspController.cs" />
-    <Compile Include="PspDisplay.cs" />
-    <Compile Include="PspEmulatorState.cs" />
-    <Compile Include="PspRtc.cs" />
+    <Compile Include="Controller\PspController.cs" />
+    <Compile Include="Display\PspDisplay.cs" />
+    <Compile Include="PspEmulatorComponent.cs" />
+    <Compile Include="PspEmulatorContext.cs" />
+    <Compile Include="Rtc\PspRtc.cs" />
     <Compile Include="Threading\Synchronization\WaitableStateMachine.cs" />
   </ItemGroup>
   <ItemGroup>

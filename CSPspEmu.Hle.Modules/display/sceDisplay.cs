@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core;
+using CSPspEmu.Core.Display;
 
 namespace CSPspEmu.Hle.Modules.display
 {

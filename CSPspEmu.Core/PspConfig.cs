@@ -28,8 +28,8 @@ namespace CSPspEmu.Core
 		//public bool NoticeUnimplementedGpuCommands = true;
 		public bool NoticeUnimplementedGpuCommands = false;
 
-		//public bool UseFastAndUnsaferMemory = true;
-		public bool UseFastAndUnsaferMemory = false;
+		public bool UseFastAndUnsaferMemory = true;
+		//public bool UseFastAndUnsaferMemory = false;
 
 		/// <summary>
 		/// Writes a line each time a JAL is executed

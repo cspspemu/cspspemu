@@ -8,6 +8,7 @@ using CSPspEmu.Core.Cpu;
 using System.Threading;
 using System.Diagnostics;
 using CSPspEmu.Core;
+using CSPspEmu.Core.Rtc;
 
 namespace CSPspEmu.Hle.Managers
 {

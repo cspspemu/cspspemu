@@ -13,6 +13,8 @@ using System.Drawing.Imaging;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Core.Controller;
+using CSPspEmu.Core.Display;
 
 namespace CSPspEmu.Gui.Winforms
 {

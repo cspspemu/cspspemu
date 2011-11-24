@@ -180,7 +180,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Store Word from Cop1 floating point.
 		public void lwc1()
 		{
-			MipsMethodEmiter.SaveFPR(FT, () =>
+			MipsMethodEmiter.SaveFPR_I(FT, () =>
 			{
 				_save_pc();
 				MipsMethodEmiter._getmemptr(() =>
@@ -189,14 +189,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
 					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
 				});
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_U4);
 			});
 		}
 		public void swc1() {
 			_save_common(() =>
 			{
-				MipsMethodEmiter.LoadFPR(FT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_R4); 
+				MipsMethodEmiter.LoadFPR_I(FT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I4); 
 			});
 		}
 	}

@@ -37,6 +37,10 @@ using CSPspEmu.Hle.Vfs.Emulator;
 using CSharpUtils.Factory;
 using System.Globalization;
 using CSPspEmu.Core.Audio.Imple.Openal;
+using CSPspEmu.Core.Rtc;
+using CSPspEmu.Core.Display;
+using CSPspEmu.Core.Controller;
+using CSPspEmu.Core.Audio;
 
 namespace CSPspEmu.Sandbox
 {
@@ -438,6 +442,7 @@ namespace CSPspEmu.Sandbox
 			//LoadFile(@"C:\juegos\jpcsp2\demos\fputest.elf");
 			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\alu.elf");
 			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\fpu.elf");
+			//LoadFile(@"C:\projects\cspspemu\PspAutoTests\fpu.elf");
 			//LoadFile(@"C:\projects\cspspemu\PspAutoTests\gum.elf");
 			//LoadFile(@"C:\juegos\pspemu\demos\controller.pbp");
 			//LoadFile(@"C:\pspsdk\psp\sdk\samples\audio\polyphonic\polyphonic.elf");

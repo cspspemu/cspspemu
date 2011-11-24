@@ -170,7 +170,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					}
 
 					//GpuState[0].VertexState.ViewMatrix.Dump();
-					//GpuState[0].VertexState.WorldMatrix.Dump();
+					GpuState[0].VertexState.WorldMatrix.Dump();
 
 					//Console.WriteLine("NO Transform2D");
 				}

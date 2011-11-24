@@ -1,6 +1,7 @@
 #include "@common.h"
+#include <math.h>
 
-// psp-gcc -I. -I"%PSPSDK%/psp/sdk/include" -L. -L"%PSPSDK%/psp/sdk/lib" fpu.c -lpspumd -lpsppower -lpspdebug -lpspgu -lpspgum -lpspge -lpspdisplay -lpspsdk -lc -lpspnet -lpspnet_inet -lpspuser -lpsprtc -lpspctrl -o fpu.elf && psp-fixup-imports fpu.elf
+// psp-gcc -I. -I"%PSPSDK%/psp/sdk/include" -L. -L"%PSPSDK%/psp/sdk/lib" fpu.c -lpspumd -lpsppower -lpspdebug -lpspgu -lpspgum -lpspge -lpspdisplay -lpspsdk -lm -lc -lpspnet -lpspnet_inet -lpspuser -lpsprtc -lpspctrl -o fpu.elf && psp-fixup-imports fpu.elf
 // psp-gcc -I. -I"%PSPSDK%/psp/sdk/include" -L. -L"%PSPSDK%/psp/sdk/lib" fpu.c -lc -lpspuser -o fpu.elf && psp-fixup-imports fpu.elf
 
 float floatValues[] = { -67123.0f, +67123.0f, -100.0f, +100.0f, 0.0f, 1.0f, -1.0f };
@@ -53,6 +54,7 @@ void test2() {
 }
 
 int main(int argc, char **argv) {
+	int n;
 	char temp[1024];
 	emitFloat(floatValues[0]);
 	emitFloat(floatValues[1]);
@@ -72,8 +74,13 @@ int main(int argc, char **argv) {
 	emitString(temp);
 	emitFloat(performanceSum * 100 / performanceCount);
 	emitFloat(performanceSum * 100 / performanceCountf);
-	
+
 	test2();
+
+	for (n = 0; n < 100; n++) {
+		//emitFloat(sinf(1.141592f));
+		emitFloat(sinf(n * 0.3f));
+	}
 	
 	return 0;
 }

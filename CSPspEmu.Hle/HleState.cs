@@ -8,6 +8,10 @@ using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core;
 using System.Reflection;
 using CSPspEmu.Core.Gpu;
+using CSPspEmu.Core.Rtc;
+using CSPspEmu.Core.Display;
+using CSPspEmu.Core.Audio;
+using CSPspEmu.Core.Controller;
 
 namespace CSPspEmu.Hle
 {

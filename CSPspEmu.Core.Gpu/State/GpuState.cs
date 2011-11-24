@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Gpu.State.SubStates;
+using CSPspEmu.Core.Display;
 
 namespace CSPspEmu.Core.Gpu.State
 {

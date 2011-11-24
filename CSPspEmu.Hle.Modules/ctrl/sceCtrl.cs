@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 using CSPspEmu.Core;
+using CSPspEmu.Core.Controller;
 
 namespace CSPspEmu.Hle.Modules.ctrl
 {
