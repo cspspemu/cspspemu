@@ -523,8 +523,8 @@ namespace CSPspEmu.Core.Tests
 				mtc1 r1, f1
 				mfc1 r2, f2
 			");
-			Assert.AreEqual(17.0f, CpuThreadState.FPR[1]);
-			Assert.AreEqual(8, CpuThreadState.GPR[2]);
+			Assert.AreEqual(CpuThreadState.GPR[1], CpuThreadState.FPR_I[1]);
+			Assert.AreEqual(CpuThreadState.FPR_I[2], CpuThreadState.GPR[2]);
 		}
 
 		[TestMethod]

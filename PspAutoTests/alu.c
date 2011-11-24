@@ -1,9 +1,12 @@
 #include "@common.h"
+#include <pspdebug.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 // SET PSPSDK=c:\pspsdk
-// psp-gcc -I. -I"%PSPSDK%/psp/sdk/include" -L. -L"%PSPSDK%/psp/sdk/lib" alu.c -lc -lg -lpsplibc -lpspsdk -lpspuser -o alu.elf && psp-fixup-imports alu.elf
+// psp-gcc -I. -I"%PSPSDK%/psp/sdk/include" -L. -L"%PSPSDK%/psp/sdk/lib" alu.c -lpspdebug -lpspdisplay -lpspge -lpspctrl -lpspsdk -lpsplibc -lpspnet -lpspnet_inet -lpspnet_apctl -lpspnet_resolver -lpsputility -lpspuser -lpspkernel -o alu.elf && psp-fixup-imports alu.elf
+
+
 
 int intValues[] = { -67123, +67123, -100, +100, 0 };
 
@@ -67,7 +70,10 @@ int main(int argc, char **argv) {
 	char buffer[1024];
 	int decpt, sign;
 	char *rve;
-	
+
+	pspDebugScreenInit();
+	pspDebugScreenPrintf("%d", 0);
+
 	checkSetLessThan();
 	checkLeftShift();
 	checkRightShift();

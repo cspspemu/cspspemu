@@ -27,29 +27,24 @@ namespace CSPspEmu.Core.Gpu.Run
 		}
 		public void OP_VIEW()
 		{
-			Console.WriteLine("View: {0:X}, {1}", Params24, Float1);
 			GpuDisplayList.GpuStateStructPointer[0].VertexState.ViewMatrix.Write(Float1);
 		}
 
 		public void OP_WMS()
 		{
-			Console.WriteLine("WorldReset: {0:X}, {1}", Params24, Float1);
 			GpuDisplayList.GpuStateStructPointer[0].VertexState.WorldMatrix.Reset();
 		}
 		public void OP_WORLD()
 		{
-			Console.WriteLine("World: {0:X}, {1}", Params24, Float1);
 			GpuDisplayList.GpuStateStructPointer[0].VertexState.WorldMatrix.Write(Float1);
 		}
 
 		public void OP_PMS()
 		{
-			Console.WriteLine("ProjReset: {0:X}, {1}", Params24, Float1);
 			GpuDisplayList.GpuStateStructPointer[0].VertexState.ProjectionMatrix.Reset();
 		}
 		public void OP_PROJ()
 		{
-			Console.WriteLine("Proj: {0:X}, {1}", Params24, Float1);
 			GpuDisplayList.GpuStateStructPointer[0].VertexState.ProjectionMatrix.Write(Float1);
 		}
 

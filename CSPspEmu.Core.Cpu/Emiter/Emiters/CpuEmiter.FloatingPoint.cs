@@ -27,31 +27,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Binary Floating Point Unit Operations
 		public void add_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Add); }
 		public void sub_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Sub); }
-		public void mul_s() {
-			MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Mul);
-
-			/*
-			MipsMethodEmiter.SaveFPR(FD, () =>
-			{
-				MipsMethodEmiter.LoadFPR(FS);
-				MipsMethodEmiter.LoadFPR(FT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_mul_s_impl"));
-			});
-			*/
-		}
-		public void div_s() {
-			MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Div);
-
-			/*
-			MipsMethodEmiter.SaveFPR(FD, () =>
-			{
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-				MipsMethodEmiter.LoadFPR(FS);
-				MipsMethodEmiter.LoadFPR(FT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_div_s_impl"));
-			});
-			*/
-		}
+		public void mul_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Mul); }
+		public void div_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Div); }
 
 		// Unary Floating Point Unit Operations
 		public void sqrt_s() {
@@ -144,32 +121,19 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			//throw(new NotImplementedException());
 		}
 
-		// Move float point registers
+		// Move (from/to) float point registers (reinterpreted)
 		public void mfc1() {
 			MipsMethodEmiter.SaveGPR(RT, () =>
 			{
 				MipsMethodEmiter.LoadFPR(FS);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_I4);
-
-				/*
-				MipsMethodEmiter.LoadFPR(FS);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(MathFloat).GetMethod("ReinterpretFloatAsUInt"));
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_R4);
-				*/
 			});
 		}
 		public void mtc1() {
 			MipsMethodEmiter.SaveFPR(FS, () =>
 			{
-				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_R4);
-
-				/*
-				MipsMethodEmiter.LoadFPR(FS);
+				MipsMethodEmiter.LoadGPR_Signed(RT);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(MathFloat).GetMethod("ReinterpretUIntAsFloat"));
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_R4);
-				*/
-
 			});
 		}
 		// CFC1 -- move Control word from/to floating point (C1)

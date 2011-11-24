@@ -93,6 +93,14 @@ namespace CSPspEmu.Core.Gpu.State
 		public uint LoadAddress;
 		public uint StoreAddress;
 
+		public uint Address
+		{
+			get
+			{
+				return 0x04000000 | ((uint)HighAddress << 24) | LowAddress;
+			}
+		}
+
 		//uint Width = 512;
 		//PspDisplay.PixelFormats Format = PspDisplay.PixelFormats.RGBA_8888;
 		/*

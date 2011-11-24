@@ -431,12 +431,14 @@ namespace CSPspEmu.Sandbox
 
 		protected void OnInit()
 		{
+			//PspConfig.DebugSyscalls = true;
+
+			LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\ortho.pbp");
 			//LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
 			//LoadFile(@"C:\juegos\jpcsp2\demos\fputest.elf");
-			//LoadFile(@"C:\projects\cspspemu\PspAutoTests\alu.elf");
-			LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\fpu.elf");
+			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\alu.elf");
+			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\fpu.elf");
 			//LoadFile(@"C:\projects\cspspemu\PspAutoTests\gum.elf");
-			//LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\ortho.pbp");
 			//LoadFile(@"C:\juegos\pspemu\demos\controller.pbp");
 			//LoadFile(@"C:\pspsdk\psp\sdk\samples\audio\polyphonic\polyphonic.elf");
 			//LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\sound.prx");
@@ -459,7 +461,6 @@ namespace CSPspEmu.Sandbox
 			//LoadFile(@"C:\pspsdk\psp\sdk\samples\prx\prx_loader\EBOOT.PBP");
 			//LoadFile(@"../../../TestInput/minifire.elf");
 			//PspConfig.ShowInstructionStats = true;
-			PspConfig.DebugSyscalls = true;
 
 			//LoadFile(@"../../../TestInput/HelloWorld.elf");
 			//LoadFile(@"../../../TestInput/HelloWorldPSP.elf");

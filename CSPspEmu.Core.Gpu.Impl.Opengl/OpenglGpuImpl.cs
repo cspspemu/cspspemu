@@ -122,13 +122,19 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			*/
 		}
 
+		void Initialize()
+		{
+			///GL.Enable(EnableCap.Blend);
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="GpuState"></param>
 		public unsafe void Prim(GpuStateStruct* GpuState, PrimitiveType PrimitiveType, ushort VertexCount)
 		{
-			return;
+			//return;
+			PrepareRead(GpuState);
 
 			if (GpuState[0].ClearingMode)
 			{
@@ -146,37 +152,34 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					GL.MatrixMode(MatrixMode.Projection); GL.LoadIdentity();
 					GL.Ortho(0, 512, 272, 0, -0x7FFF, +0x7FFF);
 					GL.MatrixMode(MatrixMode.Modelview); GL.LoadIdentity();
-					Console.WriteLine("Transform2D");
 				}
 				else
 				{
-					Console.WriteLine("[1]");
 					GL.MatrixMode(MatrixMode.Projection); GL.LoadIdentity();
-					Console.WriteLine("[2]");
 					{
 						GL.MultMatrix(GpuState[0].VertexState.ProjectionMatrix.Values);
-						GpuState[0].VertexState.ProjectionMatrix.Dump();
 					}
 
 					GL.MatrixMode(MatrixMode.Modelview); GL.LoadIdentity();
 					GL.MultMatrix(GpuState[0].VertexState.ViewMatrix.Values);
 					GL.MultMatrix(GpuState[0].VertexState.WorldMatrix.Values);
+
+					if (GpuState[0].VertexState.WorldMatrix.Values[0] == float.NaN)
+					{
+						throw (new Exception("Invalid WorldMatrix"));
+					}
+
+					//GpuState[0].VertexState.ViewMatrix.Dump();
+					//GpuState[0].VertexState.WorldMatrix.Dump();
+
 					//Console.WriteLine("NO Transform2D");
 				}
-
-/*
-struct Vertex
-{
-   unsigned int color;
-   float x, y, z;
-};
-*/
 
 				uint VertexSize = GpuState[0].VertexState.Type.GetVertexSize();
 
 				byte* VertexPtr = (byte *)Memory.PspAddressToPointerSafe(GpuState[0].VertexAddress);
 
-				Console.WriteLine(VertexSize);
+				//Console.WriteLine(VertexSize);
 
 				GL.Begin(BeginMode.TriangleStrip);
 				for (int n = 0; n < VertexCount; n++)
@@ -186,23 +189,56 @@ struct Vertex
 					float y = *(float*)(CurrentVertexPtr + 8);
 					float z = *(float*)(CurrentVertexPtr + 12);
 					GL.Vertex3(x, y, z);
-					Console.WriteLine("{0}, {1}, {2}", x, y, z);
+					GL.Color4(CurrentVertexPtr[3], CurrentVertexPtr[2], CurrentVertexPtr[1], CurrentVertexPtr[0]);
+					//Console.WriteLine("{0}, {1}, {2}", x, y, z);
 				}
 				GL.End();
-
+				GL.Flush();
 
 				//Console.WriteLine(VertexCount);
+			}
+
+			PrepareWrite(GpuState);
+		}
+
+		[HandleProcessCorruptedStateExceptions()]
+		private void PrepareRead(GpuStateStruct* GpuState)
+		{
+			var Address = GpuState[0].DrawBufferState.Address;
+			//Console.WriteLine("PrepareRead: {0:X}", Address);
+			try
+			{
+				GL.DrawPixels(512, 272, PixelFormat.Rgba, PixelType.UnsignedInt8888, new IntPtr(Memory.PspAddressToPointerSafe(Address)));
+			}
+			catch (Exception Exception)
+			{
+				Console.WriteLine(Exception);
+			}
+		}
+
+		[HandleProcessCorruptedStateExceptions()]
+		private void PrepareWrite(GpuStateStruct* GpuState)
+		{
+			try
+			{
+				var Address = GpuState[0].DrawBufferState.Address;
+				GL.ReadPixels(0, 0, 512, 272, PixelFormat.Rgba, PixelType.UnsignedInt8888, new IntPtr(Memory.PspAddressToPointerSafe(Address)));
+			}
+			catch (Exception Exception)
+			{
+				Console.WriteLine(Exception);
 			}
 		}
 
 		[HandleProcessCorruptedStateExceptions()]
 		public void Finish(GpuStateStruct* GpuState)
 		{
-			return;
-
-			//if (GpuState[0].DrawBufferState.LowAddress != 0)
+			//return;
+			/*
+			if (GpuState[0].DrawBufferState.LowAddress != 0)
 			{
-				var Address = PspMemory.FrameBufferOffset | GpuState[0].DrawBufferState.LowAddress;
+				//var Address = PspMemory.FrameBufferOffset | GpuState[0].DrawBufferState.LowAddress;
+				var Address = GpuState[0].DrawBufferState.Address;
 				try
 				{
 					Console.WriteLine("{0:X}", Address);
@@ -217,6 +253,7 @@ struct Vertex
 					//throw(Exception);
 				}
 			}
+			*/
 		}
 
 		/// <summary>
@@ -236,6 +273,7 @@ struct Vertex
 				{
 					(GraphicsContext as IGraphicsContextInternal).LoadAll();
 					PrepareShaders();
+					Initialize();
 				}
 				GraphicsContext.MakeCurrent(null);
 				CompletedEvent.Set();
