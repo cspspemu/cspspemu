@@ -118,6 +118,16 @@ namespace CSPspEmu.Hle.Modules.audio
 		[HlePspFunction(NID = 0x13F592BC, FirmwareVersion = 150)]
 		public int sceAudioOutputPannedBlocking(int Channel, int LeftVolume, int RightVolume, short* Buffer)
 		{
+#if false
+			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, "sceAudioOutputPannedBlocking", (WakeUpCallbackDelegate) =>
+			{
+				HleState.PspRtc.RegisterTimerInOnce(TimeSpan.FromMilliseconds(1), () =>
+				{
+					WakeUpCallbackDelegate();
+				});
+			});
+
+#else
 			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Audio, "sceAudioOutputPannedBlocking", (WakeUpCallbackDelegate) =>
 			{
 				HleState.PspAudio.GetChannel(Channel).Output(Buffer, LeftVolume, RightVolume, () =>
@@ -125,6 +135,7 @@ namespace CSPspEmu.Hle.Modules.audio
 					WakeUpCallbackDelegate();
 				});
 			});
+#endif
 			return 0;
 		}
 

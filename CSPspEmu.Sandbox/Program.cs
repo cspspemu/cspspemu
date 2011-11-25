@@ -428,6 +428,7 @@ namespace CSPspEmu.Sandbox
 		protected void OnInit()
 		{
 			//PspConfig.DebugSyscalls = true;
+			//LoadFile(@"C:\pspsdk\psp\sdk\samples\audio\polyphonic\polyphonic.elf");
 
 			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\fpu.elf");
 
@@ -442,7 +443,6 @@ namespace CSPspEmu.Sandbox
 			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\fpu.elf");
 			//LoadFile(@"C:\projects\cspspemu\PspAutoTests\gum.elf");
 			//LoadFile(@"C:\juegos\pspemu\demos\controller.pbp");
-			LoadFile(@"C:\pspsdk\psp\sdk\samples\audio\polyphonic\polyphonic.elf");
 			//LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\sound.prx");
 			//LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\cube.pbp");
 			//LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\ortho.pbp");

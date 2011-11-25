@@ -90,14 +90,28 @@ namespace CSPspEmu.Core.Audio
 			public void Output(short* BufferPointer, int LeftVolume, int RightVolume, Action Callback)
 			{
 				var Buffer = new short[SampleCount * NumberOfChannels];
-				for (int n = 0; n < Buffer.Length; n += 2)
+				for (int n = 0; n < Buffer.Length; n++)
 				{
-					//Console.WriteLine(BufferPointer[n + 0]);
-					//Console.WriteLine(BufferPointer[n + 1]);
-					Buffer[n + 0] = (short)(((int)BufferPointer[n + 0] * LeftVolume) / PspAudio.MaxVolume);
-					Buffer[n + 1] = (short)(((int)BufferPointer[n + 1] * RightVolume) / PspAudio.MaxVolume);
+					Buffer[n] = BufferPointer[n];
 				}
+				/*
+				for (int n = 0; n < Buffer.Length; n += NumberOfChannels)
+				{
+					//Console.Write(BufferPointer[n + 0]); Console.Write(","); Console.Write(BufferPointer[n + 1]); Console.Write(";");
+					if (NumberOfChannels >= 1)
+					{
+						//Buffer[n + 0] = (short)(((int)BufferPointer[n + 0] * LeftVolume) / PspAudio.MaxVolume);
+						Buffer[n + 0] = BufferPointer[n + 0];
+					}
+					if (NumberOfChannels >= 2)
+					{
+						//Buffer[n + 1] = (short)(((int)BufferPointer[n + 1] * RightVolume) / PspAudio.MaxVolume);
+						Buffer[n + 1] = BufferPointer[n + 1];
+					}
+				}
+				*/
 				PspAudio.PspAudioImpl.OutputStereo16_48000(Index, Buffer, Callback);
+				//Callback();
 				//OutputStereo16_48000
 				//Callback();
 			}

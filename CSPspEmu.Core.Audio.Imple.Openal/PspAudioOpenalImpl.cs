@@ -38,10 +38,11 @@ namespace CSPspEmu.Core.Audio.Imple.Openal
 
 		protected class Channel
 		{
-			public const int NumberOfBuffers = 10;
+			public const int NumberOfBuffers = 4;
 			public int Index;
 			public int[] BufferIds;
 			public int SourceId;
+			public int Frequency = 44100;
 
 			public Channel(int Index)
 			{
@@ -104,7 +105,7 @@ namespace CSPspEmu.Core.Audio.Imple.Openal
 				AL.GetSource(SourceId, ALGetSourcei.BuffersProcessed, out Processed);
 				ALEnforce();
 
-				while (Processed-- > 0)
+				if (Processed > 0)
 				{
 					int BufferId = ALEnforce(AL.SourceUnqueueBuffer(SourceId));
 					{
@@ -116,23 +117,30 @@ namespace CSPspEmu.Core.Audio.Imple.Openal
 				return Active;
 			}
 
-			Queue<Tuple<short[], Action>> SamplesBuffer = new Queue<Tuple<short[], Action>>();
+			List<Tuple<short[], Action>> SamplesBuffer = new List<Tuple<short[], Action>>();
 
 			public bool ReadStream(int BufferId)
 			{
+				//Console.Write("a");
 				if (SamplesBuffer.Count > 0)
 				{
 					//Console.WriteLine("#########################################");
-					var BufferInfo = SamplesBuffer.Dequeue();
-					var Buffer = BufferInfo.Item1;
-					var Callback = BufferInfo.Item2;
-					AL.BufferData(BufferId, ALFormat.Stereo16, Buffer, Buffer.Length / sizeof(short), 48000); ALEnforce();
-					Callback();
+					lock (SamplesBuffer)
+					{
+						//Console.Write("a");
+						var BufferInfo = SamplesBuffer[0];
+						SamplesBuffer.RemoveAt(0);
+						var Buffer = BufferInfo.Item1;
+						var Callback = BufferInfo.Item2;
+						AL.BufferData(BufferId, ALFormat.Stereo16, Buffer, Buffer.Length / sizeof(short), Frequency); ALEnforce();
+						Callback();
+					}
 				}
 				else
 				{
-					var Buffer = new short[10240 * 2];
-					AL.BufferData(BufferId, ALFormat.Stereo16, Buffer, Buffer.Length / sizeof(short), 48000); ALEnforce();
+					//Console.Write("b");
+					var Buffer = new short[2048];
+					AL.BufferData(BufferId, ALFormat.Stereo16, Buffer, Buffer.Length / sizeof(short), Frequency); ALEnforce();
 				}
 
 				//Console.WriteLine("Stream");
@@ -153,7 +161,25 @@ namespace CSPspEmu.Core.Audio.Imple.Openal
 			internal void Output(short[] Samples, Action Callback)
 			{
 				//Console.WriteLine("//////////////////////////////////////////////////////");
-				SamplesBuffer.Enqueue(new Tuple<short[], Action>(Samples, Callback));
+				lock (SamplesBuffer)
+				{
+					/*
+					if (SamplesBuffer.Count > 0)
+					{
+						var Item = SamplesBuffer[SamplesBuffer.Count - 1];
+						var Buffer = Item.Item1;
+						SamplesBuffer[SamplesBuffer.Count - 1] = new Tuple<short[], Action>(Buffer.Concat(Samples).ToArray(), () => {
+							Item.Item2();
+							Callback();
+						});
+					}
+					else
+					*/
+					{
+						SamplesBuffer.Add(new Tuple<short[], Action>(Samples, Callback));
+					}
+				}
+				//Console.WriteLine(Samples.Length);
 			}
 		}
 
@@ -181,6 +207,7 @@ namespace CSPspEmu.Core.Audio.Imple.Openal
 			{
 				AudioThreadMain(ParentThread);
 			});
+			AudioThread.IsBackground = true;
 			AudioThread.Start();
 		}
 
@@ -190,14 +217,15 @@ namespace CSPspEmu.Core.Audio.Imple.Openal
 
 			while (ParentThread.IsAlive)
 			{
+				AudioContext.Process();
 				foreach (var Channel in Channels)
 				{
 					//Console.WriteLine(Channel);
 					Channel.Update();
 				}
-				AudioContext.Process();
-				//Thread.Sleep(1);
-				Thread.Sleep(20);
+				//Thread.Sleep(0);
+				Thread.Sleep(1);
+				//Thread.Sleep(20);
 			}
 		}
 

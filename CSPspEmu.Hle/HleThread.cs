@@ -142,7 +142,13 @@ namespace CSPspEmu.Hle
 		{
 			if (this.CurrentStatus != Status.Waiting)
 			{
-				throw (new InvalidOperationException("Trying to awake a non waiting thread '" + this.CurrentStatus + "'"));
+				if (this.CurrentStatus != Status.Ready)
+				{
+					if (this.CurrentStatus != Status.Running)
+					{
+						throw (new InvalidOperationException("Trying to awake a non waiting thread '" + this.CurrentStatus + "'"));
+					}
+				}
 			}
 			this.CurrentStatus = Status.Ready;
 		}
@@ -165,7 +171,10 @@ namespace CSPspEmu.Hle
 
 		protected void SetWait1()
 		{
-			CpuThreadState.Yield();
+			if (this.CurrentStatus == Status.Waiting)
+			{
+				CpuThreadState.Yield();
+			}
 		}
 
 		public void SetWait(WaitType WaitType, String WaitDescription)
