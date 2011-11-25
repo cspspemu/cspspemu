@@ -60,7 +60,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		public void round_w_s()
 		{
-			MipsMethodEmiter.SaveFPR(FD, () =>
+			MipsMethodEmiter.SaveFPR_I(FD, () =>
 			{
 				MipsMethodEmiter.LoadFPR(FS);
 				MipsMethodEmiter.CallMethod(typeof(MathFloat), "Round");
@@ -68,7 +68,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		public void ceil_w_s()
 		{
-			MipsMethodEmiter.SaveFPR(FD, () =>
+			MipsMethodEmiter.SaveFPR_I(FD, () =>
 			{
 				MipsMethodEmiter.LoadFPR(FS);
 				MipsMethodEmiter.CallMethod(typeof(MathFloat), "Ceil");
@@ -76,7 +76,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		public void floor_w_s()
 		{
-			MipsMethodEmiter.SaveFPR(FD, () =>
+			MipsMethodEmiter.SaveFPR_I(FD, () =>
 			{
 				MipsMethodEmiter.LoadFPR(FS);
 				MipsMethodEmiter.CallMethod(typeof(MathFloat), "Floor");

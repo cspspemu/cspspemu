@@ -10,14 +10,14 @@ namespace CSPspEmu.Core
 	{
 		public PspConfig PspConfig;
 
-		public event Action ApplicationExit;
+		//public event Action ApplicationExit;
 
 		public PspEmulatorContext(PspConfig PspConfig)
 		{
 			this.PspConfig = PspConfig;
 		}
 
-		protected Dictionary<Type, object> ObjectsByType = new Dictionary<Type, object>();
+		protected Dictionary<Type, PspEmulatorComponent> ObjectsByType = new Dictionary<Type, PspEmulatorComponent>();
 		protected Dictionary<Type, Type> TypesByType = new Dictionary<Type, Type>();
 
 		public TType GetInstance<TType>() where TType : PspEmulatorComponent
@@ -27,18 +27,18 @@ namespace CSPspEmu.Core
 				Console.WriteLine("GetInstance<{0}>: Miss!", typeof(TType));
 				if (TypesByType.ContainsKey(typeof(TType)))
 				{
-					return _SetInstance<TType>(Activator.CreateInstance(TypesByType[typeof(TType)], this));
+					return _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(TypesByType[typeof(TType)], this));
 				}
 				else
 				{
-					return _SetInstance<TType>(Activator.CreateInstance(typeof(TType), this));
+					return _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(typeof(TType), this));
 				}
 			}
 
 			return (TType)ObjectsByType[typeof(TType)];
 		}
 
-		public TType SetInstance<TType>(object Instance)
+		public TType SetInstance<TType>(PspEmulatorComponent Instance) where TType : PspEmulatorComponent
 		{
 			ConsoleUtils.SaveRestoreConsoleState(() =>
 			{
@@ -49,7 +49,7 @@ namespace CSPspEmu.Core
 			return _SetInstance<TType>(Instance);
 		}
 
-		protected TType _SetInstance<TType>(object Instance)
+		protected TType _SetInstance<TType>(PspEmulatorComponent Instance) where TType : PspEmulatorComponent
 		{
 			if (ObjectsByType.ContainsKey(typeof(TType)))
 			{

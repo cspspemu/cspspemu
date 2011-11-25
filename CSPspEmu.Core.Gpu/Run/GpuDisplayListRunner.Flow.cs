@@ -94,6 +94,7 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		public void OP_END()
 		{
+			GpuDisplayList.GpuProcessor.GpuImpl.End(GpuState);
 			GpuDisplayList.Done = true;
 		}
 

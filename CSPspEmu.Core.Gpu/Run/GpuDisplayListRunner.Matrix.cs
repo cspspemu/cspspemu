@@ -36,7 +36,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		}
 		public void OP_WORLD()
 		{
-			Console.WriteLine("{0:X}, {1}", Params24, Float1);
+			//Console.WriteLine("{0:X}, {1}", Params24, Float1);
 			GpuDisplayList.GpuStateStructPointer[0].VertexState.WorldMatrix.Write(Float1);
 		}
 

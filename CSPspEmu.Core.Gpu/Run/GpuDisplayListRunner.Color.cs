@@ -20,38 +20,32 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuAmbient(unsigned int color); // OP_ALC + OP_ALA
 
 		// Diffuse Model Color
-		[GpuOpCodesNotImplemented]
 		public void OP_DMC()
 		{
-			GpuState[0].LightingState.DiffuseModelColor.SetRGB(Params24);
-			//gpu.state.diffuseModelColor.rgba[] = command.float4[];
+			GpuState[0].LightingState.DiffuseModelColor.SetRGB_A1(Params24);
 		}
 
 		// Specular Model Color
-		[GpuOpCodesNotImplemented]
 		public void OP_SMC()
 		{
-			//gpu.state.specularModelColor.rgba[] = command.float4[];
+			GpuState[0].LightingState.SpecularModelColor.SetRGB_A1(Params24);
 		}
 
 		// Emissive Model Color
-		[GpuOpCodesNotImplemented]
 		public void OP_EMC()
 		{
-			//gpu.state.emissiveModelColor.rgba[] = command.float4[];
+			GpuState[0].LightingState.EmissiveModelColor.SetRGB_A1(Params24);
 		}
 
 		// Ambient Model Color/Alpha
 		// When lighting is off, this is like glColor*
-		[GpuOpCodesNotImplemented]
 		public void OP_AMC()
 		{
-			//gpu.state.ambientModelColor.rgb[] = command.float3[];
+			GpuState[0].LightingState.AmbientModelColor.SetRGB(Params24);
 		}
-		[GpuOpCodesNotImplemented]
 		public void OP_AMA()
 		{
-			//gpu.state.ambientModelColor.alpha = command.float4[0];
+			GpuState[0].LightingState.AmbientModelColor.SetA(Params24);
 		}
 
 		/**

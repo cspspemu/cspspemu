@@ -11,7 +11,7 @@ namespace CSPspEmu.Core
 	{
 		static public string CultureName = "en";
 
-		public bool VerticalSyn = true;
+		public bool VerticalSynchronization = true;
 		public bool TraceJIT = false;
 		public bool CountInstructionsAndYield = true;
 

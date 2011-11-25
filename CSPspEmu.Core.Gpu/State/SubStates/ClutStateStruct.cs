@@ -12,7 +12,7 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 		public uint Shift;
 		public uint Mask;
 		public uint Start;
-		public PspDisplay.PixelFormats Format;
+		public PixelFormats Format;
 		public byte* Data;
 		/*
 		public PixelFormats format;

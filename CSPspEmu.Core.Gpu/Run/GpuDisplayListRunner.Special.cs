@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
+using CSPspEmu.Core.Gpu.State;
+using CSPspEmu.Core.Gpu.State.SubStates;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -167,6 +169,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		[GpuOpCodesNotImplemented]
 		public void OP_FFACE()
 		{
+			GpuState[0].BackfaceCullingState.FrontFaceDirection = (FrontFaceDirectionEnum)Params24;
 			//gpu.state.frontFaceDirection = command.extractEnum!(FrontFaceDirection);
 		}
 
@@ -183,7 +186,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		[GpuOpCodesNotImplemented]
 		public void OP_SHADE()
 		{
-			//gpu.state.shadeModel = command.extractEnum!(ShadingModel);
+			GpuState[0].ShadeModel = (ShadingModelEnum)Params24;
 		}
 
 		// Logical Operation Enable (GL_COLOR_LOGIC_OP)

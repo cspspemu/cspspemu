@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Rtc;
+using CSPspEmu.Core.Threading.Synchronization;
 
 namespace CSPspEmu.Core.Display
 {
@@ -27,14 +28,6 @@ namespace CSPspEmu.Core.Display
 			NextFrame = 1,
 		}
 
-		public enum PixelFormats : int
-		{
-			RGB_565 = 0,
-			RGBA_5551 = 1,
-			RGBA_4444 = 2,
-			RGBA_8888 = 3,
-		}
-
 		public struct Info {
 			public uint Address;
 			public int BufferWidth;
@@ -50,12 +43,20 @@ namespace CSPspEmu.Core.Display
 			this.HlePspRtc = PspEmulatorContext.GetInstance<PspRtc>();
 		}
 
+		public PspWaitEvent VBlankEvent = new PspWaitEvent();
+
+		private int _VblankCount = 0;
+
 		public int VblankCount
 		{
+			set
+			{
+				_VblankCount++;
+			}
 			get
 			{
 				//this.HlePspRtc.Elapsed
-				return 0;
+				return _VblankCount;
 			}
 		}
 	}

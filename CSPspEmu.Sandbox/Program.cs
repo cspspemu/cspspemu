@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection.Emit;
-using CSPspEmu.Core.Cpu.Table;
-using System.Runtime.InteropServices;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
 using System.IO;
-using CSharpUtils.Extensions;
-using CSPspEmu.Core.Tests;
-using System.Diagnostics;
 using CSPspEmu.Hle;
 using CSPspEmu.Core.Cpu.Assembler;
 using System.Threading;
@@ -438,17 +429,23 @@ namespace CSPspEmu.Sandbox
 		{
 			//PspConfig.DebugSyscalls = true;
 
-			LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\ortho.pbp");
+			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\fpu.elf");
+
+			//LoadFile(@"C:\pspsdk\psp\sdk\samples\gu\ortho\ortho.elf");
+			//LoadFile(@"C:\pspsdk\psp\sdk\samples\gu\lines\lines.elf");
+			//LoadFile(@"C:\pspsdk\psp\sdk\samples\gu\cube\cube.elf");
+			//LoadFile(@"C:\pspsdk\psp\sdk\samples\gu\text\gufont.elf");
+
 			//LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
 			//LoadFile(@"C:\juegos\jpcsp2\demos\fputest.elf");
 			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\alu.elf");
 			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\fpu.elf");
-			//LoadFile(@"C:\projects\cspspemu\PspAutoTests\fpu.elf");
 			//LoadFile(@"C:\projects\cspspemu\PspAutoTests\gum.elf");
 			//LoadFile(@"C:\juegos\pspemu\demos\controller.pbp");
-			//LoadFile(@"C:\pspsdk\psp\sdk\samples\audio\polyphonic\polyphonic.elf");
+			LoadFile(@"C:\pspsdk\psp\sdk\samples\audio\polyphonic\polyphonic.elf");
 			//LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\sound.prx");
 			//LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\cube.pbp");
+			//LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\ortho.pbp");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\cpu\cpu\cpu.elf");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\threadstatus.pbp");
 			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\io\io\io.elf");

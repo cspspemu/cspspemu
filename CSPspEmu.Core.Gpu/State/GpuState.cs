@@ -32,12 +32,28 @@ namespace CSPspEmu.Core.Gpu.State
 	{
 		public float Red, Green, Blue, Alpha;
 
+		public void SetRGB_A1(uint Params24)
+		{
+			SetRGB(Params24);
+			Alpha = 1.0f;
+		}
+
 		public void SetRGB(uint Params24)
 		{
+			//Console.WriteLine(Params24);
 			Red = ((float)((Params24 >> 0) & 0xFF)) / 255.0f;
 			Green = ((float)((Params24 >> 8) & 0xFF)) / 255.0f;
 			Blue = ((float)((Params24 >> 16) & 0xFF)) / 255.0f;
-			Alpha = 1.0f;
+		}
+
+		public void SetA(uint Params24)
+		{
+			Alpha = ((float)((Params24 >> 0) & 0xFF)) / 255.0f;
+		}
+
+		public override string ToString()
+		{
+			return String.Format("Colorf(R={0}, G={1}, B={2}, A={3})", Red, Green, Blue, Alpha);
 		}
 	}
 
@@ -86,7 +102,7 @@ namespace CSPspEmu.Core.Gpu.State
 
 	public struct ScreenBufferStateStruct {
 		public uint Width;
-		public PspDisplay.PixelFormats Format;
+		public PixelFormats Format;
 
 		public byte HighAddress;
 		public uint LowAddress;
@@ -168,6 +184,8 @@ namespace CSPspEmu.Core.Gpu.State
 		// Sub States.
 		public VertexStateStruct VertexState;
 
+		public BackfaceCullingStateStruct BackfaceCullingState;
+
 		public FogStateStruct FogState;
 		public BlendingStateStruct BlendingState;
 		public StencilStateStruct StencilState;
@@ -185,5 +203,10 @@ namespace CSPspEmu.Core.Gpu.State
 		public ColorfStruct FixColorSource, FixColorDestination;
 
 		public TextureMappingStateStruct TextureMappingState;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public ShadingModelEnum ShadeModel;
 	}
 }

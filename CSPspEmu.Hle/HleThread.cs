@@ -62,10 +62,11 @@ namespace CSPspEmu.Hle
 
 		public enum WaitType
 		{
-			None = 0,
-			Timer = 1,
-			GraphicEngine = 2,
-			Audio = 3,
+			None,
+			Timer,
+			GraphicEngine,
+			Audio,
+			Display,
 		}
 
 		public enum Status {

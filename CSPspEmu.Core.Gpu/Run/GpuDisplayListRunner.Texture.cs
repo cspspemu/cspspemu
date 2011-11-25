@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Gpu.State;
+using CSPspEmu.Core.Gpu.State.SubStates;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -9,20 +11,27 @@ namespace CSPspEmu.Core.Gpu.Run
 	{
 		//static pure string TextureArrayOperation(string type, string code) { return ArrayOperation(type, 0, 7, code); }
 
+		private TextureStateStruct* TextureState
+		{
+			get
+			{
+				return &GpuState[0].TextureMappingState.TextureState;
+			}
+		}
+
 		// Texture Mapping Enable (GL_TEXTURE_2D)
-		[GpuOpCodesNotImplemented]
 		public void OP_TME()
 		{
-			GpuDisplayList.GpuStateStructPointer[0].TextureMappingState.Enabled = Bool1;
+			GpuState[0].TextureMappingState.Enabled = Bool1;
 		}
 
 		public void OP_TMS()
 		{
-			GpuDisplayList.GpuStateStructPointer[0].TextureMappingState.Matrix.Reset();
+			GpuState[0].TextureMappingState.Matrix.Reset();
 		}
 		public void OP_TMATRIX()
 		{
-			GpuDisplayList.GpuStateStructPointer[0].TextureMappingState.Matrix.Write(Float1);
+			GpuState[0].TextureMappingState.Matrix.Write(Float1);
 		}
 
 		/**
@@ -49,25 +58,17 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuTexMode(int tpsm, int maxmips, int a2, int swizzle);
 
 		// Texture Mode
-		[GpuOpCodesNotImplemented]
 		public void OP_TMODE()
 		{
-			/*
-			with (gpu.state.texture) {
-				swizzled        =  command.extract!(bool,  0, 8);
-				mipmapShareClut = !command.extract!(bool,  8, 8);
-				mipmapMaxLevel  =  command.extract!(ubyte, 16, 8);
-			}
-			*/
-		
-			//writefln("%d, %d", gpu.state.texture.mipmapShareClut, gpu.state.texture.mipmapMaxLevel);
+			TextureState[0].Swizzled = (Param8(0) != 0);
+			TextureState[0].MipmapShareClut = (Param8(8) != 0);
+			TextureState[0].MipmapMaxLevel = (int)Param8(16);
 		}
 
 		// Texture Pixel Storage Mode
-		[GpuOpCodesNotImplemented]
 		public void OP_TPSM()
 		{
-			//gpu.state.texture.format = command.extractEnum!(PixelFormats);
+			TextureState[0].PixelFormat = (PixelFormats)Params24;
 		}
 
 		/**
@@ -87,84 +88,60 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuTexImage(int mipmap, int width, int height, int tbw, const void* tbp); // OP_TBP_n, OP_TBW_n, OP_TSIZE_n, OP_TFLUSH
 
 		// TextureMipmap Base Pointer
-		/*
-		mixin (TextureArrayOperation("OP_TBP_n", q{
-			with (gpu.state.texture.mipmaps[Index]) {
-				address &= 0xFF000000;
-				address |= command.param24;
-			}
-		}));
-		*/
 
-		[GpuOpCodesNotImplemented]
-		public void OP_TBP0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TBP1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TBP2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TBP3() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TBP4() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TBP5() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TBP6() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TBP7() { }
+		private TextureStateStruct.MipmapState* MipMapState(int Index)
+		{
+			return &(&TextureState[0].Mipmap0)[Index];
+		}
+
+		private void _OP_TBP(int Index)
+		{
+			var MipMap = MipMapState(Index);
+			MipMap[0].Address = (MipMap[0].Address & 0xFF000000) | (Params24 & 0x00FFFFFF);
+		}
+
+		private void _OP_TBW(int Index)
+		{
+			var MipMap = MipMapState(Index);
+			MipMap[0].BufferWidth = Param16(0);
+			MipMap[0].Address = (MipMap[0].Address & 0x00FFFFFF) | ((uint)(Param8(16) << 24) & 0xFF000000);
+		}
+
+		public void OP_TBP0() { _OP_TBP(0); }
+		public void OP_TBP1() { _OP_TBP(1); }
+		public void OP_TBP2() { _OP_TBP(2); }
+		public void OP_TBP3() { _OP_TBP(3); }
+		public void OP_TBP4() { _OP_TBP(4); }
+		public void OP_TBP5() { _OP_TBP(5); }
+		public void OP_TBP6() { _OP_TBP(6); }
+		public void OP_TBP7() { _OP_TBP(7); }
 
 		// TextureMipmap Buffer Width.
-		[GpuOpCodesNotImplemented]
-		public void OP_TBW0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TBW1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TBW2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TBW3() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TBW4() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TBW5() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TBW6() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TBW7() { }
-		/*
-		mixin (TextureArrayOperation("OP_TBW_n", q{
-			with (gpu.state.texture.mipmaps[Index]) {
-				buffer_width = command.extract!(uint, 0, 16); // ???
-				address &= 0x00FFFFFF;
-				address |= command.extract!(uint, 16, 8) << 24;
-			}
-		}));
-		*/
+		public void OP_TBW0() { _OP_TBW(0); }
+		public void OP_TBW1() { _OP_TBW(1); }
+		public void OP_TBW2() { _OP_TBW(2); }
+		public void OP_TBW3() { _OP_TBW(3); }
+		public void OP_TBW4() { _OP_TBW(4); }
+		public void OP_TBW5() { _OP_TBW(5); }
+		public void OP_TBW6() { _OP_TBW(6); }
+		public void OP_TBW7() { _OP_TBW(7); }
 
 		// TextureMipmap Size
-		[GpuOpCodesNotImplemented]
-		public void OP_TSIZE0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TSIZE1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TSIZE2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TSIZE3() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TSIZE4() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TSIZE5() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TSIZE6() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_TSIZE7() { }
-		/*
-		mixin (TextureArrayOperation("OP_TSIZE_n", q{
-			with (gpu.state.texture.mipmaps[Index]) {
-				width  = 1 << command.extract!(uint, 0, 8);
-				height = 1 << command.extract!(uint, 8, 8);
-			}
-		}));
-		*/
+		private void _OP_TSIZE(int Index)
+		{
+			var MipMap = MipMapState(Index);
+			MipMap[0].Width = (uint)(1 << Param8(0));
+			MipMap[0].Height = (uint)(1 << Param8(8));
+		}
+
+		public void OP_TSIZE0() { _OP_TSIZE(0); }
+		public void OP_TSIZE1() { _OP_TSIZE(1); }
+		public void OP_TSIZE2() { _OP_TSIZE(2); }
+		public void OP_TSIZE3() { _OP_TSIZE(3); }
+		public void OP_TSIZE4() { _OP_TSIZE(4); }
+		public void OP_TSIZE5() { _OP_TSIZE(5); }
+		public void OP_TSIZE6() { _OP_TSIZE(6); }
+		public void OP_TSIZE7() { _OP_TSIZE(7); }
 
 		/**
 		 * Flush texture page-cache
@@ -174,11 +151,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuTexFlush(void); // OP_TFLUSH
 
 		// Texture Flush. NOTE: 'sceGuTexImage' and 'sceGuTexMode' calls TFLUSH.
-		[GpuOpCodesNotImplemented]
 		public void OP_TFLUSH()
 		{
-			//writefln("TFLUSH!");
-			//gpu.impl.tflush();
+			GpuDisplayList.GpuProcessor.GpuImpl.TextureFlush(GpuState);
 		}
 
 		/**
@@ -190,15 +165,13 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuTexSync(); // OP_TSYNC
 		//
 		// http://forums.ps2dev.org/viewtopic.php?t=6304
-		// SceGuTexSync() is needed when you upload a texture to VRAM and part of that memory is still in texture cash
+		// SceGuTexSync() is needed when you upload a texture to VRAM and part of that memory is still in texture cache
 		// (which you won't know until you get some wrong texture artifacts). So just call it after each sceGuCopyImage and you're fine. 
 
 		// Texture Sync
-		[GpuOpCodesNotImplemented]
 		public void OP_TSYNC()
 		{
-			//writefln("TSYNC!");
-			//gpu.impl.tsync();
+			GpuDisplayList.GpuProcessor.GpuImpl.TextureSync(GpuState);
 		}
 
 		/**
@@ -218,15 +191,10 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuTexFilter(int min, int mag); // OP_TFLT
 
 		// Texture FiLTer
-		[GpuOpCodesNotImplemented]
 		public void OP_TFLT()
 		{
-			/*
-			with (gpu.state.texture) {
-				filterMin = command.extractEnum!(TextureFilter, 0); // only GL_NEAREST, GL_LINEAR (no mipmaps) (& 0b_1)
-				filterMag = command.extractEnum!(TextureFilter, 8); // only GL_NEAREST, GL_LINEAR (no mipmaps) (& 0b_1)
-			}
-			*/
+			TextureState[0].FilterMinification = (TextureFilter)Param8(0);
+			TextureState[0].FilterMagnification = (TextureFilter)Param8(8);
 		}
 
 		/**
@@ -242,15 +210,10 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuTexWrap(int u, int v); // OP_TWRAP
 
 		// Texture WRAP
-		[GpuOpCodesNotImplemented]
 		public void OP_TWRAP()
 		{
-			/*
-			with (gpu.state.texture) {
-				wrapU = command.extractEnum!(WrapMode, 0);
-				wrapV = command.extractEnum!(WrapMode, 8);
-			}
-			*/
+			TextureState[0].WrapU = (WrapMode)Param8(0);
+			TextureState[0].WrapV = (WrapMode)Param8(8);
 		}
 
 		/**
@@ -289,13 +252,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		[GpuOpCodesNotImplemented]
 		public void OP_TFUNC()
 		{
-			/*
-			with (gpu.state.texture) {
-				effect         = command.extractEnum!(TextureEffect, 0);
-				colorComponent = command.extractEnum!(TextureColorComponent, 8);
-				fragment_2x    = command.extract!(bool, 16, 1); // ?
-			}
-			*/
+			TextureState[0].Effect = (TextureEffect)Param8(0);
+			TextureState[0].ColorComponent = (TextureColorComponent)Param8(8);
+			TextureState[0].Fragment2X = (Param8(16) != 0);
 		}
 
 		/**
@@ -310,12 +269,8 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuTexScale(float u, float v);
 
 		// UV SCALE
-		// gpu.state.texture.scale.u = command.float1; 
-		[GpuOpCodesNotImplemented]
-		public void OP_USCALE() { }
-		// gpu.state.texture.scale.v = command.float1; 
-		[GpuOpCodesNotImplemented]
-		public void OP_VSCALE() { }
+		public void OP_USCALE() { GpuState[0].TextureMappingState.TextureState.ScaleU = Float1; }
+		public void OP_VSCALE() { GpuState[0].TextureMappingState.TextureState.ScaleV = Float1; }
 
 		/**
 		 * Set texture offset
@@ -329,12 +284,8 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuTexOffset(float u, float v);
 
 		// UV OFFSET
-		// gpu.state.texture.offset.u = command.float1;
-		[GpuOpCodesNotImplemented]
-		public void OP_UOFFSET() { }
-		// gpu.state.texture.offset.v = command.float1;
-		[GpuOpCodesNotImplemented]
-		public void OP_VOFFSET() { }
+		public void OP_UOFFSET() { GpuState[0].TextureMappingState.TextureState.OffsetU = Float1; }
+		public void OP_VOFFSET() { GpuState[0].TextureMappingState.TextureState.OffsetV = Float1; }
 
 		[GpuOpCodesNotImplemented]
 		public void OP_TEXTURE_ENV_MAP_MATRIX()
@@ -353,6 +304,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		[GpuOpCodesNotImplemented]
 		public void OP_TBIAS()
 		{
+			//GpuState[0].TextureMappingState.TextureState
 			//gpu.state.texture.levelMode  = command.extractEnum!(TextureLevelMode, 0);
 			//gpu.state.texture.mipmapBias = cast(float)command.extract!(int, 16, 8) / 16.0f;
 		}

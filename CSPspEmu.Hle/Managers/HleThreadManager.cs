@@ -104,7 +104,10 @@ namespace CSPspEmu.Hle.Managers
 			// No thread found.
 			if (NextThread == null)
 			{
-				Thread.Sleep(1);
+				if (Processor.PspConfig.VerticalSynchronization)
+				{
+					Thread.Sleep(1);
+				}
 				return;
 			}
 

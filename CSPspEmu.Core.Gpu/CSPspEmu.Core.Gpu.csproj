@@ -65,6 +65,9 @@
     <Compile Include="Run\GpuDisplayListRunner.Spline.cs" />
     <Compile Include="Run\GpuDisplayListRunner.Texture.cs" />
     <Compile Include="Run\GpuDisplayListRunner.Unknown.cs" />
+    <Compile Include="TextureColorComponent.cs" />
+    <Compile Include="TextureEffect.cs" />
+    <Compile Include="WrapMode.cs" />
     <Compile Include="State\GpuMatrixStruct.cs" />
     <Compile Include="State\GpuRectStruct.cs" />
     <Compile Include="State\GpuVectorStruct.cs" />
@@ -86,6 +89,7 @@
     <Compile Include="State\SubStates\MorphingStateStruct.cs" />
     <Compile Include="State\SubStates\PatchCullingStateStruct.cs" />
     <Compile Include="State\SubStates\StencilStateStruct.cs" />
+    <Compile Include="TextureFilter.cs" />
     <Compile Include="State\SubStates\TextureMappingStateStruct.cs" />
     <Compile Include="State\SubStates\TextureStateStruct.cs" />
     <Compile Include="State\TestFunctionEnum.cs" />

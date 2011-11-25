@@ -15,6 +15,7 @@ using System.Drawing.Drawing2D;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Controller;
 using CSPspEmu.Core.Display;
+using CSPspEmu.Core.Utils;
 
 namespace CSPspEmu.Gui.Winforms
 {
@@ -124,38 +125,14 @@ namespace CSPspEmu.Gui.Winforms
 				{
 					Buffer.LockBitsUnlock(System.Drawing.Imaging.PixelFormat.Format32bppArgb, (BitmapData) =>
 					{
-						var BitmapDataPtr = (byte*)BitmapData.Scan0.ToPointer();
+						var BitmapDataPtr = (PixelFormatDecoder.OutputPixel *)BitmapData.Scan0.ToPointer();
 						var Address = PspDisplay.CurrentInfo.Address;
 						//var Address = Memory.FrameBufferSegment.Low;
 						//Console.WriteLine("{0:X}", Address);
 						var FrameBuffer = (byte*)Memory.PspAddressToPointer(Address);
 						var Count = 512 * 272;
-						switch (PspDisplay.CurrentInfo.PixelFormat)
-						{
-							case PspDisplay.PixelFormats.RGBA_8888:
-								for (int n = 0; n < Count; n++)
-								{
-									BitmapDataPtr[n * 4 + 3] = 0xFF;
-									BitmapDataPtr[n * 4 + 0] = FrameBuffer[n * 4 + 2];
-									BitmapDataPtr[n * 4 + 1] = FrameBuffer[n * 4 + 1];
-									BitmapDataPtr[n * 4 + 2] = FrameBuffer[n * 4 + 0];
-								}
-								break;
-							case PspDisplay.PixelFormats.RGBA_5551:
-								for (int n = 0; n < Count; n++)
-								{
-									ushort Value = *(ushort*)&FrameBuffer[n * 2];
-									BitmapDataPtr[n * 4 + 3] = 0xFF;
-									BitmapDataPtr[n * 4 + 0] = (byte)Value.ExtractUnsignedScale(10, 5, 255);
-									BitmapDataPtr[n * 4 + 1] = (byte)Value.ExtractUnsignedScale(5, 5, 255);
-									BitmapDataPtr[n * 4 + 2] = (byte)Value.ExtractUnsignedScale(0, 5, 255);
-								}
-								break;
-							default:
-								//throw(new NotImplementedException("Not implemented PixelFormat '" + PspDisplay.CurrentInfo.PixelFormat + "'"));
-								Console.Error.WriteLine("Not implemented PixelFormat '" + PspDisplay.CurrentInfo.PixelFormat + "'");
-								break;
-						}
+						PixelFormatDecoder.Decode(PspDisplay.CurrentInfo.PixelFormat, FrameBuffer, BitmapDataPtr, Count);
+						for (int n = 0; n < Count; n++) BitmapDataPtr[n].A = 0xFF;
 					});
 				}
 				catch (Exception Exception)
@@ -183,10 +160,9 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			SendControllerFrame();
 			Refresh();
-			//var g = Graphics.FromHdc(this.Handle);
-			//g.DrawImage();
-			//var Bitmap = new Bitmap();
-			//Bitmap.LockBits(
+
+			PspDisplay.VBlankEvent.Signal();
+			PspDisplay.VblankCount++;
 		}
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -234,7 +210,7 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void frameSkippingToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			this.PspConfig.VerticalSyn = frameSkippingToolStripMenuItem.Checked;
+			this.PspConfig.VerticalSynchronization = frameSkippingToolStripMenuItem.Checked;
 		}
 
 		private void websiteToolStripMenuItem_Click(object sender, EventArgs e)

@@ -17,6 +17,15 @@ namespace CSPspEmu.Core.Rtc
 			}
 		}
 
+		public DateTime UpdatedCurrentDateTime
+		{
+			get
+			{
+				Update();
+				return CurrentDateTime;
+			}
+		}
+
 		public uint UnixTimeStamp
 		{
 			get
@@ -73,6 +82,7 @@ namespace CSPspEmu.Core.Rtc
 		{
 			lock (Timers)
 			{
+				//Console.WriteLine("RegisterTimerAtOnce:" + DateTime);
 				Timers.Add(new Tuple<DateTime, Action>(DateTime, Callback));
 			}
 		}

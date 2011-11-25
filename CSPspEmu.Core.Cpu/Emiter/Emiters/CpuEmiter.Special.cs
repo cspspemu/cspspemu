@@ -33,6 +33,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Move (From/To) IC
 		public void mfic()
 		{
+			//throw (new NotImplementedException());
 			MipsMethodEmiter.SaveGPR(RT, () =>
 			{
 				MipsMethodEmiter.LoadFieldPtr(typeof(CpuThreadState).GetField("IC"));
@@ -41,6 +42,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		public void mtic()
 		{
+			//throw (new NotImplementedException());
 			MipsMethodEmiter.SaveFieldI4(typeof(CpuThreadState).GetField("IC"), () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);

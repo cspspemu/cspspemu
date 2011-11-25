@@ -18,5 +18,13 @@ namespace CSPspEmu.Core.Gpu
 
 		abstract public void Prim(GpuStateStruct* GpuState, PrimitiveType PrimitiveType, ushort VertexCount);
 		abstract public void Finish(GpuStateStruct* GpuState);
+		abstract public void End(GpuStateStruct* GpuState);
+
+		virtual public void TextureFlush(GpuStateStruct* GpuState)
+		{
+		}
+		virtual public void TextureSync(GpuStateStruct* GpuState)
+		{
+		}
 	}
 }

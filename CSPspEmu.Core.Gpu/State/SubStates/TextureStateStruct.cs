@@ -5,34 +5,123 @@ using System.Text;
 
 namespace CSPspEmu.Core.Gpu.State.SubStates
 {
-	public struct TextureStateStruct
+	unsafe public struct TextureStateStruct
 	{
-		/*
-		// Format of the texture data.
-		public bool           swizzled;              /// Is texture swizzled?
-		public PixelFormats   format;                /// Texture Data mode
+		/// <summary>
+		/// Mimaps
+		/// </summary>
+		public struct MipmapState
+		{
+			/// <summary>
+			/// Pointer 
+			/// </summary>
+			public uint Address;
 
-		// Normal attributes
-		public TextureFilter  filterMin, filterMag;  /// TextureFilter when drawing the texture scaled
-		public WrapMode       wrapU, wrapV;          /// Wrap mode when specifying texture coordinates beyond texture size
-		public UV             scale;                 /// 
-		public UV             offset;                /// 
+			/// <summary>
+			/// BufferWidth
+			/// </summary>
+			public uint BufferWidth;
 
-		// Effects
-		public TextureEffect  effect;                /// 
-		public TextureColorComponent colorComponent; ///
-		public bool           fragment_2x;           /// ???
+			/// <summary>
+			/// 
+			/// </summary>
+			public uint Width;
 
-		// Mimaps
-		struct MipmapState {
-			uint address;                     /// Pointer 
-			uint buffer_width;                ///
-			uint width, height;               ///
+			/// <summary>
+			/// 
+			/// </summary>
+			public uint Height;
 		}
-		public int            mipmapMaxLevel;        /// Levels of mipmaps
-		public bool           mipmapShareClut;       /// Mipmaps share clut?
-		public MipmapState[8] mipmaps;               /// MipmapState list
 
+		/// <summary>
+		/// Is texture swizzled?
+		/// </summary>
+		public bool Swizzled;
+	
+		/// <summary>
+		/// Mipmaps share clut?
+		/// </summary>
+		public bool MipmapShareClut;
+
+		/// <summary>
+		/// Levels of mipmaps
+		/// </summary>
+		public int MipmapMaxLevel;
+
+		/// <summary>
+		/// Format of the texture data.
+		/// Texture Data mode
+		/// </summary>
+		public PixelFormats PixelFormat;
+
+		/// <summary>
+		/// MipmapState list
+		/// </summary>
+		public MipmapState Mipmap0;
+		public MipmapState Mipmap1;
+		public MipmapState Mipmap2;
+		public MipmapState Mipmap3;
+		public MipmapState Mipmap4;
+		public MipmapState Mipmap5;
+		public MipmapState Mipmap6;
+		public MipmapState Mipmap7;
+
+		/// <summary>
+		/// TextureFilter when drawing the texture scaled
+		/// </summary>
+		public TextureFilter FilterMinification;
+
+		/// <summary>
+		/// TextureFilter when drawing the texture scaled
+		/// </summary>
+		public TextureFilter FilterMagnification;
+
+		/// <summary>
+		/// Wrap mode when specifying texture coordinates beyond texture size
+		/// </summary>
+		public WrapMode WrapU;
+
+		/// <summary>
+		/// Wrap mode when specifying texture coordinates beyond texture size
+		/// </summary>
+		public WrapMode WrapV;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public float ScaleU;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public float ScaleV;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public float OffsetU;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public float OffsetV;
+
+		/// <summary>
+		/// Effects:
+		/// </summary>
+		public bool Fragment2X;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public TextureEffect Effect;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public TextureColorComponent ColorComponent;
+
+		/*
 		public int mipmapRealWidth(int mipmap = 0) { return PixelFormatSize(format, mipmaps[mipmap].buffer_width); }
 		public int mipmapTotalSize(int mipmap = 0) { return mipmapRealWidth(mipmap) * mipmaps[mipmap].height; }
 

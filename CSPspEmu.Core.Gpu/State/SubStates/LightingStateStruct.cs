@@ -80,10 +80,5 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 		/// 
 		/// </summary>
 		public LightModelEnum LightModel;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public ShadingModelEnum ShadeModel;
 	}
 }

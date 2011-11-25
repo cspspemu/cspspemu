@@ -53,9 +53,55 @@ void test2() {
 	emitString(s);
 }
 
+unsigned int colors[8] = 
+{
+	0xffff0000,
+	0xffff00ff,
+	0xff0000ff,
+	0xff00ffff,
+	0xff00ff00,
+	0xffffff00,
+	0xffffffff,
+	0xff00ffff
+};
+
+#define FADE_SPEED 0.015f;
+float fade = 0;
+unsigned int color_index = 0;
+
+void test3() {
+	unsigned int i,j;
+	unsigned int result;
+	result = 0;
+	
+	fade += FADE_SPEED;
+	if (fade >= 1.0f)
+	{
+		fade -= 1.0f;
+		color_index = (color_index+1) & 7;
+	}
+	
+	emitFloat(fade);
+	for (i = 0; i < 4; ++i)
+	{
+		int ca = (colors[color_index] >> (i*8)) & 0xff;
+		int cb = (colors[(color_index+1)&7] >> (i*8)) & 0xff;
+		emitInt(i);
+		emitUInt(ca);
+		emitUInt(cb);
+		result |= ((unsigned char)(ca + (cb-ca) * fade)) << (i*8);
+		emitUInt(result);
+	}
+	
+
+	emitUInt(result);
+}
+
 int main(int argc, char **argv) {
 	int n;
 	char temp[1024];
+	
+	/*
 	emitFloat(floatValues[0]);
 	emitFloat(floatValues[1]);
 	emitFloat(floatValues[2]);
@@ -81,6 +127,13 @@ int main(int argc, char **argv) {
 		//emitFloat(sinf(1.141592f));
 		emitFloat(sinf(n * 0.3f));
 	}
+	
+	test3();
+	*/
+	
+	int ca = 0xFF, cb = 0xFF;
+	
+	emitUInt((unsigned int)(ca + (cb-ca) * fade));
 	
 	return 0;
 }

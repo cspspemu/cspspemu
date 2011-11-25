@@ -28,6 +28,9 @@ namespace CSPspEmu.Hle.Modules.display
 			return 0;
 		}
 
+		int LastVblankCount = 0;
+		DateTime LastWaitVblankStart;
+
 		/// <summary>
 		/// Wait for vertical blank start
 		/// </summary>
@@ -35,14 +38,31 @@ namespace CSPspEmu.Hle.Modules.display
 		[HlePspFunction(NID = 0x984C27E7, FirmwareVersion = 150)]
 		public int sceDisplayWaitVblankStart(CpuThreadState CpuThreadState)
 		{
-			if (HleState.PspConfig.VerticalSyn)
+			if (HleState.PspConfig.VerticalSynchronization && LastVblankCount != HleState.PspDisplay.VblankCount)
 			{
 				var SleepThread = HleState.ThreadManager.Current;
-				SleepThread.CurrentStatus = HleThread.Status.Waiting;
-				SleepThread.CurrentWaitType = HleThread.WaitType.Timer;
-				SleepThread.AwakeOnTime = HleState.PspRtc.CurrentDateTime + TimeSpan.FromMilliseconds(1000 / 60);
+
+				SleepThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Display, "sceDisplayWaitVblankStart", (WakeUpCallbackDelegate) =>
+				{
+					HleState.PspRtc.RegisterTimerAtOnce(LastWaitVblankStart + TimeSpan.FromMilliseconds(1000 / 60), () =>
+					{
+						WakeUpCallbackDelegate();
+					});
+					LastWaitVblankStart = HleState.PspRtc.UpdatedCurrentDateTime;
+				});
+
+				/*
+				SleepThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Display, "sceDisplayWaitVblankStart", (WakeUpCallbackDelegate) =>
+				{
+					//PspDisplay.VBlankEvent
+					HleState.PspDisplay.VBlankEvent.CallbackOnStateOnce(() =>
+					{
+						LastVblankCount = HleState.PspDisplay.VblankCount;
+						WakeUpCallbackDelegate();
+					});
+				});
+				*/
 			}
-			CpuThreadState.Yield();
 
 			return 0;
 		}
@@ -56,7 +76,7 @@ namespace CSPspEmu.Hle.Modules.display
 		/// <param name="Sync">One of ::PspDisplaySetBufSync</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x289D82FE, FirmwareVersion = 150)]
-		public int sceDisplaySetFrameBuf(uint Address, int BufferWidth, PspDisplay.PixelFormats PixelFormat, PspDisplay.SyncMode Sync)
+		public int sceDisplaySetFrameBuf(uint Address, int BufferWidth, PixelFormats PixelFormat, PspDisplay.SyncMode Sync)
 		{
 			//Console.WriteLine("sceDisplay.sceDisplaySetFrameBuf {0:X},{1},{2},{3}", Address, BufferWidth, PixelFormat, Sync);
 			HleState.PspDisplay.CurrentInfo.Address = Address;

@@ -46,26 +46,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
-		int VertexShader;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		int FragmentShader;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		int GeometryShader;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		int ProgramShaderProgram;
-
-		/// <summary>
-		/// 
-		/// </summary>
 		/// <param name="Config"></param>
 		/// <param name="Memory"></param>
 		public OpenglGpuImpl(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
@@ -74,58 +54,73 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			this.Memory = PspEmulatorContext.GetInstance<PspMemory>();
 		}
 
-		private void PrepareShaders()
-		{
-			/*
-			var ComputeContext = new ComputeContext(ComputeDeviceTypes.Accelerator, new ComputeContextPropertyList(ComputePlatform.Platforms[0]), null, IntPtr.Zero);
-			ComputeProgram ComputeProgram = new ComputeProgram(ComputeContext, @"
-
-				}
-			");
-			ComputeProgram.Build(ComputeContext.Devices, "", null, IntPtr.Zero);
-
-			var Kernel = ComputeProgram.CreateKernel("interopTeste");
-
-			var ComputeCommandQueue = new ComputeCommandQueue(ComputeContext, ComputeContext.Devices[0], ComputeCommandQueueFlags.None);
-			//ComputeCommandQueue.Write(
-			ComputeCommandQueue.Execute(Kernel);
-			*/
-
-
-			//new ComputeBuffer<byte>(
-			//ComputeBuffer<byte>.CreateFromGLBuffer<byte>();
-			/*
-			ProgramShaderProgram = GL.CreateProgram();
-	
-			VertexShader = GL.CreateShader(ShaderType.VertexShader);
-			GL.ShaderSource(VertexShader, "void main() { gl_Position = ftransform();}");
-			GL.CompileShader(VertexShader);
-			var VertexShaderInfo = GL.GetShaderInfoLog(VertexShader);
-			Console.WriteLine("VertexShaderInfo: {0}", VertexShaderInfo);
-			GL.AttachShader(ProgramShaderProgram, VertexShader);
-
-			FragmentShader = GL.CreateShader(ShaderType.FragmentShader);
-			GL.ShaderSource(FragmentShader, "void main() { gl_Position = ftransform();}");
-			GL.CompileShader(FragmentShader);
-			var FragmentShaderInfo = GL.GetShaderInfoLog(VertexShader);
-			Console.WriteLine("FragmentShaderInfo: {0}", FragmentShaderInfo);
-			GL.AttachShader(ProgramShaderProgram, FragmentShader);
-
-			GeometryShader = GL.CreateShader(ShaderType.GeometryShader);
-			GL.ShaderSource(GeometryShader, "void main() { gl_Position = ftransform();}");
-			GL.CompileShader(GeometryShader);
-			var GeometryShaderInfo = GL.GetShaderInfoLog(VertexShader);
-			Console.WriteLine("GeometryShaderInfo: {0}", GeometryShaderInfo);
-			GL.AttachShader(ProgramShaderProgram, GeometryShader);
-
-			GL.LinkProgram(ProgramShaderProgram);
-			GL.UseProgram(ProgramShaderProgram);
-			*/
-		}
-
 		void Initialize()
 		{
 			///GL.Enable(EnableCap.Blend);
+			VertexReader = new VertexReader();
+		}
+
+		VertexReader VertexReader;
+
+		private void PrepareState_CullFace(GpuStateStruct* GpuState)
+		{
+			if (GlEnableDisable(EnableCap.CullFace, GpuState[0].BackfaceCullingState.Enabled))
+			{
+				GL.CullFace((GpuState[0].BackfaceCullingState.FrontFaceDirection == State.SubStates.FrontFaceDirectionEnum.ClockWise) ? CullFaceMode.Front : CullFaceMode.Back);
+			}
+		}
+
+		private void PrepareState_Texture(GpuStateStruct* GpuState)
+		{
+			//if (GlEnableDisable(EnableCap.Texture2D, GpuState[0].TextureMappingState.Enabled))
+			{
+				//GL
+				//Console.WriteLine("aaaaaaaaaaaaa");
+			}
+		}
+
+		private void PrepareState_Lighting(GpuStateStruct* GpuState)
+		{
+			//Console.WriteLine(GpuState[0].LightingState.AmbientModelColor);
+			
+			//var Color = GpuState[0].LightingState.AmbientModelColor;
+			//GL.Color3(Color.Red, Color.Green, Color.Blue);
+
+			//if (GlEnableDisable(EnableCap.Lighting, GpuState[0].LightingState.Enabled))
+			{
+			}
+		}
+
+		private void PrepareState(GpuStateStruct* GpuState)
+		{
+			PrepareState_CullFace(GpuState);
+			PrepareState_Texture(GpuState);
+			PrepareState_Lighting(GpuState);
+
+			//GL.Disable(EnableCap.Blend);
+
+			GL.ShadeModel((GpuState[0].ShadeModel == ShadingModelEnum.Flat) ? ShadingModel.Flat : ShadingModel.Smooth);
+		}
+
+		private void PutVertex(ref VertexInfo VertexInfo, ref VertexTypeStruct VertexType)
+		{
+			//Console.WriteLine(VertexInfo);
+			if (VertexType.Color != VertexTypeStruct.ColorEnum.Void)
+			{
+				GL.Color4((byte)VertexInfo.R, (byte)VertexInfo.G, (byte)VertexInfo.B, (byte)VertexInfo.A);
+			}
+			if (VertexType.Texture != VertexTypeStruct.NumericEnum.Void)
+			{
+				GL.TexCoord2(VertexInfo.U, VertexInfo.V);
+			}
+			if (VertexType.Normal != VertexTypeStruct.NumericEnum.Void)
+			{
+				GL.Normal3(VertexInfo.NX, VertexInfo.NY, VertexInfo.NZ);
+			}
+			if (VertexType.Position != VertexTypeStruct.NumericEnum.Void)
+			{
+				GL.Vertex3(VertexInfo.PX, VertexInfo.PY, VertexInfo.PZ);
+			}
 		}
 
 		/// <summary>
@@ -134,8 +129,14 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <param name="GpuState"></param>
 		override public unsafe void Prim(GpuStateStruct* GpuState, PrimitiveType PrimitiveType, ushort VertexCount)
 		{
+			//Console.WriteLine("--------------------------------------------------------");
+			var VertexType = GpuState[0].VertexState.Type;
+
+			VertexReader.SetVertexTypeStruct(VertexType, (byte*)Memory.PspAddressToPointerSafe(GpuState[0].VertexAddress));
+			
+			//VertexType.Texture == VertexTypeStruct.TextureEnum.Byte
 			//return;
-			PrepareRead(GpuState);
+			//PrepareRead(GpuState);
 
 			if (GpuState[0].ClearingMode)
 			{
@@ -171,27 +172,97 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					}
 
 					//GpuState[0].VertexState.ViewMatrix.Dump();
-					GpuState[0].VertexState.WorldMatrix.Dump();
+					//GpuState[0].VertexState.WorldMatrix.Dump();
 
 					//Console.WriteLine("NO Transform2D");
 				}
 
+				PrepareState(GpuState);
+
 				uint VertexSize = GpuState[0].VertexState.Type.GetVertexSize();
 
-				byte* VertexPtr = (byte *)Memory.PspAddressToPointerSafe(GpuState[0].VertexAddress);
+				byte* VertexPtr = (byte*)Memory.PspAddressToPointerSafe(GpuState[0].VertexAddress);
 
 				//Console.WriteLine(VertexSize);
 
-				GL.Begin(BeginMode.TriangleStrip);
-				for (int n = 0; n < VertexCount; n++)
+				BeginMode BeginMode = default(BeginMode);
+
+				switch (PrimitiveType)
 				{
-					byte* CurrentVertexPtr = VertexPtr + VertexSize * n;
-					float x = *(float*)(CurrentVertexPtr + 4);
-					float y = *(float*)(CurrentVertexPtr + 8);
-					float z = *(float*)(CurrentVertexPtr + 12);
-					GL.Vertex3(x, y, z);
-					GL.Color4(CurrentVertexPtr[3], CurrentVertexPtr[2], CurrentVertexPtr[1], CurrentVertexPtr[0]);
-					//Console.WriteLine("{0}, {1}, {2}", x, y, z);
+					case PrimitiveType.Lines: BeginMode = BeginMode.Lines; break;
+					case PrimitiveType.LineStrip: BeginMode = BeginMode.LineStrip; break;
+					case PrimitiveType.Triangles: BeginMode = BeginMode.Triangles; break;
+					case PrimitiveType.Points: BeginMode = BeginMode.Points; break;
+					case PrimitiveType.TriangleFan: BeginMode = BeginMode.TriangleFan; break;
+					case PrimitiveType.TriangleStrip: BeginMode = BeginMode.TriangleStrip; break;
+					case PrimitiveType.Sprites: BeginMode = BeginMode.Quads; break;
+					default: throw(new NotImplementedException("Not implemented PrimitiveType:'" + PrimitiveType + "'"));
+				}
+
+				//Console.WriteLine(BeginMode);
+
+				GL.Begin(BeginMode);
+				{
+					if (PrimitiveType == PrimitiveType.Sprites)
+					{
+						for (int n = 0; n < VertexCount; n += 2)
+						{
+							VertexInfo VertexInfoTopLeft;
+							VertexInfo VertexInfoTopRight;
+							VertexInfo VertexInfoBottomRight;
+							VertexInfo VertexInfoBottomLeft;
+							VertexReader.ReadVertex(n + 0, &VertexInfoTopLeft);
+							VertexReader.ReadVertex(n + 1, &VertexInfoBottomRight);
+
+							VertexInfoTopRight = new VertexInfo()
+							{
+								U = VertexInfoBottomRight.U,
+								V = VertexInfoTopLeft.V,
+								PX = VertexInfoBottomRight.PX,
+								PY = VertexInfoTopLeft.PY,
+								PZ = (VertexInfoTopLeft.PZ + VertexInfoBottomRight.PZ) / 2,
+								NX = VertexInfoBottomRight.NX,
+								NY = VertexInfoTopLeft.NY,
+								NZ = (VertexInfoTopLeft.NZ + VertexInfoBottomRight.NZ) / 2,
+								R = (byte)((VertexInfoTopLeft.R + VertexInfoBottomRight.R) / 2),
+								G = (byte)((VertexInfoTopLeft.G + VertexInfoBottomRight.G) / 2),
+								B = (byte)((VertexInfoTopLeft.B + VertexInfoBottomRight.B) / 2),
+								A = (byte)((VertexInfoTopLeft.A + VertexInfoBottomRight.A) / 2),
+							};
+
+							VertexInfoBottomLeft = new VertexInfo()
+							{
+								U = VertexInfoTopLeft.U,
+								V = VertexInfoBottomRight.V,
+								PX = VertexInfoTopLeft.PX,
+								PY = VertexInfoBottomRight.PY,
+								PZ = (VertexInfoTopLeft.PZ + VertexInfoBottomRight.PZ) / 2,
+								NX = VertexInfoTopLeft.NX,
+								NY = VertexInfoBottomRight.NY,
+								NZ = (VertexInfoTopLeft.NZ + VertexInfoBottomRight.NZ) / 2,
+								R = (byte)((VertexInfoTopLeft.R + VertexInfoBottomRight.R) / 2),
+								G = (byte)((VertexInfoTopLeft.G + VertexInfoBottomRight.G) / 2),
+								B = (byte)((VertexInfoTopLeft.B + VertexInfoBottomRight.B) / 2),
+								A = (byte)((VertexInfoTopLeft.A + VertexInfoBottomRight.A) / 2),
+							};
+
+							PutVertex(ref VertexInfoTopLeft, ref VertexType);
+							PutVertex(ref VertexInfoTopRight, ref VertexType);
+							PutVertex(ref VertexInfoBottomRight, ref VertexType);
+							PutVertex(ref VertexInfoBottomLeft, ref VertexType);
+
+						}
+					}
+					else
+					{
+						for (int n = 0; n < VertexCount; n++)
+						{
+							VertexInfo VertexInfo;
+							VertexReader.ReadVertex(n, &VertexInfo);
+							PutVertex(ref VertexInfo, ref VertexType);
+
+						}
+					}
 				}
 				GL.End();
 				GL.Flush();
@@ -199,31 +270,78 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				//Console.WriteLine(VertexCount);
 			}
 
-			PrepareWrite(GpuState);
+			//PrepareWrite(GpuState);
+		}
+
+		static private bool GlEnableDisable(EnableCap EnableCap, bool EnableDisable)
+		{
+			if (EnableDisable)
+			{
+				GL.Enable(EnableCap);
+			}
+			else
+			{
+				GL.Disable(EnableCap);
+			}
+			return EnableDisable;
 		}
 
 		[HandleProcessCorruptedStateExceptions()]
 		private void PrepareRead(GpuStateStruct* GpuState)
 		{
+			/*
 			var Address = GpuState[0].DrawBufferState.Address;
 			//Console.WriteLine("PrepareRead: {0:X}", Address);
+
 			try
 			{
+				//GL.WindowPos2(0, 272);
+				//GL.PixelZoom(1, -1);
+
 				GL.DrawPixels(512, 272, PixelFormat.Rgba, PixelType.UnsignedInt8888, new IntPtr(Memory.PspAddressToPointerSafe(Address)));
+				//GL.DrawPixels(512, 272, PixelFormat.AbgrExt, PixelType.UnsignedInt8888, new IntPtr(Memory.PspAddressToPointerSafe(Address)));
+
+				//GL.WindowPos2(0, 0);
+				//GL.PixelZoom(1, 1);
 			}
 			catch (Exception Exception)
 			{
 				Console.WriteLine(Exception);
 			}
+			*/
 		}
+
+		readonly byte[] TempBuffer = new byte[512 * 272 * 4];
 
 		[HandleProcessCorruptedStateExceptions()]
 		private void PrepareWrite(GpuStateStruct* GpuState)
 		{
 			try
 			{
-				var Address = GpuState[0].DrawBufferState.Address;
-				GL.ReadPixels(0, 0, 512, 272, PixelFormat.Rgba, PixelType.UnsignedInt8888, new IntPtr(Memory.PspAddressToPointerSafe(Address)));
+				int Width = 512;
+				int Height = 272;
+				int Width4 = Width * 4;
+				var Address = (void *)Memory.PspAddressToPointerSafe(GpuState[0].DrawBufferState.Address);
+				GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, PixelType.UnsignedInt8888, TempBuffer);
+				fixed (void* _TempBufferPtr = &TempBuffer[0])
+				{
+					var Input = (byte*)_TempBufferPtr;
+					var Output = (byte*)Address;
+
+					for (int Row = 0; Row < Height; Row++)
+					{
+						var ScanIn = &Input[Width4 * Row];
+						var ScanOut = &Output[Width4 * (Height - Row - 1)];
+						//var ScanOut = &Output[Width4 * Row];
+						for (int n = 0; n < Width4; n += 4)
+						{
+							ScanOut[n + 0] = ScanIn[n + 1];
+							ScanOut[n + 1] = ScanIn[n + 2];
+							ScanOut[n + 2] = ScanIn[n + 3];
+							ScanOut[n + 3] = ScanIn[n + 0];
+						}
+					}
+				}
 			}
 			catch (Exception Exception)
 			{
@@ -232,7 +350,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		}
 
 		[HandleProcessCorruptedStateExceptions()]
-		override public void Finish(GpuStateStruct* GpuState)
+		public override void Finish(GpuStateStruct* GpuState)
 		{
 			//return;
 			/*
@@ -261,7 +379,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// 
 		/// </summary>
 		/// <see cref="http://www.opentk.com/doc/graphics/graphicscontext"/>
-		override public void Init()
+		public override void Init()
 		{
 			AutoResetEvent CompletedEvent = new AutoResetEvent(false);
 			var CThread = new Thread(() =>
@@ -273,7 +391,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				GraphicsContext.MakeCurrent(NativeWindow.WindowInfo);
 				{
 					(GraphicsContext as IGraphicsContextInternal).LoadAll();
-					PrepareShaders();
 					Initialize();
 				}
 				GraphicsContext.MakeCurrent(null);
@@ -287,6 +404,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			CThread.IsBackground = true;
 			CThread.Start();
 			CompletedEvent.WaitOne();
+		}
+
+		public override void End(GpuStateStruct* GpuState)
+		{
+			PrepareWrite(GpuState);
+			//throw new NotImplementedException();
 		}
 	}
 }
