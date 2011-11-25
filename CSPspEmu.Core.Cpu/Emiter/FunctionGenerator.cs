@@ -77,7 +77,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			PC = EntryPC;
 			//Debug.WriteLine("PASS1: (PC={0:X}, EndPC={1:X})", PC, EndPC);
 
+			var GlobalInstructionStats = CpuProcessor.GlobalInstructionStats;
 			var InstructionStats = new Dictionary<string, uint>();
+			var NewInstruction = new Dictionary<string, bool>();
 
 			int MaxNumberOfInstructions = 8 * 1024;
 			//int MaxNumberOfInstructions = 60;
@@ -108,9 +110,21 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					var BranchInfo = GetBranchInfo(CpuEmiter.Instruction.Value);
 					if (CpuProcessor.PspConfig.ShowInstructionStats)
 					{
-						var InstuctionName = GetInstructionName(CpuEmiter.Instruction.Value, null);
-						if (!InstructionStats.ContainsKey(InstuctionName)) InstructionStats[InstuctionName] = 0;
-						InstructionStats[InstuctionName]++;
+						var InstructionName = GetInstructionName(CpuEmiter.Instruction.Value, null);
+
+						if (!InstructionStats.ContainsKey(InstructionName)) InstructionStats[InstructionName] = 0;
+						InstructionStats[InstructionName]++;
+
+						if (!GlobalInstructionStats.ContainsKey(InstructionName))
+						{
+							NewInstruction[InstructionName] = true;
+							GlobalInstructionStats[InstructionName] = 0;
+						}
+
+						GlobalInstructionStats[InstructionName]++;
+						//var GlobalInstructionStats = CpuProcessor.GlobalInstructionStats;
+						//var InstructionStats = new Dictionary<string, uint>();
+						//var NewInstruction = new Dictionary<string, bool>();
 					}
 
 					// Branch instruction.
@@ -345,7 +359,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				Console.WriteLine("--------------------------");
 				foreach (var Pair in InstructionStats.OrderByDescending(Item => Item.Value))
 				{
-					Console.WriteLine("{0} : {1}", Pair.Key, Pair.Value);
+					Console.Write("{0} : {1}", Pair.Key, Pair.Value);
+					if (NewInstruction.ContainsKey(Pair.Key))
+					{
+						Console.Write(" <-- NEW!");
+					}
+					Console.WriteLine("");
 				}
 			}
 

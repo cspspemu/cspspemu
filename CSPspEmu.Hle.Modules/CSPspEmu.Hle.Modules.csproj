@@ -50,6 +50,7 @@
     <Compile Include="ge\sceGe_user.Context.cs" />
     <Compile Include="ge\sceGe_user.cs" />
     <Compile Include="ge\sceGe_user.DisplayList.cs" />
+    <Compile Include="hpremote\sceHprm.cs" />
     <Compile Include="iofilemgr\IoFileMgrForKernel.cs" />
     <Compile Include="iofilemgr\IoFileMgrForUser.cs" />
     <Compile Include="iofilemgr\IoFileMgrForUser.Device.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="threadman\ThreadManForUser.Callbacks.cs" />
     <Compile Include="threadman\ThreadManForUser.EventFlag.cs" />
     <Compile Include="threadman\ThreadManForUser.Fpl.cs" />
+    <Compile Include="threadman\ThreadManForUser.MsgPipes.cs" />
     <Compile Include="threadman\ThreadManForUser.Semaphores.cs" />
     <Compile Include="threadman\ThreadManForUser.Threads.cs" />
     <Compile Include="utils\UtilsForUser.cs" />

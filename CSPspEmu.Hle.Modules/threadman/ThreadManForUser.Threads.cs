@@ -155,5 +155,96 @@ namespace CSPspEmu.Hle.Modules.threadman
 			HleState.ThreadManager.Current.SetWait(HleThread.WaitType.None, "sceKernelSleepThread");
 			return 0;
 		}
+
+		/// <summary>
+		/// Wait until a thread has ended.
+		/// </summary>
+		/// <param name="ThreadId">Id of the thread to wait for.</param>
+		/// <param name="Timeout">Timeout in microseconds (assumed).</param>
+		/// <returns>Less than 0 on error</returns>
+		[HlePspFunction(NID = 0x278C0DF5, FirmwareVersion = 150)]
+		public int sceKernelWaitThreadEnd(int ThreadId, uint* Timeout)
+		{
+			throw(new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Delay the current thread by a specified number of microseconds
+		/// </summary>
+		/// <param name="delay">Delay in microseconds.</param>
+		/// <example>
+		///		sceKernelDelayThread(1000000); // Delay for a second
+		/// </example>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xCEADEB47, FirmwareVersion = 150)]
+		public int sceKernelDelayThread(uint delay)
+		{
+			throw(new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Delay the current thread by a specified number of microseconds and handle any callbacks.
+		/// </summary>
+		/// <param name="delay">Delay in microseconds.</param>
+		/// <example>
+		///		sceKernelDelayThread(1000000); // Delay for a second
+		/// </example>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x68DA9E36, FirmwareVersion = 150)]
+		public int sceKernelDelayThreadCB(uint delay)
+		{
+			throw (new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Delete a thread
+		/// </summary>
+		/// <param name="ThreadId">UID of the thread to be deleted.</param>
+		/// <returns>Less than 0 on error.</returns>
+		[HlePspFunction(NID = 0x9FA03CD3, FirmwareVersion = 150)]
+		public int sceKernelDeleteThread(int ThreadId)
+		{
+			throw(new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Terminate and delete a thread.
+		/// </summary>
+		/// <param name="ThreadId">UID of the thread to terminate and delete.</param>
+		/// <returns>Success if greater or equal to 0, an error if less than 0.</returns>
+		[HlePspFunction(NID = 0x383F7BCC, FirmwareVersion = 150)]
+		public int sceKernelTerminateDeleteThread(int ThreadId)
+		{
+			throw(new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Modify the attributes of the current thread.
+		/// </summary>
+		/// <param name="unknown">Set to 0.</param>
+		/// <param name="attr">The thread attributes to modify.  One of ::PspThreadAttributes.</param>
+		/// <returns>Less than 0 on error</returns>
+		[HlePspFunction(NID = 0xEA748E31, FirmwareVersion = 150)]
+		public int sceKernelChangeCurrentThreadAttr(int Unknown, uint Attributes)
+		{
+			throw(new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Change the threads current priority.
+		/// </summary>
+		/// <param name="ThreadId">The ID of the thread (from sceKernelCreateThread or sceKernelGetThreadId)</param>
+		/// <param name="Priority">The new priority (the lower the number the higher the priority)</param>
+		/// <example>
+		///		int thid = sceKernelGetThreadId();
+		///		// Change priority of current thread to 16
+		///		sceKernelChangeThreadPriority(thid, 16);
+		/// </example>
+		/// <returns>0 if successful, otherwise the error code.</returns>
+		[HlePspFunction(NID = 0x71BC9871, FirmwareVersion = 150)]
+		public int sceKernelChangeThreadPriority(int ThreadId, int Priority)
+		{
+			throw(new NotImplementedException());
+		}
 	}
 }

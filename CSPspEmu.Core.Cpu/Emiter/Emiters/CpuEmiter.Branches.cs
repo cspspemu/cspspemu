@@ -106,6 +106,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, GetJumpAddress());
 			});
 
+			//Console.WriteLine("aaaaaaaaaaaaaa");
+
 			if (CpuProcessor.PspConfig.TraceJal)
 			{
 				MipsMethodEmiter.ILGenerator.EmitWriteLine(String.Format("{0:X} : JAL 0x{0:X}", PC, GetJumpAddress()));

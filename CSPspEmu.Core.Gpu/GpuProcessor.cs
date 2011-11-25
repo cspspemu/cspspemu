@@ -139,7 +139,10 @@ namespace CSPspEmu.Core.Gpu
 		/// <param name="DisplayList"></param>
 		public void EnqueueDisplayListFirst(GpuDisplayList DisplayList)
 		{
-			DisplayListQueue.AddFirst(DisplayList);
+			lock (DisplayListQueue)
+			{
+				DisplayListQueue.AddFirst(DisplayList);
+			}
 			DisplayListQueueUpdated.Set();
 		}
 
@@ -149,7 +152,10 @@ namespace CSPspEmu.Core.Gpu
 		/// <param name="DisplayList"></param>
 		public void EnqueueDisplayListLast(GpuDisplayList DisplayList)
 		{
-			DisplayListQueue.AddLast(DisplayList);
+			lock (DisplayListQueue)
+			{
+				DisplayListQueue.AddLast(DisplayList);
+			}
 			DisplayListQueueUpdated.Set();
 		}
 
@@ -166,17 +172,21 @@ namespace CSPspEmu.Core.Gpu
 
 				DisplayListQueueUpdated.WaitOne();
 
-				while (DisplayListQueue.Count > 0)
+				while (true)
 				{
+					lock (DisplayListQueue)
+					{
+						if (DisplayListQueue.Count <= 0) break;
+					}
 					Status.SetValue(StatusEnum.Drawing);
 					GpuDisplayList CurrentGpuDisplayList;
 
 					//Console.WriteLine("**********************************************");
-					lock (this)
+					lock (DisplayListQueue)
 					{
 						CurrentGpuDisplayList = DisplayListQueue.First.Value;
+						DisplayListQueue.RemoveFirst();
 					}
-					DisplayListQueue.RemoveFirst();
 					{
 						//Console.WriteLine("YYYYYYYYYYYYYYYYYYYYYYYYYYY");
 						CurrentGpuDisplayList.Process();

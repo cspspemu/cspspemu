@@ -285,6 +285,7 @@ namespace CSPspEmu.Gui.Winforms
 				case Keys.D2: DisplayScale = 2; break;
 				case Keys.D3: DisplayScale = 3; break;
 				case Keys.D4: DisplayScale = 4; break;
+				case Keys.F2: IGuiExternalInterface.ShowDebugInformation(); break;
 			}
 
 			SceCtrlData.UpdateButtons(GetButtonsFromKeys(e.KeyCode), true);

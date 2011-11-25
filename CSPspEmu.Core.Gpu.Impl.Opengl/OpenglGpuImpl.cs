@@ -83,8 +83,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			//Console.WriteLine(GpuState[0].LightingState.AmbientModelColor);
 			
-			//var Color = GpuState[0].LightingState.AmbientModelColor;
-			//GL.Color3(Color.Red, Color.Green, Color.Blue);
+			var Color = GpuState[0].LightingState.AmbientModelColor;
+			GL.Color4(&Color.Red);
 
 			//if (GlEnableDisable(EnableCap.Lighting, GpuState[0].LightingState.Enabled))
 			{

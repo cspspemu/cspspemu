@@ -10,6 +10,8 @@ namespace CSPspEmu.Core.Cpu
 {
 	unsafe sealed public class CpuProcessor : PspEmulatorComponent, IResetable
 	{
+		readonly public Dictionary<string, uint> GlobalInstructionStats = new Dictionary<string, uint>();
+
 		public PspConfig PspConfig;
 		public PspMemory Memory;
 		public MethodCacheFast MethodCache;

@@ -31,6 +31,7 @@ using CSPspEmu.Core.Rtc;
 using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Controller;
 using CSPspEmu.Core.Audio;
+using System.Linq;
 
 namespace CSPspEmu.Sandbox
 {
@@ -425,6 +426,14 @@ namespace CSPspEmu.Sandbox
 			}
 		}
 
+		public void ShowDebugInformation()
+		{
+			foreach (var Key in CpuProcessor.GlobalInstructionStats.Keys.OrderBy(Value => Value))
+			{
+				Console.WriteLine("{0} -> {1}", Key, CpuProcessor.GlobalInstructionStats[Key]);
+			}
+		}
+
 		protected void OnInit()
 		{
 			//PspConfig.DebugSyscalls = true;
@@ -434,6 +443,8 @@ namespace CSPspEmu.Sandbox
 
 			//LoadFile(@"C:\pspsdk\psp\sdk\samples\gu\ortho\ortho.elf");
 			//LoadFile(@"C:\pspsdk\psp\sdk\samples\gu\lines\lines.elf");
+			LoadFile(@"C:\projects\pspemu\pspautotests\demos_ex\sdl\main.elf");
+			
 			//LoadFile(@"C:\pspsdk\psp\sdk\samples\gu\cube\cube.elf");
 			//LoadFile(@"C:\pspsdk\psp\sdk\samples\gu\text\gufont.elf");
 

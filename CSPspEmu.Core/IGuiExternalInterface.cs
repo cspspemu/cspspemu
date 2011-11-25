@@ -24,5 +24,8 @@ namespace CSPspEmu.Core
 		void Resume();
 		void PauseResume(Action Action);
 		bool IsPaused();
+
+		// Debug
+		void ShowDebugInformation();
 	}
 }
