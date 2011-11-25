@@ -2,78 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Hle.Threading.Semaphores;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
 	unsafe public partial class ThreadManForUser
 	{
-		public enum SemaphoreId : int { }
-
-		public enum SemaphoreAttribute : uint
-		{
-			/// <summary>
-			/// Signal waiting threads with a FIFO iterator.
-			/// </summary>
-			FirstInFirstOut = 0x000,
-
-			/// <summary>
-			/// Signal waiting threads with a priority based iterator.
-			/// </summary>
-			Priority = 0x100,
-		}
-
-		public struct SceKernelSemaOptParam
-		{
-			/// <summary>
-			/// Size of the ::SceKernelSemaOptParam structure.
-			/// </summary>
-			public uint Size;
-		}
-
-		public struct SceKernelSemaInfo
-		{
-			/// <summary>
-			/// Size of the ::SceKernelSemaInfo structure.
-			/// </summary>
-			public uint Size;
-
-			/// <summary>
-			/// NUL-terminated name of the semaphore.
-			/// </summary>
-			public fixed byte Name[32];
-			
-			/// <summary>
-			/// Attributes.
-			/// </summary>
-			public uint Attributes;
-			
-			/// <summary>
-			/// The initial count the semaphore was created with.
-			/// </summary>
-			public int InitialCount;
-
-			/// <summary>
-			/// The current count.
-			/// </summary>
-			public int CurrentCount;
-			
-			/// <summary>
-			/// The maximum count.
-			/// </summary>
-			public int MaximumCount;
-			
-			/// <summary>
-			/// The number of threads waiting on the semaphore.
-			/// </summary>
-			public int NumberOfWaitingThreads;
-		}
+		HleSemaphoreManager SemaphoreManager { get { return HleState.SemaphoreManager; } }
 
 		/// <summary>
 		/// Creates a new semaphore
 		/// </summary>
 		/// <example>
-		/// int semaid;
-		/// semaid = sceKernelCreateSema("MyMutex", 0, 1, 1, 0);
+		///		int semaid;
+		///		semaid = sceKernelCreateSema("MyMutex", 0, 1, 1, 0);
 		/// </example>
 		/// <param name="Name">Specifies the name of the sema</param>
 		/// <param name="SemaphoreAttribute">Sema attribute flags (normally set to 0)</param>
@@ -84,13 +27,15 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0xD6DA4BA1, FirmwareVersion = 150)]
 		public SemaphoreId sceKernelCreateSema(string Name, SemaphoreAttribute SemaphoreAttribute, int InitialCount, int MaximumCount, SceKernelSemaOptParam* Options)
 		{
-			throw(new NotImplementedException());
-			/*
-			auto semaphore = new PspSemaphore(Name, SemaphoreAttribute, InitCount, MaxCount);
-			uint uid = uniqueIdFactory.add(semaphore);
-			logTrace("sceKernelCreateSema(%d:'%s') :: %s", uid, Name, semaphore);
-			return uid;
-			*/
+			var HleSemaphore = SemaphoreManager.Create();
+			{
+				HleSemaphore.Name = Name;
+				HleSemaphore.SceKernelSemaInfo.Attributes = SemaphoreAttribute;
+				HleSemaphore.SceKernelSemaInfo.InitialCount = InitialCount;
+				HleSemaphore.SceKernelSemaInfo.CurrentCount = InitialCount;
+				HleSemaphore.SceKernelSemaInfo.MaximumCount = MaximumCount;
+			}
+			return (SemaphoreId)SemaphoreManager.Semaphores.Create(HleSemaphore);
 		}
 
 		/// <summary>
@@ -104,19 +49,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Signal">The amount to signal the sema (i.e. if 2 then increment the sema by 2)</param>
 		/// <returns>less than 0 On error.</returns>
 		[HlePspFunction(NID = 0x3F53E640, FirmwareVersion = 150)]
-		public int sceKernelSignalSema(SemaphoreId SemaphoreId, int Signal) {
-			throw(new NotImplementedException());
-			/*
-			try {
-				auto semaphore = uniqueIdFactory.get!PspSemaphore(semaid); 
-				logInfo("sceKernelSignalSema(%d:'%s', %d) :: %s", semaid, semaphore.name, signal, semaphore);
-				semaphore.incrementCount(signal);
-				return 0;
-			} catch (UniqueIdNotFoundException) {
-				logWarning("Semaphore(semaid=%d) Not Found!", semaid);
-				return SceKernelErrors.ERROR_KERNEL_NOT_FOUND_SEMAPHORE;
-			}
-			*/
+		public int sceKernelSignalSema(SemaphoreId SemaphoreId, int Signal)
+		{
+			var HleSemaphore = SemaphoreManager.Semaphores.Get((int)SemaphoreId);
+			HleSemaphore.IncrementCount(Signal);
+			return 0;
 		}
 
 		/// <summary>
@@ -125,7 +62,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="SemaphoreId">The semaid returned from a previous create call.</param>
 		/// <returns>Returns the value 0 if its succesful otherwise -1</returns>
 		[HlePspFunction(NID = 0x28B6489C, FirmwareVersion = 150)]
-		public int sceKernelDeleteSema(SemaphoreId SemaphoreId) {
+		public int sceKernelDeleteSema(SemaphoreId SemaphoreId)
+		{
+			/*
+			SemaphoreManager.Semaphores.Remove((int)SemaphoreId);
+			return 0;
+			*/
 			throw (new NotImplementedException());
 			/*
 			try {
@@ -215,12 +157,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0xBC6FEBC5, FirmwareVersion = 150)]
 		public int sceKernelReferSemaStatus(SemaphoreId SemaphoreId, SceKernelSemaInfo* SceKernelSemaInfo)
 		{
-			throw(new NotImplementedException());
-			/*
-			auto semaphore = uniqueIdFactory.get!PspSemaphore(semaid);
-			*info = semaphore.info;
+			var HleSemaphore = SemaphoreManager.Semaphores.Get((int)SemaphoreId);
+			*SceKernelSemaInfo = HleSemaphore.SceKernelSemaInfo;
 			return 0;
-			*/
 		}
 
 		[HlePspFunction(NID = 0x8FFDF9A2, FirmwareVersion = 150)]
@@ -228,6 +167,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspUnknownDefinition]
 		public void sceKernelCancelSema()
 		{
+			throw (new NotImplementedException());
 		}
 	}
 }
