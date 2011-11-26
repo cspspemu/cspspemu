@@ -190,7 +190,18 @@ namespace CSPspEmu.Sandbox
 					GC.Collect();
 				}
 
-				PspConfig.HleModulesDll = Assembly.LoadFile(Path.GetDirectoryName(typeof(Program).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll");
+				foreach (var FileName in new [] {
+					Path.GetDirectoryName(typeof(Program).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll",
+					Application.ExecutablePath,
+				})
+				{
+					if (File.Exists(FileName))
+					{
+						PspConfig.HleModulesDll = Assembly.LoadFile(FileName);
+						break;
+					}
+				}
+				//
 
 				PspEmulatorContext = new PspEmulatorContext(PspConfig);
 
