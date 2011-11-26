@@ -41,6 +41,7 @@ namespace CSPspEmu.Hle
 		//public int InitPriority;
 		public uint Attribute;
 		public SceKernelThreadInfo Info;
+		public bool HandleCallbacks;
 
 		public uint GP
 		{
@@ -67,6 +68,7 @@ namespace CSPspEmu.Hle
 			GraphicEngine,
 			Audio,
 			Display,
+			Semaphore,
 		}
 
 		public enum Status {
@@ -153,20 +155,21 @@ namespace CSPspEmu.Hle
 			this.CurrentStatus = Status.Ready;
 		}
 
-		public void SetWaitAndPrepareWakeUp(WaitType WaitType, String WaitDescription, Action<WakeUpCallbackDelegate> PrepareCallback)
+		public void SetWaitAndPrepareWakeUp(WaitType WaitType, String WaitDescription, Action<WakeUpCallbackDelegate> PrepareCallback, bool HandleCallbacks = false)
 		{
-			SetWait0(WaitType, WaitDescription);
+			SetWait0(WaitType, WaitDescription, HandleCallbacks);
 			{
 				PrepareCallback(WakeUp);
 			}
 			SetWait1();
 		}
 
-		protected void SetWait0(WaitType WaitType, String WaitDescription)
+		protected void SetWait0(WaitType WaitType, String WaitDescription, bool HandleCallbacks)
 		{
 			this.CurrentStatus = Status.Waiting;
 			this.CurrentWaitType = WaitType;
 			this.WaitDescription = WaitDescription;
+			this.HandleCallbacks = HandleCallbacks;
 		}
 
 		protected void SetWait1()
@@ -177,11 +180,13 @@ namespace CSPspEmu.Hle
 			}
 		}
 
-		public void SetWait(WaitType WaitType, String WaitDescription)
+		/*
+		public void SetWait(WaitType WaitType, String WaitDescription, bool HandleCallbacks)
 		{
-			SetWait0(WaitType, WaitDescription);
+			SetWait0(WaitType, WaitDescription, HandleCallbacks);
 			SetWait1();
 		}
+		*/
 
 		public override string ToString()
 		{

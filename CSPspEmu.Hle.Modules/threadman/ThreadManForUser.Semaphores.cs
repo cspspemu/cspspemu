@@ -64,28 +64,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x28B6489C, FirmwareVersion = 150)]
 		public int sceKernelDeleteSema(SemaphoreId SemaphoreId)
 		{
-			/*
+			var HleSemaphore = SemaphoreManager.Semaphores.Get((int)SemaphoreId);
 			SemaphoreManager.Semaphores.Remove((int)SemaphoreId);
+			HleSemaphore.IncrementCount(HleSemaphore.SceKernelSemaInfo.MaximumCount);
+
 			return 0;
-			*/
-			throw (new NotImplementedException());
-			/*
-			try {
-				PspSemaphore pspSemaphore = uniqueIdFactory.get!PspSemaphore(semaid);
-				logTrace("sceKernelDeleteSema(%d:'%s')", semaid, pspSemaphore.name);
-			
-				while (pspSemaphore.info.numWaitThreads > 0) {
-					pspSemaphore.incrementCount(pspSemaphore.info.maxCount);
-					Thread.yield();
-				}
-			
-				uniqueIdFactory.remove!PspSemaphore(semaid);
-				return 0;
-			} catch (UniqueIdNotFoundException) {
-				logWarning("Semaphore(semaid=%d) Not Found!", semaid);
-				return SceKernelErrors.ERROR_KERNEL_NOT_FOUND_SEMAPHORE;
-			}
-			*/
 		}
 
 		/// <summary>
@@ -101,8 +84,15 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x4E3A1105, FirmwareVersion = 150)]
 		public int sceKernelWaitSema(SemaphoreId SemaphoreId, int Signal, uint* Timeout)
 		{
-			throw (new NotImplementedException());
-			//return _sceKernelWaitSemaCB(semaid, signal, timeout, /* callback = */ false);
+			var CurrentThread = HleState.ThreadManager.Current;
+			var Semaphore = SemaphoreManager.Semaphores.Get((int)SemaphoreId);
+
+			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, "sceKernelWaitSema", (WakeUpCallback) =>
+			{
+				Semaphore.WaitThread(CurrentThread, WakeUpCallback, Signal);
+			});
+
+			return 0;
 		}
 
 		/// <summary>

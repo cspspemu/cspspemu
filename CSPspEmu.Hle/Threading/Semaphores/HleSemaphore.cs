@@ -9,7 +9,18 @@ namespace CSPspEmu.Hle.Threading.Semaphores
 {
 	unsafe public class HleSemaphore
 	{
+		public class WaitingThread
+		{
+			public HleThread HleThread;
+			public int ExpectedMinimumCount;
+			public WakeUpCallbackDelegate WakeUpCallback;
+		}
+
 		public SceKernelSemaInfo SceKernelSemaInfo;
+		protected List<WaitingThread> WaitingThreads = new List<WaitingThread>();
+		//public SortedSet<>
+
+		protected int CurrentCount { get { return SceKernelSemaInfo.CurrentCount; } set { SceKernelSemaInfo.CurrentCount = value; } }
 
 		public String Name
 		{
@@ -23,9 +34,35 @@ namespace CSPspEmu.Hle.Threading.Semaphores
 			}
 		}
 
-		public void IncrementCount(int Signal)
+		public void IncrementCount(int IncrementCount)
 		{
-			throw new NotImplementedException();
+			CurrentCount += IncrementCount;
+			UpdatedCurrentCount();
+		}
+
+		public void WaitThread(HleThread HleThread, WakeUpCallbackDelegate WakeUpCallback, int ExpectedMinimumCount)
+		{
+			WaitingThreads.Add(
+				new WaitingThread()
+				{
+					HleThread = HleThread,
+					ExpectedMinimumCount = ExpectedMinimumCount,
+					WakeUpCallback = WakeUpCallback,
+				}
+			);
+
+			SceKernelSemaInfo.NumberOfWaitingThreads = WaitingThreads.Count;
+
+			UpdatedCurrentCount();
+		}
+
+		protected void UpdatedCurrentCount()
+		{
+			foreach (var WaitingThread in WaitingThreads.Where(WaitingThread => (CurrentCount >= WaitingThread.ExpectedMinimumCount)).ToArray())
+			{
+				WaitingThreads.Remove(WaitingThread);
+				WaitingThread.WakeUpCallback();
+			}
 		}
 	}
 }

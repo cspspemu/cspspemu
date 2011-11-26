@@ -443,7 +443,9 @@ namespace CSPspEmu.Sandbox
 
 			//LoadFile(@"C:\pspsdk\psp\sdk\samples\gu\ortho\ortho.elf");
 			//LoadFile(@"C:\pspsdk\psp\sdk\samples\gu\lines\lines.elf");
-			LoadFile(@"C:\projects\pspemu\pspautotests\demos_ex\sdl\main.elf");
+			//LoadFile(@"C:\projects\pspemu\pspautotests\demos_ex\sdl\main.elf");
+			LoadFile(@"C:\projects\csharp\cspspemu\games\cavestory\EBOOT.PBP");
+			
 			
 			//LoadFile(@"C:\pspsdk\psp\sdk\samples\gu\cube\cube.elf");
 			//LoadFile(@"C:\pspsdk\psp\sdk\samples\gu\text\gufont.elf");

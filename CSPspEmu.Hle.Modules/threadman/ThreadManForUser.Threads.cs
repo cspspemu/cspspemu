@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Managers;
 
@@ -152,7 +153,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		{
 			//logInfo("sceKernelSleepThread()");
 			//return _sceKernelSleepThreadCB(false);
-			HleState.ThreadManager.Current.SetWait(HleThread.WaitType.None, "sceKernelSleepThread");
+			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelSleepThread", WakeUpCallback =>
+			{
+			});
 			return 0;
 		}
 
@@ -168,32 +171,45 @@ namespace CSPspEmu.Hle.Modules.threadman
 			throw(new NotImplementedException());
 		}
 
+		private int _sceKernelDelayThreadCB(uint DelayInMicroseconds, bool HandleCallbacks)
+		{
+			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, "sceKernelDelayThread", WakeUpCallback =>
+			{
+				HleState.PspRtc.RegisterTimerInOnce(TimeSpanUtils.FromMicroseconds(DelayInMicroseconds), () =>
+				{
+					WakeUpCallback();
+				});
+			});
+
+			return 0;
+		}
+
 		/// <summary>
 		/// Delay the current thread by a specified number of microseconds
 		/// </summary>
-		/// <param name="delay">Delay in microseconds.</param>
+		/// <param name="DelayInMicroseconds">Delay in microseconds.</param>
 		/// <example>
 		///		sceKernelDelayThread(1000000); // Delay for a second
 		/// </example>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xCEADEB47, FirmwareVersion = 150)]
-		public int sceKernelDelayThread(uint delay)
+		public int sceKernelDelayThread(uint DelayInMicroseconds)
 		{
-			throw(new NotImplementedException());
+			return _sceKernelDelayThreadCB(DelayInMicroseconds, HandleCallbacks: false);
 		}
 
 		/// <summary>
 		/// Delay the current thread by a specified number of microseconds and handle any callbacks.
 		/// </summary>
-		/// <param name="delay">Delay in microseconds.</param>
+		/// <param name="DelayInMicroseconds">Delay in microseconds.</param>
 		/// <example>
 		///		sceKernelDelayThread(1000000); // Delay for a second
 		/// </example>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x68DA9E36, FirmwareVersion = 150)]
-		public int sceKernelDelayThreadCB(uint delay)
+		public int sceKernelDelayThreadCB(uint DelayInMicroseconds)
 		{
-			throw (new NotImplementedException());
+			return _sceKernelDelayThreadCB(DelayInMicroseconds, HandleCallbacks: true);
 		}
 
 		/// <summary>
