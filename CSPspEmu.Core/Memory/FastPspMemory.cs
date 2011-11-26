@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Memory
 {
@@ -16,6 +17,9 @@ namespace CSPspEmu.Core.Memory
 		[DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
 		internal static extern bool VirtualFree(void* lpAddress, uint dwSize, uint dwFreeType);
 
+		[DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+		internal static extern uint GetLastError();
+
 		const uint MEM_RESERVE = 0x2000;
 		const uint MEM_COMMIT = 0x1000;
 		const uint PAGE_READWRITE = 0x04;
@@ -25,29 +29,83 @@ namespace CSPspEmu.Core.Memory
 
 		public FastPspMemory(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
 		{
-			ScratchPadPtr  = VirtualAlloc(Base + ScratchPadOffset , ScratchPadSize , MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-			FrameBufferPtr = VirtualAlloc(Base + FrameBufferOffset, FrameBufferSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-			MainPtr        = VirtualAlloc(Base + MainOffset       , MainSize       , MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-			if (ScratchPadPtr == null || FrameBufferPtr == null || MainPtr == null) throw(new InvalidOperationException());
+			//AllocMemory();
+			AllocMemoryOnce();
 		}
 
 		~FastPspMemory()
 		{
-			FreeMemory();
+			//FreeMemory();
 		}
 
-		protected void FreeMemory()
+		static bool AlreadyInitialized = false;
+
+		private void AllocMemoryOnce()
 		{
+			if (!AlreadyInitialized)
+			{
+				AlreadyInitialized = true;
+				ConsoleUtils.SaveRestoreConsoleState(() =>
+				{
+					Console.BackgroundColor = ConsoleColor.Yellow;
+					Console.ForegroundColor = ConsoleColor.Black;
+					Console.WriteLine("FastPspMemory.AllocMemory");
+				});
+				ScratchPadPtr = VirtualAlloc(Base + ScratchPadOffset, ScratchPadSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+				FrameBufferPtr = VirtualAlloc(Base + FrameBufferOffset, FrameBufferSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+				MainPtr = VirtualAlloc(Base + MainOffset, MainSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+				if (ScratchPadPtr == null || FrameBufferPtr == null || MainPtr == null)
+				{
+					Console.WriteLine("Can't allocate virtual memory!");
+					throw (new InvalidOperationException());
+				}
+			}
+		}
+
+		/*
+		private void AllocMemory()
+		{
+			ConsoleUtils.SaveRestoreConsoleState(() =>
+			{
+				Console.BackgroundColor = ConsoleColor.Yellow;
+				Console.ForegroundColor = ConsoleColor.Black;
+				Console.WriteLine("FastPspMemory.AllocMemory");
+			});
+			ScratchPadPtr = VirtualAlloc(Base + ScratchPadOffset, ScratchPadSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+			FrameBufferPtr = VirtualAlloc(Base + FrameBufferOffset, FrameBufferSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+			MainPtr = VirtualAlloc(Base + MainOffset, MainSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+			if (ScratchPadPtr == null || FrameBufferPtr == null || MainPtr == null)
+			{
+				Console.WriteLine("Can't allocate virtual memory!");
+				throw (new InvalidOperationException());
+			}
+		}
+
+		private void FreeMemory()
+		{
+			ConsoleUtils.SaveRestoreConsoleState(() =>
+			{
+				Console.BackgroundColor = ConsoleColor.Yellow;
+				Console.ForegroundColor = ConsoleColor.Black;
+				Console.WriteLine("FastPspMemory.FreeMemory");
+			});
 			if (ScratchPadPtr != null)
 			{
-				VirtualFree(Base + ScratchPadOffset, 0, MEM_DECOMMIT | MEM_RELEASE);
-				VirtualFree(Base + FrameBufferOffset, 0, MEM_DECOMMIT | MEM_RELEASE);
-				VirtualFree(Base + MainOffset, 0, MEM_DECOMMIT | MEM_RELEASE);
+				if (!VirtualFree(ScratchPadPtr, ScratchPadSize, MEM_DECOMMIT | MEM_RELEASE))
+				{
+				}
+				if (!VirtualFree(FrameBufferPtr, FrameBufferSize, MEM_DECOMMIT | MEM_RELEASE))
+				{
+				}
+				if (!VirtualFree(MainPtr, MainSize, MEM_DECOMMIT | MEM_RELEASE))
+				{
+				}
 				ScratchPadPtr = null;
 				FrameBufferPtr = null;
 				MainPtr = null;
 			}
 		}
+		*/
 
 		public override uint PointerToPspAddress(void* Pointer)
 		{
@@ -64,7 +122,8 @@ namespace CSPspEmu.Core.Memory
 
 		public override void Dispose()
 		{
-			FreeMemory();
+			Reset();
+			//FreeMemory();
 		}
 	}
 }

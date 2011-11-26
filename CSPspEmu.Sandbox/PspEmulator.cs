@@ -160,13 +160,11 @@ namespace CSPspEmu.Sandbox
 				PspEmulatorContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
 				PspEmulatorContext.SetInstanceType<PspAudioImpl, PspAudioOpenalImpl>();
 
-				/*
 				if (PspConfig.UseFastAndUnsaferMemory)
 				{
 					PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();
 				}
 				else
-				*/
 				{
 					PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
 				}
