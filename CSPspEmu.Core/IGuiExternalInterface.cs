@@ -15,6 +15,7 @@ namespace CSPspEmu.Core
 		PspDisplay GetDisplay();
 		PspController GetController();
 		PspConfig GetConfig();
+		bool IsInitialized();
 
 		// Load Methods
 		void LoadFile(String FileName);

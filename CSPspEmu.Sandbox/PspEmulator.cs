@@ -27,13 +27,22 @@ namespace CSPspEmu.Sandbox
 		protected PspRunner PspRunner;
 		PspMemory PspMemory;
 
+		/// <summary>
+		/// 
+		/// </summary>
+		public ManualResetEvent ContextInitialized = new ManualResetEvent(false);
+		public bool ContextInitializedFlag = false;
+
+
 		PspMemory IGuiExternalInterface.GetMemory()
 		{
+			ContextInitialized.WaitOne();
 			return PspEmulatorContext.GetInstance<PspMemory>();
 		}
 
 		public PspDisplay GetDisplay()
 		{
+			ContextInitialized.WaitOne();
 			return PspEmulatorContext.GetInstance<PspDisplay>();
 		}
 
@@ -44,7 +53,13 @@ namespace CSPspEmu.Sandbox
 
 		public PspController GetController()
 		{
+			ContextInitialized.WaitOne();
 			return PspEmulatorContext.GetInstance<PspController>();
+		}
+
+		public bool IsInitialized()
+		{
+			return ContextInitializedFlag;
 		}
 
 		public void PauseResume(Action Action)
@@ -76,6 +91,7 @@ namespace CSPspEmu.Sandbox
 		{
 			get
 			{
+				if (PspRunner == null) return false;
 				return PspRunner.Paused;
 			}
 		}
@@ -105,14 +121,35 @@ namespace CSPspEmu.Sandbox
 		}
 
 		/// <summary>
+		/// 
+		/// </summary>
+		public void StartAndLoad(string File, bool TraceSyscalls = false)
+		{
+			PspConfig.DebugSyscalls = TraceSyscalls;
+			Start(() =>
+			{
+				LoadFile(File);
+			});
+		}
+
+		/// <summary>
 		/// Start.
 		/// </summary>
-		public void Start()
+		public void Start(Action CallbackOnInit = null)
 		{
-			// Creates a new context.
-			CreateNewContextAndRemoveOldOne();
+			// Creates a temporal context.
+			//PspEmulatorContext = new PspEmulatorContext(PspConfig);
 
-			OnStarted();
+			// Creates a new context.
+			new Thread(() =>
+			{
+				CreateNewContextAndRemoveOldOne();
+
+				if (CallbackOnInit != null)
+				{
+					CallbackOnInit();
+				}
+			}).Start();
 
 			// GUI Thread.
 			Thread.CurrentThread.Name = "GuiThread";
@@ -120,61 +157,65 @@ namespace CSPspEmu.Sandbox
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new PspDisplayForm(this));
 
-			if (PspRunner != null)
-			{
-				PspRunner.StopSynchronized();
-			}
+			ContextInitialized.WaitOne();
+			PspRunner.StopSynchronized();
 		}
 
 		public void LoadFile(String FileName)
 		{
 			CreateNewContextAndRemoveOldOne();
 
-			PspRunner.CpuThread.ThreadTaskQueue.EnqueueAndWaitCompleted(() =>
+			PspRunner.CpuComponentThread.ThreadTaskQueue.EnqueueAndWaitCompleted(() =>
 			{
-				PspRunner.CpuThread._LoadFile(FileName);
+				PspRunner.CpuComponentThread._LoadFile(FileName);
 			});
 		}
 
 		void CreateNewContextAndRemoveOldOne()
 		{
-			// Stops the current context if it has one already.
-			if (PspRunner != null)
+			ContextInitializedFlag = false;
+			ContextInitialized.Reset();
 			{
-				PspRunner.StopSynchronized();
-
-				PspEmulatorContext.GetInstance<PspMemory>().Dispose();
-				PspEmulatorContext.GetInstance<GpuImpl>().StopSynchronized();
-				PspEmulatorContext.GetInstance<PspAudioImpl>().StopSynchronized();
-
-				PspRunner = null;
-				PspEmulatorContext = null;
-				GC.Collect();
-			}
-
-			PspConfig.HleModulesDll = Assembly.LoadFile(Path.GetDirectoryName(typeof(Program).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll");
-
-			PspEmulatorContext = new PspEmulatorContext(PspConfig);
-
-			{
-				PspEmulatorContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
-				PspEmulatorContext.SetInstanceType<PspAudioImpl, PspAudioOpenalImpl>();
-
-				if (PspConfig.UseFastAndUnsaferMemory)
+				// Stops the current context if it has one already.
+				if (PspRunner != null)
 				{
-					PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();
+					PspRunner.StopSynchronized();
+
+					PspEmulatorContext.GetInstance<PspMemory>().Dispose();
+					PspEmulatorContext.GetInstance<GpuImpl>().StopSynchronized();
+					PspEmulatorContext.GetInstance<PspAudioImpl>().StopSynchronized();
+
+					PspRunner = null;
+					PspEmulatorContext = null;
+					GC.Collect();
 				}
-				else
+
+				PspConfig.HleModulesDll = Assembly.LoadFile(Path.GetDirectoryName(typeof(Program).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll");
+
+				PspEmulatorContext = new PspEmulatorContext(PspConfig);
+
 				{
-					PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
+					PspEmulatorContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
+					PspEmulatorContext.SetInstanceType<PspAudioImpl, PspAudioOpenalImpl>();
+
+					if (PspConfig.UseFastAndUnsaferMemory)
+					{
+						PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();
+					}
+					else
+					{
+						PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
+					}
 				}
+
+				PspRunner = PspEmulatorContext.GetInstance<PspRunner>();
+				PspRunner.StartSynchronized();
+
+				var GpuImpl = PspEmulatorContext.GetInstance<GpuImpl>();
+				GpuImpl.InitSynchronizedOnce();
 			}
-
-			PspRunner = PspEmulatorContext.GetInstance<PspRunner>();
-			PspRunner.StartSynchronized();
-
-			var GpuImpl = PspEmulatorContext.GetInstance<GpuImpl>();
-			GpuImpl.InitSynchronizedOnce();
+			ContextInitializedFlag = true;
+			ContextInitialized.Set();
 		}
 
 		public void ShowDebugInformation()
@@ -184,61 +225,6 @@ namespace CSPspEmu.Sandbox
 			{
 				Console.WriteLine("{0} -> {1}", Key, CpuProcessor.GlobalInstructionStats[Key]);
 			}
-		}
-
-		protected void OnStarted()
-		{
-			//PspConfig.DebugSyscalls = true;
-			//LoadFile(@"C:\pspsdk\psp\sdk\samples\audio\polyphonic\polyphonic.elf");
-
-			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\fpu.elf");
-
-			LoadFile(@"C:\pspsdk\psp\sdk\samples\gu\ortho\ortho.elf");
-			//LoadFile(@"C:\pspsdk\psp\sdk\samples\gu\lines\lines.elf");
-			//LoadFile(@"C:\projects\pspemu\pspautotests\demos_ex\sdl\main.elf");
-			//LoadFile(@"C:\projects\csharp\cspspemu\games\cavestory\EBOOT.PBP");
-
-
-			//LoadFile(@"C:\pspsdk\psp\sdk\samples\gu\cube\cube.elf");
-			//LoadFile(@"C:\pspsdk\psp\sdk\samples\gu\text\gufont.elf");
-
-			//LoadFile(@"C:\projects\jpcsp\demos\compilerPerf.pbp");
-			//LoadFile(@"C:\juegos\jpcsp2\demos\fputest.elf");
-			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\alu.elf");
-			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\fpu.elf");
-			//LoadFile(@"C:\projects\cspspemu\PspAutoTests\gum.elf");
-			//LoadFile(@"C:\juegos\pspemu\demos\controller.pbp");
-			//LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\sound.prx");
-			//LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\cube.pbp");
-			//LoadFile(@"C:\juegos\jpcsp-windows-x86\demos\ortho.pbp");
-			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\cpu\cpu\cpu.elf");
-			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\threadstatus.pbp");
-			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\io\io\io.elf");
-			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\cpu\fpu\fpu.elf");
-			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\malloc\malloc.elf");
-
-			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\args.elf");
-			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\alu.elf");
-			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\fpu.elf");
-			//LoadFile(@"C:\projects\csharp\cspspemu\PspAutoTests\malloc.elf");
-
-			//LoadFile(@"C:\pspsdk\psp\sdk\samples\kernel\sysevent\EBOOT.PBP");
-			//LoadFile(@"C:\pspsdk\psp\sdk\samples\kernel\systimer\EBOOT.PBP");
-			//LoadFile(@"C:\pspsdk\psp\sdk\samples\kernel\loadmodule\EBOOT.PBP");
-			//LoadFile(@"C:\pspsdk\psp\sdk\samples\prx\prx_loader\EBOOT.PBP");
-			//LoadFile(@"C:\pspsdk\psp\sdk\samples\prx\prx_loader\EBOOT.PBP");
-			//LoadFile(@"../../../TestInput/minifire.elf");
-			//PspConfig.ShowInstructionStats = true;
-
-			//LoadFile(@"../../../TestInput/HelloWorld.elf");
-			//LoadFile(@"../../../TestInput/HelloWorldPSP.elf");
-			//LoadFile(@"../../../TestInput/counter.elf");
-			//LoadFile(@"C:\projects\pspemu\pspautotests\tests\string\string.elf");
-			//LoadFile(@"C:\juegos\jpcsp2\demos\cube.pbp");
-			//LoadFile(@"C:\juegos\jpcsp2\demos\nehetutorial02.pbp");
-			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\mytest.elf");
-			//LoadFile(@"C:\projects\pspemu\pspautotests\demos\cube.pbp");
-			//LoadFile(@"C:\projects\pspemu\demos\dumper.elf");
 		}
 	}
 }

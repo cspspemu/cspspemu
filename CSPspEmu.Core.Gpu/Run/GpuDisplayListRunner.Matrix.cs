@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Gpu.State.SubStates;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -49,6 +50,14 @@ namespace CSPspEmu.Core.Gpu.Run
 			GpuDisplayList.GpuStateStructPointer[0].VertexState.ProjectionMatrix.Write(Float1);
 		}
 
+		private SkinningStateStruct* SkinningState
+		{
+			get
+			{
+				return &GpuDisplayList.GpuStateStructPointer[0].SkinningState;
+			}
+		}
+
 		/**
 		  * Specify skinning matrix entry
 		  *
@@ -63,19 +72,19 @@ namespace CSPspEmu.Core.Gpu.Run
 		  * @param matrix - Matrix to set
 		**/
 		//void sceGuBoneMatrix(unsigned int index, const ScePspFMatrix4* matrix);
-		// @TODO : @FIX: @HACK : it defines the position in the matrixes. So we will do a hack there until fixed.
+		// @TODO : @FIX: @HACK : it defines the position in the matrixes not the index of the matrix. So we will do a hack there until fixed.
 		// http://svn.ps2dev.org/filedetails.php?repname=psp&path=%2Ftrunk%2Fpspsdk%2Fsrc%2Fgu%2FsceGuBoneMatrix.c
-		[GpuOpCodesNotImplemented]
 		public void OP_BOFS()
 		{
-			//gpu.state.boneMatrixIndex = command.param16 / 12;
-			//gpu.state.boneMatrix[gpu.state.boneMatrixIndex].reset(Matrix.WriteMode.M4x3);
+			SkinningState[0].CurrentBoneMatrixIndex = Params24 / 12;
+			var BoneMatrices = &SkinningState[0].BoneMatrix0;
+			BoneMatrices[SkinningState[0].CurrentBoneMatrixIndex].Reset();
 		}
 
-		[GpuOpCodesNotImplemented]
 		public void OP_BONE()
 		{
-			//gpu.state.boneMatrix[gpu.state.boneMatrixIndex].write(command.float1);
+			var BoneMatrices = &SkinningState[0].BoneMatrix0;
+			BoneMatrices[SkinningState[0].CurrentBoneMatrixIndex].Write(Float1);
 		}
 	}
 }

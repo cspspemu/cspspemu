@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AudioComponentThread.cs" />
     <Compile Include="ComponentThread.cs" />
     <Compile Include="CpuComponentThread.cs" />
     <Compile Include="GpuComponentThread.cs" />

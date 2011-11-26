@@ -65,13 +65,6 @@
       <Name>CSPspEmu.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="shader.geometry.glsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="shader.fragment.glsl" />
-    <None Include="shader.vertex.glsl" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

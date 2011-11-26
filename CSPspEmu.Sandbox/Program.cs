@@ -1,38 +1,4 @@
 ﻿using System;
-using CSPspEmu.Core.Cpu;
-using CSPspEmu.Core;
-using CSPspEmu.Core.Memory;
-using System.IO;
-using CSPspEmu.Hle;
-using CSPspEmu.Core.Cpu.Assembler;
-using System.Threading;
-using System.Windows.Forms;
-using CSPspEmu.Gui.Winforms;
-using CSPspEmu.Hle.Modules.threadman;
-using CSPspEmu.Hle.Modules.utils;
-using CSPspEmu.Hle.Modules.display;
-using CSPspEmu.Hle.Modules.loadexec;
-using CSPspEmu.Hle.Modules.ctrl;
-using CSPspEmu.Hle.Managers;
-using CSPspEmu.Hle.Loader;
-using CSharpUtils;
-using CSharpUtils.Threading;
-using System.Reflection;
-using CSPspEmu.Hle.Formats;
-using CSPspEmu.Core.Gpu;
-using CSPspEmu.Core.Gpu.Impl.Opengl;
-using CSPspEmu.Hle.Modules.emulator;
-using CSPspEmu.Hle.Vfs.Local;
-using CSPspEmu.Hle.Vfs;
-using CSPspEmu.Hle.Vfs.Emulator;
-using System.Globalization;
-using CSPspEmu.Core.Audio.Imple.Openal;
-using CSPspEmu.Core.Rtc;
-using CSPspEmu.Core.Display;
-using CSPspEmu.Core.Controller;
-using CSPspEmu.Core.Audio;
-using System.Linq;
-using CSPspEmu.Runner;
 
 namespace CSPspEmu.Sandbox
 {
@@ -50,7 +16,16 @@ namespace CSPspEmu.Sandbox
 			Console.SetWindowSize(160, 60);
 			Console.SetBufferSize(160, 2000);
 			var PspEmulator = new PspEmulator();
-			PspEmulator.Start();
+			//PspEmulator.Start();
+			//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\gu\ortho\ortho.elf");
+			//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\audio\polyphonic\polyphonic.elf");
+			//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\gu\lights\lights.elf");
+			//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\gu\morph\morph.elf");
+			//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\gu\skinning\skinning.elf");
+			//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\cavestory\EBOOT.PBP", TraceSyscalls: true);
+			PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\TrigWars\EBOOT.PBP", TraceSyscalls: true);
+			
+			
 		}
 	}
 }

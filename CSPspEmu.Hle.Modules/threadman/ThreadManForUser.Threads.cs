@@ -25,7 +25,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Option">Additional options specified by ::SceKernelThreadOptParam.</param>
 		/// <returns>UID of the created thread, or an error code.</returns>
 		[HlePspFunction(NID = 0x446D8DE6, FirmwareVersion = 150)]
-		public uint sceKernelCreateThread(CpuThreadState CpuThreadState, string Name, SceKernelThreadEntry EntryPoint, int InitPriority, int StackSize, uint Attribute, SceKernelThreadOptParam* Option)
+		public uint sceKernelCreateThread(CpuThreadState CpuThreadState, string Name, SceKernelThreadEntry EntryPoint, int InitPriority, int StackSize, PspThreadAttributes Attribute, SceKernelThreadOptParam* Option)
 		{
 			var Thread = HleState.ThreadManager.Create();
 			Thread.Name = Name;
@@ -35,6 +35,10 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Thread.GP = CpuThreadState.GP;
 			Thread.Info.EntryPoint = EntryPoint;
 			Thread.Stack = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Allocate(StackSize, MemoryPartition.Anchor.High, Alignment: 0x100);
+			if (!Thread.Attribute.HasFlag(PspThreadAttributes.NoFillStack))
+			{
+				HleState.MemoryManager.Memory.WriteRepeated1(0xFF, Thread.Stack.Low, Thread.Stack.Size);
+			}
 			Thread.Info.StackPointer = Thread.Stack.Low;
 			Thread.Info.StackSize = Thread.Stack.Size;
 			Thread.CpuThreadState.PC = (uint)EntryPoint;
@@ -241,9 +245,10 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="attr">The thread attributes to modify.  One of ::PspThreadAttributes.</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xEA748E31, FirmwareVersion = 150)]
-		public int sceKernelChangeCurrentThreadAttr(int Unknown, uint Attributes)
+		[HlePspNotImplemented]
+		public int sceKernelChangeCurrentThreadAttr(int Unknown, PspThreadAttributes Attributes)
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>

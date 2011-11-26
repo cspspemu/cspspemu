@@ -25,6 +25,7 @@ using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Hle.Vfs.Local;
 using CSPspEmu.Hle.Vfs.Emulator;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace CSPspEmu.Runner
 {
@@ -204,6 +205,15 @@ namespace CSPspEmu.Runner
 							Console.WriteLine("{0}", Exception2);
 						}
 					});
+
+					// Inconsistent state. Wait for stopping.
+					while (true)
+					{
+						ThreadTaskQueue.HandleEnqueued();
+						if (!Running) return;
+						Thread.Sleep(1);
+					}
+
 					//throw (new Exception("Unhandled Exception " + Exception.ToString(), Exception));
 					//throw (new Exception(Exception.InnerException.ToString(), Exception.InnerException));
 				}

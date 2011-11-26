@@ -9,10 +9,24 @@ namespace CSPspEmu.Core
 {
 	public class PspConfig
 	{
+		/// <summary>
+		/// 
+		/// </summary>
 		static public string CultureName = "en";
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool VerticalSynchronization = true;
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool TraceJIT = false;
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool CountInstructionsAndYield = true;
 
 		//public bool ShowInstructionStats = true;
@@ -23,12 +37,26 @@ namespace CSPspEmu.Core
 		/// This will be used for the automated tests.
 		/// </summary>
 		public bool HasDisplay = true;
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool DebugSyscalls = false;
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public int CpuFrequency = 222;
 
+		/// <summary>
+		/// 
+		/// </summary>
 		//public bool NoticeUnimplementedGpuCommands = true;
 		public bool NoticeUnimplementedGpuCommands = false;
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool UseFastAndUnsaferMemory = true;
 		//public bool UseFastAndUnsaferMemory = false;
 
@@ -44,6 +72,9 @@ namespace CSPspEmu.Core
 		public bool DebugThreadSwitching = false;
 		//public bool DebugThreadSwitching = true;
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool BreakInstructionThreadSwitchingForSpeed = false;
 		//public bool BreakInstructionThreadSwitchingForSpeed = true;
 
@@ -52,6 +83,9 @@ namespace CSPspEmu.Core
 		/// </summary>
 		public Assembly HleModulesDll;
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public PspConfig()
 		{
 		}

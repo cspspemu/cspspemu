@@ -24,7 +24,15 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		public int sceIoGetstat(string FileName, SceIoStat* SceIoStat)
 		{
 			var Info = HleState.HleIoManager.ParsePath(FileName);
-			return Info.HleIoDriver.IoGetstat(Info.HleIoDrvFileArg, FileName, SceIoStat);
+			try
+			{
+				Info.HleIoDriver.IoGetstat(Info.HleIoDrvFileArg, Info.LocalPath, SceIoStat);
+				return 0;
+			}
+			catch (FileNotFoundException)
+			{
+				return (int)SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND;
+			}
 		}
 
 		/// <summary>

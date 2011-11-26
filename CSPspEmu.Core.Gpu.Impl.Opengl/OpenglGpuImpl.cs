@@ -100,7 +100,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//Console.WriteLine(VertexInfo);
 			if (VertexType.Color != VertexTypeStruct.ColorEnum.Void)
 			{
-				GL.Color4((byte)VertexInfo.R, (byte)VertexInfo.G, (byte)VertexInfo.B, (byte)VertexInfo.A);
+				GL.Color4((float)VertexInfo.R, (float)VertexInfo.G, (float)VertexInfo.B, (float)VertexInfo.A);
 			}
 			if (VertexType.Texture != VertexTypeStruct.NumericEnum.Void)
 			{
@@ -116,6 +116,18 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 		}
 
+		VertexTypeStruct VertexType;
+		byte[] IndexListByte = null;
+		short[] IndexListShort = null;
+		VertexInfo[] Vertices;
+
+		void ReadVertex(int Index, VertexInfo* VertexInfo)
+		{
+			if (IndexListByte != null) *VertexInfo = Vertices[IndexListByte[Index]];
+			else if (IndexListShort != null) *VertexInfo = Vertices[IndexListShort[Index]];
+			else *VertexInfo = Vertices[Index];
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -123,10 +135,69 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		override public unsafe void Prim(GpuStateStruct* GpuState, PrimitiveType PrimitiveType, ushort VertexCount)
 		{
 			//Console.WriteLine("--------------------------------------------------------");
-			var VertexType = GpuState[0].VertexState.Type;
+			VertexType = GpuState[0].VertexState.Type;
 
 			VertexReader.SetVertexTypeStruct(VertexType, (byte*)Memory.PspAddressToPointerSafe(GpuState[0].VertexAddress));
-			
+			//IndexReader.SetVertexTypeStruct(VertexType, VertexCount, (byte*)Memory.PspAddressToPointerSafe(GpuState[0].IndexAddress));
+
+			IndexListByte = null;
+			IndexListShort = null;
+			int TotalVerticesWithoutMorphing = VertexCount;
+
+			void* IndexAddress = Memory.PspAddressToPointerSafe(GpuState[0].IndexAddress);
+
+			switch (VertexType.Index)
+			{
+				case VertexTypeStruct.IndexEnum.Void:
+					break;
+				case VertexTypeStruct.IndexEnum.Byte:
+					IndexListByte = new byte[VertexCount];
+					Marshal.Copy(new IntPtr(IndexAddress), IndexListByte, 0, VertexCount);
+					TotalVerticesWithoutMorphing = IndexListByte.Max() + 1;
+					break;
+				case VertexTypeStruct.IndexEnum.Short:
+					IndexListShort = new short[VertexCount];
+					Marshal.Copy(new IntPtr(IndexAddress), IndexListShort, 0, VertexCount);
+					TotalVerticesWithoutMorphing = IndexListShort.Max() + 1;
+					break;
+				default:
+					throw(new NotImplementedException());
+			}
+
+			Vertices = new VertexInfo[TotalVerticesWithoutMorphing];
+
+			int MorpingVertexCount = (int)VertexType.MorphingVertexCount + 1;
+			int z = 0;
+			VertexInfo TempVertexInfo;
+
+			float *Morphs = &GpuState[0].MorphingState.MorphWeight0;
+
+			//for (int n = 0; n < MorpingVertexCount; n++) Console.Write("{0}, ", Morphs[n]); Console.WriteLine("");
+
+			fixed (VertexInfo* VerticesPtr = Vertices)
+			{
+				for (int n = 0; n < TotalVerticesWithoutMorphing; n++)
+				{
+					//Console.WriteLine(MorpingVertexCount);
+					if (MorpingVertexCount == 1)
+					{
+						VertexReader.ReadVertex(z++, &TempVertexInfo);
+						VerticesPtr[n] = TempVertexInfo;
+					}
+					else
+					{
+						var ComponentsIn = (float*)&TempVertexInfo;
+						var ComponentsOut = (float*)&VerticesPtr[n];
+						for (int cc = 0; cc < 20; cc++) ComponentsOut[cc] = 0;
+						for (int m = 0; m < MorpingVertexCount; m++)
+						{
+							VertexReader.ReadVertex(z++, &TempVertexInfo);
+							for (int cc = 0; cc < 20; cc++) ComponentsOut[cc] += ComponentsIn[cc] * Morphs[m];
+						}
+					}
+				}
+			}
+
 			//VertexType.Texture == VertexTypeStruct.TextureEnum.Byte
 			//return;
 			//PrepareRead(GpuState);
@@ -189,7 +260,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					case PrimitiveType.TriangleFan: BeginMode = BeginMode.TriangleFan; break;
 					case PrimitiveType.TriangleStrip: BeginMode = BeginMode.TriangleStrip; break;
 					case PrimitiveType.Sprites: BeginMode = BeginMode.Quads; break;
-					default: throw(new NotImplementedException("Not implemented PrimitiveType:'" + PrimitiveType + "'"));
+					default: throw (new NotImplementedException("Not implemented PrimitiveType:'" + PrimitiveType + "'"));
 				}
 
 				//Console.WriteLine(BeginMode);
@@ -204,8 +275,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 							VertexInfo VertexInfoTopRight;
 							VertexInfo VertexInfoBottomRight;
 							VertexInfo VertexInfoBottomLeft;
-							VertexReader.ReadVertex(n + 0, &VertexInfoTopLeft);
-							VertexReader.ReadVertex(n + 1, &VertexInfoBottomRight);
+							ReadVertex(n + 0, &VertexInfoTopLeft);
+							ReadVertex(n + 1, &VertexInfoBottomRight);
 
 							VertexInfoTopRight = new VertexInfo()
 							{
@@ -217,10 +288,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 								NX = VertexInfoBottomRight.NX,
 								NY = VertexInfoTopLeft.NY,
 								NZ = (VertexInfoTopLeft.NZ + VertexInfoBottomRight.NZ) / 2,
-								R = (byte)((VertexInfoTopLeft.R + VertexInfoBottomRight.R) / 2),
-								G = (byte)((VertexInfoTopLeft.G + VertexInfoBottomRight.G) / 2),
-								B = (byte)((VertexInfoTopLeft.B + VertexInfoBottomRight.B) / 2),
-								A = (byte)((VertexInfoTopLeft.A + VertexInfoBottomRight.A) / 2),
+								R = (VertexInfoTopLeft.R + VertexInfoBottomRight.R) / 2,
+								G = (VertexInfoTopLeft.G + VertexInfoBottomRight.G) / 2,
+								B = (VertexInfoTopLeft.B + VertexInfoBottomRight.B) / 2,
+								A = (VertexInfoTopLeft.A + VertexInfoBottomRight.A) / 2,
 							};
 
 							VertexInfoBottomLeft = new VertexInfo()
@@ -233,10 +304,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 								NX = VertexInfoTopLeft.NX,
 								NY = VertexInfoBottomRight.NY,
 								NZ = (VertexInfoTopLeft.NZ + VertexInfoBottomRight.NZ) / 2,
-								R = (byte)((VertexInfoTopLeft.R + VertexInfoBottomRight.R) / 2),
-								G = (byte)((VertexInfoTopLeft.G + VertexInfoBottomRight.G) / 2),
-								B = (byte)((VertexInfoTopLeft.B + VertexInfoBottomRight.B) / 2),
-								A = (byte)((VertexInfoTopLeft.A + VertexInfoBottomRight.A) / 2),
+								R = (VertexInfoTopLeft.R + VertexInfoBottomRight.R) / 2,
+								G = (VertexInfoTopLeft.G + VertexInfoBottomRight.G) / 2,
+								B = (VertexInfoTopLeft.B + VertexInfoBottomRight.B) / 2,
+								A = (VertexInfoTopLeft.A + VertexInfoBottomRight.A) / 2,
 							};
 
 							PutVertex(ref VertexInfoTopLeft, ref VertexType);
@@ -251,7 +322,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 						for (int n = 0; n < VertexCount; n++)
 						{
 							VertexInfo VertexInfo;
-							VertexReader.ReadVertex(n, &VertexInfo);
+							ReadVertex(n, &VertexInfo);
 							PutVertex(ref VertexInfo, ref VertexType);
 
 						}

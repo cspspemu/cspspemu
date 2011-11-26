@@ -6,12 +6,16 @@ using CSPspEmu.Core.Gpu.State;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
+	/// <summary>
+	/// 20 floats.
+	/// </summary>
 	public struct VertexInfo
 	{
-		public byte R, G, B, A;
+		public float R, G, B, A;
 		public float PX, PY, PZ;
 		public float NX, NY, NZ;
 		public float U, V;
+		public float Weight0, Weight1, Weight2, Weight3, Weight4, Weight5, Weight6, Weight7;
 
 		public override string ToString()
 		{
@@ -29,6 +33,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 	{
 		protected uint VertexAlignSize = 1;
 		protected uint VertexSize;
+		protected uint SkinningWeightCount;
 		protected byte* BasePointer;
 		protected byte* Pointer;
 		protected VertexInfo* VertexInfo;
@@ -59,6 +64,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		public void SetVertexTypeStruct(VertexTypeStruct VertexTypeStruct, byte* BasePointer)
 		{
+			SkinningWeightCount = VertexTypeStruct.SkinningWeightCount;
+			//Console.WriteLine(SkinningWeightCount);
 			VertexSize = VertexTypeStruct.GetVertexSize();
 			{
 				ReadWeights = ReadWeightsList[(int)VertexTypeStruct.Weight];
@@ -141,18 +148,24 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		protected void ReadColor4444()
 		{
-			throw (new NotImplementedException());
+			Align2();
+			var Value = *((ushort*)Pointer);
+			VertexInfo[0].R = (float)((Value >> 0) & 0xF) / 15.0f;
+			VertexInfo[0].G = (float)((Value >> 4) & 0xF) / 15.0f;
+			VertexInfo[0].B = (float)((Value >> 8) & 0xF) / 15.0f;
+			VertexInfo[0].A = (float)((Value >> 12) & 0xF) / 15.0f;
+			Pointer += sizeof(ushort);
 		}
 
 		protected void ReadColor8888()
 		{
 			Align4();
-			uint Value = *((uint*)Pointer);
-			VertexInfo[0].R = (byte)((Value >> 0) & 0xFF);
-			VertexInfo[0].G = (byte)((Value >> 8) & 0xFF);
-			VertexInfo[0].B = (byte)((Value >> 16) & 0xFF);
-			VertexInfo[0].A = (byte)((Value >> 24) & 0xFF);
-			Pointer += sizeof(byte) * 4;
+			var Value = *((uint*)Pointer);
+			VertexInfo[0].R = (float)((Value >> 0) & 0xFF) / 255.0f;
+			VertexInfo[0].G = (float)((Value >> 8) & 0xFF) / 255.0f;
+			VertexInfo[0].B = (float)((Value >> 16) & 0xFF) / 255.0f;
+			VertexInfo[0].A = (float)((Value >> 24) & 0xFF) / 255.0f;
+			Pointer += sizeof(uint);
 			//Console.WriteLine("{0}, {1}, {2}, {3}", VertexInfo[0].R, VertexInfo[0].G, VertexInfo[0].B, VertexInfo[0].A);
 		}
 
@@ -195,7 +208,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		public void ReadWeightFloat()
 		{
-			throw (new NotImplementedException());
+			var Weights = &VertexInfo[0].Weight0;
+			for (int n = 0; n < SkinningWeightCount; n++)
+			{
+				Weights[n] = (float)((float*)Pointer)[n];
+			}
+			Pointer += sizeof(float) * SkinningWeightCount;
 		}
 
 		public void ReadNormalByte()

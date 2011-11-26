@@ -59,6 +59,7 @@
     <Compile Include="iofilemgr\IoFileMgrForUser.Files.cs" />
     <Compile Include="loadcore\LoadCoreForKernel.cs" />
     <Compile Include="loadexec\LoadExecForUser.cs" />
+    <Compile Include="mediaman\sceUmdUser.cs" />
     <Compile Include="modulemgr\ModuleMgrForUser.cs" />
     <Compile Include="power\scePower.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

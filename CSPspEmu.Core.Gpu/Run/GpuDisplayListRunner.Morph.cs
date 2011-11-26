@@ -27,21 +27,18 @@ namespace CSPspEmu.Core.Gpu.Run
 		}));
 		*/
 
-		[GpuOpCodesNotImplemented]
-		public void OP_MW0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_MW1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_MW2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_MW3() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_MW4() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_MW5() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_MW6() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_MW7() { }
+		private void _OP_MW(int Index)
+		{
+			(&GpuState[0].MorphingState.MorphWeight0)[Index] = Float1;
+		}
+
+		public void OP_MW0() { _OP_MW(0); }
+		public void OP_MW1() { _OP_MW(1); }
+		public void OP_MW2() { _OP_MW(2); }
+		public void OP_MW3() { _OP_MW(3); }
+		public void OP_MW4() { _OP_MW(4); }
+		public void OP_MW5() { _OP_MW(5); }
+		public void OP_MW6() { _OP_MW(6); }
+		public void OP_MW7() { _OP_MW(7); }
 	}
 }

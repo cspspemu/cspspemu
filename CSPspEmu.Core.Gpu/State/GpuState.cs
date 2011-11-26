@@ -198,6 +198,7 @@ namespace CSPspEmu.Core.Gpu.State
 		public LineSmoothStateStruct LineSmoothState;
 		public ClipPlaneStateStruct ClipPlaneState;
 		public PatchCullingStateStruct PatchCullingState;
+		public SkinningStateStruct SkinningState;
 
 		// State.
 		public ColorfStruct FixColorSource, FixColorDestination;

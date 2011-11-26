@@ -193,15 +193,8 @@ namespace CSPspEmu.Core.Gpu.Run
 	
 		// draw PRIMitive
 		// Primitive Kick
-		[GpuOpCodesNotImplemented]
 		public void OP_PRIM()
 		{
-			/*
-			auto primitiveType = command.extractEnum!(PrimitiveType, 16);
-			auto vertexType    = gpu.state.vertexType;
-			int  vertexSize    = vertexType.vertexSize;
-			auto vertexCount   = command.param16;
-			*/
 			var PrimitiveType = (PrimitiveType)Param8(16);
 			var VertexCount = Param16(0);
 

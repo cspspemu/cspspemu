@@ -22,31 +22,37 @@ namespace CSPspEmu.Core
 
 		public TType GetInstance<TType>() where TType : PspEmulatorComponent
 		{
-			if (!ObjectsByType.ContainsKey(typeof(TType)))
+			lock (this)
 			{
-				Console.WriteLine("GetInstance<{0}>: Miss!", typeof(TType));
-				if (TypesByType.ContainsKey(typeof(TType)))
+				if (!ObjectsByType.ContainsKey(typeof(TType)))
 				{
-					return _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(TypesByType[typeof(TType)], this));
+					Console.WriteLine("GetInstance<{0}>: Miss!", typeof(TType));
+					if (TypesByType.ContainsKey(typeof(TType)))
+					{
+						return _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(TypesByType[typeof(TType)], this));
+					}
+					else
+					{
+						return _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(typeof(TType), this));
+					}
 				}
-				else
-				{
-					return _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(typeof(TType), this));
-				}
-			}
 
-			return (TType)ObjectsByType[typeof(TType)];
+				return (TType)ObjectsByType[typeof(TType)];
+			}
 		}
 
 		public TType SetInstance<TType>(PspEmulatorComponent Instance) where TType : PspEmulatorComponent
 		{
-			ConsoleUtils.SaveRestoreConsoleState(() =>
+			lock (this)
 			{
-				Console.ForegroundColor = ConsoleColor.Green;
-				Console.WriteLine("PspEmulatorContext.SetInstance<{0}>", typeof(TType));
-				//Console.WriteLine(Environment.StackTrace);
-			});
-			return _SetInstance<TType>(Instance);
+				ConsoleUtils.SaveRestoreConsoleState(() =>
+				{
+					Console.ForegroundColor = ConsoleColor.Green;
+					Console.WriteLine("PspEmulatorContext.SetInstance<{0}>", typeof(TType));
+					//Console.WriteLine(Environment.StackTrace);
+				});
+				return _SetInstance<TType>(Instance);
+			}
 		}
 
 		protected TType _SetInstance<TType>(PspEmulatorComponent Instance) where TType : PspEmulatorComponent
@@ -61,7 +67,10 @@ namespace CSPspEmu.Core
 
 		public void SetInstanceType<TType1, TType2>() where TType1 : PspEmulatorComponent
 		{
-			TypesByType[typeof(TType1)] = typeof(TType2);
+			lock (this)
+			{
+				TypesByType[typeof(TType1)] = typeof(TType2);
+			}
 		}
 
 		/*

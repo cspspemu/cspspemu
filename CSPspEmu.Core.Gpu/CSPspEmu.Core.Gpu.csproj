@@ -65,6 +65,7 @@
     <Compile Include="Run\GpuDisplayListRunner.Spline.cs" />
     <Compile Include="Run\GpuDisplayListRunner.Texture.cs" />
     <Compile Include="Run\GpuDisplayListRunner.Unknown.cs" />
+    <Compile Include="State\SubStates\SkinningStateStruct.cs" />
     <Compile Include="TextureColorComponent.cs" />
     <Compile Include="TextureEffect.cs" />
     <Compile Include="WrapMode.cs" />

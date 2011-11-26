@@ -60,13 +60,15 @@ namespace CSPspEmu.Gui.Winforms
 		/// 
 		/// </summary>
 		public PspController PspController { get { return IGuiExternalInterface.GetController(); } }
-		
 
 		public void SendControllerFrame()
 		{
-			SceCtrlData.X = 0;
-			SceCtrlData.Y = 0;
-			this.PspController.InsertSceCtrlData(SceCtrlData);
+			if (IGuiExternalInterface.IsInitialized())
+			{
+				SceCtrlData.X = 0;
+				SceCtrlData.Y = 0;
+				this.PspController.InsertSceCtrlData(SceCtrlData);
+			}
 		}
 
 		public PspDisplayForm(IGuiExternalInterface IGuiExternalInterface)
@@ -119,39 +121,50 @@ namespace CSPspEmu.Gui.Winforms
 
 		protected override void OnPaintBackground(PaintEventArgs PaintEventArgs)
 		{
-			if (EnableRefreshing)
+			if (IGuiExternalInterface.IsInitialized())
 			{
-				try
+				if (EnableRefreshing)
 				{
-					Buffer.LockBitsUnlock(System.Drawing.Imaging.PixelFormat.Format32bppArgb, (BitmapData) =>
+					try
 					{
-						var BitmapDataPtr = (PixelFormatDecoder.OutputPixel *)BitmapData.Scan0.ToPointer();
-						var Address = PspDisplay.CurrentInfo.Address;
-						//var Address = Memory.FrameBufferSegment.Low;
-						//Console.WriteLine("{0:X}", Address);
-						var FrameBuffer = (byte*)Memory.PspAddressToPointer(Address);
-						var Count = 512 * 272;
-						PixelFormatDecoder.Decode(PspDisplay.CurrentInfo.PixelFormat, FrameBuffer, BitmapDataPtr, Count);
-						for (int n = 0; n < Count; n++) BitmapDataPtr[n].A = 0xFF;
-					});
+						Buffer.LockBitsUnlock(System.Drawing.Imaging.PixelFormat.Format32bppArgb, (BitmapData) =>
+						{
+							var BitmapDataPtr = (PixelFormatDecoder.OutputPixel*)BitmapData.Scan0.ToPointer();
+							var Address = PspDisplay.CurrentInfo.Address;
+							//var Address = Memory.FrameBufferSegment.Low;
+							//Console.WriteLine("{0:X}", Address);
+							var FrameBuffer = (byte*)Memory.PspAddressToPointer(Address);
+							var Count = 512 * 272;
+							PixelFormatDecoder.Decode(PspDisplay.CurrentInfo.PixelFormat, FrameBuffer, BitmapDataPtr, Count);
+							for (int n = 0; n < Count; n++) BitmapDataPtr[n].A = 0xFF;
+						});
+					}
+					catch (Exception Exception)
+					{
+						Console.WriteLine(Exception);
+					}
 				}
-				catch (Exception Exception)
-				{
-					Console.WriteLine(Exception);
-				}
+				//Console.WriteLine(this.ClientRectangle);
+				PaintEventArgs.Graphics.CompositingMode = CompositingMode.SourceCopy;
+				PaintEventArgs.Graphics.CompositingQuality = CompositingQuality.HighSpeed;
+				PaintEventArgs.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
+				PaintEventArgs.Graphics.DrawImage(
+					Buffer,
+					new Rectangle(
+						0, menuStrip1.Height,
+						512 * DisplayScale, 272 * DisplayScale
+					)
+				);
+				//PaintEventArgs.Graphics.DrawImageUnscaled(Buffer, new Point(0, menuStrip1.Height));
 			}
-			//Console.WriteLine(this.ClientRectangle);
-			PaintEventArgs.Graphics.CompositingMode = CompositingMode.SourceCopy;
-			PaintEventArgs.Graphics.CompositingQuality = CompositingQuality.HighSpeed;
-			PaintEventArgs.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
-			PaintEventArgs.Graphics.DrawImage(
-				Buffer,
-				new Rectangle(
-					0, menuStrip1.Height,
-					512 * DisplayScale, 272 * DisplayScale
-				)
-			);
-			//PaintEventArgs.Graphics.DrawImageUnscaled(Buffer, new Point(0, menuStrip1.Height));
+			else
+			{
+				var Buffer = new Bitmap(512, 272);
+				var BufferGraphics = Graphics.FromImage(Buffer);
+				BufferGraphics.FillRectangle(new SolidBrush(Color.Black), new Rectangle(0, menuStrip1.Height, Buffer.Width, Buffer.Height));
+				//BufferGraphics.DrawString("Initializing...", new Font("Arial", 10), new SolidBrush(Color.White), new PointF(8, 8));
+				PaintEventArgs.Graphics.DrawImage(Buffer, new Rectangle(0, menuStrip1.Height, 512 * DisplayScale, 272 * DisplayScale));
+			}
 		}
 
 		protected bool EnableRefreshing = true;
@@ -161,8 +174,11 @@ namespace CSPspEmu.Gui.Winforms
 			SendControllerFrame();
 			Refresh();
 
-			PspDisplay.VBlankEvent.Signal();
-			PspDisplay.VblankCount++;
+			if (IGuiExternalInterface.IsInitialized())
+			{
+				PspDisplay.VBlankEvent.Signal();
+				PspDisplay.VblankCount++;
+			}
 		}
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)

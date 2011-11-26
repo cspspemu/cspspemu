@@ -31,7 +31,6 @@ namespace CSPspEmu.Runner
 				ThreadTaskQueue.HandleEnqueued();
 				if (!Running) return;
 				GpuProcessor.ProcessStep();
-				//Thread.Sleep(1);
 			}
 		}
 	}

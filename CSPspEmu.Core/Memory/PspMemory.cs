@@ -115,6 +115,14 @@ namespace CSPspEmu.Core.Memory
 			*((ulong*)PspAddressToPointer(Address)) = Value;
 		}
 
+		public void WriteRepeated1(byte Value, uint Address, int Count)
+		{
+			for (int n = 0; n < Count; n++)
+			{
+				Write1((uint)(Address + n), Value);
+			}
+		}
+
 		public byte Read1(uint Address)
 		{
 			return *((byte*)PspAddressToPointer(Address));

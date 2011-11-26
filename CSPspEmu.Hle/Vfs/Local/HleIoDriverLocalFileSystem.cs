@@ -214,7 +214,11 @@ namespace CSPspEmu.Hle.Vfs.Local
 
 		public unsafe int IoGetstat(HleIoDrvFileArg HleIoDrvFileArg, string FileName, SceIoStat* Stat)
 		{
-			throw new NotImplementedException();
+			var RealFileName = GetFullNormalizedAndSanitizedPath(FileName);
+			//Console.WriteLine(RealFileName);
+			var FileInfo = new FileInfo(RealFileName);
+			Stat[0].Size = FileInfo.Length;
+			return 0;
 		}
 
 		public unsafe int IoChstat(HleIoDrvFileArg HleIoDrvFileArg, string FileName, SceIoStat* stat, int bits)
