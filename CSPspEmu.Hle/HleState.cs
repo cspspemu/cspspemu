@@ -50,12 +50,12 @@ namespace CSPspEmu.Hle
 			this.MipsEmiter = new MipsEmiter();
 
 			// @TODO FIX! New Instances!?
-			this.ThreadManager = PspEmulatorContext.NewInstance<HleThreadManager>();
-			this.SemaphoreManager = PspEmulatorContext.NewInstance<HleSemaphoreManager>();
+			this.ThreadManager = PspEmulatorContext.GetInstance<HleThreadManager>();
+			this.SemaphoreManager = PspEmulatorContext.GetInstance<HleSemaphoreManager>();
 			this.MemoryManager = new HleMemoryManager(this.CpuProcessor.Memory);
-			this.ModuleManager = PspEmulatorContext.NewInstance<HleModuleManager>();
-			this.CallbackManager = PspEmulatorContext.NewInstance<HleCallbackManager>();
-			this.HleIoManager = PspEmulatorContext.NewInstance<HleIoManager>();
+			this.ModuleManager = PspEmulatorContext.GetInstance<HleModuleManager>();
+			this.CallbackManager = PspEmulatorContext.GetInstance<HleCallbackManager>();
+			this.HleIoManager = PspEmulatorContext.GetInstance<HleIoManager>();
 		}
 	}
 }

@@ -62,6 +62,7 @@
     <Compile Include="HleModuleGuest.cs" />
     <Compile Include="Managers\HleModuleManager.cs" />
     <Compile Include="HleThread.cs" />
+    <Compile Include="SceKernelErrors.cs" />
     <Compile Include="Threading\Semaphores\HleSemaphore.cs" />
     <Compile Include="Managers\HleSemaphoreManager.cs" />
     <Compile Include="Managers\HleThreadManager.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Vfs\ProxyHleIoDriver.cs" />
     <Compile Include="Vfs\PspIoDriverRaw.cs" />
     <Compile Include="Vfs\ReadonlyHleIoDriver.cs" />
+    <Compile Include="Vfs\SeekAnchor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">

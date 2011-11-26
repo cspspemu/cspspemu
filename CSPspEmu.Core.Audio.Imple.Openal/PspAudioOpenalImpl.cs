@@ -25,7 +25,7 @@ namespace CSPspEmu.Core.Audio.Imple.Openal
 			var Error = AL.GetError();
 			if (Error != ALError.NoError)
 			{
-				Console.Error.WriteLine(AL.GetErrorString(Error));
+				Console.Error.WriteLine("ALEnforce: " + AL.GetErrorString(Error));
 				//throw (new Exception("Error: " + AL.GetErrorString(Error)));
 			}
 		}
@@ -185,6 +185,11 @@ namespace CSPspEmu.Core.Audio.Imple.Openal
 
 		public PspAudioOpenalImpl(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
 		{
+			//InitSynchronized();
+		}
+
+		public void InitSynchronized()
+		{
 			AudioContext = new AudioContext();
 			XRam = new XRamExtension();
 
@@ -211,6 +216,8 @@ namespace CSPspEmu.Core.Audio.Imple.Openal
 			AudioThread.Start();
 		}
 
+		//public void 
+
 		protected void AudioThreadMain(Thread ParentThread)
 		{
 			AudioContext.MakeCurrent();
@@ -233,6 +240,11 @@ namespace CSPspEmu.Core.Audio.Imple.Openal
 		{
 			//Console.WriteLine("*******************************************************************");
 			Channels[ChannelId].Output(Samples, Callback);
+		}
+
+		public override void Update()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

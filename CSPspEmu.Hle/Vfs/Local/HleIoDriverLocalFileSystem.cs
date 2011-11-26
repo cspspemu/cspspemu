@@ -81,16 +81,8 @@ namespace CSPspEmu.Hle.Vfs.Local
 			if (Write) FileAccess |= FileAccess.Write;
 			//if (Append) FileMode |= FileMode.Open;
 
-			try
-			{
-				HleIoDrvFileArg.FileArgument = File.Open(RealFileName, FileMode, FileAccess, FileShare.Read);
-				return 0;
-			}
-			catch (IOException IOException)
-			{
-				Console.WriteLine(IOException);
-				return -1;
-			}
+			HleIoDrvFileArg.FileArgument = File.Open(RealFileName, FileMode, FileAccess, FileShare.Read);
+			return 0;
 		}
 
 		public unsafe int IoClose(HleIoDrvFileArg HleIoDrvFileArg)
@@ -136,9 +128,22 @@ namespace CSPspEmu.Hle.Vfs.Local
 			}
 		}
 
-		public unsafe long IoLseek(HleIoDrvFileArg HleIoDrvFileArg, long Offset, int Whence)
+		public unsafe long IoLseek(HleIoDrvFileArg HleIoDrvFileArg, long Offset, SeekAnchor Whence)
 		{
-			throw new NotImplementedException();
+			var FileStream = ((FileStream)HleIoDrvFileArg.FileArgument);
+			switch (Whence)
+			{
+				case SeekAnchor.Set:
+					FileStream.Position = Offset;
+					break;
+				case SeekAnchor.Cursor:
+					FileStream.Position = FileStream.Position + Offset;
+					break;
+				case SeekAnchor.End:
+					FileStream.Position = FileStream.Length + Offset;
+					break;
+			}
+			return FileStream.Position;
 		}
 
 		public unsafe int IoIoctl(HleIoDrvFileArg HleIoDrvFileArg, uint Command, byte* InputPointer, int InputLength, byte* OutputPointer, int OutputLength)

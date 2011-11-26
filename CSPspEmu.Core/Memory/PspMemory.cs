@@ -8,7 +8,7 @@ using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Memory
 {
-	unsafe abstract public class PspMemory : PspEmulatorComponent, IResetable
+	unsafe abstract public class PspMemory : PspEmulatorComponent, IResetable, IDisposable
 	{
 		public const uint MemoryMask = 0x1FFFFFFF;
 
@@ -134,5 +134,7 @@ namespace CSPspEmu.Core.Memory
 		{
 			return *((ulong*)PspAddressToPointer(Address));
 		}
+
+		abstract public void Dispose();
 	}
 }

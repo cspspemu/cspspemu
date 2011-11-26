@@ -44,6 +44,9 @@ namespace CSPspEmu.Core
 		public bool DebugThreadSwitching = false;
 		//public bool DebugThreadSwitching = true;
 
+		public bool BreakInstructionThreadSwitchingForSpeed = false;
+		//public bool BreakInstructionThreadSwitchingForSpeed = true;
+
 		/// <summary>
 		/// 
 		/// </summary>

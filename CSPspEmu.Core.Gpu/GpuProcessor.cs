@@ -159,44 +159,45 @@ namespace CSPspEmu.Core.Gpu
 			DisplayListQueueUpdated.Set();
 		}
 
+
+		public void ProcessInit()
+		{
+			GpuDisplayList.InstructionSwitch = GpuDisplayList.GenerateSwitch();
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
-		public void Process()
+		public void ProcessStep()
 		{
-			GpuDisplayList.InstructionSwitch = GpuDisplayList.GenerateSwitch();
+			Status.SetValue(StatusEnum.Completed);
+
+			DisplayListQueueUpdated.WaitOne(1);
 
 			while (true)
 			{
-				Status.SetValue(StatusEnum.Completed);
-
-				DisplayListQueueUpdated.WaitOne();
-
-				while (true)
+				lock (DisplayListQueue)
 				{
-					lock (DisplayListQueue)
-					{
-						if (DisplayListQueue.Count <= 0) break;
-					}
-					Status.SetValue(StatusEnum.Drawing);
-					GpuDisplayList CurrentGpuDisplayList;
-
-					//Console.WriteLine("**********************************************");
-					lock (DisplayListQueue)
-					{
-						CurrentGpuDisplayList = DisplayListQueue.First.Value;
-						DisplayListQueue.RemoveFirst();
-					}
-					{
-						//Console.WriteLine("YYYYYYYYYYYYYYYYYYYYYYYYYYY");
-						CurrentGpuDisplayList.Process();
-						//Console.WriteLine("ZZZZZZZZZZZZZZZZZZZZZZZZZZ");
-					}
-					EnqueueFreeDisplayList(CurrentGpuDisplayList);
+					if (DisplayListQueue.Count <= 0) break;
 				}
+				Status.SetValue(StatusEnum.Drawing);
+				GpuDisplayList CurrentGpuDisplayList;
 
-				//if (DrawSync != null) DrawSync();
+				//Console.WriteLine("**********************************************");
+				lock (DisplayListQueue)
+				{
+					CurrentGpuDisplayList = DisplayListQueue.First.Value;
+					DisplayListQueue.RemoveFirst();
+				}
+				{
+					//Console.WriteLine("YYYYYYYYYYYYYYYYYYYYYYYYYYY");
+					CurrentGpuDisplayList.Process();
+					//Console.WriteLine("ZZZZZZZZZZZZZZZZZZZZZZZZZZ");
+				}
+				EnqueueFreeDisplayList(CurrentGpuDisplayList);
 			}
+
+			//if (DrawSync != null) DrawSync();
 		}
 
 		public void GeDrawSync(SyncTypeEnum SyncType, Action SyncCallback)

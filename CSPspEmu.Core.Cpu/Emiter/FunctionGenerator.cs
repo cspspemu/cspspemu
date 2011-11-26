@@ -214,21 +214,24 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 				if (CheckForYield)
 				{
-					var NoYieldLabel = ILGenerator.DefineLabel();
-					MipsMethodEmiter.LoadStepInstructionCount();
-					ILGenerator.Emit(OpCodes.Ldc_I4_0);
-					ILGenerator.Emit(OpCodes.Bgt, NoYieldLabel);
-					//ILGenerator.Emit(OpCodes.Ldc_I4, 1000000);
-					//ILGenerator.Emit(OpCodes.Blt, NoYieldLabel);
-					MipsMethodEmiter.SaveStepInstructionCount(() =>
+					if (!CpuProcessor.PspConfig.BreakInstructionThreadSwitchingForSpeed)
 					{
+						var NoYieldLabel = ILGenerator.DefineLabel();
+						MipsMethodEmiter.LoadStepInstructionCount();
 						ILGenerator.Emit(OpCodes.Ldc_I4_0);
-					});
-					StorePC();
-					ILGenerator.Emit(OpCodes.Ldarg_0);
-					ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("Yield"));
-					//ILGenerator.Emit(OpCodes.Call, typeof(GreenThread).GetMethod("Yield"));
-					ILGenerator.MarkLabel(NoYieldLabel);
+						ILGenerator.Emit(OpCodes.Bgt, NoYieldLabel);
+						//ILGenerator.Emit(OpCodes.Ldc_I4, 1000000);
+						//ILGenerator.Emit(OpCodes.Blt, NoYieldLabel);
+						MipsMethodEmiter.SaveStepInstructionCount(() =>
+						{
+							ILGenerator.Emit(OpCodes.Ldc_I4_0);
+						});
+						StorePC();
+						ILGenerator.Emit(OpCodes.Ldarg_0);
+						ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("Yield"));
+						//ILGenerator.Emit(OpCodes.Call, typeof(GreenThread).GetMethod("Yield"));
+						ILGenerator.MarkLabel(NoYieldLabel);
+					}
 				}
 			};
 

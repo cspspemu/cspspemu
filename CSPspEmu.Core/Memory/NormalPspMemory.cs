@@ -41,6 +41,9 @@ namespace CSPspEmu.Core.Memory
 				Marshal.FreeHGlobal(new IntPtr(ScratchPadPtr));
 				Marshal.FreeHGlobal(new IntPtr(FrameBufferPtr));
 				Marshal.FreeHGlobal(new IntPtr(MainPtr));
+				ScratchPadPtr = null;
+				FrameBufferPtr = null;
+				MainPtr = null;
 			}
 		}
 
@@ -88,6 +91,11 @@ namespace CSPspEmu.Core.Memory
 				}
 			}
 			throw (new InvalidAddressException(_Address));
+		}
+
+		public override void Dispose()
+		{
+			FreeMemory();
 		}
 	}
 }

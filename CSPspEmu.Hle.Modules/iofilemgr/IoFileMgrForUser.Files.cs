@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Vfs;
@@ -95,7 +96,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// </param>
 		/// <returns>The position in the file after the seek. </returns>
 		[HlePspFunction(NID = 0x27EB27B8, FirmwareVersion = 150)]
-		public long sceIoLseek(int FileDescriptor, long Offset, int Whence)
+		public long sceIoLseek(int FileDescriptor, long Offset, SeekAnchor Whence)
 		{
 			var HleIoDrvFileArg = GetFileArgFromHandle(FileDescriptor);
 			return HleIoDrvFileArg.HleIoDriver.IoLseek(HleIoDrvFileArg, Offset, Whence);
@@ -115,7 +116,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// </param>
 		/// <returns>The position in the file after the seek.</returns>
 		[HlePspFunction(NID = 0x68963324, FirmwareVersion = 150)]
-		public int sceIoLseek32(int FileDescriptor, int Offset, int Whence)
+		public int sceIoLseek32(int FileDescriptor, int Offset, SeekAnchor Whence)
 		{
 			var HleIoDrvFileArg = GetFileArgFromHandle(FileDescriptor);
 			return (int)HleIoDrvFileArg.HleIoDriver.IoLseek(HleIoDrvFileArg, (long)Offset, Whence);
@@ -175,8 +176,15 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		public int sceIoOpen(string FileName, HleIoFlags Flags, SceMode Mode)
 		{
 			var Info = HleState.HleIoManager.ParsePath(FileName);
-			Info.HleIoDrvFileArg.HleIoDriver.IoOpen(Info.HleIoDrvFileArg, Info.LocalPath, Flags, Mode);
-			return HleState.HleIoManager.HleIoDrvFileArgPool.Create(Info.HleIoDrvFileArg);
+			try
+			{
+				Info.HleIoDrvFileArg.HleIoDriver.IoOpen(Info.HleIoDrvFileArg, Info.LocalPath, Flags, Mode);
+				return HleState.HleIoManager.HleIoDrvFileArgPool.Create(Info.HleIoDrvFileArg);
+			}
+			catch (FileNotFoundException)
+			{
+				return unchecked((int)SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND);
+			}
 		}
 
 		/// <summary>

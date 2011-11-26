@@ -36,12 +36,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
-		IGraphicsContext GraphicsContext;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		INativeWindow NativeWindow;
+		VertexReader VertexReader;
 
 		/// <summary>
 		/// 
@@ -52,15 +47,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			this.Config = PspEmulatorContext.PspConfig;
 			this.Memory = PspEmulatorContext.GetInstance<PspMemory>();
+			this.VertexReader = new VertexReader();
 		}
 
 		void Initialize()
 		{
 			///GL.Enable(EnableCap.Blend);
-			VertexReader = new VertexReader();
 		}
-
-		VertexReader VertexReader;
 
 		private void PrepareState_CullFace(GpuStateStruct* GpuState)
 		{
@@ -375,35 +368,65 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			*/
 		}
 
+		//Thread CThread;
+		AutoResetEvent StopEvent = new AutoResetEvent(false);
+		bool Running = true;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		static IGraphicsContext GraphicsContext;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		static INativeWindow NativeWindow;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		static bool AlreadySynchronized = false;
+
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <see cref="http://www.opentk.com/doc/graphics/graphicscontext"/>
-		public override void Init()
+		public override void InitSynchronizedOnce()
 		{
-			AutoResetEvent CompletedEvent = new AutoResetEvent(false);
-			var CThread = new Thread(() =>
+			if (!AlreadySynchronized)
 			{
-				Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.CultureName);
-				NativeWindow = new OpenTK.NativeWindow(512, 272, "PspGraphicEngine", GameWindowFlags.Default, GraphicsMode.Default, DisplayDevice.Default);
-				NativeWindow.Visible = false;
-				GraphicsContext = new GraphicsContext(GraphicsMode.Default, NativeWindow.WindowInfo);
-				GraphicsContext.MakeCurrent(NativeWindow.WindowInfo);
+				AlreadySynchronized = true;
+				AutoResetEvent CompletedEvent = new AutoResetEvent(false);
+				var CThread = new Thread(() =>
 				{
-					(GraphicsContext as IGraphicsContextInternal).LoadAll();
-					Initialize();
-				}
-				GraphicsContext.MakeCurrent(null);
-				CompletedEvent.Set();
-				while (true)
-				{
-					NativeWindow.ProcessEvents();
-					Thread.Sleep(1);
-				}
-			});
-			CThread.IsBackground = true;
-			CThread.Start();
-			CompletedEvent.WaitOne();
+					Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.CultureName);
+					NativeWindow = new OpenTK.NativeWindow(512, 272, "PspGraphicEngine", GameWindowFlags.Default, GraphicsMode.Default, DisplayDevice.Default);
+					NativeWindow.Visible = false;
+					GraphicsContext = new GraphicsContext(GraphicsMode.Default, NativeWindow.WindowInfo);
+					GraphicsContext.MakeCurrent(NativeWindow.WindowInfo);
+					{
+						(GraphicsContext as IGraphicsContextInternal).LoadAll();
+						Initialize();
+					}
+					GraphicsContext.MakeCurrent(null);
+					CompletedEvent.Set();
+					while (Running)
+					{
+						NativeWindow.ProcessEvents();
+						Thread.Sleep(1);
+					}
+					StopEvent.Set();
+				});
+				CThread.IsBackground = true;
+				CThread.Start();
+				CompletedEvent.WaitOne();
+			}
+		}
+
+		public override void StopSynchronized()
+		{
+			//Running = false;
+			//StopEvent.WaitOne();
 		}
 
 		public override void End(GpuStateStruct* GpuState)

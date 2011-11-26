@@ -33,9 +33,20 @@ namespace CSPspEmu.Core.Memory
 
 		~FastPspMemory()
 		{
-			VirtualFree(Base + ScratchPadOffset, 0, MEM_DECOMMIT | MEM_RELEASE);
-			VirtualFree(Base + FrameBufferOffset, 0, MEM_DECOMMIT | MEM_RELEASE);
-			VirtualFree(Base + MainOffset, 0, MEM_DECOMMIT | MEM_RELEASE);
+			FreeMemory();
+		}
+
+		protected void FreeMemory()
+		{
+			if (ScratchPadPtr != null)
+			{
+				VirtualFree(Base + ScratchPadOffset, 0, MEM_DECOMMIT | MEM_RELEASE);
+				VirtualFree(Base + FrameBufferOffset, 0, MEM_DECOMMIT | MEM_RELEASE);
+				VirtualFree(Base + MainOffset, 0, MEM_DECOMMIT | MEM_RELEASE);
+				ScratchPadPtr = null;
+				FrameBufferPtr = null;
+				MainPtr = null;
+			}
 		}
 
 		public override uint PointerToPspAddress(void* Pointer)
@@ -49,6 +60,11 @@ namespace CSPspEmu.Core.Memory
 			var Address = (_Address & PspMemory.MemoryMask);
 			if (Address == 0) return null;
 			return Base + Address;
+		}
+
+		public override void Dispose()
+		{
+			FreeMemory();
 		}
 	}
 }

@@ -44,7 +44,7 @@ namespace CSPspEmu.Hle.Vfs
 			return ParentDriver.IoWrite(HleIoDrvFileArg, InputPointer, InputLength);
 		}
 
-		virtual public long IoLseek(HleIoDrvFileArg HleIoDrvFileArg, long Offset, int Whence)
+		virtual public long IoLseek(HleIoDrvFileArg HleIoDrvFileArg, long Offset, SeekAnchor Whence)
 		{
 			return ParentDriver.IoLseek(HleIoDrvFileArg, Offset, Whence);
 		}

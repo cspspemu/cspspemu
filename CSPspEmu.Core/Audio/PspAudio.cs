@@ -12,6 +12,15 @@ namespace CSPspEmu.Core.Audio
 		}
 
 		abstract public void OutputStereo16_48000(int ChannelId, short[] Samples, Action Callback);
+
+		/// <summary>
+		/// Called periodically on a thread.
+		/// </summary>
+		abstract public void Update();
+
+		virtual public void StopSynchronized()
+		{
+		}
 	}
 
 	unsafe public class PspAudio : PspEmulatorComponent

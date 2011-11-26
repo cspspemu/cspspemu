@@ -54,7 +54,7 @@ namespace CSPspEmu.Hle.Vfs.Emulator
 			throw new NotImplementedException();
 		}
 
-		public unsafe long IoLseek(HleIoDrvFileArg HleIoDrvFileArg, long Offset, int Whence)
+		public unsafe long IoLseek(HleIoDrvFileArg HleIoDrvFileArg, long Offset, SeekAnchor Whence)
 		{
 			throw new NotImplementedException();
 		}

@@ -9,7 +9,7 @@ namespace CSPspEmu.Hle.Threading.Semaphores
 {
 	unsafe public class HleSemaphore
 	{
-		public class WaitingThread
+		public class WaitingSemaphoreThread
 		{
 			public HleThread HleThread;
 			public int ExpectedMinimumCount;
@@ -17,7 +17,7 @@ namespace CSPspEmu.Hle.Threading.Semaphores
 		}
 
 		public SceKernelSemaInfo SceKernelSemaInfo;
-		protected List<WaitingThread> WaitingThreads = new List<WaitingThread>();
+		protected List<WaitingSemaphoreThread> WaitingSemaphoreThreadList = new List<WaitingSemaphoreThread>();
 		//public SortedSet<>
 
 		protected int CurrentCount { get { return SceKernelSemaInfo.CurrentCount; } set { SceKernelSemaInfo.CurrentCount = value; } }
@@ -37,13 +37,14 @@ namespace CSPspEmu.Hle.Threading.Semaphores
 		public void IncrementCount(int IncrementCount)
 		{
 			CurrentCount += IncrementCount;
+
 			UpdatedCurrentCount();
 		}
 
 		public void WaitThread(HleThread HleThread, WakeUpCallbackDelegate WakeUpCallback, int ExpectedMinimumCount)
 		{
-			WaitingThreads.Add(
-				new WaitingThread()
+			WaitingSemaphoreThreadList.Add(
+				new WaitingSemaphoreThread()
 				{
 					HleThread = HleThread,
 					ExpectedMinimumCount = ExpectedMinimumCount,
@@ -51,18 +52,34 @@ namespace CSPspEmu.Hle.Threading.Semaphores
 				}
 			);
 
-			SceKernelSemaInfo.NumberOfWaitingThreads = WaitingThreads.Count;
-
 			UpdatedCurrentCount();
 		}
 
 		protected void UpdatedCurrentCount()
 		{
-			foreach (var WaitingThread in WaitingThreads.Where(WaitingThread => (CurrentCount >= WaitingThread.ExpectedMinimumCount)).ToArray())
+			// Selects all the waiting semaphores, that fit the count condition, in a FIFO order.
+			var WaitingSemaphoreThreadIterator = WaitingSemaphoreThreadList
+				.Where(WaitingThread => (CurrentCount >= WaitingThread.ExpectedMinimumCount))
+			;
+
+			// Reorders the waiting semaphores in a Thread priority order (descending).
+			if (SceKernelSemaInfo.Attributes == SemaphoreAttribute.Priority)
 			{
-				WaitingThreads.Remove(WaitingThread);
-				WaitingThread.WakeUpCallback();
+				WaitingSemaphoreThreadIterator = WaitingSemaphoreThreadIterator
+					.OrderByDescending(WaitingThread => WaitingThread.HleThread.PriorityValue)
+				;
 			}
+
+			// Iterates all the waiting semaphores in order removing them from list.
+			foreach (var WaitingSemaphoreThread in WaitingSemaphoreThreadIterator.ToArray())
+			{
+				CurrentCount -= WaitingSemaphoreThread.ExpectedMinimumCount;
+				WaitingSemaphoreThreadList.Remove(WaitingSemaphoreThread);
+				WaitingSemaphoreThread.WakeUpCallback();
+			}
+
+			// Updates the statistic about waiting threads.
+			SceKernelSemaInfo.NumberOfWaitingThreads = WaitingSemaphoreThreadList.Count;
 		}
 	}
 }
