@@ -19,6 +19,7 @@ namespace CSPspEmu.Hle.Managers
 		protected int LastId = 1;
 		public HleThread Current;
 		protected PspRtc HlePspRtc;
+		private HleThread _Next;
 
 		public HleThreadManager(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
 		{
@@ -42,7 +43,6 @@ namespace CSPspEmu.Hle.Managers
 			return HlePspThread;
 		}
 
-		private HleThread _Next;
 		public HleThread Next
 		{
 			get
@@ -79,24 +79,8 @@ namespace CSPspEmu.Hle.Managers
 			}
 		}
 
-		private void AwakeOnTimeThreads()
-		{
-			foreach (var Thread in WaitingThreads)
-			{
-				if (Thread.CurrentWaitType == HleThread.WaitType.Timer)
-				{
-					if (HlePspRtc.CurrentDateTime >= Thread.AwakeOnTime)
-					{
-						Thread.CurrentStatus = HleThread.Status.Ready;
-					}
-				}
-			}
-		}
-
 		public void StepNext()
 		{
-			AwakeOnTimeThreads();
-
 			// Select the thread with the lowest PriorityValue
 			var NextThread = Next;
 			//Console.WriteLine("NextThread: {0} : {1}", NextThread.Id, NextThread.PriorityValue);

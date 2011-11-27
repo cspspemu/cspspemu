@@ -55,8 +55,8 @@ namespace CSPspEmu.Core.Rtc
 				{
 					if (this.CurrentDateTime >= Timer.Item1)
 					{
-						Timer.Item2();
 						Timers.Remove(Timer);
+						Timer.Item2();
 						goto RetryLoop;
 					}
 				}

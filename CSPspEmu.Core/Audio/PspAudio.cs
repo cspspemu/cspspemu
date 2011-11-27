@@ -5,24 +5,6 @@ using System.Text;
 
 namespace CSPspEmu.Core.Audio
 {
-	abstract public class PspAudioImpl : PspEmulatorComponent
-	{
-		public PspAudioImpl(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
-		{
-		}
-
-		abstract public void OutputStereo16_48000(short[] Samples, Action Callback);
-
-		/// <summary>
-		/// Called periodically on a thread.
-		/// </summary>
-		abstract public void Update();
-
-		virtual public void StopSynchronized()
-		{
-		}
-	}
-
 	unsafe public class PspAudio : PspEmulatorComponent
 	{
 		/// <summary>
@@ -41,91 +23,6 @@ namespace CSPspEmu.Core.Audio
 			Mono = 0x10,
 		}
 
-		public class Channel
-		{
-			/// <summary>
-			/// 
-			/// </summary>
-			protected PspAudio PspAudio;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public int Index;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public bool Available;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public int SampleCount;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public FormatEnum Format;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public int NumberOfChannels
-			{
-				get
-				{
-					switch (Format)
-					{
-						case FormatEnum.Mono: return 1;
-						case FormatEnum.Stereo: return 2;
-						default: throw(new NotImplementedException());
-					}
-				}
-			}
-
-			/// <summary>
-			/// Constructor
-			/// </summary>
-			/// <param name="PspAudio"></param>
-			public Channel(PspAudio PspAudio)
-			{
-				this.PspAudio = PspAudio;
-			}
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public void Output(short* BufferPointer, int LeftVolume, int RightVolume, Action Callback)
-			{
-				var Buffer = new short[SampleCount * NumberOfChannels];
-				for (int n = 0; n < Buffer.Length; n++)
-				{
-					Buffer[n] = BufferPointer[n];
-				}
-				/*
-				for (int n = 0; n < Buffer.Length; n += NumberOfChannels)
-				{
-					//Console.Write(BufferPointer[n + 0]); Console.Write(","); Console.Write(BufferPointer[n + 1]); Console.Write(";");
-					if (NumberOfChannels >= 1)
-					{
-						//Buffer[n + 0] = (short)(((int)BufferPointer[n + 0] * LeftVolume) / PspAudio.MaxVolume);
-						Buffer[n + 0] = BufferPointer[n + 0];
-					}
-					if (NumberOfChannels >= 2)
-					{
-						//Buffer[n + 1] = (short)(((int)BufferPointer[n + 1] * RightVolume) / PspAudio.MaxVolume);
-						Buffer[n + 1] = BufferPointer[n + 1];
-					}
-				}
-				*/
-				//PspAudio.PspAudioImpl.OutputStereo16_48000(Index, Buffer, Callback);
-				//Callback();
-				//OutputStereo16_48000
-				//Callback();
-			}
-		}
-
 		/// <summary>
 		/// The maximum output volume.
 		/// </summary>
@@ -136,25 +33,40 @@ namespace CSPspEmu.Core.Audio
 		/// </summary>
 		public const int FreeChannel = -1;
 
-
+		/// <summary>
+		/// 
+		/// </summary>
 		public const int MaxChannels = 8;
 
-		public Channel[] Channels;
+		/// <summary>
+		/// 
+		/// </summary>
+		public PspAudioChannel[] Channels;
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public PspAudioImpl PspAudioImpl;
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="PspEmulatorContext"></param>
 		public PspAudio(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
 		{
 			this.PspAudioImpl = PspEmulatorContext.GetInstance<PspAudioImpl>();
 			Initialize();
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		protected void Initialize()
 		{
-			Channels = new Channel[MaxChannels];
+			Channels = new PspAudioChannel[MaxChannels];
 			for (int n = 0; n < MaxChannels; n++)
 			{
-				Channels[n] = new Channel(this)
+				Channels[n] = new PspAudioChannel(this)
 				{
 					Index = n,
 					Available = true,
@@ -162,11 +74,19 @@ namespace CSPspEmu.Core.Audio
 			}
 		}
 
-		public Channel GetFreeChannel()
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		public PspAudioChannel GetFreeChannel()
 		{
 			return Channels.Where(Channel => Channel.Available).First();
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="ChannelId"></param>
 		protected void CheckChannelId(int ChannelId)
 		{
 			if (ChannelId < 0 || ChannelId >= Channels.Length)
@@ -175,11 +95,58 @@ namespace CSPspEmu.Core.Audio
 			}
 		}
 
-		public Channel GetChannel(int ChannelId)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="ChannelId"></param>
+		/// <returns></returns>
+		public PspAudioChannel GetChannel(int ChannelId)
 		{
-			if (ChannelId == FreeChannel) return GetFreeChannel();
-			CheckChannelId(ChannelId);
-			return Channels[ChannelId];
+			PspAudioChannel Channel;
+			if (ChannelId == FreeChannel)
+			{
+				Channel = GetFreeChannel();
+			}
+			else
+			{
+				CheckChannelId(ChannelId);
+				Channel = Channels[ChannelId];
+			}
+			Channel.Available = false;
+			return Channel;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public void Update()
+		{
+			PspAudioImpl.Update((RequiredSamples) =>
+			{
+				short[] MixedSamples = new short[RequiredSamples];
+				int[] MixedSamplesDenormalized = new int[RequiredSamples];
+				int[] NumberOfChannels = new int[RequiredSamples];
+				foreach (var Channel in Channels)
+				{
+					var ChannelSamples = Channel.Read(RequiredSamples);
+
+					for (int n = 0; n < ChannelSamples.Length; n++)
+					{
+						MixedSamplesDenormalized[n] += ChannelSamples[n];
+						NumberOfChannels[n]++;
+					}
+				}
+
+				for (int n = 0; n < RequiredSamples; n++)
+				{
+					if (NumberOfChannels[n] != 0)
+					{
+						MixedSamples[n] = (short)(MixedSamplesDenormalized[n] / NumberOfChannels[n]);
+					}
+				}
+
+				return MixedSamples;
+			});
 		}
 	}
 }

@@ -12,7 +12,7 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
-		static public string CultureName = "en";
+		static public string CultureName = "en-US";
 
 		/// <summary>
 		/// 

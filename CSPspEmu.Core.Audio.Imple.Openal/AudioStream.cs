@@ -13,22 +13,23 @@ namespace CSPspEmu.Core.Audio.Imple.Openal
 	/// </summary>
 	sealed internal class AudioStream
 	{
-		public const int SamplesPerMillisecond = 48;
-		public const int Frequency = 48000;
-		public const int NumberOfBuffers = 2;
+		//public const int SamplesPerMillisecond = 48;
+		public const double SamplesPerMillisecond = 44.1;
+		public const int Frequency = 44100;
+		//public const int Frequency = 48000;
+		public const int NumberOfBuffers = 4;
 		public const int NumberOfChannels = 2;
-		public const int SamplesPerBuffer = SamplesPerMillisecond * 20 * NumberOfChannels;
+		public const int BufferMilliseconds = 10;
+		public const int SamplesPerBuffer = (int)(SamplesPerMillisecond * BufferMilliseconds * NumberOfChannels);
 		public int[] BufferIds;
 		public int SourceId;
-		public ProduceConsumeBuffer<short> ProduceConsumeBuffer = new ProduceConsumeBuffer<short>();
-		List<Tuple<long, Action>> Callbacks = new List<Tuple<long, Action>>();
 
-		static void ALEnforce()
+		static void ALEnforce(string AT = "Unknown")
 		{
 			var Error = AL.GetError();
 			if (Error != ALError.NoError)
 			{
-				Console.Error.WriteLine("ALEnforce: " + AL.GetErrorString(Error));
+				Console.Error.WriteLine("ALEnforce: " + AL.GetErrorString(Error) + "(" + Error + ") : " + AT);
 				//throw (new Exception("Error: " + AL.GetErrorString(Error)));
 			}
 		}
@@ -61,7 +62,7 @@ namespace CSPspEmu.Core.Audio.Imple.Openal
 			AL.DeleteBuffers(this.BufferIds); ALEnforce();
 		}
 
-		public void Start()
+		protected void Start()
 		{
 			foreach (var BufferId in BufferIds)
 			{
@@ -71,45 +72,59 @@ namespace CSPspEmu.Core.Audio.Imple.Openal
 			AL.SourcePlay(SourceId); ALEnforce();
 		}
 
-		public void Update()
+		public bool IsPlaying
+		{
+			get
+			{
+				int state = 0;
+				AL.GetSource(SourceId, ALGetSourcei.SourceState, out state);
+				return (state == (int)ALSourceState.Playing);
+			}
+		}
+
+		public void Update(Func<int, short[]> ReadStreamCallback)
 		{
 			int Processed = -1;
+
+			if (!IsPlaying)
+			{
+				AL.DeleteSource(this.SourceId); ALEnforce();
+				this.SourceId = ALEnforce(AL.GenSource());
+				//AL.SourceStop(SourceId);
+				Start();
+				//AL.SourcePlay(SourceId); ALEnforce();
+			}
 
 			AL.GetSource(SourceId, ALGetSourcei.BuffersProcessed, out Processed);
 			ALEnforce();
 
 			while (Processed-- > 0)
 			{
-				int BufferId = ALEnforce(AL.SourceUnqueueBuffer(SourceId));
+				int DequeuedBufferId = ALEnforce(AL.SourceUnqueueBuffer(SourceId));
 				{
-					ReadStream(BufferId);
+					ReadStream(DequeuedBufferId, ReadStreamCallback);
 				}
-				AL.SourceQueueBuffer(SourceId, BufferId); ALEnforce();
+				AL.SourceQueueBuffer(SourceId, DequeuedBufferId); ALEnforce();
 			}
 		}
 
-		private void ReadStream(int BufferId)
+		private void ReadStream(int BufferId, Func<int, short[]> ReadStreamCallback = null)
 		{
-			short[] Buffer;
-			lock (ProduceConsumeBuffer)
-			{
-				foreach (var Tuple in Callbacks.Where(Tuple => ProduceConsumeBuffer.TotalConsumed >= Tuple.Item1).ToArray())
-				{
-					Tuple.Item2();
-					Callbacks.Remove(Tuple);
-				}
-				Buffer = ProduceConsumeBuffer.Consume(SamplesPerBuffer);
-			}
-			AL.BufferData(BufferId, ALFormat.Stereo16, Buffer, SamplesPerBuffer, Frequency); ALEnforce();
-		}
+			short[] BufferData;
 
-		public void Output(short[] Samples, Action Callback)
-		{
-			lock (ProduceConsumeBuffer)
+			int ReadSamples = SamplesPerBuffer;
+
+			if (ReadStreamCallback != null)
 			{
-				Callbacks.Add(new Tuple<long, Action>(ProduceConsumeBuffer.TotalConsumed + Samples.Length, Callback));
-				ProduceConsumeBuffer.Produce(Samples);
+				BufferData = ReadStreamCallback(ReadSamples);
+				//if (BufferData.Any(Item => Item != 0)) foreach (var C in BufferData) Console.Write("{0},", C);
 			}
+			else
+			{
+				BufferData = new short[ReadSamples];
+			}
+
+			AL.BufferData(BufferId, ALFormat.Stereo16, BufferData, BufferData.Length * sizeof(short), Frequency); ALEnforce("ReadStream");
 		}
 	}
 }

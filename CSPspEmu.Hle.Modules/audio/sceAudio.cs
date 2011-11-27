@@ -108,88 +108,124 @@ namespace CSPspEmu.Hle.Modules.audio
 		}
 
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="ChannelId"></param>
+		/// <param name="LeftVolume"></param>
+		/// <param name="RightVolume"></param>
+		/// <param name="Buffer"></param>
+		/// <param name="Blocking"></param>
+		/// <returns></returns>
+		private int _sceAudioOutputPannedBlocking(int ChannelId, int LeftVolume, int RightVolume, short* Buffer, bool Blocking)
+		{
+			//Console.WriteLine(ChannelId);
+			var Channel = HleState.PspAudio.GetChannel(ChannelId);
+			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Audio, "_sceAudioOutputPannedBlocking", WakeUpCallback =>
+			{
+				Channel.Write(Buffer, LeftVolume, RightVolume, () =>
+				{
+					if (Blocking) WakeUpCallback();
+				});
+				/*
+				if (Blocking)
+				{
+					HleState.PspRtc.RegisterTimerInOnce(TimeSpan.FromMilliseconds(1), () =>
+					{
+						WakeUpCallback();
+					});
+				}
+				*/
+				if (!Blocking) WakeUpCallback();
+			});
+			return 0;
+		}
+
+		/// <summary>
 		/// Output panned audio of the specified channel (blocking)
 		/// </summary>
-		/// <param name="Channel">The channel number.</param>
+		/// <param name="ChannelId">The channel number.</param>
 		/// <param name="LeftVolume">The left volume. A value between 0 and PSP_AUDIO_VOLUME_MAX.</param>
 		/// <param name="RightVolume">The right volume. A value between 0 and PSP_AUDIO_VOLUME_MAX.</param>
 		/// <param name="Buffer">Pointer to the PCM data to output.</param>
 		/// <returns>0 on success, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0x13F592BC, FirmwareVersion = 150)]
-		public int sceAudioOutputPannedBlocking(int Channel, int LeftVolume, int RightVolume, short* Buffer)
+		public int sceAudioOutputPannedBlocking(int ChannelId, int LeftVolume, int RightVolume, short* Buffer)
 		{
-#if false
-			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, "sceAudioOutputPannedBlocking", (WakeUpCallbackDelegate) =>
-			{
-				HleState.PspRtc.RegisterTimerInOnce(TimeSpan.FromMilliseconds(1), () =>
-				{
-					WakeUpCallbackDelegate();
-				});
-			});
-
-#else
-			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Audio, "sceAudioOutputPannedBlocking", (WakeUpCallbackDelegate) =>
-			{
-				HleState.PspAudio.GetChannel(Channel).Output(Buffer, LeftVolume, RightVolume, () =>
-				{
-					WakeUpCallbackDelegate();
-				});
-			});
-#endif
-			return 0;
+			return _sceAudioOutputPannedBlocking(
+				ChannelId: ChannelId,
+				LeftVolume: LeftVolume,
+				RightVolume: RightVolume,
+				Buffer: Buffer,
+				Blocking: true
+			);
 		}
 
 
 		/// <summary>
 		/// Output audio of the specified channel (blocking)
 		/// </summary>
-		/// <param name="Channel">The channel number.</param>
+		/// <param name="ChannelId">The channel number.</param>
 		/// <param name="Volume">The volume.</param>
 		/// <param name="Buffer">Pointer to the PCM data to output.</param>
 		/// <returns>0 on success, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0x136CAF51, FirmwareVersion = 150)]
-		public int sceAudioOutputBlocking(int Channel, int Volume, short* Buffer)
+		public int sceAudioOutputBlocking(int ChannelId, int Volume, short* Buffer)
 		{
-			return sceAudioOutputPannedBlocking(Channel, Volume, Volume, Buffer);
+			return _sceAudioOutputPannedBlocking(
+				ChannelId: ChannelId,
+				LeftVolume: Volume,
+				RightVolume: Volume,
+				Buffer: Buffer,
+				Blocking: true
+			);
 		}
 
 		/// <summary>
 		/// Output panned audio of the specified channel
 		/// </summary>
-		/// <param name="Channel">The channel number.</param>
+		/// <param name="ChannelId">The channel number.</param>
 		/// <param name="LeftVolume">The left volume. A value between 0 and PSP_AUDIO_VOLUME_MAX.</param>
 		/// <param name="RightVolume">The right volume. A value between 0 and PSP_AUDIO_VOLUME_MAX.</param>
 		/// <param name="Buffer">Pointer to the PCM data to output.</param>
 		/// <returns>0 on success, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0xE2D56B2D, FirmwareVersion = 150)]
-		public int sceAudioOutputPanned(int Channel, int LeftVolume, int RightVolume, short* Buffer)
+		public int sceAudioOutputPanned(int ChannelId, int LeftVolume, int RightVolume, short* Buffer)
 		{
-			HleState.PspAudio.GetChannel(Channel).Output(Buffer, LeftVolume, RightVolume, () =>
-			{
-			});
-			return 0;
+			return _sceAudioOutputPannedBlocking(
+				ChannelId: ChannelId,
+				LeftVolume: LeftVolume,
+				RightVolume: RightVolume,
+				Buffer: Buffer,
+				Blocking: false
+			);
 		}
 
 		/// <summary>
 		/// Output audio of the specified channel
 		/// </summary>
-		/// <param name="Channel">The channel number.</param>
+		/// <param name="ChannelId">The channel number.</param>
 		/// <param name="Volume">The volume. A value between 0 and PSP_AUDIO_VOLUME_MAX.</param>
 		/// <param name="Buffer">Pointer to the PCM data to output.</param>
 		/// <returns>0 on success, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0x8C1009B2, FirmwareVersion = 150)]
-		public int sceAudioOutput(int Channel, int Volume, short* Buffer)
+		public int sceAudioOutput(int ChannelId, int Volume, short* Buffer)
 		{
-			return sceAudioOutputPanned(Channel, Volume, Volume, Buffer);
+			return _sceAudioOutputPannedBlocking(
+				ChannelId: ChannelId,
+				LeftVolume: Volume,
+				RightVolume: Volume,
+				Buffer: Buffer,
+				Blocking: false
+			);
 		}
 
 		/// <summary>
 		/// Get count of unplayed samples remaining
 		/// </summary>
-		/// <param name="Channel">The channel number.</param>
+		/// <param name="ChannelId">The channel number.</param>
 		/// <returns>Number of samples to be played, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0xE9D97901, FirmwareVersion = 150)]
-		public int sceAudioGetChannelRestLen(int Channel)
+		public int sceAudioGetChannelRestLen(int ChannelId)
 		{
 			throw (new NotImplementedException());
 		}

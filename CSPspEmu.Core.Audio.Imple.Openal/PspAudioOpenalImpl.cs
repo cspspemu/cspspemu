@@ -13,15 +13,16 @@ namespace CSPspEmu.Core.Audio.Imple.Openal
 	unsafe public class PspAudioOpenalImpl : PspAudioImpl
 	{
 		static protected AudioContext AudioContext;
-		static protected XRamExtension XRam;
+		//static protected XRamExtension XRam;
 		static internal AudioStream AudioStream;
 
 		public PspAudioOpenalImpl(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
 		{
 			if (AudioContext == null)
 			{
+				//AudioContext = new AudioContext(AudioContext.DefaultDevice, 44100, 4410);
 				AudioContext = new AudioContext();
-				XRam = new XRamExtension();
+				//XRam = new XRamExtension();
 
 				var Position = new Vector3(0, 0, 0);
 				var Velocity = new Vector3(0, 0, 0);
@@ -34,15 +35,14 @@ namespace CSPspEmu.Core.Audio.Imple.Openal
 			}
 		}
 
-		override public void OutputStereo16_48000(short[] Samples, Action Callback)
-		{
-			AudioStream.Output(Samples, Callback);
-		}
-
-		public override void Update()
+		override public void Update(Func<int, short[]> ReadStream)
 		{
 			AudioContext.Process();
-			AudioStream.Update();
+			AudioStream.Update(ReadStream);
+		}
+
+		override public void StopSynchronized()
+		{
 		}
 	}
 }

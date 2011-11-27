@@ -135,7 +135,18 @@ namespace CSPspEmu.Gui.Winforms
 							//Console.WriteLine("{0:X}", Address);
 							var FrameBuffer = (byte*)Memory.PspAddressToPointer(Address);
 							var Count = 512 * 272;
-							PixelFormatDecoder.Decode(PspDisplay.CurrentInfo.PixelFormat, FrameBuffer, BitmapDataPtr, Count);
+							if (FrameBuffer == null)
+							{
+								Console.Error.WriteLine("FrameBuffer == null");
+							}
+							else if (BitmapDataPtr == null)
+							{
+								Console.Error.WriteLine("BitmapDataPtr == null");
+							}
+							else
+							{
+								PixelFormatDecoder.Decode(PspDisplay.CurrentInfo.PixelFormat, FrameBuffer, BitmapDataPtr, Count);
+							}
 							for (int n = 0; n < Count; n++) BitmapDataPtr[n].A = 0xFF;
 						});
 					}
@@ -161,7 +172,7 @@ namespace CSPspEmu.Gui.Winforms
 			{
 				var Buffer = new Bitmap(512, 272);
 				var BufferGraphics = Graphics.FromImage(Buffer);
-				BufferGraphics.FillRectangle(new SolidBrush(Color.Black), new Rectangle(0, menuStrip1.Height, Buffer.Width, Buffer.Height));
+				BufferGraphics.FillRectangle(new SolidBrush(Color.Black), new Rectangle(0, 0, Buffer.Width, Buffer.Height));
 				//BufferGraphics.DrawString("Initializing...", new Font("Arial", 10), new SolidBrush(Color.White), new PointF(8, 8));
 				PaintEventArgs.Graphics.DrawImage(Buffer, new Rectangle(0, menuStrip1.Height, 512 * DisplayScale, 272 * DisplayScale));
 			}

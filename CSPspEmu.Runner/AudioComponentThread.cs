@@ -4,17 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using CSPspEmu.Core;
+using CSPspEmu.Core.Audio;
 using CSPspEmu.Core.Audio.Imple.Openal;
 
 namespace CSPspEmu.Runner
 {
 	sealed public class AudioComponentThread : ComponentThread
 	{
-		PspAudioOpenalImpl PspAudioOpenalImpl;
+		PspAudio PspAudio;
 
 		public AudioComponentThread(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
 		{
-			PspAudioOpenalImpl = PspEmulatorContext.GetInstance<PspAudioOpenalImpl>();
+			PspAudio = PspEmulatorContext.GetInstance<PspAudio>();
 		}
 
 		protected override string ThreadName { get { return "AudioThread"; } }
@@ -25,12 +26,9 @@ namespace CSPspEmu.Runner
 			while (true)
 			{
 				ThreadTaskQueue.HandleEnqueued();
-				if (!Running)
-				{
-					return;
-				}
+				if (!Running) return;
 
-				PspAudioOpenalImpl.Update();
+				PspAudio.Update();
 				Thread.Sleep(1);
 			}
 		}

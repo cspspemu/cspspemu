@@ -78,7 +78,7 @@ namespace CSPspEmu.Hle
 		//public String Name;
 		public Status CurrentStatus;
 		public WaitType CurrentWaitType;
-		public DateTime AwakeOnTime;
+		//public DateTime AwakeOnTime;
 		public MemoryPartition Stack;
 		public String WaitDescription;
 		//public int InitPriority;
