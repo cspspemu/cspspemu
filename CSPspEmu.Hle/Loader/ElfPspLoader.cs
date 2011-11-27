@@ -146,6 +146,10 @@ namespace CSPspEmu.Hle.Loader
 							Instruction.Value = BaseAddress + Instruction.Value;
 						}
 						break;
+					case Elf.Reloc.TypeEnum.MipsGpRel16:
+						{
+						}
+						break;
 					//case Elf.Reloc.TypeEnum.MipsLo16:
 					default:
 						throw(new NotImplementedException("Handling " + Reloc.Type + " not implemented"));

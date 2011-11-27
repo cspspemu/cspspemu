@@ -64,6 +64,7 @@
     <Compile Include="HleModuleGuest.cs" />
     <Compile Include="Managers\HleModuleManager.cs" />
     <Compile Include="HleThread.cs" />
+    <Compile Include="Managers\HleRegistryManager.cs" />
     <Compile Include="SceKernelErrors.cs" />
     <Compile Include="Threading\Semaphores\HleSemaphore.cs" />
     <Compile Include="Managers\HleSemaphoreManager.cs" />
@@ -80,6 +81,8 @@
     <Compile Include="Vfs\HleIoDriverExtensions.cs" />
     <Compile Include="Vfs\IHleIoDriver.cs" />
     <Compile Include="Vfs\Local\HleIoDriverLocalFileSystem.cs" />
+    <Compile Include="Vfs\HleIoDriverMountable.cs" />
+    <Compile Include="Vfs\MemoryStick\HleIoDriverMemoryStick.cs" />
     <Compile Include="Vfs\ProxyHleIoDriver.cs" />
     <Compile Include="Vfs\PspIoDriverRaw.cs" />
     <Compile Include="Vfs\ReadonlyHleIoDriver.cs" />
@@ -103,6 +106,7 @@
       <Name>CSPspEmu.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

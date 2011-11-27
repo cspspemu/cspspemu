@@ -137,6 +137,16 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			//MipsMethodEmiter.ILGenerator.EmitWriteLine(String.Format("PC(0x{0:X}) : SW: rt={1}, rs={2}, imm={3}", PC, RT, RS, Instruction.IMM));
 			_save_i(OpCodes.Stind_I4);
 		}
+		/*
+			void OP_SWL() {
+				memory.twrite!(ushort)(registers[instruction.RS] + instruction.IMM - 1, (registers[instruction.RT] >> 16) & 0xFFFF);
+				registers.pcAdvance(4);
+			}
+			void OP_SWR() {
+				memory.twrite!(ushort)(registers[instruction.RS] + instruction.IMM - 0, (registers[instruction.RT] >>  0) & 0xFFFF);
+				registers.pcAdvance(4);
+			}
+		*/
 		public void swl()
 		{
 			_save_pc();
@@ -152,7 +162,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shr);
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0x0000FFFF);
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I4);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I2);
 		}
 		public void swr()
 		{
@@ -169,7 +179,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shr);
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0x0000FFFF);
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I4);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I2);
 		}
 
 		// Load Linked word.
@@ -200,5 +210,29 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I4); 
 			});
 		}
+		/*
+			void OP_LWL() {
+				registers[instruction.RT] = (
+					(registers[instruction.RT] & 0x_0000_FFFF) |
+					((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 1) << 16) & 0x_FFFF_0000)
+				);
+				registers.pcAdvance(4);
+			}
+			void OP_LWR() {
+				registers[instruction.RT] = (
+					(registers[instruction.RT] & 0x_FFFF_0000) |
+					((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 0) << 0) & 0x_0000_FFFF)
+				);
+				registers.pcAdvance(4);
+			}
+			void OP_SWL() {
+				memory.twrite!(ushort)(registers[instruction.RS] + instruction.IMM - 1, (registers[instruction.RT] >> 16) & 0xFFFF);
+				registers.pcAdvance(4);
+			}
+			void OP_SWR() {
+				memory.twrite!(ushort)(registers[instruction.RS] + instruction.IMM - 0, (registers[instruction.RT] >>  0) & 0xFFFF);
+				registers.pcAdvance(4);
+			}
+		*/
 	}
 }

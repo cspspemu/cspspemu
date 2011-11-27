@@ -26,6 +26,7 @@ using CSPspEmu.Hle.Vfs.Local;
 using CSPspEmu.Hle.Vfs.Emulator;
 using System.Windows.Forms;
 using System.Threading;
+using CSPspEmu.Hle.Vfs.MemoryStick;
 
 namespace CSPspEmu.Runner
 {
@@ -48,12 +49,17 @@ namespace CSPspEmu.Runner
 			ThreadManager = PspEmulatorContext.GetInstance<HleThreadManager>();
 			HleState = PspEmulatorContext.GetInstance<HleState>();
 			PspMemory = PspEmulatorContext.GetInstance<PspMemory>();
+			RegisterDevices();
+		}
 
+		void RegisterDevices()
+		{
 			string VirtualDirectory = Path.GetDirectoryName(Application.ExecutablePath);
 			try { Directory.CreateDirectory(VirtualDirectory + "/PSP/GAME/virtual"); }
 			catch { }
-
-			HleState.HleIoManager.AddDriver("ms:", new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
+			var MemoryStick = new HleIoDriverMemoryStick(new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
+			HleState.HleIoManager.AddDriver("ms:", MemoryStick);
+			HleState.HleIoManager.AddDriver("fatms:", MemoryStick);
 			HleState.HleIoManager.AddDriver("emulator:", new HleIoDriverEmulator(HleState));
 		}
 

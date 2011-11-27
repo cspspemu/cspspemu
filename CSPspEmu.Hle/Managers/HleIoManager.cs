@@ -83,15 +83,23 @@ namespace CSPspEmu.Hle.Managers
 		/// <returns></returns>
 		public ParsePathInfo ParseDeviceName(string DeviceName)
 		{
-			var Match = new Regex(@"^(\w+)(\d*):$").Match(DeviceName);
+			var Match = new Regex(@"^([a-zA-Z]+)(\d*):$").Match(DeviceName);
 			int FileSystemNumber = 0;
 			Int32.TryParse(Match.Groups[2].Value, out FileSystemNumber);
+
+			var BaseDeviceName = Match.Groups[1].Value + ":";
+
+			//Drivers[
+			if (!Drivers.ContainsKey(BaseDeviceName))
+			{
+				throw(new NotImplementedException(String.Format("Unknown device '{0}'", BaseDeviceName)));
+			}
 
 			return new ParsePathInfo()
 			{
 				HleIoDrvFileArg = new HleIoDrvFileArg()
 				{
-					HleIoDriver = Drivers[Match.Groups[1].Value + ":"],
+					HleIoDriver = Drivers[BaseDeviceName],
 					FileSystemNumber = FileSystemNumber,
 					FileArgument = null,
 				},
