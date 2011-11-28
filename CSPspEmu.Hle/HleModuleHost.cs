@@ -9,6 +9,7 @@ using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using CSharpUtils;
 using CSharpUtils.Extensions;
+using CSPspEmu.Hle.Modules.threadman;
 
 namespace CSPspEmu.Hle
 {
@@ -256,6 +257,10 @@ namespace CSPspEmu.Hle
 				{
 					Delegate(CpuThreadState);
 				}
+				catch (SceKernelException SceKernelException)
+				{
+					CpuThreadState.GPR[2] = (int)SceKernelException.SceKernelError;
+				}
 				finally
 				{
 					if (Trace)
@@ -286,7 +291,9 @@ namespace CSPspEmu.Hle
 
 			if (ParameterType.IsEnum)
 			{
-				return ParameterType.GetEnumName(Int4);
+				var Name = ParameterType.GetEnumName(Int4);
+				if (Name == null || Name.Length == 0) Name = Int4.ToString();
+				return Name;
 			}
 
 			if (ParameterType.IsPointer)

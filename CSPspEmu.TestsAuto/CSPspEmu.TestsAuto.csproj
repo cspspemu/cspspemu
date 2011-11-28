@@ -4,7 +4,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{AD6A52A7-E83F-48E7-A85F-232D738EC949}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CSPspEmu.AutoTests</RootNamespace>
     <AssemblyName>CSPspEmu.AutoTests</AssemblyName>
@@ -19,6 +19,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,9 +32,13 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,7 +46,52 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AudioImplMock.cs" />
+    <Compile Include="GpuImplMock.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
+      <Project>{9b217880-48ae-43b6-ae1f-dc732fccbc7a}</Project>
+      <Name>CSharpUtils.Drawing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
+      <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
+      <Name>CSharpUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Audio.Imple.Openal\CSPspEmu.Core.Audio.Imple.Openal.csproj">
+      <Project>{07c4ae15-8e61-4740-b5a9-44db87cecb46}</Project>
+      <Name>CSPspEmu.Core.Audio.Imple.Openal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Cpu\CSPspEmu.Core.Cpu.csproj">
+      <Project>{827779a5-f05c-41c6-9ff9-fd274224a7ae}</Project>
+      <Name>CSPspEmu.Core.Cpu</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Gpu.Impl.Opengl\CSPspEmu.Core.Gpu.Impl.Opengl.csproj">
+      <Project>{72f560e3-9101-426b-b3e5-b83b78e536db}</Project>
+      <Name>CSPspEmu.Core.Gpu.Impl.Opengl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">
+      <Project>{9a30ebf3-b702-47d9-aafc-e3e02b410dad}</Project>
+      <Name>CSPspEmu.Core.Gpu</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
+      <Project>{f783ecd3-0f79-43cc-abd0-d356a64049c4}</Project>
+      <Name>CSPspEmu.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Hle.Modules\CSPspEmu.Hle.Modules.csproj">
+      <Project>{295b7bf1-1130-4098-b0fc-00555ddb09dd}</Project>
+      <Name>CSPspEmu.Hle.Modules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Hle\CSPspEmu.Hle.csproj">
+      <Project>{288af89e-b41a-4253-a8f7-43d1371516e9}</Project>
+      <Name>CSPspEmu.Hle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Runner\CSPspEmu.Runner.csproj">
+      <Project>{6552e4e6-198a-46b6-864a-53ca5c1ed851}</Project>
+      <Name>CSPspEmu.Runner</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -28,6 +29,56 @@ namespace CSPspEmu.Hle.Modules.rtc
 			HleState.PspRtc.Update();
 			*Tick = (ulong)(HleState.PspRtc.Elapsed.TotalMilliseconds * 1000);
 			return 0;
+		}
+
+		Calendar Calendar = new GregorianCalendar(GregorianCalendarTypes.USEnglish);
+
+		/// <summary>
+		/// Get number of days in a specific month
+		/// </summary>
+		/// <param name="Year">Year in which to check (accounts for leap year)</param>
+		/// <param name="Month">Month to get number of days for</param>
+		/// <returns># of days in month, less than 0 on error (?)</returns>
+		[HlePspFunction(NID = 0x05EF322C, FirmwareVersion = 150)]
+		public int sceRtcGetDaysInMonth(int Year, int Month)
+		{
+			return Calendar.GetDaysInMonth(Year, Month);
+			//new DateTime(Year, Month, 1).
+			//return Date(Year, Month, 1).daysInMonth;
+		}
+
+		public enum PspDaysOfWeek : int
+		{
+			Monday = 0,
+			Tuesday = 1,
+			Wednesday = 2,
+			Thursday = 3,
+			Friday = 4,
+			Saturday = 5,
+			Sunday = 6,
+		}
+
+		/// <summary>
+		/// Get day of the week for a date
+		/// </summary>
+		/// <param name="Year">Year in which to check (accounts for leap year)</param>
+		/// <param name="Month">Month that day is in</param>
+		/// <param name="Day">Day to get day of week for</param>
+		/// <returns>Day of week with 0 representing Monday</returns>
+		[HlePspFunction(NID = 0x57726BC1, FirmwareVersion = 150)]
+		public PspDaysOfWeek sceRtcGetDayOfWeek(int Year, int Month, int Day)
+		{
+			switch (Calendar.GetDayOfWeek(new DateTime(Year, Month, Day)))
+			{
+				case DayOfWeek.Monday: return PspDaysOfWeek.Monday;
+				case DayOfWeek.Tuesday: return PspDaysOfWeek.Tuesday;
+				case DayOfWeek.Wednesday: return PspDaysOfWeek.Wednesday;
+				case DayOfWeek.Thursday: return PspDaysOfWeek.Thursday;
+				case DayOfWeek.Friday: return PspDaysOfWeek.Friday;
+				case DayOfWeek.Saturday: return PspDaysOfWeek.Saturday;
+				case DayOfWeek.Sunday: return PspDaysOfWeek.Sunday;
+				default: throw(new InvalidCastException());
+			}
 		}
 
 	}

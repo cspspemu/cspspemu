@@ -40,6 +40,7 @@ namespace CSPspEmu.Runner
 		HleState HleState;
 		PspMemory PspMemory;
 		HleIoDriverMountable MemoryStickMountable;
+		public AutoResetEvent StoppedEndedEvent = new AutoResetEvent(false);
 
 		static public uint CODE_PTR_EXIT_THREAD = 0x08000000;
 
@@ -170,7 +171,6 @@ namespace CSPspEmu.Runner
 
 				RegisterSyscalls();
 
-
 				uint CODE_PTR_ARGUMENTS = 0x08000100;
 
 				{
@@ -201,6 +201,19 @@ namespace CSPspEmu.Runner
 			}
 		}
 
+		protected void Main_Ended()
+		{
+			StoppedEndedEvent.Set();
+
+			// Completed execution. Wait for stopping.
+			while (true)
+			{
+				ThreadTaskQueue.HandleEnqueued();
+				if (!Running) return;
+				Thread.Sleep(1);
+			}
+		}
+
 		protected override void Main()
 		{
 			while (Running)
@@ -214,6 +227,12 @@ namespace CSPspEmu.Runner
 						PspRtc.Update();
 						ThreadManager.StepNext();
 					}
+				}
+				catch (SceKernelSelfStopUnloadModuleException)
+				{
+					Console.WriteLine("SceKernelSelfStopUnloadModuleException");
+
+					Main_Ended();
 				}
 				catch (Exception Exception)
 				{
@@ -248,16 +267,7 @@ namespace CSPspEmu.Runner
 						}
 					});
 
-					// Inconsistent state. Wait for stopping.
-					while (true)
-					{
-						ThreadTaskQueue.HandleEnqueued();
-						if (!Running) return;
-						Thread.Sleep(1);
-					}
-
-					//throw (new Exception("Unhandled Exception " + Exception.ToString(), Exception));
-					//throw (new Exception(Exception.InnerException.ToString(), Exception.InnerException));
+					Main_Ended();
 				}
 			}
 		}

@@ -10,6 +10,13 @@ namespace CSPspEmu.Hle.Modules.threadman
 {
 	unsafe public partial class ThreadManForUser
 	{
+		private HleThread GetThreadById(int ThreadId)
+		{
+			HleThread HleThread = HleState.ThreadManager.GetThreadById(ThreadId);
+			if (HleThread == null) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_NOT_FOUND_THREAD));
+			return HleThread;
+		}
+
 		/// <summary>
 		/// Create a thread
 		/// </summary>
@@ -38,8 +45,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 			if (!Thread.Attribute.HasFlag(PspThreadAttributes.NoFillStack))
 			{
 				HleState.MemoryManager.Memory.WriteRepeated1(0xFF, Thread.Stack.Low, Thread.Stack.Size);
+				Console.WriteLine("-------------------------------------------------");
+				Console.WriteLine("'{0}', '{1}'", StackSize, Thread.Stack.Size);
+				Console.WriteLine("-------------------------------------------------");
 			}
-			Thread.Info.StackPointer = Thread.Stack.Low;
+			Thread.Info.StackPointer = Thread.Stack.High;
 			Thread.Info.StackSize = Thread.Stack.Size;
 			Thread.CpuThreadState.PC = (uint)EntryPoint;
 			Thread.CpuThreadState.GP = (uint)CpuThreadState.GP;
@@ -61,9 +71,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="ArgumentsPointer">Pointer to the arguments.</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xF475845D, FirmwareVersion = 150)]
-		public int sceKernelStartThread(CpuThreadState CpuThreadState, uint ThreadId, uint ArgumentsLength, uint ArgumentsPointer)
+		public int sceKernelStartThread(CpuThreadState CpuThreadState, int ThreadId, uint ArgumentsLength, uint ArgumentsPointer)
 		{
-			var ThreadToStart = HleState.ThreadManager.GetThreadById((int)ThreadId);
+			var ThreadToStart = GetThreadById((int)ThreadId);
 			//Console.WriteLine("LEN: {0:X}", ArgumentsLength);
 			//Console.WriteLine("PTR: {0:X}", ArgumentsPointer);
 			ThreadToStart.CpuThreadState.GPR[4] = (int)ArgumentsLength;
@@ -153,7 +163,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x17C1684E, FirmwareVersion = 150)]
 		public int sceKernelReferThreadStatus(int ThreadId, SceKernelThreadInfo* SceKernelThreadInfo)
 		{
-			*SceKernelThreadInfo = HleState.ThreadManager.GetThreadById(ThreadId).Info;
+			*SceKernelThreadInfo = GetThreadById(ThreadId).Info;
 			return 0;
 		}
 
@@ -181,10 +191,21 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x278C0DF5, FirmwareVersion = 150)]
 		public int sceKernelWaitThreadEnd(int ThreadId, uint* Timeout)
 		{
+			var ThreadToWaitEnd = GetThreadById(ThreadId);
+
+			if (ThreadToWaitEnd.CurrentStatus == HleThread.Status.Stopped)
+			{
+				return 0;
+			}
+
+			if (ThreadToWaitEnd.CurrentStatus == HleThread.Status.Killed)
+			{
+				return 0;
+			}
+
 			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelWaitThreadEnd", WakeUpCallback =>
 			{
-				if (Timeout != null) throw(new NotImplementedException());
-				var ThreadToWaitEnd = HleState.ThreadManager.GetThreadById(ThreadId);
+				if (Timeout != null) throw (new NotImplementedException());
 				Console.WriteLine("Wait End!");
 				ThreadToWaitEnd.End += () =>
 				{
@@ -246,7 +267,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x9FA03CD3, FirmwareVersion = 150)]
 		public int sceKernelDeleteThread(int ThreadId)
 		{
-			return _sceKernelExitDeleteThread(-1, HleState.ThreadManager.GetThreadById(ThreadId));
+			return _sceKernelExitDeleteThread(-1, GetThreadById(ThreadId));
 		}
 
 		/// <summary>
@@ -288,7 +309,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspNotImplemented]
 		public int sceKernelChangeThreadPriority(int ThreadId, int Priority)
 		{
-			HleState.ThreadManager.GetThreadById(ThreadId).PriorityValue = Priority;
+			GetThreadById(ThreadId).PriorityValue = Priority;
 			//throw(new NotImplementedException());
 			return 0;
 		}

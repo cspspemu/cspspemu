@@ -79,6 +79,11 @@ namespace CSPspEmu.Hle.Managers
 			}
 		}
 
+		public void ScheduleNext(HleThread ThreadToSchedule)
+		{
+			ThreadToSchedule.PriorityValue = Threads.Min(Thread => Thread.PriorityValue) - 1;
+		}
+
 		public void StepNext()
 		{
 			// Select the thread with the lowest PriorityValue
@@ -130,7 +135,7 @@ namespace CSPspEmu.Hle.Managers
 			}
 
 			// Increment.
-			NextThread.PriorityValue += DecrementValue + NextThread.Info.PriorityCurrent + 1;
+			NextThread.PriorityValue += NextThread.Info.PriorityCurrent + 1;
 
 			// Invalidate next.
 			_Next = null;

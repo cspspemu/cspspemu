@@ -282,19 +282,21 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 						//glLoadMatrixf(state.texture.matrix.pointer);
 						throw(new NotImplementedException());
 					case TextureMapMode.GU_ENVIRONMENT_MAP:
-						throw(new NotImplementedException());
-						/*
-						Matrix envmapMatrix;
-						envmapMatrix.setIdentity();
+						//throw(new NotImplementedException());
+						GpuMatrix4x4Struct EnviromentMapMatrix;
+						//EnviromentMapMatrix.SetIdentity();
 						
+						/*
 						for (int i = 0; i < 3; i++) {
-							envmapMatrix.rows[0][i] = state.lighting.lights[state.texture.texShade[0]].position[i];
-							envmapMatrix.rows[1][i] = state.lighting.lights[state.texture.texShade[1]].position[i];
+							EnviromentMapMatrix.Set(0, i);
+							EnviromentMapMatrix.rows[0][i] = state.lighting.lights[state.texture.texShade[0]].position[i];
+							EnviromentMapMatrix.rows[1][i] = state.lighting.lights[state.texture.texShade[1]].position[i];
 						}
 						
-						glLoadMatrixf(envmapMatrix.pointer);
+						glLoadMatrixf(EnviromentMapMatrix.pointer);
 						Logger.log(Logger.Level.WARNING, "GPU", "Not implemented! texture for transform3D!");
 						*/
+						break;
 				}
 			}
 

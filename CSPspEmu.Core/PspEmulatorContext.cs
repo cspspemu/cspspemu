@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using CSharpUtils;
 
@@ -24,24 +26,49 @@ namespace CSPspEmu.Core
 		{
 			lock (this)
 			{
-				if (!ObjectsByType.ContainsKey(typeof(TType)))
+				try
 				{
-					Console.WriteLine("GetInstance<{0}>: Miss!", typeof(TType));
-					PspEmulatorComponent Instance;
-					if (TypesByType.ContainsKey(typeof(TType)))
+					if (!ObjectsByType.ContainsKey(typeof(TType)))
 					{
-						Instance = _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(TypesByType[typeof(TType)], this));
+						Console.WriteLine("GetInstance<{0}>: Miss!", typeof(TType));
+						var Start = DateTime.Now;
+						PspEmulatorComponent Instance;
+						if (TypesByType.ContainsKey(typeof(TType)))
+						{
+							Instance = _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(TypesByType[typeof(TType)], this));
+						}
+						else
+						{
+							Instance = _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(typeof(TType), this));
+						}
+						Instance.InitializeComponent();
+						var End = DateTime.Now;
+						Console.WriteLine("GetInstance<{0}>: Miss! : LoadTime({1})", typeof(TType), End - Start);
+						return (TType)Instance;
 					}
-					else
-					{
-						Instance = _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(typeof(TType), this));
-					}
-					Instance.InitializeComponent();
-					return (TType)Instance;
-				}
 
-				return (TType)ObjectsByType[typeof(TType)];
+					return (TType)ObjectsByType[typeof(TType)];
+				}
+				catch (TargetInvocationException TargetInvocationException)
+				{
+					Console.Error.WriteLine("Error obtaining instance '{0}'", typeof(TType));
+					PreserveStackTrace(TargetInvocationException.InnerException);
+					throw (TargetInvocationException.InnerException);
+				}
 			}
+		}
+
+		static void PreserveStackTrace(Exception e)
+		{
+			var ctx = new StreamingContext(StreamingContextStates.CrossAppDomain);
+			var mgr = new ObjectManager(null, ctx);
+			var si = new SerializationInfo(e.GetType(), new FormatterConverter());
+
+			e.GetObjectData(si, ctx);
+			mgr.RegisterObject(e, 1, si); // prepare for SetObjectData
+			mgr.DoFixups(); // ObjectManager calls SetObjectData
+
+			// voila, e is unmodified save for _remoteStackTraceString
 		}
 
 		public TType SetInstance<TType>(PspEmulatorComponent Instance) where TType : PspEmulatorComponent

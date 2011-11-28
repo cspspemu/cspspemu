@@ -135,7 +135,7 @@ namespace CSPspEmu.Hle.Vfs.Emulator
 					*((int*)OutputPointer) = HleState.CpuProcessor.PspConfig.HasDisplay ? 1 : 0;
 					break;
 				case EmulatorDevclEnum.SendOutput:
-					Console.WriteLine("   OUTPUT:  {0}", new String((sbyte*)InputPointer, 0, InputLength, Encoding.ASCII));
+					HleState.HleOutputHandler.Output(new String((sbyte*)InputPointer, 0, InputLength, Encoding.ASCII));
 					break;
 				case EmulatorDevclEnum.IsEmulator:
 					return 0;

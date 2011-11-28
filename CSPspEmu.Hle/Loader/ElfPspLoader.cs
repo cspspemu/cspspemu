@@ -90,7 +90,9 @@ namespace CSPspEmu.Hle.Loader
 				switch (SectionHeader.Type)
 				{
 					case Elf.SectionHeader.TypeEnum.Relocation:
-						throw(new NotImplementedException());
+						Console.Error.WriteLine("Not implemented Elf.SectionHeader.TypeEnum.Relocation");
+						//throw (new NotImplementedException("Not implemented Elf.SectionHeader.TypeEnum.Relocation"));
+						break;
 					case Elf.SectionHeader.TypeEnum.PrxRelocation:
 						RelocateRelocs(
 							ElfLoader.SectionHeaderFileStream(SectionHeader).ReadStructVectorUntilTheEndOfStream<Elf.Reloc>()
@@ -144,8 +146,8 @@ namespace CSPspEmu.Hle.Loader
 				var Instruction = InstructionReader[RelocatedPointerAddress];
 
 				var S = (uint)BaseAddress + PointeeBaseOffset;
-				var GP_ADDR = (uint)BaseAddress + (uint)Reloc.PointerAddress;
-				var GP_OFFSET = (uint)GP_ADDR - ((uint)BaseAddress & 0xFFFF0000);
+				var GP_ADDR = (int)(BaseAddress + Reloc.PointerAddress);
+				var GP_OFFSET = (int)GP_ADDR - ((int)BaseAddress & 0xFFFF0000);
 
 				//Console.WriteLine(Reloc.Type);
 
@@ -225,7 +227,7 @@ namespace CSPspEmu.Hle.Loader
 							{
 								result = (int)S + (int)GP_OFFSET + (int)(((A & 0x00008000) != 0) ? (((A & 0x00003FFF) + 0x4000) | 0xFFFF0000) : A) - (int)GP_ADDR;
 							}
-							if ((result > 32768) || (result < -32768))
+							if ((result < -32768) || (result > 32768))
 							{
 								Console.Error.WriteLine("Relocation overflow (R_MIPS_GPREL16) : '" + result + "'");
 							}

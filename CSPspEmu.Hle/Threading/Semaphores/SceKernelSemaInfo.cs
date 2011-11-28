@@ -10,7 +10,7 @@ namespace CSPspEmu.Hle.Threading.Semaphores
 		/// <summary>
 		/// Size of the ::SceKernelSemaInfo structure.
 		/// </summary>
-		public uint Size;
+		public int Size;
 
 		/// <summary>
 		/// NUL-terminated name of the semaphore.

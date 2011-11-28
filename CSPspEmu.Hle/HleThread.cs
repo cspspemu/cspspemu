@@ -114,12 +114,36 @@ namespace CSPspEmu.Hle
 			Semaphore,
 		}
 
-		public enum Status {
+		public enum Status
+		{
+			/// <summary>
+			/// This is the current thread and is running right now.
+			/// </summary>
 			Running = 1,
+
+			/// <summary>
+			/// The thread is not running right now, but it will be scheduled.
+			/// </summary>
 			Ready = 2,
+
+			/// <summary>
+			/// The thread is waiting for a event.
+			/// </summary>
 			Waiting = 4,
+
+			/// <summary>
+			/// ?
+			/// </summary>
 			Suspend = 8,
+
+			/// <summary>
+			/// ?
+			/// </summary>
 			Stopped = 16,
+
+			/// <summary>
+			/// ?
+			/// </summary>
 			Killed = 32,
 		}
 
@@ -195,7 +219,17 @@ namespace CSPspEmu.Hle
 					}
 				}
 			}
+
+			//Console.WriteLine("Thread:{0}:{1}", this, Thread.CurrentThread.Name);
+
 			this.CurrentStatus = Status.Ready;
+
+			//this.CurrentStatus.pree
+			//if (CurrentWaitType != WaitType.Timer && CurrentWaitType != WaitType.Display)
+			{
+				//this.GreenThread.SwitchTo();
+				//CpuThreadState.Yield();
+			}
 		}
 
 		public void SetWaitAndPrepareWakeUp(WaitType WaitType, String WaitDescription, Action<WakeUpCallbackDelegate> PrepareCallback, bool HandleCallbacks = false)

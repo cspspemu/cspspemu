@@ -36,6 +36,7 @@ namespace CSPspEmu.Hle
 		public HleCallbackManager CallbackManager;
 		public HleIoManager HleIoManager;
 		public HleRegistryManager HleRegistryManager;
+		public HleOutputHandler HleOutputHandler;
 
 		public HleState(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
 		{
@@ -49,6 +50,8 @@ namespace CSPspEmu.Hle
 			this.PspController = PspEmulatorContext.GetInstance<PspController>();
 
 			this.MipsEmiter = new MipsEmiter();
+
+			this.HleOutputHandler = PspEmulatorContext.GetInstance<HleOutputHandler>();
 
 			// @TODO FIX! New Instances!?
 			this.ThreadManager = PspEmulatorContext.GetInstance<HleThreadManager>();

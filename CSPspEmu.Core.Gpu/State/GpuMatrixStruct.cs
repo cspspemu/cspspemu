@@ -63,6 +63,20 @@ namespace CSPspEmu.Core.Gpu.State
 				}
 			}
 		}
+
+		public void SetIdentity()
+		{
+			fixed (float* ValuesPtr = Values)
+			{
+				for (int y = 0; y < 4; y++)
+				{
+					for (int x = 0; x < 4; x++)
+					{
+						ValuesPtr[x + y * 4] = (x == y) ? 1 : 0;
+					}
+				}
+			}
+		}
 	}
 
 	unsafe public struct GpuMatrix4x3Struct

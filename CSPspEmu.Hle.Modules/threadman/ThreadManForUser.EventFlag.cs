@@ -67,6 +67,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// </returns>
 		public int _sceKernelWaitEventFlagCB(int EventId, uint Bits, EventFlagWaitTypeSet Wait, uint* OutBits, uint* Timeout, bool Callback)
 		{
+			throw(new NotImplementedException());
 			return 0;
 		}
 
