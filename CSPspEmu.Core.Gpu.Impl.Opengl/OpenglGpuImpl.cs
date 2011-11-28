@@ -61,6 +61,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		private void PutVertex(ref VertexInfo VertexInfo, ref VertexTypeStruct VertexType)
 		{
 			//Console.WriteLine(VertexInfo);
+			//Console.WriteLine(VertexInfo);
 			if (VertexType.Color != VertexTypeStruct.ColorEnum.Void)
 			{
 				GL.Color4((float)VertexInfo.R, (float)VertexInfo.G, (float)VertexInfo.B, (float)VertexInfo.A);
@@ -86,8 +87,14 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		void ReadVertex(int Index, VertexInfo* VertexInfo)
 		{
-			if (IndexListByte != null) *VertexInfo = Vertices[IndexListByte[Index]];
-			else if (IndexListShort != null) *VertexInfo = Vertices[IndexListShort[Index]];
+			if (VertexType.Index == VertexTypeStruct.IndexEnum.Byte)
+			{
+				*VertexInfo = Vertices[IndexListByte[Index]];
+			}
+			else if (VertexType.Index == VertexTypeStruct.IndexEnum.Short)
+			{
+				*VertexInfo = Vertices[IndexListShort[Index]];
+			}
 			else *VertexInfo = Vertices[Index];
 		}
 
@@ -103,8 +110,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			VertexReader.SetVertexTypeStruct(VertexType, (byte*)Memory.PspAddressToPointerSafe(GpuState[0].VertexAddress));
 			//IndexReader.SetVertexTypeStruct(VertexType, VertexCount, (byte*)Memory.PspAddressToPointerSafe(GpuState[0].IndexAddress));
 
-			IndexListByte = null;
-			IndexListShort = null;
 			int TotalVerticesWithoutMorphing = VertexCount;
 
 			void* IndexAddress = Memory.PspAddressToPointerSafe(GpuState[0].IndexAddress);
@@ -125,6 +130,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					throw(new NotImplementedException());
 			}
 
+			//Console.WriteLine(TotalVerticesWithoutMorphing);
+
 			int MorpingVertexCount = (int)VertexType.MorphingVertexCount + 1;
 			int z = 0;
 			VertexInfo TempVertexInfo;
@@ -141,6 +148,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					if (MorpingVertexCount == 1)
 					{
 						VertexReader.ReadVertex(z++, &TempVertexInfo);
+						//Console.WriteLine(TempVertexInfo);
 						VerticesPtr[n] = TempVertexInfo;
 					}
 					else
@@ -168,7 +176,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 				// @TODO: Fake
 				GL.ClearColor(0, 0, 0, 0);
-				GL.Clear(ClearBufferMask.ColorBufferBit);
+				GL.ClearDepth(0);
+				GL.ClearStencil(0);
+				GL.ClearAccum(0, 0, 0, 0);
+				GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit | ClearBufferMask.AccumBufferBit);
 			}
 			else
 			{
@@ -273,7 +284,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 							PutVertex(ref VertexInfoTopRight, ref VertexType);
 							PutVertex(ref VertexInfoBottomRight, ref VertexType);
 							PutVertex(ref VertexInfoBottomLeft, ref VertexType);
-
 						}
 					}
 					else
@@ -476,6 +486,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			//Console.WriteLine("TextureSync!");
 			//base.TextureSync(GpuState);
+		}
+
+		public override void AddedDisplayList()
+		{
+			//TextureCache.RecheckAll();
+			//throw new NotImplementedException();
 		}
 	}
 }

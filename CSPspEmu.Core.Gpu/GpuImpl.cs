@@ -25,5 +25,7 @@ namespace CSPspEmu.Core.Gpu
 		virtual public void TextureSync(GpuStateStruct* GpuState)
 		{
 		}
+
+		abstract public void AddedDisplayList();
 	}
 }

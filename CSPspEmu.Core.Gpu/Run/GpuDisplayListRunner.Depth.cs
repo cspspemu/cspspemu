@@ -18,22 +18,17 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuDepthBuffer(void* zbp, int zbw);
 
 		// Depth Buffer Pointer
-
-		[GpuOpCodesNotImplemented]
 		public void OP_ZBP()
 		{
-			//gpu.state.depthBuffer.lowAddress = command.param24;
+			GpuState[0].DepthBufferState.LowAddress = Params24;
 		}
 
 		// Depth Buffer Width
-		[GpuOpCodesNotImplemented]
 		public void OP_ZBW()
 		{
-			/*
-			gpu.state.depthBuffer.highAddress = command.extract!(ubyte, 16);
-			gpu.state.depthBuffer.width       = command.extract!(ushort, 0);
-			gpu.markBufferOp(BufferOperation.LOAD, BufferType.DEPTH);
-			*/
+			GpuState[0].DepthBufferState.HighAddress = Param8(16);
+			GpuState[0].DepthBufferState.Width = Param16(0);
+			GpuDisplayList.GpuProcessor.MarkDepthBufferLoad();
 		}
 
 		// depth (Z) Test Enable (GU_DEPTH_TEST)
@@ -64,10 +59,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		}
 
 		// Alpha Test Enable (GU_ALPHA_TEST) glAlphaFunc(GL_GREATER, 0.03f);
-		[GpuOpCodesNotImplemented]
 		public void OP_ATE()
 		{
-			//gpu.state.alphaTest.enabled = command.bool1; /*gpu.state.alphaFunc = 0; gpu.state.alphaFuncValue = 0.03f;*/
+			GpuState[0].AlphaTestState.Enabled = Bool1;
 		}
 
 		/**
@@ -88,23 +82,17 @@ namespace CSPspEmu.Core.Gpu.Run
 		 * @param mask - Specifies the mask that both values are ANDed with before comparison.
 		 **/
 		// void sceGuAlphaFunc(int func, int value, int mask); // OP_ATST
-		[GpuOpCodesNotImplemented]
 		public void OP_ATST()
 		{
-			/*
-			with (gpu.state) {
-				alphaTest.func  = command.extractEnum!(TestFunction, 0);
-				alphaTest.value = command.extractFixedFloat!(8, 8);
-				alphaTest.mask  = command.extract!(ubyte, 16);
-			}
-			*/
+			GpuState[0].AlphaTestState.Function = (TestFunctionEnum)Param8(0);
+			GpuState[0].AlphaTestState.Value = (float)Param8(8) / 255.0f;
+			GpuState[0].AlphaTestState.Mask = Param8(16);
 		}
 
 		// Stencil Test Enable (GL_STENCIL_TEST)
-		[GpuOpCodesNotImplemented]
 		public void OP_STE()
 		{
-			//gpu.state.stencil.testEnabled = command.bool1;
+			GpuState[0].StencilState.Enabled = Bool1;
 		}
 
 		/**
@@ -127,16 +115,11 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuStencilFunc(int func, int ref, int mask); // OP_STST
 		// sendCommandi(220,func | ((ref & 0xff) << 8) | ((mask & 0xff) << 16));
 		// Stencil Test
-		[GpuOpCodesNotImplemented]
 		public void OP_STST()
 		{
-			/*
-			with (gpu.state) {
-				stencil.funcFunc = command.extractEnum!(TestFunction, 0);
-				stencil.funcRef  = command.extract!(ubyte,  8);
-				stencil.funcMask = command.extract!(ubyte, 16);
-			}
-			*/
+			GpuState[0].StencilState.Function = (TestFunctionEnum)Param8(0);
+			GpuState[0].StencilState.FunctionRef = Param8(8);
+			GpuState[0].StencilState.FunctionMask = Param8(16);
 		}
 
 		/**
@@ -160,16 +143,11 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuStencilOp(int fail, int zfail, int zpass); // OP_SOP
 
 		// Stencil OPeration
-		[GpuOpCodesNotImplemented]
 		public void OP_SOP()
 		{
-			/*
-			with (gpu.state) {
-				stencil.operationSfail  = command.extractEnum!(StencilOperations,  0);
-				stencil.operationDpfail = command.extractEnum!(StencilOperations,  8);
-				stencil.operationDppass = command.extractEnum!(StencilOperations, 16);
-			}
-			*/
+			GpuState[0].StencilState.OperationSFail = (StencilOperationEnum)Param8(0);
+			GpuState[0].StencilState.OperationDpFail = (StencilOperationEnum)Param8(8);
+			GpuState[0].StencilState.OperationDpPass = (StencilOperationEnum)Param8(16);
 		}
 
 		/**
@@ -180,10 +158,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuDepthMask(int mask);
 
 		// glDepthMask
-		[GpuOpCodesNotImplemented]
 		public void OP_ZMSK()
 		{
-			//gpu.state.depth.mask = command.extract!(ushort);
+			GpuState[0].DepthTestState.Mask = Param16(0);
 		}
 
 		/**
@@ -201,15 +178,13 @@ namespace CSPspEmu.Core.Gpu.Run
 		 **/
 		// void sceGuDepthRange(int near, int far); // OP_NEARZ + OP_FARZ
 		// void sceGuDepthOffset(unsigned int offset);
-		[GpuOpCodesNotImplemented]
 		public void OP_NEARZ()
 		{
-			//gpu.state.depth.rangeNear = command.extractFixedFloat!(0, 16);
+			GpuState[0].DepthTestState.RangeNear = ((float)(short)Param16(0)) / 65535.0f;
 		}
-		[GpuOpCodesNotImplemented]
 		public void OP_FARZ()
 		{
-			//gpu.state.depth.rangeFar  = command.extractFixedFloat!(0, 16);
+			GpuState[0].DepthTestState.RangeFar = ((float)(short)Param16(0)) / 65535.0f;
 		}
 	}
 }

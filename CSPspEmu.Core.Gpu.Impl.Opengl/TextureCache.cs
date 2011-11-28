@@ -67,9 +67,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		public uint ClutAddress;
 		public uint ClutHash;
 		public PixelFormats ClutFormat;
-		public int Start;
-		public int Shift;
-		public int Mask;
+		public int ClutStart;
+		public int ClutShift;
+		public int ClutMask;
 	}
 
 	sealed unsafe public class TextureCache : PspEmulatorComponent
@@ -111,35 +111,37 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			if (Recheck)
 			{
+				//Console.Write(".");
+
 				//Console.WriteLine("{0:X}", ClutAddress);
 				var TexturePointer = (byte*)PspMemory.PspAddressToPointerSafe(TextureAddress);
-				var ClutPointer = PspMemory.PspAddressToPointerSafe(ClutAddress);
+				var ClutPointer = (byte *)PspMemory.PspAddressToPointerSafe(ClutAddress);
 				var TextureFormat = TextureState[0].PixelFormat;
 				var Width = TextureState[0].Mipmap0.Width;
 				var Height = TextureState[0].Mipmap0.Height;
 				var TextureDataSize = PixelFormatDecoder.GetPixelsSize(TextureFormat, Width * Height);
 				var ClutDataSize = PixelFormatDecoder.GetPixelsSize(ClutFormat, ClutState[0].NumberOfColors);
-				var PaletteCount = ClutState[0].NumberOfColors;
-				var PaletteShift = ClutState[0].Shift;
-				var PaletteMask = ClutState[0].Mask;
+				var ClutCount = ClutState[0].NumberOfColors;
+				var ClutShift = ClutState[0].Shift;
+				var ClutMask = ClutState[0].Mask;
 
 				TextureCacheKey TextureCacheKey = new TextureCacheKey()
 				{
 					TextureAddress = TextureAddress,
 					TextureFormat = TextureFormat,
-					TextureHash = FastHash((uint*)(&(TexturePointer[ClutDataStart])), TextureDataSize),
+					TextureHash = FastHash((uint*)TexturePointer, TextureDataSize),
 
-					ClutHash = FastHash((uint*)ClutPointer, ClutDataSize),
+					ClutHash = FastHash((uint*)&(ClutPointer[ClutDataStart]), ClutDataSize),
 					ClutAddress = ClutAddress,
 					ClutFormat = ClutFormat,
-					Start = PaletteStart,
-					Shift = PaletteShift,
-					Mask = PaletteMask,
+					ClutStart = PaletteStart,
+					ClutShift = ClutShift,
+					ClutMask = ClutMask,
 				};
 
 				if (Texture == null || (!Texture.TextureCacheKey.Equals(TextureCacheKey)))
 				{
-					Console.Write("{0},", ClutFormat);
+					//Console.Write("{0},", ClutFormat);
 					Texture = new Texture();
 					Texture.TextureCacheKey = TextureCacheKey;
 					{
@@ -147,7 +149,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 						{
 							PixelFormatDecoder.Decode(
 								TextureFormat, (void*)TexturePointer, TexturePixelsPointer, Width * Height, Width,
-								ClutPointer, ClutFormat, PaletteCount, PaletteStart, PaletteShift, PaletteMask
+								ClutPointer, ClutFormat, ClutCount, PaletteStart, ClutShift, ClutMask
 							);
 							Texture.SetData(TexturePixelsPointer, Width, Height);
 						}
@@ -175,7 +177,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			uint Hash = StartHash;
 			for (int n = 0; n < Count; n++)
 			{
-				Hash ^= Pointer[n];
+				Hash ^= (uint)(Pointer[n] + (n << 16));
 			}
 			return Hash;
 		}

@@ -114,6 +114,11 @@ namespace CSPspEmu.Core.Gpu
 			}
 		}
 
+		protected void AddedDisplayList()
+		{
+			GpuImpl.AddedDisplayList();
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -130,6 +135,7 @@ namespace CSPspEmu.Core.Gpu
 		/// <param name="GpuDisplayList"></param>
 		public void EnqueueFreeDisplayList(GpuDisplayList GpuDisplayList)
 		{
+			AddedDisplayList();
 			this.DisplayListFreeQueue.Enqueue(GpuDisplayList);
 		}
 
@@ -139,6 +145,7 @@ namespace CSPspEmu.Core.Gpu
 		/// <param name="DisplayList"></param>
 		public void EnqueueDisplayListFirst(GpuDisplayList DisplayList)
 		{
+			AddedDisplayList();
 			lock (DisplayListQueue)
 			{
 				DisplayListQueue.AddFirst(DisplayList);
@@ -152,6 +159,7 @@ namespace CSPspEmu.Core.Gpu
 		/// <param name="DisplayList"></param>
 		public void EnqueueDisplayListLast(GpuDisplayList DisplayList)
 		{
+			AddedDisplayList();
 			lock (DisplayListQueue)
 			{
 				DisplayListQueue.AddLast(DisplayList);
@@ -208,6 +216,11 @@ namespace CSPspEmu.Core.Gpu
 				//Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 				SyncCallback();
 			});
+		}
+
+		internal void MarkDepthBufferLoad()
+		{
+			//throw new NotImplementedException();
 		}
 	}
 }

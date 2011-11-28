@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Gpu.State.SubStates;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -12,8 +13,9 @@ namespace CSPspEmu.Core.Gpu.Run
 	
 		// Lighting Test Enable GL_LIGHTING.
 		// gpu.state.lighting.enabled = command.bool1;
-		[GpuOpCodesNotImplemented]
-		public void OP_LTE() { }
+		public void OP_LTE() {
+			GpuState[0].LightingState.Enabled = Bool1;
+		}
 	
 		// Ambient Light Color/Alpha
 		// gpu.state.lighting.ambientLightColor.rgb[] = command.float3[];
@@ -26,15 +28,41 @@ namespace CSPspEmu.Core.Gpu.Run
 			GpuState[0].LightingState.AmbientLightColor.SetA(Params24);
 		}
 
+		/**
+		 * Set light mode
+		 *
+		 * Available light modes are:
+		 *   - GU_SINGLE_COLOR
+		 *   - GU_SEPARATE_SPECULAR_COLOR
+		 *
+		 * Separate specular colors are used to interpolate the specular component
+		 * independently, so that it can be added to the fragment after the texture color.
+		 *
+		 * @param mode - Light mode to use
+		 **/
+		// void sceGuLightMode(int mode);
+		// Light MODE (global)
+		public void OP_LMODE()
+		{
+			GpuState[0].LightingState.LightModel = (LightModelEnum)Param8(0);
+		}
+
+		LightStateStruct *GetLigth(int Index)
+		{
+			var Lights = &GpuState[0].LightingState.Light0;
+			return &Lights[Index];
+		}
+
+		private void _OP_LTE(int Index)
+		{
+			GetLigth(Index)[0].Enabled = Bool1;
+		}
+
 		//mixin(LightArrayOperation("OP_LTE_n", q{ gpu.state.lighting.lights[Index].enabled = command.bool1; }));
-		[GpuOpCodesNotImplemented]
-		public void OP_LTE0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LTE1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LTE2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LTE3() { }
+		public void OP_LTE0() { _OP_LTE(0); }
+		public void OP_LTE1() { _OP_LTE(1); }
+		public void OP_LTE2() { _OP_LTE(2); }
+		public void OP_LTE3() { _OP_LTE(3); }
 
 		// LighT Enable (per light)
 
@@ -59,34 +87,27 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuLight(int light, int type, int components, const ScePspFVector3* position); // OP_LXP_n + OP_LYP_n + OP_LZP_n + OP_LT_n
 
 		// gpu.state.lighting.lights[Index].position.x = command.float1;
-		[GpuOpCodesNotImplemented]
-		public void OP_LXP0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LXP1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LXP2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LXP3() { }
+
+		private void _OP_LXP(int Index) { GetLigth(Index)[0].Position.X = Float1; }
+		private void _OP_LYP(int Index) { GetLigth(Index)[0].Position.Y = Float1; }
+		private void _OP_LZP(int Index) { GetLigth(Index)[0].Position.Z = Float1; }
+
+		public void OP_LXP0() { _OP_LXP(0); }
+		public void OP_LXP1() { _OP_LXP(1); }
+		public void OP_LXP2() { _OP_LXP(2); }
+		public void OP_LXP3() { _OP_LXP(3); }
 
 		// gpu.state.lighting.lights[Index].position.y = command.float1;
-		[GpuOpCodesNotImplemented]
-		public void OP_LYP0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LYP1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LYP2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LYP3() { }
+		public void OP_LYP0() { _OP_LYP(0); }
+		public void OP_LYP1() { _OP_LYP(1); }
+		public void OP_LYP2() { _OP_LYP(2); }
+		public void OP_LYP3() { _OP_LYP(3); }
 
 		// gpu.state.lighting.lights[Index].position.z = command.float1;
-		[GpuOpCodesNotImplemented]
-		public void OP_LZP0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LZP1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LZP2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LZP3() { }
+		public void OP_LZP0() { _OP_LZP(0); }
+		public void OP_LZP1() { _OP_LZP(1); }
+		public void OP_LZP2() { _OP_LZP(2); }
+		public void OP_LZP3() { _OP_LZP(3); }
 
 		// Light Type (per light)
 		/*
@@ -111,35 +132,33 @@ namespace CSPspEmu.Core.Gpu.Run
 			}
 		}));
 		*/
-		[GpuOpCodesNotImplemented]
-		public void OP_LT0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LT1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LT2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LT3() { }
 
-
-		/**
-		 * Set light mode
-		 *
-		 * Available light modes are:
-		 *   - GU_SINGLE_COLOR
-		 *   - GU_SEPARATE_SPECULAR_COLOR
-		 *
-		 * Separate specular colors are used to interpolate the specular component
-		 * independently, so that it can be added to the fragment after the texture color.
-		 *
-		 * @param mode - Light mode to use
-		 **/
-		// void sceGuLightMode(int mode);
-		// Light MODE (global)
-		[GpuOpCodesNotImplemented]
-		public void OP_LMODE()
+		private void _OP_LT(int Index)
 		{
-			//gpu.state.lighting.lightModel = command.extractEnum!(LightModel);
+			GetLigth(Index)[0].Kind = (LightModelEnum)Param8(0);
+			GetLigth(Index)[0].Type = (LightTypeEnum)Param8(8);
+			switch (GetLigth(Index)[0].Type)
+			{
+				case LightTypeEnum.Directional:
+					GetLigth(Index)[0].Position.W = 0;
+					break;
+				case LightTypeEnum.PointLight:
+					GetLigth(Index)[0].Position.W = 1;
+					GetLigth(Index)[0].SpotCutoff = 180;
+					break;
+				case LightTypeEnum.SpotLight:
+					GetLigth(Index)[0].Position.W = 1;
+					break;
+				default:
+					throw(new NotImplementedException());
+			}
 		}
+
+		public void OP_LT0() { _OP_LT(0); }
+		public void OP_LT1() { _OP_LT(1); }
+		public void OP_LT2() { _OP_LT(2); }
+		public void OP_LT3() { _OP_LT(3); }
+
 
 		/**
 		 * Set light attenuation
@@ -154,32 +173,25 @@ namespace CSPspEmu.Core.Gpu.Run
 		//mixin(LightArrayOperationStep3("OP_LCA_n", q{ gpu.state.lighting.lights[Index].attenuation.constant  = command.float1; }));
 		//mixin(LightArrayOperationStep3("OP_LLA_n", q{ gpu.state.lighting.lights[Index].attenuation.linear    = command.float1; }));
 		//mixin(LightArrayOperationStep3("OP_LQA_n", q{ gpu.state.lighting.lights[Index].attenuation.quadratic = command.float1; }));
-		[GpuOpCodesNotImplemented]
-		public void OP_LCA0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LCA1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LCA2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LCA3() { }
 
-		[GpuOpCodesNotImplemented]
-		public void OP_LLA0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LLA1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LLA2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LLA3() { }
+		private void _OP_LCA(int Index) { GetLigth(Index)[0].Attenuation.Constant = Float1; }
+		private void _OP_LLA(int Index) { GetLigth(Index)[0].Attenuation.Linear = Float1; }
+		private void _OP_LQA(int Index) { GetLigth(Index)[0].Attenuation.Quadratic = Float1; }
 
-		[GpuOpCodesNotImplemented]
-		public void OP_LQA0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LQA1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LQA2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LQA3() { }
+		public void OP_LCA0() { _OP_LCA(0); }
+		public void OP_LCA1() { _OP_LCA(1); }
+		public void OP_LCA2() { _OP_LCA(2); }
+		public void OP_LCA3() { _OP_LCA(3); }
+
+		public void OP_LLA0() { _OP_LLA(0); }
+		public void OP_LLA1() { _OP_LLA(1); }
+		public void OP_LLA2() { _OP_LLA(2); }
+		public void OP_LLA3() { _OP_LLA(3); }
+
+		public void OP_LQA0() { _OP_LQA(0); }
+		public void OP_LQA1() { _OP_LQA(1); }
+		public void OP_LQA2() { _OP_LQA(2); }
+		public void OP_LQA3() { _OP_LQA(3); }
 
 		/**
 		 * Set spotlight parameters
@@ -196,55 +208,42 @@ namespace CSPspEmu.Core.Gpu.Run
 		//mixin(LightArrayOperationStep3("OP_LYD_n", q{ gpu.state.lighting.lights[Index].spotDirection.y = command.float1; }));
 		//mixin(LightArrayOperationStep3("OP_LZD_n", q{ gpu.state.lighting.lights[Index].spotDirection.z = command.float1; }));
 
-		[GpuOpCodesNotImplemented]
-		public void OP_LXD0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LXD1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LXD2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LXD3() { }
+		private void _OP_LXD(int Index) { GetLigth(Index)[0].SpotDirection.X = Float1; }
+		private void _OP_LYD(int Index) { GetLigth(Index)[0].SpotDirection.Y = Float1; }
+		private void _OP_LZD(int Index) { GetLigth(Index)[0].SpotDirection.Z = Float1; }
 
-		[GpuOpCodesNotImplemented]
-		public void OP_LYD0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LYD1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LYD2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LYD3() { }
+		public void OP_LXD0() { _OP_LXD(0); }
+		public void OP_LXD1() { _OP_LXD(1); }
+		public void OP_LXD2() { _OP_LXD(2); }
+		public void OP_LXD3() { _OP_LXD(3); }
 
-		[GpuOpCodesNotImplemented]
-		public void OP_LZD0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LZD1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LZD2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_LZD3() { }
+		public void OP_LYD0() { _OP_LYD(0); }
+		public void OP_LYD1() { _OP_LYD(1); }
+		public void OP_LYD2() { _OP_LYD(2); }
+		public void OP_LYD3() { _OP_LYD(3); }
+
+		public void OP_LZD0() { _OP_LZD(0); }
+		public void OP_LZD1() { _OP_LZD(1); }
+		public void OP_LZD2() { _OP_LZD(2); }
+		public void OP_LZD3() { _OP_LZD(3); }
 
 
 		// SPOT light EXPonent/CUToff (per light)
 		//mixin(LightArrayOperation("OP_SPOTEXP_n", q{ gpu.state.lighting.lights[Index].spotExponent = command.float1; }));
 		//mixin(LightArrayOperation("OP_SPOTCUT_n", q{ gpu.state.lighting.lights[Index].spotCutoff   = command.float1; }));
 
-		[GpuOpCodesNotImplemented]
-		public void OP_SPOTEXP0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_SPOTEXP1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_SPOTEXP2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_SPOTEXP3() { }
+		private void _OP_SPOTEXP(int Index) { GetLigth(Index)[0].SpotExponent = Float1; }
+		private void _OP_SPOTCUT(int Index) { GetLigth(Index)[0].SpotCutoff = Float1; }
 
-		[GpuOpCodesNotImplemented]
-		public void OP_SPOTCUT0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_SPOTCUT1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_SPOTCUT2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_SPOTCUT3() { }
+		public void OP_SPOTEXP0() { _OP_SPOTEXP(0); }
+		public void OP_SPOTEXP1() { _OP_SPOTEXP(1); }
+		public void OP_SPOTEXP2() { _OP_SPOTEXP(2); }
+		public void OP_SPOTEXP3() { _OP_SPOTEXP(3); }
+
+		public void OP_SPOTCUT0() { _OP_SPOTCUT(0); }
+		public void OP_SPOTCUT1() { _OP_SPOTCUT(1); }
+		public void OP_SPOTCUT2() { _OP_SPOTCUT(2); }
+		public void OP_SPOTCUT3() { _OP_SPOTCUT(3); }
 
 		/**
 		 * Set light color
@@ -267,32 +266,24 @@ namespace CSPspEmu.Core.Gpu.Run
 		//mixin(LightArrayOperationStep3("OP_DLC_n", q{ gpu.state.lighting.lights[Index].diffuseColor.rgba[]  = command.float4[]; }));
 		//mixin(LightArrayOperationStep3("OP_SLC_n", q{ gpu.state.lighting.lights[Index].specularColor.rgba[] = command.float4[]; }));
 
-		[GpuOpCodesNotImplemented]
-		public void OP_ALC0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_ALC1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_ALC2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_ALC3() { }
+		private void _OP_ALC(int Index) { GetLigth(Index)[0].AmbientColor.SetRGB_A1(Params24); }
+		private void _OP_DLC(int Index) { GetLigth(Index)[0].DiffuseColor.SetRGB_A1(Params24); }
+		private void _OP_SLC(int Index) { GetLigth(Index)[0].SpecularColor.SetRGB_A1(Params24); }
 
-		[GpuOpCodesNotImplemented]
-		public void OP_DLC0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_DLC1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_DLC2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_DLC3() { }
+		public void OP_ALC0() { _OP_ALC(0); }
+		public void OP_ALC1() { _OP_ALC(1); }
+		public void OP_ALC2() { _OP_ALC(2); }
+		public void OP_ALC3() { _OP_ALC(3); }
 
-		[GpuOpCodesNotImplemented]
-		public void OP_SLC0() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_SLC1() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_SLC2() { }
-		[GpuOpCodesNotImplemented]
-		public void OP_SLC3() { }
+		public void OP_DLC0() { _OP_DLC(0); }
+		public void OP_DLC1() { _OP_DLC(1); }
+		public void OP_DLC2() { _OP_DLC(2); }
+		public void OP_DLC3() { _OP_DLC(3); }
+
+		public void OP_SLC0() { _OP_SLC(0); }
+		public void OP_SLC1() { _OP_SLC(1); }
+		public void OP_SLC2() { _OP_SLC(2); }
+		public void OP_SLC3() { _OP_SLC(3); }
 
 		/**
 		 * Set the specular power for the material
@@ -302,7 +293,6 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuSpecular(float power); // OP_SPOW
 		// Specular POWer (global)
 		// gpu.state.lighting.specularPower = command.float1;
-		[GpuOpCodesNotImplemented]
-		public void OP_SPOW() { }
+		public void OP_SPOW() { GpuState[0].LightingState.SpecularPower = Float1; }
 	}
 }
