@@ -40,6 +40,8 @@ namespace CSPspEmu.Hle.Loader
 
 			this.ElfLoader.Load(FileStream);
 
+			PspEmulatorContext.PspConfig.InfoExeHasRelocation = this.ElfLoader.NeedsRelocation;
+
 			BaseAddress = (uint)(this.ElfLoader.NeedsRelocation ? 0x08900000 : 0);
 
 			this.ElfLoader.AllocateAndWrite(MemoryStream, MemoryPartition, BaseAddress);

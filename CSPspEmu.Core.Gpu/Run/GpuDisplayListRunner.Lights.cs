@@ -17,11 +17,14 @@ namespace CSPspEmu.Core.Gpu.Run
 	
 		// Ambient Light Color/Alpha
 		// gpu.state.lighting.ambientLightColor.rgb[] = command.float3[];
-		[GpuOpCodesNotImplemented]
-		public void OP_ALC() { }
-		// gpu.state.lighting.ambientLightColor.alpha = command.float4[0];
-		[GpuOpCodesNotImplemented]
-		public void OP_ALA() { }
+		public void OP_ALC()
+		{
+			GpuState[0].LightingState.AmbientLightColor.SetRGB(Params24);
+		}
+		public void OP_ALA()
+		{
+			GpuState[0].LightingState.AmbientLightColor.SetA(Params24);
+		}
 
 		//mixin(LightArrayOperation("OP_LTE_n", q{ gpu.state.lighting.lights[Index].enabled = command.bool1; }));
 		[GpuOpCodesNotImplemented]

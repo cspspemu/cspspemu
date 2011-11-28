@@ -158,7 +158,11 @@ namespace CSPspEmu.Hle.Vfs.Local
 
 		public unsafe int IoMkdir(HleIoDrvFileArg HleIoDrvFileArg, string Name, SceMode Mode)
 		{
-			throw new NotImplementedException();
+			var RealFileName = GetFullNormalizedAndSanitizedPath(Name);
+			Directory.CreateDirectory(RealFileName);
+			//HleIoDrvFileArg.
+			//throw new NotImplementedException();
+			return 0;
 		}
 
 		public unsafe int IoRmdir(HleIoDrvFileArg HleIoDrvFileArg, string Name)

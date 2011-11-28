@@ -284,9 +284,11 @@ namespace CSPspEmu.Hle.Modules.audio
 		/// <param name="Channel">The channel to release.</param>
 		/// <returns>0 on success, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0x6FC46853, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceAudioChRelease(int Channel)
 		{
-			throw (new NotImplementedException());
+			//throw (new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>

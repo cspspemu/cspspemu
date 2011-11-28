@@ -26,7 +26,9 @@ namespace CSPspEmu.Hle.Vfs
 
 		public override int IoMkdir(HleIoDrvFileArg HleIoDrvFileArg, string Name, SceMode Mode)
 		{
-			throw(new NotImplementedException());
+			Console.Error.WriteLine("Tried to create directory on a readonly filesystem '{0}'", Name);
+			//throw(new NotImplementedException());
+			return 0;
 		}
 
 		public override int IoRmdir(HleIoDrvFileArg HleIoDrvFileArg, string Name)

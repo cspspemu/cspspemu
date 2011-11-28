@@ -55,10 +55,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		}
 
 		// frame buffer Pixel Storage Mode
-		[GpuOpCodesNotImplemented]
 		public void OP_PSM()
 		{
-			//gpu.state.drawBuffer.format = command.extractEnum!(PixelFormats);
+			GpuState[0].DrawBufferState.Format = (PixelFormats)Param8(0);
 		}
 
 		// void drawRegion(int x, int y, int width, int height)

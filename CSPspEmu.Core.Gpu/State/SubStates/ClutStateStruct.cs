@@ -9,11 +9,12 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 	unsafe public struct ClutStateStruct
 	{
 		public uint Address;
-		public uint Shift;
-		public uint Mask;
-		public uint Start;
-		public PixelFormats Format;
+		public int Shift;
+		public int Mask;
+		public int Start;
+		public PixelFormats PixelFormat;
 		public byte* Data;
+		public int NumberOfColors;
 		/*
 		public PixelFormats format;
 		public ubyte[] data;

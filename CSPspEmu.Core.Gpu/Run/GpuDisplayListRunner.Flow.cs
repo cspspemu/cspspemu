@@ -98,7 +98,6 @@ namespace CSPspEmu.Core.Gpu.Run
 			GpuDisplayList.Done = true;
 		}
 
-		[GpuOpCodesNotImplemented]
 		public void OP_FINISH()
 		{
 			GpuDisplayList.GpuProcessor.GpuImpl.Finish(GpuDisplayList.GpuStateStructPointer);

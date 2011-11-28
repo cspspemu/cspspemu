@@ -1,5 +1,7 @@
-﻿using CSharpUtils;
+﻿using System;
+using CSharpUtils;
 using CSPspEmu.Core.Display;
+using CSPspEmu.Core.Gpu.State.SubStates;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -17,36 +19,35 @@ namespace CSPspEmu.Core.Gpu.Run
 		 * @param cbp        - Pointer to palette (16 byte aligned)
 		 **/
 		///void sceGuClutLoad(int num_blocks, const void* cbp); // OP_CBP + OP_CBPH + OP_CLOAD
+		///
+		ClutStateStruct* ClutState
+		{
+			get
+			{
+				return &GpuState[0].TextureMappingState.ClutState;
+			}
+		}
 
 		// Clut Buffer Pointer (High)
 		// Clut LOAD
 		public void OP_CBP()
 		{
-			GpuState[0].TextureMappingState.ClutState.Address
-				= (GpuState[0].TextureMappingState.ClutState.Address & 0xFF000000) | ((Params24 << 0) & 0x00FFFFFF);
+			ClutState[0].Address
+				= (ClutState[0].Address & 0xFF000000) | ((Params24 << 0) & 0x00FFFFFF);
 			;
+			//Console.WriteLine("OP_CBP:{0:X}", Params24);
 		}
 		public void OP_CBPH()
 		{
-			GpuState[0].TextureMappingState.ClutState.Address
-				= (GpuState[0].TextureMappingState.ClutState.Address & 0x00FFFFFF) | ((Params24 << 24) & 0xFF000000);
+			ClutState[0].Address
+				= (ClutState[0].Address & 0x00FFFFFF) | ((Params24 << 8) & 0xFF000000);
 			;
+			//Console.WriteLine("OP_CBPH:{0:X}", Params24);
 		}
-		[GpuOpCodesNotImplemented]
 		public void OP_CLOAD()
 		{
-			//ubyte num_entries = command.extract!(ubyte);
-		
-			/*
-			gpu.state.uploadedClut = gpu.state.clut;
-			int size = gpu.state.clut.blocksSize(num_entries);
-			gpu.state.uploadedClut.data = gpu.state.clut.address ? gpu.memory[gpu.state.clut.address..gpu.state.clut.address + size].dup : [];
-			*/
-			//int size = gpu.state.clut.blocksSize(num_entries);
-
-			//writefln("%d, %d", num_entries, size);
-		
-			//gpu.state.clut.data = gpu.state.clut.address ? cast(ubyte*)gpu.memory.getPointer(gpu.state.clut.address) : null;
+			ClutState[0].NumberOfColors = Param8(0) * 8;
+			//Console.WriteLine("{0:X}", GpuState[0].TextureMappingState.ClutState.Address);
 		}
 
 		/**
@@ -68,10 +69,10 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Clut MODE
 		public void OP_CMODE()
 		{
-			GpuState[0].TextureMappingState.ClutState.Format = (PixelFormats)BitUtils.Extract(Params24, 0, 2);
-			GpuState[0].TextureMappingState.ClutState.Shift = (uint)BitUtils.Extract(Params24, 2, 5);
-			GpuState[0].TextureMappingState.ClutState.Mask = (uint)BitUtils.Extract(Params24, 8, 8);
-			GpuState[0].TextureMappingState.ClutState.Start = (uint)BitUtils.Extract(Params24, 16, 5);
+			ClutState[0].PixelFormat = (PixelFormats)BitUtils.Extract(Params24, 0, 2);
+			ClutState[0].Shift = (int)BitUtils.Extract(Params24, 2, 5);
+			ClutState[0].Mask = (int)BitUtils.Extract(Params24, 8, 8);
+			ClutState[0].Start = (int)BitUtils.Extract(Params24, 16, 5);
 		}
 	}
 }

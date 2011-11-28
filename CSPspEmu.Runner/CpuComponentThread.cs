@@ -60,6 +60,7 @@ namespace CSPspEmu.Runner
 			var MemoryStick = new HleIoDriverMemoryStick(new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
 			HleState.HleIoManager.AddDriver("ms:", MemoryStick);
 			HleState.HleIoManager.AddDriver("fatms:", MemoryStick);
+			HleState.HleIoManager.AddDriver("disc:", MemoryStick);
 			HleState.HleIoManager.AddDriver("emulator:", new HleIoDriverEmulator(HleState));
 		}
 
@@ -100,7 +101,8 @@ namespace CSPspEmu.Runner
 			RegisterModuleSyscall<Emulator>(0x1015, "emitUInt");
 			RegisterModuleSyscall<Emulator>(0x1016, "emitLong");
 			RegisterModuleSyscall<Emulator>(0x1017, "testArguments");
-			RegisterModuleSyscall<Emulator>(0x7777, "waitThreadForever");
+			//RegisterModuleSyscall<Emulator>(0x7777, "waitThreadForever");
+			RegisterModuleSyscall<ThreadManForUser>(0x7777, "sceKernelExitDeleteThread");
 		}
 
 		void RegisterModuleSyscall<TType>(int SyscallCode, string FunctionName) where TType : HleModuleHost
@@ -114,62 +116,67 @@ namespace CSPspEmu.Runner
 
 		public void _LoadFile(String FileName)
 		{
+			//GC.Collect();
+
 			var MemoryStream = new PspMemoryStream(PspMemory);
 
 			var Loader = new ElfPspLoader(PspEmulatorContext);
 			Stream LoadStream = File.OpenRead(FileName);
-			Stream ElfLoadStream = null;
-
-			var Format = new FormatDetector().Detect(LoadStream);
-			switch (Format)
+			//using ()
 			{
-				case "Pbp":
-					ElfLoadStream = new Pbp().Load(LoadStream)["psp.data"];
-					break;
-				case "Elf":
-					ElfLoadStream = LoadStream;
-					break;
-				default:
-					throw (new NotImplementedException("Can't load format '" + Format + "'"));
+				Stream ElfLoadStream = null;
+
+				var Format = new FormatDetector().Detect(LoadStream);
+				switch (Format)
+				{
+					case "Pbp":
+						ElfLoadStream = new Pbp().Load(LoadStream)["psp.data"];
+						break;
+					case "Elf":
+						ElfLoadStream = LoadStream;
+						break;
+					default:
+						throw (new NotImplementedException("Can't load format '" + Format + "'"));
+				}
+
+				Loader.Load(
+					ElfLoadStream,
+					MemoryStream,
+					HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User),
+					HleState.ModuleManager
+				);
+
+				RegisterSyscalls();
+
+
+				uint CODE_PTR_ARGUMENTS = 0x08000100;
+
+				{
+					var BinaryWriter = new BinaryWriter(MemoryStream);
+					var StreamWriter = new StreamWriter(MemoryStream); StreamWriter.AutoFlush = true;
+					MemoryStream.Position = CODE_PTR_ARGUMENTS;
+
+					BinaryWriter.Write((uint)(CODE_PTR_ARGUMENTS + 4)); BinaryWriter.Flush();
+					StreamWriter.Write("ms0:/PSP/GAME/virtual/EBOOT.PBP\0"); StreamWriter.Flush();
+				}
+
+				uint argc = 1;
+				uint argv = CODE_PTR_ARGUMENTS + 4;
+				//uint argv = CODE_PTR_ARGUMENTS;
+
+				var MainThread = HleState.ThreadManager.Create();
+				var CpuThreadState = MainThread.CpuThreadState;
+				{
+					CpuThreadState.PC = Loader.InitInfo.PC;
+					CpuThreadState.GP = Loader.InitInfo.GP;
+					CpuThreadState.SP = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Allocate(0x1000, MemoryPartition.Anchor.High, Alignment: 0x100).High;
+					CpuThreadState.K0 = MainThread.CpuThreadState.SP;
+					CpuThreadState.RA = CODE_PTR_EXIT_THREAD;
+					CpuThreadState.GPR[4] = (int)argc; // A0
+					CpuThreadState.GPR[5] = (int)argv; // A1
+				}
+				MainThread.CurrentStatus = HleThread.Status.Ready;
 			}
-
-			Loader.Load(
-				ElfLoadStream,
-				MemoryStream,
-				HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User),
-				HleState.ModuleManager
-			);
-
-			RegisterSyscalls();
-
-
-			uint CODE_PTR_ARGUMENTS = 0x08000100;
-
-			{
-				var BinaryWriter = new BinaryWriter(MemoryStream);
-				var StreamWriter = new StreamWriter(MemoryStream); StreamWriter.AutoFlush = true;
-				MemoryStream.Position = CODE_PTR_ARGUMENTS;
-
-				BinaryWriter.Write((uint)(CODE_PTR_ARGUMENTS + 4)); BinaryWriter.Flush();
-				StreamWriter.Write("ms0:/PSP/GAME/virtual/EBOOT.PBP\0"); StreamWriter.Flush();
-			}
-
-			uint argc = 1;
-			uint argv = CODE_PTR_ARGUMENTS + 4;
-			//uint argv = CODE_PTR_ARGUMENTS;
-
-			var MainThread = HleState.ThreadManager.Create();
-			var CpuThreadState = MainThread.CpuThreadState;
-			{
-				CpuThreadState.PC = Loader.InitInfo.PC;
-				CpuThreadState.GP = Loader.InitInfo.GP;
-				CpuThreadState.SP = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Allocate(0x1000, MemoryPartition.Anchor.High, Alignment: 0x100).High;
-				CpuThreadState.K0 = MainThread.CpuThreadState.SP;
-				CpuThreadState.RA = CODE_PTR_EXIT_THREAD;
-				CpuThreadState.GPR[4] = (int)argc; // A0
-				CpuThreadState.GPR[5] = (int)argv; // A1
-			}
-			MainThread.CurrentStatus = HleThread.Status.Ready;
 		}
 
 		protected override void Main()
@@ -205,6 +212,8 @@ namespace CSPspEmu.Runner
 								ThreadManager.Current.CpuThreadState.PC,
 								ThreadManager.Current.CpuThreadState.RA
 							);
+
+							Console.WriteLine("Executable had relocation: {0}", PspEmulatorContext.PspConfig.InfoExeHasRelocation);
 						}
 						catch (Exception Exception2)
 						{

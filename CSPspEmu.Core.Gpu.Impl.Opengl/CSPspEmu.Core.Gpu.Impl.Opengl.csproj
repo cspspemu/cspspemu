@@ -46,7 +46,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OpenglGpuImpl.cs" />
+    <Compile Include="OpenglGpuImpl.State.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TextureCache.cs" />
     <Compile Include="VertexReader.cs" />
   </ItemGroup>
   <ItemGroup>

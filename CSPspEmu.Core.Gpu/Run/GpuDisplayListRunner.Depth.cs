@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Gpu.State;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -36,10 +37,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		}
 
 		// depth (Z) Test Enable (GU_DEPTH_TEST)
-		[GpuOpCodesNotImplemented]
 		public void OP_ZTE()
 		{
-			//gpu.state.depth.testEnabled = command.bool1;
+			GpuState[0].DepthTestState.Enabled = Bool1;
 		}
 
 		/**
@@ -58,10 +58,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		 * @param function - Depth test function to use
 		 **/
 		// void sceGuDepthFunc(int function); // OP_ZTST
-		[GpuOpCodesNotImplemented]
 		public void OP_ZTST()
 		{
-			//gpu.state.depth.testFunc = command.extractEnum!(TestFunction);
+			GpuState[0].DepthTestState.Function = (TestFunctionEnum)Param8(0);
 		}
 
 		// Alpha Test Enable (GU_ALPHA_TEST) glAlphaFunc(GL_GREATER, 0.03f);

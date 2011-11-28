@@ -235,6 +235,16 @@ namespace CSPspEmu.Hle
 		{
 			return String.Format("HleThread(Id={0}, Name='{1}')", Id, Name);
 		}
+
+		public void Finalize()
+		{
+			if (End != null)
+			{
+				End();
+			}
+		}
+
+		public event Action End;
 	}
 
 	public struct SceKernelSysClock

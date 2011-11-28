@@ -21,7 +21,7 @@ using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-	sealed unsafe public class OpenglGpuImpl : GpuImpl
+	sealed unsafe public partial class OpenglGpuImpl : GpuImpl
 	{
 		/// <summary>
 		/// 
@@ -38,6 +38,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// </summary>
 		VertexReader VertexReader;
 
+		TextureCache TextureCache;
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -47,52 +49,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			this.Config = PspEmulatorContext.PspConfig;
 			this.Memory = PspEmulatorContext.GetInstance<PspMemory>();
+			this.TextureCache = PspEmulatorContext.GetInstance<TextureCache>();
 			this.VertexReader = new VertexReader();
 		}
 
 		void Initialize()
 		{
 			///GL.Enable(EnableCap.Blend);
-		}
-
-		private void PrepareState_CullFace(GpuStateStruct* GpuState)
-		{
-			if (GlEnableDisable(EnableCap.CullFace, GpuState[0].BackfaceCullingState.Enabled))
-			{
-				GL.CullFace((GpuState[0].BackfaceCullingState.FrontFaceDirection == State.SubStates.FrontFaceDirectionEnum.ClockWise) ? CullFaceMode.Front : CullFaceMode.Back);
-			}
-		}
-
-		private void PrepareState_Texture(GpuStateStruct* GpuState)
-		{
-			//if (GlEnableDisable(EnableCap.Texture2D, GpuState[0].TextureMappingState.Enabled))
-			{
-				//GL
-				//Console.WriteLine("aaaaaaaaaaaaa");
-			}
-		}
-
-		private void PrepareState_Lighting(GpuStateStruct* GpuState)
-		{
-			//Console.WriteLine(GpuState[0].LightingState.AmbientModelColor);
-			
-			var Color = GpuState[0].LightingState.AmbientModelColor;
-			GL.Color4(&Color.Red);
-
-			//if (GlEnableDisable(EnableCap.Lighting, GpuState[0].LightingState.Enabled))
-			{
-			}
-		}
-
-		private void PrepareState(GpuStateStruct* GpuState)
-		{
-			PrepareState_CullFace(GpuState);
-			PrepareState_Texture(GpuState);
-			PrepareState_Lighting(GpuState);
-
-			//GL.Disable(EnableCap.Blend);
-
-			GL.ShadeModel((GpuState[0].ShadeModel == ShadingModelEnum.Flat) ? ShadingModel.Flat : ShadingModel.Smooth);
 		}
 
 		private void PutVertex(ref VertexInfo VertexInfo, ref VertexTypeStruct VertexType)
@@ -117,9 +80,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		}
 
 		VertexTypeStruct VertexType;
-		byte[] IndexListByte = null;
-		short[] IndexListShort = null;
-		VertexInfo[] Vertices;
+		byte[] IndexListByte = new byte[ushort.MaxValue];
+		short[] IndexListShort = new short[ushort.MaxValue];
+		VertexInfo[] Vertices = new VertexInfo[ushort.MaxValue];
 
 		void ReadVertex(int Index, VertexInfo* VertexInfo)
 		{
@@ -151,20 +114,16 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				case VertexTypeStruct.IndexEnum.Void:
 					break;
 				case VertexTypeStruct.IndexEnum.Byte:
-					IndexListByte = new byte[VertexCount];
 					Marshal.Copy(new IntPtr(IndexAddress), IndexListByte, 0, VertexCount);
-					TotalVerticesWithoutMorphing = IndexListByte.Max() + 1;
+					TotalVerticesWithoutMorphing = IndexListByte.Take(VertexCount).Max() + 1;
 					break;
 				case VertexTypeStruct.IndexEnum.Short:
-					IndexListShort = new short[VertexCount];
 					Marshal.Copy(new IntPtr(IndexAddress), IndexListShort, 0, VertexCount);
-					TotalVerticesWithoutMorphing = IndexListShort.Max() + 1;
+					TotalVerticesWithoutMorphing = IndexListShort.Take(VertexCount).Max() + 1;
 					break;
 				default:
 					throw(new NotImplementedException());
 			}
-
-			Vertices = new VertexInfo[TotalVerticesWithoutMorphing];
 
 			int MorpingVertexCount = (int)VertexType.MorphingVertexCount + 1;
 			int z = 0;
@@ -504,6 +463,19 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			PrepareWrite(GpuState);
 			//throw new NotImplementedException();
+		}
+
+		public override void TextureFlush(GpuStateStruct* GpuState)
+		{
+			TextureCache.RecheckAll();
+			//Console.WriteLine("TextureFlush!");
+			//base.TextureFlush(GpuState);
+		}
+
+		public override void TextureSync(GpuStateStruct* GpuState)
+		{
+			//Console.WriteLine("TextureSync!");
+			//base.TextureSync(GpuState);
 		}
 	}
 }

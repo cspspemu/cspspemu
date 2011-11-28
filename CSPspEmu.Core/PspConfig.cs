@@ -29,6 +29,10 @@ namespace CSPspEmu.Core
 		/// </summary>
 		public bool CountInstructionsAndYield = true;
 
+
+		/// <summary>
+		/// 
+		/// </summary>
 		//public bool ShowInstructionStats = true;
 		public bool ShowInstructionStats = false;
 
@@ -84,8 +88,8 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
-		//public bool NoticeUnimplementedGpuCommands = true;
-		public bool NoticeUnimplementedGpuCommands = false;
+		public bool NoticeUnimplementedGpuCommands = true;
+		//public bool NoticeUnimplementedGpuCommands = false;
 
 		/// <summary>
 		/// 
@@ -122,6 +126,8 @@ namespace CSPspEmu.Core
 		public PspConfig()
 		{
 		}
+
+		public bool InfoExeHasRelocation = false;
 
 		//public bool TraceJal = true;
 	}

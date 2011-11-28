@@ -75,6 +75,16 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return 0;
 		}
 
+		public int _sceKernelExitDeleteThread(int Status, HleThread Thread)
+		{
+			if (Thread != null)
+			{
+				Thread.Finalize();
+				HleState.ThreadManager.Exit(Thread);
+			}
+			return 0;
+		}
+
 		/// <summary>
 		/// Exit a thread and delete itself.
 		/// </summary>
@@ -83,20 +93,19 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x809CE29B, FirmwareVersion = 150)]
 		public int sceKernelExitDeleteThread(int Status)
 		{
-			HleState.ThreadManager.Exit(HleState.ThreadManager.Current);
-			return 0;
+			return _sceKernelExitDeleteThread(Status, HleState.ThreadManager.Current);
 		}
 
 		/// <summary>
 		/// Exit a thread
 		/// </summary>
-		/// <param name="status">Exit status.</param>
+		/// <param name="Status">Exit status.</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xAA73C935, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceKernelExitThread(int status)
+		public int sceKernelExitThread(int Status)
 		{
-			throw (new NotImplementedException());
+			return sceKernelExitDeleteThread(Status);
 		}
 
 		/// <summary>
@@ -172,7 +181,20 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x278C0DF5, FirmwareVersion = 150)]
 		public int sceKernelWaitThreadEnd(int ThreadId, uint* Timeout)
 		{
-			throw(new NotImplementedException());
+			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelWaitThreadEnd", WakeUpCallback =>
+			{
+				if (Timeout != null) throw(new NotImplementedException());
+				var ThreadToWaitEnd = HleState.ThreadManager.GetThreadById(ThreadId);
+				Console.WriteLine("Wait End!");
+				ThreadToWaitEnd.End += () =>
+				{
+					Console.WriteLine("Ended!");
+					//throw(new Exception("aaaaaaaaaaaa"));
+					WakeUpCallback();
+				};
+			});
+
+			return 0;
 		}
 
 		private int _sceKernelDelayThreadCB(uint DelayInMicroseconds, bool HandleCallbacks)
@@ -224,7 +246,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x9FA03CD3, FirmwareVersion = 150)]
 		public int sceKernelDeleteThread(int ThreadId)
 		{
-			throw(new NotImplementedException());
+			return _sceKernelExitDeleteThread(-1, HleState.ThreadManager.GetThreadById(ThreadId));
 		}
 
 		/// <summary>
@@ -263,9 +285,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// </example>
 		/// <returns>0 if successful, otherwise the error code.</returns>
 		[HlePspFunction(NID = 0x71BC9871, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceKernelChangeThreadPriority(int ThreadId, int Priority)
 		{
-			throw(new NotImplementedException());
+			HleState.ThreadManager.GetThreadById(ThreadId).PriorityValue = Priority;
+			//throw(new NotImplementedException());
+			return 0;
 		}
 	}
 }

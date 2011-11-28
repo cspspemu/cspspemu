@@ -70,5 +70,32 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			//return Info.HleIoDriver.IoChdir(Info.HleIoDrvFileArg, Info.LocalPath);
 			return 0;
 		}
+
+		/// <summary>
+		/// Make a directory file
+		/// </summary>
+		/// <param name="DirectoryPath"></param>
+		/// <param name="AccessMode">Access mode.</param>
+		/// <returns>Returns the value 0 if its succesful otherwise -1</returns>
+		[HlePspFunction(NID = 0x06A70004, FirmwareVersion = 150)]
+		public int sceIoMkdir(string DirectoryPath, SceMode AccessMode)
+		{
+			var Info = HleState.HleIoManager.ParsePath(DirectoryPath);
+			Info.HleIoDrvFileArg.HleIoDriver.IoMkdir(Info.HleIoDrvFileArg, Info.LocalPath, AccessMode);
+			return 0;
+		}
+
+		/// <summary>
+		/// Remove a directory file
+		/// </summary>
+		/// <param name="DirectoryPath">Removes a directory file pointed by the string path</param>
+		/// <returns>Returns the value 0 if its succesful otherwise -1</returns>
+		[HlePspFunction(NID = 0x1117C65F, FirmwareVersion = 150)]
+		public int sceIoRmdir(string DirectoryPath)
+		{
+			var Info = HleState.HleIoManager.ParsePath(DirectoryPath);
+			Info.HleIoDrvFileArg.HleIoDriver.IoRmdir(Info.HleIoDrvFileArg, Info.LocalPath);
+			return 0;
+		}
 	}
 }

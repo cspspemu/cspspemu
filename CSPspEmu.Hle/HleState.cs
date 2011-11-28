@@ -35,6 +35,7 @@ namespace CSPspEmu.Hle
 		public HleModuleManager ModuleManager;
 		public HleCallbackManager CallbackManager;
 		public HleIoManager HleIoManager;
+		public HleRegistryManager HleRegistryManager;
 
 		public HleState(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
 		{
@@ -56,6 +57,7 @@ namespace CSPspEmu.Hle
 			this.ModuleManager = PspEmulatorContext.GetInstance<HleModuleManager>();
 			this.CallbackManager = PspEmulatorContext.GetInstance<HleCallbackManager>();
 			this.HleIoManager = PspEmulatorContext.GetInstance<HleIoManager>();
+			this.HleRegistryManager = PspEmulatorContext.GetInstance<HleRegistryManager>();
 		}
 	}
 }

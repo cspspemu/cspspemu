@@ -55,6 +55,23 @@ namespace CSPspEmu.Core.Gpu.State
 		{
 			return String.Format("Colorf(R={0}, G={1}, B={2}, A={3})", Red, Green, Blue, Alpha);
 		}
+
+		public bool IsColorf(float R, float G, float B)
+		{
+			return R == this.Red && G == this.Green && B == this.Blue;
+		}
+
+		public static ColorfStruct operator +(ColorfStruct Left, ColorfStruct Right)
+		{
+			return new ColorfStruct()
+			{
+				Red = Left.Red + Right.Red,
+				Green = Left.Green + Right.Green,
+				Blue = Left.Blue + Right.Blue,
+				Alpha = Left.Alpha + Right.Alpha,
+			};
+		}
+
 	}
 
 	public enum LogicalOperationEnum
@@ -155,6 +172,26 @@ namespace CSPspEmu.Core.Gpu.State
 		public ushort srcX, srcY, dstX, dstY;
 		public ushort width, height;
 		public TexelSize texelSize;
+	}
+
+	public enum BlendingOpEnum : int
+	{
+		Add = 0,
+		Substract = 1,
+		ReverseSubstract = 2,
+		Min = 3,
+		Max = 4,
+		Abs = 5,
+	}
+
+	public enum BlendingFactor : int
+	{
+		// Source
+		GU_SRC_COLOR = 0, GU_ONE_MINUS_SRC_COLOR = 1, GU_SRC_ALPHA = 2, GU_ONE_MINUS_SRC_ALPHA = 3,
+		// Dest
+		GU_DST_COLOR = 0, GU_ONE_MINUS_DST_COLOR = 1, GU_DST_ALPHA = 4, GU_ONE_MINUS_DST_ALPHA = 5,
+		// Both?
+		GU_FIX = 10
 	}
 
 	public struct GpuStateStruct

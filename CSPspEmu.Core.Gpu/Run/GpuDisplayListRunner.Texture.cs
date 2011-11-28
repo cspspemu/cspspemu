@@ -130,8 +130,8 @@ namespace CSPspEmu.Core.Gpu.Run
 		private void _OP_TSIZE(int Index)
 		{
 			var MipMap = MipMapState(Index);
-			MipMap[0].Width = (uint)(1 << Param8(0));
-			MipMap[0].Height = (uint)(1 << Param8(8));
+			MipMap[0].Width = (int)(1 << Param8(0));
+			MipMap[0].Height = (int)(1 << Param8(8));
 		}
 
 		public void OP_TSIZE0() { _OP_TSIZE(0); }
@@ -249,7 +249,6 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuTexFunc(int tfx, int tcc); // OP_TFUNC
 
 		// Texture enviroment Mode
-		[GpuOpCodesNotImplemented]
 		public void OP_TFUNC()
 		{
 			TextureState[0].Effect = (TextureEffect)Param8(0);
@@ -287,6 +286,22 @@ namespace CSPspEmu.Core.Gpu.Run
 		public void OP_UOFFSET() { GpuState[0].TextureMappingState.TextureState.OffsetU = Float1; }
 		public void OP_VOFFSET() { GpuState[0].TextureMappingState.TextureState.OffsetV = Float1; }
 
+		/**
+		 * Specify the texture environment color
+		 *
+		 * This is used in the texture function when a constant color is needed.
+		 *
+		 * See sceGuTexFunc() for more information.
+		 *
+		 * @param color - Constant color (0x00BBGGRR)
+		 **/
+		// void sceGuTexEnvColor(unsigned int color); // OP_TEC
+		// Texture Environment Color
+		public void OP_TEC()
+		{
+			GpuState[0].TextureMappingState.TextureEnviromentColor.SetRGB_A1(Params24);
+		}
+
 		[GpuOpCodesNotImplemented]
 		public void OP_TEXTURE_ENV_MAP_MATRIX()
 		{
@@ -294,11 +309,10 @@ namespace CSPspEmu.Core.Gpu.Run
 			//gpu.state.texture.texShade[1] = command.extract!(int, 8, 8) & 3;
 		}
 
-		[GpuOpCodesNotImplemented]
 		public void OP_TMAP()
 		{
-			//gpu.state.texture.mapMode     = command.extractEnum!(TextureMapMode          , 0);
-			//gpu.state.texture.projMapMode = command.extractEnum!(TextureProjectionMapMode, 8);
+			GpuState[0].TextureMappingState.TextureMapMode = (TextureMapMode)Param8(0);
+			GpuState[0].TextureMappingState.TextureProjectionMapMode = (TextureProjectionMapMode)Param8(8);
 		}
 
 		[GpuOpCodesNotImplemented]

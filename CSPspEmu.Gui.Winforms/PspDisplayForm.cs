@@ -119,6 +119,11 @@ namespace CSPspEmu.Gui.Winforms
 		{
 		}
 
+		public struct BGRA
+		{
+			public byte B, G, R, A;
+		}
+
 		protected override void OnPaintBackground(PaintEventArgs PaintEventArgs)
 		{
 			if (IGuiExternalInterface.IsInitialized())
@@ -127,27 +132,48 @@ namespace CSPspEmu.Gui.Winforms
 				{
 					try
 					{
-						Buffer.LockBitsUnlock(System.Drawing.Imaging.PixelFormat.Format32bppArgb, (BitmapData) =>
+						Buffer.LockBitsUnlock(PixelFormat.Format32bppArgb, (BitmapData) =>
 						{
-							var BitmapDataPtr = (PixelFormatDecoder.OutputPixel*)BitmapData.Scan0.ToPointer();
-							var Address = PspDisplay.CurrentInfo.Address;
-							//var Address = Memory.FrameBufferSegment.Low;
-							//Console.WriteLine("{0:X}", Address);
-							var FrameBuffer = (byte*)Memory.PspAddressToPointer(Address);
 							var Count = 512 * 272;
-							if (FrameBuffer == null)
+							var BitmapDataDecode = new PixelFormatDecoder.OutputPixel[Count];
+							fixed (PixelFormatDecoder.OutputPixel* BitmapDataDecodePtr = BitmapDataDecode)
 							{
-								Console.Error.WriteLine("FrameBuffer == null");
+								var BitmapDataPtr = (BGRA*)BitmapData.Scan0.ToPointer();
+								var Address = PspDisplay.CurrentInfo.Address;
+								//var Address = Memory.FrameBufferSegment.Low;
+								//Console.WriteLine("{0:X}", Address);
+								var FrameBuffer = (byte*)Memory.PspAddressToPointer(Address);
+
+								//var LastRow = (FrameBuffer + 512 * 260 * 4 + 4 * 10);
+								//Console.WriteLine("{0},{1},{2},{3}", LastRow[0], LastRow[1], LastRow[2], LastRow[3]);
+
+								if (FrameBuffer == null)
+								{
+									Console.Error.WriteLine("FrameBuffer == null");
+								}
+								else if (BitmapDataPtr == null)
+								{
+									Console.Error.WriteLine("BitmapDataPtr == null");
+								}
+								else
+								{
+									PixelFormatDecoder.Decode(
+										PspDisplay.CurrentInfo.PixelFormat,
+										(void*)FrameBuffer,
+										BitmapDataDecodePtr,
+										(int)Count
+									);
+								}
+
+								// Converts the decoded data to Window's format.
+								for (int n = 0; n < Count; n++)
+								{
+									BitmapDataPtr[n].R = BitmapDataDecodePtr[n].R;
+									BitmapDataPtr[n].G = BitmapDataDecodePtr[n].G;
+									BitmapDataPtr[n].B = BitmapDataDecodePtr[n].B;
+									BitmapDataPtr[n].A = 0xFF;
+								}
 							}
-							else if (BitmapDataPtr == null)
-							{
-								Console.Error.WriteLine("BitmapDataPtr == null");
-							}
-							else
-							{
-								PixelFormatDecoder.Decode(PspDisplay.CurrentInfo.PixelFormat, FrameBuffer, BitmapDataPtr, Count);
-							}
-							for (int n = 0; n < Count; n++) BitmapDataPtr[n].A = 0xFF;
 						});
 					}
 					catch (Exception Exception)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Gpu.State;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -66,28 +67,11 @@ namespace CSPspEmu.Core.Gpu.Run
 			//gpu.state.materialColorComponents = command.extractSet!(LightComponents);
 		}
 
-		/**
-		 * Specify the texture environment color
-		 *
-		 * This is used in the texture function when a constant color is needed.
-		 *
-		 * See sceGuTexFunc() for more information.
-		 *
-		 * @param color - Constant color (0x00BBGGRR)
-		 **/
-		// void sceGuTexEnvColor(unsigned int color); // OP_TEC
-		// Texture Environment Color
-		[GpuOpCodesNotImplemented]
-		public void OP_TEC()
-		{
-			//gpu.state.textureEnviromentColor.rgb[] = command.float3[]; gpu.state.textureEnviromentColor.a = 1.0;
-		}
-
 		// Alpha Blend Enable (GU_BLEND)
-		[GpuOpCodesNotImplemented]
 		public void OP_ABE()
 		{
-			//gpu.state.blend.enabled = command.bool1;
+			GpuState[0].BlendingState.Enabled = Bool1;
+			Console.WriteLine("BLEND! : " + Bool1 + ", " + Params24);
 		}
 
 		/**
@@ -127,30 +111,23 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuBlendFunc(int op, int src, int dest, unsigned int srcfix, unsigned int destfix);
 
 		// Blend Equation and Functions
-		[GpuOpCodesNotImplemented]
 		public void OP_ALPHA()
 		{
-			/*
-			with (gpu.state) {
-				blend.funcSrc  = command.extractEnum!(BlendingFactor, 0);
-				blend.funcDst  = command.extractEnum!(BlendingFactor, 4);
-				blend.equation = command.extractEnum!(BlendingOp    , 8);
-			}
-			*/
+			GpuState[0].BlendingState.FunctionSource = (BlendingFactor)((Params24 >> 0) & 0xF);
+			GpuState[0].BlendingState.FunctionDestination = (BlendingFactor)((Params24 >> 4) & 0xF);
+			GpuState[0].BlendingState.Equation = (BlendingOpEnum)((Params24 >> 8) & 0xF);
 		}
 
 		// source fix color
-		[GpuOpCodesNotImplemented]
 		public void OP_SFIX()
 		{
-			//gpu.state.blend.fixColorSrc.rgb[] = command.float3[]; gpu.state.blend.fixColorSrc.a = 1.0;
+			GpuState[0].BlendingState.FixColorSource.SetRGB_A1(Params24);
 		}
 
 		// destination fix color
-		[GpuOpCodesNotImplemented]
 		public void OP_DFIX()
 		{
-			//gpu.state.blend.fixColorDst.rgb[] = command.float3[]; gpu.state.blend.fixColorDst.a = 1.0;
+			GpuState[0].BlendingState.FixColorDestination.SetRGB_A1(Params24);
 		}
 
 		/**
@@ -161,20 +138,16 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuPixelMask(unsigned int mask);
 
 		// Pixel MasK Color
-		[GpuOpCodesNotImplemented]
 		public void OP_PMSKC()
 		{
-			/*
-			gpu.state.colorMask[0] = command.extract!(ubyte,  0, 8);
-			gpu.state.colorMask[1] = command.extract!(ubyte,  8, 8);
-			gpu.state.colorMask[2] = command.extract!(ubyte, 16, 8);
-			*/
+			GpuState[0].BlendingState.ColorMaskR = Param8(0);
+			GpuState[0].BlendingState.ColorMaskG = Param8(8);
+			GpuState[0].BlendingState.ColorMaskB = Param8(16);
 		}
 		// Pixel MasK Alpha
-		[GpuOpCodesNotImplemented]
 		public void OP_PMSKA()
 		{
-			//gpu.state.colorMask[3] = command.extract!(ubyte, 0, 8);
+			GpuState[0].BlendingState.ColorMaskA = Param8(0);
 		}
 
 	}

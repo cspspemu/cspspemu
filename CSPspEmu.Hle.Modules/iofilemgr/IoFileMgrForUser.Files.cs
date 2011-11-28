@@ -189,10 +189,14 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 				Info.HleIoDrvFileArg.HleIoDriver.IoOpen(Info.HleIoDrvFileArg, Info.LocalPath, Flags, Mode);
 				return HleState.HleIoManager.HleIoDrvFileArgPool.Create(Info.HleIoDrvFileArg);
 			}
+			catch (DirectoryNotFoundException)
+			{
+			}
 			catch (FileNotFoundException)
 			{
-				return unchecked((int)SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND);
 			}
+			Console.Error.WriteLine("Didn't find file '{0}'", FileName);
+			return unchecked((int)SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND);
 		}
 
 		/// <summary>

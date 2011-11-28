@@ -25,12 +25,12 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 			/// <summary>
 			/// 
 			/// </summary>
-			public uint Width;
+			public int Width;
 
 			/// <summary>
 			/// 
 			/// </summary>
-			public uint Height;
+			public int Height;
 		}
 
 		/// <summary>
