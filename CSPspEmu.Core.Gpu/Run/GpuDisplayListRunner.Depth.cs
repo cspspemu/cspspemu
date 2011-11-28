@@ -180,11 +180,11 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuDepthOffset(unsigned int offset);
 		public void OP_NEARZ()
 		{
-			GpuState[0].DepthTestState.RangeNear = ((float)(short)Param16(0)) / 65535.0f;
+			GpuState[0].DepthTestState.RangeNear = ((float)(ushort)Param16(0)) / 65535.0f;
 		}
 		public void OP_FARZ()
 		{
-			GpuState[0].DepthTestState.RangeFar = ((float)(short)Param16(0)) / 65535.0f;
+			GpuState[0].DepthTestState.RangeFar = ((float)(ushort)Param16(0)) / 65535.0f;
 		}
 	}
 }

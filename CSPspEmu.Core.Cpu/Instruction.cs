@@ -42,8 +42,15 @@ namespace CSPspEmu.Core.Cpu
 		public int IMM { get { return (int)(short)(ushort)get(0, 16); } set { set(0, 16, (uint)value); } }
 		public uint IMMU { get { return get(0, 16); } set { set(0, 16, (uint)value); } }
 
+		public uint HIGH16 { get { return get(16, 16); } set { set(16, 16, (uint)value); } }
+
 		// JUMP 26 bits.
 		public uint JUMP { get { return get(0, 26); } set { set(0, 26, value); } }
+
+		/// <summary>
+		/// Instruction's JUMP raw value multiplied * 4. Creating the real address.
+		/// </summary>
+		public uint JUMP_Real { get { return JUMP * 4; } set { JUMP = value / 4; } }
 
 		// CODE
 		public uint CODE { get { return get(6, 20); } set { set(6, 20, value); } }

@@ -39,6 +39,7 @@ namespace CSPspEmu.Runner
 		HleThreadManager ThreadManager;
 		HleState HleState;
 		PspMemory PspMemory;
+		HleIoDriverMountable MemoryStickMountable;
 
 		static public uint CODE_PTR_EXIT_THREAD = 0x08000000;
 
@@ -49,19 +50,38 @@ namespace CSPspEmu.Runner
 			ThreadManager = PspEmulatorContext.GetInstance<HleThreadManager>();
 			HleState = PspEmulatorContext.GetInstance<HleState>();
 			PspMemory = PspEmulatorContext.GetInstance<PspMemory>();
+		}
+
+		public override void InitializeComponent()
+		{
 			RegisterDevices();
 		}
 
 		void RegisterDevices()
 		{
-			string VirtualDirectory = Path.GetDirectoryName(Application.ExecutablePath);
-			try { Directory.CreateDirectory(VirtualDirectory + "/PSP/GAME/virtual"); }
+			string MemoryStickRootFolder = Path.GetDirectoryName(Application.ExecutablePath) + "/ms";
+			try { Directory.CreateDirectory(MemoryStickRootFolder); }
 			catch { }
-			var MemoryStick = new HleIoDriverMemoryStick(new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
+			/*
+			*/
+
+			MemoryStickMountable = new HleIoDriverMountable();
+			MemoryStickMountable.Mount("/", new HleIoDriverLocalFileSystem(MemoryStickRootFolder));
+			var MemoryStick = new HleIoDriverMemoryStick(MemoryStickMountable);
+			//var MemoryStick = new HleIoDriverMemoryStick(new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
 			HleState.HleIoManager.AddDriver("ms:", MemoryStick);
 			HleState.HleIoManager.AddDriver("fatms:", MemoryStick);
 			HleState.HleIoManager.AddDriver("disc:", MemoryStick);
 			HleState.HleIoManager.AddDriver("emulator:", new HleIoDriverEmulator(HleState));
+		}
+
+		void SetVirtualFolder(string VirtualDirectory)
+		{
+			MemoryStickMountable.Mount(
+				"/PSP/GAME/virtual",
+				new HleIoDriverLocalFileSystem(VirtualDirectory)
+					//.AsReadonlyHleIoDriver()
+			);
 		}
 
 		void RegisterSyscalls()
@@ -117,6 +137,8 @@ namespace CSPspEmu.Runner
 		public void _LoadFile(String FileName)
 		{
 			//GC.Collect();
+
+			SetVirtualFolder(Path.GetDirectoryName(FileName));
 
 			var MemoryStream = new PspMemoryStream(PspMemory);
 
@@ -212,6 +234,11 @@ namespace CSPspEmu.Runner
 								ThreadManager.Current.CpuThreadState.PC,
 								ThreadManager.Current.CpuThreadState.RA
 							);
+
+							foreach (var Thread in ThreadManager.Threads)
+							{
+								Console.WriteLine("{0}", Thread);
+							}
 
 							Console.WriteLine("Executable had relocation: {0}", PspEmulatorContext.PspConfig.InfoExeHasRelocation);
 						}

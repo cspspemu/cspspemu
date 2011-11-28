@@ -21,11 +21,12 @@ namespace CSPspEmu.Hle.Vfs
 				if (FileName.StartsWith(Mount.Key))
 				{
 					HleIoDrvFileArg.HleIoDriver = Mount.Value;
-					FileName = FileName.Substring(Mount.Key.Length + 1);
+					FileName = FileName.Substring(Mount.Key.Length);
 					return;
 				}
+
 			}
-			throw(new InvalidOperationException());
+			throw(new InvalidOperationException("Can't find mount point for '" + FileName + "'"));
 		}
 
 		public unsafe int IoOpen(HleIoDrvFileArg HleIoDrvFileArg, string FileName, HleIoFlags Flags, SceMode Mode)
@@ -36,17 +37,18 @@ namespace CSPspEmu.Hle.Vfs
 
 		public unsafe int IoInit()
 		{
-			throw new NotImplementedException();
+			return 0;
 		}
 
 		public unsafe int IoExit()
 		{
-			throw new NotImplementedException();
+			return 0;
 		}
 
 		public unsafe int IoClose(HleIoDrvFileArg HleIoDrvFileArg)
 		{
-			throw new NotImplementedException();
+			return HleIoDrvFileArg.HleIoDriver.IoClose(HleIoDrvFileArg);
+			//throw new NotImplementedException();
 		}
 
 		public unsafe int IoRead(HleIoDrvFileArg HleIoDrvFileArg, byte* OutputPointer, int OutputLength)
@@ -76,7 +78,8 @@ namespace CSPspEmu.Hle.Vfs
 
 		public unsafe int IoMkdir(HleIoDrvFileArg HleIoDrvFileArg, string Name, SceMode Mode)
 		{
-			throw new NotImplementedException();
+			ReLocatePathHandle(ref HleIoDrvFileArg, ref Name);
+			return HleIoDrvFileArg.HleIoDriver.IoMkdir(HleIoDrvFileArg, Name, Mode);
 		}
 
 		public unsafe int IoRmdir(HleIoDrvFileArg HleIoDrvFileArg, string Name)
@@ -86,7 +89,8 @@ namespace CSPspEmu.Hle.Vfs
 
 		public unsafe int IoDopen(HleIoDrvFileArg HleIoDrvFileArg, string Name)
 		{
-			throw new NotImplementedException();
+			ReLocatePathHandle(ref HleIoDrvFileArg, ref Name);
+			return HleIoDrvFileArg.HleIoDriver.IoDopen(HleIoDrvFileArg, Name);
 		}
 
 		public unsafe int IoDclose(HleIoDrvFileArg HleIoDrvFileArg)
@@ -101,7 +105,8 @@ namespace CSPspEmu.Hle.Vfs
 
 		public unsafe int IoGetstat(HleIoDrvFileArg HleIoDrvFileArg, string FileName, SceIoStat* Stat)
 		{
-			throw new NotImplementedException();
+			ReLocatePathHandle(ref HleIoDrvFileArg, ref FileName);
+			return HleIoDrvFileArg.HleIoDriver.IoGetstat(HleIoDrvFileArg, FileName, Stat);
 		}
 
 		public unsafe int IoChstat(HleIoDrvFileArg HleIoDrvFileArg, string FileName, SceIoStat* stat, int bits)

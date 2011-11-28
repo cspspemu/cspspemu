@@ -6,7 +6,7 @@ using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Utils
 {
-	unsafe public class PixelFormatDecoder
+	unsafe sealed public class PixelFormatDecoder
 	{
 		internal PixelFormatDecoder()
 		{
@@ -193,11 +193,7 @@ namespace CSPspEmu.Core.Utils
 
 			for (int n = 0; n < PixelCount; n++)
 			{
-				ushort Value = Input[n];
-				Output[n].R = (byte)Value.ExtractUnsignedScale(0, 4, 255);
-				Output[n].G = (byte)Value.ExtractUnsignedScale(4, 4, 255);
-				Output[n].B = (byte)Value.ExtractUnsignedScale(8, 4, 255);
-				Output[n].A = (byte)Value.ExtractUnsignedScale(12, 4, 255);
+				Output[n] = Decode_RGBA_4444_Pixel(Input[n]);
 			}
 
 		}
@@ -208,17 +204,52 @@ namespace CSPspEmu.Core.Utils
 
 			for (int n = 0; n < PixelCount; n++)
 			{
-				ushort Value = Input[n];
-				Output[n].R = (byte)Value.ExtractUnsignedScale(0, 5, 255);
-				Output[n].G = (byte)Value.ExtractUnsignedScale(5, 5, 255);
-				Output[n].B = (byte)Value.ExtractUnsignedScale(10, 5, 255);
-				Output[n].A = (byte)Value.ExtractUnsignedScale(16, 1, 255);
+				Output[n] = Decode_RGBA_5551_Pixel(Input[n]);
 			}
 		}
 
 		private unsafe void Decode_RGBA_5650()
 		{
-			throw(new NotImplementedException());
+			var Input = (ushort*)_Input;
+
+			for (int n = 0; n < PixelCount; n++)
+			{
+				Output[n] = Decode_RGBA_5650_Pixel(Input[n]);
+			}
+		}
+
+
+		static public unsafe OutputPixel Decode_RGBA_4444_Pixel(ushort Value)
+		{
+			return new OutputPixel()
+			{
+				R = (byte)Value.ExtractUnsignedScale(0, 4, 255),
+				G = (byte)Value.ExtractUnsignedScale(4, 4, 255),
+				B = (byte)Value.ExtractUnsignedScale(8, 4, 255),
+				A = (byte)Value.ExtractUnsignedScale(12, 4, 255),
+			};
+		}
+
+		static public unsafe OutputPixel Decode_RGBA_5551_Pixel(ushort Value)
+		{
+			return new OutputPixel()
+			{
+				R = (byte)Value.ExtractUnsignedScale(0, 5, 255),
+				G = (byte)Value.ExtractUnsignedScale(5, 5, 255),
+				B = (byte)Value.ExtractUnsignedScale(10, 5, 255),
+				A = (byte)Value.ExtractUnsignedScale(16, 1, 255),
+			};
+		}
+
+		static public unsafe OutputPixel Decode_RGBA_5650_Pixel(ushort Value)
+		{
+			return new OutputPixel()
+			{
+				R = (byte)Value.ExtractUnsignedScale(0, 5, 255),
+				G = (byte)Value.ExtractUnsignedScale(5, 6, 255),
+				B = (byte)Value.ExtractUnsignedScale(11, 5, 255),
+				A = 0xFF,
+			};
 		}
 	}
 }

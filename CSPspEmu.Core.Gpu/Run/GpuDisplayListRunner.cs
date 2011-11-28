@@ -22,6 +22,17 @@ namespace CSPspEmu.Core.Gpu.Run
 			return (byte)(Params24 >> Offset);
 		}
 
+		public uint Extract(int Offset, int Count)
+		{
+			return BitUtils.Extract(Params24, Offset, Count);
+		}
+
+		public TType Extract<TType>(int Offset, int Count)
+		{
+			return (TType)(object)BitUtils.Extract(Params24, Offset, Count);
+		}
+
+
 		public GpuStateStruct* GpuState
 		{
 			get

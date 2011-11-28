@@ -20,12 +20,12 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 		/// <summary>
 		/// 
 		/// </summary>
-		public BlendingFactor FunctionSource;
+		public GuBlendingFactorSource FunctionSource;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public BlendingFactor FunctionDestination;
+		public GuBlendingFactorDestination FunctionDestination;
 
 		/// <summary>
 		/// 

@@ -59,7 +59,8 @@ namespace CSPspEmu.Hle.Threading.Semaphores
 		{
 			// Selects all the waiting semaphores, that fit the count condition, in a FIFO order.
 			var WaitingSemaphoreThreadIterator = WaitingSemaphoreThreadList
-				.Where(WaitingThread => (CurrentCount >= WaitingThread.ExpectedMinimumCount))
+				//.Where(WaitingThread => (CurrentCount >= WaitingThread.ExpectedMinimumCount))
+				.AsEnumerable()
 			;
 
 			// Reorders the waiting semaphores in a Thread priority order (descending).
@@ -73,9 +74,12 @@ namespace CSPspEmu.Hle.Threading.Semaphores
 			// Iterates all the waiting semaphores in order removing them from list.
 			foreach (var WaitingSemaphoreThread in WaitingSemaphoreThreadIterator.ToArray())
 			{
-				CurrentCount -= WaitingSemaphoreThread.ExpectedMinimumCount;
-				WaitingSemaphoreThreadList.Remove(WaitingSemaphoreThread);
-				WaitingSemaphoreThread.WakeUpCallback();
+				if (CurrentCount >= WaitingSemaphoreThread.ExpectedMinimumCount)
+				{
+					CurrentCount -= WaitingSemaphoreThread.ExpectedMinimumCount;
+					WaitingSemaphoreThreadList.Remove(WaitingSemaphoreThread);
+					WaitingSemaphoreThread.WakeUpCallback();
+				}
 			}
 
 			// Updates the statistic about waiting threads.

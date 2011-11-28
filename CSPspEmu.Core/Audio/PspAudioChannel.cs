@@ -114,6 +114,17 @@ namespace CSPspEmu.Core.Audio
 			}
 		}
 
+		short[] MonoToStereo(short[] MonoSamples)
+		{
+			var StereoSamples = new short[MonoSamples.Length * 2];
+			for (int n = 0; n < MonoSamples.Length; n++)
+			{
+				StereoSamples[n * 2 + 0] = MonoSamples[n];
+				StereoSamples[n * 2 + 1] = MonoSamples[n];
+			}
+			return StereoSamples;
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -121,7 +132,19 @@ namespace CSPspEmu.Core.Audio
 		/// <param name="ActionCallbackOnReaded"></param>
 		public void Write(short[] Samples, Action ActionCallbackOnReaded)
 		{
-			if (Format != Audio.PspAudio.FormatEnum.Stereo) throw(new NotImplementedException());
+			short[] StereoSamples;
+
+			switch (Format)
+			{
+				case Audio.PspAudio.FormatEnum.Mono:
+					StereoSamples = MonoToStereo(Samples);
+					break;
+				default:
+				case Audio.PspAudio.FormatEnum.Stereo:
+					StereoSamples = Samples;
+					break;
+			}
+
 			lock (this)
 			{
 				if (Buffer.ConsumeRemaining < FillSamples)
@@ -130,10 +153,10 @@ namespace CSPspEmu.Core.Audio
 				}
 				else
 				{
-					BufferEvents.Add(new Tuple<long, Action>(Buffer.TotalConsumed + Samples.Length, ActionCallbackOnReaded));
+					BufferEvents.Add(new Tuple<long, Action>(Buffer.TotalConsumed + StereoSamples.Length, ActionCallbackOnReaded));
 				}
 				//Console.WriteLine(Format);
-				Buffer.Produce(Samples);
+				Buffer.Produce(StereoSamples);
 			}
 		}
 
@@ -146,24 +169,25 @@ namespace CSPspEmu.Core.Audio
 		/// <param name="ActionCallbackOnReaded"></param>
 		public void Write(short* SamplePointer, int VolumeLeft, int VolumeRight, Action ActionCallbackOnReaded)
 		{
-			var Samples = new short[SampleCount * 2];
-			bool HasSignal = false;
-			for (int n = 0; n < Samples.Length; n += 2)
+			var Samples = new short[SampleCount * NumberOfChannels];
+
+			if (NumberOfChannels == 1)
 			{
-				Samples[n + 0] = (short)(((int)SamplePointer[n + 0] * VolumeLeft) / PspAudio.MaxVolume);
-				Samples[n + 1] = (short)(((int)SamplePointer[n + 1] * VolumeRight) / PspAudio.MaxVolume);
-				if (Samples[n + 0] != 0 || Samples[n + 1] != 0)
-				{
-					HasSignal = true;
-				}
-			}
-			if (HasSignal)
-			{
+				int Volume = (VolumeLeft + VolumeRight) / 2;
 				for (int n = 0; n < Samples.Length; n++)
 				{
-					//Console.Write("{0},", Samples[n]);
+					Samples[n + 0] = (short)(((int)SamplePointer[n + 0] * Volume) / PspAudio.MaxVolume);
 				}
 			}
+			else
+			{
+				for (int n = 0; n < Samples.Length; n += 2)
+				{
+					Samples[n + 0] = (short)(((int)SamplePointer[n + 0] * VolumeLeft) / PspAudio.MaxVolume);
+					Samples[n + 1] = (short)(((int)SamplePointer[n + 1] * VolumeRight) / PspAudio.MaxVolume);
+				}
+			}
+
 			Write(Samples, ActionCallbackOnReaded);
 		}
 	}

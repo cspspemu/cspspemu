@@ -69,10 +69,10 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Clut MODE
 		public void OP_CMODE()
 		{
-			ClutState[0].PixelFormat = (PixelFormats)BitUtils.Extract(Params24, 0, 2);
-			ClutState[0].Shift = (int)BitUtils.Extract(Params24, 2, 5);
-			ClutState[0].Mask = (int)BitUtils.Extract(Params24, 8, 8);
-			ClutState[0].Start = (int)BitUtils.Extract(Params24, 16, 5);
+			ClutState[0].PixelFormat = Extract<PixelFormats>(0, 2);
+			ClutState[0].Shift = (int)Extract(2, 5);
+			ClutState[0].Mask = (int)Extract(8, 8);
+			ClutState[0].Start = (int)Extract(16, 5);
 		}
 	}
 }

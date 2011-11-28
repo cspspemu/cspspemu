@@ -5,9 +5,9 @@ using System.Text;
 
 namespace CSPspEmu.Core
 {
-	public enum PixelFormats : int
+	public enum PixelFormats : uint
 	{
-		NONE = -1,
+		NONE = unchecked((uint)-1),
 
 		RGBA_5650 = 0,
 		RGBA_5551 = 1,

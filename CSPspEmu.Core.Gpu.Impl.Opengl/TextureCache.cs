@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
+using CSharpUtils;
 using CSPspEmu.Core.Gpu.State.SubStates;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
 using OpenTK.Graphics.OpenGL;
+using CSharpUtils.Extensions;
+using System.Drawing;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
@@ -92,8 +97,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			uint TextureAddress = TextureState[0].Mipmap0.Address;
 			uint ClutAddress = ClutState[0].Address;
 			var ClutFormat = ClutState[0].PixelFormat;
-			var PaletteStart = ClutState[0].Start;
-			var ClutDataStart = PixelFormatDecoder.GetPixelsSize(ClutFormat, PaletteStart);
+			var ClutStart = ClutState[0].Start;
+			var ClutDataStart = PixelFormatDecoder.GetPixelsSize(ClutFormat, ClutStart);
 
 			ulong Hash1 = TextureAddress | (ulong)((ClutAddress + ClutDataStart) << 32);
 			bool Recheck = false;
@@ -134,25 +139,51 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					ClutHash = FastHash((uint*)&(ClutPointer[ClutDataStart]), ClutDataSize),
 					ClutAddress = ClutAddress,
 					ClutFormat = ClutFormat,
-					ClutStart = PaletteStart,
+					ClutStart = ClutStart,
 					ClutShift = ClutShift,
 					ClutMask = ClutMask,
 				};
 
 				if (Texture == null || (!Texture.TextureCacheKey.Equals(TextureCacheKey)))
 				{
-					//Console.Write("{0},", ClutFormat);
+					//Console.WriteLine("UPDATE_TEXTURE({0},{1}:{2}:{3}:{4}:0x{5:X},{6}x{7})", TextureFormat, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask, Width, Height);
 					Texture = new Texture();
 					Texture.TextureCacheKey = TextureCacheKey;
 					{
 						fixed (PixelFormatDecoder.OutputPixel* TexturePixelsPointer = TempBuffer)
 						{
-							PixelFormatDecoder.Decode(
-								TextureFormat, (void*)TexturePointer, TexturePixelsPointer, Width * Height, Width,
-								ClutPointer, ClutFormat, ClutCount, PaletteStart, ClutShift, ClutMask
+							{
+								PixelFormatDecoder.Decode(
+									TextureFormat, (void*)TexturePointer, TexturePixelsPointer, Width * Height, Width,
+									ClutPointer, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask
+								);
+							}
+							/*
+							for (int n = 0; n < Width * Height; n++)
+							{
+								TexturePixelsPointer[n].A = 255;
+							}
+
+							var Bitmap = new Bitmap(Width, Height);
+							BitmapUtils.TransferChannelsDataInterleaved(
+								Bitmap.GetFullRectangle(),
+								Bitmap,
+								(byte*)TexturePixelsPointer,
+								BitmapUtils.Direction.FromDataToBitmap,
+								BitmapChannel.Red,
+								BitmapChannel.Green,
+								BitmapChannel.Blue,
+								BitmapChannel.Alpha
 							);
+							Bitmap.Save("texture_" + TextureCacheKey.TextureHash + "_" + TextureCacheKey.ClutHash + ".png");
+							*/
+
 							Texture.SetData(TexturePixelsPointer, Width, Height);
 						}
+					}
+					if (Cache.ContainsKey(Hash1))
+					{
+						Cache[Hash1].Dispose();
 					}
 					Cache[Hash1] = Texture;
 				}

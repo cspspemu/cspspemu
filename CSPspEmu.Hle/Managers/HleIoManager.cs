@@ -73,7 +73,14 @@ namespace CSPspEmu.Hle.Managers
 		{
 			//Drivers.Add(Name, Driver);
 			Drivers[Name] = Driver;
-			Driver.IoInit();
+			try
+			{
+				Driver.IoInit();
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
+			}
 		}
 
 		/// <summary>

@@ -165,7 +165,6 @@ namespace CSPspEmu.Core.Gpu.Run
 		 * @param order - Which order to use
 		 **/
 		// void sceGuFrontFace(int order); // OP_FFACE
-		[GpuOpCodesNotImplemented]
 		public void OP_FFACE()
 		{
 			GpuState[0].BackfaceCullingState.FrontFaceDirection = (FrontFaceDirectionEnum)Params24;

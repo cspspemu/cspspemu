@@ -37,6 +37,24 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		static public Action<CpuThreadState> CreateDelegateForPC(CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC)
 		{
+			DateTime Start, End;
+			int InstructionsProcessed = 0;
+			Start = DateTime.Now;
+			try
+			{
+				return _CreateDelegateForPC(CpuProcessor, MemoryStream, EntryPC, out InstructionsProcessed);
+			}
+			finally
+			{
+				End = DateTime.Now;
+				//Console.WriteLine("Generated 0x{0:X} {1} ({2})", EntryPC, End - Start, InstructionsProcessed);
+			}
+		}
+
+		static private Action<CpuThreadState> _CreateDelegateForPC(CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC, out int InstructionsProcessed)
+		{
+			InstructionsProcessed = 0;
+
 			if (EntryPC == 0)
 			{
 				if (MemoryStream is PspMemoryStream)
@@ -263,6 +281,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				uint CurrentInstructionPC = PC;
 				Instruction CurrentInstruction = InstructionReader[PC];
+				InstructionsProcessed++;
 
 				/*
 				if (!AnalyzedPC.Contains(CurrentInstructionPC))

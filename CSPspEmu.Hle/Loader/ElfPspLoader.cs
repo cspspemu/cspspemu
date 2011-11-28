@@ -100,6 +100,10 @@ namespace CSPspEmu.Hle.Loader
 			}
 		}
 
+		/// <summary>
+		/// This function relocates all the instructions and pointers of the loading executable.
+		/// </summary>
+		/// <param name="Relocs"></param>
 		protected void RelocateRelocs(IEnumerable<Elf.Reloc> Relocs)
 		{
 			var InstructionReader = new InstructionReader(ElfLoader.MemoryStream);
@@ -112,52 +116,127 @@ namespace CSPspEmu.Hle.Loader
 
 			//var Hi16List = new List<uint>();
 
+			ushort HiValue = 0;
+			var DeferredHi16 = new LinkedList<uint>(); // We'll use this to relocate R_MIPS_HI16 when we get a R_MIPS_LO16
+
 			foreach (var Reloc in Relocs)
 			{
-				var RelocatedAddress = Reloc.GetRelocatedAddress(BaseAddress);
-
 				//Console.WriteLine(Reloc.ToStringDefault());
 				//Console.WriteLine("   {0:X}", RelocatedAddress);
 
-				var Instruction = InstructionReader[RelocatedAddress];
+				// Check if R_TYPE is 0xFF (break code) and break the loop
+				// immediately in order to avoid fetching non existent program headers.
+
+				// Some games (e.g.: "Final Fantasy: Dissidia") use this kind of relocation
+				// suggesting that the PSP's ELF Loader is capable of recognizing it and stop.
+				if (Reloc.Type == Elf.Reloc.TypeEnum.StopRelocation)
+				{
+					break;
+				}
+
+				var PointerBaseOffset = (uint)ElfLoader.ProgramHeaders[Reloc.PointerSectionHeaderBase].VirtualAddress;
+				var PointeeBaseOffset = (uint)ElfLoader.ProgramHeaders[Reloc.PointeeSectionHeaderBase].VirtualAddress;
+
+				// Address of data to relocate
+				var RelocatedPointerAddress = (uint)(BaseAddress + Reloc.PointerAddress + PointerBaseOffset);
+
+				// Value of data to relocate
+				var Instruction = InstructionReader[RelocatedPointerAddress];
+
+				var S = (uint)BaseAddress + PointeeBaseOffset;
+				var GP_ADDR = (uint)BaseAddress + (uint)Reloc.PointerAddress;
+				var GP_OFFSET = (uint)GP_ADDR - ((uint)BaseAddress & 0xFFFF0000);
+
+				//Console.WriteLine(Reloc.Type);
 
 				switch (Reloc.Type)
 				{
-					case Elf.Reloc.TypeEnum.MipsHi16:
+					// Tested on PSP: R_MIPS_NONE just returns 0.
+					case Elf.Reloc.TypeEnum.None: // 0
 						{
-							Instruction.IMMU = Instruction.IMMU + (RelocatedAddress >> 16);
 						}
+						break;
+					case Elf.Reloc.TypeEnum.Mips16: // 1
+						{
+							Instruction.IMMU += S;
+						}
+						break;
+					case Elf.Reloc.TypeEnum.Mips32: // 2
+						{
+							Instruction.Value += S;
+						}
+						break;
+					case Elf.Reloc.TypeEnum.MipsRel32: // 3;
+						{
+							throw (new NotImplementedException());
+						}
+					case Elf.Reloc.TypeEnum.Mips26: // 4
+						{
+							Instruction.JUMP_Real = Instruction.JUMP_Real + S;
+						}
+						break;
+					case Elf.Reloc.TypeEnum.MipsHi16: // 5
+						{
+							HiValue = (ushort)Instruction.IMMU;
+							DeferredHi16.AddLast(RelocatedPointerAddress);
+						}
+						break;
+					case Elf.Reloc.TypeEnum.MipsLo16: // 6
+						{
+							uint A = Instruction.IMMU;
+							uint result = 0;
 
-						{
-							//Hi16List.Add(RelocatedAddress);
+							result = (uint)(HiValue << 16) | (uint)(A & 0x0000FFFF) + S;
+
+							Instruction.IMMU = result;
+
+							// Process deferred R_MIPS_HI16
+							foreach (var data_addr2 in DeferredHi16)
+							{
+								var data2 = InstructionReader[data_addr2];
+								result = ((data2.Value & 0x0000FFFF) << 16) + A + S;
+								// The low order 16 bits are always treated as a signed
+								// value. Therefore, a negative value in the low order bits
+								// requires an adjustment in the high order bits. We need
+								// to make this adjustment in two ways: once for the bits we
+								// took from the data, and once for the bits we are putting
+								// back in to the data.
+								if ((A & 0x8000) != 0) {
+									result -= 0x10000;
+								}
+								if ((result & 0x8000) != 0) {
+									 result += 0x10000;
+								}
+								data2.IMMU = (result >> 16);
+								InstructionReader[data_addr2] = data2;
+							}
+							DeferredHi16.Clear();
 						}
 						break;
-					case Elf.Reloc.TypeEnum.MipsLo16:
+					case Elf.Reloc.TypeEnum.MipsGpRel16: // 7
 						{
-							//foreach (var Hi16 in Hi16List) { } Hi16List.Clear();
+							int A = Instruction.IMM;
+							int result;
+							if (A == 0)
+							{
+								result = (int)S - (int)GP_ADDR;
+							}
+							else
+							{
+								result = (int)S + (int)GP_OFFSET + (int)(((A & 0x00008000) != 0) ? (((A & 0x00003FFF) + 0x4000) | 0xFFFF0000) : A) - (int)GP_ADDR;
+							}
+							if ((result > 32768) || (result < -32768))
+							{
+								Console.Error.WriteLine("Relocation overflow (R_MIPS_GPREL16) : '" + result + "'");
+							}
+							Instruction.IMMU = (uint)result;
 						}
 						break;
-					case Elf.Reloc.TypeEnum.Mips26:
-						{
-							uint PointedAddress = BaseAddress + Instruction.JUMP * 4;
-							Instruction.JUMP = PointedAddress / 4;
-						}
-						break;
-					case Elf.Reloc.TypeEnum.Mips32:
-						{
-							Instruction.Value = BaseAddress + Instruction.Value;
-						}
-						break;
-					case Elf.Reloc.TypeEnum.MipsGpRel16:
-						{
-						}
-						break;
-					//case Elf.Reloc.TypeEnum.MipsLo16:
 					default:
 						throw(new NotImplementedException("Handling " + Reloc.Type + " not implemented"));
 				}
 
-				InstructionReader[RelocatedAddress] = Instruction;
+				InstructionReader[RelocatedPointerAddress] = Instruction;
 			}
 		}
 

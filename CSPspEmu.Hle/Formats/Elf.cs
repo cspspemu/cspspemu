@@ -132,43 +132,51 @@ namespace CSPspEmu.Hle.Formats
 				Reloc2 = 0x700000A1,
 			}
 
+			public enum FlagsSet : uint
+			{
+				Executable = 0x1,
+				// Note: demo PRX's were found to be not writable
+				Writable = 0x2,
+				Readable = 0x4,
+			}
+
 			/// <summary>
-			/// Type of segment
+			/// Type of segment (p_type)
 			/// </summary>
 			public TypeEnum Type;
 
 			/// <summary>
-			/// Offset for segment's first byte in file
+			/// Offset for segment's first byte in file (p_offset)
 			/// </summary>
 			public uint Offset;
 
 			/// <summary>
-			/// Virtual address for segment
+			/// Virtual address for segment (p_vaddr)
 			/// </summary>
 			public uint VirtualAddress;
 
 			/// <summary>
-			/// Physical address for segment
+			/// Physical address for segment (p_paddr)
 			/// </summary>
 			public uint PsysicalAddress;
 
 			/// <summary>
-			/// Segment image size in file
+			/// Segment image size in file (p_filesz)
 			/// </summary>
 			public uint FileSize;
 
 			/// <summary>
-			/// Segment image size in memory
+			/// Segment image size in memory (p_memsz)
 			/// </summary>
 			public uint MemorySize;
 
 			/// <summary>
-			/// Flags
+			/// Flags Bits (p_flags)
 			/// </summary>
-			public uint Flags;
+			public FlagsSet Flags;
 
 			/// <summary>
-			/// Alignment
+			/// Alignment (p_align)
 			/// </summary>
 			public uint Alignment;
 		}
@@ -280,37 +288,33 @@ namespace CSPspEmu.Hle.Formats
 				MipsPc16 = 10,
 				MipsCall16 = 11,
 				MipsGpRel32 = 12,
+				StopRelocation = 0xFF,
 			}
 
 			/// <summary>
-			/// ?
+			/// Address relative to OffsetBase where is the pointer to relocate. (r_offset)
 			/// </summary>
-			public uint Address;
+			public uint PointerAddress;
 
 			/// <summary>
-			/// ?
+			/// Packed data containing AddressBase, OffsetBase and Type. (r_info)
 			/// </summary>
 			public uint Info;
 
 			/// <summary>
-			/// ?
+			/// Program Header Index where is located the referenced data (pointee) (ADDR_BASE)
 			/// </summary>
-			public uint AddressBase { get { return (Info >> 16) & 0xFF; } }
+			public uint PointeeSectionHeaderBase { get { return (Info >> 16) & 0xFF; } }
 
 			/// <summary>
-			/// ?
+			/// Program Header Index where is located the data to relocation (pointer) (OFS_BASE)
 			/// </summary>
-			public uint OffsetBase { get { return (Info >> 8) & 0xFF; } }
+			public uint PointerSectionHeaderBase { get { return (Info >> 8) & 0xFF; } }
 
 			/// <summary>
-			/// ?
+			/// Type of relocation (R_TYPE)
 			/// </summary>
 			public TypeEnum Type { get { return (TypeEnum)((Info >> 0) & 0xFF); } }
-
-			public uint GetRelocatedAddress(uint BaseAddress)
-			{
-				return BaseAddress + Address;
-			}
 		}
 
 		public struct Symbol

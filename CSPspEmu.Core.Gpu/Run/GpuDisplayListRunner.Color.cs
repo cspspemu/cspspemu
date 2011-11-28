@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
+using CSPspEmu.Core.Gpu.State.SubStates;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -61,17 +63,16 @@ namespace CSPspEmu.Core.Gpu.Run
 		 **/
 		// void sceGuColorMaterial(int components); // OP_CMAT
 		// Material Color
-		[GpuOpCodesNotImplemented]
 		public void OP_CMAT()
 		{
-			//gpu.state.materialColorComponents = command.extractSet!(LightComponents);
+			GpuState[0].LightingState.MaterialColorComponents = (LightComponentsSet)BitUtils.Extract(Params24, 0, 8);
 		}
 
 		// Alpha Blend Enable (GU_BLEND)
 		public void OP_ABE()
 		{
 			GpuState[0].BlendingState.Enabled = Bool1;
-			Console.WriteLine("BLEND! : " + Bool1 + ", " + Params24);
+			//Console.WriteLine("BLEND! : " + Bool1 + ", " + Params24);
 		}
 
 		/**
@@ -113,9 +114,17 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Blend Equation and Functions
 		public void OP_ALPHA()
 		{
-			GpuState[0].BlendingState.FunctionSource = (BlendingFactor)((Params24 >> 0) & 0xF);
-			GpuState[0].BlendingState.FunctionDestination = (BlendingFactor)((Params24 >> 4) & 0xF);
+			GpuState[0].BlendingState.FunctionSource = (GuBlendingFactorSource)((Params24 >> 0) & 0xF);
+			GpuState[0].BlendingState.FunctionDestination = (GuBlendingFactorDestination)((Params24 >> 4) & 0xF);
 			GpuState[0].BlendingState.Equation = (BlendingOpEnum)((Params24 >> 8) & 0xF);
+			/*
+			Console.WriteLine(
+				"Alpha! : {0}, {1}, {2}",
+				GpuState[0].BlendingState.FunctionSource,
+				GpuState[0].BlendingState.FunctionDestination,
+				GpuState[0].BlendingState.Equation
+			);
+			*/
 		}
 
 		// source fix color

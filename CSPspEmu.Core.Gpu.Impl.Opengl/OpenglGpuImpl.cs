@@ -68,6 +68,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 			if (VertexType.Texture != VertexTypeStruct.NumericEnum.Void)
 			{
+				//Console.WriteLine("{0}, {1}", VertexInfo.U, VertexInfo.V);
 				GL.TexCoord2(VertexInfo.U, VertexInfo.V);
 			}
 			if (VertexType.Normal != VertexTypeStruct.NumericEnum.Void)
@@ -192,9 +193,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				else
 				{
 					GL.MatrixMode(MatrixMode.Projection); GL.LoadIdentity();
-					{
-						GL.MultMatrix(GpuState[0].VertexState.ProjectionMatrix.Values);
-					}
+					GL.MultMatrix(GpuState[0].VertexState.ProjectionMatrix.Values);
 
 					GL.MatrixMode(MatrixMode.Modelview); GL.LoadIdentity();
 					GL.MultMatrix(GpuState[0].VertexState.ViewMatrix.Values);
@@ -346,16 +345,45 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		readonly byte[] TempBuffer = new byte[512 * 272 * 4];
 
+		/*
+		 * 
+		struct GlPixelFormat {
+			PixelFormats pspFormat;
+			float size;
+			uint  internal;
+			uint  external;
+			uint  opengl;
+			uint  isize() { return cast(uint)size; }
+		}
+
+		static const auto GlPixelFormats = [
+			GlPixelFormat(PixelFormats.GU_PSM_5650,   2, 3, GL_RGB,  GL_UNSIGNED_SHORT_5_6_5_REV),
+			GlPixelFormat(PixelFormats.GU_PSM_5551,   2, 4, GL_RGBA, GL_UNSIGNED_SHORT_1_5_5_5_REV),
+			GlPixelFormat(PixelFormats.GU_PSM_4444,   2, 4, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4_REV),
+			GlPixelFormat(PixelFormats.GU_PSM_8888,   4, 4, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV),
+			GlPixelFormat(PixelFormats.GU_PSM_T4  , 0.5, 1, GL_COLOR_INDEX, GL_COLOR_INDEX4_EXT),
+			GlPixelFormat(PixelFormats.GU_PSM_T8  ,   1, 1, GL_COLOR_INDEX, GL_COLOR_INDEX8_EXT),
+			GlPixelFormat(PixelFormats.GU_PSM_T16 ,   2, 4, GL_COLOR_INDEX, GL_COLOR_INDEX16_EXT),
+			GlPixelFormat(PixelFormats.GU_PSM_T32 ,   4, 4, GL_RGBA, GL_UNSIGNED_INT ), // COLOR_INDEX, GL_COLOR_INDEX32_EXT Not defined.
+			GlPixelFormat(PixelFormats.GU_PSM_DXT1,   4, 4, GL_RGBA, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT),
+			GlPixelFormat(PixelFormats.GU_PSM_DXT3,   4, 4, GL_RGBA, GL_COMPRESSED_RGBA_S3TC_DXT3_EXT),
+			GlPixelFormat(PixelFormats.GU_PSM_DXT5,   4, 4, GL_RGBA, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT),
+		];
+		*/
+
 		[HandleProcessCorruptedStateExceptions()]
 		private void PrepareWrite(GpuStateStruct* GpuState)
 		{
+			//Console.WriteLine("PrepareWrite");
 			try
 			{
 				int Width = 512;
 				int Height = 272;
 				int Width4 = Width * 4;
 				var Address = (void *)Memory.PspAddressToPointerSafe(GpuState[0].DrawBufferState.Address);
-				GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, PixelType.UnsignedInt8888, TempBuffer);
+				Console.WriteLine("{0:X}", GpuState[0].DrawBufferState.Address);
+				//GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, PixelType.UnsignedInt8888, TempBuffer);
+				//GL.ReadPixels(0, 0, Width, Height, PixelFormat.Bgra, PixelType.UnsignedInt8888, TempBuffer);
 				fixed (void* _TempBufferPtr = &TempBuffer[0])
 				{
 					var Input = (byte*)_TempBufferPtr;
@@ -368,6 +396,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 						//var ScanOut = &Output[Width4 * Row];
 						for (int n = 0; n < Width4; n += 4)
 						{
+							/*
+							ScanOut[n + 0] = ScanIn[n + 0];
+							ScanOut[n + 1] = ScanIn[n + 1];
+							ScanOut[n + 2] = ScanIn[n + 2];
+							ScanOut[n + 3] = ScanIn[n + 3];
+							*/
 							ScanOut[n + 0] = ScanIn[n + 1];
 							ScanOut[n + 1] = ScanIn[n + 2];
 							ScanOut[n + 2] = ScanIn[n + 3];

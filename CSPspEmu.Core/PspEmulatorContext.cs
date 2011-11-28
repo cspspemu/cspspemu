@@ -27,14 +27,17 @@ namespace CSPspEmu.Core
 				if (!ObjectsByType.ContainsKey(typeof(TType)))
 				{
 					Console.WriteLine("GetInstance<{0}>: Miss!", typeof(TType));
+					PspEmulatorComponent Instance;
 					if (TypesByType.ContainsKey(typeof(TType)))
 					{
-						return _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(TypesByType[typeof(TType)], this));
+						Instance = _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(TypesByType[typeof(TType)], this));
 					}
 					else
 					{
-						return _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(typeof(TType), this));
+						Instance = _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(typeof(TType), this));
 					}
+					Instance.InitializeComponent();
+					return (TType)Instance;
 				}
 
 				return (TType)ObjectsByType[typeof(TType)];

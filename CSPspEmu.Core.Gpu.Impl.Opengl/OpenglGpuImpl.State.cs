@@ -12,15 +12,39 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 	{
 		private void PrepareState(GpuStateStruct* GpuState)
 		{
-			PrepareState_CullFace(GpuState);
 			PrepareState_Texture(GpuState);
-			PrepareState_Colors(GpuState);
+			PrepareState_CullFace(GpuState);
+			//PrepareState_Colors(GpuState);
 			PrepareState_Lighting(GpuState);
 			PrepareState_Blend(GpuState);
 			PrepareState_Depth(GpuState);
 			PrepareState_DepthTest(GpuState);
+			PrepareState_Stencil(GpuState);
 
 			GL.ShadeModel((GpuState[0].ShadeModel == ShadingModelEnum.Flat) ? ShadingModel.Flat : ShadingModel.Smooth);
+		}
+
+		private void PrepareState_Stencil(GpuStateStruct* GpuState)
+		{
+			
+			if (!GlEnableDisable(EnableCap.StencilTest, GpuState[0].StencilState.Enabled))
+			{
+				return;
+			}
+
+			//if (state.stencilFuncFunc == 2) { outputDepthAndStencil(); assert(0); }
+			
+			GL.StencilFunc(
+				(StencilFunction)TestTranslate[(int)GpuState[0].StencilState.Function],
+				GpuState[0].StencilState.FunctionRef,
+				GpuState[0].StencilState.FunctionMask
+			);
+
+			GL.StencilOp(
+				StencilOperationTranslate[(int)GpuState[0].StencilState.OperationSFail],
+				StencilOperationTranslate[(int)GpuState[0].StencilState.OperationDpFail],
+				StencilOperationTranslate[(int)GpuState[0].StencilState.OperationDpPass]
+			);
 		}
 
 		private void PrepareState_CullFace(GpuStateStruct* GpuState)
@@ -37,17 +61,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			GL.DepthRange(GpuState[0].DepthTestState.RangeFar, GpuState[0].DepthTestState.RangeNear);
 		}
-
-		static readonly DepthFunction[] TestTranslate = new DepthFunction[] {
-			DepthFunction.Never,
-			DepthFunction.Always,
-			DepthFunction.Equal,
-			DepthFunction.Notequal,
-			DepthFunction.Less,
-			DepthFunction.Lequal,
-			DepthFunction.Greater, 
-			DepthFunction.Gequal
-		};
 
 		private void PrepareState_DepthTest(GpuStateStruct* GpuState)
 		{
@@ -174,119 +187,25 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 		}
 
-		static readonly BlendEquationMode[] BlendEquationTranslate = new BlendEquationMode[]
-		{
-			BlendEquationMode.FuncAdd,
-			BlendEquationMode.FuncSubtract,
-			BlendEquationMode.FuncReverseSubtract,
-			BlendEquationMode.Min,
-			BlendEquationMode.Max,
-			BlendEquationMode.FuncAdd, /* ABS */
-		};
-
-		const int GL_ZERO = 0x0;
-		const int GL_ONE                                 = 0x1;
-		const int GL_SRC_COLOR                           = 0x0300;
-		const int GL_ONE_MINUS_SRC_COLOR                 = 0x0301;
-		const int GL_SRC_ALPHA                           = 0x0302;
-		const int GL_ONE_MINUS_SRC_ALPHA                 = 0x0303;
-		const int GL_DST_ALPHA                           = 0x0304;
-		const int GL_ONE_MINUS_DST_ALPHA                 = 0x0305;
-		const int GL_DST_COLOR                           = 0x0306;
-		const int GL_ONE_MINUS_DST_COLOR                 = 0x0307;
-		const int GL_SRC_ALPHA_SATURATE                  = 0x0308;
-		const int GL_CONSTANT_COLOR = 0x8001;
-		const int GL_ONE_MINUS_CONSTANT_COLOR = 0x8002;
-		
-		static readonly BlendingFactorSrc[] BlendFuncSrcTranslate = new BlendingFactorSrc[] {
-			/// 0 GL_SRC_COLOR,
-			//BlendingFactorSrc.DstColor,
-			(BlendingFactorSrc)GL_SRC_COLOR,
-			/// 1 GL_ONE_MINUS_SRC_COLOR,
-			//BlendingFactorSrc.OneMinusDstColor,
-			(BlendingFactorSrc)GL_ONE_MINUS_SRC_COLOR,
-			/// 2 GL_SRC_ALPHA,
-			//BlendingFactorSrc.DstAlpha,
-			(BlendingFactorSrc)GL_SRC_ALPHA,
-			/// 3 GL_ONE_MINUS_SRC_ALPHA,
-			//BlendingFactorSrc.OneMinusDstAlpha,
-			(BlendingFactorSrc)GL_ONE_MINUS_SRC_ALPHA,
-			/// 4 GL_DST_ALPHA,
-			//BlendingFactorSrc.SrcAlpha,
-			(BlendingFactorSrc)GL_DST_ALPHA,
-			/// 5 GL_ONE_MINUS_DST_ALPHA,
-			//BlendingFactorSrc.OneMinusSrcAlpha,
-			(BlendingFactorSrc)GL_ONE_MINUS_DST_ALPHA,
-			/// 6 GL_SRC_ALPHA,
-			//BlendingFactorSrc.DstAlpha,
-			(BlendingFactorSrc)GL_SRC_ALPHA,
-			/// 7 GL_ONE_MINUS_SRC_ALPHA,
-			//BlendingFactorSrc.OneMinusDstAlpha,
-			(BlendingFactorSrc)GL_ONE_MINUS_SRC_ALPHA,
-			/// 8 GL_DST_ALPHA,
-			//BlendingFactorSrc.SrcAlpha,
-			(BlendingFactorSrc)GL_DST_ALPHA,
-			/// 9 GL_ONE_MINUS_DST_ALPHA,
-			//BlendingFactorSrc.OneMinusSrcAlpha,
-			(BlendingFactorSrc)GL_ONE_MINUS_DST_ALPHA,
-			/// 10 GL_SRC_ALPHA
-			//BlendingFactorSrc.DstAlpha,
-			(BlendingFactorSrc)GL_SRC_ALPHA,
-		};
-
-		static readonly BlendingFactorDest[] BlendFuncDstTranslate = new BlendingFactorDest[] {
-			/// 0 GL_DST_COLOR
-			//BlendingFactorDest.DstColor,
-			(BlendingFactorDest)GL_DST_COLOR,
-			
-			/// 1 GL_ONE_MINUS_DST_COLOR
-			//BlendingFactorDest.OneMinusDstColor,
-			(BlendingFactorDest)GL_ONE_MINUS_DST_COLOR,
-			
-			/// 2 GL_SRC_ALPHA
-			//BlendingFactorDest.SrcAlpha,
-			(BlendingFactorDest)GL_SRC_ALPHA,
-			
-			/// 3 GL_ONE_MINUS_SRC_ALPHA
-			//BlendingFactorDest.OneMinusSrcAlpha,
-			(BlendingFactorDest)GL_ONE_MINUS_SRC_ALPHA,
-			
-			/// 4 GL_DST_ALPHA
-			//BlendingFactorDest.DstAlpha,
-			(BlendingFactorDest)GL_DST_ALPHA,
-			
-			/// 5 GL_ONE_MINUS_DST_ALPHA
-			//BlendingFactorDest.OneMinusDstAlpha,
-			(BlendingFactorDest)GL_ONE_MINUS_DST_ALPHA,
-			
-			/// 6 GL_SRC_ALPHA
-			//BlendingFactorDest.SrcAlpha, 
-			(BlendingFactorDest)GL_SRC_ALPHA,
-			
-			/// 7 GL_ONE_MINUS_SRC_ALPHA
-			//BlendingFactorDest.OneMinusSrcAlpha,
-			(BlendingFactorDest)GL_ONE_MINUS_SRC_ALPHA,
-			
-			/// 8 GL_DST_ALPHA
-			//BlendingFactorDest.DstAlpha,
-			(BlendingFactorDest)GL_DST_ALPHA,
-			
-			/// 9 GL_ONE_MINUS_DST_ALPHA
-			//BlendingFactorDest.OneMinusDstAlpha,
-			(BlendingFactorDest)GL_ONE_MINUS_DST_ALPHA,
-			
-			/// 10 GL_ONE_MINUS_SRC_ALPHA
-			//BlendingFactorDest.OneMinusSrcAlpha
-			(BlendingFactorDest)GL_ONE_MINUS_SRC_ALPHA,
-		};
-
 		private void PrepareState_Blend(GpuStateStruct* GpuState)
 		{
+			/*
+			GL.Enable(EnableCap.Blend);
+			GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+			//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			//Console.WriteLine("{0}, {1}", GpuState[0].BlendingState.FunctionSource, GpuState[0].BlendingState.FunctionDestination);
+
+			return;
+			*/
+
 			var BlendingState = &GpuState[0].BlendingState;
 			if (!GlEnableDisable(EnableCap.Blend, BlendingState[0].Enabled))
 			{
 				return;
 			}
+
+			//Console.WriteLine("Blend!");
 
 			var OpenglFunctionSource = BlendFuncSrcTranslate[(int)BlendingState[0].FunctionSource];
 			var OpenglFunctionDestination = BlendFuncDstTranslate[(int)BlendingState[0].FunctionDestination];
@@ -298,12 +217,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				return GL_CONSTANT_COLOR;
 			};
 
-			if (BlendingState[0].FunctionSource == BlendingFactor.GU_FIX)
+			if (BlendingState[0].FunctionSource == GuBlendingFactorSource.GU_FIX)
 			{
 				OpenglFunctionSource = (BlendingFactorSrc)getBlendFix(BlendingState[0].FixColorSource);
 			}
 
-			if (BlendingState[0].FunctionDestination == BlendingFactor.GU_FIX)
+			if (BlendingState[0].FunctionDestination == GuBlendingFactorDestination.GU_FIX)
 			{
 				if (((int)OpenglFunctionSource == GL_CONSTANT_COLOR) && (BlendingState[0].FixColorSource + BlendingState[0].FixColorDestination).IsColorf(1, 1, 1))
 				{
@@ -325,29 +244,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				BlendingState[0].FixColorDestination.Blue,
 				BlendingState[0].FixColorDestination.Alpha
 			);
-			/*
-			int getBlendFix(Colorf color) {
-				if (color.isColorf(0, 0, 0)) return GL_ZERO;
-				if (color.isColorf(1, 1, 1)) return GL_ONE;
-				return GL_CONSTANT_COLOR;
-			}
-
-
-
-			
-			// @CHECK @FIX
-			//glBlendEquationEXT(BlendEquationTranslate[state.blend.equation]);
-			//glBlendFunc(glFuncSrc, glFuncDst);
-			
-			// @TODO Must mix colors. 
-			glBlendColor(
-				state.blend.fixColorDst.r,
-				state.blend.fixColorDst.g,
-				state.blend.fixColorDst.b,
-				state.blend.fixColorDst.a
-			);
-			*/
-			//GL.BlendColor(BlendingState[0].FixColorDst);
 		}
 
 		private void PrepareState_Texture(GpuStateStruct* GpuState)
@@ -401,9 +297,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 						*/
 				}
 			}
-
-			var MipmapAddress = Mipmap0[0].Address;
-			var MipmapPointer = Memory.PspAddressToPointer(MipmapAddress);
 
 			var Texture = TextureCache.Get(TextureState, ClutState);
 			Texture.Bind();

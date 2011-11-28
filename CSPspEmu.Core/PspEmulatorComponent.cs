@@ -13,5 +13,9 @@ namespace CSPspEmu.Core
 		{
 			this.PspEmulatorContext = PspEmulatorContext;
 		}
+
+		virtual public void InitializeComponent()
+		{
+		}
 	}
 }
