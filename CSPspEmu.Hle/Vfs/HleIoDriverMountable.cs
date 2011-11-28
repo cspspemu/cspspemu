@@ -84,7 +84,8 @@ namespace CSPspEmu.Hle.Vfs
 
 		public unsafe int IoRmdir(HleIoDrvFileArg HleIoDrvFileArg, string Name)
 		{
-			throw new NotImplementedException();
+			ReLocatePathHandle(ref HleIoDrvFileArg, ref Name);
+			return HleIoDrvFileArg.HleIoDriver.IoRmdir(HleIoDrvFileArg, Name);
 		}
 
 		public unsafe int IoDopen(HleIoDrvFileArg HleIoDrvFileArg, string Name)
@@ -109,9 +110,10 @@ namespace CSPspEmu.Hle.Vfs
 			return HleIoDrvFileArg.HleIoDriver.IoGetstat(HleIoDrvFileArg, FileName, Stat);
 		}
 
-		public unsafe int IoChstat(HleIoDrvFileArg HleIoDrvFileArg, string FileName, SceIoStat* stat, int bits)
+		public unsafe int IoChstat(HleIoDrvFileArg HleIoDrvFileArg, string FileName, SceIoStat* Stat, int Bits)
 		{
-			throw new NotImplementedException();
+			ReLocatePathHandle(ref HleIoDrvFileArg, ref FileName);
+			return HleIoDrvFileArg.HleIoDriver.IoChstat(HleIoDrvFileArg, FileName, Stat, Bits);
 		}
 
 		public unsafe int IoRename(HleIoDrvFileArg HleIoDrvFileArg, string OldFileName, string NewFileName)

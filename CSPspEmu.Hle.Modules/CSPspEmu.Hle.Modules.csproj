@@ -60,10 +60,13 @@
     <Compile Include="iofilemgr\IoFileMgrForUser.Directory.cs" />
     <Compile Include="iofilemgr\IoFileMgrForUser.Driver.cs" />
     <Compile Include="iofilemgr\IoFileMgrForUser.Files.cs" />
+    <Compile Include="libatrac3plus\sceAtrac3plus.cs" />
     <Compile Include="loadcore\LoadCoreForKernel.cs" />
     <Compile Include="loadexec\LoadExecForUser.cs" />
+    <Compile Include="loadexec\sceDmac.cs" />
     <Compile Include="mediaman\sceUmdUser.cs" />
     <Compile Include="modulemgr\ModuleMgrForUser.cs" />
+    <Compile Include="mpeg\sceMpeg.cs" />
     <Compile Include="power\scePower.Callbacks.cs" />
     <Compile Include="power\scePower.cs" />
     <Compile Include="power\scePower.Frequencies.cs" />
@@ -71,8 +74,10 @@
     <Compile Include="pspnet\sceNetInet.cs" />
     <Compile Include="registry\sceReg.cs" />
     <Compile Include="rtc\sceRtc.cs" />
+    <Compile Include="sc_sascore\sceSasCore.cs" />
     <Compile Include="stdio\StdioForUser.cs" />
     <Compile Include="sysmem\KDebugForKernel.cs" />
+    <Compile Include="sysmem\sceSuspendForUser.cs" />
     <Compile Include="sysmem\sceSysEventForKernel.cs" />
     <Compile Include="sysmem\SysMemUserForUser.cs" />
     <Compile Include="systimer\SysTimerForKernel.cs" />

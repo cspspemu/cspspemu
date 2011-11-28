@@ -11,12 +11,13 @@ using CSPspEmu.Core.Utils;
 using OpenTK.Graphics.OpenGL;
 using CSharpUtils.Extensions;
 using System.Drawing;
+using System.Runtime.ExceptionServices;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
 	sealed unsafe public class Texture : IDisposable
 	{
-		protected int TextureId;
+		private int TextureId;
 
 		public bool Recheck;
 		public TextureCacheKey TextureCacheKey;
@@ -26,16 +27,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			TextureId = GL.GenTexture();
 		}
 
-		~Texture()
-		{
-			Dispose();
-		}
-
 		public void SetData(PixelFormatDecoder.OutputPixel *Pixels, int Width, int Height)
 		{
 			Bind();
-			//GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Width, Height, 0, PixelFormat.Rgba, PixelType.UnsignedInt8888, new IntPtr(Pixels));
-			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Width, Height, 0, PixelFormat.Bgra, PixelType.UnsignedInt8888Reversed, new IntPtr(Pixels));
+			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Width, Height, 0, PixelFormat.Rgba, PixelType.UnsignedInt8888Reversed, new IntPtr(Pixels));
 
 
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
@@ -57,7 +52,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			if (TextureId != 0)
 			{
-				//GL.DeleteTexture(TextureId);
+				GL.DeleteTexture(TextureId);
 				TextureId = 0;
 			}
 		}

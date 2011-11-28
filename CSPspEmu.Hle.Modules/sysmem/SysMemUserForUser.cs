@@ -8,6 +8,52 @@ namespace CSPspEmu.Hle.Modules.sysmem
 {
 	public class SysMemUserForUser : HleModuleHost
 	{
+		// @TODO: Unknown.
+		[HlePspFunction(NID = 0xF77D77CB, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public void sceKernelSetCompilerVersion(uint param)
+		{
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="param"></param>
+		[HlePspFunction(NID = 0x7591C7DB, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public void sceKernelSetCompiledSdkVersion(uint param)
+		{
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="param"></param>
+		[HlePspFunction(NID = 0x342061E5, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public void sceKernelSetCompiledSdkVersion370(uint param)
+		{
+		}
+	
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="param"></param>
+		[HlePspFunction(NID = 0x315AD3A0, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public void sceKernelSetCompiledSdkVersion380_390(uint param)
+		{
+		}
+	
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="param"></param>
+		[HlePspFunction(NID = 0xEBD5C3E6, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public void sceKernelSetCompiledSdkVersion395(uint param)
+		{
+		}
 
 		/// <summary>
 		/// Get the size of the largest free memory block.

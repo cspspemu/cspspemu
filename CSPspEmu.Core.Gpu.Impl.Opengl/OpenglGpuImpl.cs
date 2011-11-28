@@ -377,13 +377,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//Console.WriteLine("PrepareWrite");
 			try
 			{
-				int Width = 512;
+				int Width = (int)GpuState[0].DrawBufferState.Width;
 				int Height = 272;
-				int Width4 = Width * 4;
+				int ScanWidth = Width * 4;
 				var Address = (void *)Memory.PspAddressToPointerSafe(GpuState[0].DrawBufferState.Address);
-				Console.WriteLine("{0:X}", GpuState[0].DrawBufferState.Address);
-				//GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, PixelType.UnsignedInt8888, TempBuffer);
-				//GL.ReadPixels(0, 0, Width, Height, PixelFormat.Bgra, PixelType.UnsignedInt8888, TempBuffer);
+				//Console.WriteLine("{0:X}", GpuState[0].DrawBufferState.Address);
+				GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, PixelType.UnsignedInt8888Reversed, TempBuffer);
+				GL.PixelStore(PixelStoreParameter.PackAlignment, 4);
 				fixed (void* _TempBufferPtr = &TempBuffer[0])
 				{
 					var Input = (byte*)_TempBufferPtr;
@@ -391,22 +391,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 					for (int Row = 0; Row < Height; Row++)
 					{
-						var ScanIn = &Input[Width4 * Row];
-						var ScanOut = &Output[Width4 * (Height - Row - 1)];
+						var ScanIn = (uint *)&Input[ScanWidth * Row];
+						var ScanOut = (uint *)&Output[ScanWidth * (Height - Row - 1)];
 						//var ScanOut = &Output[Width4 * Row];
-						for (int n = 0; n < Width4; n += 4)
-						{
-							/*
-							ScanOut[n + 0] = ScanIn[n + 0];
-							ScanOut[n + 1] = ScanIn[n + 1];
-							ScanOut[n + 2] = ScanIn[n + 2];
-							ScanOut[n + 3] = ScanIn[n + 3];
-							*/
-							ScanOut[n + 0] = ScanIn[n + 1];
-							ScanOut[n + 1] = ScanIn[n + 2];
-							ScanOut[n + 2] = ScanIn[n + 3];
-							ScanOut[n + 3] = ScanIn[n + 0];
-						}
+						for (int n = 0; n < Width; n++) ScanOut[n] = ScanIn[n];
 					}
 				}
 			}
@@ -449,7 +437,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
-		static IGraphicsContext GraphicsContext;
+		public static IGraphicsContext GraphicsContext;
 
 		/// <summary>
 		/// 
