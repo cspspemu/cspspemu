@@ -52,7 +52,7 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 		/// Format of the texture data.
 		/// Texture Data mode
 		/// </summary>
-		public PixelFormats PixelFormat;
+		public GuPixelFormats PixelFormat;
 
 		/// <summary>
 		/// MipmapState list

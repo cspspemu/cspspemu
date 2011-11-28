@@ -300,6 +300,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			var Texture = TextureCache.Get(TextureState, ClutState);
 			Texture.Bind();
+
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)((TextureState[0].FilterMinification == TextureFilter.Linear) ? TextureMinFilter.Linear : TextureMinFilter.Nearest));
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)((TextureState[0].FilterMagnification == TextureFilter.Linear) ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)(TextureState[0].WrapU == WrapMode.Repeat ? TextureWrapMode.Repeat : TextureWrapMode.Clamp));
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)(TextureState[0].WrapV == WrapMode.Repeat ? TextureWrapMode.Repeat : TextureWrapMode.Clamp));
+
 		}
 	}
 }

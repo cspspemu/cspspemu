@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Core
 {
-	public enum PixelFormats : uint
+	public enum GuPixelFormats : uint
 	{
 		NONE = unchecked((uint)-1),
 

@@ -68,7 +68,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Texture Pixel Storage Mode
 		public void OP_TPSM()
 		{
-			TextureState[0].PixelFormat = (PixelFormats)Params24;
+			TextureState[0].PixelFormat = (GuPixelFormats)Params24;
 		}
 
 		/**

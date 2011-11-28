@@ -83,7 +83,7 @@ namespace CSPspEmu.Hle.Modules.display
 		/// <param name="Sync">One of ::PspDisplaySetBufSync</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x289D82FE, FirmwareVersion = 150)]
-		public int sceDisplaySetFrameBuf(uint Address, int BufferWidth, PixelFormats PixelFormat, PspDisplay.SyncMode Sync)
+		public int sceDisplaySetFrameBuf(uint Address, int BufferWidth, GuPixelFormats PixelFormat, PspDisplay.SyncMode Sync)
 		{
 			//Console.WriteLine("sceDisplay.sceDisplaySetFrameBuf {0:X},{1},{2},{3}", Address, BufferWidth, PixelFormat, Sync);
 			PspDisplay.CurrentInfo.Address = Address;

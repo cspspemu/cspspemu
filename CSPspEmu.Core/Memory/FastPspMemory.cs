@@ -9,7 +9,8 @@ namespace CSPspEmu.Core.Memory
 {
 	unsafe sealed public class FastPspMemory : PspMemory
 	{
-		readonly public byte* Base = (byte*)0x40000000;
+		//readonly public byte* Base = (byte*)0x40000000;
+		readonly public byte* Base = (byte*)0x20000000;
 
 		[DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
 		internal static extern byte* VirtualAlloc(void* lpAddress, uint dwSize, uint flAllocationType, uint flProtect);

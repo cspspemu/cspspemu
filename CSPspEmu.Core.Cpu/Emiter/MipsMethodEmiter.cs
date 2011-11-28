@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define USE_DYNAMIC_METHOD
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,9 +16,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 	/// </summary>
 	unsafe public class MipsMethodEmiter
 	{
+#if USE_DYNAMIC_METHOD
+		protected DynamicMethod DynamicMethod;
+#else
 		public TypeBuilder TypeBuilder;
 		protected MethodBuilder MethodBuilder;
-		//protected DynamicMethod DynamicMethod;
+#endif
 		public ILGenerator ILGenerator;
 		protected String MethodName;
 		//public CpuThreadState CpuThreadState;
@@ -88,14 +93,37 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 
 			UniqueCounter++;
+
+#if USE_DYNAMIC_METHOD
+			DynamicMethod = new DynamicMethod(
+				"",
+				typeof(void),
+				new Type[] { typeof(CpuThreadState) },
+				Assembly.GetExecutingAssembly().ManifestModule
+			);
+			ILGenerator = DynamicMethod.GetILGenerator();
+#else
 			TypeBuilder = MipsEmiter.ModuleBuilder.DefineType("type" + UniqueCounter, TypeAttributes.Sealed | TypeAttributes.Public);
 			MethodBuilder = TypeBuilder.DefineMethod(
-				name           : MethodName = "method" + UniqueCounter,
-				attributes     : MethodAttributes.Static | MethodAttributes.Public | MethodAttributes.UnmanagedExport | MethodAttributes.Final,
-				returnType     : typeof(void),
-				parameterTypes : new Type[] { typeof(CpuThreadState) }
+				name: MethodName = "method" + UniqueCounter,
+				attributes: MethodAttributes.Static | MethodAttributes.Public | MethodAttributes.UnmanagedExport | MethodAttributes.Final,
+				returnType: typeof(void),
+				parameterTypes: new Type[] { typeof(CpuThreadState) }
 			);
 			ILGenerator = MethodBuilder.GetILGenerator();
+#endif
+		}
+
+		public Action<CpuThreadState> CreateDelegate()
+		{
+			ILGenerator.Emit(OpCodes.Ret);
+
+#if USE_DYNAMIC_METHOD
+			return (Action<CpuThreadState>)DynamicMethod.CreateDelegate(typeof(Action<CpuThreadState>));
+#else
+			var Type = TypeBuilder.CreateType();
+			return (Action<CpuThreadState>)Delegate.CreateDelegate(typeof(Action<CpuThreadState>), Type.GetMethod(MethodName));
+#endif
 		}
 
 		public void LoadFieldPtr(FieldInfo FieldInfo)
@@ -376,15 +404,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void CallMethod(Type Class, String MethodName)
 		{
 			ILGenerator.Emit(OpCodes.Call, Class.GetMethod(MethodName));
-		}
-
-		public Action<CpuThreadState> CreateDelegate()
-		{
-			ILGenerator.Emit(OpCodes.Ret);
-
-			var Type = TypeBuilder.CreateType();
-			return (Action<CpuThreadState>)Delegate.CreateDelegate(typeof(Action<CpuThreadState>), Type.GetMethod(MethodName));
-			//return (Action<Processor>)DynamicMethod.CreateDelegate(typeof(Action<Processor>));
 		}
 	}
 }

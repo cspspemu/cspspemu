@@ -233,7 +233,14 @@ namespace CSPspEmu.Hle
 
 		public override string ToString()
 		{
-			return String.Format("HleThread(Id={0}, Name='{1}')", Id, Name);
+			var Ret = String.Format("HleThread(Id={0}, Name='{1}', Status={2}", Id, Name, CurrentStatus);
+			switch (CurrentStatus)
+			{
+				case Status.Waiting:
+					Ret += String.Format(", CurrentWaitType={0}, WaitDescription={1}", CurrentWaitType, WaitDescription);
+					break;
+			}
+			return Ret + ")";
 		}
 
 		public void Finalize()

@@ -12,7 +12,7 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 		public int Shift;
 		public int Mask;
 		public int Start;
-		public PixelFormats PixelFormat;
+		public GuPixelFormats PixelFormat;
 		public byte* Data;
 		public int NumberOfColors;
 		/*

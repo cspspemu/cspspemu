@@ -15,6 +15,15 @@ namespace CSPspEmu.Core.Cpu.Emiter
 	/// 
 	/// </summary>
 	/// <see cref="http://msdn.microsoft.com/en-us/library/ms973852.aspx"/>
+	/// <see cref="http://stackoverflow.com/questions/8263146/ilgenerator-how-to-use-unmanaged-pointers-i-get-a-verificationexception"/>
+	/// <see cref="http://srstrong.blogspot.com/2008/09/unsafe-code-without-unsafe-keyword.html"/>
+	/*
+	DynamicMethod M = new DynamicMethod(
+		"HiThere",
+		ReturnType, Args,
+		Assembly.GetExecutingAssembly().ManifestModule
+	);
+	*/
 	public class FunctionGenerator
 	{
 		static public MipsEmiter MipsEmiter = new MipsEmiter();

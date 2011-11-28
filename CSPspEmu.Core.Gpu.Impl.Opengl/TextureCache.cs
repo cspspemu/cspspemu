@@ -32,12 +32,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			Bind();
 			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Width, Height, 0, PixelFormat.Rgba, PixelType.UnsignedInt8888Reversed, new IntPtr(Pixels));
 
-
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
-
 			//glTexEnvf(GL_TEXTURE_ENV, GL_RGB_SCALE, 1.0); // 2.0 in scale_2x
 			//GL.TexEnv(TextureEnvTarget.TextureEnv, GL_TEXTURE_ENV_MODE, TextureEnvModeTranslate[state.texture.effect]);
 
@@ -62,11 +56,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 	{
 		public uint TextureAddress;
 		public uint TextureHash;
-		public PixelFormats TextureFormat;
+		public GuPixelFormats TextureFormat;
 
 		public uint ClutAddress;
 		public uint ClutHash;
-		public PixelFormats ClutFormat;
+		public GuPixelFormats ClutFormat;
 		public int ClutStart;
 		public int ClutShift;
 		public int ClutMask;

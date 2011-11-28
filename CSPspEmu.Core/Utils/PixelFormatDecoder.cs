@@ -37,7 +37,7 @@ namespace CSPspEmu.Core.Utils
 			1, 1, 1
 		};
 
-		static public int GetPixelsSize(PixelFormats PixelFormat, int PixelCount)
+		static public int GetPixelsSize(GuPixelFormats PixelFormat, int PixelCount)
 		{
 			return (int)(Sizes[(int)PixelFormat] * PixelCount);
 		}
@@ -47,13 +47,13 @@ namespace CSPspEmu.Core.Utils
 		int PixelCount;
 		int Width;
 		void* Palette;
-		PixelFormats PaletteType;
+		GuPixelFormats PaletteType;
 		int PaletteCount;
 		int PaletteStart;
 		int PaletteShift;
 		int PaletteMask;
 
-		static public void Decode(PixelFormats PixelFormat, void* Input, OutputPixel* Output, int PixelCount, int Width = 0, void* Palette = null, PixelFormats PaletteType = PixelFormats.NONE, int PaletteCount = 0, int PaletteStart = 0, int PaletteShift = 0, int PaletteMask = 0xFF)
+		static public void Decode(GuPixelFormats PixelFormat, void* Input, OutputPixel* Output, int PixelCount, int Width = 0, void* Palette = null, GuPixelFormats PaletteType = GuPixelFormats.NONE, int PaletteCount = 0, int PaletteStart = 0, int PaletteShift = 0, int PaletteMask = 0xFF)
 		{
 			var PixelFormatInt = (int)PixelFormat;
 			var PixelFormatDecoder = new PixelFormatDecoder()
@@ -71,17 +71,17 @@ namespace CSPspEmu.Core.Utils
 			};
 			switch (PixelFormat)
 			{
-				case PixelFormats.RGBA_5650: PixelFormatDecoder.Decode_RGBA_5650(); break;
-				case PixelFormats.RGBA_5551: PixelFormatDecoder.Decode_RGBA_5551(); break;
-				case PixelFormats.RGBA_4444: PixelFormatDecoder.Decode_RGBA_4444(); break;
-				case PixelFormats.RGBA_8888: PixelFormatDecoder.Decode_RGBA_8888(); break;
-				case PixelFormats.PALETTE_T4: PixelFormatDecoder.Decode_PALETTE_T4(); break;
-				case PixelFormats.PALETTE_T8: PixelFormatDecoder.Decode_PALETTE_T8(); break;
-				case PixelFormats.PALETTE_T16: PixelFormatDecoder.Decode_PALETTE_T16(); break;
-				case PixelFormats.PALETTE_T32: PixelFormatDecoder.Decode_PALETTE_T32(); break;
-				case PixelFormats.COMPRESSED_DXT1: PixelFormatDecoder.Decode_COMPRESSED_DXT1(); break;
-				case PixelFormats.COMPRESSED_DXT3: PixelFormatDecoder.Decode_COMPRESSED_DXT3(); break;
-				case PixelFormats.COMPRESSED_DXT5: PixelFormatDecoder.Decode_COMPRESSED_DXT5(); break;
+				case GuPixelFormats.RGBA_5650: PixelFormatDecoder.Decode_RGBA_5650(); break;
+				case GuPixelFormats.RGBA_5551: PixelFormatDecoder.Decode_RGBA_5551(); break;
+				case GuPixelFormats.RGBA_4444: PixelFormatDecoder.Decode_RGBA_4444(); break;
+				case GuPixelFormats.RGBA_8888: PixelFormatDecoder.Decode_RGBA_8888(); break;
+				case GuPixelFormats.PALETTE_T4: PixelFormatDecoder.Decode_PALETTE_T4(); break;
+				case GuPixelFormats.PALETTE_T8: PixelFormatDecoder.Decode_PALETTE_T8(); break;
+				case GuPixelFormats.PALETTE_T16: PixelFormatDecoder.Decode_PALETTE_T16(); break;
+				case GuPixelFormats.PALETTE_T32: PixelFormatDecoder.Decode_PALETTE_T32(); break;
+				case GuPixelFormats.COMPRESSED_DXT1: PixelFormatDecoder.Decode_COMPRESSED_DXT1(); break;
+				case GuPixelFormats.COMPRESSED_DXT3: PixelFormatDecoder.Decode_COMPRESSED_DXT3(); break;
+				case GuPixelFormats.COMPRESSED_DXT5: PixelFormatDecoder.Decode_COMPRESSED_DXT5(); break;
 				default: throw(new InvalidOperationException());
 			}
 			//DecoderCallbackTable[PixelFormatInt](Input, Output, PixelCount, Width, Palette, PaletteType, PaletteCount, PaletteStart, PaletteShift, PaletteMask);
@@ -116,7 +116,7 @@ namespace CSPspEmu.Core.Utils
 		{
 			var Input = (byte*)_Input;
 
-			if (Palette == null || PaletteType == PixelFormats.NONE) throw (new Exception("Palette required!"));
+			if (Palette == null || PaletteType == GuPixelFormats.NONE) throw (new Exception("Palette required!"));
 			OutputPixel[] PalettePixels;
 			int PaletteSize = 256;
 			PalettePixels = new OutputPixel[PaletteSize];
@@ -142,7 +142,7 @@ namespace CSPspEmu.Core.Utils
 		{
 			var Input = (byte*)_Input;
 
-			if (Palette == null || PaletteType == PixelFormats.NONE) throw(new Exception("Palette required!"));
+			if (Palette == null || PaletteType == GuPixelFormats.NONE) throw(new Exception("Palette required!"));
 			OutputPixel[] PalettePixels;
 			int PaletteSize = 256;
 			PalettePixels = new OutputPixel[PaletteSize];

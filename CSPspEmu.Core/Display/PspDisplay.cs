@@ -15,7 +15,7 @@ namespace CSPspEmu.Core.Display
 		{
 			Address = 0x04000000,
 			BufferWidth = 512,
-			PixelFormat = PixelFormats.RGBA_8888,
+			PixelFormat = GuPixelFormats.RGBA_8888,
 			Sync = SyncMode.Immediate,
 			Mode = 0,
 			Width = 480,
@@ -31,7 +31,7 @@ namespace CSPspEmu.Core.Display
 		public struct Info {
 			public uint Address;
 			public int BufferWidth;
-			public PixelFormats PixelFormat;
+			public GuPixelFormats PixelFormat;
 			public SyncMode Sync;
 			public int Mode;
 			public int Width;

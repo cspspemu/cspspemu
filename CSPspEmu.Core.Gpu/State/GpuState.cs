@@ -119,7 +119,7 @@ namespace CSPspEmu.Core.Gpu.State
 
 	public struct ScreenBufferStateStruct {
 		public uint Width;
-		public PixelFormats Format;
+		public GuPixelFormats Format;
 
 		public byte HighAddress;
 		public uint LowAddress;

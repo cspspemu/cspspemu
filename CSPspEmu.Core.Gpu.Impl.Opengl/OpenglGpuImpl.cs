@@ -16,6 +16,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
 using System.Globalization;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Core.Utils;
 //using Cloo;
 //using Cloo.Bindings;
 
@@ -343,7 +344,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			*/
 		}
 
-		readonly byte[] TempBuffer = new byte[512 * 272 * 4];
+		readonly byte[] TempBuffer = new byte[512 * 512 * 4];
 
 		/*
 		 * 
@@ -371,19 +372,40 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		];
 		*/
 
+		public struct GlPixelFormat
+		{
+			public GuPixelFormats GuPixelFormat;
+			public PixelType OpenglPixelType;
+		};
+
+		static readonly public GlPixelFormat[] GlPixelFormatList = new GlPixelFormat[]
+		{
+			new GlPixelFormat() { GuPixelFormat = GuPixelFormats.RGBA_5650, OpenglPixelType = PixelType.UnsignedShort565Reversed },
+			new GlPixelFormat() { GuPixelFormat = GuPixelFormats.RGBA_5551, OpenglPixelType = PixelType.UnsignedShort1555Reversed },
+			new GlPixelFormat() { GuPixelFormat = GuPixelFormats.RGBA_4444, OpenglPixelType = PixelType.UnsignedShort4444Reversed },
+			new GlPixelFormat() { GuPixelFormat = GuPixelFormats.RGBA_8888, OpenglPixelType = PixelType.UnsignedInt8888Reversed },
+		};
+
 		[HandleProcessCorruptedStateExceptions()]
 		private void PrepareWrite(GpuStateStruct* GpuState)
 		{
 			//Console.WriteLine("PrepareWrite");
 			try
 			{
+				var GlPixelFormat = GlPixelFormatList[(int)GpuState[0].DrawBufferState.Format];
 				int Width = (int)GpuState[0].DrawBufferState.Width;
 				int Height = 272;
-				int ScanWidth = Width * 4;
+				int ScanWidth = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, Width);
+				int PixelSize = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, 1);
+				//GpuState[0].DrawBufferState.Format
 				var Address = (void *)Memory.PspAddressToPointerSafe(GpuState[0].DrawBufferState.Address);
+
+				//Console.WriteLine("{0}", GlPixelFormat.GuPixelFormat);
+
 				//Console.WriteLine("{0:X}", GpuState[0].DrawBufferState.Address);
-				GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, PixelType.UnsignedInt8888Reversed, TempBuffer);
-				GL.PixelStore(PixelStoreParameter.PackAlignment, 4);
+				GL.PixelStore(PixelStoreParameter.PackAlignment, PixelSize);
+				GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, TempBuffer);
+
 				fixed (void* _TempBufferPtr = &TempBuffer[0])
 				{
 					var Input = (byte*)_TempBufferPtr;
@@ -391,10 +413,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 					for (int Row = 0; Row < Height; Row++)
 					{
-						var ScanIn = (uint *)&Input[ScanWidth * Row];
-						var ScanOut = (uint *)&Output[ScanWidth * (Height - Row - 1)];
-						//var ScanOut = &Output[Width4 * Row];
-						for (int n = 0; n < Width; n++) ScanOut[n] = ScanIn[n];
+						var ScanIn = (byte *)&Input[ScanWidth * Row];
+						var ScanOut = (byte*)&Output[ScanWidth * (Height - Row - 1)];
+						//Console.WriteLine("{0}:{1},{2},{3}", Row, PixelSize, Width, ScanWidth);
+						PointerUtils.Memcpy(ScanOut, ScanIn, ScanWidth);
 					}
 				}
 			}

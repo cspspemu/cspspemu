@@ -291,7 +291,14 @@ namespace CSPspEmu.Hle
 
 			if (ParameterType.IsPointer)
 			{
-				return "0x%08X".Sprintf(CpuThreadState.CpuProcessor.Memory.PointerToPspAddress((void*)Int4));
+				try
+				{
+					return "0x%08X".Sprintf(CpuThreadState.CpuProcessor.Memory.PointerToPspAddress((void*)Int4));
+				}
+				catch (Exception)
+				{
+					return String.Format("0x{0:X}", CpuThreadState.CpuProcessor.Memory.PointerToPspAddress((void*)Int4));
+				}
 			}
 
 			if (ParameterType == typeof(float))
@@ -299,7 +306,14 @@ namespace CSPspEmu.Hle
 				return String.Format("{0}", Float4);
 			}
 
-			return "0x%08X".Sprintf(Int4);
+			try
+			{
+				return "0x%08X".Sprintf(Int4);
+			}
+			catch (Exception)
+			{
+				return String.Format("0x{0:X}", Int4);
+			}
 		}
 	}
 }
