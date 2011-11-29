@@ -194,13 +194,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			});
 		}
 
-		private void Load_Register(uint Register, uint Index, uint VectorSize, bool Debug)
+		private void Load_Register(uint Register, uint Index, uint VectorSize, bool Debug = false)
 		{
 			_VfpuLoadVectorWithIndexPointer(Register, Index, VectorSize, Debug);
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
 		}
 
-		private void Save_Register(uint Register, uint Index, uint VectorSize, Action Action, bool Debug)
+		private void Save_Register(uint Register, uint Index, uint VectorSize, Action Action, bool Debug = false)
 		{
 			_VfpuLoadVectorWithIndexPointer(Register, Index, VectorSize, Debug);
 			Action();
@@ -246,8 +246,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// S000 <-- S(Matrix)(Column)(Row)
 		private void _VfpuLoadVectorWithIndexPointer(uint Register, uint Index, uint Size, bool Debug = false)
 		{
-			
-			
 			uint Line = BitUtils.Extract(Register, 0, 2); // 0-3
 			uint Matrix = BitUtils.Extract(Register, 2, 3); // 0-7
 			LineType LineType = LineType.None;
@@ -278,21 +276,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 			uint RegisterIndex = Matrix * 16 + Row * 4 + Column;
 
-/*
-		bool order  = void;
-
-		if (row.length == 1) {
-			offset = (vx >> 5) & 3;
-			order  = false;
-		} else {
-			offset = (vx & 64) >> (3 + row.length);
-			order = ((vx & 32) != 0);
-		}
-		
-		if (order) foreach (n, ref value; row) value = &registers.VF_CELLS[matrix][offset + n][line];
-		else       foreach (n, ref value; row) value = &registers.VF_CELLS[matrix][line][offset + n];
- */
-
 			if (Debug)
 			{
 				char C = 'S';
@@ -302,7 +285,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				}
 				Console.Error.WriteLine(
 					"_VfpuLoadVectorWithIndexPointer(R={0},I={1},S={2}): " +
-					"{9}{3}{4}{5} :: Matrix={3}, Column={4}, Row={5}, Type={6}, " +
+					"{9}{3}{4}{5} Index({1}) :: Matrix={3}, Column={4}, Row={5}, Type={6}, " +
 					"RegisterIndex={7}, Line={8}",
 					Register, Index, Size,
 					Matrix, Column, Row, LineType,

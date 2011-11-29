@@ -308,9 +308,31 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			});
 		}
 
+		void _vidt_x(uint VectorSize, uint Register)
+		{
+			uint IndexOne = BitUtils.Extract(Register, 0, 2);
+			foreach (var Index in XRange(0, VectorSize))
+			{
+				Save_Register(Register, Index, VectorSize, () =>
+				{
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (Index == IndexOne) ? 1.0f : 0.0f);
+				}
+				//, Debug: true
+				);
+			}
+		}
+
 		// Vfpu (Matrix) IDenTity
 		public void vidt() { throw (new NotImplementedException("")); }
-		public void vmidt() { throw (new NotImplementedException("")); }
+		public void vmidt()
+		{
+			var MatrixSize = Instruction.ONE_TWO;
+
+			foreach (var Index in XRange(0, MatrixSize))
+			{
+				_vidt_x(MatrixSize, Instruction.VD + Index);
+			}
+		}
 
 		// Vfpu load Integer IMmediate
 		public void viim()
@@ -330,7 +352,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void vflush() { throw (new NotImplementedException("")); }
 
 		public void vpfxd() { throw (new NotImplementedException("")); }
-		public void vpfxs() { throw (new NotImplementedException("")); }
+		public void vpfxs() {
+			//registers.vfpu_prefix_s = Prefix(instruction.v, true);
+
+			throw (new NotImplementedException(""));
+		}
 		public void vpfxt() { throw (new NotImplementedException("")); }
 
 		public void vdet() { throw (new NotImplementedException("")); }
