@@ -247,7 +247,7 @@ namespace CSPspEmu.AutoTests
 				Console.SetWindowSize(160, 60);
 				Console.SetBufferSize(160, 2000);
 
-				WildCardFilter = "vblank";
+				WildCardFilter = "vfpu";
 			}
 			Init();
 			Run(PspAutoTestsFolder, WildCardFilter);

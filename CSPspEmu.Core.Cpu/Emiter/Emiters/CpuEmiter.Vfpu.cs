@@ -119,35 +119,72 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				throw (new NotImplementedException(""));
 			}
-			for (uint Index = 0; Index < VectorSize; Index++)
+
+			foreach (var Index in XRange(0, VectorSize))
 			{
-				_VfpuLoadVectorWithIndexPointer(Instruction.VD, Index, VectorSize);
+				Save_VD(Index, VectorSize, () =>
 				{
-					_VfpuLoadVectorWithIndexPointer(Instruction.VS, Index, VectorSize);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
-
-					_VfpuLoadVectorWithIndexPointer(Instruction.VT, 0, 1);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
-
+					Load_VS(Index, VectorSize);
+					Load_VT(0, 1);
 					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
-				}
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_R4);
+				});
 			}
-			/*
-			loadVs(vsize);
-			loadVt(1);
-			{
-				auto scale = VT[0];
-				foreach (n, ref value; VD[0..vsize]) value = VS[n] * scale;
-			}
-			saveVd(vsize);
-			*/
 		}
 		public void vslt() { throw (new NotImplementedException("")); }
 		public void vsge() { throw (new NotImplementedException("")); }
 
 		// ROTate
-		public void vrot() { throw (new NotImplementedException("")); }
+		public void vrot()
+		{
+			var VectorSize = Instruction.ONE_TWO;
+			uint imm5 = Instruction.IMM5;
+			if (VectorSize == 1) throw(new NotImplementedException());
+
+			//uint imm5 = instruction.IMM5;
+			uint si = (imm5 >> 2) & 3;
+			uint ci = (imm5 >> 0) & 3;
+			bool NegateSin = ((imm5 & 16) != 0);
+
+			foreach (var Index in XRange(0, VectorSize))
+			{
+				Save_VD(Index, VectorSize, () =>
+				{
+					if (si == ci)
+					{
+						// Angle [-1, +1]
+						Load_VS(0, 1); // Angle
+						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (float)(Math.PI / 2.0f));
+						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+						MipsMethodEmiter.CallMethod(typeof(MathFloat), "Sin");
+					}
+					else
+					{
+						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (float)(0.0f));
+					}
+				});
+			}
+
+			if (si != ci)
+			{
+				Save_VD(si, VectorSize, () =>
+				{
+					// Angle [-1, +1]
+					Load_VS(0, 1); // Angle
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (float)(Math.PI / 2.0f));
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+					MipsMethodEmiter.CallMethod(typeof(MathFloat), "Sin");
+				});
+			}
+
+			Save_VD(ci, VectorSize, () =>
+			{
+				// Angle [-1, +1]
+				Load_VS(0, 1); // Angle
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (float)(Math.PI / 2.0f));
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+				MipsMethodEmiter.CallMethod(typeof(MathFloat), "Cos");
+			});
+		}
 
 		// Vfpu ZERO/ONE
 		public void vzero() { throw (new NotImplementedException("")); }
@@ -182,10 +219,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 			foreach (var Index in XRange(0, VectorSize))
 			{
+				//Console.Error.WriteLine("{0}/{1}", Index, VectorSize);
 				Save_VD(Index, VectorSize, () =>
 				{
 					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (float)FloatConstant);
-				});
+				}
+				//, Debug: true
+				);
 			}
 			//_call_debug_vfpu();
 		}

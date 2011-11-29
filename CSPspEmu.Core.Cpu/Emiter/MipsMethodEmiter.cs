@@ -403,7 +403,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public void CallMethod(Type Class, String MethodName)
 		{
-			ILGenerator.Emit(OpCodes.Call, Class.GetMethod(MethodName));
+			var Method = Class.GetMethod(MethodName);
+			if (Method == null) throw (new KeyNotFoundException(String.Format("Can't find {0}::{1}", Class, MethodName)));
+			ILGenerator.Emit(OpCodes.Call, Method);
 		}
 
 		public void CallMethodWithCpuThreadStateAsFirstArgument(Type Class, String MethodName)

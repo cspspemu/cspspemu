@@ -100,7 +100,7 @@ namespace CSPspEmu.Hle.Managers
 		{
 			ThreadToSchedule.PriorityValue = Threads.Min(Thread => Thread.PriorityValue) - 1;
 			Reschedule();
-			Console.WriteLine("!ScheduleNext: ");
+			//Console.WriteLine("!ScheduleNext: ");
 		}
 
 		public void StepNext()

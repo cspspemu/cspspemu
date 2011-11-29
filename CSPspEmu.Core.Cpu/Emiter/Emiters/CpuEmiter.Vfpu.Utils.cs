@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -193,37 +194,37 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			});
 		}
 
-		private void Load_Register(uint Register, uint Index, uint VectorSize)
+		private void Load_Register(uint Register, uint Index, uint VectorSize, bool Debug)
 		{
-			_VfpuLoadVectorWithIndexPointer(Register, Index, VectorSize);
+			_VfpuLoadVectorWithIndexPointer(Register, Index, VectorSize, Debug);
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
 		}
 
-		private void Save_Register(uint Register, uint Index, uint VectorSize, Action Action)
+		private void Save_Register(uint Register, uint Index, uint VectorSize, Action Action, bool Debug)
 		{
-			_VfpuLoadVectorWithIndexPointer(Register, Index, VectorSize);
+			_VfpuLoadVectorWithIndexPointer(Register, Index, VectorSize, Debug);
 			Action();
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_R4);
 		}
 
-		private void Load_VS(uint Index, uint VectorSize)
+		private void Load_VS(uint Index, uint VectorSize, bool Debug = false)
 		{
-			Load_Register(Instruction.VS, Index, VectorSize);
+			Load_Register(Instruction.VS, Index, VectorSize, Debug);
 		}
 
-		private void Load_VT(uint Index, uint VectorSize)
+		private void Load_VT(uint Index, uint VectorSize, bool Debug = false)
 		{
-			Load_Register(Instruction.VT, Index, VectorSize);
+			Load_Register(Instruction.VT, Index, VectorSize, Debug);
 		}
 
-		private void Save_VD(uint Index, uint VectorSize, Action Action)
+		private void Save_VD(uint Index, uint VectorSize, Action Action, bool Debug = false)
 		{
-			Save_Register(Instruction.VD, Index, VectorSize, Action);
+			Save_Register(Instruction.VD, Index, VectorSize, Action, Debug);
 		}
 
-		private void Save_VT(uint Index, uint VectorSize, Action Action)
+		private void Save_VT(uint Index, uint VectorSize, Action Action, bool Debug = false)
 		{
-			Save_Register(Instruction.VT, Index, VectorSize, Action);
+			Save_Register(Instruction.VT, Index, VectorSize, Action, Debug);
 		}
 
 		IEnumerable<uint> XRange(uint Start, uint End)
@@ -242,49 +243,73 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			Column = 2,
 		}
 
-		private void _VfpuLoadVectorWithIndexPointer(uint Register, uint Index, uint Size)
+		// S000 <-- S(Matrix)(Column)(Row)
+		private void _VfpuLoadVectorWithIndexPointer(uint Register, uint Index, uint Size, bool Debug = false)
 		{
-			uint Line = (Register >> 0) & 3; // 0-3
-			uint Matrix = (Register >> 2) & 7; // 0-7
-			uint Offset;
-			LineType LineType;
+			
+			
+			uint Line = BitUtils.Extract(Register, 0, 2); // 0-3
+			uint Matrix = BitUtils.Extract(Register, 2, 3); // 0-7
+			LineType LineType = LineType.None;
+			uint Row = 0;
+			uint Column = 0;
 
 			if (Size == 1)
 			{
-				Offset = (Register >> 5) & 3;
-				LineType = LineType.None;
+				Column = Line;
+				Row = (Register >> 5) & 3;
 			}
 			else
 			{
-				Offset = (Register & 64) >> (int)(3 + Size);
-				LineType = ((Register & 32) != 0) ? LineType.Column : LineType.Row;
-			}
+				uint Offset = (Register & 64) >> (int)(3 + Size);
+				LineType = ((Register & 32) == 0) ? LineType.Column : LineType.Row;
 
-			uint Row;
-			uint Column;
-			if (LineType == LineType.Row)
-			{
-				Column = Offset;
-				Row = Index;
-			}
-			else
-			{
-				Column = Index;
-				Row = Offset;
+				if (LineType == LineType.Row)
+				{
+					Column = Offset + Index;
+					Row = Line;
+				}
+				else
+				{
+					Column = Line;
+					Row = Offset + Index;
+				}
 			}
 
 			uint RegisterIndex = Matrix * 16 + Row * 4 + Column;
 
-			/*
-			Console.Error.WriteLine(
-				"_VfpuLoadVectorWithIndexPointer(R={0},I={1},S={2}): " +
-				"Matrix={3}, Row={4}, Column={5}, Type={6}, " +
-				"RegisterIndex={7}",
-				Register, Index, Size,
-				Matrix, Row, Column, LineType,
-				RegisterIndex
-			);
-			*/
+/*
+		bool order  = void;
+
+		if (row.length == 1) {
+			offset = (vx >> 5) & 3;
+			order  = false;
+		} else {
+			offset = (vx & 64) >> (3 + row.length);
+			order = ((vx & 32) != 0);
+		}
+		
+		if (order) foreach (n, ref value; row) value = &registers.VF_CELLS[matrix][offset + n][line];
+		else       foreach (n, ref value; row) value = &registers.VF_CELLS[matrix][line][offset + n];
+ */
+
+			if (Debug)
+			{
+				char C = 'S';
+				if (LineType != LineType.None)
+				{
+					C = (LineType == LineType.Row) ? 'R' : 'C';
+				}
+				Console.Error.WriteLine(
+					"_VfpuLoadVectorWithIndexPointer(R={0},I={1},S={2}): " +
+					"{9}{3}{4}{5} :: Matrix={3}, Column={4}, Row={5}, Type={6}, " +
+					"RegisterIndex={7}, Line={8}",
+					Register, Index, Size,
+					Matrix, Column, Row, LineType,
+					RegisterIndex,
+					Line, C
+				);
+			}
 
 			//if (Reg == null) throw(new InvalidOperationException("Invalid Vfpu register"));
 			MipsMethodEmiter.LoadFieldPtr(typeof(CpuThreadState).GetField("VFR" + RegisterIndex));
