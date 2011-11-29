@@ -74,6 +74,11 @@
     <Compile Include="power\scePower.cs" />
     <Compile Include="power\scePower.Frequencies.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="pspnet\sceNet.cs" />
+    <Compile Include="pspnet\sceNetAdhoc.cs" />
+    <Compile Include="pspnet\sceNetAdhocctl.cs" />
+    <Compile Include="pspnet\sceNetAdhocMatching.cs" />
+    <Compile Include="pspnet\sceNetApctl.cs" />
     <Compile Include="pspnet\sceNetInet.cs" />
     <Compile Include="pspnet\sceNetResolver.cs" />
     <Compile Include="registry\sceReg.cs" />
@@ -121,6 +126,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="README.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="threadman\ThreadManForUser.VTimer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="NewFolder1\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
