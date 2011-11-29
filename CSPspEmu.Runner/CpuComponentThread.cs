@@ -201,7 +201,7 @@ namespace CSPspEmu.Runner
 			}
 		}
 
-		protected void Main_Ended()
+		private void Main_Ended()
 		{
 			StoppedEndedEvent.Set();
 
@@ -228,14 +228,15 @@ namespace CSPspEmu.Runner
 						ThreadManager.StepNext();
 					}
 				}
-				catch (SceKernelSelfStopUnloadModuleException)
-				{
-					Console.WriteLine("SceKernelSelfStopUnloadModuleException");
-
-					Main_Ended();
-				}
 				catch (Exception Exception)
 				{
+					if (Exception is SceKernelSelfStopUnloadModuleException || Exception.InnerException is SceKernelSelfStopUnloadModuleException)
+					{
+						Console.WriteLine("SceKernelSelfStopUnloadModuleException");
+						Main_Ended();
+						return;
+					}
+
 					ConsoleUtils.SaveRestoreConsoleState(() =>
 					{
 						Console.ForegroundColor = ConsoleColor.Red;
@@ -244,7 +245,7 @@ namespace CSPspEmu.Runner
 						{
 							Console.WriteLine("Error on thread {0}", ThreadManager.Current);
 
-							Console.WriteLine(Exception);
+							Console.Error.WriteLine(Exception);
 
 							ThreadManager.Current.CpuThreadState.DumpRegisters();
 

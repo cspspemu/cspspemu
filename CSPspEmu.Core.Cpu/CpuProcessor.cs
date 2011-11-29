@@ -62,20 +62,27 @@ namespace CSPspEmu.Core.Cpu
 		{
 		}
 
-		public unsafe void sceKernelDcacheWritebackRange(void* Pointer, uint Size)
+		public void sceKernelDcacheWritebackRange(uint Address, uint Size)
 		{
 		}
 
-		public unsafe void sceKernelDcacheWritebackInvalidateRange(void* Pointer, uint Size)
+		public void sceKernelDcacheWritebackInvalidateRange(uint Address, uint Size)
 		{
 		}
 
-		public unsafe void sceKernelDcacheInvalidateRange(void* Pointer, uint Size)
+		public void sceKernelDcacheInvalidateRange(uint Address, uint Size)
 		{
 		}
 
 		public void sceKernelDcacheWritebackAll()
 		{
+		}
+
+		public void sceKernelIcacheInvalidateRange(uint Address, uint Size)
+		{
+			//Console.Error.WriteLine("sceKernelIcacheInvalidateRange!!! (0x{0:X}, {1})", Address, Size);
+			MethodCache.ClearRange(Address, Address + Size);
+			//MethodCache.Clear();
 		}
 	}
 }

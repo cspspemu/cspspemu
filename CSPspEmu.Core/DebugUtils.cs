@@ -18,6 +18,5 @@ namespace CSPspEmu.Core
 
 		[DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
 		internal static extern void DebugBreak();
-
 	}
 }

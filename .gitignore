@@ -49,3 +49,4 @@
 *.dll
 *.config
 *.exe
+/ms

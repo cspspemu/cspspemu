@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Cpu;
 
 namespace CSPspEmu.Hle.Modules.utils
 {
@@ -76,7 +77,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// <param name="Pointer"></param>
 		/// <param name="Size"></param>
 		[HlePspFunction(NID = 0xBFA98062, FirmwareVersion = 150)]
-		public void sceKernelDcacheInvalidateRange(void* Pointer, uint Size)
+		public void sceKernelDcacheInvalidateRange(uint Pointer, uint Size)
 		{
 			HleState.CpuProcessor.sceKernelDcacheInvalidateRange(Pointer, Size);
 		}
@@ -87,7 +88,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// <param name="Pointer"></param>
 		/// <param name="Size"></param>
 		[HlePspFunction(NID = 0x34B9FA9E, FirmwareVersion = 150)]
-		public void sceKernelDcacheWritebackInvalidateRange(void* Pointer, uint Size)
+		public void sceKernelDcacheWritebackInvalidateRange(uint Pointer, uint Size)
 		{
 			HleState.CpuProcessor.sceKernelDcacheWritebackInvalidateRange(Pointer, Size);
 		}
@@ -98,7 +99,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// <param name="Pointer"></param>
 		/// <param name="Size"></param>
 		[HlePspFunction(NID = 0xB435DEC5, FirmwareVersion = 150)]
-		public void sceKernelDcacheWritebackRange(void* Pointer, uint Size)
+		public void sceKernelDcacheWritebackRange(uint Pointer, uint Size)
 		{
 			HleState.CpuProcessor.sceKernelDcacheWritebackRange(Pointer, Size);
 		}
@@ -211,5 +212,18 @@ namespace CSPspEmu.Hle.Modules.utils
 		{
 			throw(new NotImplementedException());
 		}
+
+		/// <summary>
+		/// Invalidate a range of addresses in instruction cache
+		/// </summary>
+		/// <param name="p"></param>
+		/// <param name="size"></param>
+		[HlePspFunction(NID = 0xC2DF770E, FirmwareVersion = 150)]
+		public void sceKernelIcacheInvalidateRange(CpuThreadState CpuThreadState, uint Address, uint Size)
+		{
+			CpuThreadState.CpuProcessor.sceKernelIcacheInvalidateRange(Address, Size);
+			// Unimplemented cache.	
+		}
+
 	}
 }

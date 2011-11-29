@@ -3,11 +3,72 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Cpu
 {
 	public struct Instruction
 	{
+		static public float HalfFloatToFloat(int imm16)
+		{
+			int s = (imm16 >> 15) & 0x00000001; // sign
+			int e = (imm16 >> 10) & 0x0000001f; // exponent
+			int f = (imm16 >> 0) & 0x000003ff; // fraction
+
+			// need to handle 0x7C00 INF and 0xFC00 -INF?
+			if (e == 0)
+			{
+				// need to handle +-0 case f==0 or f=0x8000?
+				if (f == 0)
+				{
+					// Plus or minus zero
+					return MathFloat.ReinterpretIntAsFloat(s << 31);
+				}
+				// Denormalized number -- renormalize it
+				while ((f & 0x00000400) == 0)
+				{
+					f <<= 1;
+					e -= 1;
+				}
+				e += 1;
+				f &= ~0x00000400;
+			}
+			else if (e == 31)
+			{
+				if (f == 0)
+				{
+					// Inf
+					return MathFloat.ReinterpretIntAsFloat((s << 31) | 0x7f800000);
+				}
+				// NaN
+				return MathFloat.ReinterpretIntAsFloat((s << 31) | 0x7f800000 | (f << 13));
+			}
+
+			e = e + (127 - 15);
+			f = f << 13;
+
+			return MathFloat.ReinterpretIntAsFloat((s << 31) | (e << 23) | f);
+		}
+
+		/*
+		static private float HalfFloatToFloat(ushort ShortValue)
+		{
+			uint Value = 0;
+			var Significand = BitUtils.Extract(ShortValue, 0, 10);
+			var Exponent    = BitUtils.Extract(ShortValue, 10, 5);
+			var Sign        = BitUtils.Extract(ShortValue, 15, 1);
+			BitUtils.Insert(ref Value, 0, 23, Significand);
+			BitUtils.Insert(ref Value, 23, 8, Exponent);
+			//BitUtils.Insert(ref Value, 13, 10, Significand);
+			//BitUtils.Insert(ref Value, 26, 5, Exponent);
+			BitUtils.Insert(ref Value, 31, 1, Exponent);
+			//Console.Error.WriteLine("%032b".Sprintf(Value));
+			float ValueFloat = MathFloat.ReinterpretUIntAsFloat(Value);
+			Console.Error.WriteLine(ValueFloat);
+			return ValueFloat;
+		}
+		*/
+
 		public uint Value;
 
 		private void set(int Offset, int Count, uint SetValue)
@@ -82,8 +143,6 @@ namespace CSPspEmu.Core.Cpu
 		// // SVQ(111110:rs:vt5:imm14:0:vt1)
 		~ bitslice!("v", uint, "VT1", 0, 1)
 		~ bitslice!("v", uint, "VT2", 0, 2)
-		~ bitslice!("v", int , "IMM14", 2, 14)
-		~ bitslice!("v", uint, "VT5", 16, 5)
 		~ bitslice!("v", uint, "IMM5", 16, 5)
 
 		~ bitslice!("v", uint, "IMM4",  0, 4)
@@ -97,5 +156,27 @@ namespace CSPspEmu.Core.Cpu
 		~ bitslice!("v", uint, "LSB", 6 + 5 * 0, 5)
 		~ bitslice!("v", uint, "MSB", 6 + 5 * 1, 5)
 		*/
+
+		/// <summary>
+		/// @TODO: Signed or unsigned?
+		/// </summary>
+		public uint IMM14 { get { return get(2, 14); } set { set(2, 14, value); } }
+		public uint IMM5 { get { return get(16, 5); } set { set(16, 5, value); } }
+
+		public uint VT1 { get { return get(0, 1); } set { set(0, 1, value); } }
+		public uint VT2 { get { return get(0, 2); } set { set(0, 2, value); } }
+
+		public uint VT5 { get { return get(16, 5); } set { set(16, 5, value); } }
+
+		public uint VT5_1 { get { return VT5 | (VT1 << 5); } }
+		public uint VT5_2 { get { return VT5 | (VT2 << 5); } }
+
+		public float IMM_HF
+		{
+			get
+			{
+				return HalfFloatToFloat(IMM);
+			}
+		}
 	}
 }

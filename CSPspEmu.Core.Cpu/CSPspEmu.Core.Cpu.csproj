@@ -54,6 +54,7 @@
     <Compile Include="Emiter\Emiters\CpuEmiter.LoadStore.cs" />
     <Compile Include="Emiter\Emiters\CpuEmiter.Special.cs" />
     <Compile Include="Emiter\Emiters\CpuEmiter.Vfpu.cs" />
+    <Compile Include="Emiter\Emiters\CpuEmiter.Vfpu.Utils.cs" />
     <Compile Include="Emiter\Emiters\CpuEmiter.Vfpu_Branches.cs" />
     <Compile Include="Emiter\FunctionGenerator.cs" />
     <Compile Include="MethodCacheFast.cs" />

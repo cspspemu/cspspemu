@@ -10,7 +10,7 @@ using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.display
 {
-	public class sceDisplay : HleModuleHost
+	unsafe public class sceDisplay : HleModuleHost
 	{
 		protected PspDisplay PspDisplay { get { return HleState.PspDisplay; } }
 		protected PspRtc PspRtc { get { return HleState.PspRtc; } }
@@ -111,6 +111,23 @@ namespace CSPspEmu.Hle.Modules.display
 		{
 			return (uint)PspDisplay.VblankCount;
 		}
-	
+
+		/// <summary>
+		/// Get Display Framebuffer information
+		/// </summary>
+		/// <param name="topaddr">pointer to void* to receive address of start of framebuffer</param>
+		/// <param name="bufferwidth">pointer to int to receive buffer width (must be power of 2)</param>
+		/// <param name="pixelformat">pointer to int to receive one of ::PspDisplayPixelFormats.</param>
+		/// <param name="sync">One of ::PspDisplaySetBufSync</param>
+		/// <returns>0 on success</returns>
+		[HlePspFunction(NID = 0xEEDA2E54, FirmwareVersion = 150)]
+		//public int sceDisplayGetFrameBuf(uint* topaddr, int* bufferwidth, PspDisplayPixelFormats* pixelformat, PspDisplaySetBufSync sync)
+		public int sceDisplayGetFrameBuf(uint* topaddr, int* bufferwidth, GuPixelFormats* pixelformat, uint sync)
+		{
+			*topaddr = HleState.PspDisplay.CurrentInfo.Address;
+			*bufferwidth = HleState.PspDisplay.CurrentInfo.BufferWidth;
+			*pixelformat = HleState.PspDisplay.CurrentInfo.PixelFormat;
+			return 0;
+		}
 	}
 }

@@ -52,23 +52,10 @@ namespace CSPspEmu.Core
 				catch (TargetInvocationException TargetInvocationException)
 				{
 					Console.Error.WriteLine("Error obtaining instance '{0}'", typeof(TType));
-					PreserveStackTrace(TargetInvocationException.InnerException);
+					StackTraceUtils.PreserveStackTrace(TargetInvocationException.InnerException);
 					throw (TargetInvocationException.InnerException);
 				}
 			}
-		}
-
-		static void PreserveStackTrace(Exception e)
-		{
-			var ctx = new StreamingContext(StreamingContextStates.CrossAppDomain);
-			var mgr = new ObjectManager(null, ctx);
-			var si = new SerializationInfo(e.GetType(), new FormatterConverter());
-
-			e.GetObjectData(si, ctx);
-			mgr.RegisterObject(e, 1, si); // prepare for SetObjectData
-			mgr.DoFixups(); // ObjectManager calls SetObjectData
-
-			// voila, e is unmodified save for _remoteStackTraceString
 		}
 
 		public TType SetInstance<TType>(PspEmulatorComponent Instance) where TType : PspEmulatorComponent

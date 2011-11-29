@@ -98,5 +98,42 @@ namespace CSPspEmu.Hle.Modules.ctrl
 				HleState.PspController.SamplingCycle = SamplingCycle;
 			}
 		}
+
+		/// <summary>
+		/// Obtains information about currentLatch.
+		/// </summary>
+		/// <param name="currentLatch">Pointer to SceCtrlLatch to store the result.</param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x0B588501, FirmwareVersion = 150)]
+		public int sceCtrlReadLatch(SceCtrlLatch* currentLatch)
+		{
+			throw(new NotImplementedException());
+		}
+
+		/**
+		 * Controller latch.
+		 */
+		public struct SceCtrlLatch
+		{
+			/// <summary>
+			/// A bit fields of buttons just pressed (since last call?)
+			/// </summary>
+			public PspCtrlButtons uiMake;
+			
+			/// <summary>
+			/// A bit fields of buttons just released (since last call?)
+			/// </summary>
+			public PspCtrlButtons uiBreak;
+			
+			/// <summary>
+			/// Same has SceCtrlData.Buttons?
+			/// </summary>
+			public PspCtrlButtons uiPress;
+			
+			/// <summary>
+			/// A bit field of buttons released 
+			/// </summary>
+			public PspCtrlButtons uiRelease;
+		}
 	}
 }

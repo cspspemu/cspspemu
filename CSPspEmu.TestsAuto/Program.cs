@@ -121,7 +121,7 @@ namespace CSPspEmu.AutoTests
 			}
 		}
 
-		static protected void ExecuteBat(string ExecutableFileName, string Arguments, double TimeoutSeconds = -1)
+		static protected string ExecuteBat(string ExecutableFileName, string Arguments, double TimeoutSeconds = -1)
 		{
 			var Process = new System.Diagnostics.Process(); // Declare New Process
 			//proc.StartInfo.FileName = fileName;
@@ -148,14 +148,14 @@ namespace CSPspEmu.AutoTests
 
 			var ErrorMessage = Process.StandardError.ReadToEnd();
 			Process.WaitForExit();
-			Console.WriteLine(ErrorMessage);
 
 			var OutputMessage = Process.StandardOutput.ReadToEnd();
 			Process.WaitForExit();
-			Console.WriteLine(OutputMessage);
 
 			Process.Start();
 			Process.WaitForExit();
+
+			return ErrorMessage + OutputMessage;
 		}
 
 		static protected void Run(string PspAutoTestsFolder, string WildCardFilter)
@@ -184,10 +184,21 @@ namespace CSPspEmu.AutoTests
 				{
 					//PspAutoTestsFolder + @"\make.bat"
 					// FileNameBase
-					Console.Write("Compiling {0}...", FileNameBase);
-					ExecuteBat(PspAutoTestsFolder + @"\make.bat", FileNameBase);
-					Console.WriteLine("Done");
-					File.SetLastWriteTime(FileNameExecutable, File.GetLastWriteTime(FileNameSourceCode));
+					File.Delete(FileNameExecutable);
+					var Output = ExecuteBat(PspAutoTestsFolder + @"\make_silent.bat", FileNameBase);
+					if (Output != "")
+					{
+						Console.Write("Compiling {0}...", FileNameBase);
+						Console.WriteLine("Result:");
+						Console.WriteLine("{0}", Output);
+					}
+					try
+					{
+						File.SetLastWriteTime(FileNameExecutable, File.GetLastWriteTime(FileNameSourceCode));
+					}
+					catch
+					{
+					}
 				}
 
 				if (File.Exists(FileNameExecutable))

@@ -95,7 +95,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveFPR(FD, () =>
 			{
 				MipsMethodEmiter.LoadFPR(FS);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(MathFloat).GetMethod("ReinterpretFloatAsUInt"));
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(MathFloat).GetMethod("ReinterpretFloatAsInt"));
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_R4);
 			});
 		}
@@ -126,14 +126,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RT, () =>
 			{
 				MipsMethodEmiter.LoadFPR(FS);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(MathFloat).GetMethod("ReinterpretFloatAsUInt"));
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(MathFloat).GetMethod("ReinterpretFloatAsInt"));
 			});
 		}
 		public void mtc1() {
 			MipsMethodEmiter.SaveFPR(FS, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Signed(RT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(MathFloat).GetMethod("ReinterpretUIntAsFloat"));
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(MathFloat).GetMethod("ReinterpretIntAsFloat"));
 			});
 		}
 		// CFC1 -- move Control word from/to floating point (C1)

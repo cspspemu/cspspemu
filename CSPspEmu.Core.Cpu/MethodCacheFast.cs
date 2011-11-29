@@ -20,17 +20,18 @@ namespace CSPspEmu.Core.Cpu
 				Methods2[n] = null;
 			}
 			*/
-			foreach (var Index in MethodsInList.Where(Index => ((Index >= Low) && (Index < High))).ToArray())
+
+			foreach (var Address in MethodsInList.Where(Address => ((Address >= Low) && (Address < High))).ToArray())
 			{
-				Methods2[Index] = null;
-				MethodsInList.Remove(Index);
+				Methods2[Address_To_Index(Address)] = null;
+				MethodsInList.Remove(Address);
 			}
 		}
 
 		public void Clear()
 		{
 			//Methods2 = new Action<CpuThreadState>[PspMemory.MainSize / 4];
-			foreach (var Index in MethodsInList) Methods2[Index] = null;
+			foreach (var Address in MethodsInList) Methods2[Address_To_Index(Address)] = null;
 			MethodsInList = new SortedSet<uint>();
 		}
 
@@ -49,13 +50,18 @@ namespace CSPspEmu.Core.Cpu
 			return Action;
 		}
 
+		public uint Address_To_Index(uint PC)
+		{
+			return (PC - PspMemory.MainOffset) / 4;
+		}
+
 		public void SetMethodAt(uint PC, Action<CpuThreadState> Action)
 		{
 			//PC &= PspMemory.MemoryMask;
 			if (PC < PspMemory.MainOffset) throw (new PspMemory.InvalidAddressException(PC));
-			uint Index = (PC - PspMemory.MainOffset) / 4;
+			uint Index = Address_To_Index(PC);
 			Methods2[Index] = Action;
-			MethodsInList.Add(Index);
+			MethodsInList.Add(PC);
 		}
 	}
 }

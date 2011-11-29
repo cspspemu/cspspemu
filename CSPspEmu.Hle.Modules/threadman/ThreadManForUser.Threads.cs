@@ -45,12 +45,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 			if (!Thread.Attribute.HasFlag(PspThreadAttributes.NoFillStack))
 			{
 				HleState.MemoryManager.Memory.WriteRepeated1(0xFF, Thread.Stack.Low, Thread.Stack.Size);
-				Console.WriteLine("-------------------------------------------------");
-				Console.WriteLine("'{0}', '{1}'", StackSize, Thread.Stack.Size);
-				Console.WriteLine("-------------------------------------------------");
+				//Console.Error.WriteLine("-------------------------------------------------");
+				//Console.Error.WriteLine("'{0}', '{1}'", StackSize, Thread.Stack.Size);
+				//Console.Error.WriteLine("-------------------------------------------------");
 			}
 			Thread.Info.StackPointer = Thread.Stack.High;
-			Thread.Info.StackSize = Thread.Stack.Size;
+			Thread.Info.StackSize = StackSize;
 			Thread.CpuThreadState.PC = (uint)EntryPoint;
 			Thread.CpuThreadState.GP = (uint)CpuThreadState.GP;
 			Thread.CpuThreadState.SP = (uint)(Thread.Stack.High);
@@ -180,6 +180,41 @@ namespace CSPspEmu.Hle.Modules.threadman
 			{
 			});
 			return 0;
+		}
+
+		/// <summary>
+		/// Wake a thread previously put into the sleep state.
+		/// </summary>
+		/// <remarks>
+		/// This function increments a wakeUp count and sceKernelSleep(CB) decrements it.
+		/// So when calling sceKernelSleep(CB) if this function have been executed before one or more times,
+		/// the thread won't sleep until Sleeps is executed as many times as sceKernelWakeupThread.
+		/// 
+		/// ?? This waits until the thread has been awaken? TO CONFIRM.
+		/// </remarks>
+		/// <param name="thid">UID of the thread to wake.</param>
+		/// <returns>Success if greater or equal 0, an error if less than 0.</returns>
+		[HlePspFunction(NID = 0xD59EAD2F, FirmwareVersion = 150)]
+		public int sceKernelWakeupThread(int ThreadId)
+		{
+			throw(new NotImplementedException());
+			/*
+			ThreadState threadState = uniqueIdFactory.get!(ThreadState)(thid);
+		
+			logInfo("sceKernelWakeupThread");
+		
+			threadState.sleepingCriticalSection.tryLock({
+				threadState.incrementWakeUpCount();
+			}, {
+				threadState.resetWakeUpCount();
+				threadState.wakeUpEvent.signal();
+			
+				// Must wait until terminated?
+				threadState.sleepingCriticalSection.waitEnded();
+			});
+
+			return 0;
+			*/
 		}
 
 		/// <summary>

@@ -405,5 +405,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			ILGenerator.Emit(OpCodes.Call, Class.GetMethod(MethodName));
 		}
+
+		public void CallMethodWithCpuThreadStateAsFirstArgument(Type Class, String MethodName)
+		{
+			ILGenerator.Emit(OpCodes.Ldarg_0);
+			CallMethod(Class, MethodName);
+		}
+
 	}
 }
