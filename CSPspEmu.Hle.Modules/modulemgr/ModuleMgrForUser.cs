@@ -33,9 +33,11 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		/// <param name="SceKernelLMOption">Pointer to a mod_param_t structure. Can be NULL.</param>
 		/// <returns>The UID of the loaded module on success, otherwise one of ::PspKernelErrorCodes.</returns>
 		[HlePspFunction(NID = 0x977DE386, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceKernelLoadModule(string Path, int Flags, void* SceKernelLMOption)
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return 1;
 		}
 
 		/// <summary>
@@ -48,9 +50,11 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		/// <param name="SceKernelSMOption">Pointer to an optional ::SceKernelSMOption structure.</param>
 		/// <returns>??? on success, otherwise one of ::PspKernelErrorCodes.</returns>
 		[HlePspFunction(NID = 0x50F0C1EC, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceKernelStartModule(int ModuleId, uint ArgumentsCount, uint ArgumentsPointer, int *Status, void *SceKernelSMOption)
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return 0;
 		}
 	}
 }

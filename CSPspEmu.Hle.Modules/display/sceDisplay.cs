@@ -38,12 +38,7 @@ namespace CSPspEmu.Hle.Modules.display
 		int LastVblankCount = 0;
 		DateTime LastWaitVblankStart;
 
-		/// <summary>
-		/// Wait for vertical blank start
-		/// </summary>
-		/// <returns></returns>
-		[HlePspFunction(NID = 0x984C27E7, FirmwareVersion = 150)]
-		public int sceDisplayWaitVblankStart(CpuThreadState CpuThreadState)
+		private int _sceDisplayWaitVblankStartCB(CpuThreadState CpuThreadState, bool HandleCallbacks)
 		{
 			if (PspConfig.VerticalSynchronization && LastVblankCount != PspDisplay.VblankCount)
 			{
@@ -56,7 +51,7 @@ namespace CSPspEmu.Hle.Modules.display
 						WakeUpCallbackDelegate();
 					});
 					LastWaitVblankStart = PspRtc.UpdatedCurrentDateTime;
-				});
+				}, HandleCallbacks: HandleCallbacks);
 
 				/*
 				SleepThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Display, "sceDisplayWaitVblankStart", (WakeUpCallbackDelegate) =>
@@ -72,6 +67,16 @@ namespace CSPspEmu.Hle.Modules.display
 			}
 
 			return 0;
+		}
+
+		/// <summary>
+		/// Wait for vertical blank start
+		/// </summary>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x984C27E7, FirmwareVersion = 150)]
+		public int sceDisplayWaitVblankStart(CpuThreadState CpuThreadState)
+		{
+			return _sceDisplayWaitVblankStartCB(CpuThreadState, HandleCallbacks: false);
 		}
 
 		/// <summary>
@@ -100,6 +105,18 @@ namespace CSPspEmu.Hle.Modules.display
 		public int sceDisplayWaitVblank(CpuThreadState CpuThreadState)
 		{
 			return sceDisplayWaitVblankStart(CpuThreadState);
+		}
+
+		/// <summary>
+		/// Wait for vertical blank with callback
+		/// </summary>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x8EB9EC49, FirmwareVersion = 150)]
+		public int sceDisplayWaitVblankCB(CpuThreadState CpuThreadState)
+		{
+			// @TODO: Fixme!
+			//unimplemented_notice();
+			return _sceDisplayWaitVblankStartCB(CpuThreadState, HandleCallbacks: true);
 		}
 
 		/// <summary>
