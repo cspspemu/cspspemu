@@ -52,6 +52,7 @@ namespace CSPspEmu.Core.Gpu.Run
 			GpuState[0].DrawBufferState.HighAddress = Param8(16);
 			GpuState[0].DrawBufferState.Width = Param16(0);
 			//gpu.markBufferOp(BufferOperation.LOAD, BufferType.COLOR);
+			//Console.WriteLine("{0}", GpuState[0].DrawBufferState.Format);
 		}
 
 		// frame buffer Pixel Storage Mode

@@ -81,6 +81,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			ThreadToStart.CurrentStatus = HleThread.Status.Ready;
 
 			// Schedule new thread?
+			HleState.ThreadManager.ScheduleNext(ThreadToStart);
 			CpuThreadState.Yield();
 			return 0;
 		}
@@ -163,7 +164,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x17C1684E, FirmwareVersion = 150)]
 		public int sceKernelReferThreadStatus(int ThreadId, SceKernelThreadInfo* SceKernelThreadInfo)
 		{
-			*SceKernelThreadInfo = GetThreadById(ThreadId).Info;
+			var Thread = GetThreadById(ThreadId);
+			*SceKernelThreadInfo = Thread.Info;
 			return 0;
 		}
 
@@ -342,9 +344,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <returns>0 if successful, otherwise the error code.</returns>
 		[HlePspFunction(NID = 0x71BC9871, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceKernelChangeThreadPriority(int ThreadId, int Priority)
+		public int sceKernelChangeThreadPriority(CpuThreadState CpuThreadState, int ThreadId, int Priority)
 		{
 			GetThreadById(ThreadId).PriorityValue = Priority;
+			HleState.ThreadManager.Reschedule();
+			CpuThreadState.Yield();
 			//throw(new NotImplementedException());
 			return 0;
 		}
