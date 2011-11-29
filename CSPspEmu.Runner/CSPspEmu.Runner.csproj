@@ -19,6 +19,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -41,13 +42,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AudioComponentThread.cs" />
-    <Compile Include="ComponentThread.cs" />
-    <Compile Include="CpuComponentThread.cs" />
-    <Compile Include="GpuComponentThread.cs" />
-    <Compile Include="IRunnableComponent.cs" />
+    <Compile Include="Components\Audio\AudioComponentThread.cs" />
+    <Compile Include="Components\ComponentThread.cs" />
+    <Compile Include="Components\Cpu\CpuComponentThread.cs" />
+    <Compile Include="Components\Display\DisplayComponentThread.cs" />
+    <Compile Include="Components\Gpu\GpuComponentThread.cs" />
+    <Compile Include="Components\IRunnableComponent.cs" />
     <Compile Include="PspRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="README" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">

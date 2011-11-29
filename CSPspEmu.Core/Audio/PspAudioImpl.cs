@@ -8,15 +8,6 @@ namespace CSPspEmu.Core.Audio
 	abstract public class PspAudioImpl : PspEmulatorComponent
 	{
 		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="PspEmulatorContext"></param>
-		public PspAudioImpl(PspEmulatorContext PspEmulatorContext)
-			: base(PspEmulatorContext)
-		{
-		}
-
-		/// <summary>
 		/// Called periodically on a thread.
 		/// </summary>
 		abstract public void Update(Func<int, short[]> ReadStream);

@@ -25,12 +25,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0xE81CAF8F, FirmwareVersion = 150)]
 		public int sceKernelCreateCallback(string Name, SceKernelCallbackFunction Function, uint Argument)
 		{
-			return HleState.CallbackManager.Callbacks.Create(new HleCallback()
-			{
-				Name = Name,
-				Function = (uint)Function,
-				Argument = Argument,
-			});
+			return HleState.CallbackManager.Callbacks.Create(
+				HleCallback.Create(Name, (uint)Function, Argument)
+			);
 		}
 	}
 }

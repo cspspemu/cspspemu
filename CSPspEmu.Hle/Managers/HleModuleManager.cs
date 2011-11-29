@@ -23,8 +23,7 @@ namespace CSPspEmu.Hle.Managers
 
 		public Dictionary<String, Type> HleModuleTypes;
 
-		// new HleModuleManager(this, PspConfig.HleModulesDll);
-		public HleModuleManager(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 			HleModuleTypes = GetAllHleModules(PspEmulatorContext.PspConfig.HleModulesDll).ToDictionary(Type => Type.Name);
 			Console.WriteLine("HleModuleTypes: {0}", HleModuleTypes.Count);
@@ -39,6 +38,7 @@ namespace CSPspEmu.Hle.Managers
 				CpuThreadState.PC = CpuThreadState.RA;
 			});
 		}
+
 
 		public TType GetModule<TType>() where TType : HleModuleHost
 		{

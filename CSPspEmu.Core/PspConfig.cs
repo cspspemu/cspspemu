@@ -46,6 +46,7 @@ namespace CSPspEmu.Core
 		/// 
 		/// </summary>
 		public bool DebugSyscalls = false;
+		//public bool DebugSyscalls = true;
 
 		// http://jpcsp.googlecode.com/svn/trunk/src/jpcsp/HLE/modules150/scePower.java
 
@@ -128,6 +129,12 @@ namespace CSPspEmu.Core
 		}
 
 		public bool InfoExeHasRelocation = false;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool TraceThreadLoop = false;
+		//public bool TraceThreadLoop = true;
 
 		//public bool TraceJal = true;
 	}

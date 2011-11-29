@@ -10,7 +10,7 @@ namespace CSPspEmu.AutoTests
 {
 	unsafe public class GpuImplMock : GpuImpl
 	{
-		public GpuImplMock(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 		}
 

@@ -8,7 +8,7 @@ namespace CSPspEmu.Core.Gpu
 {
 	unsafe abstract public class GpuImpl : PspEmulatorComponent
 	{
-		public GpuImpl(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 		}
 

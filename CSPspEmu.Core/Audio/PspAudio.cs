@@ -51,8 +51,7 @@ namespace CSPspEmu.Core.Audio
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="PspEmulatorContext"></param>
-		public PspAudio(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 			this.PspAudioImpl = PspEmulatorContext.GetInstance<PspAudioImpl>();
 			Initialize();

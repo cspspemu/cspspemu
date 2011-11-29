@@ -28,7 +28,7 @@ using System.Windows.Forms;
 using System.Threading;
 using CSPspEmu.Hle.Vfs.MemoryStick;
 
-namespace CSPspEmu.Runner
+namespace CSPspEmu.Runner.Components.Cpu
 {
 	sealed public class CpuComponentThread : ComponentThread
 	{
@@ -42,19 +42,14 @@ namespace CSPspEmu.Runner
 		HleIoDriverMountable MemoryStickMountable;
 		public AutoResetEvent StoppedEndedEvent = new AutoResetEvent(false);
 
-		static public uint CODE_PTR_EXIT_THREAD = 0x08000000;
-
-		public CpuComponentThread(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 			CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();
 			PspRtc = PspEmulatorContext.GetInstance<PspRtc>();
 			ThreadManager = PspEmulatorContext.GetInstance<HleThreadManager>();
 			HleState = PspEmulatorContext.GetInstance<HleState>();
 			PspMemory = PspEmulatorContext.GetInstance<PspMemory>();
-		}
 
-		public override void InitializeComponent()
-		{
 			RegisterDevices();
 		}
 
@@ -93,8 +88,13 @@ namespace CSPspEmu.Runner
 						syscall 0x7777
 						jr r31
 						nop
+					.code CODE_PTR_FINALIZE_CALLBACK
+						syscall 0x7778
+						jr r31
+						nop
 				"
-				.Replace("CODE_PTR_EXIT_THREAD", String.Format("0x{0:X}", CODE_PTR_EXIT_THREAD))
+				.Replace("CODE_PTR_EXIT_THREAD", String.Format("0x{0:X}", HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD))
+				.Replace("CODE_PTR_FINALIZE_CALLBACK", String.Format("0x{0:X}", HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK))
 			);
 
 			//var ThreadManForUser = HleState.ModuleManager.GetModule<ThreadManForUser>();
@@ -124,6 +124,7 @@ namespace CSPspEmu.Runner
 			RegisterModuleSyscall<Emulator>(0x1017, "testArguments");
 			//RegisterModuleSyscall<Emulator>(0x7777, "waitThreadForever");
 			RegisterModuleSyscall<ThreadManForUser>(0x7777, "sceKernelExitDeleteThread");
+			RegisterModuleSyscall<Emulator>(0x7778, "finalizeCallback");
 		}
 
 		void RegisterModuleSyscall<TType>(int SyscallCode, string FunctionName) where TType : HleModuleHost
@@ -143,7 +144,7 @@ namespace CSPspEmu.Runner
 
 			var MemoryStream = new PspMemoryStream(PspMemory);
 
-			var Loader = new ElfPspLoader(PspEmulatorContext);
+			var Loader = PspEmulatorContext.GetInstance<ElfPspLoader>();
 			Stream LoadStream = File.OpenRead(FileName);
 			//using ()
 			{
@@ -193,7 +194,7 @@ namespace CSPspEmu.Runner
 					CpuThreadState.GP = Loader.InitInfo.GP;
 					CpuThreadState.SP = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Allocate(0x1000, MemoryPartition.Anchor.High, Alignment: 0x100).High;
 					CpuThreadState.K0 = MainThread.CpuThreadState.SP;
-					CpuThreadState.RA = CODE_PTR_EXIT_THREAD;
+					CpuThreadState.RA = HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD;
 					CpuThreadState.GPR[4] = (int)argc; // A0
 					CpuThreadState.GPR[5] = (int)argv; // A1
 				}
@@ -237,19 +238,21 @@ namespace CSPspEmu.Runner
 						return;
 					}
 
+					var ErrorOut = Console.Error;
+
 					ConsoleUtils.SaveRestoreConsoleState(() =>
 					{
 						Console.ForegroundColor = ConsoleColor.Red;
 
 						try
 						{
-							Console.WriteLine("Error on thread {0}", ThreadManager.Current);
+							ErrorOut.WriteLine("Error on thread {0}", ThreadManager.Current);
 
-							Console.Error.WriteLine(Exception);
+							ErrorOut.WriteLine(Exception);
 
-							ThreadManager.Current.CpuThreadState.DumpRegisters();
+							ThreadManager.Current.CpuThreadState.DumpRegisters(ErrorOut);
 
-							Console.WriteLine(
+							ErrorOut.WriteLine(
 								"Last registered PC = 0x{0:X}, RA = 0x{1:X}",
 								ThreadManager.Current.CpuThreadState.PC,
 								ThreadManager.Current.CpuThreadState.RA
@@ -257,10 +260,10 @@ namespace CSPspEmu.Runner
 
 							foreach (var Thread in ThreadManager.Threads)
 							{
-								Console.WriteLine("{0}", Thread);
+								ErrorOut.WriteLine("{0}", Thread);
 							}
 
-							Console.WriteLine("Executable had relocation: {0}", PspEmulatorContext.PspConfig.InfoExeHasRelocation);
+							ErrorOut.WriteLine("Executable had relocation: {0}", PspEmulatorContext.PspConfig.InfoExeHasRelocation);
 						}
 						catch (Exception Exception2)
 						{

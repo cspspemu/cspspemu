@@ -37,8 +37,9 @@ namespace CSPspEmu.Hle
 		public HleIoManager HleIoManager;
 		public HleRegistryManager HleRegistryManager;
 		public HleOutputHandler HleOutputHandler;
+		public HleInterruptManager HleInterruptManager;
 
-		public HleState(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 			this.IsRunning = true;
 			this.CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();
@@ -61,6 +62,7 @@ namespace CSPspEmu.Hle
 			this.CallbackManager = PspEmulatorContext.GetInstance<HleCallbackManager>();
 			this.HleIoManager = PspEmulatorContext.GetInstance<HleIoManager>();
 			this.HleRegistryManager = PspEmulatorContext.GetInstance<HleRegistryManager>();
+			this.HleInterruptManager = PspEmulatorContext.GetInstance<HleInterruptManager>();
 		}
 	}
 }

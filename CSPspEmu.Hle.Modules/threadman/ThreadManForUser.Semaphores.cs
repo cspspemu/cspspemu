@@ -64,6 +64,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x3F53E640, FirmwareVersion = 150)]
 		public int sceKernelSignalSema(CpuThreadState CpuThreadState, SemaphoreId SemaphoreId, int Signal)
 		{
+			//Console.Error.WriteLine("sceKernelSignalSema!");
 			var HleSemaphore = GetSemaphoreById(SemaphoreId);
 			if (HleSemaphore.IncrementCount(Signal) > 0)
 			{
@@ -90,7 +91,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return 0;
 		}
 
-		private int _sceKernelWaitSemaCB(SemaphoreId SemaphoreId, int Signal, uint* Timeout, bool Callbacks)
+		private int _sceKernelWaitSemaCB(SemaphoreId SemaphoreId, int Signal, uint* Timeout, bool HandleCallbacks)
 		{
 			var CurrentThread = HleState.ThreadManager.Current;
 			var Semaphore = GetSemaphoreById(SemaphoreId);
@@ -102,7 +103,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 					WakeUpCallback();
 					HleState.ThreadManager.ScheduleNext(CurrentThread);
 				}, Signal);
-			});
+			}, HandleCallbacks: HandleCallbacks);
 
 			return 0;
 		}
@@ -120,7 +121,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x4E3A1105, FirmwareVersion = 150)]
 		public int sceKernelWaitSema(SemaphoreId SemaphoreId, int Signal, uint* Timeout)
 		{
-			return _sceKernelWaitSemaCB(SemaphoreId, Signal, Timeout, Callbacks: false);
+			return _sceKernelWaitSemaCB(SemaphoreId, Signal, Timeout, HandleCallbacks: false);
 		}
 
 		/// <summary>
@@ -136,7 +137,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x6D212BAC, FirmwareVersion = 150)]
 		public int sceKernelWaitSemaCB(SemaphoreId SemaphoreId, int Signal, uint* Timeout)
 		{
-			return _sceKernelWaitSemaCB(SemaphoreId, Signal, Timeout, Callbacks: true);
+			return _sceKernelWaitSemaCB(SemaphoreId, Signal, Timeout, HandleCallbacks: true);
 		}
 
 		/// <summary>

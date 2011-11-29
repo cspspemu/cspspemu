@@ -18,6 +18,7 @@ namespace CSPspEmu.Core.Tests
 		{
 			var PspConfig = new PspConfig();
 			var PspEmulatorContext = new PspEmulatorContext(PspConfig);
+			PspEmulatorContext.SetInstanceType<PspMemory, LazyPspMemory>();
 			var Memory = PspEmulatorContext.GetInstance<PspMemory>();
 			var MemoryStream = new PspMemoryStream(Memory);
 			var MemoryPartition = new MemoryPartition(PspMemory.MainOffset, PspMemory.MainOffset + PspMemory.MainSize);

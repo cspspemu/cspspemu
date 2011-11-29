@@ -5,17 +5,20 @@ using System.Text;
 
 namespace CSPspEmu.Core
 {
-	public class PspEmulatorComponent
+	abstract public class PspEmulatorComponent
 	{
-		protected PspEmulatorContext PspEmulatorContext;
+		protected PspEmulatorContext PspEmulatorContext { get; private set; }
 
-		public PspEmulatorComponent(PspEmulatorContext PspEmulatorContext)
+		public PspEmulatorComponent()
 		{
+		}
+
+		public void _InitializeComponent(PspEmulatorContext PspEmulatorContext)
+		{
+			if (this.PspEmulatorContext != null) throw(new Exception("Can't call _InitializeComponent twice."));
 			this.PspEmulatorContext = PspEmulatorContext;
 		}
 
-		virtual public void InitializeComponent()
-		{
-		}
+		abstract public void InitializeComponent();
 	}
 }

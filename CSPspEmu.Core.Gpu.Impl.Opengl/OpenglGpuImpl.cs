@@ -39,14 +39,15 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// </summary>
 		VertexReader VertexReader;
 
+		/// <summary>
+		/// 
+		/// </summary>
 		TextureCache TextureCache;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="Config"></param>
-		/// <param name="Memory"></param>
-		public OpenglGpuImpl(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 			this.Config = PspEmulatorContext.PspConfig;
 			this.Memory = PspEmulatorContext.GetInstance<PspMemory>();
@@ -54,11 +55,19 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			this.VertexReader = new VertexReader();
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		void Initialize()
 		{
 			///GL.Enable(EnableCap.Blend);
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="VertexInfo"></param>
+		/// <param name="VertexType"></param>
 		private void PutVertex(ref VertexInfo VertexInfo, ref VertexTypeStruct VertexType)
 		{
 			//Console.WriteLine(VertexInfo);

@@ -81,7 +81,7 @@ namespace CSPspEmu.Hle.Loader
 
 			if (NeedsRelocation && this.ProgramHeaders.Length > 1)
 			{
-				throw (new NotImplementedException("Not implemented several ProgramHeaders yet using relocation"));
+				//throw (new NotImplementedException("Not implemented several ProgramHeaders yet using relocation"));
 			}
 		}
 

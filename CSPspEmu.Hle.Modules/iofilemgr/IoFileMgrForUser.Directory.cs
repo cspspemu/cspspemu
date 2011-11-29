@@ -62,7 +62,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <param name="DirectoryPath">The path to change to.</param>
 		/// <returns>less than 0 on error.</returns>
 		[HlePspFunction(NID = 0x55F4717D, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceIoChdir(string DirectoryPath)
 		{
 			HleState.HleIoManager.Chdir(DirectoryPath);

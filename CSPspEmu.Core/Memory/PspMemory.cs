@@ -12,10 +12,6 @@ namespace CSPspEmu.Core.Memory
 	{
 		public const uint MemoryMask = 0x1FFFFFFF;
 
-		public PspMemory(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
-		{
-		}
-
 		public class InvalidAddressException : Exception {
 			public InvalidAddressException(string message) : base (message) { }
 			public InvalidAddressException(string message, Exception innerException) : base(message, innerException) { }

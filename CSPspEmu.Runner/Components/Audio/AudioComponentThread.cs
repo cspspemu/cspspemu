@@ -7,13 +7,13 @@ using CSPspEmu.Core;
 using CSPspEmu.Core.Audio;
 using CSPspEmu.Core.Audio.Imple.Openal;
 
-namespace CSPspEmu.Runner
+namespace CSPspEmu.Runner.Components.Audio
 {
 	sealed public class AudioComponentThread : ComponentThread
 	{
-		PspAudio PspAudio;
+		private PspAudio PspAudio;
 
-		public AudioComponentThread(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 			PspAudio = PspEmulatorContext.GetInstance<PspAudio>();
 		}

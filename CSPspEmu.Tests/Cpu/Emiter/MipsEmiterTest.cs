@@ -15,7 +15,8 @@ namespace CSPspEmu.Core.Tests
 		{
 			var PspConfig = new PspConfig();
 			var PspEmulatorContext = new PspEmulatorContext(PspConfig);
-			var Memory = PspEmulatorContext.SetInstance<PspMemory>(new LazyPspMemory(PspEmulatorContext));
+			PspEmulatorContext.SetInstanceType<PspMemory, LazyPspMemory>();
+			var Memory = PspEmulatorContext.GetInstance<PspMemory>();
 			var Processor = PspEmulatorContext.GetInstance<CpuProcessor>();
 			var CpuThreadState = new CpuThreadState(Processor);
 			var MipsEmiter = new MipsMethodEmiter(new MipsEmiter(), Processor);

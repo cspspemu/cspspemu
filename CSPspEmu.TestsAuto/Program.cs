@@ -17,6 +17,7 @@ using CSPspEmu.Hle.Managers;
 using CSPspEmu.Runner;
 using CSharpUtils.Extensions;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace CSPspEmu.AutoTests
 {
@@ -27,10 +28,6 @@ namespace CSPspEmu.AutoTests
 		public class HleOutputHandlerMock : HleOutputHandler
 		{
 			public String OutputString = "";
-
-			public HleOutputHandlerMock(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
-			{
-			}
 
 			public override void Output(string OutputString)
 			{
@@ -83,7 +80,10 @@ namespace CSPspEmu.AutoTests
 					try
 					{
 						PspRunner.CpuComponentThread._LoadFile(FileName);
-						PspRunner.CpuComponentThread.StoppedEndedEvent.WaitOne(TimeSpan.FromSeconds(20));
+						if (!PspRunner.CpuComponentThread.StoppedEndedEvent.WaitOne(TimeSpan.FromSeconds(5)))
+						{
+							Console.Error.WriteLine("Timeout!");
+						}
 					}
 					catch (Exception Exception)
 					{
@@ -92,7 +92,8 @@ namespace CSPspEmu.AutoTests
 				}
 
 				PspRunner.StopSynchronized();
-			});
+			}
+			);
 
 			var HleOutputHandlerMock = (HleOutputHandlerMock)PspEmulatorContext.GetInstance<HleOutputHandler>();
 			OutputString = HleOutputHandlerMock.OutputString;
@@ -163,7 +164,7 @@ namespace CSPspEmu.AutoTests
 			foreach (var FileNameExpected in Directory.GetFiles(PspAutoTestsFolder, "*.expected", SearchOption.AllDirectories))
 			{
 				var FileNameBaseBase = Path.GetFileNameWithoutExtension(FileNameExpected);
-				var FileNameBase = Path.GetDirectoryName(FileNameExpected) + "/" + FileNameBaseBase;
+				var FileNameBase = Path.GetDirectoryName(FileNameExpected) + @"\" + FileNameBaseBase;
 				var FileNameExecutable = FileNameBase + ".elf";
 				var FileNameSourceCode = FileNameBase + ".c";
 
@@ -241,9 +242,19 @@ namespace CSPspEmu.AutoTests
 			}
 
 			//Console.WriteLine(String.Join(" ", Arguments));
+			if (Debugger.IsAttached)
+			{
+				Console.SetWindowSize(160, 60);
+				Console.SetBufferSize(160, 2000);
+
+				WildCardFilter = "vblank";
+			}
 			Init();
 			Run(PspAutoTestsFolder, WildCardFilter);
-			//Console.ReadKey();
+			if (Debugger.IsAttached)
+			{
+				Console.ReadKey();
+			}
 		}
 	}
 }

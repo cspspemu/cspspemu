@@ -74,7 +74,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		PixelFormatDecoder.OutputPixel[] TempBuffer = new PixelFormatDecoder.OutputPixel[1024 * 1024];
 
-		public TextureCache(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 			PspMemory = PspEmulatorContext.GetInstance<PspMemory>();
 		}

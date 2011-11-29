@@ -9,22 +9,29 @@ using System.Threading;
 using System.Diagnostics;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Rtc;
+using CSharpUtils.Threading;
 
 namespace CSPspEmu.Hle.Managers
 {
-	public class HleThreadManager : PspEmulatorComponent
+	public class HleEmulatorSpecialAddresses
 	{
+		public const uint CODE_PTR_EXIT_THREAD = 0x08000010;
+		public const uint CODE_PTR_FINALIZE_CALLBACK = 0x08000020;
+	}
+
+	public class HleThreadManager : PspEmulatorComponent, IDisposable
+	{
+
 		protected CpuProcessor Processor;
 		public List<HleThread> Threads = new List<HleThread>();
 		protected int LastId = 1;
 		public HleThread Current;
-		protected PspRtc HlePspRtc;
-		private HleThread _Next;
+		private HleCallbackManager HleCallbackManager;
 
-		public HleThreadManager(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
-			this.HlePspRtc = PspEmulatorContext.GetInstance<PspRtc>();
 			this.Processor = PspEmulatorContext.GetInstance<CpuProcessor>();
+			this.HleCallbackManager = PspEmulatorContext.GetInstance<HleCallbackManager>();
 		}
 
 		public HleThread GetThreadById(int Id)
@@ -38,11 +45,12 @@ namespace CSPspEmu.Hle.Managers
 			var HlePspThread = new HleThread(new CpuThreadState(Processor));
 			HlePspThread.Id = LastId++;
 			HlePspThread.Name = "Thread-" + HlePspThread.Id;
-			HlePspThread.CurrentStatus = Hle.HleThread.Status.Stopped;
+			HlePspThread.CurrentStatus = HleThread.Status.Stopped;
 			Threads.Add(HlePspThread);
 			return HlePspThread;
 		}
 
+		/*
 		public HleThread Next
 		{
 			get
@@ -54,18 +62,20 @@ namespace CSPspEmu.Hle.Managers
 				return _Next;
 			}
 		}
+		*/
 
 		private HleThread CalculateNext()
 		{
 			HleThread MinThread = null;
-			foreach (var Thread in Threads)
+			foreach (var Thread in Threads.Where(Thread =>
+				(
+					(Thread.CurrentStatus == HleThread.Status.Ready) || Thread.IsWaitingAndHandlingCallbacks
+				)
+			))
 			{
-				if (Thread.CurrentStatus == HleThread.Status.Ready)
+				if (MinThread == null || Thread.PriorityValue < MinThread.PriorityValue)
 				{
-					if (MinThread == null || Thread.PriorityValue < MinThread.PriorityValue)
-					{
-						MinThread = Thread;
-					}
+					MinThread = Thread;
 				}
 			}
 			return MinThread;
@@ -79,15 +89,26 @@ namespace CSPspEmu.Hle.Managers
 			}
 		}
 
+		bool MustReschedule = false;
+
+		public void Reschedule()
+		{
+			MustReschedule = true;
+		}
+
 		public void ScheduleNext(HleThread ThreadToSchedule)
 		{
 			ThreadToSchedule.PriorityValue = Threads.Min(Thread => Thread.PriorityValue) - 1;
+			Reschedule();
+			Console.WriteLine("!ScheduleNext: ");
 		}
 
 		public void StepNext()
 		{
+			MustReschedule = false;
+
 			// Select the thread with the lowest PriorityValue
-			var NextThread = Next;
+			var NextThread = CalculateNext();
 			//Console.WriteLine("NextThread: {0} : {1}", NextThread.Id, NextThread.PriorityValue);
 
 			// No thread found.
@@ -103,24 +124,70 @@ namespace CSPspEmu.Hle.Managers
 			// Run that thread
 			Current = NextThread;
 			{
-				Current.CurrentStatus = HleThread.Status.Running;
-				try
+				// Waiting, but listeing to callbacks.
+				if (Current.IsWaitingAndHandlingCallbacks)
 				{
-					if (Processor.PspConfig.DebugThreadSwitching)
+					if (HleCallbackManager.HasScheduledCallbacks)
 					{
-						ConsoleUtils.SaveRestoreConsoleState(() =>
+						//Console.Error.WriteLine("STARTED CALLBACKS");
+						while (HleCallbackManager.HasScheduledCallbacks)
 						{
-							Console.ForegroundColor = ConsoleColor.Yellow;
-							Console.WriteLine("Execute: {0} : PC: 0x{1:X}", NextThread, NextThread.CpuThreadState.PC);
-						});
+							var HleCallback = HleCallbackManager.DequeueScheduledCallback();
+							var CurrentFake = Create();
+							CurrentFake.CpuThreadState.CopyRegistersFrom(Current.CpuThreadState);
+							try
+							{
+								//Console.Error.WriteLine("  CALLBACK STARTED : {0} AT {1}", HleCallback, CurrentFake);
+
+								HleCallback.SetArgumentsToCpuThreadState(CurrentFake.CpuThreadState);
+
+								CurrentFake.CpuThreadState.PC = HleCallback.Function;
+								CurrentFake.CpuThreadState.RA = HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK;
+								//Current.CpuThreadState.RA = 0;
+
+								Processor.RunningCallback = true;
+								while (Processor.RunningCallback)
+								{
+									//Console.WriteLine("AAAAAAA {0:X}", CurrentFake.CpuThreadState.PC);
+									CurrentFake.Step();
+								}
+							}
+							finally
+							{
+							}
+
+							//Console.Error.WriteLine("  CALLBACK ENDED : " + HleCallback);
+							if (MustReschedule)
+							{
+								//Console.Error.WriteLine("    RESCHEDULE");
+								break;
+							}
+						}
+						//Console.Error.WriteLine("ENDED CALLBACKS");
 					}
-					NextThread.Step();
 				}
-				finally
+				// Executing normally.
+				else
 				{
-					if (Current.CurrentStatus == HleThread.Status.Running)
+					Current.CurrentStatus = HleThread.Status.Running;
+					try
 					{
-						Current.CurrentStatus = HleThread.Status.Ready;
+						if (Processor.PspConfig.DebugThreadSwitching)
+						{
+							ConsoleUtils.SaveRestoreConsoleState(() =>
+							{
+								Console.ForegroundColor = ConsoleColor.Yellow;
+								Console.WriteLine("Execute: {0} : PC: 0x{1:X}", Current, Current.CpuThreadState.PC);
+							});
+						}
+						Current.Step();
+					}
+					finally
+					{
+						if (Current.CurrentStatus == HleThread.Status.Running)
+						{
+							Current.CurrentStatus = HleThread.Status.Ready;
+						}
 					}
 				}
 			}
@@ -136,9 +203,6 @@ namespace CSPspEmu.Hle.Managers
 
 			// Increment.
 			NextThread.PriorityValue += NextThread.Info.PriorityCurrent + 1;
-
-			// Invalidate next.
-			_Next = null;
 		}
 
 		public void Exit(HleThread HlePspThread)
@@ -148,6 +212,10 @@ namespace CSPspEmu.Hle.Managers
 			{
 				HlePspThread.CpuThreadState.Yield();
 			}
+		}
+
+		public void Dispose()
+		{
 		}
 	}
 }

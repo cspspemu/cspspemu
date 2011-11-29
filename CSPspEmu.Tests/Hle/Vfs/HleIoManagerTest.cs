@@ -12,7 +12,8 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void ParsePathTest()
 		{
-			var HleIoManager = new HleIoManager(new PspEmulatorContext(new PspConfig()));
+			var PspEmulatorContext = new PspEmulatorContext(new PspConfig());
+			var HleIoManager = PspEmulatorContext.GetInstance<HleIoManager>();
 			var DriverName = "ms:";
 			var Driver = new HleIoDriverLocalFileSystem("C:/$INVALID$PATH$");
 			HleIoManager.AddDriver(DriverName, Driver);

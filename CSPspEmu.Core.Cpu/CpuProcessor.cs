@@ -18,8 +18,9 @@ namespace CSPspEmu.Core.Cpu
 		private Dictionary<int, Action<int, CpuThreadState>> RegisteredNativeSyscalls;
 		public HashSet<uint> NativeBreakpoints;
 		public bool IsRunning;
+		public bool RunningCallback;
 
-		public CpuProcessor(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 			this.PspConfig = PspEmulatorContext.PspConfig;
 			this.Memory = PspEmulatorContext.GetInstance<PspMemory>();

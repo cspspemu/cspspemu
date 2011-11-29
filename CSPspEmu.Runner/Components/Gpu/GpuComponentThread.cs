@@ -6,7 +6,7 @@ using System.Threading;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Gpu;
 
-namespace CSPspEmu.Runner
+namespace CSPspEmu.Runner.Components.Gpu
 {
 	sealed public class GpuComponentThread : ComponentThread
 	{
@@ -14,8 +14,7 @@ namespace CSPspEmu.Runner
 
 		private GpuProcessor GpuProcessor;
 
-		public GpuComponentThread(PspEmulatorContext PspEmulatorContext)
-			: base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 			GpuProcessor = PspEmulatorContext.GetInstance<GpuProcessor>();
 		}

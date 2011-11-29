@@ -7,16 +7,11 @@ using System.Threading;
 using CSharpUtils.Threading;
 using CSPspEmu.Core;
 
-namespace CSPspEmu.Runner
+namespace CSPspEmu.Runner.Components
 {
 	abstract public class ComponentThread : PspEmulatorComponent, IRunnableComponent
 	{
 		public bool Running = true;
-
-		public ComponentThread(PspEmulatorContext PspEmulatorContext)
-			: base(PspEmulatorContext)
-		{
-		}
 
 		protected Thread ComponentThreadThread;
 		protected AutoResetEvent StopCompleteEvent = new AutoResetEvent(false);

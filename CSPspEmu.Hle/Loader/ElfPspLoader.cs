@@ -23,7 +23,7 @@ namespace CSPspEmu.Hle.Loader
 			public uint GP;
 		}
 
-		public ElfPspLoader(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 		}
 
@@ -48,7 +48,7 @@ namespace CSPspEmu.Hle.Loader
 
 			if (this.ElfLoader.NeedsRelocation)
 			{
-				Relocate();
+				RelocateFromHeaders();
 			}
 
 			this.ModuleInfo = ElfLoader.SectionHeaderFileStream(ElfLoader.SectionHeadersByName[".rodata.sceModuleInfo"]).ReadStruct<ElfPsp.ModuleInfo>(); ;
@@ -61,7 +61,7 @@ namespace CSPspEmu.Hle.Loader
 			UpdateModuleImports();
 		}
 
-		protected void Relocate()
+		protected void RelocateFromHeaders()
 		{
 			if ((BaseAddress & 0xFFFF) != 0)
 			{
@@ -98,6 +98,8 @@ namespace CSPspEmu.Hle.Loader
 							ElfLoader.SectionHeaderFileStream(SectionHeader).ReadStructVectorUntilTheEndOfStream<Elf.Reloc>()
 						);
 						break;
+					case Elf.SectionHeader.TypeEnum.PrxRelocation_FW5:
+						throw (new Exception("Not implemented ElfSectionHeader.Type.PrxRelocation_FW5"));
 				}
 			}
 		}
@@ -158,11 +160,13 @@ namespace CSPspEmu.Hle.Loader
 						{
 						}
 						break;
+						/*
 					case Elf.Reloc.TypeEnum.Mips16: // 1
 						{
 							Instruction.IMMU += S;
 						}
 						break;
+						*/
 					case Elf.Reloc.TypeEnum.Mips32: // 2
 						{
 							Instruction.Value += S;
@@ -186,17 +190,14 @@ namespace CSPspEmu.Hle.Loader
 					case Elf.Reloc.TypeEnum.MipsLo16: // 6
 						{
 							uint A = Instruction.IMMU;
-							uint result = 0;
 
-							result = (uint)(HiValue << 16) | (uint)(A & 0x0000FFFF) + S;
-
-							Instruction.IMMU = result;
+							Instruction.IMMU = ((uint)(HiValue << 16) | (uint)(A & 0x0000FFFF)) + S;
 
 							// Process deferred R_MIPS_HI16
 							foreach (var data_addr2 in DeferredHi16)
 							{
 								var data2 = InstructionReader[data_addr2];
-								result = ((data2.Value & 0x0000FFFF) << 16) + A + S;
+								uint result = ((data2.Value & 0x0000FFFF) << 16) + A + S;
 								// The low order 16 bits are always treated as a signed
 								// value. Therefore, a negative value in the low order bits
 								// requires an adjustment in the high order bits. We need
@@ -217,6 +218,7 @@ namespace CSPspEmu.Hle.Loader
 						break;
 					case Elf.Reloc.TypeEnum.MipsGpRel16: // 7
 						{
+							/*
 							int A = Instruction.IMM;
 							int result;
 							if (A == 0)
@@ -232,6 +234,7 @@ namespace CSPspEmu.Hle.Loader
 								Console.Error.WriteLine("Relocation overflow (R_MIPS_GPREL16) : '" + result + "'");
 							}
 							Instruction.IMMU = (uint)result;
+							*/
 						}
 						break;
 					default:

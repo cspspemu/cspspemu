@@ -61,7 +61,7 @@ namespace CSPspEmu.Hle
 		ClearStack = 0x00200000,
 	}
 
-	unsafe public class HleThread
+	unsafe public class HleThread : IDisposable
 	{
 		protected MethodCacheFast MethodCache;
 
@@ -85,6 +85,14 @@ namespace CSPspEmu.Hle
 		public PspThreadAttributes Attribute;
 		public SceKernelThreadInfo Info;
 		public bool HandleCallbacks;
+
+		public bool IsWaitingAndHandlingCallbacks
+		{
+			get
+			{
+				return (CurrentStatus == Status.Waiting) && HandleCallbacks;
+			}
+		}
 
 		public uint GP
 		{
@@ -150,6 +158,7 @@ namespace CSPspEmu.Hle
 		public HleThread(CpuThreadState CpuThreadState)
 		{
 			this.MethodCache = CpuThreadState.CpuProcessor.MethodCache;
+			this.PspConfig = CpuThreadState.CpuProcessor.PspConfig;
 			this.GreenThread = new GreenThread();
 			this.CpuThreadState = CpuThreadState;
 			this.PrepareThread();
@@ -168,7 +177,10 @@ namespace CSPspEmu.Hle
 			{
 				while (true)
 				{
-					//Debug.WriteLine("Thread({0:X}) : PC: {1:X}", this.Id, CpuThreadState.PC);
+					if (PspConfig.TraceThreadLoop)
+					{
+						Console.Out.WriteLine("HleThread.MainLoop :: Thread({0:X}) : PC: {1:X}", this.Id, CpuThreadState.PC);
+					}
 					//Console.WriteLine("PC:{0:X}", CpuThreadState.PC);
 					GetDelegateAt(CpuThreadState.PC & PspMemory.MemoryMask)(CpuThreadState);
 				}
@@ -286,6 +298,12 @@ namespace CSPspEmu.Hle
 		}
 
 		public event Action End;
+		private PspConfig PspConfig;
+
+		public void Dispose()
+		{
+			GreenThread.Dispose();
+		}
 	}
 
 	public struct SceKernelSysClock

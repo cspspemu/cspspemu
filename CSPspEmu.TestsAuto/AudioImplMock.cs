@@ -9,7 +9,7 @@ namespace CSPspEmu.AutoTests
 {
 	unsafe public class AudioImplMock : PspAudioImpl
 	{
-		public AudioImplMock(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 		}
 

@@ -27,7 +27,7 @@ namespace CSPspEmu.Hle.Managers
 
 		public HleUidPool<HleIoDrvFileArg> HleIoDrvFileArgPool = new HleUidPool<HleIoDrvFileArg>();
 
-		public HleIoManager(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 		}
 

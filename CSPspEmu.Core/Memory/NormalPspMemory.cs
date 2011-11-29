@@ -9,7 +9,7 @@ namespace CSPspEmu.Core.Memory
 {
 	unsafe public class NormalPspMemory : PspMemory
 	{
-		public NormalPspMemory(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 			Initialize();
 		}

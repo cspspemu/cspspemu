@@ -35,12 +35,13 @@ namespace CSPspEmu.Core
 						PspEmulatorComponent Instance;
 						if (TypesByType.ContainsKey(typeof(TType)))
 						{
-							Instance = _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(TypesByType[typeof(TType)], this));
+							Instance = _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(TypesByType[typeof(TType)]));
 						}
 						else
 						{
-							Instance = _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(typeof(TType), this));
+							Instance = _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(typeof(TType)));
 						}
+						Instance._InitializeComponent(this);
 						Instance.InitializeComponent();
 						var End = DateTime.Now;
 						Console.WriteLine("GetInstance<{0}>: Miss! : LoadTime({1})", typeof(TType), End - Start);

@@ -8,7 +8,7 @@ namespace CSPspEmu.Hle
 {
 	public class HleOutputHandler : PspEmulatorComponent
 	{
-		public HleOutputHandler(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 		}
 

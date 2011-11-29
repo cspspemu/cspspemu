@@ -16,7 +16,7 @@ namespace CSPspEmu.Core.Audio.Imple.Openal
 		//static protected XRamExtension XRam;
 		static internal AudioStream AudioStream;
 
-		public PspAudioOpenalImpl(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 			if (AudioContext == null)
 			{

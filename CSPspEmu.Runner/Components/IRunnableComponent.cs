@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CSPspEmu.Runner
+namespace CSPspEmu.Runner.Components
 {
 	public interface IRunnableComponent
 	{

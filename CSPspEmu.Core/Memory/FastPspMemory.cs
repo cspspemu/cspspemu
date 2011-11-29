@@ -57,9 +57,8 @@ namespace CSPspEmu.Core.Memory
 		const uint PROT_WRITE = 2;
 		const uint PROT_EXEC = 4;
 
-		public FastPspMemory(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
-			//AllocMemory();
 			AllocMemoryOnce();
 		}
 

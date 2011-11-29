@@ -7,6 +7,7 @@ using CSharpUtils.Extensions;
 using CSPspEmu.Core.Cpu;
 using CSharpUtils.Threading;
 using CSharpUtils;
+using System.IO;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -352,21 +353,56 @@ namespace CSPspEmu.Core.Cpu
 
 		public void DumpRegisters()
 		{
+			DumpRegisters(Console.Out);
+		}
+
+		public void DumpRegisters(TextWriter TextWriter)
+		{
 			for (int n = 0; n < 32; n++)
 			{
-				if (n % 4 != 0) Console.Write(", ");
-				Console.Write("r{0,2}({1}) : {2}", n, RegisterMnemonicNames[n], "0x%08X".Sprintf(GPR[n]));
-				if (n % 4 == 3) Console.WriteLine();
+				if (n % 4 != 0) TextWriter.Write(", ");
+				TextWriter.Write("r{0,2}({1}) : {2}", n, RegisterMnemonicNames[n], "0x%08X".Sprintf(GPR[n]));
+				if (n % 4 == 3) TextWriter.WriteLine();
 			}
 
-			Console.WriteLine();
+			TextWriter.WriteLine();
 			for (int n = 0; n < 32; n++)
 			{
-				if (n % 4 != 0) Console.Write(", ");
-				Console.Write("f{0,2} : {1}, {2}", n, "0x%08X".Sprintf(FPR_I[n]), FPR[n]);
-				if (n % 4 == 3) Console.WriteLine();
+				if (n % 4 != 0) TextWriter.Write(", ");
+				TextWriter.Write("f{0,2} : {1}, {2}", n, "0x%08X".Sprintf(FPR_I[n]), FPR[n]);
+				if (n % 4 == 3) TextWriter.WriteLine();
 			}
-			Console.WriteLine();
+			TextWriter.WriteLine();
+		}
+
+		public unsafe void CopyRegistersFrom(CpuThreadState that)
+		{
+			this.PC = that.PC;
+			this.BranchFlag = that.BranchFlag;
+			this.Fcr31 = that.Fcr31;
+			this.IC = that.IC;
+			this.LO = that.LO;
+			this.HI = that.HI;
+			fixed (float* ThisFPR = &this.FPR0)
+			fixed (float* ThatFPR = &that.FPR0)
+			fixed (uint* ThisGPR = &this.GPR0)
+			fixed (uint* ThatGPR = &that.GPR0)
+			{
+				for (int n = 0; n < 32; n++)
+				{
+					ThisFPR[n] = ThatFPR[n];
+					ThisGPR[n] = ThatGPR[n];
+				}
+			}
+
+			fixed (float* ThisVFR = &this.VFR0)
+			fixed (float* ThatVFR = &that.VFR0)
+			{
+				for (int n = 0; n < 128; n++)
+				{
+					ThisVFR[n] = ThatVFR[n];
+				}
+			}
 		}
 	}
 }

@@ -34,7 +34,7 @@ namespace CSPspEmu.Core.Rtc
 			}
 		}
 
-		public PspRtc(PspEmulatorContext PspEmulatorContext) : base (PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 			Start();
 		}

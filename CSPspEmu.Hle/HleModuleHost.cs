@@ -220,35 +220,41 @@ namespace CSPspEmu.Hle
 					});
 				}
 
+				var Out = Console.Out;
+				if (NotImplemented)
+				{
+					Out = Console.Error;
+				}
+
 				if (Trace)
 				{
-					Console.Write(
+					Out.Write(
 						"Thread({0}:'{1}') : RA(0x{2:X}) : {3}.{4}",
 						HleState.ThreadManager.Current.Id,
 						HleState.ThreadManager.Current.Name,
 						HleState.ThreadManager.Current.CpuThreadState.RA,
 						MethodInfo.DeclaringType.Name, MethodInfo.Name
 					);
-					Console.Write("(");
+					Out.Write("(");
 					int Count = 0;
 					foreach (var ParamInfo in ParamInfoList)
 					{
-						if (Count > 0) Console.Write(", ");
-						Console.Write("{0}:", ParamInfo.ParameterName);
+						if (Count > 0) Out.Write(", ");
+						Out.Write("{0}:", ParamInfo.ParameterName);
 						switch (ParamInfo.RegisterType)
 						{
 							case HleModuleHost.ParamInfo.RegisterTypeEnum.Fpr:
 							case HleModuleHost.ParamInfo.RegisterTypeEnum.Gpr:
 								uint Int4 = (uint)CpuThreadState.GPR[ParamInfo.RegisterIndex];
 								uint Float4 = (uint)CpuThreadState.FPR[ParamInfo.RegisterIndex];
-								Console.Write("{0}", ToNormalizedTypeString(ParamInfo.ParameterType, CpuThreadState, Int4, Float4));
+								Out.Write("{0}", ToNormalizedTypeString(ParamInfo.ParameterType, CpuThreadState, Int4, Float4));
 								break;
 							default:
 								throw(new NotImplementedException());
 						}
 						Count++;
 					}
-					Console.Write(")");
+					Out.Write(")");
 					//Console.WriteLine("");
 				}
 
@@ -265,8 +271,8 @@ namespace CSPspEmu.Hle
 				{
 					if (Trace)
 					{
-						Console.WriteLine(" : {0}", ToNormalizedTypeString(MethodInfo.ReturnType, CpuThreadState, (uint)CpuThreadState.GPR[2], (float)CpuThreadState.FPR[0]));
-						Console.WriteLine("");
+						Out.WriteLine(" : {0}", ToNormalizedTypeString(MethodInfo.ReturnType, CpuThreadState, (uint)CpuThreadState.GPR[2], (float)CpuThreadState.FPR[0]));
+						Out.WriteLine("");
 					}
 				}
 			};

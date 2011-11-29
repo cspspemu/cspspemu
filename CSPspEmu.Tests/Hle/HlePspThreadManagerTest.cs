@@ -12,7 +12,6 @@ namespace CSPspEmu.Core.Tests
 	{
 		protected PspEmulatorContext PspEmulatorContext;
 		protected PspConfig PspConfig;
-		protected LazyPspMemory Memory;
 		protected CpuProcessor Processor;
 		protected MipsAssembler MipsAssembler;
 
@@ -21,10 +20,10 @@ namespace CSPspEmu.Core.Tests
 		{
 			PspConfig = new PspConfig();
 			PspEmulatorContext = new PspEmulatorContext(PspConfig);
-			Memory = PspEmulatorContext.GetInstance<LazyPspMemory>();
+			PspEmulatorContext.SetInstanceType<PspMemory, LazyPspMemory>();
 
 			Processor = PspEmulatorContext.GetInstance<CpuProcessor>();
-			MipsAssembler = new MipsAssembler(new PspMemoryStream(Memory));
+			MipsAssembler = new MipsAssembler(new PspMemoryStream(PspEmulatorContext.GetInstance<PspMemory>()));
 		}
 
 		[TestMethod]

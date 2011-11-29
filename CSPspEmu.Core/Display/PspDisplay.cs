@@ -38,7 +38,7 @@ namespace CSPspEmu.Core.Display
 			public int Height;
 		}
 
-		public PspDisplay(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 			this.HlePspRtc = PspEmulatorContext.GetInstance<PspRtc>();
 		}

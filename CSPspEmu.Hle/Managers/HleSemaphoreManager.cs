@@ -9,10 +9,11 @@ namespace CSPspEmu.Hle.Managers
 {
 	public class HleSemaphoreManager : PspEmulatorComponent
 	{
-		public HleUidPool<HleSemaphore> Semaphores = new HleUidPool<HleSemaphore>();
+		public HleUidPool<HleSemaphore> Semaphores;
 
-		public HleSemaphoreManager(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
+			Semaphores = new HleUidPool<HleSemaphore>();
 		}
 
 		public HleSemaphore Create()

@@ -53,6 +53,7 @@
     <Compile Include="Formats\ElfPsp.cs" />
     <Compile Include="Formats\Pbp.cs" />
     <Compile Include="HleCallback.cs" />
+    <Compile Include="HleEmulatorFinalizeCallbackException.cs" />
     <Compile Include="HleModule.cs" />
     <Compile Include="HleModuleHost.cs" />
     <Compile Include="HleLibrary.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Loader\ElfLoader.cs" />
     <Compile Include="Loader\ElfPspLoader.cs" />
     <Compile Include="Managers\HleCallbackManager.cs" />
+    <Compile Include="Managers\HleInterruptManager.cs" />
     <Compile Include="Managers\HleIoManager.cs" />
     <Compile Include="Managers\HleMemoryManager.cs" />
     <Compile Include="HleModuleGuest.cs" />

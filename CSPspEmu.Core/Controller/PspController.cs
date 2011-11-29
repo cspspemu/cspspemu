@@ -19,7 +19,7 @@ namespace CSPspEmu.Core.Controller
 		public int SamplingCycle;
 		public SamplingModeEnum SamplingMode;
 
-		public PspController(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 			SceCtrlData SceCtrlData = default(SceCtrlData);
 			for (int n = 0; n < MaxStoredFrames; n++)

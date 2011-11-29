@@ -94,7 +94,7 @@ namespace CSPspEmu.Core.Gpu
 		/// </summary>
 		/// <param name="PspConfig"></param>
 		/// <param name="Memory"></param>
-		public GpuProcessor(PspEmulatorContext PspEmulatorContext) : base(PspEmulatorContext)
+		public override void InitializeComponent()
 		{
 			if (sizeof(GpuStateStruct) > sizeof(uint) * 512)
 			{
