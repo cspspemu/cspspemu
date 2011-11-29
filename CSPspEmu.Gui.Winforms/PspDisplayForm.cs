@@ -61,12 +61,32 @@ namespace CSPspEmu.Gui.Winforms
 		/// </summary>
 		public PspController PspController { get { return IGuiExternalInterface.GetController(); } }
 
+		float AnalogX = 0.0f, AnalogY = 0.0f;
+
 		public void SendControllerFrame()
 		{
 			if (IGuiExternalInterface.IsInitialized())
 			{
 				SceCtrlData.X = 0;
 				SceCtrlData.Y = 0;
+
+				bool AnalogXUpdated = false;
+				bool AnalogYUpdated = false;
+				if (AnalogUp) { AnalogY -= 0.1f; AnalogYUpdated = true; }
+				if (AnalogDown) { AnalogY += 0.1f; AnalogYUpdated = true; }
+				if (AnalogLeft) { AnalogX -= 0.1f; AnalogXUpdated = true; }
+				if (AnalogRight) { AnalogX += 0.1f; AnalogXUpdated = true; }
+				if (!AnalogXUpdated) AnalogX /= 2.0f;
+				if (!AnalogYUpdated) AnalogY /= 2.0f;
+
+				AnalogX = MathFloat.Clamp(AnalogX, -1.0f, 1.0f);
+				AnalogY = MathFloat.Clamp(AnalogY, -1.0f, 1.0f);
+
+				//Console.WriteLine("{0}, {1}", AnalogX, AnalogY);
+
+				SceCtrlData.X = AnalogX;
+				SceCtrlData.Y = AnalogY;
+
 				this.PspController.InsertSceCtrlData(SceCtrlData);
 			}
 		}
@@ -330,6 +350,12 @@ namespace CSPspEmu.Gui.Winforms
 			return PspCtrlButtons.None;
 		}
 
+		//float AnalogX, AnalogY;
+		bool AnalogUp = false;
+		bool AnalogDown = false;
+		bool AnalogLeft = false;
+		bool AnalogRight = false;
+
 		private void PspDisplayForm_KeyDown(object sender, KeyEventArgs e)
 		{
 			switch (e.KeyCode)
@@ -341,11 +367,27 @@ namespace CSPspEmu.Gui.Winforms
 				case Keys.F2: IGuiExternalInterface.ShowDebugInformation(); break;
 			}
 
+			switch (e.KeyCode)
+			{
+				case Keys.U: AnalogUp = true; break;
+				case Keys.J: AnalogDown = true; break;
+				case Keys.H: AnalogLeft = true; break;
+				case Keys.K: AnalogRight = true; break;
+			}
+
 			SceCtrlData.UpdateButtons(GetButtonsFromKeys(e.KeyCode), true);
 		}
 
 		private void PspDisplayForm_KeyUp(object sender, KeyEventArgs e)
 		{
+			switch (e.KeyCode)
+			{
+				case Keys.U: AnalogUp = false; break;
+				case Keys.J: AnalogDown = false; break;
+				case Keys.H: AnalogLeft = false; break;
+				case Keys.K: AnalogRight = false; break;
+			}
+
 			SceCtrlData.UpdateButtons(GetButtonsFromKeys(e.KeyCode), false);
 		}
 

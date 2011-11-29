@@ -42,11 +42,31 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void sra() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RD, RT, Instruction.POS, OpCodes.Shr); }
 		public void srl() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RD, RT, Instruction.POS, OpCodes.Shr_Un); }
 
+		static public uint _rotr(uint Value, int Offset)
+		{
+			return (Value >> Offset) | (Value << (32 - Offset));
+		}
+
 		public void sllv() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RT, RS, OpCodes.Shl); }
 		public void srav() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RT, RS, OpCodes.Shr); }
 		public void srlv() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RT, RS, OpCodes.Shr_Un); }
-		public void rotr() { throw(new NotImplementedException()); }
-		public void rotrv() { throw(new NotImplementedException()); }
+		public void rotr() {
+			MipsMethodEmiter.SaveGPR(RD, () =>
+			{
+				MipsMethodEmiter.LoadGPR_Unsigned(RT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.POS);
+				MipsMethodEmiter.CallMethod(this.GetType(), "_rotr");
+			});
+			//$rd = ROTR($rt, $ps);
+		}
+		public void rotrv() {
+			MipsMethodEmiter.SaveGPR(RD, () =>
+			{
+				MipsMethodEmiter.LoadGPR_Unsigned(RT);
+				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmiter.CallMethod(this.GetType(), "_rotr");
+			});
+		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Set Less Than (Immediate) (Unsigned).

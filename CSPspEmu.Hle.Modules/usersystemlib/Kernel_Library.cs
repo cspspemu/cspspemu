@@ -47,7 +47,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		/// </summary>
 		/// <param name="set">The value returned from ::sceKernelCpuSuspendIntr().</param>
 		[HlePspFunction(NID = 0x5F10D406, FirmwareVersion = 150)]
-		void sceKernelCpuResumeIntr(bool set)
+		public void sceKernelCpuResumeIntr(bool set)
 		{
 			/*
 			synchronized (this) {

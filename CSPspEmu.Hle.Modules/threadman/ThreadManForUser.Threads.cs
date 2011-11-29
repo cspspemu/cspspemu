@@ -51,6 +51,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 			}
 			Thread.Info.StackPointer = Thread.Stack.High;
 			Thread.Info.StackSize = StackSize;
+
+			// Used K0 from parent thread.
+			// @FAKE. K0 should be preserved between thread calls. Though probably not modified by user modules.
+			Thread.CpuThreadState.CopyRegistersFrom(HleState.ThreadManager.Current.CpuThreadState);
+
 			Thread.CpuThreadState.PC = (uint)EntryPoint;
 			Thread.CpuThreadState.GP = (uint)CpuThreadState.GP;
 			Thread.CpuThreadState.SP = (uint)(Thread.Stack.High);

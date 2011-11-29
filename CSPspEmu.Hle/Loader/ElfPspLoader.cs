@@ -56,7 +56,7 @@ namespace CSPspEmu.Hle.Loader
 			//Console.WriteLine(this.ModuleInfo.ToStringDefault());
 
 			this.InitInfo.PC = ElfLoader.Header.EntryPoint + BaseAddress;
-			this.InitInfo.GP = this.ModuleInfo.GP;
+			this.InitInfo.GP = this.ModuleInfo.GP + BaseAddress;
 
 			UpdateModuleImports();
 		}

@@ -198,6 +198,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 					CpuThreadState.GPR[4] = (int)argc; // A0
 					CpuThreadState.GPR[5] = (int)argv; // A1
 				}
+				CpuThreadState.DumpRegisters();
 				MainThread.CurrentStatus = HleThread.Status.Ready;
 			}
 		}
