@@ -26,5 +26,10 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			Process.Start(@"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=J9DXYUSNPH5SC");
 		}
+
+		private void label1_Click(object sender, EventArgs e)
+		{
+
+		}
 	}
 }

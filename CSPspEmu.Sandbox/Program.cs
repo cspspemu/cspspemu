@@ -1,4 +1,9 @@
 ﻿using System;
+using System.IO;
+using System.IO.Compression;
+using ComponentAce.Compression.Libs.zlib;
+using CSPspEmu.Hle.Formats;
+using CSPspEmu.Hle.Vfs.Iso;
 
 namespace CSPspEmu.Sandbox
 {
@@ -14,6 +19,17 @@ namespace CSPspEmu.Sandbox
 		[STAThread]
 		static void Main(string[] args)
 		{
+			var Cso = new Cso(File.OpenRead("../../../TestInput/cube.cso"));
+			var IsoBytes = File.ReadAllBytes("../../../TestInput/cube.iso");
+			var CsoStream = new CsoProxyStream(Cso);
+
+			var Data = new byte[3000];
+			CsoStream.Position = 0x72800 - 10;
+			CsoStream.Read(Data, 0, Data.Length);
+			//Assert.AreEqual(100, );
+
+			return;
+
 			var PspEmulator = new PspEmulator();
 #if RELEASE
 			PspEmulator.Start();
@@ -39,8 +55,8 @@ namespace CSPspEmu.Sandbox
 			//PspEmulator.StartAndLoad(@"C:\projects\pspemu\pspautotests\tests\threads\threads\wakeup.elf", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"C:\projects\pspemu\pspautotests\tests\dmac\dmactest.elf", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"C:\projects\pspemu\pspautotests\tests\hle\check_not_used_uids.elf", TraceSyscalls: false);
-			
-			
+
+
 
 			//PspEmulator.Start();
 
@@ -65,7 +81,7 @@ namespace CSPspEmu.Sandbox
 			//PspEmulator.StartAndLoad(@"C:\projects\pspemu\pspautotests\tests\sysmem\sysmem.elf");
 
 			//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\cavestory\EBOOT.PBP", TraceSyscalls: false);
-			
+
 
 			//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\compilerPerf.pbp");
 			//PspEmulator.StartAndLoad(@"C:\juegos\jpcsp_last\demos\compilerPerf.pbp");

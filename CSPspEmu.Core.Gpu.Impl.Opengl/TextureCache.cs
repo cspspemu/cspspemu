@@ -119,6 +119,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				var ClutShift = ClutState[0].Shift;
 				var ClutMask = ClutState[0].Mask;
 
+				//Console.WriteLine(TextureFormat);
+
 				TextureCacheKey TextureCacheKey = new TextureCacheKey()
 				{
 					TextureAddress = TextureAddress,

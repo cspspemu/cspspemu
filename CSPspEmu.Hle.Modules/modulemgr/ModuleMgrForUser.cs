@@ -20,7 +20,6 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 			throw (new SceKernelSelfStopUnloadModuleException());
 		}
 
-
 		/// <summary>
 		/// Load a module.
 		/// </summary>
