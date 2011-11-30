@@ -171,20 +171,23 @@ namespace CSPspEmu.Core.Audio
 		{
 			var Samples = new short[SampleCount * NumberOfChannels];
 
-			if (NumberOfChannels == 1)
+			if (SamplePointer != null)
 			{
-				int Volume = (VolumeLeft + VolumeRight) / 2;
-				for (int n = 0; n < Samples.Length; n++)
+				if (NumberOfChannels == 1)
 				{
-					Samples[n + 0] = (short)(((int)SamplePointer[n + 0] * Volume) / PspAudio.MaxVolume);
+					int Volume = (VolumeLeft + VolumeRight) / 2;
+					for (int n = 0; n < Samples.Length; n++)
+					{
+						Samples[n + 0] = (short)(((int)SamplePointer[n + 0] * Volume) / PspAudio.MaxVolume);
+					}
 				}
-			}
-			else
-			{
-				for (int n = 0; n < Samples.Length; n += 2)
+				else
 				{
-					Samples[n + 0] = (short)(((int)SamplePointer[n + 0] * VolumeLeft) / PspAudio.MaxVolume);
-					Samples[n + 1] = (short)(((int)SamplePointer[n + 1] * VolumeRight) / PspAudio.MaxVolume);
+					for (int n = 0; n < Samples.Length; n += 2)
+					{
+						Samples[n + 0] = (short)(((int)SamplePointer[n + 0] * VolumeLeft) / PspAudio.MaxVolume);
+						Samples[n + 1] = (short)(((int)SamplePointer[n + 1] * VolumeRight) / PspAudio.MaxVolume);
+					}
 				}
 			}
 

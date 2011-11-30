@@ -99,6 +99,7 @@
     <Compile Include="threadman\ThreadManForUser.Threads.cs" />
     <Compile Include="usersystemlib\Kernel_Library.cs" />
     <Compile Include="utility\sceUtility.cs" />
+    <Compile Include="utility\sceUtility.Savedata.cs" />
     <Compile Include="utils\UtilsForUser.cs" />
     <Compile Include="wlan\sceWlan_Driver.cs" />
   </ItemGroup>
