@@ -39,7 +39,7 @@ namespace CSPspEmu.Hle.Loader
 
 		virtual public void Load(Stream FileStream)
 		{
-			//FileStream = new MemoryStream(FileStream.ReadAll());
+			FileStream = new MemoryStream(FileStream.ReadAll());
 
 			this.FileStream = FileStream;
 

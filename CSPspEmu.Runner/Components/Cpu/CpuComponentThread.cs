@@ -27,6 +27,7 @@ using CSPspEmu.Hle.Vfs.Emulator;
 using System.Windows.Forms;
 using System.Threading;
 using CSPspEmu.Hle.Vfs.MemoryStick;
+using CSPspEmu.Hle.Vfs.Iso;
 
 namespace CSPspEmu.Runner.Components.Cpu
 {
@@ -65,10 +66,31 @@ namespace CSPspEmu.Runner.Components.Cpu
 			MemoryStickMountable.Mount("/", new HleIoDriverLocalFileSystem(MemoryStickRootFolder));
 			var MemoryStick = new HleIoDriverMemoryStick(MemoryStickMountable);
 			//var MemoryStick = new HleIoDriverMemoryStick(new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
-			HleState.HleIoManager.AddDriver("ms:", MemoryStick);
-			HleState.HleIoManager.AddDriver("fatms:", MemoryStick);
-			HleState.HleIoManager.AddDriver("disc:", MemoryStick);
-			HleState.HleIoManager.AddDriver("emulator:", new HleIoDriverEmulator(HleState));
+			HleState.HleIoManager.SetDriver("ms:", MemoryStick);
+			HleState.HleIoManager.SetDriver("fatms:", MemoryStick);
+			HleState.HleIoManager.SetDriver("disc:", MemoryStick);
+			HleState.HleIoManager.SetDriver("emulator:", new HleIoDriverEmulator(HleState));
+		}
+
+		IsoFile SetIso(string IsoFile)
+		{
+			var IsoFileStream = (Stream)File.OpenRead(IsoFile);
+			string DetectedFormat;
+			switch (DetectedFormat = new FormatDetector().Detect(IsoFileStream))
+			{
+				case "Cso":
+					IsoFileStream = new CsoProxyStream(new Cso(IsoFileStream));
+					break;
+				case "Iso":
+					break;
+				default:
+					throw (new InvalidDataException("Can't set an ISO for '" + DetectedFormat + "'"));
+			}
+			//"../../../TestInput/cube.iso"
+			var Iso = new IsoFile(IsoFileStream, IsoFile);
+			var Umd = new HleIoDriverIso(Iso);
+			HleState.HleIoManager.SetDriver("disc:", Umd);
+			return Iso;
 		}
 
 		void SetVirtualFolder(string VirtualDirectory)
@@ -158,6 +180,13 @@ namespace CSPspEmu.Runner.Components.Cpu
 						break;
 					case "Elf":
 						ElfLoadStream = LoadStream;
+						break;
+					case "Cso":
+					case "Iso":
+						{
+							var Iso = SetIso(FileName);
+							ElfLoadStream = Iso.Root.Locate("/PSP_GAME/SYSDIR/BOOT.BIN").Open();
+						}
 						break;
 					default:
 						throw (new NotImplementedException("Can't load format '" + Format + "'"));

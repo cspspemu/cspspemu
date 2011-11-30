@@ -69,7 +69,7 @@ namespace CSPspEmu.Hle.Managers
 		/// </summary>
 		/// <param name="Name"></param>
 		/// <param name="Driver"></param>
-		public void AddDriver(string Name, IHleIoDriver Driver)
+		public void SetDriver(string Name, IHleIoDriver Driver)
 		{
 			//Drivers.Add(Name, Driver);
 			Drivers[Name] = Driver;

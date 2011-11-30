@@ -1,35 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
+using CSharpUtils;
+using CSPspEmu.Hle.Formats;
 
 namespace CSPspEmu.Hle.Vfs.Iso
 {
 	public class HleIoDriverIso : IHleIoDriver
 	{
+		public IsoFile Iso { get; protected set; }
+
+		public HleIoDriverIso(IsoFile Iso)
+		{
+			this.Iso = Iso;
+		}
+
 		public unsafe int IoInit()
 		{
-			throw new NotImplementedException();
+			return 0;
 		}
 
 		public unsafe int IoExit()
 		{
-			throw new NotImplementedException();
+			return 0;
 		}
 
 		public unsafe int IoOpen(HleIoDrvFileArg HleIoDrvFileArg, string FileName, HleIoFlags Flags, SceMode Mode)
 		{
-			throw new NotImplementedException();
+			//Console.WriteLine(FileName);
+			var IsoNode = Iso.Root.Locate(FileName);
+			HleIoDrvFileArg.FileArgument = IsoNode.Open();
+			return 0;
 		}
 
 		public unsafe int IoClose(HleIoDrvFileArg HleIoDrvFileArg)
 		{
-			throw new NotImplementedException();
+			var Stream = ((Stream)HleIoDrvFileArg.FileArgument);
+			Stream.Close();
+			return 0;
+			//throw new NotImplementedException();
 		}
 
 		public unsafe int IoRead(HleIoDrvFileArg HleIoDrvFileArg, byte* OutputPointer, int OutputLength)
 		{
-			throw new NotImplementedException();
+			var Stream = ((Stream)HleIoDrvFileArg.FileArgument);
+			var OutputData = new byte[OutputLength];
+			int Readed = Stream.Read(OutputData, 0, OutputLength);
+			Marshal.Copy(OutputData, 0, new IntPtr(OutputPointer), OutputLength);
+			return Readed;
+			//throw new NotImplementedException();
 		}
 
 		public unsafe int IoWrite(HleIoDrvFileArg HleIoDrvFileArg, byte* InputPointer, int InputLength)
@@ -39,7 +61,9 @@ namespace CSPspEmu.Hle.Vfs.Iso
 
 		public unsafe long IoLseek(HleIoDrvFileArg HleIoDrvFileArg, long Offset, SeekAnchor Whence)
 		{
-			throw new NotImplementedException();
+			var Stream = ((Stream)HleIoDrvFileArg.FileArgument);
+			//Stream.Seek(
+			return Stream.Seek(Offset, (SeekOrigin)Whence);
 		}
 
 		public unsafe int IoIoctl(HleIoDrvFileArg HleIoDrvFileArg, uint Command, byte* InputPointer, int InputLength, byte* OutputPointer, int OutputLength)

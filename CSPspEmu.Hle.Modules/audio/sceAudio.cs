@@ -325,9 +325,11 @@ namespace CSPspEmu.Hle.Modules.audio
 		/// <param name="RightVolume">The right volume.</param>
 		/// <returns>0 on success, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0xB7E1D8E7, FirmwareVersion = 150)]
+		[HlePspNotImplemented()]
 		public int sceAudioChangeChannelVolume(int Channel, int LeftVolume, int RightVolume)
 		{
-			throw (new NotImplementedException());
+			//throw (new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>

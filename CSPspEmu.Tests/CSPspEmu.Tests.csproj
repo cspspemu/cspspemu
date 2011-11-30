@@ -62,8 +62,8 @@
     <Compile Include="Cpu\InstructionTest.cs" />
     <Compile Include="Cpu\Assembler\MipsAssemblerTest.cs" />
     <Compile Include="Cpu\Emiter\MipsEmiterTest.cs" />
-    <Compile Include="CsoProxyStreamTest.cs" />
-    <Compile Include="CsoTest.cs" />
+    <Compile Include="Hle\Vfs\Iso\CsoProxyStreamTest.cs" />
+    <Compile Include="Hle\Formats\CsoTest.cs" />
     <Compile Include="Gpu\GpuProcessorTest.cs" />
     <Compile Include="Hle\Vfs\Local\HleIoDriverLocalFileSystemTest.cs" />
     <Compile Include="Hle\Vfs\HleIoManagerTest.cs" />
@@ -72,6 +72,7 @@
     <Compile Include="Hle\HlePspThreadTest.cs" />
     <Compile Include="Hle\MemoryPartitionTest.cs" />
     <Compile Include="Hle\Formats\PbpTest.cs" />
+    <Compile Include="Hle\Vfs\Iso\IsoTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -19,17 +19,6 @@ namespace CSPspEmu.Sandbox
 		[STAThread]
 		static void Main(string[] args)
 		{
-			var Cso = new Cso(File.OpenRead("../../../TestInput/cube.cso"));
-			var IsoBytes = File.ReadAllBytes("../../../TestInput/cube.iso");
-			var CsoStream = new CsoProxyStream(Cso);
-
-			var Data = new byte[3000];
-			CsoStream.Position = 0x72800 - 10;
-			CsoStream.Read(Data, 0, Data.Length);
-			//Assert.AreEqual(100, );
-
-			return;
-
 			var PspEmulator = new PspEmulator();
 #if RELEASE
 			PspEmulator.Start();
@@ -37,7 +26,8 @@ namespace CSPspEmu.Sandbox
 			Console.SetWindowSize(160, 60);
 			Console.SetBufferSize(160, 2000);
 
-			PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\puzzle_bubble\PSP_GAME\SYSDIR\BOOT.BIN");
+			PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\Puzzle Bobble.ISO");
+			//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\puzzle_bubble\PSP_GAME\SYSDIR\BOOT.BIN");
 			//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\astonishia\PSP_GAME\SYSDIR\BOOT.BIN", TraceSyscalls: true);
 
 			//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\abuse\EBOOT.PBP");

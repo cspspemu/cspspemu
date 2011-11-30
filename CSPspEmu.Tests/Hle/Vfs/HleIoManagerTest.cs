@@ -16,7 +16,7 @@ namespace CSPspEmu.Core.Tests
 			var HleIoManager = PspEmulatorContext.GetInstance<HleIoManager>();
 			var DriverName = "ms:";
 			var Driver = new HleIoDriverLocalFileSystem("C:/$INVALID$PATH$");
-			HleIoManager.AddDriver(DriverName, Driver);
+			HleIoManager.SetDriver(DriverName, Driver);
 
 			var Parts = HleIoManager.ParsePath("ms3:/path/to/file.txt");
 

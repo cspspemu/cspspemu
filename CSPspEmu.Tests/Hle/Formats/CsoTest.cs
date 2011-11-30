@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace CSPspEmu.Core.Hle.Formats
+namespace CSPspEmu.Core.Tests
 {
 	[TestClass]
 	public class CsoTest
