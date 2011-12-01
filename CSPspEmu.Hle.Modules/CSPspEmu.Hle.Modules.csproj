@@ -54,6 +54,7 @@
     <Compile Include="ge\sceGe_user.cs" />
     <Compile Include="ge\sceGe_user.DisplayList.cs" />
     <Compile Include="hpremote\sceHprm.cs" />
+    <Compile Include="impose\sceImpose.cs" />
     <Compile Include="interruptman\InterruptManager.cs" />
     <Compile Include="iofilemgr\IoFileMgrForKernel.cs" />
     <Compile Include="iofilemgr\IoFileMgrForUser.cs" />

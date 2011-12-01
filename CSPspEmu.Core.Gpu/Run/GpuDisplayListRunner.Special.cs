@@ -89,7 +89,6 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuScissor(int x, int y, int stopX, int stopY); // OP_SCISSOR1 + OP_SCISSOR2
 
 		// SCISSOR start (1)
-		[GpuOpCodesNotImplemented]
 		public void OP_SCISSOR1()
 		{
 			GpuState[0].ClipPlaneState.Scissor.Left = BitUtils.Extract(Params24, 0, 10);
@@ -97,7 +96,6 @@ namespace CSPspEmu.Core.Gpu.Run
 		}
 
 		// SCISSOR end (2)
-		[GpuOpCodesNotImplemented]
 		public void OP_SCISSOR2()
 		{
 			GpuState[0].ClipPlaneState.Scissor.Right = BitUtils.Extract(Params24, 0, 10);
@@ -123,20 +121,19 @@ namespace CSPspEmu.Core.Gpu.Run
 		// sendCommandf(69,(float)cx);
 		// sendCommandf(70,(float)cy);
 
-		[GpuOpCodesNotImplemented]
 		public void OP_XSCALE()
 		{
 			GpuState[0].Viewport.Scale.X = Float1;
 			//gpu.state.viewport.sx = command.float1 * 2;
 		}
-		[GpuOpCodesNotImplemented]
 		public void OP_YSCALE()
 		{
+			GpuState[0].Viewport.Scale.Y = Float1;
 			//gpu.state.viewport.sy = -command.float1 * 2;
 		}
-		[GpuOpCodesNotImplemented]
 		public void OP_ZSCALE()
 		{
+			GpuState[0].Viewport.Scale.Z = Float1;
 			//gpu.state.viewport.sz = command.extractFixedFloat!(0, 16);
 		}
 
@@ -148,9 +145,10 @@ namespace CSPspEmu.Core.Gpu.Run
 		{
 			GpuState[0].Viewport.Position.Y = Float1;
 		}
-		[GpuOpCodesNotImplemented]
+		//[GpuOpCodesNotImplemented]
 		public void OP_ZPOS()
 		{
+			GpuState[0].Viewport.Position.Z = BitUtils.ExtractUnsignedScaled(Params24, 0, 16, 1.0f);
 			//gpu.state.viewport.pz = command.extractFixedFloat!(0, 16);
 		}
 
@@ -182,17 +180,16 @@ namespace CSPspEmu.Core.Gpu.Run
 		 * @param mode - Which mode to use
 		**/
 		// void sceGuShadeModel(int mode); // OP_SHADE
-		[GpuOpCodesNotImplemented]
+		//[GpuOpCodesNotImplemented]
 		public void OP_SHADE()
 		{
 			GpuState[0].ShadeModel = (ShadingModelEnum)Params24;
 		}
 
 		// Logical Operation Enable (GL_COLOR_LOGIC_OP)
-		[GpuOpCodesNotImplemented]
 		public void OP_LOE()
 		{
-			//gpu.state.logicalOperation.enabled = command.bool1;
+			GpuState[0].LogicalOperationState.Enabled = Bool1;
 		}
 
 		/**
@@ -222,9 +219,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		 **/
 		// void sceGuLogicalOp(int op); // OP_LOP
 		// Logical Operation
-		[GpuOpCodesNotImplemented]
 		public void OP_LOP()
 		{
+			GpuState[0].LogicalOperationState.Operation = (LogicalOperationEnum)Param8(0);
 			//gpu.state.logicalOperation.operation = command.extractEnum!(LogicalOperation);
 		}
 
@@ -243,14 +240,16 @@ namespace CSPspEmu.Core.Gpu.Run
 		 */
 		//void sceGuOffset(unsigned int x, unsigned int y); // OP_OFFSETX + OP_OFFSETY
 
-		[GpuOpCodesNotImplemented]
+		//[GpuOpCodesNotImplemented]
 		public void OP_OFFSETX()
 		{
+			GpuState[0].Offset.X = (Params24 >> 4);
 			//gpu.state.offsetX = command.extract!(uint, 0, 4);
 		}
-		[GpuOpCodesNotImplemented]
+		//[GpuOpCodesNotImplemented]
 		public void OP_OFFSETY()
 		{
+			GpuState[0].Offset.Y = (Params24 >> 4);
 			//gpu.state.offsetY = command.extract!(uint, 0, 4);
 		}
 	}

@@ -80,6 +80,16 @@ namespace CSPspEmu.Hle.Modules.display
 		}
 
 		/// <summary>
+		/// Wait for vertical blank start with callback
+		/// </summary>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x46F186C3, FirmwareVersion = 150)]
+		public int sceDisplayWaitVblankStartCB(CpuThreadState CpuThreadState)
+		{
+			return _sceDisplayWaitVblankStartCB(CpuThreadState, HandleCallbacks: true);
+		}
+
+		/// <summary>
 		/// Display set framebuf
 		/// </summary>
 		/// <param name="Address">Address of start of framebuffer</param>
@@ -118,6 +128,19 @@ namespace CSPspEmu.Hle.Modules.display
 			//unimplemented_notice();
 			return _sceDisplayWaitVblankStartCB(CpuThreadState, HandleCallbacks: true);
 		}
+
+		/// <summary>
+		/// Get current HSYNC count
+		/// </summary>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x773DD3A3, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceDisplayGetCurrentHcount()
+		{
+			throw(new NotImplementedException());
+			//return hleEmulatorState.emulatorState.display.CURRENT_HCOUNT;
+		}
+
 
 		/// <summary>
 		/// Number of vertical blank pulses up to now

@@ -17,32 +17,32 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuFog(float near, float far, unsigned int color); // OP_FCOL + OP_FFAR + OP_FDIST
 
 		// Fog enable (GU_FOG)
-		[GpuOpCodesNotImplemented]
 		public void OP_FGE()
 		{
+			GpuState[0].FogState.Enabled = Bool1;
 			//gpu.state.fog.enabled = command.bool1;
 		}
 
 		// Fog COLor
-		[GpuOpCodesNotImplemented]
 		public void OP_FCOL()
 		{
-			//gpu.state.fog.color.rgb[] = command.float3[];
-			//gpu.state.fog.color.a = 1.0;
+			GpuState[0].FogState.Color.SetRGB_A1(Params24);
 		}
 
 		// Fog FAR
-		[GpuOpCodesNotImplemented]
+		//[GpuOpCodesNotImplemented]
 		public void OP_FFAR()
 		{
+			GpuState[0].FogState.End = Float1;
 			//gpu.state.fog.end = command.float1;
 			//writefln("OP_FFAR: %f", gpu.state.fog.end);
 		}
 
 		// Fog DISTance
-		[GpuOpCodesNotImplemented]
+		//[GpuOpCodesNotImplemented]
 		public void OP_FDIST()
 		{
+			GpuState[0].FogState.Dist = Float1;
 			//gpu.state.fog.dist = command.float1;
 			//writefln("OP_FDIST: %f", gpu.state.fog.end);
 		}

@@ -18,19 +18,22 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 			public uint Address;
 
 			/// <summary>
-			/// BufferWidth
+			/// Data width of the image.
+			/// With will be bigger. For example:
+			/// Bufferwidth = 480, Width = 512, Height = 512
+			/// Texture is 512x512 but there is data just for 480x512
 			/// </summary>
-			public uint BufferWidth;
+			public int BufferWidth;
 
 			/// <summary>
-			/// 
+			/// Texture Width
 			/// </summary>
-			public int Width;
+			public int TextureWidth;
 
 			/// <summary>
-			/// 
+			/// Texture Height
 			/// </summary>
-			public int Height;
+			public int TextureHeight;
 		}
 
 		/// <summary>

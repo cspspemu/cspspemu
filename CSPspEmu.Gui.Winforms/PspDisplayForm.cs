@@ -103,6 +103,7 @@ namespace CSPspEmu.Gui.Winforms
 
 			updateResumePause();
 			updateDebugSyscalls();
+			updateDebugGpu();
 
 			var Timer = new Timer();
 			Timer.Interval = 1000 / 60;
@@ -154,7 +155,9 @@ namespace CSPspEmu.Gui.Winforms
 					{
 						Buffer.LockBitsUnlock(PixelFormat.Format32bppArgb, (BitmapData) =>
 						{
-							var Count = 512 * 272;
+							int Width = 512;
+							int Height = 272;
+							var Count = Width * Height;
 							var BitmapDataDecode = new PixelFormatDecoder.OutputPixel[Count];
 							fixed (PixelFormatDecoder.OutputPixel* BitmapDataDecodePtr = BitmapDataDecode)
 							{
@@ -181,7 +184,7 @@ namespace CSPspEmu.Gui.Winforms
 										PspDisplay.CurrentInfo.PixelFormat,
 										(void*)FrameBuffer,
 										BitmapDataDecodePtr,
-										(int)Count
+										Width, Height
 									);
 								}
 
@@ -424,6 +427,11 @@ namespace CSPspEmu.Gui.Winforms
 			traceSyscallsToolStripMenuItem.Checked = PspConfig.DebugSyscalls;
 		}
 
+		private void updateDebugGpu()
+		{
+			traceUnimplementedGpuToolStripMenuItem.Checked = PspConfig.NoticeUnimplementedGpuCommands;
+		}
+
 		private void resumeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			IGuiExternalInterface.Resume();
@@ -449,6 +457,12 @@ namespace CSPspEmu.Gui.Winforms
 		private void traceSyscallsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			PspConfig.DebugSyscalls = !PspConfig.DebugSyscalls;
+			updateDebugSyscalls();
+		}
+
+		private void traceUnimplementedGpuToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			PspConfig.NoticeUnimplementedGpuCommands = !PspConfig.NoticeUnimplementedGpuCommands;
 			updateDebugSyscalls();
 		}
 	}

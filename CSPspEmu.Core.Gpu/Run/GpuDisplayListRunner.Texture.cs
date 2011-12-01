@@ -68,7 +68,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Texture Pixel Storage Mode
 		public void OP_TPSM()
 		{
-			TextureState[0].PixelFormat = (GuPixelFormats)Params24;
+			TextureState[0].PixelFormat = Extract<GuPixelFormats>(0, 4);
 		}
 
 		/**
@@ -130,8 +130,8 @@ namespace CSPspEmu.Core.Gpu.Run
 		private void _OP_TSIZE(int Index)
 		{
 			var MipMap = MipMapState(Index);
-			MipMap[0].Width = (int)(1 << Param8(0));
-			MipMap[0].Height = (int)(1 << Param8(8));
+			MipMap[0].TextureWidth = (int)(1 << Param8(0));
+			MipMap[0].TextureHeight = (int)(1 << Param8(8));
 		}
 
 		public void OP_TSIZE0() { _OP_TSIZE(0); }
@@ -259,7 +259,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		/**
 		 * Set texture scale
 		 *
-		 * @note Only used by the 3D T&L pipe, renders ton with GU_TRANSFORM_2D are
+		 * @note Only used by the 3D T&L pipe, renders done with GU_TRANSFORM_2D are
 		 * not affected by this.
 		 *
 		 * @param u - Scalar to multiply U coordinate with

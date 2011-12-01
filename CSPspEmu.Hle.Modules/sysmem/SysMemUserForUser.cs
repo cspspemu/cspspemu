@@ -8,6 +8,29 @@ namespace CSPspEmu.Hle.Modules.sysmem
 {
 	public class SysMemUserForUser : HleModuleHost
 	{
+		/// <summary>
+		/// Get the firmware version.
+		/// 
+		/// 0x01000300 on v1.00 unit,
+		/// 0x01050001 on v1.50 unit,
+		/// 0x01050100 on v1.51 unit,
+		/// 0x01050200 on v1.52 unit,
+		/// 0x02000010 on v2.00/v2.01 unit,
+		/// 0x02050010 on v2.50 unit,
+		/// 0x02060010 on v2.60 unit,
+		/// 0x02070010 on v2.70 unit,
+		/// 0x02070110 on v2.71 unit.
+		/// </summary>
+		/// <returns>The firmware version.</returns>
+		[HlePspFunction(NID = 0x3FC9AE6A, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelDevkitVersion()
+		{
+			//Logger.log(Logger.Level.TRACE, "SysMemUserForUser", "sceKernelDevkitVersion");
+			//return hleOsConfig.firmwareVersion;
+			return 0x02070110;
+		}
+
 		// @TODO: Unknown.
 		[HlePspFunction(NID = 0xF77D77CB, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -109,14 +132,25 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		[HlePspFunction(NID = 0x237DBD4F, FirmwareVersion = 150)]
 		public int sceKernelAllocPartitionMemory(HleMemoryManager.Partitions PartitionId, string Name, HleMemoryManager.BlockTypeEnum Type, int Size, /* void* */uint Address)
 		{
-			if (Type != HleMemoryManager.BlockTypeEnum.Low)
+			MemoryPartition MemoryPartition;
+			int Alignment = 1;
+			switch (Type)
 			{
-				throw(new NotImplementedException());
+				case HleMemoryManager.BlockTypeEnum.HighAligned:
+				case HleMemoryManager.BlockTypeEnum.LowAligned:
+					Alignment = (int)Address;
+					break;
+			}
+			if (Type == HleMemoryManager.BlockTypeEnum.Low || Type == HleMemoryManager.BlockTypeEnum.LowAligned)
+			{
+				MemoryPartition = HleState.MemoryManager.GetPartition(PartitionId).Allocate(Size, MemoryPartition.Anchor.Low, Alignment: Alignment);
+			}
+			else
+			{
+				throw (new NotImplementedException("Not Implemented sceKernelAllocPartitionMemory with '" + Type + "'"));
 			}
 
-			return (int)HleState.MemoryManager.MemoryPartitionsUid.Create(
-				HleState.MemoryManager.GetPartition(PartitionId).Allocate(Size, MemoryPartition.Anchor.Low)
-			);
+			return (int)HleState.MemoryManager.MemoryPartitionsUid.Create(MemoryPartition);
 
 			/*
 			throw(new NotImplementedException());

@@ -34,9 +34,11 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		/// <param name="cbid">A callback ID created from sceKernelCreateCallback</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xAEE7404D, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceUmdRegisterUMDCallBack(int cbid)
 		{
-			throw(new NotImplementedException());
+			return 0;
+			//throw(new NotImplementedException());
 			/*
 			//logWarning("Not implemented: sceUmdRegisterUMDCallBack");
 			unimplemented_notice();

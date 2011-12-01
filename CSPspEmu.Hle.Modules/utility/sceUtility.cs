@@ -660,5 +660,20 @@ namespace CSPspEmu.Hle.Modules.utility
 
 
 		public DialogStepEnum CurrentDialogStep = DialogStepEnum.NONE;
+
+		/// <summary>
+		/// Load an audio/video module (PRX) from user mode.
+		/// 
+		/// Available on firmware 2.00 and higher only.
+		/// </summary>
+		/// <param name="_module">module number to load (PSP_AV_MODULE_xxx)</param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0xC629AF26, FirmwareVersion = 200)]
+		[HlePspNotImplemented]
+		public int sceUtilityLoadAvModule(int _module)
+		{
+			return 0;
+		}
+
 	}
 }

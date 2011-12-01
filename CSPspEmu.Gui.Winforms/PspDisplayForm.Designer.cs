@@ -49,6 +49,7 @@
 			this.resumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.pauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.traceSyscallsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.websiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
@@ -56,7 +57,7 @@
 			this.blogcballesterosvelascoesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.traceSyscallsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.traceUnimplementedGpuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -216,10 +217,18 @@
 			// debugToolStripMenuItem
 			// 
 			this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.traceSyscallsToolStripMenuItem});
+            this.traceSyscallsToolStripMenuItem,
+            this.traceUnimplementedGpuToolStripMenuItem});
 			this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
 			this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
 			this.debugToolStripMenuItem.Text = "&Debug";
+			// 
+			// traceSyscallsToolStripMenuItem
+			// 
+			this.traceSyscallsToolStripMenuItem.Name = "traceSyscallsToolStripMenuItem";
+			this.traceSyscallsToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+			this.traceSyscallsToolStripMenuItem.Text = "Trace &Syscalls";
+			this.traceSyscallsToolStripMenuItem.Click += new System.EventHandler(this.traceSyscallsToolStripMenuItem_Click);
 			// 
 			// helpToolStripMenuItem
 			// 
@@ -272,12 +281,12 @@
 			this.aboutToolStripMenuItem.Text = "&About...";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
-			// traceSyscallsToolStripMenuItem
+			// traceUnimplementedGpuToolStripMenuItem
 			// 
-			this.traceSyscallsToolStripMenuItem.Name = "traceSyscallsToolStripMenuItem";
-			this.traceSyscallsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.traceSyscallsToolStripMenuItem.Text = "Trace &Syscalls";
-			this.traceSyscallsToolStripMenuItem.Click += new System.EventHandler(this.traceSyscallsToolStripMenuItem_Click);
+			this.traceUnimplementedGpuToolStripMenuItem.Name = "traceUnimplementedGpuToolStripMenuItem";
+			this.traceUnimplementedGpuToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+			this.traceUnimplementedGpuToolStripMenuItem.Text = "Trace Unimplemented Gpu";
+			this.traceUnimplementedGpuToolStripMenuItem.Click += new System.EventHandler(this.traceUnimplementedGpuToolStripMenuItem_Click);
 			// 
 			// PspDisplayForm
 			// 
@@ -329,5 +338,6 @@
 		private System.Windows.Forms.ToolStripMenuItem indieGamesToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem blogcballesterosvelascoesToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem traceSyscallsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem traceUnimplementedGpuToolStripMenuItem;
 	}
 }

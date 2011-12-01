@@ -248,6 +248,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				{
 					if (PrimitiveType == PrimitiveType.Sprites)
 					{
+						GL.Disable(EnableCap.CullFace);
 						for (int n = 0; n < VertexCount; n += 2)
 						{
 							VertexInfo VertexInfoTopLeft;

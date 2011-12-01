@@ -18,31 +18,31 @@ namespace CSPspEmu.Hle.Modules.power
 			throw (new NotImplementedException());
 		}
 
-		/**
-		 * Register Power Callback Function
-		 *
-		 * @param slot - slot of the callback in the list, 0 to 15, pass -1 to get an auto assignment.
-		 * @param cbid - callback id from calling sceKernelCreateCallback
-		 *
-		 * @return 0 on success, the slot number if -1 is passed, < 0 on error.
-		 */
+		/// <summary>
+		/// Register Power Callback Function
+		/// </summary>
+		/// <param name="slot">slot of the callback in the list, 0 to 15, pass -1 to get an auto assignment.</param>
+		/// <param name="cbid">callback id from calling sceKernelCreateCallback</param>
+		/// <returns> 0 on success, the slot number if -1 is passed, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0x04B7766E, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int scePowerRegisterCallback(int slot, int cbid)
 		{
-			throw (new NotImplementedException());
+			//throw (new NotImplementedException());
+			return 0;
 		}
 
-		/**
-		 * Unregister Power Callback Function
-		 *
-		 * @param slot - slot of the callback
-		 *
-		 * @return 0 on success, < 0 on error.
-		 */
+		/// <summary>
+		/// Unregister Power Callback Function
+		/// </summary>
+		/// <param name="slot">slot of the callback</param>
+		/// <returns>0 on success, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xDFA8BAF8, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int scePowerUnregisterCallback(int slot)
 		{
-			throw (new NotImplementedException());
+			//throw (new NotImplementedException());
+			return 0;
 		}
 	}
 }

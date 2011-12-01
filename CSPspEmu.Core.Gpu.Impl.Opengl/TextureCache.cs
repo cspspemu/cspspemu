@@ -64,6 +64,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		public int ClutStart;
 		public int ClutShift;
 		public int ClutMask;
+		public bool Swizzled;
 	}
 
 	sealed unsafe public class TextureCache : PspEmulatorComponent
@@ -72,7 +73,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		//Dictionary<TextureCacheKey, Texture> Cache = new Dictionary<TextureCacheKey, Texture>();
 		Dictionary<ulong, Texture> Cache = new Dictionary<ulong, Texture>();
 
-		PixelFormatDecoder.OutputPixel[] TempBuffer = new PixelFormatDecoder.OutputPixel[1024 * 1024];
+		byte[] SwizzlingBuffer = new byte[1024 * 1024 * 4];
+		PixelFormatDecoder.OutputPixel[] DecodedTextureBuffer = new PixelFormatDecoder.OutputPixel[1024 * 1024];
 
 		public override void InitializeComponent()
 		{
@@ -83,6 +85,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			Texture Texture;
 			//GC.Collect();
+			bool Swizzled = TextureState[0].Swizzled;
 			uint TextureAddress = TextureState[0].Mipmap0.Address;
 			uint ClutAddress = ClutState[0].Address;
 			var ClutFormat = ClutState[0].PixelFormat;
@@ -111,9 +114,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				var TexturePointer = (byte*)PspMemory.PspAddressToPointerSafe(TextureAddress);
 				var ClutPointer = (byte *)PspMemory.PspAddressToPointerSafe(ClutAddress);
 				var TextureFormat = TextureState[0].PixelFormat;
-				var Width = TextureState[0].Mipmap0.Width;
-				var Height = TextureState[0].Mipmap0.Height;
-				var TextureDataSize = PixelFormatDecoder.GetPixelsSize(TextureFormat, Width * Height);
+				//var Width = TextureState[0].Mipmap0.TextureWidth;
+				int BufferWidth = TextureState[0].Mipmap0.BufferWidth;
+				var Height = TextureState[0].Mipmap0.TextureHeight;
+				var TextureDataSize = PixelFormatDecoder.GetPixelsSize(TextureFormat, BufferWidth * Height);
 				var ClutDataSize = PixelFormatDecoder.GetPixelsSize(ClutFormat, ClutState[0].NumberOfColors);
 				var ClutCount = ClutState[0].NumberOfColors;
 				var ClutShift = ClutState[0].Shift;
@@ -133,19 +137,33 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					ClutStart = ClutStart,
 					ClutShift = ClutShift,
 					ClutMask = ClutMask,
+					Swizzled = Swizzled,
 				};
 
 				if (Texture == null || (!Texture.TextureCacheKey.Equals(TextureCacheKey)))
 				{
-					//Console.WriteLine("UPDATE_TEXTURE({0},{1}:{2}:{3}:{4}:0x{5:X},{6}x{7})", TextureFormat, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask, Width, Height);
+					//Console.WriteLine("UPDATE_TEXTURE(TEX={0},CLUT={1}:{2}:{3}:{4}:0x{5:X},SIZE={6}x{7},{8},Swizzled={9})", TextureFormat, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask, Width, Height, BufferWidth, Swizzled);
 					Texture = new Texture();
 					Texture.TextureCacheKey = TextureCacheKey;
 					{
-						fixed (PixelFormatDecoder.OutputPixel* TexturePixelsPointer = TempBuffer)
+						fixed (PixelFormatDecoder.OutputPixel* TexturePixelsPointer = DecodedTextureBuffer)
 						{
+							if (Swizzled)
+							{
+								fixed (byte* SwizzlingBufferPointer = SwizzlingBuffer)
+								{
+									Marshal.Copy(new IntPtr(TexturePointer), SwizzlingBuffer, 0, TextureDataSize);
+									PixelFormatDecoder.UnswizzleInline(TextureFormat, (void*)SwizzlingBufferPointer, BufferWidth, Height);
+									PixelFormatDecoder.Decode(
+										TextureFormat, (void*)SwizzlingBufferPointer, TexturePixelsPointer, BufferWidth, Height,
+										ClutPointer, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask
+									);
+								}
+							}
+							else
 							{
 								PixelFormatDecoder.Decode(
-									TextureFormat, (void*)TexturePointer, TexturePixelsPointer, Width * Height, Width,
+									TextureFormat, (void*)TexturePointer, TexturePixelsPointer, BufferWidth, Height,
 									ClutPointer, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask
 								);
 							}
@@ -169,7 +187,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 							Bitmap.Save("texture_" + TextureCacheKey.TextureHash + "_" + TextureCacheKey.ClutHash + ".png");
 							*/
 
-							Texture.SetData(TexturePixelsPointer, Width, Height);
+							Texture.SetData(TexturePixelsPointer, BufferWidth, Height);
 						}
 					}
 					if (Cache.ContainsKey(Hash1))

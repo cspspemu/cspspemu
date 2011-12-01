@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using CSharpUtils.Extensions;
 
@@ -43,25 +44,34 @@ namespace CSPspEmu.Core.Utils
 		}
 
 		void* _Input;
+		byte* InputByte;
+		ushort* InputShort;
+		uint* InputInt;
 		OutputPixel* Output;
-		int PixelCount;
 		int Width;
+		int Height;
 		void* Palette;
 		GuPixelFormats PaletteType;
 		int PaletteCount;
 		int PaletteStart;
 		int PaletteShift;
 		int PaletteMask;
+		int StrideWidth;
 
-		static public void Decode(GuPixelFormats PixelFormat, void* Input, OutputPixel* Output, int PixelCount, int Width = 0, void* Palette = null, GuPixelFormats PaletteType = GuPixelFormats.NONE, int PaletteCount = 0, int PaletteStart = 0, int PaletteShift = 0, int PaletteMask = 0xFF)
+		static public void Decode(GuPixelFormats PixelFormat, void* Input, OutputPixel* Output, int Width, int Height, void* Palette = null, GuPixelFormats PaletteType = GuPixelFormats.NONE, int PaletteCount = 0, int PaletteStart = 0, int PaletteShift = 0, int PaletteMask = 0xFF, int StrideWidth = -1)
 		{
+			if (StrideWidth == -1) StrideWidth = GetPixelsSize(PixelFormat, Width);
 			var PixelFormatInt = (int)PixelFormat;
 			var PixelFormatDecoder = new PixelFormatDecoder()
 			{
 				_Input = Input,
+				InputByte = (byte *)Input,
+				InputShort = (ushort*)Input,
+				InputInt = (uint*)Input,
 				Output = Output,
-				PixelCount = PixelCount,
+				StrideWidth = StrideWidth,
 				Width = Width,
+				Height = Height,
 				Palette = Palette,
 				PaletteType = PaletteType,
 				PaletteCount = PaletteCount,
@@ -123,7 +133,7 @@ namespace CSPspEmu.Core.Utils
 			var Translate = new int[PaletteSize];
 			fixed (OutputPixel* PalettePixelsPtr = PalettePixels)
 			{
-				Decode(PaletteType, Palette, PalettePixelsPtr, PalettePixels.Length);
+				Decode(PaletteType, Palette, PalettePixelsPtr, PalettePixels.Length, 1);
 				//Decode(PaletteType, Palette, PalettePixelsPtr, PaletteCount);
 			}
 			for (int n = 0; n < PaletteSize; n++)
@@ -131,10 +141,14 @@ namespace CSPspEmu.Core.Utils
 				Translate[n] = ((PaletteStart + n) >> PaletteShift) & PaletteMask;
 			}
 
-			for (int n = 0; n < PixelCount; n++)
+			for (int y = 0, n = 0; y < Height; y++)
 			{
-				byte Value = Input[n];
-				Output[n] = PalettePixels[Translate[(Value >> 0) & 0xFF]];
+				var InputRow = (byte *)&InputByte[y * StrideWidth];
+				for (int x = 0; x < Width; x++, n++)
+				{
+					byte Value = InputRow[x];
+					Output[n] = PalettePixels[Translate[(Value >> 0) & 0xFF]];
+				}
 			}
 		}
 
@@ -149,7 +163,7 @@ namespace CSPspEmu.Core.Utils
 			var Translate = new int[PaletteSize];
 			fixed (OutputPixel* PalettePixelsPtr = PalettePixels)
 			{
-				Decode(PaletteType, Palette, PalettePixelsPtr, PalettePixels.Length);
+				Decode(PaletteType, Palette, PalettePixelsPtr, PalettePixels.Length, 1);
 				//Decode(PaletteType, Palette, PalettePixelsPtr, PaletteCount);
 			}
 			//Console.WriteLine(PalettePixels.Length);
@@ -159,17 +173,15 @@ namespace CSPspEmu.Core.Utils
 				//Console.WriteLine(PalettePixels[Translate[n]]);
 			}
 
-			for (int n = 0; n < PixelCount / 2; n++)
+			for (int y = 0, n = 0; y < Height; y++)
 			{
-				byte Value = Input[n];
-				Output[n * 2 + 0] = PalettePixels[Translate[(Value >> 0) & 0xF]];
-				Output[n * 2 + 1] = PalettePixels[Translate[(Value >> 4) & 0xF]];
-				/*
-				if (Output[n * 2 + 0].A == 0)
+				var InputRow = (byte*)&InputByte[y * StrideWidth];
+				for (int x = 0; x < Width / 2; x++, n++)
 				{
-					Console.WriteLine("Transparent pixel!");
+					byte Value = InputRow[x];
+					Output[n * 2 + 0] = PalettePixels[Translate[(Value >> 0) & 0xF]];
+					Output[n * 2 + 1] = PalettePixels[Translate[(Value >> 4) & 0xF]];
 				}
-				*/
 			}
 		}
 
@@ -177,13 +189,17 @@ namespace CSPspEmu.Core.Utils
 		{
 			var Input = (uint*)_Input;
 
-			for (int n = 0; n < PixelCount; n++)
+			for (int y = 0, n = 0; y < Height; y++)
 			{
-				OutputPixel Value = *((OutputPixel*)&Input[n]);
-				Output[n].R = Value.R;
-				Output[n].G = Value.G;
-				Output[n].B = Value.B;
-				Output[n].A = Value.A;
+				var InputRow = (uint*)&InputByte[y * StrideWidth];
+				for (int x = 0; x < Width; x++, n++)
+				{
+					OutputPixel Value = *((OutputPixel*)&InputRow[x]);
+					Output[n].R = Value.R;
+					Output[n].G = Value.G;
+					Output[n].B = Value.B;
+					Output[n].A = Value.A;
+				}
 			}
 		}
 
@@ -191,9 +207,13 @@ namespace CSPspEmu.Core.Utils
 		{
 			var Input = (ushort*)_Input;
 
-			for (int n = 0; n < PixelCount; n++)
+			for (int y = 0, n = 0; y < Height; y++)
 			{
-				Output[n] = Decode_RGBA_4444_Pixel(Input[n]);
+				var InputRow = (ushort*)&InputByte[y * StrideWidth];
+				for (int x = 0; x < Width; x++, n++)
+				{
+					Output[n] = Decode_RGBA_4444_Pixel(InputRow[x]);
+				}
 			}
 
 		}
@@ -202,9 +222,13 @@ namespace CSPspEmu.Core.Utils
 		{
 			var Input = (ushort*)_Input;
 
-			for (int n = 0; n < PixelCount; n++)
+			for (int y = 0, n = 0; y < Height; y++)
 			{
-				Output[n] = Decode_RGBA_5551_Pixel(Input[n]);
+				var InputRow = (ushort*)&InputByte[y * StrideWidth];
+				for (int x = 0; x < Width; x++, n++)
+				{
+					Output[n] = Decode_RGBA_5551_Pixel(InputRow[x]);
+				}
 			}
 		}
 
@@ -212,12 +236,15 @@ namespace CSPspEmu.Core.Utils
 		{
 			var Input = (ushort*)_Input;
 
-			for (int n = 0; n < PixelCount; n++)
+			for (int y = 0, n = 0; y < Height; y++)
 			{
-				Output[n] = Decode_RGBA_5650_Pixel(Input[n]);
+				var InputRow = (ushort*)&InputByte[y * StrideWidth];
+				for (int x = 0; x < Width; x++, n++)
+				{
+					Output[n] = Decode_RGBA_5650_Pixel(InputRow[x]);
+				}
 			}
 		}
-
 
 		static public unsafe OutputPixel Decode_RGBA_4444_Pixel(ushort Value)
 		{
@@ -250,6 +277,64 @@ namespace CSPspEmu.Core.Utils
 				B = (byte)Value.ExtractUnsignedScale(11, 5, 255),
 				A = 0xFF,
 			};
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Input"></param>
+		/// <param name="Output"></param>
+		/// <param name="RowWidth">Width of the texture. In bytes? In pixels? Maybe bytes?</param>
+		/// <param name="TextureHeight">Height of the texture</param>
+		static public unsafe void Unswizzle(byte[] Input, byte[] Output, int RowWidth, int TextureHeight)
+		{
+			fixed (void* InputPtr = Input)
+			fixed (void* OutputPtr = Output)
+			{
+				Unswizzle(InputPtr, OutputPtr, RowWidth, TextureHeight);
+			}
+		}
+
+		static public unsafe void Unswizzle(void* Input, void* Output, int RowWidth, int TextureHeight)
+		{
+			int pitch = (RowWidth - 16) / 4;
+			int bxc = RowWidth / 16;
+			int byc = TextureHeight / 8;
+
+			var src = (uint*)Input;
+			var ydest = (byte*)Output;
+			for (int by = 0; by < byc; by++)
+			{
+				var xdest = ydest;
+				for (int bx = 0; bx < bxc; bx++)
+				{
+					var dest = (uint*)xdest;
+					for (int n = 0; n < 8; n++, dest += pitch)
+					{
+						*(dest++) = *(src++);
+						*(dest++) = *(src++);
+						*(dest++) = *(src++);
+						*(dest++) = *(src++);
+					}
+					xdest += 16;
+				}
+				ydest += RowWidth * 8;
+			}
+		}
+
+		static public unsafe void UnswizzleInline(void* Data, int RowWidth, int TextureHeight)
+		{
+			var Temp = new byte[RowWidth * TextureHeight];
+			fixed (void* TempPointer = Temp)
+			{
+				Unswizzle(Data, TempPointer, RowWidth, TextureHeight);
+			}
+			Marshal.Copy(Temp, 0, new IntPtr(Data), RowWidth * TextureHeight);
+		}
+
+		public static unsafe void UnswizzleInline(GuPixelFormats Format, void* Data, int Width, int Height)
+		{
+			UnswizzleInline(Data, GetPixelsSize(Format, Width), Height);
 		}
 	}
 }

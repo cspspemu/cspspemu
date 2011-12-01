@@ -264,8 +264,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			{
 				GL.LoadIdentity();
 				GL.Scale(
-					1.0f / Mipmap0[0].Width,
-					1.0f / Mipmap0[0].Height,
+					1.0f / Mipmap0[0].BufferWidth,
+					1.0f / Mipmap0[0].TextureHeight,
 					1.0f
 				);
 			}
