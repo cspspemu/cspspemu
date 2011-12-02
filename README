@@ -2,6 +2,17 @@ A PSP Emulator for >= .NET 4.0 made in C# by soywiz - Carlos Ballesteros Velasco
 
 Work In Progress emulator
 
+EMULATOR STATUS:
+
+* Cpu and Fpu is almost fully implemented
+* VFpu still has lots of functions without implementation 
+* Audio is implemented
+* Gpu still requires lots of works
+* Hle emulation has implemented a basic set of APIs (still lot of work left)
+* There are lot of homebrew games running
+* There are a small number of commercial games running
+
+
 KEY FEATURES:
 
 = Fully Managed and Disengaged =
@@ -15,9 +26,9 @@ KEY FEATURES:
 	The registers are inlined in the CpuThreadState class, so access
 	to a register is as fast as accessing a non-virtual field.
 
-= Fast As Hell Memory Access (Currently on Windows only) =
+= Fast As Hell Memory Access (Currently on Windows/Linux only) =
 
-	Using VirtualAlloc, allows all the PSP Memory Segments to be in a virtual space that fits the PSP Memory.
+	Using VirtualAlloc/mmap, allows all the PSP Memory Segments to be in a virtual space that fits the PSP Memory.
 	And since there is no DMA access on a HLE emulation, we can get a pointer just making an ADD operation between the base and the PSP address.
 	This is as fast as possible.
 
@@ -101,9 +112,9 @@ KEY FEATURES:
 	The idea is to create a full set of tests, testing the emulator interface, code generation, and HLE APIs.
 	UnitTests are integrated in the code, and HLE APIs are external integration tests in form of PSP executables than can be executed on any emulator to test APIs.
 	
-= Full Open Source =
+= Fully Open Source =
 
-	Project is on GitHub, so anyone can make a branch and perform Pull Requests helping to improve the code.
+	Project is on GitHub, so anyone can branch the project and perform Pull Requests helping to improve the code.
 
 = Created after 4 tries =
 
