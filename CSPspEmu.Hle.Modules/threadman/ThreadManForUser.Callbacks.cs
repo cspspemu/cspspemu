@@ -29,5 +29,80 @@ namespace CSPspEmu.Hle.Modules.threadman
 				HleCallback.Create(Name, (uint)Function, Argument)
 			);
 		}
+
+		/// <summary>
+		/// Notify a callback
+		/// </summary>
+		/// <param name="cb">The UID of the specified callback</param>
+		/// <param name="arg2">Passed as arg2 into the callback function</param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0xC11BA8C4, FirmwareVersion = 150)]
+		public int sceKernelNotifyCallback(int cb, int arg2)
+		{
+			throw(new NotImplementedException());
+			/*
+			PspCallback pspCallback = uniqueIdFactory.get!PspCallback(cb);
+		
+			hleEmulatorState.executeGuestCode(currentThreadState, pspCallback.func, [pspCallback.arg, arg2]);
+		
+			return 0;
+			*/
+		}
+
+		/// <summary>
+		/// Delete a callback
+		/// </summary>
+		/// <param name="cb">The UID of the specified callback</param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0xEDBA5844, FirmwareVersion = 150)]
+		public int sceKernelDeleteCallback(int cb)
+		{
+			throw(new NotImplementedException());
+			/*
+			uniqueIdFactory.remove!PspCallback(cb);
+			return 0;
+			*/
+		}
+
+		/// <summary>
+		/// Run all peding callbacks and return if executed any.
+		/// </summary>
+		/// <remarks>
+		/// Callbacks cannot be executed inside a interrupt
+		/// Here callbacks can be executed.
+		/// </remarks>
+		/// <returns>
+		///		0 - if the calling thread has no reported callbacks
+		///		1 - if the calling thread has reported callbacks which were executed successfully.
+		/// </returns>
+		[HlePspFunction(NID = 0x349D6D6C, FirmwareVersion = 150)]
+		public int sceKernelCheckCallback()
+		{
+			throw(new NotImplementedException());
+			/*
+			int result = hleEmulatorState.callbacksHandler.executeQueued(currentThreadState) ? 1 : 0;
+			if (result != 0)
+			{
+				//logError("sceKernelCheckCallback: %d", result);
+			}
+			return result;
+			*/
+		}
+
+		/// <summary>
+		/// Get the callback count
+		/// </summary>
+		/// <param name="cb">The UID of the specified callback</param>
+		/// <returns>The callback count, less than 0 on error</returns>
+		[HlePspFunction(NID = 0x2A3D44FF, FirmwareVersion = 150)]
+		public int sceKernelGetCallbackCount(int cb)
+		{
+			throw(new NotImplementedException());
+			/*
+			PspCallback pspCallback = uniqueIdFactory.get!PspCallback(cb);
+			return pspCallback.notifyCount;
+			*/
+		}
+
 	}
 }

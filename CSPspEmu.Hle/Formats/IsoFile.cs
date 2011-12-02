@@ -299,7 +299,7 @@ namespace CSPspEmu.Hle.Formats
 		}
 
 		/// <summary>
-		/// 
+		/// Length of the entry.
 		/// </summary>
 		public byte Length;
 
@@ -309,12 +309,12 @@ namespace CSPspEmu.Hle.Formats
 		public byte ExtendedAttributeLength;
 
 		/// <summary>
-		/// 
+		/// Sector of the file in the disc.
 		/// </summary>
 		public u32b Extent;
 
 		/// <summary>
-		/// 
+		/// Size of the file.
 		/// </summary>
 		public u32b Size;
 

@@ -12,6 +12,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 	{
 		private void PrepareState(GpuStateStruct* GpuState)
 		{
+			GL.ColorMask(true, true, true, true);
+
 			PrepareState_Texture(GpuState);
 			PrepareState_CullFace(GpuState);
 			//PrepareState_Colors(GpuState);
@@ -20,8 +22,23 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			PrepareState_Depth(GpuState);
 			PrepareState_DepthTest(GpuState);
 			PrepareState_Stencil(GpuState);
+			PrepareState_AlphaTest(GpuState);
 
 			GL.ShadeModel((GpuState[0].ShadeModel == ShadingModelEnum.Flat) ? ShadingModel.Flat : ShadingModel.Smooth);
+
+		}
+
+		private void PrepareState_AlphaTest(GpuStateStruct* GpuState)
+		{
+			if (!GlEnableDisable(EnableCap.AlphaTest, GpuState[0].AlphaTestState.Enabled))
+			{
+				return;
+			}
+
+			GL.AlphaFunc(
+				(AlphaFunction)TestTranslate[(int)GpuState[0].AlphaTestState.Function],
+				GpuState[0].AlphaTestState.Value
+			);
 		}
 
 		private void PrepareState_Stencil(GpuStateStruct* GpuState)
@@ -307,7 +324,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)((TextureState[0].FilterMagnification == TextureFilter.Linear) ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)(TextureState[0].WrapU == WrapMode.Repeat ? TextureWrapMode.Repeat : TextureWrapMode.Clamp));
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)(TextureState[0].WrapV == WrapMode.Repeat ? TextureWrapMode.Repeat : TextureWrapMode.Clamp));
-
+			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvModeTranslate[(int)TextureState[0].Effect]);
 		}
 	}
 }

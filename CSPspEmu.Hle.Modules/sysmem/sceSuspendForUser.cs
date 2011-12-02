@@ -5,7 +5,54 @@ using System.Text;
 
 namespace CSPspEmu.Hle.Modules.sysmem
 {
-	public class sceSuspendForUser : HleModuleHost
+	unsafe public class sceSuspendForUser : HleModuleHost
 	{
+		/// <summary>
+		/// Unknown
+		/// </summary>
+		[HlePspFunction(NID = 0xEADB1BD7, FirmwareVersion = 150)]
+		//[HlePspNotImplemented]
+		public void sceKernelPowerLock()
+		{
+			//unimplemented_notice();
+		}
+
+		/// <summary>
+		/// Unknown
+		/// </summary>
+		[HlePspFunction(NID = 0x3AEE7261, FirmwareVersion = 150)]
+		//[HlePspNotImplemented]
+		public void sceKernelPowerUnlock()
+		{
+			//unimplemented_notice();
+		}
+
+		/**
+		 * Will prevent the backlight to turn off.
+		 */
+		[HlePspFunction(NID = 0x090CCB3F, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public void sceKernelPowerTick(uint value)
+		{
+			//logWarning("Not Implemented sceKernelPowerTick");
+		}
+
+		/**
+		 * Allocate the extra 4megs of RAM
+		 *
+		 * @param unk  - No idea as it is never used, set to anything
+		 * @param ptr  - Pointer to a pointer to hold the address of the memory
+		 * @param size - Pointer to an int which will hold the size of the memory
+		 *
+		 * @return 0 on success
+		 */
+		[HlePspFunction(NID = 0x3E0271D3, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelVolatileMemLock(int unk, uint* ptr, int* size)
+		{
+			*ptr = 0x08400000;
+			*size = 0x400000;    // 4 MB
+			return 0;
+		}
 	}
 }

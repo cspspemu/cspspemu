@@ -254,6 +254,8 @@ namespace CSPspEmu.Core.Gpu.Run
 			TextureState[0].Effect = (TextureEffect)Param8(0);
 			TextureState[0].ColorComponent = (TextureColorComponent)Param8(8);
 			TextureState[0].Fragment2X = (Param8(16) != 0);
+
+			//Console.WriteLine(TextureState[0].Effect);
 		}
 
 		/**

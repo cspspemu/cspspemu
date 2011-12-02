@@ -40,8 +40,146 @@ namespace CSPspEmu.Hle.Vfs
 		public object FileArgument;
 	}
 
+	/// <summary>
+	/// Access modes for st_mode in SceIoStat (confirm?).
+	/// </summary>
 	public enum SceMode : uint
 	{
+		/// <summary>
+		/// Format bits mask
+		/// </summary>
+		FIO_S_IFMT = 0xF000,
+
+		/// <summary>
+		/// Symbolic link
+		/// </summary>
+		FIO_S_IFLNK = 0x4000,
+
+		/// <summary>
+		/// Directory
+		/// </summary>
+		FIO_S_IFDIR = 0x1000,
+		
+		/// <summary>
+		/// Regular file
+		/// </summary>
+		FIO_S_IFREG = 0x2000,
+
+		/// <summary>
+		/// Set UID
+		/// </summary>
+		FIO_S_ISUID = 0x0800,
+		
+		/// <summary>
+		/// Set GID
+		/// </summary>
+		FIO_S_ISGID = 0x0400,
+		
+		/// <summary>
+		/// Sticky
+		/// </summary>
+		FIO_S_ISVTX = 0x0200,
+
+		/// <summary>
+		/// User access rights mask
+		/// </summary>
+		FIO_S_IRWXU = 0x01C0,
+		
+		/// <summary>
+		/// Read user permission
+		/// </summary>
+		FIO_S_IRUSR = 0x0100,
+		
+		/// <summary>
+		/// Write user permission
+		/// </summary>
+		FIO_S_IWUSR = 0x0080,
+		
+		/// <summary>
+		/// Execute user permission
+		/// </summary>
+		FIO_S_IXUSR = 0x0040,
+
+		/// <summary>
+		/// Group access rights mask
+		/// </summary>
+		FIO_S_IRWXG = 0x0038,
+		
+		/// <summary>
+		/// Group read permission
+		/// </summary>
+		FIO_S_IRGRP = 0x0020,
+		
+		/// <summary>
+		/// Group write permission
+		/// </summary>
+		FIO_S_IWGRP = 0x0010,
+		
+		/// <summary>
+		/// Group execute permission
+		/// </summary>
+		FIO_S_IXGRP = 0x0008,
+
+		/// <summary>
+		/// Others access rights mask
+		/// </summary>
+		FIO_S_IRWXO = 0x0007,
+		
+		/// <summary>
+		/// Others read permission
+		/// </summary>
+		FIO_S_IROTH = 0x0004,
+		
+		/// <summary>
+		/// Others write permission
+		/// </summary>
+		FIO_S_IWOTH = 0x0002,
+		
+		/// <summary>
+		/// Others execute permission
+		/// </summary>
+		FIO_S_IXOTH = 0x0001,
+	}
+
+	/// <summary>
+	/// File modes, used for the st_attr parameter in SceIoStat (confirm?).
+	/// </summary>
+	public enum IOFileModes : uint
+	{
+		/// <summary>
+		/// Format mask
+		/// </summary>
+		FIO_SO_IFMT = 0x0038,
+
+		/// <summary>
+		/// Symbolic link
+		/// </summary>
+		FIO_SO_IFLNK = 0x0008,
+		
+		/// <summary>
+		/// Directory
+		/// </summary>
+		FIO_SO_IFDIR = 0x0010,
+		
+		/// <summary>
+		/// Regular file
+		/// </summary>
+		FIO_SO_IFREG = 0x0020,
+
+		/// <summary>
+		/// Hidden read permission
+		/// </summary>
+		FIO_SO_IROTH = 0x0004,
+		
+		/// <summary>
+		/// Hidden write permission
+		/// </summary>
+		FIO_SO_IWOTH = 0x0002,
+		
+		/// <summary>
+		/// Hidden execute permission
+		/// </summary>
+		FIO_SO_IXOTH = 0x0001,
 	}
 
 	public enum SceOff : long
@@ -60,6 +198,20 @@ namespace CSPspEmu.Hle.Vfs
 		public ushort Minute;
 		public ushort Second;
 		public uint Microsecond;
+
+		static public ScePspDateTime FromDateTime(DateTime DateTime)
+		{
+			return new ScePspDateTime()
+			{
+				Year = (ushort)DateTime.Year,
+				Month = (ushort)DateTime.Month,
+				Day = (ushort)DateTime.Day,
+				Hour = (ushort)DateTime.Hour,
+				Minute = (ushort)DateTime.Minute,
+				Second = (ushort)DateTime.Second,
+				Microsecond = (uint)(DateTime.Millisecond * 1000),
+			};
+		}
 	}
 
 	/// <summary>
@@ -75,7 +227,7 @@ namespace CSPspEmu.Hle.Vfs
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint Attributes;
+		public IOFileModes Attributes;
 		
 		/// <summary>
 		/// Size of the file in bytes.
@@ -104,7 +256,12 @@ namespace CSPspEmu.Hle.Vfs
 		/// The UMD driver stores
 		/// the sector of a file in the first index.
 		/// </summary>
-		public fixed uint DeviceDependentData[6];
+		public uint DeviceDependentData0;
+		public uint DeviceDependentData1;
+		public uint DeviceDependentData2;
+		public uint DeviceDependentData3;
+		public uint DeviceDependentData4;
+		public uint DeviceDependentData5;
 	}
 
 	/// <summary>

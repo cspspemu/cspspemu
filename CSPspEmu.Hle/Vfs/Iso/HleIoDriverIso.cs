@@ -103,7 +103,35 @@ namespace CSPspEmu.Hle.Vfs.Iso
 
 		public unsafe int IoGetstat(HleIoDrvFileArg HleIoDrvFileArg, string FileName, SceIoStat* Stat)
 		{
-			throw new NotImplementedException();
+			//Console.WriteLine(FileName);
+			var IsoNode = Iso.Root.Locate(FileName);
+
+			//IsoNode.DirectoryRecord.Date
+			Stat[0].Mode = 0;
+			Stat[0].Mode |= SceMode.FIO_S_IRUSR | SceMode.FIO_S_IWUSR | SceMode.FIO_S_IXUSR;
+			Stat[0].Mode |= SceMode.FIO_S_IRGRP | SceMode.FIO_S_IWGRP | SceMode.FIO_S_IXGRP;
+			Stat[0].Mode |= SceMode.FIO_S_IROTH | SceMode.FIO_S_IWOTH | SceMode.FIO_S_IXOTH;
+
+			if (IsoNode.IsDirectory)
+			{
+				Stat[0].Mode = SceMode.FIO_S_IFDIR;
+				Stat[0].Attributes = IOFileModes.FIO_SO_IFDIR;
+			}
+			else
+			{
+				Stat[0].Mode = SceMode.FIO_S_IFREG;
+				Stat[0].Attributes = IOFileModes.FIO_SO_IFREG | IOFileModes.FIO_SO_IROTH | IOFileModes.FIO_SO_IWOTH | IOFileModes.FIO_SO_IXOTH;
+			}
+			Stat[0].Size = IsoNode.DirectoryRecord.Size;
+			Stat[0].TimeCreation = ScePspDateTime.FromDateTime(IsoNode.DirectoryRecord.Date);
+			Stat[0].TimeLastAccess = ScePspDateTime.FromDateTime(IsoNode.DirectoryRecord.Date);
+			Stat[0].TimeLastModification = ScePspDateTime.FromDateTime(IsoNode.DirectoryRecord.Date);
+			Stat[0].DeviceDependentData0 = IsoNode.DirectoryRecord.Extent;
+
+			//Stat[0].DeviceDependentData
+			//throw new NotImplementedException();
+
+			return 0;
 		}
 
 		public unsafe int IoChstat(HleIoDrvFileArg HleIoDrvFileArg, string FileName, SceIoStat* stat, int bits)

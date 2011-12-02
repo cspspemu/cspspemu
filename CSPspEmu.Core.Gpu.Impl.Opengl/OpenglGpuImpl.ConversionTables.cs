@@ -112,5 +112,14 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			/// 10 GU_FIX
 			(BlendingFactorDest)GL_ONE_MINUS_SRC_ALPHA,
 		};
+
+		static readonly TextureEnvMode[] TextureEnvModeTranslate = new[]
+		{
+			TextureEnvMode.Modulate,
+			TextureEnvMode.Decal,
+			TextureEnvMode.Blend,
+			TextureEnvMode.Replace,
+			TextureEnvMode.Add,
+		};
 	}
 }

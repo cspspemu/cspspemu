@@ -61,7 +61,32 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		void Initialize()
 		{
 			///GL.Enable(EnableCap.Blend);
+			GL.Hint(HintTarget.LineSmoothHint, HintMode.Nicest);
+			/*
+			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.CombineRgb, (int)TextureEnvModeCombine.Modulate);
+			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Source0Rgb, (int)TextureEnvModeSource.Texture);
+			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Operand0Rgb, (int)TextureEnvModeOperandRgb.SrcColor);
+			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Src1Rgb, (int)TextureEnvModeSource.Previous);
+			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Operand1Rgb, (int)TextureEnvModeOperandRgb.SrcColor);
+			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.CombineAlpha, (int)TextureEnvModeCombine.Replace);
+			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Src0Alpha, (int)TextureEnvModeSource.Previous);
+			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Operand0Alpha, (int)TextureEnvModeOperandAlpha.SrcAlpha);
+			*/
+			//GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Combine);
+
+			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvColor, Color.FromArgb(1, 0, 0, 0));
+			//glAlphaFunc(GL_GREATER,0.000000)
+
+
+			//glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE)
+
+
+			//glTexEnvfv(GL_TEXTURE_ENV,GL_TEXTURE_ENV_COLOR, { 0.000000, 0.000000, 0.000000, 1.000000 } )
+
+			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Modulate);
 		}
+
+		GpuStateStruct* GpuState;
 
 		/// <summary>
 		/// 
@@ -70,6 +95,14 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <param name="VertexType"></param>
 		private void PutVertex(ref VertexInfo VertexInfo, ref VertexTypeStruct VertexType)
 		{
+			/*
+			if (GpuState[0].ClearingMode)
+			{
+				Console.WriteLine(VertexInfo);
+			}
+			*/
+			//Console.WriteLine(VertexInfo);
+
 			//Console.WriteLine(VertexInfo);
 			//Console.WriteLine(VertexInfo);
 			if (VertexType.Color != VertexTypeStruct.ColorEnum.Void)
@@ -109,12 +142,69 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			else *VertexInfo = Vertices[Index];
 		}
 
+		void drawBeginClear(GpuStateStruct* GpuState)
+		{
+			bool ccolorMask = false, calphaMask = false;
+
+			GL.Disable(EnableCap.Blend);
+			GL.Disable(EnableCap.Lighting);
+			GL.Disable(EnableCap.Texture2D);
+			GL.Disable(EnableCap.AlphaTest);
+			GL.Disable(EnableCap.DepthTest);
+			GL.Disable(EnableCap.Fog);
+			GL.Disable(EnableCap.ColorLogicOp);
+			GL.Disable(EnableCap.CullFace);
+			GL.DepthMask(false);
+
+			if (GpuState[0].ClearFlags.HasFlag(ClearBufferSet.ColorBuffer))
+			{
+				ccolorMask = true;
+			}
+
+			if (GlEnableDisable(EnableCap.StencilTest, GpuState[0].ClearFlags.HasFlag(ClearBufferSet.StencilBuffer)))
+			{
+				calphaMask = true;
+				// Sets to 0x00 the stencil.
+				// @TODO @FIXME! : Color should be extracted from the color! (as alpha component)
+				GL.StencilFunc(StencilFunction.Always, 0, 0xFF);
+				GL.StencilOp(StencilOp.Replace, StencilOp.Replace, StencilOp.Replace);
+			}
+
+			//int i; glGetIntegerv(GL_STENCIL_BITS, &i); writefln("GL_STENCIL_BITS: %d", i);
+
+			if (GpuState[0].ClearFlags.HasFlag(ClearBufferSet.DepthBuffer))
+			{
+				GL.Enable(EnableCap.DepthTest);
+				GL.DepthFunc(DepthFunction.Always);
+				GL.DepthMask(true);
+				GL.DepthRange(0, 0);
+
+				//glDepthRange(0.0, 1.0); // Original value
+			}
+
+			GL.ColorMask(ccolorMask, ccolorMask, ccolorMask, calphaMask);
+
+			//glClearDepth(0.0); glClear(GL_COLOR_BUFFER_BIT);
+
+			//if (state.clearFlags & ClearBufferMask.GU_COLOR_BUFFER_BIT) glClear(GL_DEPTH_BUFFER_BIT);
+		}
+
+		public bool IsCurrentWindow = false;
+
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="GpuState"></param>
 		override public unsafe void Prim(GpuStateStruct* GpuState, PrimitiveType PrimitiveType, ushort VertexCount)
 		{
+			this.GpuState = GpuState;
+
+			if (!IsCurrentWindow)
+			{
+				IsCurrentWindow = true;
+				GraphicsContext.MakeCurrent(NativeWindow.WindowInfo);
+			}
+
 			//Console.WriteLine("--------------------------------------------------------");
 			VertexType = GpuState[0].VertexState.Type;
 
@@ -138,7 +228,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					TotalVerticesWithoutMorphing = IndexListShort.Take(VertexCount).Max() + 1;
 					break;
 				default:
-					throw(new NotImplementedException());
+					throw (new NotImplementedException());
 			}
 
 			//Console.WriteLine(TotalVerticesWithoutMorphing);
@@ -147,7 +237,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			int z = 0;
 			VertexInfo TempVertexInfo;
 
-			float *Morphs = &GpuState[0].MorphingState.MorphWeight0;
+			float* Morphs = &GpuState[0].MorphingState.MorphWeight0;
 
 			//for (int n = 0; n < MorpingVertexCount; n++) Console.Write("{0}, ", Morphs[n]); Console.WriteLine("");
 
@@ -182,17 +272,29 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			if (GpuState[0].ClearingMode)
 			{
-				GraphicsContext.MakeCurrent(NativeWindow.WindowInfo);
+				//return;
 				//GL.ClearColor(1, 1, 0, 0);
 
 				// @TODO: Fake
+				/*
+				*/
+				//drawBeginClear(GpuState);
+				//return;
+				//Console.WriteLine(VertexCount);
+
 				GL.ClearColor(0, 0, 0, 0);
 				GL.ClearDepth(0);
 				GL.ClearStencil(0);
 				GL.ClearAccum(0, 0, 0, 0);
 				GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit | ClearBufferMask.AccumBufferBit);
+				return;
 			}
 			else
+			{
+				PrepareState(GpuState);
+			}
+
+			// DRAW BEGIN COMMON
 			{
 				if (GpuState[0].VertexState.Type.Transform2D)
 				{
@@ -219,9 +321,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 					//Console.WriteLine("NO Transform2D");
 				}
+			}
 
-				PrepareState(GpuState);
-
+			// DRAW ACTUALLY
+			{
 				uint VertexSize = GpuState[0].VertexState.Type.GetVertexSize();
 
 				byte* VertexPtr = (byte*)Memory.PspAddressToPointerSafe(GpuState[0].VertexAddress);
@@ -309,9 +412,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				}
 				GL.End();
 				GL.Flush();
-
-				//Console.WriteLine(VertexCount);
 			}
+			//Console.WriteLine(VertexCount);
 
 			//PrepareWrite(GpuState);
 		}

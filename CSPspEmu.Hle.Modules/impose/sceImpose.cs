@@ -89,7 +89,7 @@ namespace CSPspEmu.Hle.Modules.impose
 		public uint sceImposeGetBatteryIconStatus(uint* IsChargingPointer, uint* IconStatusPointer)
 		{
 			*IsChargingPointer = 0;
-			*IconStatusPointer = 0;
+			*IconStatusPointer = 3;
 			return 0;
 		}
 

@@ -137,7 +137,8 @@ namespace CSPspEmu.Hle.Modules.display
 		[HlePspNotImplemented]
 		public int sceDisplayGetCurrentHcount()
 		{
-			throw(new NotImplementedException());
+			return 0;
+			//throw(new NotImplementedException());
 			//return hleEmulatorState.emulatorState.display.CURRENT_HCOUNT;
 		}
 

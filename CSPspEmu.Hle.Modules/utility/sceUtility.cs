@@ -15,22 +15,22 @@ namespace CSPspEmu.Hle.Modules.utility
 			NONE = 0,
 
 			/// <summary>
-			/// 
+			///
 			/// </summary>
 			INIT = 1,
 
 			/// <summary>
-			/// 
+			/// If the GUI is visible (you need to call sceUtilityMsgDialogGetStatus).
 			/// </summary>
 			PROCESSING = 2,
 
 			/// <summary>
-			/// 
+			/// If the user cancelled the dialog, and you need to call sceUtilityMsgDialogShutdownStart.
 			/// </summary>
 			SUCCESS = 3,
 
 			/// <summary>
-			/// 
+			/// If the dialog has been successfully shut down.
 			/// </summary>
 			SHUTDOWN = 4,
 		}

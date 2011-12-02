@@ -205,7 +205,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 					PointerUtils.StoreStringOnPtr(FileSystemInfo.Name, Encoding.UTF8, IoDirent[0].Name);
 					IoDirent[0].Stat.Size = (FileInfo != null) ? FileInfo.Length : 0;
 					//IoDirent[0].Stat.Mode = SceMode
-					IoDirent[0].Stat.DeviceDependentData[0] = 10;
+					IoDirent[0].Stat.DeviceDependentData0 = 10;
 				}
 				return 0;
 			}

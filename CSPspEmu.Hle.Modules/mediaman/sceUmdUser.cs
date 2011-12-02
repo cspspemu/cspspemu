@@ -99,9 +99,11 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		/// </summary>
 		/// <returns>0 if no disc present, 1 if the disc is present.</returns>
 		[HlePspFunction(NID = 0x46EBB729, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceUmdCheckMedium()
 		{
-			throw(new NotImplementedException());
+			return 1;
+			//throw(new NotImplementedException());
 			/*
 			//logWarning("Partially implemented: sceUmdCheckMedium");
 			return 1;
@@ -193,7 +195,8 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		[HlePspFunction(NID = 0x4A9E5E29, FirmwareVersion = 150)]
 		public int sceUmdWaitDriveStatCB(PspUmdState stat, uint timeout)
 		{
-			throw(new NotImplementedException());
+			return 0;
+			//throw(new NotImplementedException());
 			/*
 			logWarning("Not implemented: sceUmdWaitDriveStatCB(%s:%d, %d)", to!string(stat), stat, timeout);
 		

@@ -79,6 +79,7 @@ namespace CSPspEmu.Core.Utils
 				PaletteShift = PaletteShift,
 				PaletteMask = PaletteMask,
 			};
+			//Console.WriteLine(PixelFormat);
 			switch (PixelFormat)
 			{
 				case GuPixelFormats.RGBA_5650: PixelFormatDecoder.Decode_RGBA_5650(); break;

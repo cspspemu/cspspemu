@@ -8,8 +8,8 @@ namespace CSPspEmu.Core.Gpu.State
 {
 	public struct VertexTypeStruct
 	{
-		readonly static public uint[] TypeSize = new uint[] { 0, sizeof(byte), sizeof(short), sizeof(float) };
-		readonly static public uint[] ColorSize = new uint[] { 0, 1, 1, 1, 2, 2, 2, 4 };
+		readonly static public uint[] TypeSizeTable = new uint[] { 0, sizeof(byte), sizeof(short), sizeof(float) };
+		readonly static public uint[] ColorSizeTable = new uint[] { 0, 1, 1, 1, 2, 2, 2, 4 };
 
 		public enum IndexEnum
 		{
@@ -54,11 +54,21 @@ namespace CSPspEmu.Core.Gpu.State
 		public uint GetVertexSize()
 		{
 			uint Size = 0;
-			Size += SkinningWeightCount * TypeSize[(int)Weight];
-			Size += 1 * ColorSize[(int)Color];
-			Size += 2 * TypeSize[(int)Texture];
-			Size += 3 * TypeSize[(int)Position];
-			Size += 3 * TypeSize[(int)Normal];
+			var SkinSize = TypeSizeTable[(int)Weight];
+			var ColorSize = ColorSizeTable[(int)Color];
+			var TextureSize = TypeSizeTable[(int)Texture];
+			var PositionSize = TypeSizeTable[(int)Position];
+			var NormalSize = TypeSizeTable[(int)Normal];
+			Size += SkinningWeightCount * SkinSize;
+			Size += 1 * ColorSize;
+			Size += 2 * TextureSize;
+			Size += 3 * PositionSize;
+			Size += 3 * NormalSize;
+			Size = MathUtils.NextAligned(
+				Size,
+				(int)(new uint[] { SkinSize, ColorSize, TextureSize, PositionSize, NormalSize }).Max()
+			);
+			//Console.WriteLine("Size:" + Size);
 			return Size;
 		}
 

@@ -100,7 +100,9 @@
     <Compile Include="threadman\ThreadManForUser.Threads.cs" />
     <Compile Include="usersystemlib\Kernel_Library.cs" />
     <Compile Include="utility\sceUtility.cs" />
+    <Compile Include="utility\sceUtility.MsgDialog.cs" />
     <Compile Include="utility\sceUtility.Savedata.cs" />
+    <Compile Include="utility\sceUtility.Sysparam.cs" />
     <Compile Include="utils\UtilsForUser.cs" />
     <Compile Include="wlan\sceWlan_Driver.cs" />
   </ItemGroup>
@@ -132,9 +134,7 @@
   <ItemGroup>
     <Compile Include="threadman\ThreadManForUser.VTimer.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="NewFolder1\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

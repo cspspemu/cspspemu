@@ -68,6 +68,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 			//var MemoryStick = new HleIoDriverMemoryStick(new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
 			HleState.HleIoManager.SetDriver("ms:", MemoryStick);
 			HleState.HleIoManager.SetDriver("fatms:", MemoryStick);
+			HleState.HleIoManager.SetDriver("mscmhc:", MemoryStick);
 			HleState.HleIoManager.SetDriver("disc:", MemoryStick);
 			HleState.HleIoManager.SetDriver("emulator:", new HleIoDriverEmulator(HleState));
 		}
@@ -228,6 +229,8 @@ namespace CSPspEmu.Runner.Components.Cpu
 					CpuThreadState.GPR[5] = (int)argv; // A1
 				}
 				CpuThreadState.DumpRegisters();
+				HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Dump();
+					
 				MainThread.CurrentStatus = HleThread.Status.Ready;
 			}
 		}
