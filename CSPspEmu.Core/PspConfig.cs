@@ -33,8 +33,8 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
-		//public bool ShowInstructionStats = true;
-		public bool ShowInstructionStats = false;
+		public bool ShowInstructionStats = true;
+		//public bool ShowInstructionStats = false;
 
 		/// <summary>
 		/// Specifies if the current emulator has a display.

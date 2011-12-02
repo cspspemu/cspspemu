@@ -387,15 +387,15 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 			if (CpuProcessor.PspConfig.ShowInstructionStats)
 			{
-				Console.WriteLine("--------------------------");
+				Console.Error.WriteLine("--------------------------");
 				foreach (var Pair in InstructionStats.OrderByDescending(Item => Item.Value))
 				{
-					Console.Write("{0} : {1}", Pair.Key, Pair.Value);
+					Console.Error.Write("{0} : {1}", Pair.Key, Pair.Value);
 					if (NewInstruction.ContainsKey(Pair.Key))
 					{
-						Console.Write(" <-- NEW!");
+						Console.Error.Write(" <-- NEW!");
 					}
-					Console.WriteLine("");
+					Console.Error.WriteLine("");
 				}
 			}
 

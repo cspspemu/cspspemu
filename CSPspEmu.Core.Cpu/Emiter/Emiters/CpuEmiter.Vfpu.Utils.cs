@@ -194,45 +194,221 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			});
 		}
 
-		private void Load_Register(uint Register, uint Index, uint VectorSize, bool Debug = false)
+		public VfpuPrefix PrefixNone;
+		public VfpuPrefix PrefixSource;
+		public VfpuPrefix PrefixDestination;
+		public VfpuPrefix PrefixTarget;
+
+		private void CheckPrefixUsage(VfpuPrefix Prefix)
 		{
-			_VfpuLoadVectorWithIndexPointer(Register, Index, VectorSize, Debug);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
+			// Disable the prefix once it have been used.
+			if (Prefix.Enabled)
+			{
+				if (Prefix.UsedCount > 0 && Prefix.UsedPC != PC)
+				{
+					throw (new InvalidOperationException(
+						String.Format(
+							"[0] Prefix not used or not applied to the next instruction Prefix={0}, PC=0x{1:X}",
+							Prefix, PC
+						)
+					));
+				}
+
+				if (Prefix.UsedCount > 0 && Prefix.DeclaredPC != PC)
+				{
+					Prefix.Enabled = false;
+				}
+
+				/*
+				// Additional consideration.
+				if (PC != Prefix.DeclaredPC + 4)
+				{
+					if (Prefix.UsedCount == 0)
+					{
+						throw (new InvalidOperationException(
+							String.Format(
+								"[1] Prefix not used or not applied to the next instruction Prefix={0}, PC=0x{1:X}",
+								Prefix, PC
+							)
+						));
+					}
+					Prefix.Enabled = false;
+				}
+				*/
+			}
 		}
 
-		private void Save_Register(uint Register, uint Index, uint VectorSize, Action Action, bool Debug = false)
+		/*
+		if (enabled && prefix.enabled) {
+			foreach (i, ref value; dst) {
+				// Constant.
+				if (prefix.constant(i)) {
+					final switch (prefix.index(i)) {
+						case 0: value = prefix.absolute(i) ? (3.0f       ) : (0.0f); break;
+						case 1: value = prefix.absolute(i) ? (1.0f / 3.0f) : (1.0f); break;
+						case 2: value = prefix.absolute(i) ? (1.0f / 4.0f) : (2.0f); break;
+						case 3: value = prefix.absolute(i) ? (1.0f / 6.0f) : (0.5f); break;
+					}
+				}
+				// Value
+				else {
+					value = *src[prefix.index(i)];
+				}
+				
+				if (prefix.absolute(i)) value = abs(value);
+				if (prefix.negate  (i)) value = -value;
+			}
+			prefix.enabled = false;
+		} else {
+			foreach (n, ref value; dst) value = *src[n];
+		}
+		*/
+
+		private void VfpuLoad_Register(uint Register, int Index, uint VectorSize, VfpuPrefix Prefix, bool Debug = false)
 		{
-			_VfpuLoadVectorWithIndexPointer(Register, Index, VectorSize, Debug);
-			Action();
+			CheckPrefixUsage(Prefix);
+
+			if (Prefix.Enabled)
+			{
+				Prefix.UsedPC = PC;
+				Prefix.UsedCount++;
+
+				// Constant.
+				if (Prefix.SourceConstant(Index))
+				{
+					float Value = 0.0f;
+					switch (Prefix.SourceIndex(Index))
+					{
+						case 0: Value = Prefix.SourceAbsolute(Index) ? (3.0f) : (0.0f); break;
+						case 1: Value = Prefix.SourceAbsolute(Index) ? (1.0f / 3.0f) : (1.0f); break;
+						case 2: Value = Prefix.SourceAbsolute(Index) ? (1.0f / 4.0f) : (2.0f); break;
+						case 3: Value = Prefix.SourceAbsolute(Index) ? (1.0f / 6.0f) : (0.5f); break;
+						default: throw(new InvalidOperationException());
+					}
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, Value);
+				}
+				// Value.
+				else
+				{
+					_VfpuLoadVectorWithIndexPointer(Register, (uint)Index, VectorSize, Debug);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
+				}
+
+				if (Prefix.SourceAbsolute(Index))
+				{
+					//MipsMethodEmiter.ILGenerator.Emit(OpCodes);
+					MipsMethodEmiter.CallMethod(typeof(MathFloat), "Abs");
+				}
+				if (Prefix.SourceNegate(Index))
+				{
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Neg);
+				}
+			}
+			else
+			{
+				_VfpuLoadVectorWithIndexPointer(Register, (uint)Index, VectorSize, Debug);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
+			}
+		}
+
+		/*
+		if (enabled && prefix.enabled) {
+			foreach (i, value; src) {
+				if (prefix.mask(i)) continue;
+
+				switch (prefix.saturation(i)) {
+					case 1: value = clamp!(float)(value,  0.0, 1.0); break;
+					case 3: value = clamp!(float)(value, -1.0, 1.0); break;
+					default: break;
+				}
+
+				*dst[i] = value;
+			}
+			prefix.enabled = false;
+		} else {
+			foreach (i, value; src) *dst[i] = value;
+		}
+		*/
+
+		private void VfpuSave_Register(uint Register, int Index, uint VectorSize, VfpuPrefix Prefix, Action Action, bool Debug = false)
+		{
+			CheckPrefixUsage(Prefix);
+			_VfpuLoadVectorWithIndexPointer(Register, (uint)Index, VectorSize, Debug);
+			{
+				Action();
+				if (Prefix.Enabled)
+				{
+					if (!Prefix.DestinationMask(Index))
+					{
+						float Min = 0, Max = 0;
+						bool DoClamp = false;
+						switch (Prefix.DestinationSaturation(Index))
+						{
+							case 1: DoClamp = true; Min = 0.0f; Max = 1.0f; break;
+							case 3: DoClamp = true; Min = -1.0f; Max = 1.0f; break;
+							default: break;
+						}
+						if (DoClamp)
+						{
+							MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, Min);
+							MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, Max);
+							MipsMethodEmiter.CallMethod(typeof(MathFloat), "Clamp");
+						}
+					}
+				}
+			}
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_R4);
 		}
 
-		private void Load_VS(uint Index, uint VectorSize, bool Debug = false)
+		// VfpuPrefix VfpuPrefix, 
+
+		private void Load_VS(int Index, uint VectorSize, int RegisterOffset = 0, bool Debug = false)
 		{
-			Load_Register(Instruction.VS, Index, VectorSize, Debug);
+			VfpuLoad_Register((uint)(Instruction.VS + RegisterOffset), Index, VectorSize, PrefixSource, Debug);
 		}
 
-		private void Load_VT(uint Index, uint VectorSize, bool Debug = false)
+		private void Load_VT(int Index, uint VectorSize, int RegisterOffset = 0, bool Debug = false)
 		{
-			Load_Register(Instruction.VT, Index, VectorSize, Debug);
+			VfpuLoad_Register((uint)(Instruction.VT + RegisterOffset), Index, VectorSize, PrefixTarget, Debug);
 		}
 
-		private void Save_VD(uint Index, uint VectorSize, Action Action, bool Debug = false)
+		private void Load_VD(int Index, uint VectorSize, int RegisterOffset = 0, bool Debug = false)
 		{
-			Save_Register(Instruction.VD, Index, VectorSize, Action, Debug);
+			//Load_Register(Instruction.VD + RegisterOffset, Index, VectorSize, PrefixNone, Debug);
+			VfpuLoad_Register((uint)(Instruction.VD + RegisterOffset), Index, VectorSize, PrefixDestination, Debug);
 		}
 
-		private void Save_VT(uint Index, uint VectorSize, Action Action, bool Debug = false)
+		private void Save_VD(int Index, uint VectorSize, int RegisterOffset, Action Action, bool Debug = false)
 		{
-			Save_Register(Instruction.VT, Index, VectorSize, Action, Debug);
+			VfpuSave_Register((uint)(Instruction.VD + RegisterOffset), Index, VectorSize, PrefixDestination, Action, Debug);
 		}
 
-		IEnumerable<uint> XRange(uint Start, uint End)
+		private void Save_VD(int Index, uint VectorSize, Action Action, bool Debug = false)
 		{
-			for (uint Value = Start; Value < End; Value++)
+			VfpuSave_Register((uint)(Instruction.VD), Index, VectorSize, PrefixDestination, Action, Debug);
+		}
+
+		private void Save_VT(int Index, uint VectorSize, int RegisterOffset, Action Action, bool Debug = false)
+		{
+			VfpuSave_Register((uint)(Instruction.VT + RegisterOffset), Index, VectorSize, PrefixTarget, Action, Debug);
+		}
+
+		private void Save_VT(int Index, uint VectorSize, Action Action, bool Debug = false)
+		{
+			VfpuSave_Register((uint)(Instruction.VT), Index, VectorSize, PrefixTarget, Action, Debug);
+		}
+
+		IEnumerable<int> XRange(int Start, int End)
+		{
+			for (int Value = Start; Value < End; Value++)
 			{
 				yield return Value;
 			}
+		}
+
+		IEnumerable<int> XRange(uint Count)
+		{
+			return XRange(0, (int)Count);
 		}
 
 
@@ -300,17 +476,39 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		private void _VectorOperation_N_Registers(uint VectorSize, int InputCount, Action<uint> Action)
 		{
-			foreach (var Index in XRange(0, VectorSize))
+			foreach (var Index in XRange(VectorSize))
 			{
 				Save_VD(Index, VectorSize, () =>
 				{
 					if (InputCount >= 1) Load_VS(Index, VectorSize);
 					if (InputCount >= 2) Load_VT(Index, VectorSize);
-					Action(Index);
+					Action((uint)Index);
 				});
 			}
 		}
 
+		private void VectorOperationSaveVd(Action<uint, Action<int>> Action)
+		{
+			VectorOperationSaveVd(Instruction.ONE_TWO, Action);
+		}
+
+		private void VectorOperationSaveVd(uint VectorSize, Action<uint, Action<int>> Action)
+		{
+			foreach (var Index in XRange(VectorSize))
+			{
+				Action<int> Load = InputCount =>
+				{
+					if (InputCount >= 1) Load_VS(Index, VectorSize);
+					if (InputCount >= 2) Load_VT(Index, VectorSize);
+				};
+				Save_VD(Index, VectorSize, () =>
+				{
+					Action((uint)Index, Load);
+				});
+			}
+		}
+
+		/*
 		private void _VectorOperation0Registers(Action<uint> Action)
 		{
 			_VectorOperation_N_Registers(Instruction.ONE_TWO, 0, Action);
@@ -325,7 +523,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			_VectorOperation_N_Registers(Instruction.ONE_TWO, 2, Action);
 		}
+		*/
 
+		/*
 		private void _VectorOperation0Registers(uint VectorSize, Action<uint> Action)
 		{
 			_VectorOperation_N_Registers(VectorSize, 0, Action);
@@ -340,5 +540,80 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			_VectorOperation_N_Registers(VectorSize, 2, Action);
 		}
+		*/
 	}
+
+	public struct VfpuPrefix
+	{
+		public uint DeclaredPC;
+		public uint UsedPC;
+		public uint Value;
+		public bool Enabled;
+		public int UsedCount;
+
+		// swz(xyzw)
+		public uint SourceIndex(int i)
+		{
+			//assert(i >= 0 && i < 4);
+			//return (value >> (0 + i * 2)) & 3;
+			return BitUtils.Extract(Value, 0 + i * 2, 2);
+		}
+
+		// abs(xyzw)
+		public bool SourceAbsolute(int i)
+		{
+			//assert(i >= 0 && i < 4);
+			//return (value >> (8 + i * 1)) & 1;
+			return BitUtils.Extract(Value, 8 + i * 1, 1) != 0;
+		}
+
+		// cst(xyzw)
+		public bool SourceConstant(int i)
+		{
+			//assert(i >= 0 && i < 4);
+			//return (value >> (12 + i * 1)) & 1;
+			return BitUtils.Extract(Value, 12 + i * 1, 1) != 0;
+		}
+
+		// neg(xyzw)
+		public bool SourceNegate(int i)
+		{
+			//assert(i >= 0 && i < 4);
+			//return (value >> (16 + i * 1)) & 1;
+			return BitUtils.Extract(Value, 16 + i * 1, 1) != 0;
+		}
+
+		// sat(xyzw)
+		public uint DestinationSaturation(int i)
+		{
+			//assert(i >= 0 && i < 4);
+			//return (value >> (0 + i * 2)) & 3;
+			return BitUtils.Extract(Value, 0 + i * 2, 2);
+		}
+
+		// msk(xyzw)
+		public bool DestinationMask(int i)
+		{
+			//assert(i >= 0 && i < 4);
+			//return (value >> (8 + i * 1)) & 1;
+			return BitUtils.Extract(Value, 8 + i * 1, 1) != 0;
+		}
+
+		public void EnableAndSetValueAndPc(uint Value, uint PC)
+		{
+			this.Enabled = true;
+			this.Value = Value;
+			this.DeclaredPC = PC;
+			this.UsedCount = 0;
+		}
+
+		public override string ToString()
+		{
+			return String.Format(
+				"VfpuPrefix(Enabled={0}, UsedPC=0x{1:X}, DeclaredPC=0x{2:X})",
+				Enabled, UsedPC, DeclaredPC
+			);
+		}
+	}
+
 }
