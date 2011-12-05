@@ -387,7 +387,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 			if (CpuProcessor.PspConfig.ShowInstructionStats)
 			{
-				Console.Error.WriteLine("--------------------------");
+				Console.Error.WriteLine("-------------------------- {0:X}-{1:X} ", MinPC, MaxPC);
 				foreach (var Pair in InstructionStats.OrderByDescending(Item => Item.Value))
 				{
 					Console.Error.Write("{0} : {1}", Pair.Key, Pair.Value);

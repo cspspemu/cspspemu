@@ -127,44 +127,7 @@ namespace CSPspEmu.Hle.Managers
 				// Waiting, but listeing to callbacks.
 				if (Current.IsWaitingAndHandlingCallbacks)
 				{
-					if (HleCallbackManager.HasScheduledCallbacks)
-					{
-						//Console.Error.WriteLine("STARTED CALLBACKS");
-						while (HleCallbackManager.HasScheduledCallbacks)
-						{
-							var HleCallback = HleCallbackManager.DequeueScheduledCallback();
-							var CurrentFake = Create();
-							CurrentFake.CpuThreadState.CopyRegistersFrom(Current.CpuThreadState);
-							try
-							{
-								//Console.Error.WriteLine("  CALLBACK STARTED : {0} AT {1}", HleCallback, CurrentFake);
-
-								HleCallback.SetArgumentsToCpuThreadState(CurrentFake.CpuThreadState);
-
-								CurrentFake.CpuThreadState.PC = HleCallback.Function;
-								CurrentFake.CpuThreadState.RA = HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK;
-								//Current.CpuThreadState.RA = 0;
-
-								Processor.RunningCallback = true;
-								while (Processor.RunningCallback)
-								{
-									//Console.WriteLine("AAAAAAA {0:X}", CurrentFake.CpuThreadState.PC);
-									CurrentFake.Step();
-								}
-							}
-							finally
-							{
-							}
-
-							//Console.Error.WriteLine("  CALLBACK ENDED : " + HleCallback);
-							if (MustReschedule)
-							{
-								//Console.Error.WriteLine("    RESCHEDULE");
-								break;
-							}
-						}
-						//Console.Error.WriteLine("ENDED CALLBACKS");
-					}
+					HleCallbackManager.ExecuteQueued(Current.CpuThreadState, MustReschedule);
 				}
 				// Executing normally.
 				else

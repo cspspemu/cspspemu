@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Cpu;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
@@ -76,17 +77,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		1 - if the calling thread has reported callbacks which were executed successfully.
 		/// </returns>
 		[HlePspFunction(NID = 0x349D6D6C, FirmwareVersion = 150)]
-		public int sceKernelCheckCallback()
+		public int sceKernelCheckCallback(CpuThreadState CpuThreadState)
 		{
-			throw(new NotImplementedException());
-			/*
-			int result = hleEmulatorState.callbacksHandler.executeQueued(currentThreadState) ? 1 : 0;
-			if (result != 0)
-			{
-				//logError("sceKernelCheckCallback: %d", result);
-			}
-			return result;
-			*/
+			return (HleState.CallbackManager.ExecuteQueued(CpuThreadState, false) > 0) ? 1 : 0;
 		}
 
 		/// <summary>

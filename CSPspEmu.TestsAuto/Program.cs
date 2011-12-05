@@ -185,7 +185,7 @@ namespace CSPspEmu.AutoTests
 				{
 					//PspAutoTestsFolder + @"\make.bat"
 					// FileNameBase
-					File.Delete(FileNameExecutable);
+					try { File.Delete(FileNameExecutable); } catch { }
 					var Output = ExecuteBat(PspAutoTestsFolder + @"\make_silent.bat", FileNameBase);
 					if (Output != "")
 					{
@@ -247,7 +247,7 @@ namespace CSPspEmu.AutoTests
 				Console.SetWindowSize(160, 60);
 				Console.SetBufferSize(160, 2000);
 
-				WildCardFilter = "vfpu";
+				//WildCardFilter = "umd";
 			}
 			Init();
 			Run(PspAutoTestsFolder, WildCardFilter);

@@ -7,6 +7,8 @@ namespace CSPspEmu.Hle.Modules.mediaman
 {
 	public class sceUmdUser : HleModuleHost
 	{
+		Dictionary<int, HleCallback> RegisteredCallbacks = new Dictionary<int, HleCallback>();
+
 		/// <summary>
 		/// Get the error code associated with a failed event
 		/// </summary>
@@ -31,12 +33,19 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		/// sceUmdRegisterUMDCallBack(cbid);
 		/// </example>
 		/// <remarks>Callback is of type UmdCallback</remarks>
-		/// <param name="cbid">A callback ID created from sceKernelCreateCallback</param>
+		/// <param name="CallbackId">A callback ID created from sceKernelCreateCallback</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xAEE7404D, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceUmdRegisterUMDCallBack(int cbid)
+		public int sceUmdRegisterUMDCallBack(int CallbackId)
 		{
+			var Callback = HleState.CallbackManager.Callbacks.Get(CallbackId);
+			RegisteredCallbacks[CallbackId] = HleCallback.Create(
+				"sceUmdRegisterUMDCallBack", Callback.Function,
+				1, (int)(PspUmdState.PSP_UMD_READABLE | PspUmdState.PSP_UMD_READY | PspUmdState.PSP_UMD_PRESENT), Callback.Arguments[0]
+			);
+
+			HleState.CallbackManager.ScheduleCallback(RegisteredCallbacks[CallbackId]);
+
 			return 0;
 			//throw(new NotImplementedException());
 			/*
@@ -63,19 +72,20 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		/// <summary>
 		/// Un-register a callback for the UMD drive
 		/// </summary>
-		/// <param name="cbid">A callback ID created from sceKernelCreateCallback</param>
+		/// <param name="CallbackId">A callback ID created from sceKernelCreateCallback</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xBD2BDE07, FirmwareVersion = 150)]
-		public int sceUmdUnRegisterUMDCallBack(int cbid)
+		public int sceUmdUnRegisterUMDCallBack(int CallbackId)
 		{
-			throw(new NotImplementedException());
-			/*
-			//unimplemented();
-			if (umdPspCallback is null) return -1;
-			hleEmulatorState.callbacksHandler.unregister(CallbacksHandler.Type.Umd, umdPspCallback);
-			umdPspCallback = null;
-			return 0;
-			*/
+			if (RegisteredCallbacks.ContainsKey(CallbackId))
+			{
+				RegisteredCallbacks.Remove(CallbackId);
+				return 0;
+			}
+			else
+			{
+				return -1;
+			}
 		}
 
 		/// <summary>

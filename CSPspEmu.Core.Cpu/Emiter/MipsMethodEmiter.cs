@@ -199,6 +199,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			ILGenerator.Emit(OpCodes.Ldind_I8);
 		}
 
+		public void SaveGPR_F(int R, Action Action) {
+			if (R != 0) SaveFieldR4(Field_GPRList[R], Action);
+		}
 		public void SaveGPR(int R, Action Action) { if (R != 0) SaveFieldI4(Field_GPRList[R], Action); }
 		public void SaveGPRLong(int R, Action Action) { if (R != 0) SaveFieldI8(Field_GPRList[R], Action); }
 		public void SaveFPR(int R, Action Action)

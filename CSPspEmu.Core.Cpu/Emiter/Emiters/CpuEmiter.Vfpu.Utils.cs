@@ -266,10 +266,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		private void VfpuLoad_Register(uint Register, int Index, uint VectorSize, VfpuPrefix Prefix, bool Debug = false)
 		{
+			//Console.Error.WriteLine("{0:X}", PC);
 			CheckPrefixUsage(Prefix);
+			//Console.Error.WriteLine("PREFIX [1]!" + Index);
 
 			if (Prefix.Enabled)
 			{
+				//Console.Error.WriteLine("PREFIX [2]!" + Index);
 				Prefix.UsedPC = PC;
 				Prefix.UsedCount++;
 
@@ -285,12 +288,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 						case 3: Value = Prefix.SourceAbsolute(Index) ? (1.0f / 6.0f) : (0.5f); break;
 						default: throw(new InvalidOperationException());
 					}
+					//Console.Error.WriteLine("VALUE:: " + Value);
 					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, Value);
 				}
 				// Value.
 				else
 				{
-					_VfpuLoadVectorWithIndexPointer(Register, (uint)Index, VectorSize, Debug);
+					_VfpuLoadVectorWithIndexPointer(Register, (uint)Prefix.SourceIndex(Index), VectorSize, Debug);
 					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
 				}
 

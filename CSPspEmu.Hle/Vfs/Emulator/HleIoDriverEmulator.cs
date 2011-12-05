@@ -126,7 +126,12 @@ namespace CSPspEmu.Hle.Vfs.Emulator
 
 		public unsafe int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, byte* InputPointer, int InputLength, byte* OutputPointer, int OutputLength)
 		{
-			if (DeviceName != "emulator:") throw(new InvalidOperationException());
+			switch (DeviceName)
+			{
+				case "emulator:": break;
+				case "kemulator:": break;
+				default: throw(new InvalidOperationException());
+			}
 
 			Console.WriteLine("     {0}", (EmulatorDevclEnum)Command);
 			switch ((EmulatorDevclEnum)Command)

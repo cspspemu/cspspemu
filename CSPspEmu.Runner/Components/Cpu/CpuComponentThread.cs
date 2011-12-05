@@ -41,6 +41,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 		HleState HleState;
 		PspMemory PspMemory;
 		HleIoDriverMountable MemoryStickMountable;
+		HleIoDriverEmulator HleIoDriverEmulator;
 		public AutoResetEvent StoppedEndedEvent = new AutoResetEvent(false);
 
 		public override void InitializeComponent()
@@ -64,13 +65,15 @@ namespace CSPspEmu.Runner.Components.Cpu
 
 			MemoryStickMountable = new HleIoDriverMountable();
 			MemoryStickMountable.Mount("/", new HleIoDriverLocalFileSystem(MemoryStickRootFolder));
+			HleIoDriverEmulator = new HleIoDriverEmulator(HleState);
 			var MemoryStick = new HleIoDriverMemoryStick(MemoryStickMountable);
 			//var MemoryStick = new HleIoDriverMemoryStick(new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
 			HleState.HleIoManager.SetDriver("ms:", MemoryStick);
 			HleState.HleIoManager.SetDriver("fatms:", MemoryStick);
 			HleState.HleIoManager.SetDriver("mscmhc:", MemoryStick);
 			HleState.HleIoManager.SetDriver("disc:", MemoryStick);
-			HleState.HleIoManager.SetDriver("emulator:", new HleIoDriverEmulator(HleState));
+			HleState.HleIoManager.SetDriver("emulator:", HleIoDriverEmulator);
+			HleState.HleIoManager.SetDriver("kemulator:", HleIoDriverEmulator);
 		}
 
 		IsoFile SetIso(string IsoFile)
