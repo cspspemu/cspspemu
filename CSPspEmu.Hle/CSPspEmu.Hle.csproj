@@ -63,6 +63,7 @@
     <Compile Include="Loader\ElfLoader.cs" />
     <Compile Include="Loader\ElfPspLoader.cs" />
     <Compile Include="Managers\HleCallbackManager.cs" />
+    <Compile Include="Managers\HleEventFlagManager.cs" />
     <Compile Include="Managers\HleInterruptManager.cs" />
     <Compile Include="Managers\HleIoManager.cs" />
     <Compile Include="Managers\HleMemoryManager.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="SceKernelErrors.cs" />
     <Compile Include="SceKernelException.cs" />
     <Compile Include="SceKernelSelfStopUnloadModuleException.cs" />
+    <Compile Include="Threading\EventFlags\HleEventFlag.cs" />
     <Compile Include="Threading\Semaphores\HleSemaphore.cs" />
     <Compile Include="Managers\HleSemaphoreManager.cs" />
     <Compile Include="Managers\HleThreadManager.cs" />

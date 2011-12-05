@@ -31,6 +31,7 @@ namespace CSPspEmu.Hle
 		// Hle Managers
 		public HleThreadManager ThreadManager;
 		public HleSemaphoreManager SemaphoreManager;
+		public HleEventFlagManager EventFlagManager;
 		public HleMemoryManager MemoryManager;
 		public HleModuleManager ModuleManager;
 		public HleCallbackManager CallbackManager;
@@ -57,6 +58,7 @@ namespace CSPspEmu.Hle
 			// @TODO FIX! New Instances!?
 			this.ThreadManager = PspEmulatorContext.GetInstance<HleThreadManager>();
 			this.SemaphoreManager = PspEmulatorContext.GetInstance<HleSemaphoreManager>();
+			this.EventFlagManager = PspEmulatorContext.GetInstance<HleEventFlagManager>();
 			this.MemoryManager = new HleMemoryManager(this.CpuProcessor.Memory);
 			this.ModuleManager = PspEmulatorContext.GetInstance<HleModuleManager>();
 			this.CallbackManager = PspEmulatorContext.GetInstance<HleCallbackManager>();

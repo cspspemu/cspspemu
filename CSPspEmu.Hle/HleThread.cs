@@ -13,6 +13,7 @@ using CSPspEmu.Core;
 using CSharpUtils;
 using System.Globalization;
 using System.Threading;
+using CSPspEmu.Hle.Threading.EventFlags;
 
 namespace CSPspEmu.Hle
 {
@@ -316,6 +317,7 @@ namespace CSPspEmu.Hle
 	/// <summary>
 	/// Event flag wait types
 	/// </summary>
+	/*
 	public enum PspEventFlagWaitTypes : uint
 	{
 		/// <summary>
@@ -338,6 +340,7 @@ namespace CSPspEmu.Hle
 		/// </summary>
 		PSP_EVENT_WAITCLEAR = 0x20,
 	};
+	*/
 
 	public enum PspThreadStatus : uint
 	{
@@ -409,7 +412,7 @@ namespace CSPspEmu.Hle
 		/// <summary>
 		/// Wait Type
 		/// </summary>
-		public PspEventFlagWaitTypes WaitType;
+		public EventFlagWaitTypeSet WaitType;
 
 		/// <summary>
 		/// Wait id
