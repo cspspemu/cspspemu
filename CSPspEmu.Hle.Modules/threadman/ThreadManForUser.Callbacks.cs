@@ -53,16 +53,13 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Delete a callback
 		/// </summary>
-		/// <param name="cb">The UID of the specified callback</param>
+		/// <param name="CallbackId">The UID of the specified callback</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xEDBA5844, FirmwareVersion = 150)]
-		public int sceKernelDeleteCallback(int cb)
+		public int sceKernelDeleteCallback(int CallbackId)
 		{
-			throw(new NotImplementedException());
-			/*
-			uniqueIdFactory.remove!PspCallback(cb);
+			HleState.CallbackManager.Callbacks.Remove(CallbackId);
 			return 0;
-			*/
 		}
 
 		/// <summary>

@@ -176,7 +176,7 @@ namespace CSPspEmu.Hle
 						{
 							var High = MathUtils.PrevAligned(OldFreePartition.High, Alignment);
 							var Low = (uint)(High - Size);
-							Console.WriteLine("Low: {0:X}, High: {1:X}", Low, High);
+							//Console.WriteLine("Low: {0:X}, High: {1:X}", Low, High);
 							return AllocateLowHigh(Low, High);
 						}
 				}

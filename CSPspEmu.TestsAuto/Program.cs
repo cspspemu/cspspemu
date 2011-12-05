@@ -111,6 +111,11 @@ namespace CSPspEmu.AutoTests
 			var RealOutputLines = RealOutput.Trim().Split('\n');
 			var Result = Diff.DiffTextProcessed(ExpectedOutputLines, RealOutputLines);
 
+			File.WriteAllText(
+				Path.ChangeExtension(FileNameExpected, ".lastoutput"),
+				RealOutput
+			);
+
 			if (Result.Items.All(Item => Item.Action == Diff.ProcessedItem.ActionEnum.Keep))
 			{
 				Console.WriteLine("Ok");
@@ -248,7 +253,8 @@ namespace CSPspEmu.AutoTests
 				Console.SetBufferSize(160, 2000);
 
 				//WildCardFilter = "intr";
-				WildCardFilter = "umd";
+				//WildCardFilter = "umd";
+				WildCardFilter = "sascore";
 			}
 			Init();
 			Run(PspAutoTestsFolder, WildCardFilter);

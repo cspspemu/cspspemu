@@ -80,11 +80,14 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 					}
 					if (WaitingThread.WaitType.HasFlag(EventFlagWaitTypeSet.Clear))
 					{
-						throw(new NotImplementedException());
+						BitPattern &= ~WaitingThread.BitsToMatch;
+						//Matching
+						//throw(new NotImplementedException());
 					}
 					else if (WaitingThread.WaitType.HasFlag(EventFlagWaitTypeSet.ClearAll))
 					{
-						throw (new NotImplementedException());
+						BitPattern = 0;
+						//throw (new NotImplementedException());
 					}
 					WaitingThreads.Remove(WaitingThread);
 					WaitingThread.WakeUpCallback();

@@ -25,8 +25,14 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x369ED59D, FirmwareVersion = 150)]
 		public uint sceKernelGetSystemTimeLow()
 		{
+			return (uint)sceKernelGetSystemTimeWide();
+		}
+
+		[HlePspFunction(NID = 0x82BC5777, FirmwareVersion = 150)]
+		public long sceKernelGetSystemTimeWide()
+		{
 			HleState.PspRtc.Update();
-			return (uint)(long)(HleState.PspRtc.Elapsed.TotalMilliseconds * 1000);
+			return (long)(HleState.PspRtc.Elapsed.TotalMilliseconds * 1000);
 		}
 
 	}

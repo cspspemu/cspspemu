@@ -85,6 +85,8 @@
     <Compile Include="registry\sceReg.cs" />
     <Compile Include="rtc\sceRtc.cs" />
     <Compile Include="sc_sascore\sceSasCore.cs" />
+    <Compile Include="sc_sascore\sceSasCore.Utils.cs" />
+    <Compile Include="sc_sascore\sceSasCore.Voices.cs" />
     <Compile Include="stdio\StdioForUser.cs" />
     <Compile Include="sysmem\KDebugForKernel.cs" />
     <Compile Include="sysmem\sceSuspendForUser.cs" />

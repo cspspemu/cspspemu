@@ -9,7 +9,6 @@ using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using CSharpUtils;
 using CSharpUtils.Extensions;
-using CSPspEmu.Hle.Modules.threadman;
 
 namespace CSPspEmu.Hle
 {

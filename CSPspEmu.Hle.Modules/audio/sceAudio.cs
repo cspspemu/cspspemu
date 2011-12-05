@@ -233,23 +233,25 @@ namespace CSPspEmu.Hle.Modules.audio
 		/// <summary>
 		/// Change the output sample count, after it's already been reserved
 		/// </summary>
-		/// <param name="Channel">The channel number.</param>
+		/// <param name="ChannelId">The channel number.</param>
 		/// <param name="SampleCount">The number of samples to output in one output call.</param>
 		/// <returns>0 on success, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0xCB2E439E, FirmwareVersion = 150)]
-		public int sceAudioSetChannelDataLen(int Channel, int SampleCount)
+		public int sceAudioSetChannelDataLen(int ChannelId, int SampleCount)
 		{
-			throw (new NotImplementedException());
+			var Channel = HleState.PspAudio.GetChannel(ChannelId);
+			Channel.SampleCount = SampleCount;
+			return 0;
 		}
 
 		/// <summary>
 		/// Change the format of a channel
 		/// </summary>
-		/// <param name="Channel">The channel number.</param>
+		/// <param name="ChannelId">The channel number.</param>
 		/// <param name="Format">One of ::PspAudioFormats</param>
 		/// <returns>0 on success, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0x95FD0C2D, FirmwareVersion = 150)]
-		public int sceAudioChangeChannelConfig(int Channel, PspAudio.FormatEnum Format)
+		public int sceAudioChangeChannelConfig(int ChannelId, PspAudio.FormatEnum Format)
 		{
 			throw (new NotImplementedException());
 		}

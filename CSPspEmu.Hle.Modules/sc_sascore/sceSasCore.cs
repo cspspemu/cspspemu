@@ -5,56 +5,76 @@ using System.Text;
 
 namespace CSPspEmu.Hle.Modules.sc_sascore
 {
-	public struct SasCore
-	{
-	}
-
-	unsafe public class sceSasCore : HleModuleHost
+	unsafe public partial class sceSasCore : HleModuleHost
 	{
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="sasCore"></param>
+		/// <param name="SasCore"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xBD11B7C2, FirmwareVersion = 150)]
-		public int __sceSasGetGrain(SasCore* sasCore)
+		public int __sceSasGetGrain(uint SasCorePointer)
 		{
-			throw(new NotImplementedException());
+			var SasCore = GetSasCore(SasCorePointer);
+			return SasCore.GrainSamples;
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="sasCore"></param>
-		/// <param name="grain"></param>
+		/// <param name="SasCore"></param>
+		/// <param name="Grain"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xD1E0A01E, FirmwareVersion = 150)]
-		public int __sceSasSetGrain(SasCore* sasCore, int grain)
+		public int __sceSasSetGrain(uint SasCorePointer, int Grain)
 		{
-			throw(new NotImplementedException());
+			var SasCore = GetSasCore(SasCorePointer);
+			try
+			{
+				return 0;
+				//return SasCore.GrainSamples;
+			}
+			finally
+			{
+				SasCore.GrainSamples = Grain;
+			}
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="sasCore"></param>
+		/// <param name="SasCore"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xE175EF66, FirmwareVersion = 150)]
-		public OutputMode __sceSasGetOutputmode(SasCore* sasCore)
+		public OutputMode __sceSasGetOutputmode(uint SasCorePointer)
 		{
-			throw(new NotImplementedException());
+			var SasCore = GetSasCore(SasCorePointer);
+
+			//throw(new NotImplementedException());
+			return SasCore.OutputMode;
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="sasCore"></param>
-		/// <param name="outputMode"></param>
+		/// <param name="SasCore"></param>
+		/// <param name="OutputMode"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xE855BF76, FirmwareVersion = 150)]
-		public int __sceSasSetOutputmode(SasCore* sasCore, OutputMode outputMode)
+		public int __sceSasSetOutputmode(uint SasCorePointer, OutputMode OutputMode)
 		{
-			throw(new NotImplementedException());
+			var SasCore = GetSasCore(SasCorePointer);
+
+			//throw(new NotImplementedException());
+			try
+			{
+				return 0;
+				//return SasCore.OutputMode;
+			}
+			finally
+			{
+				SasCore.OutputMode = OutputMode;
+			}
 		}
 
 		/// <summary>
@@ -73,142 +93,100 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="sampleRate">Sample Rate</param>
 		/// <returns>0 on success</returns>
 		[HlePspFunction(NID = 0x42778A9F, FirmwareVersion = 150)]
-		public uint __sceSasInit(SasCore* sasCore, int grainSamples, int maxVoices, OutputMode outputMode, int sampleRate)
+		//[HlePspNotImplemented]
+		public uint __sceSasInit(uint SasCorePointer, int GrainSamples, int MaxVoices, OutputMode OutputMode, int SampleRate)
 		{
-			throw(new NotImplementedException());
+			if (SampleRate != 44100) throw (new NotImplementedException("(SampleRate != 44100)"));
+			if (MaxVoices != 32) throw (new NotImplementedException("(MaxVoices != 32)"));
+			//if (MaxVoices != 32) throw (new NotImplementedException("(MaxVoices != 32)"));
+
+			var SasCore = GetSasCore(SasCorePointer, CreateIfNotExists: true);
+			{
+				SasCore.Initialized = true;
+				SasCore.GrainSamples = GrainSamples;
+				SasCore.MaxVoices = MaxVoices;
+				SasCore.OutputMode = OutputMode;
+				SasCore.SampleRate = SampleRate;
+			}
+			return 0;
 		}
 
 		/// <summary>
 		/// Return a bitfield indicating the end of the voices.
 		/// </summary>
-		/// <param name="sasCore">Core</param>
+		/// <param name="SasCore">Core</param>
 		/// <returns>A set of flags indiciating the end of the voices.</returns>
 		[HlePspFunction(NID = 0x68A46B95, FirmwareVersion = 150)]
-		public uint __sceSasGetEndFlag(SasCore* sasCore)
+		public uint __sceSasGetEndFlag(uint SasCorePointer)
 		{
-			throw(new NotImplementedException());
+			var SasCore = GetSasCore(SasCorePointer);
+			return SasCore.EndFlags;
 		}
 
 		/// <summary>
 		/// Sets the WaveformEffectType to the specified sasCore.
 		/// </summary>
-		/// <param name="sasCore">Core</param>
-		/// <param name="waveformEffectType">Effect</param>
+		/// <param name="SasCore">Core</param>
+		/// <param name="WaveformEffectType">Effect</param>
 		/// <returns>0 on success.</returns>
 		[HlePspFunction(NID = 0x33D4AB37, FirmwareVersion = 150)]
-		public uint __sceSasRevType(SasCore* sasCore, WaveformEffectType waveformEffectType)
+		public uint __sceSasRevType(uint SasCorePointer, WaveformEffectType WaveformEffectType)
 		{
-			throw(new NotImplementedException());
+			var SasCore = GetSasCore(SasCorePointer);
+			SasCore.WaveformEffectType = WaveformEffectType;
+			return 0;
 		}
 
 		/// <summary>
 		/// Sets the waveformEffectIsDry and waveformEffectIsWet to the specified sasCore.
 		/// </summary>
-		/// <param name="sasCore">Core</param>
-		/// <param name="waveformEffectIsDry">waveformEffectIsDry</param>
-		/// <param name="waveformEffectIsWet">waveformEffectIsWet</param>
+		/// <param name="SasCore">Core</param>
+		/// <param name="WaveformEffectIsDry">waveformEffectIsDry</param>
+		/// <param name="WaveformEffectIsWet">waveformEffectIsWet</param>
 		/// <returns>0 on success.</returns>
 		[HlePspFunction(NID = 0xF983B186, FirmwareVersion = 150)]
-		public uint __sceSasRevVON(SasCore* sasCore, bool waveformEffectIsDry, bool waveformEffectIsWet)
+		public uint __sceSasRevVON(uint SasCorePointer, bool WaveformEffectIsDry, bool WaveformEffectIsWet)
 		{
-			throw(new NotImplementedException());
+			var SasCore = GetSasCore(SasCorePointer);
+			SasCore.WaveformEffectIsDry = WaveformEffectIsDry;
+			SasCore.WaveformEffectIsWet = WaveformEffectIsWet;
+			return 0;
 		}
 
 		/// <summary>
 		/// Sets the effect left and right volumes for the specified sasCore.
 		/// </summary>
-		/// <param name="sasCore">Core</param>
-		/// <param name="leftVol">Left volume</param>
-		/// <param name="rightVol">Right volume</param>
+		/// <param name="SasCore">Core</param>
+		/// <param name="LeftVolume">Left volume</param>
+		/// <param name="RightVolume">Right volume</param>
 		/// <returns>0 on success</returns>
 		[HlePspFunction(NID = 0xD5A229C9, FirmwareVersion = 150)]
-		public uint __sceSasRevEVOL(SasCore* sasCore, int leftVol, int rightVol)
+		public uint __sceSasRevEVOL(uint SasCorePointer, int LeftVolume, int RightVolume)
 		{
-			throw(new NotImplementedException());
-		}
-
-		/// <summary>
-		/// Sets the Voice (VAG pointer).
-		/// 
-		/// 4-bit ADPCM, mono sound format.
-		/// 4-bit compressed sound format used by PlayStation and PlayStation Portable games;
-		/// compressed using ADPCM (Adaptive Differential Pulse Code Modulation) encoding.
-		/// </summary>
-		/// <param name="sasCore">Core</param>
-		/// <param name="voice">Voice</param>
-		/// <param name="vagAddr">Pointer to the wave data</param>
-		/// <param name="size">Size in bytes?? (to confirm)</param>
-		/// <param name="loopmode">Number of times the voice should play</param>
-		/// <returns></returns>
-		[HlePspFunction(NID = 0x99944089, FirmwareVersion = 150)]
-		public int __sceSasSetVoice(SasCore* sasCore, int voice, byte* vagAddr, int size, int loopmode)
-		{
-			throw(new NotImplementedException());
-		}
-
-		/// <summary>
-		/// Sets the pitch for a sasCore.voice.
-		/// </summary>
-		/// <param name="sasCore">SasCore</param>
-		/// <param name="voice">Voice</param>
-		/// <param name="pitch">Pitch to set. A value between 1 and 16384. The default value is 4096.</param>
-		/// <returns>0 on success</returns>
-		[HlePspFunction(NID = 0xAD84D37F, FirmwareVersion = 150)]
-		public int __sceSasSetPitch(SasCore* sasCore, int voice, int pitch)
-		{
-			throw(new NotImplementedException());
-		}
-
-		/// <summary>
-		/// Sets the stereo volumes for a sasCore.voice.
-		/// </summary>
-		/// <param name="sasCore">SasCore</param>
-		/// <param name="voice">Voice</param>
-		/// <param name="leftVolume">Left  Volume 0-0x1000</param>
-		/// <param name="rightVolume">Right Volume 0-0x1000</param>
-		/// <returns>0 on success.</returns>
-		[HlePspFunction(NID = 0x440CA7D8, FirmwareVersion = 150)]
-		public int __sceSasSetVolume(SasCore* sasCore, int voice, int leftVolume, int rightVolume)
-		{
-			throw(new NotImplementedException());
+			var SasCore = GetSasCore(SasCorePointer);
+			SasCore.LeftVolume = LeftVolume;
+			SasCore.RightVolume = RightVolume;
+			//throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="sasCore"></param>
-		/// <param name="delay"></param>
-		/// <param name="feedback"></param>
+		/// <param name="SasCore"></param>
+		/// <param name="Delay"></param>
+		/// <param name="Feedback"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x267A6DD2, FirmwareVersion = 150)]
-		public int __sceSasRevParam(SasCore* sasCore, int delay, int feedback)
+		public int __sceSasRevParam(uint SasCorePointer, int Delay, int Feedback)
 		{
-			throw(new NotImplementedException());
-		}
+			var SasCore = GetSasCore(SasCorePointer);
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="sasCore"></param>
-		/// <param name="voice"></param>
-		/// <param name="sustainLevel"></param>
-		/// <returns></returns>
-		[HlePspFunction(NID = 0x5F9529F6, FirmwareVersion = 150)]
-		public int __sceSasSetSL(SasCore* sasCore, int voice, int sustainLevel)
-		{
-			throw(new NotImplementedException());
-		}
+			SasCore.Delay = Delay;
+			SasCore.Feedback = Feedback;
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="sasCore"></param>
-		/// <param name="voice"></param>
-		/// <returns></returns>
-		[HlePspFunction(NID = 0x74AE582A, FirmwareVersion = 150)]
-		public int __sceSasGetEnvelopeHeight(SasCore* sasCore, int voice)
-		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -218,9 +196,11 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="voice_bits">Voice Bit Set</param>
 		/// <returns>0 on success.</returns>
 		[HlePspFunction(NID = 0x787D04D5, FirmwareVersion = 150)]
-		public int __sceSasSetPause(SasCore* sasCore, uint voice_bits)
+		[HlePspNotImplemented]
+		public int __sceSasSetPause(uint SasCorePointer, uint voice_bits)
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -229,187 +209,86 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="sasCore"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x2C8E6AB3, FirmwareVersion = 150)]
-		public int __sceSasGetPauseFlag(SasCore* sasCore)
+		[HlePspNotImplemented]
+		public int __sceSasGetPauseFlag(uint SasCorePointer)
 		{
-			throw(new NotImplementedException());
-		}
-
-		/// <summary>
-		/// Sets the ADSR (Attack Decay Sustain Release) for a sasCore.voice.
-		/// </summary>
-		/// <param name="sasCore">SasCore</param>
-		/// <param name="voice">Voice</param>
-		/// <param name="flags">Bitfield to set each envelope on or off.</param>
-		/// <param name="attackRate">ADSR Envelope's attack type.</param>
-		/// <param name="decayRate">ADSR Envelope's decay type.</param>
-		/// <param name="sustainRate">ADSR Envelope's sustain type.</param>
-		/// <param name="releaseRate">ADSR Envelope's release type.</param>
-		/// <returns>0 on success.</returns>
-		[HlePspFunction(NID = 0x019B25EB, FirmwareVersion = 150)]
-		public int __sceSasSetADSR(SasCore* sasCore, int voice, AdsrFlags flags, uint attackRate, uint decayRate, uint sustainRate, uint releaseRate)
-		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="sasCore"></param>
-		/// <param name="voice"></param>
-		/// <param name="env1Bitfield"></param>
-		/// <param name="env2Bitfield"></param>
-		/// <returns></returns>
-		[HlePspFunction(NID = 0xCBCD4F79, FirmwareVersion = 150)]
-		public int __sceSasSetSimpleADSR(SasCore* sasCore, int voice, uint env1Bitfield, uint env2Bitfield)
-		{
-			throw(new NotImplementedException());
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="sasCore"></param>
-		/// <param name="voice"></param>
-		/// <param name="flags"></param>
-		/// <param name="attackCurveMode"></param>
-		/// <param name="decayCurveMode"></param>
-		/// <param name="sustainCurveMode"></param>
-		/// <param name="releaseCurveMode"></param>
-		/// <returns></returns>
-		[HlePspFunction(NID = 0x9EC3676A, FirmwareVersion = 150)]
-		public int __sceSasSetADSRmode(SasCore* sasCore, int voice, AdsrFlags flags, AdsrCurveMode attackCurveMode, AdsrCurveMode decayCurveMode, AdsrCurveMode sustainCurveMode, AdsrCurveMode releaseCurveMode)
-		{
-			throw (new NotImplementedException());
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="sasCore"></param>
-		/// <param name="voice"></param>
-		/// <returns></returns>
-		[HlePspFunction(NID = 0x76F01ACA, FirmwareVersion = 150)]
-		public int __sceSasSetKeyOn(SasCore* sasCore, int voice)
-		{
-			throw (new NotImplementedException());
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="sasCore"></param>
-		/// <param name="voice"></param>
-		/// <returns></returns>
-		[HlePspFunction(NID = 0xA0CF2FA4, FirmwareVersion = 150)]
-		public int __sceSasSetKeyOff(SasCore* sasCore, int voice)
-		{
-			throw (new NotImplementedException());
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="sasCore"></param>
-		/// <param name="voice"></param>
-		/// <param name="noiseFreq"></param>
-		/// <returns></returns>
-		[HlePspFunction(NID = 0xB7660A23, FirmwareVersion = 150)]
-		public int __sceSasSetNoise(SasCore* sasCore, int voice, int noiseFreq)
-		{
-			throw (new NotImplementedException());
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="sasCore"></param>
-		/// <param name="sasInOut"></param>
-		/// <param name="leftVol"></param>
-		/// <param name="rightVol"></param>
+		/// <param name="SasCore"></param>
+		/// <param name="SasInOut"></param>
+		/// <param name="LeftVolume"></param>
+		/// <param name="RightVolume"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x50A14DFC, FirmwareVersion = 150)]
-		public int __sceSasCoreWithMix(SasCore* sasCore, void* sasInOut, int leftVol, int rightVol)
+		[HlePspNotImplemented]
+		public int __sceSasCoreWithMix(uint SasCorePointer, void* SasInOut, int LeftVolume, int RightVolume)
 		{
-			throw (new NotImplementedException());
+			//throw (new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="sasCore"></param>
-		/// <param name="sasOut"></param>
+		/// <param name="SasCore"></param>
+		/// <param name="SasOut"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xA3589D81, FirmwareVersion = 150)]
-		public uint __sceSasCore(SasCore* sasCore, void* sasOut)
+		//[HlePspNotImplemented]
+		public uint __sceSasCore(uint SasCorePointer, short* SasOut)
 		{
-			throw(new NotImplementedException());
+			int NumberOfChannels = 2;
+			var SasCore = GetSasCore(SasCorePointer);
+			var VoiceOnCount = new int[SasCore.GrainSamples * NumberOfChannels];
+			var BufferTemp = new int[SasCore.GrainSamples * NumberOfChannels];
+			var BufferShort = new short[SasCore.GrainSamples * NumberOfChannels];
+
+			// Read and mix voices.
+			foreach (var Voice in SasCore.Voices)
+			{
+				if (Voice.OnAndPlaying)
+				{
+					for (int n = 0; n < BufferTemp.Length; n++)
+					{
+						if (Voice.SampleOffset < Voice.Vag.DecodedSamples.Length)
+						{
+							VoiceOnCount[n]++;
+							BufferTemp[n] += Voice.Vag.DecodedSamples[Voice.SampleOffset++];
+						}
+						else
+						{
+							Voice.SetPlaying(false);
+							break;
+						}
+					}
+				}
+			}
+
+			// Normalize output
+			for (int n = 0; n < BufferTemp.Length; n++)
+			{
+				if (VoiceOnCount[n] > 0)
+				{
+					BufferShort[n] = (short)(BufferTemp[n] / VoiceOnCount[n]);
+				}
+				else
+				{
+					BufferShort[n] = 0;
+				}
+			}
+
+			// Output converted 44100 data
+			for (int n = 0; n < BufferShort.Length; n++)
+			{
+				SasOut[n] = BufferShort[n];
+			}
+			//throw(new NotImplementedException());
+			return 0;
 		}
-
-		public const int PSP_SAS_VOICES_MAX = 32;
-		public const int PSP_SAS_GRAIN_SAMPLES = 256;
-		public const int PSP_SAS_VOL_MAX = 0x1000;
-		public const int PSP_SAS_LOOP_MODE_OFF = 0;
-		public const int PSP_SAS_LOOP_MODE_ON = 1;
-		public const int PSP_SAS_PITCH_MIN = 0x1;
-		public const int PSP_SAS_PITCH_BASE = 0x1000;
-		public const int PSP_SAS_PITCH_MAX = 0x4000;
-		public const int PSP_SAS_NOISE_FREQ_MAX = 0x3F;
-		public const int PSP_SAS_ENVELOPE_HEIGHT_MAX = 0x40000000;
-		public const int PSP_SAS_ENVELOPE_FREQ_MAX = 0x7FFFFFFF;
-		public const int PSP_SAS_ADSR_ATTACK = 1;
-		public const int PSP_SAS_ADSR_DECAY = 2;
-		public const int PSP_SAS_ADSR_SUSTAIN = 4;
-		public const int PSP_SAS_ADSR_RELEASE = 8;
-	}
-
-	public enum WaveformEffectType : int
-	{
-		PSP_SAS_EFFECT_TYPE_OFF   = -1,
-		PSP_SAS_EFFECT_TYPE_ROOM  =  0,
-		PSP_SAS_EFFECT_TYPE_UNK1  =  1,
-		PSP_SAS_EFFECT_TYPE_UNK2  =  2,
-		PSP_SAS_EFFECT_TYPE_UNK3  =  3,
-		PSP_SAS_EFFECT_TYPE_HALL  =  4,
-		PSP_SAS_EFFECT_TYPE_SPACE =  5,
-		PSP_SAS_EFFECT_TYPE_ECHO  =  6,
-		PSP_SAS_EFFECT_TYPE_DELAY =  7,
-		PSP_SAS_EFFECT_TYPE_PIPE  =  8,
-	}
-
-	public enum AdsrFlags : uint 
-	{
-		hasAttack  = (1 << 0),
-		hasDecay   = (1 << 1),
-		hasSustain = (1 << 2),
-		hasRelease = (1 << 3),
-	}
-
-	public enum OutputMode : uint
-	{
-		PSP_SAS_OUTPUTMODE_STEREO = 0,
-		PSP_SAS_OUTPUTMODE_MULTICHANNEL = 1,
-	}
-
-	public enum AdsrCurveMode : uint
-	{
-		PSP_SAS_ADSR_CURVE_MODE_LINEAR_INCREASE = 0,
-		PSP_SAS_ADSR_CURVE_MODE_LINEAR_DECREASE = 1,
-		PSP_SAS_ADSR_CURVE_MODE_LINEAR_BENT = 2,
-		PSP_SAS_ADSR_CURVE_MODE_EXPONENT_REV = 3,
-		PSP_SAS_ADSR_CURVE_MODE_EXPONENT = 4,
-		PSP_SAS_ADSR_CURVE_MODE_DIRECT = 5,
-	}
-
-	public struct SasEnvelope {
-		int attackRate;
-		int decayRate;
-		int sustainRate;
-		int releaseRate;
-		AdsrCurveMode attackCurveMode;
-		AdsrCurveMode decayCurveMode;
-		AdsrCurveMode sustainCurveMode;
-		AdsrCurveMode releaseCurveMode;
-		int sustainLevel;
-		int height;
 	}
 }

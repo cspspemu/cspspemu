@@ -320,7 +320,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x383F7BCC, FirmwareVersion = 150)]
 		public int sceKernelTerminateDeleteThread(int ThreadId)
 		{
-			throw(new NotImplementedException());
+			return sceKernelDeleteThread(ThreadId);
+			//throw(new NotImplementedException());
+
 		}
 
 		/// <summary>

@@ -27,11 +27,11 @@ namespace CSPspEmu.Hle.Modules.sysmem
 			//unimplemented_notice();
 		}
 
-		/**
-		 * Will prevent the backlight to turn off.
-		 */
+		/// <summary>
+		/// Will prevent the backlight to turn off.
+		/// </summary>
+		/// <param name="value"></param>
 		[HlePspFunction(NID = 0x090CCB3F, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
 		public void sceKernelPowerTick(uint value)
 		{
 			//logWarning("Not Implemented sceKernelPowerTick");

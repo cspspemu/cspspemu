@@ -28,7 +28,9 @@ namespace CSPspEmu.Sandbox
 
 			//PspEmulator.Start();
 			//PspEmulator.StartAndLoad(@"C:\psp\isos\(PSP) Puzzle Bubble.cso", TraceSyscalls: false);
-			PspEmulator.StartAndLoad(@"C:\psp\isos\Tales of Eternia.iso", TraceSyscalls: false);
+			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia.iso", TraceSyscalls: false);
+			PspEmulator.StartAndLoad(@"F:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);
+			
 			//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\cube.pbp", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\cavestory\EBOOT.PBP", TraceSyscalls: false);
 

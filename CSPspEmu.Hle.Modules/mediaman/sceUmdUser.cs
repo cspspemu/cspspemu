@@ -91,13 +91,15 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		/// <summary>
 		/// Wait for the UMD drive to reach a certain state
 		/// </summary>
-		/// <param name="stat">One or more of ::pspUmdState</param>
+		/// <param name="PspUmdState">One or more of ::pspUmdState</param>
 		/// <param name="timeout">Timeout value in microseconds</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x56202973, FirmwareVersion = 150)]
-		public int sceUmdWaitDriveStatWithTimer(int stat, uint timeout)
+		[HlePspNotImplemented]
+		public int sceUmdWaitDriveStatWithTimer(PspUmdState PspUmdState, uint timeout)
 		{
-			throw(new NotImplementedException());
+			return 0;
+			//throw(new NotImplementedException());
 			/*
 			logWarning("Not implemented: sceUmdWaitDriveStatWithTimer");
 			return 0;

@@ -21,12 +21,14 @@ namespace CSPspEmu.Hle.Modules.ge
 				DisplayList.InstructionAddressStart = InstructionAddressStart;
 				DisplayList.InstructionAddressCurrent = InstructionAddressStart;
 				DisplayList.InstructionAddressStall = InstructionAddressStall;
+				DisplayList.GpuStateStructPointer = null;
 				if (Args != null)
 				{
-					//DisplayList.GpuStateStructPointer = (GpuStateStruct*)HleState.CpuProcessor.Memory.PspAddressToPointer(Args[0].GpuStateStructAddress);
-					throw(new NotImplementedException());
+					DisplayList.GpuStateStructPointer = (GpuStateStruct*)HleState.CpuProcessor.Memory.PspAddressToPointer(Args[0].GpuStateStructAddress);
+					//throw(new NotImplementedException());
 				}
-				else
+
+				if (DisplayList.GpuStateStructPointer == null)
 				{
 					DisplayList.GpuStateStructPointer = (GpuStateStruct*)HleState.CpuProcessor.Memory.PspAddressToPointerSafe(0x08107000);
 				}

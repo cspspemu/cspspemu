@@ -118,6 +118,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				int BufferWidth = TextureState[0].Mipmap0.BufferWidth;
 				var Height = TextureState[0].Mipmap0.TextureHeight;
 				var TextureDataSize = PixelFormatDecoder.GetPixelsSize(TextureFormat, BufferWidth * Height);
+				if (ClutState[0].NumberOfColors > 256)
+				{
+					ClutState[0].NumberOfColors = 256;
+				}
 				var ClutDataSize = PixelFormatDecoder.GetPixelsSize(ClutFormat, ClutState[0].NumberOfColors);
 				var ClutCount = ClutState[0].NumberOfColors;
 				var ClutShift = ClutState[0].Shift;
@@ -213,8 +217,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		static public uint FastHash(uint* Pointer, int Count, uint StartHash = 0)
 		{
+			if (Pointer == null) return StartHash;
 			Count /= 4;
 			uint Hash = StartHash;
+			if (Count > 2048 * 2048) {
+				Console.Error.WriteLine("FastHash too big count!");
+				return Hash;
+			}
 			for (int n = 0; n < Count; n++)
 			{
 				Hash ^= (uint)(Pointer[n] + (n << 16));

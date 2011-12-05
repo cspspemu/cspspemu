@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audio\AudioMixer.cs" />
     <Compile Include="Audio\PspAudioChannel.cs" />
     <Compile Include="Audio\PspAudioImpl.cs" />
     <Compile Include="DebugUtils.cs" />

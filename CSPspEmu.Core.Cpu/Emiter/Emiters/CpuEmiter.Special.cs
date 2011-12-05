@@ -17,7 +17,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, MipsMethodEmiter.Method_Syscall);
 		}
 
-		public void cache() { throw(new NotImplementedException()); }
+		public void cache() {
+			Console.Error.WriteLine("cache!");
+			//throw(new NotImplementedException());
+		}
 		public void sync() { throw(new NotImplementedException()); }
 
 		public void _break() {
