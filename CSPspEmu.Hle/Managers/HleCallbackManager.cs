@@ -54,24 +54,14 @@ namespace CSPspEmu.Hle.Managers
 				while (HasScheduledCallbacks)
 				{
 					var HleCallback = DequeueScheduledCallback();
-					var CurrentFake = new HleThread(new CpuThreadState(CpuProcessor));
-					CurrentFake.CpuThreadState.CopyRegistersFrom(CpuThreadState);
+
+					var FakeCpuThreadState = new CpuThreadState(CpuProcessor);
+					FakeCpuThreadState.CopyRegistersFrom(CpuThreadState);
+					HleCallback.SetArgumentsToCpuThreadState(FakeCpuThreadState);
+
 					try
 					{
-						//Console.Error.WriteLine("  CALLBACK STARTED : {0} AT {1}", HleCallback, CurrentFake);
-
-						HleCallback.SetArgumentsToCpuThreadState(CurrentFake.CpuThreadState);
-
-						CurrentFake.CpuThreadState.PC = HleCallback.Function;
-						CurrentFake.CpuThreadState.RA = HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK;
-						//Current.CpuThreadState.RA = 0;
-
-						CpuProcessor.RunningCallback = true;
-						while (CpuProcessor.RunningCallback)
-						{
-							//Console.WriteLine("AAAAAAA {0:X}", CurrentFake.CpuThreadState.PC);
-							CurrentFake.Step();
-						}
+						HleInterop.Execute(FakeCpuThreadState);
 					}
 					finally
 					{

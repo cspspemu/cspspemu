@@ -27,11 +27,13 @@ namespace CSPspEmu.Hle.Managers
 		protected int LastId = 1;
 		public HleThread Current;
 		private HleCallbackManager HleCallbackManager;
+		private HleInterruptManager HleInterruptManager;
 
 		public override void InitializeComponent()
 		{
 			this.Processor = PspEmulatorContext.GetInstance<CpuProcessor>();
 			this.HleCallbackManager = PspEmulatorContext.GetInstance<HleCallbackManager>();
+			this.HleInterruptManager = PspEmulatorContext.GetInstance<HleInterruptManager>();
 		}
 
 		public HleThread GetThreadById(int Id)
@@ -106,6 +108,14 @@ namespace CSPspEmu.Hle.Managers
 		public void StepNext()
 		{
 			MustReschedule = false;
+
+			//HleInterruptManager.EnableDisable(() => {
+			//});
+
+			if (Threads.Count > 0)
+			{
+				HleInterruptManager.ExecuteQueued(Threads.First().CpuThreadState);
+			}
 
 			// Select the thread with the lowest PriorityValue
 			var NextThread = CalculateNext();

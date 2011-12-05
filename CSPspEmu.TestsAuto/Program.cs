@@ -247,7 +247,8 @@ namespace CSPspEmu.AutoTests
 				Console.SetWindowSize(160, 60);
 				Console.SetBufferSize(160, 2000);
 
-				WildCardFilter = "events";
+				//WildCardFilter = "intr";
+				WildCardFilter = "umd";
 			}
 			Init();
 			Run(PspAutoTestsFolder, WildCardFilter);

@@ -53,6 +53,8 @@ namespace CSPspEmu.Hle
 					throw(new NotImplementedException(String.Format("Can't handle type '{0}'", ArgumentType)));
 				}
 			}
+
+			CpuThreadState.PC = Function;
 			//Console.Error.WriteLine(CpuThreadState);
 			//CpuThreadState.DumpRegisters(Console.Error);
 		}

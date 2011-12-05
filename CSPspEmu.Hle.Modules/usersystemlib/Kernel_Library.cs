@@ -28,38 +28,17 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		[HlePspFunction(NID = 0x092968F4, FirmwareVersion = 150)]
 		public uint sceKernelCpuSuspendIntr()
 		{
-			/*
-			synchronized (this) {
-				if (enabledInterrupts()) {
-					ThreadState.suspendAllCpuThreadsButThis();
-					enabledInterrupts() = false;
-					return Enabled;
-				} else {
-					return Disabled;
-				}
-			}
-			*/
-			return 0;
+			return HleState.HleInterruptManager.sceKernelCpuSuspendIntr();
 		}
 
 		/// <summary>
 		/// Resume/Enable all interrupts.
 		/// </summary>
-		/// <param name="set">The value returned from ::sceKernelCpuSuspendIntr().</param>
+		/// <param name="Flags">The value returned from ::sceKernelCpuSuspendIntr().</param>
 		[HlePspFunction(NID = 0x5F10D406, FirmwareVersion = 150)]
-		public void sceKernelCpuResumeIntr(bool set)
+		public void sceKernelCpuResumeIntr(uint Flags)
 		{
-			/*
-			synchronized (this) {
-				if (set == Enabled) {
-					enabledInterrupts() = true;
-					ThreadState.resumeAllCpuThreadsButThis();
-				} else {
-					ThreadState.suspendAllCpuThreadsButThis();
-					enabledInterrupts() = false;
-				}
-			}
-			*/
+			HleState.HleInterruptManager.sceKernelCpuResumeIntr(Flags);
 		}
 	}
 }

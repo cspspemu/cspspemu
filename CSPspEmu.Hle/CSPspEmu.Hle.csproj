@@ -56,6 +56,7 @@
     <Compile Include="Formats\Pbp.cs" />
     <Compile Include="HleCallback.cs" />
     <Compile Include="HleEmulatorFinalizeCallbackException.cs" />
+    <Compile Include="HleInterop.cs" />
     <Compile Include="HleModule.cs" />
     <Compile Include="HleModuleHost.cs" />
     <Compile Include="HleLibrary.cs" />

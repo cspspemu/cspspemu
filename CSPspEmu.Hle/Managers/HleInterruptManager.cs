@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core;
+using CSPspEmu.Core.Cpu;
 
 namespace CSPspEmu.Hle.Managers
 {
@@ -25,9 +26,11 @@ namespace CSPspEmu.Hle.Managers
 		public PspInterrupts PspInterrupt;
 		public HleSubinterruptHandler[] SubinterruptHandlers;
 		private HleCallbackManager HleCallbackManager;
+		private HleInterruptManager HleInterruptManager;
 
-		internal HleInterruptHandler(PspInterrupts PspInterrupt, HleCallbackManager HleCallbackManager)
+		internal HleInterruptHandler(HleInterruptManager HleInterruptManager, PspInterrupts PspInterrupt, HleCallbackManager HleCallbackManager)
 		{
+			this.HleInterruptManager = HleInterruptManager;
 			this.PspInterrupt = PspInterrupt;
 			this.HleCallbackManager = HleCallbackManager;
 			this.SubinterruptHandlers = new HleSubinterruptHandler[16];
@@ -39,9 +42,12 @@ namespace CSPspEmu.Hle.Managers
 
 		public void Trigger()
 		{
-			foreach (var Handler in SubinterruptHandlers.Where(Handler => Handler.Enabled))
+			if (HleInterruptManager.Enabled)
 			{
-				HleCallbackManager.ScheduleCallback(HleCallback.Create("InterruptTrigger", Handler.Address, Handler.Index, Handler.Argument));
+				foreach (var Handler in SubinterruptHandlers.Where(Handler => Handler.Enabled))
+				{
+					HleInterruptManager.Queue(HleCallback.Create("InterruptTrigger", Handler.Address, Handler.Index, Handler.Argument));
+				}
 			}
 			//Console.Error.WriteLine("Trigger: " + PspInterrupt);
 		}
@@ -49,8 +55,14 @@ namespace CSPspEmu.Hle.Managers
 
 	sealed public class HleInterruptManager : PspEmulatorComponent
 	{
+		/// <summary>
+		/// Global Interrupt Enable
+		/// </summary>
+		public bool Enabled = true;
+
 		private HleInterruptHandler[] InterruptHandlers;
 		private HleCallbackManager HleCallbackManager;
+		private CpuProcessor CpuProcessor;
 
 		public HleInterruptHandler GetInterruptHandler(PspInterrupts PspInterrupt)
 		{
@@ -60,15 +72,68 @@ namespace CSPspEmu.Hle.Managers
 		public override void InitializeComponent()
 		{
 			this.HleCallbackManager = PspEmulatorContext.GetInstance<HleCallbackManager>();
+			this.CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();
 			//uint MaxHandlers = Enum.GetValues(typeof(PspInterrupts)).OfType<uint>().Max() + 1;
 			InterruptHandlers = new HleInterruptHandler[(int)PspInterrupts._MAX];
 			for (int n = 0; n < InterruptHandlers.Length; n++)
 			{
 				InterruptHandlers[n] = new HleInterruptHandler(
+					this,
 					(PspInterrupts)n,
 					HleCallbackManager
 				);
 			}
+		}
+
+		List<HleCallback> HleCallbackList = new List<HleCallback>();
+
+		public void Queue(HleCallback HleCallback)
+		{
+			lock (HleCallbackList)
+			{
+				HleCallbackList.Add(HleCallback);
+			}
+		}
+
+		public void ExecuteQueued(CpuThreadState BaseCpuThreadState)
+		{
+			if (Enabled)
+			{
+				HleCallback[] HleCallbackListCopy;
+				lock (HleCallbackList)
+				{
+					HleCallbackListCopy = HleCallbackList.ToArray();
+					HleCallbackList.Clear();
+				}
+
+				foreach (var HleCallback in HleCallbackListCopy)
+				{
+					var FakeCpuThreadState = new CpuThreadState(CpuProcessor);
+					FakeCpuThreadState.CopyRegistersFrom(BaseCpuThreadState);
+					HleCallback.SetArgumentsToCpuThreadState(FakeCpuThreadState);
+
+					HleInterop.Execute(FakeCpuThreadState);
+					//Console.Error.WriteLine("Execute queued");
+				}
+			}
+		}
+
+		public uint sceKernelCpuSuspendIntr()
+		{
+			try
+			{
+				return (uint)(Enabled ? 1 : 0);
+			}
+			finally
+			{
+				Enabled = false;
+			}
+		}
+
+		public void sceKernelCpuResumeIntr(uint Flags)
+		{
+			//if (set != true) throw new NotImplementedException();
+			Enabled = (Flags != 0);
 		}
 	}
 

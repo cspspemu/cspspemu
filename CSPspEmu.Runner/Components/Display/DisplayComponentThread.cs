@@ -26,6 +26,7 @@ namespace CSPspEmu.Runner.Components.Display
 				ThreadTaskQueue.HandleEnqueued();
 				if (!Running) return;
 
+				//Console.Error.WriteLine("Triggered!");
 				HleInterruptManager.GetInterruptHandler(PspInterrupts.PSP_VBLANK_INT).Trigger();
 				//PspDisplay.Update();
 				Thread.Sleep(TimeSpan.FromSeconds(1.0 / 59.94));

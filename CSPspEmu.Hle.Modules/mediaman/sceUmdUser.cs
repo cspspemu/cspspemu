@@ -104,20 +104,20 @@ namespace CSPspEmu.Hle.Modules.mediaman
 			*/
 		}
 
+		public enum UmdCheckMediumEnum : uint
+		{
+			NoDisc = 0,
+			Inserted = 1,
+		}
+
 		/// <summary>
 		/// Check whether there is a disc in the UMD drive
 		/// </summary>
 		/// <returns>0 if no disc present, 1 if the disc is present.</returns>
 		[HlePspFunction(NID = 0x46EBB729, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceUmdCheckMedium()
+		public UmdCheckMediumEnum sceUmdCheckMedium()
 		{
-			return 1;
-			//throw(new NotImplementedException());
-			/*
-			//logWarning("Partially implemented: sceUmdCheckMedium");
-			return 1;
-			*/
+			return UmdCheckMediumEnum.Inserted;
 		}
 
 		/// <summary>
