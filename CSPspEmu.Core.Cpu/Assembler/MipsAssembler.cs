@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using CSharpUtils.Streams;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Core.Utils;
 
 namespace CSPspEmu.Core.Cpu.Assembler
 {
@@ -141,19 +142,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
 		public int ParseIntegerConstant(String Value)
 		{
-			Value = Value.Replace("_", "");
-			if (Value.Substr(0, 1) == "-") return -ParseIntegerConstant(Value.Substr(1));
-			if (Value.Substr(0, 1) == "+") return +ParseIntegerConstant(Value.Substr(1));
-			if (Value.Substr(0, 2) == "0x") return Convert.ToInt32(Value.Substr(2), 16);
-			if (Value.Substr(0, 2) == "0b") return Convert.ToInt32(Value.Substr(2), 2);
-			try
-			{
-				return Convert.ToInt32(Value, 10);
-			}
-			catch (FormatException FormatException)
-			{
-				throw (new FormatException("Can't parse the string '" + Value + "'", FormatException));
-			}
+			return NumberUtils.ParseIntegerConstant(Value);
 		}
 
 		public Instruction AssembleInstruction(String Line)

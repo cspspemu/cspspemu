@@ -19,6 +19,21 @@ namespace CSPspEmu.Sandbox
 		[STAThread]
 		static void Main(string[] args)
 		{
+			/*
+			var CsoName = "../../../TestInput/test.cso";
+			var Cso = new Cso(File.OpenRead(CsoName));
+			var Iso = new IsoFile();
+			Console.WriteLine("[1]");
+			Iso.SetStream(new CsoProxyStream(Cso), CsoName);
+			Console.WriteLine("[2]");
+			foreach (var Node in Iso.Root.Descendency())
+			{
+				Console.WriteLine(Node);
+			}
+			Console.ReadKey();
+			return;
+			*/
+
 			var PspEmulator = new PspEmulator();
 #if RELEASE
 			PspEmulator.Start();
@@ -27,9 +42,10 @@ namespace CSPspEmu.Sandbox
 			Console.SetBufferSize(160, 2000);
 
 			//PspEmulator.Start();
-			//PspEmulator.StartAndLoad(@"C:\psp\isos\(PSP) Puzzle Bubble.cso", TraceSyscalls: false);
+			PspEmulator.StartAndLoad(@"F:\Isos\psp\Puzzle Bobble.ISO", TraceSyscalls: false);
+			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Breath of Fire 3.cso", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia.iso", TraceSyscalls: false);
-			PspEmulator.StartAndLoad(@"F:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);
+			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);
 			
 			//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\cube.pbp", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\cavestory\EBOOT.PBP", TraceSyscalls: false);

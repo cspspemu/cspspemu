@@ -29,11 +29,22 @@ namespace CSPspEmu.Hle
 
 			try
 			{
-				foreach (var MethodInfo in this.GetType().GetMethods())
+				
+				foreach (
+					var MethodInfo in
+					new MethodInfo[0]
+					.Concat(this.GetType().GetMethods())
+					//.Concat(this.GetType().GetMethods(BindingFlags.NonPublic))
+					//.Concat(this.GetType().GetMethods(BindingFlags.Public))
+				)
 				{
 					var Attributes = MethodInfo.GetCustomAttributes(typeof(HlePspFunctionAttribute), true).Cast<HlePspFunctionAttribute>();
 					if (Attributes.Count() > 0)
 					{
+						if (!MethodInfo.IsPublic)
+						{
+							throw(new InvalidProgramException("Method " + MethodInfo + " is not public"));
+						}
 						var Delegate = CreateDelegateForMethodInfo(MethodInfo, Attributes.First());
 						DelegatesByName[MethodInfo.Name] = Delegate;
 						foreach (var Attribute in Attributes)
@@ -227,13 +238,20 @@ namespace CSPspEmu.Hle
 
 				if (Trace)
 				{
-					Out.Write(
-						"Thread({0}:'{1}') : RA(0x{2:X}) : {3}.{4}",
-						HleState.ThreadManager.Current.Id,
-						HleState.ThreadManager.Current.Name,
-						HleState.ThreadManager.Current.CpuThreadState.RA,
-						MethodInfo.DeclaringType.Name, MethodInfo.Name
-					);
+					if (HleState.ThreadManager.Current != null)
+					{
+						Out.Write(
+							"Thread({0}:'{1}') : RA(0x{2:X})",
+							HleState.ThreadManager.Current.Id,
+							HleState.ThreadManager.Current.Name,
+							HleState.ThreadManager.Current.CpuThreadState.RA
+						);
+					}
+					else
+					{
+						Out.Write("NoThread:");
+					}
+					Out.Write(" : {0}.{1}", MethodInfo.DeclaringType.Name, MethodInfo.Name);
 					Out.Write("(");
 					int Count = 0;
 					foreach (var ParamInfo in ParamInfoList)

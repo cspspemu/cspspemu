@@ -675,5 +675,23 @@ namespace CSPspEmu.Hle.Modules.utility
 			return 0;
 		}
 
+		/**
+		 * Load a network module (PRX) from user mode.
+		 * Load PSP_NET_MODULE_COMMON and PSP_NET_MODULE_INET
+		 * to use infrastructure WifI (via an access point).
+		 * Available on firmware 2.00 and higher only.
+		 *
+		 * @param module - module number to load (PSP_NET_MODULE_xxx)
+		 * @return 0 on success, < 0 on error
+		 */
+		[HlePspFunction(NID = 0x1579A159, FirmwareVersion = 200)]
+		[HlePspNotImplemented]
+		public int sceUtilityLoadNetModule(int _module)
+		{
+			//unimplemented();
+			//unimplemented_notice();
+			//Logger.log(Logger.Level.WARNING, "sceUtility", "sceUtilityLoadNetModule not implemented!");
+			return -1;
+		}
 	}
 }

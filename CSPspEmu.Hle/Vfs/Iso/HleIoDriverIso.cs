@@ -5,6 +5,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using CSharpUtils;
+using CSharpUtils.Streams;
+using CSharpUtils.Extensions;
+using CSPspEmu.Core.Utils;
 using CSPspEmu.Hle.Formats;
 
 namespace CSPspEmu.Hle.Vfs.Iso
@@ -30,6 +33,36 @@ namespace CSPspEmu.Hle.Vfs.Iso
 
 		public unsafe int IoOpen(HleIoDrvFileArg HleIoDrvFileArg, string FileName, HleIoFlags Flags, SceMode Mode)
 		{
+			// disc0:/sce_lbn0x5fa0_size0x1428
+			//Console.WriteLine(":::::::::" + FileName);
+			if (FileName.StartsWith("/sce_"))
+			{
+				int Sector = 0, Size = 0;
+				var Parts = FileName.Substring(5).Split('_');
+				foreach (var Part in Parts)
+				{
+					if (Part.StartsWith("lbn"))
+					{
+						var Number = Part.Substring(3);
+						Sector = NumberUtils.ParseIntegerConstant(Number);
+					}
+					else if (Part.StartsWith("size"))
+					{
+						var Number = Part.Substring(4);
+						Size = NumberUtils.ParseIntegerConstant(Number);
+					}
+					else
+					{
+						throw(new NotImplementedException("Can't handle special filename '" + FileName + "' part '" + Part + "'"));
+					}
+					//Console.WriteLine(Part);
+				}
+				//Console.WriteLine("SPECIAL({0}, {1})", lbn, size);
+				//Console.WriteLine("SPECIAL!!!!!!!!!!!!!!!!!!!!");
+				HleIoDrvFileArg.FileArgument = Iso.Stream.SliceWithLength(Sector * IsoFile.SectorSize, Size);
+				return 0;
+			}
+
 			//Console.WriteLine(FileName);
 			var IsoNode = Iso.Root.Locate(FileName);
 			HleIoDrvFileArg.FileArgument = IsoNode.Open();

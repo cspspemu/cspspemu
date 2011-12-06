@@ -55,5 +55,54 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 			//throw(new NotImplementedException());
 			return 0;
 		}
+
+		/// <summary>
+		/// Stop a running module.
+		/// </summary>
+		/// <param name="modid">The UID of the module to stop.</param>
+		/// <param name="argsize">The length of the arguments pointed to by argp.</param>
+		/// <param name="argp">Pointer to arguments to pass to the module's module_stop() routine.</param>
+		/// <param name="status">Return value of the module's module_stop() routine.</param>
+		/// <param name="SceKernelSMOption">Pointer to an optional ::SceKernelSMOption structure.</param>
+		/// <returns>
+		///		??? on success, otherwise one of ::PspKernelErrorCodes.
+		/// </returns>
+		[HlePspFunction(NID = 0xD1FF982A, FirmwareVersion = 150)]
+		public int sceKernelStopModule(int modid, int argsize, void* argp, int* status, void* SceKernelSMOption)
+		{
+			throw(new NotImplementedException());
+			/*
+			Module pspModule = hleEmulatorState.uniqueIdFactory.get!Module(modid);
+
+			unimplemented_notice();
+			logError("Not implemented sceKernelStopModule!!");
+			return 0;
+			*/
+		}
+
+		/// <summary>
+		/// Unload a stopped module.
+		/// </summary>
+		/// <param name="modid">The UID of the module to unload.</param>
+		/// <returns>
+		///		??? on success, otherwise one of ::PspKernelErrorCodes.
+		/// </returns>
+		[HlePspFunction(NID = 0x2E0911AA, FirmwareVersion = 150)]
+		public int sceKernelUnloadModule(int modid)
+		{
+			throw(new NotImplementedException());
+			/*
+			Module pspModule = hleEmulatorState.uniqueIdFactory.get!Module(modid);
+
+			unimplemented_notice();
+			logError("Not implemented sceKernelUnloadModule!!");
+		
+			//pspModule.
+		
+			//hleEmulatorState.moduleManager.unloadModu
+			return 0;
+			*/
+		}
+
 	}
 }

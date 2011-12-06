@@ -76,7 +76,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 			HleState.HleIoManager.SetDriver("kemulator:", HleIoDriverEmulator);
 		}
 
-		IsoFile SetIso(string IsoFile)
+		public IsoFile SetIso(string IsoFile)
 		{
 			var IsoFileStream = (Stream)File.OpenRead(IsoFile);
 			string DetectedFormat;
@@ -94,6 +94,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 			var Iso = new IsoFile(IsoFileStream, IsoFile);
 			var Umd = new HleIoDriverIso(Iso);
 			HleState.HleIoManager.SetDriver("disc:", Umd);
+			HleState.HleIoManager.SetDriver(":", Umd);
 			return Iso;
 		}
 

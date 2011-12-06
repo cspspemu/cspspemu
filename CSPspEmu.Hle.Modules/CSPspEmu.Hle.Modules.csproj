@@ -71,6 +71,7 @@
     <Compile Include="mediaman\sceUmdUser.cs" />
     <Compile Include="modulemgr\ModuleMgrForUser.cs" />
     <Compile Include="mpeg\sceMpeg.cs" />
+    <Compile Include="mpeg\sceMpeg.Utils.cs" />
     <Compile Include="power\scePower.Callbacks.cs" />
     <Compile Include="power\scePower.cs" />
     <Compile Include="power\scePower.Frequencies.cs" />
@@ -136,7 +137,9 @@
   <ItemGroup>
     <Compile Include="threadman\ThreadManForUser.VTimer.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="iofilemgr\IoFileMgrForUser.Files.Async.cs" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

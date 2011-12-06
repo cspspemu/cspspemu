@@ -148,6 +148,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x293B45B8, FirmwareVersion = 150)]
 		public int sceKernelGetThreadId()
 		{
+			if (HleState.ThreadManager.Current == null) return 0;
 			return HleState.ThreadManager.Current.Id;
 		}
 
@@ -358,6 +359,35 @@ namespace CSPspEmu.Hle.Modules.threadman
 			CpuThreadState.Yield();
 			//throw(new NotImplementedException());
 			return 0;
+		}
+
+		/// <summary>
+		/// Resume a thread previously put into a suspended state with ::sceKernelSuspendThread.
+		/// </summary>
+		/// <param name="ThreadId">UID of the thread to resume.</param>
+		/// <returns>
+		///		Success if greater or equalthan 0,
+		///		an error if less than 0.
+		/// </returns>
+		[HlePspFunction(NID = 0x9944F31F, FirmwareVersion = 150)]
+		public int sceKernelResumeThread(int ThreadId)
+		{
+			throw(new NotImplementedException());
+			return -1;
+		}
+
+		/// <summary>
+		/// Wait until a thread has ended and handle callbacks if necessary.
+		/// </summary>
+		/// <param name="ThreadId">Id of the thread to wait for.</param>
+		/// <param name="Timeout">Timeout in microseconds (assumed).</param>
+		/// <returns>Less than 0 on error</returns>
+		[HlePspFunction(NID = 0x840E8133, FirmwareVersion = 150)]
+		public int sceKernelWaitThreadEndCB(int ThreadId, uint* Timeout)
+		{
+			throw(new NotImplementedException());
+			return 0;
+			//return _sceKernelWaitThreadEndCB(thid, timeout, true);
 		}
 	}
 }

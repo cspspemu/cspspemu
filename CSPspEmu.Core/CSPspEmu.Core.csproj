@@ -65,6 +65,7 @@
     <Compile Include="Rtc\PspRtc.cs" />
     <Compile Include="Threading\Synchronization\PspWaitEvent.cs" />
     <Compile Include="Threading\Synchronization\WaitableStateMachine.cs" />
+    <Compile Include="Utils\NumberUtils.cs" />
     <Compile Include="Utils\PixelFormatDecoder.cs" />
   </ItemGroup>
   <ItemGroup>

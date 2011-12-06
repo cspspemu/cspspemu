@@ -38,6 +38,11 @@ namespace CSPspEmu.Hle.Vfs
 		/// Pointer to a user defined argument, this is preserved on a per file basis
 		/// </summary>
 		public object FileArgument;
+
+		/// <summary>
+		/// Last result produced by an async call.
+		/// </summary>
+		public long AsyncLastResult;
 	}
 
 	/// <summary>

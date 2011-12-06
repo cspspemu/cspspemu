@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 using CSPspEmu.Hle.Vfs.Iso;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Tests
 {
@@ -12,12 +13,14 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod()]
 		public void IsoConstructorTest()
 		{
-			var CsoName = "../../../TestInput/cube.cso";
+			var CsoName = "../../../TestInput/test.cso";
 			var Cso = new Cso(File.OpenRead(CsoName));
 			var Iso = new IsoFile(new CsoProxyStream(Cso), CsoName);
-			foreach (var Node in Iso.Root.Descendency())
+			var ContentNode = Iso.Root.Locate("path/content.txt");
+			var Lines = ContentNode.Open().ReadAllContentsAsString().Split('\n');
+			foreach (var Line in Lines)
 			{
-				Console.WriteLine(Node);
+				Iso.Root.Locate(Line);
 			}
 		}
 	}

@@ -22,39 +22,43 @@ namespace CSPspEmu.Hle.Formats
 	
 		protected void ProcessDirectoryRecord(IsoNode ParentIsoNode)
 		{
-			var directoryStart  = ParentIsoNode.DirectoryRecord.Extent * SectorSize;
-			var directoryLength = ParentIsoNode.DirectoryRecord.Size;
-			var directoryStream = this.Stream.SliceWithLength(directoryStart, directoryLength);
+			var DirectoryStart  = ParentIsoNode.DirectoryRecord.Extent * SectorSize;
+			var DirectoryLength = ParentIsoNode.DirectoryRecord.Size;
+			var DirectoryStream = this.Stream.SliceWithLength(DirectoryStart, DirectoryLength);
 
-			while (!directoryStream.Eof())
+			while (!DirectoryStream.Eof())
 			{
 				//writefln("%08X : %08X : %08X", directoryStream.position, directoryStart, directoryLength);
 				byte DirectoryRecordSize;
-				DirectoryRecordSize = (byte)directoryStream.ReadByte();
+				DirectoryRecordSize = (byte)DirectoryStream.ReadByte();
 
 				// Even if a directory spans multiple sectors, the directory entries are not permitted to cross the sector boundary (unlike the path table).
 				// Where there is not enough space to record an entire directory entry at the end of a sector, that sector is zero-padded and the next
 				// consecutive sector is used.
-				if (DirectoryRecordSize == 0) {
-					directoryStream.Position = MathUtils.NextAligned(directoryStream.Position, SectorSize);
+				if (DirectoryRecordSize == 0)
+				{
+					DirectoryStream.Position = MathUtils.NextAligned(DirectoryStream.Position, SectorSize);
+					//Console.WriteLine("AlignedTo: {0:X}", DirectoryStream.Position);
 					continue;
 				}
 
-				directoryStream.Position = directoryStream.Position - 1;
-			
-				byte[] DirectoryRecordBytes = new byte[DirectoryRecordSize];
-				directoryStream.Read(DirectoryRecordBytes, 0, DirectoryRecordSize);
-				var directoryRecord = StructUtils.BytesToStruct<DirectoryRecord>(DirectoryRecordBytes);
-			
-				string name = Encoding.UTF8.GetString(DirectoryRecordBytes.Slice(sizeof(DirectoryRecord), directoryRecord.NameLength));
+				DirectoryStream.Position = DirectoryStream.Position - 1;
 
-				//Console.WriteLine("{0}", name);
+				//Console.WriteLine("[{0}:{1:X}-{2:X}]", DirectoryRecordSize, DirectoryStream.Position, DirectoryStream.Position + DirectoryRecordSize);
+
+				byte[] DirectoryRecordBytes = new byte[DirectoryRecordSize];
+				DirectoryStream.Read(DirectoryRecordBytes, 0, DirectoryRecordSize);
+				var DirectoryRecord = StructUtils.BytesToStruct<DirectoryRecord>(DirectoryRecordBytes);
+			
+				string name = Encoding.UTF8.GetString(DirectoryRecordBytes.Slice(sizeof(DirectoryRecord), DirectoryRecord.NameLength));
+
+				//Console.WriteLine("{0}", name); Console.ReadKey();
 			
 				if (name == "\x00" || name == "\x01") continue;
 			
 				//writefln("   %s", name);
 			
-				var childIsoNode = new IsoNode(this, directoryRecord, name, ParentIsoNode);
+				var childIsoNode = new IsoNode(this, DirectoryRecord, name, ParentIsoNode);
 				ParentIsoNode._Childs.Add(childIsoNode);
 				ParentIsoNode._childsByName[childIsoNode.Name] = childIsoNode;
 				ParentIsoNode._childsByNameUpperCase[childIsoNode.Name.ToUpper()] = childIsoNode;

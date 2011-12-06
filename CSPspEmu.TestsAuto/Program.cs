@@ -51,7 +51,7 @@ namespace CSPspEmu.AutoTests
 			}
 		}
 
-		static protected string RunExecutableAndGetOutput(string FileName)
+		static protected string RunExecutableAndGetOutput(string PspAutoTestsFolder, string FileName)
 		{
 			var OutputString = "";
 
@@ -79,6 +79,8 @@ namespace CSPspEmu.AutoTests
 				{
 					try
 					{
+						//PspRunner.CpuComponentThread.SetIso(PspAutoTestsFolder + "/../input/test.cso");
+						PspRunner.CpuComponentThread.SetIso(PspAutoTestsFolder + "/../input/cube.cso");
 						PspRunner.CpuComponentThread._LoadFile(FileName);
 						if (!PspRunner.CpuComponentThread.StoppedEndedEvent.WaitOne(TimeSpan.FromSeconds(5)))
 						{
@@ -92,7 +94,9 @@ namespace CSPspEmu.AutoTests
 				}
 
 				PspRunner.StopSynchronized();
-			}
+			},
+			//Capture: false
+			Capture: true
 			);
 
 			var HleOutputHandlerMock = (HleOutputHandlerMock)PspEmulatorContext.GetInstance<HleOutputHandler>();
@@ -101,11 +105,16 @@ namespace CSPspEmu.AutoTests
 			return OutputString;
 		}
 
-		static protected void RunFile(string FileNameExecutable, string FileNameExpected)
+		static protected void RunFile(string PspAutoTestsFolder, string FileNameExecutable, string FileNameExpected)
 		{
 			Console.Write("{0}...", FileNameExecutable);
 			var ExpectedOutput = File.ReadAllText(FileNameExpected, Encoding.ASCII);
-			var RealOutput = RunExecutableAndGetOutput(FileNameExecutable);
+			var RealOutput = "";
+
+			// Execute.
+			{
+				RealOutput = RunExecutableAndGetOutput(PspAutoTestsFolder, FileNameExecutable);
+			}
 
 			var ExpectedOutputLines = ExpectedOutput.Trim().Split('\n');
 			var RealOutputLines = RealOutput.Trim().Split('\n');
@@ -173,7 +182,10 @@ namespace CSPspEmu.AutoTests
 				var FileNameExecutable = FileNameBase + ".elf";
 				var FileNameSourceCode = FileNameBase + ".c";
 
-				if (!new Regex(Wildcard.WildcardToRegex(WildCardFilter)).IsMatch(FileNameBaseBase))
+				var MatchName = Path.GetDirectoryName(FileNameExpected).Substr(PspAutoTestsFolder.Length).Replace("\\", "/");
+
+				//Console.WriteLine(MatchName + " ~ " + Wildcard.WildcardToRegex(WildCardFilter));
+				if (!new Regex(Wildcard.WildcardToRegex(WildCardFilter)).IsMatch(MatchName))
 				{
 					continue;
 				}
@@ -209,7 +221,7 @@ namespace CSPspEmu.AutoTests
 
 				if (File.Exists(FileNameExecutable))
 				{
-					RunFile(FileNameExecutable, FileNameExpected);
+					RunFile(PspAutoTestsFolder, FileNameExecutable, FileNameExpected);
 				}
 				else
 				{
@@ -243,7 +255,7 @@ namespace CSPspEmu.AutoTests
 
 			if (Arguments.Length > 0)
 			{
-				WildCardFilter = "*" + Arguments[0] + "*";
+				WildCardFilter =  Arguments[0];
 			}
 
 			//Console.WriteLine(String.Join(" ", Arguments));
@@ -254,8 +266,14 @@ namespace CSPspEmu.AutoTests
 
 				//WildCardFilter = "intr";
 				//WildCardFilter = "umd";
-				WildCardFilter = "sascore";
+				//WildCardFilter = "vblank";
 			}
+
+			if (WildCardFilter.Length > 0)
+			{
+				WildCardFilter = "*" + WildCardFilter + "*";
+			}
+
 			Init();
 			Run(PspAutoTestsFolder, WildCardFilter);
 			if (Debugger.IsAttached)

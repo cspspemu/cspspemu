@@ -85,7 +85,7 @@ namespace CSPspEmu.Hle.Modules.impose
 		/// <param name="IconStatusPointer"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x8C943191, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public uint sceImposeGetBatteryIconStatus(uint* IsChargingPointer, uint* IconStatusPointer)
 		{
 			*IsChargingPointer = 0;

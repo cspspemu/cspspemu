@@ -11,7 +11,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 	{
 		public enum SceUID : int { }
 		public enum SceSize : int { }
-		public enum SceIoFlags : int { }
+		//public enum SceIoFlags : int { }
 		public struct PspIoDrv { }
 
 		/// <summary>
@@ -31,6 +31,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			}
 			catch (FileNotFoundException)
 			{
+				Console.Error.WriteLine("Can't find file '{0}'", FileName);
 				return (int)SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND;
 			}
 		}
@@ -85,7 +86,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <param name="FileDescriptor">The old filedescriptor to reopen</param>
 		/// <returns>Less than 0 on error, otherwise the reopened fd.</returns>
 		[HlePspFunction(NID = 0x3C54E908, FirmwareVersion = 150)]
-		public int sceIoReopen(string NewFileName, SceIoFlags SceIoFlags, SceMode SceMode, SceUID FileDescriptor)
+		public int sceIoReopen(string NewFileName, HleIoFlags SceIoFlags, SceMode SceMode, SceUID FileDescriptor)
 		{
 			throw(new NotImplementedException());
 		}
@@ -167,12 +168,12 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// </summary>
 		/// <example>
 		///		// Example1: Open a file for reading
-		///		if (!(fd = sceIoOpen("device:/path/to/file", O_RDONLY, 0777)) {
+		///		if (!(fd = sceIoOpen("device:/path/to/file", PSP_O_RDONLY, 0777)) {
 		///			// error
 		///		}
 		///		
 		///		// Example2: Open a file for writing, creating it if it doesnt exist
-		///		if (!(fd = sceIoOpen("device:/path/to/file", O_WRONLY|O_CREAT, 0777)) {
+		///		if (!(fd = sceIoOpen("device:/path/to/file", PSP_O_WRONLY | PSP_O_CREAT, 0777)) {
 		///			// error
 		///		}
 		/// </example>

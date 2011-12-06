@@ -46,9 +46,11 @@ namespace CSPspEmu.Runner
 
 		public void StopSynchronized()
 		{
+			Console.WriteLine("Stopping!");
 			RunnableComponentList.ForEach((RunnableComponent) =>
 				RunnableComponent.StopSynchronized()
 			);
+			Console.WriteLine("Stopped!");
 		}
 
 		public void PauseSynchronized()

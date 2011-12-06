@@ -134,7 +134,7 @@ namespace CSPspEmu.Hle.Modules.display
 		/// </summary>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x773DD3A3, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceDisplayGetCurrentHcount()
 		{
 			return 0;

@@ -48,15 +48,20 @@ namespace CSPspEmu.Runner.Components
 
 		public void StopSynchronized()
 		{
-			Console.WriteLine("Component {0} StopSynchronized!", this);
+			Console.Write("Component {0} StopSynchronized...", this);
 			if (Running)
 			{
 				StopCompleteEvent.Reset();
 				{
 					Running = false;
 				}
-				StopCompleteEvent.WaitOne();
+				if (!StopCompleteEvent.WaitOne(1000))
+				{
+					Console.Error.WriteLine("Error stopping {0}", this);
+					ComponentThreadThread.Abort();
+				}
 			}
+			Console.WriteLine("Stopped!", this);
 		}
 
 		public void PauseSynchronized()
