@@ -114,6 +114,9 @@ namespace CSPspEmu.Hle.Managers
 
 					HleInterop.Execute(FakeCpuThreadState);
 					//Console.Error.WriteLine("Execute queued");
+
+					// Execute just one!
+					break;
 				}
 			}
 		}

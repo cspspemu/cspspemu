@@ -98,7 +98,7 @@ namespace CSPspEmu.Core.Gpu
 		{
 			if (sizeof(GpuStateStruct) > sizeof(uint) * 512)
 			{
-				throw (new InvalidProgramException("GpuStateStruct too big. Maybe x64?"));
+				throw (new InvalidProgramException("GpuStateStruct too big. Maybe x64? . Size: " + sizeof(GpuStateStruct)));
 			}
 
 			this.PspConfig = PspEmulatorContext.PspConfig;

@@ -63,17 +63,22 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		// void drawRegion(int x, int y, int width, int height)
 		// void sceGuDispBuffer(int width, int height, void* dispbp, int dispbw)
-		[GpuOpCodesNotImplemented]
+		//[GpuOpCodesNotImplemented]
 		public void OP_REGION1()
 		{
-			//int x1 = command.extract!(ushort,  0, 10);
-			//int y1 = command.extract!(ushort, 10, 10);
+			var X1 = (short)BitUtils.Extract(Params24, 0, 10);
+			var Y1 = (short)BitUtils.Extract(Params24, 10, 10);
+			GpuState[0].Viewport.RegionTopLeft.X = X1;
+			GpuState[0].Viewport.RegionTopLeft.Y = Y1;
 		}
-		[GpuOpCodesNotImplemented]
+
+		//[GpuOpCodesNotImplemented]
 		public void OP_REGION2()
 		{
-			//int x2 = command.extract!(ushort,  0, 10) + 1;
-			//int y2 = command.extract!(ushort, 10, 10) + 1;
+			var X2 = (short)BitUtils.Extract(Params24, 0, 10);
+			var Y2 = (short)BitUtils.Extract(Params24, 10, 10);
+			GpuState[0].Viewport.RegionBottomRight.X = X2;
+			GpuState[0].Viewport.RegionBottomRight.Y = Y2;
 		}
 
 		/**
@@ -243,13 +248,13 @@ namespace CSPspEmu.Core.Gpu.Run
 		//[GpuOpCodesNotImplemented]
 		public void OP_OFFSETX()
 		{
-			GpuState[0].Offset.X = (Params24 >> 4);
+			GpuState[0].Offset.X = (short)BitUtils.Extract(Params24, 0, 4);
 			//gpu.state.offsetX = command.extract!(uint, 0, 4);
 		}
 		//[GpuOpCodesNotImplemented]
 		public void OP_OFFSETY()
 		{
-			GpuState[0].Offset.Y = (Params24 >> 4);
+			GpuState[0].Offset.Y = (short)BitUtils.Extract(Params24, 0, 4);
 			//gpu.state.offsetY = command.extract!(uint, 0, 4);
 		}
 	}

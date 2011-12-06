@@ -27,9 +27,9 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <summary>
 		/// Reposition read/write file descriptor offset (asynchronous)
 		/// </summary>
-		/// <param name="fd">Opened file descriptor with which to seek</param>
-		/// <param name="offset">Relative offset from the start position given by whence (32 bits)</param>
-		/// <param name="whence">
+		/// <param name="FileHandle">Opened file descriptor with which to seek</param>
+		/// <param name="Offset">Relative offset from the start position given by whence (32 bits)</param>
+		/// <param name="Whence">
 		///		Set to SEEK_SET to seek from the start of the file, SEEK_CUR
 		///		seek from the current position and SEEK_END to seek from the end.
 		/// </param>
@@ -38,23 +38,17 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		///		Actual value should be passed returned by the ::sceIoWaitAsync call.
 		/// </returns>
 		[HlePspFunction(NID = 0x1B385D8F, FirmwareVersion = 150)]
-		public int sceIoLseek32Async(SceUID fd, uint offset, int whence)
+		public int sceIoLseek32Async(int FileHandle, uint Offset, SeekAnchor Whence)
 		{
-			throw (new NotImplementedException());
-			/*
-			SceOff offsetAfterSeek = sceIoLseek(fd, offset, whence);
-			auto fileHandle = uniqueIdFactory.get!FileHandle(fd);
-			fileHandle.lastOperationResult = cast(long)offsetAfterSeek;
-			return 0;
-			*/
+			return sceIoLseekAsync(FileHandle, (long)Offset, Whence);
 		}
 
 		/// <summary>
 		/// Reposition read/write file descriptor offset (asynchronous)
 		/// </summary>
-		/// <param name="fd">Opened file descriptor with which to seek</param>
-		/// <param name="offset">Relative offset from the start position given by whence</param>
-		/// <param name="whence">
+		/// <param name="FileHandle">Opened file descriptor with which to seek</param>
+		/// <param name="Offset">Relative offset from the start position given by whence</param>
+		/// <param name="Whence">
 		///		Set to SEEK_SET to seek from the start of the file, SEEK_CUR
 		///		seek from the current position and SEEK_END to seek from the end.
 		/// </param>
@@ -63,15 +57,11 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		///		Actual value should be passed returned by the ::sceIoWaitAsync call.
 		/// </returns>
 		[HlePspFunction(NID = 0x71B19E77, FirmwareVersion = 150)]
-		public int sceIoLseekAsync(SceUID fd, SceOff offset, int whence)
+		public int sceIoLseekAsync(int FileHandle, long Offset, SeekAnchor Whence)
 		{
-			throw(new NotImplementedException());
-			/*
-			SceOff offsetAfterSeek = sceIoLseek(fd, offset, whence);
-			auto fileHandle = uniqueIdFactory.get!FileHandle(fd);
-			fileHandle.lastOperationResult = cast(long)offsetAfterSeek;
+			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileHandle);
+			File.AsyncLastResult = sceIoLseek(FileHandle, Offset, Whence);
 			return 0;
-			*/
 		}
 
 		/// <summary>
@@ -118,9 +108,11 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <param name="Priority">The priority of the thread.</param>
 		/// <returns>Less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xB293727F, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceIoChangeAsyncPriority(SceUID FileHandle, int Priority)
 		{
-			throw(new NotImplementedException());
+			return 0;
+			//throw(new NotImplementedException());
 			/*
 			unimplemented_notice();
 			//return -1;

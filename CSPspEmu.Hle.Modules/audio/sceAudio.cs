@@ -253,7 +253,9 @@ namespace CSPspEmu.Hle.Modules.audio
 		[HlePspFunction(NID = 0x95FD0C2D, FirmwareVersion = 150)]
 		public int sceAudioChangeChannelConfig(int ChannelId, PspAudio.FormatEnum Format)
 		{
-			throw (new NotImplementedException());
+			var Channel = HleState.PspAudio.GetChannel(ChannelId);
+			Channel.Format = Format;
+			return 0;
 		}
 
 		/// <summary>

@@ -17,6 +17,11 @@ namespace CSPspEmu.Core.Gpu.State
 		public uint X, Y;
 	}
 
+	public struct PointS
+	{
+		public short X, Y;
+	}
+
 	public struct Vector3f
 	{
 		public float X, Y, Z;
@@ -26,6 +31,8 @@ namespace CSPspEmu.Core.Gpu.State
 	{
 		public Vector3f Position;
 		public Vector3f Scale;
+		public PointS RegionTopLeft;
+		public PointS RegionBottomRight;
 	}
 
 	public struct ColorfStruct
@@ -210,7 +217,7 @@ namespace CSPspEmu.Core.Gpu.State
 		public TextureTransferStateStruct TextureTransferState;
 
 		public ViewportStruct Viewport;
-		public PointI Offset;
+		public PointS Offset;
 		public bool ToggleUpdateState;
 
 		/// <summary>
@@ -242,6 +249,7 @@ namespace CSPspEmu.Core.Gpu.State
 		public ClipPlaneStateStruct ClipPlaneState;
 		public PatchCullingStateStruct PatchCullingState;
 		public SkinningStateStruct SkinningState;
+		public ColorTestStateStruct ColorTestState;
 
 		// State.
 		public ColorfStruct FixColorSource, FixColorDestination;

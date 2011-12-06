@@ -16,7 +16,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			PrepareState_Texture(GpuState);
 			PrepareState_CullFace(GpuState);
-			//PrepareState_Colors(GpuState);
+			PrepareState_Colors(GpuState);
 			PrepareState_Lighting(GpuState);
 			PrepareState_Blend(GpuState);
 			PrepareState_Depth(GpuState);
@@ -206,14 +206,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private void PrepareState_Blend(GpuStateStruct* GpuState)
 		{
-			/*
-			GL.Enable(EnableCap.Blend);
-			GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-			//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			//Console.WriteLine("{0}, {1}", GpuState[0].BlendingState.FunctionSource, GpuState[0].BlendingState.FunctionDestination);
-			return;
-			*/
-
 			var BlendingState = &GpuState[0].BlendingState;
 			if (!GlEnableDisable(EnableCap.Blend, BlendingState[0].Enabled))
 			{
@@ -330,8 +322,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)((TextureState[0].FilterMinification == TextureFilter.Linear) ? TextureMinFilter.Linear : TextureMinFilter.Nearest));
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)((TextureState[0].FilterMagnification == TextureFilter.Linear) ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)(TextureState[0].WrapU == WrapMode.Repeat ? TextureWrapMode.Repeat : TextureWrapMode.Clamp));
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)(TextureState[0].WrapV == WrapMode.Repeat ? TextureWrapMode.Repeat : TextureWrapMode.Clamp));
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)((TextureState[0].WrapU == WrapMode.Repeat) ? TextureWrapMode.Repeat : TextureWrapMode.Clamp));
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)((TextureState[0].WrapV == WrapMode.Repeat) ? TextureWrapMode.Repeat : TextureWrapMode.Clamp));
 			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvModeTranslate[(int)TextureState[0].Effect]);
 		}
 	}

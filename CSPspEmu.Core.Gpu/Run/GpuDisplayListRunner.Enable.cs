@@ -71,10 +71,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		}
 
 		// Color Test Enable (GU_COLOR_TEST)
-		[GpuOpCodesNotImplemented]
 		public void OP_CTE()
 		{
-			//gpu.state.colorTestEnabled = command.bool1;
+			GpuState[0].ColorTestState.Enabled = Bool1;
 		}
 	
 	}

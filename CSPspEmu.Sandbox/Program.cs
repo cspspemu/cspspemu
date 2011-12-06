@@ -42,13 +42,23 @@ namespace CSPspEmu.Sandbox
 			Console.SetBufferSize(160, 2000);
 
 			//PspEmulator.Start();
+
+			//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\TrigWars\EBOOT.PBP", TraceSyscalls: true);
+
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Puzzle Bobble.ISO", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\Aquaria\EBOOT.PBP", TraceSyscalls: true);
-			//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\Aquaria\EBOOT.PBP", TraceSyscalls: false);
 			
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Breath of Fire 3.cso", TraceSyscalls: false);
-			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia.iso", TraceSyscalls: false);
-			PspEmulator.StartAndLoad(@"F:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);
+			PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia.iso", TraceSyscalls: false);
+			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);
+			//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\audio\polyphonic\polyphonic.elf", TraceSyscalls: false);
+
+			//PspEmulator.StartAndLoad(@"C:\juegos\jpcsp_last\demos\compilerPerf.pbp");
+			//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\controller.pbp", TraceSyscalls: false);
+			//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\clut.pbp", TraceSyscalls: false);
+			//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\lights.pbp", TraceSyscalls: false);
+			//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\morph.pbp", TraceSyscalls: false);
+			//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\reflection.pbp", TraceSyscalls: false);
 			
 			//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\cube.pbp", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\cavestory\EBOOT.PBP", TraceSyscalls: false);
@@ -114,7 +124,6 @@ namespace CSPspEmu.Sandbox
 			//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\gu\morph\morph.elf");
 			//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\gu\skinning\skinning.elf");
 			//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\cavestory\EBOOT.PBP", TraceSyscalls: false);
-			//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\TrigWars\EBOOT.PBP", TraceSyscalls: true);
 			//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\reminiscence\EBOOT.PBP", TraceSyscalls: true);
 
 			//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\PspAutoTests\string.elf");

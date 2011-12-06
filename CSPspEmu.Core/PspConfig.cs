@@ -97,8 +97,8 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
-		//public bool UseFastAndUnsaferMemory = true;
-		public bool UseFastAndUnsaferMemory = false;
+		public bool UseFastAndUnsaferMemory = true;
+		//public bool UseFastAndUnsaferMemory = false;
 
 		/// <summary>
 		/// Writes a line each time a JAL is executed

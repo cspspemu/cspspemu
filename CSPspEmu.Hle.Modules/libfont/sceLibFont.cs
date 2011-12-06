@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Hle;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.libfont
 {
@@ -10,6 +11,30 @@ namespace CSPspEmu.Hle.Modules.libfont
 	{
 		public struct FontNewLibParams
 		{
+			/// <summary>
+			/// 
+			/// </summary>
+			public uint UserDataAddr;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public uint NumberOfFonts;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public uint CacheDataAddr;
+
+			// Driver callbacks.
+			public uint AllocFuncAddr;
+			public uint FreeFuncAddr;
+			public uint OpenFuncAddr;
+			public uint CloseFuncAddr;
+			public uint ReadFuncAddr;
+			public uint SeekFuncAddr;
+			public uint ErrorFuncAddr;
+			public uint IoFinishFuncAddr;
 		}
 
 		public struct FontInfo
@@ -24,13 +49,15 @@ namespace CSPspEmu.Hle.Modules.libfont
 		{
 		}
 
-		public enum FontLibraryHandle : uint
+		public enum FontLibraryHandle : int { }
+		public enum FontHandle : int { }
+
+		protected class FontLibrary
 		{
+			public FontNewLibParams Params;
 		}
 
-		public enum FontHandle : uint
-		{
-		}
+		HleUidPool<FontLibrary> FontLibraries = new HleUidPool<FontLibrary>();
 
 		/// <summary>
 		/// Creates a new font library.
@@ -39,29 +66,31 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// <param name="errorCode">Pointer to store any error code.</param>
 		/// <returns>FontLibraryHandle</returns>
 		[HlePspFunction(NID = 0x67F17ED7, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public FontLibraryHandle sceFontNewLib(FontNewLibParams* Params, uint* errorCode)
 		{
-			throw(new NotImplementedException());
-			/*
-			unimplemented_notice();
+			//if (Params != null) throw (new NotImplementedException("(Params != null)"));
 
-			*errorCode = 0;
+			var FontLibrary = new FontLibrary()
+			{
+				Params = *Params,
+			};
 
-			return uniqueIdFactory.add(new FontLibrary(Params));
-			*/
+			return (FontLibraryHandle)FontLibraries.Create(FontLibrary);
 		}
 
 		/// <summary>
 		/// Releases the font library.
 		/// </summary>
-		/// <param name="libHandle">Handle of the library.</param>
+		/// <param name="FontLibraryHandle">Handle of the library.</param>
 		/// <returns>
 		///		0 - success
 		/// </returns>
 		[HlePspFunction(NID = 0x574B6FBC, FirmwareVersion = 150)]
-		public int sceFontDoneLib(FontLibraryHandle libHandle)
+		public int sceFontDoneLib(FontLibraryHandle FontLibraryHandle)
 		{
-			throw (new NotImplementedException());
+			FontLibraries.Remove((int)FontLibraryHandle);
+			return 0;
 		}
 
 		/// <summary>

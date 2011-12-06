@@ -129,6 +129,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 				//Console.WriteLine(TextureFormat);
 
+				if (TextureDataSize > 2048 * 2048 * 4)
+				{
+					Console.Error.WriteLine("UPDATE_TEXTURE(TEX={0},CLUT={1}:{2}:{3}:{4}:0x{5:X},SIZE={6}x{7},{8},Swizzled={9})", TextureFormat, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask, BufferWidth, Height, BufferWidth, Swizzled);
+					Console.Error.WriteLine("Invalid TEXTURE!");
+					return new Texture();
+				}
+
 				TextureCacheKey TextureCacheKey = new TextureCacheKey()
 				{
 					TextureAddress = TextureAddress,

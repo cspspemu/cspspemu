@@ -84,6 +84,15 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//glTexEnvfv(GL_TEXTURE_ENV,GL_TEXTURE_ENV_COLOR, { 0.000000, 0.000000, 0.000000, 1.000000 } )
 
 			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Modulate);
+
+			//drawBeginClear(GpuState);
+			/*
+			GL.ClearColor(0, 0, 0, 1);
+			GL.ClearDepth(0);
+			GL.ClearStencil(0);
+			GL.ClearAccum(0, 0, 0, 0);
+			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit | ClearBufferMask.AccumBufferBit);
+			*/
 		}
 
 		GpuStateStruct* GpuState;
@@ -145,6 +154,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		void drawBeginClear(GpuStateStruct* GpuState)
 		{
 			bool ccolorMask = false, calphaMask = false;
+
+			//return;
 
 			GL.Disable(EnableCap.Blend);
 			GL.Disable(EnableCap.Lighting);
@@ -278,15 +289,18 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				// @TODO: Fake
 				/*
 				*/
-				//drawBeginClear(GpuState);
+				//PrepareState(GpuState);
 				//return;
 				//Console.WriteLine(VertexCount);
+				drawBeginClear(GpuState);
+				/*
 				GL.ClearColor(0, 0, 0, 1);
 				GL.ClearDepth(0);
 				GL.ClearStencil(0);
 				GL.ClearAccum(0, 0, 0, 0);
 				GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit | ClearBufferMask.AccumBufferBit);
 				return;
+				*/
 			}
 			else
 			{
@@ -330,7 +344,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 				//Console.WriteLine(VertexSize);
 
-				BeginMode BeginMode = default(BeginMode);
+				var BeginMode = default(BeginMode);
 
 				switch (PrimitiveType)
 				{
@@ -360,20 +374,20 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 							ReadVertex(n + 0, &VertexInfoTopLeft);
 							ReadVertex(n + 1, &VertexInfoBottomRight);
 
+							//if (GpuState[0].ClearingMode) Console.WriteLine("{0} - {1}", VertexInfoTopLeft, VertexInfoBottomRight);
+
+							float R = VertexInfoBottomRight.R, G = VertexInfoBottomRight.G, B = VertexInfoBottomRight.B, A = VertexInfoBottomRight.A;
+							float PZ = VertexInfoTopLeft.PZ;
+							float NZ = VertexInfoTopLeft.NZ;
+
 							VertexInfoTopRight = new VertexInfo()
 							{
 								U = VertexInfoBottomRight.U,
 								V = VertexInfoTopLeft.V,
 								PX = VertexInfoBottomRight.PX,
 								PY = VertexInfoTopLeft.PY,
-								PZ = (VertexInfoTopLeft.PZ + VertexInfoBottomRight.PZ) / 2,
 								NX = VertexInfoBottomRight.NX,
 								NY = VertexInfoTopLeft.NY,
-								NZ = (VertexInfoTopLeft.NZ + VertexInfoBottomRight.NZ) / 2,
-								R = (VertexInfoTopLeft.R + VertexInfoBottomRight.R) / 2,
-								G = (VertexInfoTopLeft.G + VertexInfoBottomRight.G) / 2,
-								B = (VertexInfoTopLeft.B + VertexInfoBottomRight.B) / 2,
-								A = (VertexInfoTopLeft.A + VertexInfoBottomRight.A) / 2,
 							};
 
 							VertexInfoBottomLeft = new VertexInfo()
@@ -382,15 +396,16 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 								V = VertexInfoBottomRight.V,
 								PX = VertexInfoTopLeft.PX,
 								PY = VertexInfoBottomRight.PY,
-								PZ = (VertexInfoTopLeft.PZ + VertexInfoBottomRight.PZ) / 2,
 								NX = VertexInfoTopLeft.NX,
 								NY = VertexInfoBottomRight.NY,
-								NZ = (VertexInfoTopLeft.NZ + VertexInfoBottomRight.NZ) / 2,
-								R = (VertexInfoTopLeft.R + VertexInfoBottomRight.R) / 2,
-								G = (VertexInfoTopLeft.G + VertexInfoBottomRight.G) / 2,
-								B = (VertexInfoTopLeft.B + VertexInfoBottomRight.B) / 2,
-								A = (VertexInfoTopLeft.A + VertexInfoBottomRight.A) / 2,
 							};
+
+							VertexInfoBottomLeft.R = VertexInfoBottomRight.R = VertexInfoTopRight.R = VertexInfoTopLeft.R = R;
+							VertexInfoBottomLeft.G = VertexInfoBottomRight.G = VertexInfoTopRight.G = VertexInfoTopLeft.G = G;
+							VertexInfoBottomLeft.B = VertexInfoBottomRight.B = VertexInfoTopRight.B = VertexInfoTopLeft.B = B;
+							VertexInfoBottomLeft.A = VertexInfoBottomRight.A = VertexInfoTopRight.A = VertexInfoTopLeft.A = R;
+							VertexInfoBottomLeft.PZ = VertexInfoBottomRight.PZ = VertexInfoTopRight.PZ = VertexInfoTopLeft.PZ = PZ;
+							VertexInfoBottomLeft.NZ = VertexInfoBottomRight.NZ = VertexInfoTopRight.NZ = VertexInfoTopLeft.NZ = NZ;
 
 							PutVertex(ref VertexInfoTopLeft, ref VertexType);
 							PutVertex(ref VertexInfoTopRight, ref VertexType);
