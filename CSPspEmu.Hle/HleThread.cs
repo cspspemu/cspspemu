@@ -86,6 +86,8 @@ namespace CSPspEmu.Hle
 		public PspThreadAttributes Attribute;
 		public SceKernelThreadInfo Info;
 		public bool HandleCallbacks;
+		public Action WakeUpCallback;
+		public List<Action> WakeUpList = new List<Action>();
 
 		public bool IsWaitingAndHandlingCallbacks
 		{
@@ -110,6 +112,76 @@ namespace CSPspEmu.Hle
 			set
 			{
 				fixed (byte* NamePtr = Info.Name) PointerUtils.StoreStringOnPtr(value, Encoding.ASCII, NamePtr);
+			}
+		}
+
+		public void ChangeWakeUpCount(int Increment, HleThread WakeupThread, bool HandleCallbacks = false)
+		{
+			var PreviousWakeupCount = Info.WakeupCount;
+			Info.WakeupCount += Increment;
+			var CurrentWakeupCount = Info.WakeupCount;
+
+			/*
+			Console.Error.WriteLine(
+				"{0} : ChangeWakeUpCount : {1} -> {2}",
+				this, PreviousWakeupCount, CurrentWakeupCount
+			);
+			*/
+
+			var ThreadToSleep = this;
+
+			// Sleep if sleeping decrement.
+			if (Increment < 0 && CurrentWakeupCount < 0)
+			{
+				ThreadToSleep.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelSleepThread", WakeUpCallback =>
+				{
+					ThreadToSleep.WakeUpCallback = () =>
+					{
+						WakeUpCallback();
+						WakeUpCallback = null;
+					};
+				}, HandleCallbacks: HandleCallbacks);
+			}
+			// Awake 
+			else if (Increment > 0 && PreviousWakeupCount < 0 && CurrentWakeupCount >= 0)
+			{
+				Action[] WakeUpListCopy;
+				lock (WakeUpList)
+				{
+					WakeUpListCopy = WakeUpList.ToArray();
+					WakeUpList.Clear();
+				}
+
+				if (WakeUpCallback != null)
+				{
+					WakeUpCallback();
+				}
+				else
+				{
+					Console.Error.WriteLine("Unexpected!");
+				}
+
+				foreach (var WakeUp in WakeUpListCopy)
+				{
+					WakeUp();
+				}
+			}
+
+			if (Increment > 0)
+			{
+				return;
+
+				WakeupThread.SetWaitAndPrepareWakeUp(WaitType.None, "sceKernelWakeupThread", WakeUpCallback =>
+				{
+					lock (WakeUpList)
+					{
+						WakeUpList.Add(() =>
+						{
+							WakeUpCallback();
+						});
+					}
+				}, HandleCallbacks: HandleCallbacks);
+				//WakeUpList.Add
 			}
 		}
 
@@ -290,7 +362,7 @@ namespace CSPspEmu.Hle
 			return Ret + ")";
 		}
 
-		public void Finalize()
+		public void Exit()
 		{
 			if (End != null)
 			{

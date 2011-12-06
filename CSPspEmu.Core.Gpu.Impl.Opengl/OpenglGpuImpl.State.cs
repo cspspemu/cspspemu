@@ -210,9 +210,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			GL.Enable(EnableCap.Blend);
 			GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 			//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 			//Console.WriteLine("{0}, {1}", GpuState[0].BlendingState.FunctionSource, GpuState[0].BlendingState.FunctionDestination);
-
 			return;
 			*/
 
@@ -225,7 +223,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//Console.WriteLine("Blend!");
 
 			var OpenglFunctionSource = BlendFuncSrcTranslate[(int)BlendingState[0].FunctionSource];
-			var OpenglFunctionDestination = BlendFuncDstTranslate[(int)BlendingState[0].FunctionDestination];
+			//var OpenglFunctionDestination = BlendFuncDstTranslate[(int)BlendingState[0].FunctionDestination];
+			var OpenglFunctionDestination = (BlendingFactorDest)BlendFuncSrcTranslate[(int)BlendingState[0].FunctionDestination];
 
 			Func<ColorfStruct, int> getBlendFix = (Color) =>
 			{
@@ -252,7 +251,16 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 			//Console.WriteLine("{0}, {1}", OpenglFunctionSource, OpenglFunctionDestination);
 
-			GL.BlendEquation(BlendEquationTranslate[(int)BlendingState[0].Equation]);
+			var OpenglBlendEquation = BlendEquationTranslate[(int)BlendingState[0].Equation];
+
+			/*
+			Console.WriteLine(
+				"{0} : {1} -> {2}",
+				OpenglBlendEquation, OpenglFunctionSource, OpenglFunctionDestination
+			);
+			*/
+
+			GL.BlendEquation(OpenglBlendEquation);
 			GL.BlendFunc(OpenglFunctionSource, OpenglFunctionDestination);
 
 			GL.BlendColor(

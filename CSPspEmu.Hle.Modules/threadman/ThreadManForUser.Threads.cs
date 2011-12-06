@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using CSharpUtils;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Managers;
@@ -91,37 +92,28 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return 0;
 		}
 
-		public int _sceKernelExitDeleteThread(int Status, HleThread Thread)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="CpuThreadState"></param>
+		/// <param name="HandleCallbacks"></param>
+		/// <returns></returns>
+		private int _sceKernelSleepThreadCB(CpuThreadState CpuThreadState, bool HandleCallbacks)
 		{
-			if (Thread != null)
-			{
-				Thread.Finalize();
-				HleState.ThreadManager.Exit(Thread);
-			}
+			var ThreadToSleep = HleState.ThreadManager.Current;
+			ThreadToSleep.ChangeWakeUpCount(-1, null);
 			return 0;
 		}
 
 		/// <summary>
-		/// Exit a thread and delete itself.
+		/// Sleep thread until sceKernelWakeUp is called.
 		/// </summary>
-		/// <param name="Status">Exit status</param>
-		/// <returns></returns>
-		[HlePspFunction(NID = 0x809CE29B, FirmwareVersion = 150)]
-		public int sceKernelExitDeleteThread(int Status)
+		/// <returns>Less than zero on error</returns>
+		[HlePspFunction(NID = 0x9ACE131E, FirmwareVersion = 150)]
+		public int sceKernelSleepThread(CpuThreadState CpuThreadState)
 		{
-			return _sceKernelExitDeleteThread(Status, HleState.ThreadManager.Current);
-		}
 
-		/// <summary>
-		/// Exit a thread
-		/// </summary>
-		/// <param name="Status">Exit status.</param>
-		/// <returns></returns>
-		[HlePspFunction(NID = 0xAA73C935, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceKernelExitThread(int Status)
-		{
-			return sceKernelExitDeleteThread(Status);
+			return _sceKernelSleepThreadCB(CpuThreadState, HandleCallbacks: false);
 		}
 
 		/// <summary>
@@ -135,10 +127,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x82826F70, FirmwareVersion = 150)]
 		public int sceKernelSleepThreadCB(CpuThreadState CpuThreadState)
 		{
-			HleState.ThreadManager.Current.CurrentStatus = HleThread.Status.Waiting;
-			HleState.ThreadManager.Current.CurrentWaitType = HleThread.WaitType.None;
-			CpuThreadState.Yield();
-			return 0;
+			return _sceKernelSleepThreadCB(CpuThreadState, HandleCallbacks: true);
 		}
 
 		/// <summary>
@@ -176,21 +165,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 		}
 
 		/// <summary>
-		/// Sleep thread until sceKernelWakeUp is called.
-		/// </summary>
-		/// <returns>Less than zero on error</returns>
-		[HlePspFunction(NID = 0x9ACE131E, FirmwareVersion = 150)]
-		public int sceKernelSleepThread(CpuThreadState CpuThreadState)
-		{
-			//logInfo("sceKernelSleepThread()");
-			//return _sceKernelSleepThreadCB(false);
-			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelSleepThread", WakeUpCallback =>
-			{
-			});
-			return 0;
-		}
-
-		/// <summary>
 		/// Wake a thread previously put into the sleep state.
 		/// </summary>
 		/// <remarks>
@@ -205,34 +179,19 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0xD59EAD2F, FirmwareVersion = 150)]
 		public int sceKernelWakeupThread(int ThreadId)
 		{
-			throw(new NotImplementedException());
-			/*
-			ThreadState threadState = uniqueIdFactory.get!(ThreadState)(thid);
-		
-			logInfo("sceKernelWakeupThread");
-		
-			threadState.sleepingCriticalSection.tryLock({
-				threadState.incrementWakeUpCount();
-			}, {
-				threadState.resetWakeUpCount();
-				threadState.wakeUpEvent.signal();
-			
-				// Must wait until terminated?
-				threadState.sleepingCriticalSection.waitEnded();
-			});
-
+			var ThreadCurrent = HleState.ThreadManager.Current;
+			var ThreadToWakeUp = HleState.ThreadManager.GetThreadById(ThreadId);
+			ThreadToWakeUp.ChangeWakeUpCount(+1, ThreadCurrent);
 			return 0;
-			*/
 		}
 
 		/// <summary>
-		/// Wait until a thread has ended.
+		/// 
 		/// </summary>
-		/// <param name="ThreadId">Id of the thread to wait for.</param>
-		/// <param name="Timeout">Timeout in microseconds (assumed).</param>
-		/// <returns>Less than 0 on error</returns>
-		[HlePspFunction(NID = 0x278C0DF5, FirmwareVersion = 150)]
-		public int sceKernelWaitThreadEnd(int ThreadId, uint* Timeout)
+		/// <param name="ThreadId"></param>
+		/// <param name="Timeout"></param>
+		/// <returns></returns>
+		private int _sceKernelWaitThreadEndCB(int ThreadId, uint* Timeout, bool HandleCallbacks)
 		{
 			var ThreadToWaitEnd = GetThreadById(ThreadId);
 
@@ -248,7 +207,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelWaitThreadEnd", WakeUpCallback =>
 			{
-				if (Timeout != null) throw (new NotImplementedException());
+				if (Timeout != null)
+				{
+					Console.Error.WriteLine("_sceKernelWaitThreadEndCB Timeout not implemented!!");
+					//throw (new NotImplementedException());
+				}
+
 				Console.WriteLine("Wait End!");
 				ThreadToWaitEnd.End += () =>
 				{
@@ -256,9 +220,33 @@ namespace CSPspEmu.Hle.Modules.threadman
 					//throw(new Exception("aaaaaaaaaaaa"));
 					WakeUpCallback();
 				};
-			});
+			}, HandleCallbacks: HandleCallbacks);
 
 			return 0;
+		}
+
+		/// <summary>
+		/// Wait until a thread has ended.
+		/// </summary>
+		/// <param name="ThreadId">Id of the thread to wait for.</param>
+		/// <param name="Timeout">Timeout in microseconds (assumed).</param>
+		/// <returns>Less than 0 on error</returns>
+		[HlePspFunction(NID = 0x278C0DF5, FirmwareVersion = 150)]
+		public int sceKernelWaitThreadEnd(int ThreadId, uint* Timeout)
+		{
+			return _sceKernelWaitThreadEndCB(ThreadId, Timeout, HandleCallbacks: false);
+		}
+
+		/// <summary>
+		/// Wait until a thread has ended and handle callbacks if necessary.
+		/// </summary>
+		/// <param name="ThreadId">Id of the thread to wait for.</param>
+		/// <param name="Timeout">Timeout in microseconds (assumed).</param>
+		/// <returns>Less than 0 on error</returns>
+		[HlePspFunction(NID = 0x840E8133, FirmwareVersion = 150)]
+		public int sceKernelWaitThreadEndCB(int ThreadId, uint* Timeout)
+		{
+			return _sceKernelWaitThreadEndCB(ThreadId, Timeout, HandleCallbacks: true);
 		}
 
 		private int _sceKernelDelayThreadCB(uint DelayInMicroseconds, bool HandleCallbacks)
@@ -300,30 +288,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelDelayThreadCB(uint DelayInMicroseconds)
 		{
 			return _sceKernelDelayThreadCB(DelayInMicroseconds, HandleCallbacks: true);
-		}
-
-		/// <summary>
-		/// Delete a thread
-		/// </summary>
-		/// <param name="ThreadId">UID of the thread to be deleted.</param>
-		/// <returns>Less than 0 on error.</returns>
-		[HlePspFunction(NID = 0x9FA03CD3, FirmwareVersion = 150)]
-		public int sceKernelDeleteThread(int ThreadId)
-		{
-			return _sceKernelExitDeleteThread(-1, GetThreadById(ThreadId));
-		}
-
-		/// <summary>
-		/// Terminate and delete a thread.
-		/// </summary>
-		/// <param name="ThreadId">UID of the thread to terminate and delete.</param>
-		/// <returns>Success if greater or equal to 0, an error if less than 0.</returns>
-		[HlePspFunction(NID = 0x383F7BCC, FirmwareVersion = 150)]
-		public int sceKernelTerminateDeleteThread(int ThreadId)
-		{
-			return sceKernelDeleteThread(ThreadId);
-			//throw(new NotImplementedException());
-
 		}
 
 		/// <summary>
@@ -377,17 +341,84 @@ namespace CSPspEmu.Hle.Modules.threadman
 		}
 
 		/// <summary>
-		/// Wait until a thread has ended and handle callbacks if necessary.
+		/// Get the exit status of a thread.
 		/// </summary>
-		/// <param name="ThreadId">Id of the thread to wait for.</param>
-		/// <param name="Timeout">Timeout in microseconds (assumed).</param>
-		/// <returns>Less than 0 on error</returns>
-		[HlePspFunction(NID = 0x840E8133, FirmwareVersion = 150)]
-		public int sceKernelWaitThreadEndCB(int ThreadId, uint* Timeout)
+		/// <param name="ThreadId">The UID of the thread to check.</param>
+		/// <returns>The exit status</returns>
+		[HlePspFunction(NID = 0x3B183E26, FirmwareVersion = 150)]
+		public int sceKernelGetThreadExitStatus(int ThreadId)
 		{
-			throw(new NotImplementedException());
-			return 0;
-			//return _sceKernelWaitThreadEndCB(thid, timeout, true);
+			var Thread = HleState.ThreadManager.GetThreadById(ThreadId);
+			return Thread.Info.ExitStatus;
 		}
+
+		/// <summary>
+		/// Exit a thread and delete itself.
+		/// </summary>
+		/// <param name="ExitStatus">Exit status</param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x809CE29B, FirmwareVersion = 150)]
+		public int sceKernelExitDeleteThread(int ExitStatus)
+		{
+			var CurrentThreadId = HleState.ThreadManager.Current.Id;
+			int ResultExit = sceKernelExitThread(ExitStatus);
+			int ResultDelete = sceKernelDeleteThread(CurrentThreadId);
+			return ResultDelete;
+		}
+
+		/// <summary>
+		/// Exit a thread
+		/// </summary>
+		/// <param name="ExitStatus">Exit status.</param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xAA73C935, FirmwareVersion = 150)]
+		public int sceKernelExitThread(int ExitStatus)
+		{
+			var Thread = HleState.ThreadManager.Current;
+			Thread.Info.ExitStatus = ExitStatus;
+			Thread.Exit();
+			Thread.CpuThreadState.Yield();
+
+			return 0;
+		}
+
+		/// <summary>
+		/// Delete a thread
+		/// </summary>
+		/// <param name="ThreadId">UID of the thread to be deleted.</param>
+		/// <returns>Less than 0 on error.</returns>
+		[HlePspFunction(NID = 0x9FA03CD3, FirmwareVersion = 150)]
+		public int sceKernelDeleteThread(int ThreadId)
+		{
+			var Thread = HleState.ThreadManager.GetThreadById(ThreadId);
+			HleState.ThreadManager.DeleteThread(Thread);
+			return 0;
+			//return _sceKernelExitDeleteThread(-1, GetThreadById(ThreadId));
+		}
+
+		/// <summary>
+		/// Terminate and delete a thread.
+		/// </summary>
+		/// <param name="ThreadId">UID of the thread to terminate and delete.</param>
+		/// <returns>Success if greater or equal to 0, an error if less than 0.</returns>
+		[HlePspFunction(NID = 0x383F7BCC, FirmwareVersion = 150)]
+		public int sceKernelTerminateDeleteThread(int ThreadId)
+		{
+			return sceKernelDeleteThread(ThreadId);
+			//throw(new NotImplementedException());
+
+		}
+
+		/*
+		public int _sceKernelExitDeleteThread(int Status, HleThread Thread)
+		{
+			if (Thread != null)
+			{
+				Thread.Finalize();
+				HleState.ThreadManager.Exit(Thread);
+			}
+			return 0;
+		}
+		*/
 	}
 }

@@ -53,97 +53,97 @@ namespace CSPspEmu.Hle.Vfs
 		/// <summary>
 		/// Format bits mask
 		/// </summary>
-		FIO_S_IFMT = 0xF000,
+		FormatMask = 0xF000,
 
 		/// <summary>
 		/// Symbolic link
 		/// </summary>
-		FIO_S_IFLNK = 0x4000,
+		SymbolicLink = 0x4000,
 
 		/// <summary>
 		/// Directory
 		/// </summary>
-		FIO_S_IFDIR = 0x1000,
+		Directory = 0x1000,
 		
 		/// <summary>
 		/// Regular file
 		/// </summary>
-		FIO_S_IFREG = 0x2000,
+		File = 0x2000,
 
 		/// <summary>
 		/// Set UID
 		/// </summary>
-		FIO_S_ISUID = 0x0800,
+		Uid = 0x0800,
 		
 		/// <summary>
 		/// Set GID
 		/// </summary>
-		FIO_S_ISGID = 0x0400,
+		Gid = 0x0400,
 		
 		/// <summary>
 		/// Sticky
 		/// </summary>
-		FIO_S_ISVTX = 0x0200,
+		Sticky = 0x0200,
 
 		/// <summary>
 		/// User access rights mask
 		/// </summary>
-		FIO_S_IRWXU = 0x01C0,
+		UserMask = 0x01C0,
 		
 		/// <summary>
 		/// Read user permission
 		/// </summary>
-		FIO_S_IRUSR = 0x0100,
+		UserCanRead = 0x0100,
 		
 		/// <summary>
 		/// Write user permission
 		/// </summary>
-		FIO_S_IWUSR = 0x0080,
+		UserCanWrite = 0x0080,
 		
 		/// <summary>
 		/// Execute user permission
 		/// </summary>
-		FIO_S_IXUSR = 0x0040,
+		UserCanExecute = 0x0040,
 
 		/// <summary>
 		/// Group access rights mask
 		/// </summary>
-		FIO_S_IRWXG = 0x0038,
+		GroupMask = 0x0038,
 		
 		/// <summary>
 		/// Group read permission
 		/// </summary>
-		FIO_S_IRGRP = 0x0020,
+		GroupCanRead = 0x0020,
 		
 		/// <summary>
 		/// Group write permission
 		/// </summary>
-		FIO_S_IWGRP = 0x0010,
+		GroupCanWrite = 0x0010,
 		
 		/// <summary>
 		/// Group execute permission
 		/// </summary>
-		FIO_S_IXGRP = 0x0008,
+		GroupCanExecute = 0x0008,
 
 		/// <summary>
 		/// Others access rights mask
 		/// </summary>
-		FIO_S_IRWXO = 0x0007,
+		OtherMask = 0x0007,
 		
 		/// <summary>
 		/// Others read permission
 		/// </summary>
-		FIO_S_IROTH = 0x0004,
+		OtherCanRead = 0x0004,
 		
 		/// <summary>
 		/// Others write permission
 		/// </summary>
-		FIO_S_IWOTH = 0x0002,
+		OtherCanWrite = 0x0002,
 		
 		/// <summary>
 		/// Others execute permission
 		/// </summary>
-		FIO_S_IXOTH = 0x0001,
+		OtherCanExecute = 0x0001,
 	}
 
 	/// <summary>
@@ -154,37 +154,37 @@ namespace CSPspEmu.Hle.Vfs
 		/// <summary>
 		/// Format mask
 		/// </summary>
-		FIO_SO_IFMT = 0x0038,
+		FormatMask = 0x0038,
 
 		/// <summary>
 		/// Symbolic link
 		/// </summary>
-		FIO_SO_IFLNK = 0x0008,
+		SymbolicLink = 0x0008,
 		
 		/// <summary>
 		/// Directory
 		/// </summary>
-		FIO_SO_IFDIR = 0x0010,
+		Directory = 0x0010,
 		
 		/// <summary>
 		/// Regular file
 		/// </summary>
-		FIO_SO_IFREG = 0x0020,
+		File = 0x0020,
 
 		/// <summary>
 		/// Hidden read permission
 		/// </summary>
-		FIO_SO_IROTH = 0x0004,
+		CanRead = 0x0004,
 		
 		/// <summary>
 		/// Hidden write permission
 		/// </summary>
-		FIO_SO_IWOTH = 0x0002,
+		CanWrite = 0x0002,
 		
 		/// <summary>
 		/// Hidden execute permission
 		/// </summary>
-		FIO_SO_IXOTH = 0x0001,
+		CanExecute = 0x0001,
 	}
 
 	public enum SceOff : long

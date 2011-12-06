@@ -178,13 +178,9 @@ namespace CSPspEmu.Hle.Managers
 			NextThread.PriorityValue += NextThread.Info.PriorityCurrent + 1;
 		}
 
-		public void Exit(HleThread HlePspThread)
+		public void DeleteThread(HleThread HlePspThread)
 		{
 			Threads.Remove(HlePspThread);
-			if (HlePspThread == Current)
-			{
-				HlePspThread.CpuThreadState.Yield();
-			}
 		}
 
 		public void Dispose()

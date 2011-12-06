@@ -40,5 +40,15 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		{
 			HleState.HleInterruptManager.sceKernelCpuResumeIntr(Flags);
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Flags"></param>
+		[HlePspFunction(NID = 0x3B84732D, FirmwareVersion = 150)]
+		public void sceKernelCpuResumeIntrWithSync(uint Flags)
+		{
+			sceKernelCpuResumeIntr(Flags);
+		}
 	}
 }

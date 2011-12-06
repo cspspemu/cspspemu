@@ -265,7 +265,7 @@ namespace CSPspEmu.Core.Utils
 				R = (byte)Value.ExtractUnsignedScale(0, 5, 255),
 				G = (byte)Value.ExtractUnsignedScale(5, 5, 255),
 				B = (byte)Value.ExtractUnsignedScale(10, 5, 255),
-				A = (byte)Value.ExtractUnsignedScale(16, 1, 255),
+				A = (byte)(255 - Value.ExtractUnsignedScale(16, 1, 255)),
 			};
 		}
 

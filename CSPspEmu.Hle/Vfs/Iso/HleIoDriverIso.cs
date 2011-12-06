@@ -141,19 +141,19 @@ namespace CSPspEmu.Hle.Vfs.Iso
 
 			//IsoNode.DirectoryRecord.Date
 			Stat[0].Mode = 0;
-			Stat[0].Mode |= SceMode.FIO_S_IRUSR | SceMode.FIO_S_IWUSR | SceMode.FIO_S_IXUSR;
-			Stat[0].Mode |= SceMode.FIO_S_IRGRP | SceMode.FIO_S_IWGRP | SceMode.FIO_S_IXGRP;
-			Stat[0].Mode |= SceMode.FIO_S_IROTH | SceMode.FIO_S_IWOTH | SceMode.FIO_S_IXOTH;
+			Stat[0].Mode |= SceMode.UserCanRead | SceMode.UserCanWrite | SceMode.UserCanExecute;
+			Stat[0].Mode |= SceMode.GroupCanRead | SceMode.GroupCanWrite | SceMode.GroupCanExecute;
+			Stat[0].Mode |= SceMode.OtherCanRead | SceMode.OtherCanWrite | SceMode.OtherCanExecute;
 
 			if (IsoNode.IsDirectory)
 			{
-				Stat[0].Mode = SceMode.FIO_S_IFDIR;
-				Stat[0].Attributes = IOFileModes.FIO_SO_IFDIR;
+				Stat[0].Mode = SceMode.Directory;
+				Stat[0].Attributes = IOFileModes.Directory;
 			}
 			else
 			{
-				Stat[0].Mode = SceMode.FIO_S_IFREG;
-				Stat[0].Attributes = IOFileModes.FIO_SO_IFREG | IOFileModes.FIO_SO_IROTH | IOFileModes.FIO_SO_IWOTH | IOFileModes.FIO_SO_IXOTH;
+				Stat[0].Mode = SceMode.File;
+				Stat[0].Attributes = IOFileModes.File | IOFileModes.CanRead | IOFileModes.CanWrite | IOFileModes.CanExecute;
 			}
 			Stat[0].Size = IsoNode.DirectoryRecord.Size;
 			Stat[0].TimeCreation = ScePspDateTime.FromDateTime(IsoNode.DirectoryRecord.Date);

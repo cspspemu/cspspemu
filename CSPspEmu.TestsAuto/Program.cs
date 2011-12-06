@@ -116,8 +116,8 @@ namespace CSPspEmu.AutoTests
 				RealOutput = RunExecutableAndGetOutput(PspAutoTestsFolder, FileNameExecutable);
 			}
 
-			var ExpectedOutputLines = ExpectedOutput.Trim().Split('\n');
-			var RealOutputLines = RealOutput.Trim().Split('\n');
+			var ExpectedOutputLines = ExpectedOutput.Trim().Replace("\r\n", "\n").Split('\n');
+			var RealOutputLines = RealOutput.Trim().Replace("\r\n", "\n").Split('\n');
 			var Result = Diff.DiffTextProcessed(ExpectedOutputLines, RealOutputLines);
 
 			File.WriteAllText(
@@ -182,7 +182,7 @@ namespace CSPspEmu.AutoTests
 				var FileNameExecutable = FileNameBase + ".elf";
 				var FileNameSourceCode = FileNameBase + ".c";
 
-				var MatchName = Path.GetDirectoryName(FileNameExpected).Substr(PspAutoTestsFolder.Length).Replace("\\", "/");
+				var MatchName = FileNameBase.Substr(PspAutoTestsFolder.Length).Replace("\\", "/");
 
 				//Console.WriteLine(MatchName + " ~ " + Wildcard.WildcardToRegex(WildCardFilter));
 				if (!new Regex(Wildcard.WildcardToRegex(WildCardFilter)).IsMatch(MatchName))
@@ -267,6 +267,9 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "intr";
 				//WildCardFilter = "umd";
 				//WildCardFilter = "vblank";
+				//WildCardFilter = "wakeup";
+				//WildCardFilter = "thread";
+				WildCardFilter = "directory";
 			}
 
 			if (WildCardFilter.Length > 0)

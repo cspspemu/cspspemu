@@ -281,8 +281,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				//drawBeginClear(GpuState);
 				//return;
 				//Console.WriteLine(VertexCount);
-
-				GL.ClearColor(0, 0, 0, 0);
+				GL.ClearColor(0, 0, 0, 1);
 				GL.ClearDepth(0);
 				GL.ClearStencil(0);
 				GL.ClearAccum(0, 0, 0, 0);

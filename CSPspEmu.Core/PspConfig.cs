@@ -50,17 +50,19 @@ namespace CSPspEmu.Core
 
 		// http://jpcsp.googlecode.com/svn/trunk/src/jpcsp/HLE/modules150/scePower.java
 
-		int BatteryLifeTime = (5 * 60); // 5 hours
-		int BatteryTemp = 28; //some standard battery temperature 28 deg C
-		int BatteryVoltage = 4135; //battery voltage 4,135 in slim
-		bool PluggedIn = true;
-		bool BatteryPresent = true;
-		int BatteryPowerPercent = 100;
-		int BatteryLowPercent = 12;
-		int BatteryForceSuspendPercent = 4;
-		int FullBatteryCapacity = 1800;
-		bool BatteryCharging = false;
-		int BacklightMaximum = 4;
+		/*
+		public int BatteryLifeTime = (5 * 60); // 5 hours
+		public int BatteryTemp = 28; //some standard battery temperature 28 deg C
+		public int BatteryVoltage = 4135; //battery voltage 4,135 in slim
+		public bool PluggedIn = true;
+		public bool BatteryPresent = true;
+		public int BatteryPowerPercent = 100;
+		public int BatteryLowPercent = 12;
+		public int BatteryForceSuspendPercent = 4;
+		public int FullBatteryCapacity = 1800;
+		public bool BatteryCharging = false;
+		public int BacklightMaximum = 4;
+		*/
 
 		/// <summary>
 		/// CPU clock:
@@ -95,8 +97,8 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
-		public bool UseFastAndUnsaferMemory = true;
-		//public bool UseFastAndUnsaferMemory = false;
+		//public bool UseFastAndUnsaferMemory = true;
+		public bool UseFastAndUnsaferMemory = false;
 
 		/// <summary>
 		/// Writes a line each time a JAL is executed
