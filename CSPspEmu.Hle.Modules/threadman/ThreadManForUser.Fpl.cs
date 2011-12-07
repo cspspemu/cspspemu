@@ -2,11 +2,49 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
 	unsafe public partial class ThreadManForUser
 	{
+		public class FixedPool
+		{
+			public HleMemoryManager MemoryManager;
+			public string Name;
+			public HleMemoryManager.Partitions PartitionId;
+			public int Attributes;
+			public int BlockSize;
+			public int NumberOfBlocks;
+			public MemoryPartition MemoryPartition;
+			public List<uint> FreeBlocks;
+			public List<uint> UsedBlocks;
+
+			public void Init()
+			{
+				var Partition = MemoryManager.GetPartition(PartitionId);
+				this.MemoryPartition = Partition.Allocate(NumberOfBlocks * BlockSize);
+				this.FreeBlocks = new List<uint>();
+				this.UsedBlocks = new List<uint>();
+				for (int n = 0; n < NumberOfBlocks; n++)
+				{
+					this.FreeBlocks.Add(GetAddressFromBlockIndex(n));
+				}
+			}
+
+			public uint GetAddressFromBlockIndex(int Index)
+			{
+				return (uint)(MemoryPartition.Low + Index * BlockSize);
+			}
+		}
+
+		public enum PoolId : int { }
+
+		HleUidPoolSpecial<FixedPool, PoolId> FixedPoolList = new HleUidPoolSpecial<FixedPool, PoolId>()
+		{
+			OnKeyNotFoundError = SceKernelErrors.ERROR_KERNEL_NOT_FOUND_FPOOL,
+		};
+
 		/// <summary>
 		/// Create a fixed pool
 		/// </summary>
@@ -18,21 +56,22 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Options">Options (set to NULL)</param>
 		/// <returns>The UID of the created pool, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xC07BB470, FirmwareVersion = 150)]
-		public int sceKernelCreateFpl(string Name, int PartitionId, int Attributes, uint BlockSize, uint NumberOfBlocks, void *Options)
+		public PoolId sceKernelCreateFpl(string Name, HleMemoryManager.Partitions PartitionId, int Attributes, int BlockSize, int NumberOfBlocks, void* Options)
 		{
-			throw(new NotImplementedException());
-			/*
-			//new MemorySegment
-			logWarning("sceKernelCreateFpl('%s', %d, %d, %d, %d)", Name, PartitionId, Attributes, BlockSize, NumberOfBlocks);
-			FixedPool fixedPool;
-			fixedPool = new FixedPool(
-				hleEmulatorState.moduleManager.get!SysMemUserForUser()._allocateMemorySegmentLow(PartitionId, dupStr(Name), BlockSize * NumberOfBlocks),
-				BlockSize,
-				NumberOfBlocks
-			);
-			logWarning("%s", fixedPool);
-			return uniqueIdFactory.add(fixedPool);
-			*/
+			if (Options != null) throw(new NotImplementedException());
+
+			var FixedPool = new FixedPool()
+			{
+				MemoryManager = HleState.MemoryManager,
+				Name = Name,
+				PartitionId = PartitionId,
+				Attributes = Attributes,
+				BlockSize = BlockSize,
+				NumberOfBlocks = NumberOfBlocks,
+			};
+			FixedPool.Init();
+
+			return FixedPoolList.Create(FixedPool);
 		}
 
 		/// <summary>
@@ -42,20 +81,22 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="DataPointerPointer">Receives the address of the allocated data</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x623AE665, FirmwareVersion = 150)]
-		public int sceKernelTryAllocateFpl(int PoolId, uint DataPointerPointer)
+		public int sceKernelTryAllocateFpl(PoolId PoolId, uint* DataPointerPointer)
 		{
-			throw(new NotImplementedException());
-			/*
-			logWarning("sceKernelTryAllocateFpl(%d, %08X)", PoolId, DataPointerPointer);
-			FixedPool fixedPool = uniqueIdFactory.get!FixedPool(PoolId);
-			try {
-				currentMemory().twrite(DataPointerPointer, cast(uint)fixedPool.allocate());
-				return 0;
-			} catch (Exception e) {
-				return SceKernelErrors.ERROR_KERNEL_NO_MEMORY;
+			var FixedPool = FixedPoolList.Get(PoolId);
+
+			if (FixedPool.FreeBlocks.Count <= 0)
+			{
+				//throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_NO_MEMORY));
+				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_WAIT_CAN_NOT_WAIT));
 			}
-			//return sceKernelTryAllocateVpl(uid, data);
-			*/
+
+			var AllocatedBlock = FixedPool.FreeBlocks.First();
+			FixedPool.FreeBlocks.Remove(AllocatedBlock);
+			FixedPool.UsedBlocks.Add(AllocatedBlock);
+
+			*DataPointerPointer = AllocatedBlock;
+			return 0;
 		}
 
 		/// <summary>
@@ -66,7 +107,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Timeout">Amount of time to wait for allocation?</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xD979E9BF, FirmwareVersion = 150)]
-		public int sceKernelAllocateFpl(int PoolId, uint DataPointerPointer, uint *Timeout)
+		public int sceKernelAllocateFpl(PoolId PoolId, uint DataPointerPointer, uint* Timeout)
 		{
 			throw(new NotImplementedException());
 			/*
@@ -78,30 +119,38 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Delete a fixed pool
 		/// </summary>
-		/// <param name="uid">The UID of the pool</param>
+		/// <param name="PoolId">The UID of the pool</param>
 		/// <returns>
 		///		0 on success
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xED1410E0, FirmwareVersion = 150)]
-		public int sceKernelDeleteFpl(int uid)
+		public int sceKernelDeleteFpl(PoolId PoolId)
 		{
-			throw(new NotImplementedException());
+			FixedPoolList.Remove(PoolId);
+			return 0;
 		}
 
 		/// <summary>
 		/// Free a block
 		/// </summary>
-		/// <param name="uid">The UID of the pool</param>
-		/// <param name="data">The data block to deallocate</param>
+		/// <param name="PoolId">The UID of the pool</param>
+		/// <param name="DataPointer">The data block to deallocate</param>
 		/// <returns>
 		///		0 on success
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xF6414A71, FirmwareVersion = 150)]
-		public int sceKernelFreeFpl(int uid, void *data)
+		public int sceKernelFreeFpl(PoolId PoolId, uint DataPointer)
 		{
-			throw (new NotImplementedException());
+			var FixedPool = FixedPoolList.Get(PoolId);
+			if (!FixedPool.UsedBlocks.Contains(DataPointer))
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MEMBLOCK));
+			}
+			FixedPool.UsedBlocks.Remove(DataPointer);
+			FixedPool.FreeBlocks.Add(DataPointer);
+			return 0;
 		}
 	}
 }

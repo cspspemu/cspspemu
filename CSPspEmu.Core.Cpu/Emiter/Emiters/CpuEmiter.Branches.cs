@@ -41,7 +41,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			});
 		}
 
-		private void _branch_pre_v0(params OpCode[] OpCodeList)
+		private void __branch_pre_v0(bool Link, params OpCode[] OpCodeList)
 		{
 			MipsMethodEmiter.StoreBranchFlag(() =>
 			{
@@ -52,6 +52,16 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					MipsMethodEmiter.ILGenerator.Emit(OpCode);
 				}
 			});
+		}
+
+		private void _branch_pre_v0(params OpCode[] OpCodeList)
+		{
+			__branch_pre_v0(false, OpCodeList);
+		}
+
+		private void _branch_pre_v0_link(params OpCode[] OpCodeList)
+		{
+			__branch_pre_v0(true, OpCodeList);
 		}
 
 		// Branch on EQuals (Likely).
@@ -65,7 +75,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Branch on Less Than Zero (And Link) (Likely).
 		public void bltz() { _branch_pre_v0(OpCodes.Clt); }
 		public void bltzl() { bltz(); }
-		public void bltzal() { throw (new NotImplementedException()); }
+		public void bltzal() {
+			//_branch_pre_v0_link(OpCodes.Clt);
+			//_link();
+			//bltz();
+			throw (new NotImplementedException());
+		}
 		public void bltzall() { bltzal(); }
 
 		// Branch on Less Or Equals than Zero (Likely).

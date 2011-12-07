@@ -107,12 +107,14 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		/// <summary>
 		/// Gets a module by its loaded address.
 		/// </summary>
-		/// <param name="addr"></param>
+		/// <param name="Address"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xD8B73127, FirmwareVersion = 150)]
-		public int sceKernelGetModuleIdByAddress(uint addr)
+		[HlePspNotImplemented]
+		public int sceKernelGetModuleIdByAddress(uint Address)
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>

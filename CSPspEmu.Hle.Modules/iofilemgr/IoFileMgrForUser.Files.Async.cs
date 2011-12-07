@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Vfs;
 
 namespace CSPspEmu.Hle.Modules.iofilemgr
@@ -120,44 +121,50 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			*/
 		}
 
-		/*
-		public int _sceIoWaitAsyncCB(SceUID fd, SceInt64* res, bool callbacks)
+		public int _sceIoWaitAsyncCB(CpuThreadState CpuThreadState, int FileHandle, long* Result, bool HandleCallbacks)
 		{
-			logInfo("_sceIoWaitAsyncCB(fd=%d, callbacks=%d)", fd, callbacks);
-			FileHandle fileHandle = uniqueIdFactory.get!FileHandle(fd);
-			*res = fileHandle.lastOperationResult;
-			if (callbacks) {
+			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileHandle);
+			*Result = File.AsyncLastResult;
+			CpuThreadState.LO = FileHandle;
+			return 0;
+			/*
+			logInfo("_sceIoWaitAsyncCB(fd=%d, callbacks=%d)", FileHandle, HandleCallbacks);
+			FileHandle fileHandle = uniqueIdFactory.get!FileHandle(FileHandle);
+			*Result = fileHandle.lastOperationResult;
+			if (HandleCallbacks) {
 				hleEmulatorState.callbacksHandler.executeQueued(currentThreadState);
 			}
-			currentRegisters.LO = fd;
-			return fd;
+			currentRegisters.LO = FileHandle;
+			return FileHandle;
+			*/
 		}
-		*/
 
 		/// <summary>
 		/// Wait for asyncronous completion.
 		/// </summary>
-		/// <param name="fd">The file descriptor which is current performing an asynchronous action.</param>
-		/// <param name="res">The result of the async action.</param>
+		/// <param name="FileHandle">The file descriptor which is current performing an asynchronous action.</param>
+		/// <param name="Result">The result of the async action.</param>
 		/// <returns>The given fd or a negative value on error.</returns>
 		[HlePspFunction(NID = 0xE23EEC33, FirmwareVersion = 150)]
-		public int sceIoWaitAsync(SceUID fd, long* res)
+		[HlePspNotImplemented]
+		public int sceIoWaitAsync(CpuThreadState CpuThreadState, int FileHandle, long* Result)
 		{
-			throw(new NotImplementedException());
-			//return _sceIoWaitAsyncCB(fd, res, false);
+			//throw(new NotImplementedException());
+			return _sceIoWaitAsyncCB(CpuThreadState, FileHandle, Result, HandleCallbacks: false);
 		}
 
 		/// <summary>
 		/// Wait for asyncronous completion.
 		/// </summary>
-		/// <param name="fd">The file descriptor which is current performing an asynchronous action.</param>
-		/// <param name="res">The result of the async action.</param>
+		/// <param name="FileHandle">The file descriptor which is current performing an asynchronous action.</param>
+		/// <param name="Result">The result of the async action.</param>
 		/// <returns>The given fd or a negative value on error.</returns>
 		[HlePspFunction(NID = 0x35DBD746, FirmwareVersion = 150)]
-		public int sceIoWaitAsyncCB(SceUID fd, long* res)
+		[HlePspNotImplemented]
+		public int sceIoWaitAsyncCB(CpuThreadState CpuThreadState, int FileHandle, long* Result)
 		{
-			throw (new NotImplementedException());
-			//return _sceIoWaitAsyncCB(fd, res, true);
+			//throw (new NotImplementedException());
+			return _sceIoWaitAsyncCB(CpuThreadState, FileHandle, Result, HandleCallbacks: true);
 		}
 
 		/// <summary>

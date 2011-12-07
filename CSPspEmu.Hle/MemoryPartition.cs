@@ -20,14 +20,14 @@ namespace CSPspEmu.Hle
 		public uint Low { get; protected set; }
 		public uint High { get; protected set; }
 		public int Size { get { return (int)(High - Low); } }
-		private MemoryPartition _ParentPartition;
+		public MemoryPartition ParentPartition { get; private set; }
 		private SortedSet<MemoryPartition> _ChildPartitions;
 
 		public MemoryPartition Root
 		{
 			get
 			{
-				return (_ParentPartition != null) ? _ParentPartition.Root : this;
+				return (ParentPartition != null) ? ParentPartition.Root : this;
 			}
 		}
 
@@ -42,7 +42,7 @@ namespace CSPspEmu.Hle
 		public MemoryPartition(uint Low, uint High, bool Allocated = true, string Name = "Unknown", MemoryPartition ParentPartition = null)
 		{
 			if (Low > High) throw (new InvalidOperationException());
-			this._ParentPartition = ParentPartition;
+			this.ParentPartition = ParentPartition;
 			this.Name = Name;
 			this.Low = Low;
 			this.High = High;

@@ -9,46 +9,6 @@ namespace CSPspEmu.Hle.Modules.libfont
 {
 	unsafe public partial class sceLibFont : HleModuleHost
 	{
-		public struct FontNewLibParams
-		{
-			/// <summary>
-			/// 
-			/// </summary>
-			public uint UserDataAddr;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public uint NumberOfFonts;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public uint CacheDataAddr;
-
-			// Driver callbacks.
-			public uint AllocFuncAddr;
-			public uint FreeFuncAddr;
-			public uint OpenFuncAddr;
-			public uint CloseFuncAddr;
-			public uint ReadFuncAddr;
-			public uint SeekFuncAddr;
-			public uint ErrorFuncAddr;
-			public uint IoFinishFuncAddr;
-		}
-
-		public struct FontInfo
-		{
-		}
-
-		public struct FontCharInfo
-		{
-		}
-
-		public struct FontStyle
-		{
-		}
-
 		public enum FontLibraryHandle : int { }
 		public enum FontHandle : int { }
 
@@ -104,9 +64,11 @@ namespace CSPspEmu.Hle.Modules.libfont
 		///		FontHandle
 		/// </returns>
         [HlePspFunction(NID = 0xA834319D, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public FontHandle sceFontOpen(FontLibraryHandle libHandle, int index, int mode, uint* errorCode)
 		{
-			throw (new NotImplementedException());
+			return (FontHandle)0;
+			//throw (new NotImplementedException());
 			/*
 			unimplemented_notice();
 
@@ -235,9 +197,11 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// <param name="errorCode">Pointer to store any error code.</param>
 		/// <returns>Font index</returns>
 		[HlePspFunction(NID = 0x099EF33C, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceFontFindOptimumFont(FontLibraryHandle libHandle, FontStyle* fontStyle, uint* errorCode)
 		{
-			throw(new NotImplementedException());
+			return 0;
+			//throw(new NotImplementedException());
 			/*
 			unimplemented_notice();
 
@@ -265,15 +229,19 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// <summary>
 		/// Obtains the FontInfo of a FontHandle.
 		/// </summary>
-		/// <param name="fontHandle">Font Handle to get the information from.</param>
-		/// <param name="fontInfo">Pointer to a FontInfo structure that will hold the information.</param>
+		/// <param name="FontHandle">Font Handle to get the information from.</param>
+		/// <param name="FontInfo">Pointer to a FontInfo structure that will hold the information.</param>
 		/// <returns>
 		///		0 on success
 		/// </returns>
 		[HlePspFunction(NID = 0x0DA7535E, FirmwareVersion = 150)]
-		public int sceFontGetFontInfo(FontHandle fontHandle, FontInfo* fontInfo)
+		[HlePspNotImplemented]
+		public int sceFontGetFontInfo(FontHandle FontHandle, FontInfo* FontInfo)
 		{
-			throw(new NotImplementedException());
+			FontInfo[0] = new FontInfo()
+			{
+			};
+			return 0;
 		}
 
 		/// <summary>

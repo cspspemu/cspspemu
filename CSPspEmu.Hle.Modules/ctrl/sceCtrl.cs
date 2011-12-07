@@ -102,17 +102,42 @@ namespace CSPspEmu.Hle.Modules.ctrl
 		/// <summary>
 		/// Obtains information about currentLatch.
 		/// </summary>
-		/// <param name="currentLatch">Pointer to SceCtrlLatch to store the result.</param>
+		/// <param name="CurrentLatch">Pointer to SceCtrlLatch to store the result.</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x0B588501, FirmwareVersion = 150)]
-		public int sceCtrlReadLatch(SceCtrlLatch* currentLatch)
+		[HlePspNotImplemented]
+		public int sceCtrlReadLatch(SceCtrlLatch* CurrentLatch)
 		{
-			throw(new NotImplementedException());
+			CurrentLatch[0] = new SceCtrlLatch()
+			{
+			};
+			//throw(new NotImplementedException());
+			return 0;
 		}
 
-		/**
-		 * Controller latch.
-		 */
+		/// <summary>
+		/// Set analog threshold relating to the idle timer.
+		/// </summary>
+		/// <param name="idlereset">Movement needed by the analog to reset the idle timer.</param>
+		/// <param name="idleback">Movement needed by the analog to bring the PSP back from an idle state.</param>
+		/// <remarks>
+		/// Set to -1 for analog to not cancel idle timer.
+		/// Set to 0 for idle timer to be cancelled even if the analog is not moved.
+		/// Set between 1 - 128 to specify the movement on either axis needed by the analog to fire the event.
+		/// </remarks>
+		/// <returns>
+		///		less than 0 on error
+		/// </returns>
+		[HlePspFunction(NID = 0xA7144800, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceCtrlSetIdleCancelThreshold(int idlereset, int idleback)
+		{
+			return 0;
+		}
+
+		/// <summary>
+		/// Controller latch.
+		/// </summary>
 		public struct SceCtrlLatch
 		{
 			/// <summary>

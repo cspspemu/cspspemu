@@ -269,7 +269,8 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "vblank";
 				//WildCardFilter = "wakeup";
 				//WildCardFilter = "thread";
-				WildCardFilter = "directory";
+				//WildCardFilter = "directory";
+				WildCardFilter = "fpl";
 			}
 
 			if (WildCardFilter.Length > 0)

@@ -9,6 +9,7 @@ using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using CSharpUtils;
 using CSharpUtils.Extensions;
+using CSharpUtils.Threading;
 
 namespace CSPspEmu.Hle
 {
@@ -283,6 +284,17 @@ namespace CSPspEmu.Hle
 				catch (SceKernelException SceKernelException)
 				{
 					CpuThreadState.GPR[2] = (int)SceKernelException.SceKernelError;
+				}
+				catch (SceKernelSelfStopUnloadModuleException SceKernelSelfStopUnloadModuleException)
+				{
+					throw (SceKernelSelfStopUnloadModuleException);
+				}
+				catch (Exception Exception)
+				{
+					throw (new Exception(
+						String.Format("ERROR calling {0}.{1}!", MethodInfo.DeclaringType.Name, MethodInfo.Name),
+						Exception
+					));
 				}
 				finally
 				{

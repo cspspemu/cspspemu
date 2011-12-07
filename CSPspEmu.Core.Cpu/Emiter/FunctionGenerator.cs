@@ -334,7 +334,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 						// Branch instruction.
 						EmitCpuInstruction();
 
-						if ((BranchInfo & CpuBranchAnalyzer.Flags.Likely) != 0)
+						//if ((BranchInfo & CpuBranchAnalyzer.Flags.Likely) != 0)
+						if (BranchInfo.HasFlag(CpuBranchAnalyzer.Flags.Likely))
 						{
 							//Console.WriteLine("Likely");
 							// Delayed instruction.

@@ -165,8 +165,16 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		unsafe static public void _div_impl(CpuThreadState CpuThreadState, int Left, int Right)
 		{
-			CpuThreadState.LO = Left / Right;
-			CpuThreadState.HI = Left % Right;
+			if (Right == 0)
+			{
+				CpuThreadState.LO = 0;
+				CpuThreadState.HI = 0;
+			}
+			else
+			{
+				CpuThreadState.LO = Left / Right;
+				CpuThreadState.HI = Left % Right;
+			}
 		}
 
 		unsafe static public void _divu_impl(CpuThreadState CpuThreadState, uint Left, uint Right)

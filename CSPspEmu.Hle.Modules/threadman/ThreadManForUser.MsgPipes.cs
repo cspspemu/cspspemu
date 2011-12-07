@@ -19,7 +19,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Options">Message pipe options (set to NULL)</param>
 		/// <returns>The UID of the created pipe, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x7C0DC2A0, FirmwareVersion = 150)]
-		public PipeId sceKernelCreateMsgPipe(string PipeName, int MemoryPartition, int Attributes, void* Unknown1, void* Options)
+		public PipeId sceKernelCreateMsgPipe(string PipeName, int MemoryPartition, int Attributes, uint Unknown1, void* Options)
 		{
 			throw (new NotImplementedException());
 		}

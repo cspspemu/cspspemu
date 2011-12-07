@@ -285,7 +285,8 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public int sceAtracGetAtracID(int codecType)
 		{
-			throw(new NotImplementedException());
+			return 0;
+			//throw(new NotImplementedException());
 			/*
 			ubyte[] data;
 			logInfo("sceAtracGetAtracID(%d)", codecType);
@@ -304,7 +305,9 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public int sceAtracGetNextSample(int atracID, int* outN)
 		{
-			throw (new NotImplementedException());
+			*outN = 0;
+			return 0;
+			//throw (new NotImplementedException());
 			/*
 			unimplemented_notice();
 			Atrac3Object atrac3Object = getAtrac3ObjectById(atracID);

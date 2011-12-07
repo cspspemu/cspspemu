@@ -409,6 +409,16 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 		}
 
+		/// <summary>
+		/// Get the current priority of the thread you are in.
+		/// </summary>
+		/// <returns>The current thread priority</returns>
+		[HlePspFunction(NID = 0x94AA61EE, FirmwareVersion = 150)]
+		public int sceKernelGetThreadCurrentPriority()
+		{
+			return HleState.ThreadManager.Current.Info.PriorityCurrent;
+		}
+
 		/*
 		public int _sceKernelExitDeleteThread(int Status, HleThread Thread)
 		{

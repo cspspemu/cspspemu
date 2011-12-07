@@ -43,7 +43,7 @@ namespace CSPspEmu.Hle.Modules.impose
 		[HlePspNotImplemented]
 		public int sceImposeSetLanguageMode(PspLanguages language, PspConfirmButton confirmButton)
 		{
-			throw (new NotImplementedException());
+			//throw (new NotImplementedException());
 			/*
 			logError("sceImposeSetLanguageMode(%s, %s)", to!string(language), to!string(confirmButton));
 			hleEmulatorState.osConfig.language      = language;

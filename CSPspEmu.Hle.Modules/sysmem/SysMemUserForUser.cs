@@ -199,12 +199,18 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// <summary>
 		/// Free a memory block allocated with ::sceKernelAllocPartitionMemory.
 		/// </summary>
-		/// <param name="blockid">UID of the block to free.</param>
+		/// <param name="BlockId">UID of the block to free.</param>
 		/// <returns>? on success, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xB6D61D02, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
-		public int sceKernelFreePartitionMemory(uint blockid)
+		public int sceKernelFreePartitionMemory(int BlockId)
 		{
+			var MemoryPartition = HleState.MemoryManager.MemoryPartitionsUid.Get(BlockId);
+			//Console.Error.WriteLine(MemoryPartition.ParentPartition.ChildPartitions.Where(Partition => Partition));
+			//Console.Error.WriteLine(":[1]:" + sceKernelTotalFreeMemSize());
+			MemoryPartition.ParentPartition.DeallocateLow(MemoryPartition.Low);
+			HleState.MemoryManager.MemoryPartitionsUid.Remove(BlockId);
+			//Console.Error.WriteLine(":[2]:" + sceKernelTotalFreeMemSize());
 			//reinterpret!(MemorySegment)(blockid).free();
 			return 0;
 		}

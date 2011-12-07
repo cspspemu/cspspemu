@@ -64,6 +64,7 @@
     <Compile Include="iofilemgr\IoFileMgrForUser.Files.cs" />
     <Compile Include="libatrac3plus\sceAtrac3plus.cs" />
     <Compile Include="libfont\sceLibFont.cs" />
+    <Compile Include="libfont\sceLibFont.Utils.cs" />
     <Compile Include="loadcore\LoadCoreForKernel.cs" />
     <Compile Include="loadexec\LoadExecForUser.cs" />
     <Compile Include="loadexec\sceDmac.cs" />

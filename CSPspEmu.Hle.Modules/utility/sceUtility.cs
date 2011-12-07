@@ -660,15 +660,17 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// <summary>
 		/// Load a module (PRX) from user mode.
 		/// </summary>
-		/// <param name="_module">module to load (PSP_MODULE_xxx)</param>
+		/// <param name="PspModule">module to load (PSP_MODULE_xxx)</param>
 		/// <returns>
 		///		0 on success
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0x2A2B3DE0, FirmwareVersion = 150)]
-		public int sceUtilityLoadModule(PspModule _module)
+		[HlePspNotImplemented]
+		public int sceUtilityLoadModule(PspModule PspModule)
 		{
-			throw (new NotImplementedException());
+			//throw (new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
