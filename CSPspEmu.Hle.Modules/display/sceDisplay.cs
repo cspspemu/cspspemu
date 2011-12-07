@@ -134,14 +134,41 @@ namespace CSPspEmu.Hle.Modules.display
 		/// </summary>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x773DD3A3, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
+		[HlePspNotImplemented]
 		public int sceDisplayGetCurrentHcount()
 		{
+			//PspRtc.Elapsed
+			//PspDisplay.cycles_per_pixel
+
 			return 0;
 			//throw(new NotImplementedException());
 			//return hleEmulatorState.emulatorState.display.CURRENT_HCOUNT;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <see cref="http://forums.ps2dev.org/viewtopic.php?t=9168"/>
+		/// <remarks>(pixel_clk_freq * cycles_per_pixel)/(row_pixels * column_pixel)</remarks>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xDBA6C4C4, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public float sceDisplayGetFramePerSec()
+		{
+			// (pixel_clk_freq * cycles_per_pixel)/(row_pixels * column_pixel)
+			return 9000000f * 1.0f / (525.0f * 286.0f);
+		}
+
+		/// <summary>
+		/// Get accumlated HSYNC count
+		/// </summary>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x210EAB3A, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceDisplayGetAccumulatedHcount()
+		{
+			return 0;
+		}
 
 		/// <summary>
 		/// Number of vertical blank pulses up to now

@@ -12,12 +12,14 @@ namespace CSPspEmu.Hle.Managers
 		public HleUidPool<HleCallback> Callbacks { get; protected set; }
 		private Queue<HleCallback> ScheduledCallbacks;
 		private CpuProcessor CpuProcessor;
+		private HleInterop HleInterop;
 
 		public override void InitializeComponent()
 		{
 			this.Callbacks = new HleUidPool<HleCallback>();
 			this.ScheduledCallbacks = new Queue<HleCallback>();
 			this.CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();
+			this.HleInterop = PspEmulatorContext.GetInstance<HleInterop>();
 		}
 
 		public void ScheduleCallback(HleCallback HleCallback)

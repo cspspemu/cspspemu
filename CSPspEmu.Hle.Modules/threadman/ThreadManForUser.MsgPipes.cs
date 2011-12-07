@@ -108,5 +108,21 @@ namespace CSPspEmu.Hle.Modules.threadman
 		{
 			throw(new NotImplementedException());
 		}
+
+		/// <summary>
+		/// Cancel a message pipe
+		/// </summary>
+		/// <param name="uid">UID of the pipe to cancel</param>
+		/// <param name="psend">Receive number of sending threads?</param>
+		/// <param name="precv">Receive number of receiving threads?</param>
+		/// <returns>
+		///		0 on success
+		///		less than 0 on error
+		/// </returns>
+		[HlePspFunction(NID = 0x349B864D, FirmwareVersion = 150)]
+		public int sceKernelCancelMsgPipe(PipeId uid, int *psend, int *precv)
+		{
+			throw (new NotImplementedException());
+		}
 	}
 }

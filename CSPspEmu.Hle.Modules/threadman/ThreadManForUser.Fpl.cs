@@ -74,5 +74,34 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return sceKernelTryAllocateFpl(uid, dataPtr);
 			*/
 		}
+
+		/// <summary>
+		/// Delete a fixed pool
+		/// </summary>
+		/// <param name="uid">The UID of the pool</param>
+		/// <returns>
+		///		0 on success
+		///		less than 0 on error
+		/// </returns>
+		[HlePspFunction(NID = 0xED1410E0, FirmwareVersion = 150)]
+		public int sceKernelDeleteFpl(int uid)
+		{
+			throw(new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Free a block
+		/// </summary>
+		/// <param name="uid">The UID of the pool</param>
+		/// <param name="data">The data block to deallocate</param>
+		/// <returns>
+		///		0 on success
+		///		less than 0 on error
+		/// </returns>
+		[HlePspFunction(NID = 0xF6414A71, FirmwareVersion = 150)]
+		public int sceKernelFreeFpl(int uid, void *data)
+		{
+			throw (new NotImplementedException());
+		}
 	}
 }

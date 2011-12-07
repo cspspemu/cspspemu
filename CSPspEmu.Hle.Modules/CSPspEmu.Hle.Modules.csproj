@@ -78,7 +78,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="pspnet\sceNet.cs" />
     <Compile Include="pspnet\sceNetAdhoc.cs" />
+    <Compile Include="pspnet\sceNetAdhoc.Socket.cs" />
+    <Compile Include="pspnet\sceNetAdhoc.Utils.cs" />
     <Compile Include="pspnet\sceNetAdhocctl.cs" />
+    <Compile Include="pspnet\sceNetAdhocctl.Utils.cs" />
     <Compile Include="pspnet\sceNetAdhocMatching.cs" />
     <Compile Include="pspnet\sceNetApctl.cs" />
     <Compile Include="pspnet\sceNetInet.cs" />

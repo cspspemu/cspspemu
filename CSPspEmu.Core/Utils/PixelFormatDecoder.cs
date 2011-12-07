@@ -206,6 +206,7 @@ namespace CSPspEmu.Core.Utils
 
 		private unsafe void Decode_RGBA_4444()
 		{
+			//throw(new NotImplementedException());
 			var Input = (ushort*)_Input;
 
 			for (int y = 0, n = 0; y < Height; y++)

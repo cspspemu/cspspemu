@@ -90,6 +90,7 @@
     <Compile Include="Threading\Semaphores\SceKernelSemaOptParam.cs" />
     <Compile Include="Threading\Semaphores\SemaphoreAttribute.cs" />
     <Compile Include="Threading\Semaphores\SemaphoreId.cs" />
+    <Compile Include="Types.cs" />
     <Compile Include="Utils\Adler32.cs" />
     <Compile Include="Utils\Deflate.cs" />
     <Compile Include="Utils\InfBlocks.cs" />

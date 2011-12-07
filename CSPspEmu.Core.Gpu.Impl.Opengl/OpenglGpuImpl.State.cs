@@ -322,8 +322,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)((TextureState[0].FilterMinification == TextureFilter.Linear) ? TextureMinFilter.Linear : TextureMinFilter.Nearest));
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)((TextureState[0].FilterMagnification == TextureFilter.Linear) ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)((TextureState[0].WrapU == WrapMode.Repeat) ? TextureWrapMode.Repeat : TextureWrapMode.Clamp));
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)((TextureState[0].WrapV == WrapMode.Repeat) ? TextureWrapMode.Repeat : TextureWrapMode.Clamp));
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)((TextureState[0].WrapU == WrapMode.Repeat) ? TextureWrapMode.Repeat : TextureWrapMode.ClampToEdge));
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)((TextureState[0].WrapV == WrapMode.Repeat) ? TextureWrapMode.Repeat : TextureWrapMode.ClampToEdge));
 			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvModeTranslate[(int)TextureState[0].Effect]);
 		}
 	}

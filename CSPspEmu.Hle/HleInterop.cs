@@ -2,31 +2,41 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle
 {
-	public class HleInterop
+	public class HleInterop : PspEmulatorComponent
 	{
-		static public void Execute(CpuThreadState FakeCpuThreadState)
+		HleThread CurrentFake;
+
+		public override void InitializeComponent()
+		{
+			//throw new NotImplementedException();
+		}
+
+		public void Execute(CpuThreadState FakeCpuThreadState)
 		{
 			var CpuProcessor = FakeCpuThreadState.CpuProcessor;
-			using (var CurrentFake = new HleThread(new CpuThreadState(CpuProcessor)))
+			if (CurrentFake == null)
 			{
-				CurrentFake.CpuThreadState.CopyRegistersFrom(FakeCpuThreadState);
-				//HleCallback.SetArgumentsToCpuThreadState(CurrentFake.CpuThreadState);
+				CurrentFake = new HleThread(new CpuThreadState(CpuProcessor));
+			}
 
-				//CurrentFake.CpuThreadState.PC = HleCallback.Function;
-				CurrentFake.CpuThreadState.RA = HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK;
-				//Current.CpuThreadState.RA = 0;
+			CurrentFake.CpuThreadState.CopyRegistersFrom(FakeCpuThreadState);
+			//HleCallback.SetArgumentsToCpuThreadState(CurrentFake.CpuThreadState);
 
-				CpuProcessor.RunningCallback = true;
-				while (CpuProcessor.RunningCallback)
-				{
-					//Console.WriteLine("AAAAAAA {0:X}", CurrentFake.CpuThreadState.PC);
-					CurrentFake.Step();
-				}
+			//CurrentFake.CpuThreadState.PC = HleCallback.Function;
+			CurrentFake.CpuThreadState.RA = HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK;
+			//Current.CpuThreadState.RA = 0;
+
+			CpuProcessor.RunningCallback = true;
+			while (CpuProcessor.RunningCallback)
+			{
+				//Console.WriteLine("AAAAAAA {0:X}", CurrentFake.CpuThreadState.PC);
+				CurrentFake.Step();
 			}
 		}
 	}

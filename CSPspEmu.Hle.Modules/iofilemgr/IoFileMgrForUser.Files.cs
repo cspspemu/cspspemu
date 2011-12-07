@@ -216,5 +216,31 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			var HleIoDrvFileArg = GetFileArgFromHandle(FileHandle);
 			return HleIoDrvFileArg.HleIoDriver.IoWrite(HleIoDrvFileArg, InputPointer, InputSize);
 		}
+
+		/// <summary>
+		/// Assigns one IO device to another (I guess)
+		/// </summary>
+		/// <example>
+		/// // Reassign flash0 in read/write mode.
+		/// sceIoUnassign("flash0");
+		/// sceIoAssign("flash0", "lflash0:0,0", "flashfat0:", IOASSIGN_RDWR, NULL, 0);
+		/// </example>
+		/// <param name="Device1">The device name to assign.</param>
+		/// <param name="Device2">The block device to assign from.</param>
+		/// <param name="Device3">The filesystem device to mape the block device to dev1</param>
+		/// <param name="mode">Read/Write mode. One of IoAssignPerms.</param>
+		/// <param name="unk1">Unknown, set to NULL.</param>
+		/// <param name="unk2">Unknown, set to 0.</param>
+		/// <returns>
+		///		Less than 0 on error.
+		/// </returns>
+		[HlePspFunction(NID = 0xB2A628C1, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceIoAssign(string Device1, string Device2, string Device3, int mode, void* unk1, long unk2)
+		{
+			// IoFileMgrForUser.sceIoAssign(Device1:'disc0:', Device2:'umd0:', Device3:'isofs0:', mode:1, unk1:0x00000000, unk2:0x0880001E)
+			//throw(new NotImplementedException());
+			return 0;
+		}
 	}
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.sysmem
@@ -206,6 +207,17 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		{
 			//reinterpret!(MemorySegment)(blockid).free();
 			return 0;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="CpuThreadState"></param>
+		[HlePspFunction(NID = 0x13A5ABEF, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public void sceKernelPrintf(CpuThreadState CpuThreadState)
+		{
+			throw(new NotImplementedException());
 		}
 	}
 }

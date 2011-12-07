@@ -104,5 +104,37 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 			*/
 		}
 
+		/// <summary>
+		/// Gets a module by its loaded address.
+		/// </summary>
+		/// <param name="addr"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xD8B73127, FirmwareVersion = 150)]
+		public int sceKernelGetModuleIdByAddress(uint addr)
+		{
+			throw(new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Get module ID from the module that called the API. 
+		/// </summary>
+		/// <returns>
+		/// Greater or equal to zero on success.
+		/// </returns>
+		[HlePspFunction(NID = 0xF0A26395, FirmwareVersion = 150)]
+		public uint sceKernelGetModuleId()
+		{
+			throw(new NotImplementedException());
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x8F2DF740, FirmwareVersion = 150)]
+		public uint sceKernelStopUnloadSelfModuleWithStatus()
+		{
+			throw(new NotImplementedException());
+		}
 	}
 }
