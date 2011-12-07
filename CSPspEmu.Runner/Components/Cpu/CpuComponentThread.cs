@@ -150,7 +150,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 			RegisterModuleSyscall<Emulator>(0x1016, "emitLong");
 			RegisterModuleSyscall<Emulator>(0x1017, "testArguments");
 			//RegisterModuleSyscall<Emulator>(0x7777, "waitThreadForever");
-			RegisterModuleSyscall<ThreadManForUser>(0x7777, "sceKernelExitDeleteThread");
+			RegisterModuleSyscall<ThreadManForUser>(0x7777, "_hle_sceKernelExitDeleteThread");
 			RegisterModuleSyscall<Emulator>(0x7778, "finalizeCallback");
 		}
 

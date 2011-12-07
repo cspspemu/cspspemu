@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Gpu.State.SubStates;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -129,9 +130,25 @@ namespace CSPspEmu.Core.Gpu.Run
 		// TextureMipmap Size
 		private void _OP_TSIZE(int Index)
 		{
+			// Astonishia Story is using normalArgument = 0x1804
+			// -> use texture_height = 1 << 0x08 (and not 1 << 0x18)
+			//        texture_width  = 1 << 0x04
+			// The maximum texture size is 512x512: the exponent value must be [0..9]
+			// Maybe a bit flag for something?
+
 			var MipMap = MipMapState(Index);
-			MipMap[0].TextureWidth = (int)(1 << Param8(0));
-			MipMap[0].TextureHeight = (int)(1 << Param8(8));
+			var WidthExp = (int)BitUtils.Extract(Params24, 0, 4);
+			var HeightExp = (int)BitUtils.Extract(Params24, 8, 4);
+			bool UnknownFlag = BitUtils.Extract(Params24, 15, 1) != 0;
+			if (UnknownFlag)
+			{
+				Console.Error.WriteLine("_OP_TSIZE UnknownFlag : 0x{0:X}", Params24);
+			}
+			WidthExp = Math.Min(WidthExp, 9);
+			HeightExp = Math.Min(HeightExp, 9);
+
+			MipMap[0].TextureWidth = (int)(1 << WidthExp);
+			MipMap[0].TextureHeight = (int)(1 << HeightExp);
 		}
 
 		public void OP_TSIZE0() { _OP_TSIZE(0); }
@@ -304,11 +321,10 @@ namespace CSPspEmu.Core.Gpu.Run
 			GpuState[0].TextureMappingState.TextureEnviromentColor.SetRGB_A1(Params24);
 		}
 
-		[GpuOpCodesNotImplemented]
 		public void OP_TEXTURE_ENV_MAP_MATRIX()
 		{
-			//gpu.state.texture.texShade[0] = command.extract!(int, 0, 8) & 3;
-			//gpu.state.texture.texShade[1] = command.extract!(int, 8, 8) & 3;
+			GpuState[0].TextureMappingState.ShadeU = (short)BitUtils.Extract(Params24, 0, 2);
+			GpuState[0].TextureMappingState.ShadeV = (short)BitUtils.Extract(Params24, 8, 2);
 		}
 
 		public void OP_TMAP()

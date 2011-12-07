@@ -49,7 +49,13 @@ namespace CSPspEmu.Sandbox
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\Aquaria\EBOOT.PBP", TraceSyscalls: true);
 
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false);
-			PspEmulator.StartAndLoad(@"F:\Isos\psp\Final Fantasy Tactics.iso", TraceSyscalls: false);
+			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Final Fantasy Tactics.iso", TraceSyscalls: false);
+			//PspEmulator.StartAndLoad(@"C:\psp\isos\astonishia.iso", TraceSyscalls: false);
+			PspEmulator.StartAndLoad(@"C:\psp\isos\Tales of Eternia.iso", TraceSyscalls: false);
+			//PspEmulator.StartAndLoad(@"C:\psp\isos\Koloomn.cso", TraceSyscalls: false);
+			//PspEmulator.StartAndLoad(@"C:\psp\isos\Final Fantasy Tactics.iso", TraceSyscalls: true);
+			
+			
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Breath of Fire 3.cso", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia.iso", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Koloomn.cso", TraceSyscalls: false);

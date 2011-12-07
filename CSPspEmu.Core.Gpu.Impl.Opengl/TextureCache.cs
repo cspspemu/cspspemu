@@ -19,7 +19,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 	{
 		private int TextureId;
 
-		public bool Recheck;
+		public DateTime RecheckTimestamp;
 		public TextureCacheKey TextureCacheKey;
 
 		public Texture()
@@ -96,9 +96,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			bool Recheck = false;
 			if (Cache.TryGetValue(Hash1, out Texture))
 			{
-				if (Texture.Recheck)
+				if (Texture.RecheckTimestamp != RecheckTimestamp)
 				{
-					Recheck = Texture.Recheck;
+					Recheck = true;
 				}
 			}
 			else
@@ -209,17 +209,16 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				}
 			}
 
-			Texture.Recheck = false;
+			Texture.RecheckTimestamp = RecheckTimestamp;
 
 			return Texture;
 		}
 
+		protected DateTime RecheckTimestamp = DateTime.MinValue;
+
 		public void RecheckAll()
 		{
-			foreach (var Texture in Cache.Values)
-			{
-				Texture.Recheck = true;
-			}
+			RecheckTimestamp = DateTime.Now;
 		}
 
 		static public uint FastHash(uint* Pointer, int Count, uint StartHash = 0)

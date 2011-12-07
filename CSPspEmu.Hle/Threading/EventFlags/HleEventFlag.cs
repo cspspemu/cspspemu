@@ -14,7 +14,7 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 			get { return Info.Attributes; }
 			set { Info.Attributes = value; }
 		}
-		public EventFlagInfo Info;
+		public EventFlagInfo Info = new EventFlagInfo();
 		public uint BitPattern
 		{
 			get { return Info.CurrentPattern; }
@@ -72,7 +72,7 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 				//Console.Error.WriteLine("");
 				//Console.Error.WriteLine("|| " + WaitingThread + " || ");
 				//Console.Error.WriteLine("");
-				if (Poll(WaitingThread.BitsToMatch, WaitingThread.WaitType, out Matching))
+				if (Poll(WaitingThread.BitsToMatch, WaitingThread.WaitType, &Matching))
 				{
 					if (WaitingThread.OutBits != null)
 					{
@@ -119,16 +119,19 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 			UpdateWaitingThreads();
 		}
 
-		public unsafe bool Poll(uint BitsToMatch, EventFlagWaitTypeSet WaitType, out uint CheckedBits)
+		public unsafe bool Poll(uint BitsToMatch, EventFlagWaitTypeSet WaitType, uint* CheckedBits)
 		{
-			CheckedBits = BitPattern;
+			if (CheckedBits != null)
+			{
+				*CheckedBits = BitPattern;
+			}
 			if (WaitType.HasFlag(EventFlagWaitTypeSet.Or))
 			{
-				return (CheckedBits & BitsToMatch) != 0;
+				return (BitPattern & BitsToMatch) != 0;
 			}
 			else
 			{
-				return (CheckedBits & BitsToMatch) == BitsToMatch;
+				return (BitPattern & BitsToMatch) == BitsToMatch;
 			}
 		}
 

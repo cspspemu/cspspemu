@@ -81,7 +81,7 @@ namespace CSPspEmu.Core.Gpu.State
 
 	}
 
-	public enum LogicalOperationEnum
+	public enum LogicalOperationEnum : byte
 	{
 		Clear = 0,
 		And = 1,
@@ -101,7 +101,8 @@ namespace CSPspEmu.Core.Gpu.State
 		Set = 15
 	}
 
-	public enum StencilOperationEnum {
+	public enum StencilOperationEnum : byte
+	{
 		Keep = 0,
 		Zero = 1,
 		Replace = 2,
@@ -110,13 +111,13 @@ namespace CSPspEmu.Core.Gpu.State
 		Decrement = 5,
 	}
 
-	public enum ShadingModelEnum
+	public enum ShadingModelEnum : byte
 	{
 		Flat = 0,
 		Smooth = 1,
 	}
 
-	public enum ClearBufferSet
+	public enum ClearBufferSet : byte
 	{
 		ColorBuffer = 1,
 		StencilBuffer = 2,

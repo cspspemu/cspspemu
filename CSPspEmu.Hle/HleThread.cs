@@ -366,7 +366,9 @@ namespace CSPspEmu.Hle
 		{
 			if (End != null)
 			{
-				End();
+				var End2 = End;
+				End = null;
+				End2();
 			}
 		}
 

@@ -11,18 +11,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 {
 	public unsafe partial class ThreadManForUser
 	{
-		private HleEventFlag EventFlagGet(int EventFlagId)
-		{
-			try
-			{
-				return HleState.EventFlagManager.EventFlags.Get(EventFlagId);
-			}
-			catch (KeyNotFoundException)
-			{
-				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_NOT_FOUND_EVENT_FLAG));
-			}
-		}
-
 		/// <summary>
 		/// Create an event flag.
 		/// </summary>
@@ -36,7 +24,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="OptionsPtr">Options, set to NULL</param>
 		/// <returns>less than 0 on error. greater or equal to 0 event flag id.</returns>
 		[HlePspFunction(NID = 0x55C20A00, FirmwareVersion = 150)]
-		public int sceKernelCreateEventFlag(string Name, HleEventFlag.AttributesSet Attributes, uint BitPattern, SceKernelEventFlagOptParam* OptionsPtr)
+		public EventFlagId sceKernelCreateEventFlag(string Name, HleEventFlag.AttributesSet Attributes, uint BitPattern, SceKernelEventFlagOptParam* OptionsPtr)
 		{
 			if (OptionsPtr != null) throw (new NotImplementedException("(OptionsPtr != null)"));
 
@@ -56,7 +44,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="EventId">The event id returned by sceKernelCreateEventFlag.</param>
 		/// <returns>less than 0 on error</returns>
 		[HlePspFunction(NID = 0xEF9E4C70, FirmwareVersion = 150)]
-		public int sceKernelDeleteEventFlag(int EventId)
+		public int sceKernelDeleteEventFlag(EventFlagId EventId)
 		{
 			HleState.EventFlagManager.EventFlags.Remove(EventId);
 			return 0;
@@ -69,9 +57,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="BitsToClear">The bits to clean</param>
 		/// <returns>less than 0 on error</returns>
 		[HlePspFunction(NID = 0x812346E4, FirmwareVersion = 150)]
-		public int sceKernelClearEventFlag(int EventId, uint BitsToClear)
+		public int sceKernelClearEventFlag(EventFlagId EventId, uint BitsToClear)
 		{
-			var EventFlag = EventFlagGet(EventId);
+			var EventFlag = HleState.EventFlagManager.EventFlags.Get(EventId);
 			EventFlag.ClearBits(BitsToClear);
 
 			return 0;
@@ -91,9 +79,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		ERROR_KERNEL_WAIT_TIMEOUT         - If there was a timeout
 		///		0                                 - On success
 		/// </returns>
-		public int _sceKernelWaitEventFlagCB(int EventId, uint Bits, EventFlagWaitTypeSet Wait, uint* OutBits, uint* Timeout, bool HandleCallbacks)
+		public int _sceKernelWaitEventFlagCB(EventFlagId EventId, uint Bits, EventFlagWaitTypeSet Wait, uint* OutBits, uint* Timeout, bool HandleCallbacks)
 		{
-			var EventFlag = EventFlagGet(EventId);
+			var EventFlag = HleState.EventFlagManager.EventFlags.Get(EventId);
 			bool TimedOut = false;
 
 			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, "_sceKernelWaitEventFlagCB", WakeUpCallback =>
@@ -146,7 +134,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Timeout">Timeout in microseconds</param>
 		/// <returns>less than 0 on error</returns>
 		[HlePspFunction(NID = 0x402FCF22, FirmwareVersion = 150)]
-		public int sceKernelWaitEventFlag(int EventId, uint Bits, EventFlagWaitTypeSet WaitType, uint* OutBits, uint* Timeout)
+		public int sceKernelWaitEventFlag(EventFlagId EventId, uint Bits, EventFlagWaitTypeSet WaitType, uint* OutBits, uint* Timeout)
 		{
 			return _sceKernelWaitEventFlagCB(EventId, Bits, WaitType, OutBits, Timeout, false);
 		}
@@ -161,7 +149,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Timeout">Timeout in microseconds</param>
 		/// <returns>less than 0 on error</returns>
 		[HlePspFunction(NID = 0x328C546A, FirmwareVersion = 150)]
-		public int sceKernelWaitEventFlagCB(int EventId, uint Bits, EventFlagWaitTypeSet WaitType, uint* OutBits, uint* Timeout)
+		public int sceKernelWaitEventFlagCB(EventFlagId EventId, uint Bits, EventFlagWaitTypeSet WaitType, uint* OutBits, uint* Timeout)
 		{
 			return _sceKernelWaitEventFlagCB(EventId, Bits, WaitType, OutBits, Timeout, true);
 		}
@@ -173,9 +161,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="BitPattern">The bit pattern to set.</param>
 		/// <returns>less than 0 on error</returns>
 		[HlePspFunction(NID = 0x1FB15A32, FirmwareVersion = 150)]
-		public int sceKernelSetEventFlag(int EventId, uint BitPattern)
+		public int sceKernelSetEventFlag(EventFlagId EventId, uint BitPattern)
 		{
-			EventFlagGet(EventId).Set(BitPattern);
+			HleState.EventFlagManager.EventFlags.Get(EventId).Set(BitPattern);
 			return 0;
 		}
 
@@ -192,11 +180,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		ERROR_KERNEL_EVENT_FLAG_POLL_FAILED
 		///	</returns>
 		[HlePspFunction(NID = 0x30FD48F0, FirmwareVersion = 150)]
-		public int sceKernelPollEventFlag(int EventId, uint Bits, EventFlagWaitTypeSet WaitType, uint* OutBits)
+		public int sceKernelPollEventFlag(EventFlagId EventId, uint Bits, EventFlagWaitTypeSet WaitType, uint* OutBits)
 		{
-			var EventFlag = EventFlagGet(EventId);
+			var EventFlag = HleState.EventFlagManager.EventFlags.Get(EventId);
 			if (Bits == 0) throw(new SceKernelException(SceKernelErrors.ERROR_KERNEL_EVENT_FLAG_ILLEGAL_WAIT_PATTERN));
-			bool Matched = EventFlag.Poll(Bits, WaitType, out *OutBits);
+			bool Matched = EventFlag.Poll(Bits, WaitType, OutBits);
 
 			if (!Matched)
 			{
@@ -213,9 +201,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Info">A pointer to a ::SceKernelEventFlagInfo structure.</param>
 		/// <returns>less than 0 on error</returns>
 		[HlePspFunction(NID = 0xA66B0120, FirmwareVersion = 150)]
-		public int sceKernelReferEventFlagStatus(int EventId, EventFlagInfo* Info)
+		public int sceKernelReferEventFlagStatus(EventFlagId EventId, EventFlagInfo* Info)
 		{
-			*Info = EventFlagGet(EventId).Info;
+			*Info = HleState.EventFlagManager.EventFlags.Get(EventId).Info;
 			return 0;
 		}
 	}

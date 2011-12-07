@@ -271,7 +271,8 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "thread";
 				//WildCardFilter = "directory";
 				//WildCardFilter = "fpl";
-				WildCardFilter = "msgpipe";
+				//WildCardFilter = "msgpipe";
+				//WildCardFilter = "events";
 			}
 
 			if (WildCardFilter.Length > 0)

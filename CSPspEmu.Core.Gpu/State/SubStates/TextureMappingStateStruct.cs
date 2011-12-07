@@ -61,5 +61,7 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 		/// 
 		/// </summary>
 		public TextureProjectionMapMode TextureProjectionMapMode;
+		public short ShadeU;
+		public short ShadeV;
 	}
 }

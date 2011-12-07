@@ -60,7 +60,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Thread.CpuThreadState.PC = (uint)EntryPoint;
 			Thread.CpuThreadState.GP = (uint)CpuThreadState.GP;
 			Thread.CpuThreadState.SP = (uint)(Thread.Stack.High);
-			Thread.CpuThreadState.RA = (uint)0x08000000;
+			Thread.CpuThreadState.RA = (uint)HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD;
 			Thread.CurrentStatus = HleThread.Status.Stopped;
 			//Thread.CpuThreadState.RA = (uint)0;
 
@@ -367,6 +367,19 @@ namespace CSPspEmu.Hle.Modules.threadman
 		}
 
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="CpuThreadState"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x11111111, FirmwareVersion = 150)]
+		public int _hle_sceKernelExitDeleteThread(CpuThreadState CpuThreadState)
+		{
+			//CpuThreadState.DumpRegisters(Console.Error);
+			//Console.Error.WriteLine(CpuThreadState.GPR[2]);
+			return sceKernelExitDeleteThread(CpuThreadState.GPR[2]);
+		}
+
+		/// <summary>
 		/// Exit a thread
 		/// </summary>
 		/// <param name="ExitStatus">Exit status.</param>
@@ -375,9 +388,20 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelExitThread(int ExitStatus)
 		{
 			var Thread = HleState.ThreadManager.Current;
+			
+			//Console.Error.WriteLine(ExitStatus);
+			
 			Thread.Info.ExitStatus = ExitStatus;
+
+			Thread.CurrentStatus = HleThread.Status.Killed;
+			HleState.ThreadManager.Reschedule();
+
 			Thread.Exit();
+
+			//HleState.ThreadManager.ExitThread(Thread);
+
 			Thread.CpuThreadState.Yield();
+
 
 			return 0;
 		}
@@ -391,7 +415,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelDeleteThread(int ThreadId)
 		{
 			var Thread = HleState.ThreadManager.GetThreadById(ThreadId);
-			HleState.ThreadManager.DeleteThread(Thread);
+			//HleState.ThreadManager.DeleteThread(Thread);
 			return 0;
 			//return _sceKernelExitDeleteThread(-1, GetThreadById(ThreadId));
 		}
