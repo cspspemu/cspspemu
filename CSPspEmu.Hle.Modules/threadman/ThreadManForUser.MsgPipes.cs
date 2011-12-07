@@ -103,11 +103,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="PipeId">The UID of the pipe</param>
 		/// <param name="Message">Pointer to the message</param>
 		/// <param name="Size">Size of the message</param>
-		/// <param name="Unknown1">Unknown</param>
-		/// <param name="Unknown2">Unknown</param>
+		/// <param name="WaitMode">Unknown</param>
+		/// <param name="ResultSizeAddr">Unknown</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x884C9F90, FirmwareVersion = 150)]
-		public int sceKernelTrySendMsgPipe(MsgPipeId PipeId, void* Message, uint Size, int Unknown1, void* Unknown2)
+		public int sceKernelTrySendMsgPipe(MsgPipeId PipeId, void* Message, uint Size, int WaitMode, uint* ResultSizeAddr)
 		{
 			throw (new NotImplementedException());
 		}
@@ -118,12 +118,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="PipeId">The UID of the pipe</param>
 		/// <param name="Message">Pointer to the message</param>
 		/// <param name="Size">Size of the message</param>
-		/// <param name="Unknown1">Unknown</param>
-		/// <param name="Unknown2">Unknown</param>
+		/// <param name="WaitMode">Unknown</param>
+		/// <param name="ResultSizeAddr">Unknown</param>
 		/// <param name="Timeout">Timeout for receive</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x74829B76, FirmwareVersion = 150)]
-		public int sceKernelReceiveMsgPipe(MsgPipeId PipeId, void* Message, uint Size, int Unknown1, void* Unknown2, uint* Timeout)
+		public int sceKernelReceiveMsgPipe(MsgPipeId PipeId, void* Message, uint Size, int WaitMode, uint* ResultSizeAddr, uint* Timeout)
 		{
 			throw (new NotImplementedException());
 		}
@@ -134,11 +134,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="PipeId">The UID of the pipe</param>
 		/// <param name="Message">Pointer to the message</param>
 		/// <param name="Size">Size of the message</param>
-		/// <param name="Unknown1">Unknown</param>
-		/// <param name="Unknown2">Unknown</param>
+		/// <param name="WaitMode">Unknown</param>
+		/// <param name="ResultSizeAddr">Unknown</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xDF52098F, FirmwareVersion = 150)]
-		public int sceKernelTryReceiveMsgPipe(MsgPipeId PipeId, void* Message, uint Size, int Unknown1, void* Unknown2)
+		public int sceKernelTryReceiveMsgPipe(MsgPipeId PipeId, void* Message, uint Size, int WaitMode, uint* ResultSizeAddr)
 		{
 			throw (new NotImplementedException());
 		}
