@@ -224,6 +224,14 @@ namespace CSPspEmu.Hle
 			}
 		}
 
+		/// <summary>
+		/// Deallocates this partition from the parent partition.
+		/// </summary>
+		public void DeallocateFromParent()
+		{
+			ParentPartition.DeallocateLow(Low);
+		}
+
 		public override string ToString()
 		{
 			if (_ChildPartitions.Count > 0)

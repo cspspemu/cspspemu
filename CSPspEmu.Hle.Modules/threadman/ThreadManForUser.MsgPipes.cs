@@ -1,8 +1,13 @@
-﻿using System;
+﻿//#define DEBUG_MSG_PIPES
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Managers;
+using CSPspEmu.Hle.Modules.sysmem;
+using CSPspEmu.Core.Memory;
+using CSharpUtils;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
@@ -10,16 +15,25 @@ namespace CSPspEmu.Hle.Modules.threadman
 	{
 		public enum MsgPipeAttributes : uint
 		{
-			PSP_MPP_ATTR_SEND_FIFO = 0,
-			PSP_MPP_ATTR_SEND_PRIORITY = 0x100,
+			/// <summary>
+			/// Allocate the pipe in a high address.
+			/// </summary>
+			UseHighAddress = 0x4000,
+		}
 
+		public enum MsgPipeReceiveAttributes : uint
+		{
 			PSP_MPP_ATTR_RECEIVE_FIFO = 0,
 			PSP_MPP_ATTR_RECEIVE_PRIORITY = 0x1000,
 
-			PSP_MPP_ATTR_SEND = PSP_MPP_ATTR_SEND_FIFO | PSP_MPP_ATTR_SEND_PRIORITY,
 			PSP_MPP_ATTR_RECEIVE = PSP_MPP_ATTR_RECEIVE_FIFO | PSP_MPP_ATTR_RECEIVE_PRIORITY,
+		}
 
-			PSP_MPP_ATTR_ADDR_HIGH = 0x4000,
+		public enum MsgPipeSendAttributes : uint
+		{
+			PSP_MPP_ATTR_SEND_FIFO = 0,
+			PSP_MPP_ATTR_SEND_PRIORITY = 0x100,
+			PSP_MPP_ATTR_SEND = PSP_MPP_ATTR_SEND_FIFO | PSP_MPP_ATTR_SEND_PRIORITY,
 		}
 
 		public enum MsgPipeId : int { }
@@ -29,10 +43,102 @@ namespace CSPspEmu.Hle.Modules.threadman
 			public string Name;
 			public MsgPipeAttributes Attributes;
 			public HleMemoryManager.Partitions PartitionId;
-			public uint Size;
+			public int Size;
+			protected PspMemory PspMemory;
+			protected MemoryPartition PoolPartition;
+			public Queue<MemoryPartition> Messages = new Queue<MemoryPartition>();
+			public Queue<Action> OnAvailableForSend = new Queue<Action>();
+			public Queue<Action> OnAvailableForRecv = new Queue<Action>();
+			private HleThreadManager ThreadManager;
 
-			public void Init()
+			public void NoticeAvailableForSend()
 			{
+				while (OnAvailableForSend.Count > 0)
+				{
+#if DEBUG_MSG_PIPES
+					Console.Error.WriteLine("MsgPipe.NoticeAvailableForSend");
+#endif
+					//ThreadManager.Reschedule();
+					OnAvailableForSend.Dequeue()();
+					//ThreadManager.Current.CpuThreadState.Yield();
+				}
+			}
+
+			public void NoticeAvailableForRecv()
+			{
+				while (OnAvailableForRecv.Count > 0)
+				{
+#if DEBUG_MSG_PIPES
+					Console.Error.WriteLine("MsgPipe.NoticeAvailableForRecv");
+#endif
+					//ThreadManager.Reschedule();
+					//ThreadManager.Reschedule();
+					OnAvailableForRecv.Dequeue()();
+					//ThreadManager.Current.CpuThreadState.Yield();
+				}
+			}
+
+			public void Enqueue(byte* MessageIn, int MessageSize)
+			{
+				try
+				{
+					var MessagePartition = PoolPartition.Allocate(MessageSize);
+					Messages.Enqueue(MessagePartition);
+					PspMemory.WriteBytes(MessagePartition.Low, MessageIn, MessageSize);
+#if DEBUG_MSG_PIPES
+					Console.Error.WriteLine("MsgPipe.Enqueue (Ok)");
+#endif
+				}
+				catch
+				{
+#if DEBUG_MSG_PIPES
+					Console.Error.WriteLine("MsgPipe.Enqueue (Failed)");
+#endif
+					throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_MESSAGE_PIPE_FULL));
+				}
+
+				// 0 -> 1
+				NoticeAvailableForRecv();
+			}
+
+			public void Dequeue(byte* MessageOut, int MessageMaxSize, int* MessageSizeOut)
+			{
+				if (Messages.Count <= 0)
+				{
+					//Console.Error.WriteLine("MsgPipe.Dequeue (Failed)");
+					throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_MESSAGE_PIPE_EMPTY));
+				}
+				else 
+				{
+					//Console.Error.WriteLine("MsgPipe.Dequeue (Ok)");
+					var MessagePartition = Messages.Dequeue();
+					var ReadSize = Math.Min(MessagePartition.Size, MessageMaxSize);
+					PspMemory.ReadBytes(MessagePartition.Low, MessageOut, ReadSize);
+					MessagePartition.DeallocateFromParent();
+					if (MessageSizeOut != null)
+					{
+						*MessageSizeOut = ReadSize;
+					}
+
+					NoticeAvailableForSend();
+				}
+			}
+
+			public void Init(HleThreadManager ThreadManager, PspMemory PspMemory, HleMemoryManager MemoryManager)
+			{
+				var BlockType = Attributes.HasFlag(MsgPipeAttributes.UseHighAddress)
+					? MemoryPartition.Anchor.High
+					: MemoryPartition.Anchor.Low
+				;
+
+				this.ThreadManager = ThreadManager;
+				this.PspMemory = PspMemory;
+				this.PoolPartition = MemoryManager.GetPartition(PartitionId).Allocate(Size, BlockType, Alignment: 16);
+			}
+
+			public void Delete()
+			{
+				PoolPartition.DeallocateFromParent();	
 			}
 		}
 
@@ -51,7 +157,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Options">Message pipe options (set to NULL)</param>
 		/// <returns>The UID of the created pipe, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x7C0DC2A0, FirmwareVersion = 150)]
-		public MsgPipeId sceKernelCreateMsgPipe(string Name, HleMemoryManager.Partitions PartitionId, MsgPipeAttributes Attributes, uint Size, void* Options)
+		public MsgPipeId sceKernelCreateMsgPipe(string Name, HleMemoryManager.Partitions PartitionId, MsgPipeAttributes Attributes, int Size, void* Options)
 		{
 			if (Options != null) throw(new NotImplementedException());
 
@@ -62,7 +168,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 				Size = Size,
 				Attributes = Attributes,
 			};
-			MsgPipe.Init();
+
+			MsgPipe.Init(HleState.ThreadManager, HleState.MemoryManager.Memory, HleState.MemoryManager);
 
 			return MessagePipeList.Create(MsgPipe);
 		}
@@ -76,6 +183,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelDeleteMsgPipe(MsgPipeId PipeId)
 		{
 			var MsgPipe = MessagePipeList.Get(PipeId);
+			MsgPipe.Delete();
 			MessagePipeList.Remove(PipeId);
 			return 0;
 		}
@@ -91,10 +199,45 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Timeout">Timeout for send</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x876DBFAD, FirmwareVersion = 150)]
-		public int sceKernelSendMsgPipe(MsgPipeId PipeId, void* Message, uint Size, int WaitMode, uint* ResultSizeAddr, uint* Timeout)
+		public int sceKernelSendMsgPipe(MsgPipeId PipeId, byte* Message, int Size, int WaitMode, int* ResultSizeAddr, uint* Timeout)
 		{
-			//sceKernelSendMsgPipe(int uid, int msg_addr, int size, int waitMode, int resultSize_addr, int timeout_addr) {
-			throw (new NotImplementedException());
+			if (Timeout != null) throw (new NotImplementedException());
+
+#if DEBUG_MSG_PIPES
+			Console.Error.WriteLine("sceKernelSendMsgPipe");
+#endif
+
+			bool Transferred = false;
+			while (!Transferred)
+			{
+				var MsgPipe = MessagePipeList.Get(PipeId);
+				try
+				{
+					//bool WaitiMsgPipe.OnAvailableForRecv.Count
+					MsgPipe.Enqueue(Message, Size);
+					HleState.ThreadManager.Current.CpuThreadState.Yield();
+					Transferred = true;
+				}
+				catch (SceKernelException)
+				{
+					//throw(new NotImplementedException());
+					HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelSendMsgPipe", WakeUpCallback =>
+					{
+#if DEBUG_MSG_PIPES
+						Console.Error.WriteLine("sceKernelSendMsgPipe.wait");
+#endif
+						MsgPipe.OnAvailableForSend.Enqueue(() =>
+						{
+#if DEBUG_MSG_PIPES
+							Console.Error.WriteLine("sceKernelSendMsgPipe.awake");
+#endif
+							WakeUpCallback();
+						});
+					}, HandleCallbacks: false);
+				}
+			}
+
+			return 0;
 		}
 
 		/// <summary>
@@ -107,9 +250,15 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="ResultSizeAddr">Unknown</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x884C9F90, FirmwareVersion = 150)]
-		public int sceKernelTrySendMsgPipe(MsgPipeId PipeId, void* Message, uint Size, int WaitMode, uint* ResultSizeAddr)
+		public int sceKernelTrySendMsgPipe(MsgPipeId PipeId, byte* Message, int Size, int WaitMode, int* ResultSizeAddr)
 		{
-			throw (new NotImplementedException());
+			var MsgPipe = MessagePipeList.Get(PipeId);
+			MsgPipe.Enqueue(Message, Size);
+			if (ResultSizeAddr != null)
+			{
+				*ResultSizeAddr = Size;
+			}
+			return 0;
 		}
 
 		/// <summary>
@@ -123,9 +272,43 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Timeout">Timeout for receive</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x74829B76, FirmwareVersion = 150)]
-		public int sceKernelReceiveMsgPipe(MsgPipeId PipeId, void* Message, uint Size, int WaitMode, uint* ResultSizeAddr, uint* Timeout)
+		public int sceKernelReceiveMsgPipe(MsgPipeId PipeId, byte* Message, int Size, int WaitMode, int* ResultSizeAddr, uint* Timeout)
 		{
-			throw (new NotImplementedException());
+			if (Timeout != null) throw(new NotImplementedException());
+
+#if DEBUG_MSG_PIPES
+			Console.Error.WriteLine("sceKernelReceiveMsgPipe");
+#endif
+
+			bool Transferred = false;
+			var MsgPipe = MessagePipeList.Get(PipeId);
+			while (!Transferred)
+			{
+				try
+				{
+					MsgPipe.Dequeue(Message, Size, ResultSizeAddr);
+					Transferred = true;
+				}
+				catch (SceKernelException)
+				{
+					HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelReceiveMsgPipe", WakeUpCallback =>
+					{
+#if DEBUG_MSG_PIPES
+						Console.Error.WriteLine("sceKernelReceiveMsgPipe.wait");
+#endif
+
+						MsgPipe.OnAvailableForRecv.Enqueue(() =>
+						{
+#if DEBUG_MSG_PIPES
+							Console.Error.WriteLine("sceKernelReceiveMsgPipe.awake");
+#endif
+							WakeUpCallback();
+						});
+
+					}, HandleCallbacks: false);
+				}
+			}
+			return 0;
 		}
 
 		/// <summary>
@@ -138,9 +321,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="ResultSizeAddr">Unknown</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xDF52098F, FirmwareVersion = 150)]
-		public int sceKernelTryReceiveMsgPipe(MsgPipeId PipeId, void* Message, uint Size, int WaitMode, uint* ResultSizeAddr)
+		public int sceKernelTryReceiveMsgPipe(MsgPipeId PipeId, byte* Message, int Size, int WaitMode, int* ResultSizeAddr)
 		{
-			throw (new NotImplementedException());
+			var MsgPipe = MessagePipeList.Get(PipeId);
+			MsgPipe.Dequeue(Message, Size, ResultSizeAddr);
+			return 0;
 		}
 
 		/// <summary>

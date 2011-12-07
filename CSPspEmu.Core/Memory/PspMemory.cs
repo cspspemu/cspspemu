@@ -113,6 +113,21 @@ namespace CSPspEmu.Core.Memory
 			*((ulong*)PspAddressToPointer(Address)) = Value;
 		}
 
+		public void WriteBytes(uint Address, byte[] DataIn)
+		{
+			Marshal.Copy(DataIn, 0, new IntPtr(PspAddressToPointer(Address)), DataIn.Length);
+		}
+
+		public void WriteBytes(uint Address, byte* DataInPointer, int DataInLength)
+		{
+			PointerUtils.Memcpy((byte*)PspAddressToPointer(Address), DataInPointer, DataInLength);
+		}
+
+		public void WriteStruct<TType>(uint Address, TType Value) where TType : struct
+		{
+			WriteBytes(Address, StructUtils.StructToBytes(Value));
+		}
+
 		public void WriteRepeated1(byte Value, uint Address, int Count)
 		{
 			for (int n = 0; n < Count; n++)
@@ -139,6 +154,23 @@ namespace CSPspEmu.Core.Memory
 		public ulong Read8(uint Address)
 		{
 			return *((ulong*)PspAddressToPointer(Address));
+		}
+
+		public byte[] ReadBytes(uint Address, int Count)
+		{
+			var Output = new byte[Count];
+			Marshal.Copy(new IntPtr(PspAddressToPointer(Address)), Output, 0, Output.Length);
+			return Output;
+		}
+
+		public void ReadBytes(uint Address, byte* DataOutPointer, int DataOutLength)
+		{
+			PointerUtils.Memcpy(DataOutPointer, (byte*)PspAddressToPointer(Address), DataOutLength);
+		}
+
+		public TType ReadStruct<TType>(uint Address) where TType : struct
+		{
+			return StructUtils.BytesToStruct<TType>(ReadBytes(Address, Marshal.SizeOf(typeof(TType))));
 		}
 
 		abstract public void Dispose();
