@@ -257,7 +257,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 				{
 					WakeUpCallback();
 				});
-			});
+			}, HandleCallbacks: HandleCallbacks);
 
 			return 0;
 		}

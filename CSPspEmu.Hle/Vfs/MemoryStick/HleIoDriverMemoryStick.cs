@@ -24,7 +24,7 @@ namespace CSPspEmu.Hle.Vfs.MemoryStick
 		/// <returns></returns>
 		public override int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, byte* InputPointer, int InputLength, byte* OutputPointer, int OutputLength)
 		{
-			Console.Error.WriteLine("MemoryStick.IoDevctl Not Implemented!");
+			Console.Error.WriteLine("MemoryStick.IoDevctl Not Implemented! ({0}, {1:X})", DeviceName, Command);
 			return 0;
 		}
 	}

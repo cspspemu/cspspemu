@@ -266,7 +266,7 @@ namespace CSPspEmu.Core.Utils
 				R = (byte)Value.ExtractUnsignedScale(0, 5, 255),
 				G = (byte)Value.ExtractUnsignedScale(5, 5, 255),
 				B = (byte)Value.ExtractUnsignedScale(10, 5, 255),
-				A = (byte)(255 - Value.ExtractUnsignedScale(16, 1, 255)),
+				A = (byte)Value.ExtractUnsignedScale(15, 1, 255),
 			};
 		}
 
@@ -281,6 +281,10 @@ namespace CSPspEmu.Core.Utils
 			};
 		}
 
+		static public unsafe OutputPixel Decode_RGBA_8888_Pixel(uint Value)
+		{
+			return *(OutputPixel*)&Value;
+		}
 		/// <summary>
 		/// 
 		/// </summary>

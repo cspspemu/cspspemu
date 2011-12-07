@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Gpu.State;
+using CSPspEmu.Core.Utils;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
@@ -57,7 +58,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			ReadWeightsList = new Action[] { Void, ReadWeightByte, ReadWeightShort, ReadWeightFloat };
 			ReadTextureCoordinatesList = new Action[] { Void, ReadTextureCoordinatesByte, ReadTextureCoordinatesShort, ReadTextureCoordinatesFloat };
-			ReadColorList = new Action[] { Void, Invalid, Invalid, Invalid, ReadColor5650, ReadColor5651, ReadColor4444, ReadColor8888 };
+			ReadColorList = new Action[] { Void, Invalid, Invalid, Invalid, ReadColor5650, ReadColor5551, ReadColor4444, ReadColor8888 };
 			ReadNormalList = new Action[] { Void, ReadNormalByte, ReadNormalShort, ReadNormalFloat };
 			ReadPositionList = new Action[] { Void, ReadPositionByte, ReadPositionShort, ReadPositionFloat };
 		}
@@ -138,22 +139,25 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		protected void ReadColor5650()
 		{
-			throw (new NotImplementedException());
+			Align2();
+			var Value = *((ushort*)Pointer);
+			_SetVertexInfoColor(PixelFormatDecoder.Decode_RGBA_5650_Pixel(Value));
+			Pointer += sizeof(ushort);
 		}
 
-		protected void ReadColor5651()
+		protected void ReadColor5551()
 		{
-			throw (new NotImplementedException());
+			Align2();
+			var Value = *((ushort*)Pointer);
+			_SetVertexInfoColor(PixelFormatDecoder.Decode_RGBA_5551_Pixel(Value));
+			Pointer += sizeof(ushort);
 		}
 
 		protected void ReadColor4444()
 		{
 			Align2();
 			var Value = *((ushort*)Pointer);
-			VertexInfo[0].R = (float)((Value >> 0) & 0xF) / 15.0f;
-			VertexInfo[0].G = (float)((Value >> 4) & 0xF) / 15.0f;
-			VertexInfo[0].B = (float)((Value >> 8) & 0xF) / 15.0f;
-			VertexInfo[0].A = (float)((Value >> 12) & 0xF) / 15.0f;
+			_SetVertexInfoColor(PixelFormatDecoder.Decode_RGBA_4444_Pixel(Value));
 			Pointer += sizeof(ushort);
 		}
 
@@ -161,12 +165,17 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			Align4();
 			var Value = *((uint*)Pointer);
-			VertexInfo[0].R = (float)((Value >> 0) & 0xFF) / 255.0f;
-			VertexInfo[0].G = (float)((Value >> 8) & 0xFF) / 255.0f;
-			VertexInfo[0].B = (float)((Value >> 16) & 0xFF) / 255.0f;
-			VertexInfo[0].A = (float)((Value >> 24) & 0xFF) / 255.0f;
+			_SetVertexInfoColor(PixelFormatDecoder.Decode_RGBA_8888_Pixel(Value));
 			Pointer += sizeof(uint);
 			//Console.WriteLine("{0}, {1}, {2}, {3}", VertexInfo[0].R, VertexInfo[0].G, VertexInfo[0].B, VertexInfo[0].A);
+		}
+
+		protected void _SetVertexInfoColor(PixelFormatDecoder.OutputPixel Color)
+		{
+			VertexInfo[0].R = (float)(Color.R) / 255.0f;
+			VertexInfo[0].G = (float)(Color.G) / 255.0f;
+			VertexInfo[0].B = (float)(Color.B) / 255.0f;
+			VertexInfo[0].A = (float)(Color.A) / 255.0f;
 		}
 
 		public void ReadPositionByte()
