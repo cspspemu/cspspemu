@@ -6,7 +6,7 @@ using CSPspEmu.Hle.Modules.threadman;
 
 namespace CSPspEmu.Hle.Modules.libatrac3plus
 {
-	unsafe public class sceAtrac3plus : HleModuleHost
+	unsafe public partial class sceAtrac3plus : HleModuleHost
 	{
 		/// <summary>
 		/// 
@@ -529,21 +529,6 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			unimplemented();
 			return 0;
 			*/
-		}
-
-		public struct PspBufferInfo
-		{
-			//u8* pucWritePositionFirstBuf;
-			public uint pucWritePositionFirstBufPointer;
-			public uint uiWritableByteFirstBuf;
-			public uint uiMinWriteByteFirstBuf;
-			public uint uiReadPositionFirstBuf;
-
-			//u8* pucWritePositionSecondBuf;
-			public uint pucWritePositionSecondBufPointer;
-			public uint uiWritableByteSecondBuf;
-			public uint uiMinWriteByteSecondBuf;
-			public uint uiReadPositionSecondBuf;
 		}
 	}
 }

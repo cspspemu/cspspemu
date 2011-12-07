@@ -46,6 +46,12 @@
     <Compile Include="Audio\AudioMixer.cs" />
     <Compile Include="Audio\PspAudioChannel.cs" />
     <Compile Include="Audio\PspAudioImpl.cs" />
+    <Compile Include="Crypto\Crypto.cs" />
+    <Compile Include="Crypto\Crypto.Sha1.cs" />
+    <Compile Include="Crypto\Crypto.Tables.cs" />
+    <Compile Include="Crypto\Kirk.cs" />
+    <Compile Include="Crypto\Kirk.Keys.cs" />
+    <Compile Include="Crypto\Kirk.Tables.cs" />
     <Compile Include="DebugUtils.cs" />
     <Compile Include="IGuiExternalInterface.cs" />
     <Compile Include="IResetable.cs" />

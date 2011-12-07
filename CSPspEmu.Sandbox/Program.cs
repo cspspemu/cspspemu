@@ -17,7 +17,7 @@ namespace CSPspEmu.Sandbox
 		/// <see cref="http://www.microsoft.com/downloads/details.aspx?FamilyID=22914587-b4ad-4eae-87cf-b14ae6a939b0&displaylang=en" />
 		/// <param name="args"></param>
 		[STAThread]
-		static void Main(string[] args)
+		static void Main(string[] Arguments)
 		{
 			/*
 			var CsoName = "../../../TestInput/test.cso";
@@ -36,7 +36,14 @@ namespace CSPspEmu.Sandbox
 
 			var PspEmulator = new PspEmulator();
 #if RELEASE
-			PspEmulator.Start();
+			if (Arguments.Length > 0)
+			{
+				PspEmulator.StartAndLoad(Arguments[0], TraceSyscalls: false);
+			}
+			else
+			{
+				PspEmulator.Start();
+			}
 #else
 			Console.SetWindowSize(160, 60);
 			Console.SetBufferSize(160, 2000);
