@@ -20,21 +20,21 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Depth Buffer Pointer
 		public void OP_ZBP()
 		{
-			GpuState[0].DepthBufferState.LowAddress = Params24;
+			GpuState->DepthBufferState.LowAddress = Params24;
 		}
 
 		// Depth Buffer Width
 		public void OP_ZBW()
 		{
-			GpuState[0].DepthBufferState.HighAddress = Param8(16);
-			GpuState[0].DepthBufferState.Width = Param16(0);
+			GpuState->DepthBufferState.HighAddress = Param8(16);
+			GpuState->DepthBufferState.Width = Param16(0);
 			GpuDisplayList.GpuProcessor.MarkDepthBufferLoad();
 		}
 
 		// depth (Z) Test Enable (GU_DEPTH_TEST)
 		public void OP_ZTE()
 		{
-			GpuState[0].DepthTestState.Enabled = Bool1;
+			GpuState->DepthTestState.Enabled = Bool1;
 		}
 
 		/**
@@ -55,13 +55,13 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuDepthFunc(int function); // OP_ZTST
 		public void OP_ZTST()
 		{
-			GpuState[0].DepthTestState.Function = (TestFunctionEnum)Param8(0);
+			GpuState->DepthTestState.Function = (TestFunctionEnum)Param8(0);
 		}
 
 		// Alpha Test Enable (GU_ALPHA_TEST) glAlphaFunc(GL_GREATER, 0.03f);
 		public void OP_ATE()
 		{
-			GpuState[0].AlphaTestState.Enabled = Bool1;
+			GpuState->AlphaTestState.Enabled = Bool1;
 		}
 
 		/**
@@ -84,15 +84,15 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuAlphaFunc(int func, int value, int mask); // OP_ATST
 		public void OP_ATST()
 		{
-			GpuState[0].AlphaTestState.Function = (TestFunctionEnum)Param8(0);
-			GpuState[0].AlphaTestState.Value = (float)Param8(8) / 255.0f;
-			GpuState[0].AlphaTestState.Mask = Param8(16);
+			GpuState->AlphaTestState.Function = (TestFunctionEnum)Param8(0);
+			GpuState->AlphaTestState.Value = (float)Param8(8) / 255.0f;
+			GpuState->AlphaTestState.Mask = Param8(16);
 		}
 
 		// Stencil Test Enable (GL_STENCIL_TEST)
 		public void OP_STE()
 		{
-			GpuState[0].StencilState.Enabled = Bool1;
+			GpuState->StencilState.Enabled = Bool1;
 		}
 
 		/**
@@ -117,9 +117,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Stencil Test
 		public void OP_STST()
 		{
-			GpuState[0].StencilState.Function = (TestFunctionEnum)Param8(0);
-			GpuState[0].StencilState.FunctionRef = Param8(8);
-			GpuState[0].StencilState.FunctionMask = Param8(16);
+			GpuState->StencilState.Function = (TestFunctionEnum)Param8(0);
+			GpuState->StencilState.FunctionRef = Param8(8);
+			GpuState->StencilState.FunctionMask = Param8(16);
 		}
 
 		/**
@@ -145,9 +145,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Stencil OPeration
 		public void OP_SOP()
 		{
-			GpuState[0].StencilState.OperationSFail = (StencilOperationEnum)Param8(0);
-			GpuState[0].StencilState.OperationDpFail = (StencilOperationEnum)Param8(8);
-			GpuState[0].StencilState.OperationDpPass = (StencilOperationEnum)Param8(16);
+			GpuState->StencilState.OperationSFail = (StencilOperationEnum)Param8(0);
+			GpuState->StencilState.OperationDpFail = (StencilOperationEnum)Param8(8);
+			GpuState->StencilState.OperationDpPass = (StencilOperationEnum)Param8(16);
 		}
 
 		/**
@@ -160,7 +160,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		// glDepthMask
 		public void OP_ZMSK()
 		{
-			GpuState[0].DepthTestState.Mask = Param16(0);
+			GpuState->DepthTestState.Mask = Param16(0);
 		}
 
 		/**
@@ -180,11 +180,11 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuDepthOffset(unsigned int offset);
 		public void OP_NEARZ()
 		{
-			GpuState[0].DepthTestState.RangeNear = ((float)(ushort)Param16(0)) / 65535.0f;
+			GpuState->DepthTestState.RangeNear = ((float)(ushort)Param16(0)) / 65535.0f;
 		}
 		public void OP_FARZ()
 		{
-			GpuState[0].DepthTestState.RangeFar = ((float)(ushort)Param16(0)) / 65535.0f;
+			GpuState->DepthTestState.RangeFar = ((float)(ushort)Param16(0)) / 65535.0f;
 		}
 	}
 }

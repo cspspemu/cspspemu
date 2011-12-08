@@ -87,11 +87,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			Texture Texture;
 			//GC.Collect();
-			bool Swizzled = TextureState[0].Swizzled;
-			uint TextureAddress = TextureState[0].Mipmap0.Address;
-			uint ClutAddress = ClutState[0].Address;
-			var ClutFormat = ClutState[0].PixelFormat;
-			var ClutStart = ClutState[0].Start;
+			bool Swizzled = TextureState->Swizzled;
+			uint TextureAddress = TextureState->Mipmap0.Address;
+			uint ClutAddress = ClutState->Address;
+			var ClutFormat = ClutState->PixelFormat;
+			var ClutStart = ClutState->Start;
 			var ClutDataStart = PixelFormatDecoder.GetPixelsSize(ClutFormat, ClutStart);
 
 			ulong Hash1 = TextureAddress | (ulong)((ClutAddress + ClutDataStart) << 32);
@@ -115,19 +115,19 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				//Console.WriteLine("{0:X}", ClutAddress);
 				var TexturePointer = (byte*)PspMemory.PspAddressToPointerSafe(TextureAddress);
 				var ClutPointer = (byte *)PspMemory.PspAddressToPointerSafe(ClutAddress);
-				var TextureFormat = TextureState[0].PixelFormat;
-				//var Width = TextureState[0].Mipmap0.TextureWidth;
-				int BufferWidth = TextureState[0].Mipmap0.BufferWidth;
-				var Height = TextureState[0].Mipmap0.TextureHeight;
+				var TextureFormat = TextureState->PixelFormat;
+				//var Width = TextureState->Mipmap0.TextureWidth;
+				int BufferWidth = TextureState->Mipmap0.BufferWidth;
+				var Height = TextureState->Mipmap0.TextureHeight;
 				var TextureDataSize = PixelFormatDecoder.GetPixelsSize(TextureFormat, BufferWidth * Height);
-				if (ClutState[0].NumberOfColors > 256)
+				if (ClutState->NumberOfColors > 256)
 				{
-					ClutState[0].NumberOfColors = 256;
+					ClutState->NumberOfColors = 256;
 				}
-				var ClutDataSize = PixelFormatDecoder.GetPixelsSize(ClutFormat, ClutState[0].NumberOfColors);
-				var ClutCount = ClutState[0].NumberOfColors;
-				var ClutShift = ClutState[0].Shift;
-				var ClutMask = ClutState[0].Mask;
+				var ClutDataSize = PixelFormatDecoder.GetPixelsSize(ClutFormat, ClutState->NumberOfColors);
+				var ClutCount = ClutState->NumberOfColors;
+				var ClutShift = ClutState->Shift;
+				var ClutMask = ClutState->Mask;
 
 				//Console.WriteLine(TextureFormat);
 

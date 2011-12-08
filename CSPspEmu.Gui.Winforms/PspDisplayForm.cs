@@ -99,7 +99,8 @@ namespace CSPspEmu.Gui.Winforms
 			DisplayScale = 1;
 
 			BufferGraphics = Graphics.FromImage(Buffer);
-			BufferGraphics.Clear(Color.Red);
+			//BufferGraphics.Clear(Color.Red);
+			BufferGraphics.Clear(Color.Black);
 
 			updateResumePause();
 			updateDebugSyscalls();

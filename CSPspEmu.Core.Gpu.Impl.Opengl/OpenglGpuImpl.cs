@@ -105,7 +105,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		private void PutVertex(ref VertexInfo VertexInfo, ref VertexTypeStruct VertexType)
 		{
 			/*
-			if (GpuState[0].ClearingMode)
+			if (GpuState->ClearingMode)
 			{
 				Console.WriteLine(VertexInfo);
 			}
@@ -167,12 +167,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			GL.Disable(EnableCap.CullFace);
 			GL.DepthMask(false);
 
-			if (GpuState[0].ClearFlags.HasFlag(ClearBufferSet.ColorBuffer))
+			if (GpuState->ClearFlags.HasFlag(ClearBufferSet.ColorBuffer))
 			{
 				ccolorMask = true;
 			}
 
-			if (GlEnableDisable(EnableCap.StencilTest, GpuState[0].ClearFlags.HasFlag(ClearBufferSet.StencilBuffer)))
+			if (GlEnableDisable(EnableCap.StencilTest, GpuState->ClearFlags.HasFlag(ClearBufferSet.StencilBuffer)))
 			{
 				calphaMask = true;
 				// Sets to 0x00 the stencil.
@@ -183,7 +183,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			//int i; glGetIntegerv(GL_STENCIL_BITS, &i); writefln("GL_STENCIL_BITS: %d", i);
 
-			if (GpuState[0].ClearFlags.HasFlag(ClearBufferSet.DepthBuffer))
+			if (GpuState->ClearFlags.HasFlag(ClearBufferSet.DepthBuffer))
 			{
 				GL.Enable(EnableCap.DepthTest);
 				GL.DepthFunc(DepthFunction.Always);
@@ -217,14 +217,14 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 
 			//Console.WriteLine("--------------------------------------------------------");
-			VertexType = GpuState[0].VertexState.Type;
+			VertexType = GpuState->VertexState.Type;
 
-			VertexReader.SetVertexTypeStruct(VertexType, (byte*)Memory.PspAddressToPointerSafe(GpuState[0].VertexAddress));
-			//IndexReader.SetVertexTypeStruct(VertexType, VertexCount, (byte*)Memory.PspAddressToPointerSafe(GpuState[0].IndexAddress));
+			VertexReader.SetVertexTypeStruct(VertexType, (byte*)Memory.PspAddressToPointerSafe(GpuState->VertexAddress));
+			//IndexReader.SetVertexTypeStruct(VertexType, VertexCount, (byte*)Memory.PspAddressToPointerSafe(GpuState->IndexAddress));
 
 			int TotalVerticesWithoutMorphing = VertexCount;
 
-			void* IndexAddress = Memory.PspAddressToPointerSafe(GpuState[0].IndexAddress);
+			void* IndexAddress = Memory.PspAddressToPointerSafe(GpuState->IndexAddress);
 
 			switch (VertexType.Index)
 			{
@@ -248,7 +248,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			int z = 0;
 			VertexInfo TempVertexInfo;
 
-			float* Morphs = &GpuState[0].MorphingState.MorphWeight0;
+			float* Morphs = &GpuState->MorphingState.MorphWeight0;
 
 			//for (int n = 0; n < MorpingVertexCount; n++) Console.Write("{0}, ", Morphs[n]); Console.WriteLine("");
 
@@ -281,7 +281,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//return;
 			//PrepareRead(GpuState);
 
-			if (GpuState[0].ClearingMode)
+			if (GpuState->ClearingMode)
 			{
 				//return;
 				//GL.ClearColor(1, 1, 0, 0);
@@ -309,7 +309,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			// DRAW BEGIN COMMON
 			{
-				if (GpuState[0].VertexState.Type.Transform2D)
+				if (GpuState->VertexState.Type.Transform2D)
 				{
 					GL.MatrixMode(MatrixMode.Projection); GL.LoadIdentity();
 					GL.Ortho(0, 512, 272, 0, -0x7FFF, +0x7FFF);
@@ -318,19 +318,19 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				else
 				{
 					GL.MatrixMode(MatrixMode.Projection); GL.LoadIdentity();
-					GL.MultMatrix(GpuState[0].VertexState.ProjectionMatrix.Values);
+					GL.MultMatrix(GpuState->VertexState.ProjectionMatrix.Values);
 
 					GL.MatrixMode(MatrixMode.Modelview); GL.LoadIdentity();
-					GL.MultMatrix(GpuState[0].VertexState.ViewMatrix.Values);
-					GL.MultMatrix(GpuState[0].VertexState.WorldMatrix.Values);
+					GL.MultMatrix(GpuState->VertexState.ViewMatrix.Values);
+					GL.MultMatrix(GpuState->VertexState.WorldMatrix.Values);
 
-					if (GpuState[0].VertexState.WorldMatrix.Values[0] == float.NaN)
+					if (GpuState->VertexState.WorldMatrix.Values[0] == float.NaN)
 					{
 						throw (new Exception("Invalid WorldMatrix"));
 					}
 
-					//GpuState[0].VertexState.ViewMatrix.Dump();
-					//GpuState[0].VertexState.WorldMatrix.Dump();
+					//GpuState->VertexState.ViewMatrix.Dump();
+					//GpuState->VertexState.WorldMatrix.Dump();
 
 					//Console.WriteLine("NO Transform2D");
 				}
@@ -338,9 +338,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			// DRAW ACTUALLY
 			{
-				uint VertexSize = GpuState[0].VertexState.Type.GetVertexSize();
+				uint VertexSize = GpuState->VertexState.Type.GetVertexSize();
 
-				byte* VertexPtr = (byte*)Memory.PspAddressToPointerSafe(GpuState[0].VertexAddress);
+				byte* VertexPtr = (byte*)Memory.PspAddressToPointerSafe(GpuState->VertexAddress);
 
 				//Console.WriteLine(VertexSize);
 
@@ -374,7 +374,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 							ReadVertex(n + 0, &VertexInfoTopLeft);
 							ReadVertex(n + 1, &VertexInfoBottomRight);
 
-							//if (GpuState[0].ClearingMode) Console.WriteLine("{0} - {1}", VertexInfoTopLeft, VertexInfoBottomRight);
+							//if (GpuState->ClearingMode) Console.WriteLine("{0} - {1}", VertexInfoTopLeft, VertexInfoBottomRight);
 
 							float R = VertexInfoBottomRight.R, G = VertexInfoBottomRight.G, B = VertexInfoBottomRight.B, A = VertexInfoBottomRight.A;
 							float PZ = VertexInfoTopLeft.PZ;
@@ -449,7 +449,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		private void PrepareRead(GpuStateStruct* GpuState)
 		{
 			/*
-			var Address = GpuState[0].DrawBufferState.Address;
+			var Address = GpuState->DrawBufferState.Address;
 			//Console.WriteLine("PrepareRead: {0:X}", Address);
 
 			try
@@ -518,17 +518,17 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//Console.WriteLine("PrepareWrite");
 			try
 			{
-				var GlPixelFormat = GlPixelFormatList[(int)GpuState[0].DrawBufferState.Format];
-				int Width = (int)GpuState[0].DrawBufferState.Width;
+				var GlPixelFormat = GlPixelFormatList[(int)GpuState->DrawBufferState.Format];
+				int Width = (int)GpuState->DrawBufferState.Width;
 				int Height = 272;
 				int ScanWidth = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, Width);
 				int PixelSize = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, 1);
-				//GpuState[0].DrawBufferState.Format
-				var Address = (void *)Memory.PspAddressToPointerSafe(GpuState[0].DrawBufferState.Address);
+				//GpuState->DrawBufferState.Format
+				var Address = (void *)Memory.PspAddressToPointerSafe(GpuState->DrawBufferState.Address);
 
 				//Console.WriteLine("{0}", GlPixelFormat.GuPixelFormat);
 
-				//Console.WriteLine("{0:X}", GpuState[0].DrawBufferState.Address);
+				//Console.WriteLine("{0:X}", GpuState->DrawBufferState.Address);
 				GL.PixelStore(PixelStoreParameter.PackAlignment, PixelSize);
 				GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, TempBuffer);
 
@@ -557,10 +557,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			//return;
 			/*
-			if (GpuState[0].DrawBufferState.LowAddress != 0)
+			if (GpuState->DrawBufferState.LowAddress != 0)
 			{
-				//var Address = PspMemory.FrameBufferOffset | GpuState[0].DrawBufferState.LowAddress;
-				var Address = GpuState[0].DrawBufferState.Address;
+				//var Address = PspMemory.FrameBufferOffset | GpuState->DrawBufferState.LowAddress;
+				var Address = GpuState->DrawBufferState.Address;
 				try
 				{
 					Console.WriteLine("{0:X}", Address);

@@ -43,37 +43,37 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Backface Culling Enable (GU_CULL_FACE)
 		public void OP_BCE()
 		{
-			GpuState[0].BackfaceCullingState.Enabled = Bool1;
+			GpuState->BackfaceCullingState.Enabled = Bool1;
 		}
 
 		// DiThering Enable (GU_DITHER)
 		public void OP_DTE()
 		{
-			GpuState[0].DitheringState.Enabled = Bool1;
+			GpuState->DitheringState.Enabled = Bool1;
 		}
 
 		// Clip Plane Enable (GU_CLIP_PLANES/GL_CLIP_PLANE0)
 		public void OP_CPE()
 		{
-			GpuState[0].ClipPlaneState.Enabled = Bool1;
+			GpuState->ClipPlaneState.Enabled = Bool1;
 		}
 
 		// AnitAliasing Enable (GU_LINE_SMOOTH?)
 		public void OP_AAE()
 		{
-			GpuState[0].LineSmoothState.Enabled = Bool1;
+			GpuState->LineSmoothState.Enabled = Bool1;
 		}
 
 		// Patch Cull Enable (GU_PATCH_CULL_FACE)
 		public void OP_PCE()
 		{
-			GpuState[0].PatchCullingState.Enabled = Bool1;
+			GpuState->PatchCullingState.Enabled = Bool1;
 		}
 
 		// Color Test Enable (GU_COLOR_TEST)
 		public void OP_CTE()
 		{
-			GpuState[0].ColorTestState.Enabled = Bool1;
+			GpuState->ColorTestState.Enabled = Bool1;
 		}
 	
 	}

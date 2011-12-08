@@ -116,24 +116,24 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		protected void ReadTextureCoordinatesByte()
 		{
 			Align1();
-			VertexInfo[0].U = (float)((byte*)Pointer)[0];
-			VertexInfo[0].V = (float)((byte*)Pointer)[1];
+			VertexInfo->U = (float)((byte*)Pointer)[0];
+			VertexInfo->V = (float)((byte*)Pointer)[1];
 			Pointer += sizeof(byte) * 2;
 		}
 
 		protected void ReadTextureCoordinatesShort()
 		{
 			Align2();
-			VertexInfo[0].U = (float)((short*)Pointer)[0];
-			VertexInfo[0].V = (float)((short*)Pointer)[1];
+			VertexInfo->U = (float)((short*)Pointer)[0];
+			VertexInfo->V = (float)((short*)Pointer)[1];
 			Pointer += sizeof(short) * 2;
 		}
 
 		protected void ReadTextureCoordinatesFloat()
 		{
 			Align4();
-			VertexInfo[0].U = (float)((float*)Pointer)[0];
-			VertexInfo[0].V = (float)((float*)Pointer)[1];
+			VertexInfo->U = (float)((float*)Pointer)[0];
+			VertexInfo->V = (float)((float*)Pointer)[1];
 			Pointer += sizeof(float) * 2;
 		}
 
@@ -167,41 +167,41 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			var Value = *((uint*)Pointer);
 			_SetVertexInfoColor(PixelFormatDecoder.Decode_RGBA_8888_Pixel(Value));
 			Pointer += sizeof(uint);
-			//Console.WriteLine("{0}, {1}, {2}, {3}", VertexInfo[0].R, VertexInfo[0].G, VertexInfo[0].B, VertexInfo[0].A);
+			//Console.WriteLine("{0}, {1}, {2}, {3}", VertexInfo->R, VertexInfo->G, VertexInfo->B, VertexInfo->A);
 		}
 
 		protected void _SetVertexInfoColor(PixelFormatDecoder.OutputPixel Color)
 		{
-			VertexInfo[0].R = (float)(Color.R) / 255.0f;
-			VertexInfo[0].G = (float)(Color.G) / 255.0f;
-			VertexInfo[0].B = (float)(Color.B) / 255.0f;
-			VertexInfo[0].A = (float)(Color.A) / 255.0f;
+			VertexInfo->R = (float)(Color.R) / 255.0f;
+			VertexInfo->G = (float)(Color.G) / 255.0f;
+			VertexInfo->B = (float)(Color.B) / 255.0f;
+			VertexInfo->A = (float)(Color.A) / 255.0f;
 		}
 
 		public void ReadPositionByte()
 		{
 			Align1();
-			VertexInfo[0].PX = (float)((byte*)Pointer)[0];
-			VertexInfo[0].PY = (float)((byte*)Pointer)[1];
-			VertexInfo[0].PZ = (float)((byte*)Pointer)[2];
+			VertexInfo->PX = (float)((byte*)Pointer)[0];
+			VertexInfo->PY = (float)((byte*)Pointer)[1];
+			VertexInfo->PZ = (float)((byte*)Pointer)[2];
 			Pointer += sizeof(byte) * 3;
 		}
 
 		public void ReadPositionShort()
 		{
 			Align2();
-			VertexInfo[0].PX = (float)((short*)Pointer)[0];
-			VertexInfo[0].PY = (float)((short*)Pointer)[1];
-			VertexInfo[0].PZ = (float)((short*)Pointer)[2];
+			VertexInfo->PX = (float)((short*)Pointer)[0];
+			VertexInfo->PY = (float)((short*)Pointer)[1];
+			VertexInfo->PZ = (float)((short*)Pointer)[2];
 			Pointer += sizeof(short) * 3;
 		}
 
 		public void ReadPositionFloat()
 		{
 			Align4();
-			VertexInfo[0].PX = (float)((float*)Pointer)[0];
-			VertexInfo[0].PY = (float)((float*)Pointer)[1];
-			VertexInfo[0].PZ = (float)((float*)Pointer)[2];
+			VertexInfo->PX = (float)((float*)Pointer)[0];
+			VertexInfo->PY = (float)((float*)Pointer)[1];
+			VertexInfo->PZ = (float)((float*)Pointer)[2];
 			Pointer += sizeof(float) * 3;
 		}
 
@@ -217,7 +217,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		public void ReadWeightFloat()
 		{
-			var Weights = &VertexInfo[0].Weight0;
+			var Weights = &VertexInfo->Weight0;
 			for (int n = 0; n < SkinningWeightCount; n++)
 			{
 				Weights[n] = (float)((float*)Pointer)[n];
@@ -228,27 +228,27 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		public void ReadNormalByte()
 		{
 			Align1();
-			VertexInfo[0].NX = (float)((byte*)Pointer)[0];
-			VertexInfo[0].NY = (float)((byte*)Pointer)[1];
-			VertexInfo[0].NZ = (float)((byte*)Pointer)[2];
+			VertexInfo->NX = (float)((byte*)Pointer)[0];
+			VertexInfo->NY = (float)((byte*)Pointer)[1];
+			VertexInfo->NZ = (float)((byte*)Pointer)[2];
 			Pointer += sizeof(byte) * 3;
 		}
 
 		public void ReadNormalShort()
 		{
 			Align2();
-			VertexInfo[0].NX = (float)((short*)Pointer)[0];
-			VertexInfo[0].NY = (float)((short*)Pointer)[1];
-			VertexInfo[0].NZ = (float)((short*)Pointer)[2];
+			VertexInfo->NX = (float)((short*)Pointer)[0];
+			VertexInfo->NY = (float)((short*)Pointer)[1];
+			VertexInfo->NZ = (float)((short*)Pointer)[2];
 			Pointer += sizeof(short) * 3;
 		}
 
 		public void ReadNormalFloat()
 		{
 			Align4();
-			VertexInfo[0].NX = (float)((float*)Pointer)[0];
-			VertexInfo[0].NY = (float)((float*)Pointer)[1];
-			VertexInfo[0].NZ = (float)((float*)Pointer)[2];
+			VertexInfo->NX = (float)((float*)Pointer)[0];
+			VertexInfo->NY = (float)((float*)Pointer)[1];
+			VertexInfo->NZ = (float)((float*)Pointer)[2];
 			Pointer += sizeof(float) * 3;
 		}
 	}

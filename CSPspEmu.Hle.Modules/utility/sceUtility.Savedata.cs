@@ -59,7 +59,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		///		4 on complete shutdown.
 		/// </returns>
 		[HlePspFunction(NID = 0x8874DBE0, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public DialogStepEnum sceUtilitySavedataGetStatus()
 		{
 			try

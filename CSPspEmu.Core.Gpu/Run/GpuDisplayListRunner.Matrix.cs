@@ -24,37 +24,37 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		public void OP_VMS()
 		{
-			GpuDisplayList.GpuStateStructPointer[0].VertexState.ViewMatrix.Reset();
+			GpuDisplayList.GpuStateStructPointer->VertexState.ViewMatrix.Reset();
 		}
 		public void OP_VIEW()
 		{
-			GpuDisplayList.GpuStateStructPointer[0].VertexState.ViewMatrix.Write(Float1);
+			GpuDisplayList.GpuStateStructPointer->VertexState.ViewMatrix.Write(Float1);
 		}
 
 		public void OP_WMS()
 		{
-			GpuDisplayList.GpuStateStructPointer[0].VertexState.WorldMatrix.Reset();
+			GpuDisplayList.GpuStateStructPointer->VertexState.WorldMatrix.Reset();
 		}
 		public void OP_WORLD()
 		{
 			//Console.WriteLine("{0:X}, {1}", Params24, Float1);
-			GpuDisplayList.GpuStateStructPointer[0].VertexState.WorldMatrix.Write(Float1);
+			GpuDisplayList.GpuStateStructPointer->VertexState.WorldMatrix.Write(Float1);
 		}
 
 		public void OP_PMS()
 		{
-			GpuDisplayList.GpuStateStructPointer[0].VertexState.ProjectionMatrix.Reset();
+			GpuDisplayList.GpuStateStructPointer->VertexState.ProjectionMatrix.Reset();
 		}
 		public void OP_PROJ()
 		{
-			GpuDisplayList.GpuStateStructPointer[0].VertexState.ProjectionMatrix.Write(Float1);
+			GpuDisplayList.GpuStateStructPointer->VertexState.ProjectionMatrix.Write(Float1);
 		}
 
 		private SkinningStateStruct* SkinningState
 		{
 			get
 			{
-				return &GpuDisplayList.GpuStateStructPointer[0].SkinningState;
+				return &GpuDisplayList.GpuStateStructPointer->SkinningState;
 			}
 		}
 
@@ -76,15 +76,15 @@ namespace CSPspEmu.Core.Gpu.Run
 		// http://svn.ps2dev.org/filedetails.php?repname=psp&path=%2Ftrunk%2Fpspsdk%2Fsrc%2Fgu%2FsceGuBoneMatrix.c
 		public void OP_BOFS()
 		{
-			SkinningState[0].CurrentBoneMatrixIndex = Params24 / 12;
-			var BoneMatrices = &SkinningState[0].BoneMatrix0;
-			BoneMatrices[SkinningState[0].CurrentBoneMatrixIndex].Reset();
+			SkinningState->CurrentBoneMatrixIndex = Params24 / 12;
+			var BoneMatrices = &SkinningState->BoneMatrix0;
+			BoneMatrices[SkinningState->CurrentBoneMatrixIndex].Reset();
 		}
 
 		public void OP_BONE()
 		{
-			var BoneMatrices = &SkinningState[0].BoneMatrix0;
-			BoneMatrices[SkinningState[0].CurrentBoneMatrixIndex].Write(Float1);
+			var BoneMatrices = &SkinningState->BoneMatrix0;
+			BoneMatrices[SkinningState->CurrentBoneMatrixIndex].Write(Float1);
 		}
 	}
 }

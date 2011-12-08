@@ -88,7 +88,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		public void OP_JUMP()
 		{
 			GpuDisplayList.Jump((uint)(
-				GpuDisplayList.GpuStateStructPointer[0].BaseAddress | (Params24 & ~3)
+				GpuDisplayList.GpuStateStructPointer->BaseAddress | (Params24 & ~3)
 			));
 		}
 
@@ -108,20 +108,18 @@ namespace CSPspEmu.Core.Gpu.Run
 			*/
 		}
 
-		[GpuOpCodesNotImplemented]
+		//[GpuOpCodesNotImplemented]
 		public void OP_CALL()
 		{
-			/*
-			auto address = (gpu.state.baseAddress | command.param24) & (~0b_11);
-			gpu.logWarning("OP_CALL and OP_RET not tested yet!! 0x%08X", address);
-			displayList.call(gpu.memory.getPointer(address));
-			*/
+			GpuDisplayList.Call((uint)(
+				GpuDisplayList.GpuStateStructPointer->BaseAddress | (Params24 & ~3)
+			));
 		}
 
-		[GpuOpCodesNotImplemented]
+		//[GpuOpCodesNotImplemented]
 		public void OP_RET()
 		{
-			//displayList.ret();
+			GpuDisplayList.Ret();
 		}
 
 		enum GU_BEHAVIOR

@@ -7,6 +7,7 @@ using CSPspEmu.Core.Threading.Synchronization;
 using CSPspEmu.Core.Gpu.State;
 using System.Reflection.Emit;
 using CSPspEmu.Core.Gpu.Run;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Gpu
 {
@@ -47,17 +48,19 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
-		private uint* _InstructionAddressStart;
+		public uint _InstructionAddressStart;
+		//volatile public uint InstructionAddressStart;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		private uint* _InstructionAddressCurrent;
+		public uint _InstructionAddressCurrent;
+		//volatile public uint InstructionAddressCurrent;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		private uint* _InstructionAddressStall;
+		private uint _InstructionAddressStall;
 
 		/// <summary>
 		/// 
@@ -67,42 +70,42 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
-		private GpuStateStruct* _GpuStateStructPointer;
+		public GpuStateStruct* GpuStateStructPointer { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint* InstructionAddressStart
-		{
+		public uint InstructionAddressStart {
 			get
 			{
 				return _InstructionAddressStart;
 			}
 			set
 			{
-				_InstructionAddressStart = value;
+				_InstructionAddressStart = value & PspMemory.MemoryMask;
 			}
 		}
+		//volatile public uint InstructionAddressStart;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint* InstructionAddressCurrent
-		{
+		public uint InstructionAddressCurrent {
 			get
 			{
 				return _InstructionAddressCurrent;
 			}
 			set
 			{
-				_InstructionAddressCurrent = value;
+				_InstructionAddressCurrent = value & PspMemory.MemoryMask;
 			}
 		}
+		//volatile public uint InstructionAddressCurrent;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint* InstructionAddressStall
+		public uint InstructionAddressStall
 		{
 			get
 			{
@@ -110,23 +113,12 @@ namespace CSPspEmu.Core.Gpu
 			}
 			set
 			{
-				_InstructionAddressStall = value;
+				_InstructionAddressStall = value & PspMemory.MemoryMask;
+				if (InstructionAddressStall != 0 && !Memory.IsAddressValid(InstructionAddressStall))
+				{
+					throw (new InvalidOperationException(String.Format("Invalid StallAddress! 0x{0}", InstructionAddressStall)));
+				}
 				StallAddressUpdated.Set();
-			}
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public GpuStateStruct* GpuStateStructPointer
-		{
-			get
-			{
-				return _GpuStateStructPointer;
-			}
-			set
-			{
-				_GpuStateStructPointer = value;
 			}
 		}
 
@@ -166,35 +158,27 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
-		GpuDisplayListRunner GpuDisplayListRunner;
+		private GpuDisplayListRunner GpuDisplayListRunner;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public Stack<uint> CallStack = new Stack<uint>();
 
 		//Action[] InstructionSwitch = new Action[256];
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		internal GpuDisplayList(GpuProcessor GpuProcessor, int Id)
+		internal GpuDisplayList(PspMemory Memory, GpuProcessor GpuProcessor, int Id)
 		{
+			this.Memory = Memory;
 			this.GpuProcessor = GpuProcessor;
 			this.Id = Id;
 			GpuDisplayListRunner = new GpuDisplayListRunner()
 			{
 				GpuDisplayList = this,
 			};
-
-			/*
-			var Names = typeof(GpuOpCodes).GetEnumNames();
-
-			for (int n = 0; n < InstructionSwitch.Length; n++)
-			{
-				var MethodInfo = typeof(GpuDisplayListRunner).GetMethod(Names[n]);
-				if (MethodInfo == null)
-				{
-					MethodInfo = typeof(GpuDisplayListRunner).GetMethod("UNKNOWN");
-				}
-				InstructionSwitch[n] = (Action)Delegate.CreateDelegate(typeof(Action), GpuDisplayListRunner, MethodInfo);
-			}
-			*/
 		}
 
 		/// <summary>
@@ -203,10 +187,10 @@ namespace CSPspEmu.Core.Gpu
 		internal void Process()
 		{
 		Loop:
-			for (Done = false; !Done ; InstructionAddressCurrent++)
+			for (Done = false; !Done; _InstructionAddressCurrent += 4)
 			{
 				//Console.WriteLine("{0:X}", (uint)InstructionAddressCurrent);
-				if ((InstructionAddressStall != null) && (InstructionAddressCurrent >= InstructionAddressStall)) break;
+				if ((InstructionAddressStall != 0) && (InstructionAddressCurrent >= InstructionAddressStall)) break;
 				ProcessInstruction();
 			}
 
@@ -217,7 +201,7 @@ namespace CSPspEmu.Core.Gpu
 				return;
 			}
 
-			if (InstructionAddressStall == null)
+			if (InstructionAddressStall == 0)
 			{
 				//Console.WriteLine("- DONE -----------------------------------------------------------------------");
 				Status.SetValue(StatusEnum.Done);
@@ -236,6 +220,7 @@ namespace CSPspEmu.Core.Gpu
 		public delegate void GpuDisplayListRunnerDelegate(GpuDisplayListRunner GpuDisplayListRunner, GpuOpCodes GpuOpCode, uint Params);
 
 		static public GpuDisplayListRunnerDelegate InstructionSwitch;
+		private unsafe PspMemory Memory;
 
 		static public GpuDisplayListRunnerDelegate GenerateSwitch()
 		{
@@ -283,17 +268,15 @@ namespace CSPspEmu.Core.Gpu
 
 		private void ProcessInstruction()
 		{
-			var Instruction = *InstructionAddressCurrent;
+			//Console.WriteLine("{0:X}", InstructionAddressCurrent);
+			var Instruction = Memory.Read4(_InstructionAddressCurrent);
 			var OpCode = (GpuOpCodes)((Instruction >> 24) & 0xFF);
 			var Params = ((Instruction) & 0xFFFFFF);
 
-			/*
-			if (OpCode == GpuOpCodes.END)
+			if (OpCode == GpuOpCodes.Unknown0xFF)
 			{
-				Done = true;
-				return;
+				Console.WriteLine("{0:X} : {1:X}", InstructionAddressCurrent, InstructionAddressStall);
 			}
-			*/
 
 			GpuDisplayListRunner.OpCode = OpCode;
 			GpuDisplayListRunner.Params24 = Params;
@@ -303,8 +286,27 @@ namespace CSPspEmu.Core.Gpu
 
 		internal void Jump(uint Address)
 		{
-			InstructionAddressCurrent = ((uint *)GpuProcessor.Memory.PspAddressToPointerSafe(Address)) - 1;
+			InstructionAddressCurrent = Address - 4;
 			//throw new NotImplementedException();
+		}
+
+		internal void Call(uint Address)
+		{
+			CallStack.Push(InstructionAddressCurrent);
+			Jump(Address);
+			//throw new NotImplementedException();
+		}
+
+		internal void Ret()
+		{
+			if (CallStack.Count > 0)
+			{
+				Jump(CallStack.Pop());
+			}
+			else
+			{
+				Console.Error.WriteLine("Stack is empty");
+			}
 		}
 
 		public void GeListSync(Gpu.GpuProcessor.SyncTypeEnum SyncType, Action NotifyOnceCallback)

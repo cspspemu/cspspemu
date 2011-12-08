@@ -74,6 +74,8 @@
     <Compile Include="modulemgr\ModuleMgrForUser.cs" />
     <Compile Include="mpeg\sceMpeg.cs" />
     <Compile Include="mpeg\sceMpeg.Utils.cs" />
+    <Compile Include="openpsid\sceOpenPSID.cs" />
+    <Compile Include="pmfplayer\scePsmfPlayer.cs" />
     <Compile Include="power\scePower.Callbacks.cs" />
     <Compile Include="power\scePower.cs" />
     <Compile Include="power\scePower.Frequencies.cs" />
@@ -106,6 +108,7 @@
     <Compile Include="threadman\ThreadManForUser.MsgPipes.cs" />
     <Compile Include="threadman\ThreadManForUser.Semaphores.cs" />
     <Compile Include="threadman\ThreadManForUser.Threads.cs" />
+    <Compile Include="threadman\ThreadManForUser.Vpl.cs" />
     <Compile Include="usersystemlib\Kernel_Library.cs" />
     <Compile Include="utility\sceUtility.cs" />
     <Compile Include="utility\sceUtility.MsgDialog.cs" />
@@ -145,6 +148,7 @@
   <ItemGroup>
     <Compile Include="iofilemgr\IoFileMgrForUser.Files.Async.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

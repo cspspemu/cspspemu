@@ -14,7 +14,7 @@ namespace CSPspEmu.Hle.Modules.ge
 			return HleState.GpuProcessor.DisplayLists[DisplayListId];
 		}
 
-		public int _sceGeListEnQueue(uint* InstructionAddressStart, uint* InstructionAddressStall, int CallbackId, PspGeListArgs* Args, Action<GpuDisplayList> Action)
+		public int _sceGeListEnQueue(uint InstructionAddressStart, uint InstructionAddressStall, int CallbackId, PspGeListArgs* Args, Action<GpuDisplayList> Action)
 		{
 			var DisplayList = HleState.GpuProcessor.DequeueFreeDisplayList();
 			{
@@ -47,7 +47,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <returns>The DisplayList Id</returns>
 		[HlePspFunction(NID = 0xAB49E76A, FirmwareVersion = 150)]
 		[HlePspNotImplemented(PartialImplemented = true, Notice = false)]
-		public int sceGeListEnQueue(uint* InstructionAddressStart, uint* InstructionAddressStall, int CallbackId, PspGeListArgs* Args)
+		public int sceGeListEnQueue(uint InstructionAddressStart, uint InstructionAddressStall, int CallbackId, PspGeListArgs* Args)
 		{
 			return _sceGeListEnQueue(InstructionAddressStart, InstructionAddressStall, CallbackId, Args, (DisplayList) =>
 			{
@@ -65,7 +65,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <returns>The DisplayList Id</returns>
 		[HlePspFunction(NID = 0x1C0D95A6, FirmwareVersion = 150)]
 		[HlePspNotImplemented(PartialImplemented = true, Notice = false)]
-		public int sceGeListEnQueueHead(uint* InstructionAddressStart, uint* InstructionAddressStall, int CallbackId, PspGeListArgs* Args)
+		public int sceGeListEnQueueHead(uint InstructionAddressStart, uint InstructionAddressStall, int CallbackId, PspGeListArgs* Args)
 		{
 			return _sceGeListEnQueue(InstructionAddressStart, InstructionAddressStall, CallbackId, Args, (DisplayList) =>
 			{
@@ -94,7 +94,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <param name="InstructionAddressStall">The stall address to update</param>
 		/// <returns>Unknown. Probably 0 if successful.</returns>
 		[HlePspFunction(NID = 0xE0D68148, FirmwareVersion = 150)]
-		public int sceGeListUpdateStallAddr(int DisplayListId, uint* InstructionAddressStall)
+		public int sceGeListUpdateStallAddr(int DisplayListId, uint InstructionAddressStall)
 		{
 			var DisplayList = GetDisplayListFromId(DisplayListId);
 			DisplayList.InstructionAddressStall = InstructionAddressStall;

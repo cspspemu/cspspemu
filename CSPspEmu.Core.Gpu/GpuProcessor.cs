@@ -108,7 +108,7 @@ namespace CSPspEmu.Core.Gpu
 			this.DisplayListFreeQueue = new Queue<GpuDisplayList>();
 			for (int n = 0; n < DisplayLists.Length; n++)
 			{
-				var DisplayList = new GpuDisplayList(this, n);
+				var DisplayList = new GpuDisplayList(Memory, this, n);
 				this.DisplayLists[n] = DisplayList;
 				this.DisplayListFreeQueue.Enqueue(DisplayLists[n]);
 			}

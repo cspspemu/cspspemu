@@ -131,10 +131,10 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 		public string hash() { return cast(string)TA(this); }
 		//string toString() { return std.string.format("TextureState(addr=%08X, size(%dx%d), bwidth=%d, format=%d, swizzled=%d)", address, width, height, buffer_width, format, swizzled); }
 
-		public int address() { return mipmaps[0].address; }
-		public int buffer_width() { return mipmaps[0].buffer_width; }
-		public int width() { return mipmaps[0].width; }
-		public int height() { return mipmaps[0].height; }
+		public int address() { return mipmaps->address; }
+		public int buffer_width() { return mipmaps->buffer_width; }
+		public int width() { return mipmaps->width; }
+		public int height() { return mipmaps->height; }
 		public bool hasPalette() { return (format >= PixelFormats.GU_PSM_T4 && format <= PixelFormats.GU_PSM_T32); }
 		public uint paletteRequiredComponents() { return hasPalette ? (1 << (4 + (format - PixelFormats.GU_PSM_T4))) : 0; }
 		*/

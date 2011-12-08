@@ -25,30 +25,30 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Diffuse Model Color
 		public void OP_DMC()
 		{
-			GpuState[0].LightingState.DiffuseModelColor.SetRGB_A1(Params24);
+			GpuState->LightingState.DiffuseModelColor.SetRGB_A1(Params24);
 		}
 
 		// Specular Model Color
 		public void OP_SMC()
 		{
-			GpuState[0].LightingState.SpecularModelColor.SetRGB_A1(Params24);
+			GpuState->LightingState.SpecularModelColor.SetRGB_A1(Params24);
 		}
 
 		// Emissive Model Color
 		public void OP_EMC()
 		{
-			GpuState[0].LightingState.EmissiveModelColor.SetRGB_A1(Params24);
+			GpuState->LightingState.EmissiveModelColor.SetRGB_A1(Params24);
 		}
 
 		// Ambient Model Color/Alpha
 		// When lighting is off, this is like glColor*
 		public void OP_AMC()
 		{
-			GpuState[0].LightingState.AmbientModelColor.SetRGB(Params24);
+			GpuState->LightingState.AmbientModelColor.SetRGB(Params24);
 		}
 		public void OP_AMA()
 		{
-			GpuState[0].LightingState.AmbientModelColor.SetA(Params24);
+			GpuState->LightingState.AmbientModelColor.SetA(Params24);
 		}
 
 		/**
@@ -65,13 +65,13 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Material Color
 		public void OP_CMAT()
 		{
-			GpuState[0].LightingState.MaterialColorComponents = (LightComponentsSet)BitUtils.Extract(Params24, 0, 8);
+			GpuState->LightingState.MaterialColorComponents = (LightComponentsSet)BitUtils.Extract(Params24, 0, 8);
 		}
 
 		// Alpha Blend Enable (GU_BLEND)
 		public void OP_ABE()
 		{
-			GpuState[0].BlendingState.Enabled = Bool1;
+			GpuState->BlendingState.Enabled = Bool1;
 			//Console.WriteLine("BLEND! : " + Bool1 + ", " + Params24);
 		}
 
@@ -114,15 +114,15 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Blend Equation and Functions
 		public void OP_ALPHA()
 		{
-			GpuState[0].BlendingState.FunctionSource = (GuBlendingFactorSource)((Params24 >> 0) & 0xF);
-			GpuState[0].BlendingState.FunctionDestination = (GuBlendingFactorDestination)((Params24 >> 4) & 0xF);
-			GpuState[0].BlendingState.Equation = (BlendingOpEnum)((Params24 >> 8) & 0xF);
+			GpuState->BlendingState.FunctionSource = (GuBlendingFactorSource)((Params24 >> 0) & 0xF);
+			GpuState->BlendingState.FunctionDestination = (GuBlendingFactorDestination)((Params24 >> 4) & 0xF);
+			GpuState->BlendingState.Equation = (BlendingOpEnum)((Params24 >> 8) & 0xF);
 			/*
 			Console.WriteLine(
 				"Alpha! : {0}, {1}, {2}",
-				GpuState[0].BlendingState.FunctionSource,
-				GpuState[0].BlendingState.FunctionDestination,
-				GpuState[0].BlendingState.Equation
+				GpuState->BlendingState.FunctionSource,
+				GpuState->BlendingState.FunctionDestination,
+				GpuState->BlendingState.Equation
 			);
 			*/
 		}
@@ -130,13 +130,13 @@ namespace CSPspEmu.Core.Gpu.Run
 		// source fix color
 		public void OP_SFIX()
 		{
-			GpuState[0].BlendingState.FixColorSource.SetRGB_A1(Params24);
+			GpuState->BlendingState.FixColorSource.SetRGB_A1(Params24);
 		}
 
 		// destination fix color
 		public void OP_DFIX()
 		{
-			GpuState[0].BlendingState.FixColorDestination.SetRGB_A1(Params24);
+			GpuState->BlendingState.FixColorDestination.SetRGB_A1(Params24);
 		}
 
 		/**
@@ -149,14 +149,14 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Pixel MasK Color
 		public void OP_PMSKC()
 		{
-			GpuState[0].BlendingState.ColorMaskR = Param8(0);
-			GpuState[0].BlendingState.ColorMaskG = Param8(8);
-			GpuState[0].BlendingState.ColorMaskB = Param8(16);
+			GpuState->BlendingState.ColorMaskR = Param8(0);
+			GpuState->BlendingState.ColorMaskG = Param8(8);
+			GpuState->BlendingState.ColorMaskB = Param8(16);
 		}
 		// Pixel MasK Alpha
 		public void OP_PMSKA()
 		{
-			GpuState[0].BlendingState.ColorMaskA = Param8(0);
+			GpuState->BlendingState.ColorMaskA = Param8(0);
 		}
 
 	}

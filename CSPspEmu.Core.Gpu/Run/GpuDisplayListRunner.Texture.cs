@@ -16,23 +16,23 @@ namespace CSPspEmu.Core.Gpu.Run
 		{
 			get
 			{
-				return &GpuState[0].TextureMappingState.TextureState;
+				return &GpuState->TextureMappingState.TextureState;
 			}
 		}
 
 		// Texture Mapping Enable (GL_TEXTURE_2D)
 		public void OP_TME()
 		{
-			GpuState[0].TextureMappingState.Enabled = Bool1;
+			GpuState->TextureMappingState.Enabled = Bool1;
 		}
 
 		public void OP_TMS()
 		{
-			GpuState[0].TextureMappingState.Matrix.Reset();
+			GpuState->TextureMappingState.Matrix.Reset();
 		}
 		public void OP_TMATRIX()
 		{
-			GpuState[0].TextureMappingState.Matrix.Write(Float1);
+			GpuState->TextureMappingState.Matrix.Write(Float1);
 		}
 
 		/**
@@ -61,15 +61,15 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Texture Mode
 		public void OP_TMODE()
 		{
-			TextureState[0].Swizzled = (Param8(0) != 0);
-			TextureState[0].MipmapShareClut = (Param8(8) != 0);
-			TextureState[0].MipmapMaxLevel = (int)Param8(16);
+			TextureState->Swizzled = (Param8(0) != 0);
+			TextureState->MipmapShareClut = (Param8(8) != 0);
+			TextureState->MipmapMaxLevel = (int)Param8(16);
 		}
 
 		// Texture Pixel Storage Mode
 		public void OP_TPSM()
 		{
-			TextureState[0].PixelFormat = Extract<GuPixelFormats>(0, 4);
+			TextureState->PixelFormat = Extract<GuPixelFormats>(0, 4);
 		}
 
 		/**
@@ -92,20 +92,20 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		private TextureStateStruct.MipmapState* MipMapState(int Index)
 		{
-			return &(&TextureState[0].Mipmap0)[Index];
+			return &(&TextureState->Mipmap0)[Index];
 		}
 
 		private void _OP_TBP(int Index)
 		{
 			var MipMap = MipMapState(Index);
-			MipMap[0].Address = (MipMap[0].Address & 0xFF000000) | (Params24 & 0x00FFFFFF);
+			MipMap->Address = (MipMap->Address & 0xFF000000) | (Params24 & 0x00FFFFFF);
 		}
 
 		private void _OP_TBW(int Index)
 		{
 			var MipMap = MipMapState(Index);
-			MipMap[0].BufferWidth = Param16(0);
-			MipMap[0].Address = (MipMap[0].Address & 0x00FFFFFF) | ((uint)(Param8(16) << 24) & 0xFF000000);
+			MipMap->BufferWidth = Param16(0);
+			MipMap->Address = (MipMap->Address & 0x00FFFFFF) | ((uint)(Param8(16) << 24) & 0xFF000000);
 		}
 
 		public void OP_TBP0() { _OP_TBP(0); }
@@ -147,8 +147,8 @@ namespace CSPspEmu.Core.Gpu.Run
 			WidthExp = Math.Min(WidthExp, 9);
 			HeightExp = Math.Min(HeightExp, 9);
 
-			MipMap[0].TextureWidth = (int)(1 << WidthExp);
-			MipMap[0].TextureHeight = (int)(1 << HeightExp);
+			MipMap->TextureWidth = (int)(1 << WidthExp);
+			MipMap->TextureHeight = (int)(1 << HeightExp);
 		}
 
 		public void OP_TSIZE0() { _OP_TSIZE(0); }
@@ -210,8 +210,8 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Texture FiLTer
 		public void OP_TFLT()
 		{
-			TextureState[0].FilterMinification = (TextureFilter)Param8(0);
-			TextureState[0].FilterMagnification = (TextureFilter)Param8(8);
+			TextureState->FilterMinification = (TextureFilter)Param8(0);
+			TextureState->FilterMagnification = (TextureFilter)Param8(8);
 		}
 
 		/**
@@ -229,8 +229,8 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Texture WRAP
 		public void OP_TWRAP()
 		{
-			TextureState[0].WrapU = (WrapMode)Param8(0);
-			TextureState[0].WrapV = (WrapMode)Param8(8);
+			TextureState->WrapU = (WrapMode)Param8(0);
+			TextureState->WrapV = (WrapMode)Param8(8);
 		}
 
 		/**
@@ -268,11 +268,11 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Texture enviroment Mode
 		public void OP_TFUNC()
 		{
-			TextureState[0].Effect = (TextureEffect)Param8(0);
-			TextureState[0].ColorComponent = (TextureColorComponent)Param8(8);
-			TextureState[0].Fragment2X = (Param8(16) != 0);
+			TextureState->Effect = (TextureEffect)Param8(0);
+			TextureState->ColorComponent = (TextureColorComponent)Param8(8);
+			TextureState->Fragment2X = (Param8(16) != 0);
 
-			//Console.WriteLine(TextureState[0].Effect);
+			//Console.WriteLine(TextureState->Effect);
 		}
 
 		/**
@@ -287,8 +287,8 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuTexScale(float u, float v);
 
 		// UV SCALE
-		public void OP_USCALE() { GpuState[0].TextureMappingState.TextureState.ScaleU = Float1; }
-		public void OP_VSCALE() { GpuState[0].TextureMappingState.TextureState.ScaleV = Float1; }
+		public void OP_USCALE() { GpuState->TextureMappingState.TextureState.ScaleU = Float1; }
+		public void OP_VSCALE() { GpuState->TextureMappingState.TextureState.ScaleV = Float1; }
 
 		/**
 		 * Set texture offset
@@ -302,8 +302,8 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuTexOffset(float u, float v);
 
 		// UV OFFSET
-		public void OP_UOFFSET() { GpuState[0].TextureMappingState.TextureState.OffsetU = Float1; }
-		public void OP_VOFFSET() { GpuState[0].TextureMappingState.TextureState.OffsetV = Float1; }
+		public void OP_UOFFSET() { GpuState->TextureMappingState.TextureState.OffsetU = Float1; }
+		public void OP_VOFFSET() { GpuState->TextureMappingState.TextureState.OffsetV = Float1; }
 
 		/**
 		 * Specify the texture environment color
@@ -318,25 +318,25 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Texture Environment Color
 		public void OP_TEC()
 		{
-			GpuState[0].TextureMappingState.TextureEnviromentColor.SetRGB_A1(Params24);
+			GpuState->TextureMappingState.TextureEnviromentColor.SetRGB_A1(Params24);
 		}
 
 		public void OP_TEXTURE_ENV_MAP_MATRIX()
 		{
-			GpuState[0].TextureMappingState.ShadeU = (short)BitUtils.Extract(Params24, 0, 2);
-			GpuState[0].TextureMappingState.ShadeV = (short)BitUtils.Extract(Params24, 8, 2);
+			GpuState->TextureMappingState.ShadeU = (short)BitUtils.Extract(Params24, 0, 2);
+			GpuState->TextureMappingState.ShadeV = (short)BitUtils.Extract(Params24, 8, 2);
 		}
 
 		public void OP_TMAP()
 		{
-			GpuState[0].TextureMappingState.TextureMapMode = (TextureMapMode)Param8(0);
-			GpuState[0].TextureMappingState.TextureProjectionMapMode = (TextureProjectionMapMode)Param8(8);
+			GpuState->TextureMappingState.TextureMapMode = (TextureMapMode)Param8(0);
+			GpuState->TextureMappingState.TextureProjectionMapMode = (TextureProjectionMapMode)Param8(8);
 		}
 
 		[GpuOpCodesNotImplemented]
 		public void OP_TBIAS()
 		{
-			//GpuState[0].TextureMappingState.TextureState
+			//GpuState->TextureMappingState.TextureState
 			//gpu.state.texture.levelMode  = command.extractEnum!(TextureLevelMode, 0);
 			//gpu.state.texture.mipmapBias = cast(float)command.extract!(int, 16, 8) / 16.0f;
 		}

@@ -24,44 +24,52 @@ namespace CSPspEmu.Runner.Components
 		public void StartSynchronized()
 		{
 			Console.WriteLine("Component {0} StartSynchronized!", this);
-			ComponentThreadThread = new Thread(() =>
+			var StartStartTime = DateTime.Now;
 			{
-				ComponentThreadThread.Name = this.ThreadName;
-				Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.CultureName);
-				try
+				ComponentThreadThread = new Thread(() =>
 				{
-					Main();
-				}
-				finally
+					ComponentThreadThread.Name = this.ThreadName;
+					Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.CultureName);
+					try
+					{
+						Main();
+					}
+					finally
+					{
+						Running = false;
+						StopCompleteEvent.Set();
+						Console.WriteLine("Component {0} Stopped!", this);
+					}
+				});
+				ComponentThreadThread.Start();
+				ThreadTaskQueue.EnqueueAndWaitCompleted(() =>
 				{
-					Running = false;
-					StopCompleteEvent.Set();
-					Console.WriteLine("Component {0} Stopped!", this);
-				}
-			});
-			ComponentThreadThread.Start();
-			ThreadTaskQueue.EnqueueAndWaitCompleted(() =>
-			{
-			});
-			Console.WriteLine("Component {0} Started!", this);
+				});
+			}
+			var StartEndTime = DateTime.Now;
+			Console.WriteLine("Component {0} Started! {1}", this, StartEndTime - StartStartTime);
 		}
 
 		public void StopSynchronized()
 		{
 			Console.Write("Component {0} StopSynchronized...", this);
-			if (Running)
+			var StopStartTime = DateTime.Now;
 			{
-				StopCompleteEvent.Reset();
+				if (Running)
 				{
-					Running = false;
-				}
-				if (!StopCompleteEvent.WaitOne(1000))
-				{
-					Console.Error.WriteLine("Error stopping {0}", this);
-					ComponentThreadThread.Abort();
+					StopCompleteEvent.Reset();
+					{
+						Running = false;
+					}
+					if (!StopCompleteEvent.WaitOne(1000))
+					{
+						Console.Error.WriteLine("Error stopping {0}", this);
+						ComponentThreadThread.Abort();
+					}
 				}
 			}
-			Console.WriteLine("Stopped!", this);
+			var StopEndTime = DateTime.Now;
+			Console.WriteLine("Stopped! {0}", StopEndTime - StopStartTime);
 		}
 
 		public void PauseSynchronized()

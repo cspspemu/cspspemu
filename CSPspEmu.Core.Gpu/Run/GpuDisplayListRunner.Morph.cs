@@ -29,7 +29,7 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		private void _OP_MW(int Index)
 		{
-			(&GpuState[0].MorphingState.MorphWeight0)[Index] = Float1;
+			(&GpuState->MorphingState.MorphWeight0)[Index] = Float1;
 		}
 
 		public void OP_MW0() { _OP_MW(0); }

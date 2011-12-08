@@ -37,28 +37,28 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Base Address Register
 		public void OP_BASE()
 		{
-			GpuState[0].BaseAddress = (Params24 << 8);
+			GpuState->BaseAddress = (Params24 << 8);
 		}
 
 		// Frame Buffer Pointer
 		public void OP_FBP()
 		{
-			GpuState[0].DrawBufferState.LowAddress = Params24;
+			GpuState->DrawBufferState.LowAddress = Params24;
 		}
 
 		// Frame Buffer Width
 		public void OP_FBW()
 		{
-			GpuState[0].DrawBufferState.HighAddress = Param8(16);
-			GpuState[0].DrawBufferState.Width = Param16(0);
+			GpuState->DrawBufferState.HighAddress = Param8(16);
+			GpuState->DrawBufferState.Width = Param16(0);
 			//gpu.markBufferOp(BufferOperation.LOAD, BufferType.COLOR);
-			//Console.WriteLine("{0}", GpuState[0].DrawBufferState.Format);
+			//Console.WriteLine("{0}", GpuState->DrawBufferState.Format);
 		}
 
 		// frame buffer Pixel Storage Mode
 		public void OP_PSM()
 		{
-			GpuState[0].DrawBufferState.Format = (GuPixelFormats)Param8(0);
+			GpuState->DrawBufferState.Format = (GuPixelFormats)Param8(0);
 		}
 
 		// void drawRegion(int x, int y, int width, int height)
@@ -68,8 +68,8 @@ namespace CSPspEmu.Core.Gpu.Run
 		{
 			var X1 = (short)BitUtils.Extract(Params24, 0, 10);
 			var Y1 = (short)BitUtils.Extract(Params24, 10, 10);
-			GpuState[0].Viewport.RegionTopLeft.X = X1;
-			GpuState[0].Viewport.RegionTopLeft.Y = Y1;
+			GpuState->Viewport.RegionTopLeft.X = X1;
+			GpuState->Viewport.RegionTopLeft.Y = Y1;
 		}
 
 		//[GpuOpCodesNotImplemented]
@@ -77,8 +77,8 @@ namespace CSPspEmu.Core.Gpu.Run
 		{
 			var X2 = (short)BitUtils.Extract(Params24, 0, 10);
 			var Y2 = (short)BitUtils.Extract(Params24, 10, 10);
-			GpuState[0].Viewport.RegionBottomRight.X = X2;
-			GpuState[0].Viewport.RegionBottomRight.Y = Y2;
+			GpuState->Viewport.RegionBottomRight.X = X2;
+			GpuState->Viewport.RegionBottomRight.Y = Y2;
 		}
 
 		/**
@@ -96,15 +96,15 @@ namespace CSPspEmu.Core.Gpu.Run
 		// SCISSOR start (1)
 		public void OP_SCISSOR1()
 		{
-			GpuState[0].ClipPlaneState.Scissor.Left = BitUtils.Extract(Params24, 0, 10);
-			GpuState[0].ClipPlaneState.Scissor.Top = BitUtils.Extract(Params24, 10, 10);
+			GpuState->ClipPlaneState.Scissor.Left = BitUtils.Extract(Params24, 0, 10);
+			GpuState->ClipPlaneState.Scissor.Top = BitUtils.Extract(Params24, 10, 10);
 		}
 
 		// SCISSOR end (2)
 		public void OP_SCISSOR2()
 		{
-			GpuState[0].ClipPlaneState.Scissor.Right = BitUtils.Extract(Params24, 0, 10);
-			GpuState[0].ClipPlaneState.Scissor.Bottom = BitUtils.Extract(Params24, 10, 10);
+			GpuState->ClipPlaneState.Scissor.Right = BitUtils.Extract(Params24, 0, 10);
+			GpuState->ClipPlaneState.Scissor.Bottom = BitUtils.Extract(Params24, 10, 10);
 		}
 
 		/**
@@ -128,32 +128,32 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		public void OP_XSCALE()
 		{
-			GpuState[0].Viewport.Scale.X = Float1;
+			GpuState->Viewport.Scale.X = Float1;
 			//gpu.state.viewport.sx = command.float1 * 2;
 		}
 		public void OP_YSCALE()
 		{
-			GpuState[0].Viewport.Scale.Y = Float1;
+			GpuState->Viewport.Scale.Y = Float1;
 			//gpu.state.viewport.sy = -command.float1 * 2;
 		}
 		public void OP_ZSCALE()
 		{
-			GpuState[0].Viewport.Scale.Z = Float1;
+			GpuState->Viewport.Scale.Z = Float1;
 			//gpu.state.viewport.sz = command.extractFixedFloat!(0, 16);
 		}
 
 		public void OP_XPOS()
 		{
-			GpuState[0].Viewport.Position.X = Float1;
+			GpuState->Viewport.Position.X = Float1;
 		}
 		public void OP_YPOS()
 		{
-			GpuState[0].Viewport.Position.Y = Float1;
+			GpuState->Viewport.Position.Y = Float1;
 		}
 		//[GpuOpCodesNotImplemented]
 		public void OP_ZPOS()
 		{
-			GpuState[0].Viewport.Position.Z = BitUtils.ExtractUnsignedScaled(Params24, 0, 16, 1.0f);
+			GpuState->Viewport.Position.Z = BitUtils.ExtractUnsignedScaled(Params24, 0, 16, 1.0f);
 			//gpu.state.viewport.pz = command.extractFixedFloat!(0, 16);
 		}
 
@@ -171,7 +171,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuFrontFace(int order); // OP_FFACE
 		public void OP_FFACE()
 		{
-			GpuState[0].BackfaceCullingState.FrontFaceDirection = (FrontFaceDirectionEnum)Params24;
+			GpuState->BackfaceCullingState.FrontFaceDirection = (FrontFaceDirectionEnum)Params24;
 			//gpu.state.frontFaceDirection = command.extractEnum!(FrontFaceDirection);
 		}
 
@@ -188,13 +188,13 @@ namespace CSPspEmu.Core.Gpu.Run
 		//[GpuOpCodesNotImplemented]
 		public void OP_SHADE()
 		{
-			GpuState[0].ShadeModel = (ShadingModelEnum)Params24;
+			GpuState->ShadeModel = (ShadingModelEnum)Params24;
 		}
 
 		// Logical Operation Enable (GL_COLOR_LOGIC_OP)
 		public void OP_LOE()
 		{
-			GpuState[0].LogicalOperationState.Enabled = Bool1;
+			GpuState->LogicalOperationState.Enabled = Bool1;
 		}
 
 		/**
@@ -226,7 +226,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Logical Operation
 		public void OP_LOP()
 		{
-			GpuState[0].LogicalOperationState.Operation = (LogicalOperationEnum)Param8(0);
+			GpuState->LogicalOperationState.Operation = (LogicalOperationEnum)Param8(0);
 			//gpu.state.logicalOperation.operation = command.extractEnum!(LogicalOperation);
 		}
 
@@ -248,13 +248,13 @@ namespace CSPspEmu.Core.Gpu.Run
 		//[GpuOpCodesNotImplemented]
 		public void OP_OFFSETX()
 		{
-			GpuState[0].Offset.X = (short)BitUtils.Extract(Params24, 0, 4);
+			GpuState->Offset.X = (short)BitUtils.Extract(Params24, 0, 4);
 			//gpu.state.offsetX = command.extract!(uint, 0, 4);
 		}
 		//[GpuOpCodesNotImplemented]
 		public void OP_OFFSETY()
 		{
-			GpuState[0].Offset.Y = (short)BitUtils.Extract(Params24, 0, 4);
+			GpuState->Offset.Y = (short)BitUtils.Extract(Params24, 0, 4);
 			//gpu.state.offsetY = command.extract!(uint, 0, 4);
 		}
 	}

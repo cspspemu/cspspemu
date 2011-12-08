@@ -225,5 +225,27 @@ namespace CSPspEmu.Hle.Modules.utils
 			// Unimplemented cache.	
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="value"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x6AD345D7, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelSetGPO(int value)
+		{
+			return 0;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x37FB5C42, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelGetGPI()
+		{
+			return 0;
+		}
 	}
 }

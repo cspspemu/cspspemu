@@ -52,32 +52,18 @@ namespace CSPspEmu.Hle.Managers
 			return HlePspThread;
 		}
 
-		/*
-		public HleThread Next
-		{
-			get
-			{
-				if (_Next == null)
-				{
-					_Next = CalculateNext();
-				}
-				return _Next;
-			}
-		}
-		*/
-
 		private HleThread CalculateNext()
 		{
 			HleThread MinThread = null;
-			foreach (var Thread in Threads.Where(Thread =>
-				(
-					(Thread.CurrentStatus == HleThread.Status.Ready) || Thread.IsWaitingAndHandlingCallbacks
-				)
-			))
+			//Console.Write("{0},", Threads.Count);
+			foreach (var Thread in Threads)
 			{
-				if (MinThread == null || Thread.PriorityValue < MinThread.PriorityValue)
+				if ((Thread.CurrentStatus == HleThread.Status.Ready) || Thread.IsWaitingAndHandlingCallbacks)
 				{
-					MinThread = Thread;
+					if (MinThread == null || Thread.PriorityValue < MinThread.PriorityValue)
+					{
+						MinThread = Thread;
+					}
 				}
 			}
 			return MinThread;

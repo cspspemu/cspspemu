@@ -144,7 +144,16 @@ namespace CSPspEmu.Hle.Modules.sysmem
 			}
 			if (Type == HleMemoryManager.BlockTypeEnum.Low || Type == HleMemoryManager.BlockTypeEnum.LowAligned)
 			{
-				MemoryPartition = HleState.MemoryManager.GetPartition(PartitionId).Allocate(Size, MemoryPartition.Anchor.Low, Alignment: Alignment);
+				try
+				{
+					MemoryPartition = HleState.MemoryManager.GetPartition(PartitionId).Allocate(Size, MemoryPartition.Anchor.Low, Alignment: Alignment);
+				}
+				catch (InvalidOperationException InvalidOperationException)
+				{
+					//Console.Error.WriteLine(InvalidOperationException);
+					Console.Error.WriteLine(InvalidOperationException.Message);
+					throw(new SceKernelException(SceKernelErrors.ERROR_KERNEL_NO_MEMORY));
+				}
 			}
 			else
 			{

@@ -175,4 +175,6 @@ namespace CSPspEmu.Core.Memory
 
 		abstract public void Dispose();
 	}
+
+	public enum PspAddress : uint { }
 }

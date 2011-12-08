@@ -24,27 +24,27 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			PrepareState_Stencil(GpuState);
 			PrepareState_AlphaTest(GpuState);
 
-			GL.ShadeModel((GpuState[0].ShadeModel == ShadingModelEnum.Flat) ? ShadingModel.Flat : ShadingModel.Smooth);
+			GL.ShadeModel((GpuState->ShadeModel == ShadingModelEnum.Flat) ? ShadingModel.Flat : ShadingModel.Smooth);
 
 		}
 
 		private void PrepareState_AlphaTest(GpuStateStruct* GpuState)
 		{
-			if (!GlEnableDisable(EnableCap.AlphaTest, GpuState[0].AlphaTestState.Enabled))
+			if (!GlEnableDisable(EnableCap.AlphaTest, GpuState->AlphaTestState.Enabled))
 			{
 				return;
 			}
 
 			GL.AlphaFunc(
-				(AlphaFunction)TestTranslate[(int)GpuState[0].AlphaTestState.Function],
-				GpuState[0].AlphaTestState.Value
+				(AlphaFunction)TestTranslate[(int)GpuState->AlphaTestState.Function],
+				GpuState->AlphaTestState.Value
 			);
 		}
 
 		private void PrepareState_Stencil(GpuStateStruct* GpuState)
 		{
 			
-			if (!GlEnableDisable(EnableCap.StencilTest, GpuState[0].StencilState.Enabled))
+			if (!GlEnableDisable(EnableCap.StencilTest, GpuState->StencilState.Enabled))
 			{
 				return;
 			}
@@ -52,52 +52,52 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//if (state.stencilFuncFunc == 2) { outputDepthAndStencil(); assert(0); }
 			
 			GL.StencilFunc(
-				(StencilFunction)TestTranslate[(int)GpuState[0].StencilState.Function],
-				GpuState[0].StencilState.FunctionRef,
-				GpuState[0].StencilState.FunctionMask
+				(StencilFunction)TestTranslate[(int)GpuState->StencilState.Function],
+				GpuState->StencilState.FunctionRef,
+				GpuState->StencilState.FunctionMask
 			);
 
 			GL.StencilOp(
-				StencilOperationTranslate[(int)GpuState[0].StencilState.OperationSFail],
-				StencilOperationTranslate[(int)GpuState[0].StencilState.OperationDpFail],
-				StencilOperationTranslate[(int)GpuState[0].StencilState.OperationDpPass]
+				StencilOperationTranslate[(int)GpuState->StencilState.OperationSFail],
+				StencilOperationTranslate[(int)GpuState->StencilState.OperationDpFail],
+				StencilOperationTranslate[(int)GpuState->StencilState.OperationDpPass]
 			);
 		}
 
 		private void PrepareState_CullFace(GpuStateStruct* GpuState)
 		{
-			if (!GlEnableDisable(EnableCap.CullFace, GpuState[0].BackfaceCullingState.Enabled))
+			if (!GlEnableDisable(EnableCap.CullFace, GpuState->BackfaceCullingState.Enabled))
 			{
 				return;
 			}
 
-			GL.CullFace((GpuState[0].BackfaceCullingState.FrontFaceDirection == State.SubStates.FrontFaceDirectionEnum.ClockWise) ? CullFaceMode.Front : CullFaceMode.Back);
+			GL.CullFace((GpuState->BackfaceCullingState.FrontFaceDirection == State.SubStates.FrontFaceDirectionEnum.ClockWise) ? CullFaceMode.Front : CullFaceMode.Back);
 		}
 
 		private void PrepareState_Depth(GpuStateStruct* GpuState)
 		{
-			GL.DepthRange(GpuState[0].DepthTestState.RangeFar, GpuState[0].DepthTestState.RangeNear);
+			GL.DepthRange(GpuState->DepthTestState.RangeFar, GpuState->DepthTestState.RangeNear);
 		}
 
 		private void PrepareState_DepthTest(GpuStateStruct* GpuState)
 		{
-			GL.DepthMask(GpuState[0].DepthTestState.Mask == 0);
-			if (!GlEnableDisable(EnableCap.DepthTest, GpuState[0].DepthTestState.Enabled))
+			GL.DepthMask(GpuState->DepthTestState.Mask == 0);
+			if (!GlEnableDisable(EnableCap.DepthTest, GpuState->DepthTestState.Enabled))
 			{
 				return;
 			}
 			//GL.DepthFunc(DepthFunction.Greater);
-			GL.DepthFunc(TestTranslate[(int)GpuState[0].DepthTestState.Function]);
+			GL.DepthFunc(TestTranslate[(int)GpuState->DepthTestState.Function]);
 		}
 
 		private void PrepareState_Colors(GpuStateStruct* GpuState)
 		{
 			GlEnableDisable(EnableCap.ColorMaterial, VertexType.Color != VertexTypeStruct.ColorEnum.Void);
 	
-			var Color = GpuState[0].LightingState.AmbientModelColor;
+			var Color = GpuState->LightingState.AmbientModelColor;
 			GL.Color4(&Color.Red);
 		
-			if (VertexType.Color != VertexTypeStruct.ColorEnum.Void && GpuState[0].LightingState.Enabled)
+			if (VertexType.Color != VertexTypeStruct.ColorEnum.Void && GpuState->LightingState.Enabled)
 			{
 				ColorMaterialParameter flags = (ColorMaterialParameter)0;
 				/*
@@ -106,19 +106,19 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				glMaterialfv(faces, GL_SPECULAR, [0.0f, 0.0f, 0.0f, 0.0f].ptr);
 				*/
 
-				var MaterialColorComponents = GpuState[0].LightingState.MaterialColorComponents;
+				var MaterialColorComponents = GpuState->LightingState.MaterialColorComponents;
 
 				if (MaterialColorComponents.HasFlag(LightComponentsSet.Ambient))
 				{
-					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, &GpuState[0].LightingState.AmbientModelColor.Red);
+					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, &GpuState->LightingState.AmbientModelColor.Red);
 				}
 				if (MaterialColorComponents.HasFlag(LightComponentsSet.Diffuse))
 				{
-					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, &GpuState[0].LightingState.DiffuseModelColor.Red);
+					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, &GpuState->LightingState.DiffuseModelColor.Red);
 				}
 				if (MaterialColorComponents.HasFlag(LightComponentsSet.Specular))
 				{
-					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, &GpuState[0].LightingState.SpecularModelColor.Red);
+					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, &GpuState->LightingState.SpecularModelColor.Red);
 				}
 
 				if (MaterialColorComponents.HasFlag(LightComponentsSet.AmbientAndDiffuse))
@@ -149,52 +149,52 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				//glEnable(GL_COLOR_MATERIAL);
 			}
 
-			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, &GpuState[0].LightingState.EmissiveModelColor.Red);
+			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, &GpuState->LightingState.EmissiveModelColor.Red);
 		}
 
 		private void PrepareState_Lighting(GpuStateStruct* GpuState)
 		{
-			//Console.WriteLine(GpuState[0].LightingState.AmbientModelColor);
-			var LightingState = &GpuState[0].LightingState;
+			//Console.WriteLine(GpuState->LightingState.AmbientModelColor);
+			var LightingState = &GpuState->LightingState;
 
 			// if (!glEnableDisable(GL_LIGHTING, state.lighting.enabled) && (state.texture.mapMode != TextureMapMode.GU_ENVIRONMENT_MAP)) {
-			if (!GlEnableDisable(EnableCap.Lighting, LightingState[0].Enabled))
+			if (!GlEnableDisable(EnableCap.Lighting, LightingState->Enabled))
 			{
 				return;
 			}
 
 			GL.LightModel(
 				LightModelParameter.LightModelColorControl,
-				(int)((LightingState[0].LightModel == LightModelEnum.SeparateSpecularColor) ? LightModelColorControl.SeparateSpecularColor : LightModelColorControl.SingleColor)
+				(int)((LightingState->LightModel == LightModelEnum.SeparateSpecularColor) ? LightModelColorControl.SeparateSpecularColor : LightModelColorControl.SingleColor)
 			);
-			GL.LightModel(LightModelParameter.LightModelAmbient, &LightingState[0].AmbientLightColor.Red);
+			GL.LightModel(LightModelParameter.LightModelAmbient, &LightingState->AmbientLightColor.Red);
 
 			for (int n = 0; n < 4; n++)
 			{
-				var LightState = &(&LightingState[0].Light0)[n];
+				var LightState = &(&LightingState->Light0)[n];
 				LightName LightName = (LightName)(LightName.Light0 + n);
 
-				if (!GlEnableDisable((EnableCap)(EnableCap.Light0 + n), LightState[0].Enabled))
+				if (!GlEnableDisable((EnableCap)(EnableCap.Light0 + n), LightState->Enabled))
 				{
 					continue;
 				}
 
-				GL.Light(LightName, LightParameter.Specular, &LightState[0].SpecularColor.Red);
-				GL.Light(LightName, LightParameter.Ambient, &LightState[0].AmbientColor.Red);
-				GL.Light(LightName, LightParameter.Diffuse, &LightState[0].DiffuseColor.Red);
+				GL.Light(LightName, LightParameter.Specular, &LightState->SpecularColor.Red);
+				GL.Light(LightName, LightParameter.Ambient, &LightState->AmbientColor.Red);
+				GL.Light(LightName, LightParameter.Diffuse, &LightState->DiffuseColor.Red);
 
-				LightState[0].Position.W = 1.0f;
-				GL.Light(LightName, LightParameter.Position, &LightState[0].Position.X);
+				LightState->Position.W = 1.0f;
+				GL.Light(LightName, LightParameter.Position, &LightState->Position.X);
 
-				GL.Light(LightName, LightParameter.ConstantAttenuation, &LightState[0].Attenuation.Constant);
-				GL.Light(LightName, LightParameter.LinearAttenuation, &LightState[0].Attenuation.Linear);
-				GL.Light(LightName, LightParameter.QuadraticAttenuation, &LightState[0].Attenuation.Quadratic);
+				GL.Light(LightName, LightParameter.ConstantAttenuation, &LightState->Attenuation.Constant);
+				GL.Light(LightName, LightParameter.LinearAttenuation, &LightState->Attenuation.Linear);
+				GL.Light(LightName, LightParameter.QuadraticAttenuation, &LightState->Attenuation.Quadratic);
 
-				if (LightState[0].Type == LightTypeEnum.SpotLight)
+				if (LightState->Type == LightTypeEnum.SpotLight)
 				{
-					GL.Light(LightName, LightParameter.SpotDirection, &LightState[0].SpotDirection.X);
-					GL.Light(LightName, LightParameter.SpotExponent, &LightState[0].SpotExponent);
-					GL.Light(LightName, LightParameter.SpotCutoff, &LightState[0].SpotCutoff);
+					GL.Light(LightName, LightParameter.SpotDirection, &LightState->SpotDirection.X);
+					GL.Light(LightName, LightParameter.SpotExponent, &LightState->SpotExponent);
+					GL.Light(LightName, LightParameter.SpotCutoff, &LightState->SpotCutoff);
 				}
 				else
 				{
@@ -206,17 +206,17 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private void PrepareState_Blend(GpuStateStruct* GpuState)
 		{
-			var BlendingState = &GpuState[0].BlendingState;
-			if (!GlEnableDisable(EnableCap.Blend, BlendingState[0].Enabled))
+			var BlendingState = &GpuState->BlendingState;
+			if (!GlEnableDisable(EnableCap.Blend, BlendingState->Enabled))
 			{
 				return;
 			}
 
 			//Console.WriteLine("Blend!");
 
-			var OpenglFunctionSource = BlendFuncSrcTranslate[(int)BlendingState[0].FunctionSource];
-			//var OpenglFunctionDestination = BlendFuncDstTranslate[(int)BlendingState[0].FunctionDestination];
-			var OpenglFunctionDestination = (BlendingFactorDest)BlendFuncSrcTranslate[(int)BlendingState[0].FunctionDestination];
+			var OpenglFunctionSource = BlendFuncSrcTranslate[(int)BlendingState->FunctionSource];
+			//var OpenglFunctionDestination = BlendFuncDstTranslate[(int)BlendingState->FunctionDestination];
+			var OpenglFunctionDestination = (BlendingFactorDest)BlendFuncSrcTranslate[(int)BlendingState->FunctionDestination];
 
 			Func<ColorfStruct, int> getBlendFix = (Color) =>
 			{
@@ -225,25 +225,25 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				return GL_CONSTANT_COLOR;
 			};
 
-			if (BlendingState[0].FunctionSource == GuBlendingFactorSource.GU_FIX)
+			if (BlendingState->FunctionSource == GuBlendingFactorSource.GU_FIX)
 			{
-				OpenglFunctionSource = (BlendingFactorSrc)getBlendFix(BlendingState[0].FixColorSource);
+				OpenglFunctionSource = (BlendingFactorSrc)getBlendFix(BlendingState->FixColorSource);
 			}
 
-			if (BlendingState[0].FunctionDestination == GuBlendingFactorDestination.GU_FIX)
+			if (BlendingState->FunctionDestination == GuBlendingFactorDestination.GU_FIX)
 			{
-				if (((int)OpenglFunctionSource == GL_CONSTANT_COLOR) && (BlendingState[0].FixColorSource + BlendingState[0].FixColorDestination).IsColorf(1, 1, 1))
+				if (((int)OpenglFunctionSource == GL_CONSTANT_COLOR) && (BlendingState->FixColorSource + BlendingState->FixColorDestination).IsColorf(1, 1, 1))
 				{
 					OpenglFunctionDestination = (BlendingFactorDest)GL_ONE_MINUS_CONSTANT_COLOR;
 				}
 				else
 				{
-					OpenglFunctionDestination = (BlendingFactorDest)getBlendFix(BlendingState[0].FixColorDestination);
+					OpenglFunctionDestination = (BlendingFactorDest)getBlendFix(BlendingState->FixColorDestination);
 				}
 			}
 			//Console.WriteLine("{0}, {1}", OpenglFunctionSource, OpenglFunctionDestination);
 
-			var OpenglBlendEquation = BlendEquationTranslate[(int)BlendingState[0].Equation];
+			var OpenglBlendEquation = BlendEquationTranslate[(int)BlendingState->Equation];
 
 			/*
 			Console.WriteLine(
@@ -256,21 +256,21 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			GL.BlendFunc(OpenglFunctionSource, OpenglFunctionDestination);
 
 			GL.BlendColor(
-				BlendingState[0].FixColorDestination.Red,
-				BlendingState[0].FixColorDestination.Green,
-				BlendingState[0].FixColorDestination.Blue,
-				BlendingState[0].FixColorDestination.Alpha
+				BlendingState->FixColorDestination.Red,
+				BlendingState->FixColorDestination.Green,
+				BlendingState->FixColorDestination.Blue,
+				BlendingState->FixColorDestination.Alpha
 			);
 		}
 
 		private void PrepareState_Texture(GpuStateStruct* GpuState)
 		{
-			var TextureMappingState = &GpuState[0].TextureMappingState;
-			var ClutState = &TextureMappingState[0].ClutState;
-			var TextureState = &TextureMappingState[0].TextureState;
-			var Mipmap0 = &TextureMappingState[0].TextureState.Mipmap0;
+			var TextureMappingState = &GpuState->TextureMappingState;
+			var ClutState = &TextureMappingState->ClutState;
+			var TextureState = &TextureMappingState->TextureState;
+			var Mipmap0 = &TextureMappingState->TextureState.Mipmap0;
 
-			if (!GlEnableDisable(EnableCap.Texture2D, TextureMappingState[0].Enabled))
+			if (!GlEnableDisable(EnableCap.Texture2D, TextureMappingState->Enabled))
 			{
 				return;
 			}
@@ -281,19 +281,19 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			{
 				GL.LoadIdentity();
 				GL.Scale(
-					1.0f / Mipmap0[0].BufferWidth,
-					1.0f / Mipmap0[0].TextureHeight,
+					1.0f / Mipmap0->BufferWidth,
+					1.0f / Mipmap0->TextureHeight,
 					1.0f
 				);
 			}
 			else 
 			{
-				switch (TextureMappingState[0].TextureMapMode)
+				switch (TextureMappingState->TextureMapMode)
 				{
 					case TextureMapMode.GU_TEXTURE_COORDS:
 						GL.LoadIdentity();
-						GL.Translate(TextureState[0].OffsetU, TextureState[0].OffsetV, 0);
-						GL.Scale(TextureState[0].ScaleU, TextureState[0].ScaleV, 1);
+						GL.Translate(TextureState->OffsetU, TextureState->OffsetV, 0);
+						GL.Scale(TextureState->ScaleU, TextureState->ScaleV, 1);
 					break;
 					case TextureMapMode.GU_TEXTURE_MATRIX:
 						//glLoadMatrixf(state.texture.matrix.pointer);
@@ -320,11 +320,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			var Texture = TextureCache.Get(TextureState, ClutState);
 			Texture.Bind();
 
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)((TextureState[0].FilterMinification == TextureFilter.Linear) ? TextureMinFilter.Linear : TextureMinFilter.Nearest));
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)((TextureState[0].FilterMagnification == TextureFilter.Linear) ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)((TextureState[0].WrapU == WrapMode.Repeat) ? TextureWrapMode.Repeat : TextureWrapMode.ClampToEdge));
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)((TextureState[0].WrapV == WrapMode.Repeat) ? TextureWrapMode.Repeat : TextureWrapMode.ClampToEdge));
-			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvModeTranslate[(int)TextureState[0].Effect]);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)((TextureState->FilterMinification == TextureFilter.Linear) ? TextureMinFilter.Linear : TextureMinFilter.Nearest));
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)((TextureState->FilterMagnification == TextureFilter.Linear) ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)((TextureState->WrapU == WrapMode.Repeat) ? TextureWrapMode.Repeat : TextureWrapMode.ClampToEdge));
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)((TextureState->WrapV == WrapMode.Repeat) ? TextureWrapMode.Repeat : TextureWrapMode.ClampToEdge));
+			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvModeTranslate[(int)TextureState->Effect]);
 		}
 	}
 }

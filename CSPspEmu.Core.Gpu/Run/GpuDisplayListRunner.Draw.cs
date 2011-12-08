@@ -47,12 +47,12 @@ namespace CSPspEmu.Core.Gpu.Run
 			// Set flags and Start the clearing mode.
 			if ((Params24 & 1) != 0)
 			{
-				GpuState[0].ClearFlags = (ClearBufferSet)Param8(8);
-				GpuState[0].ClearingMode = true;
+				GpuState->ClearFlags = (ClearBufferSet)Param8(8);
+				GpuState->ClearingMode = true;
 			}
 			// Stop the clearing mode.
 			else {
-				GpuState[0].ClearingMode = false;
+				GpuState->ClearingMode = false;
 			}
 		}
 
@@ -128,7 +128,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Vertex Type
 		public void OP_VTYPE()
 		{
-			GpuState[0].VertexState.Type.Value = Params24;
+			GpuState->VertexState.Type.Value = Params24;
 			//gpu.state.vertexType.v  = command.extract!(uint, 0, 24);
 			//writefln("VTYPE:%032b", command.param24);
 			//writefln("     :%d", gpu.state.vertexType.position);
@@ -138,16 +138,16 @@ namespace CSPspEmu.Core.Gpu.Run
 		public void OP_VADDR()
 		{
 			// + or |?
-			GpuState[0].VertexAddress = (
-				GpuDisplayList.GpuStateStructPointer[0].BaseAddress | Params24
+			GpuState->VertexAddress = (
+				GpuDisplayList.GpuStateStructPointer->BaseAddress | Params24
 			);
 		}
 
 		// Index List (Base Address)
 		public void OP_IADDR()
 		{
-			GpuState[0].IndexAddress = (
-				GpuDisplayList.GpuStateStructPointer[0].BaseAddress | Params24
+			GpuState->IndexAddress = (
+				GpuDisplayList.GpuStateStructPointer->BaseAddress | Params24
 			);
 		}
 	

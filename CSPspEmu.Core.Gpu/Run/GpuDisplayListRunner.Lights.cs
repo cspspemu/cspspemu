@@ -14,18 +14,18 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Lighting Test Enable GL_LIGHTING.
 		// gpu.state.lighting.enabled = command.bool1;
 		public void OP_LTE() {
-			GpuState[0].LightingState.Enabled = Bool1;
+			GpuState->LightingState.Enabled = Bool1;
 		}
 	
 		// Ambient Light Color/Alpha
 		// gpu.state.lighting.ambientLightColor.rgb[] = command.float3[];
 		public void OP_ALC()
 		{
-			GpuState[0].LightingState.AmbientLightColor.SetRGB(Params24);
+			GpuState->LightingState.AmbientLightColor.SetRGB(Params24);
 		}
 		public void OP_ALA()
 		{
-			GpuState[0].LightingState.AmbientLightColor.SetA(Params24);
+			GpuState->LightingState.AmbientLightColor.SetA(Params24);
 		}
 
 		/**
@@ -44,18 +44,18 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Light MODE (global)
 		public void OP_LMODE()
 		{
-			GpuState[0].LightingState.LightModel = (LightModelEnum)Param8(0);
+			GpuState->LightingState.LightModel = (LightModelEnum)Param8(0);
 		}
 
 		LightStateStruct *GetLigth(int Index)
 		{
-			var Lights = &GpuState[0].LightingState.Light0;
+			var Lights = &GpuState->LightingState.Light0;
 			return &Lights[Index];
 		}
 
 		private void _OP_LTE(int Index)
 		{
-			GetLigth(Index)[0].Enabled = Bool1;
+			GetLigth(Index)->Enabled = Bool1;
 		}
 
 		//mixin(LightArrayOperation("OP_LTE_n", q{ gpu.state.lighting.lights[Index].enabled = command.bool1; }));
@@ -88,9 +88,9 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		// gpu.state.lighting.lights[Index].position.x = command.float1;
 
-		private void _OP_LXP(int Index) { GetLigth(Index)[0].Position.X = Float1; }
-		private void _OP_LYP(int Index) { GetLigth(Index)[0].Position.Y = Float1; }
-		private void _OP_LZP(int Index) { GetLigth(Index)[0].Position.Z = Float1; }
+		private void _OP_LXP(int Index) { GetLigth(Index)->Position.X = Float1; }
+		private void _OP_LYP(int Index) { GetLigth(Index)->Position.Y = Float1; }
+		private void _OP_LZP(int Index) { GetLigth(Index)->Position.Z = Float1; }
 
 		public void OP_LXP0() { _OP_LXP(0); }
 		public void OP_LXP1() { _OP_LXP(1); }
@@ -135,19 +135,19 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		private void _OP_LT(int Index)
 		{
-			GetLigth(Index)[0].Kind = (LightModelEnum)Param8(0);
-			GetLigth(Index)[0].Type = (LightTypeEnum)Param8(8);
-			switch (GetLigth(Index)[0].Type)
+			GetLigth(Index)->Kind = (LightModelEnum)Param8(0);
+			GetLigth(Index)->Type = (LightTypeEnum)Param8(8);
+			switch (GetLigth(Index)->Type)
 			{
 				case LightTypeEnum.Directional:
-					GetLigth(Index)[0].Position.W = 0;
+					GetLigth(Index)->Position.W = 0;
 					break;
 				case LightTypeEnum.PointLight:
-					GetLigth(Index)[0].Position.W = 1;
-					GetLigth(Index)[0].SpotCutoff = 180;
+					GetLigth(Index)->Position.W = 1;
+					GetLigth(Index)->SpotCutoff = 180;
 					break;
 				case LightTypeEnum.SpotLight:
-					GetLigth(Index)[0].Position.W = 1;
+					GetLigth(Index)->Position.W = 1;
 					break;
 				default:
 					throw(new NotImplementedException());
@@ -174,9 +174,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		//mixin(LightArrayOperationStep3("OP_LLA_n", q{ gpu.state.lighting.lights[Index].attenuation.linear    = command.float1; }));
 		//mixin(LightArrayOperationStep3("OP_LQA_n", q{ gpu.state.lighting.lights[Index].attenuation.quadratic = command.float1; }));
 
-		private void _OP_LCA(int Index) { GetLigth(Index)[0].Attenuation.Constant = Float1; }
-		private void _OP_LLA(int Index) { GetLigth(Index)[0].Attenuation.Linear = Float1; }
-		private void _OP_LQA(int Index) { GetLigth(Index)[0].Attenuation.Quadratic = Float1; }
+		private void _OP_LCA(int Index) { GetLigth(Index)->Attenuation.Constant = Float1; }
+		private void _OP_LLA(int Index) { GetLigth(Index)->Attenuation.Linear = Float1; }
+		private void _OP_LQA(int Index) { GetLigth(Index)->Attenuation.Quadratic = Float1; }
 
 		public void OP_LCA0() { _OP_LCA(0); }
 		public void OP_LCA1() { _OP_LCA(1); }
@@ -208,9 +208,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		//mixin(LightArrayOperationStep3("OP_LYD_n", q{ gpu.state.lighting.lights[Index].spotDirection.y = command.float1; }));
 		//mixin(LightArrayOperationStep3("OP_LZD_n", q{ gpu.state.lighting.lights[Index].spotDirection.z = command.float1; }));
 
-		private void _OP_LXD(int Index) { GetLigth(Index)[0].SpotDirection.X = Float1; }
-		private void _OP_LYD(int Index) { GetLigth(Index)[0].SpotDirection.Y = Float1; }
-		private void _OP_LZD(int Index) { GetLigth(Index)[0].SpotDirection.Z = Float1; }
+		private void _OP_LXD(int Index) { GetLigth(Index)->SpotDirection.X = Float1; }
+		private void _OP_LYD(int Index) { GetLigth(Index)->SpotDirection.Y = Float1; }
+		private void _OP_LZD(int Index) { GetLigth(Index)->SpotDirection.Z = Float1; }
 
 		public void OP_LXD0() { _OP_LXD(0); }
 		public void OP_LXD1() { _OP_LXD(1); }
@@ -232,8 +232,8 @@ namespace CSPspEmu.Core.Gpu.Run
 		//mixin(LightArrayOperation("OP_SPOTEXP_n", q{ gpu.state.lighting.lights[Index].spotExponent = command.float1; }));
 		//mixin(LightArrayOperation("OP_SPOTCUT_n", q{ gpu.state.lighting.lights[Index].spotCutoff   = command.float1; }));
 
-		private void _OP_SPOTEXP(int Index) { GetLigth(Index)[0].SpotExponent = Float1; }
-		private void _OP_SPOTCUT(int Index) { GetLigth(Index)[0].SpotCutoff = Float1; }
+		private void _OP_SPOTEXP(int Index) { GetLigth(Index)->SpotExponent = Float1; }
+		private void _OP_SPOTCUT(int Index) { GetLigth(Index)->SpotCutoff = Float1; }
 
 		public void OP_SPOTEXP0() { _OP_SPOTEXP(0); }
 		public void OP_SPOTEXP1() { _OP_SPOTEXP(1); }
@@ -266,9 +266,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		//mixin(LightArrayOperationStep3("OP_DLC_n", q{ gpu.state.lighting.lights[Index].diffuseColor.rgba[]  = command.float4[]; }));
 		//mixin(LightArrayOperationStep3("OP_SLC_n", q{ gpu.state.lighting.lights[Index].specularColor.rgba[] = command.float4[]; }));
 
-		private void _OP_ALC(int Index) { GetLigth(Index)[0].AmbientColor.SetRGB_A1(Params24); }
-		private void _OP_DLC(int Index) { GetLigth(Index)[0].DiffuseColor.SetRGB_A1(Params24); }
-		private void _OP_SLC(int Index) { GetLigth(Index)[0].SpecularColor.SetRGB_A1(Params24); }
+		private void _OP_ALC(int Index) { GetLigth(Index)->AmbientColor.SetRGB_A1(Params24); }
+		private void _OP_DLC(int Index) { GetLigth(Index)->DiffuseColor.SetRGB_A1(Params24); }
+		private void _OP_SLC(int Index) { GetLigth(Index)->SpecularColor.SetRGB_A1(Params24); }
 
 		public void OP_ALC0() { _OP_ALC(0); }
 		public void OP_ALC1() { _OP_ALC(1); }
@@ -293,6 +293,6 @@ namespace CSPspEmu.Core.Gpu.Run
 		// void sceGuSpecular(float power); // OP_SPOW
 		// Specular POWer (global)
 		// gpu.state.lighting.specularPower = command.float1;
-		public void OP_SPOW() { GpuState[0].LightingState.SpecularPower = Float1; }
+		public void OP_SPOW() { GpuState->LightingState.SpecularPower = Float1; }
 	}
 }

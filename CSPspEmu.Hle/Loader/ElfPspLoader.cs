@@ -74,12 +74,15 @@ namespace CSPspEmu.Hle.Loader
 				switch (ProgramHeader.Type)
 				{
 					case Elf.ProgramHeader.TypeEnum.Reloc1:
-						throw (new NotImplementedException());
+						Console.Error.WriteLine("NOT IMPLEMENTED Elf.ProgramHeader.TypeEnum.Reloc1!");
+						//RelocateRelocs(ElfLoader.ProgramHeaderFileStream(ProgramHeader).ReadStructVectorUntilTheEndOfStream<Elf.Reloc>());
+						//throw (new NotImplementedException());
 						/*
 						int RelCount = (int)phdr.getP_filesz() / Elf32Relocate.sizeof();
 						f.position((int)(elfOffset + phdr.getP_offset()));
 						relocateFromBuffer(f, module, baseAddress, elf, RelCount);
 						*/
+						break;
 					case Elf.ProgramHeader.TypeEnum.Reloc2:
 						throw(new NotImplementedException());
 				}

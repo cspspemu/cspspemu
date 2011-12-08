@@ -654,7 +654,8 @@ namespace CSPspEmu.Hle.Modules.utility
 			//unimplemented();
 			//unimplemented_notice();
 			//Logger.log(Logger.Level.WARNING, "sceUtility", "sceUtilityLoadNetModule not implemented!");
-			return -1;
+			//return -1;
+			return 0;
 		}
 
 		/// <summary>

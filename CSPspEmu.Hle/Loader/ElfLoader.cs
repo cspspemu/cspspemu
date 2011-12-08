@@ -127,6 +127,11 @@ namespace CSPspEmu.Hle.Loader
 			}
 		}
 
+		public Stream ProgramHeaderFileStream(Elf.ProgramHeader ProgramHeader)
+		{
+			return this.FileStream.SliceWithLength(ProgramHeader.Offset, ProgramHeader.FileSize);
+		}
+
 		public Stream SectionHeaderFileStream(Elf.SectionHeader SectionHeader)
 		{
 			return this.FileStream.SliceWithLength(SectionHeader.Offset, SectionHeader.Size);

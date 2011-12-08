@@ -27,15 +27,23 @@ namespace CSPspEmu.Hle.Modules.ge
 			return HleState.CpuProcessor.Memory.FrameBufferSegment.Size;
 		}
 
+		private int eDRAMMemoryWidth;
+
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xB77905EA, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceGeEdramSetAddrTranslation()
+		public int sceGeEdramSetAddrTranslation(int Size)
 		{
-			throw(new NotImplementedException());
+			try
+			{
+				return eDRAMMemoryWidth;
+			}
+			finally
+			{
+				eDRAMMemoryWidth = Size;
+			}
 		}
 
 		/// <summary>
