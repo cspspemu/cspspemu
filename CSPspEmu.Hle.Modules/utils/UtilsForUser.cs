@@ -46,14 +46,19 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// <param name="TimeZone"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x71EC4271, FirmwareVersion = 150, SkipLog = true)]
+		//[HlePspNotImplemented]
 		public int sceKernelLibcGettimeofday(TimeValStruct* TimeVal, TimeZoneStruct* TimeZone)
 		{
 			if (TimeVal != null)
 			{
 				HleState.PspRtc.Update();
 				ulong MicroSeconds = (ulong)(HleState.PspRtc.Elapsed.TotalMilliseconds * 1000);
-				TimeVal[0].Seconds = (uint)(MicroSeconds / (1000 * 1000));
-				TimeVal[0].Microseconds = (uint)(MicroSeconds % (1000 * 1000));
+				ulong MicroSecondsInASecond = 1000 * 1000;
+				TimeVal->Seconds = (uint)(MicroSeconds / MicroSecondsInASecond);
+				TimeVal->Microseconds = (uint)(MicroSeconds % MicroSecondsInASecond);
+				//TimeVal->Seconds = 0;
+				//TimeVal->Microseconds = 0;
+				//Console.Error.WriteLine("aaaaaaaaaaaaaaaaaaaaaaaaa {0}:{1}", TimeVal->Seconds, TimeVal->Microseconds);
 			}
 			if (TimeZone != null)
 			{
@@ -149,20 +154,30 @@ namespace CSPspEmu.Hle.Modules.utils
 			return (uint)Random.Next();
 		}
 
-		/**
-		 * Get the time in seconds since the epoc (1st Jan 1970)
-		 */
+		/// <summary>
+		/// Get the time in seconds since the epoc (1st Jan 1970)
+		/// </summary>
+		/// <param name="Time"></param>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0x27CC57F0, FirmwareVersion = 150)]
-		public time_t sceKernelLibcTime(time_t* t)
+		public time_t sceKernelLibcTime(time_t* Time)
 		{
 			HleState.PspRtc.Update();
-			return (time_t)HleState.PspRtc.UnixTimeStamp;
+
+			var CalculatedTime = (time_t)HleState.PspRtc.UnixTimeStamp;
+
+			if (Time != null)
+			{
+				*Time = CalculatedTime;
+			}
+			return CalculatedTime;
 		}
 
 		/** 
 		 * Get the processor clock used since the start of the process
 		 */
 		[HlePspFunction(NID = 0x91E4F6A7, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public clock_t sceKernelLibcClock()
 		{
 			HleState.PspRtc.Update();

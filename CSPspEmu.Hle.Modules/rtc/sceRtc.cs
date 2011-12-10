@@ -14,6 +14,7 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// </summary>
 		/// <returns>Number of ticks per second</returns>
 		[HlePspFunction(NID = 0xC41C2853, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public uint sceRtcGetTickResolution()
 		{
 			return (uint)(TimeSpan.FromSeconds(1).TotalMilliseconds * 1000);
@@ -25,6 +26,7 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <param name="Tick">pointer to u64 to receive tick count</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x3F7AD767, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceRtcGetCurrentTick(ulong* Tick)
 		{
 			HleState.PspRtc.Update();
@@ -93,6 +95,7 @@ namespace CSPspEmu.Hle.Modules.rtc
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0x44F45E05, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceRtcTickAddTicks(ulong* destTick, ulong* srcTick, ulong numTicks)
 		{
 			throw(new NotImplementedException());
@@ -112,6 +115,7 @@ namespace CSPspEmu.Hle.Modules.rtc
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0x6FF40ACC, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceRtcGetTick(ScePspDateTime* date, ulong* tick)
 		{
 			throw (new NotImplementedException());

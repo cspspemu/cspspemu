@@ -273,6 +273,7 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "fpl";
 				//WildCardFilter = "msgpipe";
 				//WildCardFilter = "events";
+				WildCardFilter = "vpl";
 			}
 
 			if (WildCardFilter.Length > 0)

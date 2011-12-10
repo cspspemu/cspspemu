@@ -62,6 +62,7 @@
     <Compile Include="Cpu\InstructionTest.cs" />
     <Compile Include="Cpu\Assembler\MipsAssemblerTest.cs" />
     <Compile Include="Cpu\Emiter\MipsEmiterTest.cs" />
+    <Compile Include="Hle\Formats\EncryptedPrxTest.cs" />
     <Compile Include="Hle\Vfs\Iso\CsoProxyStreamTest.cs" />
     <Compile Include="Hle\Formats\CsoTest.cs" />
     <Compile Include="Gpu\GpuProcessorTest.cs" />

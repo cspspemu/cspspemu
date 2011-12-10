@@ -1,0 +1,174 @@
+// 010 Template for EBOOT.BIN - Encrypted - ~PSP files.
+
+typedef struct
+{
+	/// <summary>
+	/// 0000 - 
+	/// </summary>
+	uint Magic;
+
+	/// <summary>
+	/// 0004 - 
+	/// </summary>
+	ushort mod_attr;
+
+	/// <summary>
+	/// 0006 - 
+	/// </summary>
+	ushort comp_mod_attr;
+
+	/// <summary>
+	/// 0008 - 
+	/// </summary>
+	byte mod_ver_lo;
+
+	/// <summary>
+	/// 0009 - 
+	/// </summary>
+	byte mod_ver_hi;
+
+	/// <summary>
+	/// 000A - 
+	/// </summary>
+	char ModuleName[28];
+
+	/// <summary>
+	/// 0026 -
+	/// </summary>
+	byte mod_version;
+
+	/// <summary>
+	/// 0027 - 
+	/// </summary>
+	byte nsegments;
+
+	/// <summary>
+	/// 0028 -
+	/// </summary>
+	uint elf_size;
+
+	/// <summary>
+	/// 002C - 
+	/// </summary>
+	uint psp_size;
+
+	/// <summary>
+	/// 0030 -
+	/// </summary>
+	uint boot_entry;
+
+	/// <summary>
+	/// 0034 -
+	/// </summary>
+	uint modinfo_offset;
+
+	/// <summary>
+	/// 0038 -
+	/// </summary>
+	uint bss_size;
+
+	/// <summary>
+	/// 003C -
+	/// </summary>
+	ushort seg_align[4];
+
+	/// <summary>
+	/// 0044 - 
+	/// </summary>
+	uint seg_address[4];
+
+	/// <summary>
+	/// 0054 -
+	/// </summary>
+	uint seg_size[4];
+
+	/// <summary>
+	/// 0064 -
+	/// </summary>
+	uint reserved[5];
+
+	/// <summary>
+	/// 0068 -
+	/// </summary>
+	uint devkit_version;
+
+	/// <summary>
+	/// 006C -
+	/// </summary>
+	byte dec_mode;
+
+	/// <summary>
+	/// 006D -
+	/// </summary>
+	byte pad;
+
+	/// <summary>
+	/// 006E -
+	/// </summary>
+	ushort overlap_size;
+
+	/// <summary>
+	/// 0070 -
+	/// </summary>
+	byte aes_key[16];
+
+	/// <summary>
+	/// 0080 -
+	/// </summary>
+	byte cmac_key[16];
+
+	/// <summary>
+	/// 0090 -
+	/// </summary>
+	byte cmac_header_hash[16];
+
+	/// <summary>
+	/// 00A0 -
+	/// </summary>
+	uint comp_size;
+
+	/// <summary>
+	/// 
+	/// </summary>
+	uint comp_offset;
+
+	/// <summary>
+	/// 
+	/// </summary>
+	uint unk1;
+
+	/// <summary>
+	/// 
+	/// </summary>
+	uint unk2;
+
+	/// <summary>
+	/// 
+	/// </summary>
+	byte cmac_data_hash[16];
+
+	/// <summary>
+	/// 
+	/// </summary>
+	uint tag;
+
+	/// <summary>
+	/// 
+	/// </summary>
+	byte sig_check[88];
+
+	/// <summary>
+	/// 
+	/// </summary>
+	byte sha1_hash[20];
+
+	/// <summary>
+	/// 
+	/// </summary>
+	byte key_data[16];
+} HeaderStruct;
+
+LittleEndian(); 
+SetBackColor( cLtGray );
+
+HeaderStruct bmfh;

@@ -50,3 +50,4 @@
 *.config
 *.exe
 /ms
+/TestInput/EBOOT.BIN

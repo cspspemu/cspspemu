@@ -69,14 +69,16 @@ namespace CSPspEmu.Sandbox
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Lemmings.cso", TraceSyscalls: true);
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Luxor.cso");
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Popolocrois.cso");
-			PspEmulator.StartAndLoad(@"F:\Isos\psp\Loco Roco.cso");
+			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Loco Roco.cso");
+			//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\Yume for PSP\EBOOT.PBP");
+			//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\yume\EBOOT.PBP");
 			
 			
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Breath of Fire 3.cso", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia.iso", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Koloomn.cso", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Kameleon.cso", TraceSyscalls: false);
-			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);
+			PspEmulator.StartAndLoad(@"F:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\audio\polyphonic\polyphonic.elf", TraceSyscalls: false);
 
 			//PspEmulator.StartAndLoad(@"C:\juegos\jpcsp_last\demos\compilerPerf.pbp");

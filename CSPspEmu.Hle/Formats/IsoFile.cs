@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using CSharpUtils;
+using CSharpUtils.Endian;
 using CSharpUtils.Extensions;
 using CSharpUtils.Streams;
 
@@ -183,8 +184,8 @@ namespace CSPspEmu.Hle.Formats
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct u32b
 	{
-		uint LittleEndianValue;
-		uint BigEndianValue;
+		uint_le LittleEndianValue;
+		uint_be BigEndianValue;
 
 		public uint Value
 		{
@@ -195,7 +196,7 @@ namespace CSPspEmu.Hle.Formats
 			set
 			{
 				LittleEndianValue = value;
-				BigEndianValue = MathUtils.ByteSwap(value);
+				BigEndianValue = value;
 			}
 		}
 

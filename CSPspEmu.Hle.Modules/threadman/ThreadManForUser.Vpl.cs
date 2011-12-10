@@ -168,7 +168,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xB736E9FF, FirmwareVersion = 150)]
-		public int sceKernelFreeVpl(VariablePoolId VariablePoolId, void* Data)
+		public int sceKernelFreeVpl(VariablePoolId VariablePoolId, PspAddress Data)
 		{
 			throw (new NotImplementedException());
 			/*

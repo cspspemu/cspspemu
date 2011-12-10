@@ -52,6 +52,8 @@
     <Compile Include="Formats\audio\Vag.cs" />
     <Compile Include="Formats\audio\Vag.Structs.cs" />
     <Compile Include="Formats\Cso.cs" />
+    <Compile Include="Formats\EncryptedPrx.cs" />
+    <Compile Include="Formats\EncryptedPrx.Utils.cs" />
     <Compile Include="Formats\FormatDetector.cs" />
     <Compile Include="Formats\Elf.cs" />
     <Compile Include="Formats\ElfPsp.cs" />

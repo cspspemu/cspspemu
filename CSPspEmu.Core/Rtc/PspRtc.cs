@@ -70,6 +70,7 @@ namespace CSPspEmu.Core.Rtc
 		/// <param name="Callback"></param>
 		public void RegisterTimerInOnce(TimeSpan TimeSpan, Action Callback)
 		{
+			//Console.WriteLine("Time: " + TimeSpan);
 			RegisterTimerAtOnce(DateTime.UtcNow + TimeSpan, Callback);
 		}
 

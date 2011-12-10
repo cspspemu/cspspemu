@@ -159,8 +159,16 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0x810C4BC3, FirmwareVersion = 150)]
 		public int sceIoClose(int FileDescriptor)
 		{
-			var HleIoDrvFileArg = GetFileArgFromHandle(FileDescriptor);
-			return HleIoDrvFileArg.HleIoDriver.IoClose(HleIoDrvFileArg);
+			try
+			{
+				var HleIoDrvFileArg = GetFileArgFromHandle(FileDescriptor);
+				return HleIoDrvFileArg.HleIoDriver.IoClose(HleIoDrvFileArg);
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
+				return -1;
+			}
 		}
 
 		/// <summary>
@@ -213,8 +221,16 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0x42EC03AC, FirmwareVersion = 150)]
 		public int sceIoWrite(int FileHandle, byte* InputPointer, int InputSize)
 		{
-			var HleIoDrvFileArg = GetFileArgFromHandle(FileHandle);
-			return HleIoDrvFileArg.HleIoDriver.IoWrite(HleIoDrvFileArg, InputPointer, InputSize);
+			try
+			{
+				var HleIoDrvFileArg = GetFileArgFromHandle(FileHandle);
+				return HleIoDrvFileArg.HleIoDriver.IoWrite(HleIoDrvFileArg, InputPointer, InputSize);
+			}
+			catch (Exception Exception)
+			{
+				//Console.Error.WriteLine(Exception);
+				return -1;
+			}
 		}
 
 		/// <summary>

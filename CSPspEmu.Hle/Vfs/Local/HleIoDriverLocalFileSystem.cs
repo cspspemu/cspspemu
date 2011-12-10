@@ -125,7 +125,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 			}
 			catch (Exception Exception)
 			{
-				Console.WriteLine(Exception);
+				//Console.Error.WriteLine(Exception);
 				return -1;
 			}
 		}
