@@ -193,5 +193,13 @@ namespace CSPspEmu.Core.Audio
 
 			Write(Samples, ActionCallbackOnReaded);
 		}
+
+		public int AvailableChannelsForRead
+		{
+			get
+			{
+				return Buffer.ConsumeRemaining;
+			}
+		}
 	}
 }

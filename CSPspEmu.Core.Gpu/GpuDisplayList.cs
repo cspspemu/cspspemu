@@ -13,6 +13,9 @@ namespace CSPspEmu.Core.Gpu
 {
 	sealed unsafe public class GpuDisplayList
 	{
+		protected const bool Debug = false;
+		//protected const bool Debug = true;
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -190,31 +193,37 @@ namespace CSPspEmu.Core.Gpu
 			for (Done = false; !Done; _InstructionAddressCurrent += 4)
 			{
 				//Console.WriteLine("{0:X}", (uint)InstructionAddressCurrent);
-				if ((InstructionAddressStall != 0) && (InstructionAddressCurrent >= InstructionAddressStall)) break;
+				//if ((InstructionAddressStall != 0) && (InstructionAddressCurrent >= InstructionAddressStall)) break;
+				if ((InstructionAddressStall != 0) && (InstructionAddressCurrent == InstructionAddressStall)) break;
 				ProcessInstruction();
 			}
 
+			if (Debug) Console.WriteLine("[1]");
+
 			if (Done)
 			{
-				//Console.WriteLine("- DONE -----------------------------------------------------------------------");
+				if (Debug) Console.WriteLine("- DONE0 ----------------------------------------------------------------------");
 				Status.SetValue(StatusEnum.Done);
 				return;
 			}
 
 			if (InstructionAddressStall == 0)
 			{
-				//Console.WriteLine("- DONE -----------------------------------------------------------------------");
+				if (Debug) Console.WriteLine("- DONE1 ----------------------------------------------------------------------");
 				Status.SetValue(StatusEnum.Done);
 				return;
 			}
 
 			if (InstructionAddressCurrent == InstructionAddressStall)
 			{
-				//Console.WriteLine("- STALLED --------------------------------------------------------------------");
+				if (Debug) Console.WriteLine("- STALLED --------------------------------------------------------------------");
 				Status.SetValue(StatusEnum.StallReached);
 				StallAddressUpdated.WaitOne();
 				goto Loop;
 			}
+
+			if (Debug) Console.WriteLine("- DONE2 ----------------------------------------------------------------------");
+			Status.SetValue(StatusEnum.Done);
 		}
 
 		public delegate void GpuDisplayListRunnerDelegate(GpuDisplayListRunner GpuDisplayListRunner, GpuOpCodes GpuOpCode, uint Params);
@@ -273,9 +282,9 @@ namespace CSPspEmu.Core.Gpu
 			var OpCode = (GpuOpCodes)((Instruction >> 24) & 0xFF);
 			var Params = ((Instruction) & 0xFFFFFF);
 
-			if (OpCode == GpuOpCodes.Unknown0xFF)
-			{
-				Console.WriteLine("{0:X} : {1:X}", InstructionAddressCurrent, InstructionAddressStall);
+			//if (OpCode == GpuOpCodes.Unknown0xFF)
+			if (Debug) {
+				Console.WriteLine("{0:X} : {1:X} : {2}", InstructionAddressCurrent, InstructionAddressStall, OpCode);
 			}
 
 			GpuDisplayListRunner.OpCode = OpCode;
@@ -292,7 +301,7 @@ namespace CSPspEmu.Core.Gpu
 
 		internal void Call(uint Address)
 		{
-			CallStack.Push(InstructionAddressCurrent);
+			CallStack.Push(InstructionAddressCurrent + 4);
 			Jump(Address);
 			//throw new NotImplementedException();
 		}

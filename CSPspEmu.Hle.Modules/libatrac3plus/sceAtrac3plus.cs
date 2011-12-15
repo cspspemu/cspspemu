@@ -56,7 +56,8 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public int sceAtracSetData(int atracID, byte* bufferPtr, uint bufferSizeInBytes)
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return 0;
 			/*
 			u8[] buffer = bufferPtr[0..bufferSizeInBytes];
 			//unimplemented();
@@ -342,9 +343,14 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// <returns>Less than 0 on error, otherwise 0</returns>
 		[HlePspFunction(NID = 0x5D268707, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceAtracGetStreamDataInfo(int atracID, uint writePointerPointer /*u8** writePointer*/, uint* availableBytes, uint* readOffset)
+		public int sceAtracGetStreamDataInfo(int atracID, uint* writePointerPointer /*u8** writePointer*/, uint* availableBytes, uint* readOffset)
 		{
-			throw(new NotImplementedException());
+			*writePointerPointer = 0; // @FIXME!!
+			*availableBytes = 0;
+			*readOffset     = 0;
+
+			return -1;
+			//throw(new NotImplementedException());
 			/*
 			Atrac3Object atrac3Object = getAtrac3ObjectById(atracID);
 		

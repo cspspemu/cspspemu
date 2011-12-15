@@ -36,9 +36,10 @@ namespace CSPspEmu.Hle.Managers
 			this.HleInterruptManager = PspEmulatorContext.GetInstance<HleInterruptManager>();
 		}
 
-		public HleThread GetThreadById(int Id)
+		public HleThread GetThreadById(int Id, bool AllowSelf = true)
 		{
 			//Debug.WriteLine(Threads.Count);
+			if (AllowSelf && (Id == 0)) return Current;
 			return Threads.FirstOrDefault((Thread) => Thread.Id == Id);
 		}
 

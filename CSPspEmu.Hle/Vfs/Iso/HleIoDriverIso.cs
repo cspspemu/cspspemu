@@ -121,48 +121,72 @@ namespace CSPspEmu.Hle.Vfs.Iso
 
 		public unsafe int IoDopen(HleIoDrvFileArg HleIoDrvFileArg, string Name)
 		{
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
+			var IsoNode = Iso.Root.Locate(Name);
+			HleIoDrvFileArg.FileArgument = new DirectoryEnumerator<IsoNode>(IsoNode.Childs.ToArray());
+			return 0;
 		}
 
 		public unsafe int IoDclose(HleIoDrvFileArg HleIoDrvFileArg)
 		{
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
+			return 0;
 		}
 
-		public unsafe int IoDread(HleIoDrvFileArg HleIoDrvFileArg, HleIoDirent* dir)
+		public unsafe int IoDread(HleIoDrvFileArg HleIoDrvFileArg, HleIoDirent* IoDirent)
 		{
-			throw new NotImplementedException();
+			var Enumerator = (DirectoryEnumerator<IsoNode>)HleIoDrvFileArg.FileArgument;
+
+			// More items.
+			if (Enumerator.MoveNext())
+			{
+				//Console.Error.WriteLine("'{0}'", Enumerator.Current.ToString());
+				var IsoNode = Enumerator.Current;
+				{
+					PointerUtils.StoreStringOnPtr(IsoNode.Name, Encoding.UTF8, IoDirent->Name);
+					_IoGetstat(IsoNode, &IoDirent->Stat);
+				}
+			}
+			// No more items.
+			else
+			{
+			}
+
+			return Enumerator.GetLeft();
+		}
+
+		public unsafe void _IoGetstat(IsoNode IsoNode, SceIoStat* Stat)
+		{
+			//IsoNode.DirectoryRecord.Date
+			Stat->Mode = 0;
+			Stat->Mode |= SceMode.UserCanRead | SceMode.UserCanWrite | SceMode.UserCanExecute;
+			Stat->Mode |= SceMode.GroupCanRead | SceMode.GroupCanWrite | SceMode.GroupCanExecute;
+			Stat->Mode |= SceMode.OtherCanRead | SceMode.OtherCanWrite | SceMode.OtherCanExecute;
+
+			if (IsoNode.IsDirectory)
+			{
+				Stat->Mode = SceMode.Directory;
+				Stat->Attributes = IOFileModes.Directory;
+			}
+			else
+			{
+				Stat->Mode = SceMode.File;
+				Stat->Attributes = IOFileModes.File | IOFileModes.CanRead | IOFileModes.CanWrite | IOFileModes.CanExecute;
+			}
+			Stat->Size = IsoNode.DirectoryRecord.Size;
+			Stat->TimeCreation = ScePspDateTime.FromDateTime(IsoNode.DirectoryRecord.Date);
+			Stat->TimeLastAccess = ScePspDateTime.FromDateTime(IsoNode.DirectoryRecord.Date);
+			Stat->TimeLastModification = ScePspDateTime.FromDateTime(IsoNode.DirectoryRecord.Date);
+			Stat->DeviceDependentData0 = IsoNode.DirectoryRecord.Extent;
+
+			//Stat[0].DeviceDependentData
+			//throw new NotImplementedException();
 		}
 
 		public unsafe int IoGetstat(HleIoDrvFileArg HleIoDrvFileArg, string FileName, SceIoStat* Stat)
 		{
 			//Console.WriteLine(FileName);
-			var IsoNode = Iso.Root.Locate(FileName);
-
-			//IsoNode.DirectoryRecord.Date
-			Stat[0].Mode = 0;
-			Stat[0].Mode |= SceMode.UserCanRead | SceMode.UserCanWrite | SceMode.UserCanExecute;
-			Stat[0].Mode |= SceMode.GroupCanRead | SceMode.GroupCanWrite | SceMode.GroupCanExecute;
-			Stat[0].Mode |= SceMode.OtherCanRead | SceMode.OtherCanWrite | SceMode.OtherCanExecute;
-
-			if (IsoNode.IsDirectory)
-			{
-				Stat[0].Mode = SceMode.Directory;
-				Stat[0].Attributes = IOFileModes.Directory;
-			}
-			else
-			{
-				Stat[0].Mode = SceMode.File;
-				Stat[0].Attributes = IOFileModes.File | IOFileModes.CanRead | IOFileModes.CanWrite | IOFileModes.CanExecute;
-			}
-			Stat[0].Size = IsoNode.DirectoryRecord.Size;
-			Stat[0].TimeCreation = ScePspDateTime.FromDateTime(IsoNode.DirectoryRecord.Date);
-			Stat[0].TimeLastAccess = ScePspDateTime.FromDateTime(IsoNode.DirectoryRecord.Date);
-			Stat[0].TimeLastModification = ScePspDateTime.FromDateTime(IsoNode.DirectoryRecord.Date);
-			Stat[0].DeviceDependentData0 = IsoNode.DirectoryRecord.Extent;
-
-			//Stat[0].DeviceDependentData
-			//throw new NotImplementedException();
+			_IoGetstat(Iso.Root.Locate(FileName), Stat);
 
 			return 0;
 		}

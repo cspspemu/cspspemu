@@ -172,36 +172,6 @@ namespace CSPspEmu.Hle.Vfs.Local
 			throw new NotImplementedException();
 		}
 
-		private class FileInfoEnumerator
-		{
-			int Index = -1;
-			FileSystemInfo[] List;
-
-			public FileInfoEnumerator(FileSystemInfo[] List)
-			{
-				this.List = List;
-			}
-
-			public bool MoveNext()
-			{
-				Index++;
-				return (GetLeft() > 0);
-			}
-
-			public FileSystemInfo Current
-			{
-				get
-				{
-					return List[Index];
-				}
-			}
-
-			public int GetLeft()
-			{
-				return List.Length - Index;
-			}
-		}
-
 		public unsafe int IoDopen(HleIoDrvFileArg HleIoDrvFileArg, string Name)
 		{
 			var RealFileName = GetFullNormalizedAndSanitizedPath(Name);
@@ -215,7 +185,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 					Console.Error.WriteLine(Info);
 				}
 				*/
-				HleIoDrvFileArg.FileArgument = new FileInfoEnumerator(FileSystemInfo);
+				HleIoDrvFileArg.FileArgument = new DirectoryEnumerator<FileSystemInfo>(FileSystemInfo);
 				return 0;
 			}
 			catch (DirectoryNotFoundException DirectoryNotFoundException)
@@ -233,7 +203,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 
 		public unsafe int IoDread(HleIoDrvFileArg HleIoDrvFileArg, HleIoDirent* IoDirent)
 		{
-			var Enumerator = (FileInfoEnumerator)HleIoDrvFileArg.FileArgument;
+			var Enumerator = (DirectoryEnumerator<FileSystemInfo>)HleIoDrvFileArg.FileArgument;
 
 			// More items.
 			if (Enumerator.MoveNext())
@@ -243,22 +213,22 @@ namespace CSPspEmu.Hle.Vfs.Local
 				var FileInfo = (FileSystemInfo as FileInfo);
 				var DirectoryInfo = (FileSystemInfo as DirectoryInfo);
 				{
-					PointerUtils.StoreStringOnPtr(FileSystemInfo.Name, Encoding.UTF8, IoDirent[0].Name);
-					IoDirent[0].Stat.Size = (FileInfo != null) ? FileInfo.Length : 0;
-					//IoDirent[0].Stat.Mode = SceMode
+					PointerUtils.StoreStringOnPtr(FileSystemInfo.Name, Encoding.UTF8, IoDirent->Name);
+					IoDirent->Stat.Size = (FileInfo != null) ? FileInfo.Length : 0;
+					//IoDirent->Stat.Mode = SceMode
 
 					if (DirectoryInfo != null)
 					{
-						IoDirent[0].Stat.Mode = SceMode.Directory | (SceMode)0777;
-						IoDirent[0].Stat.Attributes = IOFileModes.Directory;
+						IoDirent->Stat.Mode = SceMode.Directory | (SceMode)0777;
+						IoDirent->Stat.Attributes = IOFileModes.Directory;
 					}
 					else
 					{
-						IoDirent[0].Stat.Mode = SceMode.File | (SceMode)0777;
-						IoDirent[0].Stat.Attributes = IOFileModes.File | IOFileModes.CanRead | IOFileModes.CanWrite | IOFileModes.CanExecute;
+						IoDirent->Stat.Mode = SceMode.File | (SceMode)0777;
+						IoDirent->Stat.Attributes = IOFileModes.File | IOFileModes.CanRead | IOFileModes.CanWrite | IOFileModes.CanExecute;
 					}
 
-					IoDirent[0].Stat.DeviceDependentData0 = 10;
+					IoDirent->Stat.DeviceDependentData0 = 10;
 				}
 			}
 			// No more items.
@@ -274,7 +244,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 			var RealFileName = GetFullNormalizedAndSanitizedPath(FileName);
 			//Console.WriteLine(RealFileName);
 			var FileInfo = new FileInfo(RealFileName);
-			Stat[0].Size = FileInfo.Length;
+			Stat->Size = FileInfo.Length;
 			return 0;
 		}
 

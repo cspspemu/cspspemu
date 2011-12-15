@@ -16,25 +16,34 @@ namespace CSPspEmu.Hle.Modules.ge
 
 		public int _sceGeListEnQueue(uint InstructionAddressStart, uint InstructionAddressStall, int CallbackId, PspGeListArgs* Args, Action<GpuDisplayList> Action)
 		{
-			var DisplayList = HleState.GpuProcessor.DequeueFreeDisplayList();
+			try
 			{
-				DisplayList.InstructionAddressStart = InstructionAddressStart;
-				DisplayList.InstructionAddressCurrent = InstructionAddressStart;
-				DisplayList.InstructionAddressStall = InstructionAddressStall;
-				DisplayList.GpuStateStructPointer = null;
-				if (Args != null)
+				var DisplayList = HleState.GpuProcessor.DequeueFreeDisplayList();
 				{
-					DisplayList.GpuStateStructPointer = (GpuStateStruct*)HleState.CpuProcessor.Memory.PspAddressToPointer(Args[0].GpuStateStructAddress);
-					//throw(new NotImplementedException());
-				}
+					DisplayList.InstructionAddressStart = InstructionAddressStart;
+					DisplayList.InstructionAddressCurrent = InstructionAddressStart;
+					DisplayList.InstructionAddressStall = InstructionAddressStall;
+					DisplayList.GpuStateStructPointer = null;
+					if (Args != null)
+					{
+						DisplayList.GpuStateStructPointer = (GpuStateStruct*)HleState.CpuProcessor.Memory.PspAddressToPointer(Args[0].GpuStateStructAddress);
+						//throw(new NotImplementedException());
+					}
 
-				if (DisplayList.GpuStateStructPointer == null)
-				{
-					DisplayList.GpuStateStructPointer = (GpuStateStruct*)HleState.CpuProcessor.Memory.PspAddressToPointerSafe(0x08107000);
+					if (DisplayList.GpuStateStructPointer == null)
+					{
+						DisplayList.GpuStateStructPointer = (GpuStateStruct*)HleState.CpuProcessor.Memory.PspAddressToPointerSafe(0x08107000);
+					}
+					Action(DisplayList);
 				}
-				Action(DisplayList);
+				return DisplayList.Id;
 			}
-			return DisplayList.Id;
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
+				//return -1;
+				throw(Exception);
+			}
 		}
 
 		/// <summary>

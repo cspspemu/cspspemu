@@ -19,7 +19,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		[HlePspFunction(NID = 0xE26F226E, FirmwareVersion = 150)]
 		public int sceNetAdhocctlInit(int stacksize, int priority, productStruct* product)
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return 0;
 		}
 
 		/**
@@ -226,9 +227,11 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		 * @return Handler id on success, < 0 on error.
 		 */
 		[HlePspFunction(NID = 0x20B317A0, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceNetAdhocctlAddHandler(/*sceNetAdhocctlHandler*/uint handler, void* unknown)
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return 0;
 		}
 
 		/**

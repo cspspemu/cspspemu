@@ -17,7 +17,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		[HlePspFunction(NID = 0xE1D621D7, FirmwareVersion = 150)]
 		public int sceNetAdhocInit()
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>

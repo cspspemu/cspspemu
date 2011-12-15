@@ -209,6 +209,12 @@ namespace CSPspEmu.Sandbox
 					PspEmulatorContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
 					PspEmulatorContext.SetInstanceType<PspAudioImpl, PspAudioOpenalImpl>();
 
+#if RELEASE
+					PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();
+#else
+					PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
+#endif
+					/*
 					if (PspConfig.UseFastAndUnsaferMemory)
 					{
 						PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();
@@ -217,6 +223,7 @@ namespace CSPspEmu.Sandbox
 					{
 						PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
 					}
+					*/
 				}
 
 				PspRunner = PspEmulatorContext.GetInstance<PspRunner>();
@@ -235,10 +242,17 @@ namespace CSPspEmu.Sandbox
 			Console.WriteLine("ShowDebugInformation:");
 			var CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();
 			PspRunner.CpuComponentThread.DumpThreads();
-			foreach (var Key in CpuProcessor.GlobalInstructionStats.Keys.OrderBy(Value => Value))
+			Console.WriteLine("-----------------------------------------------------------------");
+			foreach (var Pair in CpuProcessor.GlobalInstructionStats.OrderBy(Pair => Pair.Value))
 			{
-				Console.WriteLine("{0} -> {1}", Key, CpuProcessor.GlobalInstructionStats[Key]);
+				Console.WriteLine("{0} -> {1}", Pair.Key, Pair.Value);
 			}
+			Console.WriteLine("-----------------------------------------------------------------");
+			foreach (var Pair in CpuProcessor.GlobalInstructionStats.OrderBy(Pair => Pair.Key))
+			{
+				Console.WriteLine("{0} -> {1}", Pair.Key, Pair.Value);
+			}
+			Console.WriteLine("-----------------------------------------------------------------");
 		}
 	}
 }

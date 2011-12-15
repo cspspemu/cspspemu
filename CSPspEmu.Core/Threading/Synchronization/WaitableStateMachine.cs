@@ -37,27 +37,27 @@ namespace CSPspEmu.Core.Threading.Synchronization
 
 		public void SetValue(TEnum value)
 		{
-			_Value = value;
-			ValueWasUpdated();
+			lock (Notifications)
+			{
+				_Value = value;
+				ValueWasUpdated();
+			}
 		}
 
 		Dictionary<TEnum, List<Action>> Notifications = new Dictionary<TEnum, List<Action>>();
 
 		protected void ValueWasUpdated()
 		{
-			lock (Notifications)
+			if (Debug) Console.WriteLine("WaitableStateMachine::ValueWasUpdated: " + Value);
+			if (Notifications.ContainsKey(Value))
 			{
-				if (Debug) Console.WriteLine("WaitableStateMachine::ValueWasUpdated: " + Value);
-				if (Notifications.ContainsKey(Value))
+				if (Debug) Console.WriteLine("  Contains");
+				foreach (var Callback in Notifications[Value])
 				{
-					if (Debug) Console.WriteLine("  Contains");
-					foreach (var Callback in Notifications[Value])
-					{
-						if (Debug) Console.WriteLine("    Callback");
-						Callback();
-					}
-					Notifications[Value] = new List<Action>();
+					if (Debug) Console.WriteLine("    Callback");
+					Callback();
 				}
+				Notifications[Value] = new List<Action>();
 			}
 
 			ValueUpdatedEvent.Set();

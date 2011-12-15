@@ -443,6 +443,27 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return HleState.ThreadManager.Current.Info.PriorityCurrent;
 		}
 
+		/// <summary>
+		/// Get the free stack size for a thread.
+		/// </summary>
+		/// <param name="ThreadId">
+		///		The thread ID. Seem to take current thread if set to 0.
+		/// </param>
+		/// <returns>The free size.</returns>
+		[HlePspFunction(NID = 0x52089CA1, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelGetThreadStackFreeSize(int ThreadId)
+		{
+			var HleThread = HleState.ThreadManager.GetThreadById(ThreadId, AllowSelf: true);
+			var SpHigh = (uint)HleThread.Info.StackPointer;
+			var SpLow = (uint)HleThread.Info.StackPointer - HleThread.Info.StackSize;
+			var SpCurrent = (uint)HleThread.CpuThreadState.SP;
+			Console.Error.WriteLine("{0:X} - {1:X} - {2:X}", SpLow, SpCurrent, SpHigh);
+			return (int)(SpCurrent - SpLow);
+			//throw(new NotImplementedException());
+			//return SpHigh - SpCurrent;
+		}
+
 		/*
 		public int _sceKernelExitDeleteThread(int Status, HleThread Thread)
 		{

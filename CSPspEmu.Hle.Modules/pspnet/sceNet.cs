@@ -10,7 +10,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Initialise the networking library
 		/// </summary>
-		/// <param name="poolsize">Memory pool size (appears to be for the whole of the networking library).</param>
+		/// <param name="MemoryPoolSize">Memory pool size (appears to be for the whole of the networking library).</param>
 		/// <param name="calloutprio">Priority of the SceNetCallout thread.</param>
 		/// <param name="calloutstack">Stack size of the SceNetCallout thread (defaults to 4096 on non 1.5 firmware regardless of what value is passed).</param>
 		/// <param name="netintrprio">Priority of the SceNetNetintr thread.</param>
@@ -20,9 +20,10 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		///		less than 0 on error
 		/// </returns>
         [HlePspFunction(NID = 0x39AF39A6, FirmwareVersion = 150)]
-		public int sceNetInit(int poolsize, int calloutprio, int calloutstack, int netintrprio, int netintrstack)
+		public int sceNetInit(int MemoryPoolSize, int calloutprio, int calloutstack, int netintrprio, int netintrstack)
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>

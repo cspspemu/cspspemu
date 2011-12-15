@@ -135,7 +135,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					CpuEmiter.LoadAT(PC);
 
 					var BranchInfo = GetBranchInfo(CpuEmiter.Instruction.Value);
-					if (CpuProcessor.PspConfig.ShowInstructionStats)
+					if (CpuProcessor.PspConfig.LogInstructionStats)
 					{
 						var InstructionName = GetInstructionName(CpuEmiter.Instruction.Value, null);
 

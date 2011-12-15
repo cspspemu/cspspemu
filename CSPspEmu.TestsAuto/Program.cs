@@ -273,7 +273,10 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "fpl";
 				//WildCardFilter = "msgpipe";
 				//WildCardFilter = "events";
-				WildCardFilter = "vpl";
+				//WildCardFilter = "vpl";
+				//WildCardFilter = "fpu";
+				WildCardFilter = "vfpu";
+				//WildCardFilter = "umd_io";
 			}
 
 			if (WildCardFilter.Length > 0)

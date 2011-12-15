@@ -137,11 +137,12 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		///		sceUmdWaitDriveStat(PSP_UMD_READY);
 		///		// Now you can access the UMD using standard sceIo functions
 		/// </example>
-		/// <param name="mode">Mode.</param>
-		/// <param name="drive">A prefix string for the fs device to mount the UMD on (e.g. "disc0:")</param>
+		/// <param name="Mode">Mode.</param>
+		/// <param name="Drive">A prefix string for the fs device to mount the UMD on (e.g. "disc0:")</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xC6183D47, FirmwareVersion = 150)]
-		public int sceUmdActivate(int mode, string drive)
+		[HlePspNotImplemented]
+		public int sceUmdActivate(int Mode, string Drive)
 		{
 			return 0;
 			//throw(new NotImplementedException());
@@ -155,16 +156,17 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		/// <summary>
 		/// Deativates the UMD drive
 		/// </summary>
-		/// <param name="mode">Mode.</param>
-		/// <param name="drive">A prefix string for the fs device to mount the UMD on (e.g. "disc0:")</param>
+		/// <param name="Mode">Mode.</param>
+		/// <param name="Drive">A prefix string for the fs device to mount the UMD on (e.g. "disc0:")</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xE83742BA, FirmwareVersion = 150)]
-		public int sceUmdDeactivate(int mode, string drive)
+		[HlePspNotImplemented]
+		public int sceUmdDeactivate(int Mode, string Drive)
 		{
-			throw (new NotImplementedException());
+			return 0;
+			//throw (new NotImplementedException());
 			/*
 			unimplemented_notice();
-			return 0;
 			*/
 		}
 

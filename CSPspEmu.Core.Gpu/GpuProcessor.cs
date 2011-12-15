@@ -83,6 +83,7 @@ namespace CSPspEmu.Core.Gpu
 		/// </summary>
 		//public event Action DrawSync;
 		readonly public WaitableStateMachine<StatusEnum> Status = new WaitableStateMachine<StatusEnum>(Debug: false);
+		//readonly public WaitableStateMachine<StatusEnum> Status = new WaitableStateMachine<StatusEnum>(Debug: true);
 
 		/// <summary>
 		/// 
@@ -110,7 +111,8 @@ namespace CSPspEmu.Core.Gpu
 			{
 				var DisplayList = new GpuDisplayList(Memory, this, n);
 				this.DisplayLists[n] = DisplayList;
-				this.DisplayListFreeQueue.Enqueue(DisplayLists[n]);
+				//this.DisplayListFreeQueue.Enqueue(DisplayLists[n]);
+				EnqueueFreeDisplayList(DisplayLists[n]);
 			}
 		}
 
@@ -119,6 +121,8 @@ namespace CSPspEmu.Core.Gpu
 			GpuImpl.AddedDisplayList();
 		}
 
+		AutoResetEvent DisplayListFreeEvent = new AutoResetEvent(false);
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -126,7 +130,18 @@ namespace CSPspEmu.Core.Gpu
 		public GpuDisplayList DequeueFreeDisplayList()
 		{
 			//Console.WriteLine("Count: {0}", this.DisplayListFreeQueue.Count);
-			return this.DisplayListFreeQueue.Dequeue();
+			/*
+			while (this.DisplayListFreeQueue.Count == 0)
+			{
+				DisplayListFreeEvent.WaitOne(500);
+				if (this.DisplayListFreeQueue.Count > 0) break;
+				Console.Error.WriteLine("Empty Count");
+			}
+			*/
+			lock (DisplayListFreeQueue)
+			{
+				return this.DisplayListFreeQueue.Dequeue();
+			}
 		}
 
 		/// <summary>
@@ -136,7 +151,11 @@ namespace CSPspEmu.Core.Gpu
 		public void EnqueueFreeDisplayList(GpuDisplayList GpuDisplayList)
 		{
 			AddedDisplayList();
-			this.DisplayListFreeQueue.Enqueue(GpuDisplayList);
+			lock (DisplayListFreeQueue)
+			{
+				this.DisplayListFreeQueue.Enqueue(GpuDisplayList);
+			}
+			DisplayListFreeEvent.Set();
 		}
 
 		/// <summary>

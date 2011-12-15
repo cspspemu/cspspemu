@@ -81,6 +81,49 @@ namespace CSPspEmu.Core.Gpu.State
 
 	}
 
+	public enum PrimitiveType : byte
+	{
+		Points = 0,
+		Lines = 1,
+		LineStrip = 2,
+		Triangles = 3,
+		TriangleStrip = 4,
+		TriangleFan = 5,
+		Sprites = 6,
+	}
+
+	public enum TextureColorComponent
+	{
+		Rgb = 0,
+		Rgba = 1,
+	}
+
+	public enum TextureEffect
+	{
+		Modulate = 0,
+		Decal = 1,
+		Blend = 2,
+		Replace = 3,
+		Add = 4,
+	}
+
+	public enum TextureFilter
+	{
+		Nearest = 0,
+		Linear = 1,
+
+		NearestMipmapNearest = 4,
+		LinearMipmapNearest = 5,
+		NearestMipmapLinear = 6,
+		LinearMipmapLinear = 7,
+	}
+
+	public enum WrapMode
+	{
+		Repeat = 0,
+		Clamp = 1,
+	}
+
 	public enum LogicalOperationEnum : byte
 	{
 		Clear = 0,

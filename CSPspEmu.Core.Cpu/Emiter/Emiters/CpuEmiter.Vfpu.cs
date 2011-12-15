@@ -273,8 +273,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		// Vfpu ZERO/ONE
-		public void vzero() { throw (new NotImplementedException("")); }
-		public void vone() { throw (new NotImplementedException("")); }
+		public void vzero()
+		{
+			VectorOperationSaveVd((Index, Load) => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 0.0f); });
+		}
+		public void vone()
+		{
+			VectorOperationSaveVd((Index, Load) => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 1.0f); });
+		}
 
 		// Vfpu MOVe/SiGN/Reverse SQuare root/COSine/Arc SINe/LOG2
 		// @CHECK
@@ -551,7 +557,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		public void vmone() { throw (new NotImplementedException("")); }
 
-		public void vnop() { throw (new NotImplementedException("")); }
+		public void vnop() {
+			//throw (new NotImplementedException(""));
+		}
 		public void vsync() { throw (new NotImplementedException("")); }
 		public void vflush() { throw (new NotImplementedException("")); }
 

@@ -108,6 +108,7 @@
     <Compile Include="Utils\ZOutputStream.cs" />
     <Compile Include="Utils\ZStream.cs" />
     <Compile Include="Utils\ZStreamException.cs" />
+    <Compile Include="Vfs\DirectoryEnumerator.cs" />
     <Compile Include="Vfs\Emulator\HleIoDriverEmulator.cs" />
     <Compile Include="Vfs\HleIoDriverExtensions.cs" />
     <Compile Include="Vfs\IHleIoDriver.cs" />

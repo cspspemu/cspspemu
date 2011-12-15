@@ -99,12 +99,13 @@ namespace CSPspEmu.Hle.Modules.audio
 		/// <summary>
 		/// Get count of unplayed samples remaining
 		/// </summary>
-		/// <param name="Channel">The channel number.</param>
+		/// <param name="ChannelId">The channel number.</param>
 		/// <returns>Number of samples to be played, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0xB011922F, FirmwareVersion = 150)]
-		public int sceAudioGetChannelRestLength(int Channel)
+		public int sceAudioGetChannelRestLength(int ChannelId)
 		{
-			throw(new NotImplementedException());
+			var Channel = HleState.PspAudio.GetChannel(ChannelId);
+			return Channel.AvailableChannelsForRead;
 		}
 
 		/// <summary>
@@ -276,10 +277,18 @@ namespace CSPspEmu.Hle.Modules.audio
 		[HlePspFunction(NID = 0x5EC81C55, FirmwareVersion = 150)]
 		public int sceAudioChReserve(int ChannelId, int SampleCount, PspAudio.FormatEnum Format)
 		{
-			var Channel = HleState.PspAudio.GetChannel(ChannelId);
-			Channel.SampleCount = SampleCount;
-			Channel.Format = Format;
-			return Channel.Index;
+			try
+			{
+				var Channel = HleState.PspAudio.GetChannel(ChannelId);
+				Channel.SampleCount = SampleCount;
+				Channel.Format = Format;
+				return Channel.Index;
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
+				return -1;
+			}
 		}
 
 		/// <summary>
