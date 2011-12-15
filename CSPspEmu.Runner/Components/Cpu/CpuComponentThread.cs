@@ -312,5 +312,14 @@ namespace CSPspEmu.Runner.Components.Cpu
 				}
 			}
 		}
+
+		public void DumpThreads()
+		{
+			foreach (var Thread in ThreadManager.Threads.ToArray())
+			{
+				Console.Out.WriteLine("{0}", Thread);
+			}
+			//throw new NotImplementedException();
+		}
 	}
 }

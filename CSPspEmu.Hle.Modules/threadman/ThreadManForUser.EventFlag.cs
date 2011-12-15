@@ -84,24 +84,14 @@ namespace CSPspEmu.Hle.Modules.threadman
 			var EventFlag = HleState.EventFlagManager.EventFlags.Get(EventId);
 			bool TimedOut = false;
 
-			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, "_sceKernelWaitEventFlagCB", WakeUpCallback =>
+			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, String.Format("_sceKernelWaitEventFlagCB(EventId={0}, Bits={1:X}, Wait={2})", EventId, Bits, Wait), WakeUpCallback =>
 			{
-				bool WakedUpAlready = false;
-				Action WakeUpOnce = () =>
-				{
-					if (!WakedUpAlready)
-					{
-						WakedUpAlready = true;
-						WakeUpCallback();
-					}
-				};
-
 				if (Timeout != null)
 				{
 					HleState.PspRtc.RegisterTimerInOnce(TimeSpanUtils.FromMicroseconds(*Timeout), () =>
 					{
 						TimedOut = true;
-						WakeUpOnce();
+						WakeUpCallback();
 					});
 				}
 
@@ -110,7 +100,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 					HleThread = HleState.ThreadManager.Current,
 					BitsToMatch = Bits,
 					WaitType = Wait,
-					WakeUpCallback = WakeUpOnce,
+					WakeUpCallback = () => { WakeUpCallback(); },
 					OutBits = OutBits,
 				});
 			}, HandleCallbacks: HandleCallbacks);
@@ -163,6 +153,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x1FB15A32, FirmwareVersion = 150)]
 		public int sceKernelSetEventFlag(EventFlagId EventId, uint BitPattern)
 		{
+			//Console.WriteLine("FLAG:{0} : {1:X}", EventId, BitPattern);
 			HleState.EventFlagManager.EventFlags.Get(EventId).Set(BitPattern);
 			return 0;
 		}

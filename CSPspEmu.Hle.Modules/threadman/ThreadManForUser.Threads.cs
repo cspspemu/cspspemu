@@ -415,7 +415,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelDeleteThread(int ThreadId)
 		{
 			var Thread = HleState.ThreadManager.GetThreadById(ThreadId);
-			//HleState.ThreadManager.DeleteThread(Thread);
+			HleState.ThreadManager.DeleteThread(Thread);
 			return 0;
 			//return _sceKernelExitDeleteThread(-1, GetThreadById(ThreadId));
 		}

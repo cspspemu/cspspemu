@@ -466,5 +466,15 @@ namespace CSPspEmu.Gui.Winforms
 			PspConfig.NoticeUnimplementedGpuCommands = !PspConfig.NoticeUnimplementedGpuCommands;
 			updateDebugSyscalls();
 		}
+
+		private void showThreadInfoToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			IGuiExternalInterface.ShowDebugInformation();
+		}
+
+		private void debugToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
+		}
 	}
 }

@@ -59,10 +59,10 @@ namespace CSPspEmu.Sandbox
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Final Fantasy Tactics.iso", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: true);
-			//PspEmulator.StartAndLoad(@"C:\psp\isos\astonishia.iso", TraceSyscalls: false);
+			PspEmulator.StartAndLoad(@"C:\psp\isos\astonishia.iso", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"C:\psp\isos\Tales of Eternia.iso", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"C:\psp\isos\Koloomn.cso", TraceSyscalls: false);
-			//PspEmulator.StartAndLoad(@"C:\psp\isos\Final Fantasy Tactics.iso", TraceSyscalls: true);
+			//PspEmulator.StartAndLoad(@"C:\psp\isos\Final Fantasy Tactics.iso", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Championship_Manager.cso", TraceSyscalls: true);
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\DragonBall Z Shin Budokai.cso", TraceSyscalls: true);
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Harvest Moon.iso", TraceSyscalls: true);
@@ -78,7 +78,7 @@ namespace CSPspEmu.Sandbox
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia.iso", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Koloomn.cso", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Kameleon.cso", TraceSyscalls: false);
-			PspEmulator.StartAndLoad(@"F:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);
+			//PspEmulator.StartAndLoad(@"F:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\audio\polyphonic\polyphonic.elf", TraceSyscalls: false);
 
 			//PspEmulator.StartAndLoad(@"C:\juegos\jpcsp_last\demos\compilerPerf.pbp");

@@ -231,7 +231,10 @@ namespace CSPspEmu.Sandbox
 
 		public void ShowDebugInformation()
 		{
+			Console.WriteLine("-----------------------------------------------------------------");
+			Console.WriteLine("ShowDebugInformation:");
 			var CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();
+			PspRunner.CpuComponentThread.DumpThreads();
 			foreach (var Key in CpuProcessor.GlobalInstructionStats.Keys.OrderBy(Value => Value))
 			{
 				Console.WriteLine("{0} -> {1}", Key, CpuProcessor.GlobalInstructionStats[Key]);

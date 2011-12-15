@@ -50,6 +50,8 @@
 			this.pauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.traceSyscallsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.traceUnimplementedGpuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.showThreadInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.websiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
@@ -57,7 +59,6 @@
 			this.blogcballesterosvelascoesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.traceUnimplementedGpuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -132,28 +133,32 @@
 			// xToolStripMenuItem1
 			// 
 			this.xToolStripMenuItem1.Name = "xToolStripMenuItem1";
-			this.xToolStripMenuItem1.Size = new System.Drawing.Size(85, 22);
+			this.xToolStripMenuItem1.ShortcutKeyDisplayString = "1";
+			this.xToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
 			this.xToolStripMenuItem1.Text = "&1x";
 			this.xToolStripMenuItem1.Click += new System.EventHandler(this.xToolStripMenuItem1_Click);
 			// 
 			// xToolStripMenuItem2
 			// 
 			this.xToolStripMenuItem2.Name = "xToolStripMenuItem2";
-			this.xToolStripMenuItem2.Size = new System.Drawing.Size(85, 22);
+			this.xToolStripMenuItem2.ShortcutKeyDisplayString = "2";
+			this.xToolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
 			this.xToolStripMenuItem2.Text = "&2x";
 			this.xToolStripMenuItem2.Click += new System.EventHandler(this.xToolStripMenuItem2_Click);
 			// 
 			// xToolStripMenuItem3
 			// 
 			this.xToolStripMenuItem3.Name = "xToolStripMenuItem3";
-			this.xToolStripMenuItem3.Size = new System.Drawing.Size(85, 22);
+			this.xToolStripMenuItem3.ShortcutKeyDisplayString = "3";
+			this.xToolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
 			this.xToolStripMenuItem3.Text = "&3x";
 			this.xToolStripMenuItem3.Click += new System.EventHandler(this.xToolStripMenuItem3_Click);
 			// 
 			// xToolStripMenuItem4
 			// 
 			this.xToolStripMenuItem4.Name = "xToolStripMenuItem4";
-			this.xToolStripMenuItem4.Size = new System.Drawing.Size(85, 22);
+			this.xToolStripMenuItem4.ShortcutKeyDisplayString = "4";
+			this.xToolStripMenuItem4.Size = new System.Drawing.Size(152, 22);
 			this.xToolStripMenuItem4.Text = "&4x";
 			this.xToolStripMenuItem4.Click += new System.EventHandler(this.xToolStripMenuItem4_Click);
 			// 
@@ -203,14 +208,14 @@
 			// resumeToolStripMenuItem
 			// 
 			this.resumeToolStripMenuItem.Name = "resumeToolStripMenuItem";
-			this.resumeToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+			this.resumeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.resumeToolStripMenuItem.Text = "&Run/Resume";
 			this.resumeToolStripMenuItem.Click += new System.EventHandler(this.resumeToolStripMenuItem_Click);
 			// 
 			// pauseToolStripMenuItem
 			// 
 			this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
-			this.pauseToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+			this.pauseToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.pauseToolStripMenuItem.Text = "&Pause";
 			this.pauseToolStripMenuItem.Click += new System.EventHandler(this.pauseToolStripMenuItem_Click);
 			// 
@@ -218,10 +223,12 @@
 			// 
 			this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.traceSyscallsToolStripMenuItem,
-            this.traceUnimplementedGpuToolStripMenuItem});
+            this.traceUnimplementedGpuToolStripMenuItem,
+            this.showThreadInfoToolStripMenuItem});
 			this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
 			this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
 			this.debugToolStripMenuItem.Text = "&Debug";
+			this.debugToolStripMenuItem.Click += new System.EventHandler(this.debugToolStripMenuItem_Click);
 			// 
 			// traceSyscallsToolStripMenuItem
 			// 
@@ -229,6 +236,21 @@
 			this.traceSyscallsToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
 			this.traceSyscallsToolStripMenuItem.Text = "Trace &Syscalls";
 			this.traceSyscallsToolStripMenuItem.Click += new System.EventHandler(this.traceSyscallsToolStripMenuItem_Click);
+			// 
+			// traceUnimplementedGpuToolStripMenuItem
+			// 
+			this.traceUnimplementedGpuToolStripMenuItem.Name = "traceUnimplementedGpuToolStripMenuItem";
+			this.traceUnimplementedGpuToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+			this.traceUnimplementedGpuToolStripMenuItem.Text = "Trace Unimplemented Gpu";
+			this.traceUnimplementedGpuToolStripMenuItem.Click += new System.EventHandler(this.traceUnimplementedGpuToolStripMenuItem_Click);
+			// 
+			// showThreadInfoToolStripMenuItem
+			// 
+			this.showThreadInfoToolStripMenuItem.Name = "showThreadInfoToolStripMenuItem";
+			this.showThreadInfoToolStripMenuItem.ShortcutKeyDisplayString = "F2";
+			this.showThreadInfoToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+			this.showThreadInfoToolStripMenuItem.Text = "Show &Thread Info";
+			this.showThreadInfoToolStripMenuItem.Click += new System.EventHandler(this.showThreadInfoToolStripMenuItem_Click);
 			// 
 			// helpToolStripMenuItem
 			// 
@@ -281,13 +303,6 @@
 			this.aboutToolStripMenuItem.Text = "&About...";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
-			// traceUnimplementedGpuToolStripMenuItem
-			// 
-			this.traceUnimplementedGpuToolStripMenuItem.Name = "traceUnimplementedGpuToolStripMenuItem";
-			this.traceUnimplementedGpuToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
-			this.traceUnimplementedGpuToolStripMenuItem.Text = "Trace Unimplemented Gpu";
-			this.traceUnimplementedGpuToolStripMenuItem.Click += new System.EventHandler(this.traceUnimplementedGpuToolStripMenuItem_Click);
-			// 
 			// PspDisplayForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -339,5 +354,6 @@
 		private System.Windows.Forms.ToolStripMenuItem blogcballesterosvelascoesToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem traceSyscallsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem traceUnimplementedGpuToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem showThreadInfoToolStripMenuItem;
 	}
 }

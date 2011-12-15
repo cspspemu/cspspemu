@@ -172,5 +172,10 @@ namespace CSPspEmu.Hle.Managers
 		public void Dispose()
 		{
 		}
+
+		public unsafe void DeleteThread(HleThread Thread)
+		{
+			ExitThread(Thread);
+		}
 	}
 }

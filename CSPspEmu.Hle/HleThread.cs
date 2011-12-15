@@ -89,6 +89,11 @@ namespace CSPspEmu.Hle
 		public Action WakeUpCallback;
 		public List<Action> WakeUpList = new List<Action>();
 
+		/// <summary>
+		/// Number of times the thread have been paused.
+		/// </summary>
+		protected int YieldCount = 0;
+
 		public bool IsWaitingAndHandlingCallbacks
 		{
 			get
@@ -319,9 +324,19 @@ namespace CSPspEmu.Hle
 
 		public void SetWaitAndPrepareWakeUp(WaitType WaitType, String WaitDescription, Action<WakeUpCallbackDelegate> PrepareCallback, bool HandleCallbacks = false)
 		{
+			bool CalledAlready = false;
+			YieldCount++;
 			SetWait0(WaitType, WaitDescription, HandleCallbacks);
 			{
-				PrepareCallback(WakeUp);
+				//PrepareCallback(WakeUp);
+				PrepareCallback(() =>
+				{
+					if (!CalledAlready)
+					{
+						CalledAlready = true;
+						WakeUp();
+					}
+				});
 			}
 			SetWait1();
 		}
@@ -352,7 +367,7 @@ namespace CSPspEmu.Hle
 
 		public override string ToString()
 		{
-			var Ret = String.Format("HleThread(Id={0}, Name='{1}', Status={2}", Id, Name, CurrentStatus);
+			var Ret = String.Format("HleThread(Id={0}, Name='{1}', Status={2}, WaitCount={3}", Id, Name, CurrentStatus, YieldCount);
 			switch (CurrentStatus)
 			{
 				case Status.Waiting:
