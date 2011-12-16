@@ -349,11 +349,11 @@ namespace CSPspEmu.Hle.Modules.pmfplayer
 
 		public struct PmfInfoStruct
 		{
-			uint psmfCurrentPts;
-			uint psmfAvcStreamNum;
-			uint psmfAtracStreamNum;
-			uint psmfPcmStreamNum;
-			uint psmfPlayerVersion;
+			public uint psmfCurrentPts;
+			public uint psmfAvcStreamNum;
+			public uint psmfAtracStreamNum;
+			public uint psmfPcmStreamNum;
+			public uint psmfPlayerVersion;
 		}
 
 		public enum PSMF_PLAYER_CONFIG_MODE : uint

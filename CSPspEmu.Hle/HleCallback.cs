@@ -30,7 +30,7 @@ namespace CSPspEmu.Hle
 		public void SetArgumentsToCpuThreadState(CpuThreadState CpuThreadState)
 		{
 			int GprIndex = 4;
-			int FprIndex = 0;
+			//int FprIndex = 0;
 			Action<int> GprAlign = (int Alignment) =>
 			{
 				GprIndex = (int)MathUtils.NextAligned((uint)GprIndex, Alignment);

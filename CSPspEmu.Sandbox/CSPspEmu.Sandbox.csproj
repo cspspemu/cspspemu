@@ -95,7 +95,7 @@
       <Name>CSPspEmu.Core.Gpu.Impl.Opengl</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">
-      <Project>{9A30EBF3-B702-47D9-AAFC-E3E02B410DAD}</Project>
+      <Project>{9a30ebf3-b702-47d9-aafc-e3e02b410dad}</Project>
       <Name>CSPspEmu.Core.Gpu</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Runner\CSPspEmu.Runner.csproj">

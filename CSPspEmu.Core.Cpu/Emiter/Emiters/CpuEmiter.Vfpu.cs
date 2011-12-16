@@ -58,82 +58,126 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_R4);
 			}
 		}
+
+/*
+		void OP_LVR_Q() {
+			int vt = instruction.VT5;
+			int m = (vt >> 2) & 7;
+			int i = (vt >> 0) & 3;
+		
+			uint address = registers.R[instruction.RS] + instruction.IMM14 * 4;
+			int k = (address >> 2) & 3;
+			address += (4 - k) << 2;
+			debug (DEBUG_VFPU_I) float[] rows_d = new float[4];
+			uint address_start = address;
+
+			if ((vt & 32) != 0) {
+				for (int j = 4 - k; j < 4; ++j) {
+					auto value = memory.tread!(float)(address);
+					debug (DEBUG_VFPU_I) rows_d[j] = value;
+					registers.VF_CELLS[m][j][i] = value;
+					address += 4;
+				}
+			} else {
+				for (int j = 4 - k; j < 4; ++j) {
+					auto value = memory.tread!(float)(address);
+					debug (DEBUG_VFPU_I) rows_d[j] = value;
+					registers.VF_CELLS[m][i][j] = value;
+					address += 4;
+				}
+			}
+
+			debug (DEBUG_VFPU_I) writefln("OP_LVR_Q(0x%08X)(%s)(%s)", address_start, rows_d, executionState.memory.tread!(float[10])(address_start - 8));
+
+			registers.pcAdvance(4);
+		}
+*/
+		static public void _lvl_q(CpuThreadState CpuThreadState, uint m, uint i, uint address, bool dir)
+		{
+			uint k = 3 - ((address >> 2) & 3);
+			address &= unchecked((uint)~0xF);
+
+			for (uint j = k; j < 4; ++j) {
+				var value = *(float*)CpuThreadState.GetMemoryPtr(address);
+				fixed (float* VFPR = &CpuThreadState.VFR0)
+				{
+					if (dir)
+					{
+						VFPR[m * 16 + i * 4 + j] = value;
+					}
+					else
+					{
+						VFPR[m * 16 + j * 4 + i] = value;
+					}
+				}
+				address += 4;
+			}
+		}
+
+		static public void _lvr_q(CpuThreadState CpuThreadState, uint m, uint i, uint address, bool dir)
+		{
+			uint k = 4 - ((address >> 2) & 3);
+
+			for (uint j = 0; j < k; ++j)
+			{
+				var value = *(float*)CpuThreadState.GetMemoryPtr(address);
+				fixed (float* VFPR = &CpuThreadState.VFR0)
+				{
+					if (dir)
+					{
+						VFPR[m * 16 + i * 4 + j] = value;
+					}
+					else
+					{
+						VFPR[m * 16 + j * 4 + i] = value;
+					}
+				}
+				address += 4;
+			}
+		}
+
 		public void lvl_q()
 		{
-			var VT = Instruction.VT5;
-			var VectorSize = (uint)(4 - ((Instruction.IMM14 >> 2) & 3));
-			
-			foreach (var Index in XRange(VectorSize))
+			var vt = Instruction.VT5 | (Instruction.VT1 << 5);
+			var m  = (vt >> 2) & 7;
+			var i  = (vt >> 0) & 3;
+			var dir = (vt & 32) != 0;
+
 			{
-				VfpuSave_Register(VT, Index, VectorSize, PrefixNone, () =>
-				{
-					_load_memory_imm14_index((uint)Index - 12);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
-				});
-				//_VfpuLoadVectorWithIndexPointer(VT, Index, VectorSize);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0); // CpuThreadState
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, m);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, i);
+				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.IMM14 * 4);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, dir ? 1 : 0);
 			}
-			//throw (new NotImplementedException("lvl_q"));
-/*
-			uint Register = Instruction.VT5_1;
-
-			for (uint Index = 0; Index < 4; Index++)
-			{
-				_VfpuLoadVectorWithIndexPointer(Register, Index, 4);
-
-				_load_memory_imm14_index(Index);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
-
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_R4);
-			}
-*/
+		
+			MipsMethodEmiter.CallMethod(this.GetType(), "_lvl_q");
 		}
+
 		public void lvr_q()
 		{
-			var VT = Instruction.VT5;
-			var VectorSize = (uint)(((Instruction.IMM14 >> 2) & 3));
+			var vt = Instruction.VT5 | (Instruction.VT1 << 5);
+			var m = (vt >> 2) & 7;
+			var i = (vt >> 0) & 3;
+			var dir = (vt & 32) != 0;
 
-			foreach (var Index in XRange(VectorSize))
 			{
-				VfpuSave_Register(VT, Index, VectorSize, PrefixNone, () =>
-				{
-					_load_memory_imm14_index((uint)Index + (4 - VectorSize));
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
-				});
-				//_VfpuLoadVectorWithIndexPointer(VT, Index, VectorSize);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0); // CpuThreadState
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, m);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, i);
+				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.IMM14 * 4);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, dir ? 1 : 0);
 			}
+
+			MipsMethodEmiter.CallMethod(this.GetType(), "_lvr_q");
 		}
 
-/*
-		int vt = instruction.VT5;
-		int m  = (vt >> 2) & 7;
-		int i  = (vt >> 0) & 3;
-		
-		uint address = registers.R[instruction.RS] + instruction.IMM14 * 4 - 12;
-		int k = 4 - ((address >> 2) & 3);
-		debug (DEBUG_VFPU_I) float[] rows_d = new float[4];
-		uint address_start = address;
-		
-		if ((vt & 32) != 0) {
-			for (int j = 0; j < k; ++j) {
-				auto value = threadState.emulatorState.memory.tread!(float)(address);
-				debug (DEBUG_VFPU_I) rows_d[j] = value;
-				registers.VF_CELLS[m][j][i] = value;
-				address += 4;
-			}
-		} else {
-			for (int j = 0; j < k; ++j) {
-				auto value = threadState.emulatorState.memory.tread!(float)(address);
-				debug (DEBUG_VFPU_I) rows_d[j] = value;
-				registers.VF_CELLS[m][i][j] = value;
-				address += 4;
-			}
-		}
-
-		debug (DEBUG_VFPU_I) writefln("OP_LVL_Q(0x%08X)(%s)(%s)", address_start, rows_d, executionState.memory.tread!(float[10])(address_start - 8));
-
-		//Logger.log(Logger.Level.WARNING, "Vfpu", "LVL.Q");
-		registers.pcAdvance(4);
- */
+		public void svl_q() { throw (new NotImplementedException("")); }
+		public void svr_q() { throw (new NotImplementedException("")); }
 
 		/// <summary>
 		/// ID("sv.q",        VM("111110:rs:vt5:imm14:0:vt1"), "%Xq, %Y", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
@@ -525,7 +569,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			Save_VT(0, 1, () =>
 			{
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (float)Instruction.IMM);
+				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (float)Instruction.IMM);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (float)Instruction.IMMU);
 			});
 		}
 
@@ -627,9 +672,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 			//_call_debug_vfpu();
 		}
-
-		public void svl_q() { throw (new NotImplementedException("")); }
-		public void svr_q() { throw (new NotImplementedException("")); }
 
 		public void vbfy1() { throw (new NotImplementedException("")); }
 		public void vbfy2() { throw (new NotImplementedException("")); }

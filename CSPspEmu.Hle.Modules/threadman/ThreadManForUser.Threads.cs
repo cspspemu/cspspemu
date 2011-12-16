@@ -337,7 +337,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelResumeThread(int ThreadId)
 		{
 			throw(new NotImplementedException());
-			return -1;
+			//return -1;
 		}
 
 		/// <summary>

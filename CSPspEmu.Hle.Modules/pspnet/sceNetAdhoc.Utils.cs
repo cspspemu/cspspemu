@@ -31,7 +31,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 			/// <summary>
 			/// Port
 			/// </summary>
-			ushort port;
+			public ushort port;
 
 			/// <summary>
 			/// Bytes received
@@ -48,7 +48,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 			/// Pointer to next PTP structure in list
 			/// </summary>
 			//ptpStatStruct *next;
-			uint NextAddress;
+			public uint NextAddress;
 
 			/// <summary>
 			/// ptp ID

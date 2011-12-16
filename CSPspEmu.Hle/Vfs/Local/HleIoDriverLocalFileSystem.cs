@@ -123,7 +123,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 				FileStream.Flush();
 				return InputLength;
 			}
-			catch (Exception Exception)
+			catch (Exception)
 			{
 				//Console.Error.WriteLine(Exception);
 				return -1;

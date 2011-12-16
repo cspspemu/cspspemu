@@ -216,7 +216,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			return Texture;
 		}
 
-		protected DateTime RecheckTimestamp = DateTime.MinValue;
+		private DateTime RecheckTimestamp = DateTime.MinValue;
 
 		public void RecheckAll()
 		{

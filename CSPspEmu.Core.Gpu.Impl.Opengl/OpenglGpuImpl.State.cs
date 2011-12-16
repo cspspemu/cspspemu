@@ -300,7 +300,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 						throw(new NotImplementedException());
 					case TextureMapMode.GU_ENVIRONMENT_MAP:
 						//throw(new NotImplementedException());
-						GpuMatrix4x4Struct EnviromentMapMatrix;
+						//GpuMatrix4x4Struct EnviromentMapMatrix;
+
 						//EnviromentMapMatrix.SetIdentity();
 						
 						/*

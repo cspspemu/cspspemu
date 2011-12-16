@@ -13,7 +13,8 @@ namespace CSPspEmu.Core.Gpu
 {
 	sealed unsafe public class GpuDisplayList
 	{
-		protected const bool Debug = false;
+		//private const bool Debug = false;
+		private bool Debug = false;
 		//protected const bool Debug = true;
 
 		/// <summary>

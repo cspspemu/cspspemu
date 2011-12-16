@@ -226,7 +226,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 				var HleIoDrvFileArg = GetFileArgFromHandle(FileHandle);
 				return HleIoDrvFileArg.HleIoDriver.IoWrite(HleIoDrvFileArg, InputPointer, InputSize);
 			}
-			catch (Exception Exception)
+			catch (Exception)
 			{
 				//Console.Error.WriteLine(Exception);
 				return -1;

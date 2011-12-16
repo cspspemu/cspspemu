@@ -218,12 +218,14 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// <param name="errorCode">Pointer to store any error code.</param>
 		/// <returns>Font index</returns>
         [HlePspFunction(NID = 0x681E61A7, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceFontFindFont(FontLibraryHandle libHandle, FontStyle* fontStyle, uint* errorCode)
 		{
 			throw(new NotImplementedException());
-
+			/*
 			*errorCode = 0;
 			return 0;
+			*/
 		}
 
 		/// <summary>

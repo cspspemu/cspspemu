@@ -140,16 +140,16 @@ namespace CSPspEmu.Hle.Modules.utility
 
 		public struct PspUtilitySavedataFileData
 		{
-			uint bufPointer;
-			uint bufSize;
-			uint size;	/* ??? - why are there two sizes? */
-			int unknown;
+			public uint bufPointer;
+			public uint bufSize;
+			public uint size;	/* ??? - why are there two sizes? */
+			public int unknown;
 		}
 
 		public struct PspUtilitySavedataListSaveNewData
 		{
-			PspUtilitySavedataFileData icon0;
-			uint titleCharPointer;
+			public PspUtilitySavedataFileData icon0;
+			public uint titleCharPointer;
 		}
 
 		/// <summary>
@@ -389,7 +389,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			public uint timeout;
 		}
 
-		struct pspUtilityNetconfData
+		public struct pspUtilityNetconfData
 		{
 			/// <summary>
 			/// 
@@ -399,18 +399,18 @@ namespace CSPspEmu.Hle.Modules.utility
 			/// <summary>
 			/// One of pspUtilityNetconfActions
 			/// </summary>
-			public int action;
+			public int Action;
 
 			/// <summary>
 			/// Adhoc connection params
 			/// </summary>
 			//pspUtilityNetconfAdhoc * adhocparam;
-			public uint adhocparamPointer;
+			public uint AdhocparamPointer;
 			
 			/// <summary>
 			/// Set to 1 to allow connections with the 'Internet Browser' option set to 'Start' (ie. hotspot connection)
 			/// </summary>
-			public int hotspot;
+			public int Hotspot;
 
 			/// <summary>
 			/// Will be set to 1 when connected to a hotspot style connection

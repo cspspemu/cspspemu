@@ -200,7 +200,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			*outEnd = -1;
 			*outRemainFrame = -1;
 			throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED));
-			return 0;
+			//return 0;
 			/*
 			//logInfo("Not implemented sceAtracDecodeData(%d)", atracID);
 			//unimplemented_notice();

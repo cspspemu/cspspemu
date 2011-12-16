@@ -62,7 +62,7 @@ namespace CSPspEmu.Core.Audio.Imple.Openal
 			AL.DeleteBuffers(this.BufferIds); ALEnforce();
 		}
 
-		protected void Start()
+		private void Start()
 		{
 			foreach (var BufferId in BufferIds)
 			{

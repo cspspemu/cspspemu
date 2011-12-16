@@ -149,13 +149,12 @@ namespace CSPspEmu.Hle
 			}
 			catch (InvalidOperationException)
 			{
-				if (false)
-				{
+#if false
 					Console.WriteLine("");
 					Console.WriteLine("");
 					Root.Dump(this);
 					Console.WriteLine("");
-				}
+#endif
 				throw (new InvalidOperationException(
 					String.Format(
 						"Can't allocate Size={0} : AllocateAnchor={1} : Position=0x{2:X}",

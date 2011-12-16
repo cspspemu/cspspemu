@@ -69,7 +69,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 			/// <summary>
 			/// Channel number
 			/// </summary>
-			int channel;
+			public int channel;
 			
 			/// <summary>
 			/// Name of the connection (alphanumeric characters only)
@@ -97,13 +97,13 @@ namespace CSPspEmu.Hle.Modules.pspnet
 			/// <summary>
 			/// Number of peers (including self)
 			/// </summary>
-			int count;
+			public int count;
 
 			/// <summary>
 			/// MAC addresses of peers (including self)
 			/// </summary>
 			//byte macs[16][6];
-			fixed byte macs[16 * 6];
+			public fixed byte macs[16 * 6];
 		}
 
 		/// <summary>
@@ -114,22 +114,22 @@ namespace CSPspEmu.Hle.Modules.pspnet
 			/// <summary>
 			/// Channel number
 			/// </summary>
-			int channel;
+			public int channel;
 			
 			/// <summary>
 			/// Name of the connection
 			/// </summary>
-			fixed byte name[8];
+			public fixed byte name[8];
 			
 			/// <summary>
 			/// The BSSID
 			/// </summary>
-			fixed byte bssid[6];
+			public fixed byte bssid[6];
 			
 			/// <summary>
 			/// Nickname
 			/// </summary>
-			fixed byte nickname[128];
+			public fixed byte nickname[128];
 		}
 	}
 }
