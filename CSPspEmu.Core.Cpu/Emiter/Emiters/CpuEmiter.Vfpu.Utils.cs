@@ -199,11 +199,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public VfpuPrefix PrefixDestination;
 		public VfpuPrefix PrefixTarget;
 
-		private void CheckPrefixUsage(VfpuPrefix Prefix)
+		private void CheckPrefixUsage(ref VfpuPrefix Prefix, bool Debug = true)
 		{
 			// Disable the prefix once it have been used.
 			if (Prefix.Enabled)
 			{
+				/*
 				if (Prefix.UsedCount > 0 && Prefix.UsedPC != PC)
 				{
 					throw (new InvalidOperationException(
@@ -213,6 +214,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 						)
 					));
 				}
+				*/
 
 				if (Prefix.UsedCount > 0 && Prefix.DeclaredPC != PC)
 				{
@@ -264,10 +266,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		*/
 
-		private void VfpuLoad_Register(uint Register, int Index, uint VectorSize, VfpuPrefix Prefix, bool Debug = false)
+		private void VfpuLoad_Register(uint Register, int Index, uint VectorSize, ref VfpuPrefix Prefix, bool Debug = false)
 		{
 			//Console.Error.WriteLine("{0:X}", PC);
-			CheckPrefixUsage(Prefix);
+			CheckPrefixUsage(ref Prefix);
 			//Console.Error.WriteLine("PREFIX [1]!" + Index);
 
 			if (Prefix.Enabled)
@@ -336,7 +338,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		private void VfpuSave_Register(uint Register, int Index, uint VectorSize, VfpuPrefix Prefix, Action Action, bool Debug = false)
 		{
-			CheckPrefixUsage(Prefix);
+			CheckPrefixUsage(ref Prefix);
 			_VfpuLoadVectorWithIndexPointer(Register, (uint)Index, VectorSize, Debug);
 			{
 				Action();
@@ -368,18 +370,18 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		private void Load_VS(int Index, uint VectorSize, int RegisterOffset = 0, bool Debug = false)
 		{
-			VfpuLoad_Register((uint)(Instruction.VS + RegisterOffset), Index, VectorSize, PrefixSource, Debug);
+			VfpuLoad_Register((uint)(Instruction.VS + RegisterOffset), Index, VectorSize, ref PrefixSource, Debug);
 		}
 
 		private void Load_VT(int Index, uint VectorSize, int RegisterOffset = 0, bool Debug = false)
 		{
-			VfpuLoad_Register((uint)(Instruction.VT + RegisterOffset), Index, VectorSize, PrefixTarget, Debug);
+			VfpuLoad_Register((uint)(Instruction.VT + RegisterOffset), Index, VectorSize, ref PrefixTarget, Debug);
 		}
 
 		private void Load_VD(int Index, uint VectorSize, int RegisterOffset = 0, bool Debug = false)
 		{
 			//Load_Register(Instruction.VD + RegisterOffset, Index, VectorSize, PrefixNone, Debug);
-			VfpuLoad_Register((uint)(Instruction.VD + RegisterOffset), Index, VectorSize, PrefixDestination, Debug);
+			VfpuLoad_Register((uint)(Instruction.VD + RegisterOffset), Index, VectorSize, ref PrefixDestination, Debug);
 		}
 
 		private void Save_VD(int Index, uint VectorSize, int RegisterOffset, Action Action, bool Debug = false)
