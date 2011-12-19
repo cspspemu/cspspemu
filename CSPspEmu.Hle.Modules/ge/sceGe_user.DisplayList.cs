@@ -117,7 +117,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <param name="SyncType">Specifies the condition to wait on.  One of ::PspGeSyncType.</param>
 		/// <returns>???</returns>
 		[HlePspFunction(NID = 0x03444EB4, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceGeListSync(int DisplayListId, GpuProcessor.SyncTypeEnum SyncType)
 		{
 			var DisplayList = GetDisplayListFromId(DisplayListId);

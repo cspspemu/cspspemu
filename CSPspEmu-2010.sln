@@ -8,8 +8,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpUtils", "..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj", "{746FADF2-D613-4FFD-8551-2181ADAE3CD1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpUtils.Drawing", "..\csharputils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj", "{9B217880-48AE-43B6-AE1F-DC732FCCBC7A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Core", "CSPspEmu.Core\CSPspEmu.Core.csproj", "{F783ECD3-0F79-43CC-ABD0-D356A64049C4}"
@@ -36,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Tests", "CSPspEmu.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.TestsAuto", "CSPspEmu.TestsAuto\CSPspEmu.TestsAuto.csproj", "{AD6A52A7-E83F-48E7-A85F-232D738EC949}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpUtils", "..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj", "{746FADF2-D613-4FFD-8551-2181ADAE3CD1}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = CSPspEmu.vsmdi
@@ -49,16 +49,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Release|x86.ActiveCfg = Release|Any CPU
 		{9B217880-48AE-43B6-AE1F-DC732FCCBC7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9B217880-48AE-43B6-AE1F-DC732FCCBC7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B217880-48AE-43B6-AE1F-DC732FCCBC7A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -189,6 +179,16 @@ Global
 		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Release|x86.ActiveCfg = Release|Any CPU
+		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{746FADF2-D613-4FFD-8551-2181ADAE3CD1}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

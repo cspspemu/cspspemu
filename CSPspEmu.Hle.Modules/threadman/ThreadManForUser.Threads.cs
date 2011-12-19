@@ -297,7 +297,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="attr">The thread attributes to modify.  One of ::PspThreadAttributes.</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xEA748E31, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceKernelChangeCurrentThreadAttr(int Unknown, PspThreadAttributes Attributes)
 		{
 			return 0;

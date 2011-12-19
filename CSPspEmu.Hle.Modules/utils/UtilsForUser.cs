@@ -262,5 +262,35 @@ namespace CSPspEmu.Hle.Modules.utils
 		{
 			return 0;
 		}
+
+		/// <summary>
+		/// Decompress gzip'd data (requires kernel mode).
+		/// </summary>
+		/// <param name="dest">pointer to destination buffer</param>
+		/// <param name="destSize">size of destination buffer</param>
+		/// <param name="src">pointer to source (compressed) data</param>
+		/// <param name="unknown">unknown, pass NULL</param>
+		/// <returns>size decompressed on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0x78934841, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelGzipDecompress(byte* dest, uint destSize, byte * src, uint unknown)
+		{
+			throw(new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Decompress RLZ data (requires kernel mode)
+		/// </summary>
+		/// <param name="dest">pointer to destination buffer</param>
+		/// <param name="destSize">size of destination buffer</param>
+		/// <param name="src">pointer to source (compressed) data</param>
+		/// <param name="unknown">unknown, pass NULL</param>
+		/// <returns>size decompressed on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0x7DD07271, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelLzrcDecode(byte *dest, uint destSize, byte *src, void *unknown)
+		{
+			throw (new NotImplementedException());
+		}
 	}
 }

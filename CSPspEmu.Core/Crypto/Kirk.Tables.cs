@@ -130,9 +130,9 @@ namespace CSPspEmu.Core.Crypto
 		public struct KIRK_SHA1_HEADER
 		{
 			/// <summary>
-			/// 0000 -
+			/// 0000 - Size of the input data source where will be generated the hash from.
 			/// </summary>
-			public int data_size;
+			public int DataSize;
 		}
 
 		//mode passed to sceUtilsBufferCopyWithRange
