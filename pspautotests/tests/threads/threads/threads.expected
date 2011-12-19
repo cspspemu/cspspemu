@@ -1,0 +1,12 @@
+0, 0
+1, 1
+-1
+Thread1.Started
+Thread2.Started
+Thread3.Started
+Threads.EndedExpected
+Thread1.Ended
+Thread2.Ended
+Thread3.GoingToEnd
+Thread3.Ended
+Thread4.NotStartedSoEnded

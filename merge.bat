@@ -20,8 +20,7 @@ PUSHD %~dp0
 	REM SET FILES=%FILES% "%BASE_FOLDER%\OpenTK.dll"
 
 	SET TARGET=/targetplatform:v4,"%ProgramFiles(x86)%\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0"
-	"C:\Program Files (x86)\Microsoft\ILMerge\ilmerge.exe" %TARGET% /out:cspspemu.exe %FILES%
+	"%~dp0\utils\ilmerge\ILMerge.exe" %TARGET% /out:cspspemu.exe %FILES%
 	COPY %BASE_FOLDER%\OpenTK.dll .
-	REM PAUSE
 POPD
 :END

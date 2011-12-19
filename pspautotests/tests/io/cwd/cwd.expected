@@ -1,0 +1,21 @@
+Working Directory Examples
+Arguments: 1
+Argument[0]: 'ms0:/PSP/GAME/virtual/cwd.elf'
+Initial dir: ms0:/PSP/GAME/virtual
+
+ chdir() attempt --> resulting getcwd()
+ --------------- --> ------------------
+                 --> ms0:/PSP/GAME/virtual
+           hello --> (chdir error)
+              .. --> ms0:/PSP/GAME
+     ../SAVEDATA --> ms0:/PSP/SAVEDATA
+           ../.. --> ms0:
+               . --> ms0:
+     ./././//PSP --> ms0:/PSP
+     /PSP/./GAME --> ms0:/PSP/GAME
+               / --> ms0:
+   ms0:/PSP/GAME --> ms0:/PSP/GAME
+        flash0:/ --> flash0:
+ms0:/PSP/../PSP/ --> ms0:/PSP
+
+All done!
