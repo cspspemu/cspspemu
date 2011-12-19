@@ -12,6 +12,7 @@ using CSPspEmu.Core.Rtc;
 using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Audio;
 using CSPspEmu.Core.Controller;
+using CSPspEmu.Core.Crypto;
 
 namespace CSPspEmu.Hle
 {
@@ -39,6 +40,7 @@ namespace CSPspEmu.Hle
 		public HleRegistryManager HleRegistryManager;
 		public HleOutputHandler HleOutputHandler;
 		public HleInterruptManager HleInterruptManager;
+		public Kirk Kirk;
 
 		public override void InitializeComponent()
 		{
@@ -52,6 +54,8 @@ namespace CSPspEmu.Hle
 			this.PspController = PspEmulatorContext.GetInstance<PspController>();
 
 			this.MipsEmiter = new MipsEmiter();
+			this.Kirk = new Kirk();
+			this.Kirk.kirk_init();
 
 			this.HleOutputHandler = PspEmulatorContext.GetInstance<HleOutputHandler>();
 

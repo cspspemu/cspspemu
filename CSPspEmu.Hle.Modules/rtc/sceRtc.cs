@@ -26,7 +26,7 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <param name="Tick">pointer to u64 to receive tick count</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x3F7AD767, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceRtcGetCurrentTick(ulong* Tick)
 		{
 			HleState.PspRtc.Update();

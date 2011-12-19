@@ -13,7 +13,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <param name="PspGeCallbackData">Configured callback data structure</param>
 		/// <returns>The callback ID, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xA4FC06A4, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceGeSetCallback(PspGeCallbackData* PspGeCallbackData)
 		{
 			return 1;

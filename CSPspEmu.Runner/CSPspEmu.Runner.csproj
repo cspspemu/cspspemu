@@ -54,7 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
-      <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
+      <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Audio.Imple.Openal\CSPspEmu.Core.Audio.Imple.Openal.csproj">

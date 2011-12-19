@@ -51,3 +51,4 @@
 *.exe
 /ms
 /TestInput/EBOOT.BIN
+/pspsdk

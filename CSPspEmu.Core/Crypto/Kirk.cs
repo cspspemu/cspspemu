@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
+using System.Security.Cryptography;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Crypto
 {
@@ -40,9 +42,9 @@ namespace CSPspEmu.Core.Crypto
 			if(!is_kirk_initialized) return KIRK_NOT_INITIALIZED;
 	
 			AES128CMACHeader* header = (AES128CMACHeader*)outbuff;
-    
+	
 			Crypto.memcpy(outbuff, inbuff, size);
-    
+	
 			if(header->Mode != KIRK_MODE_CMD1) return KIRK_INVALID_MODE;
 	
 			header_keys *keys = (header_keys *)outbuff; //0-15 AES key, 16-31 CMAC key
@@ -63,7 +65,7 @@ namespace CSPspEmu.Core.Crypto
 			//CMAC HASHES
 			Crypto.AES_ctx cmac_key;
 			Crypto.AES_set_key(&cmac_key, keys->CMAC, 128);
-	    
+		
 			var _cmac_header_hash = new byte[16];
 			var _cmac_data_hash = new byte[16];
 			fixed (byte* cmac_header_hash = _cmac_header_hash)
@@ -134,7 +136,7 @@ namespace CSPspEmu.Core.Crypto
 			//Set the key
 			Crypto.AES_ctx aesKey;
 			Crypto.AES_set_key(&aesKey, key, 128);
- 			Crypto.AES_cbc_encrypt(&aesKey, inbuff+sizeof(KIRK_AES128CBC_HEADER), outbuff, size);
+			Crypto.AES_cbc_encrypt(&aesKey, inbuff+sizeof(KIRK_AES128CBC_HEADER), outbuff, size);
 	
 			return KIRK_OPERATION_SUCCESS;
 		}
@@ -164,7 +166,7 @@ namespace CSPspEmu.Core.Crypto
 			if (!is_kirk_initialized) return KIRK_NOT_INITIALIZED;
 	
 			AES128CMACHeader* header = (AES128CMACHeader*)inbuff;
-    
+	
 			if(!(header->Mode == KIRK_MODE_CMD1 || header->Mode == KIRK_MODE_CMD2 || header->Mode == KIRK_MODE_CMD3)) return KIRK_INVALID_MODE;
 			if(header->DataSize == 0) return KIRK_DATA_SIZE_ZERO;
 	
@@ -206,19 +208,31 @@ namespace CSPspEmu.Core.Crypto
 			return KIRK_SIG_CHECK_INVALID; //Checks for cmd 2 & 3 not included right now
 		}
 
-		public int kirk_CMD11(byte* outbuff, byte* inbuff, int size)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="OutputBuffer"></param>
+		/// <param name="InputBuffer"></param>
+		/// <param name="Size"></param>
+		/// <returns></returns>
+		public int kirk_CMD11(byte* OutputBuffer, byte* InputBuffer, int Size)
 		{
 			if (!is_kirk_initialized) return KIRK_NOT_INITIALIZED;
-			KIRK_SHA1_HEADER *header = (KIRK_SHA1_HEADER *)inbuff;
-			if(header->data_size == 0 || size == 0) return KIRK_DATA_SIZE_ZERO;
+
+			var Header = (KIRK_SHA1_HEADER *)InputBuffer;
+			if (Size == 0 || Header->DataSize == 0) return KIRK_DATA_SIZE_ZERO;
 	
-			Crypto.SHA1Context sha;
-			Crypto.SHA1Reset(&sha);
-			size <<= 4;
-			size >>= 4;
-			size = size < header->data_size ? size : header->data_size;
-			Crypto.SHA1Input(&sha, inbuff+sizeof(KIRK_SHA1_HEADER), size);
-			Crypto.memcpy(outbuff, sha.Message_Digest, 16);
+			//Size <<= 4;
+			//Size >>= 4;
+			Size &= 0x0FFFFFFF;
+			Size = (Size < Header->DataSize) ? Size : Header->DataSize;
+
+			var Sha1Hash = (new SHA1CryptoServiceProvider()).ComputeHash(
+				PointerUtils.PointerToByteArray(InputBuffer + 4, Size)
+			);
+
+			Marshal.Copy(Sha1Hash, 0, new IntPtr(OutputBuffer), Sha1Hash.Length);
+
 			return KIRK_OPERATION_SUCCESS;
 		}
 
@@ -302,13 +316,12 @@ namespace CSPspEmu.Core.Crypto
 				case KIRK_CMD_DECRYPT_PRIVATE: 
 					 if ((insize % 16) != 0) return SUBCWR_NOT_16_ALGINED;
 					 int ret = kirk_CMD1(outbuff, inbuff, insize, true); 
-					 if(ret == KIRK_HEADER_HASH_INVALID) return SUBCWR_HEADER_HASH_INVALID;
+					 if (ret == KIRK_HEADER_HASH_INVALID) return SUBCWR_HEADER_HASH_INVALID;
 					 return ret;
-					 break;
-				case KIRK_CMD_ENCRYPT_IV_0: return kirk_CMD4(outbuff, inbuff, insize); break;
-				case KIRK_CMD_DECRYPT_IV_0: return kirk_CMD7(outbuff, inbuff, insize); break;
-				case KIRK_CMD_PRIV_SIG_CHECK: return kirk_CMD10(inbuff, insize); break;
-				case KIRK_CMD_SHA1_HASH: return kirk_CMD11(outbuff, inbuff, insize); break;
+				case KIRK_CMD_ENCRYPT_IV_0: return kirk_CMD4(outbuff, inbuff, insize);
+				case KIRK_CMD_DECRYPT_IV_0: return kirk_CMD7(outbuff, inbuff, insize);
+				case KIRK_CMD_PRIV_SIG_CHECK: return kirk_CMD10(inbuff, insize);
+				case KIRK_CMD_SHA1_HASH: return kirk_CMD11(outbuff, inbuff, insize);
 			}
 			return -1;
 		}
