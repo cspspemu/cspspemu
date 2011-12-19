@@ -1,5 +1,7 @@
 # CSharp Psp Emulator
 
+![Kaiten Patissier PSP](http://soywiz.github.com/cspspemu/screenshoots/kaiten_patissier.png)
+
 A PSP Emulator for >= .NET 4.0 made in C# by soywiz - Carlos Ballesteros Velasco
 
 Work In Progress emulator
