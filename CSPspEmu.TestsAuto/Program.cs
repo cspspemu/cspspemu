@@ -276,10 +276,11 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "vpl";
 				//WildCardFilter = "fpu";
 				//WildCardFilter = "umd_io";
-				//WildCardFilter = "cpu/vfpu";
+				WildCardFilter = "cpu/vfpu";
+				//WildCardFilter = "cpu/vfpu/prefixes";
 				//WildCardFilter = "cpu";
 				//WildCardFilter = "dmac";
-				WildCardFilter = "kirk";
+				//WildCardFilter = "kirk";
 			}
 
 			if (WildCardFilter.Length > 0)

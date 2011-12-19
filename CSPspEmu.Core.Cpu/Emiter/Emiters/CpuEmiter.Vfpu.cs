@@ -291,6 +291,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (float)(Math.PI / 2.0f));
 						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
 						MipsMethodEmiter.CallMethod(typeof(MathFloat), "Sin");
+						if (NegateSin)
+						{
+							MipsMethodEmiter.ILGenerator.Emit(OpCodes.Neg);
+						}
 					}
 					else
 					{
@@ -308,6 +312,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (float)(Math.PI / 2.0f));
 					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
 					MipsMethodEmiter.CallMethod(typeof(MathFloat), "Sin");
+					if (NegateSin)
+					{
+						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Neg);
+					}
 				});
 			}
 

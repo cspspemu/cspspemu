@@ -216,7 +216,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				}
 				*/
 
-				if (Prefix.UsedCount > 0 && Prefix.DeclaredPC != PC)
+				if (Prefix.UsedCount > 0 && Prefix.UsedPC != PC)
 				{
 					Prefix.Enabled = false;
 				}

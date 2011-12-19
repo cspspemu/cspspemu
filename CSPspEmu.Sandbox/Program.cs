@@ -53,8 +53,8 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.Start();
 
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\TrigWars\EBOOT.PBP", TraceSyscalls: true);
-				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\pspautotests\demos\cubevfpu.prx", TraceSyscalls: false);
-				PspEmulator.StartAndLoad(@"C:\projects\cspspemu\pspautotests\demos\cubevfpu.prx", TraceSyscalls: false);
+				PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\pspautotests\demos\cubevfpu.prx", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"C:\projects\cspspemu\pspautotests\demos\cubevfpu.prx", TraceSyscalls: false);
 
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Puzzle Bobble.ISO", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Castlevania.cso", TraceSyscalls: false);
@@ -161,8 +161,8 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\reminiscence\EBOOT.PBP", TraceSyscalls: true);
 
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\PspAutoTests\string.elf");
-			}
 #endif
+			}
 		}
 	}
 }
