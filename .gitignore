@@ -41,7 +41,6 @@
 /CSPspEmu.Runner/bin
 /opentk
 /PSP
-/pspautotests
 /OpenTK.Compatibility.dll
 /OpenTK.Compatibility.dll.config
 /OpenTK.dll
@@ -52,3 +51,4 @@
 /ms
 /TestInput/EBOOT.BIN
 /pspsdk
+/_pspautotests_svn
