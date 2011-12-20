@@ -48,6 +48,9 @@
 *.dll
 *.config
 *.exe
+*.pbp
+*.lastoutput
+*.elf
 /ms
 /TestInput/EBOOT.BIN
 /pspsdk
