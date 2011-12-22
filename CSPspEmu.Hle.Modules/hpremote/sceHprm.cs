@@ -53,11 +53,10 @@ namespace CSPspEmu.Hle.Modules.hpremote
 			return 0;
 		}
 
-		/** 
-		 * Determines whether the remote is plugged in.
-		 *
-		 * @return 1 if the remote is plugged in, else 0.
-		 */
+		/// <summary>
+		/// Determines whether the remote is plugged in.
+		/// </summary>
+		/// <returns>1 if the remote is plugged in, else 0.</returns>
 		[HlePspFunction(NID = 0x208DB1BD, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceHprmIsRemoteExist()
@@ -65,5 +64,16 @@ namespace CSPspEmu.Hle.Modules.hpremote
 			return 0;
 		}
 
+		/// <summary>
+		/// Read the current latch data.
+		/// </summary>
+		/// <param name="Latch">Pointer a to a 4 dword array to contain the latch data.</param>
+		/// <returns>Less than 0 on error.</returns>
+		[HlePspFunction(NID = 0x40D2F9F0, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceHprmReadLatch(uint* Latch)
+		{
+			throw(new NotImplementedException());
+		}
 	}
 }

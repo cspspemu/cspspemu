@@ -267,7 +267,7 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "intr";
 				//WildCardFilter = "umd";
 				//WildCardFilter = "vblank";
-				//WildCardFilter = "wakeup";
+				WildCardFilter = "wakeup";
 				//WildCardFilter = "thread";
 				//WildCardFilter = "directory";
 				//WildCardFilter = "fpl";
@@ -281,7 +281,7 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "cpu";
 				//WildCardFilter = "dmac";
 				//WildCardFilter = "kirk";
-				WildCardFilter = "malloc";
+				//WildCardFilter = "malloc";
 			}
 
 			if (WildCardFilter.Length > 0)

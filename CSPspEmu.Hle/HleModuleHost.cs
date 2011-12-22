@@ -15,8 +15,15 @@ namespace CSPspEmu.Hle
 {
 	unsafe public class HleModuleHost : HleModule
 	{
+		public struct FunctionEntry
+		{
+			public uint NID;
+			public String Name;
+			public String Description;
+		}
+
 		public HleState HleState;
-		public Dictionary<uint, String> NamesByNID = new Dictionary<uint, String>();
+		public Dictionary<uint, FunctionEntry> EntriesByNID = new Dictionary<uint, FunctionEntry>();
 		public Dictionary<uint, Action<CpuThreadState>> DelegatesByNID = new Dictionary<uint, Action<CpuThreadState>>();
 		public Dictionary<string, Action<CpuThreadState>> DelegatesByName = new Dictionary<string, Action<CpuThreadState>>();
 
@@ -52,7 +59,12 @@ namespace CSPspEmu.Hle
 						{
 							//Console.WriteLine("HleModuleHost: {0}, {1}", "0x%08X".Sprintf(Attribute.NID), MethodInfo.Name);
 							DelegatesByNID[Attribute.NID] = Delegate;
-							NamesByNID[Attribute.NID] = MethodInfo.Name;
+							EntriesByNID[Attribute.NID] = new FunctionEntry()
+							{
+								NID = Attribute.NID,
+								Name = MethodInfo.Name,
+								Description = "",
+							};
 						}
 					}
 					else

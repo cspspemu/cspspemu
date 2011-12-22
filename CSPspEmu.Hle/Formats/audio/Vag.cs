@@ -55,7 +55,7 @@ namespace CSPspEmu.Hle.Formats.audio
 				)
 			);
 
-			SaveToWav("output.wav");
+			//SaveToWav("output.wav");
 		}
 
 		public void SaveToWav(String FileName)

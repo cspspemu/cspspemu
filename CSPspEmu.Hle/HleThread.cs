@@ -174,7 +174,8 @@ namespace CSPspEmu.Hle
 
 			if (Increment > 0)
 			{
-				//return;
+				/*
+				return;
 				Console.Error.WriteLine("Increment > 0 - Wakeup");
 
 				WakeupThread.SetWaitAndPrepareWakeUp(WaitType.None, "sceKernelWakeupThread", WakeUpCallback =>
@@ -187,6 +188,7 @@ namespace CSPspEmu.Hle
 						});
 					}
 				}, HandleCallbacks: HandleCallbacks);
+				*/
 				//WakeUpList.Add
 			}
 		}

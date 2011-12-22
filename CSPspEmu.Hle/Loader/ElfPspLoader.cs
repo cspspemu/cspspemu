@@ -293,20 +293,25 @@ namespace CSPspEmu.Hle.Loader
 				for (int n = 0; n < ModuleImport.FunctionCount; n++)
 				{
 					uint NID = NidStreamReader.ReadUInt32();
-					var DefaultName = String.Format("<unknown:{0:X}>", NID);
-					var NIDName = (Module != null) ? Module.NamesByNID.GetOrDefault(NID, DefaultName) : DefaultName;
+					var DefaultEntry = new HleModuleHost.FunctionEntry()
+					{
+						NID = 0x00000000,
+						Name = String.Format("__<unknown:0x{0:X}>", NID),
+						Description = "Unknown",
+					};
+					var FunctionEntry = (Module != null) ? Module.EntriesByNID.GetOrDefault(NID, DefaultEntry) : DefaultEntry;
 					//var Delegate = Module.DelegatesByNID.GetOrDefault(NID, null);
 					CallStreamWriter.Write((uint)(0x0000000C | (FunctionGenerator.NativeCallSyscallCode << 6))); // syscall 0x2307
 					CallStreamWriter.Write(
 						(uint)ModuleManager.AllocDelegateSlot(
-							CreateDelegate(ModuleManager, Module, NID, ModuleImportName, NIDName),
-							String.Format("{0}:{1}", ModuleImportName, NIDName)
+							CreateDelegate(ModuleManager, Module, NID, ModuleImportName, FunctionEntry.Name),
+							String.Format("{0}:{1}", ModuleImportName, FunctionEntry)
 						)
 					);
 
 					Console.WriteLine(
-						"    CODE_ADDR({0:X})  :  NID(0x{1,8:X}) : {2}",
-						ModuleImport.CallAddress + n * 8, NID, NIDName
+						"    CODE_ADDR({0:X})  :  NID(0x{1,8:X}) : {2} - {3}",
+						ModuleImport.CallAddress + n * 8, NID, FunctionEntry.Name, FunctionEntry.Description
 					);
 				}
 			}

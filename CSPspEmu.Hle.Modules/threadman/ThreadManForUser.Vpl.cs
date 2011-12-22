@@ -90,7 +90,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		0 on success
 		///		less than 0 on error
 		/// </returns>
-		[HlePspFunction(NID = 0xD979E9BF, FirmwareVersion = 150)]
+		[HlePspFunction(NID = 0xBED27435, FirmwareVersion = 150)]
 		public int sceKernelAllocateVpl(VariablePoolId VariablePoolId, uint Size, PspAddress* DataPointer, uint* Timeout)
 		{
 			throw(new NotImplementedException());
@@ -176,6 +176,18 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return -1;
 			*/
 		}
+
+		/// <summary>
+		/// Delete a variable pool
+		/// </summary>
+		/// <param name="VariablePoolId">The UID of the pool</param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0x89B3D48C, FirmwareVersion = 150)]
+		public int sceKernelDeleteVpl(VariablePoolId VariablePoolId)
+		{
+			throw(new NotImplementedException());
+		}
+
 
 		/// <summary>
 		/// 

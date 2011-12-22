@@ -326,21 +326,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 		}
 
 		/// <summary>
-		/// Resume a thread previously put into a suspended state with ::sceKernelSuspendThread.
-		/// </summary>
-		/// <param name="ThreadId">UID of the thread to resume.</param>
-		/// <returns>
-		///		Success if greater or equalthan 0,
-		///		an error if less than 0.
-		/// </returns>
-		[HlePspFunction(NID = 0x9944F31F, FirmwareVersion = 150)]
-		public int sceKernelResumeThread(int ThreadId)
-		{
-			throw(new NotImplementedException());
-			//return -1;
-		}
-
-		/// <summary>
 		/// Get the exit status of a thread.
 		/// </summary>
 		/// <param name="ThreadId">The UID of the thread to check.</param>
@@ -462,6 +447,103 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return (int)(SpCurrent - SpLow);
 			//throw(new NotImplementedException());
 			//return SpHigh - SpCurrent;
+		}
+
+		/// <summary>
+		/// Rotate thread ready queue at a set priority
+		/// </summary>
+		/// <param name="priority">The priority of the queue</param>
+		/// <returns>0 on success, less than 0 on error.</returns>
+		[HlePspFunction(NID = 0x912354A7, FirmwareVersion = 150)]
+		public int sceKernelRotateThreadReadyQueue(int priority)
+		{
+			throw(new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Threadman types for ::sceKernelGetThreadmanIdList
+		/// </summary>
+		public enum SceKernelIdListType
+		{
+			SCE_KERNEL_TMID_Thread = 1,
+			SCE_KERNEL_TMID_Semaphore = 2,
+			SCE_KERNEL_TMID_EventFlag = 3,
+			SCE_KERNEL_TMID_Mbox = 4,
+			SCE_KERNEL_TMID_Vpl = 5,
+			SCE_KERNEL_TMID_Fpl = 6,
+			SCE_KERNEL_TMID_Mpipe = 7,
+			SCE_KERNEL_TMID_Callback = 8,
+			SCE_KERNEL_TMID_ThreadEventHandler = 9,
+			SCE_KERNEL_TMID_Alarm = 10,
+			SCE_KERNEL_TMID_VTimer = 11,
+			SCE_KERNEL_TMID_SleepThread = 64,
+			SCE_KERNEL_TMID_DelayThread = 65,
+			SCE_KERNEL_TMID_SuspendThread = 66,
+			SCE_KERNEL_TMID_DormantThread = 67,
+		};
+
+		/// <summary>
+		/// Get a list of UIDs from threadman. Allows you to enumerate 
+		/// resources such as threads or semaphores.
+		/// </summary>
+		/// <param name="type">The type of resource to list, one of ::SceKernelIdListType.</param>
+		/// <param name="readbuf">A pointer to a buffer to store the list.</param>
+		/// <param name="readbufsize">The size of the buffer in SceUID units.</param>
+		/// <param name="idcount">Pointer to an integer in which to return the number of ids in the list.</param>
+		/// <returns>Less than 0 on error. Either 0 or the same as idcount on success.</returns>
+		[HlePspFunction(NID = 0x94416130, FirmwareVersion = 150)]
+		public int sceKernelGetThreadmanIdList(SceKernelIdListType type, int* readbuf, int readbufsize, int* idcount)
+		{
+			throw(new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Suspend a thread.
+		/// </summary>
+		/// <param name="ThreadId">UID of the thread to resume.</param>
+		/// <returns>
+		///		Success if greater or equalthan 0,
+		///		an error if less than 0.
+		/// </returns>
+		[HlePspFunction(NID = 0x9944F31F, FirmwareVersion = 150)]
+		public int sceKernelSuspendThread(int ThreadId)
+		{
+			throw (new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Resume a thread previously put into a suspended state with ::sceKernelSuspendThread.
+		/// </summary>
+		/// <param name="thid">UID of the thread to resume.</param>
+		/// <returns>Success if greater or equal to 0, an error if less than 0.</returns>
+		[HlePspFunction(NID = 0x75156E8F, FirmwareVersion = 150)]
+		public int sceKernelResumeThread(int thid)
+		{
+			throw(new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Resume the dispatch thread
+		/// </summary>
+		/// <param name="state">
+		/// The state of the dispatch thread 
+		/// (from ::sceKernelSuspendDispatchThread)
+		/// </param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0x27E22EC2, FirmwareVersion = 150)]
+		public int sceKernelResumeDispatchThread(int state)
+		{
+			throw(new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Suspend the dispatch thread
+		/// </summary>
+		/// <returns>The current state of the dispatch thread, less than 0 on error</returns>
+		[HlePspFunction(NID = 0x3AD58B8C, FirmwareVersion = 150)]
+		public int sceKernelSuspendDispatchThread()
+		{
+			throw(new NotImplementedException());
 		}
 
 		/*

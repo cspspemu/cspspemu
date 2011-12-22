@@ -380,5 +380,15 @@ namespace CSPspEmu.Hle.Modules.audio
 			throw(new NotImplementedException());
 		}
 
+		/// <summary>
+		/// Change the output sample count, after it's already been reserved
+		/// </summary>
+		/// <param name="samplecount">The number of samples to output in one output call (min 17, max 4111).</param>
+		/// <returns>0 on success, an error if less than 0.</returns>
+		[HlePspFunction(NID = 0x63F2889C, FirmwareVersion = 150)]
+		public int sceAudioOutput2ChangeLength(int samplecount)
+		{
+			throw (new NotImplementedException());
+		}
 	}
 }

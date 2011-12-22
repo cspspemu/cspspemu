@@ -40,6 +40,19 @@ namespace CSPspEmu.Hle.Modules.threadman
 		}
 
 		/// <summary>
+		/// Convert a number of microseconds to a ::SceKernelSysClock structure
+		/// </summary>
+		/// <param name="usec">Number of microseconds</param>
+		/// <param name="clock">Pointer to a ::SceKernelSysClock structure</param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0x110DEC9A, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelUSec2SysClock(uint usec, SceKernelSysClock* clock)
+		{
+			throw(new NotImplementedException());
+		}
+
+		/// <summary>
 		/// Set an alarm.
 		/// </summary>
 		/// <param name="clock">The number of micro seconds till the alarm occurrs.</param>
@@ -65,6 +78,30 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// </returns>
 		[HlePspFunction(NID = 0x7E65B999, FirmwareVersion = 150)]
 		public int sceKernelCancelAlarm(int alarmid)
+		{
+			throw(new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Get the system time
+		/// </summary>
+		/// <param name="time">Pointer to a ::SceKernelSysClock structure</param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0xDB738F35, FirmwareVersion = 150)]
+		public int sceKernelGetSystemTime(SceKernelSysClock* time)
+		{
+			throw(new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Convert a ::SceKernelSysClock structure to microseconds
+		/// </summary>
+		/// <param name="clock">Pointer to a ::SceKernelSysClock structure</param>
+		/// <param name="low">Pointer to the low part of the time</param>
+		/// <param name="high">Pointer to the high part of the time</param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0xBA6B92E2, FirmwareVersion = 150)]
+		public int sceKernelSysClock2USec(SceKernelSysClock* clock, uint* low, uint* high)
 		{
 			throw(new NotImplementedException());
 		}
