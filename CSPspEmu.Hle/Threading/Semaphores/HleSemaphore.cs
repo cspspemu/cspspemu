@@ -73,7 +73,7 @@ namespace CSPspEmu.Hle.Threading.Semaphores
 				//.Reverse()
 				//.Where(WaitingThread => (CurrentCount >= WaitingThread.ExpectedMinimumCount))
 				.AsEnumerable()
-				.Reverse()
+				//.Reverse()
 			;
 
 			// Reorders the waiting semaphores in a Thread priority order (descending).

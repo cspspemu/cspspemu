@@ -174,6 +174,13 @@ namespace CSPspEmu.Core.Memory
 		}
 
 		abstract public void Dispose();
+
+		public void Copy(uint SourceAddress, uint DestinationAddress, int Size)
+		{
+			var Source = PspAddressToPointer(SourceAddress);
+			var Destination = PspAddressToPointer(DestinationAddress);
+			PointerUtils.Memcpy((byte*)Destination, (byte*)Source, Size);
+		}
 	}
 
 	public enum PspAddress : uint { }
