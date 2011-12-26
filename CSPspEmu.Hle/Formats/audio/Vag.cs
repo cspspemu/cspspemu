@@ -33,7 +33,11 @@ namespace CSPspEmu.Hle.Formats.audio
 		{
 			//this.Data = Data;
 			var Header = *(Header*)DataPointer;
-			if (Header.Magic != 0) throw(new NotImplementedException("!"));
+			if (Header.Magic != 0)
+			{
+				Console.Error.WriteLine("Error VAG Magic: {0:X}", Header.Magic);
+				throw (new NotImplementedException("Invalid VAG header"));
+			}
 			/*
 			switch (Header.magic) {
 				case "VAG":

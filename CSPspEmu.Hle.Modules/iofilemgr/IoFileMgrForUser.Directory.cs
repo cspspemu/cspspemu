@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Vfs;
@@ -21,9 +22,19 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0xB29DDF9C, FirmwareVersion = 150)]
 		public int sceIoDopen(string DirectoryPath)
 		{
-			var Info = HleState.HleIoManager.ParsePath(DirectoryPath);
-			Info.HleIoDrvFileArg.HleIoDriver.IoDopen(Info.HleIoDrvFileArg, Info.LocalPath);
-			return HleState.HleIoManager.HleIoDrvFileArgPool.Create(Info.HleIoDrvFileArg);
+			try
+			{
+				var Info = HleState.HleIoManager.ParsePath(DirectoryPath);
+				Info.HleIoDrvFileArg.HleIoDriver.IoDopen(Info.HleIoDrvFileArg, Info.LocalPath);
+				return HleState.HleIoManager.HleIoDrvFileArgPool.Create(Info.HleIoDrvFileArg);
+			}
+			catch (DirectoryNotFoundException)
+			{
+			}
+			catch (FileNotFoundException)
+			{
+			}
+			return (int)SceKernelErrors.ERROR_ERRNO_NOT_A_DIRECTORY;
 		}
 
 		/// <summary>

@@ -38,6 +38,7 @@ namespace CSPspEmu.AutoTests
 		static public void Init()
 		{
 			PspConfig = new PspConfig();
+			PspConfig.DebugSyscalls = true;
 			foreach (var _FileName in new[] {
 					Path.GetDirectoryName(typeof(Program).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll",
 					Application.ExecutablePath,
@@ -51,7 +52,7 @@ namespace CSPspEmu.AutoTests
 			}
 		}
 
-		static protected string RunExecutableAndGetOutput(string PspAutoTestsFolder, string FileName)
+		static protected string RunExecutableAndGetOutput(string PspAutoTestsFolder, string FileName, out string CapturedOutput)
 		{
 			var OutputString = "";
 
@@ -59,7 +60,7 @@ namespace CSPspEmu.AutoTests
 
 			var PspEmulatorContext = new PspEmulatorContext(PspConfig);
 
-			ConsoleUtils.CaptureOutput(() =>
+			CapturedOutput = ConsoleUtils.CaptureOutput(() =>
 			{				
 				PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
 				PspEmulatorContext.SetInstanceType<GpuImpl, GpuImplMock>();
@@ -110,10 +111,11 @@ namespace CSPspEmu.AutoTests
 			Console.Write("{0}...", FileNameExecutable);
 			var ExpectedOutput = File.ReadAllText(FileNameExpected, Encoding.ASCII);
 			var RealOutput = "";
+			string CapturedOutput = "";
 
 			// Execute.
 			{
-				RealOutput = RunExecutableAndGetOutput(PspAutoTestsFolder, FileNameExecutable);
+				RealOutput = RunExecutableAndGetOutput(PspAutoTestsFolder, FileNameExecutable, out CapturedOutput);
 			}
 
 			var ExpectedOutputLines = ExpectedOutput.Trim().Replace("\r\n", "\n").Split('\n');
@@ -123,6 +125,11 @@ namespace CSPspEmu.AutoTests
 			File.WriteAllText(
 				Path.ChangeExtension(FileNameExpected, ".lastoutput"),
 				RealOutput
+			);
+
+			File.WriteAllText(
+				Path.ChangeExtension(FileNameExpected, ".lastdebug"),
+				CapturedOutput
 			);
 
 			if (Result.Items.All(Item => Item.Action == Diff.ProcessedItem.ActionEnum.Keep))
@@ -267,7 +274,7 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "intr";
 				//WildCardFilter = "umd";
 				//WildCardFilter = "vblank";
-				WildCardFilter = "wakeup";
+				//WildCardFilter = "wakeup";
 				//WildCardFilter = "thread";
 				//WildCardFilter = "directory";
 				//WildCardFilter = "fpl";
@@ -282,6 +289,9 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "dmac";
 				//WildCardFilter = "kirk";
 				//WildCardFilter = "malloc";
+				//WildCardFilter = "sascore";
+				//WildCardFilter = "directory";
+				//WildCardFilter = "umd_io";
 			}
 
 			if (WildCardFilter.Length > 0)

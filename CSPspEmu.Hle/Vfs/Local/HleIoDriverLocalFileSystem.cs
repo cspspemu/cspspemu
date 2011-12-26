@@ -100,6 +100,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 			{
 				var Buffer = new byte[OutputLength];
 				var FileStream = ((FileStream)HleIoDrvFileArg.FileArgument);
+				Console.WriteLine("ReadPosition: {0}", FileStream.Position);
 				int Readed = FileStream.Read(Buffer, 0, OutputLength);
 				for (int n = 0; n < Readed; n++) *OutputPointer++ = Buffer[n];
 				return Readed;
@@ -178,14 +179,14 @@ namespace CSPspEmu.Hle.Vfs.Local
 			try
 			{
 				//Console.Error.WriteLine("'{0}'", RealFileName);
-				var FileSystemInfo = new DirectoryInfo(RealFileName).EnumerateFileSystemInfos().ToArray();
-				/*
-				foreach (var Info in FileSystemInfo)
-				{
-					Console.Error.WriteLine(Info);
-				}
-				*/
-				HleIoDrvFileArg.FileArgument = new DirectoryEnumerator<FileSystemInfo>(FileSystemInfo);
+				var Items = new List<HleIoDirent>();
+
+				Items.Add(CreateFakeDirectoryHleIoDirent("."));
+				Items.Add(CreateFakeDirectoryHleIoDirent(".."));
+				Items.AddRange(new DirectoryInfo(RealFileName).EnumerateFiles().Select(Item => ConvertFileSystemInfoToHleIoDirent(Item)));
+				Items.AddRange(new DirectoryInfo(RealFileName).EnumerateDirectories().Select(Item => ConvertFileSystemInfoToHleIoDirent(Item)));
+
+				HleIoDrvFileArg.FileArgument = new DirectoryEnumerator<HleIoDirent>(Items.ToArray());
 				return 0;
 			}
 			catch (DirectoryNotFoundException DirectoryNotFoundException)
@@ -201,35 +202,56 @@ namespace CSPspEmu.Hle.Vfs.Local
 			return 0;
 		}
 
+		unsafe static public HleIoDirent CreateFakeDirectoryHleIoDirent(string Name)
+		{
+			var HleIoDirent = default(HleIoDirent);
+			PointerUtils.StoreStringOnPtr(Name, Encoding.UTF8, HleIoDirent.Name);
+			HleIoDirent.Stat.Size = 0;
+			HleIoDirent.Stat.Mode = SceMode.Directory | (SceMode)Convert.ToInt32("777", 8);
+			HleIoDirent.Stat.Attributes = IOFileModes.Directory;
+			HleIoDirent.Stat.DeviceDependentData0 = 10;
+			return HleIoDirent;
+		}
+
+		unsafe static public HleIoDirent ConvertFileSystemInfoToHleIoDirent(FileSystemInfo FileSystemInfo)
+		{
+			var HleIoDirent = default(HleIoDirent);
+			var FileInfo = (FileSystemInfo as FileInfo);
+			var DirectoryInfo = (FileSystemInfo as DirectoryInfo);
+			{
+				if (DirectoryInfo != null)
+				{
+					HleIoDirent.Stat.Size = 0;
+					HleIoDirent.Stat.Mode = SceMode.Directory | (SceMode)Convert.ToInt32("777", 8);
+					HleIoDirent.Stat.Attributes = IOFileModes.Directory;
+					PointerUtils.StoreStringOnPtr(FileSystemInfo.Name, Encoding.UTF8, HleIoDirent.Name);
+				}
+				else
+				{
+					HleIoDirent.Stat.Size = FileInfo.Length;
+					HleIoDirent.Stat.Mode = SceMode.File | (SceMode)Convert.ToInt32("777", 8);
+					//HleIoDirent.Stat.Attributes = IOFileModes.File | IOFileModes.CanRead | IOFileModes.CanWrite | IOFileModes.CanExecute;
+					HleIoDirent.Stat.Attributes = IOFileModes.File;
+					PointerUtils.StoreStringOnPtr(FileSystemInfo.Name.ToUpper(), Encoding.UTF8, HleIoDirent.Name);
+				}
+
+				HleIoDirent.Stat.DeviceDependentData0 = 10;
+			}
+			return HleIoDirent;
+		}
+
 		public unsafe int IoDread(HleIoDrvFileArg HleIoDrvFileArg, HleIoDirent* IoDirent)
 		{
-			var Enumerator = (DirectoryEnumerator<FileSystemInfo>)HleIoDrvFileArg.FileArgument;
+			var Enumerator = (DirectoryEnumerator<HleIoDirent>)HleIoDrvFileArg.FileArgument;
 
 			// More items.
 			if (Enumerator.MoveNext())
 			{
 				//Console.Error.WriteLine("'{0}'", Enumerator.Current.ToString());
-				var FileSystemInfo = Enumerator.Current;
-				var FileInfo = (FileSystemInfo as FileInfo);
-				var DirectoryInfo = (FileSystemInfo as DirectoryInfo);
-				{
-					PointerUtils.StoreStringOnPtr(FileSystemInfo.Name, Encoding.UTF8, IoDirent->Name);
-					IoDirent->Stat.Size = (FileInfo != null) ? FileInfo.Length : 0;
-					//IoDirent->Stat.Mode = SceMode
-
-					if (DirectoryInfo != null)
-					{
-						IoDirent->Stat.Mode = SceMode.Directory | (SceMode)0777;
-						IoDirent->Stat.Attributes = IOFileModes.Directory;
-					}
-					else
-					{
-						IoDirent->Stat.Mode = SceMode.File | (SceMode)0777;
-						IoDirent->Stat.Attributes = IOFileModes.File | IOFileModes.CanRead | IOFileModes.CanWrite | IOFileModes.CanExecute;
-					}
-
-					IoDirent->Stat.DeviceDependentData0 = 10;
-				}
+				*IoDirent = Enumerator.Current;
+				/*
+				
+				*/
 			}
 			// No more items.
 			else

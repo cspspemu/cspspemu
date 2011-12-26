@@ -206,19 +206,24 @@ namespace CSPspEmu.Runner.Components.Cpu
 
 				RegisterSyscalls();
 
-				uint CODE_PTR_ARGUMENTS = 0x08000100;
+				uint StartArgumentAddress = 0x08000100;
+				uint EndArgumentAddress = StartArgumentAddress;
 
-				{
-					var BinaryWriter = new BinaryWriter(MemoryStream);
-					var StreamWriter = new StreamWriter(MemoryStream); StreamWriter.AutoFlush = true;
-					MemoryStream.Position = CODE_PTR_ARGUMENTS;
+				var Arguments = new[] {
+					"ms0:/PSP/GAME/virtual/EBOOT.PBP",
+				};
 
-					BinaryWriter.Write((uint)(CODE_PTR_ARGUMENTS + 4)); BinaryWriter.Flush();
-					StreamWriter.Write("ms0:/PSP/GAME/virtual/EBOOT.PBP\0"); StreamWriter.Flush();
-				}
+				var ArgumentsChunk = Arguments
+					.Select(Argument => Encoding.UTF8.GetBytes(Argument + "\0"))
+					.Aggregate(new byte[] { }, (Accumulate, Chunk) => Accumulate.Concat(Chunk))
+				;
 
-				uint argc = 1;
-				uint argv = CODE_PTR_ARGUMENTS + 4;
+				var ReservedSyscallsPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(0x100);
+				var ArgumentsPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(ArgumentsChunk.Length);
+				PspMemory.WriteBytes(ArgumentsPartition.Low, ArgumentsChunk);
+
+				uint argc = (uint)ArgumentsPartition.Size;
+				uint argv = (uint)ArgumentsPartition.Low;
 				//uint argv = CODE_PTR_ARGUMENTS;
 
 				var MainThread = HleState.ThreadManager.Create();

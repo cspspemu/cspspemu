@@ -8,12 +8,13 @@
 //PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
 
 typedef struct {
-	char* pointer;
+	unsigned char* pointer;
 	int length;
 } ByteArray;
 
 ByteArray loadData()
 {
+	int n;
 	int length;
 	FILE *file;
 	ByteArray data = {0};
@@ -25,6 +26,13 @@ ByteArray loadData()
 		fseek(file, 0, SEEK_SET);
 		fread(data.pointer, data.length, 1, file);
 		fclose(file);
+	}
+	if (data.length == 0) {
+		printf("DATA:Can't read file\n");
+	} else {
+		printf("DATA:");
+		for (n = 0; n < 0x20; n++) printf("%02X", data.pointer[n]);
+		printf("\n");
 	}
 	return data;
 }

@@ -145,7 +145,9 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		public int sceIoRead(int FileDescriptor, byte* OutputPointer, int OutputSize)
 		{
 			var HleIoDrvFileArg = GetFileArgFromHandle(FileDescriptor);
-			return HleIoDrvFileArg.HleIoDriver.IoRead(HleIoDrvFileArg, OutputPointer, OutputSize);
+			var Result = HleIoDrvFileArg.HleIoDriver.IoRead(HleIoDrvFileArg, OutputPointer, OutputSize);
+			for (int n = 0; n < OutputSize; n++) Console.Write("{0:X},", OutputPointer[n]);
+			return Result;
 		}
 
 		/// <summary>
@@ -195,6 +197,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			var Info = HleState.HleIoManager.ParsePath(FileName);
 			try
 			{
+				Console.WriteLine("Opened '{0}' with driver '{1}' and local path '{2}'", FileName, Info.HleIoDriver, Info.LocalPath);
 				Info.HleIoDrvFileArg.HleIoDriver.IoOpen(Info.HleIoDrvFileArg, Info.LocalPath, Flags, Mode);
 				return HleState.HleIoManager.HleIoDrvFileArgPool.Create(Info.HleIoDrvFileArg);
 			}
@@ -204,7 +207,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			catch (FileNotFoundException)
 			{
 			}
-			Console.Error.WriteLine("Didn't find file '{0}'", FileName);
+			//Console.Error.WriteLine("Didn't find file '{0}'", FileName);
 			return unchecked((int)SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND);
 		}
 

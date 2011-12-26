@@ -105,7 +105,6 @@ namespace CSPspEmu.Hle.Modules.ctrl
 		/// <param name="CurrentLatch">Pointer to SceCtrlLatch to store the result.</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x0B588501, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
 		public int sceCtrlReadLatch(SceCtrlLatch* CurrentLatch)
 		{
 			CurrentLatch[0] = new SceCtrlLatch()

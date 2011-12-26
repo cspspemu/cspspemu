@@ -58,8 +58,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Thread.CpuThreadState.CopyRegistersFrom(HleState.ThreadManager.Current.CpuThreadState);
 
 			Thread.CpuThreadState.PC = (uint)EntryPoint;
-			//Thread.CpuThreadState.GP = (uint)CpuThreadState.GP;
-			Thread.CpuThreadState.SP = (uint)(Thread.Stack.High);
 			Thread.CpuThreadState.RA = (uint)HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD;
 			Thread.CurrentStatus = HleThread.Status.Stopped;
 			//Thread.CpuThreadState.RA = (uint)0;

@@ -50,6 +50,7 @@
 *.exe
 *.pbp
 *.lastoutput
+*.lastdebug
 *.elf
 /ms
 /TestInput/EBOOT.BIN

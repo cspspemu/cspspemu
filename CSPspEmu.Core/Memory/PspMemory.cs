@@ -181,6 +181,23 @@ namespace CSPspEmu.Core.Memory
 			var Destination = PspAddressToPointer(DestinationAddress);
 			PointerUtils.Memcpy((byte*)Destination, (byte*)Source, Size);
 		}
+
+		public uint WriteStringz(uint Address, string String)
+		{
+			var Bytes = Encoding.UTF8.GetBytes(String + "\0");
+			WriteBytes(Address, Bytes);
+			return (uint)Bytes.Length;
+		}
+
+		public uint WriteStringz(uint Address, string[] Strings)
+		{
+			uint StartAddress = Address;
+			foreach (var String in Strings)
+			{
+				Address += WriteStringz(Address, String);
+			}
+			return Address - StartAddress;
+		}
 	}
 
 	public enum PspAddress : uint { }
