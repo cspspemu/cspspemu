@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
 	SceIoDirent file;
 	int fd;
 
-	fd = sceIoDopen("ms0:/PSP/GAME/virtual/folder");
+	fd = sceIoDopen("folder");
 	while (1) {
 		if (sceIoDread(fd, &file) <= 0) break;
 		printf(
