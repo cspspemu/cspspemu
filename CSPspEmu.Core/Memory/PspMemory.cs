@@ -71,9 +71,29 @@ namespace CSPspEmu.Core.Memory
 
 		abstract public uint PointerToPspAddress(void* Pointer);
 		abstract public void* PspAddressToPointer(uint Address);
+
 		public PspPointer PointerToPspPointer(void* Pointer)
 		{
-			return new PspPointer(PointerToPspAddress(Pointer));
+			return new PspPointer(PointerToPspAddressSafe(Pointer));
+		}
+
+		public void* PspPointerToPointerSafe(PspPointer Pointer)
+		{
+			return PspAddressToPointerSafe(Pointer.Address);
+		}
+
+		virtual public uint PointerToPspAddressSafe(void* Pointer)
+		{
+			return PointerToPspAddressSafe((byte*)Pointer);
+		}
+
+		virtual public uint PointerToPspAddressSafe(byte* Pointer)
+		{
+			if (Pointer == null) return 0;
+			if ((Pointer >= ScratchPadPtr) && (Pointer < ScratchPadPtr + ScratchPadSize)) return (uint)(ScratchPadOffset + (Pointer - ScratchPadPtr));
+			if ((Pointer >= FrameBufferPtr) && (Pointer < FrameBufferPtr + FrameBufferSize)) return (uint)(FrameBufferOffset + (Pointer - FrameBufferPtr));
+			if ((Pointer >= MainPtr) && (Pointer < MainPtr + MainSize)) return (uint)(MainOffset + (Pointer - MainPtr));
+			throw (new InvalidAddressException("Pointer doesn't belong to PSP Memory"));
 		}
 
 		virtual public void* PspAddressToPointerSafe(uint Address)

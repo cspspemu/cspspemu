@@ -9,7 +9,28 @@ namespace CSPspEmu.Hle.Modules.mpeg
 {
 	unsafe public partial class sceMpeg
 	{
+		public SceMpegData* GetSceMpegData(SceMpeg* SceMpeg)
+		{
+			return SceMpeg->GetSceMpegData(PspMemory);
+		}
+
+		public enum StreamId : int
+		{
+			Video = 0,
+			Audio = 1,
+		}
+
 		public struct SceMpeg
+		{
+			public PspPointer SceMpegData;
+
+			public SceMpegData* GetSceMpegData(PspMemory PspMemory)
+			{
+				return (SceMpegData *)PspMemory.PspPointerToPointerSafe(SceMpegData);
+			}
+		}
+
+		public struct SceMpegData
 		{
 			/// <summary>
 			/// 

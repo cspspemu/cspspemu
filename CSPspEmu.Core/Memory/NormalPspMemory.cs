@@ -49,10 +49,11 @@ namespace CSPspEmu.Core.Memory
 
 		override public uint PointerToPspAddress(void* Pointer)
 		{
+			if (Pointer == null) return 0;
 			if (Pointer >= &ScratchPadPtr[0] && Pointer < &ScratchPadPtr[ScratchPadSize]) return (uint)((byte*)Pointer - &ScratchPadPtr[0]);
 			if (Pointer >= &FrameBufferPtr[0] && Pointer < &FrameBufferPtr[FrameBufferSize]) return (uint)((byte*)Pointer - &FrameBufferPtr[0]);
 			if (Pointer >= &MainPtr[0] && Pointer < &MainPtr[MainSize]) return (uint)((byte*)Pointer - &MainPtr[0]);
-			throw (new InvalidOperationException());
+			throw (new InvalidOperationException(String.Format("Address 0x{0:X} is not a pointer to the PspMemory", (uint)Pointer)));
 		}
 
 		override public void* PspAddressToPointer(uint _Address)

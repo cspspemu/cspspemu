@@ -3,6 +3,7 @@
 #include <pspkernel.h>
 #include <pspsdk.h>
 #include <psptypes.h>
+#include <psppower.h>
 
 
 //#include "pmfplayer.h"
@@ -80,7 +81,7 @@ typedef struct {
 	SceUID                          m_ThreadID;
 
 	SceInt32                        m_StreamSize;
-	SceMpegRingbuffer*      m_Ringbuffer;
+	SceMpegRingbuffer*              m_Ringbuffer;
 	SceInt32                        m_RingbufferPackets;
 	SceInt32                        m_Status;
 	SceInt32                        m_TotalBytes;
@@ -114,15 +115,15 @@ typedef struct
 typedef struct {
 	SceUID                          m_ThreadID;
 
-	ReaderThreadData*       Reader;
-	VideoThreadData*        Video;
-	AudioThreadData*        Audio;
+	ReaderThreadData*               Reader;
+	VideoThreadData*                Video;
+	AudioThreadData*                Audio;
 
 	SceMpeg                         m_Mpeg;
 
-	SceMpegStream*          m_MpegStreamAVC;
+	SceMpegStream*                  m_MpegStreamAVC;
 	SceMpegAu*                      m_MpegAuAVC;
-	SceMpegStream*          m_MpegStreamAtrac;
+	SceMpegStream*                  m_MpegStreamAtrac;
 	SceMpegAu*                      m_MpegAuAtrac;
 	SceInt32                        m_MpegAtracOutSize;
 
@@ -134,50 +135,50 @@ typedef struct {
 
 } DecoderThreadData;
 
-ReaderThreadData Reader;
-VideoThreadData Video;
-AudioThreadData Audio;
-DecoderThreadData Decoder;
+ReaderThreadData                    Reader;
+VideoThreadData                     Video;
+AudioThreadData                     Audio;
+DecoderThreadData                   Decoder;
 
-char                            m_LastError[256];
+char                                m_LastError[256];
 
-SceUID                          m_FileHandle;
-SceInt32                        m_MpegStreamOffset;
-SceInt32                        m_MpegStreamSize;
+SceUID                              m_FileHandle;
+SceInt32                            m_MpegStreamOffset;
+SceInt32                            m_MpegStreamSize;
 
-SceMpeg                         m_Mpeg;
-SceInt32                        m_MpegMemSize;
-ScePVoid                        m_MpegMemData;
+SceMpeg                             m_Mpeg;
+SceInt32                            m_MpegMemSize;
+ScePVoid                            m_MpegMemData;
 
-SceInt32                        m_RingbufferPackets;
-SceInt32                        m_RingbufferSize;
-ScePVoid                        m_RingbufferData;
-SceMpegRingbuffer       m_Ringbuffer;
+SceInt32                            m_RingbufferPackets;
+SceInt32                            m_RingbufferSize;
+ScePVoid                            m_RingbufferData;
+SceMpegRingbuffer                   m_Ringbuffer;
 
-SceMpegStream*          m_MpegStreamAVC;
-ScePVoid                        m_pEsBufferAVC;
-SceMpegAu                       m_MpegAuAVC;
+SceMpegStream*                      m_MpegStreamAVC;
+ScePVoid                            m_pEsBufferAVC;
+SceMpegAu                           m_MpegAuAVC;
 
-SceMpegStream*          m_MpegStreamAtrac;
-ScePVoid                        m_pEsBufferAtrac;
-SceMpegAu                       m_MpegAuAtrac;
+SceMpegStream*                      m_MpegStreamAtrac;
+ScePVoid                            m_pEsBufferAtrac;
+SceMpegAu                           m_MpegAuAtrac;
 
-SceInt32                        m_MpegAtracEsSize;
-SceInt32                        m_MpegAtracOutSize;
+SceInt32                            m_MpegAtracEsSize;
+SceInt32                            m_MpegAtracOutSize;
 
-SceInt32                        m_iLastTimeStamp;
+SceInt32                            m_iLastTimeStamp;
 
 SceInt32 RingbufferCallback(ScePVoid pData, SceInt32 iNumPackets, ScePVoid pParam)
 {
-        int retVal, iPackets;
-        SceUID hFile = *(SceUID*)pParam;
+	int retVal, iPackets;
+	SceUID hFile = *(SceUID*)pParam;
 
-        retVal = sceIoRead(hFile, pData, iNumPackets * 2048);
-        if(retVal < 0) return -1;
+	retVal = sceIoRead(hFile, pData, iNumPackets * 2048);
+	if(retVal < 0) return -1;
 
-        iPackets = retVal / 2048;
+	iPackets = retVal / 2048;
 
-        return iPackets;
+	return iPackets;
 }
 
 SceInt32 ParseHeader()
@@ -188,21 +189,21 @@ SceInt32 ParseHeader()
 	sceIoLseek(m_FileHandle, 0, SEEK_SET);
 
 	retVal = sceIoRead(m_FileHandle, pHeader, 2048);
-	if(retVal < 2048)
+	if (retVal < 2048)
 	{
 		printf("sceIoRead() failed!\n");
 		goto error;
 	}
 
-	retVal = sceMpegQueryStreamOffset(&m_Mpeg, pHeader, &m_MpegStreamOffset);
-	if(retVal != 0)
+	printf("sceMpegQueryStreamOffset     :0x%08X\n", (unsigned int)(retVal = sceMpegQueryStreamOffset(&m_Mpeg, pHeader, &m_MpegStreamOffset)));
+	if (retVal != 0)
 	{
 		printf("sceMpegQueryStreamOffset() failed: 0x%08X\n", retVal);
 		goto error;
 	}
 
-	retVal = sceMpegQueryStreamSize(pHeader, &m_MpegStreamSize);
-	if(retVal != 0)
+	printf("sceMpegQueryStreamSize       :0x%08X\n", (unsigned int)(retVal = sceMpegQueryStreamSize(pHeader, &m_MpegStreamSize)));
+	if (retVal != 0)
 	{
 		printf("sceMpegQueryStreamSize() failed: 0x%08X\n", retVal);
 		goto error;
@@ -210,6 +211,8 @@ SceInt32 ParseHeader()
 
 	m_iLastTimeStamp = *(int*)(pHeader + 80 + 12);
 	m_iLastTimeStamp = SWAPINT(m_iLastTimeStamp);
+
+	printf("m_iLastTimeStamp             :0x%08X\n", (unsigned int)(m_iLastTimeStamp));
 
 	free(pHeader);
 
@@ -238,8 +241,8 @@ void Init() {
 	printf("sceMpegInit                  :0x%08X\n", (unsigned int)sceMpegInit());
 	printf("sceMpegRingbufferQueryMemSize:0x%08X\n", (unsigned int)(m_RingbufferSize = sceMpegRingbufferQueryMemSize(m_RingbufferPackets)));
 	printf("sceMpegQueryMemSize          :0x%08X\n", (unsigned int)(m_MpegMemSize    = sceMpegQueryMemSize(0)));
-	m_RingbufferData = malloc(m_RingbufferSize);
-	m_MpegMemData    = malloc(m_MpegMemSize);
+	printf("m_RingbufferData             :0x%08X\n", (unsigned int)(m_RingbufferData = malloc(m_RingbufferSize)));
+	printf("m_MpegMemData                :0x%08X\n", (unsigned int)(m_MpegMemData    = malloc(m_MpegMemSize)));
 	
 	printf("sceMpegRingbufferConstruct   :0x%08X\n", (unsigned int)(sceMpegRingbufferConstruct(&m_Ringbuffer, m_RingbufferPackets, m_RingbufferData, m_RingbufferSize, &RingbufferCallback, &m_FileHandle)));
 	printf("sceMpegCreate                :0x%08X\n", (unsigned int)(sceMpegCreate(&m_Mpeg, m_MpegMemData, m_MpegMemSize, &m_Ringbuffer, BUFFER_WIDTH, 0, 0)));
@@ -257,7 +260,7 @@ void Load() {
 	printf("sceMpegMallocAvcEsBuf        :%08X\n", (unsigned int)(m_pEsBufferAVC = sceMpegMallocAvcEsBuf(&m_Mpeg)));
 	printf("sceMpegInitAu                :%08X\n", (unsigned int)(retVal = sceMpegInitAu(&m_Mpeg, m_pEsBufferAVC, &m_MpegAuAVC)));
 	printf("sceMpegQueryAtracEsSize      :%08X\n", (unsigned int)(retVal = sceMpegQueryAtracEsSize(&m_Mpeg, &m_MpegAtracEsSize, &m_MpegAtracOutSize)));
-	m_pEsBufferAtrac = memalign(64, m_MpegAtracEsSize);
+	printf("m_pEsBufferAtrac             :%08X\n", (unsigned int)(m_pEsBufferAtrac = memalign(64, m_MpegAtracEsSize)));
 	printf("sceMpegInitAu                :%08X\n", (unsigned int)(retVal = sceMpegInitAu(&m_Mpeg, m_pEsBufferAtrac, &m_MpegAuAtrac)));
 }
 
@@ -266,7 +269,7 @@ void Load() {
 #include "pmf_video.h"
 #include "pmf_audio.h"
 
-void Play() {
+int Play() {
 	int retVal, fail = 0;
 
 	retVal = InitReader();
@@ -277,24 +280,24 @@ void Play() {
 	}
 	
 	retVal = InitVideo();
-	if(retVal < 0)
+	if (retVal < 0)
 	{
 		fail++;
 		goto exit_video;
 	}
 
 	retVal = InitAudio();
-	if(retVal < 0)
+	if (retVal < 0)
 	{
-			fail++;
-			goto exit_audio;
+		fail++;
+		goto exit_audio;
 	}
 
 	retVal = InitDecoder();
-	if(retVal < 0)
+	if (retVal < 0)
 	{
-			fail++;
-			goto exit_decoder;
+		fail++;
+		goto exit_decoder;
 	}
 
 	ReaderThreadData* TDR = &Reader;
@@ -326,24 +329,24 @@ exit_reader:
 
 SceVoid Shutdown()
 {
-	if (m_pEsBufferAtrac != NULL) free(m_pEsBufferAtrac);
-	if (m_pEsBufferAVC != NULL) sceMpegFreeAvcEsBuf(&m_Mpeg, m_pEsBufferAVC);
-	if (m_MpegStreamAVC != NULL) sceMpegUnRegistStream(&m_Mpeg, m_MpegStreamAVC);
+	if (m_pEsBufferAtrac  != NULL) free(m_pEsBufferAtrac);
+	if (m_pEsBufferAVC    != NULL) sceMpegFreeAvcEsBuf(&m_Mpeg, m_pEsBufferAVC);
+	if (m_MpegStreamAVC   != NULL) sceMpegUnRegistStream(&m_Mpeg, m_MpegStreamAVC);
 	if (m_MpegStreamAtrac != NULL) sceMpegUnRegistStream(&m_Mpeg, m_MpegStreamAtrac);
-	if (m_FileHandle > -1) sceIoClose(m_FileHandle);
+	if (m_FileHandle      > -1   ) sceIoClose(m_FileHandle);
 
 	sceMpegDelete(&m_Mpeg);
 	sceMpegRingbufferDestruct(&m_Ringbuffer);
 	sceMpegFinish();
 
 	if (m_RingbufferData != NULL) free(m_RingbufferData);
-	if (m_MpegMemData != NULL) free(m_MpegMemData);
+	if (m_MpegMemData    != NULL) free(m_MpegMemData);
 }
 
 int main(int argc, char *argv[]) {
 	Init();
 	Load();
-	Play();
+	//Play();
 	Shutdown();
 
 	return 0;

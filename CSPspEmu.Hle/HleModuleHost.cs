@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using CSharpUtils;
 using CSharpUtils.Extensions;
 using CSharpUtils.Threading;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle
 {
@@ -26,6 +27,14 @@ namespace CSPspEmu.Hle
 		public Dictionary<uint, FunctionEntry> EntriesByNID = new Dictionary<uint, FunctionEntry>();
 		public Dictionary<uint, Action<CpuThreadState>> DelegatesByNID = new Dictionary<uint, Action<CpuThreadState>>();
 		public Dictionary<string, Action<CpuThreadState>> DelegatesByName = new Dictionary<string, Action<CpuThreadState>>();
+
+		protected PspMemory PspMemory
+		{
+			get
+			{
+				return HleState.CpuProcessor.Memory;
+			}
+		}
 
 		public HleModuleHost()
 		{

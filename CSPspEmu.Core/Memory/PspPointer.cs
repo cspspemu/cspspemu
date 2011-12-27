@@ -13,6 +13,11 @@ namespace CSPspEmu.Core.Memory
 		{
 			this.Address = Address;
 		}
+
+		public override string ToString()
+		{
+			return String.Format("PspPointer(0x{0:X})", Address);
+		}
 	}
 
 	/*

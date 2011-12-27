@@ -64,6 +64,8 @@
     <Compile Include="iofilemgr\IoFileMgrForUser.Directory.cs" />
     <Compile Include="iofilemgr\IoFileMgrForUser.Driver.cs" />
     <Compile Include="iofilemgr\IoFileMgrForUser.Files.cs" />
+    <Compile Include="mpeg\sceMpeg.Atrac.cs" />
+    <Compile Include="mpeg\sceMpeg.Avc.cs" />
     <Compile Include="sceMemlmd\semaphore.cs" />
     <Compile Include="libatrac3plus\sceAtrac3plus.cs" />
     <Compile Include="libatrac3plus\sceAtrac3plus.Utils.cs" />
