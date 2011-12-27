@@ -1,0 +1,6 @@
+sceMpegInit                  :0x00000000
+sceMpegRingbufferQueryMemSize:0x001F8600
+sceMpegQueryMemSize          :0x00010000
+sceMpegRingbufferConstruct   :0x00000000
+sceMpegCreate                :0x00000000
+sceMpegAvcDecodeMode         :0x00000000

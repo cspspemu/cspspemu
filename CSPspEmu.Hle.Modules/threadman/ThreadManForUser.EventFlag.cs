@@ -105,6 +105,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 				});
 			}, HandleCallbacks: HandleCallbacks);
 
+			if (OutBits != null)
+			{
+				*OutBits = EventFlag.BitPattern;
+			}
+
 			if (TimedOut)
 			{
 				throw(new SceKernelException(SceKernelErrors.ERROR_KERNEL_WAIT_TIMEOUT));

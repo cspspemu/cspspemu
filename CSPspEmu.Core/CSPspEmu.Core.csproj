@@ -59,6 +59,7 @@
     <Compile Include="Memory\FastPspMemory.cs" />
     <Compile Include="Memory\NormalPspMemory.cs" />
     <Compile Include="Memory\PspMemoryStream.cs" />
+    <Compile Include="Memory\PspPointer.cs" />
     <Compile Include="PixelFormats.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Audio\PspAudio.cs" />

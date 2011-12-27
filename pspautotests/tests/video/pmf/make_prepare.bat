@@ -1,0 +1,1 @@
+SET PSP_LIBS=%PSP_LIBS% -lpspmpeg -lpspaudio

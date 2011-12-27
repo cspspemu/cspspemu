@@ -274,7 +274,7 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "intr";
 				//WildCardFilter = "umd";
 				//WildCardFilter = "vblank";
-				//WildCardFilter = "wakeup";
+				//WildCardFilter = "events";
 				//WildCardFilter = "thread";
 				//WildCardFilter = "directory";
 				//WildCardFilter = "fpl";
@@ -292,6 +292,7 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "sascore";
 				//WildCardFilter = "directory";
 				//WildCardFilter = "umd_io";
+				WildCardFilter = "pmf";
 			}
 
 			if (WildCardFilter.Length > 0)

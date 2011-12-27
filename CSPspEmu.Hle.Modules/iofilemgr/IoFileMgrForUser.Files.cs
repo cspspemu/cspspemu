@@ -146,7 +146,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		{
 			var HleIoDrvFileArg = GetFileArgFromHandle(FileDescriptor);
 			var Result = HleIoDrvFileArg.HleIoDriver.IoRead(HleIoDrvFileArg, OutputPointer, OutputSize);
-			for (int n = 0; n < OutputSize; n++) Console.Write("{0:X},", OutputPointer[n]);
+			//for (int n = 0; n < OutputSize; n++) Console.Write("{0:X},", OutputPointer[n]);
 			return Result;
 		}
 

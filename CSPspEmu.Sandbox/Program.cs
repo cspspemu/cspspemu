@@ -65,7 +65,8 @@ namespace CSPspEmu.Sandbox
 
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Final Fantasy Tactics.iso", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: false);
+				//PspEmulator.AddCwCheat(0x70D69F04, 0x00000007);
+				PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"C:\psp\isos\astonishia.iso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"C:\psp\isos\Tales of Eternia.iso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"C:\psp\isos\Koloomn.cso", TraceSyscalls: false);
@@ -81,7 +82,7 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\yume\EBOOT.PBP");
 
 
-				PspEmulator.StartAndLoad(@"F:\Isos\psp\Breath of Fire 3.cso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Breath of Fire 3.cso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia.iso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Koloomn.cso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Kameleon.cso", TraceSyscalls: false);

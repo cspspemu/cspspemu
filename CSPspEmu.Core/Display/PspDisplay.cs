@@ -52,7 +52,15 @@ namespace CSPspEmu.Core.Display
 			this.HlePspRtc = PspEmulatorContext.GetInstance<PspRtc>();
 		}
 
+		public void TriggerVBlank()
+		{
+			VBlankEvent.Signal();
+			if (VBlankEventCall != null) VBlankEventCall();
+			VblankCount++;
+		}
+
 		public PspWaitEvent VBlankEvent = new PspWaitEvent();
+		public event Action VBlankEventCall;
 
 		private int _VblankCount = 0;
 

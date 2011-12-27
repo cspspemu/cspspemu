@@ -71,6 +71,10 @@ namespace CSPspEmu.Core.Memory
 
 		abstract public uint PointerToPspAddress(void* Pointer);
 		abstract public void* PspAddressToPointer(uint Address);
+		public PspPointer PointerToPspPointer(void* Pointer)
+		{
+			return new PspPointer(PointerToPspAddress(Pointer));
+		}
 
 		virtual public void* PspAddressToPointerSafe(uint Address)
 		{

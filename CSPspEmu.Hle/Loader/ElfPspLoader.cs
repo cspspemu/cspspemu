@@ -42,7 +42,15 @@ namespace CSPspEmu.Hle.Loader
 
 			PspEmulatorContext.PspConfig.InfoExeHasRelocation = this.ElfLoader.NeedsRelocation;
 
-			BaseAddress = (uint)(this.ElfLoader.NeedsRelocation ? 0x08900000 : 0);
+			if (this.ElfLoader.NeedsRelocation)
+			{
+				var DummyPartition = MemoryPartition.Allocate(0x4000);
+				BaseAddress = MemoryPartition.ChildPartitions.OrderByDescending(Partition => Partition.Size).First().Low;
+			}
+			else
+			{
+				BaseAddress = 0;
+			}
 
 			this.ElfLoader.AllocateAndWrite(MemoryStream, MemoryPartition, BaseAddress);
 
@@ -65,7 +73,7 @@ namespace CSPspEmu.Hle.Loader
 		{
 			if ((BaseAddress & 0xFFFF) != 0)
 			{
-				throw(new NotImplementedException("Can't relocate with the BaseAddress.LO16 != 0"));
+				//throw(new NotImplementedException("Can't relocate with the BaseAddress.LO16 != 0"));
 			}
 
 			// Relocate from program headers

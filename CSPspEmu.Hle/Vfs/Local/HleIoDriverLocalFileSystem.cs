@@ -100,7 +100,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 			{
 				var Buffer = new byte[OutputLength];
 				var FileStream = ((FileStream)HleIoDrvFileArg.FileArgument);
-				Console.WriteLine("ReadPosition: {0}", FileStream.Position);
+				//Console.WriteLine("ReadPosition: {0}", FileStream.Position);
 				int Readed = FileStream.Read(Buffer, 0, OutputLength);
 				for (int n = 0; n < Readed; n++) *OutputPointer++ = Buffer[n];
 				return Readed;

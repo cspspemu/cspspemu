@@ -87,8 +87,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			if (FixedPool.FreeBlocks.Count <= 0)
 			{
-				//throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_NO_MEMORY));
-				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_WAIT_CAN_NOT_WAIT));
+				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_NO_MEMORY));
+				//throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_WAIT_CAN_NOT_WAIT));
 			}
 
 			var AllocatedBlock = FixedPool.FreeBlocks.First();

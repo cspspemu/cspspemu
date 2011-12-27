@@ -237,8 +237,7 @@ namespace CSPspEmu.Gui.Winforms
 
 			if (IGuiExternalInterface.IsInitialized())
 			{
-				PspDisplay.VBlankEvent.Signal();
-				PspDisplay.VblankCount++;
+				PspDisplay.TriggerVBlank();
 			}
 		}
 

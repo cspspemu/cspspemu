@@ -166,7 +166,6 @@ namespace CSPspEmu.Runner.Components.Cpu
 		public void _LoadFile(String FileName)
 		{
 			//GC.Collect();
-
 			SetVirtualFolder(Path.GetDirectoryName(FileName));
 
 			var MemoryStream = new PspMemoryStream(PspMemory);
