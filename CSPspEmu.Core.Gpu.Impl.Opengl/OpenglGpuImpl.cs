@@ -208,6 +208,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <param name="GpuState"></param>
 		override public unsafe void Prim(GpuStateStruct* GpuState, PrimitiveType PrimitiveType, ushort VertexCount)
 		{
+			//Console.WriteLine("Prim: {0}, {1}", PrimitiveType, VertexCount);
 			this.GpuState = GpuState;
 
 			if (!IsCurrentWindow)
@@ -310,6 +311,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			// DRAW BEGIN COMMON
 			{
 				if (GpuState->VertexState.Type.Transform2D)
+				//if (true)
 				{
 					GL.MatrixMode(MatrixMode.Projection); GL.LoadIdentity();
 					GL.Ortho(0, 512, 272, 0, -0x7FFF, +0x7FFF);

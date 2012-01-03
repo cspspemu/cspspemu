@@ -49,6 +49,7 @@
     <Compile Include="GpuDisplayList.cs" />
     <Compile Include="GpuOpCodesNotImplementedAttribute.cs" />
     <Compile Include="GpuProcessor.cs" />
+    <Compile Include="PspGeCallbackData.cs" />
     <Compile Include="Run\GpuDisplayListRunner.Clut.cs" />
     <Compile Include="Run\GpuDisplayListRunner.Color.cs" />
     <Compile Include="Run\GpuDisplayListRunner.cs" />

@@ -293,7 +293,8 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "directory";
 				//WildCardFilter = "umd_io";
 				//WildCardFilter = "pmf";
-				WildCardFilter = "mstick";
+				//WildCardFilter = "mstick";
+				WildCardFilter = "ge_callbacks";
 			}
 
 			if (WildCardFilter.Length > 0)

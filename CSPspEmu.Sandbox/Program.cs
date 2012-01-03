@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
+using System.Windows.Forms;
 using ComponentAce.Compression.Libs.zlib;
 using CSPspEmu.Hle.Formats;
 using CSPspEmu.Hle.Vfs.Iso;
@@ -11,6 +15,14 @@ namespace CSPspEmu.Sandbox
 {
 	unsafe class Program
 	{
+		private const Int32 SW_HIDE = 0;
+
+		[DllImport("Kernel32.dll")]
+		private static extern IntPtr GetConsoleWindow();
+
+		[DllImport("user32.dll")]
+		private static extern Boolean ShowWindow(IntPtr hWnd, Int32 nCmdShow);
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -38,6 +50,8 @@ namespace CSPspEmu.Sandbox
 
 			Console.OutputEncoding = Encoding.UTF8;
 			Console.WriteLine("こんいちは！");
+			//Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("ja-JP");
+			//MessageBox.Show("こんいちは！");
 
 #if !RELEASE
 			Console.SetWindowSize(160, 60);
@@ -54,6 +68,9 @@ namespace CSPspEmu.Sandbox
 
 			if (File.Exists(TryIsoFile))
 			{
+				IntPtr hwnd = GetConsoleWindow();
+				ShowWindow(hwnd, SW_HIDE);
+
 				PspEmulator.StartAndLoad(TryIsoFile, TraceSyscalls: false, ShowMenus: false);
 				return;
 			}

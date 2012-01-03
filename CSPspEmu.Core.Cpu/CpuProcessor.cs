@@ -79,6 +79,11 @@ namespace CSPspEmu.Core.Cpu
 		{
 		}
 
+		public void sceKernelIcacheInvalidateAll()
+		{
+			MethodCache.Clear();
+		}
+
 		public void sceKernelIcacheInvalidateRange(uint Address, uint Size)
 		{
 			//Console.Error.WriteLine("sceKernelIcacheInvalidateRange!!! (0x{0:X}, {1})", Address, Size);

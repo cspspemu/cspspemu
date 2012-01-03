@@ -12,6 +12,7 @@ namespace CSPspEmu.Hle
 		public string Name { get; private set; }
 		public uint Function { get; private set; }
 		public object[] Arguments { get; private set; }
+		public Action ExecutedNotify;
 
 		private HleCallback()
 		{

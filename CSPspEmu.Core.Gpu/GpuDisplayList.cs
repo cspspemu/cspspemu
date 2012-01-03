@@ -320,6 +320,7 @@ namespace CSPspEmu.Core.Gpu
 		}
 
 		PspWaitEvent OnFreed = new PspWaitEvent();
+		public PspGeCallbackData Callbacks;
 
 		public void Freed()
 		{
@@ -351,6 +352,50 @@ namespace CSPspEmu.Core.Gpu
 			Console.WriteLine("Waiting for DONE");
 			Status.WaitForState(StatusEnum.Done);
 			Console.WriteLine("Ended Waiting for DONE");
+			*/
+		}
+
+		public enum GuBehavior
+		{
+			GU_BEHAVIOR_SUSPEND = 1,
+			GU_BEHAVIOR_CONTINUE = 2
+		}
+
+		public void Finish()
+		{
+			if (Callbacks.FinishFunction != 0)
+			{
+				Console.Error.WriteLine("OP_FINISH!");
+			}
+		}
+
+		public void Signal(uint Signal, GuBehavior Behavior)
+		{
+			if (Callbacks.SignalFunction != 0)
+			{
+				Console.Error.WriteLine("OP_SIGNAL! ({0}, {1})", Signal, Behavior);
+			}
+			//GpuProcessor.PspConfig
+			/*
+			auto signal   = command.extract!(uint, 16,  8);
+			auto behavior = cast(GU_BEHAVIOR)command.extract!(uint,  0, 16);
+			writefln("*OP_SIGNAL(%d, %d)", signal, behavior);
+
+			auto call = delegate() {
+				gpu.signalEvent(signal);
+			};
+		
+
+			final switch (behavior) {
+				case GU_BEHAVIOR.GU_BEHAVIOR_SUSPEND:
+					call();
+				break;
+				case GU_BEHAVIOR.GU_BEHAVIOR_CONTINUE:
+					Thread thread = new Thread(call);
+					thread.name = "Gpu.OP_SIGNAL";
+					thread.start();
+				break;
+			}
 			*/
 		}
 	}

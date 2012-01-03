@@ -17,8 +17,16 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, MipsMethodEmiter.Method_Syscall);
 		}
 
+		static public void cache_impl(CpuThreadState CpuThreadState, uint Value)
+		{
+			//Console.Error.WriteLine("cache! : 0x{0:X}", Value);
+			//CpuThreadState.CpuProcessor.sceKernelIcacheInvalidateAll();
+		}
+
 		public void cache() {
-			Console.Error.WriteLine("cache!");
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (uint)Instruction.Value);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("cache_impl"));
 			//throw(new NotImplementedException());
 		}
 		public void sync() { throw(new NotImplementedException()); }

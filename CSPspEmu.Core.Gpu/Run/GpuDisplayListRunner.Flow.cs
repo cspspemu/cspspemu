@@ -100,7 +100,9 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		public void OP_FINISH()
 		{
+			GpuDisplayList.Finish();
 			GpuDisplayList.GpuProcessor.GpuImpl.Finish(GpuDisplayList.GpuStateStructPointer);
+			//Console.Error.WriteLine("OP_FINISH!");
 			//gpu.storeFrameBuffer();
 			/*
 			gpu.impl.flush();
@@ -122,12 +124,6 @@ namespace CSPspEmu.Core.Gpu.Run
 			GpuDisplayList.Ret();
 		}
 
-		enum GU_BEHAVIOR
-		{
-			GU_BEHAVIOR_SUSPEND = 1,
-			GU_BEHAVIOR_CONTINUE = 2
-		}
-
 		/**
 		 * Trigger signal to call code from the command stream
 		 *
@@ -142,27 +138,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		[GpuOpCodesNotImplemented]
 		public void OP_SIGNAL()
 		{
-			/*
-			auto signal   = command.extract!(uint, 16,  8);
-			auto behavior = cast(GU_BEHAVIOR)command.extract!(uint,  0, 16);
-			writefln("*OP_SIGNAL(%d, %d)", signal, behavior);
-
-			auto call = delegate() {
-				gpu.signalEvent(signal);
-			};
-		
-
-			final switch (behavior) {
-				case GU_BEHAVIOR.GU_BEHAVIOR_SUSPEND:
-					call();
-				break;
-				case GU_BEHAVIOR.GU_BEHAVIOR_CONTINUE:
-					Thread thread = new Thread(call);
-					thread.name = "Gpu.OP_SIGNAL";
-					thread.start();
-				break;
-			}
-			*/
+			GpuDisplayList.Signal(Extract(16, 8), (GpuDisplayList.GuBehavior)Extract(0, 16));
 		}
 	}
 }

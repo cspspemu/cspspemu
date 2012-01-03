@@ -93,7 +93,7 @@ namespace CSPspEmu.Gui.Winforms
 
 		bool ShowMenus;
 
-		public PspDisplayForm(IGuiExternalInterface IGuiExternalInterface, bool ShowMenus = true)
+		public PspDisplayForm(IGuiExternalInterface IGuiExternalInterface, bool ShowMenus = true, int DefaultDisplayScale = 1)
 		{
 			this.IGuiExternalInterface = IGuiExternalInterface;
 			this.ShowMenus = ShowMenus;
@@ -107,7 +107,7 @@ namespace CSPspEmu.Gui.Winforms
 			this.PerformLayout();
 			*/
 			//this.MainMenuStrip.Visible = false;
-			DisplayScale = 1;
+			DisplayScale = DefaultDisplayScale;
 
 			BufferGraphics = Graphics.FromImage(Buffer);
 			//BufferGraphics.Clear(Color.Red);
@@ -121,8 +121,6 @@ namespace CSPspEmu.Gui.Winforms
 			Timer.Interval = 1000 / 60;
 			Timer.Tick += new EventHandler(Timer_Tick);
 			Timer.Start();
-
-			DisplayScale = 1;
 		}
 
 		private int _DisplayScale;

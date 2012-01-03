@@ -1,0 +1,9 @@
+main
+init()
+/init()
+sceGeEdramGetSize: 00200000
+sceGeEdramGetAddr: 04000000
+gu_signal(00000003)
+gu_signal(00000004)
+gu_finish(00000000)
+End!

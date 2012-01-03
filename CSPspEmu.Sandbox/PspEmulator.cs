@@ -158,7 +158,7 @@ namespace CSPspEmu.Sandbox
 				Thread.CurrentThread.Name = "GuiThread";
 				Application.EnableVisualStyles();
 				Application.SetCompatibleTextRenderingDefault(false);
-				Application.Run(new PspDisplayForm(this, ShowMenus: ShowMenus));
+				Application.Run(new PspDisplayForm(this, ShowMenus: ShowMenus, DefaultDisplayScale: ShowMenus ? 1 : 2));
 
 				ContextInitialized.WaitOne();
 				PspRunner.StopSynchronized();

@@ -24,6 +24,7 @@ namespace CSPspEmu.Hle.Modules.ge
 					DisplayList.InstructionAddressStart = InstructionAddressStart;
 					DisplayList.InstructionAddressCurrent = InstructionAddressStart;
 					DisplayList.InstructionAddressStall = InstructionAddressStall;
+					DisplayList.Callbacks = Callbacks[CallbackId];
 					DisplayList.GpuStateStructPointer = null;
 					if (Args != null)
 					{

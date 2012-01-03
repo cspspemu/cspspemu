@@ -11,6 +11,24 @@ namespace CSPspEmu.Core.Gpu
 {
 	unsafe public class GpuProcessor : PspEmulatorComponent
 	{
+		/*
+		 *   - GU_SYNC_FINISH - 0 - Wait until the last sceGuFinish command is reached
+		 *   - GU_SYNC_SIGNAL - 1 - Wait until the last (?) signal is executed
+		 *   - GU_SYNC_DONE   - 2 - Wait until all commands currently in list are executed
+		 *   - GU_SYNC_LIST   - 3 - Wait for the currently executed display list (GU_DIRECT)
+		 *   - GU_SYNC_SEND   - 4 - Wait for the last send list
+		 *   
+		 *   int sceGuSync(int mode, SyncTypeEnum what)
+		 *	 {
+		 *		 switch (mode)
+		 *		 {
+		 *			 case GU_SYNC_FINISH: return sceGeDrawSync(what);
+		 *			 case GU_SYNC_LIST  : return sceGeListSync(ge_list_executed[0], what);
+		 *			 case GU_SYNC_SEND  : return sceGeListSync(ge_list_executed[1], what);
+		 *		 	 default: case GU_SYNC_SIGNAL: case GU_SYNC_DONE: return 0;
+		 *	 	 }
+		 *	 }
+		 */
 		/// <summary>
 		/// 
 		/// </summary>
