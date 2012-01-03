@@ -20,7 +20,7 @@ void testMsgPipeSimple1() {
 	int result;
 	int n;
 
-	msgpipe = sceKernelCreateMsgPipe("MSGPIPE", 2, 0, sizeof(Message) * msgpipe_capacity, NULL);
+	msgpipe = sceKernelCreateMsgPipe("MSGPIPE", 2, 0, (void *)(sizeof(Message) * msgpipe_capacity), /*NULL*/0);
 	//msgpipe = sceKernelCreateMsgPipe("MSGPIPE", 2, 0, 1, NULL);
 	printf("CREATE:%08X\n", msgpipe);
 	for (n = 0; n < msgpipe_trycount; n++)
@@ -68,7 +68,7 @@ void testMsgPipeWithThreads_thread(int argc, void* argv) {
 
 void testMsgPipeWithThreads() {
 	int n;
-	msgpipe = sceKernelCreateMsgPipe("MSGPIPE", 2, 0, sizeof(Message) * msgpipe_capacity, NULL);
+	msgpipe = sceKernelCreateMsgPipe("MSGPIPE", 2, 0, (void *)(sizeof(Message) * msgpipe_capacity), NULL);
 	{
 		// Create acceptor threads, that will receive messages.
 		for (n = 0; n < msgpipe_threadcount; n++) {

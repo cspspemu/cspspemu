@@ -16,6 +16,7 @@ namespace CSPspEmu.Hle.Modules.ge
 
 		public int _sceGeListEnQueue(uint InstructionAddressStart, uint InstructionAddressStall, int CallbackId, PspGeListArgs* Args, Action<GpuDisplayList> Action)
 		{
+			//Console.WriteLine("_sceGeListEnQueue");
 			try
 			{
 				var DisplayList = HleState.GpuProcessor.DequeueFreeDisplayList();
@@ -120,6 +121,8 @@ namespace CSPspEmu.Hle.Modules.ge
 		//[HlePspNotImplemented]
 		public int sceGeListSync(int DisplayListId, GpuProcessor.SyncTypeEnum SyncType)
 		{
+			//Console.WriteLine("sceGeListSync:{0},{1}", DisplayListId, SyncType);
+
 			var DisplayList = GetDisplayListFromId(DisplayListId);
 
 			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeListSync", (WakeUpCallbackDelegate) =>
@@ -142,7 +145,19 @@ namespace CSPspEmu.Hle.Modules.ge
 		[HlePspNotImplemented(PartialImplemented = true, Notice = false)]
 		public int sceGeDrawSync(GpuProcessor.SyncTypeEnum SyncType)
 		{
-			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeDrawSync", (WakeUpCallbackDelegate) =>
+			//return 0;
+
+			//Console.WriteLine("sceGeDrawSync:{0}", SyncType);
+
+			var CurrentThread = HleState.ThreadManager.Current;
+
+			if (CurrentThread == null)
+			{
+				Console.Error.WriteLine("sceGeDrawSync.CurrentThread == null");
+				return -1;
+			}
+
+			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeDrawSync", (WakeUpCallbackDelegate) =>
 			{
 				HleState.GpuProcessor.GeDrawSync(SyncType, () =>
 				{

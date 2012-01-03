@@ -7,7 +7,7 @@
 #include <pspumd.h>
 
 int umdHandler(int unknown, int info, void *arg) {
-	printf("umdHandler called: %08X, %08X, %08X\n", unknown, info, (u32)arg);
+	printf("umdHandler called: %08X, %08X, %08X\n", (uint)unknown, (uint)info, (uint)arg);
 
 	return 0;
 }

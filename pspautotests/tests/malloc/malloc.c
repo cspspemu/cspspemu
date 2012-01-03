@@ -1,14 +1,12 @@
+#include <common.h>
 #include <pspkernel.h>
 #include <pspthreadman.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include <common.h>
-
-
-#define NUM_BUFFERS 64
-#define BUFFER_SIZE (5 * 1024 * 1024 / NUM_BUFFERS)
+#define NUM_BUFFERS 1024
+#define BUFFER_SIZE (5 * 1024)
 
 // 24MB to use
 int main(int argc, char** argv) {
@@ -31,15 +29,13 @@ int main(int argc, char** argv) {
 			for (m = 0; m < BUFFER_SIZE; m++) sum += buffer[m];
 			printf("%d: %d\n", n, sum);
 		}
-		temp = malloc(24 * 1024 * 1024);
+		temp = malloc(10 * 1024 * 1024);
 		printf("%s\n", (temp == NULL) ? "NULL" : "NOT NULL");
-		if (temp != NULL) free(temp);
 		for (n = 0; n < NUM_BUFFERS; n++) {
 			free(buffers[n]);
 		}
-		temp = malloc(24 * 1024 * 1024);
+		temp = malloc(10 * 1024 * 1024);
 		printf("%s\n", (temp == NULL) ? "NULL" : "NOT NULL");
-		if (temp != NULL) free(temp);
 	}
 	printf("ENDED\n");
 

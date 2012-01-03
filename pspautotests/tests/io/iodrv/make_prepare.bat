@@ -1,1 +1,0 @@
-SET PSP_LIBS=%PSP_LIBS% -lpspkernel

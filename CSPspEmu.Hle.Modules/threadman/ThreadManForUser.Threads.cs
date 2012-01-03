@@ -112,7 +112,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		private int _sceKernelSleepThreadCB(CpuThreadState CpuThreadState, bool HandleCallbacks)
 		{
 			var ThreadToSleep = HleState.ThreadManager.Current;
-			ThreadToSleep.ChangeWakeUpCount(-1, null);
+			ThreadToSleep.ChangeWakeUpCount(-1, null, HandleCallbacks: HandleCallbacks);
 			return 0;
 		}
 

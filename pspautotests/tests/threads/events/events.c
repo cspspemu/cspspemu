@@ -24,27 +24,27 @@ void testEvents() {
 
 	outBits = -1;
 	result = sceKernelPollEventFlag(evid, 4 | 2, PSP_EVENT_WAITAND, &outBits);
-	printf("event: %08X:%d\n", result, outBits);
+	printf("event: %08X:%d\n", (uint)result, (int)outBits);
 
 	outBits = -1;
 	result = sceKernelPollEventFlag(evid, 8 | 2, PSP_EVENT_WAITAND, &outBits);
-	printf("event: %08X:%d\n", result, outBits);
+	printf("event: %08X:%d\n", (uint)result, (int)outBits);
 
 	outBits = -1;
 	result = sceKernelPollEventFlag(evid, 8 | 4, PSP_EVENT_WAITOR, &outBits);
-	printf("event: %08X:%d\n", result, outBits);
+	printf("event: %08X:%d\n", (uint)result, (int)outBits);
 	result = sceKernelSetEventFlag(evid, 32 | 16);
-	printf("event: %08X\n", result);
+	printf("event: %08X\n", (uint)result);
 	result = sceKernelClearEventFlag(evid, ~4);
-	printf("event: %08X\n", result);
+	printf("event: %08X\n", (uint)result);
 
 	outBits = -1;
 	result = sceKernelPollEventFlag(evid, 0xFFFFFFFC, PSP_EVENT_WAITOR, &outBits);
-	printf("event: %08X:%d\n", result, outBits);
+	printf("event: %08X:%d\n", (uint)result, (int)outBits);
 
 	outBits = -1;
 	result = sceKernelPollEventFlag(evid + 100, 8 | 2, PSP_EVENT_WAITAND, &outBits);
-	printf("event: %08X:%d\n", result, outBits);
+	printf("event: %08X:%d\n", (uint)result, (int)outBits);
 
 	sceKernelStartThread(
 		sceKernelCreateThread("Test Thread", (void *)&testEvents_thread1, 0x12, 0x10000, 0, NULL),
@@ -53,20 +53,20 @@ void testEvents() {
 
 	outBits = -1;
 	result = sceKernelWaitEventFlagCB(evid, 4, PSP_EVENT_WAITAND, &outBits, NULL);
-	printf("event: %08X:%d\n", result, outBits);
+	printf("event: %08X:%d\n", (uint)result, (int)outBits);
 	
 	result = sceKernelClearEventFlag(evid, ~(2 | 8));
 
 	outBits = -1;
 	result = sceKernelWaitEventFlagCB(evid, 2 | 8, PSP_EVENT_WAITAND, &outBits, &timeout);
-	printf("event: %08X:%d\n", result, outBits);
+	printf("event: %08X:%d\n", (uint)result, (int)outBits);
 
 	result = sceKernelDeleteEventFlag(evid);
-	printf("event: %08X\n", result);
+	printf("event: %08X\n", (uint)result);
 	
 	outBits = -1;
 	result = sceKernelPollEventFlag(evid, 8 | 2, PSP_EVENT_WAITAND, &outBits);
-	printf("event: %08X:%d\n", result, outBits);
+	printf("event: %08X:%d\n", (uint)result, (int)outBits);
 	
 	// Test PSP_EVENT_WAITCLEARALL
 	// Test PSP_EVENT_WAITCLEAR

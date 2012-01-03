@@ -34,7 +34,7 @@ void testVTimerGetSimple() {
 }
 
 SceUInt testVTimerHandler_TimerHandler(SceUID uid, SceKernelSysClock *elapsedScheduled, SceKernelSysClock *elapsedReal, void *common) {
-	printf("%d: %08X%08X, %08X\n", (vtimer == uid), elapsedScheduled->hi, elapsedScheduled->low, (unsigned int)common);
+	printf("%d: %08X%08X, %08X\n", (vtimer == uid) ? 1 : 0, (uint)elapsedScheduled->hi, (uint)elapsedScheduled->low, (uint)common);
 
 	return 0;
 }

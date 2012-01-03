@@ -2,7 +2,7 @@
 
 #include "pspimport.s"
 
-IMPORT_START "sceSasCore",0x40010000
+IMPORT_START "sceSasCore",0x40090011
 IMPORT_FUNC	 "sceSasCore",0x42778A9F,__sceSasInit
 IMPORT_FUNC	 "sceSasCore",0xE855BF76,__sceSasSetOutputmode
 IMPORT_FUNC	 "sceSasCore",0x99944089,__sceSasSetVoice

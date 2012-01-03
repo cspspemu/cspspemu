@@ -1,0 +1,1 @@
+EXTRA_C_FILES=kirk-imports.S

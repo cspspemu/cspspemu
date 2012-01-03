@@ -16,12 +16,12 @@ void testSimpleFpl() {
 	TestStruct *items[3];
 	int fplCount = 2;
 	int testBlockId;
-	unsigned int base = 0;
+	uint base = 0;
 	
 	printf("testSimpleFpl:\n");
 
 	testBlockId = sceKernelAllocPartitionMemory(2, "TEST", PSP_SMEM_Low, fplCount * sizeof(TestStruct), 0);
-	base = sceKernelGetBlockHeadAddr(testBlockId);
+	base = (uint)sceKernelGetBlockHeadAddr(testBlockId);
 	sceKernelFreePartitionMemory(testBlockId);
 
 	fpl = sceKernelCreateFpl("FPL", 2, 0, sizeof(TestStruct), fplCount, NULL);

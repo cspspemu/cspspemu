@@ -374,7 +374,7 @@ namespace CSPspEmu.Hle
 			switch (CurrentStatus)
 			{
 				case Status.Waiting:
-					Ret += String.Format(", CurrentWaitType={0}, WaitDescription={1}", CurrentWaitType, WaitDescription);
+					Ret += String.Format(", CurrentWaitType={0}, WaitDescription={1}, HandleCallbacks={2}", CurrentWaitType, WaitDescription, HandleCallbacks);
 					break;
 			}
 			return Ret + ")";

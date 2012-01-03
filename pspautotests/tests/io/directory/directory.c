@@ -8,14 +8,12 @@
 int main(int argc, char **argv) {
 	SceIoDirent file;
 	int fd;
-	int result;
 
 	fd = sceIoDopen("folder");
 	while (1) {
-		if ((result = sceIoDread(fd, &file)) <= 0) break;
+		if (sceIoDread(fd, &file) <= 0) break;
 		printf(
-			"%d:'%s':%lld:%d:%d\n",
-			result,
+			"'%s':%lld:%d:%d\n",
 			file.d_name,
 			file.d_stat.st_size,
 			file.d_stat.st_attr,

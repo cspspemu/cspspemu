@@ -7,7 +7,7 @@
 #include "libfont.h"
 
 static void *Font_Alloc(void *data, u32 size) {
-	printf("Font_Alloc(%08X, %d)\n", (uint)data, size);
+	printf("Font_Alloc(%08X, %u)\n", (uint)data, (uint)size);
 	return malloc(size);
 }
 
@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 	FontHandle        fontHandle;
 	//FontInfo          fontInfo;
 	//int result;
-	u32 errorCode;
+	uint errorCode;
 	FontNewLibParams params = { NULL, 4, NULL, Font_Alloc, Font_Free, NULL, NULL, NULL, NULL, NULL, NULL };
 
 	//pspDebugScreenInit();

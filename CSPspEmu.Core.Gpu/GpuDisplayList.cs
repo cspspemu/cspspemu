@@ -319,10 +319,33 @@ namespace CSPspEmu.Core.Gpu
 			}
 		}
 
+		PspWaitEvent OnFreed = new PspWaitEvent();
+
+		public void Freed()
+		{
+			lock (this)
+			{
+				Available = true;
+				OnFreed.Signal();
+			}
+		}
+
 		public void GeListSync(Gpu.GpuProcessor.SyncTypeEnum SyncType, Action NotifyOnceCallback)
 		{
+			//Console.WriteLine("GeListSync");
 			if (SyncType != Gpu.GpuProcessor.SyncTypeEnum.ListDone) throw new NotImplementedException();
-			Status.CallbackOnStateOnce(StatusEnum.Done, NotifyOnceCallback);
+			lock (this)
+			{
+				if (Available)
+				{
+					NotifyOnceCallback();
+				}
+				else
+				{
+					OnFreed.CallbackOnStateOnce(NotifyOnceCallback);
+				}
+			}
+			//Status.CallbackOnStateOnce(StatusEnum.Done, NotifyOnceCallback);
 			/*
 			CallbackOnStateOnce
 			Console.WriteLine("Waiting for DONE");

@@ -24,6 +24,7 @@ namespace CSPspEmu.Hle.Managers
 
 		public void ScheduleCallback(HleCallback HleCallback)
 		{
+			Console.WriteLine("ScheduleCallback!");
 			lock (this)
 			{
 				this.ScheduledCallbacks.Enqueue(HleCallback);
@@ -32,6 +33,7 @@ namespace CSPspEmu.Hle.Managers
 
 		public HleCallback DequeueScheduledCallback()
 		{
+			Console.WriteLine("DequeueScheduledCallback!");
 			return ScheduledCallbacks.Dequeue();
 		}
 
@@ -50,8 +52,10 @@ namespace CSPspEmu.Hle.Managers
 		{
 			int ExecutedCount = 0;
 
+			//Console.WriteLine("ExecuteQueued");
 			if (HasScheduledCallbacks)
 			{
+				//Console.WriteLine("ExecuteQueued.HasScheduledCallbacks!");
 				//Console.Error.WriteLine("STARTED CALLBACKS");
 				while (HasScheduledCallbacks)
 				{

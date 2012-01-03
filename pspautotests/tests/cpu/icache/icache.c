@@ -5,6 +5,7 @@
 #include <common.h>
 
 #include <pspkernel.h>
+#include <psputilsforkernel.h>
 #include <pspthreadman.h>
 #include <string.h>
 

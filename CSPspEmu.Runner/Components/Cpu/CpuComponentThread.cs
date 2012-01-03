@@ -66,7 +66,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 			MemoryStickMountable = new HleIoDriverMountable();
 			MemoryStickMountable.Mount("/", new HleIoDriverLocalFileSystem(MemoryStickRootFolder));
 			HleIoDriverEmulator = new HleIoDriverEmulator(HleState);
-			var MemoryStick = new HleIoDriverMemoryStick(MemoryStickMountable);
+			var MemoryStick = new HleIoDriverMemoryStick(HleState, MemoryStickMountable);
 			//var MemoryStick = new HleIoDriverMemoryStick(new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
 			HleState.HleIoManager.SetDriver("ms:", MemoryStick);
 			HleState.HleIoManager.SetDriver("fatms:", MemoryStick);
@@ -294,9 +294,11 @@ namespace CSPspEmu.Runner.Components.Cpu
 							ThreadManager.Current.CpuThreadState.DumpRegisters(ErrorOut);
 
 							ErrorOut.WriteLine(
-								"Last registered PC = 0x{0:X}, RA = 0x{1:X}",
+								"Last registered PC = 0x{0:X}, RA = 0x{1:X}, RelocatedBaseAddress=0x{2:X}, UnrelocatedPC=0x{3:X}",
 								ThreadManager.Current.CpuThreadState.PC,
-								ThreadManager.Current.CpuThreadState.RA
+								ThreadManager.Current.CpuThreadState.RA,
+								PspEmulatorContext.PspConfig.RelocatedBaseAddress,
+								ThreadManager.Current.CpuThreadState.PC - PspEmulatorContext.PspConfig.RelocatedBaseAddress
 							);
 
 							foreach (var Thread in ThreadManager.Threads)

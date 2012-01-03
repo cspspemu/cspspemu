@@ -146,6 +146,8 @@ namespace CSPspEmu.Gui.Winforms
 			public byte B, G, R, A;
 		}
 
+		byte* OldFrameBuffer = (byte *)-1;
+
 		protected override void OnPaintBackground(PaintEventArgs PaintEventArgs)
 		{
 			if (IGuiExternalInterface.IsInitialized())
@@ -173,7 +175,10 @@ namespace CSPspEmu.Gui.Winforms
 
 								if (FrameBuffer == null)
 								{
-									Console.Error.WriteLine("FrameBuffer == null");
+									if (OldFrameBuffer != null)
+									{
+										Console.Error.WriteLine("FrameBuffer == null");
+									}
 								}
 								else if (BitmapDataPtr == null)
 								{
@@ -197,6 +202,8 @@ namespace CSPspEmu.Gui.Winforms
 									BitmapDataPtr[n].B = BitmapDataDecodePtr[n].B;
 									BitmapDataPtr[n].A = 0xFF;
 								}
+
+								OldFrameBuffer = FrameBuffer;
 							}
 						});
 					}

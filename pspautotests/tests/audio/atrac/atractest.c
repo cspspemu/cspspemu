@@ -1,3 +1,5 @@
+#include <common.h>
+
 #include <pspsdk.h>
 #include <pspkernel.h>
 #include <pspatrac3.h>
@@ -6,8 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-PSP_MODULE_INFO("atrac test", 0, 1, 1);
-PSP_MAIN_THREAD_ATTR(THREAD_ATTR_USER);
+int sceAtracGetSecondBufferInfo(int atracID, u32 *puiPosition, u32 *puiDataByte);
+int sceAtracGetNextDecodePosition(int atracID, u32 *puiSamplePosition);
 
 int main(int argc, char *argv[]) {
 	char *at3_data;
@@ -27,45 +29,42 @@ int main(int argc, char *argv[]) {
 	u32 puiPosition;
 	u32 puiDataByte;
 	
-	file = fopen("sample.at3", "rb");
-	fseek(file, 0, SEEK_END);
-	at3_size = ftell(file);
-	
-	fseek(file, 0, SEEK_SET);
-	
-	at3_data = malloc(at3_size);
-	decode_data = malloc(decode_size = 512 * 1024);
-	memset(at3_data, 0, at3_size);
-	memset(decode_data, 0, decode_size);
-	
-	fread(at3_data, at3_size, 1, file);
+	if ((file = fopen("sample.at3", "rb")) != NULL) {
+		fseek(file, 0, SEEK_END);
+		at3_size = ftell(file);
+		
+		fseek(file, 0, SEEK_SET);
+		
+		at3_data = malloc(at3_size);
+		decode_data = malloc(decode_size = 512 * 1024);
+		memset(at3_data, 0, at3_size);
+		memset(decode_data, 0, decode_size);
+		
+		fread(at3_data, at3_size, 1, file);
 
-	fclose(file);
-
-	pspDebugScreenInit();
-	
-	if (pspSdkLoadStartModule("flash0:/kd/audiocodec.prx", PSP_MEMORY_PARTITION_KERNEL) < 0) {
-		pspDebugScreenPrintf("Error loading module audiocodec.prx\n");
-		return -1;
+		fclose(file);
 	}
+
+	pspSdkLoadStartModule("flash0:/kd/audiocodec.prx", PSP_MEMORY_PARTITION_KERNEL);
+	pspSdkLoadStartModule("flash0:/kd/libatrac3plus.prx", PSP_MEMORY_PARTITION_KERNEL);
 	
-	pspDebugScreenPrintf("at3: %08X, %08X\n", (unsigned int)at3_data, at3_size);
-	pspDebugScreenPrintf("Header: %s\n", (char *)at3_data);
+	printf("at3: %08X, %08X\n", (unsigned int)at3_data, at3_size);
+	printf("Header: %s\n", (char *)at3_data);
 		
 	atracID = sceAtracSetDataAndGetID(at3_data, at3_size);
 	
 	result = sceAtracSetLoopNum(atracID, 2);
-	pspDebugScreenPrintf("sceAtracSetLoopNum: %08X\n", result);
+	printf("sceAtracSetLoopNum: %08X\n", result);
 
-	pspDebugScreenPrintf("sceAtracSetDataAndGetID: %08X\n", atracID);
+	printf("sceAtracSetDataAndGetID: %08X\n", atracID);
 	
 	result = sceAtracGetMaxSample(atracID, &maxSamples);
-	pspDebugScreenPrintf("sceAtracGetMaxSample: %08X, %d\n", result, maxSamples);
+	printf("sceAtracGetMaxSample: %08X, %d\n", result, maxSamples);
 	
 	channel = sceAudioChReserve(0, maxSamples, PSP_AUDIO_FORMAT_STEREO);
 	
 	result = sceAtracGetSecondBufferInfo(atracID, &puiPosition, &puiDataByte);
-	pspDebugScreenPrintf("sceAtracGetSecondBufferInfo: %08X, %d, %d\n", result, puiPosition, puiDataByte);
+	printf("sceAtracGetSecondBufferInfo: %08X, %u, %u\n", result, (unsigned int)puiPosition, (unsigned int)puiDataByte);
 	
 	int end = 0;
 	int steps = 0;
@@ -79,9 +78,9 @@ int main(int argc, char *argv[]) {
 		
 		if (steps < 4) {
 			result = sceAtracGetNextSample(atracID, &nextSample);
-			pspDebugScreenPrintf("sceAtracGetNextSample(%d): %d\n", result, nextSample);
+			printf("sceAtracGetNextSample(%d): %d\n", result, nextSample);
 			result = sceAtracGetNextDecodePosition(atracID, &nextPosition);
-			pspDebugScreenPrintf("sceAtracGetNextDecodePosition(%d): %d\n", result, nextPosition);
+			printf("sceAtracGetNextDecodePosition(%d): %u\n", result, (unsigned int)nextPosition);
 		}
 
 		result = sceAtracDecodeData(atracID, (u16 *)decode_data, &samples, &end, &remainFrame);
@@ -96,11 +95,11 @@ int main(int argc, char *argv[]) {
 		result = sceAtracGetRemainFrame(atracID, &remainFrame);
 
 		if (steps < 4) {
-			pspDebugScreenPrintf("sceAtracDecodeData: %08X, at3_size: %d, decode_size: %d, samples: %d, end: %d, remainFrame: %d\n\n", result, at3_size, decode_size, samples, end, remainFrame);
+			printf("sceAtracDecodeData: %08X, at3_size: %d, decode_size: %d, samples: %d, end: %d, remainFrame: %d\n\n", result, at3_size, decode_size, samples, end, remainFrame);
 			if (steps == 1) {
-				for (n = 0; n < 32; n++) pspDebugScreenPrintf("%04X ", (u16)decode_data[n]);
+				for (n = 0; n < 32; n++) printf("%04X ", (u16)decode_data[n]);
 			}
-			pspDebugScreenPrintf("sceAtracGetRemainFrame: %08X\n", result);
+			printf("sceAtracGetRemainFrame: %08X\n", result);
 		}
 
 		steps++;
@@ -108,7 +107,7 @@ int main(int argc, char *argv[]) {
 	
 	sceAudioChRelease(channel);
 	result = sceAtracReleaseAtracID(atracID);
-	pspDebugScreenPrintf("sceAtracGetRemainFrame: %08X\n", result);
+	printf("sceAtracGetRemainFrame: %08X\n", result);
 
 	return 0;
 }

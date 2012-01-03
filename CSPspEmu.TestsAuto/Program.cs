@@ -210,7 +210,7 @@ namespace CSPspEmu.AutoTests
 					//PspAutoTestsFolder + @"\make.bat"
 					// FileNameBase
 					try { File.Delete(FileNameExecutable); } catch { }
-					var Output = ExecuteBat(PspAutoTestsFolder + @"\make_silent.bat", FileNameBase);
+					var Output = ExecuteBat(PspAutoTestsFolder + @"\build.bat", FileNameBase);
 					if (Output != "")
 					{
 						Console.Write("Compiling {0}...", FileNameBase);
@@ -292,7 +292,8 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "sascore";
 				//WildCardFilter = "directory";
 				//WildCardFilter = "umd_io";
-				WildCardFilter = "pmf";
+				//WildCardFilter = "pmf";
+				WildCardFilter = "mstick";
 			}
 
 			if (WildCardFilter.Length > 0)

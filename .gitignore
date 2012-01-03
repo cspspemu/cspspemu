@@ -52,7 +52,10 @@
 *.lastoutput
 *.lastdebug
 *.elf
+*.prx
 /ms
 /TestInput/EBOOT.BIN
 /pspsdk
 /_pspautotests_svn
+/flash0
+/flash1

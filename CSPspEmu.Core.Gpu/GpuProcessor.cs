@@ -129,6 +129,7 @@ namespace CSPspEmu.Core.Gpu
 		/// <returns></returns>
 		public GpuDisplayList DequeueFreeDisplayList()
 		{
+			//Console.WriteLine("DequeueFreeDisplayList: {0}", this.DisplayListFreeQueue.Count);
 			//Console.WriteLine("Count: {0}", this.DisplayListFreeQueue.Count);
 			/*
 			while (this.DisplayListFreeQueue.Count == 0)
@@ -140,7 +141,9 @@ namespace CSPspEmu.Core.Gpu
 			*/
 			lock (DisplayListFreeQueue)
 			{
-				return this.DisplayListFreeQueue.Dequeue();
+				var DisplayList = this.DisplayListFreeQueue.Dequeue();
+				DisplayList.Available = false;
+				return DisplayList;
 			}
 		}
 
@@ -150,10 +153,12 @@ namespace CSPspEmu.Core.Gpu
 		/// <param name="GpuDisplayList"></param>
 		public void EnqueueFreeDisplayList(GpuDisplayList GpuDisplayList)
 		{
+			//Console.WriteLine("EnqueueFreeDisplayList: {0}", this.DisplayListFreeQueue.Count);
 			AddedDisplayList();
 			lock (DisplayListFreeQueue)
 			{
 				this.DisplayListFreeQueue.Enqueue(GpuDisplayList);
+				GpuDisplayList.Freed();
 			}
 			DisplayListFreeEvent.Set();
 		}
@@ -164,6 +169,7 @@ namespace CSPspEmu.Core.Gpu
 		/// <param name="DisplayList"></param>
 		public void EnqueueDisplayListFirst(GpuDisplayList DisplayList)
 		{
+			//Console.WriteLine("EnqueueDisplayListFirst: {0}", this.DisplayListFreeQueue.Count);
 			AddedDisplayList();
 			lock (DisplayListQueue)
 			{
@@ -178,6 +184,7 @@ namespace CSPspEmu.Core.Gpu
 		/// <param name="DisplayList"></param>
 		public void EnqueueDisplayListLast(GpuDisplayList DisplayList)
 		{
+			//Console.WriteLine("EnqueueDisplayListLast: {0}", this.DisplayListFreeQueue.Count);
 			AddedDisplayList();
 			lock (DisplayListQueue)
 			{
@@ -199,6 +206,7 @@ namespace CSPspEmu.Core.Gpu
 		{
 			Status.SetValue(StatusEnum.Completed);
 
+			Thread.Sleep(1);
 			DisplayListQueueUpdated.WaitOne(1);
 
 			while (true)
@@ -229,6 +237,7 @@ namespace CSPspEmu.Core.Gpu
 
 		public void GeDrawSync(SyncTypeEnum SyncType, Action SyncCallback)
 		{
+			//Console.WriteLine("GeDrawSync: {0}", this.DisplayListFreeQueue.Count);
 			if (SyncType != SyncTypeEnum.ListDone) throw new NotImplementedException();
 			Status.CallbackOnStateOnce(StatusEnum.Completed, () =>
 			{
