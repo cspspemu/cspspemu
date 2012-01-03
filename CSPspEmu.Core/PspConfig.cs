@@ -143,6 +143,7 @@ namespace CSPspEmu.Core
 		/// </summary>
 		public bool TraceThreadLoop = false;
 		public uint RelocatedBaseAddress;
+		public string GameTitle = "<Unknown Game>";
 		//public bool TraceThreadLoop = true;
 
 		//public bool TraceJal = true;

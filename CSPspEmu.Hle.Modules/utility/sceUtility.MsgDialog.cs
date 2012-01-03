@@ -50,7 +50,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// </summary>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x9A1C91D7, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public DialogStepEnum sceUtilityMsgDialogGetStatus()
 		{
 			try

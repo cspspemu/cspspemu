@@ -257,7 +257,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// </summary>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x37FB5C42, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceKernelGetGPI()
 		{
 			return 0;

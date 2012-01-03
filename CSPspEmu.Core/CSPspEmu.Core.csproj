@@ -52,6 +52,7 @@
     <Compile Include="Crypto\Kirk.Keys.cs" />
     <Compile Include="Crypto\Kirk.Tables.cs" />
     <Compile Include="DebugUtils.cs" />
+    <Compile Include="Hashing.cs" />
     <Compile Include="IGuiExternalInterface.cs" />
     <Compile Include="IResetable.cs" />
     <Compile Include="Memory\PspMemory.cs" />

@@ -91,11 +91,22 @@ namespace CSPspEmu.Gui.Winforms
 			}
 		}
 
-		public PspDisplayForm(IGuiExternalInterface IGuiExternalInterface)
+		bool ShowMenus;
+
+		public PspDisplayForm(IGuiExternalInterface IGuiExternalInterface, bool ShowMenus = true)
 		{
 			this.IGuiExternalInterface = IGuiExternalInterface;
+			this.ShowMenus = ShowMenus;
 
 			InitializeComponent();
+
+			this.MainMenuStrip.Visible = ShowMenus;
+			
+			/*
+			this.MainMenuStrip = null;
+			this.PerformLayout();
+			*/
+			//this.MainMenuStrip.Visible = false;
 			DisplayScale = 1;
 
 			BufferGraphics = Graphics.FromImage(Buffer);
@@ -110,16 +121,33 @@ namespace CSPspEmu.Gui.Winforms
 			Timer.Interval = 1000 / 60;
 			Timer.Tick += new EventHandler(Timer_Tick);
 			Timer.Start();
+
+			DisplayScale = 1;
 		}
 
 		private int _DisplayScale;
+
+		public int MainMenuStripHeight
+		{
+			get 
+			{
+				if (ShowMenus)
+				{
+					//Console.WriteLine(this.menuStrip1.Height);
+					//Console.ReadKey();
+					//return 24;
+					return this.menuStrip1.Height;
+				}
+				return 0;
+			}
+		}
 
 		public int DisplayScale
 		{
 			set
 			{
 				_DisplayScale = value;
-				var InnerSize = new Size(480 * _DisplayScale, 272 * _DisplayScale + menuStrip1.Height);
+				var InnerSize = new Size(480 * _DisplayScale, 272 * _DisplayScale + MainMenuStripHeight);
 				MinimumSize = new Size(1, 1);
 				MaximumSize = new Size(2048, 2048);
 				SetClientSizeCore(InnerSize.Width, InnerSize.Height);
@@ -147,28 +175,73 @@ namespace CSPspEmu.Gui.Winforms
 		}
 
 		byte* OldFrameBuffer = (byte *)-1;
+		uint LastHash = unchecked((uint)-1);
+		String LastText = "";
+
+		PixelFormatDecoder.OutputPixel[] BitmapDataDecode = new PixelFormatDecoder.OutputPixel[512 * 512];
 
 		protected override void OnPaintBackground(PaintEventArgs PaintEventArgs)
 		{
-			if (IGuiExternalInterface.IsInitialized())
+			if (!IGuiExternalInterface.IsInitialized())
 			{
-				if (EnableRefreshing)
+				var Buffer = new Bitmap(512, 272);
+				var BufferGraphics = Graphics.FromImage(Buffer);
+				BufferGraphics.FillRectangle(new SolidBrush(Color.Black), new Rectangle(0, 0, Buffer.Width, Buffer.Height));
+				//BufferGraphics.DrawString("Initializing...", new Font("Arial", 10), new SolidBrush(Color.White), new PointF(8, 8));
+				PaintEventArgs.Graphics.DrawImage(Buffer, new Rectangle(0, MainMenuStripHeight, 512 * DisplayScale, 272 * DisplayScale));
+				return;
+			}
+
+			try
+			{
+				if (LastText != PspConfig.GameTitle)
 				{
+					LastText = PspConfig.GameTitle;
+					//this.Font = new Font("Lucida Console", 16);
+					if (ShowMenus)
+					{
+						this.Text = "CSPspEmu :: " + LastText;
+					}
+					else
+					{
+						this.Text = LastText;
+					}
+				}
+			}
+			catch
+			{
+			}
+
+			if (EnableRefreshing)
+			{
+				try
+				{
+					int Width = 512;
+					int Height = 272;
+					var Address = PspDisplay.CurrentInfo.Address;
+					byte* FrameBuffer = null;
 					try
 					{
+						FrameBuffer = (byte*)Memory.PspAddressToPointerSafe(Address);
+					} catch
+					{
+					}
+
+					uint Hash = PixelFormatDecoder.Hash(
+						PspDisplay.CurrentInfo.PixelFormat,
+						(void*)FrameBuffer,
+						Width, Height
+					);
+
+					if (Hash != LastHash)
+					{
+						LastHash = Hash;
 						Buffer.LockBitsUnlock(PixelFormat.Format32bppArgb, (BitmapData) =>
 						{
-							int Width = 512;
-							int Height = 272;
 							var Count = Width * Height;
-							var BitmapDataDecode = new PixelFormatDecoder.OutputPixel[Count];
 							fixed (PixelFormatDecoder.OutputPixel* BitmapDataDecodePtr = BitmapDataDecode)
 							{
 								var BitmapDataPtr = (BGRA*)BitmapData.Scan0.ToPointer();
-								var Address = PspDisplay.CurrentInfo.Address;
-								//var Address = Memory.FrameBufferSegment.Low;
-								//Console.WriteLine("{0:X}", Address);
-								var FrameBuffer = (byte*)Memory.PspAddressToPointer(Address);
 
 								//var LastRow = (FrameBuffer + 512 * 260 * 4 + 4 * 10);
 								//Console.WriteLine("{0},{1},{2},{3}", LastRow[0], LastRow[1], LastRow[2], LastRow[3]);
@@ -207,32 +280,28 @@ namespace CSPspEmu.Gui.Winforms
 							}
 						});
 					}
-					catch (Exception Exception)
+					else
 					{
-						Console.WriteLine(Exception);
+						//Console.WriteLine("Display not updated!");
 					}
 				}
-				//Console.WriteLine(this.ClientRectangle);
-				PaintEventArgs.Graphics.CompositingMode = CompositingMode.SourceCopy;
-				PaintEventArgs.Graphics.CompositingQuality = CompositingQuality.HighSpeed;
-				PaintEventArgs.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
-				PaintEventArgs.Graphics.DrawImage(
-					Buffer,
-					new Rectangle(
-						0, menuStrip1.Height,
-						512 * DisplayScale, 272 * DisplayScale
-					)
-				);
-				//PaintEventArgs.Graphics.DrawImageUnscaled(Buffer, new Point(0, menuStrip1.Height));
+				catch (Exception Exception)
+				{
+					Console.WriteLine(Exception);
+				}
 			}
-			else
-			{
-				var Buffer = new Bitmap(512, 272);
-				var BufferGraphics = Graphics.FromImage(Buffer);
-				BufferGraphics.FillRectangle(new SolidBrush(Color.Black), new Rectangle(0, 0, Buffer.Width, Buffer.Height));
-				//BufferGraphics.DrawString("Initializing...", new Font("Arial", 10), new SolidBrush(Color.White), new PointF(8, 8));
-				PaintEventArgs.Graphics.DrawImage(Buffer, new Rectangle(0, menuStrip1.Height, 512 * DisplayScale, 272 * DisplayScale));
-			}
+			//Console.WriteLine(this.ClientRectangle);
+			PaintEventArgs.Graphics.CompositingMode = CompositingMode.SourceCopy;
+			PaintEventArgs.Graphics.CompositingQuality = CompositingQuality.HighSpeed;
+			PaintEventArgs.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
+			PaintEventArgs.Graphics.DrawImage(
+				Buffer,
+				new Rectangle(
+					0, MainMenuStripHeight,
+					512 * DisplayScale, 272 * DisplayScale
+				)
+			);
+			//PaintEventArgs.Graphics.DrawImageUnscaled(Buffer, new Point(0, menuStrip1.Height));
 		}
 
 		protected bool EnableRefreshing = true;

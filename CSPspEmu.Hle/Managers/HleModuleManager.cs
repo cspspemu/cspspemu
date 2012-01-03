@@ -6,14 +6,32 @@ using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Cpu.Emiter;
 using System.Reflection;
 using CSPspEmu.Core;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Managers
 {
 	public class HleModuleManager : PspEmulatorComponent
 	{
+		public struct DelegateInfo
+		{
+			public int CallIndex;
+			public uint PC;
+			public uint RA;
+			public string ModuleImportName;
+			public HleModuleHost.FunctionEntry FunctionEntry;
+			public Action<CpuThreadState> Action;
+
+			public override string ToString()
+			{
+				return String.Format("{0}: PC=0x{3:X}, RA=0x{4:X} => {1}::{2}", CallIndex, ModuleImportName, FunctionEntry.Name, PC, RA);
+				//return this.ToStringDefault();
+			}
+		}
+
 		protected Dictionary<Type, HleModuleHost> HleModules = new Dictionary<Type, HleModuleHost>();
 		public uint DelegateLastId = 0;
-		public Dictionary<uint, Action<CpuThreadState>> DelegateTable = new Dictionary<uint, Action<CpuThreadState>>();
+		public Dictionary<uint, DelegateInfo> DelegateTable = new Dictionary<uint, DelegateInfo>();
+		public Queue<DelegateInfo> LastCalledCallbacks = new Queue<DelegateInfo>();
 
 		static public IEnumerable<Type> GetAllHleModules(Assembly ModulesAssembly)
 		{
@@ -22,6 +40,8 @@ namespace CSPspEmu.Hle.Managers
 		}
 
 		public Dictionary<String, Type> HleModuleTypes;
+
+		protected int LastCallIndex = 0;
 
 		public override void InitializeComponent()
 		{
@@ -33,7 +53,16 @@ namespace CSPspEmu.Hle.Managers
 				uint Info = CpuThreadState.CpuProcessor.Memory.Read4(CpuThreadState.PC + 4);
 				{
 					//Console.WriteLine("{0:X}", CpuThreadState.RA);
-					DelegateTable[Info](CpuThreadState);
+					var DelegateInfo = DelegateTable[Info];
+					DelegateInfo.Action(CpuThreadState);
+					DelegateInfo.CallIndex = LastCallIndex++;
+					DelegateInfo.PC = CpuThreadState.PC;
+					DelegateInfo.RA = CpuThreadState.RA;
+					LastCalledCallbacks.Enqueue(DelegateInfo);
+					if (LastCalledCallbacks.Count > 10)
+					{
+						LastCalledCallbacks.Dequeue();
+					}
 				}
 				CpuThreadState.PC = CpuThreadState.RA;
 			});
@@ -83,17 +112,22 @@ namespace CSPspEmu.Hle.Managers
 			return DelegatesByName[FunctionName];
 		}
 
-		public uint AllocDelegateSlot(Action<CpuThreadState> Action, string Info)
+		public uint AllocDelegateSlot(Action<CpuThreadState> Action, string ModuleImportName, HleModuleHost.FunctionEntry FunctionEntry)
 		{
 			uint DelegateId = DelegateLastId++;
 			if (Action == null)
 			{
 				Action = (CpuThreadState) =>
 				{
-					throw (new NotImplementedException("Not Implemented Syscall '" + Info + "'"));
+					throw (new NotImplementedException("Not Implemented Syscall '" + ModuleImportName + ":" + FunctionEntry + "'"));
 				};
 			}
-			DelegateTable[DelegateId] = Action;
+			DelegateTable[DelegateId] = new DelegateInfo()
+			{
+				Action = Action,
+				ModuleImportName = ModuleImportName,
+				FunctionEntry = FunctionEntry,
+			};
 			return DelegateId;
 		}
 	}

@@ -149,7 +149,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			Align2();
 			var Value = *((ushort*)Pointer);
-			_SetVertexInfoColor(PixelFormatDecoder.Decode_RGBA_5551_Pixel(Value));
+			PixelFormatDecoder.OutputPixel Color;
+			PixelFormatDecoder.Decode_RGBA_5551_Pixel(Value, out Color);
+			_SetVertexInfoColor(Color);
 			Pointer += sizeof(ushort);
 		}
 

@@ -36,7 +36,8 @@ namespace CSPspEmu.Core.Audio
 		/// <summary>
 		/// 
 		/// </summary>
-		public const int MaxChannels = 8;
+		//public const int MaxChannels = 8;
+		public const int MaxChannels = 32;
 
 		/// <summary>
 		/// 

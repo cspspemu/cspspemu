@@ -21,6 +21,11 @@ namespace CSPspEmu.Hle
 			public uint NID;
 			public String Name;
 			public String Description;
+
+			public override string ToString()
+			{
+				return this.ToStringDefault();
+			}
 		}
 
 		public HleState HleState;

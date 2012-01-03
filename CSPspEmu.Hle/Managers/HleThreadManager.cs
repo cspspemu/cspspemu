@@ -124,6 +124,12 @@ namespace CSPspEmu.Hle.Managers
 				// Waiting, but listeing to callbacks.
 				if (Current.IsWaitingAndHandlingCallbacks)
 				{
+					/*
+					if (Processor.PspConfig.VerticalSynchronization)
+					{
+						Thread.Sleep(1);
+					}
+					*/
 					HleCallbackManager.ExecuteQueued(Current.CpuThreadState, MustReschedule);
 				}
 				// Executing normally.

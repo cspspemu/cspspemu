@@ -225,18 +225,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		static public uint FastHash(uint* Pointer, int Count, uint StartHash = 0)
 		{
-			if (Pointer == null) return StartHash;
-			Count /= 4;
-			uint Hash = StartHash;
-			if (Count > 2048 * 2048) {
-				Console.Error.WriteLine("FastHash too big count!");
-				return Hash;
-			}
-			for (int n = 0; n < Count; n++)
-			{
-				Hash ^= (uint)(Pointer[n] + (n << 16));
-			}
-			return Hash;
+			return Hashing.FastHash(Pointer, Count, StartHash);
 		}
 	}
 }

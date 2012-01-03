@@ -33,7 +33,7 @@ namespace CSPspEmu.Hle.Loader
 		public ElfLoader ElfLoader;
 		public HleModuleManager ModuleManager;
 
-		public void Load(Stream FileStream, Stream MemoryStream, MemoryPartition MemoryPartition, HleModuleManager ModuleManager)
+		public void Load(Stream FileStream, Stream MemoryStream, MemoryPartition MemoryPartition, HleModuleManager ModuleManager, String GameTitle)
 		{
 			this.ElfLoader = new ElfLoader();
 			this.ModuleManager = ModuleManager;
@@ -53,6 +53,7 @@ namespace CSPspEmu.Hle.Loader
 			}
 
 			PspEmulatorContext.PspConfig.RelocatedBaseAddress = BaseAddress;
+			PspEmulatorContext.PspConfig.GameTitle = GameTitle;
 
 			this.ElfLoader.AllocateAndWrite(MemoryStream, MemoryPartition, BaseAddress);
 
@@ -311,11 +312,11 @@ namespace CSPspEmu.Hle.Loader
 					};
 					var FunctionEntry = (Module != null) ? Module.EntriesByNID.GetOrDefault(NID, DefaultEntry) : DefaultEntry;
 					//var Delegate = Module.DelegatesByNID.GetOrDefault(NID, null);
-					CallStreamWriter.Write((uint)(0x0000000C | (FunctionGenerator.NativeCallSyscallCode << 6))); // syscall 0x2307
+					CallStreamWriter.Write((uint)(0x0000000C | (FunctionGenerator.NativeCallSyscallCode << 6))); // syscall NativeCallSyscallCode
 					CallStreamWriter.Write(
 						(uint)ModuleManager.AllocDelegateSlot(
 							CreateDelegate(ModuleManager, Module, NID, ModuleImportName, FunctionEntry.Name),
-							String.Format("{0}:{1}", ModuleImportName, FunctionEntry)
+							ModuleImportName, FunctionEntry
 						)
 					);
 

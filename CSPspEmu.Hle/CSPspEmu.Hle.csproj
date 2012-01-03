@@ -59,6 +59,7 @@
     <Compile Include="Formats\ElfPsp.cs" />
     <Compile Include="Formats\IsoFile.cs" />
     <Compile Include="Formats\Pbp.cs" />
+    <Compile Include="Formats\Psf.cs" />
     <Compile Include="HleCallback.cs" />
     <Compile Include="HleEmulatorFinalizeCallbackException.cs" />
     <Compile Include="HleInterop.cs" />

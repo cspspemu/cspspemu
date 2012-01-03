@@ -22,6 +22,8 @@ namespace CSPspEmu.Core.Utils
 			{
 				return String.Format("RGBA({0},{1},{2},{3})", R, G, B, A);
 			}
+
+			public int CheckSum { get { return (int)R + (int)G + (int)B + (int)A; } }
 		}
 
 		public struct Dxt1Block { }
@@ -224,14 +226,28 @@ namespace CSPspEmu.Core.Utils
 		{
 			var Input = (ushort*)_Input;
 
+			//long CheckSum = 0;
+
 			for (int y = 0, n = 0; y < Height; y++)
 			{
 				var InputRow = (ushort*)&InputByte[y * StrideWidth];
 				for (int x = 0; x < Width; x++, n++)
 				{
-					Output[n] = Decode_RGBA_5551_Pixel(InputRow[x]);
+					Decode_RGBA_5551_Pixel(InputRow[x], out Output[n]);
+					//CheckSum += (long)Output[n].CheckSum;
 				}
 			}
+
+			/*
+			try
+			{
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
+				Console.Error.WriteLine("Decode_RGBA_5551 : {0}x{1} : {2}", Width, Height, CheckSum);
+			}
+			*/
 		}
 
 		private unsafe void Decode_RGBA_5650()
@@ -259,15 +275,19 @@ namespace CSPspEmu.Core.Utils
 			};
 		}
 
-		static public unsafe OutputPixel Decode_RGBA_5551_Pixel(ushort Value)
+		static public unsafe void Decode_RGBA_5551_Pixel(ushort Value, out OutputPixel OutputPixel)
 		{
-			return new OutputPixel()
-			{
-				R = (byte)Value.ExtractUnsignedScale(0, 5, 255),
-				G = (byte)Value.ExtractUnsignedScale(5, 5, 255),
-				B = (byte)Value.ExtractUnsignedScale(10, 5, 255),
-				A = (byte)Value.ExtractUnsignedScale(15, 1, 255),
-			};
+#if true
+			OutputPixel.R = (byte)(((Value >> 0) & 0x1F) * 255 / 0x1F);
+			OutputPixel.G = (byte)(((Value >> 5) & 0x1F) * 255 / 0x1F);
+			OutputPixel.B = (byte)(((Value >> 10) & 0x1F) * 255 / 0x1F);
+			OutputPixel.A = (byte)(((Value >> 15) != 0) ? 255 : 0);
+#else
+			OutputPixel.R = (byte)Value.ExtractUnsignedScale(0, 5, 255);
+			OutputPixel.G = (byte)Value.ExtractUnsignedScale(5, 5, 255);
+			OutputPixel.B = (byte)Value.ExtractUnsignedScale(10, 5, 255);
+			OutputPixel.A = (byte)Value.ExtractUnsignedScale(15, 1, 255);
+#endif
 		}
 
 		static public unsafe OutputPixel Decode_RGBA_5650_Pixel(ushort Value)
@@ -341,6 +361,13 @@ namespace CSPspEmu.Core.Utils
 		public static unsafe void UnswizzleInline(GuPixelFormats Format, void* Data, int Width, int Height)
 		{
 			UnswizzleInline(Data, GetPixelsSize(Format, Width), Height);
+		}
+
+		public static unsafe uint Hash(GuPixelFormats PixelFormat, void* Input, int Width, int Height)
+		{
+			int TotalBytes = GetPixelsSize(PixelFormat, Width * Height);
+
+			return Hashing.FastHash((uint*)Input, TotalBytes, (uint)((int)PixelFormat * Width * Height));
 		}
 	}
 }

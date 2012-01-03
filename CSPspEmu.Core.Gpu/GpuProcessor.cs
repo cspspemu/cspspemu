@@ -206,7 +206,7 @@ namespace CSPspEmu.Core.Gpu
 		{
 			Status.SetValue(StatusEnum.Completed);
 
-			Thread.Sleep(1);
+			//Thread.Sleep(1);
 			DisplayListQueueUpdated.WaitOne(1);
 
 			while (true)

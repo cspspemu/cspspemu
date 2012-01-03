@@ -75,6 +75,7 @@
     <Compile Include="Hle\Formats\PbpTest.cs" />
     <Compile Include="Hle\Vfs\Iso\IsoTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Hle\Formats\PsfTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">

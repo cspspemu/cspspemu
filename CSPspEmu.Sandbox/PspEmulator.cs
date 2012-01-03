@@ -17,6 +17,7 @@ using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
 using CSPspEmu.Gui.Winforms;
+using CSPspEmu.Hle;
 using CSPspEmu.Runner;
 
 namespace CSPspEmu.Sandbox
@@ -123,19 +124,19 @@ namespace CSPspEmu.Sandbox
 		/// <summary>
 		/// 
 		/// </summary>
-		public void StartAndLoad(string File, bool TraceSyscalls = false)
+		public void StartAndLoad(string File, bool TraceSyscalls = false, bool ShowMenus = true)
 		{
 			PspConfig.DebugSyscalls = TraceSyscalls;
 			Start(() =>
 			{
 				LoadFile(File);
-			});
+			}, ShowMenus: ShowMenus);
 		}
 
 		/// <summary>
 		/// Start.
 		/// </summary>
-		public void Start(Action CallbackOnInit = null)
+		public void Start(Action CallbackOnInit = null, bool ShowMenus = true)
 		{
 			try
 			{
@@ -157,7 +158,7 @@ namespace CSPspEmu.Sandbox
 				Thread.CurrentThread.Name = "GuiThread";
 				Application.EnableVisualStyles();
 				Application.SetCompatibleTextRenderingDefault(false);
-				Application.Run(new PspDisplayForm(this));
+				Application.Run(new PspDisplayForm(this, ShowMenus: ShowMenus));
 
 				ContextInitialized.WaitOne();
 				PspRunner.StopSynchronized();
@@ -265,6 +266,14 @@ namespace CSPspEmu.Sandbox
 			foreach (var Pair in CpuProcessor.GlobalInstructionStats.OrderBy(Pair => Pair.Key))
 			{
 				Console.WriteLine("{0} -> {1}", Pair.Key, Pair.Value);
+			}
+
+			Console.WriteLine("-----------------------------------------------------------------");
+			Console.WriteLine("Last called syscalls: ");
+
+			foreach (var CalledCallback in PspEmulatorContext.GetInstance<HleState>().ModuleManager.LastCalledCallbacks.ToArray().Reverse())
+			{
+				Console.WriteLine("  {0}", CalledCallback);
 			}
 			Console.WriteLine("-----------------------------------------------------------------");
 			PspRunner.CpuComponentThread.DumpThreads();

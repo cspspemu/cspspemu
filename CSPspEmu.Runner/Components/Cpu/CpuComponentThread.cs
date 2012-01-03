@@ -177,6 +177,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 				Stream ElfLoadStream = null;
 
 				var Format = new FormatDetector().Detect(LoadStream);
+				var Title = "<Unknown Game>";
 				switch (Format)
 				{
 					case "Pbp":
@@ -189,6 +190,15 @@ namespace CSPspEmu.Runner.Components.Cpu
 					case "Iso":
 						{
 							var Iso = SetIso(FileName);
+							try
+							{
+								var ParamSfo = new Psf().Load(Iso.Root.Locate("/PSP_GAME/PARAM.SFO").Open());
+								Title = (String)ParamSfo.EntryDictionary["TITLE"];
+							}
+							catch (Exception Exception)
+							{
+								Console.Error.WriteLine(Exception);
+							}
 							ElfLoadStream = Iso.Root.Locate("/PSP_GAME/SYSDIR/BOOT.BIN").Open();
 						}
 						break;
@@ -200,7 +210,8 @@ namespace CSPspEmu.Runner.Components.Cpu
 					ElfLoadStream,
 					MemoryStream,
 					HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User),
-					HleState.ModuleManager
+					HleState.ModuleManager,
+					Title
 				);
 
 				RegisterSyscalls();
@@ -300,6 +311,12 @@ namespace CSPspEmu.Runner.Components.Cpu
 								PspEmulatorContext.PspConfig.RelocatedBaseAddress,
 								ThreadManager.Current.CpuThreadState.PC - PspEmulatorContext.PspConfig.RelocatedBaseAddress
 							);
+
+							ErrorOut.WriteLine("Last called syscalls: ");
+							foreach (var CalledCallback in HleState.ModuleManager.LastCalledCallbacks.Reverse())
+							{
+								ErrorOut.WriteLine("  {0}", CalledCallback);
+							}
 
 							foreach (var Thread in ThreadManager.Threads)
 							{
