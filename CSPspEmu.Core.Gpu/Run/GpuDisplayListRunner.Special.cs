@@ -129,12 +129,14 @@ namespace CSPspEmu.Core.Gpu.Run
 		public void OP_XSCALE()
 		{
 			GpuState->Viewport.Scale.X = Float1;
+			//Console.Error.WriteLine("OP_XSCALE: {0}", Float1);
 			//gpu.state.viewport.sx = command.float1 * 2;
 		}
 		public void OP_YSCALE()
 		{
 			GpuState->Viewport.Scale.Y = Float1;
 			//gpu.state.viewport.sy = -command.float1 * 2;
+			//Console.Error.WriteLine("OP_YSCALE: {0}", Float1);
 		}
 		public void OP_ZSCALE()
 		{

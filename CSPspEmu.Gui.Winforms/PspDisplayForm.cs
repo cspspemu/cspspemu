@@ -100,6 +100,7 @@ namespace CSPspEmu.Gui.Winforms
 
 			InitializeComponent();
 
+			this.ShowIcon = ShowMenus;
 			this.MainMenuStrip.Visible = ShowMenus;
 			
 			/*

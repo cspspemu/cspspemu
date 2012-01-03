@@ -15,7 +15,7 @@ namespace CSPspEmu.Core.Gpu
 	{
 		//private const bool Debug = false;
 		private bool Debug = false;
-		//protected const bool Debug = true;
+		//private const bool Debug = true;
 
 		/// <summary>
 		/// 
@@ -280,12 +280,21 @@ namespace CSPspEmu.Core.Gpu
 		{
 			//Console.WriteLine("{0:X}", InstructionAddressCurrent);
 			var Instruction = Memory.Read4(_InstructionAddressCurrent);
+			var WritePC = Memory.GetPCWriteAddress(_InstructionAddressCurrent);
 			var OpCode = (GpuOpCodes)((Instruction >> 24) & 0xFF);
 			var Params = ((Instruction) & 0xFFFFFF);
 
 			//if (OpCode == GpuOpCodes.Unknown0xFF)
 			if (Debug) {
-				Console.WriteLine("{0:X} : {1:X} : {2}", InstructionAddressCurrent, InstructionAddressStall, OpCode);
+				Console.WriteLine(
+					"CODE(0x{0:X}-0x{1:X}) : PC(0x{2:X}:0x{3:X}) : {4} : 0x{5:X}",
+					InstructionAddressCurrent,
+					InstructionAddressStall,
+					WritePC,
+					WritePC - GpuProcessor.PspConfig.RelocatedBaseAddress,
+					OpCode,
+					Params
+				);
 			}
 
 			GpuDisplayListRunner.OpCode = OpCode;

@@ -134,7 +134,7 @@
 			// 
 			this.xToolStripMenuItem1.Name = "xToolStripMenuItem1";
 			this.xToolStripMenuItem1.ShortcutKeyDisplayString = "1";
-			this.xToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+			this.xToolStripMenuItem1.Size = new System.Drawing.Size(98, 22);
 			this.xToolStripMenuItem1.Text = "&1x";
 			this.xToolStripMenuItem1.Click += new System.EventHandler(this.xToolStripMenuItem1_Click);
 			// 
@@ -142,7 +142,7 @@
 			// 
 			this.xToolStripMenuItem2.Name = "xToolStripMenuItem2";
 			this.xToolStripMenuItem2.ShortcutKeyDisplayString = "2";
-			this.xToolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
+			this.xToolStripMenuItem2.Size = new System.Drawing.Size(98, 22);
 			this.xToolStripMenuItem2.Text = "&2x";
 			this.xToolStripMenuItem2.Click += new System.EventHandler(this.xToolStripMenuItem2_Click);
 			// 
@@ -150,7 +150,7 @@
 			// 
 			this.xToolStripMenuItem3.Name = "xToolStripMenuItem3";
 			this.xToolStripMenuItem3.ShortcutKeyDisplayString = "3";
-			this.xToolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
+			this.xToolStripMenuItem3.Size = new System.Drawing.Size(98, 22);
 			this.xToolStripMenuItem3.Text = "&3x";
 			this.xToolStripMenuItem3.Click += new System.EventHandler(this.xToolStripMenuItem3_Click);
 			// 
@@ -158,7 +158,7 @@
 			// 
 			this.xToolStripMenuItem4.Name = "xToolStripMenuItem4";
 			this.xToolStripMenuItem4.ShortcutKeyDisplayString = "4";
-			this.xToolStripMenuItem4.Size = new System.Drawing.Size(152, 22);
+			this.xToolStripMenuItem4.Size = new System.Drawing.Size(98, 22);
 			this.xToolStripMenuItem4.Text = "&4x";
 			this.xToolStripMenuItem4.Click += new System.EventHandler(this.xToolStripMenuItem4_Click);
 			// 
@@ -208,14 +208,14 @@
 			// resumeToolStripMenuItem
 			// 
 			this.resumeToolStripMenuItem.Name = "resumeToolStripMenuItem";
-			this.resumeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.resumeToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
 			this.resumeToolStripMenuItem.Text = "&Run/Resume";
 			this.resumeToolStripMenuItem.Click += new System.EventHandler(this.resumeToolStripMenuItem_Click);
 			// 
 			// pauseToolStripMenuItem
 			// 
 			this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
-			this.pauseToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.pauseToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
 			this.pauseToolStripMenuItem.Text = "&Pause";
 			this.pauseToolStripMenuItem.Click += new System.EventHandler(this.pauseToolStripMenuItem_Click);
 			// 

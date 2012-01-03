@@ -51,9 +51,9 @@ namespace CSPspEmu.Core.Memory
 			PointerUtils.Memset((byte *)PspAddressToPointer(Segment.Low), 0, Segment.Size);
 		}
 
-		public Segment ScratchPadSegment = new Segment(ScratchPadOffset, ScratchPadSize);
-		public Segment MainSegment = new Segment(MainOffset, MainSize);
-		public Segment FrameBufferSegment = new Segment(FrameBufferOffset, FrameBufferSize);
+		public readonly Segment ScratchPadSegment = new Segment(ScratchPadOffset, ScratchPadSize);
+		public readonly Segment MainSegment = new Segment(MainOffset, MainSize);
+		public readonly Segment FrameBufferSegment = new Segment(FrameBufferOffset, FrameBufferSize);
 
 		//static public Segment ScratchPadSegment = new Segment() { Offset = 0x00010000, Size = 4 * 1024 };
 
@@ -68,6 +68,7 @@ namespace CSPspEmu.Core.Memory
 		protected byte* ScratchPadPtr; // 4KB
 		protected byte* FrameBufferPtr; // 2MB
 		protected byte* MainPtr;
+		protected uint* LogMainPtr;
 
 		abstract public uint PointerToPspAddress(void* Pointer);
 		abstract public void* PspAddressToPointer(uint Address);
@@ -94,6 +95,15 @@ namespace CSPspEmu.Core.Memory
 			if ((Pointer >= FrameBufferPtr) && (Pointer < FrameBufferPtr + FrameBufferSize)) return (uint)(FrameBufferOffset + (Pointer - FrameBufferPtr));
 			if ((Pointer >= MainPtr) && (Pointer < MainPtr + MainSize)) return (uint)(MainOffset + (Pointer - MainPtr));
 			throw (new InvalidAddressException("Pointer doesn't belong to PSP Memory"));
+		}
+
+		virtual public void SetPCWriteAddress(uint Address, uint PC)
+		{
+		}
+
+		virtual public uint GetPCWriteAddress(uint Address)
+		{
+			return 0xFFFFFFFF;
 		}
 
 		virtual public void* PspAddressToPointerSafe(uint Address)

@@ -31,6 +31,7 @@ namespace CSPspEmu.Core.Memory
 				ScratchPadPtr = (byte*)(Marshal.AllocHGlobal(ScratchPadSize).ToPointer());
 				FrameBufferPtr = (byte*)(Marshal.AllocHGlobal(FrameBufferSize).ToPointer());
 				MainPtr = (byte*)(Marshal.AllocHGlobal(MainSize).ToPointer());
+				LogMainPtr = (uint*)(Marshal.AllocHGlobal(MainSize * 4).ToPointer());
 			}
 		}
 
@@ -41,10 +42,31 @@ namespace CSPspEmu.Core.Memory
 				Marshal.FreeHGlobal(new IntPtr(ScratchPadPtr));
 				Marshal.FreeHGlobal(new IntPtr(FrameBufferPtr));
 				Marshal.FreeHGlobal(new IntPtr(MainPtr));
+				Marshal.FreeHGlobal(new IntPtr(LogMainPtr));
 				ScratchPadPtr = null;
 				FrameBufferPtr = null;
 				MainPtr = null;
+				LogMainPtr = null;
 			}
+		}
+
+		override public void SetPCWriteAddress(uint _Address, uint PC)
+		{
+			var Address = _Address & PspMemory.MemoryMask;
+			if (Address >= MainOffset && Address < MainOffset + MainSize)
+			{
+				LogMainPtr[Address - MainOffset] = PC;
+			}
+		}
+
+		override public uint GetPCWriteAddress(uint _Address)
+		{
+			var Address = _Address & PspMemory.MemoryMask;
+			if (Address >= MainOffset && Address < MainOffset + MainSize)
+			{
+				return LogMainPtr[Address - MainOffset];
+			}
+			return 0xFFFFFFFF;
 		}
 
 		override public uint PointerToPspAddress(void* Pointer)

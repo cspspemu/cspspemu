@@ -42,6 +42,16 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
 			});
 			Action();
+
+			if (!(MipsMethodEmiter.Processor.Memory is FastPspMemory))
+			{
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, PC);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("SetPCWriteAddress"));
+			}
 		}
 
 		private void _save_i(OpCode OpCode)
@@ -60,72 +70,71 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			//MipsMethodEmiter.ILGenerator.EmitWriteLine(String.Format("PC(0x{0:X}) : LW: rt={1}, rs={2}, imm={3}", PC, RT, RS, Instruction.IMM));
 			_load_i(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I4); });
 		}
-		/*
-		 * registers[instruction.RT] = (
-		 *     (registers[instruction.RT] & 0x_0000_FFFF) |
-		 *     ((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 1) << 16) & 0x_FFFF_0000)
-		 * );
-		 */
+
+		private static readonly uint[] LwrMask = new uint[] { 0x00000000, 0xFF000000, 0xFFFF0000, 0xFFFFFF00 };
+		private static readonly uint[] LwrShift = new uint[] { 0, 8, 16, 24 };
+
+		private static readonly uint[] LwlMask = new uint[] { 0x00FFFFFF, 0x0000FFFF, 0x000000FF, 0x00000000 };
+		private static readonly uint[] LwlShift = new uint[] { 24, 16, 8, 0 };
+
 		public void lwl()
 		{
 			MipsMethodEmiter.SaveGPR(RT, () =>
 			{
-				// registers[instruction.RT] & 0x_0000_FFFF
-				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0x0000FFFF);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-
-				// ((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 1) << 16) & 0x_FFFF_0000)
+				// ((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 0) << 0) & 0x_0000_FFFF)
 				_save_pc();
+
+				// int data = memory.read32(RS + SIMM16 & 0xFFFFFFFC);
 				MipsMethodEmiter._getmemptr(() =>
 				{
 					MipsMethodEmiter.LoadGPR_Unsigned(RS);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM - 1);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
 					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xFFFFFFFC);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
 				});
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I2);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 16);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I4);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, LwlShift[IMM & 3]);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shl);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xFFFF0000);
+
+				MipsMethodEmiter.LoadGPR_Unsigned(RT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, LwlMask[IMM & 3]);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
 
 				// OR
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
 			});
 		}
-		/*
-		 * registers[instruction.RT] = (
-		 *     (registers[instruction.RT] & 0x_FFFF_0000) |
-		 *     ((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 0) << 0) & 0x_0000_FFFF)
-		 * );
-		 */
+
 		public void lwr()
 		{
 			MipsMethodEmiter.SaveGPR(RT, () =>
 			{
-				// registers[instruction.RT] & 0x_FFFF_0000
-				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xFFFF0000);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-
 				// ((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 0) << 0) & 0x_0000_FFFF)
 				_save_pc();
+
+				// int data = memory.read32(RS + SIMM16 & 0xFFFFFFFC);
 				MipsMethodEmiter._getmemptr(() =>
 				{
 					MipsMethodEmiter.LoadGPR_Unsigned(RS);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM - 0);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
 					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xFFFFFFFC);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
 				});
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I2);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_0);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shl);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0x0000FFFF);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I4);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, LwrShift[IMM & 3]);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shr_Un);
+
+				MipsMethodEmiter.LoadGPR_Unsigned(RT);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, LwrMask[IMM & 3]);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
 
 				// OR
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
 			});	
 		}
+
 		public void lbu() { _load_i(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_U1); }); }
 		public void lhu() { _load_i(() => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_U2); }); }
 
@@ -137,49 +146,80 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			//MipsMethodEmiter.ILGenerator.EmitWriteLine(String.Format("PC(0x{0:X}) : SW: rt={1}, rs={2}, imm={3}", PC, RT, RS, Instruction.IMM));
 			_save_i(OpCodes.Stind_I4);
 		}
-		/*
-			void OP_SWL() {
-				memory.twrite!(ushort)(registers[instruction.RS] + instruction.IMM - 1, (registers[instruction.RT] >> 16) & 0xFFFF);
-				registers.pcAdvance(4);
-			}
-			void OP_SWR() {
-				memory.twrite!(ushort)(registers[instruction.RS] + instruction.IMM - 0, (registers[instruction.RT] >>  0) & 0xFFFF);
-				registers.pcAdvance(4);
-			}
-		*/
+
+		private static readonly uint[] SwlMask = new uint[] { 0xFFFFFF00, 0xFFFF0000, 0xFF000000, 0x00000000 };
+		private static readonly uint[] SwlShift = new uint[] { 24, 16, 8, 0 };
+
+		private static readonly uint[] SwrMask = new uint[]  { 0x00000000, 0x000000FF, 0x0000FFFF, 0x00FFFFFF };
+		private static readonly uint[] SwrShift = new uint[]  { 0, 8, 16, 24 };
+
 		public void swl()
 		{
 			_save_pc();
 			MipsMethodEmiter._getmemptr(() =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM - 1);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xFFFFFFFC);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
 			});
+			{
+				{
+					MipsMethodEmiter.LoadGPR_Unsigned(RT);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, SwlShift[IMM & 3]);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shr_Un);
 
-			MipsMethodEmiter.LoadGPR_Unsigned(RT);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 16);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shr);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0x0000FFFF);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I2);
+					MipsMethodEmiter._getmemptr(() =>
+					{
+						MipsMethodEmiter.LoadGPR_Unsigned(RS);
+						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
+						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xFFFFFFFC);
+						MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
+					});
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I4);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, SwlMask[IMM & 3]);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
+				}
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
+			}
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I4);
 		}
+
+
 		public void swr()
 		{
 			_save_pc();
 			MipsMethodEmiter._getmemptr(() =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM - 0);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xFFFFFFFC);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
 			});
+			{
+				{
+					MipsMethodEmiter.LoadGPR_Unsigned(RT);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, SwrShift[IMM & 3]);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shl);
 
-			MipsMethodEmiter.LoadGPR_Unsigned(RT);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shr);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0x0000FFFF);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I2);
+					MipsMethodEmiter._getmemptr(() =>
+					{
+						MipsMethodEmiter.LoadGPR_Unsigned(RS);
+						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
+						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xFFFFFFFC);
+						MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
+					});
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I4);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, SwrMask[IMM & 3]);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
+				}
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
+			}
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I4);
 		}
 
 		// Load Linked word.
@@ -210,29 +250,5 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I4); 
 			});
 		}
-		/*
-			void OP_LWL() {
-				registers[instruction.RT] = (
-					(registers[instruction.RT] & 0x_0000_FFFF) |
-					((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 1) << 16) & 0x_FFFF_0000)
-				);
-				registers.pcAdvance(4);
-			}
-			void OP_LWR() {
-				registers[instruction.RT] = (
-					(registers[instruction.RT] & 0x_FFFF_0000) |
-					((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 0) << 0) & 0x_0000_FFFF)
-				);
-				registers.pcAdvance(4);
-			}
-			void OP_SWL() {
-				memory.twrite!(ushort)(registers[instruction.RS] + instruction.IMM - 1, (registers[instruction.RT] >> 16) & 0xFFFF);
-				registers.pcAdvance(4);
-			}
-			void OP_SWR() {
-				memory.twrite!(ushort)(registers[instruction.RS] + instruction.IMM - 0, (registers[instruction.RT] >>  0) & 0xFFFF);
-				registers.pcAdvance(4);
-			}
-		*/
 	}
 }

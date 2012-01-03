@@ -404,5 +404,11 @@ namespace CSPspEmu.Core.Cpu
 				}
 			}
 		}
+
+		public void SetPCWriteAddress(uint Address, uint PC)
+		{
+			//Console.WriteLine("SetPCWriteAddress: {0:X} : {1:X}", Address, PC);
+			CpuProcessor.Memory.SetPCWriteAddress(Address, PC);
+		}
 	}
 }

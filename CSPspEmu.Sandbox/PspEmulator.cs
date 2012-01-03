@@ -361,6 +361,7 @@ namespace CSPspEmu.Sandbox
 		}
 
 		protected List<CWCheat> CWCheats = new List<CWCheat>();
+		public bool UseFastMemory;
 
 		void PspEmulator_VBlankEventCall()
 		{
