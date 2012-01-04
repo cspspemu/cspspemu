@@ -9,6 +9,10 @@ using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.mpeg
 {
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <see cref="http://en.wikipedia.org/wiki/MPEG_program_stream"/>
 	unsafe public partial class sceMpeg
 	{
 		public class StreamInfo
@@ -62,8 +66,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// sceMpegQueryStreamOffset
 		/// </summary>
 		/// <param name="Mpeg">SceMpeg handle</param>
-		/// <param name="PmfHeader">pointer to file header</param>
-		/// <param name="Offset">will contain stream offset in bytes, usually 2048</param>
+		/// <param name="PmfHeader">Pointer to file header</param>
+		/// <param name="Offset">Will contain the stream offset in bytes, usually 2048</param>
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0x21FF80E4, FirmwareVersion = 150)]
 		public int sceMpegQueryStreamOffset(SceMpeg* Mpeg, byte* PmfHeader, uint* Offset)
@@ -98,7 +102,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		public int sceMpegFlushAllStream(SceMpeg* Mpeg)
 		{
 			//throw(new NotImplementedException());
-			return -1;
+			return 0;
 		}
 	}
 }

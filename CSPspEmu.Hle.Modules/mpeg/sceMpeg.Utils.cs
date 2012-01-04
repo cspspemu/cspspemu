@@ -10,6 +10,27 @@ namespace CSPspEmu.Hle.Modules.mpeg
 {
 	unsafe public partial class sceMpeg
 	{
+		/// <summary>
+		/// MPEG AVC elementary stream.
+		/// MPEG packet size.
+		/// </summary>
+		protected const int MPEG_AVC_ES_SIZE = 2048;
+
+		/// <summary>
+		/// MPEG ATRAC elementary stream.
+		/// </summary>
+		protected const int MPEG_ATRAC_ES_SIZE = 2112;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		protected const int RingBufferPacketSize = 0x868;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public const int MPEG_ATRAC_ES_OUTPUT_SIZE = 8192;
+
 		public SceMpegData* GetSceMpegData(SceMpeg* SceMpeg)
 		{
 			return SceMpeg->GetSceMpegData(PspMemory);
@@ -56,22 +77,22 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		public struct SceMpegData
 		{
 			/// <summary>
-			/// 
+			/// 0000 - 
 			/// </summary>
 			public fixed byte MagicBytes[12];
 
 			/// <summary>
-			/// 
+			/// 000C - 
 			/// </summary>
 			public int Unknown1;
 
 			/// <summary>
-			/// 
+			/// 0010 - 
 			/// </summary>
 			public PspPointer RingBufferAddress;
 
 			/// <summary>
-			/// 
+			/// 0014 - 
 			/// </summary>
 			public PspPointer RingBufferAddressDataUpper;
 
@@ -80,13 +101,38 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			/// </summary>
 			public SceMpegAvcMode SceMpegAvcMode;
 
+			/// <summary>
+			/// 
+			/// </summary>
+			public int FrameWidth;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public int VideoFrameCount;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public int AudioFrameCount;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public int AvcFrameStatus;
+
 			//public fixed byte Data[0x10000];
 		}
 
+		/*
 		public struct SceMpegStream
 		{
 		}
+		*/
 
+		/// <summary>
+		/// Access Unit
+		/// </summary>
 		public struct SceMpegAu
 		{
 			/// <summary>
@@ -190,6 +236,54 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			/// Decode pixelformat
 			/// </summary>
 			public GuPixelFormats PixelFormat;
+		}
+
+		public struct AvcDecodeDetailStruct
+		{
+			/// <summary>
+			/// 0000 - Stores the result.
+			/// </summary>
+			public int AvcDecodeResult;
+
+			/// <summary>
+			/// 0004 - Last decoded frame.
+			/// </summary>
+			public int VideoFrameCount;
+
+			/// <summary>
+			/// 0008 - Frame width.
+			/// </summary>
+			public int AvcDetailFrameWidth;
+
+			/// <summary>
+			/// 000C - Frame height.
+			/// </summary>
+			public int AvcDetailFrameHeight;
+
+			/// <summary>
+			/// 0010 - Frame crop rect (left).
+			/// </summary>
+			public int FrameCropRectLeft;
+
+			/// <summary>
+			/// 0014 - Frame crop rect (right).
+			/// </summary>
+			public int FrameCropRectRight;
+
+			/// <summary>
+			/// 0018 - Frame crop rect (top).
+			/// </summary>
+			public int FrameCropRectTop;
+
+			/// <summary>
+			/// 001C - Frame crop rect (bottom).
+			/// </summary>
+			public int FrameCropRectBottom;
+
+			/// <summary>
+			/// 0x20 - Status of the last decoded frame.
+			/// </summary>
+			public int AvcFrameStatus;
 		}
 	}
 }

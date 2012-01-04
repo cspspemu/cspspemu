@@ -30,34 +30,7 @@ namespace CSPspEmu.Hle
 
 		public void SetArgumentsToCpuThreadState(CpuThreadState CpuThreadState)
 		{
-			int GprIndex = 4;
-			//int FprIndex = 0;
-			Action<int> GprAlign = (int Alignment) =>
-			{
-				GprIndex = (int)MathUtils.NextAligned((uint)GprIndex, Alignment);
-			};
-			foreach (var Argument in Arguments)
-			{
-				var ArgumentType = Argument.GetType();
-				if (ArgumentType == typeof(uint))
-				{
-					GprAlign(1);
-					CpuThreadState.GPR[GprIndex++] = (int)(uint)Argument;
-				}
-				else if (ArgumentType == typeof(int))
-				{
-					GprAlign(1);
-					CpuThreadState.GPR[GprIndex++] = (int)Argument;
-				}
-				else
-				{
-					throw(new NotImplementedException(String.Format("Can't handle type '{0}'", ArgumentType)));
-				}
-			}
-
-			CpuThreadState.PC = Function;
-			//Console.Error.WriteLine(CpuThreadState);
-			//CpuThreadState.DumpRegisters(Console.Error);
+			HleInterop.SetArgumentsToCpuThreadState(CpuThreadState, Function, Arguments);
 		}
 	}
 }

@@ -60,6 +60,7 @@
     <Compile Include="Formats\IsoFile.cs" />
     <Compile Include="Formats\Pbp.cs" />
     <Compile Include="Formats\Psf.cs" />
+    <Compile Include="Formats\video\MpegPs.cs" />
     <Compile Include="Formats\video\Pmf.cs" />
     <Compile Include="HleCallback.cs" />
     <Compile Include="HleEmulatorFinalizeCallbackException.cs" />

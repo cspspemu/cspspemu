@@ -8,63 +8,18 @@ namespace CSPspEmu.Hle.Modules.mpeg
 	unsafe public partial class sceMpeg
 	{
 		/// <summary>
-		/// MPEG AVC elementary stream.
-		/// MPEG packet size.
-		/// </summary>
-		protected const int MPEG_AVC_ES_SIZE = 2048;
-
-		/// <summary>
-		/// MPEG ATRAC elementary stream.
-		/// </summary>
-		protected const int MPEG_ATRAC_ES_SIZE = 2112;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public const int MPEG_ATRAC_ES_OUTPUT_SIZE = 8192;
-
-		/// <summary>
-		/// sceMpegInitAu
-		/// </summary>
-		/// <param name="Mpeg">SceMpeg handle</param>
-		/// <param name="EsBuffer">prevously allocated Es buffer</param>
-		/// <param name="SceMpegAu">will contain pointer to Au</param>
-		/// <returns>0 if success.</returns>
-		[HlePspFunction(NID = 0x167AFD9E, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceMpegInitAu(SceMpeg* Mpeg, int EsBuffer, SceMpegAu* SceMpegAu)
-		{
-			SceMpegAu->PresentationTimestampBe = unchecked((uint)0);
-			SceMpegAu->PresentationTimestampLe = unchecked((uint)0);
-			SceMpegAu->DecodeTimestampBe = unchecked((uint)0);
-			SceMpegAu->DecodeTimestampLe = unchecked((uint)0);
-			SceMpegAu->EsBuffer = EsBuffer;
-
-			if (EsBuffer >= 1 && EsBuffer <= AbvEsBufAllocated.Length && AbvEsBufAllocated[EsBuffer - 1])
-			{
-				SceMpegAu->AuSize = MPEG_AVC_ES_SIZE;
-			}
-			else
-			{
-				SceMpegAu->AuSize = MPEG_ATRAC_ES_SIZE;
-			}
-
-			return 0;
-		}
-
-		/// <summary>
 		/// sceMpegQueryAtracEsSize
 		/// </summary>
 		/// <param name="Mpeg">SceMpeg handle</param>
-		/// <param name="EsSize">will contain size of Es</param>
-		/// <param name="OutSize">will contain size of decoded data</param>
+		/// <param name="ElementaryStreamSize">will contain size of Es</param>
+		/// <param name="OutputSize">will contain size of decoded data</param>
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0xF8DCB679, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegQueryAtracEsSize(SceMpeg* Mpeg, int* EsSize, int* OutSize)
+		public int sceMpegQueryAtracEsSize(SceMpeg* Mpeg, int* ElementaryStreamSize, int* OutputSize)
 		{
-			*EsSize = MPEG_ATRAC_ES_SIZE;
-			*OutSize = MPEG_ATRAC_ES_OUTPUT_SIZE;
+			*ElementaryStreamSize = MPEG_ATRAC_ES_SIZE;
+			*OutputSize = MPEG_ATRAC_ES_OUTPUT_SIZE;
 			//throw(new NotImplementedException());
 			return 0;
 		}
@@ -74,15 +29,14 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// </summary>
 		/// <param name="Mpeg">SceMpeg handle</param>
 		/// <param name="pStream">associated stream</param>
-		/// <param name="pAu">will contain pointer to Au</param>
-		/// <param name="pUnk">unknown</param>
+		/// <param name="MpegAccessUnit">will contain pointer to Au</param>
+		/// <param name="Atrac3PlusPointer">Pointer to ATRAC3plus stream (from PSMF file).</param>
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0xE1CE83A7, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegGetAtracAu(SceMpeg* Mpeg, SceMpegStream* pStream, SceMpegAu* pAu, void* pUnk)
+		public int sceMpegGetAtracAu(SceMpeg* Mpeg, StreamId StreamId, SceMpegAu* MpegAccessUnit, void* Atrac3PlusPointer)
 		{
-			//throw(new NotImplementedException());
-			return 0;
+			throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
 		}
 
 
@@ -90,18 +44,17 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// sceMpegAtracDecode
 		/// </summary>
 		/// <param name="Mpeg">SceMpeg handle</param>
-		/// <param name="pAu">video Au</param>
-		/// <param name="pBuffer">buffer that will contain the decoded frame</param>
-		/// <param name="iInit">set this to 1 on first call</param>
+		/// <param name="MpegAccessUnit">video Au</param>
+		/// <param name="OutputBuffer">buffer that will contain the decoded frame</param>
+		/// <param name="Init">set this to 1 on first call</param>
 		/// <returns>
 		///		0 if success.
 		/// </returns>
 		[HlePspFunction(NID = 0x800C44DF, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegAtracDecode(SceMpeg* Mpeg, SceMpegAu* pAu, void* pBuffer, int iInit)
+		public int sceMpegAtracDecode(SceMpeg* Mpeg, SceMpegAu* MpegAccessUnit, byte* OutputBuffer, int Init)
 		{
-			//throw(new NotImplementedException());
-			return -1;
+			throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_NO_DATA));
 		}
 
 	}

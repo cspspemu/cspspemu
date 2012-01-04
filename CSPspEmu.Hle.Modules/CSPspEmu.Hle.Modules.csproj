@@ -65,6 +65,7 @@
     <Compile Include="iofilemgr\IoFileMgrForUser.Driver.cs" />
     <Compile Include="iofilemgr\IoFileMgrForUser.Files.cs" />
     <Compile Include="mpeg\sceMpeg.Atrac.cs" />
+    <Compile Include="mpeg\sceMpeg.Au.cs" />
     <Compile Include="mpeg\sceMpeg.Avc.cs" />
     <Compile Include="mpeg\sceMpeg.Ringbuffer.cs" />
     <Compile Include="mpeg\sceMpeg.Streams.cs" />

@@ -56,11 +56,13 @@ int T_Audio(SceSize _args, void *_argp)
 SceInt32 InitAudio()
 {
 	int i = 0, fail = 0;
+	
+	printf("InitAudio\n");
 
 	Audio.m_AudioChannel = sceAudioChReserve(-1, 512, PSP_AUDIO_FORMAT_STEREO);
 	if (Audio.m_AudioChannel < 0)
 	{
-		sprintf(m_LastError, "sceAudioChReserve() failed: 0x%08X", (int)Audio.m_AudioChannel);
+		printf("sceAudioChReserve() failed: 0x%08X\n", (int)Audio.m_AudioChannel);
 		return -1;
 	}
 
@@ -69,21 +71,21 @@ SceInt32 InitAudio()
 	Audio.m_ThreadID = sceKernelCreateThread("audio_thread", T_Audio, 0x3D, 0x10000, PSP_THREAD_ATTR_USER, NULL);
 	if (Audio.m_ThreadID < 0)
 	{
-		sprintf(m_LastError, "sceKernelCreateThread() failed: 0x%08X", (int)Audio.m_ThreadID);
+		printf("sceKernelCreateThread() failed: 0x%08X\n", (int)Audio.m_ThreadID);
 		goto exit0;
 	}
 
 	Audio.m_SemaphoreStart = sceKernelCreateSema("audio_start_sema",  0, 0, 1, NULL);
 	if (Audio.m_SemaphoreStart < 0)
 	{
-		sprintf(m_LastError, "sceKernelCreateSema() failed: 0x%08X", (int)Audio.m_SemaphoreStart);
+		printf("sceKernelCreateSema() failed: 0x%08X\n", (int)Audio.m_SemaphoreStart);
 		goto exit1;
 	}
 
 	Audio.m_SemaphoreLock = sceKernelCreateSema("audio_lock_sema",  0, 1, 1, NULL);
 	if (Audio.m_SemaphoreLock < 0)
 	{
-		sprintf(m_LastError, "sceKernelCreateSema() failed: 0x%08X", (int)Audio.m_SemaphoreLock);
+		printf("sceKernelCreateSema() failed: 0x%08X\n", (int)Audio.m_SemaphoreLock);
 		goto exit2;
 	}
 
@@ -92,7 +94,6 @@ SceInt32 InitAudio()
 	Audio.m_iPlayBuffer    = 1;
 	Audio.m_iDecodeBuffer  = 0;
 	Audio.m_iAbort         = 0;
-	Audio.m_LastError      = m_LastError;
 
 	for (i = 0; i < Audio.m_iNumBuffers; i++)
 	{
@@ -113,7 +114,7 @@ SceInt32 InitAudio()
 			if(Audio.m_pAudioBuffer[i] != NULL) free(Audio.m_pAudioBuffer[i]);
 		}
 
-		sprintf(m_LastError, "malloc() failed!");
+		printf("malloc() failed!\n");
 		goto exit3;
 	}
 
@@ -134,6 +135,9 @@ exit0:
 SceInt32 ShutdownAudio()
 {
 	int i;
+	
+	printf("ShutdownAudio\n");
+	
 	sceKernelDeleteThread(Audio.m_ThreadID);
 
 	sceKernelDeleteSema(Audio.m_SemaphoreStart);

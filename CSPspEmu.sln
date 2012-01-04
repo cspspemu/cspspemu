@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Core.Audio.Imple.O
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Runner", "CSPspEmu.Runner\CSPspEmu.Runner.csproj", "{6552E4E6-198A-46B6-864A-53CA5C1ED851}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpUtilsTests", "..\csharputils\CSharpUtils\CSharpUtilsTests\CSharpUtilsTests.csproj", "{1ED2F70F-882E-4E15-8604-AFA2E00F3A17}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = CSPspEmu.vsmdi
@@ -59,6 +61,16 @@ Global
 		{07C4AE15-8E61-4740-B5A9-44DB87CECB46}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{07C4AE15-8E61-4740-B5A9-44DB87CECB46}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{07C4AE15-8E61-4740-B5A9-44DB87CECB46}.Release|x86.ActiveCfg = Release|Any CPU
+		{1ED2F70F-882E-4E15-8604-AFA2E00F3A17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1ED2F70F-882E-4E15-8604-AFA2E00F3A17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1ED2F70F-882E-4E15-8604-AFA2E00F3A17}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1ED2F70F-882E-4E15-8604-AFA2E00F3A17}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{1ED2F70F-882E-4E15-8604-AFA2E00F3A17}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1ED2F70F-882E-4E15-8604-AFA2E00F3A17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1ED2F70F-882E-4E15-8604-AFA2E00F3A17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1ED2F70F-882E-4E15-8604-AFA2E00F3A17}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{1ED2F70F-882E-4E15-8604-AFA2E00F3A17}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{1ED2F70F-882E-4E15-8604-AFA2E00F3A17}.Release|x86.ActiveCfg = Release|Any CPU
 		{288AF89E-B41A-4253-A8F7-43D1371516E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{288AF89E-B41A-4253-A8F7-43D1371516E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{288AF89E-B41A-4253-A8F7-43D1371516E9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

@@ -95,31 +95,33 @@ int T_Video(SceSize _args, void *_argp)
 
 SceInt32 InitVideo()
 {
+	printf("InitVideo\n");
+	
 	Video.m_ThreadID = sceKernelCreateThread("video_thread", T_Video, 0x3F, 0x10000, PSP_THREAD_ATTR_USER, NULL);
 	if (Video.m_ThreadID < 0)
 	{
-		sprintf(m_LastError, "sceKernelCreateThread() failed: 0x%08X", (int)Video.m_ThreadID);
+		printf("sceKernelCreateThread() failed: 0x%08X\n", (int)Video.m_ThreadID);
 		return -1;
 	}
 
 	Video.m_SemaphoreStart = sceKernelCreateSema("video_start_sema", 0, 0, 1, NULL);
 	if (Video.m_SemaphoreStart < 0)
 	{
-		sprintf(m_LastError, "sceKernelCreateSema() failed: 0x%08X", (int)Video.m_SemaphoreStart);
+		printf("sceKernelCreateSema() failed: 0x%08X\n", (int)Video.m_SemaphoreStart);
 		goto exit0;
 	}
 
 	Video.m_SemaphoreWait = sceKernelCreateSema("video_wait_sema", 0, 1, 1, NULL);
 	if (Video.m_SemaphoreWait < 0)
 	{
-		sprintf(m_LastError, "sceKernelCreateSema() failed: 0x%08X", (int)Video.m_SemaphoreWait);
+		printf("sceKernelCreateSema() failed: 0x%08X\n", (int)Video.m_SemaphoreWait);
 		goto exit1;
 	}
 
 	Video.m_SemaphoreLock = sceKernelCreateSema("video_lock_sema", 0, 1, 1, NULL);
 	if (Video.m_SemaphoreLock < 0)
 	{
-		sprintf(m_LastError, "sceKernelCreateSema() failed: 0x%08X", (int)Video.m_SemaphoreLock);
+		printf("sceKernelCreateSema() failed: 0x%08X\n", (int)Video.m_SemaphoreLock);
 		goto exit2;
 	}
 
@@ -128,7 +130,6 @@ SceInt32 InitVideo()
 	Video.m_iFullBuffers         = 0;
 	Video.m_iPlayBuffer          = 0;
 	Video.m_iAbort               = 0;
-	Video.m_LastError            = m_LastError;
 
 	// not sure how to get these
 	Video.m_iWidth               = 480;
@@ -168,6 +169,7 @@ exit0:
 
 SceInt32 ShutdownVideo()
 {
+	printf("ShutdownVideo\n");
 	sceKernelDeleteThread(Video.m_ThreadID);
 
 	sceKernelDeleteSema(Video.m_SemaphoreStart);

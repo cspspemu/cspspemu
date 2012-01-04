@@ -88,27 +88,13 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			SceMpegData->Unknown1 = -1;
 			SceMpegData->RingBufferAddress = PspMemory.PointerToPspPointer(SceMpegRingbuffer);
 			SceMpegData->RingBufferAddressDataUpper = SceMpegRingbuffer->DataUpperBound;
+			SceMpegData->FrameWidth = FrameWidth;
+			SceMpegData->SceMpegAvcMode.PixelFormat = Core.GuPixelFormats.RGBA_8888;
+			SceMpegData->VideoFrameCount = 0;
+			SceMpegData->AudioFrameCount = 0;
 
-			// Write mpeg system handle.
-			/*
-			mpegHandle = data + 0x30;
-			mem.write32(mpeg, mpegHandle);
-			// Initialise fake mpeg struct.
-			Utilities.writeStringZ(mem, mpegHandle, "LIBMPEG.001");
-			mem.write32(mpegHandle + 12, -1);
-			mem.write32(mpegHandle + 16, ringbuffer_addr);
-			mem.write32(mpegHandle + 20, ringbuffer.dataUpperBound);
-			// Initialise mpeg values.
-			mpegRingbufferAddr = ringbuffer_addr;
-			mpegRingbuffer = ringbuffer;
-			videoFrameCount = 0;
-			audioFrameCount = 0;
-			videoPixelMode = PSP_DISPLAY_PIXEL_FORMAT_8888;
-			defaultFrameWidth = frameWidth;
-			*/
+			SceMpegRingbuffer->Packets = 0;
 
-			//throw (new NotImplementedException());
-			//Ringbuffer.iPackets = 0;
 			return 0;
 		}
 
@@ -118,9 +104,11 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <param name="Mpeg">SceMpeg handle</param>
 	    [HlePspFunction(NID = 0x606A4649, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public void sceMpegDelete(SceMpeg* Mpeg)
+		public int sceMpegDelete(SceMpeg* Mpeg)
 		{
 			//throw(new NotImplementedException());
+
+			return 0;
 		}
 	}
 }

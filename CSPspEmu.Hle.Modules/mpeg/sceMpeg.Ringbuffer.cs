@@ -17,8 +17,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegRingbufferQueryMemSize(int NumberOfPackets)
 		{
-			Console.WriteLine("{0}:{1}:{2}", 0x868, NumberOfPackets, 0x868 * NumberOfPackets);
-			return 0x868 * NumberOfPackets;
+			//Console.WriteLine("{0}:{1}:{2}", 0x868, NumberOfPackets, 0x868 * NumberOfPackets);
+			return RingBufferPacketSize * NumberOfPackets;
 		}
 
 		/// <summary>
@@ -86,19 +86,26 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// sceMpegRingbufferPut
 		/// </summary>
 		/// <param name="Ringbuffer">pointer to a sceMpegRingbuffer struct</param>
-		/// <param name="iNumPackets">num packets to put into the ringbuffer</param>
-		/// <param name="iAvailable">free packets in the ringbuffer, should be sceMpegRingbufferAvailableSize()</param>
+		/// <param name="NumPackets">num packets to put into the ringbuffer</param>
+		/// <param name="PacketsFree">free packets in the ringbuffer, should be sceMpegRingbufferAvailableSize()</param>
 		/// <returns>
 		///		Less than 0 if error else number of packets.
 		/// </returns>
 		[HlePspFunction(NID = 0xB240A59E, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegRingbufferPut(SceMpegRingbuffer* Ringbuffer, int iNumPackets, int iAvailable)
+		public int sceMpegRingbufferPut(SceMpegRingbuffer* Ringbuffer, int NumPackets, int PacketsFree)
 		{
+			//Ringbuffer->Data
+			var ResultCpuThreadState = HleState.HleInterop.ExecuteFunctionNow(
+				Ringbuffer->Callback,
+				Ringbuffer->Data,
+				NumPackets,
+				Ringbuffer->CallbackParameter
+			);
 			//throw(new NotImplementedException());
 			//return 1;
 			//return -1;
-			return 0;
+			return (int)ResultCpuThreadState;
 		}
 	}
 }

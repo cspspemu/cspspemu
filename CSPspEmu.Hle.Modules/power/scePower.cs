@@ -215,6 +215,27 @@ namespace CSPspEmu.Hle.Modules.power
 			throw(new NotImplementedException());
 		}
 
+		public enum PspPowerTick : uint
+		{
+			/// <summary>
+			/// All
+			/// PSP_POWER_TICK_ALL
+			/// </summary>
+			All = 0,
+
+			/// <summary>
+			/// Suspend
+			/// PSP_POWER_TICK_SUSPEND
+			/// </summary>
+			Suspend = 1,
+
+			/// <summary>
+			/// Display
+			/// PSP_POWER_TICK_DISPLAY
+			/// </summary>
+			Display = 6,
+		}
+
 		/**
 		 * Generate a power tick, preventing unit from 
 		 * powering off and turning off display.
@@ -224,9 +245,11 @@ namespace CSPspEmu.Hle.Modules.power
 		 * @return 0 on success, < 0 on error.
 		 */
 		[HlePspFunction(NID = 0xEFD3C963, FirmwareVersion = 150)]
-		public int scePowerTick(int type)
+		[HlePspNotImplemented]
+		public int scePowerTick(PspPowerTick type)
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return 0;
 		}
 
 		/**

@@ -47,13 +47,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		*/
 
-		public void _getmemptr(Action Action, bool Safe = false)
+		public void _getmemptr(Action Action, bool Safe = false, String ErrorDescription = "")
 		{
 			if (Safe)
 			{
 				ILGenerator.Emit(OpCodes.Ldarg_0);
 				Action();
-				ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("GetMemoryPtrSafe"));
+				ILGenerator.Emit(OpCodes.Ldstr, ErrorDescription);
+				ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("GetMemoryPtrSafeWithError"));
 			}
 			else if (Processor.Memory is FastPspMemory)
 			{

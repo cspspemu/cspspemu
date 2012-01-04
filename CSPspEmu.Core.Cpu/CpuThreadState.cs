@@ -8,6 +8,7 @@ using CSPspEmu.Core.Cpu;
 using CSharpUtils.Threading;
 using CSharpUtils;
 using System.IO;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -251,6 +252,18 @@ namespace CSPspEmu.Core.Cpu
 		public void* GetMemoryPtrSafe(uint Address)
 		{
 			return CpuProcessor.Memory.PspAddressToPointerSafe(Address);
+		}
+
+		public void* GetMemoryPtrSafeWithError(uint Address, String ErrorDescription)
+		{
+			try
+			{
+				return CpuProcessor.Memory.PspAddressToPointerSafe(Address);
+			}
+			catch (PspMemory.InvalidAddressException InvalidAddressException)
+			{
+				throw (new PspMemory.InvalidAddressException(ErrorDescription + " : " + InvalidAddressException.Message, InvalidAddressException));
+			}
 		}
 
 

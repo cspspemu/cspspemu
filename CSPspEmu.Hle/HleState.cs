@@ -40,6 +40,7 @@ namespace CSPspEmu.Hle
 		public HleRegistryManager HleRegistryManager;
 		public HleOutputHandler HleOutputHandler;
 		public HleInterruptManager HleInterruptManager;
+		public HleInterop HleInterop;
 		public Kirk Kirk;
 
 		public override void InitializeComponent()
@@ -69,6 +70,7 @@ namespace CSPspEmu.Hle
 			this.HleIoManager = PspEmulatorContext.GetInstance<HleIoManager>();
 			this.HleRegistryManager = PspEmulatorContext.GetInstance<HleRegistryManager>();
 			this.HleInterruptManager = PspEmulatorContext.GetInstance<HleInterruptManager>();
+			this.HleInterop = PspEmulatorContext.GetInstance<HleInterop>();
 		}
 	}
 }

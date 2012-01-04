@@ -166,7 +166,7 @@ namespace CSPspEmu.Hle
 						MipsMethodEmiter._getmemptr(() =>
 						{
 							MipsMethodEmiter.LoadGPR_Unsigned(GprIndex);
-						}, Safe: true);
+						}, Safe: true, ErrorDescription: "Invalid Pointer for Argument '" + ParameterType.Name + " " + ParameterInfo.Name + "'");
 						GprIndex++;
 					}
 					// A long type

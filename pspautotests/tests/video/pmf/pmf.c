@@ -72,8 +72,6 @@ typedef struct VideoThreadData
 	SceInt32                        m_iWidth;
 	SceInt32                        m_iHeight;
 
-	char*                           m_LastError;
-
 } VideoThreadData;
 
 typedef struct {
@@ -85,8 +83,6 @@ typedef struct {
 	SceInt32                        m_RingbufferPackets;
 	SceInt32                        m_Status;
 	SceInt32                        m_TotalBytes;
-
-	char*                           m_LastError;
 } ReaderThreadData;
 
 typedef struct
@@ -106,9 +102,6 @@ typedef struct
 	SceInt32                        m_iDecodeBuffer;
 
 	SceInt32                        m_iAbort;
-
-	char*                           m_LastError;
-
 } AudioThreadData;
 
 
@@ -130,17 +123,12 @@ typedef struct {
 	SceInt32                        m_iAudioFrameDuration;
 	SceInt32                        m_iVideoFrameDuration;
 	SceInt32                        m_iLastTimeStamp;
-
-	char*                           m_LastError;
-
 } DecoderThreadData;
 
 ReaderThreadData                    Reader;
 VideoThreadData                     Video;
 AudioThreadData                     Audio;
 DecoderThreadData                   Decoder;
-
-char                                m_LastError[256];
 
 SceUID                              m_FileHandle;
 SceInt32                            m_MpegStreamOffset;
@@ -172,6 +160,8 @@ SceInt32 RingbufferCallback(ScePVoid pData, SceInt32 iNumPackets, ScePVoid pPara
 {
 	int retVal, iPackets;
 	SceUID hFile = *(SceUID*)pParam;
+
+	printf("RingbufferCallback(pData=0x%08X, iNumPackets=0x%08X, pParam=0x%08X)\n", (unsigned int)pData, (unsigned int)iNumPackets, (unsigned int)pParam);
 
 	retVal = sceIoRead(hFile, pData, iNumPackets * 2048);
 	if(retVal < 0) return -1;
@@ -321,6 +311,7 @@ int Play() {
 	int retVal, fail = 0;
 
 	retVal = InitReader();
+	printf("  : 0x%08X\n", (unsigned int)retVal);
 	if (retVal < 0)
 	{
 		fail++;
@@ -328,6 +319,7 @@ int Play() {
 	}
 	
 	retVal = InitVideo();
+	printf("  : 0x%08X\n", (unsigned int)retVal);
 	if (retVal < 0)
 	{
 		fail++;
@@ -335,6 +327,7 @@ int Play() {
 	}
 
 	retVal = InitAudio();
+	printf("  : 0x%08X\n", (unsigned int)retVal);
 	if (retVal < 0)
 	{
 		fail++;
@@ -342,13 +335,14 @@ int Play() {
 	}
 
 	retVal = InitDecoder();
+	printf("  : 0x%08X\n", (unsigned int)retVal);
 	if (retVal < 0)
 	{
 		fail++;
 		goto exit_decoder;
 	}
 
-	ReaderThreadData* TDR = &Reader;
+	ReaderThreadData * TDR = &Reader;
 	DecoderThreadData* TDD = &Decoder;
 
 	sceKernelStartThread(Reader.m_ThreadID,  sizeof(void*), &TDR);

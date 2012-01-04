@@ -1,0 +1,37 @@
+Format                                   : MPEG-PS
+File size                                : 260 KiB
+Duration                                 : 1s 996ms
+Overall bit rate                         : 1 067 Kbps
+
+Video
+ID                                       : 224 (0xE0)
+Format                                   : AVC
+Format/Info                              : Advanced Video Codec
+Format profile                           : Main@L2.1
+Format settings, CABAC                   : Yes
+Format settings, ReFrames                : 1 frame
+Format settings, GOP                     : N=1
+Duration                                 : 1s 835ms
+Bit rate mode                            : Variable
+Bit rate                                 : 1 046 Kbps
+Maximum bit rate                         : 4 000 Kbps
+Width                                    : 480 pixels
+Height                                   : 272 pixels
+Display aspect ratio                     : 16:9
+Frame rate                               : 29.970 fps
+Color space                              : YUV
+Chroma subsampling                       : 4:2:0
+Bit depth                                : 8 bits
+Scan type                                : Progressive
+Bits/(Pixel*Frame)                       : 0.267
+Stream size                              : 234 KiB (90%)
+
+Text
+ID                                       : 189 (0xBD)
+Format                                   : RLE
+Format/Info                              : Run-length encoding
+Duration                                 : 1s 996ms
+Delay relative to video                  : -55ms
+
+Menu
+
