@@ -19,16 +19,17 @@ SceInt32 AVSyncStatus(DecoderThreadData* D)
 int RenderFrame(int width, int height, void* Buffer)
 {
 	sceGuStart(GU_DIRECT, DisplayList);
+	{
+		struct Vertex* Vertices = (struct Vertex*)sceGuGetMemory(2 * sizeof(struct Vertex));
 
-	struct Vertex* Vertices = (struct Vertex*)sceGuGetMemory(2 * sizeof(struct Vertex));
+		Vertices[0].u = 0;        Vertices[0].v = 0;
+		Vertices[0].x = 0;        Vertices[0].y = 0;        Vertices[0].z = 0;
+		Vertices[1].u = width;    Vertices[1].v = height;
+		Vertices[1].x = SCREEN_W; Vertices[1].y = SCREEN_H; Vertices[1].z = 0;
 
-	Vertices[0].u = 0;        Vertices[0].v = 0;
-	Vertices[0].x = 0;        Vertices[0].y = 0;        Vertices[0].z = 0;
-	Vertices[1].u = width;    Vertices[1].v = height;
-	Vertices[1].x = SCREEN_W; Vertices[1].y = SCREEN_H; Vertices[1].z = 0;
-
-	sceGuTexImage(0, TEXTURE_W, TEXTURE_H, BUFFER_WIDTH, Buffer);
-	sceGuDrawArray(GU_SPRITES, GU_TEXTURE_16BIT|GU_VERTEX_16BIT|GU_TRANSFORM_2D, 2, 0, Vertices);
+		sceGuTexImage(0, TEXTURE_W, TEXTURE_H, BUFFER_WIDTH, Buffer);
+		sceGuDrawArray(GU_SPRITES, GU_TEXTURE_16BIT | GU_VERTEX_16BIT | GU_TRANSFORM_2D, 2, 0, Vertices);
+	}
 	sceGuFinish();
 	sceGuSync(0, 0);
 	sceDisplayWaitVblankStart();
@@ -133,9 +134,7 @@ SceInt32 InitVideo()
 	Video.m_iWidth               = 480;
 	Video.m_iHeight              = 272;
 
-	Video.m_pVideoBuffer[0] = malloc(512 * 272 * 4);
-	/*
-#if 1
+#ifndef DISPLAY_VIDEO
 	Video.m_pVideoBuffer[0] = malloc(512 * 272 * 4);
 #else
 	Video.m_pVideoBuffer[0]      = ((char *)sceGeEdramGetAddr()) + DRAW_BUFFER_SIZE + DISP_BUFFER_SIZE;
@@ -154,7 +153,6 @@ SceInt32 InitVideo()
 	sceGuDisplay   (GU_TRUE);
 	sceGuClear     (GU_COLOR_BUFFER_BIT);
 #endif
-*/
 	
 	return 0;
 

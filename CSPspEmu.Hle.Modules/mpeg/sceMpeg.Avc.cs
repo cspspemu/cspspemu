@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.mpeg
 {
@@ -46,33 +47,39 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			return 0;
 		}
 
-
 		/// <summary>
 		/// sceMpegFreeAvcEsBuf
 		/// </summary>
 		/// <param name="Mpeg"></param>
-		/// <param name="pBuf"></param>
+		/// <param name="EsBuffer"></param>
 		[HlePspFunction(NID = 0xCEB870B1, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public void sceMpegFreeAvcEsBuf(SceMpeg* Mpeg, void* pBuf)
+		public uint sceMpegFreeAvcEsBuf(SceMpeg* Mpeg, int EsBuffer)
 		{
-			//throw(new NotImplementedException());
-			return;
+			AbvEsBufAllocated[EsBuffer - 1] = false;
+			return 0;
 		}
+
+		protected bool[] AbvEsBufAllocated = new bool[2];
 
 		/// <summary>
 		/// sceMpegMallocAvcEsBuf
 		/// </summary>
 		/// <param name="Mpeg"></param>
 		/// <returns>
-		///		0 if error else pointer to buffer.
+		///		0 if error else a id.
 		/// </returns>
 		[HlePspFunction(NID = 0xA780CF7E, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public void* sceMpegMallocAvcEsBuf(SceMpeg* Mpeg)
+		public int sceMpegMallocAvcEsBuf(SceMpeg* Mpeg)
 		{
-			//throw(new NotImplementedException());
-			return null;
+			for (int n = 0; n < 2; n++)
+			{
+				if (!AbvEsBufAllocated[n])
+				{
+					AbvEsBufAllocated[n] = true;
+					return n + 1;
+				}
+			}
+			return 0;
 		}
 
 		/// <summary>
@@ -93,13 +100,13 @@ namespace CSPspEmu.Hle.Modules.mpeg
 
 
 		/// <summary>
-		/// sceMpegAvcDecodeMode
+		/// Sets the SceMpegAvcMode to a Mpeg
 		/// </summary>
 		/// <param name="Mpeg">SceMpeg handle</param>
 		/// <param name="Mode">pointer to SceMpegAvcMode struct defining the decode mode (pixelformat)</param>
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0xA11C7026, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
+		[HlePspNotImplemented]
 		public int sceMpegAvcDecodeMode(SceMpeg* Mpeg, SceMpegAvcMode* Mode)
 		{
 			var SceMpegData = GetSceMpegData(Mpeg);
@@ -124,6 +131,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegAvcDecode(SceMpeg* Mpeg, SceMpegAu* pAu, int iFrameWidth, void* pBuffer, int* iInit)
 		{
+			throw(new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
 			//throw(new NotImplementedException());
 			return 0;
 		}

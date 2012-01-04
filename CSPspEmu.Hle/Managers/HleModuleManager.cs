@@ -58,7 +58,10 @@ namespace CSPspEmu.Hle.Managers
 					DelegateInfo.CallIndex = LastCallIndex++;
 					DelegateInfo.PC = CpuThreadState.PC;
 					DelegateInfo.RA = CpuThreadState.RA;
-					LastCalledCallbacks.Enqueue(DelegateInfo);
+					if (DelegateInfo.ModuleImportName != "Kernel_Library")
+					{
+						LastCalledCallbacks.Enqueue(DelegateInfo);
+					}
 					if (LastCalledCallbacks.Count > 10)
 					{
 						LastCalledCallbacks.Dequeue();

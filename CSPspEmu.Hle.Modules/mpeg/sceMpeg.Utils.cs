@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils.Endian;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
 
@@ -16,8 +17,30 @@ namespace CSPspEmu.Hle.Modules.mpeg
 
 		public enum StreamId : int
 		{
-			Video = 0,
-			Audio = 1,
+			/// <summary>
+			/// MPEG_AVC_STREAM
+			/// </summary>
+			Avc = 0,
+
+			/// <summary>
+			/// MPEG_ATRAC_STREAM
+			/// </summary>
+			Atrac = 1,
+
+			/// <summary>
+			/// MPEG_PCM_STREAM
+			/// </summary>
+			Pcm = 2,
+
+			/// <summary>
+			/// MPEG_DATA_STREAM
+			/// </summary>
+			Data = 3,
+
+			/// <summary>
+			/// MPEG_AUDIO_STREAM
+			/// </summary>
+			Audio = 15,
 		}
 
 		public struct SceMpeg
@@ -66,6 +89,35 @@ namespace CSPspEmu.Hle.Modules.mpeg
 
 		public struct SceMpegAu
 		{
+			/// <summary>
+			/// presentation timestamp MSB
+			/// </summary>
+			public uint_be PresentationTimestampBe;
+
+			/// <summary>
+			/// presentation timestamp LSB
+			/// </summary>
+			public uint_le PresentationTimestampLe;
+
+			/// <summary>
+			/// decode timestamp MSB
+			/// </summary>
+			public uint_be DecodeTimestampBe;
+
+			/// <summary>
+			/// decode timestamp LSB
+			/// </summary>
+			public uint_le DecodeTimestampLe;
+
+			/// <summary>
+			/// Es buffer handle
+			/// </summary>
+			public int EsBuffer;
+
+			/// <summary>
+			/// Au size
+			/// </summary>
+			public int AuSize;
 		}
 
 		public struct SceMpegRingbuffer
@@ -86,9 +138,9 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			public uint PacketsWritten;
 			
 			/// <summary>
-			/// 0C - PacketsFree
+			/// 0C - PacketsFree - Returned by sceMpegRingbufferAvailableSize
 			/// </summary>
-			public uint PacketsFree;
+			public int PacketsFree;
 			
 			/// <summary>
 			/// 10 - PacketSize
@@ -119,7 +171,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			/// <summary>
 			/// 24 - SemaId
 			/// </summary>
-			public uint SemaId;
+			public int SemaId;
 			
 			/// <summary>
 			/// 28 - Pointer to SceMpeg

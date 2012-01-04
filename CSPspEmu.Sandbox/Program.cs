@@ -49,9 +49,6 @@ namespace CSPspEmu.Sandbox
 			*/
 
 			Console.OutputEncoding = Encoding.UTF8;
-			Console.WriteLine("こんいちは！");
-			//Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("ja-JP");
-			//MessageBox.Show("こんいちは！");
 
 #if !RELEASE
 			Console.SetWindowSize(160, 60);
@@ -90,9 +87,7 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.Start();
 
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\TrigWars\EBOOT.PBP", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\pspautotests\demos\cubevfpu.prx", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\WipeOut Pulse EUR.cso");
-				//PspEmulator.StartAndLoad(@"C:\projects\cspspemu\pspautotests\demos\cubevfpu.prx", TraceSyscalls: false);
 
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Puzzle Bobble.ISO", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Castlevania.cso", TraceSyscalls: true);
@@ -100,8 +95,9 @@ namespace CSPspEmu.Sandbox
 
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\Aquaria\EBOOT.PBP", TraceSyscalls: true);
 
-				PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\cavestory\EBOOT.PBP", TraceSyscalls: false);
+				PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\pspautotests\tests\video\pmf\pmf.elf", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Final Fantasy Tactics.iso", TraceSyscalls: false);
 				//PspEmulator.AddCwCheat(0x70D69F04, 0x00000007);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: false);

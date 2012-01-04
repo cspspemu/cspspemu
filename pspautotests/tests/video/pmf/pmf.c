@@ -5,6 +5,7 @@
 #include <psptypes.h>
 #include <psppower.h>
 
+#define DISPLAY_VIDEO 1
 
 //#include "pmfplayer.h"
 #include <psputilsforkernel.h>
@@ -23,7 +24,6 @@
 #define BUFFER_WIDTH 512
 #define SWAPINT(x) (((x)<<24) | (((uint)(x)) >> 24) | (((x) & 0x0000FF00) << 8) | (((x) & 0x00FF0000) >> 8))
 
-char* pFileName = "test.pmf";
 int retVal;
 SceMpegAvcMode m_MpegAvcMode;
 
@@ -196,6 +196,7 @@ SceInt32 ParseHeader()
 	}
 
 	printf("sceMpegQueryStreamOffset     :0x%08X\n", (unsigned int)(retVal = sceMpegQueryStreamOffset(&m_Mpeg, pHeader, &m_MpegStreamOffset)));
+	printf("  value: 0x%08X\n", (unsigned int)m_MpegStreamOffset);
 	if (retVal != 0)
 	{
 		printf("sceMpegQueryStreamOffset() failed: 0x%08X\n", retVal);
@@ -203,6 +204,7 @@ SceInt32 ParseHeader()
 	}
 
 	printf("sceMpegQueryStreamSize       :0x%08X\n", (unsigned int)(retVal = sceMpegQueryStreamSize(pHeader, &m_MpegStreamSize)));
+	printf("  value: 0x%08X\n", (unsigned int)m_MpegStreamSize);
 	if (retVal != 0)
 	{
 		printf("sceMpegQueryStreamSize() failed: 0x%08X\n", retVal);
@@ -225,6 +227,29 @@ error:
 	return -1;
 }
 
+typedef struct {
+	int   packets;
+	uint  packetsRead;
+	uint  packetsWritten;
+	uint  packetsFree;
+	uint  packetSize;
+	void* data;
+	uint  callback;
+	void* callbackParameter;
+	void* dataUpperBound;
+	int   semaId;
+	SceMpeg* mpeg;
+} _SceMpegRingbuffer;
+
+typedef struct {
+	uint   magic1;
+	uint   magic2;
+	uint   magic3;
+	uint   unk_m1;
+	void*  ringbuffer_start;
+	void*  ringbuffer_end;
+} _SceMpeg;
+
 void Init() {
 	m_RingbufferPackets = 0x3C0;
 	
@@ -240,28 +265,51 @@ void Init() {
 	
 	printf("sceMpegInit                  :0x%08X\n", (unsigned int)sceMpegInit());
 	printf("sceMpegRingbufferQueryMemSize:0x%08X\n", (unsigned int)(m_RingbufferSize = sceMpegRingbufferQueryMemSize(m_RingbufferPackets)));
+	
 	printf("sceMpegQueryMemSize          :0x%08X\n", (unsigned int)(m_MpegMemSize    = sceMpegQueryMemSize(0)));
 	printf("m_RingbufferData             :0x%08X\n", (unsigned int)(m_RingbufferData = malloc(m_RingbufferSize)));
 	printf("m_MpegMemData                :0x%08X\n", (unsigned int)(m_MpegMemData    = malloc(m_MpegMemSize)));
-	
 	printf("sceMpegRingbufferConstruct   :0x%08X\n", (unsigned int)(sceMpegRingbufferConstruct(&m_Ringbuffer, m_RingbufferPackets, m_RingbufferData, m_RingbufferSize, &RingbufferCallback, &m_FileHandle)));
+	printf("    packets          : %d\n"    , (         int)((_SceMpegRingbuffer *)&m_Ringbuffer)->packets);
+	printf("    packetsRead      : %d\n"    , (         int)((_SceMpegRingbuffer *)&m_Ringbuffer)->packetsRead);
+	printf("    packetsWritten   : %d\n"    , (         int)((_SceMpegRingbuffer *)&m_Ringbuffer)->packetsWritten);
+	printf("    packetsFree      : %d\n"    , (         int)((_SceMpegRingbuffer *)&m_Ringbuffer)->packetsFree);
+	printf("    packetSize       : %d\n"    , (         int)((_SceMpegRingbuffer *)&m_Ringbuffer)->packetSize);
+	printf("    data             : 0x%08X\n", (unsigned int)((_SceMpegRingbuffer *)&m_Ringbuffer)->data);
+	printf("    callback         : 0x%08X\n", (unsigned int)((_SceMpegRingbuffer *)&m_Ringbuffer)->callback);
+	printf("    callbackParameter: 0x%08X\n", (unsigned int)((_SceMpegRingbuffer *)&m_Ringbuffer)->callbackParameter);
+	printf("    dataUpperBound   : 0x%08X\n", (unsigned int)((_SceMpegRingbuffer *)&m_Ringbuffer)->dataUpperBound);
+	printf("    semaId           : 0x%08X\n", (unsigned int)((_SceMpegRingbuffer *)&m_Ringbuffer)->semaId);
+	printf("    mpeg             : 0x%08X\n", (unsigned int)((_SceMpegRingbuffer *)&m_Ringbuffer)->mpeg);
 	printf("sceMpegCreate                :0x%08X\n", (unsigned int)(sceMpegCreate(&m_Mpeg, m_MpegMemData, m_MpegMemSize, &m_Ringbuffer, BUFFER_WIDTH, 0, 0)));
+	printf("    pointer          : '%s'\n"  , (char *)m_Mpeg);
+	printf("    unk_m1           : 0x%08X\n", (unsigned int)((_SceMpeg *)m_Mpeg)->unk_m1);
+	printf("    ringbuffer_start : 0x%08X\n", (unsigned int)((_SceMpeg *)m_Mpeg)->ringbuffer_start);
+	printf("    ringbuffer_end   : 0x%08X\n", (unsigned int)((_SceMpeg *)m_Mpeg)->ringbuffer_end);
 	
 	m_MpegAvcMode.iUnk0 = -1;
 	m_MpegAvcMode.iPixelFormat = 3;
 	printf("sceMpegAvcDecodeMode         :0x%08X\n", (unsigned int)(sceMpegAvcDecodeMode(&m_Mpeg, &m_MpegAvcMode)));
 }
 
-void Load() {
-	printf("sceIoOpen                    :%08X\n", (unsigned int)(m_FileHandle = sceIoOpen(pFileName, PSP_O_RDONLY, 0777)));
+void Load(char* pFileName) {
+	printf("sceIoOpen                    :0x%08X\n", (unsigned int)(m_FileHandle = sceIoOpen(pFileName, PSP_O_RDONLY, 0777)));
 	ParseHeader();
-	printf("sceMpegRegistStream          :%08X\n", (unsigned int)(m_MpegStreamAVC = sceMpegRegistStream(&m_Mpeg, 0, 0)));
-	printf("sceMpegRegistStream          :%08X\n", (unsigned int)(m_MpegStreamAtrac = sceMpegRegistStream(&m_Mpeg, 1, 0)));
-	printf("sceMpegMallocAvcEsBuf        :%08X\n", (unsigned int)(m_pEsBufferAVC = sceMpegMallocAvcEsBuf(&m_Mpeg)));
-	printf("sceMpegInitAu                :%08X\n", (unsigned int)(retVal = sceMpegInitAu(&m_Mpeg, m_pEsBufferAVC, &m_MpegAuAVC)));
-	printf("sceMpegQueryAtracEsSize      :%08X\n", (unsigned int)(retVal = sceMpegQueryAtracEsSize(&m_Mpeg, &m_MpegAtracEsSize, &m_MpegAtracOutSize)));
-	printf("m_pEsBufferAtrac             :%08X\n", (unsigned int)(m_pEsBufferAtrac = memalign(64, m_MpegAtracEsSize)));
-	printf("sceMpegInitAu                :%08X\n", (unsigned int)(retVal = sceMpegInitAu(&m_Mpeg, m_pEsBufferAtrac, &m_MpegAuAtrac)));
+	printf("sceMpegRegistStream          :0x%08X\n", (unsigned int)(m_MpegStreamAVC = sceMpegRegistStream(&m_Mpeg, 0, 0)));
+	printf("sceMpegRegistStream          :0x%08X\n", (unsigned int)(m_MpegStreamAtrac = sceMpegRegistStream(&m_Mpeg, 1, 0)));
+	printf("sceMpegMallocAvcEsBuf        :0x%08X\n", (unsigned int)(m_pEsBufferAVC = sceMpegMallocAvcEsBuf(&m_Mpeg)));
+	printf("sceMpegInitAu                :0x%08X\n", (unsigned int)(retVal = sceMpegInitAu(&m_Mpeg, m_pEsBufferAVC, &m_MpegAuAVC)));
+	printf("   iPtsMSB           : 0x%08X\n", (unsigned int)m_MpegAuAVC.iPtsMSB);
+	printf("   iPts              : 0x%08X\n", (unsigned int)m_MpegAuAVC.iPts);
+	printf("   iDtsMSB           : 0x%08X\n", (unsigned int)m_MpegAuAVC.iDtsMSB);
+	printf("   iDts              : 0x%08X\n", (unsigned int)m_MpegAuAVC.iDts);
+	printf("   iEsBuffer         : 0x%08X\n", (unsigned int)m_MpegAuAVC.iEsBuffer);
+	printf("   iAuSize           : 0x%08X\n", (unsigned int)m_MpegAuAVC.iAuSize);
+	printf("sceMpegQueryAtracEsSize      :0x%08X\n", (unsigned int)(retVal = sceMpegQueryAtracEsSize(&m_Mpeg, &m_MpegAtracEsSize, &m_MpegAtracOutSize)));
+	printf("   m_MpegAtracEsSize : %d\n", (int)m_MpegAtracEsSize);
+	printf("   m_MpegAtracOutSize: %d\n", (int)m_MpegAtracOutSize);
+	printf("m_pEsBufferAtrac             :0x%08X\n", (unsigned int)(m_pEsBufferAtrac = memalign(64, m_MpegAtracEsSize)));
+	printf("sceMpegInitAu                :0x%08X\n", (unsigned int)(retVal = sceMpegInitAu(&m_Mpeg, m_pEsBufferAtrac, &m_MpegAuAtrac)));
 }
 
 #include "pmf_decoder.h"
@@ -345,8 +393,8 @@ SceVoid Shutdown()
 
 int main(int argc, char *argv[]) {
 	Init();
-	Load();
-	//Play();
+	Load("test.pmf");
+	Play();
 	Shutdown();
 
 	return 0;

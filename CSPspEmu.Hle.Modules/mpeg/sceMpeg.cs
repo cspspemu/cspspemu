@@ -26,9 +26,10 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// </summary>
 		[HlePspFunction(NID = 0x874624D6, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public void sceMpegFinish()
+		public int sceMpegFinish()
 		{
 			//throw (new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -39,7 +40,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		///		Less than 0 if error else decoder data size.
 		/// </returns>
 		[HlePspFunction(NID = 0xC132E22F, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
+		[HlePspNotImplemented]
 		public int sceMpegQueryMemSize(int Mode)
 		{
 			//return sizeof(SceMpeg);
@@ -61,6 +62,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegCreate(SceMpeg* Mpeg, void* MpegData, int MpegSize, SceMpegRingbuffer* SceMpegRingbuffer, int FrameWidth, int Mode, int DdrTop)
 		{
+			//return -1;
+
 			if (MpegSize < sceMpegQueryMemSize(0))
 			{
 				throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_MEMORY));
@@ -73,7 +76,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			}
 			else
 			{
-				SceMpegRingbuffer->PacketsFree = (uint)(SceMpegRingbuffer->DataUpperBound.Address - SceMpegRingbuffer->Data.Address) / SceMpegRingbuffer->PacketSize;
+				SceMpegRingbuffer->PacketsFree = (int)((SceMpegRingbuffer->DataUpperBound.Address - SceMpegRingbuffer->Data.Address) / SceMpegRingbuffer->PacketSize);
 			}
 			SceMpegRingbuffer->SceMpeg = PspMemory.PointerToPspPointer(Mpeg);
 
