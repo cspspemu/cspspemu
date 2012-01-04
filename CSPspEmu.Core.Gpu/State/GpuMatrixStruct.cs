@@ -55,11 +55,11 @@ namespace CSPspEmu.Core.Gpu.State
 		/// <param name="Value"></param>
 		internal void Write(float Value)
 		{
-			if (Index < 16)
+			//if (Index < Indexes.Length)
 			{
 				fixed (float* ValuesPtr = Values)
 				{
-					ValuesPtr[Indexes[Index++]] = Value;
+					ValuesPtr[Indexes[Index++ % Indexes.Length]] = Value;
 				}
 			}
 		}
@@ -133,11 +133,11 @@ namespace CSPspEmu.Core.Gpu.State
 		/// <param name="Value"></param>
 		internal void Write(float Value)
 		{
-			if (Index < 16)
+			//if (Index < Indexes.Length)
 			{
 				fixed (float* ValuesPtr = Values)
 				{
-					ValuesPtr[Indexes[Index++]] = Value;
+					ValuesPtr[Indexes[Index++ % Indexes.Length]] = Value;
 				}
 			}
 		}

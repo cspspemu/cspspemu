@@ -103,9 +103,23 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			return (uint)(PC & ~PspMemory.MemoryMask) | (Instruction.JUMP << 2);
 		}
 
+		public bool PopulateCallStack
+		{
+			get
+			{
+				return !(CpuProcessor.Memory is FastPspMemory);
+			}
+		}
+
 		private void _link()
 		{
 			//Console.WriteLine("LINK: {0:X}", PC);
+			if (PopulateCallStack)
+			{
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, PC);
+				MipsMethodEmiter.CallMethod(typeof(CpuThreadState), "CallStackPush");
+			}
 			MipsMethodEmiter.SaveGPR(31, () =>
 			{
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, PC + 8);
@@ -145,6 +159,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			// RETURN
 			if (RS == 31)
 			{
+				if (PopulateCallStack)
+				{
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+					MipsMethodEmiter.CallMethod(typeof(CpuThreadState), "CallStackPop");
+				}
 			}
 
 			MipsMethodEmiter.SavePC(() =>

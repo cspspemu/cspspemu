@@ -6,9 +6,11 @@ using CSPspEmu.Core.Cpu;
 using CSharpUtils.Extensions;
 using System.Threading;
 using System.Globalization;
+using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.emulator
 {
+	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public partial class Emulator : HleModuleHost
 	{
 		[HlePspFunction(NID = 0x00000000, FirmwareVersion = 150)]

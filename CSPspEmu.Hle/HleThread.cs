@@ -14,6 +14,7 @@ using CSharpUtils;
 using System.Globalization;
 using System.Threading;
 using CSPspEmu.Hle.Threading.EventFlags;
+using System.IO;
 
 namespace CSPspEmu.Hle
 {
@@ -74,7 +75,7 @@ namespace CSPspEmu.Hle
 		//public int Priority = 1;
 		protected GreenThread GreenThread;
 		public CpuThreadState CpuThreadState { get; protected set; }
-		protected int MinimalInstructionCountForYield = 1000000;
+		//protected int MinimalInstructionCountForYield = 1000000;
 		public int Id;
 		//public String Name;
 		public Status CurrentStatus;
@@ -254,6 +255,7 @@ namespace CSPspEmu.Hle
 		protected void MainLoop()
 		{
 			Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.CultureName);
+			var Memory = CpuThreadState.CpuProcessor.Memory;
 			try
 			{
 				while (true)
@@ -263,7 +265,22 @@ namespace CSPspEmu.Hle
 						Console.Out.WriteLine("HleThread.MainLoop :: Thread({0:X}) : PC: {1:X}", this.Id, CpuThreadState.PC);
 					}
 					//Console.WriteLine("PC:{0:X}", CpuThreadState.PC);
-					GetDelegateAt(CpuThreadState.PC & PspMemory.MemoryMask)(CpuThreadState);
+					uint PC = CpuThreadState.PC & PspMemory.MemoryMask;
+					var Delegate = GetDelegateAt(PC);
+					{
+						CpuThreadState.LastValidPC = PC;
+					}
+					Delegate(CpuThreadState);
+					if (!Memory.IsAddressValid(CpuThreadState.PC))
+					{
+						throw(new Exception(
+							String.Format(
+								"Instruction at address 0x{0:X} changed the PC to an invalid address 0x{1:X}",
+								PC,
+								CpuThreadState.PC
+							)
+						));
+					}
 				}
 			}
 			catch (AccessViolationException AccessViolationException)
@@ -370,7 +387,10 @@ namespace CSPspEmu.Hle
 
 		public override string ToString()
 		{
-			var Ret = String.Format("HleThread(Id={0}, Name='{1}', Status={2}, WaitCount={3}", Id, Name, CurrentStatus, YieldCount);
+			var Ret = String.Format(
+				"HleThread(Id={0}, PC=0x{4:X}, LastValidPC=0x{5:X}, Name='{1}', Status={2}, WaitCount={3}",
+				Id, Name, CurrentStatus, YieldCount, CpuThreadState.PC, CpuThreadState.LastValidPC
+			);
 			switch (CurrentStatus)
 			{
 				case Status.Waiting:
@@ -396,6 +416,20 @@ namespace CSPspEmu.Hle
 		public void Dispose()
 		{
 			GreenThread.Dispose();
+		}
+
+		public void DumpStack(TextWriter TextWriter)
+		{
+			var FullCallStack = CpuThreadState.GetCurrentCallStack();
+			TextWriter.WriteLine("   CallStack({0})", FullCallStack.Length);
+			foreach (var CallerPC in FullCallStack.Slice(0, 4))
+			{
+				TextWriter.WriteLine("     MEM(0x{0:X}) : NOREL(0x{1:X})", CallerPC, CallerPC - PspConfig.RelocatedBaseAddress);
+			}
+			if (FullCallStack.Length > 4)
+			{
+				TextWriter.WriteLine("     ...");
+			}
 		}
 	}
 

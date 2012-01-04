@@ -92,7 +92,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		///		Less than 0 if error else number of packets.
 		/// </returns>
 		[HlePspFunction(NID = 0xB240A59E, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceMpegRingbufferPut(SceMpegRingbuffer* Ringbuffer, int NumPackets, int PacketsFree)
 		{
 			//Ringbuffer->Data

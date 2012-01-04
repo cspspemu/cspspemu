@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Hle;
+using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.libfont
 {
+	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010000)]
 	unsafe public partial class sceLibFont : HleModuleHost
 	{
 		public enum FontLibraryHandle : int { }

@@ -84,7 +84,7 @@ void test_begin() {
 		pspDebugScreenInit();
 	}
 
-	if (RUNNING_ON_EMULATOR) {
+	if (RUNNING_ON_EMULATOR && !HAS_DISPLAY) {
 		fclose(stdout);
 		stdout = fmemopen(alloca(4), 4, "wb");
 		stdout_back._write = NULL;
@@ -97,6 +97,9 @@ void test_begin() {
 		stdout_back._write = stdout->_write;
 	}
 	stdout->_write = writeStdoutHook;
+
+	setvbuf(stdout, NULL, _IONBF, 0);
+	setvbuf(stderr, NULL, _IONBF, 0);
 	
 	setbuf(stderr, NULL);
 }

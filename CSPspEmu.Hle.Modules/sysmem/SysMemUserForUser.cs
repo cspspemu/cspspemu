@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Cpu;
+using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.sysmem
 {
+	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00000011)]
 	public class SysMemUserForUser : HleModuleHost
 	{
 		/// <summary>

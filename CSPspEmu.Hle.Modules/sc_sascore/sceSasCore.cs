@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.sc_sascore
 {
+	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public partial class sceSasCore : HleModuleHost
 	{
 		/// <summary>

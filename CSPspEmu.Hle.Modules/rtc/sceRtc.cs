@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Vfs;
 
 namespace CSPspEmu.Hle.Modules.rtc
 {
+	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public class sceRtc : HleModuleHost
 	{
 		/// <summary>

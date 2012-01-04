@@ -20,6 +20,8 @@ namespace CSPspEmu.Core.Cpu
 		public int StepInstructionCount;
 		public long TotalInstructionCount;
 
+		public uint LastValidPC = 0xFFFFFFFF;
+
 		public uint PC;
 		//public uint nPC;
 
@@ -103,8 +105,33 @@ namespace CSPspEmu.Core.Cpu
 
 		public FCR31 Fcr31;
 
-		//public fixed uint PcStack[1024];
-		//public uint PcStackOffset;
+		public readonly uint[] CallStack = new uint[10240];
+		public int CallStackCount;
+
+		public uint[] GetCurrentCallStack()
+		{
+			return CallStack.Slice(0, CallStackCount).Reverse().ToArray();
+		}
+
+		public void CallStackPush(uint PC)
+		{
+			if (CallStackCount >= 0 && CallStackCount < CallStack.Length)
+			{
+				//fixed (uint* CallStack = FixedCallStack)
+				{
+					CallStack[CallStackCount] = PC;
+				}
+			}
+			CallStackCount++;
+		}
+
+		public void CallStackPop()
+		{
+			if (CallStackCount > 0)
+			{
+				CallStackCount--;
+			}
+		}
 
 		// http://msdn.microsoft.com/en-us/library/ms253512(v=vs.80).aspx
 		// http://logos.cs.uic.edu/366/notes/mips%20quick%20tutorial.htm

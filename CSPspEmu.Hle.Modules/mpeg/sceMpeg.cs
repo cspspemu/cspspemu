@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.mpeg
 {
+	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
 	unsafe public partial class sceMpeg : HleModuleHost
 	{
 		/// <summary>

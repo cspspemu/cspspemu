@@ -321,9 +321,31 @@ namespace CSPspEmu.Runner.Components.Cpu
 							foreach (var Thread in ThreadManager.Threads)
 							{
 								ErrorOut.WriteLine("{0}", Thread);
+								ErrorOut.WriteLine(
+									"Last valid PC: 0x{0:X} :, 0x{1:X}",
+									Thread.CpuThreadState.LastValidPC,
+									Thread.CpuThreadState.LastValidPC - PspEmulatorContext.PspConfig.RelocatedBaseAddress
+								);
+								Thread.DumpStack(ErrorOut);
 							}
 
-							ErrorOut.WriteLine("Executable had relocation: {0}", PspEmulatorContext.PspConfig.InfoExeHasRelocation);
+							ErrorOut.WriteLine(
+								"Executable had relocation: {0}. RelocationAddress: 0x{1:X}",
+								PspEmulatorContext.PspConfig.InfoExeHasRelocation,
+								PspEmulatorContext.PspConfig.RelocatedBaseAddress
+							);
+
+							ErrorOut.WriteLine("");
+							ErrorOut.WriteLine("Error on thread {0}", ThreadManager.Current);
+							ErrorOut.WriteLine(Exception);
+							ErrorOut.WriteLine("Saved a memory dump to 'error_memorydump.bin'", ThreadManager.Current);
+
+							var Memory = HleState.MemoryManager.Memory;
+
+							var Stream = File.OpenWrite("error_memorydump.bin");
+							Stream.WriteStream(new PspMemoryStream(Memory).SliceWithBounds(Memory.MainSegment.Low, Memory.MainSegment.High - 1));
+							Stream.Flush();
+							Stream.Close();
 						}
 						catch (Exception Exception2)
 						{

@@ -20,10 +20,11 @@ namespace CSPspEmu.Hle.Managers
 			public string ModuleImportName;
 			public HleModuleHost.FunctionEntry FunctionEntry;
 			public Action<CpuThreadState> Action;
+			public HleThread Thread;
 
 			public override string ToString()
 			{
-				return String.Format("{0}: PC=0x{3:X}, RA=0x{4:X} => {1}::{2}", CallIndex, ModuleImportName, FunctionEntry.Name, PC, RA);
+				return String.Format("{0}: PC=0x{3:X}, RA=0x{4:X} => '{5}' : {1}::{2}", CallIndex, ModuleImportName, FunctionEntry.Name, PC, RA, Thread.Name);
 				//return this.ToStringDefault();
 			}
 		}
@@ -32,6 +33,7 @@ namespace CSPspEmu.Hle.Managers
 		public uint DelegateLastId = 0;
 		public Dictionary<uint, DelegateInfo> DelegateTable = new Dictionary<uint, DelegateInfo>();
 		public Queue<DelegateInfo> LastCalledCallbacks = new Queue<DelegateInfo>();
+		protected HleThreadManager HleThreadManager;
 
 		static public IEnumerable<Type> GetAllHleModules(Assembly ModulesAssembly)
 		{
@@ -46,6 +48,7 @@ namespace CSPspEmu.Hle.Managers
 		public override void InitializeComponent()
 		{
 			HleModuleTypes = GetAllHleModules(PspEmulatorContext.PspConfig.HleModulesDll).ToDictionary(Type => Type.Name);
+			HleThreadManager = PspEmulatorContext.GetInstance<HleThreadManager>();
 			Console.WriteLine("HleModuleTypes: {0}", HleModuleTypes.Count);
 
 			PspEmulatorContext.GetInstance<CpuProcessor>().RegisterNativeSyscall(FunctionGenerator.NativeCallSyscallCode, (Code, CpuThreadState) =>
@@ -58,6 +61,8 @@ namespace CSPspEmu.Hle.Managers
 					DelegateInfo.CallIndex = LastCallIndex++;
 					DelegateInfo.PC = CpuThreadState.PC;
 					DelegateInfo.RA = CpuThreadState.RA;
+					DelegateInfo.Thread = HleThreadManager.Current;
+					
 					if (DelegateInfo.ModuleImportName != "Kernel_Library")
 					{
 						LastCalledCallbacks.Enqueue(DelegateInfo);

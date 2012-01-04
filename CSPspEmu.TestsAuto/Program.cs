@@ -295,8 +295,10 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "pmf";
 				//WildCardFilter = "mstick";
 				//WildCardFilter = "ge_callbacks";
-				//WildCardFilter = "lsu";
-				WildCardFilter = "pmf";
+				WildCardFilter = "lsu";
+				//WildCardFilter = "pmf";
+				//WildCardFilter = "pmf_simple";
+				//WildCardFilter = "sema";
 			}
 
 			if (WildCardFilter.Length > 0)

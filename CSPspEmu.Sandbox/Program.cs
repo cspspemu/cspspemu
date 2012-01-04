@@ -59,18 +59,21 @@ namespace CSPspEmu.Sandbox
 			//PspEmulator.UseFastMemory = true;
 			var CodeBase = Assembly.GetExecutingAssembly().Location;
 			var Base = Path.GetDirectoryName(CodeBase) + @"\" + Path.GetFileNameWithoutExtension(CodeBase);
-			var TryIsoFile = Base + ".iso";
-
-			//Console.WriteLine(TryIsoFile);
-			//Console.ReadKey();
-
-			if (File.Exists(TryIsoFile))
+			foreach (var TryExtension in new[] { "iso", "cso", "elf" })
 			{
-				IntPtr hwnd = GetConsoleWindow();
-				ShowWindow(hwnd, SW_HIDE);
+				var TryIsoFile = Base + "." + TryExtension;
 
-				PspEmulator.StartAndLoad(TryIsoFile, TraceSyscalls: false, ShowMenus: false);
-				return;
+				//Console.WriteLine(TryIsoFile);
+				//Console.ReadKey();
+
+				if (File.Exists(TryIsoFile))
+				{
+					IntPtr hwnd = GetConsoleWindow();
+					ShowWindow(hwnd, SW_HIDE);
+
+					PspEmulator.StartAndLoad(TryIsoFile, TraceSyscalls: false, ShowMenus: false);
+					return;
+				}
 			}
 
 			if (Arguments.Length > 0)
@@ -84,7 +87,7 @@ namespace CSPspEmu.Sandbox
 				PspEmulator.Start();
 #else
 				//PspEmulator.UseFastMemory = false;
-				//PspEmulator.Start();
+				PspEmulator.Start();
 
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\TrigWars\EBOOT.PBP", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\WipeOut Pulse EUR.cso");
@@ -95,19 +98,20 @@ namespace CSPspEmu.Sandbox
 
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\Aquaria\EBOOT.PBP", TraceSyscalls: true);
 
-				PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Popolocrois.cso");
+
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\cavestory\EBOOT.PBP", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\pspautotests\tests\video\pmf\pmf.elf", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Final Fantasy Tactics.iso", TraceSyscalls: false);
 				//PspEmulator.AddCwCheat(0x70D69F04, 0x00000007);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia.iso", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Championship_Manager.cso", TraceSyscalls: true);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Championship_Manager.cso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\DragonBall Z Shin Budokai.cso", TraceSyscalls: true);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Harvest Moon.iso", TraceSyscalls: true);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Lemmings.cso", TraceSyscalls: true);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Luxor.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Popolocrois.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Loco Roco.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\Yume for PSP\EBOOT.PBP");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\yume\EBOOT.PBP");

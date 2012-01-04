@@ -72,10 +72,10 @@ namespace CSPspEmu.Gui.Winforms
 
 				bool AnalogXUpdated = false;
 				bool AnalogYUpdated = false;
-				if (AnalogUp) { AnalogY -= 0.1f; AnalogYUpdated = true; }
-				if (AnalogDown) { AnalogY += 0.1f; AnalogYUpdated = true; }
-				if (AnalogLeft) { AnalogX -= 0.1f; AnalogXUpdated = true; }
-				if (AnalogRight) { AnalogX += 0.1f; AnalogXUpdated = true; }
+				if (AnalogUp) { AnalogY -= 0.4f; AnalogYUpdated = true; }
+				if (AnalogDown) { AnalogY += 0.4f; AnalogYUpdated = true; }
+				if (AnalogLeft) { AnalogX -= 0.4f; AnalogXUpdated = true; }
+				if (AnalogRight) { AnalogX += 0.4f; AnalogXUpdated = true; }
 				if (!AnalogXUpdated) AnalogX /= 2.0f;
 				if (!AnalogYUpdated) AnalogY /= 2.0f;
 
@@ -447,10 +447,10 @@ namespace CSPspEmu.Gui.Winforms
 
 			switch (e.KeyCode)
 			{
-				case Keys.U: AnalogUp = true; break;
-				case Keys.J: AnalogDown = true; break;
-				case Keys.H: AnalogLeft = true; break;
-				case Keys.K: AnalogRight = true; break;
+				case Keys.I: AnalogUp = true; break;
+				case Keys.K: AnalogDown = true; break;
+				case Keys.J: AnalogLeft = true; break;
+				case Keys.L: AnalogRight = true; break;
 			}
 
 			SceCtrlData.UpdateButtons(GetButtonsFromKeys(e.KeyCode), true);
@@ -460,10 +460,10 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			switch (e.KeyCode)
 			{
-				case Keys.U: AnalogUp = false; break;
-				case Keys.J: AnalogDown = false; break;
-				case Keys.H: AnalogLeft = false; break;
-				case Keys.K: AnalogRight = false; break;
+				case Keys.I: AnalogUp = false; break;
+				case Keys.K: AnalogDown = false; break;
+				case Keys.J: AnalogLeft = false; break;
+				case Keys.L: AnalogRight = false; break;
 			}
 
 			SceCtrlData.UpdateButtons(GetButtonsFromKeys(e.KeyCode), false);

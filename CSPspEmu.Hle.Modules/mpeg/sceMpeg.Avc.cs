@@ -36,6 +36,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			AvcDecodeDetail->FrameCropRectTop = 0;
 			AvcDecodeDetail->FrameCropRectBottom = 0;
 			AvcDecodeDetail->AvcFrameStatus = SceMpegData->AvcFrameStatus;
+
 			return 0;
 		}
 
@@ -137,6 +138,10 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegAvcDecode(SceMpeg* Mpeg, SceMpegAu* MpegAccessUnit, int FrameWidth, byte* OutputBuffer, int* Init)
 		{
+			if (*Init == 1)
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
+			}
 			var SceMpegData = GetSceMpegData(Mpeg);
 
 			for (int n = 0; n < 512 * 272 * 4; n++)
@@ -144,6 +149,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 				OutputBuffer[n] = 0xFF;
 			}
 
+			SceMpegData->AvcFrameStatus = 1;
 			*Init = SceMpegData->AvcFrameStatus;
 			//throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
 			return 0;

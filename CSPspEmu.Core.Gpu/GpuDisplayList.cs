@@ -374,7 +374,8 @@ namespace CSPspEmu.Core.Gpu
 		{
 			if (Callbacks.FinishFunction != 0)
 			{
-				Console.Error.WriteLine("OP_FINISH!");
+				//GpuProcessor.
+				//Console.Error.WriteLine("OP_FINISH!");
 			}
 		}
 

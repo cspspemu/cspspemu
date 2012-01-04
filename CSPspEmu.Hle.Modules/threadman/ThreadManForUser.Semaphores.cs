@@ -141,18 +141,26 @@ namespace CSPspEmu.Hle.Modules.threadman
 		}
 
 		/// <summary>
-		/// Poll a sempahore.
+		/// Poll a semaphore. (Similar to sceKernelWaitSema/CB but without waiting)
 		/// </summary>
 		/// <param name="SemaphoreId">UID of the semaphore to poll.</param>
 		/// <param name="Signal">The value to test for.</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x58B1F937, FirmwareVersion = 150)]
-		public int sceKernelPollSema(SemaphoreId SemaphoreId, int Signal)
+		public int sceKernelPollSema(CpuThreadState CpuThreadState, SemaphoreId SemaphoreId, int Signal)
 		{
-			throw(new NotImplementedException());
+			var Semaphore = GetSemaphoreById(SemaphoreId);
+			if (Signal <= 0) throw(new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT));
+			if (Semaphore.CurrentCount - Signal < 0)
+			{
+				//HleState.ThreadManager.Reschedule();
+				CpuThreadState.Yield();
+				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_SEMA_ZERO));
+			}
+			Semaphore.IncrementCount(-Signal);
+			//throw(new NotImplementedException());
+			return 0;
 			/*
-			if (signal <= 0) return SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT;
-
 			try {
 				PspSemaphore pspSemaphore = uniqueIdFactory.get!PspSemaphore(semaid);
 			

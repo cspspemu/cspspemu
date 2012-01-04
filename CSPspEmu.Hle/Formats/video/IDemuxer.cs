@@ -11,12 +11,12 @@ namespace CSPspEmu.Hle.Formats.video
 		/// <summary>
 		/// Name of the demuxer.
 		/// </summary>
-		public String Name { get; }
+		String Name { get; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public String LongName { get; }
+		String LongName { get; }
 
 		/// <summary>
 		/// Gets a fuzzy-logic score that determines if the file could be of this kind.
@@ -24,7 +24,7 @@ namespace CSPspEmu.Hle.Formats.video
 		/// <param name="FileName"></param>
 		/// <param name="Data"></param>
 		/// <returns>The score</returns>
-		public float Probe(String FileName, Stream ProbeStream);
+		float Probe(String FileName, Stream ProbeStream);
 
 
 		// ReadHeader

@@ -72,10 +72,26 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		private static readonly uint[] LwrMask = new uint[] { 0x00000000, 0xFF000000, 0xFFFF0000, 0xFFFFFF00 };
-		private static readonly uint[] LwrShift = new uint[] { 0, 8, 16, 24 };
+		private static readonly int[] LwrShift = new int[] { 0, 8, 16, 24 };
 
 		private static readonly uint[] LwlMask = new uint[] { 0x00FFFFFF, 0x0000FFFF, 0x000000FF, 0x00000000 };
-		private static readonly uint[] LwlShift = new uint[] { 24, 16, 8, 0 };
+		private static readonly int[] LwlShift = new int[] { 24, 16, 8, 0 };
+
+		static public uint _lwl_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
+		{
+			uint Address = (uint)(RS + Offset);
+			uint AddressAlign = (uint)Address & 3;
+			uint Value = *(uint*)CpuThreadState.GetMemoryPtr(Address & 0xFFFFFFFC);
+			return (uint)((Value << LwlShift[AddressAlign]) | (RT & LwlMask[AddressAlign]));
+		}
+
+		static public uint _lwr_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
+		{
+			uint Address = (uint)(RS + Offset);
+			uint AddressAlign = (uint)Address & 3;
+			uint Value = *(uint*)CpuThreadState.GetMemoryPtr(Address & 0xFFFFFFFC);
+			return (uint)((Value >> LwrShift[AddressAlign]) | (RT & LwrMask[AddressAlign]));
+		}
 
 		public void lwl()
 		{
@@ -84,7 +100,15 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				// ((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 0) << 0) & 0x_0000_FFFF)
 				_save_pc();
 
+				//_lwl_exec
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0); // CpuThreadState
+				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
+				MipsMethodEmiter.LoadGPR_Unsigned(RT);
+				MipsMethodEmiter.CallMethod(typeof(CpuEmiter), "_lwl_exec");
+
 				// int data = memory.read32(RS + SIMM16 & 0xFFFFFFFC);
+				/*
 				MipsMethodEmiter._getmemptr(() =>
 				{
 					MipsMethodEmiter.LoadGPR_Unsigned(RS);
@@ -103,6 +127,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 				// OR
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
+				*/
 			});
 		}
 
@@ -113,6 +138,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				// ((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 0) << 0) & 0x_0000_FFFF)
 				_save_pc();
 
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0); // CpuThreadState
+				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
+				MipsMethodEmiter.LoadGPR_Unsigned(RT);
+				MipsMethodEmiter.CallMethod(typeof(CpuEmiter), "_lwr_exec");
+				/*
 				// int data = memory.read32(RS + SIMM16 & 0xFFFFFFFC);
 				MipsMethodEmiter._getmemptr(() =>
 				{
@@ -132,6 +163,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 				// OR
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
+				*/
 			});	
 		}
 
@@ -148,14 +180,39 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		private static readonly uint[] SwlMask = new uint[] { 0xFFFFFF00, 0xFFFF0000, 0xFF000000, 0x00000000 };
-		private static readonly uint[] SwlShift = new uint[] { 24, 16, 8, 0 };
+		private static readonly int[] SwlShift = new int[] { 24, 16, 8, 0 };
 
 		private static readonly uint[] SwrMask = new uint[]  { 0x00000000, 0x000000FF, 0x0000FFFF, 0x00FFFFFF };
-		private static readonly uint[] SwrShift = new uint[]  { 0, 8, 16, 24 };
+		private static readonly int[] SwrShift = new int[] { 0, 8, 16, 24 };
+
+		static public void _swl_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
+		{
+			uint Address = (uint)(RS + Offset);
+			uint AddressAlign = (uint)Address & 3;
+			uint* AddressPointer = (uint *)CpuThreadState.GetMemoryPtr(Address & 0xFFFFFFFC);
+
+			*AddressPointer = (RT >> SwlShift[AddressAlign]) | (*AddressPointer & SwlMask[AddressAlign]);
+		}
+
+		static public void _swr_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
+		{
+			uint Address = (uint)(RS + Offset);
+			uint AddressAlign = (uint)Address & 3;
+			uint* AddressPointer = (uint*)CpuThreadState.GetMemoryPtr(Address & 0xFFFFFFFC);
+
+			*AddressPointer = (RT << SwrShift[AddressAlign]) | (*AddressPointer & SwrMask[AddressAlign]);
+		}
 
 		public void swl()
 		{
 			_save_pc();
+
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0); // CpuThreadState
+			MipsMethodEmiter.LoadGPR_Unsigned(RS);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
+			MipsMethodEmiter.LoadGPR_Unsigned(RT);
+			MipsMethodEmiter.CallMethod(typeof(CpuEmiter), "_swl_exec");
+			/*
 			MipsMethodEmiter._getmemptr(() =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
@@ -185,12 +242,20 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
 			}
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I4);
+			*/
 		}
 
 
 		public void swr()
 		{
 			_save_pc();
+
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0); // CpuThreadState
+			MipsMethodEmiter.LoadGPR_Unsigned(RS);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
+			MipsMethodEmiter.LoadGPR_Unsigned(RT);
+			MipsMethodEmiter.CallMethod(typeof(CpuEmiter), "_swr_exec");
+			/*
 			MipsMethodEmiter._getmemptr(() =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
@@ -220,6 +285,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
 			}
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I4);
+			*/
 		}
 
 		// Load Linked word.

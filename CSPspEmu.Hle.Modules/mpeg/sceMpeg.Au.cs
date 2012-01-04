@@ -5,6 +5,10 @@ using System.Text;
 
 namespace CSPspEmu.Hle.Modules.mpeg
 {
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <see cref="http://en.wikipedia.org/wiki/Presentation_and_access_units"/>
 	unsafe public partial class sceMpeg
 	{
 		/// <summary>

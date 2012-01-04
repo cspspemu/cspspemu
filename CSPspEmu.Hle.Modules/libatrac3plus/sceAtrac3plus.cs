@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Modules.threadman;
 
 namespace CSPspEmu.Hle.Modules.libatrac3plus
 {
+	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
 	unsafe public partial class sceAtrac3plus : HleModuleHost
 	{
 		/// <summary>

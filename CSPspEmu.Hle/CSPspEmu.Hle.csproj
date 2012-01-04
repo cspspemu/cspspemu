@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\HlePspFunctionAttribute.cs" />
+    <Compile Include="Attributes\HlePspModuleAttribute.cs" />
     <Compile Include="Attributes\HlePspNotImplementedAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -60,7 +61,8 @@
     <Compile Include="Formats\IsoFile.cs" />
     <Compile Include="Formats\Pbp.cs" />
     <Compile Include="Formats\Psf.cs" />
-    <Compile Include="Formats\video\MpegPs.cs" />
+    <Compile Include="Formats\video\IDemuxer.cs" />
+    <Compile Include="Formats\video\MpegPsDemuxer.cs" />
     <Compile Include="Formats\video\Pmf.cs" />
     <Compile Include="HleCallback.cs" />
     <Compile Include="HleEmulatorFinalizeCallbackException.cs" />

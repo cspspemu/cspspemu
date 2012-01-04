@@ -20,7 +20,7 @@ namespace CSPspEmu.Hle.Threading.Semaphores
 		protected List<WaitingSemaphoreThread> WaitingSemaphoreThreadList = new List<WaitingSemaphoreThread>();
 		//public SortedSet<>
 
-		protected int CurrentCount { get { return SceKernelSemaInfo.CurrentCount; } set { SceKernelSemaInfo.CurrentCount = value; } }
+		public int CurrentCount { get { return SceKernelSemaInfo.CurrentCount; } protected set { SceKernelSemaInfo.CurrentCount = value; } }
 
 		public HleSemaphore()
 		{

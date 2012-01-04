@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.usersystemlib
 {
+	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
 	public class Kernel_Library : HleModuleHost
 	{
 		/*
