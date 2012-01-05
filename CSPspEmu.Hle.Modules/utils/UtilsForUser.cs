@@ -175,20 +175,15 @@ namespace CSPspEmu.Hle.Modules.utils
 			return CalculatedTime;
 		}
 
-		/** 
-		 * Get the processor clock used since the start of the process
-		 */
+		/// <summary>
+		/// Get the processor clock used since the start of the process
+		/// </summary>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0x91E4F6A7, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public clock_t sceKernelLibcClock()
+		public uint sceKernelLibcClock()
 		{
 			HleState.PspRtc.Update();
-			/*
-			unimplemented();
-			return -1;
-			*/
-			//return cast(clock_t)cpu.registers.CLOCKS; // @TODO: It's the thread CLOCK not the global CLOCK!
-			throw(new NotImplementedException());
+			return (uint)(HleState.PspRtc.Elapsed.Milliseconds * 1000);
 		}
 
 		/**

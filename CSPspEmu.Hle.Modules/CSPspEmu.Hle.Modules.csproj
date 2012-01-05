@@ -125,9 +125,13 @@
     <Compile Include="utility\sceUtility.MsgDialog.cs" />
     <Compile Include="utility\sceUtility.Savedata.cs" />
     <Compile Include="utility\sceUtility.Sysparam.cs" />
+    <Compile Include="utils\UtilsForKernel.cs" />
     <Compile Include="utils\UtilsForUser.cs" />
     <Compile Include="wlan\sceWlan_Driver.cs" />
+    <Compile Include="_unknownPrx\KUBridge.cs" />
     <Compile Include="_unknownPrx\sceMp3.cs" />
+    <Compile Include="_unknownPrx\sceUsb.cs" />
+    <Compile Include="_unknownPrx\sceUsbstorBoot.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">

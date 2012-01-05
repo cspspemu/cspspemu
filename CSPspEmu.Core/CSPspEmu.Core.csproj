@@ -46,6 +46,7 @@
     <Compile Include="Audio\AudioMixer.cs" />
     <Compile Include="Audio\PspAudioChannel.cs" />
     <Compile Include="Audio\PspAudioImpl.cs" />
+    <Compile Include="Battery\Battery.cs" />
     <Compile Include="Crypto\Crypto.cs" />
     <Compile Include="Crypto\Crypto.Tables.cs" />
     <Compile Include="Crypto\Kirk.cs" />

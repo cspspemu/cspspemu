@@ -217,7 +217,7 @@ namespace CSPspEmu.Gui.Winforms
 				{
 					int Width = 512;
 					int Height = 272;
-					var Address = PspDisplay.CurrentInfo.Address;
+					var Address = PspDisplay.CurrentInfo.Address | 0x04000000;
 					byte* FrameBuffer = null;
 					try
 					{
@@ -225,6 +225,8 @@ namespace CSPspEmu.Gui.Winforms
 					} catch
 					{
 					}
+
+					//Console.WriteLine("{0:X}", Address);
 
 					uint Hash = PixelFormatDecoder.Hash(
 						PspDisplay.CurrentInfo.PixelFormat,

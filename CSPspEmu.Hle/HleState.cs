@@ -13,6 +13,7 @@ using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Audio;
 using CSPspEmu.Core.Controller;
 using CSPspEmu.Core.Crypto;
+using CSPspEmu.Core.Battery;
 
 namespace CSPspEmu.Hle
 {
@@ -26,7 +27,8 @@ namespace CSPspEmu.Hle
 		public PspAudio PspAudio;
 		public PspController PspController;
 		public PspConfig PspConfig;
-
+		public Battery PspBattery;
+		
 		public MipsEmiter MipsEmiter;
 
 		// Hle Managers
@@ -53,6 +55,7 @@ namespace CSPspEmu.Hle
 			this.PspRtc = PspEmulatorContext.GetInstance<PspRtc>();
 			this.PspDisplay = PspEmulatorContext.GetInstance<PspDisplay>();
 			this.PspController = PspEmulatorContext.GetInstance<PspController>();
+			this.PspBattery = PspEmulatorContext.GetInstance<Battery>();
 
 			this.MipsEmiter = new MipsEmiter();
 			this.Kirk = new Kirk();

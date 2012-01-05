@@ -34,6 +34,11 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 				Console.Error.WriteLine("Can't find file '{0}'", FileName);
 				return (int)SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND;
 			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
+				return -1;
+			}
 		}
 
 		/// <summary>

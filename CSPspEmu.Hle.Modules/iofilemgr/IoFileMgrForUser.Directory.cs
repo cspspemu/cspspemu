@@ -51,8 +51,16 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0xE3EB004C, FirmwareVersion = 150)]
 		public int sceIoDread(int FileHandle, HleIoDirent* IoDirent)
 		{
-			var HleIoDrvFileArg = GetFileArgFromHandle(FileHandle);
-			return HleIoDrvFileArg.HleIoDriver.IoDread(HleIoDrvFileArg, IoDirent);
+			try
+			{
+				var HleIoDrvFileArg = GetFileArgFromHandle(FileHandle);
+				return HleIoDrvFileArg.HleIoDriver.IoDread(HleIoDrvFileArg, IoDirent);
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
+				return -1;
+			}
 		}
 
 		/// <summary>

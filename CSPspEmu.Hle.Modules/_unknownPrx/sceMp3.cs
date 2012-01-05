@@ -6,9 +6,9 @@ using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules._unknownPrx
 {
+	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
 	unsafe public partial class sceMp3 : HleModuleHost
 	{
-		[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
 		public struct SceMp3InitArg
 		{
 			/// <summary>

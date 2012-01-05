@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Battery;
 using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.power
@@ -9,6 +10,72 @@ namespace CSPspEmu.Hle.Modules.power
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public partial class scePower : HleModuleHost
 	{
+		/// <summary>
+		/// Power callback flags
+		/// </summary>
+		public enum PowerFlagsSet : uint
+		{
+			/// <summary>
+			/// PSP_POWER_CB_POWER_SWITCH
+			/// Indicates the power switch it pushed, putting the unit into suspend mode
+			/// </summary>
+			PowerSwitch = 0x80000000,
+			
+			/// <summary>
+			/// PSP_POWER_CB_HOLD_SWITCH
+			/// Indicates the hold switch is on
+			/// </summary>
+			HoldSwitch = 0x40000000,
+			
+			/// <summary>
+			/// PSP_POWER_CB_STANDBY
+			/// What is standby mode?
+			/// </summary>
+			StandBy = 0x00080000,
+			
+			/// <summary>
+			/// PSP_POWER_CB_RESUME_COMPLETE
+			/// Indicates the resume process has been completed (only seems to be triggered when another event happens)
+			/// </summary>
+			ResumeComplete = 0x00040000,
+			
+			/// <summary>
+			/// PSP_POWER_CB_RESUMING
+			/// Indicates the unit is resuming from suspend mode
+			/// </summary>
+			Resuming = 0x00020000,
+			
+			/// <summary>
+			/// PSP_POWER_CB_SUSPENDING
+			/// Indicates the unit is suspending, seems to occur due to inactivity
+			/// </summary>
+			Suspending = 0x00010000,
+			
+			/// <summary>
+			/// PSP_POWER_CB_AC_POWER
+			/// Indicates the unit is plugged into an AC outlet
+			/// </summary>
+			AcPower = 0x00001000,
+			
+			/// <summary>
+			/// PSP_POWER_CB_BATTERY_LOW
+			/// Indicates the battery charge level is low
+			/// </summary>
+			BatteryLow = 0x00000100,
+			
+			/// <summary>
+			/// PSP_POWER_CB_BATTERY_EXIST
+			/// Indicates there is a battery present in the unit
+			/// </summary>
+			BatteryExists = 0x00000080,
+			
+			/// <summary>
+			/// PSP_POWER_CB_BATTPOWER
+			/// Unknown
+			/// </summary>
+			BatteryPower = 0x0000007F,
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -153,62 +220,62 @@ namespace CSPspEmu.Hle.Modules.power
 			throw(new NotImplementedException());
 		}
 
-		/**
-		 * Request the PSP to go into standby
-		 *
-		 * @return 0 always
-		 */
+		/// <summary>
+		/// Request the PSP to go into standby
+		/// </summary>
+		/// <returns>0 always</returns>
 		[HlePspFunction(NID = 0x2B7C7CF4, FirmwareVersion = 150)]
 		public int scePowerRequestStandby()
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
-		/**
-		 * Request the PSP to go into suspend
-		 *
-		 * @return 0 always
-		 */
+		/// <summary>
+		/// Request the PSP to go into suspend
+		/// </summary>
+		/// <returns>0 always</returns>
 		[HlePspFunction(NID = 0xAC32C9CC, FirmwareVersion = 150)]
 		public int scePowerRequestSuspend()
 		{
 			throw(new NotImplementedException());
 		}
 
-		/**
-		 * unknown? - crashes PSP in usermode
-		 */
+		/// <summary>
+		/// crashes PSP in usermode
+		/// </summary>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0x862AE1A6, FirmwareVersion = 150)]
 		public int scePowerGetBatteryElec()
 		{
 			throw(new NotImplementedException());
 		}
 
-		/**
-		 * Get Idle timer
-		 */
+		/// <summary>
+		/// Get Idle timer
+		/// </summary>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0xEDC13FE5, FirmwareVersion = 150)]
 		public int scePowerGetIdleTimer()
 		{
 			throw(new NotImplementedException());
 		}
 
-		/**
-		 * Enable Idle timer
-		 *
-		 * @param unknown - pass 0
-		 */
+		/// <summary>
+		/// Enable Idle timer
+		/// </summary>
+		/// <param name="unknown"></param>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0x7F30B3B1, FirmwareVersion = 150)]
 		public int scePowerIdleTimerEnable(int unknown)
 		{
 			throw(new NotImplementedException());
 		}
 
-		/**
-		 * Disable Idle timer
-		 *
-		 * @param unknown - pass 0
-		 */
+		/// <summary>
+		/// Disable Idle timer
+		/// </summary>
+		/// <param name="unknown"></param>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0x972CE941, FirmwareVersion = 150)]
 		public int scePowerIdleTimerDisable(int unknown)
 		{
@@ -236,14 +303,12 @@ namespace CSPspEmu.Hle.Modules.power
 			Display = 6,
 		}
 
-		/**
-		 * Generate a power tick, preventing unit from 
-		 * powering off and turning off display.
-		 *
-		 * @param type - Either PSP_POWER_TICK_ALL, PSP_POWER_TICK_SUSPEND or PSP_POWER_TICK_DISPLAY
-		 *
-		 * @return 0 on success, < 0 on error.
-		 */
+		/// <summary>
+		/// Generate a power tick, preventing unit from 
+		/// powering off and turning off display.
+		/// </summary>
+		/// <param name="type"></param>
+		/// <returns>0 on success</returns>
 		[HlePspFunction(NID = 0xEFD3C963, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int scePowerTick(PspPowerTick type)
@@ -252,126 +317,135 @@ namespace CSPspEmu.Hle.Modules.power
 			return 0;
 		}
 
-		/**
-		 * Check if unit is plugged in
-		 *
-		 * @return 1 if plugged in, 0 if not plugged in, < 0 on error.
-		 */
+		/// <summary>
+		/// Check if unit is plugged in
+		/// </summary>
+		/// <returns>1 if plugged in, 0 if not plugged in, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0x87440F5E, FirmwareVersion = 150)]
 		public int scePowerIsPowerOnline()
 		{
-			throw(new NotImplementedException());
+			return HleState.PspBattery.IsPowerOnline ? 1 : 0;
 		}
 
-		/**
-		 * Check if a battery is present
-		 *
-		 * @return 1 if battery present, 0 if battery not present, < 0 on error.
-		 */
+		/// <summary>
+		/// Check if a battery is present
+		/// </summary>
+		/// <returns>1 if battery present, 0 if battery not present, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0x0AFD0D8B, FirmwareVersion = 150)]
 		public int scePowerIsBatteryExist()
 		{
-			throw(new NotImplementedException());
+			return HleState.PspBattery.BatteryExist ? 1 : 0;
 		}
 
-		/**
-		 * Check if the battery is charging
-		 *
-		 * @return 1 if battery charging, 0 if battery not charging, < 0 on error.
-		 */
+		/// <summary>
+		/// Check if the battery is charging
+		/// </summary>
+		/// <returns>1 if battery charging, 0 if battery not charging, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0x1E490401, FirmwareVersion = 150)]
 		public int scePowerIsBatteryCharging()
 		{
-			throw(new NotImplementedException());
-		}
-	
-		/**
-		 * Get the status of the battery charging
-		 */
-		[HlePspFunction(NID = 0xB4432BC8, FirmwareVersion = 150)]
-		public int scePowerGetBatteryChargingStatus()
-		{
-			throw(new NotImplementedException());
+			return PspBattery.IsBatteryCharging ? 1 : 0;
 		}
 
-		/**
-		 * Check if the battery is low
-		 *
-		 * @return 1 if the battery is low, 0 if the battery is not low, < 0 on error.
-		 */
+		public Battery PspBattery
+		{
+			get
+			{
+				return HleState.PspBattery;
+			}
+		}
+
+		/// <summary>
+		/// Get the status of the battery charging
+		/// </summary>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xB4432BC8, FirmwareVersion = 150)]
+		public PowerFlagsSet scePowerGetBatteryChargingStatus()
+		{
+			var Status = default(PowerFlagsSet);
+
+			if (PspBattery.IsPresent) Status |= PowerFlagsSet.BatteryExists;
+			if (PspBattery.IsPlugedIn) Status |= PowerFlagsSet.AcPower;
+			if (PspBattery.IsBatteryCharging) Status |= PowerFlagsSet.BatteryPower;
+
+			return Status;
+		}
+
+		/// <summary>
+		/// Check if the battery is low
+		/// </summary>
+		/// <returns>1 if the battery is low, 0 if the battery is not low, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xD3075926, FirmwareVersion = 150)]
 		public int scePowerIsLowBattery()
 		{
-			throw(new NotImplementedException());
+			return (HleState.PspBattery.BatteryLifePercent <= HleState.PspBattery.LowPercent) ? 1 : 0;
 		}
 
-		/**
-		 * Get battery life as integer percent
-		 *
-		 * @return Battery charge percentage (0-100), < 0 on error.
-		 */
+		/// <summary>
+		/// Get battery life as integer percent
+		/// </summary>
+		/// <returns>Battery charge percentage (0-100), less than 0 on error.</returns>
 		[HlePspFunction(NID = 0x2085D15D, FirmwareVersion = 150)]
 		public int scePowerGetBatteryLifePercent()
 		{
-			throw(new NotImplementedException());
+			return HleState.PspBattery.BatteryLifePercent;
 		}
 
-		/**
-		 * Get battery life as time
-		 *
-		 * @return Battery life in minutes, < 0 on error.
-		 */
+		/// <summary>
+		/// Get battery life as time
+		/// </summary>
+		/// <returns>Battery life in minutes, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0x8EFB3FA2, FirmwareVersion = 150)]
 		public int scePowerGetBatteryLifeTime()
 		{
-			throw(new NotImplementedException());
+			return HleState.PspBattery.BatteryLifeTimeInMinutes;
 		}
 
-		/**
-		 * Get temperature of the battery on deg C
-		 */
+		/// <summary>
+		/// Get temperature of the battery on deg C
+		/// </summary>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0x28E12023, FirmwareVersion = 150)]
 		public int scePowerGetBatteryTemp()
 		{
-			throw(new NotImplementedException());
+			return HleState.PspBattery.BatteryTemperature;
 		}
 
-		/**
-		 * Get battery volt level
-		 */
+		/// <summary>
+		/// Get battery volt level
+		/// </summary>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0x483CE86B, FirmwareVersion = 150)]
 		public int scePowerGetBatteryVolt()
 		{
-			throw(new NotImplementedException());
+			return HleState.PspBattery.BatteryVoltage;
 		}
 
-		/**
-		 * Lock power switch
-		 *
-		 * Note: if the power switch is toggled while locked
-		 * it will fire immediately after being unlocked.
-		 *
-		 * @param unknown - pass 0
-		 *
-		 * @return 0 on success, < 0 on error.
-		 */
+		/// <summary>
+		/// Lock power switch
+		/// 
+		/// Note: if the power switch is toggled while locked
+		/// it will fire immediately after being unlocked.
+		/// </summary>
+		/// <param name="unknown">pass 0</param>
+		/// <returns>0 on success, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xD6D016EF, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int scePowerLock(int unknown)
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
-		/**
-		 * Unlock power switch
-		 *
-		 * @param unknown - pass 0
-		 *
-		 * @return 0 on success, < 0 on error.
-		 */
+		/// <summary>
+		/// Unlock power switch
+		/// </summary>
+		/// <param name="unknown">pass 0</param>
+		/// <returns>0 on success, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xCA3D34C1, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int scePowerUnlock(int unknown)
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 	}
 }
