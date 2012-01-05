@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils.Extensions;
+using CSPspEmu.Core.Cpu.Emiter;
 using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu
 {
+	public class PspMethodStruct
+	{
+		public MipsMethodEmiter MipsMethodEmiter;
+		public Action<CpuThreadState> Delegate;
+	}
+
 	sealed public class MethodCacheFast
 	{
-		private Action<CpuThreadState>[] Methods2 = new Action<CpuThreadState>[PspMemory.MainSize / 4];
+		private PspMethodStruct[] Methods2 = new PspMethodStruct[PspMemory.MainSize / 4];
 		private SortedSet<uint> MethodsInList = new SortedSet<uint>();
 
 		public void ClearRange(uint Low, uint High)
@@ -35,7 +42,7 @@ namespace CSPspEmu.Core.Cpu
 			MethodsInList = new SortedSet<uint>();
 		}
 
-		public Action<CpuThreadState> TryGetMethodAt(uint PC)
+		public PspMethodStruct TryGetMethodAt(uint PC)
 		{
 			//PC &= PspMemory.MemoryMask;
 			if (PC < PspMemory.MainOffset) throw (new PspMemory.InvalidAddressException(PC));
@@ -46,8 +53,7 @@ namespace CSPspEmu.Core.Cpu
 					String.Format("Can't jump to '{0}'. Invalid address.", "0x%08X".Sprintf(PC))
 				));
 			}
-			Action<CpuThreadState> Action = Methods2[Index];
-			return Action;
+			return Methods2[Index];
 		}
 
 		public uint Address_To_Index(uint PC)
@@ -55,7 +61,7 @@ namespace CSPspEmu.Core.Cpu
 			return (PC - PspMemory.MainOffset) / 4;
 		}
 
-		public void SetMethodAt(uint PC, Action<CpuThreadState> Action)
+		public void SetMethodAt(uint PC, PspMethodStruct Action)
 		{
 			//PC &= PspMemory.MemoryMask;
 			if (PC < PspMemory.MainOffset) throw (new PspMemory.InvalidAddressException(PC));

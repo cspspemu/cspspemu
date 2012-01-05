@@ -24,13 +24,16 @@ namespace CSPspEmu.Hle.Modules.ge
 					DisplayList.InstructionAddressStart = InstructionAddressStart;
 					DisplayList.InstructionAddressCurrent = InstructionAddressStart;
 					DisplayList.InstructionAddressStall = InstructionAddressStall;
-					if (CallbackId == -1)
+					DisplayList.Callbacks = default(PspGeCallbackData);
+					if (CallbackId != -1)
 					{
-						DisplayList.Callbacks = default(PspGeCallbackData);
-					}
-					else
-					{
-						DisplayList.Callbacks = Callbacks[CallbackId];
+						try
+						{
+							DisplayList.Callbacks = Callbacks[CallbackId];
+						}
+						catch
+						{
+						}
 					}
 					DisplayList.GpuStateStructPointer = null;
 					if (Args != null)

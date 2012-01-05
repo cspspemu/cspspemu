@@ -41,26 +41,19 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void mtvc() { throw (new NotImplementedException("mtvc")); }
 
 		// Load/Store Vfpu (Left/Right)_
-		public void lv_s() {
-			uint vt = Instruction.VT5 | (Instruction.VT2 << 5);
-			uint s = (vt >> 5) & 3;
-			uint m = (vt >> 2) & 7;
-			uint i = (vt >> 0) & 3;
-			uint offset = Instruction.IMM14 * 4;
+		public void lv_s()
+		{
+			//return;
+			uint VT = Instruction.VT5 | (Instruction.VT2 << 5);
+			uint Column = (VT >> 5) & 3;
+			uint Matrix = (VT >> 2) & 7;
+			uint Row    = (VT >> 0) & 3;
 
-			MipsMethodEmiter._getmemptr(() =>
+			SaveVprField(CalcVprRegisterIndex(Matrix, Column, Row), () =>
 			{
-				MipsMethodEmiter.LoadGPR_Signed(RS);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, offset);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+				_load_memory_imm14_index(0);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
 			});
-			//MipsMethodEmiter.LoadVFPR(m * 16 + s * 4 + i);
-
-			//VfpuLoad_Register(
-
-			//setVprInt(m, i, s, memory.read32(gpr[rs] + simm14_a16));
-
-			throw (new NotImplementedException("lv_s"));
 		}
 
 		// ID("lv.q",        VM("110110:rs:vt5:imm14:0:vt1"), "%Xq, %Y", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
@@ -379,11 +372,29 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Div);
 			});
 		}
-		public void vsin() { throw (new NotImplementedException("")); }
-		public void vcos() { throw (new NotImplementedException("")); }
+		public void vsin() {
+			VectorOperationSaveVd((Index, Load) =>
+			{
+				Load(1);
+				MipsMethodEmiter.CallMethod(typeof(MathFloat), "SinV1");
+			});
+		}
+		public void vcos() {
+			VectorOperationSaveVd((Index, Load) =>
+			{
+				Load(1);
+				MipsMethodEmiter.CallMethod(typeof(MathFloat), "CosV1");
+			});
+		}
 		public void vexp2() { throw (new NotImplementedException("")); }
 		public void vlog2() { throw (new NotImplementedException("")); }
-		public void vsqrt() { throw (new NotImplementedException("")); }
+		public void vsqrt() {
+			VectorOperationSaveVd((Index, Load) =>
+			{
+				Load(1);
+				MipsMethodEmiter.CallMethod(typeof(MathFloat), "Sqrt");
+			});
+		}
 		public void vasin() { throw (new NotImplementedException("")); }
 		public void vnrcp() { throw (new NotImplementedException("")); }
 		public void vnsin() { throw (new NotImplementedException("")); }
@@ -576,7 +587,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		// Vfpu (Matrix) IDenTity
-		public void vidt() { throw (new NotImplementedException("")); }
+		public void vidt()
+		{
+			var MatrixSize = Instruction.ONE_TWO;
+			_vidt_x(MatrixSize, (uint)(Instruction.VD));
+			//throw (new NotImplementedException(""));
+		}
 		public void vmidt()
 		{
 			var MatrixSize = Instruction.ONE_TWO;
@@ -682,7 +698,20 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void mfvme() { throw (new NotImplementedException("")); }
 		public void mtvme() { throw (new NotImplementedException("")); }
 
-		public void sv_s() { throw (new NotImplementedException("")); }
+		public void sv_s()
+		{
+			uint VT = Instruction.VT5 | (Instruction.VT2 << 5);
+			uint Column = (VT >> 5) & 3;
+			uint Matrix = (VT >> 2) & 7;
+			uint Row = (VT >> 0) & 3;
+
+			_load_memory_imm14_index(0);
+			{
+				LoadVprFieldPtr(CalcVprRegisterIndex(Matrix, Column, Row));
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
+			}
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_R4);
+		}
 
 		/// <summary>
 		/// ID("vfim",        VM("110111:11:1:vt:imm16"), "%xs, %vh",      ADDR_TYPE_NONE, INSTR_TYPE_PSP),

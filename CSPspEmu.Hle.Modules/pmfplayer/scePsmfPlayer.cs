@@ -8,6 +8,19 @@ namespace CSPspEmu.Hle.Modules.pmfplayer
 	//[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public partial class scePsmfPlayer : HleModuleHost
 	{
+		// PSMF Player status.
+		public enum PsmfPlayerStatusSet : uint
+		{
+			None = 0x0,
+			Init = 0x1,
+			Standby = 0x2,
+			Playing = 0x4,
+			Error = 0x100,
+			PlayingFinished = 0x200,
+		}
+
+		PsmfPlayerStatusSet PsmfPlayerStatus = PsmfPlayerStatusSet.PlayingFinished;
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -100,6 +113,7 @@ namespace CSPspEmu.Hle.Modules.pmfplayer
 		[HlePspNotImplemented]
 		public int scePsmfPlayerStop(int psmfPlayer)
 		{
+			PsmfPlayerStatus = PsmfPlayerStatusSet.Standby;
 			return 0;
 		}
 
@@ -144,9 +158,9 @@ namespace CSPspEmu.Hle.Modules.pmfplayer
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xF8EF08A6, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int scePsmfPlayerGetCurrentStatus(int psmfPlayer)
+		public PsmfPlayerStatusSet scePsmfPlayerGetCurrentStatus(int psmfPlayer)
 		{
-			return 0;
+			return PsmfPlayerStatus;
 		}
 
 		/// <summary>

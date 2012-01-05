@@ -9,6 +9,49 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public class ModuleMgrForUser : HleModuleHost
 	{
+	public struct SceKernelLMOption
+	{
+		/// <summary>
+		/// 0000 - Size
+		/// </summary>
+		public uint StructureSize;
+
+		/// <summary>
+		/// 0004 -
+		/// </summary>
+		public int MpidText;
+
+		/// <summary>
+		/// 0008 -
+		/// </summary>
+		public int MpidData;
+
+		/// <summary>
+		/// 000C -
+		/// </summary>
+		public uint Flags;
+
+		/// <summary>
+		/// 0010 -
+		/// </summary>
+		public byte Position;
+		
+		/// <summary>
+		/// 0011 -
+		/// </summary>
+		public byte Access;
+
+		/// <summary>
+		/// 0012 -
+		/// </summary>
+		public byte _Reserved0;
+
+		/// <summary>
+		/// 0013 -
+		/// </summary>
+		public byte _Reserved1;
+	}
+
 		/// <summary>
 		/// Stop and unload the current module.
 		/// </summary>
@@ -35,7 +78,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		/// <returns>The UID of the loaded module on success, otherwise one of ::PspKernelErrorCodes.</returns>
 		[HlePspFunction(NID = 0x977DE386, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceKernelLoadModule(string Path, int Flags, void* SceKernelLMOption)
+		public int sceKernelLoadModule(string Path, uint Flags, SceKernelLMOption* SceKernelLMOption)
 		{
 			//throw(new NotImplementedException());
 			return 1;
@@ -70,9 +113,11 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		///		??? on success, otherwise one of ::PspKernelErrorCodes.
 		/// </returns>
 		[HlePspFunction(NID = 0xD1FF982A, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceKernelStopModule(int modid, int argsize, void* argp, int* status, void* SceKernelSMOption)
 		{
-			throw(new NotImplementedException());
+			return 0;
+			//throw(new NotImplementedException());
 			/*
 			Module pspModule = hleEmulatorState.uniqueIdFactory.get!Module(modid);
 
@@ -90,9 +135,11 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		///		??? on success, otherwise one of ::PspKernelErrorCodes.
 		/// </returns>
 		[HlePspFunction(NID = 0x2E0911AA, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceKernelUnloadModule(int modid)
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return 0;
 			/*
 			Module pspModule = hleEmulatorState.uniqueIdFactory.get!Module(modid);
 
@@ -139,6 +186,20 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		public uint sceKernelStopUnloadSelfModuleWithStatus()
 		{
 			throw(new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Load a module from the given file UID.
+		/// </summary>
+		/// <param name="fid">The module's file UID.</param>
+		/// <param name="flags">Unused, always 0.</param>
+		/// <param name="option">Pointer to an optional ::SceKernelLMOption structure.</param>
+		/// <returns>The UID of the loaded module on success, otherwise one of ::PspKernelErrorCodes.</returns>
+		[HlePspFunction(NID = 0xB7F46618, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelLoadModuleByID(int FileId, uint Flags, SceKernelLMOption* SceKernelLMOption)
+		{
+			return 0;
 		}
 	}
 }

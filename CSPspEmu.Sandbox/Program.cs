@@ -87,7 +87,14 @@ namespace CSPspEmu.Sandbox
 				PspEmulator.Start();
 #else
 				//PspEmulator.UseFastMemory = false;
-				PspEmulator.Start();
+				//PspEmulator.Start();
+
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Brandish The Dark Revenant.cso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Darkstalkers Chronicle the Chaos Tower.cso");
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Downstream Panic.cso");
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Final Fantasy 20th Anniversary.cso");
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Legend of Heroes 3.cso");
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Lemmings.cso");
 
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\TrigWars\EBOOT.PBP", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\WipeOut Pulse EUR.cso");
@@ -98,8 +105,14 @@ namespace CSPspEmu.Sandbox
 
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\Aquaria\EBOOT.PBP", TraceSyscalls: true);
 
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false);
+				PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Breath of Fire 3.cso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Popolocrois.cso");
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\goldminer\EBOOT.PBP");
+				//PspEmulator.StartAndLoad(@"C:\juegos\jpcsp_last\demos\nehetutorial07.pbp");
+				//PspEmulator.StartAndLoad(@"C:\juegos\jpcsp_last\demos\nehetutorial08.pbp");
+				//PspEmulator.StartAndLoad(@"C:\juegos\jpcsp_last\demos\nehetutorial09.pbp");
+				//PspEmulator.StartAndLoad(@"C:\juegos\jpcsp_last\demos\nehetutorial10.pbp");
 
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\cavestory\EBOOT.PBP", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\pspautotests\tests\video\pmf\pmf.elf", TraceSyscalls: false);
@@ -117,7 +130,6 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\yume\EBOOT.PBP");
 
 
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Breath of Fire 3.cso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Koloomn.cso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Kameleon.cso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);

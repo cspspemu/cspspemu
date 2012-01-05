@@ -236,5 +236,16 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		{
 			throw(new NotImplementedException());
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x91DE343C, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public void SysMemUserForUser_91DE343C()
+		{
+			//throw (new NotImplementedException());
+		}
 	}
 }

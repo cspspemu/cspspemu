@@ -106,9 +106,9 @@ namespace CSPspEmu.Core.Memory
 			return 0xFFFFFFFF;
 		}
 
-		virtual public void* PspAddressToPointerSafe(uint Address)
+		virtual public void* PspAddressToPointerSafe(uint Address, bool CanBeNull = true)
 		{
-			if (Address == 0) return null;
+			if (Address == 0 && CanBeNull) return null;
 			if (!IsAddressValid(Address)) throw(new InvalidAddressException(Address));
 			return PspAddressToPointer(Address);
 		}

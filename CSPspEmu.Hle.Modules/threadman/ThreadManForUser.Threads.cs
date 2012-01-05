@@ -262,13 +262,23 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 		private int _sceKernelDelayThreadCB(uint DelayInMicroseconds, bool HandleCallbacks)
 		{
-			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, "sceKernelDelayThread", WakeUpCallback =>
+			var CurrentThread = HleState.ThreadManager.Current;
+
+			if (DelayInMicroseconds < 1000)
 			{
-				HleState.PspRtc.RegisterTimerInOnce(TimeSpanUtils.FromMicroseconds(DelayInMicroseconds), () =>
+				sceKernelCheckCallback(CurrentThread.CpuThreadState);
+				CurrentThread.CpuThreadState.Yield();
+			}
+			else
+			{
+				CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, "sceKernelDelayThread", WakeUpCallback =>
 				{
-					WakeUpCallback();
-				});
-			}, HandleCallbacks: HandleCallbacks);
+					HleState.PspRtc.RegisterTimerInOnce(TimeSpanUtils.FromMicroseconds(DelayInMicroseconds), () =>
+					{
+						WakeUpCallback();
+					});
+				}, HandleCallbacks: HandleCallbacks);
+			}
 
 			return 0;
 		}
@@ -555,6 +565,26 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelSuspendDispatchThread()
 		{
 			throw(new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Terminate a thread.
+		/// </summary>
+		/// <param name="ThreadId">UID of the thread to terminate.</param>
+		/// <returns>Success if greater than 0, an error if less than 0.</returns>
+		[HlePspFunction(NID = 0x616403BA, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelTerminateThread(int ThreadId)
+		{
+			var Thread = GetThreadById(ThreadId);
+
+			//Console.Error.WriteLine(ExitStatus);
+
+			Thread.Info.ExitStatus = -1;
+
+			Thread.CurrentStatus = HleThread.Status.Killed;
+			Thread.Exit();
+			return 0;
 		}
 
 		/*

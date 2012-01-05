@@ -41,19 +41,26 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		static protected FieldInfo[] Field_GPRList;
 		static protected FieldInfo[] Field_FPRList;
 
+		readonly public Dictionary<string, uint> InstructionStats = new Dictionary<string, uint>();
+
 		/*
 		static public MipsMethodEmiter()
 		{
 		}
 		*/
 
-		public void _getmemptr(Action Action, bool Safe = false, String ErrorDescription = "")
+		public void _getmemptr(Action Action, bool Safe = false, String ErrorDescription = "", bool CanBeNull = true)
 		{
 			if (Safe)
 			{
 				ILGenerator.Emit(OpCodes.Ldarg_0);
-				Action();
+				{
+					Action();
+				}
+				//ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("GetMemoryPtrSafe"));
+
 				ILGenerator.Emit(OpCodes.Ldstr, ErrorDescription);
+				ILGenerator.Emit(OpCodes.Ldc_I4, CanBeNull ? 1 : 0);
 				ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("GetMemoryPtrSafeWithError"));
 			}
 			else if (Processor.Memory is FastPspMemory)
@@ -76,7 +83,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		public MipsMethodEmiter(MipsEmiter MipsEmiter, CpuProcessor Processor)
+		public MipsMethodEmiter(MipsEmiter MipsEmiter, CpuProcessor Processor, uint PC)
 		{
 			this.Processor = Processor;
 
@@ -97,7 +104,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 #if USE_DYNAMIC_METHOD
 			DynamicMethod = new DynamicMethod(
-				"",
+				String.Format("DynamicMethod_0x{0:X}", PC),
 				typeof(void),
 				new Type[] { typeof(CpuThreadState) },
 				Assembly.GetExecutingAssembly().ManifestModule
@@ -127,11 +134,16 @@ namespace CSPspEmu.Core.Cpu.Emiter
 #endif
 		}
 
+		MethodBody GetMethodBody()
+		{
+			return DynamicMethod.GetMethodBody();
+		}
+
 		public void LoadFieldPtr(FieldInfo FieldInfo)
 		{
 			ILGenerator.Emit(OpCodes.Ldarg_0);
-			if (FieldInfo == null) throw (new InvalidCastException());
-			if (FieldInfo.DeclaringType != typeof(CpuThreadState)) throw(new InvalidCastException());
+			if (FieldInfo == null) throw (new InvalidCastException("FieldInfo == null"));
+			if (FieldInfo.DeclaringType != typeof(CpuThreadState)) throw (new InvalidCastException("FieldInfo.DeclaringType != CpuThreadState"));
 			ILGenerator.Emit(OpCodes.Ldflda, FieldInfo);
 		}
 

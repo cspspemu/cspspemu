@@ -87,25 +87,29 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Get the system time
 		/// </summary>
-		/// <param name="time">Pointer to a ::SceKernelSysClock structure</param>
+		/// <param name="Time">Pointer to a ::SceKernelSysClock structure</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xDB738F35, FirmwareVersion = 150)]
-		public int sceKernelGetSystemTime(SceKernelSysClock* time)
+		[HlePspNotImplemented]
+		public int sceKernelGetSystemTime(SceKernelSysClock* Time)
 		{
-			throw(new NotImplementedException());
+			Time->MicroSeconds = sceKernelGetSystemTimeWide();
+			return 0;
 		}
 
 		/// <summary>
 		/// Convert a ::SceKernelSysClock structure to microseconds
 		/// </summary>
-		/// <param name="clock">Pointer to a ::SceKernelSysClock structure</param>
-		/// <param name="low">Pointer to the low part of the time</param>
-		/// <param name="high">Pointer to the high part of the time</param>
+		/// <param name="Clock">Pointer to a ::SceKernelSysClock structure</param>
+		/// <param name="Low">Pointer to the low part of the time</param>
+		/// <param name="High">Pointer to the high part of the time</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xBA6B92E2, FirmwareVersion = 150)]
-		public int sceKernelSysClock2USec(SceKernelSysClock* clock, uint* low, uint* high)
+		public int sceKernelSysClock2USec(SceKernelSysClock* Clock, uint* Low, uint* High)
 		{
-			throw(new NotImplementedException());
+			*Low = Clock->Low;
+			*High = Clock->High;
+			return 0;
 		}
 	}
 }

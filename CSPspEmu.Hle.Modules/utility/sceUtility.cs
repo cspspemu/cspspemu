@@ -685,9 +685,11 @@ namespace CSPspEmu.Hle.Modules.utility
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xE49BFE92, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceUtilityUnloadModule(PspModule _module)
 		{
-			throw (new NotImplementedException());
+			//throw (new NotImplementedException());
+			return 0;
 		}
 	}
 }

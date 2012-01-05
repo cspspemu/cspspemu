@@ -281,7 +281,7 @@ namespace CSPspEmu.Hle.Modules.audio
 		{
 			try
 			{
-				var Channel = HleState.PspAudio.GetChannel(ChannelId);
+				var Channel = HleState.PspAudio.GetChannel(ChannelId, CanAlloc: true);
 				Channel.SampleCount = SampleCount;
 				Channel.Format = Format;
 				return Channel.Index;

@@ -44,7 +44,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public const ushort NativeCallSyscallCode = 0x1234;
 
-		static public Action<CpuThreadState> CreateDelegateForPC(CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC)
+		static public PspMethodStruct CreateDelegateForPC(CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC)
 		{
 			DateTime Start, End;
 			int InstructionsProcessed = 0;
@@ -60,7 +60,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		static private Action<CpuThreadState> _CreateDelegateForPC(CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC, out int InstructionsProcessed)
+		static private PspMethodStruct _CreateDelegateForPC(CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC, out int InstructionsProcessed)
 		{
 			InstructionsProcessed = 0;
 
@@ -84,7 +84,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 
 			var InstructionReader = new InstructionReader(MemoryStream);
-			var MipsMethodEmiter = new MipsMethodEmiter(MipsEmiter, CpuProcessor);
+			var MipsMethodEmiter = new MipsMethodEmiter(MipsEmiter, CpuProcessor, EntryPC);
 			var ILGenerator = MipsMethodEmiter.ILGenerator;
 			var CpuEmiter = new CpuEmiter(MipsMethodEmiter, InstructionReader, MemoryStream, CpuProcessor);
 
@@ -105,7 +105,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			//Debug.WriteLine("PASS1: (PC={0:X}, EndPC={1:X})", PC, EndPC);
 
 			var GlobalInstructionStats = CpuProcessor.GlobalInstructionStats;
-			var InstructionStats = new Dictionary<string, uint>();
+			var InstructionStats = MipsMethodEmiter.InstructionStats;
 			var NewInstruction = new Dictionary<string, bool>();
 
 			int MaxNumberOfInstructions = 8 * 1024;
@@ -403,7 +403,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			//if (BreakPoint) IsDebuggerPresentDebugBreak();
 			Action<CpuThreadState> Delegate = MipsMethodEmiter.CreateDelegate();
 
-			return Delegate;
+			return new PspMethodStruct()
+			{
+				Delegate = Delegate,
+				MipsMethodEmiter = MipsMethodEmiter,
+			};
 		}
 	}
 }

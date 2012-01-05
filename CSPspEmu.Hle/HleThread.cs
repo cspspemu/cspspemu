@@ -270,10 +270,12 @@ namespace CSPspEmu.Hle
 					{
 						CpuThreadState.LastValidPC = PC;
 					}
-					Delegate(CpuThreadState);
+					{
+						Delegate.Delegate(CpuThreadState);
+					}
 					if (!Memory.IsAddressValid(CpuThreadState.PC))
 					{
-						throw(new Exception(
+						throw (new Exception(
 							String.Format(
 								"Instruction at address 0x{0:X} changed the PC to an invalid address 0x{1:X}",
 								PC,
@@ -294,7 +296,7 @@ namespace CSPspEmu.Hle
 
 		// 8903E08
 
-		public Action<CpuThreadState> GetDelegateAt(uint PC)
+		public PspMethodStruct GetDelegateAt(uint PC)
 		{
 			//var MethodCache = CpuThreadState.CpuProcessor.MethodCache;
 
@@ -433,11 +435,29 @@ namespace CSPspEmu.Hle
 		}
 	}
 
-	public struct SceKernelSysClock
+	unsafe public struct SceKernelSysClock
 	{
 		//ulong Value;
 		public uint Low;
 		public uint High;
+
+		public long MicroSeconds
+		{
+			get
+			{
+				fixed (uint* LowPtr = &Low)
+				{
+					return *(long*)LowPtr;
+				}
+			}
+			set
+			{
+				fixed (uint* LowPtr = &Low)
+				{
+					*(long*)LowPtr = value;
+				}
+			}
+		}
 	}
 
 	/// <summary>

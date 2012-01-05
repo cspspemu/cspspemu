@@ -191,7 +191,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.IMM14 * 4 + Index * 4);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
-			});
+			}, Safe: true, CanBeNull: false);
 		}
 
 		public VfpuPrefix PrefixNone;
@@ -477,7 +477,35 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 
 			//if (Reg == null) throw(new InvalidOperationException("Invalid Vfpu register"));
-			MipsMethodEmiter.LoadFieldPtr(typeof(CpuThreadState).GetField("VFR" + RegisterIndex));
+			LoadVprFieldPtr(RegisterIndex);
+		}
+
+		uint CalcVprRegisterIndex(uint Matrix, uint Column, uint Row)
+		{
+			return Matrix * 16 + Column * 4 + Row;
+		}
+
+		private void SaveVprField(uint RegisterIndex, Action LoadValueCallback)
+		{
+			LoadVprFieldPtr(RegisterIndex);
+			{
+				LoadValueCallback();
+			}
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_R4);
+		}
+
+		private void LoadVprFieldPtr(uint RegisterIndex)
+		{
+			if (RegisterIndex < 0 || RegisterIndex > 128) throw(new InvalidCastException("Invalid VFR Register '" + RegisterIndex + "'"));
+			try
+			{
+				var FieldInfo = typeof(CpuThreadState).GetField("VFR" + RegisterIndex);
+				MipsMethodEmiter.LoadFieldPtr(FieldInfo);
+			}
+			catch (Exception Exception)
+			{
+				throw (new Exception("Can't load VFR register", Exception));
+			}
 		}
 
 		private void _VectorOperation_N_Registers(uint VectorSize, int InputCount, Action<uint> Action)

@@ -114,7 +114,7 @@ namespace CSPspEmu.Hle
 
 		private Action<CpuThreadState> CreateDelegateForMethodInfo(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute)
 		{
-			var MipsMethodEmiter = new MipsMethodEmiter(HleState.MipsEmiter, HleState.CpuProcessor);
+			var MipsMethodEmiter = new MipsMethodEmiter(HleState.MipsEmiter, HleState.CpuProcessor, 0);
 			int GprIndex = 4;
 			int FprIndex = 0;
 
@@ -233,6 +233,10 @@ namespace CSPspEmu.Hle
 			else if (MethodInfo.ReturnType == typeof(long))
 			{
 				MipsMethodEmiter.SaveGPRLong(2, CallAction);
+			}
+			else if (MethodInfo.ReturnType == typeof(float))
+			{
+				MipsMethodEmiter.SaveFPR(0, CallAction);
 			}
 			else
 			{

@@ -37,16 +37,16 @@ namespace CSPspEmu.Core.Cpu
 			return (_CpuThreadState) =>
 			{
 				_CpuThreadState.StepInstructionCount = 1000000;
-				Delegate(_CpuThreadState);
+				Delegate.Delegate(_CpuThreadState);
 			};
 		}
 
-		static public Action<CpuThreadState> CreateDelegateForPC(this CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC)
+		static public PspMethodStruct CreateDelegateForPC(this CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC)
 		{
 			return FunctionGenerator.CreateDelegateForPC(CpuProcessor, MemoryStream, EntryPC);
 		}
 
-		static public Action<CpuThreadState> CreateAndCacheDelegateForPC(this CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC)
+		static public PspMethodStruct CreateAndCacheDelegateForPC(this CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC)
 		{
 			var Delegate = CpuProcessor.MethodCache.TryGetMethodAt(EntryPC);
 			if (Delegate == null)

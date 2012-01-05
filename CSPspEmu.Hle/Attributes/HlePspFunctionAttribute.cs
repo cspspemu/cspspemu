@@ -22,5 +22,10 @@ namespace CSPspEmu.Hle
 		/// Avoids being logged.
 		/// </summary>
 		public bool SkipLog = false;
+
+		/// <summary>
+		/// Avoids being executed inside an interrupt.
+		/// </summary>
+		public bool CheckInsideInterrupt = true;
 	}
 }

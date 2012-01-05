@@ -281,15 +281,26 @@ namespace CSPspEmu.Core.Cpu
 			return CpuProcessor.Memory.PspAddressToPointerSafe(Address);
 		}
 
-		public void* GetMemoryPtrSafeWithError(uint Address, String ErrorDescription)
+		public void* GetMemoryPtrSafeWithError(uint Address, String ErrorDescription, bool CanBeNull)
 		{
 			try
 			{
-				return CpuProcessor.Memory.PspAddressToPointerSafe(Address);
+				void *Result = CpuProcessor.Memory.PspAddressToPointerSafe(Address, CanBeNull);
+				/*
+				if (Result == null && !CanBeNull)
+				{
+					throw(new PspMemory.InvalidAddressException(""));
+				}
+				*/
+				return Result;
 			}
 			catch (PspMemory.InvalidAddressException InvalidAddressException)
 			{
-				throw (new PspMemory.InvalidAddressException(ErrorDescription + " : " + InvalidAddressException.Message, InvalidAddressException));
+				throw (new PspMemory.InvalidAddressException("GetMemoryPtrSafeWithError:" + ErrorDescription + " : " + InvalidAddressException.Message, InvalidAddressException));
+			}
+			catch (Exception Exception)
+			{
+				throw (new Exception("GetMemoryPtrSafeWithError: " + ErrorDescription + " : " + Exception.Message, Exception));
 			}
 		}
 

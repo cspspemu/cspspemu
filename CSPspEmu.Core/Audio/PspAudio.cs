@@ -100,10 +100,10 @@ namespace CSPspEmu.Core.Audio
 		/// </summary>
 		/// <param name="ChannelId"></param>
 		/// <returns></returns>
-		public PspAudioChannel GetChannel(int ChannelId)
+		public PspAudioChannel GetChannel(int ChannelId, bool CanAlloc = false)
 		{
 			PspAudioChannel Channel;
-			if (ChannelId == FreeChannel)
+			if (CanAlloc && ChannelId == FreeChannel)
 			{
 				Channel = GetFreeChannel();
 			}

@@ -648,11 +648,30 @@ void checkMisc() {
 	printVector(v0);
 }
 
+void __attribute__((noinline)) _checkSimpleLoad(ScePspFVector4 *v0, ScePspFVector4 *v1) {
+	asm volatile (
+		"lv.s   S000, 0x00+%1\n"
+		"sv.s   S000, 0x00+%0\n"
+
+		: "+m" (*v0) : "m" (*v1)
+	);
+}
+
+void __attribute__((noinline)) checkSimpleLoad() {
+	ScePspFVector4 vIn = {0.0f, 0.0f, 0.0f, 0.0f};
+	ScePspFVector4 vOut = {0.0f, 0.0f, 0.0f, 0.0f};
+	vIn.x = 0.3f;
+	_checkSimpleLoad(&vOut, &vIn);
+	printf("%f\n", vOut.x);
+}
+
+
 int main(int argc, char *argv[]) {
 	printf("Started\n");
 
 	resetAllMatrices();
-
+	
+	printf("checkSimpleLoad:\n"); checkSimpleLoad();
 	printf("checkMisc:\n"); checkMisc();
 	printf("checkMultiplyFull:\n"); checkMultiplyFull();
 	printf("checkVadd:\n"); checkVadd();

@@ -128,15 +128,15 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		public void OP_XSCALE()
 		{
-			GpuState->Viewport.Scale.X = Float1;
-			//Console.Error.WriteLine("OP_XSCALE: {0}", Float1);
+			GpuState->Viewport.Scale.X = Float1 * 2;
+			//Console.Error.WriteLine("OP_XSCALE: {0}", GpuState->Viewport.Scale.X);
 			//gpu.state.viewport.sx = command.float1 * 2;
 		}
 		public void OP_YSCALE()
 		{
-			GpuState->Viewport.Scale.Y = Float1;
+			GpuState->Viewport.Scale.Y = Float1 * 2;
 			//gpu.state.viewport.sy = -command.float1 * 2;
-			//Console.Error.WriteLine("OP_YSCALE: {0}", Float1);
+			//Console.Error.WriteLine("OP_YSCALE: {0}", GpuState->Viewport.Scale.Y);
 		}
 		public void OP_ZSCALE()
 		{
@@ -147,16 +147,33 @@ namespace CSPspEmu.Core.Gpu.Run
 		public void OP_XPOS()
 		{
 			GpuState->Viewport.Position.X = Float1;
+			//Console.Error.WriteLine("OP_XPOS: {0}", GpuState->Viewport.Position.X);
 		}
 		public void OP_YPOS()
 		{
 			GpuState->Viewport.Position.Y = Float1;
+			//Console.Error.WriteLine("OP_YPOS: {0}", GpuState->Viewport.Position.Y);
 		}
 		//[GpuOpCodesNotImplemented]
 		public void OP_ZPOS()
 		{
 			GpuState->Viewport.Position.Z = BitUtils.ExtractUnsignedScaled(Params24, 0, 16, 1.0f);
+			//Console.Error.WriteLine("OP_ZPOS: {0}", GpuState->Viewport.Position.Z);
 			//gpu.state.viewport.pz = command.extractFixedFloat!(0, 16);
+		}
+
+		//[GpuOpCodesNotImplemented]
+		public void OP_OFFSETX()
+		{
+			GpuState->Offset.X = (short)BitUtils.Extract(Params24, 0, 4);
+			//Console.Error.WriteLine("{0}", GpuState->Offset.X);
+			//gpu.state.offsetX = command.extract!(uint, 0, 4);
+		}
+		//[GpuOpCodesNotImplemented]
+		public void OP_OFFSETY()
+		{
+			GpuState->Offset.Y = (short)BitUtils.Extract(Params24, 0, 4);
+			//gpu.state.offsetY = command.extract!(uint, 0, 4);
 		}
 
 		/**
@@ -246,18 +263,5 @@ namespace CSPspEmu.Core.Gpu.Run
 		 * @param y - Offset (0-4095)
 		 */
 		//void sceGuOffset(unsigned int x, unsigned int y); // OP_OFFSETX + OP_OFFSETY
-
-		//[GpuOpCodesNotImplemented]
-		public void OP_OFFSETX()
-		{
-			GpuState->Offset.X = (short)BitUtils.Extract(Params24, 0, 4);
-			//gpu.state.offsetX = command.extract!(uint, 0, 4);
-		}
-		//[GpuOpCodesNotImplemented]
-		public void OP_OFFSETY()
-		{
-			GpuState->Offset.Y = (short)BitUtils.Extract(Params24, 0, 4);
-			//gpu.state.offsetY = command.extract!(uint, 0, 4);
-		}
 	}
 }

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Text;
 
 namespace CSPspEmu.Core
 {
 	unsafe public sealed class Hashing
 	{
+		[HandleProcessCorruptedStateExceptions()]
 		static public uint FastHash(uint* Pointer, int Count, uint StartHash = 0)
 		{
 			if (Pointer == null)
@@ -31,8 +33,9 @@ namespace CSPspEmu.Core
 					}
 				}
 			}
-			catch
+			catch (AccessViolationException AccessViolationException)
 			{
+				Console.Error.WriteLine(AccessViolationException);
 			}
 
 			return Hash;

@@ -284,6 +284,7 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "fpu";
 				//WildCardFilter = "umd_io";
 				//WildCardFilter = "cpu/vfpu";
+				WildCardFilter = "display";
 				//WildCardFilter = "cpu/vfpu/prefixes";
 				//WildCardFilter = "cpu";
 				//WildCardFilter = "dmac";
@@ -295,7 +296,7 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "pmf";
 				//WildCardFilter = "mstick";
 				//WildCardFilter = "ge_callbacks";
-				WildCardFilter = "lsu";
+				//WildCardFilter = "lsu";
 				//WildCardFilter = "pmf";
 				//WildCardFilter = "pmf_simple";
 				//WildCardFilter = "sema";

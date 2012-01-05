@@ -202,5 +202,19 @@ namespace CSPspEmu.Hle.Modules.threadman
 			*Info = HleState.EventFlagManager.EventFlags.Get(EventId).Info;
 			return 0;
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="EventId"></param>
+		/// <param name="NewPattern"></param>
+		/// <param name="NumWaitThread"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xCD203292, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelCancelEventFlag(EventFlagId EventId, int NewPattern, int* NumWaitThread)
+		{
+			return 0;
+		}
 	}
 }

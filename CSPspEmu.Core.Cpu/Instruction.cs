@@ -160,7 +160,7 @@ namespace CSPspEmu.Core.Cpu
 		/// <summary>
 		/// @TODO: Signed or unsigned?
 		/// </summary>
-		public uint IMM14 { get { return get(2, 14); } set { set(2, 14, value); } }
+		public int IMM14 { get { return get_s(2, 14); } set { set(2, 14, (uint)value); } }
 		public uint IMM5 { get { return get(16, 5); } set { set(16, 5, value); } }
 
 		public uint VT1 { get { return get(0, 1); } set { set(0, 1, value); } }
