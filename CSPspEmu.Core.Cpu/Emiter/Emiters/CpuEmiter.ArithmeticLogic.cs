@@ -340,12 +340,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Word Swap Bytes Within Halfwords/Words.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		uint _wsbh_impl(uint v)
+		static public uint _wsbh_impl(uint v)
 		{
 			// swap bytes
 			return ((v & 0xFF00FF00) >> 8) | ((v & 0x00FF00FF) << 8);
 		}
-		uint _wsbw_impl(uint v)
+		static public uint _wsbw_impl(uint v)
 		{
 			// BSWAP
 			return (

@@ -29,9 +29,10 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 				Info.HleIoDriver.IoGetstat(Info.HleIoDrvFileArg, Info.LocalPath, SceIoStat);
 				return 0;
 			}
-			catch (FileNotFoundException)
+			catch (FileNotFoundException FileNotFoundException)
 			{
 				Console.Error.WriteLine("Can't find file '{0}'", FileName);
+				Console.Error.WriteLine(FileNotFoundException);
 				return (int)SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND;
 			}
 			catch (Exception Exception)

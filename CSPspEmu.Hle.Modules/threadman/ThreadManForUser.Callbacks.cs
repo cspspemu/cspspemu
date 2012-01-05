@@ -34,13 +34,21 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Notify a callback
 		/// </summary>
-		/// <param name="cb">The UID of the specified callback</param>
-		/// <param name="arg2">Passed as arg2 into the callback function</param>
+		/// <param name="CallbackId">The UID of the specified callback</param>
+		/// <param name="Argument2">Passed as arg2 into the callback function</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xC11BA8C4, FirmwareVersion = 150)]
-		public int sceKernelNotifyCallback(int cb, int arg2)
+		[HlePspNotImplemented]
+		public int sceKernelNotifyCallback(int CallbackId, int Argument2)
 		{
 			throw(new NotImplementedException());
+			/*
+			var Callback = HleState.CallbackManager.Callbacks.Get(CallbackId);
+			// TODO!
+			HleState.CallbackManager.ScheduleCallback(Callback);
+			return 0;
+			*/
+			//throw(new NotImplementedException());
 			/*
 			PspCallback pspCallback = uniqueIdFactory.get!PspCallback(cb);
 		

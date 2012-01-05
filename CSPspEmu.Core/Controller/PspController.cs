@@ -18,13 +18,14 @@ namespace CSPspEmu.Core.Controller
 		protected List<SceCtrlData> SceCtrlDataBuffer = new List<SceCtrlData>();
 		public int SamplingCycle;
 		public SamplingModeEnum SamplingMode;
+		public int LatchSamplingCount;
+		public uint LastTimestamp;
 
 		public override void InitializeComponent()
 		{
-			SceCtrlData SceCtrlData = default(SceCtrlData);
 			for (int n = 0; n < MaxStoredFrames; n++)
 			{
-				InsertSceCtrlData(SceCtrlData);
+				InsertSceCtrlData(default(SceCtrlData));
 			}
 		}
 
@@ -32,9 +33,11 @@ namespace CSPspEmu.Core.Controller
 		{
 			lock (this)
 			{
+				SceCtrlData.TimeStamp = LastTimestamp++;
 				SceCtrlDataBuffer.Add(SceCtrlData);
 				if (SceCtrlDataBuffer.Count > MaxStoredFrames) SceCtrlDataBuffer.RemoveAt(0);
 			}
+			LatchSamplingCount++;
 		}
 
 		public SceCtrlData GetSceCtrlDataAt(int Index)

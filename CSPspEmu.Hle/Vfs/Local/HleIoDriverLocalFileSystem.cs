@@ -265,8 +265,38 @@ namespace CSPspEmu.Hle.Vfs.Local
 		{
 			var RealFileName = GetFullNormalizedAndSanitizedPath(FileName);
 			//Console.WriteLine(RealFileName);
-			var FileInfo = new FileInfo(RealFileName);
-			Stat->Size = FileInfo.Length;
+
+			Stat->Attributes = IOFileModes.CanExecute | IOFileModes.CanRead | IOFileModes.CanWrite;
+			Stat->Mode = 0;
+			Stat->Mode = SceMode.UserCanExecute | SceMode.UserCanRead | SceMode.UserCanWrite;
+			Stat->Mode = SceMode.GroupCanExecute | SceMode.GroupCanRead | SceMode.GroupCanWrite;
+			Stat->Mode = SceMode.OtherCanExecute | SceMode.OtherCanRead | SceMode.OtherCanWrite;
+
+			FileSystemInfo FileSystemInfo = null;
+			if (File.Exists(RealFileName))
+			{
+				var FileInfo = new FileInfo(RealFileName);
+				FileSystemInfo = FileInfo;
+				Stat->Size = FileInfo.Length;
+				Stat->Mode |= SceMode.File;
+				Stat->Attributes |= IOFileModes.File;
+			}
+			else if (Directory.Exists(RealFileName))
+			{
+				var DirectoryInfo = new DirectoryInfo(RealFileName);
+				FileSystemInfo = DirectoryInfo;
+				Stat->Mode |= SceMode.Directory;
+				Stat->Attributes |= IOFileModes.Directory;
+			}
+			else
+			{
+				throw(new FileNotFoundException("Can't find file '" + RealFileName + "'"));
+			}
+
+			Stat->TimeCreation = ScePspDateTime.FromDateTime(FileSystemInfo.CreationTimeUtc);
+			Stat->TimeLastAccess = ScePspDateTime.FromDateTime(FileSystemInfo.LastAccessTimeUtc);
+			Stat->TimeLastModification = ScePspDateTime.FromDateTime(FileSystemInfo.LastWriteTimeUtc);
+
 			return 0;
 		}
 

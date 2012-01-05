@@ -20,6 +20,11 @@ namespace CSPspEmu.Core.Cpu
 		public bool IsRunning;
 		public bool RunningCallback;
 
+		public PspEmulatorContext GetPspEmulatorContext()
+		{
+			return PspEmulatorContext;
+		}
+
 		public override void InitializeComponent()
 		{
 			this.PspConfig = PspEmulatorContext.PspConfig;
@@ -89,6 +94,20 @@ namespace CSPspEmu.Core.Cpu
 			//Console.Error.WriteLine("sceKernelIcacheInvalidateRange!!! (0x{0:X}, {1})", Address, Size);
 			MethodCache.ClearRange(Address, Address + Size);
 			//MethodCache.Clear();
+		}
+
+		public event Action DebugCurrentThreadEvent;
+
+		static public void DebugCurrentThread(CpuThreadState CpuThreadState)
+		{
+			var CpuProcessor = CpuThreadState.CpuProcessor;
+			Console.Error.WriteLine("*******************************************");
+			Console.Error.WriteLine("* DebugCurrentThread **********************");
+			Console.Error.WriteLine("*******************************************");
+			CpuProcessor.DebugCurrentThreadEvent();
+			Console.Error.WriteLine("*******************************************");
+			CpuThreadState.DumpRegisters();
+			Console.Error.WriteLine("*******************************************");
 		}
 	}
 }

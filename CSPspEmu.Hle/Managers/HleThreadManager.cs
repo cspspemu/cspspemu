@@ -32,6 +32,7 @@ namespace CSPspEmu.Hle.Managers
 		public override void InitializeComponent()
 		{
 			this.Processor = PspEmulatorContext.GetInstance<CpuProcessor>();
+			this.Processor.DebugCurrentThreadEvent += DebugCurrentThread;
 			this.HleCallbackManager = PspEmulatorContext.GetInstance<HleCallbackManager>();
 			this.HleInterruptManager = PspEmulatorContext.GetInstance<HleInterruptManager>();
 		}
@@ -183,6 +184,12 @@ namespace CSPspEmu.Hle.Managers
 		public unsafe void DeleteThread(HleThread Thread)
 		{
 			ExitThread(Thread);
+		}
+
+		public void DebugCurrentThread()
+		{
+			Console.Error.WriteLine("HleThreadManager.CpuProcessor.DebugCurrentThreadEvent:");
+			Console.Error.WriteLine(Current);
 		}
 	}
 }

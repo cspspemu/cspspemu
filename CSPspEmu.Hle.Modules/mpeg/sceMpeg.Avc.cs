@@ -144,10 +144,12 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			}
 			var SceMpegData = GetSceMpegData(Mpeg);
 
+			/*
 			for (int n = 0; n < 512 * 272 * 4; n++)
 			{
 				OutputBuffer[n] = 0xFF;
 			}
+			*/
 
 			SceMpegData->AvcFrameStatus = 1;
 			*Init = SceMpegData->AvcFrameStatus;

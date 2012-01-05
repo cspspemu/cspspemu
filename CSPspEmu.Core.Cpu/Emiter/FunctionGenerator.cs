@@ -293,6 +293,16 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				InstructionsProcessed++;
 
 				/*
+				if (PC >= 0x887F500 && PC <= 0x887F600)
+				{
+					MipsMethodEmiter.CallMethodWithCpuThreadStateAsFirstArgument(typeof(CpuProcessor), "DebugCurrentThread");
+					//Console.WriteLine("Reached Debug!");
+					//Console.ReadKey();
+				}
+				*/
+
+
+				/*
 				if (!AnalyzedPC.Contains(CurrentInstructionPC))
 				{
 					// Marks label.

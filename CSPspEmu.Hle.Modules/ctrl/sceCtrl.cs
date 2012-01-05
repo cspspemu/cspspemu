@@ -14,10 +14,7 @@ namespace CSPspEmu.Hle.Modules.ctrl
 	{
 		protected void _ReadCount(SceCtrlData* SceCtrlData, int Count, bool Peek, bool Positive)
 		{
-			for (int n = 0; n < Count; n++)
-			{
-				SceCtrlData[n] = HleState.PspController.GetSceCtrlDataAt(n);
-			}
+			for (int n = 0; n < Count; n++) SceCtrlData[n] = HleState.PspController.GetSceCtrlDataAt(n);
 		}
 
 		/// <summary>
@@ -102,18 +99,46 @@ namespace CSPspEmu.Hle.Modules.ctrl
 		}
 
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="CurrentLatch"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xB1D0E5CD, FirmwareVersion = 150)]
+		//[HlePspNotImplemented]
+		public int sceCtrlPeekLatch(SceCtrlLatch* CurrentLatch)
+		{
+			var ButtonsNew = HleState.PspController.GetSceCtrlDataAt(0).Buttons;
+			var ButtonsOld = LastLatchData.Buttons;
+			var ButtonsChanged = ButtonsOld ^ ButtonsNew;
+
+			CurrentLatch->uiBreak = ButtonsOld & ButtonsChanged;
+			CurrentLatch->uiMake = ButtonsNew & ButtonsChanged;
+			CurrentLatch->uiPress = ButtonsNew;
+			CurrentLatch->uiRelease = (ButtonsOld & ~ButtonsNew) & ButtonsChanged;
+
+			return HleState.PspController.LatchSamplingCount;
+		}
+
+		SceCtrlData LastLatchData;
+
+		/// <summary>
 		/// Obtains information about currentLatch.
 		/// </summary>
 		/// <param name="CurrentLatch">Pointer to SceCtrlLatch to store the result.</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x0B588501, FirmwareVersion = 150)]
+		//[HlePspNotImplemented]
 		public int sceCtrlReadLatch(SceCtrlLatch* CurrentLatch)
 		{
-			CurrentLatch[0] = new SceCtrlLatch()
+			try
 			{
-			};
-			//throw(new NotImplementedException());
-			return 0;
+				return sceCtrlPeekLatch(CurrentLatch);
+			}
+			finally
+			{
+				LastLatchData = HleState.PspController.GetSceCtrlDataAt(0);
+				HleState.PspController.LatchSamplingCount = 0;
+			}
 		}
 
 		/// <summary>

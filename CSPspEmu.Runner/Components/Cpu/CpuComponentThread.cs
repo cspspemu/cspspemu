@@ -360,9 +360,11 @@ namespace CSPspEmu.Runner.Components.Cpu
 
 		public void DumpThreads()
 		{
+			var ErrorOut = Console.Out;
 			foreach (var Thread in ThreadManager.Threads.ToArray())
 			{
-				Console.Out.WriteLine("{0}", Thread);
+				ErrorOut.WriteLine("{0}", Thread);
+				Thread.DumpStack(ErrorOut);
 			}
 			//throw new NotImplementedException();
 		}
