@@ -216,12 +216,17 @@ namespace CSPspEmu.Hle.Modules.threadman
 				return 0;
 			}
 
+			bool TimedOut = false;
+
 			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelWaitThreadEnd", WakeUpCallback =>
 			{
 				if (Timeout != null)
 				{
-					Console.Error.WriteLine("_sceKernelWaitThreadEndCB Timeout not implemented!!");
-					//throw (new NotImplementedException());
+					HleState.PspRtc.RegisterTimerInOnce(TimeSpanUtils.FromMicroseconds(*Timeout), () =>
+					{
+						TimedOut = true;
+						WakeUpCallback();
+					});
 				}
 
 				Console.WriteLine("Wait End!");

@@ -199,5 +199,17 @@ namespace CSPspEmu.Hle.Modules.display
 			*pixelformat = HleState.PspDisplay.CurrentInfo.PixelFormat;
 			return 0;
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="CycleNum">Number of VSYNCs to wait before blocking the thread on VBLANK.</param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x40F1469C, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceDisplayWaitVblankStartMulti(int CycleNum)
+		{
+			return 0;
+		}
 	}
 }

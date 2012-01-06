@@ -66,5 +66,12 @@ namespace CSPspEmu.Hle.Modules.utility
 			}
 
 		}
+
+		[HlePspFunction(NID = 0x4928BD96, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceUtilityMsgDialogAbort()
+		{
+			return 0;
+		}
 	}
 }

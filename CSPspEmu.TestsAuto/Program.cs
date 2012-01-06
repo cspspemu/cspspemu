@@ -284,7 +284,7 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "fpu";
 				//WildCardFilter = "umd_io";
 				//WildCardFilter = "cpu/vfpu";
-				WildCardFilter = "display";
+				//WildCardFilter = "display";
 				//WildCardFilter = "cpu/vfpu/prefixes";
 				//WildCardFilter = "cpu";
 				//WildCardFilter = "dmac";
@@ -300,6 +300,7 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "pmf";
 				//WildCardFilter = "pmf_simple";
 				//WildCardFilter = "sema";
+				WildCardFilter = "mbx";
 			}
 
 			if (WildCardFilter.Length > 0)

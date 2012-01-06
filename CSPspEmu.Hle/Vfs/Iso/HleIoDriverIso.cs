@@ -44,12 +44,12 @@ namespace CSPspEmu.Hle.Vfs.Iso
 					if (Part.StartsWith("lbn"))
 					{
 						var Number = Part.Substring(3);
-						Sector = NumberUtils.ParseIntegerConstant(Number);
+						Sector = NumberUtils.ParseIntegerConstant(Number, 16);
 					}
 					else if (Part.StartsWith("size"))
 					{
 						var Number = Part.Substring(4);
-						Size = NumberUtils.ParseIntegerConstant(Number);
+						Size = NumberUtils.ParseIntegerConstant(Number, 16);
 					}
 					else
 					{

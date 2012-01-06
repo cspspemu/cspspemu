@@ -72,6 +72,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 			HleState.HleIoManager.SetDriver("fatms:", MemoryStick);
 			HleState.HleIoManager.SetDriver("mscmhc:", MemoryStick);
 			HleState.HleIoManager.SetDriver("disc:", MemoryStick);
+			HleState.HleIoManager.SetDriver("umd:", MemoryStick);
 			HleState.HleIoManager.SetDriver("emulator:", HleIoDriverEmulator);
 			HleState.HleIoManager.SetDriver("kemulator:", HleIoDriverEmulator);
 		}
@@ -94,6 +95,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 			var Iso = new IsoFile(IsoFileStream, IsoFile);
 			var Umd = new HleIoDriverIso(Iso);
 			HleState.HleIoManager.SetDriver("disc:", Umd);
+			HleState.HleIoManager.SetDriver("umd:", Umd);
 			HleState.HleIoManager.SetDriver(":", Umd);
 			return Iso;
 		}

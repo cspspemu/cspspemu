@@ -538,5 +538,19 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			return 0;
 			*/
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="atracID"></param>
+		/// <param name="uiSample"></param>
+		/// <param name="BufferInfoAddr"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x2DD3E298, FirmwareVersion = 250)]
+		[HlePspNotImplemented]
+		public int sceAtracGetBufferInfoForResetting(int atracID, uint uiSample, void* BufferInfoAddr)
+		{
+			return 0;
+		}
 	}
 }

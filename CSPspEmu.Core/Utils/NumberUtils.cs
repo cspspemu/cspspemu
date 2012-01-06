@@ -8,16 +8,16 @@ namespace CSPspEmu.Core.Utils
 {
 	public class NumberUtils
 	{
-		static public int ParseIntegerConstant(String Value)
+		static public int ParseIntegerConstant(String Value, int DefaultBase = 10)
 		{
-			Value = Value.Replace("_", "");
-			if (Value.Substr(0, 1) == "-") return -ParseIntegerConstant(Value.Substr(1));
-			if (Value.Substr(0, 1) == "+") return +ParseIntegerConstant(Value.Substr(1));
-			if (Value.Substr(0, 2) == "0x") return Convert.ToInt32(Value.Substr(2), 16);
-			if (Value.Substr(0, 2) == "0b") return Convert.ToInt32(Value.Substr(2), 2);
 			try
 			{
-				return Convert.ToInt32(Value, 10);
+				Value = Value.Replace("_", "");
+				if (Value.Substr(0, 1) == "-") return -ParseIntegerConstant(Value.Substr(1));
+				if (Value.Substr(0, 1) == "+") return +ParseIntegerConstant(Value.Substr(1));
+				if (Value.Substr(0, 2) == "0x") return Convert.ToInt32(Value.Substr(2), 16);
+				if (Value.Substr(0, 2) == "0b") return Convert.ToInt32(Value.Substr(2), 2);
+				return Convert.ToInt32(Value, DefaultBase);
 			}
 			catch (FormatException FormatException)
 			{
