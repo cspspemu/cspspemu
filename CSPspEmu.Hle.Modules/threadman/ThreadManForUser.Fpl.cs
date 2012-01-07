@@ -9,6 +9,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 {
 	unsafe public partial class ThreadManForUser
 	{
+		public struct FplOptionsStruct
+		{
+			public int StructSize;
+			public int Alignment;
+		}
+
 		public class FixedPool
 		{
 			public class WaitItem
@@ -28,11 +34,14 @@ namespace CSPspEmu.Hle.Modules.threadman
 			public List<uint> FreeBlocks;
 			public List<uint> UsedBlocks;
 			public List<WaitItem> WaitItemList;
+			public FplOptionsStruct Options;
 
 			public void Init()
 			{
+				var Alignment = Options.Alignment;
+				if (Alignment == 0) Alignment = 1;
 				var Partition = MemoryManager.GetPartition(PartitionId);
-				this.MemoryPartition = Partition.Allocate(NumberOfBlocks * BlockSize);
+				this.MemoryPartition = Partition.Allocate(NumberOfBlocks * BlockSize, Hle.MemoryPartition.Anchor.Low, 0, Alignment);
 				this.FreeBlocks = new List<uint>();
 				this.UsedBlocks = new List<uint>();
 				this.WaitItemList = new List<WaitItem>();
@@ -124,10 +133,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Options">Options (set to NULL)</param>
 		/// <returns>The UID of the created pool, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xC07BB470, FirmwareVersion = 150)]
-		public PoolId sceKernelCreateFpl(string Name, HleMemoryManager.Partitions PartitionId, int Attributes, int BlockSize, int NumberOfBlocks, void* Options)
+		public PoolId sceKernelCreateFpl(string Name, HleMemoryManager.Partitions PartitionId, int Attributes, int BlockSize, int NumberOfBlocks, FplOptionsStruct* Options)
 		{
-			if (Options != null) throw(new NotImplementedException());
-
 			var FixedPool = new FixedPool()
 			{
 				HleState = HleState,
@@ -138,6 +145,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 				BlockSize = BlockSize,
 				NumberOfBlocks = NumberOfBlocks,
 			};
+			if (Options != null) FixedPool.Options = *Options;
 			FixedPool.Init();
 
 			return FixedPoolList.Create(FixedPool);
