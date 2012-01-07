@@ -1,0 +1,194 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Reflection.Emit;
+using CSharpUtils;
+using System.Linq.Expressions;
+
+namespace CSPspEmu.Core.Cpu.Emiter
+{
+	unsafe sealed public partial class CpuEmiter
+	{
+		// Load/Store Vfpu (Left/Right)_
+		public void lv_s()
+		{
+			//return;
+			uint VT = Instruction.VT5 | (Instruction.VT2 << 5);
+			uint Column = (VT >> 5) & 3;
+			uint Matrix = (VT >> 2) & 7;
+			uint Row = (VT >> 0) & 3;
+
+			SaveVprField(CalcVprRegisterIndex(Matrix, Column, Row), () =>
+			{
+				_load_memory_imm14_index(0);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
+			});
+		}
+
+		// ID("lv.q",        VM("110110:rs:vt5:imm14:0:vt1"), "%Xq, %Y", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
+		public void lv_q()
+		{
+			uint Register = Instruction.VT5_1;
+
+			for (uint Index = 0; Index < 4; Index++)
+			{
+				_VfpuLoadVectorWithIndexPointer(Register, Index, 4);
+
+				_load_memory_imm14_index(Index);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
+
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_R4);
+			}
+		}
+
+		static public void _lvl_svl_q(CpuThreadState CpuThreadState, uint m, uint i, uint address, bool dir, bool save)
+		{
+			uint k = 3 - ((address >> 2) & 3);
+			address &= unchecked((uint)~0xF);
+
+			for (uint j = k; j < 4; ++j)
+			{
+				fixed (float* VFPR = &CpuThreadState.VFR0)
+				{
+					float* ptr;
+					if (dir)
+					{
+						ptr = &VFPR[m * 16 + i * 4 + j];
+					}
+					else
+					{
+						ptr = &VFPR[m * 16 + j * 4 + i];
+					}
+					if (save)
+					{
+						*(float*)CpuThreadState.GetMemoryPtr(address) = *ptr;
+					}
+					else
+					{
+						*ptr = *(float*)CpuThreadState.GetMemoryPtr(address);
+					}
+				}
+				address += 4;
+			}
+		}
+
+		static public void _lvr_svr_q(CpuThreadState CpuThreadState, uint m, uint i, uint address, bool dir, bool save)
+		{
+			uint k = 4 - ((address >> 2) & 3);
+
+			for (uint j = 0; j < k; ++j)
+			{
+				fixed (float* VFPR = &CpuThreadState.VFR0)
+				{
+					float* ptr;
+					if (dir)
+					{
+						ptr = &VFPR[m * 16 + i * 4 + j];
+					}
+					else
+					{
+						ptr = &VFPR[m * 16 + j * 4 + i];
+					}
+					if (save)
+					{
+						*(float*)CpuThreadState.GetMemoryPtr(address) = *ptr;
+					}
+					else
+					{
+						*ptr = *(float*)CpuThreadState.GetMemoryPtr(address);
+					}
+				}
+				address += 4;
+			}
+		}
+
+		private void lv_sv_l_r_q(bool left, bool save)
+		{
+			var vt = Instruction.VT5 | (Instruction.VT1 << 5);
+			var m = (vt >> 2) & 7;
+			var i = (vt >> 0) & 3;
+			var dir = (vt & 32) != 0;
+
+			{
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0); // CpuThreadState
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, m);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, i);
+				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.IMM14 * 4);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, dir ? 1 : 0);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, save ? 1 : 0);
+			}
+
+			if (left)
+			{
+				MipsMethodEmiter.CallMethod(this.GetType(), "_lvl_svl_q");
+			}
+			else
+			{
+				MipsMethodEmiter.CallMethod(this.GetType(), "_lvr_svr_q");
+			}
+		}
+
+		public void lvl_q()
+		{
+			lv_sv_l_r_q(left: true, save: false);
+		}
+
+		public void lvr_q()
+		{
+			lv_sv_l_r_q(left: false, save: false);
+		}
+
+		public void sv_s()
+		{
+			uint VT = Instruction.VT5 | (Instruction.VT2 << 5);
+			uint Column = (VT >> 5) & 3;
+			uint Matrix = (VT >> 2) & 7;
+			uint Row = (VT >> 0) & 3;
+
+			_load_memory_imm14_index(0);
+			{
+				LoadVprFieldPtr(CalcVprRegisterIndex(Matrix, Column, Row));
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
+			}
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_R4);
+		}
+
+		/// <summary>
+		/// ID("sv.q",        VM("111110:rs:vt5:imm14:0:vt1"), "%Xq, %Y", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
+		/// </summary>
+		public void sv_q()
+		{
+			//loadVt(4, instruction.VT5_1);
+
+			uint Register = Instruction.VT5_1;
+
+			uint VectorSize = 4;
+
+			foreach (var Index in XRange(VectorSize))
+			{
+				_load_memory_imm14_index((uint)Index);
+				{
+					//Load_VT(
+					//VfpuLoad_Register(Register, Index, VectorSize, PrefixTarget);
+					VfpuLoad_Register(Register, Index, VectorSize, ref PrefixNone);
+					//_VfpuLoadVectorWithIndexPointer(Register, (uint)Index, 4);
+					//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
+				}
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_R4);
+			}
+		}
+
+		public void svl_q()
+		{
+			lv_sv_l_r_q(left: true, save: true);
+		}
+
+		public void svr_q()
+		{
+			lv_sv_l_r_q(left: false, save: true);
+		}
+	}
+}

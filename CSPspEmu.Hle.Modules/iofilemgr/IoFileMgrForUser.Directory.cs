@@ -34,6 +34,10 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			catch (FileNotFoundException)
 			{
 			}
+			catch (InvalidOperationException InvalidOperationException)
+			{
+				Console.Error.WriteLine(InvalidOperationException);
+			}
 			return (int)SceKernelErrors.ERROR_ERRNO_NOT_A_DIRECTORY;
 		}
 

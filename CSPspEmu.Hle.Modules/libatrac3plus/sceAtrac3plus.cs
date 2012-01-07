@@ -78,7 +78,9 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public int sceAtracGetMaxSample(int atracID, int* outMax)
 		{
-			throw (new NotImplementedException());
+			*outMax = 0;
+			return -1;
+			//throw (new NotImplementedException());
 			/*
 			Atrac3Object atrac3Object = getAtrac3ObjectById(atracID);
 			*outMax = atrac3Object.getMaxNumberOfSamples();

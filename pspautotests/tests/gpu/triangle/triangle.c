@@ -114,5 +114,6 @@ int main(int argc, char* argv[])
 	emulatorEmitScreenshot();
 
 	//sceKernelExitGame();
+
 	return 0;
 }

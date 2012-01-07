@@ -1,6 +1,7 @@
 Started
 checkAggregated:
-110.000000
+SUM: 110.000000
+AVG: 27.500000
 checkSimpleLoad:
 0.300000
 checkMisc:

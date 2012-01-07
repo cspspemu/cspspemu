@@ -283,6 +283,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//return;
 			//PrepareRead(GpuState);
 
+			PrepareStateCommon(GpuState);
+
 			if (GpuState->ClearingMode)
 			{
 				//return;
@@ -315,7 +317,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				//if (true)
 				{
 					GL.MatrixMode(MatrixMode.Projection); GL.LoadIdentity();
-					GL.Ortho(0, 512, 272, 0, -0x7FFF, +0x7FFF);
+					//GL.Ortho(0, 512, 272, 0, -0x7FFF, +0x7FFF);
+					GL.Ortho(0, 480, 272, 0, -0x7FFF, +0x7FFF);
 					GL.MatrixMode(MatrixMode.Modelview); GL.LoadIdentity();
 				}
 				else

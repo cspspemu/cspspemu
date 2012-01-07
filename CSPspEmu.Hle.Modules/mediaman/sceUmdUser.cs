@@ -81,15 +81,12 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		[HlePspFunction(NID = 0xBD2BDE07, FirmwareVersion = 150)]
 		public int sceUmdUnRegisterUMDCallBack(int CallbackId)
 		{
-			if (RegisteredCallbacks.ContainsKey(CallbackId))
+			if (!RegisteredCallbacks.ContainsKey(CallbackId))
 			{
-				RegisteredCallbacks.Remove(CallbackId);
-				return 0;
+				throw(new SceKernelException(SceKernelErrors.ERROR_ERRNO_INVALID_ARGUMENT));
 			}
-			else
-			{
-				return -1;
-			}
+			RegisteredCallbacks.Remove(CallbackId);
+			return 0;
 		}
 
 		/// <summary>
@@ -145,16 +142,10 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		/// <param name="Drive">A prefix string for the fs device to mount the UMD on (e.g. "disc0:")</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xC6183D47, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceUmdActivate(int Mode, string Drive)
 		{
 			return 0;
-			//throw(new NotImplementedException());
-			/*
-			logWarning("Partially implemented: sceUmdActivate(%d, '%s')", mode, drive);
-			//triggerUmdStatusChange();
-			return 0;
-			*/
 		}
 
 		/// <summary>

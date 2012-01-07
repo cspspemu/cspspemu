@@ -3,6 +3,15 @@
 #include <pspkernel.h>
 #include <psprtc.h>
 
+typedef struct
+{
+	uint maxClusters;
+	uint freeClusters;
+	uint maxSectors;
+	uint sectorSize;
+	uint sectorCount;
+} SizeInfoStruct;
+
 static __inline__ int MScmRegisterMSInsertEjectCallback(SceUID cbid)
 {
 	return sceIoDevctl("fatms0:", 0x02415821, &cbid, sizeof(cbid), 0, 0);
@@ -15,7 +24,22 @@ static __inline__ int MScmUnregisterMSInsertEjectCallback(SceUID cbid)
 
 int ms_callback(int arg1, int arg2, void *arg)
 {
+	SizeInfoStruct sizeInfo = {0};
+	SizeInfoStruct *sizeInfoPointer = &sizeInfo;
+
 	printf("ms_callback: %08X, %08X, %08X\n", (unsigned int)arg1, (unsigned int)arg2, (unsigned int)arg);
+	
+	sceIoDevctl("fatms0:", 0x02425818, (void *)&sizeInfoPointer, sizeof(void*), 0, 0);
+	
+	printf(
+		"sizeInfo:: maxClusters=%d, freeClusters=%d, maxSectors=%d, sectorSize=%d, sectorCount=%d\n",
+		sizeInfo.maxClusters,
+		sizeInfo.freeClusters,
+		sizeInfo.maxSectors,
+		sizeInfo.sectorSize,
+		sizeInfo.sectorCount
+	);
+
     return 0;
 }
 

@@ -11,9 +11,14 @@ namespace CSPspEmu.Hle.Modules.stdio
 	{
 		public enum StdHandle : int
 		{
+			/*
 			In  = -1,
 			Out = -2,
 			Error = -3
+			*/
+			In = 10000001,
+			Out = 10000002,
+			Error = 10000003,
 		}
 
 		public enum SceMode : uint
@@ -25,6 +30,7 @@ namespace CSPspEmu.Hle.Modules.stdio
 		/// </summary>
 		/// <returns>The stdin fileno</returns>
 		[HlePspFunction(NID = 0x172D316E, FirmwareVersion = 150)]
+		//[HlePspNotImplemented]
 		public StdHandle sceKernelStdin()
 		{
 			return StdHandle.In;
@@ -35,6 +41,7 @@ namespace CSPspEmu.Hle.Modules.stdio
 		/// </summary>
 		/// <returns>The stdout fileno</returns>
 		[HlePspFunction(NID = 0xA6BAB2E9, FirmwareVersion = 150)]
+		//[HlePspNotImplemented]
 		public StdHandle sceKernelStdout()
 		{
 			return StdHandle.Out;
@@ -45,6 +52,7 @@ namespace CSPspEmu.Hle.Modules.stdio
 		/// </summary>
 		/// <returns>The stderr fileno</returns>
 		[HlePspFunction(NID = 0xF78BA90A, FirmwareVersion = 150)]
+		//[HlePspNotImplemented]
 		public StdHandle sceKernelStderr()
 		{
 			return StdHandle.Error;

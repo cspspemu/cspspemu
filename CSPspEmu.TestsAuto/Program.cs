@@ -167,19 +167,22 @@ namespace CSPspEmu.AutoTests
 										Math.Abs((int)ColorOutput.B - (int)ColorReference.B)
 									);
 									PixelTotalDifference += Difference3;
-									if (Difference3 > 0)
+									if (Difference3 > 6)
 									{
 										DifferentPixelCount++;
 									}
 									TotalPixelCount++;
 								}
 							}
-							if (PixelTotalDifference != 0)
+
+							var PixelTotalDifferencePercentage = (double)DifferentPixelCount * 100 / (double)TotalPixelCount;
+
+							if (PixelTotalDifferencePercentage > 0.01)
 							{
 								Console.Error.WriteLine(
 									"Files '{0}:{1}' and '{2}:{3}' have different contents {4}/{5} different pixels {6}%",
 									ImageReferenceFile, ReferenceBitmap.Size, ImageOutputFile, OutputBitmap.Size,
-									DifferentPixelCount, TotalPixelCount, (double)DifferentPixelCount * 100 / (double)TotalPixelCount
+									DifferentPixelCount, TotalPixelCount, PixelTotalDifferencePercentage
 								);
 								HadAnError |= true;
 							}
@@ -376,12 +379,14 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "sema";
 				//WildCardFilter = "mbx";
 				//WildCardFilter = "vtimer";
-				//WildCardFilter = "vfpu";
+				WildCardFilter = "vfpu_colors";
 				//WildCardFilter = "mutex";
 				//WildCardFilter = "vpl";
 				//WildCardFilter = "fpl";
-				WildCardFilter = "gpu/triangle";
+				//WildCardFilter = "gpu/triangle";
 				//WildCardFilter = "gpu";
+				//WildCardFilter = "umd/callbacks";
+				//WildCardFilter = "mstick";
 			}
 
 			if (WildCardFilter.Length > 0)

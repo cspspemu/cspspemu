@@ -18,16 +18,12 @@ int main(int argc, char **argv) {
 	
 	umdCbCallbackId = sceKernelCreateCallback("umdHandler", umdHandler, (void *)0x1234);
 	
-	result = sceUmdRegisterUMDCallBack(umdCbCallbackId);
-	printf("%08X\n", result);
+	printf("sceUmdRegisterUMDCallBack: %08X\n", result = sceUmdRegisterUMDCallBack(umdCbCallbackId));
+	printf("sceUmdActivate: %08X\n", sceUmdActivate(1, "disc0:"));
+	printf("sceKernelCheckCallback: %d\n", sceKernelCheckCallback());
 	
-	printf("%d\n", sceKernelCheckCallback());
-	
-	result = sceUmdUnRegisterUMDCallBack(umdCbCallbackId);
-	printf("%08X\n", result);
-
-	result = sceUmdUnRegisterUMDCallBack(umdCbCallbackId);
-	printf("%08X\n", result);
+	printf("sceUmdUnRegisterUMDCallBack: %08X\n", result = sceUmdUnRegisterUMDCallBack(umdCbCallbackId));
+	printf("sceUmdUnRegisterUMDCallBack: %08X\n", result = sceUmdUnRegisterUMDCallBack(umdCbCallbackId));
 
 	return 0;
 }

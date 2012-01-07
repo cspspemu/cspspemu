@@ -61,16 +61,27 @@ namespace CSPspEmu.Hle.Managers
 				{
 					var HleCallback = DequeueScheduledCallback();
 
+					/*
 					var FakeCpuThreadState = new CpuThreadState(CpuProcessor);
 					FakeCpuThreadState.CopyRegistersFrom(CpuThreadState);
 					HleCallback.SetArgumentsToCpuThreadState(FakeCpuThreadState);
 
+					if (FakeCpuThreadState.PC == 0x88040E0) FakeCpuThreadState.PC = 0x880416C;
+					*/
+					//Console.WriteLine("ExecuteCallback: PC=0x{0:X}", FakeCpuThreadState.PC);
+					//Console.WriteLine("               : A0=0x{0:X}", FakeCpuThreadState.GPR[4]);
+					//Console.WriteLine("               : A1=0x{0:X}", FakeCpuThreadState.GPR[5]);
 					try
 					{
-						HleInterop.Execute(FakeCpuThreadState);
+						HleInterop.ExecuteFunctionNow(HleCallback.Function, HleCallback.Arguments);
+					}
+					catch (Exception Exception)
+					{
+						Console.Error.WriteLine(Exception);
 					}
 					finally
 					{
+						//Console.WriteLine("               : PC=0x{0:X}", FakeCpuThreadState.PC);
 						ExecutedCount++;
 					}
 

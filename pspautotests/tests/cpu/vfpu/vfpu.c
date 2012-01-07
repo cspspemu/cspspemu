@@ -665,7 +665,7 @@ void __attribute__((noinline)) checkSimpleLoad() {
 	printf("%f\n", vOut.x);
 }
 
-void __attribute__((noinline)) _checkAggregated(ScePspFVector4 *v0, ScePspFVector4 *v1) {
+void __attribute__((noinline)) _checkAggregatedAdd(ScePspFVector4 *v0, ScePspFVector4 *v1) {
 	
 	asm volatile (
 		"lv.q   C100, %1\n"
@@ -676,11 +676,24 @@ void __attribute__((noinline)) _checkAggregated(ScePspFVector4 *v0, ScePspFVecto
 	);
 }
 
+void __attribute__((noinline)) _checkAggregatedAvg(ScePspFVector4 *v0, ScePspFVector4 *v1) {
+	
+	asm volatile (
+		"lv.q   C100, %1\n"
+		"vavg.q S000, C100\n"
+		"sv.s   S000, 0x00+%0\n"
+
+		: "+m" (*v0) : "m" (*v1)
+	);
+}
+
 void checkAggregated() {
 	ScePspFVector4 vIn = {11.0f, 22.0f, 33.0f, 44.0f};
 	ScePspFVector4 vOut = {0.0f, 0.0f, 0.0f, 0.0f};
-	_checkAggregated(&vOut, &vIn);
-	printf("%f\n", vOut.x);
+	_checkAggregatedAdd(&vOut, &vIn);
+	printf("SUM: %f\n", vOut.x);
+	_checkAggregatedAvg(&vOut, &vIn);
+	printf("AVG: %f\n", vOut.x);
 }
 
 void _checkMatrixScale(ScePspFMatrix4 *matrix) {

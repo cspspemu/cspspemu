@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
+using CSPspEmu.Hle.Modules.stdio;
 using CSPspEmu.Hle.Vfs;
 
 namespace CSPspEmu.Hle.Modules.iofilemgr
@@ -213,6 +215,10 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			catch (FileNotFoundException)
 			{
 			}
+			catch (IOException IOException)
+			{
+				Console.Error.WriteLine(IOException);
+			}
 			//Console.Error.WriteLine("Didn't find file '{0}'", FileName);
 			return unchecked((int)SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND);
 		}
@@ -230,14 +236,26 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0x42EC03AC, FirmwareVersion = 150)]
 		public int sceIoWrite(int FileHandle, byte* InputPointer, int InputSize)
 		{
+			switch ((StdioForUser.StdHandle)FileHandle)
+			{
+				case StdioForUser.StdHandle.Out:
+				case StdioForUser.StdHandle.Error:
+					ConsoleUtils.SaveRestoreConsoleState(() =>
+					{
+						Console.ForegroundColor = ConsoleColor.Blue;
+						Console.Error.WriteLine("Output: '{0}'", PointerUtils.PtrToString(InputPointer, InputSize, Encoding.UTF8));
+					});
+					return 0;
+			}
+
 			try
 			{
 				var HleIoDrvFileArg = GetFileArgFromHandle(FileHandle);
 				return HleIoDrvFileArg.HleIoDriver.IoWrite(HleIoDrvFileArg, InputPointer, InputSize);
 			}
-			catch (Exception)
+			catch (Exception Exception)
 			{
-				//Console.Error.WriteLine(Exception);
+				Console.Error.WriteLine(Exception);
 				return -1;
 			}
 		}

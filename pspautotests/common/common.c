@@ -5,6 +5,7 @@
 #include <pspthreadman.h>
 #include <psploadexec.h>
 #include <pspctrl.h>
+#include <pspdisplay.h>
 #include <pspiofilemgr.h>
 //#include <pspkdebug.h>
 
@@ -109,6 +110,9 @@ void test_begin() {
 void test_end() {
 	fflush(stdout);
 	fflush(stderr);
+	
+	fclose(stdout);
+	fclose(stderr);
 
 	if (!RUNNING_ON_EMULATOR) {
 		SceCtrlData key;
@@ -172,9 +176,63 @@ void emitHex(void *address, unsigned int size) {
 }
 */
 
+unsigned char bmpHeader[54] = {
+	0x42, 0x4D, 0x38, 0x80, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x36, 0x00,
+	0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x10, 0x01,
+	0x00, 0x00, 0x01, 0x00, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x80,
+	0x08, 0x00, 0x12, 0x0B, 0x00, 0x00, 0x12, 0x0B, 0x00, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+
+
+uint extractBits(uint value, int offset, int size) {
+	return (value >> offset) & ((1 << size) - 1);
+}
+
 void emulatorEmitScreenshot() {
+	int file;
+
 	if (RUNNING_ON_EMULATOR) {
 		sceIoDevctl("kemulator:", EMULATOR_DEVCTL__EMIT_SCREENSHOT, NULL, 0, NULL, 0);
+	}
+	else
+	{
+		uint topaddr;
+		int bufferwidth;
+		int pixelformat;
+
+		sceDisplayGetFrameBuf((void **)&topaddr, &bufferwidth, &pixelformat, 0);
+		
+        if (topaddr & 0x80000000) {
+            topaddr |= 0xA0000000;
+        } else {
+            topaddr |= 0x40000000;
+        }
+	
+		if ((file = sceIoOpen("__screenshot.bmp", PSP_O_CREAT | PSP_O_WRONLY | PSP_O_TRUNC, 0777)) >= 0) {
+			int y, x;
+			uint c;
+			uint* vram_row;
+			uint* row_buf = (uint *)malloc(512 * 4);
+			sceIoWrite(file, &bmpHeader, sizeof(bmpHeader));
+			for (y = 0; y < 272; y++) {
+				vram_row = (uint *)(topaddr + 512 * 4 * (271 - y));
+				for (x = 0; x < 512; x++) {
+					c = vram_row[x];
+					row_buf[x] = (
+						((extractBits(c,  0, 8)) <<  0) |
+						((extractBits(c,  8, 8)) <<  8) |
+						((extractBits(c, 16, 8)) << 16) |
+						((                0x00 ) << 24) |
+					0);
+				}
+				sceIoWrite(file, row_buf, 512 * 4);
+			}
+			free(row_buf);
+			//sceIoWrite(file, (void *)topaddr, bufferwidth * 272 * 4);
+			//sceIoFlush();
+			sceIoClose(file);
+		}
 	}
 }
 

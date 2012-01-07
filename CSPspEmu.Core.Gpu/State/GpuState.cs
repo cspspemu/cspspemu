@@ -5,6 +5,7 @@ using System.Text;
 using CSPspEmu.Core.Gpu.State.SubStates;
 using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Memory;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Gpu.State
 {
@@ -16,16 +17,31 @@ namespace CSPspEmu.Core.Gpu.State
 	public struct PointI
 	{
 		public uint X, Y;
+
+		public override string ToString()
+		{
+			return this.ToStringDefault();
+		}
 	}
 
 	public struct PointS
 	{
 		public short X, Y;
+
+		public override string ToString()
+		{
+			return this.ToStringDefault();
+		}
 	}
 
 	public struct Vector3f
 	{
 		public float X, Y, Z;
+
+		public override string ToString()
+		{
+			return this.ToStringDefault();
+		}
 	}
 
 	public struct ViewportStruct
@@ -34,6 +50,23 @@ namespace CSPspEmu.Core.Gpu.State
 		public Vector3f Scale;
 		public PointS RegionTopLeft;
 		public PointS RegionBottomRight;
+
+		public PointS RegionSize
+		{
+			get
+			{
+				return new PointS()
+				{
+					X = (short)(RegionBottomRight.X - RegionTopLeft.X + 1),
+					Y = (short)(RegionBottomRight.Y - RegionTopLeft.Y + 1),
+				};
+			}
+		}
+
+		public override string ToString()
+		{
+			return this.ToStringDefault();
+		}
 	}
 
 	public struct ColorfStruct
