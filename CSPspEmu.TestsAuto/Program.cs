@@ -18,6 +18,7 @@ using CSPspEmu.Runner;
 using CSharpUtils.Extensions;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace CSPspEmu.AutoTests
 {
@@ -52,7 +53,7 @@ namespace CSPspEmu.AutoTests
 			}
 		}
 
-		static protected string RunExecutableAndGetOutput(string PspAutoTestsFolder, string FileName, out string CapturedOutput)
+		static protected string RunExecutableAndGetOutput(string PspAutoTestsFolder, string FileName, out string CapturedOutput, string FileNameBase)
 		{
 			var OutputString = "";
 
@@ -62,10 +63,16 @@ namespace CSPspEmu.AutoTests
 
 			CapturedOutput = ConsoleUtils.CaptureOutput(() =>
 			{				
-				PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
-				PspEmulatorContext.SetInstanceType<GpuImpl, GpuImplMock>();
+				//PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
+				PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();
+
+				//PspEmulatorContext.SetInstanceType<GpuImpl, GpuImplMock>();
+				PspEmulatorContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
+
 				PspEmulatorContext.SetInstanceType<PspAudioImpl, AudioImplMock>();
 				PspEmulatorContext.SetInstanceType<HleOutputHandler, HleOutputHandlerMock>();
+
+				PspConfig.FileNameBase = FileNameBase;
 
 				var Start = DateTime.Now;
 				PspEmulatorContext.GetInstance<HleModuleManager>();
@@ -106,7 +113,7 @@ namespace CSPspEmu.AutoTests
 			return OutputString;
 		}
 
-		static protected void RunFile(string PspAutoTestsFolder, string FileNameExecutable, string FileNameExpected)
+		static protected void RunFile(string PspAutoTestsFolder, string FileNameExecutable, string FileNameExpected, string FileNameBase)
 		{
 			Console.Write("{0}...", FileNameExecutable);
 			var ExpectedOutput = File.ReadAllText(FileNameExpected, Encoding.ASCII);
@@ -115,7 +122,7 @@ namespace CSPspEmu.AutoTests
 
 			// Execute.
 			{
-				RealOutput = RunExecutableAndGetOutput(PspAutoTestsFolder, FileNameExecutable, out CapturedOutput);
+				RealOutput = RunExecutableAndGetOutput(PspAutoTestsFolder, FileNameExecutable, out CapturedOutput, FileNameBase);
 			}
 
 			var ExpectedOutputLines = ExpectedOutput.Trim().Replace("\r\n", "\n").Split('\n');
@@ -132,7 +139,74 @@ namespace CSPspEmu.AutoTests
 				CapturedOutput
 			);
 
-			if (Result.Items.All(Item => Item.Action == Diff.ProcessedItem.ActionEnum.Keep))
+			bool HadAnError = false;
+			for (int n = 0; n < 10; n++)
+			{
+				var ImageReferenceFile = String.Format("{0}.reference.{1}.png", FileNameBase, n);
+				var ImageOutputFile = String.Format("{0}.lastoutput.{1}.png", FileNameBase, n);
+				if (File.Exists(ImageReferenceFile))
+				{
+					if (File.Exists(ImageOutputFile))
+					{
+						var ReferenceBitmap = new Bitmap(ImageReferenceFile);
+						var OutputBitmap = new Bitmap(ImageOutputFile);
+						if (ReferenceBitmap.Size == OutputBitmap.Size)
+						{
+							int PixelTotalDifference = 0;
+							int DifferentPixelCount = 0;
+							int TotalPixelCount = 0;
+							for (int y = 0; y < ReferenceBitmap.Height; y++)
+							{
+								for (int x = 0; x < ReferenceBitmap.Width; x++)
+								{
+									Color ColorReference = ReferenceBitmap.GetPixel(x, y);
+									Color ColorOutput = OutputBitmap.GetPixel(x, y);
+									int Difference3 = (
+										Math.Abs((int)ColorOutput.R - (int)ColorReference.R) +
+										Math.Abs((int)ColorOutput.G - (int)ColorReference.G) +
+										Math.Abs((int)ColorOutput.B - (int)ColorReference.B)
+									);
+									PixelTotalDifference += Difference3;
+									if (Difference3 > 0)
+									{
+										DifferentPixelCount++;
+									}
+									TotalPixelCount++;
+								}
+							}
+							if (PixelTotalDifference != 0)
+							{
+								Console.Error.WriteLine(
+									"Files '{0}:{1}' and '{2}:{3}' have different contents {4}/{5} different pixels {6}%",
+									ImageReferenceFile, ReferenceBitmap.Size, ImageOutputFile, OutputBitmap.Size,
+									DifferentPixelCount, TotalPixelCount, (double)DifferentPixelCount * 100 / (double)TotalPixelCount
+								);
+								HadAnError |= true;
+							}
+						}
+						else
+						{
+							Console.Error.WriteLine(
+								"Files '{0}:{1}' and '{2}:{3}' have different sizes",
+								ImageReferenceFile, ReferenceBitmap.Size, ImageOutputFile, OutputBitmap.Size
+							);
+							HadAnError |= true;
+						}
+					}
+					else
+					{
+						Console.Error.WriteLine(
+							"File '{0}' exists, but not exists '{1}'",
+							ImageReferenceFile, ImageOutputFile
+						);
+						HadAnError |= true;
+					}
+				}
+			}
+
+			if (!Result.Items.All(Item => Item.Action == Diff.ProcessedItem.ActionEnum.Keep)) HadAnError |= true;
+
+			if (!HadAnError)
 			{
 				Console.WriteLine("Ok");
 			}
@@ -228,7 +302,7 @@ namespace CSPspEmu.AutoTests
 
 				if (File.Exists(FileNameExecutable))
 				{
-					RunFile(PspAutoTestsFolder, FileNameExecutable, FileNameExpected);
+					RunFile(PspAutoTestsFolder, FileNameExecutable, FileNameExpected, FileNameBase);
 				}
 				else
 				{
@@ -305,7 +379,9 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "vfpu";
 				//WildCardFilter = "mutex";
 				//WildCardFilter = "vpl";
-				WildCardFilter = "fpl";
+				//WildCardFilter = "fpl";
+				WildCardFilter = "gpu/triangle";
+				//WildCardFilter = "gpu";
 			}
 
 			if (WildCardFilter.Length > 0)

@@ -4,10 +4,16 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Core.Threading.Synchronization;
+using CSharpUtils;
+using CSharpUtils.Extensions;
+using System.Drawing;
+using CSPspEmu.Core.Utils;
+using CSPspEmu.Core.Memory;
+using System.Drawing.Imaging;
 
 namespace CSPspEmu.Core.Display
 {
-	public class PspDisplay : PspEmulatorComponent
+	unsafe public class PspDisplay : PspEmulatorComponent
 	{
 		public const double processed_pixels_per_second = 9000000; // hz
 		public const double cycles_per_pixel            = 1;
@@ -18,7 +24,8 @@ namespace CSPspEmu.Core.Display
 		public const double hsync_hz = (processed_pixels_per_second * cycles_per_pixel) / pixels_in_a_row;
 		public const double vsync_hz = hsync_hz / number_of_rows;
 
-		public PspRtc HlePspRtc;
+		public PspRtc PspRtc;
+		public PspMemory Memory;
 
 		public Info CurrentInfo = new Info()
 		{
@@ -45,11 +52,20 @@ namespace CSPspEmu.Core.Display
 			public int Mode;
 			public int Width;
 			public int Height;
+
+			public int BufferWidthHeightCount
+			{
+				get
+				{
+					return BufferWidth * Height;
+				}
+			}
 		}
 
 		public override void InitializeComponent()
 		{
-			this.HlePspRtc = PspEmulatorContext.GetInstance<PspRtc>();
+			this.PspRtc = PspEmulatorContext.GetInstance<PspRtc>();
+			this.Memory = PspEmulatorContext.GetInstance<PspMemory>();
 		}
 
 		public void TriggerVBlank()
@@ -75,6 +91,24 @@ namespace CSPspEmu.Core.Display
 				//this.HlePspRtc.Elapsed
 				return _VblankCount;
 			}
+		}
+
+		public Bitmap TakeScreenshot()
+		{
+			var Bitmap = new Bitmap(CurrentInfo.BufferWidth, CurrentInfo.Height, PixelFormat.Format24bppRgb);
+			Bitmap.LockBitsUnlock(PixelFormat.Format32bppArgb, (BitmapData) => {
+				var Output = (PixelFormatDecoder.OutputPixel*)BitmapData.Scan0;
+				PixelFormatDecoder.Decode(
+					CurrentInfo.PixelFormat,
+					Memory.PspAddressToPointerSafe(CurrentInfo.Address),
+					Output,
+					CurrentInfo.BufferWidth,
+					CurrentInfo.Height,
+					IgnoreAlpha: true
+				);
+			});
+
+			return Bitmap;
 		}
 	}
 }

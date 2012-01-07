@@ -3,13 +3,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6552E4E6-198A-46B6-864A-53CA5C1ED851}</ProjectGuid>
+    <ProjectGuid>{B23C9D87-D587-4599-A94B-0168D3AA382A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CSPspEmu.Runner</RootNamespace>
-    <AssemblyName>CSPspEmu.Runner</AssemblyName>
+    <RootNamespace>CSPspEmu.Core.Audio.Impl.WaveOut</RootNamespace>
+    <AssemblyName>CSPspEmu.Core.Audio.Impl.WaveOut</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,8 +26,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -34,7 +34,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,48 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Audio\AudioComponentThread.cs" />
-    <Compile Include="Components\ComponentThread.cs" />
-    <Compile Include="Components\Cpu\CpuComponentThread.cs" />
-    <Compile Include="Components\Display\DisplayComponentThread.cs" />
-    <Compile Include="Components\Gpu\GpuComponentThread.cs" />
-    <Compile Include="Components\IRunnableComponent.cs" />
-    <Compile Include="PspRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="README" />
+    <Compile Include="PspAudioWaveOutImpl.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
-      <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
+      <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
       <Name>CSharpUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Audio.Imple.Openal\CSPspEmu.Core.Audio.Impl.Openal.csproj">
-      <Project>{07c4ae15-8e61-4740-b5a9-44db87cecb46}</Project>
-      <Name>CSPspEmu.Core.Audio.Impl.Openal</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Cpu\CSPspEmu.Core.Cpu.csproj">
-      <Project>{827779a5-f05c-41c6-9ff9-fd274224a7ae}</Project>
-      <Name>CSPspEmu.Core.Cpu</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Gpu.Impl.Opengl\CSPspEmu.Core.Gpu.Impl.Opengl.csproj">
-      <Project>{72f560e3-9101-426b-b3e5-b83b78e536db}</Project>
-      <Name>CSPspEmu.Core.Gpu.Impl.Opengl</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">
-      <Project>{9a30ebf3-b702-47d9-aafc-e3e02b410dad}</Project>
-      <Name>CSPspEmu.Core.Gpu</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{f783ecd3-0f79-43cc-abd0-d356a64049c4}</Project>
       <Name>CSPspEmu.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Hle.Modules\CSPspEmu.Hle.Modules.csproj">
-      <Project>{295b7bf1-1130-4098-b0fc-00555ddb09dd}</Project>
-      <Name>CSPspEmu.Hle.Modules</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Hle\CSPspEmu.Hle.csproj">
-      <Project>{288af89e-b41a-4253-a8f7-43d1371516e9}</Project>
-      <Name>CSPspEmu.Hle</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

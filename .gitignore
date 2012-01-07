@@ -50,6 +50,7 @@
 *.exe
 *.pbp
 *.lastoutput
+*.lastoutput.*.png
 *.lastdebug
 *.elf
 *.prx

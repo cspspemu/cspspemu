@@ -5,11 +5,15 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <pspctrl.h>
 
 #undef main
 #define main test_main
 
 extern int RUNNING_ON_EMULATOR;
+
+void emulatorEmitScreenshot();
+void emulatorSendSceCtrlData(SceCtrlData* pad_data);
 
 /*
 void emitInt(int v);

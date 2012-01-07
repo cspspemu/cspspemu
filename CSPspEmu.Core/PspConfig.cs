@@ -150,8 +150,13 @@ namespace CSPspEmu.Core
 		//public bool EnableMpeg = true;
 		public bool EnableMpeg = false;
 
+		public bool MustLogWrites = false;
+		//public bool SetPCWriteAddress
+
 		//public bool TraceThreadLoop = true;
 
 		//public bool TraceJal = true;
+
+		public string FileNameBase;
 	}
 }

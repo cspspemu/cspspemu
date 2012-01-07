@@ -32,6 +32,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			});
 		}
 
+		private bool MustLogWrites
+		{
+			get
+			{
+				return !(MipsMethodEmiter.Processor.Memory is FastPspMemory) && CpuProcessor.PspConfig.MustLogWrites;
+			}
+		}
+
 		private void _save_common(Action Action)
 		{
 			_save_pc();
@@ -43,7 +51,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			});
 			Action();
 
-			if (!(MipsMethodEmiter.Processor.Memory is FastPspMemory))
+			if (MustLogWrites)
 			{
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);

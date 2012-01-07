@@ -54,6 +54,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -81,9 +82,9 @@
       <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Audio.Imple.Openal\CSPspEmu.Core.Audio.Imple.Openal.csproj">
+    <ProjectReference Include="..\CSPspEmu.Core.Audio.Imple.Openal\CSPspEmu.Core.Audio.Impl.Openal.csproj">
       <Project>{07c4ae15-8e61-4740-b5a9-44db87cecb46}</Project>
-      <Name>CSPspEmu.Core.Audio.Imple.Openal</Name>
+      <Name>CSPspEmu.Core.Audio.Impl.Openal</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Cpu\CSPspEmu.Core.Cpu.csproj">
       <Project>{827779a5-f05c-41c6-9ff9-fd274224a7ae}</Project>

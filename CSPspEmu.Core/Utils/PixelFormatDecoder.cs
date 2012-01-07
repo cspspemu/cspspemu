@@ -60,7 +60,7 @@ namespace CSPspEmu.Core.Utils
 		int PaletteMask;
 		int StrideWidth;
 
-		static public void Decode(GuPixelFormats PixelFormat, void* Input, OutputPixel* Output, int Width, int Height, void* Palette = null, GuPixelFormats PaletteType = GuPixelFormats.NONE, int PaletteCount = 0, int PaletteStart = 0, int PaletteShift = 0, int PaletteMask = 0xFF, int StrideWidth = -1)
+		static public void Decode(GuPixelFormats PixelFormat, void* Input, OutputPixel* Output, int Width, int Height, void* Palette = null, GuPixelFormats PaletteType = GuPixelFormats.NONE, int PaletteCount = 0, int PaletteStart = 0, int PaletteShift = 0, int PaletteMask = 0xFF, int StrideWidth = -1, bool IgnoreAlpha = false)
 		{
 			if (StrideWidth == -1) StrideWidth = GetPixelsSize(PixelFormat, Width);
 			var PixelFormatInt = (int)PixelFormat;
@@ -96,6 +96,10 @@ namespace CSPspEmu.Core.Utils
 				case GuPixelFormats.COMPRESSED_DXT3: PixelFormatDecoder.Decode_COMPRESSED_DXT3(); break;
 				case GuPixelFormats.COMPRESSED_DXT5: PixelFormatDecoder.Decode_COMPRESSED_DXT5(); break;
 				default: throw(new InvalidOperationException());
+			}
+			if (IgnoreAlpha)
+			{
+				for (int y = 0, n = 0; y < Height; y++) for (int x = 0; x < Width; x++, n++) Output[n].A = 0xFF;
 			}
 			//DecoderCallbackTable[PixelFormatInt](Input, Output, PixelCount, Width, Palette, PaletteType, PaletteCount, PaletteStart, PaletteShift, PaletteMask);
 		}

@@ -45,6 +45,8 @@ PSP_MAIN_THREAD_ATTR(PSP_THREAD_ATTR_USER | PSP_THREAD_ATTR_VFPU);
 #define EMULATOR_DEVCTL__GET_HAS_DISPLAY 0x00000001
 #define EMULATOR_DEVCTL__SEND_OUTPUT     0x00000002
 #define EMULATOR_DEVCTL__IS_EMULATOR     0x00000003
+#define EMULATOR_DEVCTL__SEND_CTRLDATA   0x00000010
+#define EMULATOR_DEVCTL__EMIT_SCREENSHOT 0x00000020
 
 unsigned int RUNNING_ON_EMULATOR = 0;
 unsigned int HAS_DISPLAY = 1;
@@ -170,6 +172,16 @@ void emitHex(void *address, unsigned int size) {
 }
 */
 
+void emulatorEmitScreenshot() {
+	if (RUNNING_ON_EMULATOR) {
+		sceIoDevctl("kemulator:", EMULATOR_DEVCTL__EMIT_SCREENSHOT, NULL, 0, NULL, 0);
+	}
+}
+
+void emulatorSendSceCtrlData(SceCtrlData* pad_data) {
+	sceIoDevctl("kemulator:", EMULATOR_DEVCTL__SEND_CTRLDATA, pad_data, sizeof(SceCtrlData), NULL, 0);
+}
+
 int main(int argc, char *argv[]) {
 	int retval = 0;
 
@@ -186,6 +198,10 @@ int main(int argc, char *argv[]) {
 	if (RUNNING_ON_EMULATOR) {
 		sceIoDevctl("kemulator:", EMULATOR_DEVCTL__GET_HAS_DISPLAY, NULL, 0, &HAS_DISPLAY, sizeof(HAS_DISPLAY));
 	}
+	
+	#ifdef GRAPHIC_TEST
+		HAS_DISPLAY = 0;
+	#endif
 
 	//if (strncmp(argv[0], START_WITH, strlen(START_WITH)) == 0) RUNNING_ON_EMULATOR = 1;
 

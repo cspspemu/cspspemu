@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Vfs.Emulator
 {
@@ -10,9 +13,11 @@ namespace CSPspEmu.Hle.Vfs.Emulator
 	/// </summary>
 	public enum EmulatorDevclEnum : int
 	{
-		GetHasDisplay = 1,
-		SendOutput = 2,
-		IsEmulator = 3,
+		GetHasDisplay = 0x00000001,
+		SendOutput = 0x00000002,
+		IsEmulator = 0x00000003,
+		SendCtrlData = 0x00000010,
+		EmitScreenshot = 0x00000020,
 	}
 
 	public class HleIoDriverEmulator : IHleIoDriver
@@ -124,6 +129,8 @@ namespace CSPspEmu.Hle.Vfs.Emulator
 			throw new NotImplementedException();
 		}
 
+		int ScreenShotCount = 0;
+
 		public unsafe int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, byte* InputPointer, int InputLength, byte* OutputPointer, int OutputLength)
 		{
 			switch (DeviceName)
@@ -144,8 +151,14 @@ namespace CSPspEmu.Hle.Vfs.Emulator
 					break;
 				case EmulatorDevclEnum.IsEmulator:
 					return 0;
+				case EmulatorDevclEnum.EmitScreenshot:
+					HleState.PspDisplay.TakeScreenshot().Save(String.Format("{0}.lastoutput.{1}.png", HleState.PspConfig.FileNameBase, ScreenShotCount++), ImageFormat.Png);
+					break;
+				default:
+					Console.Error.WriteLine("Unknown emulator command '{0}':0x{1:X} <- {2}", DeviceName, Command, (EmulatorDevclEnum)Command);
+					return -1;
 			}
-			return 0;
+			return -1;
 		}
 
 		public unsafe int IoUnk21(HleIoDrvFileArg HleIoDrvFileArg)
