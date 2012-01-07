@@ -665,12 +665,66 @@ void __attribute__((noinline)) checkSimpleLoad() {
 	printf("%f\n", vOut.x);
 }
 
+void __attribute__((noinline)) _checkAggregated(ScePspFVector4 *v0, ScePspFVector4 *v1) {
+	
+	asm volatile (
+		"lv.q   C100, %1\n"
+		"vfad.q S000, C100\n"
+		"sv.s   S000, 0x00+%0\n"
+
+		: "+m" (*v0) : "m" (*v1)
+	);
+}
+
+void checkAggregated() {
+	ScePspFVector4 vIn = {11.0f, 22.0f, 33.0f, 44.0f};
+	ScePspFVector4 vOut = {0.0f, 0.0f, 0.0f, 0.0f};
+	_checkAggregated(&vOut, &vIn);
+	printf("%f\n", vOut.x);
+}
+
+void _checkMatrixScale(ScePspFMatrix4 *matrix) {
+	asm volatile (
+		"vfim.s	 S000, 00\n"
+		"vfim.s	 S001, 01\n"
+		"vfim.s	 S002, 02\n"
+		"vfim.s	 S003, 03\n"
+		"vfim.s	 S010, 10\n"
+		"vfim.s	 S011, 11\n"
+		"vfim.s	 S012, 12\n"
+		"vfim.s	 S013, 13\n"
+		"vfim.s	 S020, 20\n"
+		"vfim.s	 S021, 21\n"
+		"vfim.s	 S022, 22\n"
+		"vfim.s	 S023, 23\n"
+		"vfim.s	 S030, 30\n"
+		"vfim.s	 S031, 31\n"
+		"vfim.s	 S032, 32\n"
+		"vfim.s	 S033, 33\n"
+		"vfim.s	 S200, -1\n"
+		
+		"vmscl.q M100, E000, S200\n"
+		
+		"sv.q    R100, 0x00+%0\n"
+		"sv.q    R101, 0x10+%0\n"
+		"sv.q    R102, 0x20+%0\n"
+		"sv.q    R103, 0x30+%0\n"
+		: "+m" (*matrix)
+	);
+}
+
+void checkMatrixScale() {
+	ScePspFMatrix4 matrix;
+	_checkMatrixScale(&matrix);
+	printMatrix(&matrix);
+}
 
 int main(int argc, char *argv[]) {
 	printf("Started\n");
 
 	resetAllMatrices();
 	
+	printf("checkAggregated:\n"); checkAggregated();
 	printf("checkSimpleLoad:\n"); checkSimpleLoad();
 	printf("checkMisc:\n"); checkMisc();
 	printf("checkMultiplyFull:\n"); checkMultiplyFull();
@@ -694,7 +748,9 @@ int main(int argc, char *argv[]) {
 	printf("checkVone:\n"); checkVone();
 	printf("checkGlRotate:\n"); checkGlRotate(argc, argv);
 	printf("checkGum:\n"); checkGum();
-
+	
+	printf("checkMatrixScale:\n"); checkMatrixScale();
+	
 	//return 0;
 
 	printf("Ended\n");

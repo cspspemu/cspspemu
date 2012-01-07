@@ -202,6 +202,7 @@ namespace CSPspEmu.Hle
 			Audio,
 			Display,
 			Semaphore,
+			Mutex,
 		}
 
 		public enum Status

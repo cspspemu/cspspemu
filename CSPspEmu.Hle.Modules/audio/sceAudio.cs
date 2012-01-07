@@ -64,6 +64,8 @@ namespace CSPspEmu.Hle.Modules.audio
 		/// <returns></returns>
 		//public Type PSP_AUDIO_SAMPLE_ALIGN(Type)(Type s) { return (s + 63) & ~63; }
 
+		protected int Output2ChannelId = -1;
+
 		/// <summary>
 		/// Reserve the audio output and set the output sample count
 		/// </summary>
@@ -73,19 +75,20 @@ namespace CSPspEmu.Hle.Modules.audio
 		[HlePspNotImplemented]
 		public int sceAudioOutput2Reserve(int SamplesCount)
 		{
-			throw(new NotImplementedException());
+			return Output2ChannelId = sceAudioChReserve(-1, SamplesCount, PspAudio.FormatEnum.Stereo);
+			//throw(new NotImplementedException());
 		}
 
 		/// <summary>
 		/// Output audio (blocking)
 		/// </summary>
 		/// <param name="Volume">The volume. A value between 0 and PSP_AUDIO_VOLUME_MAX.</param>
-		/// <param name="BufferPointer">Pointer to the PCM data.</param>
+		/// <param name="Buffer">Pointer to the PCM data.</param>
 		/// <returns>0 on success, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0x2D53F36E, FirmwareVersion = 150)]
-		public int sceAudioOutput2OutputBlocking(int Volume, void* BufferPointer)
+		public int sceAudioOutput2OutputBlocking(int Volume, short* Buffer)
 		{
-			throw (new NotImplementedException());
+			return sceAudioOutputBlocking(Output2ChannelId, Volume, Buffer);
 		}
 
 		/// <summary>
@@ -95,7 +98,7 @@ namespace CSPspEmu.Hle.Modules.audio
 		[HlePspFunction(NID = 0x43196845, FirmwareVersion = 150)]
 		public int sceAudioOutput2Release()
 		{
-			throw (new NotImplementedException());
+			return sceAudioChRelease(Output2ChannelId);
 		}
 
 		/// <summary>

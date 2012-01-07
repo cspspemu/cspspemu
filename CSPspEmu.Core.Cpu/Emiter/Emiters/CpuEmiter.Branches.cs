@@ -107,7 +107,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			get
 			{
-				return !(CpuProcessor.Memory is FastPspMemory);
+				return !(CpuProcessor.Memory is FastPspMemory) && CpuProcessor.PspConfig.TrackCallStack;
 			}
 		}
 

@@ -44,14 +44,14 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Convert a number of microseconds to a ::SceKernelSysClock structure
 		/// </summary>
-		/// <param name="usec">Number of microseconds</param>
-		/// <param name="clock">Pointer to a ::SceKernelSysClock structure</param>
+		/// <param name="MicroSeconds">Number of microseconds</param>
+		/// <param name="Clock">Pointer to a ::SceKernelSysClock structure</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x110DEC9A, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceKernelUSec2SysClock(uint usec, SceKernelSysClock* clock)
+		public int sceKernelUSec2SysClock(uint MicroSeconds, SceKernelSysClock* Clock)
 		{
-			throw(new NotImplementedException());
+			Clock->MicroSeconds = MicroSeconds;
+			return 0;
 		}
 
 		/// <summary>

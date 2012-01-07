@@ -202,6 +202,10 @@ namespace CSPspEmu.Runner.Components.Cpu
 								Console.Error.WriteLine(Exception);
 							}
 							ElfLoadStream = Iso.Root.Locate("/PSP_GAME/SYSDIR/BOOT.BIN").Open();
+							if (ElfLoadStream.Length == 0)
+							{
+								throw (new Exception("'disc0:/PSP_GAME/SYSDIR/BOOT.BIN' file is empty"));
+							}
 						}
 						break;
 					default:

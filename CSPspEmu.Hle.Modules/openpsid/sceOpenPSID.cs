@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
 using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.openpsid
@@ -11,18 +12,26 @@ namespace CSPspEmu.Hle.Modules.openpsid
 	{
 		public struct PspOpenPSID
 		{
-			public fixed byte data[16];
+			public fixed byte Data[16];
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="openpsid"></param>
+		/// <param name="OpenPSID"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xC69BEBCE, FirmwareVersion = 150)]
-		public int sceOpenPSIDGetOpenPSID(PspOpenPSID* openpsid)
+		[HlePspNotImplemented]
+		public int sceOpenPSIDGetOpenPSID(PspOpenPSID* OpenPSID)
 		{
-			throw(new NotImplementedException());
+			var DummyPspOpenPSID = default(PspOpenPSID);
+			int n = 0;
+			foreach (var Byte in new byte[] { 0x10, 0x02, 0xA3, 0x44, 0x13, 0xF5, 0x93, 0xB0, 0xCC, 0x6E, 0xD1, 0x32, 0x27, 0x85, 0x0F, 0x9D })
+			{
+				DummyPspOpenPSID.Data[n++] = Byte;
+			}
+			*OpenPSID = DummyPspOpenPSID;
+			return 0;
 		}
 	}
 }

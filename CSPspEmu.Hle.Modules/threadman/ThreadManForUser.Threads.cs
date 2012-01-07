@@ -481,9 +481,13 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="priority">The priority of the queue</param>
 		/// <returns>0 on success, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0x912354A7, FirmwareVersion = 150)]
-		public int sceKernelRotateThreadReadyQueue(int priority)
+		[HlePspNotImplemented]
+		public int sceKernelRotateThreadReadyQueue(CpuThreadState CpuThreadState, int priority)
 		{
-			throw(new NotImplementedException());
+			// @TODO!
+			//throw(new NotImplementedException());
+			CpuThreadState.Yield();
+			return 0;
 		}
 
 		/// <summary>
@@ -512,15 +516,25 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// Get a list of UIDs from threadman. Allows you to enumerate 
 		/// resources such as threads or semaphores.
 		/// </summary>
-		/// <param name="type">The type of resource to list, one of ::SceKernelIdListType.</param>
-		/// <param name="readbuf">A pointer to a buffer to store the list.</param>
-		/// <param name="readbufsize">The size of the buffer in SceUID units.</param>
-		/// <param name="idcount">Pointer to an integer in which to return the number of ids in the list.</param>
+		/// <param name="Type">The type of resource to list, one of ::SceKernelIdListType.</param>
+		/// <param name="List">A pointer to a buffer to store the list.</param>
+		/// <param name="ListMax">The size of the buffer in SceUID units.</param>
+		/// <param name="OutListCount">Pointer to an integer in which to return the number of ids in the list.</param>
 		/// <returns>Less than 0 on error. Either 0 or the same as idcount on success.</returns>
 		[HlePspFunction(NID = 0x94416130, FirmwareVersion = 150)]
-		public int sceKernelGetThreadmanIdList(SceKernelIdListType type, int* readbuf, int readbufsize, int* idcount)
+		public int sceKernelGetThreadmanIdList(SceKernelIdListType Type, int* List, int ListMax, int* OutListCount)
 		{
-			throw(new NotImplementedException());
+			int n = 0;
+			switch (Type)
+			{
+				case SceKernelIdListType.SCE_KERNEL_TMID_Thread:
+					foreach (var Thread in HleState.ThreadManager.Threads) List[n++] = Thread.Id;
+					break;
+				default:
+					throw (new NotImplementedException("sceKernelGetThreadmanIdList: " + Type));
+			}
+			if (OutListCount != null) *OutListCount = n;
+			return 0;
 		}
 
 		/// <summary>

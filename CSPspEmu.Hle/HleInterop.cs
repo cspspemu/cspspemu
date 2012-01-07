@@ -26,7 +26,7 @@ namespace CSPspEmu.Hle
 		public uint ExecuteFunctionNow(uint Function, params object[] Arguments)
 		{
 			CurrentFakeHleThread = new HleThread(new CpuThreadState(CpuProcessor));
-			CurrentFakeHleThread.CpuThreadState.CopyRegistersFrom(HleThreadManager.Current.CpuThreadState);
+			CurrentFakeHleThread.CpuThreadState.CopyRegistersFrom(HleThreadManager.CurrentOrAny.CpuThreadState);
 			SetArgumentsToCpuThreadState(CurrentFakeHleThread.CpuThreadState, Function, Arguments);
 			{
 				CurrentFakeHleThread.CpuThreadState.RA = HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK;

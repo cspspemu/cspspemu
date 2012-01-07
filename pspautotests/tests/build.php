@@ -87,19 +87,27 @@ foreach (recursive_directory_iterator($path) as $file) {
 	echo "{$cfile}...";
 	if ($out_time < $src_time) {
 		$output = $pspSdk->gcc($gcc_args);
-		echo $output;
-		
-		if (is_file($outfile)) {
-			echo `{$pspSdk->MKSFO} TESTMODULE "{$param_sfo}"`;
-			echo `{$pspSdk->PACK_PBP} "{$eboot_pbp}" "{$param_sfo}" NUL NUL NUL NUL NUL "{$outfile}" NUL > NUL`;
-			
-			@unlink($param_sfo);
-			
-			touch($outfile, $src_time);
-			touch($eboot_pbp, $src_time);
-		}
 
-		echo "Ok\n";
+		if ($output != '') {
+			@unlink($outfile);
+			echo "\n\n";
+			echo "{$pspSdk->gccCmd}\n";
+			echo "{$pspSdk->fixupCmd}\n";
+			echo "\n\n{$output}\n";
+			echo "...Error\n";
+		} else {
+			if (is_file($outfile)) {
+				echo `{$pspSdk->MKSFO} TESTMODULE "{$param_sfo}"`;
+				echo `{$pspSdk->PACK_PBP} "{$eboot_pbp}" "{$param_sfo}" NUL NUL NUL NUL NUL "{$outfile}" NUL > NUL`;
+				
+				@unlink($param_sfo);
+				
+				touch($outfile, $src_time);
+				touch($eboot_pbp, $src_time);
+			}
+
+			echo "Ok\n";
+		}
 	} else {
 		echo "Uptodate\n";
 	}

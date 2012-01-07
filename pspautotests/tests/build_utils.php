@@ -12,6 +12,9 @@ class PspSdk {
 	//public $PSP_FW_VERSION = 371;
 	public $PSP_FW_VERSION = 500;
 	
+	public $gccCmd;
+	public $fixupCmd;
+	
 	public function __construct() {
 		if (PHP_OS == 'WINNT') {
 			$this->EXE_PREFIX = '.exe';
@@ -45,11 +48,15 @@ class PspSdk {
 		$gcc_cmd   = $this->GCC . ' ' . implode(' ', array_map('escapeshellarg', $args));
 		$fixup_cmd = $this->FIXUP_IMPORTS . ' ' . escapeshellarg($elfoutput);
 		//echo "$cmd\n";
-		$gcc_out = `{$gcc_cmd}`;
+		
+		$this->gccCmd = $gcc_cmd;
+		$this->fixupCmd = $fixup_cmd;
+		
+		$gcc_out = `{$gcc_cmd} 2>&1`;
 		$fixup_out = '';
 		
 		if (is_file($elfoutput)) {
-			$fixup_out = `$fixup_cmd`;
+			$fixup_out = `$fixup_cmd 2>&1`;
 		}
 
 		return trim("{$gcc_out}\n{$fixup_out}");

@@ -70,6 +70,7 @@
     <Compile Include="mpeg\sceMpeg.Avc.cs" />
     <Compile Include="mpeg\sceMpeg.Ringbuffer.cs" />
     <Compile Include="mpeg\sceMpeg.Streams.cs" />
+    <Compile Include="pmfplayer\scePsmf.cs" />
     <Compile Include="sceMemlmd\semaphore.cs" />
     <Compile Include="libatrac3plus\sceAtrac3plus.cs" />
     <Compile Include="libatrac3plus\sceAtrac3plus.Utils.cs" />

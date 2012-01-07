@@ -521,12 +521,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		private void VectorOperationSaveVd(Action<uint, Action<int>> Action)
+		private void VectorOperationSaveVd(Action<uint, Action<int>> Action, Action AccumulateAction = null)
 		{
-			VectorOperationSaveVd(Instruction.ONE_TWO, Action);
+			VectorOperationSaveVd(Instruction.ONE_TWO, Action, AccumulateAction);
 		}
 
-		private void VectorOperationSaveVd(uint VectorSize, Action<uint, Action<int>> Action)
+		private void VectorOperationSaveVd(uint VectorSize, Action<uint, Action<int>> Action, Action AccumulateAction = null)
 		{
 			foreach (var Index in XRange(VectorSize))
 			{
@@ -540,6 +540,43 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					Action((uint)Index, Load);
 				});
 			}
+			if (AccumulateAction != null) AccumulateAction();
+		}
+
+		static public float LogFloatResult(float Value, CpuThreadState CpuThreadState)
+		{
+			Console.Error.WriteLine("LogFloatResult: {0}", Value);
+			//CpuThreadState.DumpVfpuRegisters(Console.Error);
+			return Value;
+		}
+
+		private void EmitLogFloatResult(bool Return = true)
+		{
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+			MipsMethodEmiter.CallMethod(typeof(CpuEmiter), "LogFloatResult");
+			if (!Return)
+			{
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Pop);
+			}
+		}
+
+		private void VectorOperationSaveAggregatedVd(uint VectorSize, Action StartAction, Action<int, Action<int>> IterationAction, Action EndAction)
+		{
+			SaveVprField(Instruction.VD, () =>
+			{
+				StartAction();
+				foreach (var Index in XRange(VectorSize))
+				{
+					Action<int> Load = InputCount =>
+					{
+						if (InputCount >= 1) Load_VS(Index, VectorSize);
+						if (InputCount >= 2) Load_VT(Index, VectorSize);
+					};
+					IterationAction(Index, Load);
+				}
+				EndAction();
+			}
+			);
 		}
 
 		/*

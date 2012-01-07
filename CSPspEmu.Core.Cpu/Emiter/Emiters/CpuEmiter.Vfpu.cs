@@ -17,7 +17,111 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				Load_VD(0, 1);
 			});
 		}
-		public void mfvc() { throw (new NotImplementedException("mfvc")); }
+
+		public enum VfpuControlRegistersEnum
+		{
+			/// <summary>
+			/// Source prefix stack
+			/// </summary>
+			VFPU_PFXS = 128,
+
+			/// <summary>
+			/// Target prefix stack
+			/// </summary>
+			VFPU_PFXT = 129,
+
+			/// <summary>
+			/// Destination prefix stack
+			/// </summary>
+			VFPU_PFXD = 130,
+
+			/// <summary>
+			/// Condition information
+			/// </summary>
+			VFPU_CC = 131,
+
+			/// <summary>
+			/// VFPU internal information 4
+			/// </summary>
+			VFPU_INF4 = 132,
+
+			/// <summary>
+			/// Not used (reserved)
+			/// </summary>
+			VFPU_RSV5 = 133,
+
+			/// <summary>
+			/// Not used (reserved)
+			/// </summary>
+			VFPU_RSV6 = 134,
+
+			/// <summary>
+			/// VFPU revision information
+			/// </summary>
+			VFPU_REV  = 135,
+
+			/// <summary>
+			/// Pseudorandom number generator information 0
+			/// </summary>
+			VFPU_RCX0 = 136,
+
+			/// <summary>
+			/// Pseudorandom number generator information 1
+			/// </summary>
+			VFPU_RCX1 = 137,
+
+			/// <summary>
+			/// Pseudorandom number generator information 2
+			/// </summary>
+			VFPU_RCX2 = 138,
+
+			/// <summary>
+			/// Pseudorandom number generator information 3
+			/// </summary>
+			VFPU_RCX3 = 139,
+
+			/// <summary>
+			/// Pseudorandom number generator information 4
+			/// </summary>
+			VFPU_RCX4 = 140,
+
+			/// <summary>
+			/// Pseudorandom number generator information 5
+			/// </summary>
+			VFPU_RCX5 = 141,
+	
+			/// <summary>
+			/// Pseudorandom number generator information 6
+			/// </summary>
+			VFPU_RCX6 = 142,
+
+			/// <summary>
+			/// Pseudorandom number generator information 7
+			/// </summary>
+			VFPU_RCX7 = 143,
+		}
+
+		static public uint _mfvc_impl(VfpuControlRegistersEnum VfpuControlRegister)
+		{
+			switch (VfpuControlRegister)
+			{
+				default:
+					throw (new NotImplementedException("_mfvc_impl: " + VfpuControlRegister));
+			}
+			//return 0;
+		}
+
+		/// <summary>
+		/// Copies a vfpu control register into a general purpose register.
+		/// </summary>
+		public void mfvc()
+		{
+			MipsMethodEmiter.SaveGPR(RT, () =>
+			{
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (int)(Instruction.IMM7 + 128));
+				MipsMethodEmiter.CallMethod(typeof(CpuEmiter), "_mfvc_impl");
+			});
+		}
 
 		/// <summary>
 		/// ID("mtv",         VM("010010:00:111:rt:0:0000000:0:vd"), "%t, %zs", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
@@ -483,7 +587,48 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public void vsrt3() { throw (new NotImplementedException("")); }
 
-		public void vfad() { throw (new NotImplementedException("")); }
+		/// <summary>
+		/// +-------------------------------------+----+--------------+---+--------------+ 
+        /// |31                                16 | 15 | 14         8 | 7 | 6         0  | 
+        /// +-------------------------------------+----+--------------+---+--------------+ 
+        /// |        opcode 0xd046 (p)            | 0  | vfpu_rs[6-0] | 1 | vfpu_rd[6-0] | 
+        /// |        opcode 0xd046 (t)            | 1  | vfpu_rs[6-0] | 0 | vfpu_rd[6-0] | 
+        /// |        opcode 0xd046 (q)            | 1  | vfpu_rs[6-0] | 1 | vfpu_rd[6-0] | 
+        /// +-------------------------------------+----+--------------+---+--------------+ 
+		/// 
+        /// Float ADD?.Pair/Triple/Quad  --  Accumulate Components of Vector into Single Float
+		/// 
+        /// vfad.p %vfpu_rd, %vfpu_rs  ; Accumulate Components of Pair 
+        /// vfad.t %vfpu_rd, %vfpu_rs  ; Accumulate Components of Triple 
+        /// vfad.q %vfpu_rd, %vfpu_rs  ; Accumulate Components of Quad 
+		/// 
+        /// %vfpu_rs:   VFPU Vector Source Register ([p|t|q]reg 0..127) 
+        /// %vfpu_rd:   VFPU Vector Destination Register (sreg 0..127) 
+		/// 
+        /// vfpu_regs[%vfpu_rd] <- Sum_Of_Components(vfpu_regs[%vfpu_rs]) 
+		/// </summary>
+		public void vfad() {
+			
+			uint VectorSize = Instruction.ONE_TWO;
+			//Console.Error.WriteLine("VectorSize: {0}", VectorSize);
+			VectorOperationSaveAggregatedVd(VectorSize,
+				delegate()
+				{
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 0.0f);
+				},
+				delegate(int Index, Action<int> Load)
+				{
+					Load(1);
+					//Load_VS(Index, VectorSize);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+					//EmitLogFloatResult();
+				},
+				delegate()
+				{
+					//EmitLogResult();
+				}
+			);
+		}
 
 		// Vfpu MINimum/MAXium/ADD/SUB/DIV/MUL
 		public void vmin() { throw (new NotImplementedException("")); }
@@ -645,7 +790,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			//throw (new NotImplementedException(""));
 		}
 		public void vsync() { throw (new NotImplementedException("")); }
-		public void vflush() { throw (new NotImplementedException("")); }
+
+		public void vflush() {
+			// Ignore cache?
+		}
 
 		public void vpfxd()
 		{
@@ -686,7 +834,45 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void vi2f() { throw (new NotImplementedException("")); }
 
 		public void vscmp() { throw (new NotImplementedException("")); }
-		public void vmscl() { throw (new NotImplementedException("")); }
+
+		/// <summary>
+        /// +----------------------+--------------+----+--------------+---+--------------+
+        /// |31                 23 | 22        16 | 15 | 14         8 | 7 | 6         0  |
+        /// +----------------------+--------------+----+--------------+---+--------------+
+        /// |  opcode 0x65008080   | vfpu_rt[6-0] |    | vfpu_rs[6-0] |   | vfpu_rd[6-0] |
+        /// +----------------------+--------------+----+--------------+---+--------------+
+		/// 
+        /// MatrixScale.Pair/Triple/Quad, multiply all components by scale factor
+		/// 
+        /// vmscl.p %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Scale 2x2 Matrix by %vfpu_rt
+        /// vmscl.t %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Scale 3x3 Matrix by %vfpu_rt
+        /// vmscl.q %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Scale 4x4 Matrix by %vfpu_rt
+		/// 
+        /// %vfpu_rt:       VFPU Vector Source Register, Scale (sreg 0..127)
+        /// %vfpu_rs:       VFPU Vector Source Register, Matrix ([p|t|q]reg 0..127)
+        /// %vfpu_rd:       VFPU Vector Destination Register, Matrix ([s|p|t|q]reg 0..127)
+		/// 
+        /// vfpu_mtx[%vfpu_rd] <- vfpu_mtx[%vfpu_rs] * vfpu_reg[%vfpu_rt]
+		/// </summary>
+		public void vmscl() {
+			var MatrixSize = Instruction.ONE_TWO;
+
+			foreach (var RowIndex in XRange(MatrixSize))
+			{
+				uint VectorSize = MatrixSize;
+
+				foreach (var Index in XRange(VectorSize))
+				{
+					Save_VD(Index, VectorSize, RowIndex, () =>
+					{
+						Load_VS(Index, VectorSize, RowIndex);
+						Load_VT(0, 1);
+						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+					});
+				}
+			}
+			//throw (new NotImplementedException(""));
+		}
 
 		public void vt4444_q() { throw (new NotImplementedException("")); }
 		public void vt5551_q() { throw (new NotImplementedException("")); }

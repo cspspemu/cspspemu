@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Crypto
 {
@@ -27,7 +28,7 @@ namespace CSPspEmu.Core.Crypto
 		//memcpy(block_buff, src, 16);
 		static public void memcpy(byte* dst, byte* src, int count)
 		{
-			for (int n = 0; n < count; n++) dst[n] = src[n];
+			PointerUtils.Memcpy(dst, src, count);
 		}
 
 		static public int memcmp(byte* str1, byte* str2, int count)

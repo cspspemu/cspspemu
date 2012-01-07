@@ -121,16 +121,17 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"C:\juegos\jpcsp_last\demos\nehetutorial07.pbp");
 				//PspEmulator.StartAndLoad(@"C:\juegos\jpcsp_last\demos\nehetutorial08.pbp");
 				//PspEmulator.StartAndLoad(@"C:\juegos\jpcsp_last\demos\nehetutorial09.pbp");
-				//PspEmulator.StartAndLoad(@"C:\juegos\jpcsp_last\demos\nehetutorial10.pbp");
+				//PspEmulator.StartAndLoad(@"C:\juegos\jpcsp_last\demos\nehetutorial10.pbp", TrackCallStack : false);
 
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\cavestory\EBOOT.PBP", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\pspautotests\tests\video\pmf\pmf.elf", TraceSyscalls: false);
-				PspEmulator.StartAndLoad(@"F:\Isos\psp\Final Fantasy Tactics.iso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Final Fantasy Tactics.iso", TraceSyscalls: false);
 				//PspEmulator.AddCwCheat(0x70D69F04, 0x00000007);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia.iso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Championship_Manager.cso", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\DragonBall Z Shin Budokai.cso", TraceSyscalls: true);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Armored Core - Silent Line Portable.iso");
+				PspEmulator.StartAndLoad(@"F:\Isos\psp\DragonBall Z Shin Budokai.cso", TraceSyscalls: true);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Harvest Moon.iso", TraceSyscalls: true);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Lemmings.cso", TraceSyscalls: true);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Luxor.cso");

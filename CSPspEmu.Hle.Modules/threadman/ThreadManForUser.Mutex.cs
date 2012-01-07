@@ -1,12 +1,106 @@
-﻿using System;
+﻿#define MUTEX_USE_WAIT_CALLBACK
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Cpu;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
 	unsafe public partial class ThreadManForUser
 	{
+		public enum MutexAttributesEnum : uint
+		{
+			/// <summary>
+			/// PSP_MUTEX_ATTR_FIFO
+			/// </summary>
+			Fifo = 0x000,
+
+			/// <summary>
+			/// PSP_MUTEX_ATTR_PRIORITY
+			/// </summary>
+			Priority = 0x100,
+
+			/// <summary>
+			/// Allows recursively call lock mutex but only on the same thread.
+			/// 
+			/// PSP_MUTEX_ATTR_ALLOW_RECURSIVE
+			/// </summary>
+			AllowRecursive = 0x200,
+		}
+
+		public class PspMutex
+		{
+			public string Name;
+			public MutexAttributesEnum Attributes;
+			public uint Options;
+			public HleState HleState;
+			public CpuThreadState LockCpuThreadState;
+			public int CurrentCountValue = 0;
+			public Queue<Action> WakeUpList = new Queue<Action>();
+
+			public void Lock(CpuThreadState CurrentCpuThreadState, int UpdateCountValue, uint* Timeout)
+			{
+				if (Timeout != null) throw(new NotImplementedException());
+				if (UpdateCountValue <= 0) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT));
+				//Console.Error.WriteLine("Lock : {0}", HleState.ThreadManager.Current.Id);
+				if (!TryLock(CurrentCpuThreadState, UpdateCountValue))
+				{
+					//HleState.ThreadManager.Current.
+					HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Mutex, "sceKernelLockMutex", (WakeUp) =>
+					{
+						WakeUpList.Enqueue(() =>
+						{
+							WakeUp();
+						});
+					}, HandleCallbacks: false);
+				}
+			}
+
+			public void Unlock(CpuThreadState CurrentCpuThreadState, int UpdateCountValue)
+			{
+				if (UpdateCountValue == 0) throw(new SceKernelException(SceKernelErrors.ERROR_KERNEL_MUTEX_UNLOCKED));
+				if (this.CurrentCountValue - UpdateCountValue < 0) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_MUTEX_UNLOCK_UNDERFLOW));
+				//Console.Error.WriteLine("Unlock : {0}", HleState.ThreadManager.Current.Id);
+				//Console.Error.WriteLine(" {0} -> {1}", this.CurrentCountValue, this.CurrentCountValue - UpdateCountValue);
+				CurrentCountValue -= UpdateCountValue;
+				if (CurrentCountValue == 0)
+				{
+					//Console.Error.WriteLine("Release!");
+					if (WakeUpList.Any())
+					{
+						var Action = WakeUpList.Dequeue();
+						Action();
+					}
+				}
+			}
+
+			public bool TryLock(CpuThreadState CurrentCpuThreadState, int UpdateCountValue)
+			{
+				if (
+					CurrentCountValue == 0 ||
+					(Attributes.HasFlag(MutexAttributesEnum.AllowRecursive) && CurrentCpuThreadState == LockCpuThreadState)
+				)
+				{
+					//Console.Error.WriteLine(" {0} -> {1}", this.CurrentCountValue, this.CurrentCountValue + UpdateCountValue);
+					this.CurrentCountValue += UpdateCountValue;
+					this.LockCpuThreadState = CurrentCpuThreadState;
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+
+		HleUidPoolSpecial<PspMutex, int> MutexList = new HleUidPoolSpecial<PspMutex, int>()
+		{
+			OnKeyNotFoundError = SceKernelErrors.ERROR_KERNEL_MUTEX_NOT_FOUND,
+		};
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -15,9 +109,18 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Options"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xB7D098C6, FirmwareVersion = 150)]
-		public int sceKernelCreateMutex(string Name, uint Attributes, int Options)
+		public int sceKernelCreateMutex(CpuThreadState CpuThreadState, string Name, MutexAttributesEnum Attributes, uint Options)
 		{
-			throw(new NotImplementedException());
+			var PspMutex = new PspMutex()
+			{
+				Name = Name,
+				Attributes = Attributes,
+				Options = Options,
+				LockCpuThreadState = CpuThreadState,
+				HleState = HleState,
+			};
+			var PspMutexId = MutexList.Create(PspMutex);
+			return PspMutexId;
 		}
 
 		/// <summary>
@@ -26,20 +129,10 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="MutexId"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xF8170FBE, FirmwareVersion = 150)]
-		public int sceKernelDeleteMutex(int MutexId)
+		public int sceKernelDeleteMutex(CpuThreadState CpuThreadState, int MutexId)
 		{
-			throw (new NotImplementedException());
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="MutexId"></param>
-		/// <returns></returns>
-		[HlePspFunction(NID = 0x6B30100F, FirmwareVersion = 150)]
-		public int sceKernelUnlockMutex(int MutexId)
-		{
-			throw (new NotImplementedException());
+			MutexList.Remove(MutexId);
+			return 0;
 		}
 
 		/// <summary>
@@ -50,9 +143,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Timeout"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xB011B11F, FirmwareVersion = 150)]
-		public int sceKernelLockMutex(int MutexId, int Count, uint* Timeout)
+		public int sceKernelLockMutex(CpuThreadState CpuThreadState, int MutexId, int Count, uint* Timeout)
 		{
-			throw(new NotImplementedException());
+			var Mutex = MutexList.Get(MutexId);
+			Mutex.Lock(CpuThreadState, Count, Timeout);
+			return 0;
 		}
 
 		/// <summary>
@@ -62,9 +157,24 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Count"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x0DDCD2C9, FirmwareVersion = 150)]
-		public int sceKernelTryLockMutex(int MutexId, int Count)
+		public int sceKernelTryLockMutex(CpuThreadState CpuThreadState, int MutexId, int Count)
 		{
-			throw (new NotImplementedException());
+			var Mutex = MutexList.Get(MutexId);
+			Mutex.TryLock(CpuThreadState, Count);
+			return 0;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="MutexId"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x6B30100F, FirmwareVersion = 150)]
+		public int sceKernelUnlockMutex(CpuThreadState CpuThreadState, int MutexId, int Count)
+		{
+			var Mutex = MutexList.Get(MutexId);
+			Mutex.Unlock(CpuThreadState, Count);
+			return 0;
 		}
 	}
 }

@@ -29,6 +29,15 @@ namespace CSPspEmu.Hle.Managers
 		private HleCallbackManager HleCallbackManager;
 		private HleInterruptManager HleInterruptManager;
 
+		public HleThread CurrentOrAny
+		{
+			get
+			{
+				if (Current != null) return Current;
+				return Threads.First();
+			}
+		}
+
 		public override void InitializeComponent()
 		{
 			this.Processor = PspEmulatorContext.GetInstance<CpuProcessor>();

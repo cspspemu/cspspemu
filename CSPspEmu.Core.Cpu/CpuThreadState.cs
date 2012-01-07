@@ -261,11 +261,35 @@ namespace CSPspEmu.Core.Cpu
 			}
 		}
 
+		public class VfprList
+		{
+			public CpuThreadState Processor;
+
+			public float this[int Index]
+			{
+				get
+				{
+					fixed (float* PTR = &Processor.VFR0)
+					{
+						return PTR[Index];
+					}
+				}
+				set
+				{
+					fixed (float* PTR = &Processor.VFR0)
+					{
+						PTR[Index] = value;
+					}
+				}
+			}
+		}
+
 		//public uint *GPR_Ptr;
 		//public float* FPR_Ptr;
 
 		public GprList GPR;
 		public FprList FPR;
+		public VfprList Vfpr;
 		public FprListInteger FPR_I;
 		//readonly public float* FPR;
 
@@ -322,6 +346,7 @@ namespace CSPspEmu.Core.Cpu
 			GPR = new GprList() { Processor = this };
 			FPR = new FprList() { Processor = this };
 			FPR_I = new FprListInteger() { Processor = this };
+			Vfpr = new VfprList() { Processor = this };
 
 			for (int n = 0; n < 32; n++)
 			{
@@ -424,6 +449,23 @@ namespace CSPspEmu.Core.Cpu
 				if (n % 4 == 3) TextWriter.WriteLine();
 			}
 			TextWriter.WriteLine();
+		}
+
+		public void DumpVfpuRegisters(TextWriter TextWriter)
+		{
+			for (int Matrix = 0; Matrix < 8; Matrix++)
+			{
+				TextWriter.WriteLine("Matrix: {0}", Matrix);
+				for (int Column = 0; Column < 4; Column++)
+				{
+					for (int Row = 0; Row < 4; Row++)
+					{
+						TextWriter.Write(", {0}", Vfpr[Matrix * 16 + Column * 4 + Row]);
+					}
+					TextWriter.WriteLine("");
+				}
+				TextWriter.WriteLine("");
+			}
 		}
 
 		public unsafe void CopyRegistersFrom(CpuThreadState that)

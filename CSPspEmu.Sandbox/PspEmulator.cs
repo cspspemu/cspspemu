@@ -124,9 +124,10 @@ namespace CSPspEmu.Sandbox
 		/// <summary>
 		/// 
 		/// </summary>
-		public void StartAndLoad(string File, bool TraceSyscalls = false, bool ShowMenus = true)
+		public void StartAndLoad(string File, bool TraceSyscalls = false, bool ShowMenus = true, bool TrackCallStack = true)
 		{
 			PspConfig.DebugSyscalls = TraceSyscalls;
+			PspConfig.TrackCallStack = TrackCallStack;
 			Start(() =>
 			{
 				LoadFile(File);
@@ -136,7 +137,7 @@ namespace CSPspEmu.Sandbox
 		/// <summary>
 		/// Start.
 		/// </summary>
-		public void Start(Action CallbackOnInit = null, bool ShowMenus = true)
+		public void Start(Action CallbackOnInit = null, bool ShowMenus = true, bool TrackCallStack = true)
 		{
 			try
 			{
