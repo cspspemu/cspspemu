@@ -47,10 +47,17 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut
 			//throw new NotImplementedException();
 		}
 
-		static private MMRESULT waveOutOpen(out IntPtr phwo, uint uDeviceID, ref WAVEFORMATEX pwfx, uint dwCallback, uint dwInstance, uint fdwOpen);
-		static private MMRESULT waveOutPrepareHeader(IntPtr hwo, ref WAVEHDR pwh, uint cbwh);
-		static private MMRESULT waveOutWrite(IntPtr hwo, WAVEHDR* pwh, uint cbwh);
-		static private MMRESULT waveOutClose(IntPtr hwo);
+		[DllImport("winmm.dll")]
+		private static extern MMRESULT waveOutOpen(out IntPtr phwo, uint uDeviceID, ref WAVEFORMATEX pwfx, uint dwCallback, uint dwInstance, uint fdwOpen);
+		
+		[DllImport("winmm.dll")]
+		private static extern MMRESULT waveOutPrepareHeader(IntPtr hwo, ref WAVEHDR pwh, uint cbwh);
+	
+		[DllImport("winmm.dll")]
+		private static extern MMRESULT waveOutWrite(IntPtr hwo, WAVEHDR* pwh, uint cbwh);
+
+		[DllImport("winmm.dll")]
+		private static extern MMRESULT waveOutClose(IntPtr hwo);
 
 		public const ushort WAVE_FORMAT_UNKNOWN = 0x0000;
 		public const ushort WAVE_FORMAT_PCM = 0x0001;
@@ -86,7 +93,7 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut
 			BADFORMAT = (MMRESULT_BASE + 32)
 		}
 
-		static const uint WHDR_DONE       = 0x00000001;
+		public const uint WHDR_DONE       = 0x00000001;
 		public const uint WHDR_PREPARED = 0x00000002;
 		public const uint WHDR_BEGINLOOP = 0x00000004;
 		public const uint WHDR_ENDLOOP = 0x00000008;
