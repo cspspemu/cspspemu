@@ -66,9 +66,12 @@ namespace CSPspEmu.Hle.Vfs.Local
 			bool Truncate = (Flags & HleIoFlags.Truncate) != 0;
 			bool Create = (Flags & HleIoFlags.Create) != 0;
 
+			if (Read) FileAccess |= FileAccess.Read;
+			if (Write) FileAccess |= FileAccess.Write;
+
 			if (Append)
 			{
-				FileMode = FileMode.Append;
+				FileMode = FileMode.OpenOrCreate;
 			}
 			else if (Create)
 			{
@@ -79,11 +82,16 @@ namespace CSPspEmu.Hle.Vfs.Local
 				FileMode = FileMode.Truncate;
 			}
 
-			if (Read) FileAccess |= FileAccess.Read;
-			if (Write) FileAccess |= FileAccess.Write;
 			//if (Append) FileMode |= FileMode.Open;
 
-			HleIoDrvFileArg.FileArgument = File.Open(RealFileName, FileMode, FileAccess, FileShare.Read);
+			var Stream = File.Open(RealFileName, FileMode, FileAccess, FileShare.Read);
+			HleIoDrvFileArg.FileArgument = Stream;
+
+			if (Append)
+			{
+				Stream.Position = Stream.Length;
+			}
+
 			return 0;
 		}
 

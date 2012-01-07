@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using CSharpUtils.Extensions;
 
@@ -63,9 +64,42 @@ namespace CSPspEmu.Core.Rtc
 			}
 		}
 
+		public struct PspTimeStruct
+		{
+			[DllImport("Kernel32.dll")]
+			private static extern bool QueryPerformanceCounter(out long lpPerformanceCount);
+
+			[DllImport("Kernel32.dll")]
+			private static extern bool QueryPerformanceFrequency(out long lpFrequency);
+
+			public long TotalMicroseconds;
+
+			public void SetToNow()
+			{
+				long Counter;
+				long Frequency;
+				QueryPerformanceCounter(out Counter);
+				QueryPerformanceFrequency(out Frequency);
+				TotalMicroseconds = Counter * 1000 * 1000 / Frequency;
+			}
+
+			public long TotalMilliseconds
+			{
+				get
+				{
+					return TotalMicroseconds / 1000;
+				}
+			}
+		}
+
 		protected LinkedList<VirtualTimer> Timers = new LinkedList<VirtualTimer>();
 		public DateTime StartDateTime;
 		public DateTime CurrentDateTime;
+
+		protected PspTimeStruct StartTime;
+		protected PspTimeStruct CurrentTime;
+		public PspTimeStruct ElapsedTime;
+
 		public TimeSpan Elapsed
 		{
 			get {
@@ -98,10 +132,14 @@ namespace CSPspEmu.Core.Rtc
 		public void Start()
 		{
 			this.StartDateTime = DateTime.UtcNow;
+			this.StartTime.SetToNow();
 		}
 
 		public void Update()
 		{
+			CurrentTime.SetToNow();
+			ElapsedTime.TotalMicroseconds = CurrentTime.TotalMicroseconds - StartTime.TotalMicroseconds;
+
 			this.CurrentDateTime = DateTime.UtcNow;
 
 			lock (Timers)

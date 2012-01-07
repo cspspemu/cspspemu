@@ -190,9 +190,11 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="Voice"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xA0CF2FA4, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int __sceSasSetKeyOff(uint SasCorePointer, int Voice)
 		{
+			var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
+			SasVoice.SetOn(false);
 			//throw (new NotImplementedException());
 			return 0;
 		}

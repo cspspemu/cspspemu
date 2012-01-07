@@ -299,6 +299,12 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 			int NumberOfChannels = SasCore.OutputMode == OutputMode.PSP_SAS_OUTPUTMODE_STEREO ? 2 : 1;
 			int NumberOfSamples = SasCore.GrainSamples * NumberOfChannels;
 
+			for (int n = 0; n < NumberOfSamples; n++)
+			{
+				BufferTemp[n] = 0;
+				VoiceOnCount[n] = 0;
+			}
+
 			// Read and mix voices.
 			foreach (var Voice in SasCore.Voices)
 			{

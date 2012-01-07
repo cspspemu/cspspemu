@@ -211,5 +211,18 @@ namespace CSPspEmu.Hle.Modules.display
 		{
 			return 0;
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="holdMode"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x7ED59BC4, FirmwareVersion = 150)]
+		[HlePspNotImplemented(Notice = false)]
+		public int sceDisplaySetHoldMode(int holdMode)
+		{
+			return 0;
+		}
+
 	}
 }

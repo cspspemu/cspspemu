@@ -75,6 +75,15 @@ namespace CSPspEmu.Core.Audio
 			}
 		}
 
+		short[] Samples;
+		short[] StereoSamplesBuffer;
+
+		public void Updated()
+		{
+			Samples = new short[SampleCount * NumberOfChannels];
+			StereoSamplesBuffer = new short[SampleCount * 2];
+		}
+
 		/// <summary>
 		/// Constructor
 		/// </summary>
@@ -116,7 +125,7 @@ namespace CSPspEmu.Core.Audio
 
 		short[] MonoToStereo(short[] MonoSamples)
 		{
-			var StereoSamples = new short[MonoSamples.Length * 2];
+			var StereoSamples = StereoSamplesBuffer;
 			for (int n = 0; n < MonoSamples.Length; n++)
 			{
 				StereoSamples[n * 2 + 0] = MonoSamples[n];
@@ -169,8 +178,6 @@ namespace CSPspEmu.Core.Audio
 		/// <param name="ActionCallbackOnReaded"></param>
 		public void Write(short* SamplePointer, int VolumeLeft, int VolumeRight, Action ActionCallbackOnReaded)
 		{
-			var Samples = new short[SampleCount * NumberOfChannels];
-
 			if (SamplePointer != null)
 			{
 				if (NumberOfChannels == 1)

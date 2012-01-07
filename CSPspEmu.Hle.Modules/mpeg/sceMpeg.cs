@@ -11,6 +11,19 @@ namespace CSPspEmu.Hle.Modules.mpeg
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
 	unsafe public partial class sceMpeg : HleModuleHost
 	{
+		public bool EnableMpeg
+		{
+			get
+			{
+				return HleState.PspConfig.EnableMpeg;
+			}
+		}
+
+		protected void CheckEnabledMpeg()
+		{
+			if (!EnableMpeg) throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
+		}
+
 		/// <summary>
 		/// sceMpegInit
 		/// </summary>
@@ -19,6 +32,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegInit()
 		{
+			CheckEnabledMpeg();
 			//throw (new NotImplementedException());
 			return 0;
 		}
@@ -64,6 +78,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegCreate(SceMpeg* Mpeg, void* MpegData, int MpegSize, SceMpegRingbuffer* SceMpegRingbuffer, int FrameWidth, int Mode, int DdrTop)
 		{
+			CheckEnabledMpeg();
+
 			//return -1;
 
 			if (MpegSize < sceMpegQueryMemSize(0))
@@ -108,6 +124,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegDelete(SceMpeg* Mpeg)
 		{
+
 			//throw(new NotImplementedException());
 
 			return 0;
@@ -154,6 +171,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegAvcCsc(SceMpeg* Mpeg, int source_addr, int range_addr, int frameWidth, int dest_addr)
 		{
+			CheckEnabledMpeg();
+
 			//throw(new NotImplementedException());
 			return -1;
 		}
@@ -171,6 +190,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegAvcInitYCbCr(SceMpeg* Mpeg, int mode, int width, int height, int ycbcr_addr)
 		{
+			CheckEnabledMpeg();
+
 			//throw (new NotImplementedException());
 			return -1;
 		}
@@ -187,6 +208,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegAvcDecodeYCbCr(SceMpeg* Mpeg, int au_addr, int buffer_addr, int init_addr)
 		{
+			CheckEnabledMpeg();
+
 			//throw (new NotImplementedException());
 			return -1;
 		}

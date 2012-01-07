@@ -212,12 +212,59 @@ namespace CSPspEmu.Core.Gpu.State
 			return false;
 		}
 		*/
+
+		public int BytesPerPixel
+		{
+			get
+			{
+				switch (Format)
+				{
+					case GuPixelFormats.RGBA_5650:
+					case GuPixelFormats.RGBA_5551:
+					case GuPixelFormats.RGBA_4444: return 2;
+					case GuPixelFormats.RGBA_8888: return 4;
+					default: throw (new InvalidOperationException("ScreenBufferStateStruct.BytesPerPixel : Invalid Format : " + Format));
+				}
+			}
+		}
 	}
 
 	public struct TextureTransferStateStruct
 	{
 		public enum TexelSizeEnum : ushort { BIT_16 = 0, BIT_32 = 1 }
 		//enum TexelSize { BIT_32 = 0, BIT_16 = 1 }
+
+		public int BytesPerPixel
+		{
+			get
+			{
+				return (TexelSize == TexelSizeEnum.BIT_16) ? 2 : 4;
+			}
+		}
+
+		public int SourceLineWidthInBytes
+		{
+			get
+			{
+				return (int)(SourceLineWidth * BytesPerPixel);
+			}
+		}
+
+		public int DestinationLineWidthInBytes
+		{
+			get
+			{
+				return (int)(DestinationLineWidth * BytesPerPixel);
+			}
+		}
+
+		public int WidthInBytes
+		{
+			get
+			{
+				return (int)(Width * BytesPerPixel);
+			}
+		}
 
 		public PspPointer SourceAddress, DestinationAddress;
 		public ushort SourceLineWidth, DestinationLineWidth;

@@ -146,6 +146,10 @@ namespace CSPspEmu.Core
 		public string GameTitle = "<Unknown Game>";
 		public bool TrackCallStack = true;
 
+		// Until more stable.
+		//public bool EnableMpeg = true;
+		public bool EnableMpeg = false;
+
 		//public bool TraceThreadLoop = true;
 
 		//public bool TraceJal = true;

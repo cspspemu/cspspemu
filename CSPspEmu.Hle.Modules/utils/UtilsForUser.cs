@@ -183,7 +183,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		public uint sceKernelLibcClock()
 		{
 			HleState.PspRtc.Update();
-			return (uint)(HleState.PspRtc.Elapsed.Milliseconds * 1000);
+			return (uint)(HleState.PspRtc.ElapsedTime.TotalMicroseconds);
 		}
 
 		/**

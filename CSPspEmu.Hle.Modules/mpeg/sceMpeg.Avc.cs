@@ -24,6 +24,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegAvcDecodeDetail(SceMpeg* Mpeg, AvcDecodeDetailStruct* AvcDecodeDetail)
 		{
+			CheckEnabledMpeg();
+
 			var SceMpegData = GetSceMpegData(Mpeg);
 
 			//throw(new NotImplementedException());
@@ -65,6 +67,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegGetAvcAu(SceMpeg* Mpeg, StreamId StreamId, SceMpegAu* MpegAccessUnit, int* DataAttributes)
 		{
+			CheckEnabledMpeg();
+
 			if (DataAttributes != null)
 			{
 				*DataAttributes = 1;
@@ -116,6 +120,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegAvcDecodeMode(SceMpeg* Mpeg, SceMpegAvcMode* Mode)
 		{
+			CheckEnabledMpeg();
+
 			var SceMpegData = GetSceMpegData(Mpeg);
 
 			if (Mode != null)
@@ -138,6 +144,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegAvcDecode(SceMpeg* Mpeg, SceMpegAu* MpegAccessUnit, int FrameWidth, byte* OutputBuffer, int* Init)
 		{
+			CheckEnabledMpeg();
+
 			if (*Init == 1)
 			{
 				throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));

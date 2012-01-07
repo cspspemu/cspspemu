@@ -38,7 +38,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public long sceKernelGetSystemTimeWide()
 		{
 			HleState.PspRtc.Update();
-			return (long)(HleState.PspRtc.Elapsed.TotalMilliseconds * 1000);
+			return HleState.PspRtc.ElapsedTime.TotalMicroseconds;
 		}
 
 		/// <summary>

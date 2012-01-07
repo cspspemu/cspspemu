@@ -29,10 +29,10 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x3F7AD767, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
-		public int sceRtcGetCurrentTick(ulong* Tick)
+		public int sceRtcGetCurrentTick(long* Tick)
 		{
 			HleState.PspRtc.Update();
-			*Tick = (ulong)(HleState.PspRtc.Elapsed.TotalMilliseconds * 1000);
+			*Tick = HleState.PspRtc.ElapsedTime.TotalMicroseconds;
 			return 0;
 		}
 
@@ -171,6 +171,19 @@ namespace CSPspEmu.Hle.Modules.rtc
 			return 0;
 			*/
 		}
-	
+
+		/// <summary>
+		/// Add an amount of ms to a tick
+		/// </summary>
+		/// <param name="dstPtr">pointer to tick to hold result</param>
+		/// <param name="srcPtr">pointer to source tick</param>
+		/// <param name="value">number of ms to add</param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0x26D25A5D, FirmwareVersion = 150)]
+		public int sceRtcTickAddMicroseconds(long* dstPtr, long* srcPtr, long value)
+		{
+			*dstPtr = *srcPtr + value;
+			return 0;
+		}
 	}
 }

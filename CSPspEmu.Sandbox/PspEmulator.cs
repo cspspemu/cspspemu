@@ -124,10 +124,11 @@ namespace CSPspEmu.Sandbox
 		/// <summary>
 		/// 
 		/// </summary>
-		public void StartAndLoad(string File, bool TraceSyscalls = false, bool ShowMenus = true, bool TrackCallStack = true)
+		public void StartAndLoad(string File, bool TraceSyscalls = false, bool ShowMenus = true, bool TrackCallStack = true, bool EnableMpeg = false)
 		{
 			PspConfig.DebugSyscalls = TraceSyscalls;
 			PspConfig.TrackCallStack = TrackCallStack;
+			PspConfig.EnableMpeg = EnableMpeg;
 			Start(() =>
 			{
 				LoadFile(File);

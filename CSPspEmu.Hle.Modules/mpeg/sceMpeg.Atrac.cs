@@ -36,6 +36,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegGetAtracAu(SceMpeg* Mpeg, StreamId StreamId, SceMpegAu* MpegAccessUnit, void* Atrac3PlusPointer)
 		{
+			CheckEnabledMpeg();
+
 			throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
 		}
 
@@ -54,6 +56,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegAtracDecode(SceMpeg* Mpeg, SceMpegAu* MpegAccessUnit, byte* OutputBuffer, int Init)
 		{
+			CheckEnabledMpeg();
+
 			throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_NO_DATA));
 		}
 

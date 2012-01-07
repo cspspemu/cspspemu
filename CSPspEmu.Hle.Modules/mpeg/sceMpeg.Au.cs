@@ -22,6 +22,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegInitAu(SceMpeg* Mpeg, int ElementaryStreamBuffer, SceMpegAu* MpegAccessUnit)
 		{
+			CheckEnabledMpeg();
+
 			MpegAccessUnit->PresentationTimestampBe = unchecked((uint)0);
 			MpegAccessUnit->PresentationTimestampLe = unchecked((uint)0);
 			MpegAccessUnit->DecodeTimestampBe = unchecked((uint)0);

@@ -703,5 +703,63 @@ namespace CSPspEmu.Hle.Modules.utility
 			//throw (new NotImplementedException());
 			return 0;
 		}
+
+		/// <summary>
+		/// Get the status of a on-screen keyboard currently active.
+		/// </summary>
+		/// <returns>the current status of the keyboard. See ::pspUtilityDialogState for details.</returns>
+		[HlePspFunction(NID = 0xF3F76017, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public pspUtilityDialogState sceUtilityOskGetStatus()
+		{
+			return pspUtilityDialogState.Finished;
+		}
+
+		/// <summary>
+		/// Get the status of a running Network Configuration Dialog
+		/// </summary>
+		/// <returns>one of pspUtilityDialogState on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0x6332AA39, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public pspUtilityDialogState sceUtilityNetconfGetStatus()
+		{
+			return pspUtilityDialogState.Finished;
+		}
+
+		/// <summary>
+		/// Return-values for the various sceUtility***GetStatus() functions
+		/// </summary>
+		public enum pspUtilityDialogState : int
+		{
+			/// <summary>
+			/// No dialog is currently active
+			/// PSP_UTILITY_DIALOG_NONE
+			/// </summary>
+			None = 0,
+
+			/// <summary>
+			/// The dialog is currently being initialized
+			/// PSP_UTILITY_DIALOG_INIT
+			/// </summary>
+			Init = 1,
+
+			/// <summary>
+			/// The dialog is visible and ready for use
+			/// PSP_UTILITY_DIALOG_VISIBLE
+			/// </summary>
+			Visible = 2,
+
+			/// <summary>
+			/// The dialog has been canceled and should be shut down
+			/// PSP_UTILITY_DIALOG_QUIT
+			/// </summary>
+			Quit = 3,
+
+			/// <summary>
+			/// The dialog has successfully shut down
+			/// PSP_UTILITY_DIALOG_FINISHED
+			/// </summary>
+			Finished = 4,
+		}
 	}
 }

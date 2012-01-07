@@ -48,6 +48,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		//public SceMpegStream* sceMpegRegistStream(SceMpeg* Mpeg, int iStreamID, int iUnk)
 		public int sceMpegRegistStream(SceMpeg* Mpeg, StreamId StreamId, int StreamIndex)
 		{
+			CheckEnabledMpeg();
+
 			var StreamInfoId = RegisteredStreams.Create(new StreamInfo()
 			{
 				StreamId = StreamId,
