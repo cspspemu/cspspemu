@@ -159,5 +159,28 @@ namespace CSPspEmu.Core.Gpu.Run
 			GpuState->BlendingState.ColorMaskA = Param8(0);
 		}
 
+		// ColorTeST
+		public void OP_CTST()
+		{
+			GpuState->ColorTestState.TestFunction = (ColorTestFunctionEnum)Extract(0, 2);
+		}
+
+		// Color REFerence
+		public void OP_CREF()
+		{
+			GpuState->ColorTestState.RefRed = (byte)Extract(8 * 0, 8);
+			GpuState->ColorTestState.RefGreen = (byte)Extract(8 * 1, 8);
+			GpuState->ColorTestState.RefBlue = (byte)Extract(8 * 2, 8);
+			GpuState->ColorTestState.RefAlpha = 0xFF;
+		}
+
+		// Color MaSK
+		public void OP_CMSK()
+		{
+			GpuState->ColorTestState.MaskRed = (byte)Extract(8 * 0, 8);
+			GpuState->ColorTestState.MaskGreen = (byte)Extract(8 * 1, 8);
+			GpuState->ColorTestState.MaskBlue = (byte)Extract(8 * 2, 8);
+			GpuState->ColorTestState.MaskAlpha = 0xFF;
+		}
 	}
 }

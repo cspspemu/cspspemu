@@ -91,12 +91,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 			//foreach (var Partition in HleState.MemoryManager.RootPartition.ChildPartitions) Console.WriteLine(Partition);
 			//return 24 * 1024 * 1024;
 
-			return HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).ChildPartitions
-				.Where(Partition => !Partition.Allocated)
-				.OrderByDescending(Partition => Partition.Size)
-				.First()
-				.Size
-			;
+			return HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).MaxFreeSize;
 		}
 
 		/// <summary>
@@ -106,10 +101,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		[HlePspFunction(NID = 0xF919F628, FirmwareVersion = 150)]
 		public int sceKernelTotalFreeMemSize()
 		{
-			return HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).ChildPartitions
-				.Where(Partition => !Partition.Allocated)
-				.Aggregate(0, (Accumulated, Partition) => Accumulated + Partition.Size)
-			;
+			return HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).TotalFreeSize;
 		}
 
 		/// <summary>

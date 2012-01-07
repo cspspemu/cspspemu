@@ -9,6 +9,22 @@ namespace CSPspEmu.Core.Memory
 	{
 		public uint Address;
 
+		public uint Low24
+		{
+			set
+			{
+				Address = (Address & 0xFF000000) | (value & 0x00FFFFFF);
+			}
+		}
+
+		public uint High8
+		{
+			set
+			{
+				Address = (Address & 0x00FFFFFF) | (value & 0xFF000000);
+			}
+		}
+
 		public PspPointer(uint Address)
 		{
 			this.Address = Address;

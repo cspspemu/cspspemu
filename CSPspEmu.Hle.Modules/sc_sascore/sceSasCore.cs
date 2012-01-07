@@ -79,6 +79,12 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 			}
 		}
 
+		protected int[] VoiceOnCount;
+		protected int[] BufferTemp;
+		protected short[] BufferShort;
+		protected short[] MixBufferShort;
+
+
 		/// <summary>
 		/// Initialized a sasCore structure.
 		/// </summary>
@@ -110,6 +116,12 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 				SasCore.OutputMode = OutputMode;
 				SasCore.SampleRate = SampleRate;
 			}
+
+			VoiceOnCount = new int[SasCore.GrainSamples * 2];
+			BufferTemp = new int[SasCore.GrainSamples * 2];
+			BufferShort = new short[SasCore.GrainSamples * 2];
+			MixBufferShort = new short[SasCore.GrainSamples * 2];
+
 			return 0;
 		}
 
@@ -219,43 +231,80 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		}
 
 		/// <summary>
-		/// 
+		/// Process the voices and generate the next samples.
+		/// Mix the resulting samples in an exiting buffer.
 		/// </summary>
-		/// <param name="SasCore"></param>
-		/// <param name="SasInOut"></param>
-		/// <param name="LeftVolume"></param>
-		/// <param name="RightVolume"></param>
-		/// <returns></returns>
+		/// <param name="SasCore">sasCore handle</param>
+		/// <param name="SasInOut">
+		///		address for the input and output buffer.
+		///		Samples are stored as 2 16-bit values
+		///		(left then right channel samples)
+		/// </param>
+		/// <param name="LeftVolume">Left channel volume, [0..0x1000].</param>
+		/// <param name="RightVolume">Right channel volume, [0..0x1000].</param>
+		/// <returns>
+		///		if OK 0
+		///		ERROR_SAS_NOT_INIT if an invalid sasCore handle is provided
+		/// </returns>
 		[HlePspFunction(NID = 0x50A14DFC, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int __sceSasCoreWithMix(uint SasCorePointer, void* SasInOut, int LeftVolume, int RightVolume)
+		//[HlePspNotImplemented]
+		public int __sceSasCoreWithMix(uint SasCorePointer, short* SasInOut, int LeftVolume, int RightVolume)
 		{
+#if false
+			var SasCore = GetSasCore(SasCorePointer);
+			int NumberOfChannels = SasCore.OutputMode == OutputMode.PSP_SAS_OUTPUTMODE_STEREO ? 2 : 1;
+			int NumberOfSamples = SasCore.GrainSamples * NumberOfChannels;
+
+			fixed (short* FixedMixBufferShort = MixBufferShort)
+			{
+				__sceSasCore(SasCorePointer, FixedMixBufferShort);
+			}
+
+			int MaxVolume = 0x1000;
+
+			int LeftVolumeComp = MaxVolume - LeftVolume;
+			int RightVolumeComp = MaxVolume - RightVolume;
+
+			for (int n = 0; n < NumberOfSamples; n += 2)
+			{
+				SasInOut[n + 0] = (short)(((int)SasInOut[n + 0] * LeftVolumeComp + (int)MixBufferShort[n + 0] * LeftVolume) * short.MaxValue / MaxVolume);
+				SasInOut[n + 1] = (short)(((int)SasInOut[n + 1] * RightVolumeComp + (int)MixBufferShort[n + 1] * RightVolume) * short.MaxValue / MaxVolume);
+			}
+
 			//throw (new NotImplementedException());
 			return 0;
+#else
+			return __sceSasCore(SasCorePointer, SasInOut);
+#endif
 		}
 
 		/// <summary>
-		/// 
+		/// Process the voices and generate the next samples.
 		/// </summary>
-		/// <param name="SasCore"></param>
-		/// <param name="SasOut"></param>
-		/// <returns></returns>
+		/// <param name="SasCore">sasCore handle</param>
+		/// <param name="SasOut">
+		///		address for the output buffer.
+		///		Samples are stored as 2 16-bit values
+		///		(left then right channel samples)
+		/// </param>
+		/// <returns>
+		///		if OK 0
+		///		ERROR_SAS_NOT_INIT if an invalid sasCore handle is provided
+		/// </returns>
 		[HlePspFunction(NID = 0xA3589D81, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
-		public uint __sceSasCore(uint SasCorePointer, short* SasOut)
+		public int __sceSasCore(uint SasCorePointer, short* SasOut)
 		{
-			int NumberOfChannels = 2;
 			var SasCore = GetSasCore(SasCorePointer);
-			var VoiceOnCount = new int[SasCore.GrainSamples * NumberOfChannels];
-			var BufferTemp = new int[SasCore.GrainSamples * NumberOfChannels];
-			var BufferShort = new short[SasCore.GrainSamples * NumberOfChannels];
+			int NumberOfChannels = SasCore.OutputMode == OutputMode.PSP_SAS_OUTPUTMODE_STEREO ? 2 : 1;
+			int NumberOfSamples = SasCore.GrainSamples * NumberOfChannels;
 
 			// Read and mix voices.
 			foreach (var Voice in SasCore.Voices)
 			{
 				if (Voice.OnAndPlaying)
 				{
-					for (int n = 0; n < BufferTemp.Length; n++)
+					for (int n = 0; n < NumberOfSamples; n++)
 					{
 						if (Voice.SampleOffset < Voice.Vag.DecodedSamples.Length)
 						{
@@ -272,7 +321,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 			}
 
 			// Normalize output
-			for (int n = 0; n < BufferTemp.Length; n++)
+			for (int n = 0; n < NumberOfSamples; n++)
 			{
 				if (VoiceOnCount[n] > 0)
 				{
@@ -285,7 +334,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 			}
 
 			// Output converted 44100 data
-			for (int n = 0; n < BufferShort.Length; n++)
+			for (int n = 0; n < NumberOfSamples; n++)
 			{
 				SasOut[n] = BufferShort[n];
 			}

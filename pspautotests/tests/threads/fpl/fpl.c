@@ -52,8 +52,30 @@ void testSimpleFpl() {
 	sceKernelDeleteFpl(fpl);
 }
 
+int threadid;
+int fpl;
+void* ptr1;
+void* ptr2;
+
+int threadFunction(int argsize, void *argdata) {
+	sceKernelDelayThread(10000);
+	printf("sceKernelFreeFpl: 0x%08X\n", sceKernelFreeFpl(fpl, ptr1));
+
+	return 0;
+}
+
+void testMultiFpl() {
+	fpl = sceKernelCreateFpl("FPL", PSP_MEMORY_PARTITION_USER, 0, 1024, 1, NULL);
+	printf("sceKernelAllocateFpl: 0x%08X\n", sceKernelAllocateFpl(fpl, &ptr1, NULL));
+	{
+		sceKernelStartThread(threadid = sceKernelCreateThread("thread", (void *)&threadFunction, 0x12, 0x10000, 0, NULL), 0, NULL);
+	}
+	printf("sceKernelAllocateFpl: 0x%08X\n", sceKernelAllocateFpl(fpl, &ptr2, NULL));
+}
+
 int main(int argc, char **argv) {
 	testSimpleFpl();
+	testMultiFpl();
 
 	return 0;
 }

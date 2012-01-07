@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Gpu.State.SubStates;
 using CSPspEmu.Core.Display;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Gpu.State
 {
@@ -215,14 +216,14 @@ namespace CSPspEmu.Core.Gpu.State
 
 	public struct TextureTransferStateStruct
 	{
-		public enum TexelSize : ushort { BIT_16 = 0, BIT_32 = 1 }
+		public enum TexelSizeEnum : ushort { BIT_16 = 0, BIT_32 = 1 }
 		//enum TexelSize { BIT_32 = 0, BIT_16 = 1 }
 
-		public uint srcAddress, dstAddress;
-		public ushort srcLineWidth, dstLineWidth;
-		public ushort srcX, srcY, dstX, dstY;
-		public ushort width, height;
-		public TexelSize texelSize;
+		public PspPointer SourceAddress, DestinationAddress;
+		public ushort SourceLineWidth, DestinationLineWidth;
+		public ushort SourceX, SourceY, DestinationX, DestinationY;
+		public ushort Width, Height;
+		public TexelSizeEnum TexelSize;
 	}
 
 	public enum BlendingOpEnum : int

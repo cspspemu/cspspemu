@@ -24,11 +24,42 @@ namespace CSPspEmu.Hle
 		public MemoryPartition ParentPartition { get; private set; }
 		private SortedSet<MemoryPartition> _ChildPartitions;
 
+		public uint GetAnchoredAddress(Anchor Anchor)
+		{
+			if (Anchor == MemoryPartition.Anchor.High) return High;
+			if (Anchor == MemoryPartition.Anchor.Low) return Low;
+			throw(new InvalidOperationException());
+		}
+
 		public MemoryPartition Root
 		{
 			get
 			{
 				return (ParentPartition != null) ? ParentPartition.Root : this;
+			}
+		}
+
+		public int MaxFreeSize
+		{
+			get
+			{
+				return ChildPartitions
+					.Where(Partition => !Partition.Allocated)
+					.OrderByDescending(Partition => Partition.Size)
+					.First()
+					.Size
+				;
+			}
+		}
+
+		public int TotalFreeSize
+		{
+			get
+			{
+				return ChildPartitions
+					.Where(Partition => !Partition.Allocated)
+					.Aggregate(0, (Accumulated, Partition) => Accumulated + Partition.Size)
+				;
 			}
 		}
 
@@ -104,6 +135,13 @@ namespace CSPspEmu.Hle
 		{
 			_ChildPartitions.Single(Partition => Partition.High == High).Allocated = false;
 			NormalizePartitions();
+		}
+
+		public void DeallocateAnchoredAddress(uint Address, Anchor Anchor)
+		{
+			if (Anchor == MemoryPartition.Anchor.Low) { DeallocateLow(Address); return; }
+			if (Anchor == MemoryPartition.Anchor.High) { DeallocateHigh(Address); return; }
+			throw(new InvalidOperationException());
 		}
 
 		public MemoryPartition AllocateLowHigh(uint Low, uint High)

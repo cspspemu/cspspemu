@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Gpu.State;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Gpu
 {
@@ -27,5 +28,10 @@ namespace CSPspEmu.Core.Gpu
 		}
 
 		abstract public void AddedDisplayList();
+
+		virtual public void Transfer(GpuStateStruct* GpuStateStruct)
+		{
+			Console.Error.WriteLine("GpuImpl.Transfer Not Implemented!! : {0}", GpuStateStruct->TextureTransferState.ToStringDefault());
+		}
 	}
 }

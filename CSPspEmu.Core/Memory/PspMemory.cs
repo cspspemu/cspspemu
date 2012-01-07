@@ -233,6 +233,4 @@ namespace CSPspEmu.Core.Memory
 			return Address - StartAddress;
 		}
 	}
-
-	public enum PspAddress : uint { }
 }

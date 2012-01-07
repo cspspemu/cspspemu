@@ -186,6 +186,25 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		}
 
 		/// <summary>
+		/// Perform an ioctl on a device. (asynchronous)
+		/// </summary>
+		/// <param name="FileHandle">Opened file descriptor to ioctl to</param>
+		/// <param name="Command">The command to send to the device</param>
+		/// <param name="InputPointer">A data block to send to the device, if NULL sends no data</param>
+		/// <param name="InputLength">Length of indata, if 0 sends no data</param>
+		/// <param name="OutputPointer">A data block to receive the result of a command, if NULL receives no data</param>
+		/// <param name="OutputLength">Length of outdata, if 0 receives no data</param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0xE95A012B, FirmwareVersion = 150)]
+		public int sceIoIoctlAsync(int FileHandle, uint Command, byte* InputPointer, int InputLength, byte* OutputPointer, int OutputLength)
+		{
+			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileHandle);
+			File.AsyncLastResult = sceIoIoctl(FileHandle, Command, InputPointer, InputLength, OutputPointer, OutputLength);
+			return 0;
+		}
+
+
+		/// <summary>
 		/// Write output (asynchronous)
 		/// </summary>
 		/// <param name="fd">Opened file descriptor to write to</param>

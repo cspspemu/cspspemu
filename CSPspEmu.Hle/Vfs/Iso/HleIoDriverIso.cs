@@ -16,6 +16,14 @@ namespace CSPspEmu.Hle.Vfs.Iso
 	{
 		public IsoFile Iso { get; protected set; }
 
+		public class IsoFileArgument
+		{
+			public IsoNode IsoNode;
+			public long StartSector;
+			public long Size;
+			public Stream Stream;
+		}
+
 		public HleIoDriverIso(IsoFile Iso)
 		{
 			this.Iso = Iso;
@@ -59,29 +67,42 @@ namespace CSPspEmu.Hle.Vfs.Iso
 				}
 				//Console.WriteLine("SPECIAL({0}, {1})", lbn, size);
 				//Console.WriteLine("SPECIAL!!!!!!!!!!!!!!!!!!!!");
-				HleIoDrvFileArg.FileArgument = Iso.Stream.SliceWithLength(Sector * IsoFile.SectorSize, Size);
+				HleIoDrvFileArg.FileArgument = new IsoFileArgument()
+				{
+					IsoNode = null,
+					StartSector = Sector,
+					Size = Size,
+					Stream = Iso.Stream.SliceWithLength(Sector * IsoFile.SectorSize, Size),
+				};
 				return 0;
 			}
 
 			//Console.WriteLine(FileName);
 			var IsoNode = Iso.Root.Locate(FileName);
-			HleIoDrvFileArg.FileArgument = IsoNode.Open();
+			;
+			HleIoDrvFileArg.FileArgument = new IsoFileArgument()
+			{
+				IsoNode = IsoNode,
+				StartSector = IsoNode.DirectoryRecord.Extent,
+				Size = IsoNode.DirectoryRecord.Size,
+				Stream = IsoNode.Open(),
+			};
 			return 0;
 		}
 
 		public unsafe int IoClose(HleIoDrvFileArg HleIoDrvFileArg)
 		{
-			var Stream = ((Stream)HleIoDrvFileArg.FileArgument);
-			Stream.Close();
+			var IsoFileArgument = ((IsoFileArgument)HleIoDrvFileArg.FileArgument);
+			IsoFileArgument.Stream.Close();
 			return 0;
 			//throw new NotImplementedException();
 		}
 
 		public unsafe int IoRead(HleIoDrvFileArg HleIoDrvFileArg, byte* OutputPointer, int OutputLength)
 		{
-			var Stream = ((Stream)HleIoDrvFileArg.FileArgument);
+			var IsoFileArgument = ((IsoFileArgument)HleIoDrvFileArg.FileArgument);
 			var OutputData = new byte[OutputLength];
-			int Readed = Stream.Read(OutputData, 0, OutputLength);
+			int Readed = IsoFileArgument.Stream.Read(OutputData, 0, OutputLength);
 			Marshal.Copy(OutputData, 0, new IntPtr(OutputPointer), OutputLength);
 			return Readed;
 			//throw new NotImplementedException();
@@ -94,14 +115,32 @@ namespace CSPspEmu.Hle.Vfs.Iso
 
 		public unsafe long IoLseek(HleIoDrvFileArg HleIoDrvFileArg, long Offset, SeekAnchor Whence)
 		{
-			var Stream = ((Stream)HleIoDrvFileArg.FileArgument);
+			var IsoFileArgument = ((IsoFileArgument)HleIoDrvFileArg.FileArgument);
 			//Stream.Seek(
-			return Stream.Seek(Offset, (SeekOrigin)Whence);
+			return IsoFileArgument.Stream.Seek(Offset, (SeekOrigin)Whence);
+		}
+
+		public enum UmdCommandEnum : uint
+		{
+			/// <summary>
+			/// Get UMD file start sector.
+			/// </summary>
+			GetStartSector = 0x01020006,
 		}
 
 		public unsafe int IoIoctl(HleIoDrvFileArg HleIoDrvFileArg, uint Command, byte* InputPointer, int InputLength, byte* OutputPointer, int OutputLength)
 		{
-			throw new NotImplementedException();
+			var IsoFileArgument = ((IsoFileArgument)HleIoDrvFileArg.FileArgument);
+
+			switch ((UmdCommandEnum)Command)
+			{
+                case UmdCommandEnum.GetStartSector:
+					if (OutputLength < 4 || OutputPointer == null) throw(new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
+					*((uint *)OutputPointer) = (uint)IsoFileArgument.StartSector;
+					return 0;
+				default:
+					throw new NotImplementedException(String.Format("Not implemented command 0x{0:X}", Command));
+			}
 		}
 
 		public unsafe int IoRemove(HleIoDrvFileArg HleIoDrvFileArg, string Name)

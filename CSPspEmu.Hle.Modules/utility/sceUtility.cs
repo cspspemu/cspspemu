@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
 using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.utility
@@ -167,32 +168,43 @@ namespace CSPspEmu.Hle.Modules.utility
 			/// <summary>
 			/// 
 			/// </summary>
-			public int unknown;
+			public int Unknown;
 
 			/// <summary>
 			/// 
 			/// </summary>
-			public pspUtilityMsgDialogMode mode;
+			public pspUtilityMsgDialogMode Mode;
 
 			/// <summary>
 			/// 
 			/// </summary>
-			public uint errorValue;
+			public uint ErrorValue;
 			
 			/// <summary>
 			/// The message to display (may contain embedded linefeeds)
 			/// </summary>
-			public fixed byte message[512];
+			public fixed byte FixedMessageRaw[512];
 
 			/// <summary>
 			/// 
 			/// </summary>
-			public pspUtilityMsgDialogOption options;
+			public pspUtilityMsgDialogOption Options;
 
 			/// <summary>
 			/// 
 			/// </summary>
-			public pspUtilityMsgDialogPressed buttonPressed;
+			public pspUtilityMsgDialogPressed ButtonPressed;
+
+			public String Message
+			{
+				get
+				{
+					fixed (byte* MessageRaw = FixedMessageRaw)
+					{
+						return PointerUtils.PtrToString(MessageRaw, Encoding.UTF8);
+					}
+				}
+			}
 		}
 
 		/// <summary>

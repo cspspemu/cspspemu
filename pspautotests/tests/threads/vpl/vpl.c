@@ -5,6 +5,8 @@
 #include <pspthreadman.h>
 #include <psploadexec.h>
 
+#define PSP_VPL_ATTR_NONE 0 
+
 void *pointer_base = NULL;
 
 int pointer_relative_to_base(void *pointer) {
@@ -18,7 +20,7 @@ void testSimpleVpl() {
 	void *pointer1 = NULL;
 	void *pointer2 = NULL;
 	void *pointer3 = NULL;
-	vpl = sceKernelCreateVpl("VPL", 2, 0, 1300, NULL);
+	vpl = sceKernelCreateVpl("VPL", PSP_MEMORY_PARTITION_USER, PSP_VPL_ATTR_NONE, 1300, NULL);
 	printf("%08X\n", vpl);
 	{
 		result = sceKernelTryAllocateVpl(vpl, 1, &pointer_base);
@@ -47,8 +49,30 @@ void testSimpleVpl() {
 	sceKernelDeleteVpl(vpl);
 }
 
+int threadid;
+int vpl;
+void* ptr1;
+void* ptr2;
+
+int threadFunction(int argsize, void *argdata) {
+	sceKernelDelayThread(10000);
+	printf("sceKernelFreeVpl: 0x%08X\n", sceKernelFreeVpl(vpl, ptr1));
+
+	return 0;
+}
+
+void testMultiVpl() {
+	vpl = sceKernelCreateVpl("VPL", PSP_MEMORY_PARTITION_USER, PSP_VPL_ATTR_NONE, 1024, NULL);
+	printf("sceKernelAllocateVpl: 0x%08X\n", sceKernelAllocateVpl(vpl, 512, &ptr1, NULL));
+	{
+		sceKernelStartThread(threadid = sceKernelCreateThread("thread", (void *)&threadFunction, 0x12, 0x10000, 0, NULL), 0, NULL);
+	}
+	printf("sceKernelAllocateVpl: 0x%08X\n", sceKernelAllocateVpl(vpl, 1024, &ptr2, NULL));
+}
+
 int main(int argc, char **argv) {
 	testSimpleVpl();
+	testMultiVpl();
 
 	return 0;
 }

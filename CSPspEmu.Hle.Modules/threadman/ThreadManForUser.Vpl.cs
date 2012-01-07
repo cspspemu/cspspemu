@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
 
@@ -13,11 +14,85 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 		public class VariablePool
 		{
+			public HleState HleState;
+			public HleMemoryManager.Partitions PartitionId;
 			public SceKernelVplInfo Info;
+			public MemoryPartition MemoryPartition;
+			public MemoryPartition.Anchor InternalMemoryAnchor;
+			public MemoryPartition.Anchor ExternalMemoryAnchor;
+
+			public class WaitVariablePoolItem
+			{
+				public int RequiredSize;
+				public Action WakeUp;
+			}
+
+			public List<WaitVariablePoolItem> WaitList = new List<WaitVariablePoolItem>();
 
 			public void Init()
 			{
-				throw new NotImplementedException();
+				var High = Info.Attribute.HasFlag(VplAttributeEnum.PSP_VPL_ATTR_ADDR_HIGH);
+
+#if true
+				ExternalMemoryAnchor = High ? Hle.MemoryPartition.Anchor.High : Hle.MemoryPartition.Anchor.Low;
+				InternalMemoryAnchor = Hle.MemoryPartition.Anchor.Low;
+#else
+				InternalMemoryAnchor = High ? Hle.MemoryPartition.Anchor.High : Hle.MemoryPartition.Anchor.Low;
+				ExternalMemoryAnchor = Hle.MemoryPartition.Anchor.Low;
+#endif
+
+				this.MemoryPartition = HleState.MemoryManager.GetPartition(PartitionId).Allocate(Info.PoolSize, ExternalMemoryAnchor);
+			}
+
+			public void Allocate(CpuThreadState CpuThreadState, int Size, PspPointer* AddressPointer, uint* Timeout, bool HandleCallbacks)
+			{
+				if (!TryAllocate(CpuThreadState, Size, AddressPointer))
+				{
+					if (Timeout != null) throw(new NotImplementedException());
+					HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, "_sceKernelAllocateVplCB", (WakeUp) =>
+					{
+						WaitList.Add(new WaitVariablePoolItem()
+						{
+							RequiredSize = Size,
+							WakeUp = () => {
+								WakeUp();
+								Allocate(CpuThreadState, Size, AddressPointer, Timeout, HandleCallbacks);
+							},
+						});
+					}, HandleCallbacks: HandleCallbacks);
+				}
+			}
+
+			public bool TryAllocate(CpuThreadState CpuThreadState, int Size, PspPointer* AddressPointer)
+			{
+				if (Size > Info.PoolSize) throw(new SceKernelException((SceKernelErrors)(-1)));
+				try
+				{
+					var AllocatedSegment = MemoryPartition.Allocate(Size, InternalMemoryAnchor);
+					AddressPointer->Address = AllocatedSegment.GetAnchoredAddress(InternalMemoryAnchor);
+					return true;
+				}
+				catch (InvalidOperationException)
+				{
+					//AddressPointer->Address = 0;
+					return false;
+				}
+			}
+
+			public void Free(CpuThreadState CpuThreadState, PspPointer Address)
+			{
+				MemoryPartition.DeallocateAnchoredAddress(Address, InternalMemoryAnchor);
+
+				var TotalFreeSize = MemoryPartition.TotalFreeSize;
+				foreach (var Item in WaitList.ToArray())
+				{
+					if (TotalFreeSize >= Item.RequiredSize)
+					{
+						WaitList.Remove(Item);
+						Item.WakeUp();
+						break;
+					}
+				}
 			}
 		}
 
@@ -39,44 +114,25 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		 less than 0 on error.
 		/// </returns>
 		[HlePspFunction(NID = 0x56C039B5, FirmwareVersion = 150)]
-		public VariablePoolId sceKernelCreateVpl(string Name, HleMemoryManager.Partitions PartitionId, VplAttribute Attribute, int Size, void* Options)
+		public VariablePoolId sceKernelCreateVpl(string Name, HleMemoryManager.Partitions PartitionId, VplAttributeEnum Attribute, int Size, void* Options)
 		{
 			var VariablePool = new VariablePool()
 			{
+				HleState = HleState,
+				PartitionId= PartitionId,
 				Info = new SceKernelVplInfo()
 				{
 					Attribute = Attribute,
+					PoolSize = Size,
 					FreeSize = Size,
 				}
 			};
 
-			/*
-			if (Attribute.HasFlag(VplAttribute.PSP_VPL_ATTR_ADDR_HIGH))
-			{
-				HleState.MemoryManager.GetPartition(PartitionId).Allocate(Size)
-			} else {
-			}
-			*/
 			VariablePool.Init();
 
-			return VariablePoolList.Create(VariablePool);
+			var VariablePoolId = VariablePoolList.Create(VariablePool);
 
-			/*
-			throw(new NotImplementedException());
-			const PSP_VPL_ATTR_MASK      = 0x41FF;  // Anything outside this mask is an illegal attr.
-			const PSP_VPL_ATTR_ADDR_HIGH = 0x4000;  // Create the vpl in high memory.
-			const PSP_VPL_ATTR_EXT       = 0x8000;  // Extend the vpl memory area (exact purpose is unknown).
-			//new MemorySegment
-			logWarning("sceKernelCreateVpl('%s', %d, %d, %d)", name, part, attr, size);
-			VariablePool variablePool;
-			if (attr & PSP_VPL_ATTR_ADDR_HIGH) {
-				variablePool = new VariablePool(hleEmulatorState.moduleManager.get!SysMemUserForUser()._allocateMemorySegmentHigh(part, dupStr(name), size));
-			} else {
-				variablePool = new VariablePool(hleEmulatorState.moduleManager.get!SysMemUserForUser()._allocateMemorySegmentLow(part, dupStr(name), size));
-			}
-			logWarning("%s", variablePool);
-			return uniqueIdFactory.add(variablePool);
-			*/
+			return VariablePoolId;
 		}
 
 		/// <summary>
@@ -91,13 +147,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xBED27435, FirmwareVersion = 150)]
-		public int sceKernelAllocateVpl(VariablePoolId VariablePoolId, uint Size, PspAddress* DataPointer, uint* Timeout)
+		public int sceKernelAllocateVpl(CpuThreadState CpuThreadState, VariablePoolId VariablePoolId, int Size, PspPointer* AddressPointer, uint* Timeout)
 		{
-			throw(new NotImplementedException());
-			/*
-			logWarning("sceKernelAllocateVpl(%d, %d, %08X) @TODO Not waiting", uid, size, cast(uint)data);
-			return sceKernelTryAllocateVpl(uid, size, data);
-			*/
+			var VariablePool = VariablePoolList.Get(VariablePoolId);
+			VariablePool.Allocate(CpuThreadState, Size, AddressPointer, Timeout, HandleCallbacks: false);
+			return 0;
 		}
 
 		/// <summary>
@@ -112,9 +166,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xEC0A693F, FirmwareVersion = 150)]
-		public int sceKernelAllocateVplCB(VariablePoolId VariablePoolId, uint Size, PspAddress* DataPointer, uint* Timeout)
+		public int sceKernelAllocateVplCB(CpuThreadState CpuThreadState, VariablePoolId VariablePoolId, int Size, PspPointer* AddressPointer, uint* Timeout)
 		{
-			throw (new NotImplementedException());
+			var VariablePool = VariablePoolList.Get(VariablePoolId);
+			VariablePool.Allocate(CpuThreadState, Size, AddressPointer, Timeout, HandleCallbacks: true);
+			return 0;
 		}
 
 		/// <summary>
@@ -128,17 +184,17 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xAF36D708, FirmwareVersion = 150)]
-		public int sceKernelTryAllocateVpl(VariablePoolId VariablePoolId, uint Size, PspAddress* DataPointer)
+		public int sceKernelTryAllocateVpl(CpuThreadState CpuThreadState, VariablePoolId VariablePoolId, int Size, PspPointer* AddressPointer)
 		{
-			throw(new NotImplementedException());
-			/*
-			logWarning("sceKernelTryAllocateVpl(%d, %d, %08X)", uid, size, cast(uint)data);
-			VariablePool variablePool = uniqueIdFactory.get!VariablePool(uid);
-			*data = cast(uint *)variablePool.memorySegment.allocByLow(size).block.low;
-			logWarning(" <<<---", *data);
-			//unimplemented();
-			return 0;
-			*/
+			var VariablePool = VariablePoolList.Get(VariablePoolId);
+			if (VariablePool.TryAllocate(CpuThreadState, Size, AddressPointer))
+			{
+				return 0;
+			}
+			else
+			{
+				return (int)SceKernelErrors.ERROR_KERNEL_NO_MEMORY;
+			}
 		}
 
 		/// <summary>
@@ -168,13 +224,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xB736E9FF, FirmwareVersion = 150)]
-		public int sceKernelFreeVpl(VariablePoolId VariablePoolId, PspAddress Data)
+		public int sceKernelFreeVpl(CpuThreadState CpuThreadState, VariablePoolId VariablePoolId, PspPointer Data)
 		{
-			throw (new NotImplementedException());
-			/*
-			unimplemented();
-			return -1;
-			*/
+			var VariablePool = VariablePoolList.Get(VariablePoolId);
+			VariablePool.Free(CpuThreadState, Data);
+			return 0;
 		}
 
 		/// <summary>
@@ -185,14 +239,15 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x89B3D48C, FirmwareVersion = 150)]
 		public int sceKernelDeleteVpl(VariablePoolId VariablePoolId)
 		{
-			throw(new NotImplementedException());
+			VariablePoolList.Remove(VariablePoolId);
+			return 0;
 		}
 
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public enum VplAttribute : uint
+		public enum VplAttributeEnum : uint
 		{
 			/// <summary>
 			/// Anything outside this mask is an illegal attr.
@@ -227,7 +282,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			/// <summary>
 			/// 
 			/// </summary>
-			public VplAttribute Attribute;
+			public VplAttributeEnum Attribute;
 
 			/// <summary>
 			/// 

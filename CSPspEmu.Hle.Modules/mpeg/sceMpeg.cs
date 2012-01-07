@@ -112,5 +112,98 @@ namespace CSPspEmu.Hle.Modules.mpeg
 
 			return 0;
 		}
+
+		public enum QueryYCbCrSizeModeEnum : int
+		{
+			LoadedFromFile = 1,
+			LoadedFromMemory = 2,
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Mpeg"></param>
+		/// <param name="Mode"></param>
+		/// <param name="Width">480</param>
+		/// <param name="Height">272</param>
+		/// <param name="ResultAddr">Where to store the result</param>
+		/// <returns></returns>
+	    [HlePspFunction(NID = 0x211A057C, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceMpegAvcQueryYCbCrSize(SceMpeg* Mpeg, QueryYCbCrSizeModeEnum Mode, int Width, int Height, int* Result)
+		{
+			if ((Width & 15) != 0 || (Height & 15) != 0 || Width > 480 || Height > 272)
+			{
+				throw(new SceKernelException(SceKernelErrors.ERROR_MPEG_INVALID_VALUE));
+			}
+
+			*Result = (Width / 2) * (Height / 2) * 6 + 128;
+			return 0;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Mpeg"></param>
+		/// <param name="source_addr"></param>
+		/// <param name="range_addr"></param>
+		/// <param name="frameWidth"></param>
+		/// <param name="dest_addr"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x31BD0272, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceMpegAvcCsc(SceMpeg* Mpeg, int source_addr, int range_addr, int frameWidth, int dest_addr)
+		{
+			//throw(new NotImplementedException());
+			return -1;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="mpeg"></param>
+		/// <param name="mode"></param>
+		/// <param name="width"></param>
+		/// <param name="height"></param>
+		/// <param name="ycbcr_addr"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x67179B1B, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceMpegAvcInitYCbCr(SceMpeg* Mpeg, int mode, int width, int height, int ycbcr_addr)
+		{
+			//throw (new NotImplementedException());
+			return -1;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Mpeg"></param>
+		/// <param name="au_addr"></param>
+		/// <param name="buffer_addr"></param>
+		/// <param name="init_addr"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xF0EB1125, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceMpegAvcDecodeYCbCr(SceMpeg* Mpeg, int au_addr, int buffer_addr, int init_addr)
+		{
+			//throw (new NotImplementedException());
+			return -1;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Mpeg"></param>
+		/// <param name="buffer_addr"></param>
+		/// <param name="status_addr"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xF2930C9C, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceMpegAvcDecodeStopYCbCr(SceMpeg* Mpeg, int buffer_addr, int status_addr)
+		{
+			//throw (new NotImplementedException());
+			return -1;
+		}
 	}
 }

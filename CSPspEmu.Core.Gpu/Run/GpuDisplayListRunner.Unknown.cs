@@ -74,15 +74,6 @@ namespace CSPspEmu.Core.Gpu.Run
 		public void OP_Unknown0xD1() { }
 		
 		[GpuOpCodesNotImplemented]
-		public void OP_CTST() { }
-		
-		[GpuOpCodesNotImplemented]
-		public void OP_CREF() { }
-		
-		[GpuOpCodesNotImplemented]
-		public void OP_CMSK() { }
-		
-		[GpuOpCodesNotImplemented]
 		public void OP_Unknown0xED() { }
 		
 		[GpuOpCodesNotImplemented]

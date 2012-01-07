@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
 using CSPspEmu.Hle;
 
 namespace CSPspEmu.Hle.Modules.utility
@@ -17,6 +18,11 @@ namespace CSPspEmu.Hle.Modules.utility
 		[HlePspNotImplemented]
 		public int sceUtilityMsgDialogInitStart(pspUtilityMsgDialogParams* Params)
 		{
+			var Message = Params->Message;
+			Console.Error.WriteLine(Message);
+			
+			
+			Params->ButtonPressed = pspUtilityMsgDialogPressed.PSP_UTILITY_MSGDIALOG_RESULT_YES;
 			CurrentDialogStep = DialogStepEnum.SUCCESS;
 			//throw(new NotImplementedException());
 			return 0;
