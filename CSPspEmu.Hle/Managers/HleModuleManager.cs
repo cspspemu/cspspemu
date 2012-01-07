@@ -24,7 +24,14 @@ namespace CSPspEmu.Hle.Managers
 
 			public override string ToString()
 			{
-				return String.Format("{0}: PC=0x{3:X}, RA=0x{4:X} => '{5}' : {1}::{2}", CallIndex, ModuleImportName, FunctionEntry.Name, PC, RA, Thread.Name);
+				try
+				{
+					return String.Format("{0}: PC=0x{3:X}, RA=0x{4:X} => '{5}' : {1}::{2}", CallIndex, ModuleImportName, FunctionEntry.Name, PC, RA, Thread.Name);
+				}
+				catch (Exception Exception)
+				{
+					return String.Format("Invalid DelegateInfo");
+				}
 				//return this.ToStringDefault();
 			}
 		}

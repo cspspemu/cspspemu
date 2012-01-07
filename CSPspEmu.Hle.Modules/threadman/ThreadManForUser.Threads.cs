@@ -606,6 +606,23 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return 0;
 		}
 
+		/// <summary>
+		/// Release a thread in the wait state.
+		/// </summary>
+		/// <param name="ThreadId">The UID of the thread.</param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0x2C34E053, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelReleaseWaitThread(int ThreadId)
+		{
+			var Thread = GetThreadById(ThreadId);
+			var CurrentThread = HleState.ThreadManager.Current;
+			if (Thread == CurrentThread) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_THREAD));
+			if (Thread.CurrentStatus != HleThread.Status.Waiting) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_THREAD_IS_NOT_WAIT));
+			Thread.WakeUp();
+			return 0;
+		}
+
 		/*
 		public int _sceKernelExitDeleteThread(int Status, HleThread Thread)
 		{

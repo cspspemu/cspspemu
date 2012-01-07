@@ -161,15 +161,22 @@ namespace CSPspEmu.Hle.Modules.rtc
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xE7C27D1B, FirmwareVersion = 150)]
-		public int sceRtcGetCurrentClockLocalTime(ScePspDateTime *time)
+		[HlePspNotImplemented]
+		public int sceRtcGetCurrentClockLocalTime(ScePspDateTime *Time)
 		{
-			throw (new NotImplementedException());
-			/*
-			ulong currentTick;
-			sceRtcGetCurrentTick(&currentTick);
-			sceRtcSetTick(time, &currentTick);
+			if (Time == null) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
+
+			HleState.PspRtc.Update();
+
+			Time->Year = (ushort)HleState.PspRtc.CurrentDateTime.Year;
+			Time->Month = (ushort)HleState.PspRtc.CurrentDateTime.Month;
+			Time->Day = (ushort)HleState.PspRtc.CurrentDateTime.Day;
+			Time->Hour = (ushort)HleState.PspRtc.CurrentDateTime.Hour;
+			Time->Minute = (ushort)HleState.PspRtc.CurrentDateTime.Minute;
+			Time->Second = (ushort)HleState.PspRtc.CurrentDateTime.Second;
+			Time->Microsecond = (uint)(HleState.PspRtc.CurrentDateTime.Millisecond * 1000);
+
 			return 0;
-			*/
 		}
 
 		/// <summary>

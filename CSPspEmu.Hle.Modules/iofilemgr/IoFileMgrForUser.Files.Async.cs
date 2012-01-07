@@ -220,5 +220,17 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			return -1;
 			*/
 		}
+
+		/// <summary>
+		/// Cancel an asynchronous operation on a file descriptor.
+		/// </summary>
+		/// <param name="id">The file descriptor to perform cancel on.</param>
+		/// <returns>less than 0 on error.</returns>
+		[HlePspFunction(NID = 0xE8BC6571, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceIoCancel(int id)
+		{
+			throw (new NotImplementedException());
+		}
 	}
 }
