@@ -266,7 +266,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		*/
 
-		private void VfpuLoad_Register(uint Register, int Index, uint VectorSize, ref VfpuPrefix Prefix, bool Debug = false)
+		private void VfpuLoad_Register(uint Register, int Index, uint VectorSize, ref VfpuPrefix Prefix, bool Debug = false, bool AsInteger = false)
 		{
 			//Console.Error.WriteLine("{0:X}", PC);
 			CheckPrefixUsage(ref Prefix);
@@ -291,13 +291,20 @@ namespace CSPspEmu.Core.Cpu.Emiter
 						default: throw(new InvalidOperationException());
 					}
 					//Console.Error.WriteLine("VALUE:: " + Value);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, Value);
+					if (AsInteger)
+					{
+						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, MathFloat.ReinterpretFloatAsInt(Value));
+					}
+					else
+					{
+						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, Value);
+					}
 				}
 				// Value.
 				else
 				{
 					_VfpuLoadVectorWithIndexPointer(Register, (uint)Prefix.SourceIndex(Index), VectorSize, Debug);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
+					MipsMethodEmiter.ILGenerator.Emit(AsInteger ? OpCodes.Ldind_I4 : OpCodes.Ldind_R4);
 				}
 
 				if (Prefix.SourceAbsolute(Index))
@@ -313,7 +320,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			else
 			{
 				_VfpuLoadVectorWithIndexPointer(Register, (uint)Index, VectorSize, Debug);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
+				MipsMethodEmiter.ILGenerator.Emit(AsInteger ? OpCodes.Ldind_I4 : OpCodes.Ldind_R4);
 			}
 		}
 
@@ -336,7 +343,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		*/
 
-		private void VfpuSave_Register(uint Register, int Index, uint VectorSize, VfpuPrefix Prefix, Action Action, bool Debug = false)
+		private void VfpuSave_Register(uint Register, int Index, uint VectorSize, VfpuPrefix Prefix, Action Action, bool Debug = false, bool AsInteger = false)
 		{
 			CheckPrefixUsage(ref Prefix);
 			_VfpuLoadVectorWithIndexPointer(Register, (uint)Index, VectorSize, Debug);
@@ -356,52 +363,83 @@ namespace CSPspEmu.Core.Cpu.Emiter
 						}
 						if (DoClamp)
 						{
-							MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, Min);
-							MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, Max);
-							MipsMethodEmiter.CallMethod(typeof(MathFloat), "Clamp");
+							if (AsInteger)
+							{
+								MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (int)Min);
+								MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (int)Max);
+								MipsMethodEmiter.CallMethod(typeof(MathFloat), "ClampInt");
+							}
+							else
+							{
+								MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, Min);
+								MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, Max);
+								MipsMethodEmiter.CallMethod(typeof(MathFloat), "Clamp");
+							}
 						}
 					}
 				}
 			}
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_R4);
+			MipsMethodEmiter.ILGenerator.Emit(AsInteger ? OpCodes.Stind_I4 : OpCodes.Stind_R4);
 		}
 
 		// VfpuPrefix VfpuPrefix, 
 
-		private void Load_VS(int Index, uint VectorSize, int RegisterOffset = 0, bool Debug = false)
+		private void Load_VS(int Index, bool AsInteger = false)
 		{
-			VfpuLoad_Register((uint)(Instruction.VS + RegisterOffset), Index, VectorSize, ref PrefixSource, Debug);
+			Load_VS(Index, VectorSizeOneTwo, AsInteger: AsInteger);
 		}
 
-		private void Load_VT(int Index, uint VectorSize, int RegisterOffset = 0, bool Debug = false)
+		private void Load_VS(int Index, uint VectorSize, int RegisterOffset = 0, bool Debug = false, bool AsInteger = false)
 		{
-			VfpuLoad_Register((uint)(Instruction.VT + RegisterOffset), Index, VectorSize, ref PrefixTarget, Debug);
+			VfpuLoad_Register((uint)(Instruction.VS + RegisterOffset), Index, VectorSize, ref PrefixSource, Debug, AsInteger: AsInteger);
 		}
 
-		private void Load_VD(int Index, uint VectorSize, int RegisterOffset = 0, bool Debug = false)
+		private void Load_VT(int Index, bool AsInteger = false)
+		{
+			Load_VT(Index, VectorSizeOneTwo, AsInteger: AsInteger);
+		}
+
+		private void Load_VT(int Index, uint VectorSize, int RegisterOffset = 0, bool Debug = false, bool AsInteger = false)
+		{
+			VfpuLoad_Register((uint)(Instruction.VT + RegisterOffset), Index, VectorSize, ref PrefixTarget, Debug, AsInteger: AsInteger);
+		}
+
+		private void Load_VS_VT(int Index, bool AsInteger = false)
+		{
+			Load_VS(Index, AsInteger: AsInteger);
+			Load_VT(Index, AsInteger: AsInteger);
+		}
+
+		private void Load_VS_VT(int Index, uint VectorSize, int RegisterOffset = 0, bool Debug = false, bool AsInteger = false)
+		{
+			Load_VS(Index, VectorSize, RegisterOffset, Debug, AsInteger: AsInteger);
+			Load_VT(Index, VectorSize, RegisterOffset, Debug, AsInteger: AsInteger);
+		}
+
+		private void Load_VD(int Index, uint VectorSize, int RegisterOffset = 0, bool Debug = false, bool AsInteger = false)
 		{
 			//Load_Register(Instruction.VD + RegisterOffset, Index, VectorSize, PrefixNone, Debug);
-			VfpuLoad_Register((uint)(Instruction.VD + RegisterOffset), Index, VectorSize, ref PrefixDestination, Debug);
+			VfpuLoad_Register((uint)(Instruction.VD + RegisterOffset), Index, VectorSize, ref PrefixDestination, Debug, AsInteger: AsInteger);
 		}
 
-		private void Save_VD(int Index, uint VectorSize, int RegisterOffset, Action Action, bool Debug = false)
+		private void Save_VD(int Index, uint VectorSize, int RegisterOffset, Action Action, bool Debug = false, bool AsInteger = false)
 		{
-			VfpuSave_Register((uint)(Instruction.VD + RegisterOffset), Index, VectorSize, PrefixDestination, Action, Debug);
+			VfpuSave_Register((uint)(Instruction.VD + RegisterOffset), Index, VectorSize, PrefixDestination, Action, Debug, AsInteger: AsInteger);
 		}
 
-		private void Save_VD(int Index, uint VectorSize, Action Action, bool Debug = false)
+		private void Save_VD(int Index, uint VectorSize, Action Action, bool Debug = false, bool AsInteger = false)
 		{
-			VfpuSave_Register((uint)(Instruction.VD), Index, VectorSize, PrefixDestination, Action, Debug);
+			VfpuSave_Register((uint)(Instruction.VD), Index, VectorSize, PrefixDestination, Action, Debug, AsInteger: AsInteger);
 		}
 
-		private void Save_VT(int Index, uint VectorSize, int RegisterOffset, Action Action, bool Debug = false)
+		private void Save_VT(int Index, uint VectorSize, int RegisterOffset, Action Action, bool Debug = false, bool AsInteger = false)
 		{
-			VfpuSave_Register((uint)(Instruction.VT + RegisterOffset), Index, VectorSize, PrefixTarget, Action, Debug);
+			VfpuSave_Register((uint)(Instruction.VT + RegisterOffset), Index, VectorSize, PrefixTarget, Action, Debug, AsInteger: AsInteger);
 		}
 
-		private void Save_VT(int Index, uint VectorSize, Action Action, bool Debug = false)
+		private void Save_VT(int Index, uint VectorSize, Action Action, bool Debug = false, bool AsInteger = false)
 		{
-			VfpuSave_Register((uint)(Instruction.VT), Index, VectorSize, PrefixTarget, Action, Debug);
+			VfpuSave_Register((uint)(Instruction.VT), Index, VectorSize, PrefixTarget, Action, Debug, AsInteger: AsInteger);
 		}
 
 		IEnumerable<int> XRange(int Start, int End)
@@ -521,24 +559,27 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		private void VectorOperationSaveVd(Action<uint, Action<int>> Action, Action AccumulateAction = null)
+		private uint VectorSizeOneTwo
 		{
-			VectorOperationSaveVd(Instruction.ONE_TWO, Action, AccumulateAction);
+			get
+			{
+				return Instruction.ONE_TWO;
+			}
 		}
 
-		private void VectorOperationSaveVd(uint VectorSize, Action<uint, Action<int>> Action, Action AccumulateAction = null)
+		private void VectorOperationSaveVd(Action<int> Action, Action AccumulateAction = null, bool AsInteger = false)
+		{
+			VectorOperationSaveVd(VectorSizeOneTwo, Action, AccumulateAction, AsInteger: AsInteger);
+		}
+
+		private void VectorOperationSaveVd(uint VectorSize, Action<int> Action, Action AccumulateAction = null, bool AsInteger = false)
 		{
 			foreach (var Index in XRange(VectorSize))
 			{
-				Action<int> Load = InputCount =>
-				{
-					if (InputCount >= 1) Load_VS(Index, VectorSize);
-					if (InputCount >= 2) Load_VT(Index, VectorSize);
-				};
 				Save_VD(Index, VectorSize, () =>
 				{
-					Action((uint)Index, Load);
-				});
+					Action((int)Index);
+				}, AsInteger: AsInteger);
 			}
 			if (AccumulateAction != null) AccumulateAction();
 		}

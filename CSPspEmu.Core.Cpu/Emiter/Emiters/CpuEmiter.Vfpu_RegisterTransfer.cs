@@ -25,7 +25,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_R4);
 			*/
 
-			VectorOperationSaveVd(1, (Index, Load) =>
+			VectorOperationSaveVd(1, (Index) =>
 			{
 				MipsMethodEmiter.LoadGPR_Signed(RT);
 				MipsMethodEmiter.CallMethod(typeof(MathFloat), "ReinterpretIntAsFloat");

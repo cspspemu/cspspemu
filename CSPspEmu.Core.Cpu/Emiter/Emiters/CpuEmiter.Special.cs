@@ -31,7 +31,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		public void sync() { throw(new NotImplementedException()); }
 
+		static public void break_impl(CpuThreadState CpuThreadState)
+		{
+			throw(new Exception("Break!"));
+		}
+
 		public void _break() {
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("break_impl"));
 			//throw(new NotImplementedException());
 		}
 		public void dbreak() { throw(new NotImplementedException()); }

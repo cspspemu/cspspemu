@@ -214,38 +214,59 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Vfpu ZERO/ONE
 		public void vzero()
 		{
-			VectorOperationSaveVd((Index, Load) => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 0.0f); });
+			VectorOperationSaveVd((Index) => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 0.0f); });
 		}
 		public void vone()
 		{
-			VectorOperationSaveVd((Index, Load) => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 1.0f); });
+			VectorOperationSaveVd((Index) => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 1.0f); });
 		}
 
 		// Vfpu MOVe/SiGN/Reverse SQuare root/COSine/Arc SINe/LOG2
 		// @CHECK
 		public void vmov()
 		{
-			VectorOperationSaveVd((Index, Load) =>
+			VectorOperationSaveVd((Index) =>
 			{
-				Load(1);
+				Load_VS(Index);
 			});
 		}
-		public void vabs() { throw (new NotImplementedException("")); }
-		public void vneg() { throw (new NotImplementedException("")); }
+		public void vabs()
+		{
+			VectorOperationSaveVd((Index) =>
+			{
+				Load_VS(Index);
+				MipsMethodEmiter.CallMethod(typeof(MathFloat), "Abs");
+			});
+		}
+		public void vneg()
+		{
+			VectorOperationSaveVd((Index) =>
+			{
+				Load_VS(Index);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Neg);
+			});
+		}
 		public void vocp() {
-			VectorOperationSaveVd((Index, Load) => {
+			VectorOperationSaveVd((Index) => {
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 1.0f);
-				Load(1);
+				Load_VS(Index);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Sub);
 			});
 		}
-		public void vsgn() { throw (new NotImplementedException("")); }
+		public void vsgn()
+		{
+			VectorOperationSaveVd((Index) =>
+			{
+				Load_VS(Index);
+				MipsMethodEmiter.CallMethod(typeof(MathFloat), "Sign");
+			});
+		}
 		public void vrcp()
 		{
-			VectorOperationSaveVd((Index, Load) =>
+			VectorOperationSaveVd((Index) =>
 			{
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 1.0f);
-				Load(1);
+				Load_VS(Index);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Div);
 			});
 		}
@@ -253,34 +274,34 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// OP_V_INTERNAL_IN_N!(1, "1.0f / sqrt(v)");
 		public void vrsq()
 		{
-			VectorOperationSaveVd((Index, Load) =>
+			VectorOperationSaveVd((Index) =>
 			{
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 1.0f);
-				Load(1);
+				Load_VS(Index);
 				MipsMethodEmiter.CallMethod(typeof(MathFloat), "Sqrt");
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Div);
 			});
 		}
 		public void vsin() {
-			VectorOperationSaveVd((Index, Load) =>
+			VectorOperationSaveVd((Index) =>
 			{
-				Load(1);
+				Load_VS(Index);
 				MipsMethodEmiter.CallMethod(typeof(MathFloat), "SinV1");
 			});
 		}
 		public void vcos() {
-			VectorOperationSaveVd((Index, Load) =>
+			VectorOperationSaveVd((Index) =>
 			{
-				Load(1);
+				Load_VS(Index);
 				MipsMethodEmiter.CallMethod(typeof(MathFloat), "CosV1");
 			});
 		}
 		public void vexp2() { throw (new NotImplementedException("")); }
 		public void vlog2() { throw (new NotImplementedException("")); }
 		public void vsqrt() {
-			VectorOperationSaveVd((Index, Load) =>
+			VectorOperationSaveVd((Index) =>
 			{
-				Load(1);
+				Load_VS(Index);
 				MipsMethodEmiter.CallMethod(typeof(MathFloat), "Sqrt");
 			});
 		}
@@ -317,8 +338,22 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void vcrsp_t() { throw (new NotImplementedException("")); }
 
 		// Vfpu MINimum/MAXium/ADD/SUB/DIV/MUL
-		public void vmin() { throw (new NotImplementedException("")); }
-		public void vmax() { throw (new NotImplementedException("")); }
+		public void vmin()
+		{
+			VectorOperationSaveVd((Index) =>
+			{
+				Load_VS_VT(Index);
+				MipsMethodEmiter.CallMethod(typeof(MathFloat), "Min");
+			});
+		}
+		public void vmax()
+		{
+			VectorOperationSaveVd((Index) =>
+			{
+				Load_VS_VT(Index);
+				MipsMethodEmiter.CallMethod(typeof(MathFloat), "Max");
+			});
+		}
 
 		/// <summary>
 		/// 	+----------------------+--------------+----+--------------+---+--------------+
@@ -342,25 +377,25 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/// </summary>
 		public void vadd()
 		{
-			VectorOperationSaveVd((Index, Load) =>
+			VectorOperationSaveVd((Index) =>
 			{
-				Load(2);
+				Load_VS_VT(Index);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
 			});
 		}
 		public void vsub()
 		{
-			VectorOperationSaveVd((Index, Load) =>
+			VectorOperationSaveVd((Index) =>
 			{
-				Load(2);
+				Load_VS_VT(Index);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Sub);
 			});
 		}
 		public void vdiv()
 		{
-			VectorOperationSaveVd((Index, Load) =>
+			VectorOperationSaveVd((Index) =>
 			{
-				Load(2);
+				Load_VS_VT(Index);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Div);
 			});
 		}
@@ -375,9 +410,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public void vmul()
 		{
-			VectorOperationSaveVd((Index, Load) =>
+			VectorOperationSaveVd((Index) =>
 			{
-				Load(2);
+				Load_VS_VT(Index);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
 				//MipsMethodEmiter.CallMethod(this.GetType(), "_vmul");
 			});

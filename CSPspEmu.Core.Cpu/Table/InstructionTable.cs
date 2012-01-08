@@ -480,10 +480,6 @@ namespace CSPspEmu.Core.Cpu.Table
 						ID("vcmovf",      VM("110100:10:101:01:imm3:two:vs:one:vd"), "%zp, %yp, %v3", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
 						ID("vcmovt",      VM("110100:10:101:00:imm3:two:vs:one:vd"), "%zp, %yp, %v3", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
 
-						////////////////////////////
-						/// Not implemented yet!
-						////////////////////////////
-
 						ID("vavg",        VM("110100:00:010:00111:two:vs:one:vd"), "%zp, %yp", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
 						ID("vf2id",       VM("110100:10:011:imm5:two:vs:one:vd"), "%zp, %yp, %v5", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
 						ID("vf2in",       VM("110100:10:000:imm5:two:vs:one:vd"), "%zp, %yp, %v5", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
@@ -523,6 +519,14 @@ namespace CSPspEmu.Core.Cpu.Table
 						ID("vlgb",        VM("110100:00:001:10:111:two:vs:one:vd"), "%zs, %ys",      ADDR_TYPE_NONE, INSTR_TYPE_PSP),
 						ID("vqmul",       VM("111100:101:vt:1:vs:1:vd"), "%zq, %yq, %xq", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
 						ID("vs2i",        VM("110100:00:001:11:011:two:vs:one:vd"), "%zq, %yp", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
+
+						// Working on it.
+
+						//"110100:00:001:11:000:1000000010000001"
+						ID("vc2i",        VM("110100:00:001:11:001:two:vs:one:vd"), "%zs, %ys, %xs", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
+						ID("vuc2i",       VM("110100:00:001:11:000:two:vs:one:vd"), "%zq, %yp", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
+
+
 						ID("vsbn",        VM("011000:010:vt:two:vs:one:vd"), "%zs, %ys, %xs", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
 
 						ID("vsbz",        VM("110100:00:001:10110:two:vs:one:vd"), "%zs, %ys", ADDR_TYPE_NONE, INSTR_TYPE_PSP),

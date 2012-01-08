@@ -732,11 +732,62 @@ void checkMatrixScale() {
 	printMatrix(&matrix);
 }
 
+void _checkMatrixPerVector(ScePspFMatrix4 *matrix, ScePspFVector4 *vmult, ScePspFVector4 *vresult) {
+	asm volatile (
+		"lv.q R700, 0x00+%1\n"
+		"lv.q R701, 0x10+%1\n"
+		"lv.q R702, 0x20+%1\n"
+		"lv.q R703, 0x30+%1\n"
+		
+		"lv.q R600, 0x00+%2\n"
+		
+		"vtfm4.q R100, M700, R600\n"
+		
+		"sv.q    R100, 0x00+%0\n"
+		: "+m" (*vresult) : "m" (*matrix), "m" (*vmult)
+	);
+}
+
+void _checkHMatrixPerVector(ScePspFMatrix4 *matrix, ScePspFVector4 *vmult, ScePspFVector4 *vresult) {
+	asm volatile (
+		"lv.q R700, 0x00+%1\n"
+		"lv.q R701, 0x10+%1\n"
+		"lv.q R702, 0x20+%1\n"
+		"lv.q R703, 0x30+%1\n"
+		
+		"lv.q R600, 0x00+%2\n"
+		
+		"vhtfm4.q R100, M700, R600\n"
+		
+		"sv.q    R100, 0x00+%0\n"
+		: "+m" (*vresult) : "m" (*matrix), "m" (*vmult)
+	);
+}
+
+void checkMatrixPerVector() {
+	ScePspFMatrix4 matrix = {
+		{ 1.0f, 5.0f,  9.0f, 13.0f },
+		{ 2.0f, 6.0f, 10.0f, 14.0f },
+		{ 3.0f, 7.0f, 11.0f, 15.0f },
+		{ 4.0f, 8.0f, 12.0f, 16.0f }
+	};
+	ScePspFVector4 vmult = { -10.0f, -20.0f, 30.0f, 40.0f};
+	ScePspFVector4 vout = { 0.0f, 0.0f, 0.0f, 0.0f };
+	
+	_checkMatrixPerVector(&matrix, &vmult, &vout);
+	printVector(&vout);
+	
+	_checkHMatrixPerVector(&matrix, &vmult, &vout);
+	printVector(&vout);
+}
+
 int main(int argc, char *argv[]) {
 	printf("Started\n");
 
 	resetAllMatrices();
 	
+	printf("checkMatrixPerVector:\n"); checkMatrixPerVector();
+	//return 0;
 	printf("checkAggregated:\n"); checkAggregated();
 	printf("checkSimpleLoad:\n"); checkSimpleLoad();
 	printf("checkMisc:\n"); checkMisc();

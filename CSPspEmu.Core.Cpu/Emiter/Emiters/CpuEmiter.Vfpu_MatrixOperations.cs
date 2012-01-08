@@ -50,13 +50,69 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		// -
-		public void vtfm2() { throw (new NotImplementedException("")); }
-		public void vtfm3() { throw (new NotImplementedException("")); }
-		public void vtfm4() { throw (new NotImplementedException("")); }
 
-		public void vhtfm2() { throw (new NotImplementedException("")); }
-		public void vhtfm3() { throw (new NotImplementedException("")); }
-		public void vhtfm4() { throw (new NotImplementedException("")); }
+		private void _vtfm_x(uint VectorSize)
+		{
+			VectorOperationSaveVd(VectorSize, Index =>
+			{
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 0.0f);
+				for (int n = 0; n < VectorSize; n++)
+				{
+					Load_VS(n, VectorSize, RegisterOffset: Index);
+					Load_VT(n, VectorSize);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+				}
+			});
+		}
+
+		private void _vhtfm_x(uint VectorSize)
+		{
+			VectorOperationSaveVd(VectorSize, Index =>
+			{
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 0.0f);
+				for (int n = 0; n < VectorSize; n++)
+				{
+					Load_VS(n, VectorSize, RegisterOffset: Index);
+					if (n == VectorSize - 1)
+					{
+						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 1.0f);
+					}
+					else
+					{
+						Load_VT(n, VectorSize - 1);
+					}
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+				}
+			});
+		}
+
+		public void vtfm2()
+		{
+			_vtfm_x(2);
+		}
+		public void vtfm3()
+		{
+			_vtfm_x(3);
+		}
+		public void vtfm4()
+		{
+			_vtfm_x(4);
+		}
+
+		public void vhtfm2()
+		{
+			_vhtfm_x(2);
+		}
+		public void vhtfm3()
+		{
+			_vhtfm_x(3);
+		}
+		public void vhtfm4()
+		{
+			_vhtfm_x(4);
+		}
 
 		public void vmidt()
 		{

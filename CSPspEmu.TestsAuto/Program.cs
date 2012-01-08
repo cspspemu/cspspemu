@@ -379,7 +379,9 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "sema";
 				//WildCardFilter = "mbx";
 				//WildCardFilter = "vtimer";
-				WildCardFilter = "vfpu_colors";
+				//WildCardFilter = "vfpu_colors";
+				WildCardFilter = "vfpu_convert";
+				//WildCardFilter = "vfpu";
 				//WildCardFilter = "mutex";
 				//WildCardFilter = "vpl";
 				//WildCardFilter = "fpl";
