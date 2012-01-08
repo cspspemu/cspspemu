@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using CSharpUtils.Extensions;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Threading.Synchronization;
 using CSPspEmu.Core.Memory;
@@ -147,16 +148,6 @@ namespace CSPspEmu.Core.Gpu
 		/// <returns></returns>
 		public GpuDisplayList DequeueFreeDisplayList()
 		{
-			//Console.WriteLine("DequeueFreeDisplayList: {0}", this.DisplayListFreeQueue.Count);
-			//Console.WriteLine("Count: {0}", this.DisplayListFreeQueue.Count);
-			/*
-			while (this.DisplayListFreeQueue.Count == 0)
-			{
-				DisplayListFreeEvent.WaitOne(500);
-				if (this.DisplayListFreeQueue.Count > 0) break;
-				Console.Error.WriteLine("Empty Count");
-			}
-			*/
 			lock (DisplayListFreeQueue)
 			{
 				var DisplayList = this.DisplayListFreeQueue.Dequeue();
@@ -222,6 +213,7 @@ namespace CSPspEmu.Core.Gpu
 		/// </summary>
 		public void ProcessStep()
 		{
+			GpuDisplayList CurrentGpuDisplayList;
 			Status.SetValue(StatusEnum.Completed);
 
 			//Thread.Sleep(1);
@@ -229,26 +221,18 @@ namespace CSPspEmu.Core.Gpu
 
 			while (true)
 			{
-				lock (DisplayListQueue)
-				{
-					if (DisplayListQueue.Count <= 0) break;
-				}
-				Status.SetValue(StatusEnum.Drawing);
-				GpuDisplayList CurrentGpuDisplayList;
+				lock (DisplayListQueue) if (DisplayListQueue.Count <= 0) break;
 
-				//Console.WriteLine("**********************************************");
-				lock (DisplayListQueue)
+				Status.SetValue(StatusEnum.Drawing);
+
+				lock (DisplayListQueue) CurrentGpuDisplayList = DisplayListQueue.RemoveFirstAndGet();
 				{
-					CurrentGpuDisplayList = DisplayListQueue.First.Value;
-					DisplayListQueue.RemoveFirst();
-				}
-				{
-					//Console.WriteLine("YYYYYYYYYYYYYYYYYYYYYYYYYYY");
 					CurrentGpuDisplayList.Process();
-					//Console.WriteLine("ZZZZZZZZZZZZZZZZZZZZZZZZZZ");
 				}
 				EnqueueFreeDisplayList(CurrentGpuDisplayList);
 			}
+
+			Status.SetValue(StatusEnum.Completed);
 
 			//if (DrawSync != null) DrawSync();
 		}

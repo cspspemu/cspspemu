@@ -100,7 +100,7 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Final Fantasy 20th Anniversary.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Legend of Heroes 3.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Lemmings.cso", EnableMpeg: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: false, EnableMpeg: false);
+				PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: false, EnableMpeg: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Final Fantasy Crisis Core.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false);
@@ -120,11 +120,11 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\scummvm-1.4.0\EBOOT.PBP");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\PicoDrive\EBOOT.PBP");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\uMSX\EBOOT.PBP");
-				PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\Daedalus\EBOOT.PBP");
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\Daedalus\EBOOT.PBP");
 				
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\EmuMaster V3.1 (Unofficial)\EBOOT.PBP", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Breath of Fire 3.cso", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Popolocrois.cso");
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Popolocrois.cso", EnableMpeg: true);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\goldminer\EBOOT.PBP");
 				//PspEmulator.StartAndLoad(@"C:\juegos\jpcsp_last\demos\nehetutorial07.pbp");
 				//PspEmulator.StartAndLoad(@"C:\juegos\jpcsp_last\demos\nehetutorial08.pbp");

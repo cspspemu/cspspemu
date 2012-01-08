@@ -190,6 +190,8 @@ namespace CSPspEmu.Core.Gpu
 		/// </summary>
 		internal void Process()
 		{
+			Status2.SetValue(Status2Enum.Drawing);
+
 		Loop:
 			for (Done = false; !Done; _InstructionAddressCurrent += 4)
 			{
@@ -205,6 +207,7 @@ namespace CSPspEmu.Core.Gpu
 			{
 				if (Debug) Console.WriteLine("- DONE0 ----------------------------------------------------------------------");
 				Status.SetValue(StatusEnum.Done);
+				Status2.SetValue(Status2Enum.Completed);
 				return;
 			}
 
@@ -212,6 +215,7 @@ namespace CSPspEmu.Core.Gpu
 			{
 				if (Debug) Console.WriteLine("- DONE1 ----------------------------------------------------------------------");
 				Status.SetValue(StatusEnum.Done);
+				Status2.SetValue(Status2Enum.Completed);
 				return;
 			}
 
@@ -219,6 +223,7 @@ namespace CSPspEmu.Core.Gpu
 			{
 				if (Debug) Console.WriteLine("- STALLED --------------------------------------------------------------------");
 				Status.SetValue(StatusEnum.StallReached);
+				Status2.SetValue(Status2Enum.Completed);
 				StallAddressUpdated.WaitOne();
 				goto Loop;
 			}
@@ -328,15 +333,24 @@ namespace CSPspEmu.Core.Gpu
 			}
 		}
 
-		PspWaitEvent OnFreed = new PspWaitEvent();
+		//PspWaitEvent OnFreed = new PspWaitEvent();
+		public enum Status2Enum
+		{
+			Drawing = 0,
+			Completed = 1,
+			Free = 2,
+		}
+		readonly public WaitableStateMachine<Status2Enum> Status2 = new WaitableStateMachine<Status2Enum>(Debug: false);
 		public PspGeCallbackData Callbacks;
 
 		public void Freed()
 		{
+			//Console.Error.WriteLine(Id);
 			lock (this)
 			{
+				//OnFreed.Signal();
+				Status2.SetValue(Status2Enum.Free);
 				Available = true;
-				OnFreed.Signal();
 			}
 		}
 
@@ -346,14 +360,10 @@ namespace CSPspEmu.Core.Gpu
 			if (SyncType != Gpu.GpuProcessor.SyncTypeEnum.ListDone) throw new NotImplementedException();
 			lock (this)
 			{
-				if (Available)
+				Status2.CallbackOnStateOnce(Status2Enum.Free, () =>
 				{
 					NotifyOnceCallback();
-				}
-				else
-				{
-					OnFreed.CallbackOnStateOnce(NotifyOnceCallback);
-				}
+				});
 			}
 			//Status.CallbackOnStateOnce(StatusEnum.Done, NotifyOnceCallback);
 			/*
