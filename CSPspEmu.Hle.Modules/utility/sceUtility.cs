@@ -709,7 +709,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// </summary>
 		/// <returns>the current status of the keyboard. See ::pspUtilityDialogState for details.</returns>
 		[HlePspFunction(NID = 0xF3F76017, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public pspUtilityDialogState sceUtilityOskGetStatus()
 		{
 			return pspUtilityDialogState.Finished;
@@ -720,7 +720,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// </summary>
 		/// <returns>one of pspUtilityDialogState on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x6332AA39, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public pspUtilityDialogState sceUtilityNetconfGetStatus()
 		{
 			return pspUtilityDialogState.Finished;

@@ -54,6 +54,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		protected Action ReadNormal;
 		protected Action ReadPosition;
 
+		protected bool Transform2D;
+
 		public VertexReader()
 		{
 			ReadWeightsList = new Action[] { Void, ReadWeightByte, ReadWeightShort, ReadWeightFloat };
@@ -65,6 +67,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		public void SetVertexTypeStruct(VertexTypeStruct VertexTypeStruct, byte* BasePointer)
 		{
+			Transform2D = VertexTypeStruct.Transform2D;
+			
+			//Console.Error.WriteLine("SetVertexTypeStruct: " + VertexTypeStruct);
 			SkinningWeightCount = VertexTypeStruct.SkinningWeightCount;
 			//Console.WriteLine(SkinningWeightCount);
 			VertexSize = VertexTypeStruct.GetVertexSize();
@@ -74,7 +79,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				ReadColor = ReadColorList[(int)VertexTypeStruct.Color];
 				ReadNormal = ReadNormalList[(int)VertexTypeStruct.Normal];
 				ReadPosition = ReadPositionList[(int)VertexTypeStruct.Position];
-				switch (VertexAlignSize)
+
+				switch (VertexTypeStruct.StructAlignment)
 				{
 					case 4: VertexAlignment = Align4; break;
 					case 2: VertexAlignment = Align2; break;
@@ -100,9 +106,29 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			ReadPosition();
 		}
 
-		protected void Align1() { }
+		protected void Align1()
+		{
+		}
+
+#if false
 		protected void Align2() { Pointer = (byte*)((uint)Pointer & unchecked((uint)~1)); }
-		protected void Align4() { Pointer = (byte*)((uint)Pointer & unchecked((uint)~3)); }
+		protected void Align4() { Pointer = (byte*)((uint)Pointer & unchecked((uint)~4)); }
+#else
+		protected void Align2()
+		{
+			if (((uint)Pointer & 1) != 0)
+			{
+				Pointer = (byte*)(((uint)Pointer + 2) & unchecked((uint)~1));
+			}
+		}
+		protected void Align4()
+		{
+			if (((uint)Pointer & 3) != 0)
+			{
+				Pointer = (byte*)(((uint)Pointer + 4) & unchecked((uint)~3));
+			}
+		}
+#endif
 
 		protected void Void()
 		{
@@ -116,16 +142,31 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		protected void ReadTextureCoordinatesByte()
 		{
 			Align1();
-			VertexInfo->U = (float)((byte*)Pointer)[0];
+
+			VertexInfo->U = (float)((byte*)Pointer)[1];
 			VertexInfo->V = (float)((byte*)Pointer)[1];
+
+			if (!Transform2D)
+			{
+				VertexInfo->U /= 128.0f;
+				VertexInfo->V /= 128.0f;
+			}
+
 			Pointer += sizeof(byte) * 2;
 		}
 
 		protected void ReadTextureCoordinatesShort()
 		{
 			Align2();
-			VertexInfo->U = (float)((short*)Pointer)[0];
-			VertexInfo->V = (float)((short*)Pointer)[1];
+			VertexInfo->U = (float)((ushort*)Pointer)[0];
+			VertexInfo->V = (float)((ushort*)Pointer)[1];
+			
+			if (!Transform2D)
+			{
+				VertexInfo->U /= 32768f;
+				VertexInfo->V /= 32768f;
+			}
+
 			Pointer += sizeof(short) * 2;
 		}
 
@@ -134,6 +175,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			Align4();
 			VertexInfo->U = (float)((float*)Pointer)[0];
 			VertexInfo->V = (float)((float*)Pointer)[1];
+
 			Pointer += sizeof(float) * 2;
 		}
 
@@ -183,9 +225,26 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		public void ReadPositionByte()
 		{
 			Align1();
-			VertexInfo->PX = (float)((byte*)Pointer)[0];
-			VertexInfo->PY = (float)((byte*)Pointer)[1];
-			VertexInfo->PZ = (float)((byte*)Pointer)[2];
+			VertexInfo->PX = (float)((sbyte*)Pointer)[0];
+			VertexInfo->PY = (float)((sbyte*)Pointer)[1];
+			if (Transform2D)
+			{
+				VertexInfo->PZ = (float)((byte*)Pointer)[2];
+			}
+			else
+			{
+				VertexInfo->PZ = (float)((sbyte*)Pointer)[2];
+			}
+
+			if (!Transform2D)
+			{
+				VertexInfo->PX /= 128f;
+				VertexInfo->PY /= 128f;
+				VertexInfo->PZ /= 128f;
+			}
+
+			//Console.Error.WriteLine(VertexInfo->PZ);
+
 			Pointer += sizeof(byte) * 3;
 		}
 
@@ -194,7 +253,24 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			Align2();
 			VertexInfo->PX = (float)((short*)Pointer)[0];
 			VertexInfo->PY = (float)((short*)Pointer)[1];
-			VertexInfo->PZ = (float)((short*)Pointer)[2];
+			if (Transform2D)
+			{
+				VertexInfo->PZ = (float)((ushort*)Pointer)[2];
+			}
+			else
+			{
+				VertexInfo->PZ = (float)((short*)Pointer)[2];
+			}
+	
+			if (!Transform2D)
+			{
+				VertexInfo->PX /= 32768f;
+				VertexInfo->PY /= 32768f;
+				VertexInfo->PZ /= 32768f;
+			}
+
+			//Console.Error.WriteLine(VertexInfo->PZ);
+
 			Pointer += sizeof(short) * 3;
 		}
 
@@ -233,6 +309,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			VertexInfo->NX = (float)((byte*)Pointer)[0];
 			VertexInfo->NY = (float)((byte*)Pointer)[1];
 			VertexInfo->NZ = (float)((byte*)Pointer)[2];
+			if (!Transform2D)
+			{
+				VertexInfo->NX /= 128f;
+				VertexInfo->NY /= 128f;
+				VertexInfo->NZ /= 128f;
+			}
+
 			Pointer += sizeof(byte) * 3;
 		}
 
@@ -242,6 +325,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			VertexInfo->NX = (float)((short*)Pointer)[0];
 			VertexInfo->NY = (float)((short*)Pointer)[1];
 			VertexInfo->NZ = (float)((short*)Pointer)[2];
+			if (!Transform2D)
+			{
+				VertexInfo->NX /= 32768f;
+				VertexInfo->NY /= 32768f;
+				VertexInfo->NZ /= 32768f;
+			}
 			Pointer += sizeof(short) * 3;
 		}
 

@@ -152,6 +152,7 @@ namespace CSPspEmu.Core.Gpu.Run
 			GpuState->BlendingState.ColorMaskR = Param8(0);
 			GpuState->BlendingState.ColorMaskG = Param8(8);
 			GpuState->BlendingState.ColorMaskB = Param8(16);
+			//Console.Error.WriteLine("OP_PMSKC");
 		}
 		// Pixel MasK Alpha
 		public void OP_PMSKA()
@@ -163,11 +164,13 @@ namespace CSPspEmu.Core.Gpu.Run
 		public void OP_CTST()
 		{
 			GpuState->ColorTestState.TestFunction = (ColorTestFunctionEnum)Extract(0, 2);
+			//Console.Error.WriteLine("OP_CTST");
 		}
 
 		// Color REFerence
 		public void OP_CREF()
 		{
+			//Console.Error.WriteLine("OP_CREF");
 			GpuState->ColorTestState.RefRed = (byte)Extract(8 * 0, 8);
 			GpuState->ColorTestState.RefGreen = (byte)Extract(8 * 1, 8);
 			GpuState->ColorTestState.RefBlue = (byte)Extract(8 * 2, 8);
@@ -177,6 +180,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Color MaSK
 		public void OP_CMSK()
 		{
+			//Console.Error.WriteLine("OP_CMSK");
 			GpuState->ColorTestState.MaskRed = (byte)Extract(8 * 0, 8);
 			GpuState->ColorTestState.MaskGreen = (byte)Extract(8 * 1, 8);
 			GpuState->ColorTestState.MaskBlue = (byte)Extract(8 * 2, 8);

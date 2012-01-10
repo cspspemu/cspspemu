@@ -310,10 +310,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 
 			GL.ActiveTexture(TextureUnit.Texture0);
-			GL.MatrixMode(MatrixMode.Texture); 
+			GL.MatrixMode(MatrixMode.Texture);
+			GL.LoadIdentity();
+
 			if (VertexType.Transform2D)
 			{
-				GL.LoadIdentity();
+				//GL.LoadIdentity();
 				GL.Scale(
 					1.0f / Mipmap0->BufferWidth,
 					1.0f / Mipmap0->TextureHeight,
@@ -325,9 +327,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				switch (TextureMappingState->TextureMapMode)
 				{
 					case TextureMapMode.GU_TEXTURE_COORDS:
-						GL.LoadIdentity();
+						//GL.LoadIdentity();
 						GL.Translate(TextureState->OffsetU, TextureState->OffsetV, 0);
 						GL.Scale(TextureState->ScaleU, TextureState->ScaleV, 1);
+						//Console.Error.WriteLine("NotImplemented: GU_TEXTURE_COORDS");
 					break;
 					case TextureMapMode.GU_TEXTURE_MATRIX:
 						//glLoadMatrixf(state.texture.matrix.pointer);
@@ -353,11 +356,17 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 						Logger.log(Logger.Level.WARNING, "GPU", "Not implemented! texture for transform3D!");
 						*/
 						break;
+					default:
+						Console.Error.WriteLine("NotImplemented TextureMappingState->TextureMapMode: " + TextureMappingState->TextureMapMode);
+						break;
 				}
 			}
 
-			var Texture = TextureCache.Get(TextureState, ClutState);
-			Texture.Bind();
+			//GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
+			//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+			CurrentTexture = TextureCache.Get(TextureState, ClutState);
+			CurrentTexture.Bind();
 
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)((TextureState->FilterMinification == TextureFilter.Linear) ? TextureMinFilter.Linear : TextureMinFilter.Nearest));
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)((TextureState->FilterMagnification == TextureFilter.Linear) ? TextureMagFilter.Linear : TextureMagFilter.Nearest));

@@ -38,12 +38,17 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
-		VertexReader VertexReader;
+		private VertexReader VertexReader;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		TextureCache TextureCache;
+		private TextureCache TextureCache;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		private Texture CurrentTexture;
 
 		/// <summary>
 		/// 
@@ -55,6 +60,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			this.TextureCache = PspEmulatorContext.GetInstance<TextureCache>();
 			this.VertexReader = new VertexReader();
 		}
+
+		//static public object GpuLock = new object();
 
 		/// <summary>
 		/// 
@@ -121,6 +128,24 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 			if (VertexType.Texture != VertexTypeStruct.NumericEnum.Void)
 			{
+				/*
+				if (VertexType.Texture == VertexTypeStruct.NumericEnum.Short)
+				{
+					var Texture = CurrentTexture;
+
+					Console.WriteLine(
+						"U={0}, V={1}, OFFSET({2}, {3}), SCALE({4}, {5}) : SIZE({6},{7}) : {8}",
+						VertexInfo.U, VertexInfo.V,
+						GpuState->TextureMappingState.TextureState.OffsetU, GpuState->TextureMappingState.TextureState.OffsetV,
+						GpuState->TextureMappingState.TextureState.ScaleU, GpuState->TextureMappingState.TextureState.ScaleV,
+						Texture.Width, Texture.Height,
+						GpuState->TextureMappingState.TextureState
+					);
+					
+					//return;
+				}
+				*/
+
 				//Console.WriteLine("{0}, {1}", VertexInfo.U, VertexInfo.V);
 				GL.TexCoord2(VertexInfo.U, VertexInfo.V);
 			}
@@ -224,6 +249,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			VertexReader.SetVertexTypeStruct(VertexType, (byte*)Memory.PspAddressToPointerSafe(GpuState->VertexAddress));
 			//IndexReader.SetVertexTypeStruct(VertexType, VertexCount, (byte*)Memory.PspAddressToPointerSafe(GpuState->IndexAddress));
 
+
 			int TotalVerticesWithoutMorphing = VertexCount;
 
 			void* IndexAddress = Memory.PspAddressToPointerSafe(GpuState->IndexAddress);
@@ -318,7 +344,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				{
 					GL.MatrixMode(MatrixMode.Projection); GL.LoadIdentity();
 					//GL.Ortho(0, 512, 272, 0, -0x7FFF, +0x7FFF);
-					GL.Ortho(0, 480, 272, 0, -0x7FFF, +0x7FFF);
+					//GL.Ortho(0, 480, 272, 0, -0x7FFF, +0x7FFF);
+					GL.Ortho(0, 480, 272, 0, 0, -0xFFFF);
+					
 					GL.MatrixMode(MatrixMode.Modelview); GL.LoadIdentity();
 				}
 				else
@@ -341,6 +369,19 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					//Console.WriteLine("NO Transform2D");
 				}
 			}
+
+			//GL.Enable(EnableCap.Blend);
+
+			/*
+			if (CurrentTexture != null)
+			{
+				if (CurrentTexture.TextureHash == 0x2202293873)
+				{
+					Console.Error.WriteLine(CurrentTexture);
+					Console.Error.WriteLine(VertexCount);
+				}
+			}
+			*/
 
 			// DRAW ACTUALLY
 			{
@@ -366,72 +407,80 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 				//Console.WriteLine(BeginMode);
 
-				GL.Begin(BeginMode);
+				//lock (GpuLock)
 				{
-					if (PrimitiveType == PrimitiveType.Sprites)
+					//Console.Error.WriteLine("GL.Begin : Thread : {0}", Thread.CurrentThread.ManagedThreadId);
+					GL.Begin(BeginMode);
+					try
 					{
-						GL.Disable(EnableCap.CullFace);
-						for (int n = 0; n < VertexCount; n += 2)
+						if (PrimitiveType == PrimitiveType.Sprites)
 						{
-							VertexInfo VertexInfoTopLeft;
-							VertexInfo VertexInfoTopRight;
-							VertexInfo VertexInfoBottomRight;
-							VertexInfo VertexInfoBottomLeft;
-							ReadVertex(n + 0, &VertexInfoTopLeft);
-							ReadVertex(n + 1, &VertexInfoBottomRight);
-
-							//if (GpuState->ClearingMode) Console.WriteLine("{0} - {1}", VertexInfoTopLeft, VertexInfoBottomRight);
-
-							float R = VertexInfoBottomRight.R, G = VertexInfoBottomRight.G, B = VertexInfoBottomRight.B, A = VertexInfoBottomRight.A;
-							float PZ = VertexInfoTopLeft.PZ;
-							float NZ = VertexInfoTopLeft.NZ;
-
-							VertexInfoTopRight = new VertexInfo()
+							GL.Disable(EnableCap.CullFace);
+							for (int n = 0; n < VertexCount; n += 2)
 							{
-								U = VertexInfoBottomRight.U,
-								V = VertexInfoTopLeft.V,
-								PX = VertexInfoBottomRight.PX,
-								PY = VertexInfoTopLeft.PY,
-								NX = VertexInfoBottomRight.NX,
-								NY = VertexInfoTopLeft.NY,
-							};
+								VertexInfo VertexInfoTopLeft;
+								VertexInfo VertexInfoTopRight;
+								VertexInfo VertexInfoBottomRight;
+								VertexInfo VertexInfoBottomLeft;
+								ReadVertex(n + 0, &VertexInfoTopLeft);
+								ReadVertex(n + 1, &VertexInfoBottomRight);
 
-							VertexInfoBottomLeft = new VertexInfo()
-							{
-								U = VertexInfoTopLeft.U,
-								V = VertexInfoBottomRight.V,
-								PX = VertexInfoTopLeft.PX,
-								PY = VertexInfoBottomRight.PY,
-								NX = VertexInfoTopLeft.NX,
-								NY = VertexInfoBottomRight.NY,
-							};
+								//if (GpuState->ClearingMode) Console.WriteLine("{0} - {1}", VertexInfoTopLeft, VertexInfoBottomRight);
 
-							VertexInfoBottomLeft.R = VertexInfoBottomRight.R = VertexInfoTopRight.R = VertexInfoTopLeft.R = R;
-							VertexInfoBottomLeft.G = VertexInfoBottomRight.G = VertexInfoTopRight.G = VertexInfoTopLeft.G = G;
-							VertexInfoBottomLeft.B = VertexInfoBottomRight.B = VertexInfoTopRight.B = VertexInfoTopLeft.B = B;
-							VertexInfoBottomLeft.A = VertexInfoBottomRight.A = VertexInfoTopRight.A = VertexInfoTopLeft.A = R;
-							VertexInfoBottomLeft.PZ = VertexInfoBottomRight.PZ = VertexInfoTopRight.PZ = VertexInfoTopLeft.PZ = PZ;
-							VertexInfoBottomLeft.NZ = VertexInfoBottomRight.NZ = VertexInfoTopRight.NZ = VertexInfoTopLeft.NZ = NZ;
+								float R = VertexInfoBottomRight.R, G = VertexInfoBottomRight.G, B = VertexInfoBottomRight.B, A = VertexInfoBottomRight.A;
+								float PZ = VertexInfoTopLeft.PZ;
+								float NZ = VertexInfoTopLeft.NZ;
 
-							PutVertex(ref VertexInfoTopLeft, ref VertexType);
-							PutVertex(ref VertexInfoTopRight, ref VertexType);
-							PutVertex(ref VertexInfoBottomRight, ref VertexType);
-							PutVertex(ref VertexInfoBottomLeft, ref VertexType);
+								VertexInfoTopRight = new VertexInfo()
+								{
+									U = VertexInfoBottomRight.U,
+									V = VertexInfoTopLeft.V,
+									PX = VertexInfoBottomRight.PX,
+									PY = VertexInfoTopLeft.PY,
+									NX = VertexInfoBottomRight.NX,
+									NY = VertexInfoTopLeft.NY,
+								};
+
+								VertexInfoBottomLeft = new VertexInfo()
+								{
+									U = VertexInfoTopLeft.U,
+									V = VertexInfoBottomRight.V,
+									PX = VertexInfoTopLeft.PX,
+									PY = VertexInfoBottomRight.PY,
+									NX = VertexInfoTopLeft.NX,
+									NY = VertexInfoBottomRight.NY,
+								};
+
+								VertexInfoBottomLeft.R = VertexInfoBottomRight.R = VertexInfoTopRight.R = VertexInfoTopLeft.R = R;
+								VertexInfoBottomLeft.G = VertexInfoBottomRight.G = VertexInfoTopRight.G = VertexInfoTopLeft.G = G;
+								VertexInfoBottomLeft.B = VertexInfoBottomRight.B = VertexInfoTopRight.B = VertexInfoTopLeft.B = B;
+								VertexInfoBottomLeft.A = VertexInfoBottomRight.A = VertexInfoTopRight.A = VertexInfoTopLeft.A = R;
+								VertexInfoBottomLeft.PZ = VertexInfoBottomRight.PZ = VertexInfoTopRight.PZ = VertexInfoTopLeft.PZ = PZ;
+								VertexInfoBottomLeft.NZ = VertexInfoBottomRight.NZ = VertexInfoTopRight.NZ = VertexInfoTopLeft.NZ = NZ;
+
+								PutVertex(ref VertexInfoTopLeft, ref VertexType);
+								PutVertex(ref VertexInfoTopRight, ref VertexType);
+								PutVertex(ref VertexInfoBottomRight, ref VertexType);
+								PutVertex(ref VertexInfoBottomLeft, ref VertexType);
+							}
 						}
-					}
-					else
-					{
-						for (int n = 0; n < VertexCount; n++)
+						else
 						{
 							VertexInfo VertexInfo;
-							ReadVertex(n, &VertexInfo);
-							PutVertex(ref VertexInfo, ref VertexType);
+							for (int n = 0; n < VertexCount; n++)
+							{
+								ReadVertex(n, &VertexInfo);
+								PutVertex(ref VertexInfo, ref VertexType);
 
+							}
 						}
 					}
+					finally
+					{
+						GL.End();
+						GL.Flush();
+					}
 				}
-				GL.End();
-				GL.Flush();
 			}
 			//Console.WriteLine(VertexCount);
 
@@ -497,6 +546,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		private void PrepareRead(GpuStateStruct* GpuState)
 		{
 #if true
+//#else
 			var GlPixelFormat = GlPixelFormatList[(int)GpuState->DrawBufferState.Format];
 			int Width = (int)GpuState->DrawBufferState.Width;
 			int Height = 272;
@@ -599,67 +649,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				}
 			}
 			*/
-		}
-
-		//Thread CThread;
-		AutoResetEvent StopEvent = new AutoResetEvent(false);
-		bool Running = true;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public static IGraphicsContext GraphicsContext;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		static INativeWindow NativeWindow;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		static bool AlreadySynchronized = false;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <see cref="http://www.opentk.com/doc/graphics/graphicscontext"/>
-		public override void InitSynchronizedOnce()
-		{
-			if (!AlreadySynchronized)
-			{
-				AlreadySynchronized = true;
-				AutoResetEvent CompletedEvent = new AutoResetEvent(false);
-				var CThread = new Thread(() =>
-				{
-					Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.CultureName);
-					NativeWindow = new OpenTK.NativeWindow(512, 272, "PspGraphicEngine", GameWindowFlags.Default, GraphicsMode.Default, DisplayDevice.Default);
-					NativeWindow.Visible = false;
-					GraphicsContext = new GraphicsContext(GraphicsMode.Default, NativeWindow.WindowInfo);
-					GraphicsContext.MakeCurrent(NativeWindow.WindowInfo);
-					{
-						(GraphicsContext as IGraphicsContextInternal).LoadAll();
-						Initialize();
-					}
-					GraphicsContext.MakeCurrent(null);
-					CompletedEvent.Set();
-					while (Running)
-					{
-						NativeWindow.ProcessEvents();
-						Thread.Sleep(1);
-					}
-					StopEvent.Set();
-				});
-				CThread.IsBackground = true;
-				CThread.Start();
-				CompletedEvent.WaitOne();
-			}
-		}
-
-		public override void StopSynchronized()
-		{
-			//Running = false;
-			//StopEvent.WaitOne();
 		}
 
 		public override void End(GpuStateStruct* GpuState)
@@ -797,8 +786,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				}
 				PrepareRead(GpuStateStruct);
 				*/
-				Console.Error.WriteLine("GpuImpl.Transfer Not Implemented!! : {0}", GpuState->TextureTransferState.ToStringDefault());
 			}
+			Console.Error.WriteLine("GpuImpl.Transfer Not Implemented!! : {0}", GpuState->TextureTransferState.ToStringDefault());
 		}
 	}
 }

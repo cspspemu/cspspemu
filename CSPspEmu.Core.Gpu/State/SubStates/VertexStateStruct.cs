@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Gpu.State
 {
@@ -51,14 +52,17 @@ namespace CSPspEmu.Core.Gpu.State
 		public uint MorphingVertexCount { get { return BitUtils.Extract(Value, 18, 2); } }
 		public bool Transform2D { get { return BitUtils.Extract(Value, 23, 1) != 0; } }
 
+		public uint SkinSize { get { return TypeSizeTable[(int)Weight]; } }
+		public uint ColorSize { get { return ColorSizeTable[(int)Color]; } }
+		public uint TextureSize { get { return TypeSizeTable[(int)Texture]; } }
+		public uint PositionSize { get { return TypeSizeTable[(int)Position]; } }
+		public uint NormalSize { get { return TypeSizeTable[(int)Normal]; } }
+
+		public uint StructAlignment { get { return Math.Max(Math.Max(Math.Max(Math.Max(SkinSize, ColorSize), TextureSize), PositionSize), NormalSize); } }
+
 		public uint GetVertexSize()
 		{
 			uint Size = 0;
-			var SkinSize = TypeSizeTable[(int)Weight];
-			var ColorSize = ColorSizeTable[(int)Color];
-			var TextureSize = TypeSizeTable[(int)Texture];
-			var PositionSize = TypeSizeTable[(int)Position];
-			var NormalSize = TypeSizeTable[(int)Normal];
 			Size += SkinningWeightCount * SkinSize;
 			Size += 1 * ColorSize;
 			Size += 2 * TextureSize;
@@ -75,6 +79,11 @@ namespace CSPspEmu.Core.Gpu.State
 		public uint GetVertexSetMorphSize()
 		{
 			return GetVertexSize() * MorphingVertexCount;
+		}
+
+		public override string ToString()
+		{
+			return this.ToStringDefault();
 		}
 	}
 

@@ -109,7 +109,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <param name="Priority">The priority of the thread.</param>
 		/// <returns>Less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xB293727F, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceIoChangeAsyncPriority(SceUID FileHandle, int Priority)
 		{
 			return 0;

@@ -14,25 +14,65 @@ using OpenTK.Graphics.OpenGL;
 using CSharpUtils.Extensions;
 using System.Drawing;
 using System.Runtime.ExceptionServices;
+using System.Threading;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
 	sealed unsafe public class Texture : IDisposable
 	{
-		private int TextureId;
+		public int TextureId { get; private set; }
+		public uint TextureHash
+		{
+			get
+			{
+				return TextureCacheKey.TextureHash;
+			}
+		}
 
 		public DateTime RecheckTimestamp;
 		public TextureCacheKey TextureCacheKey;
+		public int Width;
+		public int Height;
 
 		public Texture()
 		{
-			TextureId = GL.GenTexture();
+			OpenglGpuImpl.GraphicsContext.MakeCurrent(OpenglGpuImpl.NativeWindow.WindowInfo);
+
+			//lock (OpenglGpuImpl.GpuLock)
+			{
+				TextureId = GL.GenTexture();
+				var GlError = GL.GetError();
+				//Console.Error.WriteLine("GenTexture: {0} : Thread : {1} <- {2}", GlError, Thread.CurrentThread.ManagedThreadId, TextureId);
+				if (GlError != ErrorCode.NoError)
+				{
+					//TextureId = 0;
+				}
+			}
 		}
 
-		public void SetData(PixelFormatDecoder.OutputPixel *Pixels, int Width, int Height)
+		public bool SetData(PixelFormatDecoder.OutputPixel *Pixels, int TextureWidth, int TextureHeight)
 		{
-			Bind();
-			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Width, Height, 0, PixelFormat.Rgba, PixelType.UnsignedInt8888Reversed, new IntPtr(Pixels));
+			//lock (OpenglGpuImpl.GpuLock)
+			{
+				//if (TextureId != 0)
+				{
+					this.Width = TextureWidth;
+					this.Height = TextureHeight;
+					Bind();
+					GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, TextureWidth, TextureHeight, 0, PixelFormat.Rgba, PixelType.UnsignedInt8888Reversed, new IntPtr(Pixels));
+					GL.Flush();
+					var GlError = GL.GetError();
+
+					if (GlError != ErrorCode.NoError)
+					{
+						//Console.Error.WriteLine("TexImage2D: {0} : TexId:{1} : {2} : {3}x{4}", GlError, TextureId, new IntPtr(Pixels), TextureWidth, TextureHeight);
+						TextureId = 0;
+						Bind();
+						return false;
+					}
+				}
+			}
+			return true;
 
 			//glTexEnvf(GL_TEXTURE_ENV, GL_RGB_SCALE, 1.0); // 2.0 in scale_2x
 			//GL.TexEnv(TextureEnvTarget.TextureEnv, GL_TEXTURE_ENV_MODE, TextureEnvModeTranslate[state.texture.effect]);
@@ -41,7 +81,24 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		public void Bind()
 		{
-			GL.BindTexture(TextureTarget.Texture2D, TextureId);
+			//lock (OpenglGpuImpl.GpuLock)
+			{
+				if (TextureId != 0)
+				{
+					//GL.Enable(EnableCap.Texture2D);
+					GL.BindTexture(TextureTarget.Texture2D, TextureId);
+
+					var GlError = GL.GetError();
+					if (GlError != ErrorCode.NoError)
+					{
+						//Console.Error.WriteLine("Bind: {0} : {1}", GlError, TextureId);
+					}
+				}
+				else
+				{
+					//GL.Disable(EnableCap.Texture2D);
+				}
+			}
 		}
 
 		public void Dispose()
@@ -51,6 +108,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				GL.DeleteTexture(TextureId);
 				TextureId = 0;
 			}
+		}
+
+		public override string ToString()
+		{
+			return this.ToStringDefault();
 		}
 	}
 
@@ -67,6 +129,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		public int ClutShift;
 		public int ClutMask;
 		public bool Swizzled;
+
+		public override string ToString()
+		{
+			return this.ToStringDefault();
+		}
 	}
 
 	sealed unsafe public class TextureCache : PspEmulatorComponent
@@ -172,6 +239,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					Texture = new Texture();
 					Texture.TextureCacheKey = TextureCacheKey;
 					{
+						//int TextureWidth = Math.Max(BufferWidth, Height);
+						//int TextureHeight = Math.Max(BufferWidth, Height);
+						int TextureWidth = BufferWidth;
+						int TextureHeight = Height;
+
 						fixed (PixelFormatDecoder.OutputPixel* TexturePixelsPointer = DecodedTextureBuffer)
 						{
 							if (Swizzled)
@@ -182,7 +254,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 									PixelFormatDecoder.UnswizzleInline(TextureFormat, (void*)SwizzlingBufferPointer, BufferWidth, Height);
 									PixelFormatDecoder.Decode(
 										TextureFormat, (void*)SwizzlingBufferPointer, TexturePixelsPointer, BufferWidth, Height,
-										ClutPointer, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask
+										ClutPointer, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask, StrideWidth: PixelFormatDecoder.GetPixelsSize(TextureFormat, TextureWidth)
 									);
 								}
 							}
@@ -190,7 +262,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 							{
 								PixelFormatDecoder.Decode(
 									TextureFormat, (void*)TexturePointer, TexturePixelsPointer, BufferWidth, Height,
-									ClutPointer, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask
+									ClutPointer, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask, StrideWidth: PixelFormatDecoder.GetPixelsSize(TextureFormat, TextureWidth)
 								);
 							}
 							
@@ -209,7 +281,25 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 							Bitmap.Save(TextureName + ".png");
 #endif
 
-							Texture.SetData(TexturePixelsPointer, BufferWidth, Height);
+							var Result = Texture.SetData(TexturePixelsPointer, TextureWidth, TextureHeight);
+#if DEBUG_TEXTURE_CACHE
+							if (!Result || Texture.TextureId == 0)
+							{
+								var Bitmap2 = new Bitmap(BufferWidth, Height);
+								BitmapUtils.TransferChannelsDataInterleaved(
+									Bitmap2.GetFullRectangle(),
+									Bitmap2,
+									(byte*)TexturePixelsPointer,
+									BitmapUtils.Direction.FromDataToBitmap,
+									BitmapChannel.Red,
+									BitmapChannel.Green,
+									BitmapChannel.Blue,
+									BitmapChannel.Alpha
+								);
+								string TextureName2 = @"C:\projects\csharp\cspspemu\__invalid_texture_" + TextureCacheKey.TextureHash + "_" + TextureCacheKey.ClutHash + "_" + TextureFormat + "_" + ClutFormat + "_" + BufferWidth + "x" + Height;
+								Bitmap.Save(TextureName2 + ".png");
+							}
+#endif
 						}
 					}
 					if (Cache.ContainsKey(Hash1))

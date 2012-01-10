@@ -99,8 +99,8 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Call of Duty - Roads of Victory.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Final Fantasy 20th Anniversary.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Legend of Heroes 3.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Lemmings.cso", EnableMpeg: false);
-				PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: false, EnableMpeg: false);
+				PspEmulator.StartAndLoad(@"F:\Isos\psp\Lemmings.cso", EnableMpeg: false);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: false, EnableMpeg: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Final Fantasy Crisis Core.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false);

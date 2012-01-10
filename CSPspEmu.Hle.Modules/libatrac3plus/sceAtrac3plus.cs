@@ -75,7 +75,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// <param name="outMax">Pointer to a integer that receives the maximum number of samples.</param>
 		/// <returns>Less than 0 on error, otherwise 0</returns>
 		[HlePspFunction(NID = 0xD6A5F2F7, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceAtracGetMaxSample(int atracID, int* outMax)
 		{
 			*outMax = 0;

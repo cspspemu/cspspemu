@@ -239,6 +239,7 @@ namespace CSPspEmu.Core.Gpu
 
 		public void GeDrawSync(SyncTypeEnum SyncType, Action SyncCallback)
 		{
+			//Console.Error.WriteLine("-- GeDrawSync --------------------------------");
 			//Console.WriteLine("GeDrawSync: {0}", this.DisplayListFreeQueue.Count);
 			if (SyncType != SyncTypeEnum.ListDone) throw new NotImplementedException();
 			Status.CallbackOnStateOnce(StatusEnum.Completed, () =>
