@@ -202,9 +202,9 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0x109F50BC, FirmwareVersion = 150)]
 		public int sceIoOpen(string FileName, HleIoFlags Flags, SceMode Mode)
 		{
-			var Info = HleState.HleIoManager.ParsePath(FileName);
 			try
 			{
+				var Info = HleState.HleIoManager.ParsePath(FileName);
 				Console.WriteLine("Opened '{0}' with driver '{1}' and local path '{2}'", FileName, Info.HleIoDriver, Info.LocalPath);
 				Info.HleIoDrvFileArg.HleIoDriver.IoOpen(Info.HleIoDrvFileArg, Info.LocalPath, Flags, Mode);
 				return HleState.HleIoManager.HleIoDrvFileArgPool.Create(Info.HleIoDrvFileArg);
@@ -214,6 +214,10 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			}
 			catch (FileNotFoundException)
 			{
+			}
+			catch (InvalidOperationException InvalidOperationException)
+			{
+				Console.Error.WriteLine(InvalidOperationException);
 			}
 			catch (IOException IOException)
 			{

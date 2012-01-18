@@ -15,11 +15,10 @@ using System.Globalization;
 using System.Threading;
 using CSPspEmu.Hle.Threading.EventFlags;
 using System.IO;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle
 {
-	public delegate void WakeUpCallbackDelegate();
-
 	public enum PspThreadAttributes : uint
 	{
 		/// <summary>
@@ -238,8 +237,9 @@ namespace CSPspEmu.Hle
 			Killed = 32,
 		}
 
-		public HleThread(CpuThreadState CpuThreadState)
+		public HleThread(HleThreadManager HleThreadManager, CpuThreadState CpuThreadState)
 		{
+			this.HleThreadManager = HleThreadManager;
 			this.MethodCache = CpuThreadState.CpuProcessor.MethodCache;
 			this.PspConfig = CpuThreadState.CpuProcessor.PspConfig;
 			this.GreenThread = new GreenThread();
@@ -274,6 +274,7 @@ namespace CSPspEmu.Hle
 					{
 						Delegate.Delegate(CpuThreadState);
 					}
+#if false
 					if (!Memory.IsAddressValid(CpuThreadState.PC))
 					{
 						throw (new Exception(
@@ -284,6 +285,7 @@ namespace CSPspEmu.Hle
 							)
 						));
 					}
+#endif
 				}
 			}
 			catch (AccessViolationException AccessViolationException)
@@ -315,9 +317,13 @@ namespace CSPspEmu.Hle
 
 		public void Step(int InstructionCountForYield = 1000000)
 		{
-			CpuThreadState.StepInstructionCount = InstructionCountForYield;
-			//this.MinimalInstructionCountForYield = InstructionCountForYield;
-			GreenThread.SwitchTo();
+			do
+			{
+				//CpuThreadState.hlest
+				CpuThreadState.StepInstructionCount = InstructionCountForYield;
+				//this.MinimalInstructionCountForYield = InstructionCountForYield;
+				GreenThread.SwitchTo();
+			} while (!HleThreadManager.HleState.HleInterruptManager.Enabled);
 		}
 
 		public void WakeUp()
@@ -415,6 +421,7 @@ namespace CSPspEmu.Hle
 
 		public event Action End;
 		private PspConfig PspConfig;
+		private HleThreadManager HleThreadManager;
 
 		public void Dispose()
 		{

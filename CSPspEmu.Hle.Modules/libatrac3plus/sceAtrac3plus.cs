@@ -554,5 +554,16 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		{
 			return 0;
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x31668baa, FirmwareVersion = 250)]
+		[HlePspNotImplemented]
+		public int sceAtracGetChannel()
+		{
+			return -1;
+		}
 	}
 }

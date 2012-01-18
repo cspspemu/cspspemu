@@ -781,11 +781,34 @@ void checkMatrixPerVector() {
 	printVector(&vout);
 }
 
+void _checkCrossProduct(ScePspFVector4 *vleft, ScePspFVector4 *vright, ScePspFVector4 *vresult) {
+	asm volatile (
+		"lv.q R500, 0x00+%1\n"
+		"lv.q R600, 0x00+%2\n"
+		
+		"vcrsp.t R100, R500, R600\n"
+		
+		"sv.q    R100, 0x00+%0\n"
+		: "+m" (*vresult) : "m" (*vleft), "m" (*vright)
+	);
+}
+
+void checkCrossProduct() {
+	ScePspFVector4 vleft = { -1.0f, -2.0f, 3.0f, 4.0f};
+	ScePspFVector4 vright = { -3.0f, 5.0f, 7.0f, -11.0f };
+	ScePspFVector4 vout = { 0.0f, 0.0f, 0.0f, 0.0f };
+	_checkCrossProduct(&vleft, &vright, &vout);
+	printVector(&vout);
+}
+
 int main(int argc, char *argv[]) {
 	printf("Started\n");
 
 	resetAllMatrices();
 	
+	printf("checkCrossProduct:\n"); checkCrossProduct();
+	//return 0;
+
 	printf("checkMatrixPerVector:\n"); checkMatrixPerVector();
 	//return 0;
 	printf("checkAggregated:\n"); checkAggregated();

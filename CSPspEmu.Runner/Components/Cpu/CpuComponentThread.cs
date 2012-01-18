@@ -97,6 +97,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 			HleState.HleIoManager.SetDriver("disc:", Umd);
 			HleState.HleIoManager.SetDriver("umd:", Umd);
 			HleState.HleIoManager.SetDriver(":", Umd);
+			HleState.HleIoManager.Chdir("disc0:/PSP_GAME/USRDIR");
 			return Iso;
 		}
 
@@ -305,8 +306,13 @@ namespace CSPspEmu.Runner.Components.Cpu
 						try
 						{
 							ErrorOut.WriteLine("Error on thread {0}", ThreadManager.Current);
-
-							ErrorOut.WriteLine(Exception);
+							try
+							{
+								ErrorOut.WriteLine(Exception);
+							}
+							catch
+							{
+							}
 
 							ThreadManager.Current.CpuThreadState.DumpRegisters(ErrorOut);
 

@@ -108,7 +108,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			var InstructionStats = MipsMethodEmiter.InstructionStats;
 			var NewInstruction = new Dictionary<string, bool>();
 
-			int MaxNumberOfInstructions = 8 * 1024;
+			//int MaxNumberOfInstructions = 8 * 1024;
+			int MaxNumberOfInstructions = 64 * 1024;
 			//int MaxNumberOfInstructions = 60;
 
 			while (BranchesToAnalyze.Count > 0)

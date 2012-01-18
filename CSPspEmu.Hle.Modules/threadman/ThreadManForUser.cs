@@ -65,9 +65,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		less than 0 on error.
 		/// </returns>
 		[HlePspFunction(NID = 0x6652B8CA, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceKernelSetAlarm(int clock, /*SceKernelAlarmHandler*/uint handler, void* common)
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return -1;
 		}
 
 		/// <summary>

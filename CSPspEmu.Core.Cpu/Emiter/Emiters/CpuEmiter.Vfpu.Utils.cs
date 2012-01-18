@@ -410,6 +410,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			Load_VT(Index, AsInteger: AsInteger);
 		}
 
+		private void Load_VS_VT(int Index, uint VectorSize, bool AsInteger = false)
+		{
+			Load_VS(Index, VectorSize: VectorSize, AsInteger: AsInteger);
+			Load_VT(Index, VectorSize: VectorSize, AsInteger: AsInteger);
+		}
+
 		private void Load_VS_VT(int Index, uint VectorSize, int RegisterOffset = 0, bool Debug = false, bool AsInteger = false)
 		{
 			Load_VS(Index, VectorSize, RegisterOffset, Debug, AsInteger: AsInteger);

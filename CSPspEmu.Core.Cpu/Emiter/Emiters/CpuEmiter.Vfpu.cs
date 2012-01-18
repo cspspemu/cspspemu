@@ -335,7 +335,52 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// -
 		public void vhdp() { throw (new NotImplementedException("")); }
 		public void vcrs_t() { throw (new NotImplementedException("")); }
-		public void vcrsp_t() { throw (new NotImplementedException("")); }
+
+		/// <summary>
+		/// Cross product
+		/// </summary>
+		public void vcrsp_t() {
+			uint VectorSize = 3;
+
+			Save_VD(0, VectorSize, () =>
+			{
+				Load_VS(1, VectorSize);
+				Load_VT(2, VectorSize);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+				Load_VS(2, VectorSize);
+				Load_VT(1, VectorSize);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Sub);
+			});
+
+			Save_VD(1, VectorSize, () =>
+			{
+				Load_VS(2, VectorSize);
+				Load_VT(0, VectorSize);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+				Load_VS(0, VectorSize);
+				Load_VT(2, VectorSize);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Sub);
+			});
+
+			Save_VD(2, VectorSize, () =>
+			{
+				Load_VS(0, VectorSize);
+				Load_VT(1, VectorSize);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+				Load_VS(1, VectorSize);
+				Load_VT(0, VectorSize);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Sub);
+			});
+			/*
+			v3[0] = +v1[1] * v2[2] - v1[2] * v2[1];
+			v3[1] = +v1[2] * v2[0] - v1[0] * v2[2];
+			v3[2] = +v1[0] * v2[1] - v1[1] * v2[0];
+			throw (new NotImplementedException(""));
+			*/
+		}
 
 		// Vfpu MINimum/MAXium/ADD/SUB/DIV/MUL
 		public void vmin()

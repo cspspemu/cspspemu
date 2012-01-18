@@ -229,6 +229,16 @@ namespace CSPspEmu.Hle.Modules.mediaman
 			return 0;
 		}
 
+		/// <summary>
+		/// Prohibit UMD disc being replaced.
+		/// </summary>
+		/// <returns>Less than 0 on error</returns>
+		[HlePspFunction(NID = 0x87533940, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceUmdReplaceProhibit()
+		{
+			return 0;
+		}
 	}
 
 	/** Enumeration for UMD drive state */

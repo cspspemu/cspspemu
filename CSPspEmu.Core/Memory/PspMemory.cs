@@ -60,6 +60,7 @@ namespace CSPspEmu.Core.Memory
 		public const int ScratchPadSize = 4 * 1024; // 4KB
 		public const int FrameBufferSize = 2 * 0x100000; // 2MB
 		public const int MainSize = 64 * 0x100000; // 64MB (SLIM)
+		//public const int MainSize = 32 * 0x100000; // 64MB (SLIM)
 
 		public const uint ScratchPadOffset = 0x00010000;
 		public const uint FrameBufferOffset = 0x04000000;
@@ -72,6 +73,13 @@ namespace CSPspEmu.Core.Memory
 
 		abstract public uint PointerToPspAddress(void* Pointer);
 		abstract public void* PspAddressToPointer(uint Address);
+
+		public void* PspAddressToPointerNotNull(uint _Address) 
+		{
+			var Pointer = PspAddressToPointer(_Address);
+			if (Pointer == null) throw (new InvalidAddressException(_Address));
+			return Pointer;
+		}
 
 		public PspPointer PointerToPspPointer(void* Pointer)
 		{

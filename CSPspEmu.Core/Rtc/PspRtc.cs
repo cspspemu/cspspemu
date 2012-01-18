@@ -4,11 +4,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using CSharpUtils;
 using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Rtc
 {
-	public class PspRtc : PspEmulatorComponent
+	unsafe public class PspRtc : PspEmulatorComponent
 	{
 		public class VirtualTimer
 		{
@@ -196,6 +197,17 @@ namespace CSPspEmu.Core.Rtc
 				VirtualTimer.SetAt(DateTime);
 				VirtualTimer.Enabled = true;
 				return VirtualTimer;
+			}
+		}
+
+		public void RegisterTimeout(uint* Timeout, Action WakeUpCallback)
+		{
+			if (Timeout != null)
+			{
+				RegisterTimerInOnce(TimeSpanUtils.FromMicroseconds(*Timeout), () =>
+				{
+					WakeUpCallback();
+				});
 			}
 		}
 	}

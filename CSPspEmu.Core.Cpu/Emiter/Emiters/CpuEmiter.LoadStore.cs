@@ -27,7 +27,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					MipsMethodEmiter.LoadGPR_Unsigned(RS);
 					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
 					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
-				});
+				}, CanBeNull: false);
 				Action();
 			});
 		}
@@ -48,7 +48,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
-			});
+			}, CanBeNull: false);
 			Action();
 
 			if (MustLogWrites)

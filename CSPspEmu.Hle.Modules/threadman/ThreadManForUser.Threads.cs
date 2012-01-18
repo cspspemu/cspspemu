@@ -42,7 +42,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Thread.Attribute = Attribute;
 			Thread.GP = CpuThreadState.GP;
 			Thread.Info.EntryPoint = (SceKernelThreadEntry)EntryPoint;
-			Thread.Stack = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Allocate(StackSize, MemoryPartition.Anchor.High, Alignment: 0x100);
+			//Thread.Stack = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Allocate(StackSize, MemoryPartition.Anchor.High, Alignment: 0x100);
+			Thread.Stack = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(StackSize, MemoryPartition.Anchor.High, Alignment: 0x100);
+
 			if (!Thread.Attribute.HasFlag(PspThreadAttributes.NoFillStack))
 			{
 				HleState.MemoryManager.Memory.WriteRepeated1(0xFF, Thread.Stack.Low, Thread.Stack.Size - 0x100);
@@ -269,12 +271,14 @@ namespace CSPspEmu.Hle.Modules.threadman
 		{
 			var CurrentThread = HleState.ThreadManager.Current;
 
+			/*
 			if (DelayInMicroseconds < 1000)
 			{
 				sceKernelCheckCallback(CurrentThread.CpuThreadState);
 				CurrentThread.CpuThreadState.Yield();
 			}
 			else
+			*/
 			{
 				CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, "sceKernelDelayThread", WakeUpCallback =>
 				{

@@ -79,7 +79,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				{
 					Action();
 				}
-				ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("GetMemoryPtr"));
+#if true
+				//ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("GetMemoryPtr"));
+				ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("GetMemoryPtrNotNull"));
+#else
+				ILGenerator.Emit(OpCodes.Ldstr, ErrorDescription);
+				ILGenerator.Emit(OpCodes.Ldc_I4, CanBeNull ? 1 : 0);
+				ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("GetMemoryPtrSafeWithError"));
+#endif
 			}
 		}
 

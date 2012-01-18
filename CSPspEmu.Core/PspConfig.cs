@@ -158,5 +158,9 @@ namespace CSPspEmu.Core
 		//public bool TraceJal = true;
 
 		public string FileNameBase;
+		public PspLanguages Language;
+		public PspConfirmButton ConfirmButton;
+		//public bool TraceLastSyscalls = false;
+		public bool TraceLastSyscalls = true;
 	}
 }

@@ -31,6 +31,7 @@ void testSimpleFpl() {
 		if (items[n] == NULL) {
 			printf("%08X\n", -1);
 		} else {
+			items[n]->a[17] = 0xFFFFFFFF;
 			printf("%08X\n", (int)(items[n]) - base);
 		}
 	}
@@ -39,9 +40,10 @@ void testSimpleFpl() {
 	
 	item = NULL;
 	printf("[%d]:%08X: ", 4, sceKernelTryAllocateFpl(fpl, (void **)&item));
-	if (items[n] == NULL) {
+	if (item == NULL) {
 		printf("%08X\n", -1);
 	} else {
+		items[n]->a[17] = 0xFFFFFFFF;
 		printf("%08X\n", (int)(item) - base);
 	}
 

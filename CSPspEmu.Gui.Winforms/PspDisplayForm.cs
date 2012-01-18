@@ -16,6 +16,7 @@ using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Controller;
 using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Utils;
+using System.Threading;
 
 namespace CSPspEmu.Gui.Winforms
 {
@@ -118,7 +119,7 @@ namespace CSPspEmu.Gui.Winforms
 			updateDebugSyscalls();
 			updateDebugGpu();
 
-			var Timer = new Timer();
+			var Timer = new System.Windows.Forms.Timer();
 			Timer.Interval = 1000 / 60;
 			Timer.Tick += new EventHandler(Timer_Tick);
 			Timer.Start();
@@ -314,7 +315,9 @@ namespace CSPspEmu.Gui.Winforms
 
 			if (IGuiExternalInterface.IsInitialized())
 			{
-				PspDisplay.TriggerVBlank();
+				PspDisplay.TriggerVBlankStart();
+				Thread.Sleep(TimeSpan.FromMilliseconds(4));
+				PspDisplay.TriggerVBlankEnd();
 			}
 		}
 

@@ -38,10 +38,12 @@ namespace CSPspEmu.Hle.Managers
 		/// <returns></returns>
 		public ParsePathInfo ParsePath(string FullPath)
 		{
+			//Console.Error.WriteLine("FullPath: {0}", FullPath);
 			if (FullPath.IndexOf(':') == -1)
 			{
 				FullPath = CurrentDirectoryPath + "/" + FullPath;
 			}
+			//Console.Error.WriteLine("FullPath: {0}", FullPath);
 			var Match = new Regex(@"^(\w+)(\d+):(.*)$").Match(FullPath);
 			var DriverName = Match.Groups[1].Value + ":";
 			int FileSystemNumber = 0;

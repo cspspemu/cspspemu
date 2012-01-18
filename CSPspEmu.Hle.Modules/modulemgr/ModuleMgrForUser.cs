@@ -98,7 +98,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		public int sceKernelStartModule(int ModuleId, uint ArgumentsCount, uint ArgumentsPointer, int *Status, void *SceKernelSMOption)
 		{
 			//throw(new NotImplementedException());
-			return 0;
+			return 1;
 		}
 
 		/// <summary>
@@ -163,7 +163,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		public int sceKernelGetModuleIdByAddress(uint Address)
 		{
 			//throw(new NotImplementedException());
-			return 0;
+			return 0x1234;
 		}
 
 		/// <summary>
@@ -200,6 +200,30 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		public int sceKernelLoadModuleByID(int FileId, uint Flags, SceKernelLMOption* SceKernelLMOption)
 		{
 			return 0;
+		}
+
+		public struct SceKernelModuleInfo
+		{
+		}
+
+		/// <summary>
+		/// Query the information about a loaded module from its UID.
+		/// </summary>
+		/// <remarks>
+		/// This fails on v1.0 firmware (and even it worked has a limited structure)
+		/// so if you want to be compatible with both 1.5 and 1.0 (and you are running in 
+		/// kernel mode) then call this function first then ::pspSdkQueryModuleInfoV1 
+		/// if it fails, or make separate v1 and v1.5+ builds.
+		/// </remarks>
+		/// <param name="modid">The UID of the loaded module.</param>
+		/// <param name="info">Pointer to a ::SceKernelModuleInfo structure.</param>
+		/// <returns>0 on success, otherwise one of ::PspKernelErrorCodes.</returns>
+		[HlePspFunction(NID = 0x748CBED9, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelQueryModuleInfo(int ModuleId, SceKernelModuleInfo *info)
+		{
+			//return 0;
+			throw(new NotImplementedException("sceKernelQueryModuleInfo"));
 		}
 	}
 }

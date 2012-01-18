@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
@@ -48,9 +49,15 @@ namespace CSPspEmu.Hle.Modules.threadman
 			{
 				if (!TryAllocate(CpuThreadState, Size, AddressPointer))
 				{
-					if (Timeout != null) throw(new NotImplementedException());
+					bool TimedOut = false;
+
 					HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, "_sceKernelAllocateVplCB", (WakeUp) =>
 					{
+						HleState.PspRtc.RegisterTimeout(Timeout, () =>
+						{
+							TimedOut = true;
+							WakeUp();
+						});
 						WaitList.Add(new WaitVariablePoolItem()
 						{
 							RequiredSize = Size,

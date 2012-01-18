@@ -62,6 +62,7 @@ namespace CSPspEmu.Hle.Modules.interruptman
 		/// <param name="HandlerIndex">The sub interrupt handler number (0-15)</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xFB8E22EC, FirmwareVersion = 150)]
+		//[HlePspNotImplemented]
 		public int sceKernelEnableSubIntr(PspInterrupts PspInterrupt, int HandlerIndex)
 		{
 			CheckImplementedInterruptType(PspInterrupt);
@@ -81,6 +82,7 @@ namespace CSPspEmu.Hle.Modules.interruptman
 		/// <param name="HandlerIndex">The sub interrupt handler number (0-15)</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xD61E6961, FirmwareVersion = 150)]
+		//[HlePspNotImplemented]
 		public int sceKernelReleaseSubIntrHandler(PspInterrupts PspInterrupt, int HandlerIndex)
 		{
 			CheckImplementedInterruptType(PspInterrupt);

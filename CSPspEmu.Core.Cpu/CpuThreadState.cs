@@ -300,6 +300,11 @@ namespace CSPspEmu.Core.Cpu
 			return Pointer;
 		}
 
+		public void* GetMemoryPtrNotNull(uint Address)
+		{
+			return CpuProcessor.Memory.PspAddressToPointerNotNull(Address);
+		}
+
 		public void* GetMemoryPtrSafe(uint Address)
 		{
 			return CpuProcessor.Memory.PspAddressToPointerSafe(Address);

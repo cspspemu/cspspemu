@@ -80,8 +80,10 @@ namespace CSPspEmu.Hle.Loader
 			}
 
 			// Relocate from program headers
+			int RelocProgramIndex = 0;
 			foreach (var ProgramHeader in ElfLoader.ProgramHeaders)
 			{
+				RelocOutput.WriteLine("Program Header: %d".Sprintf(RelocProgramIndex++));
 				switch (ProgramHeader.Type)
 				{
 					case Elf.ProgramHeader.TypeEnum.Reloc1:
@@ -93,21 +95,27 @@ namespace CSPspEmu.Hle.Loader
 						f.position((int)(elfOffset + phdr.getP_offset()));
 						relocateFromBuffer(f, module, baseAddress, elf, RelCount);
 						*/
-						break;
+						throw (new NotImplementedException());
+						//break;
 					case Elf.ProgramHeader.TypeEnum.Reloc2:
 						throw(new NotImplementedException());
 				}
 			}
 
+			int RelocSectionIndex = 0;
 			foreach (var SectionHeader in ElfLoader.SectionHeaders)
 			{
+				//RelocOutput.WriteLine("Section Header: %d : %s".Sprintf(RelocSectionIndex++, SectionHeader.ToString()));
+				RelocOutput.WriteLine("Section Header: %d".Sprintf(RelocSectionIndex++));
+
 				switch (SectionHeader.Type)
 				{
 					case Elf.SectionHeader.TypeEnum.Relocation:
 						Console.Error.WriteLine("Not implemented Elf.SectionHeader.TypeEnum.Relocation");
-						//throw (new NotImplementedException("Not implemented Elf.SectionHeader.TypeEnum.Relocation"));
-						break;
+						throw (new NotImplementedException("Not implemented Elf.SectionHeader.TypeEnum.Relocation"));
+						//break;
 					case Elf.SectionHeader.TypeEnum.PrxRelocation:
+						Console.WriteLine("PrxRelocation : {0}", SectionHeader);
 						RelocateRelocs(
 							ElfLoader.SectionHeaderFileStream(SectionHeader).ReadStructVectorUntilTheEndOfStream<Elf.Reloc>()
 						);
@@ -116,7 +124,28 @@ namespace CSPspEmu.Hle.Loader
 						throw (new Exception("Not implemented ElfSectionHeader.Type.PrxRelocation_FW5"));
 				}
 			}
+
+			RelocOutput.Flush();
+			_RelocOutputStream.Flush();
+			RelocOutput.Close();
+			_RelocOutputStream.Close();
 		}
+
+		Stream _RelocOutputStream;
+		StreamWriter _RelocOutput;
+
+		StreamWriter RelocOutput {
+			get {
+				if (_RelocOutput == null)
+				{
+					_RelocOutputStream = File.Open("reloc.txt", FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+					_RelocOutput = new StreamWriter(_RelocOutputStream);
+					_RelocOutput.AutoFlush = true;
+				}
+				return _RelocOutput;
+			}
+		}
+
 
 		/// <summary>
 		/// This function relocates all the instructions and pointers of the loading executable.
@@ -137,6 +166,7 @@ namespace CSPspEmu.Hle.Loader
 			ushort HiValue = 0;
 			var DeferredHi16 = new LinkedList<uint>(); // We'll use this to relocate R_MIPS_HI16 when we get a R_MIPS_LO16
 
+			int Index = 0;
 			foreach (var Reloc in Relocs)
 			{
 				//Console.WriteLine(Reloc.ToStringDefault());
@@ -160,6 +190,7 @@ namespace CSPspEmu.Hle.Loader
 
 				// Value of data to relocate
 				var Instruction = InstructionReader[RelocatedPointerAddress];
+				var InstructionBefore = Instruction;
 
 				var S = (uint)BaseAddress + PointeeBaseOffset;
 				var GP_ADDR = (int)(BaseAddress + Reloc.PointerAddress);
@@ -255,7 +286,21 @@ namespace CSPspEmu.Hle.Loader
 						throw(new NotImplementedException("Handling " + Reloc.Type + " not implemented"));
 				}
 
+				RelocOutput.WriteLine(
+					"RELOC %06d : 0x%08X : 0x%08X -> 0x%08X".Sprintf(
+						Index,
+						RelocatedPointerAddress, InstructionBefore.Value, Instruction.Value
+					)
+				);
+
+				/*
+				log.error(String.format(
+					"RELOC %06d : 0x%08X : 0x%08X -> 0x%08X\n",
+					i, data_addr, data_prev, data
+				));
+				*/
 				InstructionReader[RelocatedPointerAddress] = Instruction;
+				Index++;
 			}
 		}
 

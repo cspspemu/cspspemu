@@ -40,6 +40,7 @@ namespace CSPspEmu.Hle.Managers
 
 		public override void InitializeComponent()
 		{
+			this.HleState = PspEmulatorContext.GetInstance<HleState>();
 			this.Processor = PspEmulatorContext.GetInstance<CpuProcessor>();
 			this.Processor.DebugCurrentThreadEvent += DebugCurrentThread;
 			this.HleCallbackManager = PspEmulatorContext.GetInstance<HleCallbackManager>();
@@ -55,7 +56,7 @@ namespace CSPspEmu.Hle.Managers
 
 		public HleThread Create()
 		{
-			var HlePspThread = new HleThread(new CpuThreadState(Processor));
+			var HlePspThread = new HleThread(this, new CpuThreadState(Processor));
 			HlePspThread.Id = LastId++;
 			HlePspThread.Name = "Thread-" + HlePspThread.Id;
 			HlePspThread.CurrentStatus = HleThread.Status.Stopped;
@@ -89,6 +90,7 @@ namespace CSPspEmu.Hle.Managers
 		}
 
 		bool MustReschedule = false;
+		internal HleState HleState;
 
 		public void Reschedule()
 		{
@@ -145,6 +147,7 @@ namespace CSPspEmu.Hle.Managers
 				// Executing normally.
 				else
 				{
+					//throw (new Exception("aaaaaaaaaaaa"));
 					Current.CurrentStatus = HleThread.Status.Running;
 					try
 					{

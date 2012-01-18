@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
@@ -49,6 +50,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 				{
 					this.FreeBlocks.Add(GetAddressFromBlockIndex(n));
 				}
+
+				//Console.Error.WriteLine(this);
 			}
 
 			public uint GetAddressFromBlockIndex(int Index)
@@ -84,7 +87,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 					var AllocatedBlock = FreeBlocks.First();
 					FreeBlocks.Remove(AllocatedBlock);
 					UsedBlocks.Add(AllocatedBlock);
-
+					//Console.Error.WriteLine("TryAllocate(0x{0:X})", AllocatedBlock);
 					*DataPointer = AllocatedBlock;
 
 					return true;
@@ -112,6 +115,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 					HleState.ThreadManager.Current.CpuThreadState.Yield();
 					break;
 				}
+			}
+
+			public override string ToString()
+			{
+				return this.ToStringDefault();
 			}
 		}
 

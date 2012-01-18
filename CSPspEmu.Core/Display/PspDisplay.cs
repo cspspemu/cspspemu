@@ -68,11 +68,17 @@ namespace CSPspEmu.Core.Display
 			this.Memory = PspEmulatorContext.GetInstance<PspMemory>();
 		}
 
-		public void TriggerVBlank()
+		public void TriggerVBlankStart()
 		{
 			VBlankEvent.Signal();
 			if (VBlankEventCall != null) VBlankEventCall();
 			VblankCount++;
+			IsVblank = true;
+		}
+
+		public void TriggerVBlankEnd()
+		{
+			IsVblank = false;
 		}
 
 		public PspWaitEvent VBlankEvent = new PspWaitEvent();
@@ -110,5 +116,7 @@ namespace CSPspEmu.Core.Display
 
 			return Bitmap;
 		}
+
+		public bool IsVblank { get; protected set; }
 	}
 }

@@ -41,6 +41,8 @@ namespace CSPspEmu.Hle.Managers
 		public Dictionary<uint, DelegateInfo> DelegateTable = new Dictionary<uint, DelegateInfo>();
 		public Queue<DelegateInfo> LastCalledCallbacks = new Queue<DelegateInfo>();
 		protected HleThreadManager HleThreadManager;
+		protected CpuProcessor CpuProcessor;
+		protected PspConfig PspConfig;
 
 		static public IEnumerable<Type> GetAllHleModules(Assembly ModulesAssembly)
 		{
@@ -57,19 +59,26 @@ namespace CSPspEmu.Hle.Managers
 			HleModuleTypes = GetAllHleModules(PspEmulatorContext.PspConfig.HleModulesDll).ToDictionary(Type => Type.Name);
 			HleThreadManager = PspEmulatorContext.GetInstance<HleThreadManager>();
 			Console.WriteLine("HleModuleTypes: {0}", HleModuleTypes.Count);
+			CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();
+			PspConfig = CpuProcessor.PspConfig;
 
 			PspEmulatorContext.GetInstance<CpuProcessor>().RegisterNativeSyscall(FunctionGenerator.NativeCallSyscallCode, (Code, CpuThreadState) =>
 			{
 				uint Info = CpuThreadState.CpuProcessor.Memory.Read4(CpuThreadState.PC + 4);
+				var DelegateInfo = DelegateTable[Info];
+				if (PspConfig.TraceLastSyscalls)
 				{
 					//Console.WriteLine("{0:X}", CpuThreadState.RA);
-					var DelegateInfo = DelegateTable[Info];
-					DelegateInfo.Action(CpuThreadState);
 					DelegateInfo.CallIndex = LastCallIndex++;
 					DelegateInfo.PC = CpuThreadState.PC;
 					DelegateInfo.RA = CpuThreadState.RA;
 					DelegateInfo.Thread = HleThreadManager.Current;
-					
+
+#if false
+//#if true
+					Console.Error.WriteLine("HleModuleManager: " + DelegateInfo);
+#endif
+
 					if (DelegateInfo.ModuleImportName != "Kernel_Library")
 					{
 						LastCalledCallbacks.Enqueue(DelegateInfo);
@@ -79,6 +88,7 @@ namespace CSPspEmu.Hle.Managers
 						LastCalledCallbacks.Dequeue();
 					}
 				}
+				DelegateInfo.Action(CpuThreadState);
 				CpuThreadState.PC = CpuThreadState.RA;
 			});
 		}

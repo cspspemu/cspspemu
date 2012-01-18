@@ -4,6 +4,7 @@ using System;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Cpu.Assembler;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Core.Tests
 {
@@ -15,6 +16,7 @@ namespace CSPspEmu.Core.Tests
 		protected PspMemory Memory;
 		protected CpuProcessor Processor;
 		protected MipsAssembler MipsAssembler;
+		private HleThreadManager ThreadManager;
 
 		[TestInitialize()]
 		public void SetUp()
@@ -23,6 +25,7 @@ namespace CSPspEmu.Core.Tests
 			PspEmulatorContext = new PspEmulatorContext(PspConfig);
 			PspEmulatorContext.SetInstanceType<PspMemory, LazyPspMemory>();
 			Memory = PspEmulatorContext.GetInstance<PspMemory>();
+			ThreadManager = PspEmulatorContext.GetInstance<HleThreadManager>();
 
 			Processor = PspEmulatorContext.GetInstance<CpuProcessor>();
 			MipsAssembler = new MipsAssembler(new PspMemoryStream(Memory));
@@ -31,7 +34,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod()]
 		public void CpuThreadStateTest()
 		{
-			var HlePspThread = new HleThread(new CpuThreadState(Processor));
+			var HlePspThread = new HleThread(ThreadManager, new CpuThreadState(Processor));
 
 			MipsAssembler.Assemble(@"
 			.code 0x08000000
@@ -51,7 +54,7 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod()]
 		public void CpuThreadStateBugTest()
 		{
-			var HlePspThread = new HleThread(new CpuThreadState(Processor));
+			var HlePspThread = new HleThread(ThreadManager, new CpuThreadState(Processor));
 
 			MipsAssembler.Assemble(@"
 			.code 0x08000000

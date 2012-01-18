@@ -109,8 +109,14 @@ namespace CSPspEmu.Hle.Modules.audio
 		[HlePspFunction(NID = 0xB011922F, FirmwareVersion = 150)]
 		public int sceAudioGetChannelRestLength(int ChannelId)
 		{
+#if false
+			return 844;
+#else
 			var Channel = HleState.PspAudio.GetChannel(ChannelId);
-			return Channel.AvailableChannelsForRead;
+			int RestLength = Channel.AvailableChannelsForRead;
+			//Console.Error.WriteLine(RestLength);
+			return RestLength;
+#endif
 		}
 
 		/// <summary>

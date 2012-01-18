@@ -98,6 +98,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, "sceKernelWaitSema", WakeUpCallback =>
 			{
+				if (Timeout != null) throw(new NotImplementedException());
 				Semaphore.WaitThread(CurrentThread, () =>
 				{
 					WakeUpCallback();

@@ -72,6 +72,17 @@ namespace CSPspEmu.Hle.Modules.display
 		}
 
 		/// <summary>
+		/// Test wheter VBLANK is active
+		/// </summary>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x4D4E10EC, FirmwareVersion = 150)]
+		public bool sceDisplayIsVblank()
+		{
+			return PspDisplay.IsVblank;
+		}
+
+
+		/// <summary>
 		/// Wait for vertical blank start
 		/// </summary>
 		/// <returns></returns>

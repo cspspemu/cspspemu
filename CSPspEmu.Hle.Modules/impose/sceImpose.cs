@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core;
 using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.impose
@@ -45,32 +46,24 @@ namespace CSPspEmu.Hle.Modules.impose
 		[HlePspNotImplemented]
 		public int sceImposeSetLanguageMode(PspLanguages language, PspConfirmButton confirmButton)
 		{
-			//throw (new NotImplementedException());
-			/*
-			logError("sceImposeSetLanguageMode(%s, %s)", to!string(language), to!string(confirmButton));
-			hleEmulatorState.osConfig.language      = language;
-			hleEmulatorState.osConfig.confirmButton = confirmButton;
-			*/
+			HleState.PspConfig.Language = language;
+			HleState.PspConfig.ConfirmButton = confirmButton;
 			return 0;
 		}
 
 		/// <summary>
 		/// Get the language and button assignment parameters
 		/// </summary>
-		/// <param name="language">Pointer to store the language</param>
-		/// <param name="confirmButton">Pointer to store the button assignment (Cross or circle)</param>
+		/// <param name="Language">Pointer to store the language</param>
+		/// <param name="ConfirmButton">Pointer to store the button assignment (Cross or circle)</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x24FD7BCF, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceImposeGetLanguageMode(PspLanguages* language, PspConfirmButton* confirmButton)
+		public int sceImposeGetLanguageMode(PspLanguages* Language, PspConfirmButton* ConfirmButton)
 		{
-			throw (new NotImplementedException());
-			/*
-			*language = hleEmulatorState.osConfig.language;
-			*confirmButton = hleEmulatorState.osConfig.confirmButton;
-
+			*Language = HleState.PspConfig.Language;
+			*ConfirmButton = HleState.PspConfig.ConfirmButton;
 			return 0;
-			*/
 		}
 
 		/// <summary>
@@ -94,28 +87,5 @@ namespace CSPspEmu.Hle.Modules.impose
 			*IconStatusPointer = 3;
 			return 0;
 		}
-
-	}
-
-	public enum PspLanguages : int
-	{
-		JAPANESE = 0,
-		ENGLISH = 1,
-		FRENCH = 2,
-		SPANISH = 3,
-		GERMAN = 4,
-		ITALIAN = 5,
-		DUTCH = 6,
-		PORTUGUESE = 7,
-		RUSSIAN = 8,
-		KOREAN = 9,
-		TRADITIONAL_CHINESE = 10,
-		SIMPLIFIED_CHINESE = 11,
-	}
-
-	public enum PspConfirmButton : int
-	{
-		CIRCLE = 0,
-		CROSS = 1,
 	}
 }

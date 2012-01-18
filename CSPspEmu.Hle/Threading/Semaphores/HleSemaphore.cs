@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Threading.Semaphores;
 using CSharpUtils;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Threading.Semaphores
 {

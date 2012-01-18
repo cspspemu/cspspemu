@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Attributes;
+using CSharpUtils;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Modules.pspnet
 {
@@ -80,12 +82,20 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Convert Mac address to a string
 		/// </summary>
-		/// <param name="mac">The Mac address to convert.</param>
-		/// <param name="name">Pointer to a buffer to store the result.</param>
+		/// <param name="MacAddress">The Mac address to convert.</param>
+		/// <param name="OutputString">Pointer to a buffer to store the result.</param>
         [HlePspFunction(NID = 0x89360950, FirmwareVersion = 150)]
-		public void sceNetEtherNtostr(byte* mac, char* name)
+		public int sceNetEtherNtostr(byte* MacAddress, char* OutputString)
 		{
-			throw (new NotImplementedException());
+			var Parts = new string[6];
+			for (int n = 0; n < 6; n++)
+			{
+				Parts[n] = "%02X".Sprintf((uint)MacAddress[n]);
+			}
+			PointerUtils.StoreStringOnPtr(String.Join(":", Parts), Encoding.UTF8, (byte*)OutputString);
+			
+			return 0;
+			//throw (new NotImplementedException());
 		}
 
 		/// <summary>
