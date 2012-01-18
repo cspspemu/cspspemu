@@ -47,6 +47,8 @@ namespace CSPspEmu.Core.Memory
 		{
 			return String.Format("PspPointer(0x{0:X})", Address);
 		}
+
+		public bool IsNull { get { return Address == 0; } }
 	}
 
 	/*

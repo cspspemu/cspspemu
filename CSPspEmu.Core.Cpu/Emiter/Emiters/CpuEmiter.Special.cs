@@ -33,7 +33,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		static public void break_impl(CpuThreadState CpuThreadState)
 		{
-			throw(new Exception("Break!"));
+			Console.Error.WriteLine("-------------------------------------------------------------------");
+			Console.Error.WriteLine("-- BREAK  ---------------------------------------------------------");
+			Console.Error.WriteLine("-------------------------------------------------------------------");
+			//throw(new Exception("Break!"));
 		}
 
 		public void _break() {

@@ -343,6 +343,21 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		*/
 
+		private void Load_VCC(uint Index)
+		{
+			MipsMethodEmiter.LoadFieldPtr(typeof(CpuThreadState).GetField("VFR_CC_" + Index));
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I1);
+		}
+
+		private void Save_VCC(int Index, Action Action)
+		{
+			MipsMethodEmiter.LoadFieldPtr(typeof(CpuThreadState).GetField("VFR_CC_" + Index));
+			{
+				Action();
+			}
+			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I1);
+		}
+
 		private void VfpuSave_Register(uint Register, int Index, uint VectorSize, VfpuPrefix Prefix, Action Action, bool Debug = false, bool AsInteger = false)
 		{
 			CheckPrefixUsage(ref Prefix);

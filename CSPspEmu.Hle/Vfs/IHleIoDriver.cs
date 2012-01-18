@@ -85,6 +85,8 @@ namespace CSPspEmu.Hle.Vfs
 		/// </summary>
 		Sticky = 0x0200,
 
+		All = UserMask | GroupMask | OtherMask,
+
 		/// <summary>
 		/// User access rights mask
 		/// </summary>

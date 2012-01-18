@@ -56,12 +56,12 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		/// <summary>
 		/// Determine if interrupts are suspended or active, based on the given flags.
 		/// </summary>
-		/// <param name="flagInterrupts">The value returned from ::sceKernelCpuSuspendIntr().</param>
+		/// <param name="Flags">The value returned from ::sceKernelCpuSuspendIntr().</param>
 		/// <returns>1 if flags indicate that interrupts were not suspended, 0 otherwise.</returns>
 		[HlePspFunction(NID = 0x47A0B729, FirmwareVersion = 150)]
-		public bool sceKernelIsCpuIntrSuspended(int flagInterrupts)
+		public bool sceKernelIsCpuIntrSuspended(int Flags)
 		{
-			throw (new NotImplementedException());
+			return (Flags != 0);
 		}
 
 		/// <summary>
@@ -71,7 +71,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		[HlePspFunction(NID = 0xB55249D2, FirmwareVersion = 150)]
 		public bool sceKernelIsCpuIntrEnable()
 		{
-			throw(new NotImplementedException());
+			return HleState.HleInterruptManager.Enabled;
 		}
 	}
 }

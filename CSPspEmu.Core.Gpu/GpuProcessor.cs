@@ -254,4 +254,6 @@ namespace CSPspEmu.Core.Gpu
 			//throw new NotImplementedException();
 		}
 	}
+
+	public enum TextureLevelMode { Auto = 0, Const = 1, Slope = 2 }
 }

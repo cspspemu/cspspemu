@@ -18,9 +18,11 @@ namespace CSPspEmu.Hle.Modules.wlan
 		/// </summary>
 		/// <returns>0 if off, 1 if on</returns>
 		[HlePspFunction(NID = 0xD7763699, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceWlanGetSwitchState()
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>

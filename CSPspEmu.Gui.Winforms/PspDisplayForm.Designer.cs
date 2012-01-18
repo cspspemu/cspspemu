@@ -59,6 +59,7 @@
 			this.blogcballesterosvelascoesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.traceUnimplementedSyscallsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -223,6 +224,7 @@
 			// 
 			this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.traceSyscallsToolStripMenuItem,
+            this.traceUnimplementedSyscallsToolStripMenuItem,
             this.traceUnimplementedGpuToolStripMenuItem,
             this.showThreadInfoToolStripMenuItem});
 			this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
@@ -233,14 +235,14 @@
 			// traceSyscallsToolStripMenuItem
 			// 
 			this.traceSyscallsToolStripMenuItem.Name = "traceSyscallsToolStripMenuItem";
-			this.traceSyscallsToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+			this.traceSyscallsToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
 			this.traceSyscallsToolStripMenuItem.Text = "Trace &Syscalls";
 			this.traceSyscallsToolStripMenuItem.Click += new System.EventHandler(this.traceSyscallsToolStripMenuItem_Click);
 			// 
 			// traceUnimplementedGpuToolStripMenuItem
 			// 
 			this.traceUnimplementedGpuToolStripMenuItem.Name = "traceUnimplementedGpuToolStripMenuItem";
-			this.traceUnimplementedGpuToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+			this.traceUnimplementedGpuToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
 			this.traceUnimplementedGpuToolStripMenuItem.Text = "Trace Unimplemented Gpu";
 			this.traceUnimplementedGpuToolStripMenuItem.Click += new System.EventHandler(this.traceUnimplementedGpuToolStripMenuItem_Click);
 			// 
@@ -248,7 +250,7 @@
 			// 
 			this.showThreadInfoToolStripMenuItem.Name = "showThreadInfoToolStripMenuItem";
 			this.showThreadInfoToolStripMenuItem.ShortcutKeyDisplayString = "F2";
-			this.showThreadInfoToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
+			this.showThreadInfoToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
 			this.showThreadInfoToolStripMenuItem.Text = "Show &Thread Info";
 			this.showThreadInfoToolStripMenuItem.Click += new System.EventHandler(this.showThreadInfoToolStripMenuItem_Click);
 			// 
@@ -303,6 +305,13 @@
 			this.aboutToolStripMenuItem.Text = "&About...";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
+			// traceUnimplementedSyscallsToolStripMenuItem
+			// 
+			this.traceUnimplementedSyscallsToolStripMenuItem.Name = "traceUnimplementedSyscallsToolStripMenuItem";
+			this.traceUnimplementedSyscallsToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+			this.traceUnimplementedSyscallsToolStripMenuItem.Text = "Trace Unimplemented Syscalls";
+			this.traceUnimplementedSyscallsToolStripMenuItem.Click += new System.EventHandler(this.traceUnimplementedSyscallsToolStripMenuItem_Click);
+			// 
 			// PspDisplayForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -355,5 +364,6 @@
 		private System.Windows.Forms.ToolStripMenuItem traceSyscallsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem traceUnimplementedGpuToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem showThreadInfoToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem traceUnimplementedSyscallsToolStripMenuItem;
 	}
 }

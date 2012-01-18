@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Hle.Vfs;
 
 namespace CSPspEmu.Hle.Modules.utility
 {
@@ -18,8 +20,88 @@ namespace CSPspEmu.Hle.Modules.utility
 		[HlePspNotImplemented]
 		public int sceUtilitySavedataInitStart(SceUtilitySavedataParam* Params)
 		{
-			//throw(new NotImplementedException());
-			CurrentDialogStep = DialogStepEnum.SUCCESS;
+			//Params->DataBufPointer
+			Params->Base.Result = 0;
+
+			var SavePathFolder = "ms0:/PSP/SAVEDATA/" + Params->GameName + Params->SaveName;
+			var SaveDataBin = SavePathFolder + "/DATA.BIN";
+			var SaveIcon0 = SavePathFolder + "/ICON0.PNG";
+			var SavePic1 = SavePathFolder + "/PIC1.PNG";
+
+			Action<PspUtilitySavedataFileData, String> Save = (PspUtilitySavedataFileData PspUtilitySavedataFileData, String FileName) =>
+			{
+				if (PspUtilitySavedataFileData.Used)
+				{
+					HleState.HleIoManager.HleIoWrapper.WriteBytes(
+						FileName,
+						PspMemory.ReadBytes(PspUtilitySavedataFileData.BufferPointer, PspUtilitySavedataFileData.Size)
+					);
+				}
+			};
+
+			try
+			{
+				switch (Params->Mode)
+				{
+					case PspUtilitySavedataMode.Autoload:
+					case PspUtilitySavedataMode.Load:
+						try
+						{
+							PspMemory.WriteBytes(
+								Params->DataBufPointer,
+								HleState.HleIoManager.HleIoWrapper.ReadBytes(SaveDataBin)
+							);
+
+							Params->Base.Result = SceKernelErrors.ERROR_OK;
+						}
+						catch (IOException)
+						{
+							throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_LOAD_NO_DATA));
+						}
+						catch (Exception)
+						{
+							throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_LOAD_ACCESS_ERROR));
+						}
+						break;
+					case PspUtilitySavedataMode.Autosave:
+					case PspUtilitySavedataMode.Save:
+						try
+						{
+							HleState.HleIoManager.HleIoWrapper.Mkdir(SavePathFolder, SceMode.All);
+
+							HleState.HleIoManager.HleIoWrapper.WriteBytes(
+								SaveDataBin,
+								PspMemory.ReadBytes(Params->DataBufPointer, Params->DataSize)
+							);
+
+							Save(Params->Icon0FileData, SaveIcon0);
+							Save(Params->Pic1FileData, SavePic1);
+							//Save(Params->SfoParam, SavePic1);
+						}
+						catch (Exception Exception)
+						{
+							Console.Error.WriteLine(Exception);
+							throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_SAVE_ACCESS_ERROR));
+						}
+						break;
+					default:
+						Console.Error.WriteLine("sceUtilitySavedataInitStart: Unsupported mode: " + Params->Mode);
+						break;
+				}
+				//throw(new NotImplementedException());
+
+				Params->Base.Result = SceKernelErrors.ERROR_OK;
+			}
+			catch (SceKernelException SceKernelException)
+			{
+				Params->Base.Result = SceKernelException.SceKernelError;
+			}
+			finally
+			{
+				CurrentDialogStep = DialogStepEnum.SUCCESS;
+			}
+
+			
 			return 0;
 		}
 

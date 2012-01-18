@@ -160,7 +160,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <param name="Result">The result of the async action.</param>
 		/// <returns>The given fd or a negative value on error.</returns>
 		[HlePspFunction(NID = 0x35DBD746, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceIoWaitAsyncCB(CpuThreadState CpuThreadState, int FileHandle, long* Result)
 		{
 			//throw (new NotImplementedException());

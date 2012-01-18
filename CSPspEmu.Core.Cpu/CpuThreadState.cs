@@ -46,6 +46,50 @@ namespace CSPspEmu.Core.Cpu
 		/// </summary>
 		public float VFR0, VFR1, VFR2, VFR3, VFR4, VFR5, VFR6, VFR7, VFR8, VFR9, VFR10, VFR11, VFR12, VFR13, VFR14, VFR15, VFR16, VFR17, VFR18, VFR19, VFR20, VFR21, VFR22, VFR23, VFR24, VFR25, VFR26, VFR27, VFR28, VFR29, VFR30, VFR31, VFR32, VFR33, VFR34, VFR35, VFR36, VFR37, VFR38, VFR39, VFR40, VFR41, VFR42, VFR43, VFR44, VFR45, VFR46, VFR47, VFR48, VFR49, VFR50, VFR51, VFR52, VFR53, VFR54, VFR55, VFR56, VFR57, VFR58, VFR59, VFR60, VFR61, VFR62, VFR63, VFR64, VFR65, VFR66, VFR67, VFR68, VFR69, VFR70, VFR71, VFR72, VFR73, VFR74, VFR75, VFR76, VFR77, VFR78, VFR79, VFR80, VFR81, VFR82, VFR83, VFR84, VFR85, VFR86, VFR87, VFR88, VFR89, VFR90, VFR91, VFR92, VFR93, VFR94, VFR95, VFR96, VFR97, VFR98, VFR99, VFR100, VFR101, VFR102, VFR103, VFR104, VFR105, VFR106, VFR107, VFR108, VFR109, VFR110, VFR111, VFR112, VFR113, VFR114, VFR115, VFR116, VFR117, VFR118, VFR119, VFR120, VFR121, VFR122, VFR123, VFR124, VFR125, VFR126, VFR127;
 
+		/// <summary>
+		/// Vfpu comparison flags
+		/// </summary>
+		public bool VFR_CC_0, VFR_CC_1, VFR_CC_2, VFR_CC_3, VFR_CC_4, VFR_CC_5, VFR_CC_6, VFR_CC_7;
+		public bool VFR_CC_ANY { get { return VFR_CC_4; } }
+		public bool VFR_CC_ALL { get { return VFR_CC_5; } }
+
+		public bool VFR_CC(int Index)
+		{
+			fixed (bool* VFR_CC = &VFR_CC_0)
+			{
+				return VFR_CC[Index];
+			}
+		}
+		/*
+		public int VFR_CC_6;
+		public int VFR_CC_7;
+		public int VFR_CC_8;
+		public int VFR_CC_9;
+		public int VFR_CC_10;
+		public int VFR_CC_11;
+		public int VFR_CC_12;
+		public int VFR_CC_13;
+		public int VFR_CC_14;
+		public int VFR_CC_15;
+		public int VFR_CC_16;
+		public int VFR_CC_17;
+		public int VFR_CC_18;
+		public int VFR_CC_19;
+		public int VFR_CC_20;
+		public int VFR_CC_21;
+		public int VFR_CC_22;
+		public int VFR_CC_23;
+		public int VFR_CC_24;
+		public int VFR_CC_25;
+		public int VFR_CC_26;
+		public int VFR_CC_27;
+		public int VFR_CC_28;
+		public int VFR_CC_29;
+		public int VFR_CC_30;
+		public int VFR_CC_31;
+		 * */
+
+
 		public struct FCR31
 		{
 			public enum TypeEnum : uint {
@@ -77,7 +121,6 @@ namespace CSPspEmu.Core.Cpu
 					Value = BitUtils.Insert(Value, 0, 2, (uint)value);
 				}
 			}
-
 
 			public bool CC {
 				get

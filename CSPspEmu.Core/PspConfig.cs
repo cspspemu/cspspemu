@@ -162,5 +162,7 @@ namespace CSPspEmu.Core
 		public PspConfirmButton ConfirmButton;
 		//public bool TraceLastSyscalls = false;
 		public bool TraceLastSyscalls = true;
+
+		public bool DebugNotImplemented = true;
 	}
 }

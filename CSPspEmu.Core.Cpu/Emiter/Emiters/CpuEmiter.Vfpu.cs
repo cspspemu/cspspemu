@@ -310,8 +310,24 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void vnsin() { throw (new NotImplementedException("")); }
 		public void vrexp2() { throw (new NotImplementedException("")); }
 
-		public void vsat0() { throw (new NotImplementedException("")); }
-		public void vsat1() { throw (new NotImplementedException("")); }
+		public void vsat0() {
+			VectorOperationSaveVd((Index) =>
+			{
+				Load_VS(Index);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 0.0f);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 1.0f);
+				MipsMethodEmiter.CallMethod(typeof(MathFloat), "Clamp");
+			});
+		}
+		public void vsat1() {
+			VectorOperationSaveVd((Index) =>
+			{
+				Load_VS(Index);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, -1.0f);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, +1.0f);
+				MipsMethodEmiter.CallMethod(typeof(MathFloat), "Clamp");
+			});
+		}
 
 		// Vfpu ConSTant
 		public void vcst()

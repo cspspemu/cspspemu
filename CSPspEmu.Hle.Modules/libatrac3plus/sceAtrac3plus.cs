@@ -28,14 +28,15 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// <summary>
 		/// Gets the bitrate.
 		/// </summary>
-		/// <param name="atracID">The atracID</param>
-		/// <param name="outBitrate">Pointer to a integer that receives the bitrate in kbps</param>
+		/// <param name="AtracId">The atracID</param>
+		/// <param name="OutputBitrate">Pointer to a integer that receives the bitrate in kbps</param>
 		/// <returns>Less than 0 on error, otherwise 0</returns>
 		[HlePspFunction(NID = 0xA554A158, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceAtracGetBitrate(int atracID, int* outBitrate)
+		public int sceAtracGetBitrate(int AtracId, int* OutputBitrate)
 		{
-			throw (new NotImplementedException());
+			return -1;
+			//throw (new NotImplementedException());
 			/*
 			unimplemented_notice();
 
@@ -203,8 +204,9 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			*outN = 0;
 			*outEnd = -1;
 			*outRemainFrame = -1;
-			throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED));
-			//return 0;
+			//throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED));
+			return 0;
+
 			/*
 			//logInfo("Not implemented sceAtracDecodeData(%d)", atracID);
 			//unimplemented_notice();

@@ -127,7 +127,10 @@ namespace CSPspEmu.Hle.Modules.audio
 		/// <param name="RightVolume"></param>
 		/// <param name="Buffer"></param>
 		/// <param name="Blocking"></param>
-		/// <returns></returns>
+		/// <returns>
+		///		Number of samples played.
+		///		A negative value on error.
+		/// </returns>
 		private int _sceAudioOutputPannedBlocking(int ChannelId, int LeftVolume, int RightVolume, short* Buffer, bool Blocking)
 		{
 			//Console.WriteLine(ChannelId);
@@ -149,7 +152,7 @@ namespace CSPspEmu.Hle.Modules.audio
 				*/
 				if (!Blocking) WakeUpCallback();
 			});
-			return 0;
+			return Channel.SampleCount;
 		}
 
 		/// <summary>
@@ -159,7 +162,10 @@ namespace CSPspEmu.Hle.Modules.audio
 		/// <param name="LeftVolume">The left volume. A value between 0 and PSP_AUDIO_VOLUME_MAX.</param>
 		/// <param name="RightVolume">The right volume. A value between 0 and PSP_AUDIO_VOLUME_MAX.</param>
 		/// <param name="Buffer">Pointer to the PCM data to output.</param>
-		/// <returns>0 on success, an error if less than 0.</returns>
+		/// <returns>
+		///		Number of samples played.
+		///		A negative value on error.
+		/// </returns>
 		[HlePspFunction(NID = 0x13F592BC, FirmwareVersion = 150)]
 		public int sceAudioOutputPannedBlocking(int ChannelId, int LeftVolume, int RightVolume, short* Buffer)
 		{
@@ -179,7 +185,10 @@ namespace CSPspEmu.Hle.Modules.audio
 		/// <param name="ChannelId">The channel number.</param>
 		/// <param name="Volume">The volume.</param>
 		/// <param name="Buffer">Pointer to the PCM data to output.</param>
-		/// <returns>0 on success, an error if less than 0.</returns>
+		/// <returns>
+		///		Number of samples played.
+		///		A negative value on error.
+		///	</returns>
 		[HlePspFunction(NID = 0x136CAF51, FirmwareVersion = 150)]
 		public int sceAudioOutputBlocking(int ChannelId, int Volume, short* Buffer)
 		{
@@ -395,12 +404,22 @@ namespace CSPspEmu.Hle.Modules.audio
 		/// <summary>
 		/// Change the output sample count, after it's already been reserved
 		/// </summary>
-		/// <param name="samplecount">The number of samples to output in one output call (min 17, max 4111).</param>
+		/// <param name="SampleCount">The number of samples to output in one output call (min 17, max 4111).</param>
 		/// <returns>0 on success, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0x63F2889C, FirmwareVersion = 150)]
-		public int sceAudioOutput2ChangeLength(int samplecount)
+		public int sceAudioOutput2ChangeLength(int SampleCount)
 		{
-			throw (new NotImplementedException());
+			var Channel = HleState.PspAudio.GetChannel(Output2ChannelId);
+			try
+			{
+				//return Channel.SampleCount;
+				return 0;
+			}
+			finally
+			{
+				Channel.SampleCount = SampleCount;
+			}
+			//return 0;
 		}
 	}
 }

@@ -125,6 +125,8 @@
     <Compile Include="usersystemlib\Kernel_Library.cs" />
     <Compile Include="utility\sceUtility.cs" />
     <Compile Include="utility\sceUtility.MsgDialog.cs" />
+    <Compile Include="utility\sceUtility.Netconf.cs" />
+    <Compile Include="utility\sceUtility.Osk.cs" />
     <Compile Include="utility\sceUtility.Savedata.cs" />
     <Compile Include="utility\sceUtility.Sysparam.cs" />
     <Compile Include="utils\UtilsForKernel.cs" />

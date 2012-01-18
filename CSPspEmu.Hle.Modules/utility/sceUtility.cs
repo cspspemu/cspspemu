@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
+using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.utility
 {
@@ -71,29 +73,120 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// Save data utility modes
 		public enum PspUtilitySavedataMode : uint
 		{
-			PSP_UTILITY_SAVEDATA_AUTOLOAD       = 0,
-			PSP_UTILITY_SAVEDATA_AUTOSAVE       = 1,
-			PSP_UTILITY_SAVEDATA_LOAD           = 2,
-			PSP_UTILITY_SAVEDATA_SAVE           = 3,
-			PSP_UTILITY_SAVEDATA_LISTLOAD       = 4,
-			PSP_UTILITY_SAVEDATA_LISTSAVE       = 5,
-			PSP_UTILITY_SAVEDATA_LISTDELETE     = 6,
-			PSP_UTILITY_SAVEDATA_DELETE         = 7,
-			PSP_UTILITY_SAVEDATA_SIZES          = 8,
-			PSP_UTILITY_SAVEDATA_AUTODELETE     = 9,
-			PSP_UTILITY_SAVEDATA_SINGLEDELETE   = 10,
-			PSP_UTILITY_SAVEDATA_LIST           = 11,
-			PSP_UTILITY_SAVEDATA_FILES          = 12,
-			PSP_UTILITY_SAVEDATA_MAKEDATASECURE = 13,
-			PSP_UTILITY_SAVEDATA_MAKEDATA       = 14,
-			PSP_UTILITY_SAVEDATA_READSECURE     = 15,
-			PSP_UTILITY_SAVEDATA_READ           = 16,
-			PSP_UTILITY_SAVEDATA_WRITESECURE    = 17,
-			PSP_UTILITY_SAVEDATA_WRITE          = 18,
-			PSP_UTILITY_SAVEDATA_ERASESECURE    = 19,
-			PSP_UTILITY_SAVEDATA_ERASE          = 20,
-			PSP_UTILITY_SAVEDATA_DELETEDATA     = 21,
-			PSP_UTILITY_SAVEDATA_GETSIZE        = 22,
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_AUTOLOAD
+			/// </summary>
+			Autoload = 0,
+
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_AUTOSAVE       
+			/// </summary>
+			Autosave = 1,
+
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_LOAD
+			/// </summary>
+			Load = 2,
+			
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_SAVE
+			/// </summary>
+			Save = 3,
+
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_LISTLOAD
+			/// </summary>
+			ListLoad = 4,
+
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_LISTSAVE       
+			/// </summary>
+			ListSave = 5,
+
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_LISTDELETE
+			/// </summary>
+			ListDelete = 6,
+			
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_DELETE
+			/// </summary>
+			Delete = 7,
+
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_SIZES
+			/// </summary>
+			Sizes = 8,
+			
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_AUTODELETE
+			/// </summary>
+			AutoDelete = 9,
+
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_SINGLEDELETE
+			/// </summary>
+			SingleDelete = 10,
+			
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_LIST
+			/// </summary>
+			List = 11,
+			
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_FILES
+			/// </summary>
+			Files = 12,
+
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_MAKEDATASECURE
+			/// </summary>
+			MakeDataSecure = 13,
+
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_MAKEDATA
+			/// </summary>
+			MakeData = 14,
+
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_READSECURE
+			/// </summary>
+			ReadSecure = 15,
+
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_READ
+			/// </summary>
+			Read = 16,
+
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_WRITESECURE
+			/// </summary>
+			WriteSecure = 17,
+
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_WRITE
+			/// </summary>
+			Write = 18,
+
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_ERASESECURE    
+			/// </summary>
+			EraseSecure = 19,
+			
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_ERASE
+			/// </summary>
+			Erase = 20,
+
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_DELETEDATA
+			/// </summary>
+			DeleteData = 21,
+			
+			/// <summary>
+			/// PSP_UTILITY_SAVEDATA_GETSIZE
+			/// </summary>
+			GetSize = 22,
 		}
 
 
@@ -134,19 +227,86 @@ namespace CSPspEmu.Hle.Modules.utility
 
 		unsafe public struct PspUtilitySavedataSFOParam
 		{
-			public fixed byte title[0x80];
-			public fixed byte savedataTitle[0x80];
-			public fixed byte detail[0x400];
-			public byte parentalLevel;
-			public fixed byte unknown[3];
+			/// <summary>
+			/// 
+			/// </summary>
+			public fixed byte TitleRaw[0x80];
+
+			public string Title
+			{
+				get
+				{
+					fixed (byte* Pointer = TitleRaw)
+					{
+						return PointerUtils.PtrToString(Pointer, Encoding.UTF8);
+					}
+				}
+			}
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public fixed byte SavedataTitleRaw[0x80];
+
+			public string SavedataTitle
+			{
+				get
+				{
+					fixed (byte* Pointer = SavedataTitleRaw)
+					{
+						return PointerUtils.PtrToString(Pointer, Encoding.UTF8);
+					}
+				}
+			}
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public fixed byte Detail[0x400];
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public byte ParentalLevel;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public fixed byte Unknown[3];
 		}
 
 		public struct PspUtilitySavedataFileData
 		{
-			public uint bufPointer;
-			public uint bufSize;
-			public uint size;	/* ??? - why are there two sizes? */
-			public int unknown;
+			public bool Used
+			{
+				get
+				{
+					if (BufferPointer.IsNull) return false;
+					//if (BufferSize == 0) return false;
+					if (Size == 0) return false;
+					return true;
+				}
+			}
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public PspPointer BufferPointer;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public int BufferSize;
+
+			/// <summary>
+			/// ??? - why are there two sizes?
+			/// </summary>
+			public int Size;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public uint Unknown;
 		}
 
 		public struct PspUtilitySavedataListSaveNewData
@@ -199,13 +359,19 @@ namespace CSPspEmu.Hle.Modules.utility
 			{
 				get
 				{
-					fixed (byte* MessageRaw = FixedMessageRaw)
+					fixed (byte* Pointer = FixedMessageRaw)
 					{
-						return PointerUtils.PtrToString(MessageRaw, Encoding.UTF8);
+						return PointerUtils.PtrToString(Pointer, Encoding.UTF8);
 					}
 				}
 			}
 		}
+
+		/*
+	                    savedataParams.base.result = SceKernelErrors.ERROR_SAVEDATA_LOAD_NO_DATA;
+	                } catch (Exception e) {
+	                    savedataParams.base.result = SceKernelErrors.ERROR_SAVEDATA_LOAD_ACCESS_ERROR;
+		*/
 
 		/// <summary>
 		/// 
@@ -215,47 +381,47 @@ namespace CSPspEmu.Hle.Modules.utility
 			/// <summary>
 			/// Size of the structure
 			/// </summary>
-			public uint size;
+			public uint Size;
 			
 			/// <summary>
 			/// Language
 			/// </summary>
-			public int  language;
+			public Language Language;
 			
 			/// <summary>
 			/// Set to 1 for X/O button swap
 			/// </summary>
-			public int  buttonSwap;
+			public int  ButtonSwap;
 			
 			/// <summary>
 			/// Graphics thread priority
 			/// </summary>
-			public int  graphicsThread;
+			public int  GraphicsThread;
 			
 			/// <summary>
 			/// Access/fileio thread priority (SceJobThread)
 			/// </summary>
-			public int  accessThread;
+			public int  AccessThread;
 			
 			/// <summary>
 			/// Font thread priority (ScePafThread)
 			/// </summary>
-			public int  fontThread;
+			public int  FontThread;
 			
 			/// <summary>
 			/// Sound thread priority
 			/// </summary>
-			public int  soundThread;
+			public int  SoundThread;
 			
 			/// <summary>
 			/// Result
 			/// </summary>
-			public int  result;
+			public SceKernelErrors Result;
 
 			/// <summary>
 			/// Set to 0
 			/// </summary>
-			public fixed int  reserved[4];
+			public fixed int  Reserved[4];
 		}
 
 		public struct SceUtilitySavedataParam
@@ -273,110 +439,134 @@ namespace CSPspEmu.Hle.Modules.utility
 			/// <summary>
 			/// 
 			/// </summary>
-			public int unknown1;
+			public int Unknown1;
 	
 			/// <summary>
 			/// 
 			/// </summary>
-			public int overwrite;
+			public int Overwrite;
 
 			/// <summary>
 			/// gameName: name used from the game for saves, equal for all saves
 			/// </summary>
-			public fixed byte gameName[13];
+			public fixed byte GameNameRaw[13];
+
+			public string GameName
+			{
+				get
+				{
+					fixed (byte* Pointer = GameNameRaw)
+					{
+						return PointerUtils.PtrToString(Pointer, Encoding.UTF8);
+					}
+				}
+			}
 
 			/// <summary>
 			/// 
 			/// </summary>
-			public fixed byte reserved[3];
+			public fixed byte Reserved[3];
 
 			/// <summary>
 			/// saveName: name of the particular save, normally a number
 			/// </summary>
-			public fixed byte saveName[20];
+			public fixed byte SaveNameRaw[20];
+
+			public string SaveName
+			{
+				get
+				{
+					fixed (byte* Pointer = SaveNameRaw)
+					{
+						return PointerUtils.PtrToString(Pointer, Encoding.UTF8);
+					}
+				}
+			}
 
 			/// <summary>
 			/// saveNameList: used by multiple modes
 			/// </summary>
-			public uint saveNameListPointer; // char[20]
+			public PspPointer SaveNameListPointer; // char[20]
 
 			/// <summary>
 			/// fileName: name of the data file of the game for example DATA.BIN
 			/// </summary>
-			public fixed byte fileName[13];
+			public fixed byte FileName[13];
 
 			/// <summary>
 			/// 
 			/// </summary>
-			public fixed byte reserved1[3];
+			public fixed byte Reserved1[3];
 	
 			/// <summary>
 			/// pointer to a buffer that will contain data file unencrypted data
 			/// </summary>
-			public uint dataBufPointer;
+			public uint DataBufPointer;
 			
 			/// <summary>
 			/// size of allocated space to dataBuf
 			/// </summary>
-			public uint dataBufSize;
+			public uint DataBufSize;
 
 			/// <summary>
 			/// 
 			/// </summary>
-			public uint dataSize;
+			public int DataSize;
+
+			//PspUtilitySavedataFileData Data
 
 			/// <summary>
 			/// 
 			/// </summary>
-			public PspUtilitySavedataSFOParam sfoParam;
+			public PspUtilitySavedataSFOParam SfoParam;
 
 			/// <summary>
 			/// 
 			/// </summary>
-			public PspUtilitySavedataFileData icon0FileData;
+			public PspUtilitySavedataFileData Icon0FileData;
 
 			/// <summary>
 			/// 
 			/// </summary>
-			public PspUtilitySavedataFileData icon1FileData;
+			public PspUtilitySavedataFileData Icon1FileData;
 
 			/// <summary>
 			/// 
 			/// </summary>
-			public PspUtilitySavedataFileData pic1FileData;
+			public PspUtilitySavedataFileData Pic1FileData;
 
 			/// <summary>
 			/// 
 			/// </summary>
-			public PspUtilitySavedataFileData snd0FileData;
+			public PspUtilitySavedataFileData Snd0FileData;
 
 			/// <summary>
 			/// Pointer to an PspUtilitySavedataListSaveNewData structure
 			/// </summary>
 			//public PspUtilitySavedataListSaveNewData *newData;
-			public uint newDataPointer;
+			public uint NewDataPointer;
 
 			/// <summary>
 			/// Initial focus for lists
 			/// </summary>
-			public PspUtilitySavedataFocus focus;
+			public PspUtilitySavedataFocus Focus;
 
 			/// <summary>
 			/// unknown2: ?
 			/// </summary>
-			public fixed int unknown2[4];
+			public fixed int Unknown2[4];
 
 		//#if _PSP_FW_VERSION >= 200
 
 			/// <summary>
 			/// key: encrypt/decrypt key for save with firmware >= 2.00
 			/// </summary>
-			public fixed byte key[16];
+			public fixed byte Key[16];
 
 			/// <summary>
 			/// unknown3: ?
 			/// </summary>
-			public fixed byte unknown3[20];
+			public fixed byte Unknown3[20];
 
 		//#endif
 
@@ -496,9 +686,20 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// </summary>
 		public enum SceUtilityOskResult
 		{
-			PSP_UTILITY_OSK_RESULT_UNCHANGED = 0,
-			PSP_UTILITY_OSK_RESULT_CANCELLED = 1,
-			PSP_UTILITY_OSK_RESULT_CHANGED   = 2,
+			/// <summary>
+			/// PSP_UTILITY_OSK_RESULT_UNCHANGED
+			/// </summary>
+			Unchanged = 0,
+			
+			/// <summary>
+			/// PSP_UTILITY_OSK_RESULT_CANCELLED
+			/// </summary>
+			Cancelled = 1,
+
+			/// <summary>
+			/// PSP_UTILITY_OSK_RESULT_CHANGED
+			/// </summary>
+			Changed = 2,
 		};
 
 		/// <summary>
@@ -506,26 +707,89 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// </summary>
 		public enum SceUtilityOskInputType
 		{
+			/// <summary>
+			/// 
+			/// </summary>
 			PSP_UTILITY_OSK_INPUTTYPE_ALL                    = 0x00000000,
+
+			/// <summary>
+			/// 
+			/// </summary>
 			PSP_UTILITY_OSK_INPUTTYPE_LATIN_DIGIT            = 0x00000001,
+
+			/// <summary>
+			/// 
+			/// </summary>
 			PSP_UTILITY_OSK_INPUTTYPE_LATIN_SYMBOL           = 0x00000002,
+
+			/// <summary>
+			/// 
+			/// </summary>
 			PSP_UTILITY_OSK_INPUTTYPE_LATIN_LOWERCASE        = 0x00000004,
+
+			/// <summary>
+			/// 
+			/// </summary>
 			PSP_UTILITY_OSK_INPUTTYPE_LATIN_UPPERCASE        = 0x00000008,
+
+			/// <summary>
+			/// 
+			/// </summary>
 			PSP_UTILITY_OSK_INPUTTYPE_JAPANESE_DIGIT         = 0x00000100,
+
+			/// <summary>
+			/// 
+			/// </summary>
 			PSP_UTILITY_OSK_INPUTTYPE_JAPANESE_SYMBOL        = 0x00000200,
+
+			/// <summary>
+			/// 
+			/// </summary>
 			PSP_UTILITY_OSK_INPUTTYPE_JAPANESE_LOWERCASE     = 0x00000400,
+
+			/// <summary>
+			/// 
+			/// </summary>
 			PSP_UTILITY_OSK_INPUTTYPE_JAPANESE_UPPERCASE     = 0x00000800,
-			// http://en.wikipedia.org/wiki/Hiragana
+			
+			/// <summary>
+			/// http://en.wikipedia.org/wiki/Hiragana
+			/// </summary>
 			PSP_UTILITY_OSK_INPUTTYPE_JAPANESE_HIRAGANA      = 0x00001000,
-			// http://en.wikipedia.org/wiki/Katakana
+
+			/// <summary>
 			// Half-width Katakana
+			/// </summary>
 			PSP_UTILITY_OSK_INPUTTYPE_JAPANESE_HALF_KATAKANA = 0x00002000,
+
+			/// <summary>
+			/// http://en.wikipedia.org/wiki/Katakana
+			/// </summary>
 			PSP_UTILITY_OSK_INPUTTYPE_JAPANESE_KATAKANA      = 0x00004000,
-			// http://en.wikipedia.org/wiki/Kanji
+			
+			/// <summary>
+			/// http://en.wikipedia.org/wiki/Kanji
+			/// </summary>
 			PSP_UTILITY_OSK_INPUTTYPE_JAPANESE_KANJI         = 0x00008000,
+
+			/// <summary>
+			/// 
+			/// </summary>
 			PSP_UTILITY_OSK_INPUTTYPE_RUSSIAN_LOWERCASE      = 0x00010000,
+
+			/// <summary>
+			/// 
+			/// </summary>
 			PSP_UTILITY_OSK_INPUTTYPE_RUSSIAN_UPPERCASE      = 0x00020000,
+
+			/// <summary>
+			/// 
+			/// </summary>
 			PSP_UTILITY_OSK_INPUTTYPE_KOREAN                 = 0x00040000,
+
+			/// <summary>
+			/// 
+			/// </summary>
 			PSP_UTILITY_OSK_INPUTTYPE_URL                    = 0x00080000,
 		};
 
@@ -705,23 +969,15 @@ namespace CSPspEmu.Hle.Modules.utility
 		}
 
 		/// <summary>
-		/// Get the status of a on-screen keyboard currently active.
+		/// Get the current status of game sharing.
+		/// 
+		/// 2(Visible)  if the GUI is visible (you need to call sceUtilityGameSharingGetStatus).
+		/// 3(Quit)     if the user cancelled the dialog, and you need to call sceUtilityGameSharingShutdownStart.
+		/// 4(Finished) if the dialog has been successfully shut down.
 		/// </summary>
-		/// <returns>the current status of the keyboard. See ::pspUtilityDialogState for details.</returns>
-		[HlePspFunction(NID = 0xF3F76017, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
-		public pspUtilityDialogState sceUtilityOskGetStatus()
-		{
-			return pspUtilityDialogState.Finished;
-		}
-
-		/// <summary>
-		/// Get the status of a running Network Configuration Dialog
-		/// </summary>
-		/// <returns>one of pspUtilityDialogState on success, less than 0 on error</returns>
-		[HlePspFunction(NID = 0x6332AA39, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
-		public pspUtilityDialogState sceUtilityNetconfGetStatus()
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x946963F3, FirmwareVersion = 150)]
+		public pspUtilityDialogState sceUtilityGameSharingGetStatus()
 		{
 			return pspUtilityDialogState.Finished;
 		}

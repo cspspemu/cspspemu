@@ -569,15 +569,17 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Resume the dispatch thread
 		/// </summary>
-		/// <param name="state">
+		/// <param name="State">
 		/// The state of the dispatch thread 
 		/// (from ::sceKernelSuspendDispatchThread)
 		/// </param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x27E22EC2, FirmwareVersion = 150)]
-		public int sceKernelResumeDispatchThread(int state)
+		[HlePspNotImplemented]
+		public int sceKernelResumeDispatchThread(int State)
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -585,9 +587,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// </summary>
 		/// <returns>The current state of the dispatch thread, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x3AD58B8C, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceKernelSuspendDispatchThread()
 		{
-			throw(new NotImplementedException());
+			// SCE_KERNEL_DISPATCHTHREAD_STATE_ENABLED : SCE_KERNEL_DISPATCHTHREAD_STATE_DISABLED
+			//throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>

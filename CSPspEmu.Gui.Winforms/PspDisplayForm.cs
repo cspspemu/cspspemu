@@ -505,6 +505,7 @@ namespace CSPspEmu.Gui.Winforms
 		private void updateDebugSyscalls()
 		{
 			traceSyscallsToolStripMenuItem.Checked = PspConfig.DebugSyscalls;
+			traceUnimplementedSyscallsToolStripMenuItem.Checked = PspConfig.DebugNotImplemented;
 		}
 
 		private void updateDebugGpu()
@@ -554,6 +555,12 @@ namespace CSPspEmu.Gui.Winforms
 		private void debugToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 
+		}
+
+		private void traceUnimplementedSyscallsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			PspConfig.DebugNotImplemented = !PspConfig.DebugNotImplemented;
+			updateDebugSyscalls();
 		}
 	}
 }

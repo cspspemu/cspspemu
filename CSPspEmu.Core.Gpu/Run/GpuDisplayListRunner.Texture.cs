@@ -333,12 +333,15 @@ namespace CSPspEmu.Core.Gpu.Run
 			GpuState->TextureMappingState.TextureProjectionMapMode = (TextureProjectionMapMode)Param8(8);
 		}
 
-		[GpuOpCodesNotImplemented]
 		public void OP_TBIAS()
 		{
-			//GpuState->TextureMappingState.TextureState
-			//gpu.state.texture.levelMode  = command.extractEnum!(TextureLevelMode, 0);
-			//gpu.state.texture.mipmapBias = cast(float)command.extract!(int, 16, 8) / 16.0f;
+			GpuState->TextureMappingState.LevelMode = (TextureLevelMode)Param8(0);
+			GpuState->TextureMappingState.MipmapBias = ((float)Param8(16)) / 16.0f;
+		}
+
+		public void OP_TSLOPE()
+		{
+			GpuState->TextureMappingState.SlopeLevel = Float1;
 		}
 	}
 }

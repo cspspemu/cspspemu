@@ -119,7 +119,7 @@ namespace CSPspEmu.Hle
 			int FprIndex = 0;
 
 			var NotImplementedAttribute = (HlePspNotImplementedAttribute)MethodInfo.GetCustomAttributes(typeof(HlePspNotImplementedAttribute), true).FirstOrDefault();
-			bool NotImplemented = (NotImplementedAttribute != null) ? NotImplementedAttribute.Notice : false;
+			bool NotImplementedFunc = (NotImplementedAttribute != null) ? NotImplementedAttribute.Notice : false;
 			bool SkipLog = HlePspFunctionAttribute.SkipLog;
 
 			var ParamInfoList = new List<ParamInfo>();
@@ -247,6 +247,7 @@ namespace CSPspEmu.Hle
 			return (CpuThreadState) =>
 			{
 				bool Trace = (!SkipLog && CpuThreadState.CpuProcessor.PspConfig.DebugSyscalls);
+				bool NotImplemented = NotImplementedFunc && CpuThreadState.CpuProcessor.PspConfig.DebugNotImplemented;
 
 				if (NotImplemented)
 				{

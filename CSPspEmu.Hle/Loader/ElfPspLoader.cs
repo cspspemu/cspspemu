@@ -112,8 +112,15 @@ namespace CSPspEmu.Hle.Loader
 				{
 					case Elf.SectionHeader.TypeEnum.Relocation:
 						Console.Error.WriteLine("Not implemented Elf.SectionHeader.TypeEnum.Relocation");
-						throw (new NotImplementedException("Not implemented Elf.SectionHeader.TypeEnum.Relocation"));
+						//throw (new NotImplementedException("Not implemented Elf.SectionHeader.TypeEnum.Relocation"));
 						//break;
+						/*
+						RelocateRelocs(
+							ElfLoader.SectionHeaderFileStream(SectionHeader).ReadStructVectorUntilTheEndOfStream<Elf.Reloc>()
+						);
+						*/
+						break;
+
 					case Elf.SectionHeader.TypeEnum.PrxRelocation:
 						Console.WriteLine("PrxRelocation : {0}", SectionHeader);
 						RelocateRelocs(

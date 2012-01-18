@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
+using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Modules.threadman;
 
 namespace CSPspEmu.Hle.Modules.utility
@@ -19,7 +20,7 @@ namespace CSPspEmu.Hle.Modules.utility
 				case PSP_SYSTEMPARAM_ID.INT_TIME_FORMAT: return (int)PSP_SYSTEMPARAM_TIME_FORMAT._24HR;
 				case PSP_SYSTEMPARAM_ID.INT_TIMEZONE: return -5 * 60;
 				case PSP_SYSTEMPARAM_ID.INT_DAYLIGHTSAVINGS: return (int)PSP_SYSTEMPARAM_DAYLIGHTSAVINGS.STD;
-				case PSP_SYSTEMPARAM_ID.INT_LANGUAGE: return (int)PSP_SYSTEMPARAM_LANGUAGE.ENGLISH;
+				case PSP_SYSTEMPARAM_ID.INT_LANGUAGE: return (int)Language.English;
 				case PSP_SYSTEMPARAM_ID.INT_BUTTON_PREFERENCE: return (int)PSP_SYSTEMPARAM_BUTTON_PREFERENCE.NA;
 				default: throw (new SceKernelException(unchecked((SceKernelErrors)PSP_SYSTEMPARAM_RETVAL.FAIL)));
 			}
@@ -164,6 +165,7 @@ namespace CSPspEmu.Hle.Modules.utility
 	/**
 	 * Valid values for PSP_SYSTEMPARAM_ID_INT_LANGUAGE
 	 */
+	/*
 	public enum PSP_SYSTEMPARAM_LANGUAGE
 	{
 		JAPANESE = 0,
@@ -179,6 +181,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		CHINESE_TRADITIONAL = 10,
 		CHINESE_SIMPLIFIED = 11,
 	}
+	*/
 
 	/**
 	 * #9 seems to be Region or maybe X/O button swap.

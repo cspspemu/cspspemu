@@ -63,5 +63,8 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 		public TextureProjectionMapMode TextureProjectionMapMode;
 		public short ShadeU;
 		public short ShadeV;
+		public TextureLevelMode LevelMode;
+		public float MipmapBias;
+		public float SlopeLevel;
 	}
 }
