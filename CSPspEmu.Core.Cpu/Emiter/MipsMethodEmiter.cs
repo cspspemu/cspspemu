@@ -424,11 +424,21 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			SaveGPR(RT, () => { LoadGPR_Unsigned(RS); });
 		}
 
-		public void CallMethod(Type Class, String MethodName)
+		public void CallMethod(MethodInfo MethodInfo)
 		{
-			var Method = Class.GetMethod(MethodName);
-			if (Method == null) throw (new KeyNotFoundException(String.Format("Can't find {0}::{1}", Class, MethodName)));
-			ILGenerator.Emit(OpCodes.Call, Method);
+			ILGenerator.Emit(OpCodes.Call, MethodInfo);
+		}
+
+		public void CallMethod(Delegate Delegate)
+		{
+			CallMethod(Delegate.Method);
+		}
+
+		private void CallMethod(Type Class, String MethodName)
+		{
+			var MethodInfo = Class.GetMethod(MethodName);
+			if (MethodInfo == null) throw (new KeyNotFoundException(String.Format("Can't find {0}::{1}", Class, MethodName)));
+			CallMethod(MethodInfo);
 		}
 
 		public void CallMethodWithCpuThreadStateAsFirstArgument(Type Class, String MethodName)

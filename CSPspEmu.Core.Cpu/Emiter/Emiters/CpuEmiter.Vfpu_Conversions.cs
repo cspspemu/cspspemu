@@ -33,7 +33,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shl);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xF0000000);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-				MipsMethodEmiter.CallMethod(typeof(CpuEmiter), "_vc2i_impl");
+				MipsMethodEmiter.CallMethod((Func<uint, uint>)CpuEmiter._vc2i_impl);
 			}, AsInteger: true);
 		}
 
@@ -75,19 +75,55 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				Load_VS(Index, AsInteger: true);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_R4);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, -(int)Instruction.IMM5);
-				MipsMethodEmiter.CallMethod(typeof(MathFloat), "Scalb");
+				MipsMethodEmiter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
 			});
 		}
 
 
 		// Vfpu Integer to(2) Color?
 		public void vi2c() { throw (new NotImplementedException("")); }
-		public void vi2uc() { throw (new NotImplementedException("")); }
+
+		uint _vi2uc(int x, int y, int z, int w)
+		{
+			return (0
+				| (uint)((x < 0) ? 0 : ((x >> 23) << 0))
+				| (uint)((y < 0) ? 0 : ((y >> 23) << 8))
+				| (uint)((z < 0) ? 0 : ((z >> 23) << 16))
+				| (uint)((w < 0) ? 0 : ((w >> 23) << 24))
+			);
+		}
+
+		public void vi2uc() {
+			var VectorSize = Instruction.ONE_TWO;
+			Save_VD(0, 1, () =>
+			{
+				Load_VS(0, VectorSize, AsInteger: true);
+				Load_VS(1, VectorSize, AsInteger: true);
+				Load_VS(2, VectorSize, AsInteger: true);
+				Load_VS(3, VectorSize, AsInteger: true);
+				MipsMethodEmiter.CallMethod((Func<int, int, int, int, uint>)_vi2uc);
+
+			}, AsInteger: true);
+		}
 
 		public void vf2id() { throw (new NotImplementedException("")); }
 		public void vf2in() { throw (new NotImplementedException("")); }
 		public void vf2iu() { throw (new NotImplementedException("")); }
-		public void vf2iz() { throw (new NotImplementedException("")); }
+
+		static public float _vf2iz(float Value, int imm5)
+		{
+			float ScalabValue = MathFloat.Scalb(Value, imm5);
+			return (Value >= 0) ? (int)MathFloat.Floor(ScalabValue) : (int)MathFloat.Ceil(ScalabValue);
+		}
+
+		public void vf2iz() {
+			var Imm5 = Instruction.IMM5;
+			VectorOperationSaveVd(Index =>
+			{
+				Load_VS(Index);
+				MipsMethodEmiter.CallMethod((Func<float, int, float>)(CpuEmiter._vf2iz));
+			});
+		}
 		public void vf2h() { throw (new NotImplementedException("")); }
 		public void vh2f() { throw (new NotImplementedException("")); }
 		public void vi2s() { throw (new NotImplementedException("")); }

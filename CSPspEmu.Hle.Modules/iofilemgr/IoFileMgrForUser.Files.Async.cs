@@ -232,5 +232,19 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		{
 			throw (new NotImplementedException());
 		}
+
+		/// <summary>
+		/// Sets a callback for the asynchronous action.
+		/// </summary>
+		/// <param name="id">The filedescriptor currently performing an asynchronous action.</param>
+		/// <param name="cbid">The UID of the callback created with ::sceKernelCreateCallback</param>
+		/// <param name="notifyArg">Pointer to an argument to pass to the callback.</param>
+		/// <returns>Less than 0 on error</returns>
+		[HlePspFunction(NID = 0xA12A0514, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceIoSetAsyncCallback(int id, int cbid, int notifyArg)
+		{
+			return 0;
+		}
 	}
 }

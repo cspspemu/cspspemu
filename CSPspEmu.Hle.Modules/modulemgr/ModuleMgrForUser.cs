@@ -9,48 +9,80 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public class ModuleMgrForUser : HleModuleHost
 	{
-	public struct SceKernelLMOption
-	{
-		/// <summary>
-		/// 0000 - Size
-		/// </summary>
-		public uint StructureSize;
+		public struct SceKernelLMOption
+		{
+			/// <summary>
+			/// 0000 - Size
+			/// </summary>
+			public uint StructureSize;
 
-		/// <summary>
-		/// 0004 -
-		/// </summary>
-		public int MpidText;
+			/// <summary>
+			/// 0004 -
+			/// </summary>
+			public int MpidText;
 
-		/// <summary>
-		/// 0008 -
-		/// </summary>
-		public int MpidData;
+			/// <summary>
+			/// 0008 -
+			/// </summary>
+			public int MpidData;
 
-		/// <summary>
-		/// 000C -
-		/// </summary>
-		public uint Flags;
+			/// <summary>
+			/// 000C -
+			/// </summary>
+			public uint Flags;
 
-		/// <summary>
-		/// 0010 -
-		/// </summary>
-		public byte Position;
+			/// <summary>
+			/// 0010 -
+			/// </summary>
+			public byte Position;
 		
-		/// <summary>
-		/// 0011 -
-		/// </summary>
-		public byte Access;
+			/// <summary>
+			/// 0011 -
+			/// </summary>
+			public byte Access;
 
-		/// <summary>
-		/// 0012 -
-		/// </summary>
-		public byte _Reserved0;
+			/// <summary>
+			/// 0012 -
+			/// </summary>
+			public byte _Reserved0;
 
-		/// <summary>
-		/// 0013 -
-		/// </summary>
-		public byte _Reserved1;
-	}
+			/// <summary>
+			/// 0013 -
+			/// </summary>
+			public byte _Reserved1;
+		}
+
+		public struct SceKernelModuleInfo
+		{
+		}
+
+		public struct SceKernelSMOption
+		{
+			/// <summary>
+			/// 
+			/// </summary>
+			public uint Size;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public uint MpidStack;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public int StackSize;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public int Priority;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public uint Attribute;
+		}
 
 		/// <summary>
 		/// Stop and unload the current module.
@@ -88,17 +120,21 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		/// Start a loaded module.
 		/// </summary>
 		/// <param name="ModuleId">The ID of the module returned from LoadModule.</param>
-		/// <param name="ArgumentsCount">Length of the args.</param>
+		/// <param name="ArgumentsSize">Length of the args.</param>
 		/// <param name="ArgumentsPointer">A pointer to the arguments to the module.</param>
 		/// <param name="Status">Returns the status of the start.</param>
 		/// <param name="SceKernelSMOption">Pointer to an optional ::SceKernelSMOption structure.</param>
 		/// <returns>??? on success, otherwise one of ::PspKernelErrorCodes.</returns>
 		[HlePspFunction(NID = 0x50F0C1EC, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceKernelStartModule(int ModuleId, uint ArgumentsCount, uint ArgumentsPointer, int *Status, void *SceKernelSMOption)
+		public int sceKernelStartModule(int ModuleId, uint ArgumentsSize, void* ArgumentsPointer, int* Status, SceKernelSMOption* SceKernelSMOption)
 		{
 			//throw(new NotImplementedException());
-			return 1;
+			if (Status != null)
+			{
+				*Status = 0;
+			}
+			return 0;
 		}
 
 		/// <summary>
@@ -199,11 +235,8 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		[HlePspNotImplemented]
 		public int sceKernelLoadModuleByID(int FileId, uint Flags, SceKernelLMOption* SceKernelLMOption)
 		{
-			return 0;
-		}
-
-		public struct SceKernelModuleInfo
-		{
+			//SceKernelLMOption->
+			return 1;
 		}
 
 		/// <summary>
@@ -224,6 +257,22 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		{
 			//return 0;
 			throw(new NotImplementedException("sceKernelQueryModuleInfo"));
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="ArgumentSize"></param>
+		/// <param name="ArgumentPointer"></param>
+		/// <param name="StatusPointer"></param>
+		/// <param name="OptionsAddress"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xCC1D3699, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelStopUnloadSelfModule(int ArgumentSize, void* ArgumentPointer, int* StatusPointer, void* OptionsAddress)
+		{
+			throw (new NotImplementedException("sceKernelStopUnloadSelfModule"));
+			return 0;
 		}
 	}
 }

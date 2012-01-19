@@ -116,7 +116,22 @@ namespace CSPspEmu.Core.Utils
 
 		private unsafe void Decode_COMPRESSED_DXT1()
 		{
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
+			Console.Error.WriteLine("Not Implemented: Decode_COMPRESSED_DXT1");
+
+			for (int y = 0, n = 0; y < Height; y++)
+			{
+				for (int x = 0; x < Width; x++, n++)
+				{
+					OutputPixel OutputPixel;
+					OutputPixel.R = 0xFF;
+					OutputPixel.G = 0x00;
+					OutputPixel.B = 0x00;
+					OutputPixel.A = 0xFF;
+					Output[n] = OutputPixel;
+				}
+			}
+
 		}
 
 		private unsafe void Decode_PALETTE_T32()

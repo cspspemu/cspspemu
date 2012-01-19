@@ -69,13 +69,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 							if ((Cond & 1) != 0)
 							{
 								Load_VS(Index);
-								MipsMethodEmiter.CallMethod(typeof(MathFloat), "IsNan");
+								MipsMethodEmiter.CallMethod((Func<float, bool>)MathFloat.IsNan);
 								MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
 							}
 							if ((Cond & 2) != 0)
 							{
 								Load_VS(Index);
-								MipsMethodEmiter.CallMethod(typeof(MathFloat), "IsInfinity");
+								MipsMethodEmiter.CallMethod((Func<float, bool>)MathFloat.IsInfinity);
 								MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
 							}
 
@@ -87,7 +87,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, VectorSize);
-			MipsMethodEmiter.CallMethod(typeof(CpuEmiter), "_vcmp_end");
+			MipsMethodEmiter.CallMethod((Action<CpuThreadState, int>)CpuEmiter._vcmp_end);
 		}
 		public void vslt() { throw (new NotImplementedException("")); }
 		public void vsge() { throw (new NotImplementedException("")); }

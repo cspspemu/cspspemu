@@ -118,7 +118,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, PC);
-				MipsMethodEmiter.CallMethod(typeof(CpuThreadState), "CallStackPush");
+				MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint>)CpuThreadState.CallStackPush);
 			}
 			MipsMethodEmiter.SaveGPR(31, () =>
 			{
@@ -162,7 +162,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				if (PopulateCallStack)
 				{
 					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-					MipsMethodEmiter.CallMethod(typeof(CpuThreadState), "CallStackPop");
+					MipsMethodEmiter.CallMethod((Action<CpuThreadState>)CpuThreadState.CallStackPop);
 				}
 			}
 

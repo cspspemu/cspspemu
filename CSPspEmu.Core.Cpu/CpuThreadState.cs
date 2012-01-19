@@ -156,23 +156,23 @@ namespace CSPspEmu.Core.Cpu
 			return CallStack.Slice(0, CallStackCount).Reverse().ToArray();
 		}
 
-		public void CallStackPush(uint PC)
+		static public void CallStackPush(CpuThreadState CpuThreadState, uint PC)
 		{
-			if (CallStackCount >= 0 && CallStackCount < CallStack.Length)
+			if (CpuThreadState.CallStackCount >= 0 && CpuThreadState.CallStackCount < CpuThreadState.CallStack.Length)
 			{
 				//fixed (uint* CallStack = FixedCallStack)
 				{
-					CallStack[CallStackCount] = PC;
+					CpuThreadState.CallStack[CpuThreadState.CallStackCount] = PC;
 				}
 			}
-			CallStackCount++;
+			CpuThreadState.CallStackCount++;
 		}
 
-		public void CallStackPop()
+		static public void CallStackPop(CpuThreadState CpuThreadState)
 		{
-			if (CallStackCount > 0)
+			if (CpuThreadState.CallStackCount > 0)
 			{
-				CallStackCount--;
+				CpuThreadState.CallStackCount--;
 			}
 		}
 

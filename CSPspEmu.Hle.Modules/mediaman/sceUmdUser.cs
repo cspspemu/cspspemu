@@ -9,7 +9,7 @@ using CSPspEmu.Hle.Modules.threadman;
 namespace CSPspEmu.Hle.Modules.mediaman
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	public class sceUmdUser : HleModuleHost
+	unsafe public partial class sceUmdUser : HleModuleHost
 	{
 		Dictionary<int, HleCallback> RegisteredCallbacks = new Dictionary<int, HleCallback>();
 
@@ -237,6 +237,57 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		[HlePspNotImplemented]
 		public int sceUmdReplaceProhibit()
 		{
+			return 0;
+		}
+
+		/// <summary>
+		/// Enumeration for UMD types
+		/// </summary>
+		public enum pspUmdTypes : uint
+		{
+			/// <summary>
+			/// PSP_UMD_TYPE_GAME
+			/// </summary>
+			Game = 0x10,
+			
+			/// <summary>
+			/// PSP_UMD_TYPE_VIDEO
+			/// </summary>
+			Video = 0x20,
+			
+			/// <summary>
+			/// PSP_UMD_TYPE_AUDIO
+			/// </summary>
+			Audio = 0x40
+		}
+
+		/// <summary>
+		/// UMD Info struct
+		/// </summary>
+		public struct pspUmdInfo
+		{
+			/// <summary>
+			/// Set to sizeof(pspUmdInfo)
+			/// </summary>
+			public uint Size;
+			
+			/// <summary>
+			/// One or more of ::pspUmdTypes
+			/// </summary>
+			public pspUmdTypes Type;
+		}
+
+		/// <summary>
+		/// Get the disc info
+		/// </summary>
+		/// <param name="pspUmdInfo">A pointer to a ::pspUmdInfo struct</param>
+		/// <returns>Less than 0 on error</returns>
+		[HlePspFunction(NID = 0x340B7686, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceUmdGetDiscInfo(pspUmdInfo* pspUmdInfo)
+		{
+			//pspUmdInfo->Size = sizeof(pspUmdInfo);
+			pspUmdInfo->Type = pspUmdTypes.Game;
 			return 0;
 		}
 	}

@@ -55,7 +55,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.POS);
-				MipsMethodEmiter.CallMethod(this.GetType(), "_rotr");
+				
+				MipsMethodEmiter.CallMethod((Func<uint, int, uint>)CpuEmiter._rotr);
 			});
 			//$rd = ROTR($rt, $ps);
 		}
@@ -64,7 +65,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
-				MipsMethodEmiter.CallMethod(this.GetType(), "_rotr");
+				MipsMethodEmiter.CallMethod((Func<uint, int, uint>)CpuEmiter._rotr);
 			});
 		}
 
@@ -179,8 +180,16 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		unsafe static public void _divu_impl(CpuThreadState CpuThreadState, uint Left, uint Right)
 		{
-			CpuThreadState.LO = (int)(Left / Right);
-			CpuThreadState.HI = (int)(Left % Right);
+			if (Right == 0)
+			{
+				CpuThreadState.LO = 0;
+				CpuThreadState.HI = 0;
+			}
+			else
+			{
+				CpuThreadState.LO = (int)(Left / Right);
+				CpuThreadState.HI = (int)(Left % Right);
+			}
 		}
 
 		public void div() {

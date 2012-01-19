@@ -45,6 +45,7 @@ namespace CSPspEmu.Hle.Modules.utility
 				{
 					case PspUtilitySavedataMode.Autoload:
 					case PspUtilitySavedataMode.Load:
+					case PspUtilitySavedataMode.ListLoad:
 						try
 						{
 							PspMemory.WriteBytes(
@@ -65,6 +66,7 @@ namespace CSPspEmu.Hle.Modules.utility
 						break;
 					case PspUtilitySavedataMode.Autosave:
 					case PspUtilitySavedataMode.Save:
+					case PspUtilitySavedataMode.ListSave:
 						try
 						{
 							HleState.HleIoManager.HleIoWrapper.Mkdir(SavePathFolder, SceMode.All);

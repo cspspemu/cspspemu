@@ -310,7 +310,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				if (Prefix.SourceAbsolute(Index))
 				{
 					//MipsMethodEmiter.ILGenerator.Emit(OpCodes);
-					MipsMethodEmiter.CallMethod(typeof(MathFloat), "Abs");
+					MipsMethodEmiter.CallMethod((Func<float, float>)MathFloat.Abs);
 				}
 				if (Prefix.SourceNegate(Index))
 				{
@@ -382,13 +382,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 							{
 								MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (int)Min);
 								MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (int)Max);
-								MipsMethodEmiter.CallMethod(typeof(MathFloat), "ClampInt");
+								MipsMethodEmiter.CallMethod((Func<int, int, int, int>)MathFloat.ClampInt);
 							}
 							else
 							{
 								MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, Min);
 								MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, Max);
-								MipsMethodEmiter.CallMethod(typeof(MathFloat), "Clamp");
+								MipsMethodEmiter.CallMethod((Func<float, float, float, float>)MathFloat.Clamp);
 							}
 						}
 					}
@@ -615,7 +615,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		private void EmitLogFloatResult(bool Return = true)
 		{
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-			MipsMethodEmiter.CallMethod(typeof(CpuEmiter), "LogFloatResult");
+			MipsMethodEmiter.CallMethod((Func<float, CpuThreadState, float>)CpuEmiter.LogFloatResult);
 			if (!Return)
 			{
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Pop);

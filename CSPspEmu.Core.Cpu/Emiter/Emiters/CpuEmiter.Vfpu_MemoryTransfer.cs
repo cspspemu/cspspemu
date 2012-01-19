@@ -123,11 +123,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 			if (left)
 			{
-				MipsMethodEmiter.CallMethod(this.GetType(), "_lvl_svl_q");
+
+				MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmiter._lvl_svl_q);
 			}
 			else
 			{
-				MipsMethodEmiter.CallMethod(this.GetType(), "_lvr_svr_q");
+				MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmiter._lvr_svr_q);
 			}
 		}
 

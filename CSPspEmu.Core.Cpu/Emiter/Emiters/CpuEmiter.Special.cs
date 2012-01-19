@@ -36,7 +36,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			Console.Error.WriteLine("-------------------------------------------------------------------");
 			Console.Error.WriteLine("-- BREAK  ---------------------------------------------------------");
 			Console.Error.WriteLine("-------------------------------------------------------------------");
-			//throw(new Exception("Break!"));
+			throw(new Exception("Break!"));
 		}
 
 		public void _break() {

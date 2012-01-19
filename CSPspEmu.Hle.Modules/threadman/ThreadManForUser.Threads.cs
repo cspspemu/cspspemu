@@ -199,6 +199,18 @@ namespace CSPspEmu.Hle.Modules.threadman
 		}
 
 		/// <summary>
+		/// Cancel a thread that was to be woken with ::sceKernelWakeupThread.
+		/// </summary>
+		/// <param name="ThreadId">UID of the thread to cancel.</param>
+		/// <returns>Success if greater or equal than 0, an error if less  than 0.</returns>
+		[HlePspFunction(NID = 0xFCCFAD26, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelCancelWakeupThread(int ThreadId)
+		{
+			return 0;
+		}
+
+		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="ThreadId"></param>

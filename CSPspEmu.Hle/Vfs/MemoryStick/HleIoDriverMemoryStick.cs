@@ -22,6 +22,8 @@ namespace CSPspEmu.Hle.Vfs.MemoryStick
 			MScmRegisterMSInsertEjectCallback = 0x02415821,
 			MScmUnregisterMSInsertEjectCallback = 0x02415822,
 			GetMemoryStickCapacity = 0x02425818,
+			CheckMemoryStickIsInserted = 0x02025806,
+			CheckMemoryStickStatus = 0x02025801,
 		}
 
 		public struct SizeInfoStruct
@@ -94,6 +96,14 @@ namespace CSPspEmu.Hle.Vfs.MemoryStick
 				case CommandType.MScmUnregisterMSInsertEjectCallback:
 					// Ignore.
 					return 0;
+				case CommandType.CheckMemoryStickIsInserted:
+					*((uint*)OutputPointer) = 1;
+					return 0;
+				case CommandType.CheckMemoryStickStatus:
+					// 0 <- Busy
+					// 1 <- Ready
+					*((uint*)OutputPointer) = 1;
+					break;
 				default:
 					Console.Error.WriteLine("MemoryStick.IoDevctl Not Implemented! ({0}, 0x{1:X})", DeviceName, Command);
 					break;

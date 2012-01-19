@@ -58,6 +58,12 @@ namespace CSPspEmu.Runner.Components.Cpu
 		void RegisterDevices()
 		{
 			string MemoryStickRootFolder = Path.GetDirectoryName(Application.ExecutablePath) + "/ms";
+			if (MemoryStickRootFolder.Replace('\\', '/').EndsWith("CSPspEmu.Sandbox/bin/Debug/ms"))
+			{
+				MemoryStickRootFolder = Path.GetFullPath(MemoryStickRootFolder + "/../../../../ms");
+			}
+			//Console.Error.WriteLine(MemoryStickRootFolder);
+			//Console.ReadKey();
 			try { Directory.CreateDirectory(MemoryStickRootFolder); }
 			catch { }
 			/*

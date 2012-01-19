@@ -28,7 +28,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveVd(1, (Index) =>
 			{
 				MipsMethodEmiter.LoadGPR_Signed(RT);
-				MipsMethodEmiter.CallMethod(typeof(MathFloat), "ReinterpretIntAsFloat");
+				MipsMethodEmiter.CallMethod((Func<int, float>)MathFloat.ReinterpretIntAsFloat);
 			});
 		}
 		public void mtvc() { throw (new NotImplementedException("mtvc")); }
@@ -52,7 +52,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RT, () =>
 			{
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (int)(Instruction.IMM7 + 128));
-				MipsMethodEmiter.CallMethod(typeof(CpuEmiter), "_mfvc_impl");
+				MipsMethodEmiter.CallMethod((Func<VfpuControlRegistersEnum, uint>)CpuEmiter._mfvc_impl);
 			});
 		}
 

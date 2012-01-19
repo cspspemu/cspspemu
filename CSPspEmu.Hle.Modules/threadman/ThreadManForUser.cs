@@ -92,9 +92,10 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Time">Pointer to a ::SceKernelSysClock structure</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xDB738F35, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceKernelGetSystemTime(SceKernelSysClock* Time)
 		{
+			//Console.Error.WriteLine(sceKernelGetSystemTimeWide());
 			Time->MicroSeconds = sceKernelGetSystemTimeWide();
 			return 0;
 		}

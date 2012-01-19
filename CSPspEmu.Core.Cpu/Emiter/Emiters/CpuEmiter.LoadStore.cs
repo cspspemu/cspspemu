@@ -113,29 +113,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				MipsMethodEmiter.CallMethod(typeof(CpuEmiter), "_lwl_exec");
-
-				// int data = memory.read32(RS + SIMM16 & 0xFFFFFFFC);
-				/*
-				MipsMethodEmiter._getmemptr(() =>
-				{
-					MipsMethodEmiter.LoadGPR_Unsigned(RS);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xFFFFFFFC);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-				});
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I4);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, LwlShift[IMM & 3]);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shl);
-
-				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, LwlMask[IMM & 3]);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-
-				// OR
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
-				*/
+				MipsMethodEmiter.CallMethod((Func<CpuThreadState, uint, int, uint, uint>)CpuEmiter._lwl_exec);
 			});
 		}
 
@@ -150,28 +128,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
 				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				MipsMethodEmiter.CallMethod(typeof(CpuEmiter), "_lwr_exec");
-				/*
-				// int data = memory.read32(RS + SIMM16 & 0xFFFFFFFC);
-				MipsMethodEmiter._getmemptr(() =>
-				{
-					MipsMethodEmiter.LoadGPR_Unsigned(RS);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xFFFFFFFC);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-				});
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I4);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, LwrShift[IMM & 3]);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shr_Un);
-
-				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, LwrMask[IMM & 3]);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-
-				// OR
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
-				*/
+				MipsMethodEmiter.CallMethod((Func<CpuThreadState, uint, int, uint, uint>)CpuEmiter._lwr_exec);
 			});	
 		}
 
@@ -219,38 +176,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.LoadGPR_Unsigned(RS);
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
 			MipsMethodEmiter.LoadGPR_Unsigned(RT);
-			MipsMethodEmiter.CallMethod(typeof(CpuEmiter), "_swl_exec");
-			/*
-			MipsMethodEmiter._getmemptr(() =>
-			{
-				MipsMethodEmiter.LoadGPR_Unsigned(RS);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xFFFFFFFC);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-			});
-			{
-				{
-					MipsMethodEmiter.LoadGPR_Unsigned(RT);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, SwlShift[IMM & 3]);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shr_Un);
-
-					MipsMethodEmiter._getmemptr(() =>
-					{
-						MipsMethodEmiter.LoadGPR_Unsigned(RS);
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xFFFFFFFC);
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-					});
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I4);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, SwlMask[IMM & 3]);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-				}
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
-			}
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I4);
-			*/
+			MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint, int, uint>)CpuEmiter._swl_exec);
 		}
 
 
@@ -262,38 +188,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.LoadGPR_Unsigned(RS);
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
 			MipsMethodEmiter.LoadGPR_Unsigned(RT);
-			MipsMethodEmiter.CallMethod(typeof(CpuEmiter), "_swr_exec");
-			/*
-			MipsMethodEmiter._getmemptr(() =>
-			{
-				MipsMethodEmiter.LoadGPR_Unsigned(RS);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xFFFFFFFC);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-			});
-			{
-				{
-					MipsMethodEmiter.LoadGPR_Unsigned(RT);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, SwrShift[IMM & 3]);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shl);
-
-					MipsMethodEmiter._getmemptr(() =>
-					{
-						MipsMethodEmiter.LoadGPR_Unsigned(RS);
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, IMM);
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xFFFFFFFC);
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-					});
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I4);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, SwrMask[IMM & 3]);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
-				}
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
-			}
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I4);
-			*/
+			MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint, int, uint>)CpuEmiter._swr_exec);
 		}
 
 		// Load Linked word.
