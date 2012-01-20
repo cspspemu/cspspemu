@@ -136,14 +136,33 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// 
 		/// </summary>
 		/// <param name="sasCore"></param>
-		/// <param name="voice"></param>
-		/// <param name="env1Bitfield"></param>
-		/// <param name="env2Bitfield"></param>
+		/// <param name="Voice"></param>
+		/// <param name="Env1Bitfield"></param>
+		/// <param name="Env2Bitfield"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xCBCD4F79, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int __sceSasSetSimpleADSR(uint SasCorePointer, int voice, uint env1Bitfield, uint env2Bitfield)
+		public int __sceSasSetSimpleADSR(uint SasCorePointer, int Voice, ushort Env1Bitfield, ushort Env2Bitfield)
 		{
+			var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
+
+
+			// The bitfields represent every value except for the decay curve shape,
+			// which seems to be unchanged in simple mode.
+			/*
+			SasVoice.Envelope.SustainLevel = (int)((BitUtils.Extract(Env1Bitfield, 0, 4) + 1) << 26);
+			SasVoice.Envelope.DecayRate = (int)(0x80000000 >> (int)(BitUtils.Extract(Env1Bitfield, 4, 4));
+			SasVoice.Envelope.DecayCurveMode = AdsrCurveMode.PSP_SAS_ADSR_CURVE_MODE_EXPONENT_DECREASE;
+			SasVoice.Envelope.AttackRate = getSimpleAttackRate(env1Bitfield);
+			SasVoice.Envelope.AttackCurveMode = getSimpleAttackCurveType(env1Bitfield);
+
+
+			SasVoice.Envelope.ReleaseRate = getSimpleReleaseRate(env2Bitfield);
+			SasVoice.Envelope.ReleaseCurveMode = getSimpleReleaseCurveType(env2Bitfield);
+			SasVoice.Envelope.SustainRate = getSimpleSustainRate(env2Bitfield);
+			SasVoice.Envelope.SustainCurveMode = getSimpleSustainCurveType(env2Bitfield);
+			*/
+
 			//throw(new NotImplementedException());
 			return 0;
 		}

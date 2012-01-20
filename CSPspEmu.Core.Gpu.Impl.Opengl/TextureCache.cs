@@ -231,8 +231,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 				if (Texture == null || (!Texture.TextureCacheKey.Equals(TextureCacheKey)))
 				{
+					string TextureName = "texture_" + TextureCacheKey.TextureHash + "_" + TextureCacheKey.ClutHash + "_" + TextureFormat + "_" + ClutFormat + "_" + BufferWidth + "x" + Height + "_" + Swizzled;
 #if DEBUG_TEXTURE_CACHE
-					string TextureName = "texture_" + TextureCacheKey.TextureHash + "_" + TextureCacheKey.ClutHash + "_" + TextureFormat + "_" + ClutFormat + "_" + BufferWidth + "x" + Height;
 
 					Console.Error.WriteLine("UPDATE_TEXTURE(TEX={0},CLUT={1}:{2}:{3}:{4}:0x{5:X},SIZE={6}x{7},{8},Swizzled={9})", TextureFormat, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask, BufferWidth, Height, BufferWidth, Swizzled);
 #endif
@@ -265,6 +265,21 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 									ClutPointer, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask, StrideWidth: PixelFormatDecoder.GetPixelsSize(TextureFormat, TextureWidth)
 								);
 							}
+
+							/*
+							var Bitmap = new Bitmap(BufferWidth, Height);
+							BitmapUtils.TransferChannelsDataInterleaved(
+								Bitmap.GetFullRectangle(),
+								Bitmap,
+								(byte*)TexturePixelsPointer,
+								BitmapUtils.Direction.FromDataToBitmap,
+								BitmapChannel.Red,
+								BitmapChannel.Green,
+								BitmapChannel.Blue,
+								BitmapChannel.Alpha
+							);
+							Bitmap.Save(TextureName + ".png");
+							*/
 							
 #if DEBUG_TEXTURE_CACHE
 							var Bitmap = new Bitmap(BufferWidth, Height);

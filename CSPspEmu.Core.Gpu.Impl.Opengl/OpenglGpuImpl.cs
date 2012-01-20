@@ -18,6 +18,7 @@ using OpenTK.Platform;
 using System.Globalization;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
+using System.Diagnostics;
 //using Cloo;
 //using Cloo.Bindings;
 
@@ -252,18 +253,27 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			int TotalVerticesWithoutMorphing = VertexCount;
 
-			void* IndexAddress = Memory.PspAddressToPointerSafe(GpuState->IndexAddress);
+			//Console.Error.WriteLine("GpuState->IndexAddress: {0:X}", GpuState->IndexAddress);
+
+			// Invalid
+			if (GpuState->IndexAddress == 0xFFFFFFFF)
+			{
+				//Debug.Fail("Invalid IndexAddress");
+				throw (new Exception("Invalid IndexAddress == 0xFFFFFFFF"));
+			}
+
+			void* IndexPointer = Memory.PspAddressToPointerSafe(GpuState->IndexAddress);
 
 			switch (VertexType.Index)
 			{
 				case VertexTypeStruct.IndexEnum.Void:
 					break;
 				case VertexTypeStruct.IndexEnum.Byte:
-					Marshal.Copy(new IntPtr(IndexAddress), IndexListByte, 0, VertexCount);
+					Marshal.Copy(new IntPtr(IndexPointer), IndexListByte, 0, VertexCount);
 					TotalVerticesWithoutMorphing = IndexListByte.Take(VertexCount).Max() + 1;
 					break;
 				case VertexTypeStruct.IndexEnum.Short:
-					Marshal.Copy(new IntPtr(IndexAddress), IndexListShort, 0, VertexCount);
+					Marshal.Copy(new IntPtr(IndexPointer), IndexListShort, 0, VertexCount);
 					TotalVerticesWithoutMorphing = IndexListShort.Take(VertexCount).Max() + 1;
 					break;
 				default:

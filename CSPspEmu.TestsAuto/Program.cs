@@ -360,7 +360,7 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "vpl";
 				//WildCardFilter = "fpu";
 				//WildCardFilter = "umd_io";
-				WildCardFilter = "cpu/vfpu/base";
+				//WildCardFilter = "cpu/vfpu/base";
 				//WildCardFilter = "display";
 				//WildCardFilter = "cpu/vfpu/prefixes";
 				//WildCardFilter = "cpu";
@@ -385,7 +385,7 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "mutex";
 				//WildCardFilter = "vpl";
 				//WildCardFilter = "fpl";
-				//WildCardFilter = "gpu/triangle";
+				WildCardFilter = "gpu/triangle";
 				//WildCardFilter = "gpu";
 				//WildCardFilter = "umd/callbacks";
 				//WildCardFilter = "mstick";

@@ -195,6 +195,7 @@ namespace CSPspEmu.Hle.Managers
 
 		public unsafe void DeleteThread(HleThread Thread)
 		{
+			Thread.Stack.DeallocateFromParent();
 			ExitThread(Thread);
 		}
 

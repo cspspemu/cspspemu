@@ -204,6 +204,8 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 
 		public uint SampleOffset;
 
+		public SasEnvelope Envelope;
+
 		public SasVoice(int Index)
 		{
 			this.Index = Index;

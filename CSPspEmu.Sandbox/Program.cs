@@ -97,8 +97,13 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Puyo.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Exit.iso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Namco Museum Battle Collection.iso");
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Breath of Fire 3.cso", TraceSyscalls: false);
 
-				PspEmulator.StartAndLoad(@"F:\Isos\psp\Jak & Daxter - The Lost Frontier.cso");
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Jak & Daxter - The Lost Frontier.cso");
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Sims2.cso");
+
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);
+				PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Phantasia.cso", EnableMpeg: false);
 
 			// bltzal
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Kameleon.cso", TraceSyscalls: false);

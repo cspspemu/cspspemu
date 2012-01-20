@@ -204,7 +204,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			*outN = 0;
 			*outEnd = -1;
 			*outRemainFrame = -1;
-			//throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED));
+			throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED));
 			return 0;
 
 			/*
