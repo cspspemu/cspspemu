@@ -58,7 +58,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			PSP_NET_MODULE_SSL       = 7,
 		}
 
-		public enum PSP_AV_MODULE
+		public enum PSP_AV_MODULE : uint
 		{
 			PSP_AV_MODULE_AVCODEC    = 0,
 			PSP_AV_MODULE_SASCORE    = 1,
@@ -911,7 +911,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xC629AF26, FirmwareVersion = 200)]
 		[HlePspNotImplemented]
-		public int sceUtilityLoadAvModule(int _module)
+		public int sceUtilityLoadAvModule(PSP_AV_MODULE _module)
 		{
 			return 0;
 		}

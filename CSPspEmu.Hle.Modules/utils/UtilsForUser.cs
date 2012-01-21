@@ -228,13 +228,22 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// <summary>
 		/// Invalidate a range of addresses in instruction cache
 		/// </summary>
-		/// <param name="p"></param>
-		/// <param name="size"></param>
+		/// <param name="Address"></param>
+		/// <param name="Size"></param>
 		[HlePspFunction(NID = 0xC2DF770E, FirmwareVersion = 150)]
 		public void sceKernelIcacheInvalidateRange(CpuThreadState CpuThreadState, uint Address, uint Size)
 		{
 			CpuThreadState.CpuProcessor.sceKernelIcacheInvalidateRange(Address, Size);
 			// Unimplemented cache.	
+		}
+
+		/// <summary>
+		/// Invalidate the entire instruction cache
+		/// </summary>
+		[HlePspFunction(NID = 0x920F104A, FirmwareVersion = 150)]
+		public void sceKernelIcacheInvalidateAll(CpuThreadState CpuThreadState)
+		{
+			CpuThreadState.CpuProcessor.sceKernelIcacheInvalidateAll();
 		}
 
 		/// <summary>

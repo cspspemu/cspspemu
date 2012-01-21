@@ -38,6 +38,8 @@ namespace CSPspEmu.Hle.Modules.libfont
 				Params = *Params,
 			};
 
+			//*errorCode = 0;
+
 			return (FontLibraryHandle)FontLibraries.Create(FontLibrary);
 		}
 
@@ -69,6 +71,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 		[HlePspNotImplemented]
 		public FontHandle sceFontOpen(FontLibraryHandle libHandle, int index, int mode, uint* errorCode)
 		{
+			//*errorCode = 0;
 			return (FontHandle)0;
 			//throw (new NotImplementedException());
 			/*
@@ -202,6 +205,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 		[HlePspNotImplemented]
 		public int sceFontFindOptimumFont(FontLibraryHandle libHandle, FontStyle* fontStyle, uint* errorCode)
 		{
+			//*errorCode = 0;
 			return 0;
 			//throw(new NotImplementedException());
 			/*

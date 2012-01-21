@@ -322,8 +322,10 @@ namespace CSPspEmu.Hle.Loader
 
 		private void _UpdateModuleImports()
 		{
-			var ImportsStream = ElfLoader.MemoryStream.SliceWithBounds(ModuleInfo.ImportsStart + BaseAddress, ModuleInfo.ImportsEnd + BaseAddress);
-			var ExportsStream = ElfLoader.MemoryStream.SliceWithBounds(ModuleInfo.ExportsStart + BaseAddress, ModuleInfo.ExportsEnd + BaseAddress);
+			var BaseMemoryStream = ElfLoader.MemoryStream.SliceWithLength(BaseAddress);
+
+			var ImportsStream = BaseMemoryStream.SliceWithBounds(ModuleInfo.ImportsStart, ModuleInfo.ImportsEnd);
+			var ExportsStream = BaseMemoryStream.SliceWithBounds(ModuleInfo.ExportsStart, ModuleInfo.ExportsEnd);
 
 			var ModuleImports = ImportsStream.ReadStructVectorUntilTheEndOfStream<ElfPsp.ModuleImport>();
 			var ModuleExports = ExportsStream.ReadStructVectorUntilTheEndOfStream<ElfPsp.ModuleImport>();

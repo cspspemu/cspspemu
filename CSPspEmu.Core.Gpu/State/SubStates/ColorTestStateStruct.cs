@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Utils;
 
 namespace CSPspEmu.Core.Gpu.State.SubStates
 {
@@ -13,7 +14,7 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 		GU_NOTEQUAL,
 	}
 
-	public struct ColorTestStateStruct
+	unsafe public struct ColorTestStateStruct
 	{
 		/// <summary>
 		/// 
@@ -21,48 +22,18 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 		public bool Enabled;
 
 		/// <summary>
-		/// [0xFF, 0xFF, 0xFF, 0xFF]
+		/// 
 		/// </summary>
-		public byte RefRed;
+		public PixelFormatDecoder.OutputPixel Ref;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public byte RefGreen;
+		public PixelFormatDecoder.OutputPixel Mask;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public byte RefBlue;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public byte RefAlpha;
-
-		/// <summary>
-		/// [0xFF, 0xFF, 0xFF, 0xFF]
-		/// </summary>
-		public byte MaskRed;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public byte MaskGreen;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public byte MaskBlue;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public byte MaskAlpha;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public ColorTestFunctionEnum TestFunction;
+		public ColorTestFunctionEnum Function;
 	}
 }

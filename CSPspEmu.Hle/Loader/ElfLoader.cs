@@ -93,14 +93,35 @@ namespace CSPspEmu.Hle.Loader
 
 			AllocateMemory();
 			WriteToMemory();
+
+			((PspMemoryStream)MemoryStream).Memory.Dump("after_allocate_and_write_dump.bin");
 		}
 
 		protected void AllocateMemory()
 		{
+			uint Lowest = 0xFFFFFFFF;
+			uint Highest = 0;
 			foreach (var SectionHeader in SectionHeadersWithFlag(Elf.SectionHeader.FlagsSet.Allocate))
 			{
-				MemoryPartition.AllocateLowSize(SectionHeader.Address + BaseAddress, SectionHeader.Size);
+				/*
+				Console.WriteLine(
+					"AllocateLowSize:(0x{0:X}:0x{1:X}) : 0x{2:X} : {3}",
+					SectionHeader.Address,
+					SectionHeader.Address + BaseAddress,
+					SectionHeader.Size,
+					SectionHeader
+				);
+				*/
+				Lowest = Math.Min(Lowest, (uint)(BaseAddress + SectionHeader.Address));
+				Highest = Math.Max(Highest, (uint)(BaseAddress + SectionHeader.Address + SectionHeader.Size));
 			}
+			foreach (var ProgramHeader in ProgramHeaders)
+			{
+				Lowest = Math.Min(Lowest, (uint)(BaseAddress + ProgramHeader.VirtualAddress));
+				Highest = Math.Max(Highest, (uint)(BaseAddress + ProgramHeader.VirtualAddress + ProgramHeader.MemorySize));
+			}
+
+			MemoryPartition.AllocateLowHigh(Lowest, Highest);
 		}
 
 		protected void WriteToMemory()

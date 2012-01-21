@@ -345,8 +345,14 @@ namespace CSPspEmu.AutoTests
 			//Console.WriteLine(String.Join(" ", Arguments));
 			if (Debugger.IsAttached)
 			{
-				Console.SetWindowSize(160, 60);
-				Console.SetBufferSize(160, 2000);
+				try
+				{
+					Console.SetWindowSize(160, 60);
+					Console.SetBufferSize(160, 2000);
+				}
+				catch
+				{
+				}
 
 				//WildCardFilter = "intr";
 				//WildCardFilter = "umd";

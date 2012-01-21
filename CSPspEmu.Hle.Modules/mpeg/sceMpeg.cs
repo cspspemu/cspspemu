@@ -15,6 +15,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		{
 			get
 			{
+				//return true;
 				return HleState.PspConfig.EnableMpeg;
 			}
 		}

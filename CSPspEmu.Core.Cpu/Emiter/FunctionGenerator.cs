@@ -301,6 +301,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					//Console.ReadKey();
 				}
 				*/
+				/*
+				if (PC >= 0x881936C && PC <= 0x881936C)
+				{
+					MipsMethodEmiter.CallMethodWithCpuThreadStateAsFirstArgument(typeof(CpuProcessor), "DebugCurrentThread");
+				}
+				*/
 
 
 				/*

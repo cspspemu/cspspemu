@@ -240,6 +240,20 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private void PrepareState_Blend(GpuStateStruct* GpuState)
 		{
+			if (GpuState->ColorTestState.Enabled)
+			{
+				GlEnableDisable(EnableCap.Blend, true);
+				GL.BlendEquation(BlendEquationMode.FuncAdd);
+				GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+				GL.BlendColor(0, 0, 0, 0);
+
+				return;
+			}
+			else
+			{
+				GlEnableDisable(EnableCap.Blend, false);
+			}
+
 			var BlendingState = &GpuState->BlendingState;
 			if (!GlEnableDisable(EnableCap.Blend, BlendingState->Enabled))
 			{
@@ -365,7 +379,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
 			//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-			CurrentTexture = TextureCache.Get(TextureState, ClutState);
+			CurrentTexture = TextureCache.Get(GpuState);
 			CurrentTexture.Bind();
 
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)((TextureState->FilterMinification == TextureFilter.Linear) ? TextureMinFilter.Linear : TextureMinFilter.Nearest));

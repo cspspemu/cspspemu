@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Gpu.State.SubStates;
 
@@ -88,8 +89,8 @@ namespace CSPspEmu.Core.Gpu.Run
 		 *   - GU_ADD              - (Cs*Bs) + (Cd*Bd)
 		 *   - GU_SUBTRACT         - (Cs*Bs) - (Cd*Bd)
 		 *   - GU_REVERSE_SUBTRACT - (Cd*Bd) - (Cs*Bs)
-		 *   - GU_MIN              - Cs < Cd ? Cs : Cd
-		 *   - GU_MAX              - Cs < Cd ? Cd : Cs
+		 *   - GU_MIN              - Cs less Cd ? Cs : Cd
+		 *   - GU_MAX              - Cs less Cd ? Cd : Cs
 		 *   - GU_ABS              - |Cs-Cd|
 		 *
 		 * Available blending-functions are:
@@ -149,42 +150,45 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Pixel MasK Color
 		public void OP_PMSKC()
 		{
-			GpuState->BlendingState.ColorMaskR = Param8(0);
-			GpuState->BlendingState.ColorMaskG = Param8(8);
-			GpuState->BlendingState.ColorMaskB = Param8(16);
+			GpuState->BlendingState.ColorMask.R = Param8(0);
+			GpuState->BlendingState.ColorMask.G = Param8(8);
+			GpuState->BlendingState.ColorMask.B = Param8(16);
 			//Console.Error.WriteLine("OP_PMSKC");
 		}
 		// Pixel MasK Alpha
 		public void OP_PMSKA()
 		{
-			GpuState->BlendingState.ColorMaskA = Param8(0);
+			GpuState->BlendingState.ColorMask.A = Param8(0);
 		}
 
 		// ColorTeST
 		public void OP_CTST()
 		{
-			GpuState->ColorTestState.TestFunction = (ColorTestFunctionEnum)Extract(0, 2);
+			GpuState->ColorTestState.Function = (ColorTestFunctionEnum)Extract(0, 2);
 			//Console.Error.WriteLine("OP_CTST");
+			//Console.Error.WriteLine("CTST: {0}", GpuState->ColorTestState.ToStringDefault());
 		}
 
 		// Color REFerence
 		public void OP_CREF()
 		{
 			//Console.Error.WriteLine("OP_CREF");
-			GpuState->ColorTestState.RefRed = (byte)Extract(8 * 0, 8);
-			GpuState->ColorTestState.RefGreen = (byte)Extract(8 * 1, 8);
-			GpuState->ColorTestState.RefBlue = (byte)Extract(8 * 2, 8);
-			GpuState->ColorTestState.RefAlpha = 0xFF;
+			GpuState->ColorTestState.Ref.R = (byte)Extract(8 * 0, 8);
+			GpuState->ColorTestState.Ref.G = (byte)Extract(8 * 1, 8);
+			GpuState->ColorTestState.Ref.B = (byte)Extract(8 * 2, 8);
+			GpuState->ColorTestState.Ref.A = 0x00;
+			//Console.Error.WriteLine("CREF: {0}", GpuState->ColorTestState.ToStringDefault());
 		}
 
 		// Color MaSK
 		public void OP_CMSK()
 		{
 			//Console.Error.WriteLine("OP_CMSK");
-			GpuState->ColorTestState.MaskRed = (byte)Extract(8 * 0, 8);
-			GpuState->ColorTestState.MaskGreen = (byte)Extract(8 * 1, 8);
-			GpuState->ColorTestState.MaskBlue = (byte)Extract(8 * 2, 8);
-			GpuState->ColorTestState.MaskAlpha = 0xFF;
+			GpuState->ColorTestState.Mask.R = (byte)Extract(8 * 0, 8);
+			GpuState->ColorTestState.Mask.G = (byte)Extract(8 * 1, 8);
+			GpuState->ColorTestState.Mask.B = (byte)Extract(8 * 2, 8);
+			GpuState->ColorTestState.Mask.A = 0x00;
+			//Console.Error.WriteLine("CMSK: {0}", GpuState->ColorTestState.ToStringDefault());
 		}
 	}
 }

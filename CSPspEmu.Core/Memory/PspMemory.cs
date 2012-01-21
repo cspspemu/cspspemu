@@ -5,6 +5,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using CSharpUtils;
 using CSharpUtils.Extensions;
+using System.IO;
 
 namespace CSPspEmu.Core.Memory
 {
@@ -239,6 +240,16 @@ namespace CSPspEmu.Core.Memory
 				Address += WriteStringz(Address, String);
 			}
 			return Address - StartAddress;
+		}
+
+		public void Dump(string OutputFile)
+		{
+			using (var Stream = File.OpenWrite(OutputFile))
+			{
+				Stream.WriteStream(new PspMemoryStream(this).SliceWithBounds(MainSegment.Low, MainSegment.High - 1));
+				Stream.Flush();
+				Stream.Close();
+			}
 		}
 	}
 }

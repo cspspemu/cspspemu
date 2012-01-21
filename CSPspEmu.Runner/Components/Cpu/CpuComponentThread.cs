@@ -28,10 +28,11 @@ using System.Windows.Forms;
 using System.Threading;
 using CSPspEmu.Hle.Vfs.MemoryStick;
 using CSPspEmu.Hle.Vfs.Iso;
+using System.Diagnostics;
 
 namespace CSPspEmu.Runner.Components.Cpu
 {
-	sealed public class CpuComponentThread : ComponentThread
+	unsafe sealed public class CpuComponentThread : ComponentThread
 	{
 		protected override string ThreadName { get { return "CpuThread"; } }
 
@@ -245,25 +246,24 @@ namespace CSPspEmu.Runner.Components.Cpu
 				var ArgumentsPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(ArgumentsChunk.Length);
 				PspMemory.WriteBytes(ArgumentsPartition.Low, ArgumentsChunk);
 
-				uint argc = (uint)ArgumentsPartition.Size;
-				uint argv = (uint)ArgumentsPartition.Low;
-				//uint argv = CODE_PTR_ARGUMENTS;
+				var ThreadManForUser = HleState.ModuleManager.GetModule<ThreadManForUser>();
+				Debug.Assert(ThreadManForUser != null);
 
-				var MainThread = HleState.ThreadManager.Create();
-				var CpuThreadState = MainThread.CpuThreadState;
+
+				//var MainThread = HleState.ThreadManager.Create();
+				//var CpuThreadState = MainThread.CpuThreadState;
+				var CurrentCpuThreadState = new CpuThreadState(CpuProcessor);
 				{
-					CpuThreadState.PC = Loader.InitInfo.PC;
-					CpuThreadState.GP = Loader.InitInfo.GP;
-					CpuThreadState.SP = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Allocate(0x1000, MemoryPartition.Anchor.High, Alignment: 0x100).High;
-					CpuThreadState.K0 = MainThread.CpuThreadState.SP;
-					CpuThreadState.RA = HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD;
-					CpuThreadState.GPR[4] = (int)argc; // A0
-					CpuThreadState.GPR[5] = (int)argv; // A1
+					//CpuThreadState.PC = Loader.InitInfo.PC;
+					CurrentCpuThreadState.GP = Loader.InitInfo.GP;
+
+					int ThreadId = (int)ThreadManForUser.sceKernelCreateThread(CurrentCpuThreadState, "<EntryPoint>", Loader.InitInfo.PC, 10, 0x1000, PspThreadAttributes.ClearStack, null);
+					ThreadManForUser._sceKernelStartThread(CurrentCpuThreadState, ThreadId, ArgumentsPartition.Size, ArgumentsPartition.Low);
 				}
-				CpuThreadState.DumpRegisters();
+				CurrentCpuThreadState.DumpRegisters();
 				HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Dump();
 					
-				MainThread.CurrentStatus = HleThread.Status.Ready;
+				//MainThread.CurrentStatus = HleThread.Status.Ready;
 			}
 		}
 
@@ -360,10 +360,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 
 							var Memory = HleState.MemoryManager.Memory;
 
-							var Stream = File.OpenWrite("error_memorydump.bin");
-							Stream.WriteStream(new PspMemoryStream(Memory).SliceWithBounds(Memory.MainSegment.Low, Memory.MainSegment.High - 1));
-							Stream.Flush();
-							Stream.Close();
+							Memory.Dump("error_memorydump.bin");
 						}
 						catch (Exception Exception2)
 						{

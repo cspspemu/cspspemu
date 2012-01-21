@@ -10,6 +10,24 @@ namespace CSPspEmu.Hle.Modules.threadman
 {
 	unsafe public partial class ThreadManForUser
 	{
+		public enum FplAttributes : uint
+		{
+			/// <summary>
+			/// 
+			/// </summary>
+			PSP_FPL_ATTR_FIFO = 0,
+
+			/// <summary>
+			/// 
+			/// </summary>
+			PSP_FPL_ATTR_PRIORITY = 0x100,
+			
+			/// <summary>
+			/// Create the fpl in high memory.
+			/// </summary>
+			PSP_FPL_ATTR_ADDR_HIGH = 0x4000,
+		}
+
 		public struct FplOptionsStruct
 		{
 			public int StructSize;
@@ -28,7 +46,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			public HleMemoryManager MemoryManager;
 			public string Name;
 			public HleMemoryManager.Partitions PartitionId;
-			public int Attributes;
+			public FplAttributes Attributes;
 			public int BlockSize;
 			public int NumberOfBlocks;
 			public MemoryPartition MemoryPartition;
@@ -40,9 +58,24 @@ namespace CSPspEmu.Hle.Modules.threadman
 			public void Init()
 			{
 				var Alignment = Options.Alignment;
-				if (Alignment == 0) Alignment = 1;
+				if (Alignment == 0) Alignment = 4;
+				//if (Alignment == 0) Alignment = 0x1000;
+				if (Attributes != (FplAttributes)0)
+				{
+					Console.Error.WriteLine("FPL: Unhandled Attribute : {0}", Attributes);
+					//throw (new NotImplementedException());
+				}
 				var Partition = MemoryManager.GetPartition(PartitionId);
+
+				//var TEST_FIXED_ADDRESS = 0x08800000U;
+				//var TEST_FIXED_ADDRESS = 0x08865980U;
+				//var TEST_FIXED_ADDRESS = 0x088A0000U;
+				//this.MemoryPartition = Partition.Allocate(NumberOfBlocks * BlockSize, Hle.MemoryPartition.Anchor.Set, TEST_FIXED_ADDRESS, Alignment);
+				//Partition.Dump();
+
 				this.MemoryPartition = Partition.Allocate(NumberOfBlocks * BlockSize, Hle.MemoryPartition.Anchor.Low, 0, Alignment);
+
+				//Console.Error.WriteLine("FixedPool.Init: 0x{0:X}", this.MemoryPartition.Low);
 				this.FreeBlocks = new List<uint>();
 				this.UsedBlocks = new List<uint>();
 				this.WaitItemList = new List<WaitItem>();
@@ -50,6 +83,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 				{
 					this.FreeBlocks.Add(GetAddressFromBlockIndex(n));
 				}
+
 
 				//Console.Error.WriteLine(this);
 			}
@@ -87,8 +121,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 					var AllocatedBlock = FreeBlocks.First();
 					FreeBlocks.Remove(AllocatedBlock);
 					UsedBlocks.Add(AllocatedBlock);
-					//Console.Error.WriteLine("TryAllocate(0x{0:X})", AllocatedBlock);
-					*DataPointer = AllocatedBlock;
+					Console.Error.WriteLine("TryAllocate(0x{0:X})", AllocatedBlock);
+					DataPointer->Address = AllocatedBlock;
 
 					return true;
 				}
@@ -141,7 +175,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Options">Options (set to NULL)</param>
 		/// <returns>The UID of the created pool, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xC07BB470, FirmwareVersion = 150)]
-		public PoolId sceKernelCreateFpl(string Name, HleMemoryManager.Partitions PartitionId, int Attributes, int BlockSize, int NumberOfBlocks, FplOptionsStruct* Options)
+		[HlePspNotImplemented]
+		public PoolId sceKernelCreateFpl(string Name, HleMemoryManager.Partitions PartitionId, FplAttributes Attributes, int BlockSize, int NumberOfBlocks, FplOptionsStruct* Options)
 		{
 			var FixedPool = new FixedPool()
 			{
@@ -166,6 +201,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="DataPointerPointer">Receives the address of the allocated data</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x623AE665, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceKernelTryAllocateFpl(PoolId PoolId, PspPointer* DataPointer)
 		{
 			var FixedPool = FixedPoolList.Get(PoolId);
@@ -185,10 +221,13 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Timeout">Amount of time to wait for allocation?</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xD979E9BF, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceKernelAllocateFpl(PoolId PoolId, PspPointer* DataPointer, uint* Timeout)
 		{
 			var FixedPool = FixedPoolList.Get(PoolId);
 			FixedPool.Allocate(DataPointer, Timeout, HandleCallbacks: false);
+
+			//Console.WriteLine("Allocated: Address: 0x{0:X}", DataPointer->Address);
 			return 0;
 		}
 
@@ -202,6 +241,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xF6414A71, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceKernelFreeFpl(PoolId PoolId, PspPointer DataPointer)
 		{
 			var FixedPool = FixedPoolList.Get(PoolId);
@@ -218,6 +258,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xED1410E0, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceKernelDeleteFpl(PoolId PoolId)
 		{
 			FixedPoolList.Remove(PoolId);

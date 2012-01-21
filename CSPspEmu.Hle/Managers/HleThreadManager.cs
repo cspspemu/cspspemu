@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define DISABLE_CALLBACKS
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -111,10 +113,12 @@ namespace CSPspEmu.Hle.Managers
 			//HleInterruptManager.EnableDisable(() => {
 			//});
 
+#if !DISABLE_CALLBACKS
 			if (Threads.Count > 0)
 			{
 				HleInterruptManager.ExecuteQueued(Threads.First().CpuThreadState);
 			}
+#endif
 
 			// Select the thread with the lowest PriorityValue
 			var NextThread = CalculateNext();
@@ -142,7 +146,9 @@ namespace CSPspEmu.Hle.Managers
 						Thread.Sleep(1);
 					}
 					*/
+#if !DISABLE_CALLBACKS
 					HleCallbackManager.ExecuteQueued(Current.CpuThreadState, MustReschedule);
+#endif
 				}
 				// Executing normally.
 				else

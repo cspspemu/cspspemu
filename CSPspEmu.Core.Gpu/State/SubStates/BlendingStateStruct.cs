@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Utils;
 
 namespace CSPspEmu.Core.Gpu.State.SubStates
 {
@@ -40,21 +41,6 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 		/// <summary>
 		/// 
 		/// </summary>
-		public byte ColorMaskR;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public byte ColorMaskG;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public byte ColorMaskB;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public byte ColorMaskA;
+		public PixelFormatDecoder.OutputPixel ColorMask;
 	}
 }

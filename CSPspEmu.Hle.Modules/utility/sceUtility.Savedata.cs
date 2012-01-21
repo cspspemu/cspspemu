@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -86,9 +87,20 @@ namespace CSPspEmu.Hle.Modules.utility
 							throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_SAVE_ACCESS_ERROR));
 						}
 						break;
+					case PspUtilitySavedataMode.GetSize:
+						//Params->DataSize
+						//throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_RW_NO_MEMSTICK));
+						//throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_RW_NO_DATA));
+						break;
+					case PspUtilitySavedataMode.Read:
+					case PspUtilitySavedataMode.ReadSecure:
+						//throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_RW_NO_DATA));
+						break;
 					default:
 						Console.Error.WriteLine("sceUtilitySavedataInitStart: Unsupported mode: " + Params->Mode);
-						break;
+						Debug.Fail("sceUtilitySavedataInitStart: Unsupported mode: " + Params->Mode);
+						throw (new SceKernelException((SceKernelErrors)(-1)));
+						//break;
 				}
 				//throw(new NotImplementedException());
 

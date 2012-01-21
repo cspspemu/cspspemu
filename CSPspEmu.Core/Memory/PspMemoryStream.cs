@@ -9,7 +9,7 @@ namespace CSPspEmu.Core.Memory
 	unsafe public class PspMemoryStream : Stream
 	{
 		protected uint _Position;
-		protected PspMemory Memory;
+		public PspMemory Memory { get; protected set; }
 
 		public PspMemoryStream(PspMemory Memory)
 		{

@@ -49,9 +49,6 @@ namespace CSPspEmu.Hle.Modules.ge
 					if (Args != null)
 					{
 						DisplayList.GpuStateStructPointer = (GpuStateStruct*)HleState.CpuProcessor.Memory.PspAddressToPointer(Args[0].GpuStateStructAddress);
-
-
-						//throw(new NotImplementedException());
 					}
 
 					if (DisplayList.GpuStateStructPointer == null)

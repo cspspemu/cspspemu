@@ -35,6 +35,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x446D8DE6, FirmwareVersion = 150)]
 		public uint sceKernelCreateThread(CpuThreadState CpuThreadState, string Name, uint /*SceKernelThreadEntry*/ EntryPoint, int InitPriority, int StackSize, PspThreadAttributes Attribute, SceKernelThreadOptParam* Option)
 		{
+			// 512 byte min. (required for interrupts)
+			StackSize = Math.Max(StackSize, 0x200);
+			// Aligned to 256 bytes.
+			StackSize = (int)MathUtils.NextAligned(StackSize, 0x100);
+
 			var Thread = HleState.ThreadManager.Create();
 			Thread.Name = Name;
 			Thread.Info.PriorityCurrent = InitPriority;
@@ -42,9 +47,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Thread.Attribute = Attribute;
 			Thread.GP = CpuThreadState.GP;
 			Thread.Info.EntryPoint = (SceKernelThreadEntry)EntryPoint;
-			Thread.Stack = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Allocate(StackSize, MemoryPartition.Anchor.High, Alignment: 0x100);
-			//Thread.Stack = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(StackSize, MemoryPartition.Anchor.High, Alignment: 0x100);
-			//Thread.Stack = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel1).Allocate(StackSize, MemoryPartition.Anchor.High, Alignment: 0x100);
+			//Thread.Stack = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Allocate(StackSize, MemoryPartition.Anchor.High, Alignment: 0x100);
+			Thread.Stack = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(StackSize, MemoryPartition.Anchor.High, Alignment: 0x100);
+			//Thread.Stack = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.UserStacks).Allocate(StackSize, MemoryPartition.Anchor.High, Alignment: 0x100);
 
 			if (!Thread.Attribute.HasFlag(PspThreadAttributes.NoFillStack))
 			{
@@ -58,16 +63,61 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			// Used K0 from parent thread.
 			// @FAKE. K0 should be preserved between thread calls. Though probably not modified by user modules.
-			Thread.CpuThreadState.CopyRegistersFrom(HleState.ThreadManager.Current.CpuThreadState);
+			if (HleState.ThreadManager.Current != null)
+			{
+				Thread.CpuThreadState.CopyRegistersFrom(HleState.ThreadManager.Current.CpuThreadState);
+			}
 
 			Thread.CpuThreadState.PC = (uint)EntryPoint;
 			Thread.CpuThreadState.RA = (uint)HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD;
 			Thread.CurrentStatus = HleThread.Status.Stopped;
 			//Thread.CpuThreadState.RA = (uint)0;
 
+
+			uint StackLow = Thread.Stack.Low;
+			uint SP = Thread.Stack.High - 0x200;
+			uint K0 = Thread.Stack.High - 0x100;
+
+			CpuThreadState.CpuProcessor.Memory.WriteStruct(StackLow, Thread.Id);
+			CpuThreadState.CpuProcessor.Memory.WriteRepeated1(0x00, K0, 0x100);
+			CpuThreadState.CpuProcessor.Memory.WriteStruct(K0 + 0xC0, StackLow);
+			CpuThreadState.CpuProcessor.Memory.WriteStruct(K0 + 0xCA, Thread.Id);
+			CpuThreadState.CpuProcessor.Memory.WriteStruct(K0 + 0xF8, 0xFFFFFFFF);
+			CpuThreadState.CpuProcessor.Memory.WriteStruct(K0 + 0xFC, 0xFFFFFFFF);
+
+			Thread.CpuThreadState.SP = SP;
+			//ThreadToStart.CpuThreadState.FP = 0xDEADBEEF;
+			Thread.CpuThreadState.K0 = K0;
+
 			//Console.WriteLine("STACK: {0:X}", Thread.CpuThreadState.SP);
 
 			return (uint)Thread.Id;
+		}
+
+		public void _sceKernelStartThread(CpuThreadState CpuThreadState, int ThreadId, int UserDataLength, uint UserDataPointer)
+		{
+			var ThreadToStart = GetThreadById((int)ThreadId);
+			//Console.WriteLine("LEN: {0:X}", ArgumentsLength);
+			//Console.WriteLine("PTR: {0:X}", ArgumentsPointer);
+
+			var CopiedDataAddress = (uint)((ThreadToStart.Stack.High - 0x100) - ((UserDataLength + 0xF) & ~0xF));
+
+			if (UserDataPointer == 0)
+			{
+				ThreadToStart.CpuThreadState.GPR[4] = 0;
+				ThreadToStart.CpuThreadState.GPR[5] = 0;
+			}
+			else
+			{
+				CpuThreadState.CpuProcessor.Memory.Copy(UserDataPointer, CopiedDataAddress, UserDataLength);
+				ThreadToStart.CpuThreadState.GPR[4] = (int)UserDataLength;
+				ThreadToStart.CpuThreadState.GPR[5] = (int)CopiedDataAddress;
+			}
+
+			ThreadToStart.CpuThreadState.GP = (uint)CpuThreadState.GP;
+			ThreadToStart.CpuThreadState.SP = (uint)(CopiedDataAddress - 0x40);
+
+			ThreadToStart.CurrentStatus = HleThread.Status.Ready;
 		}
 
 		/// <summary>
@@ -81,24 +131,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelStartThread(CpuThreadState CpuThreadState, int ThreadId, int UserDataLength, uint UserDataPointer)
 		{
 			var ThreadToStart = GetThreadById((int)ThreadId);
-			//Console.WriteLine("LEN: {0:X}", ArgumentsLength);
-			//Console.WriteLine("PTR: {0:X}", ArgumentsPointer);
-
-			var CopiedDataAddress = (uint)((ThreadToStart.Stack.High - 0x100) - ((UserDataLength + 0xF) & ~0xF));
-
-			if (UserDataPointer == 0) {
-				ThreadToStart.CpuThreadState.GPR[4] = 0;
-				ThreadToStart.CpuThreadState.GPR[5] = 0;
-			} else {
-				CpuThreadState.CpuProcessor.Memory.Copy(UserDataPointer, CopiedDataAddress, UserDataLength);
-				ThreadToStart.CpuThreadState.GPR[4] = (int)UserDataLength;
-				ThreadToStart.CpuThreadState.GPR[5] = (int)CopiedDataAddress;
-			}
-
-			ThreadToStart.CpuThreadState.GP = (uint)CpuThreadState.GP;
-			ThreadToStart.CpuThreadState.SP = (uint)(CopiedDataAddress - 0x40);
-
-			ThreadToStart.CurrentStatus = HleThread.Status.Ready;
+			_sceKernelStartThread(CpuThreadState, ThreadId, UserDataLength, UserDataPointer);
 
 			// Schedule new thread?
 			HleState.ThreadManager.ScheduleNext(ThreadToStart);

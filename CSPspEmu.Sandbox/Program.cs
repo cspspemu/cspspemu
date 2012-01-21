@@ -51,8 +51,14 @@ namespace CSPspEmu.Sandbox
 			Console.OutputEncoding = Encoding.UTF8;
 
 #if !RELEASE
-			Console.SetWindowSize(160, 60);
-			Console.SetBufferSize(160, 2000);
+			try
+			{
+				Console.SetWindowSize(160, 60);
+				Console.SetBufferSize(160, 2000);
+			}
+			catch
+			{
+			}
 #endif
 
 			var PspEmulator = new PspEmulator();
@@ -103,28 +109,40 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Sims2.cso");
 
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);
-				PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Phantasia.cso", EnableMpeg: false);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Phantasia.cso", EnableMpeg: false);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Skate Park City.cso");
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Outrun 2006.cso");
+				PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false, EnableMpeg: false);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Castlevania.cso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Jeanne d'Arc.iso", TraceSyscalls: true, EnableMpeg: false);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\TestInput\minifire.elf", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\gu\text\gufont.elf");
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\DragonBall Z Shin Budokai.cso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\PSPTris\EBOOT.PBP");
+				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\TrigWars\EBOOT.PBP", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Valkyrie Profile.cso", EnableMpeg: false, TraceSyscalls: true);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\valkyria profile\BOOT.BIN", EnableMpeg: false, TraceSyscalls: true);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Prince.cso");
 
 			// bltzal
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Kameleon.cso", TraceSyscalls: false);
 
 			// API: Not Implemented
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Jeanne d'Arc.iso", TraceSyscalls: true, EnableMpeg: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Skate Park City.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Patapon.cso");
 
 			// Memory: Invalid Address
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Castlevania.cso", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Valkyrie Profile.cso", EnableMpeg: false, TraceSyscalls: true);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Downstream Panic.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Call of Duty - Roads of Victory.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Jeanne d'Arc.iso", TraceSyscalls: true, EnableMpeg: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\DragonBall Z Shin Budokai.cso", TraceSyscalls: true);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Loco Roco.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Prince.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Ape Academy.cso");
+				
 
 			// VFPU
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Castlevania.cso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Vallhala Knights.iso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Outrun 2006.cso");
 
@@ -153,6 +171,8 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Puzzler Collection.iso");
 
 			// Black. Loop
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Ape Academy.cso", TraceSyscalls: true);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Valkyrie Profile.cso", EnableMpeg: false, TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Need for Speed Most Wanted.cso", EnableMpeg: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Naruto Nultimate Portable.cso", EnableMpeg: false, TraceSyscalls: true);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Final Fantasy Tactics.iso", TraceSyscalls: false);

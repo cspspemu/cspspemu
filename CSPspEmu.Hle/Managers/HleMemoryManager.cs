@@ -46,6 +46,8 @@ namespace CSPspEmu.Hle.Managers
 			Kernel0 = 0,
 			Kernel1 = 1,
 			User = 2,
+			VolatilePartition = 3,
+			UserStacks = 12,
 		}
 
 		//public MemoryPartition RootPartition = new MemoryPartition(PspMemory.MainOffset, PspMemory.MainOffset + PspMemory.MainSize);
@@ -59,11 +61,13 @@ namespace CSPspEmu.Hle.Managers
 
 		public HleMemoryManager(PspMemory Memory)
 		{
+			// Volatile Partition: 0x08400000
 #if true
 				MemoryPartitionsUid.Set(0, new MemoryPartition(Low: 0x88000000, High: 0x88300000, Allocated: false, Name: "Kernel Partition 1")); // 3MB
 				MemoryPartitionsUid.Set(1, new MemoryPartition(Low: 0x88300000, High: 0x88400000, Allocated: false, Name: "Kernel Partition 2")); // 1MB
 				//MemoryPartitionsUid.Set(2, new MemoryPartition(Low: 0x08800000, High: 0x0A000000, Allocated: false, Name: "User Partition")); // 24MB
 				MemoryPartitionsUid.Set(2, new MemoryPartition(Low: 0x08800000, High: 0x0B000000, Allocated: false, Name: "User Partition")); // 24MB
+				MemoryPartitionsUid.Set(12, new MemoryPartition(Low: 0x08800000, High: 0x0B000000, Allocated: false, Name: "User Stacks Partition")); // 24MB
 				MemoryPartitionsUid.Set(3, new MemoryPartition(Low: 0x08400000, High: 0x08800000, Allocated: false, Name: "Volatile Partition")); // 4MB
 				MemoryPartitionsUid.Set(4, new MemoryPartition(Low: 0x8A000000, High: 0x8BC00000, Allocated: false, Name: "UMD Cache Partition")); // 28MB
 				MemoryPartitionsUid.Set(5, new MemoryPartition(Low: 0x8BC00000, High: 0x8C000000, Allocated: false, Name: "ME Partition")); // 4MB

@@ -15,6 +15,7 @@ using CSharpUtils.Extensions;
 using System.Drawing;
 using System.Runtime.ExceptionServices;
 using System.Threading;
+using CSPspEmu.Core.Gpu.State;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
@@ -129,6 +130,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		public int ClutShift;
 		public int ClutMask;
 		public bool Swizzled;
+		public bool ColorTestEnabled;
+		public PixelFormatDecoder.OutputPixel ColorTestRef;
+		public PixelFormatDecoder.OutputPixel ColorTestMask;
+		public ColorTestFunctionEnum ColorTestFunction;
 
 		public override string ToString()
 		{
@@ -150,8 +155,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			PspMemory = PspEmulatorContext.GetInstance<PspMemory>();
 		}
 
-		public Texture Get(TextureStateStruct* TextureState, ClutStateStruct* ClutState)
+		public Texture Get(GpuStateStruct *GpuState)
 		{
+			var TextureMappingState = &GpuState->TextureMappingState;
+			var ClutState = &TextureMappingState->ClutState;
+			var TextureState = &TextureMappingState->TextureState;
+
 			Texture Texture;
 			//GC.Collect();
 			bool Swizzled = TextureState->Swizzled;
@@ -227,6 +236,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					ClutShift = ClutShift,
 					ClutMask = ClutMask,
 					Swizzled = Swizzled,
+
+					ColorTestEnabled = GpuState->ColorTestState.Enabled,
+					ColorTestRef = GpuState->ColorTestState.Ref,
+					ColorTestMask = GpuState->ColorTestState.Mask,
+					ColorTestFunction = GpuState->ColorTestState.Function,
 				};
 
 				if (Texture == null || (!Texture.TextureCacheKey.Equals(TextureCacheKey)))
@@ -243,6 +257,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 						//int TextureHeight = Math.Max(BufferWidth, Height);
 						int TextureWidth = BufferWidth;
 						int TextureHeight = Height;
+						int TextureWidthHeight = TextureWidth * TextureHeight;
 
 						fixed (PixelFormatDecoder.OutputPixel* TexturePixelsPointer = DecodedTextureBuffer)
 						{
@@ -264,6 +279,43 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 									TextureFormat, (void*)TexturePointer, TexturePixelsPointer, BufferWidth, Height,
 									ClutPointer, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask, StrideWidth: PixelFormatDecoder.GetPixelsSize(TextureFormat, TextureWidth)
 								);
+							}
+
+							if (TextureCacheKey.ColorTestEnabled)
+							{
+								byte EqualValue, NotEqualValue;
+
+								switch (TextureCacheKey.ColorTestFunction)
+								{
+									case ColorTestFunctionEnum.GU_ALWAYS: EqualValue = 0xFF; NotEqualValue = 0xFF; break;
+									case ColorTestFunctionEnum.GU_NEVER: EqualValue = 0x00; NotEqualValue = 0x00; break;
+									case ColorTestFunctionEnum.GU_EQUAL: EqualValue = 0xFF; NotEqualValue = 0x00; break;
+									case ColorTestFunctionEnum.GU_NOTEQUAL: EqualValue = 0x00; NotEqualValue = 0xFF; break;
+									default: throw(new NotImplementedException());
+								}
+
+								ConsoleUtils.SaveRestoreConsoleState(() =>
+								{
+									Console.BackgroundColor = ConsoleColor.Red;
+									Console.ForegroundColor = ConsoleColor.Yellow;
+									Console.Error.WriteLine("{0} : {1}, {2} : ref:{3} : mask:{4}", TextureCacheKey.ColorTestFunction, EqualValue, NotEqualValue, TextureCacheKey.ColorTestRef, TextureCacheKey.ColorTestMask);
+								});
+
+								for (int n = 0; n < TextureWidthHeight; n++)
+								{
+									if ((TexturePixelsPointer[n] & TextureCacheKey.ColorTestMask).Equals((TextureCacheKey.ColorTestRef & TextureCacheKey.ColorTestMask)))
+									{
+										TexturePixelsPointer[n].A = EqualValue;
+									}
+									else
+									{
+										TexturePixelsPointer[n].A = NotEqualValue;
+									}
+									if (TexturePixelsPointer[n].A == 0)
+									{
+										//Console.Write("yup!");
+									}
+								}
 							}
 
 							/*

@@ -397,8 +397,8 @@ namespace CSPspEmu.Hle
 		public override string ToString()
 		{
 			var Ret = String.Format(
-				"HleThread(Id={0}, PC=0x{4:X}, LastValidPC=0x{5:X}, Name='{1}', Status={2}, WaitCount={3}",
-				Id, Name, CurrentStatus, YieldCount, CpuThreadState.PC, CpuThreadState.LastValidPC
+				"HleThread(Id={0}, PC=0x{4:X}, LastValidPC=0x{5:X}, SP=0x{6:X}, Name='{1}', Status={2}, WaitCount={3}",
+				Id, Name, CurrentStatus, YieldCount, CpuThreadState.PC, CpuThreadState.LastValidPC, CpuThreadState.SP
 			);
 			switch (CurrentStatus)
 			{
