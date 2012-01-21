@@ -38,6 +38,7 @@ void testThreads() {
 		// before it changes its value.
 		sceKernelStartThread(
 			sceKernelCreateThread("Test Thread", (void *)&threadFunction, 0x12, 0x10000, 0, NULL),
+			//sizeof(n), &n
 			n, &n
 		);
 	}
