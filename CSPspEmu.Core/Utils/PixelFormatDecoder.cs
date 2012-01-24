@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using CSharpUtils;
 using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Utils
@@ -11,45 +12,6 @@ namespace CSPspEmu.Core.Utils
 	{
 		internal PixelFormatDecoder()
 		{
-		}
-
-		public struct OutputPixel
-		{
-			public byte R, G, B, A;
-			//public byte B, G, R, A;
-
-			public override string ToString()
-			{
-				return String.Format("RGBA({0},{1},{2},{3})", R, G, B, A);
-			}
-
-			public static OutputPixel operator &(OutputPixel c1, OutputPixel c2)
-			{
-				return new OutputPixel()
-				{
-					R = (byte)(c1.R & c2.R),
-					G = (byte)(c1.G & c2.G),
-					B = (byte)(c1.B & c2.B),
-					A = (byte)(c1.A & c2.A),
-				};
-			}
-
-			public static bool operator ==(OutputPixel c1, OutputPixel c2)
-			{
-				return (
-					(c1.R == c2.R) &&
-					(c1.G == c2.G) &&
-					(c1.B == c2.B) &&
-					(c1.A == c2.A)
-				);
-			}
-
-			public static bool operator !=(OutputPixel c1, OutputPixel c2)
-			{
-				return !(c1 == c2);
-			}
-
-			public int CheckSum { get { return (int)R + (int)G + (int)B + (int)A; } }
 		}
 
 		public struct Dxt1Block { }
@@ -65,6 +27,11 @@ namespace CSPspEmu.Core.Utils
 			// Compressed
 			1, 1, 1
 		};
+
+		static public int GetPixelsBits(GuPixelFormats PixelFormat)
+		{
+			return (int)(Sizes[(int)PixelFormat] * 8);
+		}
 
 		static public int GetPixelsSize(GuPixelFormats PixelFormat, int PixelCount)
 		{
@@ -85,6 +52,23 @@ namespace CSPspEmu.Core.Utils
 		int PaletteShift;
 		int PaletteMask;
 		int StrideWidth;
+
+		static public uint EncodePixel(GuPixelFormats PixelFormat, OutputPixel Color)
+		{
+			switch (PixelFormat)
+			{
+				case GuPixelFormats.RGBA_8888: return ColorFormats.RGBA_8888.Encode(Color.R, Color.G, Color.B, Color.A);
+				case GuPixelFormats.RGBA_5551: return ColorFormats.RGBA_5551.Encode(Color.R, Color.G, Color.B, Color.A);
+				case GuPixelFormats.RGBA_5650: return ColorFormats.RGBA_5650.Encode(Color.R, Color.G, Color.B, Color.A);
+				case GuPixelFormats.RGBA_4444: return ColorFormats.RGBA_4444.Encode(Color.R, Color.G, Color.B, Color.A);
+				default: throw(new NotImplementedException("Not implemented " + PixelFormat));
+			}
+		}
+
+		static public OutputPixel DecodePixel(GuPixelFormats PixelFormat, uint Value)
+		{
+			throw new NotImplementedException();
+		}
 
 		static public void Decode(GuPixelFormats PixelFormat, void* Input, OutputPixel* Output, int Width, int Height, void* Palette = null, GuPixelFormats PaletteType = GuPixelFormats.NONE, int PaletteCount = 0, int PaletteStart = 0, int PaletteShift = 0, int PaletteMask = 0xFF, int StrideWidth = -1, bool IgnoreAlpha = false)
 		{

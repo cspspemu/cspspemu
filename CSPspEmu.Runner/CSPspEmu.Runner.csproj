@@ -85,6 +85,10 @@
       <Project>{288af89e-b41a-4253-a8f7-43d1371516e9}</Project>
       <Name>CSPspEmu.Hle</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Resources\CSPspEmu.Resources.csproj">
+      <Project>{ba3187fa-a2a1-43e0-9fdd-69b377ee3152}</Project>
+      <Name>CSPspEmu.Resources</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -41,6 +41,6 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 		/// <summary>
 		/// 
 		/// </summary>
-		public PixelFormatDecoder.OutputPixel ColorMask;
+		public OutputPixel ColorMask;
 	}
 }

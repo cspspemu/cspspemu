@@ -44,7 +44,10 @@ namespace CSPspEmu.Hle.Loader
 
 			if (this.ElfLoader.NeedsRelocation)
 			{
-				var DummyPartition = MemoryPartition.Allocate(0x4000);
+				var DummyPartition = MemoryPartition.Allocate(
+					0x4000,
+					Name: "Dummy"
+				);
 				BaseAddress = MemoryPartition.ChildPartitions.OrderByDescending(Partition => Partition.Size).First().Low;
 			}
 			else

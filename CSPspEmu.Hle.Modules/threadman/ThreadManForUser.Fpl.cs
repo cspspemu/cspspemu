@@ -73,7 +73,13 @@ namespace CSPspEmu.Hle.Modules.threadman
 				//this.MemoryPartition = Partition.Allocate(NumberOfBlocks * BlockSize, Hle.MemoryPartition.Anchor.Set, TEST_FIXED_ADDRESS, Alignment);
 				//Partition.Dump();
 
-				this.MemoryPartition = Partition.Allocate(NumberOfBlocks * BlockSize, Hle.MemoryPartition.Anchor.Low, 0, Alignment);
+				this.MemoryPartition = Partition.Allocate(
+					NumberOfBlocks * BlockSize,
+					Hle.MemoryPartition.Anchor.Low,
+					0,
+					Alignment,
+					"<Fpl>: " + Name
+				);
 
 				//Console.Error.WriteLine("FixedPool.Init: 0x{0:X}", this.MemoryPartition.Low);
 				this.FreeBlocks = new List<uint>();
@@ -99,7 +105,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 				{
 					if (Timeout != null) throw (new NotImplementedException());
 					var CurrentThread = HleState.ThreadManager.Current;
-					CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, "_sceKernelAllocateVplCB", (WakeUp) =>
+					CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, "_sceKernelAllocateVplCB", this, (WakeUp) =>
 					{
 						WaitItemList.Add(new WaitItem()
 						{

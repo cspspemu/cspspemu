@@ -44,7 +44,10 @@ namespace CSPspEmu.Hle.Modules.threadman
 				this.Timer = HleState.PspRtc.CreateVirtualTimer(Handler);
 				this.Name = Name;
 				this.Timer.Enabled = false;
-				this.PspSharedInfoMemoryPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(sizeof(PspSharedInfoStruct));
+				this.PspSharedInfoMemoryPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(
+					sizeof(PspSharedInfoStruct),
+					Name: "VTimer.PspSharedInfoStruct"
+				);
 				this.PspSharedInfo = (PspSharedInfoStruct*)HleState.CpuProcessor.Memory.PspAddressToPointerSafe(this.PspSharedInfoMemoryPartition.Low);
 			}
 

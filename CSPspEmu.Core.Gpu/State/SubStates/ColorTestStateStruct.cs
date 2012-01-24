@@ -24,12 +24,12 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 		/// <summary>
 		/// 
 		/// </summary>
-		public PixelFormatDecoder.OutputPixel Ref;
+		public OutputPixel Ref;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public PixelFormatDecoder.OutputPixel Mask;
+		public OutputPixel Mask;
 
 		/// <summary>
 		/// 

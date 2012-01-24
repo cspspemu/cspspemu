@@ -191,7 +191,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			Align2();
 			var Value = *((ushort*)Pointer);
-			PixelFormatDecoder.OutputPixel Color;
+			OutputPixel Color;
 			PixelFormatDecoder.Decode_RGBA_5551_Pixel(Value, out Color);
 			_SetVertexInfoColor(Color);
 			Pointer += sizeof(ushort);
@@ -214,7 +214,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//Console.WriteLine("{0}, {1}, {2}, {3}", VertexInfo->R, VertexInfo->G, VertexInfo->B, VertexInfo->A);
 		}
 
-		protected void _SetVertexInfoColor(PixelFormatDecoder.OutputPixel Color)
+		protected void _SetVertexInfoColor(OutputPixel Color)
 		{
 			VertexInfo->R = (float)(Color.R) / 255.0f;
 			VertexInfo->G = (float)(Color.G) / 255.0f;

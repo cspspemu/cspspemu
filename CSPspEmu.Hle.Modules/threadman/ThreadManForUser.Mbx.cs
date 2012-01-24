@@ -188,7 +188,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			var CurrentThread = HleState.ThreadManager.Current;
 			var MessageBox = MessageBoxList.Get(MessageBoxId);
 			bool TimedOut = false;
-			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelReceiveMbx", WakeUpCallback =>
+			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelReceiveMbx", MessageBox, WakeUpCallback =>
 			{
 				if (Timeout != null)
 				{

@@ -178,7 +178,7 @@ namespace CSPspEmu.Gui.Winforms
 		uint LastHash = unchecked((uint)-1);
 		String LastText = "";
 
-		PixelFormatDecoder.OutputPixel[] BitmapDataDecode = new PixelFormatDecoder.OutputPixel[512 * 512];
+		OutputPixel[] BitmapDataDecode = new OutputPixel[512 * 512];
 
 		protected override void OnPaintBackground(PaintEventArgs PaintEventArgs)
 		{
@@ -241,7 +241,7 @@ namespace CSPspEmu.Gui.Winforms
 						Buffer.LockBitsUnlock(PixelFormat.Format32bppArgb, (BitmapData) =>
 						{
 							var Count = Width * Height;
-							fixed (PixelFormatDecoder.OutputPixel* BitmapDataDecodePtr = BitmapDataDecode)
+							fixed (OutputPixel* BitmapDataDecodePtr = BitmapDataDecode)
 							{
 								var BitmapDataPtr = (BGRA*)BitmapData.Scan0.ToPointer();
 

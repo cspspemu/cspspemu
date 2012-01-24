@@ -29,6 +29,9 @@ using System.Threading;
 using CSPspEmu.Hle.Vfs.MemoryStick;
 using CSPspEmu.Hle.Vfs.Iso;
 using System.Diagnostics;
+using CSPspEmu.Hle.Vfs.Zip;
+using CSPspEmu.Resources;
+using CSPspEmu.Hle.Formats.Archive;
 
 namespace CSPspEmu.Runner.Components.Cpu
 {
@@ -82,6 +85,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 			HleState.HleIoManager.SetDriver("umd:", MemoryStick);
 			HleState.HleIoManager.SetDriver("emulator:", HleIoDriverEmulator);
 			HleState.HleIoManager.SetDriver("kemulator:", HleIoDriverEmulator);
+			HleState.HleIoManager.SetDriver("flash:", new HleIoDriverZip(new ZipArchive(ResourceArchive.GetFlash0ZipFileStream())));
 		}
 
 		public IsoFile SetIso(string IsoFile)
@@ -254,8 +258,14 @@ namespace CSPspEmu.Runner.Components.Cpu
 					.Aggregate(new byte[] { }, (Accumulate, Chunk) => Accumulate.Concat(Chunk))
 				;
 
-				var ReservedSyscallsPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(0x100);
-				var ArgumentsPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(ArgumentsChunk.Length);
+				var ReservedSyscallsPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(
+					0x100,
+					Name: "ReservedSyscallsPartition"
+				);
+				var ArgumentsPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(
+					ArgumentsChunk.Length,
+					Name: "ArgumentsPartition"
+				);
 				PspMemory.WriteBytes(ArgumentsPartition.Low, ArgumentsChunk);
 
 				var ThreadManForUser = HleState.ModuleManager.GetModule<ThreadManForUser>();

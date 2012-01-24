@@ -133,7 +133,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 				this.ThreadManager = ThreadManager;
 				this.PspMemory = PspMemory;
-				this.PoolPartition = MemoryManager.GetPartition(PartitionId).Allocate(Size, BlockType, Alignment: 16);
+				this.PoolPartition = MemoryManager.GetPartition(PartitionId).Allocate(
+					Size,
+					BlockType,
+					Alignment: 16,
+					Name: "<MsgPipe> : " + Name
+				);
 			}
 
 			public void Delete()
@@ -221,7 +226,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 				catch (SceKernelException)
 				{
 					//throw(new NotImplementedException());
-					HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelSendMsgPipe", WakeUpCallback =>
+					HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelSendMsgPipe", MsgPipe, WakeUpCallback =>
 					{
 #if DEBUG_MSG_PIPES
 						Console.Error.WriteLine("sceKernelSendMsgPipe.wait");
@@ -291,7 +296,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 				}
 				catch (SceKernelException)
 				{
-					HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelReceiveMsgPipe", WakeUpCallback =>
+					HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelReceiveMsgPipe", MsgPipe, WakeUpCallback =>
 					{
 #if DEBUG_MSG_PIPES
 						Console.Error.WriteLine("sceKernelReceiveMsgPipe.wait");

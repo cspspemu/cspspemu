@@ -140,7 +140,12 @@ namespace CSPspEmu.Hle.Modules.sysmem
 			{
 				try
 				{
-					MemoryPartition = HleState.MemoryManager.GetPartition(PartitionId).Allocate(Size, MemoryPartition.Anchor.Low, Alignment: Alignment);
+					MemoryPartition = HleState.MemoryManager.GetPartition(PartitionId).Allocate(
+						Size,
+						MemoryPartition.Anchor.Low,
+						Alignment: Alignment,
+						Name: Name
+					);
 				}
 				catch (InvalidOperationException InvalidOperationException)
 				{

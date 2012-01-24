@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourceArchive.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="flash0.zip" />

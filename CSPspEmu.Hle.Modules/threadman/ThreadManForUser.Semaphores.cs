@@ -96,7 +96,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			var CurrentThread = HleState.ThreadManager.Current;
 			var Semaphore = GetSemaphoreById(SemaphoreId);
 
-			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, "sceKernelWaitSema", WakeUpCallback =>
+			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, "sceKernelWaitSema", Semaphore, WakeUpCallback =>
 			{
 				if (Timeout != null) throw(new NotImplementedException());
 				Semaphore.WaitThread(CurrentThread, () =>

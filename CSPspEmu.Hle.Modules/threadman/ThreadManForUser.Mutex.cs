@@ -49,7 +49,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 				if (!TryLock(CurrentCpuThreadState, UpdateCountValue))
 				{
 					//HleState.ThreadManager.Current.
-					HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Mutex, "sceKernelLockMutex", (WakeUp) =>
+					HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Mutex, "sceKernelLockMutex", this, (WakeUp) =>
 					{
 						WakeUpList.Enqueue(() =>
 						{

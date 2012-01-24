@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
+using CSPspEmu.Core;
+using CSPspEmu.Core.Memory;
+using CSPspEmu.Hle.Formats.Font;
 
 namespace CSPspEmu.Hle.Modules.libfont
 {
@@ -35,129 +39,194 @@ namespace CSPspEmu.Hle.Modules.libfont
 			public uint IoFinishFuncAddr;
 		}
 
-		public struct FontStyle
+		public class FontRegistryEntry
 		{
-			public enum Family : ushort
+			public FontStyle FontStyle;
+			public int ExtraAttributes;
+
+			public FontRegistryEntry(int HorizontalSize, int VerticalSize, int HorizontalResolution,
+				int VerticalResolution, int ExtraAttributes, int Weight,
+				FamilyEnum Family, StyleEnum StyleStyle, ushort StyleSub, LanguageEnum Language,
+				ushort Region, ushort Country, String FileName,
+				String Name, uint Expire, int ShadowOption)
 			{
-				FONT_FAMILY_SANS_SERIF = 1,
-				FONT_FAMILY_SERIF      = 2,
-			}
-	
-			public enum Style : ushort
-			{
-				FONT_STYLE_REGULAR     = 1,
-				FONT_STYLE_ITALIC      = 2,
-				FONT_STYLE_BOLD        = 5,
-				FONT_STYLE_BOLD_ITALIC = 6,
-				FONT_STYLE_DB          = 103, // Demi-Bold / semi-bold
-			}
-	
-			public enum Language : ushort
-			{
-				FONT_LANGUAGE_JAPANESE = 1,
-				FONT_LANGUAGE_LATIN    = 2,
-				FONT_LANGUAGE_KOREAN   = 3,
+				this.ExtraAttributes = ExtraAttributes;
+				this.ShadowOption = ShadowOption;
+				this.FontStyle = new FontStyle()
+				{
+					Size = new HorizontalVerticalFloat() { Horizontal = HorizontalSize, Vertical = VerticalSize, },
+					Resolution = new HorizontalVerticalFloat() { Horizontal = HorizontalResolution, Vertical = VerticalResolution, },
+					Weight = Weight,
+					Family = Family,
+					StyleStyle = StyleStyle,
+					StyleSub = StyleSub,
+					Language = Language,
+					Region = Region,
+					Country = Country,
+					FileName = FileName,
+					Name = Name,
+					Expire = Expire,
+				};
 			}
 
-			public float    fontH;
-			public float    fontV;
-			public float    fontHRes;
-			public float    fontVRes;
-			public float    fontWeight;
-			public Family   fontFamily;
-			public Style    fontStyleStyle;
-			// Check.
-			public ushort   fontStyleSub;
-			public Language fontLanguage;
-			public ushort   fontRegion;
-			public ushort   fontCountry;
-			public fixed byte fontFileName[64];
-			public fixed byte fontName[64];
-			public uint     fontAttributes;
-			public uint     fontExpire;
+			public int ShadowOption { get; set; }
 		}
 
 		public struct FontInfo
 		{
-			// Glyph metrics (in 26.6 signed fixed-point).
-			public uint maxGlyphWidthI;
-			public uint maxGlyphHeightI;
-			public uint maxGlyphAscenderI;
-			public uint maxGlyphDescenderI;
-			public uint maxGlyphLeftXI;
-			public uint maxGlyphBaseYI;
-			public uint minGlyphCenterXI;
-			public uint maxGlyphTopYI;
-			public uint maxGlyphAdvanceXI;
-			public uint maxGlyphAdvanceYI;
+			#region Glyph metrics (in 26.6 signed fixed-point).
+			public Fixed26_6 MaxGlyphWidthI;
+			public Fixed26_6 MaxGlyphHeightI;
+			public Fixed26_6 MaxGlyphAscenderI;
+			public Fixed26_6 MaxGlyphDescenderI;
+			public Fixed26_6 MaxGlyphLeftXI;
+			public Fixed26_6 MaxGlyphBaseYI;
+			public Fixed26_6 MinGlyphCenterXI;
+			public Fixed26_6 MaxGlyphTopYI;
+			public Fixed26_6 MaxGlyphAdvanceXI;
+			public Fixed26_6 MaxGlyphAdvanceYI;
+			#endregion
 
-			// Glyph metrics (replicated as float).
-			public float maxGlyphWidthF;
-			public float maxGlyphHeightF;
-			public float maxGlyphAscenderF;
-			public float maxGlyphDescenderF;
-			public float maxGlyphLeftXF;
-			public float maxGlyphBaseYF;
-			public float minGlyphCenterXF;
-			public float maxGlyphTopYF;
-			public float maxGlyphAdvanceXF;
-			public float maxGlyphAdvanceYF;
-    
-			// Bitmap dimensions.
-			public short maxGlyphWidth;
-			public short maxGlyphHeight;
-			public uint  charMapLength;   // Number of elements in the font's charmap.
-			public uint  shadowMapLength; // Number of elements in the font's shadow charmap.
-    
-			// Font style (used by font comparison functions).
-			public FontStyle fontStyle;
+			#region Glyph metrics (replicated as float).
+			public float MaxGlyphWidthF;
+			public float MaxGlyphHeightF;
+			public float MaxGlyphAscenderF;
+			public float MaxGlyphDescenderF;
+			public float MaxGlyphLeftXF;
+			public float MaxGlyphBaseYF;
+			public float MinGlyphCenterXF;
+			public float MaxGlyphTopYF;
+			public float MaxGlyphAdvanceXF;
+			public float MaxGlyphAdvanceYF;
+			#endregion
 
-			public byte BPP; // Font's BPP. = 4
-			public fixed byte pad[3];
+			#region Bitmap dimensions.
+			/// <summary>
+			/// 
+			/// </summary>
+			public ushort MaxGlyphWidth;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public ushort MaxGlyphHeight;
+			
+			/// <summary>
+			/// Number of elements in the font's charmap.
+			/// </summary>
+			public uint CharMapLength;
+			
+			/// <summary>
+			/// Number of elements in the font's shadow charmap.
+			/// </summary>
+			public uint ShadowMapLength;
+    
+			/// <summary>
+			/// Font style (used by font comparison functions).
+			/// </summary>
+			public FontStyle FontStyle;
+			#endregion
+
+			/// <summary>
+			/// Font's BPP. = 4
+			/// </summary>
+			public byte BPP;
+
+			/// <summary>
+			/// Padding.
+			/// </summary>
+			public fixed byte Pad[3];
 		}
 
-		/*
-		 * Char's metrics:
-		 *
-		 *           Width / Horizontal Advance
-		 *           <---------->
-		 *      |           000 |
-		 *      |           000 |  Ascender
-		 *      |           000 |
-		 *      |     000   000 |
-		 *      | -----000--000-------- Baseline
-		 *      |        00000  |  Descender
-		 * Height /
-		 * Vertical Advance
-		 *
-		 * The char's bearings represent the difference between the
-		 * width and the horizontal advance and/or the difference
-		 * between the height and the vertical advance.
-		 * In our debug font, these measures are the same (block pixels),
-		 * but in real PGF fonts they can vary (italic fonts, for example).
-		 */
+		/// <summary>
+		/// Char's metrics:
+		/// 
+		///           Width / Horizontal Advance
+		///           <---------->
+		///      |           000 |
+		///      |           000 |  Ascender
+		///      |           000 |
+		///      |     000   000 |
+		///      | -----000--000-------- Baseline
+		///      |        00000  |  Descender
+		/// Height /
+		/// Vertical Advance
+		/// 
+		/// The char's bearings represent the difference between the
+		/// width and the horizontal advance and/or the difference
+		/// between the height and the vertical advance.
+		/// In our debug font, these measures are the same (block pixels),
+		/// but in real PGF fonts they can vary (italic fonts, for example).
+		/// </summary>
 		public struct FontCharInfo
 		{
-			public uint bitmapWidth;
-			public uint bitmapHeight;
-			public uint bitmapLeft;
-			public uint bitmapTop;
+			public uint BitmapWidth;
+			public uint BitmapHeight;
+			public int BitmapLeft;
+			public int BitmapTop;
 
 			// Glyph metrics (in 26.6 signed fixed-point).
-			public uint sfp26Width;
-			public uint sfp26Height;
-			public uint sfp26Ascender;
-			public uint sfp26Descender;
-			public uint sfp26BearingHX;
-			public uint sfp26BearingHY;
-			public uint sfp26BearingVX;
-			public uint sfp26BearingVY;
-			public uint sfp26AdvanceH;
-			public uint sfp26AdvanceV;
-			public uint padding;
+			public Fixed26_6 Width;
+			public Fixed26_6 Height;
+			public Fixed26_6 Ascender;
+			public Fixed26_6 Descender;
+			public Fixed26_6 BearingHX;
+			public Fixed26_6 BearingHY;
+			public Fixed26_6 BearingVX;
+			public Fixed26_6 BearingVY;
+			public Fixed26_6 AdvanceH;
+			public Fixed26_6 AdvanceV;
+			public int Padding;
     
 			//static assert(this.sizeof == 4 * 15);
 		}
 
+		public struct GlyphImage
+		{
+			/// <summary>
+			/// 
+			/// </summary>
+			public GuPixelFormats PixelFormat;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public PointFixed26_6 Position;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public short BufferWidth;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public short BufferHeight;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public short BytesPerLine;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public short __Padding;
+			
+			/// <summary>
+			/// 
+			/// </summary>
+			public PspPointer Buffer;
+		}
+
+		public struct CharRect
+		{
+			public short X;
+			public short Y;
+
+			// ?
+			public short Width;
+			public short Height;
+		}
 	}
 }

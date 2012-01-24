@@ -47,6 +47,7 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
@@ -62,7 +63,9 @@
     <Compile Include="Cpu\InstructionTest.cs" />
     <Compile Include="Cpu\Assembler\MipsAssemblerTest.cs" />
     <Compile Include="Cpu\Emiter\MipsEmiterTest.cs" />
+    <Compile Include="Hle\Formats\Archive\ZipTest.cs" />
     <Compile Include="Hle\Formats\EncryptedPrxTest.cs" />
+    <Compile Include="Hle\Formats\Font\PGFTest.cs" />
     <Compile Include="Hle\Vfs\Iso\CsoProxyStreamTest.cs" />
     <Compile Include="Hle\Formats\CsoTest.cs" />
     <Compile Include="Gpu\GpuProcessorTest.cs" />
@@ -103,6 +106,10 @@
     <ProjectReference Include="..\CSPspEmu.Hle\CSPspEmu.Hle.csproj">
       <Project>{288AF89E-B41A-4253-A8F7-43D1371516E9}</Project>
       <Name>CSPspEmu.Hle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Resources\CSPspEmu.Resources.csproj">
+      <Project>{ba3187fa-a2a1-43e0-9fdd-69b377ee3152}</Project>
+      <Name>CSPspEmu.Resources</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

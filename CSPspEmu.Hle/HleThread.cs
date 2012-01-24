@@ -82,6 +82,7 @@ namespace CSPspEmu.Hle
 		//public DateTime AwakeOnTime;
 		public MemoryPartition Stack;
 		public String WaitDescription;
+		public object WaitObject;
 		//public int InitPriority;
 		public PspThreadAttributes Attribute;
 		public SceKernelThreadInfo Info;
@@ -138,7 +139,7 @@ namespace CSPspEmu.Hle
 			// Sleep if sleeping decrement.
 			if (Increment < 0 && CurrentWakeupCount < 0)
 			{
-				ThreadToSleep.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelSleepThread", WakeUpCallback =>
+				ThreadToSleep.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelSleepThread", null, WakeUpCallback =>
 				{
 					ThreadToSleep.WakeUpCallback = () =>
 					{
@@ -351,11 +352,11 @@ namespace CSPspEmu.Hle
 			}
 		}
 
-		public void SetWaitAndPrepareWakeUp(WaitType WaitType, String WaitDescription, Action<WakeUpCallbackDelegate> PrepareCallback, bool HandleCallbacks = false)
+		public void SetWaitAndPrepareWakeUp(WaitType WaitType, String WaitDescription, object WaitObject, Action<WakeUpCallbackDelegate> PrepareCallback, bool HandleCallbacks = false)
 		{
 			bool CalledAlready = false;
 			YieldCount++;
-			SetWait0(WaitType, WaitDescription, HandleCallbacks);
+			SetWait0(WaitType, WaitDescription, WaitObject, HandleCallbacks);
 			{
 				//PrepareCallback(WakeUp);
 				PrepareCallback(() =>
@@ -370,11 +371,12 @@ namespace CSPspEmu.Hle
 			SetWait1();
 		}
 
-		protected void SetWait0(WaitType WaitType, String WaitDescription, bool HandleCallbacks)
+		protected void SetWait0(WaitType WaitType, String WaitDescription, object WaitObject, bool HandleCallbacks)
 		{
 			this.CurrentStatus = Status.Waiting;
 			this.CurrentWaitType = WaitType;
 			this.WaitDescription = WaitDescription;
+			this.WaitObject = WaitObject;
 			this.HandleCallbacks = HandleCallbacks;
 		}
 
@@ -403,7 +405,10 @@ namespace CSPspEmu.Hle
 			switch (CurrentStatus)
 			{
 				case Status.Waiting:
-					Ret += String.Format(", CurrentWaitType={0}, WaitDescription={1}, HandleCallbacks={2}", CurrentWaitType, WaitDescription, HandleCallbacks);
+					Ret += String.Format(
+						", CurrentWaitType={0}, WaitDescription={1}, WaitObject={2}, HandleCallbacks={3}",
+						CurrentWaitType, WaitDescription, WaitObject, HandleCallbacks
+					);
 					break;
 			}
 			return Ret + ")";

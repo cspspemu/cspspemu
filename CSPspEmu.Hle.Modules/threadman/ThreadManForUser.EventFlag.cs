@@ -84,7 +84,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 			var EventFlag = HleState.EventFlagManager.EventFlags.Get(EventId);
 			bool TimedOut = false;
 
-			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, String.Format("_sceKernelWaitEventFlagCB(EventId={0}, Bits={1:X}, Wait={2})", EventId, Bits, Wait), WakeUpCallback =>
+			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(
+				HleThread.WaitType.Semaphore,
+				String.Format("_sceKernelWaitEventFlagCB(EventId={0}, Bits={1:X}, Wait={2})", EventId, Bits, Wait),
+				EventFlag,
+				WakeUpCallback =>
 			{
 				if (Timeout != null)
 				{

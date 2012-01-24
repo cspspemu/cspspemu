@@ -67,6 +67,7 @@ namespace CSPspEmu.Core.Memory
 		public const uint FrameBufferOffset = 0x04000000;
 		public const uint MainOffset = 0x08000000;
 
+		protected byte* NullPtr;
 		protected byte* ScratchPadPtr; // 4KB
 		protected byte* FrameBufferPtr; // 2MB
 		protected byte* MainPtr;
@@ -100,10 +101,11 @@ namespace CSPspEmu.Core.Memory
 		virtual public uint PointerToPspAddressSafe(byte* Pointer)
 		{
 			if (Pointer == null) return 0;
+			//if (Pointer == NullPtr) return 0;
 			if ((Pointer >= ScratchPadPtr) && (Pointer < ScratchPadPtr + ScratchPadSize)) return (uint)(ScratchPadOffset + (Pointer - ScratchPadPtr));
 			if ((Pointer >= FrameBufferPtr) && (Pointer < FrameBufferPtr + FrameBufferSize)) return (uint)(FrameBufferOffset + (Pointer - FrameBufferPtr));
 			if ((Pointer >= MainPtr) && (Pointer < MainPtr + MainSize)) return (uint)(MainOffset + (Pointer - MainPtr));
-			throw (new InvalidAddressException("Pointer doesn't belong to PSP Memory"));
+			throw (new InvalidAddressException(String.Format("Pointer 0x{0:X} doesn't belong to PSP Memory. Main: 0x{1:X}-0x{2:X}", (ulong)Pointer, (ulong)MainPtr, (ulong)MainSize)));
 		}
 
 		virtual public void SetPCWriteAddress(uint Address, uint PC)

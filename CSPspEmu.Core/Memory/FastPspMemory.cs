@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 using CSharpUtils;
+using System.Diagnostics;
 
 namespace CSPspEmu.Core.Memory
 {
@@ -11,6 +12,10 @@ namespace CSPspEmu.Core.Memory
 	{
 		//readonly public byte* Base = (byte*)0x40000000;
 		readonly public byte* Base = (byte*)0x20000000;
+		static public byte* StaticNullPtr;
+		static public byte* StaticScratchPadPtr;
+		static public byte* StaticFrameBufferPtr;
+		static public byte* StaticMainPtr;
 
 		[DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
 		internal static extern byte* VirtualAlloc(void* lpAddress, uint dwSize, uint flAllocationType, uint flProtect);
@@ -98,15 +103,21 @@ namespace CSPspEmu.Core.Memory
 					Console.ForegroundColor = ConsoleColor.Black;
 					Console.WriteLine("FastPspMemory.AllocMemory");
 				});
-				ScratchPadPtr = (byte *)AllocRange(Base + ScratchPadOffset, ScratchPadSize);
-				FrameBufferPtr = (byte*)AllocRange(Base + FrameBufferOffset, FrameBufferSize);
-				MainPtr = (byte*)AllocRange(Base + MainOffset, MainSize);
-				if (ScratchPadPtr == null || FrameBufferPtr == null || MainPtr == null)
+				StaticNullPtr = Base;
+				StaticScratchPadPtr = (byte *)AllocRange(Base + ScratchPadOffset, ScratchPadSize);
+				StaticFrameBufferPtr = (byte*)AllocRange(Base + FrameBufferOffset, FrameBufferSize);
+				StaticMainPtr = (byte*)AllocRange(Base + MainOffset, MainSize);
+				if (StaticScratchPadPtr == null || StaticFrameBufferPtr == null || StaticMainPtr == null)
 				{
 					Console.WriteLine("Can't allocate virtual memory!");
+					Debug.Fail("Can't allocate virtual memory!");
 					throw (new InvalidOperationException());
 				}
 			}
+			NullPtr = StaticNullPtr;
+			ScratchPadPtr = StaticScratchPadPtr;
+			FrameBufferPtr = StaticFrameBufferPtr;
+			MainPtr = StaticMainPtr;
 		}
 
 		/*

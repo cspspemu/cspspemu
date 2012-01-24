@@ -53,7 +53,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 		}
 
-		public bool SetData(PixelFormatDecoder.OutputPixel *Pixels, int TextureWidth, int TextureHeight)
+		public bool SetData(OutputPixel *Pixels, int TextureWidth, int TextureHeight)
 		{
 			//lock (OpenglGpuImpl.GpuLock)
 			{
@@ -133,8 +133,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		public int ClutMask;
 		public bool Swizzled;
 		public bool ColorTestEnabled;
-		public PixelFormatDecoder.OutputPixel ColorTestRef;
-		public PixelFormatDecoder.OutputPixel ColorTestMask;
+		public OutputPixel ColorTestRef;
+		public OutputPixel ColorTestMask;
 		public ColorTestFunctionEnum ColorTestFunction;
 
 		public override string ToString()
@@ -151,7 +151,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		public OpenglGpuImpl OpenglGpuImpl;
 
 		byte[] SwizzlingBuffer = new byte[1024 * 1024 * 4];
-		PixelFormatDecoder.OutputPixel[] DecodedTextureBuffer = new PixelFormatDecoder.OutputPixel[1024 * 1024];
+		OutputPixel[] DecodedTextureBuffer = new OutputPixel[1024 * 1024];
 
 		public override void InitializeComponent()
 		{
@@ -262,7 +262,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 						int TextureHeight = Height;
 						int TextureWidthHeight = TextureWidth * TextureHeight;
 
-						fixed (PixelFormatDecoder.OutputPixel* TexturePixelsPointer = DecodedTextureBuffer)
+						fixed (OutputPixel* TexturePixelsPointer = DecodedTextureBuffer)
 						{
 							if (Swizzled)
 							{

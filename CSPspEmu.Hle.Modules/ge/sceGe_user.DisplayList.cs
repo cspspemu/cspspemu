@@ -21,7 +21,10 @@ namespace CSPspEmu.Hle.Modules.ge
 		{
 			if (GpuStateStructPartition == null)
 			{
-				GpuStateStructPartition = HleState.MemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.Kernel0).Allocate(sizeof(GpuStateStruct));
+				GpuStateStructPartition = HleState.MemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.Kernel0).Allocate(
+					sizeof(GpuStateStruct),
+					Name: "GpuStateStruct"
+				);
 				GpuStateStructPointer = (GpuStateStruct*)HleState.MemoryManager.Memory.PspAddressToPointer(GpuStateStructPartition.Low);
 			}
 
@@ -141,11 +144,12 @@ namespace CSPspEmu.Hle.Modules.ge
 		//[HlePspNotImplemented]
 		public int sceGeListSync(int DisplayListId, GpuProcessor.SyncTypeEnum SyncType)
 		{
+			//return 0;
 			//Console.WriteLine("sceGeListSync:{0},{1}", DisplayListId, SyncType);
 
 			var DisplayList = GetDisplayListFromId(DisplayListId);
 
-			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeListSync", (WakeUpCallbackDelegate) =>
+			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeListSync", DisplayList, (WakeUpCallbackDelegate) =>
 			{
 				DisplayList.GeListSync(SyncType, () =>
 				{
@@ -166,6 +170,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		public int sceGeDrawSync(GpuProcessor.SyncTypeEnum SyncType)
 		{
 			//return 0;
+			//return 0;
 
 			//Console.WriteLine("sceGeDrawSync:{0}", SyncType);
 
@@ -177,7 +182,7 @@ namespace CSPspEmu.Hle.Modules.ge
 				return -1;
 			}
 
-			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeDrawSync", (WakeUpCallbackDelegate) =>
+			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeDrawSync", null, (WakeUpCallbackDelegate) =>
 			{
 				HleState.GpuProcessor.GeDrawSync(SyncType, () =>
 				{

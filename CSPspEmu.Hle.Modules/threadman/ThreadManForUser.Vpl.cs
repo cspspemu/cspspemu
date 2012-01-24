@@ -42,7 +42,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 				ExternalMemoryAnchor = Hle.MemoryPartition.Anchor.Low;
 #endif
 
-				this.MemoryPartition = HleState.MemoryManager.GetPartition(PartitionId).Allocate(Info.PoolSize, ExternalMemoryAnchor);
+				this.MemoryPartition = HleState.MemoryManager.GetPartition(PartitionId).Allocate(
+					Info.PoolSize,
+					ExternalMemoryAnchor,
+					Name: "<Vpl> : " + Info.Name
+				);
 			}
 
 			public void Allocate(CpuThreadState CpuThreadState, int Size, PspPointer* AddressPointer, uint* Timeout, bool HandleCallbacks)
@@ -51,7 +55,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 				{
 					bool TimedOut = false;
 
-					HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, "_sceKernelAllocateVplCB", (WakeUp) =>
+					HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, "_sceKernelAllocateVplCB", this, (WakeUp) =>
 					{
 						HleState.PspRtc.RegisterTimeout(Timeout, () =>
 						{
@@ -284,7 +288,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 			/// <summary>
 			/// 
 			/// </summary>
-			public fixed byte Name[32];
+			public fixed byte RawName[32];
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public String Name { get { fixed (byte* Pointer = RawName) return PointerUtils.PtrToStringUtf8(Pointer); } }
 
 			/// <summary>
 			/// 

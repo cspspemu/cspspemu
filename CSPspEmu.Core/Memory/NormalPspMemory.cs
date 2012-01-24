@@ -28,6 +28,7 @@ namespace CSPspEmu.Core.Memory
 		{
 			if (ScratchPadPtr == null)
 			{
+				NullPtr = null;
 				ScratchPadPtr = (byte*)(Marshal.AllocHGlobal(ScratchPadSize).ToPointer());
 				FrameBufferPtr = (byte*)(Marshal.AllocHGlobal(FrameBufferSize).ToPointer());
 				MainPtr = (byte*)(Marshal.AllocHGlobal(MainSize).ToPointer());

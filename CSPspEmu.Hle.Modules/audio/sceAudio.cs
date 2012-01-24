@@ -136,7 +136,7 @@ namespace CSPspEmu.Hle.Modules.audio
 		{
 			//Console.WriteLine(ChannelId);
 			var Channel = HleState.PspAudio.GetChannel(ChannelId);
-			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Audio, "_sceAudioOutputPannedBlocking", WakeUpCallback =>
+			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Audio, "_sceAudioOutputPannedBlocking", Channel, WakeUpCallback =>
 			{
 				Channel.Write(Buffer, LeftVolume, RightVolume, () =>
 				{

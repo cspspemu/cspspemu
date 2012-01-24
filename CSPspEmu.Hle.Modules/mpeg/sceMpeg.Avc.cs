@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.mpeg
@@ -142,7 +143,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0x0E3C2E9D, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegAvcDecode(SceMpeg* Mpeg, SceMpegAu* MpegAccessUnit, int FrameWidth, byte* OutputBuffer, int* Init)
+		public int sceMpegAvcDecode(SceMpeg* Mpeg, SceMpegAu* MpegAccessUnit, int FrameWidth, PspPointer* OutputBufferPointer, int* Init)
 		{
 			CheckEnabledMpeg();
 
@@ -152,12 +153,15 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			}
 			var SceMpegData = GetSceMpegData(Mpeg);
 
-			/*
-			for (int n = 0; n < 512 * 272 * 4; n++)
+			
+			//Console.Error.WriteLine("0x{0:X}", PspMemory.PointerToPspAddress(OutputBuffer));
+
+			var OutputBuffer = (byte*)PspMemory.PspAddressToPointerSafe(OutputBufferPointer->Address);
+
+			for (int n = 0; n < FrameWidth * 272 * 4; n++)
 			{
 				OutputBuffer[n] = 0xFF;
 			}
-			*/
 
 			SceMpegData->AvcFrameStatus = 1;
 			*Init = SceMpegData->AvcFrameStatus;

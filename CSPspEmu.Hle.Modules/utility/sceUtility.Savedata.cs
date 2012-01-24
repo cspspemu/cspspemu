@@ -87,14 +87,19 @@ namespace CSPspEmu.Hle.Modules.utility
 							throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_SAVE_ACCESS_ERROR));
 						}
 						break;
+					case PspUtilitySavedataMode.Sizes:
+						Console.Error.WriteLine("Not Implemented: sceUtilitySavedataInitStart.Sizes");
+						break;
 					case PspUtilitySavedataMode.GetSize:
 						//Params->DataSize
 						//throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_RW_NO_MEMSTICK));
 						//throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_RW_NO_DATA));
+						Console.Error.WriteLine("Not Implemented: sceUtilitySavedataInitStart.GetSize");
 						break;
 					case PspUtilitySavedataMode.Read:
 					case PspUtilitySavedataMode.ReadSecure:
 						//throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_RW_NO_DATA));
+						Console.Error.WriteLine("Not Implemented: sceUtilitySavedataInitStart.Read");
 						break;
 					default:
 						Console.Error.WriteLine("sceUtilitySavedataInitStart: Unsupported mode: " + Params->Mode);

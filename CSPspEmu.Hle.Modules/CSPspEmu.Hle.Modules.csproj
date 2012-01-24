@@ -66,6 +66,8 @@
     <Compile Include="iofilemgr\IoFileMgrForUser.Directory.cs" />
     <Compile Include="iofilemgr\IoFileMgrForUser.Driver.cs" />
     <Compile Include="iofilemgr\IoFileMgrForUser.Files.cs" />
+    <Compile Include="libfont\sceLibFont.Font.cs" />
+    <Compile Include="libfont\sceLibFont.Library.cs" />
     <Compile Include="mpeg\sceMpeg.Atrac.cs" />
     <Compile Include="mpeg\sceMpeg.Au.cs" />
     <Compile Include="mpeg\sceMpeg.Avc.cs" />

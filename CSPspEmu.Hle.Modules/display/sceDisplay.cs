@@ -46,7 +46,7 @@ namespace CSPspEmu.Hle.Modules.display
 			{
 				var SleepThread = ThreadManager.Current;
 
-				SleepThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Display, "sceDisplayWaitVblankStart", (WakeUpCallbackDelegate) =>
+				SleepThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Display, "sceDisplayWaitVblankStart", null, (WakeUpCallbackDelegate) =>
 				{
 					PspRtc.RegisterTimerAtOnce(LastWaitVblankStart + TimeSpan.FromMilliseconds(1000 / 60), () =>
 					{

@@ -103,7 +103,7 @@ namespace CSPspEmu.Core.Display
 		{
 			var Bitmap = new Bitmap(CurrentInfo.BufferWidth, CurrentInfo.Height, PixelFormat.Format24bppRgb);
 			Bitmap.LockBitsUnlock(PixelFormat.Format32bppArgb, (BitmapData) => {
-				var Output = (PixelFormatDecoder.OutputPixel*)BitmapData.Scan0;
+				var Output = (OutputPixel*)BitmapData.Scan0;
 				PixelFormatDecoder.Decode(
 					CurrentInfo.PixelFormat,
 					Memory.PspAddressToPointerSafe(CurrentInfo.Address),

@@ -48,11 +48,16 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Thread.GP = CpuThreadState.GP;
 			Thread.Info.EntryPoint = (SceKernelThreadEntry)EntryPoint;
 
-			//var ThreadStackPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User);
+			var ThreadStackPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User);
 			//var ThreadStackPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.UserStacks);
-			var ThreadStackPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0);
+			//var ThreadStackPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0);
 
-			Thread.Stack = ThreadStackPartition.Allocate(StackSize, MemoryPartition.Anchor.High, Alignment: 0x100);
+			Thread.Stack = ThreadStackPartition.Allocate(
+				StackSize,
+				MemoryPartition.Anchor.High,
+				Alignment: 0x100,
+				Name: "<Stack> : " + Name
+			);
 
 			if (!Thread.Attribute.HasFlag(PspThreadAttributes.NoFillStack))
 			{
@@ -269,7 +274,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			bool TimedOut = false;
 
-			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelWaitThreadEnd", WakeUpCallback =>
+			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelWaitThreadEnd", ThreadToWaitEnd, WakeUpCallback =>
 			{
 				if (Timeout != null)
 				{
@@ -329,7 +334,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			else
 			*/
 			{
-				CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, "sceKernelDelayThread", WakeUpCallback =>
+				CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, "sceKernelDelayThread", null, WakeUpCallback =>
 				{
 					HleState.PspRtc.RegisterTimerInOnce(TimeSpanUtils.FromMicroseconds(DelayInMicroseconds), () =>
 					{
