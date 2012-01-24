@@ -342,45 +342,68 @@ namespace CSPspEmu.Hle.Loader
 			{
 				//Console.WriteLine(ModuleImport.ToStringDefault());
 
-				var ModuleImportName = ElfLoader.MemoryStream.ReadStringzAt(ModuleImport.Name);
-				var NidStreamReader = new BinaryReader(ElfLoader.MemoryStream.SliceWithLength(ModuleImport.NidAddress, ModuleImport.FunctionCount * sizeof(uint)));
-				var CallStreamWriter = new BinaryWriter(ElfLoader.MemoryStream.SliceWithLength(ModuleImport.CallAddress, ModuleImport.FunctionCount * sizeof(uint) * 2));
-
-				HleModuleHost Module = null;
 				try
 				{
-					Module = ModuleManager.GetModuleByName(ModuleImportName);
+					String ModuleImportName = "INVALID";
+					ModuleImportName = ElfLoader.MemoryStream.ReadStringzAt(ModuleImport.Name);
+					/*
+					try
+					{
+						
+					}
+					catch (Exception Exception)
+					{
+						Console.Error.WriteLine(Exception);
+					}
+					*/
+					var NidStreamReader = new BinaryReader(ElfLoader.MemoryStream.SliceWithLength(ModuleImport.NidAddress, ModuleImport.FunctionCount * sizeof(uint)));
+					var CallStreamWriter = new BinaryWriter(ElfLoader.MemoryStream.SliceWithLength(ModuleImport.CallAddress, ModuleImport.FunctionCount * sizeof(uint) * 2));
+
+					HleModuleHost Module = null;
+					try
+					{
+						Module = ModuleManager.GetModuleByName(ModuleImportName);
+					}
+					catch (Exception Exception)
+					{
+						Console.WriteLine(Exception);
+						throw (new Exception(Exception.Message, Exception));
+					}
+
+					Console.WriteLine("{0:X}:'{1}'", ModuleImport.Name, ModuleImportName);
+					for (int n = 0; n < ModuleImport.FunctionCount; n++)
+					{
+						uint NID = NidStreamReader.ReadUInt32();
+						var DefaultEntry = new HleModuleHost.FunctionEntry()
+						{
+							NID = 0x00000000,
+							Name = String.Format("__<unknown:0x{0:X}>", NID),
+							Description = "Unknown",
+						};
+						var FunctionEntry = (Module != null) ? Module.EntriesByNID.GetOrDefault(NID, DefaultEntry) : DefaultEntry;
+						//var Delegate = Module.DelegatesByNID.GetOrDefault(NID, null);
+						CallStreamWriter.Write((uint)(0x0000000C | (FunctionGenerator.NativeCallSyscallCode << 6))); // syscall NativeCallSyscallCode
+						CallStreamWriter.Write(
+							(uint)ModuleManager.AllocDelegateSlot(
+								CreateDelegate(ModuleManager, Module, NID, ModuleImportName, FunctionEntry.Name),
+								ModuleImportName, FunctionEntry
+							)
+						);
+
+						Console.WriteLine(
+							"    CODE_ADDR({0:X})  :  NID(0x{1,8:X}) : {2} - {3}",
+							ModuleImport.CallAddress + n * 8, NID, FunctionEntry.Name, FunctionEntry.Description
+						);
+					}
 				}
+				/*
 				catch (Exception Exception)
 				{
-					Console.WriteLine(Exception);
-					throw(new Exception(Exception.Message, Exception));
+					Console.Error.WriteLine(Exception);
 				}
-
-				Console.WriteLine("{0:X}:'{1}'", ModuleImport.Name, ModuleImportName);
-				for (int n = 0; n < ModuleImport.FunctionCount; n++)
+				*/
+				finally
 				{
-					uint NID = NidStreamReader.ReadUInt32();
-					var DefaultEntry = new HleModuleHost.FunctionEntry()
-					{
-						NID = 0x00000000,
-						Name = String.Format("__<unknown:0x{0:X}>", NID),
-						Description = "Unknown",
-					};
-					var FunctionEntry = (Module != null) ? Module.EntriesByNID.GetOrDefault(NID, DefaultEntry) : DefaultEntry;
-					//var Delegate = Module.DelegatesByNID.GetOrDefault(NID, null);
-					CallStreamWriter.Write((uint)(0x0000000C | (FunctionGenerator.NativeCallSyscallCode << 6))); // syscall NativeCallSyscallCode
-					CallStreamWriter.Write(
-						(uint)ModuleManager.AllocDelegateSlot(
-							CreateDelegate(ModuleManager, Module, NID, ModuleImportName, FunctionEntry.Name),
-							ModuleImportName, FunctionEntry
-						)
-					);
-
-					Console.WriteLine(
-						"    CODE_ADDR({0:X})  :  NID(0x{1,8:X}) : {2} - {3}",
-						ModuleImport.CallAddress + n * 8, NID, FunctionEntry.Name, FunctionEntry.Description
-					);
 				}
 			}
 

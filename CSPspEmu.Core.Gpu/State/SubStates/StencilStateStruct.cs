@@ -30,16 +30,16 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 		/// <summary>
 		/// 
 		/// </summary>
-		public StencilOperationEnum OperationSFail;
+		public StencilOperationEnum OperationFail;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public StencilOperationEnum OperationDpFail;
+		public StencilOperationEnum OperationZFail;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public StencilOperationEnum OperationDpPass;
+		public StencilOperationEnum OperationZPass;
 	}
 }

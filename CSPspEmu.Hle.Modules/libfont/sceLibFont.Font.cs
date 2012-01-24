@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Memory;
@@ -68,8 +69,10 @@ namespace CSPspEmu.Hle.Modules.libfont
 			var CharInfo = Font.GetCharInfo(CharCode);
 			return sceFontGetCharGlyphImage_Clip(
 				FontHandle, CharCode, GlyphImagePointer,
-				(int)CharInfo.BitmapLeft,
-				(int)CharInfo.BitmapTop,
+				//(int)CharInfo.BitmapLeft,
+				//(int)CharInfo.BitmapTop,
+				0,
+				0,
 				(int)CharInfo.BitmapWidth,
 				(int)CharInfo.BitmapHeight
 			);
@@ -105,7 +108,9 @@ namespace CSPspEmu.Hle.Modules.libfont
 				{
 					for (int x = 0; x < ClipWidth; x++)
 					{
+						//Console.WriteLine();
 						OutputBitmap.SetPixel(x, y, new OutputPixel(GlyphBitmap.GetPixel(x + ClipX, y + ClipY)));
+						//OutputBitmap.SetPixel(x, y, new OutputPixel(Color.Red));
 					}
 				}
 			}

@@ -45,7 +45,8 @@ namespace CSPspEmu.Hle.Modules.loadcore
 		
 			return uniqueIdFactory.get!Module(modid).sceModule;
 			*/
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return null;
 		}
 
 		/// <summary>

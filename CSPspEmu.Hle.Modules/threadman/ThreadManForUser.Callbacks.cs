@@ -41,21 +41,10 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspNotImplemented]
 		public int sceKernelNotifyCallback(int CallbackId, int Argument2)
 		{
-			throw(new NotImplementedException());
-			/*
 			var Callback = HleState.CallbackManager.Callbacks.Get(CallbackId);
 			// TODO!
 			HleState.CallbackManager.ScheduleCallback(Callback);
 			return 0;
-			*/
-			//throw(new NotImplementedException());
-			/*
-			PspCallback pspCallback = uniqueIdFactory.get!PspCallback(cb);
-		
-			hleEmulatorState.executeGuestCode(currentThreadState, pspCallback.func, [pspCallback.arg, arg2]);
-		
-			return 0;
-			*/
 		}
 
 		/// <summary>

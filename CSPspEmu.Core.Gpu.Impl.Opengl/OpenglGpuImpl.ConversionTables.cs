@@ -18,7 +18,19 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			StencilOp.Decr,
 		};
 
-		static readonly DepthFunction[] TestTranslate = new DepthFunction[] {
+		static readonly StencilFunction[] StencilFunctionTranslate = new StencilFunction[]
+		{
+			StencilFunction.Never,
+			StencilFunction.Always,
+			StencilFunction.Equal,
+			StencilFunction.Notequal,
+			StencilFunction.Less,
+			StencilFunction.Lequal,
+			StencilFunction.Greater, 
+			StencilFunction.Gequal
+		};
+
+		static readonly DepthFunction[] DepthFunctionTranslate = new DepthFunction[] {
 			DepthFunction.Never,
 			DepthFunction.Always,
 			DepthFunction.Equal,

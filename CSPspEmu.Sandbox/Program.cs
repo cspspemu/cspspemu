@@ -96,11 +96,10 @@ namespace CSPspEmu.Sandbox
 
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\abuse\EBOOT.PBP", TraceSyscalls: false);
 
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Medievil.cso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Medievil.cso", TraceSyscalls: true);
 
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Puzzler Collection.iso");
 
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Puyo.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Exit.iso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Namco Museum Battle Collection.iso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Breath of Fire 3.cso", TraceSyscalls: false);
@@ -114,10 +113,10 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Outrun 2006.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false, EnableMpeg: true);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Castlevania.cso", TraceSyscalls: false);
-				PspEmulator.StartAndLoad(@"F:\Isos\psp\Jeanne d'Arc.iso", TraceSyscalls: false, EnableMpeg: true);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Jeanne d'Arc.iso", TraceSyscalls: true, EnableMpeg: true);
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\TestInput\minifire.elf", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\gu\text\gufont.elf");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\DragonBall Z Shin Budokai.cso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\DragonBall Z Shin Budokai.cso", TraceSyscalls: true);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\PSPTris\EBOOT.PBP");
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\TrigWars\EBOOT.PBP", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Valkyrie Profile.cso", EnableMpeg: false, TraceSyscalls: false);
@@ -125,17 +124,18 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Downstream Panic.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Clannad.iso", TraceSyscalls: false, EnableMpeg: true);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false, EnableMpeg: true);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Luxor.cso");
 
 			// bltzal
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Kameleon.cso", TraceSyscalls: false);
 
 			// API: Not Implemented
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Jeanne d'Arc.iso", TraceSyscalls: true, EnableMpeg: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Skate Park City.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Patapon.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\scummvm-1.4.0\EBOOT.PBP");
 
 			// Memory: Invalid Address
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Puyo.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Prince.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Downstream Panic.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Call of Duty - Roads of Victory.cso");
@@ -145,7 +145,7 @@ namespace CSPspEmu.Sandbox
 				
 			// VFPU
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Castlevania.cso", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Vallhala Knights.iso");
+				PspEmulator.StartAndLoad(@"F:\Isos\psp\Vallhala Knights.iso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Outrun 2006.cso");
 
 			// Loader: Encrypted
@@ -184,6 +184,7 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Final Fantasy Crisis Core.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Legend of Heroes 3.cso", TraceSyscalls: true);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Street Fighter Alpha 3 MAX.cso");
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Jeanne d'Arc.iso", TraceSyscalls: true, EnableMpeg: true);
 
 			// Starting
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\GripShift.cso", EnableMpeg: false);
@@ -291,7 +292,6 @@ namespace CSPspEmu.Sandbox
 
 				//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\audio\wavegen\alsample.elf", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\gu\cube\cube.elf");
-				//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\audio\polyphonic\polyphonic.elf", TraceSyscalls: true);
 				//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\audio\polyphonic\polyphonic.elf", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\gu\lights\lights.elf");
 				//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\gu\morph\morph.elf");

@@ -83,7 +83,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Vfpu Integer to(2) Color?
 		public void vi2c() { throw (new NotImplementedException("")); }
 
-		uint _vi2uc(int x, int y, int z, int w)
+		static public uint _vi2uc(int x, int y, int z, int w)
 		{
 			return (0
 				| (uint)((x < 0) ? 0 : ((x >> 23) << 0))
@@ -95,14 +95,16 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public void vi2uc() {
 			var VectorSize = Instruction.ONE_TWO;
-			Save_VD(0, 1, () =>
+			Save_VD(Index: 0, VectorSize: 1, Action: () =>
 			{
 				Load_VS(0, VectorSize, AsInteger: true);
 				Load_VS(1, VectorSize, AsInteger: true);
 				Load_VS(2, VectorSize, AsInteger: true);
 				Load_VS(3, VectorSize, AsInteger: true);
+				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
 				MipsMethodEmiter.CallMethod((Func<int, int, int, int, uint>)_vi2uc);
-
 			}, AsInteger: true);
 		}
 
@@ -121,6 +123,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveVd(Index =>
 			{
 				Load_VS(Index);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Imm5);
 				MipsMethodEmiter.CallMethod((Func<float, int, float>)(CpuEmiter._vf2iz));
 			});
 		}

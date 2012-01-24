@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define SHOW_WINDOW
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -6,6 +8,7 @@ using System.Text;
 using System.Threading;
 using OpenTK;
 using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
@@ -48,6 +51,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			IsCurrentWindow = false;
 		}
 
+#if SHOW_WINDOW
+		public bool SwapBuffers = true;
+#else
+		public bool SwapBuffers = false;
+#endif
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -61,8 +70,25 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				var CThread = new Thread(() =>
 				{
 					Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.CultureName);
-					NativeWindow = new NativeWindow(512, 272, "PspGraphicEngine", GameWindowFlags.Default, GraphicsMode.Default, DisplayDevice.Default);
-					NativeWindow.Visible = false;
+					// Index: 8, Color: 32 (8888), Depth: 24, Stencil: 0, Samples: 0, Accum: 64 (16161616), Buffers: 2, Stereo: False
+					//var UsedGraphicsMode = GraphicsMode.Default;
+					var UsedGraphicsMode = new GraphicsMode(
+						color: new ColorFormat(8, 8, 8, 8),
+						depth: 16,
+						stencil: 8,
+						samples: 0,
+						accum: new ColorFormat(16, 16, 16, 16),
+						buffers: 2,
+						stereo: false
+					);
+					//var UsedGraphicsMode = new GraphicsMode(color: new ColorFormat(32), depth: 24, stencil: 8, samples: 0);
+					var UsedGameWindowFlags = GameWindowFlags.Default;
+					//Console.Error.WriteLine(UsedGraphicsMode);
+					//Console.ReadKey();
+					NativeWindow = new NativeWindow(512, 272, "PspGraphicEngine", UsedGameWindowFlags, UsedGraphicsMode, DisplayDevice.Default);
+#if SHOW_WINDOW
+					NativeWindow.Visible = true;
+#endif
 					GraphicsContext = new GraphicsContext(GraphicsMode.Default, NativeWindow.WindowInfo);
 					GraphicsContext.MakeCurrent(NativeWindow.WindowInfo);
 					{

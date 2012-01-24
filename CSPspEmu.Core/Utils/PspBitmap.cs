@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Utils
 {
@@ -12,6 +13,7 @@ namespace CSPspEmu.Core.Utils
 		public int BitsPerPixel;
 		public int Height;
 		public byte* Address;
+		public ColorFormat ColorFormat;
 
 		public PspBitmap(GuPixelFormats PixelFormat, int Width, int Height, byte* Address)
 		{
@@ -20,29 +22,24 @@ namespace CSPspEmu.Core.Utils
 			this.Height = Height;
 			this.Address = Address;
 			this.BitsPerPixel = PixelFormatDecoder.GetPixelsBits(PixelFormat);
+			this.ColorFormat = PixelFormatDecoder.ColorFormatFromPixelFormat(PixelFormat);
 		}
 
 		public bool IsValidPosition(int X, int Y)
 		{
-			return X >= 0 && Y >= 0 && X < Width && Y < Height;
+			return ((X >= 0) && (Y >= 0) && (X < Width) && (Y < Height));
 		}
 
 		public void SetPixel(int X, int Y, OutputPixel Color)
 		{
 			if (!IsValidPosition(X, Y)) return;
 			var Position = PixelFormatDecoder.GetPixelsSize(PixelFormat, Y * Width + X);
+			uint Value = this.ColorFormat.Encode(Color);
 			switch (this.BitsPerPixel)
 			{
-				// 16 bits
-				case 16:
-					*(ushort*)&Address[Position] = (ushort)PixelFormatDecoder.EncodePixel(PixelFormat, Color);
-					break;
-				// 32 bits
-				case 32:
-					*(uint*)&Address[Position] = (uint)PixelFormatDecoder.EncodePixel(PixelFormat, Color);
-					break;
-				default:
-					throw(new NotImplementedException());
+				case 16: *(ushort*)&Address[Position] = (ushort)Value; break;
+				case 32: *(uint*)&Address[Position] = (uint)Value; break;
+				default: throw(new NotImplementedException());
 			}		
 		}
 
@@ -53,13 +50,12 @@ namespace CSPspEmu.Core.Utils
 			var Position = PixelFormatDecoder.GetPixelsSize(PixelFormat, Y * Width + X);
 			switch (this.BitsPerPixel)
 			{
-				// 16 bits
 				case 16: Value = *(ushort*)&Address[Position]; break;
-				// 32 bits
 				case 32: Value = *(uint*)&Address[Position]; break;
 				default: throw (new NotImplementedException());
 			}
-			return PixelFormatDecoder.DecodePixel(PixelFormat, Value);
+			var OutputPixel  = default(OutputPixel);
+			return this.ColorFormat.Decode(Value);
 		}
 	}
 }

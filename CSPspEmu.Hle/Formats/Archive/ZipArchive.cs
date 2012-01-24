@@ -155,33 +155,37 @@ namespace CSPspEmu.Hle.Formats.Archive
 		}
 
 		protected Dictionary<string, ZipEntry> Entries;
+		private bool CaseInsensitive;
 
 		public ZipArchive()
 		{
 		}
 
-		public ZipArchive(String FileName)
+		public ZipArchive(String FileName, bool CaseInsensitive = true)
 		{
-			Load(FileName);
+			Load(FileName, CaseInsensitive);
 		}
 
-		public ZipArchive(Stream Stream)
+		public ZipArchive(Stream Stream, bool CaseInsensitive = true)
 		{
-			Load(Stream);
+			Load(Stream, CaseInsensitive);
 		}
 
-		public ZipArchive Load(string FileName)
+		public ZipArchive Load(string FileName, bool CaseInsensitive = true)
 		{
-			return Load(File.Open(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+			return Load(File.Open(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), CaseInsensitive);
 		}
 
 		public String NormalizePath(string FileName)
 		{
-			return '/' + FileName.Replace('\\', '/').Trim('/');
+			var Return = '/' + FileName.Replace('\\', '/').Trim('/');
+			if (CaseInsensitive) Return = Return.ToLower();
+			return Return;
 		}
 
-		public ZipArchive Load(Stream Stream)
+		public ZipArchive Load(Stream Stream, bool CaseInsensitive = true)
 		{
+			this.CaseInsensitive = CaseInsensitive;
 			Entries = new Dictionary<string, ZipEntry>();
 			while (!Stream.Eof())
 			{

@@ -53,22 +53,29 @@ namespace CSPspEmu.Core.Utils
 		int PaletteMask;
 		int StrideWidth;
 
-		static public uint EncodePixel(GuPixelFormats PixelFormat, OutputPixel Color)
+		static public ColorFormat ColorFormatFromPixelFormat(GuPixelFormats PixelFormat)
 		{
 			switch (PixelFormat)
 			{
-				case GuPixelFormats.RGBA_8888: return ColorFormats.RGBA_8888.Encode(Color.R, Color.G, Color.B, Color.A);
-				case GuPixelFormats.RGBA_5551: return ColorFormats.RGBA_5551.Encode(Color.R, Color.G, Color.B, Color.A);
-				case GuPixelFormats.RGBA_5650: return ColorFormats.RGBA_5650.Encode(Color.R, Color.G, Color.B, Color.A);
-				case GuPixelFormats.RGBA_4444: return ColorFormats.RGBA_4444.Encode(Color.R, Color.G, Color.B, Color.A);
+				case GuPixelFormats.RGBA_8888: return ColorFormats.RGBA_8888;
+				case GuPixelFormats.RGBA_5551: return ColorFormats.RGBA_5551;
+				case GuPixelFormats.RGBA_5650: return ColorFormats.RGBA_5650;
+				case GuPixelFormats.RGBA_4444: return ColorFormats.RGBA_4444;
 				default: throw(new NotImplementedException("Not implemented " + PixelFormat));
 			}
+		}
+
+		/*
+		static public uint EncodePixel(GuPixelFormats PixelFormat, OutputPixel Color)
+		{
+			return ColorFormatFromPixelFormat(PixelFormat).Encode(Color.R, Color.G, Color.B, Color.A);
 		}
 
 		static public OutputPixel DecodePixel(GuPixelFormats PixelFormat, uint Value)
 		{
 			throw new NotImplementedException();
 		}
+		*/
 
 		static public void Decode(GuPixelFormats PixelFormat, void* Input, OutputPixel* Output, int Width, int Height, void* Palette = null, GuPixelFormats PaletteType = GuPixelFormats.NONE, int PaletteCount = 0, int PaletteStart = 0, int PaletteShift = 0, int PaletteMask = 0xFF, int StrideWidth = -1, bool IgnoreAlpha = false)
 		{

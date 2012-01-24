@@ -97,6 +97,8 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 			throw (new SceKernelSelfStopUnloadModuleException());
 		}
 
+		public int lastModuleId = 1;
+
 		/// <summary>
 		/// Load a module.
 		/// </summary>
@@ -113,7 +115,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		public int sceKernelLoadModule(string Path, uint Flags, SceKernelLMOption* SceKernelLMOption)
 		{
 			//throw(new NotImplementedException());
-			return 1;
+			return lastModuleId++;
 		}
 
 		/// <summary>
@@ -134,7 +136,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 			{
 				*Status = 0;
 			}
-			return 0;
+			return 1234;
 		}
 
 		/// <summary>

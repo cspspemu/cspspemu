@@ -159,9 +159,22 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void vcmovf() { _vcmovtf(false); }
 		public void vcmovt() { _vcmovtf(true); }
 
-		public void bvf() { throw (new NotImplementedException()); }
+		private void _bvtf(bool True)
+		{
+			var Register = Instruction.IMM3;
+			//throw (new NotImplementedException());
+			MipsMethodEmiter.StoreBranchFlag(() =>
+			{
+				Load_VCC(Register);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_0);
+				if (True) MipsMethodEmiter.ILGenerator.Emit(OpCodes.Not);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ceq);
+			});
+		}
+
+		public void bvf() { _bvtf(false); }
 		public void bvfl() { bvf(); }
-		public void bvt() { throw (new NotImplementedException()); }
+		public void bvt() { _bvtf(true); }
 		public void bvtl() { bvt(); }
 	}
 }

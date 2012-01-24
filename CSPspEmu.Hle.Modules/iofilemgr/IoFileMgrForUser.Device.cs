@@ -41,8 +41,16 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0x54F5FB11, FirmwareVersion = 150)]
 		public int sceIoDevctl(string DeviceName, uint Command, byte* InputPointer, int InputLength, byte* OutputPointer, int OutputLength)
 		{
-			var Info = HleState.HleIoManager.ParseDeviceName(DeviceName);
-			return Info.HleIoDrvFileArg.HleIoDriver.IoDevctl(Info.HleIoDrvFileArg, DeviceName, Command, InputPointer, InputLength, OutputPointer, OutputLength);
+			try
+			{
+				var Info = HleState.HleIoManager.ParseDeviceName(DeviceName);
+				return Info.HleIoDrvFileArg.HleIoDriver.IoDevctl(Info.HleIoDrvFileArg, DeviceName, Command, InputPointer, InputLength, OutputPointer, OutputLength);
+			}
+			catch (NotImplementedException NotImplementedException)
+			{
+				Console.Error.WriteLine(NotImplementedException);
+				return -1;
+			}
 		}
 	}
 }

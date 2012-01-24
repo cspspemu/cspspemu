@@ -38,6 +38,17 @@
 		FONT_LANGUAGE_LATIN    = 2,
 		FONT_LANGUAGE_KOREAN   = 3,
 	} Language;
+	
+	typedef struct {
+		int pixelFormat;
+		int positionX_F26_6;
+		int positionY_F26_6;
+		short bufferWidth;
+		short bufferHeight;
+		short bytesPerLine;
+		short __padding;
+		void* buffer;
+	} GlyphImage;
 
 	typedef struct {
 		float  fontH;
@@ -214,4 +225,6 @@
 	 */
 	int sceFontGetFontInfoByIndexNumber(FontLibraryHandle libHandle, FontInfo *fontInfo, int unknown, int fontIndex);
 
+	int sceFontGetFontList(FontLibraryHandle libHandle, FontStyle *fontStyleList, int numFonts);
+	int sceFontGetCharGlyphImage(FontHandle FontHandle, ushort CharCode, GlyphImage* GlyphImagePointer);
 #endif

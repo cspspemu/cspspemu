@@ -145,9 +145,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Stencil OPeration
 		public void OP_SOP()
 		{
-			GpuState->StencilState.OperationSFail = (StencilOperationEnum)Param8(0);
-			GpuState->StencilState.OperationDpFail = (StencilOperationEnum)Param8(8);
-			GpuState->StencilState.OperationDpPass = (StencilOperationEnum)Param8(16);
+			GpuState->StencilState.OperationFail = (StencilOperationEnum)Param8(0);
+			GpuState->StencilState.OperationZFail = (StencilOperationEnum)Param8(8);
+			GpuState->StencilState.OperationZPass = (StencilOperationEnum)Param8(16);
 		}
 
 		/**

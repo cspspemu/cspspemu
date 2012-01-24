@@ -124,6 +124,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			//Console.WriteLine(VertexInfo);
 			//Console.WriteLine(VertexInfo);
+
+#if false
+			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
+			GL.Vertex3(VertexInfo.PX, VertexInfo.PY, 0.5f);
+#else
+
 			if (VertexType.Color != VertexTypeStruct.ColorEnum.Void)
 			{
 				GL.Color4((float)VertexInfo.R, (float)VertexInfo.G, (float)VertexInfo.B, (float)VertexInfo.A);
@@ -159,6 +165,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			{
 				GL.Vertex3(VertexInfo.PX, VertexInfo.PY, VertexInfo.PZ);
 			}
+#endif
 		}
 
 		VertexTypeStruct VertexType;
@@ -207,6 +214,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				// @TODO @FIXME! : Color should be extracted from the color! (as alpha component)
 				GL.StencilFunc(StencilFunction.Always, 0, 0xFF);
 				GL.StencilOp(StencilOp.Replace, StencilOp.Replace, StencilOp.Replace);
+				//GL.Enable(EnableCap.DepthTest);
 			}
 
 			//int i; glGetIntegerv(GL_STENCIL_BITS, &i); writefln("GL_STENCIL_BITS: %d", i);
@@ -217,6 +225,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				GL.DepthFunc(DepthFunction.Always);
 				GL.DepthMask(true);
 				GL.DepthRange(0, 0);
+				//GL.DepthRange(-1, 0);
 
 				//glDepthRange(0.0, 1.0); // Original value
 			}
@@ -226,6 +235,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//glClearDepth(0.0); glClear(GL_COLOR_BUFFER_BIT);
 
 			//if (state.clearFlags & ClearBufferMask.GU_COLOR_BUFFER_BIT) glClear(GL_DEPTH_BUFFER_BIT);
+			//GL.Clear(ClearBufferMask.StencilBufferBit);
 		}
 
 		/// <summary>
@@ -612,11 +622,17 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			{
 				Console.WriteLine(Exception);
 			}
+
+			if (SwapBuffers)
+			{
+				GraphicsContext.SwapBuffers();
+			}
 		}
 
 		[HandleProcessCorruptedStateExceptions()]
 		public override void Finish(GpuStateStruct* GpuState)
 		{
+			//PrepareWrite(GpuState);
 			//return;
 			/*
 			if (GpuState->DrawBufferState.LowAddress != 0)

@@ -401,6 +401,7 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "threads/k0";
 				//WildCardFilter = "umd/io";
 				//WildCardFilter = "loader/bss";
+				WildCardFilter = "font/fonttest";
 			}
 
 			if (WildCardFilter.Length > 0)
