@@ -99,6 +99,7 @@ namespace CSPspEmu.Hle.Loader
 
 		protected void AllocateMemory()
 		{
+#if true
 			uint Lowest = 0xFFFFFFFF;
 			uint Highest = 0;
 			foreach (var SectionHeader in SectionHeadersWithFlag(Elf.SectionHeader.FlagsSet.Allocate))
@@ -121,7 +122,13 @@ namespace CSPspEmu.Hle.Loader
 				Highest = Math.Max(Highest, (uint)(BaseAddress + ProgramHeader.VirtualAddress + ProgramHeader.MemorySize));
 			}
 
-			MemoryPartition.AllocateLowHigh(Lowest, Highest);
+			MemoryPartition.AllocateLowHigh(Lowest, Highest, Name: "Elf");
+#else
+			foreach (var SectionHeader in SectionHeadersWithFlag(Elf.SectionHeader.FlagsSet.Allocate))
+			{
+				MemoryPartition.AllocateLowSize(BaseAddress + SectionHeader.Address, SectionHeader.Size);
+			}
+#endif
 		}
 
 		protected void WriteToMemory()

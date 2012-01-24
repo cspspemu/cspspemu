@@ -53,7 +53,7 @@ namespace CSPspEmu.Hle.Managers
 	public enum RegCategoryHandle : uint { }
 	public enum RegKeyHandle : uint { }
 
-	public class HleRegistryNode
+	public class HleRegistryNode : IDisposable
 	{
 		string Name;
 
@@ -63,6 +63,10 @@ namespace CSPspEmu.Hle.Managers
 		}
 
 		public void Flush()
+		{
+		}
+
+		public void Dispose()
 		{
 		}
 	}
@@ -130,7 +134,7 @@ namespace CSPspEmu.Hle.Managers
 		}
 	}
 
-	public class HleRegistryCategoryNode
+	public class HleRegistryCategoryNode : IDisposable
 	{
 		HleRegistryNode HleRegistryNode;
 		string Name;
@@ -175,6 +179,10 @@ namespace CSPspEmu.Hle.Managers
 		}
 
 		public void Flush()
+		{
+		}
+
+		public void Dispose()
 		{
 		}
 	}

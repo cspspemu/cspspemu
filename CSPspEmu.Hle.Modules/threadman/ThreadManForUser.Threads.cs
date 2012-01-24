@@ -47,10 +47,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Thread.Attribute = Attribute;
 			Thread.GP = CpuThreadState.GP;
 			Thread.Info.EntryPoint = (SceKernelThreadEntry)EntryPoint;
-			//Thread.Stack = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Allocate(StackSize, MemoryPartition.Anchor.Low, Alignment: 0x100);
-			Thread.Stack = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Allocate(StackSize, MemoryPartition.Anchor.High, Alignment: 0x100);
-			//Thread.Stack = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(StackSize, MemoryPartition.Anchor.High, Alignment: 0x100);
-			//Thread.Stack = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.UserStacks).Allocate(StackSize, MemoryPartition.Anchor.High, Alignment: 0x100);
+
+			//var ThreadStackPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User);
+			//var ThreadStackPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.UserStacks);
+			var ThreadStackPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0);
+
+			Thread.Stack = ThreadStackPartition.Allocate(StackSize, MemoryPartition.Anchor.High, Alignment: 0x100);
 
 			if (!Thread.Attribute.HasFlag(PspThreadAttributes.NoFillStack))
 			{

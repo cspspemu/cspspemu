@@ -246,8 +246,17 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 				case StdioForUser.StdHandle.Error:
 					ConsoleUtils.SaveRestoreConsoleState(() =>
 					{
-						Console.ForegroundColor = ConsoleColor.Blue;
-						Console.Error.WriteLine("Output: '{0}'", PointerUtils.PtrToString(InputPointer, InputSize, Encoding.UTF8));
+						//Console.BackgroundColor = ConsoleColor.DarkGray;
+						if ((StdioForUser.StdHandle)FileHandle == StdioForUser.StdHandle.Out)
+						{
+							Console.ForegroundColor = ConsoleColor.Blue;
+						}
+						else
+						{
+							Console.ForegroundColor = ConsoleColor.Red;
+						}
+						//Console.Error.WriteLine("Output: '{0}'", PointerUtils.PtrToString(InputPointer, InputSize, Encoding.UTF8));
+						Console.Error.Write("{0}", PointerUtils.PtrToString(InputPointer, InputSize, Encoding.UTF8));
 					});
 					return 0;
 			}

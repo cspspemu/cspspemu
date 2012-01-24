@@ -30,13 +30,15 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 		}
 
+		public OpenglGpuImpl OpenglGpuImpl;
 		public DateTime RecheckTimestamp;
 		public TextureCacheKey TextureCacheKey;
 		public int Width;
 		public int Height;
 
-		public Texture()
+		public Texture(OpenglGpuImpl OpenglGpuImpl)
 		{
+			this.OpenglGpuImpl = OpenglGpuImpl;
 			OpenglGpuImpl.GraphicsContext.MakeCurrent(OpenglGpuImpl.NativeWindow.WindowInfo);
 
 			//lock (OpenglGpuImpl.GpuLock)
@@ -146,6 +148,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		PspMemory PspMemory;
 		//Dictionary<TextureCacheKey, Texture> Cache = new Dictionary<TextureCacheKey, Texture>();
 		Dictionary<ulong, Texture> Cache = new Dictionary<ulong, Texture>();
+		public OpenglGpuImpl OpenglGpuImpl;
 
 		byte[] SwizzlingBuffer = new byte[1024 * 1024 * 4];
 		PixelFormatDecoder.OutputPixel[] DecodedTextureBuffer = new PixelFormatDecoder.OutputPixel[1024 * 1024];
@@ -211,14 +214,14 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				if (!PspMemory.IsAddressValid((uint)(TextureAddress + TextureDataSize - 1)))
 				{
 					Console.Error.WriteLine("Invalid TEXTURE!");
-					return new Texture();
+					return new Texture(OpenglGpuImpl);
 				}
 
 				if (TextureDataSize > 2048 * 2048 * 4)
 				{
 					Console.Error.WriteLine("UPDATE_TEXTURE(TEX={0},CLUT={1}:{2}:{3}:{4}:0x{5:X},SIZE={6}x{7},{8},Swizzled={9})", TextureFormat, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask, BufferWidth, Height, BufferWidth, Swizzled);
 					Console.Error.WriteLine("Invalid TEXTURE!");
-					return new Texture();
+					return new Texture(OpenglGpuImpl);
 				}
 
 				//Console.WriteLine("TextureAddress=0x{0:X}, TextureDataSize=0x{1:X}", TextureAddress, TextureDataSize);
@@ -250,7 +253,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 					Console.Error.WriteLine("UPDATE_TEXTURE(TEX={0},CLUT={1}:{2}:{3}:{4}:0x{5:X},SIZE={6}x{7},{8},Swizzled={9})", TextureFormat, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask, BufferWidth, Height, BufferWidth, Swizzled);
 #endif
-					Texture = new Texture();
+					Texture = new Texture(OpenglGpuImpl);
 					Texture.TextureCacheKey = TextureCacheKey;
 					{
 						//int TextureWidth = Math.Max(BufferWidth, Height);

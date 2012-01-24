@@ -8,7 +8,7 @@ using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Threading.Semaphores
 {
-	unsafe public class HleSemaphore
+	unsafe public class HleSemaphore : IDisposable
 	{
 		public class WaitingSemaphoreThread
 		{
@@ -107,6 +107,10 @@ namespace CSPspEmu.Hle.Threading.Semaphores
 		}
 
 		public void Release()
+		{
+		}
+
+		public void Dispose()
 		{
 		}
 	}

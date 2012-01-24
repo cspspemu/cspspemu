@@ -24,13 +24,16 @@ namespace CSPspEmu.Runner.Components.Gpu
 			PspEmulatorContext.GetInstance<GpuImpl>().InitSynchronizedOnce();
 
 			GpuProcessor.ProcessInit();
+			GpuProcessor.SetCurrent();
 
 			while (true)
 			{
 				ThreadTaskQueue.HandleEnqueued();
-				if (!Running) return;
+				if (!Running) break;
 				GpuProcessor.ProcessStep();
 			}
+
+			GpuProcessor.UnsetCurrent();
 		}
 	}
 }

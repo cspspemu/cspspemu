@@ -253,6 +253,15 @@ namespace CSPspEmu.Core.Gpu
 		{
 			//throw new NotImplementedException();
 		}
+
+		public void SetCurrent()
+		{
+			GpuImpl.SetCurrent();
+		}
+		public void UnsetCurrent()
+		{
+			GpuImpl.UnsetCurrent();
+		}
 	}
 
 	public enum TextureLevelMode { Auto = 0, Const = 1, Slope = 2 }

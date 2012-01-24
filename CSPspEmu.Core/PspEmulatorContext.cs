@@ -8,7 +8,7 @@ using CSharpUtils;
 
 namespace CSPspEmu.Core
 {
-	public class PspEmulatorContext
+	public class PspEmulatorContext : IDisposable
 	{
 		public PspConfig PspConfig;
 
@@ -98,5 +98,11 @@ namespace CSPspEmu.Core
 			return GetInstance<TType>();
 		}
 		*/
+
+		public void Dispose()
+		{
+			foreach (var Pair in ObjectsByType) Pair.Value.Dispose();
+			ObjectsByType = new Dictionary<Type, PspEmulatorComponent>();
+		}
 	}
 }

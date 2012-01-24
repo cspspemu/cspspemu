@@ -59,6 +59,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			this.Config = PspEmulatorContext.PspConfig;
 			this.Memory = PspEmulatorContext.GetInstance<PspMemory>();
 			this.TextureCache = PspEmulatorContext.GetInstance<TextureCache>();
+			this.TextureCache.OpenglGpuImpl = this;
 			this.VertexReader = new VertexReader();
 		}
 
@@ -227,8 +228,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//if (state.clearFlags & ClearBufferMask.GU_COLOR_BUFFER_BIT) glClear(GL_DEPTH_BUFFER_BIT);
 		}
 
-		public bool IsCurrentWindow = false;
-
 		/// <summary>
 		/// 
 		/// </summary>
@@ -237,12 +236,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			//Console.WriteLine("Prim: {0}, {1}", PrimitiveType, VertexCount);
 			this.GpuState = GpuState;
-
-			if (!IsCurrentWindow)
-			{
-				IsCurrentWindow = true;
-				GraphicsContext.MakeCurrent(NativeWindow.WindowInfo);
-			}
 
 			//Console.WriteLine("--------------------------------------------------------");
 			VertexType = GpuState->VertexState.Type;
@@ -537,20 +530,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			GlPixelFormat(PixelFormats.GU_PSM_DXT5,   4, 4, GL_RGBA, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT),
 		];
 		*/
-
-		public struct GlPixelFormat
-		{
-			public GuPixelFormats GuPixelFormat;
-			public PixelType OpenglPixelType;
-		};
-
-		static readonly public GlPixelFormat[] GlPixelFormatList = new GlPixelFormat[]
-		{
-			new GlPixelFormat() { GuPixelFormat = GuPixelFormats.RGBA_5650, OpenglPixelType = PixelType.UnsignedShort565Reversed },
-			new GlPixelFormat() { GuPixelFormat = GuPixelFormats.RGBA_5551, OpenglPixelType = PixelType.UnsignedShort1555Reversed },
-			new GlPixelFormat() { GuPixelFormat = GuPixelFormats.RGBA_4444, OpenglPixelType = PixelType.UnsignedShort4444Reversed },
-			new GlPixelFormat() { GuPixelFormat = GuPixelFormats.RGBA_8888, OpenglPixelType = PixelType.UnsignedInt8888Reversed },
-		};
 
 		[HandleProcessCorruptedStateExceptions()]
 		private void PrepareRead(GpuStateStruct* GpuState)

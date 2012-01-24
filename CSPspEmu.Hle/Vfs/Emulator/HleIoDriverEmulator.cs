@@ -140,14 +140,16 @@ namespace CSPspEmu.Hle.Vfs.Emulator
 				default: throw(new InvalidOperationException());
 			}
 
-			Console.WriteLine("     {0}", (EmulatorDevclEnum)Command);
+			//Console.Error.WriteLine("     {0}", (EmulatorDevclEnum)Command);
 			switch ((EmulatorDevclEnum)Command)
 			{
 				case EmulatorDevclEnum.GetHasDisplay:
 					*((int*)OutputPointer) = HleState.CpuProcessor.PspConfig.HasDisplay ? 1 : 0;
 					break;
 				case EmulatorDevclEnum.SendOutput:
-					HleState.HleOutputHandler.Output(new String((sbyte*)InputPointer, 0, InputLength, Encoding.ASCII));
+					var OutputString = new String((sbyte*)InputPointer, 0, InputLength, Encoding.ASCII);
+					HleState.HleOutputHandler.Output(OutputString);
+					//Console.Error.WriteLine("{0}", OutputString);
 					break;
 				case EmulatorDevclEnum.IsEmulator:
 					return 0;

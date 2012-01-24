@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Core
 {
-	abstract public class PspEmulatorComponent
+	abstract public class PspEmulatorComponent : IDisposable
 	{
 		protected PspEmulatorContext PspEmulatorContext { get; private set; }
 
@@ -20,5 +20,9 @@ namespace CSPspEmu.Core
 		}
 
 		abstract public void InitializeComponent();
+
+		virtual public void Dispose()
+		{
+		}
 	}
 }

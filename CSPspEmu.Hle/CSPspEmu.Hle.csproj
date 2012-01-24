@@ -65,6 +65,7 @@
     <Compile Include="Formats\video\IDemuxer.cs" />
     <Compile Include="Formats\video\MpegPsDemuxer.cs" />
     <Compile Include="Formats\video\Pmf.cs" />
+    <Compile Include="Formats\Zip.cs" />
     <Compile Include="HleCallback.cs" />
     <Compile Include="HleEmulatorFinalizeCallbackException.cs" />
     <Compile Include="HleInterop.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Vfs\HleIoDriverExtensions.cs" />
     <Compile Include="Vfs\IHleIoDriver.cs" />
     <Compile Include="Vfs\Iso\CsoProxyStream.cs" />
+    <Compile Include="Vfs\Iso\DisposableDummy.cs" />
     <Compile Include="Vfs\Iso\HleIoDriverIso.cs" />
     <Compile Include="Vfs\Local\HleIoDriverLocalFileSystem.cs" />
     <Compile Include="Vfs\HleIoDriverMountable.cs" />
@@ -149,8 +151,14 @@
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Resources\CSPspEmu.Resources.csproj">
+      <Project>{ba3187fa-a2a1-43e0-9fdd-69b377ee3152}</Project>
+      <Name>CSPspEmu.Resources</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Vfs\Zip\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

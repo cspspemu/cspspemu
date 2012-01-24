@@ -20,5 +20,11 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		{
 			return HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileHandle);
 		}
+
+		public override void Dispose()
+		{
+			HleState.HleIoManager.HleIoDrvFileArgPool.RemoveAll();
+			base.Dispose();
+		}
 	}
 }

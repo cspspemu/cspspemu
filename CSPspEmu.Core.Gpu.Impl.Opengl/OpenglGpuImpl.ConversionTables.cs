@@ -121,5 +121,19 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			TextureEnvMode.Replace,
 			TextureEnvMode.Add,
 		};
+
+		public struct GlPixelFormat
+		{
+			public GuPixelFormats GuPixelFormat;
+			public PixelType OpenglPixelType;
+		};
+
+		static readonly public GlPixelFormat[] GlPixelFormatList = new GlPixelFormat[]
+		{
+			new GlPixelFormat() { GuPixelFormat = GuPixelFormats.RGBA_5650, OpenglPixelType = PixelType.UnsignedShort565Reversed },
+			new GlPixelFormat() { GuPixelFormat = GuPixelFormats.RGBA_5551, OpenglPixelType = PixelType.UnsignedShort1555Reversed },
+			new GlPixelFormat() { GuPixelFormat = GuPixelFormats.RGBA_4444, OpenglPixelType = PixelType.UnsignedShort4444Reversed },
+			new GlPixelFormat() { GuPixelFormat = GuPixelFormats.RGBA_8888, OpenglPixelType = PixelType.UnsignedInt8888Reversed },
+		};
 	}
 }

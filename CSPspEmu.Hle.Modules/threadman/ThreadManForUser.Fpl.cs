@@ -121,7 +121,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 					var AllocatedBlock = FreeBlocks.First();
 					FreeBlocks.Remove(AllocatedBlock);
 					UsedBlocks.Add(AllocatedBlock);
-					Console.Error.WriteLine("TryAllocate(0x{0:X})", AllocatedBlock);
+					//Console.Error.WriteLine("TryAllocate(0x{0:X})", AllocatedBlock);
 					DataPointer->Address = AllocatedBlock;
 
 					return true;
@@ -175,7 +175,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Options">Options (set to NULL)</param>
 		/// <returns>The UID of the created pool, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xC07BB470, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public PoolId sceKernelCreateFpl(string Name, HleMemoryManager.Partitions PartitionId, FplAttributes Attributes, int BlockSize, int NumberOfBlocks, FplOptionsStruct* Options)
 		{
 			var FixedPool = new FixedPool()
@@ -201,7 +201,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="DataPointerPointer">Receives the address of the allocated data</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x623AE665, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceKernelTryAllocateFpl(PoolId PoolId, PspPointer* DataPointer)
 		{
 			var FixedPool = FixedPoolList.Get(PoolId);
@@ -221,7 +221,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Timeout">Amount of time to wait for allocation?</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xD979E9BF, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceKernelAllocateFpl(PoolId PoolId, PspPointer* DataPointer, uint* Timeout)
 		{
 			var FixedPool = FixedPoolList.Get(PoolId);
@@ -241,7 +241,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xF6414A71, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceKernelFreeFpl(PoolId PoolId, PspPointer DataPointer)
 		{
 			var FixedPool = FixedPoolList.Get(PoolId);

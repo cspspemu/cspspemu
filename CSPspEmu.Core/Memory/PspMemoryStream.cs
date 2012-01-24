@@ -60,7 +60,13 @@ namespace CSPspEmu.Core.Memory
 				throw (new InvalidOperationException(String.Format("Can't read from invalid address 0x{0:X}", _Position)));
 			}
 			byte *Ptr = (byte*)Memory.PspAddressToPointer(_Position);
-			for (int n = 0; n < count; n++) buffer[n + offset] = Ptr[n];
+			fixed (byte* bufferPtr = &buffer[offset])
+			{
+				for (int n = 0; n < count; n++)
+				{
+					bufferPtr[n] = Ptr[n];
+				}
+			}
 			_Position += (uint)count;
 			return count;
 		}

@@ -48,11 +48,10 @@ namespace CSPspEmu.Sandbox
 			return;
 			*/
 
-			Console.OutputEncoding = Encoding.UTF8;
-
 #if !RELEASE
 			try
 			{
+				Console.OutputEncoding = Encoding.UTF8;
 				Console.SetWindowSize(160, 60);
 				Console.SetBufferSize(160, 2000);
 			}
@@ -65,7 +64,7 @@ namespace CSPspEmu.Sandbox
 			//PspEmulator.UseFastMemory = true;
 			var CodeBase = Assembly.GetExecutingAssembly().Location;
 			var Base = Path.GetDirectoryName(CodeBase) + @"\" + Path.GetFileNameWithoutExtension(CodeBase);
-			foreach (var TryExtension in new[] { "iso", "cso", "elf" })
+			foreach (var TryExtension in new[] { "iso", "cso", "elf", "pbp" })
 			{
 				var TryIsoFile = Base + "." + TryExtension;
 
@@ -91,6 +90,7 @@ namespace CSPspEmu.Sandbox
 #if RELEASE
 				PspEmulator.Start();
 #else
+				PspEmulator.Start();
 				//PspEmulator.UseFastMemory = false;
 				//PspEmulator.Start();
 
@@ -112,7 +112,7 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Phantasia.cso", EnableMpeg: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Skate Park City.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Outrun 2006.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false, EnableMpeg: false);
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false, EnableMpeg: true);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Castlevania.cso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Jeanne d'Arc.iso", TraceSyscalls: false, EnableMpeg: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false);
@@ -123,7 +123,6 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\TrigWars\EBOOT.PBP", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Valkyrie Profile.cso", EnableMpeg: false, TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\valkyria profile\BOOT.BIN", EnableMpeg: false, TraceSyscalls: true);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Prince.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Downstream Panic.cso");
 
 			// bltzal
@@ -136,13 +135,13 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\scummvm-1.4.0\EBOOT.PBP");
 
 			// Memory: Invalid Address
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Prince.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Downstream Panic.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Call of Duty - Roads of Victory.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\DragonBall Z Shin Budokai.cso", TraceSyscalls: true);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Loco Roco.cso");
 				
-
 			// VFPU
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Castlevania.cso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Vallhala Knights.iso");

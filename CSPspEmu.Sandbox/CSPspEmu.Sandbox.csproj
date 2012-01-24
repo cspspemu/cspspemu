@@ -98,6 +98,10 @@
       <Project>{9a30ebf3-b702-47d9-aafc-e3e02b410dad}</Project>
       <Name>CSPspEmu.Core.Gpu</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Resources\CSPspEmu.Resources.csproj">
+      <Project>{ba3187fa-a2a1-43e0-9fdd-69b377ee3152}</Project>
+      <Name>CSPspEmu.Resources</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Runner\CSPspEmu.Runner.csproj">
       <Project>{6552e4e6-198a-46b6-864a-53ca5c1ed851}</Project>
       <Name>CSPspEmu.Runner</Name>

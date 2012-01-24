@@ -16,12 +16,18 @@ namespace CSPspEmu.Hle.Vfs.Iso
 	{
 		public IsoFile Iso { get; protected set; }
 
-		public class IsoFileArgument
+		public class IsoFileArgument : IDisposable
 		{
 			public IsoNode IsoNode;
 			public long StartSector;
 			public long Size;
 			public Stream Stream;
+
+			public void Dispose()
+			{
+				if (IsoNode != null) IsoNode.Dispose();
+				if (Stream != null) Stream.Dispose();
+			}
 		}
 
 		public HleIoDriverIso(IsoFile Iso)
@@ -162,6 +168,7 @@ namespace CSPspEmu.Hle.Vfs.Iso
 		{
 			//throw new NotImplementedException();
 			var IsoNode = Iso.Root.Locate(Name);
+			//HleIoDrvFileArg.FileArgument = new DisposableDummy<DirectoryEnumerator<IsoNode>>(new DirectoryEnumerator<IsoNode>(IsoNode.Childs.ToArray()));
 			HleIoDrvFileArg.FileArgument = new DirectoryEnumerator<IsoNode>(IsoNode.Childs.ToArray());
 			return 0;
 		}
@@ -174,6 +181,7 @@ namespace CSPspEmu.Hle.Vfs.Iso
 
 		public unsafe int IoDread(HleIoDrvFileArg HleIoDrvFileArg, HleIoDirent* IoDirent)
 		{
+			//var Enumerator = (DirectoryEnumerator<IsoNode>)(DisposableDummy<DirectoryEnumerator<IsoNode>>)HleIoDrvFileArg.FileArgument;
 			var Enumerator = (DirectoryEnumerator<IsoNode>)HleIoDrvFileArg.FileArgument;
 
 			// More items.

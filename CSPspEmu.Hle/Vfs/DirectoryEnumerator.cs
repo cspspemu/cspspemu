@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Hle.Vfs
 {
-	internal class DirectoryEnumerator<TType>
+	internal class DirectoryEnumerator<TType> : IDisposable
 	{
 		int Index = -1;
 		TType[] List;
@@ -32,6 +32,10 @@ namespace CSPspEmu.Hle.Vfs
 		public int GetLeft()
 		{
 			return List.Length - Index;
+		}
+
+		public void Dispose()
+		{
 		}
 	}
 }

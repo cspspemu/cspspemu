@@ -59,56 +59,58 @@ namespace CSPspEmu.AutoTests
 
 			GC.Collect();
 
-			var PspEmulatorContext = new PspEmulatorContext(PspConfig);
+			using (var PspEmulatorContext = new PspEmulatorContext(PspConfig))
+			{
 
-			CapturedOutput = ConsoleUtils.CaptureOutput(() =>
-			{				
-				//PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
-				PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();
-
-				//PspEmulatorContext.SetInstanceType<GpuImpl, GpuImplMock>();
-				PspEmulatorContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
-
-				PspEmulatorContext.SetInstanceType<PspAudioImpl, AudioImplMock>();
-				PspEmulatorContext.SetInstanceType<HleOutputHandler, HleOutputHandlerMock>();
-
-				PspConfig.FileNameBase = FileNameBase;
-
-				var Start = DateTime.Now;
-				PspEmulatorContext.GetInstance<HleModuleManager>();
-				var End = DateTime.Now;
-				Console.WriteLine(End - Start);
-
-				var GpuImpl = PspEmulatorContext.GetInstance<GpuImpl>();
-				GpuImpl.InitSynchronizedOnce();
-
-				var PspRunner = PspEmulatorContext.GetInstance<PspRunner>();
-				PspRunner.StartSynchronized();
+				CapturedOutput = ConsoleUtils.CaptureOutput(() =>
 				{
-					try
+					//PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
+					PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();
+
+					//PspEmulatorContext.SetInstanceType<GpuImpl, GpuImplMock>();
+					PspEmulatorContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
+
+					PspEmulatorContext.SetInstanceType<PspAudioImpl, AudioImplMock>();
+					PspEmulatorContext.SetInstanceType<HleOutputHandler, HleOutputHandlerMock>();
+
+					PspConfig.FileNameBase = FileNameBase;
+
+					var Start = DateTime.Now;
+					PspEmulatorContext.GetInstance<HleModuleManager>();
+					var End = DateTime.Now;
+					Console.WriteLine(End - Start);
+
+					var GpuImpl = PspEmulatorContext.GetInstance<GpuImpl>();
+					GpuImpl.InitSynchronizedOnce();
+
+					var PspRunner = PspEmulatorContext.GetInstance<PspRunner>();
+					PspRunner.StartSynchronized();
 					{
-						//PspRunner.CpuComponentThread.SetIso(PspAutoTestsFolder + "/../input/test.cso");
-						PspRunner.CpuComponentThread.SetIso(PspAutoTestsFolder + "/../input/cube.cso");
-						PspRunner.CpuComponentThread._LoadFile(FileName);
-						if (!PspRunner.CpuComponentThread.StoppedEndedEvent.WaitOne(TimeSpan.FromSeconds(5)))
+						try
 						{
-							Console.Error.WriteLine("Timeout!");
+							//PspRunner.CpuComponentThread.SetIso(PspAutoTestsFolder + "/../input/test.cso");
+							PspRunner.CpuComponentThread.SetIso(PspAutoTestsFolder + "/../input/cube.cso");
+							PspRunner.CpuComponentThread._LoadFile(FileName);
+							if (!PspRunner.CpuComponentThread.StoppedEndedEvent.WaitOne(TimeSpan.FromSeconds(5)))
+							{
+								Console.Error.WriteLine("Timeout!");
+							}
+						}
+						catch (Exception Exception)
+						{
+							Console.Error.WriteLine(Exception);
 						}
 					}
-					catch (Exception Exception)
-					{
-						Console.Error.WriteLine(Exception);
-					}
-				}
 
-				PspRunner.StopSynchronized();
-			},
-			//Capture: false
-			Capture: true
-			);
+					PspRunner.StopSynchronized();
+				},
+					//Capture: false
+				Capture: true
+				);
 
-			var HleOutputHandlerMock = (HleOutputHandlerMock)PspEmulatorContext.GetInstance<HleOutputHandler>();
-			OutputString = HleOutputHandlerMock.OutputString;
+				var HleOutputHandlerMock = (HleOutputHandlerMock)PspEmulatorContext.GetInstance<HleOutputHandler>();
+				OutputString = HleOutputHandlerMock.OutputString;
+			}
 
 			return OutputString;
 		}
@@ -393,9 +395,12 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "fpl";
 				//WildCardFilter = "gpu/triangle";
 				//WildCardFilter = "gpu";
+				//WildCardFilter = "gpu/simple";
 				//WildCardFilter = "umd/callbacks";
 				//WildCardFilter = "mstick";
-				WildCardFilter = "threads/k0";
+				//WildCardFilter = "threads/k0";
+				//WildCardFilter = "umd/io";
+				//WildCardFilter = "loader/bss";
 			}
 
 			if (WildCardFilter.Length > 0)

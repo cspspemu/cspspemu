@@ -155,5 +155,14 @@ namespace CSPspEmu.Hle.Managers
 			};
 			return DelegateId;
 		}
+
+		public override void Dispose()
+		{
+			foreach (var HleModule in HleModules)
+			{
+				HleModule.Value.Dispose();
+			}
+			HleModules = new Dictionary<Type, HleModuleHost>();
+		}
 	}
 }

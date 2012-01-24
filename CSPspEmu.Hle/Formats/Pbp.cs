@@ -10,6 +10,17 @@ namespace CSPspEmu.Hle.Formats
 {
 	unsafe public class Pbp : IFormatDetector
 	{
+		public enum Types
+		{
+			ParamSfo = 0,
+			Icon0Png,
+			Icon1Pmf,
+			Pic0Png,
+			Pic1Png,
+			Snd0At3,
+			PspData,
+			PsarData,
+		}
 		static readonly public String[] Names = new[] { "param.sfo", "icon0.png", "icon1.pmf", "pic0.png", "pic1.png", "snd0.at3", "psp.data", "psar.data" };
 
 		public struct HeaderStruct
@@ -49,6 +60,14 @@ namespace CSPspEmu.Hle.Formats
 			}
 
 			return this;
+		}
+
+		public Stream this[Types Type]
+		{
+			get
+			{
+				return Files[Names[(int)Type]];
+			}
 		}
 
 		public Stream this[String Key]

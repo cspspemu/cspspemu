@@ -62,3 +62,7 @@
 /flash1
 *.iso
 *.dmp
+/CSPspEmu.Resources/bin
+/CSPspEmu.Resources/obj
+/CSPspEmu.Core.Audio.Impl.WaveOut/bin
+/CSPspEmu.Core.Audio.Impl.WaveOut/obj

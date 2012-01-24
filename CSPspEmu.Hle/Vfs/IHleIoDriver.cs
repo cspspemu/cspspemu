@@ -22,7 +22,7 @@ namespace CSPspEmu.Hle.Vfs
 		Unknown3 = 0x2000000, // seen on Puzzle Guzzle, Hammerin' Hero
 	}
 
-	public class HleIoDrvFileArg
+	public class HleIoDrvFileArg : IDisposable
 	{
 		/// <summary>
 		/// Original driver.
@@ -37,12 +37,23 @@ namespace CSPspEmu.Hle.Vfs
 		/// <summary>
 		/// Pointer to a user defined argument, this is preserved on a per file basis
 		/// </summary>
-		public object FileArgument;
+		public IDisposable FileArgument;
 
 		/// <summary>
 		/// Last result produced by an async call.
 		/// </summary>
 		public long AsyncLastResult;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public void Dispose()
+		{
+			if (FileArgument != null)
+			{
+				FileArgument.Dispose();
+			}
+		}
 	}
 
 	/// <summary>
@@ -274,7 +285,7 @@ namespace CSPspEmu.Hle.Vfs
 	/// <summary>
 	/// Describes a single directory entry
 	/// </summary>
-	unsafe public struct HleIoDirent
+	unsafe public struct HleIoDirent : IDisposable
 	{
 		/// <summary>
 		/// File status.
@@ -295,6 +306,13 @@ namespace CSPspEmu.Hle.Vfs
 		/// 
 		/// </summary>
 		public uint Dummy;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public void Dispose()
+		{
+		}
 	}
 
 	/// <summary>

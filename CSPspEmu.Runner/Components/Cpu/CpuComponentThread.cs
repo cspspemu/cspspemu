@@ -191,7 +191,19 @@ namespace CSPspEmu.Runner.Components.Cpu
 				switch (Format)
 				{
 					case "Pbp":
-						ElfLoadStream = new Pbp().Load(LoadStream)["psp.data"];
+						{
+							var Pbp = new Pbp().Load(LoadStream);
+							ElfLoadStream = Pbp[Pbp.Types.PspData];
+							try
+							{
+								var ParamSfo = new Psf().Load(Pbp[Pbp.Types.ParamSfo]);
+								Title = (String)ParamSfo.EntryDictionary["TITLE"];
+							}
+							catch (Exception Exception)
+							{
+								Console.Error.WriteLine(Exception);
+							}
+						}
 						break;
 					case "Elf":
 						ElfLoadStream = LoadStream;

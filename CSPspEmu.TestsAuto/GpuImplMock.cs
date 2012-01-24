@@ -37,5 +37,13 @@ namespace CSPspEmu.AutoTests
 		public override void AddedDisplayList()
 		{
 		}
+
+		public override void SetCurrent()
+		{
+		}
+
+		public override void UnsetCurrent()
+		{
+		}
 	}
 }

@@ -5,7 +5,10 @@ using System.Text;
 
 namespace CSPspEmu.Hle
 {
-	public class HleModule
+	public class HleModule : IDisposable
 	{
+		virtual public void Dispose()
+		{
+		}
 	}
 }

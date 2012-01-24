@@ -7,7 +7,7 @@ using CSPspEmu.Core.Cpu;
 
 namespace CSPspEmu.Hle
 {
-	sealed public class HleCallback
+	sealed public class HleCallback : IDisposable
 	{
 		public string Name { get; private set; }
 		public uint Function { get; private set; }
@@ -31,6 +31,10 @@ namespace CSPspEmu.Hle
 		public void SetArgumentsToCpuThreadState(CpuThreadState CpuThreadState)
 		{
 			HleInterop.SetArgumentsToCpuThreadState(CpuThreadState, Function, Arguments);
+		}
+
+		public void Dispose()
+		{
 		}
 	}
 }

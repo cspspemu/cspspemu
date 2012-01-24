@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Hle.Managers
 {
-	public class HleUidPool<TType>
+	public class HleUidPool<TType> where TType : IDisposable
 	{
 		protected int LastId = 1;
 		protected Dictionary<int, TType> Items = new Dictionary<int, TType>();
@@ -36,7 +36,16 @@ namespace CSPspEmu.Hle.Managers
 
 		public void Remove(int Id)
 		{
-			Items.Remove(Id);
+			if (Items.ContainsKey(Id))
+			{
+				Items[Id].Dispose();
+				Items.Remove(Id);
+			}
+		}
+
+		public void RemoveAll()
+		{
+			foreach (var Item in Items.ToArray()) Remove(Item.Key);
 		}
 	}
 }

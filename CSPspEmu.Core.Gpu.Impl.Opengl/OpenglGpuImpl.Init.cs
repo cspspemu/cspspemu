@@ -13,22 +13,40 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 	{
 		//Thread CThread;
 		AutoResetEvent StopEvent = new AutoResetEvent(false);
+
 		bool Running = true;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public static IGraphicsContext GraphicsContext;
+		static public IGraphicsContext GraphicsContext;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public static INativeWindow NativeWindow;
+		static public INativeWindow NativeWindow;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		static bool AlreadySynchronized = false;
+		static public bool AlreadyInitialized = false;
+
+		public bool IsCurrentWindow = false;
+
+		public override void SetCurrent()
+		{
+			if (!IsCurrentWindow)
+			{
+				GraphicsContext.MakeCurrent(NativeWindow.WindowInfo);
+				IsCurrentWindow = true;
+			}
+		}
+
+		public override void UnsetCurrent()
+		{
+			GraphicsContext.MakeCurrent(null);
+			IsCurrentWindow = false;
+		}
 
 		/// <summary>
 		/// 
@@ -36,14 +54,14 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <see cref="http://www.opentk.com/doc/graphics/graphicscontext"/>
 		public override void InitSynchronizedOnce()
 		{
-			if (!AlreadySynchronized)
+			if (!AlreadyInitialized)
 			{
-				AlreadySynchronized = true;
+				AlreadyInitialized = true;
 				AutoResetEvent CompletedEvent = new AutoResetEvent(false);
 				var CThread = new Thread(() =>
 				{
 					Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.CultureName);
-					NativeWindow = new OpenTK.NativeWindow(512, 272, "PspGraphicEngine", GameWindowFlags.Default, GraphicsMode.Default, DisplayDevice.Default);
+					NativeWindow = new NativeWindow(512, 272, "PspGraphicEngine", GameWindowFlags.Default, GraphicsMode.Default, DisplayDevice.Default);
 					NativeWindow.Visible = false;
 					GraphicsContext = new GraphicsContext(GraphicsMode.Default, NativeWindow.WindowInfo);
 					GraphicsContext.MakeCurrent(NativeWindow.WindowInfo);
@@ -60,6 +78,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					}
 					StopEvent.Set();
 				});
+				CThread.Name = "GpuImplEventHandling";
 				CThread.IsBackground = true;
 				CThread.Start();
 				CompletedEvent.WaitOne();
@@ -70,6 +89,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			//Running = false;
 			//StopEvent.WaitOne();
+
+			//GraphicsContext.Dispose();
+			//NativeWindow.Dispose();
 		}
 	}
 }

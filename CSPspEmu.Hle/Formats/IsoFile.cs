@@ -409,7 +409,7 @@ namespace CSPspEmu.Hle.Formats
 		public byte Version;
 	}
 
-	public class IsoNode
+	public class IsoNode : IDisposable
 	{
 		public IsoFile Iso;
 		public DirectoryRecord DirectoryRecord { get; protected set; }
@@ -535,6 +535,10 @@ namespace CSPspEmu.Hle.Formats
 		public override string ToString()
 		{
 			return String.Format("IsoNode('{0}', {1})", FullPath, DirectoryRecord);
+		}
+
+		public void Dispose()
+		{
 		}
 	}
 }

@@ -14,9 +14,13 @@ namespace CSPspEmu.Hle.Modules.libfont
 		public enum FontLibraryHandle : int { }
 		public enum FontHandle : int { }
 
-		protected class FontLibrary
+		protected class FontLibrary : IDisposable
 		{
 			public FontNewLibParams Params;
+
+			public void Dispose()
+			{
+			}
 		}
 
 		HleUidPool<FontLibrary> FontLibraries = new HleUidPool<FontLibrary>();

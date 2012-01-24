@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
+using CSPspEmu.Hle.Vfs.Iso;
 
 namespace CSPspEmu.Hle.Vfs.Local
 {
@@ -194,6 +195,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 				Items.AddRange(new DirectoryInfo(RealFileName).EnumerateFiles().Select(Item => ConvertFileSystemInfoToHleIoDirent(Item)));
 				Items.AddRange(new DirectoryInfo(RealFileName).EnumerateDirectories().Select(Item => ConvertFileSystemInfoToHleIoDirent(Item)));
 
+				//HleIoDrvFileArg.FileArgument = new DisposableDummy<DirectoryEnumerator<HleIoDirent>>(new DirectoryEnumerator<HleIoDirent>(Items.ToArray()));
 				HleIoDrvFileArg.FileArgument = new DirectoryEnumerator<HleIoDirent>(Items.ToArray());
 				return 0;
 			}
@@ -250,6 +252,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 
 		public unsafe int IoDread(HleIoDrvFileArg HleIoDrvFileArg, HleIoDirent* IoDirent)
 		{
+			//var Enumerator = (DirectoryEnumerator<HleIoDirent>)(DisposableDummy<DirectoryEnumerator<HleIoDirent>>)HleIoDrvFileArg.FileArgument;
 			var Enumerator = (DirectoryEnumerator<HleIoDirent>)HleIoDrvFileArg.FileArgument;
 
 			// More items.

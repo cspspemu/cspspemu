@@ -57,12 +57,19 @@ void threadFunction(int argSize, void* argPointer)
 	th_stat.size = sizeof(th_stat);
 	sceKernelReferThreadStatus(-1, &th_stat);
 	
-	printf("K0: %d\n", ((byte*)k0 - (byte*)k0->stackAddr));
+	//printf("K0: %d\n", ((byte*)k0 - (byte*)k0->stackAddr));
+	printf("K0: 0x%08X\n", (uint)k0);
+	fflush(stdout);
 	printf("Low:%d\n", ((byte*)th_stat.stack == (byte*)k0->stackAddr));
+	fflush(stdout);
 	printf("ThreadID[1]: %d\n", (uint)(k0->threadId == sceKernelGetThreadId()));
-	printf("ThreadID[2]: %d\n", (uint)(*(int*)(k0->stackAddr) == sceKernelGetThreadId()));
+	fflush(stdout);
+	printf("ThreadID[2]: %d\n", (uint)(*(ushort*)(k0->stackAddr) == sceKernelGetThreadId()));
+	fflush(stdout);
 	printf("%08X\n", (uint)k0->f1);
+	fflush(stdout);
 	printf("%08X\n", (uint)k0->f2);
+	fflush(stdout);
 }
 
 int main(int argc, char **argv) {
