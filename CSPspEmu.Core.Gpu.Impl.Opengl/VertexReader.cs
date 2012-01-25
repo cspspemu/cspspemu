@@ -285,12 +285,22 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		public void ReadWeightByte()
 		{
-			throw(new NotImplementedException());
+			var Weights = &VertexInfo->Weight0;
+			for (int n = 0; n < SkinningWeightCount; n++)
+			{
+				Weights[n] = (float)((sbyte*)Pointer)[n] / 128f;
+			}
+			Pointer += sizeof(sbyte) * SkinningWeightCount;
 		}
 
 		public void ReadWeightShort()
 		{
-			throw (new NotImplementedException());
+			var Weights = &VertexInfo->Weight0;
+			for (int n = 0; n < SkinningWeightCount; n++)
+			{
+				Weights[n] = (float)((short*)Pointer)[n] / 32768f;
+			}
+			Pointer += sizeof(short) * SkinningWeightCount;
 		}
 
 		public void ReadWeightFloat()

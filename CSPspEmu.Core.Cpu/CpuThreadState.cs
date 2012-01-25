@@ -53,6 +53,8 @@ namespace CSPspEmu.Core.Cpu
 		public bool VFR_CC_ANY { get { return VFR_CC_4; } }
 		public bool VFR_CC_ALL { get { return VFR_CC_5; } }
 
+		public Random Random = new Random();
+
 		public bool VFR_CC(int Index)
 		{
 			fixed (bool* VFR_CC = &VFR_CC_0)

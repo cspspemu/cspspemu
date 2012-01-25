@@ -141,11 +141,11 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Call of Duty - Roads of Victory.cso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\DragonBall Z Shin Budokai.cso", TraceSyscalls: true);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Loco Roco.cso");
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Loco Roco.cso", TraceSyscalls: true);
 				
 			// VFPU
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Castlevania.cso", TraceSyscalls: false);
-				PspEmulator.StartAndLoad(@"F:\Isos\psp\Vallhala Knights.iso");
+				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Vallhala Knights.iso");
 				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Outrun 2006.cso");
 
 			// Loader: Encrypted
@@ -231,7 +231,7 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\controller.pbp", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\clut.pbp", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\lights.pbp", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\morph.pbp", TraceSyscalls: false);
+				PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\morph.pbp", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\reflection.pbp", TraceSyscalls: false);
 
 				//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\cube.pbp", TraceSyscalls: false);

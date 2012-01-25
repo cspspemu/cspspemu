@@ -68,18 +68,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}, AsInteger: true);
 		}
 
-		public void vi2f()
-		{
-			VectorOperationSaveVd(Index =>
-			{
-				Load_VS(Index, AsInteger: true);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_R4);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, -(int)Instruction.IMM5);
-				MipsMethodEmiter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
-			});
-		}
-
-
 		// Vfpu Integer to(2) Color?
 		public void vi2c() { throw (new NotImplementedException("")); }
 
@@ -101,14 +89,32 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				Load_VS(1, VectorSize, AsInteger: true);
 				Load_VS(2, VectorSize, AsInteger: true);
 				Load_VS(3, VectorSize, AsInteger: true);
-				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
-				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
-				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
 				MipsMethodEmiter.CallMethod((Func<int, int, int, int, uint>)_vi2uc);
 			}, AsInteger: true);
 		}
 
-		public void vf2id() { throw (new NotImplementedException("")); }
+		public void vi2f()
+		{
+			VectorOperationSaveVd(Index =>
+			{
+				Load_VS(Index, AsInteger: true);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_R4);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, -(int)Instruction.IMM5);
+				MipsMethodEmiter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
+			});
+		}
+
+		public void vf2id() {
+			var VectorSize = Instruction.ONE_TWO;
+			var Imm5 = Instruction.IMM5;
+			VectorOperationSaveVd(VectorSize, Index =>
+			{
+				Load_VS(Index, VectorSize);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Imm5);
+				MipsMethodEmiter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
+				MipsMethodEmiter.CallMethod((Func<float, int>)MathFloat.Floor);
+			}, AsInteger: true);
+		}
 		public void vf2in() { throw (new NotImplementedException("")); }
 		public void vf2iu() { throw (new NotImplementedException("")); }
 

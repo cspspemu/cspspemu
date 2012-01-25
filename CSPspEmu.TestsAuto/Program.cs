@@ -394,14 +394,14 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "vpl";
 				//WildCardFilter = "fpl";
 				//WildCardFilter = "gpu/triangle";
-				//WildCardFilter = "gpu";
+				WildCardFilter = "gpu";
 				//WildCardFilter = "gpu/simple";
 				//WildCardFilter = "umd/callbacks";
 				//WildCardFilter = "mstick";
 				//WildCardFilter = "threads/k0";
 				//WildCardFilter = "umd/io";
 				//WildCardFilter = "loader/bss";
-				WildCardFilter = "font/fonttest";
+				//WildCardFilter = "font/fonttest";
 			}
 
 			if (WildCardFilter.Length > 0)
