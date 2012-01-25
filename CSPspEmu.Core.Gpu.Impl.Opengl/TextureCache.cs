@@ -39,7 +39,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		public Texture(OpenglGpuImpl OpenglGpuImpl)
 		{
 			this.OpenglGpuImpl = OpenglGpuImpl;
-			OpenglGpuImpl.GraphicsContext.MakeCurrent(OpenglGpuImpl.NativeWindow.WindowInfo);
+			OpenglGpuImpl.GraphicsContext.MakeCurrent(OpenglGpuImpl.WindowInfo);
 
 			//lock (OpenglGpuImpl.GpuLock)
 			{

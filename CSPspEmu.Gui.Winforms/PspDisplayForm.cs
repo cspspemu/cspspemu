@@ -218,13 +218,16 @@ namespace CSPspEmu.Gui.Winforms
 				{
 					int Width = 512;
 					int Height = 272;
-					var Address = PspDisplay.CurrentInfo.Address | 0x04000000;
+					//var Address = PspDisplay.CurrentInfo.Address | 0x04000000;
+					var Address = PspDisplay.CurrentInfo.Address;
 					byte* FrameBuffer = null;
 					try
 					{
 						FrameBuffer = (byte*)Memory.PspAddressToPointerSafe(Address);
-					} catch
+					}
+					catch (Exception Exception)
 					{
+						Console.Error.WriteLine(Exception);
 					}
 
 					//Console.WriteLine("{0:X}", Address);
@@ -289,7 +292,7 @@ namespace CSPspEmu.Gui.Winforms
 				}
 				catch (Exception Exception)
 				{
-					Console.WriteLine(Exception);
+					Console.Error.WriteLine(Exception);
 				}
 			}
 			//Console.WriteLine(this.ClientRectangle);

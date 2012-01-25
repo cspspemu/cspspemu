@@ -45,9 +45,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OpenglGpuImpl.StateClear.cs" />
     <Compile Include="OpenglGpuImpl.cs" />
     <Compile Include="OpenglGpuImpl.Init.cs" />
-    <Compile Include="OpenglGpuImpl.State.cs" />
+    <Compile Include="OpenglGpuImpl.StateCommon.cs" />
+    <Compile Include="OpenglGpuImpl.StateDraw.cs" />
+    <Compile Include="OpenglGpuImpl.StateMatrix.cs" />
+    <Compile Include="OpenglGpuImpl.Transfer.cs" />
+    <Compile Include="OpenglGpuImpl.Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextureCache.cs" />
     <Compile Include="VertexReader.cs" />

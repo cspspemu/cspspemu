@@ -13,40 +13,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
 	sealed unsafe public partial class OpenglGpuImpl
 	{
-		private void PrepareStateCommon(GpuStateStruct* GpuState)
-		{
-			var Viewport = GpuState->Viewport;
-			//ViewportStruct(
-			//  Position=Vector3f(X=2048,Y=2048,Z=0.9999847),
-			//  Scale=Vector3f(X=480,Y=-272,Z=-32768),
-			//  RegionTopLeft=PointS(X=0,Y=0),
-			//  RegionBottomRight=PointS(X=479,Y=271)
-			//)
-			//ViewportStruct(
-			//  RegionSize=PointS(X=384,Y=240),
-			//  Position=Vector3f(X=2048,Y=2048,Z=0),
-			//  Scale=Vector3f(X=480,Y=-272,Z=0),
-			//  RegionTopLeft=PointS(X=0,Y=0),
-			//  RegionBottomRight=PointS(X=383,Y=239)
-			//)
-			//Console.Error.WriteLine(Viewport.ToString());
-			GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Fastest);
-			GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
-			GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
-			GL.Hint(HintTarget.PointSmoothHint, HintMode.Fastest);
-
-			int ScaledWidth = (int)(((double)480 / (double)Viewport.RegionSize.X) * (double)480);
-			int ScaledHeight = (int)(((double)272 / (double)Viewport.RegionSize.Y) * (double)272);
-
-			GL.Viewport(
-				(int)Viewport.RegionTopLeft.X,
-				(int)Viewport.RegionTopLeft.Y,
-				ScaledWidth,
-				ScaledHeight
-			);
-		}
-
-		private void PrepareState(GpuStateStruct* GpuState)
+		private void PrepareStateDraw(GpuStateStruct* GpuState)
 		{
 			GL.ColorMask(true, true, true, true);
 
@@ -60,7 +27,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			PrepareState_Depth(GpuState);
 			PrepareState_DepthTest(GpuState);
 			PrepareState_Stencil(GpuState);
-			//PrepareState_StencilTest(GpuState);
 			PrepareState_AlphaTest(GpuState);
 
 			GL.ShadeModel((GpuState->ShadeModel == ShadingModelEnum.Flat) ? ShadingModel.Flat : ShadingModel.Smooth);
@@ -86,6 +52,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			{
 				return;
 			}
+
+			//Console.Error.WriteLine("aaaaaa!");
 
 			//if (state.stencilFuncFunc == 2) { outputDepthAndStencil(); assert(0); }
 
@@ -126,7 +94,15 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private void PrepareState_Depth(GpuStateStruct* GpuState)
 		{
-			GL.DepthRange(GpuState->DepthTestState.RangeFar, GpuState->DepthTestState.RangeNear);
+			if (GpuState->VertexState.Type.Transform2D)
+			{
+				GL.DepthRange(0, 1);
+			}
+			else
+			{
+				GL.DepthRange(GpuState->DepthTestState.RangeFar, GpuState->DepthTestState.RangeNear);
+				//GL.DepthRange(GpuState->DepthTestState.RangeNear, GpuState->DepthTestState.RangeFar);
+			}
 		}
 
 		private void PrepareState_DepthTest(GpuStateStruct* GpuState)
@@ -167,13 +143,15 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				{
 					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, &GpuState->LightingState.AmbientModelColor.Red);
 				}
+
 				if (MaterialColorComponents.HasFlag(LightComponentsSet.Diffuse))
 				{
-					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, &GpuState->LightingState.DiffuseModelColor.Red);
+					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, &GpuState->LightingState.DiffuseModelColor.Red);
 				}
+
 				if (MaterialColorComponents.HasFlag(LightComponentsSet.Specular))
 				{
-					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, &GpuState->LightingState.SpecularModelColor.Red);
+					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, &GpuState->LightingState.SpecularModelColor.Red);
 				}
 
 				if (MaterialColorComponents.HasFlag(LightComponentsSet.AmbientAndDiffuse))

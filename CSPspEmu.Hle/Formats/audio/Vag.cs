@@ -15,7 +15,7 @@ namespace CSPspEmu.Hle.Formats.audio
 	unsafe public partial class Vag
 	{
 		//public byte[] Data;
-		public short[] DecodedSamples;
+		public short[] DecodedSamples = new short[0];
 
 		public Vag()
 		{

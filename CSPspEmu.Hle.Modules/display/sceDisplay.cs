@@ -8,6 +8,7 @@ using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Attributes;
+using System.Diagnostics;
 
 namespace CSPspEmu.Hle.Modules.display
 {
@@ -113,6 +114,10 @@ namespace CSPspEmu.Hle.Modules.display
 		[HlePspFunction(NID = 0x289D82FE, FirmwareVersion = 150)]
 		public int sceDisplaySetFrameBuf(uint Address, int BufferWidth, GuPixelFormats PixelFormat, PspDisplay.SyncMode Sync)
 		{
+			if (Sync != Core.Display.PspDisplay.SyncMode.Immediate)
+			{
+				Console.Error.WriteLine("Not immediate!");
+			}
 			//Console.WriteLine("sceDisplay.sceDisplaySetFrameBuf {0:X},{1},{2},{3}", Address, BufferWidth, PixelFormat, Sync);
 			PspDisplay.CurrentInfo.Address = Address;
 			PspDisplay.CurrentInfo.BufferWidth = BufferWidth;

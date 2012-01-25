@@ -195,7 +195,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Primitive Kick
 		public void OP_PRIM()
 		{
-			var PrimitiveType = (PrimitiveType)Param8(16);
+			var PrimitiveType = (GuPrimitiveType)Param8(16);
 			var VertexCount = Param16(0);
 
 			GpuDisplayList.GpuProcessor.GpuImpl.Prim(GpuDisplayList.GpuStateStructPointer, PrimitiveType, VertexCount);

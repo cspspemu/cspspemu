@@ -219,10 +219,18 @@ void emulatorEmitScreenshot() {
 				vram_row = (uint *)(topaddr + 512 * 4 * (271 - y));
 				for (x = 0; x < 512; x++) {
 					c = vram_row[x];
+					/*
 					row_buf[x] = (
 						((extractBits(c,  0, 8)) <<  0) |
 						((extractBits(c,  8, 8)) <<  8) |
 						((extractBits(c, 16, 8)) << 16) |
+						((                0x00 ) << 24) |
+					0);
+					*/
+					row_buf[x] = (
+						((extractBits(c, 16, 8)) <<  0) |
+						((extractBits(c,  8, 8)) <<  8) |
+						((extractBits(c,  0, 8)) << 16) |
 						((                0x00 ) << 24) |
 					0);
 				}

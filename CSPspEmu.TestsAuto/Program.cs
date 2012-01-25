@@ -393,8 +393,10 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "mutex";
 				//WildCardFilter = "vpl";
 				//WildCardFilter = "fpl";
-				//WildCardFilter = "gpu/triangle";
 				WildCardFilter = "gpu";
+				//WildCardFilter = "gpu/triangle";
+				//WildCardFilter = "gpu/reflection";
+				//WildCardFilter = "gpu";
 				//WildCardFilter = "gpu/simple";
 				//WildCardFilter = "umd/callbacks";
 				//WildCardFilter = "mstick";

@@ -115,7 +115,7 @@ namespace CSPspEmu.Core.Gpu.State
 
 	}
 
-	public enum PrimitiveType : byte
+	public enum GuPrimitiveType : byte
 	{
 		Points = 0,
 		Lines = 1,

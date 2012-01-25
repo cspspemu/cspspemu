@@ -1,37 +1,43 @@
-﻿using System;
+﻿//#define USE_VERTEX_READER_DYNAREC
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Gpu.State;
+using CSPspEmu.Core.Gpu.VertexReading;
 using CSPspEmu.Core.Utils;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-	/// <summary>
-	/// 20 floats.
-	/// </summary>
-	public struct VertexInfo
+	unsafe public partial class VertexReader
 	{
-		public float R, G, B, A;
-		public float PX, PY, PZ;
-		public float NX, NY, NZ;
-		public float U, V;
-		public float Weight0, Weight1, Weight2, Weight3, Weight4, Weight5, Weight6, Weight7;
+#if USE_VERTEX_READER_DYNAREC
+		public Dictionary<uint, VertexReaderDelegate> Readers = new Dictionary<uint, VertexReaderDelegate>();
+		VertexReaderDelegate CurrentReader;
+		byte* BasePointer;
 
-		public override string ToString()
+		public void SetVertexTypeStruct(VertexTypeStruct VertexTypeStruct, byte* BasePointer)
 		{
-			return String.Format(
-				"VertexInfo(Position=({0}, {1}, {2}), Normal=({3}, {4}, {5}), UV=({6}, {7}), COLOR=(R:{8}, G:{9}, B:{10}, A:{11}))",
-				PX, PY, PZ,
-				NX, NY, NZ,
-				U, V,
-				R, G, B, A
-			);
+			var Key = VertexTypeStruct.Value;
+			if (!Readers.TryGetValue(Key, out CurrentReader))
+			{
+				this.CurrentReader = Readers[Key] = VertexReaderDynarec.GenerateMethod(VertexTypeStruct);
+			}
+			this.BasePointer = BasePointer;
 		}
-	}
 
-	unsafe public class VertexReader
-	{
+		public void ReadVertices(int Index, VertexInfo* VertexInfo, int Count)
+		{
+			CurrentReader(BasePointer, VertexInfo, Index, Count);
+		}
+
+		public void ReadVertex(int Index, VertexInfo* VertexInfo)
+		{
+			CurrentReader(BasePointer, VertexInfo, Index, 1);
+		}
+
+#else
 		protected uint VertexAlignSize = 1;
 		protected uint VertexSize;
 		protected uint SkinningWeightCount;
@@ -89,6 +95,14 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 			//public VertexTypeStruct VertexTypeStruct;
 			this.BasePointer = BasePointer;
+		}
+
+		public void ReadVertices(int Index, VertexInfo* VertexInfo, int Count)
+		{
+			for (int n = 0; n < Count; n++)
+			{
+				ReadVertex(Index + n, &VertexInfo[n]);
+			}
 		}
 
 		public void ReadVertex(int Index, VertexInfo* VertexInfo)
@@ -352,5 +366,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			VertexInfo->NZ = (float)((float*)Pointer)[2];
 			Pointer += sizeof(float) * 3;
 		}
+#endif
 	}
 }

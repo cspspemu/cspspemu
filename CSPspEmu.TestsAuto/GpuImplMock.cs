@@ -22,7 +22,7 @@ namespace CSPspEmu.AutoTests
 		{
 		}
 
-		public override void Prim(GpuStateStruct* GpuState, PrimitiveType PrimitiveType, ushort VertexCount)
+		public override void Prim(GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
 		{
 		}
 

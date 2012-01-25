@@ -44,7 +44,8 @@ namespace CSPspEmu.Core.Display
 			NextFrame = 1,
 		}
 
-		public struct Info {
+		public struct Info 
+		{
 			public uint Address;
 			public int BufferWidth;
 			public GuPixelFormats PixelFormat;
@@ -101,20 +102,12 @@ namespace CSPspEmu.Core.Display
 
 		public Bitmap TakeScreenshot()
 		{
-			var Bitmap = new Bitmap(CurrentInfo.BufferWidth, CurrentInfo.Height, PixelFormat.Format24bppRgb);
-			Bitmap.LockBitsUnlock(PixelFormat.Format32bppArgb, (BitmapData) => {
-				var Output = (OutputPixel*)BitmapData.Scan0;
-				PixelFormatDecoder.Decode(
-					CurrentInfo.PixelFormat,
-					Memory.PspAddressToPointerSafe(CurrentInfo.Address),
-					Output,
-					CurrentInfo.BufferWidth,
-					CurrentInfo.Height,
-					IgnoreAlpha: true
-				);
-			});
-
-			return Bitmap;
+			return new PspBitmap(
+				CurrentInfo.PixelFormat,
+				CurrentInfo.BufferWidth,
+				CurrentInfo.Height,
+				(byte*)Memory.PspAddressToPointerSafe(CurrentInfo.Address)
+			).ToBitmap();
 		}
 
 		public bool IsVblank { get; protected set; }

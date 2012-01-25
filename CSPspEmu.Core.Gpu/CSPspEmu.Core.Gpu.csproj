@@ -92,8 +92,15 @@
     <Compile Include="State\SubStates\TextureStateStruct.cs" />
     <Compile Include="State\TestFunctionEnum.cs" />
     <Compile Include="State\SubStates\VertexStateStruct.cs" />
+    <Compile Include="VertexInfo.cs" />
+    <Compile Include="VertexReading\VertexReaderDynarec.cs" />
+    <Compile Include="VertexReading\VertexReaderDynarec.Utils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
+      <Project>{9b217880-48ae-43b6-ae1f-dc732fccbc7a}</Project>
+      <Name>CSharpUtils.Drawing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
       <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
