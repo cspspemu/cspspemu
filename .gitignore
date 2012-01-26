@@ -66,3 +66,5 @@
 /CSPspEmu.Resources/obj
 /CSPspEmu.Core.Audio.Impl.WaveOut/bin
 /CSPspEmu.Core.Audio.Impl.WaveOut/obj
+/CSPspEmu.Debugger/obj
+/CSPspEmu.Debugger/bin

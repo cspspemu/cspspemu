@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Core.Audio.Impl.Wa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Resources", "CSPspEmu.Resources\CSPspEmu.Resources.csproj", "{BA3187FA-A2A1-43E0-9FDD-69B377EE3152}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Debugger", "CSPspEmu.Debugger\CSPspEmu.Debugger.csproj", "{96E16187-A137-4990-B517-5A8109A97F23}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = CSPspEmu.vsmdi
@@ -163,6 +165,18 @@ Global
 		{827779A5-F05C-41C6-9FF9-FD274224A7AE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{827779A5-F05C-41C6-9FF9-FD274224A7AE}.Release|Win32.ActiveCfg = Release|Any CPU
 		{827779A5-F05C-41C6-9FF9-FD274224A7AE}.Release|x86.ActiveCfg = Release|Any CPU
+		{96E16187-A137-4990-B517-5A8109A97F23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96E16187-A137-4990-B517-5A8109A97F23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96E16187-A137-4990-B517-5A8109A97F23}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{96E16187-A137-4990-B517-5A8109A97F23}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{96E16187-A137-4990-B517-5A8109A97F23}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{96E16187-A137-4990-B517-5A8109A97F23}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{96E16187-A137-4990-B517-5A8109A97F23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96E16187-A137-4990-B517-5A8109A97F23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96E16187-A137-4990-B517-5A8109A97F23}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{96E16187-A137-4990-B517-5A8109A97F23}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{96E16187-A137-4990-B517-5A8109A97F23}.Release|Win32.ActiveCfg = Release|Any CPU
+		{96E16187-A137-4990-B517-5A8109A97F23}.Release|x86.ActiveCfg = Release|Any CPU
 		{9A30EBF3-B702-47D9-AAFC-E3E02B410DAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9A30EBF3-B702-47D9-AAFC-E3E02B410DAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A30EBF3-B702-47D9-AAFC-E3E02B410DAD}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
