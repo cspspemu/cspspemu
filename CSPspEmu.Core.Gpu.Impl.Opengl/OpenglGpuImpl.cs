@@ -286,7 +286,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					ReadVertex = ReadVertex_Byte;
 					IndexListByte = (byte *)IndexPointer;
 					TotalVerticesWithoutMorphing = 0;
-					for (int n = 0; n < VertexCount; n++) if (TotalVerticesWithoutMorphing < IndexListByte[n]) TotalVerticesWithoutMorphing = IndexListByte[n];
+					for (int n = 0; n < VertexCount; n++)
+					{
+						if (TotalVerticesWithoutMorphing < IndexListByte[n]) TotalVerticesWithoutMorphing = IndexListByte[n];
+					}
 					break;
 				case VertexTypeStruct.IndexEnum.Short:
 					ReadVertex = ReadVertex_Short;
@@ -302,6 +305,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				default:
 					throw (new NotImplementedException());
 			}
+			TotalVerticesWithoutMorphing++;
 
 			//Console.WriteLine(TotalVerticesWithoutMorphing);
 

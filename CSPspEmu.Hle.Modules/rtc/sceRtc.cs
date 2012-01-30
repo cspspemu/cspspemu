@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Vfs;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Modules.rtc
 {
@@ -16,7 +17,7 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// </summary>
 		/// <returns>Number of ticks per second</returns>
 		[HlePspFunction(NID = 0xC41C2853, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public uint sceRtcGetTickResolution()
 		{
 			return (uint)(TimeSpan.FromSeconds(1).TotalMilliseconds * 1000);
@@ -110,27 +111,18 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <summary>
 		/// Set ticks based on a pspTime struct
 		/// </summary>
-		/// <param name="date">pointer to pspTime to convert</param>
-		/// <param name="tick">pointer to tick to set</param>
+		/// <param name="Date">pointer to pspTime to convert</param>
+		/// <param name="Tick">pointer to tick to set</param>
 		/// <returns>
 		///		0 on success
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0x6FF40ACC, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceRtcGetTick(ScePspDateTime* date, ulong* tick)
+		public int sceRtcGetTick(ScePspDateTime* Date, ulong* Tick)
 		{
-			throw (new NotImplementedException());
-			/*
-			try
-			{
-				*tick = date.tick;
-				return 0;
-			} catch {
-				*tick = 0;
-				return -1;
-			}
-			*/
+			*Tick = (ulong)Date->ToDateTime().GetTotalNanoseconds();
+			return 0;
 		}
 
 		/// <summary>

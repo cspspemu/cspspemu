@@ -230,6 +230,11 @@ namespace CSPspEmu.Hle.Vfs
 				Microsecond = (uint)(DateTime.Millisecond * 1000),
 			};
 		}
+
+		public DateTime ToDateTime()
+		{
+			return new DateTime((int)Year, (int)Month, (int)Day, (int)Hour, (int)Minute, (int)Second, (int)Microsecond / 1000, DateTimeKind.Utc);
+		}
 	}
 
 	/// <summary>
