@@ -135,6 +135,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 					GraphicsContext = new GraphicsContext(GraphicsMode.Default, WindowInfo);
 					GraphicsContext.MakeCurrent(WindowInfo);
+					GraphicsContext.VSync = false;
 					{
 						(GraphicsContext as IGraphicsContextInternal).LoadAll();
 						Initialize();
