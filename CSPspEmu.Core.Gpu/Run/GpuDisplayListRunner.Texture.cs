@@ -331,6 +331,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		{
 			GpuState->TextureMappingState.TextureMapMode = (TextureMapMode)Param8(0);
 			GpuState->TextureMappingState.TextureProjectionMapMode = (TextureProjectionMapMode)Param8(8);
+			GpuState->VertexState.Type.NormalCount = GpuState->TextureMappingState.GetTextureComponentsCount();
 		}
 
 		public void OP_TBIAS()

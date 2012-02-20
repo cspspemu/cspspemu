@@ -12,9 +12,25 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Syscall
 		public void syscall()
 		{
+#if false
+			var Code = (int)Instruction.CODE;
+			var Action = CpuProcessor.GetSyscall(Code);
+			if (Action != null)
+			{
+				//MipsMethodEmiter.ILGenerator.Emit(OpCodes., Action.Target);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Code);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, Action.Method);
+			}
+			else
+			{
+				Console.WriteLine("Undefined syscall: %06X at 0x%08X".Sprintf(Code, PC));
+			}
+#else
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.CODE);
 			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, MipsMethodEmiter.Method_Syscall);
+#endif
 		}
 
 		static public void cache_impl(CpuThreadState CpuThreadState, uint Value)

@@ -70,6 +70,13 @@ namespace CSPspEmu.Hle.Modules.sysmem
 			return 0;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Type"></param>
+		/// <param name="OutAddress"></param>
+		/// <param name="OutSize"></param>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0xA14F40B2, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceKernelVolatileMemTryLock(int Type, uint* OutAddress, int* OutSize)
@@ -80,7 +87,8 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="processor"></param>
+		/// <param name="Type"></param>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0xA569E425, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceKernelVolatileMemUnlock(int Type)

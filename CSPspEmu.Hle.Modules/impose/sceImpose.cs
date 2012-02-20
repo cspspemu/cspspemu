@@ -15,13 +15,13 @@ namespace CSPspEmu.Hle.Modules.impose
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="umdPopupStatus"></param>
+		/// <param name="UmdPopupStatus"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x72189C48, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public uint sceImposeSetUMDPopupFunction(uint umdPopupStatus)
+		public uint sceImposeSetUMDPopupFunction(uint UmdPopupStatus)
 		{
-			this.umdPopupStatus = umdPopupStatus;
+			this.umdPopupStatus = UmdPopupStatus;
 			return 0;
 		}
 
@@ -39,15 +39,15 @@ namespace CSPspEmu.Hle.Modules.impose
 		/// <summary>
 		/// Set the language and button assignment parameters
 		/// </summary>
-		/// <param name="language">Language</param>
-		/// <param name="confirmButton">Button assignment (Cross or circle)</param>
+		/// <param name="Language">Language</param>
+		/// <param name="ConfirmButton">Button assignment (Cross or circle)</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x36AA6E91, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceImposeSetLanguageMode(PspLanguages language, PspConfirmButton confirmButton)
+		public int sceImposeSetLanguageMode(PspLanguages Language, PspConfirmButton ConfirmButton)
 		{
-			HleState.PspConfig.Language = language;
-			HleState.PspConfig.ConfirmButton = confirmButton;
+			HleState.PspConfig.Language = Language;
+			HleState.PspConfig.ConfirmButton = ConfirmButton;
 			return 0;
 		}
 
@@ -66,6 +66,20 @@ namespace CSPspEmu.Hle.Modules.impose
 			return 0;
 		}
 
+		public enum ChargingEnum : uint
+		{
+			NotCharging = 0,
+			Charging = 1,
+		}
+
+		public enum BateryStatusEnum : uint
+		{
+			VeryLow = 0,
+			Low = 1,
+			PartiallyFilled = 2,
+			FullyPilled = 3,
+		}
+
 		/// <summary>
 		/// IsChargingPointer:
 		///		0 - if not charging
@@ -81,10 +95,10 @@ namespace CSPspEmu.Hle.Modules.impose
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x8C943191, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
-		public uint sceImposeGetBatteryIconStatus(uint* IsChargingPointer, uint* IconStatusPointer)
+		public uint sceImposeGetBatteryIconStatus(ChargingEnum* IsChargingPointer, BateryStatusEnum* IconStatusPointer)
 		{
-			*IsChargingPointer = 0;
-			*IconStatusPointer = 3;
+			*IsChargingPointer = ChargingEnum.NotCharging;
+			*IconStatusPointer = BateryStatusEnum.FullyPilled;
 			return 0;
 		}
 	}

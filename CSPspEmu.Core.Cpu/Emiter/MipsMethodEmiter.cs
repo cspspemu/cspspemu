@@ -17,7 +17,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 	unsafe public class MipsMethodEmiter
 	{
 #if USE_DYNAMIC_METHOD
-		protected DynamicMethod DynamicMethod;
+		//protected DynamicMethod DynamicMethod;
+		public DynamicMethod DynamicMethod;
 #else
 		public TypeBuilder TypeBuilder;
 		protected MethodBuilder MethodBuilder;
@@ -34,7 +35,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		static protected FieldInfo Field_LO = typeof(CpuThreadState).GetField("LO");
 		static protected FieldInfo Field_HI = typeof(CpuThreadState).GetField("HI");
 		static protected FieldInfo Field_StepInstructionCount = typeof(CpuThreadState).GetField("StepInstructionCount");
-		static public MethodInfo Method_Syscall = typeof(CpuThreadState).GetMethod("Syscall");
+		static public MethodInfo Method_Syscall = ((Action<int>)(new CpuThreadState(null).Syscall)).Method;
 		static private ulong UniqueCounter = 0;
 
 		static protected bool InitializedOnce = false;

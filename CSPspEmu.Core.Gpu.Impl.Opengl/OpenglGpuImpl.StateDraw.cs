@@ -348,7 +348,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					case TextureMapMode.GU_TEXTURE_MATRIX:
 						//glLoadMatrixf(state.texture.matrix.pointer);
 						//throw(new NotImplementedException());
-						Console.Error.WriteLine("NotImplemented: GU_TEXTURE_MATRIX");
+						Console.Error.WriteLine("NotImplemented: GU_TEXTURE_MATRIX: {0}", GpuState->TextureMappingState.TextureProjectionMapMode);
 						break;
 					case TextureMapMode.GU_ENVIRONMENT_MAP:
 						Console.Error.WriteLine("NotImplemented: GU_ENVIRONMENT_MAP");

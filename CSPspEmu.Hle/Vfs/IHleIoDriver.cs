@@ -235,6 +235,14 @@ namespace CSPspEmu.Hle.Vfs
 		{
 			return new DateTime((int)Year, (int)Month, (int)Day, (int)Hour, (int)Minute, (int)Second, (int)Microsecond / 1000, DateTimeKind.Utc);
 		}
+
+		public override string ToString()
+		{
+			return String.Format(
+				"ScePspDateTime(Year={0}, Month={1}, Day={2}, Hour={3}, Minute={4}, Second={5}, Microsecond={6})",
+				Year, Month, Day, Hour, Minute, Second, Microsecond
+			);
+		}
 	}
 
 	/// <summary>

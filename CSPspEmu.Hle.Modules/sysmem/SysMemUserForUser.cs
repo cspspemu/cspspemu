@@ -34,50 +34,53 @@ namespace CSPspEmu.Hle.Modules.sysmem
 			return 0x02070110;
 		}
 
-		// @TODO: Unknown.
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Param"></param>
 		[HlePspFunction(NID = 0xF77D77CB, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public void sceKernelSetCompilerVersion(uint param)
+		public void sceKernelSetCompilerVersion(uint Param)
 		{
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="param"></param>
+		/// <param name="Param"></param>
 		[HlePspFunction(NID = 0x7591C7DB, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public void sceKernelSetCompiledSdkVersion(uint param)
+		public void sceKernelSetCompiledSdkVersion(uint Param)
 		{
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="param"></param>
+		/// <param name="Param"></param>
 		[HlePspFunction(NID = 0x342061E5, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public void sceKernelSetCompiledSdkVersion370(uint param)
+		public void sceKernelSetCompiledSdkVersion370(uint Param)
 		{
 		}
 	
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="param"></param>
+		/// <param name="Param"></param>
 		[HlePspFunction(NID = 0x315AD3A0, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public void sceKernelSetCompiledSdkVersion380_390(uint param)
+		public void sceKernelSetCompiledSdkVersion380_390(uint Param)
 		{
 		}
 	
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="param"></param>
+		/// <param name="Param"></param>
 		[HlePspFunction(NID = 0xEBD5C3E6, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public void sceKernelSetCompiledSdkVersion395(uint param)
+		public void sceKernelSetCompiledSdkVersion395(uint Param)
 		{
 		}
 

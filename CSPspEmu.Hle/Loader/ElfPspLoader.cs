@@ -382,7 +382,7 @@ namespace CSPspEmu.Hle.Loader
 						};
 						var FunctionEntry = (Module != null) ? Module.EntriesByNID.GetOrDefault(NID, DefaultEntry) : DefaultEntry;
 						//var Delegate = Module.DelegatesByNID.GetOrDefault(NID, null);
-						CallStreamWriter.Write((uint)(0x0000000C | (FunctionGenerator.NativeCallSyscallCode << 6))); // syscall NativeCallSyscallCode
+						CallStreamWriter.Write(FunctionGenerator.NativeCallSyscallOpCode); // syscall NativeCallSyscallCode
 						CallStreamWriter.Write(
 							(uint)ModuleManager.AllocDelegateSlot(
 								CreateDelegate(ModuleManager, Module, NID, ModuleImportName, FunctionEntry.Name),

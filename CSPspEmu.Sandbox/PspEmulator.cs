@@ -8,7 +8,7 @@ using System.Threading;
 using System.Windows.Forms;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Audio;
-using CSPspEmu.Core.Audio.Imple.Openal;
+using CSPspEmu.Core.Audio.Impl.Openal;
 using CSPspEmu.Core.Controller;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Display;

@@ -96,125 +96,126 @@ namespace CSPspEmu.Sandbox
 
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\abuse\EBOOT.PBP", TraceSyscalls: false);
 
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Medievil.cso", TraceSyscalls: true);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Medievil.cso", TraceSyscalls: true);
 
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Puzzler Collection.iso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Puzzler Collection.iso");
 
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Exit.iso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Namco Museum Battle Collection.iso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Breath of Fire 3.cso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Exit.iso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Namco Museum Battle Collection.iso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Breath of Fire 3.cso", TraceSyscalls: false);
 
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Jak & Daxter - The Lost Frontier.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Sims2.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Jak & Daxter - The Lost Frontier.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Sims2.cso");
 
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Phantasia.cso", EnableMpeg: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Skate Park City.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Outrun 2006.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false, EnableMpeg: true);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Castlevania.cso", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Jeanne d'Arc.iso", TraceSyscalls: true, EnableMpeg: true);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Tales of Phantasia.cso", EnableMpeg: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Skate Park City.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Outrun 2006.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\haruhi.iso", TraceSyscalls: false, EnableMpeg: true);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Castlevania.cso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Jeanne d'Arc.iso", TraceSyscalls: true, EnableMpeg: true);
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\TestInput\minifire.elf", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\gu\text\gufont.elf");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\DragonBall Z Shin Budokai.cso", TraceSyscalls: true);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\PSPTris\EBOOT.PBP");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\DragonBall Z Shin Budokai.cso", TraceSyscalls: true);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\homebrew\PSPTris\EBOOT.PBP");
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\TrigWars\EBOOT.PBP", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Valkyrie Profile.cso", EnableMpeg: false, TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\valkyria profile\BOOT.BIN", EnableMpeg: false, TraceSyscalls: true);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Downstream Panic.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Clannad.iso", TraceSyscalls: false, EnableMpeg: true);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false, EnableMpeg: true);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Luxor.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Vallhala Knights.iso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: false, EnableMpeg: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Valkyrie Profile.cso", EnableMpeg: false, TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\valkyria profile\BOOT.BIN", EnableMpeg: false, TraceSyscalls: true);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Downstream Panic.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Clannad.iso", TraceSyscalls: false, EnableMpeg: true);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\haruhi.iso", TraceSyscalls: false, EnableMpeg: true);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Luxor.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Vallhala Knights.iso");
+				PspEmulator.StartAndLoad(@"E:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: false, EnableMpeg: false);
 
 			// bltzal
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Kameleon.cso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Kameleon.cso", TraceSyscalls: false);
 
 			// API: Not Implemented
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Skate Park City.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Patapon.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\scummvm-1.4.0\EBOOT.PBP");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Skate Park City.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Patapon.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\homebrew\scummvm-1.4.0\EBOOT.PBP");
 
 			// Memory: Invalid Address
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Puyo.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Prince.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Downstream Panic.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Call of Duty - Roads of Victory.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\haruhi.iso", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\DragonBall Z Shin Budokai.cso", TraceSyscalls: true);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Loco Roco.cso", TraceSyscalls: true);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Puyo.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Prince.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Downstream Panic.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Call of Duty - Roads of Victory.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\haruhi.iso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\DragonBall Z Shin Budokai.cso", TraceSyscalls: true);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Loco Roco.cso", TraceSyscalls: true);
 				
 			// VFPU
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Castlevania.cso", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Outrun 2006.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Castlevania.cso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Outrun 2006.cso");
 
 			// Loader: Encrypted
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Armored Core - Silent Line Portable.iso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Brandish The Dark Revenant.cso", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Final Fantasy 20th Anniversary.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Valkya_Chronics_2_USA.iso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tekken Dark Resurrection.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Ultimate_Ghosts_N_Goblins.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Sonic Rivals.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Puzzle Quest.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Princess Frontier Portable.iso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Metal.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Daxter.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Armored Core - Silent Line Portable.iso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Brandish The Dark Revenant.cso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Final Fantasy 20th Anniversary.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Valkya_Chronics_2_USA.iso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Tekken Dark Resurrection.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Ultimate_Ghosts_N_Goblins.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Sonic Rivals.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Puzzle Quest.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Princess Frontier Portable.iso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Metal.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Daxter.cso");
 
 			// Loader: External unencrypted modules
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Metal Gear Ac!d.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Metal Gear Ac!d.cso");
 
 			// Loader: Relocation
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Metal Gear Solid Portable Ops.iso", EnableMpeg: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Every Extend Extra.cso", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Luxor.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of the World.iso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Sega.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Puzzler Collection.iso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Metal Gear Solid Portable Ops.iso", EnableMpeg: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Every Extend Extra.cso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Luxor.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Tales of the World.iso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Sega.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Puzzler Collection.iso");
 
 			// Black. Loop
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Ape Academy.cso", TraceSyscalls: true);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Valkyrie Profile.cso", EnableMpeg: false, TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Need for Speed Most Wanted.cso", EnableMpeg: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Naruto Nultimate Portable.cso", EnableMpeg: false, TraceSyscalls: true);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Final Fantasy Tactics.iso", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Harvest Moon.iso", TraceSyscalls: true);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Championship_Manager.cso", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Koloomn.cso", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Final Fantasy Crisis Core.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Legend of Heroes 3.cso", TraceSyscalls: true);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Street Fighter Alpha 3 MAX.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Jeanne d'Arc.iso", TraceSyscalls: true, EnableMpeg: true);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Ape Academy.cso", TraceSyscalls: true);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Valkyrie Profile.cso", EnableMpeg: false, TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Need for Speed Most Wanted.cso", EnableMpeg: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Naruto Nultimate Portable.cso", EnableMpeg: false, TraceSyscalls: true);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Final Fantasy Tactics.iso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Harvest Moon.iso", TraceSyscalls: true);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Championship_Manager.cso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Koloomn.cso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Final Fantasy Crisis Core.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Legend of Heroes 3.cso", TraceSyscalls: true);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Street Fighter Alpha 3 MAX.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Jeanne d'Arc.iso", TraceSyscalls: true, EnableMpeg: true);
 
 			// Starting
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Vallhala Knights.iso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\GripShift.cso", EnableMpeg: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\WipeOut Pulse EUR.cso");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\MACH.cso", EnableMpeg: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Lemmings.cso", EnableMpeg: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Phantasia.cso", EnableMpeg: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: false, EnableMpeg: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Tales of Eternia.iso", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Darkstalkers Chronicle the Chaos Tower.cso", EnableMpeg: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Breath of Fire 3.cso", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Popolocrois.cso", EnableMpeg: true);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\PSPTris\EBOOT.PBP");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Vallhala Knights.iso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\GripShift.cso", EnableMpeg: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\WipeOut Pulse EUR.cso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\MACH.cso", EnableMpeg: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Lemmings.cso", EnableMpeg: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Tales of Phantasia.cso", EnableMpeg: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: false, EnableMpeg: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Tales of Eternia.iso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Darkstalkers Chronicle the Chaos Tower.cso", EnableMpeg: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Breath of Fire 3.cso", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Popolocrois.cso", EnableMpeg: true);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\homebrew\PSPTris\EBOOT.PBP");
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\TrigWars\EBOOT.PBP", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\Puzzle Bobble.ISO", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Puzzle Bobble.ISO", TraceSyscalls: false);
 
 			// Unknown
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\Aquaria\EBOOT.PBP", TraceSyscalls: true);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\homebrew\Aquaria\EBOOT.PBP", TraceSyscalls: true);
 
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\NesterP\EBOOT.PBP", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\scummvm-0.13.0-psp\EBOOT.PBP");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\PicoDrive\EBOOT.PBP");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\uMSX\EBOOT.PBP");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\Daedalus\EBOOT.PBP");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\homebrew\NesterP\EBOOT.PBP", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\homebrew\scummvm-0.13.0-psp\EBOOT.PBP");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\homebrew\PicoDrive\EBOOT.PBP");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\homebrew\uMSX\EBOOT.PBP");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\homebrew\Daedalus\EBOOT.PBP");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\homebrew\Battlegrounds3\EBOOT.PBP");
 				
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\EmuMaster V3.1 (Unofficial)\EBOOT.PBP", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\goldminer\EBOOT.PBP");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\homebrew\EmuMaster V3.1 (Unofficial)\EBOOT.PBP", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\homebrew\goldminer\EBOOT.PBP");
 				//PspEmulator.StartAndLoad(@"C:\juegos\jpcsp_last\demos\nehetutorial07.pbp");
 				//PspEmulator.StartAndLoad(@"C:\juegos\jpcsp_last\demos\nehetutorial08.pbp");
 				//PspEmulator.StartAndLoad(@"C:\juegos\jpcsp_last\demos\nehetutorial09.pbp");
@@ -223,8 +224,8 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\cavestory\EBOOT.PBP", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\pspautotests\tests\video\pmf\pmf.elf", TraceSyscalls: false);
 				//PspEmulator.AddCwCheat(0x70D69F04, 0x00000007);
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\Yume for PSP\EBOOT.PBP");
-				//PspEmulator.StartAndLoad(@"F:\Isos\psp\homebrew\yume\EBOOT.PBP");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\homebrew\Yume for PSP\EBOOT.PBP");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\homebrew\yume\EBOOT.PBP");
 
 
 				//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\audio\polyphonic\polyphonic.elf", TraceSyscalls: false);
@@ -232,9 +233,10 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"C:\juegos\jpcsp_last\demos\compilerPerf.pbp");
 				//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\controller.pbp", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\clut.pbp", TraceSyscalls: false);
-				PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\lights.pbp", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\lights.pbp", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\morph.pbp", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\reflection.pbp", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\rtctest.pbp", TraceSyscalls: false);
 
 				//PspEmulator.StartAndLoad(@"C:\juegos\pspemu\demos\cube.pbp", TraceSyscalls: false);
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\cavestory\EBOOT.PBP", TraceSyscalls: false);

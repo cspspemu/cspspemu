@@ -66,8 +66,16 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0xF27A9C51, FirmwareVersion = 150)]
 		public int sceIoRemove(string FileName)
 		{
-			var Info = HleState.HleIoManager.ParsePath(FileName);
-			return Info.HleIoDriver.IoRemove(Info.HleIoDrvFileArg, FileName);
+			try
+			{
+				var Info = HleState.HleIoManager.ParsePath(FileName);
+				return Info.HleIoDriver.IoRemove(Info.HleIoDrvFileArg, FileName);
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
+				return -1;
+			}
 		}
 
 		/// <summary>

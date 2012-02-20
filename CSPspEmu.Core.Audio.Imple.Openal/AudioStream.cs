@@ -6,7 +6,7 @@ using CSharpUtils;
 using OpenTK;
 using OpenTK.Audio.OpenAL;
 
-namespace CSPspEmu.Core.Audio.Imple.Openal
+namespace CSPspEmu.Core.Audio.Impl.Openal
 {
 	/// <summary>
 	/// 48 Samples 1 ms

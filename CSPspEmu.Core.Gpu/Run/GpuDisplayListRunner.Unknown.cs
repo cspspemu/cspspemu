@@ -50,9 +50,6 @@ namespace CSPspEmu.Core.Gpu.Run
 		public void OP_Unknown0x4F() { }
 		
 		[GpuOpCodesNotImplemented]
-		public void OP_RNORM() { }
-		
-		[GpuOpCodesNotImplemented]
 		public void OP_Unknown0x52() { }
 		
 		[GpuOpCodesNotImplemented]

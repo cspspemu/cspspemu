@@ -23,6 +23,9 @@ namespace CSPspEmu.Hle.Modules.loadcore
 			throw(new NotImplementedException());
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[HlePspFunction(NID = 0xBF983EF2, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		[HlePspUnknownDefinitionAttribute]
@@ -56,6 +59,7 @@ namespace CSPspEmu.Hle.Modules.loadcore
 		[HlePspNotImplemented]
 		public void sceKernelIcacheClearAll()
 		{
+			HleState.CpuProcessor.sceKernelIcacheInvalidateAll();
 			//unimplemented();
 		}
 

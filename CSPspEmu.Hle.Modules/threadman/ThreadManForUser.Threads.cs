@@ -48,9 +48,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Thread.GP = CpuThreadState.GP;
 			Thread.Info.EntryPoint = (SceKernelThreadEntry)EntryPoint;
 
-			var ThreadStackPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User);
+			//var ThreadStackPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User);
 			//var ThreadStackPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.UserStacks);
-			//var ThreadStackPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0);
+			var ThreadStackPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0);
 
 			Thread.Stack = ThreadStackPartition.Allocate(
 				StackSize,

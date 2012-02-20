@@ -171,7 +171,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 		void RegisterModuleSyscall<TType>(int SyscallCode, string FunctionName) where TType : HleModuleHost
 		{
 			var Delegate = HleState.ModuleManager.GetModuleDelegate<TType>(FunctionName);
-			CpuProcessor.RegisterNativeSyscall(SyscallCode, (Code, CpuThreadState) =>
+			CpuProcessor.RegisterNativeSyscall(SyscallCode, (CpuThreadState, Code) =>
 			{
 				Delegate(CpuThreadState);
 			});

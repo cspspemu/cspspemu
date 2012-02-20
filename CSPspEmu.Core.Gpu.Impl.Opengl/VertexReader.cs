@@ -62,6 +62,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		protected bool Transform2D;
 
+		protected VertexTypeStruct VertexType;
+
 		public VertexReader()
 		{
 			ReadWeightsList = new Action[] { Void, ReadWeightByte, ReadWeightShort, ReadWeightFloat };
@@ -71,22 +73,23 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			ReadPositionList = new Action[] { Void, ReadPositionByte, ReadPositionShort, ReadPositionFloat };
 		}
 
-		public void SetVertexTypeStruct(VertexTypeStruct VertexTypeStruct, byte* BasePointer)
+		public void SetVertexTypeStruct(VertexTypeStruct VertexType, byte* BasePointer)
 		{
-			Transform2D = VertexTypeStruct.Transform2D;
+			this.VertexType = VertexType;
+			Transform2D = VertexType.Transform2D;
 			
 			//Console.Error.WriteLine("SetVertexTypeStruct: " + VertexTypeStruct);
-			SkinningWeightCount = VertexTypeStruct.SkinningWeightCount;
+			SkinningWeightCount = VertexType.SkinningWeightCount;
 			//Console.WriteLine(SkinningWeightCount);
-			VertexSize = VertexTypeStruct.GetVertexSize();
+			VertexSize = VertexType.GetVertexSize();
 			{
-				ReadWeights = ReadWeightsList[(int)VertexTypeStruct.Weight];
-				ReadTextureCoordinates = ReadTextureCoordinatesList[(int)VertexTypeStruct.Texture];
-				ReadColor = ReadColorList[(int)VertexTypeStruct.Color];
-				ReadNormal = ReadNormalList[(int)VertexTypeStruct.Normal];
-				ReadPosition = ReadPositionList[(int)VertexTypeStruct.Position];
+				ReadWeights = ReadWeightsList[(int)VertexType.Weight];
+				ReadTextureCoordinates = ReadTextureCoordinatesList[(int)VertexType.Texture];
+				ReadColor = ReadColorList[(int)VertexType.Color];
+				ReadNormal = ReadNormalList[(int)VertexType.Normal];
+				ReadPosition = ReadPositionList[(int)VertexType.Position];
 
-				switch (VertexTypeStruct.StructAlignment)
+				switch (VertexType.StructAlignment)
 				{
 					case 4: VertexAlignment = Align4; break;
 					case 2: VertexAlignment = Align2; break;
@@ -111,7 +114,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			this.VertexInfo = VertexInfo;
 			
 			// Vertex has to be aligned to the maxium size of any component. 
-			VertexAlignment();
+			//VertexAlignment();
 			
 			ReadWeights();
 			ReadTextureCoordinates();
@@ -157,40 +160,66 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			Align1();
 
-			VertexInfo->U = (float)((byte*)Pointer)[1];
-			VertexInfo->V = (float)((byte*)Pointer)[1];
+			VertexInfo->TX = (float)((byte*)Pointer)[0];
+			VertexInfo->TY = (float)((byte*)Pointer)[1];
+			if (VertexType.NormalCount > 2)
+			{
+				VertexInfo->TZ = (float)((byte*)Pointer)[2];
+			}
+			else
+			{
+				VertexInfo->TZ = 0.0f;
+			}
 
 			if (!Transform2D)
 			{
-				VertexInfo->U /= 128.0f;
-				VertexInfo->V /= 128.0f;
+				VertexInfo->TX /= 128.0f;
+				VertexInfo->TY /= 128.0f;
+				VertexInfo->TZ /= 128.0f;
 			}
 
-			Pointer += sizeof(byte) * 2;
+			Pointer += sizeof(byte) * VertexType.NormalCount;
 		}
 
 		protected void ReadTextureCoordinatesShort()
 		{
 			Align2();
-			VertexInfo->U = (float)((ushort*)Pointer)[0];
-			VertexInfo->V = (float)((ushort*)Pointer)[1];
+			VertexInfo->TX = (float)((ushort*)Pointer)[0];
+			VertexInfo->TY = (float)((ushort*)Pointer)[1];
+			if (VertexType.NormalCount > 2)
+			{
+				VertexInfo->TZ = (float)((ushort*)Pointer)[2];
+			}
+			else
+			{
+				VertexInfo->TZ = 0.0f;
+			}
 			
 			if (!Transform2D)
 			{
-				VertexInfo->U /= 32768f;
-				VertexInfo->V /= 32768f;
+				VertexInfo->TX /= 32768f;
+				VertexInfo->TY /= 32768f;
+				VertexInfo->TZ /= 32768f;
 			}
 
-			Pointer += sizeof(short) * 2;
+			Pointer += sizeof(short) * VertexType.NormalCount;
 		}
 
 		protected void ReadTextureCoordinatesFloat()
 		{
 			Align4();
-			VertexInfo->U = (float)((float*)Pointer)[0];
-			VertexInfo->V = (float)((float*)Pointer)[1];
+			VertexInfo->TX = (float)((float*)Pointer)[0];
+			VertexInfo->TY = (float)((float*)Pointer)[1];
+			if (VertexType.NormalCount > 2)
+			{
+				VertexInfo->TZ = (float)((float*)Pointer)[2];
+			}
+			else
+			{
+				VertexInfo->TZ = 0.0f;
+			}
 
-			Pointer += sizeof(float) * 2;
+			Pointer += sizeof(float) * VertexType.NormalCount;
 		}
 
 		protected void ReadColor5650()

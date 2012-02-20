@@ -15,7 +15,7 @@ namespace CSPspEmu.Core.Cpu
 		public PspConfig PspConfig;
 		public PspMemory Memory;
 		public MethodCacheFast MethodCache;
-		private Dictionary<int, Action<int, CpuThreadState>> RegisteredNativeSyscalls;
+		private Dictionary<int, Action<CpuThreadState, int>> RegisteredNativeSyscalls;
 		public HashSet<uint> NativeBreakpoints;
 		public bool IsRunning;
 		public bool RunningCallback;
@@ -36,7 +36,7 @@ namespace CSPspEmu.Core.Cpu
 		{
 			MethodCache = new MethodCacheFast();
 			NativeBreakpoints = new HashSet<uint>();
-			RegisteredNativeSyscalls = new Dictionary<int, Action<int, CpuThreadState>>();
+			RegisteredNativeSyscalls = new Dictionary<int, Action<CpuThreadState, int>>();
 			IsRunning = true;
 		}
 
@@ -45,18 +45,31 @@ namespace CSPspEmu.Core.Cpu
 			return RegisterNativeSyscall(Code, (_Code, _Processor) => Callback());
 		}
 
-		public CpuProcessor RegisterNativeSyscall(int Code, Action<int, CpuThreadState> Callback)
+		public CpuProcessor RegisterNativeSyscall(int Code, Action<CpuThreadState, int> Callback)
 		{
 			RegisteredNativeSyscalls[Code] = Callback;
 			return this;
 		}
 
-		public void Syscall(int Code, CpuThreadState CpuThreadState)
+		public Action<CpuThreadState, int> GetSyscall(int Code)
 		{
-			Action<int, CpuThreadState> Callback;
+			Action<CpuThreadState, int> Callback;
 			if (RegisteredNativeSyscalls.TryGetValue(Code, out Callback))
 			{
-				Callback(Code, CpuThreadState);
+				return Callback;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public void Syscall(int Code, CpuThreadState CpuThreadState)
+		{
+			Action<CpuThreadState, int> Callback;
+			if ((Callback = GetSyscall(Code)) != null)
+			{
+				Callback(CpuThreadState, Code);
 			}
 			else
 			{

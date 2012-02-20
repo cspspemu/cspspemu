@@ -134,6 +134,14 @@ namespace CSPspEmu.Core.Gpu.Run
 			//writefln("     :%d", gpu.state.vertexType.position);
 		}
 
+		//[GpuOpCodesNotImplemented]
+		// Reversed Normal
+		public void OP_RNORM()
+		{
+			GpuState->VertexState.Type.ReversedNormal = Bool1;
+		}
+
+
 		// Vertex List (Base Address)
 		public void OP_VADDR()
 		{

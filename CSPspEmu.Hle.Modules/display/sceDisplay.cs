@@ -116,7 +116,7 @@ namespace CSPspEmu.Hle.Modules.display
 		{
 			if (Sync != Core.Display.PspDisplay.SyncMode.Immediate)
 			{
-				Console.Error.WriteLine("Not immediate!");
+				//Console.Error.WriteLine("Not immediate!");
 			}
 			//Console.WriteLine("sceDisplay.sceDisplaySetFrameBuf {0:X},{1},{2},{3}", Address, BufferWidth, PixelFormat, Sync);
 			PspDisplay.CurrentInfo.Address = Address;

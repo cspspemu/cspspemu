@@ -44,6 +44,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public const ushort NativeCallSyscallCode = 0x1234;
 
+		static public uint NativeCallSyscallOpCode
+		{
+			get
+			{
+				return (uint)(0x0000000C | (FunctionGenerator.NativeCallSyscallCode << 6));
+			}
+		}
+
 		static public PspMethodStruct CreateDelegateForPC(CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC)
 		{
 			DateTime Start, End;

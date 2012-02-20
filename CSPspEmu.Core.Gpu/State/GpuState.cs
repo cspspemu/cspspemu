@@ -69,6 +69,11 @@ namespace CSPspEmu.Core.Gpu.State
 		}
 	}
 
+	public struct ColorStruct
+	{
+		public byte iRed, iGreen, iBlue, iAlpha;
+	}
+
 	public struct ColorfStruct
 	{
 		public float Red, Green, Blue, Alpha;
@@ -337,24 +342,23 @@ namespace CSPspEmu.Core.Gpu.State
 		public uint BaseAddress;
 		public uint VertexAddress;
 		public uint IndexAddress;
+		public bool ToggleUpdateState;
+		/// <summary>
+		/// When set, this will changes the Draw behaviour.
+		/// </summary>
+		public bool ClearingMode;
+
 		public ScreenBufferStateStruct DrawBufferState;
 		public ScreenBufferStateStruct DepthBufferState;
 		public TextureTransferStateStruct TextureTransferState;
 
 		public ViewportStruct Viewport;
 		public PointS Offset;
-		public bool ToggleUpdateState;
 
 		/// <summary>
 		/// A set of flags related to the clearing mode. Generally which buffers to clear.
 		/// </summary>
 		public ClearBufferSet ClearFlags;
-
-		/// <summary>
-		/// When set, this will changes the Draw behaviour.
-		/// </summary>
-		public bool ClearingMode;
-
 
 		// Sub States.
 		public VertexStateStruct VertexState;
@@ -377,7 +381,7 @@ namespace CSPspEmu.Core.Gpu.State
 		public ColorTestStateStruct ColorTestState;
 
 		// State.
-		public ColorfStruct FixColorSource, FixColorDestination;
+		public ColorStruct FixColorSource, FixColorDestination;
 
 		public TextureMappingStateStruct TextureMappingState;
 

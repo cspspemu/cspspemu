@@ -31,7 +31,8 @@ namespace CSPspEmu.Core.Gpu
 		public float R, G, B, A;
 		public float PX, PY, PZ;
 		public float NX, NY, NZ;
-		public float U, V;
+		public float TX, TY, TZ;
+		//public float U, V;
 		public float Weight0, Weight1, Weight2, Weight3, Weight4, Weight5, Weight6, Weight7;
 
 		public FVector3d Position { get { return new FVector3d() { X = PX, Y = PY, Z = PZ }; } }
@@ -40,10 +41,10 @@ namespace CSPspEmu.Core.Gpu
 		public override string ToString()
 		{
 			return String.Format(
-				"VertexInfo(Position=({0}, {1}, {2}), Normal=({3}, {4}, {5}), UV=({6}, {7}), COLOR=(R:{8}, G:{9}, B:{10}, A:{11}))",
+				"VertexInfo(Position=({0}, {1}, {2}), Normal=({3}, {4}, {5}), UV=({6}, {7}, {8}), COLOR=(R:{9}, G:{10}, B:{11}, A:{12}))",
 				PX, PY, PZ,
 				NX, NY, NZ,
-				U, V,
+				TX, TY, TZ,
 				R, G, B, A
 			);
 		}

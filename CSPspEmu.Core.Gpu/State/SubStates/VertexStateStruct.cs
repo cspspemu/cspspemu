@@ -9,6 +9,16 @@ namespace CSPspEmu.Core.Gpu.State
 {
 	public struct VertexTypeStruct
 	{
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool ReversedNormal;
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		public byte NormalCount;
+
 		readonly static public uint[] TypeSizeTable = new uint[] { 0, sizeof(byte), sizeof(short), sizeof(float) };
 		readonly static public uint[] ColorSizeTable = new uint[] { 0, 1, 1, 1, 2, 2, 2, 4 };
 
@@ -42,6 +52,10 @@ namespace CSPspEmu.Core.Gpu.State
 
 		public uint Value;
 
+		public NumericEnum Weight {
+			get { return (NumericEnum)BitUtils.Extract(Value, 9, 2); }
+			set { BitUtils.Insert(ref Value, 9, 2, (uint)value); }
+		}
 		public NumericEnum Texture {
 			get { return (NumericEnum)BitUtils.Extract(Value, 0, 2); }
 			set { BitUtils.Insert(ref Value, 0, 2, (uint)value); }
@@ -57,10 +71,6 @@ namespace CSPspEmu.Core.Gpu.State
 		public NumericEnum Position {
 			get { return (NumericEnum)BitUtils.Extract(Value, 7, 2); }
 			set { BitUtils.Insert(ref Value, 7, 2, (uint)value); }
-		}
-		public NumericEnum Weight {
-			get { return (NumericEnum)BitUtils.Extract(Value, 9, 2); }
-			set { BitUtils.Insert(ref Value, 9, 2, (uint)value); }
 		}
 		public IndexEnum Index {
 			get { return (IndexEnum)BitUtils.Extract(Value, 11, 2); }
@@ -104,7 +114,7 @@ namespace CSPspEmu.Core.Gpu.State
 		{
 			uint Size = 0;
 			Size = (uint)MathUtils.NextAligned(Size, SkinSize); Size += SkinningWeightCount * SkinSize;
-			Size = (uint)MathUtils.NextAligned(Size, TextureSize); Size += 2 * TextureSize;
+			Size = (uint)MathUtils.NextAligned(Size, TextureSize); Size += NormalCount * TextureSize;
 			Size = (uint)MathUtils.NextAligned(Size, ColorSize); Size += 1 * ColorSize;
 			Size = (uint)MathUtils.NextAligned(Size, NormalSize); Size += 3 * NormalSize;
 			Size = (uint)MathUtils.NextAligned(Size, PositionSize); Size += 3 * PositionSize;

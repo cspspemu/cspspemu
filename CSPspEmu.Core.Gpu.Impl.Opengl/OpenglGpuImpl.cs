@@ -1,4 +1,6 @@
-﻿//#define DEBUG_VERTEX_TYPE
+﻿#if !RELEASE
+	#define DEBUG_VERTEX_TYPE
+#endif
 
 using System;
 using System.Collections.Generic;
@@ -117,6 +119,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <param name="VertexType"></param>
 		private void PutVertex(ref VertexInfo VertexInfo, ref VertexTypeStruct VertexType)
 		{
+			//Console.WriteLine(VertexType);
+			//Console.WriteLine(VertexInfo);
 			/*
 			if (GpuState->ClearingMode)
 			{
@@ -127,6 +131,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			//Console.WriteLine(VertexInfo);
 			//Console.WriteLine(VertexInfo);
+
+#if DEBUG_VERTEX_TYPE
+			if (OutputVertexInfoStream != null) OutputVertexInfoStream.WriteBytes(Encoding.UTF8.GetBytes(String.Format("{0}\n", VertexInfo)));
+#endif
 
 #if false
 			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -158,12 +166,20 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				*/
 
 				//Console.WriteLine("{0}, {1}", VertexInfo.U, VertexInfo.V);
-				GL.TexCoord2(VertexInfo.U, VertexInfo.V);
+				//GL.TexCoord2(VertexInfo.TX, VertexInfo.TY);
+				GL.TexCoord3(VertexInfo.TX, VertexInfo.TY, VertexInfo.TZ);
 			}
 			//Console.Write(",{0}", VertexInfo.PZ);
 			if (VertexType.Normal != VertexTypeStruct.NumericEnum.Void)
 			{
-				GL.Normal3(VertexInfo.NX, VertexInfo.NY, VertexInfo.NZ);
+				if (VertexType.ReversedNormal)
+				{
+					GL.Normal3(-VertexInfo.NX, -VertexInfo.NY, -VertexInfo.NZ);
+				}
+				else
+				{
+					GL.Normal3(VertexInfo.NX, VertexInfo.NY, VertexInfo.NZ);
+				}
 			}
 			if (VertexType.Position != VertexTypeStruct.NumericEnum.Void)
 			{
@@ -220,6 +236,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//Console.Error.WriteLine("Prim: {0}", End - Start);
 		}
 
+		Stream OutputVertexInfoStream;
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -249,6 +267,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 						VertexCount + "," + PrimitiveType + "\n" +
 						VertexType.ToString()
 					);
+					OutputVertexInfoStream = File.OpenWrite("VertexType_" + VertexType.Value + "_list");
 				}
 			}
 			catch
@@ -256,7 +275,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 #endif
 			//IndexReader.SetVertexTypeStruct(VertexType, VertexCount, (byte*)Memory.PspAddressToPointerSafe(GpuState->IndexAddress));
-
 
 			uint TotalVerticesWithoutMorphing = VertexCount;
 
@@ -441,8 +459,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 								VertexInfoTopRight = new VertexInfo()
 								{
-									U = VertexInfoBottomRight.U,
-									V = VertexInfoTopLeft.V,
+									TX = VertexInfoBottomRight.TX,
+									TY = VertexInfoTopLeft.TY,
+									TZ = VertexInfoTopLeft.TZ,
 									PX = VertexInfoBottomRight.PX,
 									PY = VertexInfoTopLeft.PY,
 									NX = VertexInfoBottomRight.NX,
@@ -451,8 +470,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 								VertexInfoBottomLeft = new VertexInfo()
 								{
-									U = VertexInfoTopLeft.U,
-									V = VertexInfoBottomRight.V,
+									TX = VertexInfoTopLeft.TX,
+									TY = VertexInfoBottomRight.TY,
+									TZ = VertexInfoBottomRight.TZ,
 									PX = VertexInfoTopLeft.PX,
 									PY = VertexInfoBottomRight.PY,
 									NX = VertexInfoTopLeft.NX,
@@ -489,6 +509,14 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//Console.WriteLine(VertexCount);
 
 			//PrepareWrite(GpuState);
+
+#if DEBUG_VERTEX_TYPE
+			if (OutputVertexInfoStream != null)
+			{
+				OutputVertexInfoStream.Close();
+				OutputVertexInfoStream = null;
+			}
+#endif
 		}
 
 		readonly byte[] TempBuffer = new byte[512 * 512 * 4];

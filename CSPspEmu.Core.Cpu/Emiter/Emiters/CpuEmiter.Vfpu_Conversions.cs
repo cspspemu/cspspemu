@@ -115,8 +115,32 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.CallMethod((Func<float, int>)MathFloat.Floor);
 			}, AsInteger: true);
 		}
-		public void vf2in() { throw (new NotImplementedException("")); }
-		public void vf2iu() { throw (new NotImplementedException("")); }
+
+		public void vf2in()
+		{
+			var VectorSize = Instruction.ONE_TWO;
+			var Imm5 = Instruction.IMM5;
+			VectorOperationSaveVd(VectorSize, Index =>
+			{
+				Load_VS(Index, VectorSize);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Imm5);
+				MipsMethodEmiter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
+				MipsMethodEmiter.CallMethod((Func<float, int>)MathFloat.Round);
+			}, AsInteger: true);
+		}
+
+		public void vf2iu()
+		{
+			var VectorSize = Instruction.ONE_TWO;
+			var Imm5 = Instruction.IMM5;
+			VectorOperationSaveVd(VectorSize, Index =>
+			{
+				Load_VS(Index, VectorSize);
+				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Imm5);
+				MipsMethodEmiter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
+				MipsMethodEmiter.CallMethod((Func<float, int>)MathFloat.Ceil);
+			}, AsInteger: true);
+		}
 
 		static public float _vf2iz(float Value, int imm5)
 		{

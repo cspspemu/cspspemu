@@ -121,27 +121,42 @@ namespace CSPspEmu.Hle.Modules.rtc
 		[HlePspNotImplemented]
 		public int sceRtcGetTick(ScePspDateTime* Date, ulong* Tick)
 		{
-			*Tick = (ulong)Date->ToDateTime().GetTotalNanoseconds();
-			return 0;
+			try
+			{
+				*Tick = (ulong)Date->ToDateTime().GetTotalNanoseconds();
+				return 0;
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine("sceRtcGetTick.Date: " + *Date);
+				Console.Error.WriteLine(Exception);
+				return -1;
+			}
 		}
 
 		/// <summary>
 		/// Set a pspTime struct based on ticks
 		/// </summary>
-		/// <param name="date">pointer to pspTime struct to set</param>
-		/// <param name="tick">pointer to ticks to convert</param>
+		/// <param name="Date">pointer to pspTime struct to set</param>
+		/// <param name="Ticks">pointer to ticks to convert</param>
 		/// <returns>
 		///		0 on success
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0x7ED29E40, FirmwareVersion = 150)]
-		public int sceRtcSetTick(ScePspDateTime* date, ulong* tick)
+		[HlePspNotImplemented]
+		public int sceRtcSetTick(ScePspDateTime* Date, ulong* Ticks)
 		{
-			throw (new NotImplementedException());
-			/*
-			date.parse(*tick);
-			return 0;
-			*/
+			try
+			{
+				*Date = ScePspDateTime.FromDateTime(new DateTime((long)(*Ticks * 10)));
+				return 0;
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
+				return -1;
+			}
 		}
 
 		/// <summary>
@@ -158,15 +173,16 @@ namespace CSPspEmu.Hle.Modules.rtc
 		{
 			if (Time == null) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
 
+			var CurrentDateTime = HleState.PspRtc.CurrentDateTime;
 			HleState.PspRtc.Update();
 
-			Time->Year = (ushort)HleState.PspRtc.CurrentDateTime.Year;
-			Time->Month = (ushort)HleState.PspRtc.CurrentDateTime.Month;
-			Time->Day = (ushort)HleState.PspRtc.CurrentDateTime.Day;
-			Time->Hour = (ushort)HleState.PspRtc.CurrentDateTime.Hour;
-			Time->Minute = (ushort)HleState.PspRtc.CurrentDateTime.Minute;
-			Time->Second = (ushort)HleState.PspRtc.CurrentDateTime.Second;
-			Time->Microsecond = (uint)(HleState.PspRtc.CurrentDateTime.Millisecond * 1000);
+			Time->Year = (ushort)CurrentDateTime.Year;
+			Time->Month = (ushort)CurrentDateTime.Month;
+			Time->Day = (ushort)CurrentDateTime.Day;
+			Time->Hour = (ushort)CurrentDateTime.Hour;
+			Time->Minute = (ushort)CurrentDateTime.Minute;
+			Time->Second = (ushort)CurrentDateTime.Second;
+			Time->Microsecond = (uint)(CurrentDateTime.Millisecond * 1000);
 
 			return 0;
 		}

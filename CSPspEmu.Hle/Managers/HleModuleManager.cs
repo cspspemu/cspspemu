@@ -62,7 +62,7 @@ namespace CSPspEmu.Hle.Managers
 			CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();
 			PspConfig = CpuProcessor.PspConfig;
 
-			PspEmulatorContext.GetInstance<CpuProcessor>().RegisterNativeSyscall(FunctionGenerator.NativeCallSyscallCode, (Code, CpuThreadState) =>
+			PspEmulatorContext.GetInstance<CpuProcessor>().RegisterNativeSyscall(FunctionGenerator.NativeCallSyscallCode, (CpuThreadState, Code) =>
 			{
 				uint Info = CpuThreadState.CpuProcessor.Memory.Read4(CpuThreadState.PC + 4);
 				var DelegateInfo = DelegateTable[Info];

@@ -1,0 +1,3 @@
+[submodule "SafeILGenerator"]
+	path = SafeILGenerator
+	url = git://github.com/soywiz/SafeILGenerator.git

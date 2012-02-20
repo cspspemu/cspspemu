@@ -8,7 +8,7 @@ using OpenTK;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
 
-namespace CSPspEmu.Core.Audio.Imple.Openal
+namespace CSPspEmu.Core.Audio.Impl.Openal
 {
 	unsafe public class PspAudioOpenalImpl : PspAudioImpl
 	{

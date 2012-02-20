@@ -83,7 +83,7 @@
       <Name>CSharpUtils</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Audio.Imple.Openal\CSPspEmu.Core.Audio.Impl.Openal.csproj">
-      <Project>{07c4ae15-8e61-4740-b5a9-44db87cecb46}</Project>
+      <Project>{07C4AE15-8E61-4740-B5A9-44DB87CECB46}</Project>
       <Name>CSPspEmu.Core.Audio.Impl.Openal</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Cpu\CSPspEmu.Core.Cpu.csproj">

@@ -61,12 +61,12 @@ namespace CSPspEmu.Hle.Modules.stdio
 		/// <summary>
 		/// Function reopen the stdout file handle to a new file
 		/// </summary>
-		/// <param name="file">The file to open.</param>
-		/// <param name="flags">The open flags </param>
-		/// <param name="mode">The file mode</param>
+		/// <param name="File">The file to open.</param>
+		/// <param name="Flags">The open flags </param>
+		/// <param name="Mode">The file mode</param>
 		/// <returns>&lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0x98220F3E, FirmwareVersion = 150)]
-		public int sceKernelStdoutReopen(string file, int flags, SceMode mode)
+		public int sceKernelStdoutReopen(string File, int Flags, SceMode Mode)
 		{
 			throw (new NotImplementedException());
 		}
@@ -74,12 +74,12 @@ namespace CSPspEmu.Hle.Modules.stdio
 		/// <summary>
 		/// Function reopen the stderr file handle to a new file
 		/// </summary>
-		/// <param name="file">The file to open.</param>
-		/// <param name="flags">The open flags </param>
-		/// <param name="mode">The file mode</param>
+		/// <param name="File">The file to open.</param>
+		/// <param name="Flags">The open flags </param>
+		/// <param name="Mode">The file mode</param>
 		/// <returns>&lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0xFB5380C5, FirmwareVersion = 150)]
-		public int sceKernelStderrReopen(string file, int flags, SceMode mode)
+		public int sceKernelStderrReopen(string File, int Flags, SceMode Mode)
 		{
 			throw (new NotImplementedException());
 		}
