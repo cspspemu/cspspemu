@@ -81,7 +81,12 @@ namespace CSPspEmu.Core.Rtc
 				long Frequency;
 				QueryPerformanceCounter(out Counter);
 				QueryPerformanceFrequency(out Frequency);
-				TotalMicroseconds = Counter * 1000 * 1000 / Frequency;
+				var CurrentTotalMicroseconds = Counter * 1000 * 1000 / Frequency;
+				if (CurrentTotalMicroseconds < TotalMicroseconds)
+				{
+					throw(new InvalidCastException("Total Microseconds overflow"));
+				}
+				this.TotalMicroseconds = CurrentTotalMicroseconds;
 			}
 
 			public long TotalMilliseconds

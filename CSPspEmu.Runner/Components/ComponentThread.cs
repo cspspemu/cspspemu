@@ -24,7 +24,7 @@ namespace CSPspEmu.Runner.Components
 		public void StartSynchronized()
 		{
 			Console.WriteLine("Component {0} StartSynchronized!", this);
-			var StartStartTime = DateTime.Now;
+			var StartStartTime = DateTime.UtcNow;
 			{
 				ComponentThreadThread = new Thread(() =>
 				{
@@ -46,14 +46,14 @@ namespace CSPspEmu.Runner.Components
 				{
 				});
 			}
-			var StartEndTime = DateTime.Now;
+			var StartEndTime = DateTime.UtcNow;
 			Console.WriteLine("Component {0} Started! {1}", this, StartEndTime - StartStartTime);
 		}
 
 		public void StopSynchronized()
 		{
 			Console.Write("Component {0} StopSynchronized...", this);
-			var StopStartTime = DateTime.Now;
+			var StopStartTime = DateTime.UtcNow;
 			{
 				if (Running)
 				{
@@ -68,7 +68,7 @@ namespace CSPspEmu.Runner.Components
 					}
 				}
 			}
-			var StopEndTime = DateTime.Now;
+			var StopEndTime = DateTime.UtcNow;
 			Console.WriteLine("Stopped! {0}", StopEndTime - StopStartTime);
 		}
 

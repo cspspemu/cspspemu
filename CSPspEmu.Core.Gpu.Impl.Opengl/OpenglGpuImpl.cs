@@ -1,5 +1,5 @@
 ﻿#if !RELEASE
-	#define DEBUG_VERTEX_TYPE
+	//#define DEBUG_VERTEX_TYPE
 #endif
 
 using System;
@@ -228,11 +228,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		override public unsafe void Prim(GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
 		{
 			//Console.WriteLine("VertexCount: {0}", VertexCount);
-			var Start = DateTime.Now;
+			var Start = DateTime.UtcNow;
 			{
 				_Prim(GpuState, PrimitiveType, VertexCount);
 			}
-			var End = DateTime.Now;
+			var End = DateTime.UtcNow;
 			//Console.Error.WriteLine("Prim: {0}", End - Start);
 		}
 

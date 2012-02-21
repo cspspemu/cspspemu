@@ -57,14 +57,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			DateTime Start, End;
 			int InstructionsProcessed = 0;
-			Start = DateTime.Now;
+			Start = DateTime.UtcNow;
 			try
 			{
 				return _CreateDelegateForPC(CpuProcessor, MemoryStream, EntryPC, out InstructionsProcessed);
 			}
 			finally
 			{
-				End = DateTime.Now;
+				End = DateTime.UtcNow;
 				//Console.WriteLine("Generated 0x{0:X} {1} ({2})", EntryPC, End - Start, InstructionsProcessed);
 			}
 		}

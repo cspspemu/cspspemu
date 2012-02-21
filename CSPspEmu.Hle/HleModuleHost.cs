@@ -320,7 +320,6 @@ namespace CSPspEmu.Hle
 				{
 					throw (SceKernelSelfStopUnloadModuleException);
 				}
-					/*
 				catch (Exception Exception)
 				{
 					throw (new Exception(
@@ -328,7 +327,6 @@ namespace CSPspEmu.Hle
 						Exception
 					));
 				}
-					*/
 				finally
 				{
 					if (Trace)

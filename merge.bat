@@ -17,6 +17,7 @@ PUSHD %~dp0
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Hle.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Hle.Modules.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Runner.dll"
+	SET FILES=%FILES% "%BASE_FOLDER%\SafeILGenerator.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Resources.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\OpenTK.dll"
 

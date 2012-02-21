@@ -31,7 +31,7 @@ namespace CSPspEmu.Core
 					if (!ObjectsByType.ContainsKey(typeof(TType)))
 					{
 						Console.WriteLine("GetInstance<{0}>: Miss!", typeof(TType));
-						var Start = DateTime.Now;
+						var Start = DateTime.UtcNow;
 						PspEmulatorComponent Instance;
 						if (TypesByType.ContainsKey(typeof(TType)))
 						{
@@ -43,7 +43,7 @@ namespace CSPspEmu.Core
 						}
 						Instance._InitializeComponent(this);
 						Instance.InitializeComponent();
-						var End = DateTime.Now;
+						var End = DateTime.UtcNow;
 						Console.WriteLine("GetInstance<{0}>: Miss! : LoadTime({1})", typeof(TType), End - Start);
 						return (TType)Instance;
 					}

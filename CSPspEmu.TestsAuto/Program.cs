@@ -75,9 +75,9 @@ namespace CSPspEmu.AutoTests
 
 					PspConfig.FileNameBase = FileNameBase;
 
-					var Start = DateTime.Now;
+					var Start = DateTime.UtcNow;
 					PspEmulatorContext.GetInstance<HleModuleManager>();
-					var End = DateTime.Now;
+					var End = DateTime.UtcNow;
 					Console.WriteLine(End - Start);
 
 					var GpuImpl = PspEmulatorContext.GetInstance<GpuImpl>();

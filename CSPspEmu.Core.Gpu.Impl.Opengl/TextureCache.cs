@@ -389,7 +389,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		public void RecheckAll()
 		{
-			RecheckTimestamp = DateTime.Now;
+			RecheckTimestamp = DateTime.UtcNow;
 		}
 
 		static public uint FastHash(uint* Pointer, int Count, uint StartHash = 0)

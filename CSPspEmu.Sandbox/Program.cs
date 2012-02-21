@@ -108,7 +108,7 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Sims2.cso");
 
 				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);
-				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Tales of Phantasia.cso", EnableMpeg: false);
+				PspEmulator.StartAndLoad(@"E:\Isos\psp\Tales of Phantasia.cso", EnableMpeg: false);
 				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Skate Park City.cso");
 				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Outrun 2006.cso");
 				//PspEmulator.StartAndLoad(@"E:\Isos\psp\haruhi.iso", TraceSyscalls: false, EnableMpeg: true);
@@ -125,7 +125,7 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Clannad.iso", TraceSyscalls: false, EnableMpeg: true);
 				//PspEmulator.StartAndLoad(@"E:\Isos\psp\haruhi.iso", TraceSyscalls: false, EnableMpeg: true);
 				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Luxor.cso");
-				PspEmulator.StartAndLoad(@"E:\Isos\psp\Vallhala Knights.iso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Vallhala Knights.iso");
 				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: false, EnableMpeg: false);
 				//PspEmulator.StartAndLoad(@"E:\Isos\psp\homebrew\kaiten\EBOOT.PBP", TraceSyscalls: false, EnableMpeg: false);
 
