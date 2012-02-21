@@ -125,8 +125,9 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Clannad.iso", TraceSyscalls: false, EnableMpeg: true);
 				//PspEmulator.StartAndLoad(@"E:\Isos\psp\haruhi.iso", TraceSyscalls: false, EnableMpeg: true);
 				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Luxor.cso");
-				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Vallhala Knights.iso");
-				PspEmulator.StartAndLoad(@"E:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: false, EnableMpeg: false);
+				PspEmulator.StartAndLoad(@"E:\Isos\psp\Vallhala Knights.iso");
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: false, EnableMpeg: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\homebrew\kaiten\EBOOT.PBP", TraceSyscalls: false, EnableMpeg: false);
 
 			// bltzal
 				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Kameleon.cso", TraceSyscalls: false);

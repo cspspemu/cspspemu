@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using CSharpUtils;
+using NPhp.Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -45,13 +46,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 						switch (TypeFlag)
 						{
 							// True/False
-							case 0: MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0); break;
+							case 0: SafeILGenerator.Push((int)0); break;
 							// Equality
-							case 1: Load_VS_VT(Index); MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ceq); break;
+							case 1: Load_VS_VT(Index); SafeILGenerator.CompareBinary(SafeBinaryComparison.Equals); break;
 							// Less
-							case 2: Load_VS_VT(Index); MipsMethodEmiter.ILGenerator.Emit(OpCodes.Clt); break;
+							case 2: Load_VS_VT(Index); SafeILGenerator.CompareBinary(SafeBinaryComparison.LessThanSigned); break;
 							// Less than equals
-							case 3: Load_VS_VT(Index); MipsMethodEmiter.ILGenerator.Emit(OpCodes.Cgt); MipsMethodEmiter.ILGenerator.Emit(OpCodes.Not); break;
+							case 3: Load_VS_VT(Index); SafeILGenerator.CompareBinary(SafeBinaryComparison.LessOrEqualSigned); break;
 							default: throw (new InvalidOperationException());
 						}
 					}
@@ -60,33 +61,36 @@ namespace CSPspEmu.Core.Cpu.Emiter
 						if (TypeFlag == 0)
 						{
 							Load_VS(Index);
-							MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 0.0f);
-							MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ceq);
+							SafeILGenerator.Push((float)0.0f);
+							SafeILGenerator.CompareBinary(SafeBinaryComparison.Equals); 
 						}
 						else
 						{
-							MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0);
+							SafeILGenerator.Push((int)0);
 							if ((Cond & 1) != 0)
 							{
 								Load_VS(Index);
 								MipsMethodEmiter.CallMethod((Func<float, bool>)MathFloat.IsNan);
-								MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
+								SafeILGenerator.BinaryOperation(SafeBinaryOperator.Or); 
 							}
 							if ((Cond & 2) != 0)
 							{
 								Load_VS(Index);
 								MipsMethodEmiter.CallMethod((Func<float, bool>)MathFloat.IsInfinity);
-								MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
+								SafeILGenerator.BinaryOperation(SafeBinaryOperator.Or);
 							}
 
 						}
 					}
 
-					if (NotFlag) MipsMethodEmiter.ILGenerator.Emit(OpCodes.Not);
+					if (NotFlag)
+					{
+						SafeILGenerator.UnaryOperation(SafeUnaryOperator.Not);
+					}
 				});
 			}
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, VectorSize);
+			SafeILGenerator.LoadArgument0CpuThreadState();
+			SafeILGenerator.Push((int)VectorSize);
 			MipsMethodEmiter.CallMethod((Action<CpuThreadState, int>)CpuEmiter._vcmp_end);
 		}
 		public void vslt() { throw (new NotImplementedException("")); }
@@ -113,16 +117,16 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			if (Register < 6)
 			{
 				/*
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Register);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, VectorSize);
+				SafeILGenerator.LoadArgument0CpuThreadState()
+				SafeILGenerator.Push((int)Register);
+				SafeILGenerator.Push((int)VectorSize);
 				MipsMethodEmiter.CallMethod(typeof(CpuEmiter), "_vcmovtf_test");
 				*/
 
-				var SkipSetLabel = MipsMethodEmiter.ILGenerator.DefineLabel();
+				var SkipSetLabel = SafeILGenerator.DefineLabel("SkipSetLabel");
 				{
 					Load_VCC(Register);
-					MipsMethodEmiter.ILGenerator.Emit(True ? OpCodes.Brfalse : OpCodes.Brtrue, SkipSetLabel);
+					SafeILGenerator.BranchUnaryComparison(True ? SafeUnaryComparison.False : SafeUnaryComparison.True, SkipSetLabel);
 					//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Br, SkipSetLabel);
 					{
 						VectorOperationSaveVd((Index) =>
@@ -131,9 +135,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 						});
 
 						/*
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Register);
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, VectorSize);
+						SafeILGenerator.LoadArgument0CpuThreadState()
+						SafeILGenerator.Push((int)Register);
+						SafeILGenerator.Push((int)VectorSize);
 						MipsMethodEmiter.CallMethod(typeof(CpuEmiter), "_vcmovtf_set");
 						*/
 
@@ -141,7 +145,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 						//_call_debug_vfpu();
 					}
 				}
-				MipsMethodEmiter.ILGenerator.MarkLabel(SkipSetLabel);
+				SkipSetLabel.Mark();
 			}
 			else if (Register == 6)
 			{
@@ -166,9 +170,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.StoreBranchFlag(() =>
 			{
 				Load_VCC(Register);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_0);
-				if (True) MipsMethodEmiter.ILGenerator.Emit(OpCodes.Not);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ceq);
+				SafeILGenerator.Push((int)0);
+				if (True)
+				{
+					SafeILGenerator.UnaryOperation(SafeUnaryOperator.Not);
+				}
+				SafeILGenerator.CompareBinary(SafeBinaryComparison.Equals);
 			});
 		}
 

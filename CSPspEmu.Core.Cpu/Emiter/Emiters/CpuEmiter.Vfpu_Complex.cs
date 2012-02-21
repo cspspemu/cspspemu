@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
+using NPhp.Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -43,13 +44,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveAggregatedVd(VectorSize,
 				delegate()
 				{
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 0.0f);
+					SafeILGenerator.Push((float)0.0f);
 				},
 				delegate(int Index, Action<int> Load)
 				{
 					Load(1);
 					//Load_VS(Index, VectorSize);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+					SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
 					//EmitLogFloatResult();
 				},
 				delegate()
@@ -66,19 +67,19 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveAggregatedVd(VectorSize,
 				delegate()
 				{
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 0.0f);
+					SafeILGenerator.Push((float)0.0f);
 				},
 				delegate(int Index, Action<int> Load)
 				{
 					Load(1);
 					//Load_VS(Index, VectorSize);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+					SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
 					//EmitLogFloatResult();
 				},
 				delegate()
 				{
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (float)VectorSize);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Div);
+					SafeILGenerator.Push((float)VectorSize);
+					SafeILGenerator.BinaryOperation(SafeBinaryOperator.DivideSigned);
 					//EmitLogResult();
 				}
 			);

@@ -160,6 +160,10 @@
       <Project>{ba3187fa-a2a1-43e0-9fdd-69b377ee3152}</Project>
       <Name>CSPspEmu.Resources</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SafeILGenerator\SafeILGenerator.csproj">
+      <Project>{9A93C7E4-09DA-46CF-B7DD-6BB09681D5AB}</Project>
+      <Name>SafeILGenerator</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

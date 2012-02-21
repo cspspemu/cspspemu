@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection.Emit;
 using CSharpUtils;
+using NPhp.Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -25,15 +26,15 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		*/
 
 		// Binary Floating Point Unit Operations
-		public void add_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Add); }
-		public void sub_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Sub); }
-		public void mul_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Mul); }
-		public void div_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, OpCodes.Div); }
+		public void add_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); }); }
+		public void sub_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned); }); }
+		public void mul_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned); }); }
+		public void div_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.DivideSigned); }); }
 
 		// Unary Floating Point Unit Operations
 		public void sqrt_s() {
 			MipsMethodEmiter.OP_2REG_F(FD, FS, () => {
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("sqrt_s_impl"));
+				SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("sqrt_s_impl"));
 			});
 		}
 		static public float sqrt_s_impl(float v)
@@ -44,7 +45,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void abs_s() {
 			MipsMethodEmiter.OP_2REG_F(FD, FS, () =>
 			{
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("abs_s_impl"));
+				SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("abs_s_impl"));
 			});
 		}
 		static public float abs_s_impl(float v)
@@ -53,7 +54,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		public void mov_s() { MipsMethodEmiter.OP_2REG_F(FD, FS, () => { }); }
-		public void neg_s() { MipsMethodEmiter.OP_2REG_F(FD, FS, () => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Neg); }); }
+		public void neg_s() { MipsMethodEmiter.OP_2REG_F(FD, FS, () => { SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate); }); }
 		public void trunc_w_s()
 		{
 			floor_w_s();
@@ -95,8 +96,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveFPR(FD, () =>
 			{
 				MipsMethodEmiter.LoadFPR(FS);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(MathFloat).GetMethod("ReinterpretFloatAsInt"));
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_R4);
+				SafeILGenerator.Call(typeof(MathFloat).GetMethod("ReinterpretFloatAsInt"));
+				SafeILGenerator.ConvertTo<float>();
 			});
 		}
 
@@ -114,10 +115,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public void cvt_w_s()
 		{
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, FD);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, FS);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_cvt_w_s_impl"));
+			SafeILGenerator.LoadArgument0CpuThreadState();
+			SafeILGenerator.Push((int)FD);
+			SafeILGenerator.Push((int)FS);
+			SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_cvt_w_s_impl"));
 			//throw(new NotImplementedException());
 		}
 
@@ -126,14 +127,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RT, () =>
 			{
 				MipsMethodEmiter.LoadFPR(FS);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(MathFloat).GetMethod("ReinterpretFloatAsInt"));
+				SafeILGenerator.Call(typeof(MathFloat).GetMethod("ReinterpretFloatAsInt"));
 			});
 		}
 		public void mtc1() {
 			MipsMethodEmiter.SaveFPR(FS, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Signed(RT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(MathFloat).GetMethod("ReinterpretIntAsFloat"));
+				SafeILGenerator.Call(typeof(MathFloat).GetMethod("ReinterpretIntAsFloat"));
 			});
 		}
 		// CFC1 -- move Control word from/to floating point (C1)
@@ -164,18 +165,18 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void cfc1()
 		{
 			//throw(new NotImplementedException());
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, RD);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, RT);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_cfc1_impl"));
+			SafeILGenerator.LoadArgument0CpuThreadState();
+			SafeILGenerator.Push((int)RD);
+			SafeILGenerator.Push((int)RT);
+			SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_cfc1_impl"));
 		}
 		public void ctc1()
 		{
 			//throw (new NotImplementedException());
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, RD);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, RT);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_ctc1_impl"));
+			SafeILGenerator.LoadArgument0CpuThreadState();
+			SafeILGenerator.Push((int)RD);
+			SafeILGenerator.Push((int)RT);
+			SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_ctc1_impl"));
 		}
 
 		static public void _comp_impl(CpuThreadState CpuThreadState, float s, float t, bool fc_unordererd, bool fc_equal, bool fc_less, bool fc_inv_qnan)
@@ -204,14 +205,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 			//MipsMethodEmiter.SaveFCR31_C(() =>
 			{
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+				SafeILGenerator.LoadArgument0CpuThreadState();
 				MipsMethodEmiter.LoadFPR(FS);
 				MipsMethodEmiter.LoadFPR(FT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, fc_unordererd ? 1 : 0);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, fc_equal ? 1 : 0);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, fc_less ? 1 : 0);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, fc_inv_qnan ? 1 : 0);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_comp_impl"));
+				SafeILGenerator.Push((int)(fc_unordererd ? 1 : 0));
+				SafeILGenerator.Push((int)(fc_equal ? 1 : 0));
+				SafeILGenerator.Push((int)(fc_less ? 1 : 0));
+				SafeILGenerator.Push((int)(fc_inv_qnan ? 1 : 0));
+				SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_comp_impl"));
 			}
 			//);
 		}

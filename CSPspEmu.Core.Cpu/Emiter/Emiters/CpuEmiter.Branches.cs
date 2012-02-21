@@ -5,75 +5,68 @@ using System.Text;
 using System.Reflection.Emit;
 using System.Reflection;
 using CSPspEmu.Core.Memory;
+using NPhp.Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
 	sealed public partial class CpuEmiter
 	{
+		public SafeILGeneratorEx SafeILGenerator
+		{
+			get
+			{
+				return MipsMethodEmiter.SafeILGenerator;
+			}
+		}
+
 		// Code executed after the delayed slot.
-		public void _branch_post(Label Label)
+		public void _branch_post(SafeLabel Label)
 		{
 			MipsMethodEmiter.LoadBranchFlag();
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Brtrue, Label);
+			SafeILGenerator.BranchIfTrue(Label);
 		}
 
 		public void _branch_likely(Action Action)
 		{
-			var NullifyDelayedLabel = MipsMethodEmiter.ILGenerator.DefineLabel();
+			var NullifyDelayedLabel = SafeILGenerator.DefineLabel("NullifyDelayedLabel");
 			MipsMethodEmiter.LoadBranchFlag();
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Brfalse, NullifyDelayedLabel);
+			SafeILGenerator.BranchIfFalse(NullifyDelayedLabel);
 			{
 				Action();
 			}
-			MipsMethodEmiter.ILGenerator.MarkLabel(NullifyDelayedLabel);
+			NullifyDelayedLabel.Mark();
 		}
 
-		private void _branch_pre_vv(params OpCode[] OpCodeList)
+		private void _branch_pre_vv(SafeBinaryComparison Comparison)
 		{
 			MipsMethodEmiter.StoreBranchFlag(() =>
 			{
 				MipsMethodEmiter.LoadGPR_Signed(RS);
 				MipsMethodEmiter.LoadGPR_Signed(RT);
-				foreach (var OpCode in OpCodeList)
-				{
-					MipsMethodEmiter.ILGenerator.Emit(OpCode);
-				}
+				SafeILGenerator.CompareBinary(Comparison);
 			});
 		}
 
-		private void __branch_pre_v0(bool Link, params OpCode[] OpCodeList)
+		private void _branch_pre_v0(SafeBinaryComparison Comparison)
 		{
 			MipsMethodEmiter.StoreBranchFlag(() =>
 			{
 				MipsMethodEmiter.LoadGPR_Signed(RS);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_0);
-				foreach (var OpCode in OpCodeList)
-				{
-					MipsMethodEmiter.ILGenerator.Emit(OpCode);
-				}
+				SafeILGenerator.Push((int)0);
+				SafeILGenerator.CompareBinary(Comparison);
 			});
 		}
 
-		private void _branch_pre_v0(params OpCode[] OpCodeList)
-		{
-			__branch_pre_v0(false, OpCodeList);
-		}
-
-		private void _branch_pre_v0_link(params OpCode[] OpCodeList)
-		{
-			__branch_pre_v0(true, OpCodeList);
-		}
-
 		// Branch on EQuals (Likely).
-		public void beq() { _branch_pre_vv(OpCodes.Ceq); }
+		public void beq() { _branch_pre_vv(SafeBinaryComparison.Equals); }
 		public void beql() { beq(); }
 
 		// Branch on Not Equals (Likely).
-		public void bne() { _branch_pre_vv(OpCodes.Ceq, OpCodes.Ldc_I4_0, OpCodes.Ceq); }
+		public void bne() { _branch_pre_vv(SafeBinaryComparison.NotEquals); }
 		public void bnel() { bne(); }
 
 		// Branch on Less Than Zero (And Link) (Likely).
-		public void bltz() { _branch_pre_v0(OpCodes.Clt); }
+		public void bltz() { _branch_pre_v0(SafeBinaryComparison.LessThanSigned); }
 		public void bltzl() { bltz(); }
 		public void bltzal() {
 			//_branch_pre_v0_link(OpCodes.Clt);
@@ -84,15 +77,15 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void bltzall() { bltzal(); }
 
 		// Branch on Less Or Equals than Zero (Likely).
-		public void blez() { _branch_pre_v0(OpCodes.Cgt, OpCodes.Ldc_I4_0, OpCodes.Ceq); }
+		public void blez() { _branch_pre_v0(SafeBinaryComparison.LessOrEqualSigned); }
 		public void blezl() { blez(); }
 
 		// Branch on Great Than Zero (Likely).
-		public void bgtz() { _branch_pre_v0(OpCodes.Cgt); }
+		public void bgtz() { _branch_pre_v0(SafeBinaryComparison.GreaterThanSigned); }
 		public void bgtzl() { bgtz(); }
 
 		// Branch on Greater Equal Zero (And Link) (Likely).
-		public void bgez() { _branch_pre_v0(OpCodes.Clt, OpCodes.Ldc_I4_0, OpCodes.Ceq); }
+		public void bgez() { _branch_pre_v0(SafeBinaryComparison.GreaterOrEqualSigned); }
 		public void bgezl() { bgez(); }
 		public void bgezal() { throw (new NotImplementedException()); }
 		public void bgezall() { bgezal(); }
@@ -116,13 +109,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			//Console.WriteLine("LINK: {0:X}", PC);
 			if (PopulateCallStack)
 			{
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, PC);
-				MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint>)CpuThreadState.CallStackPush);
+				SafeILGenerator.LoadArgument0CpuThreadState();
+				SafeILGenerator.Push((int)PC);
+				SafeILGenerator.Call((Action<CpuThreadState, uint>)CpuThreadState.CallStackPush);
 			}
 			MipsMethodEmiter.SaveGPR(31, () =>
 			{
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, PC + 8);
+				SafeILGenerator.Push((int)(PC + 8));
 			});
 		}
 
@@ -132,18 +125,18 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			//Console.WriteLine("JUMP_ADDR: {0:X}", GetJumpAddress());
 			MipsMethodEmiter.SavePC(() =>
 			{
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, GetJumpAddress());
+				SafeILGenerator.Push((int)GetJumpAddress());
 			});
 
 			//Console.WriteLine("aaaaaaaaaaaaaa");
 
 			if (CpuProcessor.PspConfig.TraceJal)
 			{
-				MipsMethodEmiter.ILGenerator.EmitWriteLine(String.Format("{0:X} : JAL 0x{0:X}", PC, GetJumpAddress()));
+				SafeILGenerator.EmitWriteLine(String.Format("{0:X} : JAL 0x{0:X}", PC, GetJumpAddress()));
 			}
 
 			//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Jmp);
-			//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+			//SafeILGenerator.LoadArgument0CpuThreadState()
 			//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldobj, (object)CpuProcessor.CreateAndCacheDelegateForPC(MemoryStream, GetJumpAddress()));
 			//var FieldBuilder = MipsMethodEmiter.TypeBuilder.DefineField("testField", typeof(int), FieldAttributes.Static);
 			//FieldBuilder.SetValue(null, CpuProcessor.CreateAndCacheDelegateForPC(MemoryStream, GetJumpAddress()));
@@ -151,8 +144,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			
 			//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Callvirt);
 
-
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ret);
+			SafeILGenerator.Return();
 		}
 		public void jr() 
 		{
@@ -161,8 +153,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				if (PopulateCallStack)
 				{
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-					MipsMethodEmiter.CallMethod((Action<CpuThreadState>)CpuThreadState.CallStackPop);
+					SafeILGenerator.LoadArgument0CpuThreadState();
+					SafeILGenerator.Call((Action<CpuThreadState>)CpuThreadState.CallStackPop);
 				}
 			}
 
@@ -170,7 +162,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
 			});
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ret);
+			SafeILGenerator.Return();
 		}
 
 		public void jalr()
@@ -191,8 +183,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.StoreBranchFlag(() =>
 			{
 				MipsMethodEmiter.LoadFCR31_CC();
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_0);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ceq);
+				SafeILGenerator.Push((int)0);
+				SafeILGenerator.CompareBinary(SafeBinaryComparison.Equals);
 			});
 		}
 		public void bc1t() {

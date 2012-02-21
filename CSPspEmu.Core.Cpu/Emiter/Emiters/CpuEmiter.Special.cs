@@ -18,18 +18,18 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			if (Action != null)
 			{
 				//MipsMethodEmiter.ILGenerator.Emit(OpCodes., Action.Target);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Code);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, Action.Method);
+				SafeILGenerator.LoadArgument0CpuThreadState()
+				SafeILGenerator.Push((int)Code);
+				SafeILGenerator.Call(Action.Method);
 			}
 			else
 			{
 				Console.WriteLine("Undefined syscall: %06X at 0x%08X".Sprintf(Code, PC));
 			}
 #else
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.CODE);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, MipsMethodEmiter.Method_Syscall);
+			SafeILGenerator.LoadArgument0CpuThreadState();
+			SafeILGenerator.Push((int)Instruction.CODE);
+			SafeILGenerator.Call(MipsMethodEmiter.Method_Syscall);
 #endif
 		}
 
@@ -40,9 +40,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		public void cache() {
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (uint)Instruction.Value);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("cache_impl"));
+			SafeILGenerator.LoadArgument0CpuThreadState();
+			SafeILGenerator.Push((int)(uint)Instruction.Value);
+			SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("cache_impl"));
 			//throw(new NotImplementedException());
 		}
 		public void sync() { throw(new NotImplementedException()); }
@@ -56,8 +56,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		public void _break() {
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("break_impl"));
+			SafeILGenerator.LoadArgument0CpuThreadState();
+			SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("break_impl"));
 			//throw(new NotImplementedException());
 		}
 		public void dbreak() { throw(new NotImplementedException()); }
@@ -74,7 +74,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RT, () =>
 			{
 				MipsMethodEmiter.LoadFieldPtr(typeof(CpuThreadState).GetField("IC"));
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I4);
+				SafeILGenerator.LoadIndirect<int>();
 			});
 		}
 		public void mtic()

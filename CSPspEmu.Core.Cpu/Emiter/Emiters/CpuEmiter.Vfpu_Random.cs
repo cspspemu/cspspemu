@@ -34,7 +34,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/// Seed
 		/// </summary>
 		public void vrnds() {
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+			SafeILGenerator.LoadArgument0CpuThreadState();
 			Load_VS(0, true);
 			MipsMethodEmiter.CallMethod((Action<CpuThreadState, int>)_vrnds);
 		}
@@ -49,7 +49,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				for (int n = 0; n < VectorSize; n++)
 				{
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+					SafeILGenerator.LoadArgument0CpuThreadState();
 					MipsMethodEmiter.CallMethod((Func<CpuThreadState, int>)_vrndi);
 				}
 			}, AsInteger: true);
@@ -64,7 +64,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				for (int n = 0; n < VectorSize; n++)
 				{
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+					SafeILGenerator.LoadArgument0CpuThreadState();
 					MipsMethodEmiter.CallMethod((Func<CpuThreadState, float>)_vrndf1);
 				}
 			}, AsInteger: false);
@@ -79,7 +79,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				for (int n = 0; n < VectorSize; n++)
 				{
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+					SafeILGenerator.LoadArgument0CpuThreadState();
 					MipsMethodEmiter.CallMethod((Func<CpuThreadState, float>)_vrndf2);
 				}
 			}, AsInteger: false);

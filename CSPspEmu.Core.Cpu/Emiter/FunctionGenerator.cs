@@ -8,6 +8,7 @@ using System.Reflection.Emit;
 using CSPspEmu.Core.Cpu.Table;
 using CSPspEmu.Core.Memory;
 using CSharpUtils.Extensions;
+using NPhp.Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -93,18 +94,18 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 			var InstructionReader = new InstructionReader(MemoryStream);
 			var MipsMethodEmiter = new MipsMethodEmiter(MipsEmiter, CpuProcessor, EntryPC);
-			var ILGenerator = MipsMethodEmiter.ILGenerator;
+			var SafeILGenerator = MipsMethodEmiter.SafeILGenerator;
 			var CpuEmiter = new CpuEmiter(MipsMethodEmiter, InstructionReader, MemoryStream, CpuProcessor);
 
 			uint PC;
 			uint EndPC = (uint)MemoryStream.Length;
 			uint MinPC = uint.MaxValue, MaxPC = uint.MinValue;
 
-			var Labels = new SortedDictionary<uint, Label>();
+			var Labels = new SortedDictionary<uint, SafeLabel>();
 			var BranchesToAnalyze = new Queue<uint>();
 			var AnalyzedPC = new HashSet<uint>();
 
-			Labels[EntryPC] = ILGenerator.DefineLabel();
+			Labels[EntryPC] = SafeILGenerator.DefineLabel("EntryPoint");
 
 			BranchesToAnalyze.Enqueue(EntryPC);
 
@@ -173,7 +174,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					else if ((BranchInfo & CpuBranchAnalyzer.Flags.BranchOrJumpInstruction) != 0)
 					{
 						var BranchAddress = CpuEmiter.Instruction.GetBranchAddress(PC);
-						Labels[BranchAddress] = ILGenerator.DefineLabel();
+						Labels[BranchAddress] = SafeILGenerator.DefineLabel("" + BranchAddress);
 						BranchesToAnalyze.Enqueue(BranchAddress);
 
 						// Jump Always performed.
@@ -209,9 +210,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				if (CpuProcessor.PspConfig.TraceJIT)
 				{
-					ILGenerator.Emit(OpCodes.Ldarg_0);
-					ILGenerator.Emit(OpCodes.Ldc_I4, _PC);
-					ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("Trace"));
+					SafeILGenerator.LoadArgument<CpuThreadState>(0);
+					SafeILGenerator.Push((int)_PC);
+					SafeILGenerator.Call(typeof(CpuThreadState).GetMethod("Trace"));
 					Console.WriteLine("     PC=0x{0:X}", _PC);
 				}
 
@@ -239,9 +240,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					MipsMethodEmiter.SaveStepInstructionCount(() =>
 					{
 						MipsMethodEmiter.LoadStepInstructionCount();
-						ILGenerator.Emit(OpCodes.Ldc_I4, InstructionsEmitedSinceLastWaypoint);
-						//ILGenerator.Emit(OpCodes.Add);
-						ILGenerator.Emit(OpCodes.Sub);
+						SafeILGenerator.Push((int)InstructionsEmitedSinceLastWaypoint);
+						SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
 					});
 					//ILGenerator.Emit(OpCodes.Ldc_I4, 100);
 					//ILGenerator.EmitCall(OpCodes.Call, typeof(Console).GetMethod("WriteLine"), new Type[] { typeof(int) });
@@ -252,21 +252,21 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				{
 					if (!CpuProcessor.PspConfig.BreakInstructionThreadSwitchingForSpeed)
 					{
-						var NoYieldLabel = ILGenerator.DefineLabel();
+						var NoYieldLabel = SafeILGenerator.DefineLabel("NoYieldLabel");
 						MipsMethodEmiter.LoadStepInstructionCount();
-						ILGenerator.Emit(OpCodes.Ldc_I4_0);
-						ILGenerator.Emit(OpCodes.Bgt, NoYieldLabel);
+						SafeILGenerator.Push((int)0);
+						SafeILGenerator.BranchBinaryComparison(SafeBinaryComparison.GreaterThanSigned, NoYieldLabel);
 						//ILGenerator.Emit(OpCodes.Ldc_I4, 1000000);
 						//ILGenerator.Emit(OpCodes.Blt, NoYieldLabel);
 						MipsMethodEmiter.SaveStepInstructionCount(() =>
 						{
-							ILGenerator.Emit(OpCodes.Ldc_I4_0);
+							SafeILGenerator.Push((int)0);
 						});
 						StorePC();
-						ILGenerator.Emit(OpCodes.Ldarg_0);
-						ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("Yield"));
+						SafeILGenerator.LoadArgument0CpuThreadState();
+						SafeILGenerator.Call((Action)CpuThreadState.Methods.Yield);
 						//ILGenerator.Emit(OpCodes.Call, typeof(GreenThread).GetMethod("Yield"));
-						ILGenerator.MarkLabel(NoYieldLabel);
+						NoYieldLabel.Mark();
 					}
 				}
 			};
@@ -275,14 +275,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				if (CpuProcessor.NativeBreakpoints.Contains(PC))
 				{
-					ILGenerator.Emit(OpCodes.Call, typeof(DebugUtils).GetMethod("IsDebuggerPresentDebugBreak"));
+					SafeILGenerator.Call((Action)DebugUtils.IsDebuggerPresentDebugBreak);
 				}
 
 				// Marks label.
 				if (Labels.ContainsKey(PC))
 				{
 					EmitInstructionCountIncrement(false);
-					ILGenerator.MarkLabel(Labels[PC]);
+					Labels[PC].Mark();
 				}
 
 				_EmitCpuInstructionAT(PC);
@@ -293,7 +293,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			//Debug.WriteLine("PASS2: MinPC:{0:X}, MaxPC:{1:X}", MinPC, MaxPC);
 
 			// Jumps to the entry point.
-			ILGenerator.Emit(OpCodes.Br, Labels[EntryPC]);
+			SafeILGenerator.BranchAlways(Labels[EntryPC]);
 
 			for (PC = MinPC; PC <= MaxPC; )
 			{
@@ -347,7 +347,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 						// Marks label.
 						if (Labels.ContainsKey(PC))
 						{
-							ILGenerator.MarkLabel(Labels[PC]);
+							Labels[PC].Mark();
 						}
 
 						_EmitCpuInstructionAT(PC + 4);

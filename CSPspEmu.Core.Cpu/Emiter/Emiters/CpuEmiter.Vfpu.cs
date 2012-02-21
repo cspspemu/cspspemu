@@ -5,6 +5,7 @@ using System.Text;
 using System.Reflection.Emit;
 using CSharpUtils;
 using System.Linq.Expressions;
+using NPhp.Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -107,20 +108,20 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 			_VfpuLoadVectorWithIndexPointer(Instruction.VD, 0, 1);
 			{
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 0.0f);
+				SafeILGenerator.Push((float)0.0f);
 				for (uint Index = 0; Index < VectorSize; Index++)
 				{
 					_VfpuLoadVectorWithIndexPointer(Instruction.VS, Index, VectorSize);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
+					SafeILGenerator.LoadIndirect<float>();
 
 					_VfpuLoadVectorWithIndexPointer(Instruction.VT, Index, VectorSize);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_R4);
+					SafeILGenerator.LoadIndirect<float>();
 
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+					SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+					SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
 				}
 			}
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_R4);
+			SafeILGenerator.StoreIndirect<float>();
 
 			/*
 			loadVs(vsize);
@@ -145,7 +146,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				{
 					Load_VS(Index, VectorSize);
 					Load_VT(0, 1);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+					SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
 				});
 			}
 		}
@@ -170,17 +171,17 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					{
 						// Angle [-1, +1]
 						Load_VS(0, 1); // Angle
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (float)(Math.PI / 2.0f));
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+						SafeILGenerator.Push((float)(Math.PI / 2.0f));
+						SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
 						MipsMethodEmiter.CallMethod((Func<float, float>)MathFloat.Sin);
 						if (NegateSin)
 						{
-							MipsMethodEmiter.ILGenerator.Emit(OpCodes.Neg);
+							SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate);
 						}
 					}
 					else
 					{
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (float)(0.0f));
+						SafeILGenerator.Push((float)(0.0f));
 					}
 				});
 			}
@@ -191,12 +192,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				{
 					// Angle [-1, +1]
 					Load_VS(0, 1); // Angle
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (float)(Math.PI / 2.0f));
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+					SafeILGenerator.Push((float)(Math.PI / 2.0f));
+					SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
 					MipsMethodEmiter.CallMethod((Func<float, float>)MathFloat.Sin);
 					if (NegateSin)
 					{
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Neg);
+						SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate);
 					}
 				});
 			}
@@ -205,8 +206,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				// Angle [-1, +1]
 				Load_VS(0, 1); // Angle
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (float)(Math.PI / 2.0f));
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+				SafeILGenerator.Push((float)(Math.PI / 2.0f));
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
 				MipsMethodEmiter.CallMethod((Func<float, float>)MathFloat.Cos);
 			});
 		}
@@ -214,11 +215,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Vfpu ZERO/ONE
 		public void vzero()
 		{
-			VectorOperationSaveVd((Index) => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 0.0f); });
+			VectorOperationSaveVd((Index) => { SafeILGenerator.Push((float)0.0f); });
 		}
 		public void vone()
 		{
-			VectorOperationSaveVd((Index) => { MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 1.0f); });
+			VectorOperationSaveVd((Index) => { SafeILGenerator.Push((float)1.0f); });
 		}
 
 		// Vfpu MOVe/SiGN/Reverse SQuare root/COSine/Arc SINe/LOG2
@@ -243,14 +244,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveVd((Index) =>
 			{
 				Load_VS(Index);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Neg);
+				SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate);
 			});
 		}
 		public void vocp() {
 			VectorOperationSaveVd((Index) => {
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 1.0f);
+				SafeILGenerator.Push((float)1.0f);
 				Load_VS(Index);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Sub);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
 			});
 		}
 		public void vsgn()
@@ -265,9 +266,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			VectorOperationSaveVd((Index) =>
 			{
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 1.0f);
+				SafeILGenerator.Push((float)1.0f);
 				Load_VS(Index);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Div);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.DivideSigned);
 			});
 		}
 
@@ -305,7 +306,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				//Console.Error.WriteLine("{0}/{1}", Index, VectorSize);
 				Save_VD(Index, VectorSize, () =>
 				{
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (float)FloatConstant);
+					SafeILGenerator.Push((float)FloatConstant);
 				}
 				//, Debug: true
 				);
@@ -322,21 +323,21 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				Load_VS(1, VectorSize);
 				Load_VT(2, VectorSize);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
 			});
 
 			Save_VD(1, VectorSize, () =>
 			{
 				Load_VS(2, VectorSize);
 				Load_VT(0, VectorSize);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
 			});
 
 			Save_VD(2, VectorSize, () =>
 			{
 				Load_VS(0, VectorSize);
 				Load_VT(1, VectorSize);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
 			});
 		}
 
@@ -350,33 +351,33 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				Load_VS(1, VectorSize);
 				Load_VT(2, VectorSize);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
 				Load_VS(2, VectorSize);
 				Load_VT(1, VectorSize);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Sub);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
 			});
 
 			Save_VD(1, VectorSize, () =>
 			{
 				Load_VS(2, VectorSize);
 				Load_VT(0, VectorSize);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
 				Load_VS(0, VectorSize);
 				Load_VT(2, VectorSize);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Sub);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
 			});
 
 			Save_VD(2, VectorSize, () =>
 			{
 				Load_VS(0, VectorSize);
 				Load_VT(1, VectorSize);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
 				Load_VS(1, VectorSize);
 				Load_VT(0, VectorSize);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Sub);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
 			});
 			/*
 			v3[0] = +v1[1] * v2[2] - v1[2] * v2[1];
@@ -429,7 +430,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveVd((Index) =>
 			{
 				Load_VS_VT(Index);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
 			});
 		}
 		public void vsub()
@@ -437,7 +438,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveVd((Index) =>
 			{
 				Load_VS_VT(Index);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Sub);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
 			});
 		}
 		public void vdiv()
@@ -445,7 +446,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveVd((Index) =>
 			{
 				Load_VS_VT(Index);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Div);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.DivideSigned);
 			});
 		}
 
@@ -462,13 +463,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveVd((Index) =>
 			{
 				Load_VS_VT(Index);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
 				//MipsMethodEmiter.CallMethod(this.GetType(), "_vmul");
 			});
 			/*
 			_VectorOperation2Registers(Index =>
 			{
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
 			});
 			*/
 		}
@@ -480,7 +481,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				VfpuSave_Register(Register, Index, VectorSize, PrefixNone, () =>
 				{
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (Index == IndexOne) ? 1.0f : 0.0f);
+					SafeILGenerator.Push((float)((Index == IndexOne) ? 1.0f : 0.0f));
 				}
 				//, Debug: true
 				);
@@ -494,7 +495,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				VfpuSave_Register(Register, Index, VectorSize, PrefixNone, () =>
 				{
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4,  0.0f);
+					SafeILGenerator.Push((float) 0.0f);
 				}
 					//, Debug: true
 				);
@@ -515,8 +516,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			// @CHECK!
 			Save_VT(Index: 0, VectorSize: 1, Action: () =>
 			{
-				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (float)Instruction.IMM);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, (float)Instruction.IMMU);
+				//SafeILGenerator.Push((float)Instruction.IMM);
+				SafeILGenerator.Push((float)Instruction.IMMU);
 			});
 		}
 
@@ -531,8 +532,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void vfim()
 		{
 			_VfpuLoadVectorWithIndexPointer(Instruction.VT, 0, 1);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, Instruction.IMM_HF);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_R4);
+			SafeILGenerator.Push((float)Instruction.IMM_HF);
+			SafeILGenerator.StoreIndirect<float>();
 
 			//_call_debug_vfpu();
 		}

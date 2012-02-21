@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
+using NPhp.Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -24,13 +25,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					//VfpuSave_Register((uint)(Instruction.VD + IndexI), IndexJ, VectorSize, PrefixDestination, () =>
 					Save_VD(IndexJ, VectorSize, IndexI, () =>
 					{
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 0.0f);
+						SafeILGenerator.Push((float)0.0f);
 						foreach (var IndexK in XRange(VectorSize))
 						{
 							Load_VT(IndexK, VectorSize, IndexI);
 							Load_VS(IndexK, VectorSize, IndexJ);
-							MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
-							MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+							SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+							SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
 						}
 					});
 				}
@@ -55,13 +56,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			VectorOperationSaveVd(VectorSize, Index =>
 			{
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 0.0f);
+				SafeILGenerator.Push((float)0.0f);
 				for (int n = 0; n < VectorSize; n++)
 				{
 					Load_VS(n, VectorSize, RegisterOffset: Index);
 					Load_VT(n, VectorSize);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+					SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+					SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
 				}
 			});
 		}
@@ -70,20 +71,20 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			VectorOperationSaveVd(VectorSize, Index =>
 			{
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 0.0f);
+				SafeILGenerator.Push((float)0.0f);
 				for (int n = 0; n < VectorSize; n++)
 				{
 					Load_VS(n, VectorSize, RegisterOffset: Index);
 					if (n == VectorSize - 1)
 					{
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, 1.0f);
+						SafeILGenerator.Push((float)1.0f);
 					}
 					else
 					{
 						Load_VT(n, VectorSize - 1);
 					}
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+					SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+					SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
 				}
 			});
 		}
@@ -174,7 +175,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					{
 						Load_VS(Index, VectorSize, RowIndex);
 						Load_VT(0, 1);
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+						SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
 					});
 				}
 			}

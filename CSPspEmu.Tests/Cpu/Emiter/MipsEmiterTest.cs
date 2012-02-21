@@ -4,6 +4,7 @@ using System;
 using CSPspEmu.Core.Cpu;
 using System.Reflection.Emit;
 using CSPspEmu.Core.Memory;
+using NPhp.Codegen;
 
 namespace CSPspEmu.Core.Tests
 {
@@ -23,9 +24,9 @@ namespace CSPspEmu.Core.Tests
 			CpuThreadState.GPR[1] = 1;
 			CpuThreadState.GPR[2] = 2;
 			CpuThreadState.GPR[3] = 3;
-			MipsEmiter.OP_3REG_Unsigned(1, 2, 2, OpCodes.Add);
-			MipsEmiter.OP_3REG_Unsigned(0, 2, 2, OpCodes.Add);
-			MipsEmiter.OP_2REG_IMM_Signed(10, 0, 1000, OpCodes.Add);
+			MipsEmiter.OP_3REG_Unsigned(1, 2, 2, () => { MipsEmiter.SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); });
+			MipsEmiter.OP_3REG_Unsigned(0, 2, 2, () => { MipsEmiter.SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); });
+			MipsEmiter.OP_2REG_IMM_Signed(10, 0, 1000, () => { MipsEmiter.SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); });
 			MipsEmiter.CreateDelegate()(CpuThreadState);
 			Assert.AreEqual(4, CpuThreadState.GPR[1]);
 			Assert.AreEqual(0, CpuThreadState.GPR[0]);

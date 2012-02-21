@@ -13,34 +13,18 @@ using CSharpUtils.Factory;
 namespace CSPspEmu.Core.Tests
 {
 	[TestClass]
-	unsafe public class CpuEmiterTest
+	unsafe public partial class CpuEmiterTest
 	{
-		protected CpuProcessor Processor;
-		protected CpuThreadState CpuThreadState;
-
-		static protected PspConfig PspConfig;
-		static protected PspEmulatorContext PspEmulatorContext;
-		static protected PspMemory Memory;
-
-		[ClassInitialize]
-		public static void ClassInit(TestContext context)
+		[TestMethod]
+		public void SimplestTest()
 		{
-			PspConfig = new PspConfig();
-			PspEmulatorContext = new PspEmulatorContext(PspConfig);
-			PspEmulatorContext.SetInstanceType<PspMemory, LazyPspMemory>();
-			Memory = PspEmulatorContext.GetInstance<PspMemory>();
-		}
+			//CpuThreadState.GPR[11] = 11;
 
-		[TestInitialize]
-		public void SetUp()
-		{
-			Processor = PspEmulatorContext.GetInstance<CpuProcessor>();
-			CpuThreadState = new CpuThreadState(Processor);
-		}
+			ExecuteAssembly(@"
+				add  r1, r0, r0
+			");
 
-		protected void ExecuteAssembly(String Assembly)
-		{
-			CpuThreadState.ExecuteAssembly(Assembly);
+			//Assert.AreEqual(11, CpuThreadState.GPR[1]);
 		}
 
 		[TestMethod]
@@ -685,5 +669,36 @@ namespace CSPspEmu.Core.Tests
 			Assert.AreEqual(103, CpuThreadState.GPR[1]);
 		}
 		*/
+	}
+
+	unsafe public partial class CpuEmiterTest
+	{
+		protected CpuProcessor Processor;
+		protected CpuThreadState CpuThreadState;
+
+		static protected PspConfig PspConfig;
+		static protected PspEmulatorContext PspEmulatorContext;
+		static protected PspMemory Memory;
+
+		[ClassInitialize]
+		public static void ClassInit(TestContext context)
+		{
+			PspConfig = new PspConfig();
+			PspEmulatorContext = new PspEmulatorContext(PspConfig);
+			PspEmulatorContext.SetInstanceType<PspMemory, LazyPspMemory>();
+			Memory = PspEmulatorContext.GetInstance<PspMemory>();
+		}
+
+		[TestInitialize]
+		public void SetUp()
+		{
+			Processor = PspEmulatorContext.GetInstance<CpuProcessor>();
+			CpuThreadState = new CpuThreadState(Processor);
+		}
+
+		protected void ExecuteAssembly(String Assembly)
+		{
+			CpuThreadState.ExecuteAssembly(Assembly);
+		}
 	}
 }

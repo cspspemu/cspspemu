@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection.Emit;
 using CSharpUtils;
+using NPhp.Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -13,48 +14,48 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Arithmetic operations.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 
-		public void add() { MipsMethodEmiter.OP_3REG_Signed(RD, RS, RT, OpCodes.Add); }
-		public void addu() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RS, RT, OpCodes.Add); }
-		public void sub() { MipsMethodEmiter.OP_3REG_Signed(RD, RS, RT, OpCodes.Sub);  }
-		public void subu() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RS, RT, OpCodes.Sub);  }
+		public void add() { MipsMethodEmiter.OP_3REG_Signed(RD, RS, RT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); }); }
+		public void addu() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RS, RT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); }); }
+		public void sub() { MipsMethodEmiter.OP_3REG_Signed(RD, RS, RT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned); }); }
+		public void subu() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RS, RT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned); }); }
 
-		public void addi() { MipsMethodEmiter.OP_2REG_IMM_Signed(RT, RS, (short)IMM, OpCodes.Add); }
-		public void addiu() { MipsMethodEmiter.OP_2REG_IMM_Signed(RT, RS, (short)IMM, OpCodes.Add);  }
+		public void addi() { MipsMethodEmiter.OP_2REG_IMM_Signed(RT, RS, (short)IMM, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); }); }
+		public void addiu() { MipsMethodEmiter.OP_2REG_IMM_Signed(RT, RS, (short)IMM, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); }); }
 
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Logical Operations.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void and() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RS, RT, OpCodes.And); }
-		public void or() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RS, RT, OpCodes.Or); }
-		public void xor() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RS, RT, OpCodes.Xor); }
-		public void nor() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RS, RT, OpCodes.Or, OpCodes.Not); }
+		public void and() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RS, RT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.And); }); }
+		public void or() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RS, RT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.Or); }); }
+		public void xor() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RS, RT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.Xor); }); }
+		public void nor() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RS, RT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.Or); SafeILGenerator.UnaryOperation(SafeUnaryOperator.Not); }); }
 
-		public void andi() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RT, RS, IMMU, OpCodes.And); }
-		public void ori() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RT, RS, IMMU, OpCodes.Or); }
-		public void xori() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RT, RS, IMMU, OpCodes.Xor); }
+		public void andi() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RT, RS, IMMU, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.And); }); }
+		public void ori() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RT, RS, IMMU, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.Or); }); }
+		public void xori() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RT, RS, IMMU, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.Xor); }); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Shift Left/Right Logical/Arithmethic (Variable).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 
-		public void sll() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RD, RT, Instruction.POS, OpCodes.Shl); }
-		public void sra() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RD, RT, Instruction.POS, OpCodes.Shr); }
-		public void srl() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RD, RT, Instruction.POS, OpCodes.Shr_Un); }
+		public void sll() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RD, RT, Instruction.POS, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftLeft); }); }
+		public void sra() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RD, RT, Instruction.POS, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftRightSigned); }); }
+		public void srl() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RD, RT, Instruction.POS, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftRightUnsigned); }); }
 
 		static public uint _rotr(uint Value, int Offset)
 		{
 			return (Value >> Offset) | (Value << (32 - Offset));
 		}
 
-		public void sllv() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RT, RS, OpCodes.Shl); }
-		public void srav() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RT, RS, OpCodes.Shr); }
-		public void srlv() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RT, RS, OpCodes.Shr_Un); }
+		public void sllv() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RT, RS, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftLeft); }); }
+		public void srav() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RT, RS, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftRightSigned); }); }
+		public void srlv() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RT, RS, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftRightUnsigned); }); }
 		public void rotr() {
 			MipsMethodEmiter.SaveGPR(RD, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.POS);
+				SafeILGenerator.Push((int)Instruction.POS);
 				
 				MipsMethodEmiter.CallMethod((Func<uint, int, uint>)CpuEmiter._rotr);
 			});
@@ -72,14 +73,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Set Less Than (Immediate) (Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void slt() { MipsMethodEmiter.OP_3REG_Signed(RD, RS, RT, OpCodes.Clt);  }
-		public void sltu() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RS, RT, OpCodes.Clt_Un);  }
+		public void slt() { MipsMethodEmiter.OP_3REG_Signed(RD, RS, RT, () => { SafeILGenerator.CompareBinary(SafeBinaryComparison.LessThanSigned); }); }
+		public void sltu() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RS, RT, () => { SafeILGenerator.CompareBinary(SafeBinaryComparison.LessThanUnsigned); }); }
 
-		public void slti() { MipsMethodEmiter.OP_2REG_IMM_Signed(RT, RS, (short)Instruction.IMM, OpCodes.Clt); }
-		public void sltiu() {
-			//Console.WriteLine("SLTIU: {0} : {1}", Instruction.IMM, (uint)Instruction.IMM);
-			MipsMethodEmiter.OP_2REG_IMM_Unsigned(RT, RS, (uint)Instruction.IMM, OpCodes.Clt_Un);
-		}
+		public void slti() { MipsMethodEmiter.OP_2REG_IMM_Signed(RT, RS, (short)Instruction.IMM, () => { SafeILGenerator.CompareBinary(SafeBinaryComparison.LessThanSigned); }); }
+		public void sltiu() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RT, RS, (uint)Instruction.IMM, () => { SafeILGenerator.CompareBinary(SafeBinaryComparison.LessThanUnsigned); }); }
+		//Console.WriteLine("SLTIU: {0} : {1}", Instruction.IMM, (uint)Instruction.IMM);
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Load Upper Immediate.
@@ -96,7 +95,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RD, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_I1);
+				SafeILGenerator.ConvertTo<sbyte>();
 				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_I4);
 			});
 		}
@@ -104,7 +103,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RD, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_I2);
+				SafeILGenerator.ConvertTo<short>();
 				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_I4);
 			});
 		}
@@ -117,7 +116,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RD, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("bitrev_impl"));
+				SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("bitrev_impl"));
 			});
 			//throw (new NotImplementedException());
 		}
@@ -134,32 +133,32 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// MAXimum/MINimum.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		private void _max_min(OpCode BranchOpCode)
+		private void _max_min(SafeBinaryComparison Comparison)
 		{
-			var LabelIf = MipsMethodEmiter.ILGenerator.DefineLabel();
-			var LabelElse = MipsMethodEmiter.ILGenerator.DefineLabel();
-			var LabelEnd = MipsMethodEmiter.ILGenerator.DefineLabel();
+			var LabelIf = SafeILGenerator.DefineLabel("If");
+			var LabelElse = SafeILGenerator.DefineLabel("Else");
+			var LabelEnd = SafeILGenerator.DefineLabel("End");
 
 			MipsMethodEmiter.LoadGPR_Signed(RS);
 			MipsMethodEmiter.LoadGPR_Signed(RT);
-			MipsMethodEmiter.ILGenerator.Emit(BranchOpCode, LabelElse);
+			SafeILGenerator.BranchBinaryComparison(Comparison, LabelElse);
 
 			// IF
-			MipsMethodEmiter.ILGenerator.MarkLabel(LabelIf);
+			LabelIf.Mark();
 			MipsMethodEmiter.SET_REG(RD, RS);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Br, LabelEnd);
+			SafeILGenerator.BranchAlways(LabelEnd);
 
 			// ELSE
-			MipsMethodEmiter.ILGenerator.MarkLabel(LabelElse);
+			LabelElse.Mark();
 			MipsMethodEmiter.SET_REG(RD, RT);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Br, LabelEnd);
+			SafeILGenerator.BranchAlways(LabelEnd);
 
 			// END
-			MipsMethodEmiter.ILGenerator.MarkLabel(LabelEnd);
+			LabelEnd.Mark();
 		}
 
-		public void max() { _max_min(OpCodes.Blt); }
-		public void min() { _max_min(OpCodes.Bgt); }
+		public void max() { _max_min(SafeBinaryComparison.LessThanSigned); }
+		public void min() { _max_min(SafeBinaryComparison.GreaterThanSigned); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// DIVide (Unsigned).
@@ -193,62 +192,59 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		public void div() {
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+			SafeILGenerator.LoadArgument0CpuThreadState();
 			MipsMethodEmiter.LoadGPR_Signed(RS);
 			MipsMethodEmiter.LoadGPR_Signed(RT);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_div_impl"));
+			SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_div_impl"));
 		}
 		public void divu() {
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+			SafeILGenerator.LoadArgument0CpuThreadState();
 			MipsMethodEmiter.LoadGPR_Unsigned(RS);
 			MipsMethodEmiter.LoadGPR_Unsigned(RT);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_divu_impl"));
+			SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_divu_impl"));
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// MULTiply (Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void _mult_common_op(OpCode ConvOp)
+
+		public void _mult_common_op<TConvertType>()
 		{
 			MipsMethodEmiter.LoadGPR_Signed(RS);
-			MipsMethodEmiter.ILGenerator.Emit(ConvOp);
+			SafeILGenerator.ConvertTo<TConvertType>();
 			MipsMethodEmiter.LoadGPR_Signed(RT);
-			MipsMethodEmiter.ILGenerator.Emit(ConvOp);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Mul);
+			SafeILGenerator.ConvertTo<TConvertType>();
+			SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
 		}
 
-		public void _mult_common(OpCode ConvOp)
-		{
-			MipsMethodEmiter.SaveHI_LO(() =>
-			{
-				_mult_common_op(ConvOp);
-			});
-		}
-
-		public void _mult_common_op(OpCode ConvOp, params OpCode[] OpCodes)
+		public void _mult_common_op<TConvertType>(SafeBinaryOperator Operator)
 		{
 			MipsMethodEmiter.SaveHI_LO(() =>
 			{
 				MipsMethodEmiter.LoadHI_LO();
-				MipsMethodEmiter.ILGenerator.Emit(ConvOp);
-				_mult_common_op(ConvOp);
-				foreach (var OpCode in OpCodes)
-				{
-					MipsMethodEmiter.ILGenerator.Emit(OpCode);
-				}
+				SafeILGenerator.ConvertTo<TConvertType>();
+				_mult_common_op<TConvertType>();
+				SafeILGenerator.BinaryOperation(Operator);
+			});
+		}
+		public void _mult_common<TConvertType>()
+		{
+			MipsMethodEmiter.SaveHI_LO(() =>
+			{
+				_mult_common_op<TConvertType>();
 			});
 		}
 
-		public void mult() { _mult_common(OpCodes.Conv_I8); }
-		public void multu() { _mult_common(OpCodes.Conv_U8); }
+		public void mult() { _mult_common<long>(); }
+		public void multu() { _mult_common<ulong>(); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Multiply ADD/SUBstract (Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void madd() { _mult_common_op(OpCodes.Conv_I8, OpCodes.Add); }
-		public void maddu() { _mult_common_op(OpCodes.Conv_U8, OpCodes.Add); }
-		public void msub() { _mult_common_op(OpCodes.Conv_I8, OpCodes.Sub); }
-		public void msubu() { _mult_common_op(OpCodes.Conv_U8, OpCodes.Sub); }
+		public void madd() { _mult_common_op<long>(SafeBinaryOperator.AdditionSigned); }
+		public void maddu() { _mult_common_op<ulong>(SafeBinaryOperator.AdditionSigned); }
+		public void msub() { _mult_common_op<long>(SafeBinaryOperator.SubstractionSigned); }
+		public void msubu() { _mult_common_op<ulong>(SafeBinaryOperator.SubstractionSigned); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move To/From HI/LO.
@@ -261,21 +257,21 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move if Zero/Non zero.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		private void _movzn(OpCode OpCode)
+		private void _movzn(SafeBinaryComparison Comparison)
 		{
-			var SkipMoveLabel = MipsMethodEmiter.ILGenerator.DefineLabel();
+			var SkipMoveLabel = SafeILGenerator.DefineLabel("SkipMoveLabel");
 			MipsMethodEmiter.LoadGPR_Unsigned(RT);
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4_0);
-			MipsMethodEmiter.ILGenerator.Emit(OpCode, SkipMoveLabel);
+			SafeILGenerator.Push((int)0);
+			SafeILGenerator.BranchBinaryComparison(Comparison, SkipMoveLabel);
 			MipsMethodEmiter.SET_REG(RD, RS);
-			MipsMethodEmiter.ILGenerator.MarkLabel(SkipMoveLabel);
+			SkipMoveLabel.Mark();
 		}
 
 		public void movz() {
-			_movzn(OpCodes.Bne_Un);
+			_movzn(SafeBinaryComparison.NotEquals);
 		}
 		public void movn() {
-			_movzn(OpCodes.Beq);
+			_movzn(SafeBinaryComparison.Equals);
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -296,9 +292,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RT, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.POS);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.SIZE_E);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_ext_impl"));
+				SafeILGenerator.Push((int)Instruction.POS);
+				SafeILGenerator.Push((int)Instruction.SIZE_E);
+				SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_ext_impl"));
 			});
 		}
 		public void ins()
@@ -307,9 +303,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.POS);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.SIZE_I);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_ins_impl"));
+				SafeILGenerator.Push((int)Instruction.POS);
+				SafeILGenerator.Push((int)Instruction.SIZE_I);
+				SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_ins_impl"));
 			});
 		}
 
@@ -334,7 +330,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RD, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_clz_impl"));
+				SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_clz_impl"));
 			});
 		}
 		public void clo()
@@ -342,7 +338,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RD, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_clo_impl"));
+				SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_clo_impl"));
 			});
 		}
 
@@ -370,7 +366,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RD, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_wsbh_impl"));
+				SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_wsbh_impl"));
 			});
 		}
 		public void wsbw()
@@ -378,7 +374,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RD, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(CpuEmiter).GetMethod("_wsbw_impl"));
+				SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_wsbw_impl"));
 			});
 		}
 	}

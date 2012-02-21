@@ -14,6 +14,8 @@ namespace CSPspEmu.Core.Cpu
 {
 	unsafe sealed public class CpuThreadState
 	{
+		static public readonly CpuThreadState Methods = new CpuThreadState(null);
+
 		public CpuProcessor CpuProcessor;
 		public object ModuleObject;
 

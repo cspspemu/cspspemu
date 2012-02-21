@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using CSharpUtils;
+using NPhp.Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -29,10 +30,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveVd(VectorSize, (Index) =>
 			{
 				Load_VS(0, 1, AsInteger: true);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (3 - Index) * 4);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shl);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xF0000000);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
+				SafeILGenerator.Push((int)((3 - Index) * 4));
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftLeft);
+				SafeILGenerator.Push(unchecked((int)0xF0000000));
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.And);
 				MipsMethodEmiter.CallMethod((Func<uint, uint>)CpuEmiter._vc2i_impl);
 			}, AsInteger: true);
 		}
@@ -44,10 +45,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveVd(VectorSize, (Index) =>
 			{
 				Load_VS(0, 1, AsInteger: true);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (3 - Index) * 8);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shl);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xFF000000);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
+				SafeILGenerator.Push((int)((3 - Index) * 8));
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftLeft);
+				SafeILGenerator.Push(unchecked((int)0xFF000000));
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.And);
 			}, AsInteger: true);
 		}
 
@@ -60,11 +61,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				Load_VS((Index / 2), VectorSize, AsInteger : true);
 				if ((Index % 2) == 0)
 				{
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 16);
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shl);
+					SafeILGenerator.Push((int)16);
+					SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftLeft);
 				}
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 0xFFFF0000);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.And);
+				SafeILGenerator.Push(unchecked((int)0xFFFF0000));
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.And);
 			}, AsInteger: true);
 		}
 
@@ -98,8 +99,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveVd(Index =>
 			{
 				Load_VS(Index, AsInteger: true);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_R4);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, -(int)Instruction.IMM5);
+				SafeILGenerator.ConvertTo<float>();
+				SafeILGenerator.Push(-(int)Instruction.IMM5);
 				MipsMethodEmiter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
 			});
 		}
@@ -110,7 +111,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveVd(VectorSize, Index =>
 			{
 				Load_VS(Index, VectorSize);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Imm5);
+				SafeILGenerator.Push((int)Imm5);
 				MipsMethodEmiter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
 				MipsMethodEmiter.CallMethod((Func<float, int>)MathFloat.Floor);
 			}, AsInteger: true);
@@ -123,7 +124,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveVd(VectorSize, Index =>
 			{
 				Load_VS(Index, VectorSize);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Imm5);
+				SafeILGenerator.Push((int)Imm5);
 				MipsMethodEmiter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
 				MipsMethodEmiter.CallMethod((Func<float, int>)MathFloat.Round);
 			}, AsInteger: true);
@@ -136,7 +137,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveVd(VectorSize, Index =>
 			{
 				Load_VS(Index, VectorSize);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Imm5);
+				SafeILGenerator.Push((int)Imm5);
 				MipsMethodEmiter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
 				MipsMethodEmiter.CallMethod((Func<float, int>)MathFloat.Ceil);
 			}, AsInteger: true);
@@ -153,7 +154,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveVd(Index =>
 			{
 				Load_VS(Index);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Imm5);
+				SafeILGenerator.Push((int)Imm5);
 				MipsMethodEmiter.CallMethod((Func<float, int, float>)(CpuEmiter._vf2iz));
 			});
 		}

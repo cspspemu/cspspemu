@@ -49,9 +49,8 @@ namespace CSPspEmu.Hle
 		{
 			this.HleState = HleState;
 
-			try
+			//try
 			{
-				
 				foreach (
 					var MethodInfo in
 					new MethodInfo[0]
@@ -87,11 +86,11 @@ namespace CSPspEmu.Hle
 					}
 				}
 			}
-			catch (Exception Exception)
-			{
-				Console.WriteLine(Exception);
-				throw (Exception);
-			}
+			//catch (Exception Exception)
+			//{
+			//	Console.WriteLine(Exception);
+			//	throw (Exception);
+			//}
 		}
 
 		static public string StringFromAddress(CpuThreadState CpuThreadState, uint Address)
@@ -121,14 +120,15 @@ namespace CSPspEmu.Hle
 			var NotImplementedAttribute = (HlePspNotImplementedAttribute)MethodInfo.GetCustomAttributes(typeof(HlePspNotImplementedAttribute), true).FirstOrDefault();
 			bool NotImplementedFunc = (NotImplementedAttribute != null) ? NotImplementedAttribute.Notice : false;
 			bool SkipLog = HlePspFunctionAttribute.SkipLog;
+			var SafeILGenerator = MipsMethodEmiter.SafeILGenerator;
 
 			var ParamInfoList = new List<ParamInfo>();
 
 			Action CallAction = () =>
 			{
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldfld, typeof(CpuThreadState).GetField("ModuleObject"));
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Castclass, this.GetType());
+				SafeILGenerator.LoadArgument0CpuThreadState();
+				SafeILGenerator.LoadField(typeof(CpuThreadState).GetField("ModuleObject"));
+				SafeILGenerator.CastClass(this.GetType());
 				foreach (var ParameterInfo in MethodInfo.GetParameters())
 				{
 					var ParameterType = ParameterInfo.ParameterType;
@@ -136,7 +136,7 @@ namespace CSPspEmu.Hle
 					// The CpuThreadState
 					if (ParameterType == typeof(CpuThreadState))
 					{
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+						SafeILGenerator.LoadArgument0CpuThreadState();
 					}
 					// A stringz
 					else if (ParameterType == typeof(string))
@@ -148,9 +148,9 @@ namespace CSPspEmu.Hle
 							RegisterIndex = GprIndex,
 							ParameterType = ParameterType,
 						});
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+						SafeILGenerator.LoadArgument0CpuThreadState();
 						MipsMethodEmiter.LoadGPR_Unsigned(GprIndex);
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, typeof(HleModuleHost).GetMethod("StringFromAddress"));
+						SafeILGenerator.Call(typeof(HleModuleHost).GetMethod("StringFromAddress"));
 						GprIndex++;
 					}
 					// A pointer
@@ -187,7 +187,7 @@ namespace CSPspEmu.Hle
 						/*
 						MipsMethodEmiter.LoadGPR_Unsigned(GprIndex + 0);
 						MipsMethodEmiter.LoadGPR_Unsigned(GprIndex + 1);
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, 32);
+						SafeILGenerator.Push((int)32);
 						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shl);
 						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
 						*/
@@ -223,7 +223,7 @@ namespace CSPspEmu.Hle
 					}
 					//MipsMethodEmiter.ILGenerator.Emit(OpCodes.ld
 				}
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Call, MethodInfo);
+				SafeILGenerator.Call(MethodInfo);
 			};
 
 			if (MethodInfo.ReturnType == typeof(void))
@@ -320,6 +320,7 @@ namespace CSPspEmu.Hle
 				{
 					throw (SceKernelSelfStopUnloadModuleException);
 				}
+					/*
 				catch (Exception Exception)
 				{
 					throw (new Exception(
@@ -327,6 +328,7 @@ namespace CSPspEmu.Hle
 						Exception
 					));
 				}
+					*/
 				finally
 				{
 					if (Trace)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using CSharpUtils;
+using NPhp.Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -189,8 +190,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter._getmemptr(() =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, Instruction.IMM14 * 4 + Index * 4);
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Add);
+				SafeILGenerator.Push((int)(Instruction.IMM14 * 4 + Index * 4));
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
 			}, Safe: true, CanBeNull: false);
 		}
 
@@ -293,18 +294,25 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					//Console.Error.WriteLine("VALUE:: " + Value);
 					if (AsInteger)
 					{
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, MathFloat.ReinterpretFloatAsInt(Value));
+						SafeILGenerator.Push((int)MathFloat.ReinterpretFloatAsInt(Value));
 					}
 					else
 					{
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, Value);
+						SafeILGenerator.Push((float)Value);
 					}
 				}
 				// Value.
 				else
 				{
 					_VfpuLoadVectorWithIndexPointer(Register, (uint)Prefix.SourceIndex(Index), VectorSize, Debug);
-					MipsMethodEmiter.ILGenerator.Emit(AsInteger ? OpCodes.Ldind_I4 : OpCodes.Ldind_R4);
+					if (AsInteger)
+					{
+						SafeILGenerator.LoadIndirect<int>();
+					}
+					else
+					{
+						SafeILGenerator.LoadIndirect<float>();
+					}
 				}
 
 				if (Prefix.SourceAbsolute(Index))
@@ -314,13 +322,21 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				}
 				if (Prefix.SourceNegate(Index))
 				{
-					MipsMethodEmiter.ILGenerator.Emit(OpCodes.Neg);
+					SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate);
 				}
 			}
 			else
 			{
 				_VfpuLoadVectorWithIndexPointer(Register, (uint)Index, VectorSize, Debug);
-				MipsMethodEmiter.ILGenerator.Emit(AsInteger ? OpCodes.Ldind_I4 : OpCodes.Ldind_R4);
+				if (AsInteger)
+				{
+					SafeILGenerator.LoadIndirect<int>();
+				}
+				else
+				{
+					SafeILGenerator.LoadIndirect<float>();
+				}
+
 			}
 		}
 
@@ -346,7 +362,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		private void Load_VCC(uint Index)
 		{
 			MipsMethodEmiter.LoadFieldPtr(typeof(CpuThreadState).GetField("VFR_CC_" + Index));
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldind_I1);
+			SafeILGenerator.LoadIndirect<sbyte>();
 		}
 
 		private void Save_VCC(int Index, Action Action)
@@ -355,7 +371,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				Action();
 			}
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_I1);
+			SafeILGenerator.StoreIndirect<sbyte>();
 		}
 
 		private void VfpuSave_Register(uint Register, int Index, uint VectorSize, VfpuPrefix Prefix, Action Action, bool Debug = false, bool AsInteger = false)
@@ -380,21 +396,28 @@ namespace CSPspEmu.Core.Cpu.Emiter
 						{
 							if (AsInteger)
 							{
-								MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (int)Min);
-								MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (int)Max);
+								SafeILGenerator.Push((int)Min);
+								SafeILGenerator.Push((int)Max);
 								MipsMethodEmiter.CallMethod((Func<int, int, int, int>)MathFloat.ClampInt);
 							}
 							else
 							{
-								MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, Min);
-								MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_R4, Max);
+								SafeILGenerator.Push((float)Min);
+								SafeILGenerator.Push((float)Max);
 								MipsMethodEmiter.CallMethod((Func<float, float, float, float>)MathFloat.Clamp);
 							}
 						}
 					}
 				}
 			}
-			MipsMethodEmiter.ILGenerator.Emit(AsInteger ? OpCodes.Stind_I4 : OpCodes.Stind_R4);
+			if (AsInteger)
+			{
+				SafeILGenerator.StoreIndirect<int>();
+			}
+			else
+			{
+				SafeILGenerator.StoreIndirect<float>();
+			}
 		}
 
 		// VfpuPrefix VfpuPrefix, 
@@ -550,7 +573,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				LoadValueCallback();
 			}
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_R4);
+			SafeILGenerator.StoreIndirect<float>();
 		}
 
 		private void LoadVprFieldPtr(uint RegisterIndex)
@@ -614,11 +637,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		private void EmitLogFloatResult(bool Return = true)
 		{
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldarg_0);
+			SafeILGenerator.LoadArgument0CpuThreadState();
 			MipsMethodEmiter.CallMethod((Func<float, CpuThreadState, float>)CpuEmiter.LogFloatResult);
 			if (!Return)
 			{
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Pop);
+				SafeILGenerator.Pop();
 			}
 		}
 

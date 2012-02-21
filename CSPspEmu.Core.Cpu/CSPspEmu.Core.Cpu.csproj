@@ -66,6 +66,7 @@
     <Compile Include="Emiter\Emiters\CpuEmiter.Vfpu_Random.cs" />
     <Compile Include="Emiter\Emiters\CpuEmiter.Vfpu_RegisterTransfer.cs" />
     <Compile Include="Emiter\FunctionGenerator.cs" />
+    <Compile Include="Emiter\SafeILGeneratorEx.cs" />
     <Compile Include="MethodCacheFast.cs" />
     <Compile Include="MethodCacheSlow.cs" />
     <Compile Include="Emiter\MipsEmiter.cs" />

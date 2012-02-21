@@ -22,7 +22,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			_VfpuLoadVectorWithIndexPointer(Instruction.VD, 0, 1);
 			MipsMethodEmiter.LoadGPR_Signed(Instruction.RT);
 			MipsMethodEmiter.CallMethod(typeof(MathFloat), "ReinterpretIntAsFloat");
-			MipsMethodEmiter.ILGenerator.Emit(OpCodes.Stind_R4);
+			SafeILGenerator.StoreIndirect<float>();
 			*/
 
 			VectorOperationSaveVd(1, (Index) =>
@@ -51,7 +51,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			MipsMethodEmiter.SaveGPR(RT, () =>
 			{
-				MipsMethodEmiter.ILGenerator.Emit(OpCodes.Ldc_I4, (int)(Instruction.IMM7 + 128));
+				SafeILGenerator.Push((int)(Instruction.IMM7 + 128));
 				MipsMethodEmiter.CallMethod((Func<VfpuControlRegistersEnum, uint>)CpuEmiter._mfvc_impl);
 			});
 		}
