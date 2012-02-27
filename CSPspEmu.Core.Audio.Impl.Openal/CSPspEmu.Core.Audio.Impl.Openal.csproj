@@ -51,6 +51,10 @@
       <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Audio\CSPspEmu.Core.Audio.csproj">
+      <Project>{3BE28D69-CFB4-4C9D-8874-7CF8F520DFB0}</Project>
+      <Name>CSPspEmu.Core.Audio</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{f783ecd3-0f79-43cc-abd0-d356a64049c4}</Project>
       <Name>CSPspEmu.Core</Name>

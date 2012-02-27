@@ -97,7 +97,7 @@ namespace CSPspEmu.Sandbox
 				PspEmulator.Start();
 #else
 				//PspEmulator.UseFastMemory = true;
-				//PspEmulator.Start();
+				PspEmulator.Start();
 				//PspEmulator.Start();
 
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\abuse\EBOOT.PBP", TraceSyscalls: false);
@@ -114,7 +114,7 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Sims2.cso");
 
 				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Astonishia Story.iso", TraceSyscalls: false);
-				PspEmulator.StartAndLoad(@"E:\Isos\psp\Tales of Phantasia.cso", EnableMpeg: false);
+				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Tales of Phantasia.cso", EnableMpeg: false);
 				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Skate Park City.cso");
 				//PspEmulator.StartAndLoad(@"E:\Isos\psp\Outrun 2006.cso");
 				//PspEmulator.StartAndLoad(@"E:\Isos\psp\haruhi.iso", TraceSyscalls: false, EnableMpeg: true);

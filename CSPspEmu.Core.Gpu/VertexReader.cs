@@ -8,7 +8,7 @@ using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Gpu.VertexReading;
 using CSPspEmu.Core.Utils;
 
-namespace CSPspEmu.Core.Gpu.Impl.Opengl
+namespace CSPspEmu.Core.Gpu
 {
 	unsafe public partial class VertexReader
 	{

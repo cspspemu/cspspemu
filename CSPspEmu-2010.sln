@@ -42,6 +42,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Resources", "CSPsp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Core.Audio.Impl.WaveOut", "CSPspEmu.Core.Audio.Impl.WaveOut\CSPspEmu.Core.Audio.Impl.WaveOut.csproj", "{B23C9D87-D587-4599-A94B-0168D3AA382A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Core.Audio", "CSPspEmu.Core.Audio\CSPspEmu.Core.Audio.csproj", "{3BE28D69-CFB4-4C9D-8874-7CF8F520DFB0}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = CSPspEmu.vsmdi
@@ -225,6 +227,16 @@ Global
 		{B23C9D87-D587-4599-A94B-0168D3AA382A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{B23C9D87-D587-4599-A94B-0168D3AA382A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B23C9D87-D587-4599-A94B-0168D3AA382A}.Release|x86.ActiveCfg = Release|Any CPU
+		{3BE28D69-CFB4-4C9D-8874-7CF8F520DFB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BE28D69-CFB4-4C9D-8874-7CF8F520DFB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BE28D69-CFB4-4C9D-8874-7CF8F520DFB0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{3BE28D69-CFB4-4C9D-8874-7CF8F520DFB0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{3BE28D69-CFB4-4C9D-8874-7CF8F520DFB0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3BE28D69-CFB4-4C9D-8874-7CF8F520DFB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BE28D69-CFB4-4C9D-8874-7CF8F520DFB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BE28D69-CFB4-4C9D-8874-7CF8F520DFB0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{3BE28D69-CFB4-4C9D-8874-7CF8F520DFB0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{3BE28D69-CFB4-4C9D-8874-7CF8F520DFB0}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

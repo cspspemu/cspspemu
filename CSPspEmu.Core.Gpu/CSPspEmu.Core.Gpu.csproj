@@ -93,6 +93,7 @@
     <Compile Include="State\TestFunctionEnum.cs" />
     <Compile Include="State\SubStates\VertexStateStruct.cs" />
     <Compile Include="VertexInfo.cs" />
+    <Compile Include="VertexReader.cs" />
     <Compile Include="VertexReading\VertexReaderDynarec.cs" />
     <Compile Include="VertexReading\VertexReaderDynarec.Utils.cs" />
   </ItemGroup>

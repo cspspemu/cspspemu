@@ -15,10 +15,6 @@ using System.Windows.Forms;
 using CSharpUtils;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Gpu.State;
-using OpenTK;
-using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL;
-using OpenTK.Platform;
 using System.Globalization;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
@@ -26,6 +22,15 @@ using System.Diagnostics;
 using System.IO;
 //using Cloo;
 //using Cloo.Bindings;
+
+#if OPENTK
+using OpenTK;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
+using OpenTK.Platform;
+#else
+using MiniGL;
+#endif
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
@@ -608,9 +613,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 				GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, new IntPtr(Address));
 #else
-				GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, TempBuffer);
 				fixed (void* _TempBufferPtr = &TempBuffer[0])
 				{
+					GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, new IntPtr(_TempBufferPtr));
+
 					var Input = (byte*)_TempBufferPtr;
 					var Output = (byte*)Address;
 
@@ -685,6 +691,18 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			//TextureCache.RecheckAll();
 			//throw new NotImplementedException();
+		}
+
+		public override PluginInfo PluginInfo
+		{
+			get
+			{
+				return new PluginInfo()
+				{
+					Name = "OpenGl",
+					Version = "0.1",
+				};
+			}
 		}
 	}
 }

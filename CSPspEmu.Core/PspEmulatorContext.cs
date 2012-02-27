@@ -44,7 +44,14 @@ namespace CSPspEmu.Core
 						Instance._InitializeComponent(this);
 						Instance.InitializeComponent();
 						var End = DateTime.UtcNow;
-						Console.WriteLine("GetInstance<{0}>: Miss! : LoadTime({1})", typeof(TType), End - Start);
+						Console.Write("GetInstance<{0}>: Miss! : LoadTime(", typeof(TType));
+						var ElapsedTime = End - Start;
+						ConsoleUtils.SaveRestoreConsoleState(() =>
+						{
+							Console.ForegroundColor = (ElapsedTime.TotalSeconds > 0.1) ? ConsoleColor.Yellow : ConsoleColor.Green;
+							Console.Write("{0}", ElapsedTime.TotalSeconds);
+						});
+						Console.WriteLine(")");
 						return (TType)Instance;
 					}
 

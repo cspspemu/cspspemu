@@ -44,5 +44,16 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 		override public void StopSynchronized()
 		{
 		}
+
+		public override PluginInfo PluginInfo
+		{
+			get {
+				return new PluginInfo()
+				{
+					Name = "OpenAl",
+					Version = "1.0",
+				};
+			}
+		}
 	}
 }

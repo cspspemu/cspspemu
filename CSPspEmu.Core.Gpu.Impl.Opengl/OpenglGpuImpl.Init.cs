@@ -7,10 +7,15 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
+
+#if OPENTK
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
+#else
+using MiniGL;
+#endif
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {

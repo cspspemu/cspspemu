@@ -18,6 +18,14 @@ namespace CSPspEmu.Core.Audio
 		/// </summary>
 		abstract public void StopSynchronized();
 
+		/// <summary>
+		/// 
+		/// </summary>
+		abstract public PluginInfo PluginInfo { get; }
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public void __TestAudio()
 		{
 			int m = 0;

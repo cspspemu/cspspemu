@@ -28,5 +28,8 @@ namespace CSPspEmu.Core
 
 		// Debug
 		void ShowDebugInformation();
+
+		PluginInfo GetAudioPluginInfo();
+		PluginInfo GetGpuPluginInfo();
 	}
 }

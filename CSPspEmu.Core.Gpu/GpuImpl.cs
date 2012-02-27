@@ -36,5 +36,10 @@ namespace CSPspEmu.Core.Gpu
 
 		abstract public void SetCurrent();
 		abstract public void UnsetCurrent();
+
+		/// <summary>
+		/// 
+		/// </summary>
+		abstract public PluginInfo PluginInfo { get; }
 	}
 }

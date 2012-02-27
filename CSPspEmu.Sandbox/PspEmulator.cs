@@ -443,5 +443,15 @@ namespace CSPspEmu.Sandbox
 			}
 			//Console.ReadKey();
 		}
+
+		public PluginInfo GetAudioPluginInfo()
+		{
+			return PspEmulatorContext.GetInstance<PspAudioImpl>().PluginInfo;
+		}
+
+		public PluginInfo GetGpuPluginInfo()
+		{
+			return PspEmulatorContext.GetInstance<GpuImpl>().PluginInfo;
+		}
 	}
 }

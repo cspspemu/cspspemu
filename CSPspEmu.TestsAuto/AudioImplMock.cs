@@ -22,5 +22,17 @@ namespace CSPspEmu.AutoTests
 		{
 			//throw new NotImplementedException();
 		}
+
+		public override PluginInfo PluginInfo
+		{
+			get
+			{
+				return new PluginInfo()
+				{
+					Name = "Mock",
+					Version = "1.0",
+				};
+			}
+		}
 	}
 }

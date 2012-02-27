@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Audio;
-using CSPspEmu.Core.Audio.Impl.Openal;
 
 namespace CSPspEmu.Runner.Components.Audio
 {

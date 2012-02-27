@@ -7,14 +7,17 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Gui.Winforms
 {
 	public partial class AboutForm : Form
 	{
-		public AboutForm()
+		public AboutForm(IGuiExternalInterface IGuiExternalInterface)
 		{
 			InitializeComponent();
+			GpuPluginInfoLabel.Text = "GPU " + IGuiExternalInterface.GetGpuPluginInfo().ToString();
+			AudioPluginInfoLabel.Text = "Audio " + IGuiExternalInterface.GetAudioPluginInfo().ToString();
 		}
 
 		private void button1_Click(object sender, EventArgs e)
@@ -28,6 +31,11 @@ namespace CSPspEmu.Gui.Winforms
 		}
 
 		private void label1_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void AboutForm_Load(object sender, EventArgs e)
 		{
 
 		}

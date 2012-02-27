@@ -44,9 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Audio\AudioMixer.cs" />
-    <Compile Include="Audio\PspAudioChannel.cs" />
-    <Compile Include="Audio\PspAudioImpl.cs" />
     <Compile Include="Battery\Battery.cs" />
     <Compile Include="Crypto\Crypto.cs" />
     <Compile Include="Crypto\Crypto.Tables.cs" />
@@ -65,8 +62,8 @@
     <Compile Include="Memory\PspMemoryStream.cs" />
     <Compile Include="Memory\PspPointer.cs" />
     <Compile Include="PixelFormats.cs" />
+    <Compile Include="PluginInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Audio\PspAudio.cs" />
     <Compile Include="PspConfig.cs" />
     <Compile Include="Controller\PspController.cs" />
     <Compile Include="Display\PspDisplay.cs" />

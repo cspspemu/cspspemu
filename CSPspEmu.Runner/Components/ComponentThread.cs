@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using CSharpUtils.Threading;
 using CSPspEmu.Core;
+using CSharpUtils;
 
 namespace CSPspEmu.Runner.Components
 {
@@ -47,7 +48,14 @@ namespace CSPspEmu.Runner.Components
 				});
 			}
 			var StartEndTime = DateTime.UtcNow;
-			Console.WriteLine("Component {0} Started! {1}", this, StartEndTime - StartStartTime);
+			Console.Write("Component {0} Started! StartedTime(", this);
+			var ElapsedTime = StartEndTime - StartStartTime;
+			ConsoleUtils.SaveRestoreConsoleState(() =>
+			{
+				Console.ForegroundColor = (ElapsedTime.TotalSeconds > 0.1) ? ConsoleColor.Yellow : ConsoleColor.Green;
+				Console.Write("{0}", ElapsedTime.TotalSeconds);
+			});
+			Console.WriteLine(")");
 		}
 
 		public void StopSynchronized()

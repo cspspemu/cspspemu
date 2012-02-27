@@ -3,7 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Gpu.State;
+
+#if OPENTK
 using OpenTK.Graphics.OpenGL;
+#else
+using MiniGL;
+#endif
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {

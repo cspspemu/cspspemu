@@ -10,12 +10,17 @@ using CSharpUtils;
 using CSPspEmu.Core.Gpu.State.SubStates;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
-using OpenTK.Graphics.OpenGL;
 using CSharpUtils.Extensions;
 using System.Drawing;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using CSPspEmu.Core.Gpu.State;
+
+#if OPENTK
+using OpenTK.Graphics.OpenGL;
+#else
+using MiniGL;
+#endif
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {

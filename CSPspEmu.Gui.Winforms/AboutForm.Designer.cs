@@ -37,6 +37,9 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
 			this.label6 = new System.Windows.Forms.Label();
+			this.label7 = new System.Windows.Forms.Label();
+			this.GpuPluginInfoLabel = new System.Windows.Forms.Label();
+			this.AudioPluginInfoLabel = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
@@ -44,7 +47,7 @@
 			// button1
 			// 
 			this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.button1.Location = new System.Drawing.Point(354, 272);
+			this.button1.Location = new System.Drawing.Point(422, 312);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(90, 26);
 			this.button1.TabIndex = 0;
@@ -76,7 +79,7 @@
 			// 
 			this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.pictureBox1.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.btn_donate_LG;
-			this.pictureBox1.Location = new System.Drawing.Point(256, 272);
+			this.pictureBox1.Location = new System.Drawing.Point(324, 312);
 			this.pictureBox1.Name = "pictureBox1";
 			this.pictureBox1.Size = new System.Drawing.Size(92, 26);
 			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -132,12 +135,43 @@
 			this.label6.TabIndex = 8;
 			this.label6.Text = "Noxa";
 			// 
+			// label7
+			// 
+			this.label7.AutoSize = true;
+			this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label7.Location = new System.Drawing.Point(259, 201);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(52, 13);
+			this.label7.TabIndex = 9;
+			this.label7.Text = "Plugins:";
+			// 
+			// GpuPluginInfoLabel
+			// 
+			this.GpuPluginInfoLabel.AutoSize = true;
+			this.GpuPluginInfoLabel.Location = new System.Drawing.Point(280, 231);
+			this.GpuPluginInfoLabel.Name = "GpuPluginInfoLabel";
+			this.GpuPluginInfoLabel.Size = new System.Drawing.Size(74, 13);
+			this.GpuPluginInfoLabel.TabIndex = 10;
+			this.GpuPluginInfoLabel.Text = "GpuPluginInfo";
+			// 
+			// AudioPluginInfoLabel
+			// 
+			this.AudioPluginInfoLabel.AutoSize = true;
+			this.AudioPluginInfoLabel.Location = new System.Drawing.Point(280, 255);
+			this.AudioPluginInfoLabel.Name = "AudioPluginInfoLabel";
+			this.AudioPluginInfoLabel.Size = new System.Drawing.Size(81, 13);
+			this.AudioPluginInfoLabel.TabIndex = 11;
+			this.AudioPluginInfoLabel.Text = "AudioPluginInfo";
+			// 
 			// AboutForm
 			// 
 			this.AcceptButton = this.button1;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(456, 310);
+			this.ClientSize = new System.Drawing.Size(530, 350);
+			this.Controls.Add(this.AudioPluginInfoLabel);
+			this.Controls.Add(this.GpuPluginInfoLabel);
+			this.Controls.Add(this.label7);
 			this.Controls.Add(this.label6);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this.label4);
@@ -154,6 +188,7 @@
 			this.ShowIcon = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "About CSPspEmu";
+			this.Load += new System.EventHandler(this.AboutForm_Load);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.ResumeLayout(false);
@@ -172,5 +207,8 @@
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.Label GpuPluginInfoLabel;
+		private System.Windows.Forms.Label AudioPluginInfoLabel;
 	}
 }

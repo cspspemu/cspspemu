@@ -3,7 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Gpu.State;
+
+#if OPENTK
 using OpenTK.Graphics.OpenGL;
+#else
+using MiniGL;
+#endif
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
@@ -26,6 +31,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//  RegionBottomRight=PointS(X=383,Y=239)
 			//)
 			//Console.Error.WriteLine(Viewport.ToString());
+
 			GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Fastest);
 			GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
 			GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
