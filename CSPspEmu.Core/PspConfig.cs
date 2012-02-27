@@ -143,7 +143,20 @@ namespace CSPspEmu.Core
 		/// </summary>
 		public bool TraceThreadLoop = false;
 		public uint RelocatedBaseAddress;
-		public string GameTitle = "<Unknown Game>";
+
+		private string _GameTitle;
+		public string GameTitle
+		{
+			get
+			{
+				if (_GameTitle == null) return Translations.UnknownGameText;
+				return _GameTitle;
+			}
+			set
+			{
+				_GameTitle = value;
+			}
+		}
 		public bool TrackCallStack = true;
 
 		// Until more stable.

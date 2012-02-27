@@ -30,43 +30,47 @@
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PspDisplayForm));
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.FileMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.FileOpenMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
-			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.utilsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-			this.frameSkippingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
-			this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.traceUnimplementedSyscallsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.traceUnimplementedGpuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.showThreadInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
-			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.displayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.FileExitMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsDisplayMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.xToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.xToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
 			this.xToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
 			this.xToolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-			this.takeScreenshotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.dumpRamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.associateWithPBPAndCSOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.resumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.pauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.traceSyscallsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.websiteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.indieGamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.blogcballesterosvelascoesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.githubcomsoywizcspspemuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.reportAnIssueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+			this.UtilsLanguageMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.englishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.spanishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripSeparator();
+			this.UtilsTakeScreenshotMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsDumpMainMemoryMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+			this.UtilsFrameLimitingMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
+			this.UtilsAssociateExtensionsMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.RunMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.RunRunResumeMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.RunPauseMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.DebugMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.DebugTraceSyscallsMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.DebugTraceUnimplementedSyscallsMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.DebugTraceUnimplementedGpuMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.DebugShowThreadInfoMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.HelpMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.HelpWebsiteMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
+			this.HelpKawagamesMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.HelpBlogMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.HelpGithubMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripSeparator();
+			this.HelpCheckForUpdatesMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
+			this.HelpReportAnIssueMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
+			this.HelpAboutMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -74,179 +78,77 @@
 			// 
 			this.menuStrip1.BackColor = System.Drawing.SystemColors.ButtonFace;
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.utilsToolStripMenuItem,
-            this.runToolStripMenuItem,
-            this.debugToolStripMenuItem,
-            this.helpToolStripMenuItem});
+            this.FileMenu,
+            this.UtilsMenu,
+            this.RunMenu,
+            this.DebugMenu,
+            this.HelpMenu});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(525, 24);
 			this.menuStrip1.TabIndex = 1;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
-			// fileToolStripMenuItem
+			// FileMenu
 			// 
-			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openToolStripMenuItem,
+			this.FileMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.FileOpenMenu,
             this.toolStripMenuItem3,
-            this.exitToolStripMenuItem});
-			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-			this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-			this.fileToolStripMenuItem.Text = "&File";
+            this.FileExitMenu});
+			this.FileMenu.Name = "FileMenu";
+			this.FileMenu.Size = new System.Drawing.Size(37, 20);
+			this.FileMenu.Text = "&File";
+			// 
+			// FileOpenMenu
+			// 
+			this.FileOpenMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.folder;
+			this.FileOpenMenu.Name = "FileOpenMenu";
+			this.FileOpenMenu.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+			this.FileOpenMenu.Size = new System.Drawing.Size(155, 22);
+			this.FileOpenMenu.Text = "&Open...";
+			this.FileOpenMenu.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem3
 			// 
 			this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-			this.toolStripMenuItem3.Size = new System.Drawing.Size(109, 6);
+			this.toolStripMenuItem3.Size = new System.Drawing.Size(152, 6);
 			// 
-			// exitToolStripMenuItem
+			// FileExitMenu
 			// 
-			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
-			this.exitToolStripMenuItem.Text = "&Exit";
-			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+			this.FileExitMenu.Name = "FileExitMenu";
+			this.FileExitMenu.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+			this.FileExitMenu.Size = new System.Drawing.Size(155, 22);
+			this.FileExitMenu.Text = "&Exit";
+			this.FileExitMenu.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
-			// utilsToolStripMenuItem
+			// UtilsMenu
 			// 
-			this.utilsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.displayToolStripMenuItem,
+			this.UtilsMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.UtilsDisplayMenu,
             this.toolStripMenuItem2,
-            this.takeScreenshotToolStripMenuItem,
-            this.dumpRamToolStripMenuItem,
+            this.UtilsLanguageMenu,
+            this.toolStripMenuItem9,
+            this.UtilsTakeScreenshotMenu,
+            this.UtilsDumpMainMemoryMenu,
             this.toolStripMenuItem1,
-            this.frameSkippingToolStripMenuItem,
+            this.UtilsFrameLimitingMenu,
             this.toolStripMenuItem7,
-            this.associateWithPBPAndCSOToolStripMenuItem});
-			this.utilsToolStripMenuItem.Name = "utilsToolStripMenuItem";
-			this.utilsToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
-			this.utilsToolStripMenuItem.Text = "&Utils";
+            this.UtilsAssociateExtensionsMenu});
+			this.UtilsMenu.Name = "UtilsMenu";
+			this.UtilsMenu.Size = new System.Drawing.Size(42, 20);
+			this.UtilsMenu.Text = "&Utils";
 			// 
-			// toolStripMenuItem2
+			// UtilsDisplayMenu
 			// 
-			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(303, 6);
-			// 
-			// toolStripMenuItem1
-			// 
-			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(303, 6);
-			// 
-			// frameSkippingToolStripMenuItem
-			// 
-			this.frameSkippingToolStripMenuItem.Checked = true;
-			this.frameSkippingToolStripMenuItem.CheckOnClick = true;
-			this.frameSkippingToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.frameSkippingToolStripMenuItem.Name = "frameSkippingToolStripMenuItem";
-			this.frameSkippingToolStripMenuItem.Size = new System.Drawing.Size(306, 22);
-			this.frameSkippingToolStripMenuItem.Text = "&Frame Limiting";
-			this.frameSkippingToolStripMenuItem.Click += new System.EventHandler(this.frameSkippingToolStripMenuItem_Click);
-			// 
-			// toolStripMenuItem7
-			// 
-			this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-			this.toolStripMenuItem7.Size = new System.Drawing.Size(303, 6);
-			// 
-			// runToolStripMenuItem
-			// 
-			this.runToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.resumeToolStripMenuItem,
-            this.pauseToolStripMenuItem});
-			this.runToolStripMenuItem.Name = "runToolStripMenuItem";
-			this.runToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
-			this.runToolStripMenuItem.Text = "&Run";
-			// 
-			// debugToolStripMenuItem
-			// 
-			this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.traceSyscallsToolStripMenuItem,
-            this.traceUnimplementedSyscallsToolStripMenuItem,
-            this.traceUnimplementedGpuToolStripMenuItem,
-            this.showThreadInfoToolStripMenuItem});
-			this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
-			this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
-			this.debugToolStripMenuItem.Text = "&Debug";
-			this.debugToolStripMenuItem.Click += new System.EventHandler(this.debugToolStripMenuItem_Click);
-			// 
-			// traceUnimplementedSyscallsToolStripMenuItem
-			// 
-			this.traceUnimplementedSyscallsToolStripMenuItem.Name = "traceUnimplementedSyscallsToolStripMenuItem";
-			this.traceUnimplementedSyscallsToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-			this.traceUnimplementedSyscallsToolStripMenuItem.Text = "Trace Unimplemented Syscalls";
-			this.traceUnimplementedSyscallsToolStripMenuItem.Click += new System.EventHandler(this.traceUnimplementedSyscallsToolStripMenuItem_Click);
-			// 
-			// traceUnimplementedGpuToolStripMenuItem
-			// 
-			this.traceUnimplementedGpuToolStripMenuItem.Name = "traceUnimplementedGpuToolStripMenuItem";
-			this.traceUnimplementedGpuToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-			this.traceUnimplementedGpuToolStripMenuItem.Text = "Trace Unimplemented Gpu";
-			this.traceUnimplementedGpuToolStripMenuItem.Click += new System.EventHandler(this.traceUnimplementedGpuToolStripMenuItem_Click);
-			// 
-			// showThreadInfoToolStripMenuItem
-			// 
-			this.showThreadInfoToolStripMenuItem.Name = "showThreadInfoToolStripMenuItem";
-			this.showThreadInfoToolStripMenuItem.ShortcutKeyDisplayString = "F2";
-			this.showThreadInfoToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-			this.showThreadInfoToolStripMenuItem.Text = "Show &Thread Info";
-			this.showThreadInfoToolStripMenuItem.Click += new System.EventHandler(this.showThreadInfoToolStripMenuItem_Click);
-			// 
-			// helpToolStripMenuItem
-			// 
-			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.websiteToolStripMenuItem,
-            this.toolStripMenuItem5,
-            this.indieGamesToolStripMenuItem,
-            this.blogcballesterosvelascoesToolStripMenuItem,
-            this.githubcomsoywizcspspemuToolStripMenuItem,
-            this.toolStripMenuItem6,
-            this.checkForUpdatesToolStripMenuItem,
-            this.toolStripMenuItem4,
-            this.reportAnIssueToolStripMenuItem,
-            this.toolStripMenuItem8,
-            this.aboutToolStripMenuItem});
-			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-			this.helpToolStripMenuItem.Text = "&Help";
-			// 
-			// toolStripMenuItem5
-			// 
-			this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-			this.toolStripMenuItem5.Size = new System.Drawing.Size(232, 6);
-			// 
-			// toolStripMenuItem6
-			// 
-			this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-			this.toolStripMenuItem6.Size = new System.Drawing.Size(232, 6);
-			// 
-			// toolStripMenuItem4
-			// 
-			this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-			this.toolStripMenuItem4.Size = new System.Drawing.Size(232, 6);
-			// 
-			// toolStripMenuItem8
-			// 
-			this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-			this.toolStripMenuItem8.Size = new System.Drawing.Size(232, 6);
-			// 
-			// openToolStripMenuItem
-			// 
-			this.openToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.folder;
-			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
-			this.openToolStripMenuItem.Text = "&Open...";
-			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
-			// 
-			// displayToolStripMenuItem
-			// 
-			this.displayToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.UtilsDisplayMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.xToolStripMenuItem1,
             this.xToolStripMenuItem2,
             this.xToolStripMenuItem3,
             this.xToolStripMenuItem4});
-			this.displayToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.magnifier;
-			this.displayToolStripMenuItem.Name = "displayToolStripMenuItem";
-			this.displayToolStripMenuItem.Size = new System.Drawing.Size(306, 22);
-			this.displayToolStripMenuItem.Text = "&Display";
+			this.UtilsDisplayMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.magnifier;
+			this.UtilsDisplayMenu.Name = "UtilsDisplayMenu";
+			this.UtilsDisplayMenu.Size = new System.Drawing.Size(306, 22);
+			this.UtilsDisplayMenu.Text = "&Display";
 			// 
 			// xToolStripMenuItem1
 			// 
@@ -280,109 +182,253 @@
 			this.xToolStripMenuItem4.Text = "&4x";
 			this.xToolStripMenuItem4.Click += new System.EventHandler(this.xToolStripMenuItem4_Click);
 			// 
-			// takeScreenshotToolStripMenuItem
+			// toolStripMenuItem2
 			// 
-			this.takeScreenshotToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.camera;
-			this.takeScreenshotToolStripMenuItem.Name = "takeScreenshotToolStripMenuItem";
-			this.takeScreenshotToolStripMenuItem.Size = new System.Drawing.Size(306, 22);
-			this.takeScreenshotToolStripMenuItem.Text = "Take &Screenshot...";
-			this.takeScreenshotToolStripMenuItem.Click += new System.EventHandler(this.takeScreenshotToolStripMenuItem_Click);
+			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(303, 6);
 			// 
-			// dumpRamToolStripMenuItem
+			// UtilsLanguageMenu
 			// 
-			this.dumpRamToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.safe;
-			this.dumpRamToolStripMenuItem.Name = "dumpRamToolStripMenuItem";
-			this.dumpRamToolStripMenuItem.Size = new System.Drawing.Size(306, 22);
-			this.dumpRamToolStripMenuItem.Text = "&Dump Main Memory...";
-			this.dumpRamToolStripMenuItem.Click += new System.EventHandler(this.dumpRamToolStripMenuItem_Click);
+			this.UtilsLanguageMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.englishToolStripMenuItem,
+            this.spanishToolStripMenuItem});
+			this.UtilsLanguageMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.world;
+			this.UtilsLanguageMenu.Name = "UtilsLanguageMenu";
+			this.UtilsLanguageMenu.Size = new System.Drawing.Size(306, 22);
+			this.UtilsLanguageMenu.Text = "&Language";
 			// 
-			// associateWithPBPAndCSOToolStripMenuItem
+			// englishToolStripMenuItem
 			// 
-			this.associateWithPBPAndCSOToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.link;
-			this.associateWithPBPAndCSOToolStripMenuItem.Name = "associateWithPBPAndCSOToolStripMenuItem";
-			this.associateWithPBPAndCSOToolStripMenuItem.Size = new System.Drawing.Size(306, 22);
-			this.associateWithPBPAndCSOToolStripMenuItem.Text = "&Associate extensions (.PBP, .CSO, .PRX, .ELF)";
-			this.associateWithPBPAndCSOToolStripMenuItem.Click += new System.EventHandler(this.associateWithPBPAndCSOToolStripMenuItem_Click);
+			this.englishToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.us;
+			this.englishToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+			this.englishToolStripMenuItem.Name = "englishToolStripMenuItem";
+			this.englishToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.englishToolStripMenuItem.Text = "&English";
+			this.englishToolStripMenuItem.Click += new System.EventHandler(this.englishToolStripMenuItem_Click);
 			// 
-			// resumeToolStripMenuItem
+			// spanishToolStripMenuItem
 			// 
-			this.resumeToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.control_play;
-			this.resumeToolStripMenuItem.Name = "resumeToolStripMenuItem";
-			this.resumeToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
-			this.resumeToolStripMenuItem.Text = "&Run/Resume";
-			this.resumeToolStripMenuItem.Click += new System.EventHandler(this.resumeToolStripMenuItem_Click);
+			this.spanishToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.es;
+			this.spanishToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+			this.spanishToolStripMenuItem.Name = "spanishToolStripMenuItem";
+			this.spanishToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.spanishToolStripMenuItem.Text = "&Spanish";
+			this.spanishToolStripMenuItem.Click += new System.EventHandler(this.spanishToolStripMenuItem_Click);
 			// 
-			// pauseToolStripMenuItem
+			// toolStripMenuItem9
 			// 
-			this.pauseToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.control_pause;
-			this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
-			this.pauseToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
-			this.pauseToolStripMenuItem.Text = "&Pause";
-			this.pauseToolStripMenuItem.Click += new System.EventHandler(this.pauseToolStripMenuItem_Click);
+			this.toolStripMenuItem9.Name = "toolStripMenuItem9";
+			this.toolStripMenuItem9.Size = new System.Drawing.Size(303, 6);
 			// 
-			// traceSyscallsToolStripMenuItem
+			// UtilsTakeScreenshotMenu
 			// 
-			this.traceSyscallsToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.application_view_xp_terminal;
-			this.traceSyscallsToolStripMenuItem.Name = "traceSyscallsToolStripMenuItem";
-			this.traceSyscallsToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-			this.traceSyscallsToolStripMenuItem.Text = "Trace &Syscalls";
-			this.traceSyscallsToolStripMenuItem.Click += new System.EventHandler(this.traceSyscallsToolStripMenuItem_Click);
+			this.UtilsTakeScreenshotMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.camera;
+			this.UtilsTakeScreenshotMenu.Name = "UtilsTakeScreenshotMenu";
+			this.UtilsTakeScreenshotMenu.ShortcutKeys = System.Windows.Forms.Keys.F4;
+			this.UtilsTakeScreenshotMenu.Size = new System.Drawing.Size(306, 22);
+			this.UtilsTakeScreenshotMenu.Text = "Take &Screenshot...";
+			this.UtilsTakeScreenshotMenu.Click += new System.EventHandler(this.takeScreenshotToolStripMenuItem_Click);
 			// 
-			// websiteToolStripMenuItem
+			// UtilsDumpMainMemoryMenu
 			// 
-			this.websiteToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.world;
-			this.websiteToolStripMenuItem.Name = "websiteToolStripMenuItem";
-			this.websiteToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-			this.websiteToolStripMenuItem.Text = "&Website";
-			this.websiteToolStripMenuItem.Click += new System.EventHandler(this.websiteToolStripMenuItem_Click);
+			this.UtilsDumpMainMemoryMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.safe;
+			this.UtilsDumpMainMemoryMenu.Name = "UtilsDumpMainMemoryMenu";
+			this.UtilsDumpMainMemoryMenu.Size = new System.Drawing.Size(306, 22);
+			this.UtilsDumpMainMemoryMenu.Text = "&Dump Main Memory...";
+			this.UtilsDumpMainMemoryMenu.Click += new System.EventHandler(this.dumpRamToolStripMenuItem_Click);
 			// 
-			// indieGamesToolStripMenuItem
+			// toolStripMenuItem1
 			// 
-			this.indieGamesToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.kawagames;
-			this.indieGamesToolStripMenuItem.Name = "indieGamesToolStripMenuItem";
-			this.indieGamesToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-			this.indieGamesToolStripMenuItem.Text = "&kawagames.com";
-			this.indieGamesToolStripMenuItem.Click += new System.EventHandler(this.indieGamesToolStripMenuItem_Click);
+			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(303, 6);
 			// 
-			// blogcballesterosvelascoesToolStripMenuItem
+			// UtilsFrameLimitingMenu
 			// 
-			this.blogcballesterosvelascoesToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.blog;
-			this.blogcballesterosvelascoesToolStripMenuItem.Name = "blogcballesterosvelascoesToolStripMenuItem";
-			this.blogcballesterosvelascoesToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-			this.blogcballesterosvelascoesToolStripMenuItem.Text = "en.blog.cballesterosvelasco.es";
-			this.blogcballesterosvelascoesToolStripMenuItem.Click += new System.EventHandler(this.blogcballesterosvelascoesToolStripMenuItem_Click);
+			this.UtilsFrameLimitingMenu.Checked = true;
+			this.UtilsFrameLimitingMenu.CheckOnClick = true;
+			this.UtilsFrameLimitingMenu.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.UtilsFrameLimitingMenu.Name = "UtilsFrameLimitingMenu";
+			this.UtilsFrameLimitingMenu.ShortcutKeys = System.Windows.Forms.Keys.F3;
+			this.UtilsFrameLimitingMenu.Size = new System.Drawing.Size(306, 22);
+			this.UtilsFrameLimitingMenu.Text = "&Frame Limiting";
+			this.UtilsFrameLimitingMenu.Click += new System.EventHandler(this.frameSkippingToolStripMenuItem_Click);
 			// 
-			// githubcomsoywizcspspemuToolStripMenuItem
+			// toolStripMenuItem7
 			// 
-			this.githubcomsoywizcspspemuToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.github_icon;
-			this.githubcomsoywizcspspemuToolStripMenuItem.Name = "githubcomsoywizcspspemuToolStripMenuItem";
-			this.githubcomsoywizcspspemuToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-			this.githubcomsoywizcspspemuToolStripMenuItem.Text = "github.com/soywiz/cspspemu";
-			this.githubcomsoywizcspspemuToolStripMenuItem.Click += new System.EventHandler(this.githubcomsoywizcspspemuToolStripMenuItem_Click);
+			this.toolStripMenuItem7.Name = "toolStripMenuItem7";
+			this.toolStripMenuItem7.Size = new System.Drawing.Size(303, 6);
 			// 
-			// checkForUpdatesToolStripMenuItem
+			// UtilsAssociateExtensionsMenu
 			// 
-			this.checkForUpdatesToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.feed;
-			this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-			this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-			this.checkForUpdatesToolStripMenuItem.Text = "&Check for updates...";
-			this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
+			this.UtilsAssociateExtensionsMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.link;
+			this.UtilsAssociateExtensionsMenu.Name = "UtilsAssociateExtensionsMenu";
+			this.UtilsAssociateExtensionsMenu.Size = new System.Drawing.Size(306, 22);
+			this.UtilsAssociateExtensionsMenu.Text = "&Associate extensions (.PBP, .CSO, .PRX, .ELF)";
+			this.UtilsAssociateExtensionsMenu.Click += new System.EventHandler(this.associateWithPBPAndCSOToolStripMenuItem_Click);
 			// 
-			// reportAnIssueToolStripMenuItem
+			// RunMenu
 			// 
-			this.reportAnIssueToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.bug;
-			this.reportAnIssueToolStripMenuItem.Name = "reportAnIssueToolStripMenuItem";
-			this.reportAnIssueToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-			this.reportAnIssueToolStripMenuItem.Text = "&Report an issue...";
-			this.reportAnIssueToolStripMenuItem.Click += new System.EventHandler(this.reportAnIssueToolStripMenuItem_Click);
+			this.RunMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.RunRunResumeMenu,
+            this.RunPauseMenu});
+			this.RunMenu.Name = "RunMenu";
+			this.RunMenu.Size = new System.Drawing.Size(40, 20);
+			this.RunMenu.Text = "&Run";
 			// 
-			// aboutToolStripMenuItem
+			// RunRunResumeMenu
 			// 
-			this.aboutToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.help;
-			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-			this.aboutToolStripMenuItem.Text = "&About...";
-			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+			this.RunRunResumeMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.control_play;
+			this.RunRunResumeMenu.Name = "RunRunResumeMenu";
+			this.RunRunResumeMenu.ShortcutKeys = System.Windows.Forms.Keys.F5;
+			this.RunRunResumeMenu.Size = new System.Drawing.Size(161, 22);
+			this.RunRunResumeMenu.Text = "&Run/Resume";
+			this.RunRunResumeMenu.Click += new System.EventHandler(this.resumeToolStripMenuItem_Click);
+			// 
+			// RunPauseMenu
+			// 
+			this.RunPauseMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.control_pause;
+			this.RunPauseMenu.Name = "RunPauseMenu";
+			this.RunPauseMenu.ShortcutKeys = System.Windows.Forms.Keys.F6;
+			this.RunPauseMenu.Size = new System.Drawing.Size(161, 22);
+			this.RunPauseMenu.Text = "&Pause";
+			this.RunPauseMenu.Click += new System.EventHandler(this.pauseToolStripMenuItem_Click);
+			// 
+			// DebugMenu
+			// 
+			this.DebugMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.DebugTraceSyscallsMenu,
+            this.DebugTraceUnimplementedSyscallsMenu,
+            this.DebugTraceUnimplementedGpuMenu,
+            this.DebugShowThreadInfoMenu});
+			this.DebugMenu.Name = "DebugMenu";
+			this.DebugMenu.Size = new System.Drawing.Size(54, 20);
+			this.DebugMenu.Text = "&Debug";
+			this.DebugMenu.Click += new System.EventHandler(this.debugToolStripMenuItem_Click);
+			// 
+			// DebugTraceSyscallsMenu
+			// 
+			this.DebugTraceSyscallsMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.application_view_xp_terminal;
+			this.DebugTraceSyscallsMenu.Name = "DebugTraceSyscallsMenu";
+			this.DebugTraceSyscallsMenu.Size = new System.Drawing.Size(235, 22);
+			this.DebugTraceSyscallsMenu.Text = "Trace &Syscalls";
+			this.DebugTraceSyscallsMenu.Click += new System.EventHandler(this.traceSyscallsToolStripMenuItem_Click);
+			// 
+			// DebugTraceUnimplementedSyscallsMenu
+			// 
+			this.DebugTraceUnimplementedSyscallsMenu.Name = "DebugTraceUnimplementedSyscallsMenu";
+			this.DebugTraceUnimplementedSyscallsMenu.Size = new System.Drawing.Size(235, 22);
+			this.DebugTraceUnimplementedSyscallsMenu.Text = "Trace Unimplemented Syscalls";
+			this.DebugTraceUnimplementedSyscallsMenu.Click += new System.EventHandler(this.traceUnimplementedSyscallsToolStripMenuItem_Click);
+			// 
+			// DebugTraceUnimplementedGpuMenu
+			// 
+			this.DebugTraceUnimplementedGpuMenu.Name = "DebugTraceUnimplementedGpuMenu";
+			this.DebugTraceUnimplementedGpuMenu.Size = new System.Drawing.Size(235, 22);
+			this.DebugTraceUnimplementedGpuMenu.Text = "Trace Unimplemented Gpu";
+			this.DebugTraceUnimplementedGpuMenu.Click += new System.EventHandler(this.traceUnimplementedGpuToolStripMenuItem_Click);
+			// 
+			// DebugShowThreadInfoMenu
+			// 
+			this.DebugShowThreadInfoMenu.Name = "DebugShowThreadInfoMenu";
+			this.DebugShowThreadInfoMenu.ShortcutKeyDisplayString = "F2";
+			this.DebugShowThreadInfoMenu.Size = new System.Drawing.Size(235, 22);
+			this.DebugShowThreadInfoMenu.Text = "Show &Thread Info";
+			this.DebugShowThreadInfoMenu.Click += new System.EventHandler(this.showThreadInfoToolStripMenuItem_Click);
+			// 
+			// HelpMenu
+			// 
+			this.HelpMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.HelpWebsiteMenu,
+            this.toolStripMenuItem5,
+            this.HelpKawagamesMenu,
+            this.HelpBlogMenu,
+            this.HelpGithubMenu,
+            this.toolStripMenuItem6,
+            this.HelpCheckForUpdatesMenu,
+            this.toolStripMenuItem4,
+            this.HelpReportAnIssueMenu,
+            this.toolStripMenuItem8,
+            this.HelpAboutMenu});
+			this.HelpMenu.Name = "HelpMenu";
+			this.HelpMenu.Size = new System.Drawing.Size(44, 20);
+			this.HelpMenu.Text = "&Help";
+			// 
+			// HelpWebsiteMenu
+			// 
+			this.HelpWebsiteMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.world;
+			this.HelpWebsiteMenu.Name = "HelpWebsiteMenu";
+			this.HelpWebsiteMenu.Size = new System.Drawing.Size(235, 22);
+			this.HelpWebsiteMenu.Text = "&Website";
+			this.HelpWebsiteMenu.Click += new System.EventHandler(this.websiteToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem5
+			// 
+			this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+			this.toolStripMenuItem5.Size = new System.Drawing.Size(232, 6);
+			// 
+			// HelpKawagamesMenu
+			// 
+			this.HelpKawagamesMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.kawagames;
+			this.HelpKawagamesMenu.Name = "HelpKawagamesMenu";
+			this.HelpKawagamesMenu.Size = new System.Drawing.Size(235, 22);
+			this.HelpKawagamesMenu.Text = "&kawagames.com";
+			this.HelpKawagamesMenu.Click += new System.EventHandler(this.indieGamesToolStripMenuItem_Click);
+			// 
+			// HelpBlogMenu
+			// 
+			this.HelpBlogMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.blog;
+			this.HelpBlogMenu.Name = "HelpBlogMenu";
+			this.HelpBlogMenu.Size = new System.Drawing.Size(235, 22);
+			this.HelpBlogMenu.Text = "en.blog.cballesterosvelasco.es";
+			this.HelpBlogMenu.Click += new System.EventHandler(this.blogcballesterosvelascoesToolStripMenuItem_Click);
+			// 
+			// HelpGithubMenu
+			// 
+			this.HelpGithubMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.github_icon;
+			this.HelpGithubMenu.Name = "HelpGithubMenu";
+			this.HelpGithubMenu.Size = new System.Drawing.Size(235, 22);
+			this.HelpGithubMenu.Text = "github.com/soywiz/cspspemu";
+			this.HelpGithubMenu.Click += new System.EventHandler(this.githubcomsoywizcspspemuToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem6
+			// 
+			this.toolStripMenuItem6.Name = "toolStripMenuItem6";
+			this.toolStripMenuItem6.Size = new System.Drawing.Size(232, 6);
+			// 
+			// HelpCheckForUpdatesMenu
+			// 
+			this.HelpCheckForUpdatesMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.feed;
+			this.HelpCheckForUpdatesMenu.Name = "HelpCheckForUpdatesMenu";
+			this.HelpCheckForUpdatesMenu.Size = new System.Drawing.Size(235, 22);
+			this.HelpCheckForUpdatesMenu.Text = "&Check for updates...";
+			this.HelpCheckForUpdatesMenu.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem4
+			// 
+			this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+			this.toolStripMenuItem4.Size = new System.Drawing.Size(232, 6);
+			// 
+			// HelpReportAnIssueMenu
+			// 
+			this.HelpReportAnIssueMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.bug;
+			this.HelpReportAnIssueMenu.Name = "HelpReportAnIssueMenu";
+			this.HelpReportAnIssueMenu.Size = new System.Drawing.Size(235, 22);
+			this.HelpReportAnIssueMenu.Text = "&Report an issue...";
+			this.HelpReportAnIssueMenu.Click += new System.EventHandler(this.reportAnIssueToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem8
+			// 
+			this.toolStripMenuItem8.Name = "toolStripMenuItem8";
+			this.toolStripMenuItem8.Size = new System.Drawing.Size(232, 6);
+			// 
+			// HelpAboutMenu
+			// 
+			this.HelpAboutMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.help;
+			this.HelpAboutMenu.Name = "HelpAboutMenu";
+			this.HelpAboutMenu.ShortcutKeys = System.Windows.Forms.Keys.F1;
+			this.HelpAboutMenu.Size = new System.Drawing.Size(235, 22);
+			this.HelpAboutMenu.Text = "&About...";
+			this.HelpAboutMenu.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
 			// PspDisplayForm
 			// 
@@ -406,43 +452,47 @@
 
 		#endregion
 
-		private System.Windows.Forms.MenuStrip menuStrip1;
-		private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem utilsToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem takeScreenshotToolStripMenuItem;
-		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
-		private System.Windows.Forms.ToolStripMenuItem frameSkippingToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem websiteToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem displayToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem xToolStripMenuItem1;
-		private System.Windows.Forms.ToolStripMenuItem xToolStripMenuItem2;
-		private System.Windows.Forms.ToolStripMenuItem xToolStripMenuItem4;
-		private System.Windows.Forms.ToolStripMenuItem xToolStripMenuItem3;
-		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
-		private System.Windows.Forms.ToolStripMenuItem dumpRamToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
-		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
-		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem runToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem resumeToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem pauseToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
-		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
-		private System.Windows.Forms.ToolStripMenuItem indieGamesToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem blogcballesterosvelascoesToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem traceSyscallsToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem traceUnimplementedGpuToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem showThreadInfoToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem traceUnimplementedSyscallsToolStripMenuItem;
-		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem6;
-		private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
-		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem7;
-		private System.Windows.Forms.ToolStripMenuItem associateWithPBPAndCSOToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem githubcomsoywizcspspemuToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem reportAnIssueToolStripMenuItem;
-		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem8;
+		public System.Windows.Forms.MenuStrip menuStrip1;
+		public System.Windows.Forms.ToolStripMenuItem FileExitMenu;
+		public System.Windows.Forms.ToolStripMenuItem UtilsTakeScreenshotMenu;
+		public System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+		public System.Windows.Forms.ToolStripMenuItem UtilsFrameLimitingMenu;
+		public System.Windows.Forms.ToolStripMenuItem HelpMenu;
+		public System.Windows.Forms.ToolStripMenuItem HelpWebsiteMenu;
+		public System.Windows.Forms.ToolStripMenuItem UtilsDisplayMenu;
+		public System.Windows.Forms.ToolStripMenuItem xToolStripMenuItem1;
+		public System.Windows.Forms.ToolStripMenuItem xToolStripMenuItem2;
+		public System.Windows.Forms.ToolStripMenuItem xToolStripMenuItem4;
+		public System.Windows.Forms.ToolStripMenuItem xToolStripMenuItem3;
+		public System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+		public System.Windows.Forms.ToolStripMenuItem UtilsDumpMainMemoryMenu;
+		public System.Windows.Forms.ToolStripMenuItem FileOpenMenu;
+		public System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
+		public System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
+		public System.Windows.Forms.ToolStripMenuItem HelpAboutMenu;
+		public System.Windows.Forms.ToolStripMenuItem RunRunResumeMenu;
+		public System.Windows.Forms.ToolStripMenuItem RunPauseMenu;
+		public System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
+		public System.Windows.Forms.ToolStripMenuItem HelpKawagamesMenu;
+		public System.Windows.Forms.ToolStripMenuItem HelpBlogMenu;
+		public System.Windows.Forms.ToolStripMenuItem DebugTraceSyscallsMenu;
+		public System.Windows.Forms.ToolStripMenuItem DebugTraceUnimplementedGpuMenu;
+		public System.Windows.Forms.ToolStripMenuItem DebugShowThreadInfoMenu;
+		public System.Windows.Forms.ToolStripMenuItem DebugTraceUnimplementedSyscallsMenu;
+		public System.Windows.Forms.ToolStripSeparator toolStripMenuItem6;
+		public System.Windows.Forms.ToolStripMenuItem HelpCheckForUpdatesMenu;
+		public System.Windows.Forms.ToolStripSeparator toolStripMenuItem7;
+		public System.Windows.Forms.ToolStripMenuItem UtilsAssociateExtensionsMenu;
+		public System.Windows.Forms.ToolStripMenuItem HelpGithubMenu;
+		public System.Windows.Forms.ToolStripMenuItem HelpReportAnIssueMenu;
+		public System.Windows.Forms.ToolStripSeparator toolStripMenuItem8;
+		public System.Windows.Forms.ToolStripMenuItem UtilsLanguageMenu;
+		public System.Windows.Forms.ToolStripMenuItem englishToolStripMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem spanishToolStripMenuItem;
+		public System.Windows.Forms.ToolStripSeparator toolStripMenuItem9;
+		public System.Windows.Forms.ToolStripMenuItem FileMenu;
+		public System.Windows.Forms.ToolStripMenuItem UtilsMenu;
+		public System.Windows.Forms.ToolStripMenuItem RunMenu;
+		public System.Windows.Forms.ToolStripMenuItem DebugMenu;
 	}
 }

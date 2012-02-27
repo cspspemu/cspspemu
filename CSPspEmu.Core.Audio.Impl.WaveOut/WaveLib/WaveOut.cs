@@ -135,6 +135,7 @@ namespace WaveLib
 		private byte m_zero;
 
 		private WaveNative.WaveDelegate m_BufferProc = new WaveNative.WaveDelegate(WaveOutBuffer.WaveOutProc);
+		public bool Disposing;
 
 		public static int DeviceCount
 		{
@@ -155,19 +156,24 @@ namespace WaveLib
 		{
 			Dispose();
 		}
+
+		public void Stop()
+		{
+			Dispose();
+		}
+
 		public void Dispose()
 		{
+			Disposing = true;
 			if (m_Thread != null)
 				try
 				{
 					m_Finished = true;
-					if (m_WaveOut != IntPtr.Zero)
-						WaveNative.waveOutReset(m_WaveOut);
-					m_Thread.Join();
+					//if (m_WaveOut != IntPtr.Zero) WaveNative.waveOutReset(m_WaveOut);
+					//m_Thread.Join();
 					m_FillProc = null;
-					FreeBuffers();
-					if (m_WaveOut != IntPtr.Zero)
-						WaveNative.waveOutClose(m_WaveOut);
+					//FreeBuffers();
+					//if (m_WaveOut != IntPtr.Zero) WaveNative.waveOutClose(m_WaveOut);
 				}
 				finally
 				{
@@ -178,9 +184,11 @@ namespace WaveLib
 		}
 		private void ThreadProc()
 		{
-			while (!m_Finished)
+			while (!m_Finished && !Disposing)
 			{
+				//Console.Write("a{0}", m_Finished);
 				Advance();
+				//Console.Write("b");
 				if (m_FillProc != null && !m_Finished)
 					m_FillProc(m_CurrentBuffer.Data, m_CurrentBuffer.Size);
 				else
@@ -195,6 +203,7 @@ namespace WaveLib
 				}
 				m_CurrentBuffer.Play();
 			}
+			//Console.Write("X");
 			WaitForAllBuffers();
 		}
 		private void AllocateBuffers(int bufferSize, int bufferCount)

@@ -74,6 +74,11 @@
     <Compile Include="Rtc\PspRtc.cs" />
     <Compile Include="Threading\Synchronization\PspWaitEvent.cs" />
     <Compile Include="Threading\Synchronization\WaitableStateMachine.cs" />
+    <Compile Include="Translations.Designer.cs">
+      <DependentUpon>Translations.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Utils\ColorFormatExtensions.cs" />
     <Compile Include="Utils\NumberUtils.cs" />
     <Compile Include="Utils\OutputPixel.cs" />
@@ -90,6 +95,13 @@
       <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Translations.es.resx" />
+    <EmbeddedResource Include="Translations.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Translations.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

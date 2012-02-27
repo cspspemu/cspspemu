@@ -40,7 +40,10 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut
 			if (Queue.Count > 0)
 			{
 				short[] Result;
-				while (!Queue.TryDequeue(out Result)) ;
+				while (!Queue.TryDequeue(out Result))
+				{
+					if (m_Player.Disposing) return;
+				}
 				Marshal.Copy(Result, 0, data, size / 2);
 			}
 			else
@@ -64,7 +67,7 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut
 		public override void StopSynchronized()
 		{
 			Initialized = false;
-			m_Player.Dispose();
+			m_Player.Stop();
 		}
 
 		public override void InitializeComponent()

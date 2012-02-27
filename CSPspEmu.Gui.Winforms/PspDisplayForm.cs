@@ -20,6 +20,8 @@ using System.Threading;
 using System.Reflection;
 using System.Net;
 using System.Web;
+using System.Resources;
+using System.Globalization;
 
 namespace CSPspEmu.Gui.Winforms
 {
@@ -103,6 +105,7 @@ namespace CSPspEmu.Gui.Winforms
 			this.ShowMenus = ShowMenus;
 
 			InitializeComponent();
+			HandleCreated += new EventHandler(PspDisplayForm_HandleCreated);
 
 			this.ShowIcon = ShowMenus;
 			this.MainMenuStrip.Visible = ShowMenus;
@@ -126,6 +129,11 @@ namespace CSPspEmu.Gui.Winforms
 			Timer.Interval = 1000 / 60;
 			Timer.Tick += new EventHandler(Timer_Tick);
 			Timer.Start();
+		}
+
+		void PspDisplayForm_HandleCreated(object sender, EventArgs e)
+		{
+			LanguageUpdated();
 		}
 
 		private int _DisplayScale;
@@ -183,18 +191,8 @@ namespace CSPspEmu.Gui.Winforms
 
 		OutputPixel[] BitmapDataDecode = new OutputPixel[512 * 512];
 
-		protected override void OnPaintBackground(PaintEventArgs PaintEventArgs)
+		private void UpdateTitle()
 		{
-			if (!IGuiExternalInterface.IsInitialized())
-			{
-				var Buffer = new Bitmap(512, 272);
-				var BufferGraphics = Graphics.FromImage(Buffer);
-				BufferGraphics.FillRectangle(new SolidBrush(Color.Black), new Rectangle(0, 0, Buffer.Width, Buffer.Height));
-				//BufferGraphics.DrawString("Initializing...", new Font("Arial", 10), new SolidBrush(Color.White), new PointF(8, 8));
-				PaintEventArgs.Graphics.DrawImage(Buffer, new Rectangle(0, MainMenuStripHeight, 512 * DisplayScale, 272 * DisplayScale));
-				return;
-			}
-
 			try
 			{
 				if (LastText != PspConfig.GameTitle)
@@ -214,6 +212,21 @@ namespace CSPspEmu.Gui.Winforms
 			catch
 			{
 			}
+		}
+
+		protected override void OnPaintBackground(PaintEventArgs PaintEventArgs)
+		{
+			if (!IGuiExternalInterface.IsInitialized())
+			{
+				var Buffer = new Bitmap(512, 272);
+				var BufferGraphics = Graphics.FromImage(Buffer);
+				BufferGraphics.FillRectangle(new SolidBrush(Color.Black), new Rectangle(0, 0, Buffer.Width, Buffer.Height));
+				//BufferGraphics.DrawString("Initializing...", new Font("Arial", 10), new SolidBrush(Color.White), new PointF(8, 8));
+				PaintEventArgs.Graphics.DrawImage(Buffer, new Rectangle(0, MainMenuStripHeight, 512 * DisplayScale, 272 * DisplayScale));
+				return;
+			}
+
+			UpdateTitle();
 
 			if (EnableRefreshing)
 			{
@@ -372,7 +385,7 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void frameSkippingToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			this.PspConfig.VerticalSynchronization = frameSkippingToolStripMenuItem.Checked;
+			this.PspConfig.VerticalSynchronization = UtilsFrameLimitingMenu.Checked;
 		}
 
 		private void websiteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -505,19 +518,19 @@ namespace CSPspEmu.Gui.Winforms
 		private void updateResumePause()
 		{
 			var Paused = IGuiExternalInterface.IsPaused();
-			pauseToolStripMenuItem.Checked = Paused;
-			resumeToolStripMenuItem.Checked = !Paused;
+			RunPauseMenu.Checked = Paused;
+			RunRunResumeMenu.Checked = !Paused;
 		}
 
 		private void updateDebugSyscalls()
 		{
-			traceSyscallsToolStripMenuItem.Checked = PspConfig.DebugSyscalls;
-			traceUnimplementedSyscallsToolStripMenuItem.Checked = PspConfig.DebugNotImplemented;
+			DebugTraceSyscallsMenu.Checked = PspConfig.DebugSyscalls;
+			DebugTraceUnimplementedSyscallsMenu.Checked = PspConfig.DebugNotImplemented;
 		}
 
 		private void updateDebugGpu()
 		{
-			traceUnimplementedGpuToolStripMenuItem.Checked = PspConfig.NoticeUnimplementedGpuCommands;
+			DebugTraceUnimplementedGpuMenu.Checked = PspConfig.NoticeUnimplementedGpuCommands;
 		}
 
 		private void resumeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -698,7 +711,57 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void reportAnIssueToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Process.Start(@"https://github.com/soywiz/cspspemu/issues/new?title=&body=" + HttpUtility.UrlEncode("Version: " + PspGlobalConfiguration.CurrentVersion + "\n"));
+			Process.Start(@"https://github.com/soywiz/cspspemu/issues/new?title=" + HttpUtility.UrlEncode("Problem with " + PspConfig.GameTitle + "\n") + "&body=" + HttpUtility.UrlEncode("Version: " + PspGlobalConfiguration.CurrentVersion + "\nTitle: " + PspConfig.GameTitle + "\n") + "&labels[]=" + HttpUtility.UrlEncode("Games"));
+		}
+
+		private void PspDisplayForm_Load(object sender, EventArgs e)
+		{
+
+		}
+		Dictionary<ToolStripMenuItem, CultureInfo> LanguagePairs = new Dictionary<ToolStripMenuItem, CultureInfo>();
+
+		public IEnumerable<Control> GetAll(Control control, Type type)
+		{
+			var controls = control.Controls.Cast<Control>();
+
+			return controls.SelectMany(ctrl => GetAll(ctrl, type)).Concat(controls).Where(c => c.GetType() == type);
+		}
+
+		private void LanguageUpdated()
+		{
+			LanguagePairs.Clear();
+			LanguagePairs.Add(englishToolStripMenuItem, new CultureInfo("en-US"));
+			LanguagePairs.Add(spanishToolStripMenuItem, new CultureInfo("es-ES"));
+
+			foreach (var LanguagePair in LanguagePairs)
+			{
+				LanguagePair.Key.Tag = LanguagePair.Value;
+				LanguagePair.Key.Checked = (LanguagePair.Value.CompareInfo == Thread.CurrentThread.CurrentUICulture.CompareInfo);
+			}
+
+			foreach (var Field in this.GetType().GetFields())
+			{
+				if (Field.FieldType == typeof(ToolStripMenuItem))
+				{
+					var ToolStripMenuItem = (ToolStripMenuItem)Field.GetValue(this);
+					var Translation = Translations.ResourceManager.GetString(ToolStripMenuItem.Name);
+					ToolStripMenuItem.Text = ((Translation != null) ? Translation : ToolStripMenuItem.Text);
+				}
+			}
+
+			UpdateTitle();
+		}
+
+		private void englishToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Thread.CurrentThread.CurrentUICulture = (CultureInfo)((ToolStripMenuItem)sender).Tag;
+			LanguageUpdated();
+		}
+
+		private void spanishToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Thread.CurrentThread.CurrentUICulture = (CultureInfo)((ToolStripMenuItem)sender).Tag;
+			LanguageUpdated();
 		}
 	}
 }

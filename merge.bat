@@ -7,6 +7,7 @@ PUSHD %~dp0
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Sandbox.exe"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSharpUtils.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSharpUtils.Drawing.dll"
+	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Audio.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Audio.Impl.Openal.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Audio.Impl.WaveOut.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Cpu.dll"

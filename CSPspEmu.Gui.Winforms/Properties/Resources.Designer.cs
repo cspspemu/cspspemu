@@ -109,6 +109,13 @@ namespace CSPspEmu.Gui.Winforms.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap es {
+            get {
+                object obj = ResourceManager.GetObject("es", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap feed {
             get {
                 object obj = ResourceManager.GetObject("feed", resourceCulture);
@@ -175,6 +182,13 @@ namespace CSPspEmu.Gui.Winforms.Properties {
         internal static System.Drawing.Bitmap safe {
             get {
                 object obj = ResourceManager.GetObject("safe", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap us {
+            get {
+                object obj = ResourceManager.GetObject("us", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

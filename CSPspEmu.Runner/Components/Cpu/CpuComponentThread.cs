@@ -194,7 +194,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 				Stream ElfLoadStream = null;
 
 				var Format = new FormatDetector().Detect(LoadStream);
-				var Title = "<Unknown Game>";
+				String Title = null;
 				switch (Format)
 				{
 					case "Pbp":
