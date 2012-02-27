@@ -19,6 +19,7 @@ using CSPspEmu.Core.Utils;
 using System.Threading;
 using System.Reflection;
 using System.Net;
+using System.Web;
 
 namespace CSPspEmu.Gui.Winforms
 {
@@ -350,7 +351,7 @@ namespace CSPspEmu.Gui.Winforms
 			{
 				var SaveFileDialog = new SaveFileDialog();
 				SaveFileDialog.Filter = "PNG|*.png|All Files|*.*";
-				SaveFileDialog.FileName = "screenshot.png";
+				SaveFileDialog.FileName = String.Format("{0} - screenshot.png", PspConfig.GameTitle);
 				SaveFileDialog.AddExtension = true;
 				SaveFileDialog.DefaultExt = "png";
 				if (SaveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -377,7 +378,7 @@ namespace CSPspEmu.Gui.Winforms
 		private void websiteToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			//Process.Start(@"http://en.blog.cballesterosvelasco.es/search/label/pspemu/?rf=csp");
-			Process.Start(@"http://pspemu.soywiz.com/?rf=csp");
+			Process.Start(@"http://pspemu.soywiz.com/?rf=csp&version=" + PspGlobalConfiguration.CurrentVersion);
 		}
 
 		private void xToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -585,12 +586,32 @@ namespace CSPspEmu.Gui.Winforms
 					Request.Proxy = null;
 					var Response = Request.GetResponse();
 					var Stream = Response.GetResponseStream();
-					var LastVersion = Stream.ReadAllContentsAsString();
+					var LastVersion = Stream.ReadAllContentsAsString(null, false);
 
-					int CurrentVersionInt = int.Parse(CurrentVersion);
-					int LastVersionInt = int.Parse(LastVersion);
+					//int CurrentVersionInt = int.Parse(CurrentVersion);
+					//int LastVersionInt = int.Parse(LastVersion);
 
-					Console.WriteLine("{0} -> {1}", CurrentVersionInt, LastVersionInt);
+					Console.WriteLine("{0} -> {1}", CurrentVersion, LastVersion);
+
+					if (String.CompareOrdinal(LastVersion, CurrentVersion) > 0)
+					{
+						if (MessageBox.Show(
+							String.Format("There is a new version of the emulator.\n") +
+							String.Format("\n") +
+							String.Format("Current Version: {0}\n", CurrentVersion) +
+							String.Format("Last Version: {0}\n", LastVersion) +
+							String.Format("\n") +
+							String.Format("Download the new version?") +
+							"",
+							"New Version", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation) == DialogResult.OK)
+						{
+							Process.Start(@"http://pspemu.soywiz.com/?rf=csp&version=" + CurrentVersion);
+						}
+					}
+					else
+					{
+						MessageBox.Show("You have the lastest version", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+					}
 				}
 				catch (Exception Exception)
 				{
@@ -643,14 +664,41 @@ namespace CSPspEmu.Gui.Winforms
 				//RedirectStandardOutput = true,
 			};
 
-			// Start the process
-			ProcessObj.Start();
-
+			bool Error = false;
 			// Wait that the process exits
-			ProcessObj.WaitForExit();
+			try
+			{
+				// Start the process
+				ProcessObj.Start();
+
+				ProcessObj.WaitForExit();
+			}
+			catch
+			{
+				Error = true;
+			}
+
+			if (!Error && ProcessObj.ExitCode == 0)
+			{
+				MessageBox.Show("Associations done!", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			}
+			else
+			{
+				MessageBox.Show("Can't associate", "Done", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
 
 			// Now read the output of the DOS application
 			//string Result = ProcessObj.StandardOutput.ReadToEnd();
+		}
+
+		private void githubcomsoywizcspspemuToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Process.Start(@"https://github.com/soywiz/pspemu/?rf=csp");
+		}
+
+		private void reportAnIssueToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Process.Start(@"https://github.com/soywiz/cspspemu/issues/new?title=&body=" + HttpUtility.UrlEncode("Version: " + PspGlobalConfiguration.CurrentVersion + "\n"));
 		}
 	}
 }

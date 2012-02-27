@@ -45,9 +45,10 @@ namespace CSPspEmu.Sandbox
 					Registry.ClassesRoot.CreateSubKey(".pbp").SetValue(null, "cspspemu.executable");
 					Registry.ClassesRoot.CreateSubKey(".cso").SetValue(null, "cspspemu.executable");
 					Registry.ClassesRoot.CreateSubKey(".prx").SetValue(null, "cspspemu.executable");
+					Registry.ClassesRoot.CreateSubKey(".dax").SetValue(null, "cspspemu.executable");
 
 					var Reg = Registry.ClassesRoot.CreateSubKey("cspspemu.executable");
-					Reg.SetValue(null, "PSP executable file (.elf, .pbp, .cso, .prx)");
+					Reg.SetValue(null, "PSP executable file (.elf, .pbp, .cso, .prx, .dax)");
 					Reg.SetValue("DefaultIcon", @"""" + ApplicationPaths.ExecutablePath + @""",0");
 					Reg.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command").SetValue(null, @"""" + ApplicationPaths.ExecutablePath + @""" ""%1""");
 

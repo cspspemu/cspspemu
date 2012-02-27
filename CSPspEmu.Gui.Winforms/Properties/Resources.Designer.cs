@@ -81,6 +81,13 @@ namespace CSPspEmu.Gui.Winforms.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap bug {
+            get {
+                object obj = ResourceManager.GetObject("bug", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap camera {
             get {
                 object obj = ResourceManager.GetObject("camera", resourceCulture);
@@ -112,6 +119,13 @@ namespace CSPspEmu.Gui.Winforms.Properties {
         internal static System.Drawing.Bitmap folder {
             get {
                 object obj = ResourceManager.GetObject("folder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap github_icon {
+            get {
+                object obj = ResourceManager.GetObject("github_icon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -154,6 +168,13 @@ namespace CSPspEmu.Gui.Winforms.Properties {
         internal static System.Drawing.Bitmap psp_3000_small {
             get {
                 object obj = ResourceManager.GetObject("psp-3000_small", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap safe {
+            get {
+                object obj = ResourceManager.GetObject("safe", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
