@@ -16,7 +16,7 @@ namespace CSPspEmu.Core.Tests
 		{
 			var Cso = new Cso(File.OpenRead("../../../TestInput/cube.cso"));
 			var IsoBytes = File.ReadAllBytes("../../../TestInput/cube.iso");
-			var CsoStream = new CsoProxyStream(Cso);
+			var CsoStream = new CompressedIsoProxyStream(Cso);
 			Assert.AreEqual(0x72800, CsoStream.Length);
 			var Data = new byte[2048];
 			var Data2 = new byte[3000];

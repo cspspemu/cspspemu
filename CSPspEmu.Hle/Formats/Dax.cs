@@ -1,63 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Text;
-using ComponentAce.Compression.Libs.zlib;
+using System.IO;
 using CSharpUtils.Extensions;
+using ComponentAce.Compression.Libs.zlib;
+using System.IO.Compression;
 
 namespace CSPspEmu.Hle.Formats
 {
-	public class Cso : ICompressedIso
+	public class Dax : ICompressedIso
 	{
+		// 4 sectors
+		public const uint DAXFILE_SIGNATURE = 0x00584144;
+		public const int DAX_FRAME_SIZE = 0x800 * 4;
+
+		public const int MAX_NCAREAS = 192;
+
+		public enum Version : uint
+		{
+			DAXFORMAT_VERSION_0 = 0,
+			DAXFORMAT_VERSION_1 = 1,
+		}
+
 		public struct HeaderStruct
 		{
 			/// <summary>
-			/// +00 : 'C','I','S','O'
+			/// +00 : 'D','A','X','\0'
 			/// </summary>
 			public uint Magic;
-			
+
 			/// <summary>
-			/// +04 : header size (==0x18)
+			/// +04 : Size of the file
 			/// </summary>
-			public uint HeaderSize;
-			
+			public uint OriginalSize;
+
 			/// <summary>
 			/// +08 : number of original data size
 			/// </summary>
-			public ulong TotalBytes;
-			
-			/// <summary>
-			/// +10 : number of compressed block size
-			/// </summary>
-			public uint BlockSize;
-			
-			/// <summary>
-			/// +14 : version 01
-			/// </summary>
-			public byte Version;
-			
-			/// <summary>
-			/// +15 : align of index value
-			/// </summary>
-			public byte Alignment;
-			
-			/// <summary>
-			/// +16 : reserved
-			/// </summary>
-			public ushort Reserved;
+			public Version Version;
 
 			/// <summary>
-			/// 
+			/// +10 : number of compressed block size
+			/// On Version 1 or greater.
 			/// </summary>
-			public int NumberOfBlocks
+			public uint NCAreas;
+
+			private uint Reserved0;
+			private uint Reserved1;
+			private uint Reserved2;
+			private uint Reserved3;
+
+			public uint TotalBlocks
 			{
 				get
 				{
-					return (int)(TotalBytes / BlockSize);
+					return (OriginalSize + (DAX_FRAME_SIZE - 1)) / DAX_FRAME_SIZE;
 				}
 			}
+		}
+
+		public struct NCArea
+		{
+			public uint frame;
+			public uint size;
 		}
 
 		public struct BlockInfo
@@ -66,29 +72,17 @@ namespace CSPspEmu.Hle.Formats
 			/// Data containing information about the position and about
 			/// if the block is compresed or not.
 			/// </summary>
-			public uint Data;
+			public uint Position;
 
 			/// <summary>
-			/// Determines if this block is compressed or not.
+			/// 
 			/// </summary>
-			public bool IsCompressed
-			{
-				get
-				{
-					return (Data & 0x80000000) == 0;
-				}
-			}
+			public ushort Length;
 
 			/// <summary>
-			/// Obtains the block position.
+			/// 
 			/// </summary>
-			public uint Position
-			{
-				get
-				{
-					return Data & 0x7FFFFFFF;
-				}
-			}
+			public bool IsCompressed;
 		}
 
 		/// <summary>
@@ -109,43 +103,10 @@ namespace CSPspEmu.Hle.Formats
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="CsoStream"></param>
-		public Cso(Stream CsoStream)
+		/// <param name="DaxStream"></param>
+		public Dax(Stream DaxStream)
 		{
-			SetStream(CsoStream);
-		}
-
-		/// <summary>
-		/// Size of each block.
-		/// </summary>
-		public int BlockSize
-		{
-			get
-			{
-				return (int)this.Header.BlockSize;
-			}
-		}
-
-		/// <summary>
-		/// Total number of blocks in the file
-		/// </summary>
-		public int NumberOfBlocks
-		{
-			get
-			{
-				return this.Header.NumberOfBlocks;
-			}
-		}
-
-		/// <summary>
-		/// Uncompressed length of the file.
-		/// </summary>
-		public long UncompressedLength
-		{
-			get
-			{
-				return BlockSize * NumberOfBlocks;
-			}
+			SetStream(DaxStream);
 		}
 
 		/// <summary>
@@ -158,13 +119,74 @@ namespace CSPspEmu.Hle.Formats
 
 			// Read the header.
 			this.Header = this.Stream.ReadStruct<HeaderStruct>();
-			if (this.Header.Magic != 0x4F534943)
+			if (this.Header.Magic != DAXFILE_SIGNATURE)
 			{
-				throw (new InvalidDataException("Not a CISO File"));
+				throw (new InvalidDataException("Not a DAX File"));
 			}
 
-			// Read the block list
-			this.Blocks = this.Stream.ReadStructVector<BlockInfo>((uint)(NumberOfBlocks + 1));
+			var TotalBlocks = Header.TotalBlocks;
+
+			//Header.TotalBlocks
+			var Offsets = this.Stream.ReadStructVector<uint>(TotalBlocks);
+			var Sizes = this.Stream.ReadStructVector<ushort>(TotalBlocks);
+			NCArea[] NCAreas = null;
+
+			if (Header.Version >= Version.DAXFORMAT_VERSION_1)
+			{
+				NCAreas = this.Stream.ReadStructVector<NCArea>(Header.NCAreas);
+			}
+
+			Blocks = new BlockInfo[TotalBlocks];
+			for (int n = 0; n < TotalBlocks; n++)
+			{
+				Blocks[n].Position = Offsets[n];
+				Blocks[n].Length = Sizes[n];
+				Blocks[n].IsCompressed = true;
+			}
+			if (Header.Version >= Version.DAXFORMAT_VERSION_1)
+			{
+				foreach (var NCArea in NCAreas)
+				{
+					//Console.WriteLine("{0}-{1}", NCArea.frame, NCArea.size);
+					for (int n = 0; n < NCArea.size; n++)
+					{
+						Blocks[NCArea.frame + n].IsCompressed = false;
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Size of each block.
+		/// </summary>
+		public int BlockSize
+		{
+			get
+			{
+				return (int)DAX_FRAME_SIZE;
+			}
+		}
+
+		/// <summary>
+		/// Total number of blocks in the file
+		/// </summary>
+		public int NumberOfBlocks
+		{
+			get
+			{
+				return (int)this.Header.TotalBlocks;
+			}
+		}
+
+		/// <summary>
+		/// Uncompressed length of the file.
+		/// </summary>
+		public long UncompressedLength
+		{
+			get
+			{
+				return BlockSize * NumberOfBlocks;
+			}
 		}
 
 		/// <summary>
@@ -200,13 +222,14 @@ namespace CSPspEmu.Hle.Formats
 				return In;
 			}
 
-			var Out = new byte[this.Header.BlockSize];
+			var Out = new byte[this.BlockSize];
 
 			In = In.Concat(new byte[] { 0x00 });
 
+			//return new GZipStream(new MemoryStream(In), CompressionMode.Decompress).ReadAll(FromStart: false);
 			var ZStream = new ZStream();
 
-			if (ZStream.inflateInit(-15) != zlibConst.Z_OK)
+			if (ZStream.inflateInit(15) != zlibConst.Z_OK)
 			{
 				throw (new InvalidProgramException("Can't initialize inflater"));
 			}
@@ -231,4 +254,5 @@ namespace CSPspEmu.Hle.Formats
 			return Out;
 		}
 	}
+
 }

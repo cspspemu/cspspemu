@@ -95,7 +95,10 @@ namespace CSPspEmu.Runner.Components.Cpu
 			switch (DetectedFormat = new FormatDetector().Detect(IsoFileStream))
 			{
 				case "Cso":
-					IsoFileStream = new CsoProxyStream(new Cso(IsoFileStream));
+					IsoFileStream = new CompressedIsoProxyStream(new Cso(IsoFileStream));
+					break;
+				case "Dax":
+					IsoFileStream = new CompressedIsoProxyStream(new Dax(IsoFileStream));
 					break;
 				case "Iso":
 					break;
@@ -212,6 +215,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 					case "Elf":
 						ElfLoadStream = LoadStream;
 						break;
+					case "Dax":
 					case "Cso":
 					case "Iso":
 						{

@@ -10,14 +10,14 @@ using CSharpUtils;
 
 namespace CSPspEmu.Hle.Vfs.Iso
 {
-	public class CsoProxyStream : Stream
+	public class CompressedIsoProxyStream : Stream
 	{
-		protected Cso Cso;
+		protected ICompressedIso CompressedIso;
 		protected long _Position;
 
-		public CsoProxyStream(Cso Cso)
+		public CompressedIsoProxyStream(ICompressedIso CompressedIso)
 		{
-			this.Cso = Cso;
+			this.CompressedIso = CompressedIso;
 		}
 
 		public override bool CanRead
@@ -41,7 +41,7 @@ namespace CSPspEmu.Hle.Vfs.Iso
 
 		public override long Length
 		{
-			get { return Cso.UncompressedLength; }
+			get { return CompressedIso.UncompressedLength; }
 		}
 
 		public override long Position
@@ -70,15 +70,15 @@ namespace CSPspEmu.Hle.Vfs.Iso
 
 		protected void PrepareBlock()
 		{
-			int CurrentBlock = (int)(Position / this.Cso.BlockSize);
+			int CurrentBlock = (int)(Position / this.CompressedIso.BlockSize);
 
 			if (CurrentBlock != this.SelectedCurrentBlock)
 			{
 				this.SelectedCurrentBlock = CurrentBlock;
-				this.SelectedCurrentBlockData = Cso.ReadBlockDecompressed((uint)CurrentBlock);
+				this.SelectedCurrentBlockData = CompressedIso.ReadBlockDecompressed((uint)CurrentBlock);
 			}
 
-			SelectedCurrentPositionInBlock = (int)(Position % this.Cso.BlockSize);
+			SelectedCurrentPositionInBlock = (int)(Position % this.CompressedIso.BlockSize);
 		}
 
 		public override int Read(byte[] buffer, int offset, int count)

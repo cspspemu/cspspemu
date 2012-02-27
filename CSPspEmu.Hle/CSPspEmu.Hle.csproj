@@ -54,6 +54,7 @@
     <Compile Include="Formats\audio\Vag.cs" />
     <Compile Include="Formats\audio\Vag.Structs.cs" />
     <Compile Include="Formats\Cso.cs" />
+    <Compile Include="Formats\Dax.cs" />
     <Compile Include="Formats\EncryptedPrx.cs" />
     <Compile Include="Formats\EncryptedPrx.Utils.cs" />
     <Compile Include="Formats\Font\BitReader.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Formats\FormatDetector.cs" />
     <Compile Include="Formats\Elf.cs" />
     <Compile Include="Formats\ElfPsp.cs" />
+    <Compile Include="Formats\ICompressedIso.cs" />
     <Compile Include="Formats\IsoFile.cs" />
     <Compile Include="Formats\Pbp.cs" />
     <Compile Include="Formats\Psf.cs" />
@@ -123,7 +125,7 @@
     <Compile Include="Vfs\Emulator\HleIoDriverEmulator.cs" />
     <Compile Include="Vfs\HleIoDriverExtensions.cs" />
     <Compile Include="Vfs\IHleIoDriver.cs" />
-    <Compile Include="Vfs\Iso\CsoProxyStream.cs" />
+    <Compile Include="Vfs\Iso\CompressedIsoProxyStream.cs" />
     <Compile Include="Vfs\Iso\DisposableDummy.cs" />
     <Compile Include="Vfs\Iso\HleIoDriverIso.cs" />
     <Compile Include="Vfs\Local\HleIoDriverLocalFileSystem.cs" />
