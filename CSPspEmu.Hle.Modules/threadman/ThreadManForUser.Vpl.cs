@@ -71,6 +71,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 							},
 						});
 					}, HandleCallbacks: HandleCallbacks);
+
+					if (TimedOut) throw(new SceKernelException(SceKernelErrors.ERROR_KERNEL_WAIT_TIMEOUT));
 				}
 			}
 

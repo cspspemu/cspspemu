@@ -83,12 +83,17 @@ namespace CSPspEmu.Core
 			return (TType)Instance;
 		}
 
-		public void SetInstanceType<TType1, TType2>() where TType1 : PspEmulatorComponent
+		public void SetInstanceType<TType1>(Type Type2) where TType1 : PspEmulatorComponent
 		{
 			lock (this)
 			{
-				TypesByType[typeof(TType1)] = typeof(TType2);
+				TypesByType[typeof(TType1)] = Type2;
 			}
+		}
+
+		public void SetInstanceType<TType1, TType2>() where TType1 : PspEmulatorComponent
+		{
+			SetInstanceType<TType1>(typeof(TType2));
 		}
 
 		/*

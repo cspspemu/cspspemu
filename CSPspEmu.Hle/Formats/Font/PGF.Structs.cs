@@ -486,5 +486,21 @@ namespace CSPspEmu.Hle.Formats.Font
 		{
 			return !(Left == Right);
 		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj.GetType() != typeof(HorizontalVerticalFloat)) return false;
+			return (HorizontalVerticalFloat)obj == this;
+		}
+
+		public override int GetHashCode()
+		{
+			return Horizontal.GetHashCode() ^ Vertical.GetHashCode();
+		}
+
+		public override string ToString()
+		{
+			return String.Format("HV({0}, {1})", Horizontal, Vertical);
+		}
 	}
 }

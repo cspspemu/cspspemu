@@ -294,7 +294,14 @@ namespace CSPspEmu.Hle.Modules.threadman
 				};
 			}, HandleCallbacks: HandleCallbacks);
 
-			return 0;
+			if (TimedOut)
+			{
+				return (int)SceKernelErrors.ERROR_KERNEL_WAIT_TIMEOUT;
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
 		/// <summary>

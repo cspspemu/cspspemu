@@ -6,8 +6,8 @@
     <ProjectGuid>{07C4AE15-8E61-4740-B5A9-44DB87CECB46}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CSPspEmu.Core.Audio.Imple.Openal</RootNamespace>
-    <AssemblyName>CSPspEmu.Core.Audio.Imple.Openal</AssemblyName>
+    <RootNamespace>CSPspEmu.Core.Audio.Impl.Openal</RootNamespace>
+    <AssemblyName>CSPspEmu.Core.Audio.Impl.Openal</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

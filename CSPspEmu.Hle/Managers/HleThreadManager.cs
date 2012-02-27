@@ -21,7 +21,7 @@ namespace CSPspEmu.Hle.Managers
 		public const uint CODE_PTR_FINALIZE_CALLBACK = 0x08000020;
 	}
 
-	public class HleThreadManager : PspEmulatorComponent, IDisposable
+	public class HleThreadManager : PspEmulatorComponent
 	{
 
 		protected CpuProcessor Processor;
@@ -193,10 +193,6 @@ namespace CSPspEmu.Hle.Managers
 		public void ExitThread(HleThread HlePspThread)
 		{
 			Threads.Remove(HlePspThread);
-		}
-
-		public void Dispose()
-		{
 		}
 
 		public unsafe void DeleteThread(HleThread Thread)

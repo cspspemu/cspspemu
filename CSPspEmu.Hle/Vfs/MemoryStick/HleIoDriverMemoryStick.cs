@@ -83,7 +83,7 @@ namespace CSPspEmu.Hle.Vfs.MemoryStick
 						if (InputPointer == null || InputLength < 4) return (int)SceKernelErrors.ERROR_ERRNO_INVALID_ARGUMENT;
 						var SizeInfo = (SizeInfoStruct*)HleState.CpuProcessor.Memory.PspAddressToPointerSafe(*(uint *)InputPointer);
 						var MemoryStickSectorSize = (32 * 1024);
-						var TotalSpaceInBytes = 2L * 1024 * 1024 * 1024;
+						//var TotalSpaceInBytes = 2L * 1024 * 1024 * 1024;
 						var FreeSpaceInBytes = 1L * 1024 * 1024 * 1024;
 						SizeInfo->SectorSize = 0x200;
 						SizeInfo->SectorCount = (uint)(MemoryStickSectorSize / SizeInfo->SectorSize);

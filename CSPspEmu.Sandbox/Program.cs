@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using ComponentAce.Compression.Libs.zlib;
 using CSPspEmu.Hle.Formats;
 using CSPspEmu.Hle.Vfs.Iso;
+using CSPspEmu.Core.Audio.Impl.WaveOut;
+using CSPspEmu.Core.Audio.Impl.Openal;
 
 namespace CSPspEmu.Sandbox
 {
@@ -33,6 +35,10 @@ namespace CSPspEmu.Sandbox
 		[STAThread]
 		static void Main(string[] Arguments)
 		{
+			//new PspAudioOpenalImpl().__TestAudio();
+			//new PspAudioWaveOutImpl().__TestAudio();
+			//return;
+
 			/*
 			var CsoName = "../../../TestInput/test.cso";
 			var Cso = new Cso(File.OpenRead(CsoName));

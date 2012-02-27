@@ -7,7 +7,7 @@ using System.Threading;
 using System.Windows.Forms;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Audio;
-using CSPspEmu.Core.Audio.Impl.Openal;
+//using CSPspEmu.Core.Audio.Impl.Openal;
 using CSPspEmu.Core.Controller;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Display;
@@ -18,6 +18,8 @@ using CSPspEmu.Core.Utils;
 using CSPspEmu.Gui.Winforms;
 using CSPspEmu.Hle;
 using CSPspEmu.Runner;
+using CSPspEmu.Core.Audio.Impl.WaveOut;
+using CSPspEmu.Core.Audio.Impl.Openal;
 
 namespace CSPspEmu.Sandbox
 {
@@ -222,7 +224,16 @@ namespace CSPspEmu.Sandbox
 
 				{
 					PspEmulatorContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
-					PspEmulatorContext.SetInstanceType<PspAudioImpl, PspAudioOpenalImpl>();
+
+					if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+					//if (false)
+					{
+						PspEmulatorContext.SetInstanceType<PspAudioImpl>(typeof(PspAudioWaveOutImpl));
+					}
+					else
+					{
+						PspEmulatorContext.SetInstanceType<PspAudioImpl>(typeof(PspAudioOpenalImpl));
+					}
 
 #if RELEASE
 					PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();

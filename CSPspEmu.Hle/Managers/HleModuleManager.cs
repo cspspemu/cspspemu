@@ -30,7 +30,7 @@ namespace CSPspEmu.Hle.Managers
 				}
 				catch (Exception Exception)
 				{
-					return String.Format("Invalid DelegateInfo");
+					return String.Format("Invalid DelegateInfo : " + Exception);
 				}
 				//return this.ToStringDefault();
 			}

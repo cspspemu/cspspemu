@@ -121,9 +121,9 @@ namespace CSPspEmu.Core.Audio
 		/// </summary>
 		public void Update()
 		{
-			PspAudioImpl.Update((RequiredSamples) =>
+			PspAudioImpl.Update((MixedSamples) =>
 			{
-				short[] MixedSamples = new short[RequiredSamples];
+				int RequiredSamples = MixedSamples.Length;
 				int[] MixedSamplesDenormalized = new int[RequiredSamples];
 				int[] NumberOfChannels = new int[RequiredSamples];
 				foreach (var Channel in Channels)
@@ -144,8 +144,6 @@ namespace CSPspEmu.Core.Audio
 						MixedSamples[n] = (short)(MixedSamplesDenormalized[n] / NumberOfChannels[n]);
 					}
 				}
-
-				return MixedSamples;
 			});
 		}
 	}

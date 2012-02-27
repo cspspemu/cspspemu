@@ -13,10 +13,11 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 	/// </summary>
 	sealed internal class AudioStream
 	{
-		//public const int SamplesPerMillisecond = 48;
-		public const double SamplesPerMillisecond = 44.1;
 		public const int Frequency = 44100;
 		//public const int Frequency = 48000;
+
+		//public const double SamplesPerMillisecond = ((double)Frequency) / 1000;
+		public const double SamplesPerMillisecond = ((double)Frequency) / 500;
 		public const int NumberOfBuffers = 4;
 		public const int NumberOfChannels = 2;
 		public const int BufferMilliseconds = 10;
@@ -82,7 +83,7 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 			}
 		}
 
-		public void Update(Func<int, short[]> ReadStreamCallback)
+		public void Update(Action<short[]> ReadStreamCallback)
 		{
 			int Processed = -1;
 
@@ -108,20 +109,26 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 			}
 		}
 
-		private void ReadStream(int BufferId, Func<int, short[]> ReadStreamCallback = null)
+		short[] BufferData = null;
+		private void ReadStream(int BufferId, Action<short[]> ReadStreamCallback = null)
 		{
-			short[] BufferData;
+			//short[] BufferData;
 
 			int ReadSamples = SamplesPerBuffer;
+			if (BufferData == null || BufferData.Length != ReadSamples)
+			{
+				BufferData = new short[ReadSamples];
+				//Console.WriteLine("Created buffer");
+			}
 
 			if (ReadStreamCallback != null)
 			{
-				BufferData = ReadStreamCallback(ReadSamples);
+				ReadStreamCallback(BufferData);
 				//if (BufferData.Any(Item => Item != 0)) foreach (var C in BufferData) Console.Write("{0},", C);
 			}
 			else
 			{
-				BufferData = new short[ReadSamples];
+				//BufferData = new short[ReadSamples];
 			}
 
 			AL.BufferData(BufferId, ALFormat.Stereo16, BufferData, BufferData.Length * sizeof(short), Frequency); ALEnforce("ReadStream");

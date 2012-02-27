@@ -35,7 +35,7 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 			}
 		}
 
-		override public void Update(Func<int, short[]> ReadStream)
+		override public void Update(Action<short[]> ReadStream)
 		{
 			AudioContext.Process();
 			AudioStream.Update(ReadStream);

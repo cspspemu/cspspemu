@@ -50,6 +50,17 @@ namespace CSPspEmu.Core.Utils
 			return !(c1 == c2);
 		}
 
+		public override bool Equals(object obj)
+		{
+			if (obj.GetType() != typeof(OutputPixel)) return false;
+			return (OutputPixel)obj == this;
+		}
+
+		public override int GetHashCode()
+		{
+			return (R << 0) | (G << 8) | (B << 16) | (A << 24);
+		}
+
 		public int CheckSum { get { return (int)R + (int)G + (int)B + (int)A; } }
 	}
 }

@@ -13,7 +13,7 @@ namespace CSPspEmu.AutoTests
 		{
 		}
 
-		public override void Update(Func<int, short[]> ReadStream)
+		public override void Update(Action<short[]> ReadStream)
 		{
 			//throw new NotImplementedException();
 		}

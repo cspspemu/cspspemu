@@ -77,7 +77,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
-		static protected INativeWindow NativeWindow;
+		static private INativeWindow NativeWindow;
 #endif
 
 

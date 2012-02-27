@@ -200,9 +200,17 @@ namespace CSPspEmu.Hle.Modules.threadman
 				}
 				MessageBox.Receive(PointerToMessage, WakeUpCallback);
 			}, HandleCallbacks: false);
-			//if (Timeout)
-			//return MessageBox.Receive(Message);
-			return 0;
+
+			if (TimedOut)
+			{
+				return (int)SceKernelErrors.ERROR_KERNEL_WAIT_TIMEOUT;
+			}
+			else
+			{
+				//if (Timeout)
+				//return MessageBox.Receive(Message);
+				return 0;
+			}
 		}
 
 		/// <summary>
