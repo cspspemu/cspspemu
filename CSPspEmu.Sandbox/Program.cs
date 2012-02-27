@@ -117,8 +117,10 @@ namespace CSPspEmu.Sandbox
 				PspEmulator.Start();
 #else
 				//PspEmulator.UseFastMemory = true;
-				PspEmulator.Start();
 				//PspEmulator.Start();
+				//PspEmulator.Start();
+
+				PspEmulator.StartAndLoad(@"C:\Juegos\jpcsp-windows-x86\demos\net.pbp", TraceSyscalls: false);
 
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\abuse\EBOOT.PBP", TraceSyscalls: false);
 
