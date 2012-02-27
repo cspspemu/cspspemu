@@ -45,11 +45,14 @@
 			this.dumpRamToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.frameSkippingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
+			this.associateWithPBPAndCSOToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.resumeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.pauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.traceSyscallsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.traceUnimplementedSyscallsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.traceUnimplementedGpuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.showThreadInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,9 +60,10 @@
 			this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
 			this.indieGamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.blogcballesterosvelascoesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripSeparator();
+			this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.traceUnimplementedSyscallsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -90,6 +94,7 @@
 			// 
 			// openToolStripMenuItem
 			// 
+			this.openToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.folder;
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
 			this.openToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
 			this.openToolStripMenuItem.Text = "&Open...";
@@ -115,7 +120,9 @@
             this.takeScreenshotToolStripMenuItem,
             this.dumpRamToolStripMenuItem,
             this.toolStripMenuItem1,
-            this.frameSkippingToolStripMenuItem});
+            this.frameSkippingToolStripMenuItem,
+            this.toolStripMenuItem7,
+            this.associateWithPBPAndCSOToolStripMenuItem});
 			this.utilsToolStripMenuItem.Name = "utilsToolStripMenuItem";
 			this.utilsToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
 			this.utilsToolStripMenuItem.Text = "&Utils";
@@ -127,8 +134,9 @@
             this.xToolStripMenuItem2,
             this.xToolStripMenuItem3,
             this.xToolStripMenuItem4});
+			this.displayToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.magnifier;
 			this.displayToolStripMenuItem.Name = "displayToolStripMenuItem";
-			this.displayToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+			this.displayToolStripMenuItem.Size = new System.Drawing.Size(306, 22);
 			this.displayToolStripMenuItem.Text = "&Display";
 			// 
 			// xToolStripMenuItem1
@@ -166,26 +174,27 @@
 			// toolStripMenuItem2
 			// 
 			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(191, 6);
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(303, 6);
 			// 
 			// takeScreenshotToolStripMenuItem
 			// 
+			this.takeScreenshotToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.camera;
 			this.takeScreenshotToolStripMenuItem.Name = "takeScreenshotToolStripMenuItem";
-			this.takeScreenshotToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+			this.takeScreenshotToolStripMenuItem.Size = new System.Drawing.Size(306, 22);
 			this.takeScreenshotToolStripMenuItem.Text = "Take &Screenshot...";
 			this.takeScreenshotToolStripMenuItem.Click += new System.EventHandler(this.takeScreenshotToolStripMenuItem_Click);
 			// 
 			// dumpRamToolStripMenuItem
 			// 
 			this.dumpRamToolStripMenuItem.Name = "dumpRamToolStripMenuItem";
-			this.dumpRamToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+			this.dumpRamToolStripMenuItem.Size = new System.Drawing.Size(306, 22);
 			this.dumpRamToolStripMenuItem.Text = "&Dump Main Memory...";
 			this.dumpRamToolStripMenuItem.Click += new System.EventHandler(this.dumpRamToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem1
 			// 
 			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(191, 6);
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(303, 6);
 			// 
 			// frameSkippingToolStripMenuItem
 			// 
@@ -193,9 +202,22 @@
 			this.frameSkippingToolStripMenuItem.CheckOnClick = true;
 			this.frameSkippingToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.frameSkippingToolStripMenuItem.Name = "frameSkippingToolStripMenuItem";
-			this.frameSkippingToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+			this.frameSkippingToolStripMenuItem.Size = new System.Drawing.Size(306, 22);
 			this.frameSkippingToolStripMenuItem.Text = "&VSync";
 			this.frameSkippingToolStripMenuItem.Click += new System.EventHandler(this.frameSkippingToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem7
+			// 
+			this.toolStripMenuItem7.Name = "toolStripMenuItem7";
+			this.toolStripMenuItem7.Size = new System.Drawing.Size(303, 6);
+			// 
+			// associateWithPBPAndCSOToolStripMenuItem
+			// 
+			this.associateWithPBPAndCSOToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.link;
+			this.associateWithPBPAndCSOToolStripMenuItem.Name = "associateWithPBPAndCSOToolStripMenuItem";
+			this.associateWithPBPAndCSOToolStripMenuItem.Size = new System.Drawing.Size(306, 22);
+			this.associateWithPBPAndCSOToolStripMenuItem.Text = "&Associate extensions (.PBP, .CSO, .PRX, .ELF)";
+			this.associateWithPBPAndCSOToolStripMenuItem.Click += new System.EventHandler(this.associateWithPBPAndCSOToolStripMenuItem_Click);
 			// 
 			// runToolStripMenuItem
 			// 
@@ -208,15 +230,17 @@
 			// 
 			// resumeToolStripMenuItem
 			// 
+			this.resumeToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.control_play;
 			this.resumeToolStripMenuItem.Name = "resumeToolStripMenuItem";
-			this.resumeToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+			this.resumeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.resumeToolStripMenuItem.Text = "&Run/Resume";
 			this.resumeToolStripMenuItem.Click += new System.EventHandler(this.resumeToolStripMenuItem_Click);
 			// 
 			// pauseToolStripMenuItem
 			// 
+			this.pauseToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.control_pause;
 			this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
-			this.pauseToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+			this.pauseToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.pauseToolStripMenuItem.Text = "&Pause";
 			this.pauseToolStripMenuItem.Click += new System.EventHandler(this.pauseToolStripMenuItem_Click);
 			// 
@@ -234,10 +258,18 @@
 			// 
 			// traceSyscallsToolStripMenuItem
 			// 
+			this.traceSyscallsToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.application_view_xp_terminal;
 			this.traceSyscallsToolStripMenuItem.Name = "traceSyscallsToolStripMenuItem";
 			this.traceSyscallsToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
 			this.traceSyscallsToolStripMenuItem.Text = "Trace &Syscalls";
 			this.traceSyscallsToolStripMenuItem.Click += new System.EventHandler(this.traceSyscallsToolStripMenuItem_Click);
+			// 
+			// traceUnimplementedSyscallsToolStripMenuItem
+			// 
+			this.traceUnimplementedSyscallsToolStripMenuItem.Name = "traceUnimplementedSyscallsToolStripMenuItem";
+			this.traceUnimplementedSyscallsToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+			this.traceUnimplementedSyscallsToolStripMenuItem.Text = "Trace Unimplemented Syscalls";
+			this.traceUnimplementedSyscallsToolStripMenuItem.Click += new System.EventHandler(this.traceUnimplementedSyscallsToolStripMenuItem_Click);
 			// 
 			// traceUnimplementedGpuToolStripMenuItem
 			// 
@@ -261,6 +293,8 @@
             this.toolStripMenuItem5,
             this.indieGamesToolStripMenuItem,
             this.blogcballesterosvelascoesToolStripMenuItem,
+            this.toolStripMenuItem6,
+            this.checkForUpdatesToolStripMenuItem,
             this.toolStripMenuItem4,
             this.aboutToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
@@ -269,6 +303,7 @@
 			// 
 			// websiteToolStripMenuItem
 			// 
+			this.websiteToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.world;
 			this.websiteToolStripMenuItem.Name = "websiteToolStripMenuItem";
 			this.websiteToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
 			this.websiteToolStripMenuItem.Text = "&Website";
@@ -281,6 +316,7 @@
 			// 
 			// indieGamesToolStripMenuItem
 			// 
+			this.indieGamesToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.kawagames;
 			this.indieGamesToolStripMenuItem.Name = "indieGamesToolStripMenuItem";
 			this.indieGamesToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
 			this.indieGamesToolStripMenuItem.Text = "&kawagames.com";
@@ -288,10 +324,24 @@
 			// 
 			// blogcballesterosvelascoesToolStripMenuItem
 			// 
+			this.blogcballesterosvelascoesToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.blog;
 			this.blogcballesterosvelascoesToolStripMenuItem.Name = "blogcballesterosvelascoesToolStripMenuItem";
 			this.blogcballesterosvelascoesToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
 			this.blogcballesterosvelascoesToolStripMenuItem.Text = "en.blog.cballesterosvelasco.es";
 			this.blogcballesterosvelascoesToolStripMenuItem.Click += new System.EventHandler(this.blogcballesterosvelascoesToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem6
+			// 
+			this.toolStripMenuItem6.Name = "toolStripMenuItem6";
+			this.toolStripMenuItem6.Size = new System.Drawing.Size(229, 6);
+			// 
+			// checkForUpdatesToolStripMenuItem
+			// 
+			this.checkForUpdatesToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.feed;
+			this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
+			this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+			this.checkForUpdatesToolStripMenuItem.Text = "&Check for updates...";
+			this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem4
 			// 
@@ -300,17 +350,11 @@
 			// 
 			// aboutToolStripMenuItem
 			// 
+			this.aboutToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.help;
 			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
 			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
 			this.aboutToolStripMenuItem.Text = "&About...";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-			// 
-			// traceUnimplementedSyscallsToolStripMenuItem
-			// 
-			this.traceUnimplementedSyscallsToolStripMenuItem.Name = "traceUnimplementedSyscallsToolStripMenuItem";
-			this.traceUnimplementedSyscallsToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
-			this.traceUnimplementedSyscallsToolStripMenuItem.Text = "Trace Unimplemented Syscalls";
-			this.traceUnimplementedSyscallsToolStripMenuItem.Click += new System.EventHandler(this.traceUnimplementedSyscallsToolStripMenuItem_Click);
 			// 
 			// PspDisplayForm
 			// 
@@ -365,5 +409,9 @@
 		private System.Windows.Forms.ToolStripMenuItem traceUnimplementedGpuToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem showThreadInfoToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem traceUnimplementedSyscallsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem6;
+		private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem7;
+		private System.Windows.Forms.ToolStripMenuItem associateWithPBPAndCSOToolStripMenuItem;
 	}
 }

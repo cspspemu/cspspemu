@@ -18,7 +18,8 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public int sceAtracGetOutputChannel()
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return 0;
 			/*
 			unimplemented();
 			return 0;

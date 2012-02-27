@@ -12,6 +12,8 @@ using CSPspEmu.Hle.Formats;
 using CSPspEmu.Hle.Vfs.Iso;
 using CSPspEmu.Core.Audio.Impl.WaveOut;
 using CSPspEmu.Core.Audio.Impl.Openal;
+using Microsoft.Win32;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Sandbox
 {
@@ -35,6 +37,23 @@ namespace CSPspEmu.Sandbox
 		[STAThread]
 		static void Main(string[] Arguments)
 		{
+			if (Arguments.Length > 0)
+			{
+				if (Arguments[0] == "/associate")
+				{
+					Registry.ClassesRoot.CreateSubKey(".elf").SetValue(null, "cspspemu.executable");
+					Registry.ClassesRoot.CreateSubKey(".pbp").SetValue(null, "cspspemu.executable");
+					Registry.ClassesRoot.CreateSubKey(".cso").SetValue(null, "cspspemu.executable");
+					Registry.ClassesRoot.CreateSubKey(".prx").SetValue(null, "cspspemu.executable");
+
+					var Reg = Registry.ClassesRoot.CreateSubKey("cspspemu.executable");
+					Reg.SetValue(null, "PSP executable file (.elf, .pbp, .cso, .prx)");
+					Reg.SetValue("DefaultIcon", @"""" + ApplicationPaths.ExecutablePath + @""",0");
+					Reg.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command").SetValue(null, @"""" + ApplicationPaths.ExecutablePath + @""" ""%1""");
+
+					Environment.Exit(0);
+				}
+			}
 			//new PspAudioOpenalImpl().__TestAudio();
 			//new PspAudioWaveOutImpl().__TestAudio();
 			//return;

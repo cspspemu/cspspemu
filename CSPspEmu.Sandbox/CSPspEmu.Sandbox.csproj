@@ -140,6 +140,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="psp.ico" />
+    <EmbeddedResource Include="version_current.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

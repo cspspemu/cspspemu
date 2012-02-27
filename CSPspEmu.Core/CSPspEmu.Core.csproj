@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApplicationPaths.cs" />
     <Compile Include="Battery\Battery.cs" />
     <Compile Include="Crypto\Crypto.cs" />
     <Compile Include="Crypto\Crypto.Tables.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Display\PspDisplay.cs" />
     <Compile Include="PspEmulatorComponent.cs" />
     <Compile Include="PspEmulatorContext.cs" />
+    <Compile Include="PspGlobalConfiguration.cs" />
     <Compile Include="Rtc\PspRtc.cs" />
     <Compile Include="Threading\Synchronization\PspWaitEvent.cs" />
     <Compile Include="Threading\Synchronization\WaitableStateMachine.cs" />

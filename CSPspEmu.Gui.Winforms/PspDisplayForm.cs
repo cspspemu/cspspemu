@@ -17,6 +17,8 @@ using CSPspEmu.Core.Controller;
 using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Utils;
 using System.Threading;
+using System.Reflection;
+using System.Net;
 
 namespace CSPspEmu.Gui.Winforms
 {
@@ -200,7 +202,7 @@ namespace CSPspEmu.Gui.Winforms
 					//this.Font = new Font("Lucida Console", 16);
 					if (ShowMenus)
 					{
-						this.Text = "CSPspEmu :: " + LastText;
+						this.Text = "CSPspEmu - " + PspGlobalConfiguration.CurrentVersion + " :: " + LastText;
 					}
 					else
 					{
@@ -374,7 +376,8 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void websiteToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Process.Start(@"http://en.blog.cballesterosvelasco.es/search/label/pspemu/?rf=csp");
+			//Process.Start(@"http://en.blog.cballesterosvelasco.es/search/label/pspemu/?rf=csp");
+			Process.Start(@"http://pspemu.soywiz.com/?rf=csp");
 		}
 
 		private void xToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -564,6 +567,90 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			PspConfig.DebugNotImplemented = !PspConfig.DebugNotImplemented;
 			updateDebugSyscalls();
+		}
+
+		private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			CheckForUpdates();
+		}
+
+		static public void CheckForUpdates()
+		{
+			var CurrentVersion = PspGlobalConfiguration.CurrentVersion;
+			var CheckForUpdatesThread = new Thread(() =>
+			{
+				try
+				{
+					var Request = HttpWebRequest.Create(new Uri("https://raw.github.com/soywiz/cspspemu/master/version_last.txt"));
+					Request.Proxy = null;
+					var Response = Request.GetResponse();
+					var Stream = Response.GetResponseStream();
+					var LastVersion = Stream.ReadAllContentsAsString();
+
+					int CurrentVersionInt = int.Parse(CurrentVersion);
+					int LastVersionInt = int.Parse(LastVersion);
+
+					Console.WriteLine("{0} -> {1}", CurrentVersionInt, LastVersionInt);
+				}
+				catch (Exception Exception)
+				{
+					MessageBox.Show(Exception.ToString(), "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
+			});
+			/*
+			foreach (var Embed in Assembly.GetEntryAssembly().GetManifestResourceNames())
+			{
+				Console.WriteLine(Embed);
+			}
+			*/
+			CheckForUpdatesThread.IsBackground = true;
+			CheckForUpdatesThread.Start();
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		/// <seealso cref="http://social.msdn.microsoft.com/Forums/en-US/winforms/thread/db6647a3-85ca-4dc4-b661-fbbd36bd561f/"/>
+		private void associateWithPBPAndCSOToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			// This snippet needs the "System.Diagnostics"
+			// library
+
+
+			// Application path and command line arguments
+			string ApplicationPath = ApplicationPaths.ExecutablePath;
+			string ApplicationArguments = "/associate";
+
+			//Console.WriteLine(ExecutablePath);
+
+			// Create a new process object
+			Process ProcessObj = new Process();
+
+			ProcessObj.StartInfo = new ProcessStartInfo()
+			{
+				// StartInfo contains the startup information of the new process
+				FileName = ApplicationPath,
+				Arguments = ApplicationArguments,
+
+				UseShellExecute = true,
+				Verb = "runas",
+
+				// These two optional flags ensure that no DOS window appears
+				CreateNoWindow = true,
+				WindowStyle = ProcessWindowStyle.Hidden,
+				//RedirectStandardOutput = true,
+			};
+
+			// Start the process
+			ProcessObj.Start();
+
+			// Wait that the process exits
+			ProcessObj.WaitForExit();
+
+			// Now read the output of the DOS application
+			//string Result = ProcessObj.StandardOutput.ReadToEnd();
 		}
 	}
 }
