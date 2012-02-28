@@ -41,12 +41,8 @@
 /CSPspEmu.Runner/bin
 /opentk
 /PSP
-/OpenTK.Compatibility.dll
-/OpenTK.Compatibility.dll.config
-/OpenTK.dll
 *.pdb
 *.dll
-*.config
 *.exe
 *.pbp
 *.lastoutput
