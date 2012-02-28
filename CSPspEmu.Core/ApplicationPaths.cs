@@ -31,6 +31,7 @@ namespace CSPspEmu.Core
 					{
 						_MemoryStickRootFolder = Path.GetFullPath(MemoryStickRootFolder + "/../../../../ms");
 					}
+					try { Directory.CreateDirectory(_MemoryStickRootFolder); } catch { }
 				}
 				return _MemoryStickRootFolder;
 			}
