@@ -106,8 +106,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		public int sceNetResolverStartNtoA(int ResolverId, string HostName, in_addr* Address, uint Timeout, int Retries)
 		{
 			var Resolver = Resolvers.Get(ResolverId);
-			var ResolvedAddress = Dns.Resolve(HostName);
-			var Bytes = ResolvedAddress.AddressList[0].GetAddressBytes();
+			var ResolvedAddress = Dns.GetHostEntry(HostName).AddressList[0];
+			var Bytes = ResolvedAddress.GetAddressBytes();
 			(*Address).AddressAsBytes = Bytes;
 			//(*addr).Address = 
 			//Resolver.Resolve();

@@ -120,7 +120,10 @@ namespace CSPspEmu.Sandbox
 				//PspEmulator.Start();
 				//PspEmulator.Start();
 
-				PspEmulator.StartAndLoad(@"C:\Juegos\jpcsp-windows-x86\demos\net.pbp", TraceSyscalls: false);
+				PspEmulator.StartAndLoad(@"E:\Isos\psp\Puzzle Bobble.ISO", TraceSyscalls: false);
+
+				//PspEmulator.StartAndLoad(@"C:\Juegos\jpcsp-windows-x86\demos\net.pbp", TraceSyscalls: false);
+				//PspEmulator.StartAndLoad(@"C:\Juegos\jpcsp-windows-x86\demos\rtctest.pbp", TraceSyscalls: false);
 
 				//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\abuse\EBOOT.PBP", TraceSyscalls: false);
 

@@ -101,6 +101,7 @@ namespace CSPspEmu.Core.Rtc
 		protected LinkedList<VirtualTimer> Timers = new LinkedList<VirtualTimer>();
 		public DateTime StartDateTime;
 		public DateTime CurrentDateTime;
+		//private DateTime CurrentDateTime;
 
 		protected PspTimeStruct StartTime;
 		protected PspTimeStruct CurrentTime;
@@ -144,9 +145,8 @@ namespace CSPspEmu.Core.Rtc
 		public void Update()
 		{
 			CurrentTime.SetToNow();
-			ElapsedTime.TotalMicroseconds = CurrentTime.TotalMicroseconds - StartTime.TotalMicroseconds;
-
 			this.CurrentDateTime = DateTime.UtcNow;
+			ElapsedTime.TotalMicroseconds = CurrentTime.TotalMicroseconds - StartTime.TotalMicroseconds;
 
 			lock (Timers)
 			{
@@ -185,7 +185,8 @@ namespace CSPspEmu.Core.Rtc
 		public VirtualTimer RegisterTimerInOnce(TimeSpan TimeSpan, Action Callback)
 		{
 			//Console.WriteLine("Time: " + TimeSpan);
-			return RegisterTimerAtOnce(DateTime.UtcNow + TimeSpan, Callback);
+			//return RegisterTimerAtOnce(DateTime.UtcNow + TimeSpan, Callback);
+			return RegisterTimerAtOnce(UpdatedCurrentDateTime + TimeSpan, Callback);
 		}
 
 		/// <summary>

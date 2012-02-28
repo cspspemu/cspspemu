@@ -230,15 +230,17 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// </summary>
 		/// <param name="SocketId"></param>
 		/// <param name="BufferPointer"></param>
-		/// <param name="Flags"></param>
-		/// <param name="?"></param>
-		/// <param name="from"></param>
-		/// <param name="fromlen"></param>
+		/// <param name="BufferLength"></param>
+		/// <param name="SocketFlags"></param>
+		/// <param name="From"></param>
+		/// <param name="FromLength"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xC91142E4, FirmwareVersion = 150)]
-		public size_t sceNetInetRecvfrom(int SocketId, void *BufferPointer, size_t Flags, int i, sockaddr *from, socklen_t *fromlen)
+		public int sceNetInetRecvfrom(int SocketId, void* BufferPointer, int BufferLength, SocketFlags SocketFlags, sockaddr_in* From, socklen_t* FromLength)
 		{
-			throw(new NotImplementedException());
+			var Socket = Sockets.Get(SocketId);
+			EndPoint EndPoint = new IPEndPoint(From->sin_addr.Address, From->sin_port);
+			return Socket.ReceiveFrom(ArrayUtils.CreateArray<byte>(BufferPointer, BufferLength), SocketFlags, ref EndPoint);
 		}
 
 		/// <summary>
@@ -280,14 +282,15 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="SocketId"></param>
 		/// <param name="BufferPointer"></param>
 		/// <param name="BufferLength"></param>
-		/// <param name="Flags"></param>
+		/// <param name="SocketFlags"></param>
 		/// <param name="To"></param>
 		/// <param name="ToLength"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x05038FC7, FirmwareVersion = 150)]
-		public size_t sceNetInetSendto(int SocketId, void *BufferPointer, size_t BufferLength, int Flags, sockaddr *To, socklen_t ToLength)
+		public int sceNetInetSendto(int SocketId, void *BufferPointer, int BufferLength, SocketFlags SocketFlags, sockaddr_in *To, socklen_t ToLength)
 		{
-			throw(new NotImplementedException());
+			var Socket = Sockets.Get(SocketId);
+			return Socket.SendTo(ArrayUtils.CreateArray<byte>(BufferPointer, BufferLength), SocketFlags, new IPEndPoint(To->sin_addr.Address, To->sin_port));
 		}
 
 		/// <summary>

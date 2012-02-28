@@ -169,6 +169,29 @@ namespace CSPspEmu.Hle
 						}, Safe: true, ErrorDescription: "Invalid Pointer for Argument '" + ParameterType.Name + " " + ParameterInfo.Name + "'");
 						GprIndex++;
 					}
+					/*
+					// An array
+					else if (ParameterType.IsArray)
+					{
+						ParamInfoList.Add(new ParamInfo()
+						{
+							ParameterName = ParameterInfo.Name,
+							RegisterType = ParamInfo.RegisterTypeEnum.Gpr,
+							RegisterIndex = GprIndex,
+							ParameterType = typeof(uint),
+						});
+						// Pointer
+						MipsMethodEmiter._getmemptr(() =>
+						{
+							MipsMethodEmiter.LoadGPR_Unsigned(GprIndex);
+						}, Safe: true, ErrorDescription: "Invalid Pointer for Argument '" + ParameterType.Name + " " + ParameterInfo.Name + "'");
+						GprIndex++;
+						// Array
+						MipsMethodEmiter.LoadGPR_Unsigned(GprIndex);
+						GprIndex++;
+						MipsMethodEmiter.CallMethod(HleModuleHost.PointerLengthToArrat);
+					}
+					*/
 					// A long type
 					else if (ParameterType == typeof(long) || ParameterType == typeof(ulong))
 					{

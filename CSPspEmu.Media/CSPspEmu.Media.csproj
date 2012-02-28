@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3AD1738D-5D2E-4517-A2B0-3C94155E69DF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CSPspEmu.Media</RootNamespace>
+    <AssemblyName>CSPspEmu.Media</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Interfaces.cs" />
+    <Compile Include="OmaWavConverter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Video.DirectShow\Internals\IAMCrossbar.cs" />
+    <Compile Include="Video.DirectShow\Internals\IAMStreamConfig.cs" />
+    <Compile Include="Video.DirectShow\Internals\IAMVideoControl.cs" />
+    <Compile Include="Video.DirectShow\Internals\IBaseFilter.cs" />
+    <Compile Include="Video.DirectShow\Internals\ICaptureGraphBuilder2.cs" />
+    <Compile Include="Video.DirectShow\Internals\ICreateDevEnum.cs" />
+    <Compile Include="Video.DirectShow\Internals\IEnumFilters.cs" />
+    <Compile Include="Video.DirectShow\Internals\IEnumPins.cs" />
+    <Compile Include="Video.DirectShow\Internals\IFileSourceFilter.cs" />
+    <Compile Include="Video.DirectShow\Internals\IFilterGraph.cs" />
+    <Compile Include="Video.DirectShow\Internals\IFilterGraph2.cs" />
+    <Compile Include="Video.DirectShow\Internals\IGraphBuilder.cs" />
+    <Compile Include="Video.DirectShow\Internals\IMediaControl.cs" />
+    <Compile Include="Video.DirectShow\Internals\IMediaEventEx.cs" />
+    <Compile Include="Video.DirectShow\Internals\IMediaFilter.cs" />
+    <Compile Include="Video.DirectShow\Internals\IPersist.cs" />
+    <Compile Include="Video.DirectShow\Internals\IPin.cs" />
+    <Compile Include="Video.DirectShow\Internals\IPropertyBag.cs" />
+    <Compile Include="Video.DirectShow\Internals\IReferenceClock.cs" />
+    <Compile Include="Video.DirectShow\Internals\ISampleGrabber.cs" />
+    <Compile Include="Video.DirectShow\Internals\ISampleGrabberCB.cs" />
+    <Compile Include="Video.DirectShow\Internals\ISpecifyPropertyPages.cs" />
+    <Compile Include="Video.DirectShow\Internals\IVideoWindow.cs" />
+    <Compile Include="Video.DirectShow\Internals\Structures.cs" />
+    <Compile Include="Video.DirectShow\Internals\Tools.cs" />
+    <Compile Include="Video.DirectShow\Internals\Uuids.cs" />
+    <Compile Include="Video.DirectShow\Internals\Win32.cs" />
+    <Compile Include="Video.DirectShow\PhysicalConnectorType.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

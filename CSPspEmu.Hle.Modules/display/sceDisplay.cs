@@ -39,7 +39,7 @@ namespace CSPspEmu.Hle.Modules.display
 		}
 
 		int LastVblankCount = 0;
-		DateTime LastWaitVblankStart;
+		DateTime LastWaitVblankStart = DateTime.MinValue;
 
 		private int _sceDisplayWaitVblankStartCB(CpuThreadState CpuThreadState, bool HandleCallbacks)
 		{
@@ -49,11 +49,22 @@ namespace CSPspEmu.Hle.Modules.display
 
 				SleepThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Display, "sceDisplayWaitVblankStart", null, (WakeUpCallbackDelegate) =>
 				{
+#if true
+					PspRtc.RegisterTimerInOnce(TimeSpan.FromMilliseconds(1000 / 60), () =>
+					{
+						WakeUpCallbackDelegate();
+					});
+#else
+					if (LastWaitVblankStart == DateTime.MinValue)
+					{
+						LastWaitVblankStart = PspRtc.UpdatedCurrentDateTime;
+					}
 					PspRtc.RegisterTimerAtOnce(LastWaitVblankStart + TimeSpan.FromMilliseconds(1000 / 60), () =>
 					{
 						WakeUpCallbackDelegate();
 					});
 					LastWaitVblankStart = PspRtc.UpdatedCurrentDateTime;
+#endif
 				}, HandleCallbacks: HandleCallbacks);
 
 				/*
