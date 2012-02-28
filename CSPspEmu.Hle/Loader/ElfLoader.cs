@@ -94,7 +94,9 @@ namespace CSPspEmu.Hle.Loader
 			AllocateMemory();
 			WriteToMemory();
 
+#if DEBUG
 			((PspMemoryStream)MemoryStream).Memory.Dump("after_allocate_and_write_dump.bin");
+#endif
 		}
 
 		protected void AllocateMemory()

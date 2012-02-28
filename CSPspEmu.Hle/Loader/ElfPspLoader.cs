@@ -86,7 +86,7 @@ namespace CSPspEmu.Hle.Loader
 			int RelocProgramIndex = 0;
 			foreach (var ProgramHeader in ElfLoader.ProgramHeaders)
 			{
-				RelocOutput.WriteLine("Program Header: %d".Sprintf(RelocProgramIndex++));
+				if (RelocOutput != null) RelocOutput.WriteLine("Program Header: %d".Sprintf(RelocProgramIndex++));
 				switch (ProgramHeader.Type)
 				{
 					case Elf.ProgramHeader.TypeEnum.Reloc1:
@@ -109,7 +109,7 @@ namespace CSPspEmu.Hle.Loader
 			foreach (var SectionHeader in ElfLoader.SectionHeaders)
 			{
 				//RelocOutput.WriteLine("Section Header: %d : %s".Sprintf(RelocSectionIndex++, SectionHeader.ToString()));
-				RelocOutput.WriteLine("Section Header: %d".Sprintf(RelocSectionIndex++));
+				if (RelocOutput != null) RelocOutput.WriteLine("Section Header: %d".Sprintf(RelocSectionIndex++));
 
 				switch (SectionHeader.Type)
 				{
@@ -135,10 +135,13 @@ namespace CSPspEmu.Hle.Loader
 				}
 			}
 
-			RelocOutput.Flush();
-			_RelocOutputStream.Flush();
-			RelocOutput.Close();
-			_RelocOutputStream.Close();
+			if (RelocOutput != null)
+			{
+				RelocOutput.Flush();
+				_RelocOutputStream.Flush();
+				RelocOutput.Close();
+				_RelocOutputStream.Close();
+			}
 		}
 
 		Stream _RelocOutputStream;
@@ -148,9 +151,15 @@ namespace CSPspEmu.Hle.Loader
 			get {
 				if (_RelocOutput == null)
 				{
+#if !DEBUG
+					//_RelocOutput = new StreamWriter(_RelocOutputStream = new MemoryStream());
+					_RelocOutput = null;
+					_RelocOutputStream = null;
+#else
 					_RelocOutputStream = File.Open("reloc.txt", FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
 					_RelocOutput = new StreamWriter(_RelocOutputStream);
 					_RelocOutput.AutoFlush = true;
+#endif
 				}
 				return _RelocOutput;
 			}
@@ -296,7 +305,7 @@ namespace CSPspEmu.Hle.Loader
 						throw(new NotImplementedException("Handling " + Reloc.Type + " not implemented"));
 				}
 
-				RelocOutput.WriteLine(
+				if (RelocOutput != null) RelocOutput.WriteLine(
 					"RELOC %06d : 0x%08X : 0x%08X -> 0x%08X".Sprintf(
 						Index,
 						RelocatedPointerAddress, InstructionBefore.Value, Instruction.Value
