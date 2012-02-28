@@ -591,10 +591,10 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			CheckForUpdates();
+			CheckForUpdates(NotifyIfNotFound: true);
 		}
 
-		public void CheckForUpdates()
+		public void CheckForUpdates(bool NotifyIfNotFound)
 		{
 			var CurrentVersion = PspGlobalConfiguration.CurrentVersion;
 
@@ -632,7 +632,10 @@ namespace CSPspEmu.Gui.Winforms
 					}
 					else
 					{
-						MessageBox.Show("You have the lastest version", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+						if (NotifyIfNotFound)
+						{
+							MessageBox.Show("You have the lastest version", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+						}
 					}
 				}
 				catch (Exception Exception)
@@ -783,7 +786,7 @@ namespace CSPspEmu.Gui.Winforms
 			Debug.WriteLine(String.Format("Elapsed: {0}", (DateTime.UtcNow - IGuiExternalInterface.GetConfig().StoredConfig.LastCheckedTime)));
 			if ((DateTime.UtcNow - IGuiExternalInterface.GetConfig().StoredConfig.LastCheckedTime).TotalDays > 3)
 			{
-				CheckForUpdates();
+				CheckForUpdates(NotifyIfNotFound: false);
 			}
 		}
 
