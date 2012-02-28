@@ -80,17 +80,21 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
+    <ProjectReference Include="..\csharputils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
       <Project>{9B217880-48AE-43B6-AE1F-DC732FCCBC7A}</Project>
       <Name>CSharpUtils.Drawing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
+    <ProjectReference Include="..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
       <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Resources\CSPspEmu.Resources.csproj">
+      <Project>{BA3187FA-A2A1-43E0-9FDD-69B377EE3152}</Project>
+      <Name>CSPspEmu.Resources</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<translations>
+	<category id="menus">
+		<text id="DebugMenu">
+			<translation lang="en">&amp;Debug</translation>
+			<translation lang="es">&amp;Depuración</translation>
+		</text>
+		<text id="DebugShowThreadInfoMenu">
+			<translation lang="en">Show &amp;Thread Info</translation>
+			<translation lang="es">Mostrar información de &amp;Hilos</translation>
+		</text>
+		<text id="DebugTraceSyscallsMenu">
+			<translation lang="en">Trace &amp;Syscalls</translation>
+			<translation lang="es">Trazar &amp;Syscalls</translation>
+		</text>
+		<text id="DebugTraceUnimplementedGpuMenu">
+			<translation lang="en">Trace Unimplemented Gpu</translation>
+			<translation lang="es">Trazar Gpu no implementado</translation>
+		</text>
+		<text id="DebugTraceUnimplementedSyscallsMenu">
+			<translation lang="en">Trace Unimplemented Syscalls</translation>
+			<translation lang="es">Trazar Syscalls sin implementar</translation>
+		</text>
+		<text id="FileExitMenu">
+			<translation lang="en">&amp;Exit</translation>
+			<translation lang="es">&amp;Salir</translation>
+		</text>
+		<text id="FileMenu">
+			<translation lang="en">&amp;File</translation>
+			<translation lang="es">&amp;Archivo</translation>
+		</text>
+		<text id="FileOpenMenu">
+			<translation lang="en">&amp;Open...</translation>
+			<translation lang="es">&amp;Abrir...</translation>
+		</text>
+		<text id="HelpWebsiteMenu">
+			<translation lang="en">&amp;Website...</translation>
+			<translation lang="es">&amp;Página web...</translation>
+		</text>
+		<text id="HelpAboutMenu">
+			<translation lang="en">&amp;About...</translation>
+			<translation lang="es">&amp;Sobre...</translation>
+		</text>
+		<text id="HelpBlogMenu">
+			<translation lang="en">&amp;en.blog.cballesterosvelasco.es</translation>
+			<translation lang="es">&amp;es.blog.cballesterosvelasco.es</translation>
+		</text>
+		<text id="HelpCheckForUpdatesMenu">
+			<translation lang="en">Check for &amp;updates...</translation>
+			<translation lang="es">Buscar &amp;actualizacioes...</translation>
+		</text>
+		<text id="HelpGithubMenu">
+			<translation lang="en">&amp;github.com/soywiz/cspspemu</translation>
+			<translation lang="es">&amp;github.com/soywiz/cspspemu</translation>
+		</text>
+		<text id="HelpKawagamesMenu">
+			<translation lang="en">&amp;kawagames.com</translation>
+			<translation lang="es">&amp;kawagames.com</translation>
+		</text>
+		<text id="HelpMenu">
+			<translation lang="en">&amp;Help</translation>
+			<translation lang="es">&amp;Ayuda</translation>
+		</text>
+		<text id="HelpReportAnIssueMenu">
+			<translation lang="en">Report an &amp;issue...</translation>
+			<translation lang="es">Informar sobre &amp;problema...</translation>
+		</text>
+		<text id="UtilsAssociateExtensionsMenu">
+			<translation lang="en">Associate Extensions (.PBP, .CSO, .DAX, .ELF)</translation>
+			<translation lang="es">Asociar Extensiones (.PBP, .CSO, .DAX, .ELF)</translation>
+		</text>
+		<text id="UtilsDisplayMenu">
+			<translation lang="en">&amp;Display</translation>
+			<translation lang="es">&amp;Tamaño de ventana</translation>
+		</text>
+		<text id="UtilsDumpMainMemoryMenu">
+			<translation lang="en">Dump Main Memory...</translation>
+			<translation lang="es">Volcar memoria principal...</translation>
+		</text>
+		<text id="UtilsFrameLimitingMenu">
+			<translation lang="en">Frame Limiting</translation>
+			<translation lang="es">Limitar a refresco vertical</translation>
+		</text>
+		<text id="UtilsLanguageMenu">
+			<translation lang="en">&amp;Language</translation>
+			<translation lang="es">&amp;Idioma</translation>
+		</text>
+		<text id="UtilsMenu">
+			<translation lang="en">&amp;Utils</translation>
+			<translation lang="es">&amp;Utilidades</translation>
+		</text>
+		<text id="UtilsTakeScreenshotMenu">
+			<translation lang="en">Take Screenshot...</translation>
+			<translation lang="es">Sacar pantallazo...</translation>
+		</text>
+		<text id="UtilsUseFastmemMenu">
+			<translation lang="en">Use &amp;Fast but unsafe memory</translation>
+			<translation lang="es">Usar memoria &amp;rápida pero inestable</translation>
+		</text>
+		<text id="RunMenu">
+			<translation lang="en">&amp;Run</translation>
+			<translation lang="es">&amp;Ejecución</translation>
+		</text>
+		<text id="RunRunResumeMenu">
+			<translation lang="en">&amp;Start/Resume</translation>
+			<translation lang="es">&amp;Ejecutar</translation>
+		</text>
+		<text id="RunPauseMenu">
+			<translation lang="en">&amp;Pause</translation>
+			<translation lang="es">&amp;Pausar</translation>
+		</text>
+		<text id="UtilsLanguageEnglishMenu">
+			<translation lang="en">English</translation>
+			<translation lang="es">Inglés</translation>
+		</text>
+		<text id="UtilsLanguageSpanishMenu">
+			<translation lang="en">Spanish</translation>
+			<translation lang="es">Español</translation>
+		</text>
+	</category>
+	<category id="extra">
+		<text id="UnknownGame">
+			<translation lang="en">&lt;Unknown Game&gt;</translation>
+			<translation lang="es">&lt;Juego Desconocido&gt;</translation>
+		</text>
+	</category>
+	<category id="languages">
+		<text id="English">
+			<translation lang="en">English</translation>
+			<translation lang="es">Inglés</translation>
+		</text>
+		<text id="Spanish">
+			<translation lang="en">Spanish</translation>
+			<translation lang="es">Español</translation>
+		</text>
+	</category>
+</translations>

@@ -42,14 +42,16 @@
 			this.xToolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsLanguageMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.englishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.spanishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsLanguageEnglishMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsLanguageSpanishMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsTakeScreenshotMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.UtilsDumpMainMemoryMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsFrameLimitingMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
+			this.UtilsUseFastmemMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsAssociateExtensionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.RunMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.RunRunResumeMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -133,6 +135,8 @@
             this.toolStripMenuItem1,
             this.UtilsFrameLimitingMenu,
             this.toolStripMenuItem7,
+            this.UtilsUseFastmemMenu,
+            this.toolStripMenuItem10,
             this.UtilsAssociateExtensionsMenu});
 			this.UtilsMenu.Name = "UtilsMenu";
 			this.UtilsMenu.Size = new System.Drawing.Size(42, 20);
@@ -190,30 +194,30 @@
 			// UtilsLanguageMenu
 			// 
 			this.UtilsLanguageMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.englishToolStripMenuItem,
-            this.spanishToolStripMenuItem});
+            this.UtilsLanguageEnglishMenu,
+            this.UtilsLanguageSpanishMenu});
 			this.UtilsLanguageMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.world;
 			this.UtilsLanguageMenu.Name = "UtilsLanguageMenu";
 			this.UtilsLanguageMenu.Size = new System.Drawing.Size(306, 22);
 			this.UtilsLanguageMenu.Text = "&Language";
 			// 
-			// englishToolStripMenuItem
+			// UtilsLanguageEnglishMenu
 			// 
-			this.englishToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.us;
-			this.englishToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-			this.englishToolStripMenuItem.Name = "englishToolStripMenuItem";
-			this.englishToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
-			this.englishToolStripMenuItem.Text = "&English";
-			this.englishToolStripMenuItem.Click += new System.EventHandler(this.englishToolStripMenuItem_Click);
+			this.UtilsLanguageEnglishMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.us;
+			this.UtilsLanguageEnglishMenu.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+			this.UtilsLanguageEnglishMenu.Name = "UtilsLanguageEnglishMenu";
+			this.UtilsLanguageEnglishMenu.Size = new System.Drawing.Size(152, 22);
+			this.UtilsLanguageEnglishMenu.Text = "&English";
+			this.UtilsLanguageEnglishMenu.Click += new System.EventHandler(this.englishToolStripMenuItem_Click);
 			// 
-			// spanishToolStripMenuItem
+			// UtilsLanguageSpanishMenu
 			// 
-			this.spanishToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.es;
-			this.spanishToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-			this.spanishToolStripMenuItem.Name = "spanishToolStripMenuItem";
-			this.spanishToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
-			this.spanishToolStripMenuItem.Text = "&Spanish";
-			this.spanishToolStripMenuItem.Click += new System.EventHandler(this.spanishToolStripMenuItem_Click);
+			this.UtilsLanguageSpanishMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.es;
+			this.UtilsLanguageSpanishMenu.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+			this.UtilsLanguageSpanishMenu.Name = "UtilsLanguageSpanishMenu";
+			this.UtilsLanguageSpanishMenu.Size = new System.Drawing.Size(152, 22);
+			this.UtilsLanguageSpanishMenu.Text = "&Spanish";
+			this.UtilsLanguageSpanishMenu.Click += new System.EventHandler(this.spanishToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem9
 			// 
@@ -257,6 +261,20 @@
 			// 
 			this.toolStripMenuItem7.Name = "toolStripMenuItem7";
 			this.toolStripMenuItem7.Size = new System.Drawing.Size(303, 6);
+			// 
+			// UtilsUseFastmemMenu
+			// 
+			this.UtilsUseFastmemMenu.Checked = true;
+			this.UtilsUseFastmemMenu.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.UtilsUseFastmemMenu.Name = "UtilsUseFastmemMenu";
+			this.UtilsUseFastmemMenu.Size = new System.Drawing.Size(306, 22);
+			this.UtilsUseFastmemMenu.Text = "Use &Fast and unsafe memory";
+			this.UtilsUseFastmemMenu.Click += new System.EventHandler(this.useFastAndUnsafeMemoryToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem10
+			// 
+			this.toolStripMenuItem10.Name = "toolStripMenuItem10";
+			this.toolStripMenuItem10.Size = new System.Drawing.Size(303, 6);
 			// 
 			// UtilsAssociateExtensionsMenu
 			// 
@@ -442,6 +460,7 @@
 			this.MaximizeBox = false;
 			this.Name = "PspDisplayForm";
 			this.Text = "CSPspEmu";
+			this.Load += new System.EventHandler(this.PspDisplayForm_Load_1);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PspDisplayForm_KeyDown);
 			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PspDisplayForm_KeyUp);
 			this.menuStrip1.ResumeLayout(false);
@@ -488,12 +507,14 @@
 		public System.Windows.Forms.ToolStripMenuItem HelpReportAnIssueMenu;
 		public System.Windows.Forms.ToolStripSeparator toolStripMenuItem8;
 		public System.Windows.Forms.ToolStripMenuItem UtilsLanguageMenu;
-		public System.Windows.Forms.ToolStripMenuItem englishToolStripMenuItem;
-		public System.Windows.Forms.ToolStripMenuItem spanishToolStripMenuItem;
+		public System.Windows.Forms.ToolStripMenuItem UtilsLanguageEnglishMenu;
+		public System.Windows.Forms.ToolStripMenuItem UtilsLanguageSpanishMenu;
 		public System.Windows.Forms.ToolStripSeparator toolStripMenuItem9;
 		public System.Windows.Forms.ToolStripMenuItem FileMenu;
 		public System.Windows.Forms.ToolStripMenuItem UtilsMenu;
 		public System.Windows.Forms.ToolStripMenuItem RunMenu;
 		public System.Windows.Forms.ToolStripMenuItem DebugMenu;
+		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem10;
+		public System.Windows.Forms.ToolStripMenuItem UtilsUseFastmemMenu;
 	}
 }

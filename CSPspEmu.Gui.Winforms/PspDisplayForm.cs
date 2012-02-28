@@ -22,6 +22,7 @@ using System.Net;
 using System.Web;
 using System.Resources;
 using System.Globalization;
+using CSPspEmu.Resources;
 
 namespace CSPspEmu.Gui.Winforms
 {
@@ -115,6 +116,9 @@ namespace CSPspEmu.Gui.Winforms
 			this.PerformLayout();
 			*/
 			//this.MainMenuStrip.Visible = false;
+
+			DefaultDisplayScale = IGuiExternalInterface.GetConfig().StoredConfig.DisplayScale;
+
 			DisplayScale = DefaultDisplayScale;
 
 			BufferGraphics = Graphics.FromImage(Buffer);
@@ -169,6 +173,8 @@ namespace CSPspEmu.Gui.Winforms
 				xToolStripMenuItem2.Checked = (_DisplayScale == 2);
 				xToolStripMenuItem3.Checked = (_DisplayScale == 3);
 				xToolStripMenuItem4.Checked = (_DisplayScale == 4);
+
+				IGuiExternalInterface.GetConfig().StoredConfig.DisplayScale = _DisplayScale;
 			}
 			get
 			{
@@ -588,9 +594,12 @@ namespace CSPspEmu.Gui.Winforms
 			CheckForUpdates();
 		}
 
-		static public void CheckForUpdates()
+		public void CheckForUpdates()
 		{
 			var CurrentVersion = PspGlobalConfiguration.CurrentVersion;
+
+			IGuiExternalInterface.GetConfig().StoredConfig.LastCheckedTime = DateTime.UtcNow;
+
 			var CheckForUpdatesThread = new Thread(() =>
 			{
 				try
@@ -730,8 +739,8 @@ namespace CSPspEmu.Gui.Winforms
 		private void LanguageUpdated()
 		{
 			LanguagePairs.Clear();
-			LanguagePairs.Add(englishToolStripMenuItem, new CultureInfo("en-US"));
-			LanguagePairs.Add(spanishToolStripMenuItem, new CultureInfo("es-ES"));
+			LanguagePairs.Add(UtilsLanguageEnglishMenu, new CultureInfo("en-US"));
+			LanguagePairs.Add(UtilsLanguageSpanishMenu, new CultureInfo("es-ES"));
 
 			foreach (var LanguagePair in LanguagePairs)
 			{
@@ -744,7 +753,7 @@ namespace CSPspEmu.Gui.Winforms
 				if (Field.FieldType == typeof(ToolStripMenuItem))
 				{
 					var ToolStripMenuItem = (ToolStripMenuItem)Field.GetValue(this);
-					var Translation = Translations.ResourceManager.GetString(ToolStripMenuItem.Name);
+					var Translation = Translations.GetString("menus", ToolStripMenuItem.Name);
 					ToolStripMenuItem.Text = ((Translation != null) ? Translation : ToolStripMenuItem.Text);
 				}
 			}
@@ -762,6 +771,36 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			Thread.CurrentThread.CurrentUICulture = (CultureInfo)((ToolStripMenuItem)sender).Tag;
 			LanguageUpdated();
+		}
+
+		private void PspDisplayForm_Load_1(object sender, EventArgs e)
+		{
+			UtilsFrameLimitingMenu.Checked = this.PspConfig.VerticalSynchronization;
+			UtilsUseFastmemMenu.Checked = IGuiExternalInterface.GetConfig().StoredConfig.UseFastMemory;
+
+			Debug.WriteLine(String.Format("Now: {0}", DateTime.UtcNow));
+			Debug.WriteLine(String.Format("LastCheckedTime: {0}", IGuiExternalInterface.GetConfig().StoredConfig.LastCheckedTime));
+			Debug.WriteLine(String.Format("Elapsed: {0}", (DateTime.UtcNow - IGuiExternalInterface.GetConfig().StoredConfig.LastCheckedTime)));
+			if ((DateTime.UtcNow - IGuiExternalInterface.GetConfig().StoredConfig.LastCheckedTime).TotalDays > 3)
+			{
+				CheckForUpdates();
+			}
+		}
+
+		private void useFastAndUnsafeMemoryToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			UtilsUseFastmemMenu.Checked = !UtilsUseFastmemMenu.Checked;
+			IGuiExternalInterface.GetConfig().StoredConfig.UseFastMemory = UtilsUseFastmemMenu.Checked;
+#if false
+			MessageBox.Show("This option requires restarting the emulator.", "Warning", MessageBoxButtons.OK);
+#else
+			if (MessageBox.Show("This option requires restarting the emulator.\n\nDo you want to restart the emulator?", "Warning", MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				//IGuiExternalInterface.GetConfig().StoredConfig.Save();
+				//new StApplicationPaths.ExecutablePath;
+				Application.Restart();
+			}
+#endif
 		}
 	}
 }

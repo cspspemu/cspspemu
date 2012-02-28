@@ -14,6 +14,7 @@ using CSPspEmu.Core.Audio.Impl.WaveOut;
 using CSPspEmu.Core.Audio.Impl.Openal;
 using Microsoft.Win32;
 using CSPspEmu.Core;
+using CSPspEmu.Resources;
 
 namespace CSPspEmu.Sandbox
 {
@@ -62,7 +63,7 @@ namespace CSPspEmu.Sandbox
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\valkyria profile\BOOT.BIN", EnableMpeg: false, TraceSyscalls: true);
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Downstream Panic.cso");
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Clannad.iso", TraceSyscalls: false, EnableMpeg: true);
-			PspEmulator.StartAndLoad(@"E:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: false, EnableMpeg: false);
+			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Tales of Eternia - Español.iso", TraceSyscalls: false, EnableMpeg: false);
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\homebrew\kaiten\EBOOT.PBP", TraceSyscalls: false, EnableMpeg: false);
 
 			// bltzal
@@ -262,6 +263,11 @@ namespace CSPspEmu.Sandbox
 		[STAThread]
 		static void Main(string[] Arguments)
 		{
+#if false
+			Console.WriteLine(CSPspEmu.Resources.Translations.GetString("extra", "UnknownGame"));
+			Console.ReadKey(); Environment.Exit(0);
+#endif
+
 			if (Arguments.Length > 0)
 			{
 				if (Arguments[0] == "/associate")

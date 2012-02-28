@@ -37,6 +37,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -72,14 +73,10 @@
     <Compile Include="PspEmulatorComponent.cs" />
     <Compile Include="PspEmulatorContext.cs" />
     <Compile Include="PspGlobalConfiguration.cs" />
+    <Compile Include="PspStoredConfig.cs" />
     <Compile Include="Rtc\PspRtc.cs" />
     <Compile Include="Threading\Synchronization\PspWaitEvent.cs" />
     <Compile Include="Threading\Synchronization\WaitableStateMachine.cs" />
-    <Compile Include="Translations.Designer.cs">
-      <DependentUpon>Translations.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <Compile Include="Utils\ColorFormatExtensions.cs" />
     <Compile Include="Utils\NumberUtils.cs" />
     <Compile Include="Utils\OutputPixel.cs" />
@@ -88,21 +85,18 @@
     <Compile Include="WakeUpCallbackDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
-      <Project>{9b217880-48ae-43b6-ae1f-dc732fccbc7a}</Project>
+    <ProjectReference Include="..\csharputils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
+      <Project>{9B217880-48AE-43B6-AE1F-DC732FCCBC7A}</Project>
       <Name>CSharpUtils.Drawing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
+    <ProjectReference Include="..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
       <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Translations.es.resx" />
-    <EmbeddedResource Include="Translations.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Translations.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <ProjectReference Include="..\CSPspEmu.Resources\CSPspEmu.Resources.csproj">
+      <Project>{BA3187FA-A2A1-43E0-9FDD-69B377EE3152}</Project>
+      <Name>CSPspEmu.Resources</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

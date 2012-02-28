@@ -12,5 +12,10 @@ namespace CSPspEmu.Resources
 		{
 			return System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("CSPspEmu.Resources.flash0.zip");
 		}
+
+		static public Stream GetTranslationsStream()
+		{
+			return System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("CSPspEmu.Resources.Translations.xml");
+		}
 	}
 }

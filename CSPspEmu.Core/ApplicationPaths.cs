@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+using System.Windows.Forms;
+using System.IO;
 
 namespace CSPspEmu.Core
 {
@@ -13,6 +15,24 @@ namespace CSPspEmu.Core
 			get
 			{
 				return Assembly.GetEntryAssembly().Location;
+			}
+		}
+
+		static private string _MemoryStickRootFolder;
+
+		static public string MemoryStickRootFolder
+		{
+			get
+			{
+				if (_MemoryStickRootFolder == null)
+				{
+					_MemoryStickRootFolder = Path.GetDirectoryName(Application.ExecutablePath) + "/ms";
+					if (_MemoryStickRootFolder.Replace('\\', '/').EndsWith("CSPspEmu.Sandbox/bin/Debug/ms"))
+					{
+						_MemoryStickRootFolder = Path.GetFullPath(MemoryStickRootFolder + "/../../../../ms");
+					}
+				}
+				return _MemoryStickRootFolder;
 			}
 		}
 	}

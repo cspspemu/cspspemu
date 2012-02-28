@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CSharpUtils.Factory;
 using System.Reflection;
+using CSPspEmu.Resources;
 
 namespace CSPspEmu.Core
 {
@@ -17,7 +18,17 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
-		public bool VerticalSynchronization = true;
+		public bool VerticalSynchronization
+		{
+			get
+			{
+				return StoredConfig.LimitVerticalSync;
+			}
+			set
+			{
+				StoredConfig.LimitVerticalSync = value;
+			}
+		}
 
 		/// <summary>
 		/// 
@@ -101,12 +112,6 @@ namespace CSPspEmu.Core
 		//public bool NoticeUnimplementedGpuCommands = false;
 
 		/// <summary>
-		/// 
-		/// </summary>
-		public bool UseFastAndUnsaferMemory = true;
-		//public bool UseFastAndUnsaferMemory = false;
-
-		/// <summary>
 		/// Writes a line each time a JAL is executed
 		/// </summary>
 		public bool TraceJal = false;
@@ -132,8 +137,14 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
+		public readonly PspStoredConfig StoredConfig;
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public PspConfig()
 		{
+			StoredConfig = PspStoredConfig.Load();
 		}
 
 		public bool InfoExeHasRelocation = false;
@@ -144,12 +155,13 @@ namespace CSPspEmu.Core
 		public bool TraceThreadLoop = false;
 		public uint RelocatedBaseAddress;
 
+		static private string _GameUnknownTitle = Translations.GetString("extra", "UnknownGame");
 		private string _GameTitle;
 		public string GameTitle
 		{
 			get
 			{
-				if (_GameTitle == null) return Translations.UnknownGameText;
+				if (_GameTitle == null) return _GameUnknownTitle;
 				return _GameTitle;
 			}
 			set

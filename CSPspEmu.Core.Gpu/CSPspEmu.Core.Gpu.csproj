@@ -98,11 +98,11 @@
     <Compile Include="VertexReading\VertexReaderDynarec.Utils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
-      <Project>{9b217880-48ae-43b6-ae1f-dc732fccbc7a}</Project>
+    <ProjectReference Include="..\csharputils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
+      <Project>{9B217880-48AE-43B6-AE1F-DC732FCCBC7A}</Project>
       <Name>CSharpUtils.Drawing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
+    <ProjectReference Include="..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
       <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
     </ProjectReference>

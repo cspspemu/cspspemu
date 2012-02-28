@@ -206,17 +206,8 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 
 				var DataHash = SHA1.Create().ComputeHash(Data);
 
-				/*
-				MemoryStickMountable.Mount("/", new HleIoDriverLocalFileSystem(MemoryStickRootFolder));
-				HleIoDriverEmulator = new HleIoDriverEmulator(HleState);
-				var MemoryStick = new HleIoDriverMemoryStick(HleState, MemoryStickMountable);
-				//var MemoryStick = new HleIoDriverMemoryStick(new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
-				HleState.HleIoManager.SetDriver("ms:", MemoryStick);
-				HleState.
-				*/
-				//DataHash
-
-				var Ms0Path = new DirectoryInfo(HleState.MemoryStickRootLocalFolder).FullName;
+				//var Ms0Path = new DirectoryInfo(HleState.MemoryStickRootLocalFolder).FullName;
+				var Ms0Path = new DirectoryInfo(ApplicationPaths.MemoryStickRootFolder).FullName;
 				try { Directory.CreateDirectory(Ms0Path + "\\temp"); } catch { }
 
 				var BaseFileName = Ms0Path + "\\temp\\" + BitConverter.ToString(DataHash);

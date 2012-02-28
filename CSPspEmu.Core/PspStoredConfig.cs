@@ -1,0 +1,73 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Xml.Serialization;
+using System.IO;
+
+namespace CSPspEmu.Core
+{
+	public partial class PspStoredConfig
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		public DateTime LastCheckedTime;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool LimitVerticalSync = true;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public int DisplayScale = 1;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool UseFastMemory = false;
+	}
+
+	public partial class PspStoredConfig
+	{
+		static readonly private XmlSerializer Serializer = XmlSerializer.FromTypes(new[] { typeof(PspStoredConfig) })[0];
+
+		private PspStoredConfig()
+		{
+		}
+
+		static private string ConfigFilePath
+		{
+			get
+			{
+				return ApplicationPaths.MemoryStickRootFolder + "/EmulatorConfig.xml";
+			}
+		}
+
+		static public PspStoredConfig Load()
+		{
+			try
+			{
+				using (var Stream = File.OpenRead(ConfigFilePath))
+				{
+					return (PspStoredConfig)Serializer.Deserialize(Stream);
+				}
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
+				return new PspStoredConfig();
+			}
+		}
+
+		public void Save()
+		{
+			using (var Stream = File.Open(ConfigFilePath, FileMode.Create, FileAccess.Write))
+			{
+				Serializer.Serialize(Stream, this);
+			}
+		}
+	}
+}

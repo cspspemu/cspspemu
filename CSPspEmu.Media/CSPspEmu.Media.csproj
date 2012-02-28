@@ -76,6 +76,12 @@
     <Compile Include="Video.DirectShow\Internals\Win32.cs" />
     <Compile Include="Video.DirectShow\PhysicalConnectorType.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
+      <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
+      <Name>CSharpUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

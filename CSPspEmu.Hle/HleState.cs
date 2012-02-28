@@ -48,6 +48,7 @@ namespace CSPspEmu.Hle
 		public HleInterop HleInterop;
 		public Kirk Kirk;
 
+		/*
 		public string MemoryStickRootLocalFolder
 		{
 			get
@@ -61,6 +62,7 @@ namespace CSPspEmu.Hle
 				return Local.BasePath;
 			}
 		}
+		*/
 
 		public override void InitializeComponent()
 		{

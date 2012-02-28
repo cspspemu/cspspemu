@@ -49,7 +49,7 @@ namespace CSPspEmu.Hle.Modules.display
 
 				SleepThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Display, "sceDisplayWaitVblankStart", null, (WakeUpCallbackDelegate) =>
 				{
-#if true
+#if false
 					PspRtc.RegisterTimerInOnce(TimeSpan.FromMilliseconds(1000 / 60), () =>
 					{
 						WakeUpCallbackDelegate();

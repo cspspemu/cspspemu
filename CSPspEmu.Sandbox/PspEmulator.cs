@@ -170,6 +170,10 @@ namespace CSPspEmu.Sandbox
 			{
 				Console.Error.WriteLine(Exception);
 			}
+			finally
+			{
+				PspConfig.StoredConfig.Save();
+			}
 
 			Environment.Exit(0);
 		}
@@ -237,13 +241,7 @@ namespace CSPspEmu.Sandbox
 						PspEmulatorContext.SetInstanceType<PspAudioImpl>(typeof(PspAudioOpenalImpl));
 					}
 
-#if RELEASE
-					PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();
-#else
-					PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
-#endif
-					/*
-					if (PspConfig.UseFastAndUnsaferMemory)
+					if (PspConfig.StoredConfig.UseFastMemory)
 					{
 						PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();
 					}
@@ -251,7 +249,6 @@ namespace CSPspEmu.Sandbox
 					{
 						PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
 					}
-					*/
 				}
 
 				PspEmulatorContext.GetInstance<PspDisplay>().VBlankEventCall += new Action(PspEmulator_VBlankEventCall);
