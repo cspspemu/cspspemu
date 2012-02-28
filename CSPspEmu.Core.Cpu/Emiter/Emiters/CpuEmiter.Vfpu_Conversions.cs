@@ -158,9 +158,37 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.CallMethod((Func<float, int, float>)(CpuEmiter._vf2iz));
 			});
 		}
+
+		static public uint _vi2s(uint v1, uint v2)
+		{
+			return (
+				((v1 >> 16) << 0) |
+				((v2 >> 16) << 16)
+			);
+		}
+
+		public void vi2s()
+		{
+			var VectorSize = VectorSizeOneTwo;
+			Save_VD(0, VectorSize, () =>
+			{
+				Load_VS(0);
+				Load_VS(1);
+				MipsMethodEmiter.CallMethod((Func<uint, uint, uint>)(CpuEmiter._vi2s));
+			}, AsInteger: true);
+			if (VectorSize == 4)
+			{
+				Save_VD(1, VectorSize, () =>
+				{
+					Load_VS(2);
+					Load_VS(3);
+					MipsMethodEmiter.CallMethod((Func<uint, uint, uint>)(CpuEmiter._vi2s));
+				}, AsInteger: true);
+			}
+		}
+
 		public void vf2h() { throw (new NotImplementedException("")); }
 		public void vh2f() { throw (new NotImplementedException("")); }
-		public void vi2s() { throw (new NotImplementedException("")); }
 		public void vi2us() { throw (new NotImplementedException("")); }
 	}
 }

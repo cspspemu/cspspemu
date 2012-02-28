@@ -10,7 +10,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 {
 	public class HleIoDriverLocalFileSystem : IHleIoDriver
 	{
-		protected string BasePath;
+		public string BasePath { get; protected set; }
 
 		public HleIoDriverLocalFileSystem(string BasePath)
 		{

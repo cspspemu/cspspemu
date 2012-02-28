@@ -14,6 +14,9 @@ using CSPspEmu.Core.Audio;
 using CSPspEmu.Core.Controller;
 using CSPspEmu.Core.Crypto;
 using CSPspEmu.Core.Battery;
+using CSPspEmu.Hle.Vfs.MemoryStick;
+using CSPspEmu.Hle.Vfs.Local;
+using CSPspEmu.Hle.Vfs;
 
 namespace CSPspEmu.Hle
 {
@@ -44,6 +47,20 @@ namespace CSPspEmu.Hle
 		public HleInterruptManager HleInterruptManager;
 		public HleInterop HleInterop;
 		public Kirk Kirk;
+
+		public string MemoryStickRootLocalFolder
+		{
+			get
+			{
+				//var Mountable = (HleIoDriverMountable)HleIoManager.GetDriver("ms:");
+				//var MemoryStick = (HleIoDriverMemoryStick)Mountable.GetMount("/");
+
+				var MemoryStick = (HleIoDriverMemoryStick)HleIoManager.GetDriver("ms:");
+				var Mountable = (HleIoDriverMountable)MemoryStick.ParentDriver;
+				var Local = (HleIoDriverLocalFileSystem)(Mountable.GetMount("/"));
+				return Local.BasePath;
+			}
+		}
 
 		public override void InitializeComponent()
 		{

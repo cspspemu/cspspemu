@@ -16,6 +16,10 @@ using CSPspEmu.Hle.Formats.audio;
 using CSPspEmu.Hle.Modules.audio;
 using CSPspEmu.Core.Audio;
 using CSPspEmu.Core;
+using System.Security.Cryptography;
+using CSPspEmu.Hle.Vfs.MemoryStick;
+using CSPspEmu.Hle.Vfs.Local;
+using System.Diagnostics;
 
 namespace CSPspEmu.Hle.Modules.libatrac3plus
 {
@@ -181,13 +185,17 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			{
 			}
 
-			public Atrac(CodecType CodecType)
+			HleState HleState;
+
+			public Atrac(HleState HleState, CodecType CodecType)
 			{
+				this.HleState = HleState;
 				this.CodecType = CodecType;
 			}
 
-			public Atrac(byte[] Data)
+			public Atrac(HleState HleState, byte[] Data)
 			{
+				this.HleState = HleState;
 				CodecType = CodecType.PSP_MODE_AT_3_PLUS;
 				SetData(Data);
 			}
@@ -196,26 +204,53 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			{
 				this.Data = Data;
 
-				var OmaOutFileName = Path.GetTempFileName() + ".oma";
-				var WavOutFileName = Path.GetTempFileName() + ".wav";
+				var DataHash = SHA1.Create().ComputeHash(Data);
 
-				//ArrayUtils.HexDump(Data, 1024);
-				//Console.ReadKey();
+				/*
+				MemoryStickMountable.Mount("/", new HleIoDriverLocalFileSystem(MemoryStickRootFolder));
+				HleIoDriverEmulator = new HleIoDriverEmulator(HleState);
+				var MemoryStick = new HleIoDriverMemoryStick(HleState, MemoryStickMountable);
+				//var MemoryStick = new HleIoDriverMemoryStick(new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
+				HleState.HleIoManager.SetDriver("ms:", MemoryStick);
+				HleState.
+				*/
+				//DataHash
 
-				Console.WriteLine("{0} -> {1}", OmaOutFileName, WavOutFileName);
+				var Ms0Path = new DirectoryInfo(HleState.MemoryStickRootLocalFolder).FullName;
+				try { Directory.CreateDirectory(Ms0Path + "\\temp"); } catch { }
 
-				Console.WriteLine("[a]");
-				ParseAtracData(new MemoryStream(Data));
+				var BaseFileName = Ms0Path + "\\temp\\" + BitConverter.ToString(DataHash);
+
+				var OmaOutFileName = BaseFileName + ".oma";
+				var WavOutFileName = BaseFileName + ".wav";
+
+				if (!File.Exists(WavOutFileName))
 				{
+					//ArrayUtils.HexDump(Data, 1024);
+					//Console.ReadKey();
 
-					WriteOma(OmaOutFileName);
-					Console.WriteLine("[aa]");
-					File.Delete(WavOutFileName);
-					OmaWavConverter.convertOmaToWav(OmaOutFileName, WavOutFileName);
+					Debug.WriteLine("{0} -> {1}", OmaOutFileName, WavOutFileName);
+
+					Debug.WriteLine("[a]");
+					ParseAtracData(new MemoryStream(Data));
+					{
+
+						WriteOma(OmaOutFileName);
+						Debug.WriteLine("[aa]");
+						File.Delete(WavOutFileName);
+						OmaWavConverter.convertOmaToWav(OmaOutFileName, WavOutFileName);
+					}
+					Debug.WriteLine("[b]");
 				}
-				Console.WriteLine("[b]");
-				ParseWavData(File.OpenRead(WavOutFileName));
-				Console.WriteLine("[c]");
+				try
+				{
+					ParseWavData(File.OpenRead(WavOutFileName));
+				}
+				catch
+				{
+					DecodedData = new short[0];
+				}
+				Debug.WriteLine("[c]");
 			}
 
 			private void ParseWavData(Stream Stream)
@@ -255,14 +290,14 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 					switch (ChunkType)
 					{
 						case "fmt ":
-							Format = ChunkStream.ReadStruct<At3FormatStruct>();
+							Format = ChunkStream.ReadStructPartially<At3FormatStruct>();
 							break;
 						case "fact":
-							Fact = ChunkStream.ReadStruct<FactStruct>();
+							Fact = ChunkStream.ReadStructPartially<FactStruct>();
 							break;
 						case "smpl":
 							// Loop info
-							Smpl = ChunkStream.ReadStruct<SmplStruct>();
+							Smpl = ChunkStream.ReadStructPartially<SmplStruct>();
 							break;
 						case "data":
 							this.DataStream = ChunkStream;
@@ -316,6 +351,11 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			}
 			*/
 
+			public int GetNumberOfSamplesInNextFrame()
+			{
+				return Math.Min(MaximumSamples, TotalSamples - DecodingOffsetInSamples);
+			}
+
 			//List<short> Temp = new List<short>();
 			public int Decode(short* SamplesOut)
 			{
@@ -359,7 +399,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		public int sceAtracSetDataAndGetID(byte* DataPointer, int DataLength)
 		{
 			var Data = ArrayUtils.CreateArray<byte>(DataPointer, DataLength);
-			var Atrac = new Atrac(Data);
+			var Atrac = new Atrac(HleState, Data);
 			var AtracId = AtracList.Create(Atrac);
 			return AtracId;
 		}
@@ -374,9 +414,9 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public int sceAtracGetOutputChannel(int AtracId, out int OutputChannel)
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
 			var Atrac = AtracList.Get(AtracId);
-			OutputChannel = HleState.ModuleManager.GetModule<sceAudio>().sceAudioChReserve(2, 2048, PspAudio.FormatEnum.Stereo);
+			OutputChannel = HleState.ModuleManager.GetModule<sceAudio>().sceAudioChReserve(-1, Atrac.MaximumSamples, PspAudio.FormatEnum.Stereo);
 			//Console.WriteLine("{0}", *OutputChannelPointer); Console.ReadKey();
 			return 0;
 		}
@@ -539,7 +579,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public int sceAtracGetAtracID(CodecType CodecType)
 		{
-			var Atrac = new Atrac(CodecType);
+			var Atrac = new Atrac(HleState, CodecType);
 			var AtracId = AtracList.Create(Atrac);
 			return AtracId;
 		}
@@ -548,37 +588,28 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// Gets the number of samples of the next frame to be decoded.
 		/// </summary>
 		/// <param name="AtracId">The atrac ID</param>
-		/// <param name="outN">Pointer to receives the number of samples of the next frame.</param>
+		/// <param name="NumberOfSamplesInNextFrame">Pointer to receives the number of samples of the next frame.</param>
 		/// <returns>Less than 0 on error, otherwise 0</returns>
 		[HlePspFunction(NID = 0x36FAABFB, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceAtracGetNextSample(int AtracId, out int outN)
+		public int sceAtracGetNextSample(int AtracId, out int NumberOfSamplesInNextFrame)
 		{
-			throw (new NotImplementedException());
-			outN = 0;
+			var Atrac = AtracList.Get(AtracId);
+			NumberOfSamplesInNextFrame = Atrac.GetNumberOfSamplesInNextFrame();
 			return 0;
-			//throw (new NotImplementedException());
-			/*
-			unimplemented_notice();
-			Atrac3Object atrac3Object = getAtrac3ObjectById(atracID);
-
-			*outN = atrac3Object.getMaxNumberOfSamples();
-			logInfo("sceAtracGetNextSample(atracID=%d, outN=%d)", atracID, *outN);
-			return 0;
-			*/
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="AtracId"></param>
-		/// <param name="piResult"></param>
+		/// <param name="ErrorResult"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xE88F759B, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceAtracGetInternalErrorInfo(int AtracId, out int piResult)
+		public int sceAtracGetInternalErrorInfo(int AtracId, out int ErrorResult)
 		{
-			piResult = 0;
+			ErrorResult = 0;
 			return 0;
 		}
 
@@ -592,12 +623,12 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// <returns>Less than 0 on error, otherwise 0</returns>
 		[HlePspFunction(NID = 0x5D268707, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceAtracGetStreamDataInfo(int AtracId, uint* writePointerPointer /*u8** writePointer*/, uint* availableBytes, uint* readOffset)
+		public int sceAtracGetStreamDataInfo(int AtracId, uint* writePointerPointer /*u8** writePointer*/, out uint availableBytes, out uint readOffset)
 		{
-			throw (new NotImplementedException());
+			//throw (new NotImplementedException());
 			*writePointerPointer = 0; // @FIXME!!
-			*availableBytes = 0;
-			*readOffset     = 0;
+			availableBytes = 0;
+			readOffset     = 0;
 
 			return -1;
 			//throw(new NotImplementedException());

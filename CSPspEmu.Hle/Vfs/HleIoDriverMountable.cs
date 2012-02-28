@@ -9,6 +9,11 @@ namespace CSPspEmu.Hle.Vfs
 	{
 		Dictionary<String, IHleIoDriver> Mounts = new Dictionary<string, IHleIoDriver>();
 
+		public IHleIoDriver GetMount(string MountAt)
+		{
+			return Mounts[MountAt];
+		}
+
 		public void Mount(string MountAt, IHleIoDriver HleIoDriver)
 		{
 			Mounts[MountAt] = HleIoDriver;

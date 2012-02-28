@@ -62,6 +62,42 @@ namespace CSPspEmu.Hle
 		ClearStack = 0x00200000,
 	}
 
+	public struct FunctionEntry
+	{
+		public uint NID;
+		public String Name;
+		public String Description;
+
+		public override string ToString()
+		{
+			return this.ToStringDefault();
+		}
+	}
+
+	public struct DelegateInfo
+	{
+		public int CallIndex;
+		public uint PC;
+		public uint RA;
+		public string ModuleImportName;
+		public FunctionEntry FunctionEntry;
+		public Action<CpuThreadState> Action;
+		public HleThread Thread;
+
+		public override string ToString()
+		{
+			try
+			{
+				return String.Format("{0}: PC=0x{3:X}, RA=0x{4:X} => '{5}' : {1}::{2}", CallIndex, ModuleImportName, FunctionEntry.Name, PC, RA, Thread.Name);
+			}
+			catch (Exception Exception)
+			{
+				return String.Format("Invalid DelegateInfo : " + Exception);
+			}
+			//return this.ToStringDefault();
+		}
+	}
+
 	unsafe public class HleThread : IDisposable
 	{
 		protected MethodCacheFast MethodCache;
@@ -70,6 +106,8 @@ namespace CSPspEmu.Hle
 		/// Value used to schedule threads.
 		/// </summary>
 		public int PriorityValue;
+
+		public DelegateInfo LastCalledHleFunction;
 
 		//public int Priority = 1;
 		protected GreenThread GreenThread;
@@ -411,6 +449,7 @@ namespace CSPspEmu.Hle
 					);
 					break;
 			}
+			//Ret += String.Format(", LastCalledHleFunction={0}", LastCalledHleFunction);
 			return Ret + ")";
 		}
 
@@ -436,6 +475,7 @@ namespace CSPspEmu.Hle
 		public void DumpStack(TextWriter TextWriter)
 		{
 			var FullCallStack = CpuThreadState.GetCurrentCallStack();
+			TextWriter.WriteLine("   LastCalledHleFunction: {0}", LastCalledHleFunction);
 			TextWriter.WriteLine("   CallStack({0})", FullCallStack.Length);
 			foreach (var CallerPC in FullCallStack.Slice(0, 4))
 			{

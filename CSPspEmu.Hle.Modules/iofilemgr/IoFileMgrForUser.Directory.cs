@@ -20,7 +20,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <param name="DirectoryPath">The directory to open for reading.</param>
 		/// <returns>If greater or equal to 0 then a valid file descriptor, otherwise a Sony error code.</returns>
 		[HlePspFunction(NID = 0xB29DDF9C, FirmwareVersion = 150)]
-		public int sceIoDopen(string DirectoryPath)
+		public SceUID sceIoDopen(string DirectoryPath)
 		{
 			try
 			{
@@ -38,13 +38,13 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			{
 				Console.Error.WriteLine(InvalidOperationException);
 			}
-			return (int)SceKernelErrors.ERROR_ERRNO_NOT_A_DIRECTORY;
+			throw (new SceKernelException(SceKernelErrors.ERROR_ERRNO_NOT_A_DIRECTORY));
 		}
 
 		/// <summary>
 		/// Reads an entry from an opened file descriptor.
 		/// </summary>
-		/// <param name="FileHandle">Already opened file descriptor (using sceIoDopen)</param>
+		/// <param name="FileId">Already opened file descriptor (using sceIoDopen)</param>
 		/// <param name="IoDirent">Pointer to an io_dirent_t structure to hold the file information</param>
 		/// <returns>
 		///		Read status
@@ -53,11 +53,11 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		///		Less  than 0 - Error
 		/// </returns>
 		[HlePspFunction(NID = 0xE3EB004C, FirmwareVersion = 150)]
-		public int sceIoDread(int FileHandle, HleIoDirent* IoDirent)
+		public int sceIoDread(SceUID FileId, HleIoDirent* IoDirent)
 		{
 			try
 			{
-				var HleIoDrvFileArg = GetFileArgFromHandle(FileHandle);
+				var HleIoDrvFileArg = GetFileArgFromHandle(FileId);
 				return HleIoDrvFileArg.HleIoDriver.IoDread(HleIoDrvFileArg, IoDirent);
 			}
 			catch (Exception Exception)
@@ -70,12 +70,12 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <summary>
 		/// Close an opened directory file descriptor
 		/// </summary>
-		/// <param name="FileHandle">Already opened file descriptor (using sceIoDopen)</param>
+		/// <param name="FileId">Already opened file descriptor (using sceIoDopen)</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xEB092469, FirmwareVersion = 150)]
-		public int sceIoDclose(int FileHandle)
+		public int sceIoDclose(SceUID FileId)
 		{
-			var HleIoDrvFileArg = GetFileArgFromHandle(FileHandle);
+			var HleIoDrvFileArg = GetFileArgFromHandle(FileId);
 			return HleIoDrvFileArg.HleIoDriver.IoDclose(HleIoDrvFileArg);
 		}
 

@@ -16,18 +16,6 @@ namespace CSPspEmu.Hle
 {
 	unsafe public class HleModuleHost : HleModule
 	{
-		public struct FunctionEntry
-		{
-			public uint NID;
-			public String Name;
-			public String Description;
-
-			public override string ToString()
-			{
-				return this.ToStringDefault();
-			}
-		}
-
 		public HleState HleState;
 		public Dictionary<uint, FunctionEntry> EntriesByNID = new Dictionary<uint, FunctionEntry>();
 		public Dictionary<uint, Action<CpuThreadState>> DelegatesByNID = new Dictionary<uint, Action<CpuThreadState>>();

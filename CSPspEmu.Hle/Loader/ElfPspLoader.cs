@@ -374,7 +374,7 @@ namespace CSPspEmu.Hle.Loader
 					for (int n = 0; n < ModuleImport.FunctionCount; n++)
 					{
 						uint NID = NidStreamReader.ReadUInt32();
-						var DefaultEntry = new HleModuleHost.FunctionEntry()
+						var DefaultEntry = new FunctionEntry()
 						{
 							NID = 0x00000000,
 							Name = String.Format("__<unknown:0x{0:X}>", NID),

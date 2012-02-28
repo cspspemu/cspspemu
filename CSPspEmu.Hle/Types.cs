@@ -5,6 +5,11 @@ using System.Text;
 
 namespace CSPspEmu.Hle
 {
+	public enum SceUID : int { }
+	public enum SceSize : int { }
+	//public enum SceIoFlags : int { }
+	public struct PspIoDrv { }
+
 	public enum PspModule : uint
 	{
 		PSP_MODULE_NET_COMMON = 0x0100,

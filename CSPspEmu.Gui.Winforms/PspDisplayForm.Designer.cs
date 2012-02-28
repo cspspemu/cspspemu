@@ -202,7 +202,7 @@
 			this.englishToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.us;
 			this.englishToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this.englishToolStripMenuItem.Name = "englishToolStripMenuItem";
-			this.englishToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.englishToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
 			this.englishToolStripMenuItem.Text = "&English";
 			this.englishToolStripMenuItem.Click += new System.EventHandler(this.englishToolStripMenuItem_Click);
 			// 
@@ -211,7 +211,7 @@
 			this.spanishToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.es;
 			this.spanishToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this.spanishToolStripMenuItem.Name = "spanishToolStripMenuItem";
-			this.spanishToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.spanishToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
 			this.spanishToolStripMenuItem.Text = "&Spanish";
 			this.spanishToolStripMenuItem.Click += new System.EventHandler(this.spanishToolStripMenuItem_Click);
 			// 
@@ -330,7 +330,8 @@
 			// DebugShowThreadInfoMenu
 			// 
 			this.DebugShowThreadInfoMenu.Name = "DebugShowThreadInfoMenu";
-			this.DebugShowThreadInfoMenu.ShortcutKeyDisplayString = "F2";
+			this.DebugShowThreadInfoMenu.ShortcutKeyDisplayString = "";
+			this.DebugShowThreadInfoMenu.ShortcutKeys = System.Windows.Forms.Keys.F2;
 			this.DebugShowThreadInfoMenu.Size = new System.Drawing.Size(235, 22);
 			this.DebugShowThreadInfoMenu.Text = "Show &Thread Info";
 			this.DebugShowThreadInfoMenu.Click += new System.EventHandler(this.showThreadInfoToolStripMenuItem_Click);

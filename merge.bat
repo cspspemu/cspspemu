@@ -12,6 +12,7 @@ PUSHD %~dp0
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Audio.Impl.WaveOut.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Cpu.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.dll"
+	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Media.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Gpu.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Gpu.Impl.Opengl.dll"
 	REM SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Tests.dll"

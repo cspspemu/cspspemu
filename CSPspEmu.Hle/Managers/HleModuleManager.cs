@@ -12,30 +12,6 @@ namespace CSPspEmu.Hle.Managers
 {
 	public class HleModuleManager : PspEmulatorComponent
 	{
-		public struct DelegateInfo
-		{
-			public int CallIndex;
-			public uint PC;
-			public uint RA;
-			public string ModuleImportName;
-			public HleModuleHost.FunctionEntry FunctionEntry;
-			public Action<CpuThreadState> Action;
-			public HleThread Thread;
-
-			public override string ToString()
-			{
-				try
-				{
-					return String.Format("{0}: PC=0x{3:X}, RA=0x{4:X} => '{5}' : {1}::{2}", CallIndex, ModuleImportName, FunctionEntry.Name, PC, RA, Thread.Name);
-				}
-				catch (Exception Exception)
-				{
-					return String.Format("Invalid DelegateInfo : " + Exception);
-				}
-				//return this.ToStringDefault();
-			}
-		}
-
 		protected Dictionary<Type, HleModuleHost> HleModules = new Dictionary<Type, HleModuleHost>();
 		public uint DelegateLastId = 0;
 		public Dictionary<uint, DelegateInfo> DelegateTable = new Dictionary<uint, DelegateInfo>();
@@ -82,6 +58,7 @@ namespace CSPspEmu.Hle.Managers
 					if (DelegateInfo.ModuleImportName != "Kernel_Library")
 					{
 						LastCalledCallbacks.Enqueue(DelegateInfo);
+						HleThreadManager.Current.LastCalledHleFunction = DelegateInfo;
 					}
 					if (LastCalledCallbacks.Count > 10)
 					{
@@ -137,7 +114,7 @@ namespace CSPspEmu.Hle.Managers
 			return DelegatesByName[FunctionName];
 		}
 
-		public uint AllocDelegateSlot(Action<CpuThreadState> Action, string ModuleImportName, HleModuleHost.FunctionEntry FunctionEntry)
+		public uint AllocDelegateSlot(Action<CpuThreadState> Action, string ModuleImportName, FunctionEntry FunctionEntry)
 		{
 			uint DelegateId = DelegateLastId++;
 			if (Action == null)

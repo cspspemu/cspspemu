@@ -18,7 +18,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <param name="OutputLength">Length of outdata, if 0 receives no data</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x63632449, FirmwareVersion = 150)]
-		public int sceIoIoctl(int FileHandle, uint Command, byte* InputPointer, int InputLength, byte* OutputPointer, int OutputLength)
+		public int sceIoIoctl(SceUID FileHandle, uint Command, byte* InputPointer, int InputLength, byte* OutputPointer, int OutputLength)
 		{
 			var HleIoDrvFileArg = GetFileArgFromHandle(FileHandle);
 			return HleIoDrvFileArg.HleIoDriver.IoIoctl(HleIoDrvFileArg, Command, InputPointer, InputLength, OutputPointer, OutputLength);

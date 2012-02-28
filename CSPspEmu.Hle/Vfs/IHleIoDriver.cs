@@ -47,6 +47,12 @@ namespace CSPspEmu.Hle.Vfs
 		/// <summary>
 		/// 
 		/// </summary>
+		public object Callback;
+		public int CallbackArgument;
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public void Dispose()
 		{
 			if (FileArgument != null)

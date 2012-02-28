@@ -170,6 +170,8 @@ namespace CSPspEmu.Sandbox
 			{
 				Console.Error.WriteLine(Exception);
 			}
+
+			Environment.Exit(0);
 		}
 
 		public void LoadFile(String FileName)
@@ -270,15 +272,11 @@ namespace CSPspEmu.Sandbox
 			Console.WriteLine("-----------------------------------------------------------------");
 			Console.WriteLine("ShowDebugInformation:");
 			Console.WriteLine("-----------------------------------------------------------------");
-			foreach (var Pair in CpuProcessor.GlobalInstructionStats.OrderBy(Pair => Pair.Value))
-			{
-				Console.WriteLine("{0} -> {1}", Pair.Key, Pair.Value);
-			}
+			/*
+			foreach (var Pair in CpuProcessor.GlobalInstructionStats.OrderBy(Pair => Pair.Value)) Console.WriteLine("{0} -> {1}", Pair.Key, Pair.Value);
 			Console.WriteLine("-----------------------------------------------------------------");
-			foreach (var Pair in CpuProcessor.GlobalInstructionStats.OrderBy(Pair => Pair.Key))
-			{
-				Console.WriteLine("{0} -> {1}", Pair.Key, Pair.Value);
-			}
+			foreach (var Pair in CpuProcessor.GlobalInstructionStats.OrderBy(Pair => Pair.Key)) Console.WriteLine("{0} -> {1}", Pair.Key, Pair.Value);
+			*/
 
 			Console.WriteLine("-----------------------------------------------------------------");
 			Console.WriteLine("Last called syscalls: ");

@@ -223,7 +223,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="sasCore"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x2C8E6AB3, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int __sceSasGetPauseFlag(uint SasCorePointer)
 		{
 			//throw(new NotImplementedException());

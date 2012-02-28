@@ -11,11 +11,6 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 {
 	unsafe public partial class IoFileMgrForUser
 	{
-		public enum SceUID : int { }
-		public enum SceSize : int { }
-		//public enum SceIoFlags : int { }
-		public struct PspIoDrv { }
-
 		/// <summary>
 		/// Get the status of a file.
 		/// </summary>
@@ -113,7 +108,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <example>
 		///		pos = sceIoLseek(fd, -10, SEEK_END);
 		/// </example>
-		/// <param name="FileDescriptor">Opened file descriptor with which to seek</param>
+		/// <param name="FileId">Opened file descriptor with which to seek</param>
 		/// <param name="Offset">Relative offset from the start position given by whence</param>
 		/// <param name="Whence">
 		/// Set to SEEK_SET to seek from the start of the file, SEEK_CUR
@@ -121,9 +116,9 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// </param>
 		/// <returns>The position in the file after the seek. </returns>
 		[HlePspFunction(NID = 0x27EB27B8, FirmwareVersion = 150)]
-		public long sceIoLseek(int FileDescriptor, long Offset, SeekAnchor Whence)
+		public long sceIoLseek(SceUID FileId, long Offset, SeekAnchor Whence)
 		{
-			var HleIoDrvFileArg = GetFileArgFromHandle(FileDescriptor);
+			var HleIoDrvFileArg = GetFileArgFromHandle(FileId);
 			return HleIoDrvFileArg.HleIoDriver.IoLseek(HleIoDrvFileArg, Offset, Whence);
 		}
 
@@ -133,7 +128,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <example>
 		///		pos = sceIoLseek32(fd, -10, SEEK_END);
 		/// </example>
-		/// <param name="FileDescriptor">Opened file descriptor with which to seek</param>
+		/// <param name="FileId">Opened file descriptor with which to seek</param>
 		/// <param name="Offset">Relative offset from the start position given by whence</param>
 		/// <param name="Whence">
 		///		Set to SEEK_SET to seek from the start of the file, SEEK_CUR
@@ -141,9 +136,9 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// </param>
 		/// <returns>The position in the file after the seek.</returns>
 		[HlePspFunction(NID = 0x68963324, FirmwareVersion = 150)]
-		public int sceIoLseek32(int FileDescriptor, int Offset, SeekAnchor Whence)
+		public int sceIoLseek32(SceUID FileId, int Offset, SeekAnchor Whence)
 		{
-			var HleIoDrvFileArg = GetFileArgFromHandle(FileDescriptor);
+			var HleIoDrvFileArg = GetFileArgFromHandle(FileId);
 			return (int)HleIoDrvFileArg.HleIoDriver.IoLseek(HleIoDrvFileArg, (long)Offset, Whence);
 		}
 
@@ -158,9 +153,9 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <param name="OutputSize">Size of the read in bytes</param>
 		/// <returns>The number of bytes read</returns>
 		[HlePspFunction(NID = 0x6A638D83, FirmwareVersion = 150)]
-		public int sceIoRead(int FileDescriptor, byte* OutputPointer, int OutputSize)
+		public int sceIoRead(SceUID FileId, byte* OutputPointer, int OutputSize)
 		{
-			var HleIoDrvFileArg = GetFileArgFromHandle(FileDescriptor);
+			var HleIoDrvFileArg = GetFileArgFromHandle(FileId);
 			var Result = HleIoDrvFileArg.HleIoDriver.IoRead(HleIoDrvFileArg, OutputPointer, OutputSize);
 			//for (int n = 0; n < OutputSize; n++) Console.Write("{0:X},", OutputPointer[n]);
 			return Result;
@@ -172,14 +167,14 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <example>
 		///		sceIoClose(fd);
 		/// </example>
-		/// <param name="FileDescriptor">File descriptor to close</param>
+		/// <param name="FileId">File descriptor to close</param>
 		/// <returns>less than 0 on error</returns>
 		[HlePspFunction(NID = 0x810C4BC3, FirmwareVersion = 150)]
-		public int sceIoClose(int FileDescriptor)
+		public int sceIoClose(SceUID FileId)
 		{
 			try
 			{
-				var HleIoDrvFileArg = GetFileArgFromHandle(FileDescriptor);
+				var HleIoDrvFileArg = GetFileArgFromHandle(FileId);
 				return HleIoDrvFileArg.HleIoDriver.IoClose(HleIoDrvFileArg);
 			}
 			catch (Exception Exception)
@@ -208,12 +203,12 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <param name="Mode">File access mode.</param>
 		/// <returns>A non-negative integer is a valid fd, anything else an error</returns>
 		[HlePspFunction(NID = 0x109F50BC, FirmwareVersion = 150)]
-		public int sceIoOpen(string FileName, HleIoFlags Flags, SceMode Mode)
+		public SceUID sceIoOpen(string FileName, HleIoFlags Flags, SceMode Mode)
 		{
 			try
 			{
 				var Info = HleState.HleIoManager.ParsePath(FileName);
-				Console.WriteLine("Opened '{0}' with driver '{1}' and local path '{2}'", FileName, Info.HleIoDriver, Info.LocalPath);
+				Console.WriteLine("Opened '{0}' with driver '{1}' and local path '{2}' : '{2}'", FileName, Info.HleIoDriver, Info.LocalPath);
 				Info.HleIoDrvFileArg.HleIoDriver.IoOpen(Info.HleIoDrvFileArg, Info.LocalPath, Flags, Mode);
 				return HleState.HleIoManager.HleIoDrvFileArgPool.Create(Info.HleIoDrvFileArg);
 			}
@@ -232,7 +227,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 				Console.Error.WriteLine(IOException);
 			}
 			//Console.Error.WriteLine("Didn't find file '{0}'", FileName);
-			return unchecked((int)SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND);
+			throw (new SceKernelException(SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND));
 		}
 
 		/// <summary>
@@ -241,21 +236,21 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <example>
 		///		bytes_written = sceIoWrite(fd, data, 100);
 		/// </example>
-		/// <param name="FileHandle">Opened file descriptor to write to</param>
+		/// <param name="FileId">Opened file descriptor to write to</param>
 		/// <param name="InputPointer">Pointer to the data to write</param>
 		/// <param name="InputSize">Size of data to write</param>
 		/// <returns>The number of bytes written</returns>
 		[HlePspFunction(NID = 0x42EC03AC, FirmwareVersion = 150)]
-		public int sceIoWrite(int FileHandle, byte* InputPointer, int InputSize)
+		public int sceIoWrite(SceUID FileId, byte* InputPointer, int InputSize)
 		{
-			switch ((StdioForUser.StdHandle)FileHandle)
+			switch ((StdioForUser.StdHandle)FileId)
 			{
 				case StdioForUser.StdHandle.Out:
 				case StdioForUser.StdHandle.Error:
 					ConsoleUtils.SaveRestoreConsoleState(() =>
 					{
 						//Console.BackgroundColor = ConsoleColor.DarkGray;
-						if ((StdioForUser.StdHandle)FileHandle == StdioForUser.StdHandle.Out)
+						if ((StdioForUser.StdHandle)FileId == StdioForUser.StdHandle.Out)
 						{
 							Console.ForegroundColor = ConsoleColor.Blue;
 						}
@@ -271,7 +266,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 
 			try
 			{
-				var HleIoDrvFileArg = GetFileArgFromHandle(FileHandle);
+				var HleIoDrvFileArg = GetFileArgFromHandle(FileId);
 				return HleIoDrvFileArg.HleIoDriver.IoWrite(HleIoDrvFileArg, InputPointer, InputSize);
 			}
 			catch (Exception Exception)

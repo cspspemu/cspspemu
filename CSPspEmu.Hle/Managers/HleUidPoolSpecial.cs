@@ -48,5 +48,10 @@ namespace CSPspEmu.Hle.Managers
 			}
 			Items.Remove(Id);
 		}
+
+		public void RemoveAll()
+		{
+			foreach (var Item in Items.ToArray()) Remove(Item.Key);
+		}
 	}
 }

@@ -17,18 +17,18 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <param name="Mode">File access mode.</param>
 		/// <returns>A non-negative integer is a valid fd, anything else an error</returns>
 		[HlePspFunction(NID = 0x89AA9906, FirmwareVersion = 150)]
-		public int sceIoOpenAsync(string FileName, HleIoFlags Flags, SceMode Mode)
+		public SceUID sceIoOpenAsync(string FileName, HleIoFlags Flags, SceMode Mode)
 		{
-			var FileHandle = sceIoOpen(FileName, Flags, Mode);
-			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileHandle);
-			File.AsyncLastResult = FileHandle;
-			return FileHandle;
+			var FileId = (SceUID)sceIoOpen(FileName, Flags, Mode);
+			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileId);
+			File.AsyncLastResult = (long)FileId;
+			return FileId;
 		}
 
 		/// <summary>
 		/// Reposition read/write file descriptor offset (asynchronous)
 		/// </summary>
-		/// <param name="FileHandle">Opened file descriptor with which to seek</param>
+		/// <param name="FileId">Opened file descriptor with which to seek</param>
 		/// <param name="Offset">Relative offset from the start position given by whence (32 bits)</param>
 		/// <param name="Whence">
 		///		Set to SEEK_SET to seek from the start of the file, SEEK_CUR
@@ -39,15 +39,15 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		///		Actual value should be passed returned by the ::sceIoWaitAsync call.
 		/// </returns>
 		[HlePspFunction(NID = 0x1B385D8F, FirmwareVersion = 150)]
-		public int sceIoLseek32Async(int FileHandle, uint Offset, SeekAnchor Whence)
+		public int sceIoLseek32Async(SceUID FileId, uint Offset, SeekAnchor Whence)
 		{
-			return sceIoLseekAsync(FileHandle, (long)Offset, Whence);
+			return sceIoLseekAsync(FileId, (long)Offset, Whence);
 		}
 
 		/// <summary>
 		/// Reposition read/write file descriptor offset (asynchronous)
 		/// </summary>
-		/// <param name="FileHandle">Opened file descriptor with which to seek</param>
+		/// <param name="FileId">Opened file descriptor with which to seek</param>
 		/// <param name="Offset">Relative offset from the start position given by whence</param>
 		/// <param name="Whence">
 		///		Set to SEEK_SET to seek from the start of the file, SEEK_CUR
@@ -58,24 +58,24 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		///		Actual value should be passed returned by the ::sceIoWaitAsync call.
 		/// </returns>
 		[HlePspFunction(NID = 0x71B19E77, FirmwareVersion = 150)]
-		public int sceIoLseekAsync(int FileHandle, long Offset, SeekAnchor Whence)
+		public int sceIoLseekAsync(SceUID FileId, long Offset, SeekAnchor Whence)
 		{
-			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileHandle);
-			File.AsyncLastResult = sceIoLseek(FileHandle, Offset, Whence);
+			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileId);
+			File.AsyncLastResult = sceIoLseek(FileId, Offset, Whence);
 			return 0;
 		}
 
 		/// <summary>
 		/// Delete a descriptor (asynchronous)
 		/// </summary>
-		/// <param name="FileHandle">File descriptor to close</param>
+		/// <param name="FileId">File descriptor to close</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xFF5940B6, FirmwareVersion = 150)]
-		public int sceIoCloseAsync(int FileHandle)
+		public int sceIoCloseAsync(SceUID FileId)
 		{
-			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileHandle);
+			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileId);
 			File.AsyncLastResult = 0;
-			sceIoClose(FileHandle);
+			sceIoClose(FileId);
 
 			//HleState.HleIoManager.HleIoDrvFileArgPool.Remove(FileHandle);
 			
@@ -88,17 +88,17 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <example>
 		/// bytes_read = sceIoRead(fd, data, 100);
 		/// </example>
-		/// <param name="FileHandle">Opened file descriptor to read from</param>
+		/// <param name="FileId">Opened file descriptor to read from</param>
 		/// <param name="OutputPointer">Pointer to the buffer where the read data will be placed</param>
 		/// <param name="OutputSize">Size of the read in bytes</param>
 		/// <returns>
 		///		Less than 0 on error.
 		///	</returns>
 		[HlePspFunction(NID = 0xA0B5A7C2, FirmwareVersion = 150)]
-		public int sceIoReadAsync(int FileHandle, byte* OutputPointer, int OutputSize)
+		public int sceIoReadAsync(SceUID FileId, byte* OutputPointer, int OutputSize)
 		{
-			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileHandle);
-			File.AsyncLastResult = sceIoRead(FileHandle, OutputPointer, OutputSize);
+			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileId);
+			File.AsyncLastResult = sceIoRead(FileId, OutputPointer, OutputSize);
 			return 0;
 		}
 
@@ -121,11 +121,11 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			*/
 		}
 
-		public int _sceIoWaitAsyncCB(CpuThreadState CpuThreadState, int FileHandle, long* Result, bool HandleCallbacks)
+		public int _sceIoWaitAsyncCB(SceUID FileId, out long Result, bool HandleCallbacks, CpuThreadState CpuThreadState)
 		{
-			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileHandle);
-			*Result = File.AsyncLastResult;
-			CpuThreadState.LO = FileHandle;
+			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileId);
+			Result = File.AsyncLastResult;
+			CpuThreadState.LO = (int)FileId;
 			return 0;
 			/*
 			logInfo("_sceIoWaitAsyncCB(fd=%d, callbacks=%d)", FileHandle, HandleCallbacks);
@@ -142,45 +142,45 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <summary>
 		/// Wait for asyncronous completion.
 		/// </summary>
-		/// <param name="FileHandle">The file descriptor which is current performing an asynchronous action.</param>
+		/// <param name="FileId">The file descriptor which is current performing an asynchronous action.</param>
 		/// <param name="Result">The result of the async action.</param>
 		/// <returns>The given fd or a negative value on error.</returns>
 		[HlePspFunction(NID = 0xE23EEC33, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceIoWaitAsync(CpuThreadState CpuThreadState, int FileHandle, long* Result)
+		public int sceIoWaitAsync(SceUID FileId, out long Result, CpuThreadState CpuThreadState)
 		{
 			//throw(new NotImplementedException());
-			return _sceIoWaitAsyncCB(CpuThreadState, FileHandle, Result, HandleCallbacks: false);
+			return _sceIoWaitAsyncCB(FileId, out Result, HandleCallbacks: false, CpuThreadState : CpuThreadState);
 		}
 
 		/// <summary>
 		/// Wait for asyncronous completion.
 		/// </summary>
-		/// <param name="FileHandle">The file descriptor which is current performing an asynchronous action.</param>
+		/// <param name="FileId">The file descriptor which is current performing an asynchronous action.</param>
 		/// <param name="Result">The result of the async action.</param>
 		/// <returns>The given fd or a negative value on error.</returns>
 		[HlePspFunction(NID = 0x35DBD746, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
-		public int sceIoWaitAsyncCB(CpuThreadState CpuThreadState, int FileHandle, long* Result)
+		public int sceIoWaitAsyncCB(SceUID FileId, out long Result, CpuThreadState CpuThreadState)
 		{
 			//throw (new NotImplementedException());
-			return _sceIoWaitAsyncCB(CpuThreadState, FileHandle, Result, HandleCallbacks: true);
+			return _sceIoWaitAsyncCB(FileId, out Result, HandleCallbacks: true, CpuThreadState : CpuThreadState);
 		}
 
 		/// <summary>
 		/// Poll for asyncronous completion.
 		/// </summary>
-		/// <param name="FileHandle">The file descriptor which is current performing an asynchronous action.</param>
+		/// <param name="FileId">The file descriptor which is current performing an asynchronous action.</param>
 		/// <param name="Result">The result of the async action.</param>
 		/// <returns>
 		///		Return 1 on busy.
 		///		Return 0 on ready.
 		/// </returns>
 		[HlePspFunction(NID = 0x3251EA56, FirmwareVersion = 150)]
-		public int sceIoPollAsync(int FileHandle, long* Result)
+		public int sceIoPollAsync(SceUID FileId, out long Result)
 		{
-			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileHandle);
-			*Result = File.AsyncLastResult;
+			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileId);
+			Result = File.AsyncLastResult;
 
 			return 0;
 		}
@@ -188,7 +188,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <summary>
 		/// Perform an ioctl on a device. (asynchronous)
 		/// </summary>
-		/// <param name="FileHandle">Opened file descriptor to ioctl to</param>
+		/// <param name="FileId">Opened file descriptor to ioctl to</param>
 		/// <param name="Command">The command to send to the device</param>
 		/// <param name="InputPointer">A data block to send to the device, if NULL sends no data</param>
 		/// <param name="InputLength">Length of indata, if 0 sends no data</param>
@@ -196,10 +196,10 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <param name="OutputLength">Length of outdata, if 0 receives no data</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xE95A012B, FirmwareVersion = 150)]
-		public int sceIoIoctlAsync(int FileHandle, uint Command, byte* InputPointer, int InputLength, byte* OutputPointer, int OutputLength)
+		public int sceIoIoctlAsync(SceUID FileId, uint Command, byte* InputPointer, int InputLength, byte* OutputPointer, int OutputLength)
 		{
-			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileHandle);
-			File.AsyncLastResult = sceIoIoctl(FileHandle, Command, InputPointer, InputLength, OutputPointer, OutputLength);
+			var File = GetFileArgFromHandle(FileId); 
+			File.AsyncLastResult = sceIoIoctl(FileId, Command, InputPointer, InputLength, OutputPointer, OutputLength);
 			return 0;
 		}
 
@@ -207,12 +207,12 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <summary>
 		/// Write output (asynchronous)
 		/// </summary>
-		/// <param name="fd">Opened file descriptor to write to</param>
+		/// <param name="FileId">Opened file descriptor to write to</param>
 		/// <param name="data">Pointer to the data to write</param>
 		/// <param name="size">Size of data to write</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x0FACAB19, FirmwareVersion = 150)]
-		public int sceIoWriteAsync(SceUID fd, void* data, SceSize size)
+		public int sceIoWriteAsync(SceUID FileId, void* data, SceSize size)
 		{
 			throw(new NotImplementedException());
 			/*
@@ -224,11 +224,11 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <summary>
 		/// Cancel an asynchronous operation on a file descriptor.
 		/// </summary>
-		/// <param name="id">The file descriptor to perform cancel on.</param>
+		/// <param name="FileId">The file descriptor to perform cancel on.</param>
 		/// <returns>less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xE8BC6571, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceIoCancel(int id)
+		public int sceIoCancel(SceUID FileId)
 		{
 			throw (new NotImplementedException());
 		}
@@ -236,14 +236,20 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <summary>
 		/// Sets a callback for the asynchronous action.
 		/// </summary>
-		/// <param name="id">The filedescriptor currently performing an asynchronous action.</param>
-		/// <param name="cbid">The UID of the callback created with ::sceKernelCreateCallback</param>
-		/// <param name="notifyArg">Pointer to an argument to pass to the callback.</param>
+		/// <param name="FileId">The filedescriptor currently performing an asynchronous action.</param>
+		/// <param name="CallbackId">The UID of the callback created with ::sceKernelCreateCallback</param>
+		/// <param name="NotifyArgument">Pointer to an argument to pass to the callback.</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xA12A0514, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceIoSetAsyncCallback(int id, int cbid, int notifyArg)
+		public int sceIoSetAsyncCallback(SceUID FileId, int CallbackId, int NotifyArgument)
 		{
+			throw(new NotImplementedException());
+			var File = GetFileArgFromHandle(FileId); 
+			var Callback = HleState.CallbackManager.Callbacks.Get(CallbackId);
+			File.Callback = Callback;
+			File.CallbackArgument = NotifyArgument;
+			//HleState.CallbackManager.ScheduleCallback(Callback);
 			return 0;
 		}
 	}

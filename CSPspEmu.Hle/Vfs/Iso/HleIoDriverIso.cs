@@ -49,6 +49,18 @@ namespace CSPspEmu.Hle.Vfs.Iso
 		{
 			// disc0:/sce_lbn0x5fa0_size0x1428
 			//Console.WriteLine(":::::::::" + FileName);
+			if (FileName == "")
+			{
+				HleIoDrvFileArg.FileArgument = new IsoFileArgument()
+				{
+					IsoNode = null,
+					StartSector = 0,
+					Size = Iso.Stream.Length,
+					Stream = Iso.Stream,
+				};
+				return 0;
+			}
+
 			if (FileName.StartsWith("/sce_"))
 			{
 				int Sector = 0, Size = 0;
@@ -140,7 +152,7 @@ namespace CSPspEmu.Hle.Vfs.Iso
 
 			switch ((UmdCommandEnum)Command)
 			{
-                case UmdCommandEnum.GetStartSector:
+				case UmdCommandEnum.GetStartSector:
 					if (OutputLength < 4 || OutputPointer == null) throw(new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
 					*((uint *)OutputPointer) = (uint)IsoFileArgument.StartSector;
 					return 0;

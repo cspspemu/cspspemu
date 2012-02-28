@@ -7,12 +7,26 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Threading;
 
 namespace CSPspEmu.Media
 {
 	public class OmaWavConverter
 	{
 		static public void convertOmaToWav(string Source, string Destination)
+		{
+			var Event = new AutoResetEvent(false);
+			var Thread = new Thread(() =>
+			{
+				_convertOmaToWav(Source, Destination);
+				Event.Set();
+			});
+			Thread.IsBackground = true;
+			Thread.Start();
+			Event.WaitOne(TimeSpan.FromSeconds(12));
+			if (Thread.IsAlive) Thread.Abort();
+		}
+		static private void _convertOmaToWav(string Source, string Destination)
 		{
 			IGraphBuilder graphBuilder;
 			IMediaControl mediaControl;
@@ -62,46 +76,53 @@ namespace CSPspEmu.Media
 				return;
 			}
 
-			Debug.WriteLine("[2]");
+			DebugLine("[2]");
 
 			fileWriter = (IBaseFilter)new File_writer();
 
-			Debug.WriteLine("[3]");
+			DebugLine("[3]");
 
 			var fileSourceFilter = (IFileSourceFilter)sourceFilter;
-			fileSourceFilter.Load(Source, null);
+			DebugLine(String.Format("fileSourceFilter.Load: {0}", fileSourceFilter.Load(Source, null)));
 
-			Debug.WriteLine("[4]");
+			DebugLine("[4]");
 
 			var fileSinkFilter = (IFileSinkFilter)fileWriter;
-			fileSinkFilter.SetFileName(Destination, null);
+			DebugLine(String.Format("fileSinkFilter.SetFileName: {0}", fileSinkFilter.SetFileName(Destination, null)));
 
-			Debug.WriteLine("[5]");
+			DebugLine("[5]");
 
-			graphBuilder.AddFilter(sourceFilter, "CLSID_OpenMGOmgSourceFilter");
-			graphBuilder.AddFilter(omgTransform, "CLSID_OMG_TRANSFORM");
-			graphBuilder.AddFilter(waveDest, "CLSID_WavDest");
-			graphBuilder.AddFilter(fileWriter, "CLSID_File_writer");
+			DebugLine(String.Format("graphBuilder.AddFilter(sourceFilter): {0}", graphBuilder.AddFilter(sourceFilter, "CLSID_OpenMGOmgSourceFilter")));
+			DebugLine(String.Format("graphBuilder.AddFilter(omgTransform): {0}", graphBuilder.AddFilter(omgTransform, "CLSID_OMG_TRANSFORM")));
+			DebugLine(String.Format("graphBuilder.AddFilter(waveDest): {0}", graphBuilder.AddFilter(waveDest, "CLSID_WavDest")));
+			DebugLine(String.Format("graphBuilder.AddFilter(fileWriter): {0}", graphBuilder.AddFilter(fileWriter, "CLSID_File_writer")));
 			IPin SourceOutPin;
 			IPin FileWriterInPin;
 
-			Debug.WriteLine("[6]");
+			DebugLine("[6]");
 
-			sourceFilter.FindPin("Output", out SourceOutPin);
-			fileWriter.FindPin("in", out FileWriterInPin);
+			DebugLine(String.Format("sourceFilter.FindPin(Output): {0}", sourceFilter.FindPin("Output", out SourceOutPin)));
+			DebugLine(String.Format("fileWriter.FindPin(in): {0}", fileWriter.FindPin("in", out FileWriterInPin)));
 
-			Debug.WriteLine("[7]");
+			DebugLine("[7]");
 
-			graphBuilder.Connect(SourceOutPin, FileWriterInPin);
+			DebugLine(String.Format("graphBuilder.Connect(SourceOutPin, FileWriterInPin): {0}", graphBuilder.Connect(SourceOutPin, FileWriterInPin)));
 
-			graphBuilder.Render(SourceOutPin);
+			DebugLine("[7a]");
 
-			mediaControl.Run();
+			// Hang in some cases
+			DebugLine(String.Format("graphBuilder.Render(SourceOutPin): {0}", graphBuilder.Render(SourceOutPin)));
 
-			Debug.WriteLine("[8]");
+			DebugLine("[7b]");
+
+			DebugLine(String.Format("mediaControl.Run(SourceOutPin): {0}", mediaControl.Run()));
+
+			DebugLine("[8]");
 
 			int evCode;
+			DebugLine("WaitForCompletion...");
 			mediaEvent.WaitForCompletion(int.MaxValue, out evCode);
+			DebugLine("WaitForCompletion... DONE");
 
 			Action<object> Release = (o) =>
 			{
@@ -125,7 +146,12 @@ namespace CSPspEmu.Media
 			Release(fileSinkFilter);
 			Release(graphBuilder);
 
-			Debug.WriteLine("[9]");
+			DebugLine("[9]");
+		}
+
+		static private void DebugLine(string Text)
+		{
+			Debug.WriteLine(Text);
 		}
 	}
 }

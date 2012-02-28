@@ -5,6 +5,10 @@ using System.Text;
 
 namespace CSPspEmu.Hle.Managers
 {
+	public class HleUidPool<TType> : HleUidPoolSpecial<TType, int> where TType : IDisposable
+	{
+	}
+	/*
 	public class HleUidPool<TType> where TType : IDisposable
 	{
 		protected int LastId = 1;
@@ -48,4 +52,5 @@ namespace CSPspEmu.Hle.Managers
 			foreach (var Item in Items.ToArray()) Remove(Item.Key);
 		}
 	}
+	*/
 }

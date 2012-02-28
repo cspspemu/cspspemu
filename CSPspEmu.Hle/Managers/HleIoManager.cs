@@ -169,7 +169,7 @@ namespace CSPspEmu.Hle.Managers
 		protected Dictionary<string, IHleIoDriver> Drivers = new Dictionary<string, IHleIoDriver>();
 		public HleIoWrapper HleIoWrapper;
 
-		public HleUidPool<HleIoDrvFileArg> HleIoDrvFileArgPool = new HleUidPool<HleIoDrvFileArg>();
+		public HleUidPoolSpecial<HleIoDrvFileArg, SceUID> HleIoDrvFileArgPool = new HleUidPoolSpecial<HleIoDrvFileArg, SceUID>();
 
 		public override void InitializeComponent()
 		{
@@ -209,6 +209,11 @@ namespace CSPspEmu.Hle.Managers
 				},
 				LocalPath = Match.Groups[3].Value,
 			};
+		}
+
+		public IHleIoDriver GetDriver(string Name)
+		{
+			return Drivers[Name];
 		}
 
 		/// <summary>
