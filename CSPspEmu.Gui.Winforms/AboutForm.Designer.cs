@@ -62,9 +62,9 @@
 			this.cspspemuLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.cspspemuLabel.Location = new System.Drawing.Point(249, 7);
 			this.cspspemuLabel.Name = "cspspemuLabel";
-			this.cspspemuLabel.Size = new System.Drawing.Size(182, 37);
+			this.cspspemuLabel.Size = new System.Drawing.Size(270, 37);
 			this.cspspemuLabel.TabIndex = 2;
-			this.cspspemuLabel.Text = "CSPspEmu";
+			this.cspspemuLabel.Text = "Soywiz\'s PspEmu";
 			this.cspspemuLabel.Click += new System.EventHandler(this.label1_Click);
 			// 
 			// pictureBox2
@@ -199,7 +199,7 @@
 			this.Name = "AboutForm";
 			this.ShowIcon = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-			this.Text = "About CSPspEmu";
+			this.Text = "About Soywiz\'s PspEmu";
 			this.Load += new System.EventHandler(this.AboutForm_Load);
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

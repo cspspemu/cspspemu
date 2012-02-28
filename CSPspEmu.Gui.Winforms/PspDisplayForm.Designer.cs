@@ -206,7 +206,7 @@
 			this.UtilsLanguageEnglishMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.us;
 			this.UtilsLanguageEnglishMenu.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this.UtilsLanguageEnglishMenu.Name = "UtilsLanguageEnglishMenu";
-			this.UtilsLanguageEnglishMenu.Size = new System.Drawing.Size(152, 22);
+			this.UtilsLanguageEnglishMenu.Size = new System.Drawing.Size(115, 22);
 			this.UtilsLanguageEnglishMenu.Text = "&English";
 			this.UtilsLanguageEnglishMenu.Click += new System.EventHandler(this.englishToolStripMenuItem_Click);
 			// 
@@ -215,7 +215,7 @@
 			this.UtilsLanguageSpanishMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.es;
 			this.UtilsLanguageSpanishMenu.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 			this.UtilsLanguageSpanishMenu.Name = "UtilsLanguageSpanishMenu";
-			this.UtilsLanguageSpanishMenu.Size = new System.Drawing.Size(152, 22);
+			this.UtilsLanguageSpanishMenu.Size = new System.Drawing.Size(115, 22);
 			this.UtilsLanguageSpanishMenu.Text = "&Spanish";
 			this.UtilsLanguageSpanishMenu.Click += new System.EventHandler(this.spanishToolStripMenuItem_Click);
 			// 
@@ -459,7 +459,7 @@
 			this.MainMenuStrip = this.menuStrip1;
 			this.MaximizeBox = false;
 			this.Name = "PspDisplayForm";
-			this.Text = "CSPspEmu";
+			this.Text = "Soywiz\'s Psp Emulator";
 			this.Load += new System.EventHandler(this.PspDisplayForm_Load_1);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PspDisplayForm_KeyDown);
 			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PspDisplayForm_KeyUp);
