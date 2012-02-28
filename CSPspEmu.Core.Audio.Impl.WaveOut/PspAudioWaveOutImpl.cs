@@ -59,6 +59,7 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut
 				{
 					var Data = new short[BufferSize / 2];
 					ReadStream(Data);
+					//for (int n = 0; n < Data.Length; n++) Console.Write(Data[n]);
 					Queue.Enqueue(Data);
 				}
 			}

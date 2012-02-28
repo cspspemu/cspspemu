@@ -57,12 +57,14 @@ namespace CSPspEmu.Hle.Modules.audio
 		/// </summary>
 		public const int PSP_AUDIO_SAMPLE_MAX = 65472;
 
+		/*
 		/// <summary>
 		/// Make the given sample count a multiple of 64.
 		/// </summary>
 		/// <param name="?"></param>
 		/// <returns></returns>
 		//public Type PSP_AUDIO_SAMPLE_ALIGN(Type)(Type s) { return (s + 63) & ~63; }
+		*/
 
 		protected int Output2ChannelId = -1;
 
@@ -263,6 +265,7 @@ namespace CSPspEmu.Hle.Modules.audio
 		{
 			var Channel = HleState.PspAudio.GetChannel(ChannelId);
 			Channel.SampleCount = SampleCount;
+			Channel.Updated();
 			return 0;
 		}
 
@@ -277,6 +280,7 @@ namespace CSPspEmu.Hle.Modules.audio
 		{
 			var Channel = HleState.PspAudio.GetChannel(ChannelId);
 			Channel.Format = Format;
+			Channel.Updated();
 			return 0;
 		}
 

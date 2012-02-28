@@ -153,8 +153,8 @@ namespace CSPspEmu.Hle
 						SafeILGenerator.Call(typeof(HleModuleHost).GetMethod("StringFromAddress"));
 						GprIndex++;
 					}
-					// A pointer
-					else if (ParameterType.IsPointer)
+					// A pointer or ref/out
+					else if (ParameterType.IsPointer || ParameterType.IsByRef)
 					{
 						ParamInfoList.Add(new ParamInfo()
 						{

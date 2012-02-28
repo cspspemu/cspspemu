@@ -5,6 +5,8 @@ using System.Text;
 using AForge.Video.DirectShow.Internals;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace CSPspEmu.Media
 {
@@ -38,7 +40,11 @@ namespace CSPspEmu.Media
 			}
 			catch (COMException)
 			{
-				throw (new Exception("Must download and install 'OpenMG Setup Update Program'"));
+				if (MessageBox.Show("Must download and install 'OpenMG Setup Update Program' in order to play Atrac3+ files\n\nGo to download page?", "Error", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
+				{
+					Process.Start("http://www.sony-mea.com/support/download/375063");
+				}
+				return;
 			}
 
 			Console.WriteLine("[1]");
@@ -52,24 +58,25 @@ namespace CSPspEmu.Media
 			}
 			catch (COMException)
 			{
-				throw (new Exception("Missing WavDest"));
+				MessageBox.Show("Missing WavDest", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return;
 			}
 
-			Console.WriteLine("[2]");
+			Debug.WriteLine("[2]");
 
 			fileWriter = (IBaseFilter)new File_writer();
 
-			Console.WriteLine("[3]");
+			Debug.WriteLine("[3]");
 
 			var fileSourceFilter = (IFileSourceFilter)sourceFilter;
 			fileSourceFilter.Load(Source, null);
 
-			Console.WriteLine("[4]");
+			Debug.WriteLine("[4]");
 
 			var fileSinkFilter = (IFileSinkFilter)fileWriter;
 			fileSinkFilter.SetFileName(Destination, null);
 
-			Console.WriteLine("[5]");
+			Debug.WriteLine("[5]");
 
 			graphBuilder.AddFilter(sourceFilter, "CLSID_OpenMGOmgSourceFilter");
 			graphBuilder.AddFilter(omgTransform, "CLSID_OMG_TRANSFORM");
@@ -78,12 +85,12 @@ namespace CSPspEmu.Media
 			IPin SourceOutPin;
 			IPin FileWriterInPin;
 
-			Console.WriteLine("[6]");
+			Debug.WriteLine("[6]");
 
 			sourceFilter.FindPin("Output", out SourceOutPin);
 			fileWriter.FindPin("in", out FileWriterInPin);
 
-			Console.WriteLine("[7]");
+			Debug.WriteLine("[7]");
 
 			graphBuilder.Connect(SourceOutPin, FileWriterInPin);
 
@@ -91,7 +98,7 @@ namespace CSPspEmu.Media
 
 			mediaControl.Run();
 
-			Console.WriteLine("[8]");
+			Debug.WriteLine("[8]");
 
 			int evCode;
 			mediaEvent.WaitForCompletion(int.MaxValue, out evCode);
@@ -118,7 +125,7 @@ namespace CSPspEmu.Media
 			Release(fileSinkFilter);
 			Release(graphBuilder);
 
-			Console.WriteLine("[9]");
+			Debug.WriteLine("[9]");
 		}
 	}
 }
