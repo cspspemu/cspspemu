@@ -79,6 +79,15 @@ namespace CSPspEmu.Core.Threading.Synchronization
 			}
 		}
 
+		public void WaitForAnyState(params TEnum[] ExpectedValues)
+		{
+			while (true)
+			{
+				foreach (var ExpectedValue in ExpectedValues) if (Value.Equals(ExpectedValue)) return;
+				ValueUpdatedEvent.WaitOne();
+			}
+		}
+
 		public void WaitForState(TEnum ExpectedValue)
 		{
 			while (!ExpectedValue.Equals(Value))

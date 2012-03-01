@@ -36,17 +36,16 @@
 			this.FileExitMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.UtilsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.UtilsDisplayMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.xToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-			this.xToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-			this.xToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-			this.xToolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsDisplay1xMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsDisplay2xMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsDisplay3xMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsDisplay4xMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsLanguageMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.UtilsLanguageEnglishMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.UtilsLanguageSpanishMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsTakeScreenshotMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.UtilsDumpMainMemoryMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsFrameLimitingMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
@@ -60,6 +59,10 @@
 			this.DebugTraceSyscallsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.DebugTraceUnimplementedSyscallsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.DebugTraceUnimplementedGpuMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripSeparator();
+			this.UtilsDumpMainMemoryMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.DebugDumpGpuFrameMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem12 = new System.Windows.Forms.ToolStripSeparator();
 			this.DebugShowThreadInfoMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.HelpMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.HelpWebsiteMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -131,7 +134,6 @@
             this.UtilsLanguageMenu,
             this.toolStripMenuItem9,
             this.UtilsTakeScreenshotMenu,
-            this.UtilsDumpMainMemoryMenu,
             this.toolStripMenuItem1,
             this.UtilsFrameLimitingMenu,
             this.toolStripMenuItem7,
@@ -145,46 +147,46 @@
 			// UtilsDisplayMenu
 			// 
 			this.UtilsDisplayMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.xToolStripMenuItem1,
-            this.xToolStripMenuItem2,
-            this.xToolStripMenuItem3,
-            this.xToolStripMenuItem4});
+            this.UtilsDisplay1xMenu,
+            this.UtilsDisplay2xMenu,
+            this.UtilsDisplay3xMenu,
+            this.UtilsDisplay4xMenu});
 			this.UtilsDisplayMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.magnifier;
 			this.UtilsDisplayMenu.Name = "UtilsDisplayMenu";
 			this.UtilsDisplayMenu.Size = new System.Drawing.Size(306, 22);
 			this.UtilsDisplayMenu.Text = "&Display";
 			// 
-			// xToolStripMenuItem1
+			// UtilsDisplay1xMenu
 			// 
-			this.xToolStripMenuItem1.Name = "xToolStripMenuItem1";
-			this.xToolStripMenuItem1.ShortcutKeyDisplayString = "1";
-			this.xToolStripMenuItem1.Size = new System.Drawing.Size(98, 22);
-			this.xToolStripMenuItem1.Text = "&1x";
-			this.xToolStripMenuItem1.Click += new System.EventHandler(this.xToolStripMenuItem1_Click);
+			this.UtilsDisplay1xMenu.Name = "UtilsDisplay1xMenu";
+			this.UtilsDisplay1xMenu.ShortcutKeyDisplayString = "1";
+			this.UtilsDisplay1xMenu.Size = new System.Drawing.Size(152, 22);
+			this.UtilsDisplay1xMenu.Text = "&1x";
+			this.UtilsDisplay1xMenu.Click += new System.EventHandler(this.xToolStripMenuItem1_Click);
 			// 
-			// xToolStripMenuItem2
+			// UtilsDisplay2xMenu
 			// 
-			this.xToolStripMenuItem2.Name = "xToolStripMenuItem2";
-			this.xToolStripMenuItem2.ShortcutKeyDisplayString = "2";
-			this.xToolStripMenuItem2.Size = new System.Drawing.Size(98, 22);
-			this.xToolStripMenuItem2.Text = "&2x";
-			this.xToolStripMenuItem2.Click += new System.EventHandler(this.xToolStripMenuItem2_Click);
+			this.UtilsDisplay2xMenu.Name = "UtilsDisplay2xMenu";
+			this.UtilsDisplay2xMenu.ShortcutKeyDisplayString = "2";
+			this.UtilsDisplay2xMenu.Size = new System.Drawing.Size(152, 22);
+			this.UtilsDisplay2xMenu.Text = "&2x";
+			this.UtilsDisplay2xMenu.Click += new System.EventHandler(this.xToolStripMenuItem2_Click);
 			// 
-			// xToolStripMenuItem3
+			// UtilsDisplay3xMenu
 			// 
-			this.xToolStripMenuItem3.Name = "xToolStripMenuItem3";
-			this.xToolStripMenuItem3.ShortcutKeyDisplayString = "3";
-			this.xToolStripMenuItem3.Size = new System.Drawing.Size(98, 22);
-			this.xToolStripMenuItem3.Text = "&3x";
-			this.xToolStripMenuItem3.Click += new System.EventHandler(this.xToolStripMenuItem3_Click);
+			this.UtilsDisplay3xMenu.Name = "UtilsDisplay3xMenu";
+			this.UtilsDisplay3xMenu.ShortcutKeyDisplayString = "3";
+			this.UtilsDisplay3xMenu.Size = new System.Drawing.Size(152, 22);
+			this.UtilsDisplay3xMenu.Text = "&3x";
+			this.UtilsDisplay3xMenu.Click += new System.EventHandler(this.xToolStripMenuItem3_Click);
 			// 
-			// xToolStripMenuItem4
+			// UtilsDisplay4xMenu
 			// 
-			this.xToolStripMenuItem4.Name = "xToolStripMenuItem4";
-			this.xToolStripMenuItem4.ShortcutKeyDisplayString = "4";
-			this.xToolStripMenuItem4.Size = new System.Drawing.Size(98, 22);
-			this.xToolStripMenuItem4.Text = "&4x";
-			this.xToolStripMenuItem4.Click += new System.EventHandler(this.xToolStripMenuItem4_Click);
+			this.UtilsDisplay4xMenu.Name = "UtilsDisplay4xMenu";
+			this.UtilsDisplay4xMenu.ShortcutKeyDisplayString = "4";
+			this.UtilsDisplay4xMenu.Size = new System.Drawing.Size(152, 22);
+			this.UtilsDisplay4xMenu.Text = "&4x";
+			this.UtilsDisplay4xMenu.Click += new System.EventHandler(this.xToolStripMenuItem4_Click);
 			// 
 			// toolStripMenuItem2
 			// 
@@ -232,14 +234,6 @@
 			this.UtilsTakeScreenshotMenu.Size = new System.Drawing.Size(306, 22);
 			this.UtilsTakeScreenshotMenu.Text = "Take &Screenshot...";
 			this.UtilsTakeScreenshotMenu.Click += new System.EventHandler(this.takeScreenshotToolStripMenuItem_Click);
-			// 
-			// UtilsDumpMainMemoryMenu
-			// 
-			this.UtilsDumpMainMemoryMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.safe;
-			this.UtilsDumpMainMemoryMenu.Name = "UtilsDumpMainMemoryMenu";
-			this.UtilsDumpMainMemoryMenu.Size = new System.Drawing.Size(306, 22);
-			this.UtilsDumpMainMemoryMenu.Text = "&Dump Main Memory...";
-			this.UtilsDumpMainMemoryMenu.Click += new System.EventHandler(this.dumpRamToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem1
 			// 
@@ -317,6 +311,10 @@
             this.DebugTraceSyscallsMenu,
             this.DebugTraceUnimplementedSyscallsMenu,
             this.DebugTraceUnimplementedGpuMenu,
+            this.toolStripMenuItem11,
+            this.UtilsDumpMainMemoryMenu,
+            this.DebugDumpGpuFrameMenu,
+            this.toolStripMenuItem12,
             this.DebugShowThreadInfoMenu});
 			this.DebugMenu.Name = "DebugMenu";
 			this.DebugMenu.Size = new System.Drawing.Size(54, 20);
@@ -344,6 +342,31 @@
 			this.DebugTraceUnimplementedGpuMenu.Size = new System.Drawing.Size(235, 22);
 			this.DebugTraceUnimplementedGpuMenu.Text = "Trace Unimplemented Gpu";
 			this.DebugTraceUnimplementedGpuMenu.Click += new System.EventHandler(this.traceUnimplementedGpuToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem11
+			// 
+			this.toolStripMenuItem11.Name = "toolStripMenuItem11";
+			this.toolStripMenuItem11.Size = new System.Drawing.Size(232, 6);
+			// 
+			// UtilsDumpMainMemoryMenu
+			// 
+			this.UtilsDumpMainMemoryMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.safe;
+			this.UtilsDumpMainMemoryMenu.Name = "UtilsDumpMainMemoryMenu";
+			this.UtilsDumpMainMemoryMenu.Size = new System.Drawing.Size(235, 22);
+			this.UtilsDumpMainMemoryMenu.Text = "&Dump Main Memory...";
+			// 
+			// DebugDumpGpuFrameMenu
+			// 
+			this.DebugDumpGpuFrameMenu.Name = "DebugDumpGpuFrameMenu";
+			this.DebugDumpGpuFrameMenu.ShortcutKeys = System.Windows.Forms.Keys.F9;
+			this.DebugDumpGpuFrameMenu.Size = new System.Drawing.Size(235, 22);
+			this.DebugDumpGpuFrameMenu.Text = "Dump &Gpu Frame";
+			this.DebugDumpGpuFrameMenu.Click += new System.EventHandler(this.DebugDumpGpuFrameMenu_Click);
+			// 
+			// toolStripMenuItem12
+			// 
+			this.toolStripMenuItem12.Name = "toolStripMenuItem12";
+			this.toolStripMenuItem12.Size = new System.Drawing.Size(232, 6);
 			// 
 			// DebugShowThreadInfoMenu
 			// 
@@ -480,12 +503,11 @@
 		public System.Windows.Forms.ToolStripMenuItem HelpMenu;
 		public System.Windows.Forms.ToolStripMenuItem HelpWebsiteMenu;
 		public System.Windows.Forms.ToolStripMenuItem UtilsDisplayMenu;
-		public System.Windows.Forms.ToolStripMenuItem xToolStripMenuItem1;
-		public System.Windows.Forms.ToolStripMenuItem xToolStripMenuItem2;
-		public System.Windows.Forms.ToolStripMenuItem xToolStripMenuItem4;
-		public System.Windows.Forms.ToolStripMenuItem xToolStripMenuItem3;
+		public System.Windows.Forms.ToolStripMenuItem UtilsDisplay1xMenu;
+		public System.Windows.Forms.ToolStripMenuItem UtilsDisplay2xMenu;
+		public System.Windows.Forms.ToolStripMenuItem UtilsDisplay4xMenu;
+		public System.Windows.Forms.ToolStripMenuItem UtilsDisplay3xMenu;
 		public System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
-		public System.Windows.Forms.ToolStripMenuItem UtilsDumpMainMemoryMenu;
 		public System.Windows.Forms.ToolStripMenuItem FileOpenMenu;
 		public System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
 		public System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
@@ -516,5 +538,9 @@
 		public System.Windows.Forms.ToolStripMenuItem DebugMenu;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem10;
 		public System.Windows.Forms.ToolStripMenuItem UtilsUseFastmemMenu;
+		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem11;
+		public System.Windows.Forms.ToolStripMenuItem UtilsDumpMainMemoryMenu;
+		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem12;
+		public System.Windows.Forms.ToolStripMenuItem DebugDumpGpuFrameMenu;
 	}
 }

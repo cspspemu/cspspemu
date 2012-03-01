@@ -245,8 +245,27 @@ namespace CSPspEmu.Core.Gpu
 			Status.CallbackOnStateOnce(StatusEnum.Completed, () =>
 			{
 				//Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				CapturingWaypoint();
 				SyncCallback();
 			});
+		}
+
+		private void CapturingWaypoint()
+		{
+			if (CapturingFrame)
+			{
+				CapturingFrame = false;
+				Console.WriteLine("EndCapturingFrame!");
+				GpuImpl.EndCapture();
+			}
+
+			if (StartCapturingFrame)
+			{
+				StartCapturingFrame = false;
+				CapturingFrame = true;
+				GpuImpl.StartCapture();
+				Console.WriteLine("StartCapturingFrame!");
+			}
 		}
 
 		internal void MarkDepthBufferLoad()
@@ -261,6 +280,15 @@ namespace CSPspEmu.Core.Gpu
 		public void UnsetCurrent()
 		{
 			GpuImpl.UnsetCurrent();
+		}
+
+		bool StartCapturingFrame = false;
+		bool CapturingFrame = false;
+
+		public void CaptureFrame()
+		{
+			StartCapturingFrame = true;
+			Console.WriteLine("Waiting StartCapturingFrame!");
 		}
 	}
 

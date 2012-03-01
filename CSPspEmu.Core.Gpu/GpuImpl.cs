@@ -29,6 +29,14 @@ namespace CSPspEmu.Core.Gpu
 
 		abstract public void AddedDisplayList();
 
+		virtual public void StartCapture()
+		{
+		}
+
+		virtual public void EndCapture()
+		{
+		}
+
 		virtual public void Transfer(GpuStateStruct* GpuState)
 		{
 			Console.Error.WriteLine("GpuImpl.Transfer Not Implemented!! : {0}", GpuState->TextureTransferState.ToStringDefault());

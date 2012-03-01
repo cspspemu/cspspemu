@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils.Extensions;
+using OpenTK;
 
 namespace CSPspEmu.Core.Gpu
 {
@@ -37,6 +38,9 @@ namespace CSPspEmu.Core.Gpu
 
 		public FVector3d Position { get { return new FVector3d() { X = PX, Y = PY, Z = PZ }; } }
 		public FVector3d Normal { get { return new FVector3d() { X = NX, Y = NY, Z = NZ }; } }
+
+		//public Vector4 Position4 { get { return new Vector4(PX, PY, PZ, 1); } }
+		public Vector3 Position3 { get { return new Vector3(PX, PY, PZ); } }
 
 		public override string ToString()
 		{

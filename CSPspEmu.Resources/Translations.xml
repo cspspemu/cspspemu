@@ -21,6 +21,10 @@
 			<translation lang="en">Trace Unimplemented Syscalls</translation>
 			<translation lang="es">Trazar Syscalls sin implementar</translation>
 		</text>
+		<text id="DebugDumpGpuFrameMenu">
+			<translation lang="en">Dump &amp;Gpu Frame</translation>
+			<translation lang="es">Volcar frame de &amp;Gpu</translation>
+		</text>
 		<text id="FileExitMenu">
 			<translation lang="en">&amp;Exit</translation>
 			<translation lang="es">&amp;Salir</translation>
@@ -72,6 +76,22 @@
 		<text id="UtilsDisplayMenu">
 			<translation lang="en">&amp;Display</translation>
 			<translation lang="es">&amp;Tamaño de ventana</translation>
+		</text>
+		<text id="UtilsDisplay1xMenu">
+			<translation lang="en">1x</translation>
+			<translation lang="es">1x</translation>
+		</text>
+		<text id="UtilsDisplay2xMenu">
+			<translation lang="en">2x</translation>
+			<translation lang="es">2x</translation>
+		</text>
+		<text id="UtilsDisplay3xMenu">
+			<translation lang="en">3x</translation>
+			<translation lang="es">3x</translation>
+		</text>
+		<text id="UtilsDisplay4xMenu">
+			<translation lang="en">4x</translation>
+			<translation lang="es">4x</translation>
 		</text>
 		<text id="UtilsDumpMainMemoryMenu">
 			<translation lang="en">Dump Main Memory...</translation>

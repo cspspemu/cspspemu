@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define LIST_SYNC
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -85,6 +87,9 @@ namespace CSPspEmu.Hle.Modules.ge
 			return _sceGeListEnQueue(InstructionAddressStart, InstructionAddressStall, CallbackId, Args, (DisplayList) =>
 			{
 				HleState.GpuProcessor.EnqueueDisplayListLast(DisplayList);
+#if LIST_SYNC
+				DisplayList.WaitCompletedSync();
+#endif
 			});
 		}
 
@@ -103,6 +108,9 @@ namespace CSPspEmu.Hle.Modules.ge
 			return _sceGeListEnQueue(InstructionAddressStart, InstructionAddressStall, CallbackId, Args, (DisplayList) =>
 			{
 				HleState.GpuProcessor.EnqueueDisplayListFirst(DisplayList);
+#if LIST_SYNC
+				DisplayList.WaitCompletedSync();
+#endif
 			});
 		}
 

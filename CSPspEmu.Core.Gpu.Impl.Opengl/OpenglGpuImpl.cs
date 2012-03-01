@@ -28,6 +28,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
+using CSPspEmu.Core.Gpu.Formats;
 #else
 using MiniGL;
 #endif
@@ -124,6 +125,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <param name="VertexType"></param>
 		private void PutVertex(ref VertexInfo VertexInfo, ref VertexTypeStruct VertexType)
 		{
+			_CapturePutVertex(ref VertexInfo, ref VertexType);
+
 			//Console.WriteLine(VertexType);
 			//Console.WriteLine(VertexInfo);
 			/*
@@ -230,6 +233,60 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		delegate void ReadVertexDelegate(int Index, VertexInfo* VertexInfo);
 
+		object PspWavefrontObjWriterLock = new object();
+		PspWavefrontObjWriter PspWavefrontObjWriter = null;
+
+		public override void StartCapture()
+		{
+			lock (PspWavefrontObjWriterLock)
+			{
+				PspWavefrontObjWriter = new PspWavefrontObjWriter(new WavefrontObjWriter(ApplicationPaths.MemoryStickRootFolder + "/gpu_frame.obj"));
+			}
+		}
+
+		public override void EndCapture()
+		{
+			lock (PspWavefrontObjWriterLock)
+			{
+				PspWavefrontObjWriter.End();
+				PspWavefrontObjWriter = null;
+			}
+		}
+
+		private void _CaptureStartPrimitive(GuPrimitiveType PrimitiveType)
+		{
+			if (PspWavefrontObjWriter != null)
+			{
+				lock (PspWavefrontObjWriterLock)
+				{
+					if (PspWavefrontObjWriter != null) PspWavefrontObjWriter.StartPrimitive(GpuState, PrimitiveType);
+				}
+			}
+		}
+
+		private void _CaptureEndPrimitive()
+		{
+			if (PspWavefrontObjWriter != null)
+			{
+				lock (PspWavefrontObjWriterLock)
+				{
+					if (PspWavefrontObjWriter != null) PspWavefrontObjWriter.EndPrimitive();
+				}
+			}
+		}
+
+		private void _CapturePutVertex(ref VertexInfo VertexInfo, ref VertexTypeStruct VertexType)
+		{
+			if (PspWavefrontObjWriter != null)
+			{
+				lock (this)
+				{
+					if (PspWavefrontObjWriter != null) PspWavefrontObjWriter.PutVertex(ref VertexInfo, ref VertexType);
+				}
+			}
+		}
+
+
 		override public unsafe void Prim(GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
 		{
 			//Console.WriteLine("VertexCount: {0}", VertexCount);
@@ -249,6 +306,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <param name="GpuState"></param>
 		private unsafe void _Prim(GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
 		{
+			//if (PrimitiveType == GuPrimitiveType.TriangleStrip) VertexCount++;
+
 			//Console.WriteLine("Prim: {0}, {1}", PrimitiveType, VertexCount);
 			this.GpuState = GpuState;
 
@@ -415,6 +474,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 			*/
 
+			_CaptureStartPrimitive(PrimitiveType);
+
 			// DRAW ACTUALLY
 			{
 				//uint VertexSize = GpuState->VertexState.Type.GetVertexSize();
@@ -511,6 +572,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					GL.End();
 				}
 			}
+
+			_CaptureEndPrimitive();
+
 			//Console.WriteLine(VertexCount);
 
 			//PrepareWrite(GpuState);

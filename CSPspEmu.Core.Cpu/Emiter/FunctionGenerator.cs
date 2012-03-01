@@ -413,15 +413,28 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 			if (CpuProcessor.PspConfig.ShowInstructionStats)
 			{
-				Console.Error.WriteLine("-------------------------- {0:X}-{1:X} ", MinPC, MaxPC);
+				bool HasNew = false;
 				foreach (var Pair in InstructionStats.OrderByDescending(Item => Item.Value))
 				{
-					Console.Error.Write("{0} : {1}", Pair.Key, Pair.Value);
 					if (NewInstruction.ContainsKey(Pair.Key))
 					{
-						Console.Error.Write(" <-- NEW!");
+						HasNew = true;
 					}
-					Console.Error.WriteLine("");
+				}
+
+				if (!CpuProcessor.PspConfig.ShowInstructionStatsJustNew || HasNew)
+				{
+					Console.Error.WriteLine("-------------------------- {0:X}-{1:X} ", MinPC, MaxPC);
+					foreach (var Pair in InstructionStats.OrderByDescending(Item => Item.Value))
+					{
+						var IsNew = NewInstruction.ContainsKey(Pair.Key);
+						if (!CpuProcessor.PspConfig.ShowInstructionStatsJustNew || IsNew)
+						{
+							Console.Error.Write("{0} : {1}", Pair.Key, Pair.Value);
+							if (IsNew) Console.Error.Write(" <-- NEW!");
+							Console.Error.WriteLine("");
+						}
+					}
 				}
 			}
 

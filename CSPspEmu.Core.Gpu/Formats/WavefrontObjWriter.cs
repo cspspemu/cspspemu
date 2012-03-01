@@ -1,0 +1,142 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO;
+using OpenTK;
+
+namespace CSPspEmu.Core.Gpu.Formats
+{
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <seealso cref="http://en.wikipedia.org/wiki/Wavefront_.obj_file"/>
+	public class WavefrontObjWriter
+	{
+		private int VertexIndex = 1;
+		private Stream Stream;
+		private StreamWriter StreamWriter;
+		private StringWriter VertexWriter;
+		private StringWriter ContentWriter;
+
+		public WavefrontObjWriter(string FileName)
+		{
+			Stream = File.Open(FileName, FileMode.Create, FileAccess.Write);
+			StreamWriter = new StreamWriter(Stream);
+			VertexWriter = new StringWriter();
+			ContentWriter = new StringWriter();
+		}
+
+		public void End()
+		{
+			_EndVertices();
+			StreamWriter.Write(VertexWriter.ToString());
+			StreamWriter.Write(ContentWriter.ToString());
+			StreamWriter.Flush();
+			Stream.Flush();
+			Stream.Dispose();
+			Stream = null;
+			StreamWriter = null;
+			//throw new NotImplementedException();
+		}
+
+		private void WriteLine(string Line)
+		{
+			ContentWriter.WriteLine(Line);
+		}
+
+		private void WriteVerticeLine(string Line)
+		{
+			VertexWriter.WriteLine(Line);
+		}
+
+		List<Vector3> Vertices = new List<Vector3>();
+		Dictionary<Vector3, int> VerticesIndices = new Dictionary<Vector3, int>();
+
+		private void _EndVertices()
+		{
+			float Normalize = 0.0f;
+			foreach (var Vertex in Vertices)
+			{
+				Normalize = Math.Max(Normalize, Math.Abs(Vertex.X));
+				Normalize = Math.Max(Normalize, Math.Abs(Vertex.Y));
+				Normalize = Math.Max(Normalize, Math.Abs(Vertex.Z));
+			}
+
+			Normalize /= 64;
+
+			foreach (var Vertex in Vertices)
+			{
+				var NormalizedVertex = Vector3.Divide(Vertex, Normalize);
+				WriteVerticeLine("v " + NormalizedVertex.X + " " + NormalizedVertex.Y + " " + NormalizedVertex.Z);
+			}
+		}
+
+		public int AddVertex(Vector3 Position)
+		{
+			if (!VerticesIndices.ContainsKey(Position))
+			{
+				//WriteLine("v " + Position.X + " " + Position.Y + " " + Position.Z + " " + Position.W);
+
+				//WriteVerticeLine("v " + Position.X + " " + Position.Y + " " + Position.Z);
+				Vertices.Add(Position);
+				VerticesIndices[Position] = VertexIndex++;
+			}
+			return VerticesIndices[Position];
+		}
+
+		/*
+		public int AddVertex(float x, float y, float z)
+		{
+			WriteLine("v " + x + " " + y + " " + z);
+			return VertexIndex++;
+		}
+		*/
+
+		public void AddFace(params int[] Indices)
+		{
+			WriteLine("f " + String.Join(" ", Indices));
+		}
+
+		public void StartComment(string Text)
+		{
+			WriteLine("# " + Text);
+		}
+
+		public void StartObject(string Name)
+		{
+			WriteLine("o " + Name);
+		}
+
+		public void AddTriangleStrip(VertexInfo[] Vertices)
+		{
+			List<int> Indices = new List<int>();
+			foreach (var Vertex in Vertices)
+			{
+				Indices.Add(AddVertex(Vertex.Position3));
+			}
+			AddFace(Indices.ToArray());
+		}
+
+		/*
+		public void SampleAddCube()
+		{
+			StartComment("Cube");
+			StartObject("cube");
+		}
+		*/
+
+		public void AddFaces(int NumberOfVerticesPerFace, params int[] VerticesIndices)
+		{
+			for (int n = 0; n < VerticesIndices.Length; n += NumberOfVerticesPerFace)
+			{
+				AddFace(VerticesIndices.Skip(n).Take(NumberOfVerticesPerFace).ToArray());
+			}
+		}
+
+		public void AddFaces(int NumberOfVerticesPerFace, IEnumerable<int> VerticesIndices)
+		{
+			AddFaces(NumberOfVerticesPerFace, VerticesIndices.ToArray());
+		}
+	}
+}

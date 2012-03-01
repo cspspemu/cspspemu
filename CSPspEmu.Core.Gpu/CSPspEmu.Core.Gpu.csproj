@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Formats\PspWavefrontObjWriter.cs" />
+    <Compile Include="Formats\WavefrontObjWriter.cs" />
     <Compile Include="GpuImpl.cs" />
     <Compile Include="GpuOpCodes.cs" />
     <Compile Include="GpuDisplayList.cs" />

@@ -30,8 +30,6 @@
 		{
 			this.button1 = new System.Windows.Forms.Button();
 			this.cspspemuLabel = new System.Windows.Forms.Label();
-			this.pictureBox2 = new System.Windows.Forms.PictureBox();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
@@ -41,6 +39,12 @@
 			this.GpuPluginInfoLabel = new System.Windows.Forms.Label();
 			this.AudioPluginInfoLabel = new System.Windows.Forms.Label();
 			this.versionLabel = new System.Windows.Forms.Label();
+			this.TwitterPictureBox = new System.Windows.Forms.PictureBox();
+			this.FacebookPictureBox = new System.Windows.Forms.PictureBox();
+			this.pictureBox2 = new System.Windows.Forms.PictureBox();
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
+			((System.ComponentModel.ISupportInitialize)(this.TwitterPictureBox)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.FacebookPictureBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
@@ -66,27 +70,6 @@
 			this.cspspemuLabel.TabIndex = 2;
 			this.cspspemuLabel.Text = "Soywiz\'s PspEmu";
 			this.cspspemuLabel.Click += new System.EventHandler(this.label1_Click);
-			// 
-			// pictureBox2
-			// 
-			this.pictureBox2.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.psp_3000_small;
-			this.pictureBox2.Location = new System.Drawing.Point(12, 56);
-			this.pictureBox2.Name = "pictureBox2";
-			this.pictureBox2.Size = new System.Drawing.Size(220, 202);
-			this.pictureBox2.TabIndex = 3;
-			this.pictureBox2.TabStop = false;
-			// 
-			// pictureBox1
-			// 
-			this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.pictureBox1.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.btn_donate_LG;
-			this.pictureBox1.Location = new System.Drawing.Point(330, 343);
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(92, 26);
-			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-			this.pictureBox1.TabIndex = 1;
-			this.pictureBox1.TabStop = false;
-			this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
 			// 
 			// label2
 			// 
@@ -174,12 +157,57 @@
 			this.versionLabel.TabIndex = 12;
 			this.versionLabel.Text = "Version:";
 			// 
+			// TwitterPictureBox
+			// 
+			this.TwitterPictureBox.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.TwitterPictureBox.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.twitter_icon_png8;
+			this.TwitterPictureBox.Location = new System.Drawing.Point(12, 319);
+			this.TwitterPictureBox.Name = "TwitterPictureBox";
+			this.TwitterPictureBox.Size = new System.Drawing.Size(51, 50);
+			this.TwitterPictureBox.TabIndex = 14;
+			this.TwitterPictureBox.TabStop = false;
+			this.TwitterPictureBox.Click += new System.EventHandler(this.TwitterPictureBox_Click);
+			// 
+			// FacebookPictureBox
+			// 
+			this.FacebookPictureBox.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.FacebookPictureBox.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.facebook_icon_png8;
+			this.FacebookPictureBox.Location = new System.Drawing.Point(69, 319);
+			this.FacebookPictureBox.Name = "FacebookPictureBox";
+			this.FacebookPictureBox.Size = new System.Drawing.Size(51, 50);
+			this.FacebookPictureBox.TabIndex = 13;
+			this.FacebookPictureBox.TabStop = false;
+			this.FacebookPictureBox.Click += new System.EventHandler(this.FacebookPictureBox_Click);
+			// 
+			// pictureBox2
+			// 
+			this.pictureBox2.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.psp_3000_small;
+			this.pictureBox2.Location = new System.Drawing.Point(12, 56);
+			this.pictureBox2.Name = "pictureBox2";
+			this.pictureBox2.Size = new System.Drawing.Size(220, 202);
+			this.pictureBox2.TabIndex = 3;
+			this.pictureBox2.TabStop = false;
+			// 
+			// pictureBox1
+			// 
+			this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.pictureBox1.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.btn_donate_LG;
+			this.pictureBox1.Location = new System.Drawing.Point(330, 343);
+			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.Size = new System.Drawing.Size(92, 26);
+			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+			this.pictureBox1.TabIndex = 1;
+			this.pictureBox1.TabStop = false;
+			this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+			// 
 			// AboutForm
 			// 
 			this.AcceptButton = this.button1;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(530, 381);
+			this.Controls.Add(this.TwitterPictureBox);
+			this.Controls.Add(this.FacebookPictureBox);
 			this.Controls.Add(this.versionLabel);
 			this.Controls.Add(this.AudioPluginInfoLabel);
 			this.Controls.Add(this.GpuPluginInfoLabel);
@@ -201,6 +229,8 @@
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "About Soywiz\'s PspEmu";
 			this.Load += new System.EventHandler(this.AboutForm_Load);
+			((System.ComponentModel.ISupportInitialize)(this.TwitterPictureBox)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.FacebookPictureBox)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.ResumeLayout(false);
@@ -223,5 +253,7 @@
 		private System.Windows.Forms.Label GpuPluginInfoLabel;
 		private System.Windows.Forms.Label AudioPluginInfoLabel;
 		private System.Windows.Forms.Label versionLabel;
+		private System.Windows.Forms.PictureBox FacebookPictureBox;
+		private System.Windows.Forms.PictureBox TwitterPictureBox;
 	}
 }

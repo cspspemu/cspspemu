@@ -31,5 +31,7 @@ namespace CSPspEmu.Core
 
 		PluginInfo GetAudioPluginInfo();
 		PluginInfo GetGpuPluginInfo();
+
+		void CaptureGpuFrame();
 	}
 }

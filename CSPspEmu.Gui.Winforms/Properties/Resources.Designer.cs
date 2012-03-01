@@ -116,6 +116,13 @@ namespace CSPspEmu.Gui.Winforms.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap facebook_icon_png8 {
+            get {
+                object obj = ResourceManager.GetObject("facebook_icon-png8", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap feed {
             get {
                 object obj = ResourceManager.GetObject("feed", resourceCulture);
@@ -182,6 +189,13 @@ namespace CSPspEmu.Gui.Winforms.Properties {
         internal static System.Drawing.Bitmap safe {
             get {
                 object obj = ResourceManager.GetObject("safe", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap twitter_icon_png8 {
+            get {
+                object obj = ResourceManager.GetObject("twitter_icon-png8", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

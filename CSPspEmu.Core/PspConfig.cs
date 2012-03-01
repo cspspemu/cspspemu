@@ -44,9 +44,14 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
-		//public bool ShowInstructionStats = true;
-		public bool ShowInstructionStats = false;
+		public bool ShowInstructionStats = true;
+		//public bool ShowInstructionStats = false;
 
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool ShowInstructionStatsJustNew = true;
 
 		/// <summary>
 		/// 

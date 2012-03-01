@@ -32,7 +32,7 @@ namespace CSPspEmu.Core
 
 	public partial class PspStoredConfig
 	{
-		static readonly private XmlSerializer Serializer = XmlSerializer.FromTypes(new[] { typeof(PspStoredConfig) })[0];
+		static private XmlSerializer Serializer;
 
 		private PspStoredConfig()
 		{
@@ -50,6 +50,11 @@ namespace CSPspEmu.Core
 		{
 			try
 			{
+				if (Serializer == null)
+				{
+					Serializer = XmlSerializer.FromTypes(new[] { typeof(PspStoredConfig) })[0];
+				}
+
 				using (var Stream = File.OpenRead(ConfigFilePath))
 				{
 					return (PspStoredConfig)Serializer.Deserialize(Stream);

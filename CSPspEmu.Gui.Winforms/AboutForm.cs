@@ -40,5 +40,15 @@ namespace CSPspEmu.Gui.Winforms
 		{
 
 		}
+
+		private void TwitterPictureBox_Click(object sender, EventArgs e)
+		{
+			Process.Start(@"http://twitter.com/dpspemu");
+		}
+
+		private void FacebookPictureBox_Click(object sender, EventArgs e)
+		{
+			Process.Start(@"http://www.facebook.com/pspemu");
+		}
 	}
 }

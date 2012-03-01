@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OpenTK;
 
 namespace CSPspEmu.Core.Gpu.State
 {
@@ -77,6 +78,25 @@ namespace CSPspEmu.Core.Gpu.State
 				}
 			}
 		}
+
+		public Matrix4 Matrix4
+		{
+			get
+			{
+				fixed (float* ValuesPtr = Values)
+				{
+					var Matrix4 = new Matrix4(
+						ValuesPtr[0], ValuesPtr[1], ValuesPtr[2], ValuesPtr[3],
+						ValuesPtr[4], ValuesPtr[5], ValuesPtr[6], ValuesPtr[7],
+						ValuesPtr[8], ValuesPtr[9], ValuesPtr[10], ValuesPtr[11],
+						ValuesPtr[12], ValuesPtr[13], ValuesPtr[14], ValuesPtr[15]
+					);
+					//Matrix4.Transpose();
+					return Matrix4;
+				}
+			}
+		}
+
 	}
 
 	unsafe public struct GpuMatrix4x3Struct
@@ -138,6 +158,24 @@ namespace CSPspEmu.Core.Gpu.State
 				fixed (float* ValuesPtr = Values)
 				{
 					ValuesPtr[Indexes[Index++ % Indexes.Length]] = Value;
+				}
+			}
+		}
+
+		public Matrix4 Matrix4
+		{
+			get
+			{
+				fixed (float* ValuesPtr = Values)
+				{
+					var Matrix4 = new Matrix4(
+						ValuesPtr[0], ValuesPtr[1], ValuesPtr[2], ValuesPtr[3],
+						ValuesPtr[4], ValuesPtr[5], ValuesPtr[6], ValuesPtr[7],
+						ValuesPtr[8], ValuesPtr[9], ValuesPtr[10], ValuesPtr[11],
+						ValuesPtr[12], ValuesPtr[13], ValuesPtr[14], ValuesPtr[15]
+					);
+					//Matrix4.Transpose();
+					return Matrix4;
 				}
 			}
 		}

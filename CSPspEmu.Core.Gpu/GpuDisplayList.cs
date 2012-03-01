@@ -418,5 +418,12 @@ namespace CSPspEmu.Core.Gpu
 			}
 			*/
 		}
+
+		public void WaitCompletedSync()
+		{
+			//Status2.SetValue(Status2Enum.Completed);
+			Status.WaitForAnyState(StatusEnum.StallReached, StatusEnum.DrawingDone, StatusEnum.Done);
+			//throw new NotImplementedException();
+		}
 	}
 }

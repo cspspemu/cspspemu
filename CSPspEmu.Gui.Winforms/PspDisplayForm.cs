@@ -169,10 +169,10 @@ namespace CSPspEmu.Gui.Winforms
 				MinimumSize = MaximumSize = Size;
 				CenterToScreen();
 
-				xToolStripMenuItem1.Checked = (_DisplayScale == 1);
-				xToolStripMenuItem2.Checked = (_DisplayScale == 2);
-				xToolStripMenuItem3.Checked = (_DisplayScale == 3);
-				xToolStripMenuItem4.Checked = (_DisplayScale == 4);
+				UtilsDisplay1xMenu.Checked = (_DisplayScale == 1);
+				UtilsDisplay2xMenu.Checked = (_DisplayScale == 2);
+				UtilsDisplay3xMenu.Checked = (_DisplayScale == 3);
+				UtilsDisplay4xMenu.Checked = (_DisplayScale == 4);
 
 				IGuiExternalInterface.GetConfig().StoredConfig.DisplayScale = _DisplayScale;
 			}
@@ -804,6 +804,11 @@ namespace CSPspEmu.Gui.Winforms
 				Application.Restart();
 			}
 #endif
+		}
+
+		private void DebugDumpGpuFrameMenu_Click(object sender, EventArgs e)
+		{
+			IGuiExternalInterface.CaptureGpuFrame();
 		}
 	}
 }
