@@ -181,6 +181,9 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 				public int SampleOffset;
 			}
 
+			/// <summary>
+			/// Loop Info
+			/// </summary>
 			public struct SmplStruct
 			{
 			}

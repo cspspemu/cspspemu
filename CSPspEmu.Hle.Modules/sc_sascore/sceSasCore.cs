@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Core.Audio;
 
 namespace CSPspEmu.Hle.Modules.sc_sascore
 {
@@ -80,9 +81,9 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		}
 
 		protected int[] VoiceOnCount;
-		protected int[] BufferTemp;
-		protected short[] BufferShort;
-		protected short[] MixBufferShort;
+		protected StereoIntSoundSample[] BufferTemp;
+		protected StereoShortSoundSample[] BufferShort;
+		protected StereoShortSoundSample[] MixBufferShort;
 
 
 		/// <summary>
@@ -117,10 +118,10 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 				SasCore.SampleRate = SampleRate;
 			}
 
-			VoiceOnCount = new int[SasCore.GrainSamples * 2];
-			BufferTemp = new int[SasCore.GrainSamples * 2];
-			BufferShort = new short[SasCore.GrainSamples * 2];
-			MixBufferShort = new short[SasCore.GrainSamples * 2];
+			VoiceOnCount = new int[SasCore.GrainSamples];
+			BufferTemp = new StereoIntSoundSample[SasCore.GrainSamples];
+			BufferShort = new StereoShortSoundSample[SasCore.GrainSamples];
+			MixBufferShort = new StereoShortSoundSample[SasCore.GrainSamples];
 
 			return 0;
 		}
@@ -248,7 +249,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// </returns>
 		[HlePspFunction(NID = 0x50A14DFC, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
-		public int __sceSasCoreWithMix(uint SasCorePointer, short* SasInOut, int LeftVolume, int RightVolume)
+		public int __sceSasCoreWithMix(uint SasCorePointer, StereoShortSoundSample* SasInOut, int LeftVolume, int RightVolume)
 		{
 #if false
 			var SasCore = GetSasCore(SasCorePointer);
@@ -293,15 +294,18 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// </returns>
 		[HlePspFunction(NID = 0xA3589D81, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
-		public int __sceSasCore(uint SasCorePointer, short* SasOut)
+		public int __sceSasCore(uint SasCorePointer, StereoShortSoundSample* SasOut)
 		{
 			var SasCore = GetSasCore(SasCorePointer);
+	
+			if (SasCore.OutputMode != OutputMode.PSP_SAS_OUTPUTMODE_STEREO) throw (new NotImplementedException());
+
 			int NumberOfChannels = SasCore.OutputMode == OutputMode.PSP_SAS_OUTPUTMODE_STEREO ? 2 : 1;
-			int NumberOfSamples = SasCore.GrainSamples * NumberOfChannels;
+			int NumberOfSamples = SasCore.GrainSamples;
 
 			for (int n = 0; n < NumberOfSamples; n++)
 			{
-				BufferTemp[n] = 0;
+				BufferTemp[n] = default(StereoIntSoundSample);
 				VoiceOnCount[n] = 0;
 			}
 
@@ -312,10 +316,10 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 				{
 					for (int n = 0; n < NumberOfSamples; n++)
 					{
-						if (Voice.SampleOffset < Voice.Vag.DecodedSamples.Length)
+						if (Voice.SampleOffset < Voice.Vag.SamplesCount)
 						{
 							VoiceOnCount[n]++;
-							BufferTemp[n] += Voice.Vag.DecodedSamples[Voice.SampleOffset++];
+							BufferTemp[n] += Voice.Vag.GetSampleAt(Voice.SampleOffset++);
 						}
 						else
 						{
@@ -331,11 +335,11 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 			{
 				if (VoiceOnCount[n] > 0)
 				{
-					BufferShort[n] = (short)(BufferTemp[n] / VoiceOnCount[n]);
+					BufferShort[n] = (BufferTemp[n] / VoiceOnCount[n]);
 				}
 				else
 				{
-					BufferShort[n] = 0;
+					BufferShort[n] = default(StereoShortSoundSample);
 				}
 			}
 

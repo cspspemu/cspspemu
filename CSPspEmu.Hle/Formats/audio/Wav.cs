@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using CSharpUtils.Extensions;
 using CSharpUtils.Streams;
+using CSPspEmu.Core.Audio;
+using CSharpUtils;
 
 namespace CSPspEmu.Hle.Formats.audio
 {
@@ -70,7 +72,7 @@ namespace CSPspEmu.Hle.Formats.audio
 			new BinaryWriter(ChunkSizeStream).Write((uint)ChunkLength);
 		}
 
-		public void WriteWave(String FileName, short[] Samples)
+		public void WriteWave(String FileName, StereoShortSoundSample[] Samples)
 		{
 			using (var Stream = File.Open(FileName, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
 			{
@@ -78,7 +80,7 @@ namespace CSPspEmu.Hle.Formats.audio
 			}
 		}
 
-		public void WriteWave(Stream Stream, short[] Samples)
+		public void WriteWave(Stream Stream, StereoShortSoundSample[] Samples)
 		{
 			this.Stream = Stream;
 			this.BinaryWriter = new BinaryWriter(Stream);
@@ -101,7 +103,14 @@ namespace CSPspEmu.Hle.Formats.audio
 				});
 				WriteChunk("data", () =>
 				{
-					foreach (var Sample in Samples) BinaryWriter.Write(Sample);
+					BinaryWriter.Write(PointerUtils.ArrayToByteArray(Samples));
+					/*
+					foreach (var Sample in Samples)
+					{
+						BinaryWriter.Write(Sample.Left);
+						BinaryWriter.Write(Sample.Right);
+					}
+					*/
 				});
 			});
 		}

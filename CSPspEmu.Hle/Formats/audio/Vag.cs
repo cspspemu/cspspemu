@@ -16,9 +16,45 @@ namespace CSPspEmu.Hle.Formats.audio
 	unsafe public partial class Vag
 	{
 		//public byte[] Data;
-		public short[] DecodedSamples = new short[0];
+		//public StereoShortSoundSample[] DecodedSamples = new StereoShortSoundSample[0];
 
-		static public Dictionary<uint, short[]> CachedDecodedSamples = new Dictionary<uint, short[]>();
+		protected List<StereoShortSoundSample> DecodedSamples = new List<StereoShortSoundSample>();
+		protected IEnumerator<StereoShortSoundSample> SamplesDecoder;
+		public bool SamplesDecoderEnd = false;
+
+		public StereoShortSoundSample GetSampleAt(int Index)
+		{
+			while (Index >= DecodedSamples.Count)
+			{
+				if (!DecodeSample())
+				{
+					return new StereoShortSoundSample();
+				}
+			}
+			return DecodedSamples[Index];
+		}
+
+		public StereoShortSoundSample[] GetAllDecodedSamples()
+		{
+			while (DecodeSample()) ;
+			return DecodedSamples.ToArray();
+		}
+
+		public bool DecodeSample()
+		{
+			if (!SamplesDecoderEnd)
+			{
+				DecodedSamples.Add(SamplesDecoder.Current);
+				if (!SamplesDecoder.MoveNext()) SamplesDecoderEnd = true;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public int SamplesCount { get; protected set; }
 
 		public Vag()
 		{
@@ -55,19 +91,9 @@ namespace CSPspEmu.Hle.Formats.audio
 			}
 			*/
 
-			if (!CachedDecodedSamples.ContainsKey(Hash))
-			{
-				//writefln("%s", this.header.toString);
-
-				CachedDecodedSamples[Hash] = AudioMixer.Convert_Mono22050_Stereo44100(
-					Decoder.DecodeBlocks(
-						(Block*)&DataPointer[0x10],
-						DataLength - 0x10
-					)
-				);
-			}
-
-			this.DecodedSamples = CachedDecodedSamples[Hash];
+			var Blocks = PointerUtils.PointerToArray<Block>((Block*)&DataPointer[0x10], DataLength - 0x10);
+			SamplesCount = Blocks.Length * 56 / 16;
+			SamplesDecoder = Decoder.DecodeBlocksStream(Blocks).GetEnumerator();
 
 			//SaveToWav("output.wav");
 		}
@@ -75,7 +101,7 @@ namespace CSPspEmu.Hle.Formats.audio
 		public void SaveToWav(String FileName)
 		{
 			var WaveStream = new WaveStream();
-			WaveStream.WriteWave(FileName, DecodedSamples);
+			WaveStream.WriteWave(FileName, GetAllDecodedSamples());
 		}
 
 		internal class Decoder
@@ -85,21 +111,41 @@ namespace CSPspEmu.Hle.Formats.audio
 			protected short History1 = 0, History2 = 0;
 			protected float Predict1, Predict2;
 
-			static public short[] DecodeBlocks(Block* Blocks, int BlockCount)
+			static public IEnumerable<StereoShortSoundSample> DecodeBlocksStream(Block[] Blocks)
 			{
-				var Data = new short[28 * BlockCount];
+				var DecodedBlock = new short[28];
 				var Decoder = new Decoder();
 				int SamplesOffset = 0;
-				for (int n = 0; n < BlockCount; n++)
+				bool Ended = false;
+				var LastSample = default(StereoShortSoundSample);
+				var CurrentSample = default(StereoShortSoundSample);
+				for (int n = 0; !Ended && (n < Blocks.Length); n++)
 				{
-					if (Decoder.DecodeBlock(Blocks[n], Data, ref SamplesOffset))
+					var CurrentBlock = Blocks[n];
+					SamplesOffset = 0;
+					Decoder.DecodeBlock(CurrentBlock, DecodedBlock, ref SamplesOffset);
+					switch (CurrentBlock.Type)
 					{
-						//Console.WriteLine("STOP: {0}/{1}", n, BlockCount);
-						Data = Data.Slice(0, SamplesOffset);
-						break;
+						case Block.TypeEnum.None:
+							// 16 bytes = 56 stereo 44100 samples
+							foreach (var DecodedMonoSample in DecodedBlock)
+							{
+								CurrentSample = new StereoShortSoundSample(DecodedMonoSample, DecodedMonoSample);
+								yield return StereoShortSoundSample.Mix(LastSample, CurrentSample);
+								yield return CurrentSample;
+								LastSample = CurrentSample;
+							}
+							break;
+						case Block.TypeEnum.End:
+							Ended = true;
+							break;
 					}
 				}
-				return Data;
+			}
+
+			static public StereoShortSoundSample[] DecodeAllBlocks(Block[] Blocks)
+			{
+				return DecodeBlocksStream(Blocks).ToArray();
 			}
 
 			public bool DecodeBlock(Block Block, short[] Samples, ref int SampleOffset)

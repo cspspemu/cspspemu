@@ -588,6 +588,20 @@ namespace CSPspEmu.Gui.Winforms
 			CheckForUpdates(NotifyIfNotFound: true);
 		}
 
+		static public string GetComparableVersion(string VersionName)
+		{
+			string Return = "";
+			foreach (var Char in VersionName)
+			{
+				if (Char == '/') break;
+				if (Char >= '0' && Char <= '9')
+				{
+					Return += Char;
+				}
+			}
+			return Return;
+		}
+
 		public void CheckForUpdates(bool NotifyIfNotFound)
 		{
 			var CurrentVersion = PspGlobalConfiguration.CurrentVersion;
@@ -607,9 +621,13 @@ namespace CSPspEmu.Gui.Winforms
 					//int CurrentVersionInt = int.Parse(CurrentVersion);
 					//int LastVersionInt = int.Parse(LastVersion);
 
-					Console.WriteLine("{0} -> {1}", CurrentVersion, LastVersion);
+					var ComparableCurrentVersion = GetComparableVersion(LastVersion);
+					var ComparableLastVersion = GetComparableVersion(CurrentVersion);
 
-					if (String.CompareOrdinal(LastVersion, CurrentVersion) > 0)
+					Console.WriteLine("{0} -> {1}", CurrentVersion, LastVersion);
+					Console.WriteLine("{0} -> {1}", ComparableCurrentVersion, ComparableLastVersion);
+
+					if (String.CompareOrdinal(ComparableCurrentVersion, ComparableLastVersion) > 0)
 					{
 						if (MessageBox.Show(
 							String.Format("There is a new version of the emulator.\n") +

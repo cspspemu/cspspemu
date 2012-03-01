@@ -202,7 +202,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		public int SustainLevel;
 		public int EnvelopeHeight;
 
-		public uint SampleOffset;
+		public int SampleOffset;
 
 		public SasEnvelope Envelope;
 
