@@ -47,6 +47,7 @@
     <Compile Include="PspAudio.cs" />
     <Compile Include="PspAudioChannel.cs" />
     <Compile Include="PspAudioImpl.cs" />
+    <Compile Include="StereoShortSoundSample.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">

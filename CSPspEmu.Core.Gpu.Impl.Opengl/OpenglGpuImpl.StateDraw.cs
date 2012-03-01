@@ -30,7 +30,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			if (GpuState->VertexState.Type.Transform2D)
 			{
-				GL.Disable(EnableCap.AlphaTest);
 				GL.Disable(EnableCap.StencilTest);
 				GL.Disable(EnableCap.CullFace);
 				GL.DepthRange(0, 1);
@@ -44,9 +43,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				PrepareState_Depth(GpuState);
 				PrepareState_DepthTest(GpuState);
 				PrepareState_Stencil(GpuState);
-				PrepareState_AlphaTest(GpuState);
 			}
 			GL.ShadeModel((GpuState->ShadeModel == ShadingModelEnum.Flat) ? ShadingModel.Flat : ShadingModel.Smooth);
+			PrepareState_AlphaTest(GpuState);
 		}
 
 		private void PrepareState_AlphaTest(GpuStateStruct* GpuState)

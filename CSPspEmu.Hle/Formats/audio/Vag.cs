@@ -5,6 +5,7 @@ using System.Text;
 using CSharpUtils;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Audio;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Formats.audio
 {
@@ -16,6 +17,8 @@ namespace CSPspEmu.Hle.Formats.audio
 	{
 		//public byte[] Data;
 		public short[] DecodedSamples = new short[0];
+
+		static public Dictionary<uint, short[]> CachedDecodedSamples = new Dictionary<uint, short[]>();
 
 		public Vag()
 		{
@@ -38,6 +41,8 @@ namespace CSPspEmu.Hle.Formats.audio
 				Console.Error.WriteLine("Error VAG Magic: {0:X}", Header.Magic);
 				throw (new NotImplementedException("Invalid VAG header"));
 			}
+			var Hash = Hashing.FastHash((uint *)DataPointer, DataLength);
+
 			/*
 			switch (Header.magic) {
 				case "VAG":
@@ -49,15 +54,20 @@ namespace CSPspEmu.Hle.Formats.audio
 				default: throw(new Exception("Not a valid VAG File."));
 			}
 			*/
-		
-			//writefln("%s", this.header.toString);
 
-			this.DecodedSamples = AudioMixer.Convert_Mono22050_Stereo44100(
-				Decoder.DecodeBlocks(
-					(Block*)&DataPointer[0x10],
-					DataLength - 0x10
-				)
-			);
+			if (!CachedDecodedSamples.ContainsKey(Hash))
+			{
+				//writefln("%s", this.header.toString);
+
+				CachedDecodedSamples[Hash] = AudioMixer.Convert_Mono22050_Stereo44100(
+					Decoder.DecodeBlocks(
+						(Block*)&DataPointer[0x10],
+						DataLength - 0x10
+					)
+				);
+			}
+
+			this.DecodedSamples = CachedDecodedSamples[Hash];
 
 			//SaveToWav("output.wav");
 		}

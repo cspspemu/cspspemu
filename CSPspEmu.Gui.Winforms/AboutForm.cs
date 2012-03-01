@@ -13,13 +13,14 @@ namespace CSPspEmu.Gui.Winforms
 {
 	public partial class AboutForm : Form
 	{
-		public AboutForm(IGuiExternalInterface IGuiExternalInterface)
+		public AboutForm(Form ParentForm, IGuiExternalInterface IGuiExternalInterface)
 		{
+			this.Icon = ParentForm.Icon;
 			InitializeComponent();
 			GpuPluginInfoLabel.Text = "GPU " + IGuiExternalInterface.GetGpuPluginInfo().ToString();
 			AudioPluginInfoLabel.Text = "Audio " + IGuiExternalInterface.GetAudioPluginInfo().ToString();
 			versionLabel.Text = "Version: " + PspGlobalConfiguration.CurrentVersion;
-			GitRevisionLabel.Text = "Git Revision: " + PspGlobalConfiguration.GitRevision;
+			GitRevisionValueLinkLabel.Text = PspGlobalConfiguration.GitRevision;
 		}
 
 		private void button1_Click(object sender, EventArgs e)
@@ -50,6 +51,11 @@ namespace CSPspEmu.Gui.Winforms
 		private void FacebookPictureBox_Click(object sender, EventArgs e)
 		{
 			Process.Start(@"http://www.facebook.com/pspemu");
+		}
+
+		private void GitRevisionValueLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			Process.Start(@"https://github.com/soywiz/cspspemu/commit/" + PspGlobalConfiguration.GitRevision);
 		}
 	}
 }

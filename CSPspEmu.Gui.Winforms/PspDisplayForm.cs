@@ -517,7 +517,7 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			PauseResume(() =>
 			{
-				new AboutForm(IGuiExternalInterface).ShowDialog();
+				new AboutForm(this, IGuiExternalInterface).ShowDialog();
 			});
 		}
 

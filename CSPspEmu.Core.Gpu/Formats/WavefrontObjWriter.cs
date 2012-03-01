@@ -58,9 +58,12 @@ namespace CSPspEmu.Core.Gpu.Formats
 			float Normalize = 0.0f;
 			foreach (var Vertex in Vertices)
 			{
-				Normalize = Math.Max(Normalize, Math.Abs(Vertex.X));
-				Normalize = Math.Max(Normalize, Math.Abs(Vertex.Y));
-				Normalize = Math.Max(Normalize, Math.Abs(Vertex.Z));
+				if (!float.IsNaN(Vertex.X) && !float.IsNaN(Vertex.Y) && !float.IsNaN(Vertex.Z))
+				{
+					Normalize = Math.Max(Normalize, Math.Abs(Vertex.X));
+					Normalize = Math.Max(Normalize, Math.Abs(Vertex.Y));
+					Normalize = Math.Max(Normalize, Math.Abs(Vertex.Z));
+				}
 			}
 
 			Normalize /= 64;
@@ -80,7 +83,8 @@ namespace CSPspEmu.Core.Gpu.Formats
 			{
 				//WriteVerticeLine("v " + Position.X + " " + Position.Y + " " + Position.Z);
 				Vertices.Add(Position);
-				VerticesIndices[Position] = VertexIndex++;
+				VerticesIndices[Position] = VertexIndex;
+				return VertexIndex++;
 			}
 			return VerticesIndices[Position];
 		}

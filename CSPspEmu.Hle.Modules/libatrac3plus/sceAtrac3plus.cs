@@ -220,18 +220,18 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 					//ArrayUtils.HexDump(Data, 1024);
 					//Console.ReadKey();
 
-					Debug.WriteLine("{0} -> {1}", OmaOutFileName, WavOutFileName);
+					//Debug.WriteLine("{0} -> {1}", OmaOutFileName, WavOutFileName);
 
-					Debug.WriteLine("[a]");
+					//Debug.WriteLine("[a]");
 					ParseAtracData(new MemoryStream(Data));
 					{
 
 						WriteOma(OmaOutFileName);
-						Debug.WriteLine("[aa]");
+						//Debug.WriteLine("[aa]");
 						File.Delete(WavOutFileName);
 						OmaWavConverter.convertOmaToWav(OmaOutFileName, WavOutFileName);
 					}
-					Debug.WriteLine("[b]");
+					//Debug.WriteLine("[b]");
 				}
 				try
 				{
@@ -241,7 +241,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 				{
 					DecodedData = new short[0];
 				}
-				Debug.WriteLine("[c]");
+				//Debug.WriteLine("[c]");
 			}
 
 			private void ParseWavData(Stream Stream)
@@ -270,6 +270,10 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 
 				Console.WriteLine("DecodedSamples: {0}", DecodedData.Length);
 				Console.WriteLine("EndSample: {0}", Fact.EndSample);
+				if (Fact.EndSample == 0)
+				{
+					Fact.EndSample = DecodedData.Length / 2;
+				}
 				//Console.ReadKey();
 			}
 
