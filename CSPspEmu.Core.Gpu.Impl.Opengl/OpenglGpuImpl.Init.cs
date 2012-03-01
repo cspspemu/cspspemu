@@ -13,6 +13,9 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
+using System.Drawing;
+using System.Diagnostics;
+using CSharpUtils;
 #else
 using MiniGL;
 #endif
@@ -85,6 +88,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		static private INativeWindow NativeWindow;
 #endif
 
+		static public int GlGetInteger(GetPName Name)
+		{
+			int Value;
+			GL.GetInteger(Name, out Value);
+			return Value;
+		}
 
 		/// <summary>
 		/// 
@@ -124,6 +133,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 						gm.Stereo
 					);
 
+					//UsedGraphicsMode = new GraphicsMode(new OpenTK.Graphics.ColorFormat(8, 8, 8, 8), 24, 8);
+
 					//var UsedGraphicsMode = new GraphicsMode(color: new ColorFormat(32), depth: 24, stencil: 8, samples: 0);
 					var UsedGameWindowFlags = GameWindowFlags.Default;
 					//Console.Error.WriteLine(UsedGraphicsMode);
@@ -131,20 +142,55 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 #if USE_GL_CONTROL
 					GLControl = new GLControl(UsedGraphicsMode, 3, 0, GraphicsContextFlags.Default);
 #else
-					NativeWindow = new NativeWindow(512, 272, "PspGraphicEngine", UsedGameWindowFlags, UsedGraphicsMode, DisplayDevice.Default);
+					NativeWindow = new NativeWindow(512, 272, "PspGraphicEngine", UsedGameWindowFlags, UsedGraphicsMode, DisplayDevice.GetDisplay(DisplayIndex.Default));
 #endif
-
+					
 #if SHOW_WINDOW
 					NativeWindow.Visible = true;
 #endif
+					//Utilities.CreateWindowsWindowInfo(handle);
 
-					GraphicsContext = new GraphicsContext(GraphicsMode.Default, WindowInfo);
+					GraphicsContext = new GraphicsContext(UsedGraphicsMode, WindowInfo);
 					GraphicsContext.MakeCurrent(WindowInfo);
-					GraphicsContext.VSync = false;
+					GraphicsContext.SwapInterval = 0;
 					{
 						(GraphicsContext as IGraphicsContextInternal).LoadAll();
 						Initialize();
 					}
+
+#if true
+					//Console.WriteLine("## {0}", UsedGraphicsMode);
+					Console.WriteLine("## GraphicsContext.GraphicsMode: {0}", GraphicsContext.GraphicsMode);
+
+					Console.WriteLine("## OpenGL Context Version: {0}.{1}", GlGetInteger(GetPName.MajorVersion), GlGetInteger(GetPName.MinorVersion));
+
+					Console.WriteLine("## Depth Bits: {0}", GlGetInteger(GetPName.DepthBits));
+					Console.WriteLine("## Stencil Bits: {0}", GlGetInteger(GetPName.StencilBits));
+
+					if (GlGetInteger(GetPName.StencilBits) <= 0)
+					{
+						ConsoleUtils.SaveRestoreConsoleState(() =>
+						{
+							Console.ForegroundColor = ConsoleColor.Red;
+							Console.Error.WriteLine("No stencil bits available!");
+						});
+					}
+
+					/*
+					GL.Enable(EnableCap.StencilTest);
+					GL.StencilMask(0xFF);
+					GL.ClearColor(new Color4(Color.FromArgb(0x11, 0x22, 0x33, 0x44)));
+					GL.ClearStencil(0x7F);
+					GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.StencilBufferBit);
+
+					var TestData = new uint[16 * 16];
+					TestData[0] = 0x12345678;
+					GL.ReadPixels(0, 0, 16, 16, PixelFormat.Rgba, PixelType.UnsignedInt8888Reversed, TestData);
+					Console.WriteLine(GL.GetError());
+					for (int n = 0; n < TestData.Length; n++) Console.Write("{0:X}", TestData[n]);
+					*/
+#endif
+
 					GraphicsContext.MakeCurrent(null);
 					CompletedEvent.Set();
 					while (Running)
