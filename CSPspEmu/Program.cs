@@ -17,6 +17,10 @@ using Microsoft.Win32;
 using CSPspEmu.Core;
 using CSPspEmu.Resources;
 using CSPspEmu.AutoTests;
+using System.Diagnostics;
+using CSharpUtils;
+using CSharpUtils.Extensions;
+using CSharpUtils.Getopt;
 
 namespace CSPspEmu
 {
@@ -275,29 +279,78 @@ namespace CSPspEmu
 			Environment.Exit(0);
 #endif
 
-			if (Arguments.Length > 0)
+			var Getopt = new Getopt(Arguments);
 			{
-				if (Arguments[0] == "/associate")
+				Getopt.AddRule(new[] { "/help", "/?", "-h", "--help", "-?" }, () =>
 				{
-					Registry.ClassesRoot.CreateSubKey(".elf").SetValue(null, "cspspemu.executable");
-					Registry.ClassesRoot.CreateSubKey(".pbp").SetValue(null, "cspspemu.executable");
-					Registry.ClassesRoot.CreateSubKey(".cso").SetValue(null, "cspspemu.executable");
-					Registry.ClassesRoot.CreateSubKey(".prx").SetValue(null, "cspspemu.executable");
-					Registry.ClassesRoot.CreateSubKey(".dax").SetValue(null, "cspspemu.executable");
-
-					var Reg = Registry.ClassesRoot.CreateSubKey("cspspemu.executable");
-					Reg.SetValue(null, "PSP executable file (.elf, .pbp, .cso, .prx, .dax)");
-					Reg.SetValue("DefaultIcon", @"""" + ApplicationPaths.ExecutablePath + @""",0");
-					Reg.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command").SetValue(null, @"""" + ApplicationPaths.ExecutablePath + @""" ""%1""");
-
+					Console.WriteLine("Soywiz's Psp Emulator - {0} - {1}", PspGlobalConfiguration.CurrentVersion, PspGlobalConfiguration.GitRevision);
+					Console.WriteLine("");
+					Console.WriteLine(" Switches:");
+					Console.WriteLine("   /version      - Outputs the program version");
+					Console.WriteLine("   /gitrevision  - Outputs the git revision");
+					Console.WriteLine("   /installat3   - Installs the WavDest filter. Requires be launched with administrative rights.");
+					Console.WriteLine("   /associate    - Associates extensions with the program. Requires be launched with administrative rights.");
+					Console.WriteLine("");
+					Console.WriteLine(" Examples:");
+					Console.WriteLine("   cspspemu.exe <path_to_psp_executable>");
+					Console.WriteLine("");
 					Environment.Exit(0);
-				}
-				if (Arguments[0] == "/tests")
+				});
+				Getopt.AddRule("/version", () =>
+				{
+					Console.Write("{0}", PspGlobalConfiguration.CurrentVersion);
+					Environment.Exit(0);
+				});
+				Getopt.AddRule("/gitrevision", () =>
+				{
+					Console.Write("{0}", PspGlobalConfiguration.GitRevision);
+					Environment.Exit(0);
+				});
+				Getopt.AddRule("/installat3", () =>
+				{
+					try
+					{
+						var OutFile = Environment.SystemDirectory + @"\WavDest.dll";
+						File.WriteAllBytes(OutFile, Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.WavDest.dll").ReadAll());
+						Process.Start(new ProcessStartInfo("regsvr32", String.Format(@"/s ""{0}"" ", OutFile))).WaitForExit();
+						Environment.Exit(0);
+					}
+					catch (Exception Exception)
+					{
+						Console.Error.WriteLine(Exception);
+						Environment.Exit(-1);
+					}
+				});
+				Getopt.AddRule("/associate", () =>
+				{
+					try
+					{
+						Registry.ClassesRoot.CreateSubKey(".elf").SetValue(null, "cspspemu.executable");
+						Registry.ClassesRoot.CreateSubKey(".pbp").SetValue(null, "cspspemu.executable");
+						Registry.ClassesRoot.CreateSubKey(".cso").SetValue(null, "cspspemu.executable");
+						Registry.ClassesRoot.CreateSubKey(".prx").SetValue(null, "cspspemu.executable");
+						Registry.ClassesRoot.CreateSubKey(".dax").SetValue(null, "cspspemu.executable");
+
+						var Reg = Registry.ClassesRoot.CreateSubKey("cspspemu.executable");
+						Reg.SetValue(null, "PSP executable file (.elf, .pbp, .cso, .prx, .dax)");
+						Reg.SetValue("DefaultIcon", @"""" + ApplicationPaths.ExecutablePath + @""",0");
+						Reg.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command").SetValue(null, @"""" + ApplicationPaths.ExecutablePath + @""" ""%1""");
+
+						Environment.Exit(0);
+					}
+					catch (Exception Exception)
+					{
+						Console.Error.WriteLine(Exception);
+						Environment.Exit(-1);
+					}
+				});
+				Getopt.AddRule("/tests", () =>
 				{
 					TestsAutoProgram.Main(Arguments.Skip(1).ToArray());
 					Environment.Exit(0);
-				}
+				});
 			}
+			Getopt.Process();
 			//new PspAudioOpenalImpl().__TestAudio();
 			//new PspAudioWaveOutImpl().__TestAudio();
 			//return;

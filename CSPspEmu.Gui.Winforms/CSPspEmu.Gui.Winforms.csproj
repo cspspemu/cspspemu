@@ -160,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icons.txt" />
+    <None Include="Resources\uac_icon.png" />
     <None Include="Resources\twitter_icon-png8.png" />
     <None Include="Resources\facebook_icon-png8.png" />
   </ItemGroup>

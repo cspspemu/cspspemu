@@ -665,21 +665,15 @@ namespace CSPspEmu.Gui.Winforms
 			CheckForUpdatesThread.Start();
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		/// <seealso cref="http://social.msdn.microsoft.com/Forums/en-US/winforms/thread/db6647a3-85ca-4dc4-b661-fbbd36bd561f/"/>
-		private void associateWithPBPAndCSOToolStripMenuItem_Click(object sender, EventArgs e)
+		static private bool RunProgramInBackground(string ApplicationPath, string ApplicationArguments)
 		{
 			// This snippet needs the "System.Diagnostics"
 			// library
 
 
 			// Application path and command line arguments
-			string ApplicationPath = ApplicationPaths.ExecutablePath;
-			string ApplicationArguments = "/associate";
+			//string ApplicationPath = ApplicationPaths.ExecutablePath;
+			//string ApplicationArguments = "/associate";
 
 			//Console.WriteLine(ExecutablePath);
 
@@ -715,7 +709,20 @@ namespace CSPspEmu.Gui.Winforms
 				Error = true;
 			}
 
-			if (!Error && ProcessObj.ExitCode == 0)
+			return !Error && (ProcessObj.ExitCode == 0);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		/// <seealso cref="http://social.msdn.microsoft.com/Forums/en-US/winforms/thread/db6647a3-85ca-4dc4-b661-fbbd36bd561f/"/>
+		private void associateWithPBPAndCSOToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var Success = !RunProgramInBackground(ApplicationPaths.ExecutablePath, "/associate");
+
+			if (!Success)
 			{
 				MessageBox.Show("Associations done!", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
@@ -836,6 +843,21 @@ namespace CSPspEmu.Gui.Winforms
 			DebugTraceUnimplementedGpuMenu.Checked = PspConfig.NoticeUnimplementedGpuCommands;
 			UtilsEnableMpegMenu.Checked = IGuiExternalInterface.GetConfig().StoredConfig.EnableMpeg;
 			//UtilsUseFastmemMenu.Checked = !PspConfig.;
+		}
+
+		private void installWavDestDirectShowFilterToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var Success = !RunProgramInBackground(ApplicationPaths.ExecutablePath, "/installat3");
+
+			if (!Success)
+			{
+				MessageBox.Show("Registered done!", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			}
+			else
+			{
+				MessageBox.Show("Can't register WavDest.dll", "Done", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+
 		}
 	}
 }

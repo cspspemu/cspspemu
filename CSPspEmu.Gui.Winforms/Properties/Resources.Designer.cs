@@ -200,6 +200,13 @@ namespace CSPspEmu.Gui.Winforms.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap uac_icon {
+            get {
+                object obj = ResourceManager.GetObject("uac_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap us {
             get {
                 object obj = ResourceManager.GetObject("us", resourceCulture);

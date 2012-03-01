@@ -170,6 +170,10 @@
     <Content Include="..\version_last.txt">
       <Link>version_last.txt</Link>
     </Content>
+    <EmbeddedResource Include="..\WavDest.dll">
+      <Link>WavDest.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="psp.ico" />
   </ItemGroup>
   <ItemGroup>

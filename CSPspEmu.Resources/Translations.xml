@@ -141,6 +141,10 @@
 			<translation lang="en">Spanish</translation>
 			<translation lang="es">Español</translation>
 		</text>
+		<text id="UtilsInstallWavDestMenu">
+			<translation lang="en">Install &amp;WavDest DirectShow Filter</translation>
+			<translation lang="es">Instalar filtro de DirectShow WavDest&amp;</translation>
+		</text>
 	</category>
 	<category id="extra">
 		<text id="UnknownGame">
