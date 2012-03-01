@@ -70,6 +70,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			public At3FormatStruct Format;
 			public FactStruct Fact;
 			public SmplStruct Smpl;
+			public LoopInfoStruct[] LoopInfoList;
 			public int MaximumSamples
 			{
 				get
@@ -186,6 +187,53 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			/// </summary>
 			public struct SmplStruct
 			{
+				/// <summary>
+				/// 0000 -
+				/// </summary>
+				private fixed uint Unknown[7];
+
+				/// <summary>
+				/// 001C -
+				/// </summary>
+				public uint LoopCount;
+
+				/// <summary>
+				/// 0020 - 
+				/// </summary>
+				private uint Unknown2;
+			}
+
+			public struct LoopInfoStruct
+			{
+				/// <summary>
+				/// 0000 -
+				/// </summary>
+				uint CuePointID;
+				
+				/// <summary>
+				/// 0004 -
+				/// </summary>
+				uint Type;
+				
+				/// <summary>
+				/// 0008 -
+				/// </summary>
+				uint StartSample;
+				
+				/// <summary>
+				/// 000C -
+				/// </summary>
+				uint EndSample;
+				
+				/// <summary>
+				/// 0010 -
+				/// </summary>
+				uint Fraction;
+				
+				/// <summary>
+				/// 0014 -
+				/// </summary>
+				int PlayCount;
 			}
 
 			HleState HleState;
@@ -296,6 +344,9 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 						case "smpl":
 							// Loop info
 							Smpl = ChunkStream.ReadStructPartially<SmplStruct>();
+							LoopInfoList = ChunkStream.ReadStructVector<LoopInfoStruct>(Smpl.LoopCount);
+							Console.WriteLine("AT3 smpl: {0}", Smpl.ToStringDefault());
+							foreach (var LoopInfo in LoopInfoList) Console.WriteLine("Loop: {0}", LoopInfo.ToStringDefault());
 							break;
 						case "data":
 							this.DataStream = ChunkStream;
@@ -545,14 +596,17 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 
 			if (Atrac.DecodingReachedEnd)
 			{
-				ReachedEnd = -1;
-				throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED));
+				if (Atrac.NumberOfLoops == 0)
+				{
+					ReachedEnd = -1;
+					throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED));
+				}
+				if (Atrac.NumberOfLoops > 0) Atrac.NumberOfLoops--;
+				Atrac.DecodingOffsetInSamples = 0;
 			}
-			else
-			{
-				ReachedEnd = 0;
-				return 0;
-			}
+
+			ReachedEnd = 0;
+			return 0;
 		}
 
 		/// <summary>
