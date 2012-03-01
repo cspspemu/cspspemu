@@ -334,6 +334,7 @@ namespace CSPspEmu.AutoTests
 			if (PspAutoTestsFolder == "")
 			{
 				Console.Error.WriteLine("Can't find 'pspautotests/tests' folder.");
+				Console.ReadKey();
 			}
 
 			Console.WriteLine(PspAutoTestsFolder);

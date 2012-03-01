@@ -532,6 +532,8 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			DebugTraceSyscallsMenu.Checked = PspConfig.DebugSyscalls;
 			DebugTraceUnimplementedSyscallsMenu.Checked = PspConfig.DebugNotImplemented;
+			DebugTraceUnimplementedGpuMenu.Checked = PspConfig.NoticeUnimplementedGpuCommands;
+			//UtilsUseFastmemMenu.Checked = !PspConfig.;
 		}
 
 		private void updateDebugGpu()

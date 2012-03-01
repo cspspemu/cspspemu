@@ -131,6 +131,10 @@ namespace CSPspEmu.Hle.Managers
 				{
 					Thread.Sleep(1);
 				}
+				if (Threads.Count == 0)
+				{
+					Thread.Sleep(5);
+				}
 				return;
 			}
 

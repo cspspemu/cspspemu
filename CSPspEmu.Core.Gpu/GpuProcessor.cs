@@ -217,7 +217,14 @@ namespace CSPspEmu.Core.Gpu
 			Status.SetValue(StatusEnum.Completed);
 
 			//Thread.Sleep(1);
-			DisplayListQueueUpdated.WaitOne(0);
+			if (PspConfig.VerticalSynchronization)
+			{
+				DisplayListQueueUpdated.WaitOne(1);
+			}
+			else
+			{
+				DisplayListQueueUpdated.WaitOne(0);
+			}
 
 			while (true)
 			{

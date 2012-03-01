@@ -270,6 +270,11 @@ namespace CSPspEmu
 			Console.ReadKey(); Environment.Exit(0);
 #endif
 
+#if RUN_TESTS
+			TestsAutoProgram.Main(Arguments.Skip(0).ToArray());
+			Environment.Exit(0);
+#endif
+
 			if (Arguments.Length > 0)
 			{
 				if (Arguments[0] == "/associate")
