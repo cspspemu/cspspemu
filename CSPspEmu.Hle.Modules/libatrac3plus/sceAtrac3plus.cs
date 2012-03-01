@@ -20,6 +20,8 @@ using System.Security.Cryptography;
 using CSPspEmu.Hle.Vfs.MemoryStick;
 using CSPspEmu.Hle.Vfs.Local;
 using System.Diagnostics;
+using CSharpUtils.Streams;
+using CSharpUtils.Arrays;
 
 namespace CSPspEmu.Hle.Modules.libatrac3plus
 {
@@ -84,9 +86,9 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			}
 			public CodecType CodecType;
 			public int NumberOfLoops;
-			public int DecodingOffsetInSamples;
+			public int DecodingOffset;
 			public Stream DataStream;
-			public short[] DecodedData;
+			public IArray<StereoShortSoundSample> DecodedSamples;
 
 			public enum CompressionCode : ushort
 			{
@@ -208,32 +210,32 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 				/// <summary>
 				/// 0000 -
 				/// </summary>
-				uint CuePointID;
+				public uint CuePointID;
 				
 				/// <summary>
 				/// 0004 -
 				/// </summary>
-				uint Type;
+				public uint Type;
 				
 				/// <summary>
 				/// 0008 -
 				/// </summary>
-				uint StartSample;
+				public uint StartSample;
 				
 				/// <summary>
 				/// 000C -
 				/// </summary>
-				uint EndSample;
+				public uint EndSample;
 				
 				/// <summary>
 				/// 0010 -
 				/// </summary>
-				uint Fraction;
+				public uint Fraction;
 				
 				/// <summary>
 				/// 0014 -
 				/// </summary>
-				int PlayCount;
+				public int PlayCount;
 			}
 
 			HleState HleState;
@@ -290,7 +292,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 				}
 				catch
 				{
-					DecodedData = new short[0];
+					DecodedSamples = new ArrayWrapper<StereoShortSoundSample>();
 				}
 				//Debug.WriteLine("[c]");
 			}
@@ -307,9 +309,11 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 							WavFormat = ChunkStream.ReadStruct<WavFormatStruct>();
 							break;
 						case "data":
-							var Data = ChunkStream.ReadAll();
-							DecodedData = new short[Data.Length / 2];
-							Buffer.BlockCopy(Data, 0, DecodedData, 0, Data.Length);
+#if false
+							DecodedSamples = new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoShortSoundSample>(ChunkStream.ReadAll()));
+#else
+							DecodedSamples = ChunkStream.ConvertToStreamStructCachedArrayWrapper<StereoShortSoundSample>(16 * 1024);
+#endif
 							break;
 						default:
 							throw (new NotImplementedException(String.Format("Can't handle chunk '{0}'", ChunkType)));
@@ -319,11 +323,11 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 
 				//new WaveStream().WriteWave(@"c:\temp\3.wav", DecodedData);
 
-				Console.WriteLine("DecodedSamples: {0}", DecodedData.Length);
+				Console.WriteLine("DecodedSamples: {0}", DecodedSamples.Length);
 				Console.WriteLine("EndSample: {0}", Fact.EndSample);
 				if (Fact.EndSample == 0)
 				{
-					Fact.EndSample = DecodedData.Length / 2;
+					Fact.EndSample = DecodedSamples.Length / 2;
 				}
 				//Console.ReadKey();
 			}
@@ -375,7 +379,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			{
 				get
 				{
-					return DecodedData.Length / NumberOfChannels;
+					return DecodedSamples.Length;
 				}
 			}
 
@@ -383,17 +387,10 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			{
 				get
 				{
-					return DecodingOffsetInSamples >= TotalSamples;
+					return DecodingOffset >= TotalSamples;
 				}
 			}
 
-			public int NumberOfChannels
-			{
-				get
-				{
-					return 2;
-				}
-			}
 			/*
 			public bool DecodeSample()
 			{
@@ -402,17 +399,17 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 
 			public int GetNumberOfSamplesInNextFrame()
 			{
-				return Math.Min(MaximumSamples, TotalSamples - DecodingOffsetInSamples);
+				return Math.Min(MaximumSamples, TotalSamples - DecodingOffset);
 			}
 
 			//List<short> Temp = new List<short>();
-			public int Decode(short* SamplesOut)
+			public int Decode(StereoShortSoundSample* SamplesOut)
 			{
 				//int Channels = 2;
 
 				//ToReadSamples /= 2;
 
-				int StartDecodingOffsetInSamples = DecodingOffsetInSamples;
+				int StartDecodingOffset = DecodingOffset;
 
 				for (int n = 0; n < MaximumSamples; n++)
 				{
@@ -420,9 +417,8 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 					{
 						break;
 					}
-					SamplesOut[n * NumberOfChannels + 0] = DecodedData[DecodingOffsetInSamples * NumberOfChannels + 0];
-					SamplesOut[n * NumberOfChannels + 1] = DecodedData[DecodingOffsetInSamples * NumberOfChannels + 1];
-					DecodingOffsetInSamples++;
+					SamplesOut[n] = DecodedSamples[DecodingOffset];
+					DecodingOffset++;
 				}
 				/*
 				if (Temp.Count > 90000)
@@ -431,7 +427,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 					Console.ReadKey();
 				}
 				*/
-				return DecodingOffsetInSamples - StartDecodingOffsetInSamples;
+				return DecodingOffset - StartDecodingOffset;
 			}
 		}
 
@@ -583,7 +579,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// </param>
 		/// <returns>Less than 0 on error, otherwise 0</returns>
 		[HlePspFunction(NID = 0x6A8C3CD5, FirmwareVersion = 150)]
-		public int sceAtracDecodeData(int AtracId, short* SamplesOut, out int DecodedSamples, out int ReachedEnd, out int RemainingFramesToDecode)
+		public int sceAtracDecodeData(int AtracId, StereoShortSoundSample* SamplesOut, out int DecodedSamples, out int ReachedEnd, out int RemainingFramesToDecode)
 		{
 			var Atrac = AtracList.Get(AtracId);
 			
@@ -602,7 +598,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 					throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED));
 				}
 				if (Atrac.NumberOfLoops > 0) Atrac.NumberOfLoops--;
-				Atrac.DecodingOffsetInSamples = 0;
+				Atrac.DecodingOffset = 0;
 			}
 
 			ReachedEnd = 0;
@@ -771,7 +767,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		public int sceAtracGetNextDecodePosition(int AtracId, out int SamplePositionPointer)
 		{
 			var Atrac = AtracList.Get(AtracId);
-			SamplePositionPointer = Atrac.DecodingOffsetInSamples;
+			SamplePositionPointer = Atrac.DecodingOffset;
 			if (Atrac.DecodingReachedEnd) throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED));
 			return 0;
 		}
