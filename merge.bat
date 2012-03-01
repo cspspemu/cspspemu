@@ -1,10 +1,10 @@
 @ECHO OFF
 IF "%1"=="Debug" GOTO END
 PUSHD %~dp0
-	REM SET BASE_FOLDER=CSPspEmu.Sandbox\bin\Debug
-	SET BASE_FOLDER=%~dp0\CSPspEmu.Sandbox\bin\Release
+	REM SET BASE_FOLDER=CSPspEmu\bin\Debug
+	SET BASE_FOLDER=%~dp0\CSPspEmu\bin\Release
 	SET FILES=
-	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Sandbox.exe"
+	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.exe"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSharpUtils.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSharpUtils.Drawing.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Audio.dll"

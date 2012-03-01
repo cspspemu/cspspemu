@@ -385,7 +385,7 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "lsu";
 				//WildCardFilter = "pmf";
 				//WildCardFilter = "pmf_simple";
-				WildCardFilter = "sema";
+				//WildCardFilter = "sema";
 				//WildCardFilter = "mbx";
 				//WildCardFilter = "vtimer";
 				//WildCardFilter = "vfpu_colors";
