@@ -27,11 +27,16 @@ namespace CSPspEmu.Core
 				if (_MemoryStickRootFolder == null)
 				{
 					_MemoryStickRootFolder = Path.GetDirectoryName(Application.ExecutablePath) + "/ms";
-					if (_MemoryStickRootFolder.Replace('\\', '/').EndsWith("CSPspEmu.Sandbox/bin/Debug/ms"))
+					if (_MemoryStickRootFolder.Replace('\\', '/').EndsWith("CSPspEmu/bin/Debug/ms"))
 					{
 						_MemoryStickRootFolder = Path.GetFullPath(MemoryStickRootFolder + "/../../../../ms");
 					}
-					try { Directory.CreateDirectory(_MemoryStickRootFolder); } catch { }
+					else if (_MemoryStickRootFolder.Replace('\\', '/').EndsWith("CSPspEmu/bin/Release/ms"))
+					{
+						_MemoryStickRootFolder = Path.GetFullPath(MemoryStickRootFolder + "/../../../../ms");
+					}
+					try { Directory.CreateDirectory(_MemoryStickRootFolder); }
+					catch { }
 				}
 				return _MemoryStickRootFolder;
 			}

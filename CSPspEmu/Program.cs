@@ -18,7 +18,7 @@ using CSPspEmu.Core;
 using CSPspEmu.Resources;
 using CSPspEmu.AutoTests;
 
-namespace CSPspEmu.Sandbox
+namespace CSPspEmu
 {
 	unsafe class Program
 	{

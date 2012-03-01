@@ -17,7 +17,7 @@ namespace CSPspEmu.Core
 			{
 				if (_CurrentVersion == null)
 				{
-					_CurrentVersion = Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.Sandbox.version_current.txt").ReadAllContentsAsString();
+					_CurrentVersion = Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.version_current.txt").ReadAllContentsAsString();
 				}
 				return _CurrentVersion;
 			}

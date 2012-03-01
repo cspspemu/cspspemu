@@ -21,7 +21,7 @@ using CSPspEmu.Runner;
 using CSPspEmu.Core.Audio.Impl.WaveOut;
 using CSPspEmu.Core.Audio.Impl.Openal;
 
-namespace CSPspEmu.Sandbox
+namespace CSPspEmu
 {
 	unsafe class PspEmulator : IGuiExternalInterface
 	{
