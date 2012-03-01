@@ -38,7 +38,9 @@ namespace CSPspEmu.AutoTests
 		static public void Init()
 		{
 			PspConfig = new PspConfig();
-			PspConfig.DebugSyscalls = true;
+			PspConfig.DebugSyscalls = false;
+			PspConfig.TraceLastSyscalls = false;
+			PspConfig.ShowInstructionStats = false;
 			foreach (var _FileName in new[] {
 					Path.GetDirectoryName(typeof(Program).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll",
 					Application.ExecutablePath,
@@ -383,7 +385,7 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "lsu";
 				//WildCardFilter = "pmf";
 				//WildCardFilter = "pmf_simple";
-				//WildCardFilter = "sema";
+				WildCardFilter = "sema";
 				//WildCardFilter = "mbx";
 				//WildCardFilter = "vtimer";
 				//WildCardFilter = "vfpu_colors";
@@ -392,7 +394,7 @@ namespace CSPspEmu.AutoTests
 				//WildCardFilter = "mutex";
 				//WildCardFilter = "vpl";
 				//WildCardFilter = "fpl";
-				WildCardFilter = "gpu";
+				//WildCardFilter = "gpu";
 				//WildCardFilter = "gpu/triangle";
 				//WildCardFilter = "gpu/reflection";
 				//WildCardFilter = "gpu";

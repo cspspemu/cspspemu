@@ -11,7 +11,16 @@ namespace CSPspEmu.Hle.Managers
 		protected Dictionary<TKey, TType> Items = new Dictionary<TKey, TType>();
 		public SceKernelErrors OnKeyNotFoundError = (SceKernelErrors)(-1);
 
-		public HleUidPoolSpecial(TKey FirstId = default(TKey))
+		public HleUidPoolSpecial()
+		{
+#if true
+			this.LastId = (TKey)(dynamic)1;
+#else
+			this.LastId = (TKey)(dynamic)0;
+#endif
+		}
+
+		public HleUidPoolSpecial(TKey FirstId)
 		{
 			this.LastId = FirstId;
 		}
