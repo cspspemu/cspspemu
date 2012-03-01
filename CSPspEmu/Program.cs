@@ -350,7 +350,14 @@ namespace CSPspEmu
 					Environment.Exit(0);
 				});
 			}
-			Getopt.Process();
+			try
+			{
+				Getopt.Process();
+			}
+			catch (Exception Exception)
+			{
+				//Console.Error.WriteLine(Exception);
+			}
 			//new PspAudioOpenalImpl().__TestAudio();
 			//new PspAudioWaveOutImpl().__TestAudio();
 			//return;

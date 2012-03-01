@@ -58,7 +58,10 @@ namespace CSPspEmu.Hle.Managers
 					if (DelegateInfo.ModuleImportName != "Kernel_Library")
 					{
 						LastCalledCallbacks.Enqueue(DelegateInfo);
-						HleThreadManager.Current.LastCalledHleFunction = DelegateInfo;
+						if (HleThreadManager != null && HleThreadManager.Current != null)
+						{
+							HleThreadManager.Current.LastCalledHleFunction = DelegateInfo;
+						}
 					}
 					if (LastCalledCallbacks.Count > 10)
 					{
