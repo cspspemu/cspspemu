@@ -21,7 +21,7 @@ using System.Drawing;
 
 namespace CSPspEmu.AutoTests
 {
-	public class Program
+	public class TestsAutoProgram
 	{
 		static PspConfig PspConfig;
 
@@ -42,7 +42,7 @@ namespace CSPspEmu.AutoTests
 			PspConfig.TraceLastSyscalls = false;
 			PspConfig.ShowInstructionStats = false;
 			foreach (var _FileName in new[] {
-					Path.GetDirectoryName(typeof(Program).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll",
+					Path.GetDirectoryName(typeof(TestsAutoProgram).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll",
 					Application.ExecutablePath,
 				})
 			{

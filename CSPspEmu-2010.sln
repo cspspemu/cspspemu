@@ -24,11 +24,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Hle.Modules", "CSP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Runner", "CSPspEmu.Runner\CSPspEmu.Runner.csproj", "{6552E4E6-198A-46B6-864A-53CA5C1ED851}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Sandbox", "CSPspEmu.Sandbox\CSPspEmu.Sandbox.csproj", "{B4C3D929-6A7E-4A71-B896-D2C1C36C4554}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu", "CSPspEmu.Sandbox\CSPspEmu.csproj", "{B4C3D929-6A7E-4A71-B896-D2C1C36C4554}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Tests", "CSPspEmu.Tests\CSPspEmu.Tests.csproj", "{37463C84-1A96-4A1A-BD02-2A131D11B9EA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.TestsAuto", "CSPspEmu.TestsAuto\CSPspEmu.TestsAuto.csproj", "{AD6A52A7-E83F-48E7-A85F-232D738EC949}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Core.Audio.Impl.Openal", "CSPspEmu.Core.Audio.Impl.Openal\CSPspEmu.Core.Audio.Impl.Openal.csproj", "{07C4AE15-8E61-4740-B5A9-44DB87CECB46}"
 EndProject
@@ -161,16 +159,6 @@ Global
 		{37463C84-1A96-4A1A-BD02-2A131D11B9EA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{37463C84-1A96-4A1A-BD02-2A131D11B9EA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{37463C84-1A96-4A1A-BD02-2A131D11B9EA}.Release|x86.ActiveCfg = Release|Any CPU
-		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{AD6A52A7-E83F-48E7-A85F-232D738EC949}.Release|x86.ActiveCfg = Release|Any CPU
 		{07C4AE15-8E61-4740-B5A9-44DB87CECB46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{07C4AE15-8E61-4740-B5A9-44DB87CECB46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07C4AE15-8E61-4740-B5A9-44DB87CECB46}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

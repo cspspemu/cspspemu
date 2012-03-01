@@ -76,6 +76,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PspEmulator.cs" />
+    <Compile Include="TestsAuto\AudioImplMock.cs" />
+    <Compile Include="TestsAuto\GpuImplMock.cs" />
+    <Compile Include="TestsAuto\TestsAutoProgram.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
