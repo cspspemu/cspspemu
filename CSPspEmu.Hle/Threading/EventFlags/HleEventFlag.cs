@@ -3,23 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Threading.EventFlags
 {
 	unsafe public class HleEventFlag
 	{
-		public AttributesSet Attributes
-		{
-			get { return Info.Attributes; }
-			set { Info.Attributes = value; }
-		}
-		public EventFlagInfo Info = new EventFlagInfo();
-		public uint BitPattern
-		{
-			get { return Info.CurrentPattern; }
-			set { Info.CurrentPattern = value; }
-		}
+		public EventFlagInfo Info = new EventFlagInfo(0);
 		protected List<WaitThread> WaitingThreads = new List<WaitThread>();
 
 		public class WaitThread
@@ -80,13 +71,13 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 					}
 					if (WaitingThread.WaitType.HasFlag(EventFlagWaitTypeSet.Clear))
 					{
-						BitPattern &= ~WaitingThread.BitsToMatch;
+						Info.CurrentPattern &= ~WaitingThread.BitsToMatch;
 						//Matching
 						//throw(new NotImplementedException());
 					}
 					else if (WaitingThread.WaitType.HasFlag(EventFlagWaitTypeSet.ClearAll))
 					{
-						BitPattern = 0;
+						Info.CurrentPattern = 0;
 						//throw (new NotImplementedException());
 					}
 					WaitingThreads.Remove(WaitingThread);
@@ -115,7 +106,7 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 		/// <param name="BitsToClear"></param>
 		public void ClearBits(uint BitsToClear)
 		{
-			BitPattern &= BitsToClear;
+			Info.CurrentPattern &= BitsToClear;
 			UpdateWaitingThreads();
 		}
 
@@ -123,21 +114,21 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 		{
 			if (CheckedBits != null)
 			{
-				*CheckedBits = BitPattern;
+				*CheckedBits = Info.CurrentPattern;
 			}
 			if (WaitType.HasFlag(EventFlagWaitTypeSet.Or))
 			{
-				return (BitPattern & BitsToMatch) != 0;
+				return (Info.CurrentPattern & BitsToMatch) != 0;
 			}
 			else
 			{
-				return (BitPattern & BitsToMatch) == BitsToMatch;
+				return (Info.CurrentPattern & BitsToMatch) == BitsToMatch;
 			}
 		}
 
 		public void Set(uint Bits)
 		{
-			BitPattern |= Bits;
+			Info.CurrentPattern |= Bits;
 			UpdateWaitingThreads();
 			//BitPattern = Bits;
 		}
@@ -175,34 +166,52 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 	unsafe public struct EventFlagInfo
 	{
 		/// <summary>
-		/// 
+		/// 0x0000 - 
 		/// </summary>
 		public int Size;
 
 		/// <summary>
-		/// 
+		/// 0x0004 - 
 		/// </summary>
 		public fixed byte Name[32];
 
 		/// <summary>
-		/// 
+		/// 0x0024 - 
 		/// </summary>
 		public HleEventFlag.AttributesSet Attributes;
 
 		/// <summary>
-		/// 
+		/// 0x0028 - 
 		/// </summary>
 		public uint InitialPattern;
 
 		/// <summary>
-		/// 
+		/// 0x002C - 
 		/// </summary>
 		public uint CurrentPattern;
 
 		/// <summary>
-		/// 
+		/// 0x0030 -
 		/// </summary>
 		public int NumberOfWaitingThreads;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public EventFlagInfo(int Dummy)
+		{
+			Size = sizeof(EventFlagInfo);
+			//Name[0] = 0;
+			Attributes = (HleEventFlag.AttributesSet)0;
+			InitialPattern = 0;
+			CurrentPattern = 0;
+			NumberOfWaitingThreads = 0;
+		}
+
+		public override string ToString()
+		{
+			return this.ToStringDefault();
+		}
 	}
 
 	public struct SceKernelEventFlagOptParam

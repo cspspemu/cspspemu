@@ -86,6 +86,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		///		0 if error else a ElementaryStream id.
 		/// </returns>
 		[HlePspFunction(NID = 0xA780CF7E, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceMpegMallocAvcEsBuf(SceMpeg* Mpeg)
 		{
 			for (int n = 0; n < 2; n++)
@@ -105,6 +106,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <param name="Mpeg"></param>
 		/// <param name="ElementaryStream">Value returned from sceMpegMallocAvcEsBuf</param>
 		[HlePspFunction(NID = 0xCEB870B1, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public uint sceMpegFreeAvcEsBuf(SceMpeg* Mpeg, int ElementaryStream)
 		{
 			AbvEsBufAllocated[ElementaryStream - 1] = false;

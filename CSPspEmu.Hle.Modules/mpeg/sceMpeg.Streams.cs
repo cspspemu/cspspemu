@@ -72,6 +72,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <param name="Offset">Will contain the stream offset in bytes, usually 2048</param>
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0x21FF80E4, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceMpegQueryStreamOffset(SceMpeg* Mpeg, byte* PmfHeader, uint* Offset)
 		{
 			var Pmf = new Pmf().Load(new MemoryStream(PointerUtils.PointerToByteArray(PmfHeader, 2048)));
@@ -86,6 +87,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <param name="Size">will contain stream size in bytes</param>
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0x611E9E11, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceMpegQueryStreamSize(byte* PmfHeader, uint* Size)
 		{
 			var Pmf = new Pmf().Load(new MemoryStream(PointerUtils.PointerToByteArray(PmfHeader, 2048)));

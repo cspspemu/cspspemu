@@ -25,6 +25,7 @@
 *.pidb
 *.vsp
 *.userprefs
+*.user
 *.dump
 /CSPspEmu.Tests/obj
 /CSPspEmu.Tests/bin
@@ -68,3 +69,5 @@
 /CSPspEmu.Core.Audio/obj
 /CSPspEmu.Media/bin
 /CSPspEmu.Media/obj
+/version_current.txt
+/git_revision.txt

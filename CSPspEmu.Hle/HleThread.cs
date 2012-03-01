@@ -543,12 +543,35 @@ namespace CSPspEmu.Hle
 
 	public enum PspThreadStatus : uint
 	{
+		/// <summary>
+		/// 0x01 - Running.
+		/// </summary>
 		PSP_THREAD_RUNNING = 1,
+
+		/// <summary>
+		/// 0x02 - Ready.
+		/// </summary>
 		PSP_THREAD_READY = 2,
+
+		/// <summary>
+		/// 0x04 - Waiting.
+		/// </summary>
 		PSP_THREAD_WAITING = 4,
+
+		/// <summary>
+		/// 0x08 - Suspended.
+		/// </summary>
 		PSP_THREAD_SUSPEND = 8,
-		PSP_THREAD_STOPPED = 16, // Before startThread
-		PSP_THREAD_KILLED = 32, // Thread manager has killed the thread (stack overflow)
+
+		/// <summary>
+		/// 0x10 - Stopped. (Before startThread)
+		/// </summary>
+		PSP_THREAD_STOPPED = 16,
+
+		/// <summary>
+		/// 0x20 - Thread manager has killed the thread (stack overflow)
+		/// </summary>
+		PSP_THREAD_KILLED = 32,
 	}
 
 	//alias int function(SceSize args, void* argp) SceKernelThreadEntry;
@@ -559,22 +582,22 @@ namespace CSPspEmu.Hle
 	unsafe public struct SceKernelThreadInfo
 	{
 		/// <summary>
-		/// Size of the structure
+		/// 0x0000 - Size of the structure
 		/// </summary>
 		public int Size;
 
 		/// <summary>
-		/// Null terminated name of the thread
+		/// 0x0004 - Null terminated name of the thread
 		/// </summary>
 		public fixed byte Name[32];
 
 		/// <summary>
-		/// Thread attributes
+		/// 0x0024 - Thread attributes
 		/// </summary>
 		public uint Attributes;
 
 		/// <summary>
-		/// Thread status
+		/// 0x0028 - Thread status
 		/// </summary>
 		public PspThreadStatus Status;
 

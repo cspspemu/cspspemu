@@ -22,5 +22,19 @@ namespace CSPspEmu.Core
 				return _CurrentVersion;
 			}
 		}
+
+		static private string _GitRevision;
+
+		static public string GitRevision
+		{
+			get
+			{
+				if (_GitRevision == null)
+				{
+					_GitRevision = Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.git_revision.txt").ReadAllContentsAsString();
+				}
+				return _GitRevision;
+			}
+		}
 	}
 }

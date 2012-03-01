@@ -117,6 +117,10 @@
 			<translation lang="en">Use &amp;Fast but unsafe memory</translation>
 			<translation lang="es">Usar memoria &amp;rápida pero inestable</translation>
 		</text>
+		<text id="UtilsEnableMpegMenu">
+			<translation lang="en">Enable &amp;Mpeg processing (unstable yet)</translation>
+			<translation lang="es">Habilitar procesado de &amp;Mpeg (inestable todavía)</translation>
+		</text>
 		<text id="RunMenu">
 			<translation lang="en">&amp;Run</translation>
 			<translation lang="es">&amp;Ejecución</translation>

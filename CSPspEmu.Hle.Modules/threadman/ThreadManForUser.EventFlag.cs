@@ -31,10 +31,17 @@ namespace CSPspEmu.Hle.Modules.threadman
 			var HleEventFlag = new HleEventFlag()
 			{
 				Name = Name,
-				Attributes = Attributes,
-				BitPattern = BitPattern,
+				Info = new EventFlagInfo(0)
+				{
+					Attributes = Attributes,
+					InitialPattern = BitPattern,
+					CurrentPattern = BitPattern,
+				},
 			};
-			HleEventFlag.Info.InitialPattern = BitPattern;
+#if false
+			HleEventFlag.Info.InitialPattern = 3;
+			HleEventFlag.Info.CurrentPattern = 3;
+#endif
 			return HleState.EventFlagManager.EventFlags.Create(HleEventFlag);
 		}
 
@@ -111,7 +118,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			if (OutBits != null)
 			{
-				*OutBits = EventFlag.BitPattern;
+				*OutBits = EventFlag.Info.CurrentPattern;
 			}
 
 			if (TimedOut)
@@ -201,9 +208,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Info">A pointer to a ::SceKernelEventFlagInfo structure.</param>
 		/// <returns>less than 0 on error</returns>
 		[HlePspFunction(NID = 0xA66B0120, FirmwareVersion = 150)]
-		public int sceKernelReferEventFlagStatus(EventFlagId EventId, EventFlagInfo* Info)
+		[HlePspNotImplemented]
+		public int sceKernelReferEventFlagStatus(EventFlagId EventId, out EventFlagInfo Info)
 		{
-			*Info = HleState.EventFlagManager.EventFlags.Get(EventId).Info;
+			var EventFlag = HleState.EventFlagManager.EventFlags.Get(EventId);
+			Info = EventFlag.Info;
+			Console.WriteLine(Info);
 			return 0;
 		}
 
@@ -218,6 +228,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspNotImplemented]
 		public int sceKernelCancelEventFlag(EventFlagId EventId, int NewPattern, int* NumWaitThread)
 		{
+			throw(new NotImplementedException());
 			return 0;
 		}
 	}

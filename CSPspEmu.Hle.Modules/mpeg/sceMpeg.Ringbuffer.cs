@@ -77,8 +77,11 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		///		Less than 0 if error else number of free packets in the ringbuffer.
 		/// </returns>
 		[HlePspFunction(NID = 0xB5F6DC87, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceMpegRingbufferAvailableSize(SceMpegRingbuffer* Ringbuffer)
 		{
+			if (Ringbuffer->PacketsFree > 0) Ringbuffer->PacketsFree--;
+			//if (Ringbuffer->avai > 0) Ringbuffer->PacketsFree--;
 			return Ringbuffer->PacketsFree;
 		}
 
@@ -92,7 +95,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		///		Less than 0 if error else number of packets.
 		/// </returns>
 		[HlePspFunction(NID = 0xB240A59E, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
+		[HlePspNotImplemented]
 		public int sceMpegRingbufferPut(SceMpegRingbuffer* Ringbuffer, int NumPackets, int PacketsFree)
 		{
 			//Ringbuffer->Data

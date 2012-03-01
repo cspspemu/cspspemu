@@ -1,5 +1,6 @@
 @ECHO OFF
-IF "%1"=="Debug" GOTO END
+ECHO MERGE
+IF "%1"=="Debug" GOTO SKIP_DEBUG
 PUSHD %~dp0
 	REM SET BASE_FOLDER=CSPspEmu\bin\Debug
 	SET BASE_FOLDER=%~dp0\CSPspEmu\bin\Release
@@ -28,4 +29,7 @@ PUSHD %~dp0
 	"%~dp0\utils\ilmerge\ILMerge.exe" %TARGET% /out:cspspemu.exe %FILES%
 	COPY %BASE_FOLDER%\OpenTK.dll .
 POPD
+GOTO END
+:SKIP_DEBUG
+echo SKIP_DEBUG
 :END

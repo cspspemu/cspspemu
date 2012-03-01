@@ -28,10 +28,13 @@ namespace CSPspEmu.Core
 		/// 
 		/// </summary>
 		public bool UseFastMemory = false;
-	}
 
-	public partial class PspStoredConfig
-	{
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool EnableMpeg = false;
+
+		#region Serializing
 		static private XmlSerializer Serializer;
 
 		private PspStoredConfig()
@@ -74,5 +77,6 @@ namespace CSPspEmu.Core
 				Serializer.Serialize(Stream, this);
 			}
 		}
+		#endregion
 	}
 }

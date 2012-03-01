@@ -125,11 +125,14 @@ namespace CSPspEmu
 		/// <summary>
 		/// 
 		/// </summary>
-		public void StartAndLoad(string File, bool TraceSyscalls = false, bool ShowMenus = true, bool TrackCallStack = true, bool EnableMpeg = false)
+		public void StartAndLoad(string File, bool TraceSyscalls = false, bool ShowMenus = true, bool TrackCallStack = true, bool? EnableMpeg = null)
 		{
 			PspConfig.DebugSyscalls = TraceSyscalls;
 			PspConfig.TrackCallStack = TrackCallStack;
-			PspConfig.EnableMpeg = EnableMpeg;
+			if (EnableMpeg.HasValue)
+			{
+				PspConfig.StoredConfig.EnableMpeg = EnableMpeg.Value;
+			}
 			Start(() =>
 			{
 				LoadFile(File);

@@ -260,6 +260,8 @@ namespace CSPspEmu.Hle
 				bool Trace = (!SkipLog && CpuThreadState.CpuProcessor.PspConfig.DebugSyscalls);
 				bool NotImplemented = NotImplementedFunc && CpuThreadState.CpuProcessor.PspConfig.DebugNotImplemented;
 
+				if (Trace && (MethodInfo.DeclaringType.Name == "Kernel_Library")) Trace = false;
+
 				if (NotImplemented)
 				{
 					Trace = true;

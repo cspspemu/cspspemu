@@ -163,6 +163,10 @@
       <Link>version_current.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\git_revision.txt">
+      <Link>git_revision.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="..\version_last.txt">
       <Link>version_last.txt</Link>
     </Content>
@@ -195,7 +199,7 @@
     <PostBuildEvent>"$(SolutionDir)\merge.bat" $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>"$(SolutionDir)\update_version_current.bat"</PreBuildEvent>
+    <PreBuildEvent>"$(SolutionDir)\update_version_current.bat" $(ConfigurationName)</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

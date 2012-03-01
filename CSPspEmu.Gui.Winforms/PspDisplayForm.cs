@@ -126,7 +126,7 @@ namespace CSPspEmu.Gui.Winforms
 			BufferGraphics.Clear(Color.Black);
 
 			updateResumePause();
-			updateDebugSyscalls();
+			UpdateCheckMenusFromConfig();
 			updateDebugGpu();
 
 			var Timer = new System.Windows.Forms.Timer();
@@ -528,14 +528,6 @@ namespace CSPspEmu.Gui.Winforms
 			RunRunResumeMenu.Checked = !Paused;
 		}
 
-		private void updateDebugSyscalls()
-		{
-			DebugTraceSyscallsMenu.Checked = PspConfig.DebugSyscalls;
-			DebugTraceUnimplementedSyscallsMenu.Checked = PspConfig.DebugNotImplemented;
-			DebugTraceUnimplementedGpuMenu.Checked = PspConfig.NoticeUnimplementedGpuCommands;
-			//UtilsUseFastmemMenu.Checked = !PspConfig.;
-		}
-
 		private void updateDebugGpu()
 		{
 			DebugTraceUnimplementedGpuMenu.Checked = PspConfig.NoticeUnimplementedGpuCommands;
@@ -566,13 +558,13 @@ namespace CSPspEmu.Gui.Winforms
 		private void traceSyscallsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			PspConfig.DebugSyscalls = !PspConfig.DebugSyscalls;
-			updateDebugSyscalls();
+			UpdateCheckMenusFromConfig();
 		}
 
 		private void traceUnimplementedGpuToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			PspConfig.NoticeUnimplementedGpuCommands = !PspConfig.NoticeUnimplementedGpuCommands;
-			updateDebugSyscalls();
+			UpdateCheckMenusFromConfig();
 		}
 
 		private void showThreadInfoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -588,7 +580,7 @@ namespace CSPspEmu.Gui.Winforms
 		private void traceUnimplementedSyscallsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			PspConfig.DebugNotImplemented = !PspConfig.DebugNotImplemented;
-			updateDebugSyscalls();
+			UpdateCheckMenusFromConfig();
 		}
 
 		private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -811,6 +803,21 @@ namespace CSPspEmu.Gui.Winforms
 		private void DebugDumpGpuFrameMenu_Click(object sender, EventArgs e)
 		{
 			IGuiExternalInterface.CaptureGpuFrame();
+		}
+
+		private void enableMpegProcessinginestableYetToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			IGuiExternalInterface.GetConfig().StoredConfig.EnableMpeg = !UtilsEnableMpegMenu.Checked;
+			UpdateCheckMenusFromConfig();
+		}
+
+		private void UpdateCheckMenusFromConfig()
+		{
+			DebugTraceSyscallsMenu.Checked = PspConfig.DebugSyscalls;
+			DebugTraceUnimplementedSyscallsMenu.Checked = PspConfig.DebugNotImplemented;
+			DebugTraceUnimplementedGpuMenu.Checked = PspConfig.NoticeUnimplementedGpuCommands;
+			UtilsEnableMpegMenu.Checked = IGuiExternalInterface.GetConfig().StoredConfig.EnableMpeg;
+			//UtilsUseFastmemMenu.Checked = !PspConfig.;
 		}
 	}
 }

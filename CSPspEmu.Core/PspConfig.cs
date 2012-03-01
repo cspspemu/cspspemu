@@ -178,7 +178,16 @@ namespace CSPspEmu.Core
 
 		// Until more stable.
 		//public bool EnableMpeg = true;
-		public bool EnableMpeg = false;
+		//public bool EnableMpeg = false;
+		/*
+		public bool EnableMpeg
+		{
+			get
+			{
+				return StoredConfig.EnableMpeg;
+			}
+		}
+		*/
 
 		public bool MustLogWrites = false;
 		//public bool SetPCWriteAddress

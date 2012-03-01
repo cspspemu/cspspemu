@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define TEST_STOP_THREADS_INSTEAD_OF_KILLING
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -212,10 +214,10 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///	</param>
 		/// <returns>0 if successful, otherwise the error code.</returns>
 		[HlePspFunction(NID = 0x17C1684E, FirmwareVersion = 150)]
-		public int sceKernelReferThreadStatus(int ThreadId, SceKernelThreadInfo* SceKernelThreadInfo)
+		public int sceKernelReferThreadStatus(int ThreadId, out SceKernelThreadInfo SceKernelThreadInfo)
 		{
 			var Thread = GetThreadById(ThreadId);
-			*SceKernelThreadInfo = Thread.Info;
+			SceKernelThreadInfo = Thread.Info;
 			return 0;
 		}
 
@@ -469,7 +471,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 			
 			Thread.Info.ExitStatus = ExitStatus;
 
+#if TEST_STOP_THREADS_INSTEAD_OF_KILLING
+			Thread.CurrentStatus = HleThread.Status.Stopped;
+#else
 			Thread.CurrentStatus = HleThread.Status.Killed;
+#endif
 			HleState.ThreadManager.Reschedule();
 
 			Thread.Exit();
@@ -670,8 +676,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 			//Console.Error.WriteLine(ExitStatus);
 
 			Thread.Info.ExitStatus = -1;
-
+#if TEST_STOP_THREADS_INSTEAD_OF_KILLING
+			Thread.CurrentStatus = HleThread.Status.Stopped;
+#else
 			Thread.CurrentStatus = HleThread.Status.Killed;
+#endif
 			Thread.Exit();
 			return 0;
 		}

@@ -38,6 +38,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		{
 			CheckEnabledMpeg();
 
+			//Mpeg->SceMpegData.
+
 			throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
 		}
 
