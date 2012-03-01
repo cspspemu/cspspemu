@@ -125,7 +125,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <param name="VertexType"></param>
 		private void PutVertex(ref VertexInfo VertexInfo, ref VertexTypeStruct VertexType)
 		{
-			_CapturePutVertex(ref VertexInfo, ref VertexType);
+			_CapturePutVertex(ref VertexInfo);
 
 			//Console.WriteLine(VertexType);
 			//Console.WriteLine(VertexInfo);
@@ -253,13 +253,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 		}
 
-		private void _CaptureStartPrimitive(GuPrimitiveType PrimitiveType)
+		private void _CaptureStartPrimitive(GuPrimitiveType PrimitiveType, uint VertexAddress, int VetexCount, ref VertexTypeStruct VertexType)
 		{
 			if (PspWavefrontObjWriter != null)
 			{
 				lock (PspWavefrontObjWriterLock)
 				{
-					if (PspWavefrontObjWriter != null) PspWavefrontObjWriter.StartPrimitive(GpuState, PrimitiveType);
+					if (PspWavefrontObjWriter != null) PspWavefrontObjWriter.StartPrimitive(GpuState, PrimitiveType, VertexAddress, VetexCount, ref VertexType);
 				}
 			}
 		}
@@ -275,13 +275,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 		}
 
-		private void _CapturePutVertex(ref VertexInfo VertexInfo, ref VertexTypeStruct VertexType)
+		private void _CapturePutVertex(ref VertexInfo VertexInfo)
 		{
 			if (PspWavefrontObjWriter != null)
 			{
 				lock (this)
 				{
-					if (PspWavefrontObjWriter != null) PspWavefrontObjWriter.PutVertex(ref VertexInfo, ref VertexType);
+					if (PspWavefrontObjWriter != null) PspWavefrontObjWriter.PutVertex(ref VertexInfo);
 				}
 			}
 		}
@@ -474,7 +474,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 			*/
 
-			_CaptureStartPrimitive(PrimitiveType);
+			_CaptureStartPrimitive(PrimitiveType, GpuState->VertexAddress, VertexCount, ref VertexType);
 
 			// DRAW ACTUALLY
 			{

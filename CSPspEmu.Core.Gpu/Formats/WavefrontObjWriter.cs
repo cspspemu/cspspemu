@@ -74,10 +74,10 @@ namespace CSPspEmu.Core.Gpu.Formats
 
 		public int AddVertex(Vector3 Position)
 		{
+			WriteLine("# v " + Position.X + " " + Position.Y + " " + Position.Z + " ");
+
 			if (!VerticesIndices.ContainsKey(Position))
 			{
-				//WriteLine("v " + Position.X + " " + Position.Y + " " + Position.Z + " " + Position.W);
-
 				//WriteVerticeLine("v " + Position.X + " " + Position.Y + " " + Position.Z);
 				Vertices.Add(Position);
 				VerticesIndices[Position] = VertexIndex++;

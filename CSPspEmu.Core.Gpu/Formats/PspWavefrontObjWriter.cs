@@ -25,16 +25,18 @@ namespace CSPspEmu.Core.Gpu.Formats
 		List<int> PrimitiveIndices = new List<int>();
 		Matrix4 ModelMatrix;
 		GpuStateStruct* GpuState;
+		State.VertexTypeStruct VertexType;
 
-		public void StartPrimitive(GpuStateStruct* GpuState, State.GuPrimitiveType PrimitiveType)
+		public void StartPrimitive(GpuStateStruct* GpuState, State.GuPrimitiveType PrimitiveType, uint VertexAddress, int VertexCount, ref State.VertexTypeStruct VertexType)
 		{
 			this.GpuState = GpuState;
+			this.VertexType = VertexType;
 			var ViewMatrix = GpuState->VertexState.ViewMatrix.Matrix4;
 			var WorldMatrix = GpuState->VertexState.WorldMatrix.Matrix4;
 			ModelMatrix = Matrix4.Mult(ViewMatrix, WorldMatrix);
 
 			this.CurrentPrimitiveType = PrimitiveType;
-			WavefrontObjWriter.StartComment("Start: " + this.CurrentPrimitiveType);
+			WavefrontObjWriter.StartComment("Start: " + this.CurrentPrimitiveType + " : VertexAddress: 0x" + String.Format("{0:X}", VertexAddress) + " : " + VertexCount + " : " + this.VertexType);
 			PrimitiveIndices.Clear();
 
 			//throw new NotImplementedException();
@@ -46,7 +48,7 @@ namespace CSPspEmu.Core.Gpu.Formats
 			*/
 		}
 
-		public void PutVertex(ref VertexInfo VertexInfo, ref State.VertexTypeStruct VertexType)
+		public void PutVertex(ref VertexInfo VertexInfo)
 		{
 			//GpuState.VertexState.ViewMatrix.Matrix
 			if (!GpuState->ClearingMode)

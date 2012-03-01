@@ -25,17 +25,28 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 #if ENABLE_TEXTURES
 			PrepareState_Texture(GpuState);
 #endif
-			PrepareState_CullFace(GpuState);
 			PrepareState_Colors(GpuState);
-			PrepareState_Lighting(GpuState);
 			PrepareState_Blend(GpuState);
-			PrepareState_Depth(GpuState);
-			PrepareState_DepthTest(GpuState);
-			PrepareState_Stencil(GpuState);
-			PrepareState_AlphaTest(GpuState);
 
+			if (GpuState->VertexState.Type.Transform2D)
+			{
+				GL.Disable(EnableCap.AlphaTest);
+				GL.Disable(EnableCap.StencilTest);
+				GL.Disable(EnableCap.CullFace);
+				GL.DepthRange(0, 1);
+				GL.Disable(EnableCap.DepthTest);
+				GL.Disable(EnableCap.Lighting);
+			}
+			else
+			{
+				PrepareState_CullFace(GpuState);
+				PrepareState_Lighting(GpuState);
+				PrepareState_Depth(GpuState);
+				PrepareState_DepthTest(GpuState);
+				PrepareState_Stencil(GpuState);
+				PrepareState_AlphaTest(GpuState);
+			}
 			GL.ShadeModel((GpuState->ShadeModel == ShadingModelEnum.Flat) ? ShadingModel.Flat : ShadingModel.Smooth);
-
 		}
 
 		private void PrepareState_AlphaTest(GpuStateStruct* GpuState)
@@ -52,7 +63,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		}
 
 		private void PrepareState_Stencil(GpuStateStruct* GpuState)
-		{	
+		{
 			if (!GlEnableDisable(EnableCap.StencilTest, GpuState->StencilState.Enabled))
 			{
 				return;
@@ -63,17 +74,17 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//if (state.stencilFuncFunc == 2) { outputDepthAndStencil(); assert(0); }
 
 #if false
-			Console.Error.WriteLine(
-				"{0}:{1}:{2} - {3}, {4}, {5}",
-				StencilFunctionTranslate[(int)GpuState->StencilState.Function],
-				GpuState->StencilState.FunctionRef,
-				GpuState->StencilState.FunctionMask,
-				StencilOperationTranslate[(int)GpuState->StencilState.OperationFail],
-				StencilOperationTranslate[(int)GpuState->StencilState.OperationZFail],
-				StencilOperationTranslate[(int)GpuState->StencilState.OperationZPass]
-			);
+											Console.Error.WriteLine(
+			"{0}:{1}:{2} - {3}, {4}, {5}",
+			StencilFunctionTranslate[(int)GpuState->StencilState.Function],
+			GpuState->StencilState.FunctionRef,
+			GpuState->StencilState.FunctionMask,
+			StencilOperationTranslate[(int)GpuState->StencilState.OperationFail],
+			StencilOperationTranslate[(int)GpuState->StencilState.OperationZFail],
+			StencilOperationTranslate[(int)GpuState->StencilState.OperationZPass]
+		);
 #endif
-			
+
 			GL.StencilFunc(
 				StencilFunctionTranslate[(int)GpuState->StencilState.Function],
 				GpuState->StencilState.FunctionRef,
@@ -99,15 +110,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private void PrepareState_Depth(GpuStateStruct* GpuState)
 		{
-			if (GpuState->VertexState.Type.Transform2D)
-			{
-				GL.DepthRange(0, 1);
-			}
-			else
-			{
-				GL.DepthRange(GpuState->DepthTestState.RangeFar, GpuState->DepthTestState.RangeNear);
-				//GL.DepthRange(GpuState->DepthTestState.RangeNear, GpuState->DepthTestState.RangeFar);
-			}
+			GL.DepthRange(GpuState->DepthTestState.RangeFar, GpuState->DepthTestState.RangeNear);
+			//GL.DepthRange(GpuState->DepthTestState.RangeNear, GpuState->DepthTestState.RangeFar);
 		}
 
 		private void PrepareState_DepthTest(GpuStateStruct* GpuState)
