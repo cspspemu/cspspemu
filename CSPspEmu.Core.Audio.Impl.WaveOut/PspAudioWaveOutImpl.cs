@@ -48,6 +48,7 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut
 			}
 			else
 			{
+				PointerUtils.Memset((byte*)data.ToPointer(), 0, size);
 			}
 		}
 
