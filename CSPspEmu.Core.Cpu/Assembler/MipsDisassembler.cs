@@ -9,19 +9,26 @@ namespace CSPspEmu.Core.Cpu.Assembler
 {
 	public class MipsDisassembler
 	{
+		static public readonly MipsDisassembler Methods = new MipsDisassembler();
+
 		protected Action<uint, MipsDisassembler> ProcessCallback;
 
 		public MipsDisassembler()
 		{
-			ProcessCallback = EmitLookupGenerator.GenerateSwitchDelegate<MipsDisassembler>(InstructionTable.ALL, (ILGenerator ILGenerator, InstructionInfo InstructionInfo) =>
-			{
-				ILGenerator.Emit(OpCodes.Ldstr, InstructionInfo.Name);
-				ILGenerator.Emit(OpCodes.Call, typeof(MipsAssembler).GetMethod("Handle"));
-			});
 		}
 
 		public void Process(uint Value)
 		{
+			if (ProcessCallback == null)
+			{
+				ProcessCallback = EmitLookupGenerator.GenerateSwitch<Action<uint, MipsDisassembler>>(InstructionTable.ALL, (SafeILGenerator, InstructionInfo) =>
+				{
+					SafeILGenerator.LoadArgument<MipsDisassembler>(1);
+					SafeILGenerator.Push(InstructionInfo.Name);
+					SafeILGenerator.Call((Action<String>)MipsDisassembler.Methods.Handle);
+				});
+			}
+
 			ProcessCallback(Value, this);
 		}
 

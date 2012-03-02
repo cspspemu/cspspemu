@@ -8,7 +8,7 @@ using System.Reflection.Emit;
 using System.Linq.Expressions;
 using System.Reflection;
 using CSPspEmu.Core.Memory;
-using NPhp.Codegen;
+using Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Reflection.Emit;
 using CSharpUtils;
 using System.Linq.Expressions;
-using NPhp.Codegen;
+using Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {

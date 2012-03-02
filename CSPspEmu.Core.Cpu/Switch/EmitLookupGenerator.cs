@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection.Emit;
+using Codegen;
 
 namespace CSPspEmu.Core.Cpu.Table
 {
@@ -27,13 +28,13 @@ namespace CSPspEmu.Core.Cpu.Table
 					return Name.Replace('.', '_');
 				};
 			}
-			return GenerateSwitchDelegate<TType>(InstructionInfoList, (ILGenerator, InstructionInfo) =>
+			return GenerateSwitch<Action<uint, TType>>(InstructionInfoList, (SafeILGenerator, InstructionInfo) =>
 			{
 				var InstructionInfoName = NameConverter((InstructionInfo != null) ? InstructionInfo.Name : "Default");
-				ILGenerator.Emit(OpCodes.Ldarg_1);
+				SafeILGenerator.LoadArgument<TType>(1);
 				var MethodInfo = typeof(TType).GetMethod(InstructionInfoName);
 				if (MethodInfo == null) throw (new Exception("Cannot find method '" + InstructionInfoName + "' on type '" + typeof(TType).Name + "'"));
-				ILGenerator.Emit(OpCodes.Call, MethodInfo);
+				SafeILGenerator.Call(MethodInfo);
 			});
 		}
 
@@ -48,10 +49,11 @@ namespace CSPspEmu.Core.Cpu.Table
 					return Name.Replace('.', '_');
 				};
 			}
-			return GenerateSwitchDelegateReturn<TType, TRetType>(InstructionInfoList, (ILGenerator, InstructionInfo) =>
+			return GenerateSwitch<Func<uint, TType, TRetType>>(InstructionInfoList, (SafeILGenerator, InstructionInfo) =>
 			{
 				var InstructionInfoName = NameConverter((InstructionInfo != null) ? InstructionInfo.Name : "Default");
-				ILGenerator.Emit(OpCodes.Ldarg_1);
+				SafeILGenerator.LoadArgument<TType>(1);
+				//ILGenerator.Emit(OpCodes.Ldarg_1);
 				var MethodInfo = typeof(TType).GetMethod(InstructionInfoName);
 
 				if (MethodInfo == null && !ThrowOnUnexistent)
@@ -63,32 +65,17 @@ namespace CSPspEmu.Core.Cpu.Table
 				{
 					throw (new Exception("Cannot find method '" + InstructionInfoName + "' on type '" + typeof(TType).Name + "'"));
 				}
-				ILGenerator.Emit(OpCodes.Call, MethodInfo);
+				SafeILGenerator.Call(MethodInfo);
+				//ILGenerator.Emit(OpCodes.Call, MethodInfo);
 			});
 		}
 
-		static public Action<uint, TType> GenerateSwitchDelegate<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Action<ILGenerator, InstructionInfo> GenerateCallDelegate)
+		static public TType GenerateSwitch<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Action<SafeILGenerator, InstructionInfo> GenerateCallDelegate)
 		{
-			var DynamicMethod = new DynamicMethod("", typeof(void), new Type[] { typeof(uint), typeof(TType) });
-			var ILGenerator = DynamicMethod.GetILGenerator();
-			GenerateSwitchCode(ILGenerator, InstructionInfoList, GenerateCallDelegate);
-			return (Action<uint, TType>)DynamicMethod.CreateDelegate(typeof(Action<uint, TType>));
-		}
-
-		static public Func<uint, TType, TRetType> GenerateSwitchDelegateReturn<TType, TRetType>(IEnumerable<InstructionInfo> InstructionInfoList, Action<ILGenerator, InstructionInfo> GenerateCallDelegate)
-		{
-			var DynamicMethod = new DynamicMethod("", typeof(TRetType), new Type[] { typeof(uint), typeof(TType) });
-			var ILGenerator = DynamicMethod.GetILGenerator();
-			GenerateSwitchCode(ILGenerator, InstructionInfoList, GenerateCallDelegate);
-			return (Func<uint, TType, TRetType>)DynamicMethod.CreateDelegate(typeof(Func<uint, TType, TRetType>));
-		}
-
-		static public Func<uint, TRetType> GenerateSwitchDelegateReturn<TRetType>(IEnumerable<InstructionInfo> InstructionInfoList, Action<ILGenerator, InstructionInfo> GenerateCallDelegate)
-		{
-			var DynamicMethod = new DynamicMethod("", typeof(TRetType), new Type[] { typeof(uint) });
-			var ILGenerator = DynamicMethod.GetILGenerator();
-			GenerateSwitchCode(ILGenerator, InstructionInfoList, GenerateCallDelegate);
-			return (Func<uint, TRetType>)DynamicMethod.CreateDelegate(typeof(Func<uint, TRetType>));
+			return SafeILGenerator.Generate<TType>((Generator) =>
+			{
+				GenerateSwitchCode(Generator, InstructionInfoList, GenerateCallDelegate);
+			});
 		}
 
 		/// <summary>
@@ -98,38 +85,78 @@ namespace CSPspEmu.Core.Cpu.Table
 		/// <param name="InstructionInfoList"></param>
 		/// <param name="GenerateCallDelegate"></param>
 		/// <param name="Level"></param>
-		static public void GenerateSwitchCode(ILGenerator ILGenerator, IEnumerable<InstructionInfo> InstructionInfoList, Action<ILGenerator, InstructionInfo> GenerateCallDelegate, int Level = 0)
+		static public void GenerateSwitchCode(SafeILGenerator SafeILGenerator, IEnumerable<InstructionInfo> InstructionInfoList, Action<SafeILGenerator, InstructionInfo> GenerateCallDelegate, int Level = 0)
 		{
+			//var ILGenerator = SafeILGenerator._UnsafeGetILGenerator();
 			var CommonMask = InstructionInfoList.Aggregate(0xFFFFFFFF, (Base, InstructionInfo) => Base & InstructionInfo.Mask);
 			var MaskGroups = InstructionInfoList.GroupBy((InstructionInfo) => InstructionInfo.Value & CommonMask);
 			var MaskGroupsCount = MaskGroups.Count();
 
 			//Console.WriteLine("[" + Level + "]{0:X}", CommonMask);
 
+			//var MaskedLocal = SafeILGenerator.DeclareLocal<int>();
+
+			var MaskedLocalValue = SafeILGenerator.DeclareLocal<int>();
+			SafeILGenerator.LoadArgument<int>(0);
+			SafeILGenerator.Push((int)CommonMask);
+			SafeILGenerator.BinaryOperation(SafeBinaryOperator.And);
+			SafeILGenerator.StoreLocal(MaskedLocalValue);
+
+#if true
+			SafeILGenerator.LoadLocal(MaskedLocalValue);
+
+			SafeILGenerator.Switch(
+				// List
+				MaskGroups.Select(MaskGroup => MaskGroup.ToArray()),
+				// Get int Key
+				(MaskGroup) =>
+				{
+					return (int)(MaskGroup[0].Value & CommonMask);
+				},
+				// Case
+				(MaskGroup) =>
+				{
+					if (MaskGroup.Length > 1)
+					{
+						GenerateSwitchCode(SafeILGenerator, MaskGroup, GenerateCallDelegate, Level + 1);
+					}
+					else
+					{
+						GenerateCallDelegate(SafeILGenerator, MaskGroup[0]);
+					}
+				},
+				// Default
+				() => 
+				{
+					GenerateCallDelegate(SafeILGenerator, null);
+				}
+			);
+
+			SafeILGenerator.Return();
+#else
 			foreach (var MaskGroup in MaskGroups.Select(MaskGroup => MaskGroup.ToArray()))
 			{
-				var NextLabel = ILGenerator.DefineLabel();
-				ILGenerator.Emit(OpCodes.Ldarg_0);
-				ILGenerator.Emit(OpCodes.Ldc_I4, CommonMask);
-				ILGenerator.Emit(OpCodes.And);
-				ILGenerator.Emit(OpCodes.Ldc_I4, MaskGroup[0].Value & CommonMask);
-				ILGenerator.Emit(OpCodes.Bne_Un, NextLabel);
+				var NextLabel = SafeILGenerator.DefineLabel("NextLabel");
+				SafeILGenerator.LoadLocal(MaskedLocalValue);
+				SafeILGenerator.Push(MaskGroup[0].Value & CommonMask);
+				SafeILGenerator.BranchBinaryComparison(SafeBinaryComparison.NotEquals, NextLabel);
 				//Console.WriteLine("[" + Level + "] || (Value & " + CommonMask + " == " + (MaskGroup[0].Value & CommonMask) + ")");
 
 				if (MaskGroup.Length > 1)
 				{
-					GenerateSwitchCode(ILGenerator, MaskGroup, GenerateCallDelegate, Level + 1);
+					GenerateSwitchCode(SafeILGenerator, MaskGroup, GenerateCallDelegate, Level + 1);
 				}
 				else
 				{
-					GenerateCallDelegate(ILGenerator, MaskGroup[0]);
+					GenerateCallDelegate(SafeILGenerator, MaskGroup[0]);
 				}
-				ILGenerator.Emit(OpCodes.Ret);
-				ILGenerator.MarkLabel(NextLabel);
+				SafeILGenerator.Return();
+				NextLabel.Mark();
 			}
 
-			GenerateCallDelegate(ILGenerator, null);
-			ILGenerator.Emit(OpCodes.Ret);
+			GenerateCallDelegate(SafeILGenerator, null);
+			SafeILGenerator.Return();
+#endif
 		}
 	}
 }

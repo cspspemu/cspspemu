@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NPhp.Codegen;
+using Codegen;
 using System.Reflection.Emit;
 
 namespace CSPspEmu.Core.Cpu.Emiter

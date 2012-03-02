@@ -8,7 +8,7 @@ using System.Reflection.Emit;
 using CSPspEmu.Core.Cpu.Table;
 using CSPspEmu.Core.Memory;
 using CSharpUtils.Extensions;
-using NPhp.Codegen;
+using Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -35,11 +35,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			),
 			new CpuBranchAnalyzer()
 		);
-		static public Func<uint, Object, String> GetInstructionName = EmitLookupGenerator.GenerateSwitchDelegateReturn<Object, String>(
+		static public Func<uint, Object, String> GetInstructionName = EmitLookupGenerator.GenerateSwitch<Func<uint, Object, String>>(
 			InstructionTable.ALL,
-			(ILGenerator, InstructionInfo) =>
+			(SafeILGenerator, InstructionInfo) =>
 			{
-				ILGenerator.Emit(OpCodes.Ldstr, (InstructionInfo != null) ? InstructionInfo.Name : "unknown");
+				SafeILGenerator.Push((string)((InstructionInfo != null) ? InstructionInfo.Name : "unknown"));
 			}
 		);
 

@@ -110,11 +110,11 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 			}
 
 			Assert.AreEqual(
-				"VertexInfo(Position=(0,9765625, 0,4882813, -0,003051758), Normal=(-0,3125, -0,625, 0), UV=(0,5, 0,25), COLOR=(R:0, G:0, B:0, A:0))",
+				"VertexInfo(Position=(0,9765625, 0,4882813, -0,003051758), Normal=(-0,3125, -0,625, 0), UV=(0,5, 0,25, 0), COLOR=(R:0, G:0, B:0, A:0))",
 				VertexInfoList[0].ToString()
 			);
 			Assert.AreEqual(
-				"VertexInfo(Position=(0,4882813, 0,9765625, -0,006103516), Normal=(-0,625, -0,3125, 0), UV=(0,25, 0,5), COLOR=(R:0, G:0, B:0, A:0))",
+				"VertexInfo(Position=(0,4882813, 0,9765625, -0,006103516), Normal=(-0,625, -0,3125, 0), UV=(0,25, 0,5, 0), COLOR=(R:0, G:0, B:0, A:0))",
 				VertexInfoList[1].ToString()
 			);
 		}
@@ -150,7 +150,7 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 			}
 
 			Assert.AreEqual(
-				"VertexInfo(Position=(1, 2, 3), Normal=(0, 0, 0), UV=(0, 0), COLOR=(R:1, G:0,4666667, B:0,2, A:0,6))",
+				"VertexInfo(Position=(1, 2, 3), Normal=(0, 0, 0), UV=(0, 0, 0), COLOR=(R:1, G:0,4666667, B:0,2, A:0,6))",
 				VertexInfoList[0].ToString()
 			);
 		}

@@ -21,6 +21,7 @@ using System.Diagnostics;
 using CSharpUtils;
 using CSharpUtils.Extensions;
 using CSharpUtils.Getopt;
+using Codegen;
 
 namespace CSPspEmu
 {

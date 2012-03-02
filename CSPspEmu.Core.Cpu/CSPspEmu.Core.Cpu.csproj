@@ -90,8 +90,8 @@
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SafeILGenerator\SafeILGenerator.csproj">
-      <Project>{9A93C7E4-09DA-46CF-B7DD-6BB09681D5AB}</Project>
+    <ProjectReference Include="..\SafeILGenerator\SafeILGenerator\SafeILGenerator.csproj">
+      <Project>{9a93c7e4-09da-46cf-b7dd-6bb09681d5ab}</Project>
       <Name>SafeILGenerator</Name>
     </ProjectReference>
   </ItemGroup>
