@@ -160,14 +160,16 @@ namespace CSPspEmu.Core.Gpu.Run
 		public void OP_TSIZE6() { _OP_TSIZE(6); }
 		public void OP_TSIZE7() { _OP_TSIZE(7); }
 
-		/**
-		 * Flush texture page-cache
-		 *
-		 * Do this if you have copied/rendered into an area currently in the texture-cache
-		**/
-		// void sceGuTexFlush(void); // OP_TFLUSH
 
-		// Texture Flush. NOTE: 'sceGuTexImage' and 'sceGuTexMode' calls TFLUSH.
+		/// <summary>
+		/// Texture Flush. Flush texture page-cache
+		/// 
+		/// Do this if you have copied/rendered into an area currently in the texture-cache
+		/// </summary>
+		/// <remarks>
+		/// NOTE: 'sceGuTexImage' and 'sceGuTexMode' calls TFLUSH.
+		/// </remarks>
+		/// <see cref="void sceGuTexFlush(void); // OP_TFLUSH"/>
 		public void OP_TFLUSH()
 		{
 			GpuDisplayList.GpuProcessor.GpuImpl.TextureFlush(GpuState);

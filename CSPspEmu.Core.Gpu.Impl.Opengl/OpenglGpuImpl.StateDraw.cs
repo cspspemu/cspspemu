@@ -23,7 +23,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			GL.ColorMask(true, true, true, true);
 
 #if ENABLE_TEXTURES
-			PrepareState_Texture(GpuState);
+			PrepareState_Texture_Common(GpuState);
 #endif
 			PrepareState_Colors(GpuState);
 			PrepareState_Blend(GpuState);
@@ -318,24 +318,17 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			);
 		}
 
-		private void PrepareState_Texture(GpuStateStruct* GpuState)
+		private void PrepareState_Texture_2D(GpuStateStruct* GpuState)
 		{
 			var TextureMappingState = &GpuState->TextureMappingState;
-			var ClutState = &TextureMappingState->ClutState;
-			var TextureState = &TextureMappingState->TextureState;
 			var Mipmap0 = &TextureMappingState->TextureState.Mipmap0;
 
-			if (!GlEnableDisable(EnableCap.Texture2D, TextureMappingState->Enabled))
+			if (TextureMappingState->Enabled)
 			{
-				return;
-			}
+				GL.ActiveTexture(TextureUnit.Texture0);
+				GL.MatrixMode(MatrixMode.Texture);
+				GL.LoadIdentity();
 
-			GL.ActiveTexture(TextureUnit.Texture0);
-			GL.MatrixMode(MatrixMode.Texture);
-			GL.LoadIdentity();
-
-			if (VertexType.Transform2D)
-			{
 				//GL.LoadIdentity();
 				GL.Scale(
 					1.0f / Mipmap0->BufferWidth,
@@ -343,8 +336,19 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					1.0f
 				);
 			}
-			else 
+		}
+
+		private void PrepareState_Texture_3D(GpuStateStruct* GpuState)
+		{
+			var TextureMappingState = &GpuState->TextureMappingState;
+			var TextureState = &TextureMappingState->TextureState;
+
+			if (TextureMappingState->Enabled)
 			{
+				GL.ActiveTexture(TextureUnit.Texture0);
+				GL.MatrixMode(MatrixMode.Texture);
+				GL.LoadIdentity();
+
 				switch (TextureMappingState->TextureMapMode)
 				{
 					case TextureMapMode.GU_TEXTURE_COORDS:
@@ -352,7 +356,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 						GL.Translate(TextureState->OffsetU, TextureState->OffsetV, 0);
 						GL.Scale(TextureState->ScaleU, TextureState->ScaleV, 1);
 						//Console.Error.WriteLine("NotImplemented: GU_TEXTURE_COORDS");
-					break;
+						break;
 					case TextureMapMode.GU_TEXTURE_MATRIX:
 						//glLoadMatrixf(state.texture.matrix.pointer);
 						//throw(new NotImplementedException());
@@ -365,7 +369,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 						//GpuMatrix4x4Struct EnviromentMapMatrix;
 
 						//EnviromentMapMatrix.SetIdentity();
-						
+
 						/*
 						for (int i = 0; i < 3; i++) {
 							EnviromentMapMatrix.Set(0, i);
@@ -381,6 +385,27 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 						Console.Error.WriteLine("NotImplemented TextureMappingState->TextureMapMode: " + TextureMappingState->TextureMapMode);
 						break;
 				}
+			}
+		}
+
+		private void PrepareState_Texture_Common(GpuStateStruct* GpuState)
+		{
+			var TextureMappingState = &GpuState->TextureMappingState;
+			//var ClutState = &TextureMappingState->ClutState;
+			var TextureState = &TextureMappingState->TextureState;
+
+			if (!GlEnableDisable(EnableCap.Texture2D, TextureMappingState->Enabled))
+			{
+				return;
+			}
+
+			if (VertexType.Transform2D)
+			{
+				PrepareState_Texture_2D(GpuState);
+			}
+			else 
+			{
+				PrepareState_Texture_3D(GpuState);
 			}
 
 			//GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);

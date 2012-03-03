@@ -160,23 +160,11 @@ namespace CSPspEmu.Core.Gpu
 		{
 			Align1();
 
-			VertexInfo->TX = (float)((byte*)Pointer)[0];
-			VertexInfo->TY = (float)((byte*)Pointer)[1];
-			if (VertexType.NormalCount > 2)
-			{
-				VertexInfo->TZ = (float)((byte*)Pointer)[2];
-			}
-			else
-			{
-				VertexInfo->TZ = 0.0f;
-			}
+			VertexInfo->Texture.X = (float)((byte*)Pointer)[0];
+			VertexInfo->Texture.Y = (float)((byte*)Pointer)[1];
+			VertexInfo->Texture.Z = (VertexType.NormalCount > 2) ? (float)((byte*)Pointer)[2] : 0.0f;
 
-			if (!Transform2D)
-			{
-				VertexInfo->TX /= 128.0f;
-				VertexInfo->TY /= 128.0f;
-				VertexInfo->TZ /= 128.0f;
-			}
+			if (!Transform2D) VertexInfo->Texture /= 128.0f;
 
 			Pointer += sizeof(byte) * VertexType.NormalCount;
 		}
@@ -184,23 +172,11 @@ namespace CSPspEmu.Core.Gpu
 		protected void ReadTextureCoordinatesShort()
 		{
 			Align2();
-			VertexInfo->TX = (float)((ushort*)Pointer)[0];
-			VertexInfo->TY = (float)((ushort*)Pointer)[1];
-			if (VertexType.NormalCount > 2)
-			{
-				VertexInfo->TZ = (float)((ushort*)Pointer)[2];
-			}
-			else
-			{
-				VertexInfo->TZ = 0.0f;
-			}
-			
-			if (!Transform2D)
-			{
-				VertexInfo->TX /= 32768f;
-				VertexInfo->TY /= 32768f;
-				VertexInfo->TZ /= 32768f;
-			}
+			VertexInfo->Texture.X = (float)((ushort*)Pointer)[0];
+			VertexInfo->Texture.Y = (float)((ushort*)Pointer)[1];
+			VertexInfo->Texture.Z = (VertexType.NormalCount > 2) ? (float)((ushort*)Pointer)[2] : 0.0f;
+
+			if (!Transform2D) VertexInfo->Texture /= 32768f;
 
 			Pointer += sizeof(short) * VertexType.NormalCount;
 		}
@@ -208,16 +184,9 @@ namespace CSPspEmu.Core.Gpu
 		protected void ReadTextureCoordinatesFloat()
 		{
 			Align4();
-			VertexInfo->TX = (float)((float*)Pointer)[0];
-			VertexInfo->TY = (float)((float*)Pointer)[1];
-			if (VertexType.NormalCount > 2)
-			{
-				VertexInfo->TZ = (float)((float*)Pointer)[2];
-			}
-			else
-			{
-				VertexInfo->TZ = 0.0f;
-			}
+			VertexInfo->Texture.X = (float)((float*)Pointer)[0];
+			VertexInfo->Texture.Y = (float)((float*)Pointer)[1];
+			VertexInfo->Texture.Z = (VertexType.NormalCount > 2) ? (float)((float*)Pointer)[2] : 0.0f;
 
 			Pointer += sizeof(float) * VertexType.NormalCount;
 		}
@@ -259,32 +228,20 @@ namespace CSPspEmu.Core.Gpu
 
 		protected void _SetVertexInfoColor(OutputPixel Color)
 		{
-			VertexInfo->R = (float)(Color.R) / 255.0f;
-			VertexInfo->G = (float)(Color.G) / 255.0f;
-			VertexInfo->B = (float)(Color.B) / 255.0f;
-			VertexInfo->A = (float)(Color.A) / 255.0f;
+			VertexInfo->Color.R = (float)(Color.R) / 255.0f;
+			VertexInfo->Color.G = (float)(Color.G) / 255.0f;
+			VertexInfo->Color.B = (float)(Color.B) / 255.0f;
+			VertexInfo->Color.A = (float)(Color.A) / 255.0f;
 		}
 
 		public void ReadPositionByte()
 		{
 			Align1();
-			VertexInfo->PX = (float)((sbyte*)Pointer)[0];
-			VertexInfo->PY = (float)((sbyte*)Pointer)[1];
-			if (Transform2D)
-			{
-				VertexInfo->PZ = (float)((byte*)Pointer)[2];
-			}
-			else
-			{
-				VertexInfo->PZ = (float)((sbyte*)Pointer)[2];
-			}
+			VertexInfo->Position.X = (float)((sbyte*)Pointer)[0];
+			VertexInfo->Position.Y = (float)((sbyte*)Pointer)[1];
+			VertexInfo->Position.Z = Transform2D ? (float)((byte*)Pointer)[2] : (float)((sbyte*)Pointer)[2];
 
-			if (!Transform2D)
-			{
-				VertexInfo->PX /= 128f;
-				VertexInfo->PY /= 128f;
-				VertexInfo->PZ /= 128f;
-			}
+			if (!Transform2D) VertexInfo->Position /= 128f;
 
 			//Console.Error.WriteLine(VertexInfo->PZ);
 
@@ -294,24 +251,11 @@ namespace CSPspEmu.Core.Gpu
 		public void ReadPositionShort()
 		{
 			Align2();
-			VertexInfo->PX = (float)((short*)Pointer)[0];
-			VertexInfo->PY = (float)((short*)Pointer)[1];
-			if (Transform2D)
-			{
-				VertexInfo->PZ = (float)((ushort*)Pointer)[2];
-			}
-			else
-			{
-				VertexInfo->PZ = (float)((short*)Pointer)[2];
-			}
-	
-			if (!Transform2D)
-			{
-				VertexInfo->PX /= 32768f;
-				VertexInfo->PY /= 32768f;
-				VertexInfo->PZ /= 32768f;
-			}
+			VertexInfo->Position.X = (float)((short*)Pointer)[0];
+			VertexInfo->Position.Y = (float)((short*)Pointer)[1];
+			VertexInfo->Position.Z = Transform2D ? (float)((ushort*)Pointer)[2] : (float)((short*)Pointer)[2];
 
+			if (!Transform2D) VertexInfo->Position /= 32768f;
 			//Console.Error.WriteLine(VertexInfo->PZ);
 
 			Pointer += sizeof(short) * 3;
@@ -320,38 +264,35 @@ namespace CSPspEmu.Core.Gpu
 		public void ReadPositionFloat()
 		{
 			Align4();
-			VertexInfo->PX = (float)((float*)Pointer)[0];
-			VertexInfo->PY = (float)((float*)Pointer)[1];
-			VertexInfo->PZ = (float)((float*)Pointer)[2];
+			VertexInfo->Position.X = (float)((float*)Pointer)[0];
+			VertexInfo->Position.Y = (float)((float*)Pointer)[1];
+			VertexInfo->Position.Z = (float)((float*)Pointer)[2];
 			Pointer += sizeof(float) * 3;
 		}
 
 		public void ReadWeightByte()
 		{
-			var Weights = &VertexInfo->Weight0;
 			for (int n = 0; n < SkinningWeightCount; n++)
 			{
-				Weights[n] = (float)((sbyte*)Pointer)[n] / 128f;
+				VertexInfo->Weights[n] = (float)((sbyte*)Pointer)[n] / 128f;
 			}
 			Pointer += sizeof(sbyte) * SkinningWeightCount;
 		}
 
 		public void ReadWeightShort()
 		{
-			var Weights = &VertexInfo->Weight0;
 			for (int n = 0; n < SkinningWeightCount; n++)
 			{
-				Weights[n] = (float)((short*)Pointer)[n] / 32768f;
+				VertexInfo->Weights[n] = (float)((short*)Pointer)[n] / 32768f;
 			}
 			Pointer += sizeof(short) * SkinningWeightCount;
 		}
 
 		public void ReadWeightFloat()
 		{
-			var Weights = &VertexInfo->Weight0;
 			for (int n = 0; n < SkinningWeightCount; n++)
 			{
-				Weights[n] = (float)((float*)Pointer)[n];
+				VertexInfo->Weights[n] = (float)((float*)Pointer)[n];
 			}
 			Pointer += sizeof(float) * SkinningWeightCount;
 		}
@@ -359,40 +300,29 @@ namespace CSPspEmu.Core.Gpu
 		public void ReadNormalByte()
 		{
 			Align1();
-			VertexInfo->NX = (float)((byte*)Pointer)[0];
-			VertexInfo->NY = (float)((byte*)Pointer)[1];
-			VertexInfo->NZ = (float)((byte*)Pointer)[2];
-			if (!Transform2D)
-			{
-				VertexInfo->NX /= 128f;
-				VertexInfo->NY /= 128f;
-				VertexInfo->NZ /= 128f;
-			}
-
+			VertexInfo->Normal.X = (float)((byte*)Pointer)[0];
+			VertexInfo->Normal.Y = (float)((byte*)Pointer)[1];
+			VertexInfo->Normal.Z = (float)((byte*)Pointer)[2];
+			if (!Transform2D) VertexInfo->Normal /= 128f;
 			Pointer += sizeof(byte) * 3;
 		}
 
 		public void ReadNormalShort()
 		{
 			Align2();
-			VertexInfo->NX = (float)((short*)Pointer)[0];
-			VertexInfo->NY = (float)((short*)Pointer)[1];
-			VertexInfo->NZ = (float)((short*)Pointer)[2];
-			if (!Transform2D)
-			{
-				VertexInfo->NX /= 32768f;
-				VertexInfo->NY /= 32768f;
-				VertexInfo->NZ /= 32768f;
-			}
+			VertexInfo->Normal.X = (float)((short*)Pointer)[0];
+			VertexInfo->Normal.Y = (float)((short*)Pointer)[1];
+			VertexInfo->Normal.Z = (float)((short*)Pointer)[2];
+			if (!Transform2D) VertexInfo->Normal /= 32768f;
 			Pointer += sizeof(short) * 3;
 		}
 
 		public void ReadNormalFloat()
 		{
 			Align4();
-			VertexInfo->NX = (float)((float*)Pointer)[0];
-			VertexInfo->NY = (float)((float*)Pointer)[1];
-			VertexInfo->NZ = (float)((float*)Pointer)[2];
+			VertexInfo->Normal.X = (float)((float*)Pointer)[0];
+			VertexInfo->Normal.Y = (float)((float*)Pointer)[1];
+			VertexInfo->Normal.Z = (float)((float*)Pointer)[2];
 			Pointer += sizeof(float) * 3;
 		}
 #endif

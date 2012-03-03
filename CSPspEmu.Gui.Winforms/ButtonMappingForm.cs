@@ -30,9 +30,33 @@ namespace CSPspEmu.Gui.Winforms
 			{
 				var TextBox = (Field.GetValue(this) as TextBox);
 				TextBox.KeyDown += this.HandleKeyDown;
+				TextBox.GotFocus += this.HandleGotFocus;
+				TextBox.LostFocus += this.HandleLostFocus;
 				var ConfigField = typeof(ControllerConfig).GetField(TextBox.Name);
 				if (ConfigField != null) TextBox.Text = (String)ConfigField.GetValue(CurrentControllerConfig);
 			}
+
+			this.AcceptButton = button1;
+			this.CancelButton = button2;
+
+			this.Load += HandleLoad;
+		}
+
+		private void HandleLoad(object sender, EventArgs e)
+		{
+			(this.AcceptButton as Button).Focus();
+		}
+
+		private void HandleLostFocus(object sender, EventArgs e)
+		{
+			var TextBox = (sender as TextBox);
+			TextBox.BackColor = Color.White;
+		}
+
+		private void HandleGotFocus(object sender, EventArgs e)
+		{
+			var TextBox = (sender as TextBox);
+			TextBox.BackColor = Color.Yellow;
 		}
 
 		public void LoadConfig()
@@ -53,6 +77,8 @@ namespace CSPspEmu.Gui.Winforms
 			var ConfigField = typeof(ControllerConfig).GetField(TextBox.Name);
 			if (ConfigField != null) ConfigField.SetValue(CurrentControllerConfig, TextBox.Text);
 			e.SuppressKeyPress = true;
+			(this.AcceptButton as Button).Focus();
+			//Focus();
 			//KeyInterop.KeyFromVirtualKey
 		}
 

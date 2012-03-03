@@ -894,6 +894,9 @@ namespace CSPspEmu.Gui.Winforms
 
 				KeyMap[ParseKeyName(ControllerConfig.StartButton)] = PspCtrlButtons.Start;
 				KeyMap[ParseKeyName(ControllerConfig.SelectButton)] = PspCtrlButtons.Select;
+
+				KeyMap[ParseKeyName(ControllerConfig.LeftTriggerButton)] = PspCtrlButtons.LeftTrigger;
+				KeyMap[ParseKeyName(ControllerConfig.RightTriggerButton)] = PspCtrlButtons.RightTrigger;
 			}
 
 			Console.WriteLine("KeyMapping:");
@@ -928,8 +931,10 @@ namespace CSPspEmu.Gui.Winforms
 		private void OpenRecentHook(string Path)
 		{
 			//Console.WriteLine("PATH: {0}", Path);
-			try { PspConfig.StoredConfig.RecentFiles.Remove(Path); } catch { }
-			PspConfig.StoredConfig.RecentFiles.Insert(0, Path);
+			var RecentFiles = PspConfig.StoredConfig.RecentFiles;
+			try { RecentFiles.Remove(Path); } catch { }
+			RecentFiles.Insert(0, Path);
+			while (RecentFiles.Count > 9) RecentFiles.RemoveAt(RecentFiles.Count - 1);
 			PspConfig.StoredConfig.Save();
 			UpdateRecentList();
 		}

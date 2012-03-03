@@ -53,7 +53,7 @@ namespace CSPspEmu.Core.Gpu.Formats
 			//GpuState.VertexState.ViewMatrix.Matrix
 			if (!GpuState->ClearingMode)
 			{
-				Vector3 Vector = VertexInfo.Position3;
+				Vector3 Vector = VertexInfo.Position;
 				if (!VertexType.Transform2D)
 				{
 					Vector = Vector3.Transform(Vector, ModelMatrix);

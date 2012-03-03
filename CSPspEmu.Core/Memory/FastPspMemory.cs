@@ -10,6 +10,7 @@ namespace CSPspEmu.Core.Memory
 {
 	unsafe sealed public class FastPspMemory : PspMemory
 	{
+		//readonly public byte* Base = (byte*)0x50000000;
 		//readonly public byte* Base = (byte*)0x40000000;
 		readonly public byte* Base = (byte*)0x20000000;
 		static public byte* StaticNullPtr;

@@ -117,7 +117,7 @@ namespace CSPspEmu.Core.Gpu.Formats
 			List<int> Indices = new List<int>();
 			foreach (var Vertex in Vertices)
 			{
-				Indices.Add(AddVertex(Vertex.Position3));
+				Indices.Add(AddVertex(Vertex.Position));
 			}
 			AddFace(Indices.ToArray());
 		}

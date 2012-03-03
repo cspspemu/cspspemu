@@ -34,20 +34,10 @@ namespace CSPspEmu.Core.Gpu.State
 		}
 	}
 
-	public struct Vector3f
-	{
-		public float X, Y, Z;
-
-		public override string ToString()
-		{
-			return this.ToStringDefault();
-		}
-	}
-
 	public struct ViewportStruct
 	{
-		public Vector3f Position;
-		public Vector3f Scale;
+		public Vector3F Position;
+		public Vector3F Scale;
 		public PointS RegionTopLeft;
 		public PointS RegionBottomRight;
 

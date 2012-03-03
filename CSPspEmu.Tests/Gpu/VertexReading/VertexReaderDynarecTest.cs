@@ -122,7 +122,7 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 		public struct VertexType3
 		{
 			public ushort Color;
-			public FVector3d Position;
+			public Vector3F Position;
 		}
 
 		VertexTypeStruct VertexType3Info = new VertexTypeStruct()
@@ -134,8 +134,8 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 
 		VertexType3[] VertexType3List = new[]
 		{
-			new VertexType3() { Color = (ushort)ColorFormats.RGBA_4444.Encode(0xFF, 0x7F, 0x3C, 0xA0), Position = new FVector3d(1.0f, 2.0f, 3.0f) },
-			new VertexType3() { Color = (ushort)ColorFormats.RGBA_4444.Encode(0x11, 0x22, 0x33, 0x44), Position = new FVector3d(4.0f, 5.0f, 6.0f) },
+			new VertexType3() { Color = (ushort)ColorFormats.RGBA_4444.Encode(0xFF, 0x7F, 0x3C, 0xA0), Position = new Vector3F(1.0f, 2.0f, 3.0f) },
+			new VertexType3() { Color = (ushort)ColorFormats.RGBA_4444.Encode(0x11, 0x22, 0x33, 0x44), Position = new Vector3F(4.0f, 5.0f, 6.0f) },
 		};
 
 		[TestMethod]

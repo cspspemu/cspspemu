@@ -118,6 +118,47 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		GpuStateStruct* GpuState;
 
+#if false
+		VertexInfo PerformSkinning(VertexInfo VertexInfo)
+		{
+			VertexInfo SkinnedVertexState;
+
+			/*
+			if (!shouldPerformSkin) return vertexState;
+			
+			//writefln("%s", gpu.state.boneMatrix[0]);
+			VertexState skinnedVertexState = vertexState;
+			(cast(float *)&skinnedVertexState.px)[0..3] = 0.0;
+			(cast(float *)&skinnedVertexState.nx)[0..3] = 0.0;
+			*/
+			
+			float[3] p, n;
+
+			for (int m = 0; m < vertexType.skinningWeightCount; m++) {
+				multiplyVectorPerMatrix!(true)(
+					p,
+					(cast(float *)&vertexState.px)[0..3],
+					boneMatrix[m],
+					vertexState.weights[m]
+				);
+
+				multiplyVectorPerMatrix!(false)(
+					n,
+					(cast(float *)&vertexState.nx)[0..3],
+					boneMatrix[m],
+					vertexState.weights[m]
+				);
+				
+				//writefln("%s", p);
+				
+				(cast(float *)&skinnedVertexState.px)[0..3] += p[];
+				(cast(float *)&skinnedVertexState.nx)[0..3] += n[];
+			}
+			
+			return skinnedVertexState;
+		}
+#endif
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -151,7 +192,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			if (VertexType.Color != VertexTypeStruct.ColorEnum.Void)
 			{
-				GL.Color4((float)VertexInfo.R, (float)VertexInfo.G, (float)VertexInfo.B, (float)VertexInfo.A);
+				GL.Color4(VertexInfo.Color.R, VertexInfo.Color.G, VertexInfo.Color.B, VertexInfo.Color.A);
 			}
 			if (VertexType.Texture != VertexTypeStruct.NumericEnum.Void)
 			{
@@ -175,23 +216,23 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 				//Console.WriteLine("{0}, {1}", VertexInfo.U, VertexInfo.V);
 				//GL.TexCoord2(VertexInfo.TX, VertexInfo.TY);
-				GL.TexCoord3(VertexInfo.TX, VertexInfo.TY, VertexInfo.TZ);
+				GL.TexCoord3(VertexInfo.Texture.X, VertexInfo.Texture.Y, VertexInfo.Texture.Z);
 			}
 			//Console.Write(",{0}", VertexInfo.PZ);
 			if (VertexType.Normal != VertexTypeStruct.NumericEnum.Void)
 			{
 				if (VertexType.ReversedNormal)
 				{
-					GL.Normal3(-VertexInfo.NX, -VertexInfo.NY, -VertexInfo.NZ);
+					GL.Normal3(-VertexInfo.Normal.X, -VertexInfo.Normal.Y, -VertexInfo.Normal.Z);
 				}
 				else
 				{
-					GL.Normal3(VertexInfo.NX, VertexInfo.NY, VertexInfo.NZ);
+					GL.Normal3(VertexInfo.Normal.X, VertexInfo.Normal.Y, VertexInfo.Normal.Z);
 				}
 			}
 			if (VertexType.Position != VertexTypeStruct.NumericEnum.Void)
 			{
-				GL.Vertex3(VertexInfo.PX, VertexInfo.PY, VertexInfo.PZ);
+				GL.Vertex3(VertexInfo.Position.X, VertexInfo.Position.Y, VertexInfo.Position.Z);
 			}
 #endif
 		}
@@ -399,6 +440,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			//for (int n = 0; n < MorpingVertexCount; n++) Console.Write("{0}, ", Morphs[n]); Console.WriteLine("");
 
+			int VertexInfoFloatCount = sizeof(VertexInfo) / sizeof(float);
 			fixed (VertexInfo* VerticesPtr = Vertices)
 			{
 #if true
@@ -412,15 +454,16 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					for (int n = 0; n < TotalVerticesWithoutMorphing; n++)
 					{
 						var ComponentsOut = (float*)&VerticesPtr[n];
-						//for (int cc = 0; cc < 20; cc++) ComponentsOut[cc] = 0;
+						for (int cc = 0; cc < VertexInfoFloatCount; cc++) ComponentsOut[cc] = 0;
 						for (int m = 0; m < MorpingVertexCount; m++)
 						{
 							VertexReader.ReadVertex(z++, &TempVertexInfo);
-							for (int cc = 0; cc < 20; cc++) ComponentsOut[cc] += ComponentsIn[cc] * Morphs[m];
+							for (int cc = 0; cc < VertexInfoFloatCount; cc++) ComponentsOut[cc] += ComponentsIn[cc] * Morphs[m];
 						}
 					}
 				}
 #else
+				var ComponentsIn = (float*)&TempVertexInfo;
 				for (int n = 0; n < TotalVerticesWithoutMorphing; n++)
 				{
 					if (MorpingVertexCount == 1)
@@ -431,13 +474,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					}
 					else
 					{
-						var ComponentsIn = (float*)&TempVertexInfo;
 						var ComponentsOut = (float*)&VerticesPtr[n];
-						for (int cc = 0; cc < 20; cc++) ComponentsOut[cc] = 0;
+						for (int cc = 0; cc < VertexInfoFloatCount; cc++) ComponentsOut[cc] = 0;
 						for (int m = 0; m < MorpingVertexCount; m++)
 						{
 							VertexReader.ReadVertex(z++, &TempVertexInfo);
-							for (int cc = 0; cc < 20; cc++) ComponentsOut[cc] += ComponentsIn[cc] * Morphs[m];
+							for (int cc = 0; cc < VertexInfoFloatCount; cc++) ComponentsOut[cc] += ComponentsIn[cc] * Morphs[m];
 						}
 					}
 				}
@@ -510,52 +552,41 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 							GL.Disable(EnableCap.CullFace);
 							for (int n = 0; n < VertexCount; n += 2)
 							{
-								VertexInfo VertexInfoTopLeft;
-								VertexInfo VertexInfoTopRight;
-								VertexInfo VertexInfoBottomRight;
-								VertexInfo VertexInfoBottomLeft;
-								ReadVertex(n + 0, &VertexInfoTopLeft);
-								ReadVertex(n + 1, &VertexInfoBottomRight);
+								VertexInfo V1, V2, V3, V4;
 
-								//if (GpuState->ClearingMode) Console.WriteLine("{0} - {1}", VertexInfoTopLeft, VertexInfoBottomRight);
-
-								float R = VertexInfoBottomRight.R, G = VertexInfoBottomRight.G, B = VertexInfoBottomRight.B, A = VertexInfoBottomRight.A;
-								float PZ = VertexInfoTopLeft.PZ;
-								float NZ = VertexInfoTopLeft.NZ;
-
-								VertexInfoTopRight = new VertexInfo()
+								ReadVertex(n + 0, &V1);
+								ReadVertex(n + 1, &V3);
 								{
-									TX = VertexInfoBottomRight.TX,
-									TY = VertexInfoTopLeft.TY,
-									TZ = VertexInfoTopLeft.TZ,
-									PX = VertexInfoBottomRight.PX,
-									PY = VertexInfoTopLeft.PY,
-									NX = VertexInfoBottomRight.NX,
-									NY = VertexInfoTopLeft.NY,
-								};
+									//if (GpuState->ClearingMode) Console.WriteLine("{0} - {1}", VertexInfoTopLeft, VertexInfoBottomRight);
 
-								VertexInfoBottomLeft = new VertexInfo()
-								{
-									TX = VertexInfoTopLeft.TX,
-									TY = VertexInfoBottomRight.TY,
-									TZ = VertexInfoBottomRight.TZ,
-									PX = VertexInfoTopLeft.PX,
-									PY = VertexInfoBottomRight.PY,
-									NX = VertexInfoTopLeft.NX,
-									NY = VertexInfoBottomRight.NY,
-								};
+									var Color = V3.Color;
+									var TZ = V1.Texture.Z;
+									var PZ = V1.Position.Z;
+									var NZ = V1.Normal.Z;
 
-								VertexInfoBottomLeft.R = VertexInfoBottomRight.R = VertexInfoTopRight.R = VertexInfoTopLeft.R = R;
-								VertexInfoBottomLeft.G = VertexInfoBottomRight.G = VertexInfoTopRight.G = VertexInfoTopLeft.G = G;
-								VertexInfoBottomLeft.B = VertexInfoBottomRight.B = VertexInfoTopRight.B = VertexInfoTopLeft.B = B;
-								VertexInfoBottomLeft.A = VertexInfoBottomRight.A = VertexInfoTopRight.A = VertexInfoTopLeft.A = A;
-								VertexInfoBottomLeft.PZ = VertexInfoBottomRight.PZ = VertexInfoTopRight.PZ = VertexInfoTopLeft.PZ = PZ;
-								VertexInfoBottomLeft.NZ = VertexInfoBottomRight.NZ = VertexInfoTopRight.NZ = VertexInfoTopLeft.NZ = NZ;
+									V2 = new VertexInfo()
+									{
+										Texture = new Vector3F(V3.Texture.X, V1.Texture.Y, TZ),
+										Position = new Vector3F(V3.Position.X, V1.Position.Y, PZ),
+										Normal = new Vector3F(V3.Normal.X, V1.Normal.Y, NZ),
+									};
 
-								PutVertex(ref VertexInfoTopLeft, ref VertexType);
-								PutVertex(ref VertexInfoTopRight, ref VertexType);
-								PutVertex(ref VertexInfoBottomRight, ref VertexType);
-								PutVertex(ref VertexInfoBottomLeft, ref VertexType);
+									V4 = new VertexInfo()
+									{
+										Texture = new Vector3F(V1.Texture.X, V3.Texture.Y, TZ),
+										Position = new Vector3(V1.Position.X, V3.Position.Y, PZ),
+										Normal = new Vector3F(V1.Normal.X, V3.Normal.Y, NZ),
+									};
+
+									V4.Color = V3.Color = V2.Color = V1.Color = Color;
+									V4.Position.Z = V3.Position.Z = V2.Position.Z = V1.Position.Z = PZ;
+									V4.Normal.Z = V3.Normal.Z = V2.Normal.Z = V1.Normal.Z = NZ;
+									V4.Texture.Z = V3.Texture.Z = V2.Texture.Z = V1.Texture.Z = NZ;
+								}
+								PutVertex(ref V1, ref VertexType);
+								PutVertex(ref V2, ref VertexType);
+								PutVertex(ref V3, ref VertexType);
+								PutVertex(ref V4, ref VertexType);
 							}
 						}
 						else
