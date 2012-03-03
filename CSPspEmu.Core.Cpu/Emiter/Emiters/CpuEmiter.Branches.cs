@@ -89,12 +89,19 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void bgezl() { bgez(); }
 		public void bgezal() { throw (new NotImplementedException()); }
 		public void bgezall() { bgezal(); }
-
+		
+#if true
+		private uint GetJumpAddress()
+		{
+			return Instruction.GetJumpAddress(PC);
+		}
+#else
 		private uint GetJumpAddress()
 		{
 			//Console.WriteLine("Instruction.JUMP: {0:X}", Instruction.JUMP);
 			return (uint)(PC & ~PspMemory.MemoryMask) | (Instruction.JUMP << 2);
 		}
+#endif
 
 		public bool PopulateCallStack
 		{

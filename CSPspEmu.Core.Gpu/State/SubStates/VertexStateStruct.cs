@@ -19,8 +19,8 @@ namespace CSPspEmu.Core.Gpu.State
 		/// </summary>
 		public byte NormalCount;
 
-		readonly static public uint[] TypeSizeTable = new uint[] { 0, sizeof(byte), sizeof(short), sizeof(float) };
-		readonly static public uint[] ColorSizeTable = new uint[] { 0, 1, 1, 1, 2, 2, 2, 4 };
+		readonly static public int[] TypeSizeTable = new int[] { 0, sizeof(byte), sizeof(short), sizeof(float) };
+		readonly static public int[] ColorSizeTable = new int[] { 0, 1, 1, 1, 2, 2, 2, 4 };
 
 		public enum IndexEnum
 		{
@@ -76,12 +76,12 @@ namespace CSPspEmu.Core.Gpu.State
 			get { return (IndexEnum)BitUtils.Extract(Value, 11, 2); }
 			set { BitUtils.Insert(ref Value, 11, 2, (uint)value); }
 		}
-		public uint SkinningWeightCount {
-			get { return BitUtils.Extract(Value, 14, 3); }
+		public int SkinningWeightCount {
+			get { return (int)BitUtils.Extract(Value, 14, 3); }
 			set { BitUtils.Insert(ref Value, 14, 3, (uint)value); }
 		}
-		public uint MorphingVertexCount {
-			get { return BitUtils.Extract(Value, 18, 2); }
+		public int MorphingVertexCount {
+			get { return (int)BitUtils.Extract(Value, 18, 2); }
 			set { BitUtils.Insert(ref Value, 18, 2, (uint)value); }
 		}
 		public bool Transform2D {
@@ -91,11 +91,11 @@ namespace CSPspEmu.Core.Gpu.State
 
 		//public bool HasWeghts { get { return Weight != NumericEnum.Void; } }
 
-		public uint SkinSize { get { return TypeSizeTable[(int)Weight]; } }
-		public uint ColorSize { get { return ColorSizeTable[(int)Color]; } }
-		public uint TextureSize { get { return TypeSizeTable[(int)Texture]; } }
-		public uint PositionSize { get { return TypeSizeTable[(int)Position]; } }
-		public uint NormalSize { get { return TypeSizeTable[(int)Normal]; } }
+		public int SkinSize { get { return TypeSizeTable[(int)Weight]; } }
+		public int ColorSize { get { return ColorSizeTable[(int)Color]; } }
+		public int TextureSize { get { return TypeSizeTable[(int)Texture]; } }
+		public int PositionSize { get { return TypeSizeTable[(int)Position]; } }
+		public int NormalSize { get { return TypeSizeTable[(int)Normal]; } }
 
 		//public uint StructAlignment { get { return Math.Max(Math.Max(Math.Max(Math.Max(SkinSize, ColorSize), TextureSize), PositionSize), NormalSize); } }
 		public uint StructAlignment {
@@ -110,18 +110,18 @@ namespace CSPspEmu.Core.Gpu.State
 			return (int)MathUtils.Max(SkinSize, ColorSize, TextureSize, PositionSize, NormalSize);
 		}
 
-		public uint GetVertexSize()
+		public int GetVertexSize()
 		{
-			uint Size = 0;
-			Size = (uint)MathUtils.NextAligned(Size, SkinSize); Size += SkinningWeightCount * SkinSize;
-			Size = (uint)MathUtils.NextAligned(Size, TextureSize); Size += NormalCount * TextureSize;
-			Size = (uint)MathUtils.NextAligned(Size, ColorSize); Size += 1 * ColorSize;
-			Size = (uint)MathUtils.NextAligned(Size, NormalSize); Size += 3 * NormalSize;
-			Size = (uint)MathUtils.NextAligned(Size, PositionSize); Size += 3 * PositionSize;
+			int Size = 0;
+			Size = (int)MathUtils.NextAligned(Size, SkinSize); Size += SkinningWeightCount * SkinSize;
+			Size = (int)MathUtils.NextAligned(Size, TextureSize); Size += NormalCount * TextureSize;
+			Size = (int)MathUtils.NextAligned(Size, ColorSize); Size += 1 * ColorSize;
+			Size = (int)MathUtils.NextAligned(Size, NormalSize); Size += 3 * NormalSize;
+			Size = (int)MathUtils.NextAligned(Size, PositionSize); Size += 3 * PositionSize;
 
 			var AlignmentSize = GetMaxAlignment();
 			//Size = (uint)((Size + AlignmentSize - 1) & ~(AlignmentSize - 1));
-			Size = (uint)MathUtils.NextAligned(Size, (uint)AlignmentSize);
+			Size = (int)MathUtils.NextAligned(Size, (uint)AlignmentSize);
 			//Console.WriteLine("Size:" + Size);
 			return Size;
 		}
@@ -158,7 +158,7 @@ namespace CSPspEmu.Core.Gpu.State
 				oneVertexSize = (oneVertexSize + alignmentSize - 1) & ~(alignmentSize - 1);
 		 */
 
-		public uint GetVertexSetMorphSize()
+		public int GetVertexSetMorphSize()
 		{
 			return GetVertexSize() * MorphingVertexCount;
 		}

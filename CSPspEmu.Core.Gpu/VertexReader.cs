@@ -38,9 +38,9 @@ namespace CSPspEmu.Core.Gpu
 		}
 
 #else
-		protected uint VertexAlignSize = 1;
-		protected uint VertexSize;
-		protected uint SkinningWeightCount;
+		protected int VertexAlignSize = 1;
+		protected int VertexSize;
+		protected int SkinningWeightCount;
 		protected byte* BasePointer;
 		protected byte* Pointer;
 		protected VertexInfo* VertexInfo;

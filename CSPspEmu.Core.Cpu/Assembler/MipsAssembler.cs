@@ -10,6 +10,7 @@ using CSharpUtils.Streams;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
+using CSharpUtils.Arrays;
 
 namespace CSPspEmu.Core.Cpu.Assembler
 {
@@ -19,6 +20,14 @@ namespace CSPspEmu.Core.Cpu.Assembler
 		protected BinaryWriter BinaryWriter;
 		protected BinaryReader BinaryReader;
 		protected Dictionary<String, InstructionInfo> Instructions;
+
+		static public IArray<Instruction> StaticAssembleInstructions(string Program)
+		{
+			var Memory = new MemoryStream();
+			var Instructions = new StreamStructArrayWrapper<Instruction>(Memory);
+			new MipsAssembler(Memory).Assemble(Program);
+			return Instructions;
+		}
 
 		public MipsAssembler(Stream OutputStream)
 		{

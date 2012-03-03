@@ -5,58 +5,52 @@ using System.Reflection.Emit;
 using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
+using Codegen;
 
 namespace CSPspEmu.Core.Gpu.VertexReading
 {
 	unsafe public partial class VertexReaderDynarec
 	{
-		private void _LoadPointerAlignedTo(uint Alignment)
+		private void _LoadPointerAlignedTo(int Alignment)
 		{
 			Offset = MathUtils.NextAligned(Offset, (int)Alignment);
-			ILGenerator.Emit(OpCodes.Ldarg_0); // void* VertexData
-			ILGenerator.Emit(OpCodes.Ldc_I4, Offset);
-			ILGenerator.Emit(OpCodes.Add);
+			SafeILGenerator.LoadArgument(VertexDataArgument);
+			SafeILGenerator.Push((int)Offset);
+			SafeILGenerator.BinaryOperation(Codegen.SafeBinaryOperator.AdditionSigned);
 		}
 
-		private void IncOffset(uint Size)
+		private void IncOffset(int Size)
 		{
-			Offset += Size;
+			Offset += (uint)Size;
 			Console.Error.WriteLine("{0} -> {1}", Offset - Size, Offset);
 		}
 
-		private void _LoadIntegerAsInteger(uint Size, bool Signed)
+		private void _LoadIntegerAsInteger(int Size, bool Signed)
 		{
 			_LoadPointerAlignedTo(Alignment: Size);
-			switch (Size)
-			{
-				case 1: ILGenerator.Emit(Signed ? OpCodes.Ldind_I1 : OpCodes.Ldind_U1); break;
-				case 2: ILGenerator.Emit(Signed ? OpCodes.Ldind_I2 : OpCodes.Ldind_U2); break;
-				case 4: ILGenerator.Emit(Signed ? OpCodes.Ldind_I4 : OpCodes.Ldind_U4); break;
-				case 8: ILGenerator.Emit(Signed ? OpCodes.Ldind_I8 : OpCodes.Ldind_I8); break;
-				default: throw (new NotImplementedException("_LoadIntegerScaled: " + Size));
-			}
+			SafeILGenerator.LoadIndirect(SafeILGenerator.GetIntegralTypeByDescription(Size, Signed));
 			IncOffset(Size);
 		}
 
-		private void _LoadSignedIntegerScaled(uint Size, float Scale, bool Signed)
+		private void _LoadSignedIntegerScaled(int Size, float Scale, bool Signed)
 		{
 			_LoadIntegerAsInteger(Size, Signed);
-			ILGenerator.Emit(OpCodes.Conv_R4);
+			SafeILGenerator.ConvertTo<float>();
 			if (Scale != 1.0f)
 			{
-				ILGenerator.Emit(OpCodes.Ldc_R4, Scale);
-				ILGenerator.Emit(OpCodes.Div);
+				SafeILGenerator.Push((float)Scale);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.DivideSigned);
 			}
 		}
 
 		private void _LoadFloat()
 		{
 			_LoadPointerAlignedTo(Alignment: sizeof(float));
-			ILGenerator.Emit(OpCodes.Ldind_R4);
+			SafeILGenerator.LoadIndirect<float>();
 			IncOffset(sizeof(float));
 		}
 
-		private void _LoadIntegerScaled(uint Size, bool Signed)
+		private void _LoadIntegerScaled(int Size, bool Signed)
 		{
 			_LoadSignedIntegerScaled(
 				Size: Size,
@@ -65,7 +59,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 			);
 		}
 
-		private void _LoadIntegerScaledIfNotTransform2D(uint Size, bool Signed)
+		private void _LoadIntegerScaledIfNotTransform2D(int Size, bool Signed)
 		{
 			_LoadSignedIntegerScaled(
 				Size: Size,
@@ -76,12 +70,12 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 
 		private void _SaveFloatField(string FieldName, Action Action)
 		{
-			ILGenerator.Emit(OpCodes.Ldarg_1);
-			ILGenerator.Emit(OpCodes.Ldflda, typeof(VertexInfo).GetField(FieldName));
+			SafeILGenerator.LoadArgument(VertexInfoArgument);
+			SafeILGenerator.LoadFieldAddress(typeof(VertexInfo).GetField(FieldName));
 			{
 				Action();
 			}
-			ILGenerator.Emit(OpCodes.Stind_R4);
+			SafeILGenerator.StoreIndirect<float>();
 		}
 
 		private void _SaveFloatFields(string[] FieldNames, Action Action)
@@ -104,7 +98,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 		}
 		*/
 
-		private uint TypeSize(VertexTypeStruct.NumericEnum Type)
+		private int TypeSize(VertexTypeStruct.NumericEnum Type)
 		{
 			return VertexTypeStruct.TypeSizeTable[(int)Type];
 		}

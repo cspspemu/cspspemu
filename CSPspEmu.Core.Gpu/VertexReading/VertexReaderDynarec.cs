@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
+using Codegen;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
 
@@ -16,28 +17,32 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 	{
 		protected uint Offset;
 		protected VertexTypeStruct VertexType;
-		protected DynamicMethod DynamicMethod;
-		protected ILGenerator ILGenerator;
+		protected SafeILGenerator SafeILGenerator;
 		protected LocalBuilder LocalColor;
+		protected SafeArgument VertexDataArgument;
+		protected SafeArgument VertexInfoArgument;
+		protected SafeArgument IndexArgument;
+		protected SafeArgument CountArgument;
 
 		static public VertexReaderDelegate GenerateMethod(VertexTypeStruct VertexType)
 		{
-			return new VertexReaderDynarec(VertexType).GenerateDelegate();
+			return SafeILGenerator.Generate<VertexReaderDelegate>("VertexReaderDynarec.GenerateMethod", (Generator) =>
+			{
+				var VertexReaderDynarec = new VertexReaderDynarec(Generator, VertexType);
+				VertexReaderDynarec.GenerateCode();
+			});
 		}
 
-		protected VertexReaderDynarec(VertexTypeStruct VertexType)
+		protected VertexReaderDynarec(SafeILGenerator SafeILGenerator, VertexTypeStruct VertexType)
 		{
-			this.VertexType = VertexType;
 			this.Offset = 0;
-			this.DynamicMethod = new DynamicMethod(
-				String.Format("GenerateReaderMethod"),
-				typeof(void),
-				new[] { typeof(void*), typeof(VertexInfo*), typeof(int), typeof(int) },
-				//typeof(VertexReaderDelegate).DeclaringMethod.GetParameters().Select(Item => Item.ParameterType).ToArray(),
-				Assembly.GetExecutingAssembly().ManifestModule
-			);
-			this.ILGenerator = DynamicMethod.GetILGenerator();
-			this.LocalColor = this.ILGenerator.DeclareLocal(typeof(uint));
+			this.SafeILGenerator = SafeILGenerator;
+			this.VertexType = VertexType;
+			this.VertexDataArgument = SafeILGenerator.DeclareArgument(typeof(void*), 0);
+			this.VertexInfoArgument = SafeILGenerator.DeclareArgument(typeof(VertexInfo*), 0);
+			this.IndexArgument = SafeILGenerator.DeclareArgument(typeof(int), 0);
+			this.CountArgument = SafeILGenerator.DeclareArgument(typeof(int), 0);
+			this.LocalColor = SafeILGenerator.DeclareLocal<uint>("LocalColor");
 		}
 
 		private void AlignTo(int Alignment)
@@ -133,8 +138,8 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 
 		private void Read_Color(ColorFormat ColorFormat)
 		{
-			_LoadIntegerAsInteger(Size: (uint)ColorFormat.TotalBytes, Signed: false);
-			ILGenerator.Emit(OpCodes.Stloc, LocalColor);
+			_LoadIntegerAsInteger(Size: ColorFormat.TotalBytes, Signed: false);
+			SafeILGenerator.StoreLocal(LocalColor);
 			Read_Color_Component("R", ColorFormat.Red);
 			Read_Color_Component("G", ColorFormat.Green);
 			Read_Color_Component("B", ColorFormat.Blue);
@@ -146,61 +151,65 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 		{
 			_SaveFloatField(ComponentName, () =>
 			{
-				ILGenerator.Emit(OpCodes.Ldloc, LocalColor);
-				ILGenerator.Emit(OpCodes.Ldc_I4, ComponentInfo.Offset);
-				ILGenerator.Emit(OpCodes.Shr_Un);
-				ILGenerator.Emit(OpCodes.Ldc_I4, BitUtils.CreateMask(ComponentInfo.Size));
-				ILGenerator.Emit(OpCodes.And);
-				ILGenerator.Emit(OpCodes.Conv_R4);
-				ILGenerator.Emit(OpCodes.Ldc_R4, (float)ComponentInfo.Mask);
-				ILGenerator.Emit(OpCodes.Div);
+				SafeILGenerator.LoadLocal(LocalColor);
+				SafeILGenerator.Push((int)ComponentInfo.Offset);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftRightUnsigned);
+				SafeILGenerator.Push((int)BitUtils.CreateMask(ComponentInfo.Size));
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.And);
+				SafeILGenerator.ConvertTo<float>();
+				SafeILGenerator.Push((float)ComponentInfo.Mask);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.DivideSigned);
 			});
 		}
 
 
-		private VertexReaderDelegate GenerateDelegate()
+		private void GenerateCode()
 		{
-			var LoopLabel = ILGenerator.DefineLabel();
+			var LoopLabel = SafeILGenerator.DefineLabel("LoopLabel");
 
-			ILGenerator.Emit(OpCodes.Ldarg_0); // void* VertexData
-			ILGenerator.Emit(OpCodes.Ldarg_2); // int Index
-			ILGenerator.Emit(OpCodes.Ldc_I4, VertexType.GetVertexSize());
-			ILGenerator.Emit(OpCodes.Mul);
-			ILGenerator.Emit(OpCodes.Add);
-			ILGenerator.Emit(OpCodes.Starg, 0);
+			SafeILGenerator.LoadStoreArgument(VertexDataArgument, () =>
+			{
+				SafeILGenerator.LoadArgument(IndexArgument);
+				SafeILGenerator.Push((int)VertexType.GetVertexSize());
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
+			});
 
 			// :loop
-			ILGenerator.MarkLabel(LoopLabel);
+			LoopLabel.Mark();
 			{
 				ReadAll();
 			}
 
 			// VertexData += VertexSize
 			{
-				ILGenerator.Emit(OpCodes.Ldarg_0); // void* VertexData
-				ILGenerator.Emit(OpCodes.Ldc_I4, VertexType.GetVertexSize());
-				ILGenerator.Emit(OpCodes.Add);
-				ILGenerator.Emit(OpCodes.Starg, 0);
+				SafeILGenerator.LoadStoreArgument(VertexDataArgument, () =>
+				{
+					SafeILGenerator.Push((int)VertexType.GetVertexSize());
+					SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
+				});
 			}
 
 			// Vertex++
 			{
-				ILGenerator.Emit(OpCodes.Ldarg_1); // VertexInfo* Vertex
-				ILGenerator.Emit(OpCodes.Ldc_I4, sizeof(VertexInfo));
-				ILGenerator.Emit(OpCodes.Add);
-				ILGenerator.Emit(OpCodes.Starg, 1);
+				SafeILGenerator.LoadStoreArgument(VertexInfoArgument, () =>
+				{
+					SafeILGenerator.Push(sizeof(VertexInfo));
+					SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
+				});
 			}
 
 			// Count--
 			{
-				ILGenerator.Emit(OpCodes.Ldarg_3); // int Count
-				ILGenerator.Emit(OpCodes.Ldc_I4, -1);
-				ILGenerator.Emit(OpCodes.Add);
-				ILGenerator.Emit(OpCodes.Starg, 3);
+				SafeILGenerator.LoadStoreArgument(CountArgument, () =>
+				{
+					SafeILGenerator.Push(-1);
+					SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
+				});
 			}
 
-			ILGenerator.Emit(OpCodes.Ldarg_3);
-			ILGenerator.Emit(OpCodes.Brtrue, LoopLabel);
+			SafeILGenerator.LoadArgument(CountArgument);
+			SafeILGenerator.BranchIfTrue(LoopLabel);
 
 			Offset = MathUtils.NextAligned(Offset, VertexType.GetMaxAlignment());
 
@@ -208,10 +217,8 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 			Console.Error.WriteLine("Get:{0}, Calculated:{1}", Offset, VertexType.GetVertexSize());
 			Debug.Assert(Offset == VertexType.GetVertexSize());
 
-			ILGenerator.Emit(OpCodes.Ret);
+			SafeILGenerator.Return();
 			//Console.Error.WriteLine(DynamicMethod.GetMethodBody().GetILAsByteArray());
-			var Delegate = (VertexReaderDelegate)DynamicMethod.CreateDelegate(typeof(VertexReaderDelegate));
-			return Delegate;
 		}
 	}
 }

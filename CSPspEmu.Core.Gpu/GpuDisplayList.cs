@@ -240,7 +240,7 @@ namespace CSPspEmu.Core.Gpu
 		static public GpuDisplayListRunnerDelegate GenerateSwitch()
 		{
 			//GpuDisplayListRunnerDelegate.
-			var DynamicMethod = new DynamicMethod("", typeof(void), new Type[] { typeof(GpuDisplayListRunner), typeof(GpuOpCodes), typeof(uint) });
+			var DynamicMethod = new DynamicMethod("GpuDisplayList.GenerateSwitch", typeof(void), new Type[] { typeof(GpuDisplayListRunner), typeof(GpuOpCodes), typeof(uint) });
 			ILGenerator ILGenerator = DynamicMethod.GetILGenerator();
 			var SwitchLabels = new Label[typeof(GpuOpCodes).GetEnumValues().Length];
 			var Names = typeof(GpuOpCodes).GetEnumNames();

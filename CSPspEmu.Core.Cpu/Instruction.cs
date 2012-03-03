@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CSharpUtils;
 using CSharpUtils.Extensions;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -48,6 +49,11 @@ namespace CSPspEmu.Core.Cpu
 			f = f << 13;
 
 			return MathFloat.ReinterpretIntAsFloat((s << 31) | (e << 23) | f);
+		}
+
+		public uint GetJumpAddress(uint CurrentPC)
+		{
+			return (uint)(CurrentPC & ~PspMemory.MemoryMask) | (JUMP << 2);
 		}
 
 		/*

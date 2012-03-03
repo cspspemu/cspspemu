@@ -16,6 +16,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
 		public struct Result
 		{
+			public uint InstructionPC;
 			public Instruction Instruction;
 			public InstructionInfo InstructionInfo;
 
@@ -24,12 +25,16 @@ namespace CSPspEmu.Core.Cpu.Assembler
 				return String.Format("r{0}", RegisterIndex);
 			}
 
-			static public readonly Dictionary<string, Func<Instruction, string>> Opcodes = new Dictionary<string, Func<Instruction, string>>()
+			static public readonly Dictionary<string, Func<Result, string>> Opcodes = new Dictionary<string, Func<Result, string>>()
 			{
-				{ "s", Instruction => RegisterIndexToRegisterName(Instruction.RS) },
-				{ "d", Instruction => RegisterIndexToRegisterName(Instruction.RD) },
-				{ "t", Instruction => RegisterIndexToRegisterName(Instruction.RT) },
-				{ "a", Instruction => Instruction.POS.ToString() },
+				//return (uint)(PC & ~PspMemory.MemoryMask) | (Instruction.JUMP << 2);
+
+				{ "J", Result => RegisterIndexToRegisterName(Result.Instruction.RS) },
+				{ "j", Result => "0x%08X".Sprintf(Result.Instruction.GetJumpAddress(Result.InstructionPC)) },
+				{ "s", Result => RegisterIndexToRegisterName(Result.Instruction.RS) },
+				{ "d", Result => RegisterIndexToRegisterName(Result.Instruction.RD) },
+				{ "t", Result => RegisterIndexToRegisterName(Result.Instruction.RT) },
+				{ "a", Result => Result.Instruction.POS.ToString() },
 			};
 
 			public override string ToString()
@@ -47,7 +52,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 							var Part = Encoding.Substr(n + 1, Match);
 							if (Opcodes.ContainsKey(Part))
 							{
-								Parameters += Opcodes[Part](Instruction);
+								Parameters += Opcodes[Part](this);
 								n += Part.Length;
 								Found = true;
 								break;
@@ -68,14 +73,14 @@ namespace CSPspEmu.Core.Cpu.Assembler
 		{
 		}
 
-		public Result Disassemble(uint Value)
+		public Result Disassemble(uint PC, Instruction Instruction)
 		{
 			if (ProcessCallback == null)
 			{
 				InstructionDictionary = InstructionTable.ALL.ToDictionary(Item => Item.Name);
 				ProcessCallback = EmitLookupGenerator.GenerateSwitch<Func<uint, MipsDisassembler, Result>>(InstructionTable.ALL, (SafeILGenerator, InstructionInfo) =>
 				{
-					SafeILGenerator.LoadArgument<MipsDisassembler>(1);
+					//SafeILGenerator.LoadArgument<MipsDisassembler>(1);
 					SafeILGenerator.LoadArgument<uint>(0);
 					if (InstructionInfo == null)
 					{
@@ -85,20 +90,21 @@ namespace CSPspEmu.Core.Cpu.Assembler
 					{
 						SafeILGenerator.Push(InstructionInfo.Name);
 					}
-					SafeILGenerator.Call((Func<uint, String, Result>)MipsDisassembler.Methods.Handle);
+					SafeILGenerator.Call((Func<uint, String, Result>)MipsDisassembler._InternalHandle);
 				});
 			}
 
-			var Result = ProcessCallback(Value, this);
+			var Result = ProcessCallback(Instruction, this);
+			Result.InstructionPC = PC;
 			return Result;
 		}
 
-		public Result Handle(uint Data, String Name)
+		static public Result _InternalHandle(uint Data, String Name)
 		{
 			return new Result()
 			{
 				Instruction = Data,
-				InstructionInfo = InstructionDictionary[Name],
+				InstructionInfo = MipsDisassembler.InstructionDictionary[Name],
 			};
 		}
 	}

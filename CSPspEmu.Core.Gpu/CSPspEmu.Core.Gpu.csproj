@@ -114,6 +114,10 @@
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SafeILGenerator\SafeILGenerator\SafeILGenerator.csproj">
+      <Project>{9a93c7e4-09da-46cf-b7dd-6bb09681d5ab}</Project>
+      <Name>SafeILGenerator</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Run\GpuDisplayListRunner.Transfer.cs" />

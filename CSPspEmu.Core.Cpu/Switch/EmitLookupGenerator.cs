@@ -72,7 +72,7 @@ namespace CSPspEmu.Core.Cpu.Table
 
 		static public TType GenerateSwitch<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Action<SafeILGenerator, InstructionInfo> GenerateCallDelegate)
 		{
-			return SafeILGenerator.Generate<TType>((Generator) =>
+			return SafeILGenerator.Generate<TType>("EmitLookupGenerator.GenerateSwitch", (Generator) =>
 			{
 				GenerateSwitchCode(Generator, InstructionInfoList, GenerateCallDelegate);
 			});
