@@ -79,7 +79,7 @@ namespace CSPspEmu.Core.Gpu
 			Transform2D = VertexType.Transform2D;
 			
 			//Console.Error.WriteLine("SetVertexTypeStruct: " + VertexTypeStruct);
-			SkinningWeightCount = VertexType.SkinningWeightCount;
+			SkinningWeightCount = VertexType.RealSkinningWeightCount;
 			//Console.WriteLine(SkinningWeightCount);
 			VertexSize = VertexType.GetVertexSize();
 			{

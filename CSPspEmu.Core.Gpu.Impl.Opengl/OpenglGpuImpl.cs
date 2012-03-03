@@ -118,10 +118,67 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		GpuStateStruct* GpuState;
 
-#if false
+#if true
 		VertexInfo PerformSkinning(VertexInfo VertexInfo)
 		{
-			VertexInfo SkinnedVertexState;
+			int SkinningWeightCount = VertexType.RealSkinningWeightCount;
+			if (SkinningWeightCount == 0) return VertexInfo;
+
+			var OutputPosition = default(Vector3F);
+			var OutputNormal = default(Vector3F);
+			var InputPosition = VertexInfo.Position;
+			var InputNormal = VertexInfo.Normal;
+
+			var BoneMatrices = &GpuState->SkinningState.BoneMatrix0;
+
+			for (int m = 0; m < SkinningWeightCount; m++)
+			{
+				var BoneMatrix = BoneMatrices[m];
+				float Weight = VertexInfo.Weights[m];
+
+				if (Weight != 0)
+				{
+					OutputPosition.X += (InputPosition.X * BoneMatrix.Values[0] + InputPosition.Y * BoneMatrix.Values[4] + InputPosition.Z * BoneMatrix.Values[8] + 1 * BoneMatrix.Values[12]) * Weight;
+					OutputPosition.Y += (InputPosition.X * BoneMatrix.Values[1] + InputPosition.Y * BoneMatrix.Values[5] + InputPosition.Z * BoneMatrix.Values[9] + 1 * BoneMatrix.Values[13]) * Weight;
+					OutputPosition.Z += (InputPosition.X * BoneMatrix.Values[2] + InputPosition.Y * BoneMatrix.Values[6] + InputPosition.Z * BoneMatrix.Values[10] + 1 * BoneMatrix.Values[14]) * Weight;
+
+					OutputNormal.X += (InputNormal.X * BoneMatrix.Values[0] + InputNormal.Y * BoneMatrix.Values[4] + InputNormal.Z * BoneMatrix.Values[8] + 0 * BoneMatrix.Values[12]) * Weight;
+					OutputNormal.Y += (InputNormal.X * BoneMatrix.Values[1] + InputNormal.Y * BoneMatrix.Values[5] + InputNormal.Z * BoneMatrix.Values[9] + 0 * BoneMatrix.Values[13]) * Weight;
+					OutputNormal.Z += (InputNormal.X * BoneMatrix.Values[2] + InputNormal.Y * BoneMatrix.Values[6] + InputNormal.Z * BoneMatrix.Values[10] + 0 * BoneMatrix.Values[14]) * Weight;
+				}
+			}
+
+			VertexInfo.Position = OutputPosition;
+			VertexInfo.Normal = OutputNormal;
+
+			return VertexInfo;
+		}
+#else
+		VertexInfo PerformSkinning(VertexInfo VertexInfo)
+		{
+			if (VertexType.RealSkinningWeightCount == 0) return VertexInfo;
+			//return VertexInfo;
+
+			var SkinnedVertexState = VertexInfo;
+
+			SkinnedVertexState.Position = Vector3.Zero;
+			SkinnedVertexState.Normal = Vector3.Zero;
+
+			var BoneMatrices = &GpuState->SkinningState.BoneMatrix0;
+			//Console.WriteLine(VertexType.SkinningWeightCount);
+
+			int SkinningWeightCount = VertexType.RealSkinningWeightCount;
+
+			for (int m = 0; m < SkinningWeightCount; m++)
+			{
+				var BoneMatrix = BoneMatrices[m].Matrix4;
+				//BoneMatrix.Transpose();
+				//Console.WriteLine("{0}", VertexInfo.Weights[m]);
+				SkinnedVertexState.Position += Vector3.Transform(VertexInfo.Position, BoneMatrix) * VertexInfo.Weights[m];
+				SkinnedVertexState.Normal += Vector3.Transform(VertexInfo.Normal, BoneMatrix) * VertexInfo.Weights[m];
+			}
+
+			return SkinnedVertexState;
 
 			/*
 			if (!shouldPerformSkin) return vertexState;
@@ -132,6 +189,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			(cast(float *)&skinnedVertexState.nx)[0..3] = 0.0;
 			*/
 			
+			/*
 			float[3] p, n;
 
 			for (int m = 0; m < vertexType.skinningWeightCount; m++) {
@@ -156,6 +214,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 			
 			return skinnedVertexState;
+			*/
 		}
 #endif
 
@@ -164,8 +223,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// </summary>
 		/// <param name="VertexInfo"></param>
 		/// <param name="VertexType"></param>
-		private void PutVertex(ref VertexInfo VertexInfo, ref VertexTypeStruct VertexType)
+		private void PutVertex(ref VertexInfo _VertexInfo, ref VertexTypeStruct VertexType)
 		{
+			VertexInfo VertexInfo = PerformSkinning(_VertexInfo);
+
 			_CapturePutVertex(ref VertexInfo);
 
 			//Console.WriteLine(VertexType);

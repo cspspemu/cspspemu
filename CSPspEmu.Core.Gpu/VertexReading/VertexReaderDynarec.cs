@@ -72,7 +72,8 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 		{
 			var Type = VertexType.Weight;
 			if (Type == VertexTypeStruct.NumericEnum.Void) return;
-			for (int n = 0; n < VertexType.SkinningWeightCount; n++)
+			int WeightCount = VertexType.RealSkinningWeightCount;
+			for (int n = 0; n < WeightCount; n++)
 			{
 				_SaveFloatField("Weight" + n, () =>
 				{

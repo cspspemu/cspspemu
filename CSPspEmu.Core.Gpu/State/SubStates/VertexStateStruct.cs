@@ -89,6 +89,15 @@ namespace CSPspEmu.Core.Gpu.State
 			set { BitUtils.Insert(ref Value, 23, 1, value ? 1U : 0U); }
 		}
 
+		public int RealSkinningWeightCount
+		{
+			get
+			{
+				if (SkinSize == 0) return 0;
+				return SkinningWeightCount + 1;
+			}
+		}
+
 		//public bool HasWeghts { get { return Weight != NumericEnum.Void; } }
 
 		public int SkinSize { get { return TypeSizeTable[(int)Weight]; } }
@@ -113,7 +122,7 @@ namespace CSPspEmu.Core.Gpu.State
 		public int GetVertexSize()
 		{
 			int Size = 0;
-			Size = (int)MathUtils.NextAligned(Size, SkinSize); Size += SkinningWeightCount * SkinSize;
+			Size = (int)MathUtils.NextAligned(Size, SkinSize); Size += RealSkinningWeightCount * SkinSize;
 			Size = (int)MathUtils.NextAligned(Size, TextureSize); Size += NormalCount * TextureSize;
 			Size = (int)MathUtils.NextAligned(Size, ColorSize); Size += 1 * ColorSize;
 			Size = (int)MathUtils.NextAligned(Size, NormalSize); Size += 3 * NormalSize;
