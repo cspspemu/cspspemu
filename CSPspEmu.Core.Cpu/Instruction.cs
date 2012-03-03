@@ -136,6 +136,19 @@ namespace CSPspEmu.Core.Cpu
 
 		public uint ONE_TWO { get { return 1 + 1 * ONE + 2 * TWO; } }
 
+		static public implicit operator Instruction(uint Value)
+		{
+			return new Instruction()
+			{
+				Value = Value,
+			};
+		}
+
+		static public implicit operator uint(Instruction Instruction)
+		{
+			return Instruction.Value;
+		}
+
 		// Immediate 7 bits.
 		// VFPU
 		/*

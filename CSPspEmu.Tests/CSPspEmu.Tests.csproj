@@ -57,6 +57,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cpu\Assembler\MipsDisassemblerTest.cs" />
     <Compile Include="Cpu\Emiter\CpuEmiterTest.cs" />
     <Compile Include="Cpu\Switch\EmitLookupGeneratorTest.cs" />
     <Compile Include="Cpu\Table\InstructionTableTest.cs" />

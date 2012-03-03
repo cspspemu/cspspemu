@@ -26,14 +26,46 @@ namespace CSPspEmu.Core.Cpu.Table
 
 	public class InstructionInfo : Attribute
 	{
+		/// <summary>
+		/// Name of the instruction.
+		/// Example: add
+		/// </summary>
 		public String Name;
+
+		/// <summary>
+		/// Mask extracted from BinaryEncoding
+		/// </summary>
 		public uint Mask;
+
+		/// <summary>
+		/// Value extracted from BinaryEncoding
+		/// </summary>
 		public uint Value;
+
+		/// <summary>
+		/// Example: 000000:rs:rt:rd:00000:100000
+		/// </summary>
 		protected String _BinaryEncoding;
+
+		/// <summary>
+		/// Example: %d, %s, %t
+		/// </summary>
 		public String AsmEncoding;
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public AddressType AddressType;
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public InstructionType InstructionType;
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Encoding"></param>
 		protected void ParseBinaryEncoding(string Encoding)
 		{
 			Value = Mask = 0;
