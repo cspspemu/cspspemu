@@ -23,6 +23,7 @@ using System.Web;
 using System.Resources;
 using System.Globalization;
 using CSPspEmu.Resources;
+using System.Windows.Input;
 
 namespace CSPspEmu.Gui.Winforms
 {
@@ -128,6 +129,7 @@ namespace CSPspEmu.Gui.Winforms
 			updateResumePause();
 			UpdateCheckMenusFromConfig();
 			updateDebugGpu();
+			ReLoadControllerConfig();
 
 			var Timer = new System.Windows.Forms.Timer();
 			Timer.Interval = 1000 / 60;
@@ -441,22 +443,8 @@ namespace CSPspEmu.Gui.Winforms
 
 		private PspCtrlButtons GetButtonsFromKeys(Keys Key)
 		{
-			switch (Key)
-			{
-				case Keys.W: return PspCtrlButtons.Triangle;
-				case Keys.S: return PspCtrlButtons.Cross;
-				case Keys.A: return PspCtrlButtons.Square;
-				case Keys.D: return PspCtrlButtons.Circle;
-				case Keys.Q: return PspCtrlButtons.LeftTrigger;
-				case Keys.E: return PspCtrlButtons.RightTrigger;
-				case Keys.Up: return PspCtrlButtons.Up;
-				case Keys.Return: return PspCtrlButtons.Start;
-				case Keys.Space: return PspCtrlButtons.Select;
-				case Keys.Right: return PspCtrlButtons.Right;
-				case Keys.Down: return PspCtrlButtons.Down;
-				case Keys.Left: return PspCtrlButtons.Left;
-			}
-			return PspCtrlButtons.None;
+			if (!KeyMap.ContainsKey(Key)) return PspCtrlButtons.None;
+			return KeyMap[Key];
 		}
 
 		//float AnalogX, AnalogY;
@@ -476,26 +464,30 @@ namespace CSPspEmu.Gui.Winforms
 				//case Keys.F2: IGuiExternalInterface.ShowDebugInformation(); break;
 			}
 
-			switch (e.KeyCode)
-			{
-				case Keys.I: AnalogUp = true; break;
-				case Keys.K: AnalogDown = true; break;
-				case Keys.J: AnalogLeft = true; break;
-				case Keys.L: AnalogRight = true; break;
-			}
+			TryUpdateAnalog(e.KeyCode, true);
 
 			SceCtrlData.UpdateButtons(GetButtonsFromKeys(e.KeyCode), true);
 		}
 
+		private void TryUpdateAnalog(Keys Key, bool Press)
+		{
+			if (AnalogKeyMap.ContainsKey(Key))
+			{
+				switch (AnalogKeyMap[Key])
+				{
+					case PspCtrlAnalog.Up: AnalogUp = Press; break;
+					case PspCtrlAnalog.Down: AnalogDown = Press; break;
+					case PspCtrlAnalog.Left: AnalogLeft = Press; break;
+					case PspCtrlAnalog.Right: AnalogRight = Press; break;
+				}
+			}
+		}
+
 		private void PspDisplayForm_KeyUp(object sender, KeyEventArgs e)
 		{
-			switch (e.KeyCode)
-			{
-				case Keys.I: AnalogUp = false; break;
-				case Keys.K: AnalogDown = false; break;
-				case Keys.J: AnalogLeft = false; break;
-				case Keys.L: AnalogRight = false; break;
-			}
+			var Key = e.KeyCode;
+
+			TryUpdateAnalog(e.KeyCode, false);
 
 			SceCtrlData.UpdateButtons(GetButtonsFromKeys(e.KeyCode), false);
 		}
@@ -857,7 +849,69 @@ namespace CSPspEmu.Gui.Winforms
 			{
 				MessageBox.Show("Can't register WavDest.dll", "Done", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
+		}
 
+		private void configureControllerToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			new ButtonMappingForm(PspConfig).ShowDialog();
+			ReLoadControllerConfig();
+		}
+
+		private void ReLoadControllerConfig()
+		{
+			var ControllerConfig = PspConfig.StoredConfig.ControllerConfig;
+
+			AnalogKeyMap = new Dictionary<Keys, PspCtrlAnalog>();
+			{
+				AnalogKeyMap[ParseKeyName(ControllerConfig.AnalogLeft)] = PspCtrlAnalog.Left;
+				AnalogKeyMap[ParseKeyName(ControllerConfig.AnalogRight)] = PspCtrlAnalog.Right;
+				AnalogKeyMap[ParseKeyName(ControllerConfig.AnalogUp)] = PspCtrlAnalog.Up;
+				AnalogKeyMap[ParseKeyName(ControllerConfig.AnalogDown)] = PspCtrlAnalog.Down;
+			}
+
+			KeyMap = new Dictionary<Keys, PspCtrlButtons>();
+			{
+				KeyMap[ParseKeyName(ControllerConfig.DigitalLeft)] = PspCtrlButtons.Left;
+				KeyMap[ParseKeyName(ControllerConfig.DigitalRight)] = PspCtrlButtons.Right;
+				KeyMap[ParseKeyName(ControllerConfig.DigitalUp)] = PspCtrlButtons.Up;
+				KeyMap[ParseKeyName(ControllerConfig.DigitalDown)] = PspCtrlButtons.Down;
+
+				KeyMap[ParseKeyName(ControllerConfig.TriangleButton)] = PspCtrlButtons.Triangle;
+				KeyMap[ParseKeyName(ControllerConfig.CrossButton)] = PspCtrlButtons.Cross;
+				KeyMap[ParseKeyName(ControllerConfig.SquareButton)] = PspCtrlButtons.Square;
+				KeyMap[ParseKeyName(ControllerConfig.CircleButton)] = PspCtrlButtons.Circle;
+
+				KeyMap[ParseKeyName(ControllerConfig.StartButton)] = PspCtrlButtons.Start;
+				KeyMap[ParseKeyName(ControllerConfig.SelectButton)] = PspCtrlButtons.Select;
+			}
+
+			Console.WriteLine("KeyMapping:");
+
+			foreach (var Map in AnalogKeyMap)
+			{
+				Console.WriteLine("  '{0}' -> PspCtrlAnalog.{1}", Map.Key, Map.Value);
+			}
+
+			foreach (var Map in KeyMap)
+			{
+				Console.WriteLine("  '{0}' -> PspCtrlButtons.{1}", Map.Key, Map.Value);
+			}
+		}
+
+		public enum PspCtrlAnalog
+		{
+			Left = (1 << 0),
+			Right = (1 << 1),
+			Up = (1 << 2),
+			Down = (1 << 3),
+		}
+
+		private Dictionary<Keys, PspCtrlButtons> KeyMap = new Dictionary<Keys, PspCtrlButtons>();
+		private Dictionary<Keys, PspCtrlAnalog> AnalogKeyMap = new Dictionary<Keys, PspCtrlAnalog>();
+
+		static private Keys ParseKeyName(string KeyName)
+		{
+			return (Keys)Enum.Parse(typeof(Keys), KeyName);
 		}
 	}
 }

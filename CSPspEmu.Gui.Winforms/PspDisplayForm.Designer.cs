@@ -79,6 +79,7 @@
 			this.HelpReportAnIssueMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
 			this.HelpAboutMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.configureControllerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -135,6 +136,7 @@
             this.UtilsDisplayMenu,
             this.toolStripMenuItem2,
             this.UtilsLanguageMenu,
+            this.configureControllerToolStripMenuItem,
             this.toolStripMenuItem9,
             this.UtilsTakeScreenshotMenu,
             this.toolStripMenuItem1,
@@ -498,6 +500,13 @@
 			this.HelpAboutMenu.Text = "&About...";
 			this.HelpAboutMenu.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
+			// configureControllerToolStripMenuItem
+			// 
+			this.configureControllerToolStripMenuItem.Name = "configureControllerToolStripMenuItem";
+			this.configureControllerToolStripMenuItem.Size = new System.Drawing.Size(306, 22);
+			this.configureControllerToolStripMenuItem.Text = "Configure &Controller...";
+			this.configureControllerToolStripMenuItem.Click += new System.EventHandler(this.configureControllerToolStripMenuItem_Click);
+			// 
 			// PspDisplayForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -571,5 +580,6 @@
 		public System.Windows.Forms.ToolStripMenuItem UtilsEnableMpegMenu;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem13;
 		public System.Windows.Forms.ToolStripMenuItem UtilsInstallWavDestMenu;
+		private System.Windows.Forms.ToolStripMenuItem configureControllerToolStripMenuItem;
 	}
 }

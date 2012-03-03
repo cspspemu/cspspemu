@@ -7,6 +7,30 @@ using System.IO;
 
 namespace CSPspEmu.Core
 {
+	public class ControllerConfig
+	{
+		public string DigitalUp = "Up";
+		public string DigitalDown = "Down";
+		public string DigitalLeft = "Left";
+		public string DigitalRight = "Right";
+
+		public string AnalogUp = "I";
+		public string AnalogDown = "K";
+		public string AnalogLeft = "J";
+		public string AnalogRight = "L";
+
+		public string SelectButton = "Space";
+		public string StartButton = "Return";
+
+		public string SquareButton = "A";
+		public string CircleButton = "D";
+		public string TriangleButton = "W";
+		public string CrossButton = "S";
+
+		public string LeftTriggerButton = "Q";
+		public string RightTriggerButton = "E";
+	}
+
 	public partial class PspStoredConfig
 	{
 		/// <summary>
@@ -33,6 +57,11 @@ namespace CSPspEmu.Core
 		/// 
 		/// </summary>
 		public bool EnableMpeg = false;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public ControllerConfig ControllerConfig = new ControllerConfig();
 
 		#region Serializing
 		static private XmlSerializer Serializer;
