@@ -291,6 +291,7 @@ namespace CSPspEmu
 					Console.WriteLine("   /gitrevision  - Outputs the git revision");
 					Console.WriteLine("   /installat3   - Installs the WavDest filter. Requires be launched with administrative rights.");
 					Console.WriteLine("   /associate    - Associates extensions with the program. Requires be launched with administrative rights.");
+					Console.WriteLine("   /tests        - Run integration tests.");
 					Console.WriteLine("");
 					Console.WriteLine(" Examples:");
 					Console.WriteLine("   cspspemu.exe <path_to_psp_executable>");

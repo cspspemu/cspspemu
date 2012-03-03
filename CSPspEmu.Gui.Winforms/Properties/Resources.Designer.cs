@@ -193,6 +193,13 @@ namespace CSPspEmu.Gui.Winforms.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap pspicon_16 {
+            get {
+                object obj = ResourceManager.GetObject("pspicon_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap safe {
             get {
                 object obj = ResourceManager.GetObject("safe", resourceCulture);

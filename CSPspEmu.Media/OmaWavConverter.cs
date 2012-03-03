@@ -66,9 +66,6 @@ namespace CSPspEmu.Media
 			try
 			{
 				waveDest = (IBaseFilter)new WavDest();
-				//waveDest = (IBaseFilter)new WavDest2();
-				//waveDest = new MyWavDest();
-				//waveDest = new WavDestProxy((IBaseFilter)new WavDest());
 			}
 			catch (COMException)
 			{

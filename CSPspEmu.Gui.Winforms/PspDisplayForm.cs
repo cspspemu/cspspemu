@@ -130,6 +130,7 @@ namespace CSPspEmu.Gui.Winforms
 			UpdateCheckMenusFromConfig();
 			updateDebugGpu();
 			ReLoadControllerConfig();
+			UpdateRecentList();
 
 			var Timer = new System.Windows.Forms.Timer();
 			Timer.Interval = 1000 / 60;
@@ -500,9 +501,15 @@ namespace CSPspEmu.Gui.Winforms
 				OpenFileDialog.Filter = "Compatible Formats (*.elf, *.pbp, *.iso, *.cso, *.dax)|*.elf;*.pbp;*.iso;*.cso;*.dax|All Files|*.*";
 				if (OpenFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 				{
-					IGuiExternalInterface.LoadFile(OpenFileDialog.FileName);
+					OpenFileReal(OpenFileDialog.FileName);
 				}
 			});
+		}
+
+		private void OpenFileReal(string FilePath)
+		{
+			OpenRecentHook(FilePath);
+			IGuiExternalInterface.LoadFile(FilePath);
 		}
 
 		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -853,8 +860,12 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void configureControllerToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			new ButtonMappingForm(PspConfig).ShowDialog();
-			ReLoadControllerConfig();
+			PauseResume(() =>
+			{
+				new ButtonMappingForm(PspConfig).ShowDialog();
+				ReLoadControllerConfig();
+				StoreConfig();
+			});
 		}
 
 		private void ReLoadControllerConfig()
@@ -909,9 +920,58 @@ namespace CSPspEmu.Gui.Winforms
 		private Dictionary<Keys, PspCtrlButtons> KeyMap = new Dictionary<Keys, PspCtrlButtons>();
 		private Dictionary<Keys, PspCtrlAnalog> AnalogKeyMap = new Dictionary<Keys, PspCtrlAnalog>();
 
+		private void StoreConfig()
+		{
+			PspConfig.StoredConfig.Save();
+		}
+
+		private void OpenRecentHook(string Path)
+		{
+			//Console.WriteLine("PATH: {0}", Path);
+			try { PspConfig.StoredConfig.RecentFiles.Remove(Path); } catch { }
+			PspConfig.StoredConfig.RecentFiles.Insert(0, Path);
+			PspConfig.StoredConfig.Save();
+			UpdateRecentList();
+		}
+
+		private void UpdateRecentList()
+		{
+			try
+			{
+				var Items = openRecentToolStripMenuItem.DropDownItems;
+				Items.Clear();
+				foreach (var RecentFile in PspConfig.StoredConfig.RecentFiles)
+				{
+					var Item = new ToolStripMenuItem()
+					{
+						Text = RecentFile,
+						ShowShortcutKeys = true,
+						ShortcutKeys = ((Keys)((Keys.Control | (Keys.D1 + Items.Count)))),
+					};
+					Item.Click += Recent_Click;
+					Items.Add(Item);
+				}
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
+			}
+		}
+
+		void Recent_Click(object sender, EventArgs e)
+		{
+			var ToolStripMenuItem = (ToolStripMenuItem)sender;
+			OpenFileReal(ToolStripMenuItem.Text);
+		}
+
 		static private Keys ParseKeyName(string KeyName)
 		{
 			return (Keys)Enum.Parse(typeof(Keys), KeyName);
+		}
+
+		private void openRecentToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

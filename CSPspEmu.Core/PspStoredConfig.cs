@@ -31,7 +31,7 @@ namespace CSPspEmu.Core
 		public string RightTriggerButton = "E";
 	}
 
-	public partial class PspStoredConfig
+	public class PspStoredConfig
 	{
 		/// <summary>
 		/// 
@@ -63,6 +63,11 @@ namespace CSPspEmu.Core
 		/// </summary>
 		public ControllerConfig ControllerConfig = new ControllerConfig();
 
+		/// <summary>
+		/// 
+		/// </summary>
+		public List<string> RecentFiles = new List<string>();
+
 		#region Serializing
 		static private XmlSerializer Serializer;
 
@@ -78,32 +83,40 @@ namespace CSPspEmu.Core
 			}
 		}
 
+		private static object Lock = new object();
+
 		static public PspStoredConfig Load()
 		{
-			try
+			lock (Lock)
 			{
-				if (Serializer == null)
+				try
 				{
-					Serializer = XmlSerializer.FromTypes(new[] { typeof(PspStoredConfig) })[0];
-				}
+					if (Serializer == null)
+					{
+						Serializer = XmlSerializer.FromTypes(new[] { typeof(PspStoredConfig) })[0];
+					}
 
-				using (var Stream = File.OpenRead(ConfigFilePath))
-				{
-					return (PspStoredConfig)Serializer.Deserialize(Stream);
+					using (var Stream = File.OpenRead(ConfigFilePath))
+					{
+						return (PspStoredConfig)Serializer.Deserialize(Stream);
+					}
 				}
-			}
-			catch (Exception Exception)
-			{
-				Console.Error.WriteLine(Exception);
-				return new PspStoredConfig();
+				catch (Exception Exception)
+				{
+					Console.Error.WriteLine(Exception);
+					return new PspStoredConfig();
+				}
 			}
 		}
 
 		public void Save()
 		{
-			using (var Stream = File.Open(ConfigFilePath, FileMode.Create, FileAccess.Write))
+			lock (Lock)
 			{
-				Serializer.Serialize(Stream, this);
+				using (var Stream = File.Open(ConfigFilePath, FileMode.Create, FileAccess.Write))
+				{
+					Serializer.Serialize(Stream, this);
+				}
 			}
 		}
 		#endregion

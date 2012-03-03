@@ -33,6 +33,8 @@
 			this.FileMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.FileOpenMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+			this.openRecentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem14 = new System.Windows.Forms.ToolStripSeparator();
 			this.FileExitMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.UtilsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.UtilsDisplayMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,6 +46,7 @@
 			this.UtilsLanguageMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.UtilsLanguageEnglishMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.UtilsLanguageSpanishMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.configureControllerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsTakeScreenshotMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
@@ -79,7 +82,6 @@
 			this.HelpReportAnIssueMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
 			this.HelpAboutMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.configureControllerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -103,6 +105,8 @@
 			this.FileMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FileOpenMenu,
             this.toolStripMenuItem3,
+            this.openRecentToolStripMenuItem,
+            this.toolStripMenuItem14,
             this.FileExitMenu});
 			this.FileMenu.Name = "FileMenu";
 			this.FileMenu.Size = new System.Drawing.Size(37, 20);
@@ -121,6 +125,18 @@
 			// 
 			this.toolStripMenuItem3.Name = "toolStripMenuItem3";
 			this.toolStripMenuItem3.Size = new System.Drawing.Size(152, 6);
+			// 
+			// openRecentToolStripMenuItem
+			// 
+			this.openRecentToolStripMenuItem.Name = "openRecentToolStripMenuItem";
+			this.openRecentToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+			this.openRecentToolStripMenuItem.Text = "Open &Recent";
+			this.openRecentToolStripMenuItem.Click += new System.EventHandler(this.openRecentToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem14
+			// 
+			this.toolStripMenuItem14.Name = "toolStripMenuItem14";
+			this.toolStripMenuItem14.Size = new System.Drawing.Size(152, 6);
 			// 
 			// FileExitMenu
 			// 
@@ -228,6 +244,14 @@
 			this.UtilsLanguageSpanishMenu.Size = new System.Drawing.Size(115, 22);
 			this.UtilsLanguageSpanishMenu.Text = "&Spanish";
 			this.UtilsLanguageSpanishMenu.Click += new System.EventHandler(this.spanishToolStripMenuItem_Click);
+			// 
+			// configureControllerToolStripMenuItem
+			// 
+			this.configureControllerToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.pspicon_16;
+			this.configureControllerToolStripMenuItem.Name = "configureControllerToolStripMenuItem";
+			this.configureControllerToolStripMenuItem.Size = new System.Drawing.Size(306, 22);
+			this.configureControllerToolStripMenuItem.Text = "Configure &Controller...";
+			this.configureControllerToolStripMenuItem.Click += new System.EventHandler(this.configureControllerToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem9
 			// 
@@ -500,13 +524,6 @@
 			this.HelpAboutMenu.Text = "&About...";
 			this.HelpAboutMenu.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
-			// configureControllerToolStripMenuItem
-			// 
-			this.configureControllerToolStripMenuItem.Name = "configureControllerToolStripMenuItem";
-			this.configureControllerToolStripMenuItem.Size = new System.Drawing.Size(306, 22);
-			this.configureControllerToolStripMenuItem.Text = "Configure &Controller...";
-			this.configureControllerToolStripMenuItem.Click += new System.EventHandler(this.configureControllerToolStripMenuItem_Click);
-			// 
 			// PspDisplayForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -581,5 +598,7 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem13;
 		public System.Windows.Forms.ToolStripMenuItem UtilsInstallWavDestMenu;
 		private System.Windows.Forms.ToolStripMenuItem configureControllerToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem openRecentToolStripMenuItem;
+		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem14;
 	}
 }

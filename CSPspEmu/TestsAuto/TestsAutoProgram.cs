@@ -41,6 +41,7 @@ namespace CSPspEmu.AutoTests
 			PspConfig.DebugSyscalls = false;
 			PspConfig.TraceLastSyscalls = false;
 			PspConfig.ShowInstructionStats = false;
+			PspConfig.StoredConfig.EnableMpeg = true;
 			foreach (var _FileName in new[] {
 					Path.GetDirectoryName(typeof(TestsAutoProgram).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll",
 					Application.ExecutablePath,
