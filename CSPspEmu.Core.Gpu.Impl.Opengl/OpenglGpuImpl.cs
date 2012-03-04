@@ -400,7 +400,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//Console.Error.WriteLine("Prim: {0}", End - Start);
 		}
 
+#if DEBUG_VERTEX_TYPE
 		Stream OutputVertexInfoStream;
+#endif
 
 		/// <summary>
 		/// 
@@ -728,7 +730,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				GL.WindowPos2(0, 272);
 				GL.PixelZoom(1, -1);
 
-				GL.DrawPixels(512, 272, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, new IntPtr(Address));
+				GL.DrawPixels(Width, Height, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, new IntPtr(Address));
 				//GL.DrawPixels(512, 272, PixelFormat.AbgrExt, PixelType.UnsignedInt8888, new IntPtr(Memory.PspAddressToPointerSafe(Address)));
 
 				//GL.WindowPos2(0, 0);

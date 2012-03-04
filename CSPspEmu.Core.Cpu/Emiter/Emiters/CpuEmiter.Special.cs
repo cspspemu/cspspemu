@@ -29,11 +29,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 #else
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Push((int)Instruction.CODE);
-			SafeILGenerator.Call(MipsMethodEmiter.Method_Syscall);
+			SafeILGenerator.Call((Action<int>)CpuThreadState.Methods.Syscall);
 #endif
 		}
 
-		static public void cache_impl(CpuThreadState CpuThreadState, uint Value)
+		static public void _cache_impl(CpuThreadState CpuThreadState, uint Value)
 		{
 			//Console.Error.WriteLine("cache! : 0x{0:X}", Value);
 			//CpuThreadState.CpuProcessor.sceKernelIcacheInvalidateAll();
@@ -42,12 +42,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void cache() {
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Push((int)(uint)Instruction.Value);
-			SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("cache_impl"));
+			SafeILGenerator.Call((Action<CpuThreadState, uint>)CpuEmiter._cache_impl);
 			//throw(new NotImplementedException());
 		}
 		public void sync() { throw(new NotImplementedException()); }
 
-		static public void break_impl(CpuThreadState CpuThreadState)
+		static public void _break_impl(CpuThreadState CpuThreadState)
 		{
 			Console.Error.WriteLine("-------------------------------------------------------------------");
 			Console.Error.WriteLine("-- BREAK  ---------------------------------------------------------");
@@ -57,7 +57,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public void _break() {
 			SafeILGenerator.LoadArgument0CpuThreadState();
-			SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("break_impl"));
+			SafeILGenerator.Call((Action<CpuThreadState>)CpuEmiter._break_impl);
 			//throw(new NotImplementedException());
 		}
 		public void dbreak() { throw(new NotImplementedException()); }
@@ -80,7 +80,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void mtic()
 		{
 			//throw (new NotImplementedException());
-			MipsMethodEmiter.SaveFieldI4(typeof(CpuThreadState).GetField("IC"), () =>
+			MipsMethodEmiter.SaveField<int>(typeof(CpuThreadState).GetField("IC"), () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
 			});

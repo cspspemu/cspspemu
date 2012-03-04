@@ -34,5 +34,10 @@ namespace CSPspEmu.AutoTests
 				};
 			}
 		}
+
+		public override bool IsWorking
+		{
+			get { return true; }
+		}
 	}
 }

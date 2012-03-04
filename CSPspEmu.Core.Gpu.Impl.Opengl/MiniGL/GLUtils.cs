@@ -161,8 +161,9 @@ namespace MiniGL
 		[DllImport(Library, CallingConvention = LibraryCallingConvention)]
 		extern static public int ChoosePixelFormat(HDC hdc, PIXELFORMATDESCRIPTOR* pfd);
 
-		static HINSTANCE hInstance = 0;
 #if false
+		static HINSTANCE hInstance = 0;
+
 		static HWND CreateOpenGLWindow(int width, int height, byte type, DWORD flags)
 		{
 			int         pf;

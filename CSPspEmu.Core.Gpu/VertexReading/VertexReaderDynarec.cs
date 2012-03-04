@@ -30,7 +30,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 			{
 				var VertexReaderDynarec = new VertexReaderDynarec(Generator, VertexType);
 				VertexReaderDynarec.GenerateCode();
-			});
+			}, CheckTypes: false);
 		}
 
 		protected VertexReaderDynarec(SafeILGenerator SafeILGenerator, VertexTypeStruct VertexType)
@@ -89,7 +89,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 
 		private void Read_TextureCoordinates()
 		{
-			Read_Type0(VertexType.Texture, new[] { "U", "V" }, Signed: false);
+			Read_Type0(VertexType.Texture, new[] { "Texture.X", "Texture.Y" }, Signed: false);
 		}
 
 		private void Read_Color()
@@ -108,14 +108,14 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 
 		private void Read_Normal()
 		{
-			Read_Type0(VertexType.Normal, new[] { "NX", "NY", "NZ" }, Signed: true);
+			Read_Type0(VertexType.Normal, new[] { "Normal.X", "Normal.Y", "Normal.Z" }, Signed: true);
 		}
 
 		private void Read_Position()
 		{
 			var Type = VertexType.Position;
-			Read_Type0(Type, new[] { "PX", "PY" }, Signed: true);
-			Read_Type0(VertexType.Position, new[] { "PZ" }, Signed: !VertexType.Transform2D);
+			Read_Type0(Type, new[] { "Position.X", "Position.Y" }, Signed: true);
+			Read_Type0(VertexType.Position, new[] { "Position.Z" }, Signed: !VertexType.Transform2D);
 		}
 
 		private void Read_Type0(VertexTypeStruct.NumericEnum Type, string[] Fields, bool Signed = true)
@@ -141,10 +141,10 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 		{
 			_LoadIntegerAsInteger(Size: ColorFormat.TotalBytes, Signed: false);
 			SafeILGenerator.StoreLocal(LocalColor);
-			Read_Color_Component("R", ColorFormat.Red);
-			Read_Color_Component("G", ColorFormat.Green);
-			Read_Color_Component("B", ColorFormat.Blue);
-			Read_Color_Component("A", ColorFormat.Alpha);
+			Read_Color_Component("Color.R", ColorFormat.Red);
+			Read_Color_Component("Color.G", ColorFormat.Green);
+			Read_Color_Component("Color.B", ColorFormat.Blue);
+			Read_Color_Component("Color.A", ColorFormat.Alpha);
 
 		}
 

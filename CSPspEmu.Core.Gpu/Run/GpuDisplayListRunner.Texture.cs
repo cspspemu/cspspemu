@@ -20,7 +20,9 @@ namespace CSPspEmu.Core.Gpu.Run
 			}
 		}
 
-		// Texture Mapping Enable (GL_TEXTURE_2D)
+		/// <summary>
+		/// Texture Mapping Enable (GL_TEXTURE_2D)
+		/// </summary>
 		public void OP_TME()
 		{
 			GpuState->TextureMappingState.Enabled = Bool1;
@@ -58,7 +60,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		 **/
 		// void sceGuTexMode(int tpsm, int maxmips, int a2, int swizzle);
 
-		// Texture Mode
+		/// <summary>
+		/// Texture Mode
+		/// </summary>
 		public void OP_TMODE()
 		{
 			TextureState->Swizzled = (Param8(0) != 0);
@@ -95,12 +99,18 @@ namespace CSPspEmu.Core.Gpu.Run
 			return &(&TextureState->Mipmap0)[Index];
 		}
 
+		/// <summary>
+		/// TextureMipmap Buffer Pointer.
+		/// </summary>
 		private void _OP_TBP(int Index)
 		{
 			var MipMap = MipMapState(Index);
 			MipMap->Address = (MipMap->Address & 0xFF000000) | (Params24 & 0x00FFFFFF);
 		}
 
+		/// <summary>
+		/// TextureMipmap Buffer Width.
+		/// </summary>
 		private void _OP_TBW(int Index)
 		{
 			var MipMap = MipMapState(Index);
@@ -117,7 +127,6 @@ namespace CSPspEmu.Core.Gpu.Run
 		public void OP_TBP6() { _OP_TBP(6); }
 		public void OP_TBP7() { _OP_TBP(7); }
 
-		// TextureMipmap Buffer Width.
 		public void OP_TBW0() { _OP_TBW(0); }
 		public void OP_TBW1() { _OP_TBW(1); }
 		public void OP_TBW2() { _OP_TBW(2); }
@@ -127,7 +136,10 @@ namespace CSPspEmu.Core.Gpu.Run
 		public void OP_TBW6() { _OP_TBW(6); }
 		public void OP_TBW7() { _OP_TBW(7); }
 
-		// TextureMipmap Size
+		/// <summary>
+		/// TextureMipmap Size
+		/// </summary>
+		/// <param name="Index"></param>
 		private void _OP_TSIZE(int Index)
 		{
 			// Astonishia Story is using normalArgument = 0x1804
@@ -187,7 +199,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		// SceGuTexSync() is needed when you upload a texture to VRAM and part of that memory is still in texture cache
 		// (which you won't know until you get some wrong texture artifacts). So just call it after each sceGuCopyImage and you're fine. 
 
-		// Texture Sync
+		/// <summary>
+		/// Texture Sync
+		/// </summary>
 		public void OP_TSYNC()
 		{
 			GpuDisplayList.GpuProcessor.GpuImpl.TextureSync(GpuState);
@@ -209,7 +223,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		 **/
 		// void sceGuTexFilter(int min, int mag); // OP_TFLT
 
-		// Texture FiLTer
+		/// <summary>
+		/// Texture FiLTer
+		/// </summary>
 		public void OP_TFLT()
 		{
 			TextureState->FilterMinification = (TextureFilter)Param8(0);
@@ -228,7 +244,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		 **/
 		// void sceGuTexWrap(int u, int v); // OP_TWRAP
 
-		// Texture WRAP
+		/// <summary>
+		/// Texture WRAP
+		/// </summary>
 		public void OP_TWRAP()
 		{
 			TextureState->WrapU = (WrapMode)Param8(0);
@@ -267,7 +285,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		**/
 		// void sceGuTexFunc(int tfx, int tcc); // OP_TFUNC
 
-		// Texture enviroment Mode
+		/// <summary>
+		/// Texture enviroment Mode
+		/// </summary>
 		public void OP_TFUNC()
 		{
 			TextureState->Effect = (TextureEffect)Param8(0);
@@ -288,7 +308,9 @@ namespace CSPspEmu.Core.Gpu.Run
 		 **/
 		// void sceGuTexScale(float u, float v);
 
-		// UV SCALE
+		/// <summary>
+		/// UV SCALE
+		/// </summary>
 		public void OP_USCALE() { GpuState->TextureMappingState.TextureState.ScaleU = Float1; }
 		public void OP_VSCALE() { GpuState->TextureMappingState.TextureState.ScaleV = Float1; }
 
@@ -317,7 +339,10 @@ namespace CSPspEmu.Core.Gpu.Run
 		 * @param color - Constant color (0x00BBGGRR)
 		 **/
 		// void sceGuTexEnvColor(unsigned int color); // OP_TEC
-		// Texture Environment Color
+		
+		/// <summary>
+		/// Texture Environment Color
+		/// </summary>
 		public void OP_TEC()
 		{
 			GpuState->TextureMappingState.TextureEnviromentColor.SetRGB_A1(Params24);

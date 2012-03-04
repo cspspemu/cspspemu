@@ -71,7 +71,9 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 		private void _SaveFloatField(string FieldName, Action Action)
 		{
 			SafeILGenerator.LoadArgument(VertexInfoArgument);
-			SafeILGenerator.LoadFieldAddress(typeof(VertexInfo).GetField(FieldName));
+			var Field = typeof(VertexInfo).GetField(FieldName);
+			if (Field == null) throw(new Exception("Can't find field '" + FieldName + "'"));
+			SafeILGenerator.LoadFieldAddress(Field);
 			{
 				Action();
 			}

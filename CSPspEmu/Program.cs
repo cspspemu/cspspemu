@@ -356,7 +356,7 @@ namespace CSPspEmu
 			{
 				Getopt.Process();
 			}
-			catch (Exception Exception)
+			catch (Exception)
 			{
 				//Console.Error.WriteLine(Exception);
 			}
@@ -390,7 +390,6 @@ namespace CSPspEmu
 			{
 			}
 #endif
-
 			var PspEmulator = new PspEmulator();
 			//PspEmulator.UseFastMemory = true;
 			var CodeBase = Assembly.GetExecutingAssembly().Location;

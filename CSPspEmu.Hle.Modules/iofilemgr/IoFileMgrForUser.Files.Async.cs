@@ -245,12 +245,14 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		public int sceIoSetAsyncCallback(SceUID FileId, int CallbackId, int NotifyArgument)
 		{
 			throw(new NotImplementedException());
+#if false
 			var File = GetFileArgFromHandle(FileId); 
 			var Callback = HleState.CallbackManager.Callbacks.Get(CallbackId);
 			File.Callback = Callback;
 			File.CallbackArgument = NotifyArgument;
 			//HleState.CallbackManager.ScheduleCallback(Callback);
 			return 0;
+#endif
 		}
 	}
 }

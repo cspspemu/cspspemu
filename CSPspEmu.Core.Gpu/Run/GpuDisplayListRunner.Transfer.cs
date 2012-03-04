@@ -48,12 +48,17 @@ namespace CSPspEmu.Core.Gpu.Run
 			ushort width, height;
 		}*/
 
-		// TRansfer X Source (Buffer Pointer/Width)/POSition
+		/// <summary>
+		/// TRansfer X Source Buffer Pointer
+		/// </summary>
 		public void OP_TRXSBP()
 		{
 			GpuState->TextureTransferState.SourceAddress.Low24 = Params24;
 		}
 
+		/// <summary>
+		/// TRansfer X Source Width
+		/// </summary>
 		public void OP_TRXSBW()
 		{
 			GpuState->TextureTransferState.SourceAddress.High8 = Params24 << 8;
@@ -62,18 +67,26 @@ namespace CSPspEmu.Core.Gpu.Run
 			GpuState->TextureTransferState.SourceY = 0;
 		}
 
+		/// <summary>
+		/// TRansfer X Source POSition
+		/// </summary>
 		public void OP_TRXSPOS()
 		{
 			GpuState->TextureTransferState.SourceX = (ushort)Extract(10 * 0, 10);
 			GpuState->TextureTransferState.SourceY = (ushort)Extract(10 * 1, 10);
 		}
 
-		// TRansfer X Destination (Buffer Pointer/Width)/POSition
+		/// <summary>
+		/// // TRansfer X Destination Buffer Pointer
+		/// </summary>
 		public void OP_TRXDBP()
 		{
 			GpuState->TextureTransferState.DestinationAddress.Low24 = Params24;
 		}
 
+		/// <summary>
+		/// TRansfer X Destination Width
+		/// </summary>
 		public void OP_TRXDBW()
 		{
 			GpuState->TextureTransferState.DestinationAddress.High8 = Params24 << 8;
@@ -82,20 +95,27 @@ namespace CSPspEmu.Core.Gpu.Run
 			GpuState->TextureTransferState.DestinationY = 0;
 		}
 
+		/// <summary>
+		/// TRansfer X Destination POSition
+		/// </summary>
 		public void OP_TRXDPOS()
 		{
 			GpuState->TextureTransferState.DestinationX = (ushort)Extract(10 * 0, 10);
 			GpuState->TextureTransferState.DestinationY = (ushort)Extract(10 * 1, 10);
 		}
 
-		// TRansfer X SIZE
+		/// <summary>
+		/// TRansfer X SIZE
+		/// </summary>
 		public void OP_TRXSIZE()
 		{
 			GpuState->TextureTransferState.Width = (ushort)(Extract(10 * 0, 10) + 1);
 			GpuState->TextureTransferState.Height = (ushort)(Extract(10 * 1, 10) + 1);
 		}
 
-		// TRansfer X KICK
+		/// <summary>
+		/// TRansfer X KICKTRansfer X KICK
+		/// </summary>
 		public void OP_TRXKICK()
 		{
 			GpuState->TextureTransferState.TexelSize = (TextureTransferStateStruct.TexelSizeEnum)Extract(0, 1);

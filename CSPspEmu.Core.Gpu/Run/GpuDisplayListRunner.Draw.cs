@@ -147,7 +147,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		{
 			// + or |?
 			GpuState->VertexAddress = (
-				GpuDisplayList.GpuStateStructPointer->BaseAddress | Params24
+				GpuDisplayList.GpuStateStructPointer->GetAddressRelativeOffset(Params24)
 			);
 		}
 
@@ -155,7 +155,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		public void OP_IADDR()
 		{
 			GpuState->IndexAddress = (
-				GpuDisplayList.GpuStateStructPointer->BaseAddress | Params24
+				GpuDisplayList.GpuStateStructPointer->GetAddressRelativeOffset(Params24)
 			);
 		}
 	
@@ -193,14 +193,17 @@ namespace CSPspEmu.Core.Gpu.Run
 		}
 		*/
 
-		// Bezier Patch Kick
+		/// <summary>
+		/// Bezier Patch Kick
+		/// </summary>
 		[GpuOpCodesNotImplemented]
 		public void OP_BEZIER()
 		{
 		}
-	
-		// draw PRIMitive
-		// Primitive Kick
+
+		/// <summary>
+		/// Primitive Kick - draw PRIMitive
+		/// </summary>
 		public void OP_PRIM()
 		{
 			var PrimitiveType = (GuPrimitiveType)Param8(16);

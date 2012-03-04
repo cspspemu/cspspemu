@@ -10,19 +10,25 @@ namespace CSPspEmu.Core.Gpu.Run
 	{
 		//string LightArrayOperation(string type, string code, int step = 1) { return ArrayOperation(type, 0, 3, code, step); }
 		//string LightArrayOperationStep3(string type, string code) { return LightArrayOperation(type, code, 3); }
-	
-		// Lighting Test Enable GL_LIGHTING.
-		// gpu.state.lighting.enabled = command.bool1;
+
+		/// <summary>
+		/// Lighting Test Enable GL_LIGHTING.
+		/// </summary>
 		public void OP_LTE() {
 			GpuState->LightingState.Enabled = Bool1;
 		}
 	
-		// Ambient Light Color/Alpha
-		// gpu.state.lighting.ambientLightColor.rgb[] = command.float3[];
+		/// <summary>
+		/// Ambient Light Color
+		/// </summary>
 		public void OP_ALC()
 		{
 			GpuState->LightingState.AmbientLightColor.SetRGB(Params24);
 		}
+
+		/// <summary>
+		/// Ambient Light Alpha
+		/// </summary>
 		public void OP_ALA()
 		{
 			GpuState->LightingState.AmbientLightColor.SetA(Params24);
@@ -41,7 +47,10 @@ namespace CSPspEmu.Core.Gpu.Run
 		 * @param mode - Light mode to use
 		 **/
 		// void sceGuLightMode(int mode);
-		// Light MODE (global)
+		
+		/// <summary>
+		/// Light MODE (global)
+		/// </summary>
 		public void OP_LMODE()
 		{
 			GpuState->LightingState.LightModel = (LightModelEnum)Param8(0);
@@ -49,8 +58,7 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		LightStateStruct *GetLigth(int Index)
 		{
-			var Lights = &GpuState->LightingState.Light0;
-			return &Lights[Index];
+			return &((&GpuState->LightingState.Light0)[Index]);
 		}
 
 		private void _OP_LTE(int Index)

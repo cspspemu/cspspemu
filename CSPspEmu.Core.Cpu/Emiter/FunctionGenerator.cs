@@ -205,7 +205,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				{
 					SafeILGenerator.LoadArgument<CpuThreadState>(0);
 					SafeILGenerator.Push((int)_PC);
-					SafeILGenerator.Call(typeof(CpuThreadState).GetMethod("Trace"));
+					SafeILGenerator.Call((Action<uint>)CpuThreadState.Methods.Trace);
 					Console.WriteLine("     PC=0x{0:X}", _PC);
 				}
 

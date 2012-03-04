@@ -234,7 +234,9 @@ namespace CSPspEmu
 				{
 					PspEmulatorContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
 
-					if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+					var HasOpenal = new PspAudioOpenalImpl().IsWorking;
+
+					if (!HasOpenal && (Environment.OSVersion.Platform == PlatformID.Win32NT))
 					//if (false)
 					{
 						PspEmulatorContext.SetInstanceType<PspAudioImpl>(typeof(PspAudioWaveOutImpl));
@@ -371,7 +373,7 @@ namespace CSPspEmu
 		}
 
 		protected List<CWCheat> CWCheats = new List<CWCheat>();
-		public bool UseFastMemory;
+		//public bool UseFastMemory;
 
 		void PspEmulator_VBlankEventCall()
 		{

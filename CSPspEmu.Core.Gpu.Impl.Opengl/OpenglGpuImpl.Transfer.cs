@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
-using CSharpUtils;
 using CSharpUtils.Extensions;
 
 #if OPENTK

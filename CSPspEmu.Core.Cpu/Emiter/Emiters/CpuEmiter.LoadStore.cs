@@ -59,7 +59,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				SafeILGenerator.Push((int)IMM);
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
 				SafeILGenerator.Push((int)PC);
-				SafeILGenerator.Call(typeof(CpuThreadState).GetMethod("SetPCWriteAddress"));
+				SafeILGenerator.Call((Action<uint, uint>)CpuThreadState.Methods.SetPCWriteAddress);
 			}
 		}
 

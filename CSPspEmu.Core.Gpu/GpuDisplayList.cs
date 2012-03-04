@@ -305,6 +305,7 @@ namespace CSPspEmu.Core.Gpu
 			GpuDisplayListRunner.OpCode = OpCode;
 			GpuDisplayListRunner.Params24 = Params;
 			//InstructionSwitch[(int)OpCode]();
+			GpuDisplayListRunner.PC = _InstructionAddressCurrent;
 			InstructionSwitch(GpuDisplayListRunner, OpCode, Params);
 		}
 

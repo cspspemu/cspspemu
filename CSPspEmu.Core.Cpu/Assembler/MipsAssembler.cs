@@ -11,6 +11,7 @@ using CSharpUtils.Extensions;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
 using CSharpUtils.Arrays;
+using System.Diagnostics;
 
 namespace CSPspEmu.Core.Cpu.Assembler
 {
@@ -217,12 +218,8 @@ namespace CSPspEmu.Core.Cpu.Assembler
 						case "%C": Instruction.CODE = (uint)ParseIntegerConstant(Value); break;
 						case "%i": Instruction.IMM = ParseIntegerConstant(Value); break;
 						case "%I": Instruction.IMMU = (uint)ParseIntegerConstant(Value); break;
-						case "%j":
-							Patches.Add(new Patch() { Address = PC, LabelName = Value, Type = PatchType.ABS_26 });
-						break;
-						case "%O":
-						Patches.Add(new Patch() { Address = PC, LabelName = Value, Type = PatchType.REL_16 });
-						break;
+						case "%j": Patches.Add(new Patch() { Address = PC, LabelName = Value, Type = PatchType.ABS_26 }); break;
+						case "%O": Patches.Add(new Patch() { Address = PC, LabelName = Value, Type = PatchType.REL_16 }); break;
 						default: throw (new InvalidDataException("Unknown format '" + Key + "' <-- (" + InstructionInfo.AsmEncoding + ")"));
 					}
 				}
@@ -323,28 +320,28 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
 			foreach (var Patch in Patches)
 			{
-				uint LabelAddress;
-				if (Labels.TryGetValue(Patch.LabelName, out LabelAddress))
+				if (Labels.ContainsKey(Patch.LabelName))
 				{
-					OutputStream.Position = Patch.Address;
+					var LabelAddress = Labels[Patch.LabelName];
 					Instruction Instruction;
-					Instruction.Value = BinaryReader.ReadUInt32();
 
-					switch (Patch.Type)
+					OutputStream.Position = Patch.Address; Instruction = (Instruction)BinaryReader.ReadUInt32();
 					{
-						case PatchType.REL_16:
-							Instruction.IMM = ((int)LabelAddress - (int)Patch.Address - 4) / 4;
-							break;
-						case PatchType.ABS_26:
-							Instruction.JUMP = (LabelAddress & PspMemory.MemoryMask) / 4;
-							break;
-						case PatchType.ABS_32:
-							Instruction.Value = LabelAddress;
-							break;
+						switch (Patch.Type)
+						{
+							case PatchType.REL_16:
+								Instruction.IMM = ((int)LabelAddress - (int)Patch.Address - 4) / 4;
+								break;
+							case PatchType.ABS_26:
+								Console.Write(String.Format("0x{0:X} : {1}", (LabelAddress & PspMemory.MemoryMask) / 4, Patch.LabelName));
+								Instruction.JUMP = (LabelAddress & PspMemory.MemoryMask) / 4;
+								break;
+							case PatchType.ABS_32:
+								Instruction.Value = LabelAddress;
+								break;
+						}
 					}
-
-					OutputStream.Position = Patch.Address;
-					BinaryWriter.Write(Instruction.Value);
+					OutputStream.Position = Patch.Address; BinaryWriter.Write(Instruction.Value);
 				}
 				else
 				{

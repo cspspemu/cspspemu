@@ -55,5 +55,21 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 				};
 			}
 		}
+	
+		public override bool IsWorking
+		{
+			get
+			{
+				try
+				{
+					AL.GetError();
+					return true;
+				}
+				catch
+				{
+					return false;
+				}
+			}
+		}
 	}
 }

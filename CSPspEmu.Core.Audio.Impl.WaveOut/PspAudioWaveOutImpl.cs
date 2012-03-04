@@ -89,5 +89,10 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut
 				};
 			}
 		}
+
+		public override bool IsWorking
+		{
+			get { return true;  }
+		}
 	}
 }

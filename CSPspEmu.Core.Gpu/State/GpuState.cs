@@ -329,7 +329,13 @@ namespace CSPspEmu.Core.Gpu.State
 
 	public struct GpuStateStruct
 	{
+		public uint GetAddressRelativeOffset(uint Offset)
+		{
+			return (uint)((this.BaseAddress | Offset) + this.BaseOffset);
+		}
+
 		public uint BaseAddress;
+		public int BaseOffset;
 		public uint VertexAddress;
 		public uint IndexAddress;
 		public bool ToggleUpdateState;

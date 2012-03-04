@@ -21,7 +21,8 @@ namespace CSPspEmu.Core.Cpu
 	{
 		static public void ExecuteAssembly(this CpuThreadState CpuThreadState, String Assembly, bool BreakPoint = false)
 		{
-			CpuThreadState.CpuProcessor.CreateDelegateForString(Assembly, BreakPoint)(CpuThreadState);
+			var Method = CpuThreadState.CpuProcessor.CreateDelegateForString(Assembly, BreakPoint);
+			Method(CpuThreadState);
 		}
 
 		static public Action<CpuThreadState> CreateDelegateForString(this CpuProcessor CpuProcessor, String Assembly, bool BreakPoint = false)

@@ -12,6 +12,9 @@ using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu
 {
+	unsafe delegate void* GetMemoryPtrSafeWithErrorDelegate(uint Address, String ErrorDescription, bool CanBeNull);
+	unsafe delegate void* GetMemoryPtrNotNullDelegate(uint Address);
+
 	unsafe sealed public class CpuThreadState
 	{
 		static public readonly CpuThreadState Methods = new CpuThreadState(null);

@@ -32,16 +32,12 @@ namespace CSPspEmu.Core.Gpu.Run
 		// Clut LOAD
 		public void OP_CBP()
 		{
-			ClutState->Address
-				= (ClutState->Address & 0xFF000000) | ((Params24 << 0) & 0x00FFFFFF);
-			;
+			ClutState->Address = (ClutState->Address & 0xFF000000) | ((Params24 << 0) & 0x00FFFFFF);
 			//Console.WriteLine("OP_CBP:{0:X}", Params24);
 		}
 		public void OP_CBPH()
 		{
-			ClutState->Address
-				= (ClutState->Address & 0x00FFFFFF) | ((Params24 << 8) & 0xFF000000);
-			;
+			ClutState->Address = (ClutState->Address & 0x00FFFFFF) | ((Params24 << 8) & 0xFF000000);
 			//Console.WriteLine("OP_CBPH:{0:X}", Params24);
 		}
 		public void OP_CLOAD()

@@ -202,7 +202,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 				/// <summary>
 				/// 0020 - 
 				/// </summary>
-				private uint Unknown2;
+				private fixed uint Unknown2[1];
 			}
 
 			public struct LoopInfoStruct
@@ -824,10 +824,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		public int sceAtracResetPlayPosition(int AtracId, uint uiSample, uint uiWriteByteFirstBuf, uint uiWriteByteSecondBuf)
 		{
 			throw (new NotImplementedException());
-			/*
-			unimplemented();
-			return 0;
-			*/
+			// return 0;
 		}
 
 		/// <summary>
@@ -842,7 +839,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		public int sceAtracGetBufferInfoForResetting(int AtracId, uint uiSample, void* BufferInfoAddr)
 		{
 			throw (new NotImplementedException());
-			return 0;
+			//return 0;
 		}
 
 		/// <summary>
@@ -854,7 +851,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		public int sceAtracGetChannel()
 		{
 			throw (new NotImplementedException());
-			return -1;
+			//return -1;
 		}
 	}
 }

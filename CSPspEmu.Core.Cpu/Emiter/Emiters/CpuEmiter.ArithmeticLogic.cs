@@ -96,7 +96,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
 				SafeILGenerator.ConvertTo<sbyte>();
-				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_I4);
+				SafeILGenerator.ConvertTo<int>();
 			});
 		}
 		public void seh() {
@@ -104,7 +104,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
 				SafeILGenerator.ConvertTo<short>();
-				//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Conv_I4);
+				SafeILGenerator.ConvertTo<int>();
 			});
 		}
 
@@ -116,11 +116,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RD, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("bitrev_impl"));
+				SafeILGenerator.Call((Func<uint, uint>)CpuEmiter._bitrev_impl);
 			});
 			//throw (new NotImplementedException());
 		}
-		static public uint bitrev_impl(uint v)
+		static public uint _bitrev_impl(uint v)
 		{
 			v = ((v >> 1) & 0x55555555) | ((v & 0x55555555) << 1); // swap odd and even bits
 			v = ((v >> 2) & 0x33333333) | ((v & 0x33333333) << 2); // swap consecutive pairs
@@ -195,24 +195,26 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			MipsMethodEmiter.LoadGPR_Signed(RS);
 			MipsMethodEmiter.LoadGPR_Signed(RT);
-			SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_div_impl"));
+			SafeILGenerator.Call((Action<CpuThreadState, int, int>)CpuEmiter._div_impl);
 		}
 		public void divu() {
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			MipsMethodEmiter.LoadGPR_Unsigned(RS);
 			MipsMethodEmiter.LoadGPR_Unsigned(RT);
-			SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_divu_impl"));
+			SafeILGenerator.Call((Action<CpuThreadState, uint, uint>)CpuEmiter._divu_impl);
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// MULTiply (Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 
-		public void _mult_common_op<TConvertType>()
+		public void _mult_common_op<TConvertType>(bool Signed)
 		{
 			MipsMethodEmiter.LoadGPR_Signed(RS);
+			//if (!Signed) SafeILGenerator.ConvertTo<uint>();
 			SafeILGenerator.ConvertTo<TConvertType>();
 			MipsMethodEmiter.LoadGPR_Signed(RT);
+			//if (!Signed) SafeILGenerator.ConvertTo<uint>();
 			SafeILGenerator.ConvertTo<TConvertType>();
 			SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
 		}
@@ -223,20 +225,37 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				MipsMethodEmiter.LoadHI_LO();
 				SafeILGenerator.ConvertTo<TConvertType>();
-				_mult_common_op<TConvertType>();
+				_mult_common_op<TConvertType>(Signed: true);
 				SafeILGenerator.BinaryOperation(Operator);
 			});
 		}
-		public void _mult_common<TConvertType>()
+		public void _mult_common<TConvertType>(bool Signed)
 		{
 			MipsMethodEmiter.SaveHI_LO(() =>
 			{
-				_mult_common_op<TConvertType>();
+				_mult_common_op<TConvertType>(Signed);
 			});
 		}
 
-		public void mult() { _mult_common<long>(); }
-		public void multu() { _mult_common<ulong>(); }
+		static public ulong _multu(uint Left, uint Right)
+		{
+			return (ulong)Left * (ulong)Right;
+		}
+
+		public void mult() { _mult_common<long>(Signed : true); }
+		public void multu() {
+#if true
+			_mult_common<ulong>(Signed: false);
+#else
+			MipsMethodEmiter.SaveHI_LO(() =>
+			{
+				MipsMethodEmiter.LoadGPR_Signed(RS);
+				MipsMethodEmiter.LoadGPR_Signed(RT);
+				SafeILGenerator.Call((Func<uint, uint, ulong>)CpuEmiter._multu);
+				//_mult_common_op<TConvertType>(Signed);
+			});
+#endif
+		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Multiply ADD/SUBstract (Unsigned).
@@ -274,9 +293,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			_movzn(SafeBinaryComparison.Equals);
 		}
 
-		/////////////////////////////////////////////////////////////////////////////////////////////////
-		// EXTract/INSert.
-		/////////////////////////////////////////////////////////////////////////////////////////////////
 		static public uint _ext_impl(uint Data, int Pos, int Size)
 		{
 			return BitUtils.Extract(Data, Pos, Size);
@@ -287,6 +303,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			return BitUtils.Insert(InitialData, Pos, Size, Data);
 		}
 
+		/// <summary>
+		/// EXTract
+		/// </summary>
 		public void ext()
 		{
 			MipsMethodEmiter.SaveGPR(RT, () =>
@@ -294,9 +313,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
 				SafeILGenerator.Push((int)Instruction.POS);
 				SafeILGenerator.Push((int)Instruction.SIZE_E);
-				SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_ext_impl"));
+				SafeILGenerator.Call((Func<uint, int, int, uint>)CpuEmiter._ext_impl);
 			});
 		}
+
+		/// <summary>
+		/// INSert
+		/// </summary>
 		public void ins()
 		{
 			MipsMethodEmiter.SaveGPR(RT, () =>
@@ -305,7 +328,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
 				SafeILGenerator.Push((int)Instruction.POS);
 				SafeILGenerator.Push((int)Instruction.SIZE_I);
-				SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_ins_impl"));
+				SafeILGenerator.Call((Func<uint, uint, int, int, uint>)CpuEmiter._ins_impl);
 			});
 		}
 
@@ -330,7 +353,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RD, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
-				SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_clz_impl"));
+				SafeILGenerator.Call((Func<uint, uint>)CpuEmiter._clz_impl);
 			});
 		}
 		public void clo()
@@ -338,7 +361,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RD, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
-				SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_clo_impl"));
+				SafeILGenerator.Call((Func<uint, uint>)CpuEmiter._clo_impl);
 			});
 		}
 
@@ -366,7 +389,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RD, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_wsbh_impl"));
+				SafeILGenerator.Call((Func<uint, uint>)CpuEmiter._wsbh_impl);
 			});
 		}
 		public void wsbw()
@@ -374,7 +397,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RD, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				SafeILGenerator.Call(typeof(CpuEmiter).GetMethod("_wsbw_impl"));
+				SafeILGenerator.Call((Func<uint, uint>)CpuEmiter._wsbw_impl);
 			});
 		}
 	}

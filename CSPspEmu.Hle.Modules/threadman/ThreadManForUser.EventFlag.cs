@@ -229,7 +229,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelCancelEventFlag(EventFlagId EventId, int NewPattern, int* NumWaitThread)
 		{
 			throw(new NotImplementedException());
-			return 0;
+			//return 0;
 		}
 	}
 }

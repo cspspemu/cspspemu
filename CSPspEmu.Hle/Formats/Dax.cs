@@ -9,7 +9,7 @@ using System.IO.Compression;
 
 namespace CSPspEmu.Hle.Formats
 {
-	public class Dax : ICompressedIso
+	unsafe public class Dax : ICompressedIso
 	{
 		// 4 sectors
 		public const uint DAXFILE_SIGNATURE = 0x00584144;
@@ -46,10 +46,7 @@ namespace CSPspEmu.Hle.Formats
 			/// </summary>
 			public uint NCAreas;
 
-			private uint Reserved0;
-			private uint Reserved1;
-			private uint Reserved2;
-			private uint Reserved3;
+			public fixed uint Reserved[4];
 
 			public uint TotalBlocks
 			{

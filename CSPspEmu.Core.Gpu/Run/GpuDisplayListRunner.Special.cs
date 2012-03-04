@@ -34,19 +34,37 @@ namespace CSPspEmu.Core.Gpu.Run
 		{
 		}
 
-		// Base Address Register
+		/// <summary>
+		/// Base Address Register
+		/// </summary>
 		public void OP_BASE()
 		{
 			GpuState->BaseAddress = (Params24 << 8);
 		}
 
-		// Frame Buffer Pointer
+		[GpuOpCodesNotImplemented]
+		public void OP_OFFSETADDR()
+		{
+			GpuState->BaseOffset = (int)(Params24 << 8);
+		}
+
+		[GpuOpCodesNotImplemented]
+		public void OP_ORIGINADDR()
+		{
+			GpuState->BaseOffset = (int)PC; // ?
+		}
+
+		/// <summary>
+		/// Frame Buffer Pointer
+		/// </summary>
 		public void OP_FBP()
 		{
 			GpuState->DrawBufferState.LowAddress = Params24;
 		}
 
-		// Frame Buffer Width
+		/// <summary>
+		/// Frame Buffer Width
+		/// </summary>
 		public void OP_FBW()
 		{
 			GpuState->DrawBufferState.HighAddress = Param8(16);
@@ -55,7 +73,9 @@ namespace CSPspEmu.Core.Gpu.Run
 			//Console.WriteLine("{0}", GpuState->DrawBufferState.Format);
 		}
 
-		// frame buffer Pixel Storage Mode
+		/// <summary>
+		/// frame buffer Pixel Storage Mode
+		/// </summary>
 		public void OP_PSM()
 		{
 			GpuState->DrawBufferState.Format = (GuPixelFormats)Param8(0);
@@ -93,14 +113,18 @@ namespace CSPspEmu.Core.Gpu.Run
 		 **/
 		// void sceGuScissor(int x, int y, int stopX, int stopY); // OP_SCISSOR1 + OP_SCISSOR2
 
-		// SCISSOR start (1)
+		/// <summary>
+		/// SCISSOR start (1)
+		/// </summary>
 		public void OP_SCISSOR1()
 		{
 			GpuState->ClipPlaneState.Scissor.Left = BitUtils.Extract(Params24, 0, 10);
 			GpuState->ClipPlaneState.Scissor.Top = BitUtils.Extract(Params24, 10, 10);
 		}
 
-		// SCISSOR end (2)
+		/// <summary>
+		/// SCISSOR end (2)
+		/// </summary>
 		public void OP_SCISSOR2()
 		{
 			GpuState->ClipPlaneState.Scissor.Right = BitUtils.Extract(Params24, 0, 10);
@@ -242,7 +266,10 @@ namespace CSPspEmu.Core.Gpu.Run
 		 * @param op - Operation to execute
 		 **/
 		// void sceGuLogicalOp(int op); // OP_LOP
-		// Logical Operation
+		
+		/// <summary>
+		/// Logical Operation
+		/// </summary>
 		public void OP_LOP()
 		{
 			GpuState->LogicalOperationState.Operation = (LogicalOperationEnum)Param8(0);

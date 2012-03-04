@@ -12,6 +12,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		public GpuDisplayList GpuDisplayList;
 		public GpuOpCodes OpCode;
 		public uint Params24;
+		public static uint PC;
 
 		public ushort Param16(int Offset)
 		{

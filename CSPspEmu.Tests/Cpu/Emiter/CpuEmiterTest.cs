@@ -55,15 +55,8 @@ namespace CSPspEmu.Core.Tests
 		{
 			var Events = new List<int>();
 
-			Processor.RegisterNativeSyscall(1, () =>
-			{
-				Events.Add(1);
-			});
-
-			Processor.RegisterNativeSyscall(1000, () =>
-			{
-				Events.Add(1000);
-			});
+			Processor.RegisterNativeSyscall(1, () => { Events.Add(1); });
+			Processor.RegisterNativeSyscall(1000, () => { Events.Add(1000); });
 
 			ExecuteAssembly(@"
 				syscall 1
@@ -272,28 +265,6 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
-		public void JumpTest()
-		{
-			ExecuteAssembly(@"
-				li r1, 1
-				li r2, 1
-
-				jal test
-				nop
-			ret:
-				li r1, 2
-			test:
-				li r2, 2
-				nop
-			");
-
-			Assert.AreEqual(1, CpuThreadState.GPR[1]);
-			Assert.AreEqual(1, CpuThreadState.GPR[2]);
-			Assert.AreEqual(4 * 4, (int)CpuThreadState.GPR[31]);
-			Assert.AreEqual(5 * 4, (int)CpuThreadState.PC);
-		}
-
-		[TestMethod]
 		public void ShiftTest()
 		{
 			ExecuteAssembly(@"
@@ -400,7 +371,7 @@ namespace CSPspEmu.Core.Tests
 				mult r10, r11
 			");
 
-			long Expected = ((long)CpuThreadState.GPR[10] * (long)CpuThreadState.GPR[11]);
+			long Expected = ((long)(int)CpuThreadState.GPR[10] * (long)(int)CpuThreadState.GPR[11]);
 
 			//Console.WriteLine(CpuThreadState.GPR[10]);
 			//Console.WriteLine(CpuThreadState.GPR[11]);
@@ -408,6 +379,25 @@ namespace CSPspEmu.Core.Tests
 
 			Assert.AreEqual((uint)((((long)Expected) >> 0) & 0xFFFFFFFF), (uint)CpuThreadState.LO);
 			Assert.AreEqual((uint)((((long)Expected) >> 32) & 0xFFFFFFFF), (uint)CpuThreadState.HI);
+		}
+
+		[TestMethod]
+		public void SetMultuTest()
+		{
+			ExecuteAssembly(@"
+				li r10, 0x12345678
+				li r11, 0x87654321
+				multu r10, r11
+			");
+
+			ulong Expected = ((ulong)(uint)CpuThreadState.GPR[10] * (ulong)(uint)CpuThreadState.GPR[11]);
+
+			//Console.WriteLine(CpuThreadState.GPR[10]);
+			//Console.WriteLine(CpuThreadState.GPR[11]);
+			//Console.WriteLine(Expected);
+
+			Assert.AreEqual((uint)((((ulong)Expected) >> 0) & 0xFFFFFFFF), (uint)CpuThreadState.LO);
+			Assert.AreEqual((uint)((((ulong)Expected) >> 32) & 0xFFFFFFFF), (uint)CpuThreadState.HI);
 		}
 
 		[TestMethod]
@@ -514,7 +504,7 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
-		public void LoginTest()
+		public void OrNorTest()
 		{
 			ExecuteAssembly(@"
 				li r20, 0b_11000110001100011000110001100011
@@ -638,10 +628,73 @@ namespace CSPspEmu.Core.Tests
 			Assert.AreEqual(0, CpuThreadState.GPR[10]);
 		}
 
-		/*
+		[TestMethod]
+		public void ConvertFloatTest()
+		{
+			ExecuteAssembly(@"
+				li r1, 100
+				mtc1 r1, f1
+				cvt.s.w f2, f1
+			");
+
+			Assert.AreEqual(100.0f, CpuThreadState.FPR[2]);
+		}
+
+#if false
+		[TestMethod]
+		public void JalTest1()
+		{
+			ExecuteAssembly(@"
+				li r1, 1
+				li r2, 1
+
+				jal test
+				nop
+			ret:
+				li r1, 2
+			test:
+				li r2, 2
+				nop
+			");
+
+			Assert.AreEqual(1, CpuThreadState.GPR[1]);
+			Assert.AreEqual(2, CpuThreadState.GPR[2]);
+			Assert.AreEqual(4 * 4, (int)CpuThreadState.GPR[31]);
+			Assert.AreEqual(7 * 4, (int)CpuThreadState.PC);
+		}
+
+		[TestMethod]
+		public void JumpTest2()
+		{
+			var Events = new List<int>();
+
+			Processor.RegisterNativeSyscall(1, () => { Events.Add(1); });
+			Processor.RegisterNativeSyscall(2, () => { Events.Add(2); });
+			Processor.RegisterNativeSyscall(3, () => { Events.Add(3); });
+			Processor.RegisterNativeSyscall(4, () => { Events.Add(4); });
+
+			ExecuteAssembly(@"
+				syscall 1
+				j skip
+				nop
+				syscall 2
+			skip:
+				syscall 3
+			");
+
+			Assert.AreEqual("[1,3]", Events.ToJson());
+		}
+
 		[TestMethod]
 		public void JalTest()
 		{
+			var Events = new List<int>();
+
+			Processor.RegisterNativeSyscall(1, () => { Events.Add(1); });
+			Processor.RegisterNativeSyscall(2, () => { Events.Add(2); });
+			Processor.RegisterNativeSyscall(3, () => { Events.Add(3); });
+			Processor.RegisterNativeSyscall(4, () => { Events.Add(4); });
+
 			ExecuteAssembly(@"
 				li r1, 100
 				syscall 1
@@ -652,6 +705,7 @@ namespace CSPspEmu.Core.Tests
 				nop
 				jal function1
 				nop
+				syscall 3
 
 			j end
 			nop
@@ -664,11 +718,13 @@ namespace CSPspEmu.Core.Tests
 
 			end:
 				nop
+				syscall 4
 			");
 
+			Assert.AreEqual("[1,2,2,2,3,4]", Events.ToJson());
 			Assert.AreEqual(103, CpuThreadState.GPR[1]);
 		}
-		*/
+#endif
 	}
 
 	unsafe public partial class CpuEmiterTest

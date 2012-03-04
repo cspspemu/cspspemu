@@ -77,6 +77,7 @@
     <Compile Include="mpeg\sceMpeg.Avc.cs" />
     <Compile Include="mpeg\sceMpeg.Ringbuffer.cs" />
     <Compile Include="mpeg\sceMpeg.Streams.cs" />
+    <Compile Include="mpeg\sceMpegbase.cs" />
     <Compile Include="pmfplayer\scePsmf.cs" />
     <Compile Include="sceMemlmd\semaphore.cs" />
     <Compile Include="libatrac3plus\sceAtrac3plus.cs" />
@@ -140,6 +141,10 @@
     <Compile Include="wlan\sceWlan_Driver.cs" />
     <Compile Include="_unknownPrx\KUBridge.cs" />
     <Compile Include="_unknownPrx\sceMp3.cs" />
+    <Compile Include="_unknownPrx\sceNp.cs" />
+    <Compile Include="_unknownPrx\sceNpAuth.cs" />
+    <Compile Include="_unknownPrx\sceNpService.cs" />
+    <Compile Include="_unknownPrx\scePspNpDrm_user.cs" />
     <Compile Include="_unknownPrx\sceUsb.cs" />
     <Compile Include="_unknownPrx\sceUsbstorBoot.cs" />
   </ItemGroup>

@@ -54,22 +54,7 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 		/// <summary>
 		/// 
 		/// </summary>
-		public LightStateStruct Light0;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public LightStateStruct Light1;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public LightStateStruct Light2;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public LightStateStruct Light3;
+		public LightStateStruct Light0, Light1, Light2, Light3;
 
 		/// <summary>
 		/// 

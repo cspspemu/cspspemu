@@ -64,5 +64,8 @@ namespace CSPspEmu.Core.Gpu.Run
 			gpu.logWarning("OP_SPLINE(%d, %d, %d, %d)", sp_ucount, sp_vcount, sp_utype, sp_vtype);
 			*/
 		}
+
+		[GpuOpCodesNotImplemented]
+		public void OP_PFACE() { }
 	}
 }

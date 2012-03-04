@@ -9,25 +9,13 @@ namespace CSPspEmu.Core.Gpu.Run
 	{
 		[GpuOpCodesNotImplemented]
 		public void OP_Unknown0x03() { }
-
-		[GpuOpCodesNotImplemented]
-		public void OP_BBOX() { }
-		
-		[GpuOpCodesNotImplemented]
-		public void OP_BJUMP() { }
-		
+	
 		[GpuOpCodesNotImplemented]
 		public void OP_Unknown0x0D() { }
 		
 		[GpuOpCodesNotImplemented]
 		public void OP_Unknown0x11() { }
-		
-		[GpuOpCodesNotImplemented]
-		public void OP_OFFSETADDR() { }
-		
-		[GpuOpCodesNotImplemented]
-		public void OP_ORIGINADDR() { }
-		
+	
 		[GpuOpCodesNotImplemented]
 		public void OP_Unknown0x29() { }
 		
@@ -36,9 +24,6 @@ namespace CSPspEmu.Core.Gpu.Run
 		
 		[GpuOpCodesNotImplemented]
 		public void OP_Unknown0x35() { }
-		
-		[GpuOpCodesNotImplemented]
-		public void OP_PFACE() { }
 		
 		[GpuOpCodesNotImplemented]
 		public void OP_Unknown0x39() { }
