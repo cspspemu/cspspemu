@@ -523,6 +523,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 							VertexReader.ReadVertex(z++, &TempVertexInfo);
 							for (int cc = 0; cc < VertexInfoFloatCount; cc++) ComponentsOut[cc] += ComponentsIn[cc] * Morphs[m];
 						}
+						VerticesPtr[n].Normal = VerticesPtr[n].Normal.Normalize();
 					}
 				}
 #else
@@ -601,6 +602,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					case GuPrimitiveType.TriangleStrip: BeginMode = BeginMode.TriangleStrip; break;
 					case GuPrimitiveType.Sprites: BeginMode = BeginMode.Quads; break;
 					default: throw (new NotImplementedException("Not implemented PrimitiveType:'" + PrimitiveType + "'"));
+				}
+
+				if (PrimitiveType == GuPrimitiveType.Sprites)
+				{
+					GL.Disable(EnableCap.CullFace);
 				}
 
 				//Console.WriteLine(BeginMode);

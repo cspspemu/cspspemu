@@ -80,7 +80,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 
 			MemoryStream.Position = EntryPC;
-			if ((MemoryStream.Length >= 8) && new BinaryReader(MemoryStream).ReadUInt64() == 0x0000000003E00008)
+			if ((MemoryStream.Position + 8 <= MemoryStream.Length) && new BinaryReader(MemoryStream).ReadUInt64() == 0x0000000003E00008)
 			{
 				Console.WriteLine("NullSub detected at 0x{0:X}!", EntryPC);
 			}

@@ -32,6 +32,11 @@ namespace CSPspEmu.Hle.Managers
 
 		public override void InitializeComponent()
 		{
+			if (PspEmulatorContext.PspConfig.HleModulesDll == null)
+			{
+				throw (new ArgumentNullException("PspEmulatorContext.PspConfig.HleModulesDll Can't be bull"));
+			}
+
 			HleModuleTypes = GetAllHleModules(PspEmulatorContext.PspConfig.HleModulesDll).ToDictionary(Type => Type.Name);
 			HleThreadManager = PspEmulatorContext.GetInstance<HleThreadManager>();
 			Console.WriteLine("HleModuleTypes: {0}", HleModuleTypes.Count);

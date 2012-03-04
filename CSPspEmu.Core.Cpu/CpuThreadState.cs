@@ -25,11 +25,21 @@ namespace CSPspEmu.Core.Cpu
 		public int StepInstructionCount;
 		public long TotalInstructionCount;
 
+		/// <summary>
+		/// Las Valid Registered PC
+		/// </summary>
 		public uint LastValidPC = 0xFFFFFFFF;
 
+		/// <summary>
+		/// Current PC
+		/// </summary>
 		public uint PC;
 		//public uint nPC;
 
+		/// <summary>
+		/// LOw, HIgh registers.
+		/// Used for mult/div.
+		/// </summary>
 		public int LO, HI;
 
 		public uint IC;
@@ -67,35 +77,6 @@ namespace CSPspEmu.Core.Cpu
 				return VFR_CC[Index];
 			}
 		}
-		/*
-		public int VFR_CC_6;
-		public int VFR_CC_7;
-		public int VFR_CC_8;
-		public int VFR_CC_9;
-		public int VFR_CC_10;
-		public int VFR_CC_11;
-		public int VFR_CC_12;
-		public int VFR_CC_13;
-		public int VFR_CC_14;
-		public int VFR_CC_15;
-		public int VFR_CC_16;
-		public int VFR_CC_17;
-		public int VFR_CC_18;
-		public int VFR_CC_19;
-		public int VFR_CC_20;
-		public int VFR_CC_21;
-		public int VFR_CC_22;
-		public int VFR_CC_23;
-		public int VFR_CC_24;
-		public int VFR_CC_25;
-		public int VFR_CC_26;
-		public int VFR_CC_27;
-		public int VFR_CC_28;
-		public int VFR_CC_29;
-		public int VFR_CC_30;
-		public int VFR_CC_31;
-		 * */
-
 
 		public struct FCR31
 		{
@@ -107,49 +88,21 @@ namespace CSPspEmu.Core.Cpu
 			}
 			public uint Value;
 
-			// 0b_0000000_F_C_000000000000000000000_RM
-			/*
-				// 0b_0000000_1_1_000000000000000000000_11
-				Type, "RM", 2,
-				uint, "",   21,
-				bool, "C" , 1,
-				bool, "FS", 1,
-				uint, "",   7
-			*/
-
 			public TypeEnum RM
 			{
-				get
-				{
-					return (TypeEnum)BitUtils.Extract(Value, 0, 2);
-				}
-				set
-				{
-					Value = BitUtils.Insert(Value, 0, 2, (uint)value);
-				}
+				get { return (TypeEnum)BitUtils.Extract(Value, 0, 2); }
+				set { Value = BitUtils.Insert(Value, 0, 2, (uint)value); }
 			}
 
 			public bool CC {
-				get
-				{
-					return (BitUtils.Extract(Value, 23, 1) != 0);
-				}
-				set
-				{
-					Value = BitUtils.Insert(Value, 23, 1, (uint)(value ? 1 : 0));
-				}
+				get { return (BitUtils.Extract(Value, 23, 1) != 0); }
+				set { Value = BitUtils.Insert(Value, 23, 1, (uint)(value ? 1 : 0)); }
 			}
 
 			public bool FS
 			{
-				get
-				{
-					return (BitUtils.Extract(Value, 24, 1) != 0);
-				}
-				set
-				{
-					Value = BitUtils.Insert(Value, 24, 1, (uint)(value ? 1 : 0));
-				}
+				get { return (BitUtils.Extract(Value, 24, 1) != 0); }
+				set { Value = BitUtils.Insert(Value, 24, 1, (uint)(value ? 1 : 0)); }
 			}
 		}
 
@@ -195,48 +148,28 @@ namespace CSPspEmu.Core.Cpu
 		/// <summary>
 		/// Points to the middle of the 64K block of memory in the static data segment.
 		/// </summary>
-		public uint GP
-		{
-			get { return GPR28; }
-			set { GPR28 = value; }
-		}
+		public uint GP { get { return GPR28; } set { GPR28 = value; } }
 
 		/// <summary>
 		/// Points to last location on the stack.
 		/// </summary>
-		public uint SP
-		{
-			get { return GPR29; }
-			set { GPR29 = value; }
-		}
+		public uint SP { get { return GPR29; } set { GPR29 = value; } }
 
 		/// <summary>
 		/// Reserved for use by the interrupt/trap handler 
 		/// </summary>
-		public uint K0
-		{
-			get { return GPR26; }
-			set { GPR26 = value; }
-		}
+		public uint K0 { get { return GPR26; } set { GPR26 = value; } }
 
 		/// <summary>
 		/// saved value / frame pointer
 		/// Preserved across procedure calls
 		/// </summary>
-		public uint FP
-		{
-			get { return GPR30; }
-			set { GPR30 = value; }
-		}
+		public uint FP { get { return GPR30; } set { GPR30 = value; } }
 
 		/// <summary>
 		/// Return Address
 		/// </summary>
-		public uint RA
-		{
-			get { return GPR31; }
-			set { GPR31 = value; }
-		}
+		public uint RA { get { return GPR31; } set { GPR31 = value; } }
 
 		/*
 		public struct FixedRegisters
@@ -254,20 +187,8 @@ namespace CSPspEmu.Core.Cpu
 
 			public int this[int Index]
 			{
-				get
-				{
-					fixed (uint* PTR = &Processor.GPR0)
-					{
-						return (int)PTR[Index];
-					}
-				}
-				set
-				{
-					fixed (uint* PTR = &Processor.GPR0)
-					{
-						PTR[Index] = (uint)value;
-					}
-				}
+				get { fixed (uint* PTR = &Processor.GPR0) return (int)PTR[Index]; }
+				set { fixed (uint* PTR = &Processor.GPR0) PTR[Index] = (uint)value; }
 			}
 		}
 
@@ -277,20 +198,8 @@ namespace CSPspEmu.Core.Cpu
 
 			public float this[int Index]
 			{
-				get
-				{
-					fixed (float* PTR = &Processor.FPR0)
-					{
-						return PTR[Index];
-					}
-				}
-				set
-				{
-					fixed (float* PTR = &Processor.FPR0)
-					{
-						PTR[Index] = value;
-					}
-				}
+				get { fixed (float* PTR = &Processor.FPR0) return PTR[Index]; }
+				set { fixed (float* PTR = &Processor.FPR0) PTR[Index] = value; }
 			}
 		}
 
@@ -300,20 +209,8 @@ namespace CSPspEmu.Core.Cpu
 
 			public int this[int Index]
 			{
-				get
-				{
-					fixed (float* PTR = &Processor.FPR0)
-					{
-						return ((int *)PTR)[Index];
-					}
-				}
-				set
-				{
-					fixed (float* PTR = &Processor.FPR0)
-					{
-						((int*)PTR)[Index] = value;
-					}
-				}
+				get { fixed (float* PTR = &Processor.FPR0) return ((int*)PTR)[Index]; }
+				set { fixed (float* PTR = &Processor.FPR0) ((int*)PTR)[Index] = value; }
 			}
 		}
 
@@ -323,20 +220,8 @@ namespace CSPspEmu.Core.Cpu
 
 			public float this[int Index]
 			{
-				get
-				{
-					fixed (float* PTR = &Processor.VFR0)
-					{
-						return PTR[Index];
-					}
-				}
-				set
-				{
-					fixed (float* PTR = &Processor.VFR0)
-					{
-						PTR[Index] = value;
-					}
-				}
+				get { fixed (float* PTR = &Processor.VFR0) return PTR[Index]; }
+				set { fixed (float* PTR = &Processor.VFR0) PTR[Index] = value; }
 			}
 		}
 

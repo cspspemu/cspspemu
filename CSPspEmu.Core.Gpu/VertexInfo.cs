@@ -38,6 +38,12 @@ namespace CSPspEmu.Core.Gpu
 		{
 			return String.Format("({0}, {1}, {2})", X, Y, Z);
 		}
+
+		public Vector3F Normalize()
+		{
+			var Normal = (float)Math.Sqrt(X * X + Y * Y + Z * Z);
+			return new Vector3F(X / Normal, Y / Normal, Z / Normal);
+		}
 	}
 
 	public struct Color4F

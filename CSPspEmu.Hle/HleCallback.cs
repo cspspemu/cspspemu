@@ -23,11 +23,6 @@ namespace CSPspEmu.Hle
 			return new HleCallback() { Name = Name, Function = Function, Arguments = Arguments };
 		}
 
-		public override string ToString()
-		{
-			return String.Format("HleCallback(Name='{0}', Function=0x{1:X})", Name, Function);
-		}
-
 		public void SetArgumentsToCpuThreadState(CpuThreadState CpuThreadState)
 		{
 			HleInterop.SetArgumentsToCpuThreadState(CpuThreadState, Function, Arguments);
@@ -35,6 +30,11 @@ namespace CSPspEmu.Hle
 
 		public void Dispose()
 		{
+		}
+
+		public override string ToString()
+		{
+			return String.Format("HleCallback(Name='{0}', Function=0x{1:X})", Name, Function);
 		}
 	}
 }

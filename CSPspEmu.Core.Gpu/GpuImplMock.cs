@@ -6,7 +6,7 @@ using CSPspEmu.Core;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Gpu.State;
 
-namespace CSPspEmu.AutoTests
+namespace CSPspEmu.Core.Gpu
 {
 	unsafe public class GpuImplMock : GpuImpl
 	{

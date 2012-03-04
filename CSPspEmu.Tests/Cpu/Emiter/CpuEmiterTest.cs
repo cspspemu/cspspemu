@@ -188,6 +188,8 @@ namespace CSPspEmu.Core.Tests
 			Assert.AreEqual("[1,1,0]", Generator("blez", Regs0).ToJson());
 			Assert.AreEqual("[0,0,1]", Generator("bgtz", Regs0).ToJson());
 			Assert.AreEqual("[0,1,1]", Generator("bgez", Regs0).ToJson());
+
+			//Assert.AreEqual("[0,0,1]", Generator("bgtzl", Regs0).ToJson());
 		}
 
 		[TestMethod]
@@ -236,6 +238,8 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void FloatTest()
 		{
+			//CpuThreadState.FPR[27] = 2.0f;
+			//CpuThreadState.FPR[28] = 20.0f;
 			CpuThreadState.FPR[29] = 81.0f;
 			CpuThreadState.FPR[30] = -1.0f;
 			CpuThreadState.FPR[31] = 3.5f;
@@ -251,6 +255,8 @@ namespace CSPspEmu.Core.Tests
 				; Binary
 				add.s f10, f30, f31
 				sub.s f11, f30, f31
+				div.s f12, f30, f31
+				mul.s f13, f30, f31
 			");
 
 			// Unary
@@ -262,6 +268,8 @@ namespace CSPspEmu.Core.Tests
 
 			Assert.AreEqual(CpuThreadState.FPR[10], CpuThreadState.FPR[30] + CpuThreadState.FPR[31]);
 			Assert.AreEqual(CpuThreadState.FPR[11], CpuThreadState.FPR[30] - CpuThreadState.FPR[31]);
+			Assert.AreEqual(CpuThreadState.FPR[12], CpuThreadState.FPR[30] / CpuThreadState.FPR[31]);
+			Assert.AreEqual(CpuThreadState.FPR[13], CpuThreadState.FPR[30] * CpuThreadState.FPR[31]);
 		}
 
 		[TestMethod]
@@ -536,11 +544,20 @@ namespace CSPspEmu.Core.Tests
 			CpuThreadState.FPR[1] = 1.0f;
 			CpuThreadState.FPR[2] = 2.0f;
 
-			ExecuteAssembly("c.eq.s f1, f2");
+			ExecuteAssembly(@"c.eq.s f1, f2");
 			Assert.AreEqual(false, CpuThreadState.Fcr31.CC);
 
-			ExecuteAssembly("c.eq.s f1, f1");
+			ExecuteAssembly(@"c.eq.s f1, f1");
 			Assert.AreEqual(true, CpuThreadState.Fcr31.CC);
+
+			ExecuteAssembly(@"c.lt.s f1, f2");
+			Assert.AreEqual(true, CpuThreadState.Fcr31.CC);
+
+			ExecuteAssembly(@"c.lt.s f2, f1");
+			Assert.AreEqual(false, CpuThreadState.Fcr31.CC);
+
+			ExecuteAssembly(@"c.lt.s f1, f1");
+			Assert.AreEqual(false, CpuThreadState.Fcr31.CC);
 
 			Action<String> Gen = (INSTRUCTION_NAME) =>
 			{
@@ -629,19 +646,6 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
-		public void ConvertFloatTest()
-		{
-			ExecuteAssembly(@"
-				li r1, 100
-				mtc1 r1, f1
-				cvt.s.w f2, f1
-			");
-
-			Assert.AreEqual(100.0f, CpuThreadState.FPR[2]);
-		}
-
-#if false
-		[TestMethod]
 		public void JalTest1()
 		{
 			ExecuteAssembly(@"
@@ -724,7 +728,58 @@ namespace CSPspEmu.Core.Tests
 			Assert.AreEqual("[1,2,2,2,3,4]", Events.ToJson());
 			Assert.AreEqual(103, CpuThreadState.GPR[1]);
 		}
-#endif
+
+		[TestMethod]
+		public void ConvertFloat1Test()
+		{
+			ExecuteAssembly(@"
+				li r1, 100
+				mtc1 r1, f1
+				cvt.s.w f2, f1
+			");
+
+			Assert.AreEqual(100.0f, CpuThreadState.FPR[2]);
+		}
+
+		[TestMethod]
+		public void ConvertFloat2Test()
+		{
+			CpuThreadState.FPR[29] = 13.4f;
+			CpuThreadState.FPR[30] = 13.6f;
+			CpuThreadState.FPR[31] = 13.5f;
+
+			ExecuteAssembly(@"
+				trunc.w.s f1, f29
+				floor.w.s f2, f29
+				round.w.s f3, f29
+				ceil.w.s  f4, f29
+
+				trunc.w.s f11, f30
+				floor.w.s f12, f30
+				round.w.s f13, f30
+				ceil.w.s  f14, f30
+
+				trunc.w.s f21, f31
+				floor.w.s f22, f31
+				round.w.s f23, f31
+				ceil.w.s  f24, f31
+			");
+
+			Assert.AreEqual(13, CpuThreadState.FPR_I[1]);
+			Assert.AreEqual(13, CpuThreadState.FPR_I[2]);
+			Assert.AreEqual(13, CpuThreadState.FPR_I[3]);
+			Assert.AreEqual(14, CpuThreadState.FPR_I[4]);
+
+			Assert.AreEqual(13, CpuThreadState.FPR_I[11]);
+			Assert.AreEqual(13, CpuThreadState.FPR_I[12]);
+			Assert.AreEqual(14, CpuThreadState.FPR_I[13]);
+			Assert.AreEqual(14, CpuThreadState.FPR_I[14]);
+
+			Assert.AreEqual(13, CpuThreadState.FPR_I[21]);
+			Assert.AreEqual(13, CpuThreadState.FPR_I[22]);
+			Assert.AreEqual(14, CpuThreadState.FPR_I[23]);
+			Assert.AreEqual(14, CpuThreadState.FPR_I[24]);
+		}
 	}
 
 	unsafe public partial class CpuEmiterTest

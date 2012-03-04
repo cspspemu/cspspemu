@@ -5,7 +5,7 @@ using System.Text;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Audio;
 
-namespace CSPspEmu.AutoTests
+namespace CSPspEmu.Core.Audio
 {
 	unsafe public class AudioImplMock : PspAudioImpl
 	{

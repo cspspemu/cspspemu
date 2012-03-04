@@ -5,6 +5,9 @@ using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Cpu.Assembler;
 using CSPspEmu.Hle.Managers;
+using CSPspEmu.Core.Gpu;
+using CSPspEmu.Core.Audio;
+using System.Reflection;
 
 namespace CSPspEmu.Core.Tests
 {
@@ -22,8 +25,11 @@ namespace CSPspEmu.Core.Tests
 		public void SetUp()
 		{
 			PspConfig = new PspConfig();
+			PspConfig.HleModulesDll = Assembly.GetExecutingAssembly();
 			PspEmulatorContext = new PspEmulatorContext(PspConfig);
 			PspEmulatorContext.SetInstanceType<PspMemory, LazyPspMemory>();
+			PspEmulatorContext.SetInstanceType<GpuImpl, GpuImplMock>();
+			PspEmulatorContext.SetInstanceType<PspAudioImpl, AudioImplMock>();
 			Memory = PspEmulatorContext.GetInstance<PspMemory>();
 			ThreadManager = PspEmulatorContext.GetInstance<HleThreadManager>();
 

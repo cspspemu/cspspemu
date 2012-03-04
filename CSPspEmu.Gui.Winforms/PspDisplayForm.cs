@@ -965,8 +965,11 @@ namespace CSPspEmu.Gui.Winforms
 
 		void Recent_Click(object sender, EventArgs e)
 		{
-			var ToolStripMenuItem = (ToolStripMenuItem)sender;
-			OpenFileReal(ToolStripMenuItem.Text);
+			PauseResume(() =>
+			{
+				var ToolStripMenuItem = (ToolStripMenuItem)sender;
+				OpenFileReal(ToolStripMenuItem.Text);
+			});
 		}
 
 		static private Keys ParseKeyName(string KeyName)

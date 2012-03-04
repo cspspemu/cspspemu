@@ -94,7 +94,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			var FormatChunks = new Queue<String>(Tokenize(Format));
 			var LineChunks = new Queue<String>(Tokenize(Line));
 
-			while (FormatChunks.Count > 0)
+			while (FormatChunks.Count > 0 && LineChunks.Count > 0)
 			{
 				var CurrentFormat = FormatChunks.Dequeue();
 				var CurrentLine = LineChunks.Dequeue();
@@ -192,7 +192,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 				{
 					Value = InstructionInfo.Value & InstructionInfo.Mask,
 				};
-				var Matches = MatchFormat(InstructionInfo.AsmEncoding, LineTokens[1]);
+				var Matches = MatchFormat(InstructionInfo.AsmEncoding, (LineTokens.Length > 1) ? LineTokens[1] : "");
 				foreach (var Match in Matches)
 				{
 					var Key = Match.Item1;
@@ -218,8 +218,10 @@ namespace CSPspEmu.Core.Cpu.Assembler
 						case "%C": Instruction.CODE = (uint)ParseIntegerConstant(Value); break;
 						case "%i": Instruction.IMM = ParseIntegerConstant(Value); break;
 						case "%I": Instruction.IMMU = (uint)ParseIntegerConstant(Value); break;
+
 						case "%j": Patches.Add(new Patch() { Address = PC, LabelName = Value, Type = PatchType.ABS_26 }); break;
 						case "%O": Patches.Add(new Patch() { Address = PC, LabelName = Value, Type = PatchType.REL_16 }); break;
+
 						default: throw (new InvalidDataException("Unknown format '" + Key + "' <-- (" + InstructionInfo.AsmEncoding + ")"));
 					}
 				}

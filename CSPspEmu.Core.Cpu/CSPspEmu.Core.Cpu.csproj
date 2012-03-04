@@ -76,6 +76,7 @@
     <Compile Include="CpuThreadState.cs" />
     <Compile Include="CpuThreadStateExtensions.cs" />
     <Compile Include="CpuProcessor.cs" />
+    <Compile Include="PspBreakException.cs" />
     <Compile Include="Switch\EmitLookupGenerator.cs" />
     <Compile Include="Table\InstructionInfo.cs" />
     <Compile Include="Table\InstructionTable.cs" />

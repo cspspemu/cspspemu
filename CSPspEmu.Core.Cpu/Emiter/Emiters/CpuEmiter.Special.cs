@@ -52,10 +52,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			Console.Error.WriteLine("-------------------------------------------------------------------");
 			Console.Error.WriteLine("-- BREAK  ---------------------------------------------------------");
 			Console.Error.WriteLine("-------------------------------------------------------------------");
-			throw(new Exception("Break!"));
+			throw(new PspBreakException("Break!"));
 		}
 
 		public void _break() {
+			_save_pc();
+			//CpuThreadState.PC =
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Call((Action<CpuThreadState>)CpuEmiter._break_impl);
 			//throw(new NotImplementedException());

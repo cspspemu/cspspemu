@@ -27,6 +27,9 @@ namespace CSPspEmu.Core.Cpu
 
 		static public Action<CpuThreadState> CreateDelegateForString(this CpuProcessor CpuProcessor, String Assembly, bool BreakPoint = false)
 		{
+			CpuProcessor.MethodCache.Clear();
+
+			Assembly += "\r\nbreak\r\n";
 			var MemoryStream = new MemoryStream();
 			MemoryStream.PreservePositionAndLock(() =>
 			{
@@ -34,11 +37,27 @@ namespace CSPspEmu.Core.Cpu
 
 				MipsAssembler.Assemble(Assembly);
 			});
-			var Delegate = CpuProcessor.CreateDelegateForPC(MemoryStream, 0);
+
+			//Console.WriteLine(Assembly);
+
 			return (_CpuThreadState) =>
 			{
-				_CpuThreadState.StepInstructionCount = 1000000;
-				Delegate.Delegate(_CpuThreadState);
+				_CpuThreadState.PC = 0;
+
+				//Console.WriteLine("PC: {0:X}", _CpuThreadState.PC);
+				try
+				{
+					while (true)
+					{
+						//Console.WriteLine("PC: {0:X}", _CpuThreadState.PC);
+						var Delegate = CpuProcessor.CreateDelegateForPC(MemoryStream, _CpuThreadState.PC);
+						_CpuThreadState.StepInstructionCount = 1000000;
+						Delegate.Delegate(_CpuThreadState);
+					}
+				}
+				catch (PspBreakException)
+				{
+				}
 			};
 		}
 

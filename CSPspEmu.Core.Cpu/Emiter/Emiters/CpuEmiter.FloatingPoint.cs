@@ -38,7 +38,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void neg_s() { MipsMethodEmiter.OP_2REG_F(FD, FS, () => { SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate); }); }
 		public void trunc_w_s()
 		{
-			floor_w_s();
+			MipsMethodEmiter.SaveFPR_I(FD, () =>
+			{
+				MipsMethodEmiter.LoadFPR(FS);
+				MipsMethodEmiter.CallMethod((Func<float, int>)MathFloat.Cast);
+			});
 		}
 		public void round_w_s()
 		{
@@ -89,6 +93,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
+		/// <summary>
+		/// Floating-Point Convert to Word Fixed-Point
+		/// </summary>
 		public void cvt_w_s()
 		{
 			SafeILGenerator.LoadArgument0CpuThreadState();
@@ -171,6 +178,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			return less || equal;
 		}
 
+		/// <summary>
+		/// Compare (condition) Single_
+		/// </summary>
+		/// <param name="fc02"></param>
+		/// <param name="fc3"></param>
 		private void _comp(int fc02, int fc3)
 		{
 			bool fc_unordererd = ((fc02 & 1) != 0);
@@ -192,22 +204,86 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			});
 		}
 
-		// Compare <condition> Single_
+		/// <summary>
+		/// Compare False Single
+		/// This predicate is always False it never has a True Result
+		/// </summary>
 		public void c_f_s() { _comp(0, 0); }
+
+		/// <summary>
+		/// Compare UNordered Single
+		/// </summary>
 		public void c_un_s() { _comp(1, 0); }
+
+		/// <summary>
+		/// Compare EQual Single
+		/// </summary>
 		public void c_eq_s() { _comp(2, 0); }
+
+		/// <summary>
+		/// Compare Unordered or EQual Single
+		/// </summary>
 		public void c_ueq_s() { _comp(3, 0); }
+
+		/// <summary>
+		/// Compare Ordered or Less Than Single
+		/// </summary>
 		public void c_olt_s() { _comp(4, 0); }
+
+		/// <summary>
+		/// Compare Unordered or Less Than Single
+		/// </summary>
 		public void c_ult_s() { _comp(5, 0); }
+
+		/// <summary>
+		/// Compare Ordered or Less than or Equal Single
+		/// </summary>
 		public void c_ole_s() { _comp(6, 0); }
+
+		/// <summary>
+		/// Compare Unordered or Less than or Equal Single
+		/// </summary>
 		public void c_ule_s() { _comp(7, 0); }
+		
+		/// <summary>
+		/// Compare Signaling False Single
+		/// This predicate always False
+		/// </summary>
 		public void c_sf_s() { _comp(0, 1); }
+
+		/// <summary>
+		/// Compare Non Greater Than or Less than or Equal Single
+		/// </summary>
 		public void c_ngle_s() { _comp(1, 1); }
+
+		/// <summary>
+		/// Compare Signaling Equal Single
+		/// </summary>
 		public void c_seq_s() { _comp(2, 1); }
+
+		/// <summary>
+		/// Compare Not Greater than or Less than Single
+		/// </summary>
 		public void c_ngl_s() { _comp(3, 1); }
+
+		/// <summary>
+		/// Compare Less Than Single
+		/// </summary>
 		public void c_lt_s() { _comp(4, 1); }
+
+		/// <summary>
+		/// Compare Not Greater than or Equal Single
+		/// </summary>
 		public void c_nge_s() { _comp(5, 1); }
+
+		/// <summary>
+		/// Compare Less than or Equal Single
+		/// </summary>
 		public void c_le_s() { _comp(6, 1); }
+
+		/// <summary>
+		/// Compare Not Greater Than Single
+		/// </summary>
 		public void c_ngt_s() { _comp(7, 1); }
 	}
 }

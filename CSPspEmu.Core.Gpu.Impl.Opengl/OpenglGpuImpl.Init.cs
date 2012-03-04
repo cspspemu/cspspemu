@@ -108,35 +108,20 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				var CThread = new Thread(() =>
 				{
 					Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.CultureName);
-					// Index: 8, Color: 32 (8888), Depth: 24, Stencil: 0, Samples: 0, Accum: 64 (16161616), Buffers: 2, Stereo: False
-					//var UsedGraphicsMode = GraphicsMode.Default;
-					/*
+
 					var UsedGraphicsMode = new GraphicsMode(
-						color: new ColorFormat(8, 8, 8, 8),
+						color: new OpenTK.Graphics.ColorFormat(8, 8, 8, 8),
 						depth: 16,
 						stencil: 8,
 						samples: 0,
-						accum: new ColorFormat(16, 16, 16, 16),
+						accum: new OpenTK.Graphics.ColorFormat(16, 16, 16, 16),
+						//accum: new OpenTK.Graphics.ColorFormat(0, 0, 0, 0),
 						buffers: 2,
 						stereo: false
 					);
-					*/
 
-					GraphicsMode gm = GraphicsMode.Default;
-					var UsedGraphicsMode = new GraphicsMode(
-						gm.ColorFormat,
-						gm.Depth,
-						8, //gm.Stencil,
-						gm.Samples, // 4 // anti-alias
-						gm.AccumulatorFormat,
-						gm.Buffers,
-						gm.Stereo
-					);
-
-					//UsedGraphicsMode = new GraphicsMode(new OpenTK.Graphics.ColorFormat(8, 8, 8, 8), 24, 8);
-
-					//var UsedGraphicsMode = new GraphicsMode(color: new ColorFormat(32), depth: 24, stencil: 8, samples: 0);
 					var UsedGameWindowFlags = GameWindowFlags.Default;
+
 					//Console.Error.WriteLine(UsedGraphicsMode);
 					//Console.ReadKey();
 #if USE_GL_CONTROL
@@ -152,20 +137,22 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 					GraphicsContext = new GraphicsContext(UsedGraphicsMode, WindowInfo);
 					GraphicsContext.MakeCurrent(WindowInfo);
-					GraphicsContext.SwapInterval = 0;
 					{
-						(GraphicsContext as IGraphicsContextInternal).LoadAll();
+						GraphicsContext.LoadAll();
 						Initialize();
 					}
+					GraphicsContext.SwapInterval = 0;
 
 #if true
 					//Console.WriteLine("## {0}", UsedGraphicsMode);
+					Console.WriteLine("## UsedGraphicsMode: {0}", UsedGraphicsMode);
 					Console.WriteLine("## GraphicsContext.GraphicsMode: {0}", GraphicsContext.GraphicsMode);
 
 					Console.WriteLine("## OpenGL Context Version: {0}.{1}", GlGetInteger(GetPName.MajorVersion), GlGetInteger(GetPName.MinorVersion));
 
 					Console.WriteLine("## Depth Bits: {0}", GlGetInteger(GetPName.DepthBits));
 					Console.WriteLine("## Stencil Bits: {0}", GlGetInteger(GetPName.StencilBits));
+					Console.WriteLine("## Accum Bits: {0},{1},{2},{3}", GlGetInteger(GetPName.AccumRedBits), GlGetInteger(GetPName.AccumGreenBits), GlGetInteger(GetPName.AccumBlueBits), GlGetInteger(GetPName.AccumAlphaBits));
 
 					if (GlGetInteger(GetPName.StencilBits) <= 0)
 					{
