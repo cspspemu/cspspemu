@@ -220,12 +220,12 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 				/// <summary>
 				/// 0008 -
 				/// </summary>
-				public uint StartSample;
+				public int StartSample;
 				
 				/// <summary>
 				/// 000C -
 				/// </summary>
-				public uint EndSample;
+				public int EndSample;
 				
 				/// <summary>
 				/// 0010 -
@@ -477,7 +477,9 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		public int sceAtracGetBitrate(int AtracId, out uint Bitrate)
 		{
 			var Atrac = AtracList.Get(AtracId);
-			Bitrate = Atrac.Format.Bitrate;
+			{
+				Bitrate = Atrac.Format.Bitrate;
+			}
 			return 0;
 		}
 
@@ -782,13 +784,14 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xA2BBA8BE, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceAtracGetSoundSample(int AtracId, out int EndSamplePointer, out int LoopStartSamplePointer, out int LoopEndSamplePointer)
+		public int sceAtracGetSoundSample(int AtracId, int* EndSamplePointer, int* LoopStartSamplePointer, int* LoopEndSamplePointer)
 		{
 			var Atrac = AtracList.Get(AtracId);
 			{
-				EndSamplePointer = Atrac.Fact.EndSample;
-				LoopStartSamplePointer = -1;
-				LoopEndSamplePointer = -1;
+				var HasLoops = (Atrac.LoopInfoList != null) && (Atrac.LoopInfoList.Length > 0);
+				if (EndSamplePointer != null) *EndSamplePointer = Atrac.Fact.EndSample;
+				if (LoopStartSamplePointer != null) *LoopStartSamplePointer = HasLoops ? Atrac.LoopInfoList[0].StartSample : -1;
+				if (LoopEndSamplePointer != null) *LoopEndSamplePointer = HasLoops ? Atrac.LoopInfoList[0].EndSample : -1;
 			}
 			return 0;
 		}
@@ -843,15 +846,20 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		}
 
 		/// <summary>
-		/// 
+		/// Get Number of channels of the Atrac3 
 		/// </summary>
+		/// <param name="AtracId"></param>
+		/// <param name="Channels"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x31668baa, FirmwareVersion = 250)]
 		[HlePspNotImplemented]
-		public int sceAtracGetChannel()
+		public int sceAtracGetChannel(int AtracId, out int Channels)
 		{
-			throw (new NotImplementedException());
-			//return -1;
+			var Atrac = AtracList.Get(AtracId);
+			{
+				Channels = Atrac.Format.AtracChannels;
+			}
+			return 0;
 		}
 	}
 }

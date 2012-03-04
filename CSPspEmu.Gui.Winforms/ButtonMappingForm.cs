@@ -73,11 +73,18 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			var TextBox = (sender as TextBox);
 			var Key = e.KeyCode;
-			TextBox.Text = Key.ToString();
-			var ConfigField = typeof(ControllerConfig).GetField(TextBox.Name);
-			if (ConfigField != null) ConfigField.SetValue(CurrentControllerConfig, TextBox.Text);
-			e.SuppressKeyPress = true;
-			(this.AcceptButton as Button).Focus();
+			if ((Key & Keys.KeyCode) != 0)
+			{
+				if (Key == Keys.ShiftKey) return;
+				if (Key == Keys.ControlKey) return;
+				if (Key == Keys.Alt) return;
+
+				TextBox.Text = Key.ToString();
+				var ConfigField = typeof(ControllerConfig).GetField(TextBox.Name);
+				if (ConfigField != null) ConfigField.SetValue(CurrentControllerConfig, TextBox.Text);
+				e.SuppressKeyPress = true;
+				(this.AcceptButton as Button).Focus();
+			}
 			//Focus();
 			//KeyInterop.KeyFromVirtualKey
 		}

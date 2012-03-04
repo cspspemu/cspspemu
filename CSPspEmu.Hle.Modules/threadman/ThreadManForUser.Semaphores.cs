@@ -95,16 +95,23 @@ namespace CSPspEmu.Hle.Modules.threadman
 		{
 			var CurrentThread = HleState.ThreadManager.Current;
 			var Semaphore = GetSemaphoreById(SemaphoreId);
+			bool TimedOut = false;
 
 			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, "sceKernelWaitSema", Semaphore, WakeUpCallback =>
 			{
-				if (Timeout != null) throw(new NotImplementedException());
+				HleState.PspRtc.RegisterTimeout(Timeout, () => { TimedOut = true; WakeUpCallback(); });
+
 				Semaphore.WaitThread(CurrentThread, () =>
 				{
 					WakeUpCallback();
 					HleState.ThreadManager.ScheduleNext(CurrentThread);
 				}, Signal);
 			}, HandleCallbacks: HandleCallbacks);
+
+			if (TimedOut)
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_WAIT_TIMEOUT));
+			}
 
 			return 0;
 		}

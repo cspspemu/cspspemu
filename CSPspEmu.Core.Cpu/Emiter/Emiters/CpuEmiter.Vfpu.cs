@@ -286,8 +286,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void vrsq() { _vfpu_call_single_method((Func<float, float>)MathFloat.RSqrt); }
 		public void vsin() { _vfpu_call_single_method((Func<float, float>)MathFloat.SinV1); }
 		public void vcos() { _vfpu_call_single_method((Func<float, float>)MathFloat.CosV1); }
-		public void vexp2() { throw (new NotImplementedException("")); }
-		public void vlog2() { throw (new NotImplementedException("")); }
+		public void vexp2() { _vfpu_call_single_method((Func<float, float>)MathFloat.Exp2); }
+		public void vlog2() { _vfpu_call_single_method((Func<float, float>)MathFloat.Log2); }
 		public void vasin() { _vfpu_call_single_method((Func<float, float>)MathFloat.AsinV1); }
 		public void vnrcp() { throw (new NotImplementedException("")); }
 		public void vnsin() { throw (new NotImplementedException("")); }

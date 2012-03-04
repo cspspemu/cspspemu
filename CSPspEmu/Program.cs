@@ -279,6 +279,21 @@ namespace CSPspEmu
 			TestsAutoProgram.Main(Arguments.Skip(0).ToArray());
 			Environment.Exit(0);
 #endif
+			//AppDomain.UnHandledException
+			/*
+			AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+			{
+				try
+				{
+					Console.Error.WriteLine(e.ExceptionObject);
+				}
+				catch
+				{
+				}
+				Console.ReadKey();
+				Environment.Exit(-1);
+			};
+			*/
 
 			var Getopt = new Getopt(Arguments);
 			{
