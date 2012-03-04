@@ -29,8 +29,15 @@ namespace CSPspEmu.Hle.Vfs.Zip
 
 		public unsafe int IoOpen(HleIoDrvFileArg HleIoDrvFileArg, string FileName, HleIoFlags Flags, SceMode Mode)
 		{
-			HleIoDrvFileArg.FileArgument = ZipArchive[FileName].OpenUncompressedStream();
-			return 0;
+			try
+			{
+				HleIoDrvFileArg.FileArgument = ZipArchive[FileName].OpenUncompressedStream();
+				return 0;
+			}
+			catch (KeyNotFoundException)
+			{
+				throw(new FileNotFoundException("Can't find file '" + FileName + "' on ZipFile"));
+			}
 		}
 
 		public unsafe int IoClose(HleIoDrvFileArg HleIoDrvFileArg)
@@ -94,7 +101,18 @@ namespace CSPspEmu.Hle.Vfs.Zip
 
 		public unsafe int IoGetstat(HleIoDrvFileArg HleIoDrvFileArg, string FileName, SceIoStat* Stat)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				var ZipEntry = ZipArchive[FileName];
+				Stat->Attributes = IOFileModes.CanRead | IOFileModes.File;
+				Stat->Mode = SceMode.All;
+				Stat->Size = ZipEntry.OpenUncompressedStream().Length;
+				return 0;
+			}
+			catch (KeyNotFoundException)
+			{
+				throw (new FileNotFoundException("Can't find file '" + FileName + "' on ZipFile"));
+			}
 		}
 
 		public unsafe int IoChstat(HleIoDrvFileArg HleIoDrvFileArg, string FileName, SceIoStat* stat, int bits)
