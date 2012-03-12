@@ -12,8 +12,19 @@ namespace CSPspEmu.Hle.Managers
 {
 	public struct ParsePathInfo
 	{
+		/// <summary>
+		/// 
+		/// </summary>
 		public HleIoDrvFileArg HleIoDrvFileArg;
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public string LocalPath;
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public IHleIoDriver HleIoDriver
 		{
 			get
@@ -203,6 +214,7 @@ namespace CSPspEmu.Hle.Managers
 			{
 				HleIoDrvFileArg = new HleIoDrvFileArg()
 				{
+					DriverName = DriverName,
 					HleIoDriver = HleIoDriver,
 					FileSystemNumber = FileSystemNumber,
 					FileArgument = null,

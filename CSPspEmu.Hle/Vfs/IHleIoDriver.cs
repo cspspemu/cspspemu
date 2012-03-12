@@ -25,6 +25,11 @@ namespace CSPspEmu.Hle.Vfs
 	public class HleIoDrvFileArg : IDisposable
 	{
 		/// <summary>
+		/// 
+		/// </summary>
+		public string DriverName;
+
+		/// <summary>
 		/// Original driver.
 		/// </summary>
 		public IHleIoDriver HleIoDriver;
@@ -48,6 +53,10 @@ namespace CSPspEmu.Hle.Vfs
 		/// 
 		/// </summary>
 		public object Callback;
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public int CallbackArgument;
 
 		/// <summary>

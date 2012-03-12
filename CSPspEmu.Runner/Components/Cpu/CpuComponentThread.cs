@@ -108,6 +108,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 			var Umd = new HleIoDriverIso(Iso);
 			HleState.HleIoManager.SetDriver("disc:", Umd);
 			HleState.HleIoManager.SetDriver("umd:", Umd);
+			HleState.HleIoManager.SetDriver("host:", Umd);
 			HleState.HleIoManager.SetDriver(":", Umd);
 			HleState.HleIoManager.Chdir("disc0:/PSP_GAME/USRDIR");
 			return Iso;
@@ -227,10 +228,21 @@ namespace CSPspEmu.Runner.Components.Cpu
 							{
 								Console.Error.WriteLine(Exception);
 							}
-							ElfLoadStream = Iso.Root.Locate("/PSP_GAME/SYSDIR/BOOT.BIN").Open();
+
+							var FilesToTry = new[] {
+								"/PSP_GAME/SYSDIR/BOOT.BIN",
+								"/PSP_GAME/SYSDIR/EBOOT.BIN",
+							};
+
+							foreach (var FileToTry in FilesToTry)
+							{
+								ElfLoadStream = Iso.Root.Locate(FileToTry).Open();
+								if (ElfLoadStream.Length != 0) break;
+							}
+
 							if (ElfLoadStream.Length == 0)
 							{
-								throw (new Exception("'disc0:/PSP_GAME/SYSDIR/BOOT.BIN' file is empty"));
+								throw (new Exception(String.Format("{0} files are empty", String.Join(", ", FilesToTry))));
 							}
 						}
 						break;

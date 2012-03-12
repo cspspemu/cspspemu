@@ -47,6 +47,14 @@ namespace CSPspEmu.Hle.Vfs.Iso
 
 		public unsafe int IoOpen(HleIoDrvFileArg HleIoDrvFileArg, string FileName, HleIoFlags Flags, SceMode Mode)
 		{
+			// Ignore the filename in "umd0:xxx".
+			// Using umd0: is always opening the whole UMD in sector block mode,
+			// ignoring the file name specified after the colon.
+			if (HleIoDrvFileArg.DriverName.ToLower().StartsWith("umd"))
+			{
+				FileName = "";
+			}
+
 			// disc0:/sce_lbn0x5fa0_size0x1428
 			//Console.WriteLine(":::::::::" + FileName);
 			if (FileName == "")

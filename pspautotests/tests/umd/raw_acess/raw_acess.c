@@ -7,10 +7,11 @@
 #include <pspumd.h>
 #include <pspiofilemgr.h>
 
-char data1[472];
-char data2[472];
+char data1[472] = {0};
+char data2[472] = {0};
+char data3[472] = {0};
 
-unsigned char data3[472] =
+unsigned char dataRef[472] =
 {
 	0x00, 0x50, 0x53, 0x46, 0x01, 0x01, 0x00, 0x00, 0xB4, 0x00, 0x00, 0x00,
 	0x20, 0x01, 0x00, 0x00, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04, 0x04,
@@ -56,6 +57,7 @@ unsigned char data3[472] =
 
 
 #define FILE_NAME "disc0:/PSP_GAME/PARAM.SFO"
+#define UMD0_FILE_NAME "umd0:/PSP_GAME/PARAM.SFO"
 
 int main(int argc, char **argv)
 {
@@ -66,20 +68,31 @@ int main(int argc, char **argv)
 	printf("sceIoGetstat: %d\n", sceIoGetstat(FILE_NAME, &sceIoStat));
 	printf("Size: %lld\n", sceIoStat.st_size);
 	printf("LBN: %d\n", sceIoStat.st_private[0]);
+	// TEST normal file access.
 	{
 		fileHandle = sceIoOpen(FILE_NAME, PSP_O_RDONLY, 0777);
 		printf("HandleNormal: %s\n", (fileHandle > 0) ? "Ok" : "Error");
-		sceIoRead(fileHandle, data2, sizeof(data2));
+		sceIoRead(fileHandle, data1, sizeof(data1));
 		sceIoClose(fileHandle);
-		printf("memcmp_Normal: %d\n", memcmp(data2, data3, sizeof(data3)));
+		printf("memcmp_Normal: %d\n", memcmp(data1, dataRef, sizeof(dataRef)));
 	}
+	// TEST sce_lbn access
 	{
 		sprintf(temp, "disc0:/sce_lbn0x%08X_size0x%08X", (int)sceIoStat.st_private[0], (int)sceIoStat.st_size);
 		fileHandle = sceIoOpen(temp, PSP_O_RDONLY, 0777);
 		printf("HandleRaw: %s\n", (fileHandle > 0) ? "Ok" : "Error");
-		sceIoRead(fileHandle, data1, sizeof(data1));
+		sceIoRead(fileHandle, data2, sizeof(data2));
 		sceIoClose(fileHandle);
-		printf("memcmp_Raw: %d\n", memcmp(data1, data3, sizeof(data3)));
+		printf("memcmp_Raw: %d\n", memcmp(data2, dataRef, sizeof(dataRef)));
+	}
+	// TEST umd0:/ access
+	{
+		fileHandle = sceIoOpen(UMD0_FILE_NAME, PSP_O_RDONLY, 0777);
+		printf("HandleUmd0: %s\n", (fileHandle > 0) ? "Ok" : "Error");
+		sceIoLseek(fileHandle, (long long int)sceIoStat.st_private[0] * 0x800, SEEK_SET);
+		sceIoRead(fileHandle, data3, sizeof(data3));
+		sceIoClose(fileHandle);
+		printf("memcmp_Umd0: %d\n", memcmp(data3, dataRef, sizeof(dataRef)));
 	}
 
 	return 0;
