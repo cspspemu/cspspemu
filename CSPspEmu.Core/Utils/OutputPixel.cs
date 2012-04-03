@@ -19,6 +19,16 @@ namespace CSPspEmu.Core.Utils
 			A = Color.A;
 		}
 
+		static public OutputPixel FromRGBA(byte R, byte G, byte B, byte A)
+		{
+			return new OutputPixel() { R = R, G = G, B = B, A = A };
+		}
+
+		public OutputPixel Transform(Func<byte, byte, byte, byte, OutputPixel> Action)
+		{
+			return Action(R, G, B, A);
+		}
+
 		public override string ToString()
 		{
 			return String.Format("RGBA({0},{1},{2},{3})", R, G, B, A);

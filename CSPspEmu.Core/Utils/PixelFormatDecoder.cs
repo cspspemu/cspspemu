@@ -172,8 +172,8 @@ namespace CSPspEmu.Core.Utils
 				for (int x = 0; x < Width; x += 4, ni++)
 				{
 					var Block = ((Dxt3Block*)InputByte)[ni];
-					Colors[0] = Decode_RGBA_5650_Pixel(Block.Color1);
-					Colors[1] = Decode_RGBA_5650_Pixel(Block.Color2);
+					Colors[0] = Decode_RGBA_5650_Pixel(Block.Color1).Transform((R, G, B, A) => OutputPixel.FromRGBA(B, G, R, A));
+					Colors[1] = Decode_RGBA_5650_Pixel(Block.Color2).Transform((R, G, B, A) => OutputPixel.FromRGBA(B, G, R, A));
 					Colors[2] = OutputPixel.OperationPerComponent(Colors[0], Colors[1], (a, b) => { return (byte)(((a * 2) / 3) + ((b * 1) / 3)); });
 					Colors[3] = OutputPixel.OperationPerComponent(Colors[0], Colors[1], (a, b) => { return (byte)(((a * 1) / 3) + ((b * 2) / 3)); });
 
