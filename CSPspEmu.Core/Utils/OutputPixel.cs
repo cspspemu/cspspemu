@@ -24,6 +24,17 @@ namespace CSPspEmu.Core.Utils
 			return String.Format("RGBA({0},{1},{2},{3})", R, G, B, A);
 		}
 
+		static public OutputPixel OperationPerComponent(OutputPixel c1, OutputPixel c2, Func<byte, byte, byte> func)
+		{
+			return new OutputPixel()
+			{
+				R = func(c1.R, c2.R),
+				G = func(c1.G, c2.G),
+				B = func(c1.B, c2.B),
+				A = func(c1.A, c2.A),
+			};
+		}
+
 		public static OutputPixel operator &(OutputPixel c1, OutputPixel c2)
 		{
 			return new OutputPixel()

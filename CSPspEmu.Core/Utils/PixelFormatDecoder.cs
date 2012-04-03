@@ -15,7 +15,13 @@ namespace CSPspEmu.Core.Utils
 		}
 
 		public struct Dxt1Block { }
-		public struct Dxt3Block { }
+		public struct Dxt3Block
+		{
+			public uint ColorLookup;
+			public ushort Color1;
+			public ushort Color2;
+			public ulong Alpha;
+		}
 		public struct Dxt5Block { }
 
 		static readonly double[] Sizes =
@@ -121,21 +127,8 @@ namespace CSPspEmu.Core.Utils
 			//DecoderCallbackTable[PixelFormatInt](Input, Output, PixelCount, Width, Palette, PaletteType, PaletteCount, PaletteStart, PaletteShift, PaletteMask);
 		}
 
-		private unsafe void Decode_COMPRESSED_DXT5()
+		private unsafe void _Decode_Unimplemented()
 		{
-			throw new NotImplementedException();
-		}
-
-		private unsafe void Decode_COMPRESSED_DXT3()
-		{
-			throw new NotImplementedException();
-		}
-
-		private unsafe void Decode_COMPRESSED_DXT1()
-		{
-			//throw new NotImplementedException();
-			Console.Error.WriteLine("Not Implemented: Decode_COMPRESSED_DXT1");
-
 			for (int y = 0, n = 0; y < Height; y++)
 			{
 				for (int x = 0; x < Width; x++, n++)
@@ -148,7 +141,66 @@ namespace CSPspEmu.Core.Utils
 					Output[n] = OutputPixel;
 				}
 			}
+		}
 
+		private unsafe void Decode_COMPRESSED_DXT5()
+		{
+			Console.Error.WriteLine("Not Implemented: Decode_COMPRESSED_DXT5");
+			//throw new NotImplementedException();
+
+			_Decode_Unimplemented();
+		}
+
+		/// <summary>
+		/// DXT2 and DXT3 (collectively also known as Block Compression 2 or BC2) converts 16 input pixels
+		/// (corresponding to a 4x4 pixel block) into 128 bits of output, consisting of 64 bits of alpha channel data
+		/// (4 bits for each pixel) followed by 64 bits of color data, encoded the same way as DXT1 (with the exception
+		/// that the 4 color version of the DXT1 algorithm is always used instead of deciding which version to use based
+		/// on the relative values of  and ). In DXT2, the color data is interpreted as being premultiplied by alpha, in
+		/// DXT3 it is interpreted as not having been premultiplied by alpha. Typically DXT2/3 are well suited to images
+		/// with sharp alpha transitions, between translucent and opaque areas.
+		/// </summary>
+		private unsafe void Decode_COMPRESSED_DXT3()
+		{
+			//throw new NotImplementedException();
+			//Console.Error.WriteLine("Not Implemented: Decode_COMPRESSED_DXT3");
+
+			var Colors = new OutputPixel[4];
+
+			for (int y = 0, ni = 0; y < Height; y += 4)
+			{
+				for (int x = 0; x < Width; x += 4, ni++)
+				{
+					var Block = ((Dxt3Block*)InputByte)[ni];
+					Colors[0] = Decode_RGBA_5650_Pixel(Block.Color1);
+					Colors[1] = Decode_RGBA_5650_Pixel(Block.Color2);
+					Colors[2] = OutputPixel.OperationPerComponent(Colors[0], Colors[1], (a, b) => { return (byte)(((a * 2) / 3) + ((b * 1) / 3)); });
+					Colors[3] = OutputPixel.OperationPerComponent(Colors[0], Colors[1], (a, b) => { return (byte)(((a * 1) / 3) + ((b * 2) / 3)); });
+
+					for (int y2 = 0, no = 0; y2 < 4; y2++)
+					{
+						for (int x2 = 0; x2 < 4; x2++, no++)
+						{
+							var Alpha = ((Block.Alpha >> (4 * no)) & 0xF);
+							var Color = ((Block.ColorLookup >> (2 * no)) & 0x3);
+
+							int rx = (x + x2);
+							int ry = (y + y2);
+							int n = ry * Width + rx;
+
+							Output[n] = Colors[Color];
+							Output[n].A = (byte)((Alpha * 0xFF) / 0xF);
+						}
+					}
+				}
+			}
+		}
+
+		private unsafe void Decode_COMPRESSED_DXT1()
+		{
+			//throw new NotImplementedException();
+			Console.Error.WriteLine("Not Implemented: Decode_COMPRESSED_DXT1");
+			_Decode_Unimplemented();
 		}
 
 		private unsafe void Decode_PALETTE_T32()
