@@ -45,7 +45,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			SafeILGenerator.Call((Action<CpuThreadState, uint>)CpuEmiter._cache_impl);
 			//throw(new NotImplementedException());
 		}
-		public void sync() { throw(new NotImplementedException()); }
+		public void sync() {
+			Console.WriteLine("Not implemented 'sync' instruction");
+		}
 
 		static public void _break_impl(CpuThreadState CpuThreadState)
 		{

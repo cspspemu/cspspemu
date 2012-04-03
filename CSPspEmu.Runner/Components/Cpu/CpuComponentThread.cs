@@ -199,7 +199,8 @@ namespace CSPspEmu.Runner.Components.Cpu
 			Stream LoadStream = File.OpenRead(FileName);
 			//using ()
 			{
-				Stream ElfLoadStream = null;
+				List<Stream> ElfLoadStreamTry = new List<Stream>();
+				//Stream ElfLoadStream = null;
 
 				var Format = new FormatDetector().Detect(LoadStream);
 				String Title = null;
@@ -208,7 +209,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 					case "Pbp":
 						{
 							var Pbp = new Pbp().Load(LoadStream);
-							ElfLoadStream = Pbp[Pbp.Types.PspData];
+							ElfLoadStreamTry.Add(Pbp[Pbp.Types.PspData]);
 							try
 							{
 								var ParamSfo = new Psf().Load(Pbp[Pbp.Types.ParamSfo]);
@@ -221,7 +222,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 						}
 						break;
 					case "Elf":
-						ElfLoadStream = LoadStream;
+						ElfLoadStreamTry.Add(LoadStream);
 						break;
 					case "Dax":
 					case "Cso":
@@ -245,27 +246,47 @@ namespace CSPspEmu.Runner.Components.Cpu
 
 							foreach (var FileToTry in FilesToTry)
 							{
-								ElfLoadStream = Iso.Root.Locate(FileToTry).Open();
-								if (ElfLoadStream.Length != 0) break;
+								ElfLoadStreamTry.Add(Iso.Root.Locate(FileToTry).Open());
+								//if (ElfLoadStream.Length != 0) break;
 							}
 
+							/*
 							if (ElfLoadStream.Length == 0)
 							{
 								throw (new Exception(String.Format("{0} files are empty", String.Join(", ", FilesToTry))));
 							}
+							*/
 						}
 						break;
 					default:
 						throw (new NotImplementedException("Can't load format '" + Format + "'"));
 				}
 
-				Loader.Load(
-					ElfLoadStream,
-					MemoryStream,
-					HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User),
-					HleState.ModuleManager,
-					Title
-				);
+				Exception LoadException = null;
+
+				foreach (var ElfLoadStream in ElfLoadStreamTry)
+				{
+					try
+					{
+						Loader.Load(
+							ElfLoadStream,
+							MemoryStream,
+							HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User),
+							HleState.ModuleManager,
+							Title
+						);
+
+						LoadException = null;
+
+						break;
+					}
+					catch (Exception Exception)
+					{
+						LoadException = Exception;
+					}
+				}
+
+				if (LoadException != null) throw (LoadException);
 
 				RegisterSyscalls();
 

@@ -234,7 +234,8 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		[HlePspNotImplemented]
 		public void sceKernelPrintf(CpuThreadState CpuThreadState)
 		{
-			throw(new NotImplementedException());
+			Console.WriteLine("Unimplemented sceKernelPrintf!");
+			//throw(new NotImplementedException());
 		}
 
 		/// <summary>

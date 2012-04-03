@@ -101,6 +101,7 @@ namespace CSPspEmu.Hle.Managers
 			if (!HleModuleTypes.ContainsKey(ModuleNameToFind))
 			{
 				throw (new KeyNotFoundException("Can't find module '" + ModuleNameToFind + "'"));
+				//return new HleModuleHost();
 			}
 			return GetModuleByType(HleModuleTypes[ModuleNameToFind]);
 		}

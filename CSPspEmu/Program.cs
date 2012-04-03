@@ -63,7 +63,6 @@ namespace CSPspEmu
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Jeanne d'Arc.iso", TraceSyscalls: true, EnableMpeg: true);
 			//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\TestInput\minifire.elf", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"C:\pspsdk\psp\sdk\samples\gu\text\gufont.elf");
-			//PspEmulator.StartAndLoad(@"E:\Isos\psp\DragonBall Z Shin Budokai.cso", TraceSyscalls: true);
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\homebrew\PSPTris\EBOOT.PBP");
 			//PspEmulator.StartAndLoad(@"C:\projects\csharp\cspspemu\games\TrigWars\EBOOT.PBP", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Valkyrie Profile.cso", EnableMpeg: false, TraceSyscalls: false);
@@ -83,7 +82,6 @@ namespace CSPspEmu
 
 			// Memory: Invalid Address
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Puyo.cso");
-			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Prince.cso");
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Downstream Panic.cso");
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Call of Duty - Roads of Victory.cso");
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\haruhi.iso", TraceSyscalls: false);
@@ -95,10 +93,7 @@ namespace CSPspEmu
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Outrun 2006.cso");
 
 			// Loader: Encrypted
-			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Armored Core - Silent Line Portable.iso");
-			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Brandish The Dark Revenant.cso", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Final Fantasy 20th Anniversary.cso");
-			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Valkya_Chronics_2_USA.iso");
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Tekken Dark Resurrection.cso");
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Ultimate_Ghosts_N_Goblins.cso");
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Sonic Rivals.cso");
@@ -107,10 +102,14 @@ namespace CSPspEmu
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Metal.cso");
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Daxter.cso");
 
+			// Loader: Modules
+			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Valkya_Chronics_2_USA.iso");
+
 			// Loader: External unencrypted modules
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Metal Gear Ac!d.cso");
 
 			// Loader: Relocation
+			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Brandish The Dark Revenant.cso", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Metal Gear Solid Portable Ops.iso", EnableMpeg: false);
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Every Extend Extra.cso", TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Luxor.cso");
@@ -119,6 +118,7 @@ namespace CSPspEmu
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Puzzler Collection.iso");
 
 			// Black. Loop
+			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Prince.cso");
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Ape Academy.cso", TraceSyscalls: true);
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Valkyrie Profile.cso", EnableMpeg: false, TraceSyscalls: false);
 			//PspEmulator.StartAndLoad(@"E:\Isos\psp\Need for Speed Most Wanted.cso", EnableMpeg: false);

@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 using System.Security.Cryptography;
 using System.Runtime.InteropServices;
+using System.IO;
 
 namespace CSPspEmu.Core.Crypto
 {
+	unsafe public delegate void PointerAction(byte* Address);
+
 	unsafe public partial class Kirk
 	{
 		//small struct for temporary keeping AES & CMAC key from CMD1 header
@@ -17,72 +21,70 @@ namespace CSPspEmu.Core.Crypto
 			public fixed byte CMAC[16];
 		}
 
-		byte[] _fuseID = new byte[16]; //Emulate FUSEID	
-		byte* fuseID { get { fixed (byte* fuseID = _fuseID) return fuseID; } }
+		byte[] fuseID = new byte[16]; // Emulate FUSEID	
 
 		Crypto.AES_ctx _aes_kirk1; //global
-		Crypto.AES_ctx* aes_kirk1_ptr
-		{
-			get
-			{
-				fixed (Crypto.AES_ctx* ret = &_aes_kirk1) return ret;
-			}
-		}
+
 		Random Random;
 
-		bool is_kirk_initialized; //"init" emulation
+		bool IsKirkInitialized; //"init" emulation
 
-		/* ------------------------- INTERNAL STUFF END ------------------------- */
-
-
-		/* ------------------------- IMPLEMENTATION ------------------------- */
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="outbuff"></param>
+		/// <param name="inbuff"></param>
+		/// <param name="size"></param>
+		/// <param name="generate_trash"></param>
+		/// <returns></returns>
 		public int kirk_CMD0(byte* outbuff, byte* inbuff, int size, bool generate_trash)
 		{
-			if(!is_kirk_initialized) return KIRK_NOT_INITIALIZED;
-	
-			AES128CMACHeader* header = (AES128CMACHeader*)outbuff;
-	
-			Crypto.memcpy(outbuff, inbuff, size);
-	
-			if(header->Mode != KIRK_MODE_CMD1) return KIRK_INVALID_MODE;
-	
-			header_keys *keys = (header_keys *)outbuff; //0-15 AES key, 16-31 CMAC key
-	
-			//FILL PREDATA WITH RANDOM DATA
-			if(generate_trash) kirk_CMD14(outbuff+sizeof(AES128CMACHeader), header->DataOffset);
-	
-			//Make sure data is 16 aligned
-			int chk_size = header->DataSize;
-			if((chk_size % 16) != 0) chk_size += 16 - (chk_size % 16);
-	
-			//ENCRYPT DATA
-			Crypto.AES_ctx k1;
-			Crypto.AES_set_key(&k1, keys->AES, 128);
-	
-			Crypto.AES_cbc_encrypt(&k1, inbuff+sizeof(AES128CMACHeader)+header->DataOffset, outbuff+sizeof(AES128CMACHeader)+header->DataOffset, chk_size);
-	
-			//CMAC HASHES
-			Crypto.AES_ctx cmac_key;
-			Crypto.AES_set_key(&cmac_key, keys->CMAC, 128);
-		
 			var _cmac_header_hash = new byte[16];
 			var _cmac_data_hash = new byte[16];
+
 			fixed (byte* cmac_header_hash = _cmac_header_hash)
 			fixed (byte* cmac_data_hash = _cmac_data_hash)
+			fixed (Crypto.AES_ctx* aes_kirk1_ptr = &_aes_kirk1)
 			{
 
+				if (!IsKirkInitialized) return KIRK_NOT_INITIALIZED;
+	
+				AES128CMACHeader* header = (AES128CMACHeader*)outbuff;
+	
+				Crypto.memcpy(outbuff, inbuff, size);
+	
+				if(header->Mode != KIRK_MODE_CMD1) return KIRK_INVALID_MODE;
+	
+				header_keys *keys = (header_keys *)outbuff; //0-15 AES key, 16-31 CMAC key
+	
+				//FILL PREDATA WITH RANDOM DATA
+				if(generate_trash) kirk_CMD14(outbuff+sizeof(AES128CMACHeader), header->DataOffset);
+	
+				//Make sure data is 16 aligned
+				int chk_size = header->DataSize;
+				if((chk_size % 16) != 0) chk_size += 16 - (chk_size % 16);
+	
+				//ENCRYPT DATA
+				Crypto.AES_ctx k1;
+				Crypto.AES_set_key(&k1, keys->AES, 128);
+	
+				Crypto.AES_cbc_encrypt(&k1, inbuff+sizeof(AES128CMACHeader)+header->DataOffset, outbuff+sizeof(AES128CMACHeader)+header->DataOffset, chk_size);
+	
+				//CMAC HASHES
+				Crypto.AES_ctx cmac_key;
+				Crypto.AES_set_key(&cmac_key, keys->CMAC, 128);
+		
 				Crypto.AES_CMAC(&cmac_key, outbuff + 0x60, 0x30, cmac_header_hash);
 
 				Crypto.AES_CMAC(&cmac_key, outbuff + 0x60, 0x30 + chk_size + header->DataOffset, cmac_data_hash);
 
 				Crypto.memcpy(header->CMAC_header_hash, cmac_header_hash, 16);
 				Crypto.memcpy(header->CMAC_data_hash, cmac_data_hash, 16);
+
+				//ENCRYPT KEYS
+				Crypto.AES_cbc_encrypt(aes_kirk1_ptr, inbuff, outbuff, 16 * 2);
 			}
 
-			//ENCRYPT KEYS
-
-			Crypto.AES_cbc_encrypt(aes_kirk1_ptr, inbuff, outbuff, 16 * 2);
 			return KIRK_OPERATION_SUCCESS;
 		}
 
@@ -97,81 +99,128 @@ namespace CSPspEmu.Core.Crypto
 		/// <returns></returns>
 		public int kirk_CMD1(byte* outbuff, byte* inbuff, int size, bool do_check = true)
 		{
-			if(!is_kirk_initialized) return KIRK_NOT_INITIALIZED;
-	
-			AES128CMACHeader* header = (AES128CMACHeader*)inbuff;
-			//Console.WriteLine(MathUtils.ByteSwap(header->Mode));
-			if (header->Mode != KIRK_MODE_CMD1) return KIRK_INVALID_MODE;
-	
-			header_keys keys; //0-15 AES key, 16-31 CMAC key
-
-			Crypto.AES_cbc_decrypt(aes_kirk1_ptr, inbuff, (byte*)&keys, 16 * 2); //decrypt AES & CMAC key to temp buffer
-	
-			// HOAX WARRING! I have no idea why the hash check on last IPL block fails, so there is an option to disable checking
-			if (do_check)
+			fixed (Crypto.AES_ctx* aes_kirk1_ptr = &_aes_kirk1)
 			{
-			   int ret = kirk_CMD10(inbuff, size);
-			   if (ret != KIRK_OPERATION_SUCCESS) return ret;
+				if (!IsKirkInitialized) return KIRK_NOT_INITIALIZED;
+
+				var header = (AES128CMACHeader*)inbuff;
+				//Console.WriteLine(MathUtils.ByteSwap(header->Mode));
+				if (header->Mode != KIRK_MODE_CMD1) return KIRK_INVALID_MODE;
+
+				header_keys keys; //0-15 AES key, 16-31 CMAC key
+
+				Crypto.AES_cbc_decrypt(aes_kirk1_ptr, inbuff, (byte*)&keys, 16 * 2); //decrypt AES & CMAC key to temp buffer
+
+				//AES.CreateDecryptor(
+
+				// HOAX WARRING! I have no idea why the hash check on last IPL block fails, so there is an option to disable checking
+				if (do_check)
+				{
+					int ret = kirk_CMD10(inbuff, size);
+					if (ret != KIRK_OPERATION_SUCCESS) return ret;
+				}
+
+				//var AES = new RijndaelManaged();
+
+				Crypto.AES_ctx k1;
+				Crypto.AES_set_key(&k1, keys.AES, 128);
+
+				Crypto.AES_cbc_decrypt(&k1, inbuff + sizeof(AES128CMACHeader) + header->DataOffset, outbuff, header->DataSize);
+
+				return KIRK_OPERATION_SUCCESS;
 			}
-
-			Crypto.AES_ctx k1;
-			Crypto.AES_set_key(&k1, keys.AES, 128);
-
-			Crypto.AES_cbc_decrypt(&k1, inbuff + sizeof(AES128CMACHeader) + header->DataOffset, outbuff, header->DataSize);	
-	
-			return KIRK_OPERATION_SUCCESS;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="outbuff"></param>
+		/// <param name="inbuff"></param>
+		/// <param name="size"></param>
+		/// <returns></returns>
 		public int kirk_CMD4(byte* outbuff, byte* inbuff, int size)
 		{
-			if(!is_kirk_initialized) return KIRK_NOT_INITIALIZED;
+			if(!IsKirkInitialized) return KIRK_NOT_INITIALIZED;
 	
 			KIRK_AES128CBC_HEADER *header = (KIRK_AES128CBC_HEADER*)inbuff;
 			if(header->Mode != KIRK_MODE_ENCRYPT_CBC) return KIRK_INVALID_MODE;
 			if(header->Datasize == 0) return KIRK_DATA_SIZE_ZERO;
-	
-			byte* key = kirk_4_7_get_key(header->KeySeed);
-			if(key == (byte*)KIRK_INVALID_SIZE) return KIRK_INVALID_SIZE;
-	
-			//Set the key
-			Crypto.AES_ctx aesKey;
-			Crypto.AES_set_key(&aesKey, key, 128);
-			Crypto.AES_cbc_encrypt(&aesKey, inbuff+sizeof(KIRK_AES128CBC_HEADER), outbuff, size);
-	
+
+			kirk_4_7_get_key(header->KeySeed, (key) =>
+			{
+				if (key == (byte*)KIRK_INVALID_SIZE) throw(new KirkException(KIRK_INVALID_SIZE));
+
+				// Set the key
+				Crypto.AES_ctx aesKey;
+				Crypto.AES_set_key(&aesKey, key, 128);
+				Crypto.AES_cbc_encrypt(&aesKey, inbuff + sizeof(KIRK_AES128CBC_HEADER), outbuff, size);
+			});
+
 			return KIRK_OPERATION_SUCCESS;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="outbuff"></param>
+		/// <param name="inbuff"></param>
+		/// <param name="size"></param>
+		/// <returns></returns>
 		public int kirk_CMD7(byte* outbuff, byte* inbuff, int size)
 		{
-			if (!is_kirk_initialized) return KIRK_NOT_INITIALIZED;
+			if (!IsKirkInitialized) return KIRK_NOT_INITIALIZED;
 	
-			KIRK_AES128CBC_HEADER *header = (KIRK_AES128CBC_HEADER*)inbuff;
-			if(header->Mode != KIRK_MODE_DECRYPT_CBC) return KIRK_INVALID_MODE;
-			if(header->Datasize == 0) return KIRK_DATA_SIZE_ZERO;
-	
-			byte* key = kirk_4_7_get_key(header->KeySeed);
-			if(key == (byte*)KIRK_INVALID_SIZE) return KIRK_INVALID_SIZE;
-	
-			//Set the key
-			Crypto.AES_ctx aesKey;
-			Crypto.AES_set_key(&aesKey, key, 128);
+			var Header = (KIRK_AES128CBC_HEADER*)inbuff;
+			if (Header->Mode != KIRK_MODE_DECRYPT_CBC) return KIRK_INVALID_MODE;
+			if (Header->Datasize == 0) return KIRK_DATA_SIZE_ZERO;
 
-			Crypto.AES_cbc_decrypt(&aesKey, inbuff + sizeof(KIRK_AES128CBC_HEADER), outbuff, size);
-	
+#if true
+			var Output = DecryptAes(
+				PointerUtils.PointerToByteArray(inbuff + sizeof(KIRK_AES128CBC_HEADER), size),
+				_kirk_4_7_get_key(Header->KeySeed)
+			);
+
+			PointerUtils.ByteArrayToPointer(Output, outbuff);
+#else
+			kirk_4_7_get_key(header->KeySeed, (key) =>
+			{
+				//Set the key
+				Crypto.AES_ctx aesKey;
+				Crypto.AES_set_key(&aesKey, key, 128);
+
+				Crypto.AES_cbc_decrypt(&aesKey, inbuff + sizeof(KIRK_AES128CBC_HEADER), outbuff, size);
+			});
+#endif
+
 			return KIRK_OPERATION_SUCCESS;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="inbuff"></param>
+		/// <param name="insize"></param>
+		/// <returns></returns>
 		public int kirk_CMD10(byte* inbuff, int insize)
 		{
-			if (!is_kirk_initialized) return KIRK_NOT_INITIALIZED;
-	
-			AES128CMACHeader* header = (AES128CMACHeader*)inbuff;
-	
-			if(!(header->Mode == KIRK_MODE_CMD1 || header->Mode == KIRK_MODE_CMD2 || header->Mode == KIRK_MODE_CMD3)) return KIRK_INVALID_MODE;
-			if(header->DataSize == 0) return KIRK_DATA_SIZE_ZERO;
-	
-			if(header->Mode == KIRK_MODE_CMD1)
+			var _cmac_header_hash = new byte[16];
+			var _cmac_data_hash = new byte[16];
+			fixed (byte* cmac_header_hash = _cmac_header_hash)
+			fixed (byte* cmac_data_hash = _cmac_data_hash)
+			fixed (Crypto.AES_ctx* aes_kirk1_ptr = &_aes_kirk1)
 			{
+				if (!IsKirkInitialized) return KIRK_NOT_INITIALIZED;
+
+				AES128CMACHeader* header = (AES128CMACHeader*)inbuff;
+
+				if (!(header->Mode == KIRK_MODE_CMD1 || header->Mode == KIRK_MODE_CMD2 || header->Mode == KIRK_MODE_CMD3)) return KIRK_INVALID_MODE;
+				if (header->DataSize == 0) return KIRK_DATA_SIZE_ZERO;
+
+				if (header->Mode != KIRK_MODE_CMD1)
+				{
+					return KIRK_SIG_CHECK_INVALID; //Checks for cmd 2 & 3 not included right now
+				}
+
 				header_keys keys; //0-15 AES key, 16-31 CMAC key
 
 				Crypto.AES_cbc_decrypt(aes_kirk1_ptr, inbuff, (byte*)&keys, 32); //decrypt AES & CMAC key to temp buffer
@@ -179,86 +228,62 @@ namespace CSPspEmu.Core.Crypto
 				Crypto.AES_ctx cmac_key;
 				Crypto.AES_set_key(&cmac_key, keys.CMAC, 128);
 
-				var _cmac_header_hash = new byte[16];
-				var _cmac_data_hash = new byte[16];
-				fixed (byte* cmac_header_hash = _cmac_header_hash)
-				fixed (byte* cmac_data_hash = _cmac_data_hash)
+				Crypto.AES_CMAC(&cmac_key, inbuff + 0x60, 0x30, cmac_header_hash);
+
+				//Make sure data is 16 aligned
+				int chk_size = header->DataSize;
+				if ((chk_size % 16) != 0) chk_size += 16 - (chk_size % 16);
+				Crypto.AES_CMAC(&cmac_key, inbuff + 0x60, 0x30 + chk_size + header->DataOffset, cmac_data_hash);
+
+				if (Crypto.memcmp(cmac_header_hash, header->CMAC_header_hash, 16) != 0)
 				{
-					Crypto.AES_CMAC(&cmac_key, inbuff + 0x60, 0x30, cmac_header_hash);
-
-					//Make sure data is 16 aligned
-					int chk_size = header->DataSize;
-					if ((chk_size % 16) != 0) chk_size += 16 - (chk_size % 16);
-					Crypto.AES_CMAC(&cmac_key, inbuff + 0x60, 0x30 + chk_size + header->DataOffset, cmac_data_hash);
-
-					if (Crypto.memcmp(cmac_header_hash, header->CMAC_header_hash, 16) != 0)
-					{
-						Console.WriteLine("header hash invalid");
-						return KIRK_HEADER_HASH_INVALID;
-					}
-					if (Crypto.memcmp(cmac_data_hash, header->CMAC_data_hash, 16) != 0)
-					{
-						Console.WriteLine("data hash invalid");
-						return KIRK_DATA_HASH_INVALID;
-					}
-
-					return KIRK_OPERATION_SUCCESS;
+					Console.WriteLine("header hash invalid");
+					return KIRK_HEADER_HASH_INVALID;
 				}
+				if (Crypto.memcmp(cmac_data_hash, header->CMAC_data_hash, 16) != 0)
+				{
+					Console.WriteLine("data hash invalid");
+					return KIRK_DATA_HASH_INVALID;
+				}
+
+				return KIRK_OPERATION_SUCCESS;
 			}
-			return KIRK_SIG_CHECK_INVALID; //Checks for cmd 2 & 3 not included right now
+		}
+
+		/// <summary>
+		/// Generate Random Data
+		/// </summary>
+		/// <param name="outbuff"></param>
+		/// <param name="OutputSize"></param>
+		/// <returns></returns>
+		public int kirk_CMD14(byte* Output, int OutputSize)
+		{
+			if (!IsKirkInitialized) return KIRK_NOT_INITIALIZED;
+			for (int i = 0; i < OutputSize; i++) Output[i] = (byte)(Random.Next() & 0xFF);
+			return KIRK_OPERATION_SUCCESS;
+		}
+
+		/// <summary>
+		/// Initializes kirk
+		/// </summary>
+		/// <returns></returns>
+		public int kirk_init()
+		{
+			fixed (byte* kirk1_key_ptr = kirk1_key)
+			fixed (Crypto.AES_ctx* aes_kirk1_ptr = &_aes_kirk1)
+			{
+				Crypto.AES_set_key(aes_kirk1_ptr, kirk1_key_ptr, 128);
+			}
+			IsKirkInitialized = true;
+			Random = new Random();
+			return KIRK_OPERATION_SUCCESS;
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="OutputBuffer"></param>
-		/// <param name="InputBuffer"></param>
-		/// <param name="Size"></param>
+		/// <param name="key_type"></param>
 		/// <returns></returns>
-		public int kirk_CMD11(byte* OutputBuffer, byte* InputBuffer, int Size)
-		{
-			if (!is_kirk_initialized) return KIRK_NOT_INITIALIZED;
-
-			var Header = (KIRK_SHA1_HEADER *)InputBuffer;
-			if (Size == 0 || Header->DataSize == 0) return KIRK_DATA_SIZE_ZERO;
-	
-			//Size <<= 4;
-			//Size >>= 4;
-			Size &= 0x0FFFFFFF;
-			Size = (Size < Header->DataSize) ? Size : Header->DataSize;
-
-			var Sha1Hash = (new SHA1CryptoServiceProvider()).ComputeHash(
-				PointerUtils.PointerToByteArray(InputBuffer + 4, Size)
-			);
-
-			Marshal.Copy(Sha1Hash, 0, new IntPtr(OutputBuffer), Sha1Hash.Length);
-
-			return KIRK_OPERATION_SUCCESS;
-		}
-
-		public int kirk_CMD14(byte* outbuff, int size)
-		{
-			if (!is_kirk_initialized) return KIRK_NOT_INITIALIZED;
-			int i;
-			byte* buf = (byte*)outbuff;
-			for(i = 0; i < size; i++)
-			{
-				buf[i] = (byte)(Random.Next() & 0xFF);
-			}
-			return KIRK_OPERATION_SUCCESS;
-		}
-
-		public int kirk_init()
-		{
-			fixed (byte* kirk1_key_ptr = kirk1_key)
-			{
-				Crypto.AES_set_key(aes_kirk1_ptr, kirk1_key_ptr, 128);
-			}
-			is_kirk_initialized = true;
-			Random = new Random();
-			return KIRK_OPERATION_SUCCESS;
-		}
-
 		public byte[] _kirk_4_7_get_key(int key_type)
 		{
 			switch (key_type)
@@ -283,15 +308,32 @@ namespace CSPspEmu.Core.Crypto
 				case (0x63): return kirk7_key63;
 				case (0x64): return kirk7_key64;
 				default: throw(new NotImplementedException(String.Format("Invalid Key Type: 0x{0:X}", key_type)));
+					//throw (new KirkException(KIRK_INVALID_SIZE));
 				//default: return (byte*)KIRK_INVALID_SIZE; break; //need to get the real error code for that, placeholder now :)
 			}
 		}
 
-		public byte* kirk_4_7_get_key(int key_type)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="key_type"></param>
+		/// <returns></returns>
+		public void kirk_4_7_get_key(int key_type, PointerAction PointerAction)
 		{
-			fixed (byte* key = _kirk_4_7_get_key(key_type)) return key;
+			fixed (byte* key = _kirk_4_7_get_key(key_type))
+			{
+				PointerAction(key);
+			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="outbuff"></param>
+		/// <param name="inbuff"></param>
+		/// <param name="size"></param>
+		/// <param name="header"></param>
+		/// <returns></returns>
 		public int kirk_CMD1_ex(byte* outbuff, byte* inbuff, int size, AES128CMACHeader* header)
 		{
 			var _buffer = new byte[size];
@@ -303,35 +345,38 @@ namespace CSPspEmu.Core.Crypto
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="fuse"></param>
+		/// <returns></returns>
 		public int sceUtilsSetFuseID(void* fuse)
 		{
-			Crypto.memcpy(fuseID, fuse, 16);
+			Marshal.Copy(new IntPtr(fuse), fuseID, 0, 16);
 			return 0;
 		}
 
-		public int sceUtilsBufferCopyWithRange(byte* outbuff, int outsize, byte* inbuff, int insize, int cmd)
-		{
-			switch(cmd)
-			{
-				case KIRK_CMD_DECRYPT_PRIVATE: 
-					 if ((insize % 16) != 0) return SUBCWR_NOT_16_ALGINED;
-					 int ret = kirk_CMD1(outbuff, inbuff, insize, true); 
-					 if (ret == KIRK_HEADER_HASH_INVALID) return SUBCWR_HEADER_HASH_INVALID;
-					 return ret;
-				case KIRK_CMD_ENCRYPT_IV_0: return kirk_CMD4(outbuff, inbuff, insize);
-				case KIRK_CMD_DECRYPT_IV_0: return kirk_CMD7(outbuff, inbuff, insize);
-				case KIRK_CMD_PRIV_SIG_CHECK: return kirk_CMD10(inbuff, insize);
-				case KIRK_CMD_SHA1_HASH: return kirk_CMD11(outbuff, inbuff, insize);
-			}
-			return -1;
-		}
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="keys"></param>
+		/// <param name="inbuff"></param>
+		/// <returns></returns>
 		public int kirk_decrypt_keys(byte* keys, byte* inbuff)
 		{
-			Crypto.AES_cbc_decrypt(aes_kirk1_ptr, inbuff, (byte*)keys, 16 * 2); //decrypt AES & CMAC key to temp buffer
-			return 0;
+			fixed (Crypto.AES_ctx* aes_kirk1_ptr = &_aes_kirk1)
+			{
+				Crypto.AES_cbc_decrypt(aes_kirk1_ptr, inbuff, (byte*)keys, 16 * 2); //decrypt AES & CMAC key to temp buffer
+				return 0;
+			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="inbuff"></param>
+		/// <param name="insize"></param>
+		/// <returns></returns>
 		public int kirk_forge(byte* inbuff, int insize)
 		{
 		   AES128CMACHeader* header = (AES128CMACHeader*)inbuff;
@@ -342,8 +387,9 @@ namespace CSPspEmu.Core.Crypto
 
 		   fixed (byte* cmac_header_hash = _cmac_header_hash)
 		   fixed (byte* cmac_data_hash = _cmac_data_hash)
+		   fixed (Crypto.AES_ctx* aes_kirk1_ptr = &_aes_kirk1)
 		   {
-			   if (!is_kirk_initialized) return KIRK_NOT_INITIALIZED;
+			   if (!IsKirkInitialized) return KIRK_NOT_INITIALIZED;
 			   if (!(header->Mode == KIRK_MODE_CMD1 || header->Mode == KIRK_MODE_CMD2 || header->Mode == KIRK_MODE_CMD3)) return KIRK_INVALID_MODE;
 			   if (header->DataSize == 0) return KIRK_DATA_SIZE_ZERO;
 
@@ -382,36 +428,71 @@ namespace CSPspEmu.Core.Crypto
 		   }
 		}
 
-		public ResultEnum hleUtilsBufferCopyWithRange(byte* Out, int outsize, byte* In, int insize, CommandEnum Command, bool do_check = true)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Out"></param>
+		/// <param name="In"></param>
+		/// <param name="insize"></param>
+		/// <returns></returns>
+		public ResultEnum kirk_CMD5(byte* Out, byte* In, int insize)
+		{
+			throw (new NotImplementedException());
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Out"></param>
+		/// <param name="In"></param>
+		/// <param name="insize"></param>
+		/// <returns></returns>
+		public ResultEnum executeKIRKCmd8(byte* Out, byte* In, int insize)
+		{
+			throw (new NotImplementedException());
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Out"></param>
+		/// <param name="OutSize"></param>
+		/// <param name="In"></param>
+		/// <param name="InSize"></param>
+		/// <param name="Command"></param>
+		/// <returns></returns>
+		public int sceUtilsBufferCopyWithRange(byte* Out, int OutSize, byte* In, int InSize, int Command)
+		{
+			return (int)hleUtilsBufferCopyWithRange(Out, OutSize, In, InSize, (CommandEnum)Command);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Out"></param>
+		/// <param name="OutSize"></param>
+		/// <param name="In"></param>
+		/// <param name="InSize"></param>
+		/// <param name="Command"></param>
+		/// <param name="DoChecks"></param>
+		/// <returns></returns>
+		public ResultEnum hleUtilsBufferCopyWithRange(byte* Out, int OutSize, byte* In, int InSize, CommandEnum Command, bool DoChecks = true)
 		{
 			switch (Command)
 			{
-				case CommandEnum.PSP_KIRK_CMD_DECRYPT_PRIVATE: return (ResultEnum)kirk_CMD1(Out, In, insize, do_check);
-				case CommandEnum.PSP_KIRK_CMD_ENCRYPT: return (ResultEnum)kirk_CMD4(Out, In, insize);
-				case CommandEnum.PSP_KIRK_CMD_ENCRYPT_FUSE:
-					throw(new NotImplementedException());
-					//return kirk_CMD5(Out, In, insize);
-				case CommandEnum.PSP_KIRK_CMD_DECRYPT: return (ResultEnum)kirk_CMD7(Out, In, insize);
-				case CommandEnum.PSP_KIRK_CMD_DECRYPT_FUSE:
-					throw(new NotImplementedException());
-					//return executeKIRKCmd8(Out, In, insize);
-				case CommandEnum.PSP_KIRK_CMD_PRIV_SIG_CHECK: return (ResultEnum)kirk_CMD10(In, insize);
-				case CommandEnum.PSP_KIRK_CMD_SHA1_HASH: return (ResultEnum)kirk_CMD11(Out, In, insize);
-				case CommandEnum.PSP_KIRK_CMD_ECDSA_GEN_KEYS:
-					throw(new NotImplementedException());
-					//return executeKIRKCmd12(Out, outsize);
-				case CommandEnum.PSP_KIRK_CMD_ECDSA_MULTIPLY_POINT:
-					throw (new NotImplementedException());
-					//return executeKIRKCmd13(Out, outsize, In, insize);
-				case CommandEnum.PSP_KIRK_CMD_PRNG: return (ResultEnum)kirk_CMD14(Out, insize);
-				case CommandEnum.PSP_KIRK_CMD_ECDSA_SIGN:
-					throw(new NotImplementedException());
-					//return executeKIRKCmd16(Out, outsize, In, insize);
-				case CommandEnum.PSP_KIRK_CMD_ECDSA_VERIFY:
-					throw(new NotImplementedException());
-					//return executeKIRKCmd17(In, insize);
-				default:
-					return ResultEnum.PSP_KIRK_INVALID_OPERATION; // Dummy.
+				case CommandEnum.PSP_KIRK_CMD_DECRYPT_PRIVATE: return (ResultEnum)kirk_CMD1(Out, In, InSize, DoChecks);
+				case CommandEnum.PSP_KIRK_CMD_ENCRYPT: return (ResultEnum)kirk_CMD4(Out, In, InSize);
+				case CommandEnum.PSP_KIRK_CMD_ENCRYPT_FUSE: return kirk_CMD5(Out, In, InSize);
+				case CommandEnum.PSP_KIRK_CMD_DECRYPT: return (ResultEnum)kirk_CMD7(Out, In, InSize);
+				case CommandEnum.PSP_KIRK_CMD_DECRYPT_FUSE: return executeKIRKCmd8(Out, In, InSize);
+				case CommandEnum.PSP_KIRK_CMD_PRIV_SIG_CHECK: return (ResultEnum)kirk_CMD10(In, InSize);
+				case CommandEnum.PSP_KIRK_CMD_SHA1_HASH: return (ResultEnum)KirkSha1(Out, In, InSize);
+				case CommandEnum.PSP_KIRK_CMD_ECDSA_GEN_KEYS: return executeKIRKCmd12(Out, OutSize);
+				case CommandEnum.PSP_KIRK_CMD_ECDSA_MULTIPLY_POINT: return executeKIRKCmd13(Out, OutSize, In, InSize);
+				case CommandEnum.PSP_KIRK_CMD_PRNG: return (ResultEnum)kirk_CMD14(Out, InSize);
+				case CommandEnum.PSP_KIRK_CMD_ECDSA_SIGN: return executeKIRKCmd16(Out, OutSize, In, InSize);
+				case CommandEnum.PSP_KIRK_CMD_ECDSA_VERIFY: return executeKIRKCmd17(In, InSize);
+				default: return ResultEnum.PSP_KIRK_INVALID_OPERATION; // Dummy.
 			}
 		}
 	}

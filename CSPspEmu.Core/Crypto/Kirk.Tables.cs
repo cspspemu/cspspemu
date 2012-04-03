@@ -8,24 +8,34 @@ namespace CSPspEmu.Core.Crypto
 {
 	unsafe public partial class Kirk
 	{
-		//Kirk return values
-		const int KIRK_OPERATION_SUCCESS = 0;
-		const int KIRK_NOT_ENABLED = 1;
-		const int KIRK_INVALID_MODE = 2;
-		const int KIRK_HEADER_HASH_INVALID = 3;
-		const int KIRK_DATA_HASH_INVALID = 4;
-		const int KIRK_SIG_CHECK_INVALID = 5;
-		const int KIRK_UNK_1 = 6;
-		const int KIRK_UNK_2 = 7;
-		const int KIRK_UNK_3 = 8;
-		const int KIRK_UNK_4 = 9;
-		const int KIRK_UNK_5 = 0xA;
-		const int KIRK_UNK_6 = 0xB;
-		const int KIRK_NOT_INITIALIZED = 0xC;
-		const int KIRK_INVALID_OPERATION = 0xD;
-		const int KIRK_INVALID_SEED_CODE = 0xE;
-		const int KIRK_INVALID_SIZE = 0xF;
-		const int KIRK_DATA_SIZE_ZERO = 0x10;
+		// Kirk return values
+		public const int KIRK_OPERATION_SUCCESS = 0;
+		public const int KIRK_NOT_ENABLED = 1;
+		public const int KIRK_INVALID_MODE = 2;
+		public const int KIRK_HEADER_HASH_INVALID = 3;
+		public const int KIRK_DATA_HASH_INVALID = 4;
+		public const int KIRK_SIG_CHECK_INVALID = 5;
+		public const int KIRK_UNK_1 = 6;
+		public const int KIRK_UNK_2 = 7;
+		public const int KIRK_UNK_3 = 8;
+		public const int KIRK_UNK_4 = 9;
+		public const int KIRK_UNK_5 = 0xA; // 10
+		public const int KIRK_UNK_6 = 0xB; // 11
+		public const int KIRK_NOT_INITIALIZED = 0xC; // 12
+		public const int KIRK_INVALID_OPERATION = 0xD; // 13
+		public const int KIRK_INVALID_SEED_CODE = 0xE; // 14
+		public const int KIRK_INVALID_SIZE = 0xF; // 15
+		public const int KIRK_DATA_SIZE_ZERO = 0x10; // 16
+
+		public class KirkException : Exception
+		{
+			int Result;
+
+			public KirkException(int Result)
+			{
+				this.Result = Result;
+			}
+		}
 
 		/// <summary>
 		/// SIZE: 0014
@@ -124,28 +134,6 @@ namespace CSPspEmu.Core.Crypto
 			public fixed byte Unknown4[16];
 		}
 
-		/// <summary>
-		/// SIZE: 0004
-		/// </summary>
-		public struct KIRK_SHA1_HEADER
-		{
-			/// <summary>
-			/// 0000 - Size of the input data source where will be generated the hash from.
-			/// </summary>
-			public int DataSize;
-		}
-
-		//mode passed to sceUtilsBufferCopyWithRange
-		public const int KIRK_CMD_DECRYPT_PRIVATE = 1;
-		public const int KIRK_CMD_ENCRYPT_IV_0 = 4;
-		public const int KIRK_CMD_ENCRYPT_IV_FUSE = 5;
-		public const int KIRK_CMD_ENCRYPT_IV_USER = 6;
-		public const int KIRK_CMD_DECRYPT_IV_0 = 7;
-		public const int KIRK_CMD_DECRYPT_IV_FUSE = 8;
-		public const int KIRK_CMD_DECRYPT_IV_USER = 9;
-		public const int KIRK_CMD_PRIV_SIG_CHECK = 10;
-		public const int KIRK_CMD_SHA1_HASH = 11;
-
 		//"mode" in header
 		public const int KIRK_MODE_CMD1 = 1;
 		public const int KIRK_MODE_CMD2 = 2;
@@ -167,6 +155,10 @@ namespace CSPspEmu.Core.Crypto
 			/// Master decryption command, used by firmware modules. Applies CMAC checking.
 			/// Super-Duper decryption (no inverse)
 			/// Private Sig + Cipher
+			/// 
+			/// KIRK_CMD_DECRYPT_PRIVATE
+			/// 
+			/// Code: 1, 0x01
 			/// </summary>
 			PSP_KIRK_CMD_DECRYPT_PRIVATE = 0x1,
 
@@ -174,6 +166,8 @@ namespace CSPspEmu.Core.Crypto
 			/// Used for key type 3 (blacklisting), encrypts and signs data with a ECDSA signature.
 			/// Encrypt Operation (inverse of 0x03)
 			/// Private Sig + Cipher
+			/// 
+			/// Code: 2, 0x02
 			/// </summary>
 			PSP_KIRK_CMD_ENCRYPT_SIGN = 0x2,
 
@@ -181,6 +175,8 @@ namespace CSPspEmu.Core.Crypto
 			/// Used for key type 3 (blacklisting), decrypts and signs data with a ECDSA signature.
 			/// Decrypt Operation (inverse of 0x02)
 			/// Private Sig + Cipher
+			/// 
+			/// Code: 3, 0x03
 			/// </summary>
 			PSP_KIRK_CMD_DECRYPT_SIGN = 0x3,
 
@@ -188,6 +184,10 @@ namespace CSPspEmu.Core.Crypto
 			/// Key table based encryption used for general purposes by several modules.
 			/// Encrypt Operation (inverse of 0x07) (IV=0)
 			/// Cipher
+			/// 
+			/// KIRK_CMD_ENCRYPT_IV_0
+			/// 
+			/// Code: 4, 0x04
 			/// </summary>
 			PSP_KIRK_CMD_ENCRYPT = 0x4,
 
@@ -195,6 +195,10 @@ namespace CSPspEmu.Core.Crypto
 			/// Fuse ID based encryption used for general purposes by several modules.
 			/// Encrypt Operation (inverse of 0x08) (IV=FuseID)
 			/// Cipher
+			/// 
+			/// KIRK_CMD_ENCRYPT_IV_FUSE
+			/// 
+			/// Code: 5, 0x05
 			/// </summary>
 			PSP_KIRK_CMD_ENCRYPT_FUSE = 0x5,
 
@@ -202,6 +206,10 @@ namespace CSPspEmu.Core.Crypto
 			/// User specified ID based encryption used for general purposes by several modules.
 			/// Encrypt Operation (inverse of 0x09) (IV=UserDefined)
 			/// Cipher
+			/// 
+			/// KIRK_CMD_ENCRYPT_IV_USER
+			/// 
+			/// Code: 6, 0x06
 			/// </summary>
 			PSP_KIRK_CMD_ENCRYPT_USER = 0x6,
 
@@ -209,6 +217,10 @@ namespace CSPspEmu.Core.Crypto
 			/// Key table based decryption used for general purposes by several modules.
 			/// Decrypt Operation (inverse of 0x04)
 			/// Cipher
+			/// 
+			/// KIRK_CMD_DECRYPT_IV_0
+			/// 
+			/// Code: 7, 0x07
 			/// </summary>
 			PSP_KIRK_CMD_DECRYPT = 0x7,
 
@@ -216,6 +228,10 @@ namespace CSPspEmu.Core.Crypto
 			/// Fuse ID based decryption used for general purposes by several modules.
 			/// Decrypt Operation (inverse of 0x05)
 			/// Cipher
+			/// 
+			/// KIRK_CMD_DECRYPT_IV_FUSE
+			/// 
+			/// Code: 8, 0x08
 			/// </summary>
 			PSP_KIRK_CMD_DECRYPT_FUSE = 0x8,
 
@@ -223,6 +239,10 @@ namespace CSPspEmu.Core.Crypto
 			/// User specified ID based decryption used for general purposes by several modules.
 			/// Decrypt Operation (inverse of 0x06)
 			/// Cipher
+			/// 
+			/// KIRK_CMD_DECRYPT_IV_USER
+			/// 
+			/// Code: 9, 0x09
 			/// </summary>
 			PSP_KIRK_CMD_DECRYPT_USER = 0x9,
 
@@ -230,6 +250,10 @@ namespace CSPspEmu.Core.Crypto
 			/// Private signature (SCE) checking command.
 			/// Private Signature Check (checks for private SCE sig)
 			/// Sig Gens
+			/// 
+			/// KIRK_CMD_PRIV_SIG_CHECK
+			/// 
+			/// Code: 10, 0x0A
 			/// </summary>
 			PSP_KIRK_CMD_PRIV_SIG_CHECK = 0xA,
 
@@ -237,6 +261,10 @@ namespace CSPspEmu.Core.Crypto
 			/// SHA1 hash generating command.
 			/// SHA1 Hash
 			/// Sig Gens
+			/// 
+			/// KIRK_CMD_SHA1_HASH
+			/// 
+			/// Code: 11, 0x0B
 			/// </summary>
 			PSP_KIRK_CMD_SHA1_HASH = 0xB,
 
@@ -244,6 +272,8 @@ namespace CSPspEmu.Core.Crypto
 			/// ECDSA key generating mul1 command. 
 			/// Mul1
 			/// Sig Gens
+			/// 
+			/// Code: 12, 0x0C
 			/// </summary>
 			PSP_KIRK_CMD_ECDSA_GEN_KEYS = 0xC,
 
@@ -251,6 +281,8 @@ namespace CSPspEmu.Core.Crypto
 			/// ECDSA key generating mul2 command. 
 			/// Mul2
 			/// Sig Gens
+			/// 
+			/// Code: 13, 0x0D
 			/// </summary>
 			PSP_KIRK_CMD_ECDSA_MULTIPLY_POINT = 0xD,
 
@@ -258,6 +290,8 @@ namespace CSPspEmu.Core.Crypto
 			/// Random number generating command. 
 			/// Random Number Gen
 			/// Sig Gens
+			/// 
+			/// Code: 14, 0x0E
 			/// </summary>
 			PSP_KIRK_CMD_PRNG = 0xE,
 
@@ -265,12 +299,16 @@ namespace CSPspEmu.Core.Crypto
 			/// KIRK initialization command.
 			/// (absolutely no idea? could be KIRK initialization)
 			/// Sig Gens
+			/// 
+			/// Code: 15, 0x0F
 			/// </summary>
 			PSP_KIRK_CMD_INIT = 0xF,
 
 			/// <summary>
 			/// ECDSA signing command.
 			/// Signature Gen
+			/// 
+			/// Code: 16, 0x10
 			/// </summary>
 			PSP_KIRK_CMD_ECDSA_SIGN = 0x10,
 
@@ -278,6 +316,8 @@ namespace CSPspEmu.Core.Crypto
 			/// ECDSA checking command.
 			/// Signature Check (checks for generated sigs)
 			/// Sig Checks
+			/// 
+			/// Code: 17, 0x11
 			/// </summary>
 			PSP_KIRK_CMD_ECDSA_VERIFY = 0x11,
 
@@ -285,6 +325,8 @@ namespace CSPspEmu.Core.Crypto
 			/// Certificate checking command.
 			/// Certificate Check (idstorage signatures)
 			/// Sig Checks
+			/// 
+			/// Code: 18, 0x12
 			/// </summary>
 			PSP_KIRK_CMD_CERT_VERIFY = 0x12,
 		}

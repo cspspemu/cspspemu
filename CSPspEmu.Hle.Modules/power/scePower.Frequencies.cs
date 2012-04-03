@@ -100,6 +100,19 @@ namespace CSPspEmu.Hle.Modules.power
 		}
 
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="PllFrequency"></param>
+		/// <param name="CpuFrequency"></param>
+		/// <param name="BusFrequency"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xEBD177D6, FirmwareVersion = 150)]
+			public int scePower_EBD177D6(int PllFrequency, int CpuFrequency, int BusFrequency)
+		{
+			return scePowerSetClockFrequency(PllFrequency, CpuFrequency, BusFrequency);
+		}
+
+		/// <summary>
 		/// Set Bus Frequency
 		/// </summary>
 		/// <param name="BusFrequency">new BUS frequency, valid values are 1 - 167</param>

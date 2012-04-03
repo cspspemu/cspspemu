@@ -64,6 +64,7 @@
     <Compile Include="Cpu\InstructionTest.cs" />
     <Compile Include="Cpu\Assembler\MipsAssemblerTest.cs" />
     <Compile Include="Cpu\Emiter\MipsEmiterTest.cs" />
+    <Compile Include="Crypto\KirkTest.cs" />
     <Compile Include="Gpu\VertexReading\VertexReaderDynarecTest.cs" />
     <Compile Include="Hle\Formats\Archive\ZipTest.cs" />
     <Compile Include="Hle\Formats\EncryptedPrxTest.cs" />

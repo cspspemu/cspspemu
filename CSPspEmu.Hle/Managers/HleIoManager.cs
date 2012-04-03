@@ -201,7 +201,7 @@ namespace CSPspEmu.Hle.Managers
 			}
 			//Console.Error.WriteLine("FullPath: {0}", FullPath);
 			var Match = new Regex(@"^(\w+)(\d+):(.*)$").Match(FullPath);
-			var DriverName = Match.Groups[1].Value + ":";
+			var DriverName = Match.Groups[1].Value.ToLower() + ":";
 			int FileSystemNumber = 0;
 			IHleIoDriver HleIoDriver = null;
 			Int32.TryParse(Match.Groups[2].Value, out FileSystemNumber);

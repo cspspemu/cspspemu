@@ -50,8 +50,11 @@
     <Compile Include="Crypto\Crypto.cs" />
     <Compile Include="Crypto\Crypto.Tables.cs" />
     <Compile Include="Crypto\Kirk.cs" />
+    <Compile Include="Crypto\Kirk.Impl.Ecdsa.cs" />
+    <Compile Include="Crypto\Kirk.Impl.Sha1.cs" />
     <Compile Include="Crypto\Kirk.Keys.cs" />
     <Compile Include="Crypto\Kirk.Tables.cs" />
+    <Compile Include="Crypto\Kirk.Utils.cs" />
     <Compile Include="DebugUtils.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Hashing.cs" />
@@ -101,6 +104,9 @@
       <Project>{9a93c7e4-09da-46cf-b7dd-6bb09681d5ab}</Project>
       <Name>SafeILGenerator</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Crypto\Prx\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

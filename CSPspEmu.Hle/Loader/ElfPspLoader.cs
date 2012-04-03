@@ -376,7 +376,7 @@ namespace CSPspEmu.Hle.Loader
 					catch (Exception Exception)
 					{
 						Console.WriteLine(Exception);
-						throw (new Exception(Exception.Message, Exception));
+						//throw (new Exception(Exception.Message, Exception));
 					}
 
 					Console.WriteLine("{0:X}:'{1}'", ModuleImport.Name, ModuleImportName);
