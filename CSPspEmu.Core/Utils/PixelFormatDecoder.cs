@@ -14,12 +14,17 @@ namespace CSPspEmu.Core.Utils
 		{
 		}
 
-		public struct Dxt1Block { }
+		public struct Dxt1Block
+		{
+			public uint ColorLookup;
+			public ushort Color0;
+			public ushort Color1;
+		}
 		public struct Dxt3Block
 		{
 			public uint ColorLookup;
+			public ushort Color0;
 			public ushort Color1;
-			public ushort Color2;
 			public ulong Alpha;
 		}
 		public struct Dxt5Block { }
@@ -162,9 +167,6 @@ namespace CSPspEmu.Core.Utils
 		/// </summary>
 		private unsafe void Decode_COMPRESSED_DXT3()
 		{
-			//throw new NotImplementedException();
-			//Console.Error.WriteLine("Not Implemented: Decode_COMPRESSED_DXT3");
-
 			var Colors = new OutputPixel[4];
 
 			for (int y = 0, ni = 0; y < Height; y += 4)
@@ -172,8 +174,8 @@ namespace CSPspEmu.Core.Utils
 				for (int x = 0; x < Width; x += 4, ni++)
 				{
 					var Block = ((Dxt3Block*)InputByte)[ni];
-					Colors[0] = Decode_RGBA_5650_Pixel(Block.Color1).Transform((R, G, B, A) => OutputPixel.FromRGBA(B, G, R, A));
-					Colors[1] = Decode_RGBA_5650_Pixel(Block.Color2).Transform((R, G, B, A) => OutputPixel.FromRGBA(B, G, R, A));
+					Colors[0] = Decode_RGBA_5650_Pixel(Block.Color0).Transform((R, G, B, A) => OutputPixel.FromRGBA(B, G, R, A));
+					Colors[1] = Decode_RGBA_5650_Pixel(Block.Color1).Transform((R, G, B, A) => OutputPixel.FromRGBA(B, G, R, A));
 					Colors[2] = OutputPixel.OperationPerComponent(Colors[0], Colors[1], (a, b) => { return (byte)(((a * 2) / 3) + ((b * 1) / 3)); });
 					Colors[3] = OutputPixel.OperationPerComponent(Colors[0], Colors[1], (a, b) => { return (byte)(((a * 1) / 3) + ((b * 2) / 3)); });
 
@@ -198,9 +200,43 @@ namespace CSPspEmu.Core.Utils
 
 		private unsafe void Decode_COMPRESSED_DXT1()
 		{
-			//throw new NotImplementedException();
-			Console.Error.WriteLine("Not Implemented: Decode_COMPRESSED_DXT1");
-			_Decode_Unimplemented();
+			var Colors = new OutputPixel[4];
+
+			for (int y = 0, ni = 0; y < Height; y += 4)
+			{
+				for (int x = 0; x < Width; x += 4, ni++)
+				{
+					var Block = ((Dxt1Block*)InputByte)[ni];
+		
+					Colors[0] = Decode_RGBA_5650_Pixel(Block.Color0).Transform((R, G, B, A) => OutputPixel.FromRGBA(B, G, R, A));
+					Colors[1] = Decode_RGBA_5650_Pixel(Block.Color1).Transform((R, G, B, A) => OutputPixel.FromRGBA(B, G, R, A));
+
+					if (Block.Color0 > Block.Color1)
+					{
+						Colors[2] = OutputPixel.OperationPerComponent(Colors[0], Colors[1], (a, b) => { return (byte)(((a * 2) / 3) + ((b * 1) / 3)); });
+						Colors[3] = OutputPixel.OperationPerComponent(Colors[0], Colors[1], (a, b) => { return (byte)(((a * 1) / 3) + ((b * 2) / 3)); });
+					}
+					else
+					{
+						Colors[2] = OutputPixel.OperationPerComponent(Colors[0], Colors[1], (a, b) => { return (byte)(((a * 1) / 2) + ((b * 1) / 2)); });
+						Colors[3] = OutputPixel.FromRGBA(0, 0, 0, 0);
+					}
+
+					for (int y2 = 0, no = 0; y2 < 4; y2++)
+					{
+						for (int x2 = 0; x2 < 4; x2++, no++)
+						{
+							var Color = ((Block.ColorLookup >> (2 * no)) & 0x3);
+
+							int rx = (x + x2);
+							int ry = (y + y2);
+							int n = ry * Width + rx;
+
+							Output[n] = Colors[Color];
+						}
+					}
+				}
+			}
 		}
 
 		private unsafe void Decode_PALETTE_T32()

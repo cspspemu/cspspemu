@@ -76,13 +76,22 @@ namespace CSPspEmu.Runner.Components.Cpu
 			HleIoDriverEmulator = new HleIoDriverEmulator(HleState);
 			var MemoryStick = new HleIoDriverMemoryStick(HleState, MemoryStickMountable);
 			//var MemoryStick = new HleIoDriverMemoryStick(new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
+
+			// http://forums.ps2dev.org/viewtopic.php?t=5680
 			HleState.HleIoManager.SetDriver("ms:", MemoryStick);
 			HleState.HleIoManager.SetDriver("fatms:", MemoryStick);
+			HleState.HleIoManager.SetDriver("fatmsOem:", MemoryStick);
 			HleState.HleIoManager.SetDriver("mscmhc:", MemoryStick);
+
+			HleState.HleIoManager.SetDriver("msstor:", new ReadonlyHleIoDriver(MemoryStick));
+			HleState.HleIoManager.SetDriver("msstor0p:", new ReadonlyHleIoDriver(MemoryStick));
+
 			HleState.HleIoManager.SetDriver("disc:", MemoryStick);
 			HleState.HleIoManager.SetDriver("umd:", MemoryStick);
+
 			HleState.HleIoManager.SetDriver("emulator:", HleIoDriverEmulator);
 			HleState.HleIoManager.SetDriver("kemulator:", HleIoDriverEmulator);
+
 			HleState.HleIoManager.SetDriver("flash:", new HleIoDriverZip(new ZipArchive(ResourceArchive.GetFlash0ZipFileStream())));
 		}
 
