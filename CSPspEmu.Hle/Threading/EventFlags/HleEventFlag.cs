@@ -116,6 +116,7 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 			{
 				*CheckedBits = Info.CurrentPattern;
 			}
+
 			if (WaitType.HasFlag(EventFlagWaitTypeSet.Or))
 			{
 				return (Info.CurrentPattern & BitsToMatch) != 0;

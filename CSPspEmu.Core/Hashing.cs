@@ -29,7 +29,7 @@ namespace CSPspEmu.Core
 				{
 					for (int n = 0; n < CountInBlocks; n++)
 					{
-						Hash ^= (uint)(Pointer[n] + (n << 16));
+						Hash ^= (uint)(Pointer[n] + (n << 17));
 					}
 				}
 			}

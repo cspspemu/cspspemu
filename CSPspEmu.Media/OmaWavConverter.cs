@@ -26,6 +26,9 @@ namespace CSPspEmu.Media
 			Event.WaitOne(TimeSpan.FromSeconds(12));
 			if (Thread.IsAlive) Thread.Abort();
 		}
+
+		static bool WarnOnce = false;
+
 		static private void _convertOmaToWav(string Source, string Destination)
 		{
 			IGraphBuilder graphBuilder;
@@ -67,9 +70,13 @@ namespace CSPspEmu.Media
 			{
 				waveDest = (IBaseFilter)new WavDest();
 			}
-			catch (COMException)
+			catch (Exception Exception)
 			{
-				MessageBox.Show("Missing WavDest", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				if (!WarnOnce)
+				{
+					WarnOnce = true;
+					MessageBox.Show("Missing WavDest\r\n\r\n" + Exception, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				}
 				return;
 			}
 

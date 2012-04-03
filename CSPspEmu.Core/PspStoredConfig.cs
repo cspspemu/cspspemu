@@ -111,12 +111,19 @@ namespace CSPspEmu.Core
 
 		public void Save()
 		{
-			lock (Lock)
+			try
 			{
-				using (var Stream = File.Open(ConfigFilePath, FileMode.Create, FileAccess.Write))
+				lock (Lock)
 				{
-					Serializer.Serialize(Stream, this);
+					using (var Stream = File.Open(ConfigFilePath, FileMode.Create, FileAccess.Write))
+					{
+						Serializer.Serialize(Stream, this);
+					}
 				}
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
 			}
 		}
 		#endregion

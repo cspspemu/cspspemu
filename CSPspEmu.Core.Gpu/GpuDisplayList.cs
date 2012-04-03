@@ -377,8 +377,30 @@ namespace CSPspEmu.Core.Gpu
 
 		public enum GuBehavior
 		{
-			GU_BEHAVIOR_SUSPEND = 1,
-			GU_BEHAVIOR_CONTINUE = 2
+			PSP_GE_SIGNAL_HANDLER_SUSPEND  = 0x01,
+			PSP_GE_SIGNAL_HANDLER_CONTINUE = 0x02,
+			PSP_GE_SIGNAL_HANDLER_PAUSE    = 0x03,
+			PSP_GE_SIGNAL_SYNC             = 0x08,
+			PSP_GE_SIGNAL_JUMP             = 0x10,
+			PSP_GE_SIGNAL_CALL             = 0x11,
+			PSP_GE_SIGNAL_RETURN           = 0x12,
+			PSP_GE_SIGNAL_TBP0_REL         = 0x20,
+			PSP_GE_SIGNAL_TBP1_REL         = 0x21,
+			PSP_GE_SIGNAL_TBP2_REL         = 0x22,
+			PSP_GE_SIGNAL_TBP3_REL         = 0x23,
+			PSP_GE_SIGNAL_TBP4_REL         = 0x24,
+			PSP_GE_SIGNAL_TBP5_REL         = 0x25,
+			PSP_GE_SIGNAL_TBP6_REL         = 0x26,
+			PSP_GE_SIGNAL_TBP7_REL         = 0x27,
+			PSP_GE_SIGNAL_TBP0_REL_OFFSET  = 0x28,
+			PSP_GE_SIGNAL_TBP1_REL_OFFSET  = 0x29,
+			PSP_GE_SIGNAL_TBP2_REL_OFFSET  = 0x2A,
+			PSP_GE_SIGNAL_TBP3_REL_OFFSET  = 0x2B,
+			PSP_GE_SIGNAL_TBP4_REL_OFFSET  = 0x2C,
+			PSP_GE_SIGNAL_TBP5_REL_OFFSET  = 0x2D,
+			PSP_GE_SIGNAL_TBP6_REL_OFFSET  = 0x2E,
+			PSP_GE_SIGNAL_TBP7_REL_OFFSET  = 0x2F,
+			PSP_GE_SIGNAL_BREAK            = 0xFF,
 		}
 
 		public void Finish()
@@ -395,6 +417,11 @@ namespace CSPspEmu.Core.Gpu
 			if (Callbacks.SignalFunction != 0)
 			{
 				Console.Error.WriteLine("OP_SIGNAL! ({0}, {1})", Signal, Behavior);
+			}
+			switch (Behavior)
+			{
+				default:
+					throw(new NotImplementedException("Not implemented Signal Behavior: " + Behavior));
 			}
 			//GpuProcessor.PspConfig
 			/*

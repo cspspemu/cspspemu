@@ -21,7 +21,14 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		public int sceIoIoctl(SceUID FileHandle, uint Command, byte* InputPointer, int InputLength, byte* OutputPointer, int OutputLength)
 		{
 			var HleIoDrvFileArg = GetFileArgFromHandle(FileHandle);
-			return HleIoDrvFileArg.HleIoDriver.IoIoctl(HleIoDrvFileArg, Command, InputPointer, InputLength, OutputPointer, OutputLength);
+			try
+			{
+				return HleIoDrvFileArg.HleIoDriver.IoIoctl(HleIoDrvFileArg, Command, InputPointer, InputLength, OutputPointer, OutputLength);
+			}
+			finally
+			{
+				_DelayIo(IoDelayType.Ioctl);
+			}
 		}
 
 		/// <summary>
@@ -50,6 +57,10 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			{
 				Console.Error.WriteLine(NotImplementedException);
 				return -1;
+			}
+			finally
+			{
+				_DelayIo(IoDelayType.Devctl);
 			}
 		}
 	}

@@ -13,6 +13,11 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
+		public bool UseCoRoutines = false;
+
+		/// <summary>
+		/// 
+		/// </summary>
 		static public string CultureName = "en-US";
 
 		/// <summary>

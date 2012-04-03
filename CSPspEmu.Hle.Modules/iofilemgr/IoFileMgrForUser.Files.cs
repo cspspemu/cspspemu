@@ -37,6 +37,10 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 				Console.Error.WriteLine(Exception);
 				return -1;
 			}
+			finally
+			{
+				_DelayIo(IoDelayType.GetStat);
+			}
 		}
 
 		/// <summary>
@@ -49,8 +53,15 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0xB8A740F4, FirmwareVersion = 150)]
 		public int sceIoChstat(string FileName, SceIoStat *SceIoStat, int Bitmask)
 		{
-			var Info = HleState.HleIoManager.ParsePath(FileName);
-			return Info.HleIoDriver.IoChstat(Info.HleIoDrvFileArg, FileName, SceIoStat, Bitmask);
+			try
+			{
+				var Info = HleState.HleIoManager.ParsePath(FileName);
+				return Info.HleIoDriver.IoChstat(Info.HleIoDrvFileArg, FileName, SceIoStat, Bitmask);
+			}
+			finally
+			{
+				_DelayIo(IoDelayType.ChStat);
+			}
 		}
 
 		/// <summary>
@@ -71,6 +82,10 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 				Console.Error.WriteLine(Exception);
 				return -1;
 			}
+			finally
+			{
+				_DelayIo(IoDelayType.Remove);
+			}
 		}
 
 		/// <summary>
@@ -82,10 +97,17 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0x779103A0, FirmwareVersion = 150)]
 		public int sceIoRename(string OldFileName, string NewFileName)
 		{
-			var Info1 = HleState.HleIoManager.ParsePath(OldFileName);
-			var Info2 = HleState.HleIoManager.ParsePath(NewFileName);
-			if (!Info1.Equals(Info2)) throw(new NotImplementedException("Rename from different filesystems"));
-			return Info1.HleIoDriver.IoRename(Info1.HleIoDrvFileArg, OldFileName, NewFileName);
+			try
+			{
+				var Info1 = HleState.HleIoManager.ParsePath(OldFileName);
+				var Info2 = HleState.HleIoManager.ParsePath(NewFileName);
+				if (!Info1.Equals(Info2)) throw (new NotImplementedException("Rename from different filesystems"));
+				return Info1.HleIoDriver.IoRename(Info1.HleIoDrvFileArg, OldFileName, NewFileName);
+			}
+			finally
+			{
+				_DelayIo(IoDelayType.Rename);
+			}
 		}
 
 		/// <summary>
@@ -118,8 +140,15 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0x27EB27B8, FirmwareVersion = 150)]
 		public long sceIoLseek(SceUID FileId, long Offset, SeekAnchor Whence)
 		{
-			var HleIoDrvFileArg = GetFileArgFromHandle(FileId);
-			return HleIoDrvFileArg.HleIoDriver.IoLseek(HleIoDrvFileArg, Offset, Whence);
+			try
+			{
+				var HleIoDrvFileArg = GetFileArgFromHandle(FileId);
+				return HleIoDrvFileArg.HleIoDriver.IoLseek(HleIoDrvFileArg, Offset, Whence);
+			}
+			finally
+			{
+				_DelayIo(IoDelayType.Seek);
+			}
 		}
 
 		/// <summary>
@@ -138,8 +167,15 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0x68963324, FirmwareVersion = 150)]
 		public int sceIoLseek32(SceUID FileId, int Offset, SeekAnchor Whence)
 		{
-			var HleIoDrvFileArg = GetFileArgFromHandle(FileId);
-			return (int)HleIoDrvFileArg.HleIoDriver.IoLseek(HleIoDrvFileArg, (long)Offset, Whence);
+			try
+			{
+				var HleIoDrvFileArg = GetFileArgFromHandle(FileId);
+				return (int)HleIoDrvFileArg.HleIoDriver.IoLseek(HleIoDrvFileArg, (long)Offset, Whence);
+			}
+			finally
+			{
+				_DelayIo(IoDelayType.Seek);
+			}
 		}
 
 		/// <summary>
@@ -155,10 +191,17 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0x6A638D83, FirmwareVersion = 150)]
 		public int sceIoRead(SceUID FileId, byte* OutputPointer, int OutputSize)
 		{
-			var HleIoDrvFileArg = GetFileArgFromHandle(FileId);
-			var Result = HleIoDrvFileArg.HleIoDriver.IoRead(HleIoDrvFileArg, OutputPointer, OutputSize);
-			//for (int n = 0; n < OutputSize; n++) Console.Write("{0:X},", OutputPointer[n]);
-			return Result;
+			try
+			{
+				var HleIoDrvFileArg = GetFileArgFromHandle(FileId);
+				var Result = HleIoDrvFileArg.HleIoDriver.IoRead(HleIoDrvFileArg, OutputPointer, OutputSize);
+				//for (int n = 0; n < OutputSize; n++) Console.Write("{0:X},", OutputPointer[n]);
+				return Result;
+			}
+			finally
+			{
+				_DelayIo(IoDelayType.Read, OutputSize);
+			}
 		}
 
 		/// <summary>
@@ -181,6 +224,10 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			{
 				Console.Error.WriteLine(Exception);
 				return -1;
+			}
+			finally
+			{
+				_DelayIo(IoDelayType.Close);
 			}
 		}
 
@@ -226,6 +273,11 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			{
 				Console.Error.WriteLine(IOException);
 			}
+			finally
+			{
+				_DelayIo(IoDelayType.Open);
+			}
+
 			//Console.Error.WriteLine("Didn't find file '{0}'", FileName);
 			throw (new SceKernelException(SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND));
 		}
@@ -243,36 +295,43 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0x42EC03AC, FirmwareVersion = 150)]
 		public int sceIoWrite(SceUID FileId, byte* InputPointer, int InputSize)
 		{
-			switch ((StdioForUser.StdHandle)FileId)
-			{
-				case StdioForUser.StdHandle.Out:
-				case StdioForUser.StdHandle.Error:
-					ConsoleUtils.SaveRestoreConsoleState(() =>
-					{
-						//Console.BackgroundColor = ConsoleColor.DarkGray;
-						if ((StdioForUser.StdHandle)FileId == StdioForUser.StdHandle.Out)
-						{
-							Console.ForegroundColor = ConsoleColor.Blue;
-						}
-						else
-						{
-							Console.ForegroundColor = ConsoleColor.Red;
-						}
-						//Console.Error.WriteLine("Output: '{0}'", PointerUtils.PtrToString(InputPointer, InputSize, Encoding.UTF8));
-						Console.Error.Write("{0}", PointerUtils.PtrToString(InputPointer, InputSize, Encoding.UTF8));
-					});
-					return 0;
-			}
-
 			try
 			{
-				var HleIoDrvFileArg = GetFileArgFromHandle(FileId);
-				return HleIoDrvFileArg.HleIoDriver.IoWrite(HleIoDrvFileArg, InputPointer, InputSize);
+				switch ((StdioForUser.StdHandle)FileId)
+				{
+					case StdioForUser.StdHandle.Out:
+					case StdioForUser.StdHandle.Error:
+						ConsoleUtils.SaveRestoreConsoleState(() =>
+						{
+							//Console.BackgroundColor = ConsoleColor.DarkGray;
+							if ((StdioForUser.StdHandle)FileId == StdioForUser.StdHandle.Out)
+							{
+								Console.ForegroundColor = ConsoleColor.Blue;
+							}
+							else
+							{
+								Console.ForegroundColor = ConsoleColor.Red;
+							}
+							//Console.Error.WriteLine("Output: '{0}'", PointerUtils.PtrToString(InputPointer, InputSize, Encoding.UTF8));
+							Console.Error.Write("{0}", PointerUtils.PtrToString(InputPointer, InputSize, Encoding.UTF8));
+						});
+						return 0;
+				}
+
+				try
+				{
+					var HleIoDrvFileArg = GetFileArgFromHandle(FileId);
+					return HleIoDrvFileArg.HleIoDriver.IoWrite(HleIoDrvFileArg, InputPointer, InputSize);
+				}
+				catch (Exception Exception)
+				{
+					Console.Error.WriteLine(Exception);
+					return -1;
+				}
 			}
-			catch (Exception Exception)
+			finally
 			{
-				Console.Error.WriteLine(Exception);
-				return -1;
+				_DelayIo(IoDelayType.Write, InputSize);
 			}
 		}
 

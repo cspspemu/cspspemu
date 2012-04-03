@@ -22,6 +22,8 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			var FileId = (SceUID)sceIoOpen(FileName, Flags, Mode);
 			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileId);
 			File.AsyncLastResult = (long)FileId;
+			_DelayIo(IoDelayType.Open);
+			//HleState.PspRtc.slee
 			return FileId;
 		}
 
@@ -62,6 +64,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		{
 			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileId);
 			File.AsyncLastResult = sceIoLseek(FileId, Offset, Whence);
+			_DelayIo(IoDelayType.Seek);
 			return 0;
 		}
 
@@ -76,6 +79,8 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileId);
 			File.AsyncLastResult = 0;
 			sceIoClose(FileId);
+
+			_DelayIo(IoDelayType.Close);
 
 			//HleState.HleIoManager.HleIoDrvFileArgPool.Remove(FileHandle);
 			
@@ -99,6 +104,9 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		{
 			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileId);
 			File.AsyncLastResult = sceIoRead(FileId, OutputPointer, OutputSize);
+
+			_DelayIo(IoDelayType.Read, OutputSize);
+
 			return 0;
 		}
 
@@ -126,6 +134,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileId);
 			Result = File.AsyncLastResult;
 			CpuThreadState.LO = (int)FileId;
+
 			return 0;
 			/*
 			logInfo("_sceIoWaitAsyncCB(fd=%d, callbacks=%d)", FileHandle, HandleCallbacks);
@@ -200,6 +209,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		{
 			var File = GetFileArgFromHandle(FileId); 
 			File.AsyncLastResult = sceIoIoctl(FileId, Command, InputPointer, InputLength, OutputPointer, OutputLength);
+			_DelayIo(IoDelayType.Ioctl);
 			return 0;
 		}
 
@@ -214,7 +224,8 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0x0FACAB19, FirmwareVersion = 150)]
 		public int sceIoWriteAsync(SceUID FileId, void* data, SceSize size)
 		{
-			throw(new NotImplementedException());
+			_DelayIo(IoDelayType.Write, (long)size);
+			throw (new NotImplementedException());
 			/*
 			unimplemented();
 			return -1;

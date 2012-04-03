@@ -23,8 +23,7 @@ namespace CSPspEmu.Hle.Managers
 
 	public class HleThreadManager : PspEmulatorComponent
 	{
-
-		protected CpuProcessor Processor;
+		internal CpuProcessor Processor;
 		public List<HleThread> Threads = new List<HleThread>();
 		protected int LastId = 1;
 		public HleThread Current;

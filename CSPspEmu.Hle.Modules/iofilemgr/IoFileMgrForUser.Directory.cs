@@ -38,6 +38,10 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			{
 				Console.Error.WriteLine(InvalidOperationException);
 			}
+			finally
+			{
+				_DelayIo(IoDelayType.Dopen);
+			}
 			throw (new SceKernelException(SceKernelErrors.ERROR_ERRNO_NOT_A_DIRECTORY));
 		}
 
@@ -65,6 +69,10 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 				Console.Error.WriteLine(Exception);
 				return -1;
 			}
+			finally
+			{
+				_DelayIo(IoDelayType.Dread);
+			}
 		}
 
 		/// <summary>
@@ -76,7 +84,14 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		public int sceIoDclose(SceUID FileId)
 		{
 			var HleIoDrvFileArg = GetFileArgFromHandle(FileId);
-			return HleIoDrvFileArg.HleIoDriver.IoDclose(HleIoDrvFileArg);
+			try
+			{
+				return HleIoDrvFileArg.HleIoDriver.IoDclose(HleIoDrvFileArg);
+			}
+			finally
+			{
+				_DelayIo(IoDelayType.Dclose);
+			}
 		}
 
 		/// <summary>
@@ -88,10 +103,17 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		//[HlePspNotImplemented]
 		public int sceIoChdir(string DirectoryPath)
 		{
-			HleState.HleIoManager.Chdir(DirectoryPath);
-			//var Info = HleState.HleIoManager.ParsePath(DirectoryPath);
-			//return Info.HleIoDriver.IoChdir(Info.HleIoDrvFileArg, Info.LocalPath);
-			return 0;
+			try
+			{
+				HleState.HleIoManager.Chdir(DirectoryPath);
+				//var Info = HleState.HleIoManager.ParsePath(DirectoryPath);
+				//return Info.HleIoDriver.IoChdir(Info.HleIoDrvFileArg, Info.LocalPath);
+				return 0;
+			}
+			finally
+			{
+				_DelayIo(IoDelayType.Chdir);
+			}
 		}
 
 		/// <summary>
@@ -103,9 +125,16 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0x06A70004, FirmwareVersion = 150)]
 		public int sceIoMkdir(string DirectoryPath, SceMode AccessMode)
 		{
-			var Info = HleState.HleIoManager.ParsePath(DirectoryPath);
-			Info.HleIoDrvFileArg.HleIoDriver.IoMkdir(Info.HleIoDrvFileArg, Info.LocalPath, AccessMode);
-			return 0;
+			try
+			{
+				var Info = HleState.HleIoManager.ParsePath(DirectoryPath);
+				Info.HleIoDrvFileArg.HleIoDriver.IoMkdir(Info.HleIoDrvFileArg, Info.LocalPath, AccessMode);
+				return 0;
+			}
+			finally
+			{
+				_DelayIo(IoDelayType.Mkdir);
+			}
 		}
 
 		/// <summary>
@@ -116,9 +145,16 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0x1117C65F, FirmwareVersion = 150)]
 		public int sceIoRmdir(string DirectoryPath)
 		{
-			var Info = HleState.HleIoManager.ParsePath(DirectoryPath);
-			Info.HleIoDrvFileArg.HleIoDriver.IoRmdir(Info.HleIoDrvFileArg, Info.LocalPath);
-			return 0;
+			try
+			{
+				var Info = HleState.HleIoManager.ParsePath(DirectoryPath);
+				Info.HleIoDrvFileArg.HleIoDriver.IoRmdir(Info.HleIoDrvFileArg, Info.LocalPath);
+				return 0;
+			}
+			finally
+			{
+				_DelayIo(IoDelayType.Rmdir);
+			}
 		}
 	}
 }

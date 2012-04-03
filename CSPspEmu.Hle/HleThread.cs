@@ -111,6 +111,9 @@ namespace CSPspEmu.Hle
 
 		//public int Priority = 1;
 		protected GreenThread GreenThread;
+
+		protected Coroutine Coroutine;
+
 		public CpuThreadState CpuThreadState { get; protected set; }
 		//protected int MinimalInstructionCountForYield = 1000000;
 		public int Id;
@@ -149,14 +152,37 @@ namespace CSPspEmu.Hle
 
 		public String Name
 		{
-			get
-			{
-				fixed (byte* NamePtr = Info.Name) return PointerUtils.PtrToString(NamePtr, Encoding.ASCII);
-			}
-			set
-			{
+			get { fixed (byte* NamePtr = Info.Name) return PointerUtils.PtrToString(NamePtr, Encoding.ASCII); }
+			set {
 				fixed (byte* NamePtr = Info.Name) PointerUtils.StoreStringOnPtr(value, Encoding.ASCII, NamePtr);
+				if (this.PspConfig.UseCoRoutines)
+				{
+					this.Coroutine.Name = value;
+				}
+				else
+				{
+					this.GreenThread.Name = value;
+				}
 			}
+		}
+
+		public HleThread(HleThreadManager HleThreadManager, CpuThreadState CpuThreadState)
+		{
+			this.HleThreadManager = HleThreadManager;
+			this.MethodCache = CpuThreadState.CpuProcessor.MethodCache;
+			this.PspConfig = CpuThreadState.CpuProcessor.PspConfig;
+
+			if (this.PspConfig.UseCoRoutines)
+			{
+				this.Coroutine = HleThreadManager.Processor.CoroutinePool.CreateCoroutine(this.Name, MainLoop);
+			}
+			else
+			{
+				this.GreenThread = new GreenThread();
+				GreenThread.InitAndStartStopped(MainLoop);
+			}
+			
+			this.CpuThreadState = CpuThreadState;
 		}
 
 		public void ChangeWakeUpCount(int Increment, HleThread WakeupThread, bool HandleCallbacks = false)
@@ -232,65 +258,6 @@ namespace CSPspEmu.Hle
 			}
 		}
 
-		public enum WaitType
-		{
-			None,
-			Timer,
-			GraphicEngine,
-			Audio,
-			Display,
-			Semaphore,
-			Mutex,
-		}
-
-		public enum Status
-		{
-			/// <summary>
-			/// This is the current thread and is running right now.
-			/// </summary>
-			Running = 1,
-
-			/// <summary>
-			/// The thread is not running right now, but it will be scheduled.
-			/// </summary>
-			Ready = 2,
-
-			/// <summary>
-			/// The thread is waiting for a event.
-			/// </summary>
-			Waiting = 4,
-
-			/// <summary>
-			/// ?
-			/// </summary>
-			Suspend = 8,
-
-			/// <summary>
-			/// ?
-			/// </summary>
-			Stopped = 16,
-
-			/// <summary>
-			/// ?
-			/// </summary>
-			Killed = 32,
-		}
-
-		public HleThread(HleThreadManager HleThreadManager, CpuThreadState CpuThreadState)
-		{
-			this.HleThreadManager = HleThreadManager;
-			this.MethodCache = CpuThreadState.CpuProcessor.MethodCache;
-			this.PspConfig = CpuThreadState.CpuProcessor.PspConfig;
-			this.GreenThread = new GreenThread();
-			this.CpuThreadState = CpuThreadState;
-			this.PrepareThread();
-		}
-
-		protected void PrepareThread()
-		{
-			GreenThread.InitAndStartStopped(MainLoop);
-		}
-
 		[HandleProcessCorruptedStateExceptions()]
 		protected void MainLoop()
 		{
@@ -361,7 +328,14 @@ namespace CSPspEmu.Hle
 				//CpuThreadState.hlest
 				CpuThreadState.StepInstructionCount = InstructionCountForYield;
 				//this.MinimalInstructionCountForYield = InstructionCountForYield;
-				GreenThread.SwitchTo();
+				if (this.PspConfig.UseCoRoutines)
+				{
+					Coroutine.ExecuteStep();
+				}
+				else
+				{
+					GreenThread.SwitchTo();
+				}
 			} while (!HleThreadManager.HleState.HleInterruptManager.Enabled);
 		}
 
@@ -392,6 +366,11 @@ namespace CSPspEmu.Hle
 
 		public void SetWaitAndPrepareWakeUp(WaitType WaitType, String WaitDescription, object WaitObject, Action<WakeUpCallbackDelegate> PrepareCallback, bool HandleCallbacks = false)
 		{
+			if (this.CurrentStatus == Status.Waiting)
+			{
+				Console.Error.WriteLine("Trying to sleep an already sleeping thread!");
+			}
+
 			bool CalledAlready = false;
 			YieldCount++;
 			SetWait0(WaitType, WaitDescription, WaitObject, HandleCallbacks);
@@ -469,7 +448,8 @@ namespace CSPspEmu.Hle
 
 		public void Dispose()
 		{
-			GreenThread.Dispose();
+			if (Coroutine!= null) Coroutine.Dispose();
+			if (GreenThread != null) GreenThread.Dispose();
 		}
 
 		public void DumpStack(TextWriter TextWriter)
@@ -485,6 +465,50 @@ namespace CSPspEmu.Hle
 			{
 				TextWriter.WriteLine("     ...");
 			}
+		}
+
+		public enum WaitType
+		{
+			None,
+			Timer,
+			GraphicEngine,
+			Audio,
+			Display,
+			Semaphore,
+			Mutex,
+		}
+
+		public enum Status
+		{
+			/// <summary>
+			/// This is the current thread and is running right now.
+			/// </summary>
+			Running = 1,
+
+			/// <summary>
+			/// The thread is not running right now, but it will be scheduled.
+			/// </summary>
+			Ready = 2,
+
+			/// <summary>
+			/// The thread is waiting for a event.
+			/// </summary>
+			Waiting = 4,
+
+			/// <summary>
+			/// ?
+			/// </summary>
+			Suspend = 8,
+
+			/// <summary>
+			/// ?
+			/// </summary>
+			Stopped = 16,
+
+			/// <summary>
+			/// ?
+			/// </summary>
+			Killed = 32,
 		}
 	}
 

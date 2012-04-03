@@ -349,7 +349,14 @@ namespace CSPspEmu.Core.Cpu
 		public void Yield()
 		{
 			//Console.WriteLine(StepInstructionCount);
-			GreenThread.Yield();
+			if (CpuProcessor.PspConfig.UseCoRoutines)
+			{
+				CpuProcessor.CoroutinePool.YieldInPool();
+			}
+			else
+			{
+				GreenThread.Yield();
+			}
 			//Console.WriteLine(StepInstructionCount);
 		}
 

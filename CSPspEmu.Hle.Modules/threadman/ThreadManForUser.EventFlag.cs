@@ -190,7 +190,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelPollEventFlag(EventFlagId EventId, uint Bits, EventFlagWaitTypeSet WaitType, uint* OutBits)
 		{
 			var EventFlag = HleState.EventFlagManager.EventFlags.Get(EventId);
-			if (Bits == 0) throw(new SceKernelException(SceKernelErrors.ERROR_KERNEL_EVENT_FLAG_ILLEGAL_WAIT_PATTERN));
+			if (Bits == 0)
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_EVENT_FLAG_ILLEGAL_WAIT_PATTERN));
+			}
+
 			bool Matched = EventFlag.Poll(Bits, WaitType, OutBits);
 
 			if (!Matched)

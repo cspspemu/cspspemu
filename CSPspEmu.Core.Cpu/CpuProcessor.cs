@@ -5,6 +5,7 @@ using System.Text;
 using CSPspEmu.Core.Cpu.Emiter;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Memory;
+using CSharpUtils.Threading;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -19,6 +20,7 @@ namespace CSPspEmu.Core.Cpu
 		public HashSet<uint> NativeBreakpoints;
 		public bool IsRunning;
 		public bool RunningCallback;
+		public CoroutinePool CoroutinePool;
 
 		public PspEmulatorContext GetPspEmulatorContext()
 		{
@@ -29,6 +31,13 @@ namespace CSPspEmu.Core.Cpu
 		{
 			this.PspConfig = PspEmulatorContext.PspConfig;
 			this.Memory = PspEmulatorContext.GetInstance<PspMemory>();
+			if (this.PspConfig.UseCoRoutines)
+			{
+				this.CoroutinePool = new CoroutinePool();
+			}
+			else
+			{
+			}
 			Reset();
 		}
 
