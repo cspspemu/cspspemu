@@ -52,6 +52,7 @@
     </Compile>
     <Compile Include="Attributes\HlePspUnknownDefinitionAttribute.cs" />
     <Compile Include="CStringFormater.cs" />
+    <Compile Include="Formats\EncryptedPrx.Keys16.cs" />
     <Compile Include="Formats\audio\RiffWaveReader.cs" />
     <Compile Include="Formats\audio\Wav.cs" />
     <Compile Include="Formats\audio\Vag.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="Formats\Cso.cs" />
     <Compile Include="Formats\Dax.cs" />
     <Compile Include="Formats\EncryptedPrx.cs" />
+    <Compile Include="Formats\EncryptedPrx.Keys144.cs" />
     <Compile Include="Formats\EncryptedPrx.Utils.cs" />
     <Compile Include="Formats\Font\BitReader.cs" />
     <Compile Include="Formats\Font\PGF.cs" />

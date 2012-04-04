@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Formats
 {
@@ -157,7 +159,7 @@ namespace CSPspEmu.Hle.Formats
 			/// <summary>
 			/// 00D0 -
 			/// </summary>
-			public uint tag;
+			public uint Tag;
 
 			/// <summary>
 			/// 00D4 -
@@ -178,7 +180,7 @@ namespace CSPspEmu.Hle.Formats
 		/// <summary>
 		/// 
 		/// </summary>
-		public struct TAG_INFO_OLD
+		public class TAG_INFO
 		{
 			/// <summary>
 			/// 4 byte value at offset 0xD0 in the PRX file
@@ -188,23 +190,18 @@ namespace CSPspEmu.Hle.Formats
 			/// <summary>
 			/// 144 bytes keys
 			/// </summary>
-			private uint[] _key;
+			public byte[] key;
 
-			public uint[] key
+			/// <summary>
+			/// 
+			/// </summary>
+			public uint[] ikey
 			{
 				set
 				{
-					_key = new uint[144];
-					for (int i = 0; i < value.Length; i++) {
-						_key[i * 4 + 3] = ((value[i] >> 24) & 0xFF);
-						_key[i * 4 + 2] = ((value[i] >> 16) & 0xFF);
-						_key[i * 4 + 1] = ((value[i] >> 8) & 0xFF);
-						_key[i * 4 + 0] = (value[i] & 0xFF);
-					}
-				}
-				get
-				{
-					return _key;
+					if (value.Length * 4 != 144) throw(new Exception("Invalid entry"));
+					key = new byte[144];
+					Buffer.BlockCopy(value, 0, key, 0, value.Length * 4);
 				}
 			}
 			
@@ -216,31 +213,34 @@ namespace CSPspEmu.Hle.Formats
 			/// <summary>
 			/// code extra for scramble
 			/// </summary>
-			public uint codeExtra;
+			public byte codeExtra;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <returns></returns>
+			public override string ToString()
+			{
+				return CStringFormater.Sprintf("TAG_INFO(tag=0x%08X, key=%s, code=%02X, codeExtra=%02X)", tag, (key != null) ? BitConverter.ToString(key) : "null", code, codeExtra);
+			}
 		}
 
-		static public readonly uint[] g_key0 = new uint[36] {
-			0x7b21f3be, 0x299c5e1d, 0x1c9c5e71, 0x96cb4645, 0x3c9b1be0, 0xeb85de3d,
-			0x4a7f2022, 0xc2206eaa, 0xd50b3265, 0x55770567, 0x3c080840, 0x981d55f2,
-			0x5fd8f6f3, 0xee8eb0c5, 0x944d8152, 0xf8278651, 0x2705bafa, 0x8420e533,
-			0x27154ae9, 0x4819aa32, 0x59a3aa40, 0x2cb3cf65, 0xf274466d, 0x3a655605,
-			0x21b0f88f, 0xc5b18d26, 0x64c19051, 0xd669c94e, 0xe87035f2, 0x9d3a5909,
-			0x6f4e7102, 0xdca946ce, 0x8416881b, 0xbab097a5, 0x249125c6, 0xb34c0872,
-		};
-
-		static public readonly uint[] g_keyEBOOT1xx = new uint[36] {
-			0x18CB69EF, 0x158E8912, 0xDEF90EBB, 0x4CB0FB23, 0x3687EE18, 0x868D4A6E,
-			0x19B5C756, 0xEE16551D, 0xE7CB2D6C, 0x9747C660, 0xCE95143F, 0x2956F477,
-			0x03824ADE, 0x210C9DF1, 0x5029EB24, 0x81DFE69F, 0x39C89B00, 0xB00C8B91,
-			0xEF2DF9C2, 0xE13A93FC, 0x8B94A4A8, 0x491DD09D, 0x686A400D, 0xCED4C7E4,
-			0x96C8B7C9, 0x1EAADC28, 0xA4170B84, 0x505D5DDC, 0x5DA6C3CF, 0x0E5DFA2D,
-			0x6E7919B5, 0xCE5E29C7, 0xAAACDB94, 0x45F70CDD, 0x62A73725, 0xCCE6563D
-		};
-
-		static public readonly List<TAG_INFO_OLD> g_oldTagInfo = new List<TAG_INFO_OLD>()
+		public struct TAG_INFO2
 		{
-			new TAG_INFO_OLD() { tag = 0x00000000, key = g_key0, code = 0x42 },
-			new TAG_INFO_OLD() { tag = 0x08000000, key = g_keyEBOOT1xx, code = 0x4B },
-		};
+			/// <summary>
+			/// 4 byte value at offset 0xD0 in the PRX file
+			/// </summary>
+			public uint tag;
+
+			/// <summary>
+			/// 16 bytes keys
+			/// </summary>
+			public byte[] key;
+
+			/// <summary>
+			/// code for scramble
+			/// </summary>
+			public byte code;
+		}
 	}
 }

@@ -22,12 +22,23 @@ namespace CSPspEmu.Core.Crypto
 		{
 			if (IV == null) IV = new byte[16];
 
+			Console.WriteLine("DecryptAes({0}, {1}, {2})", Input.Length, Key.Length, IV.Length);
+
 			using (var AES = Aes.Create())
 			{
-				AES.Padding = PaddingMode.None;
+				AES.Padding = PaddingMode.Zeros;
 				var Decryptor = AES.CreateDecryptor(Key, IV);
 
-				return new CryptoStream(new MemoryStream(Input), Decryptor, CryptoStreamMode.Read).ReadAll(Dispose: true);
+				int DataSize = Input.Length;
+
+				if ((DataSize % 16) != 0)
+				{
+					var Input2 = new byte[MathUtils.NextAligned(Input.Length, 16)];
+					Array.Copy(Input, Input2, Input.Length);
+					Input = Input2;
+				}
+
+				return new CryptoStream(new MemoryStream(Input), Decryptor, CryptoStreamMode.Read).ReadBytes(DataSize);
 			}
 		}
 
@@ -44,7 +55,7 @@ namespace CSPspEmu.Core.Crypto
 
 			using (var AES = Aes.Create())
 			{
-				AES.Padding = PaddingMode.None;
+				AES.Padding = PaddingMode.Zeros;
 				var Encryptor = AES.CreateEncryptor(Key, IV);
 
 				return new CryptoStream(new MemoryStream(Input), Encryptor, CryptoStreamMode.Read).ReadAll(Dispose: true);

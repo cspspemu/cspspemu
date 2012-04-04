@@ -1,4 +1,4 @@
-﻿#define USE_DOTNET_CRYPTO
+﻿//#define USE_DOTNET_CRYPTO
 
 using System;
 using System.Collections.Generic;
@@ -213,7 +213,7 @@ namespace CSPspEmu.Core.Crypto
 
 			PointerUtils.ByteArrayToPointer(Output, outbuff);
 #else
-			kirk_4_7_get_key(header->KeySeed, (key) =>
+			kirk_4_7_get_key(Header->KeySeed, (key) =>
 			{
 				//Set the key
 				Crypto.AES_ctx aesKey;

@@ -21,12 +21,12 @@ namespace CSPspEmu.Hle
 
 			int IArgumentReader.LoadInteger()
 			{
-				return (int)Arguments[ArgumentIndex++];
+				return (int)long.Parse(Arguments[ArgumentIndex++].ToString());
 			}
 
 			long IArgumentReader.LoadLong()
 			{
-				return (long)Arguments[ArgumentIndex++];
+				return (long)long.Parse(Arguments[ArgumentIndex++].ToString());
 			}
 
 			string IArgumentReader.LoadString()
@@ -36,7 +36,7 @@ namespace CSPspEmu.Hle
 
 			float IArgumentReader.LoadFloat()
 			{
-				return (float)Arguments[ArgumentIndex++];
+				return float.Parse(Arguments[ArgumentIndex++].ToString());
 			}
 		}
 

@@ -63,6 +63,7 @@
     <Compile Include="hpremote\sceHprm_driver.cs" />
     <Compile Include="http\sceHttp.cs" />
     <Compile Include="http\sceSsl.cs" />
+    <Compile Include="ifhandler\sceNetIfhandle_lib.cs" />
     <Compile Include="impose\sceImpose.cs" />
     <Compile Include="interruptman\InterruptManager.cs" />
     <Compile Include="iofilemgr\IoFileMgrForKernel.cs" />
@@ -127,6 +128,7 @@
     <Compile Include="threadman\ThreadManForUser.Callbacks.cs" />
     <Compile Include="threadman\ThreadManForUser.EventFlag.cs" />
     <Compile Include="threadman\ThreadManForUser.Fpl.cs" />
+    <Compile Include="threadman\ThreadManForUser.LwMutex.cs" />
     <Compile Include="threadman\ThreadManForUser.Mbx.cs" />
     <Compile Include="threadman\ThreadManForUser.MsgPipes.cs" />
     <Compile Include="threadman\ThreadManForUser.Mutex.cs" />
@@ -191,9 +193,7 @@
   <ItemGroup>
     <Compile Include="iofilemgr\IoFileMgrForUser.Files.Async.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ifhandler\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

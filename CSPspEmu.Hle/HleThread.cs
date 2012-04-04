@@ -250,7 +250,7 @@ namespace CSPspEmu.Hle
 						WakeUpList.Add(() =>
 						{
 							WakeUpCallback();
-						});
+						};
 					}
 				}, HandleCallbacks: HandleCallbacks);
 				*/

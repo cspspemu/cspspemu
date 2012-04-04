@@ -128,6 +128,20 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 
 			try
 			{
+				if (Path.StartsWith(@"disc0:/PSP_GAME/USRDIR/kmodule"))
+				{
+					throw(new Exception("Ignore kmodule!"));
+				}
+
+				if (
+					Path.EndsWith(@"/libatrac3plus.prx") ||
+					Path.EndsWith(@"/mpeg.prx") ||
+				false)
+				{
+					throw (new Exception("Ignore libatrac3plus.prx!"));
+				}
+				
+
 				var ModuleStream = HleState.HleIoManager.HleIoWrapper.Open(Path, Vfs.HleIoFlags.Read, Vfs.SceMode.All);
 
 				var Loader = HleState.PspConfig.PspEmulatorContext.GetInstance<ElfPspLoader>();

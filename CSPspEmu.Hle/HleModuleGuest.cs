@@ -146,8 +146,15 @@ namespace CSPspEmu.Hle
 		public string Name;
 		public ushort Version;
 		public ushort Flags;
-		public Dictionary<uint, uint> Functions = new Dictionary<uint, uint>();
-		public Dictionary<uint, uint> Variables = new Dictionary<uint, uint>();
+
+		public class Entry
+		{
+			public bool Linked;
+			public uint Address;
+		}
+
+		public Dictionary<uint, Entry> Functions = new Dictionary<uint, Entry>();
+		public Dictionary<uint, Entry> Variables = new Dictionary<uint, Entry>();
 	}
 
 	public class HleModuleImports : HleModuleImportsExports
@@ -186,19 +193,26 @@ namespace CSPspEmu.Hle
 					var ImportModule = Module.ModulesImports.Find(Item => Item.Name == ExportModuleName);
 					if (ImportModule != null)
 					{
-						foreach (var Function in ImportModule.Functions)
+						foreach (var ImportFunction in ImportModule.Functions)
 						{
-							var FunctionAddress = ExportModule.Functions[Function.Key];
-							var CallAddress = Function.Value;
+							var ExportFunctionEntry = ExportModule.Functions[ImportFunction.Key];
+							var ImportFunctionEntry = ImportFunction.Value;
 
-							// J
-							//0000 10ii iiii iiii iiii iiii iiii iiii
-							var Instruction = default(Instruction);
-							Instruction.OP1 = 2;
-							Instruction.JUMP_Real = FunctionAddress;
+							if (!ImportFunctionEntry.Linked)
+							{
+								ImportFunctionEntry.Linked = true;
+								var FunctionAddress = ExportFunctionEntry.Address;
+								var CallAddress = ImportFunctionEntry.Address;
 
-							HleState.CpuProcessor.Memory.Write4(CallAddress + 0, Instruction); // J
-							HleState.CpuProcessor.Memory.Write4(CallAddress + 4, 0x00000000); // NOP
+								// J
+								//0000 10ii iiii iiii iiii iiii iiii iiii
+								var Instruction = default(Instruction);
+								Instruction.OP1 = 2;
+								Instruction.JUMP_Real = FunctionAddress;
+
+								HleState.CpuProcessor.Memory.Write4(CallAddress + 0, Instruction); // J
+								HleState.CpuProcessor.Memory.Write4(CallAddress + 4, 0x00000000); // NOP
+							}
 						}
 					}
 				}
@@ -225,7 +239,7 @@ namespace CSPspEmu.Hle
 				foreach (var Function in ModuleImports.Functions)
 				{
 					var NID = Function.Key;
-					var CallAddress = Function.Value;
+					var CallAddress = Function.Value.Address;
 
 					var DefaultEntry = new FunctionEntry()
 					{

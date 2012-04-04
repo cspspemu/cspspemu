@@ -62,6 +62,23 @@ namespace CSPspEmu.Hle.Loader
 			this.ModuleManager = ModuleManager;
 			this.HleModuleGuest = new HleModuleGuest(PspEmulatorContext.GetInstance<HleState>());
 
+			var Magic = FileStream.SliceWithLength(0, 4).ReadString(4);
+			Console.WriteLine("Magic: '{0}'", Magic);
+			if (Magic == "~PSP")
+			{
+				try
+				{
+					var DecryptedData = new EncryptedPrx().Decrypt(FileStream.ReadAll());
+					File.WriteAllBytes("last_decoded_prx.bin", DecryptedData);
+					FileStream = new MemoryStream(DecryptedData);
+				}
+				catch (Exception Exception)
+				{
+					Console.Error.WriteLine(Exception);
+					throw (Exception);
+				}
+			}
+
 			this.ElfLoader.Load(FileStream, ModuleName);
 
 			PspEmulatorContext.PspConfig.InfoExeHasRelocation = this.ElfLoader.NeedsRelocation;
@@ -403,7 +420,7 @@ namespace CSPspEmu.Hle.Loader
 				{
 					uint NID = FunctionNIDReader.ReadUInt32();
 					uint CallAddress = FunctionAddressReader.ReadUInt32();
-					HleModuleExports.Functions[NID] = CallAddress;
+					HleModuleExports.Functions[NID] = new HleModuleImportsExports.Entry() { Address = CallAddress };
 
 					Console.WriteLine("  |  - FUNC: {0:X} : {1:X} : {2}", NID, CallAddress, Enum.GetName(typeof(SpecialFunctionNids), NID));
 				}
@@ -412,7 +429,7 @@ namespace CSPspEmu.Hle.Loader
 				{
 					uint NID = VariableNIDReader.ReadUInt32();
 					uint CallAddress = VariableAddressReader.ReadUInt32();
-					HleModuleExports.Variables[NID] = CallAddress;
+					HleModuleExports.Variables[NID] = new HleModuleImportsExports.Entry() { Address = CallAddress };
 
 					Console.WriteLine("  |  - VAR: {0:X} : {1:X} : {2}", NID, CallAddress, Enum.GetName(typeof(SpecialVariableNids), NID));
 				}
@@ -475,7 +492,7 @@ namespace CSPspEmu.Hle.Loader
 					var NID = NidStreamReader.ReadUInt32();
 					var CallAddress = (uint)(ModuleImport.CallAddress + n * 8);
 
-					HleModuleImports.Functions[NID] = CallAddress;
+					HleModuleImports.Functions[NID] = new HleModuleImportsExports.Entry() { Address = CallAddress };
 				}
 
 				HleModuleGuest.ModulesImports.Add(HleModuleImports);

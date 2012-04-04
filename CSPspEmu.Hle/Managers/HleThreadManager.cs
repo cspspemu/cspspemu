@@ -110,7 +110,7 @@ namespace CSPspEmu.Hle.Managers
 			MustReschedule = false;
 
 			//HleInterruptManager.EnableDisable(() => {
-			//});
+			//};
 
 #if !DISABLE_CALLBACKS
 			if (Threads.Count > 0)

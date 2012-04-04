@@ -248,5 +248,23 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		{
 			//throw (new NotImplementedException());
 		}
+
+		[HlePspFunction(NID = 0xFE707FDF, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public void SysMemUserForUser_FE707FDF()
+		{
+		}
+
+		[HlePspFunction(NID = 0xDB83A952, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public void SysMemUserForUser_DB83A952()
+		{
+		}
+
+		[HlePspFunction(NID = 0x50F61D8A, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public void SysMemUserForUser_50F61D8A()
+		{
+		}
 	}
 }

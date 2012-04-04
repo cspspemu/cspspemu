@@ -12,7 +12,9 @@ namespace CSPspEmu.Core.Tests
 		public void LoadTest()
 		{
 			var EncryptedPrx = new EncryptedPrx();
-			EncryptedPrx.Load(File.ReadAllBytes("../../../TestInput/EBOOT.BIN"));
+			var DecryptedData = EncryptedPrx.Decrypt(File.ReadAllBytes("../../../TestInput/EBOOT.BIN"));
+			File.WriteAllBytes("../../../TestInput/test.bin", DecryptedData);
+			//File.ReadAllBytes("../../../TestInput/BOOT.BIN");
 		}
 	}
 }
