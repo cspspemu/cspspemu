@@ -17,6 +17,7 @@ namespace CSPspEmu.Core
 		public PspEmulatorContext(PspConfig PspConfig)
 		{
 			this.PspConfig = PspConfig;
+			this.PspConfig.PspEmulatorContext = this;
 		}
 
 		protected Dictionary<Type, PspEmulatorComponent> ObjectsByType = new Dictionary<Type, PspEmulatorComponent>();

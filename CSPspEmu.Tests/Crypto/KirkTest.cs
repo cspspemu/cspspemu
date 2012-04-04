@@ -35,7 +35,7 @@ namespace CSPspEmu.Core.Tests.Crypto
 			fixed (byte* OutputPtr = Output)
 			fixed (byte* InputPtr = Input)
 			{
-				Assert.AreEqual(Kirk.KIRK_OPERATION_SUCCESS, Kirk.KirkSha1(OutputPtr, InputPtr, Input.Length));
+				Kirk.KirkSha1(OutputPtr, InputPtr, Input.Length);
 			}
 
 			CollectionAssert.AreEqual(ExpectedOutput, Output);
@@ -48,7 +48,6 @@ namespace CSPspEmu.Core.Tests.Crypto
 			var Kirk = new Kirk();
 			Kirk.kirk_init();
 
-			int result;
 			var _src = new byte[0x100];
 			var _dst = new byte[0x10];
 
@@ -65,9 +64,7 @@ namespace CSPspEmu.Core.Tests.Crypto
 				*(uint*)(&src[0x70]) = 0x10; // DataSize
 				*(uint*)(&src[0x74]) = 0; // DataOffset
 
-				result = Kirk.kirk_CMD1(dst, src, 0x100, false);
-
-				Assert.AreEqual(0, result);
+				Kirk.kirk_CMD1(dst, src, 0x100, false);
 
 				//Console.WriteLine(BitConverter.ToString(_src));
 				//Console.WriteLine(BitConverter.ToString(_dst));
@@ -83,7 +80,6 @@ namespace CSPspEmu.Core.Tests.Crypto
 			var Kirk = new Kirk();
 			Kirk.kirk_init();
 
-			int result;
 			var _src = new byte[0x20 + 0x14];
 			var _dst = new byte[0x20];
 
@@ -101,9 +97,7 @@ namespace CSPspEmu.Core.Tests.Crypto
 				*(uint*)(&src[0x0C]) = 0x03; // KeySeed
 				*(uint*)(&src[0x10]) = 1; // DataSize
 
-				result = Kirk.kirk_CMD7(dst, src, 0x20);
-
-				Assert.AreEqual(0, result);
+				Kirk.kirk_CMD7(dst, src, 0x20);
 
 				Console.WriteLine("_src: {0}", BitConverter.ToString(_src));
 				Console.WriteLine("_dst: {0}", BitConverter.ToString(_dst));

@@ -119,9 +119,11 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <param name="FileDescriptor">The old filedescriptor to reopen</param>
 		/// <returns>Less than 0 on error, otherwise the reopened fd.</returns>
 		[HlePspFunction(NID = 0x3C54E908, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceIoReopen(string NewFileName, HleIoFlags SceIoFlags, SceMode SceMode, SceUID FileDescriptor)
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>

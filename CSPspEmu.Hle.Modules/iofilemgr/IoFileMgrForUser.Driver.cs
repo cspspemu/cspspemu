@@ -24,7 +24,8 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspNotImplemented]
 		public int sceIoAddDrv(PspIoDrv* PspIoDrv)
 		{
-			throw (new NotImplementedException());
+			Console.WriteLine("Not implemented sceIoAddDrv(...)");
+			return 0;
 		}
 
 		/// <summary>
@@ -38,7 +39,8 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspNotImplemented]
 		public int sceIoDelDrv(string DriverName)
 		{
-			throw (new NotImplementedException());
+			Console.WriteLine("Not implemented sceIoDelDrv('{0}')", DriverName);
+			return 0;
 		}
 	}
 }

@@ -8,30 +8,14 @@ namespace CSPspEmu.Core.Crypto
 {
 	unsafe public partial class Kirk
 	{
-		// Kirk return values
-		public const int KIRK_OPERATION_SUCCESS = 0;
-		public const int KIRK_NOT_ENABLED = 1;
-		public const int KIRK_INVALID_MODE = 2;
-		public const int KIRK_HEADER_HASH_INVALID = 3;
-		public const int KIRK_DATA_HASH_INVALID = 4;
-		public const int KIRK_SIG_CHECK_INVALID = 5;
-		public const int KIRK_UNK_1 = 6;
-		public const int KIRK_UNK_2 = 7;
-		public const int KIRK_UNK_3 = 8;
-		public const int KIRK_UNK_4 = 9;
-		public const int KIRK_UNK_5 = 0xA; // 10
-		public const int KIRK_UNK_6 = 0xB; // 11
-		public const int KIRK_NOT_INITIALIZED = 0xC; // 12
-		public const int KIRK_INVALID_OPERATION = 0xD; // 13
-		public const int KIRK_INVALID_SEED_CODE = 0xE; // 14
-		public const int KIRK_INVALID_SIZE = 0xF; // 15
-		public const int KIRK_DATA_SIZE_ZERO = 0x10; // 16
-
+		/// <summary>
+		/// 
+		/// </summary>
 		public class KirkException : Exception
 		{
-			int Result;
+			internal ResultEnum Result;
 
-			public KirkException(int Result)
+			public KirkException(ResultEnum Result)
 			{
 				this.Result = Result;
 			}
@@ -45,7 +29,7 @@ namespace CSPspEmu.Core.Crypto
 			/// <summary>
 			/// 0000 - 
 			/// </summary>
-			public int Mode;
+			public KirkMode Mode;
 
 			/// <summary>
 			/// 0004 - 
@@ -101,7 +85,7 @@ namespace CSPspEmu.Core.Crypto
 			/// <summary>
 			/// 0060 -
 			/// </summary>
-			public uint Mode;
+			public KirkMode Mode;
 
 			/// <summary>
 			/// 0061 -
@@ -134,17 +118,36 @@ namespace CSPspEmu.Core.Crypto
 			public fixed byte Unknown4[16];
 		}
 
-		//"mode" in header
-		public const int KIRK_MODE_CMD1 = 1;
-		public const int KIRK_MODE_CMD2 = 2;
-		public const int KIRK_MODE_CMD3 = 3;
-		public const int KIRK_MODE_ENCRYPT_CBC = 4;
-		public const int KIRK_MODE_DECRYPT_CBC = 5;
+		/// <summary>
+		/// "mode" in header
+		/// </summary>
+		public enum KirkMode : int
+		{
+			/// <summary>
+			/// KIRK_MODE_CMD1 = 1
+			/// </summary>
+			Cmd1 = 1,
 
-		//sceUtilsBufferCopyWithRange errors
-		public const int SUBCWR_NOT_16_ALGINED = 0x90A;
-		public const int SUBCWR_HEADER_HASH_INVALID = 0x920;
-		public const int SUBCWR_BUFFER_TOO_SMALL = 0x1000;
+			/// <summary>
+			/// KIRK_MODE_CMD2 = 2
+			/// </summary>
+			Cmd2 = 2,
+
+			/// <summary>
+			/// KIRK_MODE_CMD3 = 3
+			/// </summary>
+			Cmd3 = 3,
+
+			/// <summary>
+			/// KIRK_MODE_ENCRYPT_CBC = 4
+			/// </summary>
+			EncryptCbc = 4,
+
+			/// <summary>
+			/// KIRK_MODE_DECRYPT_CBC = 5
+			/// </summary>
+			DecryptCbc = 5,
+		}
 
 		/// <summary>
 		/// 
@@ -336,25 +339,104 @@ namespace CSPspEmu.Core.Crypto
 		/// </summary>
 		public enum ResultEnum
 		{
+			/// <summary>
+			/// KIRK_OPERATION_SUCCESS
+			/// </summary>
 			OK = 0,
+
+			/// <summary>
+			/// KIRK_NOT_ENABLED
+			/// </summary>
 			PSP_KIRK_NOT_ENABLED = 0x1,
+
+			/// <summary>
+			/// KIRK_INVALID_MODE
+			/// </summary>
 			PSP_KIRK_INVALID_MODE = 0x2,
+
+			/// <summary>
+			/// KIRK_HEADER_HASH_INVALID
+			/// </summary>
 			PSP_KIRK_INVALID_HEADER_HASH = 0x3,
+
+			/// <summary>
+			/// KIRK_DATA_HASH_INVALID
+			/// </summary>
 			PSP_KIRK_INVALID_DATA_HASH = 0x4,
+
+			/// <summary>
+			/// KIRK_SIG_CHECK_INVALID
+			/// </summary>
 			PSP_KIRK_INVALID_SIG_CHECK = 0x5,
+
+			/// <summary>
+			/// KIRK_UNK_1
+			/// </summary>
 			PSP_KIRK_UNK1 = 0x6,
+
+			/// <summary>
+			/// KIRK_UNK_2
+			/// </summary>
 			PSP_KIRK_UNK2 = 0x7,
+
+			/// <summary>
+			/// KIRK_UNK_3
+			/// </summary>
 			PSP_KIRK_UNK3 = 0x8,
+
+			/// <summary>
+			/// KIRK_UNK_4
+			/// </summary>
 			PSP_KIRK_UNK4 = 0x9,
+
+			/// <summary>
+			/// KIRK_UNK_5
+			/// </summary>
 			PSP_KIRK_UNK5 = 0xA,
+
+			/// <summary>
+			/// KIRK_UNK_6
+			/// </summary>
 			PSP_KIRK_UNK6 = 0xB,
+
+			/// <summary>
+			/// KIRK_NOT_INITIALIZED
+			/// </summary>
 			PSP_KIRK_NOT_INIT = 0xC,
+
+			/// <summary>
+			/// KIRK_INVALID_OPERATION
+			/// </summary>
 			PSP_KIRK_INVALID_OPERATION = 0xD,
+
+			/// <summary>
+			/// KIRK_INVALID_SEED_CODE
+			/// </summary>
 			PSP_KIRK_INVALID_SEED = 0xE,
+
+			/// <summary>
+			/// KIRK_INVALID_SIZE
+			/// </summary>
 			PSP_KIRK_INVALID_SIZE = 0xF,
+
+			/// <summary>
+			/// KIRK_DATA_SIZE_ZERO
+			/// </summary>
 			PSP_KIRK_DATA_SIZE_IS_ZERO = 0x10,
+
+			/// <summary>
+			/// SUBCWR_NOT_16_ALGINED
+			/// </summary>
 			PSP_SUBCWR_NOT_16_ALGINED = 0x90A,
+
+			/// <summary>
+			/// SUBCWR_HEADER_HASH_INVALID
+			/// </summary>
 			PSP_SUBCWR_HEADER_HASH_INVALID = 0x920,
+
+			/// <summary>
+			/// SUBCWR_BUFFER_TOO_SMALL
+			/// </summary>
 			PSP_SUBCWR_BUFFER_TOO_SMALL = 0x1000,
 		}
 	}

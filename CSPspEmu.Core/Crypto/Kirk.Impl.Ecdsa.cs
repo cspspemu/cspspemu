@@ -15,7 +15,7 @@ namespace CSPspEmu.Core.Crypto
 		/// <param name="Out"></param>
 		/// <param name="outsize"></param>
 		/// <returns></returns>
-		public ResultEnum executeKIRKCmd12(byte* Out, int outsize)
+		public void executeKIRKCmd12(byte* Out, int outsize)
 		{
 			throw (new NotImplementedException());
 		}
@@ -30,7 +30,7 @@ namespace CSPspEmu.Core.Crypto
 		/// <param name="In"></param>
 		/// <param name="insize"></param>
 		/// <returns></returns>
-		public ResultEnum executeKIRKCmd13(byte* Out, int outsize, byte* In, int insize)
+		public void executeKIRKCmd13(byte* Out, int outsize, byte* In, int insize)
 		{
 			//var ecdsa = ECDsa.Create();
 			//ecdsa.
@@ -47,7 +47,7 @@ namespace CSPspEmu.Core.Crypto
 		/// <param name="In"></param>
 		/// <param name="insize"></param>
 		/// <returns></returns>
-		public ResultEnum executeKIRKCmd16(byte* Out, int outsize, byte* In, int insize)
+		public void executeKIRKCmd16(byte* Out, int outsize, byte* In, int insize)
 		{
 			throw (new NotImplementedException());
 		}
@@ -60,7 +60,7 @@ namespace CSPspEmu.Core.Crypto
 		/// <param name="In"></param>
 		/// <param name="insize"></param>
 		/// <returns></returns>
-		public ResultEnum executeKIRKCmd17(byte* In, int insize)
+		public void executeKIRKCmd17(byte* In, int insize)
 		{
 			throw (new NotImplementedException());
 		}

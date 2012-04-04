@@ -17,6 +17,7 @@ namespace CSPspEmu.Hle
 	unsafe public class HleModuleHost : HleModule
 	{
 		public HleState HleState;
+		public string ModuleLocation;
 		public Dictionary<uint, FunctionEntry> EntriesByNID = new Dictionary<uint, FunctionEntry>();
 		public Dictionary<uint, Action<CpuThreadState>> DelegatesByNID = new Dictionary<uint, Action<CpuThreadState>>();
 		public Dictionary<string, Action<CpuThreadState>> DelegatesByName = new Dictionary<string, Action<CpuThreadState>>();
@@ -36,6 +37,10 @@ namespace CSPspEmu.Hle
 		public void Initialize(HleState HleState)
 		{
 			this.HleState = HleState;
+
+			this.ModuleLocation = "flash0:/kd/" + this.GetType().Namespace.Split('.').Last() + ".prx";
+			//Console.WriteLine(this.ModuleLocation);
+			//Console.ReadKey();
 
 			//try
 			{
@@ -333,6 +338,7 @@ namespace CSPspEmu.Hle
 				{
 					throw (SceKernelSelfStopUnloadModuleException);
 				}
+#if !DO_NOT_PROPAGATE_EXCEPTIONS
 				catch (Exception Exception)
 				{
 					throw (new Exception(
@@ -340,6 +346,7 @@ namespace CSPspEmu.Hle
 						Exception
 					));
 				}
+#endif
 				finally
 				{
 					if (Trace)

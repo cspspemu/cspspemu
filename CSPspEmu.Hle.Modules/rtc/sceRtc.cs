@@ -24,6 +24,19 @@ namespace CSPspEmu.Hle.Modules.rtc
 		}
 
 		/// <summary>
+		/// Convert a UTC-based tickcount into a local time tick count
+		/// </summary>
+		/// <param name="TickUTC">pointer to u64 tick in UTC time</param>
+		/// <param name="TickLocal">pointer to u64 to receive tick in local time</param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0x34885E0D, FirmwareVersion = 150)]
+		public int sceRtcConvertUtcToLocalTime(ulong* TickUTC, ulong* TickLocal)
+		{
+			*TickLocal = *TickUTC;
+			return 0;
+		}
+
+		/// <summary>
 		/// Get current tick count (number of microseconds)
 		/// </summary>
 		/// <param name="Tick">pointer to u64 to receive tick count</param>

@@ -30,12 +30,15 @@ namespace CSPspEmu.Core.Crypto
 		/// <param name="InputBuffer"></param>
 		/// <param name="InputSize"></param>
 		/// <returns></returns>
-		public int KirkSha1(byte* OutputBuffer, byte* InputBuffer, int InputSize)
+		public void KirkSha1(byte* OutputBuffer, byte* InputBuffer, int InputSize)
 		{
-			if (!IsKirkInitialized) return KIRK_NOT_INITIALIZED;
+			check_initialized();
 
 			var Header = (KIRK_SHA1_HEADER*)InputBuffer;
-			if (InputSize == 0 || Header->DataSize == 0) return KIRK_DATA_SIZE_ZERO;
+			if (InputSize == 0 || Header->DataSize == 0)
+			{
+				throw(new KirkException(ResultEnum.PSP_KIRK_DATA_SIZE_IS_ZERO));
+			}
 
 			//Size <<= 4;
 			//Size >>= 4;
@@ -47,8 +50,6 @@ namespace CSPspEmu.Core.Crypto
 			);
 
 			Marshal.Copy(Sha1Hash, 0, new IntPtr(OutputBuffer), Sha1Hash.Length);
-
-			return KIRK_OPERATION_SUCCESS;
 		}
 
 		/// <summary>

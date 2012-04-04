@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
 
 namespace CSPspEmu.Hle.Formats
 {
@@ -113,7 +114,8 @@ namespace CSPspEmu.Hle.Formats
 
 		// http://hitmen.c02.at/files/yapspd/psp_doc/chap26.html
 		// 26.2.2.8
-		public struct ModuleInfo {
+		public struct ModuleInfo
+		{
 			public enum AtributesEnum : ushort
 			{
 				UserMode = 0x0000,
@@ -133,7 +135,18 @@ namespace CSPspEmu.Hle.Formats
 			/// <summary>
 			/// Module Name (0 terminated)
 			/// </summary>
-			public fixed byte Name[28];
+			public fixed byte NameRaw[28];
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public string Name
+			{
+				get
+				{
+					fixed (byte* NameRawPtr = NameRaw) return PointerUtils.PtrToStringUtf8(NameRawPtr);
+				}
+			}
 
 			/// <summary>
 			/// Initial value for GP (Global Pointer).

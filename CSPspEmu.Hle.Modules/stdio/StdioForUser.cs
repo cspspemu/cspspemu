@@ -66,9 +66,11 @@ namespace CSPspEmu.Hle.Modules.stdio
 		/// <param name="Mode">The file mode</param>
 		/// <returns>&lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0x98220F3E, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceKernelStdoutReopen(string File, int Flags, SceMode Mode)
 		{
-			throw (new NotImplementedException());
+			//throw (new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -79,9 +81,11 @@ namespace CSPspEmu.Hle.Modules.stdio
 		/// <param name="Mode">The file mode</param>
 		/// <returns>&lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0xFB5380C5, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceKernelStderrReopen(string File, int Flags, SceMode Mode)
 		{
-			throw (new NotImplementedException());
+			//throw (new NotImplementedException());
+			return 0;
 		}
 	}
 }

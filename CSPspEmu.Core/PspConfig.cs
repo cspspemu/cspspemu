@@ -18,6 +18,11 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
+		public PspEmulatorContext PspEmulatorContext;
+
+		/// <summary>
+		/// 
+		/// </summary>
 		static public string CultureName = "en-US";
 
 		/// <summary>

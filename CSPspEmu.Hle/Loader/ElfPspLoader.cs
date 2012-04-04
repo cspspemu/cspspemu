@@ -141,6 +141,9 @@ namespace CSPspEmu.Hle.Loader
 				_RelocOutputStream.Flush();
 				RelocOutput.Close();
 				_RelocOutputStream.Close();
+				
+				_RelocOutput = null;
+				_RelocOutputStream = null;
 			}
 		}
 
@@ -379,7 +382,7 @@ namespace CSPspEmu.Hle.Loader
 						//throw (new Exception(Exception.Message, Exception));
 					}
 
-					Console.WriteLine("{0:X}:'{1}'", ModuleImport.Name, ModuleImportName);
+					Console.WriteLine("{0:X}:'{1}' - {2}", ModuleImport.Name, ModuleImportName, (Module != null) ? Module.ModuleLocation : "?");
 					for (int n = 0; n < ModuleImport.FunctionCount; n++)
 					{
 						uint NID = NidStreamReader.ReadUInt32();

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Hle.Modules.modulemgr;
 
 namespace CSPspEmu.Hle.Modules.loadcore
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
 	unsafe public class LoadCoreForKernel : HleModuleHost
 	{
-		public enum SceModule : uint { }
+		//public enum SceModule : uint { }
 		public enum SceUID : int { }
 
 		/// <summary>
@@ -37,19 +38,15 @@ namespace CSPspEmu.Hle.Modules.loadcore
 		/// <summary>
 		/// Find a module by it's UID.
 		/// </summary>
-		/// <param name="modid">The UID of the module.</param>
+		/// <param name="ModuleId">The UID of the module.</param>
 		/// <returns>Pointer to the ::SceModule structure if found, otherwise NULL.</returns>
 		[HlePspFunction(NID = 0xCCE4A157, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public SceModule* sceKernelFindModuleByUID(SceUID modid)
+		//[HlePspNotImplemented]
+		public uint sceKernelFindModuleByUID(int ModuleId)
 		{
-			/*
-			logWarning("Not implemented sceKernelFindModuleByUID(%d)", modid);
-		
-			return uniqueIdFactory.get!Module(modid).sceModule;
-			*/
-			//throw(new NotImplementedException());
-			return null;
+			var ModuleMgrForUser = HleState.ModuleManager.GetModule<ModuleMgrForUser>();
+			var Module = ModuleMgrForUser.Modules.Get(ModuleId);
+			return Module.SceModuleStructPartition.Low;
 		}
 
 		/// <summary>
@@ -70,14 +67,16 @@ namespace CSPspEmu.Hle.Modules.loadcore
 		/// <returns>Pointer to the ::SceModule structure if found, otherwise NULL.</returns>
 		[HlePspFunction(NID = 0xCF8A41B1, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public SceModule* sceKernelFindModuleByName(string ModuleName)
+		public int sceKernelFindModuleByName(string ModuleName)
 		{
+			Console.WriteLine("sceKernelFindModuleByName('{0}') not implemented", ModuleName);
+			return 0;
 			/*
-			logWarning("sceKernelFindModuleByName('%s') not implemented", ModuleName);
+			logWarning();
 			//unimplemented();
 			return null;
 			*/
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
 		}
 
 	}

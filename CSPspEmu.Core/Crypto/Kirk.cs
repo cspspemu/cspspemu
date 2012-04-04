@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define USE_DOTNET_CRYPTO
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,7 +25,9 @@ namespace CSPspEmu.Core.Crypto
 
 		byte[] fuseID = new byte[16]; // Emulate FUSEID	
 
+//#if !USE_DOTNET_CRYPTO
 		Crypto.AES_ctx _aes_kirk1; //global
+//#endif
 
 		Random Random;
 
@@ -37,23 +41,27 @@ namespace CSPspEmu.Core.Crypto
 		/// <param name="size"></param>
 		/// <param name="generate_trash"></param>
 		/// <returns></returns>
-		public int kirk_CMD0(byte* outbuff, byte* inbuff, int size, bool generate_trash)
+		public void kirk_CMD0(byte* outbuff, byte* inbuff, int size, bool generate_trash)
 		{
 			var _cmac_header_hash = new byte[16];
 			var _cmac_data_hash = new byte[16];
 
 			fixed (byte* cmac_header_hash = _cmac_header_hash)
 			fixed (byte* cmac_data_hash = _cmac_data_hash)
+//#if !USE_DOTNET_CRYPTO
 			fixed (Crypto.AES_ctx* aes_kirk1_ptr = &_aes_kirk1)
+//#endif
 			{
-
-				if (!IsKirkInitialized) return KIRK_NOT_INITIALIZED;
+				check_initialized();
 	
 				AES128CMACHeader* header = (AES128CMACHeader*)outbuff;
 	
 				Crypto.memcpy(outbuff, inbuff, size);
-	
-				if(header->Mode != KIRK_MODE_CMD1) return KIRK_INVALID_MODE;
+
+				if (header->Mode != KirkMode.Cmd1)
+				{
+					throw(new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE));
+				}
 	
 				header_keys *keys = (header_keys *)outbuff; //0-15 AES key, 16-31 CMAC key
 	
@@ -84,8 +92,14 @@ namespace CSPspEmu.Core.Crypto
 				//ENCRYPT KEYS
 				Crypto.AES_cbc_encrypt(aes_kirk1_ptr, inbuff, outbuff, 16 * 2);
 			}
+		}
 
-			return KIRK_OPERATION_SUCCESS;
+		/// <summary>
+		/// 
+		/// </summary>
+		private void check_initialized()
+		{
+			if (!IsKirkInitialized) throw (new KirkException(ResultEnum.PSP_KIRK_NOT_INIT));
 		}
 
 		/// <summary>
@@ -97,37 +111,46 @@ namespace CSPspEmu.Core.Crypto
 		/// <param name="size"></param>
 		/// <param name="do_check"></param>
 		/// <returns></returns>
-		public int kirk_CMD1(byte* outbuff, byte* inbuff, int size, bool do_check = true)
+		public void kirk_CMD1(byte* outbuff, byte* inbuff, int size, bool do_check = true)
 		{
 			fixed (Crypto.AES_ctx* aes_kirk1_ptr = &_aes_kirk1)
 			{
-				if (!IsKirkInitialized) return KIRK_NOT_INITIALIZED;
-
+				check_initialized();
 				var header = (AES128CMACHeader*)inbuff;
 				//Console.WriteLine(MathUtils.ByteSwap(header->Mode));
-				if (header->Mode != KIRK_MODE_CMD1) return KIRK_INVALID_MODE;
+				if (header->Mode != KirkMode.Cmd1) throw (new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE));
 
 				header_keys keys; //0-15 AES key, 16-31 CMAC key
 
-				Crypto.AES_cbc_decrypt(aes_kirk1_ptr, inbuff, (byte*)&keys, 16 * 2); //decrypt AES & CMAC key to temp buffer
+#if USE_DOTNET_CRYPTO
+				DecryptAes(kirk1_key, inbuff, (byte*)&keys, 16 * 2); //decrypt AES & CMAC key to temp buffer
+#else
+				Crypto.AES_cbc_decrypt(aes_kirk1_ptr, inbuff, (byte*)&keys, 16 * 2); 
+#endif
 
 				//AES.CreateDecryptor(
 
 				// HOAX WARRING! I have no idea why the hash check on last IPL block fails, so there is an option to disable checking
 				if (do_check)
 				{
-					int ret = kirk_CMD10(inbuff, size);
-					if (ret != KIRK_OPERATION_SUCCESS) return ret;
+					kirk_CMD10(inbuff, size);
 				}
 
 				//var AES = new RijndaelManaged();
 
+#if USE_DOTNET_CRYPTO
+				DecryptAes(
+					PointerUtils.PointerToByteArray(keys.AES, 16),
+					inbuff + sizeof(AES128CMACHeader) + header->DataOffset,
+					outbuff,
+					header->DataSize
+				);
+#else
 				Crypto.AES_ctx k1;
 				Crypto.AES_set_key(&k1, keys.AES, 128);
 
 				Crypto.AES_cbc_decrypt(&k1, inbuff + sizeof(AES128CMACHeader) + header->DataOffset, outbuff, header->DataSize);
-
-				return KIRK_OPERATION_SUCCESS;
+#endif
 			}
 		}
 
@@ -138,25 +161,27 @@ namespace CSPspEmu.Core.Crypto
 		/// <param name="inbuff"></param>
 		/// <param name="size"></param>
 		/// <returns></returns>
-		public int kirk_CMD4(byte* outbuff, byte* inbuff, int size)
+		public void kirk_CMD4(byte* outbuff, byte* inbuff, int size)
 		{
-			if(!IsKirkInitialized) return KIRK_NOT_INITIALIZED;
+			check_initialized();
 	
 			KIRK_AES128CBC_HEADER *header = (KIRK_AES128CBC_HEADER*)inbuff;
-			if(header->Mode != KIRK_MODE_ENCRYPT_CBC) return KIRK_INVALID_MODE;
-			if(header->Datasize == 0) return KIRK_DATA_SIZE_ZERO;
+			if (header->Mode != KirkMode.EncryptCbc)
+			{
+				throw (new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE));
+			}
+			if (header->Datasize == 0)
+			{
+				throw (new KirkException(ResultEnum.PSP_KIRK_DATA_SIZE_IS_ZERO));
+			}
 
 			kirk_4_7_get_key(header->KeySeed, (key) =>
 			{
-				if (key == (byte*)KIRK_INVALID_SIZE) throw(new KirkException(KIRK_INVALID_SIZE));
-
 				// Set the key
 				Crypto.AES_ctx aesKey;
 				Crypto.AES_set_key(&aesKey, key, 128);
 				Crypto.AES_cbc_encrypt(&aesKey, inbuff + sizeof(KIRK_AES128CBC_HEADER), outbuff, size);
 			});
-
-			return KIRK_OPERATION_SUCCESS;
 		}
 
 		/// <summary>
@@ -166,15 +191,21 @@ namespace CSPspEmu.Core.Crypto
 		/// <param name="inbuff"></param>
 		/// <param name="size"></param>
 		/// <returns></returns>
-		public int kirk_CMD7(byte* outbuff, byte* inbuff, int size)
+		public void kirk_CMD7(byte* outbuff, byte* inbuff, int size)
 		{
-			if (!IsKirkInitialized) return KIRK_NOT_INITIALIZED;
+			check_initialized();
 	
 			var Header = (KIRK_AES128CBC_HEADER*)inbuff;
-			if (Header->Mode != KIRK_MODE_DECRYPT_CBC) return KIRK_INVALID_MODE;
-			if (Header->Datasize == 0) return KIRK_DATA_SIZE_ZERO;
+			if (Header->Mode != KirkMode.DecryptCbc)
+			{
+				throw (new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE));
+			}
+			if (Header->Datasize == 0)
+			{
+				throw (new KirkException(ResultEnum.PSP_KIRK_DATA_SIZE_IS_ZERO));
+			}
 
-#if true
+#if USE_DOTNET_CRYPTO
 			var Output = DecryptAes(
 				PointerUtils.PointerToByteArray(inbuff + sizeof(KIRK_AES128CBC_HEADER), size),
 				_kirk_4_7_get_key(Header->KeySeed)
@@ -191,8 +222,6 @@ namespace CSPspEmu.Core.Crypto
 				Crypto.AES_cbc_decrypt(&aesKey, inbuff + sizeof(KIRK_AES128CBC_HEADER), outbuff, size);
 			});
 #endif
-
-			return KIRK_OPERATION_SUCCESS;
 		}
 
 		/// <summary>
@@ -201,29 +230,43 @@ namespace CSPspEmu.Core.Crypto
 		/// <param name="inbuff"></param>
 		/// <param name="insize"></param>
 		/// <returns></returns>
-		public int kirk_CMD10(byte* inbuff, int insize)
+		public void kirk_CMD10(byte* inbuff, int insize)
 		{
 			var _cmac_header_hash = new byte[16];
 			var _cmac_data_hash = new byte[16];
 			fixed (byte* cmac_header_hash = _cmac_header_hash)
 			fixed (byte* cmac_data_hash = _cmac_data_hash)
+#if !USE_DOTNET_CRYPTO
 			fixed (Crypto.AES_ctx* aes_kirk1_ptr = &_aes_kirk1)
+#endif
 			{
-				if (!IsKirkInitialized) return KIRK_NOT_INITIALIZED;
+				check_initialized();
 
 				AES128CMACHeader* header = (AES128CMACHeader*)inbuff;
 
-				if (!(header->Mode == KIRK_MODE_CMD1 || header->Mode == KIRK_MODE_CMD2 || header->Mode == KIRK_MODE_CMD3)) return KIRK_INVALID_MODE;
-				if (header->DataSize == 0) return KIRK_DATA_SIZE_ZERO;
-
-				if (header->Mode != KIRK_MODE_CMD1)
+				if (!(header->Mode == KirkMode.Cmd1 || header->Mode == KirkMode.Cmd2 || header->Mode == KirkMode.Cmd3))
 				{
-					return KIRK_SIG_CHECK_INVALID; //Checks for cmd 2 & 3 not included right now
+					throw(new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE));
+				}
+
+				if (header->DataSize == 0)
+				{
+					throw (new KirkException(ResultEnum.PSP_KIRK_DATA_SIZE_IS_ZERO));
+				}
+
+				if (header->Mode != KirkMode.Cmd1)
+				{
+					// Checks for cmd 2 & 3 not included right now
+					throw (new KirkException(ResultEnum.PSP_KIRK_INVALID_SIG_CHECK));
 				}
 
 				header_keys keys; //0-15 AES key, 16-31 CMAC key
 
+#if USE_DOTNET_CRYPTO
+				DecryptAes(kirk1_key, inbuff, (byte *)&keys, 16 * 2);
+#else
 				Crypto.AES_cbc_decrypt(aes_kirk1_ptr, inbuff, (byte*)&keys, 32); //decrypt AES & CMAC key to temp buffer
+#endif
 
 				Crypto.AES_ctx cmac_key;
 				Crypto.AES_set_key(&cmac_key, keys.CMAC, 128);
@@ -238,15 +281,13 @@ namespace CSPspEmu.Core.Crypto
 				if (Crypto.memcmp(cmac_header_hash, header->CMAC_header_hash, 16) != 0)
 				{
 					Console.WriteLine("header hash invalid");
-					return KIRK_HEADER_HASH_INVALID;
+					throw (new KirkException(ResultEnum.PSP_SUBCWR_HEADER_HASH_INVALID));
 				}
 				if (Crypto.memcmp(cmac_data_hash, header->CMAC_data_hash, 16) != 0)
 				{
 					Console.WriteLine("data hash invalid");
-					return KIRK_DATA_HASH_INVALID;
+					throw (new KirkException(ResultEnum.PSP_SUBCWR_HEADER_HASH_INVALID));
 				}
-
-				return KIRK_OPERATION_SUCCESS;
 			}
 		}
 
@@ -256,18 +297,17 @@ namespace CSPspEmu.Core.Crypto
 		/// <param name="outbuff"></param>
 		/// <param name="OutputSize"></param>
 		/// <returns></returns>
-		public int kirk_CMD14(byte* Output, int OutputSize)
+		public void kirk_CMD14(byte* Output, int OutputSize)
 		{
-			if (!IsKirkInitialized) return KIRK_NOT_INITIALIZED;
+			check_initialized();
 			for (int i = 0; i < OutputSize; i++) Output[i] = (byte)(Random.Next() & 0xFF);
-			return KIRK_OPERATION_SUCCESS;
 		}
 
 		/// <summary>
 		/// Initializes kirk
 		/// </summary>
 		/// <returns></returns>
-		public int kirk_init()
+		public void kirk_init()
 		{
 			fixed (byte* kirk1_key_ptr = kirk1_key)
 			fixed (Crypto.AES_ctx* aes_kirk1_ptr = &_aes_kirk1)
@@ -276,7 +316,6 @@ namespace CSPspEmu.Core.Crypto
 			}
 			IsKirkInitialized = true;
 			Random = new Random();
-			return KIRK_OPERATION_SUCCESS;
 		}
 
 		/// <summary>
@@ -334,14 +373,14 @@ namespace CSPspEmu.Core.Crypto
 		/// <param name="size"></param>
 		/// <param name="header"></param>
 		/// <returns></returns>
-		public int kirk_CMD1_ex(byte* outbuff, byte* inbuff, int size, AES128CMACHeader* header)
+		public void kirk_CMD1_ex(byte* outbuff, byte* inbuff, int size, AES128CMACHeader* header)
 		{
 			var _buffer = new byte[size];
 			fixed (byte* buffer = _buffer)
 			{
 				Crypto.memcpy(buffer, header, sizeof(AES128CMACHeader));
 				Crypto.memcpy(buffer + sizeof(AES128CMACHeader), inbuff, header->DataSize);
-				return kirk_CMD1(outbuff, buffer, size, true);
+				kirk_CMD1(outbuff, buffer, size, true);
 			}
 		}
 
@@ -377,7 +416,7 @@ namespace CSPspEmu.Core.Crypto
 		/// <param name="inbuff"></param>
 		/// <param name="insize"></param>
 		/// <returns></returns>
-		public int kirk_forge(byte* inbuff, int insize)
+		public void kirk_forge(byte* inbuff, int insize)
 		{
 		   AES128CMACHeader* header = (AES128CMACHeader*)inbuff;
 		   Crypto.AES_ctx cmac_key;
@@ -389,42 +428,53 @@ namespace CSPspEmu.Core.Crypto
 		   fixed (byte* cmac_data_hash = _cmac_data_hash)
 		   fixed (Crypto.AES_ctx* aes_kirk1_ptr = &_aes_kirk1)
 		   {
-			   if (!IsKirkInitialized) return KIRK_NOT_INITIALIZED;
-			   if (!(header->Mode == KIRK_MODE_CMD1 || header->Mode == KIRK_MODE_CMD2 || header->Mode == KIRK_MODE_CMD3)) return KIRK_INVALID_MODE;
-			   if (header->DataSize == 0) return KIRK_DATA_SIZE_ZERO;
-
-			   if (header->Mode == KIRK_MODE_CMD1)
+			   check_initialized();
+			   if (!(header->Mode == KirkMode.Cmd1 || header->Mode == KirkMode.Cmd2 || header->Mode == KirkMode.Cmd3))
 			   {
-				   header_keys keys; //0-15 AES key, 16-31 CMAC key
-
-				   Crypto.AES_cbc_decrypt(aes_kirk1_ptr, inbuff, (byte*)&keys, 32); //decrypt AES & CMAC key to temp buffer
-				   Crypto.AES_set_key(&cmac_key, keys.CMAC, 128);
-				   Crypto.AES_CMAC(&cmac_key, inbuff + 0x60, 0x30, cmac_header_hash);
-				   if (Crypto.memcmp(cmac_header_hash, header->CMAC_header_hash, 16) != 0) return KIRK_HEADER_HASH_INVALID;
-
-				   //Make sure data is 16 aligned
-				   chk_size = header->DataSize;
-				   if ((chk_size % 16) != 0) chk_size += 16 - (chk_size % 16);
-				   Crypto.AES_CMAC(&cmac_key, inbuff + 0x60, 0x30 + chk_size + header->DataOffset, cmac_data_hash);
-
-				   if (Crypto.memcmp(cmac_data_hash, header->CMAC_data_hash, 16) != 0)
-				   {
-					   //printf("data hash invalid, correcting...\n");
-				   }
-				   else
-				   {
-					   Console.Error.WriteLine("data hash is already valid!");
-					   return 100;
-				   }
-				   // Forge collision for data hash
-				   Crypto.memcpy(cmac_data_hash, header->CMAC_data_hash, 0x10);
-				   Crypto.AES_CMAC_forge(&cmac_key, inbuff + 0x60, 0x30 + chk_size + header->DataOffset, cmac_data_hash);
-				   //printf("Last row in bad file should be :\n"); for(i=0;i<0x10;i++) printf("%02x", cmac_data_hash[i]);
-				   //printf("\n\n");
-
-				   return KIRK_OPERATION_SUCCESS;
+				   throw (new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE));
 			   }
-			   return KIRK_SIG_CHECK_INVALID; //Checks for cmd 2 & 3 not included right now
+			   if (header->DataSize == 0)
+			   {
+				   throw (new KirkException(ResultEnum.PSP_KIRK_DATA_SIZE_IS_ZERO));
+			   }
+
+			   if (header->Mode != KirkMode.Cmd1)
+			   {
+					// Checks for cmd 2 & 3 not included right now
+					//throw(new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE));
+				   throw(new KirkException(ResultEnum.PSP_KIRK_INVALID_SIG_CHECK));
+			   }
+
+				header_keys keys; //0-15 AES key, 16-31 CMAC key
+
+				Crypto.AES_cbc_decrypt(aes_kirk1_ptr, inbuff, (byte*)&keys, 32); //decrypt AES & CMAC key to temp buffer
+				Crypto.AES_set_key(&cmac_key, keys.CMAC, 128);
+				Crypto.AES_CMAC(&cmac_key, inbuff + 0x60, 0x30, cmac_header_hash);
+				if (Crypto.memcmp(cmac_header_hash, header->CMAC_header_hash, 16) != 0)
+				{
+					throw (new KirkException(ResultEnum.PSP_KIRK_INVALID_HEADER_HASH));
+				}
+
+				//Make sure data is 16 aligned
+				chk_size = header->DataSize;
+				if ((chk_size % 16) != 0) chk_size += 16 - (chk_size % 16);
+				Crypto.AES_CMAC(&cmac_key, inbuff + 0x60, 0x30 + chk_size + header->DataOffset, cmac_data_hash);
+
+				if (Crypto.memcmp(cmac_data_hash, header->CMAC_data_hash, 16) != 0)
+				{
+					//printf("data hash invalid, correcting...\n");
+				}
+				else
+				{
+					throw(new NotImplementedException());
+					//Console.Error.WriteLine("data hash is already valid!");
+					//return 100;
+				}
+				// Forge collision for data hash
+				Crypto.memcpy(cmac_data_hash, header->CMAC_data_hash, 0x10);
+				Crypto.AES_CMAC_forge(&cmac_key, inbuff + 0x60, 0x30 + chk_size + header->DataOffset, cmac_data_hash);
+				//printf("Last row in bad file should be :\n"); for(i=0;i<0x10;i++) printf("%02x", cmac_data_hash[i]);
+				//printf("\n\n");
 		   }
 		}
 
@@ -435,7 +485,7 @@ namespace CSPspEmu.Core.Crypto
 		/// <param name="In"></param>
 		/// <param name="insize"></param>
 		/// <returns></returns>
-		public ResultEnum kirk_CMD5(byte* Out, byte* In, int insize)
+		public void kirk_CMD5(byte* Out, byte* In, int insize)
 		{
 			throw (new NotImplementedException());
 		}
@@ -447,7 +497,7 @@ namespace CSPspEmu.Core.Crypto
 		/// <param name="In"></param>
 		/// <param name="insize"></param>
 		/// <returns></returns>
-		public ResultEnum executeKIRKCmd8(byte* Out, byte* In, int insize)
+		public void executeKIRKCmd8(byte* Out, byte* In, int insize)
 		{
 			throw (new NotImplementedException());
 		}
@@ -478,21 +528,30 @@ namespace CSPspEmu.Core.Crypto
 		/// <returns></returns>
 		public ResultEnum hleUtilsBufferCopyWithRange(byte* Out, int OutSize, byte* In, int InSize, CommandEnum Command, bool DoChecks = true)
 		{
-			switch (Command)
+			try
 			{
-				case CommandEnum.PSP_KIRK_CMD_DECRYPT_PRIVATE: return (ResultEnum)kirk_CMD1(Out, In, InSize, DoChecks);
-				case CommandEnum.PSP_KIRK_CMD_ENCRYPT: return (ResultEnum)kirk_CMD4(Out, In, InSize);
-				case CommandEnum.PSP_KIRK_CMD_ENCRYPT_FUSE: return kirk_CMD5(Out, In, InSize);
-				case CommandEnum.PSP_KIRK_CMD_DECRYPT: return (ResultEnum)kirk_CMD7(Out, In, InSize);
-				case CommandEnum.PSP_KIRK_CMD_DECRYPT_FUSE: return executeKIRKCmd8(Out, In, InSize);
-				case CommandEnum.PSP_KIRK_CMD_PRIV_SIG_CHECK: return (ResultEnum)kirk_CMD10(In, InSize);
-				case CommandEnum.PSP_KIRK_CMD_SHA1_HASH: return (ResultEnum)KirkSha1(Out, In, InSize);
-				case CommandEnum.PSP_KIRK_CMD_ECDSA_GEN_KEYS: return executeKIRKCmd12(Out, OutSize);
-				case CommandEnum.PSP_KIRK_CMD_ECDSA_MULTIPLY_POINT: return executeKIRKCmd13(Out, OutSize, In, InSize);
-				case CommandEnum.PSP_KIRK_CMD_PRNG: return (ResultEnum)kirk_CMD14(Out, InSize);
-				case CommandEnum.PSP_KIRK_CMD_ECDSA_SIGN: return executeKIRKCmd16(Out, OutSize, In, InSize);
-				case CommandEnum.PSP_KIRK_CMD_ECDSA_VERIFY: return executeKIRKCmd17(In, InSize);
-				default: return ResultEnum.PSP_KIRK_INVALID_OPERATION; // Dummy.
+				switch (Command)
+				{
+					case CommandEnum.PSP_KIRK_CMD_DECRYPT_PRIVATE: kirk_CMD1(Out, In, InSize, DoChecks); break;
+					case CommandEnum.PSP_KIRK_CMD_ENCRYPT: kirk_CMD4(Out, In, InSize); break;
+					case CommandEnum.PSP_KIRK_CMD_ENCRYPT_FUSE: kirk_CMD5(Out, In, InSize); break;
+					case CommandEnum.PSP_KIRK_CMD_DECRYPT: kirk_CMD7(Out, In, InSize); break;
+					case CommandEnum.PSP_KIRK_CMD_DECRYPT_FUSE: executeKIRKCmd8(Out, In, InSize); break;
+					case CommandEnum.PSP_KIRK_CMD_PRIV_SIG_CHECK: kirk_CMD10(In, InSize); break;
+					case CommandEnum.PSP_KIRK_CMD_SHA1_HASH: KirkSha1(Out, In, InSize); break;
+					case CommandEnum.PSP_KIRK_CMD_ECDSA_GEN_KEYS: executeKIRKCmd12(Out, OutSize); break;
+					case CommandEnum.PSP_KIRK_CMD_ECDSA_MULTIPLY_POINT: executeKIRKCmd13(Out, OutSize, In, InSize); break;
+					case CommandEnum.PSP_KIRK_CMD_PRNG: kirk_CMD14(Out, InSize); break;
+					case CommandEnum.PSP_KIRK_CMD_ECDSA_SIGN: executeKIRKCmd16(Out, OutSize, In, InSize); break;
+					case CommandEnum.PSP_KIRK_CMD_ECDSA_VERIFY: executeKIRKCmd17(In, InSize); break;
+					default: throw(new KirkException(ResultEnum.PSP_KIRK_INVALID_OPERATION));
+				}
+
+				return ResultEnum.OK;
+			}
+			catch (KirkException KirkException)
+			{
+				return KirkException.Result;
 			}
 		}
 	}

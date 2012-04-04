@@ -350,7 +350,9 @@ namespace CSPspEmu.Runner.Components.Cpu
 		{
 			while (Running)
 			{
+#if !DO_NOT_PROPAGATE_EXCEPTIONS
 				try
+#endif
 				{
 					while (true)
 					{
@@ -360,6 +362,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 						ThreadManager.StepNext();
 					}
 				}
+#if !DO_NOT_PROPAGATE_EXCEPTIONS
 				catch (Exception Exception)
 				{
 					if (Exception is SceKernelSelfStopUnloadModuleException || Exception.InnerException is SceKernelSelfStopUnloadModuleException)
@@ -436,6 +439,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 
 					Main_Ended();
 				}
+#endif
 			}
 		}
 

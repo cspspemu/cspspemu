@@ -44,12 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArgumentReader.cs" />
     <Compile Include="Attributes\HlePspFunctionAttribute.cs" />
     <Compile Include="Attributes\HlePspModuleAttribute.cs" />
     <Compile Include="Attributes\HlePspNotImplementedAttribute.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Attributes\HlePspUnknownDefinitionAttribute.cs" />
+    <Compile Include="CStringFormater.cs" />
     <Compile Include="Formats\audio\RiffWaveReader.cs" />
     <Compile Include="Formats\audio\Wav.cs" />
     <Compile Include="Formats\audio\Vag.cs" />
@@ -79,6 +81,7 @@
     <Compile Include="HleModuleHost.cs" />
     <Compile Include="HleLibrary.cs" />
     <Compile Include="HleOutputHandler.cs" />
+    <Compile Include="IArgumentReader.cs" />
     <Compile Include="Loader\ElfLoader.cs" />
     <Compile Include="Loader\ElfPspLoader.cs" />
     <Compile Include="Managers\HleCallbackManager.cs" />

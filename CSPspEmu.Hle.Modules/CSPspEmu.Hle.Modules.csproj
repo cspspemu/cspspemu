@@ -60,6 +60,7 @@
     <Compile Include="ge\sceGe_user.cs" />
     <Compile Include="ge\sceGe_user.DisplayList.cs" />
     <Compile Include="hpremote\sceHprm.cs" />
+    <Compile Include="hpremote\sceHprm_driver.cs" />
     <Compile Include="http\sceHttp.cs" />
     <Compile Include="http\sceSsl.cs" />
     <Compile Include="impose\sceImpose.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="iofilemgr\IoFileMgrForUser.IoDelay.cs" />
     <Compile Include="libfont\sceLibFont.Font.cs" />
     <Compile Include="libfont\sceLibFont.Library.cs" />
+    <Compile Include="modulemgr\sceModuleManager.cs" />
     <Compile Include="mpeg\sceMpeg.Atrac.cs" />
     <Compile Include="mpeg\sceMpeg.Au.cs" />
     <Compile Include="mpeg\sceMpeg.Avc.cs" />
@@ -114,6 +116,7 @@
     <Compile Include="sc_sascore\sceSasCore.cs" />
     <Compile Include="sc_sascore\sceSasCore.Utils.cs" />
     <Compile Include="sc_sascore\sceSasCore.Voices.cs" />
+    <Compile Include="stdio\StdioForKernel.cs" />
     <Compile Include="stdio\StdioForUser.cs" />
     <Compile Include="sysmem\KDebugForKernel.cs" />
     <Compile Include="sysmem\sceSuspendForUser.cs" />
@@ -187,6 +190,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="iofilemgr\IoFileMgrForUser.Files.Async.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ifhandler\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

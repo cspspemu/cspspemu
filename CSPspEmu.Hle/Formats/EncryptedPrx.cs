@@ -54,7 +54,7 @@ namespace CSPspEmu.Hle.Formats
 				//HeaderPointer->boot_entry = 0;
 
 				var h7_header = (Kirk.KIRK_AES128CBC_HEADER*)&_outbuf[0x2C];
-				h7_header->Mode = 5;
+				h7_header->Mode = Core.Crypto.Kirk.KirkMode.DecryptCbc;
 				h7_header->Unknown4 = 0;
 				h7_header->Unknown8 = 0;
 				h7_header->KeySeed = pti.code;
@@ -97,7 +97,7 @@ namespace CSPspEmu.Hle.Formats
 				}
 
 				var KirkHeader = (Kirk.AES128CMACHeader *)&_outbuf[0x40];
-				KirkHeader->Mode = (uint)Kirk.KIRK_MODE_CMD1;
+				KirkHeader->Mode = Kirk.KirkMode.Cmd1;
 
 				Array.Copy(inbuf, 0x40 + 0x70, outbuf, 0x40 + 0x70, 0x20);
 				Array.Copy(inbuf, 0, outbuf, 0x40 + 0x90, 0x80);

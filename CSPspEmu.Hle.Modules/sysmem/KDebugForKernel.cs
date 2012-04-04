@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
 
@@ -35,9 +36,17 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// <param name="Format"></param>
 		/// <param name="CpuThreadState"></param>
 		[HlePspFunction(NID = 0x84F370BC, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public void Kprintf(string Format, CpuThreadState CpuThreadState)
 		{
+			var Arguments = new ArgumentReader(CpuThreadState);
+			Arguments.LoadInteger(); // Skips format
+
+			ConsoleUtils.SaveRestoreConsoleState(() =>
+			{
+				Console.ForegroundColor = ConsoleColor.Blue;
+				Console.Error.Write("{0}", CStringFormater.Sprintf(Format, Arguments));
+			});
 		}
 	}
 }

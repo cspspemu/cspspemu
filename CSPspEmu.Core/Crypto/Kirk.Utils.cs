@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using CSharpUtils;
 using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Crypto
@@ -48,6 +49,20 @@ namespace CSPspEmu.Core.Crypto
 
 				return new CryptoStream(new MemoryStream(Input), Encryptor, CryptoStreamMode.Read).ReadAll(Dispose: true);
 			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Key"></param>
+		/// <param name="Input"></param>
+		/// <param name="Output"></param>
+		/// <param name="Size"></param>
+		static public void DecryptAes(byte[] Key, byte* Input, byte* Output, int Size)
+		{
+			var InputArray = PointerUtils.PointerToByteArray(Input, Size);
+			var OutputArray = DecryptAes(InputArray, Key);
+			PointerUtils.ByteArrayToPointer(OutputArray, Output);
 		}
 	}
 }

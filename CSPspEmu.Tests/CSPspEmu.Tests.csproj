@@ -69,6 +69,7 @@
     <Compile Include="Hle\Formats\Archive\ZipTest.cs" />
     <Compile Include="Hle\Formats\EncryptedPrxTest.cs" />
     <Compile Include="Hle\Formats\Font\PGFTest.cs" />
+    <Compile Include="Hle\CStringFormaterTest.cs" />
     <Compile Include="Hle\Vfs\Iso\CsoProxyStreamTest.cs" />
     <Compile Include="Hle\Formats\CsoTest.cs" />
     <Compile Include="Gpu\GpuProcessorTest.cs" />

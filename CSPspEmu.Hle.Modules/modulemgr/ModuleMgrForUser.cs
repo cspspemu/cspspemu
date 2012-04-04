@@ -2,7 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
+using CSPspEmu.Core;
+using CSPspEmu.Core.Cpu;
+using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Hle.Loader;
+using CSPspEmu.Hle.Managers;
+using CSPspEmu.Hle.Modules.iofilemgr;
+using CSPspEmu.Hle.Modules.threadman;
 
 namespace CSPspEmu.Hle.Modules.modulemgr
 {
@@ -97,7 +105,9 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 			throw (new SceKernelSelfStopUnloadModuleException());
 		}
 
-		public int lastModuleId = 1;
+		//public int lastModuleId = 1;
+
+		public HleUidPool<HleModuleGuest> Modules = new HleUidPool<HleModuleGuest>();
 
 		/// <summary>
 		/// Load a module.
@@ -114,8 +124,48 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		[HlePspNotImplemented]
 		public int sceKernelLoadModule(string Path, uint Flags, SceKernelLMOption* SceKernelLMOption)
 		{
-			//throw(new NotImplementedException());
-			return lastModuleId++;
+			HleModuleGuest Module = new HleModuleGuest();
+
+			try
+			{
+				var ModuleStream = HleState.HleIoManager.HleIoWrapper.Open(Path, Vfs.HleIoFlags.Read, Vfs.SceMode.All);
+
+				var Loader = HleState.PspConfig.PspEmulatorContext.GetInstance<ElfPspLoader>();
+				Loader.Load(
+					ModuleStream,
+					new PspMemoryStream(HleState.CpuProcessor.Memory),
+					HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User),
+					HleState.ModuleManager,
+					""
+				);
+
+				var SceModulePartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(sizeof(SceModule));
+
+				var SceModulePtr = (SceModule*)HleState.CpuProcessor.Memory.PspAddressToPointer(SceModulePartition.Low);
+
+				SceModulePtr->Attributes = Loader.ModuleInfo.ModuleAtributes;
+				SceModulePtr->Version = Loader.ModuleInfo.ModuleVersion;
+				SceModulePtr->ModuleName = Loader.ModuleInfo.Name;
+				SceModulePtr->gp_value = Loader.ModuleInfo.GP;
+				SceModulePtr->ent_top = Loader.ModuleInfo.ExportsStart;
+				SceModulePtr->ent_size = Loader.ModuleInfo.ExportsEnd - Loader.ModuleInfo.ExportsStart;
+				SceModulePtr->stub_top = Loader.ModuleInfo.ImportsStart;
+				SceModulePtr->stub_size = Loader.ModuleInfo.ImportsEnd - Loader.ModuleInfo.ImportsStart;
+
+				Module.ModuleInfo = Loader.ModuleInfo;
+				Module.InitInfo = Loader.InitInfo;
+				Module.Loaded = true;
+				Module.SceModuleStructPartition = SceModulePartition;
+
+				//Loader.InitInfo.GP
+			}
+			catch (Exception Exception)
+			{
+				Console.WriteLine(Exception);
+				Module.Loaded = false;
+			}
+
+			return Modules.Create(Module);
 		}
 
 		/// <summary>
@@ -129,8 +179,17 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		/// <returns>??? on success, otherwise one of ::PspKernelErrorCodes.</returns>
 		[HlePspFunction(NID = 0x50F0C1EC, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceKernelStartModule(int ModuleId, uint ArgumentsSize, void* ArgumentsPointer, int* Status, SceKernelSMOption* SceKernelSMOption)
+		public int sceKernelStartModule(CpuThreadState CpuThreadState, int ModuleId, int ArgumentsSize, uint ArgumentsPointer, int* Status, SceKernelSMOption* SceKernelSMOption)
 		{
+			var Module = Modules.Get(ModuleId);
+
+			if (Module.Loaded)
+			{
+				var ThreadManForUser = HleState.ModuleManager.GetModule<ThreadManForUser>();
+				var ThreadId = (int)ThreadManForUser.sceKernelCreateThread(CpuThreadState, "ModuleThread", Module.InitInfo.PC, 10, 1024, PspThreadAttributes.ClearStack, null);
+				ThreadManForUser.sceKernelStartThread(CpuThreadState, ThreadId, ArgumentsSize, ArgumentsPointer);
+			}
+
 			//throw(new NotImplementedException());
 			if (Status != null)
 			{
@@ -142,17 +201,17 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		/// <summary>
 		/// Stop a running module.
 		/// </summary>
-		/// <param name="modid">The UID of the module to stop.</param>
-		/// <param name="argsize">The length of the arguments pointed to by argp.</param>
-		/// <param name="argp">Pointer to arguments to pass to the module's module_stop() routine.</param>
-		/// <param name="status">Return value of the module's module_stop() routine.</param>
+		/// <param name="ModuleId">The UID of the module to stop.</param>
+		/// <param name="ArgumentsSize">The length of the arguments pointed to by argp.</param>
+		/// <param name="ArgumentsPointer">Pointer to arguments to pass to the module's module_stop() routine.</param>
+		/// <param name="Status">Return value of the module's module_stop() routine.</param>
 		/// <param name="SceKernelSMOption">Pointer to an optional ::SceKernelSMOption structure.</param>
 		/// <returns>
 		///		??? on success, otherwise one of ::PspKernelErrorCodes.
 		/// </returns>
 		[HlePspFunction(NID = 0xD1FF982A, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceKernelStopModule(int modid, int argsize, void* argp, int* status, void* SceKernelSMOption)
+		public int sceKernelStopModule(int ModuleId, int ArgumentsSize, void* ArgumentsPointer, int* Status, void* SceKernelSMOption)
 		{
 			return 0;
 			//throw(new NotImplementedException());
@@ -168,13 +227,13 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		/// <summary>
 		/// Unload a stopped module.
 		/// </summary>
-		/// <param name="modid">The UID of the module to unload.</param>
+		/// <param name="ModuleId">The UID of the module to unload.</param>
 		/// <returns>
 		///		??? on success, otherwise one of ::PspKernelErrorCodes.
 		/// </returns>
 		[HlePspFunction(NID = 0x2E0911AA, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceKernelUnloadModule(int modid)
+		public int sceKernelUnloadModule(int ModuleId)
 		{
 			//throw(new NotImplementedException());
 			return 0;
