@@ -49,6 +49,11 @@ namespace CSPspEmu.Core.Memory
 		}
 
 		public bool IsNull { get { return Address == 0; } }
+
+		public unsafe void* GetPointer(PspMemory pspMemory)
+		{
+			return pspMemory.PspPointerToPointerSafe(this);
+		}
 	}
 
 	/*

@@ -238,6 +238,23 @@ namespace CSPspEmu.Hle.Modules.threadman
 		}
 
 		/// <summary>
+		/// Allocate from the pool (with callback)
+		/// </summary>
+		/// <param name="PoolId">The UID of the pool</param>
+		/// <param name="DataPointer">Receives the address of the allocated data</param>
+		/// <param name="Timeout">Amount of time to wait for allocation?</param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0xE7282CB6, FirmwareVersion = 150)]
+		public int sceKernelAllocateFplCB(PoolId PoolId, PspPointer* DataPointer, uint* Timeout)
+		{
+			var FixedPool = FixedPoolList.Get(PoolId);
+			FixedPool.Allocate(DataPointer, Timeout, HandleCallbacks: true);
+
+			//Console.WriteLine("Allocated: Address: 0x{0:X}", DataPointer->Address);
+			return 0;
+		}
+
+		/// <summary>
 		/// Free a block
 		/// </summary>
 		/// <param name="PoolId">The UID of the pool</param>

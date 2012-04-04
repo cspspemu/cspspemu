@@ -140,8 +140,11 @@ namespace CSPspEmu.Hle.Loader
 				{
 					case Elf.ProgramHeader.TypeEnum.Reloc1:
 						Console.Error.WriteLine("NOT IMPLEMENTED Elf.ProgramHeader.TypeEnum.Reloc1!");
+
 						//throw (new NotImplementedException());
-						RelocateRelocs(ElfLoader.ProgramHeaderFileStream(ProgramHeader).ReadStructVectorUntilTheEndOfStream<Elf.Reloc>());
+
+						// NOTE: Enabling it, breaks stuff.
+						//RelocateRelocs(ElfLoader.ProgramHeaderFileStream(ProgramHeader).ReadStructVectorUntilTheEndOfStream<Elf.Reloc>());
 						break;
 						//throw (new NotImplementedException());
 						/*

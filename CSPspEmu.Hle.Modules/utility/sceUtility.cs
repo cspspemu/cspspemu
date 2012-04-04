@@ -74,117 +74,117 @@ namespace CSPspEmu.Hle.Modules.utility
 		public enum PspUtilitySavedataMode : uint
 		{
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_AUTOLOAD
+			/// PSP_UTILITY_SAVEDATA_AUTOLOAD = 0
 			/// </summary>
 			Autoload = 0,
 
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_AUTOSAVE       
+			/// PSP_UTILITY_SAVEDATA_AUTOSAVE = 1
 			/// </summary>
 			Autosave = 1,
 
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_LOAD
+			/// PSP_UTILITY_SAVEDATA_LOAD = 2
 			/// </summary>
 			Load = 2,
 			
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_SAVE
+			/// PSP_UTILITY_SAVEDATA_SAVE = 3
 			/// </summary>
 			Save = 3,
 
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_LISTLOAD
+			/// PSP_UTILITY_SAVEDATA_LISTLOAD = 4
 			/// </summary>
 			ListLoad = 4,
 
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_LISTSAVE       
+			/// PSP_UTILITY_SAVEDATA_LISTSAVE = 5 
 			/// </summary>
 			ListSave = 5,
 
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_LISTDELETE
+			/// PSP_UTILITY_SAVEDATA_LISTDELETE = 6
 			/// </summary>
 			ListDelete = 6,
 			
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_DELETE
+			/// PSP_UTILITY_SAVEDATA_DELETE = 7
 			/// </summary>
 			Delete = 7,
 
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_SIZES
+			/// PSP_UTILITY_SAVEDATA_SIZES = 8
 			/// </summary>
 			Sizes = 8,
 			
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_AUTODELETE
+			/// PSP_UTILITY_SAVEDATA_AUTODELETE = 9
 			/// </summary>
 			AutoDelete = 9,
 
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_SINGLEDELETE
+			/// PSP_UTILITY_SAVEDATA_SINGLEDELETE = 10 = 0x0A
 			/// </summary>
 			SingleDelete = 10,
 			
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_LIST
+			/// PSP_UTILITY_SAVEDATA_LIST = 11 = 0x0B
 			/// </summary>
 			List = 11,
 			
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_FILES
+			/// PSP_UTILITY_SAVEDATA_FILES = 12 = 0x0C
 			/// </summary>
 			Files = 12,
 
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_MAKEDATASECURE
+			/// PSP_UTILITY_SAVEDATA_MAKEDATASECURE = 13 = 0x0D
 			/// </summary>
 			MakeDataSecure = 13,
 
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_MAKEDATA
+			/// PSP_UTILITY_SAVEDATA_MAKEDATA = 14 = 0x0E
 			/// </summary>
 			MakeData = 14,
 
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_READSECURE
+			/// PSP_UTILITY_SAVEDATA_READSECURE = 15 = 0x0F
 			/// </summary>
 			ReadSecure = 15,
 
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_READ
+			/// PSP_UTILITY_SAVEDATA_READ = 16 = 0x10
 			/// </summary>
 			Read = 16,
 
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_WRITESECURE
+			/// PSP_UTILITY_SAVEDATA_WRITESECURE = 17 = 0x11
 			/// </summary>
 			WriteSecure = 17,
 
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_WRITE
+			/// PSP_UTILITY_SAVEDATA_WRITE = 18 = 0x12
 			/// </summary>
 			Write = 18,
 
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_ERASESECURE    
+			/// PSP_UTILITY_SAVEDATA_ERASESECURE = 19 = 0x13
 			/// </summary>
 			EraseSecure = 19,
 			
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_ERASE
+			/// PSP_UTILITY_SAVEDATA_ERASE = 20 = 0x14
 			/// </summary>
 			Erase = 20,
 
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_DELETEDATA
+			/// PSP_UTILITY_SAVEDATA_DELETEDATA = 21 = 0x15
 			/// </summary>
 			DeleteData = 21,
 			
 			/// <summary>
-			/// PSP_UTILITY_SAVEDATA_GETSIZE
+			/// PSP_UTILITY_SAVEDATA_GETSIZE = 22 = 0x16
 			/// </summary>
 			GetSize = 22,
 		}
@@ -552,9 +552,24 @@ namespace CSPspEmu.Hle.Modules.utility
 			public PspUtilitySavedataFocus Focus;
 
 			/// <summary>
-			/// unknown2: ?
+			/// 
 			/// </summary>
-			public fixed int Unknown2[4];
+			public uint abortStatus;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public PspPointer msFreeAddr;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public PspPointer msDataAddr;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public PspPointer utilityDataAddr;
 
 		//#if _PSP_FW_VERSION >= 200
 
@@ -564,9 +579,34 @@ namespace CSPspEmu.Hle.Modules.utility
 			public fixed byte Key[16];
 
 			/// <summary>
+			/// 
+			/// </summary>
+			public uint secureVersion;
+			
+			/// <summary>
+			/// 
+			/// </summary>
+			public uint multiStatus;
+			
+			/// <summary>
+			/// 
+			/// </summary>
+			public PspPointer idListAddr;
+			
+			/// <summary>
+			/// 
+			/// </summary>
+			public PspPointer fileListAddr;
+			
+			/// <summary>
+			/// 
+			/// </summary>
+			public PspPointer sizeAddr;
+
+			/// <summary>
 			/// unknown3: ?
 			/// </summary>
-			public fixed byte Unknown3[20];
+			public fixed byte Unknown3[20 - 5];
 
 		//#endif
 
@@ -916,15 +956,27 @@ namespace CSPspEmu.Hle.Modules.utility
 			return 0;
 		}
 
-		/**
-		 * Load a network module (PRX) from user mode.
-		 * Load PSP_NET_MODULE_COMMON and PSP_NET_MODULE_INET
-		 * to use infrastructure WifI (via an access point).
-		 * Available on firmware 2.00 and higher only.
-		 *
-		 * @param module - module number to load (PSP_NET_MODULE_xxx)
-		 * @return 0 on success, < 0 on error
-		 */
+		/// <summary>
+		/// Unload an audio/video module (PRX) from user mode.
+		/// Available on firmware 2.00 and higher only.
+		/// </summary>
+		/// <param name="_module">module number to be unloaded</param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0xF7D8D092, FirmwareVersion = 200)]
+		[HlePspNotImplemented]
+		public int sceUtilityUnloadAvModule(PSP_AV_MODULE _module)
+		{
+			return 0;
+		}
+
+		/// <summary>
+		/// Load a network module (PRX) from user mode.
+		/// Load PSP_NET_MODULE_COMMON and PSP_NET_MODULE_INET
+		/// to use infrastructure WifI (via an access point).
+		/// Available on firmware 2.00 and higher only.
+		/// </summary>
+		/// <param name="_module">module number to load (PSP_NET_MODULE_xxx)</param>
+		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x1579A159, FirmwareVersion = 200)]
 		[HlePspNotImplemented]
 		public int sceUtilityLoadNetModule(int _module)
