@@ -46,7 +46,7 @@ namespace CSPspEmu.Hle.Modules.loadcore
 		{
 			var ModuleMgrForUser = HleState.ModuleManager.GetModule<ModuleMgrForUser>();
 			var Module = ModuleMgrForUser.Modules.Get(ModuleId);
-			return Module.SceModuleStructPartition.Low;
+			return (Module.Loaded) ? Module.SceModuleStructPartition.Low : 0;
 		}
 
 		/// <summary>

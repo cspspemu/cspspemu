@@ -25,7 +25,7 @@ namespace CSPspEmu.Core.Tests
 
 			var ElfLoader = new ElfLoader();
 
-			ElfLoader.Load(File.OpenRead("../../../TestInput/minifire.elf"));
+			ElfLoader.Load(File.OpenRead("../../../TestInput/minifire.elf"), "minifire.elf");
 			ElfLoader.AllocateAndWrite(MemoryStream, MemoryPartition);
 			Assert.AreEqual(1, ElfLoader.ProgramHeaders.Length);
 			Assert.AreEqual(3, ElfLoader.SectionHeaders.Length);

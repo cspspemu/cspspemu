@@ -13,6 +13,7 @@ namespace CSPspEmu.Hle.Managers
 	public class HleModuleManager : PspEmulatorComponent
 	{
 		protected Dictionary<Type, HleModuleHost> HleModules = new Dictionary<Type, HleModuleHost>();
+		public List<HleModuleGuest> LoadedGuestModules = new List<HleModuleGuest>();
 		public uint DelegateLastId = 0;
 		public Dictionary<uint, DelegateInfo> DelegateTable = new Dictionary<uint, DelegateInfo>();
 		public Queue<DelegateInfo> LastCalledCallbacks = new Queue<DelegateInfo>();

@@ -32,7 +32,8 @@ namespace CSPspEmu.Hle.Formats
 			MODULE_STOP_THREAD_PARAMETER = 0xCF0CC697,
 		}
 
-		public struct ModuleExport {
+		public struct ModuleExport
+		{
 			/// <summary>
 			/// Address to a stringz with the module.
 			/// Relative to ?
@@ -70,7 +71,8 @@ namespace CSPspEmu.Hle.Formats
 			public uint Exports;
 		}
 
-		public struct ModuleImport {
+		public struct ModuleImport 
+		{
 			/// <summary>
 			/// Address to a stringz with the module.
 			/// </summary>

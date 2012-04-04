@@ -69,8 +69,9 @@ namespace CSPspEmu.Hle.Modules.stdio
 		[HlePspNotImplemented]
 		public int sceKernelStdoutReopen(string File, int Flags, SceMode Mode)
 		{
+			Console.WriteLine(File);
 			//throw (new NotImplementedException());
-			return 0;
+			return (int)StdHandle.Out;
 		}
 
 		/// <summary>
@@ -85,7 +86,7 @@ namespace CSPspEmu.Hle.Modules.stdio
 		public int sceKernelStderrReopen(string File, int Flags, SceMode Mode)
 		{
 			//throw (new NotImplementedException());
-			return 0;
+			return (int)StdHandle.Error;
 		}
 	}
 }

@@ -124,36 +124,38 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		[HlePspNotImplemented]
 		public int sceKernelLoadModule(string Path, uint Flags, SceKernelLMOption* SceKernelLMOption)
 		{
-			HleModuleGuest Module = new HleModuleGuest();
+			HleModuleGuest Module = new HleModuleGuest(HleState);
 
 			try
 			{
 				var ModuleStream = HleState.HleIoManager.HleIoWrapper.Open(Path, Vfs.HleIoFlags.Read, Vfs.SceMode.All);
 
 				var Loader = HleState.PspConfig.PspEmulatorContext.GetInstance<ElfPspLoader>();
-				Loader.Load(
+				var HleModuleGuest = Loader.LoadModule(
 					ModuleStream,
 					new PspMemoryStream(HleState.CpuProcessor.Memory),
 					HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User),
 					HleState.ModuleManager,
-					""
+					"",
+					ModuleName : Path,
+					IsMainModule: false
 				);
 
 				var SceModulePartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(sizeof(SceModule));
 
 				var SceModulePtr = (SceModule*)HleState.CpuProcessor.Memory.PspAddressToPointer(SceModulePartition.Low);
 
-				SceModulePtr->Attributes = Loader.ModuleInfo.ModuleAtributes;
-				SceModulePtr->Version = Loader.ModuleInfo.ModuleVersion;
-				SceModulePtr->ModuleName = Loader.ModuleInfo.Name;
-				SceModulePtr->gp_value = Loader.ModuleInfo.GP;
-				SceModulePtr->ent_top = Loader.ModuleInfo.ExportsStart;
-				SceModulePtr->ent_size = Loader.ModuleInfo.ExportsEnd - Loader.ModuleInfo.ExportsStart;
-				SceModulePtr->stub_top = Loader.ModuleInfo.ImportsStart;
-				SceModulePtr->stub_size = Loader.ModuleInfo.ImportsEnd - Loader.ModuleInfo.ImportsStart;
+				SceModulePtr->Attributes = HleModuleGuest.ModuleInfo.ModuleAtributes;
+				SceModulePtr->Version = HleModuleGuest.ModuleInfo.ModuleVersion;
+				SceModulePtr->ModuleName = HleModuleGuest.ModuleInfo.Name;
+				SceModulePtr->GP = HleModuleGuest.ModuleInfo.GP;
+				SceModulePtr->ent_top = HleModuleGuest.ModuleInfo.ExportsStart;
+				SceModulePtr->ent_size = HleModuleGuest.ModuleInfo.ExportsEnd - HleModuleGuest.ModuleInfo.ExportsStart;
+				SceModulePtr->stub_top = HleModuleGuest.ModuleInfo.ImportsStart;
+				SceModulePtr->stub_size = HleModuleGuest.ModuleInfo.ImportsEnd - HleModuleGuest.ModuleInfo.ImportsStart;
 
-				Module.ModuleInfo = Loader.ModuleInfo;
-				Module.InitInfo = Loader.InitInfo;
+				Module.ModuleInfo = HleModuleGuest.ModuleInfo;
+				Module.InitInfo = HleModuleGuest.InitInfo;
 				Module.Loaded = true;
 				Module.SceModuleStructPartition = SceModulePartition;
 

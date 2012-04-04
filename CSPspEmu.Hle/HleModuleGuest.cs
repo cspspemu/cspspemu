@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Cpu;
-using System.Reflection;
 using CSPspEmu.Hle.Formats;
 using CSPspEmu.Hle.Loader;
 using CSPspEmu.Core.Memory;
 using CSharpUtils;
+using CSharpUtils.Extensions;
+using CSPspEmu.Hle.Managers;
+using CSPspEmu.Core.Cpu.Emiter;
 
 namespace CSPspEmu.Hle
 {
@@ -96,54 +98,186 @@ namespace CSPspEmu.Hle
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint entry_addr;
+		public uint EntryAddress;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint gp_value;
+		public uint GP;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint text_addr;
+		public uint TextAddress;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint text_size;
+		public uint TextSize;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint data_size;
+		public uint DataSize;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint bss_size;
+		public uint BssSize;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint nsegment;
+		public uint NumberOfSegments;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public fixed uint segmentaddr[4];
+		public fixed uint SegmentAddress[4];
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public fixed uint segmentsize[4];
+		public fixed uint SegmentSize[4];
+	}
+
+	public class HleModuleImportsExports
+	{
+		public string Name;
+		public ushort Version;
+		public ushort Flags;
+		public Dictionary<uint, uint> Functions = new Dictionary<uint, uint>();
+		public Dictionary<uint, uint> Variables = new Dictionary<uint, uint>();
+	}
+
+	public class HleModuleImports : HleModuleImportsExports
+	{
+	}
+
+	public class HleModuleExports : HleModuleImportsExports
+	{
 	}
 
 	unsafe public class HleModuleGuest : HleModule
 	{
+		public string Name { get { return ModuleInfo.Name; } }
+		public HleState HleState;
 		public bool Loaded;
 		public ElfPsp.ModuleInfo ModuleInfo;
-		public ElfPspLoader.InitInfoStruct InitInfo;
+		public InitInfoStruct InitInfo;
 		public MemoryPartition SceModuleStructPartition;
+		public List<HleModuleImports> ModulesImports = new List<HleModuleImports>();
+		public List<HleModuleExports> ModulesExports = new List<HleModuleExports>();
+
+		public HleModuleGuest(HleState HleState)
+		{
+			this.HleState = HleState;
+		}
+
+		public void ExportModules()
+		{
+			foreach (var ExportModule in ModulesExports)
+			{
+				var ExportModuleName = ExportModule.Name;
+
+				foreach (var Module in HleState.ModuleManager.LoadedGuestModules)
+				{
+					//Console.WriteLine("{0} - {1}", ExportModuleName, Module.Name);
+					var ImportModule = Module.ModulesImports.Find(Item => Item.Name == ExportModuleName);
+					if (ImportModule != null)
+					{
+						foreach (var Function in ImportModule.Functions)
+						{
+							var FunctionAddress = ExportModule.Functions[Function.Key];
+							var CallAddress = Function.Value;
+
+							// J
+							//0000 10ii iiii iiii iiii iiii iiii iiii
+							var Instruction = default(Instruction);
+							Instruction.OP1 = 2;
+							Instruction.JUMP_Real = FunctionAddress;
+
+							HleState.CpuProcessor.Memory.Write4(CallAddress + 0, Instruction); // J
+							HleState.CpuProcessor.Memory.Write4(CallAddress + 4, 0x00000000); // NOP
+						}
+					}
+				}
+			}
+		}
+
+		public void ImportModules()
+		{
+			var ModuleManager = HleState.ModuleManager;
+
+			foreach (var ModuleImports in ModulesImports)
+			{
+				HleModuleHost Module = null;
+				try
+				{
+					Module = ModuleManager.GetModuleByName(ModuleImports.Name);
+				}
+				catch (Exception Exception)
+				{
+					Console.WriteLine(Exception);
+				}
+
+				Console.WriteLine("'{0}' - {1}", ModuleImports.Name, (Module != null) ? Module.ModuleLocation : "?");
+				foreach (var Function in ModuleImports.Functions)
+				{
+					var NID = Function.Key;
+					var CallAddress = Function.Value;
+
+					var DefaultEntry = new FunctionEntry()
+					{
+						NID = 0x00000000,
+						Name = CStringFormater.Sprintf("__<unknown:0x%08X>", (int)NID),
+						Description = "Unknown",
+					};
+					var FunctionEntry = (Module != null) ? Module.EntriesByNID.GetOrDefault(NID, DefaultEntry) : DefaultEntry;
+					//var Delegate = Module.DelegatesByNID.GetOrDefault(NID, null);
+
+					HleState.CpuProcessor.Memory.Write4(CallAddress + 0, FunctionGenerator.NativeCallSyscallOpCode);  // syscall NativeCallSyscallCode
+					HleState.CpuProcessor.Memory.Write4(CallAddress + 4, (uint)ModuleManager.AllocDelegateSlot(
+						CreateDelegate(ModuleManager, Module, NID, ModuleImports.Name, FunctionEntry.Name),
+						ModuleImports.Name, FunctionEntry
+					));
+
+					Console.WriteLine(
+						"    CODE_ADDR({0:X})  :  NID(0x{1,8:X}) : {2} - {3}",
+						CallAddress, NID, FunctionEntry.Name, FunctionEntry.Description
+					);
+				}
+			}
+		}
+
+		protected Action<CpuThreadState> CreateDelegate(HleModuleManager ModuleManager, HleModuleHost Module, uint NID, string ModuleImportName, string NIDName)
+		{
+			Action<CpuThreadState> Callback = null;
+			if (Module != null)
+			{
+				Callback = Module.DelegatesByNID.GetOrDefault(NID, null);
+			}
+
+			return (CpuThreadState) =>
+			{
+				if (Callback == null)
+				{
+					if (CpuThreadState.CpuProcessor.PspConfig.DebugSyscalls)
+					{
+						Console.WriteLine(
+							"Thread({0}:'{1}'):{2}:{3}",
+							HleState.PspConfig.PspEmulatorContext.GetInstance<HleThreadManager>().Current.Id,
+							HleState.PspConfig.PspEmulatorContext.GetInstance<HleThreadManager>().Current.Name,
+							ModuleImportName, NIDName
+						);
+					}
+					throw (new NotImplementedException("Not Implemented '" + String.Format("{0}:{1}", ModuleImportName, NIDName) + "'"));
+				}
+				else
+				{
+					Callback(CpuThreadState);
+				}
+			};
+		}
 	}
 }

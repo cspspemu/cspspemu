@@ -37,7 +37,7 @@ namespace CSPspEmu.Hle.Loader
 			}
 		}
 
-		virtual public void Load(Stream FileStream)
+		virtual public void Load(Stream FileStream, string Name)
 		{
 			FileStream = new MemoryStream(FileStream.ReadAll());
 
@@ -46,7 +46,7 @@ namespace CSPspEmu.Hle.Loader
 			this.Header = FileStream.ReadStruct<Elf.HeaderStruct>();
 			if (this.Header.Magic != Elf.HeaderStruct.MagicEnum.ExpectedValue)
 			{
-				throw(new InvalidProgramException("Not an ELF File"));
+				throw(new InvalidProgramException("Not an ELF File '" + Name + "'"));
 			}
 
 			if (this.Header.Machine != Elf.HeaderStruct.MachineEnum.ALLEGREX)

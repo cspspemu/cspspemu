@@ -15,30 +15,54 @@ using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Loader
 {
+	public struct InitInfoStruct
+	{
+		public uint PC;
+		public uint GP;
+	}
+
 	unsafe public class ElfPspLoader : PspEmulatorComponent
 	{
-		public struct InitInfoStruct
-		{
-			public uint PC;
-			public uint GP;
-		}
-
 		public override void InitializeComponent()
 		{
 		}
 
 		protected uint BaseAddress;
-		public ElfPsp.ModuleInfo ModuleInfo { get; protected set; }
-		public InitInfoStruct InitInfo;
-		public ElfLoader ElfLoader;
-		public HleModuleManager ModuleManager;
+		protected ElfLoader ElfLoader;
+		protected HleModuleManager ModuleManager;
+		protected HleModuleGuest HleModuleGuest;
 
-		public void Load(Stream FileStream, Stream MemoryStream, MemoryPartition MemoryPartition, HleModuleManager ModuleManager, String GameTitle)
+		Stream _RelocOutputStream;
+		StreamWriter _RelocOutput;
+
+		StreamWriter RelocOutput
+		{
+			get
+			{
+				if (_RelocOutput == null)
+				{
+//#if !DEBUG
+#if true
+					//_RelocOutput = new StreamWriter(_RelocOutputStream = new MemoryStream());
+					_RelocOutput = null;
+					_RelocOutputStream = null;
+#else
+					_RelocOutputStream = File.Open("reloc.txt", FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+					_RelocOutput = new StreamWriter(_RelocOutputStream);
+					_RelocOutput.AutoFlush = true;
+#endif
+				}
+				return _RelocOutput;
+			}
+		}
+
+		public HleModuleGuest LoadModule(Stream FileStream, Stream MemoryStream, MemoryPartition MemoryPartition, HleModuleManager ModuleManager, String GameTitle, string ModuleName, bool IsMainModule)
 		{
 			this.ElfLoader = new ElfLoader();
 			this.ModuleManager = ModuleManager;
+			this.HleModuleGuest = new HleModuleGuest(PspEmulatorContext.GetInstance<HleState>());
 
-			this.ElfLoader.Load(FileStream);
+			this.ElfLoader.Load(FileStream, ModuleName);
 
 			PspEmulatorContext.PspConfig.InfoExeHasRelocation = this.ElfLoader.NeedsRelocation;
 
@@ -65,14 +89,22 @@ namespace CSPspEmu.Hle.Loader
 				RelocateFromHeaders();
 			}
 
-			this.ModuleInfo = ElfLoader.SectionHeaderFileStream(ElfLoader.SectionHeadersByName[".rodata.sceModuleInfo"]).ReadStruct<ElfPsp.ModuleInfo>(); ;
+			this.HleModuleGuest.ModuleInfo = ElfLoader.SectionHeaderFileStream(ElfLoader.SectionHeadersByName[".rodata.sceModuleInfo"]).ReadStruct<ElfPsp.ModuleInfo>(); ;
 
 			//Console.WriteLine(this.ModuleInfo.ToStringDefault());
 
-			this.InitInfo.PC = ElfLoader.Header.EntryPoint + BaseAddress;
-			this.InitInfo.GP = this.ModuleInfo.GP + BaseAddress;
+			this.HleModuleGuest.InitInfo = new InitInfoStruct()
+			{
+				PC = ElfLoader.Header.EntryPoint + BaseAddress,
+				GP = this.HleModuleGuest.ModuleInfo.GP + BaseAddress,
+			};
 
 			UpdateModuleImports();
+			UpdateModuleExports();
+
+			ModuleManager.LoadedGuestModules.Add(HleModuleGuest);
+
+			return HleModuleGuest;
 		}
 
 		protected void RelocateFromHeaders()
@@ -146,28 +178,6 @@ namespace CSPspEmu.Hle.Loader
 				_RelocOutputStream = null;
 			}
 		}
-
-		Stream _RelocOutputStream;
-		StreamWriter _RelocOutput;
-
-		StreamWriter RelocOutput {
-			get {
-				if (_RelocOutput == null)
-				{
-#if !DEBUG
-					//_RelocOutput = new StreamWriter(_RelocOutputStream = new MemoryStream());
-					_RelocOutput = null;
-					_RelocOutputStream = null;
-#else
-					_RelocOutputStream = File.Open("reloc.txt", FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
-					_RelocOutput = new StreamWriter(_RelocOutputStream);
-					_RelocOutput.AutoFlush = true;
-#endif
-				}
-				return _RelocOutput;
-			}
-		}
-
 
 		/// <summary>
 		/// This function relocates all the instructions and pointers of the loading executable.
@@ -326,6 +336,9 @@ namespace CSPspEmu.Hle.Loader
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		protected void UpdateModuleImports()
 		{
 			ConsoleUtils.SaveRestoreConsoleState(() =>
@@ -335,121 +348,144 @@ namespace CSPspEmu.Hle.Loader
 			});
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		protected void UpdateModuleExports()
+		{
+			ConsoleUtils.SaveRestoreConsoleState(() =>
+			{
+				Console.ForegroundColor = ConsoleColor.DarkGreen;
+				_UpdateModuleExports();
+			});
+		}
+
+		/// <summary>
+		/// The export section is organized as as sequence of:
+		/// - 32-bit NID * functionCount
+		/// - 32-bit NID * variableCount
+		/// - 32-bit export address * functionCount
+		/// - 32-bit variable address * variableCount
+		///   (each variable address references another structure, depending on its NID)
+		/// </summary>
+		private void _UpdateModuleExports()
+		{
+			var BaseMemoryStream = ElfLoader.MemoryStream.SliceWithLength(BaseAddress);
+			var ExportsStream = BaseMemoryStream.SliceWithBounds(HleModuleGuest.ModuleInfo.ExportsStart, HleModuleGuest.ModuleInfo.ExportsEnd);
+			var ModuleExports = ExportsStream.ReadStructVectorUntilTheEndOfStream<ElfPsp.ModuleExport>();
+
+			Console.WriteLine("Exports:");
+
+			foreach (var ModuleExport in ModuleExports)
+			{
+				String ModuleExportName = "";
+
+				try { ModuleExportName = ElfLoader.MemoryStream.ReadStringzAt(ModuleExport.Name); } catch { }
+
+				Console.WriteLine("  * Export: '{0}'", ModuleExportName);
+
+				var HleModuleExports = new HleModuleExports();
+				HleModuleExports.Name = ModuleExportName;
+				HleModuleExports.Flags = ModuleExport.Flags;
+				HleModuleExports.Version = ModuleExport.Version;
+
+				var ExportsExportsStream = ElfLoader.MemoryStream.SliceWithLength(
+					ModuleExport.Exports,
+					ModuleExport.FunctionCount * sizeof(uint) * 2 + ModuleExport.VariableCount * sizeof(uint) * 2
+				);
+
+				var FunctionNIDReader = new BinaryReader(ExportsExportsStream.ReadStream(ModuleExport.FunctionCount * sizeof(uint)));
+				var VariableNIDReader = new BinaryReader(ExportsExportsStream.ReadStream(ModuleExport.VariableCount * sizeof(uint)));
+				var FunctionAddressReader = new BinaryReader(ExportsExportsStream.ReadStream(ModuleExport.FunctionCount * sizeof(uint)));
+				var VariableAddressReader = new BinaryReader(ExportsExportsStream.ReadStream(ModuleExport.VariableCount * sizeof(uint)));
+
+				for (int n = 0; n < ModuleExport.FunctionCount; n++)
+				{
+					uint NID = FunctionNIDReader.ReadUInt32();
+					uint CallAddress = FunctionAddressReader.ReadUInt32();
+					HleModuleExports.Functions[NID] = CallAddress;
+
+					Console.WriteLine("  |  - FUNC: {0:X} : {1:X} : {2}", NID, CallAddress, Enum.GetName(typeof(SpecialFunctionNids), NID));
+				}
+
+				for (int n = 0; n < ModuleExport.VariableCount; n++)
+				{
+					uint NID = VariableNIDReader.ReadUInt32();
+					uint CallAddress = VariableAddressReader.ReadUInt32();
+					HleModuleExports.Variables[NID] = CallAddress;
+
+					Console.WriteLine("  |  - VAR: {0:X} : {1:X} : {2}", NID, CallAddress, Enum.GetName(typeof(SpecialVariableNids), NID));
+				}
+
+				HleModuleGuest.ModulesExports.Add(HleModuleExports);
+			}
+
+			HleModuleGuest.ExportModules();
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public enum SpecialFunctionNids : uint
+		{
+			module_start = 0xD632ACDB,
+			module_stop = 0xCEE8593C,
+			module_reboot_before = 0x2F064FA6,
+			module_reboot_phase = 0xADF12745,
+			module_bootstart = 0xD3744BE0,
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public enum SpecialVariableNids : uint
+		{
+			module_info = 0xF01D73A7,
+			module_start_thread_parameter = 0x0F7C276C,
+			module_stop_thread_parameter = 0xCF0CC697,
+			module_reboot_before_thread_parameter = 0xF4F4299D,
+			module_sdk_version = 0x11B97506,
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
 		private void _UpdateModuleImports()
 		{
 			var BaseMemoryStream = ElfLoader.MemoryStream.SliceWithLength(BaseAddress);
-
-			var ImportsStream = BaseMemoryStream.SliceWithBounds(ModuleInfo.ImportsStart, ModuleInfo.ImportsEnd);
-			var ExportsStream = BaseMemoryStream.SliceWithBounds(ModuleInfo.ExportsStart, ModuleInfo.ExportsEnd);
-
+			var ImportsStream = BaseMemoryStream.SliceWithBounds(HleModuleGuest.ModuleInfo.ImportsStart, HleModuleGuest.ModuleInfo.ImportsEnd);
 			var ModuleImports = ImportsStream.ReadStructVectorUntilTheEndOfStream<ElfPsp.ModuleImport>();
-			var ModuleExports = ExportsStream.ReadStructVectorUntilTheEndOfStream<ElfPsp.ModuleImport>();
 
-			foreach (var SectionHeader in ElfLoader.SectionHeaders)
-			{
-				//Console.WriteLine("{0}: {1}", NameAt(SectionHeader.Name), SectionHeader);
-			}
+			Console.WriteLine("Imports:");
 
 			foreach (var ModuleImport in ModuleImports)
 			{
-				//Console.WriteLine(ModuleImport.ToStringDefault());
+				String ModuleImportName = "INVALID";
+				try { ModuleImportName = ElfLoader.MemoryStream.ReadStringzAt(ModuleImport.Name); } catch { }
 
-				try
+				var HleModuleImports = new HleModuleImports();
+				HleModuleImports.Name = ModuleImportName;
+				HleModuleImports.Flags = ModuleImport.Flags;
+				HleModuleImports.Version = ModuleImport.Version;
+
+				var NidStreamReader = new BinaryReader(ElfLoader.MemoryStream.SliceWithLength(ModuleImport.NidAddress, ModuleImport.FunctionCount * sizeof(uint)));
+
+				for (int n = 0; n < ModuleImport.FunctionCount; n++)
 				{
-					String ModuleImportName = "INVALID";
-					ModuleImportName = ElfLoader.MemoryStream.ReadStringzAt(ModuleImport.Name);
-					/*
-					try
-					{
-						
-					}
-					catch (Exception Exception)
-					{
-						Console.Error.WriteLine(Exception);
-					}
-					*/
-					var NidStreamReader = new BinaryReader(ElfLoader.MemoryStream.SliceWithLength(ModuleImport.NidAddress, ModuleImport.FunctionCount * sizeof(uint)));
-					var CallStreamWriter = new BinaryWriter(ElfLoader.MemoryStream.SliceWithLength(ModuleImport.CallAddress, ModuleImport.FunctionCount * sizeof(uint) * 2));
+					var NID = NidStreamReader.ReadUInt32();
+					var CallAddress = (uint)(ModuleImport.CallAddress + n * 8);
 
-					HleModuleHost Module = null;
-					try
-					{
-						Module = ModuleManager.GetModuleByName(ModuleImportName);
-					}
-					catch (Exception Exception)
-					{
-						Console.WriteLine(Exception);
-						//throw (new Exception(Exception.Message, Exception));
-					}
+					HleModuleImports.Functions[NID] = CallAddress;
+				}
 
-					Console.WriteLine("{0:X}:'{1}' - {2}", ModuleImport.Name, ModuleImportName, (Module != null) ? Module.ModuleLocation : "?");
-					for (int n = 0; n < ModuleImport.FunctionCount; n++)
-					{
-						uint NID = NidStreamReader.ReadUInt32();
-						var DefaultEntry = new FunctionEntry()
-						{
-							NID = 0x00000000,
-							Name = String.Format("__<unknown:0x{0:X}>", NID),
-							Description = "Unknown",
-						};
-						var FunctionEntry = (Module != null) ? Module.EntriesByNID.GetOrDefault(NID, DefaultEntry) : DefaultEntry;
-						//var Delegate = Module.DelegatesByNID.GetOrDefault(NID, null);
-						CallStreamWriter.Write(FunctionGenerator.NativeCallSyscallOpCode); // syscall NativeCallSyscallCode
-						CallStreamWriter.Write(
-							(uint)ModuleManager.AllocDelegateSlot(
-								CreateDelegate(ModuleManager, Module, NID, ModuleImportName, FunctionEntry.Name),
-								ModuleImportName, FunctionEntry
-							)
-						);
-
-						Console.WriteLine(
-							"    CODE_ADDR({0:X})  :  NID(0x{1,8:X}) : {2} - {3}",
-							ModuleImport.CallAddress + n * 8, NID, FunctionEntry.Name, FunctionEntry.Description
-						);
-					}
-				}
-				/*
-				catch (Exception Exception)
-				{
-					Console.Error.WriteLine(Exception);
-				}
-				*/
-				finally
-				{
-				}
+				HleModuleGuest.ModulesImports.Add(HleModuleImports);
 			}
+
+			HleModuleGuest.ImportModules();
 
 			//Console.ReadKey();
 		}
 
-		protected Action<CpuThreadState> CreateDelegate(HleModuleManager ModuleManager, HleModuleHost Module, uint NID, string ModuleImportName, string NIDName)
-		{
-			Action<CpuThreadState> Callback = null;
-			if (Module != null)
-			{
-				Callback = Module.DelegatesByNID.GetOrDefault(NID, null);
-			}
-
-			return (CpuThreadState) =>
-			{
-				if (Callback == null)
-				{
-					if (CpuThreadState.CpuProcessor.PspConfig.DebugSyscalls)
-					{
-						Console.WriteLine(
-							"Thread({0}:'{1}'):{2}:{3}",
-							PspEmulatorContext.GetInstance<HleThreadManager>().Current.Id,
-							PspEmulatorContext.GetInstance<HleThreadManager>().Current.Name,
-							ModuleImportName, NIDName
-						);
-					}
-					throw (new NotImplementedException("Not Implemented '" + String.Format("{0}:{1}", ModuleImportName, NIDName) + "'"));
-				}
-				else
-				{
-					Callback(CpuThreadState);
-				}
-			};
-		}
+		
 	}
 }

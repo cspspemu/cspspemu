@@ -246,7 +246,13 @@ namespace CSPspEmu.Runner.Components.Cpu
 
 							foreach (var FileToTry in FilesToTry)
 							{
-								ElfLoadStreamTry.Add(Iso.Root.Locate(FileToTry).Open());
+								try
+								{
+									ElfLoadStreamTry.Add(Iso.Root.Locate(FileToTry).Open());
+								}
+								catch
+								{
+								}
 								//if (ElfLoadStream.Length != 0) break;
 							}
 
@@ -263,24 +269,29 @@ namespace CSPspEmu.Runner.Components.Cpu
 				}
 
 				Exception LoadException = null;
+				HleModuleGuest HleModuleGuest = null;
 
 				foreach (var ElfLoadStream in ElfLoadStreamTry)
 				{
 					try
 					{
-						Loader.Load(
+						LoadException = null;
+
+						HleModuleGuest = Loader.LoadModule(
 							ElfLoadStream,
 							MemoryStream,
 							HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User),
 							HleState.ModuleManager,
-							Title
+							Title,
+							ModuleName: FileName,
+							IsMainModule: true
 						);
 
 						LoadException = null;
 
 						break;
 					}
-					catch (Exception Exception)
+					catch (InvalidProgramException Exception)
 					{
 						LoadException = Exception;
 					}
@@ -321,9 +332,9 @@ namespace CSPspEmu.Runner.Components.Cpu
 				var CurrentCpuThreadState = new CpuThreadState(CpuProcessor);
 				{
 					//CpuThreadState.PC = Loader.InitInfo.PC;
-					CurrentCpuThreadState.GP = Loader.InitInfo.GP;
+					CurrentCpuThreadState.GP = HleModuleGuest.InitInfo.GP;
 
-					int ThreadId = (int)ThreadManForUser.sceKernelCreateThread(CurrentCpuThreadState, "<EntryPoint>", Loader.InitInfo.PC, 10, 0x1000, PspThreadAttributes.ClearStack, null);
+					int ThreadId = (int)ThreadManForUser.sceKernelCreateThread(CurrentCpuThreadState, "<EntryPoint>", HleModuleGuest.InitInfo.PC, 10, 0x1000, PspThreadAttributes.ClearStack, null);
 					ThreadManForUser._sceKernelStartThread(CurrentCpuThreadState, ThreadId, ArgumentsPartition.Size, ArgumentsPartition.Low);
 				}
 				CurrentCpuThreadState.DumpRegisters();
