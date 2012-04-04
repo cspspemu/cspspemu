@@ -730,6 +730,48 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
+		public void BltzalTest()
+		{
+			var Events = new List<int>();
+
+			Processor.RegisterNativeSyscall(1, () => { Events.Add(1); });
+			Processor.RegisterNativeSyscall(2, () => { Events.Add(2); });
+			Processor.RegisterNativeSyscall(3, () => { Events.Add(3); });
+			Processor.RegisterNativeSyscall(4, () => { Events.Add(4); });
+
+			ExecuteAssembly(@"
+				li r1, 1
+				li r2, -1
+
+				bltzal r1, function1
+				nop
+
+				bltzal r2, function2
+				nop
+
+			j end
+			nop
+
+			function1:
+				syscall 1
+				jr r31
+				nop
+
+			function2:
+				syscall 2
+				jr r31
+				nop
+
+			end:
+				nop
+				syscall 3
+			");
+
+			Assert.AreEqual("[2,3]", Events.ToJson());
+			Assert.AreEqual(103, CpuThreadState.GPR[1]);
+		}
+
+		[TestMethod]
 		public void ConvertFloat1Test()
 		{
 			ExecuteAssembly(@"

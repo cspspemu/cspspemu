@@ -46,10 +46,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public Flags bgtz() { return Flags.BranchOrJumpInstruction; }
 		public Flags bgez() { return Flags.BranchOrJumpInstruction; }
-		public Flags bgezal() { return Flags.BranchOrJumpInstruction | Flags.AndLink; }
 		public Flags bgtzl() { return Flags.BranchOrJumpInstruction | Flags.Likely; }
 		public Flags bgezl() { return Flags.BranchOrJumpInstruction | Flags.Likely; }
-		public Flags bgezall() { return Flags.BranchOrJumpInstruction | Flags.AndLink | Flags.Likely; }
+		public Flags bgezal() { return Flags.BranchOrJumpInstruction | Flags.JumpInstruction | Flags.AndLink; }
+		public Flags bgezall() { return Flags.BranchOrJumpInstruction | Flags.JumpInstruction | Flags.AndLink | Flags.Likely; }
 
 		public Flags j() { return Flags.BranchOrJumpInstruction | Flags.JumpInstruction | Flags.JumpAlways; }
 		public Flags jr() { return Flags.BranchOrJumpInstruction | Flags.JumpInstruction | Flags.JumpAlways | Flags.DynamicJump; }

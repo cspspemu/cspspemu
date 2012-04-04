@@ -19,13 +19,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		// Code executed after the delayed slot.
-		public void _branch_post(SafeLabel Label)
-		{
-			MipsMethodEmiter.LoadBranchFlag();
-			SafeILGenerator.BranchIfTrue(Label);
-		}
-
 		public void _branch_likely(Action Action)
 		{
 			var NullifyDelayedLabel = SafeILGenerator.DefineLabel("NullifyDelayedLabel");
@@ -57,35 +50,64 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			});
 		}
 
+		// Code executed after the delayed slot.
+		public void _branch_post(SafeLabel Label)
+		{
+			if (this.AndLink)
+			{
+				var SkipBranch = SafeILGenerator.DefineLabel("SkipBranch");
+				MipsMethodEmiter.LoadBranchFlag();
+				SafeILGenerator.BranchIfFalse(SkipBranch);
+				{
+					MipsMethodEmiter.SaveGPR(31, () =>
+					{
+						SafeILGenerator.Push((int)(BranchPC + 8));
+					});
+
+					SafeILGenerator.BranchAlways(Label);
+				}
+				SkipBranch.Mark();
+			}
+			else
+			{
+				MipsMethodEmiter.LoadBranchFlag();
+				SafeILGenerator.BranchIfTrue(Label);
+			}
+		}
+
+		bool AndLink = false;
+		uint BranchPC = 0;
+
+		public void _branch_pre(bool AndLink = false)
+		{
+			this.AndLink = AndLink;
+			this.BranchPC = PC;
+		}
+
 		// Branch on EQuals (Likely).
-		public void beq() { _branch_pre_vv(SafeBinaryComparison.Equals); }
+		public void beq() { _branch_pre(); _branch_pre_vv(SafeBinaryComparison.Equals); }
 		public void beql() { beq(); }
 
 		// Branch on Not Equals (Likely).
-		public void bne() { _branch_pre_vv(SafeBinaryComparison.NotEquals); }
+		public void bne() { _branch_pre(); _branch_pre_vv(SafeBinaryComparison.NotEquals); }
 		public void bnel() { bne(); }
 
 		// Branch on Less Than Zero (And Link) (Likely).
-		public void bltz() { _branch_pre_v0(SafeBinaryComparison.LessThanSigned); }
+		public void bltz() { _branch_pre(); _branch_pre_v0(SafeBinaryComparison.LessThanSigned); }
 		public void bltzl() { bltz(); }
-		public void bltzal() {
-			//_branch_pre_v0_link(OpCodes.Clt);
-			//_link();
-			//bltz();
-			throw (new NotImplementedException());
-		}
+		public void bltzal() { _branch_pre(AndLink: true); _branch_pre_v0(SafeBinaryComparison.LessThanSigned); }
 		public void bltzall() { bltzal(); }
 
 		// Branch on Less Or Equals than Zero (Likely).
-		public void blez() { _branch_pre_v0(SafeBinaryComparison.LessOrEqualSigned); }
+		public void blez() { _branch_pre(); _branch_pre_v0(SafeBinaryComparison.LessOrEqualSigned); }
 		public void blezl() { blez(); }
 
 		// Branch on Great Than Zero (Likely).
-		public void bgtz() { _branch_pre_v0(SafeBinaryComparison.GreaterThanSigned); }
+		public void bgtz() { _branch_pre();  _branch_pre_v0(SafeBinaryComparison.GreaterThanSigned); }
 		public void bgtzl() { bgtz(); }
 
 		// Branch on Greater Equal Zero (And Link) (Likely).
-		public void bgez() { _branch_pre_v0(SafeBinaryComparison.GreaterOrEqualSigned); }
+		public void bgez() { _branch_pre();  _branch_pre_v0(SafeBinaryComparison.GreaterOrEqualSigned); }
 		public void bgezl() { bgez(); }
 		public void bgezal() { throw (new NotImplementedException()); }
 		public void bgezall() { bgezal(); }
