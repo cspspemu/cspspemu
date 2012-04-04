@@ -19,7 +19,7 @@ namespace CSPspEmu.Gui.Winforms
 			InitializeComponent();
 			GpuPluginInfoLabel.Text = "GPU " + IGuiExternalInterface.GetGpuPluginInfo().ToString();
 			AudioPluginInfoLabel.Text = "Audio " + IGuiExternalInterface.GetAudioPluginInfo().ToString();
-			versionLabel.Text = "Version: " + PspGlobalConfiguration.CurrentVersion;
+			versionLabel.Text = "Version: " + PspGlobalConfiguration.CurrentVersion + " : r" + PspGlobalConfiguration.CurrentVersionNumeric;
 			GitRevisionValueLinkLabel.Text = PspGlobalConfiguration.GitRevision;
 		}
 

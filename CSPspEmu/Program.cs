@@ -299,10 +299,11 @@ namespace CSPspEmu
 			{
 				Getopt.AddRule(new[] { "/help", "/?", "-h", "--help", "-?" }, () =>
 				{
-					Console.WriteLine("Soywiz's Psp Emulator - {0} - {1}", PspGlobalConfiguration.CurrentVersion, PspGlobalConfiguration.GitRevision);
+					Console.WriteLine("Soywiz's Psp Emulator - {0} - r{1} - {2}", PspGlobalConfiguration.CurrentVersion, PspGlobalConfiguration.CurrentVersionNumeric, PspGlobalConfiguration.GitRevision);
 					Console.WriteLine("");
 					Console.WriteLine(" Switches:");
 					Console.WriteLine("   /version      - Outputs the program version");
+					Console.WriteLine("   /version2     - Outputs the program numeric version");
 					Console.WriteLine("   /gitrevision  - Outputs the git revision");
 					Console.WriteLine("   /installat3   - Installs the WavDest filter. Requires be launched with administrative rights.");
 					Console.WriteLine("   /associate    - Associates extensions with the program. Requires be launched with administrative rights.");
@@ -316,6 +317,11 @@ namespace CSPspEmu
 				Getopt.AddRule("/version", () =>
 				{
 					Console.Write("{0}", PspGlobalConfiguration.CurrentVersion);
+					Environment.Exit(0);
+				});
+				Getopt.AddRule("/version2", () =>
+				{
+					Console.Write("{0}", PspGlobalConfiguration.CurrentVersionNumeric);
 					Environment.Exit(0);
 				});
 				Getopt.AddRule("/gitrevision", () =>

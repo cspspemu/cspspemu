@@ -27,6 +27,8 @@
 *.userprefs
 *.user
 *.dump
+*.idb
+*.idc
 /CSPspEmu.Tests/obj
 /CSPspEmu.Tests/bin
 /CSPspEmu.Core.Gpu.Impl.Opengl/obj
@@ -71,3 +73,6 @@
 /CSPspEmu.Media/obj
 /version_current.txt
 /git_revision.txt
+*.psess
+*.sdf
+*.log

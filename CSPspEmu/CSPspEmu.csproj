@@ -169,6 +169,9 @@
       <Link>git_revision.txt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\version_current_numeric.txt">
+      <Link>version_current_numeric.txt</Link>
+    </EmbeddedResource>
     <Content Include="..\version_last.txt">
       <Link>version_last.txt</Link>
     </Content>

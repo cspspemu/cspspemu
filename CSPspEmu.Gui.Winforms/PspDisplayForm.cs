@@ -210,7 +210,7 @@ namespace CSPspEmu.Gui.Winforms
 					//this.Font = new Font("Lucida Console", 16);
 					if (ShowMenus)
 					{
-						this.Text = "Soywiz's PspEmu - " + PspGlobalConfiguration.CurrentVersion + " :: " + LastText;
+						this.Text = "Soywiz's PspEmu - " + PspGlobalConfiguration.CurrentVersion + " :: r" + PspGlobalConfiguration.CurrentVersionNumeric + " :: " + LastText;
 					}
 					else
 					{
@@ -400,7 +400,7 @@ namespace CSPspEmu.Gui.Winforms
 		private void websiteToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			//Process.Start(@"http://en.blog.cballesterosvelasco.es/search/label/pspemu/?rf=csp");
-			Process.Start(@"http://pspemu.soywiz.com/?rf=csp&version=" + PspGlobalConfiguration.CurrentVersion);
+			Process.Start(@"http://pspemu.soywiz.com/?rf=csp&version=" + PspGlobalConfiguration.CurrentVersion + "&version2=" + PspGlobalConfiguration.CurrentVersionNumeric);
 		}
 
 		private void xToolStripMenuItem1_Click(object sender, EventArgs e)

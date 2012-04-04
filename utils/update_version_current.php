@@ -5,9 +5,12 @@ function file_put_contents_if_newer($file, $content) {
 
 date_default_timezone_set('europe/madrid');
 $rootDir = realpath(dirname(__DIR__));
+//$rootDir = (dirname(__DIR__));
 
 $gitrev = @explode("\n", `git rev-parse HEAD {$rootDir}`); $gitrev = trim($gitrev[0]);
 file_put_contents_if_newer("{$rootDir}/git_revision.txt", $gitrev);
+
+$rev_count = count(explode("\n", `git rev-list --all`));
 
 if (@$argv[1] == 'Release') {
 	$content = date('Ymd');
@@ -15,3 +18,4 @@ if (@$argv[1] == 'Release') {
 	$content = date('Y-m-d') . '/' . substr($gitrev, 0, 10) . '/Git';
 }
 file_put_contents_if_newer("{$rootDir}/version_current.txt", $content);
+file_put_contents_if_newer("{$rootDir}/version_current_numeric.txt", $rev_count);
