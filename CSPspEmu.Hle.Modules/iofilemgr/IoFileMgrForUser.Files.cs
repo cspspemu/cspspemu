@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
+using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Modules.stdio;
 using CSPspEmu.Hle.Vfs;
 
@@ -11,6 +12,140 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 {
 	unsafe public partial class IoFileMgrForUser
 	{
+		public class GuestHleIoDriver : IHleIoDriver
+		{
+			HleState HleState;
+			PspIoDrv* PspIoDrv;
+			PspIoDrvFuncs* PspIoDrvFuncs { get { return PspIoDrv->funcs; } }
+
+			public GuestHleIoDriver(HleState HleState, PspIoDrv* PspIoDrv)
+			{
+				this.HleState = HleState;
+				this.PspIoDrv = PspIoDrv;
+			}
+
+			public int IoInit()
+			{
+				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.WriteLine("Not Implemented: GuestHleIoDriver.IoInit"); });
+				return (int)HleState.HleInterop.ExecuteFunctionNow(PspIoDrvFuncs->IoInit);
+			}
+
+			public int IoExit()
+			{
+				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.WriteLine("Not Implemented: GuestHleIoDriver.IoExit"); });
+				return (int)HleState.HleInterop.ExecuteFunctionNow(PspIoDrvFuncs->IoExit);
+			}
+
+			public int IoOpen(HleIoDrvFileArg HleIoDrvFileArg, string FileName, HleIoFlags Flags, SceMode Mode)
+			{
+				//HleState.HleInterop.ExecuteFunctionNow(PspIoDrvFuncs->IoOpen);
+				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.WriteLine("Not Implemented: GuestHleIoDriver.IoOpen"); });
+				//throw new NotImplementedException();
+				return 0;
+			}
+
+			public int IoClose(HleIoDrvFileArg HleIoDrvFileArg)
+			{
+				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.WriteLine("Not Implemented: GuestHleIoDriver.IoClose"); });
+				//throw new NotImplementedException();
+				return 0;
+			}
+
+			public int IoRead(HleIoDrvFileArg HleIoDrvFileArg, byte* OutputPointer, int OutputLength)
+			{
+				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.WriteLine("Not Implemented: GuestHleIoDriver.IoRead"); });
+				//throw new NotImplementedException();
+				return 0;
+			}
+
+			public int IoWrite(HleIoDrvFileArg HleIoDrvFileArg, byte* InputPointer, int InputLength)
+			{
+				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.WriteLine("Not Implemented: GuestHleIoDriver.IoWrite"); });
+				//throw new NotImplementedException();
+				return 0;
+			}
+
+			public long IoLseek(HleIoDrvFileArg HleIoDrvFileArg, long Offset, SeekAnchor Whence)
+			{
+				throw new NotImplementedException();
+			}
+
+			public int IoIoctl(HleIoDrvFileArg HleIoDrvFileArg, uint Command, byte* InputPointer, int InputLength, byte* OutputPointer, int OutputLength)
+			{
+				throw new NotImplementedException();
+			}
+
+			public int IoRemove(HleIoDrvFileArg HleIoDrvFileArg, string Name)
+			{
+				throw new NotImplementedException();
+			}
+
+			public int IoMkdir(HleIoDrvFileArg HleIoDrvFileArg, string Name, SceMode Mode)
+			{
+				throw new NotImplementedException();
+			}
+
+			public int IoRmdir(HleIoDrvFileArg HleIoDrvFileArg, string Name)
+			{
+				throw new NotImplementedException();
+			}
+
+			public int IoDopen(HleIoDrvFileArg HleIoDrvFileArg, string Name)
+			{
+				throw new NotImplementedException();
+			}
+
+			public int IoDclose(HleIoDrvFileArg HleIoDrvFileArg)
+			{
+				throw new NotImplementedException();
+			}
+
+			public int IoDread(HleIoDrvFileArg HleIoDrvFileArg, HleIoDirent* dir)
+			{
+				throw new NotImplementedException();
+			}
+
+			public int IoGetstat(HleIoDrvFileArg HleIoDrvFileArg, string FileName, SceIoStat* Stat)
+			{
+				throw new NotImplementedException();
+			}
+
+			public int IoChstat(HleIoDrvFileArg HleIoDrvFileArg, string FileName, SceIoStat* stat, int bits)
+			{
+				throw new NotImplementedException();
+			}
+
+			public int IoRename(HleIoDrvFileArg HleIoDrvFileArg, string OldFileName, string NewFileName)
+			{
+				throw new NotImplementedException();
+			}
+
+			public int IoChdir(HleIoDrvFileArg HleIoDrvFileArg, string DirectoryName)
+			{
+				throw new NotImplementedException();
+			}
+
+			public int IoMount(HleIoDrvFileArg HleIoDrvFileArg)
+			{
+				throw new NotImplementedException();
+			}
+
+			public int IoUmount(HleIoDrvFileArg HleIoDrvFileArg)
+			{
+				throw new NotImplementedException();
+			}
+
+			public int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, byte* InputPointer, int InputLength, byte* OutputPointer, int OutputLength)
+			{
+				throw new NotImplementedException();
+			}
+
+			public int IoUnk21(HleIoDrvFileArg HleIoDrvFileArg)
+			{
+				throw new NotImplementedException();
+			}
+		}
+
 		/// <summary>
 		/// Get the status of a file.
 		/// </summary>
@@ -362,5 +497,118 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			//throw(new NotImplementedException());
 			return 0;
 		}
+	}
+
+	public struct PspIoDrvFuncs
+	{
+		/// <summary>
+		/// int (*IoInit)(PspIoDrvArg* arg);
+		/// </summary>
+		public PspPointer IoInit;
+
+		/// <summary>
+		///int (*IoExit)(PspIoDrvArg* arg); 
+		/// </summary>
+		public PspPointer IoExit;
+
+		/// <summary>
+		///int (*IoOpen)(PspIoDrvFileArg *arg, char *file, int flags, SceMode mode); 
+		/// </summary>
+		public PspPointer IoOpen;
+
+		/// <summary>
+		/// int (*IoClose)(PspIoDrvFileArg *arg); 
+		/// </summary>
+		public PspPointer IoClose;
+
+		/// <summary>
+		/// int (*IoRead)(PspIoDrvFileArg *arg, char *data, int len); 
+		/// </summary>
+		public PspPointer IoRead;
+
+		/// <summary>
+		/// int (*IoWrite)(PspIoDrvFileArg *arg, const char *data, int len); 
+		/// </summary>
+		public PspPointer IoWrite;
+
+		/// <summary>
+		/// SceOff (*IoLseek)(PspIoDrvFileArg *arg, SceOff ofs, int whence); 
+		/// </summary>
+		public PspPointer IoLseek;
+
+		/// <summary>
+		/// int (*IoIoctl)(PspIoDrvFileArg *arg, unsigned int cmd, void *indata, int inlen, void *outdata, int outlen);
+		/// </summary>
+		public PspPointer IoIoctl;
+
+		/// <summary>
+		/// int (*IoRemove)(PspIoDrvFileArg *arg, const char *name); 
+		/// </summary>
+		public PspPointer IoRemove;
+
+		/// <summary>
+		/// int (*IoMkdir)(PspIoDrvFileArg *arg, const char *name, SceMode mode); 
+		/// </summary>
+		public PspPointer IoMkdir;
+
+		/// <summary>
+		/// int (*IoRmdir)(PspIoDrvFileArg *arg, const char *name);
+		/// </summary>
+		public PspPointer IoRmdir;
+
+		/// <summary>
+		/// int (*IoDopen)(PspIoDrvFileArg *arg, const char *dirname); 
+		/// </summary>
+		public PspPointer IoDopen;
+
+		/// <summary>
+		/// int (*IoDclose)(PspIoDrvFileArg *arg);
+		/// </summary>
+		public PspPointer IoDclose;
+
+		/// <summary>
+		/// int (*IoDread)(PspIoDrvFileArg *arg, SceIoDirent *dir);
+		/// </summary>
+		public PspPointer IoDread;
+
+		/// <summary>
+		/// int (*IoGetstat)(PspIoDrvFileArg *arg, const char *file, SceIoStat *stat);
+		/// </summary>
+		public PspPointer IoGetstat;
+
+		/// <summary>
+		/// int (*IoChstat)(PspIoDrvFileArg *arg, const char *file, SceIoStat *stat, int bits);
+		/// </summary>
+		public PspPointer IoChstat;
+
+		/// <summary>
+		/// int (*IoRename)(PspIoDrvFileArg *arg, const char *oldname, const char *newname); 
+		/// </summary>
+		public PspPointer IoRename;
+
+		/// <summary>
+		/// int (*IoChdir)(PspIoDrvFileArg *arg, const char *dir); 
+		/// </summary>
+		public PspPointer IoChdir;
+
+		/// <summary>
+		/// int (*IoMount)(PspIoDrvFileArg *arg); 
+		/// </summary>
+		public PspPointer IoMount;
+
+		/// <summary>
+		/// int (*IoUmount)(PspIoDrvFileArg *arg); 
+		/// </summary>
+		public PspPointer IoUmount;
+
+		/// <summary>
+		/// int (*IoDevctl)(PspIoDrvFileArg *arg, const char *devname, unsigned int cmd, void *indata, int inlen, void *outdata, int outlen); 
+		/// </summary>
+		public PspPointer IoDevctl;
+
+		/// <summary>
+		/// int (*IoUnk21)(PspIoDrvFileArg *arg); 
+		/// </summary>
+		public PspPointer IoUnk21;
 	}
 }

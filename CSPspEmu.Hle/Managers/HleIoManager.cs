@@ -250,6 +250,23 @@ namespace CSPspEmu.Hle.Managers
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="Name"></param>
+		public void RemoveDriver(string Name)
+		{
+			try
+			{
+				Drivers[Name].IoExit();
+				Drivers.Remove(Name);
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
 		/// <param name="DeviceName"></param>
 		/// <returns></returns>
 		public ParsePathInfo ParseDeviceName(string DeviceName)

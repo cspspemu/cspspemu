@@ -2,11 +2,40 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Modules.iofilemgr
 {
 	unsafe public partial class IoFileMgrForUser
 	{
+		public struct PspIoDrv
+		{
+			/// <summary>
+			/// The name of the device to add
+			/// </summary>
+			public PspPointer name;
+
+			/// <summary>
+			/// Device type, this 0x10 is for a filesystem driver
+			/// </summary>
+			public uint dev_type;
+
+			/// <summary>
+			/// Unknown, set to 0x800
+			/// </summary>
+			public uint unk2;
+			
+			/// <summary>
+			/// This seems to be the same as name but capitalised :/
+			/// </summary>
+			public PspPointer name2;
+
+			/// <summary>
+			/// Pointer to a filled out functions table
+			/// </summary>
+			public PspIoDrvFuncs* funcs;
+		}
+
 		/// <summary>
 		/// Adds a new IO driver to the system.
 		/// 
@@ -24,7 +53,8 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspNotImplemented]
 		public int sceIoAddDrv(PspIoDrv* PspIoDrv)
 		{
-			Console.WriteLine("Not implemented sceIoAddDrv(...)");
+			var Name = HleState.CpuProcessor.Memory.ReadStringz(PspIoDrv->name, Encoding.UTF8);
+			HleState.HleIoManager.SetDriver(Name + ":", new GuestHleIoDriver(HleState, PspIoDrv));
 			return 0;
 		}
 
@@ -36,10 +66,9 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <param name="DriverName">Name of the driver to delete.</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xC7F35804, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
 		public int sceIoDelDrv(string DriverName)
 		{
-			Console.WriteLine("Not implemented sceIoDelDrv('{0}')", DriverName);
+			HleState.HleIoManager.RemoveDriver(DriverName + ":");
 			return 0;
 		}
 	}

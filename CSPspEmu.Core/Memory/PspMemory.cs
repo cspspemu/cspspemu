@@ -227,6 +227,11 @@ namespace CSPspEmu.Core.Memory
 			PointerUtils.Memcpy((byte*)Destination, (byte*)Source, Size);
 		}
 
+		public string ReadStringz(uint Address, Encoding Encoding)
+		{
+			return new PspMemoryStream(this).SliceWithLength(Address).ReadStringz(-1, Encoding);
+		}
+
 		public uint WriteStringz(uint Address, string String)
 		{
 			var Bytes = Encoding.UTF8.GetBytes(String + "\0");

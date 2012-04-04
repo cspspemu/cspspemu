@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Hle.Modules.iofilemgr;
+using CSPspEmu.Hle.Vfs;
 
 namespace CSPspEmu.Hle.Modules.stdio
 {
@@ -25,6 +27,10 @@ namespace CSPspEmu.Hle.Modules.stdio
 		{
 		}
 
+		StdHandle StdIn = StdHandle.In;
+		StdHandle StdOut = StdHandle.Out;
+		StdHandle StdError = StdHandle.Error;
+
 		/// <summary>
 		/// Function to get the current standard in file no
 		/// </summary>
@@ -33,7 +39,7 @@ namespace CSPspEmu.Hle.Modules.stdio
 		//[HlePspNotImplemented]
 		public StdHandle sceKernelStdin()
 		{
-			return StdHandle.In;
+			return StdIn;
 		}
 
 		/// <summary>
@@ -44,7 +50,7 @@ namespace CSPspEmu.Hle.Modules.stdio
 		//[HlePspNotImplemented]
 		public StdHandle sceKernelStdout()
 		{
-			return StdHandle.Out;
+			return StdOut;
 		}
 
 		/// <summary>
@@ -55,7 +61,7 @@ namespace CSPspEmu.Hle.Modules.stdio
 		//[HlePspNotImplemented]
 		public StdHandle sceKernelStderr()
 		{
-			return StdHandle.Error;
+			return StdError;
 		}
 
 		/// <summary>
@@ -67,11 +73,12 @@ namespace CSPspEmu.Hle.Modules.stdio
 		/// <returns>&lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0x98220F3E, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceKernelStdoutReopen(string File, int Flags, SceMode Mode)
+		public StdHandle sceKernelStdoutReopen(string File, HleIoFlags Flags, Vfs.SceMode Mode)
 		{
-			Console.WriteLine(File);
-			//throw (new NotImplementedException());
-			return (int)StdHandle.Out;
+			var IoFileMgrForUser = HleState.ModuleManager.GetModule<IoFileMgrForUser>();
+			StdOut = (StdHandle)IoFileMgrForUser.sceIoOpen(File, Flags, Mode);
+			//Console.WriteLine("StdOut: {0}", StdOut);
+			return StdOut;
 		}
 
 		/// <summary>
@@ -83,10 +90,11 @@ namespace CSPspEmu.Hle.Modules.stdio
 		/// <returns>&lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0xFB5380C5, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceKernelStderrReopen(string File, int Flags, SceMode Mode)
+		public StdHandle sceKernelStderrReopen(string File, HleIoFlags Flags, Vfs.SceMode Mode)
 		{
-			//throw (new NotImplementedException());
-			return (int)StdHandle.Error;
+			var IoFileMgrForUser = HleState.ModuleManager.GetModule<IoFileMgrForUser>();
+			StdError = (StdHandle)IoFileMgrForUser.sceIoOpen(File, Flags, Mode);
+			return StdError;
 		}
 	}
 }
