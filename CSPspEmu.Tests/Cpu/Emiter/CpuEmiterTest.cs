@@ -768,7 +768,6 @@ namespace CSPspEmu.Core.Tests
 			");
 
 			Assert.AreEqual("[2,3]", Events.ToJson());
-			Assert.AreEqual(103, CpuThreadState.GPR[1]);
 		}
 
 		[TestMethod]

@@ -644,9 +644,19 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public int sceAtracGetNextSample(int AtracId, out int NumberOfSamplesInNextFrame)
 		{
-			var Atrac = AtracList.Get(AtracId);
-			NumberOfSamplesInNextFrame = Atrac.GetNumberOfSamplesInNextFrame();
-			return 0;
+			NumberOfSamplesInNextFrame = 0;
+			try
+			{
+				var Atrac = AtracList.Get(AtracId);
+				NumberOfSamplesInNextFrame = Atrac.GetNumberOfSamplesInNextFrame();
+				return 0;
+			}
+			catch (Exception Exception)
+			{
+				NumberOfSamplesInNextFrame = 1;
+				Console.Error.WriteLine(Exception);
+				return 0;
+			}
 		}
 
 		/// <summary>
