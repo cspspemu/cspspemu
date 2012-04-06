@@ -213,5 +213,35 @@ namespace CSPspEmu.Hle.Modules.rtc
 			*dstPtr = *srcPtr + value;
 			return 0;
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x011F03C1, FirmwareVersion = 150)]
+		public long sceRtcGetAccumulativeTime()
+		{
+			// Returns the difference between the last reincarnated time and the current tick.
+			// Just return our current tick, since there's no need to mimick such behaviour.
+
+			long result;
+			sceRtcGetCurrentTick(&result);
+
+			return result;
+		}
+
+		/// <summary>
+		/// Converts a date to a unix time
+		/// </summary>
+		/// <param name="date_addr"></param>
+		/// <param name="time_addr"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xE1C93E47, FirmwareVersion = 200)]
+		public int sceRtcGetTime64_t(ref ScePspDateTime DatePointer, ref long UnixTimePointer)
+		{
+			UnixTimePointer = DatePointer.ToUnixTimestamp();
+
+			return 0;
+		}
 	}
 }

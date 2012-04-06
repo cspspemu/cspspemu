@@ -76,3 +76,4 @@
 *.psess
 *.sdf
 *.log
+/version_current_numeric.txt

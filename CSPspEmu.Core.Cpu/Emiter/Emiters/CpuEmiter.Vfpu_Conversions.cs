@@ -23,11 +23,24 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			return Value;
 		}
 
+		static public uint _vi2c_impl(uint x, uint y, uint z, uint w)
+		{
+			return
+				((x >> 24) << 0 ) |
+				((y >> 24) << 8 ) |
+				((z >> 24) << 16) |
+				((w >> 24) << 24) |
+			0;
+		}
+
 		public void vuc2i()
 		{
 			var VectorSize = Instruction.ONE_TWO;
-			if (VectorSize != 4) throw (new NotImplementedException());
-			VectorOperationSaveVd(VectorSize, (Index) =>
+			//if (VectorSize != 4) throw (new NotImplementedException());
+			if (VectorSize != 1) throw (new NotImplementedException());
+			
+			//VectorOperationSaveVd(VectorSize, (Index) =>
+			VectorOperationSaveVd(4, (Index) =>
 			{
 				Load_VS(0, 1, AsInteger: true);
 				SafeILGenerator.Push((int)((3 - Index) * 4));
@@ -41,14 +54,33 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void vc2i()
 		{
 			var VectorSize = Instruction.ONE_TWO;
-			if (VectorSize != 4) throw (new NotImplementedException());
-			VectorOperationSaveVd(VectorSize, (Index) =>
+			//if (VectorSize != 4) throw (new NotImplementedException());
+			if (VectorSize != 1) throw (new NotImplementedException());
+
+			//VectorOperationSaveVd(VectorSize, (Index) =>
+			VectorOperationSaveVd(4, (Index) =>
 			{
 				Load_VS(0, 1, AsInteger: true);
 				SafeILGenerator.Push((int)((3 - Index) * 8));
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftLeft);
 				SafeILGenerator.Push(unchecked((int)0xFF000000));
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.And);
+			}, AsInteger: true);
+		}
+
+		// Vfpu Integer to(2) Color?
+		public void vi2c()
+		{
+			var VectorSize = Instruction.ONE_TWO;
+			if (VectorSize != 4) throw (new NotImplementedException(""));
+
+			VectorOperationSaveVd(1, (Index) =>
+			{
+				Load_VS(0, 4, AsInteger: true);
+				Load_VS(1, 4, AsInteger: true);
+				Load_VS(2, 4, AsInteger: true);
+				Load_VS(3, 4, AsInteger: true);
+				SafeILGenerator.Call((Func<uint, uint, uint, uint, uint>)_vi2c_impl);
 			}, AsInteger: true);
 		}
 
@@ -68,9 +100,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.And);
 			}, AsInteger: true);
 		}
-
-		// Vfpu Integer to(2) Color?
-		public void vi2c() { throw (new NotImplementedException("")); }
 
 		static public uint _vi2uc(int x, int y, int z, int w)
 		{

@@ -48,7 +48,8 @@ namespace CSPspEmu.Hle.Vfs.MemoryStick
 		/// <returns></returns>
 		public override int IoDevctl(HleIoDrvFileArg HleIoDrvFileArg, string DeviceName, uint Command, byte* InputPointer, int InputLength, byte* OutputPointer, int OutputLength)
 		{
-			Console.Error.WriteLine("MemoryStick.IoDevctl: ({0}, 0x{1:X})", DeviceName, Command);
+			//Console.Error.WriteLine("MemoryStick.IoDevctl: ({0}, 0x{1:X})", DeviceName, Command);
+
 			switch ((CommandType)Command)
 			{
 				case CommandType.CheckInserted:

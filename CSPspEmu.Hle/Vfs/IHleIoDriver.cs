@@ -256,6 +256,11 @@ namespace CSPspEmu.Hle.Vfs
 			return new DateTime((int)Year, (int)Month, (int)Day, (int)Hour, (int)Minute, (int)Second, (int)Microsecond / 1000, DateTimeKind.Utc);
 		}
 
+		public long ToUnixTimestamp()
+		{
+			return (long)((ToDateTime() - new DateTime(1970, 1, 1)).TotalSeconds);
+		}
+
 		public override string ToString()
 		{
 			return String.Format(

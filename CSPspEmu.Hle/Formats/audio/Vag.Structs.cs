@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
+using CSharpUtils.Endian;
 
 namespace CSPspEmu.Hle.Formats.audio
 {
@@ -21,14 +22,11 @@ namespace CSPspEmu.Hle.Formats.audio
 		{
 			public uint Magic;
 
-			[EndianAttribute(Endianness.BigEndian)]
-			public uint VagVersion;
+			public uint_be VagVersion;
 
-			[EndianAttribute(Endianness.BigEndian)]
-			public uint DataSize;
+			public uint_be DataSize;
 
-			[EndianAttribute(Endianness.BigEndian)]
-			public uint SampleRate;
+			public uint_be SampleRate;
 
 			public fixed byte Name[16];
 		}
