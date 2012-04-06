@@ -526,6 +526,7 @@
 			// 
 			// PspDisplayForm
 			// 
+			this.AllowDrop = true;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(525, 291);
@@ -536,6 +537,8 @@
 			this.Name = "PspDisplayForm";
 			this.Text = "Soywiz\'s Psp Emulator";
 			this.Load += new System.EventHandler(this.PspDisplayForm_Load_1);
+			this.DragDrop += new System.Windows.Forms.DragEventHandler(this.PspDisplayForm_DragDrop);
+			this.DragEnter += new System.Windows.Forms.DragEventHandler(this.PspDisplayForm_DragEnter);
 			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PspDisplayForm_KeyDown);
 			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PspDisplayForm_KeyUp);
 			this.menuStrip1.ResumeLayout(false);
