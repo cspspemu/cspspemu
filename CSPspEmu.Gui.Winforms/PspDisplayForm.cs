@@ -495,15 +495,25 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			var OpenFileDialog = new OpenFileDialog();
+			var Result = default(DialogResult);
+
 			PauseResume(() =>
 			{
-				var OpenFileDialog = new OpenFileDialog();
 				OpenFileDialog.Filter = "Compatible Formats (*.elf, *.pbp, *.iso, *.cso, *.dax)|*.elf;*.pbp;*.iso;*.cso;*.dax|All Files|*.*";
-				if (OpenFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-				{
-					OpenFileReal(OpenFileDialog.FileName);
-				}
+				Result = OpenFileDialog.ShowDialog();
 			});
+
+			new Thread(() =>
+			{
+				PauseResume(() =>
+				{
+					if (Result == System.Windows.Forms.DialogResult.OK)
+					{
+						OpenFileReal(OpenFileDialog.FileName);
+					}
+				});
+			}).Start();
 		}
 
 		private void OpenFileReal(string FilePath)
@@ -967,11 +977,14 @@ namespace CSPspEmu.Gui.Winforms
 
 		void Recent_Click(object sender, EventArgs e)
 		{
-			PauseResume(() =>
+			new Thread(() =>
 			{
-				var ToolStripMenuItem = (ToolStripMenuItem)sender;
-				OpenFileReal(ToolStripMenuItem.Text);
-			});
+				PauseResume(() =>
+				{
+					var ToolStripMenuItem = (ToolStripMenuItem)sender;
+					OpenFileReal(ToolStripMenuItem.Text);
+				});
+			}).Start();
 		}
 
 		static private Keys ParseKeyName(string KeyName)
@@ -996,12 +1009,19 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
+			this.TopMost = true;
+			this.Focus();
+			this.TopMost = false;
+
 			foreach (string file in files)
 			{
-				PauseResume(() =>
+				new Thread(() =>
 				{
-					OpenFileReal(file);
-				});
+					PauseResume(() =>
+					{
+						OpenFileReal(file);
+					});
+				}).Start();
 
 				break;
 			}  
