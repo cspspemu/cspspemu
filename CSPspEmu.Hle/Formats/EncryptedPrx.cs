@@ -63,7 +63,7 @@ namespace CSPspEmu.Hle.Formats
 		/// 
 		/// </summary>
 		/// <param name="Stream"></param>
-		public byte[] Decrypt(byte[] _pbIn)
+		public byte[] Decrypt(byte[] _pbIn, bool ShowInfo = false)
 		{
 			var Kirk = new Kirk();
 			Kirk.kirk_init();
@@ -77,7 +77,11 @@ namespace CSPspEmu.Hle.Formats
 				var HeaderPointer = (HeaderStruct*)pbIn;
 				this.Header = *(HeaderStruct*)pbIn;
 				var pti = GetTagInfoByTag(this.Header.Tag);
-				Console.WriteLine("TAG_INFO: {0}", pti);
+
+				if (ShowInfo)
+				{
+					Console.WriteLine("TAG_INFO: {0}", pti);
+				}
 
 				// build conversion into pbOut
 				PointerUtils.Memcpy(pbOut, pbIn, _pbIn.Length);

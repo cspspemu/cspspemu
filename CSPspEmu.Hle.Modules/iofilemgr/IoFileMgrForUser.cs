@@ -16,7 +16,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// </summary>
 		/// <param name="FileHandle"></param>
 		/// <returns></returns>
-		private HleIoDrvFileArg GetFileArgFromHandle(SceUID FileHandle)
+		public HleIoDrvFileArg GetFileArgFromHandle(SceUID FileHandle)
 		{
 			return HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileHandle);
 		}

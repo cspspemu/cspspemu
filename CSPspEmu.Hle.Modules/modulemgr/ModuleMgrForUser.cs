@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
@@ -109,40 +110,29 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 
 		public HleUidPool<HleModuleGuest> Modules = new HleUidPool<HleModuleGuest>();
 
-		/// <summary>
-		/// Load a module.
-		/// </summary>
-		/// <remarks>
-		/// This function restricts where it can load from (such as from flash0) 
-		/// unless you call it in kernel mode. It also must be called from a thread.
-		/// </remarks>
-		/// <param name="Path">The path to the module to load.</param>
-		/// <param name="Flags">Unused, always 0 .</param>
-		/// <param name="SceKernelLMOption">Pointer to a mod_param_t structure. Can be NULL.</param>
-		/// <returns>The UID of the loaded module on success, otherwise one of ::PspKernelErrorCodes.</returns>
-		[HlePspFunction(NID = 0x977DE386, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceKernelLoadModule(string Path, uint Flags, SceKernelLMOption* SceKernelLMOption)
+		public int sceKernelLoadModuleWithStream(Func<Stream> GetStreamAction, string Path, uint Flags, SceKernelLMOption* SceKernelLMOption)
 		{
 			HleModuleGuest Module = new HleModuleGuest(HleState);
 
 			try
 			{
+				Path = Path.ToLowerInvariant();
+
 				if (Path.StartsWith(@"disc0:/PSP_GAME/USRDIR/kmodule"))
 				{
-					throw(new Exception("Ignore kmodule!"));
+					throw (new Exception("Ignore kmodule!"));
 				}
 
 				if (
 					Path.EndsWith(@"/libatrac3plus.prx") ||
+					Path.EndsWith(@"/audiocodec.prx") ||
 					Path.EndsWith(@"/mpeg.prx") ||
 				false)
 				{
 					throw (new Exception("Ignore libatrac3plus.prx!"));
 				}
-				
 
-				var ModuleStream = HleState.HleIoManager.HleIoWrapper.Open(Path, Vfs.HleIoFlags.Read, Vfs.SceMode.All);
+				var ModuleStream = GetStreamAction();
 
 				var Loader = HleState.PspConfig.PspEmulatorContext.GetInstance<ElfPspLoader>();
 				var HleModuleGuest = Loader.LoadModule(
@@ -151,7 +141,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 					HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User),
 					HleState.ModuleManager,
 					"",
-					ModuleName : Path,
+					ModuleName: Path,
 					IsMainModule: false
 				);
 
@@ -185,6 +175,27 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		}
 
 		/// <summary>
+		/// Load a module.
+		/// </summary>
+		/// <remarks>
+		/// This function restricts where it can load from (such as from flash0) 
+		/// unless you call it in kernel mode. It also must be called from a thread.
+		/// </remarks>
+		/// <param name="Path">The path to the module to load.</param>
+		/// <param name="Flags">Unused, always 0 .</param>
+		/// <param name="SceKernelLMOption">Pointer to a mod_param_t structure. Can be NULL.</param>
+		/// <returns>The UID of the loaded module on success, otherwise one of ::PspKernelErrorCodes.</returns>
+		[HlePspFunction(NID = 0x977DE386, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelLoadModule(string Path, uint Flags, SceKernelLMOption* SceKernelLMOption)
+		{
+			return sceKernelLoadModuleWithStream(() =>
+			{
+				return HleState.HleIoManager.HleIoWrapper.Open(Path, Vfs.HleIoFlags.Read, Vfs.SceMode.All);
+			}, Path, Flags, SceKernelLMOption);
+		}
+
+		/// <summary>
 		/// Start a loaded module.
 		/// </summary>
 		/// <param name="ModuleId">The ID of the module returned from LoadModule.</param>
@@ -202,8 +213,13 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 			if (Module.Loaded)
 			{
 				var ThreadManForUser = HleState.ModuleManager.GetModule<ThreadManForUser>();
-				var ThreadId = (int)ThreadManForUser.sceKernelCreateThread(CpuThreadState, "ModuleThread", Module.InitInfo.PC, 10, 1024, PspThreadAttributes.ClearStack, null);
-				ThreadManForUser.sceKernelStartThread(CpuThreadState, ThreadId, ArgumentsSize, ArgumentsPointer);
+
+				var NewCpuThreadState = new CpuThreadState(CpuThreadState.CpuProcessor);
+				NewCpuThreadState.CopyRegistersFrom(CpuThreadState);
+				NewCpuThreadState.GP = Module.InitInfo.GP;
+
+				var ThreadId = (int)ThreadManForUser.sceKernelCreateThread(NewCpuThreadState, "ModuleThread", Module.InitInfo.PC, 10, 1024, PspThreadAttributes.ClearStack, null);
+				ThreadManForUser.sceKernelStartThread(NewCpuThreadState, ThreadId, ArgumentsSize, ArgumentsPointer);
 			}
 
 			//throw(new NotImplementedException());
@@ -310,10 +326,14 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		/// <returns>The UID of the loaded module on success, otherwise one of ::PspKernelErrorCodes.</returns>
 		[HlePspFunction(NID = 0xB7F46618, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceKernelLoadModuleByID(int FileId, uint Flags, SceKernelLMOption* SceKernelLMOption)
+		public int sceKernelLoadModuleByID(SceUID FileId, uint Flags, SceKernelLMOption* SceKernelLMOption)
 		{
-			//SceKernelLMOption->
-			return 1;
+			var IoFileMgrForUser = HleState.ModuleManager.GetModule<IoFileMgrForUser>();
+			var Args = IoFileMgrForUser.GetFileArgFromHandle(FileId);
+			return sceKernelLoadModuleWithStream(() =>
+			{
+				return new FileHandle(Args);
+			}, Args.FullFileName, Flags, SceKernelLMOption);
 		}
 
 		/// <summary>

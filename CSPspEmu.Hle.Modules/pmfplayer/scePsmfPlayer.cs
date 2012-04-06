@@ -30,6 +30,7 @@ namespace CSPspEmu.Hle.Modules.pmfplayer
 		[HlePspNotImplemented]
 		public int scePsmfPlayerCreate(int psmfPlayer, void* psmfPlayerDataAddr)
 		{
+			throw(new NotImplementedException());
 			return 0;
 		}
 

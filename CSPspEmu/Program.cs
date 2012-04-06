@@ -302,12 +302,13 @@ namespace CSPspEmu
 					Console.WriteLine("Soywiz's Psp Emulator - {0} - r{1} - {2}", PspGlobalConfiguration.CurrentVersion, PspGlobalConfiguration.CurrentVersionNumeric, PspGlobalConfiguration.GitRevision);
 					Console.WriteLine("");
 					Console.WriteLine(" Switches:");
-					Console.WriteLine("   /version      - Outputs the program version");
-					Console.WriteLine("   /version2     - Outputs the program numeric version");
-					Console.WriteLine("   /gitrevision  - Outputs the git revision");
-					Console.WriteLine("   /installat3   - Installs the WavDest filter. Requires be launched with administrative rights.");
-					Console.WriteLine("   /associate    - Associates extensions with the program. Requires be launched with administrative rights.");
-					Console.WriteLine("   /tests        - Run integration tests.");
+					Console.WriteLine("   /version             - Outputs the program version");
+					Console.WriteLine("   /version2            - Outputs the program numeric version");
+					Console.WriteLine("   /decrypt <EBOOT.BIN> - Decrypts an EBOOT.BIN");
+					Console.WriteLine("   /gitrevision         - Outputs the git revision");
+					Console.WriteLine("   /installat3          - Installs the WavDest filter. Requires be launched with administrative rights.");
+					Console.WriteLine("   /associate           - Associates extensions with the program. Requires be launched with administrative rights.");
+					Console.WriteLine("   /tests               - Run integration tests.");
 					Console.WriteLine("");
 					Console.WriteLine(" Examples:");
 					Console.WriteLine("   cspspemu.exe <path_to_psp_executable>");
@@ -324,6 +325,41 @@ namespace CSPspEmu
 					Console.Write("{0}", PspGlobalConfiguration.CurrentVersionNumeric);
 					Environment.Exit(0);
 				});
+				Getopt.AddRule("/decrypt", (string EncryptedFile) =>
+				{
+					try
+					{
+						using (var EncryptedStream = File.OpenRead(EncryptedFile))
+						{
+							/*
+							var Format = new FormatDetector().DetectSubType(EncryptedStream);
+
+							switch (Format)
+							{
+								case FormatDetector.SubType.Cso:
+								case FormatDetector.SubType.Dax:
+								case FormatDetector.SubType.Iso:
+
+									break;
+							}
+							*/
+
+							var DecryptedFile = String.Format("{0}.decrypted", EncryptedFile);
+							Console.Write("'{0}' -> '{1}'...", EncryptedFile, DecryptedFile);
+
+							var EncryptedData = EncryptedStream.ReadAll();
+							var DecryptedData = new EncryptedPrx().Decrypt(EncryptedData);
+							File.WriteAllBytes(DecryptedFile, DecryptedData);
+							Console.WriteLine("Ok");
+							Environment.Exit(0);
+						}
+					}
+					catch (Exception Exception)
+					{
+						Console.Error.WriteLine(Exception);
+						Environment.Exit(-1);
+					}
+				});
 				Getopt.AddRule("/gitrevision", () =>
 				{
 					Console.Write("{0}", PspGlobalConfiguration.GitRevision);
@@ -331,18 +367,10 @@ namespace CSPspEmu
 				});
 				Getopt.AddRule("/installat3", () =>
 				{
-					try
-					{
-						var OutFile = Environment.SystemDirectory + @"\WavDest.dll";
-						File.WriteAllBytes(OutFile, Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.WavDest.dll").ReadAll());
-						Process.Start(new ProcessStartInfo("regsvr32", String.Format(@"/s ""{0}"" ", OutFile))).WaitForExit();
-						Environment.Exit(0);
-					}
-					catch (Exception Exception)
-					{
-						Console.Error.WriteLine(Exception);
-						Environment.Exit(-1);
-					}
+					var OutFile = Environment.SystemDirectory + @"\WavDest.dll";
+					File.WriteAllBytes(OutFile, Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.WavDest.dll").ReadAll());
+					Process.Start(new ProcessStartInfo("regsvr32", String.Format(@"/s ""{0}"" ", OutFile))).WaitForExit();
+					Environment.Exit(0);
 				});
 				Getopt.AddRule("/associate", () =>
 				{
@@ -377,9 +405,10 @@ namespace CSPspEmu
 			{
 				Getopt.Process();
 			}
-			catch (Exception)
+			catch (Exception Exception)
 			{
-				//Console.Error.WriteLine(Exception);
+				Console.Error.WriteLine(Exception);
+				Environment.Exit(-1);
 			}
 			//new PspAudioOpenalImpl().__TestAudio();
 			//new PspAudioWaveOutImpl().__TestAudio();

@@ -4,3 +4,6 @@
 [submodule "csharputils"]
 	path = csharputils
 	url = git://github.com/soywiz/csharputils.git
+[submodule "ffmpeg.net"]
+	path = ffmpeg.net
+	url = https://soywiz@github.com/soywiz/ffmpeg.net.git

@@ -394,6 +394,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 				var Info = HleState.HleIoManager.ParsePath(FileName);
 				Console.WriteLine("Opened '{0}' with driver '{1}' and local path '{2}' : '{2}'", FileName, Info.HleIoDriver, Info.LocalPath);
 				Info.HleIoDrvFileArg.HleIoDriver.IoOpen(Info.HleIoDrvFileArg, Info.LocalPath, Flags, Mode);
+				Info.HleIoDrvFileArg.FullFileName = FileName;
 				return HleState.HleIoManager.HleIoDrvFileArgPool.Create(Info.HleIoDrvFileArg);
 			}
 			catch (DirectoryNotFoundException)

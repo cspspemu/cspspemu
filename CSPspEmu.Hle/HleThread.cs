@@ -67,10 +67,12 @@ namespace CSPspEmu.Hle
 		public uint NID;
 		public String Name;
 		public String Description;
+		public HleModuleHost Module;
+		public string ModuleName;
 
 		public override string ToString()
 		{
-			return this.ToStringDefault();
+			return String.Format("FunctionEntry(NID=0x{0:X}, Name='{1}', Description='{2}', Module='{3}')", NID, Name, Description, Module);
 		}
 	}
 

@@ -98,16 +98,16 @@ namespace CSPspEmu.Runner.Components.Cpu
 		public IsoFile SetIso(string IsoFile)
 		{
 			var IsoFileStream = (Stream)File.OpenRead(IsoFile);
-			string DetectedFormat;
-			switch (DetectedFormat = new FormatDetector().Detect(IsoFileStream))
+			FormatDetector.SubType DetectedFormat;
+			switch (DetectedFormat = new FormatDetector().DetectSubType(IsoFileStream))
 			{
-				case "Cso":
+				case FormatDetector.SubType.Cso:
 					IsoFileStream = new CompressedIsoProxyStream(new Cso(IsoFileStream));
 					break;
-				case "Dax":
+				case FormatDetector.SubType.Dax:
 					IsoFileStream = new CompressedIsoProxyStream(new Dax(IsoFileStream));
 					break;
-				case "Iso":
+				case FormatDetector.SubType.Iso:
 					break;
 				default:
 					throw (new InvalidDataException("Can't set an ISO for '" + DetectedFormat + "'"));
@@ -202,11 +202,11 @@ namespace CSPspEmu.Runner.Components.Cpu
 				List<Stream> ElfLoadStreamTry = new List<Stream>();
 				//Stream ElfLoadStream = null;
 
-				var Format = new FormatDetector().Detect(LoadStream);
+				var Format = new FormatDetector().DetectSubType(LoadStream);
 				String Title = null;
 				switch (Format)
 				{
-					case "Pbp":
+					case FormatDetector.SubType.Pbp:
 						{
 							var Pbp = new Pbp().Load(LoadStream);
 							ElfLoadStreamTry.Add(Pbp[Pbp.Types.PspData]);
@@ -221,12 +221,12 @@ namespace CSPspEmu.Runner.Components.Cpu
 							}
 						}
 						break;
-					case "Elf":
+					case FormatDetector.SubType.Elf:
 						ElfLoadStreamTry.Add(LoadStream);
 						break;
-					case "Dax":
-					case "Cso":
-					case "Iso":
+					case FormatDetector.SubType.Dax:
+					case FormatDetector.SubType.Cso:
+					case FormatDetector.SubType.Iso:
 						{
 							var Iso = SetIso(FileName);
 							try

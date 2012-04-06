@@ -68,7 +68,7 @@ namespace CSPspEmu.Hle.Loader
 			{
 				try
 				{
-					var DecryptedData = new EncryptedPrx().Decrypt(FileStream.ReadAll());
+					var DecryptedData = new EncryptedPrx().Decrypt(FileStream.ReadAll(), true);
 					File.WriteAllBytes("last_decoded_prx.bin", DecryptedData);
 					FileStream = new MemoryStream(DecryptedData);
 				}
@@ -90,6 +90,9 @@ namespace CSPspEmu.Hle.Loader
 					Name: "Dummy"
 				);
 				BaseAddress = MemoryPartition.ChildPartitions.OrderByDescending(Partition => Partition.Size).First().Low;
+				Console.WriteLine("BASE ADDRESS (Try    ): 0x{0:X}", BaseAddress);
+				BaseAddress = MathUtils.NextAligned(BaseAddress, 0x1000);
+				Console.WriteLine("BASE ADDRESS (Aligned): 0x{0:X}", BaseAddress);
 			}
 			else
 			{
@@ -475,6 +478,8 @@ namespace CSPspEmu.Hle.Loader
 			var BaseMemoryStream = ElfLoader.MemoryStream.SliceWithLength(BaseAddress);
 			var ImportsStream = BaseMemoryStream.SliceWithBounds(HleModuleGuest.ModuleInfo.ImportsStart, HleModuleGuest.ModuleInfo.ImportsEnd);
 			var ModuleImports = ImportsStream.ReadStructVectorUntilTheEndOfStream<ElfPsp.ModuleImport>();
+
+			Console.WriteLine("BASE ADDRESS: 0x{0:X}", BaseAddress);
 
 			Console.WriteLine("Imports:");
 

@@ -40,6 +40,11 @@ namespace CSPspEmu.Hle.Vfs
 		public int FileSystemNumber;
 
 		/// <summary>
+		/// File Name if available.
+		/// </summary>
+		public string FullFileName;
+
+		/// <summary>
 		/// Pointer to a user defined argument, this is preserved on a per file basis
 		/// </summary>
 		public IDisposable FileArgument;

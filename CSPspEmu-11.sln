@@ -48,6 +48,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeILGenerator", "SafeILGe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeILGenerator.Tests", "SafeILGenerator\SafeILGenerator.Tests\SafeILGenerator.Tests.csproj", "{84686E6D-3496-4934-A021-79FA6B7E7420}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFMpeg.NET", "ffmpeg.net\ffmpeg.net\FFMpeg.NET\FFMpeg.NET\FFMpeg.NET.csproj", "{6A814899-8E58-4C52-8D6C-FC6F73A39B9B}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = CSPspEmu.vsmdi
@@ -184,6 +186,21 @@ Global
 		{6552E4E6-198A-46B6-864A-53CA5C1ED851}.RunTests|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{6552E4E6-198A-46B6-864A-53CA5C1ED851}.RunTests|Mixed Platforms.Build.0 = Debug|Any CPU
 		{6552E4E6-198A-46B6-864A-53CA5C1ED851}.RunTests|x86.ActiveCfg = Release|Any CPU
+		{6A814899-8E58-4C52-8D6C-FC6F73A39B9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A814899-8E58-4C52-8D6C-FC6F73A39B9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A814899-8E58-4C52-8D6C-FC6F73A39B9B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6A814899-8E58-4C52-8D6C-FC6F73A39B9B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6A814899-8E58-4C52-8D6C-FC6F73A39B9B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6A814899-8E58-4C52-8D6C-FC6F73A39B9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A814899-8E58-4C52-8D6C-FC6F73A39B9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A814899-8E58-4C52-8D6C-FC6F73A39B9B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6A814899-8E58-4C52-8D6C-FC6F73A39B9B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6A814899-8E58-4C52-8D6C-FC6F73A39B9B}.Release|x86.ActiveCfg = Release|Any CPU
+		{6A814899-8E58-4C52-8D6C-FC6F73A39B9B}.RunTests|Any CPU.ActiveCfg = Release|Any CPU
+		{6A814899-8E58-4C52-8D6C-FC6F73A39B9B}.RunTests|Any CPU.Build.0 = Release|Any CPU
+		{6A814899-8E58-4C52-8D6C-FC6F73A39B9B}.RunTests|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6A814899-8E58-4C52-8D6C-FC6F73A39B9B}.RunTests|Mixed Platforms.Build.0 = Release|Any CPU
+		{6A814899-8E58-4C52-8D6C-FC6F73A39B9B}.RunTests|x86.ActiveCfg = Release|Any CPU
 		{72F560E3-9101-426B-B3E5-B83B78E536DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{72F560E3-9101-426B-B3E5-B83B78E536DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72F560E3-9101-426B-B3E5-B83B78E536DB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
