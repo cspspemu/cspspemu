@@ -30,7 +30,7 @@ namespace CSPspEmu.Hle.Modules.pmfplayer
 		[HlePspNotImplemented]
 		public int scePsmfPlayerCreate(int psmfPlayer, void* psmfPlayerDataAddr)
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
 			return 0;
 		}
 
@@ -172,7 +172,7 @@ namespace CSPspEmu.Hle.Modules.pmfplayer
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xDF089680, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int scePsmfPlayerGetPsmfInfo(int psmfPlayer, PmfInfoStruct* Info)
+		public int scePsmfPlayerGetPsmfInfo(int psmfPlayer, ref PmfInfoStruct Info)
 		{
 			return 0;
 		}
@@ -323,6 +323,13 @@ namespace CSPspEmu.Hle.Modules.pmfplayer
 			return 0;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="psmfPlayer"></param>
+		/// <param name="newAudioCodec"></param>
+		/// <param name="newAudioStreamNum"></param>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0x85461EFF, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int scePsmfPlayerSelectSpecificAudio(int psmfPlayer, uint newAudioCodec, uint newAudioStreamNum)

@@ -21,6 +21,8 @@ namespace CSPspEmu.Hle.Modules.ge
 
 		public int _sceGeListEnQueue(uint InstructionAddressStart, uint InstructionAddressStall, int CallbackId, PspGeListArgs* Args, Action<GpuDisplayList> Action)
 		{
+			//Console.WriteLine("aaaaaaaaaaa");
+
 			if (GpuStateStructPartition == null)
 			{
 				GpuStateStructPartition = HleState.MemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.Kernel0).Allocate(

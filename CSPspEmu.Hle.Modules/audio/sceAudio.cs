@@ -379,9 +379,11 @@ namespace CSPspEmu.Hle.Modules.audio
 		/// <param name="Channels">Number of channels. Pass 2 (stereo).</param>
 		/// <returns>0 on success, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0x38553111, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceAudioSRCChReserve(int SampleCount, int Frequency, int Channels)
 		{
-			throw (new NotImplementedException());
+			//throw (new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>

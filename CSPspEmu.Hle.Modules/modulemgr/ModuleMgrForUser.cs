@@ -8,6 +8,7 @@ using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Hle.Formats;
 using CSPspEmu.Hle.Loader;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Modules.iofilemgr;
@@ -63,6 +64,22 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 
 		public struct SceKernelModuleInfo
 		{
+			public int size;
+			public byte nsegment;
+			public fixed byte reserved[3];
+			public fixed int segmentaddr[4];
+			public fixed int segmentsize[4];
+			public uint entry_addr;
+			public uint gp_value;
+			public uint text_addr;
+			public uint text_size;
+			public uint data_size;
+			public uint bss_size;
+			// The following is only available in the v1.5 firmware and above,
+			// but as sceKernelQueryModuleInfo is broken in v1.0 is doesn't matter ;)
+			public ElfPsp.ModuleInfo.AtributesEnum attribute;
+			public fixed byte version[2];
+			public fixed byte name[28];
 		}
 
 		public struct SceKernelSMOption
@@ -112,7 +129,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 
 		public int sceKernelLoadModuleWithStream(Func<Stream> GetStreamAction, string Path, uint Flags, SceKernelLMOption* SceKernelLMOption)
 		{
-			HleModuleGuest Module = new HleModuleGuest(HleState);
+			var Module = new HleModuleGuest(HleState);
 
 			try
 			{
@@ -127,6 +144,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 					Path.EndsWith(@"/libatrac3plus.prx") ||
 					Path.EndsWith(@"/audiocodec.prx") ||
 					Path.EndsWith(@"/mpeg.prx") ||
+					Path.EndsWith(@"/libfont.prx") ||
 				false)
 				{
 					throw (new Exception("Ignore libatrac3plus.prx!"));
@@ -171,7 +189,9 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 				Module.Loaded = false;
 			}
 
-			return Modules.Create(Module);
+			var ModuleId = Modules.Create(Module);
+			Module.ID = ModuleId;
+			return ModuleId;
 		}
 
 		/// <summary>
@@ -217,6 +237,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 				var NewCpuThreadState = new CpuThreadState(CpuThreadState.CpuProcessor);
 				NewCpuThreadState.CopyRegistersFrom(CpuThreadState);
 				NewCpuThreadState.GP = Module.InitInfo.GP;
+				NewCpuThreadState.CallerModule = Module;
 
 				var ThreadId = (int)ThreadManForUser.sceKernelCreateThread(NewCpuThreadState, "ModuleThread", Module.InitInfo.PC, 10, 1024, PspThreadAttributes.ClearStack, null);
 				ThreadManForUser.sceKernelStartThread(NewCpuThreadState, ThreadId, ArgumentsSize, ArgumentsPointer);
@@ -302,9 +323,10 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		/// Greater or equal to zero on success.
 		/// </returns>
 		[HlePspFunction(NID = 0xF0A26395, FirmwareVersion = 150)]
-		public uint sceKernelGetModuleId()
+		public int sceKernelGetModuleId(CpuThreadState CpuThreadState)
 		{
-			throw(new NotImplementedException());
+			var Module = (HleModuleGuest)CpuThreadState.CallerModule;
+			return Module.ID;
 		}
 
 		/// <summary>
@@ -345,15 +367,55 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		/// kernel mode) then call this function first then ::pspSdkQueryModuleInfoV1 
 		/// if it fails, or make separate v1 and v1.5+ builds.
 		/// </remarks>
-		/// <param name="modid">The UID of the loaded module.</param>
-		/// <param name="info">Pointer to a ::SceKernelModuleInfo structure.</param>
+		/// <param name="ModuleId">The UID of the loaded module.</param>
+		/// <param name="ModuleInfo">Pointer to a ::SceKernelModuleInfo structure.</param>
 		/// <returns>0 on success, otherwise one of ::PspKernelErrorCodes.</returns>
 		[HlePspFunction(NID = 0x748CBED9, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceKernelQueryModuleInfo(int ModuleId, SceKernelModuleInfo *info)
+		public int sceKernelQueryModuleInfo(int ModuleId, ref SceKernelModuleInfo ModuleInfo)
 		{
+			var Module = Modules.Get(ModuleId);
+
+			/*
+		public struct SceKernelModuleInfo
+		{
+			public int size;
+			public byte nsegment;
+			public fixed byte reserved[3];
+			public fixed int segmentaddr[4];
+			public fixed int segmentsize[4];
+			public uint entry_addr;
+			public uint gp_value;
+			public uint text_addr;
+			public uint text_size;
+			public uint data_size;
+			public uint bss_size;
+			// The following is only available in the v1.5 firmware and above,
+			// but as sceKernelQueryModuleInfo is broken in v1.0 is doesn't matter ;)
+			public ElfPsp.ModuleInfo.AtributesEnum attribute;
+			public fixed byte version[2];
+			public fixed byte name[28];
+		}
+		*/
+
+			ModuleInfo.size = sizeof(SceKernelModuleInfo);
+			ModuleInfo.nsegment = 0;
+			/*
+			ModuleInfo.reserved[0] = 0;
+			ModuleInfo.reserved[1] = 0;
+			ModuleInfo.reserved[2] = 0;
+			ModuleInfo.segmentaddr[0] = 0;
+			*/
+			ModuleInfo.entry_addr = Module.InitInfo.PC;
+			ModuleInfo.gp_value = Module.InitInfo.GP;
+			ModuleInfo.attribute = Module.ModuleInfo.ModuleAtributes;
+
+			Console.Error.WriteLine("sceKernelQueryModuleInfo : PARTIALLY IMPLEMENTED!");
+
+			//ModuleInfo = Module
 			//return 0;
-			throw(new NotImplementedException("sceKernelQueryModuleInfo"));
+			//throw(new NotImplementedException("sceKernelQueryModuleInfo"));
+			return 0;
 		}
 
 		/// <summary>

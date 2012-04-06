@@ -5,12 +5,31 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
+using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Vfs;
 
 namespace CSPspEmu.Hle.Modules.utility
 {
 	unsafe public partial class sceUtility
 	{
+		public struct ListRequest
+		{
+			/// <summary>
+			/// 
+			/// </summary>
+			public uint MaxEntries;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public uint NumEntriesReaded;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public PspPointer Entries;
+		}
+
 		public struct SizeFreeInfo
 		{
 			/// <summary>
@@ -118,6 +137,8 @@ namespace CSPspEmu.Hle.Modules.utility
 		[HlePspNotImplemented]
 		public int sceUtilitySavedataInitStart(SceUtilitySavedataParam* Params)
 		{
+			var Memory = HleState.CpuProcessor.Memory;
+
 			//Params->DataBufPointer
 			Params->Base.Result = 0;
 
@@ -233,7 +254,7 @@ namespace CSPspEmu.Hle.Modules.utility
 							// Gets the ammount of free space in the Memory Stick. If null,
 							// the size is ignored and no error is returned.
 							{
-								var SizeFreeInfo = (SizeFreeInfo*)Params->msFreeAddr.GetPointer(HleState.CpuProcessor.Memory);
+								var SizeFreeInfo = (SizeFreeInfo*)Params->msFreeAddr.GetPointer(Memory);
 								SizeFreeInfo->SectorSize = SectorSize;
 								SizeFreeInfo->FreeSectors = FreeSize / SectorSize;
 								SizeFreeInfo->FreeKb = FreeSize / 1024;
@@ -245,7 +266,7 @@ namespace CSPspEmu.Hle.Modules.utility
 							// Gets the size of the data already saved in the Memory Stick.
 							// If null, the size is ignored and no error is returned.
 							{
-								var SizeUsedInfo = (SizeUsedInfo*)Params->msDataAddr.GetPointer(HleState.CpuProcessor.Memory);
+								var SizeUsedInfo = (SizeUsedInfo*)Params->msDataAddr.GetPointer(Memory);
 
 								Console.WriteLine(SizeUsedInfo->saveName);
 								Console.WriteLine(SizeUsedInfo->gameName);
@@ -261,7 +282,7 @@ namespace CSPspEmu.Hle.Modules.utility
 							// Gets the size of the data to be saved in the Memory Stick.
 							// If null, the size is ignored and no error is returned.
 							{
-								var SizeRequiredSpaceInfo = (SizeRequiredSpaceInfo*)Params->utilityDataAddr.GetPointer(HleState.CpuProcessor.Memory);
+								var SizeRequiredSpaceInfo = (SizeRequiredSpaceInfo*)Params->utilityDataAddr.GetPointer(Memory);
 								long RequiredSize = 0;
 								RequiredSize += Params->Icon0FileData.Size;
 								RequiredSize += Params->Icon1FileData.Size;
@@ -276,6 +297,12 @@ namespace CSPspEmu.Hle.Modules.utility
 								SizeRequiredSpaceInfo->RequiredSpaceString = (SizeRequiredSpaceInfo->RequiredSpaceKb) + "KB";
 								SizeRequiredSpaceInfo->RequiredSpace32KBString = (SizeRequiredSpaceInfo->RequiredSpace32KB) + "KB";
 							}
+						}
+						break;
+					case PspUtilitySavedataMode.List:
+						{
+							var ListRequest = (ListRequest *)Params->idListAddr.GetPointer(Memory);
+							ListRequest->NumEntriesReaded = 0;
 						}
 						break;
 					case PspUtilitySavedataMode.GetSize:

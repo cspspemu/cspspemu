@@ -167,6 +167,7 @@ namespace CSPspEmu.Hle
 
 	unsafe public class HleModuleGuest : HleModule
 	{
+		public int ID;
 		public string Name { get { return ModuleInfo.Name; } }
 		public HleState HleState;
 		public bool Loaded;
@@ -197,7 +198,7 @@ namespace CSPspEmu.Hle
 		{
 			var ModuleManager = HleState.ModuleManager;
 
-			Console.WriteLine(NativeFunction);
+			//Console.WriteLine(NativeFunction);
 
 			HleState.CpuProcessor.Memory.Write4(CallAddress + 0, FunctionGenerator.NativeCallSyscallOpCode);  // syscall NativeCallSyscallCode
 			HleState.CpuProcessor.Memory.Write4(CallAddress + 4, (uint)ModuleManager.AllocDelegateSlot(

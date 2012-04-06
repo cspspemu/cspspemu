@@ -194,7 +194,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			CheckEnabledMpeg();
 
 			//throw (new NotImplementedException());
-			return -1;
+			//return -1;
+			return 0;
 		}
 
 		/// <summary>

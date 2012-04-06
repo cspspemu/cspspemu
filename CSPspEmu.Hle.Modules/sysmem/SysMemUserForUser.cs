@@ -159,7 +159,10 @@ namespace CSPspEmu.Hle.Modules.sysmem
 			}
 			else
 			{
-				throw (new NotImplementedException("Not Implemented sceKernelAllocPartitionMemory with '" + Type + "'"));
+				//throw (new NotImplementedException());
+				Console.WriteLine("Not Implemented sceKernelAllocPartitionMemory with Type='" + Type + "'");
+				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MEMBLOCK_ALLOC_TYPE));
+				//return SceKernelErrors.ERROR_KERNEL_ILLEGAL_MEMBLOCK_ALLOC_TYPE;
 			}
 
 			return (int)HleState.MemoryManager.MemoryPartitionsUid.Create(MemoryPartition);

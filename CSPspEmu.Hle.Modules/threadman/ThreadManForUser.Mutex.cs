@@ -43,7 +43,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			public void Lock(CpuThreadState CurrentCpuThreadState, int UpdateCountValue, uint* Timeout)
 			{
-				if (Timeout != null) throw(new NotImplementedException());
+				if (Timeout != null)
+				{
+					//Console.Error.WriteLine("PspMutex.Lock with Timeout not implemented!!");
+					throw (new NotImplementedException());
+				}
 				if (UpdateCountValue <= 0) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT));
 				//Console.Error.WriteLine("Lock : {0}", HleState.ThreadManager.Current.Id);
 				if (!TryLock(CurrentCpuThreadState, UpdateCountValue))

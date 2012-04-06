@@ -49,7 +49,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Thread.Attribute = Attribute;
 			Thread.GP = CpuThreadState.GP;
 			Thread.Info.EntryPoint = (SceKernelThreadEntry)EntryPoint;
-
+			
 			//var ThreadStackPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User);
 			//var ThreadStackPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.UserStacks);
 			var ThreadStackPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0);
@@ -126,6 +126,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			ThreadToStart.CpuThreadState.GP = (uint)CpuThreadState.GP;
 			ThreadToStart.CpuThreadState.SP = (uint)(CopiedDataAddress - 0x40);
+
+			ThreadToStart.CpuThreadState.CallerModule = CpuThreadState.CallerModule;
 
 			ThreadToStart.CurrentStatus = HleThread.Status.Ready;
 		}

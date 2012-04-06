@@ -8,7 +8,7 @@ using CSPspEmu.Hle.Attributes;
 namespace CSPspEmu.Hle.Modules.wlan
 {
 	/// <summary>
-	/// Functions related to Wlan.
+	/// 
 	/// </summary>
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public class sceWlanDrv : HleModuleHost
@@ -52,7 +52,14 @@ namespace CSPspEmu.Hle.Modules.wlan
 
 			return -1;
 		}
+	}
 
+	/// <summary>
+	/// Functions related to Wlan.
+	/// </summary>
+	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
+	unsafe public class sceWlanDrv_lib : HleModuleHost
+	{
 		/// <summary>
 		/// Determine if the wlan device is currently powered on
 		/// </summary>
@@ -61,6 +68,14 @@ namespace CSPspEmu.Hle.Modules.wlan
 		public int sceWlanDevIsPowerOn()
 		{
 			throw (new NotImplementedException());
+		}
+
+		/// <summary>
+		/// ?
+		/// </summary>
+		[HlePspFunction(NID = 0x8D5F551B, FirmwareVersion = 150)]
+		public void sceWlanDrv_lib_0x8D5F551B()
+		{
 		}
 	}
 }

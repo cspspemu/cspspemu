@@ -754,6 +754,18 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// 
 		/// </summary>
 		/// <param name="AtracId"></param>
+		/// <returns>0 - not needed ; 1 - needed</returns>
+		[HlePspFunction(NID = 0xECA32A99, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceAtracIsSecondBufferNeeded(int AtracId)
+		{
+			return 0;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="AtracId"></param>
 		/// <param name="pucSecondBufferAddr"></param>
 		/// <param name="uiSecondBufferByte"></param>
 		/// <returns></returns>
@@ -870,6 +882,18 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 				Channels = Atrac.Format.AtracChannels;
 			}
 			return 0;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="AtracId"></param>
+		/// <param name="Atrac3PlusId"></param>
+		[HlePspFunction(NID = 0x132F1ECA, FirmwareVersion = 250)]
+		[HlePspNotImplemented]
+		public int sceAtracReinit(int AtracId, int Atrac3PlusId)
+		{
+			return -1;
 		}
 	}
 }

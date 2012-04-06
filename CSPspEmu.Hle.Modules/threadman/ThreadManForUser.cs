@@ -55,6 +55,20 @@ namespace CSPspEmu.Hle.Modules.threadman
 		}
 
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="sysclock"></param>
+		/// <param name="addr"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xE1619D7C, FirmwareVersion = 150)]
+		public int sceKernelSysClock2USecWide(long Clock, uint* Low, uint* High)
+		{
+			if (Low != null) *Low = (uint)(Clock % 1000000);
+			if (High != null) *High = (uint)(Clock / 1000000);
+			return 0;
+		}
+
+		/// <summary>
 		/// Set an alarm.
 		/// </summary>
 		/// <param name="clock">The number of micro seconds till the alarm occurrs.</param>
@@ -110,9 +124,18 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0xBA6B92E2, FirmwareVersion = 150)]
 		public int sceKernelSysClock2USec(SceKernelSysClock* Clock, uint* Low, uint* High)
 		{
-			*Low = Clock->Low;
-			*High = Clock->High;
-			return 0;
+			return sceKernelSysClock2USecWide(Clock->MicroSeconds, Low, High);
+		}
+
+		/// <summary>
+		/// Convert a number of microseconds to a wide time
+		/// </summary>
+		/// <param name="MicroSeconds">Number of microseconds.</param>
+		/// <returns>The time</returns>
+		[HlePspFunction(NID = 0xC8CD158C, FirmwareVersion = 150)]
+		public long sceKernelUSec2SysClockWide(uint MicroSeconds)
+		{
+			return MicroSeconds;
 		}
 	}
 }

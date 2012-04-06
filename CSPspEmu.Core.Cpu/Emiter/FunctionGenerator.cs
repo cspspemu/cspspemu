@@ -82,7 +82,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MemoryStream.Position = EntryPC;
 			if ((MemoryStream.Position + 8 <= MemoryStream.Length) && new BinaryReader(MemoryStream).ReadUInt64() == 0x0000000003E00008)
 			{
-				Console.WriteLine("NullSub detected at 0x{0:X}!", EntryPC);
+				//Console.WriteLine("NullSub detected at 0x{0:X}!", EntryPC);
 			}
 
 			var InstructionReader = new InstructionReader(MemoryStream);
@@ -111,7 +111,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			var NewInstruction = new Dictionary<string, bool>();
 
 			//int MaxNumberOfInstructions = 8 * 1024;
-			int MaxNumberOfInstructions = 64 * 1024;
+			//int MaxNumberOfInstructions = 64 * 1024;
+			int MaxNumberOfInstructions = 128 * 1024;
 			//int MaxNumberOfInstructions = 60;
 
 			while (BranchesToAnalyze.Count > 0)

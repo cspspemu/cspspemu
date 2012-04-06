@@ -21,6 +21,7 @@ namespace CSPspEmu.Core.Cpu
 
 		public CpuProcessor CpuProcessor;
 		public object ModuleObject;
+		public object CallerModule;
 
 		public int StepInstructionCount;
 		public long TotalInstructionCount;

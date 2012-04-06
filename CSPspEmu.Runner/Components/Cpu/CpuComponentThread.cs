@@ -327,18 +327,22 @@ namespace CSPspEmu.Runner.Components.Cpu
 				Debug.Assert(ThreadManForUser != null);
 
 
+				// @TODO: Use Module Manager
+
 				//var MainThread = HleState.ThreadManager.Create();
 				//var CpuThreadState = MainThread.CpuThreadState;
 				var CurrentCpuThreadState = new CpuThreadState(CpuProcessor);
 				{
 					//CpuThreadState.PC = Loader.InitInfo.PC;
 					CurrentCpuThreadState.GP = HleModuleGuest.InitInfo.GP;
+					CurrentCpuThreadState.CallerModule = HleModuleGuest;
 
 					int ThreadId = (int)ThreadManForUser.sceKernelCreateThread(CurrentCpuThreadState, "<EntryPoint>", HleModuleGuest.InitInfo.PC, 10, 0x1000, PspThreadAttributes.ClearStack, null);
 					ThreadManForUser._sceKernelStartThread(CurrentCpuThreadState, ThreadId, ArgumentsPartition.Size, ArgumentsPartition.Low);
 				}
 				CurrentCpuThreadState.DumpRegisters();
 				HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Dump();
+				//HleState.ModuleManager.LoadedGuestModules.Add(HleModuleGuest);
 					
 				//MainThread.CurrentStatus = HleThread.Status.Ready;
 			}

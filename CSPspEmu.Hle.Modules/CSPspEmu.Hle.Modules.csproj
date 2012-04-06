@@ -144,7 +144,7 @@
     <Compile Include="utility\sceUtility.Sysparam.cs" />
     <Compile Include="utils\UtilsForKernel.cs" />
     <Compile Include="utils\UtilsForUser.cs" />
-    <Compile Include="wlan\sceWlan_Driver.cs" />
+    <Compile Include="wlan\sceWlanDrv_lib.cs" />
     <Compile Include="_unknownPrx\KUBridge.cs" />
     <Compile Include="_unknownPrx\sceMp3.cs" />
     <Compile Include="_unknownPrx\sceNp.cs" />
