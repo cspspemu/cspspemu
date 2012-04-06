@@ -225,7 +225,7 @@ namespace CSPspEmu.Hle.Formats
 			}
 		}
 
-		public struct TAG_INFO2
+		public class TAG_INFO2
 		{
 			/// <summary>
 			/// 4 byte value at offset 0xD0 in the PRX file
@@ -241,6 +241,11 @@ namespace CSPspEmu.Hle.Formats
 			/// code for scramble
 			/// </summary>
 			public byte code;
+
+			public override string ToString()
+			{
+				return CStringFormater.Sprintf("TAG_INFO2(tag=0x%08X, key=%s, code=%02X)", tag, (key != null) ? BitConverter.ToString(key) : "null", code);
+			}
 		}
 	}
 }

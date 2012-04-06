@@ -7,7 +7,7 @@ namespace CSPspEmu.Hle.Formats
 {
 	unsafe public partial class EncryptedPrx
 	{
-		static public readonly TAG_INFO2[] g_tagInfo2 = new TAG_INFO2[]
+		public TAG_INFO2[] g_tagInfo2 = new TAG_INFO2[]
 		{
 			new TAG_INFO2() { tag = 0x380228F0, key = keys620_5v, code = 0x5A }, // -- PSPgo PSPgo 6.XX vshmain
 			new TAG_INFO2() { tag = 0x4C942AF0, key = keys620_5k, code = 0x43 }, // PSPgo 6.XX
