@@ -27,16 +27,24 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		[HlePspFunction(NID = 0x99944089, FirmwareVersion = 150)]
 		public int __sceSasSetVoice(uint SasCorePointer, int Voice, byte* VagPointer, int VagSize, int LoopCount)
 		{
-			var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
-			SasVoice.Vag = new Vag();
-			SasVoice.Vag.Load(VagPointer, VagSize);
-			SasVoice.SampleOffset = 0;
-			SasVoice.LoopCount = LoopCount;
+			try
+			{
+				var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
+				SasVoice.Vag = new Vag();
+				SasVoice.Vag.Load(VagPointer, VagSize);
+				SasVoice.SampleOffset = 0;
+				SasVoice.LoopCount = LoopCount;
 
-			//var VagPointer = (byte *)HleState.MemoryManager.Memory.PspAddressToPointerSafe(VagAddress);
-			//File.WriteAllBytes("test.vag", PointerUtils.PointerToByteArray(VagPointer, VagSize));
+				//var VagPointer = (byte *)HleState.MemoryManager.Memory.PspAddressToPointerSafe(VagAddress);
+				//File.WriteAllBytes("test.vag", PointerUtils.PointerToByteArray(VagPointer, VagSize));
 
-			return 0;
+				return 0;
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
+				return 0;
+			}
 		}
 
 		/// <summary>

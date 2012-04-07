@@ -48,7 +48,9 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="CheckInitialized"></param>
 		private SasVoice GetSasCoreVoice(uint SasCorePointer, int Voice)
 		{
-			return GetSasCore(SasCorePointer).Voices[Voice];
+			var SasCore = GetSasCore(SasCorePointer);
+			_CheckVoice(Voice);
+			return SasCore.Voices[Voice];
 		}
 
 		/// <summary>

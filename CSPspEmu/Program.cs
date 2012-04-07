@@ -295,6 +295,8 @@ namespace CSPspEmu
 			};
 			*/
 
+			string FileToLoad = null;
+
 			var Getopt = new Getopt(Arguments);
 			{
 				Getopt.AddRule(new[] { "/help", "/?", "-h", "--help", "-?" }, () =>
@@ -400,6 +402,10 @@ namespace CSPspEmu
 					TestsAutoProgram.Main(Arguments.Skip(1).ToArray());
 					Environment.Exit(0);
 				});
+				Getopt.AddRule((Name) =>
+				{
+					FileToLoad = Name;
+				});
 			}
 			try
 			{
@@ -461,9 +467,9 @@ namespace CSPspEmu
 				}
 			}
 
-			if (Arguments.Length > 0)
+			if (FileToLoad != null)
 			{
-				PspEmulator.StartAndLoad(Arguments[0], TraceSyscalls: false);
+				PspEmulator.StartAndLoad(FileToLoad, TraceSyscalls: false);
 			}
 			else
 			{

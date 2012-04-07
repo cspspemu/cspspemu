@@ -191,6 +191,9 @@ namespace CSPspEmu.Hle.Managers
 			{
 				FullPath = CurrentDirectoryPath + "/" + FullPath;
 			}
+
+			Console.WriteLine(FullPath);
+
 			//Console.Error.WriteLine("FullPath: {0}", FullPath);
 			var Match = new Regex(@"^(\w+)(\d+):(.*)$").Match(FullPath);
 			var DriverName = Match.Groups[1].Value.ToLower() + ":";

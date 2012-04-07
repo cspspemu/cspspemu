@@ -504,16 +504,23 @@ namespace CSPspEmu.Gui.Winforms
 				Result = OpenFileDialog.ShowDialog();
 			});
 
-			new Thread(() =>
+			if (Result == System.Windows.Forms.DialogResult.OK)
+			{
+				OpenFileRealOnNewThreadLock(OpenFileDialog.FileName);
+			}
+		}
+
+		private void OpenFileRealOnNewThreadLock(string FilePath)
+		{
+			var BackgroundThread = new Thread(() =>
 			{
 				PauseResume(() =>
 				{
-					if (Result == System.Windows.Forms.DialogResult.OK)
-					{
-						OpenFileReal(OpenFileDialog.FileName);
-					}
+					OpenFileReal(FilePath);
 				});
-			}).Start();
+			});
+			BackgroundThread.IsBackground = true;
+			BackgroundThread.Start();
 		}
 
 		private void OpenFileReal(string FilePath)
@@ -977,14 +984,8 @@ namespace CSPspEmu.Gui.Winforms
 
 		void Recent_Click(object sender, EventArgs e)
 		{
-			new Thread(() =>
-			{
-				PauseResume(() =>
-				{
-					var ToolStripMenuItem = (ToolStripMenuItem)sender;
-					OpenFileReal(ToolStripMenuItem.Text);
-				});
-			}).Start();
+			var ToolStripMenuItem = (ToolStripMenuItem)sender;
+			OpenFileRealOnNewThreadLock(ToolStripMenuItem.Text);
 		}
 
 		static private Keys ParseKeyName(string KeyName)
@@ -1015,13 +1016,7 @@ namespace CSPspEmu.Gui.Winforms
 
 			foreach (string file in files)
 			{
-				new Thread(() =>
-				{
-					PauseResume(() =>
-					{
-						OpenFileReal(file);
-					});
-				}).Start();
+				OpenFileRealOnNewThreadLock(file);
 
 				break;
 			}  

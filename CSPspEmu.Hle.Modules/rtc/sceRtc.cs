@@ -243,5 +243,32 @@ namespace CSPspEmu.Hle.Modules.rtc
 
 			return 0;
 		}
+
+		/// <summary>
+		/// Get current tick count, adjusted for local time zone
+		/// </summary>
+		/// <param name="DateTime">pointer to pspTime struct to receive time</param>
+		/// <param name="TimeZone">time zone to adjust to (minutes from UTC)</param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0x4CFA57B0, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceRtcGetCurrentClock(out ScePspDateTime DateTime, int TimeZone)
+		{
+			var CurrentDateTime = HleState.PspRtc.CurrentDateTime;
+			HleState.PspRtc.Update();
+
+			DateTime = new ScePspDateTime()
+			{
+				Year = (ushort)CurrentDateTime.Year,
+				Month = (ushort)CurrentDateTime.Month,
+				Day = (ushort)CurrentDateTime.Day,
+				Hour = (ushort)CurrentDateTime.Hour,
+				Minute = (ushort)(CurrentDateTime.Minute + TimeZone),
+				Second = (ushort)CurrentDateTime.Second,
+				Microsecond = (uint)(CurrentDateTime.Millisecond * 1000),
+			};
+
+			return 0;
+		}
 	}
 }

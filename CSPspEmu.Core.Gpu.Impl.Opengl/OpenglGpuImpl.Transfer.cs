@@ -31,13 +31,15 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			GL.PixelStore(PixelStoreParameter.UnpackSkipPixels, TextureTransferState.SourceX);
 			GL.PixelStore(PixelStoreParameter.UnpackSkipRows, TextureTransferState.SourceY);
 
-			GL.DrawPixels(
-				TextureTransferState.Width,
-				TextureTransferState.Height,
-				PixelFormat.Rgba,
-				GlPixelFormat.OpenglPixelType,
-				new IntPtr(Memory.PspAddressToPointerSafe(TextureTransferState.SourceAddress))
-			);
+			{
+				GL.DrawPixels(
+					TextureTransferState.Width,
+					TextureTransferState.Height,
+					PixelFormat.Rgba,
+					GlPixelFormat.OpenglPixelType,
+					new IntPtr(Memory.PspAddressToPointerSafe(TextureTransferState.SourceAddress))
+				);
+			}
 
 			GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
 			GL.PixelStore(PixelStoreParameter.UnpackRowLength, 0);

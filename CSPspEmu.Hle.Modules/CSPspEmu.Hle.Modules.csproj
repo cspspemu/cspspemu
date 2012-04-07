@@ -122,8 +122,10 @@
     <Compile Include="sysmem\KDebugForKernel.cs" />
     <Compile Include="sysmem\sceSuspendForUser.cs" />
     <Compile Include="sysmem\sceSysEventForKernel.cs" />
+    <Compile Include="sysmem\SysMemForKernel.cs" />
     <Compile Include="sysmem\SysMemUserForUser.cs" />
     <Compile Include="systimer\SysTimerForKernel.cs" />
+    <Compile Include="threadman\ThreadManForKernel.cs" />
     <Compile Include="threadman\ThreadManForUser.cs" />
     <Compile Include="threadman\ThreadManForUser.Callbacks.cs" />
     <Compile Include="threadman\ThreadManForUser.EventFlag.cs" />
