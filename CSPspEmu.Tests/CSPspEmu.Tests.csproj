@@ -66,6 +66,7 @@
     <Compile Include="Cpu\Emiter\MipsEmiterTest.cs" />
     <Compile Include="Crypto\KirkTest.cs" />
     <Compile Include="Gpu\VertexReading\VertexReaderDynarecTest.cs" />
+    <Compile Include="Gui\UnitTest1.cs" />
     <Compile Include="Hle\Formats\Archive\ZipTest.cs" />
     <Compile Include="Hle\Formats\EncryptedPrxTest.cs" />
     <Compile Include="Hle\Formats\Font\PGFTest.cs" />
@@ -91,6 +92,10 @@
       <Project>{9B217880-48AE-43B6-AE1F-DC732FCCBC7A}</Project>
       <Name>CSharpUtils.Drawing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\csharputils\CSharpUtils\CSharpUtils.Ext\CSharpUtils.Ext.csproj">
+      <Project>{c017fbbe-ef10-4030-a69e-204e766c8f9d}</Project>
+      <Name>CSharpUtils.Ext</Name>
+    </ProjectReference>
     <ProjectReference Include="..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
       <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
@@ -110,6 +115,10 @@
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Gui.Winforms\CSPspEmu.Gui.Winforms.csproj">
+      <Project>{550e4f4e-704e-48eb-8392-c1eb229348cf}</Project>
+      <Name>CSPspEmu.Gui.Winforms</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Hle.Modules\CSPspEmu.Hle.Modules.csproj">
       <Project>{295B7BF1-1130-4098-B0FC-00555DDB09DD}</Project>

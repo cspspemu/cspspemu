@@ -18,6 +18,7 @@ PUSHD %~dp0
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Gpu.Impl.Opengl.dll"
 	REM SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Tests.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Gui.Winforms.dll"
+	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Gui.Winforms.Controls.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Hle.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Hle.Modules.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Runner.dll"

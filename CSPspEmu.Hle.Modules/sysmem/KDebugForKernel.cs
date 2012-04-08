@@ -42,9 +42,8 @@ namespace CSPspEmu.Hle.Modules.sysmem
 			var Arguments = new ArgumentReader(CpuThreadState);
 			Arguments.LoadInteger(); // Skips format
 
-			ConsoleUtils.SaveRestoreConsoleState(() =>
+			ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Blue, () =>
 			{
-				Console.ForegroundColor = ConsoleColor.Blue;
 				Console.Error.Write("{0}", CStringFormater.Sprintf(Format, Arguments));
 			});
 		}

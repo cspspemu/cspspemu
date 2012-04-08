@@ -823,8 +823,6 @@ namespace CSPspEmu.Gui.Winforms
 			{
 				CheckForUpdates(NotifyIfNotFound: false);
 			}
-
-			//new GameListForm().Show();
 		}
 
 		private void useFastAndUnsafeMemoryToolStripMenuItem_Click(object sender, EventArgs e)

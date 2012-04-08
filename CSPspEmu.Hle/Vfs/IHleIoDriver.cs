@@ -24,6 +24,14 @@ namespace CSPspEmu.Hle.Vfs
 
 	public class HleIoDrvFileArg : IDisposable
 	{
+		public HleIoDrvFileArg(string DriverName, IHleIoDriver HleIoDriver, int FileSystemNumber = 0, IDisposable FileArgument = null)
+		{
+			this.DriverName = DriverName;
+			this.HleIoDriver = HleIoDriver;
+			this.FileSystemNumber = FileSystemNumber;
+			this.FileArgument = FileArgument;
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>

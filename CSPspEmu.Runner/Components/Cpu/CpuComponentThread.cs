@@ -97,23 +97,8 @@ namespace CSPspEmu.Runner.Components.Cpu
 
 		public IsoFile SetIso(string IsoFile)
 		{
-			var IsoFileStream = (Stream)File.OpenRead(IsoFile);
-			FormatDetector.SubType DetectedFormat;
-			switch (DetectedFormat = new FormatDetector().DetectSubType(IsoFileStream))
-			{
-				case FormatDetector.SubType.Cso:
-					IsoFileStream = new CompressedIsoProxyStream(new Cso(IsoFileStream));
-					break;
-				case FormatDetector.SubType.Dax:
-					IsoFileStream = new CompressedIsoProxyStream(new Dax(IsoFileStream));
-					break;
-				case FormatDetector.SubType.Iso:
-					break;
-				default:
-					throw (new InvalidDataException("Can't set an ISO for '" + DetectedFormat + "'"));
-			}
 			//"../../../TestInput/cube.iso"
-			var Iso = new IsoFile(IsoFileStream, IsoFile);
+			var Iso = IsoLoader.GetIso(IsoFile);
 			var Umd = new HleIoDriverIso(Iso);
 			HleState.HleIoManager.SetDriver("disc:", Umd);
 			HleState.HleIoManager.SetDriver("umd:", Umd);
@@ -195,6 +180,10 @@ namespace CSPspEmu.Runner.Components.Cpu
 
 			var MemoryStream = new PspMemoryStream(PspMemory);
 
+			var Arguments = new[] {
+				"ms0:/PSP/GAME/virtual/EBOOT.PBP",
+			};
+
 			var Loader = PspEmulatorContext.GetInstance<ElfPspLoader>();
 			Stream LoadStream = File.OpenRead(FileName);
 			//using ()
@@ -228,6 +217,8 @@ namespace CSPspEmu.Runner.Components.Cpu
 					case FormatDetector.SubType.Cso:
 					case FormatDetector.SubType.Iso:
 						{
+							Arguments[0] = "disc0:/PSP/GAME/SYSDIR/EBOOT.BIN";
+
 							var Iso = SetIso(FileName);
 							try
 							{
@@ -240,8 +231,8 @@ namespace CSPspEmu.Runner.Components.Cpu
 							}
 
 							var FilesToTry = new[] {
-								"/PSP_GAME/SYSDIR/BOOT.BIN",
 								"/PSP_GAME/SYSDIR/EBOOT.BIN",
+								"/PSP_GAME/SYSDIR/BOOT.BIN",
 							};
 
 							foreach (var FileToTry in FilesToTry)
@@ -303,10 +294,6 @@ namespace CSPspEmu.Runner.Components.Cpu
 
 				uint StartArgumentAddress = 0x08000100;
 				uint EndArgumentAddress = StartArgumentAddress;
-
-				var Arguments = new[] {
-					"ms0:/PSP/GAME/virtual/EBOOT.PBP",
-				};
 
 				var ArgumentsChunk = Arguments
 					.Select(Argument => Encoding.UTF8.GetBytes(Argument + "\0"))

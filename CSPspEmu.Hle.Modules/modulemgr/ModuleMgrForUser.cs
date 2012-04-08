@@ -13,6 +13,7 @@ using CSPspEmu.Hle.Loader;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Modules.iofilemgr;
 using CSPspEmu.Hle.Modules.threadman;
+using CSPspEmu.Hle.Vfs;
 
 namespace CSPspEmu.Hle.Modules.modulemgr
 {
@@ -248,7 +249,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 			{
 				*Status = 0;
 			}
-			return 1234;
+			return 0;
 		}
 
 		/// <summary>
@@ -312,7 +313,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		[HlePspNotImplemented]
 		public int sceKernelGetModuleIdByAddress(uint Address)
 		{
-			//throw(new NotImplementedException());
+			throw(new NotImplementedException());
 			return 0x1234;
 		}
 

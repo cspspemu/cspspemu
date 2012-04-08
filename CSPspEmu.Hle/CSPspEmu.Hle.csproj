@@ -70,6 +70,7 @@
     <Compile Include="Formats\ElfPsp.cs" />
     <Compile Include="Formats\ICompressedIso.cs" />
     <Compile Include="Formats\IsoFile.cs" />
+    <Compile Include="Formats\IsoLoader.cs" />
     <Compile Include="Formats\Pbp.cs" />
     <Compile Include="Formats\Psf.cs" />
     <Compile Include="Formats\video\IDemuxer.cs" />
@@ -129,8 +130,11 @@
     <Compile Include="Utils\ZStreamException.cs" />
     <Compile Include="Vfs\DirectoryEnumerator.cs" />
     <Compile Include="Vfs\Emulator\HleIoDriverEmulator.cs" />
+    <Compile Include="Vfs\FileHandle.cs" />
     <Compile Include="Vfs\HleIoDriverExtensions.cs" />
+    <Compile Include="Vfs\HleIoDrvFileArgExtensions.cs" />
     <Compile Include="Vfs\IHleIoDriver.cs" />
+    <Compile Include="Vfs\IHleIoDriverExtensions.cs" />
     <Compile Include="Vfs\Iso\CompressedIsoProxyStream.cs" />
     <Compile Include="Vfs\Iso\DisposableDummy.cs" />
     <Compile Include="Vfs\Iso\HleIoDriverIso.cs" />

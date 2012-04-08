@@ -37,7 +37,7 @@ namespace CSPspEmu.Hle.Formats
 		{
 			var StartMagic = Stream.SliceWithLength(0, 4).ReadAllContentsAsString(Encoding.ASCII);
 
-			Console.WriteLine(StartMagic);
+			//Console.WriteLine(StartMagic);
 
 			if (StartMagic == '\0' + "PBP") return SubType.Pbp;
 			if (StartMagic == '\0' + "PSF") return SubType.Psf;

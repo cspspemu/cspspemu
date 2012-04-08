@@ -41,6 +41,15 @@ namespace CSPspEmu.Hle.Formats
 		public EntryStruct[] Entries;
 		public Dictionary<String, object> EntryDictionary;
 
+		public Psf()
+		{
+		}
+
+		public Psf(Stream Stream)
+		{
+			this.Load(Stream);
+		}
+
 		public Psf Load(Stream Stream)
 		{
 			EntryDictionary = new Dictionary<string, object>();
