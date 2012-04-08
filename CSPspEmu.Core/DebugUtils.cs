@@ -10,13 +10,7 @@ namespace CSPspEmu.Core
 	{
 		static public void IsDebuggerPresentDebugBreak()
 		{
-			if (IsDebuggerPresent()) DebugBreak();
+			if (Platform.IsDebuggerPresent()) Platform.DebugBreak();
 		}
-
-		[DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-		internal static extern bool IsDebuggerPresent();
-
-		[DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-		internal static extern void DebugBreak();
 	}
 }

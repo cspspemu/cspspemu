@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace CSPspEmu.Core.Memory
@@ -50,11 +51,46 @@ namespace CSPspEmu.Core.Memory
 
 		public bool IsNull { get { return Address == 0; } }
 
-		public unsafe void* GetPointer(PspMemory pspMemory)
+		public unsafe void* GetPointer(PspMemory pspMemory, int Size)
 		{
-			return pspMemory.PspPointerToPointerSafe(this);
+			return pspMemory.PspPointerToPointerSafe(this, Size);
+		}
+
+		public unsafe void* GetPointer<TType>(PspMemory pspMemory)
+		{
+			return pspMemory.PspPointerToPointerSafe(this, Marshal.SizeOf(typeof(TType)));
+		}
+
+		/*
+		public unsafe PspMemoryPointer<TType> GetPspMemoryPointer<TType>(PspMemory pspMemory)
+		{
+			return new PspMemoryPointer<TType>(pspMemory, Address);
+		}
+		*/
+	}
+
+	/*
+	public class Reference<TType>
+	{
+		public TType Value;
+	}
+
+	public class PspMemoryPointer<TType>
+	{
+		public PspMemory PspMemory;
+		public uint Address;
+
+		public PspMemoryPointer(PspMemory PspMemory, uint Address)
+		{
+			this.PspMemory = PspMemory;
+			this.Address = Address;
+		}
+
+		public void UpdateIndex(Action<Reference<TType>> Action)
+		{
 		}
 	}
+	*/
 
 	/*
 	public struct PspPointer<TType>

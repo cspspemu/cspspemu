@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core.Memory;
@@ -254,7 +255,7 @@ namespace CSPspEmu.Hle.Modules.utility
 							// Gets the ammount of free space in the Memory Stick. If null,
 							// the size is ignored and no error is returned.
 							{
-								var SizeFreeInfo = (SizeFreeInfo*)Params->msFreeAddr.GetPointer(Memory);
+								var SizeFreeInfo = (SizeFreeInfo*)Params->msFreeAddr.GetPointer<SizeFreeInfo>(Memory);
 								SizeFreeInfo->SectorSize = SectorSize;
 								SizeFreeInfo->FreeSectors = FreeSize / SectorSize;
 								SizeFreeInfo->FreeKb = FreeSize / 1024;
@@ -266,7 +267,7 @@ namespace CSPspEmu.Hle.Modules.utility
 							// Gets the size of the data already saved in the Memory Stick.
 							// If null, the size is ignored and no error is returned.
 							{
-								var SizeUsedInfo = (SizeUsedInfo*)Params->msDataAddr.GetPointer(Memory);
+								var SizeUsedInfo = (SizeUsedInfo*)Params->msDataAddr.GetPointer<SizeUsedInfo>(Memory);
 
 								Console.WriteLine(SizeUsedInfo->saveName);
 								Console.WriteLine(SizeUsedInfo->gameName);
@@ -282,7 +283,7 @@ namespace CSPspEmu.Hle.Modules.utility
 							// Gets the size of the data to be saved in the Memory Stick.
 							// If null, the size is ignored and no error is returned.
 							{
-								var SizeRequiredSpaceInfo = (SizeRequiredSpaceInfo*)Params->utilityDataAddr.GetPointer(Memory);
+								var SizeRequiredSpaceInfo = (SizeRequiredSpaceInfo*)Params->utilityDataAddr.GetPointer<SizeRequiredSpaceInfo>(Memory);
 								long RequiredSize = 0;
 								RequiredSize += Params->Icon0FileData.Size;
 								RequiredSize += Params->Icon1FileData.Size;
@@ -301,7 +302,7 @@ namespace CSPspEmu.Hle.Modules.utility
 						break;
 					case PspUtilitySavedataMode.List:
 						{
-							var ListRequest = (ListRequest *)Params->idListAddr.GetPointer(Memory);
+							var ListRequest = (ListRequest*)Params->idListAddr.GetPointer<ListRequest>(Memory);
 							ListRequest->NumEntriesReaded = 0;
 						}
 						break;

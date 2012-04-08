@@ -7,6 +7,7 @@ using System.Text;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Cpu;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Modules.ge
 {
@@ -29,7 +30,7 @@ namespace CSPspEmu.Hle.Modules.ge
 					sizeof(GpuStateStruct),
 					Name: "GpuStateStruct"
 				);
-				GpuStateStructPointer = (GpuStateStruct*)HleState.MemoryManager.Memory.PspAddressToPointer(GpuStateStructPartition.Low);
+				GpuStateStructPointer = (GpuStateStruct*)HleState.MemoryManager.Memory.PspAddressToPointerSafe(GpuStateStructPartition.Low, Marshal.SizeOf(typeof(GpuStateStruct)));
 			}
 
 			//Console.WriteLine("_sceGeListEnQueue");
@@ -55,7 +56,7 @@ namespace CSPspEmu.Hle.Modules.ge
 					DisplayList.GpuStateStructPointer = null;
 					if (Args != null)
 					{
-						DisplayList.GpuStateStructPointer = (GpuStateStruct*)HleState.CpuProcessor.Memory.PspAddressToPointer(Args[0].GpuStateStructAddress);
+						DisplayList.GpuStateStructPointer = (GpuStateStruct*)HleState.CpuProcessor.Memory.PspAddressToPointerSafe(Args[0].GpuStateStructAddress, Marshal.SizeOf(typeof(GpuStateStruct)));
 					}
 
 					if (DisplayList.GpuStateStructPointer == null)

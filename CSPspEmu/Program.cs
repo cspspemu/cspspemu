@@ -28,14 +28,6 @@ namespace CSPspEmu
 {
 	unsafe class Program
 	{
-		private const Int32 SW_HIDE = 0;
-
-		[DllImport("Kernel32.dll")]
-		private static extern IntPtr GetConsoleWindow();
-
-		[DllImport("user32.dll")]
-		private static extern Boolean ShowWindow(IntPtr hWnd, Int32 nCmdShow);
-
 		/// <summary>
 		/// 
 		/// </summary>
@@ -71,8 +63,7 @@ namespace CSPspEmu
 			};
 			*/
 
-			Application.EnableVisualStyles();
-			Application.Run(new GameListForm()); Application.Exit();
+			//Application.EnableVisualStyles(); Application.Run(new GameListForm()); Application.Exit();
 
 			string FileToLoad = null;
 
@@ -238,8 +229,7 @@ namespace CSPspEmu
 
 				if (File.Exists(TryIsoFile))
 				{
-					IntPtr hwnd = GetConsoleWindow();
-					ShowWindow(hwnd, SW_HIDE);
+					Platform.HideConsole();
 
 					PspEmulator.StartAndLoad(TryIsoFile, TraceSyscalls: false, ShowMenus: false);
 					return;

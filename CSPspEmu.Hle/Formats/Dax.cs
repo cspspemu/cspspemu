@@ -46,8 +46,14 @@ namespace CSPspEmu.Hle.Formats
 			/// </summary>
 			public uint NCAreas;
 
+			/// <summary>
+			/// 
+			/// </summary>
 			public fixed uint Reserved[4];
 
+			/// <summary>
+			/// 
+			/// </summary>
 			public uint TotalBlocks
 			{
 				get
@@ -57,12 +63,25 @@ namespace CSPspEmu.Hle.Formats
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public struct NCArea
 		{
-			public uint frame;
-			public uint size;
+			/// <summary>
+			/// 
+			/// </summary>
+			public uint Frame;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public uint Size;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public struct BlockInfo
 		{
 			/// <summary>
@@ -145,9 +164,9 @@ namespace CSPspEmu.Hle.Formats
 				foreach (var NCArea in NCAreas)
 				{
 					//Console.WriteLine("{0}-{1}", NCArea.frame, NCArea.size);
-					for (int n = 0; n < NCArea.size; n++)
+					for (int n = 0; n < NCArea.Size; n++)
 					{
-						Blocks[NCArea.frame + n].IsCompressed = false;
+						Blocks[NCArea.Frame + n].IsCompressed = false;
 					}
 				}
 			}

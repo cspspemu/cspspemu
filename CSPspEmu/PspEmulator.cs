@@ -136,13 +136,13 @@ namespace CSPspEmu
 			Start(() =>
 			{
 				LoadFile(File);
-			}, ShowMenus: ShowMenus);
+			}, ShowMenus: ShowMenus, AutoLoad: true);
 		}
 
 		/// <summary>
 		/// Start.
 		/// </summary>
-		public void Start(Action CallbackOnInit = null, bool ShowMenus = true, bool TrackCallStack = true)
+		public void Start(Action CallbackOnInit = null, bool ShowMenus = true, bool AutoLoad = false, bool TrackCallStack = true)
 		{
 			try
 			{
@@ -164,7 +164,7 @@ namespace CSPspEmu
 				Thread.CurrentThread.Name = "GuiThread";
 				Application.EnableVisualStyles();
 				Application.SetCompatibleTextRenderingDefault(false);
-				Application.Run(new PspDisplayForm(this, ShowMenus: ShowMenus, DefaultDisplayScale: ShowMenus ? 1 : 2));
+				Application.Run(new PspDisplayForm(this, ShowMenus: ShowMenus, AutoLoad: AutoLoad, DefaultDisplayScale: ShowMenus ? 1 : 2));
 
 				ContextInitialized.WaitOne();
 				PspRunner.StopSynchronized();
@@ -184,7 +184,6 @@ namespace CSPspEmu
 		public void LoadFile(String FileName)
 		{
 			CreateNewContextAndRemoveOldOne();
-
 
 			if (File.Exists(FileName + ".cwcheat"))
 			{
@@ -328,15 +327,15 @@ namespace CSPspEmu
 					{
 						// [t]8-bit Constant Write 0x0aaaaaaa 0x000000dd
 						case 0x0:
-							PspMemory.Write1(Address, (byte)(Value & 0xFF));
+							PspMemory.WriteSafe(Address, (byte)(Value & 0xFF));
 							break;
 						// [t]16-bit Constant write 0x1aaaaaaa 0x0000dddd
 						case 0x1:
-							PspMemory.Write2(Address, (ushort)(Value & 0xFFFF));
+							PspMemory.WriteSafe(Address, (ushort)(Value & 0xFFFF));
 							break;
 						// [t]32-bit Constant write 0x2aaaaaaa 0xdddddddd
 						case 0x2:
-							PspMemory.Write4(Address, (uint)(Value & 0xFFFFFFFF));
+							PspMemory.WriteSafe(Address, (uint)(Value & 0xFFFFFFFF));
 							break;
 						// 16-bit XOR - 0x7aaaaaaa 0x0005vvvv
 						// 8-bit  XOR - 0x7aaaaaaa 0x000400vv
@@ -352,7 +351,7 @@ namespace CSPspEmu
 								{
 									// 8-bit  OR  - 0x7aaaaaaa 0x000000vv
 									case 0:
-										PspMemory.Write1(Address, (byte)(PspMemory.Read1(Address) | (SubValue & 0xFF)));
+										PspMemory.WriteSafe(Address, (byte)(PspMemory.ReadSafe<byte>(Address) | (SubValue & 0xFF)));
 										break;
 									default:
 										Console.Error.WriteLine("Invalid CWCheatOpCode: 0x{0:X} : 0x{1:X}", OpCode, SubOpCode);

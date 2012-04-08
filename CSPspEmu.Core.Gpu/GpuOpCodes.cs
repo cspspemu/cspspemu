@@ -8,87 +8,87 @@ namespace CSPspEmu.Core.Gpu
 	public enum GpuOpCodes : byte
 	{
 		/// <summary>
-		/// 0x00 - NOP
+		/// 0x00 - 0 - NOP
 		/// </summary>
 		NOP,
 
 		/// <summary>
-		/// 0x01 - Vertex List (BASE)
+		/// 0x01 - 1 - Vertex List (BASE)
 		/// </summary>
 		VADDR,
 
 		/// <summary>
-		/// 0x02 - Index List (BASE)
+		/// 0x02 - 2 - Index List (BASE)
 		/// </summary>
 		IADDR,
 
 		/// <summary>
-		/// 0x03 - 
+		/// 0x03 - 3 - 
 		/// </summary>
 		Unknown0x03,
 
 		/// <summary>
-		/// 0x04 - Primitive Kick
+		/// 0x04 - 4 - Primitive Kick
 		/// </summary>
 		PRIM,
 
 		/// <summary>
-		/// 0x05 - Bezier Patch Kick
+		/// 0x05 - 5 - Bezier Patch Kick
 		/// </summary>
 		BEZIER,
 
 		/// <summary>
-		/// 0x06 - Spline Surface Kick
+		/// 0x06 - 6 - Spline Surface Kick
 		/// </summary>
 		SPLINE,
 
 		/// <summary>
-		/// 0x07 - Bounding Box
+		/// 0x07 - 7 - Bounding Box
 		/// </summary>
 		BBOX,
 
 		/// <summary>
-		/// 0x08 - Jump To New Address (BASE)
+		/// 0x08 - 8 - Jump To New Address (BASE)
 		/// </summary>
 		JUMP,
 
 		/// <summary>
-		/// 0x09 - Conditional Jump (BASE)
+		/// 0x09 - 9 - Conditional Jump (BASE)
 		/// </summary>
 		BJUMP,
 
 		/// <summary>
-		/// 0x0A - Call Address (BASE)
+		/// 0x0A - 10 - Call Address (BASE)
 		/// </summary>
 		CALL,
 
 		/// <summary>
-		/// 0x0B - Return From Call
+		/// 0x0B - 11 - Return From Call
 		/// </summary>
 		RET,
 
 		/// <summary>
-		/// 0x0C - Stop Execution
+		/// 0x0C - 12 - Stop Execution
 		/// </summary>
 		END,
 
 		/// <summary>
-		/// 0x0D - 
+		/// 0x0D - 13 - 
 		/// </summary>
 		Unknown0x0D,
 
 		/// <summary>
-		/// 0x0E - Raise Signal Interrupt
+		/// 0x0E - 14 - Raise Signal Interrupt
 		/// </summary>
 		SIGNAL,
 
 		/// <summary>
-		/// 0x0F - Complete Rendering
+		/// 0x0F - 15 - Complete Rendering
 		/// </summary>
 		FINISH,
 
 		/// <summary>
-		/// 0x10 - Base Address Register
+		/// 0x10 - 16 - Base Address Register
 		/// </summary>
 		BASE,
 

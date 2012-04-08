@@ -63,11 +63,11 @@
       <DependentUpon>ButtonMappingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GameList.cs" />
-    <Compile Include="GameListForm.cs">
-      <SubType>Form</SubType>
+    <Compile Include="GameListComponent.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GameListForm.Designer.cs">
-      <DependentUpon>GameListForm.cs</DependentUpon>
+    <Compile Include="GameListComponent.Designer.cs">
+      <DependentUpon>GameListComponent.cs</DependentUpon>
     </Compile>
     <Compile Include="ProgressForm.cs">
       <SubType>Form</SubType>
@@ -95,8 +95,8 @@
     <EmbeddedResource Include="ButtonMappingForm.resx">
       <DependentUpon>ButtonMappingForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GameListForm.resx">
-      <DependentUpon>GameListForm.cs</DependentUpon>
+    <EmbeddedResource Include="GameListComponent.resx">
+      <DependentUpon>GameListComponent.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProgressForm.resx">
       <DependentUpon>ProgressForm.cs</DependentUpon>

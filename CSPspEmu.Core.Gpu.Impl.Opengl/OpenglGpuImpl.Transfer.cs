@@ -37,7 +37,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					TextureTransferState.Height,
 					PixelFormat.Rgba,
 					GlPixelFormat.OpenglPixelType,
-					new IntPtr(Memory.PspAddressToPointerSafe(TextureTransferState.SourceAddress))
+					new IntPtr(Memory.PspAddressToPointerSafe(
+						TextureTransferState.SourceAddress,
+						TextureTransferState.Width * TextureTransferState.Height * 4
+					))
 				);
 			}
 
@@ -51,13 +54,17 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			var TextureTransferState = GpuState->TextureTransferState;
 
-			var SourcePointer = (byte*)Memory.PspAddressToPointer(TextureTransferState.SourceAddress.Address);
-			var DestinationPointer = (byte*)Memory.PspAddressToPointer(TextureTransferState.DestinationAddress.Address);
 			var SourceX = TextureTransferState.SourceX;
 			var SourceY = TextureTransferState.SourceY;
 			var DestinationX = TextureTransferState.DestinationX;
 			var DestinationY = TextureTransferState.DestinationY;
 			var BytesPerPixel = TextureTransferState.BytesPerPixel;
+
+			var SourceTotalBytes = TextureTransferState.SourceLineWidth * TextureTransferState.Height * BytesPerPixel;
+			var DestinationTotalBytes = TextureTransferState.DestinationLineWidth * TextureTransferState.Height * BytesPerPixel;
+
+			var SourcePointer = (byte*)Memory.PspAddressToPointerSafe(TextureTransferState.SourceAddress.Address, SourceTotalBytes);
+			var DestinationPointer = (byte*)Memory.PspAddressToPointerSafe(TextureTransferState.DestinationAddress.Address, DestinationTotalBytes);
 
 			for (uint y = 0; y < TextureTransferState.Height; y++)
 			{

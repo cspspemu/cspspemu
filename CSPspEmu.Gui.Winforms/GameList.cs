@@ -47,61 +47,80 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			Entries.Clear();
 
-			var CheckList = new List<string>();
-
-			foreach (var File in Directory.EnumerateFiles(Folder))
+			try
 			{
-				switch (Path.GetExtension(File).ToLowerInvariant())
+				var CheckList = new List<string>();
+
+				foreach (var File in Directory.EnumerateFiles(Folder))
 				{
-					case ".iso":
-					case ".cso":
-					case ".dax":
-						{
-							CheckList.Add(File);
-						}
-						break;
-				}
-				if (CheckList.Count > MaxCount) break;
-			}
-
-			int Current = 0;
-			int Total = CheckList.Count;
-
-			Parallel.ForEach(CheckList, (IsoFile) =>
-			{
-				//Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
-				if (Progress != null) Progress(IsoFile, Current, Total);
-
-				//Serializer.Serialize(Console.Out, Entry);
-
-				var Hash = GetHash(IsoFile);
-				var CacheFile = CacheFolder + "/cspspemu_iso_cache_" + Hash + ".xml";
-
-				GameEntry Entry;
-
-				if (File.Exists(CacheFile))
-				{
-					Entry = (GameEntry)Serializer.Deserialize(File.OpenRead(CacheFile));
-				}
-				else
-				{
-					Entry = HandleIso(IsoFile);
-					using (var CacheFileStream = File.OpenWrite(CacheFile))
+					switch (Path.GetExtension(File).ToLowerInvariant())
 					{
-						Serializer.Serialize(CacheFileStream, Entry);
+						case ".iso":
+						case ".cso":
+						case ".dax":
+							{
+								CheckList.Add(File);
+							}
+							break;
 					}
+					if (CheckList.Count > MaxCount) break;
 				}
-				
-				Entries.Add(Entry);
 
-				if (EntryAdded != null) EntryAdded(Entry);
-				Current++;
-			});
+				int Current = 0;
+				int Total = CheckList.Count;
+
+				Parallel.ForEach(CheckList, (IsoFile) =>
+				{
+					try
+					{
+						//Console.WriteLine(Thread.CurrentThread.ManagedThreadId);
+						if (Progress != null) Progress(IsoFile, Current, Total);
+
+						//Serializer.Serialize(Console.Out, Entry);
+
+						var Hash = GetHash(IsoFile);
+						var CacheFile = CacheFolder + "/cspspemu_iso_cache_" + Hash + ".xml";
+
+						GameEntry Entry;
+						bool Cached = false;
+
+						if (File.Exists(CacheFile))
+						{
+							Entry = (GameEntry)Serializer.Deserialize(File.OpenRead(CacheFile));
+							Cached = true;
+						}
+						else
+						{
+							Entry = HandleIso(IsoFile);
+							using (var CacheFileStream = File.OpenWrite(CacheFile))
+							{
+								Serializer.Serialize(CacheFileStream, Entry);
+							}
+						}
+
+						Entries.Add(Entry);
+
+						if (EntryAdded != null && Entry != null)
+						{
+							EntryAdded(Entry, Cached);
+						}
+					}
+					catch (Exception Exception)
+					{
+						Console.Error.WriteLine(Exception);
+					}
+					Current++;
+				});
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
+			}
 			Progress("Done!", 1, 1);
 		}
 
 		public event Action<string, int, int> Progress;
-		public event Action<GameEntry> EntryAdded;
+		public event Action<GameEntry, bool> EntryAdded;
 		static XmlSerializer Serializer = new XmlSerializer(typeof(GameEntry));
 
 		static public String GetHash(string IsoFile)

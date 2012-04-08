@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using BrightIdeasSoftware;
+using CSharpUtils;
 
 namespace CSPspEmu.Gui.Winforms
 {
@@ -18,9 +19,9 @@ namespace CSPspEmu.Gui.Winforms
 	/// 
 	/// </summary>
 	/// <seealso cref="http://www.codeproject.com/Articles/16009/A-Much-Easier-to-Use-ListView"/>
-	public partial class GameListForm : Form
+	public partial class GameListComponent : UserControl
 	{
-		public GameListForm()
+		public GameListComponent()
 		{
 			InitializeComponent();
 		}
@@ -36,29 +37,6 @@ namespace CSPspEmu.Gui.Winforms
 		}
 
 		TypedObjectListView<GameList.GameEntry> TypedObjectListViewEntry;
-
-		class MyRenderer : IRenderer
-		{
-			public bool RenderItem(DrawListViewItemEventArgs e, Graphics g, Rectangle itemBounds, object rowObject)
-			{
-				throw new NotImplementedException();
-			}
-
-			public bool RenderSubItem(DrawListViewSubItemEventArgs e, Graphics g, Rectangle cellBounds, object rowObject)
-			{
-				throw new NotImplementedException();
-			}
-
-			public void HitTest(OlvListViewHitTestInfo hti, int x, int y)
-			{
-				throw new NotImplementedException();
-			}
-
-			public Rectangle GetEditRectangle(Graphics g, Rectangle cellBounds, OLVListItem item, int subItemIndex)
-			{
-				throw new NotImplementedException();
-			}
-		}
 
 		OLVColumn BannerColumn = new OLVColumn("Banner", "");
 		OLVColumn DiscIdColumn = new OLVColumn("Id", "");
@@ -81,13 +59,13 @@ namespace CSPspEmu.Gui.Winforms
 		}
 		*/
 
+		Font Font2 = new Font("MS Gothic Normal", 13);
+
 		private void GameListForm_Load(object sender, EventArgs e)
 		{
 			TypedObjectListViewEntry = new TypedObjectListView<GameList.GameEntry>(objectListView1);
 			objectListView1.ShowGroups = false;
 			objectListView1.FullRowSelect = true;
-			DiscIdColumn.MaximumWidth = DiscIdColumn.MinimumWidth = DiscIdColumn.Width = 80;
-			FirmwareColumn.MaximumWidth = FirmwareColumn.MinimumWidth = FirmwareColumn.Width = 60;
 			DiscIdColumn.TextAlign = HorizontalAlignment.Center;
 			FirmwareColumn.TextAlign = HorizontalAlignment.Center;
 
@@ -102,21 +80,12 @@ namespace CSPspEmu.Gui.Winforms
 			var IconSize = new Size(108, 60);
 
 			objectListView1.RowHeight = IconSize.Height;
-			objectListView1.AllowColumnReorder = true;
+			//objectListView1.AllowColumnReorder = true;
+			//objectListView1.AutoResizeColumns();
 
-			objectListView1.Columns.Add(BannerColumn);
-			objectListView1.Columns.Add(DiscIdColumn);
-			objectListView1.Columns.Add(TitleColumn);
-			objectListView1.Columns.Add(FirmwareColumn);
-			objectListView1.Columns.Add(RegionColumn);
-			objectListView1.Columns.Add(MediaTypeColumn);
-			objectListView1.Columns.Add(LicenseTypeColumn);
-			objectListView1.Columns.Add(ReleaseTypeColumn);
-			objectListView1.Columns.Add(PathColumn);
+			objectListView1.Resize += objectListView1_Resize;
+			ResetColumns();
 			objectListView1.GridLines = true;
-
-			TitleColumn.Width = 400;
-			PathColumn.Width = 120;
 
 			objectListView1.Sort(TitleColumn, SortOrder.Ascending);
 
@@ -124,12 +93,19 @@ namespace CSPspEmu.Gui.Winforms
 			TitleColumn.RendererDelegate = (ee, gg, rr, oo) =>
 			{
 				var Entry = ((GameList.GameEntry)oo);
-				var Selected = (objectListView1.GetSelectedObjects().Contains((object)Entry));
-				var Font = new Font("MS Gothic Normal", 13);
+				var Selected = (objectListView1.SelectedObjects.Contains((object)Entry));
 				gg.FillRectangle(new SolidBrush(!Selected ? SystemColors.Window : SystemColors.Highlight), new Rectangle(rr.Left - 1, rr.Top - 1, rr.Width + 1, rr.Height + 1));
-				var Measure = gg.MeasureString(Entry.TITLE, Font);
+				var Measure = gg.MeasureString(Entry.TITLE, Font2, new Size(rr.Width, rr.Height));
 				gg.Clip = new System.Drawing.Region(rr);
-				gg.DrawString(Entry.TITLE, Font, new SolidBrush(!Selected ? SystemColors.WindowText : SystemColors.HighlightText), new Point(rr.Left + 8, (int)(rr.Top + rr.Height / 2 - Measure.Height / 2)));
+				gg.DrawString(
+					Entry.TITLE,
+					Font2,
+					new SolidBrush(!Selected ? SystemColors.WindowText : SystemColors.HighlightText),
+					new Rectangle(
+						new Point(rr.Left + 8, (int)(rr.Top + rr.Height / 2 - Measure.Height / 2)),
+						new Size(rr.Width, rr.Height)
+					)
+				);
 				//gg.FillRectangle(new SolidBrush(Color.White), rr);
 				//gg.DrawImageUnscaled(Entry.CachedBitmap, new Point(rr.Left, rr.Top));
 
@@ -196,6 +172,7 @@ namespace CSPspEmu.Gui.Winforms
 					case 'P':
 					case 'J': return "Japan";
 					case 'E': return "Europe";
+					case 'K': return "Korea";
 					case 'U': return "USA";
 					case 'A': return "Asia";
 					default: return "Unknown";
@@ -217,48 +194,171 @@ namespace CSPspEmu.Gui.Winforms
 			FirmwareColumn.AspectGetter = delegate(object _entry) { return ((GameList.GameEntry)_entry).PSP_SYSTEM_VER; };
 		}
 
-		private void GameListForm_Shown(object sender, EventArgs e)
+		public int GetColumnsWidth(params ColumnSize[] Except)
 		{
-			var ProgressForm = new ProgressForm();
+			int Width = 0;
 
-			ThreadPool.QueueUserWorkItem((state) =>
+			var Columns = new[] { BannerColumnSize, DiscIdColumnSize, TitleColumnSize, FirmwareColumnSize, RegionColumnSize, PathColumnSize };
+
+			foreach (var Column in Columns)
 			{
-				var GameList = new GameList();
-				Console.WriteLine("Reading ISOs...");
-				GameList.Progress += (Title, Current, Total) =>
+				if (!Except.Contains(Column))
 				{
-					//Console.WriteLine("Progress: {0}, {1}/{2}", Title, Current, Total);
-					ProgressForm.SetProgress(Title, Current, Total);
-				};
+					Width += Column.Width;
+				}
+			}
+			return Width;
+		}
 
-				var List = new List<GameList.GameEntry>();
+		void ResetColumns()
+		{
+			ResetColumnsWidths();
+			UpdateColumnsWidths();
 
-				GameList.EntryAdded += (Entry) =>
+			objectListView1.Columns.Clear();
+			objectListView1.Columns.Add(BannerColumn);
+			objectListView1.Columns.Add(DiscIdColumn);
+			objectListView1.Columns.Add(TitleColumn);
+			objectListView1.Columns.Add(FirmwareColumn);
+			objectListView1.Columns.Add(RegionColumn);
+			//objectListView1.Columns.Add(MediaTypeColumn);
+			//objectListView1.Columns.Add(LicenseTypeColumn);
+			//objectListView1.Columns.Add(ReleaseTypeColumn);
+			objectListView1.Columns.Add(PathColumn);
+		}
+
+		ColumnSize BannerColumnSize = new ColumnSize();
+		ColumnSize DiscIdColumnSize = new ColumnSize();
+		ColumnSize TitleColumnSize = new ColumnSize();
+		ColumnSize FirmwareColumnSize = new ColumnSize();
+		ColumnSize RegionColumnSize = new ColumnSize();
+		ColumnSize PathColumnSize = new ColumnSize();
+
+		public class ColumnSize
+		{
+			public int MinimumWidth = 0;
+			public int MaximumWidth = 1024;
+			private int _Width = 120;
+			public int Width
+			{
+				get
 				{
-					List.Add(Entry);
-				};
+					return _Width;
+				}
+				set
+				{
+					_Width = MathUtils.Clamp(value, MinimumWidth, MaximumWidth);
+				}
+			}
+		}
 
-				//GameList.ScanPath(@"e:\isos\psp");
-				GameList.ScanPath(@"e:\isos\psp", @"c:\temp");
+		void ResetColumnsWidths()
+		{
+			DiscIdColumnSize.MaximumWidth = DiscIdColumnSize.MinimumWidth = DiscIdColumnSize.Width = 80;
+			FirmwareColumnSize.MaximumWidth = FirmwareColumnSize.MinimumWidth = FirmwareColumnSize.Width = 60;
+			PathColumnSize.Width = 120;
+			TitleColumnSize.Width = 400;
+			TitleColumnSize.MinimumWidth = 120;
+			RegionColumnSize.Width = 60;
+		}
+
+		void UpdateColumnWidths(ColumnSize ColumnSize, OLVColumn Column)
+		{
+			if (Column.Width != ColumnSize.Width) Column.Width = ColumnSize.Width;
+			if (Column.MinimumWidth != ColumnSize.MinimumWidth) Column.MinimumWidth = ColumnSize.MinimumWidth;
+			if (Column.MaximumWidth != ColumnSize.MaximumWidth) Column.MaximumWidth = ColumnSize.MaximumWidth;
+		}
+
+		void UpdateColumnsWidths()
+		{
+			UpdateColumnWidths(BannerColumnSize, BannerColumn);
+			UpdateColumnWidths(DiscIdColumnSize, DiscIdColumn);
+			UpdateColumnWidths(TitleColumnSize, TitleColumn);
+			UpdateColumnWidths(FirmwareColumnSize, FirmwareColumn);
+			UpdateColumnWidths(RegionColumnSize, RegionColumn);
+			UpdateColumnWidths(PathColumnSize, PathColumn);
+		}
+
+		void objectListView1_Resize(object sender, EventArgs e)
+		{
+			ResetColumnsWidths();
+
+			bool Updated = false;
+
+			//ResetColumns();
+			var InitialWidth = objectListView1.Width - 32;
+			var RestColumnWidth = GetColumnsWidth(TitleColumnSize);
+			TitleColumnSize.Width = InitialWidth - RestColumnWidth;
+
+			/*
+			if (GetColumnsWidth() > InitialWidth)
+			{
+				PathColumn.Width = PathColumn.MinimumWidth = 0;
+			}
+			*/
+
+			UpdateColumnsWidths();
+		}
+
+		public void Init(string IsosPath, string CachePath)
+		{
+			if (IsosPath == null)
+			{
+				return;
+			}
+			var ProgressForm = new ProgressForm();
+			try
+			{
+				ThreadPool.QueueUserWorkItem((state) =>
+				{
+					var GameList = new GameList();
+					Console.WriteLine("Reading ISOs...");
+					GameList.Progress += (Title, Current, Total) =>
+					{
+						//Console.WriteLine("Progress: {0}, {1}/{2}", Title, Current, Total);
+						ProgressForm.SetProgress(Title, Current, Total);
+					};
+
+					var List = new List<GameList.GameEntry>();
+
+					GameList.EntryAdded += (Entry, Cached) =>
+					{
+						//Console.WriteLine("aaaaaaaa");
+						List.Add(Entry);
+						if (!Cached)
+						{
+							objectListView1.AddObject(Entry);
+						}
+					};
+
+					GameList.ScanPath(IsosPath, CachePath);
+
+					this.Invoke(new Action(() =>
+					{
+						objectListView1.SetObjects(List);
+						objectListView1.Sort(TitleColumn, SortOrder.Ascending);
+					}));
+
+					Console.WriteLine("Done");
+					/*
+					foreach (var Entry in GameList.Entries)
+					{
+						Console.WriteLine(Entry.TITLE);
+					}
+					*/
+
+					ProgressForm.End();
+				}, null);
 
 				this.Invoke(new Action(() =>
 				{
-					objectListView1.SetObjects(List);
-					objectListView1.Sort(TitleColumn, SortOrder.Ascending);
+					ProgressForm.ShowDialog();
 				}));
-
-				Console.WriteLine("Done");
-				/*
-				foreach (var Entry in GameList.Entries)
-				{
-					Console.WriteLine(Entry.TITLE);
-				}
-				*/
-
+			}
+			finally
+			{
 				ProgressForm.End();
-			}, null);
-
-			ProgressForm.ShowDialog();
+			}
 		}
 
 		private void textBox1_TextChanged(object sender, EventArgs e)
@@ -285,10 +385,17 @@ namespace CSPspEmu.Gui.Winforms
 			textBox1.SelectAll();
 		}
 
+		public event Action<string> SelectedItem;
+
 		private void objectListView1_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
-			var Entry = (GameList.GameEntry)objectListView1.GetSelectedObject();
-			Console.WriteLine("Double click! : {0}", Entry.IsoFile);
+			var Entry = (GameList.GameEntry)objectListView1.SelectedObject;
+			SelectedItem(Entry.IsoFile);
+		}
+
+		private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+		{
+
 		}
 	}
 }

@@ -298,6 +298,8 @@ namespace CSPspEmu.Hle
 			}
 			catch (AccessViolationException AccessViolationException)
 			{
+				Console.Error.WriteLine(AccessViolationException);
+
 				var Field = typeof(AccessViolationException).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(FieldInfo => FieldInfo.Name == "_target").Single();
 				uint Address = (uint)((IntPtr)Field.GetValue(AccessViolationException)).ToInt32();
 				throw (new PspMemory.InvalidAddressException(Address));

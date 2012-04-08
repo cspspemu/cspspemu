@@ -39,11 +39,23 @@ namespace CSPspEmu.Gui.Winforms
 
 		public void End()
 		{
-			this.Invoke(new Action(() =>
+			try
 			{
-				AllowClose = true;
-				this.Close();
-			}));
+				this.Invoke(new Action(() =>
+				{
+					try
+					{
+						AllowClose = true;
+						this.Close();
+					}
+					catch
+					{
+					}
+				}));
+			}
+			catch
+			{
+			}
 		}
 	}
 }

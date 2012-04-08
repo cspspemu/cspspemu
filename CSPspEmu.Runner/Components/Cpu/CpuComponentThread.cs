@@ -231,6 +231,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 							}
 
 							var FilesToTry = new[] {
+								"/PSP_GAME/SYSDIR/EBOOT.OLD",
 								"/PSP_GAME/SYSDIR/EBOOT.BIN",
 								"/PSP_GAME/SYSDIR/BOOT.BIN",
 							};

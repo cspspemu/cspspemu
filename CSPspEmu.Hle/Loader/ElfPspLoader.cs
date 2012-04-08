@@ -109,6 +109,11 @@ namespace CSPspEmu.Hle.Loader
 				RelocateFromHeaders();
 			}
 
+			if (!ElfLoader.SectionHeadersByName.ContainsKey(".rodata.sceModuleInfo"))
+			{
+				throw(new Exception("Can't find segment '.rodata.sceModuleInfo'"));
+			}
+
 			this.HleModuleGuest.ModuleInfo = ElfLoader.SectionHeaderFileStream(ElfLoader.SectionHeadersByName[".rodata.sceModuleInfo"]).ReadStruct<ElfPsp.ModuleInfo>(); ;
 
 			//Console.WriteLine(this.ModuleInfo.ToStringDefault());
@@ -142,19 +147,8 @@ namespace CSPspEmu.Hle.Loader
 				switch (ProgramHeader.Type)
 				{
 					case Elf.ProgramHeader.TypeEnum.Reloc1:
-						Console.Error.WriteLine("NOT IMPLEMENTED Elf.ProgramHeader.TypeEnum.Reloc1!");
-
-						//throw (new NotImplementedException());
-
-						// NOTE: Enabling it, breaks stuff.
-						//RelocateRelocs(ElfLoader.ProgramHeaderFileStream(ProgramHeader).ReadStructVectorUntilTheEndOfStream<Elf.Reloc>());
+						Console.Error.WriteLine("SKIPPING Elf.ProgramHeader.TypeEnum.Reloc1!");
 						break;
-						//throw (new NotImplementedException());
-						/*
-						int RelCount = (int)phdr.getP_filesz() / Elf32Relocate.sizeof();
-						f.position((int)(elfOffset + phdr.getP_offset()));
-						relocateFromBuffer(f, module, baseAddress, elf, RelCount);
-						*/
 					case Elf.ProgramHeader.TypeEnum.Reloc2:
 						throw(new NotImplementedException());
 				}

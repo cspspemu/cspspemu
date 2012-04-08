@@ -35,6 +35,15 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		}
 
 		/// <summary>
+		/// 1.00 to 3.52, gone in 3.95+
+		/// </summary>
+		[HlePspFunction(NID = 0x35669D4C, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public void SysMemUserForUser_35669D4C()
+		{
+		}
+
+		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="Param"></param>

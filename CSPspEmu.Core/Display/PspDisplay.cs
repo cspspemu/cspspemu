@@ -13,7 +13,7 @@ using System.Drawing.Imaging;
 
 namespace CSPspEmu.Core.Display
 {
-	unsafe public class PspDisplay : PspEmulatorComponent
+	public class PspDisplay : PspEmulatorComponent
 	{
 		public const double processed_pixels_per_second = 9000000; // hz
 		public const double cycles_per_pixel            = 1;
@@ -100,13 +100,16 @@ namespace CSPspEmu.Core.Display
 			}
 		}
 
-		public Bitmap TakeScreenshot()
+		unsafe public Bitmap TakeScreenshot()
 		{
 			return new PspBitmap(
 				CurrentInfo.PixelFormat,
 				CurrentInfo.BufferWidth,
 				CurrentInfo.Height,
-				(byte*)Memory.PspAddressToPointerSafe(CurrentInfo.Address)
+				(byte*)Memory.PspAddressToPointerSafe(
+					CurrentInfo.Address,
+					PixelFormatDecoder.GetPixelsSize(CurrentInfo.PixelFormat, CurrentInfo.BufferWidth * CurrentInfo.Height)
+				)
 			).ToBitmap();
 		}
 

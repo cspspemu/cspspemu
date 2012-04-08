@@ -237,7 +237,7 @@ namespace CSPspEmu.Core.Cpu
 
 		public void* GetMemoryPtr(uint Address)
 		{
-			var Pointer = CpuProcessor.Memory.PspAddressToPointer(Address);
+			var Pointer = CpuProcessor.Memory.PspAddressToPointerUnsafe(Address);
 			//Console.WriteLine("%08X".Sprintf((uint)Pointer));
 			return Pointer;
 		}
@@ -249,14 +249,14 @@ namespace CSPspEmu.Core.Cpu
 
 		public void* GetMemoryPtrSafe(uint Address)
 		{
-			return CpuProcessor.Memory.PspAddressToPointerSafe(Address);
+			return CpuProcessor.Memory.PspAddressToPointerSafe(Address, 0);
 		}
 
 		public void* GetMemoryPtrSafeWithError(uint Address, String ErrorDescription, bool CanBeNull)
 		{
 			try
 			{
-				void *Result = CpuProcessor.Memory.PspAddressToPointerSafe(Address, CanBeNull);
+				void *Result = CpuProcessor.Memory.PspAddressToPointerSafe(Address, 0, CanBeNull);
 				/*
 				if (Result == null && !CanBeNull)
 				{

@@ -368,31 +368,12 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			}
 		}
 
-		/// <summary>
-		/// Open or create a file for reading or writing
-		/// </summary>
-		/// <example>
-		///		// Example1: Open a file for reading
-		///		if (!(fd = sceIoOpen("device:/path/to/file", PSP_O_RDONLY, 0777)) {
-		///			// error
-		///		}
-		///		
-		///		// Example2: Open a file for writing, creating it if it doesnt exist
-		///		if (!(fd = sceIoOpen("device:/path/to/file", PSP_O_WRONLY | PSP_O_CREAT, 0777)) {
-		///			// error
-		///		}
-		/// </example>
-		/// <param name="FileName">Pointer to a string holding the name of the file to open</param>
-		/// <param name="Flags">Libc styled flags that are or'ed together</param>
-		/// <param name="Mode">File access mode.</param>
-		/// <returns>A non-negative integer is a valid fd, anything else an error</returns>
-		[HlePspFunction(NID = 0x109F50BC, FirmwareVersion = 150)]
-		public SceUID sceIoOpen(string FileName, HleIoFlags Flags, SceMode Mode)
+		public SceUID _sceIoOpen(string FileName, HleIoFlags Flags, SceMode Mode, bool Async)
 		{
 			try
 			{
 				var Info = HleState.HleIoManager.ParsePath(FileName);
-				Console.WriteLine("Opened '{0}' with driver '{1}' and local path '{2}' : '{2}'", FileName, Info.HleIoDriver, Info.LocalPath);
+				Console.WriteLine("Opened ({3}) '{0}' with driver '{1}' and local path '{2}' : '{2}'", FileName, Info.HleIoDriver, Info.LocalPath, Async ? "Async" : "NO Async");
 				Info.HleIoDrvFileArg.HleIoDriver.IoOpen(Info.HleIoDrvFileArg, Info.LocalPath, Flags, Mode);
 				Info.HleIoDrvFileArg.FullFileName = FileName;
 				return HleState.HleIoManager.HleIoDrvFileArgPool.Create(Info.HleIoDrvFileArg);
@@ -418,6 +399,31 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 
 			//Console.Error.WriteLine("Didn't find file '{0}'", FileName);
 			throw (new SceKernelException(SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND));
+		}
+
+
+		/// <summary>
+		/// Open or create a file for reading or writing
+		/// </summary>
+		/// <example>
+		///		// Example1: Open a file for reading
+		///		if (!(fd = sceIoOpen("device:/path/to/file", PSP_O_RDONLY, 0777)) {
+		///			// error
+		///		}
+		///		
+		///		// Example2: Open a file for writing, creating it if it doesnt exist
+		///		if (!(fd = sceIoOpen("device:/path/to/file", PSP_O_WRONLY | PSP_O_CREAT, 0777)) {
+		///			// error
+		///		}
+		/// </example>
+		/// <param name="FileName">Pointer to a string holding the name of the file to open</param>
+		/// <param name="Flags">Libc styled flags that are or'ed together</param>
+		/// <param name="Mode">File access mode.</param>
+		/// <returns>A non-negative integer is a valid fd, anything else an error</returns>
+		[HlePspFunction(NID = 0x109F50BC, FirmwareVersion = 150)]
+		public SceUID sceIoOpen(string FileName, HleIoFlags Flags, SceMode Mode)
+		{
+			return _sceIoOpen(FileName, Flags, Mode, Async: false);
 		}
 
 		/// <summary>

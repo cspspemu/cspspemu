@@ -190,8 +190,8 @@ namespace CSPspEmu.Hle
 			Instruction.OP1 = 2;
 			Instruction.JUMP_Real = FunctionAddress;
 
-			HleState.CpuProcessor.Memory.Write4(CallAddress + 0, Instruction); // J
-			HleState.CpuProcessor.Memory.Write4(CallAddress + 4, 0x00000000); // NOP
+			HleState.CpuProcessor.Memory.WriteSafe(CallAddress + 0, Instruction); // J
+			HleState.CpuProcessor.Memory.WriteSafe(CallAddress + 4, 0x00000000); // NOP
 		}
 
 		public void LinkFunction(uint CallAddress, FunctionEntry NativeFunction)
@@ -200,8 +200,8 @@ namespace CSPspEmu.Hle
 
 			//Console.WriteLine(NativeFunction);
 
-			HleState.CpuProcessor.Memory.Write4(CallAddress + 0, FunctionGenerator.NativeCallSyscallOpCode);  // syscall NativeCallSyscallCode
-			HleState.CpuProcessor.Memory.Write4(CallAddress + 4, (uint)ModuleManager.AllocDelegateSlot(
+			HleState.CpuProcessor.Memory.WriteSafe(CallAddress + 0, FunctionGenerator.NativeCallSyscallOpCode);  // syscall NativeCallSyscallCode
+			HleState.CpuProcessor.Memory.WriteSafe(CallAddress + 4, (uint)ModuleManager.AllocDelegateSlot(
 				Action: CreateDelegate(
 					ModuleManager: ModuleManager,
 					Module: NativeFunction.Module,

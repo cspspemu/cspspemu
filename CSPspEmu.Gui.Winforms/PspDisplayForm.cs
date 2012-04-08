@@ -100,11 +100,13 @@ namespace CSPspEmu.Gui.Winforms
 		}
 
 		bool ShowMenus;
+		bool AutoLoad;
 
-		public PspDisplayForm(IGuiExternalInterface IGuiExternalInterface, bool ShowMenus = true, int DefaultDisplayScale = 1)
+		public PspDisplayForm(IGuiExternalInterface IGuiExternalInterface, bool ShowMenus = true, bool AutoLoad = false, int DefaultDisplayScale = 1)
 		{
 			this.IGuiExternalInterface = IGuiExternalInterface;
 			this.ShowMenus = ShowMenus;
+			this.AutoLoad = AutoLoad;
 
 			InitializeComponent();
 			HandleCreated += new EventHandler(PspDisplayForm_HandleCreated);
@@ -248,7 +250,10 @@ namespace CSPspEmu.Gui.Winforms
 					byte* FrameBuffer = null;
 					try
 					{
-						FrameBuffer = (byte*)Memory.PspAddressToPointerSafe(Address);
+						FrameBuffer = (byte*)Memory.PspAddressToPointerSafe(
+							Address,
+							PixelFormatDecoder.GetPixelsSize(PspDisplay.CurrentInfo.PixelFormat, Width * Height)
+						);
 					}
 					catch (Exception Exception)
 					{
@@ -339,7 +344,10 @@ namespace CSPspEmu.Gui.Winforms
 		void Timer_Tick(object sender, EventArgs e)
 		{
 			SendControllerFrame();
-			Refresh();
+			if (!GameListComponent.Visible)
+			{
+				Refresh();
+			}
 
 			if (IGuiExternalInterface.IsInitialized())
 			{
@@ -525,6 +533,11 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void OpenFileReal(string FilePath)
 		{
+			this.Invoke(new Action(() =>
+			{
+				GameListComponent.Visible = false;
+			}));
+
 			OpenRecentHook(FilePath);
 			IGuiExternalInterface.LoadFile(FilePath);
 		}
@@ -811,6 +824,8 @@ namespace CSPspEmu.Gui.Winforms
 			LanguageUpdated();
 		}
 
+		GameListComponent GameListComponent = new GameListComponent();
+
 		private void PspDisplayForm_Load_1(object sender, EventArgs e)
 		{
 			UtilsFrameLimitingMenu.Checked = this.PspConfig.VerticalSynchronization;
@@ -823,6 +838,33 @@ namespace CSPspEmu.Gui.Winforms
 			{
 				CheckForUpdates(NotifyIfNotFound: false);
 			}
+
+			GameListComponent.SelectedItem += (IsoFile) =>
+			{
+				OpenFileRealOnNewThreadLock(IsoFile);
+			};
+			GameListComponent.Dock = DockStyle.Fill;
+
+			//PspConfig.IsosPath = @"e:\isos\pspa";
+			if (!AutoLoad)
+			{
+				RefreshGameList();
+				GameListComponent.Visible = true;
+			}
+			else
+			{
+				GameListComponent.Visible = false;
+			}
+
+			GameListComponent.Parent = this;
+		}
+
+		public void RefreshGameList()
+		{
+			ThreadPool.QueueUserWorkItem((state) =>
+			{
+				GameListComponent.Init(PspConfig.StoredConfig.IsosPath, ApplicationPaths.MemoryStickRootFolder);
+			});
 		}
 
 		private void useFastAndUnsafeMemoryToolStripMenuItem_Click(object sender, EventArgs e)
@@ -958,26 +1000,29 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void UpdateRecentList()
 		{
-			try
+			this.Invoke(new Action(() =>
 			{
-				var Items = openRecentToolStripMenuItem.DropDownItems;
-				Items.Clear();
-				foreach (var RecentFile in PspConfig.StoredConfig.RecentFiles)
+				try
 				{
-					var Item = new ToolStripMenuItem()
+					var Items = openRecentToolStripMenuItem.DropDownItems;
+					Items.Clear();
+					foreach (var RecentFile in PspConfig.StoredConfig.RecentFiles)
 					{
-						Text = RecentFile,
-						ShowShortcutKeys = true,
-						ShortcutKeys = ((Keys)((Keys.Control | (Keys.D1 + Items.Count)))),
-					};
-					Item.Click += Recent_Click;
-					Items.Add(Item);
+						var Item = new ToolStripMenuItem()
+						{
+							Text = RecentFile,
+							ShowShortcutKeys = true,
+							ShortcutKeys = ((Keys)((Keys.Control | (Keys.D1 + Items.Count)))),
+						};
+						Item.Click += Recent_Click;
+						Items.Add(Item);
+					}
 				}
-			}
-			catch (Exception Exception)
-			{
-				Console.Error.WriteLine(Exception);
-			}
+				catch (Exception Exception)
+				{
+					Console.Error.WriteLine(Exception);
+				}
+			}));
 		}
 
 		void Recent_Click(object sender, EventArgs e)
@@ -1018,6 +1063,22 @@ namespace CSPspEmu.Gui.Winforms
 
 				break;
 			}  
+		}
+
+		private void setIsoFolderToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var Dialog = new FolderBrowserDialog();
+			Dialog.ShowNewFolderButton = true;
+			//Dialog.RootFolder = PspConfig.StoredConfig.IsosPath;
+
+			if (Dialog.ShowDialog() == DialogResult.OK)
+			{
+				PspConfig.StoredConfig.IsosPath = Dialog.SelectedPath;
+				PspConfig.StoredConfig.Save();
+			}
+
+			RefreshGameList();
+			//new FileDialog();
 		}
 	}
 }

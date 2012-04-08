@@ -68,6 +68,11 @@ namespace CSPspEmu.Core
 		/// </summary>
 		public List<string> RecentFiles = new List<string>();
 
+		/// <summary>
+		/// 
+		/// </summary>
+		public string IsosPath = null;
+
 		#region Serializing
 		static private XmlSerializer Serializer;
 

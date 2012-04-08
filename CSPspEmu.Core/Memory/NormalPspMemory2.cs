@@ -1,6 +1,6 @@
-﻿#define ADDITIONAL_CHECKS
-#define USE_ARRAY_BYTES
+﻿#define USE_ARRAY_BYTES
 
+#if false
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -128,7 +128,7 @@ namespace CSPspEmu.Core.Memory
 			return 0xFFFFFFFF;
 		}
 
-		override public uint PointerToPspAddressUnsafe(void* Pointer)
+		override public uint PointerToPspAddress(void* Pointer)
 		{
 			if (Pointer == null) return 0;
 			if (Pointer >= &ScratchPadPtr[0] && Pointer < &ScratchPadPtr[ScratchPadSize]) return (uint)((byte*)Pointer - ScratchPadPtr);
@@ -137,10 +137,8 @@ namespace CSPspEmu.Core.Memory
 			throw (new InvalidOperationException(String.Format("Address 0x{0:X} is not a pointer to the PspMemory", (uint)Pointer)));
 		}
 
-		override public void* PspAddressToPointerUnsafe(uint _Address)
+		override public void* PspAddressToPointer(uint _Address)
 		{
-			//Console.WriteLine("PointerToPspAddressUnsafe: 0x{0:X}", _Address);
-
 			if (_Address == 0) return null;
 			//if (IsAddressValid(_Address))
 			{
@@ -150,43 +148,20 @@ namespace CSPspEmu.Core.Memory
 				{
 					/////// hp
 					case 0x00: //case 0b_00000:
+						if (Address < ScratchPadOffset)
 						{
-							if (Address < ScratchPadOffset)
-							{
-								break;
-							}
-							var Offset = Address - ScratchPadOffset;
-#if ADDITIONAL_CHECKS
-							if (Offset < 0 || Offset >= ScratchPad.Length) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
-#endif
-							return &ScratchPadPtr[Address - ScratchPadOffset];
+							break;
 						}
+						return &ScratchPadPtr[Address - ScratchPadOffset];
 					/////// hp
 					case 0x04: //case 0b_00100:
-						{
-							var Offset = Address - FrameBufferOffset;
-							//if (Offset < 0 || Offset >= FrameBufferSize) throw (new Exception("Outside!"));
-#if ADDITIONAL_CHECKS
-							if (Offset < 0 || Offset >= FrameBuffer.Length) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
-#endif
-
-							return &FrameBufferPtr[Offset];
-						}
+						return &FrameBufferPtr[Address - FrameBufferOffset];
 					/////// hp
 					case 0x08: //case 0b_01000:
 					case 0x09: //case 0b_01001:
 					case 0x0A: //case 0b_01010: // SLIM ONLY
 					case 0x0B: //case 0b_01011: // SLIM ONLY
-						{
-							var Offset = Address - MainOffset;
-							//if (Offset < 0 || Offset >= MainSize) throw(new Exception("Outside!"));
-#if ADDITIONAL_CHECKS
-							if (Offset < 0 || Offset >= Main.Length) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
-#endif
-
-							return &MainPtr[Offset];
-							//return &Main[Offset];
-						}
+						return &MainPtr[Address - MainOffset];
 					/////// hp
 					case 0x37: //case 0b_11111: // HO IO2
 						//return &Vectors[Address - 0x1fc00000];
@@ -206,3 +181,4 @@ namespace CSPspEmu.Core.Memory
 		}
 	}
 }
+#endif

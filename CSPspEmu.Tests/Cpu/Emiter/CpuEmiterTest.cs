@@ -494,7 +494,7 @@ namespace CSPspEmu.Core.Tests
 				swc1 f0, 0(r1)
 				lwc1 f1, 0(r1)
 			");
-			Assert.AreEqual(0x3F800000, (int)CpuThreadState.CpuProcessor.Memory.Read4(0x08000000));
+			Assert.AreEqual(0x3F800000, (int)CpuThreadState.CpuProcessor.Memory.ReadSafe<uint>(0x08000000));
 			Assert.AreEqual(CpuThreadState.FPR[1], CpuThreadState.FPR[0]);
 		}
 

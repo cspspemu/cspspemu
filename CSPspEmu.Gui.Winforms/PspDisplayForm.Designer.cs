@@ -82,6 +82,7 @@
 			this.HelpReportAnIssueMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
 			this.HelpAboutMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.setIsoFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -104,6 +105,7 @@
 			// 
 			this.FileMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FileOpenMenu,
+            this.setIsoFolderToolStripMenuItem,
             this.toolStripMenuItem3,
             this.openRecentToolStripMenuItem,
             this.toolStripMenuItem14,
@@ -524,6 +526,13 @@
 			this.HelpAboutMenu.Text = "&About...";
 			this.HelpAboutMenu.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
+			// setIsoFolderToolStripMenuItem
+			// 
+			this.setIsoFolderToolStripMenuItem.Name = "setIsoFolderToolStripMenuItem";
+			this.setIsoFolderToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+			this.setIsoFolderToolStripMenuItem.Text = "Set &Iso Folder...";
+			this.setIsoFolderToolStripMenuItem.Click += new System.EventHandler(this.setIsoFolderToolStripMenuItem_Click);
+			// 
 			// PspDisplayForm
 			// 
 			this.AllowDrop = true;
@@ -603,5 +612,6 @@
 		private System.Windows.Forms.ToolStripMenuItem configureControllerToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem openRecentToolStripMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem14;
+		private System.Windows.Forms.ToolStripMenuItem setIsoFolderToolStripMenuItem;
 	}
 }

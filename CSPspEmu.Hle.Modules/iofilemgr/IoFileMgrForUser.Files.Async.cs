@@ -19,7 +19,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0x89AA9906, FirmwareVersion = 150)]
 		public SceUID sceIoOpenAsync(string FileName, HleIoFlags Flags, SceMode Mode)
 		{
-			var FileId = (SceUID)sceIoOpen(FileName, Flags, Mode);
+			var FileId = (SceUID)_sceIoOpen(FileName, Flags, Mode, Async: true);
 			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileId);
 			File.AsyncLastResult = (long)FileId;
 			_DelayIo(IoDelayType.Open);

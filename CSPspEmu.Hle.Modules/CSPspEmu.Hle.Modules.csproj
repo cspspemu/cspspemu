@@ -59,6 +59,7 @@
     <Compile Include="ge\sceGe_user.Context.cs" />
     <Compile Include="ge\sceGe_user.cs" />
     <Compile Include="ge\sceGe_user.DisplayList.cs" />
+    <Compile Include="hen\libpspsystemctrl_kernel\SystemCtrlForKernel.cs" />
     <Compile Include="hpremote\sceHprm.cs" />
     <Compile Include="hpremote\sceHprm_driver.cs" />
     <Compile Include="http\sceHttp.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="utils\UtilsForUser.cs" />
     <Compile Include="wlan\sceWlanDrv_lib.cs" />
     <Compile Include="_unknownPrx\KUBridge.cs" />
+    <Compile Include="_unknownPrx\ModuleMgrForKernel.cs" />
     <Compile Include="_unknownPrx\sceMp3.cs" />
     <Compile Include="_unknownPrx\sceNp.cs" />
     <Compile Include="_unknownPrx\sceNpAuth.cs" />
@@ -155,6 +157,7 @@
     <Compile Include="_unknownPrx\scePspNpDrm_user.cs" />
     <Compile Include="_unknownPrx\sceUsb.cs" />
     <Compile Include="_unknownPrx\sceUsbstorBoot.cs" />
+    <Compile Include="_unknownPrx\SysclibForKernel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">

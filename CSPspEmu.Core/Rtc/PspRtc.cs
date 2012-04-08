@@ -67,20 +67,14 @@ namespace CSPspEmu.Core.Rtc
 
 		public struct PspTimeStruct
 		{
-			[DllImport("Kernel32.dll")]
-			private static extern bool QueryPerformanceCounter(out long lpPerformanceCount);
-
-			[DllImport("Kernel32.dll")]
-			private static extern bool QueryPerformanceFrequency(out long lpFrequency);
-
 			public long TotalMicroseconds;
 
 			public void SetToNow()
 			{
 				long Counter;
 				long Frequency;
-				QueryPerformanceCounter(out Counter);
-				QueryPerformanceFrequency(out Frequency);
+				Platform.QueryPerformanceCounter(out Counter);
+				Platform.QueryPerformanceFrequency(out Frequency);
 				var CurrentTotalMicroseconds = Counter * 1000 * 1000 / Frequency;
 				if (CurrentTotalMicroseconds < TotalMicroseconds)
 				{

@@ -284,7 +284,10 @@ namespace CSPspEmu.Core.Gpu
 		private void ProcessInstruction()
 		{
 			//Console.WriteLine("{0:X}", InstructionAddressCurrent);
-			var Instruction = Memory.Read4(_InstructionAddressCurrent);
+
+			//var Instruction = Memory.Read4Unsafe(_InstructionAddressCurrent);
+			var Instruction = Memory.ReadSafe<uint>(_InstructionAddressCurrent);
+
 			var WritePC = Memory.GetPCWriteAddress(_InstructionAddressCurrent);
 			var OpCode = (GpuOpCodes)((Instruction >> 24) & 0xFF);
 			var Params = ((Instruction) & 0xFFFFFF);

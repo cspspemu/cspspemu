@@ -395,11 +395,11 @@ namespace CSPspEmu.Hle
 			{
 				try
 				{
-					return "0x%08X".Sprintf(CpuThreadState.CpuProcessor.Memory.PointerToPspAddress((void*)Int4));
+					return "0x%08X".Sprintf(CpuThreadState.CpuProcessor.Memory.PointerToPspAddressUnsafe((void*)Int4));
 				}
 				catch (Exception)
 				{
-					return String.Format("0x{0:X}", CpuThreadState.CpuProcessor.Memory.PointerToPspAddress((void*)Int4));
+					return String.Format("0x{0:X}", CpuThreadState.CpuProcessor.Memory.PointerToPspAddressUnsafe((void*)Int4));
 				}
 			}
 

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
 using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Hle.Modules.threadman;
 
 namespace CSPspEmu.Hle.Modules.usersystemlib
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	public class Kernel_Library : HleModuleHost
+	unsafe public class Kernel_Library : HleModuleHost
 	{
 		/*
 		void initNids() {
@@ -65,6 +67,33 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		}
 
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="WorkAreaPointer"></param>
+		/// <param name="Count"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x15B6446B, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelUnlockLwMutex(void* WorkAreaPointer, int Count)
+		{
+			return 0;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="WorkAreaPointer"></param>
+		/// <param name="Count"></param>
+		/// <param name="TimeOut"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xBEA46419, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelLockLwMutex(void* WorkAreaPointer, int Count, int* TimeOut)
+		{
+			return 0;
+		}
+
+		/// <summary>
 		/// Determine if interrupts are enabled or disabled.
 		/// </summary>
 		/// <returns>1 if interrupts are currently enabled.</returns>
@@ -72,6 +101,30 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		public bool sceKernelIsCpuIntrEnable()
 		{
 			return HleState.HleInterruptManager.Enabled;
+		}
+
+		/// <summary>
+		/// Get the current thread Id
+		/// </summary>
+		/// <returns>The thread id of the calling thread.</returns>
+		[HlePspFunction(NID = 0x293B45B8, FirmwareVersion = 150)]
+		public int sceKernelGetThreadId()
+		{
+			return HleState.ModuleManager.GetModule<ThreadManForUser>().sceKernelGetThreadId();
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Pointer"></param>
+		/// <param name="Data"></param>
+		/// <param name="Size"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xA089ECA4, FirmwareVersion = 150)]
+		public int sceKernelMemset(byte* Pointer, int Data, int Size)
+		{
+			PointerUtils.Memset(Pointer, (byte)Data, Size);
+			return 0;
 		}
 	}
 }

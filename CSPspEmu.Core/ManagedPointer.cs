@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core
 {
+	/*
 	unsafe public class ManagedPointer<TType>
 	{
 		public byte* InternalPointer;
@@ -29,4 +30,5 @@ namespace CSPspEmu.Core
 			}
 		}
 	}
+	*/
 }

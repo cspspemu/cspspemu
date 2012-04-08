@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core;
@@ -166,7 +167,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 
 				var SceModulePartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(sizeof(SceModule));
 
-				var SceModulePtr = (SceModule*)HleState.CpuProcessor.Memory.PspAddressToPointer(SceModulePartition.Low);
+				var SceModulePtr = (SceModule*)HleState.CpuProcessor.Memory.PspAddressToPointerSafe(SceModulePartition.Low, Marshal.SizeOf(typeof(SceModule)));
 
 				SceModulePtr->Attributes = HleModuleGuest.ModuleInfo.ModuleAtributes;
 				SceModulePtr->Version = HleModuleGuest.ModuleInfo.ModuleVersion;
@@ -313,8 +314,9 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		[HlePspNotImplemented]
 		public int sceKernelGetModuleIdByAddress(uint Address)
 		{
-			throw(new NotImplementedException());
-			return 0x1234;
+			//throw(new NotImplementedException());
+			//return 0x1234;
+			return -1;
 		}
 
 		/// <summary>

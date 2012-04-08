@@ -21,16 +21,16 @@ namespace CSPspEmu.Core.Memory
 			}
 		}
 
-		override public uint PointerToPspAddress(void* Pointer)
+		override public uint PointerToPspAddressUnsafe(void* Pointer)
 		{
 			LazyCreateMemory();
-			return base.PointerToPspAddress(Pointer);
+			return base.PointerToPspAddressUnsafe(Pointer);
 		}
 
-		override public void* PspAddressToPointer(uint _Address)
+		override public void* PspAddressToPointerUnsafe(uint _Address)
 		{
 			LazyCreateMemory();
-			return base.PspAddressToPointer(_Address);
+			return base.PspAddressToPointerUnsafe(_Address);
 		}
 	}
 }

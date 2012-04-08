@@ -13,7 +13,8 @@ namespace CSPspEmu.Core.Memory
 	{
 		public const uint MemoryMask = 0x1FFFFFFF;
 
-		public class InvalidAddressException : Exception {
+		public class InvalidAddressException : Exception
+		{
 			public InvalidAddressException(string message) : base (message) { }
 			public InvalidAddressException(string message, Exception innerException) : base(message, innerException) { }
 			//public InvalidAddressException(uint Address) : base(String.Format("Invalid Address : 0x%08X".Sprintf(Address))) { }
@@ -49,7 +50,7 @@ namespace CSPspEmu.Core.Memory
 
 		public void ZeroFillSegment(Segment Segment)
 		{
-			PointerUtils.Memset((byte *)PspAddressToPointer(Segment.Low), 0, Segment.Size);
+			PointerUtils.Memset((byte *)PspAddressToPointerUnsafe(Segment.Low), 0, Segment.Size);
 		}
 
 		public readonly Segment ScratchPadSegment = new Segment(ScratchPadOffset, ScratchPadSize);
@@ -61,7 +62,7 @@ namespace CSPspEmu.Core.Memory
 		public const int ScratchPadSize = 4 * 1024; // 4KB
 		public const int FrameBufferSize = 2 * 0x100000; // 2MB
 		public const int MainSize = 64 * 0x100000; // 64MB (SLIM)
-		//public const int MainSize = 32 * 0x100000; // 64MB (SLIM)
+		//public const int MainSize = 32 * 0x100000; // 32MB (PHAT)
 
 		public const uint ScratchPadOffset = 0x00010000;
 		public const uint FrameBufferOffset = 0x04000000;
@@ -73,12 +74,12 @@ namespace CSPspEmu.Core.Memory
 		protected byte* MainPtr;
 		protected uint* LogMainPtr;
 
-		abstract public uint PointerToPspAddress(void* Pointer);
-		abstract public void* PspAddressToPointer(uint Address);
+		abstract public uint PointerToPspAddressUnsafe(void* Pointer);
+		abstract public void* PspAddressToPointerUnsafe(uint Address);
 
 		public void* PspAddressToPointerNotNull(uint _Address) 
 		{
-			var Pointer = PspAddressToPointer(_Address);
+			var Pointer = PspAddressToPointerUnsafe(_Address);
 			if (Pointer == null) throw (new InvalidAddressException(_Address));
 			return Pointer;
 		}
@@ -88,9 +89,9 @@ namespace CSPspEmu.Core.Memory
 			return new PspPointer(PointerToPspAddressSafe(Pointer));
 		}
 
-		public void* PspPointerToPointerSafe(PspPointer Pointer)
+		public void* PspPointerToPointerSafe(PspPointer Pointer, int Size = 0)
 		{
-			return PspAddressToPointerSafe(Pointer.Address);
+			return PspAddressToPointerSafe(Pointer.Address, Size);
 		}
 
 		virtual public uint PointerToPspAddressSafe(void* Pointer)
@@ -117,16 +118,26 @@ namespace CSPspEmu.Core.Memory
 			return 0xFFFFFFFF;
 		}
 
-		virtual public void* PspAddressToPointerSafe(uint Address, bool CanBeNull = true)
+		public void ValidateRange(uint Address, int Size)
+		{
+			if (!IsAddressValid((uint)(Address + 0))) throw (new InvalidAddressException(Address));
+			if (Size > 1)
+			{
+				if (!IsAddressValid((uint)(Address + Size - 1))) throw (new InvalidAddressException(Address));
+			}
+		}
+
+		virtual public void* PspAddressToPointerSafe(uint Address, int Size = 0, bool CanBeNull = true)
 		{
 			if (Address == 0 && CanBeNull) return null;
-			if (!IsAddressValid(Address)) throw(new InvalidAddressException(Address));
-			return PspAddressToPointer(Address);
+			ValidateRange(Address, Size);
+			//if (!IsAddressValid(Address)) throw(new InvalidAddressException(Address));
+			return PspAddressToPointerUnsafe(Address);
 		}
 
 		public void CheckAndEnforceAddressValid(uint Address)
 		{
-			if (!IsAddressValid(Address)) throw(new InvalidAddressException(Address));
+			ValidateRange(Address, 0);
 		}
 
 		public bool IsAddressValid(uint _Address)
@@ -138,34 +149,41 @@ namespace CSPspEmu.Core.Memory
 			return false;
 		}
 
-		public void Write1(uint Address, byte Value)
+		/*
+		public void Write1Unsafe(uint Address, byte Value)
 		{
-			*((byte*)PspAddressToPointer(Address)) = Value;
+			*((byte*)PspAddressToPointerUnsafe(Address)) = Value;
 		}
 
-		public void Write2(uint Address, ushort Value)
+		public void Write2Unsafe(uint Address, ushort Value)
 		{
-			*((ushort*)PspAddressToPointer(Address)) = Value;
+			*((ushort*)PspAddressToPointerUnsafe(Address)) = Value;
 		}
 
-		public void Write4(uint Address, uint Value)
+		public void Write4Unsafe(uint Address, uint Value)
 		{
-			*((uint*)PspAddressToPointer(Address)) = Value;
+			*((uint*)PspAddressToPointerUnsafe(Address)) = Value;
 		}
 
-		public void Write8(uint Address, ulong Value)
+		public void Write8Unsafe(uint Address, ulong Value)
 		{
-			*((ulong*)PspAddressToPointer(Address)) = Value;
+			*((ulong*)PspAddressToPointerUnsafe(Address)) = Value;
+		}
+		*/
+
+		public void WriteSafe<TType>(uint Address, TType Value) where TType : struct
+		{
+			WriteStruct<TType>(Address, Value);
 		}
 
 		public void WriteBytes(uint Address, byte[] DataIn)
 		{
-			Marshal.Copy(DataIn, 0, new IntPtr(PspAddressToPointer(Address)), DataIn.Length);
+			Marshal.Copy(DataIn, 0, new IntPtr(PspAddressToPointerSafe(Address, DataIn.Length)), DataIn.Length);
 		}
 
 		public void WriteBytes(uint Address, byte* DataInPointer, int DataInLength)
 		{
-			PointerUtils.Memcpy((byte*)PspAddressToPointer(Address), DataInPointer, DataInLength);
+			PointerUtils.Memcpy((byte*)PspAddressToPointerSafe(Address, DataInLength), DataInPointer, DataInLength);
 		}
 
 		public void WriteStruct<TType>(uint Address, TType Value) where TType : struct
@@ -175,42 +193,46 @@ namespace CSPspEmu.Core.Memory
 
 		public void WriteRepeated1(byte Value, uint Address, int Count)
 		{
-			for (int n = 0; n < Count; n++)
-			{
-				Write1((uint)(Address + n), Value);
-			}
+			PointerUtils.Memset((byte*)PspAddressToPointerSafe(Address, Count), Value, Count);
 		}
 
-		public byte Read1(uint Address)
+		/*
+		public byte Read1Unsafe(uint Address)
 		{
-			return *((byte*)PspAddressToPointer(Address));
+			return *((byte*)PspAddressToPointerUnsafe(Address));
 		}
 
-		public ushort Read2(uint Address)
+		public ushort Read2Unsafe(uint Address)
 		{
-			return *((ushort*)PspAddressToPointer(Address));
+			return *((ushort*)PspAddressToPointerUnsafe(Address));
 		}
 
-		public uint Read4(uint Address)
+		public uint Read4Unsafe(uint Address)
 		{
-			return *((uint*)PspAddressToPointer(Address));
+			return *((uint*)PspAddressToPointerUnsafe(Address));
 		}
 
-		public ulong Read8(uint Address)
+		public ulong Read8Unsafe(uint Address)
 		{
-			return *((ulong*)PspAddressToPointer(Address));
+			return *((ulong*)PspAddressToPointerUnsafe(Address));
+		}
+		*/
+
+		public TType ReadSafe<TType>(uint Address) where TType : struct
+		{
+			return StructUtils.BytesToStruct<TType>(ReadBytes(Address, Marshal.SizeOf(typeof(TType))));
 		}
 
 		public byte[] ReadBytes(uint Address, int Count)
 		{
 			var Output = new byte[Count];
-			Marshal.Copy(new IntPtr(PspAddressToPointer(Address)), Output, 0, Output.Length);
+			Marshal.Copy(new IntPtr(PspAddressToPointerSafe(Address, Count)), Output, 0, Output.Length);
 			return Output;
 		}
 
 		public void ReadBytes(uint Address, byte* DataOutPointer, int DataOutLength)
 		{
-			PointerUtils.Memcpy(DataOutPointer, (byte*)PspAddressToPointer(Address), DataOutLength);
+			PointerUtils.Memcpy(DataOutPointer, (byte*)PspAddressToPointerSafe(Address, DataOutLength), DataOutLength);
 		}
 
 		public TType ReadStruct<TType>(uint Address) where TType : struct
@@ -222,8 +244,8 @@ namespace CSPspEmu.Core.Memory
 
 		public void Copy(uint SourceAddress, uint DestinationAddress, int Size)
 		{
-			var Source = PspAddressToPointer(SourceAddress);
-			var Destination = PspAddressToPointer(DestinationAddress);
+			var Source = PspAddressToPointerSafe(SourceAddress, Size);
+			var Destination = PspAddressToPointerSafe(DestinationAddress, Size);
 			PointerUtils.Memcpy((byte*)Destination, (byte*)Source, Size);
 		}
 

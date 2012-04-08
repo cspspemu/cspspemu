@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Core.Controller
 {
-	unsafe public class PspController : PspEmulatorComponent
+	public class PspController : PspEmulatorComponent
 	{
 		public const int MaxStoredFrames = 128;
 
@@ -164,7 +164,7 @@ namespace CSPspEmu.Core.Controller
 		MemoryStickPresent = 0x2000000,
 	}
 
-	unsafe public struct SceCtrlData
+	public struct SceCtrlData
 	{
 		/// <summary>
 		/// The current read frame.
@@ -189,7 +189,12 @@ namespace CSPspEmu.Core.Controller
 		/// <summary>
 		/// Reserved bytes.
 		/// </summary>
-		public fixed byte Rsrv[6];
+		public byte Rsrv0;
+		public byte Rsrv1;
+		public byte Rsrv2;
+		public byte Rsrv3;
+		public byte Rsrv4;
+		public byte Rsrv5;
 
 		/// <summary>
 		/// Analog X : [-1.0, +1.0]

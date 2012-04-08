@@ -419,7 +419,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			VertexType = GpuState->VertexState.Type;
 
 			ReadVertexDelegate ReadVertex = ReadVertex_Void;
-			VertexReader.SetVertexTypeStruct(VertexType, (byte*)Memory.PspAddressToPointerSafe(GpuState->VertexAddress));
+			VertexReader.SetVertexTypeStruct(
+				VertexType,
+				(byte*)Memory.PspAddressToPointerSafe(GpuState->VertexAddress, 0)
+			);
 
 #if DEBUG_VERTEX_TYPE
 			try
@@ -460,7 +463,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			void* IndexPointer = null;
 			if (VertexType.Index != VertexTypeStruct.IndexEnum.Void)
 			{
-				IndexPointer = Memory.PspAddressToPointerSafe(GpuState->IndexAddress);
+				IndexPointer = Memory.PspAddressToPointerSafe(GpuState->IndexAddress, 0);
 			}
 
 			//Console.Error.WriteLine(VertexType.Index);
@@ -727,7 +730,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			int ScanWidth = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, Width);
 			int PixelSize = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, 1);
 			//GpuState->DrawBufferState.Format
-			var Address = (void*)Memory.PspAddressToPointerSafe(GpuState->DrawBufferState.Address);
+			var Address = (void*)Memory.PspAddressToPointerSafe(GpuState->DrawBufferState.Address, 0);
 			GL.PixelStore(PixelStoreParameter.PackAlignment, PixelSize);
 			//Console.WriteLine("PrepareRead: {0:X}", Address);
 
