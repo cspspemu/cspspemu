@@ -46,6 +46,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpUtils.Drawing", "csha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpUtils.Ext", "csharputils\CSharpUtils\CSharpUtils.Ext\CSharpUtils.Ext.csproj", "{C017FBBE-EF10-4030-A69E-204E766C8F9D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Gui.Winforms.Controls", "CSPspEmu.Gui.Winforms.Controls\CSPspEmu.Gui.Winforms.Controls.csproj", "{4056A286-E040-450F-BAD8-DE8E6B9B57B8}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = CSPspEmu.vsmdi
@@ -347,8 +349,26 @@ Global
 		{C017FBBE-EF10-4030-A69E-204E766C8F9D}.RunTests|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{C017FBBE-EF10-4030-A69E-204E766C8F9D}.RunTests|Mixed Platforms.Build.0 = Debug|Any CPU
 		{C017FBBE-EF10-4030-A69E-204E766C8F9D}.RunTests|x86.ActiveCfg = Release|Any CPU
+		{4056A286-E040-450F-BAD8-DE8E6B9B57B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4056A286-E040-450F-BAD8-DE8E6B9B57B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4056A286-E040-450F-BAD8-DE8E6B9B57B8}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4056A286-E040-450F-BAD8-DE8E6B9B57B8}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4056A286-E040-450F-BAD8-DE8E6B9B57B8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4056A286-E040-450F-BAD8-DE8E6B9B57B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4056A286-E040-450F-BAD8-DE8E6B9B57B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4056A286-E040-450F-BAD8-DE8E6B9B57B8}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4056A286-E040-450F-BAD8-DE8E6B9B57B8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{4056A286-E040-450F-BAD8-DE8E6B9B57B8}.Release|x86.ActiveCfg = Release|Any CPU
+		{4056A286-E040-450F-BAD8-DE8E6B9B57B8}.RunTests|Any CPU.ActiveCfg = Release|Any CPU
+		{4056A286-E040-450F-BAD8-DE8E6B9B57B8}.RunTests|Any CPU.Build.0 = Release|Any CPU
+		{4056A286-E040-450F-BAD8-DE8E6B9B57B8}.RunTests|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4056A286-E040-450F-BAD8-DE8E6B9B57B8}.RunTests|Mixed Platforms.Build.0 = Release|Any CPU
+		{4056A286-E040-450F-BAD8-DE8E6B9B57B8}.RunTests|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = d38aaf0d-8be1-4b81-a305-6434120ed494
 	EndGlobalSection
 EndGlobal
