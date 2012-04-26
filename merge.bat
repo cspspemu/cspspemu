@@ -1,6 +1,7 @@
 @ECHO OFF
 ECHO MERGE
 IF "%1"=="Debug" GOTO SKIP_DEBUG
+IF "%1"=="Trace" GOTO SKIP_DEBUG
 PUSHD %~dp0
 	REM SET BASE_FOLDER=CSPspEmu\bin\Debug
 	SET BASE_FOLDER=%~dp0\CSPspEmu\bin\Release

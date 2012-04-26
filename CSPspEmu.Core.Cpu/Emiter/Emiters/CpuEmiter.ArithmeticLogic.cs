@@ -192,12 +192,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		public void div() {
+			SafeILGenerator.Comment("DIV r" + RS + ", r" + RT);
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			MipsMethodEmiter.LoadGPR_Signed(RS);
 			MipsMethodEmiter.LoadGPR_Signed(RT);
 			SafeILGenerator.Call((Action<CpuThreadState, int, int>)CpuEmiter._div_impl);
 		}
 		public void divu() {
+			SafeILGenerator.Comment("DIVU r" + RS + ", r" + RT);
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			MipsMethodEmiter.LoadGPR_Unsigned(RS);
 			MipsMethodEmiter.LoadGPR_Unsigned(RT);

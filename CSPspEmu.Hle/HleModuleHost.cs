@@ -123,6 +123,7 @@ namespace CSPspEmu.Hle
 			bool NotImplementedFunc = (NotImplementedAttribute != null) ? NotImplementedAttribute.Notice : false;
 			bool SkipLog = HlePspFunctionAttribute.SkipLog;
 			var SafeILGenerator = MipsMethodEmiter.SafeILGenerator;
+			SafeILGenerator.Comment("HleModuleHost.CreateDelegateForMethodInfo(" + MethodInfo + ", " + HlePspFunctionAttribute + ")");
 
 			var ParamInfoList = new List<ParamInfo>();
 
@@ -231,6 +232,21 @@ namespace CSPspEmu.Hle
 
 						MipsMethodEmiter.LoadFPR(FprIndex);
 						FprIndex++;
+					}
+					// Test
+					else if (ParameterType == typeof(PspPointer))
+					{
+						ParamInfoList.Add(new ParamInfo()
+						{
+							ParameterName = ParameterInfo.Name,
+							RegisterType = ParamInfo.RegisterTypeEnum.Gpr,
+							RegisterIndex = GprIndex,
+							ParameterType = ParameterType,
+						});
+
+						MipsMethodEmiter.LoadGPR_Unsigned(GprIndex);
+						MipsMethodEmiter.CallMethod(typeof(PspPointer).GetMethod("op_Implicit", new[] { typeof(uint) }));
+						GprIndex++;
 					}
 					// An integer register
 					else

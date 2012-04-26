@@ -3,8 +3,6 @@ bin
 obj
 /TestResults
 *.suo
-*.testsettings
-*.vsmdi
 /Docs
 *.pidb
 *.vsp

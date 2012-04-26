@@ -117,7 +117,17 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				new Type[] { typeof(CpuThreadState) },
 				Assembly.GetExecutingAssembly().ManifestModule
 			);
-			SafeILGenerator = new SafeILGeneratorEx(DynamicMethod.GetILGenerator(), CheckTypes: false, DoDebug: false);
+			SafeILGenerator = new SafeILGeneratorEx(
+				DynamicMethod.GetILGenerator(),
+				CheckTypes: false,
+#if LOG_TRACE
+				DoDebug: true,
+				DoLog: true
+#else
+				DoDebug: false,
+				DoLog: false
+#endif
+			);
 #else
 			TypeBuilder = MipsEmiter.ModuleBuilder.DefineType("type" + UniqueCounter, TypeAttributes.Sealed | TypeAttributes.Public);
 			MethodBuilder = TypeBuilder.DefineMethod(
@@ -134,12 +144,26 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			SafeILGenerator.Return();
 
+			try
+			{
 #if USE_DYNAMIC_METHOD
-			return (Action<CpuThreadState>)DynamicMethod.CreateDelegate(typeof(Action<CpuThreadState>));
+				return (Action<CpuThreadState>)DynamicMethod.CreateDelegate(typeof(Action<CpuThreadState>));
 #else
 			var Type = TypeBuilder.CreateType();
 			return (Action<CpuThreadState>)Delegate.CreateDelegate(typeof(Action<CpuThreadState>), Type.GetMethod(MethodName));
 #endif
+			}
+			catch (InvalidProgramException InvalidProgramException)
+			{
+#if LOG_TRACE
+				Console.WriteLine("Invalid Delegate...");
+				foreach (var Line in SafeILGenerator.GetEmittedInstructions())
+				{
+					Console.WriteLine("  ## {0}", Line);
+				}
+#endif
+				throw (InvalidProgramException);
+			}
 		}
 
 		MethodBody GetMethodBody()
