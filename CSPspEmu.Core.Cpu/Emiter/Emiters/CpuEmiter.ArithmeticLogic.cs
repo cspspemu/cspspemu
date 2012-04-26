@@ -157,8 +157,34 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			LabelEnd.Mark();
 		}
 
-		public void max() { _max_min(SafeBinaryComparison.LessThanSigned); }
-		public void min() { _max_min(SafeBinaryComparison.GreaterThanSigned); }
+		unsafe static public int _max_impl(int Left, int Right) { return (Left > Right) ? Left : Right; }
+		unsafe static public int _min_impl(int Left, int Right) { return (Left < Right) ? Left : Right; }
+
+		public void max()
+		{
+#if true
+			_max_min(SafeBinaryComparison.LessThanSigned);
+#else
+			MipsMethodEmiter.SaveGPR(RD, () =>
+			{
+				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmiter.LoadGPR_Unsigned(RT);
+				SafeILGenerator.Call((Func<int, int, int>)CpuEmiter._max_impl);
+			});
+#endif
+		}
+		public void min() {
+#if true
+			_max_min(SafeBinaryComparison.GreaterThanSigned);
+#else
+			MipsMethodEmiter.SaveGPR(RD, () =>
+			{
+				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmiter.LoadGPR_Unsigned(RT);
+				SafeILGenerator.Call((Func<int, int, int>)CpuEmiter._min_impl);
+			});
+#endif
+		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// DIVide (Unsigned).

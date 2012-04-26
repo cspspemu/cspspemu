@@ -7,6 +7,7 @@ using System.Text;
 using System.Reflection.Emit;
 using System.Linq.Expressions;
 using System.Reflection;
+using CSharpUtils.Extensions;
 using CSPspEmu.Core.Memory;
 using Codegen;
 
@@ -121,7 +122,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				DynamicMethod.GetILGenerator(),
 				CheckTypes: false,
 #if LOG_TRACE
-				DoDebug: true,
+				DoDebug: false,
 				DoLog: true
 #else
 				DoDebug: false,
@@ -147,7 +148,32 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			try
 			{
 #if USE_DYNAMIC_METHOD
-				return (Action<CpuThreadState>)DynamicMethod.CreateDelegate(typeof(Action<CpuThreadState>));
+				var Method = (Action<CpuThreadState>)DynamicMethod.CreateDelegate(typeof(Action<CpuThreadState>));
+				return (CpuThreadState CpuThreadState) =>
+				{
+					try
+					{
+						Method(CpuThreadState);
+					}
+					catch (InvalidProgramException InvalidProgramException)
+					{
+#if LOG_TRACE
+						Console.WriteLine("Invalid Delegate:");
+						foreach (var Line in SafeILGenerator.GetEmittedInstructions())
+						{
+							if (Line.Substr(0, 1) == ":")
+							{
+								Console.WriteLine("{0}", Line);
+							}
+							else
+							{
+								Console.WriteLine("    {0}", Line);
+							}
+						}
+#endif
+						throw (InvalidProgramException);
+					}
+				};
 #else
 			var Type = TypeBuilder.CreateType();
 			return (Action<CpuThreadState>)Delegate.CreateDelegate(typeof(Action<CpuThreadState>), Type.GetMethod(MethodName));
@@ -156,7 +182,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			catch (InvalidProgramException InvalidProgramException)
 			{
 #if LOG_TRACE
-				Console.WriteLine("Invalid Delegate...");
+				Console.WriteLine("Invalid Delegate:");
 				foreach (var Line in SafeILGenerator.GetEmittedInstructions())
 				{
 					Console.WriteLine("  ## {0}", Line);
