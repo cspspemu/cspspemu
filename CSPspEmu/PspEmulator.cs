@@ -20,6 +20,7 @@ using CSPspEmu.Hle;
 using CSPspEmu.Runner;
 using CSPspEmu.Core.Audio.Impl.WaveOut;
 using CSPspEmu.Core.Audio.Impl.Openal;
+using CSPspEmu.Hle.Modules;
 
 namespace CSPspEmu
 {
@@ -162,7 +163,10 @@ namespace CSPspEmu
 
 				// GUI Thread.
 				Thread.CurrentThread.Name = "GuiThread";
-				Application.EnableVisualStyles();
+				if (Platform.OperatingSystem == Platform.OS.Windows)
+				{
+					Application.EnableVisualStyles();
+				}
 				Application.SetCompatibleTextRenderingDefault(false);
 				Application.Run(new PspDisplayForm(this, ShowMenus: ShowMenus, AutoLoad: AutoLoad, DefaultDisplayScale: ShowMenus ? 1 : 2));
 
@@ -215,6 +219,9 @@ namespace CSPspEmu
 					GC.Collect();
 				}
 
+				PspConfig.HleModulesDll = typeof(HleModulesRoot).Assembly;
+
+				/*
 				foreach (var FileName in new [] {
 					Path.GetDirectoryName(typeof(Program).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll",
 					Application.ExecutablePath,
@@ -226,6 +233,7 @@ namespace CSPspEmu
 						break;
 					}
 				}
+				*/
 				//
 
 				PspEmulatorContext = new PspEmulatorContext(PspConfig);
@@ -235,14 +243,17 @@ namespace CSPspEmu
 
 					var HasOpenal = new PspAudioOpenalImpl().IsWorking;
 
-					if (!HasOpenal && (Environment.OSVersion.Platform == PlatformID.Win32NT))
-					//if (false)
+					if (HasOpenal)
+					{
+						PspEmulatorContext.SetInstanceType<PspAudioImpl>(typeof(PspAudioOpenalImpl));
+					}
+					else if (Environment.OSVersion.Platform == PlatformID.Win32NT)
 					{
 						PspEmulatorContext.SetInstanceType<PspAudioImpl>(typeof(PspAudioWaveOutImpl));
 					}
 					else
 					{
-						PspEmulatorContext.SetInstanceType<PspAudioImpl>(typeof(PspAudioOpenalImpl));
+						PspEmulatorContext.SetInstanceType<PspAudioImpl>(typeof(AudioImplMock));
 					}
 
 					if (PspConfig.StoredConfig.UseFastMemory)

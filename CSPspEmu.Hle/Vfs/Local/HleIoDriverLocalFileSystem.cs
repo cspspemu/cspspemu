@@ -25,7 +25,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 		static public string GetSanitizedPath(string Path)
 		{
 			var Parts = new Stack<string>();
-			foreach (var Part in Path.Split('/', '\\'))
+			foreach (var Part in Path.Replace('\\', '/').Split('/'))
 			{
 				switch (Part)
 				{
@@ -42,7 +42,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 		protected string GetFullNormalizedAndSanitizedPath(string Path)
 		{
 			var Normalized = BasePath + "/" + GetSanitizedPath(Path);
-			Normalized = Normalized.Replace('/', '\\').Replace("\\\\", "\\");
+			Normalized = Normalized.Replace('\\', '/').Replace("//", "/");
 			return Normalized;
 		}
 

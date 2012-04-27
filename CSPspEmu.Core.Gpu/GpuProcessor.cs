@@ -7,6 +7,7 @@ using CSharpUtils.Extensions;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Threading.Synchronization;
 using CSPspEmu.Core.Memory;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Gpu
 {
@@ -118,7 +119,13 @@ namespace CSPspEmu.Core.Gpu
 		{
 			if (sizeof(GpuStateStruct) > sizeof(uint) * 512)
 			{
-				throw (new InvalidProgramException("GpuStateStruct too big. Maybe x64? . Size: " + sizeof(GpuStateStruct)));
+				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () =>
+				{
+					Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+					Console.WriteLine("GpuStateStruct too big. Maybe x64? . Size: " + sizeof(GpuStateStruct));
+					Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				});
+				
 			}
 
 			this.PspConfig = PspEmulatorContext.PspConfig;

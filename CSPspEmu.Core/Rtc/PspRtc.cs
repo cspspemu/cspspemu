@@ -75,10 +75,14 @@ namespace CSPspEmu.Core.Rtc
 				long Frequency;
 				Platform.QueryPerformanceCounter(out Counter);
 				Platform.QueryPerformanceFrequency(out Frequency);
+				var PrevTotalMicroseconds = TotalMicroseconds;
 				var CurrentTotalMicroseconds = Counter * 1000 * 1000 / Frequency;
-				if (CurrentTotalMicroseconds < TotalMicroseconds)
+				if (CurrentTotalMicroseconds < PrevTotalMicroseconds)
 				{
-					throw(new InvalidCastException("Total Microseconds overflow"));
+					ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () =>
+					{
+						Console.Error.WriteLine("Total Microseconds overflow Prev({0}), Now({1})", PrevTotalMicroseconds, CurrentTotalMicroseconds);
+					});
 				}
 				this.TotalMicroseconds = CurrentTotalMicroseconds;
 			}

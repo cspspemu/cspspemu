@@ -76,6 +76,7 @@
     <Compile Include="ge\sceGe_user.cs" />
     <Compile Include="ge\sceGe_user.DisplayList.cs" />
     <Compile Include="hen\libpspsystemctrl_kernel\SystemCtrlForKernel.cs" />
+    <Compile Include="HleModulesRoot.cs" />
     <Compile Include="hpremote\sceHprm.cs" />
     <Compile Include="hpremote\sceHprm_driver.cs" />
     <Compile Include="http\sceHttp.cs" />

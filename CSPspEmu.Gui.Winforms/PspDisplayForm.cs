@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CSPspEmu.Core;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -344,7 +345,8 @@ namespace CSPspEmu.Gui.Winforms
 		void Timer_Tick(object sender, EventArgs e)
 		{
 			SendControllerFrame();
-			if (!GameListComponent.Visible)
+			
+			if (GameListComponent == null || !GameListComponent.Visible)
 			{
 				Refresh();
 			}
@@ -464,6 +466,7 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void PspDisplayForm_KeyDown(object sender, KeyEventArgs e)
 		{
+			//Console.WriteLine("aaaaaaaaaaaa");
 			switch (e.KeyCode)
 			{
 				case Keys.D1: DisplayScale = 1; break;
@@ -494,6 +497,7 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void PspDisplayForm_KeyUp(object sender, KeyEventArgs e)
 		{
+			Console.WriteLine("Keup!");
 			var Key = e.KeyCode;
 
 			TryUpdateAnalog(e.KeyCode, false);
@@ -535,7 +539,7 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			this.Invoke(new Action(() =>
 			{
-				GameListComponent.Visible = false;
+				if (GameListComponent != null) GameListComponent.Visible = false;
 			}));
 
 			OpenRecentHook(FilePath);
@@ -824,7 +828,7 @@ namespace CSPspEmu.Gui.Winforms
 			LanguageUpdated();
 		}
 
-		GameListComponent GameListComponent = new GameListComponent();
+		GameListComponent GameListComponent;
 
 		private void PspDisplayForm_Load_1(object sender, EventArgs e)
 		{
@@ -839,31 +843,37 @@ namespace CSPspEmu.Gui.Winforms
 				CheckForUpdates(NotifyIfNotFound: false);
 			}
 
-			GameListComponent.SelectedItem += (IsoFile) =>
+			if (Platform.OperatingSystem == Platform.OS.Windows)
+			//if (false)
 			{
-				OpenFileRealOnNewThreadLock(IsoFile);
-			};
-			GameListComponent.Dock = DockStyle.Fill;
+				GameListComponent = new GameListComponent();
 
-			//PspConfig.IsosPath = @"e:\isos\pspa";
-			if (!AutoLoad)
-			{
-				RefreshGameList();
-				GameListComponent.Visible = true;
-			}
-			else
-			{
-				GameListComponent.Visible = false;
-			}
+				GameListComponent.SelectedItem += (IsoFile) =>
+				{
+					OpenFileRealOnNewThreadLock(IsoFile);
+				};
+				GameListComponent.Dock = DockStyle.Fill;
 
-			GameListComponent.Parent = this;
+				//PspConfig.IsosPath = @"e:\isos\pspa";
+				if (!AutoLoad)
+				{
+					RefreshGameList();
+					GameListComponent.Visible = true;
+				}
+				else
+				{
+					GameListComponent.Visible = false;
+				}
+
+				GameListComponent.Parent = this;
+			}
 		}
 
 		public void RefreshGameList()
 		{
 			ThreadPool.QueueUserWorkItem((state) =>
 			{
-				GameListComponent.Init(PspConfig.StoredConfig.IsosPath, ApplicationPaths.MemoryStickRootFolder);
+				if (GameListComponent != null) GameListComponent.Init(PspConfig.StoredConfig.IsosPath, ApplicationPaths.MemoryStickRootFolder);
 			});
 		}
 

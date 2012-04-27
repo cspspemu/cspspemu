@@ -7,6 +7,7 @@ using CSPspEmu.Core.Cpu.Emiter;
 using System.Reflection;
 using CSPspEmu.Core;
 using CSharpUtils.Extensions;
+using CSharpUtils;
 
 namespace CSPspEmu.Hle.Managers
 {
@@ -24,6 +25,7 @@ namespace CSPspEmu.Hle.Managers
 		static public IEnumerable<Type> GetAllHleModules(Assembly ModulesAssembly)
 		{
 			var FindType = typeof(HleModuleHost);
+			//foreach (var Type in ModulesAssembly.GetTypes()) Console.WriteLine(Type);
 			return ModulesAssembly.GetTypes().Where(Type => FindType.IsAssignableFrom(Type));
 		}
 
@@ -41,6 +43,17 @@ namespace CSPspEmu.Hle.Managers
 			HleModuleTypes = GetAllHleModules(PspEmulatorContext.PspConfig.HleModulesDll).ToDictionary(Type => Type.Name);
 			HleThreadManager = PspEmulatorContext.GetInstance<HleThreadManager>();
 			Console.WriteLine("HleModuleTypes: {0}", HleModuleTypes.Count);
+
+			if (HleModuleTypes.Count < 10)
+			{
+				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () =>
+				{
+					Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!");
+					Console.WriteLine("Can't find HLE modules!!");
+					Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!");
+				});
+			}
+
 			CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();
 			PspConfig = CpuProcessor.PspConfig;
 
