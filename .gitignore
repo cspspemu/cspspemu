@@ -37,5 +37,5 @@ obj
 *.sdf
 *.log
 /version_current_numeric.txt
-/deploy/cspspemu/src
-/deploy/cspspemu/ms
+/version_current_numeric.txt
+/_ReSharper.CSPspEmu-2010
