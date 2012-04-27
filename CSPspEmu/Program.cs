@@ -38,6 +38,7 @@ namespace CSPspEmu
 		[STAThread]
 		static void Main(string[] Arguments)
 		{
+			Console.WriteLine("Running ... plat:{0} ... int*:{1}", Environment.Is64BitProcess ? "x64" : "x86", sizeof(int*));
 #if false
 			Console.WriteLine(CSPspEmu.Resources.Translations.GetString("extra", "UnknownGame"));
 			Console.ReadKey(); Environment.Exit(0);

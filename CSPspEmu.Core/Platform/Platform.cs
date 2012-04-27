@@ -9,6 +9,48 @@ namespace CSPspEmu.Core
 {
 	unsafe public class Platform
 	{
+		public enum OS
+		{
+			Windows,
+			Posix,
+		}
+
+		static public OS OperatingSystem;
+
+
+		static Platform()
+		{
+			switch (Environment.OSVersion.Platform)
+			{
+				case PlatformID.Win32NT:
+				case PlatformID.Win32Windows:
+				case PlatformID.WinCE:
+				case PlatformID.Win32S:
+					OperatingSystem = OS.Windows;
+					break;
+				case PlatformID.MacOSX:
+				case PlatformID.Unix:
+					OperatingSystem = OS.Posix;
+					break;
+				default:
+					throw(new NotImplementedException());
+			}
+		}
+
+		public struct timespec
+		{
+			public long sec;
+			public long usec;
+
+			public long total_usec
+			{
+				get
+				{
+					return (long)usec + (long)sec * 1000 * 1000;
+				}
+			}
+		}
+
 		private class Internal
 		{
 			[DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
@@ -31,6 +73,12 @@ namespace CSPspEmu.Core
 
 			[DllImport("libc", EntryPoint = "mprotect")]
 			internal static extern int mprotect(void* start, ulong len, uint prot);
+
+			[DllImport("librt", EntryPoint = "clock_getres")]
+			internal static extern int clock_getres(int clock_id, out timespec timespec);
+
+			[DllImport("librt", EntryPoint = "clock_gettime")]
+			internal static extern int clock_gettime(int clock_id, out timespec timespec);
 
 			[DllImport("Kernel32.dll")]
 			internal static extern bool QueryPerformanceCounter(out long lpPerformanceCount);
@@ -64,12 +112,9 @@ namespace CSPspEmu.Core
 
 		static public void* AllocRange(void* Address, uint Size)
 		{
-			switch (Environment.OSVersion.Platform)
+			switch (OperatingSystem)
 			{
-				case PlatformID.Win32NT:
-				case PlatformID.Win32Windows:
-				case PlatformID.WinCE:
-				case PlatformID.Win32S:
+				case OS.Windows:
 					{
 						var Pointer = Internal.VirtualAlloc(Address, Size, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 
@@ -77,7 +122,7 @@ namespace CSPspEmu.Core
 						PointerUtils.Memset(Pointer, 0, (int)Size);
 						return Pointer;
 					}
-				case PlatformID.Unix:
+				case OS.Posix:
 					void* result = Internal.mmap(Address, Size, PROT_NONE, MAP_PRIVATE | MAP_ANON, 0);
 					int result3 = Internal.mprotect(Address, Size, PROT_READ | PROT_WRITE);
 					return result;
@@ -87,12 +132,38 @@ namespace CSPspEmu.Core
 
 		static public bool QueryPerformanceCounter(out long lpPerformanceCount)
 		{
-			return Internal.QueryPerformanceCounter(out lpPerformanceCount);
+			if (OperatingSystem == OS.Windows)
+			{
+				return Internal.QueryPerformanceCounter(out lpPerformanceCount);
+			}
+			else
+			{
+				var timespec = default(timespec);
+				//Console.WriteLine("clock_gettime: {0} :: {1}", timespec.sec, timespec.usec);
+				Internal.clock_gettime(0, out timespec);
+				//Console.WriteLine("clock_gettime: {0} :: {1}", timespec.sec, timespec.usec);
+				//Console.WriteLine("clock_gettime: {0}", timespec.total_usec);
+				lpPerformanceCount = timespec.total_usec;
+				return true;
+			}
 		}
 
 		static public bool QueryPerformanceFrequency(out long lpFrequency)
 		{
-			return Internal.QueryPerformanceFrequency(out lpFrequency);
+			if (OperatingSystem == OS.Windows)
+			{
+				return Internal.QueryPerformanceFrequency(out lpFrequency);
+			}
+			else
+			{
+				var timespec = default(timespec);
+				//Console.WriteLine("clock_getres: {0} :: {1}", timespec.sec, timespec.usec);
+				Internal.clock_getres(0, out timespec);
+				//Console.WriteLine("clock_getres: {0} :: {1}", timespec.sec, timespec.usec);
+				//Console.WriteLine("clock_getres: {0}", timespec.total_usec);
+				lpFrequency = timespec.total_usec;
+				return true;
+			}
 		}
 
 		static public bool IsDebuggerPresent()

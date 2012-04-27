@@ -11,6 +11,7 @@ using CSPspEmu.Runner.Components.Audio;
 using CSPspEmu.Runner.Components.Cpu;
 using CSPspEmu.Runner.Components.Display;
 using CSPspEmu.Runner.Components.Gpu;
+using CSharpUtils;
 
 namespace CSPspEmu.Runner
 {
@@ -28,7 +29,13 @@ namespace CSPspEmu.Runner
 		{
 			if (sizeof(uint*) != 4)
 			{
-				throw(new NotImplementedException("At the moment the only supported target is 32-bits"));
+				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () =>
+				{
+					Console.Error.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+					Console.Error.WriteLine("WARNING: At the moment the only supported target is 32-bits : " + sizeof(uint*));
+					Console.Error.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				});
+				//throw(new NotImplementedException("At the moment the only supported target is 32-bits"));
 			}
 
 			RunnableComponentList.Add(CpuComponentThread = PspEmulatorContext.GetInstance<CpuComponentThread>());
