@@ -1,5 +1,5 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Core", "CSPspEmu.Core\CSPspEmu.Core.csproj", "{F783ECD3-0F79-43CC-ABD0-D356A64049C4}"
 EndProject
