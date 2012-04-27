@@ -239,23 +239,22 @@ namespace CSPspEmu
 				PspEmulatorContext = new PspEmulatorContext(PspConfig);
 
 				{
+					// GPU
 					PspEmulatorContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
 
-					var HasOpenal = new PspAudioOpenalImpl().IsWorking;
-
-					if (HasOpenal)
+					// AUDIO
+					var AvailableAudioImplementations = new[] { typeof(PspAudioOpenalImpl), typeof(PspAudioWaveOutImpl), typeof(AudioImplMock) };
+					foreach (var AudioType in AvailableAudioImplementations)
 					{
-						PspEmulatorContext.SetInstanceType<PspAudioImpl>(typeof(PspAudioOpenalImpl));
+						if (((PspAudioImpl)Activator.CreateInstance(AudioType)).IsWorking)
+						{
+							// Found a working implementation
+							PspEmulatorContext.SetInstanceType<PspAudioImpl>(AudioType);
+							break;
+						}
 					}
-					else if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-					{
-						PspEmulatorContext.SetInstanceType<PspAudioImpl>(typeof(PspAudioWaveOutImpl));
-					}
-					else
-					{
-						PspEmulatorContext.SetInstanceType<PspAudioImpl>(typeof(AudioImplMock));
-					}
-
+					
+					// Memory
 					if (PspConfig.StoredConfig.UseFastMemory)
 					{
 						PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();

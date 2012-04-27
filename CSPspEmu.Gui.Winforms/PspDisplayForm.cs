@@ -497,7 +497,7 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void PspDisplayForm_KeyUp(object sender, KeyEventArgs e)
 		{
-			Console.WriteLine("Keup!");
+			//Console.WriteLine("Keup!");
 			var Key = e.KeyCode;
 
 			TryUpdateAnalog(e.KeyCode, false);

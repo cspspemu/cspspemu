@@ -92,7 +92,12 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut
 
 		public override bool IsWorking
 		{
-			get { return true;  }
+			get
+			{
+				if (Platform.OperatingSystem != Platform.OS.Windows) return false;
+				if (WaveOutPlayer.DeviceCount == 0) return false;
+				return true;
+			}
 		}
 	}
 }

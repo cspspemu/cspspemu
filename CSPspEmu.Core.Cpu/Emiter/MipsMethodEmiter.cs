@@ -149,6 +149,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 #if USE_DYNAMIC_METHOD
 				var Method = (Action<CpuThreadState>)DynamicMethod.CreateDelegate(typeof(Action<CpuThreadState>));
+#else
+			var Type = TypeBuilder.CreateType();
+			return (Action<CpuThreadState>)Delegate.CreateDelegate(typeof(Action<CpuThreadState>), Type.GetMethod(MethodName));
+#endif
+
+#if !LOG_TRACE
+				return Method;
+#else
 				return (CpuThreadState CpuThreadState) =>
 				{
 					try
@@ -157,7 +165,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					}
 					catch (InvalidProgramException InvalidProgramException)
 					{
-#if LOG_TRACE
 						Console.WriteLine("Invalid Delegate:");
 						foreach (var Line in SafeILGenerator.GetEmittedInstructions())
 						{
@@ -170,13 +177,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 								Console.WriteLine("    {0}", Line);
 							}
 						}
-#endif
 						throw (InvalidProgramException);
 					}
 				};
-#else
-			var Type = TypeBuilder.CreateType();
-			return (Action<CpuThreadState>)Delegate.CreateDelegate(typeof(Action<CpuThreadState>), Type.GetMethod(MethodName));
 #endif
 			}
 			catch (InvalidProgramException InvalidProgramException)
