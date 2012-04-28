@@ -293,6 +293,7 @@ namespace CSPspEmu.Hle.Formats
 			}
 		}
 
+		[Flags]
 		public enum FlagsEnum : byte
 		{
 			Unknown1 = 1 << 0,

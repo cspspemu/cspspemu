@@ -13,6 +13,7 @@ namespace CSPspEmu.Hle.Modules.power
 		/// <summary>
 		/// Power callback flags
 		/// </summary>
+		[Flags]
 		public enum PowerFlagsSet : uint
 		{
 			/// <summary>

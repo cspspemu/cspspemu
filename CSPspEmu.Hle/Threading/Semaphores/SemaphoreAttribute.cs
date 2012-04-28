@@ -5,6 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Hle.Threading.Semaphores
 {
+	[Flags]
 	public enum SemaphoreAttribute : uint
 	{
 		/// <summary>

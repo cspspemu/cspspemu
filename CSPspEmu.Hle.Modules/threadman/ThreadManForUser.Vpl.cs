@@ -260,6 +260,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// 
 		/// </summary>
+		[Flags]
 		public enum VplAttributeEnum : uint
 		{
 			/// <summary>

@@ -9,6 +9,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
 	unsafe public partial class sceUsb : HleModuleHost
 	{
+		[Flags]
 		public enum UsbStateEnum : uint
 		{
 			/// <summary>

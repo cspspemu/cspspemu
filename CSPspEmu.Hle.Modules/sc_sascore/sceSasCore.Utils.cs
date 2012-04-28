@@ -96,6 +96,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		PSP_SAS_EFFECT_TYPE_PIPE = 8,
 	}
 
+	[Flags]
 	public enum AdsrFlags : uint
 	{
 		hasAttack = (1 << 0),

@@ -12,6 +12,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 {
 	unsafe public partial class ThreadManForUser
 	{
+		[Flags]
 		public enum MbxAttributesEnum : uint
 		{
 			/// <summary>

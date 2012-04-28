@@ -14,6 +14,7 @@ namespace CSPspEmu.Core.Cpu.Table
 		Reg = 3,
 	}
 
+	[Flags]
 	public enum InstructionType
 	{
 		None   = 0x00,

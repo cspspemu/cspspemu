@@ -120,7 +120,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 			/// Number of elements in the font's shadow charmap.
 			/// </summary>
 			public uint ShadowMapLength;
-    
+	
 			/// <summary>
 			/// Font style (used by font comparison functions).
 			/// </summary>
@@ -177,7 +177,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 			public Fixed26_6 AdvanceH;
 			public Fixed26_6 AdvanceV;
 			public int Padding;
-    
+	
 			//static assert(this.sizeof == 4 * 15);
 		}
 

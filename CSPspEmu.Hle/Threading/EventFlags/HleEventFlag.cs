@@ -138,6 +138,7 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 	/// <summary>
 	/// Event flag wait types
 	/// </summary>
+	[Flags]
 	public enum EventFlagWaitTypeSet : uint
 	{
 		/// <summary>

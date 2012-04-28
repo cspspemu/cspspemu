@@ -87,11 +87,11 @@ namespace CSPspEmu.Hle.Modules.utility
 
 	}
 
-	/**
-	 * IDs for use inSystemParam functions
-	 * PSP_SYSTEMPARAM_ID_INT    are for use with SystemParamInt    funcs
-	 * PSP_SYSTEMPARAM_ID_STRING are for use with SystemParamString funcs
-	 */
+	/// <summary>
+	/// IDs for use inSystemParam functions
+	/// PSP_SYSTEMPARAM_ID_INT    are for use with SystemParamInt    funcs
+	/// PSP_SYSTEMPARAM_ID_STRING are for use with SystemParamString funcs
+	/// </summary>
 	public enum PSP_SYSTEMPARAM_ID
 	{
 		STRING_NICKNAME = 1,
@@ -105,18 +105,18 @@ namespace CSPspEmu.Hle.Modules.utility
 		INT_BUTTON_PREFERENCE = 9,
 	}
 
-	/**
-	 * Return values for the SystemParam functions
-	 */
+	/// <summary>
+	/// Return values for the SystemParam functions
+	/// </summary>
 	public enum PSP_SYSTEMPARAM_RETVAL : uint
 	{
 		OK = 0,
 		FAIL = 0x80110103,
 	}
 
-	/**
-	 * Valid values for PSP_SYSTEMPARAM_ID_INT_ADHOC_CHANNEL
-	 */
+	/// <summary>
+	/// Valid values for PSP_SYSTEMPARAM_ID_INT_ADHOC_CHANNEL
+	/// </summary>
 	public enum PSP_SYSTEMPARAM_ADHOC_CHANNEL
 	{
 		AUTOMATIC = 0,
@@ -125,18 +125,18 @@ namespace CSPspEmu.Hle.Modules.utility
 		C11 = 11,
 	}
 
-	/**
-	 * Valid values for PSP_SYSTEMPARAM_ID_INT_WLAN_POWERSAVE
-	 */
+	/// <summary>
+	/// Valid values for PSP_SYSTEMPARAM_ID_INT_WLAN_POWERSAVE
+	/// </summary>
 	public enum PSP_SYSTEMPARAM_WLAN_POWERSAVE
 	{
 		OFF = 0,
 		ON = 1,
 	}
 
-	/**
-	 * Valid values for PSP_SYSTEMPARAM_ID_INT_DATE_FORMAT
-	 */
+	/// <summary>
+	/// Valid values for PSP_SYSTEMPARAM_ID_INT_DATE_FORMAT
+	/// </summary>
 	public enum PSP_SYSTEMPARAM_DATE_FORMAT
 	{
 		YYYYMMDD = 0,
@@ -144,28 +144,27 @@ namespace CSPspEmu.Hle.Modules.utility
 		DDMMYYYY = 2,
 	}
 
-	/**
-	 * Valid values for PSP_SYSTEMPARAM_ID_INT_TIME_FORMAT
-	 */
+	/// <summary>
+	/// Valid values for PSP_SYSTEMPARAM_ID_INT_TIME_FORMAT
+	/// </summary>
 	public enum PSP_SYSTEMPARAM_TIME_FORMAT
 	{
 		_24HR = 0,
 		_12HR = 1,
 	}
 
-	/**
-	 * Valid values for PSP_SYSTEMPARAM_ID_INT_DAYLIGHTSAVINGS
-	 */
+	/// <summary>
+	/// Valid values for PSP_SYSTEMPARAM_ID_INT_DAYLIGHTSAVINGS
+	/// </summary>
 	public enum PSP_SYSTEMPARAM_DAYLIGHTSAVINGS
 	{
 		STD = 0,
 		SAVING = 1,
 	}
 
-	/**
-	 * Valid values for PSP_SYSTEMPARAM_ID_INT_LANGUAGE
-	 */
-	/*
+	/// <summary>
+	/// Valid values for PSP_SYSTEMPARAM_ID_INT_LANGUAGE
+	/// </summary>
 	public enum PSP_SYSTEMPARAM_LANGUAGE
 	{
 		JAPANESE = 0,
@@ -181,19 +180,17 @@ namespace CSPspEmu.Hle.Modules.utility
 		CHINESE_TRADITIONAL = 10,
 		CHINESE_SIMPLIFIED = 11,
 	}
-	*/
 
-	/**
-	 * #9 seems to be Region or maybe X/O button swap.
-	 * It doesn't exist on JAP v1.0
-	 * is 1 on NA v1.5s
-	 * is 0 on JAP v1.5s
-	 * is read-only
-	 */
+	/// <summary>
+	/// #9 seems to be Region or maybe X/O button swap.
+	/// It doesn't exist on JAP v1.0
+	/// is 1 on NA v1.5s
+	/// is 0 on JAP v1.5s
+	/// is read-only
+	/// </summary>
 	public enum PSP_SYSTEMPARAM_BUTTON_PREFERENCE
 	{
 		JAP = 0,
 		NA = 1,
 	}
-
 }

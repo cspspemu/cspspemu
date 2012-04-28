@@ -981,6 +981,7 @@ namespace CSPspEmu.Gui.Winforms
 			}
 		}
 
+		[Flags]
 		public enum PspCtrlAnalog
 		{
 			Left = (1 << 0),

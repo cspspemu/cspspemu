@@ -10,6 +10,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 {
 	unsafe public partial class ThreadManForUser
 	{
+		[Flags]
 		public enum FplAttributes : uint
 		{
 			/// <summary>

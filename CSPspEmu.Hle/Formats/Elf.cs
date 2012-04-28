@@ -132,6 +132,7 @@ namespace CSPspEmu.Hle.Formats
 				Reloc2 = 0x700000A1,
 			}
 
+			[Flags]
 			public enum FlagsSet : uint
 			{
 				Executable = 0x1,

@@ -196,6 +196,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			PSP_UTILITY_MSGDIALOG_MODE_TEXT  = 1, // String message
 		}
 
+		[Flags]
 		public enum pspUtilityMsgDialogOption
 		{
 			PSP_UTILITY_MSGDIALOG_OPTION_ERROR         = 0x00000000, // Error message (why two flags?)
@@ -745,6 +746,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// <summary>
 		/// Enumeration for input types (these are limited by initial choice of language)
 		/// </summary>
+		[Flags]
 		public enum SceUtilityOskInputType
 		{
 			/// <summary>

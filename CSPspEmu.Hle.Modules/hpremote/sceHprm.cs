@@ -12,6 +12,7 @@ namespace CSPspEmu.Hle.Modules.hpremote
 		/// <summary>
 		/// Enumeration of the remote keys
 		/// </summary>
+		[Flags]
 		public enum PspHprmKeysEnum : uint
 		{
 			None = 0,

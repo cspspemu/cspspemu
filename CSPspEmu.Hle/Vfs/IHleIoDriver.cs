@@ -5,6 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Hle.Vfs
 {
+	[Flags]
 	public enum HleIoFlags : uint
 	{
 		Read = 0x0001,
@@ -87,6 +88,7 @@ namespace CSPspEmu.Hle.Vfs
 	/// <summary>
 	/// Access modes for st_mode in SceIoStat (confirm?).
 	/// </summary>
+	[Flags]
 	public enum SceMode : uint
 	{
 		/// <summary>
@@ -190,6 +192,7 @@ namespace CSPspEmu.Hle.Vfs
 	/// <summary>
 	/// File modes, used for the st_attr parameter in SceIoStat (confirm?).
 	/// </summary>
+	[Flags]
 	public enum IOFileModes : uint
 	{
 		/// <summary>

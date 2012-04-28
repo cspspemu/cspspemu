@@ -9,6 +9,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 	{
 		public Instruction Instruction;
 
+		[Flags]
 		public enum Flags
 		{
 			NormalInstruction = (1 << 0),

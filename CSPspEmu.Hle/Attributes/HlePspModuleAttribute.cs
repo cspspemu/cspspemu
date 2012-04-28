@@ -5,6 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Hle.Attributes
 {
+	[Flags]
 	public enum ModuleFlags : uint
 	{
 		Flags0x00010011 = 0x00010011,

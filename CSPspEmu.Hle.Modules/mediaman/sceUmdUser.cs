@@ -243,6 +243,7 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		/// <summary>
 		/// Enumeration for UMD types
 		/// </summary>
+		[Flags]
 		public enum pspUmdTypes : uint
 		{
 			/// <summary>
@@ -292,7 +293,10 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		}
 	}
 
-	/** Enumeration for UMD drive state */
+	/// <summary>
+	/// Enumeration for UMD drive state
+	/// </summary>
+	[Flags]
 	public enum PspUmdState : uint
 	{
 		PSP_UMD_INIT = 0x00,

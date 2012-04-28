@@ -5,6 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Core.Gpu.State.SubStates
 {
+	[Flags]
 	public enum LightComponentsSet {
 		Ambient = 1,
 		Diffuse = 2,

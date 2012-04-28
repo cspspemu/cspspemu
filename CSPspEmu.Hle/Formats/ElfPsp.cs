@@ -8,12 +8,14 @@ namespace CSPspEmu.Hle.Formats
 {
 	unsafe public class ElfPsp
 	{
+		[Flags]
 		public enum ModuleFlags : ushort
 		{
 			User   = 0x0000,
 			Kernel = 0x1000,
 		}
 
+		[Flags]
 		public enum LibFlags : ushort
 		{
 			DirectJump = 0x0001,

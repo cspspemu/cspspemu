@@ -13,6 +13,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 {
 	unsafe public partial class ThreadManForUser
 	{
+		[Flags]
 		public enum MsgPipeAttributes : uint
 		{
 			/// <summary>
@@ -21,6 +22,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			UseHighAddress = 0x4000,
 		}
 
+		[Flags]
 		public enum MsgPipeReceiveAttributes : uint
 		{
 			PSP_MPP_ATTR_RECEIVE_FIFO = 0,
@@ -29,6 +31,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			PSP_MPP_ATTR_RECEIVE = PSP_MPP_ATTR_RECEIVE_FIFO | PSP_MPP_ATTR_RECEIVE_PRIORITY,
 		}
 
+		[Flags]
 		public enum MsgPipeSendAttributes : uint
 		{
 			PSP_MPP_ATTR_SEND_FIFO = 0,

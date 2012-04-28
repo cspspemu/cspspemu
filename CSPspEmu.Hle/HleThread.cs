@@ -19,6 +19,7 @@ using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle
 {
+	[Flags]
 	public enum PspThreadAttributes : uint
 	{
 		/// <summary>
@@ -482,6 +483,7 @@ namespace CSPspEmu.Hle
 			Mutex,
 		}
 
+		[Flags]
 		public enum Status
 		{
 			/// <summary>
@@ -569,6 +571,7 @@ namespace CSPspEmu.Hle
 	};
 	*/
 
+	[Flags]
 	public enum PspThreadStatus : uint
 	{
 		/// <summary>

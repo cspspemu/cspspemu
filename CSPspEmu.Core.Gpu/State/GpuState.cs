@@ -189,6 +189,7 @@ namespace CSPspEmu.Core.Gpu.State
 		Smooth = 1,
 	}
 
+	[Flags]
 	public enum ClearBufferSet : byte
 	{
 		ColorBuffer = 1,
