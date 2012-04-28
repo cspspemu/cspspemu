@@ -55,7 +55,7 @@ namespace CSPspEmu.Hle.Modules.utils
 			{
 				HleState.PspRtc.Update();
 				ulong MicroSeconds = (ulong)(HleState.PspRtc.Elapsed.TotalMilliseconds * 1000);
-				ulong MicroSecondsInASecond = 1000 * 1000;
+				const ulong MicroSecondsInASecond = 1000 * 1000;
 				TimeVal->Seconds = (uint)(MicroSeconds / MicroSecondsInASecond);
 				TimeVal->Microseconds = (uint)(MicroSeconds % MicroSecondsInASecond);
 				//TimeVal->Seconds = 0;
