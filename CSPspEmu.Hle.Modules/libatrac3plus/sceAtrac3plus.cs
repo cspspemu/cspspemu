@@ -5,7 +5,6 @@ using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Modules.threadman;
 using CSharpUtils;
-using CSharpUtils.Extensions;
 using CSPspEmu.Hle.Managers;
 using System.IO;
 using System.Runtime.InteropServices;

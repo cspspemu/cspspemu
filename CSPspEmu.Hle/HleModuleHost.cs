@@ -8,7 +8,6 @@ using CSPspEmu.Core.Cpu.Emiter;
 using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using CSharpUtils;
-using CSharpUtils.Extensions;
 using CSharpUtils.Threading;
 using CSPspEmu.Core.Memory;
 

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
-using CSharpUtils.Extensions;
 using System.Security.Cryptography;
 using System.Runtime.InteropServices;
 using System.IO;
@@ -16,6 +15,8 @@ namespace CSPspEmu.Core.Crypto
 
 	unsafe public partial class Kirk
 	{
+		static Logger Logger = Logger.GetLogger("Kirk");
+
 		//small struct for temporary keeping AES & CMAC key from CMD1 header
 		struct header_keys
 		{
@@ -117,7 +118,6 @@ namespace CSPspEmu.Core.Crypto
 			{
 				check_initialized();
 				var header = (AES128CMACHeader*)inbuff;
-				//Console.WriteLine(MathUtils.ByteSwap(header->Mode));
 				if (header->Mode != KirkMode.Cmd1) throw (new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE));
 
 				header_keys keys; //0-15 AES key, 16-31 CMAC key
@@ -280,12 +280,12 @@ namespace CSPspEmu.Core.Crypto
 
 				if (Crypto.memcmp(cmac_header_hash, header->CMAC_header_hash, 16) != 0)
 				{
-					Console.WriteLine("header hash invalid");
+					Logger.Error("header hash invalid");
 					throw (new KirkException(ResultEnum.PSP_SUBCWR_HEADER_HASH_INVALID));
 				}
 				if (Crypto.memcmp(cmac_data_hash, header->CMAC_data_hash, 16) != 0)
 				{
-					Console.WriteLine("data hash invalid");
+					Logger.Error("data hash invalid");
 					throw (new KirkException(ResultEnum.PSP_SUBCWR_HEADER_HASH_INVALID));
 				}
 			}
@@ -466,8 +466,8 @@ namespace CSPspEmu.Core.Crypto
 				}
 				else
 				{
+					Logger.Error("data hash is already valid!");
 					throw(new NotImplementedException());
-					//Console.Error.WriteLine("data hash is already valid!");
 					//return 100;
 				}
 				// Forge collision for data hash

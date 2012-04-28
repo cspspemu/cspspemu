@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Core;
 using System.IO;
-using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Managers
 {

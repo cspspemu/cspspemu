@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 using CSharpUtils;
-using CSharpUtils.Extensions;
 using System.IO;
 
 namespace CSPspEmu.Core.Memory
 {
 	unsafe abstract public class PspMemory : PspEmulatorComponent, IResetable, IDisposable
 	{
+		static internal Logger Logger = Logger.GetLogger("Memory");
+
 		public const uint MemoryMask = 0x1FFFFFFF;
 
 		public class InvalidAddressException : Exception

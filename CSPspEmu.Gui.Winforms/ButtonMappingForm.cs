@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using CSPspEmu.Core;
-using CSharpUtils.Extensions;
 using System.Windows.Input;
 using System.Globalization;
 

@@ -14,7 +14,6 @@ using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Runner;
-using CSharpUtils.Extensions;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.Drawing;

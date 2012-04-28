@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Gpu.State.SubStates;
-using CSharpUtils.Extensions;
 
 #if OPENTK
 using OpenTK.Graphics.OpenGL;

@@ -7,7 +7,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using CSharpUtils;
 using CSharpUtils.Endian;
-using CSharpUtils.Extensions;
 using CSharpUtils.Streams;
 
 namespace CSPspEmu.Hle.Formats

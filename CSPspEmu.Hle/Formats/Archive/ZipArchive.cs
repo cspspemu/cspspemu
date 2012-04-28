@@ -6,7 +6,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using ComponentAce.Compression.Libs.zlib;
-using CSharpUtils.Extensions;
 using CSPspEmu.Hle.Utils;
 
 namespace CSPspEmu.Hle.Formats.Archive

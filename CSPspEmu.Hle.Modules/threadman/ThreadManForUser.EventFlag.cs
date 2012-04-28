@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Threading.EventFlags;
-using CSharpUtils.Extensions;
 using CSharpUtils;
 
 namespace CSPspEmu.Hle.Modules.threadman

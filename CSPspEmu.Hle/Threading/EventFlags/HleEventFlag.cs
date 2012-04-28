@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
-using CSharpUtils.Extensions;
 using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Threading.EventFlags

@@ -6,7 +6,6 @@ using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Cpu.Emiter;
 using System.Reflection;
 using CSPspEmu.Core;
-using CSharpUtils.Extensions;
 using CSharpUtils;
 
 namespace CSPspEmu.Hle.Managers

@@ -5,7 +5,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using ComponentAce.Compression.Libs.zlib;
-using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Formats
 {

@@ -7,7 +7,6 @@ using CSPspEmu.Hle.Formats;
 using CSPspEmu.Hle.Loader;
 using CSPspEmu.Core.Memory;
 using CSharpUtils;
-using CSharpUtils.Extensions;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core.Cpu.Emiter;
 

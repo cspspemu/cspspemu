@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Drawing;
 using CSharpUtils;
-using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Formats.Font
 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace CSPspEmu.Core
 {
@@ -10,7 +11,7 @@ namespace CSPspEmu.Core
 	{
 		static public void IsDebuggerPresentDebugBreak()
 		{
-			if (Platform.IsDebuggerPresent()) Platform.DebugBreak();
+			if (Debugger.IsAttached) Debugger.Break();
 		}
 	}
 }

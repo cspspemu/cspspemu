@@ -5,7 +5,6 @@ using System.Text;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Core.Threading.Synchronization;
 using CSharpUtils;
-using CSharpUtils.Extensions;
 using System.Drawing;
 using CSPspEmu.Core.Utils;
 using CSPspEmu.Core.Memory;

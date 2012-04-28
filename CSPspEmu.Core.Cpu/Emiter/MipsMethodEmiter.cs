@@ -7,7 +7,6 @@ using System.Text;
 using System.Reflection.Emit;
 using System.Linq.Expressions;
 using System.Reflection;
-using CSharpUtils.Extensions;
 using CSPspEmu.Core.Memory;
 using Codegen;
 

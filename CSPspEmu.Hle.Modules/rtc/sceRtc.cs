@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Vfs;
-using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Modules.rtc
 {

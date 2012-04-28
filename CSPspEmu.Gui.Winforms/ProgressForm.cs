@@ -20,13 +20,19 @@ namespace CSPspEmu.Gui.Winforms
 
 		public void SetProgress(string Title, int Current, int Total)
 		{
-			this.Invoke(new Action(() =>
+			try
 			{
-				label1.Text = Title;
-				progressBar1.Minimum = 0;
-				progressBar1.Value = Current;
-				progressBar1.Maximum = Total;
-			}));
+				this.Invoke(new Action(() =>
+				{
+					label1.Text = Title;
+					progressBar1.Minimum = 0;
+					progressBar1.Value = Current;
+					progressBar1.Maximum = Total;
+				}));
+			}
+			catch
+			{
+			}
 		}
 
 		private void ProgressForm_FormClosing(object sender, FormClosingEventArgs e)

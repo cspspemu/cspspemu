@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using CSharpUtils.Endian;
-using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Formats.video
 {

@@ -10,7 +10,6 @@ using CSharpUtils;
 using CSPspEmu.Core.Gpu.State.SubStates;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
-using CSharpUtils.Extensions;
 using System.Drawing;
 using System.Runtime.ExceptionServices;
 using System.Threading;

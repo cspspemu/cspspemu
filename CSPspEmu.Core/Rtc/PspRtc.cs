@@ -5,12 +5,13 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using CSharpUtils;
-using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Rtc
 {
 	unsafe public class PspRtc : PspEmulatorComponent
 	{
+		static public Logger Logger = Logger.GetLogger("Rtc");
+
 		public class VirtualTimer
 		{
 			protected PspRtc PspRtc;
@@ -71,17 +72,14 @@ namespace CSPspEmu.Core.Rtc
 
 			public void SetToNow()
 			{
-				long Counter;
-				long Frequency;
-				Platform.QueryPerformanceCounter(out Counter);
-				Platform.QueryPerformanceFrequency(out Frequency);
 				var PrevTotalMicroseconds = TotalMicroseconds;
-				var CurrentTotalMicroseconds = Counter * 1000 * 1000 / Frequency;
+				var CurrentTotalMicroseconds = Platform.GetCurrentMicroseconds();
+
 				if (CurrentTotalMicroseconds < PrevTotalMicroseconds)
 				{
 					ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () =>
 					{
-						Console.Error.WriteLine("Total Microseconds overflow Prev({0}), Now({1})", PrevTotalMicroseconds, CurrentTotalMicroseconds);
+						Logger.Error("Total Microseconds overflow Prev({0}), Now({1})", PrevTotalMicroseconds, CurrentTotalMicroseconds);
 					});
 				}
 				this.TotalMicroseconds = CurrentTotalMicroseconds;
@@ -153,10 +151,8 @@ namespace CSPspEmu.Core.Rtc
 				{
 					lock (Timer)
 					{
-						//Console.Error.WriteLine(Timer);
 						if (Timer.Enabled && this.CurrentDateTime >= Timer.DateTime)
 						{
-							//Console.Error.WriteLine("Tick!");
 							Timers.Remove(Timer);
 							Timer.Callback();
 							Timer.OnList = false;
@@ -182,8 +178,7 @@ namespace CSPspEmu.Core.Rtc
 		/// <param name="Callback"></param>
 		public VirtualTimer RegisterTimerInOnce(TimeSpan TimeSpan, Action Callback)
 		{
-			//Console.WriteLine("Time: " + TimeSpan);
-			//return RegisterTimerAtOnce(DateTime.UtcNow + TimeSpan, Callback);
+			Logger.Notice("RegisterTimerInOnce: " + TimeSpan);
 			return RegisterTimerAtOnce(UpdatedCurrentDateTime + TimeSpan, Callback);
 		}
 
@@ -196,7 +191,7 @@ namespace CSPspEmu.Core.Rtc
 		{
 			lock (Timers)
 			{
-				//Console.WriteLine("RegisterTimerAtOnce:" + DateTime);
+				Logger.Notice("RegisterTimerAtOnce: " + DateTime);
 				var VirtualTimer = CreateVirtualTimer(Callback);
 				VirtualTimer.SetAt(DateTime);
 				VirtualTimer.Enabled = true;

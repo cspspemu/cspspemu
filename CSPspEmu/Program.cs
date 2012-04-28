@@ -19,7 +19,6 @@ using CSPspEmu.Resources;
 using CSPspEmu.AutoTests;
 using System.Diagnostics;
 using CSharpUtils;
-using CSharpUtils.Extensions;
 using CSharpUtils.Getopt;
 using Codegen;
 using CSPspEmu.Gui.Winforms;
@@ -28,6 +27,8 @@ namespace CSPspEmu
 {
 	unsafe class Program
 	{
+		static Logger Logger = Logger.GetLogger("Program");
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -38,7 +39,12 @@ namespace CSPspEmu
 		[STAThread]
 		static void Main(string[] Arguments)
 		{
-			Console.WriteLine("Running ... plat:{0} ... int*:{1}", Environment.Is64BitProcess ? "x64" : "x86", sizeof(int*));
+			Logger.OnGlobalLog += (LogName, Level, Text) =>
+			{
+				Console.WriteLine("{0} : {1} : {2}", LogName, Level, Text);
+			};
+
+			Logger.Info("Running ... plat:{0} ... int*:{1}", Environment.Is64BitProcess ? "x64" : "x86", sizeof(int*));
 #if false
 			Console.WriteLine(CSPspEmu.Resources.Translations.GetString("extra", "UnknownGame"));
 			Console.ReadKey(); Environment.Exit(0);

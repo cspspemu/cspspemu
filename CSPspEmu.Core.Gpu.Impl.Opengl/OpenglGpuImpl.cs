@@ -13,7 +13,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CSharpUtils;
-using CSharpUtils.Extensions;
 using CSPspEmu.Core.Gpu.State;
 using System.Globalization;
 using CSPspEmu.Core.Memory;

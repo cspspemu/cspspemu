@@ -4,7 +4,6 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
-using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Vfs.Emulator
 {

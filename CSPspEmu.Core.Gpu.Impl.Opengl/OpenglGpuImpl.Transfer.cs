@@ -4,13 +4,8 @@ using System.Linq;
 using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
-using CSharpUtils.Extensions;
 
-#if OPENTK
 using OpenTK.Graphics.OpenGL;
-#else
-using MiniGL;
-#endif
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {

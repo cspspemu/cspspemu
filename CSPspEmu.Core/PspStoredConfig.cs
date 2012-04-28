@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using System.IO;
+using CSharpUtils;
 
 namespace CSPspEmu.Core
 {
@@ -33,6 +34,8 @@ namespace CSPspEmu.Core
 
 	public class PspStoredConfig
 	{
+		static public Logger Logger = Logger.GetLogger("Config");
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -108,7 +111,7 @@ namespace CSPspEmu.Core
 				}
 				catch (Exception Exception)
 				{
-					Console.Error.WriteLine(Exception);
+					Logger.Error(Exception);
 					return new PspStoredConfig();
 				}
 			}
@@ -128,7 +131,7 @@ namespace CSPspEmu.Core
 			}
 			catch (Exception Exception)
 			{
-				Console.Error.WriteLine(Exception);
+				Logger.Error(Exception);
 			}
 		}
 		#endregion

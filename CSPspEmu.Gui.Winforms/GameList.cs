@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Formats;
 using CSPspEmu.Hle.Vfs.Iso;
-using CSharpUtils.Extensions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Drawing;

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using CSharpUtils.Extensions;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Threading.Synchronization;
 using CSPspEmu.Core.Memory;

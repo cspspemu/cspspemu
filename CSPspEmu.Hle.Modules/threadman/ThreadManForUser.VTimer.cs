@@ -5,7 +5,6 @@ using System.Text;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Hle.Managers;
-using CSharpUtils.Extensions;
 using CSharpUtils;
 
 namespace CSPspEmu.Hle.Modules.threadman

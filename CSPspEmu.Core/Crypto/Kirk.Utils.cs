@@ -5,7 +5,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using CSharpUtils;
-using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Crypto
 {
@@ -22,7 +21,7 @@ namespace CSPspEmu.Core.Crypto
 		{
 			if (IV == null) IV = new byte[16];
 
-			Console.WriteLine("DecryptAes({0}, {1}, {2})", Input.Length, Key.Length, IV.Length);
+			Logger.Notice("DecryptAes({0}, {1}, {2})", Input.Length, Key.Length, IV.Length);
 
 			using (var AES = Aes.Create())
 			{

@@ -7,7 +7,6 @@ using System.Reflection.Emit;
 using System.IO;
 using System.Text.RegularExpressions;
 using CSharpUtils.Streams;
-using CSharpUtils.Extensions;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
 using CSharpUtils.Arrays;

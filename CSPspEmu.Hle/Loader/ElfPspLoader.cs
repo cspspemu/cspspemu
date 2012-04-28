@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Formats;
-using CSharpUtils.Extensions;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Diagnostics;

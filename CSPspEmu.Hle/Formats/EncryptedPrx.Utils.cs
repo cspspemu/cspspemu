@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
-using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Formats
 {

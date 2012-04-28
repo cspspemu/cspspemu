@@ -23,6 +23,9 @@ namespace CSPspEmu.Core.Audio
 		/// </summary>
 		abstract public PluginInfo PluginInfo { get; }
 
+		/// <summary>
+		/// 
+		/// </summary>
 		abstract public bool IsWorking { get; }
 
 		/// <summary>

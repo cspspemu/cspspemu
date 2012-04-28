@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Formats.Archive;
-using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Vfs.Zip
 {

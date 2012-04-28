@@ -7,7 +7,6 @@ using CSPspEmu.Core.Cpu.Emiter;
 using System.Reflection.Emit;
 using CSPspEmu.Core.Cpu.Table;
 using CSPspEmu.Core.Memory;
-using CSharpUtils.Extensions;
 using Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Cpu;
-using CSharpUtils.Extensions;
 using System.Threading;
 using System.Globalization;
 using CSPspEmu.Hle.Attributes;

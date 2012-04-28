@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Formats.video
 {

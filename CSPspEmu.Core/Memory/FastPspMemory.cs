@@ -49,19 +49,15 @@ namespace CSPspEmu.Core.Memory
 			if (!AlreadyInitialized)
 			{
 				AlreadyInitialized = true;
-				ConsoleUtils.SaveRestoreConsoleState(() =>
-				{
-					Console.BackgroundColor = ConsoleColor.Yellow;
-					Console.ForegroundColor = ConsoleColor.Black;
-					Console.WriteLine("FastPspMemory.AllocMemory");
-				});
+
+				Logger.Info("FastPspMemory.AllocMemory");
 				StaticNullPtr = Base;
 				StaticScratchPadPtr = (byte *)Platform.AllocRange(Base + ScratchPadOffset, ScratchPadSize);
 				StaticFrameBufferPtr = (byte*)Platform.AllocRange(Base + FrameBufferOffset, FrameBufferSize);
 				StaticMainPtr = (byte*)Platform.AllocRange(Base + MainOffset, MainSize);
 				if (StaticScratchPadPtr == null || StaticFrameBufferPtr == null || StaticMainPtr == null)
 				{
-					Console.WriteLine("Can't allocate virtual memory!");
+					Logger.Fatal("Can't allocate virtual memory!");
 					Debug.Fail("Can't allocate virtual memory!");
 					throw (new InvalidOperationException());
 				}
@@ -75,30 +71,20 @@ namespace CSPspEmu.Core.Memory
 		/*
 		private void AllocMemory()
 		{
-			ConsoleUtils.SaveRestoreConsoleState(() =>
-			{
-				Console.BackgroundColor = ConsoleColor.Yellow;
-				Console.ForegroundColor = ConsoleColor.Black;
-				Console.WriteLine("FastPspMemory.AllocMemory");
-			});
+			Logger.Info("FastPspMemory.AllocMemory");
 			ScratchPadPtr = VirtualAlloc(Base + ScratchPadOffset, ScratchPadSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 			FrameBufferPtr = VirtualAlloc(Base + FrameBufferOffset, FrameBufferSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 			MainPtr = VirtualAlloc(Base + MainOffset, MainSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 			if (ScratchPadPtr == null || FrameBufferPtr == null || MainPtr == null)
 			{
-				Console.WriteLine("Can't allocate virtual memory!");
+				Logger.Fatal("Can't allocate virtual memory!");
 				throw (new InvalidOperationException());
 			}
 		}
 
 		private void FreeMemory()
 		{
-			ConsoleUtils.SaveRestoreConsoleState(() =>
-			{
-				Console.BackgroundColor = ConsoleColor.Yellow;
-				Console.ForegroundColor = ConsoleColor.Black;
-				Console.WriteLine("FastPspMemory.FreeMemory");
-			});
+			Logger.Info("FastPspMemory.FreeMemory");
 			if (ScratchPadPtr != null)
 			{
 				if (!VirtualFree(ScratchPadPtr, ScratchPadSize, MEM_DECOMMIT | MEM_RELEASE))

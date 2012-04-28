@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using CSharpUtils;
-using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Utils
 {

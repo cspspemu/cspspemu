@@ -7,7 +7,6 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using CSharpUtils.Extensions;
 using CSharpUtils;
 using CSPspEmu.Core;
 using System.Drawing.Imaging;

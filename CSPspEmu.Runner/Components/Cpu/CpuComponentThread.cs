@@ -20,7 +20,6 @@ using CSPspEmu.Hle.Modules.emulator;
 using CSPspEmu.Hle.Modules.loadexec;
 using CSPspEmu.Hle.Modules.threadman;
 using CSPspEmu.Hle.Modules.utils;
-using CSharpUtils.Extensions;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Hle.Vfs.Local;
 using CSPspEmu.Hle.Vfs.Emulator;

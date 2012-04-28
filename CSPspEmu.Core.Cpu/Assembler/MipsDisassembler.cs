@@ -5,7 +5,6 @@ using System.Text;
 using CSPspEmu.Core.Cpu.Table;
 using System.Reflection.Emit;
 using CSharpUtils;
-using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Cpu.Assembler
 {

@@ -5,7 +5,6 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using CSharpUtils.Extensions;
 using System.Globalization;
 
 namespace CSPspEmu.Resources

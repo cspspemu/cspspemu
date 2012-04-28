@@ -5,7 +5,6 @@ using System.Text;
 using CSPspEmu.Core.Gpu.State.SubStates;
 using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Memory;
-using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Gpu.State
 {

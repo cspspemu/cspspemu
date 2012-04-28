@@ -6,7 +6,6 @@ using CSPspEmu.Core.Cpu.Emiter;
 using CSPspEmu.Core.Cpu.Table;
 using System.IO;
 using CSPspEmu.Core.Cpu.Assembler;
-using CSharpUtils.Extensions;
 using System.Runtime.InteropServices;
 using CSPspEmu.Core.Cpu;
 using System.Reflection.Emit;

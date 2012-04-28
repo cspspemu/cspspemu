@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSharpUtils;
-using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Modules.pspnet
 {

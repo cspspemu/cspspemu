@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using CSharpUtils;
 using CSharpUtils.Streams;
-using CSharpUtils.Extensions;
 using CSPspEmu.Core.Utils;
 using CSPspEmu.Hle.Formats;
 

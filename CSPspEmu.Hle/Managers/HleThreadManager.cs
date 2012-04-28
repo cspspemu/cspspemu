@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
-using CSharpUtils.Extensions;
 using CSPspEmu.Core.Cpu;
 using System.Threading;
 using System.Diagnostics;

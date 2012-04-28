@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
-using CSharpUtils.Extensions;
 using CSharpUtils;
 
 namespace CSPspEmu.Core.Memory
@@ -49,10 +48,13 @@ namespace CSPspEmu.Core.Memory
 				NullPtr = null;
 
 #if USE_ARRAY_BYTES
-				ScratchPad = new byte[ScratchPadSize];
-				FrameBuffer = new byte[FrameBufferSize];
-				Main = new byte[MainSize];
-				LogMain = new uint[MainSize];
+				//if (ScratchPad != null)
+				{
+					ScratchPad = new byte[ScratchPadSize];
+					FrameBuffer = new byte[FrameBufferSize];
+					Main = new byte[MainSize];
+					LogMain = new uint[MainSize];
+				}
 
 				ScratchPadHandle = GCHandle.Alloc(ScratchPad, GCHandleType.Pinned);
 				FrameBufferHandle = GCHandle.Alloc(FrameBuffer, GCHandleType.Pinned);
@@ -77,7 +79,6 @@ namespace CSPspEmu.Core.Memory
 				*/
 #endif
 
-				//for (int n = 0; n < 1000; n++) Console.WriteLine("{0}", ScratchPadPtr[n]);
 				//GCHandle.Alloc();
 			}
 		}
@@ -139,8 +140,6 @@ namespace CSPspEmu.Core.Memory
 
 		override public void* PspAddressToPointerUnsafe(uint _Address)
 		{
-			//Console.WriteLine("PointerToPspAddressUnsafe: 0x{0:X}", _Address);
-
 			if (_Address == 0) return null;
 			//if (IsAddressValid(_Address))
 			{

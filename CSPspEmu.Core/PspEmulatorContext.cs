@@ -10,6 +10,8 @@ namespace CSPspEmu.Core
 {
 	public class PspEmulatorContext : IDisposable
 	{
+		static Logger Logger = Logger.GetLogger("PspEmulatorContext");
+
 		public PspConfig PspConfig;
 
 		//public event Action ApplicationExit;
@@ -31,28 +33,26 @@ namespace CSPspEmu.Core
 				{
 					if (!ObjectsByType.ContainsKey(typeof(TType)))
 					{
-						Console.WriteLine("GetInstance<{0}>: Miss!", typeof(TType));
-						var Start = DateTime.UtcNow;
-						PspEmulatorComponent Instance;
-						if (TypesByType.ContainsKey(typeof(TType)))
+						var Instance = default(PspEmulatorComponent);
+
+						Logger.Info("GetInstance<{0}>: Miss!", typeof(TType));
+
+						var ElapsedTime = Logger.Measure(() =>
 						{
-							Instance = _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(TypesByType[typeof(TType)]));
-						}
-						else
-						{
-							Instance = _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(typeof(TType)));
-						}
-						Instance._InitializeComponent(this);
-						Instance.InitializeComponent();
-						var End = DateTime.UtcNow;
-						Console.Write("GetInstance<{0}>: Miss! : LoadTime(", typeof(TType));
-						var ElapsedTime = End - Start;
-						ConsoleUtils.SaveRestoreConsoleState(() =>
-						{
-							Console.ForegroundColor = (ElapsedTime.TotalSeconds > 0.1) ? ConsoleColor.Yellow : ConsoleColor.Green;
-							Console.Write("{0}", ElapsedTime.TotalSeconds);
+							if (TypesByType.ContainsKey(typeof(TType)))
+							{
+								Instance = _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(TypesByType[typeof(TType)]));
+							}
+							else
+							{
+								Instance = _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(typeof(TType)));
+							}
+							Instance._InitializeComponent(this);
+							Instance.InitializeComponent();
 						});
-						Console.WriteLine(")");
+
+						Logger.Info("GetInstance<{0}>: Miss! : LoadTime({1})", typeof(TType), ElapsedTime.TotalSeconds);
+
 						return (TType)Instance;
 					}
 
@@ -60,7 +60,7 @@ namespace CSPspEmu.Core
 				}
 				catch (TargetInvocationException TargetInvocationException)
 				{
-					Console.Error.WriteLine("Error obtaining instance '{0}'", typeof(TType));
+					Logger.Error("Error obtaining instance '{0}'", typeof(TType));
 					StackTraceUtils.PreserveStackTrace(TargetInvocationException.InnerException);
 					throw (TargetInvocationException.InnerException);
 				}
@@ -71,12 +71,7 @@ namespace CSPspEmu.Core
 		{
 			lock (this)
 			{
-				ConsoleUtils.SaveRestoreConsoleState(() =>
-				{
-					Console.ForegroundColor = ConsoleColor.Green;
-					Console.WriteLine("PspEmulatorContext.SetInstance<{0}>", typeof(TType));
-					//Console.WriteLine(Environment.StackTrace);
-				});
+				Logger.Info("PspEmulatorContext.SetInstance<{0}>", typeof(TType));
 				return _SetInstance<TType>(Instance);
 			}
 		}

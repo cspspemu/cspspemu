@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using CSharpUtils.Streams;
-using CSharpUtils.Extensions;
 using CSPspEmu.Hle.Formats;
 using CSharpUtils;
 

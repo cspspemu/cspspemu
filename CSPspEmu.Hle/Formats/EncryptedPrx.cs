@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
-using CSharpUtils.Extensions;
 using CSPspEmu.Core.Crypto;
 
 namespace CSPspEmu.Hle.Formats
