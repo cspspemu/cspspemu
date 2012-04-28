@@ -39,3 +39,6 @@ obj
 /version_current_numeric.txt
 /version_current_numeric.txt
 /_ReSharper.CSPspEmu-2010
+
+/deploy/cspspemu/ms
+/deploy/cspspemu/src
