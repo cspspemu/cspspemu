@@ -63,7 +63,7 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 				try
 				{
 					AL.GetError();
-					return true;
+					return AudioContext.AvailableDevices.Count > 0;
 				}
 				catch
 				{
