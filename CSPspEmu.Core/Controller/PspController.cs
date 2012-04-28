@@ -49,7 +49,8 @@ namespace CSPspEmu.Core.Controller
 		}
 	}
 
-	public enum PspCtrlButtons : uint
+    [Flags]
+    public enum PspCtrlButtons : uint
 	{
 		None = 0x0000000,
 
