@@ -302,7 +302,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 
 				var ArgumentsChunk = Arguments
 					.Select(Argument => Encoding.UTF8.GetBytes(Argument + "\0"))
-					.Aggregate(new byte[] { }, (Accumulate, Chunk) => Accumulate.Concat(Chunk))
+					.Aggregate(new byte[] { }, (Accumulate, Chunk) => (byte[])Accumulate.Concat(Chunk))
 				;
 
 				var ReservedSyscallsPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(

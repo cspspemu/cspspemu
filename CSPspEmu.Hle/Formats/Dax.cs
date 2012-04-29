@@ -239,7 +239,7 @@ namespace CSPspEmu.Hle.Formats
 
 			var Out = new byte[this.BlockSize];
 
-			In = In.Concat(new byte[] { 0x00 });
+			In = (byte[])In.Concat(new byte[] { 0x00 });
 
 			//return new GZipStream(new MemoryStream(In), CompressionMode.Decompress).ReadAll(FromStart: false);
 			var ZStream = new ZStream();
