@@ -7,7 +7,7 @@ using CSPspEmu.Core.Audio;
 
 namespace CSPspEmu.Core.Audio
 {
-	unsafe public class AudioImplMock : PspAudioImpl
+	unsafe public class AudioImplNull : PspAudioImpl
 	{
 		public override void InitializeComponent()
 		{
@@ -29,7 +29,7 @@ namespace CSPspEmu.Core.Audio
 			{
 				return new PluginInfo()
 				{
-					Name = "Mock",
+					Name = "Null",
 					Version = "1.0",
 				};
 			}

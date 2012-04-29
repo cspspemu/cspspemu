@@ -5,11 +5,14 @@ using System.Text;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Gpu.State;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Gpu
 {
-	unsafe public class GpuImplMock : GpuImpl
+	unsafe public class GpuImplSoft : GpuImpl
 	{
+		public PspMemory PspMemory;
+
 		public override void InitializeComponent()
 		{
 		}
@@ -52,10 +55,16 @@ namespace CSPspEmu.Core.Gpu
 			{
 				return new PluginInfo()
 				{
-					Name = "Mock",
-					Version = "1.0",
+					Name = "Soft",
+					Version = "0.0",
 				};
 			}
 		}
+
+		public override bool IsWorking
+		{
+			get { return true; }
+		}
+
 	}
 }

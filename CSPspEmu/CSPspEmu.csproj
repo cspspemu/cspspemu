@@ -116,6 +116,10 @@
       <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Audio.Impl.Null\CSPspEmu.Core.Audio.Impl.Null.csproj">
+      <Project>{ADC15EA6-1D61-4AE9-8989-9969CA2E299B}</Project>
+      <Name>CSPspEmu.Core.Audio.Impl.Null</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Audio.Impl.WaveOut\CSPspEmu.Core.Audio.Impl.WaveOut.csproj">
       <Project>{B23C9D87-D587-4599-A94B-0168D3AA382A}</Project>
       <Name>CSPspEmu.Core.Audio.Impl.WaveOut</Name>
@@ -132,9 +136,17 @@
       <Project>{827779A5-F05C-41C6-9FF9-FD274224A7AE}</Project>
       <Name>CSPspEmu.Core.Cpu</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Gpu.Impl.Null\CSPspEmu.Core.Gpu.Impl.Null.csproj">
+      <Project>{DB1B25C7-5ADF-4190-8EA1-9C30F4021F94}</Project>
+      <Name>CSPspEmu.Core.Gpu.Impl.Null</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Gpu.Impl.Opengl\CSPspEmu.Core.Gpu.Impl.Opengl.csproj">
       <Project>{72f560e3-9101-426b-b3e5-b83b78e536db}</Project>
       <Name>CSPspEmu.Core.Gpu.Impl.Opengl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Gpu.Impl.Soft\CSPspEmu.Core.Gpu.Impl.Soft.csproj">
+      <Project>{2D629653-A87E-4AC4-9E58-3EAA1107C456}</Project>
+      <Name>CSPspEmu.Core.Gpu.Impl.Soft</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">
       <Project>{9a30ebf3-b702-47d9-aafc-e3e02b410dad}</Project>

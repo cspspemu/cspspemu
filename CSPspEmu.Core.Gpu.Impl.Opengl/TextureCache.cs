@@ -149,6 +149,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 	sealed unsafe public class TextureCache : PspEmulatorComponent
 	{
+		[Inject]
 		PspMemory PspMemory;
 		//Dictionary<TextureCacheKey, Texture> Cache = new Dictionary<TextureCacheKey, Texture>();
 		Dictionary<ulong, Texture> Cache = new Dictionary<ulong, Texture>();
@@ -159,7 +160,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		public override void InitializeComponent()
 		{
-			PspMemory = PspEmulatorContext.GetInstance<PspMemory>();
 		}
 
 		public Texture Get(GpuStateStruct *GpuState)

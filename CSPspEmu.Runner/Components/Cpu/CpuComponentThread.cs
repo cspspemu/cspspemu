@@ -38,27 +38,33 @@ namespace CSPspEmu.Runner.Components.Cpu
 	{
 		protected override string ThreadName { get { return "CpuThread"; } }
 
-		CpuProcessor CpuProcessor;
-		PspRtc PspRtc;
-		HleThreadManager ThreadManager;
-		HleState HleState;
-		PspMemory PspMemory;
+		[Inject]
+		public CpuProcessor CpuProcessor;
+
+		[Inject]
+		public PspRtc PspRtc;
+		
+		[Inject]
+		public HleThreadManager ThreadManager;
+		
+		[Inject]
+		public HleState HleState;
+
+		[Inject]
+		public PspMemory PspMemory;
+
+		[Inject]
+		public ElfPspLoader Loader;
+
+
 		HleIoDriverMountable MemoryStickMountable;
 		HleIoDriverEmulator HleIoDriverEmulator;
 		public AutoResetEvent StoppedEndedEvent = new AutoResetEvent(false);
 
 		public override void InitializeComponent()
 		{
-			CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();
-			PspRtc = PspEmulatorContext.GetInstance<PspRtc>();
-			ThreadManager = PspEmulatorContext.GetInstance<HleThreadManager>();
-			HleState = PspEmulatorContext.GetInstance<HleState>();
-			PspMemory = PspEmulatorContext.GetInstance<PspMemory>();
-
 			RegisterDevices();
 		}
-
-
 
 		void RegisterDevices()
 		{
@@ -183,7 +189,6 @@ namespace CSPspEmu.Runner.Components.Cpu
 				"ms0:/PSP/GAME/virtual/EBOOT.PBP",
 			};
 
-			var Loader = PspEmulatorContext.GetInstance<ElfPspLoader>();
 			Stream LoadStream = File.OpenRead(FileName);
 			//using ()
 			{

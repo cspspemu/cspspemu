@@ -44,6 +44,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
+		[Inject]
 		private PspMemory Memory;
 
 		/// <summary>
@@ -54,6 +55,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
+		[Inject]
 		private TextureCache TextureCache;
 
 		/// <summary>
@@ -67,8 +69,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		public override void InitializeComponent()
 		{
 			this.Config = PspEmulatorContext.PspConfig;
-			this.Memory = PspEmulatorContext.GetInstance<PspMemory>();
-			this.TextureCache = PspEmulatorContext.GetInstance<TextureCache>();
 			this.TextureCache.OpenglGpuImpl = this;
 			this.VertexReader = new VertexReader();
 		}
@@ -869,6 +869,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					Version = "0.1",
 				};
 			}
+		}
+
+		public override bool IsWorking
+		{
+			get { return true; }
 		}
 	}
 }

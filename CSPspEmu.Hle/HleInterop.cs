@@ -13,13 +13,15 @@ namespace CSPspEmu.Hle
 	public class HleInterop : PspEmulatorComponent
 	{
 		protected HleThread CurrentFakeHleThread;
+
+		[Inject]
 		protected HleThreadManager HleThreadManager;
+
+		[Inject]
 		protected CpuProcessor CpuProcessor;
 
 		public override void InitializeComponent()
 		{
-			this.CpuProcessor = this.PspEmulatorContext.GetInstance<CpuProcessor>();
-			this.HleThreadManager = this.PspEmulatorContext.GetInstance<HleThreadManager>();
 			//throw new NotImplementedException();
 		}
 

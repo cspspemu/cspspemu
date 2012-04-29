@@ -129,6 +129,9 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 
 		public HleUidPool<HleModuleGuest> Modules = new HleUidPool<HleModuleGuest>();
 
+		[Inject]
+		public ElfPspLoader Loader;
+
 		public int sceKernelLoadModuleWithStream(Func<Stream> GetStreamAction, string Path, uint Flags, SceKernelLMOption* SceKernelLMOption)
 		{
 			var Module = new HleModuleGuest(HleState);
@@ -154,7 +157,6 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 
 				var ModuleStream = GetStreamAction();
 
-				var Loader = HleState.PspConfig.PspEmulatorContext.GetInstance<ElfPspLoader>();
 				var HleModuleGuest = Loader.LoadModule(
 					ModuleStream,
 					new PspMemoryStream(HleState.CpuProcessor.Memory),

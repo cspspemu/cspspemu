@@ -120,6 +120,10 @@
       <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Audio.Impl.Null\CSPspEmu.Core.Audio.Impl.Null.csproj">
+      <Project>{ADC15EA6-1D61-4AE9-8989-9969CA2E299B}</Project>
+      <Name>CSPspEmu.Core.Audio.Impl.Null</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Audio\CSPspEmu.Core.Audio.csproj">
       <Project>{3be28d69-cfb4-4c9d-8874-7cf8f520dfb0}</Project>
       <Name>CSPspEmu.Core.Audio</Name>
@@ -127,6 +131,10 @@
     <ProjectReference Include="..\CSPspEmu.Core.Cpu\CSPspEmu.Core.Cpu.csproj">
       <Project>{827779A5-F05C-41C6-9FF9-FD274224A7AE}</Project>
       <Name>CSPspEmu.Core.Cpu</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Gpu.Impl.Null\CSPspEmu.Core.Gpu.Impl.Null.csproj">
+      <Project>{DB1B25C7-5ADF-4190-8EA1-9C30F4021F94}</Project>
+      <Name>CSPspEmu.Core.Gpu.Impl.Null</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">
       <Project>{9A30EBF3-B702-47D9-AAFC-E3E02B410DAD}</Project>

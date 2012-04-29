@@ -97,6 +97,7 @@
     <Compile Include="PspEmulatorComponent.cs" />
     <Compile Include="PspEmulatorContext.cs" />
     <Compile Include="PspGlobalConfiguration.cs" />
+    <Compile Include="PspPluginImpl.cs" />
     <Compile Include="PspStoredConfig.cs" />
     <Compile Include="Rtc\PspRtc.cs" />
     <Compile Include="Threading\Synchronization\PspWaitEvent.cs" />

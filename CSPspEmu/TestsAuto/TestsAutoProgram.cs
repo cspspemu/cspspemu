@@ -71,7 +71,7 @@ namespace CSPspEmu.AutoTests
 					//PspEmulatorContext.SetInstanceType<GpuImpl, GpuImplMock>();
 					PspEmulatorContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
 
-					PspEmulatorContext.SetInstanceType<PspAudioImpl, AudioImplMock>();
+					PspEmulatorContext.SetInstanceType<PspAudioImpl, AudioImplNull>();
 					PspEmulatorContext.SetInstanceType<HleOutputHandler, HleOutputHandlerMock>();
 
 					PspConfig.FileNameBase = FileNameBase;
@@ -357,55 +357,6 @@ namespace CSPspEmu.AutoTests
 				catch
 				{
 				}
-
-				//WildCardFilter = "intr";
-				//WildCardFilter = "umd";
-				//WildCardFilter = "vblank";
-				//WildCardFilter = "events";
-				//WildCardFilter = "thread";
-				//WildCardFilter = "directory";
-				//WildCardFilter = "fpl";
-				//WildCardFilter = "msgpipe";
-				//WildCardFilter = "events";
-				//WildCardFilter = "vpl";
-				//WildCardFilter = "fpu";
-				//WildCardFilter = "umd_io";
-				//WildCardFilter = "cpu/vfpu/base";
-				//WildCardFilter = "display";
-				//WildCardFilter = "cpu/vfpu/prefixes";
-				//WildCardFilter = "cpu";
-				//WildCardFilter = "dmac";
-				//WildCardFilter = "kirk";
-				//WildCardFilter = "malloc";
-				//WildCardFilter = "sascore";
-				//WildCardFilter = "directory";
-				//WildCardFilter = "umd_io";
-				//WildCardFilter = "pmf";
-				//WildCardFilter = "mstick";
-				//WildCardFilter = "ge_callbacks";
-				//WildCardFilter = "lsu";
-				//WildCardFilter = "pmf";
-				//WildCardFilter = "pmf_simple";
-				//WildCardFilter = "sema";
-				//WildCardFilter = "mbx";
-				//WildCardFilter = "vtimer";
-				//WildCardFilter = "vfpu_colors";
-				//WildCardFilter = "vfpu_convert";
-				//WildCardFilter = "vfpu";
-				//WildCardFilter = "mutex";
-				//WildCardFilter = "vpl";
-				//WildCardFilter = "fpl";
-				//WildCardFilter = "gpu";
-				//WildCardFilter = "gpu/triangle";
-				//WildCardFilter = "gpu/reflection";
-				//WildCardFilter = "gpu";
-				//WildCardFilter = "gpu/simple";
-				//WildCardFilter = "umd/callbacks";
-				//WildCardFilter = "mstick";
-				//WildCardFilter = "threads/k0";
-				//WildCardFilter = "umd/io";
-				//WildCardFilter = "loader/bss";
-				//WildCardFilter = "font/fonttest";
 			}
 
 			if (WildCardFilter.Length > 0)

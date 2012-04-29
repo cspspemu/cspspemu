@@ -23,7 +23,10 @@ namespace CSPspEmu.Core.Display
 		public const double hsync_hz = (processed_pixels_per_second * cycles_per_pixel) / pixels_in_a_row;
 		public const double vsync_hz = hsync_hz / number_of_rows;
 
+		[Inject]
 		public PspRtc PspRtc;
+
+		[Inject]
 		public PspMemory Memory;
 
 		public Info CurrentInfo = new Info()
@@ -64,8 +67,6 @@ namespace CSPspEmu.Core.Display
 
 		public override void InitializeComponent()
 		{
-			this.PspRtc = PspEmulatorContext.GetInstance<PspRtc>();
-			this.Memory = PspEmulatorContext.GetInstance<PspMemory>();
 		}
 
 		public void TriggerVBlankStart()

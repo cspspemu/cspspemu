@@ -5,6 +5,10 @@ using System.Text;
 
 namespace CSPspEmu.Core
 {
+	public class InjectAttribute : Attribute
+	{
+	}
+
 	abstract public class PspEmulatorComponent : IDisposable
 	{
 		protected PspEmulatorContext PspEmulatorContext { get; private set; }
@@ -15,8 +19,10 @@ namespace CSPspEmu.Core
 
 		public void _InitializeComponent(PspEmulatorContext PspEmulatorContext)
 		{
+			Console.WriteLine("_InitializeComponent : {0}", this.GetType());
 			if (this.PspEmulatorContext != null) throw(new Exception("Can't call _InitializeComponent twice."));
 			this.PspEmulatorContext = PspEmulatorContext;
+			PspEmulatorContext.InjectDependencesTo(this);
 		}
 
 		abstract public void InitializeComponent();

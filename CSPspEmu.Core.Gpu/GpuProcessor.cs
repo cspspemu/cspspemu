@@ -69,6 +69,7 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
+		[Inject]
 		public PspMemory Memory;
 
 		/// <summary>
@@ -107,6 +108,7 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
+		[Inject]
 		public GpuImpl GpuImpl;
 
 		/// <summary>
@@ -128,8 +130,6 @@ namespace CSPspEmu.Core.Gpu
 			}
 
 			this.PspConfig = PspEmulatorContext.PspConfig;
-			this.Memory = PspEmulatorContext.GetInstance<PspMemory>();
-			this.GpuImpl = PspEmulatorContext.GetInstance<GpuImpl>();
 			this.DisplayListQueue = new LinkedList<GpuDisplayList>();
 			this.DisplayListFreeQueue = new Queue<GpuDisplayList>();
 			for (int n = 0; n < DisplayLists.Length; n++)

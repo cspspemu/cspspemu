@@ -6,7 +6,7 @@ using CSPspEmu.Core.Gpu.State;
 
 namespace CSPspEmu.Core.Gpu
 {
-	unsafe abstract public class GpuImpl : PspEmulatorComponent
+	unsafe abstract public class GpuImpl : PspPluginImpl
 	{
 		public override void InitializeComponent()
 		{
@@ -43,10 +43,5 @@ namespace CSPspEmu.Core.Gpu
 
 		abstract public void SetCurrent();
 		abstract public void UnsetCurrent();
-
-		/// <summary>
-		/// 
-		/// </summary>
-		abstract public PluginInfo PluginInfo { get; }
 	}
 }

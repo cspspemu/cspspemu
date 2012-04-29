@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{3BE28D69-CFB4-4C9D-8874-7CF8F520DFB0}</ProjectGuid>
+    <ProjectGuid>{DB1B25C7-5ADF-4190-8EA1-9C30F4021F94}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CSPspEmu.Core.Audio</RootNamespace>
-    <AssemblyName>CSPspEmu.Core.Audio</AssemblyName>
+    <RootNamespace>CSPspEmu.Core.Gpu.Impl.Null</RootNamespace>
+    <AssemblyName>CSPspEmu.Core.Gpu.Impl.Null</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,21 +32,6 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Trace|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Trace\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Debug\CSPspEmu.Core.Audio.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
-    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
-    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
-    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -57,17 +42,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AudioMixer.cs" />
+    <Compile Include="GpuImplNull.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PspAudio.cs" />
-    <Compile Include="PspAudioChannel.cs" />
-    <Compile Include="PspAudioImpl.cs" />
-    <Compile Include="SoundSample.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
-      <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
-      <Name>CSharpUtils</Name>
+    <ProjectReference Include="..\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">
+      <Project>{9A30EBF3-B702-47D9-AAFC-E3E02B410DAD}</Project>
+      <Name>CSPspEmu.Core.Gpu</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>

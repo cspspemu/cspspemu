@@ -23,29 +23,57 @@ namespace CSPspEmu.Hle
 	public class HleState : PspEmulatorComponent
 	{
 		public bool IsRunning;
+
+		[Inject]
 		public CpuProcessor CpuProcessor;
+
+		[Inject]
 		public GpuProcessor GpuProcessor;
+
+		[Inject]
 		public PspRtc PspRtc;
+
+		[Inject]
 		public PspDisplay PspDisplay;
+
+		[Inject]
 		public PspAudio PspAudio;
+
+		[Inject]
 		public PspController PspController;
+
+		[Inject]
 		public PspConfig PspConfig;
+
+		[Inject]
 		public Battery PspBattery;
 		
 		public MipsEmiter MipsEmiter;
 
 		// Hle Managers
+		[Inject]
 		public HleThreadManager ThreadManager;
+		[Inject]
 		public HleSemaphoreManager SemaphoreManager;
+		[Inject]
 		public HleEventFlagManager EventFlagManager;
+		[Inject]
 		public HleMemoryManager MemoryManager;
+		[Inject]
 		public HleModuleManager ModuleManager;
+		[Inject]
 		public HleCallbackManager CallbackManager;
+		[Inject]
 		public HleIoManager HleIoManager;
+		[Inject]
 		public HleRegistryManager HleRegistryManager;
+		[Inject]
 		public HleOutputHandler HleOutputHandler;
+		[Inject]
 		public HleInterruptManager HleInterruptManager;
+		[Inject]
 		public HleInterop HleInterop;
+		[Inject]
 		public Kirk Kirk;
 
 		/*
@@ -67,32 +95,14 @@ namespace CSPspEmu.Hle
 		public override void InitializeComponent()
 		{
 			this.IsRunning = true;
-			this.CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();
-			this.GpuProcessor = PspEmulatorContext.GetInstance<GpuProcessor>();
-			this.PspAudio = PspEmulatorContext.GetInstance<PspAudio>();
 			this.PspConfig = PspEmulatorContext.PspConfig;
-			this.PspRtc = PspEmulatorContext.GetInstance<PspRtc>();
-			this.PspDisplay = PspEmulatorContext.GetInstance<PspDisplay>();
-			this.PspController = PspEmulatorContext.GetInstance<PspController>();
-			this.PspBattery = PspEmulatorContext.GetInstance<Battery>();
 
 			this.MipsEmiter = new MipsEmiter();
 			this.Kirk = new Kirk();
 			this.Kirk.kirk_init();
 
-			this.HleOutputHandler = PspEmulatorContext.GetInstance<HleOutputHandler>();
-
 			// @TODO FIX! New Instances!?
-			this.ThreadManager = PspEmulatorContext.GetInstance<HleThreadManager>();
-			this.SemaphoreManager = PspEmulatorContext.GetInstance<HleSemaphoreManager>();
-			this.EventFlagManager = PspEmulatorContext.GetInstance<HleEventFlagManager>();
 			this.MemoryManager = new HleMemoryManager(this.CpuProcessor.Memory);
-			this.ModuleManager = PspEmulatorContext.GetInstance<HleModuleManager>();
-			this.CallbackManager = PspEmulatorContext.GetInstance<HleCallbackManager>();
-			this.HleIoManager = PspEmulatorContext.GetInstance<HleIoManager>();
-			this.HleRegistryManager = PspEmulatorContext.GetInstance<HleRegistryManager>();
-			this.HleInterruptManager = PspEmulatorContext.GetInstance<HleInterruptManager>();
-			this.HleInterop = PspEmulatorContext.GetInstance<HleInterop>();
 		}
 	}
 }

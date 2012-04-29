@@ -10,11 +10,11 @@ namespace CSPspEmu.Runner.Components.Display
 {
 	sealed public class DisplayComponentThread : ComponentThread
 	{
+		[Inject]
 		private HleInterruptManager HleInterruptManager;
 
 		public override void InitializeComponent()
 		{
-			this.HleInterruptManager = PspEmulatorContext.GetInstance<HleInterruptManager>();
 		}
 
 		protected override string ThreadName { get { return "DisplayThread"; } }

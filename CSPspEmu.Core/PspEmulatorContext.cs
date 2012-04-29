@@ -25,46 +25,51 @@ namespace CSPspEmu.Core
 		protected Dictionary<Type, PspEmulatorComponent> ObjectsByType = new Dictionary<Type, PspEmulatorComponent>();
 		protected Dictionary<Type, Type> TypesByType = new Dictionary<Type, Type>();
 
-		public TType GetInstance<TType>() where TType : PspEmulatorComponent
+		public object GetInstance(Type Type)
 		{
 			lock (this)
 			{
 				try
 				{
-					if (!ObjectsByType.ContainsKey(typeof(TType)))
+					if (!ObjectsByType.ContainsKey(Type))
 					{
 						var Instance = default(PspEmulatorComponent);
 
-						Logger.Info("GetInstance<{0}>: Miss!", typeof(TType));
+						Logger.Info("GetInstance<{0}>: Miss!", Type);
 
 						var ElapsedTime = Logger.Measure(() =>
 						{
-							if (TypesByType.ContainsKey(typeof(TType)))
+							if (TypesByType.ContainsKey(Type))
 							{
-								Instance = _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(TypesByType[typeof(TType)]));
+								Instance = (PspEmulatorComponent)_SetInstance(Type, (PspEmulatorComponent)Activator.CreateInstance(TypesByType[Type]));
 							}
 							else
 							{
-								Instance = _SetInstance<TType>((PspEmulatorComponent)Activator.CreateInstance(typeof(TType)));
+								Instance = (PspEmulatorComponent)_SetInstance(Type, (PspEmulatorComponent)Activator.CreateInstance(Type));
 							}
 							Instance._InitializeComponent(this);
 							Instance.InitializeComponent();
 						});
 
-						Logger.Info("GetInstance<{0}>: Miss! : LoadTime({1})", typeof(TType), ElapsedTime.TotalSeconds);
+						Logger.Info("GetInstance<{0}>: Miss! : LoadTime({1})", Type, ElapsedTime.TotalSeconds);
 
-						return (TType)Instance;
+						return Instance;
 					}
 
-					return (TType)ObjectsByType[typeof(TType)];
+					return ObjectsByType[Type];
 				}
 				catch (TargetInvocationException TargetInvocationException)
 				{
-					Logger.Error("Error obtaining instance '{0}'", typeof(TType));
+					Logger.Error("Error obtaining instance '{0}'", Type);
 					StackTraceUtils.PreserveStackTrace(TargetInvocationException.InnerException);
 					throw (TargetInvocationException.InnerException);
 				}
 			}
+		}
+
+		public TType GetInstance<TType>() where TType : PspEmulatorComponent
+		{
+			return (TType)GetInstance(typeof(TType));
 		}
 
 		public TType SetInstance<TType>(PspEmulatorComponent Instance) where TType : PspEmulatorComponent
@@ -76,14 +81,19 @@ namespace CSPspEmu.Core
 			}
 		}
 
+		protected object _SetInstance(Type Type, PspEmulatorComponent Instance)
+		{
+			if (ObjectsByType.ContainsKey(Type))
+			{
+				throw (new InvalidOperationException());
+			}
+			ObjectsByType[Type] = Instance;
+			return Instance;
+		}
+
 		protected TType _SetInstance<TType>(PspEmulatorComponent Instance) where TType : PspEmulatorComponent
 		{
-			if (ObjectsByType.ContainsKey(typeof(TType)))
-			{
-				throw(new InvalidOperationException());
-			}
-			ObjectsByType[typeof(TType)] = Instance;
-			return (TType)Instance;
+			return (TType)_SetInstance(typeof(TType), Instance);
 		}
 
 		public void SetInstanceType<TType1>(Type Type2) where TType1 : PspEmulatorComponent
@@ -106,6 +116,32 @@ namespace CSPspEmu.Core
 			return GetInstance<TType>();
 		}
 		*/
+
+		public void InjectDependencesTo(object Object)
+		{
+			var GetBindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+
+			foreach (var Field in Object.GetType().GetFields(GetBindingFlags))
+			{
+				var FieldType = Field.FieldType;
+				if (typeof(PspEmulatorComponent).IsAssignableFrom(FieldType))
+				{
+					Field.SetValue(Object, this.GetInstance(FieldType));
+					Logger.Info("Inject {0} to {1}", FieldType, Object);
+				}
+			}
+
+			foreach (var Property in Object.GetType().GetProperties(GetBindingFlags))
+			{
+				Console.WriteLine(Property);
+				var PropertyType = Property.PropertyType;
+				if (typeof(PspEmulatorComponent).IsAssignableFrom(PropertyType))
+				{
+					Property.SetValue(Object, this.GetInstance(PropertyType), null);
+					Logger.Info("Inject {0} to {1}", PropertyType, Object);
+				}
+			}
+		}
 
 		public void Dispose()
 		{

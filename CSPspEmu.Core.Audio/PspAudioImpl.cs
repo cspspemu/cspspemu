@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace CSPspEmu.Core.Audio
 {
-	abstract public class PspAudioImpl : PspEmulatorComponent
+	abstract public class PspAudioImpl : PspPluginImpl
 	{
 		/// <summary>
 		/// Called periodically on a thread.
@@ -17,16 +17,6 @@ namespace CSPspEmu.Core.Audio
 		/// 
 		/// </summary>
 		abstract public void StopSynchronized();
-
-		/// <summary>
-		/// 
-		/// </summary>
-		abstract public PluginInfo PluginInfo { get; }
-
-		/// <summary>
-		/// 
-		/// </summary>
-		abstract public bool IsWorking { get; }
 
 		/// <summary>
 		/// 

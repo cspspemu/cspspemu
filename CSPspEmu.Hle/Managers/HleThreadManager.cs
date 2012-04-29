@@ -22,11 +22,22 @@ namespace CSPspEmu.Hle.Managers
 
 	public class HleThreadManager : PspEmulatorComponent
 	{
+		[Inject]
 		internal CpuProcessor Processor;
+
+		bool MustReschedule = false;
+
+		[Inject]
+		internal HleState HleState;
+
 		public List<HleThread> Threads = new List<HleThread>();
 		protected int LastId = 1;
 		public HleThread Current;
+
+		[Inject]
 		private HleCallbackManager HleCallbackManager;
+
+		[Inject]
 		private HleInterruptManager HleInterruptManager;
 
 		public HleThread CurrentOrAny
@@ -40,11 +51,7 @@ namespace CSPspEmu.Hle.Managers
 
 		public override void InitializeComponent()
 		{
-			this.HleState = PspEmulatorContext.GetInstance<HleState>();
-			this.Processor = PspEmulatorContext.GetInstance<CpuProcessor>();
 			this.Processor.DebugCurrentThreadEvent += DebugCurrentThread;
-			this.HleCallbackManager = PspEmulatorContext.GetInstance<HleCallbackManager>();
-			this.HleInterruptManager = PspEmulatorContext.GetInstance<HleInterruptManager>();
 		}
 
 		public HleThread GetThreadById(int Id, bool AllowSelf = true)
@@ -88,9 +95,6 @@ namespace CSPspEmu.Hle.Managers
 				return Threads.Where(Thread => Thread.CurrentStatus == HleThread.Status.Waiting);
 			}
 		}
-
-		bool MustReschedule = false;
-		internal HleState HleState;
 
 		public void Reschedule()
 		{

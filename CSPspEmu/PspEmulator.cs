@@ -240,19 +240,18 @@ namespace CSPspEmu
 
 				{
 					// GPU
-					PspEmulatorContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
+					PspPluginImpl.SelectWorkingPlugin<GpuImpl>(PspEmulatorContext,
+						typeof(OpenglGpuImpl),
+						typeof(GpuImplSoft),
+						typeof(GpuImplNull)
+					);
 
 					// AUDIO
-					var AvailableAudioImplementations = new[] { typeof(PspAudioOpenalImpl), typeof(PspAudioWaveOutImpl), typeof(AudioImplMock) };
-					foreach (var AudioType in AvailableAudioImplementations)
-					{
-						if (((PspAudioImpl)Activator.CreateInstance(AudioType)).IsWorking)
-						{
-							// Found a working implementation
-							PspEmulatorContext.SetInstanceType<PspAudioImpl>(AudioType);
-							break;
-						}
-					}
+					PspPluginImpl.SelectWorkingPlugin<PspAudioImpl>(PspEmulatorContext,
+						typeof(PspAudioOpenalImpl),
+						typeof(PspAudioWaveOutImpl),
+						typeof(AudioImplNull)
+					);
 					
 					// Memory
 					if (PspConfig.StoredConfig.UseFastMemory)

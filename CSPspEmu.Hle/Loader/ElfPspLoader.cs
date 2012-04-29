@@ -22,13 +22,20 @@ namespace CSPspEmu.Hle.Loader
 
 	unsafe public class ElfPspLoader : PspEmulatorComponent
 	{
+		static Logger Logger = Logger.GetLogger("Loader");
+
 		public override void InitializeComponent()
 		{
 		}
 
 		protected uint BaseAddress;
+		
+		[Inject]
 		protected ElfLoader ElfLoader;
+
+		[Inject]
 		protected HleModuleManager ModuleManager;
+
 		protected HleModuleGuest HleModuleGuest;
 
 		Stream _RelocOutputStream;
@@ -57,12 +64,13 @@ namespace CSPspEmu.Hle.Loader
 
 		public HleModuleGuest LoadModule(Stream FileStream, Stream MemoryStream, MemoryPartition MemoryPartition, HleModuleManager ModuleManager, String GameTitle, string ModuleName, bool IsMainModule)
 		{
-			this.ElfLoader = new ElfLoader();
-			this.ModuleManager = ModuleManager;
 			this.HleModuleGuest = new HleModuleGuest(PspEmulatorContext.GetInstance<HleState>());
 
+			this.ElfLoader = new ElfLoader();
+			this.ModuleManager = ModuleManager;
+
 			var Magic = FileStream.SliceWithLength(0, 4).ReadString(4);
-			Console.WriteLine("Magic: '{0}'", Magic);
+			Logger.Info("Magic: '{0}'", Magic);
 			if (Magic == "~PSP")
 			{
 				try
@@ -73,7 +81,7 @@ namespace CSPspEmu.Hle.Loader
 				}
 				catch (Exception Exception)
 				{
-					Console.Error.WriteLine(Exception);
+					Logger.Error(Exception);
 					throw (Exception);
 				}
 			}
@@ -89,9 +97,9 @@ namespace CSPspEmu.Hle.Loader
 					Name: "Dummy"
 				);
 				BaseAddress = MemoryPartition.ChildPartitions.OrderByDescending(Partition => Partition.Size).First().Low;
-				Console.WriteLine("BASE ADDRESS (Try    ): 0x{0:X}", BaseAddress);
+				Logger.Info("BASE ADDRESS (Try    ): 0x{0:X}", BaseAddress);
 				BaseAddress = MathUtils.NextAligned(BaseAddress, 0x1000);
-				Console.WriteLine("BASE ADDRESS (Aligned): 0x{0:X}", BaseAddress);
+				Logger.Info("BASE ADDRESS (Aligned): 0x{0:X}", BaseAddress);
 			}
 			else
 			{
@@ -113,14 +121,14 @@ namespace CSPspEmu.Hle.Loader
 				throw(new Exception("Can't find segment '.rodata.sceModuleInfo'"));
 			}
 
-			this.HleModuleGuest.ModuleInfo = ElfLoader.SectionHeaderFileStream(ElfLoader.SectionHeadersByName[".rodata.sceModuleInfo"]).ReadStruct<ElfPsp.ModuleInfo>(); ;
+			HleModuleGuest.ModuleInfo = ElfLoader.SectionHeaderFileStream(ElfLoader.SectionHeadersByName[".rodata.sceModuleInfo"]).ReadStruct<ElfPsp.ModuleInfo>(); ;
 
 			//Console.WriteLine(this.ModuleInfo.ToStringDefault());
 
-			this.HleModuleGuest.InitInfo = new InitInfoStruct()
+			HleModuleGuest.InitInfo = new InitInfoStruct()
 			{
 				PC = ElfLoader.Header.EntryPoint + BaseAddress,
-				GP = this.HleModuleGuest.ModuleInfo.GP + BaseAddress,
+				GP = HleModuleGuest.ModuleInfo.GP + BaseAddress,
 			};
 
 			UpdateModuleImports();
@@ -146,7 +154,7 @@ namespace CSPspEmu.Hle.Loader
 				switch (ProgramHeader.Type)
 				{
 					case Elf.ProgramHeader.TypeEnum.Reloc1:
-						Console.Error.WriteLine("SKIPPING Elf.ProgramHeader.TypeEnum.Reloc1!");
+						Logger.Warning("SKIPPING Elf.ProgramHeader.TypeEnum.Reloc1!");
 						break;
 					case Elf.ProgramHeader.TypeEnum.Reloc2:
 						throw(new NotImplementedException());

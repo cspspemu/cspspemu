@@ -28,8 +28,8 @@ namespace CSPspEmu.Core.Tests
 			PspConfig.HleModulesDll = Assembly.GetExecutingAssembly();
 			PspEmulatorContext = new PspEmulatorContext(PspConfig);
 			PspEmulatorContext.SetInstanceType<PspMemory, LazyPspMemory>();
-			PspEmulatorContext.SetInstanceType<GpuImpl, GpuImplMock>();
-			PspEmulatorContext.SetInstanceType<PspAudioImpl, AudioImplMock>();
+			PspEmulatorContext.SetInstanceType<GpuImpl, GpuImplNull>();
+			PspEmulatorContext.SetInstanceType<PspAudioImpl, AudioImplNull>();
 			Memory = PspEmulatorContext.GetInstance<PspMemory>();
 			ThreadManager = PspEmulatorContext.GetInstance<HleThreadManager>();
 

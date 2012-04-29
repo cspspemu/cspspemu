@@ -12,16 +12,19 @@ namespace CSPspEmu.Runner.Components.Gpu
 	{
 		protected override string ThreadName { get { return "CpuThread"; } }
 
+		[Inject]
 		private GpuProcessor GpuProcessor;
+
+		[Inject]
+		private GpuImpl GpuImpl;
 
 		public override void InitializeComponent()
 		{
-			GpuProcessor = PspEmulatorContext.GetInstance<GpuProcessor>();
 		}
 
 		protected override void Main()
 		{
-			PspEmulatorContext.GetInstance<GpuImpl>().InitSynchronizedOnce();
+			GpuImpl.InitSynchronizedOnce();
 
 			GpuProcessor.ProcessInit();
 			GpuProcessor.SetCurrent();

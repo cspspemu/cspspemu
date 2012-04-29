@@ -17,10 +17,18 @@ namespace CSPspEmu.Runner
 {
 	unsafe public class PspRunner : PspEmulatorComponent, IRunnableComponent
 	{
+		[Inject]
 		public CpuComponentThread CpuComponentThread { get; protected set; }
+		
+		[Inject]
 		public GpuComponentThread GpuComponentThread { get; protected set; }
+
+		[Inject]
 		public AudioComponentThread AudioComponentThread { get; protected set; }
+		
+		[Inject]
 		public DisplayComponentThread DisplayComponentThread { get; protected set; }
+
 		protected List<IRunnableComponent> RunnableComponentList = new List<IRunnableComponent>();
 
 		public bool Paused { get; protected set; }
@@ -38,10 +46,10 @@ namespace CSPspEmu.Runner
 				//throw(new NotImplementedException("At the moment the only supported target is 32-bits"));
 			}
 
-			RunnableComponentList.Add(CpuComponentThread = PspEmulatorContext.GetInstance<CpuComponentThread>());
-			RunnableComponentList.Add(GpuComponentThread = PspEmulatorContext.GetInstance<GpuComponentThread>());
-			RunnableComponentList.Add(AudioComponentThread = PspEmulatorContext.GetInstance<AudioComponentThread>());
-			RunnableComponentList.Add(DisplayComponentThread = PspEmulatorContext.GetInstance<DisplayComponentThread>());
+			RunnableComponentList.Add(CpuComponentThread);
+			RunnableComponentList.Add(GpuComponentThread);
+			RunnableComponentList.Add(AudioComponentThread);
+			RunnableComponentList.Add(DisplayComponentThread);
 		}
 
 		public void StartSynchronized()

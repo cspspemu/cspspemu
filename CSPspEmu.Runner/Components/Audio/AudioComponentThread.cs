@@ -10,11 +10,11 @@ namespace CSPspEmu.Runner.Components.Audio
 {
 	sealed public class AudioComponentThread : ComponentThread
 	{
+		[Inject]
 		private PspAudio PspAudio;
 
 		public override void InitializeComponent()
 		{
-			PspAudio = PspEmulatorContext.GetInstance<PspAudio>();
 		}
 
 		protected override string ThreadName { get { return "AudioThread"; } }

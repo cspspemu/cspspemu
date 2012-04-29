@@ -61,8 +61,14 @@ namespace CSPspEmu.Hle.Managers
 		public bool Enabled = true;
 
 		private HleInterruptHandler[] InterruptHandlers;
+
+		[Inject]
 		private HleCallbackManager HleCallbackManager;
+
+		[Inject]
 		private CpuProcessor CpuProcessor;
+
+		[Inject]
 		private HleInterop HleInterop;
 
 		public HleInterruptHandler GetInterruptHandler(PspInterrupts PspInterrupt)
@@ -72,9 +78,6 @@ namespace CSPspEmu.Hle.Managers
 
 		public override void InitializeComponent()
 		{
-			this.HleCallbackManager = PspEmulatorContext.GetInstance<HleCallbackManager>();
-			this.CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();
-			this.HleInterop = PspEmulatorContext.GetInstance<HleInterop>();
 			//uint MaxHandlers = Enum.GetValues(typeof(PspInterrupts)).OfType<uint>().Max() + 1;
 			InterruptHandlers = new HleInterruptHandler[(int)PspInterrupts._MAX];
 			for (int n = 0; n < InterruptHandlers.Length; n++)

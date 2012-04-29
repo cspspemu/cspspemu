@@ -68,7 +68,6 @@
     <Compile Include="Formats\PspWavefrontObjWriter.cs" />
     <Compile Include="Formats\WavefrontObjWriter.cs" />
     <Compile Include="GpuImpl.cs" />
-    <Compile Include="GpuImplMock.cs" />
     <Compile Include="GpuOpCodes.cs" />
     <Compile Include="GpuDisplayList.cs" />
     <Compile Include="GpuOpCodesNotImplementedAttribute.cs" />

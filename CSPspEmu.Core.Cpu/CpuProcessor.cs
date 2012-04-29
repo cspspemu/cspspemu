@@ -13,7 +13,10 @@ namespace CSPspEmu.Core.Cpu
 		readonly public Dictionary<string, uint> GlobalInstructionStats = new Dictionary<string, uint>();
 
 		public PspConfig PspConfig;
+
+		[Inject]
 		public PspMemory Memory;
+
 		public MethodCacheFast MethodCache;
 		private Dictionary<int, Action<CpuThreadState, int>> RegisteredNativeSyscalls;
 		public HashSet<uint> NativeBreakpoints;
@@ -29,7 +32,6 @@ namespace CSPspEmu.Core.Cpu
 		public override void InitializeComponent()
 		{
 			this.PspConfig = PspEmulatorContext.PspConfig;
-			this.Memory = PspEmulatorContext.GetInstance<PspMemory>();
 			if (this.PspConfig.UseCoRoutines)
 			{
 				this.CoroutinePool = new CoroutinePool();
