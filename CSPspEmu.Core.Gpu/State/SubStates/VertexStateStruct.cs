@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Gpu.State
 {
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct VertexTypeStruct
 	{
 		/// <summary>
@@ -177,12 +179,7 @@ namespace CSPspEmu.Core.Gpu.State
 		}
 	}
 
-	public enum TransformModeEnum
-	{
-		Normal = 0,
-		Raw = 1,
-	}
-
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct VertexStateStruct
 	{
 		/// <summary>

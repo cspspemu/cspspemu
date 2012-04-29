@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Utils
 {
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct OutputPixel
 	{
 		public byte R, G, B, A;

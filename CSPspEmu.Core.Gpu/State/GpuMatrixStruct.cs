@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OpenTK;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Gpu.State
 {
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	unsafe public struct GpuMatrix4x4Struct
 	{
 		readonly static public int[] Indexes = new int[] {
@@ -99,6 +101,7 @@ namespace CSPspEmu.Core.Gpu.State
 
 	}
 
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	unsafe public struct GpuMatrix4x3Struct
 	{
 		readonly static public int[] Indexes = new int[] {

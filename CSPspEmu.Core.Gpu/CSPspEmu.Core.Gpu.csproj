@@ -91,6 +91,9 @@
     <Compile Include="Run\GpuDisplayListRunner.Spline.cs" />
     <Compile Include="Run\GpuDisplayListRunner.Texture.cs" />
     <Compile Include="Run\GpuDisplayListRunner.Unknown.cs" />
+    <Compile Include="State\GpuState.Enums.cs" />
+    <Compile Include="State\GpuState.Structs.cs" />
+    <Compile Include="State\SubStates\ScreenBufferStateStruct.cs" />
     <Compile Include="State\SubStates\SkinningStateStruct.cs" />
     <Compile Include="State\GpuMatrixStruct.cs" />
     <Compile Include="State\GpuRectStruct.cs" />
@@ -115,6 +118,7 @@
     <Compile Include="State\SubStates\StencilStateStruct.cs" />
     <Compile Include="State\SubStates\TextureMappingStateStruct.cs" />
     <Compile Include="State\SubStates\TextureStateStruct.cs" />
+    <Compile Include="State\SubStates\TextureTransferStateStruct.cs" />
     <Compile Include="State\TestFunctionEnum.cs" />
     <Compile Include="State\SubStates\VertexStateStruct.cs" />
     <Compile Include="VertexInfo.cs" />

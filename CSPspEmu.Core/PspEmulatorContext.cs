@@ -121,25 +121,34 @@ namespace CSPspEmu.Core
 		{
 			var GetBindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
+			foreach (var Member in Object.GetType().GetMembers(GetBindingFlags))
+			{
+				var Field = Member as FieldInfo;
+				var Property = Member as PropertyInfo;
+				Type MemberType = null;
+				if (Member.MemberType == MemberTypes.Field) MemberType = Field.FieldType;
+				if (Member.MemberType == MemberTypes.Property) MemberType = Property.PropertyType;
+
+				var InjectAttributeList = Member.GetCustomAttributes(typeof(InjectAttribute), true);
+
+				if (typeof(PspEmulatorComponent).IsAssignableFrom(MemberType) && InjectAttributeList != null && InjectAttributeList.Length > 0)
+				{
+					switch (Member.MemberType)
+					{
+						case MemberTypes.Field: Field.SetValue(Object, this.GetInstance(MemberType)); break;
+						case MemberTypes.Property: Property.SetValue(Object, this.GetInstance(MemberType), null); break;
+					}
+					Logger.Info("Inject {0} to {1}", MemberType, Object);
+				}
+			}
+
 			foreach (var Field in Object.GetType().GetFields(GetBindingFlags))
 			{
-				var FieldType = Field.FieldType;
-				if (typeof(PspEmulatorComponent).IsAssignableFrom(FieldType))
-				{
-					Field.SetValue(Object, this.GetInstance(FieldType));
-					Logger.Info("Inject {0} to {1}", FieldType, Object);
-				}
 			}
 
 			foreach (var Property in Object.GetType().GetProperties(GetBindingFlags))
 			{
 				Console.WriteLine(Property);
-				var PropertyType = Property.PropertyType;
-				if (typeof(PspEmulatorComponent).IsAssignableFrom(PropertyType))
-				{
-					Property.SetValue(Object, this.GetInstance(PropertyType), null);
-					Logger.Info("Inject {0} to {1}", PropertyType, Object);
-				}
 			}
 		}
 

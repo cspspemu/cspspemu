@@ -103,6 +103,7 @@ namespace CSPspEmu
 		{
 			if (!Paused)
 			{
+				InitializedEvent.WaitOne();
 				PspRunner.PauseSynchronized();
 			}
 		}
@@ -140,6 +141,8 @@ namespace CSPspEmu
 			}, ShowMenus: ShowMenus, AutoLoad: true);
 		}
 
+		ManualResetEvent InitializedEvent = new ManualResetEvent(false);
+
 		/// <summary>
 		/// Start.
 		/// </summary>
@@ -159,6 +162,8 @@ namespace CSPspEmu
 					{
 						CallbackOnInit();
 					}
+
+					InitializedEvent.Set();
 				}).Start();
 
 				// GUI Thread.

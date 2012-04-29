@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Gpu.State.SubStates
 {
@@ -15,6 +16,7 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 		UnknownLightComponent = 8,
 	}
 
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct LightingStateStruct
 	{
 		/// <summary>

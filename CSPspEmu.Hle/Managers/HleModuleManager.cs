@@ -21,7 +21,10 @@ namespace CSPspEmu.Hle.Managers
 		[Inject]
 		protected HleThreadManager HleThreadManager;
 
+		[Inject]
 		protected CpuProcessor CpuProcessor;
+
+		[Inject]
 		protected PspConfig PspConfig;
 
 		static public IEnumerable<Type> GetAllHleModules(Assembly ModulesAssembly)
