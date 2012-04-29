@@ -21,6 +21,8 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public class ModuleMgrForUser : HleModuleHost
 	{
+		static Logger Logger = Logger.GetLogger("ModuleMgr");
+
 		public struct SceKernelLMOption
 		{
 			/// <summary>
@@ -147,12 +149,15 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 
 				if (
 					Path.EndsWith(@"/libatrac3plus.prx") ||
+					Path.EndsWith(@"/videocodec.prx") ||
 					Path.EndsWith(@"/audiocodec.prx") ||
 					Path.EndsWith(@"/mpeg.prx") ||
+					Path.EndsWith(@"/mpegbase.prx") ||
 					Path.EndsWith(@"/libfont.prx") ||
 				false)
 				{
-					throw (new Exception("Ignore libatrac3plus.prx!"));
+					Logger.Warning("Infore {0}!", Path);
+					throw (new Exception("Ignore " + Path + "!"));
 				}
 
 				var ModuleStream = GetStreamAction();

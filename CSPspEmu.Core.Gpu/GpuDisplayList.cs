@@ -8,11 +8,14 @@ using CSPspEmu.Core.Gpu.State;
 using System.Reflection.Emit;
 using CSPspEmu.Core.Gpu.Run;
 using CSPspEmu.Core.Memory;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Gpu
 {
 	sealed unsafe public class GpuDisplayList
 	{
+		static Logger Logger = Logger.GetLogger("Gpu");
+
 		//private const bool Debug = false;
 		private bool Debug = false;
 		//private const bool Debug = true;
@@ -293,7 +296,8 @@ namespace CSPspEmu.Core.Gpu
 			var Params = ((Instruction) & 0xFFFFFF);
 
 			//if (OpCode == GpuOpCodes.Unknown0xFF)
-			if (Debug) {
+			if (Debug)
+			{
 				Console.WriteLine(
 					"CODE(0x{0:X}-0x{1:X}) : PC(0x{2:X}:0x{3:X}) : {4} : 0x{5:X}",
 					InstructionAddressCurrent,
@@ -346,6 +350,7 @@ namespace CSPspEmu.Core.Gpu
 		}
 		readonly public WaitableStateMachine<Status2Enum> Status2 = new WaitableStateMachine<Status2Enum>(Debug: false);
 		public PspGeCallbackData Callbacks;
+		public int CallbacksId;
 
 		public void Freed()
 		{
@@ -410,8 +415,19 @@ namespace CSPspEmu.Core.Gpu
 		{
 			if (Callbacks.FinishFunction != 0)
 			{
+				GpuProcessor.HleInterop.ExecuteFunctionLater(
+					Callbacks.FinishFunction,
+					(Result) =>
+					{
+						Console.Error.WriteLine("OP_FINISH! : ENDED : {0}", Result);
+					},
+					CallbacksId,
+					Callbacks.FinishArgument
+				);
+				//Callbacks.FinishFunction();
+				//GpuProcessor.interop
 				//GpuProcessor.
-				//Console.Error.WriteLine("OP_FINISH!");
+				Console.Error.WriteLine("OP_FINISH! : SCHEDULED");
 			}
 		}
 
@@ -424,7 +440,32 @@ namespace CSPspEmu.Core.Gpu
 			switch (Behavior)
 			{
 				default:
-					throw(new NotImplementedException("Not implemented Signal Behavior: " + Behavior));
+				{
+					//Logger.
+					/*
+					var Result = GpuProcessor.HleInterop.ExecuteFunctionNow(
+						Callbacks.SignalFunction,
+						//CallbacksId,
+						(int)Behavior,
+						Callbacks.SignalArgument
+					);
+					Console.Error.WriteLine("OP_SIGNAL! : ENDED : {0}", Result);
+					*/
+					GpuProcessor.HleInterop.ExecuteFunctionLater(
+						Callbacks.SignalFunction,
+						(Result) =>
+						{
+							Console.Error.WriteLine("OP_SIGNAL! : ENDED : {0}", Result);
+						},
+						//CallbacksId,
+						(int)Behavior,
+						Callbacks.SignalArgument
+					);
+					Console.Error.WriteLine("OP_SIGNAL! : ENQUEUED");
+
+					Logger.Error("Not implemented Signal Behavior: " + Behavior);
+				}
+				break;
 			}
 			//GpuProcessor.PspConfig
 			/*

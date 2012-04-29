@@ -7,7 +7,6 @@ using CSPspEmu.Core.Cpu.Emiter;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core;
 using System.Reflection;
-using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Audio;
@@ -20,15 +19,13 @@ using CSPspEmu.Hle.Vfs;
 
 namespace CSPspEmu.Hle
 {
+	[Obsolete("This class should not exists. Classes needing components, should get them injected.")]
 	public class HleState : PspEmulatorComponent
 	{
 		public bool IsRunning;
 
 		[Inject]
 		public CpuProcessor CpuProcessor;
-
-		[Inject]
-		public GpuProcessor GpuProcessor;
 
 		[Inject]
 		public PspRtc PspRtc;

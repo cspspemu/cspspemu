@@ -42,13 +42,36 @@ namespace CSPspEmu.Hle
 			return (uint)CurrentFakeHleThread.CpuThreadState.GPR2;
 		}
 
+		public class QueuedExecution
+		{
+			public uint Function;
+			public Action<uint> ExecutedCallback;
+			public object[] Arguments;
+		}
+
+		Queue<QueuedExecution> QueuedExecutions = new Queue<QueuedExecution>();
+
+		public int ExecuteAllQueuedFunctionsNow()
+		{
+			int ExecutedCount = 0;
+			while (QueuedExecutions.Count > 0)
+			{
+				var QueuedExecution = QueuedExecutions.Dequeue();
+				var Result = ExecuteFunctionNow(QueuedExecution.Function, QueuedExecution.Arguments);
+				if (QueuedExecution.ExecutedCallback != null) QueuedExecution.ExecutedCallback(Result);
+				ExecutedCount++;
+			}
+			return ExecutedCount;
+		}
+
 		public void ExecuteFunctionLater(uint Function, Action<uint> ExecutedCallback, params object[] Arguments)
 		{
-			/*
-			var Result = ExecuteFunctionNow(Function, Arguments);
-			ExecutedCallback(Result);
-			*/
-			throw(new NotImplementedException());
+			QueuedExecutions.Enqueue(new QueuedExecution()
+			{
+				Function = Function,
+				ExecutedCallback = ExecutedCallback,
+				Arguments = Arguments,
+			});
 		}
 
 		public HleThread Execute(CpuThreadState FakeCpuThreadState)

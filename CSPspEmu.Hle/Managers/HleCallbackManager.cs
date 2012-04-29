@@ -94,6 +94,8 @@ namespace CSPspEmu.Hle.Managers
 						break;
 					}
 				}
+
+				ExecutedCount += HleInterop.ExecuteAllQueuedFunctionsNow();
 				//Console.Error.WriteLine("ENDED CALLBACKS");
 			}
 

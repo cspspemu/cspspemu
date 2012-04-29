@@ -7,6 +7,7 @@ using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Threading.Synchronization;
 using CSPspEmu.Core.Memory;
 using CSharpUtils;
+using CSPspEmu.Hle;
 
 namespace CSPspEmu.Core.Gpu
 {
@@ -71,6 +72,11 @@ namespace CSPspEmu.Core.Gpu
 		/// </summary>
 		[Inject]
 		public PspMemory Memory;
+
+		[Inject]
+		public HleInterop HleInterop;
+
+		//HleInterop
 
 		/// <summary>
 		/// 

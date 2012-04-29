@@ -8,13 +8,17 @@ using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Cpu;
 using System.Runtime.InteropServices;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.ge
 {
 	unsafe public partial class sceGe_user
 	{
+		[Inject]
+		public GpuProcessor GpuProcessor;
+
 		private GpuDisplayList GetDisplayListFromId(int DisplayListId) {
-			return HleState.GpuProcessor.DisplayLists[DisplayListId];
+			return GpuProcessor.DisplayLists[DisplayListId];
 		}
 
 		MemoryPartition GpuStateStructPartition = null;
@@ -36,11 +40,12 @@ namespace CSPspEmu.Hle.Modules.ge
 			//Console.WriteLine("_sceGeListEnQueue");
 			try
 			{
-				var DisplayList = HleState.GpuProcessor.DequeueFreeDisplayList();
+				var DisplayList = GpuProcessor.DequeueFreeDisplayList();
 				{
 					DisplayList.InstructionAddressStart = InstructionAddressStart;
 					DisplayList.InstructionAddressCurrent = InstructionAddressStart;
 					DisplayList.InstructionAddressStall = InstructionAddressStall;
+					DisplayList.CallbacksId = -1;
 					DisplayList.Callbacks = default(PspGeCallbackData);
 					if (CallbackId != -1)
 					{
@@ -48,6 +53,7 @@ namespace CSPspEmu.Hle.Modules.ge
 						{
 							//DisplayList.Callbacks = Callbacks[CallbackId];
 							DisplayList.Callbacks = Callbacks[CallbackId];
+							DisplayList.CallbacksId = CallbackId;
 						}
 						catch
 						{
@@ -89,7 +95,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		{
 			return _sceGeListEnQueue(InstructionAddressStart, InstructionAddressStall, CallbackId, Args, (DisplayList) =>
 			{
-				HleState.GpuProcessor.EnqueueDisplayListLast(DisplayList);
+				GpuProcessor.EnqueueDisplayListLast(DisplayList);
 #if LIST_SYNC
 				DisplayList.WaitCompletedSync();
 #endif
@@ -110,7 +116,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		{
 			return _sceGeListEnQueue(InstructionAddressStart, InstructionAddressStall, CallbackId, Args, (DisplayList) =>
 			{
-				HleState.GpuProcessor.EnqueueDisplayListFirst(DisplayList);
+				GpuProcessor.EnqueueDisplayListFirst(DisplayList);
 #if LIST_SYNC
 				DisplayList.WaitCompletedSync();
 #endif
@@ -127,7 +133,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		public int sceGeListDeQueue(int DisplayListId)
 		{
 			var DisplayList = GetDisplayListFromId(DisplayListId);
-			HleState.GpuProcessor.DisplayListQueue.Remove(DisplayList);
+			GpuProcessor.DisplayListQueue.Remove(DisplayList);
 			return 0;
 		}
 
@@ -195,7 +201,7 @@ namespace CSPspEmu.Hle.Modules.ge
 
 			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeDrawSync", null, (WakeUpCallbackDelegate) =>
 			{
-				HleState.GpuProcessor.GeDrawSync(SyncType, () =>
+				GpuProcessor.GeDrawSync(SyncType, () =>
 				{
 					WakeUpCallbackDelegate();
 				});

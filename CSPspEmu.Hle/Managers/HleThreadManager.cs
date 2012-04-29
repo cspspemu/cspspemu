@@ -40,6 +40,9 @@ namespace CSPspEmu.Hle.Managers
 		[Inject]
 		private HleInterruptManager HleInterruptManager;
 
+		[Inject]
+		private HleInterop HleInterop;
+
 		public HleThread CurrentOrAny
 		{
 			get
@@ -154,6 +157,7 @@ namespace CSPspEmu.Hle.Managers
 					*/
 #if !DISABLE_CALLBACKS
 					HleCallbackManager.ExecuteQueued(Current.CpuThreadState, MustReschedule);
+					HleInterop.ExecuteAllQueuedFunctionsNow();
 #endif
 				}
 				// Executing normally.
