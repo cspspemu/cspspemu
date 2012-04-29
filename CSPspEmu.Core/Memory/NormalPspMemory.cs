@@ -1,4 +1,5 @@
-﻿#define ADDITIONAL_CHECKS
+﻿//#define ENABLE_LOG_MEMORY
+#define ADDITIONAL_CHECKS
 #define USE_ARRAY_BYTES
 
 using System;
@@ -53,7 +54,11 @@ namespace CSPspEmu.Core.Memory
 					ScratchPad = new byte[ScratchPadSize];
 					FrameBuffer = new byte[FrameBufferSize];
 					Main = new byte[MainSize];
+#if ENABLE_LOG_MEMORY
+					LogMain = new uint[0];
+#else
 					LogMain = new uint[MainSize];
+#endif
 				}
 
 				ScratchPadHandle = GCHandle.Alloc(ScratchPad, GCHandleType.Pinned);
@@ -112,20 +117,24 @@ namespace CSPspEmu.Core.Memory
 
 		override public void SetPCWriteAddress(uint _Address, uint PC)
 		{
+#if ENABLE_LOG_MEMORY
 			var Address = _Address & PspMemory.MemoryMask;
 			if (Address >= MainOffset && Address < MainOffset + MainSize)
 			{
 				LogMainPtr[Address - MainOffset] = PC;
 			}
+#endif
 		}
 
 		override public uint GetPCWriteAddress(uint _Address)
 		{
+#if ENABLE_LOG_MEMORY
 			var Address = _Address & PspMemory.MemoryMask;
 			if (Address >= MainOffset && Address < MainOffset + MainSize)
 			{
 				return LogMainPtr[Address - MainOffset];
 			}
+#endif
 			return 0xFFFFFFFF;
 		}
 
@@ -156,7 +165,7 @@ namespace CSPspEmu.Core.Memory
 							}
 							var Offset = Address - ScratchPadOffset;
 #if ADDITIONAL_CHECKS
-							if (Offset < 0 || Offset >= ScratchPad.Length) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
+							if (Offset < 0 || Offset >= ScratchPadSize) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
 #endif
 							return &ScratchPadPtr[Address - ScratchPadOffset];
 						}
@@ -164,9 +173,8 @@ namespace CSPspEmu.Core.Memory
 					case 0x04: //case 0b_00100:
 						{
 							var Offset = Address - FrameBufferOffset;
-							//if (Offset < 0 || Offset >= FrameBufferSize) throw (new Exception("Outside!"));
 #if ADDITIONAL_CHECKS
-							if (Offset < 0 || Offset >= FrameBuffer.Length) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
+							if (Offset < 0 || Offset >= FrameBufferSize) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
 #endif
 
 							return &FrameBufferPtr[Offset];
@@ -178,9 +186,8 @@ namespace CSPspEmu.Core.Memory
 					case 0x0B: //case 0b_01011: // SLIM ONLY
 						{
 							var Offset = Address - MainOffset;
-							//if (Offset < 0 || Offset >= MainSize) throw(new Exception("Outside!"));
 #if ADDITIONAL_CHECKS
-							if (Offset < 0 || Offset >= Main.Length) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
+							if (Offset < 0 || Offset >= MainSize) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
 #endif
 
 							return &MainPtr[Offset];

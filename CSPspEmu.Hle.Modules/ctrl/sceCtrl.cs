@@ -10,6 +10,11 @@ using CSPspEmu.Hle.Attributes;
 namespace CSPspEmu.Hle.Modules.ctrl
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
+	public class sceCtrl_driver : sceCtrl
+	{
+	}
+
+	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public class sceCtrl : HleModuleHost
 	{
 		protected void _ReadCount(SceCtrlData* SceCtrlData, int Count, bool Peek, bool Positive)

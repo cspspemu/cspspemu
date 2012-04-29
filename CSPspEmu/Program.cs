@@ -179,10 +179,10 @@ namespace CSPspEmu
 					TestsAutoProgram.Main(Arguments.Skip(1).ToArray());
 					Environment.Exit(0);
 				});
-				//Getopt.AddRule((Name) =>
-				//{
-				//    FileToLoad = Name;
-				//});
+				Getopt.AddRule((Name) =>
+				{
+				    FileToLoad = Name;
+				});
 			}
 			try
 			{

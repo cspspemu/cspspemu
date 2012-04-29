@@ -8,6 +8,12 @@ using System.IO;
 
 namespace CSPspEmu.Core.Memory
 {
+	unsafe abstract public class PspModel
+	{
+		public const bool IsSlim = false;
+		//public const bool IsSlim = true;
+	}
+
 	unsafe abstract public class PspMemory : PspEmulatorComponent, IResetable, IDisposable
 	{
 		static internal Logger Logger = Logger.GetLogger("Memory");
@@ -62,8 +68,7 @@ namespace CSPspEmu.Core.Memory
 
 		public const int ScratchPadSize = 4 * 1024; // 4KB
 		public const int FrameBufferSize = 2 * 0x100000; // 2MB
-		public const int MainSize = 64 * 0x100000; // 64MB (SLIM)
-		//public const int MainSize = 32 * 0x100000; // 32MB (PHAT)
+		public const int MainSize = (PspModel.IsSlim ? 64 : 32) * 0x100000; // 32MB (PHAT) / 64MB (SLIM)
 
 		public const uint ScratchPadOffset = 0x00010000;
 		public const uint FrameBufferOffset = 0x04000000;

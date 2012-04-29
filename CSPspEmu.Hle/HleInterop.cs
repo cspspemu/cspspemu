@@ -53,25 +53,31 @@ namespace CSPspEmu.Hle
 
 		public int ExecuteAllQueuedFunctionsNow()
 		{
-			int ExecutedCount = 0;
-			while (QueuedExecutions.Count > 0)
+			lock (QueuedExecutions)
 			{
-				var QueuedExecution = QueuedExecutions.Dequeue();
-				var Result = ExecuteFunctionNow(QueuedExecution.Function, QueuedExecution.Arguments);
-				if (QueuedExecution.ExecutedCallback != null) QueuedExecution.ExecutedCallback(Result);
-				ExecutedCount++;
+				int ExecutedCount = 0;
+				while (QueuedExecutions.Count > 0)
+				{
+					var QueuedExecution = QueuedExecutions.Dequeue();
+					var Result = ExecuteFunctionNow(QueuedExecution.Function, QueuedExecution.Arguments);
+					if (QueuedExecution.ExecutedCallback != null) QueuedExecution.ExecutedCallback(Result);
+					ExecutedCount++;
+				}
+				return ExecutedCount;
 			}
-			return ExecutedCount;
 		}
 
 		public void ExecuteFunctionLater(uint Function, Action<uint> ExecutedCallback, params object[] Arguments)
 		{
-			QueuedExecutions.Enqueue(new QueuedExecution()
+			lock (QueuedExecutions)
 			{
-				Function = Function,
-				ExecutedCallback = ExecutedCallback,
-				Arguments = Arguments,
-			});
+				QueuedExecutions.Enqueue(new QueuedExecution()
+				{
+					Function = Function,
+					ExecutedCallback = ExecutedCallback,
+					Arguments = Arguments,
+				});
+			}
 		}
 
 		public HleThread Execute(CpuThreadState FakeCpuThreadState)

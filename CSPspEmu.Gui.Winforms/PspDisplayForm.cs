@@ -315,7 +315,7 @@ namespace CSPspEmu.Gui.Winforms
 							}
 						});
 					}
-					else
+					//else
 					{
 						//Console.WriteLine("Display not updated!");
 					}

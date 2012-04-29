@@ -13,6 +13,7 @@ namespace CSPspEmu.Hle.Modules.utility
 {
 	unsafe public partial class sceUtility
 	{
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct ListRequest
 		{
 			/// <summary>
@@ -31,6 +32,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			public PspPointer Entries;
 		}
 
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct SizeFreeInfo
 		{
 			/// <summary>
@@ -55,6 +57,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			public string FreeKbString { get { fixed (byte* Ptr = FreeKbStringFixed) return PointerUtils.FixedByteGet(8, Ptr); } set { fixed (byte* Ptr = FreeKbStringFixed) PointerUtils.FixedByteSet(8, Ptr, value); } }
 		}
 
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct SizeUsedInfo
 		{
 			/// <summary>
@@ -97,6 +100,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			public string UsedKb32String { get { fixed (byte* Ptr = UsedKb32StringFixed) return PointerUtils.FixedByteGet(8, Ptr); } set { fixed (byte* Ptr = UsedKb32StringFixed) PointerUtils.FixedByteSet(8, Ptr, value); } }
 		}
 
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct SizeRequiredSpaceInfo
 		{
 			/// <summary>
@@ -269,14 +273,17 @@ namespace CSPspEmu.Hle.Modules.utility
 							{
 								var SizeUsedInfo = (SizeUsedInfo*)Params->msDataAddr.GetPointer<SizeUsedInfo>(Memory);
 
-								Console.WriteLine(SizeUsedInfo->saveName);
-								Console.WriteLine(SizeUsedInfo->gameName);
-		
-								SizeUsedInfo->UsedKb = UsedSize / 1024;
-								SizeUsedInfo->UsedKb32 = UsedSize / (32 * 1024);
+								if (SizeUsedInfo != null)
+								{
+									Console.WriteLine(SizeUsedInfo->saveName);
+									Console.WriteLine(SizeUsedInfo->gameName);
 
-								SizeUsedInfo->UsedKbString = (SizeUsedInfo->UsedKb) + "KB";
-								SizeUsedInfo->UsedKb32String = (SizeUsedInfo->UsedKb32) + "KB";
+									SizeUsedInfo->UsedKb = UsedSize / 1024;
+									SizeUsedInfo->UsedKb32 = UsedSize / (32 * 1024);
+
+									SizeUsedInfo->UsedKbString = (SizeUsedInfo->UsedKb) + "KB";
+									SizeUsedInfo->UsedKb32String = (SizeUsedInfo->UsedKb32) + "KB";
+								}
 							}
 
 							// Utility data size.

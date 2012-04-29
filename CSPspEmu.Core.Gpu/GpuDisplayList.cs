@@ -419,7 +419,7 @@ namespace CSPspEmu.Core.Gpu
 					Callbacks.FinishFunction,
 					(Result) =>
 					{
-						Console.Error.WriteLine("OP_FINISH! : ENDED : {0}", Result);
+						//Console.Error.WriteLine("OP_FINISH! : ENDED : {0}", Result);
 					},
 					CallbacksId,
 					Callbacks.FinishArgument
@@ -427,7 +427,7 @@ namespace CSPspEmu.Core.Gpu
 				//Callbacks.FinishFunction();
 				//GpuProcessor.interop
 				//GpuProcessor.
-				Console.Error.WriteLine("OP_FINISH! : SCHEDULED");
+				//Console.Error.WriteLine("OP_FINISH! : SCHEDULED");
 			}
 		}
 

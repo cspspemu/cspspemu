@@ -6,6 +6,7 @@ using CSharpUtils;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Modules.utility
 {
@@ -226,6 +227,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			PSP_UTILITY_SAVEDATA_FOCUS_LASTEMPTY  = 8, // Last empty slot
 		}
 
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		unsafe public struct PspUtilitySavedataSFOParam
 		{
 			/// <summary>
@@ -276,6 +278,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			public fixed byte Unknown[3];
 		}
 
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct PspUtilitySavedataFileData
 		{
 			public bool Used
@@ -310,6 +313,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			public uint Unknown;
 		}
 
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct PspUtilitySavedataListSaveNewData
 		{
 			public PspUtilitySavedataFileData icon0;
@@ -319,6 +323,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// <summary>
 		/// Structure to hold the parameters for a message dialog
 		/// </summary>
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct pspUtilityMsgDialogParams
 		{
 			/// <summary>
@@ -377,6 +382,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// <summary>
 		/// 
 		/// </summary>
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct pspUtilityDialogCommon
 		{
 			/// <summary>
@@ -425,6 +431,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			public fixed int  Reserved[4];
 		}
 
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct SceUtilitySavedataParam
 		{
 			/// <summary>
@@ -621,6 +628,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			PSP_NETCONF_ACTION_CONNECTAP_LASTUSED,
 		}
 
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct pspUtilityNetconfAdhoc
 		{
 			/// <summary>
@@ -634,6 +642,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			public uint timeout;
 		}
 
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct pspUtilityNetconfData
 		{
 			/// <summary>
@@ -838,6 +847,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// <summary>
 		/// OSK Field data
 		/// </summary>
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct SceUtilityOskData
 		{
 			/// <summary>
@@ -912,6 +922,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// <summary>
 		/// OSK parameters
 		/// </summary>
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct SceUtilityOskParams
 		{
 			/// <summary>

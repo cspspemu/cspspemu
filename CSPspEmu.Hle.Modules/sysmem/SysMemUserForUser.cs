@@ -5,6 +5,7 @@ using System.Text;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Modules.sysmem
 {
@@ -32,6 +33,23 @@ namespace CSPspEmu.Hle.Modules.sysmem
 			//Logger.log(Logger.Level.TRACE, "SysMemUserForUser", "sceKernelDevkitVersion");
 			//return hleOsConfig.firmwareVersion;
 			return 0x02070110;
+		}
+
+		public enum PspModelEnum : int
+		{
+			Phat = 0,
+			Slim = 1,
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x6373995D, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public PspModelEnum sceKernelGetModel()
+		{
+			return PspModel.IsSlim ? PspModelEnum.Slim : PspModelEnum.Phat;
 		}
 
 		/// <summary>

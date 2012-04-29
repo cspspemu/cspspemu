@@ -98,18 +98,10 @@ namespace CSPspEmu.Core.Gpu
 		/// </summary>
 		readonly public GpuDisplayList[] DisplayLists = new GpuDisplayList[64];
 
-		public enum StatusEnum
-		{
-			Drawing = 0,
-			Completed = 1,
-		}
-
 		/// <summary>
 		/// 
 		/// </summary>
-		//public event Action DrawSync;
-		readonly public WaitableStateMachine<StatusEnum> Status = new WaitableStateMachine<StatusEnum>(Debug: false);
-		//readonly public WaitableStateMachine<StatusEnum> Status = new WaitableStateMachine<StatusEnum>(Debug: true);
+		public PspAutoResetEvent CompletedDrawingEvent = new PspAutoResetEvent(true);
 
 		/// <summary>
 		/// 
@@ -225,45 +217,36 @@ namespace CSPspEmu.Core.Gpu
 		/// </summary>
 		public void ProcessStep()
 		{
-			GpuDisplayList CurrentGpuDisplayList;
-			Status.SetValue(StatusEnum.Completed);
-
 			//Thread.Sleep(1);
-			if (PspConfig.VerticalSynchronization)
-			{
-				DisplayListQueueUpdated.WaitOne(1);
-			}
-			else
-			{
-				DisplayListQueueUpdated.WaitOne(0);
-			}
+			DisplayListQueueUpdated.WaitOne(PspConfig.VerticalSynchronization ? 1 : 0);
 
-			while (true)
+			if (DisplayListQueue.GetCountLock() > 0)
 			{
-				lock (DisplayListQueue) if (DisplayListQueue.Count <= 0) break;
+				//Console.WriteLine("ProcessStep START");
 
-				Status.SetValue(StatusEnum.Drawing);
-
-				lock (DisplayListQueue) CurrentGpuDisplayList = DisplayListQueue.RemoveFirstAndGet();
+				while (DisplayListQueue.GetCountLock() > 0)
 				{
+					var CurrentGpuDisplayList = DisplayListQueue.RemoveFirstAndGet();
+					//Console.WriteLine("Executing list : {0}", CurrentGpuDisplayList.Id);
 					CurrentGpuDisplayList.Process();
+					EnqueueFreeDisplayList(CurrentGpuDisplayList);
 				}
-				EnqueueFreeDisplayList(CurrentGpuDisplayList);
+
+				CompletedDrawingEvent.Set();
+				//Console.WriteLine("ProcessStep END");
 			}
-
-			Status.SetValue(StatusEnum.Completed);
-
 			//if (DrawSync != null) DrawSync();
 		}
 
 		public void GeDrawSync(SyncTypeEnum SyncType, Action SyncCallback)
 		{
 			//Console.Error.WriteLine("-- GeDrawSync --------------------------------");
-			//Console.WriteLine("GeDrawSync: {0}", this.DisplayListFreeQueue.Count);
 			if (SyncType != SyncTypeEnum.ListDone) throw new NotImplementedException();
-			Status.CallbackOnStateOnce(StatusEnum.Completed, () =>
+
+			CompletedDrawingEvent.CallbackOnSet(() =>
 			{
-				//Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				//Console.Error.WriteLine("-- GeDrawSync Completed --------------------------------");
+				CompletedDrawingEvent.Reset();
 				CapturingWaypoint();
 				SyncCallback();
 			});
