@@ -201,7 +201,7 @@ namespace CSPspEmu.Hle.Formats
 
 			var Out = new byte[this.Header.BlockSize];
 
-			In = In.Concat(new byte[] { 0x00 });
+			In = (byte[])In.Concat(new byte[] { 0x00 });
 
 			var ZStream = new ZStream();
 
