@@ -26,7 +26,7 @@ namespace CSPspEmu.Hle.Modules.Tests.iofilemgr.umd
 
 		protected override void Initialize()
 		{
-			var Iso = IsoLoader.GetIso("../../../pspautotests/input/cube.cso");
+			var Iso = IsoLoader.GetIso("../../../pspautotests/input/iotest.iso");
 			var Umd = new HleIoDriverIso(Iso);
 			HleIoManager.SetDriver("disc:", Umd);
 			HleIoManager.Chdir("disc0:/PSP_GAME/USRDIR");
