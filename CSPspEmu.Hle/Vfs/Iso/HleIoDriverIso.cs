@@ -213,8 +213,7 @@ namespace CSPspEmu.Hle.Vfs.Iso
 					return 0;
 				case UmdCommandEnum.GetPrimaryVolumeDescriptor:
 					if (OutputLength != IsoFile.SectorSize || OutputPointer == null) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
-					*((PrimaryVolumeDescriptor*)OutputPointer) = IsoFileArgument.Stream.ReadStruct<PrimaryVolumeDescriptor>();
-					//*((PrimaryVolumeDescriptor*)OutputPointer) = Iso.PrimaryVolumeDescriptor;
+					*((PrimaryVolumeDescriptor*)OutputPointer) = Iso.PrimaryVolumeDescriptor;
 					return 0;
 				default:
 					throw new NotImplementedException(String.Format("Not implemented command 0x{0:X}", Command));
