@@ -31,12 +31,10 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// </summary>
 		/// <returns>The firmware version.</returns>
 		[HlePspFunction(NID = 0x3FC9AE6A, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
 		public int sceKernelDevkitVersion()
 		{
-			//Logger.log(Logger.Level.TRACE, "SysMemUserForUser", "sceKernelDevkitVersion");
-			//return hleOsConfig.firmwareVersion;
-			return 0x02070110;
+			var Version = PspConfig.FirmwareVersion;
+			return (Version.Major << 24) | (Version.Minor << 16) | (Version.Revision << 8) | 0x10;
 		}
 
 		public enum PspModelEnum : int

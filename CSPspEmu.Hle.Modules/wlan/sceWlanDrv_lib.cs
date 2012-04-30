@@ -18,11 +18,10 @@ namespace CSPspEmu.Hle.Modules.wlan
 		/// </summary>
 		/// <returns>0 if off, 1 if on</returns>
 		[HlePspFunction(NID = 0xD7763699, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceWlanGetSwitchState()
+		public bool sceWlanGetSwitchState()
 		{
 			//throw(new NotImplementedException());
-			return 0;
+			return PspConfig.WlanIsOn;
 		}
 
 		/// <summary>
@@ -39,10 +38,7 @@ namespace CSPspEmu.Hle.Modules.wlan
 				if (ThisNetworkInterface.OperationalStatus == OperationalStatus.Up)
 				{
 					var Bytes = ThisNetworkInterface.GetPhysicalAddress().GetAddressBytes();
-					for (int n = 0; n < 6; n++)
-					{
-						EthernetAddress[n] = Bytes[n];
-					}
+					for (int n = 0; n < 6; n++) EthernetAddress[n] = Bytes[n];
 
 					return 0;
 				}

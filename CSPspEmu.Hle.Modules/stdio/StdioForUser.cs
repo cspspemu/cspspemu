@@ -16,6 +16,10 @@ namespace CSPspEmu.Hle.Modules.stdio
 		[Inject]
 		HleModuleManager ModuleManager;
 
+		[Inject]
+		IoFileMgrForUser IoFileMgrForUser;
+
+		// ::TODO Faked STD. We should properly open streams.
 		public enum StdHandle : int
 		{
 			/*
@@ -80,7 +84,6 @@ namespace CSPspEmu.Hle.Modules.stdio
 		[HlePspNotImplemented]
 		public StdHandle sceKernelStdoutReopen(string File, HleIoFlags Flags, Vfs.SceMode Mode)
 		{
-			var IoFileMgrForUser = ModuleManager.GetModule<IoFileMgrForUser>();
 			StdOut = (StdHandle)IoFileMgrForUser.sceIoOpen(File, Flags, Mode);
 			//Console.WriteLine("StdOut: {0}", StdOut);
 			return StdOut;
@@ -97,7 +100,6 @@ namespace CSPspEmu.Hle.Modules.stdio
 		[HlePspNotImplemented]
 		public StdHandle sceKernelStderrReopen(string File, HleIoFlags Flags, Vfs.SceMode Mode)
 		{
-			var IoFileMgrForUser = ModuleManager.GetModule<IoFileMgrForUser>();
 			StdError = (StdHandle)IoFileMgrForUser.sceIoOpen(File, Flags, Mode);
 			return StdError;
 		}

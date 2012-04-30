@@ -3775,7 +3775,7 @@ namespace BrightIdeasSoftware
             if (!this.ShowGroups)
                 return value.Index;
 
-            // TODO: This could be optimized
+            // This could be optimized
             int i = 0;
             foreach (ListViewGroup lvg in this.Groups) {
                 foreach (ListViewItem lvi in lvg.Items) {
@@ -4713,7 +4713,7 @@ namespace BrightIdeasSoftware
             const int MILLISECONDS_BETWEEN_KEYPRESSES = 1000;
 
             // What character did the user type and was it part of a longer string?
-            char character = (char)m.WParam.ToInt32(); //TODO: Will this work on 64 bit or MBCS?
+            char character = (char)m.WParam.ToInt32(); // Will this work on 64 bit or MBCS?
             if (character == (char)Keys.Back) {
                 // Backspace forces the next key to be considered the start of a new search
                 this.timeLastCharEvent = 0;
@@ -5334,7 +5334,7 @@ namespace BrightIdeasSoftware
 
             bool isMsgHandled = false;
 
-            // TODO: Don't do any logic in this method. Create separate methods for each message
+            // Don't do any logic in this method. Create separate methods for each message
 
             NativeMethods.NMHDR nmhdr = (NativeMethods.NMHDR)m.GetLParam(typeof(NativeMethods.NMHDR));
             //System.Diagnostics.Debug.WriteLine(String.Format("rn: {0}", nmhdr->code));
@@ -8239,7 +8239,7 @@ namespace BrightIdeasSoftware
             OLVColumn column = this.GetColumn(subItemIndex);
             Object value = column.GetValue(item.RowObject) ?? this.GetFirstNonNullValue(column);
 
-            // TODO: What do we do if value is still null here?
+            //  What do we do if value is still null here?
 
             // Ask the registry for an instance of the appropriate editor.
             Control editor = ObjectListView.EditorRegistry.GetEditor(item.RowObject, column, value);
@@ -8921,7 +8921,7 @@ namespace BrightIdeasSoftware
                 return false;
 
             // If we don't have 32-bit display, alpha blending doesn't work, so again, no overlays
-            // TODO: This should actually figure out which screen(s) the control is on, and make sure
+            // This should actually figure out which screen(s) the control is on, and make sure
             // that each one is 32-bit.
             if (Screen.PrimaryScreen.BitsPerPixel < 32)
                 return false;

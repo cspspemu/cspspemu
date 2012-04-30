@@ -6,8 +6,6 @@ using System.Drawing.Drawing2D;
 using System.Text;
 using System.Windows.Forms;
 
-//TODO: Allow alpha
-
 namespace BrightIdeasSoftware
 {
     internal partial class BrushForm : Form

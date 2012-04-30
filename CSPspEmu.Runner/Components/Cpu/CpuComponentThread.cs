@@ -34,6 +34,8 @@ namespace CSPspEmu.Runner.Components.Cpu
 {
 	unsafe sealed public class CpuComponentThread : ComponentThread
 	{
+		static Logger Logger = Logger.GetLogger("CpuComponentThread");
+
 		protected override string ThreadName { get { return "CpuThread"; } }
 
 		[Inject]
@@ -212,6 +214,14 @@ namespace CSPspEmu.Runner.Components.Cpu
 							{
 								var ParamSfo = new Psf().Load(Pbp[Pbp.Types.ParamSfo]);
 								Title = (String)ParamSfo.EntryDictionary["TITLE"];
+								try
+								{
+									PspEmulatorContext.PspConfig.SetVersion(ParamSfo.EntryDictionary["PSP_SYSTEM_VER"].ToString());
+								}
+								catch (Exception Exception)
+								{
+									Logger.Error(Exception);
+								}
 							}
 							catch (Exception Exception)
 							{

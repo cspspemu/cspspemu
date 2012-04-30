@@ -126,7 +126,7 @@ namespace BrightIdeasSoftware {
                     }
                     string strValue = col.Text;
                     sbText.Append(strValue);
-                    sbHtml.Append(strValue); //TODO: Should encode the string value
+                    sbHtml.Append(strValue); //Should encode the string value
                 }
                 sbText.AppendLine();
                 sbHtml.AppendLine("</td></tr>");
@@ -141,7 +141,7 @@ namespace BrightIdeasSoftware {
                     }
                     string strValue = col.GetStringValue(modelObject);
                     sbText.Append(strValue);
-                    sbHtml.Append(strValue); //TODO: Should encode the string value
+                    sbHtml.Append(strValue); // Should encode the string value
                 }
                 sbText.AppendLine();
                 sbHtml.AppendLine("</td></tr>");
@@ -172,7 +172,7 @@ namespace BrightIdeasSoftware {
                         sbHtml.Append("</td><td>");
                     }
                     string strValue = col.GetStringValue(modelObject);
-                    sbHtml.Append(strValue); //TODO: Should encode the string value
+                    sbHtml.Append(strValue); // Should encode the string value
                 }
                 sbHtml.AppendLine("</td></tr>");
             }

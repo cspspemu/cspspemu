@@ -425,7 +425,7 @@ namespace BrightIdeasSoftware
             this.RedrawItems(index, this.GetItemCount() - 1, false);
 
             if (this.RevealAfterExpand && index > 0) {
-                // TODO: This should be a separate method
+                // ::TODO: This should be a separate method
                 this.BeginUpdate();
                 try {
                     int countPerPage = NativeMethods.GetCountPerPage(this);
@@ -1004,7 +1004,7 @@ namespace BrightIdeasSoftware
                 this.lastSortColumn = column;
                 this.lastSortOrder = order;
 
-                // TODO: Need to raise an AboutToSortEvent here
+                // ::TODO: Need to raise an AboutToSortEvent here
 
                 // Sorting is going to change the order of the branches so clear
                 // the "first branch" flag

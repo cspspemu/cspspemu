@@ -47,7 +47,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelNotifyCallback(int CallbackId, int Argument2)
 		{
 			var Callback = CallbackManager.Callbacks.Get(CallbackId);
-			// TODO!
+			// ::TODO!
 			CallbackManager.ScheduleCallback(Callback);
 			return 0;
 		}

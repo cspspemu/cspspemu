@@ -350,7 +350,7 @@ namespace BrightIdeasSoftware
 
             if (this.Spin != 0) {
                 Rectangle r = this.Bounds;
-                // TODO: Make a SpinCentre property
+                // Make a SpinCentre property
                 Point spinCentre = r.Location;
                 if (!this.SpinAroundOrigin)
                     spinCentre = new Point(r.X + r.Width / 2, r.Y + r.Height / 2);

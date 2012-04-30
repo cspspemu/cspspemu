@@ -496,7 +496,7 @@ namespace BrightIdeasSoftware
         }
 
         private Type GeneratePart(ILGenerator il, Type type, string pathPart, bool isLastPart) {
-            // TODO: Generate check for null
+            // ::TODO: Generate check for null
 
             // Find the first member with the given nam that is a field, property, or parameter-less method
             List<MemberInfo> infos = new List<MemberInfo>(type.GetMember(pathPart));

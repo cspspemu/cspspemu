@@ -126,7 +126,7 @@ namespace BrightIdeasSoftware.Design
                 //THINK: Can this ever happen?
                 System.Diagnostics.Debug.WriteLine("context.Instance was NOT an ObjectListView");
 
-                // Hack to figure out which ObjectListView we are working on
+                // :: Hack to figure out which ObjectListView we are working on
                 ListView.ColumnHeaderCollection cols = (ListView.ColumnHeaderCollection)value;
                 if (cols.Count == 0) {
                     cols.Add(new OLVColumn());

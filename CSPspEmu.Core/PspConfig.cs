@@ -5,6 +5,7 @@ using System.Text;
 using CSharpUtils.Factory;
 using System.Reflection;
 using CSPspEmu.Resources;
+using System.Text.RegularExpressions;
 
 namespace CSPspEmu.Core
 {
@@ -214,5 +215,18 @@ namespace CSPspEmu.Core
 
 		public bool DebugNotImplemented = true;
 		public bool WlanIsOn = false;
+		//public Version FirmwareVersion = new Version(6, 3, 0);
+		public Version FirmwareVersion = new Version("6.3.0.0");
+
+		static Regex SetVersionRegex = new Regex(@"^(\d+)\.(\d)(\d)$", RegexOptions.Compiled);
+
+		public void SetVersion(string VersionString)
+		{
+			var Match = SetVersionRegex.Match(VersionString);
+			var Major = int.Parse(Match.Groups[1].Value);
+			var Minor = int.Parse(Match.Groups[2].Value);
+			var Revision = int.Parse(Match.Groups[3].Value);
+			FirmwareVersion = new Version(Major, Minor, Revision);
+		}
 	}
 }

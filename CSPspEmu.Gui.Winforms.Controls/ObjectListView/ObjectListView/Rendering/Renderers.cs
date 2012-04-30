@@ -734,7 +734,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <returns>The background color of the subitem's text</returns>
         protected virtual Color GetTextBackgroundColor() {
-            //TODO: Refactor with GetBackgroundColor() - they are almost identical
+            // Refactor with GetBackgroundColor() - they are almost identical
             if (this.IsItemSelected && !this.ListView.UseTranslucentSelection 
                 && (this.Column.Index == 0 || this.ListView.FullRowSelect)) {
                 if (this.ListView.Focused)
@@ -2181,7 +2181,7 @@ namespace BrightIdeasSoftware
                 foreach (PropertyItem pi in this.image.PropertyItems) {
                     if (pi.Id == PropertyTagFrameDelay) {
                         for (int i = 0; i < pi.Len; i += 4) {
-                            //TODO: There must be a better way to convert 4-bytes to an int
+                            // There must be a better way to convert 4-bytes to an int
                             int delay = (pi.Value[i + 3] << 24) + (pi.Value[i + 2] << 16) + (pi.Value[i + 1] << 8) + pi.Value[i];
                             this.imageDuration.Add(delay * 10); // store delays as milliseconds
                         }

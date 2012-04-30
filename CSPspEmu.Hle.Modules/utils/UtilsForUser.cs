@@ -345,6 +345,10 @@ namespace CSPspEmu.Hle.Modules.utils
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <seealso cref="http://takel.jp/mt/MT19937.cs"/>
 	[StructLayout(LayoutKind.Sequential, Pack = 4)]
 	unsafe public struct SceKernelUtilsMt19937Context
 	{
