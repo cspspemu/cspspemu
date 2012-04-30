@@ -122,7 +122,6 @@
     <Compile Include="Threading\Semaphores\HleSemaphore.cs" />
     <Compile Include="Managers\HleSemaphoreManager.cs" />
     <Compile Include="Managers\HleThreadManager.cs" />
-    <Compile Include="HleState.cs" />
     <Compile Include="Managers\HleUidPool.cs" />
     <Compile Include="MemoryPartition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

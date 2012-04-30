@@ -48,9 +48,6 @@ namespace CSPspEmu.Runner.Components.Cpu
 		public HleThreadManager ThreadManager;
 		
 		[Inject]
-		public HleState HleState;
-
-		[Inject]
 		public PspMemory PspMemory;
 
 		[Inject]
@@ -59,6 +56,11 @@ namespace CSPspEmu.Runner.Components.Cpu
 		[Inject]
 		public HleMemoryManager MemoryManager;
 
+		[Inject]
+		HleModuleManager ModuleManager;
+
+		[Inject]
+		HleIoManager HleIoManager;
 
 		HleIoDriverMountable MemoryStickMountable;
 
@@ -88,21 +90,21 @@ namespace CSPspEmu.Runner.Components.Cpu
 			//var MemoryStick = new HleIoDriverMemoryStick(new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
 
 			// http://forums.ps2dev.org/viewtopic.php?t=5680
-			HleState.HleIoManager.SetDriver("ms:", MemoryStick);
-			HleState.HleIoManager.SetDriver("fatms:", MemoryStick);
-			HleState.HleIoManager.SetDriver("fatmsOem:", MemoryStick);
-			HleState.HleIoManager.SetDriver("mscmhc:", MemoryStick);
+			HleIoManager.SetDriver("ms:", MemoryStick);
+			HleIoManager.SetDriver("fatms:", MemoryStick);
+			HleIoManager.SetDriver("fatmsOem:", MemoryStick);
+			HleIoManager.SetDriver("mscmhc:", MemoryStick);
 
-			HleState.HleIoManager.SetDriver("msstor:", new ReadonlyHleIoDriver(MemoryStick));
-			HleState.HleIoManager.SetDriver("msstor0p:", new ReadonlyHleIoDriver(MemoryStick));
+			HleIoManager.SetDriver("msstor:", new ReadonlyHleIoDriver(MemoryStick));
+			HleIoManager.SetDriver("msstor0p:", new ReadonlyHleIoDriver(MemoryStick));
 
-			HleState.HleIoManager.SetDriver("disc:", MemoryStick);
-			HleState.HleIoManager.SetDriver("umd:", MemoryStick);
+			HleIoManager.SetDriver("disc:", MemoryStick);
+			HleIoManager.SetDriver("umd:", MemoryStick);
 
-			HleState.HleIoManager.SetDriver("emulator:", HleIoDriverEmulator);
-			HleState.HleIoManager.SetDriver("kemulator:", HleIoDriverEmulator);
+			HleIoManager.SetDriver("emulator:", HleIoDriverEmulator);
+			HleIoManager.SetDriver("kemulator:", HleIoDriverEmulator);
 
-			HleState.HleIoManager.SetDriver("flash:", new HleIoDriverZip(new ZipArchive(ResourceArchive.GetFlash0ZipFileStream())));
+			HleIoManager.SetDriver("flash:", new HleIoDriverZip(new ZipArchive(ResourceArchive.GetFlash0ZipFileStream())));
 		}
 
 		public IsoFile SetIso(string IsoFile)
@@ -110,11 +112,11 @@ namespace CSPspEmu.Runner.Components.Cpu
 			//"../../../TestInput/cube.iso"
 			var Iso = IsoLoader.GetIso(IsoFile);
 			var Umd = new HleIoDriverIso(Iso);
-			HleState.HleIoManager.SetDriver("disc:", Umd);
-			HleState.HleIoManager.SetDriver("umd:", Umd);
-			HleState.HleIoManager.SetDriver("host:", Umd);
-			HleState.HleIoManager.SetDriver(":", Umd);
-			HleState.HleIoManager.Chdir("disc0:/PSP_GAME/USRDIR");
+			HleIoManager.SetDriver("disc:", Umd);
+			HleIoManager.SetDriver("umd:", Umd);
+			HleIoManager.SetDriver("host:", Umd);
+			HleIoManager.SetDriver(":", Umd);
+			HleIoManager.Chdir("disc0:/PSP_GAME/USRDIR");
 			return Iso;
 		}
 
@@ -144,7 +146,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 				.Replace("CODE_PTR_FINALIZE_CALLBACK", String.Format("0x{0:X}", HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK))
 			);
 
-			//var ThreadManForUser = HleState.ModuleManager.GetModule<ThreadManForUser>();
+			//var ThreadManForUser = ModuleManager.GetModule<ThreadManForUser>();
 
 			RegisterModuleSyscall<ThreadManForUser>(0x206D, "sceKernelCreateThread");
 			RegisterModuleSyscall<ThreadManForUser>(0x206F, "sceKernelStartThread");
@@ -176,7 +178,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 
 		void RegisterModuleSyscall<TType>(int SyscallCode, string FunctionName) where TType : HleModuleHost
 		{
-			var Delegate = HleState.ModuleManager.GetModuleDelegate<TType>(FunctionName);
+			var Delegate = ModuleManager.GetModuleDelegate<TType>(FunctionName);
 			CpuProcessor.RegisterNativeSyscall(SyscallCode, (CpuThreadState, Code) =>
 			{
 				Delegate(CpuThreadState);
@@ -282,7 +284,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 							ElfLoadStream,
 							MemoryStream,
 							MemoryManager.GetPartition(HleMemoryManager.Partitions.User),
-							HleState.ModuleManager,
+							ModuleManager,
 							Title,
 							ModuleName: FileName,
 							IsMainModule: true
@@ -320,13 +322,13 @@ namespace CSPspEmu.Runner.Components.Cpu
 				);
 				PspMemory.WriteBytes(ArgumentsPartition.Low, ArgumentsChunk);
 
-				var ThreadManForUser = HleState.ModuleManager.GetModule<ThreadManForUser>();
+				var ThreadManForUser = ModuleManager.GetModule<ThreadManForUser>();
 				Debug.Assert(ThreadManForUser != null);
 
 
 				// @TODO: Use Module Manager
 
-				//var MainThread = HleState.ThreadManager.Create();
+				//var MainThread = ThreadManager.Create();
 				//var CpuThreadState = MainThread.CpuThreadState;
 				var CurrentCpuThreadState = new CpuThreadState(CpuProcessor);
 				{
@@ -339,7 +341,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 				}
 				CurrentCpuThreadState.DumpRegisters();
 				MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Dump();
-				//HleState.ModuleManager.LoadedGuestModules.Add(HleModuleGuest);
+				//ModuleManager.LoadedGuestModules.Add(HleModuleGuest);
 					
 				//MainThread.CurrentStatus = HleThread.Status.Ready;
 			}
@@ -412,7 +414,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 							);
 
 							ErrorOut.WriteLine("Last called syscalls: ");
-							foreach (var CalledCallback in HleState.ModuleManager.LastCalledCallbacks.Reverse())
+							foreach (var CalledCallback in ModuleManager.LastCalledCallbacks.Reverse())
 							{
 								ErrorOut.WriteLine("  {0}", CalledCallback);
 							}

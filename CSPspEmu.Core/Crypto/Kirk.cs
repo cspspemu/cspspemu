@@ -13,7 +13,7 @@ namespace CSPspEmu.Core.Crypto
 {
 	unsafe public delegate void PointerAction(byte* Address);
 
-	unsafe public partial class Kirk
+	unsafe public partial class Kirk : PspEmulatorComponent
 	{
 		static Logger Logger = Logger.GetLogger("Kirk");
 
@@ -33,6 +33,11 @@ namespace CSPspEmu.Core.Crypto
 		Random Random;
 
 		bool IsKirkInitialized; //"init" emulation
+
+		public override void InitializeComponent()
+		{
+			this.kirk_init();
+		}
 
 		/// <summary>
 		/// 

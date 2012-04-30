@@ -27,7 +27,7 @@ namespace CSPspEmu.Hle
 
 		public uint ExecuteFunctionNow(uint Function, params object[] Arguments)
 		{
-			CurrentFakeHleThread = new HleThread(HleThreadManager, new CpuThreadState(CpuProcessor));
+			CurrentFakeHleThread = new HleThread(PspEmulatorContext, new CpuThreadState(CpuProcessor));
 			CurrentFakeHleThread.CpuThreadState.CopyRegistersFrom(HleThreadManager.CurrentOrAny.CpuThreadState);
 			SetArgumentsToCpuThreadState(CurrentFakeHleThread.CpuThreadState, Function, Arguments);
 			{
@@ -85,7 +85,7 @@ namespace CSPspEmu.Hle
 			var CpuProcessor = FakeCpuThreadState.CpuProcessor;
 			if (CurrentFakeHleThread == null)
 			{
-				CurrentFakeHleThread = new HleThread(HleThreadManager, new CpuThreadState(CpuProcessor));
+				CurrentFakeHleThread = new HleThread(PspEmulatorContext, new CpuThreadState(CpuProcessor));
 			}
 
 			CurrentFakeHleThread.CpuThreadState.CopyRegistersFrom(FakeCpuThreadState);

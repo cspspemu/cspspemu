@@ -50,7 +50,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		{
 			try
 			{
-				var Info = HleState.HleIoManager.ParseDeviceName(DeviceName);
+				var Info = HleIoManager.ParseDeviceName(DeviceName);
 				return Info.HleIoDrvFileArg.HleIoDriver.IoDevctl(Info.HleIoDrvFileArg, DeviceName, Command, InputPointer, InputLength, OutputPointer, OutputLength);
 			}
 			catch (NotImplementedException NotImplementedException)

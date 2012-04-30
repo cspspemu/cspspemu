@@ -55,8 +55,8 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		{
 			return 0;
 
-			var Name = HleState.CpuProcessor.Memory.ReadStringz(PspIoDrv->name, Encoding.UTF8);
-			HleState.HleIoManager.SetDriver(Name + ":", new GuestHleIoDriver(HleState, PspIoDrv));
+			var Name = PspMemory.ReadStringz(PspIoDrv->name, Encoding.UTF8);
+			HleIoManager.SetDriver(Name + ":", new GuestHleIoDriver(PspEmulatorContext, PspIoDrv));
 			return 0;
 		}
 
@@ -70,7 +70,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0xC7F35804, FirmwareVersion = 150)]
 		public int sceIoDelDrv(string DriverName)
 		{
-			HleState.HleIoManager.RemoveDriver(DriverName + ":");
+			HleIoManager.RemoveDriver(DriverName + ":");
 			return 0;
 		}
 	}

@@ -24,9 +24,9 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		{
 			try
 			{
-				var Info = HleState.HleIoManager.ParsePath(DirectoryPath);
+				var Info = HleIoManager.ParsePath(DirectoryPath);
 				Info.HleIoDrvFileArg.HleIoDriver.IoDopen(Info.HleIoDrvFileArg, Info.LocalPath);
-				return HleState.HleIoManager.HleIoDrvFileArgPool.Create(Info.HleIoDrvFileArg);
+				return HleIoManager.HleIoDrvFileArgPool.Create(Info.HleIoDrvFileArg);
 			}
 			catch (DirectoryNotFoundException)
 			{
@@ -105,8 +105,8 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		{
 			try
 			{
-				HleState.HleIoManager.Chdir(DirectoryPath);
-				//var Info = HleState.HleIoManager.ParsePath(DirectoryPath);
+				HleIoManager.Chdir(DirectoryPath);
+				//var Info = HleIoManager.ParsePath(DirectoryPath);
 				//return Info.HleIoDriver.IoChdir(Info.HleIoDrvFileArg, Info.LocalPath);
 				return 0;
 			}
@@ -127,7 +127,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		{
 			try
 			{
-				var Info = HleState.HleIoManager.ParsePath(DirectoryPath);
+				var Info = HleIoManager.ParsePath(DirectoryPath);
 				Info.HleIoDrvFileArg.HleIoDriver.IoMkdir(Info.HleIoDrvFileArg, Info.LocalPath, AccessMode);
 				return 0;
 			}
@@ -147,7 +147,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		{
 			try
 			{
-				var Info = HleState.HleIoManager.ParsePath(DirectoryPath);
+				var Info = HleIoManager.ParsePath(DirectoryPath);
 				Info.HleIoDrvFileArg.HleIoDriver.IoRmdir(Info.HleIoDrvFileArg, Info.LocalPath);
 				return 0;
 			}

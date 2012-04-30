@@ -16,6 +16,9 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		[Inject]
 		HleCallbackManager CallbackManager;
 
+		[Inject]
+		ThreadManForUser ThreadManForUser;
+
 		Dictionary<int, HleCallback> RegisteredCallbacks = new Dictionary<int, HleCallback>();
 
 		/// <summary>
@@ -212,7 +215,7 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		[HlePspNotImplemented]
 		public int sceUmdWaitDriveStatCB(CpuThreadState CpuThreadState, PspUmdState stat, uint timeout)
 		{
-			HleState.ModuleManager.GetModule<ThreadManForUser>().sceKernelCheckCallback(CpuThreadState);
+			ThreadManForUser.sceKernelCheckCallback(CpuThreadState);
 			return 0;
 			//throw(new NotImplementedException());
 			/*

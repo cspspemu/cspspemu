@@ -10,12 +10,12 @@ using System.Runtime.InteropServices;
 using CSharpUtils;
 using CSharpUtils.Threading;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle
 {
 	unsafe public partial class HleModuleHost : HleModule
 	{
-		public HleState HleState;
 		public string ModuleLocation;
 		public Dictionary<uint, FunctionEntry> EntriesByNID = new Dictionary<uint, FunctionEntry>();
 		public Dictionary<uint, Action<CpuThreadState>> DelegatesByNID = new Dictionary<uint, Action<CpuThreadState>>();
@@ -28,21 +28,17 @@ namespace CSPspEmu.Hle
 			}
 		}
 
-		protected PspMemory PspMemory
-		{
-			get
-			{
-				return HleState.CpuProcessor.Memory;
-			}
-		}
+		[Inject]
+		protected PspMemory PspMemory;
 
 		public HleModuleHost()
 		{
 		}
 
-		public void Initialize(HleState HleState)
+		public void Initialize(PspEmulatorContext PspEmulatorContext)
 		{
-			this.HleState = HleState;
+			//this.PspEmulatorContext = PspEmulatorContext;
+			PspEmulatorContext.InjectDependencesTo(this);
 
 			this.ModuleLocation = "flash0:/kd/" + this.GetType().Namespace.Split('.').Last() + ".prx";
 			//Console.WriteLine(this.ModuleLocation);

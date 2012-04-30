@@ -4,12 +4,16 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Crypto;
 using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.kirk
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public partial class semaphore : HleModuleHost
 	{
+		[Inject]
+		Kirk Kirk;
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -43,7 +47,7 @@ namespace CSPspEmu.Hle.Modules.kirk
 		[HlePspFunction(NID = 0x4C537C72, FirmwareVersion = 150)]
 		public int sceUtilsBufferCopyWithRange(byte* OutputBuffer, int OutputSize, byte* InputBuffer, int InputSize, int Command)
 		{
-			return HleState.Kirk.sceUtilsBufferCopyWithRange(OutputBuffer, OutputSize, InputBuffer, InputSize, Command);
+			return Kirk.sceUtilsBufferCopyWithRange(OutputBuffer, OutputSize, InputBuffer, InputSize, Command);
 		}
 
 		/// <summary>

@@ -7,18 +7,13 @@ using System.Reflection.Emit;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
-	public class MipsEmiter
+	public class MipsEmiter : PspEmulatorComponent
 	{
 		static private ulong UniqueCounter = 0;
 		internal AssemblyBuilder AssemblyBuilder;
 		internal ModuleBuilder ModuleBuilder;
 
-		public MipsEmiter()
-		{
-			Reset();
-		}
-
-		public void Reset()
+		public override void InitializeComponent()
 		{
 			UniqueCounter++;
 			var CurrentAppDomain = AppDomain.CurrentDomain;

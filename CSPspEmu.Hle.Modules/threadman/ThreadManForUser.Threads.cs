@@ -58,8 +58,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Thread.GP = CpuThreadState.GP;
 			Thread.Info.EntryPoint = (SceKernelThreadEntry)EntryPoint;
 			
-			//var ThreadStackPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User);
-			//var ThreadStackPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.UserStacks);
+			//var ThreadStackPartition = MemoryManager.GetPartition(HleMemoryManager.Partitions.User);
+			//var ThreadStackPartition = MemoryManager.GetPartition(HleMemoryManager.Partitions.UserStacks);
 			var ThreadStackPartition = MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0);
 
 			Thread.Stack = ThreadStackPartition.Allocate(
@@ -490,7 +490,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			Thread.Exit();
 
-			//HleState.ThreadManager.ExitThread(Thread);
+			//ThreadManager.ExitThread(Thread);
 
 			Thread.CpuThreadState.Yield();
 
@@ -718,7 +718,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			if (Thread != null)
 			{
 				Thread.Finalize();
-				HleState.ThreadManager.Exit(Thread);
+				ThreadManager.Exit(Thread);
 			}
 			return 0;
 		}

@@ -4,12 +4,17 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Modules.modulemgr;
+using CSPspEmu.Hle.Managers;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules._unknownPrx
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
 	unsafe public class ModuleMgrForKernel : HleModuleHost
 	{
+		[Inject]
+		HleModuleManager ModuleManager;
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -21,7 +26,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
 		[HlePspNotImplemented]
 		public int sceKernelLoadModuleForLoadExecVSHDisc(string FileName, uint Flags, ModuleMgrForUser.SceKernelLMOption* option)
 		{
-			return HleState.ModuleManager.GetModule<ModuleMgrForUser>().sceKernelLoadModule(FileName, Flags, option);
+			return ModuleManager.GetModule<ModuleMgrForUser>().sceKernelLoadModule(FileName, Flags, option);
 		}
 	}
 }

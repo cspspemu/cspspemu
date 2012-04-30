@@ -5,12 +5,20 @@ using System.Text;
 using CSharpUtils;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Modules.threadman;
+using CSPspEmu.Core;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.usersystemlib
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
 	unsafe public class Kernel_Library : HleModuleHost
 	{
+		[Inject]
+		HleInterruptManager HleInterruptManager;
+
+		[Inject]
+		ThreadManForUser ThreadManForUser;
+
 		/*
 		void initNids() {
 			
@@ -32,7 +40,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		[HlePspFunction(NID = 0x092968F4, FirmwareVersion = 150)]
 		public uint sceKernelCpuSuspendIntr()
 		{
-			return HleState.HleInterruptManager.sceKernelCpuSuspendIntr();
+			return HleInterruptManager.sceKernelCpuSuspendIntr();
 		}
 
 		/// <summary>
@@ -42,7 +50,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		[HlePspFunction(NID = 0x5F10D406, FirmwareVersion = 150)]
 		public void sceKernelCpuResumeIntr(uint Flags)
 		{
-			HleState.HleInterruptManager.sceKernelCpuResumeIntr(Flags);
+			HleInterruptManager.sceKernelCpuResumeIntr(Flags);
 		}
 
 		/// <summary>
@@ -100,7 +108,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		[HlePspFunction(NID = 0xB55249D2, FirmwareVersion = 150)]
 		public bool sceKernelIsCpuIntrEnable()
 		{
-			return HleState.HleInterruptManager.Enabled;
+			return HleInterruptManager.Enabled;
 		}
 
 		/// <summary>
@@ -110,7 +118,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		[HlePspFunction(NID = 0x293B45B8, FirmwareVersion = 150)]
 		public int sceKernelGetThreadId()
 		{
-			return HleState.ModuleManager.GetModule<ThreadManForUser>().sceKernelGetThreadId();
+			return ThreadManForUser.sceKernelGetThreadId();
 		}
 
 		/// <summary>

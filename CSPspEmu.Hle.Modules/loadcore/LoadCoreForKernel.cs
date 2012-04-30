@@ -4,12 +4,21 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Modules.modulemgr;
+using CSPspEmu.Core;
+using CSPspEmu.Hle.Managers;
+using CSPspEmu.Core.Cpu;
 
 namespace CSPspEmu.Hle.Modules.loadcore
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
 	unsafe public class LoadCoreForKernel : HleModuleHost
 	{
+		[Inject]
+		HleModuleManager ModuleManager;
+
+		[Inject]
+		CpuProcessor CpuProcessor;
+
 		//public enum SceModule : uint { }
 		public enum SceUID : int { }
 
@@ -44,7 +53,7 @@ namespace CSPspEmu.Hle.Modules.loadcore
 		//[HlePspNotImplemented]
 		public uint sceKernelFindModuleByUID(int ModuleId)
 		{
-			var ModuleMgrForUser = HleState.ModuleManager.GetModule<ModuleMgrForUser>();
+			var ModuleMgrForUser = ModuleManager.GetModule<ModuleMgrForUser>();
 			var Module = ModuleMgrForUser.Modules.Get(ModuleId);
 			return (Module.Loaded) ? Module.SceModuleStructPartition.Low : 0;
 		}
@@ -56,7 +65,7 @@ namespace CSPspEmu.Hle.Modules.loadcore
 		[HlePspNotImplemented]
 		public void sceKernelIcacheClearAll()
 		{
-			HleState.CpuProcessor.sceKernelIcacheInvalidateAll();
+			CpuProcessor.sceKernelIcacheInvalidateAll();
 			//unimplemented();
 		}
 

@@ -163,7 +163,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			if (Signal <= 0) throw(new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT));
 			if (Semaphore.CurrentCount - Signal < 0)
 			{
-				//HleState.ThreadManager.Reschedule();
+				//ThreadManager.Reschedule();
 				CpuThreadState.Yield();
 				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_SEMA_ZERO));
 			}

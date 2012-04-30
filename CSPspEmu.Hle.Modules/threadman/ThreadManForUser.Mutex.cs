@@ -55,10 +55,10 @@ namespace CSPspEmu.Hle.Modules.threadman
 					throw (new NotImplementedException());
 				}
 				if (UpdateCountValue <= 0) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT));
-				//Console.Error.WriteLine("Lock : {0}", HleState.ThreadManager.Current.Id);
+				//Console.Error.WriteLine("Lock : {0}", ThreadManager.Current.Id);
 				if (!TryLock(CurrentCpuThreadState, UpdateCountValue))
 				{
-					//HleState.ThreadManager.Current.
+					//ThreadManager.Current.
 					ThreadManForUser.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Mutex, "sceKernelLockMutex", this, (WakeUp) =>
 					{
 						WakeUpList.Enqueue(() =>
@@ -73,7 +73,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			{
 				if (UpdateCountValue == 0) throw(new SceKernelException(SceKernelErrors.ERROR_KERNEL_MUTEX_UNLOCKED));
 				if (this.CurrentCountValue - UpdateCountValue < 0) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_MUTEX_UNLOCK_UNDERFLOW));
-				//Console.Error.WriteLine("Unlock : {0}", HleState.ThreadManager.Current.Id);
+				//Console.Error.WriteLine("Unlock : {0}", ThreadManager.Current.Id);
 				//Console.Error.WriteLine(" {0} -> {1}", this.CurrentCountValue, this.CurrentCountValue - UpdateCountValue);
 				CurrentCountValue -= UpdateCountValue;
 				if (CurrentCountValue == 0)

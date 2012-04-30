@@ -27,6 +27,9 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
 	unsafe public partial class sceAtrac3plus : HleModuleHost
 	{
+		[Inject]
+		sceAudio sceAudio;
+
 		public enum CodecType
 		{
 			PSP_MODE_AT_3_PLUS = 0x00001000,
@@ -237,17 +240,13 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 				public int PlayCount;
 			}
 
-			HleState HleState;
-
-			public Atrac(HleState HleState, CodecType CodecType)
+			public Atrac(PspEmulatorContext PspEmulatorContext, CodecType CodecType)
 			{
-				this.HleState = HleState;
 				this.CodecType = CodecType;
 			}
 
-			public Atrac(HleState HleState, byte[] Data)
+			public Atrac(PspEmulatorContext PspEmulatorContext, byte[] Data)
 			{
-				this.HleState = HleState;
 				CodecType = CodecType.PSP_MODE_AT_3_PLUS;
 				SetData(Data);
 			}
@@ -258,7 +257,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 
 				var DataHash = SHA1.Create().ComputeHash(Data);
 
-				//var Ms0Path = new DirectoryInfo(HleState.MemoryStickRootLocalFolder).FullName;
+				//var Ms0Path = new DirectoryInfo(MemoryStickRootLocalFolder).FullName;
 				var Ms0Path = new DirectoryInfo(ApplicationPaths.MemoryStickRootFolder).FullName;
 				try { Directory.CreateDirectory(Ms0Path + "\\temp"); } catch { }
 
@@ -443,7 +442,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		public int sceAtracSetDataAndGetID(byte* DataPointer, int DataLength)
 		{
 			var Data = ArrayUtils.CreateArray<byte>(DataPointer, DataLength);
-			var Atrac = new Atrac(HleState, Data);
+			var Atrac = new Atrac(PspEmulatorContext, Data);
 			var AtracId = AtracList.Create(Atrac);
 			return AtracId;
 		}
@@ -460,7 +459,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		{
 			//throw(new NotImplementedException());
 			var Atrac = AtracList.Get(AtracId);
-			OutputChannel = HleState.ModuleManager.GetModule<sceAudio>().sceAudioChReserve(-1, Atrac.MaximumSamples, PspAudio.FormatEnum.Stereo);
+			OutputChannel = sceAudio.sceAudioChReserve(-1, Atrac.MaximumSamples, PspAudio.FormatEnum.Stereo);
 			//Console.WriteLine("{0}", *OutputChannelPointer); Console.ReadKey();
 			return 0;
 		}
@@ -628,7 +627,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public int sceAtracGetAtracID(CodecType CodecType)
 		{
-			var Atrac = new Atrac(HleState, CodecType);
+			var Atrac = new Atrac(PspEmulatorContext, CodecType);
 			var AtracId = AtracList.Create(Atrac);
 			return AtracId;
 		}

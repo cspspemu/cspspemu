@@ -20,10 +20,10 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		public SceUID sceIoOpenAsync(string FileName, HleIoFlags Flags, SceMode Mode)
 		{
 			var FileId = (SceUID)_sceIoOpen(FileName, Flags, Mode, Async: true);
-			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileId);
+			var File = HleIoManager.HleIoDrvFileArgPool.Get(FileId);
 			File.AsyncLastResult = (long)FileId;
 			_DelayIo(IoDelayType.Open);
-			//HleState.PspRtc.slee
+			//PspRtc.slee
 			return FileId;
 		}
 
@@ -62,7 +62,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0x71B19E77, FirmwareVersion = 150)]
 		public int sceIoLseekAsync(SceUID FileId, long Offset, SeekAnchor Whence)
 		{
-			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileId);
+			var File = HleIoManager.HleIoDrvFileArgPool.Get(FileId);
 			File.AsyncLastResult = sceIoLseek(FileId, Offset, Whence);
 			_DelayIo(IoDelayType.Seek);
 			return 0;
@@ -76,13 +76,13 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0xFF5940B6, FirmwareVersion = 150)]
 		public int sceIoCloseAsync(SceUID FileId)
 		{
-			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileId);
+			var File = HleIoManager.HleIoDrvFileArgPool.Get(FileId);
 			File.AsyncLastResult = 0;
 			sceIoClose(FileId);
 
 			_DelayIo(IoDelayType.Close);
 
-			//HleState.HleIoManager.HleIoDrvFileArgPool.Remove(FileHandle);
+			//HleIoManager.HleIoDrvFileArgPool.Remove(FileHandle);
 			
 			return 0;
 		}
@@ -102,7 +102,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0xA0B5A7C2, FirmwareVersion = 150)]
 		public int sceIoReadAsync(SceUID FileId, byte* OutputPointer, int OutputSize)
 		{
-			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileId);
+			var File = HleIoManager.HleIoDrvFileArgPool.Get(FileId);
 			File.AsyncLastResult = sceIoRead(FileId, OutputPointer, OutputSize);
 
 			_DelayIo(IoDelayType.Read, OutputSize);
@@ -131,7 +131,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 
 		public int _sceIoWaitAsyncCB(SceUID FileId, out long Result, bool HandleCallbacks, CpuThreadState CpuThreadState)
 		{
-			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileId);
+			var File = HleIoManager.HleIoDrvFileArgPool.Get(FileId);
 			Result = File.AsyncLastResult;
 			CpuThreadState.LO = (int)FileId;
 
@@ -188,7 +188,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0x3251EA56, FirmwareVersion = 150)]
 		public int sceIoPollAsync(SceUID FileId, out long Result)
 		{
-			var File = HleState.HleIoManager.HleIoDrvFileArgPool.Get(FileId);
+			var File = HleIoManager.HleIoDrvFileArgPool.Get(FileId);
 			Result = File.AsyncLastResult;
 
 			return 0;
@@ -258,10 +258,10 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			throw(new NotImplementedException());
 #if false
 			var File = GetFileArgFromHandle(FileId); 
-			var Callback = HleState.CallbackManager.Callbacks.Get(CallbackId);
+			var Callback = CallbackManager.Callbacks.Get(CallbackId);
 			File.Callback = Callback;
 			File.CallbackArgument = NotifyArgument;
-			//HleState.CallbackManager.ScheduleCallback(Callback);
+			//CallbackManager.ScheduleCallback(Callback);
 			return 0;
 #endif
 		}

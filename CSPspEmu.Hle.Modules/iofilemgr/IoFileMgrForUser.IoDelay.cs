@@ -74,7 +74,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			if (TimeSpan != TimeSpan.Zero)
 			{
 				var CurrentThread = ThreadManager.Current;
-				//HleState.ThreadManager
+				//ThreadManager
 				CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, "_DelayIo", null, WakeUpCallback =>
 				{
 					PspRtc.RegisterTimerInOnce(TimeSpan, () =>

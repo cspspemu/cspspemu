@@ -116,6 +116,7 @@ namespace CSPspEmu.Hle
 
 		protected Coroutine Coroutine;
 
+		HleInterruptManager HleInterruptManager;
 		public CpuThreadState CpuThreadState { get; protected set; }
 		//protected int MinimalInstructionCountForYield = 1000000;
 		public int Id;
@@ -168,9 +169,10 @@ namespace CSPspEmu.Hle
 			}
 		}
 
-		public HleThread(HleThreadManager HleThreadManager, CpuThreadState CpuThreadState)
+		public HleThread(PspEmulatorContext PspEmulatorContext, CpuThreadState CpuThreadState)
 		{
-			this.HleThreadManager = HleThreadManager;
+			this.HleInterruptManager = PspEmulatorContext.GetInstance<HleInterruptManager>();
+			this.HleThreadManager = PspEmulatorContext.GetInstance<HleThreadManager>();
 			this.MethodCache = CpuThreadState.CpuProcessor.MethodCache;
 			this.PspConfig = CpuThreadState.CpuProcessor.PspConfig;
 
@@ -340,7 +342,7 @@ namespace CSPspEmu.Hle
 				{
 					GreenThread.SwitchTo();
 				}
-			} while (!HleThreadManager.HleState.HleInterruptManager.Enabled);
+			} while (!HleInterruptManager.Enabled);
 		}
 
 		public void WakeUp()

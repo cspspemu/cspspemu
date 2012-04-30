@@ -27,9 +27,6 @@ namespace CSPspEmu.Hle.Managers
 
 		bool MustReschedule = false;
 
-		[Inject]
-		internal HleState HleState;
-
 		public List<HleThread> Threads = new List<HleThread>();
 		protected int LastId = 1;
 		public HleThread Current;
@@ -66,7 +63,7 @@ namespace CSPspEmu.Hle.Managers
 
 		public HleThread Create()
 		{
-			var HlePspThread = new HleThread(this, new CpuThreadState(Processor));
+			var HlePspThread = new HleThread(PspEmulatorContext, new CpuThreadState(Processor));
 			HlePspThread.Id = LastId++;
 			HlePspThread.Name = "Thread-" + HlePspThread.Id;
 			HlePspThread.CurrentStatus = HleThread.Status.Stopped;

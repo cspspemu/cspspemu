@@ -26,6 +26,18 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		[Inject]
 		HleMemoryManager MemoryManager;
 
+		[Inject]
+		HleModuleManager ModuleManager;
+
+		[Inject]
+		ThreadManForUser ThreadManForUser;
+
+		[Inject]
+		IoFileMgrForUser IoFileMgrForUser;
+
+		[Inject]
+		HleIoManager HleIoManager;
+
 		public struct SceKernelLMOption
 		{
 			/// <summary>
@@ -139,7 +151,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 
 		public int sceKernelLoadModuleWithStream(Func<Stream> GetStreamAction, string Path, uint Flags, SceKernelLMOption* SceKernelLMOption)
 		{
-			var Module = new HleModuleGuest(HleState);
+			var Module = new HleModuleGuest(PspEmulatorContext);
 
 			try
 			{
@@ -167,9 +179,9 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 
 				var HleModuleGuest = Loader.LoadModule(
 					ModuleStream,
-					new PspMemoryStream(HleState.CpuProcessor.Memory),
+					new PspMemoryStream(PspMemory),
 					MemoryManager.GetPartition(HleMemoryManager.Partitions.User),
-					HleState.ModuleManager,
+					ModuleManager,
 					"",
 					ModuleName: Path,
 					IsMainModule: false
@@ -177,7 +189,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 
 				var SceModulePartition = MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(sizeof(SceModule));
 
-				var SceModulePtr = (SceModule*)HleState.CpuProcessor.Memory.PspAddressToPointerSafe(SceModulePartition.Low, Marshal.SizeOf(typeof(SceModule)));
+				var SceModulePtr = (SceModule*)PspMemory.PspAddressToPointerSafe(SceModulePartition.Low, Marshal.SizeOf(typeof(SceModule)));
 
 				SceModulePtr->Attributes = HleModuleGuest.ModuleInfo.ModuleAtributes;
 				SceModulePtr->Version = HleModuleGuest.ModuleInfo.ModuleVersion;
@@ -223,7 +235,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		{
 			return sceKernelLoadModuleWithStream(() =>
 			{
-				return HleState.HleIoManager.HleIoWrapper.Open(Path, Vfs.HleIoFlags.Read, Vfs.SceMode.All);
+				return HleIoManager.HleIoWrapper.Open(Path, Vfs.HleIoFlags.Read, Vfs.SceMode.All);
 			}, Path, Flags, SceKernelLMOption);
 		}
 
@@ -244,8 +256,6 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 
 			if (Module.Loaded)
 			{
-				var ThreadManForUser = HleState.ModuleManager.GetModule<ThreadManForUser>();
-
 				var NewCpuThreadState = new CpuThreadState(CpuThreadState.CpuProcessor);
 				NewCpuThreadState.CopyRegistersFrom(CpuThreadState);
 				NewCpuThreadState.GP = Module.InitInfo.GP;
@@ -363,7 +373,6 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		[HlePspNotImplemented]
 		public int sceKernelLoadModuleByID(SceUID FileId, uint Flags, SceKernelLMOption* SceKernelLMOption)
 		{
-			var IoFileMgrForUser = HleState.ModuleManager.GetModule<IoFileMgrForUser>();
 			var Args = IoFileMgrForUser.GetFileArgFromHandle(FileId);
 			return sceKernelLoadModuleWithStream(() =>
 			{

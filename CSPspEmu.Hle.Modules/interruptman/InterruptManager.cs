@@ -4,12 +4,16 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.interruptman
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00000011)]
 	unsafe public class InterruptManager : HleModuleHost
 	{
+		[Inject]
+		HleInterruptManager HleInterruptManager;
+
 		private void CheckImplementedInterruptType(PspInterrupts PspInterrupt)
 		{
 			switch (PspInterrupt)
@@ -36,7 +40,7 @@ namespace CSPspEmu.Hle.Modules.interruptman
 		{
 			CheckImplementedInterruptType(PspInterrupt);
 
-			var HleSubinterruptHandler = HleState.HleInterruptManager.GetInterruptHandler(PspInterrupt).SubinterruptHandlers[HandlerIndex];
+			var HleSubinterruptHandler = HleInterruptManager.GetInterruptHandler(PspInterrupt).SubinterruptHandlers[HandlerIndex];
 			{
 				HleSubinterruptHandler.Address = CallbackAddress;
 				HleSubinterruptHandler.Argument = CallbackArgument;
@@ -68,7 +72,7 @@ namespace CSPspEmu.Hle.Modules.interruptman
 		{
 			CheckImplementedInterruptType(PspInterrupt);
 
-			var HleSubinterruptHandler = HleState.HleInterruptManager.GetInterruptHandler(PspInterrupt).SubinterruptHandlers[HandlerIndex];
+			var HleSubinterruptHandler = HleInterruptManager.GetInterruptHandler(PspInterrupt).SubinterruptHandlers[HandlerIndex];
 			{
 				HleSubinterruptHandler.Enabled = true;
 			}
@@ -88,7 +92,7 @@ namespace CSPspEmu.Hle.Modules.interruptman
 		{
 			CheckImplementedInterruptType(PspInterrupt);
 
-			var HleSubinterruptHandler = HleState.HleInterruptManager.GetInterruptHandler(PspInterrupt).SubinterruptHandlers[HandlerIndex];
+			var HleSubinterruptHandler = HleInterruptManager.GetInterruptHandler(PspInterrupt).SubinterruptHandlers[HandlerIndex];
 			{
 				HleSubinterruptHandler.Enabled = false;
 			}

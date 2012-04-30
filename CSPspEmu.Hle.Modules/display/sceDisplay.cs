@@ -24,8 +24,6 @@ namespace CSPspEmu.Hle.Modules.display
 		[Inject]
 		HleThreadManager ThreadManager;
 
-		protected PspConfig PspConfig { get { return HleState.PspConfig; } }
-
 		/// <summary>
 		/// Set display mode
 		/// </summary>
@@ -77,9 +75,9 @@ namespace CSPspEmu.Hle.Modules.display
 				SleepThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Display, "sceDisplayWaitVblankStart", (WakeUpCallbackDelegate) =>
 				{
 					//PspDisplay.VBlankEvent
-					HleState.PspDisplay.VBlankEvent.CallbackOnStateOnce(() =>
+					PspDisplay.VBlankEvent.CallbackOnStateOnce(() =>
 					{
-						LastVblankCount = HleState.PspDisplay.VblankCount;
+						LastVblankCount = PspDisplay.VblankCount;
 						WakeUpCallbackDelegate();
 					});
 				});

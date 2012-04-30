@@ -7,6 +7,7 @@ using CSharpUtils;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Modules.stdio;
 using CSPspEmu.Hle.Vfs;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.iofilemgr
 {
@@ -14,31 +15,33 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 	{
 		public class GuestHleIoDriver : IHleIoDriver
 		{
-			HleState HleState;
+			[Inject]
+			HleInterop HleInterop;
+
 			PspIoDrv* PspIoDrv;
 			PspIoDrvFuncs* PspIoDrvFuncs { get { return PspIoDrv->funcs; } }
 
-			public GuestHleIoDriver(HleState HleState, PspIoDrv* PspIoDrv)
+			public GuestHleIoDriver(PspEmulatorContext PspEmulatorContext, PspIoDrv* PspIoDrv)
 			{
-				this.HleState = HleState;
+				PspEmulatorContext.InjectDependencesTo(this);
 				this.PspIoDrv = PspIoDrv;
 			}
 
 			public int IoInit()
 			{
 				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.WriteLine("Not Implemented: GuestHleIoDriver.IoInit"); });
-				return (int)HleState.HleInterop.ExecuteFunctionNow(PspIoDrvFuncs->IoInit);
+				return (int)HleInterop.ExecuteFunctionNow(PspIoDrvFuncs->IoInit);
 			}
 
 			public int IoExit()
 			{
 				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.WriteLine("Not Implemented: GuestHleIoDriver.IoExit"); });
-				return (int)HleState.HleInterop.ExecuteFunctionNow(PspIoDrvFuncs->IoExit);
+				return (int)HleInterop.ExecuteFunctionNow(PspIoDrvFuncs->IoExit);
 			}
 
 			public int IoOpen(HleIoDrvFileArg HleIoDrvFileArg, string FileName, HleIoFlags Flags, SceMode Mode)
 			{
-				//HleState.HleInterop.ExecuteFunctionNow(PspIoDrvFuncs->IoOpen);
+				//HleInterop.ExecuteFunctionNow(PspIoDrvFuncs->IoOpen);
 				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.WriteLine("Not Implemented: GuestHleIoDriver.IoOpen"); });
 				//throw new NotImplementedException();
 				return 0;
@@ -155,7 +158,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0xACE946E8, FirmwareVersion = 150)]
 		public int sceIoGetstat(string FileName, SceIoStat* SceIoStat)
 		{
-			var Info = HleState.HleIoManager.ParsePath(FileName);
+			var Info = HleIoManager.ParsePath(FileName);
 			try
 			{
 				Info.HleIoDriver.IoGetstat(Info.HleIoDrvFileArg, Info.LocalPath, SceIoStat);
@@ -190,7 +193,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		{
 			try
 			{
-				var Info = HleState.HleIoManager.ParsePath(FileName);
+				var Info = HleIoManager.ParsePath(FileName);
 				return Info.HleIoDriver.IoChstat(Info.HleIoDrvFileArg, FileName, SceIoStat, Bitmask);
 			}
 			finally
@@ -209,7 +212,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		{
 			try
 			{
-				var Info = HleState.HleIoManager.ParsePath(FileName);
+				var Info = HleIoManager.ParsePath(FileName);
 				return Info.HleIoDriver.IoRemove(Info.HleIoDrvFileArg, FileName);
 			}
 			catch (Exception Exception)
@@ -234,8 +237,8 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		{
 			try
 			{
-				var Info1 = HleState.HleIoManager.ParsePath(OldFileName);
-				var Info2 = HleState.HleIoManager.ParsePath(NewFileName);
+				var Info1 = HleIoManager.ParsePath(OldFileName);
+				var Info2 = HleIoManager.ParsePath(NewFileName);
 				if (!Info1.Equals(Info2)) throw (new NotImplementedException("Rename from different filesystems"));
 				return Info1.HleIoDriver.IoRename(Info1.HleIoDrvFileArg, OldFileName, NewFileName);
 			}
@@ -372,11 +375,11 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		{
 			try
 			{
-				var Info = HleState.HleIoManager.ParsePath(FileName);
+				var Info = HleIoManager.ParsePath(FileName);
 				Console.WriteLine("Opened ({3}) '{0}' with driver '{1}' and local path '{2}' : '{2}'", FileName, Info.HleIoDriver, Info.LocalPath, Async ? "Async" : "NO Async");
 				Info.HleIoDrvFileArg.HleIoDriver.IoOpen(Info.HleIoDrvFileArg, Info.LocalPath, Flags, Mode);
 				Info.HleIoDrvFileArg.FullFileName = FileName;
-				return HleState.HleIoManager.HleIoDrvFileArgPool.Create(Info.HleIoDrvFileArg);
+				return HleIoManager.HleIoDrvFileArgPool.Create(Info.HleIoDrvFileArg);
 			}
 			catch (DirectoryNotFoundException)
 			{

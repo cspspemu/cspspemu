@@ -7,6 +7,7 @@ using CSPspEmu.Core.Rtc;
 using CSPspEmu.Hle.Managers;
 using CSharpUtils;
 using CSPspEmu.Core;
+using CSPspEmu.Core.Cpu;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
@@ -14,8 +15,21 @@ namespace CSPspEmu.Hle.Modules.threadman
 	{
 		public class VirtualTimer : IDisposable
 		{
-			protected HleState HleState;
-			protected ThreadManForUser ThreadManForUser;
+			[Inject]
+			PspRtc PspRtc;
+
+			[Inject]
+			HleMemoryManager MemoryManager;
+
+			[Inject]
+			CpuProcessor CpuProcessor;
+
+			[Inject]
+			PspMemory Memory;
+
+			[Inject]
+			HleInterop HleInterop;
+
 			protected PspRtc.VirtualTimer Timer;
 			public int Id;
 			public string Name;
@@ -39,18 +53,18 @@ namespace CSPspEmu.Hle.Modules.threadman
 			MemoryPartition PspSharedInfoMemoryPartition;
 			PspSharedInfoStruct* PspSharedInfo;
 
-			public VirtualTimer(HleState HleState, ThreadManForUser ThreadManForUser, string Name)
+			public VirtualTimer(PspEmulatorContext PspEmulatorContext, string Name)
 			{
-				this.HleState = HleState;
-				this.ThreadManForUser = ThreadManForUser;
-				this.Timer = ThreadManForUser.PspRtc.CreateVirtualTimer(Handler);
+				PspEmulatorContext.InjectDependencesTo(this);
+
+				this.Timer = PspRtc.CreateVirtualTimer(Handler);
 				this.Name = Name;
 				this.Timer.Enabled = false;
-				this.PspSharedInfoMemoryPartition = ThreadManForUser.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(
+				this.PspSharedInfoMemoryPartition = MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(
 					sizeof(PspSharedInfoStruct),
 					Name: "VTimer.PspSharedInfoStruct"
 				);
-				this.PspSharedInfo = (PspSharedInfoStruct*)HleState.CpuProcessor.Memory.PspAddressToPointerSafe(this.PspSharedInfoMemoryPartition.Low);
+				this.PspSharedInfo = (PspSharedInfoStruct*)CpuProcessor.Memory.PspAddressToPointerSafe(this.PspSharedInfoMemoryPartition.Low);
 			}
 
 			public void Dispose()
@@ -67,11 +81,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 					PspSharedInfo->ElapsedScheduled.MicroSeconds = HandlerTime;
 					PspSharedInfo->ElapsedReal.MicroSeconds = ElapsedAccumulatedTime;
 
-					uint Result = HleState.HleInterop.ExecuteFunctionNow(
+					uint Result = HleInterop.ExecuteFunctionNow(
 						HandlerCallback,
 						Id,
-						HleState.CpuProcessor.Memory.PointerToPspAddressSafe(&PspSharedInfo->ElapsedScheduled),
-						HleState.CpuProcessor.Memory.PointerToPspAddressSafe(&PspSharedInfo->ElapsedReal),
+						Memory.PointerToPspAddressSafe(&PspSharedInfo->ElapsedScheduled),
+						Memory.PointerToPspAddressSafe(&PspSharedInfo->ElapsedReal),
 						HandlerArgument
 					); 
 					Console.Error.WriteLine("Handler ENABLED!! {0}", Result);
@@ -80,8 +94,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			public void UpdateElapsedTime(bool Increment)
 			{
-				ThreadManForUser.PspRtc.Update();
-				this.CurrentUpdatedTime = ThreadManForUser.PspRtc.Elapsed.GetTotalMicroseconds();
+				PspRtc.Update();
+				this.CurrentUpdatedTime = PspRtc.Elapsed.GetTotalMicroseconds();
 				{
 					if (Increment)
 					{
@@ -113,9 +127,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			protected void UpdateHandlerTime()
 			{
-				ThreadManForUser.PspRtc.Update();
+				PspRtc.Update();
 				Console.Error.WriteLine("UpdateHandlerTime: {0}", this.HandlerTime - ElapsedAccumulatedTime);
-				this.Timer.DateTime = ThreadManForUser.PspRtc.CurrentDateTime + TimeSpanUtils.FromMicroseconds(this.HandlerTime - ElapsedAccumulatedTime);
+				this.Timer.DateTime = PspRtc.CurrentDateTime + TimeSpanUtils.FromMicroseconds(this.HandlerTime - ElapsedAccumulatedTime);
 			}
 
 			public void SetHandler(long Time, PspPointer HandlerCallback, PspPointer HandlerArgument, bool HandlerIsWide)
@@ -176,7 +190,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x20FFF560, FirmwareVersion = 150)]
 		public int sceKernelCreateVTimer(string Name, SceKernelVTimerOptParam *SceKernelVTimerOptParam)
 		{
-			var VirtualTimer = new VirtualTimer(HleState, this, Name);
+			var VirtualTimer = new VirtualTimer(PspEmulatorContext, Name);
 			if (SceKernelVTimerOptParam != null) VirtualTimer.SceKernelVTimerOptParam = *SceKernelVTimerOptParam;
 			var VirtualTimerId = VirtualTimerPool.Create(VirtualTimer);
 			VirtualTimer.Id = VirtualTimerId;

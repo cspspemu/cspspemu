@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Core.Cpu;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.ge
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public partial class sceGe_user : HleModuleHost
 	{
+		[Inject]
+		CpuProcessor CpuProcessor;
+
 		/// <summary>
 		/// Get the address of VRAM.
 		/// </summary>
@@ -16,7 +21,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		[HlePspFunction(NID = 0xE47E40E4, FirmwareVersion = 150)]
 		public uint sceGeEdramGetAddr()
 		{
-			return HleState.CpuProcessor.Memory.FrameBufferSegment.Low;
+			return CpuProcessor.Memory.FrameBufferSegment.Low;
 		}
 
 		/// <summary>
@@ -26,7 +31,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		[HlePspFunction(NID = 0x1F6752AD, FirmwareVersion = 150)]
 		public int sceGeEdramGetSize()
 		{
-			return HleState.CpuProcessor.Memory.FrameBufferSegment.Size;
+			return CpuProcessor.Memory.FrameBufferSegment.Size;
 		}
 
 		private int eDRAMMemoryWidth;

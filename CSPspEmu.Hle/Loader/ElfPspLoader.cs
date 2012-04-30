@@ -64,7 +64,7 @@ namespace CSPspEmu.Hle.Loader
 
 		public HleModuleGuest LoadModule(Stream FileStream, Stream MemoryStream, MemoryPartition MemoryPartition, HleModuleManager ModuleManager, String GameTitle, string ModuleName, bool IsMainModule)
 		{
-			this.HleModuleGuest = new HleModuleGuest(PspEmulatorContext.GetInstance<HleState>());
+			this.HleModuleGuest = new HleModuleGuest(PspEmulatorContext);
 
 			this.ElfLoader = new ElfLoader();
 			this.ModuleManager = ModuleManager;

@@ -106,7 +106,7 @@ namespace CSPspEmu.Hle.Managers
 			if (!HleModules.ContainsKey(Type))
 			{
 				var HleModule = HleModules[Type] = (HleModuleHost)PspEmulatorContext.GetInstance(Type);
-				HleModule.Initialize(PspEmulatorContext.GetInstance<HleState>());
+				HleModule.Initialize(PspEmulatorContext);
 			}
 
 			return (HleModuleHost)HleModules[Type];

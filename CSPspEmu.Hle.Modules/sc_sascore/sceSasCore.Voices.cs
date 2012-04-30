@@ -35,7 +35,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 				SasVoice.SampleOffset = 0;
 				SasVoice.LoopCount = LoopCount;
 
-				//var VagPointer = (byte *)HleState.MemoryManager.Memory.PspAddressToPointerSafe(VagAddress);
+				//var VagPointer = (byte *)MemoryManager.Memory.PspAddressToPointerSafe(VagAddress);
 				//File.WriteAllBytes("test.vag", PointerUtils.PointerToByteArray(VagPointer, VagSize));
 
 				return 0;

@@ -5,12 +5,17 @@ using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Modules.iofilemgr;
 using CSPspEmu.Hle.Vfs;
+using CSPspEmu.Hle.Managers;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.stdio
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	public class StdioForUser : HleModuleHost
 	{
+		[Inject]
+		HleModuleManager ModuleManager;
+
 		public enum StdHandle : int
 		{
 			/*
@@ -75,7 +80,7 @@ namespace CSPspEmu.Hle.Modules.stdio
 		[HlePspNotImplemented]
 		public StdHandle sceKernelStdoutReopen(string File, HleIoFlags Flags, Vfs.SceMode Mode)
 		{
-			var IoFileMgrForUser = HleState.ModuleManager.GetModule<IoFileMgrForUser>();
+			var IoFileMgrForUser = ModuleManager.GetModule<IoFileMgrForUser>();
 			StdOut = (StdHandle)IoFileMgrForUser.sceIoOpen(File, Flags, Mode);
 			//Console.WriteLine("StdOut: {0}", StdOut);
 			return StdOut;
@@ -92,7 +97,7 @@ namespace CSPspEmu.Hle.Modules.stdio
 		[HlePspNotImplemented]
 		public StdHandle sceKernelStderrReopen(string File, HleIoFlags Flags, Vfs.SceMode Mode)
 		{
-			var IoFileMgrForUser = HleState.ModuleManager.GetModule<IoFileMgrForUser>();
+			var IoFileMgrForUser = ModuleManager.GetModule<IoFileMgrForUser>();
 			StdError = (StdHandle)IoFileMgrForUser.sceIoOpen(File, Flags, Mode);
 			return StdError;
 		}

@@ -9,6 +9,7 @@ using CSPspEmu.Core.Memory;
 using CSharpUtils;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core.Cpu.Emiter;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle
 {
@@ -168,7 +169,6 @@ namespace CSPspEmu.Hle
 	{
 		public int ID;
 		public string Name { get { return ModuleInfo.Name; } }
-		public HleState HleState;
 		public bool Loaded;
 		public ElfPsp.ModuleInfo ModuleInfo;
 		public InitInfoStruct InitInfo;
@@ -176,9 +176,15 @@ namespace CSPspEmu.Hle
 		public List<HleModuleImports> ModulesImports = new List<HleModuleImports>();
 		public List<HleModuleExports> ModulesExports = new List<HleModuleExports>();
 
-		public HleModuleGuest(HleState HleState)
+		[Inject]
+		HleModuleManager ModuleManager;
+
+		[Inject]
+		CpuProcessor CpuProcessor;
+
+		public HleModuleGuest(PspEmulatorContext PspEmulatorContext)
 		{
-			this.HleState = HleState;
+			PspEmulatorContext.InjectDependencesTo(this);
 		}
 
 		public void LinkFunction(uint CallAddress, uint FunctionAddress)
@@ -189,18 +195,16 @@ namespace CSPspEmu.Hle
 			Instruction.OP1 = 2;
 			Instruction.JUMP_Real = FunctionAddress;
 
-			HleState.CpuProcessor.Memory.WriteSafe(CallAddress + 0, Instruction); // J
-			HleState.CpuProcessor.Memory.WriteSafe(CallAddress + 4, 0x00000000); // NOP
+			CpuProcessor.Memory.WriteSafe(CallAddress + 0, Instruction); // J
+			CpuProcessor.Memory.WriteSafe(CallAddress + 4, 0x00000000); // NOP
 		}
 
 		public void LinkFunction(uint CallAddress, FunctionEntry NativeFunction)
 		{
-			var ModuleManager = HleState.ModuleManager;
-
 			//Console.WriteLine(NativeFunction);
 
-			HleState.CpuProcessor.Memory.WriteSafe(CallAddress + 0, FunctionGenerator.NativeCallSyscallOpCode);  // syscall NativeCallSyscallCode
-			HleState.CpuProcessor.Memory.WriteSafe(CallAddress + 4, (uint)ModuleManager.AllocDelegateSlot(
+			CpuProcessor.Memory.WriteSafe(CallAddress + 0, FunctionGenerator.NativeCallSyscallOpCode);  // syscall NativeCallSyscallCode
+			CpuProcessor.Memory.WriteSafe(CallAddress + 4, (uint)ModuleManager.AllocDelegateSlot(
 				Action: CreateDelegate(
 					ModuleManager: ModuleManager,
 					Module: NativeFunction.Module,
@@ -220,7 +224,7 @@ namespace CSPspEmu.Hle
 
 		public void ExportModules()
 		{
-			foreach (var Module in HleState.ModuleManager.LoadedGuestModules)
+			foreach (var Module in ModuleManager.LoadedGuestModules)
 			{
 				ExportModules(Module);
 			}
@@ -257,8 +261,6 @@ namespace CSPspEmu.Hle
 
 		public void ImportModules()
 		{
-			var ModuleManager = HleState.ModuleManager;
-
 			foreach (var ModuleImports in ModulesImports)
 			{
 				HleModuleHost HleModuleHost = null;
@@ -274,7 +276,7 @@ namespace CSPspEmu.Hle
 				// Can't use a host module. Try to use a Guest module.
 				if (HleModuleHost == null)
 				{
-					var HleModuleGuest = HleState.ModuleManager.LoadedGuestModules.FirstOrDefault(ModuleExports => (ModuleExports.Name == ModuleImports.Name));
+					var HleModuleGuest = ModuleManager.LoadedGuestModules.FirstOrDefault(ModuleExports => (ModuleExports.Name == ModuleImports.Name));
 					if (HleModuleGuest != null)
 					{
 						HleModuleGuest.ExportModules(this);
@@ -321,8 +323,8 @@ namespace CSPspEmu.Hle
 					{
 						Console.WriteLine(
 							"Thread({0}:'{1}'):{2}:{3}",
-							HleState.PspConfig.PspEmulatorContext.GetInstance<HleThreadManager>().Current.Id,
-							HleState.PspConfig.PspEmulatorContext.GetInstance<HleThreadManager>().Current.Name,
+							PspEmulatorContext.GetInstance<HleThreadManager>().Current.Id,
+							PspEmulatorContext.GetInstance<HleThreadManager>().Current.Name,
 							ModuleImportName, NIDName
 						);
 					}

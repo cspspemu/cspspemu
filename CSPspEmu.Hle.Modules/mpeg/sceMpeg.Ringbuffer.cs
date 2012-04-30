@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.mpeg
 {
 	unsafe public partial class sceMpeg
 	{
+		[Inject]
+		HleInterop HleInterop;
+
 		/// <summary>
 		/// sceMpegRingbufferQueryMemSize
 		/// </summary>
@@ -99,7 +103,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		public int sceMpegRingbufferPut(SceMpegRingbuffer* Ringbuffer, int NumPackets, int PacketsFree)
 		{
 			//Ringbuffer->Data
-			var ResultCpuThreadState = HleState.HleInterop.ExecuteFunctionNow(
+			var ResultCpuThreadState = HleInterop.ExecuteFunctionNow(
 				Ringbuffer->Callback,
 				Ringbuffer->Data,
 				NumPackets,

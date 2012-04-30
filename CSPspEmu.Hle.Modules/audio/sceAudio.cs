@@ -121,7 +121,7 @@ namespace CSPspEmu.Hle.Modules.audio
 #if true
 			return 844;
 #else
-			var Channel = HleState.PspAudio.GetChannel(ChannelId);
+			var Channel = PspAudio.GetChannel(ChannelId);
 			int RestLength = Channel.AvailableChannelsForRead;
 			//Console.Error.WriteLine(RestLength);
 			return RestLength;
@@ -154,7 +154,7 @@ namespace CSPspEmu.Hle.Modules.audio
 				/*
 				if (Blocking)
 				{
-					HleState.PspRtc.RegisterTimerInOnce(TimeSpan.FromMilliseconds(1), () =>
+					PspRtc.RegisterTimerInOnce(TimeSpan.FromMilliseconds(1), () =>
 					{
 						WakeUpCallback();
 					});

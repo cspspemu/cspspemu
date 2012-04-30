@@ -21,6 +21,7 @@ using CSPspEmu.Runner;
 using CSPspEmu.Core.Audio.Impl.WaveOut;
 using CSPspEmu.Core.Audio.Impl.Openal;
 using CSPspEmu.Hle.Modules;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu
 {
@@ -296,7 +297,7 @@ namespace CSPspEmu
 			Console.WriteLine("-----------------------------------------------------------------");
 			Console.WriteLine("Last called syscalls: ");
 
-			foreach (var CalledCallback in PspEmulatorContext.GetInstance<HleState>().ModuleManager.LastCalledCallbacks.ToArray().Reverse())
+			foreach (var CalledCallback in PspEmulatorContext.GetInstance<HleModuleManager>().LastCalledCallbacks.ToArray().Reverse())
 			{
 				Console.WriteLine("  {0}", CalledCallback);
 			}

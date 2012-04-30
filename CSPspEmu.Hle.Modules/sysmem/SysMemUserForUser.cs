@@ -122,7 +122,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		[HlePspFunction(NID = 0xA291F107, FirmwareVersion = 150)]
 		public int sceKernelMaxFreeMemSize()
 		{
-			//foreach (var Partition in HleState.MemoryManager.RootPartition.ChildPartitions) Console.WriteLine(Partition);
+			//foreach (var Partition in MemoryManager.RootPartition.ChildPartitions) Console.WriteLine(Partition);
 			//return 24 * 1024 * 1024;
 
 			return MemoryManager.GetPartition(HleMemoryManager.Partitions.User).MaxFreeSize;

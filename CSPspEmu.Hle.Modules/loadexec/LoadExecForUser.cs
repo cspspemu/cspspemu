@@ -5,12 +5,15 @@ using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core;
 using CSPspEmu.Hle.Managers;
+using CSharpUtils;
 
 namespace CSPspEmu.Hle.Modules.loadexec
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	public class LoadExecForUser : HleModuleHost
 	{
+		Logger Logger = Logger.GetLogger("LoadExecForUser");
+
 		[Inject]
 		HleCallbackManager CallbackManager;
 
@@ -24,7 +27,7 @@ namespace CSPspEmu.Hle.Modules.loadexec
 		[HlePspFunction(NID = 0x05572A5F, FirmwareVersion = 150)]
 		public void sceKernelExitGame()
 		{
-			HleState.IsRunning = false;
+			Logger.Error("sceKernelExitGame");
 		}
 
 		/// <summary>

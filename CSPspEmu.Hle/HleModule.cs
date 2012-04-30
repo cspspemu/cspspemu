@@ -8,6 +8,8 @@ namespace CSPspEmu.Hle
 {
 	public class HleModule : PspEmulatorComponent, IDisposable
 	{
+		protected PspConfig PspConfig { get { return PspEmulatorContext.PspConfig; } }
+
 		virtual public void Dispose()
 		{
 		}

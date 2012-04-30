@@ -69,7 +69,7 @@ namespace CSPspEmu.Hle.Modules.ge
 					DisplayList.GpuStateStructPointer = null;
 					if (Args != null)
 					{
-						DisplayList.GpuStateStructPointer = (GpuStateStruct*)HleState.CpuProcessor.Memory.PspAddressToPointerSafe(Args[0].GpuStateStructAddress, Marshal.SizeOf(typeof(GpuStateStruct)));
+						DisplayList.GpuStateStructPointer = (GpuStateStruct*)CpuProcessor.Memory.PspAddressToPointerSafe(Args[0].GpuStateStructAddress, Marshal.SizeOf(typeof(GpuStateStruct)));
 					}
 
 					if (DisplayList.GpuStateStructPointer == null)

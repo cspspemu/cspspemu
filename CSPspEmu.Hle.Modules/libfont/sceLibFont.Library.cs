@@ -5,11 +5,15 @@ using System.Linq;
 using System.Text;
 using CSharpUtils;
 using CSPspEmu.Hle.Formats.Font;
+using CSPspEmu.Hle.Managers;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.libfont
 {
 	unsafe public partial class sceLibFont
 	{
+		[Inject]
+		HleIoManager HleIoManager;
 
 		/// <summary>
 		/// Opens a new font.
@@ -28,7 +32,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 			var FontLibrary = FontLibraries.Get(FontLibraryHandle);
 
 			var FontRegistry = FontLibrary.FontRegistryList[Index];
-			var FontFileStream = HleState.HleIoManager.HleIoWrapper.Open("flash0:/font/" + FontRegistry.FontStyle.FileName, Vfs.HleIoFlags.Read, Vfs.SceMode.All);
+			var FontFileStream = HleIoManager.HleIoWrapper.Open("flash0:/font/" + FontRegistry.FontStyle.FileName, Vfs.HleIoFlags.Read, Vfs.SceMode.All);
 			var PGF = new PGF().Load(FontFileStream);
 			var Font = new Font(FontLibrary, PGF);
 			*ErrorCode = 0;
@@ -70,7 +74,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 		public FontHandle sceFontOpenUserFile(FontLibraryHandle FontLibraryHandle, string FileName, int Mode, uint* ErrorCode)
 		{
 			var FontLibrary = FontLibraries.Get(FontLibraryHandle);
-			var FontFileStream = HleState.HleIoManager.HleIoWrapper.Open(FileName, Vfs.HleIoFlags.Read, (Vfs.SceMode)Mode);
+			var FontFileStream = HleIoManager.HleIoWrapper.Open(FileName, Vfs.HleIoFlags.Read, (Vfs.SceMode)Mode);
 			var PGF = new PGF().Load(FontFileStream);
 			var Font = new Font(FontLibrary, PGF);
 			*ErrorCode = 0;
