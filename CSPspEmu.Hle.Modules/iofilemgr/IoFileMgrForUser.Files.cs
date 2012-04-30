@@ -401,7 +401,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			}
 
 			//Console.Error.WriteLine("Didn't find file '{0}'", FileName);
-			throw (new SceKernelException(SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND));
+			throw (new SceKernelException(SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND, String.Format("Didn't find file '{0}'", FileName)));
 		}
 
 

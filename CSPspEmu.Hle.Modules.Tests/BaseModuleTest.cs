@@ -15,6 +15,10 @@ namespace CSPspEmu.Hle.Modules.Tests
 		{
 		}
 
+		virtual protected void Initialize()
+		{
+		}
+
 		[TestInitialize]
 		public void SetUp()
 		{
@@ -24,6 +28,7 @@ namespace CSPspEmu.Hle.Modules.Tests
 			SetMocks(PspEmulatorContext);
 
 			PspEmulatorContext.InjectDependencesTo(this);
+			Initialize();
 		}
 	}
 }

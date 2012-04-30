@@ -147,50 +147,50 @@ namespace CSPspEmu.Hle.Vfs.Iso
 
 		public enum UmdCommandEnum : uint
 		{
-            /// <summary>
-            /// UMD file seek set.
-            /// </summary>
-            FileSeekSet = 0x01010005,
-            /// <summary>
-            /// Get UMD Primary Volume Descriptor
-            /// </summary>
-            GetPrimaryVolumeDescriptor = 0x01020001,
-            /// <summary>
-            /// Get UMD Path Table
-            /// </summary>
-            GetPathTable = 0x01020002,
-            /// <summary>
-            /// Get Sector size
-            /// </summary>
-            GetSectorSize = 0x01020003,
-            /// <summary>
-            /// Get UMD file pointer.
-            /// </summary>
-            GetFilePointer = 0x01020004,
-            /// <summary>
-            /// Get UMD file start sector.
-            /// </summary>
-            GetStartSector = 0x01020006,
-            /// <summary>
-            /// Get UMD file length in bytes.
-            /// </summary>
-            GetLengthInBytes = 0x01020007,
-            /// <summary>
-            /// Read UMD file.
-            /// </summary>
-            ReadFile = 0x01030008,
-            /// <summary>
-            /// UMD disc read sectors operation.
-            /// </summary>
-            ReadSectors = 0x01F30003,
-            /// <summary>
-            /// UMD file seek whence.
-            /// </summary>
-            FileSeek = 0x01F100A6,
-            /// <summary>
-            /// Define decryption key (DRM by amctrl.prx).
-            /// </summary>
-            DefineDecryptionKey = 0x04100001
+			/// <summary>
+			/// UMD file seek set.
+			/// </summary>
+			FileSeekSet = 0x01010005,
+			/// <summary>
+			/// Get UMD Primary Volume Descriptor
+			/// </summary>
+			GetPrimaryVolumeDescriptor = 0x01020001,
+			/// <summary>
+			/// Get UMD Path Table
+			/// </summary>
+			GetPathTable = 0x01020002,
+			/// <summary>
+			/// Get Sector size
+			/// </summary>
+			GetSectorSize = 0x01020003,
+			/// <summary>
+			/// Get UMD file pointer.
+			/// </summary>
+			GetFilePointer = 0x01020004,
+			/// <summary>
+			/// Get UMD file start sector.
+			/// </summary>
+			GetStartSector = 0x01020006,
+			/// <summary>
+			/// Get UMD file length in bytes.
+			/// </summary>
+			GetLengthInBytes = 0x01020007,
+			/// <summary>
+			/// Read UMD file.
+			/// </summary>
+			ReadFile = 0x01030008,
+			/// <summary>
+			/// UMD disc read sectors operation.
+			/// </summary>
+			ReadSectors = 0x01F30003,
+			/// <summary>
+			/// UMD file seek whence.
+			/// </summary>
+			FileSeek = 0x01F100A6,
+			/// <summary>
+			/// Define decryption key (DRM by amctrl.prx).
+			/// </summary>
+			DefineDecryptionKey = 0x04100001
 		}
 
 		public unsafe int IoIoctl(HleIoDrvFileArg HleIoDrvFileArg, uint Command, byte* InputPointer, int InputLength, byte* OutputPointer, int OutputLength)
@@ -203,18 +203,19 @@ namespace CSPspEmu.Hle.Vfs.Iso
 					if (OutputLength < 4 || OutputPointer == null) throw(new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
 					*((uint *)OutputPointer) = (uint)IsoFileArgument.StartSector;
 					return 0;
-                case UmdCommandEnum.GetSectorSize:
-                    if (OutputLength != 4 || OutputPointer == null) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
-                    *((uint*)OutputPointer) = IsoFile.SectorSize;
-                    return 0;
-                case UmdCommandEnum.GetLengthInBytes:
-                    if (OutputLength < 8 || OutputPointer == null) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
-                    *((uint*)OutputPointer) = (uint)IsoFileArgument.Size;
-                    return 0;
-                case UmdCommandEnum.GetPrimaryVolumeDescriptor:
-                    if (OutputLength != IsoFile.SectorSize || OutputPointer == null) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
-                    *((PrimaryVolumeDescriptor*)OutputPointer) = IsoFileArgument.Stream.ReadStruct<PrimaryVolumeDescriptor>();
-                    return 0;
+				case UmdCommandEnum.GetSectorSize:
+					if (OutputLength != 4 || OutputPointer == null) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
+					*((uint*)OutputPointer) = IsoFile.SectorSize;
+					return 0;
+				case UmdCommandEnum.GetLengthInBytes:
+					if (OutputLength < 8 || OutputPointer == null) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
+					*((uint*)OutputPointer) = (uint)IsoFileArgument.Size;
+					return 0;
+				case UmdCommandEnum.GetPrimaryVolumeDescriptor:
+					if (OutputLength != IsoFile.SectorSize || OutputPointer == null) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
+					*((PrimaryVolumeDescriptor*)OutputPointer) = IsoFileArgument.Stream.ReadStruct<PrimaryVolumeDescriptor>();
+					//*((PrimaryVolumeDescriptor*)OutputPointer) = Iso.PrimaryVolumeDescriptor;
+					return 0;
 				default:
 					throw new NotImplementedException(String.Format("Not implemented command 0x{0:X}", Command));
 			}

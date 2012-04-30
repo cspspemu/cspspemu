@@ -9,7 +9,8 @@ namespace CSPspEmu.Hle
 	{
 		public readonly SceKernelErrors SceKernelError;
 
-		public SceKernelException(SceKernelErrors SceKernelError)
+		public SceKernelException(SceKernelErrors SceKernelError, string Message = "")
+			: base(SceKernelError + " : " + Message)
 		{
 			this.SceKernelError = SceKernelError;
 		}

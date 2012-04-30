@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseModuleTest.cs" />
+    <Compile Include="iofilemgr\umd\ioctlTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="rtc\sceRtcTest.cs" />
     <Compile Include="utils\UtilsForUserTest.cs" />

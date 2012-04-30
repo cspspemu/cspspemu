@@ -74,14 +74,17 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			if (TimeSpan != TimeSpan.Zero)
 			{
 				var CurrentThread = ThreadManager.Current;
-				//ThreadManager
-				CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, "_DelayIo", null, WakeUpCallback =>
+				if (CurrentThread != null)
 				{
-					PspRtc.RegisterTimerInOnce(TimeSpan, () =>
+					//ThreadManager
+					CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, "_DelayIo", null, WakeUpCallback =>
 					{
-						WakeUpCallback();
-					});
-				}, HandleCallbacks: false);
+						PspRtc.RegisterTimerInOnce(TimeSpan, () =>
+						{
+							WakeUpCallback();
+						});
+					}, HandleCallbacks: false);
+				}
 			}
 			else
 			{
