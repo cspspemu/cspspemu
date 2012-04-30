@@ -56,29 +56,5 @@ namespace CSPspEmu.Core.Tests
 			HlePspThread.CpuThreadState.PC = 0x08000000;
 			HlePspThread.Step();
 		}
-
-		[TestMethod()]
-		public void CpuThreadStateBugTest()
-		{
-			var HlePspThread = new HleThread(PspEmulatorContext, new CpuThreadState(Processor));
-
-			MipsAssembler.Assemble(@"
-			.code 0x08000000
-				li r31, 0x08000000
-				jal end
-				nop
-			end:
-				jr r31
-				nop
-			");
-
-			HlePspThread.CpuThreadState.PC = 0x08000000;
-
-			Assert.Inconclusive();
-
-			Console.WriteLine("1");
-			HlePspThread.Step();
-			Console.WriteLine("2");
-		}
 	}
 }
