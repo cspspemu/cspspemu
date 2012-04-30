@@ -14,14 +14,14 @@ namespace CSPspEmu.Core.Display
 {
 	public class PspDisplay : PspEmulatorComponent
 	{
-		public const double processed_pixels_per_second = 9000000; // hz
-		public const double cycles_per_pixel            = 1;
-		public const double pixels_in_a_row             = 525;
-		public const double vsync_row                   = 272;
-		public const double number_of_rows              = 286;
+		public const double ProcessedPixelsPerSecond = 9000000; // hz
+		public const double CyclesPerPixel            = 1;
+		public const double PixelsInARow             = 525;
+		public const double VsyncRow                   = 272;
+		public const double NumberOfRows              = 286;
 	
-		public const double hsync_hz = (processed_pixels_per_second * cycles_per_pixel) / pixels_in_a_row;
-		public const double vsync_hz = hsync_hz / number_of_rows;
+		public const double HorizontalSyncHertz = (ProcessedPixelsPerSecond * CyclesPerPixel) / PixelsInARow;
+		public const double VeritcalSyncHertz = HorizontalSyncHertz / NumberOfRows;
 
 		[Inject]
 		public PspRtc PspRtc;

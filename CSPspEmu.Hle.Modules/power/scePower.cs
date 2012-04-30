@@ -385,7 +385,7 @@ namespace CSPspEmu.Hle.Modules.power
 		[HlePspFunction(NID = 0x2085D15D, FirmwareVersion = 150)]
 		public int scePowerGetBatteryLifePercent()
 		{
-			return PspBattery.BatteryLifePercent;
+			return (int)(PspBattery.BatteryLifePercent * 100);
 		}
 
 		/// <summary>

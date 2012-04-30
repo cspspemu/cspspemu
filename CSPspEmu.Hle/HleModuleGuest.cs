@@ -203,7 +203,7 @@ namespace CSPspEmu.Hle
 		{
 			//Console.WriteLine(NativeFunction);
 
-			CpuProcessor.Memory.WriteSafe(CallAddress + 0, FunctionGenerator.NativeCallSyscallOpCode);  // syscall NativeCallSyscallCode
+			CpuProcessor.Memory.WriteSafe(CallAddress + 0, SyscallInfo.NativeCallSyscallOpCode);  // syscall NativeCallSyscallCode
 			CpuProcessor.Memory.WriteSafe(CallAddress + 4, (uint)ModuleManager.AllocDelegateSlot(
 				Action: CreateDelegate(
 					ModuleManager: ModuleManager,

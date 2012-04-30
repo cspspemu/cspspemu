@@ -11,13 +11,40 @@ namespace CSPspEmu.Core.Battery
 		{
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool IsPlugedIn = true;
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool IsPresent = true;
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool BatteryExist = true;
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool IsBatteryCharging = true;
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		public int BatteryLifeTimeInMinutes = 5 * 60;
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool IsPowerOnline = true;
-		public int BatteryLifePercent = 100;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public double BatteryLifePercent = 1.0;
 
 		/// <summary>
 		/// Some standard battery temperature 28 deg C
@@ -32,6 +59,6 @@ namespace CSPspEmu.Core.Battery
 		/// <summary>
 		/// Led starts flashing at 12%
 		/// </summary>
-		public int LowPercent = 12;
+		public double LowPercent = 0.12;
 	}
 }

@@ -2,11 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core.Cpu.Table;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Dynarec
 {
-	sealed public class CpuBranchAnalyzer
+	sealed public class DynarecBranchAnalyzer
 	{
+		static public Func<Instruction, JumpFlags> GetBranchInfo = (Instruction) =>
+		{
+			return _GetBranchInfo(Instruction.Value);
+		};
+
+		static private Func<uint, JumpFlags> _GetBranchInfo = EmitLookupGenerator.GenerateInfoDelegate<DynarecBranchAnalyzer, JumpFlags>(
+			EmitLookupGenerator.GenerateSwitchDelegateReturn<DynarecBranchAnalyzer, JumpFlags>(
+				InstructionTable.ALL, ThrowOnUnexistent: false
+			),
+			new DynarecBranchAnalyzer()
+		);
+
 		public Instruction Instruction;
 
 		[Flags]
@@ -65,7 +78,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public JumpFlags syscall() { return JumpFlags.SyscallInstruction; }
 
 		public JumpFlags unhandled() { return JumpFlags.NormalInstruction; }
-		//public Flags unknown() { throw (new InvalidOperationException()); }
 		public JumpFlags unknown() { return JumpFlags.NormalInstruction; }
 	}
+
 }

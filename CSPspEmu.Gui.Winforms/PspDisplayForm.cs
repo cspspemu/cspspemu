@@ -538,7 +538,11 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			this.Invoke(new Action(() =>
 			{
-				if (GameListComponent != null) GameListComponent.Visible = false;
+				if (GameListComponent != null)
+				{
+					GameListComponent.Visible = false;
+				}
+				this.Focus();
 			}));
 
 			OpenRecentHook(FilePath);

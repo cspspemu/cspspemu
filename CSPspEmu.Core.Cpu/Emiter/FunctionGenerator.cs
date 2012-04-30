@@ -21,8 +21,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 	{
 		static public MipsEmiter MipsEmiter = new MipsEmiter();
 		static public Action<uint, CpuEmiter> CpuEmiterInstruction = EmitLookupGenerator.GenerateSwitchDelegate<CpuEmiter>(InstructionTable.ALL);
-		static public Func<uint, CpuBranchAnalyzer.Flags> GetBranchInfo = EmitLookupGenerator.GenerateInfoDelegate<CpuBranchAnalyzer, CpuBranchAnalyzer.Flags>(
-			EmitLookupGenerator.GenerateSwitchDelegateReturn<CpuBranchAnalyzer, CpuBranchAnalyzer.Flags>(
+		static public Func<uint, CpuBranchAnalyzer.JumpFlags> GetBranchInfo = EmitLookupGenerator.GenerateInfoDelegate<CpuBranchAnalyzer, CpuBranchAnalyzer.JumpFlags>(
+			EmitLookupGenerator.GenerateSwitchDelegateReturn<CpuBranchAnalyzer, CpuBranchAnalyzer.JumpFlags>(
 				InstructionTable.ALL, ThrowOnUnexistent: false
 			),
 			new CpuBranchAnalyzer()
@@ -35,6 +35,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		);
 
+		/*
 		public const ushort NativeCallSyscallCode = 0x1234;
 
 		static public uint NativeCallSyscallOpCode
@@ -44,6 +45,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				return (uint)(0x0000000C | (FunctionGenerator.NativeCallSyscallCode << 6));
 			}
 		}
+		*/
 
 		static public PspMethodStruct CreateDelegateForPC(CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC)
 		{
@@ -114,9 +116,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			int MaxNumberOfInstructions = 128 * 1024;
 			//int MaxNumberOfInstructions = 60;
 
-			while (BranchesToAnalyze.Count > 0)
+			while (true)
 			{
+			HandleNextBranch: ;
 				bool EndOfBranchFound = false;
+
+				if (BranchesToAnalyze.Count == 0) break;
 
 				for (PC = BranchesToAnalyze.Dequeue(); PC < EndPC; PC += 4)
 				{
@@ -157,14 +162,48 @@ namespace CSPspEmu.Core.Cpu.Emiter
 						//var NewInstruction = new Dictionary<string, bool>();
 					}
 
+#if false
+					if ((BranchInfo & CpuBranchAnalyzer.JumpFlags.BranchOrJumpInstruction) != 0)
+					{
+						var BranchAddress = CpuEmiter.Instruction.GetBranchAddress(PC);
+						Labels[BranchAddress] = SafeILGenerator.DefineLabel("" + BranchAddress);
+						BranchesToAnalyze.Enqueue(BranchAddress);
+					}
+
 					// Branch instruction.
-					if ((BranchInfo & CpuBranchAnalyzer.Flags.JumpInstruction) != 0)
+					//if ((BranchInfo & CpuBranchAnalyzer.JumpFlags.JumpInstruction) != 0)
+					if ((BranchInfo & CpuBranchAnalyzer.JumpFlags.JumpAlways) != 0)
 					{
 						//Console.WriteLine("Instruction");
 						EndOfBranchFound = true;
 						continue;
 					}
-					else if ((BranchInfo & CpuBranchAnalyzer.Flags.BranchOrJumpInstruction) != 0)
+					else if ((BranchInfo & CpuBranchAnalyzer.JumpFlags.SyscallInstruction) != 0)
+					{
+						// On this special Syscall
+						if (CpuEmiter.Instruction.CODE == SyscallInfo.NativeCallSyscallCode)
+						{
+							//PC += 4;
+							goto HandleNextBranch;
+						}
+					}
+
+					// A Jump Always found. And we have also processed the delayed branch slot. End the branch.
+					if (EndOfBranchFound)
+					{
+						goto HandleNextBranch;
+					}
+#else
+
+					// Branch instruction.
+					if ((BranchInfo & CpuBranchAnalyzer.JumpFlags.JumpInstruction) != 0)
+					//if ((BranchInfo & CpuBranchAnalyzer.JumpFlags.JumpAlways) != 0)
+					{
+						//Console.WriteLine("Instruction");
+						EndOfBranchFound = true;
+						continue;
+					}
+					else if ((BranchInfo & CpuBranchAnalyzer.JumpFlags.BranchOrJumpInstruction) != 0)
 					{
 						var BranchAddress = CpuEmiter.Instruction.GetBranchAddress(PC);
 						Labels[BranchAddress] = SafeILGenerator.DefineLabel("" + BranchAddress);
@@ -179,13 +218,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 						}
 						*/
 					}
-					else if ((BranchInfo & CpuBranchAnalyzer.Flags.SyscallInstruction) != 0)
+					else if ((BranchInfo & CpuBranchAnalyzer.JumpFlags.SyscallInstruction) != 0)
 					{
 						// On this special Syscall
-						if (CpuEmiter.Instruction.CODE == FunctionGenerator.NativeCallSyscallCode)
+						if (CpuEmiter.Instruction.CODE == SyscallInfo.NativeCallSyscallCode)
 						{
 							//PC += 4;
-							break;
+							goto HandleNextBranch;
 						}
 					}
 
@@ -193,8 +232,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					if (EndOfBranchFound)
 					{
 						EndOfBranchFound = false;
-						break;
+						goto HandleNextBranch;
 					}
+#endif
 				}
 			}
 
@@ -328,14 +368,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				var BranchInfo = GetBranchInfo(CurrentInstruction.Value);
 
 				// Delayed branch instruction.
-				if ((BranchInfo & CpuBranchAnalyzer.Flags.BranchOrJumpInstruction) != 0)
+				if ((BranchInfo & CpuBranchAnalyzer.JumpFlags.BranchOrJumpInstruction) != 0)
 				{
 					InstructionsEmitedSinceLastWaypoint += 2;
 					EmitInstructionCountIncrement(true);
 
 					var BranchAddress = CurrentInstruction.GetBranchAddress(PC);
 
-					if ((BranchInfo & CpuBranchAnalyzer.Flags.JumpInstruction) != 0)
+					if ((BranchInfo & CpuBranchAnalyzer.JumpFlags.JumpInstruction) != 0)
 					{
 						// Marks label.
 						if (Labels.ContainsKey(PC))
@@ -353,7 +393,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 						EmitCpuInstruction();
 
 						//if ((BranchInfo & CpuBranchAnalyzer.Flags.Likely) != 0)
-						if (BranchInfo.HasFlag(CpuBranchAnalyzer.Flags.Likely))
+						if (BranchInfo.HasFlag(CpuBranchAnalyzer.JumpFlags.Likely))
 						{
 							//Console.WriteLine("Likely");
 							// Delayed instruction.
@@ -386,15 +426,15 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				else
 				{
 					// Syscall instruction.
-					if ((BranchInfo & CpuBranchAnalyzer.Flags.SyscallInstruction) != 0)
+					if ((BranchInfo & CpuBranchAnalyzer.JumpFlags.SyscallInstruction) != 0)
 					{
 						StorePC();
 					}
 					EmitCpuInstruction();
-					if ((BranchInfo & CpuBranchAnalyzer.Flags.SyscallInstruction) != 0)
+					if ((BranchInfo & CpuBranchAnalyzer.JumpFlags.SyscallInstruction) != 0)
 					{
 						// On this special Syscall
-						if (CurrentInstruction.CODE == FunctionGenerator.NativeCallSyscallCode)
+						if (CurrentInstruction.CODE == SyscallInfo.NativeCallSyscallCode)
 						{
 							//PC += 4;
 							break;

@@ -60,7 +60,7 @@ namespace CSPspEmu.Hle.Managers
 
 			PspConfig = CpuProcessor.PspConfig;
 
-			CpuProcessor.RegisterNativeSyscall(FunctionGenerator.NativeCallSyscallCode, (CpuThreadState, Code) =>
+			CpuProcessor.RegisterNativeSyscall(SyscallInfo.NativeCallSyscallCode, (CpuThreadState, Code) =>
 			{
 				uint Info = CpuThreadState.CpuProcessor.Memory.ReadSafe<uint>(CpuThreadState.PC + 4);
 				var DelegateInfo = DelegateTable[Info];

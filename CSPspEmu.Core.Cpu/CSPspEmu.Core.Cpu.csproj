@@ -63,6 +63,10 @@
   <ItemGroup>
     <Compile Include="Assembler\MipsAssembler.cs" />
     <Compile Include="Assembler\MipsDisassembler.cs" />
+    <Compile Include="Dynarec\DynarecBranchAnalyzer.cs" />
+    <Compile Include="Dynarec\DynarecFunction.cs" />
+    <Compile Include="Dynarec\DynarecFunctionCompiler.cs" />
+    <Compile Include="Dynarec\DynarecFunctionCompiler.Internal.cs" />
     <Compile Include="Emiter\CpuBranchAnalyzer.cs" />
     <Compile Include="Emiter\CpuEmiter.cs" />
     <Compile Include="Emiter\Emiters\CpuEmiter.ArithmeticLogic.cs" />
@@ -96,6 +100,7 @@
     <Compile Include="CpuProcessor.cs" />
     <Compile Include="PspBreakException.cs" />
     <Compile Include="Switch\EmitLookupGenerator.cs" />
+    <Compile Include="SyscallInfo.cs" />
     <Compile Include="Table\InstructionInfo.cs" />
     <Compile Include="Table\InstructionTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

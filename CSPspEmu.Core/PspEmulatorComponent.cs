@@ -26,7 +26,9 @@ namespace CSPspEmu.Core
 			PspEmulatorContext.InjectDependencesTo(this);
 		}
 
-		abstract public void InitializeComponent();
+		virtual public void InitializeComponent()
+		{
+		}
 
 		virtual public void Dispose()
 		{
