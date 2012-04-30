@@ -22,39 +22,56 @@ namespace CSPspEmu.Hle.Modules.Tests.iofilemgr.umd
 		[Inject]
 		HleIoManager HleIoManager = null;
 
+		SceUID BootBinFileHandle;
+
 		protected override void Initialize()
 		{
 			var Iso = IsoLoader.GetIso("../../../pspautotests/input/cube.cso");
 			var Umd = new HleIoDriverIso(Iso);
 			HleIoManager.SetDriver("disc:", Umd);
-			HleIoManager.SetDriver("umd:", Umd);
-			HleIoManager.SetDriver("host:", Umd);
-			HleIoManager.SetDriver(":", Umd);
 			HleIoManager.Chdir("disc0:/PSP_GAME/USRDIR");
+			BootBinFileHandle = IoFileMgrForUser.sceIoOpen("disc0:/PSP_GAME/SYSDIR/BOOT.BIN", HleIoFlags.Read, SceMode.All);
 		}
 
 		[TestMethod]
 		public void GetPrimaryVolumeDescriptorTest()
 		{
-			var buffer = new byte[0x800];
-			fixed (byte* bufferPointer = buffer)
-			{
-				var result = IoFileMgrForUser.sceIoIoctl(
-					FileHandle: IoFileMgrForUser.sceIoOpen("disc0:/PSP_GAME/SYSDIR/BOOT.BIN", HleIoFlags.Read, SceMode.All),
-					Command: (uint)HleIoDriverIso.UmdCommandEnum.GetPrimaryVolumeDescriptor,
-					InputPointer: null,
-					InputLength: 0,
-					OutputPointer: bufferPointer,
-					OutputLength: buffer.Length
-				);
+			var PrimaryVolumeDescriptor = default(PrimaryVolumeDescriptor);
+			var result = IoFileMgrForUser.sceIoIoctl(
+				FileHandle: BootBinFileHandle,
+				Command: (uint)HleIoDriverIso.UmdCommandEnum.GetPrimaryVolumeDescriptor,
+				InputPointer: null,
+				InputLength: 0,
+				OutputPointer: (byte*)&PrimaryVolumeDescriptor,
+				OutputLength: sizeof(PrimaryVolumeDescriptor)
+			);
 
-				Assert.AreEqual(0, result, "Expected no error");
-				Assert.AreEqual(
-					((char)0x01) + "CD001",
-					Encoding.ASCII.GetString(buffer.Slice(0, 6).ToArray()),
-					"Expected the PrimaryVolumeDescriptor magic"
-				);
-			}
+			Assert.AreEqual(0, result, "Expected no error");
+			Assert.AreEqual(
+				"CD001",
+				PrimaryVolumeDescriptor.VolumeDescriptorHeader.IdString
+			);
+			Assert.AreEqual(
+				VolumeDescriptorHeader.TypeEnum.PrimaryVolumeDescriptor,
+				PrimaryVolumeDescriptor.VolumeDescriptorHeader.Type
+			);
+		}
+
+		[TestMethod]
+		public void GetSectorSizeTest()
+		{
+			uint SectorSize;
+
+			var result = IoFileMgrForUser.sceIoIoctl(
+				FileHandle: BootBinFileHandle,
+				Command: (uint)HleIoDriverIso.UmdCommandEnum.GetSectorSize,
+				InputPointer: null,
+				InputLength: 0,
+				OutputPointer: (byte*)&SectorSize,
+				OutputLength: sizeof(uint)
+			);
+
+			Assert.AreEqual(IsoFile.SectorSize, SectorSize);
 		}
 	}
 }

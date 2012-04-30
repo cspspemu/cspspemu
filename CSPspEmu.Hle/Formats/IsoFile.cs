@@ -407,6 +407,14 @@ namespace CSPspEmu.Hle.Formats
 		public TypeEnum Type;
 		public fixed byte Id[5];
 		public byte Version;
+
+		public string IdString
+		{
+			get
+			{
+				fixed (byte* IdPtr = Id) return PointerUtils.PtrToString(IdPtr, 5, Encoding.UTF8);
+			}
+		}
 	}
 
 	public class IsoNode : IDisposable
