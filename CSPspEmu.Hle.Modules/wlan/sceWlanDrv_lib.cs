@@ -28,10 +28,8 @@ namespace CSPspEmu.Hle.Modules.wlan
 		/// <summary>
 		/// Get the Ethernet Address of the wlan controller
 		/// </summary>
-		/// <param name="EthernetAddress">
-		///		Pointer to a buffer of u8 (NOTE: it only writes to 6 bytes, but 
-		///		requests 8 so pass it 8 bytes just in case)
-		/// </param>
+		/// <param name="EthernetAddress">Pointer to a buffer of u8</param>
+		/// <remarks>NOTE: it only writes to 6 bytes, but requests 8 so pass it 8 bytes just in case)</remarks>
 		/// <returns>0 on success, < 0 on error</returns>
 		[HlePspFunction(NID = 0x0C622081, FirmwareVersion = 150)]
 		public int sceWlanGetEtherAddr(byte* EthernetAddress)
@@ -65,9 +63,9 @@ namespace CSPspEmu.Hle.Modules.wlan
 		/// </summary>
 		/// <returns>0 if off, 1 if on</returns>
 		[HlePspFunction(NID = 0x93440B11, FirmwareVersion = 150)]
-		public int sceWlanDevIsPowerOn()
+		public bool sceWlanDevIsPowerOn()
 		{
-			throw (new NotImplementedException());
+			return PspConfig.WlanIsOn;
 		}
 
 		/// <summary>

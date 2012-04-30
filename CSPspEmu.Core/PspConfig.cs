@@ -213,5 +213,6 @@ namespace CSPspEmu.Core
 		public bool TraceLastSyscalls = true;
 
 		public bool DebugNotImplemented = true;
+		public bool WlanIsOn = false;
 	}
 }

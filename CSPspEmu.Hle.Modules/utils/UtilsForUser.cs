@@ -6,6 +6,7 @@ using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Core;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Modules.utils
 {
@@ -37,10 +38,6 @@ namespace CSPspEmu.Hle.Modules.utils
 		public struct clock_t
 		{
 			public uint Value;
-		}
-
-		public struct SceKernelUtilsMt19937Context
-		{
 		}
 
 		protected Dictionary<uint, Random> Randoms = new Dictionary<uint, Random>();
@@ -128,40 +125,80 @@ namespace CSPspEmu.Hle.Modules.utils
 			CpuProcessor.sceKernelDcacheWritebackInvalidateAll();
 		}
 
-		/** 
-		 * Function to initialise a mersenne twister context.
-		 *
-		 * @param ctx - Pointer to a context
-		 * @param seed - A seed for the random function.
-		 *
-		 * @par Example:
-		 * @code
-		 * SceKernelUtilsMt19937Context ctx;
-		 * sceKernelUtilsMt19937Init(&ctx, time(NULL));
-		 * u23 rand_val = sceKernelUtilsMt19937UInt(&ctx);
-		 * @endcode
-		 *
-		 * @return < 0 on error.
-		 */
+		/// <summary>
+		/// Function to initialise a mersenne twister context.
+		/// </summary>
+		/// <param name="Context">Pointer to a context</param>
+		/// <param name="Seed">A seed for the random function.</param>
+		/// <example>
+		/// SceKernelUtilsMt19937Context ctx;
+		/// sceKernelUtilsMt19937Init(&ctx, time(NULL));
+		/// u32 rand_val = sceKernelUtilsMt19937UInt(&ctx);
+		/// </example>
+		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x27CC57F0, FirmwareVersion = 150)]
 		[HlePspFunction(NID = 0xE860E75E, FirmwareVersion = 150)]
-		public int sceKernelUtilsMt19937Init(SceKernelUtilsMt19937Context* Context, uint Seed)
+		public int sceKernelUtilsMt19937Init(out SceKernelUtilsMt19937Context Context, uint Seed)
 		{
-			Randoms.Add((uint)Context, new Random((int)Seed));
-			return 0;
+			fixed (uint* State = Context.State)
+			{
+				State[0] = Seed;
+
+				for (int n = 1; n < SceKernelUtilsMt19937Context.MT_N; n++)
+				{
+					State[n] = (uint)(1812433253 * (State[n - 1] ^ (State[n - 1] >> 30)) + n);
+				}
+
+				Context.Count = 0;
+
+				for (int n = 0; n < SceKernelUtilsMt19937Context.MT_N; n++)
+				{
+					sceKernelUtilsMt19937UInt(ref Context);
+				}
+
+				return 0;
+			}
 		}
 
-		/**
-		 * Function to return a new psuedo random number.
-		 *
-		 * @param ctx - Pointer to a pre-initialised context.
-		 * @return A pseudo random number (between 0 and MAX_INT).
-		 */
+		/// <summary>
+		/// Function to return a new psuedo random number.
+		/// </summary>
+		/// <param name="Context">Pointer to a pre-initialised context.</param>
+		/// <returns>A pseudo random number (between 0 and MAX_INT).</returns>
 		[HlePspFunction(NID = 0x06FB8A63, FirmwareVersion = 150, SkipLog = true)]
-		public uint sceKernelUtilsMt19937UInt(SceKernelUtilsMt19937Context* Context)
+		public uint sceKernelUtilsMt19937UInt(ref SceKernelUtilsMt19937Context Context)
 		{
-			var Random = Randoms[(uint)Context];
-			return (uint)Random.Next();
+			fixed (uint* State = Context.State)
+			{
+				uint* CurrentPointer;
+				uint Current, Next;
+				uint v0;
+				bool currentPosIsLess = Context.Count < (SceKernelUtilsMt19937Context.MT_N - SceKernelUtilsMt19937Context.MT_M);
+				CurrentPointer = &State[Context.Count];
+
+				// Current Value
+				Current = *CurrentPointer;
+
+				// Next Value
+				Context.Count = (Context.Count + 1) % SceKernelUtilsMt19937Context.MT_N;
+				Next = State[Context.Count];
+
+				v0 = Current ^ (Current >> 11);
+				v0 ^= ((v0 << 7) & 0x9D2C5680);
+				v0 ^= ((v0 << 15) & 0xEFC60000);
+
+				var Mix = ((Current & 0x80000000) | (Next & 0x7FFFFFFF)) >> 1;
+
+				if ((Next & 1) != 0) Current ^= 0x9908B0DF;
+				Mix ^= *(
+					currentPosIsLess
+					? &CurrentPointer[+SceKernelUtilsMt19937Context.MT_M]
+					: &CurrentPointer[-(SceKernelUtilsMt19937Context.MT_N - SceKernelUtilsMt19937Context.MT_M)]
+				);
+				*CurrentPointer = Mix;
+
+				return v0 ^ (v0 >> 18);
+			}
 		}
 
 		/// <summary>
@@ -306,5 +343,15 @@ namespace CSPspEmu.Hle.Modules.utils
 		{
 			throw (new NotImplementedException());
 		}
+	}
+
+	[StructLayout(LayoutKind.Sequential, Pack = 4)]
+	unsafe public struct SceKernelUtilsMt19937Context
+	{
+		public const int MT_N = 624;
+		public const int MT_M = 397;
+
+		public uint Count;
+		public fixed uint State[MT_N];
 	}
 }
