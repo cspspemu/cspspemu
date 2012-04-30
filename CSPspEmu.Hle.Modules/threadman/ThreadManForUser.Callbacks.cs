@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Cpu;
+using CSPspEmu.Hle.Managers;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
 	unsafe public partial class ThreadManForUser : HleModuleHost
 	{
+		[Inject]
+		HleCallbackManager CallbackManager;
+
 		public enum SceKernelCallbackFunction : uint
 		{
 		}
@@ -26,7 +31,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0xE81CAF8F, FirmwareVersion = 150)]
 		public int sceKernelCreateCallback(string Name, SceKernelCallbackFunction Function, uint Argument)
 		{
-			return HleState.CallbackManager.Callbacks.Create(
+			return CallbackManager.Callbacks.Create(
 				HleCallback.Create(Name, (uint)Function, Argument)
 			);
 		}
@@ -41,9 +46,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspNotImplemented]
 		public int sceKernelNotifyCallback(int CallbackId, int Argument2)
 		{
-			var Callback = HleState.CallbackManager.Callbacks.Get(CallbackId);
+			var Callback = CallbackManager.Callbacks.Get(CallbackId);
 			// TODO!
-			HleState.CallbackManager.ScheduleCallback(Callback);
+			CallbackManager.ScheduleCallback(Callback);
 			return 0;
 		}
 
@@ -55,7 +60,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0xEDBA5844, FirmwareVersion = 150)]
 		public int sceKernelDeleteCallback(int CallbackId)
 		{
-			HleState.CallbackManager.Callbacks.Remove(CallbackId);
+			CallbackManager.Callbacks.Remove(CallbackId);
 			return 0;
 		}
 
@@ -73,7 +78,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x349D6D6C, FirmwareVersion = 150)]
 		public int sceKernelCheckCallback(CpuThreadState CpuThreadState)
 		{
-			return (HleState.CallbackManager.ExecuteQueued(CpuThreadState, false) > 0) ? 1 : 0;
+			return (CallbackManager.ExecuteQueued(CpuThreadState, false) > 0) ? 1 : 0;
 		}
 
 		/// <summary>

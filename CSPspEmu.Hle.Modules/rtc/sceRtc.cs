@@ -5,12 +5,17 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Vfs;
+using CSPspEmu.Core.Rtc;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.rtc
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public class sceRtc : HleModuleHost
 	{
+		[Inject]
+		PspRtc PspRtc;
+
 		/// <summary>
 		/// Get the resolution of the tick counter
 		/// </summary>
@@ -44,8 +49,8 @@ namespace CSPspEmu.Hle.Modules.rtc
 		//[HlePspNotImplemented]
 		public int sceRtcGetCurrentTick(long* Tick)
 		{
-			HleState.PspRtc.Update();
-			*Tick = HleState.PspRtc.ElapsedTime.TotalMicroseconds;
+			PspRtc.Update();
+			*Tick = PspRtc.ElapsedTime.TotalMicroseconds;
 			return 0;
 		}
 
@@ -185,8 +190,8 @@ namespace CSPspEmu.Hle.Modules.rtc
 		{
 			if (Time == null) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
 
-			var CurrentDateTime = HleState.PspRtc.CurrentDateTime;
-			HleState.PspRtc.Update();
+			var CurrentDateTime = PspRtc.CurrentDateTime;
+			PspRtc.Update();
 
 			Time->Year = (ushort)CurrentDateTime.Year;
 			Time->Month = (ushort)CurrentDateTime.Month;
@@ -253,8 +258,8 @@ namespace CSPspEmu.Hle.Modules.rtc
 		[HlePspNotImplemented]
 		public int sceRtcGetCurrentClock(out ScePspDateTime DateTime, int TimeZone)
 		{
-			var CurrentDateTime = HleState.PspRtc.CurrentDateTime;
-			HleState.PspRtc.Update();
+			var CurrentDateTime = PspRtc.CurrentDateTime;
+			PspRtc.Update();
 
 			DateTime = new ScePspDateTime()
 			{

@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Core;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.sysmem
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00000011)]
 	unsafe public class sceSuspendForUser : HleModuleHost
 	{
+		[Inject]
+		HleMemoryManager MemoryManager;
+
 		/// <summary>
 		/// Unknown
 		/// </summary>
@@ -50,7 +55,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// <returns>0 on success</returns>
 		[HlePspFunction(NID = 0x3E0271D3, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceKernelVolatileMemLock(int Type, uint* OutAddress, int* OutSize)
+		public int sceKernelVolatileMemLock(int Type, out uint OutAddress, out int OutSize)
 		{
 			if (Type != 0)
 			{
@@ -62,9 +67,9 @@ namespace CSPspEmu.Hle.Modules.sysmem
 				throw(new SceKernelException(SceKernelErrors.ERROR_POWER_VMEM_IN_USE));
 			}
 
-			var Partition = HleState.MemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.VolatilePartition);
-			*OutAddress = Partition.Low;
-			*OutSize = Partition.Size;    // 4 MB
+			var Partition = MemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.VolatilePartition);
+			OutAddress = Partition.Low;
+			OutSize = Partition.Size;    // 4 MB
 			VolatileMemLocked = true;
 
 			return 0;
@@ -79,9 +84,9 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xA14F40B2, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceKernelVolatileMemTryLock(int Type, uint* OutAddress, int* OutSize)
+		public int sceKernelVolatileMemTryLock(int Type, out uint OutAddress, out int OutSize)
 		{
-			return sceKernelVolatileMemLock(Type, OutAddress, OutSize);
+			return sceKernelVolatileMemLock(Type, out OutAddress, out OutSize);
 		}
 
 		/// <summary>

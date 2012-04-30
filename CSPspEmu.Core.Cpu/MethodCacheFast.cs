@@ -9,7 +9,7 @@ namespace CSPspEmu.Core.Cpu
 {
 	public class PspMethodStruct
 	{
-		public MipsMethodEmiter MipsMethodEmiter;
+		//public MipsMethodEmiter MipsMethodEmiter;
 		public Action<CpuThreadState> Delegate;
 	}
 

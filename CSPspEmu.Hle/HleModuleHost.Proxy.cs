@@ -7,11 +7,16 @@ using CSPspEmu.Core.Cpu.Emiter;
 using System.Reflection;
 using CSharpUtils;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Hle.Managers;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle
 {
 	unsafe public partial class HleModuleHost : HleModule
 	{
+		[Inject]
+		HleThreadManager ThreadManager;
+
 		private Action<CpuThreadState> CreateDelegateForMethodInfo(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute)
 		{
 			var MipsMethodEmiter = new MipsMethodEmiter(HleState.MipsEmiter, HleState.CpuProcessor, 0);
@@ -212,13 +217,13 @@ namespace CSPspEmu.Hle
 
 				if (Trace)
 				{
-					if (HleState.ThreadManager.Current != null)
+					if (ThreadManager.Current != null)
 					{
 						Out.Write(
 							"Thread({0}:'{1}') : RA(0x{2:X})",
-							HleState.ThreadManager.Current.Id,
-							HleState.ThreadManager.Current.Name,
-							HleState.ThreadManager.Current.CpuThreadState.RA
+							ThreadManager.Current.Id,
+							ThreadManager.Current.Name,
+							ThreadManager.Current.CpuThreadState.RA
 						);
 					}
 					else

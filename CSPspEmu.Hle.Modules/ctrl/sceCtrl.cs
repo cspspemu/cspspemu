@@ -17,9 +17,12 @@ namespace CSPspEmu.Hle.Modules.ctrl
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public class sceCtrl : HleModuleHost
 	{
+		[Inject]
+		PspController PspController;
+
 		protected void _ReadCount(SceCtrlData* SceCtrlData, int Count, bool Peek, bool Positive)
 		{
-			for (int n = 0; n < Count; n++) SceCtrlData[n] = HleState.PspController.GetSceCtrlDataAt(n);
+			for (int n = 0; n < Count; n++) SceCtrlData[n] = PspController.GetSceCtrlDataAt(n);
 		}
 
 		/// <summary>
@@ -73,11 +76,11 @@ namespace CSPspEmu.Hle.Modules.ctrl
 		{
 			try
 			{
-				return HleState.PspController.SamplingMode;
+				return PspController.SamplingMode;
 			}
 			finally
 			{
-				HleState.PspController.SamplingMode = SamplingMode;
+				PspController.SamplingMode = SamplingMode;
 			}
 		}
 
@@ -95,11 +98,11 @@ namespace CSPspEmu.Hle.Modules.ctrl
 		{
 			try
 			{
-				return HleState.PspController.SamplingCycle;
+				return PspController.SamplingCycle;
 			}
 			finally
 			{
-				HleState.PspController.SamplingCycle = SamplingCycle;
+				PspController.SamplingCycle = SamplingCycle;
 			}
 		}
 
@@ -112,7 +115,7 @@ namespace CSPspEmu.Hle.Modules.ctrl
 		//[HlePspNotImplemented]
 		public int sceCtrlPeekLatch(SceCtrlLatch* CurrentLatch)
 		{
-			var ButtonsNew = HleState.PspController.GetSceCtrlDataAt(0).Buttons;
+			var ButtonsNew = PspController.GetSceCtrlDataAt(0).Buttons;
 			var ButtonsOld = LastLatchData.Buttons;
 			var ButtonsChanged = ButtonsOld ^ ButtonsNew;
 
@@ -121,7 +124,7 @@ namespace CSPspEmu.Hle.Modules.ctrl
 			CurrentLatch->uiPress = ButtonsNew;
 			CurrentLatch->uiRelease = (ButtonsOld & ~ButtonsNew) & ButtonsChanged;
 
-			return HleState.PspController.LatchSamplingCount;
+			return PspController.LatchSamplingCount;
 		}
 
 		SceCtrlData LastLatchData;
@@ -141,8 +144,8 @@ namespace CSPspEmu.Hle.Modules.ctrl
 			}
 			finally
 			{
-				LastLatchData = HleState.PspController.GetSceCtrlDataAt(0);
-				HleState.PspController.LatchSamplingCount = 0;
+				LastLatchData = PspController.GetSceCtrlDataAt(0);
+				PspController.LatchSamplingCount = 0;
 			}
 		}
 

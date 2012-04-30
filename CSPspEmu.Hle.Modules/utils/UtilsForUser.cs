@@ -4,12 +4,17 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Core.Rtc;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.utils
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public class UtilsForUser : HleModuleHost
 	{
+		[Inject]
+		PspRtc PspRtc;
+
 		public struct TimeValStruct
 		{
 			public uint Seconds;
@@ -53,8 +58,8 @@ namespace CSPspEmu.Hle.Modules.utils
 		{
 			if (TimeVal != null)
 			{
-				HleState.PspRtc.Update();
-				ulong MicroSeconds = (ulong)(HleState.PspRtc.Elapsed.TotalMilliseconds * 1000);
+				PspRtc.Update();
+				ulong MicroSeconds = (ulong)(PspRtc.Elapsed.TotalMilliseconds * 1000);
 				const ulong MicroSecondsInASecond = 1000 * 1000;
 				TimeVal->Seconds = (uint)(MicroSeconds / MicroSecondsInASecond);
 				TimeVal->Microseconds = (uint)(MicroSeconds % MicroSecondsInASecond);
@@ -164,9 +169,9 @@ namespace CSPspEmu.Hle.Modules.utils
 		[HlePspFunction(NID = 0x27CC57F0, FirmwareVersion = 150)]
 		public time_t sceKernelLibcTime(time_t* Time)
 		{
-			HleState.PspRtc.Update();
+			PspRtc.Update();
 
-			var CalculatedTime = (time_t)HleState.PspRtc.UnixTimeStamp;
+			var CalculatedTime = (time_t)PspRtc.UnixTimeStamp;
 
 			if (Time != null)
 			{
@@ -182,8 +187,8 @@ namespace CSPspEmu.Hle.Modules.utils
 		[HlePspFunction(NID = 0x91E4F6A7, FirmwareVersion = 150)]
 		public uint sceKernelLibcClock()
 		{
-			HleState.PspRtc.Update();
-			return (uint)(HleState.PspRtc.ElapsedTime.TotalMicroseconds);
+			PspRtc.Update();
+			return (uint)(PspRtc.ElapsedTime.TotalMicroseconds);
 		}
 
 		/**

@@ -6,12 +6,17 @@ using CSPspEmu.Core.Cpu;
 using System.Threading;
 using System.Globalization;
 using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Core;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.emulator
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public partial class Emulator : HleModuleHost
 	{
+		[Inject]
+		HleThreadManager ThreadManager;
+
 		[HlePspFunction(NID = 0x00000000, FirmwareVersion = 150)]
 		public void emitInt(int Value)
 		{
@@ -63,7 +68,7 @@ namespace CSPspEmu.Hle.Modules.emulator
 		[HlePspFunction(NID = 0x10000000, FirmwareVersion = 150)]
 		public void waitThreadForever(CpuThreadState CpuThreadState)
 		{
-			var SleepThread = HleState.ThreadManager.Current;
+			var SleepThread = ThreadManager.Current;
 			SleepThread.CurrentStatus = HleThread.Status.Waiting;
 			SleepThread.CurrentWaitType = HleThread.WaitType.None;
 			CpuThreadState.Yield();

@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Core;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.loadexec
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	public class LoadExecForUser : HleModuleHost
 	{
+		[Inject]
+		HleCallbackManager CallbackManager;
+
 		/// <summary>
 		/// Exit game and go back to the PSP browser.
 		/// </summary>
@@ -39,7 +44,7 @@ namespace CSPspEmu.Hle.Modules.loadexec
 		[HlePspFunction(NID = 0x4AC57943, FirmwareVersion = 150)]
 		public int sceKernelRegisterExitCallback(int CallbackId)
 		{
-			var Callback = HleState.CallbackManager.Callbacks.Get(CallbackId);
+			var Callback = CallbackManager.Callbacks.Get(CallbackId);
 			//throw(new NotImplementedException());
 			return 0;
 		}

@@ -4,12 +4,16 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Battery;
 using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.power
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public partial class scePower : HleModuleHost
 	{
+		[Inject]
+		Battery PspBattery;
+
 		/// <summary>
 		/// Power callback flags
 		/// </summary>
@@ -325,7 +329,7 @@ namespace CSPspEmu.Hle.Modules.power
 		[HlePspFunction(NID = 0x87440F5E, FirmwareVersion = 150)]
 		public int scePowerIsPowerOnline()
 		{
-			return HleState.PspBattery.IsPowerOnline ? 1 : 0;
+			return PspBattery.IsPowerOnline ? 1 : 0;
 		}
 
 		/// <summary>
@@ -335,7 +339,7 @@ namespace CSPspEmu.Hle.Modules.power
 		[HlePspFunction(NID = 0x0AFD0D8B, FirmwareVersion = 150)]
 		public int scePowerIsBatteryExist()
 		{
-			return HleState.PspBattery.BatteryExist ? 1 : 0;
+			return PspBattery.BatteryExist ? 1 : 0;
 		}
 
 		/// <summary>
@@ -346,14 +350,6 @@ namespace CSPspEmu.Hle.Modules.power
 		public int scePowerIsBatteryCharging()
 		{
 			return PspBattery.IsBatteryCharging ? 1 : 0;
-		}
-
-		public Battery PspBattery
-		{
-			get
-			{
-				return HleState.PspBattery;
-			}
 		}
 
 		/// <summary>
@@ -379,7 +375,7 @@ namespace CSPspEmu.Hle.Modules.power
 		[HlePspFunction(NID = 0xD3075926, FirmwareVersion = 150)]
 		public int scePowerIsLowBattery()
 		{
-			return (HleState.PspBattery.BatteryLifePercent <= HleState.PspBattery.LowPercent) ? 1 : 0;
+			return (PspBattery.BatteryLifePercent <= PspBattery.LowPercent) ? 1 : 0;
 		}
 
 		/// <summary>
@@ -389,7 +385,7 @@ namespace CSPspEmu.Hle.Modules.power
 		[HlePspFunction(NID = 0x2085D15D, FirmwareVersion = 150)]
 		public int scePowerGetBatteryLifePercent()
 		{
-			return HleState.PspBattery.BatteryLifePercent;
+			return PspBattery.BatteryLifePercent;
 		}
 
 		/// <summary>
@@ -399,7 +395,7 @@ namespace CSPspEmu.Hle.Modules.power
 		[HlePspFunction(NID = 0x8EFB3FA2, FirmwareVersion = 150)]
 		public int scePowerGetBatteryLifeTime()
 		{
-			return HleState.PspBattery.BatteryLifeTimeInMinutes;
+			return PspBattery.BatteryLifeTimeInMinutes;
 		}
 
 		/// <summary>
@@ -409,7 +405,7 @@ namespace CSPspEmu.Hle.Modules.power
 		[HlePspFunction(NID = 0x28E12023, FirmwareVersion = 150)]
 		public int scePowerGetBatteryTemp()
 		{
-			return HleState.PspBattery.BatteryTemperature;
+			return PspBattery.BatteryTemperature;
 		}
 
 		/// <summary>
@@ -419,7 +415,7 @@ namespace CSPspEmu.Hle.Modules.power
 		[HlePspFunction(NID = 0x483CE86B, FirmwareVersion = 150)]
 		public int scePowerGetBatteryVolt()
 		{
-			return HleState.PspBattery.BatteryVoltage;
+			return PspBattery.BatteryVoltage;
 		}
 
 		/// <summary>

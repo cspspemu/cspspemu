@@ -5,12 +5,19 @@ using System.Text;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Audio;
 using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.audio
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public class sceAudio : HleModuleHost
 	{
+		[Inject]
+		PspAudio PspAudio;
+
+		[Inject]
+		HleThreadManager ThreadManager;
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -137,8 +144,8 @@ namespace CSPspEmu.Hle.Modules.audio
 		private int _sceAudioOutputPannedBlocking(int ChannelId, int LeftVolume, int RightVolume, short* Buffer, bool Blocking)
 		{
 			//Console.WriteLine(ChannelId);
-			var Channel = HleState.PspAudio.GetChannel(ChannelId);
-			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Audio, "_sceAudioOutputPannedBlocking", Channel, WakeUpCallback =>
+			var Channel = PspAudio.GetChannel(ChannelId);
+			ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Audio, "_sceAudioOutputPannedBlocking", Channel, WakeUpCallback =>
 			{
 				Channel.Write(Buffer, LeftVolume, RightVolume, () =>
 				{
@@ -263,7 +270,7 @@ namespace CSPspEmu.Hle.Modules.audio
 		[HlePspFunction(NID = 0xCB2E439E, FirmwareVersion = 150)]
 		public int sceAudioSetChannelDataLen(int ChannelId, int SampleCount)
 		{
-			var Channel = HleState.PspAudio.GetChannel(ChannelId);
+			var Channel = PspAudio.GetChannel(ChannelId);
 			Channel.SampleCount = SampleCount;
 			Channel.Updated();
 			return 0;
@@ -278,7 +285,7 @@ namespace CSPspEmu.Hle.Modules.audio
 		[HlePspFunction(NID = 0x95FD0C2D, FirmwareVersion = 150)]
 		public int sceAudioChangeChannelConfig(int ChannelId, PspAudio.FormatEnum Format)
 		{
-			var Channel = HleState.PspAudio.GetChannel(ChannelId);
+			var Channel = PspAudio.GetChannel(ChannelId);
 			Channel.Format = Format;
 			Channel.Updated();
 			return 0;
@@ -304,7 +311,7 @@ namespace CSPspEmu.Hle.Modules.audio
 		{
 			try
 			{
-				var Channel = HleState.PspAudio.GetChannel(ChannelId, CanAlloc: true);
+				var Channel = PspAudio.GetChannel(ChannelId, CanAlloc: true);
 				Channel.SampleCount = SampleCount;
 				Channel.Format = Format;
 				Channel.Updated();
@@ -416,7 +423,7 @@ namespace CSPspEmu.Hle.Modules.audio
 		[HlePspFunction(NID = 0x63F2889C, FirmwareVersion = 150)]
 		public int sceAudioOutput2ChangeLength(int SampleCount)
 		{
-			var Channel = HleState.PspAudio.GetChannel(Output2ChannelId);
+			var Channel = PspAudio.GetChannel(Output2ChannelId);
 			try
 			{
 				//return Channel.SampleCount;

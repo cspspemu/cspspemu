@@ -23,6 +23,9 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 	{
 		static Logger Logger = Logger.GetLogger("ModuleMgr");
 
+		[Inject]
+		HleMemoryManager MemoryManager;
+
 		public struct SceKernelLMOption
 		{
 			/// <summary>
@@ -165,14 +168,14 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 				var HleModuleGuest = Loader.LoadModule(
 					ModuleStream,
 					new PspMemoryStream(HleState.CpuProcessor.Memory),
-					HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User),
+					MemoryManager.GetPartition(HleMemoryManager.Partitions.User),
 					HleState.ModuleManager,
 					"",
 					ModuleName: Path,
 					IsMainModule: false
 				);
 
-				var SceModulePartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(sizeof(SceModule));
+				var SceModulePartition = MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(sizeof(SceModule));
 
 				var SceModulePtr = (SceModule*)HleState.CpuProcessor.Memory.PspAddressToPointerSafe(SceModulePartition.Low, Marshal.SizeOf(typeof(SceModule)));
 

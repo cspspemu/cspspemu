@@ -8,7 +8,7 @@ using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Managers
 {
-	public class HleMemoryManager
+	public class HleMemoryManager : PspEmulatorComponent
 	{
 		/// <summary>
 		/// Specifies the type of allocation used for memory blocks.
@@ -51,7 +51,9 @@ namespace CSPspEmu.Hle.Managers
 		}
 
 		//public MemoryPartition RootPartition = new MemoryPartition(PspMemory.MainOffset, PspMemory.MainOffset + PspMemory.MainSize);
+		[Inject]
 		public PspMemory Memory;
+
 		public HleUidPool<MemoryPartition> MemoryPartitionsUid = new HleUidPool<MemoryPartition>();
 
 		public MemoryPartition GetPartition(Partitions Partition)
@@ -59,9 +61,8 @@ namespace CSPspEmu.Hle.Managers
 			return MemoryPartitionsUid.Get((int)Partition);
 		}
 
-		public HleMemoryManager(PspMemory Memory)
+		public override void InitializeComponent()
 		{
-			// Volatile Partition: 0x08400000
 #if true
 				MemoryPartitionsUid.Set(0, new MemoryPartition(Low: 0x88000000, High: 0x88300000, Allocated: false, Name: "Kernel Partition 1")); // 3MB
 				MemoryPartitionsUid.Set(1, new MemoryPartition(Low: 0x88300000, High: 0x88400000, Allocated: false, Name: "Kernel Partition 2")); // 1MB
@@ -76,8 +77,6 @@ namespace CSPspEmu.Hle.Managers
 				MemoryPartitionsUid.Set(1, new MemoryPartition(Low: 0x88300000, High: 0x88400000, Allocated: false, Name: "Kernel Partition 2")); // 1MB
 				MemoryPartitionsUid.Set(2, new MemoryPartition(Low: 0x08800000, High: 0x0B000000, Allocated: false, Name: "User Partition")); // 48MB
 #endif
-
-			this.Memory = Memory;
 		}
 	}
 }

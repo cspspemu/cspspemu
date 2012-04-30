@@ -37,10 +37,15 @@ namespace CSPspEmu.Hle.Modules.threadman
 			public string Name;
 			public MutexAttributesEnum Attributes;
 			public uint Options;
-			public HleState HleState;
+			public ThreadManForUser ThreadManForUser;
 			public CpuThreadState LockCpuThreadState;
 			public int CurrentCountValue = 0;
 			public Queue<Action> WakeUpList = new Queue<Action>();
+
+			public PspMutex(ThreadManForUser ThreadManForUser)
+			{
+				this.ThreadManForUser = ThreadManForUser;
+			}
 
 			public void Lock(CpuThreadState CurrentCpuThreadState, int UpdateCountValue, uint* Timeout)
 			{
@@ -54,7 +59,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 				if (!TryLock(CurrentCpuThreadState, UpdateCountValue))
 				{
 					//HleState.ThreadManager.Current.
-					HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Mutex, "sceKernelLockMutex", this, (WakeUp) =>
+					ThreadManForUser.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Mutex, "sceKernelLockMutex", this, (WakeUp) =>
 					{
 						WakeUpList.Enqueue(() =>
 						{
@@ -116,13 +121,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0xB7D098C6, FirmwareVersion = 150)]
 		public int sceKernelCreateMutex(CpuThreadState CpuThreadState, string Name, MutexAttributesEnum Attributes, uint Options)
 		{
-			var PspMutex = new PspMutex()
+			var PspMutex = new PspMutex(this)
 			{
 				Name = Name,
 				Attributes = Attributes,
 				Options = Options,
 				LockCpuThreadState = CpuThreadState,
-				HleState = HleState,
 			};
 			var PspMutexId = MutexList.Create(PspMutex);
 			return PspMutexId;

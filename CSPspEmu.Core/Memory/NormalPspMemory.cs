@@ -55,9 +55,9 @@ namespace CSPspEmu.Core.Memory
 					FrameBuffer = new byte[FrameBufferSize];
 					Main = new byte[MainSize];
 #if ENABLE_LOG_MEMORY
-					LogMain = new uint[0];
-#else
 					LogMain = new uint[MainSize];
+#else
+					LogMain = new uint[0];
 #endif
 				}
 

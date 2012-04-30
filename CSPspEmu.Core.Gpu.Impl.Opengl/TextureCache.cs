@@ -155,7 +155,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		Dictionary<ulong, Texture> Cache = new Dictionary<ulong, Texture>();
 		public OpenglGpuImpl OpenglGpuImpl;
 
-		byte[] SwizzlingBuffer = new byte[1024 * 1024 * 4];
+		byte[] SwizzlingBuffer = new byte[4 * 1024 * 1024];
 		OutputPixel[] DecodedTextureBuffer = new OutputPixel[1024 * 1024];
 
 		public override void InitializeComponent()

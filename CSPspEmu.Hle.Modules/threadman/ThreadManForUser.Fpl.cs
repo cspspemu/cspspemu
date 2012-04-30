@@ -42,7 +42,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 				public Action WakeUp;
 			}
 
-			public HleState HleState;
+			public ThreadManForUser ThreadManForUser;
 			public HleMemoryManager MemoryManager;
 			public string Name;
 			public HleMemoryManager.Partitions PartitionId;
@@ -54,6 +54,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 			public List<uint> UsedBlocks;
 			public List<WaitItem> WaitItemList;
 			public FplOptionsStruct Options;
+
+			public FixedPool(ThreadManForUser ThreadManForUser)
+			{
+				this.ThreadManForUser = ThreadManForUser;
+			}
 
 			public void Init()
 			{
@@ -104,7 +109,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 				if (!TryAllocate(DataPointer))
 				{
 					if (Timeout != null) throw (new NotImplementedException());
-					var CurrentThread = HleState.ThreadManager.Current;
+					var CurrentThread = ThreadManForUser.ThreadManager.Current;
 					CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, "_sceKernelAllocateVplCB", this, (WakeUp) =>
 					{
 						WaitItemList.Add(new WaitItem()
@@ -152,7 +157,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 					//Console.Error.WriteLine("Free!");
 					WaitItemList.Remove(WaitItem);
 					WaitItem.WakeUp();
-					HleState.ThreadManager.Current.CpuThreadState.Yield();
+					ThreadManForUser.ThreadManager.Current.CpuThreadState.Yield();
 					break;
 				}
 			}
@@ -184,10 +189,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		//[HlePspNotImplemented]
 		public PoolId sceKernelCreateFpl(string Name, HleMemoryManager.Partitions PartitionId, FplAttributes Attributes, int BlockSize, int NumberOfBlocks, FplOptionsStruct* Options)
 		{
-			var FixedPool = new FixedPool()
+			var FixedPool = new FixedPool(this)
 			{
-				HleState = HleState,
-				MemoryManager = HleState.MemoryManager,
+				MemoryManager = MemoryManager,
 				Name = Name,
 				PartitionId = PartitionId,
 				Attributes = Attributes,

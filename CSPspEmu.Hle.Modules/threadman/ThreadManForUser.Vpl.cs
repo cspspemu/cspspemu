@@ -15,7 +15,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 		public class VariablePool
 		{
-			public HleState HleState;
+			public ThreadManForUser ThreadManForUser;
 			public HleMemoryManager.Partitions PartitionId;
 			public SceKernelVplInfo Info;
 			public MemoryPartition MemoryPartition;
@@ -30,6 +30,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			public List<WaitVariablePoolItem> WaitList = new List<WaitVariablePoolItem>();
 
+			public VariablePool(ThreadManForUser ThreadManForUser)
+			{
+				this.ThreadManForUser = ThreadManForUser;
+			}
+
 			public void Init()
 			{
 				var High = Info.Attribute.HasFlag(VplAttributeEnum.PSP_VPL_ATTR_ADDR_HIGH);
@@ -42,7 +47,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 				ExternalMemoryAnchor = Hle.MemoryPartition.Anchor.Low;
 #endif
 
-				this.MemoryPartition = HleState.MemoryManager.GetPartition(PartitionId).Allocate(
+				this.MemoryPartition = ThreadManForUser.MemoryManager.GetPartition(PartitionId).Allocate(
 					Info.PoolSize,
 					ExternalMemoryAnchor,
 					Name: "<Vpl> : " + Info.Name
@@ -55,9 +60,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 				{
 					bool TimedOut = false;
 
-					HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, "_sceKernelAllocateVplCB", this, (WakeUp) =>
+					ThreadManForUser.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, "_sceKernelAllocateVplCB", this, (WakeUp) =>
 					{
-						HleState.PspRtc.RegisterTimeout(Timeout, () =>
+						ThreadManForUser.PspRtc.RegisterTimeout(Timeout, () =>
 						{
 							TimedOut = true;
 							WakeUp();
@@ -129,9 +134,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x56C039B5, FirmwareVersion = 150)]
 		public VariablePoolId sceKernelCreateVpl(string Name, HleMemoryManager.Partitions PartitionId, VplAttributeEnum Attribute, int Size, void* Options)
 		{
-			var VariablePool = new VariablePool()
+			var VariablePool = new VariablePool(this)
 			{
-				HleState = HleState,
 				PartitionId= PartitionId,
 				Info = new SceKernelVplInfo()
 				{

@@ -177,7 +177,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 				Attributes = Attributes,
 			};
 
-			MsgPipe.Init(HleState.ThreadManager, HleState.MemoryManager.Memory, HleState.MemoryManager);
+			MsgPipe.Init(ThreadManager, MemoryManager.Memory, MemoryManager);
 
 			return MessagePipeList.Create(MsgPipe);
 		}
@@ -223,13 +223,13 @@ namespace CSPspEmu.Hle.Modules.threadman
 				{
 					//bool WaitiMsgPipe.OnAvailableForRecv.Count
 					MsgPipe.Enqueue(Message, Size);
-					HleState.ThreadManager.Current.CpuThreadState.Yield();
+					ThreadManager.Current.CpuThreadState.Yield();
 					Transferred = true;
 				}
 				catch (SceKernelException)
 				{
 					//throw(new NotImplementedException());
-					HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelSendMsgPipe", MsgPipe, WakeUpCallback =>
+					ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelSendMsgPipe", MsgPipe, WakeUpCallback =>
 					{
 #if DEBUG_MSG_PIPES
 						Console.Error.WriteLine("sceKernelSendMsgPipe.wait");
@@ -299,7 +299,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 				}
 				catch (SceKernelException)
 				{
-					HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelReceiveMsgPipe", MsgPipe, WakeUpCallback =>
+					ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelReceiveMsgPipe", MsgPipe, WakeUpCallback =>
 					{
 #if DEBUG_MSG_PIPES
 						Console.Error.WriteLine("sceKernelReceiveMsgPipe.wait");

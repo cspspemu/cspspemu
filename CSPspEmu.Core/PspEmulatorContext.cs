@@ -109,13 +109,11 @@ namespace CSPspEmu.Core
 			SetInstanceType<TType1>(typeof(TType2));
 		}
 
-		/*
 		public TType NewInstance<TType>() where TType : PspEmulatorComponent
 		{
 			ObjectsByType.Remove(typeof(TType));
 			return GetInstance<TType>();
 		}
-		*/
 
 		public void InjectDependencesTo(object Object)
 		{

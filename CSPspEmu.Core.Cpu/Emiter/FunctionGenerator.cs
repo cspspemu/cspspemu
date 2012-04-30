@@ -437,7 +437,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			return new PspMethodStruct()
 			{
 				Delegate = Delegate,
-				MipsMethodEmiter = MipsMethodEmiter,
+				//MipsMethodEmiter = MipsMethodEmiter,
 			};
 		}
 	}

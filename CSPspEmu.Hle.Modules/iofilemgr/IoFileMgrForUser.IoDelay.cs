@@ -2,11 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSPspEmu.Core;
+using CSPspEmu.Core.Rtc;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.iofilemgr
 {
 	unsafe public partial class IoFileMgrForUser
 	{
+		[Inject]
+		PspRtc PspRtc;
+
+		[Inject]
+		HleThreadManager ThreadManager;
+
 		private class IoDelayType
 		{
 			static public readonly IoDelayType Open = new IoDelayType("Open", TimeSpan.FromMilliseconds(5));
@@ -64,11 +73,11 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 
 			if (TimeSpan != TimeSpan.Zero)
 			{
-				var CurrentThread = HleState.ThreadManager.Current;
+				var CurrentThread = ThreadManager.Current;
 				//HleState.ThreadManager
 				CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, "_DelayIo", null, WakeUpCallback =>
 				{
-					HleState.PspRtc.RegisterTimerInOnce(TimeSpan, () =>
+					PspRtc.RegisterTimerInOnce(TimeSpan, () =>
 					{
 						WakeUpCallback();
 					});
@@ -76,7 +85,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			}
 			else
 			{
-				HleState.ThreadManager.Reschedule();
+				ThreadManager.Reschedule();
 			}
 		}
 	}

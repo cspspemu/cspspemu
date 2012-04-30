@@ -15,10 +15,16 @@ namespace CSPspEmu.Hle.Modules.display
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public class sceDisplay : HleModuleHost
 	{
-		protected PspDisplay PspDisplay { get { return HleState.PspDisplay; } }
-		protected PspRtc PspRtc { get { return HleState.PspRtc; } }
+		[Inject]
+		PspDisplay PspDisplay;
+
+		[Inject]
+		PspRtc PspRtc;
+
+		[Inject]
+		HleThreadManager ThreadManager;
+
 		protected PspConfig PspConfig { get { return HleState.PspConfig; } }
-		protected HleThreadManager ThreadManager { get { return HleState.ThreadManager; } }
 
 		/// <summary>
 		/// Set display mode
@@ -219,11 +225,11 @@ namespace CSPspEmu.Hle.Modules.display
 		/// <returns>0 on success</returns>
 		[HlePspFunction(NID = 0xEEDA2E54, FirmwareVersion = 150)]
 		//public int sceDisplayGetFrameBuf(uint* topaddr, int* bufferwidth, PspDisplayPixelFormats* pixelformat, PspDisplaySetBufSync sync)
-		public int sceDisplayGetFrameBuf(uint* topaddr, int* bufferwidth, GuPixelFormats* pixelformat, uint sync)
+		public int sceDisplayGetFrameBuf(ref uint topaddr, ref int bufferwidth, ref GuPixelFormats pixelformat, uint sync)
 		{
-			*topaddr = HleState.PspDisplay.CurrentInfo.Address;
-			*bufferwidth = HleState.PspDisplay.CurrentInfo.BufferWidth;
-			*pixelformat = HleState.PspDisplay.CurrentInfo.PixelFormat;
+			topaddr = PspDisplay.CurrentInfo.Address;
+			bufferwidth = PspDisplay.CurrentInfo.BufferWidth;
+			pixelformat = PspDisplay.CurrentInfo.PixelFormat;
 			return 0;
 		}
 

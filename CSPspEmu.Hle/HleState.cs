@@ -16,6 +16,7 @@ using CSPspEmu.Core.Battery;
 using CSPspEmu.Hle.Vfs.MemoryStick;
 using CSPspEmu.Hle.Vfs.Local;
 using CSPspEmu.Hle.Vfs;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle
 {
@@ -28,38 +29,17 @@ namespace CSPspEmu.Hle
 		public CpuProcessor CpuProcessor;
 
 		[Inject]
-		public PspRtc PspRtc;
-
-		[Inject]
-		public PspDisplay PspDisplay;
-
-		[Inject]
-		public PspAudio PspAudio;
-
-		[Inject]
-		public PspController PspController;
+		public PspMemory PspMemory;
 
 		[Inject]
 		public PspConfig PspConfig;
 
-		[Inject]
-		public Battery PspBattery;
-		
 		public MipsEmiter MipsEmiter;
 
 		// Hle Managers
 		[Inject]
-		public HleThreadManager ThreadManager;
-		[Inject]
-		public HleSemaphoreManager SemaphoreManager;
-		[Inject]
-		public HleEventFlagManager EventFlagManager;
-		[Inject]
-		public HleMemoryManager MemoryManager;
-		[Inject]
 		public HleModuleManager ModuleManager;
-		[Inject]
-		public HleCallbackManager CallbackManager;
+
 		[Inject]
 		public HleIoManager HleIoManager;
 		[Inject]
@@ -97,9 +77,6 @@ namespace CSPspEmu.Hle
 			this.MipsEmiter = new MipsEmiter();
 			this.Kirk = new Kirk();
 			this.Kirk.kirk_init();
-
-			// @TODO FIX! New Instances!?
-			this.MemoryManager = new HleMemoryManager(this.CpuProcessor.Memory);
 		}
 	}
 }

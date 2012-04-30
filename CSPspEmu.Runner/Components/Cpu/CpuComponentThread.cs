@@ -56,9 +56,15 @@ namespace CSPspEmu.Runner.Components.Cpu
 		[Inject]
 		public ElfPspLoader Loader;
 
+		[Inject]
+		public HleMemoryManager MemoryManager;
+
 
 		HleIoDriverMountable MemoryStickMountable;
+
+		[Inject]
 		HleIoDriverEmulator HleIoDriverEmulator;
+
 		public AutoResetEvent StoppedEndedEvent = new AutoResetEvent(false);
 
 		public override void InitializeComponent()
@@ -78,8 +84,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 
 			MemoryStickMountable = new HleIoDriverMountable();
 			MemoryStickMountable.Mount("/", new HleIoDriverLocalFileSystem(MemoryStickRootFolder));
-			HleIoDriverEmulator = new HleIoDriverEmulator(HleState);
-			var MemoryStick = new HleIoDriverMemoryStick(HleState, MemoryStickMountable);
+			var MemoryStick = new HleIoDriverMemoryStick(PspEmulatorContext, MemoryStickMountable);
 			//var MemoryStick = new HleIoDriverMemoryStick(new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
 
 			// http://forums.ps2dev.org/viewtopic.php?t=5680
@@ -276,7 +281,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 						HleModuleGuest = Loader.LoadModule(
 							ElfLoadStream,
 							MemoryStream,
-							HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User),
+							MemoryManager.GetPartition(HleMemoryManager.Partitions.User),
 							HleState.ModuleManager,
 							Title,
 							ModuleName: FileName,
@@ -305,11 +310,11 @@ namespace CSPspEmu.Runner.Components.Cpu
 					.Aggregate(new byte[] { }, (Accumulate, Chunk) => Accumulate.Concat(Chunk))
 				;
 
-				var ReservedSyscallsPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(
+				var ReservedSyscallsPartition = MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(
 					0x100,
 					Name: "ReservedSyscallsPartition"
 				);
-				var ArgumentsPartition = HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(
+				var ArgumentsPartition = MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(
 					ArgumentsChunk.Length,
 					Name: "ArgumentsPartition"
 				);
@@ -333,7 +338,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 					ThreadManForUser._sceKernelStartThread(CurrentCpuThreadState, ThreadId, ArgumentsPartition.Size, ArgumentsPartition.Low);
 				}
 				CurrentCpuThreadState.DumpRegisters();
-				HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Dump();
+				MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Dump();
 				//HleState.ModuleManager.LoadedGuestModules.Add(HleModuleGuest);
 					
 				//MainThread.CurrentStatus = HleThread.Status.Ready;
@@ -434,7 +439,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 							ErrorOut.WriteLine(Exception);
 							ErrorOut.WriteLine("Saved a memory dump to 'error_memorydump.bin'", ThreadManager.Current);
 
-							var Memory = HleState.MemoryManager.Memory;
+							var Memory = MemoryManager.Memory;
 
 							Memory.Dump("error_memorydump.bin");
 						}

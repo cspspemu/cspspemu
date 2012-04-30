@@ -3,17 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Core;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Vfs.MemoryStick
 {
 	unsafe public class HleIoDriverMemoryStick : ProxyHleIoDriver
 	{
-		HleState HleState;
+		[Inject]
+		PspMemory Memory;
 
-		public HleIoDriverMemoryStick(HleState HleState, IHleIoDriver HleIoDriver)
+		[Inject]
+		HleCallbackManager CallbackManager;
+
+		public HleIoDriverMemoryStick(PspEmulatorContext PspEmulatorContext, IHleIoDriver HleIoDriver)
 			: base(HleIoDriver)
 		{
-			this.HleState = HleState;
+			PspEmulatorContext.InjectDependencesTo(this);
 		}
 
 		public enum CommandType : uint
@@ -64,8 +70,8 @@ namespace CSPspEmu.Hle.Vfs.MemoryStick
 					{
 						if (InputPointer == null || InputLength < 4) return (int)SceKernelErrors.ERROR_ERRNO_INVALID_ARGUMENT;
 						int CallbackId = *(int*)InputPointer;
-						var Callback = HleState.CallbackManager.Callbacks.Get(CallbackId);
-						HleState.CallbackManager.ScheduleCallback(
+						var Callback = CallbackManager.Callbacks.Get(CallbackId);
+						CallbackManager.ScheduleCallback(
 							HleCallback.Create(
 								"RegisterInjectEjectCallback",
 								Callback.Function,
@@ -82,7 +88,7 @@ namespace CSPspEmu.Hle.Vfs.MemoryStick
 				case CommandType.GetMemoryStickCapacity:
 					{
 						if (InputPointer == null || InputLength < 4) return (int)SceKernelErrors.ERROR_ERRNO_INVALID_ARGUMENT;
-						var SizeInfo = (SizeInfoStruct*)HleState.CpuProcessor.Memory.PspAddressToPointerSafe(*(uint *)InputPointer);
+						var SizeInfo = (SizeInfoStruct*)Memory.PspAddressToPointerSafe(*(uint *)InputPointer);
 						var MemoryStickSectorSize = (32 * 1024);
 						//var TotalSpaceInBytes = 2L * 1024 * 1024 * 1024;
 						var FreeSpaceInBytes = 1L * 1024 * 1024 * 1024;

@@ -4,6 +4,8 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
+using CSPspEmu.Core;
+using CSPspEmu.Core.Display;
 
 namespace CSPspEmu.Hle.Vfs.Emulator
 {
@@ -19,13 +21,19 @@ namespace CSPspEmu.Hle.Vfs.Emulator
 		EmitScreenshot = 0x00000020,
 	}
 
-	public class HleIoDriverEmulator : IHleIoDriver
+	public class HleIoDriverEmulator : PspEmulatorComponent, IHleIoDriver
 	{
-		protected HleState HleState;
+		[Inject]
+		PspDisplay PspDisplay;
 
-		public HleIoDriverEmulator(HleState HleState)
+		[Inject]
+		HleOutputHandler HleOutputHandler;
+
+		PspConfig PspConfig;
+
+		public override void InitializeComponent()
 		{
-			this.HleState = HleState;
+			this.PspConfig = PspEmulatorContext.PspConfig;
 		}
 
 		public unsafe int IoInit()
@@ -143,17 +151,17 @@ namespace CSPspEmu.Hle.Vfs.Emulator
 			switch ((EmulatorDevclEnum)Command)
 			{
 				case EmulatorDevclEnum.GetHasDisplay:
-					*((int*)OutputPointer) = HleState.CpuProcessor.PspConfig.HasDisplay ? 1 : 0;
+					*((int*)OutputPointer) = PspConfig.HasDisplay ? 1 : 0;
 					break;
 				case EmulatorDevclEnum.SendOutput:
 					var OutputString = new String((sbyte*)InputPointer, 0, InputLength, Encoding.ASCII);
-					HleState.HleOutputHandler.Output(OutputString);
+					this.HleOutputHandler.Output(OutputString);
 					//Console.Error.WriteLine("{0}", OutputString);
 					break;
 				case EmulatorDevclEnum.IsEmulator:
 					return 0;
 				case EmulatorDevclEnum.EmitScreenshot:
-					HleState.PspDisplay.TakeScreenshot().Save(String.Format("{0}.lastoutput.{1}.png", HleState.PspConfig.FileNameBase, ScreenShotCount++), ImageFormat.Png);
+					this.PspDisplay.TakeScreenshot().Save(String.Format("{0}.lastoutput.{1}.png", PspConfig.FileNameBase, ScreenShotCount++), ImageFormat.Png);
 					break;
 				default:
 					Console.Error.WriteLine("Unknown emulator command '{0}':0x{1:X} <- {2}", DeviceName, Command, (EmulatorDevclEnum)Command);

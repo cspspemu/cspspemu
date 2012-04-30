@@ -6,12 +6,16 @@ using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.sysmem
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00000011)]
 	public class SysMemUserForUser : HleModuleHost
 	{
+		[Inject]
+		HleMemoryManager MemoryManager;
+
 		/// <summary>
 		/// Get the firmware version.
 		/// 
@@ -121,7 +125,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 			//foreach (var Partition in HleState.MemoryManager.RootPartition.ChildPartitions) Console.WriteLine(Partition);
 			//return 24 * 1024 * 1024;
 
-			return HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).MaxFreeSize;
+			return MemoryManager.GetPartition(HleMemoryManager.Partitions.User).MaxFreeSize;
 		}
 
 		/// <summary>
@@ -131,7 +135,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		[HlePspFunction(NID = 0xF919F628, FirmwareVersion = 150)]
 		public int sceKernelTotalFreeMemSize()
 		{
-			return HleState.MemoryManager.GetPartition(HleMemoryManager.Partitions.User).TotalFreeSize;
+			return MemoryManager.GetPartition(HleMemoryManager.Partitions.User).TotalFreeSize;
 		}
 
 		/// <summary>
@@ -142,7 +146,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		[HlePspFunction(NID = 0x9D9A5BA1, FirmwareVersion = 150)]
 		public uint sceKernelGetBlockHeadAddr(int BlockId)
 		{
-			return HleState.MemoryManager.MemoryPartitionsUid.Get(BlockId).Low;
+			return MemoryManager.MemoryPartitionsUid.Get(BlockId).Low;
 		}
 
 		/// <summary>
@@ -170,7 +174,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 			{
 				try
 				{
-					MemoryPartition = HleState.MemoryManager.GetPartition(PartitionId).Allocate(
+					MemoryPartition = MemoryManager.GetPartition(PartitionId).Allocate(
 						Size,
 						MemoryPartition.Anchor.Low,
 						Alignment: Alignment,
@@ -192,7 +196,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 				//return SceKernelErrors.ERROR_KERNEL_ILLEGAL_MEMBLOCK_ALLOC_TYPE;
 			}
 
-			return (int)HleState.MemoryManager.MemoryPartitionsUid.Create(MemoryPartition);
+			return (int)MemoryManager.MemoryPartitionsUid.Create(MemoryPartition);
 
 			/*
 			throw(new NotImplementedException());
@@ -246,11 +250,11 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		//[HlePspNotImplemented]
 		public int sceKernelFreePartitionMemory(int BlockId)
 		{
-			var MemoryPartition = HleState.MemoryManager.MemoryPartitionsUid.Get(BlockId);
+			var MemoryPartition = MemoryManager.MemoryPartitionsUid.Get(BlockId);
 			//Console.Error.WriteLine(MemoryPartition.ParentPartition.ChildPartitions.Where(Partition => Partition));
 			//Console.Error.WriteLine(":[1]:" + sceKernelTotalFreeMemSize());
 			MemoryPartition.ParentPartition.DeallocateLow(MemoryPartition.Low);
-			HleState.MemoryManager.MemoryPartitionsUid.Remove(BlockId);
+			MemoryManager.MemoryPartitionsUid.Remove(BlockId);
 			//Console.Error.WriteLine(":[2]:" + sceKernelTotalFreeMemSize());
 			//reinterpret!(MemorySegment)(blockid).free();
 			return 0;

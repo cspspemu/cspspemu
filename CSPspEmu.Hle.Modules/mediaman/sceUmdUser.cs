@@ -5,12 +5,17 @@ using System.Text;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Modules.threadman;
+using CSPspEmu.Core;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.mediaman
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public partial class sceUmdUser : HleModuleHost
 	{
+		[Inject]
+		HleCallbackManager CallbackManager;
+
 		Dictionary<int, HleCallback> RegisteredCallbacks = new Dictionary<int, HleCallback>();
 
 		/// <summary>
@@ -42,13 +47,13 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		[HlePspFunction(NID = 0xAEE7404D, FirmwareVersion = 150)]
 		public int sceUmdRegisterUMDCallBack(int CallbackId)
 		{
-			var Callback = HleState.CallbackManager.Callbacks.Get(CallbackId);
+			var Callback = CallbackManager.Callbacks.Get(CallbackId);
 			RegisteredCallbacks[CallbackId] = HleCallback.Create(
 				"sceUmdRegisterUMDCallBack", Callback.Function,
 				1, (int)(PspUmdState.PSP_UMD_READABLE | PspUmdState.PSP_UMD_READY | PspUmdState.PSP_UMD_PRESENT), Callback.Arguments[0]
 			);
 
-			HleState.CallbackManager.ScheduleCallback(RegisteredCallbacks[CallbackId]);
+			CallbackManager.ScheduleCallback(RegisteredCallbacks[CallbackId]);
 
 			return 0;
 			//throw(new NotImplementedException());

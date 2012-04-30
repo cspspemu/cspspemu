@@ -9,6 +9,7 @@ using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Cpu;
 using System.Runtime.InteropServices;
 using CSPspEmu.Core;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.ge
 {
@@ -16,6 +17,12 @@ namespace CSPspEmu.Hle.Modules.ge
 	{
 		[Inject]
 		public GpuProcessor GpuProcessor;
+
+		[Inject]
+		HleThreadManager ThreadManager;
+
+		[Inject]
+		HleMemoryManager MemoryManager;
 
 		private GpuDisplayList GetDisplayListFromId(int DisplayListId) {
 			return GpuProcessor.DisplayLists[DisplayListId];
@@ -30,11 +37,11 @@ namespace CSPspEmu.Hle.Modules.ge
 
 			if (GpuStateStructPartition == null)
 			{
-				GpuStateStructPartition = HleState.MemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.Kernel0).Allocate(
+				GpuStateStructPartition = MemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.Kernel0).Allocate(
 					sizeof(GpuStateStruct),
 					Name: "GpuStateStruct"
 				);
-				GpuStateStructPointer = (GpuStateStruct*)HleState.MemoryManager.Memory.PspAddressToPointerSafe(GpuStateStructPartition.Low, Marshal.SizeOf(typeof(GpuStateStruct)));
+				GpuStateStructPointer = (GpuStateStruct*)MemoryManager.Memory.PspAddressToPointerSafe(GpuStateStructPartition.Low, Marshal.SizeOf(typeof(GpuStateStruct)));
 			}
 
 			//Console.WriteLine("_sceGeListEnQueue");
@@ -166,7 +173,7 @@ namespace CSPspEmu.Hle.Modules.ge
 
 			var DisplayList = GetDisplayListFromId(DisplayListId);
 
-			HleState.ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeListSync", DisplayList, (WakeUpCallbackDelegate) =>
+			ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeListSync", DisplayList, (WakeUpCallbackDelegate) =>
 			{
 				DisplayList.GeListSync(SyncType, () =>
 				{
@@ -191,7 +198,7 @@ namespace CSPspEmu.Hle.Modules.ge
 
 			//Console.WriteLine("sceGeDrawSync:{0}", SyncType);
 
-			var CurrentThread = HleState.ThreadManager.Current;
+			var CurrentThread = ThreadManager.Current;
 
 			if (CurrentThread == null)
 			{

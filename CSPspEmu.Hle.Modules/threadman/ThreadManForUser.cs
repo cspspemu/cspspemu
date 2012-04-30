@@ -4,12 +4,17 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Core;
+using CSPspEmu.Core.Rtc;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public partial class ThreadManForUser : HleModuleHost
 	{
+		[Inject]
+		PspRtc PspRtc;
+
 		/*
 		
 		public uint Test(CpuThreadState CpuThreadState, int a, int b, string c)
@@ -37,8 +42,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x82BC5777, FirmwareVersion = 150)]
 		public long sceKernelGetSystemTimeWide()
 		{
-			HleState.PspRtc.Update();
-			return HleState.PspRtc.ElapsedTime.TotalMicroseconds;
+			PspRtc.Update();
+			return PspRtc.ElapsedTime.TotalMicroseconds;
 		}
 
 		/// <summary>

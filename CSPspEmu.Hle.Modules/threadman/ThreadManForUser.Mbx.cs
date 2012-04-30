@@ -186,14 +186,14 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x18260574, FirmwareVersion = 150)]
 		public int sceKernelReceiveMbx(int MessageBoxId, PspPointer* PointerToMessage, uint* Timeout)
 		{
-			var CurrentThread = HleState.ThreadManager.Current;
+			var CurrentThread = ThreadManager.Current;
 			var MessageBox = MessageBoxList.Get(MessageBoxId);
 			bool TimedOut = false;
 			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelReceiveMbx", MessageBox, WakeUpCallback =>
 			{
 				if (Timeout != null)
 				{
-					HleState.PspRtc.RegisterTimerInOnce(TimeSpanUtils.FromMicroseconds(*Timeout), () =>
+					PspRtc.RegisterTimerInOnce(TimeSpanUtils.FromMicroseconds(*Timeout), () =>
 					{
 						TimedOut = true;
 						WakeUpCallback();

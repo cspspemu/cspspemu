@@ -7,6 +7,7 @@ using CSPspEmu.Core.Cpu;
 
 namespace CSPspEmu.Hle.Managers
 {
+	[Obsolete("Should check Interop and decide which one to use, or refactor or something.")]
 	public class HleCallbackManager : PspEmulatorComponent
 	{
 		public HleUidPool<HleCallback> Callbacks { get; protected set; }

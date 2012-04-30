@@ -5,12 +5,14 @@ using System.Text;
 using CSPspEmu.Hle.Threading.Semaphores;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core.Cpu;
+using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
 	unsafe public partial class ThreadManForUser
 	{
-		HleSemaphoreManager SemaphoreManager { get { return HleState.SemaphoreManager; } }
+		[Inject]
+		HleSemaphoreManager SemaphoreManager;
 
 		HleSemaphore GetSemaphoreById(SemaphoreId SemaphoreId)
 		{
@@ -93,18 +95,18 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 		private int _sceKernelWaitSemaCB(SemaphoreId SemaphoreId, int Signal, uint* Timeout, bool HandleCallbacks)
 		{
-			var CurrentThread = HleState.ThreadManager.Current;
+			var CurrentThread = ThreadManager.Current;
 			var Semaphore = GetSemaphoreById(SemaphoreId);
 			bool TimedOut = false;
 
 			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, "sceKernelWaitSema", Semaphore, WakeUpCallback =>
 			{
-				HleState.PspRtc.RegisterTimeout(Timeout, () => { TimedOut = true; WakeUpCallback(); });
+				PspRtc.RegisterTimeout(Timeout, () => { TimedOut = true; WakeUpCallback(); });
 
 				Semaphore.WaitThread(CurrentThread, () =>
 				{
 					WakeUpCallback();
-					HleState.ThreadManager.ScheduleNext(CurrentThread);
+					ThreadManager.ScheduleNext(CurrentThread);
 				}, Signal);
 			}, HandleCallbacks: HandleCallbacks);
 
