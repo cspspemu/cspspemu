@@ -47,7 +47,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Core.Gpu.Impl.Null
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Core.Gpu.Impl.Soft", "CSPspEmu.Core.Gpu.Impl.Soft\CSPspEmu.Core.Gpu.Impl.Soft.csproj", "{2D629653-A87E-4AC4-9E58-3EAA1107C456}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Hle.Modules.Tests", "CSPspEmu.Hle.Modules.Tests\CSPspEmu.Hle.Modules.Tests.csproj", "{32300C4A-932A-4E50-8CDE-EF31550CD739}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1948ADE1-9E79-4677-A6DC-D76103CD3566}"
+	ProjectSection(SolutionItems) = preProject
+		CSPspEmu-2010.vsmdi = CSPspEmu-2010.vsmdi
+		Local.testsettings = Local.testsettings
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = CSPspEmu-2010.vsmdi
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -583,6 +595,26 @@ Global
 		{2D629653-A87E-4AC4-9E58-3EAA1107C456}.Trace|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{2D629653-A87E-4AC4-9E58-3EAA1107C456}.Trace|Mixed Platforms.Build.0 = Release|Any CPU
 		{2D629653-A87E-4AC4-9E58-3EAA1107C456}.Trace|x86.ActiveCfg = Release|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.Release|x86.ActiveCfg = Release|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.RunTests|Any CPU.ActiveCfg = Release|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.RunTests|Any CPU.Build.0 = Release|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.RunTests|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.RunTests|Mixed Platforms.Build.0 = Release|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.RunTests|x86.ActiveCfg = Release|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.Trace|Any CPU.ActiveCfg = Release|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.Trace|Any CPU.Build.0 = Release|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.Trace|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.Trace|Mixed Platforms.Build.0 = Release|Any CPU
+		{32300C4A-932A-4E50-8CDE-EF31550CD739}.Trace|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

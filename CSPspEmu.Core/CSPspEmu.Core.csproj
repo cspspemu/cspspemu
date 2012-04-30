@@ -100,6 +100,8 @@
     <Compile Include="PspPluginImpl.cs" />
     <Compile Include="PspStoredConfig.cs" />
     <Compile Include="Rtc\PspRtc.cs" />
+    <Compile Include="Rtc\PspTimeStruct.cs" />
+    <Compile Include="Rtc\PspVirtualTimer.cs" />
     <Compile Include="Threading\Synchronization\PspAutoResetEvent.cs" />
     <Compile Include="Threading\Synchronization\PspWaitEvent.cs" />
     <Compile Include="Threading\Synchronization\WaitableStateMachine.cs" />

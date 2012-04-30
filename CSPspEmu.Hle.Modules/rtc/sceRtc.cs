@@ -70,17 +70,6 @@ namespace CSPspEmu.Hle.Modules.rtc
 			//return Date(Year, Month, 1).daysInMonth;
 		}
 
-		public enum PspDaysOfWeek : int
-		{
-			Monday = 0,
-			Tuesday = 1,
-			Wednesday = 2,
-			Thursday = 3,
-			Friday = 4,
-			Saturday = 5,
-			Sunday = 6,
-		}
-
 		/// <summary>
 		/// Get day of the week for a date
 		/// </summary>
@@ -186,20 +175,21 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// </returns>
 		[HlePspFunction(NID = 0xE7C27D1B, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceRtcGetCurrentClockLocalTime(ScePspDateTime *Time)
+		public int sceRtcGetCurrentClockLocalTime(out ScePspDateTime Time)
 		{
-			if (Time == null) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
-
 			var CurrentDateTime = PspRtc.CurrentDateTime;
 			PspRtc.Update();
 
-			Time->Year = (ushort)CurrentDateTime.Year;
-			Time->Month = (ushort)CurrentDateTime.Month;
-			Time->Day = (ushort)CurrentDateTime.Day;
-			Time->Hour = (ushort)CurrentDateTime.Hour;
-			Time->Minute = (ushort)CurrentDateTime.Minute;
-			Time->Second = (ushort)CurrentDateTime.Second;
-			Time->Microsecond = (uint)(CurrentDateTime.Millisecond * 1000);
+			Time = new ScePspDateTime()
+			{
+				Year = (ushort)CurrentDateTime.Year,
+				Month = (ushort)CurrentDateTime.Month,
+				Day = (ushort)CurrentDateTime.Day,
+				Hour = (ushort)CurrentDateTime.Hour,
+				Minute = (ushort)CurrentDateTime.Minute,
+				Second = (ushort)CurrentDateTime.Second,
+				Microsecond = (uint)(CurrentDateTime.Millisecond * 1000),
+			};
 
 			return 0;
 		}
@@ -258,6 +248,7 @@ namespace CSPspEmu.Hle.Modules.rtc
 		[HlePspNotImplemented]
 		public int sceRtcGetCurrentClock(out ScePspDateTime DateTime, int TimeZone)
 		{
+			PspRtc.Update();
 			var CurrentDateTime = PspRtc.CurrentDateTime;
 			PspRtc.Update();
 
@@ -274,5 +265,16 @@ namespace CSPspEmu.Hle.Modules.rtc
 
 			return 0;
 		}
+	}
+
+	public enum PspDaysOfWeek : int
+	{
+		Monday = 0,
+		Tuesday = 1,
+		Wednesday = 2,
+		Thursday = 3,
+		Friday = 4,
+		Saturday = 5,
+		Sunday = 6,
 	}
 }

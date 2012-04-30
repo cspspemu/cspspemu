@@ -30,7 +30,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			[Inject]
 			HleInterop HleInterop;
 
-			protected PspRtc.VirtualTimer Timer;
+			protected PspVirtualTimer Timer;
 			public int Id;
 			public string Name;
 			public SceKernelVTimerOptParam SceKernelVTimerOptParam;

@@ -20,13 +20,7 @@ namespace CSPspEmu.Hle
 		public Dictionary<uint, FunctionEntry> EntriesByNID = new Dictionary<uint, FunctionEntry>();
 		public Dictionary<uint, Action<CpuThreadState>> DelegatesByNID = new Dictionary<uint, Action<CpuThreadState>>();
 		public Dictionary<string, Action<CpuThreadState>> DelegatesByName = new Dictionary<string, Action<CpuThreadState>>();
-		public string Name
-		{
-			get
-			{
-				return this.GetType().Name;
-			}
-		}
+		public string Name { get { return this.GetType().Name; } }
 
 		[Inject]
 		protected PspMemory PspMemory;

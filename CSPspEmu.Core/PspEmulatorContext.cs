@@ -39,14 +39,11 @@ namespace CSPspEmu.Core
 
 						var ElapsedTime = Logger.Measure(() =>
 						{
-							if (TypesByType.ContainsKey(Type))
-							{
-								Instance = (PspEmulatorComponent)_SetInstance(Type, (PspEmulatorComponent)Activator.CreateInstance(TypesByType[Type]));
-							}
-							else
-							{
-								Instance = (PspEmulatorComponent)_SetInstance(Type, (PspEmulatorComponent)Activator.CreateInstance(Type));
-							}
+							var RealType = TypesByType.ContainsKey(Type) ? TypesByType[Type] : Type;
+
+							if (RealType.IsAbstract) throw (new Exception(String.Format("Can't instantiate class '{0}', because it is abstract", RealType)));
+							Instance = (PspEmulatorComponent)_SetInstance(Type, (PspEmulatorComponent)Activator.CreateInstance(RealType));
+
 							Instance._InitializeComponent(this);
 							Instance.InitializeComponent();
 						});
