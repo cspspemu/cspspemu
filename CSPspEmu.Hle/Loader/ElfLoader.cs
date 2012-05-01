@@ -140,6 +140,7 @@ namespace CSPspEmu.Hle.Loader
 				var SectionHeaderMemoryStream = MemoryStream.SliceWithLength(SectionHeader.Address + BaseAddress, SectionHeader.Size);
 
 				Console.WriteLine("WriteToMemory('{0:X}') : 0x{1:X} : {2} : {3}", GetStringFromStringTable(SectionHeader.Name), SectionHeader.Address, SectionHeader.Type, SectionHeader.Size);
+				Console.WriteLine("   0x{0:X} - 0x{1:X}", SectionHeader.Address + BaseAddress, SectionHeader.Size);
 
 				switch (SectionHeader.Type)
 				{

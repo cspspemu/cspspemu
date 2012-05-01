@@ -180,8 +180,6 @@ namespace CSPspEmu.Hle.Modules.utility
 									Params->DataBufPointer,
 									HleIoManager.HleIoWrapper.ReadBytes(SaveDataBin)
 								);
-
-								Params->Base.Result = SceKernelErrors.ERROR_OK;
 							}
 							catch (IOException)
 							{
@@ -252,6 +250,8 @@ namespace CSPspEmu.Hle.Modules.utility
 	                // error: SCE_UTILITY_SAVEDATA_TYPE_SIZES return 801103c7
 					case PspUtilitySavedataMode.Sizes:
 						{
+							SceKernelErrors SceKernelError = SceKernelErrors.ERROR_OK;
+
 							//Console.Error.WriteLine("Not Implemented: sceUtilitySavedataInitStart.Sizes");
 
 							uint SectorSize = 1024;
@@ -278,14 +278,21 @@ namespace CSPspEmu.Hle.Modules.utility
 
 								if (SizeUsedInfo != null)
 								{
-									Console.WriteLine(SizeUsedInfo->saveName);
-									Console.WriteLine(SizeUsedInfo->gameName);
+									if (false)
+									{
+										Console.WriteLine(SizeUsedInfo->saveName);
+										Console.WriteLine(SizeUsedInfo->gameName);
 
-									SizeUsedInfo->UsedKb = UsedSize / 1024;
-									SizeUsedInfo->UsedKb32 = UsedSize / (32 * 1024);
+										SizeUsedInfo->UsedKb = UsedSize / 1024;
+										SizeUsedInfo->UsedKb32 = UsedSize / (32 * 1024);
 
-									SizeUsedInfo->UsedKbString = (SizeUsedInfo->UsedKb) + "KB";
-									SizeUsedInfo->UsedKb32String = (SizeUsedInfo->UsedKb32) + "KB";
+										SizeUsedInfo->UsedKbString = (SizeUsedInfo->UsedKb) + "KB";
+										SizeUsedInfo->UsedKb32String = (SizeUsedInfo->UsedKb32) + "KB";
+									}
+									else
+									{
+										SceKernelError = SceKernelErrors.ERROR_SAVEDATA_SIZES_NO_DATA;
+									}
 								}
 							}
 
@@ -294,20 +301,25 @@ namespace CSPspEmu.Hle.Modules.utility
 							// If null, the size is ignored and no error is returned.
 							{
 								var SizeRequiredSpaceInfo = (SizeRequiredSpaceInfo*)Params->utilityDataAddr.GetPointer<SizeRequiredSpaceInfo>(PspMemory);
-								long RequiredSize = 0;
-								RequiredSize += Params->Icon0FileData.Size;
-								RequiredSize += Params->Icon1FileData.Size;
-								RequiredSize += Params->Pic1FileData.Size;
-								RequiredSize += Params->Snd0FileData.Size;
-								RequiredSize += Params->DataSize;
+								if (SizeRequiredSpaceInfo != null)
+								{
+									long RequiredSize = 0;
+									RequiredSize += Params->Icon0FileData.Size;
+									RequiredSize += Params->Icon1FileData.Size;
+									RequiredSize += Params->Pic1FileData.Size;
+									RequiredSize += Params->Snd0FileData.Size;
+									RequiredSize += Params->DataSize;
 
-								SizeRequiredSpaceInfo->RequiredSpaceSectors = (uint)(RequiredSize / SectorSize);
-								SizeRequiredSpaceInfo->RequiredSpaceKb = (uint)(RequiredSize / 1024);
-								SizeRequiredSpaceInfo->RequiredSpace32KB = (uint)(RequiredSize / (32 * 1024));
+									SizeRequiredSpaceInfo->RequiredSpaceSectors = (uint)MathUtils.RequiredBlocks(RequiredSize, SectorSize);
+									SizeRequiredSpaceInfo->RequiredSpaceKb = (uint)MathUtils.RequiredBlocks(RequiredSize, 1024);
+									SizeRequiredSpaceInfo->RequiredSpace32KB = (uint)MathUtils.RequiredBlocks(RequiredSize, 32 * 1024);
 
-								SizeRequiredSpaceInfo->RequiredSpaceString = (SizeRequiredSpaceInfo->RequiredSpaceKb) + "KB";
-								SizeRequiredSpaceInfo->RequiredSpace32KBString = (SizeRequiredSpaceInfo->RequiredSpace32KB) + "KB";
+									SizeRequiredSpaceInfo->RequiredSpaceString = (SizeRequiredSpaceInfo->RequiredSpaceKb) + "KB";
+									SizeRequiredSpaceInfo->RequiredSpace32KBString = (SizeRequiredSpaceInfo->RequiredSpace32KB) + "KB";
+								}
 							}
+
+							if (SceKernelError != SceKernelErrors.ERROR_OK) throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_SIZES_NO_DATA));
 						}
 						break;
 					case PspUtilitySavedataMode.List:

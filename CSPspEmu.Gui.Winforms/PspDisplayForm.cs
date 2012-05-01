@@ -212,7 +212,7 @@ namespace CSPspEmu.Gui.Winforms
 					//this.Font = new Font("Lucida Console", 16);
 					if (ShowMenus)
 					{
-						this.Text = "Soywiz's PspEmu - " + PspGlobalConfiguration.CurrentVersion + " :: r" + PspGlobalConfiguration.CurrentVersionNumeric + " :: " + LastText;
+						this.Text = "Soywiz's PspEmu - " + PspGlobalConfiguration.CurrentVersion + " :: r" + PspGlobalConfiguration.CurrentVersionNumeric + " :: " + Platform.Architecture + " :: " + LastText;
 					}
 					else
 					{

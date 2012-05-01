@@ -14,14 +14,14 @@ namespace CSPspEmu.Core.Rtc
 
 		public void SetToDateTime(DateTime DateTime)
 		{
-			var Seconds = (uint)(DateTime - new DateTime(1970, 1, 1)).TotalSeconds;
+			var Seconds = (uint)(DateTime - Platform.UnixStart).TotalSeconds;
 			TotalMicroseconds = Seconds + DateTime.Millisecond * 1000;
 		}
 
 		public void SetToNow()
 		{
 			var PrevTotalMicroseconds = TotalMicroseconds;
-			var CurrentTotalMicroseconds = Platform.GetCurrentMicroseconds();
+			var CurrentTotalMicroseconds = Platform.GetCurrentUnixMicroseconds();
 
 			if (CurrentTotalMicroseconds < PrevTotalMicroseconds)
 			{

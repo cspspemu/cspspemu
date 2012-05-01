@@ -20,7 +20,7 @@ namespace CSPspEmu.Core
 
 		public void _InitializeComponent(PspEmulatorContext PspEmulatorContext)
 		{
-			Console.WriteLine("_InitializeComponent : {0}", this.GetType());
+			//Console.WriteLine("_InitializeComponent : {0}", this.GetType());
 			if (this.PspEmulatorContext != null) throw(new Exception("Can't call _InitializeComponent twice."));
 			this.PspEmulatorContext = PspEmulatorContext;
 			PspEmulatorContext.InjectDependencesTo(this);

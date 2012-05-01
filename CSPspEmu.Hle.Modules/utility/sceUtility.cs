@@ -214,7 +214,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			PSP_UTILITY_MSGDIALOG_RESULT_BACK     = 3,
 		}
 
-		public enum PspUtilitySavedataFocus
+		public enum PspUtilitySavedataFocus : uint
 		{
 			PSP_UTILITY_SAVEDATA_FOCUS_UNKNOWN    = 0, // 
 			PSP_UTILITY_SAVEDATA_FOCUS_FIRSTLIST  = 1, // First in list
@@ -231,7 +231,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		unsafe public struct PspUtilitySavedataSFOParam
 		{
 			/// <summary>
-			/// 
+			/// 0000 -
 			/// </summary>
 			public fixed byte TitleRaw[0x80];
 
@@ -247,7 +247,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			}
 
 			/// <summary>
-			/// 
+			/// 0080 -
 			/// </summary>
 			public fixed byte SavedataTitleRaw[0x80];
 
@@ -263,17 +263,17 @@ namespace CSPspEmu.Hle.Modules.utility
 			}
 
 			/// <summary>
-			/// 
+			/// 0100 -
 			/// </summary>
 			public fixed byte Detail[0x400];
 
 			/// <summary>
-			/// 
+			/// 0500 -
 			/// </summary>
 			public byte ParentalLevel;
 
 			/// <summary>
-			/// 
+			/// 0501 -
 			/// </summary>
 			public fixed byte Unknown[3];
 		}
@@ -281,6 +281,26 @@ namespace CSPspEmu.Hle.Modules.utility
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct PspUtilitySavedataFileData
 		{
+			/// <summary>
+			/// 0000 -
+			/// </summary>
+			public PspPointer BufferPointer;
+
+			/// <summary>
+			/// 0004 -
+			/// </summary>
+			public int BufferSize;
+
+			/// <summary>
+			/// 0008 - why are there two sizes?
+			/// </summary>
+			public int Size;
+
+			/// <summary>
+			/// 000C -
+			/// </summary>
+			public uint Unknown;
+
 			public bool Used
 			{
 				get
@@ -291,26 +311,6 @@ namespace CSPspEmu.Hle.Modules.utility
 					return true;
 				}
 			}
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public PspPointer BufferPointer;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public int BufferSize;
-
-			/// <summary>
-			/// ??? - why are there two sizes?
-			/// </summary>
-			public int Size;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public uint Unknown;
 		}
 
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -386,78 +386,78 @@ namespace CSPspEmu.Hle.Modules.utility
 		public struct pspUtilityDialogCommon
 		{
 			/// <summary>
-			/// Size of the structure
+			/// 0000 - Size of the structure
 			/// </summary>
 			public uint Size;
 			
 			/// <summary>
-			/// Language
+			/// 0004 - Language
 			/// </summary>
 			public Language Language;
 			
 			/// <summary>
-			/// Set to 1 for X/O button swap
+			/// 0008 - Set to 1 for X/O button swap
 			/// </summary>
-			public int  ButtonSwap;
+			public int ButtonSwap;
 			
 			/// <summary>
-			/// Graphics thread priority
+			/// 000C - Graphics thread priority
 			/// </summary>
-			public int  GraphicsThread;
+			public int GraphicsThread;
 			
 			/// <summary>
-			/// Access/fileio thread priority (SceJobThread)
+			/// 0010 - Access/fileio thread priority (SceJobThread)
 			/// </summary>
-			public int  AccessThread;
+			public int AccessThread;
 			
 			/// <summary>
-			/// Font thread priority (ScePafThread)
+			/// 0014 - Font thread priority (ScePafThread)
 			/// </summary>
-			public int  FontThread;
+			public int FontThread;
 			
 			/// <summary>
-			/// Sound thread priority
+			/// 0018 - Sound thread priority
 			/// </summary>
-			public int  SoundThread;
+			public int SoundThread;
 			
 			/// <summary>
-			/// Result
+			/// 001C - Result
 			/// </summary>
 			public SceKernelErrors Result;
 
 			/// <summary>
-			/// Set to 0
+			/// 0020 - Set to 0
 			/// </summary>
-			public fixed int  Reserved[4];
+			public fixed int Reserved[4];
 		}
 
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct SceUtilitySavedataParam
 		{
 			/// <summary>
-			/// 
+			/// 0000 - 
 			/// </summary>
 			public pspUtilityDialogCommon Base;
 
 			/// <summary>
-			/// 
+			/// 0030 - 
 			/// </summary>
 			public PspUtilitySavedataMode Mode;
 	
 			/// <summary>
-			/// 
+			/// 0034 -
 			/// </summary>
 			public int Unknown1;
 	
 			/// <summary>
-			/// 
+			/// 0038 -
 			/// </summary>
 			public int Overwrite;
 
 			/// <summary>
-			/// gameName: name used from the game for saves, equal for all saves
+			/// 003C - gameName: name used from the game for saves, equal for all saves
 			/// </summary>
-			public fixed byte GameNameRaw[13];
+			public fixed byte GameNameRaw[16];
 
 			public string GameName
 			{
@@ -465,18 +465,13 @@ namespace CSPspEmu.Hle.Modules.utility
 				{
 					fixed (byte* Pointer = GameNameRaw)
 					{
-						return PointerUtils.PtrToString(Pointer, Encoding.UTF8);
+						return PointerUtils.PtrToString(Pointer, 16, Encoding.UTF8);
 					}
 				}
 			}
 
 			/// <summary>
-			/// 
-			/// </summary>
-			public fixed byte Reserved[3];
-
-			/// <summary>
-			/// saveName: name of the particular save, normally a number
+			/// 004C - saveName: name of the particular save, normally a number
 			/// </summary>
 			public fixed byte SaveNameRaw[20];
 
@@ -486,133 +481,128 @@ namespace CSPspEmu.Hle.Modules.utility
 				{
 					fixed (byte* Pointer = SaveNameRaw)
 					{
-						return PointerUtils.PtrToString(Pointer, Encoding.UTF8);
+						return PointerUtils.PtrToString(Pointer, 20, Encoding.UTF8);
 					}
 				}
 			}
 
 			/// <summary>
-			/// saveNameList: used by multiple modes
+			/// 0060 - saveNameList: used by multiple modes
 			/// </summary>
 			public PspPointer SaveNameListPointer; // char[20]
 
 			/// <summary>
-			/// fileName: name of the data file of the game for example DATA.BIN
+			/// 0064 - fileName: name of the data file of the game for example DATA.BIN
 			/// </summary>
-			public fixed byte FileName[13];
+			public fixed byte FileName[16];
 
 			/// <summary>
-			/// 
-			/// </summary>
-			public fixed byte Reserved1[3];
-	
-			/// <summary>
-			/// pointer to a buffer that will contain data file unencrypted data
+			/// 0074 - pointer to a buffer that will contain data file unencrypted data
 			/// </summary>
 			public uint DataBufPointer;
 			
 			/// <summary>
-			/// size of allocated space to dataBuf
+			/// 0078 - size of allocated space to dataBuf
 			/// </summary>
 			public uint DataBufSize;
 
 			/// <summary>
-			/// 
+			/// 007C -
 			/// </summary>
 			public int DataSize;
 
 			//PspUtilitySavedataFileData Data
 
 			/// <summary>
-			/// 
+			/// 0080 -
 			/// </summary>
-			public PspUtilitySavedataSFOParam SfoParam;
+			public PspUtilitySavedataSFOParam SfoParam; // 504?
 
 			/// <summary>
-			/// 
+			/// 0584 -
 			/// </summary>
-			public PspUtilitySavedataFileData Icon0FileData;
+			public PspUtilitySavedataFileData Icon0FileData; // 16
 
 			/// <summary>
-			/// 
+			/// 0594 -
 			/// </summary>
-			public PspUtilitySavedataFileData Icon1FileData;
+			public PspUtilitySavedataFileData Icon1FileData; // 16
 
 			/// <summary>
-			/// 
+			/// 05A4 -
 			/// </summary>
-			public PspUtilitySavedataFileData Pic1FileData;
+			public PspUtilitySavedataFileData Pic1FileData; // 16
 
 			/// <summary>
-			/// 
+			/// 05B4 -
 			/// </summary>
-			public PspUtilitySavedataFileData Snd0FileData;
+			public PspUtilitySavedataFileData Snd0FileData; // 16
 
 			/// <summary>
-			/// Pointer to an PspUtilitySavedataListSaveNewData structure
+			/// 05C4 -Pointer to an PspUtilitySavedataListSaveNewData structure
 			/// </summary>
 			//public PspUtilitySavedataListSaveNewData *newData;
 			public uint NewDataPointer;
 
 			/// <summary>
-			/// Initial focus for lists
+			/// 05C8 -Initial focus for lists
 			/// </summary>
 			public PspUtilitySavedataFocus Focus;
 
 			/// <summary>
-			/// 
+			/// 05CC -
 			/// </summary>
 			public uint abortStatus;
 
 			/// <summary>
-			/// 
+			/// 05D0 -
 			/// </summary>
 			public PspPointer msFreeAddr;
 
 			/// <summary>
-			/// 
+			/// 05D4 -
 			/// </summary>
 			public PspPointer msDataAddr;
 
 			/// <summary>
-			/// 
+			/// 05D8 -
 			/// </summary>
 			public PspPointer utilityDataAddr;
 
 		//#if _PSP_FW_VERSION >= 200
 
 			/// <summary>
-			/// key: encrypt/decrypt key for save with firmware >= 2.00
+			/// 05E0 -key: encrypt/decrypt key for save with firmware >= 2.00
 			/// </summary>
 			public fixed byte Key[16];
 
 			/// <summary>
-			/// 
+			/// 05F0 -
 			/// </summary>
 			public uint secureVersion;
 			
 			/// <summary>
-			/// 
+			/// 05F4 -
 			/// </summary>
 			public uint multiStatus;
 			
 			/// <summary>
-			/// 
+			/// 05F8 -
 			/// </summary>
 			public PspPointer idListAddr;
 			
 			/// <summary>
-			/// 
+			/// 05FC -
 			/// </summary>
 			public PspPointer fileListAddr;
 			
 			/// <summary>
-			/// 
+			/// 0600 -
 			/// </summary>
 			public PspPointer sizeAddr;
 
 			/// <summary>
-			/// unknown3: ?
+			/// 0604 -unknown3: ?
 			/// </summary>
 			public fixed byte Unknown3[20 - 5];
 

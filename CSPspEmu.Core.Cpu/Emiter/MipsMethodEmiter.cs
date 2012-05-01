@@ -66,12 +66,22 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 			else if (Processor.Memory is FastPspMemory)
 			{
-				SafeILGenerator.Push((int)((FastPspMemory)Processor.Memory).Base);
+				var Base = ((FastPspMemory)Processor.Memory).Base;
+
+				if (Platform.Is32Bit)
+				{
+					SafeILGenerator.Push((int)Base);
+				}
+				else
+				{
+					SafeILGenerator.Push((long)Base);
+				}
 				{
 					Action();
 				}
 				SafeILGenerator.Push((int)PspMemory.MemoryMask);
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.And);
+				if (!Platform.Is32Bit) SafeILGenerator.ConvertTo<long>();
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
 			}
 			else

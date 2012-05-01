@@ -19,6 +19,8 @@ namespace CSPspEmu.Core
 				return StartHash;
 			}
 
+			//Console.WriteLine("{0:X}", new IntPtr(Pointer));
+
 			var CountInBlocks = Count / 4;
 			var Hash = StartHash;
 

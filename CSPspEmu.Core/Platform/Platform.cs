@@ -10,6 +10,8 @@ namespace CSPspEmu.Core
 {
 	unsafe public class Platform
 	{
+		static Logger Logger = Logger.GetLogger("Platform");
+
 		public enum OS
 		{
 			Windows,
@@ -18,6 +20,45 @@ namespace CSPspEmu.Core
 
 		static public OS OperatingSystem;
 
+		public static bool Is32Bit
+		{
+			get
+			{
+				return !Environment.Is64BitProcess;
+			}
+		}
+
+		static private string _Architecture;
+
+		static public string Architecture
+		{
+			get
+			{
+				if (_Architecture == null)
+				{
+					//Environment.OSVersion
+					if (OperatingSystem == OS.Windows)
+					{
+						_Architecture = Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE");
+					}
+					else
+					{
+						try
+						{
+							_Architecture = ProcessUtils.ExecuteCommand("uname", "-m");
+							//_Architecture = Environment.GetEnvironmentVariable("HOSTTYPE");
+							//_Architecture = Environment.GetEnvironmentVariable("MACHTYPE");
+						}
+						catch (Exception Exception)
+						{
+							Logger.Error(Exception);
+							_Architecture = "Can't get arch";
+						}
+					}
+				}
+				return _Architecture;
+			}
+		}
 
 		static Platform()
 		{
@@ -34,8 +75,10 @@ namespace CSPspEmu.Core
 					OperatingSystem = OS.Posix;
 					break;
 				default:
-					throw(new NotImplementedException());
+					throw (new PlatformNotSupportedException());
 			}
+
+			UnixStart = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 		}
 
 		public struct timespec
@@ -57,32 +100,11 @@ namespace CSPspEmu.Core
 			[DllImport("libc", EntryPoint = "mmap")]
 			internal static extern void* mmap(void* addr, uint len, uint prot, uint flags, uint off_t);
 
+			[DllImport("libc", EntryPoint = "munmap")]
+			internal static extern int munmap(void* addr, uint len);
+
 			[DllImport("libc", EntryPoint = "mprotect")]
 			internal static extern int mprotect(void* start, ulong len, uint prot);
-
-			[DllImport("librt", EntryPoint = "clock_getres")]
-			internal static extern int clock_getres(int clock_id, out timespec timespec);
-
-			[DllImport("librt", EntryPoint = "clock_gettime")]
-			internal static extern int clock_gettime(int clock_id, out timespec timespec);
-
-			static public long GetCurrentMicroseconds()
-			{
-				long Counter;
-				long Frequency;
-
-				timespec timespec;
-
-				timespec = default(timespec);
-				InternalUnix.clock_gettime(0, out timespec);
-				Counter = timespec.total_usec;
-
-				timespec = default(timespec);
-				InternalUnix.clock_getres(0, out timespec);
-				Frequency = timespec.total_usec;
-
-				return Counter * 1000 * 1000 / Frequency;
-			}
 		}
 
 		private class InternalWindows
@@ -97,27 +119,10 @@ namespace CSPspEmu.Core
 			internal static extern uint GetLastError();
 
 			[DllImport("Kernel32.dll")]
-			internal static extern bool QueryPerformanceCounter(out long lpPerformanceCount);
-
-			[DllImport("Kernel32.dll")]
-			internal static extern bool QueryPerformanceFrequency(out long lpFrequency);
-
-			[DllImport("Kernel32.dll")]
 			internal static extern IntPtr GetConsoleWindow();
 
 			[DllImport("user32.dll")]
 			internal static extern Boolean ShowWindow(IntPtr hWnd, Int32 nCmdShow);
-
-			static internal long GetCurrentMicroseconds()
-			{
-				long Counter;
-				long Frequency;
-
-				QueryPerformanceCounter(out Counter);
-				QueryPerformanceFrequency(out Frequency);
-
-				return Counter * 1000 * 1000 / Frequency;
-			}
 		}
 
 		const uint MEM_RESERVE = 0x2000;
@@ -137,6 +142,16 @@ namespace CSPspEmu.Core
 		const uint PROT_WRITE = 2;
 		const uint PROT_EXEC = 4;
 
+		static public void Free(void* Address, uint Size)
+		{
+			switch (OperatingSystem)
+			{
+				case OS.Windows: InternalWindows.VirtualFree(Address, 0, MEM_RELEASE); break;
+				case OS.Posix: InternalUnix.munmap(Address, Size); break;
+			}
+			throw (new NotImplementedException());
+		}
+
 		static public void* AllocRange(void* Address, uint Size)
 		{
 			switch (OperatingSystem)
@@ -145,8 +160,14 @@ namespace CSPspEmu.Core
 					{
 						var Pointer = InternalWindows.VirtualAlloc(Address, Size, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 
-						if ((void*)Pointer != (void*)Address) throw (new Exception("Not allocated the desired address!"));
-						PointerUtils.Memset(Pointer, 0, (int)Size);
+						if (Pointer != null)
+						{
+							if ((void*)Pointer != (void*)Address)
+							{
+								throw (new Exception(String.Format("Not allocated the desired address! Expected {0:X}, Allocated: {1:X}", new IntPtr(Address), new IntPtr(Pointer))));
+							}
+							PointerUtils.Memset(Pointer, 0, (int)Size);
+						}
 						return Pointer;
 					}
 				case OS.Posix:
@@ -159,16 +180,11 @@ namespace CSPspEmu.Core
 			throw (new NotImplementedException());
 		}
 
-		static public long GetCurrentMicroseconds()
+		static public DateTime UnixStart;
+
+		static public long GetCurrentUnixMicroseconds()
 		{
-			if (OperatingSystem == OS.Windows)
-			{
-				return InternalWindows.GetCurrentMicroseconds();
-			}
-			else
-			{
-				return InternalUnix.GetCurrentMicroseconds();
-			}
+			return (DateTime.UtcNow - UnixStart).Ticks / (TimeSpan.TicksPerMillisecond / 1000);
 		}
 
 		private const Int32 SW_HIDE = 0;

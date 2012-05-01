@@ -26,8 +26,8 @@ namespace CSPspEmu.Core.Memory
 			public InvalidAddressException(string message, Exception innerException) : base(message, innerException) { }
 			//public InvalidAddressException(uint Address) : base(String.Format("Invalid Address : 0x%08X".Sprintf(Address))) { }
 			//public InvalidAddressException(uint Address, Exception innerException) : base(String.Format("Invalid Address : 0x%08X".Sprintf(Address)), innerException) { }
-			public InvalidAddressException(uint Address) : base(String.Format("Invalid Address : 0x{0:X}", Address)) { }
-			public InvalidAddressException(uint Address, Exception innerException) : base(String.Format("Invalid Address : 0x{0:X}", Address), innerException) { }
+			public InvalidAddressException(ulong Address) : base(String.Format("Invalid Address : 0x{0:X}", Address)) { }
+			public InvalidAddressException(ulong Address, Exception innerException) : base(String.Format("Invalid Address : 0x{0:X}", Address), innerException) { }
 		}
 
 		sealed public class Segment
@@ -57,7 +57,7 @@ namespace CSPspEmu.Core.Memory
 
 		public void ZeroFillSegment(Segment Segment)
 		{
-			PointerUtils.Memset((byte *)PspAddressToPointerUnsafe(Segment.Low), 0, Segment.Size);
+			PointerUtils.Memset((byte *)PspAddressToPointerSafe(Segment.Low), 0, Segment.Size);
 		}
 
 		public readonly Segment ScratchPadSegment = new Segment(ScratchPadOffset, ScratchPadSize);
@@ -137,7 +137,7 @@ namespace CSPspEmu.Core.Memory
 		{
 			if (Address == 0 && CanBeNull) return null;
 			ValidateRange(Address, Size);
-			//if (!IsAddressValid(Address)) throw(new InvalidAddressException(Address));
+			if (!IsAddressValid(Address)) throw(new InvalidAddressException(Address));
 			return PspAddressToPointerUnsafe(Address);
 		}
 

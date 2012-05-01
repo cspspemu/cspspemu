@@ -6,6 +6,7 @@ using System.Text;
 
 namespace CSPspEmu.Core.Memory
 {
+	[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
 	unsafe public struct PspPointer
 	{
 		public uint Address;
@@ -59,6 +60,13 @@ namespace CSPspEmu.Core.Memory
 		public unsafe void* GetPointer<TType>(PspMemory pspMemory)
 		{
 			return pspMemory.PspPointerToPointerSafe(this, Marshal.SizeOf(typeof(TType)));
+		}
+
+		public unsafe void* GetPointerNotNull<TType>(PspMemory pspMemory)
+		{
+			var Pointer = this.GetPointer<TType>(pspMemory);
+			if (Pointer == null) throw(new NullReferenceException(String.Format("Pointer for {0} can't be null", typeof(TType))));
+			return Pointer;
 		}
 
 		/*

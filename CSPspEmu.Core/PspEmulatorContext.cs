@@ -35,7 +35,7 @@ namespace CSPspEmu.Core
 					{
 						var Instance = default(PspEmulatorComponent);
 
-						Logger.Info("GetInstance<{0}>: Miss!", Type);
+						Logger.Notice("GetInstance<{0}>: Miss!", Type);
 
 						var ElapsedTime = Logger.Measure(() =>
 						{
@@ -48,7 +48,7 @@ namespace CSPspEmu.Core
 							Instance.InitializeComponent();
 						});
 
-						Logger.Info("GetInstance<{0}>: Miss! : LoadTime({1})", Type, ElapsedTime.TotalSeconds);
+						Logger.Notice("GetInstance<{0}>: Miss! : LoadTime({1})", Type, ElapsedTime.TotalSeconds);
 
 						return Instance;
 					}
@@ -133,18 +133,20 @@ namespace CSPspEmu.Core
 						case MemberTypes.Field: Field.SetValue(Object, this.GetInstance(MemberType)); break;
 						case MemberTypes.Property: Property.SetValue(Object, this.GetInstance(MemberType), null); break;
 					}
-					Logger.Info("Inject {0} to {1}", MemberType, Object);
+					Logger.Notice("Inject {0} to {1}", MemberType, Object);
 				}
 			}
 
+			/*
 			foreach (var Field in Object.GetType().GetFields(GetBindingFlags))
 			{
 			}
 
 			foreach (var Property in Object.GetType().GetProperties(GetBindingFlags))
 			{
-				Console.WriteLine(Property);
+				//Console.WriteLine(Property);
 			}
+			*/
 		}
 
 		public void Dispose()

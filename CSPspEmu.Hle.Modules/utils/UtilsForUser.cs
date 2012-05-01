@@ -349,7 +349,7 @@ namespace CSPspEmu.Hle.Modules.utils
 	/// 
 	/// </summary>
 	/// <seealso cref="http://takel.jp/mt/MT19937.cs"/>
-	[StructLayout(LayoutKind.Sequential, Pack = 4)]
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	unsafe public struct SceKernelUtilsMt19937Context
 	{
 		public const int MT_N = 624;

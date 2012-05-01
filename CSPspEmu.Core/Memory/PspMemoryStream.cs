@@ -62,7 +62,10 @@ namespace CSPspEmu.Core.Memory
 
 		public override void Write(byte[] buffer, int offset, int count)
 		{
+			//Console.WriteLine("PspMemoryStream.Write(Size: {0}, _Position: 0x{1:X})", count, _Position);
 			byte* Ptr = (byte*)Memory.PspAddressToPointerSafe(_Position, count);
+			//Console.WriteLine("  Ptr: 0x{0:X}", (ulong)Ptr);
+
 			Marshal.Copy(buffer, offset, new IntPtr(Ptr), count);
 			_Position += (uint)count;
 		}

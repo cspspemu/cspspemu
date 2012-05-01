@@ -22,12 +22,25 @@ using CSharpUtils;
 using CSharpUtils.Getopt;
 using Codegen;
 using CSPspEmu.Gui.Winforms;
+using System.Security.Permissions;
 
 namespace CSPspEmu
 {
 	unsafe class Program
 	{
 		static Logger Logger = Logger.GetLogger("Program");
+
+		private static void Form1_UIThreadException(object sender, ThreadExceptionEventArgs e)
+		{
+			Console.Error.WriteLine(e.Exception);
+			Application.Exit();
+		}
+
+		private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+		{
+			Console.Error.WriteLine(e.ExceptionObject);
+			Application.Exit();
+		}
 
 		/// <summary>
 		/// 
@@ -37,11 +50,26 @@ namespace CSPspEmu
 		/// <see cref="http://www.microsoft.com/downloads/details.aspx?FamilyID=22914587-b4ad-4eae-87cf-b14ae6a939b0&displaylang=en" />
 		/// <param name="args"></param>
 		[STAThread]
+		[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
 		static void Main(string[] Arguments)
 		{
-			Logger.OnGlobalLog += (LogName, Level, Text) =>
+			// Add the event handler for handling UI thread exceptions to the event.
+			Application.ThreadException += new ThreadExceptionEventHandler(Form1_UIThreadException);
+
+			// Set the unhandled exception mode to force all Windows Forms errors to go through
+			// our handler.
+			Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+
+			// Add the event handler for handling non-UI thread exceptions to the event. 
+			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+
+			Logger.OnGlobalLog += (LogName, Level, Text, StackFrame) =>
 			{
-				Console.WriteLine("{0} : {1} : {2}", LogName, Level, Text);
+				if (Level >= Logger.Level.Info)
+				{
+					var Method = StackFrame.GetMethod();
+					Console.WriteLine("{0} : {1} : {2}.{3} : {4}", LogName, Level, Method.DeclaringType.Name, Method.Name, Text);
+				}
 			};
 
 			Logger.Info("Running ... plat:{0} ... int*:{1}", Environment.Is64BitProcess ? "x64" : "x86", sizeof(int*));

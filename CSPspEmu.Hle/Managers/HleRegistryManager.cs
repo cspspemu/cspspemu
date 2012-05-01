@@ -33,7 +33,7 @@ namespace CSPspEmu.Hle.Managers
 	/// <summary>
 	/// Valid values for PSP_SYSTEMPARAM_ID_INT_LANGUAGE
 	/// </summary>
-	public enum Language
+	public enum Language : uint
 	{
 		Japanese = 0,
 		English = 1,
