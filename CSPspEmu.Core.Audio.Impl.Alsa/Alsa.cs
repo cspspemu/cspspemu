@@ -148,5 +148,10 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		public static extern int snd_pcm_avail(IntPtr playback_handle);
 		[DllImport(DLL)]
 		public static extern int snd_pcm_avail_update(IntPtr playback_handle);
+
+		[DllImport(DLL)]
+		public static extern int snd_pcm_hw_params_set_periods(IntPtr playback_handle, IntPtr hw_params, int periods, int p);
+		[DllImport(DLL)]
+		public static extern int snd_pcm_hw_params_set_buffer_size(IntPtr playback_handle, IntPtr hw_params, int p);
 	}
 }

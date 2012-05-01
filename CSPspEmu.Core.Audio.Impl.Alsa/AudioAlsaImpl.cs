@@ -13,6 +13,8 @@ namespace CSPspEmu.Core.Audio
 	{
 		static IntPtr playback_handle = IntPtr.Zero;
 		static IntPtr hw_params = IntPtr.Zero;
+		int periods = 2;       /* Number of periods */
+		int periodsize = 8192; /* Periodsize (bytes) */
 
 		public override void InitializeComponent()
 		{
@@ -22,66 +24,41 @@ namespace CSPspEmu.Core.Audio
 				fixed (IntPtr* hw_params_ptr = &hw_params)
 				{
 					int rate = 44100;
-					Console.WriteLine(Alsa.snd_pcm_open(playback_handle_ptr, "default", Alsa.snd_pcm_stream_t.SND_PCM_LB_OPEN_PLAYBACK, 0));
-					Console.WriteLine(Alsa.snd_pcm_hw_params_malloc(hw_params_ptr));
-					Console.WriteLine(Alsa.snd_pcm_hw_params_any(playback_handle, hw_params));
+					Assert(Alsa.snd_pcm_open(playback_handle_ptr, "default", Alsa.snd_pcm_stream_t.SND_PCM_LB_OPEN_PLAYBACK, 0));
+					Assert(Alsa.snd_pcm_hw_params_malloc(hw_params_ptr));
+					Assert(Alsa.snd_pcm_hw_params_any(playback_handle, hw_params));
 
-					Console.WriteLine(Alsa.snd_pcm_hw_params_set_access(playback_handle, hw_params, Alsa.snd_pcm_access.SND_PCM_ACCESS_RW_INTERLEAVED));
-					Console.WriteLine(Alsa.snd_pcm_hw_params_set_format(playback_handle, hw_params, Alsa.snd_pcm_format.SND_PCM_FORMAT_S16_LE));
-					Console.WriteLine(Alsa.snd_pcm_hw_params_set_rate_near(playback_handle, hw_params, &rate, null));
-					Console.WriteLine(Alsa.snd_pcm_hw_params_set_channels(playback_handle, hw_params, 2));
-					Console.WriteLine(Alsa.snd_pcm_hw_params(playback_handle, hw_params));
-					Console.WriteLine(Alsa.snd_pcm_hw_params_free(hw_params));
+					Assert(Alsa.snd_pcm_hw_params_set_access(playback_handle, hw_params, Alsa.snd_pcm_access.SND_PCM_ACCESS_RW_INTERLEAVED));
+					Assert(Alsa.snd_pcm_hw_params_set_format(playback_handle, hw_params, Alsa.snd_pcm_format.SND_PCM_FORMAT_S16_LE));
+					Assert(Alsa.snd_pcm_hw_params_set_rate_near(playback_handle, hw_params, &rate, null));
+					Assert(Alsa.snd_pcm_hw_params_set_channels(playback_handle, hw_params, 2));
+					Assert(Alsa.snd_pcm_hw_params_set_periods(playback_handle, hw_params, periods, 0));
+					Assert(Alsa.snd_pcm_hw_params_set_buffer_size(playback_handle, hw_params, (periodsize * periods) >> 2));
 
-					/*
-					var Data = new byte[16 * 1024];
-					for (int n = 0; n < Data.Length; n++)
-					{
-						Data[n] = (byte)n;
-					}
-					fixed (byte* DataPtr = Data)
-					{
-						Alsa.snd_pcm_writei(playback_handle, DataPtr, Data.Length / 4);
-					}
-					*/
+					Assert(Alsa.snd_pcm_hw_params(playback_handle, hw_params));
+					Assert(Alsa.snd_pcm_hw_params_free(hw_params));
 				}
 			}
 
-			available_start = Alsa.snd_pcm_avail_update(playback_handle);
+			//available_start = Alsa.snd_pcm_avail_update(playback_handle);
 		}
 
-		public int available_start;
+		static private void Assert(int Value)
+		{
+			//if (Value < 0) throw(new Exception("Alsa error"));
+		}
 
-		//protected short[] Buffer = new short[512];
-		short[] Buffer = new short[512];
+		//public int available_start;
+
+		protected short[] Buffer = new short[512];
+		//short[] Buffer = new short[2 * 1024];
 
 		public override void Update(Action<short[]> ReadStream)
 		{
-			/*
-			var Data = new byte[16 * 1024];
-			for (int n = 0; n < Data.Length; n++)
+			ReadStream(Buffer);
+			fixed (short* BufferPtr = &Buffer[0])
 			{
-				Data[n] = (byte)n;
-			}
-			fixed (byte* DataPtr = Data)
-			{
-				Alsa.snd_pcm_writei(playback_handle, DataPtr, Data.Length / 4);
-			}
-			*/
-
-			Console.WriteLine("{0} - {1}", available_start, Alsa.snd_pcm_avail_update(playback_handle));
-
-			//if (available_start - Alsa.snd_pcm_avail_update(playback_handle) < Buffer.Length * 4)
-			{
-				//Console.WriteLine("aaaaaaaaa");
-				ReadStream(Buffer);
-				//for (int n = 0; n < Buffer.Length; n++) Console.Write(Buffer[n]);
-				fixed (short* BufferPtr = &Buffer[0])
-				{
-					Alsa.snd_pcm_writei(playback_handle, BufferPtr, Buffer.Length);
-					Thread.Sleep(128);
-				}
-				//throw new NotImplementedException();
+				Alsa.snd_pcm_writei(playback_handle, BufferPtr, Buffer.Length / 2);
 			}
 		}
 
