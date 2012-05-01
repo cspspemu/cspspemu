@@ -12,6 +12,7 @@ PUSHD %~dp0
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Audio.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Audio.Impl.Null.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Audio.Impl.Openal.dll"
+	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Audio.Impl.Alsa.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Audio.Impl.WaveOut.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Cpu.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.dll"

@@ -23,6 +23,7 @@ using CSharpUtils.Getopt;
 using Codegen;
 using CSPspEmu.Gui.Winforms;
 using System.Security.Permissions;
+using CSPspEmu.Core.Audio.Impl.Alsa;
 
 namespace CSPspEmu
 {
@@ -62,6 +63,40 @@ namespace CSPspEmu
 
 			// Add the event handler for handling non-UI thread exceptions to the event. 
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+
+			/*
+			IntPtr playback_handle = IntPtr.Zero;
+			IntPtr hw_params = IntPtr.Zero;
+			Alsa.snd_config_t config;
+			int rate = 44100;
+			Console.WriteLine(Alsa.snd_pcm_open(&playback_handle, "default", Alsa.snd_pcm_stream_t.SND_PCM_LB_OPEN_PLAYBACK, 0));
+			Console.WriteLine(Alsa.snd_pcm_hw_params_malloc(&hw_params));
+			Console.WriteLine(Alsa.snd_pcm_hw_params_any(playback_handle, hw_params));
+
+			Console.WriteLine(Alsa.snd_pcm_hw_params_set_access(playback_handle, hw_params, Alsa.snd_pcm_access.SND_PCM_ACCESS_RW_INTERLEAVED));
+			Console.WriteLine(Alsa.snd_pcm_hw_params_set_format(playback_handle, hw_params, Alsa.snd_pcm_format.SND_PCM_FORMAT_S16_LE));
+			Console.WriteLine(Alsa.snd_pcm_hw_params_set_rate_near(playback_handle, hw_params, &rate, null));
+			Console.WriteLine(Alsa.snd_pcm_hw_params_set_channels (playback_handle, hw_params, 2));
+			Console.WriteLine(Alsa.snd_pcm_hw_params(playback_handle, hw_params));
+			Console.WriteLine(Alsa.snd_pcm_hw_params_free(hw_params));
+
+			var Data = new byte[16 * 1024];
+			for (int n = 0; n < Data.Length; n++)
+			{
+				Data[n] = (byte)n;
+			}
+			fixed (byte* DataPtr = Data)
+			{
+				Alsa.snd_pcm_writei(playback_handle, DataPtr, Data.Length / 4);
+			}
+
+			Thread.Sleep(128);
+
+			//Console.WriteLine(Alsa.snd_pcm_prepare(playback_handle));
+			//Console.WriteLine(Alsa.snd_pcm_open_preferred(out AlsaHandle, null, null, (int)Alsa.OpenMode.SND_PCM_LB_OPEN_PLAYBACK));
+			//Console.WriteLine(Alsa.snd_pcm_close(AlsaHandle));
+			Environment.Exit(0); return;
+			*/
 
 			Logger.OnGlobalLog += (LogName, Level, Text, StackFrame) =>
 			{

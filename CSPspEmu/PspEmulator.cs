@@ -256,6 +256,7 @@ namespace CSPspEmu
 					PspPluginImpl.SelectWorkingPlugin<PspAudioImpl>(PspEmulatorContext,
 						typeof(PspAudioOpenalImpl),
 						typeof(PspAudioWaveOutImpl),
+						typeof(AudioAlsaImpl),
 						typeof(AudioImplNull)
 					);
 					
