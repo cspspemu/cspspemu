@@ -67,8 +67,7 @@ namespace CSPspEmu.Core.Memory
 					}
 					else
 					{
-						//TryBases = new ulong[] { 0x2300000000, 0x31000000 };
-						TryBases = new ulong[] { 0x31000000, 0x40000000, 0x50000000 };
+						TryBases = new ulong[] { 0x2300000000, 0x31000000, 0x40000000, 0x50000000, 0xE1000000 };
 					}
 				}
 

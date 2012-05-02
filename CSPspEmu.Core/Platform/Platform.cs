@@ -97,8 +97,12 @@ namespace CSPspEmu.Core
 
 		private class InternalUnix
 		{
+			[DllImport("libc")]
+			internal static extern int* __errno_location();
+
 			[DllImport("libc", EntryPoint = "mmap")]
-			internal static extern void* mmap(void* addr, uint len, uint prot, uint flags, uint off_t);
+			//internal static extern void* mmap(void* addr, uint len, uint prot, uint flags, uint off_t);
+			internal static extern void* mmap(void* addr, uint len, uint prot, uint flags, int fildes, uint off);
 
 			[DllImport("libc", EntryPoint = "munmap")]
 			internal static extern int munmap(void* addr, uint len);
@@ -132,15 +136,50 @@ namespace CSPspEmu.Core
 		const uint MEM_DECOMMIT = 0x4000;
 		const uint MEM_RELEASE = 0x8000;
 
+		/*
 		const uint MAP_ANON = 1;
 		const uint MAP_ANONYMOUS = 1;
 		const uint MAP_FILE = 2;
 		const uint MAP_PRIVATE = 4;
 		const uint MAP_SHARED = 8;
+		const uint MAP_FIXED = 0x10;
+		*/
+
 		const uint PROT_NONE = 0;
 		const uint PROT_READ = 1;
 		const uint PROT_WRITE = 2;
 		const uint PROT_EXEC = 4;
+
+		const uint MAP_SHARED	= 0x01;		// Share changes
+		const uint MAP_PRIVATE = 0x02;		// Changes are private
+
+		// #elif defined(__i386__) || defined(__s390__) || defined(__x86_64__)
+
+		const uint MAP_FIXED = 0x10; // Interpret addr exactly
+		const uint MAP_ANONYMOUS= 	0x20	; // don't use a file
+		const uint MAP_GROWSDOWN= 	0x0100	; // stack-like segment
+		const uint MAP_DENYWRITE= 	0x0800	; // ETXTBSY
+		const uint MAP_EXECUTABLE= 	0x1000	; // mark it as an executable
+		const uint MAP_LOCKED	= 0x2000	; // pages are locked
+		const uint MAP_NORESERVE = 0x4000;	  //  don't check for reservations
+
+		// #define MAP_FIXED	0x10		/* Interpret addr exactly */
+		// #define MAP_ANONYMOUS	0x20		/* don't use a file */
+		// #define MAP_GROWSDOWN	0x0100		/* stack-like segment */
+		// #define MAP_DENYWRITE	0x0800		/* ETXTBSY */
+		// #define MAP_EXECUTABLE	0x1000		/* mark it as an executable */
+		// #define MAP_LOCKED	0x2000		/* pages are locked */
+		// #define MAP_NORESERVE	0x4000		/* don't check for reservations */
+		// #define MS_ASYNC	1		/* sync memory asynchronously */
+		// #define MS_INVALIDATE	2		/* invalidate the caches */
+		// #define MS_SYNC		4		/* synchronous memory sync */
+		// #define MCL_CURRENT	1		/* lock all current mappings */
+		// #define MCL_FUTURE	2		/* lock all future mappings */
+		// #define MADV_NORMAL	0x0		/* default page-in behavior */
+		// #define MADV_RANDOM	0x1		/* page-in minimum required */
+		// #define MADV_SEQUENTIAL	0x2		/* read-ahead aggressively */
+		// #define MADV_WILLNEED	0x3		/* pre-fault pages */
+		// #define MADV_DONTNEED	0x4		/* discard these pages */
 
 		static public void Free(void* Address, uint Size)
 		{
@@ -172,7 +211,26 @@ namespace CSPspEmu.Core
 					}
 				case OS.Posix:
 					{
-						void* result = InternalUnix.mmap(Address, Size, PROT_NONE, MAP_PRIVATE | MAP_ANON, 0);
+						void* result = InternalUnix.mmap(
+							Address,
+							Size,
+							PROT_READ | PROT_WRITE,
+							MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED,
+							-1,
+							0
+						);
+						if (result == (void*)-1) result = null;
+
+						if (result == null)
+						{
+							Console.Error.WriteLine("errno: {0}", *InternalUnix.__errno_location());
+						}
+
+						if (result != Address)
+						{
+							Console.WriteLine("Alloc pointer mismatch! {0}, {1}", new IntPtr(result), new IntPtr(Address));
+							//Console.ReadKey();
+						}
 						int result3 = InternalUnix.mprotect(Address, Size, PROT_READ | PROT_WRITE);
 						return result;
 					}
