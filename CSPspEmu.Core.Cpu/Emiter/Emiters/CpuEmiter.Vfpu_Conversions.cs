@@ -37,7 +37,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 4) throw (new NotImplementedException());
-			if (VectorSize != 1) throw (new NotImplementedException());
+			//if (VectorSize != 1) throw (new NotImplementedException());
 			
 			//VectorOperationSaveVd(VectorSize, (Index) =>
 			VectorOperationSaveVd(4, (Index) =>
@@ -55,7 +55,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 4) throw (new NotImplementedException());
-			if (VectorSize != 1) throw (new NotImplementedException());
+			//if (VectorSize != 1) throw (new NotImplementedException());
 
 			//VectorOperationSaveVd(VectorSize, (Index) =>
 			VectorOperationSaveVd(4, (Index) =>

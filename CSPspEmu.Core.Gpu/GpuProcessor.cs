@@ -232,7 +232,10 @@ namespace CSPspEmu.Core.Gpu
 					EnqueueFreeDisplayList(CurrentGpuDisplayList);
 				}
 
-				CompletedDrawingEvent.Set();
+				lock (DisplayListQueue)
+				{
+					CompletedDrawingEvent.Set();
+				}
 				//Console.WriteLine("ProcessStep END");
 			}
 			//if (DrawSync != null) DrawSync();
@@ -242,14 +245,21 @@ namespace CSPspEmu.Core.Gpu
 		{
 			//Console.Error.WriteLine("-- GeDrawSync --------------------------------");
 			if (SyncType != SyncTypeEnum.ListDone) throw new NotImplementedException();
-
-			CompletedDrawingEvent.CallbackOnSet(() =>
+			if (DisplayListQueue.GetCountLock() == 0)
 			{
-				//Console.Error.WriteLine("-- GeDrawSync Completed --------------------------------");
-				CompletedDrawingEvent.Reset();
 				CapturingWaypoint();
 				SyncCallback();
-			});
+			}
+			else
+			{
+				CompletedDrawingEvent.CallbackOnSet(() =>
+				{
+					//Console.Error.WriteLine("-- GeDrawSync Completed --------------------------------");
+					CompletedDrawingEvent.Reset();
+					CapturingWaypoint();
+					SyncCallback();
+				});
+			}
 		}
 
 		private void CapturingWaypoint()

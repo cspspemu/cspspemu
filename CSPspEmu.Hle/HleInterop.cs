@@ -7,12 +7,13 @@ using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
+using System.Threading;
 
 namespace CSPspEmu.Hle
 {
 	public class HleInterop : PspEmulatorComponent
 	{
-		protected HleThread CurrentFakeHleThread;
+		ThreadLocal<HleThread> CurrentFakeHleThreads;
 
 		[Inject]
 		protected HleThreadManager HleThreadManager;
@@ -22,12 +23,14 @@ namespace CSPspEmu.Hle
 
 		public override void InitializeComponent()
 		{
+			CurrentFakeHleThreads = new ThreadLocal<HleThread>(() => new HleThread(PspEmulatorContext, new CpuThreadState(CpuProcessor)));
 			//throw new NotImplementedException();
+			//CurrentFakeHleThread = ;
 		}
 
 		public uint ExecuteFunctionNow(uint Function, params object[] Arguments)
 		{
-			CurrentFakeHleThread = new HleThread(PspEmulatorContext, new CpuThreadState(CpuProcessor));
+			var CurrentFakeHleThread = CurrentFakeHleThreads.Value;
 			CurrentFakeHleThread.CpuThreadState.CopyRegistersFrom(HleThreadManager.CurrentOrAny.CpuThreadState);
 			SetArgumentsToCpuThreadState(CurrentFakeHleThread.CpuThreadState, Function, Arguments);
 			{
@@ -82,11 +85,7 @@ namespace CSPspEmu.Hle
 
 		public HleThread Execute(CpuThreadState FakeCpuThreadState)
 		{
-			var CpuProcessor = FakeCpuThreadState.CpuProcessor;
-			if (CurrentFakeHleThread == null)
-			{
-				CurrentFakeHleThread = new HleThread(PspEmulatorContext, new CpuThreadState(CpuProcessor));
-			}
+			var CurrentFakeHleThread = CurrentFakeHleThreads.Value;
 
 			CurrentFakeHleThread.CpuThreadState.CopyRegistersFrom(FakeCpuThreadState);
 			//HleCallback.SetArgumentsToCpuThreadState(CurrentFake.CpuThreadState);
