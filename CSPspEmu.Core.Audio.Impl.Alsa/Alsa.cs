@@ -13,7 +13,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 	/// <see cref="http://www.alsa-project.org/alsa-doc/alsa-lib/group___p_c_m.html"/>
 	unsafe static public class Alsa
 	{
-		private const string DLL = "asound";
+		private const string DLL = "asound.so.2";
 
 		public enum snd_pcm_stream_t : int
 		{
@@ -95,6 +95,13 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 			SND_PCM_FORMAT_LAST = SND_PCM_FORMAT_U18_3BE,
 		}
 
+		public enum _snd_pcm_state
+		{
+			SND_PCM_STATE_OPEN = 0, SND_PCM_STATE_SETUP, SND_PCM_STATE_PREPARED, SND_PCM_STATE_RUNNING,
+			SND_PCM_STATE_XRUN, SND_PCM_STATE_DRAINING, SND_PCM_STATE_PAUSED, SND_PCM_STATE_SUSPENDED,
+			SND_PCM_STATE_DISCONNECTED, SND_PCM_STATE_LAST = SND_PCM_STATE_DISCONNECTED
+		}
+
 		// WaveOut calls
 		[DllImport(DLL)]
 		public static extern int snd_pcm_open(IntPtr* playback_handle, string card, snd_pcm_stream_t device, int mode);
@@ -153,5 +160,8 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		public static extern int snd_pcm_hw_params_set_periods(IntPtr playback_handle, IntPtr hw_params, int periods, int p);
 		[DllImport(DLL)]
 		public static extern int snd_pcm_hw_params_set_buffer_size(IntPtr playback_handle, IntPtr hw_params, int p);
+
+		[DllImport(DLL)]
+		public static extern _snd_pcm_state snd_pcm_state(IntPtr playback_handle);
 	}
 }
