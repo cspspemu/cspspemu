@@ -163,7 +163,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				var Type = TypeBuilder.CreateType();
 				var Method = (Action<CpuThreadState>)Delegate.CreateDelegate(typeof(Action<CpuThreadState>), Type.GetMethod(MethodName));
 #endif
-				Marshal.Prelink(Method.Method);
+				//Marshal.Prelink(Method.Method);
 
 				return Method;
 			}

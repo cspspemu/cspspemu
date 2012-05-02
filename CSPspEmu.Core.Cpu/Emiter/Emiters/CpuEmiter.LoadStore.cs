@@ -198,6 +198,19 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Store Word from Cop1 floating point.
 		public void lwc1()
 		{
+#if false
+			MipsMethodEmiter.SaveFPR(FT, () =>
+			{
+				_save_pc();
+				MipsMethodEmiter._getmemptr(() =>
+				{
+					MipsMethodEmiter.LoadGPR_Unsigned(RS);
+					SafeILGenerator.Push((int)IMM);
+					SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
+				});
+				SafeILGenerator.LoadIndirect<float>();
+			});
+#else
 			MipsMethodEmiter.SaveFPR_I(FT, () =>
 			{
 				_save_pc();
@@ -209,6 +222,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				});
 				SafeILGenerator.LoadIndirect<uint>();
 			});
+#endif
 		}
 		public void swc1() {
 			_save_common(() =>
