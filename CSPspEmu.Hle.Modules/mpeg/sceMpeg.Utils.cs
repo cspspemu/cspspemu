@@ -5,6 +5,7 @@ using System.Text;
 using CSharpUtils.Endian;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Modules.mpeg
 {
@@ -24,16 +25,16 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <summary>
 		/// 
 		/// </summary>
-		protected const int RingBufferPacketSize = 0x868;
+		protected const int RingBufferPacketSize = 0x800;
 
 		/// <summary>
 		/// 
 		/// </summary>
 		public const int MPEG_ATRAC_ES_OUTPUT_SIZE = 8192;
 
-		public SceMpegData* GetSceMpegData(SceMpeg* SceMpeg)
+		public SceMpeg* GetSceMpegData(SceMpegPointer* SceMpeg)
 		{
-			return SceMpeg->GetSceMpegData(PspMemory);
+			return SceMpeg->GetSceMpeg(PspMemory);
 		}
 
 		public enum StreamId : int
@@ -64,17 +65,19 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			Audio = 15,
 		}
 
-		public struct SceMpeg
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct SceMpegPointer
 		{
-			public PspPointer SceMpegData;
+			public PspPointer SceMpeg;
 
-			public SceMpegData* GetSceMpegData(PspMemory PspMemory)
+			public SceMpeg* GetSceMpeg(PspMemory PspMemory)
 			{
-				return (SceMpegData *)PspMemory.PspPointerToPointerSafe(SceMpegData);
+				return (SceMpeg *)PspMemory.PspPointerToPointerSafe(SceMpeg);
 			}
 		}
 
-		public struct SceMpegData
+		[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 0x10000)]
+		public struct SceMpeg
 		{
 			/// <summary>
 			/// 0000 - 
@@ -121,6 +124,11 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			/// </summary>
 			public int AvcFrameStatus;
 
+			/// <summary>
+			/// 
+			/// </summary>
+			public int StreamSize;
+
 			//public fixed byte Data[0x10000];
 		}
 
@@ -133,39 +141,44 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <summary>
 		/// Access Unit
 		/// </summary>
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct SceMpegAu
 		{
 			/// <summary>
-			/// presentation timestamp MSB
+			/// 0000 - presentation timestamp (PTS) MSB
 			/// </summary>
 			public uint_be PresentationTimestampBe;
 
 			/// <summary>
-			/// presentation timestamp LSB
+			/// 0004 - presentation timestamp (PTS) LSB
 			/// </summary>
 			public uint_le PresentationTimestampLe;
 
 			/// <summary>
-			/// decode timestamp MSB
+			/// 0008 - decode timestamp (DTS) MSB
 			/// </summary>
 			public uint_be DecodeTimestampBe;
 
 			/// <summary>
-			/// decode timestamp LSB
+			/// 000C - decode timestamp (DTS) LSB
 			/// </summary>
 			public uint_le DecodeTimestampLe;
 
 			/// <summary>
-			/// Es buffer handle
+			/// 0010 - Es buffer handle
 			/// </summary>
 			public int EsBuffer;
 
 			/// <summary>
-			/// Au size
+			/// 0014 - Au size
 			/// </summary>
 			public int AuSize;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct SceMpegRingbuffer
 		{
 			/// <summary>
@@ -176,12 +189,12 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			/// <summary>
 			/// 04 - PacketsRead
 			/// </summary>
-			public uint PacketsRead;
+			public int PacketsRead;
 
 			/// <summary>
 			/// 08 - packetsWritten
 			/// </summary>
-			public uint PacketsWritten;
+			public int PacketsWritten;
 			
 			/// <summary>
 			/// 0C - PacketsFree - Returned by sceMpegRingbufferAvailableSize
@@ -225,19 +238,27 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			public PspPointer SceMpeg;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct SceMpegAvcMode
 		{
 			/// <summary>
-			/// unknown, set to -1
+			/// 0000 - unknown, set to -1
 			/// </summary>
 			public int Unknown;
 			
 			/// <summary>
-			/// Decode pixelformat
+			/// 0004 - Decode pixelformat
 			/// </summary>
 			public GuPixelFormats PixelFormat;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct AvcDecodeDetailStruct
 		{
 			/// <summary>

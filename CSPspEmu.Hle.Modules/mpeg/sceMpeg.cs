@@ -60,8 +60,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegQueryMemSize(int Mode)
 		{
-			//return sizeof(SceMpeg);
-			return 0x10000;
+			return sizeof(SceMpeg);
+			//return 0x10000;
 		}
 
 		/// <summary>
@@ -77,7 +77,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0xD8C5F121, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegCreate(SceMpeg* Mpeg, void* MpegData, int MpegSize, SceMpegRingbuffer* SceMpegRingbuffer, int FrameWidth, int Mode, int DdrTop)
+		public int sceMpegCreate(SceMpegPointer* Mpeg, void* MpegData, int MpegSize, SceMpegRingbuffer* SceMpegRingbuffer, int FrameWidth, int Mode, int DdrTop)
 		{
 			CheckEnabledMpeg();
 
@@ -99,9 +99,9 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			}
 			SceMpegRingbuffer->SceMpeg = PspMemory.PointerToPspPointer(Mpeg);
 
-			SceMpegData* SceMpegData = (SceMpegData*)&((byte*)MpegData)[0x30];
+			SceMpeg* SceMpegData = (SceMpeg*)&((byte*)MpegData)[0x30];
 
-			Mpeg->SceMpegData = PspMemory.PointerToPspPointer(SceMpegData);
+			Mpeg->SceMpeg = PspMemory.PointerToPspPointer(SceMpegData);
 
 			PointerUtils.StoreStringOnPtr("LIBMPEG.001", Encoding.UTF8, SceMpegData->MagicBytes);
 			SceMpegData->Unknown1 = -1;
@@ -123,7 +123,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <param name="Mpeg">SceMpeg handle</param>
 	    [HlePspFunction(NID = 0x606A4649, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegDelete(SceMpeg* Mpeg)
+		public int sceMpegDelete(SceMpegPointer* Mpeg)
 		{
 
 			//throw(new NotImplementedException());
@@ -148,7 +148,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <returns></returns>
 	    [HlePspFunction(NID = 0x211A057C, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegAvcQueryYCbCrSize(SceMpeg* Mpeg, QueryYCbCrSizeModeEnum Mode, int Width, int Height, int* Result)
+		public int sceMpegAvcQueryYCbCrSize(SceMpegPointer* Mpeg, QueryYCbCrSizeModeEnum Mode, int Width, int Height, int* Result)
 		{
 			if ((Width & 15) != 0 || (Height & 15) != 0 || Width > 480 || Height > 272)
 			{
@@ -170,7 +170,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x31BD0272, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegAvcCsc(SceMpeg* Mpeg, int source_addr, int range_addr, int frameWidth, int dest_addr)
+		public int sceMpegAvcCsc(SceMpegPointer* Mpeg, int source_addr, int range_addr, int frameWidth, int dest_addr)
 		{
 			CheckEnabledMpeg();
 
@@ -189,7 +189,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x67179B1B, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegAvcInitYCbCr(SceMpeg* Mpeg, int mode, int width, int height, int ycbcr_addr)
+		public int sceMpegAvcInitYCbCr(SceMpegPointer* Mpeg, int mode, int width, int height, int ycbcr_addr)
 		{
 			CheckEnabledMpeg();
 
@@ -208,7 +208,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xF0EB1125, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegAvcDecodeYCbCr(SceMpeg* Mpeg, int au_addr, int buffer_addr, int init_addr)
+		public int sceMpegAvcDecodeYCbCr(SceMpegPointer* Mpeg, int au_addr, int buffer_addr, int init_addr)
 		{
 			CheckEnabledMpeg();
 
@@ -225,7 +225,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xF2930C9C, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegAvcDecodeStopYCbCr(SceMpeg* Mpeg, int buffer_addr, int status_addr)
+		public int sceMpegAvcDecodeStopYCbCr(SceMpegPointer* Mpeg, int buffer_addr, int status_addr)
 		{
 			//throw (new NotImplementedException());
 			return -1;

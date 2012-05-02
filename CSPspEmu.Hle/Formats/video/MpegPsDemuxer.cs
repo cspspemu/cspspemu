@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Runtime.InteropServices;
+using CSharpUtils;
 
 namespace CSPspEmu.Hle.Formats.video
 {
@@ -25,10 +27,65 @@ namespace CSPspEmu.Hle.Formats.video
 	/// </summary>
 	/// <see cref="http://en.wikipedia.org/wiki/MPEG_program_stream"/>
 	/// <see cref="http://en.wikipedia.org/wiki/MPEG_transport_stream"/>
-	public class MpegPsDemuxer : IDemuxer
+	unsafe public class MpegPsDemuxer : IDemuxer
 	{
+		public const int MpegTimestampPerSecond = 90000; 
+		public const int PspVideoTimestampStep = 3003;      // Value based on pmfplayer ((mpegTimestampPerSecond * 1) / 29.970 (fps)).
+		public const int PspAudioTimestampStep = 4180;      // For audio play at 44100 Hz ((mpegTimestampPerSecond * 2048 samples) / 44100 == 4180)
+		public TimeSpan PspVideoTimeSpanStep = TimeSpan.FromSeconds(1.0 / 29.970);
+		public TimeSpan PspVideoTimeSpanStep = TimeSpan.FromSeconds(2048.0 / 44100.0);
+
 		public string Name { get { return "mpeg"; } }
 		public string LongName { get { return "MPEG-PS format"; } }
+
+		//public struct PTS_PresentationTimeStamp
+		//public struct DTS_DecodeTimeStamp
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
+		public struct TimeStamp
+		{
+			public fixed byte Bytes[5];
+
+			public byte[] ManagedBytes
+			{
+				get
+				{
+					var ManagedBytes = new byte[5];
+					fixed (byte* BytesPtr = this.Bytes)
+					{
+						Marshal.Copy(new IntPtr(BytesPtr), ManagedBytes, 0, 5);
+					}
+					return ManagedBytes;
+				}
+			}
+
+			public ulong Value
+			{
+				get
+				{
+					fixed (byte* buf = this.Bytes)
+					{
+						return (ulong)(
+							(ulong)((buf[0] & 0x0E) << 29) |
+							(ulong)((PointerUtils.PtrToShort_BE(buf + 1) >> 1) << 15) |
+							(ulong)((PointerUtils.PtrToShort_BE(buf + 3) >> 1))
+						);
+					}
+				}
+			}
+
+			public TimeSpan PresentationTimeSpan
+			{
+				get
+				{
+					return TimeSpan.FromSeconds(((double)Value) / (double)MpegTimestampPerSecond);
+				}
+			}
+
+			public override string ToString()
+			{
+				return String.Format("TimeStamp(Bytes={0}, Value={1}, TimeSpan={2})", BitConverter.ToString(ManagedBytes), Value, PresentationTimeSpan);
+			}
+		}
 
 		public enum ChunkType : uint
 		{
@@ -52,6 +109,7 @@ namespace CSPspEmu.Hle.Formats.video
 			ST_ITUT_D        = 0x000001F7,
 			ST_ITUT_E        = 0x000001F8,
 			ST_PSDirectory   = 0x000001FF,
+			Invalid          = 0xFFFFFFFF,
 		}
 
 		protected Stream Stream;
@@ -75,21 +133,21 @@ namespace CSPspEmu.Hle.Formats.video
 		{
 			while (!Stream.Eof())
 			{
-				uint StartCode = GetNextPacketAndSync();
-				switch (StartCode)
+				var StartCode = (uint)GetNextPacketAndSync();
+				switch ((ChunkType)StartCode)
 				{
 					// PACK_START_CODE
-					case 0x000001BA:
+					case ChunkType.Start:
 						continue;
 					// SYSTEM_HEADER_START_CODE
-					case 0x000001BB:
+					case ChunkType.SystemHeader:
 						continue;
 					// PADDING_STREAM
-					case 0x000001BE:
+					case ChunkType.ST_Padding:
 						Stream.Skip(Read16());
 						continue;
 					// PRIVATE_STREAM_2
-					case 0x000001BF:
+					case ChunkType.ST_Private2:
 						Stream.Skip(Read16());
 						continue;
 					/*
@@ -127,6 +185,40 @@ namespace CSPspEmu.Hle.Formats.video
 			throw(new Exception("End of Stream"));
 		}
 
+		public void ParsePacketizedStream(Stream PacketStream)
+		{
+			var c = (byte)PacketStream.ReadByte();
+			Console.WriteLine("c: 0x{0:X}", c);
+
+			TimeStamp dts, pts;
+
+			// mpeg 2 PES
+			if ((c & 0xC0) == 0x80)
+			{
+				var flags = (byte)PacketStream.ReadByte();
+				var header_len = (byte)PacketStream.ReadByte();
+				var HeaderStream = PacketStream.ReadStream(header_len);
+
+				//PacketStream.Skip(header_len);
+				Console.WriteLine("flags: 0x{0:X}", flags);
+
+				// Has PTS/DTS
+				if ((flags & 0x80) != 0)
+				{
+					dts = pts = HeaderStream.ReadStruct<TimeStamp>();
+
+					// Has DTS
+					// On PSP, video DTS is always 1 frame behind PTS
+					if ((flags & 0x40) != 0)
+					{
+						dts = HeaderStream.ReadStruct<TimeStamp>();
+					}
+
+					Console.WriteLine("pts: {0}, dts: {1}", pts, dts);
+				}
+			}
+		}
+
 		public ushort Read16()
 		{
 			byte Hi = (byte)Stream.ReadByte();
@@ -134,7 +226,7 @@ namespace CSPspEmu.Hle.Formats.video
 			return (ushort)(((ushort)Hi << 8) | (ushort)Lo);
 		}
 
-		public uint GetNextPacketAndSync()
+		public ChunkType GetNextPacketAndSync()
 		{
 			uint Value = 0xFFFFFFFF;
 			int Byte;
@@ -144,10 +236,14 @@ namespace CSPspEmu.Hle.Formats.video
 				Value |= (byte)Byte;
 				if ((Value & 0xFFFFFF00) == 0x00000100)
 				{
-					return Value;
+					return (ChunkType)Value;
 				}
 			}
-			return 0xFFFFFFFF;
+			return (ChunkType)0xFFFFFFFF;
+		}
+
+		public void ReadStartPacket()
+		{
 		}
 
 		// From libavformat/mpeg.h

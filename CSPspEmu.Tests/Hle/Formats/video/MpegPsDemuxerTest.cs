@@ -13,7 +13,7 @@ namespace CSPspEmu.Core.Tests
 		public void GetNextPacketAndSyncTest()
 		{
 			var MpegPsDemuxer = new MpegPsDemuxer(File.OpenRead("../../../TestInput/test.pmf").SliceWithLength(0x800));
-			Assert.AreEqual((uint)0x1BA, (uint)MpegPsDemuxer.GetNextPacketAndSync());
+			Assert.AreEqual(MpegPsDemuxer.ChunkType.Start, MpegPsDemuxer.GetNextPacketAndSync());
 			Assert.AreEqual((uint)0x1BB, (uint)MpegPsDemuxer.GetNextPacketAndSync());
 			Assert.AreEqual((uint)0x1BF, (uint)MpegPsDemuxer.GetNextPacketAndSync());
 			Assert.AreEqual((uint)0x1E0, (uint)MpegPsDemuxer.GetNextPacketAndSync());
@@ -28,16 +28,16 @@ namespace CSPspEmu.Core.Tests
 		{
 			MpegPsDemuxer.Packet Packet;
 			var MpegPsDemuxer = new MpegPsDemuxer(File.OpenRead("../../../TestInput/test.pmf").SliceWithLength(0x800));
-			Packet = MpegPsDemuxer.ReadPacketizedElementaryStreamHeader();
-			Console.WriteLine("0x{0:X}", Packet.Type);
-			Packet = MpegPsDemuxer.ReadPacketizedElementaryStreamHeader();
-			Console.WriteLine("0x{0:X}", Packet.Type);
-			Packet = MpegPsDemuxer.ReadPacketizedElementaryStreamHeader();
-			Console.WriteLine("0x{0:X}", Packet.Type);
-			Packet = MpegPsDemuxer.ReadPacketizedElementaryStreamHeader();
-			Console.WriteLine("0x{0:X}", Packet.Type);
-			Packet = MpegPsDemuxer.ReadPacketizedElementaryStreamHeader();
-			Console.WriteLine("0x{0:X}", Packet.Type);
+			for (int n = 0; n < 32; n++)
+			{
+				Packet = MpegPsDemuxer.ReadPacketizedElementaryStreamHeader();
+				//if ((Packet.Type & 0xFF0) == 0x1E0)
+				//if (Packet.Type == 0x1E0)
+				{
+					Console.WriteLine("0x{0:X}", Packet.Type);
+					MpegPsDemuxer.ParsePacketizedStream(Packet.Stream);
+				}
+			}
 		}
 	}
 }

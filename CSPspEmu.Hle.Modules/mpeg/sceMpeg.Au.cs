@@ -20,7 +20,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0x167AFD9E, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegInitAu(SceMpeg* Mpeg, int ElementaryStreamBuffer, SceMpegAu* MpegAccessUnit)
+		public int sceMpegInitAu(SceMpegPointer* Mpeg, int ElementaryStreamBuffer, SceMpegAu* MpegAccessUnit)
 		{
 			CheckEnabledMpeg();
 

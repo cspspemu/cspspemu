@@ -30,7 +30,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <param name="pStream">pointer to stream</param>
 		[HlePspFunction(NID = 0x591A4AA2, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public void sceMpegUnRegistStream(SceMpeg* Mpeg, int StreamInfoId)
+		public void sceMpegUnRegistStream(SceMpegPointer* Mpeg, int StreamInfoId)
 		{
 			RegisteredStreams.Remove(StreamInfoId);
 			//throw(new NotImplementedException());
@@ -46,7 +46,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspFunction(NID = 0x42560F23, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		//public SceMpegStream* sceMpegRegistStream(SceMpeg* Mpeg, int iStreamID, int iUnk)
-		public int sceMpegRegistStream(SceMpeg* Mpeg, StreamId StreamId, int StreamIndex)
+		public int sceMpegRegistStream(SceMpegPointer* Mpeg, StreamId StreamId, int StreamIndex)
 		{
 			CheckEnabledMpeg();
 
@@ -67,16 +67,21 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <summary>
 		/// sceMpegQueryStreamOffset
 		/// </summary>
-		/// <param name="Mpeg">SceMpeg handle</param>
+		/// <param name="MpegPointer">SceMpeg handle</param>
 		/// <param name="PmfHeader">Pointer to file header</param>
 		/// <param name="Offset">Will contain the stream offset in bytes, usually 2048</param>
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0x21FF80E4, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegQueryStreamOffset(SceMpeg* Mpeg, byte* PmfHeader, uint* Offset)
+		public int sceMpegQueryStreamOffset(SceMpegPointer* MpegPointer, byte* PmfHeader, out uint Offset)
 		{
 			var Pmf = new Pmf().Load(new MemoryStream(PointerUtils.PointerToByteArray(PmfHeader, 2048)));
-			*Offset = (uint)Pmf.Header.StreamOffset;
+
+			var SceMpeg = MpegPointer->GetSceMpeg(PspMemory);
+
+			SceMpeg->StreamSize = (int)(uint)Pmf.Header.StreamSize;
+
+			Offset = (uint)Pmf.Header.StreamOffset;
 			return 0;
 		}
 
@@ -88,10 +93,11 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0x611E9E11, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegQueryStreamSize(byte* PmfHeader, uint* Size)
+		public int sceMpegQueryStreamSize(byte* PmfHeader, out uint Size)
 		{
 			var Pmf = new Pmf().Load(new MemoryStream(PointerUtils.PointerToByteArray(PmfHeader, 2048)));
-			*Size = Pmf.Header.StreamSize;
+			Size = Pmf.Header.StreamSize;
+			//*Size = 0;
 			return 0;
 		}
 
@@ -103,7 +109,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0x707B7629, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegFlushAllStream(SceMpeg* Mpeg)
+		public int sceMpegFlushAllStream(SceMpegPointer* Mpeg)
 		{
 			//throw(new NotImplementedException());
 			return 0;

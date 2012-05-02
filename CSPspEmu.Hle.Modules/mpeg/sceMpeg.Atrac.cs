@@ -16,7 +16,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0xF8DCB679, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegQueryAtracEsSize(SceMpeg* Mpeg, int* ElementaryStreamSize, int* OutputSize)
+		public int sceMpegQueryAtracEsSize(SceMpegPointer* Mpeg, int* ElementaryStreamSize, int* OutputSize)
 		{
 			*ElementaryStreamSize = MPEG_ATRAC_ES_SIZE;
 			*OutputSize = MPEG_ATRAC_ES_OUTPUT_SIZE;
@@ -34,7 +34,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0xE1CE83A7, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegGetAtracAu(SceMpeg* Mpeg, StreamId StreamId, SceMpegAu* MpegAccessUnit, void* Atrac3PlusPointer)
+		public int sceMpegGetAtracAu(SceMpegPointer* Mpeg, StreamId StreamId, SceMpegAu* MpegAccessUnit, void* Atrac3PlusPointer)
 		{
 			CheckEnabledMpeg();
 
@@ -56,7 +56,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// </returns>
 		[HlePspFunction(NID = 0x800C44DF, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegAtracDecode(SceMpeg* Mpeg, SceMpegAu* MpegAccessUnit, byte* OutputBuffer, int Init)
+		public int sceMpegAtracDecode(SceMpegPointer* Mpeg, SceMpegAu* MpegAccessUnit, byte* OutputBuffer, int Init)
 		{
 			CheckEnabledMpeg();
 

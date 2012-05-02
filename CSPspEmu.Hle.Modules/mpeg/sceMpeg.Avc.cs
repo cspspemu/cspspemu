@@ -23,7 +23,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x0F6C18D7, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegAvcDecodeDetail(SceMpeg* Mpeg, AvcDecodeDetailStruct* AvcDecodeDetail)
+		public int sceMpegAvcDecodeDetail(SceMpegPointer* Mpeg, AvcDecodeDetailStruct* AvcDecodeDetail)
 		{
 			CheckEnabledMpeg();
 
@@ -50,7 +50,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x4571CC64, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegAvcDecodeFlush(SceMpeg* Mpeg)
+		public int sceMpegAvcDecodeFlush(SceMpegPointer* Mpeg)
 		{
 			//throw(new NotImplementedException());
 			return 0;
@@ -66,7 +66,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0xFE246728, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegGetAvcAu(SceMpeg* Mpeg, StreamId StreamId, SceMpegAu* MpegAccessUnit, int* DataAttributes)
+		public int sceMpegGetAvcAu(SceMpegPointer* Mpeg, StreamId StreamId, SceMpegAu* MpegAccessUnit, int* DataAttributes)
 		{
 			CheckEnabledMpeg();
 
@@ -74,8 +74,11 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			{
 				*DataAttributes = 1;
 			}
+
+			throw(new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
+
 			//throw(new NotImplementedException());
-			return 0;
+			//return 0;
 		}
 
 		/// <summary>
@@ -87,7 +90,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// </returns>
 		[HlePspFunction(NID = 0xA780CF7E, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegMallocAvcEsBuf(SceMpeg* Mpeg)
+		public int sceMpegMallocAvcEsBuf(SceMpegPointer* Mpeg)
 		{
 			for (int n = 0; n < 2; n++)
 			{
@@ -107,7 +110,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <param name="ElementaryStream">Value returned from sceMpegMallocAvcEsBuf</param>
 		[HlePspFunction(NID = 0xCEB870B1, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public uint sceMpegFreeAvcEsBuf(SceMpeg* Mpeg, int ElementaryStream)
+		public uint sceMpegFreeAvcEsBuf(SceMpegPointer* Mpeg, int ElementaryStream)
 		{
 			AbvEsBufAllocated[ElementaryStream - 1] = false;
 			return 0;
@@ -121,7 +124,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0xA11C7026, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegAvcDecodeMode(SceMpeg* Mpeg, SceMpegAvcMode* Mode)
+		public int sceMpegAvcDecodeMode(SceMpegPointer* Mpeg, SceMpegAvcMode* Mode)
 		{
 			CheckEnabledMpeg();
 
@@ -145,7 +148,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0x0E3C2E9D, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegAvcDecode(SceMpeg* Mpeg, SceMpegAu* MpegAccessUnit, int FrameWidth, PspPointer* OutputBufferPointer, int* Init)
+		public int sceMpegAvcDecode(SceMpegPointer* Mpeg, SceMpegAu* MpegAccessUnit, int FrameWidth, PspPointer* OutputBufferPointer, int* Init)
 		{
 			CheckEnabledMpeg();
 
@@ -181,8 +184,10 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0x740FCCD1, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegAvcDecodeStop(SceMpeg* Mpeg, int FrameWidth, byte* OutputBuffer, int* Status)
+		public int sceMpegAvcDecodeStop(SceMpegPointer* Mpeg, int FrameWidth, byte* OutputBuffer, int* Status)
 		{
+			var SceMpegData = GetSceMpegData(Mpeg);
+
 			//throw(new NotImplementedException());
 			return 0;
 		}
