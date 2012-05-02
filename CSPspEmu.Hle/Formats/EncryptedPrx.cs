@@ -205,9 +205,9 @@ namespace CSPspEmu.Hle.Formats
 
 				int retsize = *(int *)&inbuf[0xB0];
 
-				PointerUtils.Memset(tmp1, 0, 0x150);
-				PointerUtils.Memset(tmp2, 0, 0x90 + 0x14);
-				PointerUtils.Memset(tmp3, 0, 0x60 + 0x14);
+				PointerUtils.Memset(_tmp1, 0, 0x150);
+				PointerUtils.Memset(_tmp2, 0, 0x90 + 0x14);
+				PointerUtils.Memset(_tmp3, 0, 0x60 + 0x14);
 
 				PointerUtils.Memcpy(outbuf, inbuf, size);
 
@@ -224,16 +224,16 @@ namespace CSPspEmu.Hle.Formats
 				PointerUtils.Memcpy(tmp1, outbuf, 0x150);
 
 				int i, j;
-				byte *p = tmp2+0x14;
+				//byte *p = tmp2+0x14;
 
 				for (i = 0; i < 9; i++)
 				{
 					for (j = 0; j < 0x10; j++)
 					{
-						p[(i << 4) + j] = pti.key[j];
+						_tmp2[0x14 + (i << 4) + j] = pti.key[j];
 					}
 
-					p[(i << 4)] = (byte)i;
+					_tmp2[0x14 + (i << 4)] = (byte)i;
 				}	
 
 				if (Scramble((uint *)tmp2, 0x90, pti.code) < 0)
@@ -279,7 +279,7 @@ namespace CSPspEmu.Hle.Formats
 				int iXOR;
 
 				for (iXOR = 0; iXOR < 0x40; iXOR++) {
-					tmp3[iXOR+0x14] = (byte)(outbuf[iXOR+0x80] ^ tmp2[iXOR+0x10]);
+					tmp3[iXOR+0x14] = (byte)(outbuf[iXOR+0x80] ^ _tmp2[iXOR+0x10]);
 				}
 
 				if (Scramble((uint *)tmp3, 0x40, pti.code) != 0)
@@ -288,7 +288,7 @@ namespace CSPspEmu.Hle.Formats
 				}
 	
 				for (iXOR = 0x3F; iXOR >= 0; iXOR--) {
-					outbuf[iXOR+0x40] = (byte)(tmp3[iXOR] ^ tmp2[iXOR+0x50]); // uns 8
+					outbuf[iXOR+0x40] = (byte)(_tmp3[iXOR] ^ _tmp2[iXOR+0x50]); // uns 8
 				}
 
 				PointerUtils.Memset(outbuf + 0x80, 0, 0x30);

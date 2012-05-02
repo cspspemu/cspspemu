@@ -344,14 +344,17 @@ namespace CSPspEmu.Hle.Modules.threadman
 		{
 			var CurrentThread = ThreadManager.Current;
 
-			/*
+#if true
 			if (DelayInMicroseconds < 1000)
 			{
-				sceKernelCheckCallback(CurrentThread.CpuThreadState);
+				if (HandleCallbacks)
+				{
+					sceKernelCheckCallback(CurrentThread.CpuThreadState);
+				}
 				CurrentThread.CpuThreadState.Yield();
 			}
 			else
-			*/
+#endif
 			{
 				CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, "sceKernelDelayThread", null, WakeUpCallback =>
 				{
