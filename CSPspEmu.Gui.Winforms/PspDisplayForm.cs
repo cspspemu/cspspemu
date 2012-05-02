@@ -260,6 +260,13 @@ namespace CSPspEmu.Gui.Winforms
 						Console.Error.WriteLine(Exception);
 					}
 
+					//Console.Error.WriteLine("FrameBuffer == 0x{0:X}!!", (long)FrameBuffer);
+
+					if (FrameBuffer == null)
+					{
+						Console.Error.WriteLine("FrameBuffer == null!!");
+					}
+
 					//Console.WriteLine("{0:X}", Address);
 
 					uint Hash = PixelFormatDecoder.Hash(

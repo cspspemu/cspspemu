@@ -57,7 +57,15 @@ namespace CSPspEmu.Core.Memory
 				ulong[] TryBases;
 				if (Platform.Is32Bit)
 				{
-					TryBases = new ulong[] { 0x31000000, 0x40000000, 0x50000000 };
+					if (Platform.OperatingSystem == Platform.OS.Windows)
+					{
+						TryBases = new ulong[] { 0x31000000, 0x40000000, 0x50000000 };
+					}
+					else
+					{
+						Logger.Error("Using mmap on linux x86 is known to cause problems");
+						TryBases = new ulong[] { 0xE1000000, 0x31008008, 0x40008000, 0x50008000, 0x31000000, 0x40000000, 0x50000000 };
+					}
 				}
 				else
 				{
@@ -81,7 +89,6 @@ namespace CSPspEmu.Core.Memory
 					Console.WriteLine("FastPspMemory.AllocMemoryOnce: Trying Base ... 0x{0:X}", TryBase);
 
 					StaticNullPtr = Base;
-
 					StaticScratchPadPtr = (byte*)Platform.AllocRange(Base + ScratchPadOffset, ScratchPadAllocSize);
 					StaticFrameBufferPtr = (byte*)Platform.AllocRange(Base + FrameBufferOffset, FrameBufferAllocSize);
 					StaticMainPtr = (byte*)Platform.AllocRange(Base + MainOffset, MainAllocSize);
@@ -99,7 +106,7 @@ namespace CSPspEmu.Core.Memory
 					}
 				}
 
-				if (StaticScratchPadPtr == null || StaticFrameBufferPtr == null || StaticMainPtr == null)
+				if (_Base == null || StaticScratchPadPtr == null || StaticFrameBufferPtr == null || StaticMainPtr == null)
 				{
 					Logger.Fatal("Can't allocate virtual memory!");
 					Debug.Fail("Can't allocate virtual memory!");
@@ -158,7 +165,7 @@ namespace CSPspEmu.Core.Memory
 			var Address = (_Address & PspMemory.MemoryMask);
 			//Console.WriteLine("Base: 0x{0:X} ; Address: 0x{1:X}", (ulong)Base, Address);
 			if (Address == 0) return null;
-#if true
+#if false
 			if (Base == null) throw(new InvalidProgramException("Base is null"));
 #endif
 			return Base + Address;

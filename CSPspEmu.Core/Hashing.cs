@@ -38,6 +38,10 @@ namespace CSPspEmu.Core
 					}
 				}
 			}
+			catch (NullReferenceException NullReferenceException)
+			{
+				Logger.Error(NullReferenceException);
+			}
 			catch (AccessViolationException AccessViolationException)
 			{
 				Logger.Error(AccessViolationException);
