@@ -27,6 +27,8 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
 	unsafe public partial class sceAtrac3plus : HleModuleHost
 	{
+		static Logger Logger = Logger.GetLogger("sceAtrac3plus");
+
 		[Inject]
 		sceAudio sceAudio;
 
@@ -259,39 +261,48 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 
 				//var Ms0Path = new DirectoryInfo(MemoryStickRootLocalFolder).FullName;
 				var Ms0Path = new DirectoryInfo(ApplicationPaths.MemoryStickRootFolder).FullName;
-				try { Directory.CreateDirectory(Ms0Path + "\\temp"); } catch { }
+				try { Directory.CreateDirectory(Ms0Path + "/temp"); } catch { }
 
-				var BaseFileName = Ms0Path + "\\temp\\" + BitConverter.ToString(DataHash);
+				var BaseFileName = Ms0Path + "/temp/" + BitConverter.ToString(DataHash);
 
 				var OmaOutFileName = BaseFileName + ".oma";
 				var WavOutFileName = BaseFileName + ".wav";
 
-				if (!File.Exists(WavOutFileName))
+				if (Platform.OperatingSystem == Platform.OS.Windows)
 				{
-					//ArrayUtils.HexDump(Data, 1024);
-					//Console.ReadKey();
-
-					//Debug.WriteLine("{0} -> {1}", OmaOutFileName, WavOutFileName);
-
-					//Debug.WriteLine("[a]");
-					ParseAtracData(new MemoryStream(Data));
+					if (!File.Exists(WavOutFileName))
 					{
+						//ArrayUtils.HexDump(Data, 1024);
+						//Console.ReadKey();
 
-						WriteOma(OmaOutFileName);
-						//Debug.WriteLine("[aa]");
-						File.Delete(WavOutFileName);
-						OmaWavConverter.convertOmaToWav(OmaOutFileName, WavOutFileName);
+						//Debug.WriteLine("{0} -> {1}", OmaOutFileName, WavOutFileName);
+
+						//Debug.WriteLine("[a]");
+						ParseAtracData(new MemoryStream(Data));
+						{
+
+							WriteOma(OmaOutFileName);
+							//Debug.WriteLine("[aa]");
+							File.Delete(WavOutFileName);
+							OmaWavConverter.convertOmaToWav(OmaOutFileName, WavOutFileName);
+						}
+						//Debug.WriteLine("[b]");
 					}
-					//Debug.WriteLine("[b]");
+					try
+					{
+						ParseWavData(File.OpenRead(WavOutFileName));
+					}
+					catch
+					{
+						DecodedSamples = new ArrayWrapper<StereoShortSoundSample>();
+					}
 				}
-				try
+				else
 				{
-					ParseWavData(File.OpenRead(WavOutFileName));
-				}
-				catch
-				{
+					Logger.Error("atrac3+ not implemented on unix");
 					DecodedSamples = new ArrayWrapper<StereoShortSoundSample>();
 				}
+
 				//Debug.WriteLine("[c]");
 			}
 
