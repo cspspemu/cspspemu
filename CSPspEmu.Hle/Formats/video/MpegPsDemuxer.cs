@@ -33,7 +33,7 @@ namespace CSPspEmu.Hle.Formats.video
 		public const int PspVideoTimestampStep = 3003;      // Value based on pmfplayer ((mpegTimestampPerSecond * 1) / 29.970 (fps)).
 		public const int PspAudioTimestampStep = 4180;      // For audio play at 44100 Hz ((mpegTimestampPerSecond * 2048 samples) / 44100 == 4180)
 		public TimeSpan PspVideoTimeSpanStep = TimeSpan.FromSeconds(1.0 / 29.970);
-		public TimeSpan PspVideoTimeSpanStep = TimeSpan.FromSeconds(2048.0 / 44100.0);
+		public TimeSpan PspAudioTimeSpanStep = TimeSpan.FromSeconds(2048.0 / 44100.0);
 
 		public string Name { get { return "mpeg"; } }
 		public string LongName { get { return "MPEG-PS format"; } }

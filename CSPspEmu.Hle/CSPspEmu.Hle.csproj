@@ -165,7 +165,7 @@
     <Compile Include="Vfs\Zip\HleIoDriverZip.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
+    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils.csproj">
       <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
     </ProjectReference>
@@ -185,7 +185,7 @@
       <Project>{ba3187fa-a2a1-43e0-9fdd-69b377ee3152}</Project>
       <Name>CSPspEmu.Resources</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SafeILGenerator\SafeILGenerator\SafeILGenerator.csproj">
+    <ProjectReference Include="..\Libraries\SafeILGenerator\SafeILGenerator.csproj">
       <Project>{9a93c7e4-09da-46cf-b7dd-6bb09681d5ab}</Project>
       <Name>SafeILGenerator</Name>
     </ProjectReference>

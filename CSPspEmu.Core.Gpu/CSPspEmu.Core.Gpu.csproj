@@ -127,11 +127,11 @@
     <Compile Include="VertexReading\VertexReaderDynarec.Utils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\csharputils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
+    <ProjectReference Include="..\Libraries\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
       <Project>{9B217880-48AE-43B6-AE1F-DC732FCCBC7A}</Project>
       <Name>CSharpUtils.Drawing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\csharputils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
+    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils.csproj">
       <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
     </ProjectReference>
@@ -143,7 +143,7 @@
       <Project>{288AF89E-B41A-4253-A8F7-43D1371516E9}</Project>
       <Name>CSPspEmu.Hle</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SafeILGenerator\SafeILGenerator\SafeILGenerator.csproj">
+    <ProjectReference Include="..\Libraries\SafeILGenerator\SafeILGenerator.csproj">
       <Project>{9a93c7e4-09da-46cf-b7dd-6bb09681d5ab}</Project>
       <Name>SafeILGenerator</Name>
     </ProjectReference>
