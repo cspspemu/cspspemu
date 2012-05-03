@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.Security;
 
 namespace CSPspEmu.Core.Audio.Impl.Alsa
 {
@@ -104,6 +105,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 
 		// WaveOut calls
 		[DllImport(DLL)]
+		//[SuppressUnmanagedCodeSecurity]
 		public static extern int snd_pcm_open(IntPtr* playback_handle, string card, snd_pcm_stream_t device, int mode);
 
 		[DllImport(DLL)]

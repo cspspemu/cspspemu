@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using CSharpUtils;
 using System.Diagnostics;
+using System.Security;
 
 namespace CSPspEmu.Core
 {
@@ -102,6 +103,7 @@ namespace CSPspEmu.Core
 
 #if false
 			[DllImport("libc")]
+			//[SuppressUnmanagedCodeSecurity]
 			//[return: MarshalAs(UnmanagedType.BStr)]
 			[return: MarshalAs(UnmanagedType.LPStr)]
 			internal static extern string strerror(int errno);
