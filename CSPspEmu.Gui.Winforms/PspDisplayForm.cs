@@ -803,9 +803,25 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void LanguageUpdated()
 		{
+			this.UtilsLanguageMenu.DropDownItems.Clear();
 			LanguagePairs.Clear();
-			LanguagePairs.Add(UtilsLanguageEnglishMenu, new CultureInfo("en-US"));
-			LanguagePairs.Add(UtilsLanguageSpanishMenu, new CultureInfo("es-ES"));
+
+			foreach (var AvailableLanguage in Translations.AvailableLanguages)
+			{
+				var CultureInfo = new CultureInfo(Translations.GetString("info", "CultureInfo", AvailableLanguage));
+				var ToolStrip = new ToolStripMenuItem()
+				{
+					Image = Translations.GetLangFlagImage(AvailableLanguage),
+					ImageScaling = ToolStripItemImageScaling.None,
+					Size = new Size(152, 22),
+					Text = Translations.GetString("languages", AvailableLanguage),
+					Tag = CultureInfo,
+				};
+				ToolStrip.Click += LanguageMenuItem_Click;
+				this.UtilsLanguageMenu.DropDownItems.Add(ToolStrip);
+
+				LanguagePairs.Add(ToolStrip, CultureInfo);
+			}
 
 			foreach (var LanguagePair in LanguagePairs)
 			{
@@ -826,13 +842,7 @@ namespace CSPspEmu.Gui.Winforms
 			UpdateTitle();
 		}
 
-		private void englishToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			Thread.CurrentThread.CurrentUICulture = (CultureInfo)((ToolStripMenuItem)sender).Tag;
-			LanguageUpdated();
-		}
-
-		private void spanishToolStripMenuItem_Click(object sender, EventArgs e)
+		private void LanguageMenuItem_Click(object sender, EventArgs e)
 		{
 			Thread.CurrentThread.CurrentUICulture = (CultureInfo)((ToolStripMenuItem)sender).Tag;
 			LanguageUpdated();

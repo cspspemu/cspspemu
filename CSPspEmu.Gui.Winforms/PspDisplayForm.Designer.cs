@@ -32,6 +32,7 @@
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.FileMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.FileOpenMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.setIsoFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
 			this.openRecentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem14 = new System.Windows.Forms.ToolStripSeparator();
@@ -44,8 +45,6 @@
 			this.UtilsDisplay4xMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsLanguageMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.UtilsLanguageEnglishMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.UtilsLanguageSpanishMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.configureControllerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsTakeScreenshotMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,7 +81,6 @@
 			this.HelpReportAnIssueMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
 			this.HelpAboutMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.setIsoFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -122,6 +120,13 @@
 			this.FileOpenMenu.Size = new System.Drawing.Size(155, 22);
 			this.FileOpenMenu.Text = "&Open...";
 			this.FileOpenMenu.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+			// 
+			// setIsoFolderToolStripMenuItem
+			// 
+			this.setIsoFolderToolStripMenuItem.Name = "setIsoFolderToolStripMenuItem";
+			this.setIsoFolderToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+			this.setIsoFolderToolStripMenuItem.Text = "Set &Iso Folder...";
+			this.setIsoFolderToolStripMenuItem.Click += new System.EventHandler(this.setIsoFolderToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem3
 			// 
@@ -221,31 +226,10 @@
 			// 
 			// UtilsLanguageMenu
 			// 
-			this.UtilsLanguageMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.UtilsLanguageEnglishMenu,
-            this.UtilsLanguageSpanishMenu});
 			this.UtilsLanguageMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.world;
 			this.UtilsLanguageMenu.Name = "UtilsLanguageMenu";
 			this.UtilsLanguageMenu.Size = new System.Drawing.Size(306, 22);
 			this.UtilsLanguageMenu.Text = "&Language";
-			// 
-			// UtilsLanguageEnglishMenu
-			// 
-			this.UtilsLanguageEnglishMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.us;
-			this.UtilsLanguageEnglishMenu.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-			this.UtilsLanguageEnglishMenu.Name = "UtilsLanguageEnglishMenu";
-			this.UtilsLanguageEnglishMenu.Size = new System.Drawing.Size(115, 22);
-			this.UtilsLanguageEnglishMenu.Text = "&English";
-			this.UtilsLanguageEnglishMenu.Click += new System.EventHandler(this.englishToolStripMenuItem_Click);
-			// 
-			// UtilsLanguageSpanishMenu
-			// 
-			this.UtilsLanguageSpanishMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.es;
-			this.UtilsLanguageSpanishMenu.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-			this.UtilsLanguageSpanishMenu.Name = "UtilsLanguageSpanishMenu";
-			this.UtilsLanguageSpanishMenu.Size = new System.Drawing.Size(115, 22);
-			this.UtilsLanguageSpanishMenu.Text = "&Spanish";
-			this.UtilsLanguageSpanishMenu.Click += new System.EventHandler(this.spanishToolStripMenuItem_Click);
 			// 
 			// configureControllerToolStripMenuItem
 			// 
@@ -526,13 +510,6 @@
 			this.HelpAboutMenu.Text = "&About...";
 			this.HelpAboutMenu.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
-			// setIsoFolderToolStripMenuItem
-			// 
-			this.setIsoFolderToolStripMenuItem.Name = "setIsoFolderToolStripMenuItem";
-			this.setIsoFolderToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
-			this.setIsoFolderToolStripMenuItem.Text = "Set &Iso Folder...";
-			this.setIsoFolderToolStripMenuItem.Click += new System.EventHandler(this.setIsoFolderToolStripMenuItem_Click);
-			// 
 			// PspDisplayForm
 			// 
 			this.AllowDrop = true;
@@ -593,8 +570,6 @@
 		public System.Windows.Forms.ToolStripMenuItem HelpReportAnIssueMenu;
 		public System.Windows.Forms.ToolStripSeparator toolStripMenuItem8;
 		public System.Windows.Forms.ToolStripMenuItem UtilsLanguageMenu;
-		public System.Windows.Forms.ToolStripMenuItem UtilsLanguageEnglishMenu;
-		public System.Windows.Forms.ToolStripMenuItem UtilsLanguageSpanishMenu;
 		public System.Windows.Forms.ToolStripSeparator toolStripMenuItem9;
 		public System.Windows.Forms.ToolStripMenuItem FileMenu;
 		public System.Windows.Forms.ToolStripMenuItem UtilsMenu;

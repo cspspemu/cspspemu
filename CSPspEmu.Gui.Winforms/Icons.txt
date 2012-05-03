@@ -1,2 +1,5 @@
 ﻿Icons from "Led Icon Set" v1.0:
 http://led24.de/iconset/
+
+Flags:
+http://www.famfamfam.com/lab/icons/flags/

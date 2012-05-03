@@ -6,16 +6,23 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Globalization;
+using System.Reflection;
+using System.Drawing;
 
 namespace CSPspEmu.Resources
 {
 	public class Translations
 	{
 		static private Dictionary<string, Dictionary<string, Dictionary<string, string>>> Dictionary;
+		static public SortedSet<string> AvailableLanguages { get; private set; }
+
+		static public string DefaultLanguage = null;
 
 		static private void Parse()
 		{
+
 			Dictionary = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
+			AvailableLanguages = new SortedSet<string>();
 
 			try
 			{
@@ -33,6 +40,11 @@ namespace CSPspEmu.Resources
 						{
 							var LangId = TranslationNode.Attributes["lang"].Value;
 							var Text = TranslationNode.InnerText;
+							if (DefaultLanguage == null)
+							{
+								DefaultLanguage = LangId;
+							}
+							AvailableLanguages.Add(LangId);
 							//Console.WriteLine("{0}.{1}.{2} = {3}", CategoryId, TextId, LangId, Text);
 							Dictionary[CategoryId][TextId][LangId] = Text;
 						}
@@ -45,19 +57,36 @@ namespace CSPspEmu.Resources
 			}
 		}
 
-		static public string GetString(string CategoryId, string TextId, CultureInfo CultureInfo = null)
+		private static Dictionary<string, Image> FlagCache = new Dictionary<string, Image>();
+
+		static public Image GetLangFlagImage(string LangId)
+		{
+			try
+			{
+				if (!FlagCache.ContainsKey(LangId))
+				{
+					var BitmapStream = typeof(Translations).Assembly.GetManifestResourceStream("CSPspEmu.Resources.Images.Languages." + LangId + ".png");
+					FlagCache[LangId] = Image.FromStream(BitmapStream);
+				}
+				return FlagCache[LangId];
+			}
+			catch
+			{
+				return null;
+			}
+		}
+
+		static public string GetString(string CategoryId, string TextId, string LangId = null)
 		{
 			if (Dictionary == null)
 			{
 				Parse();
 			}
-			if (CultureInfo == null)
+
+			if (LangId == null)
 			{
-				CultureInfo = CultureInfo.CurrentUICulture;
+				LangId = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 			}
-
-			var LangId = CultureInfo.TwoLetterISOLanguageName;
-
 
 			dynamic Category = null;
 			dynamic CategoryText = null;
@@ -74,13 +103,20 @@ namespace CSPspEmu.Resources
 				Console.Error.WriteLine(Exception);
 				try
 				{
-					return CategoryText["en"];
+					return CategoryText[DefaultLanguage];
 				}
 				catch
 				{
 					return String.Format("{0}.{1}", CategoryId, TextId);
 				}
 			}
+		}
+
+		static public string GetString(string CategoryId, string TextId, CultureInfo CultureInfo)
+		{
+			var LangId = CultureInfo.TwoLetterISOLanguageName;
+
+			return GetString(CategoryId, TextId, LangId);
 		}
 	}
 }

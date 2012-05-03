@@ -195,20 +195,32 @@
 		</text>
 	</category>
 	<category id="languages">
-		<text id="English">
+		<text id="en">
 			<translation lang="en">English</translation>
 			<translation lang="es">Inglés</translation>
 			<translation lang="it">Inglese</translation>
 		</text>
-		<text id="Spanish">
+		<text id="es">
 			<translation lang="en">Spanish</translation>
 			<translation lang="es">Español</translation>
 			<translation lang="it">Spagnolo</translation>
 		</text>
-		<text id="Italian">
+		<text id="it">
 			<translation lang="en">Italian</translation>
 			<translation lang="es">Italiano</translation>
 			<translation lang="it">Italiano</translation>
+		</text>
+	</category>
+	<category id="info">
+		<text id="CultureInfo">
+			<translation lang="en">en-US</translation>
+			<translation lang="es">es-ES</translation>
+			<translation lang="it">it-IT</translation>
+		</text>
+		<text id="Credits">
+			<translation lang="en">soywiz</translation>
+			<translation lang="es">soywiz</translation>
+			<translation lang="it">gambe</translation>
 		</text>
 	</category>
 </translations>
