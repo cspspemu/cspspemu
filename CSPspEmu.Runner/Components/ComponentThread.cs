@@ -12,6 +12,7 @@ namespace CSPspEmu.Runner.Components
 {
 	abstract public class ComponentThread : PspEmulatorComponent, IRunnableComponent
 	{
+		protected AutoResetEvent RunningUpdatedEvent = new AutoResetEvent(false);
 		public bool Running = true;
 
 		protected Thread ComponentThreadThread;
@@ -38,6 +39,7 @@ namespace CSPspEmu.Runner.Components
 					finally
 					{
 						Running = false;
+						RunningUpdatedEvent.Set();
 						StopCompleteEvent.Set();
 						Console.WriteLine("Component {0} Stopped!", this);
 					}
@@ -68,6 +70,7 @@ namespace CSPspEmu.Runner.Components
 					StopCompleteEvent.Reset();
 					{
 						Running = false;
+						RunningUpdatedEvent.Set();
 					}
 					if (!StopCompleteEvent.WaitOne(1000))
 					{

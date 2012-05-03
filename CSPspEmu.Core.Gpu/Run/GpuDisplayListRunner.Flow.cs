@@ -87,9 +87,7 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		public void OP_JUMP()
 		{
-			GpuDisplayList.Jump((uint)(
-				GpuDisplayList.GpuStateStructPointer->BaseAddress | (Params24 & ~3)
-			));
+			GpuDisplayList.JumpRelativeOffset((uint)(Params24 & ~3));
 		}
 
 		public void OP_END()
@@ -100,7 +98,7 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		public void OP_FINISH()
 		{
-			GpuDisplayList.Finish();
+			GpuDisplayList.Finish(Params24);
 			GpuDisplayList.GpuProcessor.GpuImpl.Finish(GpuDisplayList.GpuStateStructPointer);
 			//Console.Error.WriteLine("OP_FINISH!");
 			//gpu.storeFrameBuffer();
@@ -113,9 +111,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		//[GpuOpCodesNotImplemented]
 		public void OP_CALL()
 		{
-			GpuDisplayList.Call((uint)(
-				GpuDisplayList.GpuStateStructPointer->BaseAddress | (Params24 & ~3)
-			));
+			GpuDisplayList.CallRelativeOffset((uint)(Params24 & ~3));
 		}
 
 		//[GpuOpCodesNotImplemented]

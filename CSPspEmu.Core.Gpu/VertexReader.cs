@@ -231,7 +231,11 @@ namespace CSPspEmu.Core.Gpu
 			VertexInfo->Color.R = (float)(Color.R) / 255.0f;
 			VertexInfo->Color.G = (float)(Color.G) / 255.0f;
 			VertexInfo->Color.B = (float)(Color.B) / 255.0f;
+#if true
 			VertexInfo->Color.A = (float)(Color.A) / 255.0f;
+#else
+			VertexInfo->Color.A = 1.0f;
+#endif
 		}
 
 		public void ReadPositionByte()
@@ -241,7 +245,7 @@ namespace CSPspEmu.Core.Gpu
 			VertexInfo->Position.Y = (float)((sbyte*)Pointer)[1];
 			VertexInfo->Position.Z = Transform2D ? (float)((byte*)Pointer)[2] : (float)((sbyte*)Pointer)[2];
 
-			if (!Transform2D) VertexInfo->Position /= 128f;
+			if (!Transform2D) VertexInfo->Position /= 127f;
 
 			//Console.Error.WriteLine(VertexInfo->PZ);
 
@@ -255,7 +259,7 @@ namespace CSPspEmu.Core.Gpu
 			VertexInfo->Position.Y = (float)((short*)Pointer)[1];
 			VertexInfo->Position.Z = Transform2D ? (float)((ushort*)Pointer)[2] : (float)((short*)Pointer)[2];
 
-			if (!Transform2D) VertexInfo->Position /= 32768f;
+			if (!Transform2D) VertexInfo->Position /= 32767f;
 			//Console.Error.WriteLine(VertexInfo->PZ);
 
 			Pointer += sizeof(short) * 3;
@@ -303,7 +307,7 @@ namespace CSPspEmu.Core.Gpu
 			VertexInfo->Normal.X = (float)((byte*)Pointer)[0];
 			VertexInfo->Normal.Y = (float)((byte*)Pointer)[1];
 			VertexInfo->Normal.Z = (float)((byte*)Pointer)[2];
-			if (!Transform2D) VertexInfo->Normal /= 128f;
+			if (!Transform2D) VertexInfo->Normal /= 127f;
 			Pointer += sizeof(byte) * 3;
 		}
 
@@ -313,7 +317,7 @@ namespace CSPspEmu.Core.Gpu
 			VertexInfo->Normal.X = (float)((short*)Pointer)[0];
 			VertexInfo->Normal.Y = (float)((short*)Pointer)[1];
 			VertexInfo->Normal.Z = (float)((short*)Pointer)[2];
-			if (!Transform2D) VertexInfo->Normal /= 32768f;
+			if (!Transform2D) VertexInfo->Normal /= 32767f;
 			Pointer += sizeof(short) * 3;
 		}
 

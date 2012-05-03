@@ -220,6 +220,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.StoreBranchFlag(() =>
 			{
 				MipsMethodEmiter.LoadFCR31_CC();
+				SafeILGenerator.Push((int)0);
+				SafeILGenerator.CompareBinary(SafeBinaryComparison.NotEquals);
 			});
 		}
 		public void bc1fl() { bc1f(); }

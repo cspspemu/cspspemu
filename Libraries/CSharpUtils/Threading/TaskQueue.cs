@@ -8,8 +8,13 @@ namespace CSharpUtils.Threading
 {
 	public class TaskQueue
 	{
-		AutoResetEvent EnqueuedEvent = new AutoResetEvent(false);
+		public AutoResetEvent EnqueuedEvent { get; protected set; }
 		protected Queue<Action> Tasks = new Queue<Action>();
+
+		public TaskQueue()
+		{
+			EnqueuedEvent = new AutoResetEvent(false);
+		}
 
 		public void WaitAndHandleEnqueued()
 		{

@@ -316,16 +316,23 @@ namespace CSPspEmu.Core.Gpu
 			InstructionSwitch(GpuDisplayListRunner, OpCode, Params);
 		}
 
-		internal void Jump(uint Address)
+		internal void JumpRelativeOffset(uint Address)
 		{
-			InstructionAddressCurrent = Address - 4;
+			InstructionAddressCurrent = GpuStateStructPointer->GetAddressRelativeToBaseOffset(Address - 4);
 			//throw new NotImplementedException();
 		}
 
-		internal void Call(uint Address)
+		internal void JumpAbsolute(uint Address)
+		{
+			InstructionAddressCurrent = (Address - 4);
+		}
+
+		internal void CallRelativeOffset(uint Address)
 		{
 			CallStack.Push(InstructionAddressCurrent + 4);
-			Jump(Address);
+			CallStack.Push((uint)GpuStateStructPointer->BaseOffset);
+			//CallStack.Push(InstructionAddressCurrent);
+			JumpRelativeOffset(Address);
 			//throw new NotImplementedException();
 		}
 
@@ -333,7 +340,8 @@ namespace CSPspEmu.Core.Gpu
 		{
 			if (CallStack.Count > 0)
 			{
-				Jump(CallStack.Pop());
+				GpuStateStructPointer->BaseOffset = (int)CallStack.Pop();
+				JumpAbsolute(CallStack.Pop());
 			}
 			else
 			{
@@ -411,10 +419,13 @@ namespace CSPspEmu.Core.Gpu
 			PSP_GE_SIGNAL_BREAK            = 0xFF,
 		}
 
-		public void Finish()
+		public void Finish(uint Arg)
 		{
 			if (Callbacks.FinishFunction != 0)
 			{
+#if true
+				// triggerAsyncCallback(cbid, listId, PSP_GE_SIGNAL_HANDLER_SUSPEND, callbackNotifyArg1, finishCallbacks);
+
 				GpuProcessor.HleInterop.ExecuteFunctionLater(
 					Callbacks.FinishFunction,
 					(Result) =>
@@ -424,6 +435,18 @@ namespace CSPspEmu.Core.Gpu
 					CallbacksId,
 					Callbacks.FinishArgument
 				);
+#else
+				GpuProcessor.HleInterop.ExecuteFunctionLater(
+					Callbacks.FinishFunction,
+					(Result) =>
+					{
+						//Console.Error.WriteLine("OP_FINISH! : ENDED : {0}", Result);
+					},
+					CallbacksId,
+					Id,
+					Arg
+				);
+#endif
 				//Callbacks.FinishFunction();
 				//GpuProcessor.interop
 				//GpuProcessor.
@@ -433,6 +456,8 @@ namespace CSPspEmu.Core.Gpu
 
 		public void Signal(uint Signal, GuBehavior Behavior)
 		{
+			Console.WriteLine("SIGNAL : Behavior:{0}", Behavior);
+
 			if (Callbacks.SignalFunction != 0)
 			{
 				Console.Error.WriteLine("OP_SIGNAL! ({0}, {1})", Signal, Behavior);

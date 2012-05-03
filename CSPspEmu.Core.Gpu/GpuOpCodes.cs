@@ -93,57 +93,57 @@ namespace CSPspEmu.Core.Gpu
 		BASE,
 
 		/// <summary>
-		/// 0x11 - 
+		/// 0x11 - 17 -
 		/// </summary>
 		Unknown0x11,
 
 		/// <summary>
-		/// 0x12 - Vertex Type
+		/// 0x12 - 18 - Vertex Type
 		/// </summary>
 		VTYPE,
 
 		/// <summary>
-		/// 0x13 - Offset Address (BASE)
+		/// 0x13 - 19 - Offset Address (BASE)
 		/// </summary>
-		OFFSETADDR,
+		OFFSET_ADDR,
 
 		/// <summary>
-		/// 0x14 - Origin Address (BASE)
+		/// 0x14 - 20 - Origin Address (BASE)
 		/// </summary>
-		ORIGINADDR,
+		ORIGIN_ADDR,
 
 		/// <summary>
-		/// 0x15 - Draw Region Start
+		/// 0x15 - 21 - Draw Region Start
 		/// </summary>
 		REGION1,
 
 		/// <summary>
-		/// 0x16 - Draw Region End
+		/// 0x16 - 22 - Draw Region End
 		/// </summary>
 		REGION2,
 
 		/// <summary>
-		/// 0x17 - Lighting Enable
+		/// 0x17 - 23 - Lighting Enable
 		/// </summary>
 		LTE,
 
 		/// <summary>
-		/// 0x18 - Light 0 Enable
+		/// 0x18 - 24 - Light 0 Enable
 		/// </summary>
 		LTE0,
 
 		/// <summary>
-		/// 0x19 - Light 1 Enable
+		/// 0x19 - 25 - Light 1 Enable
 		/// </summary>
 		LTE1,
 
 		/// <summary>
-		/// 0x1A - Light 2 Enable
+		/// 0x1A - 26 - Light 2 Enable
 		/// </summary>
 		LTE2,
 
 		/// <summary>
-		/// 0x1B - Light 3 Enable
+		/// 0x1B - 27 - Light 3 Enable
 		/// </summary>
 		LTE3,
 
@@ -788,12 +788,12 @@ namespace CSPspEmu.Core.Gpu
 		FFACE,
 
 		/// <summary>
-		/// 0x9C - Frame Buffer Pointer
+		/// 0x9C - 156  Frame Buffer Pointer
 		/// </summary>
 		FBP,
 
 		/// <summary>
-		/// 0x9D - Frame Buffer Width
+		/// 0x9D - 157 - Frame Buffer Width
 		/// </summary>
 		FBW,
 

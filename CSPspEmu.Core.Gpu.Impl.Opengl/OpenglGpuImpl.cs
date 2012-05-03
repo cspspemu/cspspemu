@@ -281,11 +281,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//Console.Write(",{0}", VertexInfo.PZ);
 			if (VertexType.Normal != VertexTypeStruct.NumericEnum.Void)
 			{
+#if false
 				if (VertexType.ReversedNormal)
 				{
 					GL.Normal3(-VertexInfo.Normal.X, -VertexInfo.Normal.Y, -VertexInfo.Normal.Z);
 				}
 				else
+#endif
 				{
 					GL.Normal3(VertexInfo.Normal.X, VertexInfo.Normal.Y, VertexInfo.Normal.Z);
 				}
@@ -420,7 +422,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			ReadVertexDelegate ReadVertex = ReadVertex_Void;
 			VertexReader.SetVertexTypeStruct(
 				VertexType,
-				(byte*)Memory.PspAddressToPointerSafe(GpuState->VertexAddress, 0)
+				(byte*)Memory.PspAddressToPointerSafe(GpuState->GetAddressRelativeToBaseOffset(GpuState->VertexAddress), 0)
 			);
 
 #if DEBUG_VERTEX_TYPE
@@ -462,7 +464,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			void* IndexPointer = null;
 			if (VertexType.Index != VertexTypeStruct.IndexEnum.Void)
 			{
-				IndexPointer = Memory.PspAddressToPointerSafe(GpuState->IndexAddress, 0);
+				IndexPointer = Memory.PspAddressToPointerSafe(GpuState->GetAddressRelativeToBaseOffset(GpuState->IndexAddress), 0);
 			}
 
 			//Console.Error.WriteLine(VertexType.Index);
@@ -505,7 +507,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			//for (int n = 0; n < MorpingVertexCount; n++) Console.Write("{0}, ", Morphs[n]); Console.WriteLine("");
 
-			int VertexInfoFloatCount = sizeof(VertexInfo) / sizeof(float);
+			//int VertexInfoFloatCount = (sizeof(Color4F) + sizeof(Vector3F) * 3) / sizeof(float);
+			int VertexInfoFloatCount = (sizeof(VertexInfo)) / sizeof(float);
 			fixed (VertexInfo* VerticesPtr = Vertices)
 			{
 #if true
@@ -582,7 +585,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 			*/
 
-			_CaptureStartPrimitive(PrimitiveType, GpuState->VertexAddress, VertexCount, ref VertexType);
+			_CaptureStartPrimitive(PrimitiveType, GpuState->GetAddressRelativeToBaseOffset(GpuState->VertexAddress), VertexCount, ref VertexType);
 
 			// DRAW ACTUALLY
 			{

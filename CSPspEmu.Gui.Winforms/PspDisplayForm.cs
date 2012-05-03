@@ -518,7 +518,7 @@ namespace CSPspEmu.Gui.Winforms
 
 			PauseResume(() =>
 			{
-				OpenFileDialog.Filter = "Compatible Formats (*.elf, *.pbp, *.iso, *.cso, *.dax)|*.elf;*.pbp;*.iso;*.cso;*.dax|All Files|*.*";
+				OpenFileDialog.Filter = "Compatible Formats (*.elf, *.pbp, *.iso, *.cso, *.dax, *.prx)|*.elf;*.pbp;*.iso;*.cso;*.dax;*.prx|All Files|*.*";
 				Result = OpenFileDialog.ShowDialog();
 			});
 

@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Utils;
 using OpenTK;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Gpu
 {
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct Vector3F
 	{
 		public float X, Y, Z;
@@ -45,6 +47,7 @@ namespace CSPspEmu.Core.Gpu
 		}
 	}
 
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct Color4F
 	{
 		public float R, G, B, A;
@@ -83,6 +86,7 @@ namespace CSPspEmu.Core.Gpu
 	/// <summary>
 	/// Information about a vertex.
 	/// </summary>
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	unsafe public struct VertexInfo
 	{
 		public Color4F Color;

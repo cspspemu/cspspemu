@@ -5,10 +5,10 @@ using System.Text;
 
 namespace CSPspEmu.Core.Threading.Synchronization
 {
-	public class PspAutoResetEvent : PspResetEvent
+	public class PspManualResetEvent : PspResetEvent
 	{
-		public PspAutoResetEvent(bool InitialValue)
-			: base(InitialValue, AutoReset: true)
+		public PspManualResetEvent(bool InitialValue)
+			: base(InitialValue, AutoReset: false)
 		{
 		}
 	}

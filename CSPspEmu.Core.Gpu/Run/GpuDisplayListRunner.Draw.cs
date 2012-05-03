@@ -147,7 +147,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		{
 			// + or |?
 			GpuState->VertexAddress = (
-				GpuDisplayList.GpuStateStructPointer->GetAddressRelativeOffset(Params24)
+				Params24
 			);
 		}
 
@@ -155,15 +155,15 @@ namespace CSPspEmu.Core.Gpu.Run
 		public void OP_IADDR()
 		{
 			GpuState->IndexAddress = (
-				GpuDisplayList.GpuStateStructPointer->GetAddressRelativeOffset(Params24)
+				Params24
 			);
 		}
 	
 		/*
 		// http://en.wikipedia.org/wiki/Bernstein_polynomial
 		float[4] bernsteinCoefficients(float u) {
-    		static if (false) {
-	    		float uPow1  = u;
+			static if (false) {
+				float uPow1  = u;
 				float uPow2  = uPow1 * uPow1;
 				float uPow3  = uPow2 * uPow1;
 	
@@ -172,21 +172,21 @@ namespace CSPspEmu.Core.Gpu.Run
 				float u1Pow2 = Pow1 * Pow1;
 				float u1Pow3 = u1Pow2 * Pow1;
 	
-	    		float[4] ret = [
-	    			(u1Pow3),
-	    			(3 * uPow1 * u1Pow2),
-	    			(3 * uPow2 * u1Pow1),
-	    			(uPow3)
-	    		];
+				float[4] ret = [
+					(u1Pow3),
+					(3 * uPow1 * u1Pow2),
+					(3 * uPow2 * u1Pow1),
+					(uPow3)
+				];
 			} else {
-	    		float u0 = u - 0;
-	    		float u1 = 1 - u;
-	    		float[4] ret = [
-	    			(u1 ^^ 3),
-	    			(3 * (u0 ^^ 1) * (u1 ^^ 2)),
-	    			(3 * (u1 ^^ 1) * (u0 ^^ 2)),
-	    			(u0 ^^ 3)
-	    		];
+				float u0 = u - 0;
+				float u1 = 1 - u;
+				float[4] ret = [
+					(u1 ^^ 3),
+					(3 * (u0 ^^ 1) * (u1 ^^ 2)),
+					(3 * (u1 ^^ 1) * (u0 ^^ 2)),
+					(u0 ^^ 3)
+				];
 			}
 
 			return ret;

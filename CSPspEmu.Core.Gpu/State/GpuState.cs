@@ -12,12 +12,17 @@ namespace CSPspEmu.Core.Gpu.State
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct GpuStateStruct
 	{
-		public uint GetAddressRelativeOffset(uint Offset)
+		public uint GetAddressRelativeToBase(uint RelativeAddress)
 		{
-			return (uint)((this.BaseAddress | Offset) + this.BaseOffset);
+			return (uint)(this.Base | RelativeAddress);
 		}
 
-		public uint BaseAddress;
+		public uint GetAddressRelativeToBaseOffset(uint RelativeAddress)
+		{
+			return (uint)((this.Base | RelativeAddress) + this.BaseOffset);
+		}
+
+		public uint Base;
 		public int BaseOffset;
 		public uint VertexAddress;
 		public uint IndexAddress;

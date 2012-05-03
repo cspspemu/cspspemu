@@ -86,24 +86,30 @@ namespace CSPspEmu.Core.Cpu
 				Ceil = 2,
 				Floor = 3,
 			}
-			public uint Value;
 
-			public TypeEnum RM
+			private uint _Value;
+
+			public uint Value
 			{
-				get { return (TypeEnum)BitUtils.Extract(Value, 0, 2); }
-				set { Value = BitUtils.Insert(Value, 0, 2, (uint)value); }
+				get
+				{
+					_Value = BitUtils.Insert(_Value, 0, 2, (uint)RM);
+					_Value = BitUtils.Insert(_Value, 23, 1, (uint)(CC ? 1 : 0));
+					_Value = BitUtils.Insert(_Value, 24, 1, (uint)(FS ? 1 : 0));
+					return _Value;
+				}
+				set
+				{
+					_Value = value;
+					CC = (BitUtils.Extract(value, 23, 1) != 0);
+					FS = (BitUtils.Extract(value, 24, 1) != 0);
+					RM = (TypeEnum)BitUtils.Extract(value, 0, 2);
+				}
 			}
 
-			public bool CC {
-				get { return (BitUtils.Extract(Value, 23, 1) != 0); }
-				set { Value = BitUtils.Insert(Value, 23, 1, (uint)(value ? 1 : 0)); }
-			}
-
-			public bool FS
-			{
-				get { return (BitUtils.Extract(Value, 24, 1) != 0); }
-				set { Value = BitUtils.Insert(Value, 24, 1, (uint)(value ? 1 : 0)); }
-			}
+			public TypeEnum RM;
+			public bool CC;
+			public bool FS;
 		}
 
 		public FCR31 Fcr31;

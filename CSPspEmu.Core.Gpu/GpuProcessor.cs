@@ -86,7 +86,7 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
-		volatile protected AutoResetEvent DisplayListQueueUpdated = new AutoResetEvent(false);
+		volatile public AutoResetEvent DisplayListQueueUpdated = new AutoResetEvent(false);
 
 		/// <summary>
 		/// 
@@ -101,7 +101,8 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
-		public PspAutoResetEvent CompletedDrawingEvent = new PspAutoResetEvent(true);
+		//public PspAutoResetEvent CompletedDrawingEvent = new PspAutoResetEvent(false);
+		public PspManualResetEvent CompletedDrawingEvent = new PspManualResetEvent(false);
 
 		/// <summary>
 		/// 
@@ -189,6 +190,7 @@ namespace CSPspEmu.Core.Gpu
 				DisplayListQueue.AddFirst(DisplayList);
 			}
 			DisplayListQueueUpdated.Set();
+			ListEnqueuedEvent.Set();
 		}
 
 		/// <summary>
@@ -204,6 +206,7 @@ namespace CSPspEmu.Core.Gpu
 				DisplayListQueue.AddLast(DisplayList);
 			}
 			DisplayListQueueUpdated.Set();
+			ListEnqueuedEvent.Set();
 		}
 
 
@@ -212,30 +215,35 @@ namespace CSPspEmu.Core.Gpu
 			GpuDisplayList.InstructionSwitch = GpuDisplayList.GenerateSwitch();
 		}
 
+		public AutoResetEvent ListEnqueuedEvent = new AutoResetEvent(false);
+
 		/// <summary>
 		/// 
 		/// </summary>
 		public void ProcessStep()
 		{
 			//Thread.Sleep(1);
-			DisplayListQueueUpdated.WaitOne(PspConfig.VerticalSynchronization ? 1 : 0);
+			//DisplayListQueueUpdated.WaitOne(PspConfig.VerticalSynchronization ? 1 : 0);
 
 			if (DisplayListQueue.GetCountLock() > 0)
 			{
+				CompletedDrawingEvent.Reset();
 				//Console.WriteLine("ProcessStep START");
-
-				while (DisplayListQueue.GetCountLock() > 0)
+				TimeSpanUtils.InfiniteLoopDetector(() =>
 				{
-					var CurrentGpuDisplayList = DisplayListQueue.RemoveFirstAndGet();
-					//Console.WriteLine("Executing list : {0}", CurrentGpuDisplayList.Id);
-					CurrentGpuDisplayList.Process();
-					EnqueueFreeDisplayList(CurrentGpuDisplayList);
-				}
+					while (DisplayListQueue.GetCountLock() > 0)
+					{
+						var CurrentGpuDisplayList = DisplayListQueue.First.Value;
+						{
+							//Console.WriteLine("Executing list : {0}", CurrentGpuDisplayList.Id);
+							CurrentGpuDisplayList.Process();
+						}
+						DisplayListQueue.RemoveFirst();
+						EnqueueFreeDisplayList(CurrentGpuDisplayList);
+					}
+				});
 
-				lock (DisplayListQueue)
-				{
-					CompletedDrawingEvent.Set();
-				}
+				CompletedDrawingEvent.Set();
 				//Console.WriteLine("ProcessStep END");
 			}
 			//if (DrawSync != null) DrawSync();
@@ -245,8 +253,10 @@ namespace CSPspEmu.Core.Gpu
 		{
 			//Console.Error.WriteLine("-- GeDrawSync --------------------------------");
 			if (SyncType != SyncTypeEnum.ListDone) throw new NotImplementedException();
+
 			if (DisplayListQueue.GetCountLock() == 0)
 			{
+				CompletedDrawingEvent.Reset();
 				CapturingWaypoint();
 				SyncCallback();
 			}

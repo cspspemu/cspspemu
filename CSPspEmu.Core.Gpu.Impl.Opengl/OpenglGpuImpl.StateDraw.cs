@@ -103,7 +103,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				return;
 			}
 
+			//GlEnableDisable(EnableCap.CullFace, false);
+
 			GL.CullFace((GpuState->BackfaceCullingState.FrontFaceDirection == State.SubStates.FrontFaceDirectionEnum.ClockWise) ? CullFaceMode.Front : CullFaceMode.Back);
+			//GL.CullFace((GpuState->BackfaceCullingState.FrontFaceDirection == State.SubStates.FrontFaceDirectionEnum.ClockWise) ? CullFaceMode.Back : CullFaceMode.Front);
 		}
 
 		private void PrepareState_Depth(GpuStateStruct* GpuState)

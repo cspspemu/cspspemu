@@ -103,6 +103,8 @@
     <Compile Include="Rtc\PspTimeStruct.cs" />
     <Compile Include="Rtc\PspVirtualTimer.cs" />
     <Compile Include="Threading\Synchronization\PspAutoResetEvent.cs" />
+    <Compile Include="Threading\Synchronization\PspManualResetEvent.cs" />
+    <Compile Include="Threading\Synchronization\PspResetEvent.cs" />
     <Compile Include="Threading\Synchronization\PspWaitEvent.cs" />
     <Compile Include="Threading\Synchronization\WaitableStateMachine.cs" />
     <Compile Include="Utils\ColorFormatExtensions.cs" />
