@@ -4,6 +4,8 @@ date_default_timezone_set('Europe/Madrid');
 
 chdir(dirname(__DIR__));
 
+echo "BUILDING RELEASE...\n";
+`MSBuild /p:Configuration=Release`;
 `copy /Y cspspemu.exe deploy\\cspspemu\\cspspemu.exe`;
 
 echo "REMOVING OLD FILES...\n";
@@ -21,7 +23,15 @@ echo "ARCHIVING GIT SOURCE...\n";
 echo "CREATING 7Z...\n";
 chdir('deploy');
 
-$file = sprintf('cspspemu-%s-r%d.7z', date('Ymd', $commitDate), $git_revision_count);
+$base_file = 'cspspemu';
 
-`..\\utils\\7z\\7z a -t7z "{$file}" cspspemu -aoa -mx9`;
+$base_file .= '-' . date('Y-m-d', $commitDate);
+
+$base_file .= ' + r' . $git_revision_count;
+
+$base_file .= ' + windows';
+if ($git_revision_count >= 264) $base_file .= ' + linux';
+$base_file .= ' + src';
+
+`..\\utils\\7z\\7z a -t7z "{$base_file}.7z" cspspemu -aoa -mx9`;
 
