@@ -23,8 +23,15 @@ obj
 *.lastdebug
 *.elf
 *.prx
+*.7z
+*.zip
+*.cso
+*.iso
+*.dax
+*.bin
 /ms
 /TestInput/EBOOT.BIN
+/TestOutput/*
 /pspsdk
 /_pspautotests_svn
 /flash0
