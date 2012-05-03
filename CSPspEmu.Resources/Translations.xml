@@ -4,162 +4,211 @@
 		<text id="DebugMenu">
 			<translation lang="en">&amp;Debug</translation>
 			<translation lang="es">&amp;Depuración</translation>
+			<translation lang="it">&amp;Esegui Debug</translation>
 		</text>
 		<text id="DebugShowThreadInfoMenu">
 			<translation lang="en">Show &amp;Thread Info</translation>
 			<translation lang="es">Mostrar información de &amp;Hilos</translation>
+			<translation lang="it">Mostra info sul &amp;processo</translation>
 		</text>
 		<text id="DebugTraceSyscallsMenu">
 			<translation lang="en">Trace &amp;Syscalls</translation>
 			<translation lang="es">Trazar &amp;Syscalls</translation>
+			<translation lang="it">Traccia &amp;Syscalls</translation>
 		</text>
 		<text id="DebugTraceUnimplementedGpuMenu">
 			<translation lang="en">Trace Unimplemented Gpu</translation>
 			<translation lang="es">Trazar Gpu no implementado</translation>
+			<translation lang="it">Traccia Gpu non implementata</translation>
 		</text>
 		<text id="DebugTraceUnimplementedSyscallsMenu">
 			<translation lang="en">Trace Unimplemented Syscalls</translation>
 			<translation lang="es">Trazar Syscalls sin implementar</translation>
+			<translation lang="it">Traccia Syscalls non implementate</translation>
 		</text>
 		<text id="DebugDumpGpuFrameMenu">
 			<translation lang="en">Dump &amp;Gpu Frame</translation>
 			<translation lang="es">Volcar frame de &amp;Gpu</translation>
+			<translation lang="it">Scarica &amp;Frame della Gpu</translation>
 		</text>
 		<text id="FileExitMenu">
 			<translation lang="en">&amp;Exit</translation>
 			<translation lang="es">&amp;Salir</translation>
+			<translation lang="it">&amp;Esci</translation>
 		</text>
 		<text id="FileMenu">
 			<translation lang="en">&amp;File</translation>
 			<translation lang="es">&amp;Archivo</translation>
+			<translation lang="it">&amp;File</translation>
 		</text>
 		<text id="FileOpenMenu">
 			<translation lang="en">&amp;Open...</translation>
 			<translation lang="es">&amp;Abrir...</translation>
+			<translation lang="it">&amp;Apri...</translation>
 		</text>
 		<text id="HelpWebsiteMenu">
 			<translation lang="en">&amp;Website...</translation>
 			<translation lang="es">&amp;Página web...</translation>
+			<translation lang="it">&amp;Pagina web...</translation>
 		</text>
 		<text id="HelpAboutMenu">
 			<translation lang="en">&amp;About...</translation>
 			<translation lang="es">&amp;Sobre...</translation>
+			<translation lang="it">&amp;Informazioni...</translation>
 		</text>
 		<text id="HelpBlogMenu">
 			<translation lang="en">&amp;en.blog.cballesterosvelasco.es</translation>
 			<translation lang="es">&amp;es.blog.cballesterosvelasco.es</translation>
+			<translation lang="it">&amp;es.blog.cballesterosvelasco.es</translation>
 		</text>
 		<text id="HelpCheckForUpdatesMenu">
 			<translation lang="en">Check for &amp;updates...</translation>
 			<translation lang="es">Buscar &amp;actualizacioes...</translation>
+			<translation lang="it">Cerca &amp;aggiornamenti...</translation>
 		</text>
 		<text id="HelpGithubMenu">
 			<translation lang="en">&amp;github.com/soywiz/cspspemu</translation>
 			<translation lang="es">&amp;github.com/soywiz/cspspemu</translation>
+			<translation lang="it">&amp;github.com/soywiz/cspspemu</translation>
 		</text>
 		<text id="HelpKawagamesMenu">
 			<translation lang="en">&amp;kawagames.com</translation>
 			<translation lang="es">&amp;kawagames.com</translation>
+			<translation lang="it">&amp;kawagames.com</translation>
 		</text>
 		<text id="HelpMenu">
 			<translation lang="en">&amp;Help</translation>
 			<translation lang="es">&amp;Ayuda</translation>
+			<translation lang="it">&amp;Aiuto</translation>
 		</text>
 		<text id="HelpReportAnIssueMenu">
 			<translation lang="en">Report an &amp;issue...</translation>
 			<translation lang="es">Informar sobre &amp;problema...</translation>
+			<translation lang="it">Riporta un &amp;problema...</translation>
 		</text>
 		<text id="UtilsAssociateExtensionsMenu">
 			<translation lang="en">Associate Extensions (.PBP, .CSO, .DAX, .ELF)</translation>
 			<translation lang="es">Asociar Extensiones (.PBP, .CSO, .DAX, .ELF)</translation>
+			<translation lang="it">Associa Estensioni (.PBP, .CSO, .DAX, .ELF)</translation>
 		</text>
 		<text id="UtilsDisplayMenu">
 			<translation lang="en">&amp;Display</translation>
 			<translation lang="es">&amp;Tamaño de ventana</translation>
+			<translation lang="it">&amp;Dimensioni finestra</translation>
 		</text>
 		<text id="UtilsDisplay1xMenu">
 			<translation lang="en">1x</translation>
 			<translation lang="es">1x</translation>
+			<translation lang="it">1x</translation>
 		</text>
 		<text id="UtilsDisplay2xMenu">
 			<translation lang="en">2x</translation>
 			<translation lang="es">2x</translation>
+			<translation lang="it">2x</translation>
 		</text>
 		<text id="UtilsDisplay3xMenu">
 			<translation lang="en">3x</translation>
 			<translation lang="es">3x</translation>
+			<translation lang="it">2x</translation>
 		</text>
 		<text id="UtilsDisplay4xMenu">
 			<translation lang="en">4x</translation>
 			<translation lang="es">4x</translation>
+			<translation lang="it">4x</translation>
 		</text>
 		<text id="UtilsDumpMainMemoryMenu">
 			<translation lang="en">Dump Main Memory...</translation>
 			<translation lang="es">Volcar memoria principal...</translation>
+			<translation lang="it">Scarica la memoria principale</translation>
 		</text>
 		<text id="UtilsFrameLimitingMenu">
 			<translation lang="en">Frame Limiting</translation>
 			<translation lang="es">Limitar a refresco vertical</translation>
+			<translation lang="it">Imposta il limite dei frame</translation>
 		</text>
 		<text id="UtilsLanguageMenu">
 			<translation lang="en">&amp;Language</translation>
 			<translation lang="es">&amp;Idioma</translation>
+			<translation lang="it">&amp;Lingua</translation>
 		</text>
 		<text id="UtilsMenu">
 			<translation lang="en">&amp;Utils</translation>
 			<translation lang="es">&amp;Utilidades</translation>
+			<translation lang="en">&amp;Utility</translation>
 		</text>
 		<text id="UtilsTakeScreenshotMenu">
 			<translation lang="en">Take Screenshot...</translation>
 			<translation lang="es">Sacar pantallazo...</translation>
+			<translation lang="it">Cattura schermata...</translation>
 		</text>
 		<text id="UtilsUseFastmemMenu">
 			<translation lang="en">Use &amp;Fast but unsafe memory</translation>
 			<translation lang="es">Usar memoria &amp;rápida pero inestable</translation>
+			<translation lang="it">Usa memoria &amp;veloce ma instabile</translation>
 		</text>
 		<text id="UtilsEnableMpegMenu">
 			<translation lang="en">Enable &amp;Mpeg processing (unstable yet)</translation>
 			<translation lang="es">Habilitar procesado de &amp;Mpeg (inestable todavía)</translation>
+			<translation lang="it">Abilita il processo di &amp;Mpeg (non ancora stabile)</translation>
 		</text>
 		<text id="RunMenu">
 			<translation lang="en">&amp;Run</translation>
 			<translation lang="es">&amp;Ejecución</translation>
+			<translation lang="it">&amp;Esegui</translation>
 		</text>
 		<text id="RunRunResumeMenu">
 			<translation lang="en">&amp;Start/Resume</translation>
 			<translation lang="es">&amp;Ejecutar</translation>
+			<translation lang="it">&amp;Avvia/Riprendi</translation>
 		</text>
 		<text id="RunPauseMenu">
 			<translation lang="en">&amp;Pause</translation>
 			<translation lang="es">&amp;Pausar</translation>
+			<translation lang="it">&amp;Pausa</translation>
 		</text>
 		<text id="UtilsLanguageEnglishMenu">
 			<translation lang="en">English</translation>
 			<translation lang="es">Inglés</translation>
+			<translation lang="it">Inglese</translation>
 		</text>
 		<text id="UtilsLanguageSpanishMenu">
 			<translation lang="en">Spanish</translation>
 			<translation lang="es">Español</translation>
+			<translation lang="it">Spagnolo</translation>
+		</text>
+		<text id="UtilsLanguageItalianMenu">
+			<translation lang="en">Italian</translation>
+			<translation lang="es">Italiano</translation>
+			<translation lang="it">Italiano</translation>
 		</text>
 		<text id="UtilsInstallWavDestMenu">
 			<translation lang="en">Install &amp;WavDest DirectShow Filter</translation>
 			<translation lang="es">Instalar filtro de DirectShow WavDest&amp;</translation>
+			<translation lang="it">Installa filtro &amp;WavDest DirectShow</translation>
 		</text>
 	</category>
 	<category id="extra">
 		<text id="UnknownGame">
 			<translation lang="en">&lt;Unknown Game&gt;</translation>
 			<translation lang="es">&lt;Juego Desconocido&gt;</translation>
+			<translation lang="it">&lt;Gioco Sconosciuto&gt;</translation>
 		</text>
 	</category>
 	<category id="languages">
 		<text id="English">
 			<translation lang="en">English</translation>
 			<translation lang="es">Inglés</translation>
+			<translation lang="it">Inglese</translation>
 		</text>
 		<text id="Spanish">
 			<translation lang="en">Spanish</translation>
 			<translation lang="es">Español</translation>
+			<translation lang="it">Spagnolo</translation>
+		</text>
+		<text id="Italian">
+			<translation lang="en">Italian</translation>
+			<translation lang="es">Italiano</translation>
+			<translation lang="it">Italiano</translation>
 		</text>
 	</category>
 </translations>
