@@ -17,6 +17,9 @@ namespace CSPspEmu.Hle.Modules.loadcore
 		HleModuleManager ModuleManager;
 
 		[Inject]
+		ModuleMgrForUser ModuleMgrForUser;
+
+		[Inject]
 		CpuProcessor CpuProcessor;
 
 		//public enum SceModule : uint { }
@@ -53,7 +56,6 @@ namespace CSPspEmu.Hle.Modules.loadcore
 		//[HlePspNotImplemented]
 		public uint sceKernelFindModuleByUID(int ModuleId)
 		{
-			var ModuleMgrForUser = ModuleManager.GetModule<ModuleMgrForUser>();
 			var Module = ModuleMgrForUser.Modules.Get(ModuleId);
 			return (Module.Loaded) ? Module.SceModuleStructPartition.Low : 0;
 		}

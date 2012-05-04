@@ -32,7 +32,7 @@ namespace CSPspEmu.Hle
 		public void Initialize(PspEmulatorContext PspEmulatorContext)
 		{
 			//this.PspEmulatorContext = PspEmulatorContext;
-			PspEmulatorContext.InjectDependencesTo(this);
+			//PspEmulatorContext.InjectDependencesTo(this);
 
 			this.ModuleLocation = "flash0:/kd/" + this.GetType().Namespace.Split('.').Last() + ".prx";
 			//Console.WriteLine(this.ModuleLocation);
@@ -43,7 +43,7 @@ namespace CSPspEmu.Hle
 				foreach (
 					var MethodInfo in
 					new MethodInfo[0]
-					.Concat(this.GetType().GetMethods())
+					.Concat(this.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance))
 					//.Concat(this.GetType().GetMethods(BindingFlags.NonPublic))
 					//.Concat(this.GetType().GetMethods(BindingFlags.Public))
 				)

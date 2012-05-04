@@ -112,7 +112,7 @@ namespace CSPspEmu.Gui.Winforms
 				return true;
 			};
 
-			BannerColumn.MinimumWidth = BannerColumn.MaximumWidth = BannerColumn.Width = IconSize.Width;
+			BannerColumn.MaximumWidth = BannerColumn.Width = BannerColumn.MinimumWidth = IconSize.Width;
 			//BannerColumn.AspectGetter = delegate(object _entry) { return null; };
 			BannerColumn.RendererDelegate = (ee, gg, rr, oo) =>
 			{
@@ -125,7 +125,19 @@ namespace CSPspEmu.Gui.Winforms
 					{
 						gg2.CompositingQuality = CompositingQuality.HighQuality;
 						gg2.Clear(Color.White);
-						gg2.DrawImage(Image.FromStream(new MemoryStream(Data)), new Rectangle(0, 0, IconSize.Width, IconSize.Height));
+						var IconToBlit = Image.FromStream(new MemoryStream(Data));
+
+						var TempBuffer = new Bitmap(144, 80);
+						using (var gg3 = Graphics.FromImage(TempBuffer))
+						{
+							gg3.CompositingQuality = CompositingQuality.HighQuality;
+							gg3.Clear(Color.White);
+							gg3.DrawImage(IconToBlit, new Rectangle(TempBuffer.Width / 2 - IconToBlit.Width / 2, 0, IconToBlit.Width, IconToBlit.Height));
+						}
+
+						//Console.WriteLine("{0}x{1}", IconToBlit.Width, IconToBlit.Height);
+
+						gg2.DrawImage(TempBuffer, new Rectangle(0, 0, IconSize.Width, IconSize.Height));
 					}
 				}
 
@@ -264,9 +276,9 @@ namespace CSPspEmu.Gui.Winforms
 
 		void UpdateColumnWidths(ColumnSize ColumnSize, OLVColumn Column)
 		{
-			if (Column.Width != ColumnSize.Width) Column.Width = ColumnSize.Width;
 			if (Column.MinimumWidth != ColumnSize.MinimumWidth) Column.MinimumWidth = ColumnSize.MinimumWidth;
 			if (Column.MaximumWidth != ColumnSize.MaximumWidth) Column.MaximumWidth = ColumnSize.MaximumWidth;
+			if (Column.Width != ColumnSize.Width) Column.Width = ColumnSize.Width;
 		}
 
 		void UpdateColumnsWidths()

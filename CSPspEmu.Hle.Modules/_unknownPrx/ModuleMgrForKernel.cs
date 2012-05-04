@@ -15,6 +15,9 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
 		[Inject]
 		HleModuleManager ModuleManager;
 
+		[Inject]
+		ModuleMgrForUser ModuleMgrForUser;
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -26,7 +29,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
 		[HlePspNotImplemented]
 		public int sceKernelLoadModuleForLoadExecVSHDisc(string FileName, uint Flags, ModuleMgrForUser.SceKernelLMOption* option)
 		{
-			return ModuleManager.GetModule<ModuleMgrForUser>().sceKernelLoadModule(FileName, Flags, option);
+			return ModuleMgrForUser.sceKernelLoadModule(FileName, Flags, option);
 		}
 	}
 }

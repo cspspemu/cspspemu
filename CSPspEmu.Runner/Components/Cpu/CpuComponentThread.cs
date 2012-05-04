@@ -65,6 +65,9 @@ namespace CSPspEmu.Runner.Components.Cpu
 		HleIoDriverMountable MemoryStickMountable;
 
 		[Inject]
+		ThreadManForUser ThreadManForUser;
+
+		[Inject]
 		HleIoDriverEmulator HleIoDriverEmulator;
 
 		public AutoResetEvent StoppedEndedEvent = new AutoResetEvent(false);
@@ -250,9 +253,9 @@ namespace CSPspEmu.Runner.Components.Cpu
 							}
 
 							var FilesToTry = new[] {
-								"/PSP_GAME/SYSDIR/EBOOT.OLD",
 								"/PSP_GAME/SYSDIR/BOOT.BIN",
 								"/PSP_GAME/SYSDIR/EBOOT.BIN",
+								"/PSP_GAME/SYSDIR/EBOOT.OLD",
 							};
 
 							foreach (var FileToTry in FilesToTry)
@@ -287,6 +290,8 @@ namespace CSPspEmu.Runner.Components.Cpu
 					try
 					{
 						LoadException = null;
+
+						if (ElfLoadStream.Length < 1024) throw(new InvalidProgramException("File too short"));
 
 						HleModuleGuest = Loader.LoadModule(
 							ElfLoadStream,
@@ -330,9 +335,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 				);
 				PspMemory.WriteBytes(ArgumentsPartition.Low, ArgumentsChunk);
 
-				var ThreadManForUser = ModuleManager.GetModule<ThreadManForUser>();
 				Debug.Assert(ThreadManForUser != null);
-
 
 				// @TODO: Use Module Manager
 

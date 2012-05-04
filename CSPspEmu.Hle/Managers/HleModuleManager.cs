@@ -95,12 +95,6 @@ namespace CSPspEmu.Hle.Managers
 			});
 		}
 
-
-		public TType GetModule<TType>() where TType : HleModuleHost
-		{
-			return (TType)GetModuleByType(typeof(TType));
-		}
-
 		public HleModuleHost GetModuleByType(Type Type)
 		{
 			if (!HleModules.ContainsKey(Type))
@@ -121,6 +115,11 @@ namespace CSPspEmu.Hle.Managers
 				//return new HleModuleHost();
 			}
 			return GetModuleByType(HleModuleTypes[ModuleNameToFind]);
+		}
+
+		public TType GetModule<TType>() where TType : HleModuleHost
+		{
+			return (TType)GetModuleByType(typeof(TType));
 		}
 
 		public Action<CpuThreadState> GetModuleDelegate<TType>(String FunctionName) where TType : HleModuleHost

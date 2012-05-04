@@ -14,10 +14,10 @@ namespace CSPspEmu.Hle.Modules.utils
 	unsafe public class UtilsForUser : HleModuleHost
 	{
 		[Inject]
-		PspRtc PspRtc;
+		public PspRtc PspRtc;
 
 		[Inject]
-		CpuProcessor CpuProcessor;
+		public CpuProcessor CpuProcessor;
 
 		public struct TimeValStruct
 		{
@@ -80,6 +80,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		[HlePspFunction(NID = 0x79D1C3FA, FirmwareVersion = 150)]
 		public void sceKernelDcacheWritebackAll()
 		{
+			Console.WriteLine("sceKernelDcacheWritebackAll: {0}", CpuProcessor);
 			CpuProcessor.sceKernelDcacheWritebackAll();
 		}
 
