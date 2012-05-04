@@ -55,6 +55,14 @@
 			<translation lang="it">&amp;Apri...</translation>
 			<translation lang="pt">&amp;Abrir...</translation>
 		</text>
+		<text id="FileSetIsoFolderMenu">
+			<translation lang="en">Set &amp;Iso Folder...</translation>
+			<translation lang="es">Establecer Carpeta de &amp;Isos...</translation>
+		</text>
+		<text id="FileOpenRecentMenu">
+			<translation lang="en">Open &amp;Recent</translation>
+			<translation lang="es">Abrir &amp;Recientes</translation>
+		</text>
 		<text id="HelpWebsiteMenu">
 			<translation lang="en">&amp;Website...</translation>
 			<translation lang="es">&amp;Página web...</translation>
@@ -114,6 +122,10 @@
 			<translation lang="es">&amp;Tamaño de ventana</translation>
 			<translation lang="it">&amp;Dimensioni finestra</translation>
 			<translation lang="pt">&amp;Tamanho da janela</translation>
+		</text>
+		<text id="UtilsConfigureControllerMenu">
+			<translation lang="en">Configure &amp;Controller...</translation>
+			<translation lang="es">Configurar &amp;Controles...</translation>
 		</text>
 		<text id="UtilsDisplay1xMenu">
 			<translation lang="en">1x</translation>
@@ -221,7 +233,7 @@
 			<translation lang="en">Portuguese</translation>
 			<translation lang="es">Portugués</translation>
 			<translation lang="it">Portoghese</translation>
-                        <translation lang="pt">Português</translation>
+			<translation lang="pt">Português</translation>
 		</text>
 		<text id="UtilsInstallWavDestMenu">
 			<translation lang="en">Install &amp;WavDest DirectShow Filter</translation>
@@ -235,7 +247,7 @@
 			<translation lang="en">&lt;Unknown Game&gt;</translation>
 			<translation lang="es">&lt;Juego Desconocido&gt;</translation>
 			<translation lang="it">&lt;Gioco Sconosciuto&gt;</translation>
-			<translation lang="pt">&lt:Jogo Desconhecido&gt;</translation>
+			<translation lang="pt">&lt;Jogo Desconhecido&gt;</translation>
 		</text>
 	</category>
 	<category id="languages">
@@ -261,7 +273,7 @@
 			<translation lang="en">Portuguese</translation>
 			<translation lang="es">Portugués</translation>
 			<translation lang="it">Portoghese</translation>
-                        <translation lang="pt">Português</translation>
+												<translation lang="pt">Português</translation>
 		</text>
 	</category>
 	<category id="info">

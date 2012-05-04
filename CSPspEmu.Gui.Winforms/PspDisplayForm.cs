@@ -829,7 +829,7 @@ namespace CSPspEmu.Gui.Winforms
 				LanguagePair.Key.Checked = (LanguagePair.Value.CompareInfo == Thread.CurrentThread.CurrentUICulture.CompareInfo);
 			}
 
-			foreach (var Field in this.GetType().GetFields())
+			foreach (var Field in this.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance))
 			{
 				if (Field.FieldType == typeof(ToolStripMenuItem))
 				{
@@ -1035,7 +1035,7 @@ namespace CSPspEmu.Gui.Winforms
 			{
 				try
 				{
-					var Items = openRecentToolStripMenuItem.DropDownItems;
+					var Items = FileOpenRecentMenu.DropDownItems;
 					Items.Clear();
 					foreach (var RecentFile in PspConfig.StoredConfig.RecentFiles)
 					{

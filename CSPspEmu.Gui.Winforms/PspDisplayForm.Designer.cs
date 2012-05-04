@@ -32,9 +32,9 @@
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.FileMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.FileOpenMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.setIsoFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.FileSetIsoFolderMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
-			this.openRecentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.FileOpenRecentMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem14 = new System.Windows.Forms.ToolStripSeparator();
 			this.FileExitMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.UtilsMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -45,7 +45,7 @@
 			this.UtilsDisplay4xMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsLanguageMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.configureControllerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsConfigureControllerMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsTakeScreenshotMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
@@ -103,9 +103,9 @@
 			// 
 			this.FileMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FileOpenMenu,
-            this.setIsoFolderToolStripMenuItem,
+            this.FileSetIsoFolderMenu,
             this.toolStripMenuItem3,
-            this.openRecentToolStripMenuItem,
+            this.FileOpenRecentMenu,
             this.toolStripMenuItem14,
             this.FileExitMenu});
 			this.FileMenu.Name = "FileMenu";
@@ -121,24 +121,24 @@
 			this.FileOpenMenu.Text = "&Open...";
 			this.FileOpenMenu.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
-			// setIsoFolderToolStripMenuItem
+			// FileSetIsoFolderMenu
 			// 
-			this.setIsoFolderToolStripMenuItem.Name = "setIsoFolderToolStripMenuItem";
-			this.setIsoFolderToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
-			this.setIsoFolderToolStripMenuItem.Text = "Set &Iso Folder...";
-			this.setIsoFolderToolStripMenuItem.Click += new System.EventHandler(this.setIsoFolderToolStripMenuItem_Click);
+			this.FileSetIsoFolderMenu.Name = "FileSetIsoFolderMenu";
+			this.FileSetIsoFolderMenu.Size = new System.Drawing.Size(155, 22);
+			this.FileSetIsoFolderMenu.Text = "Set &Iso Folder...";
+			this.FileSetIsoFolderMenu.Click += new System.EventHandler(this.setIsoFolderToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem3
 			// 
 			this.toolStripMenuItem3.Name = "toolStripMenuItem3";
 			this.toolStripMenuItem3.Size = new System.Drawing.Size(152, 6);
 			// 
-			// openRecentToolStripMenuItem
+			// FileOpenRecentMenu
 			// 
-			this.openRecentToolStripMenuItem.Name = "openRecentToolStripMenuItem";
-			this.openRecentToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
-			this.openRecentToolStripMenuItem.Text = "Open &Recent";
-			this.openRecentToolStripMenuItem.Click += new System.EventHandler(this.openRecentToolStripMenuItem_Click);
+			this.FileOpenRecentMenu.Name = "FileOpenRecentMenu";
+			this.FileOpenRecentMenu.Size = new System.Drawing.Size(155, 22);
+			this.FileOpenRecentMenu.Text = "Open &Recent";
+			this.FileOpenRecentMenu.Click += new System.EventHandler(this.openRecentToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem14
 			// 
@@ -159,7 +159,7 @@
             this.UtilsDisplayMenu,
             this.toolStripMenuItem2,
             this.UtilsLanguageMenu,
-            this.configureControllerToolStripMenuItem,
+            this.UtilsConfigureControllerMenu,
             this.toolStripMenuItem9,
             this.UtilsTakeScreenshotMenu,
             this.toolStripMenuItem1,
@@ -231,13 +231,13 @@
 			this.UtilsLanguageMenu.Size = new System.Drawing.Size(306, 22);
 			this.UtilsLanguageMenu.Text = "&Language";
 			// 
-			// configureControllerToolStripMenuItem
+			// UtilsConfigureControllerMenu
 			// 
-			this.configureControllerToolStripMenuItem.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.pspicon_16;
-			this.configureControllerToolStripMenuItem.Name = "configureControllerToolStripMenuItem";
-			this.configureControllerToolStripMenuItem.Size = new System.Drawing.Size(306, 22);
-			this.configureControllerToolStripMenuItem.Text = "Configure &Controller...";
-			this.configureControllerToolStripMenuItem.Click += new System.EventHandler(this.configureControllerToolStripMenuItem_Click);
+			this.UtilsConfigureControllerMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.pspicon_16;
+			this.UtilsConfigureControllerMenu.Name = "UtilsConfigureControllerMenu";
+			this.UtilsConfigureControllerMenu.Size = new System.Drawing.Size(306, 22);
+			this.UtilsConfigureControllerMenu.Text = "Configure &Controller...";
+			this.UtilsConfigureControllerMenu.Click += new System.EventHandler(this.configureControllerToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem9
 			// 
@@ -584,9 +584,9 @@
 		public System.Windows.Forms.ToolStripMenuItem UtilsEnableMpegMenu;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem13;
 		public System.Windows.Forms.ToolStripMenuItem UtilsInstallWavDestMenu;
-		private System.Windows.Forms.ToolStripMenuItem configureControllerToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem openRecentToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem UtilsConfigureControllerMenu;
+		private System.Windows.Forms.ToolStripMenuItem FileOpenRecentMenu;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem14;
-		private System.Windows.Forms.ToolStripMenuItem setIsoFolderToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem FileSetIsoFolderMenu;
 	}
 }
