@@ -268,7 +268,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 				var OmaOutFileName = BaseFileName + ".oma";
 				var WavOutFileName = BaseFileName + ".wav";
 
-				if (Platform.OperatingSystem == Platform.OS.Windows)
+				if (Platform.OperatingSystem == Platform.OS.Windows && Platform.Is32Bit)
 				{
 					if (!File.Exists(WavOutFileName))
 					{

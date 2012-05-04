@@ -51,9 +51,14 @@
     <Compile Include="iofilemgr\umd\ioctlTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="rtc\sceRtcTest.cs" />
+    <Compile Include="sceDefltTest.cs" />
     <Compile Include="utils\UtilsForUserTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CSPspEmu.Utils\CSPspEmu.Utils.csproj">
+      <Project>{DC02A203-30F2-4613-950B-1529FD55AC81}</Project>
+      <Name>CSPspEmu.Utils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils.csproj">
       <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>

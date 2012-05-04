@@ -168,6 +168,7 @@
     <Compile Include="wlan\sceWlanDrv_lib.cs" />
     <Compile Include="_unknownPrx\KUBridge.cs" />
     <Compile Include="_unknownPrx\ModuleMgrForKernel.cs" />
+    <Compile Include="_unknownPrx\sceDeflt.cs" />
     <Compile Include="_unknownPrx\sceMp3.cs" />
     <Compile Include="_unknownPrx\sceNp.cs" />
     <Compile Include="_unknownPrx\sceNpAuth.cs" />
@@ -178,6 +179,10 @@
     <Compile Include="_unknownPrx\SysclibForKernel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CSPspEmu.Utils\CSPspEmu.Utils.csproj">
+      <Project>{DC02A203-30F2-4613-950B-1529FD55AC81}</Project>
+      <Name>CSPspEmu.Utils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils.csproj">
       <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
