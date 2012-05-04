@@ -48,21 +48,61 @@ namespace CSharpUtils
 
 		static public void Memset(byte[] Array, byte Value, int Count)
 		{
-			int n = 0;
-			while (Count-- > 0) Array[n++] = Value;
+			fixed (byte* ArrayPointer = Array)
+			{
+				Memset(ArrayPointer, Value, Count);
+			}
 		}
 
 		static public void Memset(byte* Pointer, byte Value, int Count)
 		{
 			if (Pointer == null) throw(new ArgumentNullException("Memset pointer is null"));
-#if true
-			while (Count-- > 0) *Pointer++ = Value;
-#else
-			for (int n = 0; n < Count; n++)
+
+			if (Count >= 32)
 			{
-				Pointer[n] = Value;
-			}
+				var Value2 = (ushort)(((ushort)Value << 8) | ((ushort)Value << 0));
+				var Value4 = (uint)(((uint)Value2 << 16) | ((uint)Value2 << 0));
+
+#if true
+				var Value8 = (ulong)(((ulong)Value4 << 32) | ((ulong)Value4 << 0));
+				var Pointer8 = (ulong*)Pointer;
+				while (Count >= 8)
+				{
+					*Pointer8++ = Value8;
+					Count -= 8;
+				}
+				Pointer = (byte*)Pointer8;
+#else
+				var Pointer4 = (uint*)Pointer;
+				while (Count >= 4)
+				{
+					*Pointer4++ = Value4;
+					Count -= 4;
+				}
+				Pointer = (byte*)Pointer4;
 #endif
+			}
+
+			while (Count > 0)
+			{
+				*Pointer++ = Value;
+				Count--;
+			}
+		}
+
+		static public void MemsetSlow(byte[] Array, byte Value, int Count)
+		{
+			fixed (byte* ArrayPointer = Array)
+			{
+				MemsetSlow(ArrayPointer, Value, Count);
+			}
+		}
+
+		static public void MemsetSlow(byte* Pointer, byte Value, int Count)
+		{
+			if (Pointer == null) throw (new ArgumentNullException("Memset pointer is null"));
+
+			while (Count-- > 0) *Pointer++ = Value;
 		}
 
 		[DllImport("kernel32.dll")]

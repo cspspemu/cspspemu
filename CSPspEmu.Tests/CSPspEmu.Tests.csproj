@@ -99,6 +99,7 @@
     <Compile Include="Hle\Vfs\Iso\IsoTest.cs" />
     <Compile Include="Hle\Formats\video\PmfTest.cs" />
     <Compile Include="Hle\Formats\video\MpegPsDemuxerTest.cs" />
+    <Compile Include="PointerUtilsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Hle\Formats\PsfTest.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

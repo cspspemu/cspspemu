@@ -54,6 +54,19 @@ namespace CSPspEmu
 		[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
 		static void Main(string[] Arguments)
 		{
+#if false
+			var Test = new byte[4 * 1024 * 1024];
+			Console.WriteLine(Logger.Measure(() =>
+			{
+				for (int n = 0; n < 32; n++) PointerUtils.Memset(Test, 0x7F, Test.Length);
+			}));
+
+			Console.WriteLine(Logger.Measure(() =>
+			{
+				for (int n = 0; n < 32; n++) PointerUtils.MemsetSlow(Test, 0x7F, Test.Length);
+			}));
+#endif
+
 			// Add the event handler for handling UI thread exceptions to the event.
 			Application.ThreadException += new ThreadExceptionEventHandler(Form1_UIThreadException);
 
