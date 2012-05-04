@@ -25,9 +25,16 @@ namespace CSPspEmu.Gui.Winforms
 				this.Invoke(new Action(() =>
 				{
 					label1.Text = Title;
-					progressBar1.Minimum = 0;
-					progressBar1.Value = Current;
-					progressBar1.Maximum = Total;
+					try
+					{
+						Current = Math.Min(Math.Max(0, Current), Total);
+						progressBar1.Minimum = 0;
+						progressBar1.Maximum = Total;
+						progressBar1.Value = Current;
+					}
+					catch
+					{
+					}
 				}));
 			}
 			catch

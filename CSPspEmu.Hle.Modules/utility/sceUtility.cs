@@ -879,13 +879,13 @@ namespace CSPspEmu.Hle.Modules.utility
 			/// Description text
 			/// </summary>
 			//public ushort* desc;              
-			public uint descPointer;
+			public PspPointer descPointer;
 
 			/// <summary>
 			/// Initial text
 			/// </summary>
 			//public ushort* intext;
-			public uint intextPointer;  
+			public PspPointer intextPointer;  
 
 			/// <summary>
 			/// Length of output text
@@ -896,7 +896,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			/// Pointer to the output text
 			/// </summary>
 			//public ushort* outtext;           
-			public uint outtextPointer;           
+			public PspPointer outtextPointer;           
 
 			/// <summary>
 			/// Result.
@@ -929,7 +929,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			/// Pointer to the start of the data for the input fields
 			/// </summary>
 			//SceUtilityOskData*     data;
-			public uint dataPointer;    
+			public PspPointer dataPointer;    
 
 			/// <summary>
 			/// The local OSK state, one of ::SceUtilityOskState

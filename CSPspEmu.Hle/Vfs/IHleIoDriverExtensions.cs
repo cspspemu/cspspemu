@@ -7,13 +7,28 @@ using CSPspEmu.Hle.Vfs;
 
 namespace System
 {
-	static public class IHleIoDriverExtensions
+	unsafe static public class IHleIoDriverExtensions
 	{
 		static public Stream OpenRead(this IHleIoDriver HleIoDriver, string FileName)
 		{
 			var HleIoDrvFileArg = new HleIoDrvFileArg("none", HleIoDriver, 0, null);
 			HleIoDriver.IoOpen(HleIoDrvFileArg, FileName, HleIoFlags.Read, SceMode.All);
 			return HleIoDrvFileArg.GetStream();
+		}
+
+		static public bool FileExists(this IHleIoDriver HleIoDriver, string FileName)
+		{
+			try
+			{
+				var HleIoDrvFileArg = new HleIoDrvFileArg("none", HleIoDriver, 0, null);
+				var SceIoStat = default(SceIoStat);
+				HleIoDriver.IoGetstat(HleIoDrvFileArg, FileName, &SceIoStat);
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 	}
 }

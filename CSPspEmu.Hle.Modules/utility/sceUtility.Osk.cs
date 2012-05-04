@@ -25,6 +25,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// </summary>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x3DFAEBA9, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceUtilityOskShutdownStart()
 		{
 			return 0;
@@ -36,6 +37,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// <param name="n">Unknown, pass 1.</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x4B85C861, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceUtilityOskUpdate(int n)
 		{
 			return 0;
@@ -46,6 +48,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// </summary>
 		/// <returns>the current status of the keyboard. See ::pspUtilityDialogState for details.</returns>
 		[HlePspFunction(NID = 0xF3F76017, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public pspUtilityDialogState sceUtilityOskGetStatus()
 		{
 			return pspUtilityDialogState.Finished;

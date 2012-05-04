@@ -53,7 +53,7 @@ namespace CSPspEmu.Hle.Modules.loadcore
 		/// <param name="ModuleId">The UID of the module.</param>
 		/// <returns>Pointer to the ::SceModule structure if found, otherwise NULL.</returns>
 		[HlePspFunction(NID = 0xCCE4A157, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
+		[HlePspNotImplemented]
 		public uint sceKernelFindModuleByUID(int ModuleId)
 		{
 			var Module = ModuleMgrForUser.Modules.Get(ModuleId);

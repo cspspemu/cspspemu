@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="audio\sceAudio.cs" />
     <Compile Include="audio\sceAudio_Driver.cs" />
+    <Compile Include="audio\sceVaudio.cs" />
     <Compile Include="avcodec\sceAudiocodec.cs" />
     <Compile Include="ctrl\sceCtrl.cs" />
     <Compile Include="display\sceDisplay.cs" />

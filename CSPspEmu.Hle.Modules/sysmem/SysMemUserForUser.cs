@@ -16,6 +16,9 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		[Inject]
 		HleMemoryManager MemoryManager;
 
+		[Inject]
+		KDebugForKernel KDebugForKernel;
+
 		/// <summary>
 		/// Get the firmware version.
 		/// 
@@ -263,10 +266,10 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// </summary>
 		/// <param name="CpuThreadState"></param>
 		[HlePspFunction(NID = 0x13A5ABEF, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public void sceKernelPrintf(CpuThreadState CpuThreadState)
+		//[HlePspNotImplemented]
+		public void sceKernelPrintf(string Format, CpuThreadState CpuThreadState)
 		{
-			Console.WriteLine("Unimplemented sceKernelPrintf!");
+			KDebugForKernel.Kprintf(Format, CpuThreadState);
 			//throw(new NotImplementedException());
 		}
 

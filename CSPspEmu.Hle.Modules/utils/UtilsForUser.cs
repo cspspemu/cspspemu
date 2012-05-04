@@ -80,7 +80,6 @@ namespace CSPspEmu.Hle.Modules.utils
 		[HlePspFunction(NID = 0x79D1C3FA, FirmwareVersion = 150)]
 		public void sceKernelDcacheWritebackAll()
 		{
-			Console.WriteLine("sceKernelDcacheWritebackAll: {0}", CpuProcessor);
 			CpuProcessor.sceKernelDcacheWritebackAll();
 		}
 

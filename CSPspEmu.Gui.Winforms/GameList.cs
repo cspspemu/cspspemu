@@ -38,6 +38,7 @@ namespace CSPspEmu.Gui.Winforms
 			public byte[] Icon0Png;
 			public Image CachedBitmap;
 			public string Hash;
+			public bool PatchedWithPrometheus;
 		}
 
 		public List<GameEntry> Entries = new List<GameEntry>();
@@ -78,7 +79,8 @@ namespace CSPspEmu.Gui.Winforms
 						//Serializer.Serialize(Console.Out, Entry);
 
 						var Hash = GetHash(IsoFile);
-						var CacheFile = CacheFolder + "/cspspemu_iso_cache_" + Hash + ".xml";
+						try { Directory.CreateDirectory(CacheFolder + "/cspspemu_iso_cache"); } catch { } 
+						var CacheFile = CacheFolder + "/cspspemu_iso_cache/cspspemu_iso_cache_" + Hash + ".xml";
 
 						GameEntry Entry;
 						bool Cached = false;
@@ -141,6 +143,18 @@ namespace CSPspEmu.Gui.Winforms
 			var Entries = ParamSfo.EntryDictionary;
 
 			var Entry = new GameEntry();
+
+			if (
+				FileSystem.FileExists("/PSP_GAME/SYSDIR/prometheus.prx")
+				|| FileSystem.FileExists("/PSP_GAME/SYSDIR/EBOOT.OLD")
+			)
+			{
+				Entry.PatchedWithPrometheus = true;
+			}
+			else
+			{
+				Entry.PatchedWithPrometheus = false;
+			}
 
 			Entry.IsoSize = IsoFileInfo.Length;
 			Entry.Hash = GetHash(IsoFile);

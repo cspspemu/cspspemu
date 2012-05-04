@@ -278,7 +278,7 @@ namespace CSPspEmu.Hle.Modules.utility
 
 								if (SizeUsedInfo != null)
 								{
-									if (false)
+									if (true)
 									{
 										Console.WriteLine(SizeUsedInfo->saveName);
 										Console.WriteLine(SizeUsedInfo->gameName);
