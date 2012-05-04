@@ -794,6 +794,18 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return 0;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x8218B4DD, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelReferGlobalProfiler()
+		{
+			// Can be safely ignored. Only valid in debug mode on a real PSP.
+			return 0;
+		}
+
 		/*
 		public int _sceKernelExitDeleteThread(int Status, HleThread Thread)
 		{

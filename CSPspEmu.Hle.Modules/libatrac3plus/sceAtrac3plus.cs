@@ -856,8 +856,8 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public int sceAtracResetPlayPosition(int AtracId, uint uiSample, uint uiWriteByteFirstBuf, uint uiWriteByteSecondBuf)
 		{
-			throw (new NotImplementedException());
-			// return 0;
+			//throw (new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
