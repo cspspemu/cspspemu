@@ -14,10 +14,10 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 	unsafe public class Kernel_Library : HleModuleHost
 	{
 		[Inject]
-		HleInterruptManager HleInterruptManager;
+		public HleInterruptManager HleInterruptManager;
 
 		[Inject]
-		ThreadManForUser ThreadManForUser;
+		public ThreadManForUser ThreadManForUser;
 
 		/*
 		void initNids() {
@@ -80,9 +80,14 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		/// <param name="WorkAreaPointer"></param>
 		/// <param name="Count"></param>
 		/// <returns></returns>
-		[HlePspFunction(NID = 0x15B6446B, FirmwareVersion = 150)]
+		[HlePspFunction(NID = 0x15B6446B, FirmwareVersion = 380)]
 		[HlePspNotImplemented]
 		public int sceKernelUnlockLwMutex(void* WorkAreaPointer, int Count)
+		{
+			return 0;
+		}
+
+		private int _sceKernelLockLwMutexCB(void* WorkAreaPointer, int Count, int* TimeOut, bool HandleCallbacks)
 		{
 			return 0;
 		}
@@ -94,11 +99,25 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		/// <param name="Count"></param>
 		/// <param name="TimeOut"></param>
 		/// <returns></returns>
-		[HlePspFunction(NID = 0xBEA46419, FirmwareVersion = 150)]
+		[HlePspFunction(NID = 0xBEA46419, FirmwareVersion = 380)]
 		[HlePspNotImplemented]
 		public int sceKernelLockLwMutex(void* WorkAreaPointer, int Count, int* TimeOut)
 		{
-			return 0;
+			return _sceKernelLockLwMutexCB(WorkAreaPointer, Count, TimeOut, HandleCallbacks: false);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="WorkAreaPointer"></param>
+		/// <param name="Count"></param>
+		/// <param name="TimeOut"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x1FC64E09, FirmwareVersion = 380)]
+		[HlePspNotImplemented]
+		public int sceKernelLockLwMutexCB(void* WorkAreaPointer, int Count, int* TimeOut)
+		{
+			return _sceKernelLockLwMutexCB(WorkAreaPointer, Count, TimeOut, HandleCallbacks: true);
 		}
 
 		/// <summary>
@@ -133,6 +152,20 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		{
 			PointerUtils.Memset(Pointer, (byte)Data, Size);
 			return 0;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Destination"></param>
+		/// <param name="Source"></param>
+		/// <param name="Size"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x1839852A, FirmwareVersion = 150)]
+		public uint sceKernelMemcpy(byte* Destination, byte* Source, int Size)
+		{
+			PointerUtils.Memcpy(Destination, Source, Size);
+			return PspMemory.PointerToPspAddressSafe(Destination);
 		}
 	}
 }

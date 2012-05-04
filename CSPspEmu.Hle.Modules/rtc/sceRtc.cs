@@ -28,6 +28,21 @@ namespace CSPspEmu.Hle.Modules.rtc
 		}
 
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="DateTime"></param>
+		/// <param name="UnixTime"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x27C4594C, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceRtcGetTime_t(ref ScePspDateTime DateTime, out uint UnixTime)
+		{
+			UnixTime = (uint)DateTime.ToUnixTimestamp();
+			return 0;
+		}
+
+
+		/// <summary>
 		/// Convert a UTC-based tickcount into a local time tick count
 		/// </summary>
 		/// <param name="TickUTC">pointer to u64 tick in UTC time</param>

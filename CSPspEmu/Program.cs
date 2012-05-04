@@ -211,7 +211,7 @@ namespace CSPspEmu
 				{
 					var OutFile = Environment.SystemDirectory + @"\WavDest.dll";
 					File.WriteAllBytes(OutFile, Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.WavDest.dll").ReadAll());
-					Process.Start(new ProcessStartInfo("regsvr32", String.Format(@"/s ""{0}"" ", OutFile))).WaitForExit();
+					ProcessUtils.ExecuteCommand("regsvr32", String.Format(@"/s ""{0}"" ", OutFile));
 					Environment.Exit(0);
 				});
 				Getopt.AddRule("/associate", () =>

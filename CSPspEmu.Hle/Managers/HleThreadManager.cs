@@ -66,7 +66,7 @@ namespace CSPspEmu.Hle.Managers
 			var HlePspThread = new HleThread(PspEmulatorContext, new CpuThreadState(Processor));
 			HlePspThread.Id = LastId++;
 			HlePspThread.Name = "Thread-" + HlePspThread.Id;
-			HlePspThread.CurrentStatus = HleThread.Status.Stopped;
+			HlePspThread.AddStatus(HleThread.Status.Stopped);
 			Threads.Add(HlePspThread);
 			return HlePspThread;
 		}
@@ -77,7 +77,7 @@ namespace CSPspEmu.Hle.Managers
 			//Console.Write("{0},", Threads.Count);
 			foreach (var Thread in Threads)
 			{
-				if ((Thread.CurrentStatus == HleThread.Status.Ready) || Thread.IsWaitingAndHandlingCallbacks)
+				if ((Thread.HasStatus(HleThread.Status.Ready)) || Thread.IsWaitingAndHandlingCallbacks)
 				{
 					if (MinThread == null || Thread.PriorityValue < MinThread.PriorityValue)
 					{
@@ -92,7 +92,7 @@ namespace CSPspEmu.Hle.Managers
 		{
 			get
 			{
-				return Threads.Where(Thread => Thread.CurrentStatus == HleThread.Status.Waiting);
+				return Threads.Where(Thread => Thread.HasStatus(HleThread.Status.Waiting));
 			}
 		}
 
@@ -106,6 +106,32 @@ namespace CSPspEmu.Hle.Managers
 			ThreadToSchedule.PriorityValue = Threads.Min(Thread => Thread.PriorityValue) - 1;
 			Reschedule();
 			//Console.WriteLine("!ScheduleNext: ");
+		}
+
+		public void Yield()
+		{
+			if (Current != null)
+			{
+				Current.CpuThreadState.Yield();
+			}
+		}
+
+		public enum SCE_KERNEL_DISPATCHTHREAD_STATE : uint
+		{
+			DISABLED = 0,
+			ENABLED = 1,
+		}
+
+		public SCE_KERNEL_DISPATCHTHREAD_STATE DispatchingThreads = SCE_KERNEL_DISPATCHTHREAD_STATE.ENABLED;
+
+		public void ExecuteCurrent(HleThread Current)
+		{
+			do
+			{
+				if (Current.HasStatus(HleThread.Status.Suspend)) return;
+				Current.Step();
+			}
+			while (DispatchingThreads == SCE_KERNEL_DISPATCHTHREAD_STATE.DISABLED);
 		}
 
 		public void StepNext()
@@ -161,7 +187,9 @@ namespace CSPspEmu.Hle.Managers
 				else
 				{
 					//throw (new Exception("aaaaaaaaaaaa"));
-					Current.CurrentStatus = HleThread.Status.Running;
+					Current.RemoveStatus(HleThread.Status.Ready);
+					Current.AddStatus(HleThread.Status.Running);
+
 					try
 					{
 						if (Processor.PspConfig.DebugThreadSwitching)
@@ -172,13 +200,14 @@ namespace CSPspEmu.Hle.Managers
 								Console.WriteLine("Execute: {0} : PC: 0x{1:X}", Current, Current.CpuThreadState.PC);
 							});
 						}
-						Current.Step();
+						ExecuteCurrent(Current);
 					}
 					finally
 					{
-						if (Current.CurrentStatus == HleThread.Status.Running)
+						if (Current.HasStatus(HleThread.Status.Running))
 						{
-							Current.CurrentStatus = HleThread.Status.Ready;
+							Current.RemoveStatus(HleThread.Status.Running);
+							Current.AddStatus(HleThread.Status.Ready);
 						}
 					}
 				}

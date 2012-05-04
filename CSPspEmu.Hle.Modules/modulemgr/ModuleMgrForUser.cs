@@ -359,7 +359,8 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		[HlePspFunction(NID = 0x8F2DF740, FirmwareVersion = 150)]
 		public uint sceKernelStopUnloadSelfModuleWithStatus()
 		{
-			throw(new NotImplementedException());
+			Console.Error.WriteLine("sceKernelStopUnloadSelfModuleWithStatus");
+			return 0;
 		}
 
 		/// <summary>

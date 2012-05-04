@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace CSharpUtils
 {
@@ -9,7 +10,7 @@ namespace CSharpUtils
 	{
 		static public string ExecuteCommand(string Command, string Arguments)
 		{
-			System.Diagnostics.Process proc = new System.Diagnostics.Process();
+			var proc = new Process();
 			proc.EnableRaisingEvents = false;
 			proc.StartInfo.FileName = Command;
 			proc.StartInfo.Arguments = Arguments;

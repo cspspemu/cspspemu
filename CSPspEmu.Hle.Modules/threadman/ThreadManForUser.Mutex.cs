@@ -51,8 +51,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 			{
 				if (Timeout != null)
 				{
-					//Console.Error.WriteLine("PspMutex.Lock with Timeout not implemented!!");
-					throw (new NotImplementedException());
+					Console.Error.WriteLine("PspMutex.Lock with Timeout not implemented!!");
+					//throw (new NotImplementedException());
 				}
 				if (UpdateCountValue <= 0) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT));
 				//Console.Error.WriteLine("Lock : {0}", ThreadManager.Current.Id);

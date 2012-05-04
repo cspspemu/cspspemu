@@ -121,7 +121,7 @@ namespace CSPspEmu.Hle
 		//protected int MinimalInstructionCountForYield = 1000000;
 		public int Id;
 		//public String Name;
-		public Status CurrentStatus;
+		private Status CurrentStatus;
 		public WaitType CurrentWaitType;
 		//public DateTime AwakeOnTime;
 		public MemoryPartition Stack;
@@ -134,6 +134,29 @@ namespace CSPspEmu.Hle
 		public Action WakeUpCallback;
 		public List<Action> WakeUpList = new List<Action>();
 
+		public bool HasStatus(Status Has)
+		{
+			return (CurrentStatus & Has) == Has;
+		}
+
+		public void AddStatus(Status Add)
+		{
+			CurrentStatus |= Add;
+		}
+
+		public void RemoveStatus(Status Remove)
+		{
+			CurrentStatus &= ~Remove;
+		}
+
+#if false
+		public void ChangeStatus(Status Add, Status Remove = 0)
+		{
+			AddStatus(Add);
+			if (Remove != 0) RemoveStatus(Remove);
+		}
+#endif
+
 		/// <summary>
 		/// Number of times the thread have been paused.
 		/// </summary>
@@ -143,7 +166,7 @@ namespace CSPspEmu.Hle
 		{
 			get
 			{
-				return (CurrentStatus == Status.Waiting) && HandleCallbacks;
+				return ((CurrentStatus & Status.Waiting) != 0) && HandleCallbacks;
 			}
 		}
 
@@ -347,20 +370,16 @@ namespace CSPspEmu.Hle
 
 		public void WakeUp()
 		{
-			if (this.CurrentStatus != Status.Waiting)
+			if (!this.HasStatus(Status.Waiting))
 			{
-				if (this.CurrentStatus != Status.Ready)
-				{
-					if (this.CurrentStatus != Status.Running)
-					{
-						throw (new InvalidOperationException("Trying to awake a non waiting thread '" + this.CurrentStatus + "'"));
-					}
-				}
+				Console.Error.WriteLine("Trying to awake a non waiting thread '{0}'", this.CurrentStatus);
+				//throw (new InvalidOperationException());
 			}
 
 			//Console.WriteLine("Thread:{0}:{1}", this, Thread.CurrentThread.Name);
 
-			this.CurrentStatus = Status.Ready;
+			this.CurrentStatus |= Status.Ready;
+			this.CurrentStatus &= ~Status.Waiting;
 
 			//this.CurrentStatus.pree
 			//if (CurrentWaitType != WaitType.Timer && CurrentWaitType != WaitType.Display)

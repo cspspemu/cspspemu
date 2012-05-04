@@ -90,7 +90,8 @@ namespace CSPspEmu.Hle.Modules.power
 		/// <param name="BusFrequency">bus frequency, valid from 1-167</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x737486F2, FirmwareVersion = 150)]
-		//mixin(registerFunction!(0xEBD177D6, scePowerSetClockFrequency));
+		[HlePspFunction(NID = 0xEBD177D6, FirmwareVersion = 150)]
+		[HlePspFunction(NID = 0x469989AD, FirmwareVersion = 630)]
 		public int scePowerSetClockFrequency(int PllFrequency, int CpuFrequency, int BusFrequency)
 		{
 			PspConfig.PllFrequency = PllFrequency;
@@ -98,19 +99,6 @@ namespace CSPspEmu.Hle.Modules.power
 			PspConfig.BusFrequency = BusFrequency;
 
 			return 0;
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="PllFrequency"></param>
-		/// <param name="CpuFrequency"></param>
-		/// <param name="BusFrequency"></param>
-		/// <returns></returns>
-		[HlePspFunction(NID = 0xEBD177D6, FirmwareVersion = 150)]
-			public int scePower_EBD177D6(int PllFrequency, int CpuFrequency, int BusFrequency)
-		{
-			return scePowerSetClockFrequency(PllFrequency, CpuFrequency, BusFrequency);
 		}
 
 		/// <summary>
@@ -123,6 +111,16 @@ namespace CSPspEmu.Hle.Modules.power
 		{
 			PspConfig.BusFrequency = BusFrequency;
 			return 0;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x34F9C463, FirmwareVersion = 150)]
+		public int scePowerGetPllClockFrequencyInt()
+		{
+			return PspConfig.PllFrequency;
 		}
 	}
 }

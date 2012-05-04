@@ -29,9 +29,11 @@ namespace CSPspEmu.Hle.Modules.hpremote
 		/// </summary>
 		/// <returns>1 if the headphones are plugged in, else 0.</returns>
 		[HlePspFunction(NID = 0x7E69EDA4, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceHprmIsHeadphoneExist()
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>

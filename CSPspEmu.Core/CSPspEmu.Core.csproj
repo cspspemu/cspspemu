@@ -99,6 +99,7 @@
     <Compile Include="PspGlobalConfiguration.cs" />
     <Compile Include="PspPluginImpl.cs" />
     <Compile Include="PspStoredConfig.cs" />
+    <Compile Include="PspUntestedAttribute.cs" />
     <Compile Include="Rtc\PspRtc.cs" />
     <Compile Include="Rtc\PspTimeStruct.cs" />
     <Compile Include="Rtc\PspVirtualTimer.cs" />

@@ -69,7 +69,7 @@ namespace CSPspEmu.Hle.Modules.emulator
 		public void waitThreadForever(CpuThreadState CpuThreadState)
 		{
 			var SleepThread = ThreadManager.Current;
-			SleepThread.CurrentStatus = HleThread.Status.Waiting;
+			SleepThread.AddStatus(HleThread.Status.Waiting);
 			SleepThread.CurrentWaitType = HleThread.WaitType.None;
 			CpuThreadState.Yield();
 		}

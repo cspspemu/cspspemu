@@ -357,5 +357,31 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 			//throw(new NotImplementedException());
 			return 0;
 		}
+
+		/// <summary>
+		/// Get the current envelope height for all the voices.
+		/// </summary>
+		/// <param name="sasCore">sasCore handle</param>
+		/// <param name="heightsAddr">
+		/// (int *) address where to return the envelope heights,
+		/// stored as 32 bit values [0..0x40000000].
+		///     heightsAddr[0] = envelope height of voice 0
+		///     heightsAddr[1] = envelope height of voice 1
+		///     ...
+		/// </param>
+		/// <returns>
+		/// 0 if OK
+		/// ERROR_SAS_NOT_INIT if an invalid sasCore handle is provided
+		/// </returns>
+		[HlePspFunction(NID = 0x07F58C24, FirmwareVersion = 150)]
+		public int __sceSasGetAllEnvelopeHeights(uint SasCorePointer, int* Heights)
+		{
+			var SasCore = GetSasCore(SasCorePointer);
+			foreach (var Voice in SasCore.Voices)
+			{
+				Voice.EnvelopeHeight = *Heights++;
+			}
+			return 0;
+		}
 	}
 }

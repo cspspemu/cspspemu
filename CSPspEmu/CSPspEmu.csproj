@@ -204,6 +204,10 @@
     <EmbeddedResource Include="..\version_current_numeric.txt">
       <Link>version_current_numeric.txt</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\utils\oma2wav\oma2wav.exe">
+      <Link>oma2wav.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="..\version_last.txt">
       <Link>version_last.txt</Link>
     </Content>

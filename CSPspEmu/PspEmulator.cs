@@ -289,7 +289,15 @@ namespace CSPspEmu
 			Console.WriteLine("-----------------------------------------------------------------");
 			Console.WriteLine("ShowDebugInformation:");
 			Console.WriteLine("-----------------------------------------------------------------");
-			foreach (var Pair in CpuProcessor.GlobalInstructionStats.OrderBy(Pair => Pair.Value)) Console.WriteLine("{0} -> {1}", Pair.Key, Pair.Value);
+			try
+			{
+				foreach (var Pair in CpuProcessor.GlobalInstructionStats.OrderBy(Pair => Pair.Value)) Console.WriteLine("{0} -> {1}", Pair.Key, Pair.Value);
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
+			}
+
 			/*
 			Console.WriteLine("-----------------------------------------------------------------");
 			foreach (var Pair in CpuProcessor.GlobalInstructionStats.OrderBy(Pair => Pair.Key)) Console.WriteLine("{0} -> {1}", Pair.Key, Pair.Value);
@@ -297,13 +305,26 @@ namespace CSPspEmu
 
 			Console.WriteLine("-----------------------------------------------------------------");
 			Console.WriteLine("Last called syscalls: ");
-
-			foreach (var CalledCallback in PspEmulatorContext.GetInstance<HleModuleManager>().LastCalledCallbacks.ToArray().Reverse())
+			try
 			{
-				Console.WriteLine("  {0}", CalledCallback);
+				foreach (var CalledCallback in PspEmulatorContext.GetInstance<HleModuleManager>().LastCalledCallbacks.ToArray().Reverse())
+				{
+					Console.WriteLine("  {0}", CalledCallback);
+				}
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
 			}
 			Console.WriteLine("-----------------------------------------------------------------");
-			PspRunner.CpuComponentThread.DumpThreads();
+			try
+			{
+				PspRunner.CpuComponentThread.DumpThreads();
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
+			}
 			Console.WriteLine("-----------------------------------------------------------------");
 		}
 

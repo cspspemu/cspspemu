@@ -301,5 +301,11 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		public void SysMemUserForUser_50F61D8A()
 		{
 		}
+
+		[HlePspFunction(NID = 0x1B4217BC, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public void SysMemUserForUser_1B4217BC()
+		{
+		}
 	}
 }

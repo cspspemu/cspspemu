@@ -268,7 +268,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 				var OmaOutFileName = BaseFileName + ".oma";
 				var WavOutFileName = BaseFileName + ".wav";
 
-				if (Platform.OperatingSystem == Platform.OS.Windows && Platform.Is32Bit)
+				if (Platform.OperatingSystem == Platform.OS.Windows)
 				{
 					if (!File.Exists(WavOutFileName))
 					{
@@ -280,7 +280,6 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 						//Debug.WriteLine("[a]");
 						ParseAtracData(new MemoryStream(Data));
 						{
-
 							WriteOma(OmaOutFileName);
 							//Debug.WriteLine("[aa]");
 							File.Delete(WavOutFileName);

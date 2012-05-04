@@ -16,10 +16,10 @@ namespace CSPspEmu.Hle.Modules.threadman
 	unsafe public partial class ThreadManForUser
 	{
 		[Inject]
-		internal HleThreadManager ThreadManager;
+		public HleThreadManager ThreadManager;
 
 		[Inject]
-		internal HleMemoryManager MemoryManager;
+		public HleMemoryManager MemoryManager;
 
 		private HleThread GetThreadById(int ThreadId)
 		{
@@ -88,7 +88,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			Thread.CpuThreadState.PC = (uint)EntryPoint;
 			Thread.CpuThreadState.RA = (uint)HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD;
-			Thread.CurrentStatus = HleThread.Status.Stopped;
+			Thread.AddStatus(HleThread.Status.Stopped);
 			//Thread.CpuThreadState.RA = (uint)0;
 
 
@@ -137,7 +137,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			ThreadToStart.CpuThreadState.CallerModule = CpuThreadState.CallerModule;
 
-			ThreadToStart.CurrentStatus = HleThread.Status.Ready;
+			ThreadToStart.AddStatus(HleThread.Status.Ready);
 		}
 
 		/// <summary>
@@ -246,9 +246,16 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0xD59EAD2F, FirmwareVersion = 150)]
 		public int sceKernelWakeupThread(int ThreadId)
 		{
-			var ThreadCurrent = ThreadManager.Current;
-			var ThreadToWakeUp = ThreadManager.GetThreadById(ThreadId);
-			ThreadToWakeUp.ChangeWakeUpCount(+1, ThreadCurrent);
+			try
+			{
+				var ThreadCurrent = ThreadManager.Current;
+				var ThreadToWakeUp = ThreadManager.GetThreadById(ThreadId);
+				ThreadToWakeUp.ChangeWakeUpCount(+1, ThreadCurrent);
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
+			}
 			return 0;
 		}
 
@@ -274,12 +281,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 		{
 			var ThreadToWaitEnd = GetThreadById(ThreadId);
 
-			if (ThreadToWaitEnd.CurrentStatus == HleThread.Status.Stopped)
+			if (ThreadToWaitEnd.HasStatus(HleThread.Status.Stopped))
 			{
 				return 0;
 			}
 
-			if (ThreadToWaitEnd.CurrentStatus == HleThread.Status.Killed)
+			if (ThreadToWaitEnd.HasStatus(HleThread.Status.Killed))
 			{
 				return 0;
 			}
@@ -485,9 +492,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Thread.Info.ExitStatus = ExitStatus;
 
 #if TEST_STOP_THREADS_INSTEAD_OF_KILLING
-			Thread.CurrentStatus = HleThread.Status.Stopped;
+			Thread.AddStatus(HleThread.Status.Stopped);
 #else
-			Thread.CurrentStatus = HleThread.Status.Killed;
+			Thread.AddStatus(HleThread.Status.Killed);
 #endif
 			ThreadManager.Reschedule();
 
@@ -509,8 +516,15 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x9FA03CD3, FirmwareVersion = 150)]
 		public int sceKernelDeleteThread(int ThreadId)
 		{
-			var Thread = ThreadManager.GetThreadById(ThreadId);
-			ThreadManager.DeleteThread(Thread);
+			try
+			{
+				var Thread = ThreadManager.GetThreadById(ThreadId);
+				ThreadManager.DeleteThread(Thread);
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
+			}
 			return 0;
 			//return _sceKernelExitDeleteThread(-1, GetThreadById(ThreadId));
 		}
@@ -630,20 +644,30 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		an error if less than 0.
 		/// </returns>
 		[HlePspFunction(NID = 0x9944F31F, FirmwareVersion = 150)]
+		[PspUntested]
 		public int sceKernelSuspendThread(int ThreadId)
 		{
-			throw (new NotImplementedException());
+			var Thread = GetThreadById(ThreadId);
+			Thread.AddStatus(HleThread.Status.Suspend);
+			if (Thread == ThreadManager.Current)
+			{
+				ThreadManager.Yield();
+			}
+			return 0;
 		}
 
 		/// <summary>
 		/// Resume a thread previously put into a suspended state with ::sceKernelSuspendThread.
 		/// </summary>
-		/// <param name="thid">UID of the thread to resume.</param>
+		/// <param name="ThreadId">UID of the thread to resume.</param>
 		/// <returns>Success if greater or equal to 0, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0x75156E8F, FirmwareVersion = 150)]
-		public int sceKernelResumeThread(int thid)
+		[PspUntested]
+		public int sceKernelResumeThread(int ThreadId)
 		{
-			throw(new NotImplementedException());
+			var Thread = GetThreadById(ThreadId);
+			Thread.RemoveStatus(HleThread.Status.Suspend);
+			return 0;
 		}
 
 		/// <summary>
@@ -655,10 +679,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// </param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x27E22EC2, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceKernelResumeDispatchThread(int State)
+		//[HlePspNotImplemented]
+		[PspUntested]
+		public int sceKernelResumeDispatchThread(HleThreadManager.SCE_KERNEL_DISPATCHTHREAD_STATE State)
 		{
-			throw(new NotImplementedException());
+			ThreadManager.DispatchingThreads = State;
 			return 0;
 		}
 
@@ -667,12 +692,18 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// </summary>
 		/// <returns>The current state of the dispatch thread, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x3AD58B8C, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceKernelSuspendDispatchThread()
+		//[HlePspNotImplemented]
+		[PspUntested]
+		public HleThreadManager.SCE_KERNEL_DISPATCHTHREAD_STATE sceKernelSuspendDispatchThread()
 		{
-			// SCE_KERNEL_DISPATCHTHREAD_STATE_ENABLED : SCE_KERNEL_DISPATCHTHREAD_STATE_DISABLED
-			throw(new NotImplementedException());
-			return 0;
+			try
+			{
+				return ThreadManager.DispatchingThreads;
+			}
+			finally
+			{
+				ThreadManager.DispatchingThreads = HleThreadManager.SCE_KERNEL_DISPATCHTHREAD_STATE.DISABLED;
+			}
 		}
 
 		/// <summary>
@@ -690,9 +721,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			Thread.Info.ExitStatus = -1;
 #if TEST_STOP_THREADS_INSTEAD_OF_KILLING
-			Thread.CurrentStatus = HleThread.Status.Stopped;
+			Thread.AddStatus(HleThread.Status.Stopped);
 #else
-			Thread.CurrentStatus = HleThread.Status.Killed;
+			Thread.AddStatus(HleThread.Status.Killed);
 #endif
 			Thread.Exit();
 			return 0;
@@ -710,8 +741,56 @@ namespace CSPspEmu.Hle.Modules.threadman
 			var Thread = GetThreadById(ThreadId);
 			var CurrentThread = ThreadManager.Current;
 			if (Thread == CurrentThread) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_THREAD));
-			if (Thread.CurrentStatus != HleThread.Status.Waiting) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_THREAD_IS_NOT_WAIT));
+			if (!Thread.HasStatus(HleThread.Status.Waiting)) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_THREAD_IS_NOT_WAIT));
 			Thread.WakeUp();
+			return 0;
+		}
+
+		public struct SceKernelSystemStatus
+		{
+			/// <summary>
+			/// Size of the structure (should be set prior to the call). 
+			/// </summary>
+			public uint Size;
+				
+			/// <summary>
+			/// The status ? 
+			/// </summary>
+			public uint Status;
+				
+			/// <summary>
+			/// SceKernelSysClock : idleClocks (The number of cpu clocks in the idle thread. )
+			/// </summary>
+			public uint IdleClocks;
+
+			/// <summary>
+			/// Number of times we resumed from idle. 
+			/// </summary>
+			public uint ComesOutOfIdleCount;
+				
+			/// <summary>
+			/// Number of thread context switches. 
+			/// </summary>
+			public uint ThreadSwitchCount;
+				
+			/// <summary>
+			/// Number of vfpu switches ? 
+			/// </summary>
+			public uint VfpuSwitchCount;
+		}
+
+		/// <summary>
+		/// Get the current system status.
+		/// </summary>
+		/// <param name="?">Pointer to a ::SceKernelSystemStatus structure.</param>
+		/// <param name="?"></param>
+		/// </summary>
+		[HlePspFunction(NID = 0x627E6F3A, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelReferSystemStatus(ref SceKernelSystemStatus SceKernelSystemStatus)
+		{
+			SceKernelSystemStatus.Status = 0;
+
 			return 0;
 		}
 

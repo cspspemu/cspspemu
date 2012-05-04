@@ -8,6 +8,9 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Threading;
+using CSPspEmu.Core;
+using System.Reflection;
+using CSharpUtils;
 
 namespace CSPspEmu.Media
 {
@@ -30,6 +33,25 @@ namespace CSPspEmu.Media
 		static bool WarnOnce = false;
 
 		static private void _convertOmaToWav(string Source, string Destination)
+		{
+			if (Platform.Is32Bit)
+			{
+				_convertOmaToWav_COM(Source, Destination);
+			}
+			else
+			{
+				var Folder = Directory.GetParent(Destination);
+				var Oma2WavFile = String.Format("{0}/oma2wav.exe", Folder);
+				if (!File.Exists(Oma2WavFile))
+				{
+					File.WriteAllBytes(Oma2WavFile, Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.oma2wav.exe").ReadAll());
+				}
+
+				ProcessUtils.ExecuteCommand(Oma2WavFile, String.Format(@" ""{0}"" ""{1}"" ", Source, Destination));
+			}
+		}
+
+		static private void _convertOmaToWav_COM(string Source, string Destination)
 		{
 			IGraphBuilder graphBuilder;
 			IMediaControl mediaControl;

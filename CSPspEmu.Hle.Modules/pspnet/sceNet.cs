@@ -70,12 +70,15 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Convert string to a Mac address
 		/// </summary>
-		/// <param name="name">The string to convert.</param>
-		/// <param name="mac">Pointer to a buffer to store the result.</param>
+		/// <param name="String">The string to convert.</param>
+		/// <param name="MacAddress">Pointer to a buffer to store the result.</param>
 		[HlePspFunction(NID = 0xD27961C9, FirmwareVersion = 150)]
-		public void sceNetEtherStrton(string name, byte* mac)
+		[HlePspNotImplemented]
+		public int sceNetEtherStrton(string String, byte* MacAddress)
 		{
-			throw (new NotImplementedException());
+			PointerUtils.Memset(MacAddress, 0, 6);
+			return 0;
+			//throw (new NotImplementedException());
 		}
 
 		/// <summary>
