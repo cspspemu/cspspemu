@@ -164,9 +164,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// </summary>
 		[HlePspFunction(NID = 0x5BF4DD27, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceKernelLockMutexCB()
+		public int sceKernelLockMutexCB(CpuThreadState CpuThreadState, int MutexId, int Count, uint* Timeout)
 		{
-			throw (new NotImplementedException());
+			return sceKernelLockMutex(CpuThreadState, MutexId, Count, Timeout);
 		}
 
 		/// <summary>

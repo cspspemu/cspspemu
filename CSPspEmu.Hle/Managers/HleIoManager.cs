@@ -92,6 +92,8 @@ namespace CSPspEmu.Hle.Managers
 		/// <returns></returns>
 		public ParsePathInfo ParsePath(string FullPath)
 		{
+			//FullPath = FullPath.Replace('\\', '/');
+
 			//Console.Error.WriteLine("FullPath: {0}", FullPath);
 			if (FullPath.IndexOf(':') == -1)
 			{
@@ -114,7 +116,7 @@ namespace CSPspEmu.Hle.Managers
 			return new ParsePathInfo()
 			{
 				HleIoDrvFileArg = new HleIoDrvFileArg(DriverName, HleIoDriver, FileSystemNumber, null),
-				LocalPath = Match.Groups[3].Value,
+				LocalPath = Match.Groups[3].Value.Replace('\\', '/'),
 			};
 		}
 

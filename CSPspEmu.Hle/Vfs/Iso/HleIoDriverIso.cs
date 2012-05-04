@@ -197,26 +197,40 @@ namespace CSPspEmu.Hle.Vfs.Iso
 		{
 			var IsoFileArgument = ((IsoFileArgument)HleIoDrvFileArg.FileArgument);
 
+			Action<int> ExpectedOutputSize = (int MinimumSize) =>
+			{
+				if (OutputLength < MinimumSize || OutputPointer == null) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
+			};
+
+			Action<int> ExpectedInputSize = (int MinimumSize) =>
+			{
+				if (InputLength < MinimumSize || InputPointer == null) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
+			};
+
 			switch ((UmdCommandEnum)Command)
 			{
+				case UmdCommandEnum.FileSeekSet:
+					ExpectedInputSize(sizeof(uint));
+					IsoFileArgument.Stream.Position = *(uint*)InputPointer;
+					return 0;
 				case UmdCommandEnum.GetStartSector:
-					if (OutputLength < 4 || OutputPointer == null) throw(new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
+					ExpectedOutputSize(sizeof(uint));
 					*((uint *)OutputPointer) = (uint)IsoFileArgument.StartSector;
 					return 0;
 				case UmdCommandEnum.GetSectorSize:
-					if (OutputLength != 4 || OutputPointer == null) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
+					ExpectedOutputSize(sizeof(uint));
 					*((uint*)OutputPointer) = IsoFile.SectorSize;
 					return 0;
 				case UmdCommandEnum.GetLengthInBytes:
-					if (OutputLength < 8 || OutputPointer == null) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
-					*((uint*)OutputPointer) = (uint)IsoFileArgument.Size;
+					ExpectedOutputSize(sizeof(ulong));
+					*((ulong*)OutputPointer) = (uint)IsoFileArgument.Size;
 					return 0;
 				case UmdCommandEnum.GetPrimaryVolumeDescriptor:
-					if (OutputLength != IsoFile.SectorSize || OutputPointer == null) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_ARGUMENT));
+					ExpectedOutputSize((int)IsoFile.SectorSize);
 					*((PrimaryVolumeDescriptor*)OutputPointer) = Iso.PrimaryVolumeDescriptor;
 					return 0;
 				default:
-					throw new NotImplementedException(String.Format("Not implemented command 0x{0:X}", Command));
+					throw new NotImplementedException(String.Format("Not implemented command 0x{0:X} : {1}", Command, (UmdCommandEnum)Command));
 			}
 		}
 

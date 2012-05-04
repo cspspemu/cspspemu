@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core.Audio;
+using CSharpUtils;
 
 namespace CSPspEmu.Hle.Modules.sc_sascore
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	unsafe public partial class sceSasCore : HleModuleHost
 	{
+		static Logger Logger = Logger.GetLogger("sceSasCore");
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -297,8 +300,11 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		public int __sceSasCore(uint SasCorePointer, StereoShortSoundSample* SasOut)
 		{
 			var SasCore = GetSasCore(SasCorePointer);
-	
-			if (SasCore.OutputMode != OutputMode.PSP_SAS_OUTPUTMODE_STEREO) throw (new NotImplementedException());
+
+			if (SasCore.OutputMode != OutputMode.PSP_SAS_OUTPUTMODE_STEREO)
+			{
+				Logger.Unimplemented("SasCore.OutputMode != OutputMode.PSP_SAS_OUTPUTMODE_STEREO");
+			}
 
 			int NumberOfChannels = SasCore.OutputMode == OutputMode.PSP_SAS_OUTPUTMODE_STEREO ? 2 : 1;
 			int NumberOfSamples = SasCore.GrainSamples;

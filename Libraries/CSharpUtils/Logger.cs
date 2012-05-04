@@ -14,6 +14,7 @@ namespace CSharpUtils
 			Notice,
 			Info,
 			Warning,
+			Unimplemented,
 			Error,
 			Fatal,
 		}
@@ -78,6 +79,7 @@ namespace CSharpUtils
 		public Logger Notice(object Format, params object[] Params) { return Log(Level.Notice, Format, Params); }
 		public Logger Info(object Format, params object[] Params) { return Log(Level.Info, Format, Params); }
 		public Logger Warning(object Format, params object[] Params) { return Log(Level.Warning, Format, Params); }
+		public Logger Unimplemented(object Format, params object[] Params) { return Log(Level.Unimplemented, Format, Params); }
 		public Logger Error(object Format, params object[] Params) { return Log(Level.Error, Format, Params); }
 		public Logger Fatal(object Format, params object[] Params) { return Log(Level.Fatal, Format, Params); }
 
