@@ -85,6 +85,16 @@ namespace CSPspEmu.Hle.Modules.ctrl
 		}
 
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xDA6B76A1, FirmwareVersion = 150)]
+		public PspController.SamplingModeEnum sceCtrlGetSamplingMode()
+		{
+			return PspController.SamplingMode;
+		}
+
+		/// <summary>
 		/// Set the controller cycle setting.
 		/// </summary>
 		/// <param name="SamplingCycle">

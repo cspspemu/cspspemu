@@ -658,7 +658,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspNotImplemented]
 		public int sceKernelResumeDispatchThread(int State)
 		{
-			//throw(new NotImplementedException());
+			throw(new NotImplementedException());
 			return 0;
 		}
 
@@ -671,7 +671,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelSuspendDispatchThread()
 		{
 			// SCE_KERNEL_DISPATCHTHREAD_STATE_ENABLED : SCE_KERNEL_DISPATCHTHREAD_STATE_DISABLED
-			//throw(new NotImplementedException());
+			throw(new NotImplementedException());
 			return 0;
 		}
 

@@ -49,11 +49,20 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// <param name="FontCharInfoPointer"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xDCC80C2F, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceFontGetCharInfo(FontHandle FontHandle, ushort CharCode, FontCharInfo* FontCharInfoPointer)
 		{
-			var Font = Fonts.Get(FontHandle);
-			*FontCharInfoPointer = Font.GetCharInfo(CharCode);
-			return 0;
+			try
+			{
+				var Font = Fonts.Get(FontHandle);
+				*FontCharInfoPointer = Font.GetCharInfo(CharCode);
+				return 0;
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
+				return -1;
+			}
 		}
 
 		/// <summary>
@@ -91,38 +100,46 @@ namespace CSPspEmu.Hle.Modules.libfont
 		[HlePspFunction(NID = 0xCA1E6945, FirmwareVersion = 150)]
 		public int sceFontGetCharGlyphImage_Clip(FontHandle FontHandle, ushort CharCode, GlyphImage* GlyphImagePointer, int ClipX, int ClipY, int ClipWidth, int ClipHeight)
 		{
-			var Font = Fonts.Get(FontHandle);
-			var Glyph = Font.GetGlyph(CharCode);
-			var Face = Glyph.Face;
-			var PixelFormat = GlyphImagePointer->PixelFormat;
-			var Buffer = PspMemory.PspAddressToPointerSafe(GlyphImagePointer->Buffer);
-			var BufferHeight = GlyphImagePointer->BufferHeight;
-			var BufferWidth = GlyphImagePointer->BufferWidth;
-			var Position = GlyphImagePointer->Position;
-			var GlyphBitmap = Face.GetBitmap();
-			var OutputBitmap = new PspBitmap(PixelFormat, (int)BufferWidth, (int)BufferHeight, (byte*)Buffer);
-
 			try
 			{
-				for (int y = 0; y < ClipHeight; y++)
+				var Font = Fonts.Get(FontHandle);
+				var Glyph = Font.GetGlyph(CharCode);
+				var Face = Glyph.Face;
+				var PixelFormat = GlyphImagePointer->PixelFormat;
+				var Buffer = PspMemory.PspAddressToPointerSafe(GlyphImagePointer->Buffer);
+				var BufferHeight = GlyphImagePointer->BufferHeight;
+				var BufferWidth = GlyphImagePointer->BufferWidth;
+				var Position = GlyphImagePointer->Position;
+				var GlyphBitmap = Face.GetBitmap();
+				var OutputBitmap = new PspBitmap(PixelFormat, (int)BufferWidth, (int)BufferHeight, (byte*)Buffer);
+
+				try
 				{
-					for (int x = 0; x < ClipWidth; x++)
+					for (int y = 0; y < ClipHeight; y++)
 					{
-						//Console.WriteLine();
-						OutputBitmap.SetPixel(x, y, new OutputPixel(GlyphBitmap.GetPixel(x + ClipX, y + ClipY)));
-						//OutputBitmap.SetPixel(x, y, new OutputPixel(Color.Red));
+						for (int x = 0; x < ClipWidth; x++)
+						{
+							//Console.WriteLine();
+							OutputBitmap.SetPixel(x, y, new OutputPixel(GlyphBitmap.GetPixel(x + ClipX, y + ClipY)));
+							//OutputBitmap.SetPixel(x, y, new OutputPixel(Color.Red));
+						}
 					}
 				}
+				catch (Exception Exception)
+				{
+					Console.Error.WriteLine(Exception);
+				}
+
+				//for (int n = 0; n < )
+				//Console.Error.WriteLine("'{0}': {1}", (char)CharCode, Glyph);
+				//throw (new NotImplementedException());
+				return 0;
 			}
 			catch (Exception Exception)
 			{
 				Console.Error.WriteLine(Exception);
+				return -1;
 			}
-
-			//for (int n = 0; n < )
-			//Console.Error.WriteLine("'{0}': {1}", (char)CharCode, Glyph);
-			//throw (new NotImplementedException());
-			return 0;
 		}
 
 		/// <summary>
