@@ -79,13 +79,11 @@
     <Compile Include="IGuiExternalInterface.cs" />
     <Compile Include="IResetable.cs" />
     <Compile Include="ManagedPointer.cs" />
-    <Compile Include="Memory\NormalPspMemory2.cs" />
     <Compile Include="Memory\PspMemory.cs" />
     <Compile Include="Memory\LazyPspMemory.cs" />
     <Compile Include="Memory\FastPspMemory.cs" />
     <Compile Include="Memory\NormalPspMemory.cs" />
     <Compile Include="Memory\PspMemoryStream.cs" />
-    <Compile Include="Memory\PspMemoryStream2.cs" />
     <Compile Include="Memory\PspPointer.cs" />
     <Compile Include="PixelFormats.cs" />
     <Compile Include="Platform\Platform.cs" />

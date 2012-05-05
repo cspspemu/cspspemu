@@ -18,13 +18,13 @@ namespace CSPspEmu.Core.Cpu
 {
 	static public class ProcessorExtensions
 	{
-		static public void ExecuteAssembly(this CpuThreadState CpuThreadState, String Assembly, bool BreakPoint = false)
+		static public void ExecuteAssembly(this CpuThreadState CpuThreadState, String Assembly, bool BreakPoint = false, bool DoDebug = false, bool DoLog = false)
 		{
-			var Method = CpuThreadState.CpuProcessor.CreateDelegateForString(Assembly, BreakPoint);
+			var Method = CpuThreadState.CpuProcessor.CreateDelegateForString(Assembly, BreakPoint, DoDebug: DoDebug, DoLog: DoLog);
 			Method(CpuThreadState);
 		}
 
-		static public Action<CpuThreadState> CreateDelegateForString(this CpuProcessor CpuProcessor, String Assembly, bool BreakPoint = false)
+		static public Action<CpuThreadState> CreateDelegateForString(this CpuProcessor CpuProcessor, String Assembly, bool BreakPoint = false, bool DoDebug = false, bool DoLog = false)
 		{
 			CpuProcessor.MethodCache.Clear();
 
@@ -49,7 +49,7 @@ namespace CSPspEmu.Core.Cpu
 					while (true)
 					{
 						//Console.WriteLine("PC: {0:X}", _CpuThreadState.PC);
-						var Delegate = CpuProcessor.CreateDelegateForPC(MemoryStream, _CpuThreadState.PC);
+						var Delegate = CpuProcessor.CreateDelegateForPC(MemoryStream, _CpuThreadState.PC, DoDebug: DoDebug, DoLog: DoLog);
 						_CpuThreadState.StepInstructionCount = 1000000;
 						Delegate.Delegate(_CpuThreadState);
 					}
@@ -60,17 +60,17 @@ namespace CSPspEmu.Core.Cpu
 			};
 		}
 
-		static public PspMethodStruct CreateDelegateForPC(this CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC)
+		static public PspMethodStruct CreateDelegateForPC(this CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC, bool DoDebug = false, bool DoLog = false)
 		{
-			return FunctionGenerator.CreateDelegateForPC(CpuProcessor, MemoryStream, EntryPC);
+			return FunctionGenerator.CreateDelegateForPC(CpuProcessor, MemoryStream, EntryPC, DoDebug: DoDebug, DoLog: DoLog);
 		}
 
-		static public PspMethodStruct CreateAndCacheDelegateForPC(this CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC)
+		static public PspMethodStruct CreateAndCacheDelegateForPC(this CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC, bool DoDebug, bool DoLog)
 		{
 			var Delegate = CpuProcessor.MethodCache.TryGetMethodAt(EntryPC);
 			if (Delegate == null)
 			{
-				Delegate = CpuProcessor.CreateDelegateForPC(MemoryStream, EntryPC);
+				Delegate = CpuProcessor.CreateDelegateForPC(MemoryStream, EntryPC, DoDebug: DoDebug, DoLog: DoLog);
 				CpuProcessor.MethodCache.SetMethodAt(EntryPC, Delegate);
 			}
 			return Delegate;

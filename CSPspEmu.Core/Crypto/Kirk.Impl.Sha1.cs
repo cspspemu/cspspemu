@@ -49,7 +49,7 @@ namespace CSPspEmu.Core.Crypto
 				PointerUtils.PointerToByteArray(InputBuffer + 4, InputSize)
 			);
 
-			Marshal.Copy(Sha1Hash, 0, new IntPtr(OutputBuffer), Sha1Hash.Length);
+			PointerUtils.Memcpy(OutputBuffer, Sha1Hash, Sha1Hash.Length);
 		}
 
 		/// <summary>

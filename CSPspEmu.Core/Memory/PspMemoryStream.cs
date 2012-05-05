@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using System.Runtime.InteropServices;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Memory
 {
@@ -55,7 +55,9 @@ namespace CSPspEmu.Core.Memory
 		public override int Read(byte[] buffer, int offset, int count)
 		{
 			byte* Ptr = (byte*)Memory.PspAddressToPointerSafe(_Position, count);
-			Marshal.Copy(new IntPtr(Ptr), buffer, offset, count);
+			{
+				PointerUtils.Memcpy(new ArraySegment<byte>(buffer, offset, count), Ptr);
+			}
 			_Position += (uint)count;
 			return count;
 		}
@@ -65,8 +67,9 @@ namespace CSPspEmu.Core.Memory
 			//Console.WriteLine("PspMemoryStream.Write(Size: {0}, _Position: 0x{1:X})", count, _Position);
 			byte* Ptr = (byte*)Memory.PspAddressToPointerSafe(_Position, count);
 			//Console.WriteLine("  Ptr: 0x{0:X}", (ulong)Ptr);
-
-			Marshal.Copy(buffer, offset, new IntPtr(Ptr), count);
+			{
+				PointerUtils.Memcpy(Ptr, new ArraySegment<byte>(buffer, offset, count));
+			}
 			_Position += (uint)count;
 		}
 	}

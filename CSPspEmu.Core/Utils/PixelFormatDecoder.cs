@@ -478,7 +478,7 @@ namespace CSPspEmu.Core.Utils
 			{
 				Unswizzle(Data, TempPointer, RowWidth, TextureHeight);
 			}
-			Marshal.Copy(Temp, 0, new IntPtr(Data), RowWidth * TextureHeight);
+			PointerUtils.Memcpy((byte*)Data, Temp, RowWidth * TextureHeight);
 		}
 
 		public static unsafe void UnswizzleInline(GuPixelFormats Format, void* Data, int Width, int Height)

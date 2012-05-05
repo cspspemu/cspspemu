@@ -8,6 +8,7 @@ using System.Reflection.Emit;
 using CSPspEmu.Core.Cpu.Table;
 using CSPspEmu.Core.Memory;
 using Codegen;
+using CSPspEmu.Core.Cpu.Assembler;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -47,14 +48,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		*/
 
-		static public PspMethodStruct CreateDelegateForPC(CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC)
+		static public PspMethodStruct CreateDelegateForPC(CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC, bool DoDebug = false, bool DoLog = false)
 		{
 			DateTime Start, End;
 			int InstructionsProcessed = 0;
 			Start = DateTime.UtcNow;
 			try
 			{
-				return _CreateDelegateForPC(CpuProcessor, MemoryStream, EntryPC, out InstructionsProcessed);
+				return _CreateDelegateForPC(CpuProcessor, MemoryStream, EntryPC, out InstructionsProcessed, DoDebug: DoDebug, DoLog: DoLog);
 			}
 			finally
 			{
@@ -63,7 +64,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		static private PspMethodStruct _CreateDelegateForPC(CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC, out int InstructionsProcessed)
+		static private MipsDisassembler MipsDisassembler = new MipsDisassembler();
+
+		static private PspMethodStruct _CreateDelegateForPC(CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC, out int InstructionsProcessed, bool DoDebug = false, bool DoLog = false)
 		{
 			InstructionsProcessed = 0;
 
@@ -87,7 +90,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 
 			var InstructionReader = new InstructionReader(MemoryStream);
-			var MipsMethodEmiter = new MipsMethodEmiter(MipsEmiter, CpuProcessor, EntryPC);
+			var MipsMethodEmiter = new MipsMethodEmiter(MipsEmiter, CpuProcessor, EntryPC, DoDebug: DoDebug, DoLog: DoLog);
 			var SafeILGenerator = MipsMethodEmiter.SafeILGenerator;
 			var CpuEmiter = new CpuEmiter(MipsMethodEmiter, InstructionReader, MemoryStream, CpuProcessor);
 
@@ -98,6 +101,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			var Labels = new SortedDictionary<uint, SafeLabel>();
 			var BranchesToAnalyze = new Queue<uint>();
 			var AnalyzedPC = new HashSet<uint>();
+			
+			// Instructions to SKIP code generation, because they have been grouped in other instruction.
+			var SkipPC = new HashSet<uint>();
 
 			Labels[EntryPC] = SafeILGenerator.DefineLabel("EntryPoint");
 
@@ -140,12 +146,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 					//Console.WriteLine("    PC:{0:X}", PC);
 
-					CpuEmiter.LoadAT(PC);
+					var Instruction = CpuEmiter.LoadAT(PC);
 
-					var BranchInfo = GetBranchInfo(CpuEmiter.Instruction.Value);
+					var BranchInfo = GetBranchInfo(CpuEmiter.Instruction);
 					if (CpuProcessor.PspConfig.LogInstructionStats)
 					{
-						var InstructionName = GetInstructionName(CpuEmiter.Instruction.Value, null);
+						var InstructionName = GetInstructionName(CpuEmiter.Instruction, null);
 
 						if (!InstructionStats.ContainsKey(InstructionName)) InstructionStats[InstructionName] = 0;
 						InstructionStats[InstructionName]++;
@@ -161,39 +167,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 						//var InstructionStats = new Dictionary<string, uint>();
 						//var NewInstruction = new Dictionary<string, bool>();
 					}
-
-#if false
-					if ((BranchInfo & CpuBranchAnalyzer.JumpFlags.BranchOrJumpInstruction) != 0)
-					{
-						var BranchAddress = CpuEmiter.Instruction.GetBranchAddress(PC);
-						Labels[BranchAddress] = SafeILGenerator.DefineLabel("" + BranchAddress);
-						BranchesToAnalyze.Enqueue(BranchAddress);
-					}
-
-					// Branch instruction.
-					//if ((BranchInfo & CpuBranchAnalyzer.JumpFlags.JumpInstruction) != 0)
-					if ((BranchInfo & CpuBranchAnalyzer.JumpFlags.JumpAlways) != 0)
-					{
-						//Console.WriteLine("Instruction");
-						EndOfBranchFound = true;
-						continue;
-					}
-					else if ((BranchInfo & CpuBranchAnalyzer.JumpFlags.SyscallInstruction) != 0)
-					{
-						// On this special Syscall
-						if (CpuEmiter.Instruction.CODE == SyscallInfo.NativeCallSyscallCode)
-						{
-							//PC += 4;
-							goto HandleNextBranch;
-						}
-					}
-
-					// A Jump Always found. And we have also processed the delayed branch slot. End the branch.
-					if (EndOfBranchFound)
-					{
-						goto HandleNextBranch;
-					}
-#else
 
 					// Branch instruction.
 					if ((BranchInfo & CpuBranchAnalyzer.JumpFlags.JumpInstruction) != 0)
@@ -234,13 +207,15 @@ namespace CSPspEmu.Core.Cpu.Emiter
 						EndOfBranchFound = false;
 						goto HandleNextBranch;
 					}
-#endif
 				}
 			}
 
 			// PASS2: Generate code and put labels;
 			Action<uint> _EmitCpuInstructionAT = (_PC) =>
 			{
+				// Skip emit instruction.
+				if (SkipPC.Contains(_PC)) return;
+
 				if (CpuProcessor.PspConfig.TraceJIT)
 				{
 					SafeILGenerator.LoadArgument<CpuThreadState>(0);
@@ -249,8 +224,74 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					Console.WriteLine("     PC=0x{0:X}", _PC);
 				}
 
-				CpuEmiter.LoadAT(_PC);
-				CpuEmiterInstruction(CpuEmiter.Instruction.Value, CpuEmiter);
+#if true
+				var Instruction = CpuEmiter.LoadAT(_PC);
+				var InstructionDisasm = MipsDisassembler.Disassemble(_PC, Instruction);
+
+				if (InstructionDisasm.InstructionInfo.Name == "lwl")
+				{
+					// set: RT
+					// get: RT, RS
+					var lwl_rt = Instruction.RT;
+					var lwl_rs = Instruction.RS;
+					var lwl_offset = Instruction.IMM;
+
+					for (int n = 1; n < 16; n++)
+					{
+						var PC2 = (uint)(_PC + n * 4);
+
+						// A label between!
+						if (Labels.ContainsKey(PC2))
+						{
+							Console.WriteLine("Label!");
+							break;
+						}
+						if (!AnalyzedPC.Contains(PC2))
+						{
+							Console.WriteLine("Not analyzed!");
+							break;
+						}
+
+						var Instruction2 = CpuEmiter.LoadAT(PC2);
+						var Instruction2Disasm = MipsDisassembler.Disassemble(PC2, Instruction2);
+
+						//Console.WriteLine(Instruction2Disasm);
+
+						// TODO: Check if other instructions modify RT or RS register!!
+
+						if (Instruction2Disasm.InstructionInfo.Name == "lwr")
+						{
+							//Console.WriteLine("lwr!");
+							var lwr_rt = Instruction2.RT;
+							var lwr_rs = Instruction2.RS;
+							var lwr_offset = Instruction2.IMM;
+
+							//Console.WriteLine("lwl! : {0}, {1}, {2}", lwl_rt, lwl_rs, lwl_offset);
+							//Console.WriteLine("lwr! : {0}, {1}, {2}", lwr_rt, lwr_rs, lwr_offset);
+
+							if ((lwl_rt == lwr_rt) && (lwl_rs == lwr_rs) && (lwr_offset == lwl_offset - 3))
+							{
+								//Console.WriteLine("Found it!");
+								
+								// FOUND IT!
+								SkipPC.Add(PC2);
+
+								// Emit Unaligned LW 
+								//SafeILGenerator.emi
+								Instruction.RT = lwr_rt;
+								Instruction.RS = lwr_rs;
+								Instruction.IMM = lwr_offset;
+								CpuEmiter._lw_unaligned();
+								//CpuEmiterInstruction(CpuEmiter.Instruction.Value, CpuEmiter);
+								return;
+							}
+						}
+					}
+				}
+#endif
+
+				Instruction = CpuEmiter.LoadAT(_PC);
+				CpuEmiterInstruction(CpuEmiter.Instruction, CpuEmiter);
 			};
 
 			uint InstructionsEmitedSinceLastWaypoint = 0;
@@ -473,6 +514,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 			//if (BreakPoint) IsDebuggerPresentDebugBreak();
 			Action<CpuThreadState> Delegate = MipsMethodEmiter.CreateDelegate();
+
+			if (DoLog)
+			{
+				foreach (var Instruction in MipsMethodEmiter.SafeILGenerator.GetEmittedInstructions()) Console.WriteLine(Instruction);
+			}
 
 			return new PspMethodStruct()
 			{

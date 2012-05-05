@@ -9,6 +9,7 @@ using CSharpUtils.Extensions;
 using System.Collections.Generic;
 using CSPspEmu.Core.Memory;
 using CSharpUtils.Factory;
+using System.Threading;
 
 namespace CSPspEmu.Core.Tests
 {
@@ -783,6 +784,19 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
+		public void LoadUnalignedTest()
+		{
+			var Value = 0x87654321;
+			Memory.WriteSafe<uint>(0x08010004, 0x87654321);
+			ExecuteAssembly(@"
+				li r2, 0x08010000
+				lwl r1, 7(r2)
+				lwr r1, 4(r2)
+			");
+			Assert.AreEqual((uint)Value, (uint)CpuThreadState.GPR[1]);
+		}
+
+		[TestMethod]
 		public void ConvertFloat2Test()
 		{
 			CpuThreadState.FPR[29] = 13.4f;
@@ -850,7 +864,10 @@ namespace CSPspEmu.Core.Tests
 
 		protected void ExecuteAssembly(String Assembly)
 		{
-			CpuThreadState.ExecuteAssembly(Assembly);
+			CpuThreadState.ExecuteAssembly(
+				Assembly
+				, DoDebug: true, DoLog: true
+			);
 		}
 	}
 }

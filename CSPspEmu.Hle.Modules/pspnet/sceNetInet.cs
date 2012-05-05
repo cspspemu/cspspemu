@@ -221,7 +221,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 			var Socket = Sockets.Get(SocketId);
 			var RecvBuffer = new byte[BufferLength];
 			int Received = Socket.Receive(RecvBuffer, Flags);
-			Marshal.Copy(RecvBuffer, 0, new IntPtr(BufferPointer), Received);
+			PointerUtils.Memcpy((byte*)BufferPointer, RecvBuffer, Received);
 			return Received;
 		}
 

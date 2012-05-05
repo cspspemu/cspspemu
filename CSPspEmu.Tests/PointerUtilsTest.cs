@@ -8,7 +8,7 @@ using CSharpUtils;
 namespace CSPspEmu.Tests
 {
 	[TestClass]
-	public class PointerUtilsTest
+	unsafe public class PointerUtilsTest
 	{
 		[TestMethod]
 		public void TestMemset()
@@ -19,6 +19,29 @@ namespace CSPspEmu.Tests
 			CollectionAssert.AreEqual(
 				((byte)0x3E).Repeat(Data.Length),
 				Data
+			);
+		}
+
+		[TestMethod]
+		public void TestMemcpy()
+		{
+			int SizeStart = 17;
+			int SizeMiddle = 77;
+			int SizeEnd = 17;
+			var Dst = new byte[SizeStart + SizeMiddle + SizeEnd];
+			fixed (byte* DstPtr = &Dst[SizeStart])
+			{
+				PointerUtils.Memcpy(DstPtr, ((byte)0x1D).Repeat(SizeMiddle).ToArray(), SizeMiddle);
+			}
+
+			var Expected = ((byte)0x00).Repeat(SizeStart).Concat(((byte)0x1D).Repeat(SizeMiddle)).Concat(((byte)0x00).Repeat(SizeEnd)).ToArray();
+
+			//Console.WriteLine(BitConverter.ToString(Dst));
+			//Console.WriteLine(BitConverter.ToString(Expected));
+
+			CollectionAssert.AreEqual(
+				Expected,
+				Dst
 			);
 		}
 	}
