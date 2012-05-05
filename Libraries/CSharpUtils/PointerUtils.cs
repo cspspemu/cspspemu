@@ -54,34 +54,47 @@ namespace CSharpUtils
 			}
 		}
 
+		private static bool Is64;
+
+		static PointerUtils()
+		{
+			Is64 = Environment.Is64BitProcess;
+		}
+
 		static public void Memset(byte* Pointer, byte Value, int Count)
 		{
 			if (Pointer == null) throw(new ArgumentNullException("Memset pointer is null"));
 
+#if true
 			if (Count >= 32)
 			{
 				var Value2 = (ushort)(((ushort)Value << 8) | ((ushort)Value << 0));
 				var Value4 = (uint)(((uint)Value2 << 16) | ((uint)Value2 << 0));
 
-#if true
-				var Value8 = (ulong)(((ulong)Value4 << 32) | ((ulong)Value4 << 0));
-				var Pointer8 = (ulong*)Pointer;
-				while (Count >= 8)
+				if (Is64)
 				{
-					*Pointer8++ = Value8;
-					Count -= 8;
+
+					var Value8 = (ulong)(((ulong)Value4 << 32) | ((ulong)Value4 << 0));
+					var Pointer8 = (ulong*)Pointer;
+					while (Count >= 8)
+					{
+						*Pointer8++ = Value8;
+						Count -= 8;
+					}
+					Pointer = (byte*)Pointer8;
 				}
-				Pointer = (byte*)Pointer8;
-#else
-				var Pointer4 = (uint*)Pointer;
-				while (Count >= 4)
+				else
 				{
-					*Pointer4++ = Value4;
-					Count -= 4;
+					var Pointer4 = (uint*)Pointer;
+					while (Count >= 4)
+					{
+						*Pointer4++ = Value4;
+						Count -= 4;
+					}
+					Pointer = (byte*)Pointer4;
 				}
-				Pointer = (byte*)Pointer4;
-#endif
 			}
+#endif
 
 			while (Count > 0)
 			{
@@ -90,6 +103,7 @@ namespace CSharpUtils
 			}
 		}
 
+#if false
 		static public void MemsetSlow(byte[] Array, byte Value, int Count)
 		{
 			fixed (byte* ArrayPointer = Array)
@@ -104,39 +118,75 @@ namespace CSharpUtils
 
 			while (Count-- > 0) *Pointer++ = Value;
 		}
+#endif
 
-		[DllImport("kernel32.dll")]
-		static extern void RtlMoveMemory(byte* Destination, byte* Source, int Size);
+		public static void Memcpy(byte* Destination, ArraySegment<byte> Source)
+		{
+			fixed (byte* SourcePtr = &Source.Array[Source.Offset])
+			{
+				Memcpy(Destination, SourcePtr, Source.Count);
+			}
+		}
+
+		public static void Memcpy(byte* Destination, byte[] Source, int Count)
+		{
+			fixed (byte* SourcePtr = Source)
+			{
+				Memcpy(Destination, SourcePtr, Count);
+			}
+		}
+
+		public static void Memcpy(ArraySegment<byte> Destination, byte* Source)
+		{
+			//var Pin = GCHandle.Alloc(Destination.Array, GCHandleType.Pinned);
+			//Pin.Free();
+			fixed (byte* DestinationPtr = &Destination.Array[Destination.Offset])
+			{
+				//Marshal.UnsafeAddrOfPinnedArrayElement(
+				Memcpy(DestinationPtr, Source, Destination.Count);
+			}
+		}
+
+		public static void Memcpy(byte[] Destination, byte* Source, int Count)
+		{
+			fixed (byte* DestinationPtr = Destination)
+			{
+				Memcpy(DestinationPtr, Source, Count);
+			}
+		}
 
 		public static void Memcpy(byte* Destination, byte* Source, int Size)
 		{
-			//Marshal.Copy(new IntPtr(Source), new IntPtr(Destination), 0, Size);
 #if true
-			switch (Environment.OSVersion.Platform)
+			if (Is64)
 			{
-				case PlatformID.Win32NT:
-				case PlatformID.Win32Windows:
-				case PlatformID.WinCE:
-				case PlatformID.Win32S:
-					RtlMoveMemory(Destination, Source, Size);
-					break;
-				case PlatformID.Unix:
-					while (Size-- > 0) *Destination++ = *Source++;
-					break;
+				while (Size >= sizeof(ulong))
+				{
+					*(ulong*)Destination = *(ulong*)Source;
+					Destination += sizeof(ulong);
+					Source += sizeof(ulong);
+					Size -= sizeof(ulong);
+				}
 			}
-			
-			//while (Size-- > 0) *Destination++ = *Source++;
-			/*
-			byte* DestinationEnd = Destination + Size;
-			while (Destination < DestinationEnd)
+			else
 			{
-				*Destination++ = *Source++;
+				while (Size >= sizeof(uint))
+				{
+					*(ulong*)Destination = *(ulong*)Source;
+					Destination += sizeof(uint);
+					Source += sizeof(uint);
+					Size -= sizeof(uint);
+				}
 			}
-			*/
-#else
-			//Marshal.Copy(new IntPtr(Source), new IntPtr(Destination), 0, Size);
-			for (int n = 0; n < Size; n++) Destination[n] = Source[n];
 #endif
+
+			while (Size > 0)
+			{
+				*((byte*)Destination) = *((byte*)Source);
+				Destination++;
+				Source++;
+				Size--;
+			}
 		}
 
 		public static unsafe byte[] PointerToByteArray(byte* Pointer, int Size)
@@ -204,7 +254,7 @@ namespace CSharpUtils
 
 		public static unsafe void ByteArrayToPointer(byte[] Array, byte* Output)
 		{
-			Marshal.Copy(Array, 0, new IntPtr(Output), Array.Length);
+			PointerUtils.Memcpy(Output, Array, Array.Length);
 		}
 
 		public static string FixedByteGet(int Size, byte* Ptr)
@@ -215,6 +265,11 @@ namespace CSharpUtils
 		public static void FixedByteSet(int Size, byte* Ptr, string Value)
 		{
 			StoreStringOnPtr(Value, Encoding.UTF8, Ptr, Size);
+		}
+
+		public static int Sizeof<T>()
+		{
+			return Marshal.SizeOf(typeof(T));
 		}
 
 		public static unsafe int Memcmp(byte* Left, byte* Right, int Count)

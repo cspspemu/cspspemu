@@ -15,10 +15,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public Instruction Instruction { private set; get; }
 		public uint PC { private set; get; }
 
-		public void LoadAT(uint PC)
+		public Instruction LoadAT(uint PC)
 		{
 			this.PC = PC;
-			this.Instruction = InstructionReader[PC];
+			return this.Instruction = InstructionReader[PC];
 		}
 
 		public int RT { get { return Instruction.RT; } }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Runtime.InteropServices;
 using CSharpUtils;
 using System.IO;
 
@@ -184,7 +183,7 @@ namespace CSPspEmu.Core.Memory
 
 		public void WriteBytes(uint Address, byte[] DataIn)
 		{
-			Marshal.Copy(DataIn, 0, new IntPtr(PspAddressToPointerSafe(Address, DataIn.Length)), DataIn.Length);
+			PointerUtils.Memcpy((byte*)PspAddressToPointerSafe(Address, DataIn.Length), DataIn, DataIn.Length);
 		}
 
 		public void WriteBytes(uint Address, byte* DataInPointer, int DataInLength)
@@ -226,13 +225,16 @@ namespace CSPspEmu.Core.Memory
 
 		public TType ReadSafe<TType>(uint Address) where TType : struct
 		{
-			return StructUtils.BytesToStruct<TType>(ReadBytes(Address, Marshal.SizeOf(typeof(TType))));
+			return StructUtils.BytesToStruct<TType>(ReadBytes(Address, PointerUtils.Sizeof<TType>()));
 		}
 
 		public byte[] ReadBytes(uint Address, int Count)
 		{
 			var Output = new byte[Count];
-			Marshal.Copy(new IntPtr(PspAddressToPointerSafe(Address, Count)), Output, 0, Output.Length);
+			fixed (byte* OutputPtr = Output)
+			{
+				ReadBytes(Address, OutputPtr, Count);
+			}
 			return Output;
 		}
 
@@ -243,7 +245,7 @@ namespace CSPspEmu.Core.Memory
 
 		public TType ReadStruct<TType>(uint Address) where TType : struct
 		{
-			return StructUtils.BytesToStruct<TType>(ReadBytes(Address, Marshal.SizeOf(typeof(TType))));
+			return StructUtils.BytesToStruct<TType>(ReadBytes(Address, PointerUtils.Sizeof<TType>()));
 		}
 
 		abstract public void Dispose();

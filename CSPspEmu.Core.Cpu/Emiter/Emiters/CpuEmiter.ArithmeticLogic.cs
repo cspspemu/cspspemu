@@ -19,8 +19,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void sub() { MipsMethodEmiter.OP_3REG_Signed(RD, RS, RT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned); }); }
 		public void subu() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RS, RT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned); }); }
 
-		public void addi() { MipsMethodEmiter.OP_2REG_IMM_Signed(RT, RS, (short)IMM, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); }); }
-		public void addiu() { MipsMethodEmiter.OP_2REG_IMM_Signed(RT, RS, (short)IMM, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); }); }
+		public void addi() {
+			SafeILGenerator.Comment("addi");
+			MipsMethodEmiter.OP_2REG_IMM_Signed(RT, RS, (short)IMM, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); });
+		}
+		public void addiu() {
+			SafeILGenerator.Comment("addu");
+			MipsMethodEmiter.OP_2REG_IMM_Signed(RT, RS, (short)IMM, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); });
+		}
 
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////

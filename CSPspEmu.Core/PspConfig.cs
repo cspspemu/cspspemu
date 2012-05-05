@@ -49,7 +49,8 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
-		public bool CountInstructionsAndYield = true;
+		//public bool CountInstructionsAndYield = true;
+		public bool CountInstructionsAndYield = false;
 
 
 		/// <summary>

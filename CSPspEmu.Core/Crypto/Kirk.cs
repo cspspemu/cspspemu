@@ -396,7 +396,8 @@ namespace CSPspEmu.Core.Crypto
 		/// <returns></returns>
 		public int sceUtilsSetFuseID(void* fuse)
 		{
-			Marshal.Copy(new IntPtr(fuse), fuseID, 0, 16);
+			//PointerUtils.Memcpy(new ArraySegment<byte>(fuseID, 0, 16), (byte*)fuse);
+			PointerUtils.Memcpy(fuseID, (byte*)fuse, 16);
 			return 0;
 		}
 

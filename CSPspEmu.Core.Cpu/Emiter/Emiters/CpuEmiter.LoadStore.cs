@@ -77,6 +77,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void lh() { _load_i(() => { SafeILGenerator.LoadIndirect<short>(); }); }
 		public void lw() {
 			//MipsMethodEmiter.ILGenerator.EmitWriteLine(String.Format("PC(0x{0:X}) : LW: rt={1}, rs={2}, imm={3}", PC, RT, RS, Instruction.IMM));
+			_lw_unaligned();
+		}
+
+		public void _lw_unaligned()
+		{
+			//MipsMethodEmiter.ILGenerator.EmitWriteLine(String.Format("PC(0x{0:X}) : LW: rt={1}, rs={2}, imm={3}", PC, RT, RS, Instruction.IMM));
 			_load_i(() => { SafeILGenerator.LoadIndirect<int>(); });
 		}
 

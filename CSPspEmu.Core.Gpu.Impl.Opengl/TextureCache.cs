@@ -272,7 +272,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 							{
 								fixed (byte* SwizzlingBufferPointer = SwizzlingBuffer)
 								{
-									Marshal.Copy(new IntPtr(TexturePointer), SwizzlingBuffer, 0, TextureDataSize);
+									PointerUtils.Memcpy(SwizzlingBuffer, TexturePointer, TextureDataSize);
 									PixelFormatDecoder.UnswizzleInline(TextureFormat, (void*)SwizzlingBufferPointer, BufferWidth, Height);
 									PixelFormatDecoder.Decode(
 										TextureFormat, (void*)SwizzlingBufferPointer, TexturePixelsPointer, BufferWidth, Height,

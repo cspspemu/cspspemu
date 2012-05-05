@@ -23,7 +23,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
 		[HlePspNotImplemented]
 		public int sceNpDrmSetLicenseeKey(byte* npDrmKeyAddr)
 		{
-			Marshal.Copy(new IntPtr(npDrmKeyAddr), npDrmKey, 0, PSP_NPDRM_KEY_LENGHT);
+			PointerUtils.Memcpy(npDrmKey, npDrmKeyAddr, PSP_NPDRM_KEY_LENGHT);
 			return 0;
 		}
 

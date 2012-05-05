@@ -128,7 +128,7 @@ namespace CSPspEmu.Hle.Vfs.Iso
 			var IsoFileArgument = ((IsoFileArgument)HleIoDrvFileArg.FileArgument);
 			var OutputData = new byte[OutputLength];
 			int Readed = IsoFileArgument.Stream.Read(OutputData, 0, OutputLength);
-			Marshal.Copy(OutputData, 0, new IntPtr(OutputPointer), OutputLength);
+			PointerUtils.Memcpy(OutputPointer, OutputData, OutputLength);
 			return Readed;
 			//throw new NotImplementedException();
 		}

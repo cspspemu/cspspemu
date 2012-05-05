@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Runtime.InteropServices;
 using CSharpUtils;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Formats.video
 {
@@ -52,7 +52,7 @@ namespace CSPspEmu.Hle.Formats.video
 					var ManagedBytes = new byte[5];
 					fixed (byte* BytesPtr = this.Bytes)
 					{
-						Marshal.Copy(new IntPtr(BytesPtr), ManagedBytes, 0, 5);
+						PointerUtils.Memcpy(ManagedBytes, BytesPtr, 5);
 					}
 					return ManagedBytes;
 				}

@@ -11,7 +11,6 @@ namespace CSPspEmu.Core.Cpu.Assembler
 	public class MipsDisassembler
 	{
 		static public readonly MipsDisassembler Methods = new MipsDisassembler();
-		static protected Dictionary<String, InstructionInfo> InstructionDictionary = new Dictionary<String, InstructionInfo>();
 
 		public struct Result
 		{
@@ -72,24 +71,22 @@ namespace CSPspEmu.Core.Cpu.Assembler
 		{
 		}
 
+		static protected InstructionInfo[] InstructionLookup;
 		public Result Disassemble(uint PC, Instruction Instruction)
 		{
 			if (ProcessCallback == null)
 			{
-				InstructionDictionary = InstructionTable.ALL.ToDictionary(Item => Item.Name);
+				var Dictionary = new Dictionary<InstructionInfo, int>();
+
+				InstructionLookup = InstructionTable.ALL.ToArray();
+				for (int n = 0; n < InstructionLookup.Length; n++) Dictionary[InstructionLookup[n]] = n;
+
 				ProcessCallback = EmitLookupGenerator.GenerateSwitch<Func<uint, MipsDisassembler, Result>>(InstructionTable.ALL, (SafeILGenerator, InstructionInfo) =>
 				{
 					//SafeILGenerator.LoadArgument<MipsDisassembler>(1);
 					SafeILGenerator.LoadArgument<uint>(0);
-					if (InstructionInfo == null)
-					{
-						SafeILGenerator.Push("Unknown");
-					}
-					else
-					{
-						SafeILGenerator.Push(InstructionInfo.Name);
-					}
-					SafeILGenerator.Call((Func<uint, String, Result>)MipsDisassembler._InternalHandle);
+					SafeILGenerator.Push((InstructionInfo != null) ? Dictionary[InstructionInfo] : -1);
+					SafeILGenerator.Call((Func<uint, int, Result>)MipsDisassembler._InternalHandle);
 				});
 			}
 
@@ -98,12 +95,12 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			return Result;
 		}
 
-		static public Result _InternalHandle(uint Data, String Name)
+		static public Result _InternalHandle(uint Data, int Index)
 		{
 			return new Result()
 			{
 				Instruction = Data,
-				InstructionInfo = MipsDisassembler.InstructionDictionary[Name],
+				InstructionInfo = (Index != -1) ? MipsDisassembler.InstructionLookup[Index] : null,
 			};
 		}
 	}

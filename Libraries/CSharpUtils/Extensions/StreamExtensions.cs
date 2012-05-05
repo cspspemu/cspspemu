@@ -573,7 +573,7 @@ static public class StreamExtensions
 	{
 		var Data = new byte[Count];
 		int Result = Stream.Read(Data, 0, Count);
-		Marshal.Copy(Data, 0, new IntPtr(Pointer), Count);
+		PointerUtils.Memcpy(Pointer, Data, Count);
 		return Result;
 	}
 }

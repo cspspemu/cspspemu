@@ -102,7 +102,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		public MipsMethodEmiter(MipsEmiter MipsEmiter, CpuProcessor Processor, uint PC)
+		public MipsMethodEmiter(MipsEmiter MipsEmiter, CpuProcessor Processor, uint PC, bool DoDebug = false, bool DoLog = false)
 		{
 			this.Processor = Processor;
 
@@ -135,8 +135,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				DoDebug: false,
 				DoLog: true
 #else
-				DoDebug: false,
-				DoLog: false
+				DoDebug: DoDebug,
+				DoLog: DoLog
 #endif
 			);
 #else
