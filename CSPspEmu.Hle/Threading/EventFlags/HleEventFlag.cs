@@ -10,7 +10,15 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 	unsafe public class HleEventFlag
 	{
 		public EventFlagInfo Info = new EventFlagInfo(0);
-		protected List<WaitThread> WaitingThreads = new List<WaitThread>();
+		protected List<WaitThread> _WaitingThreads = new List<WaitThread>();
+
+		public IEnumerable<WaitThread> WaitingThreads
+		{
+			get
+			{
+				return _WaitingThreads;
+			}
+		}
 
 		public class WaitThread
 		{
@@ -50,13 +58,13 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 
 		public void AddWaitingThread(WaitThread WaitThread)
 		{
-			WaitingThreads.Add(WaitThread);
+			_WaitingThreads.Add(WaitThread);
 			UpdateWaitingThreads();
 		}
 
 		protected void UpdateWaitingThreads()
 		{
-			foreach (var WaitingThread in WaitingThreads.ToArray())
+			foreach (var WaitingThread in _WaitingThreads.ToArray())
 			{
 				uint Matching = 0;
 				//Console.Error.WriteLine("");
@@ -79,13 +87,13 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 						Info.CurrentPattern = 0;
 						//throw (new NotImplementedException());
 					}
-					WaitingThreads.Remove(WaitingThread);
+					_WaitingThreads.Remove(WaitingThread);
 					WaitingThread.WakeUpCallback();
 					//Console.Error.WriteLine("WAKE UP!!");
 				}
 			}
 
-			Info.NumberOfWaitingThreads = WaitingThreads.Count;
+			Info.NumberOfWaitingThreads = _WaitingThreads.Count;
 		}
 
 		/// <summary>

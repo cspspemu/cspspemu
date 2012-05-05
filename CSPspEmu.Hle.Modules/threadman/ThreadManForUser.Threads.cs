@@ -358,6 +358,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 				{
 					sceKernelCheckCallback(CurrentThread.CpuThreadState);
 				}
+				//ThreadManager.ScheduleNext();
+				ThreadManager.Reschedule();
 				CurrentThread.CpuThreadState.Yield();
 			}
 			else

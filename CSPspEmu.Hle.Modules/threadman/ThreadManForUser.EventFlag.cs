@@ -235,8 +235,14 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspNotImplemented]
 		public int sceKernelCancelEventFlag(EventFlagId EventId, int NewPattern, int* NumWaitThread)
 		{
-			throw(new NotImplementedException());
-			//return 0;
+			var EventFlag = EventFlagManager.EventFlags.Get(EventId);
+			foreach (var WaitingThread in EventFlag.WaitingThreads)
+			{
+				WaitingThread.WakeUpCallback();
+			}
+			
+			//throw(new NotImplementedException());
+			return 0;
 		}
 	}
 }
