@@ -51,5 +51,13 @@ namespace CSPspEmu.Hle.Modules.loadexec
 			//throw(new NotImplementedException());
 			return 0;
 		}
+
+        [HlePspFunction(NID = 0x2AC9954B, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceKernelExitGameWithStatus()
+        {
+            return 0;
+        }
+    
 	}
 }

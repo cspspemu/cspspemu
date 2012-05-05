@@ -383,5 +383,12 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 			}
 			return 0;
 		}
+
+        [HlePspFunction(NID = 0xE1CD9561, FirmwareVersion = 500)]
+        [HlePspNotImplemented]
+        public int __sceSasSetVoicePCM()
+        {
+            return 0;
+        }
 	}
 }

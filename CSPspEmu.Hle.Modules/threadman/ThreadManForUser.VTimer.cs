@@ -274,6 +274,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="HandlerCallback">The timer handler</param>
 		/// <param name="HandlerArgument">Common pointer</param>
 		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0x53B00E9A, FirmwareVersion = 150)]
 		public int sceKernelSetVTimerHandlerWide(int VirtualTimerId, long Time, PspPointer HandlerCallback, PspPointer HandlerArgument)
 		{
 			var VirtualTimer = VirtualTimerPool.Get(VirtualTimerId);

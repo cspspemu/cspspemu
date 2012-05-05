@@ -166,6 +166,7 @@
     <Compile Include="utils\UtilsForKernel.cs" />
     <Compile Include="utils\UtilsForUser.cs" />
     <Compile Include="wlan\sceWlanDrv_lib.cs" />
+    <Compile Include="_unknownPrx\sceCcc.cs" />
     <Compile Include="_unknownPrx\KUBridge.cs" />
     <Compile Include="_unknownPrx\ModuleMgrForKernel.cs" />
     <Compile Include="_unknownPrx\sceDeflt.cs" />

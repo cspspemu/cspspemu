@@ -903,5 +903,19 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		{
 			return -1;
 		}
+
+        [HlePspFunction(NID = 0x5CF9D852, FirmwareVersion = 250)]
+        [HlePspNotImplemented]
+        public int sceAtracSetMOutHalfwayBuffer()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0x0FAE370E, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceAtracSetHalfwayBufferAndGetID()
+        {
+            return 0;
+        }
 	}
 }

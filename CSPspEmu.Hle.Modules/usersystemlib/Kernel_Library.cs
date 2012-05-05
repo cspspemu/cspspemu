@@ -92,6 +92,11 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 			return 0;
 		}
 
+		private int _sceKernelTryLockLwMutex(void* WorkAreaPointer, int Count)
+		{
+			return 0;
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -105,6 +110,14 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		{
 			return _sceKernelLockLwMutexCB(WorkAreaPointer, Count, TimeOut, HandleCallbacks: false);
 		}
+
+		[HlePspFunction(NID = 0x37431849, FirmwareVersion = 380)]
+		[HlePspNotImplemented]
+		public int sceKernelTryLockLwMutex_600(void* WorkAreaPointer, int Count)
+		{
+			return _sceKernelTryLockLwMutex(WorkAreaPointer, Count);
+		}
+
 
 		/// <summary>
 		/// 

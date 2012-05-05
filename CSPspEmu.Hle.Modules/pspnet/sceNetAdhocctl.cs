@@ -104,6 +104,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		 *
 		 * @return 0 on success, < 0 on error.
 		 */
+        [HlePspFunction(NID = 0x362CBE8F, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
 		public int sceNetAdhocctlGetAdhocId(productStruct* product)
 		{
 			throw(new NotImplementedException());
@@ -121,6 +123,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		 *
 		 * @return 0 on success, < 0 on error.
 		 */
+        [HlePspFunction(NID = 0xA5C055CE, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
 		public int sceNetAdhocctlCreateEnterGameMode(string name, int unknown, int num, string macs, uint timeout, int unknown2)
 		{
 			throw(new NotImplementedException());
@@ -136,6 +140,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		 *
 		 * @return 0 on success, < 0 on error.
 		 */
+        [HlePspFunction(NID = 0x1FF89745, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
 		public int sceNetAdhocctlJoinEnterGameMode(string name, string hostmac, uint timeout, int unknown)
 		{
 			throw(new NotImplementedException());
@@ -148,6 +154,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		 *
 		 * @return 0 on success, < 0 on error.
 		 */
+        [HlePspFunction(NID = 0x5A014CE0, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
 		public int sceNetAdhocctlGetGameModeInfo(SceNetAdhocctlGameModeInfo* gamemodeinfo)
 		{
 			throw(new NotImplementedException());
@@ -158,6 +166,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		 *
 		 * @return 0 on success, < 0 on error.
 		 */
+        [HlePspFunction(NID = 0xCF8E084D, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
 		public int sceNetAdhocctlExitGameMode()
 		{
 			throw(new NotImplementedException());
@@ -186,6 +196,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		 *
 		 * @return 0 on success, < 0 on error.
 		 */
+
+        [HlePspFunction(NID = 0x8DB83FDC, FirmwareVersion = 150)]
 		public int sceNetAdhocctlGetPeerInfo(string mac, int size, SceNetAdhocctlPeerInfo* peerinfo)
 		{
 			throw(new NotImplementedException());
@@ -197,6 +209,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		 * @return 0 on success, < 0 on error.
 		 */
 		[HlePspFunction(NID = 0x08FFF7A0, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
 		public int sceNetAdhocctlScan()
 		{
 			throw(new NotImplementedException());
@@ -270,6 +283,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		 *
 		 * @return 0 on success, < 0 on error.
 		 */
+        [HlePspFunction(NID = 0x99560ABE, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
 		public int sceNetAdhocctlGetAddrByName(char* nickname, int* length, void* buf)
 		{
 			throw(new NotImplementedException());
@@ -282,6 +297,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		 *
 		 * @return 0 on success, < 0 on error.
 		 */
+        [HlePspFunction(NID = 0xDED9D28E, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
 		public int sceNetAdhocctlGetParameter(SceNetAdhocctlParams* Params)
 		{
 			throw(new NotImplementedException());

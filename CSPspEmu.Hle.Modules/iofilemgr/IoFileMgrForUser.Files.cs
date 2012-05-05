@@ -507,6 +507,13 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			//throw(new NotImplementedException());
 			return 0;
 		}
+
+        [HlePspFunction(NID = 0xAB96437F, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceIoSync()
+        {
+            return 0;
+        }
 	}
 
 	public struct PspIoDrvFuncs

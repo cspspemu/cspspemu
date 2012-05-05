@@ -36,6 +36,41 @@ namespace CSPspEmu.Hle.Modules.pspnet
 			throw(new NotImplementedException());
 		}
 
+        [HlePspFunction(NID = 0x7A662D6B, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceNetAdhocPollSocket()
+        {
+            throw (new NotImplementedException());
+        }
+
+        [HlePspFunction(NID = 0x6F92741B, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceNetAdhocPdpCreate()
+        {
+            throw (new NotImplementedException());
+        }
+
+        [HlePspFunction(NID = 0xABED3790, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceNetAdhocPdpSend()
+        {
+            throw (new NotImplementedException());
+        }
+
+        [HlePspFunction(NID = 0xDFE53E03, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceNetAdhocPdpRecv()
+        {
+            throw (new NotImplementedException());
+        }
+
+        [HlePspFunction(NID = 0x7F27BB5E, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceNetAdhocPdpDelete()
+        {
+            throw (new NotImplementedException());
+        }
+
 		/// <summary>
 		/// Create a PDP object.
 		/// </summary>

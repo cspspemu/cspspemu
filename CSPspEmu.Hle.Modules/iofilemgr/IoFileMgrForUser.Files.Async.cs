@@ -244,6 +244,13 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			throw (new NotImplementedException());
 		}
 
+		[HlePspFunction(NID = 0x6D08A871, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceIoUnassign()
+		{
+			throw (new NotImplementedException());
+		}
+
 		/// <summary>
 		/// Sets a callback for the asynchronous action.
 		/// </summary>
