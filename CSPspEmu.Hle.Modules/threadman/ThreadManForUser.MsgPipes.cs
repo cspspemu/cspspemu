@@ -209,7 +209,10 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x876DBFAD, FirmwareVersion = 150)]
 		public int sceKernelSendMsgPipe(MsgPipeId PipeId, byte* Message, int Size, int WaitMode, int* ResultSizeAddr, uint* Timeout)
 		{
-			if (Timeout != null) throw (new NotImplementedException());
+			if (Timeout != null)
+			{
+				Logger.Unimplemented("sceKernelSendMsgPipe.Timeout != null");
+			}
 
 #if DEBUG_MSG_PIPES
 			Console.Error.WriteLine("sceKernelSendMsgPipe");

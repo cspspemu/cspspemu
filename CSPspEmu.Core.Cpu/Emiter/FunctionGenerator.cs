@@ -261,13 +261,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 						if (Instruction2Disasm.InstructionInfo.Name == "lwr")
 						{
-							//Console.WriteLine("lwr!");
 							var lwr_rt = Instruction2.RT;
 							var lwr_rs = Instruction2.RS;
 							var lwr_offset = Instruction2.IMM;
-
-							//Console.WriteLine("lwl! : {0}, {1}, {2}", lwl_rt, lwl_rs, lwl_offset);
-							//Console.WriteLine("lwr! : {0}, {1}, {2}", lwr_rt, lwr_rs, lwr_offset);
 
 							if ((lwl_rt == lwr_rt) && (lwl_rs == lwr_rs) && (lwr_offset == lwl_offset - 3))
 							{

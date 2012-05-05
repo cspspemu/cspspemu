@@ -6,6 +6,7 @@ using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Rtc;
+using CSharpUtils;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
@@ -14,6 +15,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 	{
 		[Inject]
 		PspRtc PspRtc;
+
+		static Logger Logger = Logger.GetLogger("ThreadManForUser");
 
 		/*
 		

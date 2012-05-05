@@ -104,8 +104,14 @@ namespace CSPspEmu.Hle.Modules.rtc
 				case DayOfWeek.Friday: return PspDaysOfWeek.Friday;
 				case DayOfWeek.Saturday: return PspDaysOfWeek.Saturday;
 				case DayOfWeek.Sunday: return PspDaysOfWeek.Sunday;
-				default: throw(new InvalidCastException());
+				default: throw (new InvalidCastException());
 			}
+		}
+
+		private int _sceRtcTickAddTimeSpan(long* dstPtr, long* srcPtr, TimeSpan TimeSpan)
+		{
+			*dstPtr = (*srcPtr + TimeSpan.GetTotalMicroseconds());
+			return 0;
 		}
 
 		/// <summary>
@@ -119,14 +125,65 @@ namespace CSPspEmu.Hle.Modules.rtc
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0x44F45E05, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceRtcTickAddTicks(ulong* destTick, ulong* srcTick, ulong numTicks)
+		public int sceRtcTickAddTicks(long* dstPtr, long* srcPtr, long value)
 		{
-			throw(new NotImplementedException());
-			/*
-			*destTick = *srcTick + numTicks;
+			*dstPtr = (long)((long)*srcPtr + value);
 			return 0;
-			*/
+		}
+
+		/// <summary>
+		/// Add an amount of ms to a tick
+		/// </summary>
+		/// <param name="dstPtr">pointer to tick to hold result</param>
+		/// <param name="srcPtr">pointer to source tick</param>
+		/// <param name="value">number of ms to add</param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0x26D25A5D, FirmwareVersion = 150)]
+		public int sceRtcTickAddMicroseconds(long* dstPtr, long* srcPtr, long value)
+		{
+			return sceRtcTickAddTicks(dstPtr, srcPtr, value);
+		}
+
+		[HlePspFunction(NID = 0xF2A4AFE5, FirmwareVersion = 150)]
+		public int sceRtcTickAddSeconds(long* dstPtr, long* srcPtr, long value)
+		{
+			return _sceRtcTickAddTimeSpan(dstPtr, srcPtr, TimeSpan.FromSeconds(value));
+		}
+
+		[HlePspFunction(NID = 0xE6605BCA, FirmwareVersion = 150)]
+		public int sceRtcTickAddMinutes(long* dstPtr, long* srcPtr, long value)
+		{
+			return _sceRtcTickAddTimeSpan(dstPtr, srcPtr, TimeSpan.FromMinutes(value));
+		}
+
+		[HlePspFunction(NID = 0x26D7A24A, FirmwareVersion = 150)]
+		public int sceRtcTickAddHours(long* dstPtr, long* srcPtr, int value)
+		{
+			return _sceRtcTickAddTimeSpan(dstPtr, srcPtr, TimeSpan.FromHours(value));
+		}
+
+		[HlePspFunction(NID = 0xE51B4B7A, FirmwareVersion = 150)]
+		public int sceRtcTickAddDays(long* dstPtr, long* srcPtr, int value)
+		{
+			return _sceRtcTickAddTimeSpan(dstPtr, srcPtr, TimeSpan.FromDays(value));
+		}
+
+		[HlePspFunction(NID = 0xCF3A2CA8, FirmwareVersion = 150)]
+		public int sceRtcTickAddWeeks(long* dstPtr, long* srcPtr, int value)
+		{
+			return _sceRtcTickAddTimeSpan(dstPtr, srcPtr, TimeSpan.FromDays(value * 7));
+		}
+
+		[HlePspFunction(NID = 0xDBF74F1B, FirmwareVersion = 150)]
+		public int sceRtcTickAddMonths(long* dstPtr, long* srcPtr, int value)
+		{
+			return _sceRtcTickAddTimeSpan(dstPtr, srcPtr, TimeSpan.FromDays(value * 30));
+		}
+
+		[HlePspFunction(NID = 0x42842C77, FirmwareVersion = 150)]
+		public int sceRtcTickAddYears(long* dstPtr, long* srcPtr, int value)
+		{
+			return _sceRtcTickAddTimeSpan(dstPtr, srcPtr, TimeSpan.FromDays(value * 365));
 		}
 
 		/// <summary>
@@ -206,20 +263,6 @@ namespace CSPspEmu.Hle.Modules.rtc
 				Microsecond = (uint)(CurrentDateTime.Millisecond * 1000),
 			};
 
-			return 0;
-		}
-
-		/// <summary>
-		/// Add an amount of ms to a tick
-		/// </summary>
-		/// <param name="dstPtr">pointer to tick to hold result</param>
-		/// <param name="srcPtr">pointer to source tick</param>
-		/// <param name="value">number of ms to add</param>
-		/// <returns>0 on success, less than 0 on error</returns>
-		[HlePspFunction(NID = 0x26D25A5D, FirmwareVersion = 150)]
-		public int sceRtcTickAddMicroseconds(long* dstPtr, long* srcPtr, long value)
-		{
-			*dstPtr = *srcPtr + value;
 			return 0;
 		}
 
