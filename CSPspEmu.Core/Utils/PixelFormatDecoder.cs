@@ -486,11 +486,11 @@ namespace CSPspEmu.Core.Utils
 			UnswizzleInline(Data, GetPixelsSize(Format, Width), Height);
 		}
 
-		public static unsafe uint Hash(GuPixelFormats PixelFormat, void* Input, int Width, int Height)
+		public static unsafe ulong Hash(GuPixelFormats PixelFormat, void* Input, int Width, int Height)
 		{
 			int TotalBytes = GetPixelsSize(PixelFormat, Width * Height);
 
-			return Hashing.FastHash((uint*)Input, TotalBytes, (uint)((int)PixelFormat * Width * Height));
+			return Hashing.FastHash((byte*)Input, TotalBytes, (ulong)((int)PixelFormat * Width * Height));
 		}
 	}
 }

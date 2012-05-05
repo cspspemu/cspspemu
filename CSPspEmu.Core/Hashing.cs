@@ -12,31 +12,22 @@ namespace CSPspEmu.Core
 		static Logger Logger = Logger.GetLogger("Hashing");
 
 		[HandleProcessCorruptedStateExceptions()]
-		static public uint FastHash(uint* Pointer, int Count, uint StartHash = 0)
+		static public ulong FastHash(byte* Pointer, int Count, ulong StartHash = 0)
 		{
 			if (Pointer == null)
 			{
 				return StartHash;
 			}
 
-			//Console.WriteLine("{0:X}", new IntPtr(Pointer));
-
-			var CountInBlocks = Count / 4;
-			var Hash = StartHash;
+			if (Count > 4 * 2048 * 2048)
+			{
+				Logger.Error("FastHash too big count!");
+				return StartHash;
+			}
 
 			try
 			{
-				if (CountInBlocks > 2048 * 2048)
-				{
-					Logger.Error("FastHash too big count!");
-				}
-				else
-				{
-					for (int n = 0; n < CountInBlocks; n++)
-					{
-						Hash += (uint)(Pointer[n] + (n << 17));
-					}
-				}
+				return FastHash_64(Pointer, Count, StartHash);
 			}
 			catch (NullReferenceException NullReferenceException)
 			{
@@ -45,6 +36,28 @@ namespace CSPspEmu.Core
 			catch (AccessViolationException AccessViolationException)
 			{
 				Logger.Error(AccessViolationException);
+			}
+
+			return StartHash;
+
+		}
+
+		[HandleProcessCorruptedStateExceptions()]
+		static private ulong FastHash_64(byte* Pointer, int Count, ulong StartHash = 0)
+		{
+			var Hash = StartHash;
+
+			while (Count >= 8)
+			{
+				Hash += (*(ulong*)Pointer) + (ulong)(Count << 31);
+				Pointer += 8;
+				Count -= 8;
+			}
+
+			while (Count >= 1)
+			{
+				Hash += *Pointer++;
+				Count--;
 			}
 
 			return Hash;

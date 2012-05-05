@@ -8,6 +8,7 @@ using CSharpUtils.Threading;
 using CSharpUtils;
 using System.IO;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Core.Cpu.Emiter;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -69,6 +70,21 @@ namespace CSPspEmu.Core.Cpu
 		public bool VFR_CC_ALL { get { return VFR_CC_5; } }
 
 		public Random Random = new Random();
+
+		public VfpuPrefix PrefixNone;
+		public VfpuPrefix PrefixSource;
+		public VfpuPrefix PrefixDestination;
+		public VfpuPrefix PrefixTarget;
+
+		public uint VFR_CC_Value
+		{
+			get
+			{
+				uint Value = 0;
+				for (int n = 0; n < 8; n++) Value |= (uint)(VFR_CC(n) ? (1 << n) : 0);
+				return Value;
+			}
+		}
 
 		public bool VFR_CC(int Index)
 		{

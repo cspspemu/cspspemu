@@ -294,11 +294,11 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="value"></param>
+		/// <param name="Value"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x6AD345D7, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceKernelSetGPO(int value)
+		[HlePspNotImplemented(Notice = false)]
+		public int sceKernelSetGPO(int Value)
 		{
 			return 0;
 		}
@@ -308,7 +308,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// </summary>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x37FB5C42, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
+		[HlePspNotImplemented(Notice = false)]
 		public int sceKernelGetGPI()
 		{
 			return 0;

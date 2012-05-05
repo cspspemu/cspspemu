@@ -16,13 +16,13 @@ namespace CSPspEmu.Hle.Modules.display
 	unsafe public class sceDisplay : HleModuleHost
 	{
 		[Inject]
-		PspDisplay PspDisplay;
+		public PspDisplay PspDisplay;
 
 		[Inject]
-		PspRtc PspRtc;
+		public PspRtc PspRtc;
 
 		[Inject]
-		HleThreadManager ThreadManager;
+		public HleThreadManager ThreadManager;
 
 		/// <summary>
 		/// Set display mode
@@ -45,7 +45,7 @@ namespace CSPspEmu.Hle.Modules.display
 		int LastVblankCount = 0;
 		DateTime LastWaitVblankStart = DateTime.MinValue;
 
-		private int _sceDisplayWaitVblankStartCB(CpuThreadState CpuThreadState, bool HandleCallbacks)
+		private int _waitVblankCB(CpuThreadState CpuThreadState, bool HandleCallbacks, int CycleCount)
 		{
 			if (PspConfig.VerticalSynchronization && LastVblankCount != PspDisplay.VblankCount)
 			{
@@ -85,6 +85,11 @@ namespace CSPspEmu.Hle.Modules.display
 			}
 
 			return 0;
+		}
+
+		private int _sceDisplayWaitVblankStartCB(CpuThreadState CpuThreadState, bool HandleCallbacks)
+		{
+			return _waitVblankCB(CpuThreadState, HandleCallbacks, CycleCount: 1);
 		}
 
 		/// <summary>
@@ -167,13 +172,21 @@ namespace CSPspEmu.Hle.Modules.display
 		/// </summary>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x773DD3A3, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
+		[HlePspNotImplemented(Notice = false)]
 		public int sceDisplayGetCurrentHcount()
 		{
+			// TODO: Properly implement this.
+
 			//PspRtc.Elapsed
 			//PspDisplay.cycles_per_pixel
-
-			return 0;
+			if (sceDisplayIsVblank())
+			{
+				return 272;
+			}
+			else
+			{
+				return 0;
+			}
 			//throw(new NotImplementedException());
 			//return hleEmulatorState.emulatorState.display.CURRENT_HCOUNT;
 		}
@@ -192,15 +205,17 @@ namespace CSPspEmu.Hle.Modules.display
 			return 9000000f * 1.0f / (525.0f * 286.0f);
 		}
 
+		const float hCountPerVblank = 285.72f;
+
 		/// <summary>
 		/// Get accumlated HSYNC count
 		/// </summary>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x210EAB3A, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		[HlePspNotImplemented(Notice = false)]
 		public int sceDisplayGetAccumulatedHcount()
 		{
-			return 0;
+			return (int)(sceDisplayGetCurrentHcount() + sceDisplayGetVcount() * hCountPerVblank);
 		}
 
 		/// <summary>
@@ -255,5 +270,43 @@ namespace CSPspEmu.Hle.Modules.display
 			return 0;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="ModeOut"></param>
+		/// <param name="WidthOut"></param>
+		/// <param name="HeightOut"></param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xDEA197D4, FirmwareVersion = 150)]
+		public int sceDisplayGetMode(out int ModeOut, out int WidthOut, out int HeightOut)
+		{
+			ModeOut = PspDisplay.CurrentInfo.Mode;
+			WidthOut = PspDisplay.CurrentInfo.Width;
+			HeightOut = PspDisplay.CurrentInfo.Height;
+
+			return 0;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="CycleCount">Number of VSYNCs to wait before blocking the thread on VBLANK.</param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x40F1469C, FirmwareVersion = 500, CheckInsideInterrupt = true)]
+		public int sceDisplayWaitVblankStartMulti(CpuThreadState CpuThreadState, int CycleCount)
+		{
+			return _waitVblankCB(CpuThreadState, HandleCallbacks: false, CycleCount: CycleCount);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="CycleCount">Number of VSYNCs to wait before blocking the thread on VBLANK.</param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x77ED8B3A, FirmwareVersion = 500, CheckInsideInterrupt = true)]
+		public int sceDisplayWaitVblankStartMultiCB(CpuThreadState CpuThreadState, int CycleCount)
+		{
+			return _waitVblankCB(CpuThreadState, HandleCallbacks: true, CycleCount: CycleCount);
+		}
 	}
 }

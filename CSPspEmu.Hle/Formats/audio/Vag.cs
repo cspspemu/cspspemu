@@ -76,7 +76,7 @@ namespace CSPspEmu.Hle.Formats.audio
 				Console.Error.WriteLine("Error VAG Magic: {0:X}", Header.Magic);
 				throw (new NotImplementedException("Invalid VAG header"));
 			}
-			var Hash = Hashing.FastHash((uint *)DataPointer, DataLength);
+			var Hash = Hashing.FastHash(DataPointer, DataLength);
 
 			/*
 			switch (Header.magic) {

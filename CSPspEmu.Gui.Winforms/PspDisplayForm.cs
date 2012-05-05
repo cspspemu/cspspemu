@@ -197,7 +197,7 @@ namespace CSPspEmu.Gui.Winforms
 		}
 
 		byte* OldFrameBuffer = (byte *)-1;
-		uint LastHash = unchecked((uint)-1);
+		ulong LastHash = unchecked((ulong)-1);
 		String LastText = "";
 
 		OutputPixel[] BitmapDataDecode = new OutputPixel[512 * 512];
@@ -269,7 +269,7 @@ namespace CSPspEmu.Gui.Winforms
 
 					//Console.WriteLine("{0:X}", Address);
 
-					uint Hash = PixelFormatDecoder.Hash(
+					var Hash = PixelFormatDecoder.Hash(
 						PspDisplay.CurrentInfo.PixelFormat,
 						(void*)FrameBuffer,
 						Width, Height

@@ -26,7 +26,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 	sealed unsafe public class Texture : IDisposable
 	{
 		public int TextureId { get; private set; }
-		public uint TextureHash
+		public ulong TextureHash
 		{
 			get
 			{
@@ -126,11 +126,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 	public struct TextureCacheKey
 	{
 		public uint TextureAddress;
-		public uint TextureHash;
+		public ulong TextureHash;
 		public GuPixelFormats TextureFormat;
 
 		public uint ClutAddress;
-		public uint ClutHash;
+		public ulong ClutHash;
 		public GuPixelFormats ClutFormat;
 		public int ClutStart;
 		public int ClutShift;
@@ -215,9 +215,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				//Console.WriteLine(TextureFormat);
 
 
-				if (!PspMemory.IsAddressValid((uint)(TextureAddress + TextureDataSize - 1)))
+				if (!PspMemory.IsRangeValid(TextureAddress, TextureDataSize))
 				{
-					Console.Error.WriteLine("Invalid TEXTURE!");
+					Console.Error.WriteLine("Invalid TEXTURE! TextureAddress=0x{0:X}, TextureDataSize={1}", TextureAddress, TextureDataSize);
 					return new Texture(OpenglGpuImpl);
 				}
 
@@ -234,9 +234,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				{
 					TextureAddress = TextureAddress,
 					TextureFormat = TextureFormat,
-					TextureHash = FastHash((uint*)TexturePointer, TextureDataSize),
+					TextureHash = FastHash(TexturePointer, TextureDataSize),
 
-					ClutHash = FastHash((uint*)&(ClutPointer[ClutDataStart]), ClutDataSize),
+					ClutHash = FastHash(&(ClutPointer[ClutDataStart]), ClutDataSize),
 					ClutAddress = ClutAddress,
 					ClutFormat = ClutFormat,
 					ClutStart = ClutStart,
@@ -396,7 +396,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			RecheckTimestamp = DateTime.UtcNow;
 		}
 
-		static public uint FastHash(uint* Pointer, int Count, uint StartHash = 0)
+		static public ulong FastHash(byte* Pointer, int Count, ulong StartHash = 0)
 		{
 			return Hashing.FastHash(Pointer, Count, StartHash);
 		}

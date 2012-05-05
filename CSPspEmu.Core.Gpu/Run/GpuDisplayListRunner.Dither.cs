@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -26,24 +27,17 @@ namespace CSPspEmu.Core.Gpu.Run
 		}));
 		*/
 
-		[GpuOpCodesNotImplemented]
-		public void OP_DTH0()
+		private void _OP_DTH(int n)
 		{
+			GpuState->DitherMatrix[4 * n + 0] = (sbyte)BitUtils.ExtractSigned(Params24, 4 * 0, 4);
+			GpuState->DitherMatrix[4 * n + 1] = (sbyte)BitUtils.ExtractSigned(Params24, 4 * 1, 4);
+			GpuState->DitherMatrix[4 * n + 2] = (sbyte)BitUtils.ExtractSigned(Params24, 4 * 2, 4);
+			GpuState->DitherMatrix[4 * n + 3] = (sbyte)BitUtils.ExtractSigned(Params24, 4 * 3, 4);
 		}
 
-		[GpuOpCodesNotImplemented]
-		public void OP_DTH1()
-		{
-		}
-
-		[GpuOpCodesNotImplemented]
-		public void OP_DTH2()
-		{
-		}
-
-		[GpuOpCodesNotImplemented]
-		public void OP_DTH3()
-		{
-		}
+		public void OP_DTH0() { _OP_DTH(0); }
+		public void OP_DTH1() { _OP_DTH(1); }
+		public void OP_DTH2() { _OP_DTH(2); }
+		public void OP_DTH3() { _OP_DTH(3); }
 	}
 }

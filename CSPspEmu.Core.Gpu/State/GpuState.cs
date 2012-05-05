@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 namespace CSPspEmu.Core.Gpu.State
 {
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	public struct GpuStateStruct
+	unsafe public struct GpuStateStruct
 	{
 		public uint GetAddressRelativeToBase(uint RelativeAddress)
 		{
@@ -73,5 +73,7 @@ namespace CSPspEmu.Core.Gpu.State
 		/// 
 		/// </summary>
 		public ShadingModelEnum ShadeModel;
+
+		public fixed sbyte DitherMatrix[16];
 	}
 }

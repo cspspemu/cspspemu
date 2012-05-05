@@ -123,6 +123,13 @@ namespace CSPspEmu.Core.Memory
 			return 0xFFFFFFFF;
 		}
 
+		public bool IsRangeValid(uint Address, int Size)
+		{
+			if (!IsAddressValid(Address)) return false;
+			if (!IsAddressValid((uint)(Address + Size - 1))) return false;
+			return true;
+		}
+
 		public void ValidateRange(uint Address, int Size)
 		{
 			if (!IsAddressValid((uint)(Address + 0))) throw (new InvalidAddressException(Address));

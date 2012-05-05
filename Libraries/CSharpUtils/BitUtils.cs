@@ -44,13 +44,14 @@ namespace CSharpUtils
 
 		static public int ExtractSigned(uint InitialValue, int Offset, int Count)
 		{
+			var Mask = CreateMask(Count);
 			uint SignBit = (uint)(1 << (Offset + (Count - 1)));
-			int _Value = (int)((InitialValue >> Offset) & CreateMask(Count));
+			uint _Value = (uint)((InitialValue >> Offset) & Mask);
 			if ((_Value & SignBit) != 0)
 			{
-				throw (new NotImplementedException());
+				_Value |= ~Mask;
 			}
-			return _Value;
+			return (int)_Value;
 		}
 
 		static public float ExtractUnsignedScaled(uint Value, int Offset, int Count, float Scale = 1.0f)

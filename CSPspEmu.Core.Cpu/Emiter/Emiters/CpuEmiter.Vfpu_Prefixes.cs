@@ -8,19 +8,43 @@ namespace CSPspEmu.Core.Cpu.Emiter
 {
 	unsafe sealed public partial class CpuEmiter
 	{
+		static public void _vpfxd_impl(CpuThreadState CpuThreadState, uint Value)
+		{
+			CpuThreadState.PrefixDestination.Value = Value;
+		}
+
+		static public void _vpfxs_impl(CpuThreadState CpuThreadState, uint Value)
+		{
+			CpuThreadState.PrefixSource.Value = Value;
+		}
+
+		static public void _vpfxt_impl(CpuThreadState CpuThreadState, uint Value)
+		{
+			CpuThreadState.PrefixTarget.Value = Value;
+		}
+
 		public void vpfxd()
 		{
 			PrefixDestination.EnableAndSetValueAndPc(Instruction.Value, PC);
+			SafeILGenerator.LoadArgument0CpuThreadState();
+			SafeILGenerator.Push((uint)Instruction.Value);
+			MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint>)_vpfxd_impl);
 		}
 
 		public void vpfxs()
 		{
 			PrefixSource.EnableAndSetValueAndPc(Instruction.Value, PC);
+			SafeILGenerator.LoadArgument0CpuThreadState();
+			SafeILGenerator.Push((uint)Instruction.Value);
+			MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint>)_vpfxs_impl);
 		}
 
 		public void vpfxt()
 		{
 			PrefixTarget.EnableAndSetValueAndPc(Instruction.Value, PC);
+			SafeILGenerator.LoadArgument0CpuThreadState();
+			SafeILGenerator.Push((uint)Instruction.Value);
+			MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint>)_vpfxt_impl);
 		}
 	}
 
