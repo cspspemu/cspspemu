@@ -116,19 +116,14 @@ namespace CSPspEmu.Hle.Loader
 				RelocateFromHeaders();
 			}
 
-			if (!ElfLoader.SectionHeadersByName.ContainsKey(".rodata.sceModuleInfo"))
-			{
-				throw(new Exception("Can't find segment '.rodata.sceModuleInfo'"));
-			}
-
-			HleModuleGuest.ModuleInfo = ElfLoader.SectionHeaderFileStream(ElfLoader.SectionHeadersByName[".rodata.sceModuleInfo"]).ReadStruct<ElfPsp.ModuleInfo>(); ;
+			LoadModuleInfo();
 
 			//Console.WriteLine(this.ModuleInfo.ToStringDefault());
 
 			HleModuleGuest.InitInfo = new InitInfoStruct()
 			{
 				PC = ElfLoader.Header.EntryPoint + BaseAddress,
-				GP = HleModuleGuest.ModuleInfo.GP + BaseAddress,
+				GP = HleModuleGuest.ModuleInfo.GP,
 			};
 
 			UpdateModuleImports();
@@ -137,6 +132,23 @@ namespace CSPspEmu.Hle.Loader
 			ModuleManager.LoadedGuestModules.Add(HleModuleGuest);
 
 			return HleModuleGuest;
+		}
+
+		protected void LoadModuleInfo()
+		{
+			var SectionHeaderName = ".rodata.sceModuleInfo";
+			var ProgramHeader = ElfLoader.ProgramHeaders.FirstOrDefault();
+			Stream Stream = null;
+			if (ElfLoader.SectionHeadersByName.ContainsKey(SectionHeaderName))
+			{
+				Stream = ElfLoader.SectionHeaderMemoryStream(ElfLoader.SectionHeadersByName[".rodata.sceModuleInfo"]);
+			}
+			else
+			{
+				Stream = ElfLoader.MemoryStream.SliceWithLength((uint)(BaseAddress + (ProgramHeader.PsysicalAddress & 0x7FFFFFFFL) - ProgramHeader.Offset));
+			}
+
+			HleModuleGuest.ModuleInfo = Stream.ReadStruct<ElfPsp.ModuleInfo>(); ;
 		}
 
 		protected void RelocateFromHeaders()
@@ -394,8 +406,8 @@ namespace CSPspEmu.Hle.Loader
 		/// </summary>
 		private void _UpdateModuleExports()
 		{
-			var BaseMemoryStream = ElfLoader.MemoryStream.SliceWithLength(BaseAddress);
-			var ExportsStream = BaseMemoryStream.SliceWithBounds(HleModuleGuest.ModuleInfo.ExportsStart, HleModuleGuest.ModuleInfo.ExportsEnd);
+			//var BaseMemoryStream = ElfLoader.MemoryStream.SliceWithLength(BaseAddress);
+			var ExportsStream = ElfLoader.MemoryStream.SliceWithBounds(HleModuleGuest.ModuleInfo.ExportsStart, HleModuleGuest.ModuleInfo.ExportsEnd);
 			var ModuleExports = ExportsStream.ReadStructVectorUntilTheEndOfStream<ElfPsp.ModuleExport>();
 
 			Console.WriteLine("Exports:");
@@ -476,8 +488,8 @@ namespace CSPspEmu.Hle.Loader
 		/// </summary>
 		private void _UpdateModuleImports()
 		{
-			var BaseMemoryStream = ElfLoader.MemoryStream.SliceWithLength(BaseAddress);
-			var ImportsStream = BaseMemoryStream.SliceWithBounds(HleModuleGuest.ModuleInfo.ImportsStart, HleModuleGuest.ModuleInfo.ImportsEnd);
+			//var BaseMemoryStream = ElfLoader.MemoryStream.SliceWithLength(BaseAddress);
+			var ImportsStream = ElfLoader.MemoryStream.SliceWithBounds(HleModuleGuest.ModuleInfo.ImportsStart, HleModuleGuest.ModuleInfo.ImportsEnd);
 			var ModuleImports = ImportsStream.ReadStructVectorUntilTheEndOfStream<ElfPsp.ModuleImport>();
 
 			Console.WriteLine("BASE ADDRESS: 0x{0:X}", BaseAddress);

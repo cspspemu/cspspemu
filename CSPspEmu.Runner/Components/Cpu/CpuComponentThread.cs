@@ -291,7 +291,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 					{
 						LoadException = null;
 
-						if (ElfLoadStream.Length < 1024) throw(new InvalidProgramException("File too short"));
+						if (ElfLoadStream.Length < 256) throw(new InvalidProgramException("File too short"));
 
 						HleModuleGuest = Loader.LoadModule(
 							ElfLoadStream,

@@ -97,7 +97,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 					BearingVY = Face.Top,
 					AdvanceH = PGF.AdvanceTable[Face.AdvanceIndex].Src,
 					AdvanceV = PGF.AdvanceTable[Face.AdvanceIndex].Dst,
-					Padding = 0,
+					Unknown = 0,
 				};
 
 				return FontCharInfo;
@@ -133,6 +133,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 					MaxGlyphAdvanceYF = PGF.Header.MaxAdvance.Y,
 
 					FontStyle = PGF.FontStyle,
+					BPP = 4,
 				};
 			}
 		}

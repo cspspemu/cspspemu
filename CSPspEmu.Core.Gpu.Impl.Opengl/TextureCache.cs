@@ -162,6 +162,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 		}
 
+		Texture InvalidTexture;
+
 		public Texture Get(GpuStateStruct *GpuState)
 		{
 			var TextureMappingState = &GpuState->TextureMappingState;
@@ -200,7 +202,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				var ClutPointer = (byte *)PspMemory.PspAddressToPointerSafe(ClutAddress);
 				var TextureFormat = TextureState->PixelFormat;
 				//var Width = TextureState->Mipmap0.TextureWidth;
+
 				int BufferWidth = TextureState->Mipmap0.BufferWidth;
+
+				// FAKE!
+				//BufferWidth = TextureState->Mipmap0.TextureWidth;
+
 				var Height = TextureState->Mipmap0.TextureHeight;
 				var TextureDataSize = PixelFormatDecoder.GetPixelsSize(TextureFormat, BufferWidth * Height);
 				if (ClutState->NumberOfColors > 256)
@@ -215,17 +222,25 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				//Console.WriteLine(TextureFormat);
 
 
-				if (!PspMemory.IsRangeValid(TextureAddress, TextureDataSize))
-				{
-					Console.Error.WriteLine("Invalid TEXTURE! TextureAddress=0x{0:X}, TextureDataSize={1}", TextureAddress, TextureDataSize);
-					return new Texture(OpenglGpuImpl);
-				}
-
-				if (TextureDataSize > 2048 * 2048 * 4)
+				if (!PspMemory.IsRangeValid(TextureAddress, TextureDataSize) || TextureDataSize > 2048 * 2048 * 4)
 				{
 					Console.Error.WriteLine("UPDATE_TEXTURE(TEX={0},CLUT={1}:{2}:{3}:{4}:0x{5:X},SIZE={6}x{7},{8},Swizzled={9})", TextureFormat, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask, BufferWidth, Height, BufferWidth, Swizzled);
+					Console.Error.WriteLine("Invalid TEXTURE! TextureAddress=0x{0:X}, TextureDataSize={1}", TextureAddress, TextureDataSize);
 					Console.Error.WriteLine("Invalid TEXTURE!");
-					return new Texture(OpenglGpuImpl);
+					if (InvalidTexture == null)
+					{
+						InvalidTexture = new Texture(OpenglGpuImpl);
+
+						fixed (OutputPixel* Data = new OutputPixel[BufferWidth * Height])
+						{
+							for (int n = 0; n < BufferWidth * Height; n++)
+							{
+								Data[n] = OutputPixel.FromRGBA(0xFF, 0x00, 0x00, 0xFF);
+							}
+							InvalidTexture.SetData(Data, 2, 2);
+						}
+					}
+					return InvalidTexture;
 				}
 
 				//Console.WriteLine("TextureAddress=0x{0:X}, TextureDataSize=0x{1:X}", TextureAddress, TextureDataSize);

@@ -14,7 +14,15 @@ namespace CSPspEmu.Resources
 	public class Translations
 	{
 		static private Dictionary<string, Dictionary<string, Dictionary<string, string>>> Dictionary;
-		static public SortedSet<string> AvailableLanguages { get; private set; }
+		static private SortedSet<string> _AvailableLanguages;
+		static public SortedSet<string> AvailableLanguages
+		{
+			get
+			{
+				if (Dictionary == null) Parse();
+				return _AvailableLanguages;
+			}
+		}
 
 		static public string DefaultLanguage = null;
 
@@ -22,7 +30,7 @@ namespace CSPspEmu.Resources
 		{
 
 			Dictionary = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
-			AvailableLanguages = new SortedSet<string>();
+			_AvailableLanguages = new SortedSet<string>();
 
 			try
 			{
@@ -78,15 +86,8 @@ namespace CSPspEmu.Resources
 
 		static public string GetString(string CategoryId, string TextId, string LangId = null)
 		{
-			if (Dictionary == null)
-			{
-				Parse();
-			}
-
-			if (LangId == null)
-			{
-				LangId = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-			}
+			if (Dictionary == null) Parse();
+			if (LangId == null) LangId = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
 			dynamic Category = null;
 			dynamic CategoryText = null;

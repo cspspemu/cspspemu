@@ -6,11 +6,13 @@ using CSharpUtils;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Formats.Font;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Modules.libfont
 {
 	unsafe public partial class sceLibFont
 	{
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct FontNewLibParams
 		{
 			/// <summary>
@@ -72,6 +74,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 			public int ShadowOption { get; set; }
 		}
 
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct FontInfo
 		{
 			#region Glyph metrics (in 26.6 signed fixed-point).
@@ -158,6 +161,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// In our debug font, these measures are the same (block pixels),
 		/// but in real PGF fonts they can vary (italic fonts, for example).
 		/// </summary>
+		[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 60)]
 		public struct FontCharInfo
 		{
 			public uint BitmapWidth;
@@ -176,17 +180,56 @@ namespace CSPspEmu.Hle.Modules.libfont
 			public Fixed26_6 BearingVY;
 			public Fixed26_6 AdvanceH;
 			public Fixed26_6 AdvanceV;
-			public int Padding;
+			public int Unknown;
 	
 			//static assert(this.sizeof == 4 * 15);
+
+			public override string ToString()
+			{
+				return String.Format(
+					"FontCharInfo[Bitmap(W={0},H={1},L={2},T={3}), " +
+					"Metrics(W={4}, H={5}, Ascender={6}, Descender={7}, BearingH={8}x{9}, BearingV={10}x{11}, Advance={12}x{13})",
+					BitmapWidth, BitmapHeight, BitmapLeft, BitmapTop,
+					Width, Height, Ascender, Descender, BearingHX, BearingHY, BearingVX, BearingVY, AdvanceH, AdvanceV
+				);
+			}
 		}
 
+		public enum FontPixelFormat : uint
+		{
+			/// <summary>
+			/// 2 pixels packed in 1 byte (natural order)
+			/// </summary>
+			PSP_FONT_PIXELFORMAT_4 = 0,
+
+			/// <summary>
+			/// 2 pixels packed in 1 byte (reversed order)
+			/// </summary>
+			PSP_FONT_PIXELFORMAT_4_REV = 1,
+
+			/// <summary>
+			/// 1 pixel in 1 byte
+			/// </summary>
+			PSP_FONT_PIXELFORMAT_8 = 2,
+
+			/// <summary>
+			/// 1 pixel in 3 bytes (RGB)
+			/// </summary>
+			PSP_FONT_PIXELFORMAT_24 = 3,
+
+			/// <summary>
+			/// 1 pixel in 4 bytes (RGBA)
+			/// </summary>
+			PSP_FONT_PIXELFORMAT_32 = 4,
+		}
+
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct GlyphImage
 		{
 			/// <summary>
 			/// 
 			/// </summary>
-			public GuPixelFormats PixelFormat;
+			public FontPixelFormat PixelFormat;
 
 			/// <summary>
 			/// 
@@ -219,6 +262,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 			public PspPointer Buffer;
 		}
 
+		[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 8)]
 		public struct CharRect
 		{
 			public short X;

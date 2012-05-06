@@ -373,35 +373,46 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 
 		public SceUID _sceIoOpen(string FileName, HleIoFlags Flags, SceMode Mode, bool Async)
 		{
+			var Info = HleIoManager.ParsePath(FileName);
+
 			try
 			{
-				var Info = HleIoManager.ParsePath(FileName);
 				Console.WriteLine("Opened ({3}) '{0}' with driver '{1}' and local path '{2}' : '{2}'", FileName, Info.HleIoDriver, Info.LocalPath, Async ? "Async" : "NO Async");
 				Info.HleIoDrvFileArg.HleIoDriver.IoOpen(Info.HleIoDrvFileArg, Info.LocalPath, Flags, Mode);
 				Info.HleIoDrvFileArg.FullFileName = FileName;
-				return HleIoManager.HleIoDrvFileArgPool.Create(Info.HleIoDrvFileArg);
-			}
-			catch (DirectoryNotFoundException)
-			{
-			}
-			catch (FileNotFoundException)
-			{
-			}
-			catch (InvalidOperationException InvalidOperationException)
-			{
-				Console.Error.WriteLine(InvalidOperationException);
+				var Uid = HleIoManager.HleIoDrvFileArgPool.Create(Info.HleIoDrvFileArg);
+				if (Async)
+				{
+					Info.HleIoDrvFileArg.AsyncLastResult = (long)Uid;
+				}
+				return Uid;
 			}
 			catch (IOException IOException)
 			{
 				Console.Error.WriteLine(IOException);
 			}
+			catch (InvalidOperationException InvalidOperationException)
+			{
+				Console.Error.WriteLine(InvalidOperationException);
+			}
 			finally
 			{
-				_DelayIo(IoDelayType.Open);
+				if (!Async)
+				{
+					_DelayIo(IoDelayType.Open);
+				}
 			}
 
-			//Console.Error.WriteLine("Didn't find file '{0}'", FileName);
-			throw (new SceKernelException(SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND, String.Format("Didn't find file '{0}'", FileName)));
+			if (Async)
+			{
+				Info.HleIoDrvFileArg.AsyncLastResult = (long)SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND;
+				return HleIoManager.HleIoDrvFileArgPool.Create(Info.HleIoDrvFileArg);
+			}
+			else
+			{
+				//Console.Error.WriteLine("Didn't find file '{0}'", FileName);
+				throw (new SceKernelException(SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND, String.Format("Didn't find file '{0}'", FileName)));
+			}
 		}
 
 
@@ -508,12 +519,12 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			return 0;
 		}
 
-        [HlePspFunction(NID = 0xAB96437F, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceIoSync()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0xAB96437F, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceIoSync()
+		{
+			return 0;
+		}
 	}
 
 	public struct PspIoDrvFuncs

@@ -14,10 +14,11 @@ namespace CSPspEmu.Core.Utils
 		public int Width;
 		public int BitsPerPixel;
 		public int Height;
+		public int BytesPerLine;
 		public byte* Address;
 		public ColorFormat ColorFormat;
 
-		public PspBitmap(GuPixelFormats PixelFormat, int Width, int Height, byte* Address)
+		public PspBitmap(GuPixelFormats PixelFormat, int Width, int Height, byte* Address, int BytesPerLine = -1)
 		{
 			this.GuPixelFormat = PixelFormat;
 			this.Width = Width;
@@ -25,6 +26,14 @@ namespace CSPspEmu.Core.Utils
 			this.Address = Address;
 			this.BitsPerPixel = PixelFormatDecoder.GetPixelsBits(PixelFormat);
 			this.ColorFormat = PixelFormatDecoder.ColorFormatFromPixelFormat(PixelFormat);
+			if (BytesPerLine < 0)
+			{
+				this.BytesPerLine = PixelFormatDecoder.GetPixelsSize(GuPixelFormat, Width);
+			}
+			else
+			{
+				this.BytesPerLine = BytesPerLine;
+			}
 		}
 
 		public bool IsValidPosition(int X, int Y)
@@ -32,15 +41,21 @@ namespace CSPspEmu.Core.Utils
 			return ((X >= 0) && (Y >= 0) && (X < Width) && (Y < Height));
 		}
 
+		private int GetOffset(int X, int Y)
+		{
+			return Y * BytesPerLine + PixelFormatDecoder.GetPixelsSize(GuPixelFormat, X);
+		}
+
 		public void SetPixel(int X, int Y, OutputPixel Color)
 		{
 			if (!IsValidPosition(X, Y)) return;
-			var Position = PixelFormatDecoder.GetPixelsSize(GuPixelFormat, Y * Width + X);
+			//var Position = PixelFormatDecoder.GetPixelsSize(GuPixelFormat, Y * Width + X);
+			var Position = GetOffset(X, Y);
 			uint Value = this.ColorFormat.Encode(Color);
 			switch (this.BitsPerPixel)
 			{
-				case 16: *(ushort*)&Address[Position] = (ushort)Value; break;
-				case 32: *(uint*)&Address[Position] = (uint)Value; break;
+				case 16: *(ushort*)(Address + Position) = (ushort)Value; break;
+				case 32: *(uint*)(Address + Position) = (uint)Value; break;
 				default: throw(new NotImplementedException());
 			}		
 		}
@@ -49,14 +64,14 @@ namespace CSPspEmu.Core.Utils
 		{
 			if (!IsValidPosition(X, Y)) return new OutputPixel();
 			uint Value;
-			var Position = PixelFormatDecoder.GetPixelsSize(GuPixelFormat, Y * Width + X);
+			var Position = GetOffset(X, Y);
 			switch (this.BitsPerPixel)
 			{
-				case 16: Value = *(ushort*)&Address[Position]; break;
-				case 32: Value = *(uint*)&Address[Position]; break;
+				case 16: Value = *(ushort*)(Address + Position); break;
+				case 32: Value = *(uint*)(Address + Position); break;
 				default: throw (new NotImplementedException());
 			}
-			var OutputPixel  = default(OutputPixel);
+			//var OutputPixel = default(OutputPixel);
 			return this.ColorFormat.Decode(Value);
 		}
 

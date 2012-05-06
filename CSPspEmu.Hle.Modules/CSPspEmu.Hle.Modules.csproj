@@ -102,6 +102,7 @@
     <Compile Include="mpeg\sceMpeg.Streams.cs" />
     <Compile Include="mpeg\sceMpegbase.cs" />
     <Compile Include="pmfplayer\scePsmf.cs" />
+    <Compile Include="pspnet\sceNetAdhocDiscover.cs" />
     <Compile Include="sceMemlmd\semaphore.cs" />
     <Compile Include="libatrac3plus\sceAtrac3plus.cs" />
     <Compile Include="libatrac3plus\sceAtrac3plus.Utils.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="_unknownPrx\ModuleMgrForKernel.cs" />
     <Compile Include="_unknownPrx\sceDeflt.cs" />
     <Compile Include="_unknownPrx\sceMp3.cs" />
+    <Compile Include="_unknownPrx\sceMp4.cs" />
     <Compile Include="_unknownPrx\sceNp.cs" />
     <Compile Include="_unknownPrx\sceNpAuth.cs" />
     <Compile Include="_unknownPrx\sceNpService.cs" />

@@ -50,12 +50,13 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xDCC80C2F, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceFontGetCharInfo(FontHandle FontHandle, ushort CharCode, FontCharInfo* FontCharInfoPointer)
+		public int sceFontGetCharInfo(FontHandle FontHandle, ushort CharCode, ref FontCharInfo FontCharInfoPointer)
 		{
 			try
 			{
 				var Font = Fonts.Get(FontHandle);
-				*FontCharInfoPointer = Font.GetCharInfo(CharCode);
+				FontCharInfoPointer = Font.GetCharInfo(CharCode);
+				Console.WriteLine("sceFontGetCharInfo({0}) : {1}", CharCode, FontCharInfoPointer);
 				return 0;
 			}
 			catch (Exception Exception)
@@ -72,12 +73,12 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// <param name="CharCode"></param>
 		/// <param name="GlyphImagePointer"></param>
 		[HlePspFunction(NID = 0x980F4895, FirmwareVersion = 150)]
-		public int sceFontGetCharGlyphImage(FontHandle FontHandle, ushort CharCode, GlyphImage* GlyphImagePointer)
+		public int sceFontGetCharGlyphImage(FontHandle FontHandle, ushort CharCode, ref GlyphImage GlyphImagePointer)
 		{
 			var Font = Fonts.Get(FontHandle);
 			var CharInfo = Font.GetCharInfo(CharCode);
 			return sceFontGetCharGlyphImage_Clip(
-				FontHandle, CharCode, GlyphImagePointer,
+				FontHandle, CharCode, ref GlyphImagePointer,
 				//(int)CharInfo.BitmapLeft,
 				//(int)CharInfo.BitmapTop,
 				0,
@@ -87,31 +88,111 @@ namespace CSPspEmu.Hle.Modules.libfont
 			);
 		}
 
+		public class FontBitmap
+		{
+			protected FontPixelFormat FontPixelFormat;
+			public int Width;
+			public int BitsPerPixel;
+			public int Height;
+			public int BytesPerLine;
+			public byte* Address;
+
+			public FontBitmap(byte* Address, FontPixelFormat FontPixelFormat, int Width, int Height, int BytesPerLine)
+			{
+				this.Address = Address;
+				this.FontPixelFormat = FontPixelFormat;
+				this.Width = Width;
+				this.Height = Height;
+				this.BytesPerLine = BytesPerLine;
+				switch (FontPixelFormat)
+				{
+					case sceLibFont.FontPixelFormat.PSP_FONT_PIXELFORMAT_4: this.BitsPerPixel = 4; break;
+					case sceLibFont.FontPixelFormat.PSP_FONT_PIXELFORMAT_4_REV: this.BitsPerPixel = 4; break;
+					case sceLibFont.FontPixelFormat.PSP_FONT_PIXELFORMAT_8: this.BitsPerPixel = 8; break;
+					case sceLibFont.FontPixelFormat.PSP_FONT_PIXELFORMAT_24: this.BitsPerPixel = 24; break;
+					case sceLibFont.FontPixelFormat.PSP_FONT_PIXELFORMAT_32: this.BitsPerPixel = 32; break;
+				}
+			}
+
+			private int GetOffset(int X, int Y)
+			{
+				return Y * BytesPerLine + (X * this.BitsPerPixel) / 8;
+			}
+
+			public void SetPixel(int X, int Y, OutputPixel Color)
+			{
+				if (X < 0 || Y < 0) return;
+				if (X >= Width || Y >= Height) return;
+				var Offset = GetOffset(X, Y);
+				var WriteAddress = (byte *)(Address + Offset);
+
+				//byte C = (byte)((Color.R + Color.G + Color.B) * 15 / 3 / 255);
+				byte C = (byte)(Color.R * 15 / 255);
+
+				switch (FontPixelFormat)
+				{
+					case sceLibFont.FontPixelFormat.PSP_FONT_PIXELFORMAT_4:
+						*WriteAddress = (byte)((*WriteAddress & 0xF0) | ((C & 0xF) << 0));
+					break;
+					case sceLibFont.FontPixelFormat.PSP_FONT_PIXELFORMAT_4_REV:
+						*WriteAddress = (byte)((*WriteAddress & 0x0F) | ((C & 0xF) << 4));
+					break;
+					case sceLibFont.FontPixelFormat.PSP_FONT_PIXELFORMAT_8:
+						*WriteAddress = Color.A;
+					break;
+					case sceLibFont.FontPixelFormat.PSP_FONT_PIXELFORMAT_24:
+						*(WriteAddress + 0) = Color.R;
+						*(WriteAddress + 1) = Color.G;
+						*(WriteAddress + 2) = Color.B;
+						break;
+					case sceLibFont.FontPixelFormat.PSP_FONT_PIXELFORMAT_32:
+						*(WriteAddress + 0) = Color.R;
+						*(WriteAddress + 1) = Color.G;
+						*(WriteAddress + 2) = Color.B;
+						*(WriteAddress + 3) = Color.A;
+						break;
+				}
+			}
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="FontHandle"></param>
 		/// <param name="CharCode"></param>
-		/// <param name="GlyphImagePointer"></param>
+		/// <param name="GlyphImage"></param>
 		/// <param name="ClipX"></param>
 		/// <param name="ClipY"></param>
 		/// <param name="ClipWidth"></param>
 		/// <param name="ClipHeight"></param>
 		[HlePspFunction(NID = 0xCA1E6945, FirmwareVersion = 150)]
-		public int sceFontGetCharGlyphImage_Clip(FontHandle FontHandle, ushort CharCode, GlyphImage* GlyphImagePointer, int ClipX, int ClipY, int ClipWidth, int ClipHeight)
+		public int sceFontGetCharGlyphImage_Clip(FontHandle FontHandle, ushort CharCode, ref GlyphImage GlyphImage, int ClipX, int ClipY, int ClipWidth, int ClipHeight)
 		{
 			try
 			{
 				var Font = Fonts.Get(FontHandle);
 				var Glyph = Font.GetGlyph(CharCode);
+				var CharInfo = Font.GetCharInfo(CharCode);
 				var Face = Glyph.Face;
-				var PixelFormat = GlyphImagePointer->PixelFormat;
-				var Buffer = PspMemory.PspAddressToPointerSafe(GlyphImagePointer->Buffer);
-				var BufferHeight = GlyphImagePointer->BufferHeight;
-				var BufferWidth = GlyphImagePointer->BufferWidth;
-				var Position = GlyphImagePointer->Position;
+				var PixelFormat = GlyphImage.PixelFormat;
+				var Buffer = PspMemory.PspAddressToPointerSafe(GlyphImage.Buffer);
+				var BufferHeight = GlyphImage.BufferHeight;
+				var BufferWidth = GlyphImage.BufferWidth;
+				var BytesPerLine = GlyphImage.BytesPerLine;
+				var Position = GlyphImage.Position;
 				var GlyphBitmap = Face.GetBitmap();
-				var OutputBitmap = new PspBitmap(PixelFormat, (int)BufferWidth, (int)BufferHeight, (byte*)Buffer);
+				var OutputBitmap = new FontBitmap((byte*)Buffer, PixelFormat, (int)BufferWidth, (int)BufferHeight, BytesPerLine);
+
+				Console.WriteLine(
+					"sceFontGetCharGlyphImage_Clip({0}, ({1}, {2})-({3}, {4}) : {5}) : {6}",
+					CharCode, ClipX, ClipY, ClipWidth, ClipHeight, PixelFormat, Position
+				);
+
+				ClipWidth = Math.Min(ClipWidth, BufferWidth - ClipX);
+				ClipHeight = Math.Min(ClipHeight, BufferHeight - ClipY);
+
+				ClipWidth = Math.Min(ClipWidth, GlyphBitmap.Width - ClipX);
+				ClipHeight = Math.Min(ClipHeight, GlyphBitmap.Height - ClipY);
 
 				try
 				{
@@ -120,9 +201,12 @@ namespace CSPspEmu.Hle.Modules.libfont
 						for (int x = 0; x < ClipWidth; x++)
 						{
 							//Console.WriteLine();
-							OutputBitmap.SetPixel(x, y, new OutputPixel(GlyphBitmap.GetPixel(x + ClipX, y + ClipY)));
+							var Pixel = GlyphBitmap.GetPixel(x + ClipX, y + ClipY);
+							OutputBitmap.SetPixel(x + (int)Position.X, y + (int)Position.Y, new OutputPixel(Pixel));
+							//Console.Write(Pixel.R > 0x7F ? "X" : ".");
 							//OutputBitmap.SetPixel(x, y, new OutputPixel(Color.Red));
 						}
+						//Console.WriteLine("");
 					}
 				}
 				catch (Exception Exception)

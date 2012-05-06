@@ -263,7 +263,7 @@ namespace CSPspEmu.Hle.Formats.Font
 		}
 	}
 
-	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
+	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1, Size = 8)]
 	public struct PointFixed26_6
 	{
 		public Fixed26_6 X;
@@ -278,6 +278,7 @@ namespace CSPspEmu.Hle.Formats.Font
 	/// <summary>
 	/// 26.6 signed fixed-point.
 	/// </summary>
+	[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
 	public struct Fixed26_6
 	{
 		private int RawValue;

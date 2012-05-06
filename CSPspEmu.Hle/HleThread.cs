@@ -90,7 +90,9 @@ namespace CSPspEmu.Hle
 		{
 			try
 			{
-				return String.Format("{0}: PC=0x{3:X}, RA=0x{4:X} => '{5}' : {1}::{2}", CallIndex, ModuleImportName, FunctionEntry.Name, PC, RA, Thread.Name);
+				return String.Format(
+					"{0}: PC=0x{3:X}, RA=0x{4:X} => '{5}' : {1}::{2}",
+					CallIndex, ModuleImportName, FunctionEntry.Name, PC, RA, (Thread != null) ? Thread.Name : "-");
 			}
 			catch (Exception Exception)
 			{
@@ -453,6 +455,7 @@ namespace CSPspEmu.Hle
 					);
 					break;
 			}
+			Ret += String.Format(", PriorityValue={0}", PriorityValue);
 			//Ret += String.Format(", LastCalledHleFunction={0}", LastCalledHleFunction);
 			return Ret + ")";
 		}

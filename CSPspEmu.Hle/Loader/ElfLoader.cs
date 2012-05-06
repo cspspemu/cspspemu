@@ -169,7 +169,7 @@ namespace CSPspEmu.Hle.Loader
 
 		public Stream SectionHeaderMemoryStream(Elf.SectionHeader SectionHeader)
 		{
-			return this.MemoryStream.SliceWithLength(SectionHeader.Offset, SectionHeader.Size);
+			return this.MemoryStream.SliceWithLength(BaseAddress + SectionHeader.Address, SectionHeader.Size);
 		}
 
 		protected IEnumerable<Elf.SectionHeader> SectionHeadersWithFlag(Elf.SectionHeader.FlagsSet Flag)

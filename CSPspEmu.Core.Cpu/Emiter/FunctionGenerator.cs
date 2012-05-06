@@ -68,6 +68,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		static private PspMethodStruct _CreateDelegateForPC(CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC, out int InstructionsProcessed, bool DoDebug = false, bool DoLog = false)
 		{
+			//Console.WriteLine("Creating delegate for 0x{0:X}", EntryPC);
+
 			InstructionsProcessed = 0;
 
 			if (EntryPC == 0)
@@ -243,12 +245,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 						// A label between!
 						if (Labels.ContainsKey(PC2))
 						{
-							Console.WriteLine("Label!");
+							//Console.WriteLine("Label!");
 							break;
 						}
 						if (!AnalyzedPC.Contains(PC2))
 						{
-							Console.WriteLine("Not analyzed!");
+							//Console.WriteLine("Not analyzed!");
 							break;
 						}
 

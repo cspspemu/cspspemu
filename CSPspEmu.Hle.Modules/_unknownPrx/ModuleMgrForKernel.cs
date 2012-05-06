@@ -10,13 +10,10 @@ using CSPspEmu.Core;
 namespace CSPspEmu.Hle.Modules._unknownPrx
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class ModuleMgrForKernel : HleModuleHost
+	unsafe public class ModuleMgrForKernel : ModuleMgrForUser
 	{
 		[Inject]
 		HleModuleManager ModuleManager;
-
-		[Inject]
-		ModuleMgrForUser ModuleMgrForUser;
 
 		/// <summary>
 		/// 
@@ -29,7 +26,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
 		[HlePspNotImplemented]
 		public int sceKernelLoadModuleForLoadExecVSHDisc(string FileName, uint Flags, ModuleMgrForUser.SceKernelLMOption* option)
 		{
-			return ModuleMgrForUser.sceKernelLoadModule(FileName, Flags, option);
+			return sceKernelLoadModule(FileName, Flags, option);
 		}
 	}
 }

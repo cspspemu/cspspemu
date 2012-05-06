@@ -21,6 +21,7 @@ using CSPspEmu.Hle.Vfs.Local;
 using System.Diagnostics;
 using CSharpUtils.Streams;
 using CSharpUtils.Arrays;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Modules.libatrac3plus
 {
@@ -30,7 +31,10 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		static Logger Logger = Logger.GetLogger("sceAtrac3plus");
 
 		[Inject]
-		sceAudio sceAudio;
+		public sceAudio sceAudio;
+
+		[Inject]
+		public HleMemoryManager HleMemoryManager;
 
 		public enum CodecType
 		{
@@ -72,6 +76,9 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 
 		public class Atrac : IDisposable
 		{
+			[Inject]
+			protected HleMemoryManager HleMemoryManager;
+
 			public byte[] Data;
 			public At3FormatStruct Format;
 			public FactStruct Fact;
@@ -93,6 +100,10 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			public int DecodingOffset;
 			public Stream DataStream;
 			public IArray<StereoShortSoundSample> DecodedSamples;
+
+			public MemoryPartition PrimaryBuffer;
+			public int PrimaryBufferReaded;
+
 
 			public enum CompressionCode : ushort
 			{
@@ -244,11 +255,19 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 
 			public Atrac(PspEmulatorContext PspEmulatorContext, CodecType CodecType)
 			{
+				PspEmulatorContext.InjectDependencesTo(this);
+
+				PrimaryBuffer = HleMemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.User).Allocate(1024);
+
 				this.CodecType = CodecType;
 			}
 
 			public Atrac(PspEmulatorContext PspEmulatorContext, byte[] Data)
 			{
+				PspEmulatorContext.InjectDependencesTo(this);
+
+				PrimaryBuffer = HleMemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.User).Allocate(1024);
+
 				CodecType = CodecType.PSP_MODE_AT_3_PLUS;
 				SetData(Data);
 			}
@@ -533,11 +552,10 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public int sceAtracGetLoopStatus(int AtracId, out int piLoopNum, out uint puiLoopStatus)
 		{
-			throw (new NotImplementedException());
-			/*
-			unimplemented();
+			var Atrac = AtracList.Get(AtracId);
+			piLoopNum = 0;
+			puiLoopStatus = 0;
 			return 0;
-			*/
 		}
 
 		/// <summary>
@@ -685,37 +703,22 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// 
 		/// </summary>
 		/// <param name="AtracId">The atrac ID</param>
-		/// <param name="writePointer">Pointer to where to read the atrac data</param>
-		/// <param name="availableBytes">Number of bytes available at the writePointer location</param>
-		/// <param name="readOffset">Offset where to seek into the atrac file before reading</param>
+		/// <param name="WritePointerPointer">Pointer to where to read the atrac data</param>
+		/// <param name="AvailableBytes">Number of bytes available at the writePointer location</param>
+		/// <param name="ReadOffset">Offset where to seek into the atrac file before reading</param>
 		/// <returns>Less than 0 on error, otherwise 0</returns>
 		[HlePspFunction(NID = 0x5D268707, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceAtracGetStreamDataInfo(int AtracId, uint* writePointerPointer /*u8** writePointer*/, out uint availableBytes, out uint readOffset)
+		public int sceAtracGetStreamDataInfo(int AtracId, out PspPointer WritePointerPointer, out int AvailableBytes, out int ReadOffset)
 		{
-			//throw (new NotImplementedException());
-			*writePointerPointer = 0; // @FIXME!!
-			availableBytes = 0;
-			readOffset     = 0;
+			var Atrac = AtracList.Get(AtracId);
 
-			return -1;
-			//throw(new NotImplementedException());
-			/*
-			Atrac3Object atrac3Object = getAtrac3ObjectById(atracID);
-		
-			unimplemented();
-		
-			*writePointer   = cast(u8*)atrac3Object.writeBufferGuestPtr; // @FIXME!!
-			*availableBytes = cast(uint)atrac3Object.writeBufferSize;
-			*readOffset     = atrac3Object.processor.dataOffset;
-		
-			logInfo(
-				"sceAtracGetStreamDataInfo(atracID=%d, writePointer=%08X, availableBytes=%d, readOffset=%d)",
-				atracID, cast(uint)*writePointer, *availableBytes, *readOffset
-			);
+			//throw (new NotImplementedException());
+			WritePointerPointer = Atrac.PrimaryBuffer.Low; // @FIXME!!
+			AvailableBytes = Atrac.PrimaryBuffer.Size;
+			ReadOffset = Atrac.PrimaryBufferReaded;
 
 			return 0;
-			*/
 		}
 
 		/// <summary>
@@ -728,7 +731,10 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public int sceAtracAddStreamData(int AtracId, int bytesToAdd)
 		{
-			throw (new NotImplementedException());
+			var Atrac = AtracList.Get(AtracId);
+
+			Atrac.PrimaryBufferReaded += bytesToAdd;
+			//throw (new NotImplementedException());
 			/*
 			unimplemented();
 
@@ -736,8 +742,8 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 
 			logInfo("sceAtracAddStreamData(%d, %d)", atracID, bytesToAdd);
 
-			return 0;
 			*/
+			return 0;
 		}
 
 		/// <summary>
@@ -904,18 +910,18 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			return -1;
 		}
 
-        [HlePspFunction(NID = 0x5CF9D852, FirmwareVersion = 250)]
-        [HlePspNotImplemented]
-        public int sceAtracSetMOutHalfwayBuffer()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0x5CF9D852, FirmwareVersion = 250)]
+		[HlePspNotImplemented]
+		public int sceAtracSetMOutHalfwayBuffer()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0x0FAE370E, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceAtracSetHalfwayBufferAndGetID()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0x0FAE370E, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceAtracSetHalfwayBufferAndGetID()
+		{
+			return 0;
+		}
 	}
 }

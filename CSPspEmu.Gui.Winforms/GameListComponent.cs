@@ -174,9 +174,9 @@ namespace CSPspEmu.Gui.Winforms
 				return true;
 			};
 
-			TitleColumn.AspectGetter = delegate(object _entry) { return ((GameList.GameEntry)_entry).TITLE; };
-			DiscIdColumn.AspectGetter = delegate(object _entry) { return ((GameList.GameEntry)_entry).DiscId0; };
-			PathColumn.AspectGetter = delegate(object _entry) { return Path.GetFileName(((GameList.GameEntry)_entry).IsoFile); };
+			TitleColumn.AspectGetter = delegate(object _entry) { try { return ((GameList.GameEntry)_entry).TITLE; } catch { return "INVALID"; } };
+			DiscIdColumn.AspectGetter = delegate(object _entry) { try { return ((GameList.GameEntry)_entry).DiscId0; } catch { return "INVALID"; } };
+			PathColumn.AspectGetter = delegate(object _entry) { try { return Path.GetFileName(((GameList.GameEntry)_entry).IsoFile); } catch { return "INVALID"; } };
 			MediaTypeColumn.AspectGetter = delegate(object _entry)
 			{
 				var Entry = ((GameList.GameEntry)_entry);
