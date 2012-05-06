@@ -145,5 +145,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 		{
 			return MicroSeconds;
 		}
+
+		[HlePspFunction(NID = 0x64D4540E, FirmwareVersion = 150)]
+		public long sceKernelReferThreadProfiler()
+		{
+			//Valid only on actual hardware with debug mode enabled.
+			return 0;
+		}
 	}
 }

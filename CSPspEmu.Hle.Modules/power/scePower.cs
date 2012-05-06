@@ -444,5 +444,12 @@ namespace CSPspEmu.Hle.Modules.power
 		{
 			return 0;
 		}
+
+        [HlePspFunction(NID = 0xEA382A27, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int scePowerGetPllClockFrequencyFloat()
+        {
+            return 0;
+        }
 	}
 }

@@ -323,6 +323,22 @@ namespace CSPspEmu.Hle.Modules.rtc
 
 			return 0;
 		}
+
+        [HlePspFunction(NID = 0x9ED0AE87, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceRtcCompareTick()
+        {
+            return 0;
+        }
+
+        
+        
+        [HlePspFunction(NID = 0xCF561893, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceRtcGetWin32FileTime()
+        {
+            return 0;
+        }
 	}
 
 	public enum PspDaysOfWeek : int
