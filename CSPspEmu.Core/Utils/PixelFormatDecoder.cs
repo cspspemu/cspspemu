@@ -26,7 +26,14 @@ namespace CSPspEmu.Core.Utils
 			public ushort Color1;
 			public ulong Alpha;
 		}
-		public struct Dxt5Block { }
+
+		public struct Dxt5Block
+		{
+			public uint ColorLookup;
+			public ushort Color0;
+			public ushort Color1;
+			public ulong Alpha;
+		}
 
 		static readonly double[] Sizes =
 		{
@@ -139,7 +146,7 @@ namespace CSPspEmu.Core.Utils
 				{
 					OutputPixel OutputPixel;
 					OutputPixel.R = 0xFF;
-					OutputPixel.G = 0x00;
+					OutputPixel.G = (byte)(((n & 1) == 0) ? 0xFF : 0x00);
 					OutputPixel.B = 0x00;
 					OutputPixel.A = 0xFF;
 					Output[n] = OutputPixel;
@@ -149,10 +156,67 @@ namespace CSPspEmu.Core.Utils
 
 		private unsafe void Decode_COMPRESSED_DXT5()
 		{
-			Console.Error.WriteLine("Not Implemented: Decode_COMPRESSED_DXT5");
+			//Console.Error.WriteLine("Not Implemented: Decode_COMPRESSED_DXT5");
 			//throw new NotImplementedException();
 
-			_Decode_Unimplemented();
+			//_Decode_Unimplemented();
+
+			var Colors = new OutputPixel[4];
+
+			for (int y = 0, ni = 0; y < Height; y += 4)
+			{
+				for (int x = 0; x < Width; x += 4, ni++)
+				{
+					var Block = ((Dxt5Block*)InputByte)[ni];
+					Colors[0] = Decode_RGBA_5650_Pixel(Block.Color0).Transform((R, G, B, A) => OutputPixel.FromRGBA(B, G, R, A));
+					Colors[1] = Decode_RGBA_5650_Pixel(Block.Color1).Transform((R, G, B, A) => OutputPixel.FromRGBA(B, G, R, A));
+					Colors[2] = OutputPixel.OperationPerComponent(Colors[0], Colors[1], (a, b) => { return (byte)(((a * 2) / 3) + ((b * 1) / 3)); });
+					Colors[3] = OutputPixel.OperationPerComponent(Colors[0], Colors[1], (a, b) => { return (byte)(((a * 1) / 3) + ((b * 2) / 3)); });
+
+					// Create Alpha Lookup
+					var AlphaLookup = new byte[8];
+					var Alphas = (ushort)(Block.Alpha >> 48);
+					var Alpha0 = (byte)((Alphas >> 0) & 0xFF);
+					var Alpha1 = (byte)((Alphas >> 8) & 0xFF);
+
+					AlphaLookup[0] = Alpha0;
+					AlphaLookup[1] = Alpha1;
+					if (Alpha0 > Alpha1)
+					{
+						AlphaLookup[2] = (byte)((6 * Alpha0 + Alpha1) / 7);
+						AlphaLookup[3] = (byte)((5 * Alpha0 + 2 * Alpha1) / 7);
+						AlphaLookup[4] = (byte)((4 * Alpha0 + 3 * Alpha1) / 7);
+						AlphaLookup[5] = (byte)((3 * Alpha0 + 4 * Alpha1) / 7);
+						AlphaLookup[6] = (byte)((2 * Alpha0 + 5 * Alpha1) / 7);
+						AlphaLookup[7] = (byte)((Alpha0 + 6 * Alpha1) / 7);
+					}
+					else
+					{
+						AlphaLookup[2] = (byte)((4 * Alpha0 + Alpha1) / 5);
+						AlphaLookup[3] = (byte)((3 * Alpha0 + 2 * Alpha1) / 5);
+						AlphaLookup[4] = (byte)((2 * Alpha0 + 3 * Alpha1) / 5);
+						AlphaLookup[5] = (byte)((Alpha0 + 4 * Alpha1) / 5);
+						AlphaLookup[6] = (byte)(0x00);
+						AlphaLookup[7] = (byte)(0xFF);
+					}
+
+					for (int y2 = 0, no = 0; y2 < 4; y2++)
+					{
+						for (int x2 = 0; x2 < 4; x2++, no++)
+						{
+							var Alpha = AlphaLookup[((Block.Alpha >> (3 * no)) & 0x7)];
+							var Color = ((Block.ColorLookup >> (2 * no)) & 0x3);
+
+							int rx = (x + x2);
+							int ry = (y + y2);
+							int n = ry * Width + rx;
+
+							Output[n] = Colors[Color];
+							Output[n].A = Alpha;
+						}
+					}
+				}
+			}
 		}
 
 		/// <summary>

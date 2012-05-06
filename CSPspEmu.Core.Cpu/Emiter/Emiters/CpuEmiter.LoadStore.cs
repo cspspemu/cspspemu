@@ -197,8 +197,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		// Load Linked word.
 		// Store Conditional word.
-		public void ll() { throw (new NotImplementedException()); }
-		public void sc() { throw (new NotImplementedException()); }
+		public void ll() {
+			throw (new NotImplementedException());
+		}
+		public void sc() {
+			throw (new NotImplementedException());
+		}
 
 		// Load Word to Cop1 floating point.
 		// Store Word from Cop1 floating point.

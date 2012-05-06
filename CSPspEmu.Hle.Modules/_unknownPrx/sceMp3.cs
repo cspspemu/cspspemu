@@ -57,8 +57,11 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
 		{
 		}
 
-		public class Mp3Stream
+		public class Mp3Stream : IDisposable
 		{
+			void IDisposable.Dispose()
+			{
+			}
 		}
 
 		HleUidPoolSpecial<Mp3Stream, Mp3StreamId> Mp3Handles = new HleUidPoolSpecial<Mp3Stream, Mp3StreamId>()

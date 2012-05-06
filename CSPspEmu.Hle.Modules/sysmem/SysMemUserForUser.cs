@@ -182,10 +182,10 @@ namespace CSPspEmu.Hle.Modules.sysmem
 						Name: Name
 					);
 				}
-				catch (InvalidOperationException InvalidOperationException)
+				catch (MemoryPartitionNoMemoryException MemoryPartitionNoMemoryException)
 				{
 					//Console.Error.WriteLine(InvalidOperationException);
-					Console.Error.WriteLine(InvalidOperationException.Message);
+					Console.Error.WriteLine(MemoryPartitionNoMemoryException);
 					throw(new SceKernelException(SceKernelErrors.ERROR_KERNEL_NO_MEMORY));
 				}
 			}

@@ -83,7 +83,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void sltu() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RS, RT, () => { SafeILGenerator.CompareBinary(SafeBinaryComparison.LessThanUnsigned); }); }
 
 		public void slti() { MipsMethodEmiter.OP_2REG_IMM_Signed(RT, RS, (short)Instruction.IMM, () => { SafeILGenerator.CompareBinary(SafeBinaryComparison.LessThanSigned); }); }
-		public void sltiu() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RT, RS, (ushort)Instruction.IMM, () => { SafeILGenerator.CompareBinary(SafeBinaryComparison.LessThanUnsigned); }); }
+
+		[PspTested]
+		// It is (uint) and it is correct.
+		public void sltiu() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RT, RS, (uint)Instruction.IMM, () => { SafeILGenerator.CompareBinary(SafeBinaryComparison.LessThanUnsigned); }); }
 		//Console.WriteLine("SLTIU: {0} : {1}", Instruction.IMM, (uint)Instruction.IMM);
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -124,7 +127,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
 				SafeILGenerator.Call((Func<uint, uint>)CpuEmiter._bitrev_impl);
 			});
-			//throw (new NotImplementedException());
 		}
 		static public uint _bitrev_impl(uint v)
 		{

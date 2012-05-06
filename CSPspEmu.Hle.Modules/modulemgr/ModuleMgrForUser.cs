@@ -144,6 +144,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 
 		//public int lastModuleId = 1;
 
+		//public HleUidPool<HleModule> Modules = new HleUidPool<HleModule>();
 		public HleUidPool<HleModuleGuest> Modules = new HleUidPool<HleModuleGuest>();
 
 		[Inject]
@@ -171,8 +172,13 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 					Path.EndsWith(@"/libfont.prx") ||
 				false)
 				{
-					Logger.Warning("Infore {0}!", Path);
+					Logger.Warning("Ignore {0}!", Path);
 					throw (new Exception("Ignore " + Path + "!"));
+
+					//var ModuleId = Modules.Create(new HleModule());
+					//Module.ID = ModuleId;
+					//return ModuleId;
+
 				}
 
 				var ModuleStream = GetStreamAction();

@@ -57,18 +57,18 @@ namespace CSPspEmu.Runner.Components.Cpu
 		public HleMemoryManager MemoryManager;
 
 		[Inject]
-		HleModuleManager ModuleManager;
+		public HleModuleManager ModuleManager;
 
 		[Inject]
-		HleIoManager HleIoManager;
-
-		HleIoDriverMountable MemoryStickMountable;
+		public HleIoManager HleIoManager;
 
 		[Inject]
-		ThreadManForUser ThreadManForUser;
+		public ThreadManForUser ThreadManForUser;
 
 		[Inject]
-		HleIoDriverEmulator HleIoDriverEmulator;
+		public HleIoDriverEmulator HleIoDriverEmulator;
+
+		public HleIoDriverMountable MemoryStickMountable;
 
 		public AutoResetEvent StoppedEndedEvent = new AutoResetEvent(false);
 

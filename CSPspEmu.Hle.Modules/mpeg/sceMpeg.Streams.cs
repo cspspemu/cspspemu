@@ -15,10 +15,14 @@ namespace CSPspEmu.Hle.Modules.mpeg
 	/// <see cref="http://en.wikipedia.org/wiki/MPEG_program_stream"/>
 	unsafe public partial class sceMpeg
 	{
-		public class StreamInfo
+		public class StreamInfo : IDisposable
 		{
 			public StreamId StreamId;
 			public int StreamIndex;
+
+			void IDisposable.Dispose()
+			{
+			}
 		}
 
 		HleUidPoolSpecial<StreamInfo, int> RegisteredStreams = new HleUidPoolSpecial<StreamInfo, int>(FirstId: 0x17);

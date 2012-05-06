@@ -42,7 +42,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Push((int)(uint)Instruction.Value);
 			SafeILGenerator.Call((Action<CpuThreadState, uint>)CpuEmiter._cache_impl);
-			//throw(new NotImplementedException());
 		}
 		public void sync() {
 			Console.WriteLine("Not implemented 'sync' instruction");
@@ -61,7 +60,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			//CpuThreadState.PC =
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Call((Action<CpuThreadState>)CpuEmiter._break_impl);
-			//throw(new NotImplementedException());
 		}
 		public void dbreak() { throw(new NotImplementedException()); }
 		public void halt() { throw(new NotImplementedException()); }
@@ -73,7 +71,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Move (From/To) IC
 		public void mfic()
 		{
-			//throw (new NotImplementedException());
 			MipsMethodEmiter.SaveGPR(RT, () =>
 			{
 				MipsMethodEmiter.LoadFieldPtr(typeof(CpuThreadState).GetField("IC"));
@@ -82,7 +79,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		public void mtic()
 		{
-			//throw (new NotImplementedException());
 			MipsMethodEmiter.SaveField<int>(typeof(CpuThreadState).GetField("IC"), () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);

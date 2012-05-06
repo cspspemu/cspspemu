@@ -265,6 +265,10 @@ namespace CSPspEmu.Hle
 				{
 					Delegate(CpuThreadState);
 				}
+				catch (MemoryPartitionNoMemoryException)
+				{
+					CpuThreadState.GPR[2] = (int)SceKernelErrors.ERROR_ERRNO_NO_MEMORY;
+				}
 				catch (SceKernelException SceKernelException)
 				{
 					CpuThreadState.GPR[2] = (int)SceKernelException.SceKernelError;

@@ -34,7 +34,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			public int Alignment;
 		}
 
-		public class FixedPool
+		public class FixedPool : IDisposable
 		{
 			public class WaitItem
 			{
@@ -70,6 +70,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 					Console.Error.WriteLine("FPL: Unhandled Attribute : {0}", Attributes);
 					//throw (new NotImplementedException());
 				}
+
+				if (BlockSize == 0)
+				{
+					throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MEMSIZE));
+				}
+
 				var Partition = MemoryManager.GetPartition(PartitionId);
 
 				//var TEST_FIXED_ADDRESS = 0x08800000U;
@@ -78,13 +84,20 @@ namespace CSPspEmu.Hle.Modules.threadman
 				//this.MemoryPartition = Partition.Allocate(NumberOfBlocks * BlockSize, Hle.MemoryPartition.Anchor.Set, TEST_FIXED_ADDRESS, Alignment);
 				//Partition.Dump();
 
-				this.MemoryPartition = Partition.Allocate(
-					NumberOfBlocks * BlockSize,
-					Hle.MemoryPartition.Anchor.Low,
-					0,
-					Alignment,
-					"<Fpl>: " + Name
-				);
+				try
+				{
+					this.MemoryPartition = Partition.Allocate(
+						NumberOfBlocks * BlockSize,
+						Hle.MemoryPartition.Anchor.Low,
+						0,
+						Alignment,
+						"<Fpl>: " + Name
+					);
+				}
+				catch (MemoryPartitionNoMemoryException)
+				{
+					throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_NO_MEMORY));
+				}
 
 				//Console.Error.WriteLine("FixedPool.Init: 0x{0:X}", this.MemoryPartition.Low);
 				this.FreeBlocks = new List<uint>();
@@ -165,6 +178,15 @@ namespace CSPspEmu.Hle.Modules.threadman
 			public override string ToString()
 			{
 				return this.ToStringDefault();
+			}
+
+			void IDisposable.Dispose()
+			{
+				if (this.MemoryPartition != null)
+				{
+					this.MemoryPartition.DeallocateFromParent();
+					this.MemoryPartition = null;
+				}
 			}
 		}
 

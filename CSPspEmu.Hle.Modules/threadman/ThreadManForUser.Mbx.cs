@@ -38,7 +38,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			SendPriority = 0x400,
 		}
 
-		public class MessageBox
+		public class MessageBox : IDisposable
 		{
 			public string Name;
 			public MbxAttributesEnum Attributes;
@@ -95,6 +95,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 						return false;
 					}
 				}
+			}
+
+			void IDisposable.Dispose()
+			{
+				// TODO
 			}
 		}
 

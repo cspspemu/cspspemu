@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Threading.EventFlags
 {
-	unsafe public class HleEventFlag
+	unsafe public class HleEventFlag : IDisposable
 	{
 		public EventFlagInfo Info = new EventFlagInfo(0);
 		protected List<WaitThread> _WaitingThreads = new List<WaitThread>();
@@ -139,6 +139,11 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 			Info.CurrentPattern |= Bits;
 			UpdateWaitingThreads();
 			//BitPattern = Bits;
+		}
+
+		void IDisposable.Dispose()
+		{
+			// TODO
 		}
 	}
 

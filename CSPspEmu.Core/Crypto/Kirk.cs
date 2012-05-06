@@ -428,7 +428,7 @@ namespace CSPspEmu.Core.Crypto
 		   Crypto.AES_ctx cmac_key;
 		   var _cmac_header_hash = new byte[16];
 		   var _cmac_data_hash = new byte[16];
-		   int chk_size,i;
+		   int chk_size;
 
 		   fixed (byte* cmac_header_hash = _cmac_header_hash)
 		   fixed (byte* cmac_data_hash = _cmac_data_hash)

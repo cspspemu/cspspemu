@@ -87,9 +87,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="cb">The UID of the specified callback</param>
 		/// <returns>The callback count, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x2A3D44FF, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceKernelGetCallbackCount(int cb)
 		{
-			throw(new NotImplementedException());
+			return 0;
+			//throw(new NotImplementedException());
 			/*
 			PspCallback pspCallback = uniqueIdFactory.get!PspCallback(cb);
 			return pspCallback.notifyCount;

@@ -231,13 +231,17 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					{
 						InvalidTexture = new Texture(OpenglGpuImpl);
 
-						fixed (OutputPixel* Data = new OutputPixel[BufferWidth * Height])
+						int ITWidth = 2, ITHeight = 2;
+						int ITWidthHeight = ITWidth * ITHeight;
+						fixed (OutputPixel* Data = new OutputPixel[ITWidthHeight])
 						{
-							for (int n = 0; n < BufferWidth * Height; n++)
+							var Color1 = OutputPixel.FromRGBA(0xFF, 0x00, 0x00, 0xFF);
+							var Color2 = OutputPixel.FromRGBA(0x00, 0x00, 0xFF, 0xFF);
+							for (int n = 0; n < ITWidthHeight; n++)
 							{
-								Data[n] = OutputPixel.FromRGBA(0xFF, 0x00, 0x00, 0xFF);
+								Data[n] = ((n & 1) != 0) ? Color1 : Color2;
 							}
-							InvalidTexture.SetData(Data, 2, 2);
+							InvalidTexture.SetData(Data, ITWidth, ITHeight);
 						}
 					}
 					return InvalidTexture;

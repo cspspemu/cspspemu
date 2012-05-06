@@ -7,6 +7,14 @@ using CSharpUtils;
 
 namespace CSPspEmu.Hle
 {
+	public class MemoryPartitionNoMemoryException : Exception
+	{
+		public MemoryPartitionNoMemoryException(string Text)
+			: base(Text)
+		{
+		}
+	}
+
 	public class MemoryPartition : IDisposable
 	{
 		public enum Anchor
@@ -194,7 +202,7 @@ namespace CSPspEmu.Hle
 					Root.Dump(this);
 					Console.WriteLine("");
 #endif
-				throw (new InvalidOperationException(
+				throw (new MemoryPartitionNoMemoryException(
 					String.Format(
 						"Can't allocate Size={0} : AllocateAnchor={1} : Position=0x{2:X}",
 						Size, AllocateAnchor, Position

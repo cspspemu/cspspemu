@@ -95,6 +95,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Branch on Less Than Zero (And Link) (Likely).
 		public void bltz() { _branch_pre(); _branch_pre_v0(SafeBinaryComparison.LessThanSigned); }
 		public void bltzl() { bltz(); }
+
+		[PspUntested]
 		public void bltzal() { _branch_pre(AndLink: true); _branch_pre_v0(SafeBinaryComparison.LessThanSigned); }
 		public void bltzall() { bltzal(); }
 
@@ -109,7 +111,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Branch on Greater Equal Zero (And Link) (Likely).
 		public void bgez() { _branch_pre();  _branch_pre_v0(SafeBinaryComparison.GreaterOrEqualSigned); }
 		public void bgezl() { bgez(); }
-		public void bgezal() { throw (new NotImplementedException()); }
+		[PspUntested]
+		public void bgezal() {
+			_branch_pre(AndLink: true); _branch_pre_v0(SafeBinaryComparison.GreaterOrEqualSigned); 
+		}
 		public void bgezall() { bgezal(); }
 		
 #if true

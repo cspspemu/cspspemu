@@ -51,6 +51,9 @@ namespace CSPspEmu.Core
 		/// </summary>
 		//public bool CountInstructionsAndYield = true;
 		public bool CountInstructionsAndYield = false;
+		//public bool BreakInstructionThreadSwitchingForSpeed = false;
+		public bool BreakInstructionThreadSwitchingForSpeed = true;
+
 
 
 		/// <summary>
@@ -139,12 +142,6 @@ namespace CSPspEmu.Core
 		/// </summary>
 		public bool DebugThreadSwitching = false;
 		//public bool DebugThreadSwitching = true;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public bool BreakInstructionThreadSwitchingForSpeed = false;
-		//public bool BreakInstructionThreadSwitchingForSpeed = true;
 
 		/// <summary>
 		/// 

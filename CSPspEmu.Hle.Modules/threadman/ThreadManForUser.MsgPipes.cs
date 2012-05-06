@@ -41,7 +41,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 		public enum MsgPipeId : int { }
 
-		public class MsgPipe
+		public class MsgPipe : IDisposable
 		{
 			public string Name;
 			public MsgPipeAttributes Attributes;
@@ -147,6 +147,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 			public void Delete()
 			{
 				PoolPartition.DeallocateFromParent();	
+			}
+
+			void IDisposable.Dispose()
+			{
+				// TODO
 			}
 		}
 

@@ -13,7 +13,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 	{
 		public enum VariablePoolId : int { }
 
-		public class VariablePool
+		public class VariablePool : IDisposable
 		{
 			public ThreadManForUser ThreadManForUser;
 			public HleMemoryManager.Partitions PartitionId;
@@ -90,7 +90,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 					AddressPointer->Address = AllocatedSegment.GetAnchoredAddress(InternalMemoryAnchor);
 					return true;
 				}
-				catch (InvalidOperationException)
+				catch (MemoryPartitionNoMemoryException)
 				{
 					//AddressPointer->Address = 0;
 					return false;
@@ -110,6 +110,15 @@ namespace CSPspEmu.Hle.Modules.threadman
 						Item.WakeUp();
 						break;
 					}
+				}
+			}
+
+			void IDisposable.Dispose()
+			{
+				if (this.MemoryPartition != null)
+				{
+					this.MemoryPartition.DeallocateFromParent();
+					this.MemoryPartition = null;
 				}
 			}
 		}

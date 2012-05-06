@@ -102,7 +102,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			SafeILGenerator.Push((int)FD);
 			SafeILGenerator.Push((int)FS);
 			SafeILGenerator.Call((Action<CpuThreadState, int, int>)CpuEmiter._cvt_w_s_impl);
-			//throw(new NotImplementedException());
 		}
 
 		// Move (from/to) float point registers (reinterpreted)
@@ -147,7 +146,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public void cfc1()
 		{
-			//throw(new NotImplementedException());
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Push((int)RD);
 			SafeILGenerator.Push((int)RT);
@@ -155,7 +153,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		public void ctc1()
 		{
-			//throw (new NotImplementedException());
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Push((int)RD);
 			SafeILGenerator.Push((int)RT);
@@ -188,9 +185,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			bool fc_unordererd = ((fc02 & 1) != 0);
 			bool fc_equal = ((fc02 & 2) != 0);
 			bool fc_less = ((fc02 & 4) != 0);
-			bool fc_inv_qnan = (fc3 != 0); // @TODO? -- Only used for detecting invalid operations?
-
-			//throw(new NotImplementedException());
+			bool fc_inv_qnan = (fc3 != 0); // TODO -- Only used for detecting invalid operations?
 
 			MipsMethodEmiter.SaveFCR31_CC(() =>
 			{

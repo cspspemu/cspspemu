@@ -301,6 +301,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 			Action<bool> EmitInstructionCountIncrement = (bool CheckForYield) =>
 			{
+				// CountInstructionsAndYield
 				if (!CpuProcessor.PspConfig.CountInstructionsAndYield)
 				{
 					return;

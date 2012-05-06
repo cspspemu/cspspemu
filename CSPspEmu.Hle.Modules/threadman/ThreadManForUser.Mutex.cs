@@ -32,7 +32,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			AllowRecursive = 0x200,
 		}
 
-		public class PspMutex
+		public class PspMutex : IDisposable
 		{
 			public string Name;
 			public MutexAttributesEnum Attributes;
@@ -103,6 +103,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 				{
 					return false;
 				}
+			}
+
+			void IDisposable.Dispose()
+			{
+				// TODO
 			}
 		}
 

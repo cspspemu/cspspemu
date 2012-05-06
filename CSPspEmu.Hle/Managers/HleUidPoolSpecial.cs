@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Hle.Managers
 {
-	public class HleUidPoolSpecial<TType, TKey>
+	public class HleUidPoolSpecial<TType, TKey> where TType : IDisposable
 	{
 		protected TKey LastId = default(TKey);
 		protected Dictionary<TKey, TType> Items = new Dictionary<TKey, TType>();
@@ -32,6 +32,24 @@ namespace CSPspEmu.Hle.Managers
 			return Value;
 		}
 
+#if false
+		public TKey? Find(TType Value)
+		{
+			foreach (var Pair in Items) if (Pair.Value.Equals(Value)) return Pair.Key;
+			return null;
+		}
+
+		public TKey GetOrCreate(TType Item)
+		{
+			var Result = Find(Item);
+			if (Result == null)
+			{
+				Result = Create(Item);
+			}
+			return Result.Value;
+		}
+#endif
+
 		public TType Get(TKey Id)
 		{
 			if (!Items.ContainsKey(Id))
@@ -55,12 +73,18 @@ namespace CSPspEmu.Hle.Managers
 			{
 				throw (new SceKernelException(OnKeyNotFoundError));
 			}
+			var Item = Items[Id];
 			Items.Remove(Id);
+			Item.Dispose();
 		}
 
 		public void RemoveAll()
 		{
-			foreach (var Item in Items.ToArray()) Remove(Item.Key);
+			foreach (var Item in Items.ToArray())
+			{
+				Remove(Item.Key);
+				Item.Value.Dispose();
+			}
 		}
 	}
 }

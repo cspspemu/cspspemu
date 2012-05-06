@@ -315,7 +315,26 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		// -
-		public void vhdp() { throw (new NotImplementedException("")); }
+		public void vhdp()
+		{
+			var VectorSize = Instruction.ONE_TWO;
+
+			VectorOperationSaveVd(1, (Index) =>
+			{
+				SafeILGenerator.Push(0.0f);
+				for (int n = 0; n < VectorSize - 1; n++)
+				{
+					Load_VS(n);
+					Load_VT(n);
+					SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+					SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
+				}
+
+				Load_VT((int)(VectorSize - 1));
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
+			});
+		}
+
 		public void vcrs_t() {
 			uint VectorSize = 3;
 
