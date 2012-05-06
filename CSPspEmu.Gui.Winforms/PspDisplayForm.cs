@@ -245,8 +245,8 @@ namespace CSPspEmu.Gui.Winforms
 				{
 					int Width = 512;
 					int Height = 272;
-					var Address = PspDisplay.CurrentInfo.Address | 0x04000000;
-					//var Address = PspDisplay.CurrentInfo.Address;
+					//var Address = PspDisplay.CurrentInfo.Address | 0x04000000; // It causes artifacts
+					var Address = PspDisplay.CurrentInfo.Address;
 					byte* FrameBuffer = null;
 					try
 					{

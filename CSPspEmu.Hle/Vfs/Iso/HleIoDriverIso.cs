@@ -244,6 +244,12 @@ namespace CSPspEmu.Hle.Vfs.Iso
 						IsoFileArgument.Stream.Seek(In->Offset, (SeekOrigin)In->Whence);
 						return 0;
 					}
+				case UmdCommandEnum.GetFilePointer:
+					{
+						var Out = (uint*)ExpectedOutputSize(sizeof(uint));
+						*Out = (uint)IsoFileArgument.Stream.Position;
+						return 0;
+					}
 				case UmdCommandEnum.GetStartSector:
 					{
 						var Out = (uint*)ExpectedOutputSize(sizeof(uint));

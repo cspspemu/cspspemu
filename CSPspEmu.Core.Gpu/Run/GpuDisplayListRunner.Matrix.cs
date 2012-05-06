@@ -24,7 +24,8 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		public void OP_VMS()
 		{
-			GpuDisplayList.GpuStateStructPointer->VertexState.ViewMatrix.Reset();
+			uint StartIndex = Params24;
+			GpuDisplayList.GpuStateStructPointer->VertexState.ViewMatrix.Reset(StartIndex);
 		}
 		public void OP_VIEW()
 		{
@@ -33,7 +34,8 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		public void OP_WMS()
 		{
-			GpuDisplayList.GpuStateStructPointer->VertexState.WorldMatrix.Reset();
+			uint StartIndex = Params24;
+			GpuDisplayList.GpuStateStructPointer->VertexState.WorldMatrix.Reset(StartIndex);
 		}
 		public void OP_WORLD()
 		{
@@ -43,7 +45,8 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		public void OP_PMS()
 		{
-			GpuDisplayList.GpuStateStructPointer->VertexState.ProjectionMatrix.Reset();
+			uint StartIndex = Params24;
+			GpuDisplayList.GpuStateStructPointer->VertexState.ProjectionMatrix.Reset(StartIndex);
 		}
 		public void OP_PROJ()
 		{
@@ -77,15 +80,19 @@ namespace CSPspEmu.Core.Gpu.Run
 		// http://svn.ps2dev.org/filedetails.php?repname=psp&path=%2Ftrunk%2Fpspsdk%2Fsrc%2Fgu%2FsceGuBoneMatrix.c
 		public void OP_BOFS()
 		{
-			SkinningState->CurrentBoneMatrixIndex = Params24 / 12;
-			var BoneMatrices = &SkinningState->BoneMatrix0;
-			BoneMatrices[SkinningState->CurrentBoneMatrixIndex].Reset();
+			SkinningState->CurrentBoneIndex = (int)Params24;
+			//SkinningState->CurrentBoneMatrixIndex = Params24 / 12;
+			//uint StartIndex = Params24 % 12;
+			//var BoneMatrices = &SkinningState->BoneMatrix0;
+			//BoneMatrices[SkinningState->CurrentBoneMatrixIndex].Reset(StartIndex);
 		}
 
 		public void OP_BONE()
 		{
 			var BoneMatrices = &SkinningState->BoneMatrix0;
-			BoneMatrices[SkinningState->CurrentBoneMatrixIndex].Write(Float1);
+			//Console.WriteLine("{0}.{1} -> {2}", SkinningState->CurrentBoneIndex / 12, SkinningState->CurrentBoneIndex % 12, Float1);
+			BoneMatrices[SkinningState->CurrentBoneIndex / 12].WriteAt(SkinningState->CurrentBoneIndex % 12, Float1);
+			SkinningState->CurrentBoneIndex++;
 		}
 	}
 }

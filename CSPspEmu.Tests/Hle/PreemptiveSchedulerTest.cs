@@ -93,7 +93,6 @@ namespace CSPspEmu.Tests.Hle
 			}
 
 			PreemptiveItem2.Ready = false;
-			//Scheduler.Put(PreemptiveItem2);
 
 			for (int n = 0; n < 3; n++)
 			{
@@ -116,7 +115,6 @@ namespace CSPspEmu.Tests.Hle
 			PreemptiveItem4.Priority = 11;
 			PreemptiveItem4.Ready = true;
 			Scheduler.Update(PreemptiveItem4);
-			//Scheduler.ReScheduleHighestPriority();
 
 			for (int n = 0; n < 3; n++)
 			{

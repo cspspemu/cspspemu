@@ -30,9 +30,9 @@ namespace CSPspEmu.Core.Gpu.State
 		/// <summary>
 		/// 
 		/// </summary>
-		internal void Reset()
+		internal void Reset(uint Index = 0)
 		{
-			Index = 0;
+			this.Index = Index;
 		}
 
 		public void Dump()
@@ -124,13 +124,13 @@ namespace CSPspEmu.Core.Gpu.State
 		/// <summary>
 		/// 
 		/// </summary>
-		internal void Reset()
+		internal void Reset(uint Index = 0)
 		{
 			fixed (float* ValuesPtr = Values)
 			{
-				ValuesPtr[15] = 1;
+				//ValuesPtr[15] = 1.0f;
 			}
-			Index = 0;
+			this.Index = Index;
 		}
 
 		public void Dump()
@@ -165,6 +165,17 @@ namespace CSPspEmu.Core.Gpu.State
 			}
 		}
 
+		internal void WriteAt(int Index, float Value)
+		{
+			//if (Index < Indexes.Length)
+			{
+				fixed (float* ValuesPtr = Values)
+				{
+					ValuesPtr[Indexes[Index]] = Value;
+				}
+			}
+		}
+
 		public Matrix4 Matrix4
 		{
 			get
@@ -172,14 +183,32 @@ namespace CSPspEmu.Core.Gpu.State
 				fixed (float* ValuesPtr = Values)
 				{
 					var Matrix4 = new Matrix4(
+#if false
 						ValuesPtr[0], ValuesPtr[1], ValuesPtr[2], ValuesPtr[3],
 						ValuesPtr[4], ValuesPtr[5], ValuesPtr[6], ValuesPtr[7],
 						ValuesPtr[8], ValuesPtr[9], ValuesPtr[10], ValuesPtr[11],
 						ValuesPtr[12], ValuesPtr[13], ValuesPtr[14], ValuesPtr[15]
+#else
+						ValuesPtr[0], ValuesPtr[1], ValuesPtr[2], 0,
+						ValuesPtr[4], ValuesPtr[5], ValuesPtr[6], 0,
+						ValuesPtr[8], ValuesPtr[9], ValuesPtr[10], 0,
+						ValuesPtr[12], ValuesPtr[13], ValuesPtr[14], 1.0f
+#endif
 					);
 					//Matrix4.Transpose();
 					return Matrix4;
 				}
+			}
+		}
+
+		public void SetLastColumn()
+		{
+			fixed (float* ValuesPtr = Values)
+			{
+				ValuesPtr[3] = 0.0f;
+				ValuesPtr[7] = 0.0f;
+				ValuesPtr[11] = 0.0f;
+				ValuesPtr[15] = 1.0f;
 			}
 		}
 	}

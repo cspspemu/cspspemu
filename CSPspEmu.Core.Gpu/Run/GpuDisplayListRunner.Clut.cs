@@ -42,6 +42,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		}
 		public void OP_CLOAD()
 		{
+			// TODO: Clut loading should be done at this function? Check! 
 			ClutState->NumberOfColors = Param8(0) * 8;
 			//Console.WriteLine("{0:X}", GpuState->TextureMappingState.ClutState.Address);
 		}

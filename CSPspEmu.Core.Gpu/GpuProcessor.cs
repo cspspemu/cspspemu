@@ -67,6 +67,8 @@ namespace CSPspEmu.Core.Gpu
 		/// </summary>
 		public PspConfig PspConfig;
 
+		public GlobalGpuState GlobalGpuState = new GlobalGpuState();
+
 		/// <summary>
 		/// 
 		/// </summary>

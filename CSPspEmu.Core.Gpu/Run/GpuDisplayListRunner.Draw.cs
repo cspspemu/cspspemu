@@ -209,7 +209,7 @@ namespace CSPspEmu.Core.Gpu.Run
 			var PrimitiveType = (GuPrimitiveType)Param8(16);
 			var VertexCount = Param16(0);
 
-			GpuDisplayList.GpuProcessor.GpuImpl.Prim(GpuDisplayList.GpuStateStructPointer, PrimitiveType, VertexCount);
+			GpuDisplayList.GpuProcessor.GpuImpl.Prim(GlobalGpuState, GpuDisplayList.GpuStateStructPointer, PrimitiveType, VertexCount);
 		}
 	}
 }

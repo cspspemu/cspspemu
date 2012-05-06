@@ -9,6 +9,7 @@ namespace CSPspEmu.Core.Gpu.Run
 {
 	unsafe sealed public partial class GpuDisplayListRunner
 	{
+		public GlobalGpuState GlobalGpuState;
 		public GpuDisplayList GpuDisplayList;
 		public GpuOpCodes OpCode;
 		public uint Params24;

@@ -135,6 +135,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				var BoneMatrix = BoneMatrices[m];
 				float Weight = VertexInfo.Weights[m];
 
+				BoneMatrix.SetLastColumn();
+
 				if (Weight != 0)
 				{
 					OutputPosition.X += (InputPosition.X * BoneMatrix.Values[0] + InputPosition.Y * BoneMatrix.Values[4] + InputPosition.Z * BoneMatrix.Values[8] + 1 * BoneMatrix.Values[12]) * Weight;
@@ -390,12 +392,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		}
 
 
-		override public unsafe void Prim(GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
+		override public unsafe void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
 		{
 			//Console.WriteLine("VertexCount: {0}", VertexCount);
 			var Start = DateTime.UtcNow;
 			{
-				_Prim(GpuState, PrimitiveType, VertexCount);
+				_Prim(GlobalGpuState, GpuState, PrimitiveType, VertexCount);
 			}
 			var End = DateTime.UtcNow;
 			//Console.Error.WriteLine("Prim: {0}", End - Start);
@@ -409,7 +411,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// 
 		/// </summary>
 		/// <param name="GpuState"></param>
-		private unsafe void _Prim(GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
+		private unsafe void _Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
 		{
 			//if (PrimitiveType == GuPrimitiveType.TriangleStrip) VertexCount++;
 
@@ -422,7 +424,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			ReadVertexDelegate ReadVertex = ReadVertex_Void;
 			VertexReader.SetVertexTypeStruct(
 				VertexType,
-				(byte*)Memory.PspAddressToPointerSafe(GpuState->GetAddressRelativeToBaseOffset(GpuState->VertexAddress), 0)
+				(byte*)Memory.PspAddressToPointerSafe(GlobalGpuState.GetAddressRelativeToBaseOffset(GpuState->VertexAddress), 0)
 			);
 
 #if DEBUG_VERTEX_TYPE
@@ -464,7 +466,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			void* IndexPointer = null;
 			if (VertexType.Index != VertexTypeStruct.IndexEnum.Void)
 			{
-				IndexPointer = Memory.PspAddressToPointerSafe(GpuState->GetAddressRelativeToBaseOffset(GpuState->IndexAddress), 0);
+				IndexPointer = Memory.PspAddressToPointerSafe(GlobalGpuState.GetAddressRelativeToBaseOffset(GpuState->IndexAddress), 0);
 			}
 
 			//Console.Error.WriteLine(VertexType.Index);
@@ -585,7 +587,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 			*/
 
-			_CaptureStartPrimitive(PrimitiveType, GpuState->GetAddressRelativeToBaseOffset(GpuState->VertexAddress), VertexCount, ref VertexType);
+			_CaptureStartPrimitive(PrimitiveType, GlobalGpuState.GetAddressRelativeToBaseOffset(GpuState->VertexAddress), VertexCount, ref VertexType);
 
 			// DRAW ACTUALLY
 			{

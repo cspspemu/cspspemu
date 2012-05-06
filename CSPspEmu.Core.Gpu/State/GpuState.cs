@@ -6,11 +6,11 @@ using CSPspEmu.Core.Gpu.State.SubStates;
 using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Memory;
 using System.Runtime.InteropServices;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Gpu.State
 {
-	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	unsafe public struct GpuStateStruct
+	public class GlobalGpuState
 	{
 		public uint GetAddressRelativeToBase(uint RelativeAddress)
 		{
@@ -24,6 +24,11 @@ namespace CSPspEmu.Core.Gpu.State
 
 		public uint Base;
 		public int BaseOffset;
+	}
+
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
+	unsafe public struct GpuStateStruct
+	{
 		public uint VertexAddress;
 		public uint IndexAddress;
 		public bool ToggleUpdateState;
@@ -75,5 +80,21 @@ namespace CSPspEmu.Core.Gpu.State
 		public ShadingModelEnum ShadeModel;
 
 		public fixed sbyte DitherMatrix[16];
+
+		/*
+		static public void Init(GpuStateStruct* GpuState)
+		{
+			PointerUtils.Memset((byte*)GpuState, 0, sizeof(GpuStateStruct));
+
+			GpuState->SkinningState.BoneMatrix0.Init();
+			GpuState->SkinningState.BoneMatrix1.Init();
+			GpuState->SkinningState.BoneMatrix2.Init();
+			GpuState->SkinningState.BoneMatrix3.Init();
+			GpuState->SkinningState.BoneMatrix4.Init();
+			GpuState->SkinningState.BoneMatrix5.Init();
+			GpuState->SkinningState.BoneMatrix6.Init();
+			GpuState->SkinningState.BoneMatrix7.Init();
+		}
+		*/
 	}
 }

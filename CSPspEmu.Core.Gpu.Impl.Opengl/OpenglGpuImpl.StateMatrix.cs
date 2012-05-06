@@ -32,6 +32,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					GL.MultMatrix(GpuState->VertexState.ProjectionMatrix.Values);
 
 					GL.MatrixMode(MatrixMode.Modelview); GL.LoadIdentity();
+					GpuState->VertexState.ViewMatrix.SetLastColumn();
+					GpuState->VertexState.WorldMatrix.SetLastColumn();
 					GL.MultMatrix(GpuState->VertexState.ViewMatrix.Values);
 					GL.MultMatrix(GpuState->VertexState.WorldMatrix.Values);
 

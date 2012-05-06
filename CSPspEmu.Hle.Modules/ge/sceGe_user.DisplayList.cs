@@ -189,7 +189,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// </summary>
 		/// <param name="SyncType">Specifies the condition to wait on.  One of ::PspGeSyncType.</param>
 		/// <returns>???</returns>
-		[HlePspFunction(NID = 0xB287BD61, FirmwareVersion = 150)]
+		[HlePspFunction(NID = 0xB287BD61, FirmwareVersion = 150, CheckInsideInterrupt = true)]
 		[HlePspNotImplemented(PartialImplemented = true, Notice = false)]
 		public int sceGeDrawSync(GpuProcessor.SyncTypeEnum SyncType)
 		{

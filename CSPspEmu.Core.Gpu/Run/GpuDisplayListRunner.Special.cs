@@ -39,7 +39,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		/// </summary>
 		public void OP_BASE()
 		{
-			GpuState->Base = ((Params24 << 8) & 0xff000000);
+			GlobalGpuState.Base = ((Params24 << 8) & 0xff000000);
 			//GpuState->BaseAddress = (Params24 << 8);
 		}
 
@@ -48,7 +48,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		/// </summary>
 		public void OP_OFFSET_ADDR()
 		{
-			GpuState->BaseOffset = (int)(Params24 << 8);
+			GlobalGpuState.BaseOffset = (int)(Params24 << 8);
 		}
 
 		/// <summary>
@@ -57,7 +57,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		[GpuOpCodesNotImplemented]
 		public void OP_ORIGIN_ADDR()
 		{
-			GpuState->BaseOffset = (int)PC; // ?
+			GlobalGpuState.BaseOffset = (int)PC; // ?
 		}
 
 		/// <summary>

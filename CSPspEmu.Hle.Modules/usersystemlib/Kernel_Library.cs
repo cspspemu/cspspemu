@@ -75,7 +75,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		}
 
 		/// <summary>
-		/// 
+		/// Unlocks a LigthWeight Mutex
 		/// </summary>
 		/// <param name="WorkAreaPointer"></param>
 		/// <param name="Count"></param>
@@ -98,7 +98,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		}
 
 		/// <summary>
-		/// 
+		/// Locks a LightWeight Mutex
 		/// </summary>
 		/// <param name="WorkAreaPointer"></param>
 		/// <param name="Count"></param>
@@ -120,7 +120,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 
 
 		/// <summary>
-		/// 
+		/// Locks a LightWeight Mutex (with callback)
 		/// </summary>
 		/// <param name="WorkAreaPointer"></param>
 		/// <param name="Count"></param>
