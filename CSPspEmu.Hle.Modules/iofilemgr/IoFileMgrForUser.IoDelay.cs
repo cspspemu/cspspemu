@@ -88,7 +88,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			}
 			else
 			{
-				ThreadManager.Reschedule();
+				ThreadManager.Yield();
 			}
 		}
 	}

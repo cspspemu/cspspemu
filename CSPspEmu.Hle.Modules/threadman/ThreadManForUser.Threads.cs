@@ -88,7 +88,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			Thread.CpuThreadState.PC = (uint)EntryPoint;
 			Thread.CpuThreadState.RA = (uint)HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD;
-			Thread.AddStatus(HleThread.Status.Stopped);
+			Thread.SetStatus(HleThread.Status.Stopped);
 			//Thread.CpuThreadState.RA = (uint)0;
 
 
@@ -137,7 +137,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			ThreadToStart.CpuThreadState.CallerModule = CpuThreadState.CallerModule;
 
-			ThreadToStart.AddStatus(HleThread.Status.Ready);
+			ThreadToStart.SetStatus(HleThread.Status.Ready);
 		}
 
 		/// <summary>
@@ -152,9 +152,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		{
 			var ThreadToStart = GetThreadById((int)ThreadId);
 			_sceKernelStartThread(CpuThreadState, ThreadId, UserDataLength, UserDataPointer);
-
 			// Schedule new thread?
-			ThreadManager.ScheduleNext(ThreadToStart);
 			CpuThreadState.Yield();
 			return 0;
 		}
@@ -281,12 +279,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 		{
 			var ThreadToWaitEnd = GetThreadById(ThreadId);
 
-			if (ThreadToWaitEnd.HasStatus(HleThread.Status.Stopped))
+			if (ThreadToWaitEnd.HasAnyStatus(HleThread.Status.Stopped))
 			{
 				return 0;
 			}
 
-			if (ThreadToWaitEnd.HasStatus(HleThread.Status.Killed))
+			if (ThreadToWaitEnd.HasAnyStatus(HleThread.Status.Killed))
 			{
 				return 0;
 			}
@@ -359,7 +357,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 					sceKernelCheckCallback(CurrentThread.CpuThreadState);
 				}
 				//ThreadManager.ScheduleNext();
-				ThreadManager.Reschedule();
 				CurrentThread.CpuThreadState.Yield();
 			}
 			else
@@ -412,9 +409,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="attr">The thread attributes to modify.  One of ::PspThreadAttributes.</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xEA748E31, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
-		public int sceKernelChangeCurrentThreadAttr(int Unknown, PspThreadAttributes Attributes)
+		[HlePspNotImplemented]
+		public int sceKernelChangeCurrentThreadAttr(PspThreadAttributes RemoveAttributes, PspThreadAttributes AddAttributes)
 		{
+			ThreadManager.Current.Attribute &= ~RemoveAttributes;
+			ThreadManager.Current.Attribute |= AddAttributes;
 			return 0;
 		}
 
@@ -433,8 +432,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspNotImplemented]
 		public int sceKernelChangeThreadPriority(CpuThreadState CpuThreadState, int ThreadId, int Priority)
 		{
-			GetThreadById(ThreadId).PriorityValue = Priority;
-			ThreadManager.Reschedule();
+			var Thread = GetThreadById(ThreadId);
+			Thread.PriorityValue = Priority;
 			CpuThreadState.Yield();
 			//throw(new NotImplementedException());
 			return 0;
@@ -475,6 +474,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int _hle_sceKernelExitDeleteThread(CpuThreadState CpuThreadState)
 		{
 			//CpuThreadState.DumpRegisters(Console.Error);
+
 			//Console.Error.WriteLine(CpuThreadState.GPR[2]);
 			return sceKernelExitDeleteThread(CpuThreadState.GPR[2]);
 		}
@@ -494,11 +494,10 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Thread.Info.ExitStatus = ExitStatus;
 
 #if TEST_STOP_THREADS_INSTEAD_OF_KILLING
-			Thread.AddStatus(HleThread.Status.Stopped);
+			Thread.SetStatus(HleThread.Status.Stopped);
 #else
-			Thread.AddStatus(HleThread.Status.Killed);
+			Thread.SetStatus(HleThread.Status.Killed);
 #endif
-			ThreadManager.Reschedule();
 
 			Thread.Exit();
 
@@ -518,15 +517,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x9FA03CD3, FirmwareVersion = 150)]
 		public int sceKernelDeleteThread(int ThreadId)
 		{
-			try
-			{
-				var Thread = ThreadManager.GetThreadById(ThreadId);
-				ThreadManager.DeleteThread(Thread);
-			}
-			catch (Exception Exception)
-			{
-				Console.Error.WriteLine(Exception);
-			}
+			var Thread = ThreadManager.GetThreadById(ThreadId);
+			ThreadManager.DeleteThread(Thread);
+			ThreadManager.ExitThread(Thread);
 			return 0;
 			//return _sceKernelExitDeleteThread(-1, GetThreadById(ThreadId));
 		}
@@ -650,7 +643,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelSuspendThread(int ThreadId)
 		{
 			var Thread = GetThreadById(ThreadId);
-			Thread.AddStatus(HleThread.Status.Suspend);
+			Thread.SetStatus(HleThread.Status.Suspend);
 			if (Thread == ThreadManager.Current)
 			{
 				ThreadManager.Yield();
@@ -668,7 +661,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelResumeThread(int ThreadId)
 		{
 			var Thread = GetThreadById(ThreadId);
-			Thread.RemoveStatus(HleThread.Status.Suspend);
+			Thread.SetStatus(HleThread.Status.Ready);
 			return 0;
 		}
 
@@ -722,11 +715,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			//Console.Error.WriteLine(ExitStatus);
 
 			Thread.Info.ExitStatus = -1;
-#if TEST_STOP_THREADS_INSTEAD_OF_KILLING
-			Thread.AddStatus(HleThread.Status.Stopped);
-#else
-			Thread.AddStatus(HleThread.Status.Killed);
-#endif
+			Thread.SetStatus(HleThread.Status.Killed);
 			Thread.Exit();
 			return 0;
 		}
@@ -743,7 +732,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			var Thread = GetThreadById(ThreadId);
 			var CurrentThread = ThreadManager.Current;
 			if (Thread == CurrentThread) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_THREAD));
-			if (!Thread.HasStatus(HleThread.Status.Waiting)) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_THREAD_IS_NOT_WAIT));
+			if (!Thread.HasAnyStatus(HleThread.Status.Waiting)) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_THREAD_IS_NOT_WAIT));
 			Thread.WakeUp();
 			return 0;
 		}

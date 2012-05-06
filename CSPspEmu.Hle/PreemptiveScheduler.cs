@@ -19,14 +19,24 @@ namespace CSPspEmu.Hle
 		List<T> Items = new List<T>();
 
 		bool NewItemsFirst;
+		bool ThrowException;
+
+		public IEnumerable<T> GetThreadsInQueue()
+		{
+			lock (this)
+			{
+				return CurrentReadyQueue.ToArray();
+			}
+		}
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="NewItemsFirst"></param>
-		public PreemptiveScheduler(bool NewItemsFirst)
+		public PreemptiveScheduler(bool NewItemsFirst, bool ThrowException = true)
 		{
 			this.NewItemsFirst = NewItemsFirst;
+			this.ThrowException = ThrowException;
 		}
 
 		/// <summary>
@@ -35,7 +45,10 @@ namespace CSPspEmu.Hle
 		/// <param name="PreemptiveItem"></param>
 		public void Remove(T PreemptiveItem)
 		{
-			Items.Remove(PreemptiveItem);
+			lock (this)
+			{
+				Items.Remove(PreemptiveItem);
+			}
 		}
 
 		/// <summary>
@@ -44,34 +57,46 @@ namespace CSPspEmu.Hle
 		/// <param name="Item"></param>
 		public void Update(T Item)
 		{
-			if (!Items.Contains(Item))
+			lock (this)
 			{
-				//Items.Remove(PreemptiveItem);
-				Items.Add(Item);
-			}
+				//Console.WriteLine("PreemptiveScheduler.Update: {0}", Item);
 
-			if (Item.Ready && Item.Priority >= CurrentHighestPriority)
-			{
-				if (Item.Priority == CurrentHighestPriority)
+				if (!Items.Contains(Item))
 				{
-					AddItemToCurrentReadyQueue(Item);
+					//Items.Remove(PreemptiveItem);
+					Items.Add(Item);
 				}
-				else
+
+				if (Item.Ready && Item.Priority >= CurrentHighestPriority)
 				{
-					ReScheduleHighestPriority();
+					if (Item.Priority == CurrentHighestPriority)
+					{
+						AddItemToCurrentReadyQueue(Item);
+					}
+					else
+					{
+						ReScheduleHighestPriority();
+					}
 				}
 			}
 		}
 
 		private void AddItemToCurrentReadyQueue(T Item)
 		{
-			if (NewItemsFirst)
+			lock (this)
 			{
-				CurrentReadyQueue.AddFirst(Item);
-			}
-			else
-			{
-				CurrentReadyQueue.AddLast(Item);
+				//Console.WriteLine("AddItemToCurrentReadyQueue: {0}", Item);
+				if (!CurrentReadyQueue.Contains(Item))
+				{
+					if (NewItemsFirst)
+					{
+						CurrentReadyQueue.AddFirst(Item);
+					}
+					else
+					{
+						CurrentReadyQueue.AddLast(Item);
+					}
+				}
 			}
 		}
 
@@ -89,15 +114,27 @@ namespace CSPspEmu.Hle
 		/// 
 		/// </summary>
 		/// <remarks>If an item changes its priority, this method should be executed.</remarks>
-		public void ReScheduleHighestPriority()
+		public bool ReScheduleHighestPriority()
 		{
-			if (Items.Count == 0) throw (new Exception("No items to schedule"));
-
-			CurrentHighestPriority = Items.Where(Item => Item.Ready).Max(Item => Item.Priority);
-
-			foreach (var Item in Items.Where(Item => Item.Ready && Item.Priority == CurrentHighestPriority))
+			lock (this)
 			{
-				AddItemToCurrentReadyQueue(Item);
+				var ReadyItems = Items.Where(Item => Item.Ready);
+				if (!ReadyItems.Any())
+				{
+					if (ThrowException) throw (new Exception("No items to schedule"));
+					return false;
+				}
+				else
+				{
+					CurrentHighestPriority = ReadyItems.Max(Item => Item.Priority);
+
+					foreach (var Item in Items.Where(Item => Item.Ready && Item.Priority == CurrentHighestPriority))
+					{
+						AddItemToCurrentReadyQueue(Item);
+					}
+
+					return true;
+				}
 			}
 		}
 
@@ -106,27 +143,37 @@ namespace CSPspEmu.Hle
 		/// </summary>
 		public void Next()
 		{
-			bool Found = false;
-			Current = default(T);
-
-			while (!Found)
+			lock (this)
 			{
-				// Queue is empty, lets find the higher Ready priority.
-				if (CurrentReadyQueue.Count == 0)
-				{
-					ReScheduleHighestPriority();
-				}
+				bool Found = false;
+				Current = default(T);
 
-				// Get next in the queue.
-				while (CurrentReadyQueue.Count > 0)
+				while (!Found)
 				{
-					var Item = CurrentReadyQueue.RemoveFirstAndGet();
-					if (Item.Ready && Item.Priority == CurrentHighestPriority)
+					// Queue is empty, lets find the higher Ready priority.
+					if (CurrentReadyQueue.Count == 0)
 					{
-						Current = Item;
-						Found = true;
-						CurrentReadyQueue.AddLast(Item);
-						break;
+						if (!ReScheduleHighestPriority()) break;
+					}
+
+					// Get next in the queue.
+					while (CurrentReadyQueue.Count > 0)
+					{
+						var Item = CurrentReadyQueue.First.Value;
+						CurrentReadyQueue.RemoveFirst();
+
+						if (Item.Ready && Item.Priority == CurrentHighestPriority)
+						{
+							//Console.WriteLine("Rescheduled again: {0}", Item);
+							Current = Item;
+							Found = true;
+							CurrentReadyQueue.AddLast(Item);
+							break;
+						}
+						else
+						{
+							//Console.WriteLine("Not scheduled again: {0} : Ready: {1}, Priority : {2} != {3}", Item, Item.Ready, Item.Priority, CurrentHighestPriority);
+						}
 					}
 				}
 			}

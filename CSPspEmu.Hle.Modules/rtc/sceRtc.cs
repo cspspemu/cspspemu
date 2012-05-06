@@ -304,10 +304,12 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x4CFA57B0, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
+		[PspUntested]
 		public int sceRtcGetCurrentClock(out ScePspDateTime DateTime, int TimeZone)
 		{
 			PspRtc.Update();
 			var CurrentDateTime = PspRtc.CurrentDateTime;
+			CurrentDateTime += TimeSpan.FromMinutes(TimeZone);
 			PspRtc.Update();
 
 			DateTime = new ScePspDateTime()
@@ -316,29 +318,29 @@ namespace CSPspEmu.Hle.Modules.rtc
 				Month = (ushort)CurrentDateTime.Month,
 				Day = (ushort)CurrentDateTime.Day,
 				Hour = (ushort)CurrentDateTime.Hour,
-				Minute = (ushort)(CurrentDateTime.Minute + TimeZone),
+				Minute = (ushort)(CurrentDateTime.Minute),
 				Second = (ushort)CurrentDateTime.Second,
-				Microsecond = (uint)(CurrentDateTime.Millisecond * 1000),
+				Microsecond = (uint)(CurrentDateTime.GetTotalMicroseconds() % 1000000),
 			};
 
 			return 0;
 		}
 
-        [HlePspFunction(NID = 0x9ED0AE87, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceRtcCompareTick()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0x9ED0AE87, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceRtcCompareTick()
+		{
+			return 0;
+		}
 
-        
-        
-        [HlePspFunction(NID = 0xCF561893, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceRtcGetWin32FileTime()
-        {
-            return 0;
-        }
+		
+		
+		[HlePspFunction(NID = 0xCF561893, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceRtcGetWin32FileTime()
+		{
+			return 0;
+		}
 	}
 
 	public enum PspDaysOfWeek : int

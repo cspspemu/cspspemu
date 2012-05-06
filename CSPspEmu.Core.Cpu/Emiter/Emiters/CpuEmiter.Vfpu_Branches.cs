@@ -93,9 +93,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			SafeILGenerator.Push((int)VectorSize);
 			MipsMethodEmiter.CallMethod((Action<CpuThreadState, int>)CpuEmiter._vcmp_end);
 		}
-		public void vslt() { throw (new NotImplementedException("")); }
-		public void vsge() { throw (new NotImplementedException("")); }
-		public void vscmp() { throw (new NotImplementedException("")); }
+		public void vslt() { throw (new NotImplementedException("vslt")); }
+		public void vsge() { throw (new NotImplementedException("vsge")); }
+		public void vscmp() { throw (new NotImplementedException("vscmp")); }
 
 		/*
 		static public void _vcmovtf_test(CpuThreadState CpuThreadState, int Register, int VectorSize)
@@ -149,14 +149,15 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 			else if (Register == 6)
 			{
-				throw(new NotImplementedException());
+				throw (new NotImplementedException("_vcmovtf:Register = 6"));
 			}
 			else if (Register == 7)
 			{
+				throw (new NotImplementedException("_vcmovtf:Register = 7"));
 			}
 			else
 			{
-				throw(new InvalidOperationException());
+				throw (new InvalidOperationException("_vcmovtf"));
 			}
 		}
 

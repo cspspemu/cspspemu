@@ -17,7 +17,7 @@ namespace CSPspEmu.Hle
 	unsafe public partial class HleModuleHost : HleModule
 	{
 		public string ModuleLocation;
-		public Dictionary<uint, FunctionEntry> EntriesByNID = new Dictionary<uint, FunctionEntry>();
+		public Dictionary<uint, HleFunctionEntry> EntriesByNID = new Dictionary<uint, HleFunctionEntry>();
 		public Dictionary<uint, Action<CpuThreadState>> DelegatesByNID = new Dictionary<uint, Action<CpuThreadState>>();
 		public Dictionary<string, Action<CpuThreadState>> DelegatesByName = new Dictionary<string, Action<CpuThreadState>>();
 		public string Name { get { return this.GetType().Name; } }
@@ -61,7 +61,7 @@ namespace CSPspEmu.Hle
 						{
 							//Console.WriteLine("HleModuleHost: {0}, {1}", "0x%08X".Sprintf(Attribute.NID), MethodInfo.Name);
 							DelegatesByNID[Attribute.NID] = Delegate;
-							EntriesByNID[Attribute.NID] = new FunctionEntry()
+							EntriesByNID[Attribute.NID] = new HleFunctionEntry()
 							{
 								NID = Attribute.NID,
 								Name = MethodInfo.Name,

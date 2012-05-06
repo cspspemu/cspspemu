@@ -54,6 +54,14 @@ namespace CSPspEmu.Hle
 
 		Queue<QueuedExecution> QueuedExecutions = new Queue<QueuedExecution>();
 
+		public bool HasQueuedFunctions
+		{
+			get
+			{
+				return QueuedExecutions.Count > 0;
+			}
+		}
+
 		public int ExecuteAllQueuedFunctionsNow()
 		{
 			lock (QueuedExecutions)

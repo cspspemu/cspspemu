@@ -174,9 +174,9 @@ namespace CSPspEmu.Gui.Winforms
 				return true;
 			};
 
-			TitleColumn.AspectGetter = delegate(object _entry) { try { return ((GameList.GameEntry)_entry).TITLE; } catch { return "INVALID"; } };
-			DiscIdColumn.AspectGetter = delegate(object _entry) { try { return ((GameList.GameEntry)_entry).DiscId0; } catch { return "INVALID"; } };
-			PathColumn.AspectGetter = delegate(object _entry) { try { return Path.GetFileName(((GameList.GameEntry)_entry).IsoFile); } catch { return "INVALID"; } };
+			TitleColumn.AspectGetter = delegate(object _entry) { try { return ((GameList.GameEntry)_entry).TITLE; } catch { return "*ERROR*"; } };
+			DiscIdColumn.AspectGetter = delegate(object _entry) { try { return ((GameList.GameEntry)_entry).DiscId0; } catch { return "*ERROR*"; } };
+			PathColumn.AspectGetter = delegate(object _entry) { try { return Path.GetFileName(((GameList.GameEntry)_entry).IsoFile); } catch { return "*ERROR*"; } };
 			MediaTypeColumn.AspectGetter = delegate(object _entry)
 			{
 				var Entry = ((GameList.GameEntry)_entry);
@@ -230,7 +230,7 @@ namespace CSPspEmu.Gui.Winforms
 				}
 			};
 
-			FirmwareColumn.AspectGetter = delegate(object _entry) { return ((GameList.GameEntry)_entry).PSP_SYSTEM_VER; };
+			FirmwareColumn.AspectGetter = delegate(object _entry) { try { return ((GameList.GameEntry)_entry).PSP_SYSTEM_VER; } catch { return "*ERROR*"; } };
 		}
 
 		public int GetColumnsWidth(params ColumnSize[] Except)

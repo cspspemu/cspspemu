@@ -139,7 +139,7 @@ namespace CSPspEmu.Hle.Managers
 			return DelegatesByName[FunctionName];
 		}
 
-		public uint AllocDelegateSlot(Action<CpuThreadState> Action, string ModuleImportName, FunctionEntry FunctionEntry)
+		public uint AllocDelegateSlot(Action<CpuThreadState> Action, string ModuleImportName, HleFunctionEntry FunctionEntry)
 		{
 			uint DelegateId = DelegateLastId++;
 			if (Action == null)

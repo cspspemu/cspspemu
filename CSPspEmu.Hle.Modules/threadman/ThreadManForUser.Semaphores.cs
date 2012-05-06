@@ -106,7 +106,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 				Semaphore.WaitThread(CurrentThread, () =>
 				{
 					WakeUpCallback();
-					ThreadManager.ScheduleNext(CurrentThread);
+					//ThreadManager.ScheduleNext(CurrentThread);
 				}, Signal);
 			}, HandleCallbacks: HandleCallbacks);
 

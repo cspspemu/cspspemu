@@ -62,7 +62,7 @@ namespace CSPspEmu.Hle
 		ClearStack = 0x00200000,
 	}
 
-	public struct FunctionEntry
+	public struct HleFunctionEntry
 	{
 		public uint NID;
 		public String Name;
@@ -82,7 +82,7 @@ namespace CSPspEmu.Hle
 		public uint PC;
 		public uint RA;
 		public string ModuleImportName;
-		public FunctionEntry FunctionEntry;
+		public HleFunctionEntry FunctionEntry;
 		public Action<CpuThreadState> Action;
 		public HleThread Thread;
 
@@ -102,14 +102,46 @@ namespace CSPspEmu.Hle
 		}
 	}
 
-	unsafe public class HleThread : IDisposable
+	unsafe public class HleThread : IDisposable, IPreemptiveItem
 	{
 		protected MethodCacheFast MethodCache;
+
+		int IPreemptiveItem.Priority
+		{
+			get { return PriorityValue; }
+		}
+
+		bool IPreemptiveItem.Ready
+		{
+			get
+			{
+				//throw new NotImplementedException();
+				if (CurrentStatus.HasFlag(Status.Running)) return true;
+				if (CurrentStatus.HasFlag(Status.Ready)) return true;
+				return false;
+			}
+		}
+
+		private int _PriorityValue;
 
 		/// <summary>
 		/// Value used to schedule threads.
 		/// </summary>
-		public int PriorityValue;
+		public int PriorityValue
+		{
+			get
+			{
+				return _PriorityValue;
+			}
+			set
+			{
+				if (_PriorityValue != value)
+				{
+					_PriorityValue = value;
+					StatusUpdated();
+				}
+			}
+		}
 
 		public DelegateInfo LastCalledHleFunction;
 
@@ -136,19 +168,29 @@ namespace CSPspEmu.Hle
 		public Action WakeUpCallback;
 		public List<Action> WakeUpList = new List<Action>();
 
-		public bool HasStatus(Status Has)
+		public bool HasAllStatus(Status Has)
 		{
 			return (CurrentStatus & Has) == Has;
 		}
 
-		public void AddStatus(Status Add)
+		public bool HasAnyStatus(Status Has)
 		{
-			CurrentStatus |= Add;
+			return (CurrentStatus & Has) != 0;
 		}
 
-		public void RemoveStatus(Status Remove)
+		private void StatusUpdated()
 		{
-			CurrentStatus &= ~Remove;
+			HleThreadManager.UpdatedThread(this);
+		}
+
+		public void SetStatus(Status NewStatus)
+		{
+			//Console.WriteLine("@ {0} :: {1} -> {2}", this, this.CurrentStatus, NewStatus);
+			if (CurrentStatus != NewStatus)
+			{
+				CurrentStatus = NewStatus;
+				StatusUpdated();
+			}
 		}
 
 #if false
@@ -168,7 +210,7 @@ namespace CSPspEmu.Hle
 		{
 			get
 			{
-				return ((CurrentStatus & Status.Waiting) != 0) && HandleCallbacks;
+				return HasAllStatus(Status.Waiting) && HandleCallbacks;
 			}
 		}
 
@@ -372,7 +414,7 @@ namespace CSPspEmu.Hle
 
 		public void WakeUp()
 		{
-			if (!this.HasStatus(Status.Waiting))
+			if (!this.HasAllStatus(Status.Waiting))
 			{
 				Console.Error.WriteLine("Trying to awake a non waiting thread '{0}'", this.CurrentStatus);
 				//throw (new InvalidOperationException());
@@ -380,8 +422,7 @@ namespace CSPspEmu.Hle
 
 			//Console.WriteLine("Thread:{0}:{1}", this, Thread.CurrentThread.Name);
 
-			this.CurrentStatus |= Status.Ready;
-			this.CurrentStatus &= ~Status.Waiting;
+			this.SetStatus(Status.Ready);
 
 			//this.CurrentStatus.pree
 			//if (CurrentWaitType != WaitType.Timer && CurrentWaitType != WaitType.Display)
@@ -393,7 +434,7 @@ namespace CSPspEmu.Hle
 
 		public void SetWaitAndPrepareWakeUp(WaitType WaitType, String WaitDescription, object WaitObject, Action<WakeUpCallbackDelegate> PrepareCallback, bool HandleCallbacks = false)
 		{
-			if (this.CurrentStatus == Status.Waiting)
+			if (this.HasAllStatus(Status.Waiting))
 			{
 				Console.Error.WriteLine("Trying to sleep an already sleeping thread!");
 			}
@@ -417,7 +458,7 @@ namespace CSPspEmu.Hle
 
 		protected void SetWait0(WaitType WaitType, String WaitDescription, object WaitObject, bool HandleCallbacks)
 		{
-			this.CurrentStatus = Status.Waiting;
+			this.SetStatus(Status.Waiting);
 			this.CurrentWaitType = WaitType;
 			this.WaitDescription = WaitDescription;
 			this.WaitObject = WaitObject;
@@ -426,7 +467,7 @@ namespace CSPspEmu.Hle
 
 		protected void SetWait1()
 		{
-			if (this.CurrentStatus == Status.Waiting)
+			if (this.HasAllStatus(Status.Waiting))
 			{
 				CpuThreadState.Yield();
 			}
@@ -442,9 +483,16 @@ namespace CSPspEmu.Hle
 
 		public override string ToString()
 		{
+			return String.Format("HleThread(Id={0}, Priority={1}, Name='{2}', Status={3})", Id, PriorityValue, Name, CurrentStatus);
+		}
+
+		public string ToExtendedString()
+		{
 			var Ret = String.Format(
-				"HleThread(Id={0}, PC=0x{4:X}, LastValidPC=0x{5:X}, SP=0x{6:X}, Name='{1}', Status={2}, WaitCount={3}",
-				Id, Name, CurrentStatus, YieldCount, CpuThreadState.PC, CpuThreadState.LastValidPC, CpuThreadState.SP
+				"HleThread(Id={0}, Priority={1}, PC=0x{2:X}, LastValidPC=0x{3:X}, SP=0x{4:X}, Name='{5}', Status={6}, WaitCount={7}",
+				Id, PriorityValue,
+				CpuThreadState.PC, CpuThreadState.LastValidPC, CpuThreadState.SP,
+				Name, CurrentStatus, YieldCount
 			);
 			switch (CurrentStatus)
 			{
@@ -455,7 +503,6 @@ namespace CSPspEmu.Hle
 					);
 					break;
 			}
-			Ret += String.Format(", PriorityValue={0}", PriorityValue);
 			//Ret += String.Format(", LastCalledHleFunction={0}", LastCalledHleFunction);
 			return Ret + ")";
 		}

@@ -45,7 +45,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 		public PspRtc PspRtc;
 		
 		[Inject]
-		public HleThreadManager ThreadManager;
+		public HleThreadManager HleThreadManager;
 		
 		[Inject]
 		public PspMemory PspMemory;
@@ -348,7 +348,10 @@ namespace CSPspEmu.Runner.Components.Cpu
 					CurrentCpuThreadState.CallerModule = HleModuleGuest;
 
 					int ThreadId = (int)ThreadManForUser.sceKernelCreateThread(CurrentCpuThreadState, "<EntryPoint>", HleModuleGuest.InitInfo.PC, 10, 0x1000, PspThreadAttributes.ClearStack, null);
+
+					//var Thread = HleThreadManager.GetThreadById(ThreadId);
 					ThreadManForUser._sceKernelStartThread(CurrentCpuThreadState, ThreadId, ArgumentsPartition.Size, ArgumentsPartition.Low);
+					//Console.WriteLine("RA: 0x{0:X}", CurrentCpuThreadState.RA);
 				}
 				CurrentCpuThreadState.DumpRegisters();
 				MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Dump();
@@ -384,7 +387,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 						ThreadTaskQueue.HandleEnqueued();
 						if (!Running) return;
 						PspRtc.Update();
-						ThreadManager.StepNext();
+						HleThreadManager.StepNext();
 					}
 				}
 #if !DO_NOT_PROPAGATE_EXCEPTIONS
@@ -405,7 +408,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 
 						try
 						{
-							ErrorOut.WriteLine("Error on thread {0}", ThreadManager.Current);
+							ErrorOut.WriteLine("Error on thread {0}", HleThreadManager.Current);
 							try
 							{
 								ErrorOut.WriteLine(Exception);
@@ -414,14 +417,14 @@ namespace CSPspEmu.Runner.Components.Cpu
 							{
 							}
 
-							ThreadManager.Current.CpuThreadState.DumpRegisters(ErrorOut);
+							HleThreadManager.Current.CpuThreadState.DumpRegisters(ErrorOut);
 
 							ErrorOut.WriteLine(
 								"Last registered PC = 0x{0:X}, RA = 0x{1:X}, RelocatedBaseAddress=0x{2:X}, UnrelocatedPC=0x{3:X}",
-								ThreadManager.Current.CpuThreadState.PC,
-								ThreadManager.Current.CpuThreadState.RA,
+								HleThreadManager.Current.CpuThreadState.PC,
+								HleThreadManager.Current.CpuThreadState.RA,
 								PspEmulatorContext.PspConfig.RelocatedBaseAddress,
-								ThreadManager.Current.CpuThreadState.PC - PspEmulatorContext.PspConfig.RelocatedBaseAddress
+								HleThreadManager.Current.CpuThreadState.PC - PspEmulatorContext.PspConfig.RelocatedBaseAddress
 							);
 
 							ErrorOut.WriteLine("Last called syscalls: ");
@@ -430,9 +433,9 @@ namespace CSPspEmu.Runner.Components.Cpu
 								ErrorOut.WriteLine("  {0}", CalledCallback);
 							}
 
-							foreach (var Thread in ThreadManager.Threads)
+							foreach (var Thread in HleThreadManager.Threads)
 							{
-								ErrorOut.WriteLine("{0}", Thread);
+								ErrorOut.WriteLine("{0}", Thread.ToExtendedString());
 								ErrorOut.WriteLine(
 									"Last valid PC: 0x{0:X} :, 0x{1:X}",
 									Thread.CpuThreadState.LastValidPC,
@@ -448,9 +451,9 @@ namespace CSPspEmu.Runner.Components.Cpu
 							);
 
 							ErrorOut.WriteLine("");
-							ErrorOut.WriteLine("Error on thread {0}", ThreadManager.Current);
+							ErrorOut.WriteLine("Error on thread {0}", HleThreadManager.Current);
 							ErrorOut.WriteLine(Exception);
-							ErrorOut.WriteLine("Saved a memory dump to 'error_memorydump.bin'", ThreadManager.Current);
+							ErrorOut.WriteLine("Saved a memory dump to 'error_memorydump.bin'", HleThreadManager.Current);
 
 							var Memory = MemoryManager.Memory;
 
@@ -471,7 +474,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 		public void DumpThreads()
 		{
 			var ErrorOut = Console.Out;
-			foreach (var Thread in ThreadManager.Threads.ToArray())
+			foreach (var Thread in HleThreadManager.Threads.ToArray())
 			{
 				ErrorOut.WriteLine("{0}", Thread);
 				Thread.DumpStack(ErrorOut);

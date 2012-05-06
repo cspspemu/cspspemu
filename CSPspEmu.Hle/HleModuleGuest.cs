@@ -199,7 +199,7 @@ namespace CSPspEmu.Hle
 			CpuProcessor.Memory.WriteSafe(CallAddress + 4, 0x00000000); // NOP
 		}
 
-		public void LinkFunction(uint CallAddress, FunctionEntry NativeFunction)
+		public void LinkFunction(uint CallAddress, HleFunctionEntry NativeFunction)
 		{
 			//Console.WriteLine(NativeFunction);
 
@@ -290,7 +290,7 @@ namespace CSPspEmu.Hle
 					var NID = Function.Key;
 					var CallAddress = Function.Value.Address;
 
-					var DefaultEntry = new FunctionEntry()
+					var DefaultEntry = new HleFunctionEntry()
 					{
 						NID = 0x00000000,
 						Name = CStringFormater.Sprintf("__<unknown:0x%08X>", (int)NID),
