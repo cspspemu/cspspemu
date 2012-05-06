@@ -5,6 +5,10 @@ using System.Text;
 
 namespace CSPspEmu
 {
+	public class PspTestedAttribute : Attribute
+	{
+	}
+
 	public class PspUntestedAttribute : Attribute
 	{
 	}

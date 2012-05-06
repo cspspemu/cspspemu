@@ -12,6 +12,8 @@ namespace CSPspEmu.Runner.Components
 {
 	abstract public class ComponentThread : PspEmulatorComponent, IRunnableComponent
 	{
+		static Logger Logger = Logger.GetLogger("ComponentThread");
+
 		protected AutoResetEvent RunningUpdatedEvent = new AutoResetEvent(false);
 		public bool Running = true;
 
@@ -25,8 +27,8 @@ namespace CSPspEmu.Runner.Components
 
 		public void StartSynchronized()
 		{
-			Console.WriteLine("Component {0} StartSynchronized!", this);
-			var StartStartTime = DateTime.UtcNow;
+			Logger.Notice("Component {0} StartSynchronized!", this);
+			var ElapsedTime = Logger.Measure(() =>
 			{
 				ComponentThreadThread = new Thread(() =>
 				{
@@ -41,29 +43,21 @@ namespace CSPspEmu.Runner.Components
 						Running = false;
 						RunningUpdatedEvent.Set();
 						StopCompleteEvent.Set();
-						Console.WriteLine("Component {0} Stopped!", this);
+						Logger.Notice("Component {0} Stopped!", this);
 					}
 				});
 				ComponentThreadThread.Start();
 				ThreadTaskQueue.EnqueueAndWaitCompleted(() =>
 				{
 				});
-			}
-			var StartEndTime = DateTime.UtcNow;
-			Console.Write("Component {0} Started! StartedTime(", this);
-			var ElapsedTime = StartEndTime - StartStartTime;
-			ConsoleUtils.SaveRestoreConsoleState(() =>
-			{
-				Console.ForegroundColor = (ElapsedTime.TotalSeconds > 0.1) ? ConsoleColor.Yellow : ConsoleColor.Green;
-				Console.Write("{0}", ElapsedTime.TotalSeconds);
 			});
-			Console.WriteLine(")");
+			Logger.Notice("Component {0} Started! StartedTime({1})", this, ElapsedTime.TotalSeconds);
 		}
 
 		public void StopSynchronized()
 		{
-			Console.Write("Component {0} StopSynchronized...", this);
-			var StopStartTime = DateTime.UtcNow;
+			Logger.Notice("Component {0} StopSynchronized...", this);
+			var ElapsedTime = Logger.Measure(() =>
 			{
 				if (Running)
 				{
@@ -74,18 +68,17 @@ namespace CSPspEmu.Runner.Components
 					}
 					if (!StopCompleteEvent.WaitOne(1000))
 					{
-						Console.Error.WriteLine("Error stopping {0}", this);
+						Logger.Error("Error stopping {0}", this);
 						ComponentThreadThread.Abort();
 					}
 				}
-			}
-			var StopEndTime = DateTime.UtcNow;
-			Console.WriteLine("Stopped! {0}", StopEndTime - StopStartTime);
+			});
+			Logger.Notice("Stopped! {0}", ElapsedTime);
 		}
 
 		public void PauseSynchronized()
 		{
-			Console.WriteLine("Component {0} PauseSynchronized!", this);
+			Logger.Notice("Component {0} PauseSynchronized!", this);
 
 			ThreadTaskQueue.EnqueueAndWaitStarted(() =>
 			{
@@ -98,7 +91,7 @@ namespace CSPspEmu.Runner.Components
 
 		public void ResumeSynchronized()
 		{
-			Console.WriteLine("Component {0} ResumeSynchronized!", this);
+			Logger.Notice("Component {0} ResumeSynchronized!", this);
 
 			PauseEvent.Set();
 		}

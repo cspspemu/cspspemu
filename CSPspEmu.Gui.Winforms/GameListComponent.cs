@@ -132,45 +132,51 @@ namespace CSPspEmu.Gui.Winforms
 			//BannerColumn.AspectGetter = delegate(object _entry) { return null; };
 			BannerColumn.RendererDelegate = (ee, gg, rr, oo) =>
 			{
-				var Entry = ((GameList.GameEntry)oo);
-				var Data = Entry.Icon0Png;
-				if (Entry.CachedBitmap == null)
+				try
 				{
-					Entry.CachedBitmap = new Bitmap(IconSize.Width, IconSize.Height);
-					using (var gg2 = Graphics.FromImage(Entry.CachedBitmap))
+					var Entry = ((GameList.GameEntry)oo);
+					var Data = Entry.Icon0Png;
+					if (Entry.CachedBitmap == null)
 					{
-						var IconToBlit = Image.FromStream(new MemoryStream(Data));
+						Entry.CachedBitmap = new Bitmap(IconSize.Width, IconSize.Height);
+						using (var gg2 = Graphics.FromImage(Entry.CachedBitmap))
+						{
+							var IconToBlit = Image.FromStream(new MemoryStream(Data));
 
-						var TempBuffer = new Bitmap(144, 80);
-						using (var gg3 = Graphics.FromImage(TempBuffer))
-						{
-							gg3.CompositingQuality = CompositingQuality.HighQuality;
-							gg3.Clear(Color.Transparent);
-							gg3.DrawImage(IconToBlit, new Rectangle(TempBuffer.Width / 2 - IconToBlit.Width / 2, 0, IconToBlit.Width, IconToBlit.Height));
-						}
+							var TempBuffer = new Bitmap(144, 80);
+							using (var gg3 = Graphics.FromImage(TempBuffer))
+							{
+								gg3.CompositingQuality = CompositingQuality.HighQuality;
+								gg3.Clear(Color.Transparent);
+								gg3.DrawImage(IconToBlit, new Rectangle(TempBuffer.Width / 2 - IconToBlit.Width / 2, 0, IconToBlit.Width, IconToBlit.Height));
+							}
 
-						//Console.WriteLine("{0}x{1}", IconToBlit.Width, IconToBlit.Height);
+							//Console.WriteLine("{0}x{1}", IconToBlit.Width, IconToBlit.Height);
 
-						gg2.CompositingQuality = CompositingQuality.HighQuality;
-						if (Entry.PatchedWithPrometheus)
-						{
-							gg2.Clear(Color.Red);
-						}
-						else
-						{
-							gg2.Clear(Color.White);
-						}
-						gg2.DrawImage(TempBuffer, new Rectangle(0, 0, IconSize.Width, IconSize.Height));
-						if (Entry.PatchedWithPrometheus)
-						{
-							gg2.DrawLine(new Pen(Color.Red), new Point(0, 0), new Point(IconSize.Width, IconSize.Height));
-							gg2.DrawLine(new Pen(Color.Red), new Point(IconSize.Width, 0), new Point(0, IconSize.Height));
+							gg2.CompositingQuality = CompositingQuality.HighQuality;
+							if (Entry.PatchedWithPrometheus)
+							{
+								gg2.Clear(Color.Red);
+							}
+							else
+							{
+								gg2.Clear(Color.White);
+							}
+							gg2.DrawImage(TempBuffer, new Rectangle(0, 0, IconSize.Width, IconSize.Height));
+							if (Entry.PatchedWithPrometheus)
+							{
+								gg2.DrawLine(new Pen(Color.Red), new Point(0, 0), new Point(IconSize.Width, IconSize.Height));
+								gg2.DrawLine(new Pen(Color.Red), new Point(IconSize.Width, 0), new Point(0, IconSize.Height));
+							}
 						}
 					}
-				}
 
-				gg.FillRectangle(new SolidBrush(Entry.PatchedWithPrometheus ? Color.Red : Color.White), new Rectangle(rr.Left - 1, rr.Top - 1, rr.Width + 1, rr.Height + 1));
-				gg.DrawImageUnscaled(Entry.CachedBitmap, new Point(rr.Left - 1, rr.Top - 1));
+					gg.FillRectangle(new SolidBrush(Entry.PatchedWithPrometheus ? Color.Red : Color.White), new Rectangle(rr.Left - 1, rr.Top - 1, rr.Width + 1, rr.Height + 1));
+					gg.DrawImageUnscaled(Entry.CachedBitmap, new Point(rr.Left - 1, rr.Top - 1));
+				}
+				catch
+				{
+				}
 
 				return true;
 			};
