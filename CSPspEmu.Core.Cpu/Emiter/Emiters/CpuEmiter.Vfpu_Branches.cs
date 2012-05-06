@@ -93,9 +93,45 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			SafeILGenerator.Push((int)VectorSize);
 			MipsMethodEmiter.CallMethod((Action<CpuThreadState, int>)CpuEmiter._vcmp_end);
 		}
-		public void vslt() { throw (new NotImplementedException("vslt")); }
-		public void vsge() { throw (new NotImplementedException("vsge")); }
-		public void vscmp() { throw (new NotImplementedException("vscmp")); }
+
+		public void _vsltge(SafeBinaryComparison SafeBinaryComparison)
+		{
+			var VectorSize = Instruction.ONE_TWO;
+
+			VectorOperationSaveVd(VectorSize, (Index) =>
+			{
+				Load_VS(Index);
+				Load_VT(Index);
+				SafeILGenerator.CompareBinary(SafeBinaryComparison.LessThanSigned);
+				SafeILGenerator.MacroIfElse(() =>
+				{
+					SafeILGenerator.Push(1.0f);
+				}, () =>
+				{
+					SafeILGenerator.Push(0.0f);
+				});
+			});
+		}
+
+		[PspUntested]
+		public void vslt() { _vsltge(SafeBinaryComparison.LessThanSigned); }
+
+		[PspUntested]
+		public void vsge() { _vsltge(SafeBinaryComparison.GreaterOrEqualSigned); }
+		
+		[PspUntested]
+		public void vscmp()
+		{
+			var VectorSize = Instruction.ONE_TWO;
+
+			VectorOperationSaveVd(VectorSize, (Index) =>
+			{
+				Load_VS(Index);
+				Load_VT(Index);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
+				SafeILGenerator.Call((Func<float, float>)MathFloat.Sign);
+			});
+		}
 
 		/*
 		static public void _vcmovtf_test(CpuThreadState CpuThreadState, int Register, int VectorSize)
@@ -109,6 +145,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		*/
 
+		[PspUntested]
 		public void _vcmovtf(bool True)
 		{
 			var Register = Instruction.IMM3;
@@ -129,31 +166,43 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					SafeILGenerator.BranchUnaryComparison(True ? SafeUnaryComparison.False : SafeUnaryComparison.True, SkipSetLabel);
 					//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Br, SkipSetLabel);
 					{
-						VectorOperationSaveVd((Index) =>
+						VectorOperationSaveVd(VectorSize, (Index) =>
 						{
 							Load_VS(Index);
 						});
 
-						/*
-						SafeILGenerator.LoadArgument0CpuThreadState()
-						SafeILGenerator.Push((int)Register);
-						SafeILGenerator.Push((int)VectorSize);
-						MipsMethodEmiter.CallMethod(typeof(CpuEmiter), "_vcmovtf_set");
-						*/
-
-						//MipsMethodEmiter.ILGenerator.EmitWriteLine("SET!");
-						//_call_debug_vfpu();
+						// Check some cases.
 					}
 				}
 				SkipSetLabel.Mark();
 			}
 			else if (Register == 6)
 			{
-				throw (new NotImplementedException("_vcmovtf:Register = 6"));
+				//throw (new NotImplementedException("_vcmovtf:Register = 6"));
+				VectorOperationSaveVd(VectorSize, (Index) =>
+				{
+					Load_VCC((uint)Index);
+
+					SafeILGenerator.MacroIfElse(() =>
+					{
+						Load_VS(Index);
+					}, () =>
+					{
+						Load_VD(Index, VectorSize);
+					});
+				});
+
 			}
 			else if (Register == 7)
 			{
-				throw (new NotImplementedException("_vcmovtf:Register = 7"));
+				// Copy always
+				if (!True)
+				{
+					VectorOperationSaveVd(VectorSize, (Index) =>
+					{
+						Load_VS(Index);
+					});
+				}
 			}
 			else
 			{

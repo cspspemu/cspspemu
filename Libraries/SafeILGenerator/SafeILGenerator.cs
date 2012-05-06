@@ -1328,6 +1328,32 @@ namespace Codegen
 				default: throw(new NotImplementedException("Not Integral Type"));
 			}
 		}
+
+		public void MacroIfElse(Action IfAction, Action ElseAction)
+		{
+			var IfLabel = DefineLabel("If");
+			var ElseLabel = DefineLabel("Else");
+			var EndLabel = DefineLabel("End");
+
+			BranchUnaryComparison(SafeUnaryComparison.True, IfLabel);
+			BranchAlways(ElseLabel);
+			// If
+			IfLabel.Mark();
+			{
+				IfAction();
+
+				BranchAlways(EndLabel);
+			}
+			// Else
+			ElseLabel.Mark();
+			{
+				ElseAction();
+
+				BranchAlways(EndLabel);
+			}
+			// End
+			EndLabel.Mark();
+		}
 	}
 
 	public class SafeArgument

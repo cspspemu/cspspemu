@@ -224,6 +224,22 @@ namespace CSPspEmu.Hle.Modules.threadman
 		}
 
 		/// <summary>
+		/// Set the timer time (wide format)
+		/// </summary>
+		/// <param name="VirtualTimerId">UID of the vtimer</param>
+		/// <param name="Time">A ::SceKernelSysClock structure</param>
+		/// <returns>Possibly the last time</returns>
+		[HlePspFunction(NID = 0xFB6425C3, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		[PspUntested]
+		public int sceKernelSetVTimerTimeWide(int VirtualTimerId, long Time)
+		{
+			var VirtualTimer = VirtualTimerPool.Get(VirtualTimerId);
+			//VirtualTimer.ElapsedMicroseconds = Time;
+			return 0;
+		}
+
+		/// <summary>
 		/// Get the timer time
 		/// </summary>
 		/// <param name="VirtualTimerId">UID of the vtimer</param>
@@ -292,6 +308,18 @@ namespace CSPspEmu.Hle.Modules.threadman
 		{
 			var VirtualTimer = VirtualTimerPool.Get(VirtualTimerId);
 			VirtualTimer.CancelHandler();
+			return 0;
+		}
+
+		/// <summary>
+		/// Deletes the timer handler
+		/// </summary>
+		/// <param name="VirtualTimerId">The UID of the vtimer</param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0x328F9E52, FirmwareVersion = 150)]
+		public int sceKernelDeleteVTimer(int VirtualTimerId)
+		{
+			VirtualTimerPool.Remove(VirtualTimerId);
 			return 0;
 		}
 	}

@@ -31,7 +31,8 @@ namespace CSPspEmu.Gui.Winforms
 			public string Title;
 			public string Title2;
 
-			public string GetTitle() {
+			public string GetTitle()
+			{
 				return Title;
 			}
 		}
@@ -179,54 +180,84 @@ namespace CSPspEmu.Gui.Winforms
 			PathColumn.AspectGetter = delegate(object _entry) { try { return Path.GetFileName(((GameList.GameEntry)_entry).IsoFile); } catch { return "*ERROR*"; } };
 			MediaTypeColumn.AspectGetter = delegate(object _entry)
 			{
-				var Entry = ((GameList.GameEntry)_entry);
-
-				var DISC_ID = Entry.DISC_ID;
-				switch (DISC_ID[0])
+				try
 				{
-					case 'S': return "CD/DVD";
-					case 'U': return "UMD";
-					case 'B': return "BluRay";
-					default: return "Unknown";
+					var Entry = ((GameList.GameEntry)_entry);
+
+					var DISC_ID = Entry.DISC_ID;
+					switch (DISC_ID[0])
+					{
+						case 'S': return "CD/DVD";
+						case 'U': return "UMD";
+						case 'B': return "BluRay";
+						default: return "Unknown";
+					}
+				}
+				catch
+				{
+					return "*ERROR*";
 				}
 			};
 			LicenseTypeColumn.AspectGetter = delegate(object _entry)
 			{
-				var Entry = ((GameList.GameEntry)_entry);
-
-				var DISC_ID = Entry.DISC_ID;
-				switch (DISC_ID[1])
+				try
 				{
-					case 'C': return "Sony";
-					case 'L': return "Other";
-					default: return "Unknown";
+					var Entry = ((GameList.GameEntry)_entry);
+
+					var DISC_ID = Entry.DISC_ID;
+					switch (DISC_ID[1])
+					{
+						case 'C': return "Sony";
+						case 'L': return "Other";
+						default: return "Unknown";
+					}
+				}
+				catch
+				{
+					return "*ERROR*";
 				}
 			};
-			RegionColumn.AspectGetter = delegate(object _entry) {
-				var Entry = ((GameList.GameEntry)_entry);
-
-				var DISC_ID = Entry.DISC_ID;
-				switch (DISC_ID[2])
+			RegionColumn.AspectGetter = delegate(object _entry)
+			{
+				try
 				{
-					case 'P':
-					case 'J': return "Japan";
-					case 'E': return "Europe";
-					case 'K': return "Korea";
-					case 'U': return "USA";
-					case 'A': return "Asia";
-					default: return "Unknown";
+					var Entry = ((GameList.GameEntry)_entry);
+
+					var DISC_ID = Entry.DISC_ID;
+					switch (DISC_ID[2])
+					{
+						case 'P':
+						case 'J': return "Japan";
+						case 'E': return "Europe";
+						case 'K': return "Korea";
+						case 'U': return "USA";
+						case 'A': return "Asia";
+						default: return "Unknown";
+					}
+				}
+				catch
+				{
+					return "*ERROR*";
 				}
 			};
-			ReleaseTypeColumn.AspectGetter = delegate(object _entry) {
-				var Entry = ((GameList.GameEntry)_entry);
-
-				var DISC_ID = Entry.DISC_ID;
-				switch (DISC_ID[3])
+			ReleaseTypeColumn.AspectGetter = delegate(object _entry)
+			{
+				try
 				{
-					case 'D': return "Demo";
-					case 'M': return "Malasian";
-					case 'S': return "Retail";
-					default: return "Unknown";
+					var Entry = ((GameList.GameEntry)_entry);
+
+					var DISC_ID = Entry.DISC_ID;
+					switch (DISC_ID[3])
+					{
+						case 'D': return "Demo";
+						case 'M': return "Malasian";
+						case 'S': return "Retail";
+						default: return "Unknown";
+					}
+				}
+				catch
+				{
+					return "*ERROR*";
 				}
 			};
 
