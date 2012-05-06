@@ -115,6 +115,7 @@
     <Compile Include="HleThread.cs" />
     <Compile Include="Managers\HleRegistryManager.cs" />
     <Compile Include="Managers\HleUidPoolSpecial.cs" />
+    <Compile Include="PreemptiveScheduler.cs" />
     <Compile Include="SceKernelErrors.cs" />
     <Compile Include="SceKernelException.cs" />
     <Compile Include="SceKernelSelfStopUnloadModuleException.cs" />
