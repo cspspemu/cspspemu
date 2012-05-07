@@ -389,11 +389,11 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			}
 			catch (IOException IOException)
 			{
-				Console.Error.WriteLine(IOException);
+				Logger.Notice("IOException: {0}", IOException);
 			}
 			catch (InvalidOperationException InvalidOperationException)
 			{
-				Console.Error.WriteLine(InvalidOperationException);
+				Logger.Warning("InvalidOperationException: {0}", InvalidOperationException);
 			}
 			finally
 			{

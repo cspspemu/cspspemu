@@ -13,5 +13,6 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 		/// 
 		/// </summary>
 		public bool Enabled;
+		public bool FaceFlag;
 	}
 }

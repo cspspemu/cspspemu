@@ -59,7 +59,7 @@ namespace CSPspEmu.Hle.Modules.utils
 			if (TimeVal != null)
 			{
 				PspRtc.Update();
-				ulong MicroSeconds = (ulong)(PspRtc.Elapsed.TotalMilliseconds * 1000);
+				ulong MicroSeconds = (ulong)(PspRtc.Elapsed.GetTotalMicroseconds());
 				const ulong MicroSecondsInASecond = 1000 * 1000;
 				TimeVal->Seconds = (uint)(MicroSeconds / MicroSecondsInASecond);
 				TimeVal->Microseconds = (uint)(MicroSeconds % MicroSecondsInASecond);
@@ -69,6 +69,8 @@ namespace CSPspEmu.Hle.Modules.utils
 			}
 			if (TimeZone != null)
 			{
+				TimeZone->DstTime = 0;
+				TimeZone->MinutesWest = 0;
 			}
 			//throw(new NotImplementedException());
 			return 0;

@@ -14,8 +14,9 @@ namespace CSPspEmu.Core.Rtc
 
 		public void SetToDateTime(DateTime DateTime)
 		{
-			var Seconds = (uint)(DateTime - Platform.UnixStart).TotalSeconds;
-			TotalMicroseconds = Seconds + DateTime.Millisecond * 1000;
+			//DateTime.GetTotalMicroseconds();
+			//var Seconds = (uint)(DateTime - Platform.UnixStart).TotalSeconds;
+			TotalMicroseconds = Platform.GetCurrentUnixMicroseconds();
 		}
 
 		public void SetToNow()
@@ -28,14 +29,6 @@ namespace CSPspEmu.Core.Rtc
 				Logger.Error("Total Microseconds overflow Prev({0}), Now({1})", PrevTotalMicroseconds, CurrentTotalMicroseconds);
 			}
 			this.TotalMicroseconds = CurrentTotalMicroseconds;
-		}
-
-		public long TotalMilliseconds
-		{
-			get
-			{
-				return TotalMicroseconds / 1000;
-			}
 		}
 	}
 }

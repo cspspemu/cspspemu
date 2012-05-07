@@ -65,7 +65,9 @@ namespace CSPspEmu.Core.Gpu.Run
 			*/
 		}
 
-		[GpuOpCodesNotImplemented]
-		public void OP_PFACE() { }
+		public void OP_PFACE()
+		{
+			GpuState->PatchCullingState.FaceFlag = (Params24 != 0);
+		}
 	}
 }

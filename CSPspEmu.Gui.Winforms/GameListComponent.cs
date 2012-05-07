@@ -94,37 +94,42 @@ namespace CSPspEmu.Gui.Winforms
 			//TitleColumn.HeaderFont = new Font("MS Gothic Normal", 16);
 			TitleColumn.RendererDelegate = (ee, gg, rr, oo) =>
 			{
-				var Entry = ((GameList.GameEntry)oo);
-				var Selected = (objectListView1.SelectedObjects.Contains((object)Entry));
-				gg.FillRectangle(new SolidBrush(!Selected ? SystemColors.Window : SystemColors.Highlight), new Rectangle(rr.Left - 1, rr.Top - 1, rr.Width + 1, rr.Height + 1));
-
-				var Text = Entry.TITLE;
-				Font Font;
-
-				if (Entry.PatchedWithPrometheus)
+				try
 				{
-					Text = Text + " *PATCHED*";
-					Font = Font3;
+					var Entry = ((GameList.GameEntry)oo);
+					var Selected = (objectListView1.SelectedObjects.Contains((object)Entry));
+					gg.FillRectangle(new SolidBrush(!Selected ? SystemColors.Window : SystemColors.Highlight), new Rectangle(rr.Left - 1, rr.Top - 1, rr.Width + 1, rr.Height + 1));
+
+					var Text = Entry.TITLE;
+					Font Font;
+
+					if (Entry.PatchedWithPrometheus)
+					{
+						Text = Text + " *PATCHED*";
+						Font = Font3;
+					}
+					else
+					{
+						Font = Font2;
+					}
+
+					var Measure = gg.MeasureString(Text, Font, new Size(rr.Width, rr.Height));
+					gg.Clip = new System.Drawing.Region(rr);
+					gg.DrawString(
+						Text,
+						Font,
+						new SolidBrush(!Selected ? SystemColors.WindowText : SystemColors.HighlightText),
+						new Rectangle(
+							new Point(rr.Left + 8, (int)(rr.Top + rr.Height / 2 - Measure.Height / 2)),
+							new Size(rr.Width, rr.Height)
+						)
+					);
+					//gg.FillRectangle(new SolidBrush(Color.White), rr);
+					//gg.DrawImageUnscaled(Entry.CachedBitmap, new Point(rr.Left, rr.Top));
 				}
-				else
+				catch
 				{
-					Font = Font2;
 				}
-
-				var Measure = gg.MeasureString(Text, Font, new Size(rr.Width, rr.Height));
-				gg.Clip = new System.Drawing.Region(rr);
-				gg.DrawString(
-					Text,
-					Font,
-					new SolidBrush(!Selected ? SystemColors.WindowText : SystemColors.HighlightText),
-					new Rectangle(
-						new Point(rr.Left + 8, (int)(rr.Top + rr.Height / 2 - Measure.Height / 2)),
-						new Size(rr.Width, rr.Height)
-					)
-				);
-				//gg.FillRectangle(new SolidBrush(Color.White), rr);
-				//gg.DrawImageUnscaled(Entry.CachedBitmap, new Point(rr.Left, rr.Top));
-
 				return true;
 			};
 

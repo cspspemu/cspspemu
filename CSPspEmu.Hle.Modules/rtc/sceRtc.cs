@@ -24,7 +24,8 @@ namespace CSPspEmu.Hle.Modules.rtc
 		//[HlePspNotImplemented]
 		public uint sceRtcGetTickResolution()
 		{
-			return (uint)(TimeSpan.FromSeconds(1).TotalMilliseconds * 1000);
+			//return (uint)(TimeSpan.FromSeconds(1).TotalMilliseconds * 1000);
+			return 1000 * 1000;
 		}
 
 		/// <summary>

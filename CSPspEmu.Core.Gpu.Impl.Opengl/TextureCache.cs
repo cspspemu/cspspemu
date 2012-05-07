@@ -57,6 +57,27 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 		}
 
+		public void Save(string File)
+		{
+			var Bitmap = new Bitmap(this.Width, this.Height);
+			fixed (OutputPixel* DataPtr = Data)
+			{
+				BitmapUtils.TransferChannelsDataInterleaved(
+					Bitmap.GetFullRectangle(),
+					Bitmap,
+					(byte*)DataPtr,
+					BitmapUtils.Direction.FromDataToBitmap,
+					BitmapChannel.Red,
+					BitmapChannel.Green,
+					BitmapChannel.Blue,
+					BitmapChannel.Alpha
+				);
+			}
+			Bitmap.Save(File);
+		}
+
+		OutputPixel[] Data;
+
 		public bool SetData(OutputPixel *Pixels, int TextureWidth, int TextureHeight)
 		{
 			//lock (OpenglGpuImpl.GpuLock)
@@ -65,6 +86,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				{
 					this.Width = TextureWidth;
 					this.Height = TextureHeight;
+
+					Data = new OutputPixel[TextureWidth * TextureHeight];
+					fixed (OutputPixel* DataPtr = Data)
+					{
+						PointerUtils.Memcpy((byte*)DataPtr, (byte*)Pixels, TextureWidth * TextureHeight * sizeof(OutputPixel));
+					}
+
 					Bind();
 					GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, TextureWidth, TextureHeight, 0, PixelFormat.Rgba, PixelType.UnsignedInt8888Reversed, new IntPtr(Pixels));
 					GL.Flush();
@@ -83,7 +111,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			//glTexEnvf(GL_TEXTURE_ENV, GL_RGB_SCALE, 1.0); // 2.0 in scale_2x
 			//GL.TexEnv(TextureEnvTarget.TextureEnv, GL_TEXTURE_ENV_MODE, TextureEnvModeTranslate[state.texture.effect]);
-
 		}
 
 		public void Bind()
@@ -343,21 +370,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 									}
 								}
 							}
-
-							/*
-							var Bitmap = new Bitmap(BufferWidth, Height);
-							BitmapUtils.TransferChannelsDataInterleaved(
-								Bitmap.GetFullRectangle(),
-								Bitmap,
-								(byte*)TexturePixelsPointer,
-								BitmapUtils.Direction.FromDataToBitmap,
-								BitmapChannel.Red,
-								BitmapChannel.Green,
-								BitmapChannel.Blue,
-								BitmapChannel.Alpha
-							);
-							Bitmap.Save(TextureName + ".png");
-							*/
 							
 #if DEBUG_TEXTURE_CACHE
 							var Bitmap = new Bitmap(BufferWidth, Height);

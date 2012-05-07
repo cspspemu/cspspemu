@@ -1,4 +1,6 @@
-﻿#if !RELEASE
+﻿//#define DEBUG_PRIM
+
+#if !RELEASE
 	//#define DEBUG_VERTEX_TYPE
 #endif
 
@@ -391,6 +393,25 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 		}
 
+		private void ResetState()
+		{
+			GL.Viewport(0, 0, 512, 272);
+			GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Fastest);
+			GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
+			GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
+			GL.Hint(HintTarget.PointSmoothHint, HintMode.Fastest);
+			foreach (var Item in Enum.GetValues(typeof(EnableCap)).Cast<EnableCap>())
+			{
+				GL.Disable(Item);
+			}
+
+			GL.MatrixMode(MatrixMode.Projection); GL.LoadIdentity();
+			GL.Ortho(0, 480, 272, 0, 0, -0xFFFF);
+
+			GL.MatrixMode(MatrixMode.Modelview); GL.LoadIdentity();
+			GL.MatrixMode(MatrixMode.Color); GL.LoadIdentity();
+			GL.Color3(Color.White);
+		}
 
 		override public unsafe void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
 		{
@@ -401,6 +422,27 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 			var End = DateTime.UtcNow;
 			//Console.Error.WriteLine("Prim: {0}", End - Start);
+
+			if (!GpuState->ClearingMode)
+			{
+				//Console.WriteLine("{0}", (*GpuState).ToStringDefault());
+			}
+
+#if false
+			if (GpuState->ClearingMode)
+			{
+				ResetState();
+				GL.Begin(BeginMode.Quads);
+				{
+					GL.Vertex2(0, 0);
+					GL.Vertex2(100, 0);
+					GL.Vertex2(100, 100);
+					GL.Vertex2(0, 100);
+				}
+				GL.End();
+				SaveFrameBuffer(GpuState, "frameBuffer.png");
+			}
+#endif
 		}
 
 #if DEBUG_VERTEX_TYPE
@@ -625,6 +667,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					{
 						if (PrimitiveType == GuPrimitiveType.Sprites)
 						{
+#if DEBUG_PRIM
+							if (!GpuState->ClearingMode)
+							{
+								Console.WriteLine("************************");
+							}
+#endif
 							GL.Disable(EnableCap.CullFace);
 							for (int n = 0; n < VertexCount; n += 2)
 							{
@@ -632,6 +680,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 								ReadVertex(n + 0, &V1);
 								ReadVertex(n + 1, &V3);
+								V1.Color.A = 1.0f;
+								V3.Color.A = 1.0f;
+
 								{
 									//if (GpuState->ClearingMode) Console.WriteLine("{0} - {1}", VertexInfoTopLeft, VertexInfoBottomRight);
 
@@ -659,6 +710,16 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 									V4.Normal.Z = V3.Normal.Z = V2.Normal.Z = V1.Normal.Z = NZ;
 									V4.Texture.Z = V3.Texture.Z = V2.Texture.Z = V1.Texture.Z = NZ;
 								}
+#if DEBUG_PRIM
+								if (!GpuState->ClearingMode)
+								{
+									Console.WriteLine("--------------------");
+									Console.WriteLine("{0}", V1);
+									Console.WriteLine("{0}", V2);
+									Console.WriteLine("{0}", V3);
+									Console.WriteLine("{0}", V4);
+								}
+#endif
 								PutVertex(ref V1, ref VertexType);
 								PutVertex(ref V2, ref VertexType);
 								PutVertex(ref V3, ref VertexType);
@@ -730,6 +791,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 //#else
 			var GlPixelFormat = GlPixelFormatList[(int)GpuState->DrawBufferState.Format];
 			int Width = (int)GpuState->DrawBufferState.Width;
+			if (Width == 0) Width = 512;
 			int Height = 272;
 			int ScanWidth = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, Width);
 			int PixelSize = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, 1);
@@ -756,6 +818,41 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 #endif
 		}
 
+		private void SaveFrameBuffer(GpuStateStruct* GpuState, string FileName)
+		{
+			var GlPixelFormat = GlPixelFormatList[(int)GuPixelFormats.RGBA_8888];
+			int Width = (int)GpuState->DrawBufferState.Width;
+			if (Width == 0) Width = 512;
+			int Height = 272;
+			int ScanWidth = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, Width);
+			int PixelSize = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, 1);
+
+			if (Width == 0) Width = 512;
+
+			GL.PixelStore(PixelStoreParameter.PackAlignment, PixelSize);
+
+			var FB = new Bitmap(Width, Height);
+			var Data = new byte[Width * Height * 4];
+
+			fixed (byte* DataPtr = Data)
+			{
+				GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, new IntPtr(DataPtr));
+
+				BitmapUtils.TransferChannelsDataInterleaved(
+					FB.GetFullRectangle(),
+					FB,
+					DataPtr,
+					BitmapUtils.Direction.FromDataToBitmap,
+					BitmapChannel.Red,
+					BitmapChannel.Green,
+					BitmapChannel.Blue,
+					BitmapChannel.Alpha
+				);
+			}
+
+			FB.Save(FileName);
+		}
+
 		[HandleProcessCorruptedStateExceptions()]
 		private void PrepareWrite(GpuStateStruct* GpuState)
 		{
@@ -764,6 +861,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			{
 				var GlPixelFormat = GlPixelFormatList[(int)GpuState->DrawBufferState.Format];
 				int Width = (int)GpuState->DrawBufferState.Width;
+				if (Width == 0) Width = 512;
 				int Height = 272;
 				int ScanWidth = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, Width);
 				int PixelSize = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, 1);
@@ -841,7 +939,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		public override void End(GpuStateStruct* GpuState)
 		{
+			//Console.WriteLine("End");
 			PrepareWrite(GpuState);
+
+			//SaveFrameBuffer(GpuState, "framebuffer.png");
+
 			//throw new NotImplementedException();
 		}
 

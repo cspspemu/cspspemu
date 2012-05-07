@@ -315,7 +315,7 @@ namespace CSPspEmu.Hle.Modules.power
 		/// <param name="type"></param>
 		/// <returns>0 on success</returns>
 		[HlePspFunction(NID = 0xEFD3C963, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		[HlePspNotImplemented(Notice = false, PartialImplemented = true)]
 		public int scePowerTick(PspPowerTick type)
 		{
 			//throw(new NotImplementedException());
@@ -445,11 +445,11 @@ namespace CSPspEmu.Hle.Modules.power
 			return 0;
 		}
 
-        [HlePspFunction(NID = 0xEA382A27, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int scePowerGetPllClockFrequencyFloat()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0xEA382A27, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int scePowerGetPllClockFrequencyFloat()
+		{
+			return 0;
+		}
 	}
 }

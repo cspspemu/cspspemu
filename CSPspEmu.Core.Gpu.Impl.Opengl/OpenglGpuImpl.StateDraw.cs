@@ -24,11 +24,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 #if ENABLE_TEXTURES
 			PrepareState_Texture_Common(GpuState);
 #endif
-			PrepareState_Colors(GpuState);
 			PrepareState_Blend(GpuState);
 
 			if (GpuState->VertexState.Type.Transform2D)
 			{
+				PrepareState_Colors_2D(GpuState);
 				GL.Disable(EnableCap.StencilTest);
 				GL.Disable(EnableCap.CullFace);
 				GL.DepthRange(0, 1);
@@ -37,6 +37,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 			else
 			{
+				PrepareState_Colors_3D(GpuState);
 				PrepareState_CullFace(GpuState);
 				PrepareState_Lighting(GpuState);
 				PrepareState_Depth(GpuState);
@@ -131,7 +132,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//GL.DepthRange
 		}
 
-		private void PrepareState_Colors(GpuStateStruct* GpuState)
+		private void PrepareState_Colors_2D(GpuStateStruct* GpuState)
+		{
+			PrepareState_Colors_3D(GpuState);
+		}
+
+		private void PrepareState_Colors_3D(GpuStateStruct* GpuState)
 		{
 			GlEnableDisable(EnableCap.ColorMaterial, VertexType.Color != VertexTypeStruct.ColorEnum.Void);
 	
@@ -421,6 +427,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			CurrentTexture = TextureCache.Get(GpuState);
 			CurrentTexture.Bind();
+			//CurrentTexture.Save("test.png");
 
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)((TextureState->FilterMinification == TextureFilter.Linear) ? TextureMinFilter.Linear : TextureMinFilter.Nearest));
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)((TextureState->FilterMagnification == TextureFilter.Linear) ? TextureMagFilter.Linear : TextureMagFilter.Nearest));

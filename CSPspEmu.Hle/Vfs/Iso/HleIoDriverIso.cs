@@ -222,6 +222,12 @@ namespace CSPspEmu.Hle.Vfs.Iso
 
 			switch ((UmdCommandEnum)Command)
 			{
+#if false
+				case UmdCommandEnum.DefineDecryptionKey:
+					{
+						return 0;
+					}
+#endif
 				case UmdCommandEnum.FileSeekSet:
 					{
 						var In = (uint *)ExpectedInputSize(sizeof(uint));

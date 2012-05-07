@@ -81,6 +81,11 @@ namespace CSPspEmu.Core.Gpu
 				A = ((float)OutputPixel.A) / 255.0f,
 			};
 		}
+
+		public override string ToString()
+		{
+			return String.Format("Color4F({0}, {1}, {2}, {3})", R, G, B, A);
+		}
 	}
 
 	/// <summary>

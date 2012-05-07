@@ -110,7 +110,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="SasCore"></param>
 		/// <param name="Voice"></param>
 		/// <returns></returns>
-		[HlePspFunction(NID = 0x74AE582A, FirmwareVersion = 150)]
+		[HlePspFunction(NID = 0x74AE582A, FirmwareVersion = 150, SkipLog = true)]
 		public int __sceSasGetEnvelopeHeight(uint SasCorePointer, int Voice)
 		{
 			var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);

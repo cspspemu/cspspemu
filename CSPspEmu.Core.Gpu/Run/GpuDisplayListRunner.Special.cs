@@ -75,6 +75,13 @@ namespace CSPspEmu.Core.Gpu.Run
 		{
 			GpuState->DrawBufferState.HighAddress = Param8(16);
 			GpuState->DrawBufferState.Width = Param16(0);
+
+			if (GpuState->DrawBufferState.Width == 0)
+			{
+				//Console.WriteLine("GpuState->DrawBufferState.Width == 0!");
+				//GpuState->DrawBufferState.Width = 512;
+			}
+
 			//gpu.markBufferOp(BufferOperation.LOAD, BufferType.COLOR);
 			//Console.WriteLine("{0}", GpuState->DrawBufferState.Format);
 		}
