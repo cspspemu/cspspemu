@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using OpenTK;
+using Mono.Simd;
 
 namespace CSPspEmu.Core.Gpu.Formats
 {
@@ -68,9 +69,11 @@ namespace CSPspEmu.Core.Gpu.Formats
 
 			Normalize /= 64;
 
+			var NormalizeRecp = (1.0f / Normalize);
+
 			foreach (var Vertex in Vertices)
 			{
-				var NormalizedVertex = Vector3.Divide(Vertex, Normalize);
+				var NormalizedVertex = Vertex * NormalizeRecp;
 				WriteVerticeLine("v " + NormalizedVertex.X + " " + NormalizedVertex.Y + " " + NormalizedVertex.Z);
 			}
 		}
@@ -117,7 +120,7 @@ namespace CSPspEmu.Core.Gpu.Formats
 			List<int> Indices = new List<int>();
 			foreach (var Vertex in Vertices)
 			{
-				Indices.Add(AddVertex(Vertex.Position));
+				Indices.Add(AddVertex(Vertex.Position.ToVector3()));
 			}
 			AddFace(Indices.ToArray());
 		}

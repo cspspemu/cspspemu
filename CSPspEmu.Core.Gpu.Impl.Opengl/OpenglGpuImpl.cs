@@ -32,6 +32,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
 using CSPspEmu.Core.Gpu.Formats;
+using Mono.Simd;
 #else
 using MiniGL;
 #endif
@@ -127,8 +128,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			int SkinningWeightCount = VertexType.RealSkinningWeightCount;
 			if (SkinningWeightCount == 0) return VertexInfo;
 
-			var OutputPosition = default(Vector3F);
-			var OutputNormal = default(Vector3F);
+			var OutputPosition = default(Vector4f);
+			var OutputNormal = default(Vector4f);
 			var InputPosition = VertexInfo.Position;
 			var InputNormal = VertexInfo.Normal;
 
@@ -258,7 +259,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			if (VertexType.Color != VertexTypeStruct.ColorEnum.Void)
 			{
-				GL.Color4(VertexInfo.Color.R, VertexInfo.Color.G, VertexInfo.Color.B, VertexInfo.Color.A);
+				GL.Color4(VertexInfo.Color.X, VertexInfo.Color.Y, VertexInfo.Color.Z, VertexInfo.Color.W);
 			}
 			if (VertexType.Texture != VertexTypeStruct.NumericEnum.Void)
 			{
@@ -803,8 +804,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 								ReadVertex(n + 0, &V1);
 								ReadVertex(n + 1, &V3);
-								V1.Color.A = 1.0f;
-								V3.Color.A = 1.0f;
+								V1.Color.W = 1.0f;
+								V3.Color.W = 1.0f;
 
 								{
 									//if (GpuState->ClearingMode) Console.WriteLine("{0} - {1}", VertexInfoTopLeft, VertexInfoBottomRight);
@@ -816,16 +817,16 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 									V2 = new VertexInfo()
 									{
-										Texture = new Vector3F(V3.Texture.X, V1.Texture.Y, TZ),
-										Position = new Vector3F(V3.Position.X, V1.Position.Y, PZ),
-										Normal = new Vector3F(V3.Normal.X, V1.Normal.Y, NZ),
+										Texture = new Vector4f(V3.Texture.X, V1.Texture.Y, TZ, 0),
+										Position = new Vector4f(V3.Position.X, V1.Position.Y, PZ, 0),
+										Normal = new Vector4f(V3.Normal.X, V1.Normal.Y, NZ, 0),
 									};
 
 									V4 = new VertexInfo()
 									{
-										Texture = new Vector3F(V1.Texture.X, V3.Texture.Y, TZ),
-										Position = new Vector3(V1.Position.X, V3.Position.Y, PZ),
-										Normal = new Vector3F(V1.Normal.X, V3.Normal.Y, NZ),
+										Texture = new Vector4f(V1.Texture.X, V3.Texture.Y, TZ, 0),
+										Position = new Vector4f(V1.Position.X, V3.Position.Y, PZ, 0),
+										Normal = new Vector4f(V1.Normal.X, V3.Normal.Y, NZ, 0),
 									};
 
 									V4.Color = V3.Color = V2.Color = V1.Color = Color;

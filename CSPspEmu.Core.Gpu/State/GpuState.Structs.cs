@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using Mono.Simd;
 
 namespace CSPspEmu.Core.Gpu.State
 {
@@ -37,8 +38,8 @@ namespace CSPspEmu.Core.Gpu.State
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct ViewportStruct
 	{
-		public Vector3F Position;
-		public Vector3F Scale;
+		public Vector4f Position;
+		public Vector4f Scale;
 		public PointS RegionTopLeft;
 		public PointS RegionBottomRight;
 

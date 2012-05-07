@@ -68,6 +68,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		static private PspMethodStruct _CreateDelegateForPC(CpuProcessor CpuProcessor, Stream MemoryStream, uint EntryPC, out int InstructionsProcessed, bool DoDebug = false, bool DoLog = false)
 		{
+			//DoLog = true;
+
 			//Console.WriteLine("Creating delegate for 0x{0:X}", EntryPC);
 
 			InstructionsProcessed = 0;
@@ -516,6 +518,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 			if (DoLog)
 			{
+				Console.WriteLine("----------------------------");
 				foreach (var Instruction in MipsMethodEmiter.SafeILGenerator.GetEmittedInstructions()) Console.WriteLine(Instruction);
 			}
 

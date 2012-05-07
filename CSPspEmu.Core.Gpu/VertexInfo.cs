@@ -5,9 +5,11 @@ using System.Text;
 using CSPspEmu.Core.Utils;
 using OpenTK;
 using System.Runtime.InteropServices;
+using Mono.Simd;
 
 namespace CSPspEmu.Core.Gpu
 {
+#if false
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct Vector3F
 	{
@@ -118,17 +120,32 @@ namespace CSPspEmu.Core.Gpu
 			return String.Format("Color4F({0}, {1}, {2}, {3})", R, G, B, A);
 		}
 	}
+#endif
+
+	static public class Vector4fExtensions
+	{
+		static public Vector4f Normalize(this Vector4f Vector)
+		{
+			return Vector * (1.0f / (float)Math.Sqrt(Vector.X * Vector.X + Vector.Y * Vector.Y + Vector.Z * Vector.Z));
+		}
+
+		static public Vector3 ToVector3(this Vector4f Vector)
+		{
+			return new Vector3(Vector.X, Vector.Y, Vector.Z);
+		}
+	}
+
 
 	/// <summary>
 	/// Information about a vertex.
 	/// </summary>
-	[StructLayout(LayoutKind.Sequential, Pack = 1)]
+	[StructLayout(LayoutKind.Sequential, Pack = 4)]
 	unsafe public struct VertexInfo
 	{
-		public Color4F Color;
-		public Vector3F Position;
-		public Vector3F Normal;
-		public Vector3F Texture;
+		public Vector4f Color;
+		public Vector4f Position;
+		public Vector4f Normal;
+		public Vector4f Texture;
 		public fixed float Weights[8];
 
 		public override string ToString()

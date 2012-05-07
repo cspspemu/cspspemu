@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Gpu.State;
 using OpenTK.Graphics.OpenGL;
+using Mono.Simd;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -280,8 +281,8 @@ namespace CSPspEmu.Core.Gpu.Run
 					ucoeff[i] = BernsteinCoeff(u);
 
 					var p = default(VertexInfo);
-					p.Position = Vector3F.Zero;
-					p.Normal = Vector3F.Zero;
+					p.Position = Vector4f.Zero;
+					p.Normal = Vector4f.Zero;
 
 					for (int ii = 0; ii < 4; ++ii)
 					{
