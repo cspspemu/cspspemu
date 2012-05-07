@@ -37,14 +37,10 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		//void sceGuDrawSpline(int vtype, int ucount, int vcount, int uedge, int vedge, const void* indices, const void* vertices);
 
-		[GpuOpCodesNotImplemented]
 		public void OP_PSUB()
 		{
-			/*
-			gpu.state.patch.div_s = command.extract!(ubyte,  0, 8); 
-			gpu.state.patch.div_t = command.extract!(ubyte,  8, 8);
-			//gpu.logWarning("OP_PSUB(%f, %f)", params[0], params[1]); 
-			*/
+			GpuState->PatchState.DivS = Param8(0);
+			GpuState->PatchState.DivT = Param8(8);
 		}
 
 		[GpuOpCodesNotImplemented]

@@ -43,5 +43,10 @@ namespace CSPspEmu.Core.Gpu
 
 		abstract public void SetCurrent();
 		abstract public void UnsetCurrent();
+
+		virtual public void DrawCurvedSurface(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuStateStruct, VertexInfo[,] Patch, int UCount, int VCount)
+		{
+			Console.Error.WriteLine("GpuImpl.DrawCurvedSurface Not Implemented!!");
+		}
 	}
 }

@@ -185,8 +185,9 @@ namespace CSPspEmu.Hle.Modules.utility
 							{
 								throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_LOAD_NO_DATA));
 							}
-							catch (Exception)
+							catch (Exception Exception)
 							{
+								Console.WriteLine(Exception);
 								throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_LOAD_ACCESS_ERROR));
 							}
 						}
@@ -278,7 +279,8 @@ namespace CSPspEmu.Hle.Modules.utility
 
 								if (SizeUsedInfo != null)
 								{
-									if (true)
+#if false
+									if (false)
 									{
 										Console.WriteLine(SizeUsedInfo->saveName);
 										Console.WriteLine(SizeUsedInfo->gameName);
@@ -293,6 +295,9 @@ namespace CSPspEmu.Hle.Modules.utility
 									{
 										SceKernelError = SceKernelErrors.ERROR_SAVEDATA_SIZES_NO_DATA;
 									}
+#else
+									SceKernelError = SceKernelErrors.ERROR_SAVEDATA_SIZES_NO_DATA;
+#endif
 								}
 							}
 

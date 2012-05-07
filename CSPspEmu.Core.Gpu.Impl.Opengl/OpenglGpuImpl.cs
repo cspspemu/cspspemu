@@ -1,4 +1,6 @@
-﻿//#define DEBUG_PRIM
+﻿//#define SLOW_SIMPLE_RENDER_TARGET
+
+//#define DEBUG_PRIM
 
 #if !RELEASE
 	//#define DEBUG_VERTEX_TYPE
@@ -413,14 +415,132 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			GL.Color3(Color.White);
 		}
 
+		private GuPrimitiveType[] patch_prim_types = { GuPrimitiveType.TriangleStrip, GuPrimitiveType.LineStrip, GuPrimitiveType.Points };
+
+		public override void DrawCurvedSurface(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuStateStruct, VertexInfo[,] Patch, int UCount, int VCount)
+		{
+			//GpuState->TextureMappingState.Enabled = true;
+
+			//ResetState();
+			PrepareStateCommon(GpuState);
+			PrepareStateDraw(GpuState);
+			PrepareStateMatrix(GpuState);
+
+			PrepareState_Texture_Common(GpuState);
+			PrepareState_Texture_3D(GpuState);
+
+			GL.ActiveTexture(TextureUnit.Texture0);
+			/*
+			GL.Enable(EnableCap.Texture2D);
+			GL.Disable(EnableCap.Lighting);
+			GL.Disable(EnableCap.CullFace);
+			//GL.Disable(EnableCap.Texture2D);
+			//var CurrentTexture = TextureCache.Get(GpuState);
+			var CurrentTexture = new Texture(this).Load("Bezier2.png");
+			CurrentTexture.Bind();
+
+
+			var Mipmap0 = &GpuStateStruct->TextureMappingState.TextureState.Mipmap0;
+			int MipmapWidth = Mipmap0->BufferWidth;
+			int MipmapHeight = Mipmap0->TextureHeight;
+			*/
+
+			/*
+
+			GL.Scale(
+				1.0f * Mipmap0->BufferWidth,
+				1.0f * Mipmap0->TextureHeight,
+				1.0f
+			);
+			*/
+			//GL.LoadIdentity();
+
+			//var CurrentTexture = TextureCache.Get(GpuState);
+			//CurrentTexture.Save("Bezier.png");
+
+			
+			var VertexType = GpuStateStruct->VertexState.Type;
+
+			//GL.Color3(Color.White);
+
+#if true
+			GL.Begin(BeginMode.Triangles);
+			for (int t = 0; t < Patch.GetLength(1) - 1; t++)
+			{
+				for (int s = 0; s < Patch.GetLength(0) - 1; s++)
+				{
+					var VertexInfo1 = Patch[s + 0, t + 0];
+					var VertexInfo2 = Patch[s + 0, t + 1];
+					var VertexInfo3 = Patch[s + 1, t + 1];
+					var VertexInfo4 = Patch[s + 1, t + 0];
+
+					/*
+					VertexInfo1.Texture.X = (s + 0) * MipmapWidth / Patch.GetLength(0);
+					VertexInfo1.Texture.Y = (t + 0) * MipmapWidth / Patch.GetLength(1);
+
+					VertexInfo2.Texture.X = (s + 0) * MipmapWidth / Patch.GetLength(0);
+					VertexInfo2.Texture.Y = (t + 1) * MipmapWidth / Patch.GetLength(1);
+
+					VertexInfo3.Texture.X = (s + 1) * MipmapWidth / Patch.GetLength(0);
+					VertexInfo3.Texture.Y = (t + 1) * MipmapWidth / Patch.GetLength(1);
+
+					VertexInfo4.Texture.X = (s + 1) * MipmapWidth / Patch.GetLength(0);
+					VertexInfo4.Texture.Y = (t + 0) * MipmapWidth / Patch.GetLength(1);
+					*/
+
+					PutVertex(ref VertexInfo1, ref VertexType);
+					PutVertex(ref VertexInfo2, ref VertexType);
+					PutVertex(ref VertexInfo3, ref VertexType);
+
+					PutVertex(ref VertexInfo1, ref VertexType);
+					PutVertex(ref VertexInfo3, ref VertexType);
+					PutVertex(ref VertexInfo4, ref VertexType);
+
+					//GL.Color3(Color.White);
+					//Console.WriteLine("{0}, {1} : {2}", s, t, VertexInfo1);
+				}
+			}
+			GL.End();
+#else
+			GL.Begin(BeginMode.TriangleStrip);
+			//GL.Begin(BeginMode.LineStrip);
+			//GL.Begin(BeginMode.Points);
+			for (int t = 0; t < Patch.GetLength(1) - 1; t++)
+			{
+				for (int s = 0; s < Patch.GetLength(0); s++)
+				{
+					var VertexInfo1 = Patch[s, t];
+					var VertexInfo2 = Patch[s, t + 1];
+					PutVertex(ref VertexInfo1, ref VertexType);
+					PutVertex(ref VertexInfo2, ref VertexType);
+					//GL.Color3(Color.White);
+					Console.WriteLine("{0}, {1} : {2}", s, t, VertexInfo1);
+				}
+			}
+			GL.End();
+#endif
+
+		}
+
 		override public unsafe void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
 		{
+#if SLOW_SIMPLE_RENDER_TARGET
+			PrepareRead(GpuState);
+#endif
+
+
 			//Console.WriteLine("VertexCount: {0}", VertexCount);
 			var Start = DateTime.UtcNow;
 			{
 				_Prim(GlobalGpuState, GpuState, PrimitiveType, VertexCount);
 			}
 			var End = DateTime.UtcNow;
+
+#if SLOW_SIMPLE_RENDER_TARGET
+			PrepareWrite(GpuState);
+#endif
+
+
 			//Console.Error.WriteLine("Prim: {0}", End - Start);
 
 			if (!GpuState->ClearingMode)
@@ -659,6 +779,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				}
 
 				//Console.WriteLine(BeginMode);
+
+				//var CurrentTexture = new Texture(this).Load("Bezier2.png");
+				//CurrentTexture.Bind();
 
 				//lock (GpuLock)
 				{

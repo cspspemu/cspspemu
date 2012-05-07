@@ -51,7 +51,8 @@ namespace CSPspEmu.Core.Gpu.Run
 				GpuState->ClearingMode = true;
 			}
 			// Stop the clearing mode.
-			else {
+			else
+			{
 				GpuState->ClearingMode = false;
 			}
 		}
@@ -158,47 +159,174 @@ namespace CSPspEmu.Core.Gpu.Run
 				Params24
 			);
 		}
-	
-		/*
-		// http://en.wikipedia.org/wiki/Bernstein_polynomial
-		float[4] bernsteinCoefficients(float u) {
-			static if (false) {
-				float uPow1  = u;
-				float uPow2  = uPow1 * uPow1;
-				float uPow3  = uPow2 * uPow1;
-	
-				// Complementary.
-				float u1Pow1 = 1 - u;
-				float u1Pow2 = Pow1 * Pow1;
-				float u1Pow3 = u1Pow2 * Pow1;
-	
-				float[4] ret = [
-					(u1Pow3),
-					(3 * uPow1 * u1Pow2),
-					(3 * uPow2 * u1Pow1),
-					(uPow3)
-				];
-			} else {
-				float u0 = u - 0;
-				float u1 = 1 - u;
-				float[4] ret = [
-					(u1 ^^ 3),
-					(3 * (u0 ^^ 1) * (u1 ^^ 2)),
-					(3 * (u1 ^^ 1) * (u0 ^^ 2)),
-					(u0 ^^ 3)
-				];
-			}
-
-			return ret;
-		}
-		*/
 
 		/// <summary>
 		/// Bezier Patch Kick
 		/// </summary>
-		[GpuOpCodesNotImplemented]
 		public void OP_BEZIER()
 		{
+			var UCount = Param8(0);
+			var VCount = Param8(8);
+
+			DrawBezier(UCount, VCount);
+		}
+
+		static private float[] BernsteinCoeff(float u)
+		{
+			float uPow2 = u * u;
+			float uPow3 = uPow2 * u;
+			float u1 = 1 - u;
+			float u1Pow2 = u1 * u1;
+			float u1Pow3 = u1Pow2 * u1;
+
+			return new float[] {
+				u1Pow3,
+				3 * u * u1Pow2,
+				3 * uPow2 * u1,
+				uPow3,
+			};
+		}
+
+		private void PointMultAdd(ref VertexInfo dest, ref VertexInfo src, float f)
+		{
+			dest.Position += src.Position * f;
+			dest.Texture += src.Texture * f;
+			dest.Color += src.Color * f;
+			dest.Normal += src.Normal * f;
+		}
+
+		private VertexInfo[,] GetControlPoints(int UCount, int VCount)
+		{
+			var ControlPoints = new VertexInfo[UCount, VCount];
+
+			var VertexPtr = (byte*)GpuDisplayList.GpuProcessor.Memory.PspAddressToPointerSafe(GlobalGpuState.GetAddressRelativeToBaseOffset(GpuState->VertexAddress), 0);
+			var VertexReader = new VertexReader();
+			VertexReader.SetVertexTypeStruct(GpuState->VertexState.Type, VertexPtr);
+
+			for (int u = 0; u < UCount; u++)
+			{
+				for (int v = 0; v < VCount; v++)
+				{
+					ControlPoints[u, v] = VertexReader.ReadVertex(v * UCount + u);
+					//Console.WriteLine("getControlPoints({0}, {1}) : {2}", u, v, controlPoints[u, v]);
+				}
+			}
+			return ControlPoints;
+		}
+
+		private void DrawBezier(int UCount, int VCount)
+		{
+			var DivS = GpuState->PatchState.DivS;
+			var DivT = GpuState->PatchState.DivT;
+
+			if ((UCount - 1) % 3 != 0 || (VCount - 1) % 3 != 0)
+			{
+				Logger.Warning("Unsupported bezier parameters ucount=" + UCount + " vcount=" + VCount);
+				return;
+			}
+			if (DivS <= 0 || DivT <= 0)
+			{
+				Logger.Warning("Unsupported bezier patches patch_div_s=" + DivS + " patch_div_t=" + DivT);
+				return;
+			}
+
+			//initRendering();
+			//boolean useTexture = context.vinfo.texture != 0 || context.textureFlag.isEnabled();
+			//boolean useNormal = context.lightingFlag.isEnabled();
+
+			var anchors = GetControlPoints(UCount, VCount);
+
+			// Don't capture the ram if the vertex list is embedded in the display list. TODO handle stall_addr == 0 better
+			// TODO may need to move inside the loop if indices are used, or find the largest index so we can calculate the size of the vertex list
+			/*
+			if (State.captureGeNextFrame && !isVertexBufferEmbedded()) {
+				Logger.Info("Capture drawBezier");
+				CaptureManager.captureRAM(context.vinfo.ptr_vertex, context.vinfo.vertexSize * ucount * vcount);
+			}
+			*/
+
+			// Generate patch VertexState.
+			var Patch = new VertexInfo[DivS + 1, DivT + 1];
+
+			// Number of patches in the U and V directions
+			int upcount = UCount / 3;
+			int vpcount = VCount / 3;
+
+			float[][] ucoeff = new float[DivS + 1][];
+
+			for (int j = 0; j <= DivT; j++)
+			{
+				float vglobal = (float)j * vpcount / (float)DivT;
+
+				int vpatch = (int)vglobal; // Patch number
+				float v = vglobal - vpatch;
+				if (j == DivT)
+				{
+					vpatch--;
+					v = 1.0f;
+				}
+				float[] vcoeff = BernsteinCoeff(v);
+
+				for (int i = 0; i <= DivS; i++)
+				{
+					float uglobal = (float)i * upcount / (float)DivS;
+					int upatch = (int)uglobal;
+					float u = uglobal - upatch;
+					if (i == DivS)
+					{
+						upatch--;
+						u = 1.0f;
+					}
+					ucoeff[i] = BernsteinCoeff(u);
+
+					var p = default(VertexInfo);
+					p.Position = Vector3F.Zero;
+					p.Normal = Vector3F.Zero;
+
+					for (int ii = 0; ii < 4; ++ii)
+					{
+						for (int jj = 0; jj < 4; ++jj)
+						{
+							/*
+							Console.WriteLine(
+								"({0}, {1}) : {2} : {3} : {4}",
+								ii, jj,
+								p.Position, anchors[3 * upatch + ii, 3 * vpatch + jj].Position,
+								ucoeff[i][ii] * vcoeff[jj]
+							);
+							*/
+							PointMultAdd(
+								ref p,
+								ref anchors[3 * upatch + ii, 3 * vpatch + jj],
+								ucoeff[i][ii] * vcoeff[jj]
+							);
+						}
+					}
+
+					p.Texture.X = uglobal;
+					p.Texture.Y = vglobal;
+
+					Patch[i, j] = p;
+
+					/*
+					Console.WriteLine(
+						"W: ({0}, {1}) : {2}",
+						i, j,
+						patch[i, j] 
+					);
+					*/
+
+					/*
+					if (useTexture && context.vinfo.texture == 0)
+					{
+						p.t[0] = uglobal;
+						p.t[1] = vglobal;
+					}
+					*/
+				}
+			}
+
+			GpuDisplayList.GpuProcessor.GpuImpl.DrawCurvedSurface(GlobalGpuState, GpuDisplayList.GpuStateStructPointer, Patch, UCount, VCount);
 		}
 
 		/// <summary>

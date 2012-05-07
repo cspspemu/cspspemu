@@ -123,6 +123,13 @@ namespace CSPspEmu.Core.Gpu
 			ReadPosition();
 		}
 
+		public VertexInfo ReadVertex(int Index)
+		{
+			var OutVertexInfo = default(VertexInfo);
+			ReadVertex(Index, &OutVertexInfo);
+			return OutVertexInfo;
+		}
+
 		protected void Align1()
 		{
 		}

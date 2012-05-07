@@ -32,7 +32,11 @@ namespace CSharpUtils
 		{
 			if (Pointer == null) return null;
 			List<byte> Bytes = new List<byte>();
-			for (int n = 0; n < Length; n++) Bytes.Add(Pointer[n]);
+			for (int n = 0; n < Length; n++)
+			{
+				if (Pointer[n] == 0) break;
+				Bytes.Add(Pointer[n]);
+			}
 			return Encoding.GetString(Bytes.ToArray());
 		}
 

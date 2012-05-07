@@ -37,8 +37,26 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
 			GL.Hint(HintTarget.PointSmoothHint, HintMode.Fastest);
 
-			int ScaledWidth = (int)(((double)480 / (double)Viewport.RegionSize.X) * (double)480);
-			int ScaledHeight = (int)(((double)272 / (double)Viewport.RegionSize.Y) * (double)272);
+/*
+				int halfHeight = Math.abs(context.viewport_height);
+				int halfWidth = Math.abs(context.viewport_width);
+				int viewportX = context.viewport_cx - halfWidth - context.offset_x;
+				int viewportY = context.viewport_cy - halfHeight - context.offset_y;
+				int viewportWidth = 2 * halfWidth;
+				int viewportHeight = 2 * halfHeight;
+
+				// For OpenGL, translate the viewportY from the upper left corner
+				// to the lower left corner.
+				viewportY = Screen.height - viewportY - viewportHeight;
+
+				re.setViewport(viewportX, viewportY, viewportWidth, viewportHeight);
+*/
+
+			int ScreenWidth = 480;
+			int ScreenHeight = 272;
+
+			int ScaledWidth = (int)(((double)ScreenWidth / (double)Viewport.RegionSize.X) * (double)ScreenWidth);
+			int ScaledHeight = (int)(((double)ScreenHeight / (double)Viewport.RegionSize.Y) * (double)ScreenHeight);
 
 			GL.Viewport(
 				(int)Viewport.RegionTopLeft.X,

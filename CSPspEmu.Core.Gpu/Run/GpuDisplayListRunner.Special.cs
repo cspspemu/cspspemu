@@ -82,6 +82,7 @@ namespace CSPspEmu.Core.Gpu.Run
 				//GpuState->DrawBufferState.Width = 512;
 			}
 
+			//GpuDisplayList.GpuProcessor.GpuImpl.
 			//gpu.markBufferOp(BufferOperation.LOAD, BufferType.COLOR);
 			//Console.WriteLine("{0}", GpuState->DrawBufferState.Format);
 		}
@@ -167,12 +168,10 @@ namespace CSPspEmu.Core.Gpu.Run
 		{
 			GpuState->Viewport.Scale.X = Float1 * 2;
 			//Console.Error.WriteLine("OP_XSCALE: {0}", GpuState->Viewport.Scale.X);
-			//gpu.state.viewport.sx = command.float1 * 2;
 		}
 		public void OP_YSCALE()
 		{
-			GpuState->Viewport.Scale.Y = Float1 * 2;
-			//gpu.state.viewport.sy = -command.float1 * 2;
+			GpuState->Viewport.Scale.Y = -Float1 * 2;
 			//Console.Error.WriteLine("OP_YSCALE: {0}", GpuState->Viewport.Scale.Y);
 		}
 		public void OP_ZSCALE()

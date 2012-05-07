@@ -69,6 +69,8 @@ namespace CSPspEmu.Core.Gpu.State
 		public SkinningStateStruct SkinningState;
 		public ColorTestStateStruct ColorTestState;
 
+		public PatchStateStruct PatchState;
+
 		// State.
 		public ColorStruct FixColorSource, FixColorDestination;
 
@@ -96,5 +98,12 @@ namespace CSPspEmu.Core.Gpu.State
 			GpuState->SkinningState.BoneMatrix7.Init();
 		}
 		*/
+	}
+
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
+	public struct PatchStateStruct
+	{
+		public byte DivS;
+		public byte DivT;
 	}
 }

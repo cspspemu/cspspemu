@@ -338,27 +338,27 @@ namespace CSPspEmu.Core.Gpu
 		TMATRIX,
 
 		/// <summary>
-		/// 0x42 - Viewport Width Scale
+		/// 0x42 - 66 - Viewport Width Scale
 		/// </summary>
 		XSCALE,
 
 		/// <summary>
-		/// 0x43 - Viewport Height Scale
+		/// 0x43 - 67 - Viewport Height Scale
 		/// </summary>
 		YSCALE,
 
 		/// <summary>
-		/// 0x44 - Depth Scale
+		/// 0x44 - 68 - Depth Scale
 		/// </summary>
 		ZSCALE,
 
 		/// <summary>
-		/// 0x45 - Viewport X Position
+		/// 0x45 - 69 - Viewport X Position
 		/// </summary>
 		XPOS,
 
 		/// <summary>
-		/// 0x46 - Viewport Y Position
+		/// 0x46 - 90 - Viewport Y Position
 		/// </summary>
 		YPOS,
 

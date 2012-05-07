@@ -13,6 +13,8 @@ namespace CSPspEmu.Core.Gpu
 	{
 		public float X, Y, Z;
 
+		static public Vector3F Zero = new Vector3F(0, 0, 0);
+
 		public Vector3F(float X, float Y, float Z)
 		{
 			this.X = X;
@@ -30,9 +32,19 @@ namespace CSPspEmu.Core.Gpu
 			return new Vector3F(Vector3.X, Vector3.Y, Vector3.Z);
 		}
 
-		static public Vector3F operator/(Vector3F Vector3F, float Value)
+		static public Vector3F operator +(Vector3F Left, Vector3F Right)
 		{
-			return new Vector3F(Vector3F.X / Value, Vector3F.Y / Value, Vector3F.Z / Value);
+			return new Vector3F(Left.X + Right.X, Left.Y + Right.Y, Left.Z + Right.Z);
+		}
+
+		static public Vector3F operator/(Vector3F Left, float Value)
+		{
+			return new Vector3F(Left.X / Value, Left.Y / Value, Left.Z / Value);
+		}
+
+		static public Vector3F operator*(Vector3F Left, float Value)
+		{
+			return new Vector3F(Left.X * Value, Left.Y * Value, Left.Z * Value);
 		}
 
 		public override string ToString()
@@ -42,8 +54,7 @@ namespace CSPspEmu.Core.Gpu
 
 		public Vector3F Normalize()
 		{
-			var Normal = (float)Math.Sqrt(X * X + Y * Y + Z * Z);
-			return new Vector3F(X / Normal, Y / Normal, Z / Normal);
+			return this / (float)Math.Sqrt(X * X + Y * Y + Z * Z);
 		}
 	}
 
@@ -80,6 +91,26 @@ namespace CSPspEmu.Core.Gpu
 				B = ((float)OutputPixel.B) / 255.0f,
 				A = ((float)OutputPixel.A) / 255.0f,
 			};
+		}
+
+		static public Color4F operator +(Color4F Left, Color4F Right)
+		{
+			return new Color4F(
+				Left.R + Right.R,
+				Left.G + Right.G,
+				Left.B + Right.B,
+				Left.A + Right.A
+			);
+		}
+
+		static public Color4F operator *(Color4F Left, float Value)
+		{
+			return new Color4F(
+				Left.R + Value,
+				Left.G + Value,
+				Left.B + Value,
+				Left.A + Value
+			);
 		}
 
 		public override string ToString()

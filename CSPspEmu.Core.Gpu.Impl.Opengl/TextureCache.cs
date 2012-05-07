@@ -78,6 +78,16 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		OutputPixel[] Data;
 
+		public Texture Load(string FileName)
+		{
+			var Bitmap = new Bitmap(Image.FromFile(FileName));
+			Bitmap.LockBitsUnlock(System.Drawing.Imaging.PixelFormat.Format32bppArgb, (BitmapData) =>
+			{
+				this.SetData((OutputPixel *)BitmapData.Scan0, BitmapData.Width, BitmapData.Height);
+			});
+			return this;
+		}
+
 		public bool SetData(OutputPixel *Pixels, int TextureWidth, int TextureHeight)
 		{
 			//lock (OpenglGpuImpl.GpuLock)
@@ -95,12 +105,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 					Bind();
 					GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, TextureWidth, TextureHeight, 0, PixelFormat.Rgba, PixelType.UnsignedInt8888Reversed, new IntPtr(Pixels));
-					GL.Flush();
 					var GlError = GL.GetError();
+					GL.Flush();
 
 					if (GlError != ErrorCode.NoError)
 					{
-						//Console.Error.WriteLine("TexImage2D: {0} : TexId:{1} : {2} : {3}x{4}", GlError, TextureId, new IntPtr(Pixels), TextureWidth, TextureHeight);
+						Console.Error.WriteLine("########## ERROR: TexImage2D: {0} : TexId:{1} : {2} : {3}x{4}", GlError, TextureId, new IntPtr(Pixels), TextureWidth, TextureHeight);
 						TextureId = 0;
 						Bind();
 						return false;
