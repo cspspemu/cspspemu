@@ -34,7 +34,7 @@
 		<text id="DebugDumpGpuFrameMenu">
 			<translation lang="en">Dump &amp;Gpu Frame</translation>
 			<translation lang="es">Volcar frame de &amp;Gpu</translation>
-			<translation lang="it">Scarica &amp;Frame della Gpu</translation>
+			<translation lang="it">Scarica Frame della &amp;Gpu</translation>
 			<translation lang="pt">Descarregar frame de &amp;Gpu</translation>
 		</text>
 		<text id="FileExitMenu">
@@ -58,11 +58,13 @@
 		<text id="FileSetIsoFolderMenu">
 			<translation lang="en">Set &amp;Iso Folder...</translation>
 			<translation lang="es">Establecer Carpeta de &amp;Isos...</translation>
+			<translation lang="it">Seleziona la cartella &amp;Iso...</translation>
 			<translation lang="pt">Selecionar Pasta das &amp;Isos...</translation>
 		</text>
 		<text id="FileOpenRecentMenu">
 			<translation lang="en">Open &amp;Recent</translation>
 			<translation lang="es">Abrir &amp;Recientes</translation>
+			<translation lang="it">Apri &amp;Recenti</translation>
 			<translation lang="pt">Abrir &amp;Recentes...</translation>
 		</text>
 		<text id="HelpWebsiteMenu">
@@ -128,6 +130,7 @@
 		<text id="UtilsConfigureControllerMenu">
 			<translation lang="en">Configure &amp;Controller...</translation>
 			<translation lang="es">Configurar &amp;Controles...</translation>
+			<translation lang="it">Configura &amp;Controller...</translation>
 			<translation lang="pt">Configurar os &amp;Controles...</translation>
 		</text>
 		<text id="UtilsDisplay1xMenu">
