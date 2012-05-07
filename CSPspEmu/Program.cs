@@ -23,7 +23,7 @@ using CSharpUtils.Getopt;
 using Codegen;
 using CSPspEmu.Gui.Winforms;
 using System.Security.Permissions;
-using CSPspEmu.Core.Audio.Impl.Alsa;
+using Mono.Simd;
 
 namespace CSPspEmu
 {
@@ -65,6 +65,22 @@ namespace CSPspEmu
 			{
 				for (int n = 0; n < 32; n++) PointerUtils.MemsetSlow(Test, 0x7F, Test.Length);
 			}));
+#endif
+#if false
+			Console.WriteLine("SIMD Test: {0}", Logger.Measure(() =>
+			{
+				for (int n = 0; n < 2000000; n++)
+				{
+					var Test = default(Vector4f);
+					Test += new Vector4f(1, 1, 1, 1);
+					Test += new Vector4f(1, 1, 1, 1);
+					Test += new Vector4f(1, 1, 1, 1);
+					Test += new Vector4f(1, 1, 1, 1);
+					Test += new Vector4f(1, 1, 1, 1);
+					Test += new Vector4f(1, 1, 1, 1);
+				}
+			}));
+			//SimdRuntime.IsMethodAccelerated(typeof(Vector4f), "op_Add");
 #endif
 
 			// Add the event handler for handling UI thread exceptions to the event.
@@ -120,7 +136,7 @@ namespace CSPspEmu
 				}
 			};
 
-			Logger.Info("Running ... plat:{0} ... int*:{1}", Environment.Is64BitProcess ? "x64" : "x86", sizeof(int*));
+			Logger.Info("Running ... plat:{0} ... int*:{1} ... simd:{2}", Environment.Is64BitProcess ? "x64" : "x86", sizeof(int*), SimdRuntime.AccelMode);
 #if false
 			Console.WriteLine(CSPspEmu.Resources.Translations.GetString("extra", "UnknownGame"));
 			Console.ReadKey(); Environment.Exit(0);

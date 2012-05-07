@@ -7,6 +7,7 @@ PUSHD %~dp0
 	SET BASE_FOLDER=%~dp0\CSPspEmu\bin\Release
 	SET FILES=
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.exe"
+	SET FILES=%FILES% "%BASE_FOLDER%\Mono.SIMD.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSharpUtils.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSharpUtils.Drawing.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Utils.dll"

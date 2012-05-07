@@ -218,6 +218,24 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public void vf2h() { throw (new NotImplementedException("")); }
 		public void vh2f() { throw (new NotImplementedException("")); }
-		public void vi2us() { throw (new NotImplementedException("")); }
+
+		static public int _vi2us(int x, int y)
+		{
+			return (
+				((x < 0) ? 0 : ((x >> 15) << 0)) |
+				((y < 0) ? 0 : ((y >> 15) << 16))
+			);
+		}
+
+		public void vi2us()
+		{
+			var VectorSize = VectorSizeOneTwo;
+			VectorOperationSaveVd(VectorSize / 2, (Index) =>
+			{
+				Load_VS(Index * 2 + 0, AsInteger: true);
+				Load_VS(Index * 2 + 1, AsInteger: true);
+				MipsMethodEmiter.CallMethod((Func<int, int, int>)(CpuEmiter._vi2us));
+			}, AsInteger: true);
+		}
 	}
 }

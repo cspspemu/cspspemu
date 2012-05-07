@@ -877,8 +877,8 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public int sceAtracGetBufferInfoForResetting(int AtracId, uint uiSample, void* BufferInfoAddr)
 		{
-			throw (new NotImplementedException());
-			//return 0;
+			//throw (new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
