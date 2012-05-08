@@ -10,7 +10,7 @@ $rootDir = realpath(dirname(__DIR__));
 $gitrev = @explode("\n", `git rev-parse HEAD {$rootDir}`); $gitrev = trim($gitrev[0]);
 file_put_contents_if_newer("{$rootDir}/git_revision.txt", $gitrev);
 
-$rev_count = count(explode("\n", `git rev-list --all`));
+$rev_count = count(explode("\n", trim(`git rev-list --all`))) + 0;
 
 if (@$argv[1] == 'Release') {
 	$content = date('Ymd');

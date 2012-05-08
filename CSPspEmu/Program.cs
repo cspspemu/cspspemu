@@ -247,10 +247,10 @@ namespace CSPspEmu
 				{
 					try
 					{
-						Registry.ClassesRoot.CreateSubKey(".elf").SetValue(null, "cspspemu.executable");
 						Registry.ClassesRoot.CreateSubKey(".pbp").SetValue(null, "cspspemu.executable");
-						Registry.ClassesRoot.CreateSubKey(".cso").SetValue(null, "cspspemu.executable");
+						Registry.ClassesRoot.CreateSubKey(".elf").SetValue(null, "cspspemu.executable");
 						Registry.ClassesRoot.CreateSubKey(".prx").SetValue(null, "cspspemu.executable");
+						Registry.ClassesRoot.CreateSubKey(".cso").SetValue(null, "cspspemu.executable");
 						Registry.ClassesRoot.CreateSubKey(".dax").SetValue(null, "cspspemu.executable");
 
 						var Reg = Registry.ClassesRoot.CreateSubKey("cspspemu.executable");

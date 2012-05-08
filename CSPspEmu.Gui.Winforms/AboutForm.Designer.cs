@@ -39,14 +39,19 @@
 			this.GpuPluginInfoLabel = new System.Windows.Forms.Label();
 			this.AudioPluginInfoLabel = new System.Windows.Forms.Label();
 			this.versionLabel = new System.Windows.Forms.Label();
-			this.TwitterPictureBox = new System.Windows.Forms.PictureBox();
-			this.FacebookPictureBox = new System.Windows.Forms.PictureBox();
-			this.pictureBox2 = new System.Windows.Forms.PictureBox();
-			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.GitRevisionLabelLabel = new System.Windows.Forms.Label();
 			this.GitRevisionValueLinkLabel = new System.Windows.Forms.LinkLabel();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label8 = new System.Windows.Forms.Label();
+			this.label9 = new System.Windows.Forms.Label();
+			this.label10 = new System.Windows.Forms.Label();
+			this.label11 = new System.Windows.Forms.Label();
+			this.label12 = new System.Windows.Forms.Label();
+			this.label13 = new System.Windows.Forms.Label();
+			this.TwitterPictureBox = new System.Windows.Forms.PictureBox();
+			this.FacebookPictureBox = new System.Windows.Forms.PictureBox();
+			this.pictureBox2 = new System.Windows.Forms.PictureBox();
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			((System.ComponentModel.ISupportInitialize)(this.TwitterPictureBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.FacebookPictureBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -56,9 +61,9 @@
 			// button1
 			// 
 			this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.button1.Location = new System.Drawing.Point(525, 320);
+			this.button1.Location = new System.Drawing.Point(534, 360);
 			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(90, 26);
+			this.button1.Size = new System.Drawing.Size(84, 35);
 			this.button1.TabIndex = 0;
 			this.button1.Text = "&Accept";
 			this.button1.UseVisualStyleBackColor = true;
@@ -127,7 +132,7 @@
 			// 
 			this.label7.AutoSize = true;
 			this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label7.Location = new System.Drawing.Point(259, 226);
+			this.label7.Location = new System.Drawing.Point(259, 282);
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(63, 16);
 			this.label7.TabIndex = 9;
@@ -136,7 +141,7 @@
 			// GpuPluginInfoLabel
 			// 
 			this.GpuPluginInfoLabel.AutoSize = true;
-			this.GpuPluginInfoLabel.Location = new System.Drawing.Point(259, 253);
+			this.GpuPluginInfoLabel.Location = new System.Drawing.Point(259, 309);
 			this.GpuPluginInfoLabel.Name = "GpuPluginInfoLabel";
 			this.GpuPluginInfoLabel.Size = new System.Drawing.Size(74, 13);
 			this.GpuPluginInfoLabel.TabIndex = 10;
@@ -145,7 +150,7 @@
 			// AudioPluginInfoLabel
 			// 
 			this.AudioPluginInfoLabel.AutoSize = true;
-			this.AudioPluginInfoLabel.Location = new System.Drawing.Point(259, 277);
+			this.AudioPluginInfoLabel.Location = new System.Drawing.Point(259, 333);
 			this.AudioPluginInfoLabel.Name = "AudioPluginInfoLabel";
 			this.AudioPluginInfoLabel.Size = new System.Drawing.Size(81, 13);
 			this.AudioPluginInfoLabel.TabIndex = 11;
@@ -160,49 +165,6 @@
 			this.versionLabel.Size = new System.Drawing.Size(53, 13);
 			this.versionLabel.TabIndex = 12;
 			this.versionLabel.Text = "Version:";
-			// 
-			// TwitterPictureBox
-			// 
-			this.TwitterPictureBox.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.TwitterPictureBox.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.twitter_icon_png8;
-			this.TwitterPictureBox.Location = new System.Drawing.Point(12, 296);
-			this.TwitterPictureBox.Name = "TwitterPictureBox";
-			this.TwitterPictureBox.Size = new System.Drawing.Size(51, 50);
-			this.TwitterPictureBox.TabIndex = 14;
-			this.TwitterPictureBox.TabStop = false;
-			this.TwitterPictureBox.Click += new System.EventHandler(this.TwitterPictureBox_Click);
-			// 
-			// FacebookPictureBox
-			// 
-			this.FacebookPictureBox.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.FacebookPictureBox.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.facebook_icon_png8;
-			this.FacebookPictureBox.Location = new System.Drawing.Point(69, 296);
-			this.FacebookPictureBox.Name = "FacebookPictureBox";
-			this.FacebookPictureBox.Size = new System.Drawing.Size(51, 50);
-			this.FacebookPictureBox.TabIndex = 13;
-			this.FacebookPictureBox.TabStop = false;
-			this.FacebookPictureBox.Click += new System.EventHandler(this.FacebookPictureBox_Click);
-			// 
-			// pictureBox2
-			// 
-			this.pictureBox2.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.psp_3000_small;
-			this.pictureBox2.Location = new System.Drawing.Point(12, 64);
-			this.pictureBox2.Name = "pictureBox2";
-			this.pictureBox2.Size = new System.Drawing.Size(220, 202);
-			this.pictureBox2.TabIndex = 3;
-			this.pictureBox2.TabStop = false;
-			// 
-			// pictureBox1
-			// 
-			this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.pictureBox1.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.btn_donate_LG;
-			this.pictureBox1.Location = new System.Drawing.Point(427, 320);
-			this.pictureBox1.Name = "pictureBox1";
-			this.pictureBox1.Size = new System.Drawing.Size(92, 26);
-			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-			this.pictureBox1.TabIndex = 1;
-			this.pictureBox1.TabStop = false;
-			this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
 			// 
 			// GitRevisionLabelLabel
 			// 
@@ -244,12 +206,107 @@
 			this.label8.TabIndex = 18;
 			this.label8.Text = "MaXiMu";
 			// 
+			// label9
+			// 
+			this.label9.AutoSize = true;
+			this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label9.Location = new System.Drawing.Point(259, 195);
+			this.label9.Name = "label9";
+			this.label9.Size = new System.Drawing.Size(79, 13);
+			this.label9.TabIndex = 19;
+			this.label9.Text = "Programmers";
+			// 
+			// label10
+			// 
+			this.label10.AutoSize = true;
+			this.label10.Location = new System.Drawing.Point(259, 220);
+			this.label10.Name = "label10";
+			this.label10.Size = new System.Drawing.Size(51, 13);
+			this.label10.TabIndex = 20;
+			this.label10.Text = "archanox";
+			// 
+			// label11
+			// 
+			this.label11.AutoSize = true;
+			this.label11.Location = new System.Drawing.Point(402, 220);
+			this.label11.Name = "label11";
+			this.label11.Size = new System.Drawing.Size(58, 13);
+			this.label11.TabIndex = 22;
+			this.label11.Text = "PT: e-COS";
+			// 
+			// label12
+			// 
+			this.label12.AutoSize = true;
+			this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label12.Location = new System.Drawing.Point(402, 195);
+			this.label12.Name = "label12";
+			this.label12.Size = new System.Drawing.Size(70, 13);
+			this.label12.TabIndex = 21;
+			this.label12.Text = "Translators";
+			// 
+			// label13
+			// 
+			this.label13.AutoSize = true;
+			this.label13.Location = new System.Drawing.Point(402, 242);
+			this.label13.Name = "label13";
+			this.label13.Size = new System.Drawing.Size(55, 13);
+			this.label13.TabIndex = 23;
+			this.label13.Text = "IT: gambe";
+			// 
+			// TwitterPictureBox
+			// 
+			this.TwitterPictureBox.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.TwitterPictureBox.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.twitter_icon_png8;
+			this.TwitterPictureBox.Location = new System.Drawing.Point(12, 336);
+			this.TwitterPictureBox.Name = "TwitterPictureBox";
+			this.TwitterPictureBox.Size = new System.Drawing.Size(51, 50);
+			this.TwitterPictureBox.TabIndex = 14;
+			this.TwitterPictureBox.TabStop = false;
+			this.TwitterPictureBox.Click += new System.EventHandler(this.TwitterPictureBox_Click);
+			// 
+			// FacebookPictureBox
+			// 
+			this.FacebookPictureBox.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.FacebookPictureBox.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.facebook_icon_png8;
+			this.FacebookPictureBox.Location = new System.Drawing.Point(69, 336);
+			this.FacebookPictureBox.Name = "FacebookPictureBox";
+			this.FacebookPictureBox.Size = new System.Drawing.Size(51, 50);
+			this.FacebookPictureBox.TabIndex = 13;
+			this.FacebookPictureBox.TabStop = false;
+			this.FacebookPictureBox.Click += new System.EventHandler(this.FacebookPictureBox_Click);
+			// 
+			// pictureBox2
+			// 
+			this.pictureBox2.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.psp_3000_small;
+			this.pictureBox2.Location = new System.Drawing.Point(12, 64);
+			this.pictureBox2.Name = "pictureBox2";
+			this.pictureBox2.Size = new System.Drawing.Size(220, 202);
+			this.pictureBox2.TabIndex = 3;
+			this.pictureBox2.TabStop = false;
+			// 
+			// pictureBox1
+			// 
+			this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.pictureBox1.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.paypal_donate_button;
+			this.pictureBox1.Location = new System.Drawing.Point(426, 360);
+			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.Size = new System.Drawing.Size(83, 35);
+			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+			this.pictureBox1.TabIndex = 1;
+			this.pictureBox1.TabStop = false;
+			this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+			// 
 			// AboutForm
 			// 
 			this.AcceptButton = this.button1;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(630, 359);
+			this.ClientSize = new System.Drawing.Size(630, 407);
+			this.Controls.Add(this.label13);
+			this.Controls.Add(this.label11);
+			this.Controls.Add(this.label12);
+			this.Controls.Add(this.label10);
+			this.Controls.Add(this.label9);
 			this.Controls.Add(this.label8);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.GitRevisionValueLinkLabel);
@@ -308,5 +365,10 @@
 		private System.Windows.Forms.LinkLabel GitRevisionValueLinkLabel;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Label label9;
+		private System.Windows.Forms.Label label10;
+		private System.Windows.Forms.Label label11;
+		private System.Windows.Forms.Label label12;
+		private System.Windows.Forms.Label label13;
 	}
 }

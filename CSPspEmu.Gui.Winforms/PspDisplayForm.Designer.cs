@@ -31,55 +31,56 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PspDisplayForm));
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.FileMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.FileOpenMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.FileSetIsoFolderMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
 			this.FileOpenRecentMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem14 = new System.Windows.Forms.ToolStripSeparator();
 			this.FileExitMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.UtilsMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.UtilsDisplayMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.UtilsDisplay1xMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.UtilsDisplay2xMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.UtilsDisplay3xMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.UtilsDisplay4xMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-			this.UtilsLanguageMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.UtilsConfigureControllerMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripSeparator();
-			this.UtilsTakeScreenshotMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsFrameLimitingMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsUseFastmemMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.UtilsEnableMpegMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripSeparator();
-			this.UtilsInstallWavDestMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem13 = new System.Windows.Forms.ToolStripSeparator();
-			this.UtilsAssociateExtensionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.RunMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.RunRunResumeMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.RunPauseMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.DebugMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.DebugTraceSyscallsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.DebugTraceUnimplementedSyscallsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.DebugTraceUnimplementedGpuMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripSeparator();
-			this.UtilsDumpMainMemoryMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.DebugDumpGpuFrameMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem12 = new System.Windows.Forms.ToolStripSeparator();
 			this.DebugShowThreadInfoMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.HelpMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.HelpWebsiteMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
+			this.FileOpenMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsDisplayMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsDisplay1xMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsDisplay2xMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsDisplay3xMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsDisplay4xMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsLanguageMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsConfigureControllerMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsTakeScreenshotMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsInstallWavDestMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsAssociateExtensionsMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.RunRunResumeMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.RunPauseMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.DebugTraceSyscallsMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsDumpMainMemoryMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.HelpWebsiteMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.HelpKawagamesMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.HelpEmureleasesMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.HelpBlogMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.HelpGithubMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripSeparator();
 			this.HelpCheckForUpdatesMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
 			this.HelpReportAnIssueMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
 			this.HelpAboutMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
@@ -111,15 +112,6 @@
 			this.FileMenu.Name = "FileMenu";
 			this.FileMenu.Size = new System.Drawing.Size(37, 20);
 			this.FileMenu.Text = "&File";
-			// 
-			// FileOpenMenu
-			// 
-			this.FileOpenMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.folder;
-			this.FileOpenMenu.Name = "FileOpenMenu";
-			this.FileOpenMenu.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-			this.FileOpenMenu.Size = new System.Drawing.Size(155, 22);
-			this.FileOpenMenu.Text = "&Open...";
-			this.FileOpenMenu.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
 			// FileSetIsoFolderMenu
 			// 
@@ -175,6 +167,177 @@
 			this.UtilsMenu.Size = new System.Drawing.Size(42, 20);
 			this.UtilsMenu.Text = "&Utils";
 			// 
+			// toolStripMenuItem2
+			// 
+			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(303, 6);
+			// 
+			// toolStripMenuItem9
+			// 
+			this.toolStripMenuItem9.Name = "toolStripMenuItem9";
+			this.toolStripMenuItem9.Size = new System.Drawing.Size(303, 6);
+			// 
+			// toolStripMenuItem1
+			// 
+			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(303, 6);
+			// 
+			// UtilsFrameLimitingMenu
+			// 
+			this.UtilsFrameLimitingMenu.Checked = true;
+			this.UtilsFrameLimitingMenu.CheckOnClick = true;
+			this.UtilsFrameLimitingMenu.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.UtilsFrameLimitingMenu.Name = "UtilsFrameLimitingMenu";
+			this.UtilsFrameLimitingMenu.ShortcutKeys = System.Windows.Forms.Keys.F3;
+			this.UtilsFrameLimitingMenu.Size = new System.Drawing.Size(306, 22);
+			this.UtilsFrameLimitingMenu.Text = "&Frame Limiting";
+			this.UtilsFrameLimitingMenu.Click += new System.EventHandler(this.frameSkippingToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem7
+			// 
+			this.toolStripMenuItem7.Name = "toolStripMenuItem7";
+			this.toolStripMenuItem7.Size = new System.Drawing.Size(303, 6);
+			// 
+			// UtilsUseFastmemMenu
+			// 
+			this.UtilsUseFastmemMenu.Checked = true;
+			this.UtilsUseFastmemMenu.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.UtilsUseFastmemMenu.Name = "UtilsUseFastmemMenu";
+			this.UtilsUseFastmemMenu.Size = new System.Drawing.Size(306, 22);
+			this.UtilsUseFastmemMenu.Text = "Use &Fast and unsafe memory";
+			this.UtilsUseFastmemMenu.Click += new System.EventHandler(this.useFastAndUnsafeMemoryToolStripMenuItem_Click);
+			// 
+			// UtilsEnableMpegMenu
+			// 
+			this.UtilsEnableMpegMenu.Name = "UtilsEnableMpegMenu";
+			this.UtilsEnableMpegMenu.Size = new System.Drawing.Size(306, 22);
+			this.UtilsEnableMpegMenu.Text = "Enable &Mpeg processing (unstable yet)";
+			this.UtilsEnableMpegMenu.Click += new System.EventHandler(this.enableMpegProcessinginestableYetToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem10
+			// 
+			this.toolStripMenuItem10.Name = "toolStripMenuItem10";
+			this.toolStripMenuItem10.Size = new System.Drawing.Size(303, 6);
+			// 
+			// toolStripMenuItem13
+			// 
+			this.toolStripMenuItem13.Name = "toolStripMenuItem13";
+			this.toolStripMenuItem13.Size = new System.Drawing.Size(303, 6);
+			// 
+			// RunMenu
+			// 
+			this.RunMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.RunRunResumeMenu,
+            this.RunPauseMenu});
+			this.RunMenu.Name = "RunMenu";
+			this.RunMenu.Size = new System.Drawing.Size(40, 20);
+			this.RunMenu.Text = "&Run";
+			// 
+			// DebugMenu
+			// 
+			this.DebugMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.DebugTraceSyscallsMenu,
+            this.DebugTraceUnimplementedSyscallsMenu,
+            this.DebugTraceUnimplementedGpuMenu,
+            this.toolStripMenuItem11,
+            this.UtilsDumpMainMemoryMenu,
+            this.DebugDumpGpuFrameMenu,
+            this.toolStripMenuItem12,
+            this.DebugShowThreadInfoMenu});
+			this.DebugMenu.Name = "DebugMenu";
+			this.DebugMenu.Size = new System.Drawing.Size(54, 20);
+			this.DebugMenu.Text = "&Debug";
+			this.DebugMenu.Click += new System.EventHandler(this.debugToolStripMenuItem_Click);
+			// 
+			// DebugTraceUnimplementedSyscallsMenu
+			// 
+			this.DebugTraceUnimplementedSyscallsMenu.Name = "DebugTraceUnimplementedSyscallsMenu";
+			this.DebugTraceUnimplementedSyscallsMenu.Size = new System.Drawing.Size(235, 22);
+			this.DebugTraceUnimplementedSyscallsMenu.Text = "Trace Unimplemented Syscalls";
+			this.DebugTraceUnimplementedSyscallsMenu.Click += new System.EventHandler(this.traceUnimplementedSyscallsToolStripMenuItem_Click);
+			// 
+			// DebugTraceUnimplementedGpuMenu
+			// 
+			this.DebugTraceUnimplementedGpuMenu.Name = "DebugTraceUnimplementedGpuMenu";
+			this.DebugTraceUnimplementedGpuMenu.Size = new System.Drawing.Size(235, 22);
+			this.DebugTraceUnimplementedGpuMenu.Text = "Trace Unimplemented Gpu";
+			this.DebugTraceUnimplementedGpuMenu.Click += new System.EventHandler(this.traceUnimplementedGpuToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem11
+			// 
+			this.toolStripMenuItem11.Name = "toolStripMenuItem11";
+			this.toolStripMenuItem11.Size = new System.Drawing.Size(232, 6);
+			// 
+			// DebugDumpGpuFrameMenu
+			// 
+			this.DebugDumpGpuFrameMenu.Name = "DebugDumpGpuFrameMenu";
+			this.DebugDumpGpuFrameMenu.ShortcutKeys = System.Windows.Forms.Keys.F9;
+			this.DebugDumpGpuFrameMenu.Size = new System.Drawing.Size(235, 22);
+			this.DebugDumpGpuFrameMenu.Text = "Dump &Gpu Frame";
+			this.DebugDumpGpuFrameMenu.Click += new System.EventHandler(this.DebugDumpGpuFrameMenu_Click);
+			// 
+			// toolStripMenuItem12
+			// 
+			this.toolStripMenuItem12.Name = "toolStripMenuItem12";
+			this.toolStripMenuItem12.Size = new System.Drawing.Size(232, 6);
+			// 
+			// DebugShowThreadInfoMenu
+			// 
+			this.DebugShowThreadInfoMenu.Name = "DebugShowThreadInfoMenu";
+			this.DebugShowThreadInfoMenu.ShortcutKeyDisplayString = "";
+			this.DebugShowThreadInfoMenu.ShortcutKeys = System.Windows.Forms.Keys.F2;
+			this.DebugShowThreadInfoMenu.Size = new System.Drawing.Size(235, 22);
+			this.DebugShowThreadInfoMenu.Text = "Show &Thread Info";
+			this.DebugShowThreadInfoMenu.Click += new System.EventHandler(this.showThreadInfoToolStripMenuItem_Click);
+			// 
+			// HelpMenu
+			// 
+			this.HelpMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.HelpWebsiteMenu,
+            this.toolStripMenuItem5,
+            this.HelpKawagamesMenu,
+            this.HelpEmureleasesMenu,
+            this.HelpBlogMenu,
+            this.HelpGithubMenu,
+            this.toolStripMenuItem6,
+            this.HelpCheckForUpdatesMenu,
+            this.toolStripMenuItem4,
+            this.HelpReportAnIssueMenu,
+            this.toolStripMenuItem8,
+            this.HelpAboutMenu});
+			this.HelpMenu.Name = "HelpMenu";
+			this.HelpMenu.Size = new System.Drawing.Size(44, 20);
+			this.HelpMenu.Text = "&Help";
+			// 
+			// toolStripMenuItem5
+			// 
+			this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+			this.toolStripMenuItem5.Size = new System.Drawing.Size(232, 6);
+			// 
+			// toolStripMenuItem6
+			// 
+			this.toolStripMenuItem6.Name = "toolStripMenuItem6";
+			this.toolStripMenuItem6.Size = new System.Drawing.Size(232, 6);
+			// 
+			// toolStripMenuItem4
+			// 
+			this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+			this.toolStripMenuItem4.Size = new System.Drawing.Size(232, 6);
+			// 
+			// toolStripMenuItem8
+			// 
+			this.toolStripMenuItem8.Name = "toolStripMenuItem8";
+			this.toolStripMenuItem8.Size = new System.Drawing.Size(232, 6);
+			// 
+			// FileOpenMenu
+			// 
+			this.FileOpenMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.folder;
+			this.FileOpenMenu.Name = "FileOpenMenu";
+			this.FileOpenMenu.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+			this.FileOpenMenu.Size = new System.Drawing.Size(155, 22);
+			this.FileOpenMenu.Text = "&Open...";
+			this.FileOpenMenu.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+			// 
 			// UtilsDisplayMenu
 			// 
 			this.UtilsDisplayMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -219,11 +382,6 @@
 			this.UtilsDisplay4xMenu.Text = "&4x";
 			this.UtilsDisplay4xMenu.Click += new System.EventHandler(this.xToolStripMenuItem4_Click);
 			// 
-			// toolStripMenuItem2
-			// 
-			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(303, 6);
-			// 
 			// UtilsLanguageMenu
 			// 
 			this.UtilsLanguageMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.world;
@@ -239,11 +397,6 @@
 			this.UtilsConfigureControllerMenu.Text = "Configure &Controller...";
 			this.UtilsConfigureControllerMenu.Click += new System.EventHandler(this.configureControllerToolStripMenuItem_Click);
 			// 
-			// toolStripMenuItem9
-			// 
-			this.toolStripMenuItem9.Name = "toolStripMenuItem9";
-			this.toolStripMenuItem9.Size = new System.Drawing.Size(303, 6);
-			// 
 			// UtilsTakeScreenshotMenu
 			// 
 			this.UtilsTakeScreenshotMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.camera;
@@ -253,48 +406,6 @@
 			this.UtilsTakeScreenshotMenu.Text = "Take &Screenshot...";
 			this.UtilsTakeScreenshotMenu.Click += new System.EventHandler(this.takeScreenshotToolStripMenuItem_Click);
 			// 
-			// toolStripMenuItem1
-			// 
-			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(303, 6);
-			// 
-			// UtilsFrameLimitingMenu
-			// 
-			this.UtilsFrameLimitingMenu.Checked = true;
-			this.UtilsFrameLimitingMenu.CheckOnClick = true;
-			this.UtilsFrameLimitingMenu.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.UtilsFrameLimitingMenu.Name = "UtilsFrameLimitingMenu";
-			this.UtilsFrameLimitingMenu.ShortcutKeys = System.Windows.Forms.Keys.F3;
-			this.UtilsFrameLimitingMenu.Size = new System.Drawing.Size(306, 22);
-			this.UtilsFrameLimitingMenu.Text = "&Frame Limiting";
-			this.UtilsFrameLimitingMenu.Click += new System.EventHandler(this.frameSkippingToolStripMenuItem_Click);
-			// 
-			// toolStripMenuItem7
-			// 
-			this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-			this.toolStripMenuItem7.Size = new System.Drawing.Size(303, 6);
-			// 
-			// UtilsUseFastmemMenu
-			// 
-			this.UtilsUseFastmemMenu.Checked = true;
-			this.UtilsUseFastmemMenu.CheckState = System.Windows.Forms.CheckState.Checked;
-			this.UtilsUseFastmemMenu.Name = "UtilsUseFastmemMenu";
-			this.UtilsUseFastmemMenu.Size = new System.Drawing.Size(306, 22);
-			this.UtilsUseFastmemMenu.Text = "Use &Fast and unsafe memory";
-			this.UtilsUseFastmemMenu.Click += new System.EventHandler(this.useFastAndUnsafeMemoryToolStripMenuItem_Click);
-			// 
-			// UtilsEnableMpegMenu
-			// 
-			this.UtilsEnableMpegMenu.Name = "UtilsEnableMpegMenu";
-			this.UtilsEnableMpegMenu.Size = new System.Drawing.Size(306, 22);
-			this.UtilsEnableMpegMenu.Text = "Enable &Mpeg processing (unstable yet)";
-			this.UtilsEnableMpegMenu.Click += new System.EventHandler(this.enableMpegProcessinginestableYetToolStripMenuItem_Click);
-			// 
-			// toolStripMenuItem10
-			// 
-			this.toolStripMenuItem10.Name = "toolStripMenuItem10";
-			this.toolStripMenuItem10.Size = new System.Drawing.Size(303, 6);
-			// 
 			// UtilsInstallWavDestMenu
 			// 
 			this.UtilsInstallWavDestMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.uac_icon;
@@ -303,11 +414,6 @@
 			this.UtilsInstallWavDestMenu.Text = "Install &WavDest DirectShow Filter";
 			this.UtilsInstallWavDestMenu.Click += new System.EventHandler(this.installWavDestDirectShowFilterToolStripMenuItem_Click);
 			// 
-			// toolStripMenuItem13
-			// 
-			this.toolStripMenuItem13.Name = "toolStripMenuItem13";
-			this.toolStripMenuItem13.Size = new System.Drawing.Size(303, 6);
-			// 
 			// UtilsAssociateExtensionsMenu
 			// 
 			this.UtilsAssociateExtensionsMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.link;
@@ -315,15 +421,6 @@
 			this.UtilsAssociateExtensionsMenu.Size = new System.Drawing.Size(306, 22);
 			this.UtilsAssociateExtensionsMenu.Text = "&Associate extensions (.PBP, .CSO, .PRX, .ELF)";
 			this.UtilsAssociateExtensionsMenu.Click += new System.EventHandler(this.associateWithPBPAndCSOToolStripMenuItem_Click);
-			// 
-			// RunMenu
-			// 
-			this.RunMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.RunRunResumeMenu,
-            this.RunPauseMenu});
-			this.RunMenu.Name = "RunMenu";
-			this.RunMenu.Size = new System.Drawing.Size(40, 20);
-			this.RunMenu.Text = "&Run";
 			// 
 			// RunRunResumeMenu
 			// 
@@ -343,22 +440,6 @@
 			this.RunPauseMenu.Text = "&Pause";
 			this.RunPauseMenu.Click += new System.EventHandler(this.pauseToolStripMenuItem_Click);
 			// 
-			// DebugMenu
-			// 
-			this.DebugMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.DebugTraceSyscallsMenu,
-            this.DebugTraceUnimplementedSyscallsMenu,
-            this.DebugTraceUnimplementedGpuMenu,
-            this.toolStripMenuItem11,
-            this.UtilsDumpMainMemoryMenu,
-            this.DebugDumpGpuFrameMenu,
-            this.toolStripMenuItem12,
-            this.DebugShowThreadInfoMenu});
-			this.DebugMenu.Name = "DebugMenu";
-			this.DebugMenu.Size = new System.Drawing.Size(54, 20);
-			this.DebugMenu.Text = "&Debug";
-			this.DebugMenu.Click += new System.EventHandler(this.debugToolStripMenuItem_Click);
-			// 
 			// DebugTraceSyscallsMenu
 			// 
 			this.DebugTraceSyscallsMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.application_view_xp_terminal;
@@ -367,71 +448,12 @@
 			this.DebugTraceSyscallsMenu.Text = "Trace &Syscalls";
 			this.DebugTraceSyscallsMenu.Click += new System.EventHandler(this.traceSyscallsToolStripMenuItem_Click);
 			// 
-			// DebugTraceUnimplementedSyscallsMenu
-			// 
-			this.DebugTraceUnimplementedSyscallsMenu.Name = "DebugTraceUnimplementedSyscallsMenu";
-			this.DebugTraceUnimplementedSyscallsMenu.Size = new System.Drawing.Size(235, 22);
-			this.DebugTraceUnimplementedSyscallsMenu.Text = "Trace Unimplemented Syscalls";
-			this.DebugTraceUnimplementedSyscallsMenu.Click += new System.EventHandler(this.traceUnimplementedSyscallsToolStripMenuItem_Click);
-			// 
-			// DebugTraceUnimplementedGpuMenu
-			// 
-			this.DebugTraceUnimplementedGpuMenu.Name = "DebugTraceUnimplementedGpuMenu";
-			this.DebugTraceUnimplementedGpuMenu.Size = new System.Drawing.Size(235, 22);
-			this.DebugTraceUnimplementedGpuMenu.Text = "Trace Unimplemented Gpu";
-			this.DebugTraceUnimplementedGpuMenu.Click += new System.EventHandler(this.traceUnimplementedGpuToolStripMenuItem_Click);
-			// 
-			// toolStripMenuItem11
-			// 
-			this.toolStripMenuItem11.Name = "toolStripMenuItem11";
-			this.toolStripMenuItem11.Size = new System.Drawing.Size(232, 6);
-			// 
 			// UtilsDumpMainMemoryMenu
 			// 
 			this.UtilsDumpMainMemoryMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.safe;
 			this.UtilsDumpMainMemoryMenu.Name = "UtilsDumpMainMemoryMenu";
 			this.UtilsDumpMainMemoryMenu.Size = new System.Drawing.Size(235, 22);
 			this.UtilsDumpMainMemoryMenu.Text = "&Dump Main Memory...";
-			// 
-			// DebugDumpGpuFrameMenu
-			// 
-			this.DebugDumpGpuFrameMenu.Name = "DebugDumpGpuFrameMenu";
-			this.DebugDumpGpuFrameMenu.ShortcutKeys = System.Windows.Forms.Keys.F9;
-			this.DebugDumpGpuFrameMenu.Size = new System.Drawing.Size(235, 22);
-			this.DebugDumpGpuFrameMenu.Text = "Dump &Gpu Frame";
-			this.DebugDumpGpuFrameMenu.Click += new System.EventHandler(this.DebugDumpGpuFrameMenu_Click);
-			// 
-			// toolStripMenuItem12
-			// 
-			this.toolStripMenuItem12.Name = "toolStripMenuItem12";
-			this.toolStripMenuItem12.Size = new System.Drawing.Size(232, 6);
-			// 
-			// DebugShowThreadInfoMenu
-			// 
-			this.DebugShowThreadInfoMenu.Name = "DebugShowThreadInfoMenu";
-			this.DebugShowThreadInfoMenu.ShortcutKeyDisplayString = "";
-			this.DebugShowThreadInfoMenu.ShortcutKeys = System.Windows.Forms.Keys.F2;
-			this.DebugShowThreadInfoMenu.Size = new System.Drawing.Size(235, 22);
-			this.DebugShowThreadInfoMenu.Text = "Show &Thread Info";
-			this.DebugShowThreadInfoMenu.Click += new System.EventHandler(this.showThreadInfoToolStripMenuItem_Click);
-			// 
-			// HelpMenu
-			// 
-			this.HelpMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.HelpWebsiteMenu,
-            this.toolStripMenuItem5,
-            this.HelpKawagamesMenu,
-            this.HelpBlogMenu,
-            this.HelpGithubMenu,
-            this.toolStripMenuItem6,
-            this.HelpCheckForUpdatesMenu,
-            this.toolStripMenuItem4,
-            this.HelpReportAnIssueMenu,
-            this.toolStripMenuItem8,
-            this.HelpAboutMenu});
-			this.HelpMenu.Name = "HelpMenu";
-			this.HelpMenu.Size = new System.Drawing.Size(44, 20);
-			this.HelpMenu.Text = "&Help";
 			// 
 			// HelpWebsiteMenu
 			// 
@@ -441,11 +463,6 @@
 			this.HelpWebsiteMenu.Text = "&Website";
 			this.HelpWebsiteMenu.Click += new System.EventHandler(this.websiteToolStripMenuItem_Click);
 			// 
-			// toolStripMenuItem5
-			// 
-			this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-			this.toolStripMenuItem5.Size = new System.Drawing.Size(232, 6);
-			// 
 			// HelpKawagamesMenu
 			// 
 			this.HelpKawagamesMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.kawagames;
@@ -453,6 +470,14 @@
 			this.HelpKawagamesMenu.Size = new System.Drawing.Size(235, 22);
 			this.HelpKawagamesMenu.Text = "&kawagames.com";
 			this.HelpKawagamesMenu.Click += new System.EventHandler(this.indieGamesToolStripMenuItem_Click);
+			// 
+			// HelpEmureleasesMenu
+			// 
+			this.HelpEmureleasesMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.favicon;
+			this.HelpEmureleasesMenu.Name = "HelpEmureleasesMenu";
+			this.HelpEmureleasesMenu.Size = new System.Drawing.Size(235, 22);
+			this.HelpEmureleasesMenu.Text = "emu&releases.com";
+			this.HelpEmureleasesMenu.Click += new System.EventHandler(this.emureleasescomToolStripMenuItem_Click);
 			// 
 			// HelpBlogMenu
 			// 
@@ -470,11 +495,6 @@
 			this.HelpGithubMenu.Text = "github.com/soywiz/cspspemu";
 			this.HelpGithubMenu.Click += new System.EventHandler(this.githubcomsoywizcspspemuToolStripMenuItem_Click);
 			// 
-			// toolStripMenuItem6
-			// 
-			this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-			this.toolStripMenuItem6.Size = new System.Drawing.Size(232, 6);
-			// 
 			// HelpCheckForUpdatesMenu
 			// 
 			this.HelpCheckForUpdatesMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.feed;
@@ -483,11 +503,6 @@
 			this.HelpCheckForUpdatesMenu.Text = "&Check for updates...";
 			this.HelpCheckForUpdatesMenu.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
 			// 
-			// toolStripMenuItem4
-			// 
-			this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-			this.toolStripMenuItem4.Size = new System.Drawing.Size(232, 6);
-			// 
 			// HelpReportAnIssueMenu
 			// 
 			this.HelpReportAnIssueMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.bug;
@@ -495,11 +510,6 @@
 			this.HelpReportAnIssueMenu.Size = new System.Drawing.Size(235, 22);
 			this.HelpReportAnIssueMenu.Text = "&Report an issue...";
 			this.HelpReportAnIssueMenu.Click += new System.EventHandler(this.reportAnIssueToolStripMenuItem_Click);
-			// 
-			// toolStripMenuItem8
-			// 
-			this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-			this.toolStripMenuItem8.Size = new System.Drawing.Size(232, 6);
 			// 
 			// HelpAboutMenu
 			// 
@@ -588,5 +598,6 @@
 		private System.Windows.Forms.ToolStripMenuItem FileOpenRecentMenu;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem14;
 		private System.Windows.Forms.ToolStripMenuItem FileSetIsoFolderMenu;
+		private System.Windows.Forms.ToolStripMenuItem HelpEmureleasesMenu;
 	}
 }

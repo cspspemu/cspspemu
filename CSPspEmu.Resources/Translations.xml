@@ -103,6 +103,12 @@
 			<translation lang="it">&amp;kawagames.com</translation>
 			<translation lang="pt">&amp;kawagames.com</translation>
 		</text>
+		<text id="HelpEmureleasesMenu">
+			<translation lang="en">emu&amp;releases.com</translation>
+			<translation lang="es">emu&amp;releases.com</translation>
+			<translation lang="it">emu&amp;releases.com</translation>
+			<translation lang="pt">emu&amp;releases.com</translation>
+		</text>
 		<text id="HelpMenu">
 			<translation lang="en">&amp;Help</translation>
 			<translation lang="es">&amp;Ayuda</translation>
@@ -116,10 +122,10 @@
 			<translation lang="pt">Informar sobre &amp;problemas...</translation>
 		</text>
 		<text id="UtilsAssociateExtensionsMenu">
-			<translation lang="en">Associate Extensions (.PBP, .CSO, .DAX, .ELF)</translation>
-			<translation lang="es">Asociar Extensiones (.PBP, .CSO, .DAX, .ELF)</translation>
-			<translation lang="it">Associa Estensioni (.PBP, .CSO, .DAX, .ELF)</translation>
-			<translation lang="pt">Associar Extensões (.PBP, .CSO, .DAX, .ELF)</translation>
+			<translation lang="en">Associate Extensions (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
+			<translation lang="es">Asociar Extensiones (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
+			<translation lang="it">Associa Estensioni (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
+			<translation lang="pt">Associar Extensões (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
 		</text>
 		<text id="UtilsDisplayMenu">
 			<translation lang="en">&amp;Display</translation>

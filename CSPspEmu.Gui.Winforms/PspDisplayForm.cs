@@ -1111,5 +1111,10 @@ namespace CSPspEmu.Gui.Winforms
 			RefreshGameList();
 			//new FileDialog();
 		}
+
+		private void emureleasescomToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Process.Start(@"http://www.emureleases.com/?rf=csp");
+		}
 	}
 }

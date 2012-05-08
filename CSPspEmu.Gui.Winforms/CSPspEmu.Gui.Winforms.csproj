@@ -216,6 +216,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icons.txt" />
+    <None Include="Resources\favicon.png" />
+    <None Include="Resources\paypal-donate-button.gif" />
     <None Include="Resources\pspicon_16.jpg" />
     <None Include="Resources\psp8-png8.png" />
     <None Include="Resources\uac_icon.png" />

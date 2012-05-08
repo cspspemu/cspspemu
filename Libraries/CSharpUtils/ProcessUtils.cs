@@ -8,7 +8,7 @@ namespace CSharpUtils
 {
 	public class ProcessUtils
 	{
-		static public string ExecuteCommand(string Command, string Arguments)
+		static public string ExecuteCommand(string Command, string Arguments, string WorkingDirectory = ".")
 		{
 			var proc = new Process();
 			proc.EnableRaisingEvents = false;
@@ -16,6 +16,7 @@ namespace CSharpUtils
 			proc.StartInfo.Arguments = Arguments;
 			proc.StartInfo.CreateNoWindow = true;
 			proc.StartInfo.ErrorDialog = false;
+			proc.StartInfo.WorkingDirectory = WorkingDirectory;
 			proc.StartInfo.UseShellExecute = false;
 			proc.StartInfo.RedirectStandardError = true;
 			proc.StartInfo.RedirectStandardInput = true;

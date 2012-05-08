@@ -1,2 +1,2 @@
 <?php
-echo count(explode("\n", `git rev-list --all`));
+echo count(explode("\n", trim(`git rev-list --all`))) + 0;
