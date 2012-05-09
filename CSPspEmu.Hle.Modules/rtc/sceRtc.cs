@@ -247,6 +247,7 @@ namespace CSPspEmu.Hle.Modules.rtc
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xE7C27D1B, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
 		public int sceRtcGetCurrentClockLocalTime(out ScePspDateTime Time)
 		{
 			var CurrentDateTime = PspRtc.CurrentDateTime;
@@ -303,8 +304,6 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <param name="TimeZone">time zone to adjust to (minutes from UTC)</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x4CFA57B0, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		[PspUntested]
 		public int sceRtcGetCurrentClock(out ScePspDateTime DateTime, int TimeZone)
 		{
 			PspRtc.Update();
