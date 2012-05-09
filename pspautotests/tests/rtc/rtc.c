@@ -24,6 +24,11 @@ void checkGetCurrentTick() {
 	printf("%d\n", (tick1 - tick0) >= microseconds);
 }
 
+void checkGetCurrentClock() {
+	printf("Checking sceRtcGetCurrentClock\n");
+	/*sceRtcGetCurrentClock */
+}
+
 void checkDaysInMonth() {
 	printf("Checking sceRtcGetDaysInMonth\n");
 	printf("sceRtcGetDaysInMonth:2010, 4\n");
@@ -40,6 +45,7 @@ int main(int argc, char **argv) {
 	checkGetCurrentTick();
 	checkDaysInMonth();
 	checkDayOfWeek();
+	checkGetCurrentClock();
 	
 	return 0;
 }

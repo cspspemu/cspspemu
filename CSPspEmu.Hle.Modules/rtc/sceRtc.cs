@@ -241,13 +241,12 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <summary>
 		/// Get current local time into a pspTime struct
 		/// </summary>
-		/// <param name="time">pointer to pspTime struct to receive time</param>
+		/// <param name="Time">pointer to pspTime struct to receive time</param>
 		/// <returns>
 		///		0 on success
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xE7C27D1B, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
 		public int sceRtcGetCurrentClockLocalTime(out ScePspDateTime Time)
 		{
 			var CurrentDateTime = PspRtc.CurrentDateTime;
@@ -286,8 +285,8 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <summary>
 		/// Converts a date to a unix time
 		/// </summary>
-		/// <param name="date_addr"></param>
-		/// <param name="time_addr"></param>
+        /// <param name="DatePointer"></param>
+        /// <param name="UnixTimePointer"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xE1C93E47, FirmwareVersion = 200)]
 		public int sceRtcGetTime64_t(ref ScePspDateTime DatePointer, ref long UnixTimePointer)
@@ -321,7 +320,7 @@ namespace CSPspEmu.Hle.Modules.rtc
 				Hour = (ushort)CurrentDateTime.Hour,
 				Minute = (ushort)(CurrentDateTime.Minute),
 				Second = (ushort)CurrentDateTime.Second,
-				Microsecond = (uint)(CurrentDateTime.GetTotalMicroseconds() % 1000000),
+                Microsecond = (uint)(CurrentDateTime.GetTotalMicroseconds() % 1000000),
 			};
 
 			return 0;
@@ -346,12 +345,12 @@ namespace CSPspEmu.Hle.Modules.rtc
 
 	public enum PspDaysOfWeek : int
 	{
-		Monday = 0,
-		Tuesday = 1,
-		Wednesday = 2,
-		Thursday = 3,
-		Friday = 4,
-		Saturday = 5,
-		Sunday = 6,
+		Monday = 1,
+		Tuesday = 2,
+		Wednesday = 3,
+		Thursday = 4,
+		Friday = 5,
+		Saturday = 6,
+		Sunday = 7
 	}
 }
