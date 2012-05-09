@@ -42,7 +42,9 @@ namespace CSPspEmu.Hle.Modules.Tests.rtc
 		[TestMethod]
 		public void Test_sceRtcGetDayOfWeek()
 		{
+            Assert.AreEqual((int)PspDaysOfWeek.Monday, 1);
 			Assert.AreEqual(PspDaysOfWeek.Monday, sceRtc.sceRtcGetDayOfWeek(2012, 4, 30));
+            Assert.AreEqual(2, (int)sceRtc.sceRtcGetDayOfWeek(2012, 5, 1));
 			Assert.AreEqual(PspDaysOfWeek.Tuesday, sceRtc.sceRtcGetDayOfWeek(2012, 5, 1));
 		}
 

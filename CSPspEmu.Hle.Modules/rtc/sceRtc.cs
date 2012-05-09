@@ -92,7 +92,7 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <param name="Year">Year in which to check (accounts for leap year)</param>
 		/// <param name="Month">Month that day is in</param>
 		/// <param name="Day">Day to get day of week for</param>
-		/// <returns>Day of week with 0 representing Monday</returns>
+		/// <returns>Day of week with 1 representing Monday</returns>
 		[HlePspFunction(NID = 0x57726BC1, FirmwareVersion = 150)]
 		public PspDaysOfWeek sceRtcGetDayOfWeek(int Year, int Month, int Day)
 		{
