@@ -304,6 +304,8 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <param name="TimeZone">time zone to adjust to (minutes from UTC)</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x4CFA57B0, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        [PspUntested]
 		public int sceRtcGetCurrentClock(out ScePspDateTime DateTime, int TimeZone)
 		{
 			PspRtc.Update();
