@@ -9,6 +9,8 @@ namespace CSPspEmu.Core.Cpu
 {
 	public struct Instruction
 	{
+		public uint Value;
+
 		static public float HalfFloatToFloat(int imm16)
 		{
 			int s = (imm16 >> 15) & 0x00000001; // sign
@@ -73,8 +75,6 @@ namespace CSPspEmu.Core.Cpu
 			return ValueFloat;
 		}
 		*/
-
-		public uint Value;
 
 		private void set(int Offset, int Count, uint SetValue)
 		{

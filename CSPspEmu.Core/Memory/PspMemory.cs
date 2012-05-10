@@ -13,7 +13,7 @@ namespace CSPspEmu.Core.Memory
 		//public const bool IsSlim = true;
 	}
 
-	unsafe abstract public class PspMemory : PspEmulatorComponent, IResetable, IDisposable
+	unsafe abstract public class PspMemory : PspEmulatorComponent, IDisposable
 	{
 		static internal Logger Logger = Logger.GetLogger("Memory");
 

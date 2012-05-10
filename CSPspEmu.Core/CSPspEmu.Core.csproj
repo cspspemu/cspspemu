@@ -77,7 +77,6 @@
     <Compile Include="Enums.cs" />
     <Compile Include="Hashing.cs" />
     <Compile Include="IGuiExternalInterface.cs" />
-    <Compile Include="IResetable.cs" />
     <Compile Include="ManagedPointer.cs" />
     <Compile Include="Memory\PspMemory.cs" />
     <Compile Include="Memory\LazyPspMemory.cs" />
@@ -101,6 +100,7 @@
     <Compile Include="Rtc\PspRtc.cs" />
     <Compile Include="Rtc\PspTimeStruct.cs" />
     <Compile Include="Rtc\PspVirtualTimer.cs" />
+    <Compile Include="Threading\Synchronization\MessagePipe.cs" />
     <Compile Include="Threading\Synchronization\PspAutoResetEvent.cs" />
     <Compile Include="Threading\Synchronization\PspManualResetEvent.cs" />
     <Compile Include="Threading\Synchronization\PspResetEvent.cs" />

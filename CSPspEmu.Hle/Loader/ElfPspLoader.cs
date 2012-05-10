@@ -221,7 +221,7 @@ namespace CSPspEmu.Hle.Loader
 		/// <param name="Relocs"></param>
 		protected void RelocateRelocs(IEnumerable<Elf.Reloc> Relocs)
 		{
-			var InstructionReader = new InstructionReader(ElfLoader.MemoryStream);
+			var InstructionReader = new InstructionStreamReader(ElfLoader.MemoryStream);
 
 			/*
 			Func<uint, Action<ref Instruction>> UpdateInstruction = (Address) =>

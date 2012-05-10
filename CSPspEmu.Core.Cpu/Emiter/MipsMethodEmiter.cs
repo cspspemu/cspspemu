@@ -102,7 +102,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		public MipsMethodEmiter(MipsEmiter MipsEmiter, CpuProcessor Processor, uint PC, bool DoDebug = false, bool DoLog = false)
+		public MipsMethodEmiter(CpuProcessor Processor, uint PC, bool DoDebug = false, bool DoLog = false)
 		{
 			this.Processor = Processor;
 
@@ -163,7 +163,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				var Type = TypeBuilder.CreateType();
 				var Method = (Action<CpuThreadState>)Delegate.CreateDelegate(typeof(Action<CpuThreadState>), Type.GetMethod(MethodName));
 #endif
-				//Marshal.Prelink(Method.Method);
+				//Console.WriteLine(Method.Method.);
+				if (Platform.IsMono)
+				{
+					Marshal.Prelink(Method.Method);
+				}
 
 				return Method;
 			}

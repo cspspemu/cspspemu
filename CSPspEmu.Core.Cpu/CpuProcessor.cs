@@ -8,7 +8,7 @@ using CSharpUtils.Threading;
 
 namespace CSPspEmu.Core.Cpu
 {
-	unsafe sealed public class CpuProcessor : PspEmulatorComponent, IResetable
+	unsafe sealed public class CpuProcessor : PspEmulatorComponent
 	{
 		readonly public Dictionary<string, uint> GlobalInstructionStats = new Dictionary<string, uint>();
 
@@ -17,7 +17,9 @@ namespace CSPspEmu.Core.Cpu
 		[Inject]
 		public PspMemory Memory;
 
+		[Inject]
 		public MethodCacheFast MethodCache;
+
 		private Dictionary<int, Action<CpuThreadState, int>> RegisteredNativeSyscalls;
 		public HashSet<uint> NativeBreakpoints;
 		public bool IsRunning;
@@ -39,12 +41,6 @@ namespace CSPspEmu.Core.Cpu
 			else
 			{
 			}
-			Reset();
-		}
-
-		public void Reset()
-		{
-			MethodCache = new MethodCacheFast();
 			NativeBreakpoints = new HashSet<uint>();
 			RegisteredNativeSyscalls = new Dictionary<int, Action<CpuThreadState, int>>();
 			IsRunning = true;

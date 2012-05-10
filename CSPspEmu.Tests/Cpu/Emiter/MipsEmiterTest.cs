@@ -20,7 +20,7 @@ namespace CSPspEmu.Core.Tests
 			var Memory = PspEmulatorContext.GetInstance<PspMemory>();
 			var Processor = PspEmulatorContext.GetInstance<CpuProcessor>();
 			var CpuThreadState = new CpuThreadState(Processor);
-			var MipsEmiter = new MipsMethodEmiter(new MipsEmiter(), Processor, 0);
+			var MipsEmiter = new MipsMethodEmiter(Processor, 0);
 			CpuThreadState.GPR[1] = 1;
 			CpuThreadState.GPR[2] = 2;
 			CpuThreadState.GPR[3] = 3;

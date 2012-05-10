@@ -182,9 +182,64 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			//throw (new NotImplementedException(""));
 		}
 
+		public float _vqmul_row0(float l0, float l1, float l2, float l3, float r0, float r1, float r2, float r3)
+		{
+			return +(l0 * r3) + (l1 * r2) - (l2 * r1) + (l3 * r0);
+			//v3[0] = +(v1[0] * v2[3]) + (v1[1] * v2[2]) - (v1[2] * v2[1]) + (v1[3] * v2[0]);
+		}
+
+		public float _vqmul_row1(float l0, float l1, float l2, float l3, float r0, float r1, float r2, float r3)
+		{
+			return -(l0 * r2) + (l1 * r3) + (l2 * r0) + (l3 * r1);
+			//v3[1] = -(v1[0] * v2[2]) + (v1[1] * v2[3]) + (v1[2] * v2[0]) + (v1[3] * v2[1]);
+		}
+
+		public float _vqmul_row2(float l0, float l1, float l2, float l3, float r0, float r1, float r2, float r3)
+		{
+			return +(l0 * r1) - (l1 * r0) + (l2 * r3) + (l3 * r2);
+			//v3[2] = +(v1[0] * v2[1]) - (v1[1] * v2[0]) + (v1[2] * v2[3]) + (v1[3] * v2[2]);
+		}
+
+		public float _vqmul_row3(float l0, float l1, float l2, float l3, float r0, float r1, float r2, float r3)
+		{
+			return -(l0 * r0) - (l1 * r1) - (l2 * r2) + (l3 * r3);
+			//v3[3] = -(v1[0] * v2[0]) - (v1[1] * v2[1]) - (v1[2] * v2[2]) + (v1[3] * v2[3]);
+		}
+
+#if false
+			loadVs(4, vs);
+			loadVt(4, vt);
+
+			v3[0] = +(v1[0] * v2[3]) + (v1[1] * v2[2]) - (v1[2] * v2[1]) + (v1[3] * v2[0]);
+			v3[1] = -(v1[0] * v2[2]) + (v1[1] * v2[3]) + (v1[2] * v2[0]) + (v1[3] * v2[1]);
+			v3[2] = +(v1[0] * v2[1]) - (v1[1] * v2[0]) + (v1[2] * v2[3]) + (v1[3] * v2[2]);
+			v3[3] = -(v1[0] * v2[0]) - (v1[1] * v2[1]) - (v1[2] * v2[2]) + (v1[3] * v2[3]);
+
+			saveVd(4, vd, v3);
+#endif
+
 		public void vqmul()
 		{
-			throw (new NotImplementedException(""));
+			//var VectorSize = Instruction.ONE_TWO;
+			var VectorSize = (uint)4;
+			VectorOperationSaveVd(VectorSize, (Index) =>
+			{
+				Load_VS(0);
+				Load_VS(1);
+				Load_VS(2);
+				Load_VS(3);
+				Load_VT(0);
+				Load_VT(1);
+				Load_VT(2);
+				Load_VT(3);
+				switch (Index)
+				{
+					case 0: SafeILGenerator.Call((Func<float, float, float, float, float, float, float, float, float>)_vqmul_row0); break;
+					case 1: SafeILGenerator.Call((Func<float, float, float, float, float, float, float, float, float>)_vqmul_row1); break;
+					case 2: SafeILGenerator.Call((Func<float, float, float, float, float, float, float, float, float>)_vqmul_row2); break;
+					case 3: SafeILGenerator.Call((Func<float, float, float, float, float, float, float, float, float>)_vqmul_row3); break;
+				}
+			});
 		}
 
 		public void vmmov()

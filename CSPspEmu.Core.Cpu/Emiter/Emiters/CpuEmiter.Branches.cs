@@ -150,16 +150,20 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(31, () =>
 			{
 				SafeILGenerator.Push((int)(PC + 8));
+				AnalyzePCEvent(PC + 8);
 			});
 		}
 
-		// Jump (And Link) (Register).
+		/// <summary>
+		/// Jump
+		/// </summary>
 		public void j()
 		{
 			//Console.WriteLine("JUMP_ADDR: {0:X}", GetJumpAddress());
 			MipsMethodEmiter.SavePC(() =>
 			{
 				SafeILGenerator.Push((int)GetJumpAddress());
+				AddPcToAnalyze(GetJumpAddress());
 			});
 
 			//Console.WriteLine("aaaaaaaaaaaaaa");
@@ -177,9 +181,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			//FieldBuilder.SetValue(null, 1);
 			
 			//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Callvirt);
-
+			
 			SafeILGenerator.Return();
 		}
+
+		/// <summary>
+		/// Jump Register
+		/// </summary>
 		public void jr() 
 		{
 			// RETURN
@@ -199,21 +207,36 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			SafeILGenerator.Return();
 		}
 
+		public event Action<uint> AnalyzePCEvent;
+		private void AddPcToAnalyze(uint PC)
+		{
+			if (AnalyzePCEvent != null) AnalyzePCEvent(PC);
+		}
+
+		/// <summary>
+		/// Jump And Link Register
+		/// </summary>
 		public void jalr()
 		{
 			_link();
 			jr();
 		}
 
+		/// <summary>
+		/// Jump And Link
+		/// </summary>
 		public void jal()
 		{
 			_link();
 			j();
 		}
 
-		// Branch on C1 False/True (Likely).
+		/// <summary>
+		/// Branch on C1 False
+		/// </summary>
 		public void bc1f()
 		{
+			// Branch on C1 False/True (Likely).
 			MipsMethodEmiter.StoreBranchFlag(() =>
 			{
 				MipsMethodEmiter.LoadFCR31_CC();
@@ -221,7 +244,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				SafeILGenerator.CompareBinary(SafeBinaryComparison.Equals);
 			});
 		}
-		public void bc1t() {
+		/// <summary>
+		/// Branch on C1 True
+		/// </summary>
+		public void bc1t()
+		{
 			MipsMethodEmiter.StoreBranchFlag(() =>
 			{
 				MipsMethodEmiter.LoadFCR31_CC();
@@ -229,7 +256,21 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				SafeILGenerator.CompareBinary(SafeBinaryComparison.NotEquals);
 			});
 		}
-		public void bc1fl() { bc1f(); }
-		public void bc1tl() { bc1t(); }
+
+		/// <summary>
+		/// Branch on C1 False (Likely)
+		/// </summary>
+		public void bc1fl()
+		{
+			bc1f();
+		}
+
+		/// <summary>
+		/// Branch on C1 True (Likely)
+		/// </summary>
+		public void bc1tl()
+		{
+			bc1t();
+		}
 	}
 }

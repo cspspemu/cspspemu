@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Diagnostics;
+using System.Linq;
 
 namespace CSharpUtils
 {
@@ -89,6 +90,33 @@ namespace CSharpUtils
 			Action();
 			var End = DateTime.UtcNow;
 			return End - Start;
+		}
+
+		public class Stopwatch
+		{
+			List<DateTime> DateTimeList = new List<DateTime>();
+
+			public void Tick()
+			{
+				DateTimeList.Add(DateTime.UtcNow);
+			}
+
+			public override string ToString()
+			{
+				var TimeSpans = new List<TimeSpan>();
+				for (int n = 1; n < DateTimeList.Count; n++)
+				{
+					TimeSpans.Add(DateTimeList[n] - DateTimeList[n - 1]);
+				}
+
+				return String.Format(
+					"Logger.Stopwatch({0})",
+					String.Join(",", TimeSpans.Select(Item => String.Format(
+						"{0} ms",
+						(int)Item.TotalMilliseconds
+					)))
+				);
+			}
 		}
 	}
 }

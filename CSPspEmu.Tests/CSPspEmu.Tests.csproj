@@ -76,6 +76,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cpu\Assembler\MipsDisassemblerTest.cs" />
+    <Compile Include="Cpu\Dynarec\DynarecFunctionCompilerTaskTest.cs" />
+    <Compile Include="Cpu\Dynarec\DynarecFunctionCompilerTest.cs" />
     <Compile Include="Cpu\Emiter\CpuEmiterTest.cs" />
     <Compile Include="Cpu\Switch\EmitLookupGeneratorTest.cs" />
     <Compile Include="Cpu\Table\InstructionTableTest.cs" />

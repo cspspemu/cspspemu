@@ -15,6 +15,7 @@ using System.Threading;
 using CSPspEmu.Hle.Threading.EventFlags;
 using System.IO;
 using CSPspEmu.Hle.Managers;
+using CSPspEmu.Core.Cpu.Dynarec;
 
 namespace CSPspEmu.Hle
 {
@@ -378,16 +379,21 @@ namespace CSPspEmu.Hle
 
 		// 8903E08
 
-		public PspMethodStruct GetDelegateAt(uint PC)
-		{
-			//var MethodCache = CpuThreadState.CpuProcessor.MethodCache;
+		DynarecFunctionCompilerTask DynarecFunctionCompilerTask;
 
+		public DynarecFunction GetDelegateAt(uint PC)
+		{
 			var Delegate = MethodCache.TryGetMethodAt(PC);
 			if (Delegate == null)
 			{
+				if (DynarecFunctionCompilerTask == null)
+				{
+					DynarecFunctionCompilerTask = CpuThreadState.CpuProcessor.GetPspEmulatorContext().GetInstance<DynarecFunctionCompilerTask>();
+				}
+
 				MethodCache.SetMethodAt(
 					PC,
-					Delegate = CpuThreadState.CpuProcessor.CreateDelegateForPC(new PspMemoryStream(CpuThreadState.CpuProcessor.Memory), PC)
+					Delegate = DynarecFunctionCompilerTask.GetFunctionForAddress(PC)
 				);
 			}
 

@@ -20,12 +20,9 @@ namespace CSPspEmu.Hle
 		[Inject]
 		internal CpuProcessor CpuProcessor;
 
-		[Inject]
-		internal MipsEmiter MipsEmiter;
-
 		private Action<CpuThreadState> CreateDelegateForMethodInfo(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute)
 		{
-			var MipsMethodEmiter = new MipsMethodEmiter(MipsEmiter, CpuProcessor, 0);
+			var MipsMethodEmiter = new MipsMethodEmiter(CpuProcessor, 0);
 			int GprIndex = 4;
 			int FprIndex = 0;
 

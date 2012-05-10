@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection.Emit;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -89,9 +90,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void mfdr() { throw(new NotImplementedException()); }
 		public void mtdr() { throw(new NotImplementedException()); }
 
+		Logger Logger = Logger.GetLogger("CpuEmiter");
+
 		public void unknown()
 		{
-			throw (new NotImplementedException("0x%08X : %032b at 0x%08X".Sprintf(Instruction.Value, Instruction.Value, PC)));
+			Logger.Error("0x%08X : %032b at 0x%08X".Sprintf(Instruction.Value, Instruction.Value, PC));
+
+			_break();
 		}
 	}
 }

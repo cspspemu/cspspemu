@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using CSPspEmu.Core.Memory;
 using CSharpUtils.Factory;
 using System.Threading;
+using CSPspEmu.Core.Cpu.Dynarec;
 
 namespace CSPspEmu.Core.Tests
 {
@@ -56,8 +57,8 @@ namespace CSPspEmu.Core.Tests
 		{
 			var Events = new List<int>();
 
-			Processor.RegisterNativeSyscall(1, () => { Events.Add(1); });
-			Processor.RegisterNativeSyscall(1000, () => { Events.Add(1000); });
+			CpuProcessor.RegisterNativeSyscall(1, () => { Events.Add(1); });
+			CpuProcessor.RegisterNativeSyscall(1000, () => { Events.Add(1000); });
 
 			ExecuteAssembly(@"
 				syscall 1
@@ -673,10 +674,10 @@ namespace CSPspEmu.Core.Tests
 		{
 			var Events = new List<int>();
 
-			Processor.RegisterNativeSyscall(1, () => { Events.Add(1); });
-			Processor.RegisterNativeSyscall(2, () => { Events.Add(2); });
-			Processor.RegisterNativeSyscall(3, () => { Events.Add(3); });
-			Processor.RegisterNativeSyscall(4, () => { Events.Add(4); });
+			CpuProcessor.RegisterNativeSyscall(1, () => { Events.Add(1); });
+			CpuProcessor.RegisterNativeSyscall(2, () => { Events.Add(2); });
+			CpuProcessor.RegisterNativeSyscall(3, () => { Events.Add(3); });
+			CpuProcessor.RegisterNativeSyscall(4, () => { Events.Add(4); });
 
 			ExecuteAssembly(@"
 				syscall 1
@@ -695,10 +696,10 @@ namespace CSPspEmu.Core.Tests
 		{
 			var Events = new List<int>();
 
-			Processor.RegisterNativeSyscall(1, () => { Events.Add(1); });
-			Processor.RegisterNativeSyscall(2, () => { Events.Add(2); });
-			Processor.RegisterNativeSyscall(3, () => { Events.Add(3); });
-			Processor.RegisterNativeSyscall(4, () => { Events.Add(4); });
+			CpuProcessor.RegisterNativeSyscall(1, () => { Events.Add(1); });
+			CpuProcessor.RegisterNativeSyscall(2, () => { Events.Add(2); });
+			CpuProcessor.RegisterNativeSyscall(3, () => { Events.Add(3); });
+			CpuProcessor.RegisterNativeSyscall(4, () => { Events.Add(4); });
 
 			ExecuteAssembly(@"
 				li r1, 100
@@ -735,10 +736,10 @@ namespace CSPspEmu.Core.Tests
 		{
 			var Events = new List<int>();
 
-			Processor.RegisterNativeSyscall(1, () => { Events.Add(1); });
-			Processor.RegisterNativeSyscall(2, () => { Events.Add(2); });
-			Processor.RegisterNativeSyscall(3, () => { Events.Add(3); });
-			Processor.RegisterNativeSyscall(4, () => { Events.Add(4); });
+			CpuProcessor.RegisterNativeSyscall(1, () => { Events.Add(1); });
+			CpuProcessor.RegisterNativeSyscall(2, () => { Events.Add(2); });
+			CpuProcessor.RegisterNativeSyscall(3, () => { Events.Add(3); });
+			CpuProcessor.RegisterNativeSyscall(4, () => { Events.Add(4); });
 
 			ExecuteAssembly(@"
 				li r1, 1
@@ -839,7 +840,12 @@ namespace CSPspEmu.Core.Tests
 
 	unsafe public partial class CpuEmiterTest
 	{
-		protected CpuProcessor Processor;
+		[Inject]
+		protected CpuProcessor CpuProcessor;
+
+		[Inject]
+		protected DynarecFunctionCompiler DynarecFunctionCompiler;
+
 		protected CpuThreadState CpuThreadState;
 
 		static protected PspConfig PspConfig;
@@ -858,16 +864,47 @@ namespace CSPspEmu.Core.Tests
 		[TestInitialize]
 		public void SetUp()
 		{
-			Processor = PspEmulatorContext.GetInstance<CpuProcessor>();
-			CpuThreadState = new CpuThreadState(Processor);
+			PspEmulatorContext.InjectDependencesTo(this);
+			CpuThreadState = new CpuThreadState(CpuProcessor);
 		}
 
-		protected void ExecuteAssembly(String Assembly)
+		protected void ExecuteAssembly(String Assembly, bool DoDebug = false, bool DoLog = false)
 		{
-			CpuThreadState.ExecuteAssembly(
-				Assembly
-				, DoDebug: true, DoLog: true
-			);
+			CpuProcessor.MethodCache.Clear();
+
+			Assembly += "\r\nbreak\r\n";
+			var MemoryStream = new MemoryStream();
+			MemoryStream.PreservePositionAndLock(() =>
+			{
+				var MipsAssembler = new MipsAssembler(MemoryStream);
+
+				MipsAssembler.Assemble(Assembly);
+			});
+			var InstructionReader = new InstructionStreamReader(MemoryStream);
+
+			//Console.WriteLine(Assembly);
+
+			Action<CpuThreadState> Method = (_CpuThreadState) =>
+			{
+				_CpuThreadState.PC = 0;
+
+				//Console.WriteLine("PC: {0:X}", _CpuThreadState.PC);
+				try
+				{
+					while (true)
+					{
+						//Console.WriteLine("PC: {0:X}", _CpuThreadState.PC);
+						var Delegate = DynarecFunctionCompiler.CreateFunction(InstructionReader, _CpuThreadState.PC, null, DoDebug: DoDebug, DoLog: DoLog);
+						_CpuThreadState.StepInstructionCount = 1000000;
+						Delegate.Delegate(_CpuThreadState);
+					}
+				}
+				catch (PspBreakException)
+				{
+				}
+			};
+
+			Method(CpuThreadState);
 		}
 	}
 }

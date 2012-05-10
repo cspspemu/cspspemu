@@ -4,44 +4,45 @@ using System.Linq;
 using System.Text;
 using CSPspEmu.Core.Cpu.Emiter;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Core.Cpu.Dynarec;
 
 namespace CSPspEmu.Core.Cpu
 {
-	public class PspMethodStruct
+	sealed public class MethodCacheFast : PspEmulatorComponent
 	{
-		//public MipsMethodEmiter MipsMethodEmiter;
-		public Action<CpuThreadState> Delegate;
-	}
-
-	sealed public class MethodCacheFast
-	{
-		private PspMethodStruct[] Methods2 = new PspMethodStruct[PspMemory.MainSize / 4];
+		private DynarecFunction[] Methods2 = new DynarecFunction[PspMemory.MainSize / 4];
 		private SortedSet<uint> MethodsInList = new SortedSet<uint>();
+
+		public event Action<uint, uint> OnClearRange;
 
 		public void ClearRange(uint Low, uint High)
 		{
-			/*
-			for (uint n = Low; n < High; n += 4)
+			if (OnClearRange != null)
 			{
-				Methods2[n] = null;
+				OnClearRange(Low, High);
 			}
-			*/
 
-			foreach (var Address in MethodsInList.Where(Address => ((Address >= Low) && (Address < High))).ToArray())
+			if (Low == uint.MinValue && High == uint.MaxValue)
 			{
-				Methods2[Address_To_Index(Address)] = null;
-				MethodsInList.Remove(Address);
+				foreach (var Address in MethodsInList) Methods2[Address_To_Index(Address)] = null;
+				MethodsInList = new SortedSet<uint>();
+			}
+			else
+			{
+				foreach (var Address in MethodsInList.Where(Address => ((Address >= Low) && (Address < High))).ToArray())
+				{
+					Methods2[Address_To_Index(Address)] = null;
+					MethodsInList.Remove(Address);
+				}
 			}
 		}
 
 		public void Clear()
 		{
-			//Methods2 = new Action<CpuThreadState>[PspMemory.MainSize / 4];
-			foreach (var Address in MethodsInList) Methods2[Address_To_Index(Address)] = null;
-			MethodsInList = new SortedSet<uint>();
+			ClearRange(uint.MinValue, uint.MaxValue);
 		}
 
-		public PspMethodStruct TryGetMethodAt(uint PC)
+		public DynarecFunction TryGetMethodAt(uint PC)
 		{
 			//PC &= PspMemory.MemoryMask;
 			if (PC < PspMemory.MainOffset) throw (new PspMemory.InvalidAddressException(PC));
@@ -60,7 +61,7 @@ namespace CSPspEmu.Core.Cpu
 			return (PC - PspMemory.MainOffset) / 4;
 		}
 
-		public void SetMethodAt(uint PC, PspMethodStruct Action)
+		public void SetMethodAt(uint PC, DynarecFunction Action)
 		{
 			//PC &= PspMemory.MemoryMask;
 			if (PC < PspMemory.MainOffset) throw (new PspMemory.InvalidAddressException(PC));

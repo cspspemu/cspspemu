@@ -63,6 +63,8 @@ namespace CSPspEmu.Core
 
 		static Platform()
 		{
+			IsMono = (Type.GetType("Mono.Runtime") != null);
+
 			switch (Environment.OSVersion.Platform)
 			{
 				case PlatformID.Win32NT:
@@ -329,5 +331,7 @@ namespace CSPspEmu.Core
 			IntPtr hwnd = InternalWindows.GetConsoleWindow();
 			InternalWindows.ShowWindow(hwnd, SW_HIDE);
 		}
+
+		static public bool IsMono { get; private set; }
 	}
 }

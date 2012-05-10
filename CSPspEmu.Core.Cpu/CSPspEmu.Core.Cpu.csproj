@@ -67,7 +67,7 @@
     <Compile Include="Dynarec\DynarecFunction.cs" />
     <Compile Include="Dynarec\DynarecFunctionCompiler.cs" />
     <Compile Include="Dynarec\DynarecFunctionCompiler.Internal.cs" />
-    <Compile Include="Emiter\CpuBranchAnalyzer.cs" />
+    <Compile Include="Dynarec\DynarecFunctionCompilerTask.cs" />
     <Compile Include="Emiter\CpuEmiter.cs" />
     <Compile Include="Emiter\Emiters\CpuEmiter.ArithmeticLogic.cs" />
     <Compile Include="Emiter\Emiters\CpuEmiter.Branches.cs" />
@@ -87,16 +87,13 @@
     <Compile Include="Emiter\Emiters\CpuEmiter.Vfpu_Prefixes.cs" />
     <Compile Include="Emiter\Emiters\CpuEmiter.Vfpu_Random.cs" />
     <Compile Include="Emiter\Emiters\CpuEmiter.Vfpu_RegisterTransfer.cs" />
-    <Compile Include="Emiter\FunctionGenerator.cs" />
     <Compile Include="Emiter\SafeILGeneratorEx.cs" />
     <Compile Include="MethodCacheFast.cs" />
     <Compile Include="MethodCacheSlow.cs" />
-    <Compile Include="Emiter\MipsEmiter.cs" />
     <Compile Include="Emiter\MipsMethodEmiter.cs" />
     <Compile Include="Instruction.cs" />
     <Compile Include="InstructionReader.cs" />
     <Compile Include="CpuThreadState.cs" />
-    <Compile Include="CpuThreadStateExtensions.cs" />
     <Compile Include="CpuProcessor.cs" />
     <Compile Include="PspBreakException.cs" />
     <Compile Include="Switch\EmitLookupGenerator.cs" />
