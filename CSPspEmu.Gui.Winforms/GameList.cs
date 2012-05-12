@@ -136,10 +136,15 @@ namespace CSPspEmu.Gui.Winforms
 
 			var Iso = IsoLoader.GetIso(IsoFile);
 			var FileSystem = new HleIoDriverIso(Iso);
-			var UmdData = FileSystem.OpenRead("/UMD_DATA.BIN").ReadAllContentsAsString();
-			var ParamSfo = new Psf(new MemoryStream(FileSystem.OpenRead("/PSP_GAME/PARAM.SFO").ReadAll()));
-			var Icon0Png = FileSystem.OpenRead("/PSP_GAME/ICON0.PNG").ReadAll();
-
+		    string UmdData = string.Empty;
+            if (FileSystem.FileExists("/UMD_DATA.BIN"))
+                UmdData = FileSystem.OpenRead("/UMD_DATA.BIN").ReadAllContentsAsString();
+		    var ParamSfo = new Psf(new MemoryStream(FileSystem.OpenRead("/PSP_GAME/PARAM.SFO").ReadAll()));
+		    byte[] Icon0Png ;
+            if (FileSystem.FileExists("/PSP_GAME/ICON0.PNG"))
+                Icon0Png = FileSystem.OpenRead("/PSP_GAME/ICON0.PNG").ReadAll();
+            else
+                Icon0Png = (byte[])System.ComponentModel.TypeDescriptor.GetConverter(Properties.Resources.icon0).ConvertTo(Properties.Resources.icon0, typeof(byte[]));
 			var Entries = ParamSfo.EntryDictionary;
 
 			var Entry = new GameEntry();
@@ -163,7 +168,12 @@ namespace CSPspEmu.Gui.Winforms
 			try { Entry.APP_VER = (string)Entries["APP_VER"]; } catch { }
 			try { Entry.BOOTABLE = ((int)Entries["BOOTABLE"]) != 0; } catch { }
 			try { Entry.CATEGORY = (string)Entries["CATEGORY"]; } catch { }
-			try { Entry.DISC_ID = (string)Entries["DISC_ID"]; } catch { }
+			try { 
+                Entry.DISC_ID = (string)Entries["DISC_ID"];
+                if (string.IsNullOrWhiteSpace(Entry.DiscId0))
+			        Entry.DiscId0 = Entry.DISC_ID.Substring(0, 4) +"-"+ Entry.DISC_ID.Substring(4);
+			}
+            catch { }
 			try { Entry.DISC_NUMBER = (int)Entries["DISC_NUMBER"]; } catch { }
 			try { Entry.DISC_TOTAL = (int)Entries["DISC_TOTAL"]; } catch { }
 			try { Entry.DISC_VERSION = (string)Entries["DISC_VERSION"]; } catch { }

@@ -474,7 +474,7 @@ namespace CSPspEmu.Hle.Formats
 		protected IsoNode AccessChild(string ChildName)
 		{
 			if (ChildName == "" || ChildName == ".") return this;
-			if (ChildName == "..") return (Parent != null) ? Parent : this;
+			if (ChildName == "..") return Parent ?? this;
 			ChildName = ChildName.ToUpper();
 
 			if (!_childsByNameUpperCase.ContainsKey(ChildName))
