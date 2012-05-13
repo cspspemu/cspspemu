@@ -107,9 +107,15 @@ namespace CSPspEmu.Hle
 	{
 		protected MethodCacheFast MethodCache;
 
+		/// <summary>
+		/// Lower priority value is a higher priority, so we negate the priorityvalue.
+		/// </summary>
 		int IPreemptiveItem.Priority
 		{
-			get { return PriorityValue; }
+			get
+			{
+				return -PriorityValue;
+			}
 		}
 
 		bool IPreemptiveItem.Ready

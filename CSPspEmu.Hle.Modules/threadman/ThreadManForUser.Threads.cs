@@ -54,6 +54,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Thread.Name = Name;
 			Thread.Info.PriorityCurrent = InitPriority;
 			Thread.Info.PriorityInitially = InitPriority;
+			Thread.PriorityValue = InitPriority;
 			Thread.Attribute = Attribute;
 			Thread.GP = CpuThreadState.GP;
 			Thread.Info.EntryPoint = (SceKernelThreadEntry)EntryPoint;
