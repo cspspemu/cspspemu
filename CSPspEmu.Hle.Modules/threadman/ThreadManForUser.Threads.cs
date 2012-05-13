@@ -215,8 +215,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		status.size = sizeof(SceKernelThreadInfo);
 		///		if (sceKernelReferThreadStatus(thid, &status) == 0) { Do something... }
 		/// </example>
-		/// <param name="thid">Id of the thread to get status</param>
-		/// <param name="info">
+        /// <param name="ThreadId">Id of the thread to get status</param>
+        /// <param name="SceKernelThreadInfo">
 		///		Pointer to the info structure to receive the data.
 		///		Note: The structures size field should be set to
 		///		sizeof(SceKernelThreadInfo) before calling this function.

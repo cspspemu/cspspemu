@@ -13,6 +13,7 @@ namespace CSPspEmu.Hle.Modules.power
 		/// 
 		/// </summary>
 		[HlePspFunction(NID = 0xDB9D28DD, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public void scePowerUnregitserCallback()
 		{
 			throw (new NotImplementedException());

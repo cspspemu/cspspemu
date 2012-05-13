@@ -328,17 +328,19 @@ namespace CSPspEmu.Hle.Modules.rtc
 		}
 
 		[HlePspFunction(NID = 0x9ED0AE87, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceRtcCompareTick()
+        [PspUntested]
+		public int sceRtcCompareTick(ulong* Tick1, ulong* Tick2)
 		{
-			return 0;
+            if (Tick1 < Tick2) return -1;
+            if (Tick1 > Tick2) return 1;
+            return 0;
 		}
 
 		
 		
 		[HlePspFunction(NID = 0xCF561893, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceRtcGetWin32FileTime()
+		public int sceRtcGetWin32FileTime(ScePspDateTime DateTime)
 		{
 			return 0;
 		}
@@ -352,6 +354,6 @@ namespace CSPspEmu.Hle.Modules.rtc
 		Thursday = 4,
 		Friday = 5,
 		Saturday = 6,
-		Sunday = 7
+		Sunday = 0
 	}
 }
