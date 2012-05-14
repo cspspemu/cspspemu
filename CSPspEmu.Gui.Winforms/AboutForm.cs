@@ -57,5 +57,10 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			Process.Start(@"https://github.com/soywiz/cspspemu/commit/" + PspGlobalConfiguration.GitRevision);
 		}
+
+		private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			Process.Start(@"http://tgames.fr.nf/");
+		}
 	}
 }
