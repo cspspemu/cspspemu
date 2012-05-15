@@ -13,7 +13,7 @@
 			<translation lang="es">Mostrar información de &amp;Hilos</translation>
 			<translation lang="it">Mostra info sul &amp;processo</translation>
 			<translation lang="pt">Mostrar informação do &amp;Processo</translation>
-			<translation lang="fr">Montrer les informations du amp;Processus</translation>
+			<translation lang="fr">Montrer les informations du &amp;processus</translation>
 		</text>
 		<text id="DebugTraceSyscallsMenu">
 			<translation lang="en">Trace &amp;Syscalls</translation>
@@ -34,7 +34,7 @@
 			<translation lang="es">Trazar Syscalls sin implementar</translation>
 			<translation lang="it">Traccia Syscalls non implementate</translation>
 			<translation lang="pt">Traçar Syscalls não implementados</translation>
-			<translation lang="pt">Trace Syscalls non implémentés</translation>
+			<translation lang="fr">Trace Syscalls non implémentés</translation>
 		</text>
 		<text id="DebugDumpGpuFrameMenu">
 			<translation lang="en">Dump &amp;Gpu Frame</translation>
@@ -48,7 +48,7 @@
 			<translation lang="es">&amp;Salir</translation>
 			<translation lang="it">&amp;Esci</translation>
 			<translation lang="pt">&amp;Sair</translation>
-			<translation lang="pt">&amp;Quitter</translation>
+			<translation lang="fr">&amp;Quitter</translation>
 		</text>
 		<text id="FileMenu">
 			<translation lang="en">&amp;File</translation>
@@ -69,14 +69,14 @@
 			<translation lang="es">Establecer Carpeta de &amp;Isos...</translation>
 			<translation lang="it">Seleziona la cartella &amp;Iso...</translation>
 			<translation lang="pt">Selecionar Pasta das &amp;Isos...</translation>
-			<translation lang="fr">Selectionner les repertoires des Isos...</translation>
+			<translation lang="fr">Selectionner le repertoire des Isos...</translation>
 		</text>
 		<text id="FileOpenRecentMenu">
 			<translation lang="en">Open &amp;Recent</translation>
 			<translation lang="es">Abrir &amp;Recientes</translation>
 			<translation lang="it">Apri &amp;Recenti</translation>
 			<translation lang="pt">Abrir &amp;Recentes...</translation>
-			<translation lang="fr">Ouvrir &amp;Recents...</translation>
+			<translation lang="fr">Ouvrir &amp;Récents...</translation>
 		</text>
 		<text id="HelpWebsiteMenu">
 			<translation lang="en">&amp;Website...</translation>
@@ -139,7 +139,7 @@
 			<translation lang="es">Informar sobre &amp;problema...</translation>
 			<translation lang="it">Riporta un &amp;problema...</translation>
 			<translation lang="pt">Informar sobre &amp;problemas...</translation>
-			<translation lang="fr">Informer d'un &amp;probleme...</translation>
+			<translation lang="fr">Informer d'un &amp;problème...</translation>
 			
 		</text>
 		<text id="UtilsAssociateExtensionsMenu">
@@ -147,7 +147,7 @@
 			<translation lang="es">Asociar Extensiones (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
 			<translation lang="it">Associa Estensioni (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
 			<translation lang="pt">Associar Extensões (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
-			<translation lang="pt">Associer Extensions (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
+			<translation lang="fr">Associer Extensions (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
 		</text>
 		<text id="UtilsDisplayMenu">
 			<translation lang="en">&amp;Display</translation>
@@ -196,7 +196,7 @@
 			<translation lang="es">Volcar memoria principal...</translation>
 			<translation lang="it">Scarica la memoria principale...</translation>
 			<translation lang="pt">Descarregar memória principal...</translation>
-			<translation lang="fr">Décharger la memoire principale...</translation>
+			<translation lang="fr">Décharger la mémoire principale...</translation>
 		</text>
 		<text id="UtilsFrameLimitingMenu">
 			<translation lang="en">Frame Limiting</translation>
@@ -224,7 +224,7 @@
 			<translation lang="es">Sacar pantallazo...</translation>
 			<translation lang="it">Cattura schermata...</translation>
 			<translation lang="pt">Tirar Screenshot...</translation>
-			<translation lang="fr">Capture d'ecran...</translation>
+			<translation lang="fr">Capture d'écran...</translation>
 		</text>
 		<text id="UtilsUseFastmemMenu">
 			<translation lang="en">Use &amp;Fast but unsafe memory</translation>
@@ -245,14 +245,14 @@
 			<translation lang="es">&amp;Ejecución</translation>
 			<translation lang="it">&amp;Esegui</translation>
 			<translation lang="pt">&amp;Executar</translation>
-			<translation lang="fr">&amp;Executer</translation>
+			<translation lang="fr">&amp;Exécuter</translation>
 		</text>
 		<text id="RunRunResumeMenu">
 			<translation lang="en">&amp;Start/Resume</translation>
 			<translation lang="es">&amp;Ejecutar</translation>
 			<translation lang="it">&amp;Avvia/Riprendi</translation>
 			<translation lang="pt">&amp;Executar</translation>
-			<translation lang="fr">&amp;Executer/Reprendre</translation>
+			<translation lang="fr">&amp;Exécuter/Reprendre</translation>
 		</text>
 		<text id="RunPauseMenu">
 			<translation lang="en">&amp;Pause</translation>
@@ -287,7 +287,7 @@
 			<translation lang="es">Portugués</translation>
 			<translation lang="it">Portoghese</translation>
 			<translation lang="pt">Português</translation>
-			<translation lang="pt">Portuguais</translation>
+			<translation lang="fr">Portuguais</translation>
 			</text>
 		<text id="UtilsLanguagePortugueseMenu">
 			<translation lang="en">French</translation>
@@ -340,7 +340,7 @@
 			<translation lang="es">Portugués</translation>
 			<translation lang="it">Portoghese</translation>
 			<translation lang="pt">Português</translation>
-			<translation lang="pt">Portuguais</translation>
+			<translation lang="fr">Portuguais</translation>
 		</text>
 		<text id="fr">
 			<translation lang="en">French</translation>
