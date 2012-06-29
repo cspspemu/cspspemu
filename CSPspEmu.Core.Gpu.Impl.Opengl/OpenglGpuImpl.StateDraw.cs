@@ -31,7 +31,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				PrepareState_Colors_2D(GpuState);
 				GL.Disable(EnableCap.StencilTest);
 				GL.Disable(EnableCap.CullFace);
-				GL.DepthRange(0, 1);
+				GL.DepthRange((double)0, (double)1);
 				GL.Disable(EnableCap.DepthTest);
 				GL.Disable(EnableCap.Lighting);
 			}
@@ -112,8 +112,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private void PrepareState_Depth(GpuStateStruct* GpuState)
 		{
-			GL.DepthRange(GpuState->DepthTestState.RangeFar, GpuState->DepthTestState.RangeNear);
-			//GL.DepthRange(GpuState->DepthTestState.RangeNear, GpuState->DepthTestState.RangeFar);
+			GL.DepthRange((double)GpuState->DepthTestState.RangeFar, (double)GpuState->DepthTestState.RangeNear);
+			//GL.DepthRange((double)GpuState->DepthTestState.RangeNear, (double)GpuState->DepthTestState.RangeFar);
 		}
 
 		private void PrepareState_DepthTest(GpuStateStruct* GpuState)

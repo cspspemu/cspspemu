@@ -54,8 +54,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				GL.Enable(EnableCap.DepthTest);
 				GL.DepthFunc(DepthFunction.Always);
 				GL.DepthMask(true);
-				GL.DepthRange(0, 0);
-				//GL.DepthRange(-1, 0);
+				GL.DepthRange((double)0, (double)0);
+				//GL.DepthRange((double)-1, (double)0);
 
 				//glDepthRange(0.0, 1.0); // Original value
 			}
