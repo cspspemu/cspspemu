@@ -247,7 +247,7 @@ namespace CSPspEmu.Hle.Modules.rtc
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xE7C27D1B, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
+		[HlePspNotImplemented]
 		public int sceRtcGetCurrentClockLocalTime(out ScePspDateTime Time)
 		{
 			var CurrentDateTime = PspRtc.CurrentDateTime;
@@ -286,8 +286,8 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <summary>
 		/// Converts a date to a unix time
 		/// </summary>
-        /// <param name="DatePointer"></param>
-        /// <param name="UnixTimePointer"></param>
+		/// <param name="DatePointer"></param>
+		/// <param name="UnixTimePointer"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xE1C93E47, FirmwareVersion = 200)]
 		public int sceRtcGetTime64_t(ref ScePspDateTime DatePointer, ref long UnixTimePointer)
@@ -304,8 +304,8 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <param name="TimeZone">time zone to adjust to (minutes from UTC)</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x4CFA57B0, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        [PspUntested]
+		[HlePspNotImplemented]
+		[PspUntested]
 		public int sceRtcGetCurrentClock(out ScePspDateTime DateTime, int TimeZone)
 		{
 			PspRtc.Update();
@@ -321,19 +321,19 @@ namespace CSPspEmu.Hle.Modules.rtc
 				Hour = (ushort)CurrentDateTime.Hour,
 				Minute = (ushort)(CurrentDateTime.Minute),
 				Second = (ushort)CurrentDateTime.Second,
-                Microsecond = (uint)(CurrentDateTime.GetTotalMicroseconds() % 1000000),
+				Microsecond = (uint)(CurrentDateTime.GetTotalMicroseconds() % 1000000),
 			};
 
 			return 0;
 		}
 
 		[HlePspFunction(NID = 0x9ED0AE87, FirmwareVersion = 150)]
-        [PspUntested]
+		[PspUntested]
 		public int sceRtcCompareTick(ulong* Tick1, ulong* Tick2)
 		{
-            if (Tick1 < Tick2) return -1;
-            if (Tick1 > Tick2) return 1;
-            return 0;
+			if (Tick1 < Tick2) return -1;
+			if (Tick1 > Tick2) return 1;
+			return 0;
 		}
 
 		

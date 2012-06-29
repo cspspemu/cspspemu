@@ -28,7 +28,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 				//return (uint)(PC & ~PspMemory.MemoryMask) | (Instruction.JUMP << 2);
 
 				{ "J", Result => RegisterIndexToRegisterName(Result.Instruction.RS) },
-				{ "j", Result => "0x%08X".Sprintf(Result.Instruction.GetJumpAddress(Result.InstructionPC)) },
+				{ "j", Result => String.Format("0x{0:X8}", Result.Instruction.GetJumpAddress(Result.InstructionPC)) },
 				{ "s", Result => RegisterIndexToRegisterName(Result.Instruction.RS) },
 				{ "d", Result => RegisterIndexToRegisterName(Result.Instruction.RD) },
 				{ "t", Result => RegisterIndexToRegisterName(Result.Instruction.RT) },

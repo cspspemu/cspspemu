@@ -412,7 +412,7 @@ namespace CSPspEmu.Core.Cpu
 			for (int n = 0; n < 32; n++)
 			{
 				if (n % 4 != 0) TextWriter.Write(", ");
-				TextWriter.Write("r{0,2}({1}) : {2}", n, RegisterMnemonicNames[n], "0x%08X".Sprintf(GPR[n]));
+				TextWriter.Write("r{0,2}({1}) : 0x{2:X8}", n, RegisterMnemonicNames[n], GPR[n]);
 				if (n % 4 == 3) TextWriter.WriteLine();
 			}
 
@@ -420,7 +420,7 @@ namespace CSPspEmu.Core.Cpu
 			for (int n = 0; n < 32; n++)
 			{
 				if (n % 4 != 0) TextWriter.Write(", ");
-				TextWriter.Write("f{0,2} : {1}, {2}", n, "0x%08X".Sprintf(FPR_I[n]), FPR[n]);
+				TextWriter.Write("f{0,2} : 0x{1:X8}, {2}", n, FPR_I[n], FPR[n]);
 				if (n % 4 == 3) TextWriter.WriteLine();
 			}
 			TextWriter.WriteLine();

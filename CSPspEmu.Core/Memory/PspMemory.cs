@@ -23,10 +23,8 @@ namespace CSPspEmu.Core.Memory
 		{
 			public InvalidAddressException(string message) : base (message) { }
 			public InvalidAddressException(string message, Exception innerException) : base(message, innerException) { }
-			//public InvalidAddressException(uint Address) : base(String.Format("Invalid Address : 0x%08X".Sprintf(Address))) { }
-			//public InvalidAddressException(uint Address, Exception innerException) : base(String.Format("Invalid Address : 0x%08X".Sprintf(Address)), innerException) { }
-			public InvalidAddressException(ulong Address) : base(String.Format("Invalid Address : 0x{0:X}", Address)) { }
-			public InvalidAddressException(ulong Address, Exception innerException) : base(String.Format("Invalid Address : 0x{0:X}", Address), innerException) { }
+			public InvalidAddressException(ulong Address) : base(String.Format("Invalid Address : 0x{0:X8}", Address)) { }
+			public InvalidAddressException(ulong Address, Exception innerException) : base(String.Format("Invalid Address : 0x{0:X8}", Address), innerException) { }
 		}
 
 		sealed public class Segment
