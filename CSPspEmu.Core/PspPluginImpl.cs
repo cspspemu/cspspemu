@@ -21,7 +21,18 @@ namespace CSPspEmu.Core
 		{
 			foreach (var ImplementationType in AvailablePluginImplementations)
 			{
-				if (((PspPluginImpl)Activator.CreateInstance(ImplementationType)).IsWorking)
+				bool IsWorking = false;
+
+				try
+				{
+					IsWorking = ((PspPluginImpl)Activator.CreateInstance(ImplementationType)).IsWorking;
+				}
+				catch (Exception Exception)
+				{
+					Console.Error.WriteLine(Exception);
+				}
+
+				if (IsWorking)
 				{
 					// Found a working implementation
 					PspEmulatorContext.SetInstanceType<TType>(ImplementationType);
