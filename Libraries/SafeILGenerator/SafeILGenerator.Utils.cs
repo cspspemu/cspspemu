@@ -10,7 +10,7 @@ namespace Codegen
 {
 	public partial class SafeILGenerator
 	{
-		internal ILGenerator __ILGenerator;
+		public ILGenerator __ILGenerator { get; private set; }
 		SafeTypeStack TypeStack;
 		List<SafeLabel> Labels = new List<SafeLabel>();
 		bool OverflowCheck = false;
@@ -73,7 +73,7 @@ namespace Codegen
 
 		protected void Emit(OpCode opcode, SafeLabel Param) { EmitHook(opcode, Param); __ILGenerator.Emit(opcode, Param.ReflectionLabel); }
 		protected void Emit(OpCode opcode, SafeLabel[] Param) { EmitHook(opcode, Param); __ILGenerator.Emit(opcode, Param.Select(Label => Label.ReflectionLabel).ToArray()); }
-		protected void Emit(OpCode opcode, FieldInfo Param) { EmitHook(opcode, Param); __ILGenerator.Emit(opcode, Param); }
+		protected void Emit(OpCode opcode, FieldInfo Param)  { EmitHook(opcode, Param); __ILGenerator.Emit(opcode, Param); }
 		protected void Emit(OpCode opcode, MethodInfo Param) { EmitHook(opcode, Param); __ILGenerator.Emit(opcode, Param); }
 
 		static public TDelegate Generate<TDelegate>(string MethodName, Action<SafeILGenerator> Generator, bool CheckTypes = true, bool DoDebug = false, bool DoLog = false)
@@ -172,9 +172,19 @@ namespace Codegen
 			throw (new NotImplementedException());
 		}
 
+		public LocalBuilder DeclareLocal(Type Type, string Name = "")
+		{
+			var LocalBuilder = __ILGenerator.DeclareLocal(Type);
+			if (Name != null && Name != "")
+			{
+				LocalBuilder.SetLocalSymInfo(Name);
+			}
+			return LocalBuilder;
+		}
+
 		public LocalBuilder DeclareLocal<TType>(string Name = "")
 		{
-			return __ILGenerator.DeclareLocal(typeof(TType));
+			return DeclareLocal(typeof(TType), Name);
 		}
 
 		public void CheckAndFinalize()
@@ -271,6 +281,14 @@ namespace Codegen
 		//public List<Type> List;
 		private LinkedList<Type> Stack = new LinkedList<Type>();
 		private SafeILGenerator SafeILGenerator;
+
+		public SafeTypeStack Clone2()
+		{
+			return new SafeTypeStack(SafeILGenerator)
+			{
+				Stack = new LinkedList<Type>(this.Stack.ToArray()),
+			};
+		}
 
 		internal SafeTypeStack(SafeILGenerator SafeILGenerator)
 		{

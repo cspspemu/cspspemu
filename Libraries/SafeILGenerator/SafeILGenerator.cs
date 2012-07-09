@@ -5,9 +5,28 @@ using System.Text;
 using System.Reflection.Emit;
 using System.Reflection;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace Codegen
 {
+	public class SafeMethodTypeInfo
+	{
+		public Type ReturnType;
+		public Type[] Parameters;
+		public bool IsStatic;
+
+		public SafeMethodTypeInfo()
+		{
+		}
+
+		public SafeMethodTypeInfo(MethodInfo MethodInfo)
+		{
+			this.IsStatic = MethodInfo.IsStatic;
+			this.ReturnType = MethodInfo.ReturnType;
+			this.Parameters = MethodInfo.GetParameters().Select(Item => Item.ParameterType).ToArray();
+		}
+	}
+
 	public partial class SafeILGenerator
 	{
 		public void UnaryOperation(SafeUnaryOperator Operator)
@@ -15,11 +34,9 @@ namespace Codegen
 			if (TrackStack)
 			{
 				var TypeRight = TypeStack.Pop();
-				var TypeLeft = TypeStack.Pop();
 
 				if (CheckTypes)
 				{
-					if (TypeLeft != TypeRight) throw (new InvalidOperationException("Binary operation mismatch"));
 				}
 
 				TypeStack.Push(TypeRight);
@@ -75,26 +92,104 @@ namespace Codegen
 			StoreElement(typeof(TType));
 		}
 
+		public void InitObject(Type Type)
+		{
+			if (TrackStack)
+			{
+				var StoreAddressValue = TypeStack.Pop();
+				//TypeStack.Push(Type);
+			}
+
+			if (DoEmit)
+			{
+				Emit(OpCodes.Initobj, Type);
+			}
+
+			if (DoDebug)
+			{
+				Debug.WriteLine(String.Format("InitObject({0}) :: Stack -> {1}", Type.Name, TypeStack.Count));
+			}
+		}
+
+		public void StackAlloc()
+		{
+			if (TrackStack)
+			{
+				var Count = TypeStack.Pop();
+				TypeStack.Push(typeof(void*));
+			}
+
+			if (DoEmit)
+			{
+				Emit(OpCodes.Localloc);
+			}
+
+			if (DoDebug)
+			{
+				Debug.WriteLine(String.Format("StackAlloc :: Stack -> {0}", TypeStack.Count));
+			}
+		}
+
+		public void StoreObject(Type Type)
+		{
+			if (TrackStack)
+			{
+				var StoreValueType = TypeStack.Pop();
+				var StoreAddressValue = TypeStack.Pop();
+				if (StoreValueType != Type) throw (new InvalidOperationException(String.Format("{0} != {1}", StoreValueType, Type)));
+			}
+
+			if (DoEmit)
+			{
+				Emit(OpCodes.Stobj, Type);
+			}
+
+			if (DoDebug)
+			{
+				Debug.WriteLine(String.Format("SotreObject({0}) :: Stack -> {1}", Type.Name, TypeStack.Count));
+			}
+		}
+
 		public void StoreIndirect(Type Type)
 		{
 			if (TrackStack)
 			{
 				var StoreValueType = TypeStack.Pop();
 				var StoreAddressValue = TypeStack.Pop();
+				if (Type != StoreValueType)
+				{
+					if (Type.IsPointer && StoreValueType.IsPointer)
+					{
+					}
+					else
+					{
+						//throw (new InvalidOperationException(String.Format("{0} != {1}", StoreValueType, Type)));
+					}
+				}
 			}
 
 			if (DoEmit)
 			{
 				while (true)
 				{
+					// Simple types.
 					if (Type == typeof(bool)) { Emit(OpCodes.Stind_I); break; }
 					if (Type == typeof(sbyte) || Type == typeof(byte)) { Emit(OpCodes.Stind_I1); break; }
 					if (Type == typeof(short) || Type == typeof(ushort)) { Emit(OpCodes.Stind_I2); break; }
-					if (Type == typeof(int) || Type == typeof(uint)) {Emit(OpCodes.Stind_I4); break; }
+					if (Type == typeof(int) || Type == typeof(uint)) { Emit(OpCodes.Stind_I4); break; }
 					if (Type == typeof(long) || Type == typeof(ulong)) { Emit(OpCodes.Stind_I8); break; }
 					if (Type == typeof(float)) { Emit(OpCodes.Stind_R4); break; }
 					if (Type == typeof(double)) { Emit(OpCodes.Stind_R8); break; }
-					throw(new NotImplementedException("Can't store indirectly type '" + Type.Name + "'"));
+
+					// Pointers
+					//if (Type.IsPointer) { Emit(OpCodes.Stobj, Type); break; }
+					if (Type.IsPointer) { Emit(OpCodes.Stind_I); break; }
+					//if (Type.IsPointer) { Emit(OpCodes.Stind_Ref); break; }
+
+					//if (Type.IsClass) { Emit(OpCodes.Stobj, Type); break; }
+					if (true) { Emit(OpCodes.Stobj, Type); break; }
+
+					throw (new NotImplementedException("Can't store indirectly type '" + Type.Name + "'"));
 				}
 			}
 
@@ -114,7 +209,12 @@ namespace Codegen
 			if (TrackStack)
 			{
 				var StoreValueType = TypeStack.Pop();
-				if (StoreValueType != Local.LocalType) throw(new InvalidOperationException());
+				if (StoreValueType != Local.LocalType)
+				{
+#if false
+					throw (new InvalidOperationException(String.Format("{0} != {1}", StoreValueType, Local.LocalType)));
+#endif
+				}
 			}
 
 			if (DoEmit)
@@ -141,12 +241,12 @@ namespace Codegen
 			StoreArgument(Argument.Type, Argument.Index);
 		}
 
-		public void StoreArgument<TType>(int ArgumentIndex)
+		public void StoreArgument<TType>(ushort ArgumentIndex)
 		{
 			StoreArgument(typeof(TType), ArgumentIndex);
 		}
 
-		public void StoreArgument(Type Type, int ArgumentIndex)
+		public void StoreArgument(Type Type, ushort ArgumentIndex)
 		{
 			if (TrackStack)
 			{
@@ -156,7 +256,14 @@ namespace Codegen
 
 			if (DoEmit)
 			{
-				Emit(((int)(byte)ArgumentIndex == (int)ArgumentIndex) ? OpCodes.Starg_S : OpCodes.Starg, ArgumentIndex);
+				if ((ushort)(byte)ArgumentIndex == (ushort)ArgumentIndex)
+				{
+					Emit(OpCodes.Starg_S, (byte)ArgumentIndex);
+				}
+				else
+				{
+					Emit(OpCodes.Starg, (ushort)ArgumentIndex);
+				}
 			}
 
 			if (DoDebug)
@@ -241,10 +348,13 @@ namespace Codegen
 			}
 		}
 
+		/// <summary>
+		/// Must precede a call type instruction.
+		/// </summary>
 		public void Tailcall()
 		{
-			throw (new NotImplementedException());
-			//Emit(OpCodes.Tailcall);
+			//throw (new NotImplementedException());
+			Emit(OpCodes.Tailcall);
 		}
 
 		public void Switch<TType>(IEnumerable<TType> ListEnumerable, Func<TType, int> IntKeySelector, Action<TType> CaseGenerate, Action DefaultGenerate)
@@ -333,32 +443,82 @@ namespace Codegen
 			}
 		}
 
-		public void Sizeof()
+		public void Sizeof(Type Type)
 		{
 			if (TrackStack)
 			{
-				var BaseType = TypeStack.Pop();
+				//var BaseType = TypeStack.Pop();
 				TypeStack.Push(typeof(int));
 			}
 
 			if (DoEmit)
 			{
-				Emit(OpCodes.Sizeof);
+				Emit(OpCodes.Sizeof, Type);
 			}
 
 			if (DoDebug)
 			{
-				Debug.WriteLine(String.Format("Sizeof() :: Stack -> {0}", TypeStack.Count));
+				Debug.WriteLine(String.Format("Sizeof({0}) :: Stack -> {1}", Type, TypeStack.Count));
 			}
 		}
 
-		public void Return()
+		public void NewObject(ConstructorInfo ConstructorInfo)
 		{
 			if (TrackStack)
 			{
-				// @TODO CHECK RETURN TYPE
-				//var ReturnType = TypeStack.Pop();
-				//throw(new NotImplementedException());
+				//var ConstructorInfo = TypeStack.Pop();
+				foreach (var Parameter in ConstructorInfo.GetParameters())
+				{
+					TypeStack.Pop();
+				}
+			}
+
+			if (DoEmit)
+			{
+				__ILGenerator.Emit(OpCodes.Newobj, ConstructorInfo);
+			}
+
+			if (DoDebug)
+			{
+				Debug.WriteLine(String.Format("NewObject() :: Stack -> {0}", TypeStack.Count));
+			}
+		}
+
+		public void Throw()
+		{
+			if (TrackStack)
+			{
+				var ExceptionType = TypeStack.Pop();
+				if (typeof(Exception).IsAssignableFrom(ExceptionType))
+				{
+					throw(new InvalidOperationException(String.Format("Must throw an exception type but trying to throw {0}", ExceptionType)));
+				}
+			}
+
+			if (DoEmit)
+			{
+				Emit(OpCodes.Throw);
+			}
+
+			if (DoDebug)
+			{
+				Debug.WriteLine(String.Format("Throw() :: Stack -> {0}", TypeStack.Count));
+			}
+		}
+
+		public void Return(Type ReturnType)
+		{
+			if (TrackStack)
+			{
+				if (ReturnType != typeof(void))
+				{
+					var StackReturnType = TypeStack.Pop();
+					if (StackReturnType != ReturnType)
+					{
+						//throw (new Exception(String.Format("Invalid return type {0} != {1}", StackReturnType, ReturnType)));
+						ConvertTo(ReturnType);
+					}
+				}
 			}
 
 			if (DoEmit)
@@ -503,19 +663,51 @@ namespace Codegen
 
 		public void ConvertTo(Type Type)
 		{
-			// @TODO: From unsigned values
+			Type PreviousType = null;
 
 			if (TrackStack)
 			{
-				var PreviousType = TypeStack.Pop();
+				PreviousType = TypeStack.Pop();
 				TypeStack.Push(Type);
 			}
 
-			if (DoEmit)
+			if (DoEmit && (PreviousType != Type))
 			{
 				while (true)
 				{
-					if (Type == typeof(bool)) { Emit(OverflowCheck ? OpCodes.Conv_Ovf_I : OpCodes.Conv_I); break; }
+					if (PreviousType != null && PreviousType.IsPointer)
+					{
+						Emit(OpCodes.Conv_U);
+					}
+
+					/*
+					if (PreviousType != null && PreviousType.IsPointer)
+					{
+						//typeof(IntPtr).GetMethods(
+						//typeof(IntPtr).GetMethod(null, null, null, 
+
+						var PointerToIntPtr = typeof(IntPtr).GetMethods().Where(Method => Method.Name == "op_Explicit" && Method.ReturnType == typeof(IntPtr) && Method.GetParameters()[0].ParameterType == typeof(void*)).First();
+						var IntPtrToInt32 = typeof(IntPtr).GetMethods().Where(Method => Method.Name == "op_Explicit" && Method.ReturnType == typeof(int) && Method.GetParameters()[0].ParameterType == typeof(IntPtr)).First();
+						Call(PointerToIntPtr);
+						Call(IntPtrToInt32);
+						// IL_0000: ldc.i4.0
+						// IL_0001: conv.u
+						// IL_0002: ldflda int32 ilcc.Runtime.Tests.CLibTest/MyStruct::c
+						// IL_0007: conv.u
+						// IL_0008: call native int [mscorlib]System.IntPtr::op_Explicit(void*)
+						// IL_000d: call int32 [mscorlib]System.IntPtr::op_Explicit(native int)
+						// IL_0012: ret
+					}
+					*/
+
+					if (Type == typeof(bool))
+					{
+						Push(0);
+						CompareBinary(SafeBinaryComparison.NotEquals);
+
+						//Emit(OverflowCheck ? OpCodes.Conv_Ovf_I : OpCodes.Conv_I);
+						break;
+					}
 					if (Type == typeof(sbyte)) { Emit(OverflowCheck ? OpCodes.Conv_Ovf_I1 : OpCodes.Conv_I1); break; }
 					if (Type == typeof(byte)) { Emit(OverflowCheck ? OpCodes.Conv_Ovf_U1 : OpCodes.Conv_U1); break; }
 					if (Type == typeof(short)) { Emit(OverflowCheck ? OpCodes.Conv_Ovf_I2 : OpCodes.Conv_I2); break; }
@@ -527,7 +719,20 @@ namespace Codegen
 					if (Type == typeof(float)) { Emit(OpCodes.Conv_R4); break; }
 					if (Type == typeof(double)) { Emit(OpCodes.Conv_R8); break; }
 
-					throw (new NotImplementedException());
+					if (Type.IsPointer)
+					{
+						Emit(OverflowCheck ? OpCodes.Conv_Ovf_U : OpCodes.Conv_U);
+						// Do nothing?
+						break;
+					}
+
+					//if (Type.IsClass)
+					{
+						Emit(OpCodes.Castclass, Type);
+						break;
+					}
+
+					throw (new NotImplementedException(String.Format("Can't convert to type '{0}'", Type)));
 				}
 			}
 
@@ -645,7 +850,7 @@ namespace Codegen
 			}
 		}
 
-		public void BranchUnaryComparison(SafeUnaryComparison Comparison, SafeLabel Label)
+		public void BranchUnaryComparison(SafeUnaryComparison Comparison, SafeLabel Label, bool Short = false)
 		{
 			if (TrackStack)
 			{
@@ -664,8 +869,8 @@ namespace Codegen
 			{
 				switch (Comparison)
 				{
-					case SafeUnaryComparison.False: Emit(OpCodes.Brfalse, Label); break;
-					case SafeUnaryComparison.True: Emit(OpCodes.Brtrue, Label); break;
+					case SafeUnaryComparison.False: Emit(Short ? OpCodes.Brfalse_S : OpCodes.Brfalse, Label); break;
+					case SafeUnaryComparison.True: Emit(Short ? OpCodes.Brtrue_S : OpCodes.Brtrue, Label); break;
 					default: throw (new NotImplementedException());
 				}
 			}
@@ -676,14 +881,14 @@ namespace Codegen
 			}
 		}
 
-		public void BranchIfTrue(SafeLabel Label)
+		public void BranchIfTrue(SafeLabel Label, bool Short = false)
 		{
-			BranchUnaryComparison(SafeUnaryComparison.True, Label);
+			BranchUnaryComparison(SafeUnaryComparison.True, Label, Short);
 		}
 
-		public void BranchIfFalse(SafeLabel Label)
+		public void BranchIfFalse(SafeLabel Label, bool Short = false)
 		{
-			BranchUnaryComparison(SafeUnaryComparison.False, Label);
+			BranchUnaryComparison(SafeUnaryComparison.False, Label, Short);
 		}
 
 		static private Type GetCommonType(Type Type)
@@ -697,8 +902,12 @@ namespace Codegen
 			return Type;
 		}
 
-		private void _Jmp_Call(OpCode OpCode, MethodInfo MethodInfo)
+		private void _Jmp_Call(OpCode OpCode, MethodInfo MethodInfo, SafeMethodTypeInfo SafeMethodTypeInfo, Type[] ParameterTypes)
 		{
+			if (SafeMethodTypeInfo == null)
+			{
+				SafeMethodTypeInfo = new SafeMethodTypeInfo(MethodInfo);
+			}
 			if (DoDebug)
 			{
 				Debug.WriteLine(String.Format("_Jmp_Call({0}, {1}) :: Stack -> {2}", OpCode.Name, MethodInfo, TypeStack.Count));
@@ -707,9 +916,10 @@ namespace Codegen
 			if (TrackStack)
 			{
 				int CurrentArgumentIndex = 0;
-				foreach (var Parameter in MethodInfo.GetParameters().Reverse())
+				foreach (var ParameterParameterType in SafeMethodTypeInfo.Parameters.Reverse())
+				//foreach (var ParameterParameterType in SafeMethodTypeInfo.Parameters)
 				{
-					var FunctionParameterType = Parameter.ParameterType;
+					var FunctionParameterType = ParameterParameterType;
 					var StackParameterType = TypeStack.Pop();
 					
 					if (FunctionParameterType == typeof(bool)) FunctionParameterType = typeof(int);
@@ -717,7 +927,7 @@ namespace Codegen
 
 					if (CheckTypes)
 					{
-						if (FunctionParameterType != StackParameterType)
+						if (FunctionParameterType != StackParameterType && (FunctionParameterType != typeof(object) && StackParameterType != typeof(object)))
 						{
 							if (GetCommonType(FunctionParameterType) != GetCommonType(StackParameterType))
 							{
@@ -733,20 +943,32 @@ namespace Codegen
 					CurrentArgumentIndex++;
 				}
 
-				if (!MethodInfo.IsStatic)
+				if (ParameterTypes != null)
+				{
+					foreach (var ParameterType in ParameterTypes) TypeStack.Pop();
+				}
+
+				if (!SafeMethodTypeInfo.IsStatic)
 				{
 					var ThisType = TypeStack.Pop();
 				}
 
-				if (MethodInfo.ReturnType != typeof(void))
+				if (SafeMethodTypeInfo.ReturnType != typeof(void))
 				{
-					TypeStack.Push(MethodInfo.ReturnType);
+					TypeStack.Push(SafeMethodTypeInfo.ReturnType);
 				}
 			}
 
 			if (DoEmit)
 			{
-				Emit(OpCode, MethodInfo);
+				if (ParameterTypes != null)
+				{
+					__ILGenerator.EmitCall(OpCode, MethodInfo, ParameterTypes);
+				}
+				else
+				{
+					Emit(OpCode, MethodInfo);
+				}
 			}
 		}
 
@@ -757,10 +979,10 @@ namespace Codegen
 			for (int n = 0; n > StackCount; n++) Pop();
 		}
 
-		public void Jmp(MethodInfo MethodInfo)
+		public void Jmp(MethodInfo MethodInfo, SafeMethodTypeInfo SafeMethodTypeInfo = null)
 		{
 			ResetStack();
-			_Jmp_Call(OpCodes.Jmp, MethodInfo);
+			_Jmp_Call(OpCodes.Jmp, MethodInfo, SafeMethodTypeInfo, null);
 		}
 
 		public void Call(Delegate Delegate)
@@ -768,9 +990,74 @@ namespace Codegen
 			Call(Delegate.Method);
 		}
 
-		public void Call(MethodInfo MethodInfo)
+		public void LoadFunctionPointer(MethodInfo MethodInfo, bool IsVirtual = false)
 		{
-			_Jmp_Call(OpCodes.Call, MethodInfo);
+			if (TrackStack)
+			{
+				if (IsVirtual) TypeStack.Pop();
+
+				TypeStack.Push(typeof(void*));
+			}
+
+			if (DoEmit)
+			{
+				Emit(IsVirtual ? OpCodes.Ldvirtftn : OpCodes.Ldftn, MethodInfo);
+			}
+		}
+
+		public void CallManagedFunction(CallingConventions CallingConventions, Type ReturnType, Type[] ParameterTypes, Type[] OptionalParameterTypes)
+		{
+			if (TrackStack)
+			{
+				// Parameters
+				foreach (var ParameterType in ParameterTypes) TypeStack.Pop();
+
+				// Function Pointer
+				TypeStack.Pop();
+
+				// Pushes the result
+				if (ReturnType != typeof(void)) TypeStack.Push(ReturnType);
+			}
+
+			if (DoEmit)
+			{
+				__ILGenerator.EmitCalli(OpCodes.Calli, CallingConventions, ReturnType, ParameterTypes, OptionalParameterTypes);
+			}
+
+			if (DoDebug)
+			{
+				Debug.WriteLine(String.Format("CallCdecl({0}, {1}) :: Stack -> {0}", ReturnType, ParameterTypes, TypeStack.Count));
+			}
+		}
+
+		public void CallUnmanagedFunction(CallingConvention CallingConvention, Type ReturnType, Type[] ParameterTypes)
+		{
+			if (TrackStack)
+			{
+				// Parameters
+				foreach (var ParameterType in ParameterTypes) TypeStack.Pop();
+				
+				// Function Pointer
+				TypeStack.Pop();
+
+				// Pushes the result
+				if (ReturnType != typeof(void)) TypeStack.Push(ReturnType);
+			}
+
+			if (DoEmit)
+			{
+				__ILGenerator.EmitCalli(OpCodes.Calli, CallingConvention, ReturnType, ParameterTypes);
+			}
+
+			if (DoDebug)
+			{
+				Debug.WriteLine(String.Format("CallCdecl({0}, {1}) :: Stack -> {0}", ReturnType, ParameterTypes, TypeStack.Count));
+			}
+		}
+
+		public void Call(MethodInfo MethodInfo, SafeMethodTypeInfo SafeMethodTypeInfo = null, Type[] ParameterTypes = null)
+		{
+			_Jmp_Call(OpCodes.Call, MethodInfo, SafeMethodTypeInfo, ParameterTypes);
 		}
 
 		public void Break()
@@ -786,17 +1073,22 @@ namespace Codegen
 			}
 		}
 
-		public void BranchAlways(SafeLabel Label)
+		public void BranchAlways(SafeLabel Label, bool Short = false)
 		{
 			if (DoEmit)
 			{
-				Emit(OpCodes.Br, Label);
+				Emit(Short ? OpCodes.Br_S : OpCodes.Br, Label);
 			}
 
 			if (DoDebug)
 			{
 				Debug.WriteLine(String.Format("BranchAlways() :: Stack -> {0}", TypeStack.Count));
 			}
+		}
+
+		public void PopLeft()
+		{
+			while (TypeStack.Count > 0) Pop();
 		}
 
 		public void Pop()
@@ -817,9 +1109,9 @@ namespace Codegen
 			}
 		}
 
-		public SafeArgument DeclareArgument(Type Type, int ArgumentIndex)
+		public SafeArgument DeclareArgument(Type Type, ushort ArgumentIndex, string Name = "")
 		{
-			return new SafeArgument(Type, ArgumentIndex);
+			return new SafeArgument(Type, ArgumentIndex, Name);
 		}
 
 		public void LoadStoreArgument(SafeArgument Argument, Action Action)
@@ -834,6 +1126,11 @@ namespace Codegen
 		public void LoadArgument(SafeArgument Argument)
 		{
 			LoadArgument(Argument.Type, Argument.Index);
+		}
+
+		public void LoadArgumentAddress(SafeArgument Argument)
+		{
+			LoadArgumentAddress(Argument.Type, Argument.Index);
 		}
 
 		public void LoadArgument<TType>(int ArgumentIndex)
@@ -856,7 +1153,16 @@ namespace Codegen
 					case 1: Emit(OpCodes.Ldarg_1); break;
 					case 2: Emit(OpCodes.Ldarg_2); break;
 					case 3: Emit(OpCodes.Ldarg_3); break;
-					default: Emit(((int)(byte)ArgumentIndex == (int)ArgumentIndex) ? OpCodes.Ldarg_S : OpCodes.Ldarg, ArgumentIndex); break;
+					default:
+						if ((ushort)(byte)ArgumentIndex == (ushort)ArgumentIndex)
+						{
+							Emit(OpCodes.Ldarg_S, (byte)ArgumentIndex);
+						}
+						else
+						{
+							Emit(OpCodes.Ldarg, (ushort)ArgumentIndex);
+						}
+					break;
 				}
 			}
 
@@ -866,6 +1172,30 @@ namespace Codegen
 			}
 		}
 
+		public void LoadArgumentAddress(Type Type, ushort ArgumentIndex)
+		{
+			if (TrackStack)
+			{
+				TypeStack.Push(Type.MakePointerType());
+			}
+
+			if (DoEmit)
+			{
+				if ((ushort)(byte)ArgumentIndex == (ushort)ArgumentIndex)
+				{
+					Emit(OpCodes.Ldarga_S, (byte)ArgumentIndex);
+				}
+				else
+				{
+					Emit(OpCodes.Ldarga, (ushort)ArgumentIndex);
+				}
+			}
+
+			if (DoDebug)
+			{
+				Debug.WriteLine(String.Format("LoadArgumentAddress<{0}>({1}) :: Stack -> {2}", Type.Name, ArgumentIndex, TypeStack.Count));
+			}
+		}
 
 		public void LoadArgumentFromIndexAtStack()
 		{
@@ -929,6 +1259,60 @@ namespace Codegen
 			}
 		}
 
+		public void Push(Type Value)
+		{
+			if (TrackStack)
+			{
+				TypeStack.Push(typeof(RuntimeTypeHandle));
+			}
+
+			if (DoEmit)
+			{
+				Emit(OpCodes.Ldtoken, Value);
+			}
+
+			if (DoDebug)
+			{
+				Debug.WriteLine(String.Format("Push({0}) :: Stack -> {1}", Value, TypeStack.Count));
+			}
+		}
+
+		public void Push(MethodInfo Value)
+		{
+			if (TrackStack)
+			{
+				TypeStack.Push(typeof(MethodInfo));
+			}
+
+			if (DoEmit)
+			{
+				Emit(OpCodes.Ldtoken, Value);
+			}
+
+			if (DoDebug)
+			{
+				Debug.WriteLine(String.Format("Push({0}) :: Stack -> {1}", Value, TypeStack.Count));
+			}
+		}
+
+		public void Push(FieldInfo Value)
+		{
+			if (TrackStack)
+			{
+				TypeStack.Push(typeof(FieldInfo));
+			}
+
+			if (DoEmit)
+			{
+				Emit(OpCodes.Ldtoken, Value);
+			}
+
+			if (DoDebug)
+			{
+				Debug.WriteLine(String.Format("Push({0}) :: Stack -> {1}", Value, TypeStack.Count));
+			}
+		}
+
 		public void Push(bool Value)
 		{
 			_PushIntAs<bool>(Value ? 1 : 0);
@@ -937,6 +1321,11 @@ namespace Codegen
 		public void Push(int Value)
 		{
 			_PushIntAs<int>(Value);
+		}
+
+		public void Push(char Value)
+		{
+			_PushIntAs<char>(Value);
 		}
 
 		public void Push(long Value)
@@ -1044,24 +1433,44 @@ namespace Codegen
 
 		public void StoreField(FieldInfo FieldInfo)
 		{
-			if (TrackStack)
+			if (FieldInfo.IsStatic)
 			{
-				var ValueType = TypeStack.Pop();
-				var ObjectType = TypeStack.Pop();
-			}
+				if (TrackStack)
+				{
+					var ValueType = TypeStack.Pop();
+				}
 
-			if (DoEmit)
-			{
-				Emit(OpCodes.Stfld, FieldInfo);
-			}
+				if (DoEmit)
+				{
+					Emit(OpCodes.Stsfld, FieldInfo);
+				}
 
-			if (DoDebug)
+				if (DoDebug)
+				{
+					Debug.WriteLine(String.Format("StoreField({0}) :: Stack -> {1}", FieldInfo, TypeStack.Count));
+				}
+			}
+			else
 			{
-				Debug.WriteLine(String.Format("StoreField({0}) :: Stack -> {1}", FieldInfo, TypeStack.Count));
+				if (TrackStack)
+				{
+					var ValueType = TypeStack.Pop();
+					var ObjectType = TypeStack.Pop();
+				}
+
+				if (DoEmit)
+				{
+					Emit(OpCodes.Stfld, FieldInfo);
+				}
+
+				if (DoDebug)
+				{
+					Debug.WriteLine(String.Format("StoreField({0}) :: Stack -> {1}", FieldInfo, TypeStack.Count));
+				}
 			}
 		}
 
-		private void _LoadField_Address(OpCode OpCode, FieldInfo FieldInfo)
+		private void _LoadField_Address(OpCode OpCode, FieldInfo FieldInfo, bool Address)
 		{
 			if (FieldInfo == null)
 			{
@@ -1071,10 +1480,16 @@ namespace Codegen
 			if (TrackStack)
 			{
 				//var FieldInfoType = TypeStack.Pop();
-				var ObjectType = TypeStack.Pop();
-
-				// @TODO: Field reference
-				TypeStack.Push(typeof(object));
+				var TypePointer = TypeStack.Pop();
+				var ExpectedType = FieldInfo.FieldType;
+				if (Address) ExpectedType = FieldInfo.DeclaringType.MakePointerType();
+#if false
+				if (TypePointer != ExpectedType)
+				{
+					throw (new InvalidOperationException(String.Format("{0} != {1}", TypePointer, ExpectedType)));
+				}
+#endif
+				TypeStack.Push(ExpectedType);
 			}
 	
 			if (DoEmit)
@@ -1090,12 +1505,20 @@ namespace Codegen
 
 		public void LoadField(FieldInfo FieldInfo)
 		{
-			_LoadField_Address(OpCodes.Ldfld, FieldInfo);
+			_LoadField_Address(FieldInfo.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, FieldInfo, Address: false);
 		}
 
-		public void LoadFieldAddress(FieldInfo FieldInfo)
+		public void LoadFieldAddress(FieldInfo FieldInfo, bool UseLoadFieldAddress = true)
 		{
-			_LoadField_Address(OpCodes.Ldflda, FieldInfo);
+			if (UseLoadFieldAddress)
+			{
+				_LoadField_Address(FieldInfo.IsStatic ? OpCodes.Ldsflda : OpCodes.Ldflda, FieldInfo, Address: true);
+			}
+			else
+			{
+				Push((int)Marshal.OffsetOf(FieldInfo.DeclaringType, FieldInfo.Name));
+				BinaryOperation(SafeBinaryOperator.AdditionSigned);
+			}
 		}
 
 		public void LoadMethodAddress()
@@ -1170,15 +1593,14 @@ namespace Codegen
 		{
 			if (TrackStack)
 			{
-				// @TODO: Address
-				TypeStack.Push(Local.LocalType);
+				TypeStack.Push(Local.LocalType.MakePointerType());
 			}
 
 			if (DoEmit)
 			{
 				int LocalIndex = Local.LocalIndex;
 
-				Emit(((int)(byte)LocalIndex == (int)LocalIndex) ? OpCodes.Ldloca_S : OpCodes.Ldloca);
+				Emit(((int)(byte)LocalIndex == (int)LocalIndex) ? OpCodes.Ldloca_S : OpCodes.Ldloca, Local);
 			}
 
 			if (DoDebug)
@@ -1232,8 +1654,14 @@ namespace Codegen
 					if (Type == typeof(byte)) { Emit(OpCodes.Ldind_U1); break; }
 					if (Type == typeof(ushort)) { Emit(OpCodes.Ldind_U2); break; }
 					if (Type == typeof(uint)) { Emit(OpCodes.Ldind_U4); break; }
+					//if (Type.IsPointer) { Emit(OpCodes.Ldind_Ref); break; }
+					if (Type.IsPointer) { Emit(OpCodes.Ldind_I); break; }
 					//Emit(OpCodes.Ldelem);
-					throw (new NotImplementedException());
+					
+					//if (Type.IsClass) { Emit(OpCodes.Conv_U); Emit(OpCodes.Ldobj, Type); break; }
+					if (true) { Emit(OpCodes.Conv_U); Emit(OpCodes.Ldobj, Type); break; }
+
+					throw (new NotImplementedException("Can't load indirectly type '" + Type.Name + "'"));
 				}
 			}
 
@@ -1329,42 +1757,102 @@ namespace Codegen
 			}
 		}
 
+		public void SaveRestoreTypeStack(Action Action)
+		{
+			var OldTypeStack = TypeStack.Clone2();
+			try
+			{
+				Action();
+			}
+			finally
+			{
+				TypeStack = OldTypeStack;
+			}
+		}
+
+		public int GetOffsetIncrement(Action Action)
+		{
+			var ILOffsetStart = __ILGenerator.ILOffset;
+			Action();
+			var ILOffsetEnd = __ILGenerator.ILOffset;
+			return ILOffsetEnd - ILOffsetStart;
+		}
+
+		public void MacroIf(Action IfAction)
+		{
+			var IfLabel = DefineLabel("If");
+			var EndLabel = DefineLabel("End");
+
+			BranchUnaryComparison(SafeUnaryComparison.False, EndLabel);
+			// If
+			IfLabel.Mark();
+			{
+				//SaveRestoreTypeStack(() => {
+				IfAction();
+				//});
+			}
+			EndLabel.Mark();
+		}
+
 		public void MacroIfElse(Action IfAction, Action ElseAction)
 		{
 			var IfLabel = DefineLabel("If");
 			var ElseLabel = DefineLabel("Else");
 			var EndLabel = DefineLabel("End");
 
-			BranchUnaryComparison(SafeUnaryComparison.True, IfLabel);
-			BranchAlways(ElseLabel);
+			BranchUnaryComparison(SafeUnaryComparison.False, ElseLabel);
 			// If
 			IfLabel.Mark();
 			{
-				IfAction();
+				//SaveRestoreTypeStack(() => {
+					IfAction();
+				//});
 
 				BranchAlways(EndLabel);
 			}
 			// Else
 			ElseLabel.Mark();
 			{
-				ElseAction();
-
-				BranchAlways(EndLabel);
+				//SaveRestoreTypeStack(() =>  {
+					ElseAction();
+				//});
 			}
 			// End
 			EndLabel.Mark();
+		}
+
+		public IEnumerable<LocalBuilder> StackSave()
+		{
+			// TODO: Check if the stack fits or it should be a queue!
+			var SavedStack = new Stack<LocalBuilder>();
+			while (TypeStack.Count > 0)
+			{
+				var Type = TypeStack.Pop(); TypeStack.Push(Type);
+
+				var Temp1 = DeclareLocal(Type);
+				StoreLocal(Temp1);
+				SavedStack.Push(Temp1);
+			}
+			return SavedStack;
+		}
+
+		public void StackRestore(IEnumerable<LocalBuilder> SavedStack)
+		{
+			foreach (var Local in SavedStack) LoadLocal(Local);
 		}
 	}
 
 	public class SafeArgument
 	{
 		internal Type Type;
-		internal int Index;
+		internal ushort Index;
+		internal string Name;
 
-		internal SafeArgument(Type Type, int Index)
+		internal SafeArgument(Type Type, ushort Index, string Name)
 		{
 			this.Type = Type;
 			this.Index = Index;
+			this.Name = Name;
 		}
 	}
 }
