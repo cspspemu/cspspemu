@@ -136,7 +136,7 @@ namespace CSPspEmu
 				}
 			};
 
-			Logger.Info("Running ... plat:{0} ... int*:{1} ... simd:{2}", Environment.Is64BitProcess ? "x64" : "x86", sizeof(int*), SimdRuntime.AccelMode);
+			Logger.Info("Running ... plat:{0} ... int*:{1} ... simd:{2}", Environment.Is64BitProcess ? "64bit" : "32bit", sizeof(int*), SimdRuntime.AccelMode);
 #if false
 			Console.WriteLine(CSPspEmu.Resources.Translations.GetString("extra", "UnknownGame"));
 			Console.ReadKey(); Environment.Exit(0);
