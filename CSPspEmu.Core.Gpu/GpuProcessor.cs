@@ -124,7 +124,7 @@ namespace CSPspEmu.Core.Gpu
 				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () =>
 				{
 					Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-					Console.WriteLine("GpuStateStruct too big. Maybe x64? . Size: " + sizeof(GpuStateStruct));
+					Console.WriteLine("GpuStateStruct too big. Maybe 64bit? . Size: " + sizeof(GpuStateStruct));
 					Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 				});
 				
