@@ -405,7 +405,7 @@ namespace Codegen
 		{
 #if true
 			// SwitchReferenceValue = <expression>
-			var SwitchReferenceValue = DeclareLocal<int>("SwitchReferenceValue");
+			var SwitchReferenceValue = DeclareLocal<int>("SwitchReferenceValue", false);
 			StoreLocal(SwitchReferenceValue);
 
 			foreach (var Pair in Labels)

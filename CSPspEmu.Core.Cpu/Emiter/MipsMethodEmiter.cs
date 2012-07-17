@@ -153,7 +153,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public Action<CpuThreadState> CreateDelegate()
 		{
-			SafeILGenerator.Return();
+			SafeILGenerator.Return(typeof(void));
 
 			try
 			{

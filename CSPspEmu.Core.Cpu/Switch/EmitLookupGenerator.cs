@@ -132,7 +132,7 @@ namespace CSPspEmu.Core.Cpu.Table
 				}
 			);
 
-			SafeILGenerator.Return();
+			SafeILGenerator.Return(typeof(void));
 #else
 			foreach (var MaskGroup in MaskGroups.Select(MaskGroup => MaskGroup.ToArray()))
 			{

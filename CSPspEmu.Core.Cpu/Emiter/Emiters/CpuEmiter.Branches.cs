@@ -181,8 +181,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			//FieldBuilder.SetValue(null, 1);
 			
 			//MipsMethodEmiter.ILGenerator.Emit(OpCodes.Callvirt);
-			
-			SafeILGenerator.Return();
+
+			SafeILGenerator.Return(typeof(void));
 		}
 
 		/// <summary>
@@ -204,7 +204,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
 			});
-			SafeILGenerator.Return();
+			SafeILGenerator.Return(typeof(void));
 		}
 
 		public event Action<uint> AnalyzePCEvent;

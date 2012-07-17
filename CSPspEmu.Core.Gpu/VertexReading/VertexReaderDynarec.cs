@@ -42,7 +42,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 			this.VertexInfoArgument = SafeILGenerator.DeclareArgument(typeof(VertexInfo*), 0);
 			this.IndexArgument = SafeILGenerator.DeclareArgument(typeof(int), 0);
 			this.CountArgument = SafeILGenerator.DeclareArgument(typeof(int), 0);
-			this.LocalColor = SafeILGenerator.DeclareLocal<uint>("LocalColor");
+			this.LocalColor = SafeILGenerator.DeclareLocal<uint>("LocalColor", false);
 		}
 
 		private void AlignTo(int Alignment)
@@ -218,7 +218,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 			Console.Error.WriteLine("Get:{0}, Calculated:{1}", Offset, VertexType.GetVertexSize());
 			Debug.Assert(Offset == VertexType.GetVertexSize());
 
-			SafeILGenerator.Return();
+			SafeILGenerator.Return(typeof(void));
 			//Console.Error.WriteLine(DynamicMethod.GetMethodBody().GetILAsByteArray());
 		}
 	}

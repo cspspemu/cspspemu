@@ -172,19 +172,22 @@ namespace Codegen
 			throw (new NotImplementedException());
 		}
 
-		public LocalBuilder DeclareLocal(Type Type, string Name = "")
+		public LocalBuilder DeclareLocal(Type Type, string Name = "", bool UseSymbolicInformation = true)
 		{
 			var LocalBuilder = __ILGenerator.DeclareLocal(Type);
 			if (Name != null && Name != "")
 			{
-				LocalBuilder.SetLocalSymInfo(Name);
+				if (UseSymbolicInformation)
+				{
+					LocalBuilder.SetLocalSymInfo(Name);
+				}
 			}
 			return LocalBuilder;
 		}
 
-		public LocalBuilder DeclareLocal<TType>(string Name = "")
+		public LocalBuilder DeclareLocal<TType>(string Name = "", bool UseSymbolicInformation = true)
 		{
-			return DeclareLocal(typeof(TType), Name);
+			return DeclareLocal(typeof(TType), Name, UseSymbolicInformation);
 		}
 
 		public void CheckAndFinalize()
