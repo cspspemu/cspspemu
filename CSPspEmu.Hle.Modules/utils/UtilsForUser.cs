@@ -345,6 +345,27 @@ namespace CSPspEmu.Hle.Modules.utils
 		{
 			throw (new NotImplementedException());
 		}
+
+        [HlePspFunction(NID = 0x7853182D, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceUtilityGameSharingUpdate()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0xC492F751, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceUtilityGameSharingInitStart()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0xEFC6F80F, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceUtilityGameSharingShutdownStart()
+        {
+            return 0;
+        }
 	}
 
 	/// <summary>

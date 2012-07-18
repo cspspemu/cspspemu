@@ -436,11 +436,18 @@ namespace CSPspEmu.Hle.Modules.audio
 			//return 0;
 		}
 
-        [HlePspFunction(NID = 0x647CEF33, FirmwareVersion = 150)]
+		[HlePspFunction(NID = 0x647CEF33, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceAudioOutput2GetRestSample()
+		{
+			throw (new NotImplementedException());
+		}
+
+        [HlePspFunction(NID = 0xE926D3FB, FirmwareVersion = 150)]
         [HlePspNotImplemented]
-        public int sceAudioOutput2GetRestSample()
+        public int sceAudioInputInitEx()
         {
-            throw (new NotImplementedException());
+            return 0;
         }
 	}
 }

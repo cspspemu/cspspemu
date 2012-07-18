@@ -36,40 +36,40 @@ namespace CSPspEmu.Hle.Modules.pspnet
 			throw(new NotImplementedException());
 		}
 
-        [HlePspFunction(NID = 0x7A662D6B, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceNetAdhocPollSocket()
-        {
-            throw (new NotImplementedException());
-        }
+		[HlePspFunction(NID = 0x7A662D6B, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceNetAdhocPollSocket()
+		{
+			throw (new NotImplementedException());
+		}
 
-        [HlePspFunction(NID = 0x6F92741B, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceNetAdhocPdpCreate()
-        {
-            throw (new NotImplementedException());
-        }
+		[HlePspFunction(NID = 0x6F92741B, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceNetAdhocPdpCreate()
+		{
+			throw (new NotImplementedException());
+		}
 
-        [HlePspFunction(NID = 0xABED3790, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceNetAdhocPdpSend()
-        {
-            throw (new NotImplementedException());
-        }
+		[HlePspFunction(NID = 0xABED3790, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceNetAdhocPdpSend()
+		{
+			throw (new NotImplementedException());
+		}
 
-        [HlePspFunction(NID = 0xDFE53E03, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceNetAdhocPdpRecv()
-        {
-            throw (new NotImplementedException());
-        }
+		[HlePspFunction(NID = 0xDFE53E03, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceNetAdhocPdpRecv()
+		{
+			throw (new NotImplementedException());
+		}
 
-        [HlePspFunction(NID = 0x7F27BB5E, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceNetAdhocPdpDelete()
-        {
-            throw (new NotImplementedException());
-        }
+		[HlePspFunction(NID = 0x7F27BB5E, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceNetAdhocPdpDelete()
+		{
+			throw (new NotImplementedException());
+		}
 
 		/// <summary>
 		/// Create a PDP object.
@@ -82,6 +82,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		///		The ID of the PDP object
 		///		less than 0 on error
 		///	</returns>
+        /// 
+        [HlePspFunction(NID = 0x6F92741B, FirmwareVersion = 150)]
 		public int sceNetAdhocPdpCreate(byte *mac, ushort port, uint bufsize, int unk1)
 		{
 			throw(new NotImplementedException());
@@ -96,6 +98,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		///		0 on success
 		///		less than 0 on error
 		/// </returns>
+        [HlePspFunction(NID = 0x7F27BB5E, FirmwareVersion = 150)]
 		public int sceNetAdhocPdpDelete(int id, int unk1)
 		{
 			throw(new NotImplementedException());
@@ -135,6 +138,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		///		Number of bytes received
 		///		less than 0 on error.
 		/// </returns>
+        [HlePspFunction(NID = 0xDFE53E03, FirmwareVersion = 150)]
 		public int sceNetAdhocPdpRecv(int id, byte *srcMacAddr, ushort *port, void *data, void *dataLength, uint timeout, int nonblock)
 		{
 			throw(new NotImplementedException());
@@ -148,6 +152,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		 *
 		 * @return 0 on success, < 0 on error
 		 */
+        [HlePspFunction(NID = 0xC7C1FC57, FirmwareVersion = 150)]
 		public int sceNetAdhocGetPdpStat(int *size, pdpStatStruct *stat)
 		{
 			throw(new NotImplementedException());
@@ -161,6 +166,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		 *
 		 * @return 0 on success, < 0 on error.
 		 */
+        [HlePspFunction(NID = 0x7F75C338, FirmwareVersion = 150)]
 		public int sceNetAdhocGameModeCreateMaster(void *data, int size)
 		{
 			throw(new NotImplementedException());
@@ -175,6 +181,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		 *
 		 * @return The id of the replica on success, < 0 on error.
 		 */
+        [HlePspFunction(NID = 0x3278AB0C, FirmwareVersion = 150)]
 		public int sceNetAdhocGameModeCreateReplica(byte *mac, void *data, int size)
 		{
 			throw(new NotImplementedException());
@@ -185,6 +192,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		 *
 		 * @return 0 on success, < 0 on error.
 		 */
+		[HlePspFunction(NID = 0x98C204C8, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceNetAdhocGameModeUpdateMaster()
 		{
 			throw(new NotImplementedException());
@@ -198,6 +207,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		 *
 		 * @return 0 on success, < 0 on error.
 		 */
+        [HlePspFunction(NID = 0xFA324B4E, FirmwareVersion = 150)]
 		public int sceNetAdhocGameModeUpdateReplica(int id, int unk1)
 		{
 			throw(new NotImplementedException());
@@ -208,6 +218,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		 *
 		 * @return 0 on success, < 0 on error.
 		 */
+        [HlePspFunction(NID = 0xA0229362, FirmwareVersion = 150)]
 		public int sceNetAdhocGameModeDeleteMaster()
 		{
 			throw(new NotImplementedException());
@@ -220,6 +231,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		 *
 		 * @return 0 on success, < 0 on error.
 		 */
+        [HlePspFunction(NID = 0x0B2228E9, FirmwareVersion = 150)]
 		public int sceNetAdhocGameModeDeleteReplica(int id)
 		{
 			throw(new NotImplementedException());
@@ -234,9 +246,58 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		///		0 on success
 		///		less than 0 on error
 		/// </returns>
+        /// 
+        [HlePspFunction(NID = 0xB9685118, FirmwareVersion = 150)]
 		public int sceNetAdhocGetPtpStat(int *size, ptpStatStruct *stat)
 		{
 			throw(new NotImplementedException());
 		}
+
+		/**
+		 * Create peer game object type data.
+		 *
+		 * @param mac - The mac address of the peer.
+		 * @param data - A pointer to the game object data.
+		 * @param size - Size of the game data.
+		 *
+		 * @return The id of the replica on success, < 0 on error.
+		 */
+		[HlePspFunction(NID = 0x3278AB0C, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceNetAdhocGameModeCreateReplica()
+		{
+			return 0;
+		}
+
+		/**
+		 * Create own game object type data.
+		 *
+		 * @param data - A pointer to the game object data.
+		 * @param size - Size of the game data.
+		 *
+		 * @return 0 on success, < 0 on error.
+		 */
+		[HlePspFunction(NID = 0x7F75C338, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceNetAdhocGameModeCreateMaster()
+		{
+			return 0;
+		}
+
+
+		/**
+		 * Update peer game object type data.
+		 *
+		 * @param id - The id of the replica returned by sceNetAdhocGameModeCreateReplica.
+		 * @param info - address of GameModeUpdateInfo structure.
+		 *
+		 * @return 0 on success, < 0 on error.
+		 */
+		[HlePspFunction(NID = 0xFA324B4E, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceNetAdhocGameModeUpdateReplica()
+        {
+            return 0;
+        }
 	}
 }

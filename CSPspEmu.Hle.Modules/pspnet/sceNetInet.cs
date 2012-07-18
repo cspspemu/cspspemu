@@ -423,5 +423,13 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		{
 			throw(new NotImplementedException());
 		}
+
+
+		[HlePspFunction(NID = 0x8CA3A97E, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceNetInetGetPspError()
+		{
+			return 0;
+		}
 	}
 }

@@ -32,5 +32,12 @@ namespace CSPspEmu.Hle.Modules.pmfplayer
 		{
 			return -1;
 		}
+
+		[HlePspFunction(NID = 0x68D42328, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int scePsmfGetNumberOfSpecificStreams()
+		{
+			return 0;
+		}
 	}
 }
