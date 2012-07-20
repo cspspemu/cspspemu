@@ -390,5 +390,19 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
         {
             return 0;
         }
+
+        [HlePspFunction(NID = 0xD5EBBBCD, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int __sceSasSetSteepWave()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0xA232CBE6, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int __sceSasSetTriangularWave()
+        {
+            return 0;
+        }
 	}
 }

@@ -101,5 +101,19 @@ namespace CSPspEmu.Hle.Modules.impose
 			*IconStatusPointer = BateryStatusEnum.FullyPilled;
 			return 0;
 		}
+
+        [HlePspFunction(NID = 0x967F6D4A, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceImposeSetBacklightOffTime()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0x8F6E3518, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceImposeGetBacklightOffTime()
+        {
+            return 0;
+        }
 	}
 }

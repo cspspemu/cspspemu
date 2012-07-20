@@ -1198,5 +1198,96 @@ namespace CSPspEmu.Hle.Modules.utility
 		{
 			return 0;
 		}
+
+        [HlePspFunction(NID = 0x7853182D, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceUtilityGameSharingUpdate()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0xC492F751, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceUtilityGameSharingInitStart()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0x16D02AF0, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceUtilityNpSigninInitStart()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0x86ABDB1B, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceUtilityNpSigninGetStatus()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0xE19C97D6, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceUtilityNpSigninShutdownStart()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0xF3FBC572, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceUtilityNpSigninUpdate()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0x0251B134, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceUtilityScreenshotInitStart()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0x41E30674, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceUtilitySetSystemParamString()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0x45C18506, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceUtilitySetSystemParamInt()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0x4FED24D8, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceUtilityGetNetParamLatestID()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0xAB083EA9, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceUtilityScreenshotUpdate()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0xD81957B7, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceUtilityScreenshotGetStatus()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0xF9E0008C, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceUtilityScreenshotShutdownStart()
+        {
+            return 0;
+        }
 	}
 }

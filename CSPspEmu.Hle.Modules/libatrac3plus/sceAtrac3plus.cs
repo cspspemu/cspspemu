@@ -923,5 +923,47 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		{
 			return 0;
 		}
+
+        [HlePspFunction(NID = 0xD5C28CC0, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceAtracEndEntry()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0xD1F59FDB, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceAtracStartEntry()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0x9CD7DE03, FirmwareVersion = 250)]
+        [HlePspNotImplemented]
+        public int sceAtracSetMOutHalfwayBufferAndGetID()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0x5DD66588, FirmwareVersion = 250)]
+        [HlePspNotImplemented]
+        public int sceAtracSetAA3HalfwayBufferAndGetID()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0x5622B7C1, FirmwareVersion = 250)]
+        [HlePspNotImplemented]
+        public int sceAtracSetAA3DataAndGetID()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0x3F6E26B5, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceAtracSetHalfwayBuffer()
+        {
+            return 0;
+        }
 	}
 }

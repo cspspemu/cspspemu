@@ -308,5 +308,12 @@ namespace CSPspEmu.Hle.Modules.display
 		{
 			return _waitVblankCB(CpuThreadState, HandleCallbacks: true, CycleCount: CycleCount);
 		}
+
+        [HlePspFunction(NID = 0xB4F378FA, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceDisplayIsForeground()
+        {
+            return 0;
+        }
 	}
 }

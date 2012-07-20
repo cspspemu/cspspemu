@@ -179,6 +179,48 @@ namespace CSPspEmu.Hle.Modules.ctrl
 			return 0;
 		}
 
+        [HlePspFunction(NID = 0xC152080A, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceCtrlPeekBufferNegative()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0xA68FD260, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceCtrlClearRapidFire()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0x687660FA, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceCtrlGetIdleCancelThreshold()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0x6841BE1A, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceCtrlSetRapidFire()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0x60B81F86, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceCtrlReadBufferNegative()
+        {
+            return 0;
+        }
+
+        [HlePspFunction(NID = 0x02BAAD91, FirmwareVersion = 150)]
+        [HlePspNotImplemented]
+        public int sceCtrlGetSamplingCycle()
+        {
+            return 0;
+        }
+
 		/// <summary>
 		/// Controller latch.
 		/// </summary>
