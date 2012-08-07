@@ -248,6 +248,13 @@ namespace CSPspEmu.Hle.Modules.mediaman
 			return 0;
 		}
 
+		[HlePspFunction(NID = 0xCBE9F02A, FirmwareVersion = 200)]
+		[HlePspNotImplemented]
+		public int sceUmdReplacePermit()
+		{
+			return 0;
+		}
+
 		/// <summary>
 		/// Enumeration for UMD types
 		/// </summary>

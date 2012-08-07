@@ -201,6 +201,7 @@ namespace CSPspEmu.Gui.Winforms
 						case 'S': return "CD/DVD";
 						case 'U': return "UMD";
 						case 'B': return "BluRay";
+						case 'N': return "PSN";
 						default: return "Unknown";
 					}
 				}
@@ -219,6 +220,7 @@ namespace CSPspEmu.Gui.Winforms
 					switch (DISC_ID[1])
 					{
 						case 'C': return "Sony";
+                        case 'P': return "PSN";
 						case 'L': return "Other";
 						default: return "Unknown";
 					}
@@ -261,7 +263,7 @@ namespace CSPspEmu.Gui.Winforms
 					switch (DISC_ID[3])
 					{
 						case 'D': return "Demo";
-						case 'M': return "Malasian";
+						case 'M': return "Malaysian";
 						case 'S': return "Retail";
 						default: return "Unknown";
 					}
@@ -302,7 +304,7 @@ namespace CSPspEmu.Gui.Winforms
 			objectListView1.Columns.Add(TitleColumn);
 			objectListView1.Columns.Add(FirmwareColumn);
 			objectListView1.Columns.Add(RegionColumn);
-			//objectListView1.Columns.Add(MediaTypeColumn);
+			objectListView1.Columns.Add(MediaTypeColumn);
 			//objectListView1.Columns.Add(LicenseTypeColumn);
 			//objectListView1.Columns.Add(ReleaseTypeColumn);
 			objectListView1.Columns.Add(PathColumn);

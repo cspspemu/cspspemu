@@ -336,11 +336,121 @@ namespace CSPspEmu.Hle.Modules.rtc
 			return 0;
 		}
 
-		
-		
 		[HlePspFunction(NID = 0xCF561893, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceRtcGetWin32FileTime(ScePspDateTime DateTime)
+		{
+			return 0;
+		}
+		
+		[HlePspFunction(NID = 0x0498FB3C, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceRtcFormatRFC3339()
+		{
+			return 0;
+		}
+
+		[HlePspFunction(NID = 0x1909C99B, FirmwareVersion = 200)]
+		[HlePspNotImplemented]
+		public int sceRtcSetTime64_t()
+		{
+			return 0;
+		}
+
+		[HlePspFunction(NID = 0x203CEB0D, FirmwareVersion = 200)]
+		[HlePspNotImplemented]
+		public int sceRtcGetLastReincarnatedTime()
+		{
+			return 0;
+		}
+
+		[HlePspFunction(NID = 0x27F98543, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceRtcFormatRFC3339LocalTime()
+		{
+			return 0;
+		}
+
+		[HlePspFunction(NID = 0x28E1E988, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceRtcParseRFC3339()
+		{
+			return 0;
+		}
+
+		[HlePspFunction(NID = 0x36075567, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceRtcGetDosTime()
+		{
+			return 0;
+		}
+
+		[HlePspFunction(NID = 0x3A807CC8, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceRtcSetTime_t()
+		{
+			return 0;
+		}
+
+		[HlePspFunction(NID = 0x42307A17, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceRtcIsLeapYear()
+		{
+			return 0;
+		}
+
+		[HlePspFunction(NID = 0x4B1B5E82, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceRtcCheckValid()
+		{
+			return 0;
+		}
+
+		[HlePspFunction(NID = 0x62685E98, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceRtcGetLastAdjustedTime()
+		{
+			return 0;
+		}
+
+		[HlePspFunction(NID = 0x779242A2, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceRtcConvertLocalTimeToUTC()
+		{
+			return 0;
+		}
+
+		[HlePspFunction(NID = 0x7ACE4C04, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceRtcSetWin32FileTime()
+		{
+			return 0;
+		}
+
+		[HlePspFunction(NID = 0x7DE6711B, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceRtcFormatRFC2822LocalTime()
+		{
+			return 0;
+		}
+
+		[HlePspFunction(NID = 0xC663B3B9, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceRtcFormatRFC2822()
+		{
+			return 0;
+		}
+
+		[HlePspFunction(NID = 0xDFBC5F16, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceRtcParseDateTime()
+		{
+			return 0;
+		}
+
+		[HlePspFunction(NID = 0xF006F264, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceRtcSetDosTime()
 		{
 			return 0;
 		}
