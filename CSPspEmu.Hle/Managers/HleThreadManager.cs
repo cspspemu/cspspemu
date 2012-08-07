@@ -153,7 +153,7 @@ namespace CSPspEmu.Hle.Managers
 			return PreemptiveScheduler.Current;
 		}
 
-		public void StepNext()
+		public void StepNext(Action DoBeforeSelectingNext)
 		{
 			//HleInterruptManager.EnableDisable(() => {
 			//};
@@ -182,10 +182,11 @@ namespace CSPspEmu.Hle.Managers
 			}
 
 			// Run that thread
-			Current = NextThread;
+			this.Current = NextThread;
+			var CurrentCurrent = Current;
 			{
 				// Ready -> Running
-				Current.SetStatus(HleThread.Status.Running);
+				CurrentCurrent.SetStatus(HleThread.Status.Running);
 
 				try
 				{
@@ -194,21 +195,24 @@ namespace CSPspEmu.Hle.Managers
 						ConsoleUtils.SaveRestoreConsoleState(() =>
 						{
 							Console.ForegroundColor = ConsoleColor.Yellow;
-							Console.WriteLine("Execute: {0} : PC: 0x{1:X}", Current, Current.CpuThreadState.PC);
+							Console.WriteLine("Execute: {0} : PC: 0x{1:X}", CurrentCurrent, CurrentCurrent.CpuThreadState.PC);
 						});
 					}
-					ExecuteCurrent(Current);
+
+					if (DoBeforeSelectingNext != null) DoBeforeSelectingNext();
+
+					ExecuteCurrent(CurrentCurrent);
 				}
 				finally
 				{
 					// Running -> Ready
-					if (Current.HasAllStatus(HleThread.Status.Running))
+					if (CurrentCurrent.HasAllStatus(HleThread.Status.Running))
 					{
-						Current.SetStatus(HleThread.Status.Ready);
+						CurrentCurrent.SetStatus(HleThread.Status.Ready);
 					}
 				}
 			}
-			Current = null;
+			this.Current = null;
 		}
 	}
 

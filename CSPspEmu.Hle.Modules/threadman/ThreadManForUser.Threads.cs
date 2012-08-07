@@ -1,4 +1,5 @@
 ﻿//#define TEST_STOP_THREADS_INSTEAD_OF_KILLING
+#define USE_RIGHT_PRIORITY_VALUE
 
 using System;
 using System.Collections.Generic;
@@ -54,8 +55,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 			Thread.Name = Name;
 			Thread.Info.PriorityCurrent = InitPriority;
 			Thread.Info.PriorityInitially = InitPriority;
-			// TODO: Note that setting it causes problems on some games? Try to guess why.
+			
+#if USE_RIGHT_PRIORITY_VALUE
 			Thread.PriorityValue = InitPriority;
+#endif
+
 			Thread.Attribute = Attribute;
 			Thread.GP = CpuThreadState.GP;
 			Thread.Info.EntryPoint = (SceKernelThreadEntry)EntryPoint;

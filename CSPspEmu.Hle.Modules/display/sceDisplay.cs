@@ -198,7 +198,7 @@ namespace CSPspEmu.Hle.Modules.display
 		/// <remarks>(pixel_clk_freq * cycles_per_pixel)/(row_pixels * column_pixel)</remarks>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xDBA6C4C4, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public float sceDisplayGetFramePerSec()
 		{
 			// (pixel_clk_freq * cycles_per_pixel)/(row_pixels * column_pixel)

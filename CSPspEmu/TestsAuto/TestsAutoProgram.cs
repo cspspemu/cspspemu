@@ -65,6 +65,7 @@ namespace CSPspEmu.AutoTests
 
 				CapturedOutput = ConsoleUtils.CaptureOutput(() =>
 				{
+					//Console.Error.WriteLine("[0]");
 					//PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
 					PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();
 
@@ -73,6 +74,7 @@ namespace CSPspEmu.AutoTests
 
 					PspEmulatorContext.SetInstanceType<PspAudioImpl, AudioImplNull>();
 					PspEmulatorContext.SetInstanceType<HleOutputHandler, HleOutputHandlerMock>();
+					//Console.Error.WriteLine("[1]");
 
 					PspConfig.FileNameBase = FileNameBase;
 
@@ -81,17 +83,29 @@ namespace CSPspEmu.AutoTests
 					var End = DateTime.UtcNow;
 					Console.WriteLine(End - Start);
 
+					//Console.Error.WriteLine("[a]");
+
+					// GPU -> NULL
+					PspEmulatorContext.SetInstanceType<GpuImpl>(typeof(GpuImplNull));
+
 					var GpuImpl = PspEmulatorContext.GetInstance<GpuImpl>();
 					GpuImpl.InitSynchronizedOnce();
 
+					//Console.Error.WriteLine("[b]");
+
 					var PspRunner = PspEmulatorContext.GetInstance<PspRunner>();
 					PspRunner.StartSynchronized();
+
+					//Console.Error.WriteLine("[c]");
+
 					{
 						try
 						{
 							//PspRunner.CpuComponentThread.SetIso(PspAutoTestsFolder + "/../input/test.cso");
 							PspRunner.CpuComponentThread.SetIso(PspAutoTestsFolder + "/../input/cube.cso");
+							//Console.Error.WriteLine("[2]");
 							PspRunner.CpuComponentThread._LoadFile(FileName);
+							//Console.Error.WriteLine("[3]");
 							if (!PspRunner.CpuComponentThread.StoppedEndedEvent.WaitOne(TimeSpan.FromSeconds(5)))
 							{
 								Console.Error.WriteLine("Timeout!");

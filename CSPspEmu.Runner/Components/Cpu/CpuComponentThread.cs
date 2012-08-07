@@ -382,12 +382,25 @@ namespace CSPspEmu.Runner.Components.Cpu
 				try
 #endif
 				{
+					// HACK! TODO: Update PspRtc every 2 thread switchings.
+					// Note: It should update the RTC after selecting the next thread to run.
+					// But currently is is not possible since updating the RTC and waking up
+					// threads has secondary effects that I have to consideer first.
+					bool TickAlternate = false;
+
+					//PspRtc.Update();
 					while (true)
 					{
 						ThreadTaskQueue.HandleEnqueued();
 						if (!Running) return;
-						PspRtc.Update();
-						HleThreadManager.StepNext();
+
+						if (!TickAlternate) PspRtc.Update();
+						TickAlternate = !TickAlternate;
+
+						HleThreadManager.StepNext(DoBeforeSelectingNext : () =>
+						{
+							//PspRtc.Update();
+						});
 					}
 				}
 #if !DO_NOT_PROPAGATE_EXCEPTIONS
