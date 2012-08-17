@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing.Imaging;
 using System.Drawing;
-using CSharpUtils.Extensions;
+using CSharpUtils;
 
 namespace CSharpUtils
 {

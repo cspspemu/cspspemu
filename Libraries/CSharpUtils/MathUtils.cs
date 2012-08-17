@@ -16,6 +16,13 @@ namespace CSharpUtils
 			return Value;
 		}
 
+		static public int FastClamp(int Value, int Min, int Max)
+		{
+			if (Value < Min) return Min;
+			if (Value > Max) return Max;
+			return Value;
+		}
+
 		static public void Swap<Type>(ref Type A, ref Type B)
 		{
 			LanguageUtils.Swap(ref A, ref B);

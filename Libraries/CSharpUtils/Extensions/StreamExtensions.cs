@@ -12,11 +12,24 @@ using CSharpUtils;
 
 static public class StreamExtensions
 {
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <returns></returns>
 	static public bool Eof(this Stream Stream)
 	{
 		return Stream.Available() <= 0;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="TStream"></typeparam>
+	/// <param name="Stream"></param>
+	/// <param name="Position"></param>
+	/// <param name="Callback"></param>
+	/// <returns></returns>
 	static public TStream PreservePositionAndLock<TStream>(this TStream Stream, long Position, Action Callback) where TStream : Stream
 	{
 		return Stream.PreservePositionAndLock(() =>
@@ -26,6 +39,13 @@ static public class StreamExtensions
 		});
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="TStream"></typeparam>
+	/// <param name="Stream"></param>
+	/// <param name="Callback"></param>
+	/// <returns></returns>
 	static public TStream PreservePositionAndLock<TStream>(this TStream Stream, Action Callback) where TStream : Stream
 	{
 		return Stream.PreservePositionAndLock((_Stream) =>
@@ -34,6 +54,13 @@ static public class StreamExtensions
 		});
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="TStream"></typeparam>
+	/// <param name="Stream"></param>
+	/// <param name="Callback"></param>
+	/// <returns></returns>
 	static public TStream PreservePositionAndLock<TStream>(this TStream Stream, Action<Stream> Callback) where TStream : Stream
 	{
 		if (!Stream.CanSeek)
@@ -52,11 +79,23 @@ static public class StreamExtensions
 		return Stream;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <returns></returns>
 	static public long Available(this Stream Stream)
 	{
 		return Stream.Length - Stream.Position;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Start"></param>
+	/// <param name="Length"></param>
+	/// <returns></returns>
 	static public byte[] ReadChunk(this Stream Stream, int Start, int Length)
 	{
 		byte[] Chunk = new byte[Length];
@@ -68,6 +107,13 @@ static public class StreamExtensions
 		return Chunk;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="ExpectedByte"></param>
+	/// <param name="IncludeExpectedByte"></param>
+	/// <returns></returns>
 	static public byte[] ReadUntil(this Stream Stream, byte ExpectedByte, bool IncludeExpectedByte = false)
 	{
 		bool Found = false;
@@ -88,11 +134,26 @@ static public class StreamExtensions
 		return Buffer.ToArray();
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="ExpectedByte"></param>
+	/// <param name="Encoding"></param>
+	/// <param name="IncludeExpectedByte"></param>
+	/// <returns></returns>
 	static public String ReadUntilString(this Stream Stream, byte ExpectedByte, Encoding Encoding, bool IncludeExpectedByte = false)
 	{
 		return Encoding.GetString(Stream.ReadUntil(ExpectedByte, IncludeExpectedByte));
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Encoding"></param>
+	/// <param name="FromStart"></param>
+	/// <returns></returns>
 	static public String ReadAllContentsAsString(this Stream Stream, Encoding Encoding = null, bool FromStart = true)
 	{
 		if (Encoding == null) Encoding = Encoding.UTF8;
@@ -107,6 +168,13 @@ static public class StreamExtensions
 		return Encoding.GetString(Data);
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="FromStart"></param>
+	/// <param name="Dispose"></param>
+	/// <returns></returns>
 	static public byte[] ReadAll(this Stream Stream, bool FromStart = true, bool Dispose = false)
 	{
 		try
@@ -135,6 +203,12 @@ static public class StreamExtensions
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="ToRead"></param>
+	/// <returns></returns>
 	static public Stream ReadStream(this Stream Stream, long ToRead = -1)
 	{
 		if (ToRead == -1) ToRead = Stream.Available();
@@ -143,6 +217,12 @@ static public class StreamExtensions
 		return ReadedStream;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="ToRead"></param>
+	/// <returns></returns>
 	static public byte[] ReadBytes(this Stream Stream, int ToRead)
 	{
 		if (ToRead == 0) return new byte[0];
@@ -157,12 +237,48 @@ static public class StreamExtensions
 		return Buffer;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="ToReadAsMax"></param>
+	/// <returns></returns>
+    static public byte[] ReadBytesUpTo(this Stream Stream, int ToReadAsMax)
+    {
+        if (ToReadAsMax == 0) return new byte[0];
+        var Buffer = new byte[ToReadAsMax];
+        int Readed = 0;
+        while (Readed < ToReadAsMax)
+        {
+            int ReadedNow = Stream.Read(Buffer, Readed, ToReadAsMax - Readed);
+            if (ReadedNow <= 0)
+            {
+                break;
+            }
+            Readed += ReadedNow;
+        }
+        return Buffer.Slice(0, Readed);
+    }
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Bytes"></param>
+	/// <returns></returns>
 	static public Stream WriteBytes(this Stream Stream, byte[] Bytes)
 	{
 		Stream.Write(Bytes, 0, Bytes.Length);
 		return Stream;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Byte"></param>
+	/// <param name="RepeatCount"></param>
+	/// <returns></returns>
 	static public Stream WriteBytes(this Stream Stream, byte Byte, int RepeatCount)
 	{
 		var Bytes = Byte.Repeat(RepeatCount);
@@ -170,12 +286,26 @@ static public class StreamExtensions
 		return Stream;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="ToRead"></param>
+	/// <param name="Encoding"></param>
+	/// <returns></returns>
 	static public String ReadString(this Stream Stream, int ToRead, Encoding Encoding = null)
 	{
 		if (Encoding == null) Encoding = Encoding.UTF8;
 		return Stream.ReadBytes(ToRead).GetString(Encoding);
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Offset"></param>
+	/// <param name="Encoding"></param>
+	/// <returns></returns>
 	static public String ReadStringzAt(this Stream Stream, long Offset, Encoding Encoding = null)
 	{
 		String Return = null;
@@ -186,6 +316,14 @@ static public class StreamExtensions
 		return Return;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="ToRead"></param>
+	/// <param name="Encoding"></param>
+	/// <param name="AllowEndOfStream"></param>
+	/// <returns></returns>
 	static public String ReadStringz(this Stream Stream, int ToRead = -1, Encoding Encoding = null, bool AllowEndOfStream = true)
 	{
 		if (Encoding == null) Encoding = Encoding.ASCII;
@@ -212,6 +350,14 @@ static public class StreamExtensions
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Value1"></param>
+	/// <param name="Value2"></param>
+	/// <param name="Encoding"></param>
+	/// <returns></returns>
 	static public Stream WriteStringzPair(this Stream Stream, String Value1, String Value2, Encoding Encoding = null)
 	{
 		Stream.WriteStringz(Value1, -1, Encoding);
@@ -219,6 +365,13 @@ static public class StreamExtensions
 		return Stream;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Value"></param>
+	/// <param name="Encoding"></param>
+	/// <returns></returns>
 	static public Stream WriteString(this Stream Stream, String Value, Encoding Encoding = null)
 	{
 		if (Encoding == null) Encoding = Encoding.ASCII;
@@ -226,6 +379,14 @@ static public class StreamExtensions
 		return Stream;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Value"></param>
+	/// <param name="ToWrite"></param>
+	/// <param name="Encoding"></param>
+	/// <returns></returns>
 	static public Stream WriteStringz(this Stream Stream, String Value, int ToWrite = -1, Encoding Encoding = null)
 	{
 		if (Encoding == null) Encoding = Encoding.ASCII;
@@ -244,6 +405,12 @@ static public class StreamExtensions
 		return Stream;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Count"></param>
+	/// <returns></returns>
 	static public Stream WriteZeroBytes(this Stream Stream, int Count)
 	{
 		if (Count < 0)
@@ -259,18 +426,36 @@ static public class StreamExtensions
 		return Stream;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Align"></param>
+	/// <returns></returns>
 	static public Stream WriteZeroToAlign(this Stream Stream, int Align)
 	{
 		Stream.WriteZeroBytes((int)(MathUtils.Align(Stream.Position, Align) - Stream.Position));
 		return Stream;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Offset"></param>
+	/// <returns></returns>
 	static public Stream WriteZeroToOffset(this Stream Stream, long Offset)
 	{
 		Stream.WriteZeroBytes((int)(Offset - Stream.Position));
 		return Stream;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="TType"></typeparam>
+	/// <param name="Stream"></param>
+	/// <returns></returns>
 	public static TType ReadManagedStruct<TType>(this Stream Stream) where TType : struct
 	{
 		var Struct = new TType();
@@ -297,6 +482,12 @@ static public class StreamExtensions
 		return Struct;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="Stream"></param>
+	/// <returns></returns>
 	public static T ReadStruct<T>(this Stream Stream) where T : struct
 	{
 		var Size = Marshal.SizeOf(typeof(T));
@@ -304,6 +495,12 @@ static public class StreamExtensions
 		return StructUtils.BytesToStruct<T>(Buffer);
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="Stream"></param>
+	/// <returns></returns>
 	public static T ReadStructPartially<T>(this Stream Stream) where T : struct
 	{
 		var Size = Marshal.SizeOf(typeof(T));
@@ -321,6 +518,15 @@ static public class StreamExtensions
 		return StructUtils.BytesToStruct<T>(Buffer);
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="TType"></typeparam>
+	/// <param name="Stream"></param>
+	/// <param name="Offset"></param>
+	/// <param name="Count"></param>
+	/// <param name="EntrySize"></param>
+	/// <returns></returns>
 	public static TType[] ReadStructVectorAt<TType>(this Stream Stream, long Offset, uint Count, int EntrySize = -1) where TType : struct
 	{
 		TType[] Value = null;
@@ -332,39 +538,62 @@ static public class StreamExtensions
 		return Value;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="TType"></typeparam>
+	/// <param name="Stream"></param>
+	/// <param name="Vector"></param>
+	/// <param name="Count"></param>
+	/// <param name="EntrySize"></param>
+	/// <returns></returns>
 	public static TType[] ReadStructVector<TType>(this Stream Stream, ref TType[] Vector, uint Count, int EntrySize = -1) where TType : struct
 	{
 		Vector = Stream.ReadStructVector<TType>(Count, EntrySize);
 		return Vector;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="TType"></typeparam>
+	/// <param name="Stream"></param>
+	/// <param name="Count"></param>
+	/// <param name="EntrySize"></param>
+	/// <returns></returns>
 	public static TType[] ReadStructVector<TType>(this Stream Stream, uint Count, int EntrySize = -1) where TType : struct
 	{
-		TType[] Vector = new TType[Count];
-		int SkipSize;
-		if (EntrySize == -1)
-		{
-			SkipSize = 0;
-		}
-		else
-		{
-			SkipSize = EntrySize - Marshal.SizeOf(typeof(TType));
-		}
+		var ItemSize = Marshal.SizeOf(typeof(TType));
+		var SkipSize = (EntrySize == -1) ? (0) : (EntrySize - ItemSize);
 
 		if (SkipSize < 0)
 		{
 			throw (new Exception("Invalid Size"));
 		}
-
-		for (int n = 0; n < Count; n++)
+		else if (SkipSize == 0)
 		{
-			Vector[n] = ReadStruct<TType>(Stream);
-			Stream.Skip(SkipSize);
+			return StructUtils.BytesToStructArray<TType>(Stream.ReadBytes((int)(ItemSize * Count)));
 		}
+		else
+		{
+			TType[] Vector = new TType[Count];
 
-		return Vector;
+			for (int n = 0; n < Count; n++)
+			{
+				Vector[n] = ReadStruct<TType>(Stream);
+				Stream.Skip(SkipSize);
+			}
+
+			return Vector;
+		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="Stream"></param>
+	/// <returns></returns>
 	public static T[] ReadStructVectorUntilTheEndOfStream<T>(this Stream Stream) where T : struct
 	{
 		var EntrySize = Marshal.SizeOf(typeof(T));
@@ -373,6 +602,13 @@ static public class StreamExtensions
 		return Stream.ReadStructVector<T>((uint)(BytesAvailable / EntrySize));
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="Stream"></param>
+	/// <param name="Struct"></param>
+	/// <returns></returns>
 	public static Stream WriteStruct<T>(this Stream Stream, T Struct) where T : struct
 	{
 		byte[] Bytes = StructUtils.StructToBytes(Struct);
@@ -380,21 +616,37 @@ static public class StreamExtensions
 		return Stream;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="Stream"></param>
+	/// <param name="Structs"></param>
+	/// <returns></returns>
 	public static Stream WriteStructVector<T>(this Stream Stream, T[] Structs) where T : struct
 	{
-		foreach (var Struct in Structs)
-		{
-			Stream.WriteStruct(Struct);
-		}
+		Stream.WriteBytes(StructUtils.StructArrayToBytes(Structs));
 		return Stream;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Align"></param>
+	/// <returns></returns>
 	public static Stream Align(this Stream Stream, int Align)
 	{
 		Stream.Position = MathUtils.Align(Stream.Position, Align);
 		return Stream;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Count"></param>
+	/// <returns></returns>
 	public static Stream Skip(this Stream Stream, long Count)
 	{
 		Stream.Seek(Count, SeekOrigin.Current);
@@ -421,10 +673,15 @@ static public class StreamExtensions
 		//SliceFromStream.Dispose();
 	}
 #else
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="FromStream"></param>
+	/// <param name="ToStream"></param>
 	public static void CopyToFast(this Stream FromStream, Stream ToStream)
 	{
 		/// ::TODO: Create a buffer and reuse it once for each thread.
-		var BufferSize = Math.Min((int)FromStream.Length, 2 * 1024 * 1024);
+		var BufferSize = (int)Math.Min((long)FromStream.Length, (long)(2 * 1024 * 1024));
 		if (BufferSize > 0)
 		{
 			FromStream.CopyTo(ToStream, BufferSize);
@@ -436,6 +693,12 @@ static public class StreamExtensions
 	}
 #endif
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="FileName"></param>
+	/// <returns></returns>
 	public static Stream CopyToFile(this Stream Stream, String FileName)
 	{
 		using (var OutputFile = File.Open(FileName, FileMode.Create, FileAccess.Write))
@@ -445,17 +708,35 @@ static public class StreamExtensions
 		return Stream;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="ToStream"></param>
+	/// <param name="FromStream"></param>
 	public static void WriteStream(this Stream ToStream, Stream FromStream)
 	{
 		FromStream.CopyToFast(ToStream);
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Position"></param>
+	/// <returns></returns>
 	public static Stream SetPosition(this Stream Stream, long Position)
 	{
 		Stream.Position = Position;
 		return Stream;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Byte"></param>
+	/// <param name="Count"></param>
+	/// <returns></returns>
 	unsafe public static Stream WriteByteRepeated(this Stream Stream, byte Byte, int Count = 1)
 	{
 		if (Count > 0)
@@ -472,6 +753,12 @@ static public class StreamExtensions
 		return Stream;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Value"></param>
+	/// <returns></returns>
 	static public Stream WriteVariableUintBit8Extends(this Stream Stream, uint Value)
 	{
 		do
@@ -484,6 +771,30 @@ static public class StreamExtensions
 		return Stream;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Value"></param>
+	/// <returns></returns>
+	static public Stream WriteVariableUlongBit8Extends(this Stream Stream, ulong Value)
+	{
+		do
+		{
+			byte Byte = (byte)(Value & 0x7F);
+			Value >>= 7;
+			if (Value != 0) Byte |= 0x80;
+			Stream.WriteByte(Byte);
+		} while (Value != 0);
+		return Stream;
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Values"></param>
+	/// <returns></returns>
 	static public Stream WriteVariableUintBit8ExtendsArray(this Stream Stream, params uint[] Values)
 	{
 		foreach (var Value in Values)
@@ -493,6 +804,11 @@ static public class StreamExtensions
 		return Stream;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <returns></returns>
 	static public uint ReadVariableUintBit8Extends(this Stream Stream)
 	{
 		int c;
@@ -508,6 +824,32 @@ static public class StreamExtensions
 		return v;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <returns></returns>
+	static public ulong ReadVariableUlongBit8Extends(this Stream Stream)
+	{
+		int c;
+		ulong v = 0;
+		int shift = 0;
+		do
+		{
+			c = Stream.ReadByte();
+			if (c == -1) throw (new Exception("Incomplete VariableUintBit8Extends"));
+			v |= (ulong)(((ulong)c & 0x7F) << shift);
+			shift += 7;
+		} while ((c & 0x80) != 0);
+		return v;
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Count"></param>
+	/// <returns></returns>
 	static public uint[] ReadVariableUintBit8ExtendsArray(this Stream Stream, int Count)
 	{
 		uint[] Array = new uint[Count];
@@ -515,6 +857,11 @@ static public class StreamExtensions
 		return Array;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <returns></returns>
 	static public IEnumerable<byte> AsByteEnumerable(this Stream Stream)
 	{
 		lock (Stream)
@@ -539,41 +886,88 @@ static public class StreamExtensions
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="BaseStream"></param>
+	/// <returns></returns>
 	static public SliceStream Slice(this Stream BaseStream)
 	{
 		return SliceStream.CreateWithLength(BaseStream);
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="BaseStream"></param>
+	/// <param name="ThisStart"></param>
+	/// <param name="ThisLength"></param>
+	/// <param name="CanWrite"></param>
+	/// <returns></returns>
 	static public SliceStream SliceWithLength(this Stream BaseStream, long ThisStart = 0, long ThisLength = -1, bool? CanWrite = null)
 	{
 		return SliceStream.CreateWithLength(BaseStream, ThisStart, ThisLength, CanWrite);
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="BaseStream"></param>
+	/// <param name="LowerBound"></param>
+	/// <param name="UpperBound"></param>
+	/// <param name="CanWrite"></param>
+	/// <returns></returns>
 	static public SliceStream SliceWithBounds(this Stream BaseStream, long LowerBound, long UpperBound, bool? CanWrite = null)
 	{
 		return SliceStream.CreateWithBounds(BaseStream, LowerBound, UpperBound, CanWrite);
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="BaseStream"></param>
+	/// <param name="NextStream"></param>
+	/// <returns></returns>
 	static public ConcatStream Concat(this Stream BaseStream, Stream NextStream)
 	{
 		return new ConcatStream(BaseStream, NextStream);
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="TType"></typeparam>
+	/// <param name="BaseStream"></param>
+	/// <returns></returns>
 	static public StreamStructArrayWrapper<TType> ConvertToStreamStructArrayWrapper<TType>(this Stream BaseStream) where TType : struct
 	{
 		return new StreamStructArrayWrapper<TType>(BaseStream);
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <typeparam name="TType"></typeparam>
+	/// <param name="BaseStream"></param>
+	/// <param name="BufferCount"></param>
+	/// <returns></returns>
 	static public StreamStructCachedArrayWrapper<TType> ConvertToStreamStructCachedArrayWrapper<TType>(this Stream BaseStream, int BufferCount) where TType : struct
 	{
 		return new StreamStructCachedArrayWrapper<TType>(BufferCount, BaseStream);
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="Stream"></param>
+	/// <param name="Pointer"></param>
+	/// <param name="Count"></param>
+	/// <returns></returns>
 	unsafe static public int ReadToPointer(this Stream Stream, byte* Pointer, int Count)
 	{
 		var Data = new byte[Count];
 		int Result = Stream.Read(Data, 0, Count);
-		PointerUtils.Memcpy(Pointer, Data, Count);
+		Marshal.Copy(Data, 0, new IntPtr(Pointer), Count);
 		return Result;
 	}
 }

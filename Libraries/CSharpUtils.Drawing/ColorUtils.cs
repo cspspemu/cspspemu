@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using CSharpUtils.Drawing;
 
 namespace CSharpUtils
 {
 	public class ColorUtils
 	{
+		[Obsolete("Use RGBA32 + operator")]
 		static public void InternalAdd(ref int R, ref int G, ref int B, ref int A, params Color[] Colors)
 		{
 			foreach (var Color in Colors)

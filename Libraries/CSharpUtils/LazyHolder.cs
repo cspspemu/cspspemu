@@ -10,6 +10,7 @@ namespace CSharpUtils
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <see cref="Lazy&lt;T&gt;"/>
+	[Obsolete(message: "Use System.Lazy", error: false)]
 	public class LazyHolder<T>
 	{
 		public Func<T> Getter;

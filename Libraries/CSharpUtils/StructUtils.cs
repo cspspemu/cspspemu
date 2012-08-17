@@ -6,8 +6,16 @@ using System.Runtime.InteropServices;
 
 namespace CSharpUtils
 {
+	/// <summary>
+	/// 
+	/// </summary>
 	public class StructUtils
 	{
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="ExpectedSize"></param>
 		static public void ExpectSize<T>(int ExpectedSize)
 		{
 			int RealSize = Marshal.SizeOf(typeof(T));
@@ -17,11 +25,23 @@ namespace CSharpUtils
 			}
 		}
 
-		public static T BytesToStruct<T>(byte[] rawData) where T : struct
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="RawData"></param>
+		/// <returns></returns>
+		unsafe public static T BytesToStruct<T>(byte[] RawData) where T : struct
 		{
 			T result = default(T);
 
-			GCHandle handle = GCHandle.Alloc(rawData, GCHandleType.Pinned);
+#if true
+			fixed (byte* RawDataPointer = &RawData[0])
+			{
+				result = (T)Marshal.PtrToStructure(new IntPtr(RawDataPointer), typeof(T));
+			}
+#else
+			GCHandle handle = GCHandle.Alloc(RawData, GCHandleType.Pinned);
 
 			try
 			{
@@ -32,55 +52,92 @@ namespace CSharpUtils
 			{
 				handle.Free();
 			}
+#endif
 
 			return result;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="RawData"></param>
+		/// <returns></returns>
 		unsafe public static T[] BytesToStructArray<T>(byte[] RawData) where T : struct
 		{
 			int ElementSize = Marshal.SizeOf(typeof(T));
 			T[] Array = new T[RawData.Length / ElementSize];
+
 			var Type = typeof(T);
 			fixed (byte* RawDataPointer = &RawData[0])
 			{
 				for (int n = 0; n < Array.Length; n++)
 				{
-					Marshal.PtrToStructure(new IntPtr(RawDataPointer + n * ElementSize), Type);
+					Array[n] = (T)Marshal.PtrToStructure(new IntPtr(RawDataPointer + n * ElementSize), Type);
 				}
 			}
+
 			return Array;
-			//T[] Array = 
-			//Marshal.PtrToStructure(
 		}
 
-		public static byte[] StructToBytes<T>(T data) where T : struct
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="Data"></param>
+		/// <returns></returns>
+		unsafe public static byte[] StructToBytes<T>(T Data) where T : struct
 		{
-			byte[] rawData = new byte[Marshal.SizeOf(data)];
-			GCHandle handle = GCHandle.Alloc(rawData, GCHandleType.Pinned);
+			byte[] RawData = new byte[Marshal.SizeOf(Data)];
+
+#if true
+			fixed (byte* RawDataPointer = RawData)
+			{
+				Marshal.StructureToPtr(Data, new IntPtr(RawDataPointer), false);
+			}
+#else
+			GCHandle Handle = GCHandle.Alloc(RawData, GCHandleType.Pinned);
 			try
 			{
-				IntPtr rawDataPtr = handle.AddrOfPinnedObject();
-				Marshal.StructureToPtr(data, rawDataPtr, false);
+				IntPtr RawDataPointer = Handle.AddrOfPinnedObject();
+				Marshal.StructureToPtr(Data, RawDataPointer, false);
 			}
 			finally
 			{
-				handle.Free();
+				Handle.Free();
 			}
+#endif
 
-			return rawData;
+			return RawData;
 		}
 
-		public static byte[] StructArrayToBytes<T>(T[] dataArray) where T : struct
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="DataArray"></param>
+		/// <returns></returns>
+		unsafe public static byte[] StructArrayToBytes<T>(T[] DataArray) where T : struct
 		{
-			int ElementSize = Marshal.SizeOf(dataArray[0]);
-			byte[] rawData = new byte[ElementSize * dataArray.Length];
-			GCHandle handle = GCHandle.Alloc(rawData, GCHandleType.Pinned);
+			int ElementSize = Marshal.SizeOf(DataArray[0]);
+			byte[] RawData = new byte[ElementSize * DataArray.Length];
+
+#if true
+			fixed (byte* RawDataPointer = RawData)
+			{
+				for (int n = 0; n < DataArray.Length; n++)
+				{
+					Marshal.StructureToPtr(DataArray[n], new IntPtr(RawDataPointer + ElementSize * n), false);
+				}
+			}
+#else
+			GCHandle handle = GCHandle.Alloc(RawData, GCHandleType.Pinned);
 			try
 			{
-				for (int n = 0; n < dataArray.Length; n++)
+				for (int n = 0; n < DataArray.Length; n++)
 				{
-					IntPtr rawDataPtr = handle.AddrOfPinnedObject() + ElementSize * n;
-					Marshal.StructureToPtr(dataArray[n], rawDataPtr, false);
+					IntPtr RawDataPointer = handle.AddrOfPinnedObject() + ElementSize * n;
+					Marshal.StructureToPtr(DataArray[n], RawDataPointer, false);
 				}
 			}
 			finally
@@ -89,8 +146,9 @@ namespace CSharpUtils
 			}
 
 			//RespectEndianness(typeof(T), rawData);
+#endif
 
-			return rawData;
+			return RawData;
 		}
 	}
 }

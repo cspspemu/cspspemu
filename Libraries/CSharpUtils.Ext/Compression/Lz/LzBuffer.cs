@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CSharpUtils.Extensions;
+using CSharpUtils;
 using System.IO;
 
 namespace CSharpUtils.Compression.Lz

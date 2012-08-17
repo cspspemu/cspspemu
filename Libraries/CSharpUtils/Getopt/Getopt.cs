@@ -5,17 +5,41 @@ using System.Text;
 
 namespace CSharpUtils.Getopt
 {
-	public class Getopt
+	sealed public class Getopt
 	{
-		protected Queue<string> Items;
-		protected Dictionary<string, Action<string, string>> Actions;
+		/// <summary>
+		/// 
+		/// </summary>
+		private Queue<string> Items;
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		private Dictionary<string, Action<string, string>> Actions;
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		private Action DefaultAction;
 
+		/// <summary>
+		/// 
+		/// </summary>
+		public string[] SopportedSwitches = new[] { "/", "-", "--" };
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="_Items"></param>
 		public Getopt(string[] _Items)
 		{
 			this.Items = new Queue<string>(_Items);
 			this.Actions = new Dictionary<string, Action<string, string>>();
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool HasMore
 		{
 			get
@@ -24,21 +48,29 @@ namespace CSharpUtils.Getopt
 			}
 		}
 
-		/*
-		public string Next
-		{
-			get
-			{
-				return DequeueNext();
-			}
-		}
-		*/
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		public string DequeueNext()
 		{
 			return this.Items.Dequeue();
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Action"></param>
+		public void AddDefaultRule(Action Action)
+		{
+			this.DefaultAction = Action;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Name"></param>
+		/// <param name="Value"></param>
 		unsafe public void AddRule(string Name, ref bool Value)
 		{
 			fixed (bool* ptr = &Value)
@@ -51,6 +83,11 @@ namespace CSharpUtils.Getopt
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Name"></param>
+		/// <param name="Value"></param>
 		unsafe public void AddRule(string Name, ref int Value)
 		{
 			fixed (int* ptr = &Value)
@@ -63,16 +100,32 @@ namespace CSharpUtils.Getopt
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="Name"></param>
+		/// <param name="Action"></param>
 		public void AddRule<T>(string Name, Action<T> Action)
 		{
 			AddRule<T>(new string[] { Name }, Action);
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Name"></param>
+		/// <param name="Action"></param>
 		public void AddRule(string Name, Action Action)
 		{
 			AddRule(new string[] { Name }, Action);
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Names"></param>
+		/// <param name="Action"></param>
 		public void AddRule(string[] Names, Action Action)
 		{
 			Action<string, string> FormalAction;
@@ -84,6 +137,10 @@ namespace CSharpUtils.Getopt
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Action"></param>
 		public void AddRule(Action<string> Action)
 		{
 			Action<string, string> FormalAction;
@@ -91,6 +148,13 @@ namespace CSharpUtils.Getopt
 			this.Actions.Add("", FormalAction);
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="TType"></typeparam>
+		/// <param name="Name"></param>
+		/// <param name="Action"></param>
+		/// <returns></returns>
 		static public TType CheckArgument<TType>(string Name, Func<TType> Action)
 		{
 			try
@@ -103,6 +167,12 @@ namespace CSharpUtils.Getopt
 			}
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="Names"></param>
+		/// <param name="Action"></param>
 		public void AddRule<T>(string[] Names, Action<T> Action)
 		{
 			Action<string, string> FormalAction;
@@ -158,8 +228,13 @@ namespace CSharpUtils.Getopt
 			//foreach ()
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public void Process()
 		{
+			bool ExecutedAnyAction = false;
+
 			while (HasMore)
 			{
 				var CurrentRaw = DequeueNext();
@@ -173,11 +248,12 @@ namespace CSharpUtils.Getopt
 					Arg = CurrentRaw.Substring(EqualsOffset + 1);
 				}
 
-				if (Current.Length > 0 && Current[0] == '/')
+				if (SopportedSwitches.Any((v) => Current.StartsWith(v)))
 				{
 					if (this.Actions.ContainsKey(Current))
 					{
 						this.Actions[Current](Current, Arg);
+						ExecutedAnyAction = true;
 					}
 					else
 					{
@@ -186,8 +262,17 @@ namespace CSharpUtils.Getopt
 				}
 				else
 				{
-					this.Actions[""](Current, Arg);
+					if (this.Actions.ContainsKey(""))
+					{
+						this.Actions[""](Current, Arg);
+						ExecutedAnyAction = true;
+					}
 				}
+			}
+
+			if (!ExecutedAnyAction && DefaultAction != null)
+			{
+				DefaultAction();
 			}
 		}
 	}

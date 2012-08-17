@@ -168,6 +168,11 @@ namespace CSharpUtils.SpaceAssigner
 			AvailableSpaces = new SortedSet<Space>();
 		}
 
+		public Space[] GetAvailableSpaces()
+		{
+			return AvailableSpaces.ToArray();
+		}
+
 		public Space Intersection(Space Space)
 		{
 			throw(new NotImplementedException());

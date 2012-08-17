@@ -11,7 +11,7 @@
     <RootNamespace>CSharpUtils</RootNamespace>
     <AssemblyName>CSharpUtils</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
   </PropertyGroup>
@@ -26,6 +26,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <DocumentationFile>bin\Debug\CSharpUtils.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -56,6 +57,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -87,6 +89,7 @@
     <Compile Include="Extensions\IntegerExtensions.cs" />
     <Compile Include="Extensions\LinkedListExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
+    <Compile Include="Extensions\ICustomAttributeProviderExtensions.cs" />
     <Compile Include="Extensions\ReaderWriterLockExtensions.cs" />
     <Compile Include="Extensions\SerializationExtensions.cs" />
     <Compile Include="Extensions\TextReaderExtensions.cs" />
@@ -95,6 +98,7 @@
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Factory\Factory.cs" />
     <Compile Include="Factory\MockeableFactory.cs" />
+    <Compile Include="Getopt\GetoptCommandLineProgram.cs" />
     <Compile Include="Getopt\Getopt.cs" />
     <Compile Include="Json\IJsonSerializable.cs" />
     <Compile Include="Json\JSON.cs" />
@@ -127,7 +131,9 @@
     <Compile Include="MathUtils.cs" />
     <Compile Include="Streams\FilterStream.cs" />
     <Compile Include="Arrays\IArray.cs" />
+    <Compile Include="Streams\MapStream.cs" />
     <Compile Include="Streams\ProxyStream.cs" />
+    <Compile Include="Streams\SerializerUtils.cs" />
     <Compile Include="Streams\SliceStream.cs" />
     <Compile Include="Extensions\StreamExtensions.cs" />
     <Compile Include="Streams\StreamBitReader.cs" />
@@ -136,6 +142,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Streams\StreamStructArrayWrapper.cs" />
     <Compile Include="Streams\StreamStructCachedArrayWrapper.cs" />
+    <Compile Include="Streams\ZeroStream.cs" />
     <Compile Include="StructUtils.cs" />
     <Compile Include="Threading\Coroutines.cs" />
     <Compile Include="Threading\CustomThreadPool.cs" />
