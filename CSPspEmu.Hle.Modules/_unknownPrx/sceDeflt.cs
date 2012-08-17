@@ -10,7 +10,7 @@ using CSharpUtils;
 using System.IO;
 using ComponentAce.Compression.Libs.zlib;
 using System.Runtime.InteropServices;
-using SafeILGenerator;
+using CSharpUtils.Streams;
 
 namespace CSPspEmu.Hle.Modules._unknownPrx
 {

@@ -1,0 +1,6 @@
+[submodule "Libraries/CSharpUtils"]
+	path = Libraries/CSharpUtils
+	url = https://github.com/soywiz/csharputils.git
+[submodule "Libraries/SafeILGenerator"]
+	path = Libraries/SafeILGenerator
+	url = https://github.com/soywiz/SafeILGenerator.git

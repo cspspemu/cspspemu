@@ -118,21 +118,21 @@
     <Compile Include="WakeUpCallbackDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Libraries\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
-      <Project>{9B217880-48AE-43B6-AE1F-DC732FCCBC7A}</Project>
-      <Name>CSharpUtils.Drawing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils.csproj">
-      <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
-      <Name>CSharpUtils</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Resources\CSPspEmu.Resources.csproj">
       <Project>{BA3187FA-A2A1-43E0-9FDD-69B377EE3152}</Project>
       <Name>CSPspEmu.Resources</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Libraries\SafeILGenerator\SafeILGenerator.csproj">
-      <Project>{9a93c7e4-09da-46cf-b7dd-6bb09681d5ab}</Project>
-      <Name>SafeILGenerator</Name>
+    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
+      <Project>{9b217880-48ae-43b6-ae1f-dc732fccbc7a}</Project>
+      <Name>CSharpUtils.Drawing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Ext\CSharpUtils.Ext.csproj">
+      <Project>{c017fbbe-ef10-4030-a69e-204e766c8f9d}</Project>
+      <Name>CSharpUtils.Ext</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
+      <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
+      <Name>CSharpUtils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
