@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using CSPspEmu.Hle.Formats;
 using System.IO;
-using CSharpUtils.Extensions;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Tests
 {

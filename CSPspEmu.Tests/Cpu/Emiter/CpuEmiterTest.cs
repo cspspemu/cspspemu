@@ -5,7 +5,7 @@ using CSPspEmu.Core.Cpu.Table;
 using CSPspEmu.Core.Cpu.Assembler;
 using CSPspEmu.Core.Cpu;
 using System.IO;
-using CSharpUtils.Extensions;
+using CSharpUtils;
 using System.Collections.Generic;
 using CSPspEmu.Core.Memory;
 using CSharpUtils.Factory;

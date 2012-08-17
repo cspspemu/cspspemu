@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 using CSPspEmu.Hle.Vfs.Iso;
-using CSharpUtils.Extensions;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Tests
 {

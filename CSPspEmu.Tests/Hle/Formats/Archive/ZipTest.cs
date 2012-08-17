@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CSPspEmu.Hle.Formats.Archive;
 using CSPspEmu.Resources;
-using CSharpUtils.Extensions;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Tests.Hle.Formats.Archive
 {

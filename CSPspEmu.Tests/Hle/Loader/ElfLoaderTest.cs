@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle;
-using CSharpUtils.Extensions;
+using CSharpUtils;
 using CSPspEmu.Hle.Formats;
 using CSPspEmu.Hle.Managers;
 
