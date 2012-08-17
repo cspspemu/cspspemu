@@ -98,9 +98,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mono.Simd">
-      <HintPath>..\Mono.Simd.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -143,6 +140,10 @@
       <Project>{827779A5-F05C-41C6-9FF9-FD274224A7AE}</Project>
       <Name>CSPspEmu.Core.Cpu</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Crypto\CSPspEmu.Core.Crypto.csproj">
+      <Project>{f4181553-01f3-425a-8ddc-927a97de6de2}</Project>
+      <Name>CSPspEmu.Core.Crypto</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Gpu.Impl.Null\CSPspEmu.Core.Gpu.Impl.Null.csproj">
       <Project>{DB1B25C7-5ADF-4190-8EA1-9C30F4021F94}</Project>
       <Name>CSPspEmu.Core.Gpu.Impl.Null</Name>
@@ -159,6 +160,14 @@
       <Project>{9a30ebf3-b702-47d9-aafc-e3e02b410dad}</Project>
       <Name>CSPspEmu.Core.Gpu</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Gui.Winforms.Controls\CSPspEmu.Gui.Winforms.Controls.csproj">
+      <Project>{4056a286-e040-450f-bad8-de8e6b9b57b8}</Project>
+      <Name>CSPspEmu.Gui.Winforms.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Media\CSPspEmu.Media.csproj">
+      <Project>{3ad1738d-5d2e-4517-a2b0-3c94155e69df}</Project>
+      <Name>CSPspEmu.Media</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Resources\CSPspEmu.Resources.csproj">
       <Project>{ba3187fa-a2a1-43e0-9fdd-69b377ee3152}</Project>
       <Name>CSPspEmu.Resources</Name>
@@ -167,9 +176,9 @@
       <Project>{6552e4e6-198a-46b6-864a-53ca5c1ed851}</Project>
       <Name>CSPspEmu.Runner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Tests\CSPspEmu.Tests.csproj">
+    <ProjectReference Include="..\CSPspEmu.Tests\Tests.CSPspEmu.csproj">
       <Project>{37463C84-1A96-4A1A-BD02-2A131D11B9EA}</Project>
-      <Name>CSPspEmu.Tests</Name>
+      <Name>Tests.CSPspEmu</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
@@ -186,6 +195,10 @@
     <ProjectReference Include="..\CSPspEmu.Hle\CSPspEmu.Hle.csproj">
       <Project>{288AF89E-B41A-4253-A8F7-43D1371516E9}</Project>
       <Name>CSPspEmu.Hle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Utils\CSPspEmu.Utils.csproj">
+      <Project>{dc02a203-30f2-4613-950b-1529fd55ac81}</Project>
+      <Name>CSPspEmu.Utils</Name>
     </ProjectReference>
     <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
       <Project>{9b217880-48ae-43b6-ae1f-dc732fccbc7a}</Project>

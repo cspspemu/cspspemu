@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0DFDB697-8C09-48ED-A561-C6610799E4D7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Tests.CSPspEmu.Core.Cpu</RootNamespace>
+    <AssemblyName>Tests.CSPspEmu.Core.Cpu</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+  <ItemGroup>
+    <Compile Include="Cpu\Assembler\MipsAssemblerTest.cs" />
+    <Compile Include="Cpu\Assembler\MipsDisassemblerTest.cs" />
+    <Compile Include="Cpu\Dynarec\DynarecFunctionCompilerTaskTest.cs" />
+    <Compile Include="Cpu\Dynarec\DynarecFunctionCompilerTest.cs" />
+    <Compile Include="Cpu\Emiter\CpuEmiterTest.cs" />
+    <Compile Include="Cpu\Emiter\MipsEmiterTest.cs" />
+    <Compile Include="Cpu\InstructionTest.cs" />
+    <Compile Include="Cpu\Switch\EmitLookupGeneratorTest.cs" />
+    <Compile Include="Cpu\Table\InstructionTableTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CSPspEmu.Core.Cpu\CSPspEmu.Core.Cpu.csproj">
+      <Project>{827779a5-f05c-41c6-9ff9-fd274224a7ae}</Project>
+      <Name>CSPspEmu.Core.Cpu</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
+      <Project>{f783ecd3-0f79-43cc-abd0-d356a64049c4}</Project>
+      <Name>CSPspEmu.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
+      <Project>{9b217880-48ae-43b6-ae1f-dc732fccbc7a}</Project>
+      <Name>CSharpUtils.Drawing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Ext\CSharpUtils.Ext.csproj">
+      <Project>{c017fbbe-ef10-4030-a69e-204e766c8f9d}</Project>
+      <Name>CSharpUtils.Ext</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
+      <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
+      <Name>CSharpUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\SafeILGenerator\SafeILGenerator\SafeILGenerator.csproj">
+      <Project>{9a93c7e4-09da-46cf-b7dd-6bb09681d5ab}</Project>
+      <Name>SafeILGenerator</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

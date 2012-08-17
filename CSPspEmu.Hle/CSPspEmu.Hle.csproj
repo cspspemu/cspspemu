@@ -179,6 +179,10 @@
       <Project>{827779A5-F05C-41C6-9FF9-FD274224A7AE}</Project>
       <Name>CSPspEmu.Core.Cpu</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Crypto\CSPspEmu.Core.Crypto.csproj">
+      <Project>{f4181553-01f3-425a-8ddc-927a97de6de2}</Project>
+      <Name>CSPspEmu.Core.Crypto</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>

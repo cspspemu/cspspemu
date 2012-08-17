@@ -1,18 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2D629653-A87E-4AC4-9E58-3EAA1107C456}</ProjectGuid>
+    <ProjectGuid>{83BC2E9E-F96C-44B0-B735-4C048F3F2530}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CSPspEmu.Core.Gpu.Impl.Soft</RootNamespace>
-    <AssemblyName>CSPspEmu.Core.Gpu.Impl.Soft</AssemblyName>
+    <RootNamespace>Tests.CSPspEmu.Core.Gpu</RootNamespace>
+    <AssemblyName>Tests.CSPspEmu.Core.Gpu</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,7 +21,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,9 +30,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Mono.Simd">
+      <HintPath>..\Mono.Simd.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,16 +45,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GpuImplSoft.cs" />
+    <Compile Include="Gpu\GpuProcessorTest.cs" />
+    <Compile Include="Gpu\VertexReading\VertexReaderDynarecTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">
-      <Project>{9A30EBF3-B702-47D9-AAFC-E3E02B410DAD}</Project>
+      <Project>{9a30ebf3-b702-47d9-aafc-e3e02b410dad}</Project>
       <Name>CSPspEmu.Core.Gpu</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
-      <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
+      <Project>{f783ecd3-0f79-43cc-abd0-d356a64049c4}</Project>
       <Name>CSPspEmu.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">

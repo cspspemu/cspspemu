@@ -58,9 +58,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mono.Simd">
-      <HintPath>..\Mono.Simd.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -189,6 +186,10 @@
     <Compile Include="_unknownPrx\SysclibForKernel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CSPspEmu.Core.Crypto\CSPspEmu.Core.Crypto.csproj">
+      <Project>{f4181553-01f3-425a-8ddc-927a97de6de2}</Project>
+      <Name>CSPspEmu.Core.Crypto</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Utils\CSPspEmu.Utils.csproj">
       <Project>{DC02A203-30F2-4613-950B-1529FD55AC81}</Project>
       <Name>CSPspEmu.Utils</Name>

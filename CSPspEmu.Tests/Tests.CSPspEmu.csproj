@@ -79,39 +79,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cpu\Assembler\MipsDisassemblerTest.cs" />
-    <Compile Include="Cpu\Dynarec\DynarecFunctionCompilerTaskTest.cs" />
-    <Compile Include="Cpu\Dynarec\DynarecFunctionCompilerTest.cs" />
-    <Compile Include="Cpu\Emiter\CpuEmiterTest.cs" />
-    <Compile Include="Cpu\Switch\EmitLookupGeneratorTest.cs" />
-    <Compile Include="Cpu\Table\InstructionTableTest.cs" />
-    <Compile Include="Cpu\InstructionTest.cs" />
-    <Compile Include="Cpu\Assembler\MipsAssemblerTest.cs" />
-    <Compile Include="Cpu\Emiter\MipsEmiterTest.cs" />
-    <Compile Include="Crypto\KirkTest.cs" />
-    <Compile Include="Gpu\VertexReading\VertexReaderDynarecTest.cs" />
-    <Compile Include="Gui\UnitTest1.cs" />
-    <Compile Include="Hle\Formats\Archive\ZipTest.cs" />
-    <Compile Include="Hle\Formats\EncryptedPrxTest.cs" />
-    <Compile Include="Hle\Formats\Font\PGFTest.cs" />
-    <Compile Include="Hle\CStringFormaterTest.cs" />
-    <Compile Include="Hle\PreemptiveSchedulerTest.cs" />
-    <Compile Include="Hle\Vfs\Iso\CsoProxyStreamTest.cs" />
-    <Compile Include="Hle\Formats\CsoTest.cs" />
-    <Compile Include="Gpu\GpuProcessorTest.cs" />
-    <Compile Include="Hle\Vfs\Local\HleIoDriverLocalFileSystemTest.cs" />
-    <Compile Include="Hle\Vfs\HleIoManagerTest.cs" />
-    <Compile Include="Hle\Loader\ElfLoaderTest.cs" />
-    <Compile Include="Hle\HlePspThreadManagerTest.cs" />
-    <Compile Include="Hle\HlePspThreadTest.cs" />
-    <Compile Include="Hle\MemoryPartitionTest.cs" />
-    <Compile Include="Hle\Formats\PbpTest.cs" />
-    <Compile Include="Hle\Vfs\Iso\IsoTest.cs" />
-    <Compile Include="Hle\Formats\video\PmfTest.cs" />
-    <Compile Include="Hle\Formats\video\MpegPsDemuxerTest.cs" />
-    <Compile Include="PointerUtilsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Hle\Formats\PsfTest.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -176,10 +144,7 @@
       <Name>SafeILGenerator</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Emit\" />
-    <Folder Include="Hle\Formats\audio\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

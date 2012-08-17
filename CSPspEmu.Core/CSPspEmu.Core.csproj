@@ -69,14 +69,6 @@
   <ItemGroup>
     <Compile Include="ApplicationPaths.cs" />
     <Compile Include="Battery\Battery.cs" />
-    <Compile Include="Crypto\Crypto.cs" />
-    <Compile Include="Crypto\Crypto.Tables.cs" />
-    <Compile Include="Crypto\Kirk.cs" />
-    <Compile Include="Crypto\Kirk.Impl.Ecdsa.cs" />
-    <Compile Include="Crypto\Kirk.Impl.Sha1.cs" />
-    <Compile Include="Crypto\Kirk.Keys.cs" />
-    <Compile Include="Crypto\Kirk.Tables.cs" />
-    <Compile Include="Crypto\Kirk.Utils.cs" />
     <Compile Include="DebugUtils.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Hashing.cs" />
@@ -88,6 +80,21 @@
     <Compile Include="Memory\NormalPspMemory.cs" />
     <Compile Include="Memory\PspMemoryStream.cs" />
     <Compile Include="Memory\PspPointer.cs" />
+    <Compile Include="Mono.Simd\AccelerationAttribute.cs" />
+    <Compile Include="Mono.Simd\AccelMode.cs" />
+    <Compile Include="Mono.Simd\ArrayExtensions.cs" />
+    <Compile Include="Mono.Simd\SimdRuntime.cs" />
+    <Compile Include="Mono.Simd\Vector16b.cs" />
+    <Compile Include="Mono.Simd\Vector16sb.cs" />
+    <Compile Include="Mono.Simd\Vector2d.cs" />
+    <Compile Include="Mono.Simd\Vector2l.cs" />
+    <Compile Include="Mono.Simd\Vector2ul.cs" />
+    <Compile Include="Mono.Simd\Vector4f.cs" />
+    <Compile Include="Mono.Simd\Vector4i.cs" />
+    <Compile Include="Mono.Simd\Vector4ui.cs" />
+    <Compile Include="Mono.Simd\Vector8s.cs" />
+    <Compile Include="Mono.Simd\Vector8us.cs" />
+    <Compile Include="Mono.Simd\VectorOperations.cs" />
     <Compile Include="PixelFormats.cs" />
     <Compile Include="Platform\Platform.cs" />
     <Compile Include="PluginInfo.cs" />
@@ -135,7 +142,6 @@
       <Name>CSharpUtils</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -6,6 +6,7 @@ chdir(dirname(__DIR__));
 
 echo "BUILDING RELEASE...\n";
 `MSBuild /p:Configuration=Release`;
+`merge.bat`;
 `copy /Y cspspemu.exe deploy\\cspspemu\\cspspemu.exe`;
 
 echo "REMOVING OLD FILES...\n";

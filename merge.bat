@@ -7,11 +7,11 @@ PUSHD %~dp0
 	SET BASE_FOLDER=%~dp0\CSPspEmu\bin\Release
 	SET FILES=
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.exe"
-	SET FILES=%FILES% "%BASE_FOLDER%\Mono.SIMD.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSharpUtils.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSharpUtils.Drawing.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Utils.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.dll"
+	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Crypto.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Audio.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Audio.Impl.Null.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Audio.Impl.Openal.dll"
@@ -33,7 +33,7 @@ PUSHD %~dp0
 	SET FILES=%FILES% "%BASE_FOLDER%\SafeILGenerator.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\OpenTK.dll"
 
-	SET TARGET=/targetplatform:v4,"%ProgramFiles(x86)%\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0"
+	SET TARGET=/targetplatform:v4,"%ProgramFiles(x86)%\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5"
 	"%~dp0\utils\ilmerge\ILMerge.exe" %TARGET% /out:cspspemu.exe %FILES%
 	COPY %BASE_FOLDER%\OpenTK.dll .
 POPD
