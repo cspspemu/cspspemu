@@ -41,6 +41,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		static protected bool InitializedOnce = false;
 		static protected FieldInfo[] Field_GPRList;
+		static protected FieldInfo[] Field_C0RList;
 		static protected FieldInfo[] Field_FPRList;
 
 		readonly public Dictionary<string, uint> InstructionStats = new Dictionary<string, uint>();
@@ -109,10 +110,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			if (!InitializedOnce)
 			{
 				Field_GPRList = new FieldInfo[32];
+				Field_C0RList = new FieldInfo[32];
 				Field_FPRList = new FieldInfo[32];
 				for (int n = 0; n < 32; n++)
 				{
 					Field_GPRList[n] = typeof(CpuThreadState).GetField("GPR" + n);
+					Field_C0RList[n] = typeof(CpuThreadState).GetField("C0R" + n);
 					Field_FPRList[n] = typeof(CpuThreadState).GetField("FPR" + n);
 				}
 
@@ -205,6 +208,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		protected void LoadGPR_Ptr(int R) { LoadFieldPtr(Field_GPRList[R]); }
+		protected void LoadC0R_Ptr(int R) { LoadFieldPtr(Field_C0RList[R]); }
 		protected void LoadFPR_Ptr(int R) { LoadFieldPtr(Field_FPRList[R]); }
 		protected void LoadPC_Ptr() { LoadFieldPtr(Field_PC); }
 		protected void LoadHI_Ptr() { LoadFieldPtr(Field_HI); }
@@ -268,6 +272,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public void SaveGPR_F(int R, Action Action) { if (R != 0) SaveField<float>(Field_GPRList[R], Action); }
 		public void SaveGPR(int R, Action Action) { if (R != 0) SaveField<int>(Field_GPRList[R], Action); }
+		public void SaveC0R(int R, Action Action) { SaveField<int>(Field_C0RList[R], Action); }
 		public void SaveGPRLong(int R, Action Action) { if (R != 0) SaveField<long>(Field_GPRList[R], Action); }
 		public void SaveFPR(int R, Action Action)
 		{
@@ -320,6 +325,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				LoadGPR_Ptr(R);
 				SafeILGenerator.LoadIndirect<int>();
 			}
+		}
+
+
+		public void LoadC0R(int R)
+		{
+			LoadC0R_Ptr(R);
+			SafeILGenerator.LoadIndirect<int>();
 		}
 
 		public void LoadGPR_Unsigned(int R)

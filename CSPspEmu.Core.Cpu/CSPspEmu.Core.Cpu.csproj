@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="Assembler\MipsAssembler.cs" />
     <Compile Include="Assembler\MipsDisassembler.cs" />
+    <Compile Include="CachedGetMethodCache.cs" />
     <Compile Include="Dynarec\DynarecBranchAnalyzer.cs" />
     <Compile Include="Dynarec\DynarecFunction.cs" />
     <Compile Include="Dynarec\DynarecFunctionCompiler.cs" />
