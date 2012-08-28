@@ -45,6 +45,9 @@
   <ItemGroup>
     <Compile Include="DebugPspMemory.cs" />
     <Compile Include="Dma.cs" />
+    <Compile Include="ILleDma.cs" />
+    <Compile Include="LleGPIO.cs" />
+    <Compile Include="LleNAND.cs" />
     <Compile Include="LlePspComponent.cs" />
     <Compile Include="LlePspCpu.cs" />
     <Compile Include="LLEState.cs" />

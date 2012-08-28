@@ -198,6 +198,11 @@ namespace CSPspEmu.Core.Cpu
 		/// </summary>
 		public uint RA { get { return GPR31; } set { GPR31 = value; } }
 
+		/// <summary>
+		/// V0
+		/// </summary>
+		public uint V0 { get { return GPR2; } set { GPR2 = value; } }
+
 		/*
 		public struct FixedRegisters
 		{

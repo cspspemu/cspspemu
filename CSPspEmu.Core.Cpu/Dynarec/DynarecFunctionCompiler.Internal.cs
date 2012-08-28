@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define OPTIMIZE_LWL_LWR
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -214,8 +216,8 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 					Console.WriteLine("     PC=0x{0:X}", _PC);
 				}
 
-#if true
 				var Instruction = CpuEmiter.LoadAT(_PC);
+#if OPTIMIZE_LWL_LWR
 				var InstructionDisasm = MipsDisassembler.Disassemble(_PC, Instruction);
 
 				if (InstructionDisasm.InstructionInfo != null && InstructionDisasm.InstructionInfo.Name == "lwl")

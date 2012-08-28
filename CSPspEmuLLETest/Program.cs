@@ -21,6 +21,7 @@ namespace CSPspEmuLLETest
 			get
 			{
 				return @"..\..\..\deploy\cspspemu\nand-dump.bin";
+				//return @"..\..\..\deploy\cspspemu\nand-dump-420.bin";
 			}
 		}
 
@@ -43,6 +44,12 @@ namespace CSPspEmuLLETest
 			var IplReader = new IplReader(new NandReader(File.OpenRead(NandPath)));
 			var Info = IplReader.LoadIplToMemory(new PspMemoryStream(DebugPspMemory));
 
+			//DebugPspMemory.Write4(0xBFC00FFC, 0x20040420);
+
+			// It doesn't start the ME
+			//DebugPspMemory.Write4(0xBFC00FFC, 0xFFFFFFFF);
+			
+
 			/*
 			ME:
 			li      $t0, 0x40EC19C
@@ -55,6 +62,7 @@ namespace CSPspEmuLLETest
 			var LLEState = new LLEState();
 
 			Dma.LLEState = LLEState;
+			LLEState.GPIO = new LleGPIO();
 			LLEState.Cpu = new LlePspCpu("CPU", PspEmulatorContext, CpuProcessor, Info.EntryFunction);
 			LLEState.Me = new LlePspCpu("ME", PspEmulatorContext, CpuProcessor, 0x1FD00000);
 

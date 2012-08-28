@@ -10,6 +10,12 @@ namespace CSPspEmuLLETest
 {
 	public class Dma
 	{
+		public enum Direction
+		{
+			Write,
+			Read,
+		}
+
 		public CpuThreadState CpuThreadState;
 		public LLEState LLEState;
 		//0xBC100004
@@ -21,6 +27,15 @@ namespace CSPspEmuLLETest
 
 		bool LogDMAReads = true;
 
+		public void TransferDMA(Dma.Direction Direction, int Size, uint Address, ref uint Value)
+		{
+			if (Address >= 0xBE240000 && Address <= 0xbe24000C) { LLEState.GPIO.Transfer(Direction, Size, Address, ref Value); return; }
+			else
+			{
+				if (LogDMAReads) Console.WriteLine("{0}.DMA(0x{1:X8}) at 0x{2:X8}", Direction, Address, CpuThreadState.PC);
+			}
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -29,6 +44,7 @@ namespace CSPspEmuLLETest
 		/// <returns></returns>
 		public uint ReadDMA(int Size, uint Address)
 		{
+			uint Value = 0;
 			switch (Address)
 			{
 				case 0xBC10004C:
@@ -40,17 +56,14 @@ namespace CSPspEmuLLETest
 				case 0xbc100078:
 					Console.WriteLine("Read: SystemConfig.IO_ENABLE");
 					break;
-				case 0xBE240000:
-					Console.WriteLine("Read: GPIO");
-					break;
 				case 0xBC10007C:
 					Console.WriteLine("Read: SystemConfig.GPIO_IO_ENABLE");
 					break;
 				default:
-					if (LogDMAReads) Console.WriteLine("ReadDMA(0x{0:X8}) at 0x{1:X8}", Address, CpuThreadState.PC);
+					TransferDMA(Direction.Read, Size, Address, ref Value);
 					break;
 			}
-			return 0;
+			return Value;
 		}
 
 		/// <summary>
@@ -73,18 +86,6 @@ namespace CSPspEmuLLETest
 						LLEState.Me.Reset();
 					}
 					break;
-				case 0xbe240000:
-					Console.WriteLine("Write: GPIO");
-					break;
-				case 0xbe240004:
-					Console.WriteLine("Write: GPIO.PortRead");
-					break;
-				case 0xbe240008:
-					Console.WriteLine("Write: GPIO.PortWrite");
-					break;
-				case 0xbe24000C:
-					Console.WriteLine("Write: GPIO.PortClear");
-					break;
 				case 0xbc100050:
 					Console.WriteLine("Write: SystemConfig.BUS_CLOCK_ENABLE");
 					break;
@@ -95,7 +96,7 @@ namespace CSPspEmuLLETest
 					Console.WriteLine("Write: SystemConfig.IO_ENABLE(0x{0:X8})", Value);
 					break;
 				default:
-					if (LogDMAReads) Console.WriteLine("WriteDMA(0x{0:X8}) <- 0x{1:X8} at 0x{2:X8}", Address, Value, CpuThreadState.PC);
+					TransferDMA(Direction.Write, Size, Address, ref Value);
 					break;
 			}
 		}

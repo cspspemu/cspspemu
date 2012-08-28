@@ -123,7 +123,11 @@ namespace CSPspEmu.Core.Crypto
 			{
 				check_initialized();
 				var header = *(AES128CMACHeader*)inbuff;
-				if (header.Mode != KirkMode.Cmd1) throw (new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE));
+				if (header.Mode != KirkMode.Cmd1)
+				{
+					//Console.Error.WriteLine("ResultEnum.PSP_KIRK_INVALID_MODE");
+					throw (new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE));
+				}
 
 				header_keys keys; //0-15 AES key, 16-31 CMAC key
 

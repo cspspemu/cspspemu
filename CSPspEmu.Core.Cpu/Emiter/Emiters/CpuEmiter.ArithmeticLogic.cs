@@ -5,6 +5,7 @@ using System.Text;
 using System.Reflection.Emit;
 using CSharpUtils;
 using Codegen;
+using System.Runtime.CompilerServices;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -49,10 +50,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void sra() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RD, RT, Instruction.POS, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftRightSigned); }); }
 		public void srl() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RD, RT, Instruction.POS, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftRightUnsigned); }); }
 
-		static public uint _rotr(uint Value, int Offset)
-		{
-			return (Value >> Offset) | (Value << (32 - Offset));
-		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		static public uint _rotr(uint Value, int Offset) { return (Value >> Offset) | (Value << (32 - Offset)); }
 
 		public void sllv() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RT, RS, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftLeft); }); }
 		public void srav() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RT, RS, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftRightSigned); }); }
@@ -128,6 +127,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				SafeILGenerator.Call((Func<uint, uint>)CpuEmiter._bitrev_impl);
 			});
 		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		static public uint _bitrev_impl(uint v)
 		{
 			v = ((v >> 1) & 0x55555555) | ((v & 0x55555555) << 1); // swap odd and even bits
@@ -273,6 +274,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			});
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		static public ulong _multu(uint Left, uint Right)
 		{
 			return (ulong)Left * (ulong)Right;
@@ -373,12 +375,15 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 
 		// http://aggregate.org/MAGIC/
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		static public uint _clo_impl(uint x)
 		{
 			uint ret = 0;
 			while ((x & 0x80000000) != 0) { x <<= 1; ret++; }
 			return ret;
 		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		static public uint _clz_impl(uint x)
 		{
 			return _clo_impl(~x);
@@ -404,11 +409,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Word Swap Bytes Within Halfwords/Words.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		static public uint _wsbh_impl(uint v)
 		{
 			// swap bytes
 			return ((v & 0xFF00FF00) >> 8) | ((v & 0x00FF00FF) << 8);
 		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		static public uint _wsbw_impl(uint v)
 		{
 			// BSWAP

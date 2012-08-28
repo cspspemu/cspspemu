@@ -44,6 +44,16 @@ namespace CSPspEmuLLETest
 							Console.WriteLine("{0}: {1:X8}", Name, PC);
 						}
 
+						if (PC == 0x040EC228)
+						{
+							if (((int)CpuThreadState.V0) < 0)
+							{
+								Console.WriteLine("!!ERROR: 0x{0:X8}", CpuThreadState.V0);
+								//(SceKernelErrors)
+							}
+							//CpuThreadState.DumpRegisters();
+						}
+
 						Func.Delegate(CpuThreadState);
 						//throw(new PspMemory.InvalidAddressException(""));
 					}

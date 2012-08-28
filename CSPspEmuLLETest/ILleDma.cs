@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace CSPspEmuLLETest
 {
-	public class LLEState
+	public interface ILleDma
 	{
-		public LlePspCpu Cpu;
-		public LlePspCpu Me;
-		public LleGPIO GPIO;
+		void Transfer(Dma.Direction Direction, int Size, uint Address, ref uint Value);
 	}
 }

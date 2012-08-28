@@ -65,6 +65,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analyzer\AnalyzerExpression.cs" />
+    <Compile Include="Analyzer\AnalyzerState.cs" />
+    <Compile Include="Analyzer\AnalyzerValue.cs" />
+    <Compile Include="Analyzer\InstructionAnalyzerInfo.cs" />
     <Compile Include="Assembler\MipsAssembler.cs" />
     <Compile Include="Assembler\MipsDisassembler.cs" />
     <Compile Include="CachedGetMethodCache.cs" />
