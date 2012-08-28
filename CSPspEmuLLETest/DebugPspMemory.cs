@@ -43,7 +43,7 @@ namespace CSPspEmuLLETest
 		{
 			if (((Address & PspMemory.MemoryMask) >= 0x1FC00000) && ((Address & PspMemory.MemoryMask) <= 0x20000000))
 			{
-				Console.WriteLine("{0:X8}: Write: {1:X8} : {2:X8}", CpuThreadState.PC, Address, Value);
+				//Console.WriteLine("{0:X8}: Write: {1:X8} : {2:X8}", CpuThreadState.PC, Address, Value);
 			}
 		}
 

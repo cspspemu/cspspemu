@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CSharpUtils;
 using CSPspEmu.Core;
@@ -31,7 +32,6 @@ namespace CSPspEmuLLETest
 			PspEmulatorContext.SetInstance<PspMemory>(DebugPspMemory);
 			var CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();
 			var CpuThreadState = new CpuThreadState(CpuProcessor);
-			var CachedGetMethodCache = PspEmulatorContext.GetInstance<CachedGetMethodCache>();
 			var Dma = new Dma(CpuThreadState);
 			DebugPspMemory.CpuThreadState = CpuThreadState;
 			DebugPspMemory.Dma = Dma;
@@ -52,31 +52,17 @@ namespace CSPspEmuLLETest
 
 			//IplReader.WriteIplToFile(File.Open(NandPath + ".ipl.bin", FileMode.Create, FileAccess.Write));
 
-			CpuThreadState.PC = Info.EntryFunction;
-			try
-			{
-				while (true)
-				{
-					var PC = CpuThreadState.PC & PspMemory.MemoryMask;
-					//Console.WriteLine("PC:{0:X8} - {1:X8}", PC, CpuThreadState.PC);
-					var Func = CachedGetMethodCache.GetDelegateAt(PC);
-					Func.Delegate(CpuThreadState);
-					//throw(new PspMemory.InvalidAddressException(""));
-				}
-			}
-			catch (Exception Exception)
-			{
-				CpuThreadState.DumpRegisters();
-				Console.WriteLine("----------------------------------------------------");
-				Console.Error.WriteLine(Exception.Message);
-				Console.WriteLine("----------------------------------------------------");
-				Console.WriteLine("at {0:X8}", CpuThreadState.PC);
-				Console.WriteLine("----------------------------------------------------");
-				Console.Error.WriteLine(Exception);
-				Console.WriteLine("----------------------------------------------------");
-				Console.WriteLine("at {0:X8}", CpuThreadState.PC);
-				Console.ReadKey();
-			}
+			var LLEState = new LLEState();
+
+			Dma.LLEState = LLEState;
+			LLEState.Cpu = new LlePspCpu("CPU", PspEmulatorContext, CpuProcessor, Info.EntryFunction);
+			LLEState.Me = new LlePspCpu("ME", PspEmulatorContext, CpuProcessor, 0x1FD00000);
+
+			LLEState.Cpu.Start();
+
+			while (true) Thread.Sleep(int.MaxValue);
 		}
+
+		
 	}
 }

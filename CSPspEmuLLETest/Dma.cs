@@ -11,6 +11,7 @@ namespace CSPspEmuLLETest
 	public class Dma
 	{
 		public CpuThreadState CpuThreadState;
+		public LLEState LLEState;
 		//0xBC100004
 
 		public Dma(CpuThreadState CpuThreadState)
@@ -63,10 +64,14 @@ namespace CSPspEmuLLETest
 			switch (Address)
 			{
 				case 0xbc100004: // Clear All Interrupts
-					Console.WriteLine("{0:X8}: Write: SystemConfig.ClearAllInterrupts : 0x{1:X8}", CpuThreadState.PC, Value);
+					Console.WriteLine("{0:X8}: Write: SystemConfig.ClearInterrupts : 0x{1:X8}", CpuThreadState.PC, Value);
 					break;
 				case 0xBC10004C:
 					Console.WriteLine("{0:X8}: Write: SystemConfig.RESET_ENABLE : 0x{1:X8}", CpuThreadState.PC, Value);
+					if ((Value & 2) != 0) // ME
+					{
+						LLEState.Me.Reset();
+					}
 					break;
 				case 0xbe240000:
 					Console.WriteLine("Write: GPIO");

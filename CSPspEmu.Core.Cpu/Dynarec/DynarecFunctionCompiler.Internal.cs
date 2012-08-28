@@ -152,7 +152,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
 						if (AnalyzedPC.Count > MaxNumberOfInstructions)
 						{
-							throw (new InvalidDataException("Code sequence too long: >= " + MaxNumberOfInstructions + ""));
+							throw (new InvalidDataException(String.Format("Code sequence too long: >= {0} at 0x{1:X8}", MaxNumberOfInstructions, EntryPC)));
 						}
 
 						MinPC = Math.Min(MinPC, PC);
