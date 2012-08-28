@@ -122,8 +122,8 @@ namespace CSPspEmu.Core.Crypto
 			fixed (Crypto.AES_ctx* aes_kirk1_ptr = &_aes_kirk1)
 			{
 				check_initialized();
-				var header = (AES128CMACHeader*)inbuff;
-				if (header->Mode != KirkMode.Cmd1) throw (new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE));
+				var header = *(AES128CMACHeader*)inbuff;
+				if (header.Mode != KirkMode.Cmd1) throw (new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE));
 
 				header_keys keys; //0-15 AES key, 16-31 CMAC key
 
@@ -154,7 +154,7 @@ namespace CSPspEmu.Core.Crypto
 				Crypto.AES_ctx k1;
 				Crypto.AES_set_key(&k1, keys.AES, 128);
 
-				Crypto.AES_cbc_decrypt(&k1, inbuff + sizeof(AES128CMACHeader) + header->DataOffset, outbuff, header->DataSize);
+				Crypto.AES_cbc_decrypt(&k1, inbuff + sizeof(AES128CMACHeader) + header.DataOffset, outbuff, header.DataSize);
 #endif
 			}
 		}
@@ -247,19 +247,19 @@ namespace CSPspEmu.Core.Crypto
 			{
 				check_initialized();
 
-				AES128CMACHeader* header = (AES128CMACHeader*)inbuff;
+				AES128CMACHeader header = *(AES128CMACHeader*)inbuff;
 
-				if (!(header->Mode == KirkMode.Cmd1 || header->Mode == KirkMode.Cmd2 || header->Mode == KirkMode.Cmd3))
+				if (!(header.Mode == KirkMode.Cmd1 || header.Mode == KirkMode.Cmd2 || header.Mode == KirkMode.Cmd3))
 				{
 					throw(new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE));
 				}
 
-				if (header->DataSize == 0)
+				if (header.DataSize == 0)
 				{
 					throw (new KirkException(ResultEnum.PSP_KIRK_DATA_SIZE_IS_ZERO));
 				}
 
-				if (header->Mode != KirkMode.Cmd1)
+				if (header.Mode != KirkMode.Cmd1)
 				{
 					// Checks for cmd 2 & 3 not included right now
 					throw (new KirkException(ResultEnum.PSP_KIRK_INVALID_SIG_CHECK));
@@ -279,16 +279,16 @@ namespace CSPspEmu.Core.Crypto
 				Crypto.AES_CMAC(&cmac_key, inbuff + 0x60, 0x30, cmac_header_hash);
 
 				//Make sure data is 16 aligned
-				int chk_size = header->DataSize;
+				int chk_size = header.DataSize;
 				if ((chk_size % 16) != 0) chk_size += 16 - (chk_size % 16);
-				Crypto.AES_CMAC(&cmac_key, inbuff + 0x60, 0x30 + chk_size + header->DataOffset, cmac_data_hash);
+				Crypto.AES_CMAC(&cmac_key, inbuff + 0x60, 0x30 + chk_size + header.DataOffset, cmac_data_hash);
 
-				if (Crypto.memcmp(cmac_header_hash, header->CMAC_header_hash, 16) != 0)
+				if (Crypto.memcmp(cmac_header_hash, header.CMAC_header_hash, 16) != 0)
 				{
 					Logger.Error("header hash invalid");
 					throw (new KirkException(ResultEnum.PSP_SUBCWR_HEADER_HASH_INVALID));
 				}
-				if (Crypto.memcmp(cmac_data_hash, header->CMAC_data_hash, 16) != 0)
+				if (Crypto.memcmp(cmac_data_hash, header.CMAC_data_hash, 16) != 0)
 				{
 					Logger.Error("data hash invalid");
 					throw (new KirkException(ResultEnum.PSP_SUBCWR_HEADER_HASH_INVALID));

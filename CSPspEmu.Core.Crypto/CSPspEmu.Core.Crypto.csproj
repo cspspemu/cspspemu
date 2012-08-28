@@ -49,6 +49,7 @@
     <Compile Include="Crypto\Kirk.Keys.cs" />
     <Compile Include="Crypto\Kirk.Tables.cs" />
     <Compile Include="Crypto\Kirk.Utils.cs" />
+    <Compile Include="IplReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

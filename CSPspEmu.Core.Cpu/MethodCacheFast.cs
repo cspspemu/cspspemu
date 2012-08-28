@@ -12,6 +12,7 @@ namespace CSPspEmu.Core.Cpu
 	{
 		private DynarecFunction[] MethodsScratchPad = new DynarecFunction[PspMemory.ScratchPadSize / 4];
 		private DynarecFunction[] MethodsMain = new DynarecFunction[PspMemory.MainSize / 4];
+		private DynarecFunction[] MethodsFrameBuffer = new DynarecFunction[PspMemory.FrameBufferSize / 4];
 		private DynarecFunction[] MethodsVectors = new DynarecFunction[PspMemory.VectorsSize / 4];
 		private SortedSet<uint> MethodsInList = new SortedSet<uint>();
 
@@ -44,9 +45,10 @@ namespace CSPspEmu.Core.Cpu
 
 		public void SetMethodAt(uint Address, DynarecFunction Action)
 		{
-			if (PspMemory.MainSegment.Contains(Address)) MethodsMain[MainAddress_To_Index(Address)] = Action;
-			else if (PspMemory.ScratchPadSegment.Contains(Address)) MethodsScratchPad[ScratchPadAddress_To_Index(Address)] = Action;
-			else if (PspMemory.VectorsSegment.Contains(Address)) MethodsVectors[VectorsAddress_To_Index(Address)] = Action;
+			if (PspMemory.MainSegment.Contains(Address)) MethodsMain[AddressToIndex_Main(Address)] = Action;
+			else if (PspMemory.ScratchPadSegment.Contains(Address)) MethodsScratchPad[AdressToIndex_ScratchPad(Address)] = Action;
+			else if (PspMemory.FrameBufferSegment.Contains(Address)) MethodsFrameBuffer[AddressToIndex_FrameBuffer(Address)] = Action;
+			else if (PspMemory.VectorsSegment.Contains(Address)) MethodsVectors[AddressToIndex_Vectors(Address)] = Action;
 			if (Action != null) MethodsInList.Add(Address);
 		}
 
@@ -62,28 +64,19 @@ namespace CSPspEmu.Core.Cpu
 
 		public DynarecFunction TryGetMethodAt(uint PC)
 		{
-			if (PspMemory.MainSegment.Contains(PC)) return MethodsMain[MainAddress_To_Index(PC)];
-			if (PspMemory.ScratchPadSegment.Contains(PC)) return MethodsScratchPad[ScratchPadAddress_To_Index(PC)];
-			if (PspMemory.VectorsSegment.Contains(PC)) return MethodsVectors[VectorsAddress_To_Index(PC)];
+			if (PspMemory.MainSegment.Contains(PC)) return MethodsMain[AddressToIndex_Main(PC)];
+			if (PspMemory.ScratchPadSegment.Contains(PC)) return MethodsScratchPad[AdressToIndex_ScratchPad(PC)];
+			if (PspMemory.FrameBufferSegment.Contains(PC)) return MethodsFrameBuffer[AddressToIndex_FrameBuffer(PC)];
+			if (PspMemory.VectorsSegment.Contains(PC)) return MethodsVectors[AddressToIndex_Vectors(PC)];
 
 			throw (new IndexOutOfRangeException(
 				String.Format("Can't jump to '{0}'. Invalid address.", "0x%08X".Sprintf(PC))
 			));
 		}
 
-		public uint VectorsAddress_To_Index(uint PC)
-		{
-			return (PC - PspMemory.VectorsOffset) / 4;
-		}
-
-		public uint ScratchPadAddress_To_Index(uint PC)
-		{
-			return (PC - PspMemory.ScratchPadOffset) / 4;
-		}
-
-		public uint MainAddress_To_Index(uint PC)
-		{
-			return (PC - PspMemory.MainOffset) / 4;
-		}
+		public uint AddressToIndex_Main(uint PC) { return (PC - PspMemory.MainOffset) / 4; }
+		public uint AdressToIndex_ScratchPad(uint PC) { return (PC - PspMemory.ScratchPadOffset) / 4; }
+		public uint AddressToIndex_FrameBuffer(uint PC) { return (PC - PspMemory.FrameBufferOffset) / 4; }
+		public uint AddressToIndex_Vectors(uint PC) { return (PC - PspMemory.VectorsOffset) / 4; }
 	}
 }

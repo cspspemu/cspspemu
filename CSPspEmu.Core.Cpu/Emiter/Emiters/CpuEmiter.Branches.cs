@@ -164,7 +164,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				var NewPC = GetJumpAddress();
 
-				Console.WriteLine("NewPC: 0x{0:X8}", NewPC);
+				//Console.WriteLine("NewPC: 0x{0:X8}", NewPC);
 
 				SafeILGenerator.Push((int)NewPC);
 				AddPcToAnalyze(NewPC);

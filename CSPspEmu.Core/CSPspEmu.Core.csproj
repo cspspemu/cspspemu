@@ -73,7 +73,6 @@
     <Compile Include="Enums.cs" />
     <Compile Include="Hashing.cs" />
     <Compile Include="IGuiExternalInterface.cs" />
-    <Compile Include="IplReader.cs" />
     <Compile Include="ManagedPointer.cs" />
     <Compile Include="Memory\PspMemory.cs" />
     <Compile Include="Memory\LazyPspMemory.cs" />
