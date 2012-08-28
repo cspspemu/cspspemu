@@ -215,7 +215,18 @@ namespace CSPspEmu.Core.Cpu
 			public int this[int Index]
 			{
 				get { fixed (uint* PTR = &Processor.GPR0) return (int)PTR[Index]; }
-				set { fixed (uint* PTR = &Processor.GPR0) PTR[Index] = (uint)value; }
+				set { if (Index == 0) return; fixed (uint* PTR = &Processor.GPR0) PTR[Index] = (uint)value; }
+			}
+		}
+
+		public class C0rList
+		{
+			public CpuThreadState Processor;
+
+			public uint this[int Index]
+			{
+				get { fixed (uint* PTR = &Processor.C0R0) return (uint)PTR[Index]; }
+				set { fixed (uint* PTR = &Processor.C0R0) PTR[Index] = (uint)value; }
 			}
 		}
 
@@ -256,6 +267,7 @@ namespace CSPspEmu.Core.Cpu
 		//public float* FPR_Ptr;
 
 		public GprList GPR;
+		public C0rList C0R;
 		public FprList FPR;
 		public VfprList Vfpr;
 		public FprListInteger FPR_I;
@@ -267,6 +279,14 @@ namespace CSPspEmu.Core.Cpu
 			//Console.WriteLine("%08X".Sprintf((uint)Pointer));
 			return Pointer;
 		}
+
+		public byte Read1(uint Address) { return CpuProcessor.Memory.Read1(Address); }
+		public ushort Read2(uint Address) { return CpuProcessor.Memory.Read2(Address); }
+		public uint Read4(uint Address) { return CpuProcessor.Memory.Read4(Address); }
+
+		public void Write1(uint Address, byte Value) { CpuProcessor.Memory.Write1(Address, Value); }
+		public void Write2(uint Address, ushort Value) { CpuProcessor.Memory.Write2(Address, Value); }
+		public void Write4(uint Address, uint Value) { CpuProcessor.Memory.Write4(Address, Value); }
 
 		public void* GetMemoryPtrNotNull(uint Address)
 		{
@@ -318,6 +338,7 @@ namespace CSPspEmu.Core.Cpu
 
 			GPR = new GprList() { Processor = this };
 			FPR = new FprList() { Processor = this };
+			C0R = new C0rList() { Processor = this };
 			FPR_I = new FprListInteger() { Processor = this };
 			Vfpr = new VfprList() { Processor = this };
 
@@ -426,6 +447,13 @@ namespace CSPspEmu.Core.Cpu
 			{
 				if (n % 4 != 0) TextWriter.Write(", ");
 				TextWriter.Write("f{0,2} : 0x{1:X8}, {2}", n, FPR_I[n], FPR[n]);
+				if (n % 4 == 3) TextWriter.WriteLine();
+			}
+			TextWriter.WriteLine();
+			for (int n = 0; n < 32; n++)
+			{
+				if (n % 4 != 0) TextWriter.Write(", ");
+				TextWriter.Write("c0r{0,2} : 0x{1:X8}", n, C0R[n]);
 				if (n % 4 == 3) TextWriter.WriteLine();
 			}
 			TextWriter.WriteLine();

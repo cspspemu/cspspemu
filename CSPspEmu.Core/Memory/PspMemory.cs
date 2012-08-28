@@ -13,6 +13,15 @@ namespace CSPspEmu.Core.Memory
 		//public const bool IsSlim = true;
 	}
 
+	/// <summary>
+	/// start       end         size  description
+	/// 0x00010000  0x00013fff  16kb  scratchpad
+	/// 0x04000000  0x041fffff  2mb   Video Memory / Frame Buffer
+	/// 0x08000000  0x09ffffff  32mb  Main Memory
+	/// 0x1c000000  0x1fbfffff        Hardware i/o
+	/// 0x1fc00000  0x1fcfffff  1mb   Hardware Exception Vectors (RAM)
+	/// 0x1fd00000  0x1fffffff        Hardware i/o
+	/// </summary>
 	unsafe abstract public class PspMemory : PspEmulatorComponent, IDisposable
 	{
 		static internal Logger Logger = Logger.GetLogger("Memory");
@@ -57,24 +66,29 @@ namespace CSPspEmu.Core.Memory
 			PointerUtils.Memset((byte *)PspAddressToPointerSafe(Segment.Low), 0, Segment.Size);
 		}
 
-		public readonly Segment ScratchPadSegment = new Segment(ScratchPadOffset, ScratchPadSize);
-		public readonly Segment MainSegment = new Segment(MainOffset, MainSize);
-		public readonly Segment FrameBufferSegment = new Segment(FrameBufferOffset, FrameBufferSize);
+		static public readonly Segment ScratchPadSegment = new Segment(ScratchPadOffset, ScratchPadSize);
+		static public readonly Segment MainSegment = new Segment(MainOffset, MainSize);
+		static public readonly Segment FrameBufferSegment = new Segment(FrameBufferOffset, FrameBufferSize);
+		static public readonly Segment VectorsSegment = new Segment(VectorsOffset, VectorsSize);
 
 		//static public Segment ScratchPadSegment = new Segment() { Offset = 0x00010000, Size = 4 * 1024 };
 
 		public const int ScratchPadSize = 4 * 1024; // 4KB
 		public const int FrameBufferSize = 2 * 0x100000; // 2MB
 		public const int MainSize = (PspModel.IsSlim ? 64 : 32) * 0x100000; // 32MB (PHAT) / 64MB (SLIM)
+		//public const int HardwareVectorsSize = 1 * 1024 * 1024;
+		public const int VectorsSize = 4 * 1024 * 1024;
 
 		public const uint ScratchPadOffset = 0x00010000;
 		public const uint FrameBufferOffset = 0x04000000;
 		public const uint MainOffset = 0x08000000;
+		public const uint VectorsOffset = 0x1fc00000;
 
 		protected byte* NullPtr;
 		protected byte* ScratchPadPtr; // 4KB
 		protected byte* FrameBufferPtr; // 2MB
 		protected byte* MainPtr;
+		protected byte* VectorsPtr;
 		protected uint* LogMainPtr;
 
 		abstract public uint PointerToPspAddressUnsafe(void* Pointer);
@@ -109,6 +123,7 @@ namespace CSPspEmu.Core.Memory
 			if ((Pointer >= ScratchPadPtr) && (Pointer < ScratchPadPtr + ScratchPadSize)) return (uint)(ScratchPadOffset + (Pointer - ScratchPadPtr));
 			if ((Pointer >= FrameBufferPtr) && (Pointer < FrameBufferPtr + FrameBufferSize)) return (uint)(FrameBufferOffset + (Pointer - FrameBufferPtr));
 			if ((Pointer >= MainPtr) && (Pointer < MainPtr + MainSize)) return (uint)(MainOffset + (Pointer - MainPtr));
+			if ((Pointer >= VectorsPtr) && (Pointer < VectorsPtr + VectorsSize)) return (uint)(VectorsOffset + (Pointer - VectorsPtr));
 			throw (new InvalidAddressException(String.Format("Pointer 0x{0:X} doesn't belong to PSP Memory. Main: 0x{1:X}-0x{2:X}", (ulong)Pointer, (ulong)MainPtr, (ulong)MainSize)));
 		}
 
@@ -156,6 +171,7 @@ namespace CSPspEmu.Core.Memory
 			if (MainSegment.Contains(Address)) return true;
 			if (FrameBufferSegment.Contains(Address)) return true;
 			if (ScratchPadSegment.Contains(Address)) return true;
+			if (VectorsSegment.Contains(Address)) return true;
 			return false;
 		}
 
@@ -242,6 +258,16 @@ namespace CSPspEmu.Core.Memory
 			}
 			return Output;
 		}
+
+		virtual public byte Read1(uint Address) { return *(byte *)PspAddressToPointerNotNull(Address); }
+		virtual public ushort Read2(uint Address) { return *(ushort*)PspAddressToPointerNotNull(Address); }
+		virtual public uint Read4(uint Address) { return *(uint*)PspAddressToPointerNotNull(Address); }
+		virtual public ulong Read8(uint Address) { return *(ulong*)PspAddressToPointerNotNull(Address); }
+
+		virtual public void Write1(uint Address, byte Value) { *(byte*)PspAddressToPointerNotNull(Address) = Value; }
+		virtual public void Write2(uint Address, ushort Value) { *(ushort*)PspAddressToPointerNotNull(Address) = Value; }
+		virtual public void Write4(uint Address, uint Value) { *(uint*)PspAddressToPointerNotNull(Address) = Value; }
+		virtual public void Write8(uint Address, ulong Value) { *(ulong*)PspAddressToPointerNotNull(Address) = Value; }
 
 		public void ReadBytes(uint Address, byte* DataOutPointer, int DataOutLength)
 		{

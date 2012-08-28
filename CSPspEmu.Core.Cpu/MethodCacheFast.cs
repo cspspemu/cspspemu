@@ -10,7 +10,9 @@ namespace CSPspEmu.Core.Cpu
 {
 	sealed public class MethodCacheFast : PspEmulatorComponent
 	{
-		private DynarecFunction[] Methods2 = new DynarecFunction[PspMemory.MainSize / 4];
+		private DynarecFunction[] MethodsScratchPad = new DynarecFunction[PspMemory.ScratchPadSize / 4];
+		private DynarecFunction[] MethodsMain = new DynarecFunction[PspMemory.MainSize / 4];
+		private DynarecFunction[] MethodsVectors = new DynarecFunction[PspMemory.VectorsSize / 4];
 		private SortedSet<uint> MethodsInList = new SortedSet<uint>();
 
 		public event Action<uint, uint> OnClearRange;
@@ -26,18 +28,31 @@ namespace CSPspEmu.Core.Cpu
 			{
 				if (Low == uint.MinValue && High == uint.MaxValue)
 				{
-					foreach (var Address in MethodsInList) Methods2[Address_To_Index(Address)] = null;
+					foreach (var Address in MethodsInList) RemoveMethodAt(Address);
 					MethodsInList = new SortedSet<uint>();
 				}
 				else
 				{
 					foreach (var Address in MethodsInList.Where(Address => ((Address >= Low) && (Address < High))).ToArray())
 					{
-						Methods2[Address_To_Index(Address)] = null;
+						RemoveMethodAt(Address);
 						MethodsInList.Remove(Address);
 					}
 				}
 			}
+		}
+
+		public void SetMethodAt(uint Address, DynarecFunction Action)
+		{
+			if (PspMemory.MainSegment.Contains(Address)) MethodsMain[MainAddress_To_Index(Address)] = Action;
+			else if (PspMemory.ScratchPadSegment.Contains(Address)) MethodsScratchPad[ScratchPadAddress_To_Index(Address)] = Action;
+			else if (PspMemory.VectorsSegment.Contains(Address)) MethodsVectors[VectorsAddress_To_Index(Address)] = Action;
+			if (Action != null) MethodsInList.Add(Address);
+		}
+
+		public void RemoveMethodAt(uint Address)
+		{
+			SetMethodAt(Address, null);
 		}
 
 		public void Clear()
@@ -47,33 +62,28 @@ namespace CSPspEmu.Core.Cpu
 
 		public DynarecFunction TryGetMethodAt(uint PC)
 		{
-			//PC &= PspMemory.MemoryMask;
-			if (PC < PspMemory.MainOffset) throw (new PspMemory.InvalidAddressException(PC));
-			uint Index = (PC - PspMemory.MainOffset) / 4;
-			if (Index < 0 || Index >= PspMemory.MainSize / 4)
-			{
-				throw(new IndexOutOfRangeException(
-					String.Format("Can't jump to '{0}'. Invalid address.", "0x%08X".Sprintf(PC))
-				));
-			}
-			return Methods2[Index];
+			if (PspMemory.MainSegment.Contains(PC)) return MethodsMain[MainAddress_To_Index(PC)];
+			if (PspMemory.ScratchPadSegment.Contains(PC)) return MethodsScratchPad[ScratchPadAddress_To_Index(PC)];
+			if (PspMemory.VectorsSegment.Contains(PC)) return MethodsVectors[VectorsAddress_To_Index(PC)];
+
+			throw (new IndexOutOfRangeException(
+				String.Format("Can't jump to '{0}'. Invalid address.", "0x%08X".Sprintf(PC))
+			));
 		}
 
-		public uint Address_To_Index(uint PC)
+		public uint VectorsAddress_To_Index(uint PC)
+		{
+			return (PC - PspMemory.VectorsOffset) / 4;
+		}
+
+		public uint ScratchPadAddress_To_Index(uint PC)
+		{
+			return (PC - PspMemory.ScratchPadOffset) / 4;
+		}
+
+		public uint MainAddress_To_Index(uint PC)
 		{
 			return (PC - PspMemory.MainOffset) / 4;
-		}
-
-		public void SetMethodAt(uint PC, DynarecFunction Action)
-		{
-			//PC &= PspMemory.MemoryMask;
-			if (PC < PspMemory.MainOffset) throw (new PspMemory.InvalidAddressException(PC));
-			uint Index = Address_To_Index(PC);
-			lock (this)
-			{
-				Methods2[Index] = Action;
-				MethodsInList.Add(PC);
-			}
 		}
 	}
 }

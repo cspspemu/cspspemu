@@ -18,20 +18,34 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
+		private void _load_i<TType>()
+		{
+			_save_pc();
+			MipsMethodEmiter.SaveGPR(RT, () =>
+			{
+				MipsMethodEmiter._loadfromaddress<TType>(_loadd_rs_plus_imm, CanBeNull: false);
+			});
+
+		}
+
+		private void _loadd_rs_plus_imm()
+		{
+			MipsMethodEmiter.LoadGPR_Unsigned(RS);
+			SafeILGenerator.Push((int)IMM);
+			SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
+		}
+
+		/*
 		private void _load_i(Action Action)
 		{
 			_save_pc();
 			MipsMethodEmiter.SaveGPR(RT, () =>
 			{
-				MipsMethodEmiter._getmemptr(() =>
-				{
-					MipsMethodEmiter.LoadGPR_Unsigned(RS);
-					SafeILGenerator.Push((int)IMM);
-					SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-				}, CanBeNull: false);
+				MipsMethodEmiter._getmemptr(() => { _loadd_rs_plus_imm(); }, CanBeNull: false);
 				Action();
 			});
 		}
+		*/
 
 		private bool MustLogWrites
 		{
@@ -41,16 +55,22 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		private void _save_common(Action Action)
+		private void _save_common<TType>(Action ActionLoadValue)
 		{
 			_save_pc();
+#if false
 			MipsMethodEmiter._getmemptr(() =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
 				SafeILGenerator.Push((int)IMM);
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
 			}, CanBeNull: false);
-			Action();
+
+			ActionLoadValue();
+			SafeILGenerator.StoreIndirect<TType>();
+#else
+			MipsMethodEmiter._savetoaddress<TType>(_loadd_rs_plus_imm, ActionLoadValue);
+#endif
 
 			if (MustLogWrites)
 			{
@@ -65,26 +85,24 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		private void _save_i<TType>()
 		{
-			_save_common(() =>
+			_save_common<TType>(() =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				SafeILGenerator.StoreIndirect<TType>();
 			});
 		}
 
 		// Load Byte/Half word/Word (Left/Right/Unsigned).
-		public void lb() { _load_i(() => { SafeILGenerator.LoadIndirect<sbyte>(); }); }
-		public void lh() { _load_i(() => { SafeILGenerator.LoadIndirect<short>(); }); }
-		public void lw() {
-			//MipsMethodEmiter.ILGenerator.EmitWriteLine(String.Format("PC(0x{0:X}) : LW: rt={1}, rs={2}, imm={3}", PC, RT, RS, Instruction.IMM));
-			_lw_unaligned();
-		}
+		public void lb() { _load_i<sbyte>(); }
+		public void lbu() { _load_i<byte>(); }
+		public void lh() { _load_i<short>(); }
+		public void lhu() { _load_i<ushort>(); }
+		public void lw() { _lw_unaligned(); }
+		public void _lw_unaligned() { _load_i<int>(); }
 
-		public void _lw_unaligned()
-		{
-			//MipsMethodEmiter.ILGenerator.EmitWriteLine(String.Format("PC(0x{0:X}) : LW: rt={1}, rs={2}, imm={3}", PC, RT, RS, Instruction.IMM));
-			_load_i(() => { SafeILGenerator.LoadIndirect<int>(); });
-		}
+		// Store Byte/Half word/Word (Left/Right).
+		public void sb() { _save_i<sbyte>(); }
+		public void sh() { _save_i<short>(); }
+		public void sw() { _save_i<int>(); }
 
 		private static readonly uint[] LwrMask = new uint[] { 0x00000000, 0xFF000000, 0xFFFF0000, 0xFFFFFF00 };
 		private static readonly int[] LwrShift = new int[] { 0, 8, 16, 24 };
@@ -139,13 +157,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			});	
 		}
 
-		public void lbu() { _load_i(() => { SafeILGenerator.LoadIndirect<byte>(); }); }
-		public void lhu() { _load_i(() => { SafeILGenerator.LoadIndirect<ushort>(); }); }
-
-		// Store Byte/Half word/Word (Left/Right).
-		public void sb() { _save_i<sbyte>(); }
-		public void sh() { _save_i<short>(); }
-		public void sw() { _save_i<int>(); }
 		//MipsMethodEmiter.ILGenerator.EmitWriteLine(String.Format("PC(0x{0:X}) : SW: rt={1}, rs={2}, imm={3}", PC, RT, RS, Instruction.IMM));
 
 		private static readonly uint[] SwlMask = new uint[] { 0xFFFFFF00, 0xFFFF0000, 0xFF000000, 0x00000000 };
@@ -223,22 +234,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 #else
 			MipsMethodEmiter.SaveFPR_I(FT, () =>
 			{
-				_save_pc();
-				MipsMethodEmiter._getmemptr(() =>
-				{
-					MipsMethodEmiter.LoadGPR_Unsigned(RS);
-					SafeILGenerator.Push((int)IMM);
-					SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-				});
-				SafeILGenerator.LoadIndirect<uint>();
+				_load_i<uint>();
 			});
 #endif
 		}
 		public void swc1() {
-			_save_common(() =>
+			_save_common<int>(() =>
 			{
 				MipsMethodEmiter.LoadFPR_I(FT);
-				SafeILGenerator.StoreIndirect<int>();
 			});
 		}
 	}

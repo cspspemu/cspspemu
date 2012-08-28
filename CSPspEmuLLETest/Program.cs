@@ -20,23 +20,66 @@ namespace CSPspEmuLLETest
 			}
 		}
 
+		static public string NandPath
+		{
+			get
+			{
+				return @"..\..\..\deploy\cspspemu\nand-dump.bin";
+			}
+		}
+
+		static public string IplPath
+		{
+			get
+			{
+				return @"..\..\..\deploy\cspspemu\ipl.bin";
+			}
+		}
+
 		static void Main(string[] args)
 		{
+			var IplReader = new IplReader(new NandReader(File.OpenRead(NandPath)));
+			var IplData = IplReader.GetIplData().ToArray();
+
 			var PspConfig = new PspConfig();
 			var PspEmulatorContext = new PspEmulatorContext(PspConfig);
-			PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
+			var DebugPspMemory = PspEmulatorContext.GetInstance<DebugPspMemory>();
+			PspEmulatorContext.SetInstance<PspMemory>(DebugPspMemory);
 			var CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();
 			var CpuThreadState = new CpuThreadState(CpuProcessor);
-			CpuProcessor.Memory.WriteBytes(0x08600000, File.ReadAllBytes(Flash0Directory + @"\reboot.bin"));
+			CpuProcessor.Memory.WriteBytes(0x1FD00000, IplData);
 			var CachedGetMethodCache = PspEmulatorContext.GetInstance<CachedGetMethodCache>();
+			DebugPspMemory.CpuThreadState = CpuThreadState;
 
-			CpuThreadState.PC = 0x08600000;
-			while (true)
+			Console.SetWindowSize(120, 60);
+
+			PspConfig.MustLogWrites = true;
+
+			//for (int n = 0; n < 32; n++) CpuThreadState.GPR[n] = (int)(uint)(0xFFF00000 + n);
+			//CpuThreadState.GPR[4] = unchecked((int)0x88500000);
+			//CpuThreadState.GPR[5] = unchecked((int)0x89000000);
+			CpuThreadState.C0R[12] = 0xFFFFFFFF;
+			CpuThreadState.PC = 0x1FD00000 | 0x100;
+			try
 			{
-				var PC = CpuThreadState.PC & 0x0FFFFFFF;
-				var Func = CachedGetMethodCache.GetDelegateAt(PC);
-				Console.WriteLine("PC:{0:X8}", PC);
-				Func.Delegate(CpuThreadState);
+				while (true)
+				{
+					var PC = CpuThreadState.PC & PspMemory.MemoryMask;
+					Console.WriteLine("PC:{0:X8} - {1:X8}", PC, CpuThreadState.PC);
+					var Func = CachedGetMethodCache.GetDelegateAt(PC);
+					Func.Delegate(CpuThreadState);
+					//throw(new PspMemory.InvalidAddressException(""));
+				}
+			}
+			catch (Exception Exception)
+			{
+				CpuThreadState.DumpRegisters();
+				Console.WriteLine("----------------------------------------------------");
+				Console.Error.WriteLine(Exception.Message);
+				Console.WriteLine("----------------------------------------------------");
+				Console.WriteLine("at {0:X8}", CpuThreadState.PC);
+				Console.WriteLine("----------------------------------------------------");
+				Console.ReadKey();
 			}
 		}
 	}

@@ -54,7 +54,11 @@ namespace CSPspEmu.Core.Cpu
 
 		public uint GetJumpAddress(uint CurrentPC)
 		{
-			return (uint)(CurrentPC & ~PspMemory.MemoryMask) | (JUMP << 2);
+			//Console.WriteLine("{0:X8} - ", CurrentPC);
+			//var Result = (uint)(CurrentPC & ~PspMemory.MemoryMask) + (JUMP << 2);
+			var Result = (uint)(CurrentPC & ~0x0FFFFFFF) + (JUMP << 2);
+			Console.WriteLine("CurrentPC: 0x{0:X8} - 0x{1:X8} - 0x{2:X8} - 0x{3:X8}", CurrentPC, (CurrentPC & ~PspMemory.MemoryMask), JUMP << 2, Result);
+			return Result;
 		}
 
 		/*

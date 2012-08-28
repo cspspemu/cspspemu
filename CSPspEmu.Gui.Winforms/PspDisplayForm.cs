@@ -451,7 +451,7 @@ namespace CSPspEmu.Gui.Winforms
 				if (SaveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 				{
 					var Stream = SaveFileDialog.OpenFile();
-					Stream.WriteStream(new PspMemoryStream(Memory).SliceWithBounds(Memory.MainSegment.Low, Memory.MainSegment.High - 1));
+					Stream.WriteStream(new PspMemoryStream(Memory).SliceWithBounds(PspMemory.MainSegment.Low, PspMemory.MainSegment.High - 1));
 					Stream.Flush();
 					Stream.Close();
 				}

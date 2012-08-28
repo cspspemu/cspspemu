@@ -52,9 +52,53 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 		*/
 
+		public void _savetoaddress<TType>(Action ActionAddress, Action ActionValue, bool Safe = false, String ErrorDescription = "", bool CanBeNull = true)
+		{
+			if (Safe || !(Processor.Memory is FastPspMemory))
+			{
+				SafeILGenerator.LoadArgument0CpuThreadState();
+				ActionAddress();
+				ActionValue();
+				switch (Marshal.SizeOf(typeof(TType)))
+				{
+					case 1: SafeILGenerator.Call((Action<uint, byte>)CpuThreadState.Methods.Write1); break;
+					case 2: SafeILGenerator.Call((Action<uint, ushort>)CpuThreadState.Methods.Write2); break;
+					case 4: SafeILGenerator.Call((Action<uint, uint>)CpuThreadState.Methods.Write4); break;
+					default: throw (new NotImplementedException());
+				}
+			}
+			else
+			{
+				_getmemptr(ActionAddress, Safe, ErrorDescription, CanBeNull);
+				ActionValue();
+				SafeILGenerator.StoreIndirect<TType>();
+			}
+		}
+
+		public void _loadfromaddress<TType>(Action ActionAddress, bool Safe = false, String ErrorDescription = "", bool CanBeNull = true)
+		{
+			if (Safe || !(Processor.Memory is FastPspMemory))
+			{
+				SafeILGenerator.LoadArgument0CpuThreadState();
+				ActionAddress();
+				switch (Marshal.SizeOf(typeof(TType)))
+				{
+					case 1: SafeILGenerator.Call((Func<uint, byte>)CpuThreadState.Methods.Read1); break;
+					case 2: SafeILGenerator.Call((Func<uint, ushort>)CpuThreadState.Methods.Read2); break;
+					case 4: SafeILGenerator.Call((Func<uint, uint>)CpuThreadState.Methods.Read4); break;
+					default: throw(new NotImplementedException());
+				}
+			}
+			else
+			{
+				_getmemptr(ActionAddress, Safe, ErrorDescription, CanBeNull);
+				SafeILGenerator.LoadIndirect<TType>();
+			}
+		}
+
 		public void _getmemptr(Action Action, bool Safe = false, String ErrorDescription = "", bool CanBeNull = true)
 		{
-			if (Safe)
+			if (Safe || !(Processor.Memory is FastPspMemory))
 			{
 				SafeILGenerator.LoadArgument0CpuThreadState();
 				{
@@ -62,11 +106,19 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				}
 				//ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("GetMemoryPtrSafe"));
 
-				SafeILGenerator.Push((string)ErrorDescription);
-				SafeILGenerator.Push((int)(CanBeNull ? 1: 0));
-				SafeILGenerator.Call((GetMemoryPtrSafeWithErrorDelegate)CpuThreadState.Methods.GetMemoryPtrSafeWithError);
+				if (Safe)
+				{
+					SafeILGenerator.Push((string)ErrorDescription);
+					SafeILGenerator.Push((int)(CanBeNull ? 1 : 0));
+					SafeILGenerator.Call((GetMemoryPtrSafeWithErrorDelegate)CpuThreadState.Methods.GetMemoryPtrSafeWithError);
+				}
+				else
+				{
+					//ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("GetMemoryPtr"));
+					SafeILGenerator.Call((GetMemoryPtrNotNullDelegate)CpuThreadState.Methods.GetMemoryPtrNotNull);
+				}
 			}
-			else if (Processor.Memory is FastPspMemory)
+			else
 			{
 				var Base = ((FastPspMemory)Processor.Memory).Base;
 
@@ -85,21 +137,6 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.And);
 				if (!Platform.Is32Bit) SafeILGenerator.ConvertTo<long>();
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-			}
-			else
-			{
-				SafeILGenerator.LoadArgument0CpuThreadState();
-				{
-					Action();
-				}
-#if true
-				//ILGenerator.Emit(OpCodes.Call, typeof(CpuThreadState).GetMethod("GetMemoryPtr"));
-				SafeILGenerator.Call((GetMemoryPtrNotNullDelegate)CpuThreadState.Methods.GetMemoryPtrNotNull);
-#else
-				ILGenerator.Emit(OpCodes.Ldstr, ErrorDescription);
-				ILGenerator.Emit(OpCodes.Ldc_I4, CanBeNull ? 1 : 0);
-				ILGenerator.Emit(OpCodes.Call, CpuThreadState.GetMemoryPtrSafeWithError);
-#endif
 			}
 		}
 

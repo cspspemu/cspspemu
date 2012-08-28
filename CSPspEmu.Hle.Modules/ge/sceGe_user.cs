@@ -5,6 +5,7 @@ using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Modules.ge
 {
@@ -21,7 +22,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		[HlePspFunction(NID = 0xE47E40E4, FirmwareVersion = 150)]
 		public uint sceGeEdramGetAddr()
 		{
-			return CpuProcessor.Memory.FrameBufferSegment.Low;
+			return PspMemory.FrameBufferSegment.Low;
 		}
 
 		/// <summary>
@@ -31,7 +32,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		[HlePspFunction(NID = 0x1F6752AD, FirmwareVersion = 150)]
 		public int sceGeEdramGetSize()
 		{
-			return CpuProcessor.Memory.FrameBufferSegment.Size;
+			return PspMemory.FrameBufferSegment.Size;
 		}
 
 		private int eDRAMMemoryWidth;

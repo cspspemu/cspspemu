@@ -12,7 +12,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void ctc0() { throw (new NotImplementedException()); }
 
 		// Move (From/To) Cop0
-		public void mfc0() { MipsMethodEmiter.SaveGPR(RT, () => { MipsMethodEmiter.LoadC0R(RD); }); }
-		public void mtc0() { MipsMethodEmiter.SaveC0R(RD, () => { MipsMethodEmiter.LoadGPR_Unsigned(RT); }); }
+		public void mfc0() {
+			//Console.WriteLine("mfc0 {0}, {1}", RT, RD);
+			MipsMethodEmiter.SaveGPR(RT, () => { MipsMethodEmiter.LoadC0R(RD); });
+		}
+		public void mtc0() {
+			//Console.WriteLine("mtc0 {0}, {1}", RD, RT);
+			MipsMethodEmiter.SaveC0R(RD, () => { MipsMethodEmiter.LoadGPR_Unsigned(RT); });
+		}
 	}
 }

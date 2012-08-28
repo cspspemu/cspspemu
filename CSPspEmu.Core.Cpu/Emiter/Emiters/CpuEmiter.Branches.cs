@@ -162,8 +162,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			//Console.WriteLine("JUMP_ADDR: {0:X}", GetJumpAddress());
 			MipsMethodEmiter.SavePC(() =>
 			{
-				SafeILGenerator.Push((int)GetJumpAddress());
-				AddPcToAnalyze(GetJumpAddress());
+				var NewPC = GetJumpAddress();
+
+				Console.WriteLine("NewPC: 0x{0:X8}", NewPC);
+
+				SafeILGenerator.Push((int)NewPC);
+				AddPcToAnalyze(NewPC);
 			});
 
 			//Console.WriteLine("aaaaaaaaaaaaaa");

@@ -1,0 +1,179 @@
+The (New) PSP Technical Docs
+Article01: (PSP Boot sequence)
+Version: 0.1
+
+Author: SilverSpring
+E-mail: silverspringpsp [at] gmail [dot] com
+
+Todo:
+ - Part3 IPL 
+ - Firmware load sequence
+ - clean up!! (and stuff)
+
+
+CONTENTS:
+
+1. Version History
+
+2. Introduction
+
+3. Pre-IPL Boot Sequence
+  3.1. Part1 Pre-IPL (the loader)
+  3.2. Part2 Pre-IPL (the payload)
+
+4. IPL Boot Sequence
+  4.1. Part1 IPL (the loader)
+  4.2. Part2 IPL (main.bin)
+  4.3. Part3 IPL (the payload)
+
+5. Firmware Boot Sequence
+
+6. Obligatory Legal Stuff
+
+
+
+------------------------------------------------------------------------
+
+1. Version History
+
+
+    0.1 - (05/11/07) first draft
+
+
+
+------------------------------------------------------------------------
+
+2. Introduction
+
+
+When the PSP is the in the default off state, the only hardware running
+is the SYSCON chip. SYSCON controls most of the PSP's hardware,
+including the power & battery. It runs off the internal cell battery on
+the motherboard so even without the main PSP battery inserted, the
+SYSCON chip is still running. The SYSCON chip is responsible for
+monitoring the power switch, and when this power switch is activated,
+SYSCON applies power to the main CPU.
+
+The main CPU is a custom-made Sony CPU with a MIPS32 core and has an
+embedded mask rom (like most embedded systems do) which is exactly 4KB
+in size. This holds the "preipl" (this is where the routines to boot
+into service mode are and loads & decrypts the encrypted IPL from the
+nand/MS). This preipl mask rom device is mapped to physical address
+0x1FC00000 (this is the address of reset exception vector on MIPS CPUs),
+and this is where the CPU starts executing from on coldboot.
+
+
+
+------------------------------------------------------------------------
+
+3. Pre-IPL Boot Sequence
+
+
+3.1. Part1 Pre-IPL (the loader)
+
+The preipl is made up of 2 parts, the "loader", and the "payload".
+Because the preipl is stored in non-volatile read-only memory it cannot
+use variables, so the Part1 preipl code (the loader) copies the Part2
+preipl (the payload) to the CPU's scratchpad RAM (the only RAM available
+at this time, along with another 4KB block of RAM and the 2MB EDRAM -
+normal DDR SDRAM hasnt been initialised yet). The scratchpad RAM is
+mapped to physical address 0x00010000, and after Part1 has finished
+copying Part2 to it, it jumps to this new address.
+
+
+3.2. Part2 Pre-IPL (the payload)
+
+Now the CPU is executing from the scratchpad RAM (the preipl payload).
+The preipl payload inits the nand hardware and reads the IPL
+nand-block-table (a table with the physical block numbers of the
+ecnrypted IPL's location on the nand). The table is located at the
+4th physical block of the nand (offset 0x10000), and is repeated for
+the next 7 blocks. This is so that if a bad block occurs in any of
+these blocks, the table can still be read. Though if all 8 blocks
+become bad blocks, its a non-recoverable brick as the preipl can no
+longer locate the IPL's location (the only solution to this problem
+is to either boot from MS instead, or use a custom IPL to patch the
+preipl to remap the table - both of which would still require Pandora).
+
+The entire raw IPL is stored on the nand encrypted. The preipl payload 
+uses a 4KB RAM (this RAM is mapped to physical address 0x1FD00000, but 
+will later be remapped to 0x1FC00000 to be used for the ME CPU reset 
+exception vector) as a temporary location to load & decrypt each 
+encrypted IPL block. Because this RAM is only 4KB in size, the 
+encrypted IPL is organised as 4KB blocks on the nand. As the preipl 
+decrypts each of the 4KB IPL blocks, it loads the decrypted blocks to 
+the IPL entry address 0x040F0000 (this address is located in the 2MB 
+EDRAM which is normally used as VRAM, normal DDR RAM still has not been
+initialised yet). When the preipl has finished decrypting and loading 
+all the encrypted IPL blocks it jumps to the IPL entry address.
+
+
+
+------------------------------------------------------------------------
+
+4. IPL Boot Sequence
+
+
+The decrypted IPL is composed of 3 parts:
+Part1 - the 'loader', Part2 - 'main.bin', and Part3 - the 'payload'.
+Part1 is plaintext MIPS code, Part2 is gzip compressed, and Part3 is
+again encrypted (from 2.60 onwards, parts 2 & 3 are further encrypted 
+again).
+
+
+4.1. Part1 IPL (the loader)
+
+One of the first things Part1 IPL does is reset the main CPU.
+After reset the preipl mask ROM device is no longer mapped to memory at
+all (the 0x1FC00000 address range is then remapped to the 4KB RAM
+mentioned above to be used for the ME reset vector). This is why the 
+preipl is no longer accessable once the IPL has booted. The Part1 IPL 
+does some very basic hardware inits and decompresses the gzipped Part2 
+IPL (main.bin) to address 0x04000000 (still in EDRAM). Part1 IPL then 
+jumps to the entry address of main.bin (0x04000000) to initialise the 
+hardware.
+
+
+4.2. Part2 IPL (main.bin)
+
+Part2 IPL (main.bin) is responsible for initialising the PSP hardware.
+It has copies of it's own driver libraries similar to the drivers found 
+in the firmware (including: sceNAND_Driver, sceDDR_Driver, 
+sceIdStorage_Service, sceSYSREG_Driver, sceSYSCON_Driver, 
+sceGPIO_Driver, sceClockgen_Driver, & sceI2C_Driver). Some of the 
+initialisation of the hardware depends on data stored in idstorage keys 
+(for example keys 4,5,6). Note this is where TA082/086 motherboards 
+'brick' on 1.50 firmware. The clockgen hardware was changed on TA082/086
+motherboards so the functions used to initialise it does not recognise 
+the new hardware. And because part of the initialisation depends on data
+stored in key5, simply by invalidating key5 (by corrupting the header), 
+the initialisation is skipped allowing the firmware to continue to boot.
+After initialising the hardware (including the DDR RAM), Part2 IPL 
+decrypts the Part3 IPL (the payload) and loads it to address 0x08400000 
+(which is located in normal DDR RAM now that it has been initialised).
+It then jumps to the entry address of the Part3 IPL (0x08400000) to boot
+the firmware.
+
+
+4.3. Part3 IPL (the payload) - todo
+
+
+
+------------------------------------------------------------------------
+
+5. Firmware Boot Sequence - todo
+
+
+
+------------------------------------------------------------------------
+
+6. Obligatory Legal Stuff
+
+
+I'll keep this short. This document is meant to be free for everybody to
+use so feel free to do whatever you wish with it (no need to ask for
+permission).
+
+
+
+

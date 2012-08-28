@@ -34,11 +34,13 @@ namespace CSPspEmu.Core.Memory
 		byte[] ScratchPad;
 		byte[] FrameBuffer;
 		byte[] Main;
+		byte[] Vectors;
 		uint[] LogMain;
 
 		GCHandle ScratchPadHandle;
 		GCHandle FrameBufferHandle;
 		GCHandle MainHandle;
+		GCHandle VectorsHandle;
 		GCHandle LogMainHandle;
 #endif
 
@@ -54,6 +56,7 @@ namespace CSPspEmu.Core.Memory
 					ScratchPad = new byte[ScratchPadSize];
 					FrameBuffer = new byte[FrameBufferSize];
 					Main = new byte[MainSize];
+					Vectors = new byte[VectorsSize];
 #if ENABLE_LOG_MEMORY
 					LogMain = new uint[MainSize];
 #else
@@ -64,11 +67,13 @@ namespace CSPspEmu.Core.Memory
 				ScratchPadHandle = GCHandle.Alloc(ScratchPad, GCHandleType.Pinned);
 				FrameBufferHandle = GCHandle.Alloc(FrameBuffer, GCHandleType.Pinned);
 				MainHandle = GCHandle.Alloc(Main, GCHandleType.Pinned);
+				VectorsHandle = GCHandle.Alloc(Vectors, GCHandleType.Pinned);
 				LogMainHandle = GCHandle.Alloc(LogMain, GCHandleType.Pinned);
 
 				ScratchPadPtr = (byte*)ScratchPadHandle.AddrOfPinnedObject().ToPointer();
 				FrameBufferPtr = (byte*)FrameBufferHandle.AddrOfPinnedObject().ToPointer();
 				MainPtr = (byte*)MainHandle.AddrOfPinnedObject().ToPointer();
+				VectorsPtr = (byte*)VectorsHandle.AddrOfPinnedObject().ToPointer();
 				LogMainPtr = (uint*)LogMainHandle.AddrOfPinnedObject().ToPointer();
 #else
 				ScratchPadPtr = (byte*)(Marshal.AllocHGlobal(ScratchPadSize).ToPointer());
@@ -96,11 +101,13 @@ namespace CSPspEmu.Core.Memory
 				ScratchPad = null;
 				FrameBuffer = null;
 				Main = null;
+				Vectors = null;
 				LogMain = null;
 
 				ScratchPadHandle.Free();
 				FrameBufferHandle.Free();
 				MainHandle.Free();
+				VectorsHandle.Free();
 				LogMainHandle.Free();
 #else
 				Marshal.FreeHGlobal(new IntPtr(ScratchPadPtr));
@@ -111,6 +118,7 @@ namespace CSPspEmu.Core.Memory
 				ScratchPadPtr = null;
 				FrameBufferPtr = null;
 				MainPtr = null;
+				VectorsPtr = null;
 				LogMainPtr = null;
 			}
 		}
@@ -140,11 +148,15 @@ namespace CSPspEmu.Core.Memory
 
 		override public uint PointerToPspAddressUnsafe(void* Pointer)
 		{
+			/*
 			if (Pointer == null) return 0;
 			if (Pointer >= &ScratchPadPtr[0] && Pointer < &ScratchPadPtr[ScratchPadSize]) return (uint)((byte*)Pointer - ScratchPadPtr);
 			if (Pointer >= &FrameBufferPtr[0] && Pointer < &FrameBufferPtr[FrameBufferSize]) return (uint)((byte*)Pointer - FrameBufferPtr);
 			if (Pointer >= &MainPtr[0] && Pointer < &MainPtr[MainSize]) return (uint)((byte*)Pointer - MainPtr);
+			if (Pointer >= &HardwareVectorsPtr[0] && Pointer < &HardwareVectorsPtr[MainSize]) return (uint)((byte*)Pointer - HardwareVectorsPtr);
 			throw (new InvalidOperationException(String.Format("Address 0x{0:X} is not a pointer to the PspMemory", (uint)Pointer)));
+			 * */
+			return PointerToPspAddressSafe(Pointer);
 		}
 
 		override public void* PspAddressToPointerUnsafe(uint _Address)
@@ -194,14 +206,23 @@ namespace CSPspEmu.Core.Memory
 							//return &Main[Offset];
 						}
 					/////// hp
-					case 0x37: //case 0b_11111: // HO IO2
-						//return &Vectors[Address - 0x1fc00000];
-						break;
+					case 0x1F: //case 0b_011111
+					case 0x37: //case 0b_111111: // HO IO2
+						{
+							//return &Vectors[Address - 0x1fc00000];
+							//return HardwareVectors
+							var Offset = Address - VectorsOffset;
+#if ADDITIONAL_CHECKS
+							if (Offset < 0 || Offset >= VectorsSize) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
+#endif
+							return &VectorsPtr[Offset];
+						}
 					case 0x1C: //case 0b_11100: // HW IO1
 						break;
 					default:
 						break;
 				}
+				Console.Error.WriteLine("0x{0:X2}", (Address >> 24));
 			}
 			throw (new InvalidAddressException(_Address));
 		}
