@@ -228,10 +228,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				SafeILGenerator.LoadIndirect<float>();
 			});
 #else
-			MipsMethodEmiter.SaveFPR_I(FT, () =>
-			{
-				_load_i<uint>();
-			});
+			MipsMethodEmiter.SaveFPR_I(FT, _load_i<uint>);
 #endif
 		}
 		public void swc1() {

@@ -23,8 +23,8 @@ namespace CSPspEmu.Gui.Winforms
 			{
 				var TextBox = (Field.GetValue(this) as TextBox);
 				TextBox.KeyDown += this.HandleKeyDown;
-				TextBox.GotFocus += this.HandleGotFocus;
-				TextBox.LostFocus += this.HandleLostFocus;
+				TextBox.GotFocus += HandleGotFocus;
+				TextBox.LostFocus += HandleLostFocus;
 				var ConfigField = typeof(ControllerConfig).GetField(TextBox.Name);
 				if (ConfigField != null) TextBox.Text = (String)ConfigField.GetValue(CurrentControllerConfig);
 			}
@@ -40,13 +40,13 @@ namespace CSPspEmu.Gui.Winforms
 			(this.AcceptButton as Button).Focus();
 		}
 
-		private void HandleLostFocus(object sender, EventArgs e)
+		private static void HandleLostFocus(object sender, EventArgs e)
 		{
 			var TextBox = (sender as TextBox);
 			TextBox.BackColor = Color.White;
 		}
 
-		private void HandleGotFocus(object sender, EventArgs e)
+		private static void HandleGotFocus(object sender, EventArgs e)
 		{
 			var TextBox = (sender as TextBox);
 			TextBox.BackColor = Color.Yellow;

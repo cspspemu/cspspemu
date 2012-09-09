@@ -110,7 +110,7 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 		{
 			//short[] BufferData;
 
-			int ReadSamples = SamplesPerBuffer;
+			const int ReadSamples = SamplesPerBuffer;
 			if (BufferData == null || BufferData.Length != ReadSamples)
 			{
 				BufferData = new short[ReadSamples];

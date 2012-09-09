@@ -483,7 +483,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VfpuSave_Register((uint)(Instruction.VT), Index, VectorSize, PrefixTarget, Action, Debug, AsInteger: AsInteger);
 		}
 
-		IEnumerable<int> XRange(int Start, int End)
+	    static IEnumerable<int> XRange(int Start, int End)
 		{
 			for (int Value = Start; Value < End; Value++)
 			{
@@ -491,7 +491,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		IEnumerable<int> XRange(uint Count)
+	    static IEnumerable<int> XRange(uint Count)
 		{
 			return XRange(0, (int)Count);
 		}
@@ -559,7 +559,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			LoadVprFieldPtr(RegisterIndex);
 		}
 
-		uint CalcVprRegisterIndex(uint Matrix, uint Column, uint Row)
+	    static uint CalcVprRegisterIndex(uint Matrix, uint Column, uint Row)
 		{
 			return Matrix * 16 + Column * 4 + Row;
 		}

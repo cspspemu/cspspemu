@@ -183,7 +183,7 @@ namespace CSPspEmu.Core.Gpu.Run
 			};
 		}
 
-		private void PointMultAdd(ref VertexInfo dest, ref VertexInfo src, float f)
+		private static void PointMultAdd(ref VertexInfo dest, ref VertexInfo src, float f)
 		{
 			dest.Position += src.Position * f;
 			dest.Texture += src.Texture * f;

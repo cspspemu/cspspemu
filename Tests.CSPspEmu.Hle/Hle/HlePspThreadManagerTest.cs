@@ -1,6 +1,4 @@
-﻿using CSPspEmu.Hle;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Cpu.Assembler;
@@ -15,7 +13,7 @@ namespace CSPspEmu.Core.Tests
 		protected CpuProcessor Processor;
 		protected MipsAssembler MipsAssembler;
 
-		[TestInitialize()]
+		[TestInitialize]
 		public void SetUp()
 		{
 			PspConfig = new PspConfig();

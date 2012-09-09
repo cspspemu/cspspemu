@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using CSharpUtils;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu;
-using CSPspEmu.Core.Crypto;
 using CSPspEmu.Core.Memory;
 
 namespace CSPspEmuLLETest
 {
-	unsafe class Program
+    class Program
 	{
 		public static string NandPath
 		{
@@ -25,7 +18,7 @@ namespace CSPspEmuLLETest
 			}
 		}
 
-		static void Main(string[] args)
+		static void Main()
 		{
 			var PspConfig = new PspConfig();
 			var PspEmulatorContext = new PspEmulatorContext(PspConfig);

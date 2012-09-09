@@ -45,7 +45,7 @@ namespace CSPspEmu.Hle
 				)
 				{
 					var Attributes = MethodInfo.GetCustomAttributes(typeof(HlePspFunctionAttribute), true).Cast<HlePspFunctionAttribute>();
-					if (Attributes.Count() > 0)
+					if (Attributes.Any())
 					{
 						if (!MethodInfo.IsPublic)
 						{

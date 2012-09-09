@@ -341,7 +341,7 @@ namespace CSPspEmu.Gui.Winforms
 			RegionColumnSize.Width = 60;
 		}
 
-		void UpdateColumnWidths(ColumnSize ColumnSize, OLVColumn Column)
+	    static void UpdateColumnWidths(ColumnSize ColumnSize, OLVColumn Column)
 		{
 			if (Column.MinimumWidth != ColumnSize.MinimumWidth) Column.MinimumWidth = ColumnSize.MinimumWidth;
 			if (Column.MaximumWidth != ColumnSize.MaximumWidth) Column.MaximumWidth = ColumnSize.MaximumWidth;

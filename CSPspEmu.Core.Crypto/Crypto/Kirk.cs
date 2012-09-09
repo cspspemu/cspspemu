@@ -297,7 +297,7 @@ namespace CSPspEmu.Core.Crypto
 		/// <summary>
 		/// Generate Random Data
 		/// </summary>
-		/// <param name="outbuff"></param>
+		/// <param name="Output"></param>
 		/// <param name="OutputSize"></param>
 		/// <returns></returns>
 		public void kirk_CMD14(byte* Output, int OutputSize)

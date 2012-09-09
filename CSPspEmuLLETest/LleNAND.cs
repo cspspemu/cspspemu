@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSPspEmuLLETest
 {
@@ -35,7 +31,7 @@ namespace CSPspEmuLLETest
 		/// </summary>
 		uint Address;
 
-		private void _Transfer<T>(Dma.Direction Direction, ref T DeviceValue, ref uint MemoryValue)
+		private static void _Transfer<T>(Dma.Direction Direction, ref T DeviceValue, ref uint MemoryValue)
 		{
 			if (Direction == Dma.Direction.Read)
 			{
@@ -47,7 +43,7 @@ namespace CSPspEmuLLETest
 			}
 		}
 
-		private void Reset()
+		private static void Reset()
 		{
 			Console.WriteLine("Reset NAND controller to default state?");
 		}

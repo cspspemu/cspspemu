@@ -7,7 +7,7 @@ namespace CSPspEmu.Hle.Modules.utility
 {
 	public unsafe partial class sceUtility
 	{
-		private int _sceUtilityGetSystemParamInt(PSP_SYSTEMPARAM_ID id)
+		private static int _sceUtilityGetSystemParamInt(PSP_SYSTEMPARAM_ID id)
 		{
 			switch (id)
 			{
@@ -23,7 +23,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			}
 		}
 
-		private string _sceUtilityGetSystemParamString(PSP_SYSTEMPARAM_ID id)
+		private static string _sceUtilityGetSystemParamString(PSP_SYSTEMPARAM_ID id)
 		{
 			switch (id)
 			{

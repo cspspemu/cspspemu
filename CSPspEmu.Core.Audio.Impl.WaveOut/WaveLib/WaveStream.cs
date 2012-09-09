@@ -28,7 +28,7 @@ namespace WaveLib
 			get { return m_Format; }
 		}
 
-		private string ReadChunk(BinaryReader reader)
+		private static string ReadChunk(BinaryReader reader)
 		{
 			byte[] ch = new byte[4];
 			reader.Read(ch, 0, ch.Length);

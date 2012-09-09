@@ -55,7 +55,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// Checks a voice.
 		/// </summary>
 		/// <param name="Voice"></param>
-		private void _CheckVoice(int Voice)
+		private static void _CheckVoice(int Voice)
 		{
 			if (Voice < 0 || Voice >= 32)
 			{

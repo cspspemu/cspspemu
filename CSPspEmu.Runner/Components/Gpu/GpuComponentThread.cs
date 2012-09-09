@@ -27,7 +27,7 @@ namespace CSPspEmu.Runner.Components.Gpu
 
 			while (true)
 			{
-				WaitHandle.WaitAny(new[] { GpuProcessor.DisplayListQueueUpdated, ThreadTaskQueue.EnqueuedEvent, RunningUpdatedEvent }, 10);
+				WaitHandle.WaitAny(new WaitHandle[] { GpuProcessor.DisplayListQueueUpdated, ThreadTaskQueue.EnqueuedEvent, RunningUpdatedEvent }, 10);
 
 				ThreadTaskQueue.HandleEnqueued();
 				if (!Running) break;

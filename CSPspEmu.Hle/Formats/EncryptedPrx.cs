@@ -24,14 +24,14 @@ namespace CSPspEmu.Hle.Formats
 
 		private TAG_INFO GetTagInfo(uint CheckTag)
 		{
-			var Result = g_tagInfo.Where(Tag => Tag.tag == CheckTag).SingleOrDefault();
+			var Result = g_tagInfo.SingleOrDefault(Tag => Tag.tag == CheckTag);
 			if (Result == null) throw(new InvalidDataException(String.Format("Can't find tag1 0x{0:X}", CheckTag)));
 			return Result;
 		}
 
 		private TAG_INFO2 GetTagInfo2(uint CheckTag)
 		{
-			var Result = g_tagInfo2.Where(Tag => Tag.tag == CheckTag).SingleOrDefault();
+			var Result = g_tagInfo2.SingleOrDefault(Tag => Tag.tag == CheckTag);
 			if (Result == null) throw (new InvalidDataException(String.Format("Can't find tag2 0x{0:X}", CheckTag)));
 			return Result;
 		}

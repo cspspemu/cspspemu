@@ -26,7 +26,7 @@ namespace CSPspEmu.Hle
 			int FprIndex = 0;
 
 			var NotImplementedAttribute = (HlePspNotImplementedAttribute)MethodInfo.GetCustomAttributes(typeof(HlePspNotImplementedAttribute), true).FirstOrDefault();
-			bool NotImplementedFunc = (NotImplementedAttribute != null) ? NotImplementedAttribute.Notice : false;
+			bool NotImplementedFunc = (NotImplementedAttribute != null) && NotImplementedAttribute.Notice;
 			bool SkipLog = HlePspFunctionAttribute.SkipLog;
 			var SafeILGenerator = MipsMethodEmiter.SafeILGenerator;
 			SafeILGenerator.Comment("HleModuleHost.CreateDelegateForMethodInfo(" + MethodInfo + ", " + HlePspFunctionAttribute + ")");
@@ -313,7 +313,7 @@ namespace CSPspEmu.Hle
 			if (ParameterType.IsEnum)
 			{
 				var Name = ParameterType.GetEnumName(Int4);
-				if (Name == null || Name.Length == 0) Name = Int4.ToString();
+				if (string.IsNullOrEmpty(Name)) Name = Int4.ToString();
 				return Name;
 			}
 

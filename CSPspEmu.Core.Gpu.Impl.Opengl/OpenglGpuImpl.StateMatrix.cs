@@ -11,7 +11,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
 	public sealed unsafe partial class OpenglGpuImpl
 	{
-		private void PrepareStateMatrix(GpuStateStruct* GpuState)
+		private static void PrepareStateMatrix(GpuStateStruct* GpuState)
 		{
 			// DRAW BEGIN COMMON
 			{
@@ -34,7 +34,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					GL.MultMatrix(GpuState->VertexState.ViewMatrix.Values);
 					GL.MultMatrix(GpuState->VertexState.WorldMatrix.Values);
 
-					if (GpuState->VertexState.WorldMatrix.Values[0] == float.NaN)
+					if (float.IsNaN(GpuState->VertexState.WorldMatrix.Values[0]))
 					{
 						throw (new Exception("Invalid WorldMatrix"));
 					}

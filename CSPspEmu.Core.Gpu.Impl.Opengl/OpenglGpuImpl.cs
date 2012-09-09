@@ -71,7 +71,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
-		void Initialize()
+		static void Initialize()
 		{
 			///GL.Enable(EnableCap.Blend);
 			GL.Hint(HintTarget.LineSmoothHint, HintMode.Nicest);

@@ -10,7 +10,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
 	public sealed unsafe partial class OpenglGpuImpl
 	{
-		void PrepareStateClear(GpuStateStruct* GpuState)
+	    static void PrepareStateClear(GpuStateStruct* GpuState)
 		{
 			bool ccolorMask = false, calphaMask = false;
 

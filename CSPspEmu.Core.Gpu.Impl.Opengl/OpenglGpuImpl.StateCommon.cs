@@ -10,7 +10,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
 	public sealed unsafe partial class OpenglGpuImpl
 	{
-		private void PrepareStateCommon(GpuStateStruct* GpuState)
+		private static void PrepareStateCommon(GpuStateStruct* GpuState)
 		{
 			var Viewport = GpuState->Viewport;
 			//ViewportStruct(

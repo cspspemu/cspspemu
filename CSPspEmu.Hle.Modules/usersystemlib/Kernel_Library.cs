@@ -1,8 +1,8 @@
 ﻿using CSharpUtils;
-using CSPspEmu.Hle.Attributes;
-using CSPspEmu.Hle.Modules.threadman;
 using CSPspEmu.Core;
+using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
+using CSPspEmu.Hle.Modules.threadman;
 
 namespace CSPspEmu.Hle.Modules.usersystemlib
 {

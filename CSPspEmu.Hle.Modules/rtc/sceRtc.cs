@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
+using CSPspEmu.Core;
+using CSPspEmu.Core.Rtc;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Vfs;
-using CSPspEmu.Core.Rtc;
-using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.rtc
 {
@@ -106,7 +106,7 @@ namespace CSPspEmu.Hle.Modules.rtc
 			}
 		}
 
-		private int _sceRtcTickAddTimeSpan(long* dstPtr, long* srcPtr, TimeSpan TimeSpan)
+		private static int _sceRtcTickAddTimeSpan(long* dstPtr, long* srcPtr, TimeSpan TimeSpan)
 		{
 			*dstPtr = (*srcPtr + TimeSpan.GetTotalMicroseconds());
 			return 0;

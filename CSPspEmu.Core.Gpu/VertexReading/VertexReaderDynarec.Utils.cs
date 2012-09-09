@@ -96,7 +96,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 		}
 		*/
 
-		private int TypeSize(VertexTypeStruct.NumericEnum Type)
+		private static int TypeSize(VertexTypeStruct.NumericEnum Type)
 		{
 			return VertexTypeStruct.TypeSizeTable[(int)Type];
 		}

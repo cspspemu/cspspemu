@@ -1,7 +1,7 @@
 ﻿using System;
+using CSPspEmu.Core;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.interruptman
 {
@@ -11,7 +11,7 @@ namespace CSPspEmu.Hle.Modules.interruptman
 		[Inject]
 		HleInterruptManager HleInterruptManager;
 
-		private void CheckImplementedInterruptType(PspInterrupts PspInterrupt)
+		private static void CheckImplementedInterruptType(PspInterrupts PspInterrupt)
 		{
 			switch (PspInterrupt)
 			{
@@ -26,7 +26,7 @@ namespace CSPspEmu.Hle.Modules.interruptman
 		/// <summary>
 		/// Register a sub interrupt handler.
 		/// </summary>
-		/// <param name="PspInterrupts">The interrupt number to register.</param>
+		/// <param name="PspInterrupt">The interrupt number to register.</param>
 		/// <param name="HandlerIndex">The sub interrupt handler number (user controlled) (0-15)</param>
 		/// <param name="CallbackAddress">The interrupt handler</param>
 		/// <param name="CallbackArgument">An argument passed to the interrupt handler</param>
