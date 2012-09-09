@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Net;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
-using System.Net;
 
 namespace CSPspEmu.Hle.Modules.pspnet
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class sceNetResolver : HleModuleHost
+	public unsafe class sceNetResolver : HleModuleHost
 	{
 		public struct in_addr
 		{

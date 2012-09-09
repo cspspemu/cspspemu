@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Hle.Modules.pspnet
 {
-	unsafe public partial class sceNetAdhoc
+	public unsafe partial class sceNetAdhoc
 	{
 		/// <summary>
 		/// Open a PTP (Peer To Peer) connection

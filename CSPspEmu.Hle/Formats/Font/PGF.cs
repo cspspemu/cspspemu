@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
 using System.IO;
 using System.Drawing;
-using CSharpUtils;
 
 namespace CSPspEmu.Hle.Formats.Font
 {
-	unsafe public partial class PGF
+    public partial class PGF
 	{
 		public class Glyph
 		{

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
 
@@ -9,7 +6,7 @@ using OpenTK.Graphics.OpenGL;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-	sealed unsafe public partial class OpenglGpuImpl
+	public sealed unsafe partial class OpenglGpuImpl
 	{
 		private void TransferToFrameBuffer(GpuStateStruct* GpuState)
 		{

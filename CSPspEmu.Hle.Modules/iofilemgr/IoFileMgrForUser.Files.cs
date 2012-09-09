@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core.Memory;
@@ -11,7 +9,7 @@ using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.iofilemgr
 {
-	unsafe public partial class IoFileMgrForUser
+	public unsafe partial class IoFileMgrForUser
 	{
 		public class GuestHleIoDriver : IHleIoDriver
 		{

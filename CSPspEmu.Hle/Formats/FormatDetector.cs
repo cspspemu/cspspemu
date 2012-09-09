@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Text;
 
 namespace CSPspEmu.Hle.Formats
 {
@@ -10,7 +8,7 @@ namespace CSPspEmu.Hle.Formats
 	{
 	}
 
-	unsafe public class FormatDetector
+    public class FormatDetector
 	{
 		public enum SubType
 		{

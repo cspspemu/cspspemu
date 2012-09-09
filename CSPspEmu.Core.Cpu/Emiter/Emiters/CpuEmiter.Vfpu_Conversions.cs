@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
 using CSharpUtils;
 using Codegen;
 
@@ -23,7 +19,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			return Value;
 		}
 
-		static public uint _vi2c_impl(uint x, uint y, uint z, uint w)
+		public static uint _vi2c_impl(uint x, uint y, uint z, uint w)
 		{
 			return
 				((x >> 24) << 0 ) |
@@ -101,7 +97,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}, AsInteger: true);
 		}
 
-		static public uint _vi2uc(int x, int y, int z, int w)
+		public static uint _vi2uc(int x, int y, int z, int w)
 		{
 			return (0
 				| (uint)((x < 0) ? 0 : ((x >> 23) << 0))
@@ -172,7 +168,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}, AsInteger: true);
 		}
 
-		static public float _vf2iz(float Value, int imm5)
+		public static float _vf2iz(float Value, int imm5)
 		{
 			float ScalabValue = MathFloat.Scalb(Value, imm5);
 			return (Value >= 0) ? (int)MathFloat.Floor(ScalabValue) : (int)MathFloat.Ceil(ScalabValue);
@@ -188,7 +184,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			});
 		}
 
-		static public uint _vi2s(uint v1, uint v2)
+		public static uint _vi2s(uint v1, uint v2)
 		{
 			return (
 				((v1 >> 16) << 0) |

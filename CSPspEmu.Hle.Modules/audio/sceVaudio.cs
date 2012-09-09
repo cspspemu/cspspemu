@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Hle.Attributes;
+﻿using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.audio
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class sceVaudio : HleModuleHost
+	public unsafe class sceVaudio : HleModuleHost
 	{
 		[Inject]
 		public sceAudio sceAudio;

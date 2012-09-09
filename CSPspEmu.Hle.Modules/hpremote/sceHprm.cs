@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.hpremote
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class sceHprm : HleModuleHost
+	public unsafe class sceHprm : HleModuleHost
 	{
 		/// <summary>
 		/// Enumeration of the remote keys

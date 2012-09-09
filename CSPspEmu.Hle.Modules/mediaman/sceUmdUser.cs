@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Modules.threadman;
@@ -11,7 +9,7 @@ using CSPspEmu.Hle.Managers;
 namespace CSPspEmu.Hle.Modules.mediaman
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public partial class sceUmdUser : HleModuleHost
+	public unsafe class sceUmdUser : HleModuleHost
 	{
 		[Inject]
 		HleCallbackManager CallbackManager;

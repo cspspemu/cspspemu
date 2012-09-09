@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Cpu.Emiter;
-using System.Reflection;
 using CSharpUtils;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
@@ -12,7 +11,7 @@ using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle
 {
-	unsafe public partial class HleModuleHost : HleModule
+	public unsafe partial class HleModuleHost : HleModule
 	{
 		[Inject]
 		internal HleThreadManager ThreadManager;
@@ -294,7 +293,7 @@ namespace CSPspEmu.Hle
 			};
 		}
 
-		static public string ToNormalizedTypeString(Type ParameterType, CpuThreadState CpuThreadState, uint Int4, float Float4)
+		public static string ToNormalizedTypeString(Type ParameterType, CpuThreadState CpuThreadState, uint Int4, float Float4)
 		{
 			if (ParameterType == typeof(void))
 			{

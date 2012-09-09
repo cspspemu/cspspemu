@@ -3,14 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using CSharpUtils;
 using CSPspEmu.Core.Cpu;
-using System.Threading;
-using System.Diagnostics;
 using CSPspEmu.Core;
-using CSPspEmu.Core.Rtc;
-using CSharpUtils.Threading;
 
 namespace CSPspEmu.Hle.Managers
 {

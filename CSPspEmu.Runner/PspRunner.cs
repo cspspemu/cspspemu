@@ -1,21 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using CSPspEmu.Core;
-using CSPspEmu.Core.Gpu;
 using CSPspEmu.Runner.Components;
 using CSPspEmu.Runner.Components.Audio;
 using CSPspEmu.Runner.Components.Cpu;
 using CSPspEmu.Runner.Components.Display;
 using CSPspEmu.Runner.Components.Gpu;
-using CSharpUtils;
 
 namespace CSPspEmu.Runner
 {
-	unsafe public class PspRunner : PspEmulatorComponent, IRunnableComponent
+	public unsafe class PspRunner : PspEmulatorComponent, IRunnableComponent
 	{
 		[Inject]
 		public CpuComponentThread CpuComponentThread { get; protected set; }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Gpu.State;
 
 #if OPENTK
@@ -12,7 +9,7 @@ using MiniGL;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-	sealed unsafe public partial class OpenglGpuImpl
+	public sealed unsafe partial class OpenglGpuImpl
 	{
 		private void PrepareStateMatrix(GpuStateStruct* GpuState)
 		{

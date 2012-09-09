@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection.Emit;
 using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
-	sealed public partial class CpuEmiter
+	public sealed partial class CpuEmiter
 	{
 		// Syscall
 		public void syscall()
@@ -33,7 +29,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 #endif
 		}
 
-		static public void _cache_impl(CpuThreadState CpuThreadState, uint Value)
+		public static void _cache_impl(CpuThreadState CpuThreadState, uint Value)
 		{
 			//Console.Error.WriteLine("cache! : 0x{0:X}", Value);
 			//CpuThreadState.CpuProcessor.sceKernelIcacheInvalidateAll();
@@ -48,7 +44,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			Console.WriteLine("Not implemented 'sync' instruction");
 		}
 
-		static public void _break_impl(CpuThreadState CpuThreadState)
+		public static void _break_impl(CpuThreadState CpuThreadState)
 		{
 			Console.Error.WriteLine("-------------------------------------------------------------------");
 			Console.Error.WriteLine("-- BREAK  ---------------------------------------------------------");

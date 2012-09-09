@@ -4,17 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using CSPspEmu.Core.Cpu;
-using CSPspEmu.Core.Cpu.Emiter;
-using System.Reflection.Emit;
-using System.Runtime.InteropServices;
 using CSharpUtils;
-using CSharpUtils.Threading;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle
 {
-	unsafe public partial class HleModuleHost : HleModule
+	public unsafe partial class HleModuleHost : HleModule
 	{
 		public string ModuleLocation;
 		public Dictionary<uint, HleFunctionEntry> EntriesByNID = new Dictionary<uint, HleFunctionEntry>();
@@ -84,7 +80,7 @@ namespace CSPspEmu.Hle
 			//}
 		}
 
-		static public string StringFromAddress(CpuThreadState CpuThreadState, uint Address)
+		public static string StringFromAddress(CpuThreadState CpuThreadState, uint Address)
 		{
 			if (Address == 0) return null;
 			return PointerUtils.PtrToString((byte*)CpuThreadState.GetMemoryPtr(Address), Encoding.UTF8);

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Utils;
-using OpenTK;
 using System.Runtime.InteropServices;
+using OpenTK;
 using Mono.Simd;
 
 namespace CSPspEmu.Core.Gpu
@@ -122,14 +118,14 @@ namespace CSPspEmu.Core.Gpu
 	}
 #endif
 
-	static public class Vector4fExtensions
+	public static class Vector4fExtensions
 	{
-		static public Vector4f Normalize(this Vector4f Vector)
+		public static Vector4f Normalize(this Vector4f Vector)
 		{
 			return Vector * (1.0f / (float)Math.Sqrt(Vector.X * Vector.X + Vector.Y * Vector.Y + Vector.Z * Vector.Z));
 		}
 
-		static public Vector3 ToVector3(this Vector4f Vector)
+		public static Vector3 ToVector3(this Vector4f Vector)
 		{
 			return new Vector3(Vector.X, Vector.Y, Vector.Z);
 		}
@@ -140,7 +136,7 @@ namespace CSPspEmu.Core.Gpu
 	/// Information about a vertex.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential, Pack = 4)]
-	unsafe public struct VertexInfo
+	public unsafe struct VertexInfo
 	{
 		public Vector4f Color;
 		public Vector4f Position;

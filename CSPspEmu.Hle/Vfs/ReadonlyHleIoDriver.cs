@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Hle.Vfs
 {
-	unsafe public class ReadonlyHleIoDriver : ProxyHleIoDriver
+	public unsafe class ReadonlyHleIoDriver : ProxyHleIoDriver
 	{
 		public ReadonlyHleIoDriver(IHleIoDriver HleIoDriver)
 			: base(HleIoDriver)

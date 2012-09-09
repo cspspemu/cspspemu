@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AForge.Video.DirectShow.Internals;
 using System.Runtime.InteropServices;
+using AForge.Video.DirectShow.Internals;
 
 namespace CSPspEmu.Media
 {

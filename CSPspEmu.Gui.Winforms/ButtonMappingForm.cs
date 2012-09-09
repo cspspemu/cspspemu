@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using CSPspEmu.Core;
-using System.Windows.Input;
-using System.Globalization;
 
 namespace CSPspEmu.Gui.Winforms
 {

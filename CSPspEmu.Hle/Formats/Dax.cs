@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using ComponentAce.Compression.Libs.zlib;
-using System.IO.Compression;
 
 namespace CSPspEmu.Hle.Formats
 {
-	unsafe public class Dax : ICompressedIso
+	public unsafe class Dax : ICompressedIso
 	{
 		// 4 sectors
 		public const uint DAXFILE_SIGNATURE = 0x00584144;

@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
-	sealed public partial class CpuEmiter
+	public sealed partial class CpuEmiter
 	{
 		// C? (From/To) Cop0
 		public void cfc0() { throw (new NotImplementedException()); }

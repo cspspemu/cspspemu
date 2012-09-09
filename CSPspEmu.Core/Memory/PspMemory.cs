@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Text;
 using CSharpUtils;
-using System.IO;
 
 namespace CSPspEmu.Core.Memory
 {

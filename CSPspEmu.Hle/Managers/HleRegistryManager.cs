@@ -1,8 +1,6 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Managers
@@ -71,7 +69,7 @@ namespace CSPspEmu.Hle.Managers
 		}
 	}
 
-	unsafe public class HleRegistryKeyNode
+	public unsafe class HleRegistryKeyNode
 	{
 		public RegKeyHandle Id;
 		public string Name;

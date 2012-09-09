@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Core.Cpu.Table
 {
@@ -18,17 +17,17 @@ namespace CSPspEmu.Core.Cpu.Table
 		private const InstructionType INSTR_TYPE_JAL = InstructionType.Jal;
 		private const InstructionType INSTR_TYPE_JUMP = InstructionType.Jump;
 
-		static private InstructionInfo ID(String Name, String BinaryEncoding, String AsmEncoding, AddressType AddressType, InstructionType InstructionType)
+		private static InstructionInfo ID(String Name, String BinaryEncoding, String AsmEncoding, AddressType AddressType, InstructionType InstructionType)
 		{
 			return new InstructionInfo() { Name = Name, BinaryEncoding = BinaryEncoding, AsmEncoding = AsmEncoding, AddressType = AddressType, InstructionType = InstructionType };
 		}
 
-		static private String VM(string BinaryEncoding)
+		private static String VM(string BinaryEncoding)
 		{
 			return BinaryEncoding;
 		}
 
-		static public IEnumerable<InstructionInfo> ALL
+		public static IEnumerable<InstructionInfo> ALL
 		{
 			get
 			{
@@ -46,7 +45,7 @@ namespace CSPspEmu.Core.Cpu.Table
 			}
 		}
 
-		static public IEnumerable<InstructionInfo> ALL_BRANCHES
+		public static IEnumerable<InstructionInfo> ALL_BRANCHES
 		{
 			get
 			{
@@ -57,8 +56,8 @@ namespace CSPspEmu.Core.Cpu.Table
 			}
 		}
 
-		static private InstructionInfo[] _ALU;
-		static public InstructionInfo[] ALU
+		private static InstructionInfo[] _ALU;
+		public static InstructionInfo[] ALU
 		{
 			get
 			{
@@ -153,8 +152,8 @@ namespace CSPspEmu.Core.Cpu.Table
 			}
 		}
 
-		static private InstructionInfo[] _BCU;
-		static public InstructionInfo[] BCU
+		private static InstructionInfo[] _BCU;
+		public static InstructionInfo[] BCU
 		{
 			get
 			{
@@ -206,8 +205,8 @@ namespace CSPspEmu.Core.Cpu.Table
 			}
 		}
 
-		static private InstructionInfo[] _LSU;
-		static public InstructionInfo[] LSU
+		private static InstructionInfo[] _LSU;
+		public static InstructionInfo[] LSU
 		{
 			get {
 				if (_LSU == null)
@@ -244,8 +243,8 @@ namespace CSPspEmu.Core.Cpu.Table
 			}
 		}
 
-		static public InstructionInfo[] _FPU;
-		static public InstructionInfo[] FPU
+		public static InstructionInfo[] _FPU;
+		public static InstructionInfo[] FPU
 		{
 			get
 			{
@@ -302,8 +301,8 @@ namespace CSPspEmu.Core.Cpu.Table
 			}
 		}
 
-		static private InstructionInfo[] _SPECIAL;
-		static public InstructionInfo[] SPECIAL
+		private static InstructionInfo[] _SPECIAL;
+		public static InstructionInfo[] SPECIAL
 		{
 			get
 			{
@@ -337,8 +336,8 @@ namespace CSPspEmu.Core.Cpu.Table
 			}
 		}
 
-		static public InstructionInfo[] _COP0;
-		static public InstructionInfo[] COP0
+		public static InstructionInfo[] _COP0;
+		public static InstructionInfo[] COP0
 		{
 			get
 			{
@@ -358,8 +357,8 @@ namespace CSPspEmu.Core.Cpu.Table
 			}
 		}
 
-		static private InstructionInfo[] _VFPU;
-		static public InstructionInfo[] VFPU
+		private static InstructionInfo[] _VFPU;
+		public static InstructionInfo[] VFPU
 		{
 			get
 			{
@@ -544,8 +543,8 @@ namespace CSPspEmu.Core.Cpu.Table
 			}
 		}
 
-		static public InstructionInfo[] _VFPU_BRANCH;
-		static public InstructionInfo[] VFPU_BRANCH
+		public static InstructionInfo[] _VFPU_BRANCH;
+		public static InstructionInfo[] VFPU_BRANCH
 		{
 			get
 			{

@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
 using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
-	unsafe sealed public partial class CpuEmiter
+    public sealed partial class CpuEmiter
 	{
 		public void vmfvc() { throw (new NotImplementedException("")); }
 		public void vmtvc() { throw (new NotImplementedException("")); }
@@ -34,7 +30,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void mtvc() { throw (new NotImplementedException("mtvc")); }
 
 
-		static public uint _mfvc_impl(CpuThreadState CpuThreadState, VfpuControlRegistersEnum VfpuControlRegister)
+		public static uint _mfvc_impl(CpuThreadState CpuThreadState, VfpuControlRegistersEnum VfpuControlRegister)
 		{
 			switch (VfpuControlRegister)
 			{

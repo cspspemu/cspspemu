@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using CSPspEmu.Core.Gpu;
 using CSharpUtils;
 
 namespace CSPspEmu.Hle.Modules.ge
 {
-	unsafe public partial class sceGe_user
+    public partial class sceGe_user
 	{
 		static Logger Logger = Logger.GetLogger("sceGe");
 

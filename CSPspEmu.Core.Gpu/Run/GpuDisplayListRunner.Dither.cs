@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSharpUtils;
+﻿using CSharpUtils;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
-	unsafe sealed public partial class GpuDisplayListRunner
+	public unsafe sealed partial class GpuDisplayListRunner
 	{
 		/**
 		 * Set ordered pixel dither matrix

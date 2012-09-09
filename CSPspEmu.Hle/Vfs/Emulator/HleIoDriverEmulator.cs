@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing.Imaging;
-using System.Linq;
 using System.Text;
-using CSharpUtils;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Display;
 

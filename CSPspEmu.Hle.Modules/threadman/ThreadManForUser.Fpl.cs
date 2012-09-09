@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
-	unsafe public partial class ThreadManForUser
+	public unsafe partial class ThreadManForUser
 	{
 		[Flags]
 		public enum FplAttributes : uint
@@ -230,7 +229,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// Try to allocate from the pool immediately.
 		/// </summary>
 		/// <param name="PoolId">The UID of the pool</param>
-		/// <param name="DataPointerPointer">Receives the address of the allocated data</param>
+		/// <param name="DataPointer">Receives the address of the allocated data</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x623AE665, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]

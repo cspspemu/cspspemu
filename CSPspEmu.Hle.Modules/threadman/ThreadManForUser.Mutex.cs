@@ -3,13 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
-	unsafe public partial class ThreadManForUser
+	public unsafe partial class ThreadManForUser
 	{
 		[Flags]
 		public enum MutexAttributesEnum : uint

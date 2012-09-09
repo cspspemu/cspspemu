@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using CSharpUtils;
 using CSPspEmu.Hle.Formats.audio;
 
 namespace CSPspEmu.Hle.Modules.sc_sascore
 {
-	unsafe public partial class sceSasCore
+	public unsafe partial class sceSasCore
 	{
 		/// <summary>
 		/// Sets the Voice (VAG pointer).
@@ -18,9 +12,9 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// 4-bit compressed sound format used by PlayStation and PlayStation Portable games;
 		/// compressed using ADPCM (Adaptive Differential Pulse Code Modulation) encoding.
 		/// </summary>
-		/// <param name="SasCore">Core</param>
+		/// <param name="SasCorePointer">Core</param>
 		/// <param name="Voice">Voice</param>
-		/// <param name="VagAddress">Pointer to the wave data</param>
+		/// <param name="VagPointer">Pointer to the wave data</param>
 		/// <param name="VagSize">Size in bytes?? (to confirm)</param>
 		/// <param name="LoopCount">Number of times the voice should play</param>
 		/// <returns></returns>
@@ -50,7 +44,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// Sets the pitch for a sasCore.voice.
 		/// </summary>
-		/// <param name="SasCore">SasCore</param>
+		/// <param name="SasCorePointer">SasCore</param>
 		/// <param name="Voice">Voice</param>
 		/// <param name="Pitch">Pitch to set. A value between 1 and 16384. The default value is 4096.</param>
 		/// <returns>0 on success</returns>
@@ -68,7 +62,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// Sets the stereo volumes for a sasCore.voice.
 		/// </summary>
-		/// <param name="SasCore">SasCore</param>
+		/// <param name="SasCorePointer">SasCore</param>
 		/// <param name="Voice">Voice</param>
 		/// <param name="LeftVolume">Left  Volume 0-0x1000</param>
 		/// <param name="RightVolume">Right Volume 0-0x1000</param>
@@ -89,7 +83,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="SasCore"></param>
+		/// <param name="SasCorePointer"></param>
 		/// <param name="Voice"></param>
 		/// <param name="SustainLevel"></param>
 		/// <returns></returns>
@@ -107,7 +101,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="SasCore"></param>
+		/// <param name="SasCorePointer"></param>
 		/// <param name="Voice"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x74AE582A, FirmwareVersion = 150, SkipLog = true)]
@@ -125,7 +119,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// Sets the ADSR (Attack Decay Sustain Release) for a sasCore.voice.
 		/// </summary>
-		/// <param name="sasCore">SasCore</param>
+		/// <param name="SasCorePointer">SasCore</param>
 		/// <param name="voice">Voice</param>
 		/// <param name="flags">Bitfield to set each envelope on or off.</param>
 		/// <param name="attackRate">ADSR Envelope's attack type.</param>
@@ -143,7 +137,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="sasCore"></param>
+		/// <param name="SasCorePointer"></param>
 		/// <param name="Voice"></param>
 		/// <param name="Env1Bitfield"></param>
 		/// <param name="Env2Bitfield"></param>
@@ -178,7 +172,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="sasCore"></param>
+		/// <param name="SasCorePointer"></param>
 		/// <param name="voice"></param>
 		/// <param name="flags"></param>
 		/// <param name="attackCurveMode"></param>
@@ -197,7 +191,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="sasCore"></param>
+		/// <param name="SasCorePointer"></param>
 		/// <param name="Voice"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x76F01ACA, FirmwareVersion = 150)]
@@ -213,7 +207,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="SasCore"></param>
+		/// <param name="SasCorePointer"></param>
 		/// <param name="Voice"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xA0CF2FA4, FirmwareVersion = 150)]
@@ -229,7 +223,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="SasCore"></param>
+		/// <param name="SasCorePointer"></param>
 		/// <param name="Voice"></param>
 		/// <param name="NoiseFrequency"></param>
 		/// <returns></returns>

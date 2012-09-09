@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
 using Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
-	unsafe sealed public partial class CpuEmiter
+    public sealed partial class CpuEmiter
 	{
 		// Vfpu Matrix MULtiplication
 		// @FIX!!!

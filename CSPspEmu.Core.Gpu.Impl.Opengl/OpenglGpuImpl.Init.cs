@@ -2,10 +2,7 @@
 //#define SHOW_WINDOW
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 #if OPENTK
@@ -13,8 +10,6 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
-using System.Drawing;
-using System.Diagnostics;
 using CSharpUtils;
 #else
 using MiniGL;
@@ -22,7 +17,7 @@ using MiniGL;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-	unsafe public partial class OpenglGpuImpl
+    public partial class OpenglGpuImpl
 	{
 		//Thread CThread;
 		AutoResetEvent StopEvent = new AutoResetEvent(false);

@@ -3,18 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 using CSPspEmu.Hle.Formats;
-using CSharpUtils.Streams;
 using CSharpUtils;
-using CSPspEmu.Core;
-using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Loader
 {
-	unsafe public class ElfLoader
+	public unsafe class ElfLoader
 	{
 		public Stream FileStream;
 		public Stream MemoryStream;
@@ -36,7 +31,7 @@ namespace CSPspEmu.Hle.Loader
 			}
 		}
 
-		virtual public void Load(Stream FileStream, string Name)
+		public virtual void Load(Stream FileStream, string Name)
 		{
 			FileStream = new MemoryStream(FileStream.ReadAll());
 

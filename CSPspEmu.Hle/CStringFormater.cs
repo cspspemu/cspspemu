@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace CSPspEmu.Hle
@@ -40,14 +37,14 @@ namespace CSPspEmu.Hle
 			}
 		}
 
-		static public string Sprintf(string Format, params object[] Arguments)
+		public static string Sprintf(string Format, params object[] Arguments)
 		{
 			return Sprintf(Format, new ArrayArgumentReader(Arguments));
 		}
 
 		static Regex FormatRegex = new Regex(@"%(‘.|0|\x20)?(-)?(\d+)?(\.\d+)?(%|b|c|d|u|f|o|s|x|X)", RegexOptions.ECMAScript | RegexOptions.Compiled);
 
-		static public string Sprintf(string Format, IArgumentReader Arguments)
+		public static string Sprintf(string Format, IArgumentReader Arguments)
 		{
 			var FormatReader = new StringReader(Format);
 			return FormatRegex.Replace(Format, (Match) =>

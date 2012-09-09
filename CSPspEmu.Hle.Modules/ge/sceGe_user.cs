@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core;
@@ -10,7 +7,7 @@ using CSPspEmu.Core.Memory;
 namespace CSPspEmu.Hle.Modules.ge
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public partial class sceGe_user : HleModuleHost
+	public unsafe partial class sceGe_user : HleModuleHost
 	{
 		[Inject]
 		CpuProcessor CpuProcessor;

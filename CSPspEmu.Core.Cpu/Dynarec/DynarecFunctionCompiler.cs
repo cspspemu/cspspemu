@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSharpUtils.Arrays;
 using CSPspEmu.Core.Cpu.Emiter;
-using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu.Dynarec
 {
 	/// <summary>
 	/// Compiles functions
 	/// </summary>
-	unsafe public partial class DynarecFunctionCompiler : PspEmulatorComponent
+	public partial class DynarecFunctionCompiler : PspEmulatorComponent
 	{
 		[Inject]
 		CpuProcessor CpuProcessor;

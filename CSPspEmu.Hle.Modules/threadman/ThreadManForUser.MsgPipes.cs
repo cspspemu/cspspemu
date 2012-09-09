@@ -2,16 +2,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Hle.Modules.sysmem;
 using CSPspEmu.Core.Memory;
-using CSharpUtils;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
-	unsafe public partial class ThreadManForUser
+	public unsafe partial class ThreadManForUser
 	{
 		[Flags]
 		public enum MsgPipeAttributes : uint

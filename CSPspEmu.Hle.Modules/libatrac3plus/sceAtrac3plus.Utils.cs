@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CSPspEmu.Hle.Modules.libatrac3plus
+﻿namespace CSPspEmu.Hle.Modules.libatrac3plus
 {
-	unsafe public partial class sceAtrac3plus
+    public partial class sceAtrac3plus
 	{
 		public struct PspBufferInfo
 		{

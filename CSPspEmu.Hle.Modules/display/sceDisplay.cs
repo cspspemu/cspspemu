@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Attributes;
-using System.Diagnostics;
 
 namespace CSPspEmu.Hle.Modules.display
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class sceDisplay : HleModuleHost
+	public class sceDisplay : HleModuleHost
 	{
 		[Inject]
 		public PspDisplay PspDisplay;

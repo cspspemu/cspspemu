@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
-using CSPspEmu.Core.Cpu;
 using CSharpUtils.Threading;
 using CSharpUtils;
-using System.IO;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Cpu.Emiter;
 
@@ -15,9 +12,9 @@ namespace CSPspEmu.Core.Cpu
 	unsafe delegate void* GetMemoryPtrSafeWithErrorDelegate(uint Address, String ErrorDescription, bool CanBeNull);
 	unsafe delegate void* GetMemoryPtrNotNullDelegate(uint Address);
 
-	unsafe sealed public class CpuThreadState
+	public unsafe sealed class CpuThreadState
 	{
-		static public readonly CpuThreadState Methods = new CpuThreadState(null);
+		public static readonly CpuThreadState Methods = new CpuThreadState(null);
 
 		public CpuProcessor CpuProcessor;
 		public object ModuleObject;
@@ -149,7 +146,7 @@ namespace CSPspEmu.Core.Cpu
 			return Out.ToArray();
 		}
 
-		static public void CallStackPush(CpuThreadState CpuThreadState, uint PC)
+		public static void CallStackPush(CpuThreadState CpuThreadState, uint PC)
 		{
 			if (CpuThreadState.CallStackCount >= 0)
 			{
@@ -161,7 +158,7 @@ namespace CSPspEmu.Core.Cpu
 			CpuThreadState.CallStackCount++;
 		}
 
-		static public void CallStackPop(CpuThreadState CpuThreadState)
+		public static void CallStackPop(CpuThreadState CpuThreadState)
 		{
 			if (CpuThreadState.CallStackCount > 0)
 			{

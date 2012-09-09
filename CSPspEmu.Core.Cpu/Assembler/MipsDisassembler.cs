@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Cpu.Table;
-using System.Reflection.Emit;
-using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu.Assembler
 {
 	public class MipsDisassembler
 	{
-		static public readonly MipsDisassembler Methods = new MipsDisassembler();
+		public static readonly MipsDisassembler Methods = new MipsDisassembler();
 
 		public struct Result
 		{
@@ -18,12 +15,12 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			public Instruction Instruction;
 			public InstructionInfo InstructionInfo;
 
-			static public String RegisterIndexToRegisterName(int RegisterIndex)
+			public static String RegisterIndexToRegisterName(int RegisterIndex)
 			{
 				return String.Format("r{0}", RegisterIndex);
 			}
 
-			static public readonly Dictionary<string, Func<Result, string>> Opcodes = new Dictionary<string, Func<Result, string>>()
+			public static readonly Dictionary<string, Func<Result, string>> Opcodes = new Dictionary<string, Func<Result, string>>()
 			{
 				//return (uint)(PC & ~PspMemory.MemoryMask) | (Instruction.JUMP << 2);
 
@@ -71,7 +68,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 		{
 		}
 
-		static protected InstructionInfo[] InstructionLookup;
+		protected static InstructionInfo[] InstructionLookup;
 		public Result Disassemble(uint PC, Instruction Instruction)
 		{
 			if (ProcessCallback == null)
@@ -95,7 +92,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			return Result;
 		}
 
-		static public Result _InternalHandle(uint Data, int Index)
+		public static Result _InternalHandle(uint Data, int Index)
 		{
 			return new Result()
 			{

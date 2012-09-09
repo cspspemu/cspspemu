@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CSPspEmu.Core.Battery
+﻿namespace CSPspEmu.Core.Battery
 {
 	public class Battery : PspEmulatorComponent
 	{

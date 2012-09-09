@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu;
@@ -19,7 +16,7 @@ using CSPspEmu.Hle.Vfs;
 namespace CSPspEmu.Hle.Modules.modulemgr
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class ModuleMgrForUser : HleModuleHost
+	public unsafe class ModuleMgrForUser : HleModuleHost
 	{
 		static Logger Logger = Logger.GetLogger("ModuleMgr");
 

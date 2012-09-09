@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection.Emit;
-using CSharpUtils;
-using System.Linq.Expressions;
 using Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
-	unsafe sealed public partial class CpuEmiter
+	public unsafe sealed partial class CpuEmiter
 	{
 		// Load/Store Vfpu (Left/Right)_
 		public void lv_s()
@@ -43,7 +37,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		static public void _lvl_svl_q(CpuThreadState CpuThreadState, uint m, uint i, uint address, bool dir, bool save)
+		public static void _lvl_svl_q(CpuThreadState CpuThreadState, uint m, uint i, uint address, bool dir, bool save)
 		{
 			uint k = 3 - ((address >> 2) & 3);
 			address &= unchecked((uint)~0xF);
@@ -74,7 +68,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		static public void _lvr_svr_q(CpuThreadState CpuThreadState, uint m, uint i, uint address, bool dir, bool save)
+		public static void _lvr_svr_q(CpuThreadState CpuThreadState, uint m, uint i, uint address, bool dir, bool save)
 		{
 			uint k = 4 - ((address >> 2) & 3);
 

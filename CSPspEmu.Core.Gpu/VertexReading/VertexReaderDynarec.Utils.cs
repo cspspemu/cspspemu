@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
 using Codegen;
 
 namespace CSPspEmu.Core.Gpu.VertexReading
 {
-	unsafe public partial class VertexReaderDynarec
+    public partial class VertexReaderDynarec
 	{
 		private void _LoadPointerAlignedTo(int Alignment)
 		{

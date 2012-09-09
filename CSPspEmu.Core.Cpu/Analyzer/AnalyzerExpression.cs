@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSPspEmu.Core.Cpu.Analyzer
 {
-	abstract public class AnalyzerExpression
+	public abstract class AnalyzerExpression
 	{
 		abstract public String GetExpressionString();
 	}

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;

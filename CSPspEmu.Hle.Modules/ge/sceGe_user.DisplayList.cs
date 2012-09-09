@@ -1,19 +1,15 @@
 ﻿//#define LIST_SYNC
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Runtime.InteropServices;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Gpu.State;
-using CSPspEmu.Core.Cpu;
-using System.Runtime.InteropServices;
 using CSPspEmu.Core;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.ge
 {
-	unsafe public partial class sceGe_user
+	public unsafe partial class sceGe_user
 	{
 		[Inject]
 		public GpuProcessor GpuProcessor;

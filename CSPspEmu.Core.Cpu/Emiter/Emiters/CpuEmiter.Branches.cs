@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection.Emit;
-using System.Reflection;
 using CSPspEmu.Core.Memory;
 using Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
-	sealed public partial class CpuEmiter
+	public sealed partial class CpuEmiter
 	{
 		public SafeILGeneratorEx SafeILGenerator
 		{

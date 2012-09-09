@@ -1,21 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Hle.Attributes;
-using System.IO.Compression;
-using CSPspEmu.Core.Memory;
-using CSPspEmu.Hle.Utils;
-using CSharpUtils;
 using System.IO;
-using ComponentAce.Compression.Libs.zlib;
-using System.Runtime.InteropServices;
+using CSPspEmu.Hle.Attributes;
+using CSharpUtils;
 using CSharpUtils.Streams;
+using ComponentAce.Compression.Libs.zlib;
 
 namespace CSPspEmu.Hle.Modules._unknownPrx
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class sceDeflt : HleModuleHost
+	public unsafe class sceDeflt : HleModuleHost
 	{
 		/// <summary>
 		/// 

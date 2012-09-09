@@ -1,24 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
-	unsafe sealed public partial class CpuEmiter
+    public sealed partial class CpuEmiter
 	{
-		static public void _vpfxd_impl(CpuThreadState CpuThreadState, uint Value)
+		public static void _vpfxd_impl(CpuThreadState CpuThreadState, uint Value)
 		{
 			CpuThreadState.PrefixDestination.Value = Value;
 		}
 
-		static public void _vpfxs_impl(CpuThreadState CpuThreadState, uint Value)
+		public static void _vpfxs_impl(CpuThreadState CpuThreadState, uint Value)
 		{
 			CpuThreadState.PrefixSource.Value = Value;
 		}
 
-		static public void _vpfxt_impl(CpuThreadState CpuThreadState, uint Value)
+		public static void _vpfxt_impl(CpuThreadState CpuThreadState, uint Value)
 		{
 			CpuThreadState.PrefixTarget.Value = Value;
 		}

@@ -1,22 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AForge.Video.DirectShow.Internals;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Windows.Forms;
 using System.Diagnostics;
-using System.Threading;
-using CSPspEmu.Core;
+using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Windows.Forms;
+using AForge.Video.DirectShow.Internals;
+using CSPspEmu.Core;
 using CSharpUtils;
 
 namespace CSPspEmu.Media
 {
 	public class OmaWavConverter
 	{
-		static public void convertOmaToWav(string Source, string Destination)
+		public static void convertOmaToWav(string Source, string Destination)
 		{
 			var Event = new AutoResetEvent(false);
 			var Thread = new Thread(() =>
@@ -32,7 +29,7 @@ namespace CSPspEmu.Media
 
 		static bool WarnOnce = false;
 
-		static private void _convertOmaToWav(string Source, string Destination)
+		private static void _convertOmaToWav(string Source, string Destination)
 		{
 			if (Platform.Is32Bit)
 			{
@@ -51,7 +48,7 @@ namespace CSPspEmu.Media
 			}
 		}
 
-		static private void _convertOmaToWav_COM(string Source, string Destination)
+		private static void _convertOmaToWav_COM(string Source, string Destination)
 		{
 			IGraphBuilder graphBuilder;
 			IMediaControl mediaControl;
@@ -175,7 +172,7 @@ namespace CSPspEmu.Media
 			DebugLine("[9]");
 		}
 
-		static private void DebugLine(string Text)
+		private static void DebugLine(string Text)
 		{
 			Debug.WriteLine(Text);
 		}

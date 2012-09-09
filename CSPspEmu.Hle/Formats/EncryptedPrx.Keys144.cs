@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSharpUtils;
-
-namespace CSPspEmu.Hle.Formats
+﻿namespace CSPspEmu.Hle.Formats
 {
-	unsafe public partial class EncryptedPrx
+    public partial class EncryptedPrx
 	{
 		public TAG_INFO[] g_tagInfo = new TAG_INFO[]
 		{

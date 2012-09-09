@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using CSharpUtils;
 using CSPspEmu.Hle.Formats.Font;
 using CSPspEmu.Hle.Managers;
@@ -10,7 +8,7 @@ using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.libfont
 {
-	unsafe public partial class sceLibFont
+	public unsafe partial class sceLibFont
 	{
 		[Inject]
 		HleIoManager HleIoManager;

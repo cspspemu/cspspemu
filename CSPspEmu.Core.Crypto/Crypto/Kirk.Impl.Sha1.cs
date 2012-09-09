@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Text;
+﻿using System.Security.Cryptography;
 using CSharpUtils;
 
 namespace CSPspEmu.Core.Crypto
 {
-	unsafe public partial class Kirk
+	public unsafe partial class Kirk
 	{
 		/// <summary>
 		/// SIZE: 0004
@@ -57,7 +52,7 @@ namespace CSPspEmu.Core.Crypto
 		/// </summary>
 		/// <param name="Input"></param>
 		/// <returns></returns>
-		static public byte[] Sha1(byte[] Input)
+		public static byte[] Sha1(byte[] Input)
 		{
 			return (new SHA1CryptoServiceProvider()).ComputeHash(Input);
 		}

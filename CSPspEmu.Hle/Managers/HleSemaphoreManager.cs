@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core;
+﻿using CSPspEmu.Core;
 using CSPspEmu.Hle.Threading.Semaphores;
 
 namespace CSPspEmu.Hle.Managers

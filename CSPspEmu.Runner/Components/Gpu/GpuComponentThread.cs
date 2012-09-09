@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Gpu;
 
 namespace CSPspEmu.Runner.Components.Gpu
 {
-	sealed public class GpuComponentThread : ComponentThread
+	public sealed class GpuComponentThread : ComponentThread
 	{
 		protected override string ThreadName { get { return "CpuThread"; } }
 

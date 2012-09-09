@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core;
-using CSPspEmu.Core.Gpu;
-using CSPspEmu.Core.Gpu.State;
+﻿using CSPspEmu.Core.Gpu.State;
 
 namespace CSPspEmu.Core.Gpu
 {
-	unsafe public class GpuImplNull : GpuImpl
+	public unsafe class GpuImplNull : GpuImpl
 	{
 		public override void InitializeComponent()
 		{

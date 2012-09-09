@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using CSPspEmu.Core;
@@ -16,7 +15,6 @@ using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
 using CSPspEmu.Gui.Winforms;
-using CSPspEmu.Hle;
 using CSPspEmu.Runner;
 using CSPspEmu.Core.Audio.Impl.WaveOut;
 using CSPspEmu.Core.Audio.Impl.Openal;
@@ -25,7 +23,7 @@ using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu
 {
-	unsafe class PspEmulator : IGuiExternalInterface
+    class PspEmulator : IGuiExternalInterface
 	{
 		private PspConfig PspConfig;
 		private PspEmulatorContext PspEmulatorContext;

@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Hle.Vfs
 {
-	unsafe public class FileHandle : Stream
+	public unsafe class FileHandle : Stream
 	{
 		HleIoDrvFileArg HleIoDrvFileArg;
 		//public HleIoManager HleIoManager;

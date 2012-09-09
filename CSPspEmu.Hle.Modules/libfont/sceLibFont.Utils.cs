@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSharpUtils;
-using CSPspEmu.Core;
+using System.Runtime.InteropServices;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Formats.Font;
-using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Modules.libfont
 {
-	unsafe public partial class sceLibFont
+	public unsafe partial class sceLibFont
 	{
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct FontNewLibParams

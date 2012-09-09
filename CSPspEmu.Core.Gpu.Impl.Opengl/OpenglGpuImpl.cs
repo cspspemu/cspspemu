@@ -7,30 +7,18 @@
 #endif
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.ExceptionServices;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
-using System.Globalization;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
-using System.Diagnostics;
-using System.IO;
 //using Cloo;
 //using Cloo.Bindings;
 
 #if OPENTK
-using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Platform;
 using CSPspEmu.Core.Gpu.Formats;
 using Mono.Simd;
 #else

@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using CSharpUtils;
 using CSharpUtils.Endian;
-using CSharpUtils.Streams;
 
 namespace CSPspEmu.Hle.Formats
 {
-	unsafe public class IsoFile
+	public unsafe class IsoFile
 	{
 		public const uint SectorSize = 0x800;
 	
@@ -374,7 +371,7 @@ namespace CSPspEmu.Hle.Formats
 	/// 8 Volume Descriptors
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	unsafe public struct VolumeDescriptorHeader
+	public unsafe struct VolumeDescriptorHeader
 	{
 		public enum TypeEnum : byte
 		{

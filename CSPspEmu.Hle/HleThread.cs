@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
-using System.Text;
-using CSharpUtils.Threading;
-using CSPspEmu.Core.Cpu;
-using CSPspEmu.Core.Memory;
-using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
-using CSPspEmu.Core;
-using CSharpUtils;
-using System.Globalization;
+using System.Text;
 using System.Threading;
-using CSPspEmu.Hle.Threading.EventFlags;
-using System.IO;
-using CSPspEmu.Hle.Managers;
+using CSharpUtils.Threading;
+using CSPspEmu.Core;
+using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Cpu.Dynarec;
+using CSPspEmu.Core.Memory;
+using CSPspEmu.Hle.Threading.EventFlags;
+using CSPspEmu.Hle.Managers;
+using CSharpUtils;
 
 namespace CSPspEmu.Hle
 {
@@ -103,7 +102,7 @@ namespace CSPspEmu.Hle
 		}
 	}
 
-	unsafe public class HleThread : IDisposable, IPreemptiveItem
+	public unsafe class HleThread : IDisposable, IPreemptiveItem
 	{
 		protected MethodCacheFast MethodCache;
 
@@ -336,7 +335,7 @@ namespace CSPspEmu.Hle
 			}
 		}
 
-		[HandleProcessCorruptedStateExceptions()]
+		[HandleProcessCorruptedStateExceptions]
 		protected void MainLoop()
 		{
 			Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.CultureName);
@@ -600,7 +599,7 @@ namespace CSPspEmu.Hle
 		}
 	}
 
-	unsafe public struct SceKernelSysClock
+	public unsafe struct SceKernelSysClock
 	{
 		//ulong Value;
 		public uint Low;

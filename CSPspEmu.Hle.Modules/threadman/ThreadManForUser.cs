@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Rtc;
@@ -11,7 +7,7 @@ using CSharpUtils;
 namespace CSPspEmu.Hle.Modules.threadman
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public partial class ThreadManForUser : HleModuleHost
+	public unsafe partial class ThreadManForUser : HleModuleHost
 	{
 		[Inject]
 		PspRtc PspRtc;
@@ -65,8 +61,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="sysclock"></param>
-		/// <param name="addr"></param>
+		/// <param name="Clock"></param>
+		/// <param name="Low"></param>
+		/// <param name="High"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xE1619D7C, FirmwareVersion = 150)]
 		public int sceKernelSysClock2USecWide(long Clock, uint* Low, uint* High)

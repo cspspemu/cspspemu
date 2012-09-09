@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Core.Rtc;
@@ -11,7 +8,7 @@ using CSPspEmu.Core;
 namespace CSPspEmu.Hle.Modules.rtc
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class sceRtc : HleModuleHost
+	public unsafe class sceRtc : HleModuleHost
 	{
 		[Inject]
 		PspRtc PspRtc;

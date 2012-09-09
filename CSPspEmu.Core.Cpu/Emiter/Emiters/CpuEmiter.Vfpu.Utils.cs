@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
 using CSharpUtils;
 using Codegen;
 
@@ -106,7 +103,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 	  So Q_C010 specifies the Quad Column starting at S010, T_C011 the triple Column starting at S011.
 	*/
-	unsafe sealed public partial class CpuEmiter
+	public unsafe sealed partial class CpuEmiter
 	{
 
 		/// <summary>
@@ -161,7 +158,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.CallMethodWithCpuThreadStateAsFirstArgument(this.GetType(), "_debug_vfpu");
 		}
 
-		static public void _debug_vfpu(CpuThreadState CpuThreadState)
+		public static void _debug_vfpu(CpuThreadState CpuThreadState)
 		{
 			Console.Error.WriteLine("");
 			Console.Error.WriteLine("VPU DEBUG:");
@@ -628,7 +625,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			if (AccumulateAction != null) AccumulateAction();
 		}
 
-		static public float LogFloatResult(float Value, CpuThreadState CpuThreadState)
+		public static float LogFloatResult(float Value, CpuThreadState CpuThreadState)
 		{
 			Console.Error.WriteLine("LogFloatResult: {0}", Value);
 			//CpuThreadState.DumpVfpuRegisters(Console.Error);

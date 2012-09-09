@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CSPspEmu.Hle.Modules.mpeg
+﻿namespace CSPspEmu.Hle.Modules.mpeg
 {
 	/// <summary>
 	/// 
 	/// </summary>
 	/// <see cref="http://en.wikipedia.org/wiki/Presentation_and_access_units"/>
-	unsafe public partial class sceMpeg
+	public unsafe partial class sceMpeg
 	{
 		/// <summary>
 		/// Initializes a Mpeg Access Unit from an ElementaryStreamBuffer.

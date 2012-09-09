@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using CSharpUtils;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu;
@@ -22,17 +24,15 @@ using CSPspEmu.Hle.Modules.utils;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Hle.Vfs.Local;
 using CSPspEmu.Hle.Vfs.Emulator;
-using System.Threading;
 using CSPspEmu.Hle.Vfs.MemoryStick;
 using CSPspEmu.Hle.Vfs.Iso;
-using System.Diagnostics;
 using CSPspEmu.Hle.Vfs.Zip;
 using CSPspEmu.Resources;
 using CSPspEmu.Hle.Formats.Archive;
 
 namespace CSPspEmu.Runner.Components.Cpu
 {
-	unsafe sealed public class CpuComponentThread : ComponentThread
+	public unsafe sealed class CpuComponentThread : ComponentThread
 	{
 		static Logger Logger = Logger.GetLogger("CpuComponentThread");
 

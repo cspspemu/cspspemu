@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Modules.iofilemgr
 {
-	unsafe public partial class IoFileMgrForUser
+	public unsafe partial class IoFileMgrForUser
 	{
 		public struct PspIoDrv
 		{

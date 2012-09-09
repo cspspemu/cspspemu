@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Threading.Synchronization;
@@ -11,7 +9,7 @@ using CSPspEmu.Hle;
 
 namespace CSPspEmu.Core.Gpu
 {
-	unsafe public class GpuProcessor : PspEmulatorComponent
+	public unsafe class GpuProcessor : PspEmulatorComponent
 	{
 		/*
 		 *   - GU_SYNC_FINISH - 0 - Wait until the last sceGuFinish command is reached
@@ -83,22 +81,22 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
-		volatile public LinkedList<GpuDisplayList> DisplayListQueue;
+		public volatile LinkedList<GpuDisplayList> DisplayListQueue;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		volatile public AutoResetEvent DisplayListQueueUpdated = new AutoResetEvent(false);
+		public volatile AutoResetEvent DisplayListQueueUpdated = new AutoResetEvent(false);
 
 		/// <summary>
 		/// 
 		/// </summary>
-		volatile protected Queue<GpuDisplayList> DisplayListFreeQueue;
+		protected volatile Queue<GpuDisplayList> DisplayListFreeQueue;
 
 		/// <summary>
 		/// All the supported Psp Display Lists (Available and not available).
 		/// </summary>
-		readonly public GpuDisplayList[] DisplayLists = new GpuDisplayList[64];
+		public readonly GpuDisplayList[] DisplayLists = new GpuDisplayList[64];
 
 		/// <summary>
 		/// 

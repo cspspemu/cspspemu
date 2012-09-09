@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules._unknownPrx
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	unsafe public partial class sceMp3 : HleModuleHost
+	public unsafe class sceMp3 : HleModuleHost
 	{
 		public struct SceMp3InitArg
 		{

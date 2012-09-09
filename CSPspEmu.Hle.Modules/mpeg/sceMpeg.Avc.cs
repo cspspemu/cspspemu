@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Memory;
-using CSPspEmu.Hle.Managers;
+﻿using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Modules.mpeg
 {
@@ -11,7 +6,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 	/// AVC: Advanced Video Coding
 	/// </summary>
 	/// <see cref="http://en.wikipedia.org/wiki/H.264/MPEG-4_AVC"/>
-	unsafe public partial class sceMpeg
+	public unsafe partial class sceMpeg
 	{
 		protected bool[] AbvEsBufAllocated = new bool[2];
 

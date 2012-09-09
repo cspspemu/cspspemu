@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Controller;
 using CSPspEmu.Core.Memory;

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.sysmem
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class sceSysEventForKernel : HleModuleHost
+	public unsafe class sceSysEventForKernel : HleModuleHost
 	{
 		//int (*handler)(int ev_id, char* ev_name, void* param, int* result);
 		public enum PspSysEventHandlerFunc : uint { }

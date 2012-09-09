@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
 using Codegen;
 using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
-	unsafe sealed public partial class CpuEmiter
+    public sealed partial class CpuEmiter
 	{
 		[PspUntested]
 		public void vbfy1()
@@ -96,6 +92,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				}
 			}, AsInteger: false);
 		}
+
 		[PspUntested]
 		public void vsrt3()
 		{
@@ -113,6 +110,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				}
 			}, AsInteger: false);
 		}
+
 		[PspUntested]
 		public void vsrt4()
 		{

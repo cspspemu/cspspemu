@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Gpu.State;
-using OpenTK.Graphics.OpenGL;
+﻿using CSPspEmu.Core.Gpu.State;
 using Mono.Simd;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
-	unsafe sealed public partial class GpuDisplayListRunner
+	public unsafe sealed partial class GpuDisplayListRunner
 	{
 		/**
 		 * Set the current clear-color

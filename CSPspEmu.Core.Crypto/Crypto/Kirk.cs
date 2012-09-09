@@ -1,19 +1,13 @@
 ﻿//#define USE_DOTNET_CRYPTO
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSharpUtils;
-using System.Security.Cryptography;
-using System.Runtime.InteropServices;
-using System.IO;
 
 namespace CSPspEmu.Core.Crypto
 {
-	unsafe public delegate void PointerAction(byte* Address);
+	public unsafe delegate void PointerAction(byte* Address);
 
-	unsafe public partial class Kirk : PspEmulatorComponent
+	public unsafe partial class Kirk : PspEmulatorComponent
 	{
 		static Logger Logger = Logger.GetLogger("Kirk");
 

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using CSharpUtils;
-using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Threading.EventFlags
 {
-	unsafe public class HleEventFlag : IDisposable
+	public unsafe class HleEventFlag : IDisposable
 	{
 		public EventFlagInfo Info = new EventFlagInfo(0);
 		protected List<WaitThread> _WaitingThreads = new List<WaitThread>();
@@ -35,7 +33,7 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 				);
 			}
 
-			public unsafe uint* OutBits;
+			public uint* OutBits;
 		}
 
 		public string Name
@@ -117,7 +115,7 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 			UpdateWaitingThreads();
 		}
 
-		public unsafe bool Poll(uint BitsToMatch, EventFlagWaitTypeSet WaitType, uint* CheckedBits)
+		public bool Poll(uint BitsToMatch, EventFlagWaitTypeSet WaitType, uint* CheckedBits)
 		{
 			if (CheckedBits != null)
 			{
@@ -177,7 +175,7 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 	/// <summary>
 	/// Structure to hold the event flag information
 	/// </summary>
-	unsafe public struct EventFlagInfo
+	public unsafe struct EventFlagInfo
 	{
 		/// <summary>
 		/// 0x0000 - 

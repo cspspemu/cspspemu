@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core;
@@ -9,7 +6,7 @@ using CSPspEmu.Core;
 namespace CSPspEmu.Hle.Modules.interruptman
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00000011)]
-	unsafe public class InterruptManager : HleModuleHost
+	public unsafe class InterruptManager : HleModuleHost
 	{
 		[Inject]
 		HleInterruptManager HleInterruptManager;

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.pspnet
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | (ModuleFlags)0x00010011)]
-	unsafe public class sceNetAdhocDiscover : HleModuleHost
+	public unsafe class sceNetAdhocDiscover : HleModuleHost
 	{
 		[HlePspFunction(NID = 0x941B3877, FirmwareVersion = 150)]
 		public void sceNetAdhocDiscoverInitStart()

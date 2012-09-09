@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSharpUtils;
-using CSharpUtils.Endian;
+﻿using CSharpUtils.Endian;
 
 namespace CSPspEmu.Hle.Formats.audio
 {
-	unsafe public partial class Vag
+	public unsafe partial class Vag
 	{
 		static public readonly float[][] VAG_f = new float[][]
 		{

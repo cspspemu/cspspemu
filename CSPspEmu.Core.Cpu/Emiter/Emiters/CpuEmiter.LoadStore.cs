@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection.Emit;
 using CSPspEmu.Core.Memory;
 using Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
-	unsafe sealed public partial class CpuEmiter
+	public unsafe sealed partial class CpuEmiter
 	{
 		private void _save_pc()
 		{
@@ -110,7 +106,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		private static readonly uint[] LwlMask = new uint[] { 0x00FFFFFF, 0x0000FFFF, 0x000000FF, 0x00000000 };
 		private static readonly int[] LwlShift = new int[] { 24, 16, 8, 0 };
 
-		static public uint _lwl_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
+		public static uint _lwl_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
 		{
 			uint Address = (uint)(RS + Offset);
 			uint AddressAlign = (uint)Address & 3;
@@ -118,7 +114,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			return (uint)((Value << LwlShift[AddressAlign]) | (RT & LwlMask[AddressAlign]));
 		}
 
-		static public uint _lwr_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
+		public static uint _lwr_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
 		{
 			uint Address = (uint)(RS + Offset);
 			uint AddressAlign = (uint)Address & 3;
@@ -174,7 +170,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			*AddressPointer = (RT >> SwlShift[AddressAlign]) | (*AddressPointer & SwlMask[AddressAlign]);
 		}
 
-		static public void _swr_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
+		public static void _swr_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
 		{
 			uint Address = (uint)(RS + Offset);
 			uint AddressAlign = (uint)Address & 3;

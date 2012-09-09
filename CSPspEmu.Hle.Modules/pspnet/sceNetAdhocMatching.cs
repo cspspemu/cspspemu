@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.pspnet
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | (ModuleFlags)0x00010011)]
-	unsafe public class sceNetAdhocMatching : HleModuleHost
+	public unsafe class sceNetAdhocMatching : HleModuleHost
 	{
 		/// <summary>
 		/// Initialise the Adhoc matching library

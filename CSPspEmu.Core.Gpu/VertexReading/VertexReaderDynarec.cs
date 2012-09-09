@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
 using Codegen;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
 
 namespace CSPspEmu.Core.Gpu.VertexReading
 {
-	unsafe public delegate void VertexReaderDelegate(void* VertexData, VertexInfo* Vertex, int Index, int Count);
+	public unsafe delegate void VertexReaderDelegate(void* VertexData, VertexInfo* Vertex, int Index, int Count);
 
-	unsafe public partial class VertexReaderDynarec
+	public unsafe partial class VertexReaderDynarec
 	{
 		protected uint Offset;
 		protected VertexTypeStruct VertexType;
@@ -24,7 +20,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 		protected SafeArgument IndexArgument;
 		protected SafeArgument CountArgument;
 
-		static public VertexReaderDelegate GenerateMethod(VertexTypeStruct VertexType)
+		public static VertexReaderDelegate GenerateMethod(VertexTypeStruct VertexType)
 		{
 			return SafeILGenerator.Generate<VertexReaderDelegate>("VertexReaderDynarec.GenerateMethod", (Generator) =>
 			{

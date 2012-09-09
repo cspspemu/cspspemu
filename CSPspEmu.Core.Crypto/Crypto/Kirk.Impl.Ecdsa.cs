@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Core.Crypto
 {
-	unsafe public partial class Kirk
+	public unsafe partial class Kirk
 	{
 		/// <summary>
 		/// PSP_KIRK_CMD_ECDSA_GEN_KEYS

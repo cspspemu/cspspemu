@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
 using CSharpUtils;
 using Codegen;
-using System.Runtime.CompilerServices;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -275,7 +271,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		static public ulong _multu(uint Left, uint Right)
+		public static ulong _multu(uint Left, uint Right)
 		{
 			return (ulong)Left * (ulong)Right;
 		}
@@ -331,12 +327,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			_movzn(SafeBinaryComparison.Equals);
 		}
 
-		static public uint _ext_impl(uint Data, int Pos, int Size)
+		public static uint _ext_impl(uint Data, int Pos, int Size)
 		{
 			return BitUtils.Extract(Data, Pos, Size);
 		}
 
-		static public uint _ins_impl(uint InitialData, uint Data, int Pos, int Size)
+		public static uint _ins_impl(uint InitialData, uint Data, int Pos, int Size)
 		{
 			return BitUtils.Insert(InitialData, Pos, Size, Data);
 		}
@@ -376,7 +372,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		// http://aggregate.org/MAGIC/
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		static public uint _clo_impl(uint x)
+		public static uint _clo_impl(uint x)
 		{
 			uint ret = 0;
 			while ((x & 0x80000000) != 0) { x <<= 1; ret++; }
@@ -384,7 +380,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		static public uint _clz_impl(uint x)
+		public static uint _clz_impl(uint x)
 		{
 			return _clo_impl(~x);
 		}
@@ -410,14 +406,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Word Swap Bytes Within Halfwords/Words.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		static public uint _wsbh_impl(uint v)
+		public static uint _wsbh_impl(uint v)
 		{
 			// swap bytes
 			return ((v & 0xFF00FF00) >> 8) | ((v & 0x00FF00FF) << 8);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		static public uint _wsbw_impl(uint v)
+		public static uint _wsbw_impl(uint v)
 		{
 			// BSWAP
 			return (

@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 
 namespace CSPspEmu.Resources
 {
 	public class ResourceArchive
 	{
-		static public Stream GetFlash0ZipFileStream()
+		public static Stream GetFlash0ZipFileStream()
 		{
 			return System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("CSPspEmu.Resources.flash0.zip");
 		}
 
-		static public Stream GetTranslationsStream()
+		public static Stream GetTranslationsStream()
 		{
 			return System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("CSPspEmu.Resources.Translations.xml");
 		}

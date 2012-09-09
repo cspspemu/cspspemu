@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Runtime.InteropServices;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Core;
-using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Modules.utils
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class UtilsForUser : HleModuleHost
+	public unsafe class UtilsForUser : HleModuleHost
 	{
 		[Inject]
 		public PspRtc PspRtc;

@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.iofilemgr
 {
-	unsafe public partial class IoFileMgrForUser
+    public partial class IoFileMgrForUser
 	{
 		[Inject]
 		PspRtc PspRtc;

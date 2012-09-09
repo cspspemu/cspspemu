@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core.Crypto;
 
 namespace CSPspEmu.Hle.Formats
 {
-	unsafe public partial class EncryptedPrx
+	public unsafe partial class EncryptedPrx
 	{
 		Kirk Kirk;
 

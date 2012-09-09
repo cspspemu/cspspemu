@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Hle.Vfs
 {
@@ -248,7 +245,7 @@ namespace CSPspEmu.Hle.Vfs
 		public ushort Second;
 		public uint Microsecond;
 
-		static public ScePspDateTime FromDateTime(DateTime DateTime)
+		public static ScePspDateTime FromDateTime(DateTime DateTime)
 		{
 			return new ScePspDateTime()
 			{
@@ -284,7 +281,7 @@ namespace CSPspEmu.Hle.Vfs
 	/// <summary>
 	/// Structure to hold the status information about a file
 	/// </summary>
-	unsafe public struct SceIoStat
+	public struct SceIoStat
 	{
 		/// <summary>
 		/// 
@@ -334,7 +331,7 @@ namespace CSPspEmu.Hle.Vfs
 	/// <summary>
 	/// Describes a single directory entry
 	/// </summary>
-	unsafe public struct HleIoDirent : IDisposable
+	public unsafe struct HleIoDirent : IDisposable
 	{
 		/// <summary>
 		/// File status.
@@ -367,7 +364,7 @@ namespace CSPspEmu.Hle.Vfs
 	/// <summary>
 	/// 
 	/// </summary>
-	unsafe public interface IHleIoDriver
+	public unsafe interface IHleIoDriver
 	{
 		/// <summary>
 		/// Initializes the Driver

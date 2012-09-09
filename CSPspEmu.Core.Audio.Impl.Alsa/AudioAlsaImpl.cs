@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core;
-using CSPspEmu.Core.Audio;
 using CSPspEmu.Core.Audio.Impl.Alsa;
-using System.Threading;
-using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Audio
 {

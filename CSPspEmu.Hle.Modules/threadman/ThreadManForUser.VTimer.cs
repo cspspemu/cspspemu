@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Hle.Managers;
@@ -11,7 +8,7 @@ using CSPspEmu.Core.Cpu;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
-	unsafe public partial class ThreadManForUser
+	public unsafe partial class ThreadManForUser
 	{
 		public class VirtualTimer : IDisposable
 		{

@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Hle.Modules.pspnet
 {
-	unsafe public partial class sceNetAdhocctl : HleModuleHost
+	public unsafe partial class sceNetAdhocctl : HleModuleHost
 	{
 		/**
 		 * Initialise the Adhoc control library

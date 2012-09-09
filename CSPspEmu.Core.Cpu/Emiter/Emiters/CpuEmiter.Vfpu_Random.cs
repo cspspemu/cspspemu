@@ -1,31 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
-	sealed public partial class CpuEmiter
+	public sealed partial class CpuEmiter
 	{
-		static public void _vrnds(CpuThreadState CpuThreadState, int Seed)
+		public static void _vrnds(CpuThreadState CpuThreadState, int Seed)
 		{
 			CpuThreadState.Random = new Random(Seed);
 		}
 
-		static public int _vrndi(CpuThreadState CpuThreadState)
+		public static int _vrndi(CpuThreadState CpuThreadState)
 		{
 			byte[] Data = new byte[4];
 			CpuThreadState.Random.NextBytes(Data);
 			return BitConverter.ToInt32(Data, 0);
 		}
 
-		static public float _vrndf1(CpuThreadState CpuThreadState)
+		public static float _vrndf1(CpuThreadState CpuThreadState)
 		{
 			return (float)(CpuThreadState.Random.NextDouble() * 2.0f);
 		}
 
-		static public float _vrndf2(CpuThreadState CpuThreadState)
+		public static float _vrndf2(CpuThreadState CpuThreadState)
 		{
 			return (float)(CpuThreadState.Random.NextDouble() * 4.0f);
 		}

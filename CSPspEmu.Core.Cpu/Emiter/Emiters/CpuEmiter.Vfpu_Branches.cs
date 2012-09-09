@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
 using CSharpUtils;
 using Codegen;
 
@@ -134,12 +130,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		/*
-		static public void _vcmovtf_test(CpuThreadState CpuThreadState, int Register, int VectorSize)
+		public static public void _vcmovtf_test(CpuThreadState CpuThreadState, int Register, int VectorSize)
 		{
 			Console.Error.WriteLine("_vcmovtf({0}, {1}) : {2}", Register, VectorSize, CpuThreadState.VFR_CC(Register));
 		}
 
-		static public void _vcmovtf_set(CpuThreadState CpuThreadState, int Register, int VectorSize)
+		public static void _vcmovtf_set(CpuThreadState CpuThreadState, int Register, int VectorSize)
 		{
 			Console.Error.WriteLine("SET! _vcmovtf({0}, {1}) : {2}", Register, VectorSize, CpuThreadState.VFR_CC(Register));
 		}

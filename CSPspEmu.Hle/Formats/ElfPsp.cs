@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSharpUtils;
 
 namespace CSPspEmu.Hle.Formats
 {
-	unsafe public class ElfPsp
+	public unsafe class ElfPsp
 	{
 		[Flags]
 		public enum ModuleFlags : ushort

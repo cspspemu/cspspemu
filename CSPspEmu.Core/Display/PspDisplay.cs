@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Drawing;
+using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Core.Threading.Synchronization;
-using CSharpUtils;
-using System.Drawing;
 using CSPspEmu.Core.Utils;
-using CSPspEmu.Core.Memory;
-using System.Drawing.Imaging;
 
 namespace CSPspEmu.Core.Display
 {

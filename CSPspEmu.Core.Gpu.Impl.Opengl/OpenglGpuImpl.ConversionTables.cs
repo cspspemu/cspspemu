@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-#if OPENTK
+﻿#if OPENTK
 using OpenTK.Graphics.OpenGL;
 #else
 using MiniGL;
@@ -11,7 +6,7 @@ using MiniGL;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-	sealed unsafe public partial class OpenglGpuImpl
+	public sealed partial class OpenglGpuImpl
 	{
 		static readonly StencilOp[] StencilOperationTranslate = new StencilOp[]
 		{

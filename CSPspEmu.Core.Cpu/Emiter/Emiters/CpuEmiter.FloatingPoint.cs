@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection.Emit;
 using CSharpUtils;
 using Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
-	sealed public partial class CpuEmiter
+	public sealed partial class CpuEmiter
 	{
 		/*
-		static public float _mul_s_impl(float a, float b)
+		public static float _mul_s_impl(float a, float b)
 		{
 			//Console.WriteLine("MUL: {0} * {1} = {2}", a, b, a * b);
 			return a * b;
 		}
 
-		static public float _div_s_impl(CpuThreadState CpuThreadState, float a, float b)
+		public static float _div_s_impl(CpuThreadState CpuThreadState, float a, float b)
 		{
 			//Console.WriteLine("{0}", CpuThreadState.FPR[2]);
 			//Console.WriteLine("DIV: {0} / {1} = {2}", a, b, a / b);
@@ -81,7 +77,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			});
 		}
 
-		static public void _cvt_w_s_impl(CpuThreadState CpuThreadState, int FD, int FS)
+		public static void _cvt_w_s_impl(CpuThreadState CpuThreadState, int FD, int FS)
 		{
 			//Console.WriteLine("_cvt_w_s_impl: {0}", CpuThreadState.FPR[FS]);
 			switch (CpuThreadState.Fcr31.RM)
@@ -120,7 +116,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			});
 		}
 		// CFC1 -- move Control word from/to floating point (C1)
-		static public void _cfc1_impl(CpuThreadState CpuThreadState, int RD, int RT)
+		public static void _cfc1_impl(CpuThreadState CpuThreadState, int RD, int RT)
 		{
 			switch (RD)
 			{
@@ -133,7 +129,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		static public void _ctc1_impl(CpuThreadState CpuThreadState, int RD, int RT)
+		public static void _ctc1_impl(CpuThreadState CpuThreadState, int RD, int RT)
 		{
 			switch (RD)
 			{
@@ -159,7 +155,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			SafeILGenerator.Call((Action<CpuThreadState, int, int>)CpuEmiter._ctc1_impl);
 		}
 
-		static public bool _comp_impl(float s, float t, bool fc_unordererd, bool fc_equal, bool fc_less, bool fc_inv_qnan)
+		public static bool _comp_impl(float s, float t, bool fc_unordererd, bool fc_equal, bool fc_less, bool fc_inv_qnan)
 		{
 			if (float.IsNaN(s) || float.IsNaN(t))
 			{

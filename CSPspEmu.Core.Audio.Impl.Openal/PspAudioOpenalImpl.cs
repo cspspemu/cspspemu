@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using CSharpUtils;
 using OpenTK;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
 
 namespace CSPspEmu.Core.Audio.Impl.Openal
 {
-	unsafe public class PspAudioOpenalImpl : PspAudioImpl
+    public class PspAudioOpenalImpl : PspAudioImpl
 	{
 		static protected AudioContext AudioContext;
 		//static protected XRamExtension XRam;

@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Cpu.Emiter;
 using CSPspEmu.Core.Memory;
 using CSharpUtils.Threading;
 
 namespace CSPspEmu.Core.Cpu
 {
-	unsafe sealed public class CpuProcessor : PspEmulatorComponent
+    public sealed class CpuProcessor : PspEmulatorComponent
 	{
 		readonly public Dictionary<string, uint> GlobalInstructionStats = new Dictionary<string, uint>();
 

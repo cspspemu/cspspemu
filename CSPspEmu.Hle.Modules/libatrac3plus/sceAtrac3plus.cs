@@ -1,32 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Hle.Attributes;
-using CSPspEmu.Hle.Modules.threadman;
-using CSharpUtils;
-using CSPspEmu.Hle.Managers;
 using System.IO;
-using System.Runtime.InteropServices;
-using AForge.Video.DirectShow.Internals;
-using CSPspEmu.Media;
+using System.Security.Cryptography;
+using CSPspEmu.Hle.Attributes;
+using CSharpUtils;
+using CSharpUtils.Arrays;
 using CSharpUtils.Endian;
+using CSPspEmu.Hle.Managers;
+using CSPspEmu.Media;
 using CSPspEmu.Hle.Formats.audio;
 using CSPspEmu.Hle.Modules.audio;
 using CSPspEmu.Core.Audio;
 using CSPspEmu.Core;
-using System.Security.Cryptography;
-using CSPspEmu.Hle.Vfs.MemoryStick;
-using CSPspEmu.Hle.Vfs.Local;
-using System.Diagnostics;
-using CSharpUtils.Streams;
-using CSharpUtils.Arrays;
 using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Modules.libatrac3plus
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	unsafe public partial class sceAtrac3plus : HleModuleHost
+	public unsafe partial class sceAtrac3plus : HleModuleHost
 	{
 		static Logger Logger = Logger.GetLogger("sceAtrac3plus");
 

@@ -2,14 +2,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Reflection.Emit;
-using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using CSPspEmu.Core.Memory;
 using Codegen;
-using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
@@ -32,19 +29,19 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		
 		//static protected FieldInfo Field_GPR_Ptr = typeof(Processor).GetField("GPR_Ptr");
 		//static protected FieldInfo Field_FPR_Ptr = typeof(Processor).GetField("FPR_Ptr");
-		static protected FieldInfo Field_BranchFlag = typeof(CpuThreadState).GetField("BranchFlag");
-		static protected FieldInfo Field_PC = typeof(CpuThreadState).GetField("PC");
-		static protected FieldInfo Field_LO = typeof(CpuThreadState).GetField("LO");
-		static protected FieldInfo Field_HI = typeof(CpuThreadState).GetField("HI");
-		static protected FieldInfo Field_StepInstructionCount = typeof(CpuThreadState).GetField("StepInstructionCount");
-		static private ulong UniqueCounter = 0;
+		protected static FieldInfo Field_BranchFlag = typeof(CpuThreadState).GetField("BranchFlag");
+		protected static FieldInfo Field_PC = typeof(CpuThreadState).GetField("PC");
+		protected static FieldInfo Field_LO = typeof(CpuThreadState).GetField("LO");
+		protected static FieldInfo Field_HI = typeof(CpuThreadState).GetField("HI");
+		protected static FieldInfo Field_StepInstructionCount = typeof(CpuThreadState).GetField("StepInstructionCount");
+		private static ulong UniqueCounter = 0;
 
-		static protected bool InitializedOnce = false;
-		static protected FieldInfo[] Field_GPRList;
-		static protected FieldInfo[] Field_C0RList;
-		static protected FieldInfo[] Field_FPRList;
+		protected static bool InitializedOnce = false;
+		protected static FieldInfo[] Field_GPRList;
+		protected static FieldInfo[] Field_C0RList;
+		protected static FieldInfo[] Field_FPRList;
 
-		readonly public Dictionary<string, uint> InstructionStats = new Dictionary<string, uint>();
+		public readonly Dictionary<string, uint> InstructionStats = new Dictionary<string, uint>();
 
 		/*
 		static public MipsMethodEmiter()
@@ -328,12 +325,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			SafeILGenerator.StoreIndirect<int>();
 		}
 
-		static public bool _LoadFcr31CC(CpuThreadState CpuThreadState)
+		public static bool _LoadFcr31CC(CpuThreadState CpuThreadState)
 		{
 			return CpuThreadState.Fcr31.CC;
 		}
 
-		static public void _SaveFcr31CC(CpuThreadState CpuThreadState, bool Value)
+		public static void _SaveFcr31CC(CpuThreadState CpuThreadState, bool Value)
 		{
 			CpuThreadState.Fcr31.CC = Value;
 		}

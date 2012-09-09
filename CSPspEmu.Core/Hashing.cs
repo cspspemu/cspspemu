@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.ExceptionServices;
-using System.Text;
 using CSharpUtils;
 
 namespace CSPspEmu.Core
@@ -11,7 +8,7 @@ namespace CSPspEmu.Core
 	{
 		static Logger Logger = Logger.GetLogger("Hashing");
 
-		[HandleProcessCorruptedStateExceptions()]
+		[HandleProcessCorruptedStateExceptions]
 		static public ulong FastHash(byte* Pointer, int Count, ulong StartHash = 0)
 		{
 			if (Pointer == null)
@@ -42,7 +39,7 @@ namespace CSPspEmu.Core
 
 		}
 
-		[HandleProcessCorruptedStateExceptions()]
+		[HandleProcessCorruptedStateExceptions]
 		static private ulong FastHash_64(byte* Pointer, int Count, ulong StartHash = 0)
 		{
 			var Hash = StartHash;

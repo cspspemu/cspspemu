@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSharpUtils.Factory;
 using System.Reflection;
-using CSPspEmu.Resources;
 using System.Text.RegularExpressions;
+using CSPspEmu.Resources;
 
 namespace CSPspEmu.Core
 {

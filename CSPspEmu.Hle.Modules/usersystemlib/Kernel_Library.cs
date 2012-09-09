@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSharpUtils;
+﻿using CSharpUtils;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Modules.threadman;
 using CSPspEmu.Core;
@@ -11,7 +7,7 @@ using CSPspEmu.Hle.Managers;
 namespace CSPspEmu.Hle.Modules.usersystemlib
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class Kernel_Library : HleModuleHost
+	public unsafe class Kernel_Library : HleModuleHost
 	{
 		[Inject]
 		public HleInterruptManager HleInterruptManager;

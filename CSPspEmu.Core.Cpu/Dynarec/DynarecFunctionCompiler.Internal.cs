@@ -3,22 +3,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.IO;
 using Codegen;
-using System.Reflection.Emit;
-using CSharpUtils.Arrays;
 using CSPspEmu.Core.Cpu.Table;
 using CSPspEmu.Core.Cpu.Emiter;
 using CSPspEmu.Core.Cpu.Assembler;
 
 namespace CSPspEmu.Core.Cpu.Dynarec
 {
-	unsafe public partial class DynarecFunctionCompiler
+    public partial class DynarecFunctionCompiler
 	{
-		unsafe internal class InternalFunctionCompiler
+        internal class InternalFunctionCompiler
 		{
-			static public Action<uint, CpuEmiter> CpuEmiterInstruction = EmitLookupGenerator.GenerateSwitchDelegate<CpuEmiter>(InstructionTable.ALL);
+			public static Action<uint, CpuEmiter> CpuEmiterInstruction = EmitLookupGenerator.GenerateSwitchDelegate<CpuEmiter>(InstructionTable.ALL);
 			static MipsDisassembler MipsDisassembler = new MipsDisassembler();
 			CpuEmiter CpuEmiter;
 			MipsMethodEmiter MipsMethodEmiter;
@@ -34,7 +31,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			//const int MaxNumberOfInstructions = 128 * 1024;
 			//const int MaxNumberOfInstructions = 60;
 
-			static public Func<uint, Object, String> GetInstructionName = EmitLookupGenerator.GenerateSwitch<Func<uint, Object, String>>(
+			public static Func<uint, Object, String> GetInstructionName = EmitLookupGenerator.GenerateSwitch<Func<uint, Object, String>>(
 				InstructionTable.ALL,
 				(SafeILGenerator, InstructionInfo) =>
 				{

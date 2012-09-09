@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Core.Audio
 {
-	unsafe public class PspAudio : PspEmulatorComponent
+    public class PspAudio : PspEmulatorComponent
 	{
 		/// <summary>
 		/// 
@@ -80,7 +78,7 @@ namespace CSPspEmu.Core.Audio
 		/// <returns></returns>
 		public PspAudioChannel GetFreeChannel()
 		{
-			return Channels.Where(Channel => Channel.Available).First();
+			return Channels.First(Channel => Channel.Available);
 		}
 
 		/// <summary>

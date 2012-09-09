@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Runtime.InteropServices;
 using CSharpUtils.Endian;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
-using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Modules.mpeg
 {
-	unsafe public partial class sceMpeg
+	public unsafe partial class sceMpeg
 	{
 		/// <summary>
 		/// MPEG AVC elementary stream.

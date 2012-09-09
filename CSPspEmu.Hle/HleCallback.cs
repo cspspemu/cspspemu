@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSharpUtils;
 using CSPspEmu.Core.Cpu;
 
 namespace CSPspEmu.Hle
 {
-	sealed public class HleCallback : IDisposable
+	public sealed class HleCallback : IDisposable
 	{
 		public string Name { get; private set; }
 		public uint Function { get; private set; }
@@ -18,7 +14,7 @@ namespace CSPspEmu.Hle
 		{
 		}
 
-		static public HleCallback Create(string Name, uint Function, params object[] Arguments)
+		public static HleCallback Create(string Name, uint Function, params object[] Arguments)
 		{
 			return new HleCallback() { Name = Name, Function = Function, Arguments = Arguments };
 		}

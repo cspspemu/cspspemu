@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Cpu.Emiter;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Cpu.Dynarec;
 
 namespace CSPspEmu.Core.Cpu
 {
-	sealed public class MethodCacheFast : PspEmulatorComponent
+	public sealed class MethodCacheFast : PspEmulatorComponent
 	{
 		private DynarecFunction[] MethodsScratchPad = new DynarecFunction[PspMemory.ScratchPadSize / 4];
 		private DynarecFunction[] MethodsMain = new DynarecFunction[PspMemory.MainSize / 4];

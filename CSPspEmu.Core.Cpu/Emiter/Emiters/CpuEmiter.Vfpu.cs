@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection.Emit;
 using CSharpUtils;
-using System.Linq.Expressions;
 using Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emiter
 {
-	unsafe sealed public partial class CpuEmiter
+	public sealed partial class CpuEmiter
 	{
 		public enum VfpuControlRegistersEnum
 		{

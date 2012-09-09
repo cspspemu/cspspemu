@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Threading.EventFlags;
 using CSharpUtils;

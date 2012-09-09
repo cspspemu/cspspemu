@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core;
-using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
-	unsafe public partial class ThreadManForUser
+	public unsafe partial class ThreadManForUser
 	{
 		[Flags]
 		public enum MbxAttributesEnum : uint
@@ -160,8 +158,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// // Send the message
 		/// sceKernelSendMbx(mbxid, (void*) &msg);
 		/// </example>
-		/// <param name="mbxid">The mbx id returned from sceKernelCreateMbx</param>
-		/// <param name="message">
+		/// <param name="MessageBoxId">The mbx id returned from sceKernelCreateMbx</param>
+		/// <param name="Message">
 		/// A message to be forwarded to the receiver.
 		/// The start of the message should be the 
 		/// ::SceKernelMsgPacket structure, the rest
@@ -181,12 +179,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// void *msg;
 		/// sceKernelReceiveMbx(mbxid, &msg, NULL);
 		/// </example>
-		/// <param name="mbxid">The mbx id returned from sceKernelCreateMbx</param>
-		/// <param name="pmessage">
+		/// <param name="MessageBoxId">The mbx id returned from sceKernelCreateMbx</param>
+		/// <param name="PointerToMessage">
 		///		A pointer to where a pointer to the
 		///		received message should be stored
 		/// </param>
-		/// <param name="timeout">Timeout in microseconds</param>
+		/// <param name="Timeout">Timeout in microseconds</param>
 		/// <returns>less than 0 on error</returns>
 		[HlePspFunction(NID = 0x18260574, FirmwareVersion = 150)]
 		public int sceKernelReceiveMbx(int MessageBoxId, PspPointer* PointerToMessage, uint* Timeout)

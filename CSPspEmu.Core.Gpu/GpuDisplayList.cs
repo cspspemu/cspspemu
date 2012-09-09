@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Reflection.Emit;
 using System.Threading;
 using CSPspEmu.Core.Threading.Synchronization;
 using CSPspEmu.Core.Gpu.State;
-using System.Reflection.Emit;
 using CSPspEmu.Core.Gpu.Run;
 using CSPspEmu.Core.Memory;
 using CSharpUtils;
 
 namespace CSPspEmu.Core.Gpu
 {
-	sealed unsafe public class GpuDisplayList
+	public sealed unsafe class GpuDisplayList
 	{
 		static Logger Logger = Logger.GetLogger("Gpu");
 
@@ -241,10 +239,10 @@ namespace CSPspEmu.Core.Gpu
 
 		public delegate void GpuDisplayListRunnerDelegate(GpuDisplayListRunner GpuDisplayListRunner, GpuOpCodes GpuOpCode, uint Params);
 
-		static public GpuDisplayListRunnerDelegate InstructionSwitch;
-		private unsafe PspMemory Memory;
+		public static GpuDisplayListRunnerDelegate InstructionSwitch;
+		private PspMemory Memory;
 
-		static public GpuDisplayListRunnerDelegate GenerateSwitch()
+		public static GpuDisplayListRunnerDelegate GenerateSwitch()
 		{
 			//GpuDisplayListRunnerDelegate.
 			var DynamicMethod = new DynamicMethod("GpuDisplayList.GenerateSwitch", typeof(void), new Type[] { typeof(GpuDisplayListRunner), typeof(GpuOpCodes), typeof(uint) });
@@ -360,7 +358,7 @@ namespace CSPspEmu.Core.Gpu
 			Completed = 1,
 			Free = 2,
 		}
-		readonly public WaitableStateMachine<Status2Enum> Status2 = new WaitableStateMachine<Status2Enum>(Debug: false);
+		public readonly WaitableStateMachine<Status2Enum> Status2 = new WaitableStateMachine<Status2Enum>(Debug: false);
 		public PspGeCallbackData Callbacks;
 		public int CallbacksId;
 

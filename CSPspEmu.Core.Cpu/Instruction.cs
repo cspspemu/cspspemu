@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSharpUtils;
-using CSPspEmu.Core.Memory;
+﻿using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -11,7 +6,7 @@ namespace CSPspEmu.Core.Cpu
 	{
 		public uint Value;
 
-		static public float HalfFloatToFloat(int imm16)
+		public static float HalfFloatToFloat(int imm16)
 		{
 			int s = (imm16 >> 15) & 0x00000001; // sign
 			int e = (imm16 >> 10) & 0x0000001f; // exponent
@@ -62,7 +57,7 @@ namespace CSPspEmu.Core.Cpu
 		}
 
 		/*
-		static private float HalfFloatToFloat(ushort ShortValue)
+		private static float HalfFloatToFloat(ushort ShortValue)
 		{
 			uint Value = 0;
 			var Significand = BitUtils.Extract(ShortValue, 0, 10);
@@ -145,7 +140,7 @@ namespace CSPspEmu.Core.Cpu
 
 		public uint ONE_TWO { get { return 1 + 1 * ONE + 2 * TWO; } }
 
-		static public implicit operator Instruction(uint Value)
+		public static implicit operator Instruction(uint Value)
 		{
 			return new Instruction()
 			{
@@ -153,7 +148,7 @@ namespace CSPspEmu.Core.Cpu
 			};
 		}
 
-		static public implicit operator uint(Instruction Instruction)
+		public static implicit operator uint(Instruction Instruction)
 		{
 			return Instruction.Value;
 		}

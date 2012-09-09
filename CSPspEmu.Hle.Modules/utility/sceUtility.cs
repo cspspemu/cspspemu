@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
-using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Modules.utility
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public partial class sceUtility : HleModuleHost
+	public unsafe partial class sceUtility : HleModuleHost
 	{
 		public enum DialogStepEnum
 		{

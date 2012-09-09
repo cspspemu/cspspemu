@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Reflection.Emit;
 using Codegen;
 
 namespace CSPspEmu.Core.Cpu.Table
 {
 	public class EmitLookupGenerator
 	{
-		static public Func<uint, TRetType> GenerateInfoDelegate<TType, TRetType>(Func<uint, TType, TRetType> Callback, TType Instance)
+		public static Func<uint, TRetType> GenerateInfoDelegate<TType, TRetType>(Func<uint, TType, TRetType> Callback, TType Instance)
 		{
 			return Value =>
 			{
@@ -17,7 +15,7 @@ namespace CSPspEmu.Core.Cpu.Table
 			};
 		}
 
-		static public Action<uint, TType> GenerateSwitchDelegate<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Func<String, String> NameConverter = null)
+		public static Action<uint, TType> GenerateSwitchDelegate<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Func<String, String> NameConverter = null)
 		{
 			if (NameConverter == null)
 			{
@@ -38,7 +36,7 @@ namespace CSPspEmu.Core.Cpu.Table
 			});
 		}
 
-		static public Func<uint, TType, TRetType> GenerateSwitchDelegateReturn<TType, TRetType>(IEnumerable<InstructionInfo> InstructionInfoList, Func<String, String> NameConverter = null, bool ThrowOnUnexistent = true)
+		public static Func<uint, TType, TRetType> GenerateSwitchDelegateReturn<TType, TRetType>(IEnumerable<InstructionInfo> InstructionInfoList, Func<String, String> NameConverter = null, bool ThrowOnUnexistent = true)
 		{
 			if (NameConverter == null)
 			{
@@ -70,7 +68,7 @@ namespace CSPspEmu.Core.Cpu.Table
 			});
 		}
 
-		static public TType GenerateSwitch<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Action<SafeILGenerator, InstructionInfo> GenerateCallDelegate)
+		public static TType GenerateSwitch<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Action<SafeILGenerator, InstructionInfo> GenerateCallDelegate)
 		{
 			return SafeILGenerator.Generate<TType>("EmitLookupGenerator.GenerateSwitch", (Generator) =>
 			{
@@ -85,7 +83,7 @@ namespace CSPspEmu.Core.Cpu.Table
 		/// <param name="InstructionInfoList"></param>
 		/// <param name="GenerateCallDelegate"></param>
 		/// <param name="Level"></param>
-		static public void GenerateSwitchCode(SafeILGenerator SafeILGenerator, IEnumerable<InstructionInfo> InstructionInfoList, Action<SafeILGenerator, InstructionInfo> GenerateCallDelegate, int Level = 0)
+		public static void GenerateSwitchCode(SafeILGenerator SafeILGenerator, IEnumerable<InstructionInfo> InstructionInfoList, Action<SafeILGenerator, InstructionInfo> GenerateCallDelegate, int Level = 0)
 		{
 			//var ILGenerator = SafeILGenerator._UnsafeGetILGenerator();
 			var CommonMask = InstructionInfoList.Aggregate(0xFFFFFFFF, (Base, InstructionInfo) => Base & InstructionInfo.Mask);

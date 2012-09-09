@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSharpUtils;
+﻿using CSharpUtils;
 using CSPspEmu.Core.Cpu;
 
 namespace CSPspEmu.Hle
 {
-	unsafe public class ArgumentReader : IArgumentReader
+	public unsafe class ArgumentReader : IArgumentReader
 	{
 		int GprPosition = 4;
 		int FprPosition = 0;

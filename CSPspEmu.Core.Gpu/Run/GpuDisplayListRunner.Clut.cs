@@ -1,14 +1,11 @@
-﻿using System;
-using CSharpUtils;
-using CSPspEmu.Core.Display;
-using CSPspEmu.Core.Gpu.State.SubStates;
+﻿using CSPspEmu.Core.Gpu.State.SubStates;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
 	/// <summary>
 	/// CLUT (Color LookUp Table) opcodes.
 	/// </summary>
-	unsafe sealed public partial class GpuDisplayListRunner
+	public unsafe sealed partial class GpuDisplayListRunner
 	{
 		/**
 		 * Upload CLUT (Color Lookup Table)

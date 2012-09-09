@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Modules.mpeg
 {
-	unsafe public partial class sceMpeg
+	public unsafe partial class sceMpeg
 	{
 		[Inject]
 		HleInterop HleInterop;

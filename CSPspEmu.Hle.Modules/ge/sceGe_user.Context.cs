@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Hle.Modules.ge
 {
-	unsafe public partial class sceGe_user
+	public unsafe partial class sceGe_user
 	{
 		/// <summary>
 		/// Context.

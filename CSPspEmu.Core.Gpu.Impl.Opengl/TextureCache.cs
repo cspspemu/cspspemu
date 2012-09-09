@@ -2,17 +2,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
+using System.Drawing;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State.SubStates;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
-using System.Drawing;
-using System.Runtime.ExceptionServices;
-using System.Threading;
 using CSPspEmu.Core.Gpu.State;
 
 #if OPENTK
@@ -23,7 +17,7 @@ using MiniGL;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-	sealed unsafe public class Texture : IDisposable
+	public sealed unsafe class Texture : IDisposable
 	{
 		public int TextureId { get; private set; }
 		public ulong TextureHash
@@ -184,7 +178,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		}
 	}
 
-	sealed unsafe public class TextureCache : PspEmulatorComponent
+	public sealed unsafe class TextureCache : PspEmulatorComponent
 	{
 		[Inject]
 		PspMemory PspMemory;
@@ -437,7 +431,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			RecheckTimestamp = DateTime.UtcNow;
 		}
 
-		static public ulong FastHash(byte* Pointer, int Count, ulong StartHash = 0)
+		public static ulong FastHash(byte* Pointer, int Count, ulong StartHash = 0)
 		{
 			return Hashing.FastHash(Pointer, Count, StartHash);
 		}

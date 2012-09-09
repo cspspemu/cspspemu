@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Battery;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core;
@@ -9,7 +6,7 @@ using CSPspEmu.Core;
 namespace CSPspEmu.Hle.Modules.power
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public partial class scePower : HleModuleHost
+	public unsafe partial class scePower : HleModuleHost
 	{
 		[Inject]
 		Battery PspBattery;

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using CSharpUtils;
 using CSPspEmu.Hle.Formats.video;
 using CSPspEmu.Hle.Managers;
@@ -13,7 +10,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 	/// 
 	/// </summary>
 	/// <see cref="http://en.wikipedia.org/wiki/MPEG_program_stream"/>
-	unsafe public partial class sceMpeg
+	public unsafe partial class sceMpeg
 	{
 		public class StreamInfo : IDisposable
 		{

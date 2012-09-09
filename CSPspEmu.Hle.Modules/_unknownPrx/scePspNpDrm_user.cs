@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSharpUtils;
-using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Modules._unknownPrx
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	unsafe public partial class scePspNpDrm_user : HleModuleHost
+	public unsafe class scePspNpDrm_user : HleModuleHost
 	{
 		const int PSP_NPDRM_KEY_LENGHT = 0x10;
 		byte[] npDrmKey = new byte[PSP_NPDRM_KEY_LENGHT];

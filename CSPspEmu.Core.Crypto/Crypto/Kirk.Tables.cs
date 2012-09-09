@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSharpUtils.Endian;
 
 namespace CSPspEmu.Core.Crypto
 {
-	unsafe public partial class Kirk
+	public unsafe partial class Kirk
 	{
 		/// <summary>
 		/// 
