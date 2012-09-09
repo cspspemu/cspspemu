@@ -79,7 +79,7 @@ namespace CSPspEmu.Core.Cpu.Table
 		/// <summary>
 		/// Generates an assembly code that will decode an integer with a set of InstructionInfo.
 		/// </summary>
-		/// <param name="ILGenerator"></param>
+		/// <param name="SafeILGenerator"></param>
 		/// <param name="InstructionInfoList"></param>
 		/// <param name="GenerateCallDelegate"></param>
 		/// <param name="Level"></param>

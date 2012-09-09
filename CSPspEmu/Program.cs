@@ -38,7 +38,7 @@ namespace CSPspEmu
 		/// <see cref="http://en.wikipedia.org/wiki/Common_Intermediate_Language"/>
 		/// <see cref="http://en.wikipedia.org/wiki/List_of_CIL_instructions"/>
 		/// <see cref="http://www.microsoft.com/downloads/details.aspx?FamilyID=22914587-b4ad-4eae-87cf-b14ae6a939b0&displaylang=en" />
-		/// <param name="args"></param>
+		/// <param name="Arguments"></param>
 		[STAThread]
 		[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
 		static void Main(string[] Arguments)

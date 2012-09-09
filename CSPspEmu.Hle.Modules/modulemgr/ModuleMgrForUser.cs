@@ -369,9 +369,9 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		/// <summary>
 		/// Load a module from the given file UID.
 		/// </summary>
-		/// <param name="fid">The module's file UID.</param>
-		/// <param name="flags">Unused, always 0.</param>
-		/// <param name="option">Pointer to an optional ::SceKernelLMOption structure.</param>
+		/// <param name="FileId">The module's file UID.</param>
+		/// <param name="Flags">Unused, always 0.</param>
+		/// <param name="SceKernelLMOption">Pointer to an optional ::SceKernelLMOption structure.</param>
 		/// <returns>The UID of the loaded module on success, otherwise one of ::PspKernelErrorCodes.</returns>
 		[HlePspFunction(NID = 0xB7F46618, FirmwareVersion = 150)]
 		[HlePspNotImplemented]

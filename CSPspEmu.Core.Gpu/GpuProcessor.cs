@@ -113,8 +113,6 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="PspConfig"></param>
-		/// <param name="Memory"></param>
 		public override void InitializeComponent()
 		{
 			if (sizeof(GpuStateStruct) > sizeof(uint) * 512)

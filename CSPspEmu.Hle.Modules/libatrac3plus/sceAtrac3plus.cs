@@ -470,7 +470,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// 
 		/// </summary>
 		/// <param name="AtracId"></param>
-		/// <param name="ChannelPointer"></param>
+		/// <param name="OutputChannel"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xB3B5D042, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -806,7 +806,6 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// <param name="AtracId"></param>
 		/// <param name="EndSamplePointer"></param>
 		/// <param name="LoopStartSamplePointer"></param>
-		/// <param name="piLoopEndSample"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xA2BBA8BE, FirmwareVersion = 150)]
 		[HlePspNotImplemented]

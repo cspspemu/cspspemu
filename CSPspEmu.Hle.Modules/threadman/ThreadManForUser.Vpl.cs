@@ -162,6 +162,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Allocate from the pool
 		/// </summary>
+		/// <param name="CpuThreadState"></param>
 		/// <param name="VariablePoolId">The UID of the pool</param>
 		/// <param name="Size">The size to allocate</param>
 		/// <param name="Data">Receives the address of the allocated data</param>
@@ -181,6 +182,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Allocate from the pool (Handling Callbacks)
 		/// </summary>
+		/// <param name="CpuThreadState"></param>
 		/// <param name="VariablePoolId">The UID of the pool</param>
 		/// <param name="Size">The size to allocate</param>
 		/// <param name="Data">Receives the address of the allocated data</param>
@@ -200,6 +202,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Try to allocate from the pool 
 		/// </summary>
+		/// <param name="CpuThreadState"></param>
 		/// <param name="VariablePoolId">The UID of the pool</param>
 		/// <param name="Size">The size to allocate</param>
 		/// <param name="Data">Receives the address of the allocated data</param>

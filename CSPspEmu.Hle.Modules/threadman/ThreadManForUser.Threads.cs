@@ -240,7 +240,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// 
 		/// ?? This waits until the thread has been awaken? TO CONFIRM.
 		/// </remarks>
-		/// <param name="thid">UID of the thread to wake.</param>
+		/// <param name="ThreadId">UID of the thread to wake.</param>
 		/// <returns>Success if greater or equal 0, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0xD59EAD2F, FirmwareVersion = 150)]
 		public int sceKernelWakeupThread(int ThreadId)
@@ -407,7 +407,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// Modify the attributes of the current thread.
 		/// </summary>
 		/// <param name="unknown">Set to 0.</param>
-		/// <param name="attr">The thread attributes to modify.  One of ::PspThreadAttributes.</param>
+		/// <param name="AddAttributes">The thread attributes to modify.  One of ::PspThreadAttributes.</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xEA748E31, FirmwareVersion = 150)]
 		[HlePspNotImplemented]

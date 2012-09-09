@@ -119,7 +119,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <summary>
 		/// Start a PCM.
 		/// </summary>
-		/// <param name="handle">PCM handle</param>
+		/// <param name="playback_handle">PCM handle</param>
 		/// <returns>0 on success otherwise a negative error code</returns>
 		[DllImport(DLL)]
 		public static extern int snd_pcm_start(IntPtr playback_handle);

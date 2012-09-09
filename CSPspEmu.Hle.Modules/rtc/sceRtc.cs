@@ -115,9 +115,9 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <summary>
 		/// Add two ticks
 		/// </summary>
-		/// <param name="destTick">pointer to tick to hold result</param>
-		/// <param name="srcTick">pointer to source tick</param>
-		/// <param name="numTicks">number of ticks to add</param>
+		/// <param name="dstPtr">pointer to tick to hold result</param>
+		/// <param name="srcPtr">pointer to source tick</param>
+		/// <param name="value">number of ticks to add</param>
 		/// <returns>
 		///		0 on success
 		///		less than 0 on error

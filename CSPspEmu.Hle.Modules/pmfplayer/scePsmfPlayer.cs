@@ -88,7 +88,9 @@ namespace CSPspEmu.Hle.Modules.pmfplayer
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="processor"></param>
+		/// <param name="psmfPlayer"></param>
+		/// <param name="initPlayInfoAddr"></param>
+		/// <param name="initPts"></param>
 		[HlePspFunction(NID = 0x95A84EE5, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int scePsmfPlayerStart(int psmfPlayer, PlayInfoStruct* initPlayInfoAddr, int initPts)
@@ -99,7 +101,7 @@ namespace CSPspEmu.Hle.Modules.pmfplayer
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="processor"></param>
+		/// <param name="psmfPlayer"></param>
 		[HlePspFunction(NID = 0x3EA82A4B, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int scePsmfPlayerGetAudioOutSize(int psmfPlayer)
@@ -110,7 +112,7 @@ namespace CSPspEmu.Hle.Modules.pmfplayer
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="processor"></param>
+		/// <param name="psmfPlayer"></param>
 		[HlePspFunction(NID = 0x1078C008, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int scePsmfPlayerStop(int psmfPlayer)
@@ -133,7 +135,7 @@ namespace CSPspEmu.Hle.Modules.pmfplayer
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="processor"></param>
+		/// <param name="psmfPlayer"></param>
 		[HlePspFunction(NID = 0x46F61F8B, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int scePsmfPlayerGetVideoData(int psmfPlayer, void* VideoData)

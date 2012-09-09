@@ -19,7 +19,7 @@ namespace CSPspEmu.Hle.Formats.video
 		/// Gets a fuzzy-logic score that determines if the file could be of this kind.
 		/// </summary>
 		/// <param name="FileName"></param>
-		/// <param name="Data"></param>
+		/// <param name="ProbeStream"></param>
 		/// <returns>The score</returns>
 		float Probe(String FileName, Stream ProbeStream);
 

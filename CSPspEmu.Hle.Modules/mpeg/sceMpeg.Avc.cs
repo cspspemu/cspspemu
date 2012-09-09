@@ -55,7 +55,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// sceMpegGetAvcAu
 		/// </summary>
 		/// <param name="Mpeg">SceMpeg handle</param>
-		/// <param name="pStream">associated stream</param>
+		/// <param name="StreamId">associated stream</param>
 		/// <param name="MpegAccessUnit">will contain pointer to Au</param>
 		/// <param name="DataAttributes">unknown</param>
 		/// <returns>0 if success.</returns>
@@ -138,7 +138,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <param name="Mpeg">SceMpeg handle</param>
 		/// <param name="MpegAccessUnit">Video Access Unit</param>
 		/// <param name="FrameWidth">Output buffer width, set to 512 if writing to framebuffer</param>
-		/// <param name="OutputBuffer">Buffer that will contain the decoded frame</param>
+		/// <param name="OutputBufferPointer">Buffer that will contain the decoded frame</param>
 		/// <param name="Init">Will be set to 0 on first call, then 1</param>
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0x0E3C2E9D, FirmwareVersion = 150)]

@@ -322,7 +322,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <example>
 		///     bytes_read = sceIoRead(fd, data, 100);
 		/// </example>
-		/// <param name="fd">Opened file descriptor to read from</param>
+		/// <param name="FileId">Opened file descriptor to read from</param>
 		/// <param name="OutputPointer">Pointer to the buffer where the read data will be placed</param>
 		/// <param name="OutputSize">Size of the read in bytes</param>
 		/// <returns>The number of bytes read</returns>

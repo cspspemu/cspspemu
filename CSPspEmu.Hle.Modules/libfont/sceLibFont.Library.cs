@@ -239,7 +239,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// 
 		/// </summary>
 		/// <param name="FontLibraryHandle"></param>
-		/// <param name="FontPointsH"></param>
+		/// <param name="FontPointsV"></param>
 		/// <param name="ErrorCode"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xF8F0752E, FirmwareVersion = 150)]

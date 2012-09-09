@@ -369,14 +369,12 @@ namespace CSPspEmu.Hle.Vfs
 		/// <summary>
 		/// Initializes the Driver
 		/// </summary>
-		/// <param name="PspIoDrvArg"></param>
 		/// <returns></returns>
 		int IoInit();
 
 		/// <summary>
 		/// Deinitializes the driver.
 		/// </summary>
-		/// <param name="PspIoDrvArg"></param>
 		/// <returns></returns>
 		int IoExit(); 
 

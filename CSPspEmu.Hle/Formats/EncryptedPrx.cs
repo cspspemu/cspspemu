@@ -328,7 +328,8 @@ namespace CSPspEmu.Hle.Formats
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="Stream"></param>
+        /// <param name="_pbIn"></param>
+        /// <param name="ShowInfo"></param>
 		public byte[] Decrypt(byte[] _pbIn, bool ShowInfo = false)
 		{
 			this.Kirk = new Kirk();

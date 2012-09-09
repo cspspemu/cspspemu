@@ -44,7 +44,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		///		sceIoDelDrv("host");
 		///		sceIoAddDrv(&host_driver);
 		/// </example>
-		/// <param name="drv">Pointer to a filled out driver structure</param>
+		/// <param name="PspIoDrv">Pointer to a filled out driver structure</param>
 		/// <returns>Less than 0 on error.</returns>
 		[HlePspFunction(NID = 0x8E982A74, FirmwareVersion = 150)]
 		[HlePspNotImplemented]

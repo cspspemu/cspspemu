@@ -215,7 +215,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="VertexInfo"></param>
+		/// <param name="_VertexInfo"></param>
 		/// <param name="VertexType"></param>
 		private void PutVertex(ref VertexInfo _VertexInfo, ref VertexTypeStruct VertexType)
 		{

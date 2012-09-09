@@ -23,7 +23,7 @@
 		/// sceMpegGetAtracAu
 		/// </summary>
 		/// <param name="Mpeg">SceMpeg handle</param>
-		/// <param name="pStream">associated stream</param>
+		/// <param name="StreamId">associated stream</param>
 		/// <param name="MpegAccessUnit">will contain pointer to Au</param>
 		/// <param name="Atrac3PlusPointer">Pointer to ATRAC3plus stream (from PSMF file).</param>
 		/// <returns>0 if success.</returns>

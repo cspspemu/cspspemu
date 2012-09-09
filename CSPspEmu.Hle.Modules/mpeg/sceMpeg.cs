@@ -140,7 +140,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <param name="Mode"></param>
 		/// <param name="Width">480</param>
 		/// <param name="Height">272</param>
-		/// <param name="ResultAddr">Where to store the result</param>
+		/// <param name="Result">Where to store the result</param>
 		/// <returns></returns>
 	    [HlePspFunction(NID = 0x211A057C, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -177,7 +177,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="mpeg"></param>
+		/// <param name="Mpeg"></param>
 		/// <param name="mode"></param>
 		/// <param name="width"></param>
 		/// <param name="height"></param>

@@ -44,8 +44,8 @@ namespace CSPspEmu.Hle.Modules.ctrl
 		///		sceCtrlReadBufferPositive(&pad, 1);
 		///		// Do something with the read controller data
 		/// </example>
-		/// <param name="pad_data">Pointer to a ::SceCtrlData structure used hold the returned pad data.</param>
-		/// <param name="count">Number of ::SceCtrlData buffers to read.</param>
+		/// <param name="SceCtrlData">Pointer to a ::SceCtrlData structure used hold the returned pad data.</param>
+		/// <param name="Count">Number of ::SceCtrlData buffers to read.</param>
 		/// <returns>Count?</returns>
 		[HlePspFunction(NID = 0x1F803938, FirmwareVersion = 150, SkipLog = true)]
 		public int sceCtrlReadBufferPositive(SceCtrlData* SceCtrlData, int Count)
