@@ -6,7 +6,7 @@ namespace CSPspEmu.Core
 {
 	public class ApplicationPaths
 	{
-		static public string ExecutablePath
+		public static string ExecutablePath
 		{
 			get
 			{
@@ -14,9 +14,9 @@ namespace CSPspEmu.Core
 			}
 		}
 
-		static private string _MemoryStickRootFolder;
+		private static string _MemoryStickRootFolder;
 
-		static public string MemoryStickRootFolder
+		public static string MemoryStickRootFolder
 		{
 			get
 			{

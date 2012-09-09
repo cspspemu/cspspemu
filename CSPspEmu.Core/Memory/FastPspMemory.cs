@@ -7,11 +7,11 @@ namespace CSPspEmu.Core.Memory
 	{
 		//readonly public byte* Base = (byte*)0x50000000;
 		//readonly public byte* Base = (byte*)0x40000000;
-		static public byte* _Base = null;
-		static public byte* StaticNullPtr;
-		static public byte* StaticScratchPadPtr;
-		static public byte* StaticFrameBufferPtr;
-		static public byte* StaticMainPtr;
+		public static byte* _Base = null;
+		public static byte* StaticNullPtr;
+		public static byte* StaticScratchPadPtr;
+		public static byte* StaticFrameBufferPtr;
+		public static byte* StaticMainPtr;
 
 		public byte* Base { get { return _Base; } }
 

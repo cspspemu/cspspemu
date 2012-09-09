@@ -543,7 +543,7 @@ namespace BrightIdeasSoftware
         /// <param name="lv">The ListView in virtual mode</param>
         /// <param name="n">index of item to get</param>
         /// <returns>the item</returns>
-        virtual protected ListViewItem GetVirtualItem(ListView lv, int n)
+        protected virtual ListViewItem GetVirtualItem(ListView lv, int n)
         {
             throw new ApplicationException("Virtual list items cannot be retrieved. Use an ObjectListView instead.");
         }
@@ -944,7 +944,7 @@ namespace BrightIdeasSoftware
         /// <param name="lv">The listview to be printed</param>
         /// <param name="n">The index of the row whose height is to be calculated</param>
         /// <returns>The height of one row in pixels</returns>
-        virtual protected float CalculateRowHeight(Graphics g, ListView lv, int n)
+        protected virtual float CalculateRowHeight(Graphics g, ListView lv, int n)
         {
             // If we're including graphics in the report, we need to allow for the height of a small image
             if (!this.IsTextOnly && lv.SmallImageList != null)
@@ -1022,7 +1022,7 @@ namespace BrightIdeasSoftware
         /// <param name="row"></param>
         /// <param name="column"></param>
         /// <param name="cell"></param>
-        virtual protected void PrintCell(Graphics g, ListView lv, ListViewItem lvi, int row, int column, RectangleF cell)
+        protected virtual void PrintCell(Graphics g, ListView lv, ListViewItem lvi, int row, int column, RectangleF cell)
         {
             BlockFormat fmt = this.CellFormat;
             ColumnHeader ch = this.GetColumn(column);
@@ -1974,7 +1974,7 @@ namespace BrightIdeasSoftware
             }
         }
 
-        static public Brush PrepareBrushForDrawing(Brush value, RectangleF r)
+        public static Brush PrepareBrushForDrawing(Brush value, RectangleF r)
         {
             LinearGradientBrush lgb = value as LinearGradientBrush;
             if (lgb == null)
@@ -1996,7 +1996,7 @@ namespace BrightIdeasSoftware
             return lgb2;
         }
 
-        static public Pen PreparePenForDrawing(Pen value, RectangleF r)
+        public static Pen PreparePenForDrawing(Pen value, RectangleF r)
         {
             if (r.Height == 0)
                 r.Height = value.Width;
@@ -2006,7 +2006,7 @@ namespace BrightIdeasSoftware
             return value;
         }
 
-        static public Brush PrepareBrushForDrawing(Brush value, Rectangle r)
+        public static Brush PrepareBrushForDrawing(Brush value, Rectangle r)
         {
             LinearGradientBrush lgb = value as LinearGradientBrush;
             if (lgb == null)
@@ -2028,7 +2028,7 @@ namespace BrightIdeasSoftware
             return lgb2;
         }
 
-        static public Pen PreparePenForDrawing(Pen value, Rectangle r)
+        public static Pen PreparePenForDrawing(Pen value, Rectangle r)
         {
             value.Brush = BlockFormat.PrepareBrushForDrawing(value.Brush, r);
             return value;
@@ -2086,7 +2086,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Return the default style for cells
         /// </summary>
-        static public BlockFormat DefaultCell()
+        public static BlockFormat DefaultCell()
         {
             BlockFormat fmt = new BlockFormat();
 
@@ -2102,7 +2102,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Return a minimal set of formatting values.
         /// </summary>
-        static public BlockFormat Minimal()
+        public static BlockFormat Minimal()
         {
             return BlockFormat.Minimal(new Font("Times New Roman", 12));
         }
@@ -2110,7 +2110,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Return a minimal set of formatting values.
         /// </summary>
-        static public BlockFormat Minimal(Font f)
+        public static BlockFormat Minimal(Font f)
         {
             BlockFormat fmt = new BlockFormat();
 
@@ -2125,7 +2125,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Return a set of formatting values that draws boxes
         /// </summary>
-        static public BlockFormat Box()
+        public static BlockFormat Box()
         {
             return BlockFormat.Box(new Font("Verdana", 24));
         }
@@ -2133,7 +2133,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Return a set of formatting values that draws boxes
         /// </summary>
-        static public BlockFormat Box(Font f)
+        public static BlockFormat Box(Font f)
         {
             BlockFormat fmt = new BlockFormat();
 
@@ -2149,7 +2149,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Return a format that will nicely print headers.
         /// </summary>
-        static public BlockFormat Header()
+        public static BlockFormat Header()
         {
             return BlockFormat.Header(new Font("Verdana", 24));
         }
@@ -2157,7 +2157,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Return a format that will nicely print headers.
         /// </summary>
-        static public BlockFormat Header(Font f)
+        public static BlockFormat Header(Font f)
         {
             BlockFormat fmt = new BlockFormat();
 
@@ -2173,7 +2173,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Return a format that will nicely print report footers.
         /// </summary>
-        static public BlockFormat Footer()
+        public static BlockFormat Footer()
         {
             return BlockFormat.Footer(new Font("Verdana", 10, FontStyle.Italic));
         }
@@ -2181,7 +2181,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Return a format that will nicely print report footers.
         /// </summary>
-        static public BlockFormat Footer(Font f)
+        public static BlockFormat Footer(Font f)
         {
             BlockFormat fmt = new BlockFormat();
 
@@ -2197,7 +2197,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Return a format that will nicely print list headers.
         /// </summary>
-        static public BlockFormat ListHeader()
+        public static BlockFormat ListHeader()
         {
             return BlockFormat.ListHeader(new Font("Verdana", 12));
         }
@@ -2205,7 +2205,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Return a format that will nicely print list headers.
         /// </summary>
-        static public BlockFormat ListHeader(Font f)
+        public static BlockFormat ListHeader(Font f)
         {
             BlockFormat fmt = new BlockFormat();
 
@@ -2223,7 +2223,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Return a format that will nicely print group headers.
         /// </summary>
-        static public BlockFormat GroupHeader()
+        public static BlockFormat GroupHeader()
         {
             return BlockFormat.GroupHeader(new Font("Verdana", 10, FontStyle.Bold));
         }
@@ -2231,7 +2231,7 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Return a format that will nicely print group headers.
         /// </summary>
-        static public BlockFormat GroupHeader(Font f)
+        public static BlockFormat GroupHeader(Font f)
         {
             BlockFormat fmt = new BlockFormat();
 

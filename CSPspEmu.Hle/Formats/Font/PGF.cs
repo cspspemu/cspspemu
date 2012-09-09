@@ -261,7 +261,7 @@ namespace CSPspEmu.Hle.Formats.Font
 			return (int)BitReader.ReadBitsAt(PackedCharMap, glyphPos * Header.TableCharMapBpe, Header.TableCharMapBpe);
 		}
 
-		static protected int BitsToBytesHighAligned(int Bits)
+		protected static int BitsToBytesHighAligned(int Bits)
 		{
 			//return MathUtils.NextHigherAligned(Bits, 8) / 8;
 			return ((Bits + 31) & ~31) / 8;

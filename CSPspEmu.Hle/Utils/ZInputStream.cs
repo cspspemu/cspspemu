@@ -52,7 +52,7 @@ namespace ComponentAce.Compression.Libs.zlib
 			flush = zlibConst.Z_NO_FLUSH;
 			buf = new byte[bufsize];
 		}
-		virtual public int FlushMode
+		public virtual int FlushMode
 		{
 			get
 			{
@@ -66,7 +66,7 @@ namespace ComponentAce.Compression.Libs.zlib
 			
 		}
 		/// <summary> Returns the total number of bytes input so far.</summary>
-		virtual public long TotalIn
+		public virtual long TotalIn
 		{
 			get
 			{
@@ -75,7 +75,7 @@ namespace ComponentAce.Compression.Libs.zlib
 			
 		}
 		/// <summary> Returns the total number of bytes output so far.</summary>
-		virtual public long TotalOut
+		public virtual long TotalOut
 		{
 			get
 			{

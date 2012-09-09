@@ -2,7 +2,7 @@
 
 namespace CSPspEmu.Hle.Modules._unknownPrx //vsh/module/vshmain.prx vsh_module
 {
-	unsafe public partial class sceCcc : HleModuleHost
+	public unsafe partial class sceCcc : HleModuleHost
 	{
         [HlePspFunction(NID = 0x92C05851, FirmwareVersion = 150)]
         [HlePspNotImplemented]

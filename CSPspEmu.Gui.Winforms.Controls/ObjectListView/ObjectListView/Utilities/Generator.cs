@@ -58,7 +58,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="olv">The ObjectListView to modify</param>
         /// <param name="enumerable">The collection whose first element will be used to generate columns.</param>
-        static public void GenerateColumns(ObjectListView olv, IEnumerable enumerable) {
+        public static void GenerateColumns(ObjectListView olv, IEnumerable enumerable) {
             // Generate columns based on the type of the first model in the collection and then quit
             if (enumerable != null) {
                 foreach (object model in enumerable) {
@@ -77,7 +77,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="olv">The ObjectListView to modify</param>
         /// <param name="type">The model type whose attributes will be considered.</param>
-        static public void GenerateColumns(ObjectListView olv, Type type) {
+        public static void GenerateColumns(ObjectListView olv, Type type) {
             IList<OLVColumn> columns = Generator.GenerateColumns(type);
             Generator.ReplaceColumns(olv, columns);
         }
@@ -88,7 +88,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="type"></param>
         /// <returns>A collection of OLVColumns matching the attributes of Type that have OLVColumnAttributes.</returns>
-        static public IList<OLVColumn> GenerateColumns(Type type) {
+        public static IList<OLVColumn> GenerateColumns(Type type) {
             List<OLVColumn> columns = new List<OLVColumn>();
             
             // Iterate all public properties in the class and build columns from those that have
@@ -122,7 +122,7 @@ namespace BrightIdeasSoftware
 
         #region Implementation
 
-        static private void ReplaceColumns(ObjectListView olv, IList<OLVColumn> columns) {
+        private static void ReplaceColumns(ObjectListView olv, IList<OLVColumn> columns) {
             olv.Clear();
             olv.AllColumns.Clear();
             olv.PrimarySortColumn = null;

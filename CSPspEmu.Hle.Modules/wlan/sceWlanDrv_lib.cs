@@ -48,7 +48,7 @@ namespace CSPspEmu.Hle.Modules.wlan
 	/// Functions related to Wlan.
 	/// </summary>
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class sceWlanDrv_lib : HleModuleHost
+	public unsafe class sceWlanDrv_lib : HleModuleHost
 	{
 		/// <summary>
 		/// Determine if the wlan device is currently powered on

@@ -27,12 +27,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
-		static public IGraphicsContext GraphicsContext;
+		public static IGraphicsContext GraphicsContext;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		static public bool AlreadyInitialized = false;
+		public static bool AlreadyInitialized = false;
 
 		public bool IsCurrentWindow = false;
 
@@ -75,15 +75,15 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
-		static protected GLControl GLControl;
+		protected static GLControl GLControl;
 #else
 		/// <summary>
 		/// 
 		/// </summary>
-		static private INativeWindow NativeWindow;
+		private static INativeWindow NativeWindow;
 #endif
 
-		static public int GlGetInteger(GetPName Name)
+		public static int GlGetInteger(GetPName Name)
 		{
 			int Value;
 			GL.GetInteger(Name, out Value);

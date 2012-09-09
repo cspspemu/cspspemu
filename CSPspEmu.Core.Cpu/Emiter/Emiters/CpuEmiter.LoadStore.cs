@@ -161,7 +161,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		private static readonly uint[] SwrMask = new uint[]  { 0x00000000, 0x000000FF, 0x0000FFFF, 0x00FFFFFF };
 		private static readonly int[] SwrShift = new int[] { 0, 8, 16, 24 };
 
-		static public void _swl_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
+		public static void _swl_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
 		{
 			uint Address = (uint)(RS + Offset);
 			uint AddressAlign = (uint)Address & 3;

@@ -4,12 +4,12 @@ using CSharpUtils;
 
 namespace CSPspEmu.Core
 {
-	unsafe public sealed class Hashing
+	public unsafe sealed class Hashing
 	{
 		static Logger Logger = Logger.GetLogger("Hashing");
 
 		[HandleProcessCorruptedStateExceptions]
-		static public ulong FastHash(byte* Pointer, int Count, ulong StartHash = 0)
+		public static ulong FastHash(byte* Pointer, int Count, ulong StartHash = 0)
 		{
 			if (Pointer == null)
 			{
@@ -40,7 +40,7 @@ namespace CSPspEmu.Core
 		}
 
 		[HandleProcessCorruptedStateExceptions]
-		static private ulong FastHash_64(byte* Pointer, int Count, ulong StartHash = 0)
+		private static ulong FastHash_64(byte* Pointer, int Count, ulong StartHash = 0)
 		{
 			var Hash = StartHash;
 

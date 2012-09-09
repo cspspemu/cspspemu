@@ -6,7 +6,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 {
 	sealed public partial class CpuEmiter
 	{
-		static public uint _vc2i_impl(uint Value)
+		public static uint _vc2i_impl(uint Value)
 		{
 			Value |= (Value >> 16);
 			Value |= (Value >> 8);
@@ -215,7 +215,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void vf2h() { throw (new NotImplementedException("")); }
 		public void vh2f() { throw (new NotImplementedException("")); }
 
-		static public int _vi2us(int x, int y)
+		public static int _vi2us(int x, int y)
 		{
 			return (
 				((x < 0) ? 0 : ((x >> 15) << 0)) |

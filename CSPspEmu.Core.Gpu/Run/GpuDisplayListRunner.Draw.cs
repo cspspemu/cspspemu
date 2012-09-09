@@ -167,7 +167,7 @@ namespace CSPspEmu.Core.Gpu.Run
 			DrawBezier(UCount, VCount);
 		}
 
-		static private float[] BernsteinCoeff(float u)
+		private static float[] BernsteinCoeff(float u)
 		{
 			float uPow2 = u * u;
 			float uPow3 = uPow2 * u;

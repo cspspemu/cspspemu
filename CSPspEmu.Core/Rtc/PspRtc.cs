@@ -4,9 +4,9 @@ using CSharpUtils;
 
 namespace CSPspEmu.Core.Rtc
 {
-	unsafe public class PspRtc : PspEmulatorComponent
+	public unsafe class PspRtc : PspEmulatorComponent
 	{
-		static public Logger Logger = Logger.GetLogger("Rtc");
+		public static Logger Logger = Logger.GetLogger("Rtc");
 
 		internal LinkedList<PspVirtualTimer> Timers = new LinkedList<PspVirtualTimer>();
 		public DateTime StartDateTime { get; protected set; }

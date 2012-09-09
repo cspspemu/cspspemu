@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace CSPspEmu.Core.Memory
 {
 	[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
-	unsafe public struct PspPointer
+	public unsafe struct PspPointer
 	{
 		public uint Address;
 

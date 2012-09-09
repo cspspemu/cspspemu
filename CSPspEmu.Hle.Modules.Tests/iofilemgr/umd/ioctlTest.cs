@@ -14,7 +14,7 @@ using CSPspEmu.Hle.Formats;
 namespace CSPspEmu.Hle.Modules.Tests.iofilemgr.umd
 {
 	[TestClass]
-	unsafe public class ioctlTest : BaseModuleTest
+	public unsafe class ioctlTest : BaseModuleTest
 	{
 		[Inject]
 		IoFileMgrForUser IoFileMgrForUser = null;

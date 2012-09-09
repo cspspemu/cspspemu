@@ -64,12 +64,12 @@ namespace CSPspEmu.Core.Memory
 			PointerUtils.Memset((byte *)PspAddressToPointerSafe(Segment.Low), 0, Segment.Size);
 		}
 
-		static public readonly Segment ScratchPadSegment = new Segment(ScratchPadOffset, ScratchPadSize);
-		static public readonly Segment MainSegment = new Segment(MainOffset, MainSize);
-		static public readonly Segment FrameBufferSegment = new Segment(FrameBufferOffset, FrameBufferSize);
-		static public readonly Segment VectorsSegment = new Segment(VectorsOffset, VectorsSize);
+		public static readonly Segment ScratchPadSegment = new Segment(ScratchPadOffset, ScratchPadSize);
+		public static readonly Segment MainSegment = new Segment(MainOffset, MainSize);
+		public static readonly Segment FrameBufferSegment = new Segment(FrameBufferOffset, FrameBufferSize);
+		public static readonly Segment VectorsSegment = new Segment(VectorsOffset, VectorsSize);
 
-		//static public Segment ScratchPadSegment = new Segment() { Offset = 0x00010000, Size = 4 * 1024 };
+		//public static Segment ScratchPadSegment = new Segment() { Offset = 0x00010000, Size = 4 * 1024 };
 
 		public const int ScratchPadSize = 4 * 1024; // 4KB
 		public const int FrameBufferSize = 2 * 0x100000; // 2MB
@@ -109,12 +109,12 @@ namespace CSPspEmu.Core.Memory
 			return PspAddressToPointerSafe(Pointer.Address, Size);
 		}
 
-		virtual public uint PointerToPspAddressSafe(void* Pointer)
+		public virtual uint PointerToPspAddressSafe(void* Pointer)
 		{
 			return PointerToPspAddressSafe((byte*)Pointer);
 		}
 
-		virtual public uint PointerToPspAddressSafe(byte* Pointer)
+		public virtual uint PointerToPspAddressSafe(byte* Pointer)
 		{
 			if (Pointer == null) return 0;
 			//if (Pointer == NullPtr) return 0;
@@ -125,11 +125,11 @@ namespace CSPspEmu.Core.Memory
 			throw (new InvalidAddressException(String.Format("Pointer 0x{0:X} doesn't belong to PSP Memory. Main: 0x{1:X}-0x{2:X}", (ulong)Pointer, (ulong)MainPtr, (ulong)MainSize)));
 		}
 
-		virtual public void SetPCWriteAddress(uint Address, uint PC)
+		public virtual void SetPCWriteAddress(uint Address, uint PC)
 		{
 		}
 
-		virtual public uint GetPCWriteAddress(uint Address)
+		public virtual uint GetPCWriteAddress(uint Address)
 		{
 			return 0xFFFFFFFF;
 		}
@@ -150,7 +150,7 @@ namespace CSPspEmu.Core.Memory
 			}
 		}
 
-		virtual public void* PspAddressToPointerSafe(uint Address, int Size = 0, bool CanBeNull = true)
+		public virtual void* PspAddressToPointerSafe(uint Address, int Size = 0, bool CanBeNull = true)
 		{
 			if (Address == 0 && CanBeNull) return null;
 			ValidateRange(Address, Size);
@@ -257,15 +257,15 @@ namespace CSPspEmu.Core.Memory
 			return Output;
 		}
 
-		virtual public byte Read1(uint Address) { return *(byte *)PspAddressToPointerNotNull(Address); }
-		virtual public ushort Read2(uint Address) { return *(ushort*)PspAddressToPointerNotNull(Address); }
-		virtual public uint Read4(uint Address) { return *(uint*)PspAddressToPointerNotNull(Address); }
-		virtual public ulong Read8(uint Address) { return *(ulong*)PspAddressToPointerNotNull(Address); }
+		public virtual byte Read1(uint Address) { return *(byte *)PspAddressToPointerNotNull(Address); }
+		public virtual ushort Read2(uint Address) { return *(ushort*)PspAddressToPointerNotNull(Address); }
+		public virtual uint Read4(uint Address) { return *(uint*)PspAddressToPointerNotNull(Address); }
+		public virtual ulong Read8(uint Address) { return *(ulong*)PspAddressToPointerNotNull(Address); }
 
-		virtual public void Write1(uint Address, byte Value) { *(byte*)PspAddressToPointerNotNull(Address) = Value; }
-		virtual public void Write2(uint Address, ushort Value) { *(ushort*)PspAddressToPointerNotNull(Address) = Value; }
-		virtual public void Write4(uint Address, uint Value) { *(uint*)PspAddressToPointerNotNull(Address) = Value; }
-		virtual public void Write8(uint Address, ulong Value) { *(ulong*)PspAddressToPointerNotNull(Address) = Value; }
+		public virtual void Write1(uint Address, byte Value) { *(byte*)PspAddressToPointerNotNull(Address) = Value; }
+		public virtual void Write2(uint Address, ushort Value) { *(ushort*)PspAddressToPointerNotNull(Address) = Value; }
+		public virtual void Write4(uint Address, uint Value) { *(uint*)PspAddressToPointerNotNull(Address) = Value; }
+		public virtual void Write8(uint Address, ulong Value) { *(ulong*)PspAddressToPointerNotNull(Address) = Value; }
 
 		public void ReadBytes(uint Address, byte* DataOutPointer, int DataOutLength)
 		{

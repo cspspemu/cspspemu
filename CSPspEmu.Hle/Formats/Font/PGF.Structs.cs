@@ -446,7 +446,7 @@ namespace CSPspEmu.Hle.Formats.Font
 		/// </summary>
 		public uint Expire;
 
-		static public float GetScoreCompare(FontStyle Left, FontStyle Right)
+		public static float GetScoreCompare(FontStyle Left, FontStyle Right)
 		{
 			float Score = 0.0f;
 			if (Left.Size == Right.Size) Score++;

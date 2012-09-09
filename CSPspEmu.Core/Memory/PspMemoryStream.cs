@@ -4,7 +4,7 @@ using CSharpUtils;
 
 namespace CSPspEmu.Core.Memory
 {
-	unsafe public class PspMemoryStream : Stream
+	public unsafe class PspMemoryStream : Stream
 	{
 		protected uint _Position;
 		public PspMemory Memory { get; protected set; }

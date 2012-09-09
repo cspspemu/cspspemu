@@ -27,7 +27,7 @@ using MiniGL;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-	sealed unsafe public partial class OpenglGpuImpl : GpuImpl
+	sealed public unsafe partial class OpenglGpuImpl : GpuImpl
 	{
 		/// <summary>
 		/// 
@@ -66,7 +66,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			this.VertexReader = new VertexReader();
 		}
 
-		//static public object GpuLock = new object();
+		//public static object GpuLock = new object();
 
 		/// <summary>
 		/// 

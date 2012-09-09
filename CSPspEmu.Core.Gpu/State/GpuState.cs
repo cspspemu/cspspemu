@@ -77,7 +77,7 @@ namespace CSPspEmu.Core.Gpu.State
 		public fixed sbyte DitherMatrix[16];
 
 		/*
-		static public void Init(GpuStateStruct* GpuState)
+		public static void Init(GpuStateStruct* GpuState)
 		{
 			PointerUtils.Memset((byte*)GpuState, 0, sizeof(GpuStateStruct));
 

@@ -2,14 +2,14 @@
 
 namespace CSPspEmu.Core.Utils
 {
-	static public class ColorFormatExtensions
+	public static class ColorFormatExtensions
 	{
-		static public uint Encode(this ColorFormat ColorFormat, OutputPixel OutputPixel)
+		public static uint Encode(this ColorFormat ColorFormat, OutputPixel OutputPixel)
 		{
 			return ColorFormat.Encode(OutputPixel.R, OutputPixel.G, OutputPixel.B, OutputPixel.A);
 		}
 
-		static public OutputPixel Decode(this ColorFormat ColorFormat, uint Value)
+		public static OutputPixel Decode(this ColorFormat ColorFormat, uint Value)
 		{
 			var OutputPixel = default(OutputPixel);
 			ColorFormat.Decode(Value, out OutputPixel.R, out OutputPixel.G, out OutputPixel.B, out OutputPixel.A);

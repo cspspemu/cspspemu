@@ -4,7 +4,7 @@ namespace CSPspEmu.Hle.Formats.audio
 {
 	public unsafe partial class Vag
 	{
-		static public readonly float[][] VAG_f = new float[][]
+		public static readonly float[][] VAG_f = new float[][]
 		{
 			new[] {   0.0f / 64.0f,   0.0f / 64.0f },
 			new[] {  60.0f / 64.0f,   0.0f / 64.0f },

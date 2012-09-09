@@ -1,6 +1,6 @@
 ﻿namespace CSPspEmu.Core.Memory
 {
-	unsafe public class LazyPspMemory : NormalPspMemory
+	public unsafe class LazyPspMemory : NormalPspMemory
 	{
 		protected override void Initialize()
 		{

@@ -63,7 +63,7 @@ namespace BrightIdeasSoftware
             }
         }
 
-        virtual protected void HandlePaintEvent(Graphics g, Rectangle r)
+        protected virtual void HandlePaintEvent(Graphics g, Rectangle r)
         {
             using (Brush b = this.GetBrush()) {
                 StringFormat fmt = new StringFormat();

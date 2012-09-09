@@ -373,12 +373,12 @@ namespace CSPspEmu.Core.Cpu
 			GPR[R] = (int)V;
 		}
 
-		static public void TestBranchFlag(Processor Processor)
+		public static void TestBranchFlag(Processor Processor)
 		{
 			Processor.BranchFlag = (Processor.GPR[2] == Processor.GPR[2]);
 		}
 
-		static public void TestGPR(Processor Processor)
+		public static void TestGPR(Processor Processor)
 		{
 			Processor.GPR[1] = Processor.GPR[2] + Processor.GPR[2];
 		}
@@ -390,7 +390,7 @@ namespace CSPspEmu.Core.Cpu
 		}
 
 		/*
-		static public void TestMemset(CpuThreadState Processor)
+		public static void TestMemset(CpuThreadState Processor)
 		{
 			*((byte*)Processor.GetMemoryPtr(0x04000000)) = 0x77;
 		}

@@ -226,7 +226,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		}
 
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
-		unsafe public struct PspUtilitySavedataSFOParam
+		public unsafe struct PspUtilitySavedataSFOParam
 		{
 			/// <summary>
 			/// 0000 -

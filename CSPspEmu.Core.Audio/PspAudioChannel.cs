@@ -5,7 +5,7 @@ using CSharpUtils;
 
 namespace CSPspEmu.Core.Audio
 {
-	unsafe public class PspAudioChannel
+	public unsafe class PspAudioChannel
 	{
 		/// <summary>
 		/// 

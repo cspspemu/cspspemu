@@ -3,9 +3,9 @@ using CSPspEmu.Hle.Vfs;
 
 namespace System
 {
-	static public class HleIoDrvFileArgExtensions
+	public static class HleIoDrvFileArgExtensions
 	{
-		static public Stream GetStream(this HleIoDrvFileArg HleIoDrvFileArg)
+		public static Stream GetStream(this HleIoDrvFileArg HleIoDrvFileArg)
 		{
 			return new FileHandle(HleIoDrvFileArg);
 		}

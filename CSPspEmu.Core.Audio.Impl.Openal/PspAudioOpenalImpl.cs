@@ -7,8 +7,8 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 {
     public class PspAudioOpenalImpl : PspAudioImpl
 	{
-		static protected AudioContext AudioContext;
-		//static protected XRamExtension XRam;
+		protected static AudioContext AudioContext;
+		//protected static XRamExtension XRam;
 		static internal AudioStream AudioStream;
 
 		public override void InitializeComponent()

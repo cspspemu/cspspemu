@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Memory
 {
-	unsafe public class NormalPspMemory : PspMemory
+	public unsafe class NormalPspMemory : PspMemory
 	{
 		public override void InitializeComponent()
 		{
@@ -21,7 +21,7 @@ namespace CSPspEmu.Core.Memory
 		}
 		*/
 
-		virtual protected void Initialize()
+		protected virtual void Initialize()
 		{
 			AllocateMemory();
 		}

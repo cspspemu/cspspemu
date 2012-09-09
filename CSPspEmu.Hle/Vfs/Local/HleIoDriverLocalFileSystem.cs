@@ -211,7 +211,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 			return 0;
 		}
 
-		unsafe static public HleIoDirent CreateFakeDirectoryHleIoDirent(string Name)
+		unsafe public static HleIoDirent CreateFakeDirectoryHleIoDirent(string Name)
 		{
 			var HleIoDirent = default(HleIoDirent);
 			PointerUtils.StoreStringOnPtr(Name, Encoding.UTF8, HleIoDirent.Name);
@@ -222,7 +222,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 			return HleIoDirent;
 		}
 
-		unsafe static public HleIoDirent ConvertFileSystemInfoToHleIoDirent(FileSystemInfo FileSystemInfo)
+		unsafe public static HleIoDirent ConvertFileSystemInfoToHleIoDirent(FileSystemInfo FileSystemInfo)
 		{
 			var HleIoDirent = default(HleIoDirent);
 			var FileInfo = (FileSystemInfo as FileInfo);

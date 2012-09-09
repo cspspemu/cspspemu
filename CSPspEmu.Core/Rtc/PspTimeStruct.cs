@@ -5,7 +5,7 @@ namespace CSPspEmu.Core.Rtc
 {
 	public struct PspTimeStruct
 	{
-		static public Logger Logger = Logger.GetLogger("Rtc");
+		public static Logger Logger = Logger.GetLogger("Rtc");
 
 		public long TotalMicroseconds;
 

@@ -8,7 +8,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 	/// </summary>
 	/// <see cref="http://www.alsa-project.org/alsa-doc/alsa-lib/pcm.html"/>
 	/// <see cref="http://www.alsa-project.org/alsa-doc/alsa-lib/group___p_c_m.html"/>
-	unsafe static public class Alsa
+	unsafe public static class Alsa
 	{
 		private const string DLL = "asound.so.2";
 

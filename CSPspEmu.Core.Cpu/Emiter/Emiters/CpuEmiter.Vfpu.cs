@@ -465,7 +465,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		/*
-		static public float _vmul(float a, float b)
+		public static float _vmul(float a, float b)
 		{
 			Console.Error.WriteLine("{0} * {1} = {2}", a, b, a * b);
 			return a * b;

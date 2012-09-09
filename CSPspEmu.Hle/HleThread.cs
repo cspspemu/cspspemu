@@ -691,7 +691,7 @@ namespace CSPspEmu.Hle
 	{
 	}
 
-	unsafe public struct SceKernelThreadInfo
+	public unsafe struct SceKernelThreadInfo
 	{
 		/// <summary>
 		/// 0x0000 - Size of the structure

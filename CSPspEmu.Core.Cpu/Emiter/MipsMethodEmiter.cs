@@ -13,7 +13,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 	/// <summary>
 	/// <see cref="http://www.mrc.uidaho.edu/mrc/people/jff/digital/MIPSir.html"/>
 	/// </summary>
-	unsafe public class MipsMethodEmiter
+	public unsafe class MipsMethodEmiter
 	{
 #if USE_DYNAMIC_METHOD
 		//protected DynamicMethod DynamicMethod;
@@ -27,8 +27,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		//public CpuThreadState CpuThreadState;
 		public CpuProcessor Processor;
 		
-		//static protected FieldInfo Field_GPR_Ptr = typeof(Processor).GetField("GPR_Ptr");
-		//static protected FieldInfo Field_FPR_Ptr = typeof(Processor).GetField("FPR_Ptr");
+		//protected static FieldInfo Field_GPR_Ptr = typeof(Processor).GetField("GPR_Ptr");
+		//protected static FieldInfo Field_FPR_Ptr = typeof(Processor).GetField("FPR_Ptr");
 		protected static FieldInfo Field_BranchFlag = typeof(CpuThreadState).GetField("BranchFlag");
 		protected static FieldInfo Field_PC = typeof(CpuThreadState).GetField("PC");
 		protected static FieldInfo Field_LO = typeof(CpuThreadState).GetField("LO");
@@ -44,7 +44,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public readonly Dictionary<string, uint> InstructionStats = new Dictionary<string, uint>();
 
 		/*
-		static public MipsMethodEmiter()
+		public static MipsMethodEmiter()
 		{
 		}
 		*/

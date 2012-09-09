@@ -4,7 +4,7 @@ using CSharpUtils;
 
 namespace CSPspEmu.Core.Crypto
 {
-	unsafe public partial class Crypto
+	public unsafe partial class Crypto
 	{
 #if false
 		//#define GETuint(pt) (((uint)(pt)[0] << 24) ^ ((uint)(pt)[1] << 16) ^ ((uint)(pt)[2] <<  8) ^ ((uint)(pt)[3]))

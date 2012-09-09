@@ -114,7 +114,7 @@ namespace CSPspEmu.Core.Cpu
 
 		public event Action DebugCurrentThreadEvent;
 
-		static public void DebugCurrentThread(CpuThreadState CpuThreadState)
+		public static void DebugCurrentThread(CpuThreadState CpuThreadState)
 		{
 			var CpuProcessor = CpuThreadState.CpuProcessor;
 			Console.Error.WriteLine("*******************************************");

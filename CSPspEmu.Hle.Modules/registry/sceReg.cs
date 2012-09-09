@@ -159,7 +159,7 @@ namespace CSPspEmu.Hle.Modules.registry
 	/// <summary>
 	/// 
 	/// </summary>
-	unsafe public struct RegParam
+	public unsafe struct RegParam
 	{
 		/// <summary>
 		/// Set to 1 only for system

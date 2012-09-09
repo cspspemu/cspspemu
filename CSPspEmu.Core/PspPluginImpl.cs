@@ -14,7 +14,7 @@ namespace CSPspEmu.Core
 		/// </summary>
 		abstract public bool IsWorking { get; }
 
-		static public void SelectWorkingPlugin<TType>(PspEmulatorContext PspEmulatorContext, params Type[] AvailablePluginImplementations) where TType : PspPluginImpl
+		public static void SelectWorkingPlugin<TType>(PspEmulatorContext PspEmulatorContext, params Type[] AvailablePluginImplementations) where TType : PspPluginImpl
 		{
 			foreach (var ImplementationType in AvailablePluginImplementations)
 			{

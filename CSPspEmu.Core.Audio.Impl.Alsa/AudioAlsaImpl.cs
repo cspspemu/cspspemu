@@ -3,11 +3,11 @@ using CSPspEmu.Core.Audio.Impl.Alsa;
 
 namespace CSPspEmu.Core.Audio
 {
-	unsafe public class AudioAlsaImpl : PspAudioImpl
+	public unsafe class AudioAlsaImpl : PspAudioImpl
 	{
-		static public string Device = "default";
-		//static public string Device = "plughw:0,0";
-		//static public string Device = "hw:0,0";
+		public static string Device = "default";
+		//public static string Device = "plughw:0,0";
+		//public static string Device = "hw:0,0";
 		static IntPtr playback_handle = IntPtr.Zero;
 		static IntPtr hw_params = IntPtr.Zero;
 		int periods = 2;       /* Number of periods */
@@ -45,7 +45,7 @@ namespace CSPspEmu.Core.Audio
 			//available_start = Alsa.snd_pcm_avail_update(playback_handle);
 		}
 
-		static private void Assert(string Function, int Value)
+		private static void Assert(string Function, int Value)
 		{
 			Console.WriteLine("Alsa.{0} : {1}", Function, Value);
 			//if (Value < 0) throw(new Exception(String.Format("Alsa error({0}) calling function '{1}'", Value, Function)));

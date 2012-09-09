@@ -7,7 +7,7 @@ using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
-	unsafe public partial class ThreadManForUser
+	public unsafe partial class ThreadManForUser
 	{
 		[Inject]
 		HleSemaphoreManager SemaphoreManager;

@@ -9,7 +9,7 @@ namespace CSPspEmu.Hle
 		{
 		}
 
-		virtual public void Output(string Output)
+		public virtual void Output(string Output)
 		{
 			Console.WriteLine("   OUTPUT:  {0}", Output);
 		}

@@ -307,7 +307,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 	}
 
 	/*
-	unsafe public struct SasCore
+	public unsafe struct SasCore
 	{
 		/// <summary>
 		/// 

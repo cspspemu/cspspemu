@@ -5,7 +5,7 @@ using CSharpUtils;
 
 namespace CSPspEmu.Core.Utils
 {
-	unsafe public class PspBitmap
+	public unsafe class PspBitmap
 	{
 		protected GuPixelFormats GuPixelFormat;
 		public int Width;

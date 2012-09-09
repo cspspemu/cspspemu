@@ -47,7 +47,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void srl() { MipsMethodEmiter.OP_2REG_IMM_Unsigned(RD, RT, Instruction.POS, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftRightUnsigned); }); }
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		static public uint _rotr(uint Value, int Offset) { return (Value >> Offset) | (Value << (32 - Offset)); }
+		public static uint _rotr(uint Value, int Offset) { return (Value >> Offset) | (Value << (32 - Offset)); }
 
 		public void sllv() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RT, RS, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftLeft); }); }
 		public void srav() { MipsMethodEmiter.OP_3REG_Unsigned(RD, RT, RS, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftRightSigned); }); }
@@ -125,7 +125,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		static public uint _bitrev_impl(uint v)
+		public static uint _bitrev_impl(uint v)
 		{
 			v = ((v >> 1) & 0x55555555) | ((v & 0x55555555) << 1); // swap odd and even bits
 			v = ((v >> 2) & 0x33333333) | ((v & 0x33333333) << 2); // swap consecutive pairs
@@ -162,8 +162,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			LabelEnd.Mark();
 		}
 
-		unsafe static public int _max_impl(int Left, int Right) { return (Left > Right) ? Left : Right; }
-		unsafe static public int _min_impl(int Left, int Right) { return (Left < Right) ? Left : Right; }
+		unsafe public static int _max_impl(int Left, int Right) { return (Left > Right) ? Left : Right; }
+		unsafe public static int _min_impl(int Left, int Right) { return (Left < Right) ? Left : Right; }
 
 		public void max()
 		{
@@ -194,7 +194,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// DIVide (Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		unsafe static public void _div_impl(CpuThreadState CpuThreadState, int Left, int Right)
+		unsafe public static void _div_impl(CpuThreadState CpuThreadState, int Left, int Right)
 		{
 			if (Right == 0)
 			{
@@ -208,7 +208,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		unsafe static public void _divu_impl(CpuThreadState CpuThreadState, uint Left, uint Right)
+		unsafe public static void _divu_impl(CpuThreadState CpuThreadState, uint Left, uint Right)
 		{
 			if (Right == 0)
 			{

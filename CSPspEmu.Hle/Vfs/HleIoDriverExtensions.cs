@@ -1,8 +1,8 @@
 ﻿namespace CSPspEmu.Hle.Vfs
 {
-	static public class HleIoDriverExtensions
+	public static class HleIoDriverExtensions
 	{
-		static public IHleIoDriver AsReadonlyHleIoDriver(this IHleIoDriver HleIoDriver)
+		public static IHleIoDriver AsReadonlyHleIoDriver(this IHleIoDriver HleIoDriver)
 		{
 			return new ReadonlyHleIoDriver(HleIoDriver);
 		}

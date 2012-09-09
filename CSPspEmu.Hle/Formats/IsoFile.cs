@@ -106,7 +106,7 @@ namespace CSPspEmu.Hle.Formats
 	/// 8.4 Primary Volume Descriptor
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	unsafe public struct PrimaryVolumeDescriptor
+	public unsafe struct PrimaryVolumeDescriptor
 	{
 		public VolumeDescriptorHeader VolumeDescriptorHeader;
 
@@ -206,7 +206,7 @@ namespace CSPspEmu.Hle.Formats
 	/// 8.4.26 Volume Creation Date and Time (BP 814 to 830)
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	unsafe public struct IsoDate
+	public unsafe struct IsoDate
 	{
 		fixed byte Data[17];
 

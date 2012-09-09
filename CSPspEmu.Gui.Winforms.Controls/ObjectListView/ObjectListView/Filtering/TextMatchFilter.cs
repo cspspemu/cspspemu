@@ -532,7 +532,7 @@ namespace BrightIdeasSoftware {
                     return this.Regex == TextRegexMatchingStrategy.InvalidRegexMarker;
                 }
             }
-            static private Regex InvalidRegexMarker = new Regex(".*");
+            private static Regex InvalidRegexMarker = new Regex(".*");
 
             /// <summary>
             /// Does the given text match the filter

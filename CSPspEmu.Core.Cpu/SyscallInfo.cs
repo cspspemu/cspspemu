@@ -4,7 +4,7 @@
 	{
 		public const ushort NativeCallSyscallCode = 0x1234;
 
-		static public uint NativeCallSyscallOpCode
+		public static uint NativeCallSyscallOpCode
 		{
 			get
 			{

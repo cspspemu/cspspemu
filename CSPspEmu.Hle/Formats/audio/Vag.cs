@@ -109,7 +109,7 @@ namespace CSPspEmu.Hle.Formats.audio
 			protected short History1 = 0, History2 = 0;
 			protected float Predict1, Predict2;
 
-			static public IEnumerable<StereoShortSoundSample> DecodeBlocksStream(Block[] Blocks)
+			public static IEnumerable<StereoShortSoundSample> DecodeBlocksStream(Block[] Blocks)
 			{
 				var DecodedBlock = new short[28];
 				var Decoder = new Decoder();
@@ -141,7 +141,7 @@ namespace CSPspEmu.Hle.Formats.audio
 				}
 			}
 
-			static public StereoShortSoundSample[] DecodeAllBlocks(Block[] Blocks)
+			public static StereoShortSoundSample[] DecodeAllBlocks(Block[] Blocks)
 			{
 				return DecodeBlocksStream(Blocks).ToArray();
 			}

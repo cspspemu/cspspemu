@@ -95,7 +95,7 @@ namespace CSPspEmu.Core.Display
 			}
 		}
 
-		unsafe public Bitmap TakeScreenshot()
+		public unsafe Bitmap TakeScreenshot()
 		{
 			return new PspBitmap(
 				CurrentInfo.PixelFormat,

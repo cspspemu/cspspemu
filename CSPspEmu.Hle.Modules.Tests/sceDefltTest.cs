@@ -10,7 +10,7 @@ using System.IO;
 namespace CSPspEmu.Hle.Modules.Tests
 {
 	[TestClass]
-	unsafe public class sceDefltTest : BaseModuleTest
+	public unsafe class sceDefltTest : BaseModuleTest
 	{
 		[Inject]
 		sceDeflt sceDeflt = null;

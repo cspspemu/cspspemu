@@ -572,19 +572,19 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets whether the program running on Vista or later?
         /// </summary>
-        static public bool IsVistaOrLater {
+        public static bool IsVistaOrLater {
             get {
                 if (!ObjectListView.isVistaOrLater.HasValue)
                     ObjectListView.isVistaOrLater = Environment.OSVersion.Version.Major >= 6;
                 return ObjectListView.isVistaOrLater.Value;
             }
         }
-        static private bool? isVistaOrLater;
+        private static bool? isVistaOrLater;
 
         /// <summary>
         /// Gets whether the program running on Win7 or later?
         /// </summary>
-        static public bool IsWin7OrLater {
+        public static bool IsWin7OrLater {
             get {
                 if (!ObjectListView.isWin7OrLater.HasValue) {
                     // For some reason, Win7 is v6.1, not v7.0
@@ -594,26 +594,26 @@ namespace BrightIdeasSoftware
                 return ObjectListView.isWin7OrLater.Value;
             }
         }
-        static private bool? isWin7OrLater;
+        private static bool? isWin7OrLater;
 
         /// <summary>
         /// Gets or sets how what smoothing mode will be applied to graphic operations.
         /// </summary>
-        static public System.Drawing.Drawing2D.SmoothingMode SmoothingMode {
+        public static System.Drawing.Drawing2D.SmoothingMode SmoothingMode {
             get { return ObjectListView.smoothingMode; }
             set { ObjectListView.smoothingMode = value; }
         }
-        static private System.Drawing.Drawing2D.SmoothingMode smoothingMode =
+        private static System.Drawing.Drawing2D.SmoothingMode smoothingMode =
             System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 
         /// <summary>
         /// Gets or sets how should text be renderered.
         /// </summary>
-        static public System.Drawing.Text.TextRenderingHint TextRenderingHint {
+        public static System.Drawing.Text.TextRenderingHint TextRenderingHint {
             get { return ObjectListView.textRendereringHint; }
             set { ObjectListView.textRendereringHint = value; }
         }
-        static private System.Drawing.Text.TextRenderingHint textRendereringHint =
+        private static System.Drawing.Text.TextRenderingHint textRendereringHint =
             System.Drawing.Text.TextRenderingHint.SystemDefault;
 
         /// <summary>
@@ -1149,7 +1149,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <see cref="EditorRegistry"/>
         /// <remarks>All instances of ObjectListView share the same editor registry.</remarks>
-        static public EditorRegistry EditorRegistry = new EditorRegistry();
+        public static EditorRegistry EditorRegistry = new EditorRegistry();
 
         /// <summary>
         /// Gets or sets the text that should be shown when there are no items in this list view.
@@ -1241,7 +1241,7 @@ namespace BrightIdeasSoftware
         /// </remarks>
         [Browsable(false),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        virtual public IEnumerable FilteredObjects {
+        public virtual IEnumerable FilteredObjects {
             get {
                 if (this.IsFiltering)
                     return this.FilterObjects(this.Objects, this.ModelFilter, this.ListFilter);
@@ -1723,7 +1723,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         [Browsable(false),
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        virtual public bool IsFiltering {
+        public virtual bool IsFiltering {
             get { return this.UseFiltering && (this.ModelFilter != null || this.ListFilter != null); }
         }
 
@@ -2804,7 +2804,7 @@ namespace BrightIdeasSoftware
         [Category("ObjectListView"),
         Description("Should the list enable filtering?"),
         DefaultValue(false)]
-        virtual public bool UseFiltering {
+        public virtual bool UseFiltering {
             get { return useFiltering; }
             set {
                 useFiltering = value;
@@ -2820,7 +2820,7 @@ namespace BrightIdeasSoftware
         [Category("ObjectListView"),
         Description("Should an image be drawn in a column's header when that column is being used for filtering?"),
         DefaultValue(true)]
-        virtual public bool UseFilterIndicator {
+        public virtual bool UseFilterIndicator {
             get { return useFilterIndicator; }
             set { 
                 useFilterIndicator = value;
@@ -5858,12 +5858,12 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets or sets the image that will be place next to the Sort Ascending command
         /// </summary>
-        static public Bitmap SortAscendingImage = Resources.SortAscending;
+        public static Bitmap SortAscendingImage = Resources.SortAscending;
 
         /// <summary>
         /// Gets or sets the image that will be placed next to the Sort Descending command
         /// </summary>
-        static public Bitmap SortDescendingImage = Resources.SortDescending;
+        public static Bitmap SortDescendingImage = Resources.SortDescending;
 
         /// <summary>
         /// Append the column selection menu items to the given menu strip.
@@ -9004,7 +9004,7 @@ namespace BrightIdeasSoftware
         /// <param name="aModelFilter"></param>
         /// <param name="aListFilter"></param>
         /// <returns></returns>
-        virtual protected IEnumerable FilterObjects(IEnumerable objects, IModelFilter aModelFilter, IListFilter aListFilter) {
+        protected virtual IEnumerable FilterObjects(IEnumerable objects, IModelFilter aModelFilter, IListFilter aListFilter) {
             // Being cautious
             objects = objects ?? new ArrayList();
 

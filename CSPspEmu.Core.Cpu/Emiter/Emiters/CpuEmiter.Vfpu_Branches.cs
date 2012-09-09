@@ -6,7 +6,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 {
 	sealed public partial class CpuEmiter
 	{
-		static public void _vcmp_end(CpuThreadState CpuThreadState, int VectorSize)
+		public static void _vcmp_end(CpuThreadState CpuThreadState, int VectorSize)
 		{
 			CpuThreadState.VFR_CC_4 = false;
 			CpuThreadState.VFR_CC_5 = true;
@@ -130,7 +130,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		/*
-		public static public void _vcmovtf_test(CpuThreadState CpuThreadState, int Register, int VectorSize)
+		public public static void _vcmovtf_test(CpuThreadState CpuThreadState, int Register, int VectorSize)
 		{
 			Console.Error.WriteLine("_vcmovtf({0}, {1}) : {2}", Register, VectorSize, CpuThreadState.VFR_CC(Register));
 		}

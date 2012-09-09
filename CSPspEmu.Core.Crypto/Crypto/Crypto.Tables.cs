@@ -1,6 +1,6 @@
 ﻿namespace CSPspEmu.Core.Crypto
 {
-	unsafe public partial class Crypto
+	public unsafe partial class Crypto
 	{
 		//CMAC GLOBS
 		static readonly byte[] _const_Rb = new byte[16] {

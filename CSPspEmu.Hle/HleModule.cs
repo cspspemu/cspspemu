@@ -10,7 +10,7 @@ namespace CSPspEmu.Hle
 	{
 		protected PspConfig PspConfig { get { return PspEmulatorContext.PspConfig; } }
 
-		virtual public void Dispose()
+		public virtual void Dispose()
 		{
 		}
 
