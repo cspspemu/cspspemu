@@ -50,6 +50,7 @@ namespace CSPspEmu.Hle.Formats.Font
 
 		public class GlyphSymbol
 		{
+            [Flags]
 			public enum GlyphFlags : int
 			{
 				FONT_PGF_BMP_H_ROWS = 0x01,

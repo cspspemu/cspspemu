@@ -28,7 +28,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// sceMpegUnRegistStream
 		/// </summary>
 		/// <param name="Mpeg">SceMpeg handle</param>
-		/// <param name="pStream">pointer to stream</param>
+		/// <param name="StreamInfoId">pointer to stream</param>
 		[HlePspFunction(NID = 0x591A4AA2, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public void sceMpegUnRegistStream(SceMpegPointer* Mpeg, int StreamInfoId)

@@ -49,7 +49,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// Convert a number of microseconds to a ::SceKernelSysClock structure
 		/// </summary>
 		/// <param name="MicroSeconds">Number of microseconds</param>
-		/// <param name="Clock">Pointer to a ::SceKernelSysClock structure</param>
+		/// <param name="Clock">Pointer to a <see cref="SceKernelSysClock"/> structure</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x110DEC9A, FirmwareVersion = 150)]
 		public int sceKernelUSec2SysClock(uint MicroSeconds, SceKernelSysClock* Clock)
@@ -77,7 +77,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// Set an alarm.
 		/// </summary>
 		/// <param name="clock">The number of micro seconds till the alarm occurrs.</param>
-		/// <param name="handler">Pointer to a ::SceKernelAlarmHandler</param>
+		/// <param name="handler">Pointer to a SceKernelAlarmHandler</param>
 		/// <param name="common">Common pointer for the alarm handler</param>
 		/// <returns>
 		///		A UID representing the created alarm
@@ -108,7 +108,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Get the system time
 		/// </summary>
-		/// <param name="Time">Pointer to a ::SceKernelSysClock structure</param>
+		/// <param name="Time">Pointer to a <see cref="SceKernelSysClock"/> structure</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xDB738F35, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
@@ -120,9 +120,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		}
 
 		/// <summary>
-		/// Convert a ::SceKernelSysClock structure to microseconds
+		/// Convert a <see cref="SceKernelSysClock"/> structure to microseconds
 		/// </summary>
-		/// <param name="Clock">Pointer to a ::SceKernelSysClock structure</param>
+		/// <param name="Clock">Pointer to a <see cref="SceKernelSysClock"/> structure</param>
 		/// <param name="Low">Pointer to the low part of the time</param>
 		/// <param name="High">Pointer to the high part of the time</param>
 		/// <returns>0 on success, less than 0 on error</returns>

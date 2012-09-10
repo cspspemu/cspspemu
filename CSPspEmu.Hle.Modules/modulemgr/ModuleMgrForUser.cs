@@ -242,16 +242,17 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 			}, Path, Flags, SceKernelLMOption);
 		}
 
-		/// <summary>
-		/// Start a loaded module.
-		/// </summary>
-		/// <param name="ModuleId">The ID of the module returned from LoadModule.</param>
-		/// <param name="ArgumentsSize">Length of the args.</param>
-		/// <param name="ArgumentsPointer">A pointer to the arguments to the module.</param>
-		/// <param name="Status">Returns the status of the start.</param>
-		/// <param name="SceKernelSMOption">Pointer to an optional ::SceKernelSMOption structure.</param>
-		/// <returns>??? on success, otherwise one of ::PspKernelErrorCodes.</returns>
-		[HlePspFunction(NID = 0x50F0C1EC, FirmwareVersion = 150)]
+	    /// <summary>
+	    /// Start a loaded module.
+	    /// </summary>
+	    /// <param name="CpuThreadState"></param>
+	    /// <param name="ModuleId">The ID of the module returned from LoadModule.</param>
+	    /// <param name="ArgumentsSize">Length of the args.</param>
+	    /// <param name="ArgumentsPointer">A pointer to the arguments to the module.</param>
+	    /// <param name="Status">Returns the status of the start.</param>
+	    /// <param name="SceKernelSMOption">Pointer to an optional ::SceKernelSMOption structure.</param>
+	    /// <returns>??? on success, otherwise one of ::PspKernelErrorCodes.</returns>
+	    [HlePspFunction(NID = 0x50F0C1EC, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceKernelStartModule(CpuThreadState CpuThreadState, int ModuleId, int ArgumentsSize, uint ArgumentsPointer, int* Status, SceKernelSMOption* SceKernelSMOption)
 		{

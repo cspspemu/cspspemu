@@ -26,7 +26,7 @@ namespace CSPspEmu.Hle.Modules.systimer
 		/// <summary>
 		/// Setup a SysTimer handler
 		/// </summary>
-		/// <param name="SysTimerId">The timer id.</param>
+		/// <param name="SysTimerId">The timer ID.</param>
 		/// <param name="Cycle">The timer cycle in microseconds (???). Maximum: 4194303 which represents ~1/10 seconds.</param>
 		/// <param name="Handler">The handler function. Has to return -1.</param>
 		/// <param name="Unknown">Unknown. Pass 0.</param>
@@ -44,7 +44,7 @@ namespace CSPspEmu.Hle.Modules.systimer
 		/// <summary>
 		/// Start the SysTimer timer count.
 		/// </summary>
-		/// <param name="SysTimerId">The timer id.</param>
+		/// <param name="SysTimerId">The timer ID.</param>
 		[HlePspFunction(NID = 0xA95143E2, FirmwareVersion = 150)]
 		public void sceSTimerStartCount(SceSysTimerId SysTimerId)
 		{

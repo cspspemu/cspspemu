@@ -63,8 +63,8 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// <summary>
 		/// Set Integer System Parameter
 		/// </summary>
-		/// <param name="id">which parameter to set</param>
-		/// <param name="value">integer value to set</param>
+		/// <param name="id">Which parameter to set</param>
+		/// <param name="value">Integer value to set</param>
 		/// <returns>PSP_SYSTEMPARAM_RETVAL.OK on success, PSP_SYSTEMPARAM_RETVAL.FAIL on failure</returns>
 		public PSP_SYSTEMPARAM_RETVAL sceUtilitySetSystemParamInt(PSP_SYSTEMPARAM_ID id, int value)
 		{
@@ -74,8 +74,8 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// <summary>
 		/// Set String System Parameter
 		/// </summary>
-		/// <param name="id">which parameter to set</param>
-		/// <param name="str">char * value to set</param>
+		/// <param name="id">Which parameter to set</param>
+		/// <param name="str">char* value to set</param>
 		/// <returns>PSP_SYSTEMPARAM_RETVAL.OK on success, PSP_SYSTEMPARAM_RETVAL.FAIL on failure</returns>
 		public PSP_SYSTEMPARAM_RETVAL sceUtilitySetSystemParamString(PSP_SYSTEMPARAM_ID id, string str)
 		{

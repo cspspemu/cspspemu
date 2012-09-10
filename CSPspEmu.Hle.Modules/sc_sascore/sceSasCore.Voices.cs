@@ -42,7 +42,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		}
 
 		/// <summary>
-		/// Sets the pitch for a sasCore.voice.
+		/// Sets the pitch for a SasCore.voice.
 		/// </summary>
 		/// <param name="SasCorePointer">SasCore</param>
 		/// <param name="Voice">Voice</param>
@@ -60,7 +60,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		}
 
 		/// <summary>
-		/// Sets the stereo volumes for a sasCore.voice.
+		/// Sets the stereo volumes for a SasCore.voice.
 		/// </summary>
 		/// <param name="SasCorePointer">SasCore</param>
 		/// <param name="Voice">Voice</param>
@@ -117,7 +117,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 
 
 		/// <summary>
-		/// Sets the ADSR (Attack Decay Sustain Release) for a sasCore.voice.
+		/// Sets the ADSR (Attack Decay Sustain Release) for a SasCore.voice.
 		/// </summary>
 		/// <param name="SasCorePointer">SasCore</param>
 		/// <param name="voice">Voice</param>

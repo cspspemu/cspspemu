@@ -161,7 +161,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// </summary>
 		/// <param name="Name">Name of the pipe</param>
 		/// <param name="PartitionId">ID of the memory partition</param>
-		/// <param name="Attributes">One of ::MsgPipeAttributes</param>
+		/// <param name="Attributes">One of <see cref="MsgPipeAttributes"/></param>
 		/// <param name="Size">Size of the message pipe</param>
 		/// <param name="Options">Message pipe options (set to NULL)</param>
 		/// <returns>The UID of the created pipe, less than 0 on error</returns>

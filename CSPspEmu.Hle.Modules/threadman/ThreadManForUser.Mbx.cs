@@ -116,7 +116,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Name">Specifies the name of the mbx</param>
 		/// <param name="Attributes">Mbx attribute flags (normally set to 0)</param>
 		/// <param name="Options">Mbx options (normally set to NULL)</param>
-		/// <returns>A messagebox id</returns>
+		/// <returns>A messagebox ID</returns>
 		[HlePspFunction(NID = 0x8125221D, FirmwareVersion = 150)]
 		public int sceKernelCreateMbx(string Name, MbxAttributesEnum Attributes, SceKernelMbxOptParam* Options)
 		{
@@ -177,15 +177,15 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// </summary>
 		/// <example>
 		/// void *msg;
-		/// sceKernelReceiveMbx(mbxid, &msg, NULL);
+		/// sceKernelReceiveMbx(mbxid, &amp;msg, NULL);
 		/// </example>
-		/// <param name="MessageBoxId">The mbx id returned from sceKernelCreateMbx</param>
+		/// <param name="MessageBoxId">The mbx ID returned from <see cref="sceKernelCreateMbx"/></param>
 		/// <param name="PointerToMessage">
 		///		A pointer to where a pointer to the
 		///		received message should be stored
 		/// </param>
 		/// <param name="Timeout">Timeout in microseconds</param>
-		/// <returns>less than 0 on error</returns>
+		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x18260574, FirmwareVersion = 150)]
 		public int sceKernelReceiveMbx(int MessageBoxId, PspPointer* PointerToMessage, uint* Timeout)
 		{
@@ -224,7 +224,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// void *msg;
 		/// sceKernelPollMbx(mbxid, &msg);
 		/// </example>
-		/// <param name="MessageBoxId">The mbx id returned from sceKernelCreateMbx</param>
+		/// <param name="MessageBoxId">The mbx ID returned from <see cref="sceKernelCreateMbx"/></param>
 		/// <param name="PointerToMessage">A pointer to where a pointer to the received message should be stored</param>
 		/// <returns>Less than 0 on error (SCE_KERNEL_ERROR_MBOX_NOMSG if the mbx is empty)</returns>
 		[HlePspFunction(NID = 0x0D81716A, FirmwareVersion = 150)]

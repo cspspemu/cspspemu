@@ -25,7 +25,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// <summary>
 		/// Register a SysEvent handler.
 		/// </summary>
-		/// <param name="PspSysEventHandler">the handler to register</param>
+		/// <param name="PspSysEventHandler">The handler to register</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xCD9E4BB5, FirmwareVersion = 150)]
 		public int sceKernelRegisterSysEventHandler(PspSysEventHandler* PspSysEventHandler)
@@ -42,7 +42,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// Dispatch a SysEvent event.
 		/// </summary>
 		/// <param name="EventTypeMask">The event type mask</param>
-		/// <param name="EventId">The event id</param>
+		/// <param name="EventId">The event ID</param>
 		/// <param name="EventNamePointer">The event name</param>
 		/// <param name="Parameter">The pointer to the custom parameters</param>
 		/// <param name="Result">The pointer to the result</param>

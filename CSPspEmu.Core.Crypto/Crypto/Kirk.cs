@@ -359,6 +359,7 @@ namespace CSPspEmu.Core.Crypto
 		/// 
 		/// </summary>
 		/// <param name="key_type"></param>
+		/// <param name="PointerAction"></param>
 		/// <returns></returns>
 		public void kirk_4_7_get_key(int key_type, PointerAction PointerAction)
 		{

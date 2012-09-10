@@ -32,6 +32,7 @@ namespace CSPspEmu.Hle
 		/// 
 		/// </summary>
 		/// <param name="NewItemsFirst"></param>
+		/// <param name="ThrowException"></param>
 		public PreemptiveScheduler(bool NewItemsFirst, bool ThrowException = true)
 		{
 			this.NewItemsFirst = NewItemsFirst;

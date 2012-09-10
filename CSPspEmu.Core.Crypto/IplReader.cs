@@ -75,6 +75,8 @@ namespace CSPspEmu.Core
 		/// 
 		/// </summary>
 		/// <param name="IplData"></param>
+		/// <param name="OutputStream"></param>
+		/// <param name="ToMemoryAddress"></param>
 		/// <returns></returns>
 		public static unsafe IplInfo DecryptIplToMemory(byte[] IplData, Stream OutputStream, bool ToMemoryAddress = true)
 		{

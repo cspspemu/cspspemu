@@ -152,7 +152,8 @@ namespace CSPspEmu.Core.Crypto
 		/// Expand the cipher key into the decryption key schedule.
 		/// </summary>
 		/// <param name="rk"></param>
-		/// <param name="?"></param>
+		/// <param name="cipherKey"></param>
+		/// <param name="keyBits"></param>
 		/// <returns>the number of rounds for the given cipher key size.</returns>
 		public static int rijndaelKeySetupDec(uint *rk /*4*(Nr + 1)*/, byte* cipherKey, int keyBits)
 		{

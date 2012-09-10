@@ -800,14 +800,15 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			return 0;
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="AtracId"></param>
-		/// <param name="EndSamplePointer"></param>
-		/// <param name="LoopStartSamplePointer"></param>
-		/// <returns></returns>
-		[HlePspFunction(NID = 0xA2BBA8BE, FirmwareVersion = 150)]
+	    /// <summary>
+	    /// 
+	    /// </summary>
+	    /// <param name="AtracId"></param>
+	    /// <param name="EndSamplePointer"></param>
+	    /// <param name="LoopStartSamplePointer"></param>
+	    /// <param name="LoopEndSamplePointer"></param>
+	    /// <returns></returns>
+	    [HlePspFunction(NID = 0xA2BBA8BE, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceAtracGetSoundSample(int AtracId, int* EndSamplePointer, int* LoopStartSamplePointer, int* LoopEndSamplePointer)
 		{

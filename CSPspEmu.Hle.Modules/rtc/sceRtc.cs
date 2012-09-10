@@ -115,9 +115,9 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <summary>
 		/// Add two ticks
 		/// </summary>
-		/// <param name="dstPtr">pointer to tick to hold result</param>
-		/// <param name="srcPtr">pointer to source tick</param>
-		/// <param name="value">number of ticks to add</param>
+		/// <param name="dstPtr">Pointer to tick to hold result</param>
+		/// <param name="srcPtr">Pointer to source tick</param>
+		/// <param name="value">Number of ticks to add</param>
 		/// <returns>
 		///		0 on success
 		///		less than 0 on error
@@ -132,9 +132,9 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <summary>
 		/// Add an amount of ms to a tick
 		/// </summary>
-		/// <param name="dstPtr">pointer to tick to hold result</param>
-		/// <param name="srcPtr">pointer to source tick</param>
-		/// <param name="value">number of ms to add</param>
+		/// <param name="dstPtr">Pointer to tick to hold result</param>
+		/// <param name="srcPtr">Pointer to source tick</param>
+		/// <param name="value">Number of ms to add</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x26D25A5D, FirmwareVersion = 150)]
 		public int sceRtcTickAddMicroseconds(long* dstPtr, long* srcPtr, long value)
@@ -187,8 +187,8 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <summary>
 		/// Set ticks based on a pspTime struct
 		/// </summary>
-		/// <param name="Date">pointer to pspTime to convert</param>
-		/// <param name="Tick">pointer to tick to set</param>
+		/// <param name="Date">Pointer to pspTime to convert</param>
+		/// <param name="Tick">Pointer to tick to set</param>
 		/// <returns>
 		///		0 on success
 		///		less than 0 on error
@@ -213,8 +213,8 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <summary>
 		/// Set a pspTime struct based on ticks
 		/// </summary>
-		/// <param name="Date">pointer to pspTime struct to set</param>
-		/// <param name="Ticks">pointer to ticks to convert</param>
+		/// <param name="Date">Pointer to pspTime struct to set</param>
+		/// <param name="Ticks">Pointer to ticks to convert</param>
 		/// <returns>
 		///		0 on success
 		///		less than 0 on error
@@ -238,7 +238,7 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <summary>
 		/// Get current local time into a pspTime struct
 		/// </summary>
-		/// <param name="Time">pointer to pspTime struct to receive time</param>
+		/// <param name="Time">Pointer to pspTime struct to receive time</param>
 		/// <returns>
 		///		0 on success
 		///		less than 0 on error
@@ -297,8 +297,8 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <summary>
 		/// Get current tick count, adjusted for local time zone
 		/// </summary>
-		/// <param name="DateTime">pointer to pspTime struct to receive time</param>
-		/// <param name="TimeZone">time zone to adjust to (minutes from UTC)</param>
+		/// <param name="DateTime">Pointer to pspTime struct to receive time</param>
+		/// <param name="TimeZone">Time zone to adjust to (minutes from UTC)</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x4CFA57B0, FirmwareVersion = 150)]
 		[HlePspNotImplemented]

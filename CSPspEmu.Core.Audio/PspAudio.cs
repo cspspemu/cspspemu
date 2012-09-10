@@ -97,6 +97,7 @@ namespace CSPspEmu.Core.Audio
 		/// 
 		/// </summary>
 		/// <param name="ChannelId"></param>
+		/// <param name="CanAlloc"></param>
 		/// <returns></returns>
 		public PspAudioChannel GetChannel(int ChannelId, bool CanAlloc = false)
 		{

@@ -420,24 +420,24 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		/// <summary>
-		/// 	+----------------------+--------------+----+--------------+---+--------------+
-		///     |31                 23 | 22        16 | 15 | 14         8 | 7 | 6         0  |
-		///     +----------------------+--------------+----+--------------+---+--------------+
-		///     |  opcode 0x60000000   | vfpu_rt[6-0] |    | vfpu_rs[6-0] |   | vfpu_rd[6-0] |
-		///     +----------------------+--------------+----+--------------+---+--------------+
+        /// 	+----------------------+--------------+----+--------------+---+--------------+ <para/>
+        ///     |31                 23 | 22        16 | 15 | 14         8 | 7 | 6         0  | <para/>
+        ///     +----------------------+--------------+----+--------------+---+--------------+ <para/>
+        ///     |  opcode 0x60000000   | vfpu_rt[6-0] |    | vfpu_rs[6-0] |   | vfpu_rd[6-0] | <para/>
+        ///     +----------------------+--------------+----+--------------+---+--------------+ <para/>
 		///     
 		///     VectorAdd.Single/Pair/Triple/Quad
 		///     
-		///     vadd.s %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Single
-		///     vadd.p %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Pair
-		///     vadd.t %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Triple
-		///     vadd.q %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Quad
-		///     
-		///     %vfpu_rt:	VFPU Vector Source Register ([s|p|t|q]reg 0..127)
-		///     %vfpu_rs:	VFPU Vector Source Register ([s|p|t|q]reg 0..127)
-		///     %vfpu_rd:	VFPU Vector Destination Register ([s|p|t|q]reg 0..127)
-		///     
-		///     vfpu_regs[%vfpu_rd] <- vfpu_regs[%vfpu_rs] + vfpu_regs[%vfpu_rt]
+        ///     vadd.s %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Single <para/>
+        ///     vadd.p %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Pair <para/>
+        ///     vadd.t %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Triple <para/>
+        ///     vadd.q %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Quad <para/>
+        ///     <para/>
+        ///     %vfpu_rt:	VFPU Vector Source Register ([s|p|t|q]reg 0..127) <para/>
+        ///     %vfpu_rs:	VFPU Vector Source Register ([s|p|t|q]reg 0..127) <para/>
+        ///     %vfpu_rd:	VFPU Vector Destination Register ([s|p|t|q]reg 0..127) <para/>
+        ///     <para/>
+		///     vfpu_regs[%vfpu_rd] &lt;- vfpu_regs[%vfpu_rs] + vfpu_regs[%vfpu_rt]
 		/// </summary>
 		public void vadd()
 		{

@@ -217,7 +217,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			PSP_UTILITY_SAVEDATA_FOCUS_UNKNOWN    = 0, // 
 			PSP_UTILITY_SAVEDATA_FOCUS_FIRSTLIST  = 1, // First in list
 			PSP_UTILITY_SAVEDATA_FOCUS_LASTLIST   = 2, // Last in list
-			PSP_UTILITY_SAVEDATA_FOCUS_LATEST     = 3, //  Most recent date
+			PSP_UTILITY_SAVEDATA_FOCUS_LATEST     = 3, // Most recent date
 			PSP_UTILITY_SAVEDATA_FOCUS_OLDEST     = 4, // Oldest date
 			PSP_UTILITY_SAVEDATA_FOCUS_UNKNOWN2   = 5, //
 			PSP_UTILITY_SAVEDATA_FOCUS_UNKNOWN3   = 6, //
@@ -453,7 +453,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			public int Overwrite;
 
 			/// <summary>
-			/// 003C - gameName: name used from the game for saves, equal for all saves
+			/// 003C - GameName: name used from the game for saves, equal for all saves
 			/// </summary>
 			public fixed byte GameNameRaw[16];
 
@@ -469,7 +469,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			}
 
 			/// <summary>
-			/// 004C - saveName: name of the particular save, normally a number
+			/// 004C - SaveName: name of the particular save, normally a number
 			/// </summary>
 			public fixed byte SaveNameRaw[20];
 
@@ -485,22 +485,22 @@ namespace CSPspEmu.Hle.Modules.utility
 			}
 
 			/// <summary>
-			/// 0060 - saveNameList: used by multiple modes
+			/// 0060 - SaveNameList: used by multiple modes
 			/// </summary>
 			public PspPointer SaveNameListPointer; // char[20]
 
 			/// <summary>
-			/// 0064 - fileName: name of the data file of the game for example DATA.BIN
+			/// 0064 - FileName: Name of the data file of the game for example DATA.BIN
 			/// </summary>
 			public fixed byte FileName[16];
 
 			/// <summary>
-			/// 0074 - pointer to a buffer that will contain data file unencrypted data
+			/// 0074 - Pointer to a buffer that will contain data file unencrypted data
 			/// </summary>
 			public uint DataBufPointer;
 			
 			/// <summary>
-			/// 0078 - size of allocated space to dataBuf
+			/// 0078 - Size of allocated space to dataBuf
 			/// </summary>
 			public uint DataBufSize;
 
@@ -570,7 +570,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		//#if _PSP_FW_VERSION >= 200
 
 			/// <summary>
-			/// 05E0 -key: encrypt/decrypt key for save with firmware >= 2.00
+			/// 05E0 - Key: Encrypt/decrypt key for save with firmware >= 2.00
 			/// </summary>
 			public fixed byte Key[16];
 
@@ -948,7 +948,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// 
 		/// Available on firmware 2.00 and higher only.
 		/// </summary>
-		/// <param name="_module">module number to load (PSP_AV_MODULE_xxx)</param>
+		/// <param name="_module">Module number to load (PSP_AV_MODULE_xxx)</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xC629AF26, FirmwareVersion = 200)]
 		[HlePspNotImplemented]
@@ -961,7 +961,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// Unload an audio/video module (PRX) from user mode.
 		/// Available on firmware 2.00 and higher only.
 		/// </summary>
-		/// <param name="_module">module number to be unloaded</param>
+		/// <param name="_module">Module number to be unloaded</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xF7D8D092, FirmwareVersion = 200)]
 		[HlePspNotImplemented]
@@ -976,7 +976,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// to use infrastructure WifI (via an access point).
 		/// Available on firmware 2.00 and higher only.
 		/// </summary>
-		/// <param name="_module">module number to load (PSP_NET_MODULE_xxx)</param>
+		/// <param name="_module">Module number to load (PSP_NET_MODULE_xxx)</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x1579A159, FirmwareVersion = 200)]
 		[HlePspNotImplemented]
@@ -992,7 +992,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// <summary>
 		/// Load a module (PRX) from user mode.
 		/// </summary>
-		/// <param name="PspModule">module to load (PSP_MODULE_xxx)</param>
+		/// <param name="PspModule">Module to load (PSP_MODULE_xxx)</param>
 		/// <returns>
 		///		0 on success
 		///		less than 0 on error
@@ -1008,7 +1008,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// <summary>
 		/// Unload a module (PRX) from user mode.
 		/// </summary>
-		/// <param name="_module">module to unload (PSP_MODULE_xxx)</param>
+		/// <param name="_module">Module to unload (PSP_MODULE_xxx)</param>
 		/// <returns>
 		///		0 on success
 		///		less than 0 on error

@@ -140,13 +140,14 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			*/
 		}
 
-		/// <summary>
-		/// Wait for asyncronous completion.
-		/// </summary>
-		/// <param name="FileId">The file descriptor which is current performing an asynchronous action.</param>
-		/// <param name="Result">The result of the async action.</param>
-		/// <returns>The given fd or a negative value on error.</returns>
-		[HlePspFunction(NID = 0xE23EEC33, FirmwareVersion = 150)]
+	    /// <summary>
+	    /// Wait for asyncronous completion.
+	    /// </summary>
+	    /// <param name="FileId">The file descriptor which is current performing an asynchronous action.</param>
+	    /// <param name="Result">The result of the async action.</param>
+	    /// <param name="CpuThreadState"></param>
+	    /// <returns>The given fd or a negative value on error.</returns>
+	    [HlePspFunction(NID = 0xE23EEC33, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceIoWaitAsync(SceUID FileId, out long Result, CpuThreadState CpuThreadState)
 		{
@@ -154,13 +155,14 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			return _sceIoWaitAsyncCB(FileId, out Result, HandleCallbacks: false, CpuThreadState : CpuThreadState);
 		}
 
-		/// <summary>
-		/// Wait for asyncronous completion.
-		/// </summary>
-		/// <param name="FileId">The file descriptor which is current performing an asynchronous action.</param>
-		/// <param name="Result">The result of the async action.</param>
-		/// <returns>The given fd or a negative value on error.</returns>
-		[HlePspFunction(NID = 0x35DBD746, FirmwareVersion = 150)]
+	    /// <summary>
+	    /// Wait for asyncronous completion.
+	    /// </summary>
+	    /// <param name="FileId">The file descriptor which is current performing an asynchronous action.</param>
+	    /// <param name="Result">The result of the async action.</param>
+	    /// <param name="CpuThreadState"></param>
+	    /// <returns>The given fd or a negative value on error.</returns>
+	    [HlePspFunction(NID = 0x35DBD746, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
 		public int sceIoWaitAsyncCB(SceUID FileId, out long Result, CpuThreadState CpuThreadState)
 		{

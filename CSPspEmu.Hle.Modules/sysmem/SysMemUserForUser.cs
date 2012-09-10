@@ -240,7 +240,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 
 
 		/// <summary>
-		/// Free a memory block allocated with ::sceKernelAllocPartitionMemory.
+		/// Free a memory block allocated with <see cref="sceKernelAllocPartitionMemory"/>.
 		/// </summary>
 		/// <param name="BlockId">UID of the block to free.</param>
 		/// <returns>? on success, less than 0 on error.</returns>
@@ -258,11 +258,12 @@ namespace CSPspEmu.Hle.Modules.sysmem
 			return 0;
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="CpuThreadState"></param>
-		[HlePspFunction(NID = 0x13A5ABEF, FirmwareVersion = 150)]
+	    /// <summary>
+	    /// 
+	    /// </summary>
+	    /// <param name="Format"></param>
+	    /// <param name="CpuThreadState"></param>
+	    [HlePspFunction(NID = 0x13A5ABEF, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
 		public void sceKernelPrintf(string Format, CpuThreadState CpuThreadState)
 		{

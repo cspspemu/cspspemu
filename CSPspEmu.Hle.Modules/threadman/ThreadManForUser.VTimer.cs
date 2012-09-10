@@ -182,7 +182,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// Create a virtual timer
 		/// </summary>
 		/// <param name="Name">Name for the timer.</param>
-		/// <param name="SceKernelVTimerOptParam">Pointer to an ::SceKernelVTimerOptParam (pass NULL)</param>
+		/// <param name="SceKernelVTimerOptParam">Pointer to an <see cref="SceKernelVTimerOptParam"/> (pass NULL)</param>
 		/// <returns>The VTimer's UID or less than 0 on error.</returns>
 		[HlePspFunction(NID = 0x20FFF560, FirmwareVersion = 150)]
 		public int sceKernelCreateVTimer(string Name, SceKernelVTimerOptParam *SceKernelVTimerOptParam)
@@ -224,7 +224,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// Set the timer time (wide format)
 		/// </summary>
 		/// <param name="VirtualTimerId">UID of the vtimer</param>
-		/// <param name="Time">A ::SceKernelSysClock structure</param>
+		/// <param name="Time">A <see cref="SceKernelSysClock"/> structure</param>
 		/// <returns>Possibly the last time</returns>
 		[HlePspFunction(NID = 0xFB6425C3, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -240,7 +240,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// Get the timer time
 		/// </summary>
 		/// <param name="VirtualTimerId">UID of the vtimer</param>
-		/// <param name="Time">Pointer to a ::SceKernelSysClock structure</param>
+		/// <param name="Time">Pointer to a <see cref="SceKernelSysClock"/> structure</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x034A921F, FirmwareVersion = 150)]
 		public int sceKernelGetVTimerTime(int VirtualTimerId, SceKernelSysClock* Time)

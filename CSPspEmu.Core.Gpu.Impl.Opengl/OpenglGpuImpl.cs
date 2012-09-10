@@ -561,7 +561,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="GlobalGpuState"></param>
 		/// <param name="GpuState"></param>
+		/// <param name="PrimitiveType"></param>
+		/// <param name="VertexCount"></param>
 		private unsafe void _Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
 		{
 			//if (PrimitiveType == GuPrimitiveType.TriangleStrip) VertexCount++;
@@ -896,7 +899,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		];
 		*/
 
-		[HandleProcessCorruptedStateExceptions()]
+		[HandleProcessCorruptedStateExceptions]
 		private void PrepareRead(GpuStateStruct* GpuState)
 		{
 #if true
@@ -965,7 +968,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			FB.Save(FileName);
 		}
 
-		[HandleProcessCorruptedStateExceptions()]
+		[HandleProcessCorruptedStateExceptions]
 		private void PrepareWrite(GpuStateStruct* GpuState)
 		{
 			//Console.WriteLine("PrepareWrite");
@@ -1022,7 +1025,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 		}
 
-		[HandleProcessCorruptedStateExceptions()]
+		[HandleProcessCorruptedStateExceptions]
 		public override void Finish(GpuStateStruct* GpuState)
 		{
 			//PrepareWrite(GpuState);

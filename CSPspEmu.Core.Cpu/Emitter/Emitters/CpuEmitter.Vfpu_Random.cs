@@ -36,7 +36,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		/// <summary>
-		/// -2^31 <= value < 2^31 
+		/// -2^31 &lt;= value &lt; 2^31 
 		/// </summary>
 		public void vrndi()
 		{
@@ -51,8 +51,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}, AsInteger: true);
 		}
 
+        // 0.0 <= value < 2.0.
 		/// <summary>
-		/// 0.0 <= value < 2.0.
+		/// 0.0 &lt;= value &lt; 2.0.
 		/// </summary>
 		public void vrndf1() {
 			var VectorSize = Instruction.ONE_TWO;
@@ -66,8 +67,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}, AsInteger: false);
 		}
 
+        // 0.0 <= value < 4.0 (max = 3.999979)
 		/// <summary>
-		/// 0.0 <= value < 4.0 (max = 3.999979)
+		/// 0.0 &lt;= value &lt; 4.0 (max = 3.999979)
 		/// </summary>
 		public void vrndf2() {
 			var VectorSize = Instruction.ONE_TWO;

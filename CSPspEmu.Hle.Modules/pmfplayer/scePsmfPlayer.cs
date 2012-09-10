@@ -132,11 +132,12 @@ namespace CSPspEmu.Hle.Modules.pmfplayer
 			return 0;
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="psmfPlayer"></param>
-		[HlePspFunction(NID = 0x46F61F8B, FirmwareVersion = 150)]
+	    /// <summary>
+	    /// 
+	    /// </summary>
+	    /// <param name="psmfPlayer"></param>
+	    /// <param name="VideoData"> </param>
+	    [HlePspFunction(NID = 0x46F61F8B, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int scePsmfPlayerGetVideoData(int psmfPlayer, void* VideoData)
 		{
