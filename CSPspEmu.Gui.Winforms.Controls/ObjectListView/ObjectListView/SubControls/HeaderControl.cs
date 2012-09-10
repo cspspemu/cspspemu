@@ -30,7 +30,7 @@
  * TO DO:
  * - Put drawing code into header style object, so that it can be easily customized.
  * 
- * Copyright (C) 2006-2010 Phillip Piper
+ * Copyright (C) 2006-2012 Phillip Piper
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,9 +54,8 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Windows.Forms.VisualStyles;
 using System.Drawing.Drawing2D;
-//using BrightIdeasSoftware.Properties;
-using CSPspEmu.Gui.Winforms.Controls.Properties;
 using System.Security.Permissions;
+using CSPspEmu.Gui.Winforms.Controls.Properties;
 
 namespace BrightIdeasSoftware
 {
@@ -103,7 +102,7 @@ namespace BrightIdeasSoftware
         public new IntPtr Handle {
             get { return NativeMethods.GetHeaderControl(this.ListView); }
         }
-        // The Handle property may no longer be necessary. CHECK! 2008/11/28
+        //TODO: The Handle property may no longer be necessary. CHECK! 2008/11/28
 
         /// <summary>
         /// Gets or sets a style that should be applied to the font of the
@@ -277,7 +276,7 @@ namespace BrightIdeasSoftware
             this.ToolTip = new ToolTipControl();
             this.ToolTip.Create(this.Handle);
             this.ToolTip.AddTool(this);
-            this.ToolTip.Showing += new EventHandler<ToolTipShowingEventArgs>(this.ListView.headerToolTip_Showing);
+            this.ToolTip.Showing += new EventHandler<ToolTipShowingEventArgs>(this.ListView.HeaderToolTipShowingCallback);
         }
 
         #endregion
@@ -504,7 +503,7 @@ namespace BrightIdeasSoftware
         /// <returns></returns>
         protected bool HandleDestroy(ref Message m) {
             if (this.ToolTip != null) {
-                this.ToolTip.Showing -= new EventHandler<ToolTipShowingEventArgs>(this.ListView.headerToolTip_Showing);
+                this.ToolTip.Showing -= new EventHandler<ToolTipShowingEventArgs>(this.ListView.HeaderToolTipShowingCallback);
             }
             return false;
         }

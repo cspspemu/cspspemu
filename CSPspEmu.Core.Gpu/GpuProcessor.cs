@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using CSPspEmu.Core.Gpu.State;
-using CSPspEmu.Core.Threading.Synchronization;
 using CSPspEmu.Core.Memory;
-using CSharpUtils;
+using CSPspEmu.Core.Threading.Synchronization;
 using CSPspEmu.Hle;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Gpu
 {

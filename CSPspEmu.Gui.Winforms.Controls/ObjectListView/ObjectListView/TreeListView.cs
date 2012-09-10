@@ -5,6 +5,10 @@
  * Date: 23/09/2008 11:15 AM
  *
  * Change log:
+ * v2.5.1
+ * 2012-04-30  JPP  - Fixed bug where CheckedObjects would return model objects that had been filtered out.
+ *                  - Allow any column to render the tree, not just column 0 (still not sure about this one)
+ * v2.5.0
  * 2011-04-20  JPP  - Added ExpandedObjects property and RebuildAll() method.
  * 2011-04-09  JPP  - Added Expanding, Collapsing, Expanded and Collapsed events.
  *                    The ..ing events are cancellable. These are only fired in response
@@ -68,7 +72,7 @@
  *             to show the expand/collapse icon. If the tree has check boxes,
  *             it has to be owner drawn.
  * 
- * Copyright (C) 2006-2008 Phillip Piper
+ * Copyright (C) 2006-2012 Phillip Piper
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -90,6 +94,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -205,8 +210,10 @@ namespace BrightIdeasSoftware
             }
             set {
                 this.TreeModel.mapObjectToExpanded.Clear();
-                foreach (object x in value)
-                    this.TreeModel.SetModelExpanded(x, true);
+                if (value != null) {
+                    foreach (object x in value)
+                        this.TreeModel.SetModelExpanded(x, true);
+                }
             }
         }
 
@@ -233,6 +240,15 @@ namespace BrightIdeasSoftware
             set { this.Roots = value; }
         }
 
+        [Browsable(false),
+        DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public override IEnumerable ObjectsForClustering {
+            get {
+                for (int i = 0; i < this.TreeModel.GetObjectCount(); i++)
+                    yield return this.TreeModel.GetNthObject(i);
+            }
+        }
+
         /// <summary>
         /// After expanding a branch, should the TreeListView attempts to show as much of the 
         /// revealed descendents as possible.
@@ -256,34 +272,47 @@ namespace BrightIdeasSoftware
         public virtual IEnumerable Roots {
             get { return this.TreeModel.RootObjects; }
             set {
-                // Make sure that column 0 is showing a tree
-                if (this.Columns.Count > 0) {
-                    OLVColumn columnZero = this.GetColumn(0);
-                    if (!(columnZero.Renderer is TreeRenderer)) 
-                        columnZero.Renderer = this.TreeColumnRenderer;
-                    
-                    columnZero.WordWrap = columnZero.WordWrap;
-                }
-                if (value == null)
-                    this.TreeModel.RootObjects = new ArrayList();
-                else
-                    this.TreeModel.RootObjects = value;
+                this.TreeColumnRenderer = this.TreeColumnRenderer;
+                this.TreeModel.RootObjects = value ?? new ArrayList();
                 this.UpdateVirtualListSize();
             }
+        }
+
+        /// <summary>
+        /// Make sure that at least one column is displaying a tree. 
+        /// If no columns is showing the tree, make column 0 do it.
+        /// </summary>
+        protected virtual void EnsureTreeRendererPresent(TreeRenderer renderer) {
+            if (this.Columns.Count == 0) 
+                return;
+
+            foreach (OLVColumn col in this.Columns) {
+                if (col.Renderer is TreeRenderer) {
+                    col.Renderer = renderer;
+                    return;
+                }
+            }
+
+            // No column held a tree renderer, so give column 0 one
+            OLVColumn columnZero = this.GetColumn(0);
+            columnZero.Renderer = renderer;
+            columnZero.WordWrap = columnZero.WordWrap;
         }
 
         /// <summary>
         /// Gets or sets the renderer that will be used to draw the tree structure.
         /// Setting this to null resets the renderer to default.
         /// </summary>
+        /// <remarks>If a column is currently rendering the tree, the renderer
+        /// for that column will be replaced. If no column is rendering the tree,
+        /// column 0 will be given this renderer.</remarks>
         [Browsable(false),
         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public virtual TreeRenderer TreeColumnRenderer {
-            get { return treeRenderer; }
+            get { return treeRenderer ?? (treeRenderer = new TreeRenderer()); }
             set {
                 treeRenderer = value ?? new TreeRenderer();
-                if (this.Columns.Count > 0)
-                    this.GetColumn(0).Renderer = treeRenderer;
+                EnsureTreeRendererPresent(treeRenderer);
             }
         }
         private TreeRenderer treeRenderer;
@@ -360,9 +389,22 @@ namespace BrightIdeasSoftware
         }
 
         /// <summary>
+        /// Remove all items from this list
+        /// </summary>
+        /// <remark>This method can safely be called from background threads.</remark>
+        public override void ClearObjects() {
+            if (this.InvokeRequired)
+                this.Invoke(new MethodInvoker(this.ClearObjects));
+            else {
+                this.DiscardAllState();
+            }
+        }
+
+        /// <summary>
         /// Collapse all roots and forget everything we know about all models
         /// </summary>
         public virtual void DiscardAllState() {
+            this.CheckStateMap.Clear();
             this.RebuildAll(false);
         }
 
@@ -371,9 +413,15 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="preserveState">If true, the control will try to preserve selection and expansion</param>
         public virtual void RebuildAll(bool preserveState) {
+            int previousTopItemIndex = preserveState ? this.TopItemIndex : -1;
+
             this.RebuildAll(
                 preserveState ? this.SelectedObjects : null,
-                preserveState ? this.ExpandedObjects : null);
+                preserveState ? this.ExpandedObjects : null,
+                preserveState ? this.CheckedObjects : null);
+
+            if (preserveState)
+                this.TopItemIndex = previousTopItemIndex;
         }
 
         /// <summary>
@@ -381,24 +429,34 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="selected">If not null, this list of objects will be selected after the tree is rebuilt</param>
         /// <param name="expanded">If not null, this collection of objects will be expanded after the tree is rebuilt</param>
-        protected virtual void RebuildAll(IList selected, IEnumerable expanded) {
+        /// <param name="checkedObjects">If not null, this collection of objects will be checked after the tree is rebuilt</param>
+        protected virtual void RebuildAll(IList selected, IEnumerable expanded, IList checkedObjects) {
             // Remember the bits of info we don't want to forget (anyone ever see Memento?)
             IEnumerable roots = this.Roots;
             CanExpandGetterDelegate canExpand = this.CanExpandGetter;
             ChildrenGetterDelegate childrenGetter = this.ChildrenGetter;
 
-            // Give ourselves a new data structure
-            this.TreeModel = new Tree(this);
-            this.VirtualListDataSource = this.TreeModel;
+            try {
+                this.BeginUpdate();
 
-            // Put back the bits we didn't want to forget
-            this.CanExpandGetter = canExpand;
-            this.ChildrenGetter = childrenGetter;
-            if (expanded != null)
-                this.ExpandedObjects = expanded;
-            this.Roots = roots;
-            if (selected != null)
-                this.SelectedObjects = selected;
+                // Give ourselves a new data structure
+                this.TreeModel = new Tree(this);
+                this.VirtualListDataSource = this.TreeModel;
+
+                // Put back the bits we didn't want to forget
+                this.CanExpandGetter = canExpand;
+                this.ChildrenGetter = childrenGetter;
+                if (expanded != null)
+                    this.ExpandedObjects = expanded;
+                this.Roots = roots;
+                if (selected != null)
+                    this.SelectedObjects = selected;
+                if (checkedObjects != null)
+                    this.CheckedObjects = checkedObjects;
+            }
+            finally {
+                this.EndUpdate();
+            }
         }
 
         /// <summary>
@@ -425,21 +483,24 @@ namespace BrightIdeasSoftware
             this.RedrawItems(index, this.GetItemCount() - 1, false);
 
             if (this.RevealAfterExpand && index > 0) {
-                // ::TODO: This should be a separate method
+                // TODO: This should be a separate method
                 this.BeginUpdate();
                 try {
                     int countPerPage = NativeMethods.GetCountPerPage(this);
                     int descedentCount = this.TreeModel.GetVisibleDescendentCount(model);
-                    if (descedentCount < countPerPage)
+                    // If all of the descendents can be shown in the window, make sure that last one is visible.
+                    // If all the descendents can't fit into the window, move the model to the top of the window
+                    // (which will show as many of the descendents as possible)
+                    if (descedentCount < countPerPage) {
                         this.EnsureVisible(index + descedentCount);
-                    else
+                    } else {
                         this.TopItemIndex = index;
+                    }
                 }
                 finally {
                     this.EndUpdate();
                 }
             }
-
         }
 
         /// <summary>
@@ -546,8 +607,11 @@ namespace BrightIdeasSoftware
             Branch br = this.TreeModel.GetBranch(model);
             if (br == null || !br.CanExpand)
                 return new ArrayList();
-            else
-                return br.Children;
+            
+            if (!br.IsExpanded)
+                br.Expand();
+
+            return br.Children;
         }
 
         //------------------------------------------------------------------------------------------
@@ -612,10 +676,10 @@ namespace BrightIdeasSoftware
         /// <returns></returns>
         protected override bool IsInputKey(Keys keyData) {
             // We want to handle Left and Right keys within the control
-            if (((keyData & Keys.KeyCode) == Keys.Left) || ((keyData & Keys.KeyCode) == Keys.Right)) {
+            if (((keyData & Keys.KeyCode) == Keys.Left) || ((keyData & Keys.KeyCode) == Keys.Right)) 
                 return true;
-            } else
-                return base.IsInputKey(keyData);
+            
+            return base.IsInputKey(keyData);
         }
 
         /// <summary>
@@ -851,9 +915,10 @@ namespace BrightIdeasSoftware
                 int index = this.GetObjectIndex(model);
                 if (count > 0)
                     this.objectList.RemoveRange(index + 1, count);
-                br.FetchChildren();
-                if (br.IsExpanded)
+                if (br.CanExpand && br.IsExpanded) {
+                    br.FetchChildren();
                     this.InsertChildren(br, index + 1);
+                }
                 return index;
             }
 
@@ -880,12 +945,12 @@ namespace BrightIdeasSoftware
             /// <param name="model"></param>
             /// <param name="isExpanded"></param>
             internal void SetModelExpanded(object model, bool isExpanded) {
-                if (model != null) {
-                    if (isExpanded)
-                        this.mapObjectToExpanded[model] = true;
-                    else
-                        this.mapObjectToExpanded.Remove(model);
-                }
+                if (model == null) return;
+
+                if (isExpanded)
+                    this.mapObjectToExpanded[model] = true;
+                else
+                    this.mapObjectToExpanded.Remove(model);
             }
 
             /// <summary>
@@ -922,6 +987,8 @@ namespace BrightIdeasSoftware
             /// </summary>
             /// <param name="startIndex"></param>
             protected virtual void RebuildObjectMap(int startIndex) {
+                if (startIndex == 0)
+                    this.mapObjectToIndex.Clear();
                 for (int i = startIndex; i < this.objectList.Count; i++)
                     this.mapObjectToIndex[this.objectList[i]] = i;
             }
@@ -1004,7 +1071,7 @@ namespace BrightIdeasSoftware
                 this.lastSortColumn = column;
                 this.lastSortOrder = order;
 
-                // ::TODO: Need to raise an AboutToSortEvent here
+                // TODO: Need to raise an AboutToSortEvent here
 
                 // Sorting is going to change the order of the branches so clear
                 // the "first branch" flag
@@ -1248,6 +1315,9 @@ namespace BrightIdeasSoftware
             /// </summary>
             public List<Branch> FilteredChildBranches {
                 get {
+                    if (!this.IsExpanded)
+                        return new List<Branch>();
+
                     if (!this.Tree.IsFiltering)
                         return this.ChildBranches;
 
@@ -1489,7 +1559,7 @@ namespace BrightIdeasSoftware
             /// Force a refresh of all children recursively
             /// </summary>
             public virtual void RefreshChildren() {
-                if (this.IsExpanded) {
+                if (this.IsExpanded && this.CanExpand) {
                     this.FetchChildren();
                     foreach (Branch br in this.ChildBranches)
                         br.RefreshChildren();

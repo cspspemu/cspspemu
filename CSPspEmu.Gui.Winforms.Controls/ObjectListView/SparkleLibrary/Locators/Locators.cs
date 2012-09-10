@@ -83,7 +83,7 @@ namespace BrightIdeasSoftware
         /// of the sprite will be placed at the bottom right corner of the animation.
         /// </remarks>
         /// <param name="spriteCorner">The corner of the sprite to be aligned</param>
-        /// <param name="animationCorner">The corner at which it will be aligned</param>
+        /// <param name="corner">The corner at which it will be aligned</param>
         /// <returns>A point locator</returns>
         public static IPointLocator SpriteAligned(Corner spriteCorner, Corner animationCorner) {
             return Locators.SpriteAligned(spriteCorner, animationCorner, Point.Empty);

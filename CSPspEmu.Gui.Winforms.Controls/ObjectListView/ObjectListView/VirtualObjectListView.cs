@@ -5,6 +5,13 @@
  * Date: 27/09/2008 9:15 AM
  *
  * Change log:
+ * 2012-06-13   JPP  - Corrected several bugs related to groups on virtual lists.
+ *                   - Added EnsureNthGroupVisible() since EnsureGroupVisible() can't work on virtual lists.
+ * v2.5.1
+ * 2012-05-04   JPP  - Avoid bug/feature in ListView.VirtalListSize setter that causes flickering
+ *                     when the size of the list changes.
+ * 2012-04-24   JPP  - Fixed bug that occurred when adding/removing item while the view was grouped.
+ * v2.5
  * 2011-05-31   JPP  - Setting CheckedObjects is more efficient on large collections
  * 2011-04-05   JPP  - CheckedObjects now only returns objects that are currently in the list.
  *                     ClearObjects() now resets all check state info.
@@ -38,7 +45,7 @@
  * 2008-10-02   JPP  - MAJOR CHANGE: Use IVirtualListDataSource
  * 2008-09-27   JPP  - Separated from ObjectListView.cs
  * 
- * Copyright (C) 2006-2011 Phillip Piper
+ * Copyright (C) 2006-2012 Phillip Piper
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,6 +67,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.Reflection;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
@@ -81,9 +91,6 @@ namespace BrightIdeasSoftware
     /// but you must use the functions provided by ObjectListView: CheckedObjects, CheckObject(), UncheckObject() and their friends. 
     /// If you use the normal check box properties (CheckedItems or CheckedIndicies), they will throw an exception, since the
     /// list is in virtual mode, and .NET "knows" it can't handle checkboxes in virtual mode.
-    /// </para>
-    /// <para>
-    /// The "CheckBoxes" property itself can be set once, but trying to unset it later will throw an exception.
     /// </para>
     /// <para>Due to the limits of the underlying Windows control, virtual lists do not trigger ItemCheck/ItemChecked events. 
     /// Use a CheckStatePutter instead.</para>
@@ -107,6 +114,10 @@ namespace BrightIdeasSoftware
             //this.VirtualItemsSelectionRangeChanged += new ListViewVirtualItemsSelectionRangeChangedEventHandler(VirtualObjectListView_VirtualItemsSelectionRangeChanged);
 
             this.VirtualListDataSource = new VirtualListVersion1DataSource(this);
+
+            // Virtual lists have to manage their own check state, since the normal ListView control 
+            // doesn't even allow checkboxes on virtual lists
+            this.PersistentCheckBoxes = true;
         }
 
         #region Public Properties
@@ -130,7 +141,7 @@ namespace BrightIdeasSoftware
         /// that limitation.</remarks>
         [Category("Appearance"),
          Description("Should the list view show checkboxes?"),
-         DefaultValue(true)]
+         DefaultValue(false)]
         new public bool CheckBoxes {
             get { return base.CheckBoxes;  }
             set {
@@ -174,22 +185,23 @@ namespace BrightIdeasSoftware
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public override IList CheckedObjects {
             get {
-                ArrayList objects = new ArrayList();
-
+                // If we aren't should checkboxes, then no objects can be checked
                 if (!this.CheckBoxes)
-                    return objects;
+                    return new ArrayList();
+
+                // If the data source has somehow vanished, we can't do anything
+                if (this.VirtualListDataSource == null)
+                    return new ArrayList();
 
                 // If a custom check state getter is install, we can't use our check state management
                 // We have to use the (slower) base version.
                 if (this.CheckStateGetter != null)
                     return base.CheckedObjects;
 
-                // If the data source has somehow vanished, we can't do anything
-                if (this.VirtualListDataSource == null)
-                    return objects;
-
                 // Collect items that are checked AND that still exist in the list.
-                foreach (KeyValuePair<Object, CheckState> kvp in this.checkStateMap) {
+                ArrayList objects = new ArrayList();
+                foreach (KeyValuePair<Object, CheckState> kvp in this.CheckStateMap)
+                {
                     if (kvp.Value == CheckState.Checked && this.VirtualListDataSource.GetObjectIndex(kvp.Key) >= 0)
                         objects.Add(kvp.Key);
                 }
@@ -207,8 +219,8 @@ namespace BrightIdeasSoftware
                 }
 
                 // Uncheck anything that is no longer checked
-                Object[] keys = new Object[this.checkStateMap.Count];
-                this.checkStateMap.Keys.CopyTo(keys, 0);
+                Object[] keys = new Object[this.CheckStateMap.Count];
+                this.CheckStateMap.Keys.CopyTo(keys, 0);
                 foreach (Object key in keys) {
                     if (!table.Contains(key))
                         this.SetObjectCheckedness(key, CheckState.Unchecked);
@@ -310,17 +322,12 @@ namespace BrightIdeasSoftware
         override public bool ShowGroups {
             get {
                 // Pre-Vista, virtual lists cannot show groups
-                if (ObjectListView.IsVistaOrLater)
-                    return showGroups;
-                else
-                    return false;
+                return ObjectListView.IsVistaOrLater && this.showGroups;
             }
             set {
                 this.showGroups = value;
-                if (this.Created) {
-                    if (!value)
-                        this.DisableVirtualGroups();
-                }
+                if (this.Created && !value) 
+                    this.DisableVirtualGroups();
             }
         }
         private bool showGroups;
@@ -342,11 +349,44 @@ namespace BrightIdeasSoftware
                     this.ClearCachedInfo();
                     this.virtualListDataSource.Sort(column, sortOrder);
                 };
-                this.UpdateVirtualListSize();
-                this.Invalidate();
+                this.BuildList(false);
             }
         }
         private IVirtualListDataSource virtualListDataSource;
+
+        /// <summary>
+        /// Gets or sets the number of rows in this virtual list.
+        /// </summary>
+        /// <remarks>
+        /// There is an annoying feature/bug in the .NET ListView class. 
+        /// When you change the VirtualListSize property, it always scrolls so
+        /// that the focused item is the top item. This is annoying since it makes
+        /// the virtual list seem to flicker as the control scrolls to show the focused
+        /// item and then scrolls back to where ObjectListView wants it to be.
+        /// </remarks>
+        [Browsable(false),
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        protected new virtual int VirtualListSize {
+            get { return base.VirtualListSize; }
+            set {
+                if (value == this.VirtualListSize || value < 0)
+                    return;
+
+                // Get around the 'private' marker on 'virtualListSize' field using reflection
+                if (virtualListSizeFieldInfo == null) {
+                    virtualListSizeFieldInfo = typeof(ListView).GetField("virtualListSize", BindingFlags.NonPublic | BindingFlags.Instance);
+                    System.Diagnostics.Debug.Assert(virtualListSizeFieldInfo != null);
+                }
+
+                // Set the base class private field so that it keeps on working
+                virtualListSizeFieldInfo.SetValue(this, value);
+
+                // Send a raw message to change the virtual list size *without* changing the scroll position
+                if (this.IsHandleCreated && !this.DesignMode)
+                    NativeMethods.SetItemCount(this, value);
+            }
+        }
+        static private FieldInfo virtualListSizeFieldInfo;
 
         #endregion
 
@@ -395,10 +435,7 @@ namespace BrightIdeasSoftware
                 return null;
 
             int index = this.VirtualListDataSource.GetObjectIndex(modelObject);
-            if (index >= 0)
-                return this.GetItem(index);
-            else
-                return null;
+            return index >= 0 ? this.GetItem(index) : null;
         }
 
         #endregion
@@ -425,10 +462,14 @@ namespace BrightIdeasSoftware
             if (args.Canceled)
                 return;
 
-            this.ClearCachedInfo();
-            this.VirtualListDataSource.AddObjects(args.ObjectsToAdd);
-            this.Sort();
-            this.UpdateVirtualListSize();
+            try {
+                this.BeginUpdate();
+                this.VirtualListDataSource.AddObjects(args.ObjectsToAdd);
+                this.BuildList();
+            }
+            finally {
+                this.EndUpdate();
+            }
         }
 
         /// <summary>
@@ -439,8 +480,39 @@ namespace BrightIdeasSoftware
             if (this.InvokeRequired)
                 this.Invoke(new MethodInvoker(this.ClearObjects));
             else {
-                this.checkStateMap.Clear();
+                this.CheckStateMap.Clear();
                 this.SetObjects(new ArrayList());
+            }
+        }
+
+        /// <summary>
+        /// Scroll the listview so that the given group is at the top.
+        /// </summary>
+        /// <param name="groupIndex">The index of the group to be revealed</param>
+        /// <remarks><para>
+        /// If the group is already visible, the list will still be scrolled to move
+        /// the group to the top, if that is possible.
+        /// </para>
+        /// <para>This only works when the list is showing groups (obviously).</para>
+        /// </remarks>
+        public virtual void EnsureNthGroupVisible(int groupIndex) {
+            if (!this.ShowGroups)
+                return;
+
+            if (groupIndex <= 0 || groupIndex >= this.OLVGroups.Count) {
+                // There is no easy way to scroll back to the beginning of the list
+                int delta = 0 - NativeMethods.GetScrollPosition(this, false);
+                NativeMethods.Scroll(this, 0, delta);
+            } else {
+                // Find the display rectangle of the last item in the previous group
+                OLVGroup previousGroup = this.OLVGroups[groupIndex - 1];
+                int lastItemInGroup = this.GroupingStrategy.GetGroupMember(previousGroup, previousGroup.VirtualItemCount - 1);
+                Rectangle r = this.GetItemRect(lastItemInGroup);
+
+                // Scroll so that the last item of the previous group is just out of sight,
+                // which will make the desired group header visible.
+                int delta = r.Y + r.Height / 2;
+                NativeMethods.Scroll(this, 0, delta);
             }
         }
 
@@ -458,11 +530,17 @@ namespace BrightIdeasSoftware
             if (this.VirtualListDataSource == null)
                 return;
 
-            this.ClearCachedInfo();
-            foreach (object modelObject in modelObjects) {
-                int index = this.VirtualListDataSource.GetObjectIndex(modelObject);
-                if (index >= 0)
-                    this.RedrawItems(index, index, true);
+            try {
+                this.BeginUpdate();
+                this.ClearCachedInfo();
+                foreach (object modelObject in modelObjects) {
+                    int index = this.VirtualListDataSource.GetObjectIndex(modelObject);
+                    if (index >= 0)
+                        this.RedrawItems(index, index, true);
+                }
+            }
+            finally {
+                this.EndUpdate();
             }
         }
 
@@ -497,9 +575,14 @@ namespace BrightIdeasSoftware
             if (args.Canceled)
                 return;
 
-            this.ClearCachedInfo();
-            this.VirtualListDataSource.RemoveObjects(args.ObjectsToRemove);
-            this.UpdateVirtualListSize();
+            try {
+                this.BeginUpdate();
+                this.VirtualListDataSource.RemoveObjects(args.ObjectsToRemove);
+                this.BuildList();
+            }
+            finally {
+                this.EndUpdate();
+            }
         }
 
         /// <summary>
@@ -555,27 +638,27 @@ namespace BrightIdeasSoftware
         /// Set the collection of objects that this control will show.
         /// </summary>
         /// <param name="collection"></param>
-        /// <remark>This method can safely be called from background threads.</remark>
-        public override void SetObjects(IEnumerable collection) {
+        /// <param name="preserveState">Should the state of the list be preserved as far as is possible.</param>
+        public override void SetObjects(IEnumerable collection, bool preserveState) {
             if (this.InvokeRequired) {
-                this.Invoke((MethodInvoker)delegate { this.SetObjects(collection); });
+                this.Invoke((MethodInvoker)delegate { this.SetObjects(collection, preserveState); });
                 return;
             }
 
             if (this.VirtualListDataSource == null)
                 return;
 
+            // Give the world a chance to cancel or change the assigned collection
+            ItemsChangingEventArgs args = new ItemsChangingEventArgs(null, collection);
+            this.OnItemsChanging(args);
+            if (args.Canceled)
+                return;
+
             this.BeginUpdate();
             try {
-                // Give the world a chance to cancel or change the assigned collection
-                ItemsChangingEventArgs args = new ItemsChangingEventArgs(null, collection);
-                this.OnItemsChanging(args);
-                if (args.Canceled)
-                    return;
-
                 this.VirtualListDataSource.SetObjects(args.NewObjects);
-                this.UpdateVirtualListSize();
-                this.Sort();
+                this.BuildList();
+                this.UpdateNotificationSubscriptions(args.NewObjects);
             }
             finally {
                 this.EndUpdate();
@@ -613,10 +696,10 @@ namespace BrightIdeasSoftware
         /// Do the work of creating groups for this control
         /// </summary>
         /// <param name="groups"></param>
-        protected override void CreateGroups(IList<OLVGroup> groups) {
+        protected override void CreateGroups(IEnumerable<OLVGroup> groups) {
 
-            // A virtual list we cannot touch the Groups property since it often throws exceptions
-            // when used with a virtual list
+            // In a virtual list, we cannot touch the Groups property.
+            // It was obviously not written for virtual list and often throws exceptions.
 
             NativeMethods.ClearGroups(this);
 
@@ -681,7 +764,7 @@ namespace BrightIdeasSoftware
 
             CheckState state = CheckState.Unchecked;
             if (modelObject != null)
-                this.checkStateMap.TryGetValue(modelObject, out state);
+                this.CheckStateMap.TryGetValue(modelObject, out state);
             return state;
         }
 
@@ -692,7 +775,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="itemIndex"></param>
         /// <returns></returns>
-        public virtual int GetItemIndexInDisplayOrder(int itemIndex) {
+        public override int GetDisplayOrderOfItemIndex(int itemIndex) {
             if (!this.ShowGroups)
                 return itemIndex;
 
@@ -703,6 +786,46 @@ namespace BrightIdeasSoftware
             displayIndex += this.GroupingStrategy.GetIndexWithinGroup(this.OLVGroups[groupIndex], itemIndex);
 
             return displayIndex;
+        }
+
+        /// <summary>
+        /// Return the last item in the order they are shown to the user.
+        /// If the control is not grouped, the display order is the same as the
+        /// sorted list order. But if the list is grouped, the display order is different.
+        /// </summary>
+        /// <returns></returns>
+        public override OLVListItem GetLastItemInDisplayOrder() {
+            if (!this.ShowGroups)
+                return base.GetLastItemInDisplayOrder();
+
+            if (this.OLVGroups.Count > 0) {
+                OLVGroup lastGroup = this.OLVGroups[this.OLVGroups.Count - 1];
+                if (lastGroup.VirtualItemCount > 0)
+                    return this.GetItem(this.GroupingStrategy.GetGroupMember(lastGroup, lastGroup.VirtualItemCount - 1));
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Return the n'th item (0-based) in the order they are shown to the user.
+        /// If the control is not grouped, the display order is the same as the
+        /// sorted list order. But if the list is grouped, the display order is different.
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public override OLVListItem GetNthItemInDisplayOrder(int n) {
+            if (!this.ShowGroups)
+                return this.GetItem(n);
+
+            foreach (OLVGroup group in this.OLVGroups) {
+                if (n < group.VirtualItemCount)
+                    return this.GetItem(this.GroupingStrategy.GetGroupMember(group, n));
+
+                n -= group.VirtualItemCount;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -801,7 +924,7 @@ namespace BrightIdeasSoftware
             OLVListItem olvi = new OLVListItem(this.GetModelObject(itemIndex));
             this.FillInValues(olvi, olvi.RowObject);
 
-            this.PostProcessOneRow(itemIndex, this.GetItemIndexInDisplayOrder(itemIndex), olvi);
+            this.PostProcessOneRow(itemIndex, this.GetDisplayOrderOfItemIndex(itemIndex), olvi);
 
             if (this.HotRowIndex == itemIndex)
                 this.UpdateHotRow(olvi);
@@ -825,7 +948,7 @@ namespace BrightIdeasSoftware
         /// the control.</returns>
         protected override CheckState PutCheckState(object modelObject, CheckState state) {
             state = base.PutCheckState(modelObject, state);
-            this.checkStateMap[modelObject] = state;
+            this.CheckStateMap[modelObject] = state;
             return state;
         }
 
@@ -906,11 +1029,11 @@ namespace BrightIdeasSoftware
             try {
                 int originalSize = this.VirtualListSize;
                 filterable.ApplyFilters(this.ModelFilter, this.ListFilter);
-                this.UpdateVirtualListSize();
+                this.BuildList();
 
-                // If the filtering actually did something, rebuild the groups if they are being shown
-                if (originalSize != this.VirtualListSize && this.ShowGroups)
-                    this.BuildGroups();
+                //// If the filtering actually did something, rebuild the groups if they are being shown
+                //if (originalSize != this.VirtualListSize && this.ShowGroups)
+                //    this.BuildGroups();
             }
             finally {
                 this.EndUpdate();
@@ -1008,7 +1131,6 @@ namespace BrightIdeasSoftware
 
         #region Variable declaractions
 
-        private Dictionary<Object, CheckState> checkStateMap = new Dictionary<object, CheckState>();
         private OLVListItem lastRetrieveVirtualItem;
         private int lastRetrieveVirtualItemIndex = -1;
 

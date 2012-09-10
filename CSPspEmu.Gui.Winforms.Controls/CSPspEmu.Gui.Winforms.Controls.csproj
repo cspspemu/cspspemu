@@ -72,13 +72,15 @@
     <Compile Include="ObjectListView\ListViewPrinter\ListViewPrinter.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ObjectListView\ListViewPrinter\RuntimePropertiesObject.cs" />
     <Compile Include="ObjectListView\ObjectListView\CellEditing\CellEditKeyEngine.cs" />
     <Compile Include="ObjectListView\ObjectListView\CellEditing\CellEditors.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ObjectListView\ObjectListView\CellEditing\EditorRegistry.cs" />
     <Compile Include="ObjectListView\ObjectListView\DataListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ObjectListView\ObjectListView\DataTreeListView.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ObjectListView\ObjectListView\DragDrop\DragSource.cs" />
@@ -96,6 +98,7 @@
     <Compile Include="ObjectListView\ObjectListView\Filtering\DateTimeClusteringStrategy.cs" />
     <Compile Include="ObjectListView\ObjectListView\Filtering\FilterMenuBuilder.cs" />
     <Compile Include="ObjectListView\ObjectListView\Filtering\Filters.cs" />
+    <Compile Include="ObjectListView\ObjectListView\Filtering\FlagClusteringStrategy.cs" />
     <Compile Include="ObjectListView\ObjectListView\Filtering\ICluster.cs" />
     <Compile Include="ObjectListView\ObjectListView\Filtering\IClusteringStrategy.cs" />
     <Compile Include="ObjectListView\ObjectListView\Filtering\TextMatchFilter.cs" />
@@ -117,6 +120,7 @@
     <Compile Include="ObjectListView\ObjectListView\Implementation\OLVListItem.cs" />
     <Compile Include="ObjectListView\ObjectListView\Implementation\OLVListSubItem.cs" />
     <Compile Include="ObjectListView\ObjectListView\Implementation\OlvListViewHitTestInfo.cs" />
+    <Compile Include="ObjectListView\ObjectListView\Implementation\TreeDataSourceAdapter.cs" />
     <Compile Include="ObjectListView\ObjectListView\Implementation\VirtualGroups.cs" />
     <Compile Include="ObjectListView\ObjectListView\Implementation\VirtualListDataSource.cs" />
     <Compile Include="ObjectListView\ObjectListView\ObjectListView.cs">
@@ -126,7 +130,6 @@
     <Compile Include="ObjectListView\ObjectListView\OLVColumn.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ObjectListView\ObjectListView\Properties.cs" />
     <Compile Include="ObjectListView\ObjectListView\Rendering\Adornments.cs" />
     <Compile Include="ObjectListView\ObjectListView\Rendering\Decorations.cs" />
     <Compile Include="ObjectListView\ObjectListView\Rendering\Overlays.cs" />
@@ -157,6 +160,7 @@
       <DependentUpon>ColumnSelectionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ObjectListView\ObjectListView\Utilities\Generator.cs" />
+    <Compile Include="ObjectListView\ObjectListView\Utilities\OLVExporter.cs" />
     <Compile Include="ObjectListView\ObjectListView\Utilities\TypedObjectListView.cs" />
     <Compile Include="ObjectListView\ObjectListView\VirtualObjectListView.cs">
       <SubType>Component</SubType>
@@ -184,20 +188,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ObjectListView\ObjectListView\CustomDictionary.xml" />
-    <Content Include="ObjectListView\ObjectListView\Resources\clear-filter.png" />
-    <None Include="ObjectListView\ObjectListView\Resources\sort-descending1.png" />
-    <None Include="ObjectListView\ObjectListView\Resources\sort-ascending1.png" />
-    <None Include="ObjectListView\ObjectListView\Resources\filter1.png" />
-    <None Include="ObjectListView\ObjectListView\Resources\filter-icons31.png" />
-    <None Include="ObjectListView\ObjectListView\Resources\clear-filter1.png" />
-    <Content Include="ObjectListView\ObjectListView\Resources\coffee.jpg" />
-    <Content Include="ObjectListView\ObjectListView\Resources\filter-icons3.png" />
-    <Content Include="ObjectListView\ObjectListView\Resources\filter.png" />
-    <Content Include="ObjectListView\ObjectListView\Resources\sort-ascending.png" />
-    <Content Include="ObjectListView\ObjectListView\Resources\sort-descending.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="ObjectListView\ListViewPrinter\BrushForm.resx">
       <DependentUpon>BrushForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -206,6 +196,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
@@ -222,6 +213,15 @@
       <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
       <Name>CSharpUtils</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ObjectListView\ObjectListView\CustomDictionary.xml" />
+    <Content Include="ObjectListView\ObjectListView\Resources\clear-filter.png" />
+    <Content Include="ObjectListView\ObjectListView\Resources\coffee.jpg" />
+    <Content Include="ObjectListView\ObjectListView\Resources\filter-icons3.png" />
+    <Content Include="ObjectListView\ObjectListView\Resources\filter.png" />
+    <Content Include="ObjectListView\ObjectListView\Resources\sort-ascending.png" />
+    <Content Include="ObjectListView\ObjectListView\Resources\sort-descending.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

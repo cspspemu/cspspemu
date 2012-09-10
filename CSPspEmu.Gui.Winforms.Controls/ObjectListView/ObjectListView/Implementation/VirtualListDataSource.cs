@@ -12,7 +12,7 @@
  *
  * To do:
  *
- * Copyright (C) 2009-2010 Phillip Piper
+ * Copyright (C) 2009-2012 Phillip Piper
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -231,7 +231,7 @@ namespace BrightIdeasSoftware
         /// <param name="column"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static int DefaultSearchText(string value, int first, int last, OLVColumn column, IVirtualListDataSource source) {
+        static public int DefaultSearchText(string value, int first, int last, OLVColumn column, IVirtualListDataSource source) {
             if (first <= last) {
                 for (int i = first; i <= last; i++) {
                     string data = column.GetStringValue(source.GetNthObject(i));
@@ -256,7 +256,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="modelFilter"></param>
         /// <param name="listFilter"></param>
-        public virtual void ApplyFilters(IModelFilter modelFilter, IListFilter listFilter) {
+        virtual public void ApplyFilters(IModelFilter modelFilter, IListFilter listFilter) {
         }
 
         #endregion

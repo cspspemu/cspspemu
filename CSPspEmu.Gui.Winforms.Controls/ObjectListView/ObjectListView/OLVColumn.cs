@@ -9,7 +9,7 @@
  * 2011-04-12  JPP  - Added HasFilterIndicator
  * 2011-03-31  JPP  - Split into its own file
  * 
- * Copyright (C) 2011 Phillip Piper
+ * Copyright (C) 2011-2012 Phillip Piper
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Collections;
+using System.Diagnostics;
 
 namespace BrightIdeasSoftware {
 
@@ -53,6 +54,9 @@ namespace BrightIdeasSoftware {
     /// </remarks>
     [Browsable(false)]
     public partial class OLVColumn : ColumnHeader {
+
+        #region Life and death
+
         /// <summary>
         /// Create an OLVColumn
         /// </summary>
@@ -69,6 +73,8 @@ namespace BrightIdeasSoftware {
             this.Text = title;
             this.AspectName = aspect;
         }
+
+        #endregion 
 
         #region Public Properties
 
@@ -200,6 +206,36 @@ namespace BrightIdeasSoftware {
                 return this.Hideable && (this.Index != 0);
             }
         }
+
+        /// <summary>
+        /// Gets or sets how many pixels will be left blank around this cells in this column
+        /// </summary>
+        /// <remarks>This setting only takes effect when the control is owner drawn.</remarks>
+        public Rectangle? CellPadding {
+            get { return this.cellPadding; }
+            set { this.cellPadding = value; }
+        }
+        private Rectangle? cellPadding;
+
+        /// <summary>
+        /// Gets or sets how cells in this column will be vertically aligned.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// This setting only takes effect when the control is owner drawn.
+        /// </para>        
+        /// <para>
+        /// If this is not set, the value from the control itself will be used.
+        /// </para>
+        /// </remarks>
+        [Category("ObjectListView"),
+         Description("How will cell values be vertically aligned?"),
+         DefaultValue(null)]
+        public virtual StringAlignment? CellVerticalAlignment {
+            get { return this.cellVerticalAlignment; }
+            set { this.cellVerticalAlignment = value; }
+        }
+        private StringAlignment? cellVerticalAlignment;
 
         /// <summary>
         /// Gets or sets whether this column will show a checkbox.
@@ -998,7 +1034,7 @@ namespace BrightIdeasSoftware {
                 if (this.ValuesChosenForFiltering == null || this.ValuesChosenForFiltering.Count == 0)
                     return null;
 
-                return new OneOfFilter(this.ClusteringStrategy.GetClusterKey, this.ValuesChosenForFiltering);
+                return this.ClusteringStrategy.CreateFilter(this.ValuesChosenForFiltering);
             }
             set { valueBasedFilter = value; }
         }

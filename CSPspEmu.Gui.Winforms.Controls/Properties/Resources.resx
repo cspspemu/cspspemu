@@ -119,18 +119,18 @@
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="ClearFiltering" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\ObjectListView\ObjectListView\Resources\clear-filter1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\ObjectListView\ObjectListView\Resources\clear-filter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ColumnFilterIndicator" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\ObjectListView\ObjectListView\Resources\filter-icons31.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\ObjectListView\ObjectListView\Resources\filter-icons3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Filtering" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\ObjectListView\ObjectListView\Resources\filter1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\ObjectListView\ObjectListView\Resources\filter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="SortAscending" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\ObjectListView\ObjectListView\Resources\sort-ascending1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\ObjectListView\ObjectListView\Resources\sort-ascending.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="SortDescending" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\ObjectListView\ObjectListView\Resources\sort-descending1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\ObjectListView\ObjectListView\Resources\sort-descending.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

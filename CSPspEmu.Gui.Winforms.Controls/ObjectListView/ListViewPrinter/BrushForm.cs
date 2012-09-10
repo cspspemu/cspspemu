@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Text;
 using System.Windows.Forms;
+
+//TODO: Allow alpha
 
 namespace BrightIdeasSoftware
 {
@@ -63,7 +61,7 @@ namespace BrightIdeasSoftware
             }
         }
 
-        protected virtual void HandlePaintEvent(Graphics g, Rectangle r)
+        virtual protected void HandlePaintEvent(Graphics g, Rectangle r)
         {
             using (Brush b = this.GetBrush()) {
                 StringFormat fmt = new StringFormat();

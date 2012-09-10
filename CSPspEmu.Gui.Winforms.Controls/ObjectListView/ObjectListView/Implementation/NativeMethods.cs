@@ -10,7 +10,7 @@
  *
  * To do:
  * 
- * Copyright (C) 2006-2009 Phillip Piper
+ * Copyright (C) 2006-2012 Phillip Piper
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ namespace BrightIdeasSoftware
     /// <summary>
     /// Wrapper for all native method calls on ListView controls
     /// </summary>
-    internal class NativeMethods
+    internal static class NativeMethods
     {
         #region Constants
 
@@ -48,21 +48,24 @@ namespace BrightIdeasSoftware
         private const int LVM_GETGROUPINFO = LVM_FIRST + 149;
         private const int LVM_GETGROUPSTATE = LVM_FIRST + 92;
         private const int LVM_GETHEADER = LVM_FIRST + 31;
-        private const int LVM_GETTOOLTIPS = 0x1000 + 78;
+        private const int LVM_GETTOOLTIPS = LVM_FIRST + 78;
+        private const int LVM_GETTOPINDEX = LVM_FIRST + 39;
+        private const int LVM_HITTEST = LVM_FIRST + 18;
         private const int LVM_INSERTGROUP = LVM_FIRST + 145;
         private const int LVM_REMOVEALLGROUPS = LVM_FIRST + 160;
         private const int LVM_SCROLL = LVM_FIRST + 20;
-        private const int LVM_SETBKIMAGE = 0x108A;
+        private const int LVM_SETBKIMAGE = LVM_FIRST + 0x8A;
         private const int LVM_SETCOLUMN = LVM_FIRST + 96;
         private const int LVM_SETEXTENDEDLISTVIEWSTYLE = LVM_FIRST + 54;
         private const int LVM_SETGROUPINFO = LVM_FIRST + 147;
         private const int LVM_SETGROUPMETRICS = LVM_FIRST + 155;
         private const int LVM_SETIMAGELIST = LVM_FIRST + 3;
         private const int LVM_SETITEM = LVM_FIRST + 76;
+        private const int LVM_SETITEMCOUNT = LVM_FIRST + 47;
         private const int LVM_SETITEMSTATE = LVM_FIRST + 43;
-        private const int LVM_SETTOOLTIPS = 0x1000 + 74;
         private const int LVM_SETSELECTEDCOLUMN = LVM_FIRST + 140;
-        
+        private const int LVM_SETTOOLTIPS = LVM_FIRST + 74;
+        private const int LVM_SUBITEMHITTEST = LVM_FIRST + 57;
         private const int LVS_EX_SUBITEMIMAGES = 0x0002;
 
         private const int LVIF_TEXT = 0x0001;
@@ -97,6 +100,10 @@ namespace BrightIdeasSoftware
         private const int LVBKIF_FLAG_TILEOFFSET = 0x100;
         private const int LVBKIF_TYPE_WATERMARK = 0x10000000;
         private const int LVBKIF_FLAG_ALPHABLEND = 0x20000000;
+
+        private const int LVSICF_NOINVALIDATEALL = 1;
+        private const int LVSICF_NOSCROLL = 2;
+
         private const int HDM_FIRST = 0x1200;
         private const int HDM_HITTEST = HDM_FIRST + 6;
         private const int HDM_GETITEMRECT = HDM_FIRST + 7;
@@ -147,9 +154,9 @@ namespace BrightIdeasSoftware
         const int SWP_NOACTIVATE = 16;
         public const int SWP_FRAMECHANGED = 32;
 
-        const int SWP_zOrderOnly = SWP_NOSIZE | SWP_NOMOVE | SWP_NOREDRAW | SWP_NOACTIVATE;
-        const int SWP_sizeOnly = SWP_NOMOVE | SWP_NOREDRAW | SWP_NOZORDER | SWP_NOACTIVATE;
-        const int SWP_updateFrame = SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOZORDER | SWP_FRAMECHANGED;
+        const int SWP_ZORDERONLY = SWP_NOSIZE | SWP_NOMOVE | SWP_NOREDRAW | SWP_NOACTIVATE;
+        const int SWP_SIZEONLY = SWP_NOMOVE | SWP_NOREDRAW | SWP_NOZORDER | SWP_NOACTIVATE;
+        const int SWP_UPDATE_FRAME = SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOZORDER | SWP_FRAMECHANGED;
 
         #endregion
 
@@ -304,6 +311,7 @@ namespace BrightIdeasSoftware
             public int flags;
             public int iItem;
             public int iSubItem;
+            public int iGroup;
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
@@ -420,6 +428,15 @@ namespace BrightIdeasSoftware
             public int iItem;
             public int iSubItem;
             public IntPtr lParam;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct NMLVGROUP
+        {
+            public NMHDR hdr;
+            public int iGroupId; // which group is changing
+            public uint uNewState; // LVGS_xxx flags
+            public uint uOldState;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -649,6 +666,16 @@ namespace BrightIdeasSoftware
         /// <param name="list">The listview to send a m to</param>
         public static void ForceSubItemImagesExStyle(ListView list) {
             SendMessage(list.Handle, LVM_SETEXTENDEDLISTVIEWSTYLE, LVS_EX_SUBITEMIMAGES, LVS_EX_SUBITEMIMAGES);
+        }
+
+        /// <summary>
+        /// Change the virtual list size of the given ListView (which must be in virtual mode)
+        /// </summary>
+        /// <remarks>This will not change the scroll position</remarks>
+        /// <param name="list">The listview to send a message to</param>
+        /// <param name="count">How many rows should the list have?</param>
+        public static void SetItemCount(ListView list, int count) {
+            SendMessage(list.Handle, LVM_SETITEMCOUNT, count, LVSICF_NOSCROLL);
         }
 
         /// <summary>
@@ -897,7 +924,7 @@ namespace BrightIdeasSoftware
         /// <param name="reference"></param>
         /// <returns></returns>
         public static bool ChangeZOrder(IWin32Window toBeMoved, IWin32Window reference) {
-            return NativeMethods.SetWindowPos(toBeMoved.Handle, reference.Handle, 0, 0, 0, 0, SWP_zOrderOnly);
+            return NativeMethods.SetWindowPos(toBeMoved.Handle, reference.Handle, 0, 0, 0, 0, SWP_ZORDERONLY);
         }
 
         /// <summary>
@@ -907,18 +934,18 @@ namespace BrightIdeasSoftware
         /// <returns></returns>
         public static bool MakeTopMost(IWin32Window toBeMoved) {
             IntPtr HWND_TOPMOST = (IntPtr)(-1);
-            return NativeMethods.SetWindowPos(toBeMoved.Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_zOrderOnly);
+            return NativeMethods.SetWindowPos(toBeMoved.Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_ZORDERONLY);
         }
 
         public static bool ChangeSize(IWin32Window toBeMoved, int width, int height) {
-            return NativeMethods.SetWindowPos(toBeMoved.Handle, IntPtr.Zero, 0, 0, width, height, SWP_sizeOnly);
+            return NativeMethods.SetWindowPos(toBeMoved.Handle, IntPtr.Zero, 0, 0, width, height, SWP_SIZEONLY);
         }
 
         /// <summary>
         /// Show the given window without activating it
         /// </summary>
         /// <param name="win">The window to show</param>
-        public static void ShowWithoutActivate(IWin32Window win) {
+        static public void ShowWithoutActivate(IWin32Window win) {
             const int SW_SHOWNA = 8;
             NativeMethods.ShowWindow(win.Handle, SW_SHOWNA);
         }
@@ -932,20 +959,24 @@ namespace BrightIdeasSoftware
         /// This method works, but it prevents subitems in the given column from having
         /// back colors. 
         /// </remarks>
-        public static void SetSelectedColumn(ListView objectListView, ColumnHeader value) {
+        static public void SetSelectedColumn(ListView objectListView, ColumnHeader value) {
             NativeMethods.SendMessage(objectListView.Handle,
                 LVM_SETSELECTEDCOLUMN, (value == null) ? -1 : value.Index, 0);
         }
 
-        public static IntPtr GetTooltipControl(ListView lv) {
+        static public int GetTopIndex(ListView lv) {
+            return (int)SendMessage(lv.Handle, LVM_GETTOPINDEX, 0, 0);
+        }
+
+        static public IntPtr GetTooltipControl(ListView lv) {
             return SendMessage(lv.Handle, LVM_GETTOOLTIPS, 0, 0);
         }
 
-        public static IntPtr SetTooltipControl(ListView lv, ToolTipControl tooltip) {
+        static public IntPtr SetTooltipControl(ListView lv, ToolTipControl tooltip) {
             return SendMessage(lv.Handle, LVM_SETTOOLTIPS, 0, tooltip.Handle);
         }
 
-        public static bool HasHorizontalScrollBar(ListView lv) {
+        static public bool HasHorizontalScrollBar(ListView lv) {
             const int GWL_STYLE = -16;
             const int WS_HSCROLL = 0x00100000;
 
@@ -1011,8 +1042,8 @@ namespace BrightIdeasSoftware
             return (int)NativeMethods.SendMessage(olv.Handle, LVM_SETGROUPINFO, groupId, ref group);
         }
 
-        public static int SetGroupMetrics(ObjectListView olv, int groupId, LVGROUPMETRICS metrics) {
-            return (int)NativeMethods.SendMessage(olv.Handle, LVM_SETGROUPMETRICS, groupId, ref metrics);
+        public static int SetGroupMetrics(ObjectListView olv, LVGROUPMETRICS metrics) {
+            return (int)NativeMethods.SendMessage(olv.Handle, LVM_SETGROUPMETRICS, 0, ref metrics);
         }
 
         public static int ClearGroups(VirtualObjectListView virtualObjectListView) {
@@ -1025,6 +1056,11 @@ namespace BrightIdeasSoftware
             if (il != null)
                 handle = il.Handle;
             return (int)NativeMethods.SendMessage(olv.Handle, LVM_SETIMAGELIST, LVSIL_GROUPHEADER, handle);
+        }
+
+        public static int HitTest(ObjectListView olv, ref LVHITTESTINFO hittest)
+        {
+            return (int)NativeMethods.SendMessage(olv.Handle, olv.View == View.Details ? LVM_SUBITEMHITTEST : LVM_HITTEST, -1, ref hittest);
         }
     }
 }

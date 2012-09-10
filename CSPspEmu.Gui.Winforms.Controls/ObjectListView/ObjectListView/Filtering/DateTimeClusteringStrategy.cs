@@ -7,7 +7,7 @@
  * Change log:
  * 2011-03-30  JPP  - First version
  * 
- * Copyright (C) 2011 Phillip Piper
+ * Copyright (C) 2011-2012 Phillip Piper
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@
  */
 
 using System;
+using System.Globalization;
 
 namespace BrightIdeasSoftware {
 
@@ -171,7 +172,7 @@ namespace BrightIdeasSoftware {
         /// <returns></returns>
         protected virtual string DateToString(DateTime dateTime) {
             if (String.IsNullOrEmpty(this.Format))
-                return dateTime.ToString();
+                return dateTime.ToString(CultureInfo.CurrentUICulture);
 
             try {
                 return dateTime.ToString(this.Format);

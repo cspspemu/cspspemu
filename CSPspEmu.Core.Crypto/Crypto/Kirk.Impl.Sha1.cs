@@ -27,7 +27,7 @@ namespace CSPspEmu.Core.Crypto
 		/// <returns></returns>
 		public void KirkSha1(byte* OutputBuffer, byte* InputBuffer, int InputSize)
 		{
-			check_initialized();
+			CheckInitialized();
 
 			var Header = (KIRK_SHA1_HEADER*)InputBuffer;
 			if (InputSize == 0 || Header->DataSize == 0)

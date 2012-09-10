@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using System.Threading;
-using CSPspEmu.Core.Threading.Synchronization;
-using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Gpu.Run;
+using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Core.Threading.Synchronization;
 using CSharpUtils;
 
 namespace CSPspEmu.Core.Gpu
@@ -132,7 +132,7 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// Stack with the InstructionAddressCurrent for the CALL/RET opcodes.
 		/// </summary>
-		readonly private Stack<IntPtr> ExecutionStack = new Stack<IntPtr>();
+		private readonly Stack<IntPtr> ExecutionStack = new Stack<IntPtr>();
 
 		/*
 		private bool Finished;
