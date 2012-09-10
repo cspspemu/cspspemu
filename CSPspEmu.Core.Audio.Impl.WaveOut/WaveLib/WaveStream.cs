@@ -85,16 +85,19 @@ namespace WaveLib
 		public WaveStream(string fileName) : this(new FileStream(fileName, FileMode.Open))
 		{
 		}
-		public WaveStream(Stream S)
+		
+        public WaveStream(Stream S)
 		{
 			m_Stream = S;
 			ReadHeader();
 		}
-		~WaveStream()
+		
+        ~WaveStream()
 		{
 			Dispose();
 		}
-		public void Dispose()
+		
+        public void Dispose()
 		{
 			if (m_Stream != null)
 				m_Stream.Close();
@@ -105,35 +108,43 @@ namespace WaveLib
 		{
 			get { return true; }
 		}
-		public override bool CanSeek
+		
+        public override bool CanSeek
 		{
 			get { return true; }
 		}
-		public override bool CanWrite
+		
+        public override bool CanWrite
 		{
 			get { return false; }
 		}
-		public override long Length
+		
+        public override long Length
 		{
 			get { return m_Length; }
 		}
-		public override long Position
+		
+        public override long Position
 		{
 			get { return m_Stream.Position - m_DataPos; }
 			set { Seek(value, SeekOrigin.Begin); }
 		}
-		public override void Close()
+		
+        public override void Close()
 		{
 			Dispose();
 		}
-		public override void Flush()
+		
+        public override void Flush()
 		{
 		}
-		public override void SetLength(long len)
+		
+        public override void SetLength(long len)
 		{
 			throw new InvalidOperationException();
 		}
-		public override long Seek(long pos, SeekOrigin o)
+		
+        public override long Seek(long pos, SeekOrigin o)
 		{
 			switch(o)
 			{
@@ -149,12 +160,14 @@ namespace WaveLib
 			}
 			return this.Position;
 		}
-		public override int Read(byte[] buf, int ofs, int count)
+		
+        public override int Read(byte[] buf, int ofs, int count)
 		{
 			int toread = (int)Math.Min(count, m_Length - Position);
 			return m_Stream.Read(buf, ofs, toread);
 		}
-		public override void Write(byte[] buf, int ofs, int count)
+		
+        public override void Write(byte[] buf, int ofs, int count)
 		{
 			throw new InvalidOperationException();
 		}

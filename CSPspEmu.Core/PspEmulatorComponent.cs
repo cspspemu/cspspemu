@@ -7,7 +7,7 @@ namespace CSPspEmu.Core
 	{
 	}
 
-	abstract public class PspEmulatorComponent : IDisposable
+	public abstract class PspEmulatorComponent : IDisposable
 	{
 		protected PspEmulatorContext PspEmulatorContext { get; private set; }
 

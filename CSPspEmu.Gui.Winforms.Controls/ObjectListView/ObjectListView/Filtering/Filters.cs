@@ -118,7 +118,7 @@ namespace BrightIdeasSoftware
     /// A CompositeFilter joins several other filters together.
     /// If there are no filters, all model objects are included
     /// </summary>
-    abstract public class CompositeFilter : IModelFilter {
+    public abstract class CompositeFilter : IModelFilter {
 
         /// <summary>
         /// Create an empty filter
@@ -164,7 +164,7 @@ namespace BrightIdeasSoftware
         /// <remarks>Filters is guaranteed to be non-empty when this method is called</remarks>
         /// <param name="modelObject">The model object under consideration</param>
         /// <returns>True if the object is included by the filter</returns>
-        abstract public bool FilterObject(object modelObject);
+        public abstract bool FilterObject(object modelObject);
     }
 
     /// <summary>
@@ -188,7 +188,7 @@ namespace BrightIdeasSoftware
         /// <remarks>Filters is guaranteed to be non-empty when this method is called</remarks>
         /// <param name="modelObject">The model object under consideration</param>
         /// <returns>True if the object is included by the filter</returns>
-        override public bool FilterObject(object modelObject) {
+        public override bool FilterObject(object modelObject) {
             foreach (IModelFilter filter in this.Filters)
                 if (!filter.Filter(modelObject))
                     return false;
@@ -218,7 +218,7 @@ namespace BrightIdeasSoftware
         /// <remarks>Filters is guaranteed to be non-empty when this method is called</remarks>
         /// <param name="modelObject">The model object under consideration</param>
         /// <returns>True if the object is included by the filter</returns>
-        override public bool FilterObject(object modelObject) {
+        public override bool FilterObject(object modelObject) {
             foreach (IModelFilter filter in this.Filters)
                 if (filter.Filter(modelObject))
                     return true;

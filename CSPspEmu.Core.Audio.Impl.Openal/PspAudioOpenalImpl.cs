@@ -30,13 +30,13 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 			}
 		}
 
-		override public void Update(Action<short[]> ReadStream)
+		public override void Update(Action<short[]> ReadStream)
 		{
 			AudioContext.Process();
 			AudioStream.Update(ReadStream);
 		}
 
-		override public void StopSynchronized()
+		public override void StopSynchronized()
 		{
 		}
 

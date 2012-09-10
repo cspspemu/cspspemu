@@ -119,7 +119,7 @@ namespace CSPspEmu.Core.Memory
 			}
 		}
 
-		override public void SetPCWriteAddress(uint _Address, uint PC)
+		public override void SetPCWriteAddress(uint _Address, uint PC)
 		{
 #if ENABLE_LOG_MEMORY
 			var Address = _Address & PspMemory.MemoryMask;
@@ -130,7 +130,7 @@ namespace CSPspEmu.Core.Memory
 #endif
 		}
 
-		override public uint GetPCWriteAddress(uint _Address)
+		public override uint GetPCWriteAddress(uint _Address)
 		{
 #if ENABLE_LOG_MEMORY
 			var Address = _Address & PspMemory.MemoryMask;
@@ -142,7 +142,7 @@ namespace CSPspEmu.Core.Memory
 			return 0xFFFFFFFF;
 		}
 
-		override public uint PointerToPspAddressUnsafe(void* Pointer)
+		public override uint PointerToPspAddressUnsafe(void* Pointer)
 		{
 			/*
 			if (Pointer == null) return 0;
@@ -155,13 +155,13 @@ namespace CSPspEmu.Core.Memory
 			return PointerToPspAddressSafe(Pointer);
 		}
 
-		override public void* PspAddressToPointerUnsafe(uint _Address)
+		public override void* PspAddressToPointerUnsafe(uint _Address)
 		{
 			if (_Address == 0) return null;
 			//if (IsAddressValid(_Address))
 			{
 				// Ignore last 3 bits (cache / kernel)
-				var Address = _Address & PspMemory.MemoryMask;
+				uint Address = _Address & PspMemory.MemoryMask;
 				switch (Address >> 24)
 				{
 					/////// hp
@@ -171,7 +171,7 @@ namespace CSPspEmu.Core.Memory
 							{
 								break;
 							}
-							var Offset = Address - ScratchPadOffset;
+							uint Offset = Address - ScratchPadOffset;
 #if ADDITIONAL_CHECKS
 							if (Offset < 0 || Offset >= ScratchPadSize) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
 #endif
@@ -180,7 +180,7 @@ namespace CSPspEmu.Core.Memory
 					/////// hp
 					case 0x04: //case 0b_00100:
 						{
-							var Offset = Address - FrameBufferOffset;
+							uint Offset = Address - FrameBufferOffset;
 #if ADDITIONAL_CHECKS
 							if (Offset < 0 || Offset >= FrameBufferSize) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
 #endif
@@ -193,7 +193,7 @@ namespace CSPspEmu.Core.Memory
 					case 0x0A: //case 0b_01010: // SLIM ONLY
 					case 0x0B: //case 0b_01011: // SLIM ONLY
 						{
-							var Offset = Address - MainOffset;
+							uint Offset = Address - MainOffset;
 #if ADDITIONAL_CHECKS
 							if (Offset < 0 || Offset >= MainSize) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
 #endif
@@ -207,7 +207,7 @@ namespace CSPspEmu.Core.Memory
 						{
 							//return &Vectors[Address - 0x1fc00000];
 							//return HardwareVectors
-							var Offset = Address - VectorsOffset;
+							uint Offset = Address - VectorsOffset;
 #if ADDITIONAL_CHECKS
 							if (Offset < 0 || Offset >= VectorsSize) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
 #endif

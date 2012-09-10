@@ -5,7 +5,7 @@ using CSharpUtils;
 
 namespace CSPspEmu.Core.Memory
 {
-	unsafe abstract public class PspModel
+	public unsafe abstract class PspModel
 	{
 		public const bool IsSlim = false;
 		//public const bool IsSlim = true;
@@ -20,7 +20,7 @@ namespace CSPspEmu.Core.Memory
 	/// 0x1fc00000  0x1fcfffff  1mb   Hardware Exception Vectors (RAM)
 	/// 0x1fd00000  0x1fffffff        Hardware i/o
 	/// </summary>
-	unsafe abstract public class PspMemory : PspEmulatorComponent, IDisposable
+	public unsafe abstract class PspMemory : PspEmulatorComponent, IDisposable
 	{
 		static internal Logger Logger = Logger.GetLogger("Memory");
 
@@ -89,8 +89,8 @@ namespace CSPspEmu.Core.Memory
 		protected byte* VectorsPtr;
 		protected uint* LogMainPtr;
 
-		abstract public uint PointerToPspAddressUnsafe(void* Pointer);
-		abstract public void* PspAddressToPointerUnsafe(uint Address);
+		public abstract uint PointerToPspAddressUnsafe(void* Pointer);
+		public abstract void* PspAddressToPointerUnsafe(uint Address);
 
 		public void* PspAddressToPointerNotNull(uint _Address) 
 		{
@@ -277,7 +277,7 @@ namespace CSPspEmu.Core.Memory
 			return StructUtils.BytesToStruct<TType>(ReadBytes(Address, PointerUtils.Sizeof<TType>()));
 		}
 
-		abstract public void Dispose();
+		public abstract void Dispose();
 
 		public void Copy(uint SourceAddress, uint DestinationAddress, int Size)
 		{

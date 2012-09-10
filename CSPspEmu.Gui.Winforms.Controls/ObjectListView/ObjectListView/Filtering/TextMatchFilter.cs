@@ -387,7 +387,7 @@ namespace BrightIdeasSoftware {
             /// </remarks>
             /// <param name="cellText">The text of the cell we want to search</param>
             /// <returns>A list of character ranges indicating the matched substrings</returns>
-            abstract public IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText);
+            public abstract IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText);
 
             /// <summary>
             /// Does the given text match the filter
@@ -397,7 +397,7 @@ namespace BrightIdeasSoftware {
             /// </remarks>
             /// <param name="cellText">The text of the cell we want to search</param>
             /// <returns>Return true if the given cellText matches our strategy</returns>
-            abstract public bool MatchesText(string cellText);
+            public abstract bool MatchesText(string cellText);
         }
 
         /// <summary>
@@ -423,7 +423,7 @@ namespace BrightIdeasSoftware {
             /// </remarks>
             /// <param name="cellText">The text of the cell we want to search</param>
             /// <returns>Return true if the given cellText matches our strategy</returns>
-            override public bool MatchesText(string cellText) {
+            public override bool MatchesText(string cellText) {
                 return cellText.IndexOf(this.Text, this.StringComparison) != -1;
             }
 
@@ -439,7 +439,7 @@ namespace BrightIdeasSoftware {
             /// </remarks>
             /// <param name="cellText">The text of the cell we want to search</param>
             /// <returns>A list of character ranges indicating the matched substrings</returns>
-            override public IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText) {
+            public override IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText) {
                 List<CharacterRange> ranges = new List<CharacterRange>();
 
                 int matchIndex = cellText.IndexOf(this.Text, this.StringComparison);
@@ -475,7 +475,7 @@ namespace BrightIdeasSoftware {
             /// </remarks>
             /// <param name="cellText">The text of the cell we want to search</param>
             /// <returns>Return true if the given cellText matches our strategy</returns>
-            override public bool MatchesText(string cellText) {
+            public override bool MatchesText(string cellText) {
                 return cellText.StartsWith(this.Text, this.StringComparison);
             }
 
@@ -491,7 +491,7 @@ namespace BrightIdeasSoftware {
             /// </remarks>
             /// <param name="cellText">The text of the cell we want to search</param>
             /// <returns>A list of character ranges indicating the matched substrings</returns>
-            override public IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText) {
+            public override IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText) {
                 List<CharacterRange> ranges = new List<CharacterRange>();
 
                 if (cellText.StartsWith(this.Text, this.StringComparison))
@@ -587,7 +587,7 @@ namespace BrightIdeasSoftware {
             /// </remarks>
             /// <param name="cellText">The text of the cell we want to search</param>
             /// <returns>A list of character ranges indicating the matched substrings</returns>
-            override public IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText) {
+            public override IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText) {
                 List<CharacterRange> ranges = new List<CharacterRange>();
 
                 if (!this.IsRegexInvalid) {

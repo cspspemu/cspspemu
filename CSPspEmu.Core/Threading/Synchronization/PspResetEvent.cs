@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CSPspEmu.Core.Threading.Synchronization
 {
-	abstract public class PspResetEvent
+	public abstract class PspResetEvent
 	{
 		protected bool Value;
 		protected bool AutoReset;

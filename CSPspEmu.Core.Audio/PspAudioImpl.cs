@@ -3,17 +3,17 @@ using System.Threading;
 
 namespace CSPspEmu.Core.Audio
 {
-	abstract public class PspAudioImpl : PspPluginImpl
+	public abstract class PspAudioImpl : PspPluginImpl
 	{
 		/// <summary>
 		/// Called periodically on a thread.
 		/// </summary>
-		abstract public void Update(Action<short[]> ReadStream);
+		public abstract void Update(Action<short[]> ReadStream);
 
 		/// <summary>
 		/// 
 		/// </summary>
-		abstract public void StopSynchronized();
+		public abstract void StopSynchronized();
 
 		/// <summary>
 		/// 

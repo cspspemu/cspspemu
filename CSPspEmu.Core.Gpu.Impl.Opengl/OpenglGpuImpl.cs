@@ -511,7 +511,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		}
 
-		override public unsafe void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
+		public override unsafe void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
 		{
 #if SLOW_SIMPLE_RENDER_TARGET
 			PrepareRead(GpuState);

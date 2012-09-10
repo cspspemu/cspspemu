@@ -4,7 +4,7 @@ namespace CSPspEmu.Core.Cpu.Analyzer
 {
 	public abstract class AnalyzerExpression
 	{
-		abstract public String GetExpressionString();
+		public abstract String GetExpressionString();
 	}
 
 	public class AnalyzerExpressionUndefined : AnalyzerExpression

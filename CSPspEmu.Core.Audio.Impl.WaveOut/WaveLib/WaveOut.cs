@@ -69,11 +69,13 @@ namespace WaveLib
 			m_Header.dwBufferLength = size;
 			WaveOutHelper.Try(WaveNative.waveOutPrepareHeader(m_WaveOut, ref m_Header, Marshal.SizeOf(m_Header)));
 		}
-		~WaveOutBuffer()
+		
+        ~WaveOutBuffer()
 		{
 			Dispose();
 		}
-		public void Dispose()
+		
+        public void Dispose()
 		{
 			if (m_Header.lpData != IntPtr.Zero)
 			{
@@ -106,7 +108,8 @@ namespace WaveLib
 				return m_Playing;
 			}
 		}
-		public void WaitFor()
+		
+        public void WaitFor()
 		{
 			if (m_Playing)
 			{
@@ -117,7 +120,8 @@ namespace WaveLib
 				Thread.Sleep(0);
 			}
 		}
-		public void OnCompleted()
+		
+        public void OnCompleted()
 		{
 			m_PlayEvent.Set();
 			m_Playing = false;
@@ -152,7 +156,8 @@ namespace WaveLib
 			m_Thread.IsBackground = true;
 			m_Thread.Start();
 		}
-		~WaveOutPlayer()
+		
+        ~WaveOutPlayer()
 		{
 			Dispose();
 		}
@@ -182,7 +187,8 @@ namespace WaveLib
 				}
 			GC.SuppressFinalize(this);
 		}
-		private void ThreadProc()
+		
+        private void ThreadProc()
 		{
 			while (!m_Finished && !Disposing)
 			{
@@ -206,7 +212,8 @@ namespace WaveLib
 			//Console.Write("X");
 			WaitForAllBuffers();
 		}
-		private void AllocateBuffers(int bufferSize, int bufferCount)
+		
+        private void AllocateBuffers(int bufferSize, int bufferCount)
 		{
 			FreeBuffers();
 			if (bufferCount > 0)
@@ -228,7 +235,8 @@ namespace WaveLib
 				}
 			}
 		}
-		private void FreeBuffers()
+		
+        private void FreeBuffers()
 		{
 			m_CurrentBuffer = null;
 			if (m_Buffers != null)
@@ -245,12 +253,14 @@ namespace WaveLib
 				} while(Current != First);
 			}
 		}
-		private void Advance()
+		
+        private void Advance()
 		{
 			m_CurrentBuffer = m_CurrentBuffer == null ? m_Buffers : m_CurrentBuffer.NextBuffer;
 			m_CurrentBuffer.WaitFor();
 		}
-		private void WaitForAllBuffers()
+		
+        private void WaitForAllBuffers()
 		{
 			WaveOutBuffer Buf = m_Buffers;
 			while (Buf.NextBuffer != m_Buffers)

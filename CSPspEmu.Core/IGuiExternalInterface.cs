@@ -15,7 +15,7 @@ namespace CSPspEmu.Core
 		bool IsInitialized();
 
 		// Load Methods
-		void LoadFile(String FileName);
+		void LoadFile(string FileName);
 
 		// Running Methods
 		void Pause();

@@ -79,7 +79,7 @@ namespace CSPspEmu.Core
 			UnixStart = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 		}
 
-		public struct timespec
+		public struct TimeSpec
 		{
 			public long sec;
 			public long usec;

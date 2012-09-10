@@ -14,13 +14,13 @@
 			}
 		}
 
-		override public uint PointerToPspAddressUnsafe(void* Pointer)
+		public override uint PointerToPspAddressUnsafe(void* Pointer)
 		{
 			LazyCreateMemory();
 			return base.PointerToPspAddressUnsafe(Pointer);
 		}
 
-		override public void* PspAddressToPointerUnsafe(uint _Address)
+		public override void* PspAddressToPointerUnsafe(uint _Address)
 		{
 			LazyCreateMemory();
 			return base.PspAddressToPointerUnsafe(_Address);

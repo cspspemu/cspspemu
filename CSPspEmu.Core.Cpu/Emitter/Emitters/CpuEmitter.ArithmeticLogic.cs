@@ -162,8 +162,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			LabelEnd.Mark();
 		}
 
-		unsafe public static int _max_impl(int Left, int Right) { return (Left > Right) ? Left : Right; }
-		unsafe public static int _min_impl(int Left, int Right) { return (Left < Right) ? Left : Right; }
+		public unsafe static int _max_impl(int Left, int Right) { return (Left > Right) ? Left : Right; }
+		public unsafe static int _min_impl(int Left, int Right) { return (Left < Right) ? Left : Right; }
 
 		public void max()
 		{
@@ -194,7 +194,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// DIVide (Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		unsafe public static void _div_impl(CpuThreadState CpuThreadState, int Left, int Right)
+		public unsafe static void _div_impl(CpuThreadState CpuThreadState, int Left, int Right)
 		{
 			if (Right == 0)
 			{
@@ -208,7 +208,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 		}
 
-		unsafe public static void _divu_impl(CpuThreadState CpuThreadState, uint Left, uint Right)
+		public unsafe static void _divu_impl(CpuThreadState CpuThreadState, uint Left, uint Right)
 		{
 			if (Right == 0)
 			{

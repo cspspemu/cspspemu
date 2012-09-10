@@ -319,7 +319,7 @@ namespace BrightIdeasSoftware
         [Category("Appearance"),
          Description("Should the list view show items in groups?"),
          DefaultValue(true)]
-        override public bool ShowGroups {
+        public override bool ShowGroups {
             get {
                 // Pre-Vista, virtual lists cannot show groups
                 return ObjectListView.IsVistaOrLater && this.showGroups;

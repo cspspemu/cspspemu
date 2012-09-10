@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace CSPspEmu.Core.Memory
 {
-	unsafe public sealed class FastPspMemory : PspMemory
+	public unsafe sealed class FastPspMemory : PspMemory
 	{
 		//public readonly byte* Base = (byte*)0x50000000;
 		//public readonly byte* Base = (byte*)0x40000000;

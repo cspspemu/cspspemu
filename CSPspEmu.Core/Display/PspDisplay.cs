@@ -10,10 +10,10 @@ namespace CSPspEmu.Core.Display
 	public class PspDisplay : PspEmulatorComponent
 	{
 		public const double ProcessedPixelsPerSecond = 9000000; // hz
-		public const double CyclesPerPixel            = 1;
+		public const double CyclesPerPixel           = 1;
 		public const double PixelsInARow             = 525;
-		public const double VsyncRow                   = 272;
-		public const double NumberOfRows              = 286;
+		public const double VsyncRow                 = 272;
+		public const double NumberOfRows             = 286;
 	
 		public const double HorizontalSyncHertz = (ProcessedPixelsPerSecond * CyclesPerPixel) / PixelsInARow;
 		public const double VeritcalSyncHertz = HorizontalSyncHertz / NumberOfRows;
