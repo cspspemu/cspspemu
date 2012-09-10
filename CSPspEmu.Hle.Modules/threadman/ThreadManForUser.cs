@@ -150,25 +150,25 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return 0;
 		}
 
-        [HlePspFunction(NID = 0xFFC36A14, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceKernelReferThreadRunStatus()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0xFFC36A14, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelReferThreadRunStatus()
+		{
+			return 0;
+		}
 
-        /**
-         * Delay the current thread by a specified number of sysclocks
-         *
-         * @param sysclocksPointer - Address of delay in sysclocks
-         *
-         * @return 0 on success, < 0 on error
-         */
-        [HlePspFunction(NID = 0xBD123D9E, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceKernelDelaySysClockThread()
-        {
-            return 0;
-        }
+		/**
+		 * Delay the current thread by a specified number of sysclocks
+		 *
+		 * @param sysclocksPointer - Address of delay in sysclocks
+		 *
+		 * @return 0 on success, < 0 on error
+		 */
+		[HlePspFunction(NID = 0xBD123D9E, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelDelaySysClockThread()
+		{
+			return 0;
+		}
 	}
 }

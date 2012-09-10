@@ -3,7 +3,7 @@ using Codegen;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
-    public sealed partial class CpuEmitter
+	public sealed partial class CpuEmitter
 	{
 		// Vfpu Matrix MULtiplication
 		// @FIX!!!
@@ -146,15 +146,15 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// +----------------------+--------------+----+--------------+---+--------------+ <para/>
 		/// <para/>
 		/// MatrixScale.Pair/Triple/Quad, multiply all components by scale factor <para/>
-        /// <para/>
-		/// vmscl.p %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Scale 2x2 Matrix by %vfpu_rt <para/>
-        /// vmscl.t %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Scale 3x3 Matrix by %vfpu_rt <para/>
-        /// vmscl.q %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Scale 4x4 Matrix by %vfpu_rt <para/>
 		/// <para/>
-        /// %vfpu_rt:       VFPU Vector Source Register, Scale (sreg 0..127) <para/>
-        /// %vfpu_rs:       VFPU Vector Source Register, Matrix ([p|t|q]reg 0..127) <para/>
-        /// %vfpu_rd:       VFPU Vector Destination Register, Matrix ([s|p|t|q]reg 0..127) <para/>
-        /// <para/>
+		/// vmscl.p %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Scale 2x2 Matrix by %vfpu_rt <para/>
+		/// vmscl.t %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Scale 3x3 Matrix by %vfpu_rt <para/>
+		/// vmscl.q %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Scale 4x4 Matrix by %vfpu_rt <para/>
+		/// <para/>
+		/// %vfpu_rt:       VFPU Vector Source Register, Scale (sreg 0..127) <para/>
+		/// %vfpu_rs:       VFPU Vector Source Register, Matrix ([p|t|q]reg 0..127) <para/>
+		/// %vfpu_rd:       VFPU Vector Destination Register, Matrix ([s|p|t|q]reg 0..127) <para/>
+		/// <para/>
 		/// vfpu_mtx[%vfpu_rd] &lt;- vfpu_mtx[%vfpu_rs] * vfpu_reg[%vfpu_rt]
 		/// </summary>
 		public void vmscl()

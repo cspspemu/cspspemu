@@ -51,18 +51,18 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return (SemaphoreId)SemaphoreManager.Semaphores.Create(HleSemaphore);
 		}
 
-	    /// <summary>
-	    /// Send a signal to a semaphore
-	    /// </summary>
-	    /// <example>
-	    /// // Signal the semaphore
-	    /// sceKernelSignalSema(semaphoreID, 1);
-	    /// </example>
-	    /// <param name="CpuThreadState"></param>
-	    /// <param name="SemaphoreId">The semaphore ID returned from sceKernelCreateSema</param>
-	    /// <param name="Signal">The amount to signal the semaphore (i.e. if 2 then increment the semaphore by 2)</param>
-	    /// <returns>Less than 0 On error.</returns>
-	    [HlePspFunction(NID = 0x3F53E640, FirmwareVersion = 150)]
+		/// <summary>
+		/// Send a signal to a semaphore
+		/// </summary>
+		/// <example>
+		/// // Signal the semaphore
+		/// sceKernelSignalSema(semaphoreID, 1);
+		/// </example>
+		/// <param name="CpuThreadState"></param>
+		/// <param name="SemaphoreId">The semaphore ID returned from sceKernelCreateSema</param>
+		/// <param name="Signal">The amount to signal the semaphore (i.e. if 2 then increment the semaphore by 2)</param>
+		/// <returns>Less than 0 On error.</returns>
+		[HlePspFunction(NID = 0x3F53E640, FirmwareVersion = 150)]
 		public int sceKernelSignalSema(CpuThreadState CpuThreadState, SemaphoreId SemaphoreId, int Signal)
 		{
 			//Console.Error.WriteLine("sceKernelSignalSema!");
@@ -74,13 +74,13 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return 0;
 		}
 
-	    /// <summary>
-	    /// Destroy a semaphore
-	    /// </summary>
-	    /// <param name="CpuThreadState"></param>
-	    /// <param name="SemaphoreId">The semaphore ID returned from a previous create call.</param>
-	    /// <returns>Returns the value 0 if its succesful otherwise -1</returns>
-	    [HlePspFunction(NID = 0x28B6489C, FirmwareVersion = 150)]
+		/// <summary>
+		/// Destroy a semaphore
+		/// </summary>
+		/// <param name="CpuThreadState"></param>
+		/// <param name="SemaphoreId">The semaphore ID returned from a previous create call.</param>
+		/// <returns>Returns the value 0 if its succesful otherwise -1</returns>
+		[HlePspFunction(NID = 0x28B6489C, FirmwareVersion = 150)]
 		public int sceKernelDeleteSema(CpuThreadState CpuThreadState, SemaphoreId SemaphoreId)
 		{
 			var HleSemaphore = GetSemaphoreById(SemaphoreId);
@@ -150,14 +150,14 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return _sceKernelWaitSemaCB(SemaphoreId, Signal, Timeout, HandleCallbacks: true);
 		}
 
-	    /// <summary>
-	    /// Poll a semaphore. (Similar to sceKernelWaitSema/CB but without waiting)
-	    /// </summary>
-	    /// <param name="CpuThreadState"></param>
-	    /// <param name="SemaphoreId">UID of the semaphore to poll.</param>
-	    /// <param name="Signal">The value to test for.</param>
-	    /// <returns>Less than 0 on error</returns>
-	    [HlePspFunction(NID = 0x58B1F937, FirmwareVersion = 150)]
+		/// <summary>
+		/// Poll a semaphore. (Similar to sceKernelWaitSema/CB but without waiting)
+		/// </summary>
+		/// <param name="CpuThreadState"></param>
+		/// <param name="SemaphoreId">UID of the semaphore to poll.</param>
+		/// <param name="Signal">The value to test for.</param>
+		/// <returns>Less than 0 on error</returns>
+		[HlePspFunction(NID = 0x58B1F937, FirmwareVersion = 150)]
 		public int sceKernelPollSema(CpuThreadState CpuThreadState, SemaphoreId SemaphoreId, int Signal)
 		{
 			var Semaphore = GetSemaphoreById(SemaphoreId);

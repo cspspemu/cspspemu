@@ -258,12 +258,12 @@ namespace CSPspEmu.Hle.Modules.sysmem
 			return 0;
 		}
 
-	    /// <summary>
-	    /// 
-	    /// </summary>
-	    /// <param name="Format"></param>
-	    /// <param name="CpuThreadState"></param>
-	    [HlePspFunction(NID = 0x13A5ABEF, FirmwareVersion = 150)]
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Format"></param>
+		/// <param name="CpuThreadState"></param>
+		[HlePspFunction(NID = 0x13A5ABEF, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
 		public void sceKernelPrintf(string Format, CpuThreadState CpuThreadState)
 		{

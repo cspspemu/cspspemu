@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace CSPspEmu.Hle.Formats.Font
 {
-    public partial class PGF
+	public partial class PGF
 	{
 		public class Glyph
 		{
@@ -50,7 +50,7 @@ namespace CSPspEmu.Hle.Formats.Font
 
 		public class GlyphSymbol
 		{
-            [Flags]
+			[Flags]
 			public enum GlyphFlags : int
 			{
 				FONT_PGF_BMP_H_ROWS = 0x01,

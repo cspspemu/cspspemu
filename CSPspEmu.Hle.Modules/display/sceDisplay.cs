@@ -283,35 +283,35 @@ namespace CSPspEmu.Hle.Modules.display
 			return 0;
 		}
 
-	    /// <summary>
-	    /// 
-	    /// </summary>
-	    /// <param name="CpuThreadState"></param>
-	    /// <param name="CycleCount">Number of VSYNCs to wait before blocking the thread on VBLANK.</param>
-	    /// <returns></returns>
-	    [HlePspFunction(NID = 0x40F1469C, FirmwareVersion = 500, CheckInsideInterrupt = true)]
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="CpuThreadState"></param>
+		/// <param name="CycleCount">Number of VSYNCs to wait before blocking the thread on VBLANK.</param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x40F1469C, FirmwareVersion = 500, CheckInsideInterrupt = true)]
 		public int sceDisplayWaitVblankStartMulti(CpuThreadState CpuThreadState, int CycleCount)
 		{
 			return _waitVblankCB(CpuThreadState, HandleCallbacks: false, CycleCount: CycleCount);
 		}
 
-	    /// <summary>
-	    /// 
-	    /// </summary>
-	    /// <param name="CpuThreadState"></param>
-	    /// <param name="CycleCount">Number of VSYNCs to wait before blocking the thread on VBLANK.</param>
-	    /// <returns></returns>
-	    [HlePspFunction(NID = 0x77ED8B3A, FirmwareVersion = 500, CheckInsideInterrupt = true)]
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="CpuThreadState"></param>
+		/// <param name="CycleCount">Number of VSYNCs to wait before blocking the thread on VBLANK.</param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0x77ED8B3A, FirmwareVersion = 500, CheckInsideInterrupt = true)]
 		public int sceDisplayWaitVblankStartMultiCB(CpuThreadState CpuThreadState, int CycleCount)
 		{
 			return _waitVblankCB(CpuThreadState, HandleCallbacks: true, CycleCount: CycleCount);
 		}
 
-        [HlePspFunction(NID = 0xB4F378FA, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceDisplayIsForeground()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0xB4F378FA, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceDisplayIsForeground()
+		{
+			return 0;
+		}
 	}
 }

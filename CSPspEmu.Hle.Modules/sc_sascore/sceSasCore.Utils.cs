@@ -133,7 +133,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		public int Height;
 	}
 
-    public class SasVoice
+	public class SasVoice
 	{
 		/// <summary>
 		/// 
@@ -221,7 +221,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		}
 	}
 
-    public class SasCore
+	public class SasCore
 	{
 		/// <summary>
 		/// 

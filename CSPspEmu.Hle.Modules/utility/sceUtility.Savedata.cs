@@ -214,38 +214,38 @@ namespace CSPspEmu.Hle.Modules.utility
 						}
 						break;
 
-	                // "METAL SLUG XX" outputs the following on stdout after calling mode 8 (PspUtilitySavedataMode.Sizes):
-	                //
-	                // ------ SIZES ------
-	                // ---------- savedata result ----------
-	                // result = 0x801103c7
-	                //
-	                // bind : un used(0x0).
-	                //
-	                // -- dir name --
-	                // title id : ULUS10495
-	                // user  id : METALSLUGXX
-	                //
-	                // ms free size
-	                //   cluster size(byte) : 32768 byte
-	                //   free cluster num   : 32768
-	                //   free size(KB)      : 1048576 KB
-	                //   free size(string)  : "1 GB"
-	                //
-	                // ms data size(titleId=ULUS10495, userId=METALSLUGXX)
-	                //   cluster num        : 0
-	                //   size (KB)          : 0 KB
-	                //   size (string)      : "0 KB"
-	                //   size (32KB)        : 0 KB
-	                //   size (32KB string) : "0 KB"
-	                //
-	                // utility data size
-	                //   cluster num        : 13
-	                //   size (KB)          : 416 KB
-	                //   size (string)      : "416 KB"
-	                //   size (32KB)        : 416 KB
-	                //   size (32KB string) : "416 KB"
-	                // error: SCE_UTILITY_SAVEDATA_TYPE_SIZES return 801103c7
+					// "METAL SLUG XX" outputs the following on stdout after calling mode 8 (PspUtilitySavedataMode.Sizes):
+					//
+					// ------ SIZES ------
+					// ---------- savedata result ----------
+					// result = 0x801103c7
+					//
+					// bind : un used(0x0).
+					//
+					// -- dir name --
+					// title id : ULUS10495
+					// user  id : METALSLUGXX
+					//
+					// ms free size
+					//   cluster size(byte) : 32768 byte
+					//   free cluster num   : 32768
+					//   free size(KB)      : 1048576 KB
+					//   free size(string)  : "1 GB"
+					//
+					// ms data size(titleId=ULUS10495, userId=METALSLUGXX)
+					//   cluster num        : 0
+					//   size (KB)          : 0 KB
+					//   size (string)      : "0 KB"
+					//   size (32KB)        : 0 KB
+					//   size (32KB string) : "0 KB"
+					//
+					// utility data size
+					//   cluster num        : 13
+					//   size (KB)          : 416 KB
+					//   size (string)      : "416 KB"
+					//   size (32KB)        : 416 KB
+					//   size (32KB string) : "416 KB"
+					// error: SCE_UTILITY_SAVEDATA_TYPE_SIZES return 801103c7
 					case PspUtilitySavedataMode.Sizes:
 						{
 							SceKernelErrors SceKernelError = SceKernelErrors.ERROR_OK;

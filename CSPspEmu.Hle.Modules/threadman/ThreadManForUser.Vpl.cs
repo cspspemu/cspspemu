@@ -241,17 +241,17 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return 0;
 		}
 
-	    /// <summary>
-	    /// Free a block
-	    /// </summary>
-	    ///<param name="CpuThreadState"></param>
-	    ///<param name="VariablePoolId">The UID of the pool</param>
-	    /// <param name="Data">The data block to deallocate</param>
-	    /// <returns>
-	    ///		0 on success
-	    ///		less than 0 on error
-	    /// </returns>
-	    [HlePspFunction(NID = 0xB736E9FF, FirmwareVersion = 150)]
+		/// <summary>
+		/// Free a block
+		/// </summary>
+		///<param name="CpuThreadState"></param>
+		///<param name="VariablePoolId">The UID of the pool</param>
+		/// <param name="Data">The data block to deallocate</param>
+		/// <returns>
+		///		0 on success
+		///		less than 0 on error
+		/// </returns>
+		[HlePspFunction(NID = 0xB736E9FF, FirmwareVersion = 150)]
 		public int sceKernelFreeVpl(CpuThreadState CpuThreadState, VariablePoolId VariablePoolId, PspPointer Data)
 		{
 			var VariablePool = VariablePoolList.Get(VariablePoolId);
@@ -294,7 +294,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			PSP_VPL_ATTR_EXT       = 0x8000,
 		}
 		/// <summary>
-        /// Variable pool status info.
+		/// Variable pool status info.
 		/// </summary>
 		public struct SceKernelVplInfo
 		{

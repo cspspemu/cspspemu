@@ -24,22 +24,22 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return HleThread;
 		}
 
-	    /// <summary>
-	    /// Create a thread
-	    /// </summary>
-	    /// <example>
-	    /// SceUID thid;
-	    /// thid = sceKernelCreateThread("my_thread", threadFunc, 0x18, 0x10000, 0, NULL);
-	    /// </example>
-	    /// <param name="CpuThreadState"> </param>
-	    /// <param name="Name">An arbitrary thread name.</param>
-	    /// <param name="EntryPoint">The thread function to run when started.</param>
-	    /// <param name="InitPriority">The initial priority of the thread. Less if higher priority.</param>
-	    /// <param name="StackSize">The size of the initial stack.</param>
-	    /// <param name="Attribute">The thread attributes, zero or more of <see cref="PspThreadAttributes"/>.</param>
-	    /// <param name="Option">Additional options specified by ::SceKernelThreadOptParam.</param>
-	    /// <returns>UID of the created thread, or an error code.</returns>
-	    [HlePspFunction(NID = 0x446D8DE6, FirmwareVersion = 150)]
+		/// <summary>
+		/// Create a thread
+		/// </summary>
+		/// <example>
+		/// SceUID thid;
+		/// thid = sceKernelCreateThread("my_thread", threadFunc, 0x18, 0x10000, 0, NULL);
+		/// </example>
+		/// <param name="CpuThreadState"> </param>
+		/// <param name="Name">An arbitrary thread name.</param>
+		/// <param name="EntryPoint">The thread function to run when started.</param>
+		/// <param name="InitPriority">The initial priority of the thread. Less if higher priority.</param>
+		/// <param name="StackSize">The size of the initial stack.</param>
+		/// <param name="Attribute">The thread attributes, zero or more of <see cref="PspThreadAttributes"/>.</param>
+		/// <param name="Option">Additional options specified by ::SceKernelThreadOptParam.</param>
+		/// <returns>UID of the created thread, or an error code.</returns>
+		[HlePspFunction(NID = 0x446D8DE6, FirmwareVersion = 150)]
 		public uint sceKernelCreateThread(CpuThreadState CpuThreadState, string Name, uint /*SceKernelThreadEntry*/ EntryPoint, int InitPriority, int StackSize, PspThreadAttributes Attribute, SceKernelThreadOptParam* Option)
 		{
 			// 512 byte min. (required for interrupts)
@@ -142,15 +142,15 @@ namespace CSPspEmu.Hle.Modules.threadman
 			ThreadToStart.SetStatus(HleThread.Status.Ready);
 		}
 
-	    /// <summary>
-	    /// Start a created thread
-	    /// </summary>
-	    /// <param name="CpuThreadState"></param>
-	    /// <param name="ThreadId">Thread ID from sceKernelCreateThread</param>
-	    /// <param name="UserDataLength">Length of the data pointed to by argp, in bytes</param>
-	    /// <param name="UserDataPointer">Pointer to the arguments.</param>
-	    /// <returns></returns>
-	    [HlePspFunction(NID = 0xF475845D, FirmwareVersion = 150)]
+		/// <summary>
+		/// Start a created thread
+		/// </summary>
+		/// <param name="CpuThreadState"></param>
+		/// <param name="ThreadId">Thread ID from sceKernelCreateThread</param>
+		/// <param name="UserDataLength">Length of the data pointed to by argp, in bytes</param>
+		/// <param name="UserDataPointer">Pointer to the arguments.</param>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xF475845D, FirmwareVersion = 150)]
 		public int sceKernelStartThread(CpuThreadState CpuThreadState, int ThreadId, int UserDataLength, uint UserDataPointer)
 		{
 			var ThreadToStart = GetThreadById((int)ThreadId);
@@ -272,14 +272,14 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return 0;
 		}
 
-	    /// <summary>
-	    /// 
-	    /// </summary>
-	    /// <param name="ThreadId"></param>
-	    /// <param name="Timeout"></param>
-	    /// <param name="HandleCallbacks"></param>
-	    /// <returns></returns>
-	    private int _sceKernelWaitThreadEndCB(int ThreadId, uint* Timeout, bool HandleCallbacks)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="ThreadId"></param>
+		/// <param name="Timeout"></param>
+		/// <param name="HandleCallbacks"></param>
+		/// <returns></returns>
+		private int _sceKernelWaitThreadEndCB(int ThreadId, uint* Timeout, bool HandleCallbacks)
 		{
 			var ThreadToWaitEnd = GetThreadById(ThreadId);
 
@@ -406,13 +406,13 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return _sceKernelDelayThreadCB(DelayInMicroseconds, HandleCallbacks: true);
 		}
 
-	    /// <summary>
-	    /// Modify the attributes of the current thread.
-	    /// </summary>
-	    /// <param name="RemoveAttributes"></param>
-	    /// <param name="AddAttributes">The thread attributes to modify. One of <see cref="PspThreadAttributes"/>.</param>
-	    /// <returns>Less than 0 on error</returns>
-	    [HlePspFunction(NID = 0xEA748E31, FirmwareVersion = 150)]
+		/// <summary>
+		/// Modify the attributes of the current thread.
+		/// </summary>
+		/// <param name="RemoveAttributes"></param>
+		/// <param name="AddAttributes">The thread attributes to modify. One of <see cref="PspThreadAttributes"/>.</param>
+		/// <returns>Less than 0 on error</returns>
+		[HlePspFunction(NID = 0xEA748E31, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceKernelChangeCurrentThreadAttr(PspThreadAttributes RemoveAttributes, PspThreadAttributes AddAttributes)
 		{
@@ -421,19 +421,19 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return 0;
 		}
 
-	    /// <summary>
-	    /// Change the threads current priority.
-	    /// </summary>
-	    ///<param name="CpuThreadState"></param>
-	    ///<param name="ThreadId">The ID of the thread (from <see cref="sceKernelCreateThread"/> or <see cref="sceKernelGetThreadId"/>)</param>
-	    /// <param name="Priority">The new priority (the lower the number the higher the priority)</param>
-	    /// <example>
-	    ///		int thid = sceKernelGetThreadId();
-	    ///		// Change priority of current thread to 16
-	    ///		sceKernelChangeThreadPriority(thid, 16);
-	    /// </example>
-	    /// <returns>0 if successful, otherwise the error code.</returns>
-	    [HlePspFunction(NID = 0x71BC9871, FirmwareVersion = 150)]
+		/// <summary>
+		/// Change the threads current priority.
+		/// </summary>
+		///<param name="CpuThreadState"></param>
+		///<param name="ThreadId">The ID of the thread (from <see cref="sceKernelCreateThread"/> or <see cref="sceKernelGetThreadId"/>)</param>
+		/// <param name="Priority">The new priority (the lower the number the higher the priority)</param>
+		/// <example>
+		///		int thid = sceKernelGetThreadId();
+		///		// Change priority of current thread to 16
+		///		sceKernelChangeThreadPriority(thid, 16);
+		/// </example>
+		/// <returns>0 if successful, otherwise the error code.</returns>
+		[HlePspFunction(NID = 0x71BC9871, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceKernelChangeThreadPriority(CpuThreadState CpuThreadState, int ThreadId, int Priority)
 		{
@@ -573,13 +573,13 @@ namespace CSPspEmu.Hle.Modules.threadman
 			//return SpHigh - SpCurrent;
 		}
 
-	    /// <summary>
-	    /// Rotate thread ready queue at a set priority
-	    /// </summary>
-	    /// <param name="CpuThreadState"></param>
-	    /// <param name="priority">The priority of the queue</param>
-	    /// <returns>0 on success, less than 0 on error.</returns>
-	    [HlePspFunction(NID = 0x912354A7, FirmwareVersion = 150)]
+		/// <summary>
+		/// Rotate thread ready queue at a set priority
+		/// </summary>
+		/// <param name="CpuThreadState"></param>
+		/// <param name="priority">The priority of the queue</param>
+		/// <returns>0 on success, less than 0 on error.</returns>
+		[HlePspFunction(NID = 0x912354A7, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceKernelRotateThreadReadyQueue(CpuThreadState CpuThreadState, int priority)
 		{
@@ -743,9 +743,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return 0;
 		}
 
-        /// <summary>
-        /// Structure to contain the system status returned by <see cref="sceKernelReferSystemStatus"/>.
-        /// </summary>
+		/// <summary>
+		/// Structure to contain the system status returned by <see cref="sceKernelReferSystemStatus"/>.
+		/// </summary>
 		public struct SceKernelSystemStatus
 		{
 			/// <summary>
@@ -779,13 +779,13 @@ namespace CSPspEmu.Hle.Modules.threadman
 			public uint VfpuSwitchCount;
 		}
 
-	    /// <summary>
-	    /// Get the current system status.
-	    /// </summary>
-	    /// <param name="?">Pointer to an <see cref="SceKernelSystemStatus"/> structure.</param>
-	    /// <param name="?"></param>
-	    /// <param name="SceKernelSystemStatus"></param>
-	    [HlePspFunction(NID = 0x627E6F3A, FirmwareVersion = 150)]
+		/// <summary>
+		/// Get the current system status.
+		/// </summary>
+		/// <param name="?">Pointer to an <see cref="SceKernelSystemStatus"/> structure.</param>
+		/// <param name="?"></param>
+		/// <param name="SceKernelSystemStatus"></param>
+		[HlePspFunction(NID = 0x627E6F3A, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceKernelReferSystemStatus(ref SceKernelSystemStatus SceKernelSystemStatus)
 		{
