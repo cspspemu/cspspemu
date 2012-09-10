@@ -3,7 +3,7 @@ using CSharpUtils;
 
 namespace CSPspEmu.Core.Utils
 {
-	unsafe sealed public class PixelFormatDecoder
+	unsafe public sealed class PixelFormatDecoder
 	{
 		internal PixelFormatDecoder()
 		{

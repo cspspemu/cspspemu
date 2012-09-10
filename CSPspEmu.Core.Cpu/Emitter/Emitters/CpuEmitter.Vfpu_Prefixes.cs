@@ -1,9 +1,9 @@
 ﻿using System;
 using CSharpUtils;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-    public sealed partial class CpuEmiter
+    public sealed partial class CpuEmitter
 	{
 		public static void _vpfxd_impl(CpuThreadState CpuThreadState, uint Value)
 		{

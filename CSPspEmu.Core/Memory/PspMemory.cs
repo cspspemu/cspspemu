@@ -34,7 +34,7 @@ namespace CSPspEmu.Core.Memory
 			public InvalidAddressException(ulong Address, Exception innerException) : base(String.Format("Invalid Address : 0x{0:X8}", Address), innerException) { }
 		}
 
-		sealed public class Segment
+		public sealed class Segment
 		{
 			public uint Low { get; private set; }
 			public uint High { get; private set; }

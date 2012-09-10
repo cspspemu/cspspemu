@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using CSPspEmu.Core.Cpu;
-using CSPspEmu.Core.Cpu.Emiter;
+using CSPspEmu.Core.Cpu.Emitter;
 using CSharpUtils;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
@@ -21,7 +21,7 @@ namespace CSPspEmu.Hle
 
 		private Action<CpuThreadState> CreateDelegateForMethodInfo(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute)
 		{
-			var MipsMethodEmiter = new MipsMethodEmiter(CpuProcessor, 0);
+			var MipsMethodEmiter = new MipsMethodEmitter(CpuProcessor, 0);
 			int GprIndex = 4;
 			int FprIndex = 0;
 

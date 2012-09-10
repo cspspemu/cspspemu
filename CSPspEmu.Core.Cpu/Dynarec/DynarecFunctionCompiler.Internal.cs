@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using Codegen;
-using CSPspEmu.Core.Cpu.Table;
-using CSPspEmu.Core.Cpu.Emiter;
 using CSPspEmu.Core.Cpu.Assembler;
+using CSPspEmu.Core.Cpu.Emitter;
+using CSPspEmu.Core.Cpu.Table;
 
 namespace CSPspEmu.Core.Cpu.Dynarec
 {
@@ -15,10 +15,10 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 	{
         internal class InternalFunctionCompiler
 		{
-			public static Action<uint, CpuEmiter> CpuEmiterInstruction = EmitLookupGenerator.GenerateSwitchDelegate<CpuEmiter>(InstructionTable.ALL);
+			public static Action<uint, CpuEmitter> CpuEmiterInstruction = EmitLookupGenerator.GenerateSwitchDelegate<CpuEmitter>(InstructionTable.ALL);
 			static MipsDisassembler MipsDisassembler = new MipsDisassembler();
-			CpuEmiter CpuEmiter;
-			MipsMethodEmiter MipsMethodEmiter;
+			CpuEmitter CpuEmiter;
+			MipsMethodEmitter MipsMethodEmiter;
 			SafeILGeneratorEx SafeILGenerator;
 			DynarecFunctionCompiler DynarecFunctionCompiler;
 			IInstructionReader InstructionReader;
@@ -63,10 +63,10 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				if (_ExploreNewPcCallback != null) _ExploreNewPcCallback(PC);
 			}
 
-			internal InternalFunctionCompiler(CpuProcessor CpuProcessor, MipsMethodEmiter MipsMethodEmiter, DynarecFunctionCompiler DynarecFunctionCompiler, IInstructionReader InstructionReader, Action<uint> _ExploreNewPcCallback, uint EntryPC, bool DoLog)
+			internal InternalFunctionCompiler(CpuProcessor CpuProcessor, MipsMethodEmitter MipsMethodEmiter, DynarecFunctionCompiler DynarecFunctionCompiler, IInstructionReader InstructionReader, Action<uint> _ExploreNewPcCallback, uint EntryPC, bool DoLog)
 			{
 				this._ExploreNewPcCallback = _ExploreNewPcCallback;
-				this.CpuEmiter = new CpuEmiter(MipsMethodEmiter, InstructionReader, CpuProcessor);
+				this.CpuEmiter = new CpuEmitter(MipsMethodEmiter, InstructionReader, CpuProcessor);
 				this.CpuEmiter.AnalyzePCEvent += ExploreNewPcCallback;
 				this.MipsMethodEmiter = MipsMethodEmiter;
 				this.GlobalInstructionStats = CpuProcessor.GlobalInstructionStats;

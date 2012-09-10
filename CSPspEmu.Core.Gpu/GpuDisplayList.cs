@@ -145,7 +145,7 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// Current status of the DisplayList.
 		/// </summary>
-		readonly public WaitableStateMachine<StatusEnum> Status = new WaitableStateMachine<StatusEnum>();
+		public readonly WaitableStateMachine<StatusEnum> Status = new WaitableStateMachine<StatusEnum>();
 
 		/// <summary>
 		/// Indicates if the list can be used.

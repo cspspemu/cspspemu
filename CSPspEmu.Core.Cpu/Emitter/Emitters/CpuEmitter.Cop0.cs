@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	public sealed partial class CpuEmiter
+	public sealed partial class CpuEmitter
 	{
 		// C? (From/To) Cop0
 		public void cfc0() { throw (new NotImplementedException()); }

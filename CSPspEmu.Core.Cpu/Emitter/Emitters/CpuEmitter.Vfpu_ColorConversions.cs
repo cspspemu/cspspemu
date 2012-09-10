@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-    public sealed partial class CpuEmiter
+    public sealed partial class CpuEmitter
 	{
 		public static uint _vt4444_step(uint i0, uint i1)
 		{

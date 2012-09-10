@@ -1,9 +1,9 @@
 ﻿using System;
 using CSharpUtils;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-    public sealed partial class CpuEmiter
+    public sealed partial class CpuEmitter
 	{
 		public void vmfvc() { throw (new NotImplementedException("")); }
 		public void vmtvc() { throw (new NotImplementedException("")); }
@@ -62,7 +62,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				SafeILGenerator.LoadArgument0CpuThreadState();
 				SafeILGenerator.Push((int)(Instruction.IMM7 + 128));
-				MipsMethodEmiter.CallMethod((Func<CpuThreadState, VfpuControlRegistersEnum, uint>)CpuEmiter._mfvc_impl);
+				MipsMethodEmiter.CallMethod((Func<CpuThreadState, VfpuControlRegistersEnum, uint>)CpuEmitter._mfvc_impl);
 			});
 		}
 

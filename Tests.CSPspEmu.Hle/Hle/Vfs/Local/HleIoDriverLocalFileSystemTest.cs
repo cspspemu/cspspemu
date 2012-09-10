@@ -1,6 +1,5 @@
 ﻿using CSPspEmu.Hle.Vfs.Local;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace CSPspEmu.Core.Tests
 {

@@ -2,9 +2,9 @@
 using CSPspEmu.Core.Memory;
 using Codegen;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	public unsafe sealed partial class CpuEmiter
+	public unsafe sealed partial class CpuEmitter
 	{
 		private void _save_pc()
 		{
@@ -134,7 +134,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
 				SafeILGenerator.Push((int)IMM);
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				MipsMethodEmiter.CallMethod((Func<CpuThreadState, uint, int, uint, uint>)CpuEmiter._lwl_exec);
+				MipsMethodEmiter.CallMethod((Func<CpuThreadState, uint, int, uint, uint>)CpuEmitter._lwl_exec);
 			});
 		}
 
@@ -149,7 +149,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
 				SafeILGenerator.Push((int)IMM);
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				MipsMethodEmiter.CallMethod((Func<CpuThreadState, uint, int, uint, uint>)CpuEmiter._lwr_exec);
+				MipsMethodEmiter.CallMethod((Func<CpuThreadState, uint, int, uint, uint>)CpuEmitter._lwr_exec);
 			});	
 		}
 
@@ -187,7 +187,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.LoadGPR_Unsigned(RS);
 			SafeILGenerator.Push((int)IMM);
 			MipsMethodEmiter.LoadGPR_Unsigned(RT);
-			MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint, int, uint>)CpuEmiter._swl_exec);
+			MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint, int, uint>)CpuEmitter._swl_exec);
 		}
 
 
@@ -199,7 +199,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.LoadGPR_Unsigned(RS);
 			SafeILGenerator.Push((int)IMM);
 			MipsMethodEmiter.LoadGPR_Unsigned(RT);
-			MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint, int, uint>)CpuEmiter._swr_exec);
+			MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint, int, uint>)CpuEmitter._swr_exec);
 		}
 
 		// Load Linked word.

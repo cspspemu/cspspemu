@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	public sealed partial class CpuEmiter
+	public sealed partial class CpuEmitter
 	{
 		public static void _vrnds(CpuThreadState CpuThreadState, int Seed)
 		{

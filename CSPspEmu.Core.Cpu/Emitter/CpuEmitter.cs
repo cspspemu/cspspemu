@@ -1,9 +1,9 @@
-﻿namespace CSPspEmu.Core.Cpu.Emiter
+﻿namespace CSPspEmu.Core.Cpu.Emitter
 {
-	public sealed partial class CpuEmiter
+	public sealed partial class CpuEmitter
 	{
 		public CpuProcessor CpuProcessor;
-		private MipsMethodEmiter MipsMethodEmiter;
+		private MipsMethodEmitter MipsMethodEmiter;
 		private IInstructionReader InstructionReader;
 		public Instruction Instruction { private set; get; }
 		public uint PC { private set; get; }
@@ -24,7 +24,7 @@
 		public int FD { get { return Instruction.FD; } }
 		public int FS { get { return Instruction.FS; } }
 
-		public CpuEmiter(MipsMethodEmiter MipsMethodEmiter, IInstructionReader InstructionReader, CpuProcessor CpuProcessor)
+		public CpuEmitter(MipsMethodEmitter MipsMethodEmiter, IInstructionReader InstructionReader, CpuProcessor CpuProcessor)
 		{
 			this.MipsMethodEmiter = MipsMethodEmiter;
 			this.InstructionReader = InstructionReader;

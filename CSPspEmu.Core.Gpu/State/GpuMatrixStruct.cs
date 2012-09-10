@@ -7,7 +7,7 @@ namespace CSPspEmu.Core.Gpu.State
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
     public unsafe struct GpuMatrix4x4Struct
 	{
-		readonly public static int[] Indexes = new int[] {
+		public readonly static int[] Indexes = new int[] {
 			0, 1, 2, 3,
 			4, 5, 6, 7,
 			8, 9, 10, 11,
@@ -101,7 +101,7 @@ namespace CSPspEmu.Core.Gpu.State
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public unsafe struct GpuMatrix4x3Struct
 	{
-		readonly public static int[] Indexes = new int[] {
+		public readonly static int[] Indexes = new int[] {
 			0, 1, 2,
 			4, 5, 6,
 			8, 9, 10,

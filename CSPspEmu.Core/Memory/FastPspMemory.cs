@@ -3,10 +3,10 @@ using System.Diagnostics;
 
 namespace CSPspEmu.Core.Memory
 {
-	unsafe sealed public class FastPspMemory : PspMemory
+	unsafe public sealed class FastPspMemory : PspMemory
 	{
-		//readonly public byte* Base = (byte*)0x50000000;
-		//readonly public byte* Base = (byte*)0x40000000;
+		//public readonly byte* Base = (byte*)0x50000000;
+		//public readonly byte* Base = (byte*)0x40000000;
 		public static byte* _Base = null;
 		public static byte* StaticNullPtr;
 		public static byte* StaticScratchPadPtr;

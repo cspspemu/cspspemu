@@ -1,5 +1,5 @@
 ﻿using System;
-using CSPspEmu.Core.Cpu.Emiter;
+using CSPspEmu.Core.Cpu.Emitter;
 
 namespace CSPspEmu.Core.Cpu.Dynarec
 {
@@ -18,7 +18,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			//var Stopwatch = new Logger.Stopwatch();
 			//Stopwatch.Tick();
 			
-			var MipsMethodEmiter = new MipsMethodEmiter(CpuProcessor, PC, DoDebug, DoLog);
+			var MipsMethodEmiter = new MipsMethodEmitter(CpuProcessor, PC, DoDebug, DoLog);
 			var InternalFunctionCompiler = new InternalFunctionCompiler(CpuProcessor, MipsMethodEmiter, this, InstructionReader, ExploreNewPcCallback, PC, DoLog);
 			DynarecFunction = InternalFunctionCompiler.CreateFunction();
 

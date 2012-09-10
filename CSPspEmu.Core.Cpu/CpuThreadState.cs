@@ -5,7 +5,7 @@ using System.Linq;
 using CSharpUtils.Threading;
 using CSharpUtils;
 using CSPspEmu.Core.Memory;
-using CSPspEmu.Core.Cpu.Emiter;
+using CSPspEmu.Core.Cpu.Emitter;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -273,7 +273,7 @@ namespace CSPspEmu.Core.Cpu
 		public FprList FPR;
 		public VfprList Vfpr;
 		public FprListInteger FPR_I;
-		//readonly public float* FPR;
+		//public readonly float* FPR;
 
 		public void* GetMemoryPtr(uint Address)
 		{

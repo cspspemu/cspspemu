@@ -8,12 +8,12 @@ using System.Runtime.InteropServices;
 using CSPspEmu.Core.Memory;
 using Codegen;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
 	/// <summary>
 	/// <see cref="http://www.mrc.uidaho.edu/mrc/people/jff/digital/MIPSir.html"/>
 	/// </summary>
-	public unsafe class MipsMethodEmiter
+	public unsafe class MipsMethodEmitter
 	{
 #if USE_DYNAMIC_METHOD
 		//protected DynamicMethod DynamicMethod;
@@ -137,7 +137,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		public MipsMethodEmiter(CpuProcessor Processor, uint PC, bool DoDebug = false, bool DoLog = false)
+		public MipsMethodEmitter(CpuProcessor Processor, uint PC, bool DoDebug = false, bool DoLog = false)
 		{
 			this.Processor = Processor;
 
@@ -338,14 +338,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void LoadFCR31_CC()
 		{
 			SafeILGenerator.LoadArgument0CpuThreadState();
-			SafeILGenerator.Call((Func<CpuThreadState, bool>)MipsMethodEmiter._LoadFcr31CC);
+			SafeILGenerator.Call((Func<CpuThreadState, bool>)MipsMethodEmitter._LoadFcr31CC);
 		}
 
 		public void SaveFCR31_CC(Action Action)
 		{
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			Action();
-			SafeILGenerator.Call((Action<CpuThreadState, bool>)MipsMethodEmiter._SaveFcr31CC);
+			SafeILGenerator.Call((Action<CpuThreadState, bool>)MipsMethodEmitter._SaveFcr31CC);
 		}
 
 		public void LoadGPR_Signed(int R)

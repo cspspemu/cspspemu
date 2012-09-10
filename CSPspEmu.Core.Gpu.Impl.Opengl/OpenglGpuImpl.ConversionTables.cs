@@ -140,7 +140,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			public PixelType OpenglPixelType;
 		};
 
-		static readonly public GlPixelFormat[] GlPixelFormatList = new GlPixelFormat[]
+		static public readonly GlPixelFormat[] GlPixelFormatList = new GlPixelFormat[]
 		{
 			new GlPixelFormat() { GuPixelFormat = GuPixelFormats.RGBA_5650, OpenglPixelType = PixelType.UnsignedShort565Reversed },
 			new GlPixelFormat() { GuPixelFormat = GuPixelFormats.RGBA_5551, OpenglPixelType = PixelType.UnsignedShort1555Reversed },

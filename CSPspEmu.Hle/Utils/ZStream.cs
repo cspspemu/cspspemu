@@ -45,7 +45,7 @@ using System;
 namespace ComponentAce.Compression.Libs.zlib
 {
 	
-	sealed public class ZStream
+	public sealed class ZStream
 	{
 		
 		private const int MAX_WBITS = 15; // 32K LZ77 window		

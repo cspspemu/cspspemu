@@ -3,9 +3,9 @@ using System.Runtime.CompilerServices;
 using CSharpUtils;
 using Codegen;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	sealed public partial class CpuEmiter
+	public sealed partial class CpuEmitter
 	{
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Arithmetic operations.
@@ -58,7 +58,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
 				SafeILGenerator.Push((int)Instruction.POS);
 				
-				MipsMethodEmiter.CallMethod((Func<uint, int, uint>)CpuEmiter._rotr);
+				MipsMethodEmiter.CallMethod((Func<uint, int, uint>)CpuEmitter._rotr);
 			});
 			//$rd = ROTR($rt, $ps);
 		}
@@ -67,7 +67,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
-				MipsMethodEmiter.CallMethod((Func<uint, int, uint>)CpuEmiter._rotr);
+				MipsMethodEmiter.CallMethod((Func<uint, int, uint>)CpuEmitter._rotr);
 			});
 		}
 
@@ -120,7 +120,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RD, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				SafeILGenerator.Call((Func<uint, uint>)CpuEmiter._bitrev_impl);
+				SafeILGenerator.Call((Func<uint, uint>)CpuEmitter._bitrev_impl);
 			});
 		}
 
@@ -227,14 +227,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			MipsMethodEmiter.LoadGPR_Signed(RS);
 			MipsMethodEmiter.LoadGPR_Signed(RT);
-			SafeILGenerator.Call((Action<CpuThreadState, int, int>)CpuEmiter._div_impl);
+			SafeILGenerator.Call((Action<CpuThreadState, int, int>)CpuEmitter._div_impl);
 		}
 		public void divu() {
 			SafeILGenerator.Comment("DIVU r" + RS + ", r" + RT);
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			MipsMethodEmiter.LoadGPR_Unsigned(RS);
 			MipsMethodEmiter.LoadGPR_Unsigned(RT);
-			SafeILGenerator.Call((Action<CpuThreadState, uint, uint>)CpuEmiter._divu_impl);
+			SafeILGenerator.Call((Action<CpuThreadState, uint, uint>)CpuEmitter._divu_impl);
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
@@ -347,7 +347,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
 				SafeILGenerator.Push((int)Instruction.POS);
 				SafeILGenerator.Push((int)Instruction.SIZE_E);
-				SafeILGenerator.Call((Func<uint, int, int, uint>)CpuEmiter._ext_impl);
+				SafeILGenerator.Call((Func<uint, int, int, uint>)CpuEmitter._ext_impl);
 			});
 		}
 
@@ -362,7 +362,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
 				SafeILGenerator.Push((int)Instruction.POS);
 				SafeILGenerator.Push((int)Instruction.SIZE_I);
-				SafeILGenerator.Call((Func<uint, uint, int, int, uint>)CpuEmiter._ins_impl);
+				SafeILGenerator.Call((Func<uint, uint, int, int, uint>)CpuEmitter._ins_impl);
 			});
 		}
 
@@ -390,7 +390,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RD, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
-				SafeILGenerator.Call((Func<uint, uint>)CpuEmiter._clz_impl);
+				SafeILGenerator.Call((Func<uint, uint>)CpuEmitter._clz_impl);
 			});
 		}
 		public void clo()
@@ -398,7 +398,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RD, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
-				SafeILGenerator.Call((Func<uint, uint>)CpuEmiter._clo_impl);
+				SafeILGenerator.Call((Func<uint, uint>)CpuEmitter._clo_impl);
 			});
 		}
 
@@ -429,7 +429,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RD, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				SafeILGenerator.Call((Func<uint, uint>)CpuEmiter._wsbh_impl);
+				SafeILGenerator.Call((Func<uint, uint>)CpuEmitter._wsbh_impl);
 			});
 		}
 		public void wsbw()
@@ -437,7 +437,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			MipsMethodEmiter.SaveGPR(RD, () =>
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				SafeILGenerator.Call((Func<uint, uint>)CpuEmiter._wsbw_impl);
+				SafeILGenerator.Call((Func<uint, uint>)CpuEmitter._wsbw_impl);
 			});
 		}
 	}

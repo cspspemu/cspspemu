@@ -2,9 +2,9 @@
 using CSharpUtils;
 using Codegen;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	sealed public partial class CpuEmiter
+	public sealed partial class CpuEmitter
 	{
 		public static void _vcmp_end(CpuThreadState CpuThreadState, int VectorSize)
 		{
@@ -87,7 +87,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Push((int)VectorSize);
-			MipsMethodEmiter.CallMethod((Action<CpuThreadState, int>)CpuEmiter._vcmp_end);
+			MipsMethodEmiter.CallMethod((Action<CpuThreadState, int>)CpuEmitter._vcmp_end);
 		}
 
 		public void _vsltge(SafeBinaryComparison SafeBinaryComparison)

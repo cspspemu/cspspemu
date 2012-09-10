@@ -2,9 +2,9 @@
 using Codegen;
 using CSharpUtils;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-    public sealed partial class CpuEmiter
+    public sealed partial class CpuEmitter
 	{
 		[PspUntested]
 		public void vbfy1()

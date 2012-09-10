@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using CSharpUtils;
 using Codegen;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
 	// http://forums.ps2dev.org/viewtopic.php?t=6929 
 	// http://wiki.fx-world.org/doku.php?do=index
@@ -103,7 +103,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 	  So Q_C010 specifies the Quad Column starting at S010, T_C011 the triple Column starting at S011.
 	*/
-	public unsafe sealed partial class CpuEmiter
+	public unsafe sealed partial class CpuEmitter
 	{
 
 		/// <summary>
@@ -635,7 +635,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		private void EmitLogFloatResult(bool Return = true)
 		{
 			SafeILGenerator.LoadArgument0CpuThreadState();
-			MipsMethodEmiter.CallMethod((Func<float, CpuThreadState, float>)CpuEmiter.LogFloatResult);
+			MipsMethodEmiter.CallMethod((Func<float, CpuThreadState, float>)CpuEmitter.LogFloatResult);
 			if (!Return)
 			{
 				SafeILGenerator.Pop();

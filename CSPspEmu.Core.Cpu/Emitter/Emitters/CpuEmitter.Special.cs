@@ -1,9 +1,9 @@
 ﻿using System;
 using CSharpUtils;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	public sealed partial class CpuEmiter
+	public sealed partial class CpuEmitter
 	{
 		// Syscall
 		public void syscall()
@@ -38,7 +38,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void cache() {
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Push((int)(uint)Instruction.Value);
-			SafeILGenerator.Call((Action<CpuThreadState, uint>)CpuEmiter._cache_impl);
+			SafeILGenerator.Call((Action<CpuThreadState, uint>)CpuEmitter._cache_impl);
 		}
 		public void sync() {
 			Console.WriteLine("Not implemented 'sync' instruction");
@@ -56,7 +56,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			_save_pc();
 			//CpuThreadState.PC =
 			SafeILGenerator.LoadArgument0CpuThreadState();
-			SafeILGenerator.Call((Action<CpuThreadState>)CpuEmiter._break_impl);
+			SafeILGenerator.Call((Action<CpuThreadState>)CpuEmitter._break_impl);
 		}
 		public void dbreak() { throw(new NotImplementedException()); }
 		public void halt() { throw(new NotImplementedException()); }

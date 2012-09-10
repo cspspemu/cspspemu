@@ -27,7 +27,7 @@ using MiniGL;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-	sealed public unsafe partial class OpenglGpuImpl : GpuImpl
+	public sealed unsafe partial class OpenglGpuImpl : GpuImpl
 	{
 		/// <summary>
 		/// 

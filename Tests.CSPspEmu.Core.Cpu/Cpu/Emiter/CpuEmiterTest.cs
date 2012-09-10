@@ -1,4 +1,4 @@
-﻿using CSPspEmu.Core.Cpu.Emiter;
+﻿using CSPspEmu.Core.Cpu.Emitter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using CSPspEmu.Core.Cpu.Table;

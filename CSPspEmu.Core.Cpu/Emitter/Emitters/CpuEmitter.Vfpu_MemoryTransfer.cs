@@ -1,9 +1,9 @@
 ﻿using System;
 using Codegen;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	public unsafe sealed partial class CpuEmiter
+	public unsafe sealed partial class CpuEmitter
 	{
 		// Load/Store Vfpu (Left/Right)_
 		public void lv_s()
@@ -119,11 +119,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			if (left)
 			{
 
-				MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmiter._lvl_svl_q);
+				MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmitter._lvl_svl_q);
 			}
 			else
 			{
-				MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmiter._lvr_svr_q);
+				MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmitter._lvr_svr_q);
 			}
 		}
 

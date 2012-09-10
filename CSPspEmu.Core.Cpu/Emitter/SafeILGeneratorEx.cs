@@ -1,7 +1,7 @@
 ﻿using Codegen;
 using System.Reflection.Emit;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
 	public class SafeILGeneratorEx : SafeILGenerator
 	{

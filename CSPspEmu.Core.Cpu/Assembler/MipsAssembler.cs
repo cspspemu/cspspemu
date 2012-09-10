@@ -5,8 +5,8 @@ using System.Linq;
 using CSPspEmu.Core.Cpu.Table;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
-using CSharpUtils.Streams;
 using CSharpUtils.Arrays;
+using CSharpUtils.Streams;
 
 namespace CSPspEmu.Core.Cpu.Assembler
 {

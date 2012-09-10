@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace CSPspEmu.Core.Cpu.Table
 {
-	sealed public class InstructionTable
+	public sealed class InstructionTable
 	{
 		private const AddressType ADDR_TYPE_NONE = AddressType.None;
 		private const AddressType ADDR_TYPE_16 = AddressType.T16;

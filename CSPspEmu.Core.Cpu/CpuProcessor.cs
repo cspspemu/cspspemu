@@ -7,7 +7,7 @@ namespace CSPspEmu.Core.Cpu
 {
     public sealed class CpuProcessor : PspEmulatorComponent
 	{
-		readonly public Dictionary<string, uint> GlobalInstructionStats = new Dictionary<string, uint>();
+		public readonly Dictionary<string, uint> GlobalInstructionStats = new Dictionary<string, uint>();
 
 		public PspConfig PspConfig;
 

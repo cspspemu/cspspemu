@@ -2,9 +2,9 @@
 using CSharpUtils;
 using Codegen;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	public sealed partial class CpuEmiter
+	public sealed partial class CpuEmitter
 	{
 		/*
 		public static float _mul_s_impl(float a, float b)
@@ -97,7 +97,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Push((int)FD);
 			SafeILGenerator.Push((int)FS);
-			SafeILGenerator.Call((Action<CpuThreadState, int, int>)CpuEmiter._cvt_w_s_impl);
+			SafeILGenerator.Call((Action<CpuThreadState, int, int>)CpuEmitter._cvt_w_s_impl);
 		}
 
 		// Move (from/to) float point registers (reinterpreted)
@@ -145,14 +145,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Push((int)RD);
 			SafeILGenerator.Push((int)RT);
-			SafeILGenerator.Call((Action<CpuThreadState, int, int>)CpuEmiter._cfc1_impl);
+			SafeILGenerator.Call((Action<CpuThreadState, int, int>)CpuEmitter._cfc1_impl);
 		}
 		public void ctc1()
 		{
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Push((int)RD);
 			SafeILGenerator.Push((int)RT);
-			SafeILGenerator.Call((Action<CpuThreadState, int, int>)CpuEmiter._ctc1_impl);
+			SafeILGenerator.Call((Action<CpuThreadState, int, int>)CpuEmitter._ctc1_impl);
 		}
 
 		public static bool _comp_impl(float s, float t, bool fc_unordererd, bool fc_equal, bool fc_less, bool fc_inv_qnan)
@@ -191,7 +191,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				SafeILGenerator.Push((int)(fc_equal ? 1 : 0));
 				SafeILGenerator.Push((int)(fc_less ? 1 : 0));
 				SafeILGenerator.Push((int)(fc_inv_qnan ? 1 : 0));
-				SafeILGenerator.Call((Func<float, float, bool, bool, bool, bool, bool>)CpuEmiter._comp_impl);
+				SafeILGenerator.Call((Func<float, float, bool, bool, bool, bool, bool>)CpuEmitter._comp_impl);
 			});
 		}
 
