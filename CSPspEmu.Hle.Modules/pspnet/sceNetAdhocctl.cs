@@ -87,8 +87,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// </summary>
 		/// <param name="product">A pointer to a  <see cref="productStruct"/></param>
 		/// <returns>0 on success, &lt; 0 on error.</returns>
-        [HlePspFunction(NID = 0x362CBE8F, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
+		[HlePspFunction(NID = 0x362CBE8F, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceNetAdhocctlGetAdhocId(productStruct* product)
 		{
 			throw(new NotImplementedException());
@@ -104,8 +104,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="timeout">Timeout in microseconds.</param>
 		/// <param name="unknown2">Pass 0</param>
 		/// <returns>0 on success, &lt; 0 on error.</returns>
-        [HlePspFunction(NID = 0xA5C055CE, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
+		[HlePspFunction(NID = 0xA5C055CE, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceNetAdhocctlCreateEnterGameMode(string name, int unknown, int num, string macs, uint timeout, int unknown2)
 		{
 			throw(new NotImplementedException());
@@ -119,8 +119,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="timeout">Timeout in microseconds.</param>
 		/// <param name="unknown">Pass 0</param>
 		/// <returns>0 on success, &lt; 0 on error.</returns>
-        [HlePspFunction(NID = 0x1FF89745, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
+		[HlePspFunction(NID = 0x1FF89745, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceNetAdhocctlJoinEnterGameMode(string name, string hostmac, uint timeout, int unknown)
 		{
 			throw(new NotImplementedException());
@@ -131,8 +131,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// </summary>
 		/// <param name="gamemodeinfo">Pointer to store the info.</param>
 		/// <returns>0 on success, &lt; 0 on error.</returns>
-        [HlePspFunction(NID = 0x5A014CE0, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
+		[HlePspFunction(NID = 0x5A014CE0, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceNetAdhocctlGetGameModeInfo(SceNetAdhocctlGameModeInfo* gamemodeinfo)
 		{
 			throw(new NotImplementedException());
@@ -142,8 +142,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// Exit game mode.
 		/// </summary>
 		/// <returns>0 on success, &lt; 0 on error.</returns>
-        [HlePspFunction(NID = 0xCF8E084D, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
+		[HlePspFunction(NID = 0xCF8E084D, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceNetAdhocctlExitGameMode()
 		{
 			throw(new NotImplementedException());
@@ -168,7 +168,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="size">Size of peerinfo.</param>
 		/// <param name="peerinfo">Pointer to store the information.</param>
 		/// <returns>0 on success, &lt; 0 on error.</returns>
-        [HlePspFunction(NID = 0x8DB83FDC, FirmwareVersion = 150)]
+		[HlePspFunction(NID = 0x8DB83FDC, FirmwareVersion = 150)]
 		public int sceNetAdhocctlGetPeerInfo(string mac, int size, SceNetAdhocctlPeerInfo* peerinfo)
 		{
 			throw(new NotImplementedException());
@@ -179,7 +179,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// </summary>
 		/// <returns>0 on success, &lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0x08FFF7A0, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
+		[HlePspNotImplemented]
 		public int sceNetAdhocctlScan()
 		{
 			throw(new NotImplementedException());
@@ -243,8 +243,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="length">The length of the list.</param>
 		/// <param name="buf">An allocated area of size length.</param>
 		/// <returns>0 on success, &lt; 0 on error.</returns>
-        [HlePspFunction(NID = 0x99560ABE, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
+		[HlePspFunction(NID = 0x99560ABE, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceNetAdhocctlGetAddrByName(char* nickname, int* length, void* buf)
 		{
 			throw(new NotImplementedException());
@@ -255,8 +255,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// </summary>
 		/// <param name="Params">Pointer to a <see cref="SceNetAdhocctlParams"/></param>
 		/// <returns>0 on success, &lt; 0 on error.</returns>
-        [HlePspFunction(NID = 0xDED9D28E, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
+		[HlePspFunction(NID = 0xDED9D28E, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceNetAdhocctlGetParameter(SceNetAdhocctlParams* Params)
 		{
 			throw(new NotImplementedException());

@@ -29,7 +29,7 @@ namespace CSPspEmu.Hle.Modules.http
 		/// <summary>
 		/// Get http request response length.
 		/// </summary>
-		/// <param name="requestid">ID of the request created by sceHttpCreateRequest or sceHttpCreateRequestWithURL</param>
+		/// <param name="requestid">ID of the request created by <see cref="sceHttpCreateRequest"/> or <see cref="sceHttpCreateRequestWithURL"/></param>
 		/// <param name="contentlength">The size of the content</param>
 		/// <returns>0 on success, less than 0 on error.</returns>
 		[HlePspNotImplemented]
@@ -201,8 +201,8 @@ namespace CSPspEmu.Hle.Modules.http
 		/// <summary>
 		/// Create a http request.
 		/// </summary>
-		/// <param name="connectionid">ID of the connection created by sceHttpCreateConnection or sceHttpCreateConnectionWithURL</param>
-		/// <param name="method">One of ::PspHttpMethod</param>
+		/// <param name="connectionid">ID of the connection created by <see cref="sceHttpCreateConnection"/> or <see cref="sceHttpCreateConnectionWithURL"/></param>
+		/// <param name="method">One of <see cref="PspHttpMethod"/></param>
 		/// <param name="path">Path to access</param>
 		/// <param name="contentlength">Length of the content (POST method only)</param>
 		/// <returns>A request ID on success, less than 0 on error.</returns>

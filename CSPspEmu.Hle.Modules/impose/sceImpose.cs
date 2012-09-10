@@ -77,14 +77,14 @@ namespace CSPspEmu.Hle.Modules.impose
 		}
 
 		/// <summary>
-		/// IsChargingPointer:
-		///		0 - if not charging
-		///		1 - if charging
-		///	IconStatusPointer:
-		///		0 - Battery is very low
-		///		1 - Battery is low
-		///		2 - Battery is partial filled
-		///		3 - Battery is fully filled
+		/// IsChargingPointer:      <para/>
+		///		0 - if not charging <para/>
+		///		1 - if charging     <para/>-<para/>
+		///	IconStatusPointer:                <para/>
+		///		0 - Battery is very low       <para/>       
+		///		1 - Battery is low            <para/>
+		///		2 - Battery is partial filled <para/>
+		///		3 - Battery is fully filled   <para/>
 		/// </summary>
 		/// <param name="IsChargingPointer"></param>
 		/// <param name="IconStatusPointer"></param>

@@ -89,9 +89,9 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// </summary>
 		/// <param name="InstructionAddressStart">The head of the list to queue.</param>
 		/// <param name="InstructionAddressStall">The stall address. If NULL then no stall address set and the list is transferred immediately.</param>
-		/// <param name="CallbackId">ID of the callback set by calling sceGeSetCallback</param>
+		/// <param name="CallbackId">ID of the callback set by calling <see cref="sceGeSetCallback"/></param>
 		/// <param name="Args">Structure containing GE context buffer address</param>
-		/// <returns>The DisplayList Id</returns>
+		/// <returns>The DisplayList ID</returns>
 		[HlePspFunction(NID = 0xAB49E76A, FirmwareVersion = 150)]
 		[HlePspNotImplemented(PartialImplemented = true, Notice = false)]
 		public int sceGeListEnQueue(uint InstructionAddressStart, uint InstructionAddressStall, int CallbackId, PspGeListArgs* Args)
@@ -110,9 +110,9 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// </summary>
 		/// <param name="InstructionAddressStart">The head of the list to queue.</param>
 		/// <param name="InstructionAddressStall">The stall address. If NULL then no stall address set and the list is transferred immediately.</param>
-		/// <param name="CallbackId">ID of the callback set by calling sceGeSetCallback</param>
+		/// <param name="CallbackId">ID of the callback set by calling <see cref="sceGeSetCallback"/></param>
 		/// <param name="Args">Structure containing GE context buffer address</param>
-		/// <returns>The DisplayList Id</returns>
+		/// <returns>The DisplayList ID</returns>
 		[HlePspFunction(NID = 0x1C0D95A6, FirmwareVersion = 150)]
 		[HlePspNotImplemented(PartialImplemented = true, Notice = false)]
 		public int sceGeListEnQueueHead(uint InstructionAddressStart, uint InstructionAddressStall, int CallbackId, PspGeListArgs* Args)
@@ -129,7 +129,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <summary>
 		/// Cancel a queued or running list.
 		/// </summary>
-		/// <param name="DisplayListId">A DisplayList Id</param>
+		/// <param name="DisplayListId">A DisplayList ID</param>
 		/// <returns>???</returns>
 		[HlePspFunction(NID = 0x5FB86AB0, FirmwareVersion = 150)]
 		[HlePspNotImplemented(PartialImplemented = true)]
@@ -158,7 +158,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// Wait for syncronisation of a list.
 		/// </summary>
 		/// <param name="DisplayListId">The queue ID of the list to sync.</param>
-		/// <param name="SyncType">Specifies the condition to wait on.  One of ::PspGeSyncType.</param>
+		/// <param name="SyncType">Specifies the condition to wait on.  One of PspGeSyncType.</param>
 		/// <returns>???</returns>
 		[HlePspFunction(NID = 0x03444EB4, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
