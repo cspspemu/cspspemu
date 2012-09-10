@@ -42,6 +42,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 * and contributors of zlib.
 */
 using System;
+
 namespace ComponentAce.Compression.Libs.zlib
 {
 	
@@ -98,10 +99,10 @@ namespace ComponentAce.Compression.Libs.zlib
 		internal int end; // one byte after sliding window 
 		internal int read; // window read pointer 
 		internal int write; // window write pointer 
-		internal System.Object checkfn; // check function 
+		internal object checkfn; // check function 
 		internal long check; // check on output 
 		
-		internal InfBlocks(ZStream z, System.Object checkfn, int w)
+		internal InfBlocks(ZStream z, object checkfn, int w)
 		{
 			hufts = new int[MANY * 3];
 			window = new byte[w];
@@ -111,7 +112,7 @@ namespace ComponentAce.Compression.Libs.zlib
 			reset(z, null);
 		}
 		
-		internal void  reset(ZStream z, long[] c)
+		internal void reset(ZStream z, long[] c)
 		{
 			if (c != null)
 				c[0] = check;
@@ -461,7 +462,7 @@ namespace ComponentAce.Compression.Libs.zlib
 							
 							if (tb[0] == - 1)
 							{
-								//System.err.println("null...");
+								// Console.WriteLine("null...");
 							}
 							
 							t = hufts[(tb[0] + (b & inflate_mask[t])) * 3 + 1];

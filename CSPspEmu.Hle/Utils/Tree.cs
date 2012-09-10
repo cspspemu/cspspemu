@@ -41,10 +41,9 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 * Jean-loup Gailly(jloup@gzip.org) and Mark Adler(madler@alumni.caltech.edu)
 * and contributors of zlib.
 */
-using System;
+
 namespace ComponentAce.Compression.Libs.zlib
 {
-	
 	sealed class Tree
 	{
 		private const int MAX_BITS = 15;
@@ -127,11 +126,11 @@ namespace ComponentAce.Compression.Libs.zlib
 			int[] extra = stat_desc.extra_bits;
 			int base_Renamed = stat_desc.extra_base;
 			int max_length = stat_desc.max_length;
-			int h; // heap index
-			int n, m; // iterate over the tree elements
-			int bits; // bit length
+			int h;     // heap index
+			int n, m;  // iterate over the tree elements
+			int bits;  // bit length
 			int xbits; // extra bits
-			short f; // frequency
+			short f;   // frequency
 			int overflow = 0; // number of elements with bit length too large
 			
 			for (bits = 0; bits <= MAX_BITS; bits++)

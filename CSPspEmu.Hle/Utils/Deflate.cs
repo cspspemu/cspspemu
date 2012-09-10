@@ -42,12 +42,11 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 * and contributors of zlib.
 */
 using System;
+
 namespace ComponentAce.Compression.Libs.zlib
 {
-	
 	public sealed class Deflate
 	{
-		
 		private const int MAX_MEM_LEVEL = 9;
 		
 		private const int Z_DEFAULT_COMPRESSION = - 1;
@@ -58,7 +57,7 @@ namespace ComponentAce.Compression.Libs.zlib
 		internal class Config
 		{
 			internal int good_length; // reduce lazy search above this match length
-			internal int max_lazy; // do not perform lazy search above this match length
+			internal int max_lazy;    // do not perform lazy search above this match length
 			internal int nice_length; // quit search above this match length
 			internal int max_chain;
 			internal int func;
@@ -77,7 +76,7 @@ namespace ComponentAce.Compression.Libs.zlib
 		private const int SLOW = 2;
 		private static Config[] config_table;
 				
-		private static readonly System.String[] z_errmsg = new System.String[]{"need dictionary", "stream end", "", "file error", "stream error", "data error", "insufficient memory", "buffer error", "incompatible version", ""};
+		private static readonly string[] z_errmsg = new string[]{"need dictionary", "stream end", "", "file error", "stream error", "data error", "insufficient memory", "buffer error", "incompatible version", ""};
 		
 		// block not completed, need more input or more output
 		private const int NeedMore = 0;
