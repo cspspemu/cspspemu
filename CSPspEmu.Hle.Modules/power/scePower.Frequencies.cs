@@ -5,7 +5,7 @@
 		/// <summary>
 		/// Set CPU Frequency
 		/// </summary>
-		/// <param name="CpuFrequency">new CPU frequency, valid values are 1 - 333</param>
+		/// <param name="CpuFrequency">New CPU frequency, valid values are 1 - 333</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x843FBF43, FirmwareVersion = 150)]
 		public int scePowerSetCpuClockFrequency(int CpuFrequency)
@@ -15,9 +15,9 @@
 		}
 
 		/// <summary>
-		/// Get CPU Frequency as Integer
+		/// Get CPU Frequency as an integer
 		/// </summary>
-		/// <returns>frequency as int</returns>
+		/// <returns>Frequency as an int</returns>
 		[HlePspFunction(NID = 0xFDB5BFE9, FirmwareVersion = 150)]
 		public int scePowerGetCpuClockFrequencyInt()
 		{
@@ -25,9 +25,9 @@
 		}
 
 		/// <summary>
-		/// Get Bus fequency as Integer
+		/// Get Bus feequency as an integer
 		/// </summary>
-		/// <returns>frequency as int</returns>
+		/// <returns>Frequency as an int</returns>
 		[HlePspFunction(NID = 0xBD681969, FirmwareVersion = 150)]
 		public int scePowerGetBusClockFrequencyInt()
 		{
@@ -35,9 +35,9 @@
 		}
 
 		/// <summary>
-		/// Get CPU Frequency as Float
+		/// Get CPU Frequency as a float
 		/// </summary>
-		/// <returns>frequency as float</returns>
+		/// <returns>Frequency as a float</returns>
 		[HlePspFunction(NID = 0xB1A52C83, FirmwareVersion = 150)]
 		public float scePowerGetCpuClockFrequencyFloat()
 		{
@@ -47,7 +47,7 @@
 		/// <summary>
 		/// Get Bus frequency as Float
 		/// </summary>
-		/// <returns>frequency as float</returns>
+		/// <returns>Frequency as a float</returns>
 		[HlePspFunction(NID = 0x9BADB3EB, FirmwareVersion = 150)]
 		public float scePowerGetBusClockFrequencyFloat()
 		{
@@ -57,7 +57,7 @@
 		/// <summary>
 		/// Alias for scePowerGetCpuClockFrequencyInt
 		/// </summary>
-		/// <returns>frequency as int</returns>
+		/// <returns>Frequency as an int</returns>
 		[HlePspFunction(NID = 0xFEE03A2F, FirmwareVersion = 150)]
 		public int scePowerGetCpuClockFrequency()
 		{
@@ -67,7 +67,7 @@
 		/// <summary>
 		/// Alias for scePowerGetBusClockFrequencyInt
 		/// </summary>
-		/// <returns>frequency as int</returns>
+		/// <returns>Frequency as an int</returns>
 		[HlePspFunction(NID = 0x478FE6F5, FirmwareVersion = 150)]
 		public int scePowerGetBusClockFrequency()
 		{
@@ -76,8 +76,8 @@
 
 		/// <summary>
 		/// Set Clock Frequencies
-		/// cpufreq <= pllfreq
-		/// busfreq*2 <= pllfreq
+		/// cpufreq &lt;= pllfreq
+		/// busfreq*2 &lt;= pllfreq
 		/// </summary>
 		/// <param name="PllFrequency">pll frequency, valid from 19-333</param>
 		/// <param name="CpuFrequency">cpu frequency, valid from 1-333</param>
@@ -98,7 +98,7 @@
 		/// <summary>
 		/// Set Bus Frequency
 		/// </summary>
-		/// <param name="BusFrequency">new BUS frequency, valid values are 1 - 167</param>
+		/// <param name="BusFrequency">New BUS frequency, valid values are 1 - 167</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xB8D7B3FB, FirmwareVersion = 150)]
 		public int scePowerSetBusClockFrequency(int BusFrequency)

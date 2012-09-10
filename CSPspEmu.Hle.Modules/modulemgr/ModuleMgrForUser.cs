@@ -132,7 +132,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		/// <param name="unknown">Unknown (I've seen 1 passed).</param>
 		/// <param name="argsize">Size (in bytes) of the arguments that will be passed to module_stop().</param>
 		/// <param name="argp">Pointer to arguments that will be passed to module_stop().</param>
-		/// <returns>??? on success, otherwise one of ::PspKernelErrorCodes.</returns>
+		/// <returns>??? on success, otherwise one of PspKernelErrorCodes.</returns>
 		[HlePspFunction(NID = 0xD675EBB8, FirmwareVersion = 150)]
 		public int sceKernelSelfStopUnloadModule(int unknown, int argsize, uint argp)
 		{
@@ -250,7 +250,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 	    /// <param name="ArgumentsSize">Length of the args.</param>
 	    /// <param name="ArgumentsPointer">A pointer to the arguments to the module.</param>
 	    /// <param name="Status">Returns the status of the start.</param>
-	    /// <param name="SceKernelSMOption">Pointer to an optional ::SceKernelSMOption structure.</param>
+	    /// <param name="SceKernelSMOption">Pointer to an optional <see cref="SceKernelSMOption"/> structure.</param>
 	    /// <returns>??? on success, otherwise one of ::PspKernelErrorCodes.</returns>
 	    [HlePspFunction(NID = 0x50F0C1EC, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -284,7 +284,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		/// <param name="ArgumentsSize">The length of the arguments pointed to by argp.</param>
 		/// <param name="ArgumentsPointer">Pointer to arguments to pass to the module's module_stop() routine.</param>
 		/// <param name="Status">Return value of the module's module_stop() routine.</param>
-		/// <param name="SceKernelSMOption">Pointer to an optional ::SceKernelSMOption structure.</param>
+		/// <param name="SceKernelSMOption">Pointer to an optional <see cref="SceKernelSMOption"/> structure.</param>
 		/// <returns>
 		///		??? on success, otherwise one of ::PspKernelErrorCodes.
 		/// </returns>
@@ -372,7 +372,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		/// </summary>
 		/// <param name="FileId">The module's file UID.</param>
 		/// <param name="Flags">Unused, always 0.</param>
-		/// <param name="SceKernelLMOption">Pointer to an optional ::SceKernelLMOption structure.</param>
+		/// <param name="SceKernelLMOption">Pointer to an optional <see cref="SceKernelLMOption"/> structure.</param>
 		/// <returns>The UID of the loaded module on success, otherwise one of ::PspKernelErrorCodes.</returns>
 		[HlePspFunction(NID = 0xB7F46618, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -391,11 +391,11 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		/// <remarks>
 		/// This fails on v1.0 firmware (and even it worked has a limited structure)
 		/// so if you want to be compatible with both 1.5 and 1.0 (and you are running in 
-		/// kernel mode) then call this function first then ::pspSdkQueryModuleInfoV1 
+		/// kernel mode) then call this function first then pspSdkQueryModuleInfoV1 
 		/// if it fails, or make separate v1 and v1.5+ builds.
 		/// </remarks>
 		/// <param name="ModuleId">The UID of the loaded module.</param>
-		/// <param name="ModuleInfo">Pointer to a ::SceKernelModuleInfo structure.</param>
+		/// <param name="ModuleInfo">Pointer to a <see cref="SceKernelModuleInfo"/> structure.</param>
 		/// <returns>0 on success, otherwise one of ::PspKernelErrorCodes.</returns>
 		[HlePspFunction(NID = 0x748CBED9, FirmwareVersion = 150)]
 		[HlePspNotImplemented]

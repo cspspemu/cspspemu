@@ -137,19 +137,19 @@ namespace CSPspEmu.Hle.Modules.libfont
 		}
 
 		/// <summary>
-		/// Char's metrics:
+		/// Char's metrics: <para/>
 		/// 
-		///           Width / Horizontal Advance
-		///           <---------->
-		///      |           000 |
-		///      |           000 |  Ascender
-		///      |           000 |
-		///      |     000   000 |
-		///      | -----000--000-------- Baseline
-		///      |        00000  |  Descender
-		/// Height /
-		/// Vertical Advance
-		/// 
+		///           Width / Horizontal Advance  <para/>
+		///           &lt;----------&gt;          <para/>
+		///      |           000 |                <para/>
+		///      |           000 |  Ascender      <para/>
+		///      |           000 |                <para/>
+		///      |     000   000 |                <para/>
+		///      | -----000--000-------- Baseline <para/>
+		///      |        00000  |  Descender     <para/>
+		/// Height /                              <para/>
+		/// Vertical Advance                      <para/>
+		/// <para/>
 		/// The char's bearings represent the difference between the
 		/// width and the horizontal advance and/or the difference
 		/// between the height and the vertical advance.

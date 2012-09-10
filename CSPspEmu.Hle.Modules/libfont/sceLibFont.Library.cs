@@ -148,7 +148,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// Obtains the FontInfo of a Font with its index.
 		/// </summary>
 		/// <param name="FontLibraryHandle">Handle of the library.</param>
-		/// <param name="FontInfoPointer">Pointer to a FontInfo structure that will hold the information.</param>
+		/// <param name="FontInfoPointer">Pointer to a <see cref="FontInfo"/> structure that will hold the information.</param>
 		/// <param name="Unknown">???</param>
 		/// <param name="FontIndex">Index of the font to get the information from.</param>
 		/// <returns>

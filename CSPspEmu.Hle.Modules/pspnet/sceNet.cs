@@ -6,7 +6,7 @@ using CSharpUtils;
 namespace CSPspEmu.Hle.Modules.pspnet
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	public unsafe partial class sceNet : HleModuleHost
+	public unsafe class sceNet : HleModuleHost
 	{
 		/// <summary>
 		/// Initialise the networking library
@@ -42,7 +42,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Free (delete) thread info/data
 		/// </summary>
-		/// <param name="thid">The thread id.</param>
+		/// <param name="thid">The thread ID.</param>
 		/// <returns>
 		///		0 on success
 		/// </returns>
@@ -114,7 +114,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Retrieve the networking library memory usage
 		/// </summary>
-		/// <param name="stat">Pointer to a ::SceNetMallocStat type to store the result.</param>
+		/// <param name="stat">Pointer to a <see cref="SceNetMallocStat"/> type to store the result.</param>
 		/// <returns>
 		///		0 on success
 		/// </returns>

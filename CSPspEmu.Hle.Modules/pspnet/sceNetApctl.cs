@@ -65,7 +65,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Delete an apctl event handler.
 		/// </summary>
-		/// <param name="handlerId">A handler as created returned from sceNetApctlAddHandler.</param>
+		/// <param name="handlerId">A handler as created returned from <see cref="sceNetApctlAddHandler"/>.</param>
 		/// <returns>Less than 0 on error.</returns>
 		[HlePspFunction(NID = 0x5963991B, FirmwareVersion = 150)]
 		[HlePspNotImplemented]

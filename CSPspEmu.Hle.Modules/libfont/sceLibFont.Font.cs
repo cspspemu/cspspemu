@@ -23,7 +23,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// Obtains the FontInfo of a FontHandle.
 		/// </summary>
 		/// <param name="FontHandle">Font Handle to get the information from.</param>
-		/// <param name="FontInfoPointer">Pointer to a FontInfo structure that will hold the information.</param>
+		/// <param name="FontInfoPointer">Pointer to a <see cref="FontInfo"/> structure that will hold the information.</param>
 		/// <returns>
 		///		0 on success
 		/// </returns>

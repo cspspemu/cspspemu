@@ -98,7 +98,7 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		/// <summary>
 		/// Wait for the UMD drive to reach a certain state
 		/// </summary>
-		/// <param name="PspUmdState">One or more of ::pspUmdState</param>
+		/// <param name="PspUmdState">One or more of <see cref="PspUmdState"/></param>
 		/// <param name="Timeout">Timeout value in microseconds</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x56202973, FirmwareVersion = 150)]
@@ -155,7 +155,7 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		}
 
 		/// <summary>
-		/// Deativates the UMD drive
+		/// Deactivates the UMD drive
 		/// </summary>
 		/// <param name="Mode">Mode.</param>
 		/// <param name="Drive">A prefix string for the fs device to mount the UMD on (e.g. "disc0:")</param>
@@ -174,7 +174,7 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		/// <summary>
 		/// Get (poll) the current state of the UMD drive
 		/// </summary>
-		/// <returns>Less than 0 on error, one or more of ::PspUmdState on success</returns>
+		/// <returns>Less than 0 on error, one or more of <see cref="PspUmdState"/> on success</returns>
 		[HlePspFunction(NID = 0x6B4A146C, FirmwareVersion = 150)]
 		public PspUmdState sceUmdGetDriveStat()
 		{
@@ -189,7 +189,7 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		/// <summary>
 		/// Wait for the UMD drive to reach a certain state
 		/// </summary>
-		/// <param name="PspUmdState">One or more of ::pspUmdState</param>
+		/// <param name="PspUmdState">One or more of <see cref="PspUmdState"/></param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x8EF08FCE, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -207,7 +207,7 @@ namespace CSPspEmu.Hle.Modules.mediaman
 	    /// Wait for the UMD drive to reach a certain state (plus callback)
 	    /// </summary>
 	    /// <param name="CpuThreadState"></param>
-	    /// <param name="stat">One or more of ::pspUmdState</param>
+	    /// <param name="stat">One or more of <see cref="PspUmdState"/></param>
 	    /// <param name="timeout">Timeout value in microseconds</param>
 	    /// <returns>Less than 0 on error</returns>
 	    [HlePspFunction(NID = 0x4A9E5E29, FirmwareVersion = 150)]
@@ -295,7 +295,7 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		/// <summary>
 		/// Get the disc info
 		/// </summary>
-		/// <param name="pspUmdInfo">A pointer to a ::pspUmdInfo struct</param>
+		/// <param name="pspUmdInfo">A pointer to a <see cref="pspUmdInfo"/> struct</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x340B7686, FirmwareVersion = 150)]
 		[HlePspNotImplemented]

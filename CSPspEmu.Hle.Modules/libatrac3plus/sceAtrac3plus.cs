@@ -453,8 +453,8 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// <summary>
 		/// Creates a new Atrac ID from the specified data
 		/// </summary>
-		/// <param name="DataPointer">the buffer holding the atrac3 data, including the RIFF/WAVE header.</param>
-		/// <param name="DataLength">the size of the buffer pointed by buf</param>
+		/// <param name="DataPointer">The buffer holding the atrac3 data, including the RIFF/WAVE header.</param>
+		/// <param name="DataLength">The size of the buffer pointed by buf</param>
 		/// <returns>The new atrac ID, or less than 0 on error </returns>
 		[HlePspFunction(NID = 0x7A20E7AF, FirmwareVersion = 150)]
 		[HlePspNotImplemented]

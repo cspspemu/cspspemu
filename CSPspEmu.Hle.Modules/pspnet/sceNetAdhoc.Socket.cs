@@ -46,7 +46,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		}
 
 		/// <summary>
-		/// Wait for connection created by sceNetAdhocPtpOpen()
+		/// Wait for connection created by <see cref="sceNetAdhocPtpOpen"/>
 		/// </summary>
 		/// <param name="id">A socket ID.</param>
 		/// <param name="timeout">Timeout in microseconds.</param>

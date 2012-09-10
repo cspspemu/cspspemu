@@ -141,54 +141,47 @@ namespace CSPspEmu.Hle.Modules.pspnet
 			throw(new NotImplementedException());
 		}
 
-		/**
-		 * Get the status of all PDP objects
-		 *
-		 * @param size - Pointer to the size of the stat array (e.g 20 for one structure)
-		 * @param stat - Pointer to a list of ::pspStatStruct structures.
-		 *
-		 * @return 0 on success, < 0 on error
-		 */
+		/// <summary>
+		/// Get the status of all PDP objects
+		/// </summary>
+		/// <param name="size">Pointer to the size of the stat array (e.g 20 for one structure)</param>
+		/// <param name="stat">Pointer to a list of ::pspStatStruct structures.</param>
+		/// <returns> on success, &lt; 0 on error</returns>
         [HlePspFunction(NID = 0xC7C1FC57, FirmwareVersion = 150)]
 		public int sceNetAdhocGetPdpStat(int *size, pdpStatStruct *stat)
 		{
 			throw(new NotImplementedException());
 		}
 
-		/**
-		 * Create own game object type data.
-		 *
-		 * @param data - A pointer to the game object data.
-		 * @param size - Size of the game data.
-		 *
-		 * @return 0 on success, < 0 on error.
-		 */
+		/// <summary>
+		/// Create own game object type data.
+		/// </summary>
+		/// <param name="data">A pointer to the game object data.</param>
+		/// <param name="size">Size of the game data.</param>
+		/// <returns>0 on success, &lt; 0 on error.</returns>
         [HlePspFunction(NID = 0x7F75C338, FirmwareVersion = 150)]
 		public int sceNetAdhocGameModeCreateMaster(void *data, int size)
 		{
 			throw(new NotImplementedException());
 		}
 
-		/**
-		 * Create peer game object type data.
-		 *
-		 * @param mac - The mac address of the peer.
-		 * @param data - A pointer to the game object data.
-		 * @param size - Size of the game data.
-		 *
-		 * @return The id of the replica on success, < 0 on error.
-		 */
+		/// <summary>
+		/// Create peer game object type data.
+		/// </summary>
+		/// <param name="mac">he mac address of the peer.</param>
+		/// <param name="data">A pointer to the game object data.</param>
+		/// <param name="size">Size of the game data.</param>
+		/// <returns>The id of the replica on success, &lt; 0 on error.</returns>
         [HlePspFunction(NID = 0x3278AB0C, FirmwareVersion = 150)]
 		public int sceNetAdhocGameModeCreateReplica(byte *mac, void *data, int size)
 		{
 			throw(new NotImplementedException());
 		}
 
-		/**
-		 * Update own game object type data.
-		 *
-		 * @return 0 on success, < 0 on error.
-		 */
+		/// <summary>
+		/// Update own game object type data.
+		/// </summary>
+		/// <returns>0 on success, &lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0x98C204C8, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceNetAdhocGameModeUpdateMaster()
@@ -221,13 +214,11 @@ namespace CSPspEmu.Hle.Modules.pspnet
 			throw(new NotImplementedException());
 		}
 
-		/**
-		 * Delete peer game object type data.
-		 *
-		 * @param id - The id of the replica.
-		 *
-		 * @return 0 on success, < 0 on error.
-		 */
+		/// <summary>
+		/// Delete peer game object type data.
+		/// </summary>
+		/// <param name="id">The ID of the replica</param>
+		/// <returns>0 on success, &lt; 0 on error.</returns>
         [HlePspFunction(NID = 0x0B2228E9, FirmwareVersion = 150)]
 		public int sceNetAdhocGameModeDeleteReplica(int id)
 		{
@@ -250,7 +241,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 			throw(new NotImplementedException());
 		}
 
-		/**
+		/*
 		 * Create peer game object type data.
 		 *
 		 * @param mac - The mac address of the peer.
@@ -272,7 +263,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		 * @param data - A pointer to the game object data.
 		 * @param size - Size of the game data.
 		 *
-		 * @return 0 on success, < 0 on error.
+		 * @return 0 on success, &lt; 0 on error.
 		 */
 		[HlePspFunction(NID = 0x7F75C338, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -288,7 +279,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		 * @param id - The id of the replica returned by sceNetAdhocGameModeCreateReplica.
 		 * @param info - address of GameModeUpdateInfo structure.
 		 *
-		 * @return 0 on success, < 0 on error.
+		 * @return 0 on success, &lt; 0 on error.
 		 */
 		[HlePspFunction(NID = 0xFA324B4E, FirmwareVersion = 150)]
         [HlePspNotImplemented]

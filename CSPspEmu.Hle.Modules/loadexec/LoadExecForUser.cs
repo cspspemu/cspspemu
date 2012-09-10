@@ -38,7 +38,7 @@ namespace CSPspEmu.Hle.Modules.loadexec
 		///		cbid = sceKernelCreateCallback("ExitCallback", exit_callback, NULL);
 		///		sceKernelRegisterExitCallback(cbid);
 		///	</example>
-		/// <param name="CallbackId">Callback id</param>
+		/// <param name="CallbackId">Callback ID</param>
 		/// <returns>&lt; 0 on error</returns>
 		[HlePspFunction(NID = 0x4AC57943, FirmwareVersion = 150)]
 		public int sceKernelRegisterExitCallback(int CallbackId)

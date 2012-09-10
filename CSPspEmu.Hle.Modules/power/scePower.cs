@@ -243,7 +243,7 @@ namespace CSPspEmu.Hle.Modules.power
 		}
 
 		/// <summary>
-		/// crashes PSP in usermode
+		/// Crashes PSP in usermode
 		/// </summary>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x862AE1A6, FirmwareVersion = 150)]
@@ -421,7 +421,7 @@ namespace CSPspEmu.Hle.Modules.power
 		/// Note: if the power switch is toggled while locked
 		/// it will fire immediately after being unlocked.
 		/// </summary>
-		/// <param name="unknown">pass 0</param>
+		/// <param name="unknown">Pass 0</param>
 		/// <returns>0 on success, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xD6D016EF, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -433,7 +433,7 @@ namespace CSPspEmu.Hle.Modules.power
 		/// <summary>
 		/// Unlock power switch
 		/// </summary>
-		/// <param name="unknown">pass 0</param>
+		/// <param name="unknown">Pass 0</param>
 		/// <returns>0 on success, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xCA3D34C1, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
