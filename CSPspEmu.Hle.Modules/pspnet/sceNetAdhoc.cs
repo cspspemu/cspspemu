@@ -52,8 +52,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		///		The ID of the PDP object.
 		///		Less than 0 on error.
 		///	</returns>
-        /// 
-        [HlePspFunction(NID = 0x6F92741B, FirmwareVersion = 150)]
+		/// 
+		[HlePspFunction(NID = 0x6F92741B, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceNetAdhocPdpCreate(byte *mac, ushort port, uint bufsize, int unk1)
 		{
@@ -69,7 +69,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		///		0 on success.
 		///		Less than 0 on error.
 		/// </returns>
-        [HlePspFunction(NID = 0x7F27BB5E, FirmwareVersion = 150)]
+		[HlePspFunction(NID = 0x7F27BB5E, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceNetAdhocPdpDelete(int id, int unk1)
 		{
@@ -108,7 +108,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		///		Number of bytes received
 		///		less than 0 on error.
 		/// </returns>
-        [HlePspFunction(NID = 0xDFE53E03, FirmwareVersion = 150)]
+		[HlePspFunction(NID = 0xDFE53E03, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceNetAdhocPdpRecv(int id, byte *srcMacAddr, ushort *port, void *data, void *dataLength, uint timeout, int nonblock)
 		{
@@ -121,7 +121,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="size">Pointer to the size of the stat array (e.g 20 for one structure)</param>
 		/// <param name="stat">Pointer to a list of ::pspStatStruct structures.</param>
 		/// <returns> on success, &lt; 0 on error</returns>
-        [HlePspFunction(NID = 0xC7C1FC57, FirmwareVersion = 150)]
+		[HlePspFunction(NID = 0xC7C1FC57, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceNetAdhocGetPdpStat(int *size, pdpStatStruct *stat)
 		{
@@ -134,7 +134,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="data">A pointer to the game object data.</param>
 		/// <param name="size">Size of the game data.</param>
 		/// <returns>0 on success, &lt; 0 on error.</returns>
-        [HlePspFunction(NID = 0x7F75C338, FirmwareVersion = 150)]
+		[HlePspFunction(NID = 0x7F75C338, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceNetAdhocGameModeCreateMaster(void *data, int size)
 		{
@@ -148,7 +148,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="data">A pointer to the game object data.</param>
 		/// <param name="size">Size of the game data.</param>
 		/// <returns>The id of the replica on success, &lt; 0 on error.</returns>
-        [HlePspFunction(NID = 0x3278AB0C, FirmwareVersion = 150)]
+		[HlePspFunction(NID = 0x3278AB0C, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceNetAdhocGameModeCreateReplica(byte *mac, void *data, int size)
 		{
@@ -172,7 +172,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="id">The ID of the replica returned by <see cref="sceNetAdhocGameModeCreateReplica"/>.</param>
 		/// <param name="unk1">Pass 0.</param>
 		/// <returns>0 on success, &lt; 0 on error.</returns>
-        [HlePspFunction(NID = 0xFA324B4E, FirmwareVersion = 150)]
+		[HlePspFunction(NID = 0xFA324B4E, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceNetAdhocGameModeUpdateReplica(int id, int unk1)
 		{
@@ -183,7 +183,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// Delete own game object type data.
 		/// </summary>
 		/// <returns>0 on success, &lt; 0 on error.</returns>
-        [HlePspFunction(NID = 0xA0229362, FirmwareVersion = 150)]
+		[HlePspFunction(NID = 0xA0229362, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceNetAdhocGameModeDeleteMaster()
 		{
@@ -195,7 +195,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// </summary>
 		/// <param name="id">The ID of the replica</param>
 		/// <returns>0 on success, &lt; 0 on error.</returns>
-        [HlePspFunction(NID = 0x0B2228E9, FirmwareVersion = 150)]
+		[HlePspFunction(NID = 0x0B2228E9, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceNetAdhocGameModeDeleteReplica(int id)
 		{
