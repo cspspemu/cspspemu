@@ -13,7 +13,7 @@ namespace CSPspEmu.Core.Memory
 		public static byte* StaticFrameBufferPtr;
 		public static byte* StaticMainPtr;
 
-		public byte* Base { get { return _Base; } }
+		public static byte* Base { get { return _Base; } }
 
 		/*
 		// to RESERVE memory in Linux, use mmap with a private, anonymous, non-accessible mapping.

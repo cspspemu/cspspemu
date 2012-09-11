@@ -12,17 +12,17 @@ namespace CSPspEmu.Core.Memory
 	}
 
 	/// <summary>
-	/// start       end         size  description
-	/// 0x00010000  0x00013fff  16kb  scratchpad
+	/// Start       End         Size  Description
+	/// 0x00010000  0x00013fff  16kb  Scratchpad
 	/// 0x04000000  0x041fffff  2mb   Video Memory / Frame Buffer
 	/// 0x08000000  0x09ffffff  32mb  Main Memory
-	/// 0x1c000000  0x1fbfffff        Hardware i/o
+	/// 0x1c000000  0x1fbfffff        Hardware I/O
 	/// 0x1fc00000  0x1fcfffff  1mb   Hardware Exception Vectors (RAM)
-	/// 0x1fd00000  0x1fffffff        Hardware i/o
+	/// 0x1fd00000  0x1fffffff        Hardware I/O
 	/// </summary>
 	public unsafe abstract class PspMemory : PspEmulatorComponent, IDisposable
 	{
-		static internal Logger Logger = Logger.GetLogger("Memory");
+		internal static Logger Logger = Logger.GetLogger("Memory");
 
 		public const uint MemoryMask = 0x1FFFFFFF;
 
@@ -163,7 +163,7 @@ namespace CSPspEmu.Core.Memory
 			ValidateRange(Address, 0);
 		}
 
-		public bool IsAddressValid(uint _Address)
+		public static bool IsAddressValid(uint _Address)
 		{
 			var Address = _Address & PspMemory.MemoryMask;
 			if (MainSegment.Contains(Address)) return true;

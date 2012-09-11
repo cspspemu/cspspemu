@@ -14,7 +14,7 @@ namespace CSPspEmu.Hle.Attributes
 		UserMode = 0x40000000,
 	}
 
-	public class HlePspModuleAttribute : Attribute
+	public sealed class HlePspModuleAttribute : Attribute
 	{
 		public ModuleFlags ModuleFlags;
 	}

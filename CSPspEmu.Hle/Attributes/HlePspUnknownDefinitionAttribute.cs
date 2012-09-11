@@ -3,7 +3,7 @@
 namespace CSPspEmu.Hle
 {
 	[AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
-	public class HlePspUnknownDefinitionAttribute : Attribute
+	public sealed class HlePspUnknownDefinitionAttribute : Attribute
 	{
 	}
 }

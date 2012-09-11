@@ -4,7 +4,7 @@ using System.IO;
 
 namespace CSPspEmu.Core
 {
-	public class ApplicationPaths
+	public static class ApplicationPaths
 	{
 		public static string ExecutablePath
 		{
@@ -35,8 +35,14 @@ namespace CSPspEmu.Core
 					{
 						_MemoryStickRootFolder = Path.GetFullPath(MemoryStickRootFolder + "/../../../../ms");
 					}
-					try { Directory.CreateDirectory(_MemoryStickRootFolder); }
-					catch { }
+					
+					try
+					{
+						Directory.CreateDirectory(_MemoryStickRootFolder);
+					}
+					catch
+					{
+					}
 				}
 				return _MemoryStickRootFolder;
 			}

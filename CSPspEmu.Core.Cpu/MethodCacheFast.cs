@@ -72,9 +72,9 @@ namespace CSPspEmu.Core.Cpu
 			));
 		}
 
-		public uint AddressToIndex_Main(uint PC) { return (PC - PspMemory.MainOffset) / 4; }
-		public uint AdressToIndex_ScratchPad(uint PC) { return (PC - PspMemory.ScratchPadOffset) / 4; }
-		public uint AddressToIndex_FrameBuffer(uint PC) { return (PC - PspMemory.FrameBufferOffset) / 4; }
-		public uint AddressToIndex_Vectors(uint PC) { return (PC - PspMemory.VectorsOffset) / 4; }
+		public static uint AddressToIndex_Main(uint PC) { return (PC - PspMemory.MainOffset) / 4; }
+		public static uint AdressToIndex_ScratchPad(uint PC) { return (PC - PspMemory.ScratchPadOffset) / 4; }
+		public static uint AddressToIndex_FrameBuffer(uint PC) { return (PC - PspMemory.FrameBufferOffset) / 4; }
+		public static uint AddressToIndex_Vectors(uint PC) { return (PC - PspMemory.VectorsOffset) / 4; }
 	}
 }

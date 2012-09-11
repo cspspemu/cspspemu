@@ -2,7 +2,7 @@
 
 namespace CSPspEmu.Core.Utils
 {
-	public class NumberUtils
+	public static class NumberUtils
 	{
 		public static int ParseIntegerConstant(String Value, int DefaultBase = 10)
 		{

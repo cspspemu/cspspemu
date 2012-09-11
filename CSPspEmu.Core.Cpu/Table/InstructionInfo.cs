@@ -21,7 +21,7 @@ namespace CSPspEmu.Core.Cpu.Table
 		Psp    = (1 << 8),
 	}
 
-	public class InstructionInfo : Attribute
+	public sealed class InstructionInfo : Attribute
 	{
 		/// <summary>
 		/// Name of the instruction.

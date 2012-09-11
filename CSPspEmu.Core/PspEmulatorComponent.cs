@@ -3,7 +3,7 @@
 namespace CSPspEmu.Core
 {
 	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-	public class InjectAttribute : Attribute
+	public sealed class InjectAttribute : Attribute
 	{
 	}
 

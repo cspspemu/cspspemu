@@ -121,7 +121,7 @@ namespace CSPspEmu.Core.Gpu
 			set
 			{
 				_InstructionAddressStall = value & PspMemory.MemoryMask;
-				if (InstructionAddressStall != 0 && !Memory.IsAddressValid(InstructionAddressStall))
+				if (InstructionAddressStall != 0 && !PspMemory.IsAddressValid(InstructionAddressStall))
 				{
 					throw (new InvalidOperationException(String.Format("Invalid StallAddress! 0x{0}", InstructionAddressStall)));
 				}

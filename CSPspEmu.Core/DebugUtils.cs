@@ -2,7 +2,7 @@
 
 namespace CSPspEmu.Core
 {
-	public class DebugUtils
+	public static class DebugUtils
 	{
 		public static void IsDebuggerPresentDebugBreak()
 		{
