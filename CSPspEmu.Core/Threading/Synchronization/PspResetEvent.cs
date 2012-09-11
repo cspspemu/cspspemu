@@ -9,7 +9,7 @@ namespace CSPspEmu.Core.Threading.Synchronization
 		protected bool AutoReset;
 		Queue<Action> Actions = new Queue<Action>();
 
-		public PspResetEvent(bool InitialValue, bool AutoReset)
+		protected PspResetEvent(bool InitialValue, bool AutoReset)
 		{
 			this.Value = InitialValue;
 			this.AutoReset = AutoReset;

@@ -11,10 +11,6 @@ namespace CSPspEmu.Core
 	{
 		protected PspEmulatorContext PspEmulatorContext { get; private set; }
 
-		public PspEmulatorComponent()
-		{
-		}
-
 		public void _InitializeComponent(PspEmulatorContext PspEmulatorContext)
 		{
 			//Console.WriteLine("_InitializeComponent : {0}", this.GetType());
