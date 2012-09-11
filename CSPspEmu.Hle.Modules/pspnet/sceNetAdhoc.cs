@@ -84,7 +84,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="port">The port to send to.</param>
 		/// <param name="data">The data to send.</param>
 		/// <param name="len">The length of the data.</param>
-		/// <param name="timeout">Timeot in microseconds</param>
+		/// <param name="timeout">Timeout in microseconds</param>
 		/// <param name="nonblock">Set to 0 to block, 1 for non-blocking.</param>
 		/// <returns>Bytes sent, &lt; 0 on error</returns>
 		[HlePspFunction(NID = 0xABED3790, FirmwareVersion = 150)]
