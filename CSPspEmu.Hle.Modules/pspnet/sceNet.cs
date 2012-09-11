@@ -18,7 +18,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="netintrstack">Stack size of the SceNetNetintr thread (defaults to 4096 on non 1.5 firmware regardless of what value is passed).</param>
 		/// <returns>
 		///		0 on success
-		///		less than 0 on error
+		///		Less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0x39AF39A6, FirmwareVersion = 150)]
 		public int sceNetInit(int MemoryPoolSize, int calloutprio, int calloutstack, int netintrprio, int netintrstack)

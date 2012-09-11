@@ -2,10 +2,10 @@
 using System.IO;
 using System.Text;
 using CSharpUtils;
+using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Modules.stdio;
 using CSPspEmu.Hle.Vfs;
-using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.iofilemgr
 {

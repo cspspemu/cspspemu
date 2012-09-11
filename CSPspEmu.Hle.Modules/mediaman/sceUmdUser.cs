@@ -227,7 +227,7 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		}
 
 		/// <summary>
-		/// 
+		/// Cancel an sceUmdWait* call
 		/// </summary>
 		[HlePspFunction(NID = 0x6AF9B50A, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -247,6 +247,10 @@ namespace CSPspEmu.Hle.Modules.mediaman
 			return 0;
 		}
 
+		/// <summary>
+		/// Permit UMD disc being replaced
+		/// </summary>
+		/// <returns>&lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0xCBE9F02A, FirmwareVersion = 200)]
 		[HlePspNotImplemented]
 		public int sceUmdReplacePermit()
