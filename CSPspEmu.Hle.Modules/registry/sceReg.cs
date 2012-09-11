@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
 using CSharpUtils;
+using CSPspEmu.Core;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.registry
 {
@@ -157,7 +157,7 @@ namespace CSPspEmu.Hle.Modules.registry
 	}
 
 	/// <summary>
-	/// 
+    /// Struct used to open a registry
 	/// </summary>
 	public unsafe struct RegParam
 	{

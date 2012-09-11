@@ -130,7 +130,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// Cancel a queued or running list.
 		/// </summary>
 		/// <param name="DisplayListId">A DisplayList ID</param>
-		/// <returns>???</returns>
+		/// <returns>&lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0x5FB86AB0, FirmwareVersion = 150)]
 		[HlePspNotImplemented(PartialImplemented = true)]
 		public int sceGeListDeQueue(int DisplayListId)
@@ -145,7 +145,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// </summary>
 		/// <param name="DisplayListId">The ID of the queue.</param>
 		/// <param name="InstructionAddressStall">The stall address to update</param>
-		/// <returns>Unknown. Probably 0 if successful.</returns>
+		/// <returns>Unknown. Probably 0 if successful. &lt; 0 on error</returns>
 		[HlePspFunction(NID = 0xE0D68148, FirmwareVersion = 150)]
 		public int sceGeListUpdateStallAddr(int DisplayListId, uint InstructionAddressStall)
 		{
@@ -219,7 +219,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		public struct PspGeListArgs
 		{
 			/// <summary>
-			/// Size
+			/// Size of the structure
 			/// </summary>
 			public uint Size;
 

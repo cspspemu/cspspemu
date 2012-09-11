@@ -69,7 +69,7 @@ namespace CSPspEmu.Hle.Modules.loadcore
 		}
 
 		/// <summary>
-		/// Find a module by it's name.
+		/// Find a module by its name.
 		/// </summary>
 		/// <param name="ModuleName">The name of the module.</param>
 		/// <returns>Pointer to the <see cref="SceModule"/> structure if found, otherwise NULL.</returns>

@@ -446,7 +446,7 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		}
 
 		/// <summary>
-		/// 
+		/// Stop and unload the current module.
 		/// </summary>
 		/// <param name="ArgumentSize"></param>
 		/// <param name="ArgumentPointer"></param>

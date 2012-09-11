@@ -16,7 +16,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// Save the GE's current state. Save the GE's current state.
 		/// </summary>
 		/// <param name="contextAddr">Pointer to a <see cref="PspGeContext"/>.</param>
-		/// <returns>???</returns>
+		/// <returns>&lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0x438A385A, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceGeSaveContext(PspGeContext* contextAddr)
@@ -28,7 +28,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// Restore a previously saved GE context.
 		/// </summary>
 		/// <param name="contextAddr">Pointer to a <see cref="PspGeContext"/>.</param>
-		/// <returns>???</returns>
+		/// <returns>&lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0x0BF608FB, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceGeRestoreContext(PspGeContext* contextAddr)
@@ -53,7 +53,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// </summary>
 		/// <param name="MatrixType">One of <see cref="PspGeMatrixTypes"/>.</param>
 		/// <param name="MatrixAddress">Pointer to a variable to store the matrix.</param>
-		/// <returns>???</returns>
+		/// <returns>&lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0x57C8945B, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceGeGetMtx(PspGeMatrixTypes MatrixType, uint* MatrixAddress)

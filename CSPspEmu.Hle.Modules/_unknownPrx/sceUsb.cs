@@ -32,7 +32,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
 		{
 			get
 			{
-				// Simulate that a USB cacle is always connected
+				// Simulate that a USB cable is always connected
 				UsbStateEnum State = UsbStateEnum.PSP_USB_CABLE_CONNECTED;
 
 				// USB has been activated?
@@ -46,7 +46,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
 		/// <summary>
 		/// Start a USB driver.
 		/// </summary>
-		/// <param name="DriverName">name of the USB driver to start</param>
+		/// <param name="DriverName">Name of the USB driver to start</param>
 		/// <param name="Size">Size of arguments to pass to USB driver start</param>
 		/// <param name="Args">Arguments to pass to USB driver start</param>
 		/// <returns>0 on success</returns>
@@ -61,7 +61,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
 		/// <summary>
 		/// Stop a USB driver.
 		/// </summary>
-		/// <param name="DriverName">name of the USB driver to stop</param>
+		/// <param name="DriverName">Name of the USB driver to stop</param>
 		/// <param name="Size">Size of arguments to pass to USB driver start</param>
 		/// <param name="Args">Arguments to pass to USB driver start</param>
 		/// <returns>0 on success</returns>
@@ -96,7 +96,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
 		/// <summary>
 		/// Get state of a specific USB driver
 		/// </summary>
-		/// <param name="DriverName">name of USB driver to get status from</param>
+		/// <param name="DriverName">Name of the USB driver to get status from</param>
 		/// <returns>1 if the driver has been started, 2 if it is stopped</returns>
 		[HlePspFunction(NID = 0x112CC951, FirmwareVersion = 150)]
 		public int sceUsbGetDrvState(string DriverName)

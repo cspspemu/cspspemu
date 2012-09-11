@@ -41,7 +41,7 @@ namespace CSPspEmu.Hle.Modules.ctrl
 		///		
 		///		sceCtrlSetSamplingCycle(0);
 		///		sceCtrlSetSamplingMode(1);
-		///		sceCtrlReadBufferPositive(&pad, 1);
+		///		sceCtrlReadBufferPositive(&amp;pad, 1);
 		///		// Do something with the read controller data
 		/// </example>
 		/// <param name="SceCtrlData">Pointer to a <see cref="SceCtrlData"/> structure used hold the returned pad data.</param>
@@ -80,7 +80,7 @@ namespace CSPspEmu.Hle.Modules.ctrl
 		}
 
 		/// <summary>
-		/// 
+        /// Gets the current controller mode.
 		/// </summary>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xDA6B76A1, FirmwareVersion = 150)]
@@ -165,7 +165,7 @@ namespace CSPspEmu.Hle.Modules.ctrl
 		/// Set between 1 - 128 to specify the movement on either axis needed by the analog to fire the event.
 		/// </remarks>
 		/// <returns>
-		///		less than 0 on error
+		///		Less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xA7144800, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -188,9 +188,15 @@ namespace CSPspEmu.Hle.Modules.ctrl
             return 0;
         }
 
+        /// <summary>
+        /// Get the idle threshold values.
+        /// </summary>
+        /// <param name="idlerest">Movement needed by the analog to reset the idle timer.</param>
+        /// <param name="idleback">Movement needed by the analog to bring the PSP back from an idle state.</param>
+        /// <returns>&lt; 0 on error.</returns>
         [HlePspFunction(NID = 0x687660FA, FirmwareVersion = 150)]
         [HlePspNotImplemented]
-        public int sceCtrlGetIdleCancelThreshold()
+        public int sceCtrlGetIdleCancelThreshold(int *idlerest, int *idleback)
         {
             return 0;
         }
@@ -209,9 +215,14 @@ namespace CSPspEmu.Hle.Modules.ctrl
             return 0;
         }
 
+        /// <summary>
+        /// Get the controller current cycle setting.
+        /// </summary>
+        /// <param name="pcycle">Return value.</param>
+        /// <returns>Return 0</returns>
         [HlePspFunction(NID = 0x02BAAD91, FirmwareVersion = 150)]
         [HlePspNotImplemented]
-        public int sceCtrlGetSamplingCycle()
+        public int sceCtrlGetSamplingCycle(int *pcycle)
         {
             return 0;
         }

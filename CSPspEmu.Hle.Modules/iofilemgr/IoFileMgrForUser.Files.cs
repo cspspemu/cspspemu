@@ -525,6 +525,9 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		}
 	}
 
+    /// <summary>
+    /// Structure to maintain the file driver pointers
+    /// </summary>
 	public struct PspIoDrvFuncs
 	{
 		/// <summary>

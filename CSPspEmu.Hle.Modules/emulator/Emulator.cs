@@ -1,7 +1,7 @@
 ﻿using System;
+using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
-using CSPspEmu.Core;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.emulator

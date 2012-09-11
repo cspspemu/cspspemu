@@ -1,17 +1,17 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
-using CSPspEmu.Hle.Attributes;
 using CSharpUtils;
 using CSharpUtils.Arrays;
 using CSharpUtils.Endian;
-using CSPspEmu.Hle.Managers;
-using CSPspEmu.Media;
+using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Formats.audio;
+using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Modules.audio;
-using CSPspEmu.Core.Audio;
 using CSPspEmu.Core;
+using CSPspEmu.Core.Audio;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Media;
 
 namespace CSPspEmu.Hle.Modules.libatrac3plus
 {

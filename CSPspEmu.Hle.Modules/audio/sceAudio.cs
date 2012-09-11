@@ -127,12 +127,12 @@ namespace CSPspEmu.Hle.Modules.audio
 		}
 
 		/// <summary>
-		/// 
+		/// Output panned audio of the specified channel (blocking)
 		/// </summary>
-		/// <param name="ChannelId"></param>
-		/// <param name="LeftVolume"></param>
-		/// <param name="RightVolume"></param>
-		/// <param name="Buffer"></param>
+		/// <param name="ChannelId">The channel number</param>
+		/// <param name="LeftVolume">The left volume</param>
+		/// <param name="RightVolume">The right volume</param>
+		/// <param name="Buffer">Pointer to the PCM data to output</param>
 		/// <param name="Blocking"></param>
 		/// <returns>
 		///		Number of samples played.
@@ -277,7 +277,7 @@ namespace CSPspEmu.Hle.Modules.audio
 		/// Change the format of a channel
 		/// </summary>
 		/// <param name="ChannelId">The channel number.</param>
-		/// <param name="Format">One of ::PspAudioFormats</param>
+		/// <param name="Format">One of PspAudioFormats</param>
 		/// <returns>0 on success, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0x95FD0C2D, FirmwareVersion = 150)]
 		public int sceAudioChangeChannelConfig(int ChannelId, PspAudio.FormatEnum Format)
@@ -297,8 +297,8 @@ namespace CSPspEmu.Hle.Modules.audio
 		/// </param>
 		/// <param name="SampleCount">
 		///		The number of samples that can be output on the channel per
-		///		output call.  It must be a value between ::PSP_AUDIO_SAMPLE_MIN
-		///		and ::PSP_AUDIO_SAMPLE_MAX, and it must be aligned to 64 bytes
+		///		output call.  It must be a value between <see cref="PSP_AUDIO_SAMPLE_MIN"/>
+		///		and <see cref="PSP_AUDIO_SAMPLE_MAX"/>, and it must be aligned to 64 bytes
 		///		(use the ::PSP_AUDIO_SAMPLE_ALIGN macro to align it).
 		/// </param>
 		/// <param name="Format">The output format to use for the channel.  One of ::PspAudioFormats.</param>
@@ -433,6 +433,10 @@ namespace CSPspEmu.Hle.Modules.audio
 			//return 0;
 		}
 
+        /// <summary>
+        /// Get count of unplayed samples remaining
+        /// </summary>
+        /// <returns>Number of samples to be played, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0x647CEF33, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceAudioOutput2GetRestSample()
@@ -440,9 +444,14 @@ namespace CSPspEmu.Hle.Modules.audio
 			throw (new NotImplementedException());
 		}
 
+        /// <summary>
+        /// Init audio input (with extra arguments)
+        /// </summary>
+        /// <param name="parameters">A pointer to a <see cref="pspAudioInputParams"/> struct.</param>
+        /// <returns>0 on success, an error if less than 0.</returns>
         [HlePspFunction(NID = 0xE926D3FB, FirmwareVersion = 150)]
         [HlePspNotImplemented]
-        public int sceAudioInputInitEx()
+        public int sceAudioInputInitEx(pspAudioInputParams *parameters)
         {
             return 0;
         }
