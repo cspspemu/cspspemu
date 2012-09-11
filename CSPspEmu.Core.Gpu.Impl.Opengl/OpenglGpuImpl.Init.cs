@@ -36,7 +36,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		public bool IsCurrentWindow = false;
 
-		public IWindowInfo WindowInfo
+		public static IWindowInfo WindowInfo
 		{
 			get
 			{

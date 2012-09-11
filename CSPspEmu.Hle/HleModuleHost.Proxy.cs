@@ -269,9 +269,9 @@ namespace CSPspEmu.Hle
 				{
 					CpuThreadState.GPR[2] = (int)SceKernelException.SceKernelError;
 				}
-				catch (SceKernelSelfStopUnloadModuleException SceKernelSelfStopUnloadModuleException)
+				catch (SceKernelSelfStopUnloadModuleException)
 				{
-					throw (SceKernelSelfStopUnloadModuleException);
+					throw;
 				}
 #if !DO_NOT_PROPAGATE_EXCEPTIONS
 				catch (Exception Exception)

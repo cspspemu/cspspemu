@@ -304,7 +304,7 @@ namespace CSPspEmu.AutoTests
 					// FileNameBase
 					try { File.Delete(FileNameExecutable); } catch { }
 					var Output = ExecuteBat(PspAutoTestsFolder + @"\build.bat", FileNameBase);
-					if (Output != "")
+					if (!string.IsNullOrEmpty((Output)))
 					{
 						Console.Write("Compiling {0}...", FileNameBase);
 						Console.WriteLine("Result:");
@@ -333,7 +333,7 @@ namespace CSPspEmu.AutoTests
 		public static void Main(String[] Arguments)
 		{
 			var BasePath = Path.GetDirectoryName(Application.ExecutablePath);
-			String PspAutoTestsFolder = "";
+			string PspAutoTestsFolder = "";
 
 			foreach (var TryName in new[] { "pspautotests/tests", "../../../pspautotests/tests" })
 			{
@@ -344,7 +344,7 @@ namespace CSPspEmu.AutoTests
 				}
 			}
 
-			if (PspAutoTestsFolder == "")
+			if (string.IsNullOrEmpty(PspAutoTestsFolder))
 			{
 				Console.Error.WriteLine("Can't find 'pspautotests/tests' folder.");
 				Console.ReadKey();

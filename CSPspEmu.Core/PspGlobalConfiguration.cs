@@ -2,7 +2,7 @@
 
 namespace CSPspEmu.Core
 {
-	public class PspGlobalConfiguration
+	public static class PspGlobalConfiguration
 	{
 		private static string _CurrentVersion;
 		private static int? _CurrentVersionNumeric;

@@ -78,7 +78,7 @@ namespace CSPspEmu.Hle.Loader
 				catch (Exception Exception)
 				{
 					Logger.Error(Exception);
-					throw (Exception);
+					throw;
 				}
 			}
 

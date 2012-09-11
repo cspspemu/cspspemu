@@ -4,7 +4,7 @@ using CSharpUtils;
 
 namespace CSPspEmu.Core
 {
-	public unsafe class Platform
+	public static unsafe class Platform
 	{
 		static Logger Logger = Logger.GetLogger("Platform");
 

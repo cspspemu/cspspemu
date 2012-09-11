@@ -128,7 +128,7 @@ namespace CSPspEmu.Gui.Winforms
 			return BitConverter.ToString(SHA1.Create().ComputeHash(Encoding.UTF8.GetBytes(IsoFileInfo.FullName + "_" + IsoFileInfo.Length))).Replace("-", "");
 		}
 
-		public GameEntry HandleIso(string IsoFile)
+		public static GameEntry HandleIso(string IsoFile)
 		{
 			var IsoFileInfo = new FileInfo(IsoFile);
 

@@ -4,7 +4,7 @@ using CSharpUtils;
 
 namespace CSPspEmu.Core
 {
-	public unsafe sealed class Hashing
+	public static unsafe class Hashing
 	{
 		static Logger Logger = Logger.GetLogger("Hashing");
 
