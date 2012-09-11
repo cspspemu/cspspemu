@@ -142,91 +142,91 @@ namespace CSPspEmu.Hle.Modules.rtc
 			return sceRtcTickAddTicks(dstPtr, srcPtr, value);
 		}
 
-        /// <summary>
-        /// Add an amount of seconds to a tick
-        /// </summary>
-        /// <param name="dstPtr">Pointer to tick to hold result</param>
-        /// <param name="srcPtr">Pointer to source tick</param>
-        /// <param name="value">Number of seconds to add</param>
-        /// <returns>0 on success, &lt; 0 on error</returns>
+		/// <summary>
+		/// Add an amount of seconds to a tick
+		/// </summary>
+		/// <param name="dstPtr">Pointer to tick to hold result</param>
+		/// <param name="srcPtr">Pointer to source tick</param>
+		/// <param name="value">Number of seconds to add</param>
+		/// <returns>0 on success, &lt; 0 on error</returns>
 		[HlePspFunction(NID = 0xF2A4AFE5, FirmwareVersion = 150)]
 		public int sceRtcTickAddSeconds(long* dstPtr, long* srcPtr, long value)
 		{
 			return _sceRtcTickAddTimeSpan(dstPtr, srcPtr, TimeSpan.FromSeconds(value));
 		}
 
-        /// <summary>
-        /// Add an amount of minutes to a tick
-        /// </summary>
-        /// <param name="dstPtr">Pointer to tick to hold result</param>
-        /// <param name="srcPtr">Pointer to source tick</param>
-        /// <param name="value">Number of minutes to add</param>
-        /// <returns>0 on success, &lt; 0 on error</returns>
+		/// <summary>
+		/// Add an amount of minutes to a tick
+		/// </summary>
+		/// <param name="dstPtr">Pointer to tick to hold result</param>
+		/// <param name="srcPtr">Pointer to source tick</param>
+		/// <param name="value">Number of minutes to add</param>
+		/// <returns>0 on success, &lt; 0 on error</returns>
 		[HlePspFunction(NID = 0xE6605BCA, FirmwareVersion = 150)]
 		public int sceRtcTickAddMinutes(long* dstPtr, long* srcPtr, long value)
 		{
 			return _sceRtcTickAddTimeSpan(dstPtr, srcPtr, TimeSpan.FromMinutes(value));
 		}
 
-        /// <summary>
-        /// Add an amount of hours to a tick
-        /// </summary>
-        /// <param name="dstPtr">Pointer to tick to hold result</param>
-        /// <param name="srcPtr">Pointer to source tick</param>
-        /// <param name="value">Number of hours to add</param>
-        /// <returns>0 on success, &lt; 0 on error</returns>
+		/// <summary>
+		/// Add an amount of hours to a tick
+		/// </summary>
+		/// <param name="dstPtr">Pointer to tick to hold result</param>
+		/// <param name="srcPtr">Pointer to source tick</param>
+		/// <param name="value">Number of hours to add</param>
+		/// <returns>0 on success, &lt; 0 on error</returns>
 		[HlePspFunction(NID = 0x26D7A24A, FirmwareVersion = 150)]
 		public int sceRtcTickAddHours(long* dstPtr, long* srcPtr, int value)
 		{
 			return _sceRtcTickAddTimeSpan(dstPtr, srcPtr, TimeSpan.FromHours(value));
 		}
 
-        /// <summary>
-        /// Add an amount of days to a tick
-        /// </summary>
-        /// <param name="dstPtr">Pointer to tick to hold result</param>
-        /// <param name="srcPtr">Pointer to source tick</param>
-        /// <param name="value">Number of days to add</param>
-        /// <returns>0 on success, &lt; 0 on error</returns>
+		/// <summary>
+		/// Add an amount of days to a tick
+		/// </summary>
+		/// <param name="dstPtr">Pointer to tick to hold result</param>
+		/// <param name="srcPtr">Pointer to source tick</param>
+		/// <param name="value">Number of days to add</param>
+		/// <returns>0 on success, &lt; 0 on error</returns>
 		[HlePspFunction(NID = 0xE51B4B7A, FirmwareVersion = 150)]
 		public int sceRtcTickAddDays(long* dstPtr, long* srcPtr, int value)
 		{
 			return _sceRtcTickAddTimeSpan(dstPtr, srcPtr, TimeSpan.FromDays(value));
 		}
 
-        /// <summary>
-        /// Add an amount of weeks to a tick
-        /// </summary>
-        /// <param name="dstPtr">Pointer to tick to hold result</param>
-        /// <param name="srcPtr">Pointer to source tick</param>
-        /// <param name="value">Number of weeks to add</param>
-        /// <returns>0 on success, &lt; 0 on error</returns>
+		/// <summary>
+		/// Add an amount of weeks to a tick
+		/// </summary>
+		/// <param name="dstPtr">Pointer to tick to hold result</param>
+		/// <param name="srcPtr">Pointer to source tick</param>
+		/// <param name="value">Number of weeks to add</param>
+		/// <returns>0 on success, &lt; 0 on error</returns>
 		[HlePspFunction(NID = 0xCF3A2CA8, FirmwareVersion = 150)]
 		public int sceRtcTickAddWeeks(long* dstPtr, long* srcPtr, int value)
 		{
 			return _sceRtcTickAddTimeSpan(dstPtr, srcPtr, TimeSpan.FromDays(value * 7));
 		}
 
-        /// <summary>
-        /// Add an amount of months to a tick
-        /// </summary>
-        /// <param name="dstPtr">Pointer to tick to hold result</param>
-        /// <param name="srcPtr">Pointer to source tick</param>
-        /// <param name="value">Number of months to add</param>
-        /// <returns>0 on success, &lt; 0 on error</returns>
+		/// <summary>
+		/// Add an amount of months to a tick
+		/// </summary>
+		/// <param name="dstPtr">Pointer to tick to hold result</param>
+		/// <param name="srcPtr">Pointer to source tick</param>
+		/// <param name="value">Number of months to add</param>
+		/// <returns>0 on success, &lt; 0 on error</returns>
 		[HlePspFunction(NID = 0xDBF74F1B, FirmwareVersion = 150)]
 		public int sceRtcTickAddMonths(long* dstPtr, long* srcPtr, int value)
 		{
 			return _sceRtcTickAddTimeSpan(dstPtr, srcPtr, TimeSpan.FromDays(value * 30));
 		}
 
-        /// <summary>
-        /// Add an amount of years to a tick
-        /// </summary>
-        /// <param name="dstPtr">Pointer to tick to hold result</param>
-        /// <param name="srcPtr">Pointer to source tick</param>
-        /// <param name="value">Number of years to add</param>
-        /// <returns>0 on success, &lt; 0 on error</returns>
+		/// <summary>
+		/// Add an amount of years to a tick
+		/// </summary>
+		/// <param name="dstPtr">Pointer to tick to hold result</param>
+		/// <param name="srcPtr">Pointer to source tick</param>
+		/// <param name="value">Number of years to add</param>
+		/// <returns>0 on success, &lt; 0 on error</returns>
 		[HlePspFunction(NID = 0x42842C77, FirmwareVersion = 150)]
 		public int sceRtcTickAddYears(long* dstPtr, long* srcPtr, int value)
 		{
@@ -373,12 +373,12 @@ namespace CSPspEmu.Hle.Modules.rtc
 			return 0;
 		}
 
-        /// <summary>
-        /// Compare two ticks
-        /// </summary>
-        /// <param name="Tick1">Pointer to first tick.</param>
-        /// <param name="Tick2">Pointer to second tick.</param>
-        /// <returns>0 when both ticks are equal, &lt; 0 when tick1 &lt; tick2, &gt; 0 when tick1 &gt; tick2</returns>
+		/// <summary>
+		/// Compare two ticks
+		/// </summary>
+		/// <param name="Tick1">Pointer to first tick.</param>
+		/// <param name="Tick2">Pointer to second tick.</param>
+		/// <returns>0 when both ticks are equal, &lt; 0 when tick1 &lt; tick2, &gt; 0 when tick1 &gt; tick2</returns>
 		[HlePspFunction(NID = 0x9ED0AE87, FirmwareVersion = 150)]
 		[PspUntested]
 		public int sceRtcCompareTick(ulong* Tick1, ulong* Tick2)
@@ -395,10 +395,10 @@ namespace CSPspEmu.Hle.Modules.rtc
 			return 0;
 		}
 		
-        /// <summary>
-        /// Format Tick-representation UTC time in RFC3339(ISO8601) format
-        /// </summary>
-        /// <returns></returns>
+		/// <summary>
+		/// Format Tick-representation UTC time in RFC3339(ISO8601) format
+		/// </summary>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0x0498FB3C, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceRtcFormatRFC3339()
@@ -420,10 +420,10 @@ namespace CSPspEmu.Hle.Modules.rtc
 			return 0;
 		}
 
-        /// <summary>
-        /// Format Tick-representation UTC time in RFC3339(ISO8601) format
-        /// </summary>
-        /// <returns></returns>
+		/// <summary>
+		/// Format Tick-representation UTC time in RFC3339(ISO8601) format
+		/// </summary>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0x27F98543, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceRtcFormatRFC3339LocalTime()
@@ -431,10 +431,10 @@ namespace CSPspEmu.Hle.Modules.rtc
 			return 0;
 		}
 
-        /// <summary>
-        /// Parse time information represented in RFC3339 format
-        /// </summary>
-        /// <returns></returns>
+		/// <summary>
+		/// Parse time information represented in RFC3339 format
+		/// </summary>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0x28E1E988, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceRtcParseRFC3339()
@@ -456,11 +456,11 @@ namespace CSPspEmu.Hle.Modules.rtc
 			return 0;
 		}
 
-        /// <summary>
-        /// Check if a year is a leap year
-        /// </summary>
-        /// <param name="year">Year to check if it's a leap year</param>
-        /// <returns>1 if year is a leap year, 0 if not</returns>
+		/// <summary>
+		/// Check if a year is a leap year
+		/// </summary>
+		/// <param name="year">Year to check if it's a leap year</param>
+		/// <returns>1 if year is a leap year, 0 if not</returns>
 		[HlePspFunction(NID = 0x42307A17, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceRtcIsLeapYear(int year)
@@ -468,11 +468,11 @@ namespace CSPspEmu.Hle.Modules.rtc
 			return 0;
 		}
 
-        /// <summary>
-        /// Validate PspDateStruct component ranges
-        /// </summary>
-        /// <param name="date">Pointer to the PspDateStruct to be checked</param>
-        /// <returns>0 on success, one of ::CheckValidErrors on error</returns>
+		/// <summary>
+		/// Validate PspDateStruct component ranges
+		/// </summary>
+		/// <param name="date">Pointer to the PspDateStruct to be checked</param>
+		/// <returns>0 on success, one of ::CheckValidErrors on error</returns>
 		[HlePspFunction(NID = 0x4B1B5E82, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceRtcCheckValid(PspTimeStruct date)
@@ -501,10 +501,10 @@ namespace CSPspEmu.Hle.Modules.rtc
 			return 0;
 		}
 
-        /// <summary>
-        /// Format Tick-representation UTC time in RFC2822 format
-        /// </summary>
-        /// <returns></returns>
+		/// <summary>
+		/// Format Tick-representation UTC time in RFC2822 format
+		/// </summary>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0x7DE6711B, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceRtcFormatRFC2822LocalTime()
@@ -512,10 +512,10 @@ namespace CSPspEmu.Hle.Modules.rtc
 			return 0;
 		}
 
-        /// <summary>
-        /// Format Tick-representation UTC time in RFC2822 format
-        /// </summary>
-        /// <returns></returns>
+		/// <summary>
+		/// Format Tick-representation UTC time in RFC2822 format
+		/// </summary>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0xC663B3B9, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceRtcFormatRFC2822()
@@ -538,14 +538,14 @@ namespace CSPspEmu.Hle.Modules.rtc
 		}
 	}
 
-    public enum PspDaysOfWeek : int
-    {
-        Monday = 1,
-        Tuesday = 2,
-        Wednesday = 3,
-        Thursday = 4,
-        Friday = 5,
-        Saturday = 6,
-        Sunday = 0,
-    }
+	public enum PspDaysOfWeek : int
+	{
+		Monday = 1,
+		Tuesday = 2,
+		Wednesday = 3,
+		Thursday = 4,
+		Friday = 5,
+		Saturday = 6,
+		Sunday = 0,
+	}
 }

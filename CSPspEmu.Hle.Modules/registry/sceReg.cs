@@ -157,7 +157,7 @@ namespace CSPspEmu.Hle.Modules.registry
 	}
 
 	/// <summary>
-    /// Struct used to open a registry
+	/// Struct used to open a registry
 	/// </summary>
 	public unsafe struct RegParam
 	{

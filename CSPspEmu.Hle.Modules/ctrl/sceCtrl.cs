@@ -80,7 +80,7 @@ namespace CSPspEmu.Hle.Modules.ctrl
 		}
 
 		/// <summary>
-        /// Gets the current controller mode.
+		/// Gets the current controller mode.
 		/// </summary>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xDA6B76A1, FirmwareVersion = 150)]
@@ -174,58 +174,58 @@ namespace CSPspEmu.Hle.Modules.ctrl
 			return 0;
 		}
 
-        [HlePspFunction(NID = 0xC152080A, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceCtrlPeekBufferNegative()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0xC152080A, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceCtrlPeekBufferNegative()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0xA68FD260, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceCtrlClearRapidFire()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0xA68FD260, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceCtrlClearRapidFire()
+		{
+			return 0;
+		}
 
-        /// <summary>
-        /// Get the idle threshold values.
-        /// </summary>
-        /// <param name="idlerest">Movement needed by the analog to reset the idle timer.</param>
-        /// <param name="idleback">Movement needed by the analog to bring the PSP back from an idle state.</param>
-        /// <returns>&lt; 0 on error.</returns>
-        [HlePspFunction(NID = 0x687660FA, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceCtrlGetIdleCancelThreshold(int *idlerest, int *idleback)
-        {
-            return 0;
-        }
+		/// <summary>
+		/// Get the idle threshold values.
+		/// </summary>
+		/// <param name="idlerest">Movement needed by the analog to reset the idle timer.</param>
+		/// <param name="idleback">Movement needed by the analog to bring the PSP back from an idle state.</param>
+		/// <returns>&lt; 0 on error.</returns>
+		[HlePspFunction(NID = 0x687660FA, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceCtrlGetIdleCancelThreshold(int *idlerest, int *idleback)
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0x6841BE1A, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceCtrlSetRapidFire()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0x6841BE1A, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceCtrlSetRapidFire()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0x60B81F86, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceCtrlReadBufferNegative()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0x60B81F86, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceCtrlReadBufferNegative()
+		{
+			return 0;
+		}
 
-        /// <summary>
-        /// Get the controller current cycle setting.
-        /// </summary>
-        /// <param name="pcycle">Return value.</param>
-        /// <returns>Return 0</returns>
-        [HlePspFunction(NID = 0x02BAAD91, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceCtrlGetSamplingCycle(int *pcycle)
-        {
-            return 0;
-        }
+		/// <summary>
+		/// Get the controller current cycle setting.
+		/// </summary>
+		/// <param name="pcycle">Return value.</param>
+		/// <returns>Return 0</returns>
+		[HlePspFunction(NID = 0x02BAAD91, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceCtrlGetSamplingCycle(int *pcycle)
+		{
+			return 0;
+		}
 
 		/// <summary>
 		/// Controller latch.

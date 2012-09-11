@@ -52,11 +52,11 @@ namespace CSPspEmu.Hle.Modules.ge
 		}
 
 		/// <summary>
-        /// Interrupt drawing queue.
+		/// Interrupt drawing queue.
 		/// </summary>
-        /// <param name="Mode">If set to 1, reset all the queues.</param>
-        /// <param name="BreakAddress">Unused (just K1-checked).</param>
-        /// <returns>The stopped queue ID if mode isn't set to 0, otherwise 0, and &lt; 0 on error.</returns>
+		/// <param name="Mode">If set to 1, reset all the queues.</param>
+		/// <param name="BreakAddress">Unused (just K1-checked).</param>
+		/// <returns>The stopped queue ID if mode isn't set to 0, otherwise 0, and &lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0xB448EC0D, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceGeBreak(int Mode, void* BreakAddress)
@@ -65,7 +65,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		}
 
 		/// <summary>
-        /// Restart drawing queue.
+		/// Restart drawing queue.
 		/// </summary>
 		/// <returns>&lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0x4C06E472, FirmwareVersion = 150)]

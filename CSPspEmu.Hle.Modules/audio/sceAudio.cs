@@ -433,10 +433,10 @@ namespace CSPspEmu.Hle.Modules.audio
 			//return 0;
 		}
 
-        /// <summary>
-        /// Get count of unplayed samples remaining
-        /// </summary>
-        /// <returns>Number of samples to be played, an error if less than 0.</returns>
+		/// <summary>
+		/// Get count of unplayed samples remaining
+		/// </summary>
+		/// <returns>Number of samples to be played, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0x647CEF33, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceAudioOutput2GetRestSample()
@@ -444,16 +444,16 @@ namespace CSPspEmu.Hle.Modules.audio
 			throw (new NotImplementedException());
 		}
 
-        /// <summary>
-        /// Init audio input (with extra arguments)
-        /// </summary>
-        /// <param name="parameters">A pointer to a <see cref="pspAudioInputParams"/> struct.</param>
-        /// <returns>0 on success, an error if less than 0.</returns>
-        [HlePspFunction(NID = 0xE926D3FB, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceAudioInputInitEx(pspAudioInputParams *parameters)
-        {
-            return 0;
-        }
+		/// <summary>
+		/// Init audio input (with extra arguments)
+		/// </summary>
+		/// <param name="parameters">A pointer to a <see cref="pspAudioInputParams"/> struct.</param>
+		/// <returns>0 on success, an error if less than 0.</returns>
+		[HlePspFunction(NID = 0xE926D3FB, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceAudioInputInitEx(pspAudioInputParams *parameters)
+		{
+			return 0;
+		}
 	}
 }

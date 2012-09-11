@@ -188,7 +188,7 @@ namespace CSPspEmu.Hle.Modules.display
 		}
 
 		/// <summary>
-        /// Get number of frames per second
+		/// Get number of frames per second
 		/// </summary>
 		/// <see cref="http://forums.ps2dev.org/viewtopic.php?t=9168"/>
 		/// <remarks>(pixel_clk_freq * cycles_per_pixel)/(row_pixels * column_pixel)</remarks>
@@ -267,11 +267,11 @@ namespace CSPspEmu.Hle.Modules.display
 		}
 
 		/// <summary>
-        /// Get display mode
+		/// Get display mode
 		/// </summary>
-        /// <param name="ModeOut">Integer to receive the current mode.</param>
-        /// <param name="WidthOut">Integer to receive the current width.</param>
-        /// <param name="HeightOut">Integer to receive the current height.</param>
+		/// <param name="ModeOut">Integer to receive the current mode.</param>
+		/// <param name="WidthOut">Integer to receive the current width.</param>
+		/// <param name="HeightOut">Integer to receive the current height.</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xDEA197D4, FirmwareVersion = 150)]
 		public int sceDisplayGetMode(out int ModeOut, out int WidthOut, out int HeightOut)
@@ -307,10 +307,10 @@ namespace CSPspEmu.Hle.Modules.display
 			return _waitVblankCB(CpuThreadState, HandleCallbacks: true, CycleCount: CycleCount);
 		}
 
-        /// <summary>
-        /// Get whether or not frame buffer is being displayed
-        /// </summary>
-        /// <returns></returns>
+		/// <summary>
+		/// Get whether or not frame buffer is being displayed
+		/// </summary>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0xB4F378FA, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceDisplayIsForeground()
