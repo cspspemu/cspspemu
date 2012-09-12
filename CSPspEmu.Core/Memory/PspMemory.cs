@@ -134,14 +134,14 @@ namespace CSPspEmu.Core.Memory
 			return 0xFFFFFFFF;
 		}
 
-		public bool IsRangeValid(uint Address, int Size)
+		public static bool IsRangeValid(uint Address, int Size)
 		{
 			if (!IsAddressValid(Address)) return false;
 			if (!IsAddressValid((uint)(Address + Size - 1))) return false;
 			return true;
 		}
 
-		public void ValidateRange(uint Address, int Size)
+		public static void ValidateRange(uint Address, int Size)
 		{
 			if (!IsAddressValid((uint)(Address + 0))) throw (new InvalidAddressException(Address));
 			if (Size > 1)
@@ -158,7 +158,7 @@ namespace CSPspEmu.Core.Memory
 			return PspAddressToPointerUnsafe(Address);
 		}
 
-		public void CheckAndEnforceAddressValid(uint Address)
+		public static void CheckAndEnforceAddressValid(uint Address)
 		{
 			ValidateRange(Address, 0);
 		}
