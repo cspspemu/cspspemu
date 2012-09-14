@@ -22,46 +22,46 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		*/
 
 		// Binary Floating Point Unit Operations
-		public void add_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); }); }
-		public void sub_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned); }); }
-		public void mul_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned); }); }
-		public void div_s() { MipsMethodEmiter.OP_3REG_F(FD, FS, FT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.DivideSigned); }); }
+		public void add_s() { MipsMethodEmitter.OP_3REG_F(FD, FS, FT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); }); }
+		public void sub_s() { MipsMethodEmitter.OP_3REG_F(FD, FS, FT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned); }); }
+		public void mul_s() { MipsMethodEmitter.OP_3REG_F(FD, FS, FT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned); }); }
+		public void div_s() { MipsMethodEmitter.OP_3REG_F(FD, FS, FT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.DivideSigned); }); }
 
 		// Unary Floating Point Unit Operations
-		public void sqrt_s() { MipsMethodEmiter.OP_2REG_F(FD, FS, () => { SafeILGenerator.Call((Func<float, float>)MathFloat.Sqrt); }); }
-		public void abs_s() { MipsMethodEmiter.OP_2REG_F(FD, FS, () => { SafeILGenerator.Call((Func<float, float>)MathFloat.Abs); }); }
-		public void mov_s() { MipsMethodEmiter.OP_2REG_F(FD, FS, () => { }); }
-		public void neg_s() { MipsMethodEmiter.OP_2REG_F(FD, FS, () => { SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate); }); }
+		public void sqrt_s() { MipsMethodEmitter.OP_2REG_F(FD, FS, () => { SafeILGenerator.Call((Func<float, float>)MathFloat.Sqrt); }); }
+		public void abs_s() { MipsMethodEmitter.OP_2REG_F(FD, FS, () => { SafeILGenerator.Call((Func<float, float>)MathFloat.Abs); }); }
+		public void mov_s() { MipsMethodEmitter.OP_2REG_F(FD, FS, () => { }); }
+		public void neg_s() { MipsMethodEmitter.OP_2REG_F(FD, FS, () => { SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate); }); }
 		public void trunc_w_s()
 		{
-			MipsMethodEmiter.SaveFPR_I(FD, () =>
+			MipsMethodEmitter.SaveFPR_I(FD, () =>
 			{
-				MipsMethodEmiter.LoadFPR(FS);
-				MipsMethodEmiter.CallMethod((Func<float, int>)MathFloat.Cast);
+				MipsMethodEmitter.LoadFPR(FS);
+				MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Cast);
 			});
 		}
 		public void round_w_s()
 		{
-			MipsMethodEmiter.SaveFPR_I(FD, () =>
+			MipsMethodEmitter.SaveFPR_I(FD, () =>
 			{
-				MipsMethodEmiter.LoadFPR(FS);
-				MipsMethodEmiter.CallMethod((Func<float, int>)MathFloat.Round);
+				MipsMethodEmitter.LoadFPR(FS);
+				MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Round);
 			});
 		}
 		public void ceil_w_s()
 		{
-			MipsMethodEmiter.SaveFPR_I(FD, () =>
+			MipsMethodEmitter.SaveFPR_I(FD, () =>
 			{
-				MipsMethodEmiter.LoadFPR(FS);
-				MipsMethodEmiter.CallMethod((Func<float, int>)MathFloat.Ceil);
+				MipsMethodEmitter.LoadFPR(FS);
+				MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Ceil);
 			});
 		}
 		public void floor_w_s()
 		{
-			MipsMethodEmiter.SaveFPR_I(FD, () =>
+			MipsMethodEmitter.SaveFPR_I(FD, () =>
 			{
-				MipsMethodEmiter.LoadFPR(FS);
-				MipsMethodEmiter.CallMethod((Func<float, int>)MathFloat.Floor);
+				MipsMethodEmitter.LoadFPR(FS);
+				MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Floor);
 			});
 		}
 
@@ -70,9 +70,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public void cvt_s_w()
 		{
-			MipsMethodEmiter.SaveFPR(FD, () =>
+			MipsMethodEmitter.SaveFPR(FD, () =>
 			{
-				MipsMethodEmiter.LoadFPR_I(FS);
+				MipsMethodEmitter.LoadFPR_I(FS);
 				SafeILGenerator.ConvertTo<float>();
 			});
 		}
@@ -102,16 +102,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		// Move (from/to) float point registers (reinterpreted)
 		public void mfc1() {
-			MipsMethodEmiter.SaveGPR(RT, () =>
+			MipsMethodEmitter.SaveGPR(RT, () =>
 			{
-				MipsMethodEmiter.LoadFPR(FS);
+				MipsMethodEmitter.LoadFPR(FS);
 				SafeILGenerator.Call((Func<float, int>)MathFloat.ReinterpretFloatAsInt);
 			});
 		}
 		public void mtc1() {
-			MipsMethodEmiter.SaveFPR(FS, () =>
+			MipsMethodEmitter.SaveFPR(FS, () =>
 			{
-				MipsMethodEmiter.LoadGPR_Signed(RT);
+				MipsMethodEmitter.LoadGPR_Signed(RT);
 				SafeILGenerator.Call((Func<int, float>)MathFloat.ReinterpretIntAsFloat);
 			});
 		}
@@ -183,10 +183,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			bool fc_less = ((fc02 & 4) != 0);
 			bool fc_inv_qnan = (fc3 != 0); // TODO -- Only used for detecting invalid operations?
 
-			MipsMethodEmiter.SaveFCR31_CC(() =>
+			MipsMethodEmitter.SaveFCR31_CC(() =>
 			{
-				MipsMethodEmiter.LoadFPR(FS);
-				MipsMethodEmiter.LoadFPR(FT);
+				MipsMethodEmitter.LoadFPR(FS);
+				MipsMethodEmitter.LoadFPR(FT);
 				SafeILGenerator.Push((int)(fc_unordererd ? 1 : 0));
 				SafeILGenerator.Push((int)(fc_equal ? 1 : 0));
 				SafeILGenerator.Push((int)(fc_less ? 1 : 0));

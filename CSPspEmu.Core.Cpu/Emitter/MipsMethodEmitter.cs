@@ -464,15 +464,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public void SET(int RT, uint Value)
 		{
-			SaveGPR(RT, () =>
-			{
-				SafeILGenerator.Push((int)Value);
-			});
+			SaveGPR(RT, () => SafeILGenerator.Push((int)Value));
 		}
 
 		public void SET_REG(int RT, int RS)
 		{
-			SaveGPR(RT, () => { LoadGPR_Unsigned(RS); });
+			SaveGPR(RT, () => LoadGPR_Unsigned(RS));
 		}
 
 		public void CallMethod(MethodInfo MethodInfo)

@@ -66,13 +66,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 							if ((Cond & 1) != 0)
 							{
 								Load_VS(Index);
-								MipsMethodEmiter.CallMethod((Func<float, bool>)MathFloat.IsNan);
+								MipsMethodEmitter.CallMethod((Func<float, bool>)MathFloat.IsNan);
 								SafeILGenerator.BinaryOperation(SafeBinaryOperator.Or); 
 							}
 							if ((Cond & 2) != 0)
 							{
 								Load_VS(Index);
-								MipsMethodEmiter.CallMethod((Func<float, bool>)MathFloat.IsInfinity);
+								MipsMethodEmitter.CallMethod((Func<float, bool>)MathFloat.IsInfinity);
 								SafeILGenerator.BinaryOperation(SafeBinaryOperator.Or);
 							}
 
@@ -87,7 +87,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Push((int)VectorSize);
-			MipsMethodEmiter.CallMethod((Action<CpuThreadState, int>)CpuEmitter._vcmp_end);
+			MipsMethodEmitter.CallMethod((Action<CpuThreadState, int>)CpuEmitter._vcmp_end);
 		}
 
 		public void _vsltge(SafeBinaryComparison SafeBinaryComparison)
@@ -213,7 +213,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			var Register = Instruction.IMM3;
 			//throw (new NotImplementedException());
-			MipsMethodEmiter.StoreBranchFlag(() =>
+			MipsMethodEmitter.StoreBranchFlag(() =>
 			{
 				Load_VCC(Register);
 				SafeILGenerator.Push((int)0);

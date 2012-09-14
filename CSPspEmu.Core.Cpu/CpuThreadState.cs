@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CSharpUtils.Threading;
 using CSharpUtils;
-using CSPspEmu.Core.Memory;
+using CSharpUtils.Threading;
 using CSPspEmu.Core.Cpu.Emitter;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu
 {

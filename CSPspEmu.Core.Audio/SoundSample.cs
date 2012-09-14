@@ -2,8 +2,8 @@
 {
 	public struct StereoShortSoundSample
 	{
-		public short Left;
-		public short Right;
+		public short Left;  // Left audio
+		public short Right; // Right audio
 
 		public StereoShortSoundSample(short Left, short Right)
 		{
@@ -33,8 +33,8 @@
 
 	public struct StereoIntSoundSample
 	{
-		public int Left;
-		public int Right;
+		public int Left;  // Left audio
+		public int Right; // Right audio
 
 		public StereoIntSoundSample(int Left, int Right)
 		{

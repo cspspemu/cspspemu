@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Cpu.Dynarec;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu
 {

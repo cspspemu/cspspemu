@@ -8,25 +8,25 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	{
 		private void _save_pc()
 		{
-			if (!(MipsMethodEmiter.Processor.Memory is FastPspMemory))
+			if (!(MipsMethodEmitter.Processor.Memory is FastPspMemory))
 			{
-				MipsMethodEmiter.SavePC(PC);
+				MipsMethodEmitter.SavePC(PC);
 			}
 		}
 
 		private void _load_i<TType>()
 		{
 			_save_pc();
-			MipsMethodEmiter.SaveGPR(RT, () =>
+			MipsMethodEmitter.SaveGPR(RT, () =>
 			{
-				MipsMethodEmiter._loadfromaddress<TType>(_loadd_rs_plus_imm, CanBeNull: false);
+				MipsMethodEmitter._loadfromaddress<TType>(_loadd_rs_plus_imm, CanBeNull: false);
 			});
 
 		}
 
 		private void _loadd_rs_plus_imm()
 		{
-			MipsMethodEmiter.LoadGPR_Unsigned(RS);
+			MipsMethodEmitter.LoadGPR_Unsigned(RS);
 			SafeILGenerator.Push((int)IMM);
 			SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
 		}
@@ -47,7 +47,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			get
 			{
-				return !(MipsMethodEmiter.Processor.Memory is FastPspMemory) && CpuProcessor.PspConfig.MustLogWrites;
+				return !(MipsMethodEmitter.Processor.Memory is FastPspMemory) && CpuProcessor.PspConfig.MustLogWrites;
 			}
 		}
 
@@ -65,13 +65,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			ActionLoadValue();
 			SafeILGenerator.StoreIndirect<TType>();
 #else
-			MipsMethodEmiter._savetoaddress<TType>(_loadd_rs_plus_imm, ActionLoadValue);
+			MipsMethodEmitter._savetoaddress<TType>(_loadd_rs_plus_imm, ActionLoadValue);
 #endif
 
 			if (MustLogWrites)
 			{
 				SafeILGenerator.LoadArgument0CpuThreadState();
-				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmitter.LoadGPR_Unsigned(RS);
 				SafeILGenerator.Push((int)IMM);
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
 				SafeILGenerator.Push((int)PC);
@@ -83,7 +83,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			_save_common<TType>(() =>
 			{
-				MipsMethodEmiter.LoadGPR_Unsigned(RT);
+				MipsMethodEmitter.LoadGPR_Unsigned(RT);
 			});
 		}
 
@@ -124,32 +124,32 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public void lwl()
 		{
-			MipsMethodEmiter.SaveGPR(RT, () =>
+			MipsMethodEmitter.SaveGPR(RT, () =>
 			{
 				// ((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 0) << 0) & 0x_0000_FFFF)
 				_save_pc();
 
 				//_lwl_exec
 				SafeILGenerator.LoadArgument0CpuThreadState(); // CpuThreadState
-				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmitter.LoadGPR_Unsigned(RS);
 				SafeILGenerator.Push((int)IMM);
-				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				MipsMethodEmiter.CallMethod((Func<CpuThreadState, uint, int, uint, uint>)CpuEmitter._lwl_exec);
+				MipsMethodEmitter.LoadGPR_Unsigned(RT);
+				MipsMethodEmitter.CallMethod((Func<CpuThreadState, uint, int, uint, uint>)CpuEmitter._lwl_exec);
 			});
 		}
 
 		public void lwr()
 		{
-			MipsMethodEmiter.SaveGPR(RT, () =>
+			MipsMethodEmitter.SaveGPR(RT, () =>
 			{
 				// ((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 0) << 0) & 0x_0000_FFFF)
 				_save_pc();
 
 				SafeILGenerator.LoadArgument0CpuThreadState(); // CpuThreadState
-				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmitter.LoadGPR_Unsigned(RS);
 				SafeILGenerator.Push((int)IMM);
-				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				MipsMethodEmiter.CallMethod((Func<CpuThreadState, uint, int, uint, uint>)CpuEmitter._lwr_exec);
+				MipsMethodEmitter.LoadGPR_Unsigned(RT);
+				MipsMethodEmitter.CallMethod((Func<CpuThreadState, uint, int, uint, uint>)CpuEmitter._lwr_exec);
 			});	
 		}
 
@@ -184,10 +184,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			_save_pc();
 
 			SafeILGenerator.LoadArgument0CpuThreadState(); // CpuThreadState
-			MipsMethodEmiter.LoadGPR_Unsigned(RS);
+			MipsMethodEmitter.LoadGPR_Unsigned(RS);
 			SafeILGenerator.Push((int)IMM);
-			MipsMethodEmiter.LoadGPR_Unsigned(RT);
-			MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint, int, uint>)CpuEmitter._swl_exec);
+			MipsMethodEmitter.LoadGPR_Unsigned(RT);
+			MipsMethodEmitter.CallMethod((Action<CpuThreadState, uint, int, uint>)CpuEmitter._swl_exec);
 		}
 
 
@@ -196,10 +196,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			_save_pc();
 
 			SafeILGenerator.LoadArgument0CpuThreadState(); // CpuThreadState
-			MipsMethodEmiter.LoadGPR_Unsigned(RS);
+			MipsMethodEmitter.LoadGPR_Unsigned(RS);
 			SafeILGenerator.Push((int)IMM);
-			MipsMethodEmiter.LoadGPR_Unsigned(RT);
-			MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint, int, uint>)CpuEmitter._swr_exec);
+			MipsMethodEmitter.LoadGPR_Unsigned(RT);
+			MipsMethodEmitter.CallMethod((Action<CpuThreadState, uint, int, uint>)CpuEmitter._swr_exec);
 		}
 
 		// Load Linked word.
@@ -228,13 +228,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				SafeILGenerator.LoadIndirect<float>();
 			});
 #else
-			MipsMethodEmiter.SaveFPR_I(FT, _load_i<uint>);
+			MipsMethodEmitter.SaveFPR_I(FT, _load_i<uint>);
 #endif
 		}
 		public void swc1() {
 			_save_common<int>(() =>
 			{
-				MipsMethodEmiter.LoadFPR_I(FT);
+				MipsMethodEmitter.LoadFPR_I(FT);
 			});
 		}
 	}

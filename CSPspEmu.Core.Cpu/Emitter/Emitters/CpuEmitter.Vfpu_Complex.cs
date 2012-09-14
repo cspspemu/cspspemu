@@ -54,7 +54,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			Load_VS(Left);
 			Load_VS(Right);
-			MipsMethodEmiter.CallMethod(Func);
+			MipsMethodEmitter.CallMethod(Func);
 		}
 
 		[PspUntested]

@@ -155,7 +155,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private void _call_debug_vfpu()
 		{
-			MipsMethodEmiter.CallMethodWithCpuThreadStateAsFirstArgument(this.GetType(), "_debug_vfpu");
+			MipsMethodEmitter.CallMethodWithCpuThreadStateAsFirstArgument(this.GetType(), "_debug_vfpu");
 		}
 
 		public static void _debug_vfpu(CpuThreadState CpuThreadState)
@@ -184,9 +184,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private void _load_memory_imm14_index(uint Index)
 		{
-			MipsMethodEmiter._getmemptr(() =>
+			MipsMethodEmitter._getmemptr(() =>
 			{
-				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmitter.LoadGPR_Unsigned(RS);
 				SafeILGenerator.Push((int)(Instruction.IMM14 * 4 + Index * 4));
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
 			}, Safe: true, CanBeNull: false);
@@ -315,7 +315,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				if (Prefix.SourceAbsolute(Index))
 				{
 					//MipsMethodEmiter.ILGenerator.Emit(OpCodes);
-					MipsMethodEmiter.CallMethod((Func<float, float>)MathFloat.Abs);
+					MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Abs);
 				}
 				if (Prefix.SourceNegate(Index))
 				{
@@ -358,13 +358,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private void Load_VCC(uint Index)
 		{
-			MipsMethodEmiter.LoadFieldPtr(typeof(CpuThreadState).GetField("VFR_CC_" + Index));
+			MipsMethodEmitter.LoadFieldPtr(typeof(CpuThreadState).GetField("VFR_CC_" + Index));
 			SafeILGenerator.LoadIndirect<sbyte>();
 		}
 
 		private void Save_VCC(int Index, Action Action)
 		{
-			MipsMethodEmiter.LoadFieldPtr(typeof(CpuThreadState).GetField("VFR_CC_" + Index));
+			MipsMethodEmitter.LoadFieldPtr(typeof(CpuThreadState).GetField("VFR_CC_" + Index));
 			{
 				Action();
 			}
@@ -395,13 +395,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 							{
 								SafeILGenerator.Push((int)Min);
 								SafeILGenerator.Push((int)Max);
-								MipsMethodEmiter.CallMethod((Func<int, int, int, int>)MathFloat.ClampInt);
+								MipsMethodEmitter.CallMethod((Func<int, int, int, int>)MathFloat.ClampInt);
 							}
 							else
 							{
 								SafeILGenerator.Push((float)Min);
 								SafeILGenerator.Push((float)Max);
-								MipsMethodEmiter.CallMethod((Func<float, float, float, float>)MathFloat.Clamp);
+								MipsMethodEmitter.CallMethod((Func<float, float, float, float>)MathFloat.Clamp);
 							}
 						}
 					}
@@ -579,7 +579,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			try
 			{
 				var FieldInfo = typeof(CpuThreadState).GetField("VFR" + RegisterIndex);
-				MipsMethodEmiter.LoadFieldPtr(FieldInfo);
+				MipsMethodEmitter.LoadFieldPtr(FieldInfo);
 			}
 			catch (Exception Exception)
 			{
@@ -635,7 +635,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		private void EmitLogFloatResult(bool Return = true)
 		{
 			SafeILGenerator.LoadArgument0CpuThreadState();
-			MipsMethodEmiter.CallMethod((Func<float, CpuThreadState, float>)CpuEmitter.LogFloatResult);
+			MipsMethodEmitter.CallMethod((Func<float, CpuThreadState, float>)CpuEmitter.LogFloatResult);
 			if (!Return)
 			{
 				SafeILGenerator.Pop();

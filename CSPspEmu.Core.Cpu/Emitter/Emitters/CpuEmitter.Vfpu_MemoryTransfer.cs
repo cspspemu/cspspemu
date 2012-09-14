@@ -109,7 +109,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				SafeILGenerator.LoadArgument0CpuThreadState();// CpuThreadState
 				SafeILGenerator.Push((int)(m));
 				SafeILGenerator.Push((int)(i));
-				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmitter.LoadGPR_Unsigned(RS);
 				SafeILGenerator.Push((int)(Instruction.IMM14 * 4));
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
 				SafeILGenerator.Push((int)(dir ? 1 : 0));
@@ -119,11 +119,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			if (left)
 			{
 
-				MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmitter._lvl_svl_q);
+				MipsMethodEmitter.CallMethod((Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmitter._lvl_svl_q);
 			}
 			else
 			{
-				MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmitter._lvr_svr_q);
+				MipsMethodEmitter.CallMethod((Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmitter._lvr_svr_q);
 			}
 		}
 

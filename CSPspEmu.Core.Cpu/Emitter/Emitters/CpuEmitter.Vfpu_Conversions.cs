@@ -43,7 +43,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftLeft);
 				SafeILGenerator.Push(unchecked((int)0xF0000000));
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.And);
-				MipsMethodEmiter.CallMethod((Func<uint, uint>)CpuEmitter._vc2i_impl);
+				MipsMethodEmitter.CallMethod((Func<uint, uint>)CpuEmitter._vc2i_impl);
 			}, AsInteger: true);
 		}
 
@@ -115,7 +115,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				Load_VS(1, VectorSize, AsInteger: true);
 				Load_VS(2, VectorSize, AsInteger: true);
 				Load_VS(3, VectorSize, AsInteger: true);
-				MipsMethodEmiter.CallMethod((Func<int, int, int, int, uint>)_vi2uc);
+				MipsMethodEmitter.CallMethod((Func<int, int, int, int, uint>)_vi2uc);
 			}, AsInteger: true);
 		}
 
@@ -126,7 +126,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				Load_VS(Index, AsInteger: true);
 				SafeILGenerator.ConvertTo<float>();
 				SafeILGenerator.Push(-(int)Instruction.IMM5);
-				MipsMethodEmiter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
+				MipsMethodEmitter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
 			});
 		}
 
@@ -137,8 +137,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			{
 				Load_VS(Index, VectorSize);
 				SafeILGenerator.Push((int)Imm5);
-				MipsMethodEmiter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
-				MipsMethodEmiter.CallMethod((Func<float, int>)MathFloat.Floor);
+				MipsMethodEmitter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
+				MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Floor);
 			}, AsInteger: true);
 		}
 
@@ -150,8 +150,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			{
 				Load_VS(Index, VectorSize);
 				SafeILGenerator.Push((int)Imm5);
-				MipsMethodEmiter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
-				MipsMethodEmiter.CallMethod((Func<float, int>)MathFloat.Round);
+				MipsMethodEmitter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
+				MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Round);
 			}, AsInteger: true);
 		}
 
@@ -163,8 +163,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			{
 				Load_VS(Index, VectorSize);
 				SafeILGenerator.Push((int)Imm5);
-				MipsMethodEmiter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
-				MipsMethodEmiter.CallMethod((Func<float, int>)MathFloat.Ceil);
+				MipsMethodEmitter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
+				MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Ceil);
 			}, AsInteger: true);
 		}
 
@@ -180,7 +180,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			{
 				Load_VS(Index);
 				SafeILGenerator.Push((int)Imm5);
-				MipsMethodEmiter.CallMethod((Func<float, int, float>)(CpuEmitter._vf2iz));
+				MipsMethodEmitter.CallMethod((Func<float, int, float>)(CpuEmitter._vf2iz));
 			});
 		}
 
@@ -199,7 +199,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			{
 				Load_VS(0);
 				Load_VS(1);
-				MipsMethodEmiter.CallMethod((Func<uint, uint, uint>)(CpuEmitter._vi2s));
+				MipsMethodEmitter.CallMethod((Func<uint, uint, uint>)(CpuEmitter._vi2s));
 			}, AsInteger: true);
 			if (VectorSize == 4)
 			{
@@ -207,7 +207,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				{
 					Load_VS(2);
 					Load_VS(3);
-					MipsMethodEmiter.CallMethod((Func<uint, uint, uint>)(CpuEmitter._vi2s));
+					MipsMethodEmitter.CallMethod((Func<uint, uint, uint>)(CpuEmitter._vi2s));
 				}, AsInteger: true);
 			}
 		}
@@ -230,7 +230,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			{
 				Load_VS(Index * 2 + 0, AsInteger: true);
 				Load_VS(Index * 2 + 1, AsInteger: true);
-				MipsMethodEmiter.CallMethod((Func<int, int, int>)(CpuEmitter._vi2us));
+				MipsMethodEmitter.CallMethod((Func<int, int, int>)(CpuEmitter._vi2us));
 			}, AsInteger: true);
 		}
 	}

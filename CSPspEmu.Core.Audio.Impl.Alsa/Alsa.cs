@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace CSPspEmu.Core.Audio.Impl.Alsa
 {
 	/// <summary>
-	/// 
+	/// ALSA P/Invoke class
 	/// </summary>
 	/// <see cref="http://www.alsa-project.org/alsa-doc/alsa-lib/pcm.html"/>
 	/// <see cref="http://www.alsa-project.org/alsa-doc/alsa-lib/group___p_c_m.html"/>
@@ -12,12 +12,22 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 	{
 		private const string DLL = "asound.so.2";
 
+		/// <summary>
+		/// PCM stream
+		/// </summary>
 		public enum snd_pcm_stream_t : int
 		{
 			SND_PCM_LB_OPEN_PLAYBACK = 0,
 			SND_PCM_LB_OPEN_RECORD   = 1,
 		}
 
+		/// <summary>
+		/// Internal structure for a configuration node object.
+		/// <para/>
+		/// The ALSA library uses a pointer to this structure as a handle to a configuration node. 
+		/// <para/>
+		/// Applications don't access its contents directly.
+		/// </summary>
 		public struct snd_config_t
 		{
 			private fixed byte data[4 * 1024];
@@ -42,12 +52,22 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		}
 		*/
 
+		/// <summary>
+		/// PCM access type
+		/// </summary>
 		public enum snd_pcm_access 
 		{
-			SND_PCM_ACCESS_MMAP_INTERLEAVED = 0, SND_PCM_ACCESS_MMAP_NONINTERLEAVED, SND_PCM_ACCESS_MMAP_COMPLEX, SND_PCM_ACCESS_RW_INTERLEAVED, 
-			SND_PCM_ACCESS_RW_NONINTERLEAVED, SND_PCM_ACCESS_LAST = SND_PCM_ACCESS_RW_NONINTERLEAVED 
+			SND_PCM_ACCESS_MMAP_INTERLEAVED = 0,
+			SND_PCM_ACCESS_MMAP_NONINTERLEAVED,
+			SND_PCM_ACCESS_MMAP_COMPLEX,
+			SND_PCM_ACCESS_RW_INTERLEAVED,
+			SND_PCM_ACCESS_RW_NONINTERLEAVED,
+			SND_PCM_ACCESS_LAST = SND_PCM_ACCESS_RW_NONINTERLEAVED 
 		}
 
+		/// <summary>
+		/// PCM sample formats
+		/// </summary>
 		public enum snd_pcm_format
 		{
 			SND_PCM_FORMAT_UNKNOWN = -1,
@@ -92,11 +112,21 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 			SND_PCM_FORMAT_LAST = SND_PCM_FORMAT_U18_3BE,
 		}
 
+		/// <summary>
+		/// PCM State
+		/// </summary>
 		public enum _snd_pcm_state
 		{
-			SND_PCM_STATE_OPEN = 0, SND_PCM_STATE_SETUP, SND_PCM_STATE_PREPARED, SND_PCM_STATE_RUNNING,
-			SND_PCM_STATE_XRUN, SND_PCM_STATE_DRAINING, SND_PCM_STATE_PAUSED, SND_PCM_STATE_SUSPENDED,
-			SND_PCM_STATE_DISCONNECTED, SND_PCM_STATE_LAST = SND_PCM_STATE_DISCONNECTED
+			SND_PCM_STATE_OPEN = 0,
+			SND_PCM_STATE_SETUP,
+			SND_PCM_STATE_PREPARED,
+			SND_PCM_STATE_RUNNING,
+			SND_PCM_STATE_XRUN,
+			SND_PCM_STATE_DRAINING,
+			SND_PCM_STATE_PAUSED,
+			SND_PCM_STATE_SUSPENDED,
+			SND_PCM_STATE_DISCONNECTED,
+			SND_PCM_STATE_LAST = SND_PCM_STATE_DISCONNECTED
 		}
 
 		// WaveOut calls
@@ -113,6 +143,11 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		[DllImport(DLL)]
 		public static extern int snd_pcm_playback_format(IntPtr playback_handle, ref snd_pcm_format format);
 
+		/// <summary>
+		/// Prepare PCM for use.
+		/// </summary>
+		/// <param name="playback_handle">PCM handle</param>
+		/// <returns>0 upon success, otherwise a negative error code</returns>
 		[DllImport(DLL)]
 		public static extern int snd_pcm_prepare(IntPtr playback_handle);
 
@@ -120,45 +155,145 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// Start a PCM.
 		/// </summary>
 		/// <param name="playback_handle">PCM handle</param>
-		/// <returns>0 on success otherwise a negative error code</returns>
+		/// <returns>0 upon success otherwise a negative error code</returns>
 		[DllImport(DLL)]
 		public static extern int snd_pcm_start(IntPtr playback_handle);
 
+		/// <summary>
+		/// Write interleaved frames to a PCM.
+		/// </summary>
+		/// <param name="playback_handle">PCM frame</param>
+		/// <param name="buffer">Frames containing buffer</param>
+		/// <param name="size">Frames to be written</param>
+		/// <returns>A positive number of frames actually written, otherwise a negative error code</returns>
 		[DllImport(DLL)]
 		public static extern int snd_pcm_writei(IntPtr playback_handle, void* buffer, int size);
 
+		/// <summary>
+		/// Close PCM handle.
+		/// </summary>
+		/// <param name="playback_handle">PCM handle</param>
+		/// <returns>0 upon success, otherwise a negative error code</returns>
 		[DllImport(DLL)]
 		public static extern int snd_pcm_close(IntPtr playback_handle);
 
+		/// <summary>
+		/// Allocate an invalid snd_pcm_hw_params_t using standard malloc
+		/// </summary>
+		/// <param name="hw_params">Returned pointer</param>
+		/// <returns>0 upon success, otherwise negative error code</returns>
 		[DllImport(DLL)]
 		public static extern int snd_pcm_hw_params_malloc(IntPtr* hw_params);
 
+		/// <summary>
+		/// Fill params with a full configuration space for a PCM.
+		/// </summary>
+		/// <param name="playback_handle">PCM handle</param>
+		/// <param name="hw_params">Configuration space</param>
 		[DllImport(DLL)]
 		public static extern int snd_pcm_hw_params_any(IntPtr playback_handle, IntPtr hw_params);
 	
+
+		/// <summary>
+		/// Restrict a configuration space to contain only one access type.
+		/// </summary>
+		/// <param name="playback_handle">PCM handle</param>
+		/// <param name="hw_params">Configuration space</param>
+		/// <param name="snd_pcm_access">Access type</param>
+		/// <returns>0, otherwise a negative error code if configuration space would become empty</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_hw_params_set_access(IntPtr playback_handle,IntPtr hw_params,snd_pcm_access snd_pcm_access);
+		public static extern int snd_pcm_hw_params_set_access(IntPtr playback_handle, IntPtr hw_params, snd_pcm_access snd_pcm_access);
+		
+		/// <summary>
+		/// Restrict a configuration space to contain only one format.
+		/// </summary>
+		/// <param name="playback_handle">PCM handle</param>
+		/// <param name="hw_params">Configuration space</param>
+		/// <param name="snd_pcm_format">Format</param>
+		/// <returns>0, otherwise a negative error code</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_hw_params_set_format(IntPtr playback_handle,IntPtr hw_params,snd_pcm_format snd_pcm_format);
+		public static extern int snd_pcm_hw_params_set_format(IntPtr playback_handle, IntPtr hw_params, snd_pcm_format snd_pcm_format);
+		
+		/// <summary>
+		/// Restrict a configuration space to contain only one channels count.
+		/// </summary>
+		/// <param name="playback_handle">PCM handle</param>
+		/// <param name="hw_params">Configuration space</param>
+		/// <param name="p">Channel count</param>
+		/// <returns>0, otherwise a negative error code if configuration space would become empty</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_hw_params_set_channels(IntPtr playback_handle,IntPtr hw_params,int p);
+		public static extern int snd_pcm_hw_params_set_channels(IntPtr playback_handle, IntPtr hw_params,int p);
+		
+		/// <summary>
+		/// Install one PCM hardware configuration chosen from a configuration space and snd_pcm_prepare it.
+		/// </summary>
+		/// <param name="playback_handle">PCM handle</param>
+		/// <param name="hw_params">Configuration space definition container</param>
+		/// <returns>0 upon success, otherwise a negative error code</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_hw_params(IntPtr playback_handle,IntPtr hw_params);
+		public static extern int snd_pcm_hw_params(IntPtr playback_handle, IntPtr hw_params);
+		
+		/// <summary>
+		/// Frees a previously allocated snd_pcm_hw_params_t
+		/// </summary>
+		/// <param name="hw_params">Pointer to object to free</param>
 		[DllImport(DLL)]
 		public static extern int snd_pcm_hw_params_free(IntPtr hw_params);
+		
+		/// <summary>
+		/// Restrict a configuration space to have rate nearest to a target.
+		/// </summary>
+		/// <param name="playback_handle">PCM handle</param>
+		/// <param name="hw_params">Configuration space</param>
+		/// <param name="val">Approximate target rate / returned approximate set rate</param>
+		/// <param name="dir">Sub unit direction</param>
+		/// <returns>0, otherwise a negative error code if configuration space is empty</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_hw_params_set_rate_near(IntPtr playback_handle,IntPtr hw_params,int* p, void* p_2);
+		public static extern int snd_pcm_hw_params_set_rate_near(IntPtr playback_handle, IntPtr hw_params, int* val, void* dir);
 
+
+		/// <summary>
+		/// Return number of frames ready to be read (capture) / written (playback)
+		/// </summary>
+		/// <param name="playback_handle">PCM handle</param>
+		/// <returns>A positive number of frames ready, otherwise a negative error code</returns>
 		[DllImport(DLL)]
 		public static extern int snd_pcm_avail(IntPtr playback_handle);
+
+		/// <summary>
+		/// Return number of frames ready to be read (capture) / written (playback)
+		/// </summary>
+		/// <param name="playback_handle">PCM handle</param>
+		/// <returns>A positive number of frames ready, otherwise a negative error code</returns>
 		[DllImport(DLL)]
 		public static extern int snd_pcm_avail_update(IntPtr playback_handle);
 
+		/// <summary>
+		/// Restrict a configuration space to contain only one periods count.
+		/// </summary>
+		/// <param name="playback_handle">PCM handle</param>
+		/// <param name="hw_params">Configuration space</param>
+		/// <param name="periods">Approximate periods per buffer</param>
+		/// <param name="dir">Sub unit direction</param>
+		/// <returns>0, otherwise a negative error code if configuration space would become empty</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_hw_params_set_periods(IntPtr playback_handle, IntPtr hw_params, int periods, int p);
+		public static extern int snd_pcm_hw_params_set_periods(IntPtr playback_handle, IntPtr hw_params, int periods, int dir);
+		
+		/// <summary>
+		/// Restrict a configuration space to contain only one buffer size.
+		/// </summary>
+		/// <param name="playback_handle">PCM handle</param>
+		/// <param name="hw_params">Configuration space</param>
+		/// <param name="val">Buffer size in frames</param>
+		/// <returns>0, otherwise a negative error code if configuration space would become empty</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_hw_params_set_buffer_size(IntPtr playback_handle, IntPtr hw_params, int p);
+		public static extern int snd_pcm_hw_params_set_buffer_size(IntPtr playback_handle, IntPtr hw_params, int val);
 
+		/// <summary>
+		/// Return PCM state.
+		/// </summary>
+		/// <param name="playback_handle">PCM Handle</param>
+		/// <returns>PCM state snd_pcm_state_t of given PCM handle</returns>
 		[DllImport(DLL)]
 		public static extern _snd_pcm_state snd_pcm_state(IntPtr playback_handle);
 	}

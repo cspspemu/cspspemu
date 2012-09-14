@@ -168,7 +168,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 						Load_VS(0, 1); // Angle
 						SafeILGenerator.Push((float)(Math.PI / 2.0f));
 						SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-						MipsMethodEmiter.CallMethod((Func<float, float>)MathFloat.Sin);
+						MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Sin);
 						if (NegateSin)
 						{
 							SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate);
@@ -189,7 +189,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 					Load_VS(0, 1); // Angle
 					SafeILGenerator.Push((float)(Math.PI / 2.0f));
 					SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-					MipsMethodEmiter.CallMethod((Func<float, float>)MathFloat.Sin);
+					MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Sin);
 					if (NegateSin)
 					{
 						SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate);
@@ -203,7 +203,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				Load_VS(0, 1); // Angle
 				SafeILGenerator.Push((float)(Math.PI / 2.0f));
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-				MipsMethodEmiter.CallMethod((Func<float, float>)MathFloat.Cos);
+				MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Cos);
 			});
 		}
 
@@ -231,7 +231,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			VectorOperationSaveVd((Index) =>
 			{
 				Load_VS(Index);
-				MipsMethodEmiter.CallMethod((Func<float, float>)MathFloat.Abs);
+				MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Abs);
 			});
 		}
 		public void vneg()
@@ -254,7 +254,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			VectorOperationSaveVd((Index) =>
 			{
 				Load_VS(Index);
-				MipsMethodEmiter.CallMethod((Func<float, float>)MathFloat.Sign);
+				MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Sign);
 			});
 		}
 		public void vrcp()
@@ -272,7 +272,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			VectorOperationSaveVd((Index) =>
 			{
 				Load_VS(Index);
-				MipsMethodEmiter.CallMethod(Delegate);
+				MipsMethodEmitter.CallMethod(Delegate);
 			});
 		}
 
@@ -407,7 +407,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			VectorOperationSaveVd((Index) =>
 			{
 				Load_VS_VT(Index);
-				MipsMethodEmiter.CallMethod((Func<float, float, float>)MathFloat.Min);
+				MipsMethodEmitter.CallMethod((Func<float, float, float>)MathFloat.Min);
 			});
 		}
 		public void vmax()
@@ -415,7 +415,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			VectorOperationSaveVd((Index) =>
 			{
 				Load_VS_VT(Index);
-				MipsMethodEmiter.CallMethod((Func<float, float, float>)MathFloat.Max);
+				MipsMethodEmitter.CallMethod((Func<float, float, float>)MathFloat.Max);
 			});
 		}
 

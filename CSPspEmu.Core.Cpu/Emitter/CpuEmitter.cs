@@ -3,7 +3,7 @@
 	public sealed partial class CpuEmitter
 	{
 		public CpuProcessor CpuProcessor;
-		private MipsMethodEmitter MipsMethodEmiter;
+		private MipsMethodEmitter MipsMethodEmitter;
 		private IInstructionReader InstructionReader;
 		public Instruction Instruction { private set; get; }
 		public uint PC { private set; get; }
@@ -24,9 +24,9 @@
 		public int FD { get { return Instruction.FD; } }
 		public int FS { get { return Instruction.FS; } }
 
-		public CpuEmitter(MipsMethodEmitter MipsMethodEmiter, IInstructionReader InstructionReader, CpuProcessor CpuProcessor)
+		public CpuEmitter(MipsMethodEmitter MipsMethodEmitter, IInstructionReader InstructionReader, CpuProcessor CpuProcessor)
 		{
-			this.MipsMethodEmiter = MipsMethodEmiter;
+			this.MipsMethodEmitter = MipsMethodEmitter;
 			this.InstructionReader = InstructionReader;
 			this.CpuProcessor = CpuProcessor;
 		}

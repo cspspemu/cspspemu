@@ -3,6 +3,9 @@ using CSPspEmu.Core.Audio.Impl.Alsa;
 
 namespace CSPspEmu.Core.Audio
 {
+	/// <summary>
+	/// ALSA Implementation of PSP audio playback
+	/// </summary>
 	public unsafe class AudioAlsaImpl : PspAudioImpl
 	{
 		public static string Device = "default";

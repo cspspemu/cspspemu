@@ -25,7 +25,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			PrefixDestination.EnableAndSetValueAndPc(Instruction.Value, PC);
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Push((uint)Instruction.Value);
-			MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint>)_vpfxd_impl);
+			MipsMethodEmitter.CallMethod((Action<CpuThreadState, uint>)_vpfxd_impl);
 		}
 
 		public void vpfxs()
@@ -33,7 +33,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			PrefixSource.EnableAndSetValueAndPc(Instruction.Value, PC);
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Push((uint)Instruction.Value);
-			MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint>)_vpfxs_impl);
+			MipsMethodEmitter.CallMethod((Action<CpuThreadState, uint>)_vpfxs_impl);
 		}
 
 		public void vpfxt()
@@ -41,7 +41,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			PrefixTarget.EnableAndSetValueAndPc(Instruction.Value, PC);
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Push((uint)Instruction.Value);
-			MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint>)_vpfxt_impl);
+			MipsMethodEmitter.CallMethod((Action<CpuThreadState, uint>)_vpfxt_impl);
 		}
 	}
 

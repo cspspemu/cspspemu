@@ -6,7 +6,7 @@ namespace CSPspEmu.Core.Audio
     public class PspAudio : PspEmulatorComponent
 	{
 		/// <summary>
-		/// 
+		/// Output formats for PSP audio.
 		/// </summary>
 		public enum FormatEnum
 		{
@@ -32,13 +32,13 @@ namespace CSPspEmu.Core.Audio
 		public const int FreeChannel = -1;
 
 		/// <summary>
-		/// 
+		/// Maximum number of allowed audio channels
 		/// </summary>
 		//public const int MaxChannels = 8;
 		public const int MaxChannels = 32;
 
 		/// <summary>
-		/// 
+		/// Number of audio channels
 		/// </summary>
 		public PspAudioChannel[] Channels;
 

@@ -68,17 +68,17 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// Move (From/To) IC
 		public void mfic()
 		{
-			MipsMethodEmiter.SaveGPR(RT, () =>
+			MipsMethodEmitter.SaveGPR(RT, () =>
 			{
-				MipsMethodEmiter.LoadFieldPtr(typeof(CpuThreadState).GetField("IC"));
+				MipsMethodEmitter.LoadFieldPtr(typeof(CpuThreadState).GetField("IC"));
 				SafeILGenerator.LoadIndirect<int>();
 			});
 		}
 		public void mtic()
 		{
-			MipsMethodEmiter.SaveField<int>(typeof(CpuThreadState).GetField("IC"), () =>
+			MipsMethodEmitter.SaveField<int>(typeof(CpuThreadState).GetField("IC"), () =>
 			{
-				MipsMethodEmiter.LoadGPR_Unsigned(RT);
+				MipsMethodEmitter.LoadGPR_Unsigned(RT);
 			});
 		}
 

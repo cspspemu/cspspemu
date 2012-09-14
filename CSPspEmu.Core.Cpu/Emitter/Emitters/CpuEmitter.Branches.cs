@@ -10,14 +10,14 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			get
 			{
-				return MipsMethodEmiter.SafeILGenerator;
+				return MipsMethodEmitter.SafeILGenerator;
 			}
 		}
 
 		public void _branch_likely(Action Action)
 		{
 			var NullifyDelayedLabel = SafeILGenerator.DefineLabel("NullifyDelayedLabel");
-			MipsMethodEmiter.LoadBranchFlag();
+			MipsMethodEmitter.LoadBranchFlag();
 			SafeILGenerator.BranchIfFalse(NullifyDelayedLabel);
 			{
 				Action();
@@ -27,19 +27,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private void _branch_pre_vv(SafeBinaryComparison Comparison)
 		{
-			MipsMethodEmiter.StoreBranchFlag(() =>
+			MipsMethodEmitter.StoreBranchFlag(() =>
 			{
-				MipsMethodEmiter.LoadGPR_Signed(RS);
-				MipsMethodEmiter.LoadGPR_Signed(RT);
+				MipsMethodEmitter.LoadGPR_Signed(RS);
+				MipsMethodEmitter.LoadGPR_Signed(RT);
 				SafeILGenerator.CompareBinary(Comparison);
 			});
 		}
 
 		private void _branch_pre_v0(SafeBinaryComparison Comparison)
 		{
-			MipsMethodEmiter.StoreBranchFlag(() =>
+			MipsMethodEmitter.StoreBranchFlag(() =>
 			{
-				MipsMethodEmiter.LoadGPR_Signed(RS);
+				MipsMethodEmitter.LoadGPR_Signed(RS);
 				SafeILGenerator.Push((int)0);
 				SafeILGenerator.CompareBinary(Comparison);
 			});
@@ -51,10 +51,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			if (this.AndLink)
 			{
 				var SkipBranch = SafeILGenerator.DefineLabel("SkipBranch");
-				MipsMethodEmiter.LoadBranchFlag();
+				MipsMethodEmitter.LoadBranchFlag();
 				SafeILGenerator.BranchIfFalse(SkipBranch);
 				{
-					MipsMethodEmiter.SaveGPR(31, () =>
+					MipsMethodEmitter.SaveGPR(31, () =>
 					{
 						SafeILGenerator.Push((int)(BranchPC + 8));
 					});
@@ -65,7 +65,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 			else
 			{
-				MipsMethodEmiter.LoadBranchFlag();
+				MipsMethodEmitter.LoadBranchFlag();
 				SafeILGenerator.BranchIfTrue(Label);
 			}
 		}
@@ -142,7 +142,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				SafeILGenerator.Push((int)PC);
 				SafeILGenerator.Call((Action<CpuThreadState, uint>)CpuThreadState.CallStackPush);
 			}
-			MipsMethodEmiter.SaveGPR(31, () =>
+			MipsMethodEmitter.SaveGPR(31, () =>
 			{
 				SafeILGenerator.Push((int)(PC + 8));
 				AnalyzePCEvent(PC + 8);
@@ -155,7 +155,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public void j()
 		{
 			//Console.WriteLine("JUMP_ADDR: {0:X}", GetJumpAddress());
-			MipsMethodEmiter.SavePC(() =>
+			MipsMethodEmitter.SavePC(() =>
 			{
 				var NewPC = GetJumpAddress();
 
@@ -199,9 +199,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				}
 			}
 
-			MipsMethodEmiter.SavePC(() =>
+			MipsMethodEmitter.SavePC(() =>
 			{
-				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmitter.LoadGPR_Unsigned(RS);
 			});
 			SafeILGenerator.Return(typeof(void));
 		}
@@ -236,9 +236,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public void bc1f()
 		{
 			// Branch on C1 False/True (Likely).
-			MipsMethodEmiter.StoreBranchFlag(() =>
+			MipsMethodEmitter.StoreBranchFlag(() =>
 			{
-				MipsMethodEmiter.LoadFCR31_CC();
+				MipsMethodEmitter.LoadFCR31_CC();
 				SafeILGenerator.Push((int)0);
 				SafeILGenerator.CompareBinary(SafeBinaryComparison.Equals);
 			});
@@ -248,9 +248,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public void bc1t()
 		{
-			MipsMethodEmiter.StoreBranchFlag(() =>
+			MipsMethodEmitter.StoreBranchFlag(() =>
 			{
-				MipsMethodEmiter.LoadFCR31_CC();
+				MipsMethodEmitter.LoadFCR31_CC();
 				SafeILGenerator.Push((int)0);
 				SafeILGenerator.CompareBinary(SafeBinaryComparison.NotEquals);
 			});
