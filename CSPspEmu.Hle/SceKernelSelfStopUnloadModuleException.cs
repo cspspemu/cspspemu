@@ -2,7 +2,7 @@
 
 namespace CSPspEmu.Hle
 {
-	public class SceKernelSelfStopUnloadModuleException : Exception
+	public sealed class SceKernelSelfStopUnloadModuleException : Exception
 	{
 	}
 }

@@ -2,7 +2,7 @@
 
 namespace CSPspEmu.Hle
 {
-	public class HleEmulatorFinalizeCallbackException : Exception
+	public sealed class HleEmulatorFinalizeCallbackException : Exception
 	{
 	}
 }

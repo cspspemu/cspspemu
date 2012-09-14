@@ -30,7 +30,7 @@ namespace CSPspEmu.Core.Gpu
 		 *	 }
 		 */
 		/// <summary>
-		/// 
+		/// Wait conditions for sceGeListSync() and sceGeDrawSync()
 		/// </summary>
 		public enum SyncTypeEnum : uint
 		{

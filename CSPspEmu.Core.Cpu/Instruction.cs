@@ -8,14 +8,14 @@ namespace CSPspEmu.Core.Cpu
 
 		public static float HalfFloatToFloat(int imm16)
 		{
-			int s = (imm16 >> 15) & 0x00000001; // sign
-			int e = (imm16 >> 10) & 0x0000001f; // exponent
-			int f = (imm16 >> 0) & 0x000003ff; // fraction
+			int s = (imm16 >> 15) & 0x00000001; // Sign
+			int e = (imm16 >> 10) & 0x0000001f; // Exponent
+			int f = (imm16 >> 0) & 0x000003ff;  // Fraction
 
-			// need to handle 0x7C00 INF and 0xFC00 -INF?
+			// Need to handle 0x7C00 INF and 0xFC00 -INF?
 			if (e == 0)
 			{
-				// need to handle +-0 case f==0 or f=0x8000?
+				// Need to handle +-0 case f==0 or f=0x8000?
 				if (f == 0)
 				{
 					// Plus or minus zero

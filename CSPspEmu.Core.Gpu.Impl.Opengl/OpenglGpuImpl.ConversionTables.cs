@@ -30,7 +30,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			StencilFunction.Gequal
 		};
 
-		static readonly DepthFunction[] DepthFunctionTranslate = new DepthFunction[] {
+		static readonly DepthFunction[] DepthFunctionTranslate = new DepthFunction[]
+		{
 			DepthFunction.Never,
 			DepthFunction.Always,
 			DepthFunction.Equal,
@@ -75,7 +76,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		*/
 
-		static readonly BlendingFactorSrc[] BlendFuncSrcTranslate = new BlendingFactorSrc[] {
+		static readonly BlendingFactorSrc[] BlendFuncSrcTranslate = new BlendingFactorSrc[]
+		{
 			/// 0 GU_SRC_COLOR,
 			(BlendingFactorSrc)GL_SRC_COLOR,
 			/// 1 GU_ONE_MINUS_SRC_COLOR,
@@ -100,7 +102,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			(BlendingFactorSrc)GL_SRC_ALPHA,
 		};
 
-		static readonly BlendingFactorDest[] BlendFuncDstTranslate = new BlendingFactorDest[] {
+		static readonly BlendingFactorDest[] BlendFuncDstTranslate = new BlendingFactorDest[]
+		{
 			/// 0 GU_DST_COLOR,
 			(BlendingFactorDest)GL_DST_COLOR,
 			/// 1 GU_ONE_MINUS_DST_COLOR,

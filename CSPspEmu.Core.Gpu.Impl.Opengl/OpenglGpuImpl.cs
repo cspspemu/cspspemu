@@ -73,7 +73,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// </summary>
 		static void Initialize()
 		{
-			///GL.Enable(EnableCap.Blend);
+			// GL.Enable(EnableCap.Blend);
 			GL.Hint(HintTarget.LineSmoothHint, HintMode.Nicest);
 			/*
 			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.CombineRgb, (int)TextureEnvModeCombine.Modulate);

@@ -7,14 +7,14 @@ using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading;
-using CSharpUtils.Threading;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Cpu.Dynarec;
 using CSPspEmu.Core.Memory;
-using CSPspEmu.Hle.Threading.EventFlags;
 using CSPspEmu.Hle.Managers;
+using CSPspEmu.Hle.Threading.EventFlags;
 using CSharpUtils;
+using CSharpUtils.Threading;
 
 namespace CSPspEmu.Hle
 {

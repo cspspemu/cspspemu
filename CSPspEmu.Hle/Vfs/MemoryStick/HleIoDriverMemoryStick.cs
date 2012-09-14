@@ -1,6 +1,6 @@
 ﻿using System;
-using CSPspEmu.Core.Memory;
 using CSPspEmu.Core;
+using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Vfs.MemoryStick

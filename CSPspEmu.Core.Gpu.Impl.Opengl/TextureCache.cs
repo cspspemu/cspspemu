@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using CSharpUtils;
+using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Gpu.State.SubStates;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
-using CSPspEmu.Core.Gpu.State;
 
 #if OPENTK
 using OpenTK.Graphics.OpenGL;

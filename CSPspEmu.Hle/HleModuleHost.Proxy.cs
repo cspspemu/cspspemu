@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Cpu.Emitter;
-using CSharpUtils;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Core;
+using CSharpUtils;
+
 
 namespace CSPspEmu.Hle
 {

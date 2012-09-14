@@ -82,7 +82,8 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint InstructionAddressStart {
+		public uint InstructionAddressStart
+		{
 			get
 			{
 				return _InstructionAddressStart;
@@ -97,7 +98,8 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint InstructionAddressCurrent {
+		public uint InstructionAddressCurrent
+		{
 			get
 			{
 				return _InstructionAddressCurrent;
