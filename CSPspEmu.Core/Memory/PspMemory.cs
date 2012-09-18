@@ -82,6 +82,7 @@ namespace CSPspEmu.Core.Memory
 		public const uint ScratchPadOffset = 0x00010000;
 		public const uint FrameBufferOffset = 0x04000000;
 		public const uint MainOffset = 0x08000000;
+		//public const uint VectorsOffset = 0xbfc00000;
 		public const uint VectorsOffset = 0x1fc00000;
 
 		protected byte* NullPtr;

@@ -45,7 +45,10 @@
   <ItemGroup>
     <Compile Include="DebugPspMemory.cs" />
     <Compile Include="Dma.cs" />
+    <Compile Include="DmaEnum.cs" />
     <Compile Include="ILleDma.cs" />
+    <Compile Include="LleKirk.cs" />
+    <Compile Include="TransferUtils.cs" />
     <Compile Include="LleGPIO.cs" />
     <Compile Include="LleNAND.cs" />
     <Compile Include="LlePspComponent.cs" />

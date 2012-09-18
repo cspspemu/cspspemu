@@ -66,7 +66,7 @@ namespace CSPspEmu.Core.Crypto
 
 				if (header->Mode != KirkMode.Cmd1)
 				{
-					throw(new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE));
+					throw(new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE, String.Format("Expected mode Cmd1 but found {0}", header->Mode)));
 				}
 	
 				header_keys *keys = (header_keys *)outbuff; //0-15 AES key, 16-31 CMAC key
@@ -105,7 +105,7 @@ namespace CSPspEmu.Core.Crypto
 		/// </summary>
 		private void check_initialized()
 		{
-			if (!IsKirkInitialized) throw (new KirkException(ResultEnum.PSP_KIRK_NOT_INIT));
+			if (!IsKirkInitialized) throw (new KirkException(ResultEnum.PSP_KIRK_NOT_INIT, "Not initialized"));
 		}
 
 		/// <summary>
@@ -126,7 +126,12 @@ namespace CSPspEmu.Core.Crypto
 				if (header.Mode != KirkMode.Cmd1)
 				{
 					//Console.Error.WriteLine("ResultEnum.PSP_KIRK_INVALID_MODE");
-					throw (new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE));
+					Console.Error.WriteLine("{0}", header.ToStringDefault(true));
+					Console.WriteLine("Input:");
+					ArrayUtils.HexDump(PointerUtils.PointerToByteArray(inbuff, 0x100));
+					Console.WriteLine("Output:");
+					ArrayUtils.HexDump(PointerUtils.PointerToByteArray(outbuff, 0x100));
+					throw (new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE, String.Format("Expected mode Cmd1 but found {0}", header.Mode)));
 				}
 
 				header_keys keys; //0-15 AES key, 16-31 CMAC key

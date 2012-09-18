@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu;
@@ -27,12 +28,54 @@ namespace CSPspEmuLLETest
 
 		bool LogDMAReads = true;
 
-		public void TransferDMA(Dma.Direction Direction, int Size, uint Address, ref uint Value)
+		private string GetRegisterName(uint Address)
 		{
-			if (Address >= 0xBE240000 && Address <= 0xbe24000C) { LLEState.GPIO.Transfer(Direction, Size, Address, ref Value); return; }
+			string Reg = "";
+			var DmaAddress = (DmaEnum)Address;
+
+			if ((DmaAddress >= DmaEnum.NAND__DATA_PAGE_START) && (DmaAddress < DmaEnum.NAND__DATA_PAGE_END))
+			{
+				return String.Format("NAND__DATA_PAGE[{0}]", DmaAddress - DmaEnum.NAND__DATA_PAGE_START);
+			}
+
+			if (Enum.IsDefined(typeof(DmaEnum), Address))
+			{
+				Reg = String.Format("{0}({1:X8})", (DmaEnum)Address, (uint)Address);
+			}
 			else
 			{
-				if (LogDMAReads) Console.WriteLine("{0}.DMA(0x{1:X8}) at 0x{2:X8}", Direction, Address, CpuThreadState.PC);
+				Reg = String.Format("Unknown({0:X8})", (uint)Address);
+			}
+
+			return Reg;
+		}
+
+		public void LogDMA(Dma.Direction Direction, int Size, uint Address, ref uint Value)
+		{
+			var DmaAddress = (DmaEnum)Address;
+			if ((DmaAddress >= DmaEnum.NAND__DATA_PAGE_START) && (DmaAddress < DmaEnum.NAND__DATA_PAGE_END)) return;
+			Console.WriteLine("PC({0:X8}) {1}: {2} : 0x{3:X8}", CpuThreadState.PC, Direction, GetRegisterName(Address), Value);
+		}
+
+		byte[] Test = new byte[0x1000];
+
+		public void TransferDMA(Dma.Direction Direction, int Size, DmaEnum Address, ref uint Value)
+		{
+			if (false) { }
+			/*
+			else if ((uint)Address >= 0x1FD00000 && (uint)Address <= 0x1FD00000 + 0x1000)
+			{
+				TransferUtils.TransferToArray(Direction, Test, (int)(Address - 0x1FD00000), Size, ref Value);
+			}
+			*/
+			else if (Address >= DmaEnum.GPIO && Address <= DmaEnum.GPIO__PORT_CLEAR) { LLEState.GPIO.Transfer(Direction, Size, (DmaEnum)Address, ref Value); return; }
+			else if (Address >= DmaEnum.NAND__CONTROL && Address <= DmaEnum.NAND__READDATA) { LLEState.NAND.Transfer(Direction, Size, (DmaEnum)Address, ref Value); return; }
+			else if (Address >= DmaEnum.NAND__DATA_PAGE_START && Address <= DmaEnum.NAND__DATA_EXTRA_END) { LLEState.NAND.Transfer(Direction, Size, (DmaEnum)Address, ref Value); return; }
+			else if (Address >= DmaEnum.KIRK_SIGNATURE && Address <= DmaEnum.KIRK_UNK_50) { LLEState.LleKirk.Transfer(Direction, Size, (DmaEnum)Address, ref Value); return; }
+			else
+			{
+				Console.WriteLine("Unprocessed LLEState.Memory:{0}", LLEState.Memory.MountedPreIpl);
+				//Thread.Sleep(100);
 			}
 		}
 
@@ -45,24 +88,10 @@ namespace CSPspEmuLLETest
 		public uint ReadDMA(int Size, uint Address)
 		{
 			uint Value = 0;
-			switch (Address)
-			{
-				case 0xBC10004C:
-					Console.WriteLine("Read: SystemConfig.RESET_ENABLE");
-					break;
-				case 0xbc100050:
-					Console.WriteLine("Read: SystemConfig.BUS_CLOCK_ENABLE");
-					break;
-				case 0xbc100078:
-					Console.WriteLine("Read: SystemConfig.IO_ENABLE");
-					break;
-				case 0xBC10007C:
-					Console.WriteLine("Read: SystemConfig.GPIO_IO_ENABLE");
-					break;
-				default:
-					TransferDMA(Direction.Read, Size, Address, ref Value);
-					break;
-			}
+
+			TransferDMA(Direction.Read, Size, (DmaEnum)Address, ref Value);
+			LogDMA(Direction.Read, Size, Address, ref Value);
+
 			return Value;
 		}
 
@@ -74,29 +103,19 @@ namespace CSPspEmuLLETest
 		/// <param name="Value"></param>
 		public void WriteDMA(int Size, uint Address, uint Value)
 		{
-			switch (Address)
+			LogDMA(Direction.Write, Size, Address, ref Value);
+			TransferDMA(Direction.Write, Size, (DmaEnum)Address, ref Value);
+
+			switch ((DmaEnum)Address)
 			{
-				case 0xbc100004: // Clear All Interrupts
-					Console.WriteLine("{0:X8}: Write: SystemConfig.ClearInterrupts : 0x{1:X8}", CpuThreadState.PC, Value);
-					break;
-				case 0xBC10004C:
-					Console.WriteLine("{0:X8}: Write: SystemConfig.RESET_ENABLE : 0x{1:X8}", CpuThreadState.PC, Value);
+				case DmaEnum.SystemConfig__RESET_ENABLE:
+					LLEState.Memory.MountedPreIpl = false;
+					/*
 					if ((Value & 2) != 0) // ME
 					{
 						LLEState.Me.Reset();
 					}
-					break;
-				case 0xbc100050:
-					Console.WriteLine("Write: SystemConfig.BUS_CLOCK_ENABLE");
-					break;
-				case 0xBC10007C:
-					Console.WriteLine("Write: SystemConfig.GPIO_IO_ENABLE(0x{0:X8})", Value);
-					break;
-				case 0xbc100078:
-					Console.WriteLine("Write: SystemConfig.IO_ENABLE(0x{0:X8})", Value);
-					break;
-				default:
-					TransferDMA(Direction.Write, Size, Address, ref Value);
+					*/
 					break;
 			}
 		}
