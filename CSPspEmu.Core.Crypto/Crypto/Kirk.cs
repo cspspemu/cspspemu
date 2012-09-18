@@ -134,6 +134,14 @@ namespace CSPspEmu.Core.Crypto
 					throw (new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE, String.Format("Expected mode Cmd1 but found {0}", header.Mode)));
 				}
 
+				Console.WriteLine("Input:");
+				ArrayUtils.HexDump(PointerUtils.PointerToByteArray(inbuff, 0x100));
+
+				//Console.WriteLine("header.DataOffset = 0x{0:X8}", header.DataOffset);
+				//Console.WriteLine("header.DataSize = 0x{0:X8}", header.DataSize);
+
+				// Decrypts AES and CMAC keys.
+
 				header_keys keys; //0-15 AES key, 16-31 CMAC key
 
 #if USE_DOTNET_CRYPTO
@@ -141,8 +149,6 @@ namespace CSPspEmu.Core.Crypto
 #else
 				Crypto.AES_cbc_decrypt(aes_kirk1_ptr, inbuff, (byte*)&keys, 16 * 2); 
 #endif
-
-				//AES.CreateDecryptor(
 
 				// HOAX WARRING! I have no idea why the hash check on last IPL block fails, so there is an option to disable checking
 				if (do_check)
@@ -163,7 +169,12 @@ namespace CSPspEmu.Core.Crypto
 				Crypto.AES_ctx k1;
 				Crypto.AES_set_key(&k1, keys.AES, 128);
 
-				Crypto.AES_cbc_decrypt(&k1, inbuff + sizeof(AES128CMACHeader) + header.DataOffset, outbuff, header.DataSize);
+				Crypto.AES_cbc_decrypt(
+					ctx: &k1,
+					src: inbuff + sizeof(AES128CMACHeader) + header.DataOffset,
+					dst: outbuff,
+					size: header.DataSize
+				);
 #endif
 			}
 		}

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using CSharpUtils;
 
 namespace CSPspEmuLLETest
 {
@@ -122,6 +123,7 @@ namespace CSPspEmuLLETest
 							NandStream.Position = ((DmaAddress / 2 / 512) * (512 + 16));
 							NandBlock = NandStream.ReadBytes(512 + 16);
 							Console.WriteLine("Read from NAND: 0x{0:X8}", DmaAddress);
+							ArrayUtils.HexDump(NandBlock);
 							
 							//Thread.Sleep(TimeSpan.FromSeconds(0.5));
 							//Thread.Sleep(-1);

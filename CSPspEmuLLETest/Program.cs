@@ -45,8 +45,6 @@ namespace CSPspEmuLLETest
 			DebugPspMemory.CpuThreadState = CpuThreadState;
 			DebugPspMemory.Dma = Dma;
 
-			PspConfig.TraceJal = true;
-			//PspConfig.TraceJIT = true;
 
 			Console.SetWindowSize(120, 60);
 			Console.SetBufferSize(120, 8000);
@@ -54,21 +52,25 @@ namespace CSPspEmuLLETest
 			PspConfig.MustLogWrites = true;
 
 			var NandStream = File.OpenRead(NandPath);
-			//var IplReader = new IplReader(new NandReader(NandStream));
-			//var Info = IplReader.LoadIplToMemory(new PspMemoryStream(DebugPspMemory));
 
 			//DebugPspMemory.Write4(0xBFC00FFC, 0x20040420);
 
 			// It doesn't start the ME
 			//DebugPspMemory.Write4(0xBFC00FFC, 0xFFFFFFFF);
 
-			//uint StartPC = Info.EntryFunction;
-
+#if false
 			// PRE-IPL
 			uint StartPC = 0x1FC00000;
 			DebugPspMemory.WriteBytes(StartPC, File.ReadAllBytes(PreIplPath));
-			// PRE-IPL
-			
+
+			PspConfig.TraceJal = true;
+			//PspConfig.TraceJIT = true;
+#else
+			var IplReader = new IplReader(new NandReader(NandStream));
+			var Info = IplReader.LoadIplToMemory(new PspMemoryStream(DebugPspMemory));
+			uint StartPC = Info.EntryFunction;
+#endif
+
 
 			/*
 			ME:

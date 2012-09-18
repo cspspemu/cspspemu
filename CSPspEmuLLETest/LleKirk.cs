@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using CSharpUtils;
 using CSPspEmu.Core.Crypto;
 
 namespace CSPspEmuLLETest
@@ -49,15 +50,35 @@ namespace CSPspEmuLLETest
 					var SourcePtr = (byte *)Memory.PspAddressToPointerSafe(KirkSource);
 					var DestinationPtr = (byte*)Memory.PspAddressToPointerSafe(KirkDestination);
 
-					try
+					//var Out = new byte[10000];
+
+					//fixed (byte* OutPtr = Out)
 					{
-						Kirk.kirk_CMD1(DestinationPtr, SourcePtr, -1, true);
-						this.KirkResult = (uint)Kirk.ResultEnum.OK;
-					}
-					catch (Kirk.KirkException KirkException)
-					{
-						this.KirkResult = (uint)KirkException.Result;
-						Console.Error.WriteLine("Kirk.KirkException : {0}", KirkException);
+						//DestinationPtr = OutPtr;
+						Console.WriteLine("Input:");
+						ArrayUtils.HexDump(PointerUtils.PointerToByteArray(SourcePtr, 0x200));
+
+						/*
+						try
+						{
+							Kirk.kirk_CMD1(DestinationPtr, SourcePtr, -1, true);
+							this.KirkResult = (uint)Kirk.ResultEnum.OK;
+						}
+						catch (Kirk.KirkException KirkException)
+						{
+							this.KirkResult = (uint)KirkException.Result;
+							Console.Error.WriteLine("Kirk.KirkException : {0}", KirkException);
+						}
+						*/
+
+						this.KirkResult = (uint)Kirk.sceUtilsBufferCopyWithRange(DestinationPtr, -1, SourcePtr, -1, 1);
+
+						Console.WriteLine("Output:");
+						ArrayUtils.HexDump(PointerUtils.PointerToByteArray(DestinationPtr, 0x200));
+						Console.WriteLine("LOADADDR:{0:X8}", ((uint*)DestinationPtr)[0]);
+						Console.WriteLine("BLOCKSIZE:{0:X8}", ((uint*)DestinationPtr)[1]);
+						Console.WriteLine("ENTRY:{0:X8}", ((uint*)DestinationPtr)[2]);
+						Console.WriteLine("CHECKSUM:{0:X8}", ((uint*)DestinationPtr)[3]);
 					}
 
 					//Thread.Sleep(4);

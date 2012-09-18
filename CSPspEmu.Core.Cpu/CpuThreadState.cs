@@ -9,6 +9,7 @@ using CSharpUtils;
 using System.IO;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Cpu.Emiter;
+using CSPspEmu.Core.Cpu.Assembler;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -413,9 +414,13 @@ namespace CSPspEmu.Core.Cpu
 			//Console.WriteLine(StepInstructionCount);
 		}
 
+		static MipsDisassembler MipsDisassembler;
+
 		public void Trace(uint PC)
 		{
-			Console.WriteLine("  Trace: {0:X}", PC);
+			if (MipsDisassembler == null) MipsDisassembler = new MipsDisassembler();
+			var Result = MipsDisassembler.Disassemble(PC, (Instruction)CpuProcessor.Memory.Read4(PC));
+			Console.WriteLine("  Trace: PC:0x{0:X8} : DATA:0x{1:X8} : {2}", PC, CpuProcessor.Memory.Read4(PC), Result);
 		}
 
 		public void BreakpointIfEnabled()
