@@ -83,6 +83,8 @@ namespace CSPspEmu.Core
 			var buffer = new byte[0x1000];
 			var IplInfo = default(IplInfo);
 
+			//ArrayUtils.HexDump(IplData);
+
 			fixed (byte* IplPtr = IplData)
 			fixed (byte* bufferPtr = buffer)
 			{
@@ -119,7 +121,7 @@ namespace CSPspEmu.Core
 		/// <returns></returns>
 		public IEnumerable<ushort> GetIplOffsets()
 		{
-			Stream.Position = NandReader.BytesPerBlock * 4;
+			var Stream = this.Stream.SliceWithLength(NandReader.BytesPerBlock * 4);
 			while (true)
 			{
 				var Result = Stream.ReadStruct<ushort>();

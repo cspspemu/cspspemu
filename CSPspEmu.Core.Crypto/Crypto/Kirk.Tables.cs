@@ -9,9 +9,10 @@ namespace CSPspEmu.Core.Crypto
 		/// </summary>
 		public class KirkException : Exception
 		{
-			internal ResultEnum Result;
+			public ResultEnum Result;
 
-			public KirkException(ResultEnum Result)
+			public KirkException(ResultEnum Result, string Message = "")
+				: base(String.Format("KirkException: {0} : {1}", Result, Message))
 			{
 				this.Result = Result;
 			}

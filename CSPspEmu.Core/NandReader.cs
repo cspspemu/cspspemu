@@ -22,7 +22,9 @@ namespace CSPspEmu.Core
 			try
 			{
 				Stream.Position = BytesPerRawPage * Index;
-				return Stream.ReadBytes(BytesPerPage);
+				var Bytes = Stream.ReadBytes(BytesPerPage);
+				//ArrayUtils.HexDump(Bytes);
+				return Bytes;
 			}
 			catch (Exception)
 			{
@@ -82,6 +84,9 @@ namespace CSPspEmu.Core
 			}
 		}
 
+		int LastPageIndex = -1;
+		byte[] LastPageData;
+
 		public override int Read(byte[] buffer, int offset, int count)
 		{
 			if (Position >= Length)
@@ -100,10 +105,17 @@ namespace CSPspEmu.Core
 			}
 
 			var PageIndex = (int)(Position / BytesPerPage);
-			var PageData = ReadPage(PageIndex);
+
+			if (PageIndex != LastPageIndex)
+			{
+				LastPageIndex = PageIndex;
+				LastPageData = ReadPage(PageIndex);
+			}
+
+			byte[] PageData = LastPageData;
 
 			Array.Copy(PageData, PageOffset, buffer, offset, count);
-			
+
 			Position += count;
 
 			return count;
