@@ -15,7 +15,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <summary>
 		/// PCM stream
 		/// </summary>
-		public enum snd_pcm_stream_t : int
+		internal enum snd_pcm_stream_t : int
 		{
 			SND_PCM_LB_OPEN_PLAYBACK = 0,
 			SND_PCM_LB_OPEN_RECORD   = 1,
@@ -55,7 +55,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <summary>
 		/// PCM access type
 		/// </summary>
-		public enum snd_pcm_access 
+		internal enum snd_pcm_access 
 		{
 			SND_PCM_ACCESS_MMAP_INTERLEAVED = 0,
 			SND_PCM_ACCESS_MMAP_NONINTERLEAVED,
@@ -68,7 +68,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <summary>
 		/// PCM sample formats
 		/// </summary>
-		public enum snd_pcm_format
+		internal enum snd_pcm_format
 		{
 			SND_PCM_FORMAT_UNKNOWN = -1,
 			SND_PCM_FORMAT_S8 = 0,
@@ -115,7 +115,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <summary>
 		/// PCM State
 		/// </summary>
-		public enum _snd_pcm_state
+		internal enum _snd_pcm_state
 		{
 			SND_PCM_STATE_OPEN = 0,
 			SND_PCM_STATE_SETUP,
@@ -132,16 +132,16 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		// WaveOut calls
 		[DllImport(DLL)]
 		//[SuppressUnmanagedCodeSecurity]
-		public static extern int snd_pcm_open(IntPtr* playback_handle, string card, snd_pcm_stream_t device, int mode);
+		internal static extern int snd_pcm_open(IntPtr* playback_handle, string card, snd_pcm_stream_t device, int mode);
 
 		[DllImport(DLL)]
-		public static extern int snd_pcm_open_lconf(IntPtr* playback_handle, string name, snd_pcm_stream_t stream, int mode, out snd_config_t lconf);
+		internal static extern int snd_pcm_open_lconf(IntPtr* playback_handle, string name, snd_pcm_stream_t stream, int mode, out snd_config_t lconf);
 		
 		[DllImport(DLL)]
-		public static extern int snd_pcm_open_preferred(IntPtr* playback_handle, int* rcard, int* rdevice, int mode);
+		internal static extern int snd_pcm_open_preferred(IntPtr* playback_handle, int* rcard, int* rdevice, int mode);
 
 		[DllImport(DLL)]
-		public static extern int snd_pcm_playback_format(IntPtr playback_handle, ref snd_pcm_format format);
+		internal static extern int snd_pcm_playback_format(IntPtr playback_handle, ref snd_pcm_format format);
 
 		/// <summary>
 		/// Prepare PCM for use.
@@ -149,7 +149,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <param name="playback_handle">PCM handle</param>
 		/// <returns>0 upon success, otherwise a negative error code</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_prepare(IntPtr playback_handle);
+		internal static extern int snd_pcm_prepare(IntPtr playback_handle);
 
 		/// <summary>
 		/// Start a PCM.
@@ -157,7 +157,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <param name="playback_handle">PCM handle</param>
 		/// <returns>0 upon success otherwise a negative error code</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_start(IntPtr playback_handle);
+		internal static extern int snd_pcm_start(IntPtr playback_handle);
 
 		/// <summary>
 		/// Write interleaved frames to a PCM.
@@ -167,7 +167,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <param name="size">Frames to be written</param>
 		/// <returns>A positive number of frames actually written, otherwise a negative error code</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_writei(IntPtr playback_handle, void* buffer, int size);
+		internal static extern int snd_pcm_writei(IntPtr playback_handle, void* buffer, int size);
 
 		/// <summary>
 		/// Close PCM handle.
@@ -175,7 +175,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <param name="playback_handle">PCM handle</param>
 		/// <returns>0 upon success, otherwise a negative error code</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_close(IntPtr playback_handle);
+		internal static extern int snd_pcm_close(IntPtr playback_handle);
 
 		/// <summary>
 		/// Allocate an invalid snd_pcm_hw_params_t using standard malloc
@@ -183,7 +183,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <param name="hw_params">Returned pointer</param>
 		/// <returns>0 upon success, otherwise negative error code</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_hw_params_malloc(IntPtr* hw_params);
+		internal static extern int snd_pcm_hw_params_malloc(IntPtr* hw_params);
 
 		/// <summary>
 		/// Fill params with a full configuration space for a PCM.
@@ -191,7 +191,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <param name="playback_handle">PCM handle</param>
 		/// <param name="hw_params">Configuration space</param>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_hw_params_any(IntPtr playback_handle, IntPtr hw_params);
+		internal static extern int snd_pcm_hw_params_any(IntPtr playback_handle, IntPtr hw_params);
 	
 
 		/// <summary>
@@ -202,7 +202,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <param name="snd_pcm_access">Access type</param>
 		/// <returns>0, otherwise a negative error code if configuration space would become empty</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_hw_params_set_access(IntPtr playback_handle, IntPtr hw_params, snd_pcm_access snd_pcm_access);
+		internal static extern int snd_pcm_hw_params_set_access(IntPtr playback_handle, IntPtr hw_params, snd_pcm_access snd_pcm_access);
 		
 		/// <summary>
 		/// Restrict a configuration space to contain only one format.
@@ -212,7 +212,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <param name="snd_pcm_format">Format</param>
 		/// <returns>0, otherwise a negative error code</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_hw_params_set_format(IntPtr playback_handle, IntPtr hw_params, snd_pcm_format snd_pcm_format);
+		internal static extern int snd_pcm_hw_params_set_format(IntPtr playback_handle, IntPtr hw_params, snd_pcm_format snd_pcm_format);
 		
 		/// <summary>
 		/// Restrict a configuration space to contain only one channels count.
@@ -222,7 +222,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <param name="p">Channel count</param>
 		/// <returns>0, otherwise a negative error code if configuration space would become empty</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_hw_params_set_channels(IntPtr playback_handle, IntPtr hw_params,int p);
+		internal static extern int snd_pcm_hw_params_set_channels(IntPtr playback_handle, IntPtr hw_params, int p);
 		
 		/// <summary>
 		/// Install one PCM hardware configuration chosen from a configuration space and snd_pcm_prepare it.
@@ -231,14 +231,14 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <param name="hw_params">Configuration space definition container</param>
 		/// <returns>0 upon success, otherwise a negative error code</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_hw_params(IntPtr playback_handle, IntPtr hw_params);
+		internal static extern int snd_pcm_hw_params(IntPtr playback_handle, IntPtr hw_params);
 		
 		/// <summary>
 		/// Frees a previously allocated snd_pcm_hw_params_t
 		/// </summary>
 		/// <param name="hw_params">Pointer to object to free</param>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_hw_params_free(IntPtr hw_params);
+		internal static extern int snd_pcm_hw_params_free(IntPtr hw_params);
 		
 		/// <summary>
 		/// Restrict a configuration space to have rate nearest to a target.
@@ -249,7 +249,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <param name="dir">Sub unit direction</param>
 		/// <returns>0, otherwise a negative error code if configuration space is empty</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_hw_params_set_rate_near(IntPtr playback_handle, IntPtr hw_params, int* val, void* dir);
+		internal static extern int snd_pcm_hw_params_set_rate_near(IntPtr playback_handle, IntPtr hw_params, int* val, void* dir);
 
 
 		/// <summary>
@@ -258,7 +258,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <param name="playback_handle">PCM handle</param>
 		/// <returns>A positive number of frames ready, otherwise a negative error code</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_avail(IntPtr playback_handle);
+		internal static extern int snd_pcm_avail(IntPtr playback_handle);
 
 		/// <summary>
 		/// Return number of frames ready to be read (capture) / written (playback)
@@ -266,7 +266,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <param name="playback_handle">PCM handle</param>
 		/// <returns>A positive number of frames ready, otherwise a negative error code</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_avail_update(IntPtr playback_handle);
+		internal static extern int snd_pcm_avail_update(IntPtr playback_handle);
 
 		/// <summary>
 		/// Restrict a configuration space to contain only one periods count.
@@ -277,7 +277,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <param name="dir">Sub unit direction</param>
 		/// <returns>0, otherwise a negative error code if configuration space would become empty</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_hw_params_set_periods(IntPtr playback_handle, IntPtr hw_params, int periods, int dir);
+		internal static extern int snd_pcm_hw_params_set_periods(IntPtr playback_handle, IntPtr hw_params, int periods, int dir);
 		
 		/// <summary>
 		/// Restrict a configuration space to contain only one buffer size.
@@ -287,7 +287,7 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <param name="val">Buffer size in frames</param>
 		/// <returns>0, otherwise a negative error code if configuration space would become empty</returns>
 		[DllImport(DLL)]
-		public static extern int snd_pcm_hw_params_set_buffer_size(IntPtr playback_handle, IntPtr hw_params, int val);
+		internal static extern int snd_pcm_hw_params_set_buffer_size(IntPtr playback_handle, IntPtr hw_params, int val);
 
 		/// <summary>
 		/// Return PCM state.
@@ -295,6 +295,6 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <param name="playback_handle">PCM Handle</param>
 		/// <returns>PCM state snd_pcm_state_t of given PCM handle</returns>
 		[DllImport(DLL)]
-		public static extern _snd_pcm_state snd_pcm_state(IntPtr playback_handle);
+		internal static extern _snd_pcm_state snd_pcm_state(IntPtr playback_handle);
 	}
 }

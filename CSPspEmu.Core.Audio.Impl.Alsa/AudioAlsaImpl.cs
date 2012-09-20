@@ -8,13 +8,13 @@ namespace CSPspEmu.Core.Audio
 	/// </summary>
 	public unsafe class AudioAlsaImpl : PspAudioImpl
 	{
-		public static string Device = "default";
+		private const string Device = "default";
 		//public static string Device = "plughw:0,0";
 		//public static string Device = "hw:0,0";
-		static IntPtr playback_handle = IntPtr.Zero;
-		static IntPtr hw_params = IntPtr.Zero;
-		int periods = 2;       /* Number of periods */
-		int periodsize = 8192; /* Periodsize (bytes) */
+		private static IntPtr playback_handle = IntPtr.Zero;
+		private static IntPtr hw_params = IntPtr.Zero;
+		private const int periods = 2;       /* Number of periods */
+		private const int periodsize = 8192; /* Periodsize (bytes) */
 
 		public override void InitializeComponent()
 		{
@@ -106,7 +106,7 @@ namespace CSPspEmu.Core.Audio
 					if (Platform.OperatingSystem == Platform.OS.Posix)
 					{
 						IntPtr temp_playback_handle = IntPtr.Zero;
-						var Result = Alsa.snd_pcm_open(&temp_playback_handle, "default", Alsa.snd_pcm_stream_t.SND_PCM_LB_OPEN_PLAYBACK, 0);
+						var Result = Alsa.snd_pcm_open(&temp_playback_handle, Device, Alsa.snd_pcm_stream_t.SND_PCM_LB_OPEN_PLAYBACK, 0);
 						if (Result >= 0)
 						{
 							Alsa.snd_pcm_close(temp_playback_handle);
