@@ -52,7 +52,7 @@ namespace CSPspEmu.Core.Crypto
 			fixed (Crypto.AES_ctx* aes_kirk1_ptr = &_aes_kirk1)
 			//#endif
 			{
-				check_initialized();
+				CheckInitialized();
 
 				AES128CMACHeader* header = (AES128CMACHeader*)outbuff;
 
@@ -97,7 +97,7 @@ namespace CSPspEmu.Core.Crypto
 		/// <summary>
 		/// 
 		/// </summary>
-		private void check_initialized()
+		private void CheckInitialized()
 		{
 			if (!IsKirkInitialized) throw (new KirkException(ResultEnum.PSP_KIRK_NOT_INIT, "Not initialized"));
 		}
@@ -115,7 +115,7 @@ namespace CSPspEmu.Core.Crypto
 		{
 			fixed (Crypto.AES_ctx* aes_kirk1_ptr = &_aes_kirk1)
 			{
-				check_initialized();
+				CheckInitialized();
 				var header = *(AES128CMACHeader*)inbuff;
 				if (header.Mode != KirkMode.Cmd1)
 				{
@@ -182,7 +182,7 @@ namespace CSPspEmu.Core.Crypto
 		/// <returns></returns>
 		public void kirk_CMD4(byte* outbuff, byte* inbuff, int size)
 		{
-			check_initialized();
+			CheckInitialized();
 
 			KIRK_AES128CBC_HEADER* header = (KIRK_AES128CBC_HEADER*)inbuff;
 			if (header->Mode != KirkMode.EncryptCbc)
@@ -212,7 +212,7 @@ namespace CSPspEmu.Core.Crypto
 		/// <returns></returns>
 		public void kirk_CMD7(byte* outbuff, byte* inbuff, int size)
 		{
-			check_initialized();
+			CheckInitialized();
 
 			var Header = (KIRK_AES128CBC_HEADER*)inbuff;
 			if (Header->Mode != KirkMode.DecryptCbc)
@@ -259,7 +259,7 @@ namespace CSPspEmu.Core.Crypto
 			fixed (Crypto.AES_ctx* aes_kirk1_ptr = &_aes_kirk1)
 #endif
 			{
-				check_initialized();
+				CheckInitialized();
 
 				AES128CMACHeader header = *(AES128CMACHeader*)inbuff;
 
@@ -318,7 +318,7 @@ namespace CSPspEmu.Core.Crypto
 		/// <returns></returns>
 		public void kirk_CMD14(byte* Output, int OutputSize)
 		{
-			check_initialized();
+			CheckInitialized();
 			for (int i = 0; i < OutputSize; i++) Output[i] = (byte)(Random.Next() & 0xFF);
 		}
 
@@ -448,7 +448,7 @@ namespace CSPspEmu.Core.Crypto
 			fixed (byte* cmac_data_hash = _cmac_data_hash)
 			fixed (Crypto.AES_ctx* aes_kirk1_ptr = &_aes_kirk1)
 			{
-				check_initialized();
+				CheckInitialized();
 				if (!(header->Mode == KirkMode.Cmd1 || header->Mode == KirkMode.Cmd2 || header->Mode == KirkMode.Cmd3))
 				{
 					throw (new KirkException(ResultEnum.PSP_KIRK_INVALID_MODE));
