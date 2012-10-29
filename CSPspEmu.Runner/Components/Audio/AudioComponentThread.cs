@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Audio;
 
 namespace CSPspEmu.Runner.Components.Audio
 {
-	sealed public class AudioComponentThread : ComponentThread
+	public sealed class AudioComponentThread : ComponentThread
 	{
 		[Inject]
 		private PspAudio PspAudio;

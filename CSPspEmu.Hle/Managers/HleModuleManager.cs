@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Cpu;
-using CSPspEmu.Core.Cpu.Emiter;
 using System.Reflection;
 using CSPspEmu.Core;
 using CSharpUtils;
@@ -27,7 +25,7 @@ namespace CSPspEmu.Hle.Managers
 		[Inject]
 		protected PspConfig PspConfig;
 
-		static public IEnumerable<Type> GetAllHleModules(Assembly ModulesAssembly)
+		public static IEnumerable<Type> GetAllHleModules(Assembly ModulesAssembly)
 		{
 			var FindType = typeof(HleModuleHost);
 			//foreach (var Type in ModulesAssembly.GetTypes()) Console.WriteLine(Type);
@@ -42,7 +40,7 @@ namespace CSPspEmu.Hle.Managers
 		{
 			if (PspEmulatorContext.PspConfig.HleModulesDll == null)
 			{
-				throw (new ArgumentNullException("PspEmulatorContext.PspConfig.HleModulesDll Can't be bull"));
+				throw (new ArgumentNullException("PspEmulatorContext.PspConfig.HleModulesDll Can't be null"));
 			}
 
 			HleModuleTypes = GetAllHleModules(PspEmulatorContext.PspConfig.HleModulesDll).ToDictionary(Type => Type.Name);

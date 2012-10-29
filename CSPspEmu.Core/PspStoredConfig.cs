@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
 using System.IO;
+using System.Xml.Serialization;
 using CSharpUtils;
 
 namespace CSPspEmu.Core
@@ -34,7 +32,7 @@ namespace CSPspEmu.Core
 
 	public class PspStoredConfig
 	{
-		static public Logger Logger = Logger.GetLogger("Config");
+		public static Logger Logger = Logger.GetLogger("Config");
 
 		/// <summary>
 		/// 
@@ -77,13 +75,13 @@ namespace CSPspEmu.Core
 		public string IsosPath = null;
 
 		#region Serializing
-		static private XmlSerializer Serializer;
+		private static XmlSerializer Serializer;
 
 		private PspStoredConfig()
 		{
 		}
 
-		static private string ConfigFilePath
+		private static string ConfigFilePath
 		{
 			get
 			{
@@ -93,7 +91,7 @@ namespace CSPspEmu.Core
 
 		private static object Lock = new object();
 
-		static public PspStoredConfig Load()
+		public static PspStoredConfig Load()
 		{
 			lock (Lock)
 			{

@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
-using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Modules.utility
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public partial class sceUtility : HleModuleHost
+	public unsafe partial class sceUtility : HleModuleHost
 	{
 		public enum DialogStepEnum
 		{
@@ -219,7 +217,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			PSP_UTILITY_SAVEDATA_FOCUS_UNKNOWN    = 0, // 
 			PSP_UTILITY_SAVEDATA_FOCUS_FIRSTLIST  = 1, // First in list
 			PSP_UTILITY_SAVEDATA_FOCUS_LASTLIST   = 2, // Last in list
-			PSP_UTILITY_SAVEDATA_FOCUS_LATEST     = 3, //  Most recent date
+			PSP_UTILITY_SAVEDATA_FOCUS_LATEST     = 3, // Most recent date
 			PSP_UTILITY_SAVEDATA_FOCUS_OLDEST     = 4, // Oldest date
 			PSP_UTILITY_SAVEDATA_FOCUS_UNKNOWN2   = 5, //
 			PSP_UTILITY_SAVEDATA_FOCUS_UNKNOWN3   = 6, //
@@ -228,7 +226,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		}
 
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
-		unsafe public struct PspUtilitySavedataSFOParam
+		public unsafe struct PspUtilitySavedataSFOParam
 		{
 			/// <summary>
 			/// 0000 -
@@ -455,7 +453,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			public int Overwrite;
 
 			/// <summary>
-			/// 003C - gameName: name used from the game for saves, equal for all saves
+			/// 003C - GameName: name used from the game for saves, equal for all saves
 			/// </summary>
 			public fixed byte GameNameRaw[16];
 
@@ -471,7 +469,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			}
 
 			/// <summary>
-			/// 004C - saveName: name of the particular save, normally a number
+			/// 004C - SaveName: name of the particular save, normally a number
 			/// </summary>
 			public fixed byte SaveNameRaw[20];
 
@@ -487,22 +485,22 @@ namespace CSPspEmu.Hle.Modules.utility
 			}
 
 			/// <summary>
-			/// 0060 - saveNameList: used by multiple modes
+			/// 0060 - SaveNameList: used by multiple modes
 			/// </summary>
 			public PspPointer SaveNameListPointer; // char[20]
 
 			/// <summary>
-			/// 0064 - fileName: name of the data file of the game for example DATA.BIN
+			/// 0064 - FileName: Name of the data file of the game for example DATA.BIN
 			/// </summary>
 			public fixed byte FileName[16];
 
 			/// <summary>
-			/// 0074 - pointer to a buffer that will contain data file unencrypted data
+			/// 0074 - Pointer to a buffer that will contain data file unencrypted data
 			/// </summary>
 			public uint DataBufPointer;
 			
 			/// <summary>
-			/// 0078 - size of allocated space to dataBuf
+			/// 0078 - Size of allocated space to dataBuf
 			/// </summary>
 			public uint DataBufSize;
 
@@ -572,7 +570,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		//#if _PSP_FW_VERSION >= 200
 
 			/// <summary>
-			/// 05E0 -key: encrypt/decrypt key for save with firmware >= 2.00
+			/// 05E0 - Key: Encrypt/decrypt key for save with firmware >= 2.00
 			/// </summary>
 			public fixed byte Key[16];
 
@@ -950,7 +948,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// 
 		/// Available on firmware 2.00 and higher only.
 		/// </summary>
-		/// <param name="_module">module number to load (PSP_AV_MODULE_xxx)</param>
+		/// <param name="_module">Module number to load (PSP_AV_MODULE_xxx)</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xC629AF26, FirmwareVersion = 200)]
 		[HlePspNotImplemented]
@@ -963,7 +961,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// Unload an audio/video module (PRX) from user mode.
 		/// Available on firmware 2.00 and higher only.
 		/// </summary>
-		/// <param name="_module">module number to be unloaded</param>
+		/// <param name="_module">Module number to be unloaded</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xF7D8D092, FirmwareVersion = 200)]
 		[HlePspNotImplemented]
@@ -978,7 +976,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// to use infrastructure WifI (via an access point).
 		/// Available on firmware 2.00 and higher only.
 		/// </summary>
-		/// <param name="_module">module number to load (PSP_NET_MODULE_xxx)</param>
+		/// <param name="_module">Module number to load (PSP_NET_MODULE_xxx)</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x1579A159, FirmwareVersion = 200)]
 		[HlePspNotImplemented]
@@ -994,7 +992,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// <summary>
 		/// Load a module (PRX) from user mode.
 		/// </summary>
-		/// <param name="PspModule">module to load (PSP_MODULE_xxx)</param>
+		/// <param name="PspModule">Module to load (PSP_MODULE_xxx)</param>
 		/// <returns>
 		///		0 on success
 		///		less than 0 on error
@@ -1010,7 +1008,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// <summary>
 		/// Unload a module (PRX) from user mode.
 		/// </summary>
-		/// <param name="_module">module to unload (PSP_MODULE_xxx)</param>
+		/// <param name="_module">Module to unload (PSP_MODULE_xxx)</param>
 		/// <returns>
 		///		0 on success
 		///		less than 0 on error
@@ -1199,95 +1197,95 @@ namespace CSPspEmu.Hle.Modules.utility
 			return 0;
 		}
 
-        [HlePspFunction(NID = 0x7853182D, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceUtilityGameSharingUpdate()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0x7853182D, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceUtilityGameSharingUpdate()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0xC492F751, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceUtilityGameSharingInitStart()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0xC492F751, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceUtilityGameSharingInitStart()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0x16D02AF0, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceUtilityNpSigninInitStart()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0x16D02AF0, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceUtilityNpSigninInitStart()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0x86ABDB1B, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceUtilityNpSigninGetStatus()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0x86ABDB1B, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceUtilityNpSigninGetStatus()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0xE19C97D6, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceUtilityNpSigninShutdownStart()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0xE19C97D6, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceUtilityNpSigninShutdownStart()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0xF3FBC572, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceUtilityNpSigninUpdate()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0xF3FBC572, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceUtilityNpSigninUpdate()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0x0251B134, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceUtilityScreenshotInitStart()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0x0251B134, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceUtilityScreenshotInitStart()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0x41E30674, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceUtilitySetSystemParamString()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0x41E30674, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceUtilitySetSystemParamString()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0x45C18506, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceUtilitySetSystemParamInt()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0x45C18506, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceUtilitySetSystemParamInt()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0x4FED24D8, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceUtilityGetNetParamLatestID()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0x4FED24D8, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceUtilityGetNetParamLatestID()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0xAB083EA9, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceUtilityScreenshotUpdate()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0xAB083EA9, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceUtilityScreenshotUpdate()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0xD81957B7, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceUtilityScreenshotGetStatus()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0xD81957B7, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceUtilityScreenshotGetStatus()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0xF9E0008C, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceUtilityScreenshotShutdownStart()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0xF9E0008C, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceUtilityScreenshotShutdownStart()
+		{
+			return 0;
+		}
 	}
 }

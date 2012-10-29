@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using CSharpUtils.Endian;
 
 namespace CSPspEmu.Hle.Formats.video
 {
-	unsafe public partial class Pmf
+	public unsafe class Pmf
 	{
 		/// <summary>
 		/// 0000 -

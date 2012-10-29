@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Core.Threading.Synchronization
 {
-	abstract public class PspResetEvent
+	public abstract class PspResetEvent
 	{
 		protected bool Value;
 		protected bool AutoReset;
 		Queue<Action> Actions = new Queue<Action>();
 
-		public PspResetEvent(bool InitialValue, bool AutoReset)
+		protected PspResetEvent(bool InitialValue, bool AutoReset)
 		{
 			this.Value = InitialValue;
 			this.AutoReset = AutoReset;

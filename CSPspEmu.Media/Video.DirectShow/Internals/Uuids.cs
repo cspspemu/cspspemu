@@ -15,7 +15,7 @@ namespace AForge.Video.DirectShow.Internals
 	/// DirectShow class IDs.
 	/// </summary>
 	[ComVisible( false )]
-	static public class Clsid
+	public static class Clsid
 	{
 		/// <summary>
 		/// System device enumerator.
@@ -68,7 +68,7 @@ namespace AForge.Video.DirectShow.Internals
 	/// </summary>
 	/// 
 	[ComVisible( false )]
-	static public class MediaType
+	public static class MediaType
 	{
 		/// <summary>
 		/// Video.
@@ -121,7 +121,7 @@ namespace AForge.Video.DirectShow.Internals
 	/// </summary>
 	/// 
 	[ComVisible( false )]
-	static public class MediaSubType
+	public static class MediaSubType
 	{
 		/// <summary>
 		/// YUY2 (packed 4:2:2).
@@ -237,7 +237,7 @@ namespace AForge.Video.DirectShow.Internals
 	/// </summary>
 	/// 
 	[ComVisible( false )]
-	static public class PinCategory
+	public static class PinCategory
 	{
 		/// <summary>
 		/// Capture pin.
@@ -260,7 +260,7 @@ namespace AForge.Video.DirectShow.Internals
 
 	// Below GUIDs are used by ICaptureGraphBuilder::FindInterface().
 	[ComVisible( false )]
-	static public class FindDirection
+	public static class FindDirection
 	{
 		/// <summary>Equals to LOOK_UPSTREAM_ONLY.</summary>
 		public static readonly Guid UpstreamOnly =

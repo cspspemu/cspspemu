@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using CSharpUtils;
 
 namespace CSPspEmu.Core.Utils
 {
-	unsafe sealed public class PixelFormatDecoder
+	public unsafe sealed class PixelFormatDecoder
 	{
 		internal PixelFormatDecoder()
 		{
@@ -45,12 +41,12 @@ namespace CSPspEmu.Core.Utils
 			1, 1, 1
 		};
 
-		static public int GetPixelsBits(GuPixelFormats PixelFormat)
+		public static int GetPixelsBits(GuPixelFormats PixelFormat)
 		{
 			return (int)(Sizes[(int)PixelFormat] * 8);
 		}
 
-		static public int GetPixelsSize(GuPixelFormats PixelFormat, int PixelCount)
+		public static int GetPixelsSize(GuPixelFormats PixelFormat, int PixelCount)
 		{
 			return (int)(Sizes[(int)PixelFormat] * PixelCount);
 		}
@@ -70,7 +66,7 @@ namespace CSPspEmu.Core.Utils
 		int PaletteMask;
 		int StrideWidth;
 
-		static public ColorFormat ColorFormatFromPixelFormat(GuPixelFormats PixelFormat)
+		public static ColorFormat ColorFormatFromPixelFormat(GuPixelFormats PixelFormat)
 		{
 			switch (PixelFormat)
 			{
@@ -83,18 +79,18 @@ namespace CSPspEmu.Core.Utils
 		}
 
 		/*
-		static public uint EncodePixel(GuPixelFormats PixelFormat, OutputPixel Color)
+		public static uint EncodePixel(GuPixelFormats PixelFormat, OutputPixel Color)
 		{
 			return ColorFormatFromPixelFormat(PixelFormat).Encode(Color.R, Color.G, Color.B, Color.A);
 		}
 
-		static public OutputPixel DecodePixel(GuPixelFormats PixelFormat, uint Value)
+		public static OutputPixel DecodePixel(GuPixelFormats PixelFormat, uint Value)
 		{
 			throw new NotImplementedException();
 		}
 		*/
 
-		static public void Decode(GuPixelFormats PixelFormat, void* Input, OutputPixel* Output, int Width, int Height, void* Palette = null, GuPixelFormats PaletteType = GuPixelFormats.NONE, int PaletteCount = 0, int PaletteStart = 0, int PaletteShift = 0, int PaletteMask = 0xFF, int StrideWidth = -1, bool IgnoreAlpha = false)
+		public static void Decode(GuPixelFormats PixelFormat, void* Input, OutputPixel* Output, int Width, int Height, void* Palette = null, GuPixelFormats PaletteType = GuPixelFormats.NONE, int PaletteCount = 0, int PaletteStart = 0, int PaletteShift = 0, int PaletteMask = 0xFF, int StrideWidth = -1, bool IgnoreAlpha = false)
 		{
 			if (StrideWidth == -1) StrideWidth = GetPixelsSize(PixelFormat, Width);
 			var PixelFormatInt = (int)PixelFormat;
@@ -451,7 +447,7 @@ namespace CSPspEmu.Core.Utils
 			}
 		}
 
-		static public unsafe OutputPixel Decode_RGBA_4444_Pixel(ushort Value)
+		public static unsafe OutputPixel Decode_RGBA_4444_Pixel(ushort Value)
 		{
 			return new OutputPixel()
 			{
@@ -462,7 +458,7 @@ namespace CSPspEmu.Core.Utils
 			};
 		}
 
-		static public unsafe void Decode_RGBA_5551_Pixel(ushort Value, out OutputPixel OutputPixel)
+		public static unsafe void Decode_RGBA_5551_Pixel(ushort Value, out OutputPixel OutputPixel)
 		{
 #if true
 			OutputPixel.R = (byte)(((Value >> 0) & 0x1F) * 255 / 0x1F);
@@ -477,7 +473,7 @@ namespace CSPspEmu.Core.Utils
 #endif
 		}
 
-		static public unsafe OutputPixel Decode_RGBA_5650_Pixel(ushort Value)
+		public static unsafe OutputPixel Decode_RGBA_5650_Pixel(ushort Value)
 		{
 			return new OutputPixel()
 			{
@@ -488,7 +484,7 @@ namespace CSPspEmu.Core.Utils
 			};
 		}
 
-		static public unsafe OutputPixel Decode_RGBA_8888_Pixel(uint Value)
+		public static unsafe OutputPixel Decode_RGBA_8888_Pixel(uint Value)
 		{
 			return *(OutputPixel*)&Value;
 		}
@@ -499,7 +495,7 @@ namespace CSPspEmu.Core.Utils
 		/// <param name="Output"></param>
 		/// <param name="RowWidth">Width of the texture. In bytes? In pixels? Maybe bytes?</param>
 		/// <param name="TextureHeight">Height of the texture</param>
-		static public unsafe void Unswizzle(byte[] Input, byte[] Output, int RowWidth, int TextureHeight)
+		public static unsafe void Unswizzle(byte[] Input, byte[] Output, int RowWidth, int TextureHeight)
 		{
 			fixed (void* InputPtr = Input)
 			fixed (void* OutputPtr = Output)
@@ -508,7 +504,7 @@ namespace CSPspEmu.Core.Utils
 			}
 		}
 
-		static public unsafe void Unswizzle(void* Input, void* Output, int RowWidth, int TextureHeight)
+		public static unsafe void Unswizzle(void* Input, void* Output, int RowWidth, int TextureHeight)
 		{
 			int pitch = (RowWidth - 16) / 4;
 			int bxc = RowWidth / 16;
@@ -535,7 +531,7 @@ namespace CSPspEmu.Core.Utils
 			}
 		}
 
-		static public unsafe void UnswizzleInline(void* Data, int RowWidth, int TextureHeight)
+		public static unsafe void UnswizzleInline(void* Data, int RowWidth, int TextureHeight)
 		{
 			var Temp = new byte[RowWidth * TextureHeight];
 			fixed (void* TempPointer = Temp)

@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Hle.Formats;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
+using System.Linq;
+using CSPspEmu.Hle.Formats;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Core.Cpu.Emiter;
 using CSPspEmu.Core.Cpu;
 using CSharpUtils;
 using CSPspEmu.Core;
@@ -20,7 +16,7 @@ namespace CSPspEmu.Hle.Loader
 		public uint GP;
 	}
 
-	unsafe public class ElfPspLoader : PspEmulatorComponent
+    public class ElfPspLoader : PspEmulatorComponent
 	{
 		static Logger Logger = Logger.GetLogger("Loader");
 
@@ -82,7 +78,7 @@ namespace CSPspEmu.Hle.Loader
 				catch (Exception Exception)
 				{
 					Logger.Error(Exception);
-					throw (Exception);
+					throw;
 				}
 			}
 

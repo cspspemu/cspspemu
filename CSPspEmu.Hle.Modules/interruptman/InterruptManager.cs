@@ -1,20 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using CSPspEmu.Core;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.interruptman
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00000011)]
-	unsafe public class InterruptManager : HleModuleHost
+	public unsafe class InterruptManager : HleModuleHost
 	{
 		[Inject]
 		HleInterruptManager HleInterruptManager;
 
-		private void CheckImplementedInterruptType(PspInterrupts PspInterrupt)
+		private static void CheckImplementedInterruptType(PspInterrupts PspInterrupt)
 		{
 			switch (PspInterrupt)
 			{
@@ -29,7 +26,7 @@ namespace CSPspEmu.Hle.Modules.interruptman
 		/// <summary>
 		/// Register a sub interrupt handler.
 		/// </summary>
-		/// <param name="PspInterrupts">The interrupt number to register.</param>
+		/// <param name="PspInterrupt">The interrupt number to register.</param>
 		/// <param name="HandlerIndex">The sub interrupt handler number (user controlled) (0-15)</param>
 		/// <param name="CallbackAddress">The interrupt handler</param>
 		/// <param name="CallbackArgument">An argument passed to the interrupt handler</param>

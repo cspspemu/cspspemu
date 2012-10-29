@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Hle.Attributes;
+﻿using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Modules.modulemgr;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core;
@@ -10,7 +6,7 @@ using CSPspEmu.Core;
 namespace CSPspEmu.Hle.Modules._unknownPrx
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class ModuleMgrForKernel : ModuleMgrForUser
+	public unsafe class ModuleMgrForKernel : ModuleMgrForUser
 	{
 		[Inject]
 		HleModuleManager ModuleManager;

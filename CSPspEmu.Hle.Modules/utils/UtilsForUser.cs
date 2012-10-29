@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Runtime.InteropServices;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Core;
-using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Modules.utils
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class UtilsForUser : HleModuleHost
+	public unsafe class UtilsForUser : HleModuleHost
 	{
 		[Inject]
 		public PspRtc PspRtc;
@@ -272,12 +270,13 @@ namespace CSPspEmu.Hle.Modules.utils
 			throw(new NotImplementedException());
 		}
 
-		/// <summary>
-		/// Invalidate a range of addresses in instruction cache
-		/// </summary>
-		/// <param name="Address"></param>
-		/// <param name="Size"></param>
-		[HlePspFunction(NID = 0xC2DF770E, FirmwareVersion = 150)]
+	    /// <summary>
+	    /// Invalidate a range of addresses in instruction cache
+	    /// </summary>
+	    /// <param name="CpuThreadState"></param>
+	    /// <param name="Address"></param>
+	    /// <param name="Size"></param>
+	    [HlePspFunction(NID = 0xC2DF770E, FirmwareVersion = 150)]
 		public void sceKernelIcacheInvalidateRange(CpuThreadState CpuThreadState, uint Address, uint Size)
 		{
 			CpuThreadState.CpuProcessor.sceKernelIcacheInvalidateRange(Address, Size);
@@ -373,7 +372,7 @@ namespace CSPspEmu.Hle.Modules.utils
 	/// </summary>
 	/// <seealso cref="http://takel.jp/mt/MT19937.cs"/>
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	unsafe public struct SceKernelUtilsMt19937Context
+	public unsafe struct SceKernelUtilsMt19937Context
 	{
 		public const int MT_N = 624;
 		public const int MT_M = 397;

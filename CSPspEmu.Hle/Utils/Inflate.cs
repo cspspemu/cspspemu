@@ -41,13 +41,11 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 * Jean-loup Gailly(jloup@gzip.org) and Mark Adler(madler@alumni.caltech.edu)
 * and contributors of zlib.
 */
-using System;
+
 namespace ComponentAce.Compression.Libs.zlib
 {
-	
 	sealed class Inflate
 	{
-		
 		private const int MAX_WBITS = 15; // 32K LZ77 window
 		
 		// preset dictionary flag in zlib header
@@ -71,20 +69,20 @@ namespace ComponentAce.Compression.Libs.zlib
 		private const int Z_BUF_ERROR = - 5;
 		private const int Z_VERSION_ERROR = - 6;
 		
-		private const int METHOD = 0; // waiting for method byte
-		private const int FLAG = 1; // waiting for flag byte
-		private const int DICT4 = 2; // four dictionary check bytes to go
-		private const int DICT3 = 3; // three dictionary check bytes to go
-		private const int DICT2 = 4; // two dictionary check bytes to go
-		private const int DICT1 = 5; // one dictionary check byte to go
-		private const int DICT0 = 6; // waiting for inflateSetDictionary
-		private const int BLOCKS = 7; // decompressing blocks
-		private const int CHECK4 = 8; // four check bytes to go
-		private const int CHECK3 = 9; // three check bytes to go
+		private const int METHOD = 0;  // waiting for method byte
+		private const int FLAG = 1;    // waiting for flag byte
+		private const int DICT4 = 2;   // four dictionary check bytes to go
+		private const int DICT3 = 3;   // three dictionary check bytes to go
+		private const int DICT2 = 4;   // two dictionary check bytes to go
+		private const int DICT1 = 5;   // one dictionary check byte to go
+		private const int DICT0 = 6;   // waiting for inflateSetDictionary
+		private const int BLOCKS = 7;  // decompressing blocks
+		private const int CHECK4 = 8;  // four check bytes to go
+		private const int CHECK3 = 9;  // three check bytes to go
 		private const int CHECK2 = 10; // two check bytes to go
 		private const int CHECK1 = 11; // one check byte to go
-		private const int DONE = 12; // finished check, done
-		private const int BAD = 13; // got an error--stay here
+		private const int DONE = 12;   // finished check, done
+		private const int BAD = 13;    // got an error--stay here
 		
 		internal int mode; // current inflate mode
 		
@@ -164,10 +162,8 @@ namespace ComponentAce.Compression.Libs.zlib
 			r = Z_BUF_ERROR;
 			while (true)
 			{
-				//System.out.println("mode: "+z.istate.mode);
 				switch (z.istate.mode)
 				{
-					
 					case METHOD: 
 						
 						if (z.avail_in == 0)
@@ -181,16 +177,18 @@ namespace ComponentAce.Compression.Libs.zlib
 							z.istate.marker = 5; // can't try inflateSync
 							break;
 						}
-						if ((z.istate.method >> 4) + 8 > z.istate.wbits)
+						
+                        if ((z.istate.method >> 4) + 8 > z.istate.wbits)
 						{
 							z.istate.mode = BAD;
 							z.msg = "invalid window size";
 							z.istate.marker = 5; // can't try inflateSync
 							break;
 						}
+
 						z.istate.mode = FLAG;
 						goto case FLAG;
-					
+
 					case FLAG: 
 						
 						if (z.avail_in == 0)

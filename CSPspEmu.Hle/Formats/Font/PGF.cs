@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
 using System.IO;
 using System.Drawing;
-using CSharpUtils;
 
 namespace CSPspEmu.Hle.Formats.Font
 {
-	unsafe public partial class PGF
+	public partial class PGF
 	{
 		public class Glyph
 		{
@@ -54,6 +50,7 @@ namespace CSPspEmu.Hle.Formats.Font
 
 		public class GlyphSymbol
 		{
+			[Flags]
 			public enum GlyphFlags : int
 			{
 				FONT_PGF_BMP_H_ROWS = 0x01,
@@ -265,7 +262,7 @@ namespace CSPspEmu.Hle.Formats.Font
 			return (int)BitReader.ReadBitsAt(PackedCharMap, glyphPos * Header.TableCharMapBpe, Header.TableCharMapBpe);
 		}
 
-		static protected int BitsToBytesHighAligned(int Bits)
+		protected static int BitsToBytesHighAligned(int Bits)
 		{
 			//return MathUtils.NextHigherAligned(Bits, 8) / 8;
 			return ((Bits + 31) & ~31) / 8;

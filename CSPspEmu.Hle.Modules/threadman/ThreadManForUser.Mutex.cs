@@ -3,13 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
-	unsafe public partial class ThreadManForUser
+	public unsafe partial class ThreadManForUser
 	{
 		[Flags]
 		public enum MutexAttributesEnum : uint
@@ -119,6 +118,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="CpuThreadState"></param>
 		/// <param name="Name"></param>
 		/// <param name="Attributes"></param>
 		/// <param name="Options"></param>
@@ -140,6 +140,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="CpuThreadState"></param>
 		/// <param name="MutexId"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xF8170FBE, FirmwareVersion = 150)]
@@ -152,6 +153,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="CpuThreadState"></param>
 		/// <param name="MutexId"></param>
 		/// <param name="Count"></param>
 		/// <param name="Timeout"></param>
@@ -177,6 +179,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="CpuThreadState"></param>
 		/// <param name="MutexId"></param>
 		/// <param name="Count"></param>
 		/// <returns></returns>
@@ -191,7 +194,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="CpuThreadState"></param>
 		/// <param name="MutexId"></param>
+		/// <param name="Count"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x6B30100F, FirmwareVersion = 150)]
 		public int sceKernelUnlockMutex(CpuThreadState CpuThreadState, int MutexId, int Count)

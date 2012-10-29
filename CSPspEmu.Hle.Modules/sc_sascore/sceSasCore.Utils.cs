@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Formats.audio;
 
 namespace CSPspEmu.Hle.Modules.sc_sascore
 {
-	unsafe public partial class sceSasCore
+	public unsafe partial class sceSasCore
 	{
 		Dictionary<uint, SasCore> SasCoreList = new Dictionary<uint, SasCore>();
 
@@ -44,8 +42,8 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// Checks if a SasCore pointer structure is fine.
 		/// </summary>
-		/// <param name="SasCore"></param>
-		/// <param name="CheckInitialized"></param>
+		/// <param name="SasCorePointer"></param>
+		/// <param name="Voice"></param>
 		private SasVoice GetSasCoreVoice(uint SasCorePointer, int Voice)
 		{
 			var SasCore = GetSasCore(SasCorePointer);
@@ -57,7 +55,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// Checks a voice.
 		/// </summary>
 		/// <param name="Voice"></param>
-		private void _CheckVoice(int Voice)
+		private static void _CheckVoice(int Voice)
 		{
 			if (Voice < 0 || Voice >= 32)
 			{
@@ -135,7 +133,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		public int Height;
 	}
 
-	unsafe public class SasVoice
+	public class SasVoice
 	{
 		/// <summary>
 		/// 
@@ -223,7 +221,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		}
 	}
 
-	unsafe public class SasCore
+	public class SasCore
 	{
 		/// <summary>
 		/// 
@@ -309,7 +307,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 	}
 
 	/*
-	unsafe public struct SasCore
+	public unsafe struct SasCore
 	{
 		/// <summary>
 		/// 

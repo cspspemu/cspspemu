@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Modules.mpeg
 {
-	unsafe public partial class sceMpeg
+	public unsafe partial class sceMpeg
 	{
 		[Inject]
 		HleInterop HleInterop;
@@ -16,8 +13,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <summary>
 		/// sceMpegRingbufferQueryMemSize
 		/// </summary>
-		/// <param name="NumberOfPackets">number of packets in the ringbuffer</param>
-		/// <returns>Less than 0 if error else ringbuffer data size.</returns>
+		/// <param name="NumberOfPackets">Number of packets in the ringbuffer</param>
+		/// <returns>Less than 0 if error, else ringbuffer data size.</returns>
 		[HlePspFunction(NID = 0xD7A29F46, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceMpegRingbufferQueryMemSize(int NumberOfPackets)
@@ -29,13 +26,13 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <summary>
 		/// sceMpegRingbufferConstruct
 		/// </summary>
-		/// <param name="Ringbuffer">pointer to a sceMpegRingbuffer struct</param>
-		/// <param name="Packets">number of packets in the ringbuffer</param>
-		/// <param name="Data">pointer to allocated memory</param>
-		/// <param name="Size">size of allocated memory, shoud be sceMpegRingbufferQueryMemSize(iPackets)</param>
-		/// <param name="Callback">ringbuffer callback</param>
-		/// <param name="CallbackParam">param passed to callback</param>
-		/// <returns>0 if success.</returns>
+		/// <param name="Ringbuffer">Pointer to a sceMpegRingbuffer struct</param>
+		/// <param name="Packets">Number of packets in the ringbuffer</param>
+		/// <param name="Data">Pointer to allocated memory</param>
+		/// <param name="Size">Size of allocated memory, shoud be sceMpegRingbufferQueryMemSize(iPackets)</param>
+		/// <param name="Callback">Ringbuffer callback</param>
+		/// <param name="CallbackParam">Param passed to callback</param>
+		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0x37295ED8, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceMpegRingbufferConstruct(SceMpegRingbuffer* Ringbuffer, int Packets, PspPointer Data, int Size, PspPointer Callback, PspPointer CallbackParam)
@@ -65,7 +62,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <summary>
 		/// sceMpegRingbufferDestruct
 		/// </summary>
-		/// <param name="Ringbuffer">pointer to a sceMpegRingbuffer struct</param>
+		/// <param name="Ringbuffer">Pointer to a sceMpegRingbuffer struct</param>
 		[HlePspFunction(NID = 0x13407F13, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceMpegRingbufferDestruct(SceMpegRingbuffer* Ringbuffer)
@@ -77,9 +74,9 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <summary>
 		/// sceMpegQueryMemSize
 		/// </summary>
-		/// <param name="Ringbuffer">pointer to a sceMpegRingbuffer struct</param>
+		/// <param name="Ringbuffer">Pointer to a sceMpegRingbuffer struct</param>
 		/// <returns>
-		///		Less than 0 if error else number of free packets in the ringbuffer.
+		///		Less than 0 if error, else number of free packets in the ringbuffer.
 		/// </returns>
 		[HlePspFunction(NID = 0xB5F6DC87, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -93,11 +90,11 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <summary>
 		/// sceMpegRingbufferPut
 		/// </summary>
-		/// <param name="Ringbuffer">pointer to a sceMpegRingbuffer struct</param>
-		/// <param name="NumPackets">num packets to put into the ringbuffer</param>
-		/// <param name="Available">free packets in the ringbuffer, should be sceMpegRingbufferAvailableSize()</param>
+		/// <param name="Ringbuffer">Pointer to a sceMpegRingbuffer struct</param>
+		/// <param name="NumPackets">Num packets to put into the ringbuffer</param>
+		/// <param name="Available">Free packets in the ringbuffer, should be sceMpegRingbufferAvailableSize()</param>
 		/// <returns>
-		///		Less than 0 if error else number of packets.
+		///		Less than 0 if error, else number of packets.
 		/// </returns>
 		[HlePspFunction(NID = 0xB240A59E, FirmwareVersion = 150)]
 		[HlePspNotImplemented]

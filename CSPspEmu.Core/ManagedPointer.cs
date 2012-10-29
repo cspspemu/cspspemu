@@ -7,11 +7,11 @@ using System.Runtime.InteropServices;
 namespace CSPspEmu.Core
 {
 	/*
-	unsafe public class ManagedPointer<TType>
+	public unsafe class ManagedPointer<TType>
 	{
 		public byte* InternalPointer;
-		static public readonly Type Type = typeof(TType);
-		static public readonly int EntrySize = Marshal.SizeOf(typeof(TType));
+		public static readonly Type Type = typeof(TType);
+		public static readonly int EntrySize = Marshal.SizeOf(typeof(TType));
 
 		public ManagedPointer(byte* InternalPointer)
 		{

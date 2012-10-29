@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 
@@ -63,7 +59,7 @@ namespace CSPspEmuLLETest
 			return Value;
 		}
 
-		private void TrackWrite(uint Address, uint Value)
+		private static void TrackWrite(uint Address, uint Value)
 		{
 			if (((Address & PspMemory.MemoryMask) >= 0x1FC00000) && ((Address & PspMemory.MemoryMask) <= 0x20000000))
 			{

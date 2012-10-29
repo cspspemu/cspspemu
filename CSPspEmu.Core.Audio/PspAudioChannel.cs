@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CSharpUtils;
 
 namespace CSPspEmu.Core.Audio
 {
-	unsafe public class PspAudioChannel
+	public unsafe class PspAudioChannel
 	{
 		/// <summary>
 		/// 
@@ -36,12 +35,13 @@ namespace CSPspEmu.Core.Audio
 		public bool Available;
 
 		/// <summary>
-		/// 
+		/// Total amount of samples in the channel.
 		/// </summary>
 		public int SampleCount;
 
 		/// <summary>
-		/// 
+		/// Format of the audio in the channel.
+		/// Can be mono or stereo.
 		/// </summary>
 		public PspAudio.FormatEnum Format;
 
@@ -60,7 +60,7 @@ namespace CSPspEmu.Core.Audio
 		private List<Tuple<long, Action>> BufferEvents = new List<Tuple<long, Action>>();
 
 		/// <summary>
-		/// 
+		/// Returns the total number of audio channels present.
 		/// </summary>
 		public int NumberOfChannels
 		{
@@ -75,8 +75,8 @@ namespace CSPspEmu.Core.Audio
 			}
 		}
 
-		short[] Samples;
-		short[] StereoSamplesBuffer;
+		private short[] Samples;
+		private short[] StereoSamplesBuffer;
 
 		public void Updated()
 		{
@@ -94,9 +94,9 @@ namespace CSPspEmu.Core.Audio
 		}
 
 		/// <summary>
-		/// 
+		/// Read 'Count' number of samples
 		/// </summary>
-		/// <param name="Count"></param>
+		/// <param name="Count">Number of samples to read</param>
 		/// <returns></returns>
 		public short[] Read(int Count)
 		{
@@ -123,6 +123,12 @@ namespace CSPspEmu.Core.Audio
 			}
 		}
 
+		/// <summary>
+		/// Converts a buffer containing mono samples
+		/// into a buffer containing of stereo samples
+		/// </summary>
+		/// <param name="MonoSamples">Buffer that contains mono samples.</param>
+		/// <returns>A buffer that contains stereo samples.</returns>
 		short[] MonoToStereo(short[] MonoSamples)
 		{
 			var StereoSamples = StereoSamplesBuffer;
@@ -201,6 +207,9 @@ namespace CSPspEmu.Core.Audio
 			Write(Samples, ActionCallbackOnReaded);
 		}
 
+		/// <summary>
+		/// Available channels that can be read.
+		/// </summary>
 		public int AvailableChannelsForRead
 		{
 			get

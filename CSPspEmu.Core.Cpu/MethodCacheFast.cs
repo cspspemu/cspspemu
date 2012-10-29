@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Cpu.Emiter;
-using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Cpu.Dynarec;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu
 {
-	sealed public class MethodCacheFast : PspEmulatorComponent
+	public sealed class MethodCacheFast : PspEmulatorComponent
 	{
 		private DynarecFunction[] MethodsScratchPad = new DynarecFunction[PspMemory.ScratchPadSize / 4];
 		private DynarecFunction[] MethodsMain = new DynarecFunction[PspMemory.MainSize / 4];
@@ -74,9 +72,9 @@ namespace CSPspEmu.Core.Cpu
 			));
 		}
 
-		public uint AddressToIndex_Main(uint PC) { return (PC - PspMemory.MainOffset) / 4; }
-		public uint AdressToIndex_ScratchPad(uint PC) { return (PC - PspMemory.ScratchPadOffset) / 4; }
-		public uint AddressToIndex_FrameBuffer(uint PC) { return (PC - PspMemory.FrameBufferOffset) / 4; }
-		public uint AddressToIndex_Vectors(uint PC) { return (PC - PspMemory.VectorsOffset) / 4; }
+		public static uint AddressToIndex_Main(uint PC) { return (PC - PspMemory.MainOffset) / 4; }
+		public static uint AdressToIndex_ScratchPad(uint PC) { return (PC - PspMemory.ScratchPadOffset) / 4; }
+		public static uint AddressToIndex_FrameBuffer(uint PC) { return (PC - PspMemory.FrameBufferOffset) / 4; }
+		public static uint AddressToIndex_Vectors(uint PC) { return (PC - PspMemory.VectorsOffset) / 4; }
 	}
 }

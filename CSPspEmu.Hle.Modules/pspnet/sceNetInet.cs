@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Hle.Attributes;
-using System.Net.Sockets;
-using CSPspEmu.Hle.Managers;
 using System.Net;
+using System.Net.Sockets;
+using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Hle.Managers;
 using CSharpUtils.Endian;
 using CSharpUtils;
-using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Modules.pspnet
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class sceNetInet : HleModuleHost
+	public unsafe class sceNetInet : HleModuleHost
 	{
 		HleUidPool<Socket> Sockets = new HleUidPool<Socket>();
 

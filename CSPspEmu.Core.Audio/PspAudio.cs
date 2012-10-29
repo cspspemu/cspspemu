@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Core.Audio
 {
-	unsafe public class PspAudio : PspEmulatorComponent
+    public class PspAudio : PspEmulatorComponent
 	{
 		/// <summary>
-		/// 
+		/// Output formats for PSP audio.
 		/// </summary>
 		public enum FormatEnum
 		{
@@ -34,13 +32,13 @@ namespace CSPspEmu.Core.Audio
 		public const int FreeChannel = -1;
 
 		/// <summary>
-		/// 
+		/// Maximum number of allowed audio channels
 		/// </summary>
 		//public const int MaxChannels = 8;
 		public const int MaxChannels = 32;
 
 		/// <summary>
-		/// 
+		/// Number of audio channels
 		/// </summary>
 		public PspAudioChannel[] Channels;
 
@@ -80,7 +78,7 @@ namespace CSPspEmu.Core.Audio
 		/// <returns></returns>
 		public PspAudioChannel GetFreeChannel()
 		{
-			return Channels.Where(Channel => Channel.Available).First();
+			return Channels.First(Channel => Channel.Available);
 		}
 
 		/// <summary>
@@ -99,6 +97,7 @@ namespace CSPspEmu.Core.Audio
 		/// 
 		/// </summary>
 		/// <param name="ChannelId"></param>
+		/// <param name="CanAlloc"></param>
 		/// <returns></returns>
 		public PspAudioChannel GetChannel(int ChannelId, bool CanAlloc = false)
 		{

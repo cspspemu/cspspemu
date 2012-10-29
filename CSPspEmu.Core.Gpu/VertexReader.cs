@@ -1,16 +1,12 @@
 ﻿//#define USE_VERTEX_READER_DYNAREC
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Gpu.State;
-using CSPspEmu.Core.Gpu.VertexReading;
 using CSPspEmu.Core.Utils;
 
 namespace CSPspEmu.Core.Gpu
 {
-	unsafe public partial class VertexReader
+    public unsafe class VertexReader
 	{
 #if USE_VERTEX_READER_DYNAREC
 		public Dictionary<uint, VertexReaderDelegate> Readers = new Dictionary<uint, VertexReaderDelegate>();

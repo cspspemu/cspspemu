@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Core;
-using System.IO;
 
 namespace CSPspEmu.Hle.Managers
 {
@@ -33,7 +30,7 @@ namespace CSPspEmu.Hle.Managers
 		}
 	}
 
-	unsafe public class HleIoWrapper
+    public class HleIoWrapper
 	{
 		HleIoManager HleIoManager;
 
@@ -73,7 +70,7 @@ namespace CSPspEmu.Hle.Managers
 		}
 	}
 
-	unsafe public class HleIoManager : PspEmulatorComponent
+    public class HleIoManager : PspEmulatorComponent
 	{
 		protected Dictionary<string, IHleIoDriver> Drivers = new Dictionary<string, IHleIoDriver>();
 		public HleIoWrapper HleIoWrapper;

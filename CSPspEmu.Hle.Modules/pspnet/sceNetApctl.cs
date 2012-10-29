@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.pspnet
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class sceNetApctl : HleModuleHost
+	public unsafe class sceNetApctl : HleModuleHost
 	{
 		public struct SceNetApctlInfo
 		{
@@ -68,7 +65,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Delete an apctl event handler.
 		/// </summary>
-		/// <param name="handlerId">A handler as created returned from sceNetApctlAddHandler.</param>
+		/// <param name="handlerId">A handler as created returned from <see cref="sceNetApctlAddHandler"/>.</param>
 		/// <returns>Less than 0 on error.</returns>
 		[HlePspFunction(NID = 0x5963991B, FirmwareVersion = 150)]
 		[HlePspNotImplemented]

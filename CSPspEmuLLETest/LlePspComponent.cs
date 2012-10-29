@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 
 namespace CSPspEmuLLETest
 {
-	abstract public class LlePspComponent
+	public abstract class LlePspComponent
 	{
 		protected AutoResetEvent StartEvent = new AutoResetEvent(false);
 		protected bool Running = false;
@@ -20,7 +15,7 @@ namespace CSPspEmuLLETest
 			Thread.Start();
 		}
 
-		abstract public void Main();
+		public abstract void Main();
 
 		public void Start()
 		{

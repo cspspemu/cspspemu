@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Hle.Attributes;
+﻿using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Modules.iofilemgr;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Hle.Managers;

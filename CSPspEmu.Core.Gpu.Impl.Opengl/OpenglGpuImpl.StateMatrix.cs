@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Gpu.State;
 
 #if OPENTK
@@ -12,9 +9,9 @@ using MiniGL;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-	sealed unsafe public partial class OpenglGpuImpl
+	public sealed unsafe partial class OpenglGpuImpl
 	{
-		private void PrepareStateMatrix(GpuStateStruct* GpuState)
+		private static void PrepareStateMatrix(GpuStateStruct* GpuState)
 		{
 			// DRAW BEGIN COMMON
 			{
@@ -37,7 +34,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					GL.MultMatrix(GpuState->VertexState.ViewMatrix.Values);
 					GL.MultMatrix(GpuState->VertexState.WorldMatrix.Values);
 
-					if (GpuState->VertexState.WorldMatrix.Values[0] == float.NaN)
+					if (float.IsNaN(GpuState->VertexState.WorldMatrix.Values[0]))
 					{
 						throw (new Exception("Invalid WorldMatrix"));
 					}

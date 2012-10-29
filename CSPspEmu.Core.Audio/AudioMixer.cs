@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CSPspEmu.Core.Audio
+﻿namespace CSPspEmu.Core.Audio
 {
 	public class AudioMixer
 	{
 		/*
-		static public short[] Convert(short[] Input, int InputRate, int InputChannels, int OutputRate, int OutputChannels)
+		public static short[] Convert(short[] Input, int InputRate, int InputChannels, int OutputRate, int OutputChannels)
 		{
 			var Output = new short[(Input.Length * InputRate * InputChannels) / (OutputRate * OutputChannels)];
 			if (InputRate != OutputRate)
 		}
 		*/
 
-		static public StereoShortSoundSample[] Convert_Mono22050_Stereo44100(short[] Input)
+		public static StereoShortSoundSample[] Convert_Mono22050_Stereo44100(short[] Input)
 		{
 			var Output = new StereoShortSoundSample[Input.Length * 2];
 			int m = 0;

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using CSharpUtils;
-using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.mpeg
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	unsafe public partial class sceMpeg : HleModuleHost
+	public unsafe partial class sceMpeg : HleModuleHost
 	{
 		public bool EnableMpeg
 		{
@@ -67,14 +63,14 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <summary>
 		/// sceMpegCreate
 		/// </summary>
-		/// <param name="Mpeg">will be filled</param>
-		/// <param name="MpegData">pointer to allocated memory of size = sceMpegQueryMemSize()</param>
-		/// <param name="MpegSize">size of data, should be = sceMpegQueryMemSize()</param>
-		/// <param name="SceMpegRingbuffer">a ringbuffer</param>
-		/// <param name="FrameWidth">display buffer width, set to 512 if writing to framebuffer</param>
-		/// <param name="Mode">unknown, set to 0</param>
-		/// <param name="DdrTop">unknown, set to 0</param>
-		/// <returns>0 if success.</returns>
+		/// <param name="Mpeg">Will be filled</param>
+		/// <param name="MpegData">Pointer to allocated memory of size = sceMpegQueryMemSize()</param>
+		/// <param name="MpegSize">Size of data, should be = sceMpegQueryMemSize()</param>
+		/// <param name="SceMpegRingbuffer">A ringbuffer</param>
+		/// <param name="FrameWidth">Display buffer width, set to 512 if writing to framebuffer</param>
+		/// <param name="Mode">Unknown, set to 0</param>
+		/// <param name="DdrTop">Unknown, set to 0</param>
+		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0xD8C5F121, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceMpegCreate(SceMpegPointer* Mpeg, void* MpegData, int MpegSize, SceMpegRingbuffer* SceMpegRingbuffer, int FrameWidth, int Mode, int DdrTop)
@@ -144,7 +140,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <param name="Mode"></param>
 		/// <param name="Width">480</param>
 		/// <param name="Height">272</param>
-		/// <param name="ResultAddr">Where to store the result</param>
+		/// <param name="Result">Where to store the result</param>
 		/// <returns></returns>
 	    [HlePspFunction(NID = 0x211A057C, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -181,7 +177,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="mpeg"></param>
+		/// <param name="Mpeg"></param>
 		/// <param name="mode"></param>
 		/// <param name="width"></param>
 		/// <param name="height"></param>

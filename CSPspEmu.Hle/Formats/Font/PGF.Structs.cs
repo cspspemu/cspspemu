@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using CSharpUtils;
 
 namespace CSPspEmu.Hle.Formats.Font
 {
-	unsafe public partial class PGF
+	public unsafe partial class PGF
 	{
 		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
 		public struct HeaderStruct
@@ -369,7 +367,7 @@ namespace CSPspEmu.Hle.Formats.Font
 		FONT_LANGUAGE_KOREAN = 3,
 	}
 
-	unsafe public struct FontStyle
+	public unsafe struct FontStyle
 	{
 		/// <summary>
 		/// 
@@ -448,7 +446,7 @@ namespace CSPspEmu.Hle.Formats.Font
 		/// </summary>
 		public uint Expire;
 
-		static public float GetScoreCompare(FontStyle Left, FontStyle Right)
+		public static float GetScoreCompare(FontStyle Left, FontStyle Right)
 		{
 			float Score = 0.0f;
 			if (Left.Size == Right.Size) Score++;
@@ -476,14 +474,14 @@ namespace CSPspEmu.Hle.Formats.Font
 			this.Vertical = Vertical;
 		}
 
-		static public bool operator ==(HorizontalVerticalFloat Left, HorizontalVerticalFloat Right)
+		public static bool operator ==(HorizontalVerticalFloat Left, HorizontalVerticalFloat Right)
 		{
 			if (Left.Horizontal != Right.Horizontal) return false;
 			if (Left.Vertical != Right.Vertical) return false;
 			return true;
 		}
 
-		static public bool operator !=(HorizontalVerticalFloat Left, HorizontalVerticalFloat Right)
+		public static bool operator !=(HorizontalVerticalFloat Left, HorizontalVerticalFloat Right)
 		{
 			return !(Left == Right);
 		}

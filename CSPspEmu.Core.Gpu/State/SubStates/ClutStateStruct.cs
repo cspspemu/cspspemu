@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Display;
-
-namespace CSPspEmu.Core.Gpu.State.SubStates
+﻿namespace CSPspEmu.Core.Gpu.State.SubStates
 {
-	unsafe public struct ClutStateStruct
+	public unsafe struct ClutStateStruct
 	{
 		public uint Address;
 		public int Shift;

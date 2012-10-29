@@ -2,21 +2,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Reflection.Emit;
-using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using CSPspEmu.Core.Memory;
 using Codegen;
-using System.Runtime.InteropServices;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
 	/// <summary>
 	/// <see cref="http://www.mrc.uidaho.edu/mrc/people/jff/digital/MIPSir.html"/>
 	/// </summary>
-	unsafe public class MipsMethodEmiter
+	public unsafe class MipsMethodEmitter
 	{
 #if USE_DYNAMIC_METHOD
 		//protected DynamicMethod DynamicMethod;
@@ -30,24 +27,24 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		//public CpuThreadState CpuThreadState;
 		public CpuProcessor Processor;
 		
-		//static protected FieldInfo Field_GPR_Ptr = typeof(Processor).GetField("GPR_Ptr");
-		//static protected FieldInfo Field_FPR_Ptr = typeof(Processor).GetField("FPR_Ptr");
-		static protected FieldInfo Field_BranchFlag = typeof(CpuThreadState).GetField("BranchFlag");
-		static protected FieldInfo Field_PC = typeof(CpuThreadState).GetField("PC");
-		static protected FieldInfo Field_LO = typeof(CpuThreadState).GetField("LO");
-		static protected FieldInfo Field_HI = typeof(CpuThreadState).GetField("HI");
-		static protected FieldInfo Field_StepInstructionCount = typeof(CpuThreadState).GetField("StepInstructionCount");
-		static private ulong UniqueCounter = 0;
+		//protected static FieldInfo Field_GPR_Ptr = typeof(Processor).GetField("GPR_Ptr");
+		//protected static FieldInfo Field_FPR_Ptr = typeof(Processor).GetField("FPR_Ptr");
+		protected static FieldInfo Field_BranchFlag = typeof(CpuThreadState).GetField("BranchFlag");
+		protected static FieldInfo Field_PC = typeof(CpuThreadState).GetField("PC");
+		protected static FieldInfo Field_LO = typeof(CpuThreadState).GetField("LO");
+		protected static FieldInfo Field_HI = typeof(CpuThreadState).GetField("HI");
+		protected static FieldInfo Field_StepInstructionCount = typeof(CpuThreadState).GetField("StepInstructionCount");
+		private static ulong UniqueCounter = 0;
 
-		static protected bool InitializedOnce = false;
-		static protected FieldInfo[] Field_GPRList;
-		static protected FieldInfo[] Field_C0RList;
-		static protected FieldInfo[] Field_FPRList;
+		protected static bool InitializedOnce = false;
+		protected static FieldInfo[] Field_GPRList;
+		protected static FieldInfo[] Field_C0RList;
+		protected static FieldInfo[] Field_FPRList;
 
-		readonly public Dictionary<string, uint> InstructionStats = new Dictionary<string, uint>();
+		public readonly Dictionary<string, uint> InstructionStats = new Dictionary<string, uint>();
 
 		/*
-		static public MipsMethodEmiter()
+		public static MipsMethodEmiter()
 		{
 		}
 		*/
@@ -120,7 +117,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 			else
 			{
-				var Base = ((FastPspMemory)Processor.Memory).Base;
+				var Base = FastPspMemory.Base;
 
 				if (Platform.Is32Bit)
 				{
@@ -140,7 +137,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		public MipsMethodEmiter(CpuProcessor Processor, uint PC, bool DoDebug = false, bool DoLog = false)
+		public MipsMethodEmitter(CpuProcessor Processor, uint PC, bool DoDebug = false, bool DoLog = false)
 		{
 			this.Processor = Processor;
 
@@ -328,12 +325,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			SafeILGenerator.StoreIndirect<int>();
 		}
 
-		static public bool _LoadFcr31CC(CpuThreadState CpuThreadState)
+		public static bool _LoadFcr31CC(CpuThreadState CpuThreadState)
 		{
 			return CpuThreadState.Fcr31.CC;
 		}
 
-		static public void _SaveFcr31CC(CpuThreadState CpuThreadState, bool Value)
+		public static void _SaveFcr31CC(CpuThreadState CpuThreadState, bool Value)
 		{
 			CpuThreadState.Fcr31.CC = Value;
 		}
@@ -341,14 +338,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void LoadFCR31_CC()
 		{
 			SafeILGenerator.LoadArgument0CpuThreadState();
-			SafeILGenerator.Call((Func<CpuThreadState, bool>)MipsMethodEmiter._LoadFcr31CC);
+			SafeILGenerator.Call((Func<CpuThreadState, bool>)MipsMethodEmitter._LoadFcr31CC);
 		}
 
 		public void SaveFCR31_CC(Action Action)
 		{
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			Action();
-			SafeILGenerator.Call((Action<CpuThreadState, bool>)MipsMethodEmiter._SaveFcr31CC);
+			SafeILGenerator.Call((Action<CpuThreadState, bool>)MipsMethodEmitter._SaveFcr31CC);
 		}
 
 		public void LoadGPR_Signed(int R)
@@ -467,15 +464,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		public void SET(int RT, uint Value)
 		{
-			SaveGPR(RT, () =>
-			{
-				SafeILGenerator.Push((int)Value);
-			});
+			SaveGPR(RT, () => SafeILGenerator.Push((int)Value));
 		}
 
 		public void SET_REG(int RT, int RS)
 		{
-			SaveGPR(RT, () => { LoadGPR_Unsigned(RS); });
+			SaveGPR(RT, () => LoadGPR_Unsigned(RS));
 		}
 
 		public void CallMethod(MethodInfo MethodInfo)

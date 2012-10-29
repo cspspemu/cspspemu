@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Hle.Modules.pspnet
 {
-	unsafe public partial class sceNetAdhoc
+	public unsafe partial class sceNetAdhoc
 	{
 		/// <summary>
 		/// Open a PTP (Peer To Peer) connection
@@ -49,7 +46,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		}
 
 		/// <summary>
-		/// Wait for connection created by sceNetAdhocPtpOpen()
+		/// Wait for connection created by <see cref="sceNetAdhocPtpOpen"/>
 		/// </summary>
 		/// <param name="id">A socket ID.</param>
 		/// <param name="timeout">Timeout in microseconds.</param>
@@ -91,8 +88,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="timeout">Timeout in microseconds.</param>
 		/// <param name="nonblock">Set to 0 to block, 1 for non-blocking.</param>
 		/// <returns>
-		///		0 on success
-		///		less than 0 on error
+		///		0 on success.
+		///		Less than 0 on error.
 		/// </returns>
 		[HlePspFunction(NID = 0x4DA4C788, FirmwareVersion = 150)]
 		public int sceNetAdhocPtpSend(int id, void* data, int* datasize, uint timeout, int nonblock)
@@ -109,8 +106,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="timeout">Timeout in microseconds.</param>
 		/// <param name="nonblock">Set to 0 to block, 1 for non-blocking.</param>
 		/// <returns>
-		///		0 on success
-		///		less than 0 on error.
+		///		0 on success.
+		///		Less than 0 on error.
 		///	</returns>
 		[HlePspFunction(NID = 0x8BEA2B3E, FirmwareVersion = 150)]
 		public int sceNetAdhocPtpRecv(int id, void* data, int* datasize, uint timeout, int nonblock)
@@ -125,8 +122,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="timeout">Timeout in microseconds.</param>
 		/// <param name="nonblock">Set to 0 to block, 1 for non-blocking.</param>
 		/// <returns>
-		///		A socket ID on success
-		///		less than 0 on error.
+		///		A socket ID on success.
+		///		Less than 0 on error.
 		/// </returns>
 		[HlePspFunction(NID = 0x9AC2EEAC, FirmwareVersion = 150)]
 		public int sceNetAdhocPtpFlush(int id, uint timeout, int nonblock)
@@ -145,6 +142,22 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// </returns>
 		[HlePspFunction(NID = 0x157E6225, FirmwareVersion = 150)]
 		public int sceNetAdhocPtpClose(int id, int unk1)
+		{
+			throw (new NotImplementedException());
+		}
+
+		/// <summary>
+		/// Get the status of all PTP objects
+		/// </summary>
+		/// <param name="size">Pointer to the size of the stat array (e.g 20 for one structure)</param>
+		/// <param name="stat">Pointer to a list of <see cref="ptpStatStruct"/> structures.</param>
+		/// <returns>
+		///		0 on success
+		///		less than 0 on error
+		/// </returns>
+		/// 
+		[HlePspFunction(NID = 0xB9685118, FirmwareVersion = 150)]
+		public int sceNetAdhocGetPtpStat(int* size, ptpStatStruct* stat)
 		{
 			throw (new NotImplementedException());
 		}

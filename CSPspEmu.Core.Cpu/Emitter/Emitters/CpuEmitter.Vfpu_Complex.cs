@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
 using Codegen;
 using CSharpUtils;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	unsafe sealed public partial class CpuEmiter
+	public sealed partial class CpuEmitter
 	{
 		[PspUntested]
 		public void vbfy1()
@@ -58,7 +54,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			Load_VS(Left);
 			Load_VS(Right);
-			MipsMethodEmiter.CallMethod(Func);
+			MipsMethodEmitter.CallMethod(Func);
 		}
 
 		[PspUntested]
@@ -96,6 +92,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				}
 			}, AsInteger: false);
 		}
+
 		[PspUntested]
 		public void vsrt3()
 		{
@@ -113,6 +110,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				}
 			}, AsInteger: false);
 		}
+
 		[PspUntested]
 		public void vsrt4()
 		{
@@ -132,24 +130,24 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		/// <summary>
-		/// +-------------------------------------+----+--------------+---+--------------+ 
-		/// |31                                16 | 15 | 14         8 | 7 | 6         0  | 
-		/// +-------------------------------------+----+--------------+---+--------------+ 
-		/// |        opcode 0xd046 (p)            | 0  | vfpu_rs[6-0] | 1 | vfpu_rd[6-0] | 
-		/// |        opcode 0xd046 (t)            | 1  | vfpu_rs[6-0] | 0 | vfpu_rd[6-0] | 
-		/// |        opcode 0xd046 (q)            | 1  | vfpu_rs[6-0] | 1 | vfpu_rd[6-0] | 
-		/// +-------------------------------------+----+--------------+---+--------------+ 
-		/// 
+		/// +-------------------------------------+----+--------------+---+--------------+ <para/>
+		/// |31                                16 | 15 | 14         8 | 7 | 6         0  | <para/>
+		/// +-------------------------------------+----+--------------+---+--------------+ <para/>
+		/// |        opcode 0xd046 (p)            | 0  | vfpu_rs[6-0] | 1 | vfpu_rd[6-0] | <para/>
+		/// |        opcode 0xd046 (t)            | 1  | vfpu_rs[6-0] | 0 | vfpu_rd[6-0] | <para/>
+		/// |        opcode 0xd046 (q)            | 1  | vfpu_rs[6-0] | 1 | vfpu_rd[6-0] | <para/>
+		/// +-------------------------------------+----+--------------+---+--------------+ <para/>
+		/// <para/>
 		/// Float ADD?.Pair/Triple/Quad  --  Accumulate Components of Vector into Single Float
-		/// 
-		/// vfad.p %vfpu_rd, %vfpu_rs  ; Accumulate Components of Pair 
-		/// vfad.t %vfpu_rd, %vfpu_rs  ; Accumulate Components of Triple 
-		/// vfad.q %vfpu_rd, %vfpu_rs  ; Accumulate Components of Quad 
-		/// 
-		/// %vfpu_rs:   VFPU Vector Source Register ([p|t|q]reg 0..127) 
-		/// %vfpu_rd:   VFPU Vector Destination Register (sreg 0..127) 
-		/// 
-		/// vfpu_regs[%vfpu_rd] <- Sum_Of_Components(vfpu_regs[%vfpu_rs]) 
+		/// <para/>
+		/// vfad.p %vfpu_rd, %vfpu_rs  ; Accumulate Components of Pair <para/>
+		/// vfad.t %vfpu_rd, %vfpu_rs  ; Accumulate Components of Triple <para/>
+		/// vfad.q %vfpu_rd, %vfpu_rs  ; Accumulate Components of Quad <para/>
+		/// <para/>
+		/// %vfpu_rs:   VFPU Vector Source Register ([p|t|q]reg 0..127) <para/>
+		/// %vfpu_rd:   VFPU Vector Destination Register (sreg 0..127) <para/>
+		/// <para/>
+		/// vfpu_regs[%vfpu_rd] &lt;- Sum_Of_Components(vfpu_regs[%vfpu_rs]) 
 		/// </summary>
 		public void vfad()
 		{
@@ -175,24 +173,24 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		/// <summary>
-		/// +-------------------------------------+----+--------------+---+--------------+ 
-		/// |31                                16 | 15 | 14         8 | 7 | 6         0  | 
-		/// +-------------------------------------+----+--------------+---+--------------+ 
-		/// |        opcode 0xd047 (p)            | 0  | vfpu_rs[6-0] | 1 | vfpu_rd[6-0] | 
-		/// |        opcode 0xd047 (t)            | 1  | vfpu_rs[6-0] | 0 | vfpu_rd[6-0] | 
-		/// |        opcode 0xd047 (q)            | 1  | vfpu_rs[6-0] | 1 | vfpu_rd[6-0] | 
-		/// +-------------------------------------+----+--------------+---+--------------+ 
-		/// 
+		/// +-------------------------------------+----+--------------+---+--------------+ <para/>
+		/// |31                                16 | 15 | 14         8 | 7 | 6         0  | <para/>
+		/// +-------------------------------------+----+--------------+---+--------------+ <para/>
+		/// |        opcode 0xd047 (p)            | 0  | vfpu_rs[6-0] | 1 | vfpu_rd[6-0] | <para/>
+		/// |        opcode 0xd047 (t)            | 1  | vfpu_rs[6-0] | 0 | vfpu_rd[6-0] | <para/>
+		/// |        opcode 0xd047 (q)            | 1  | vfpu_rs[6-0] | 1 | vfpu_rd[6-0] | <para/>
+		/// +-------------------------------------+----+--------------+---+--------------+ <para/>
+		/// <para/>
 		///   VectorAverage.Pair/Triple/Quad  --  Average Components of Vector into Single Float
-		/// 
-		/// 		vavg.p %vfpu_rd, %vfpu_rs  ; Accumulate Components of Pair 
-		/// 		vavg.t %vfpu_rd, %vfpu_rs  ; Accumulate Components of Triple 
-		/// 		vavg.q %vfpu_rd, %vfpu_rs  ; Accumulate Components of Quad 
-		/// 
-		/// 				%vfpu_rs:   VFPU Vector Source Register ([p|t|q]reg 0..127) 
-		/// 				%vfpu_rd:   VFPU Vector Destination Register (sreg 0..127) 
-		/// 
-		/// 		vfpu_regs[%vfpu_rd] <- Average_Of_Components(vfpu_regs[%vfpu_rs]) 
+		/// <para/>
+		/// 		vavg.p %vfpu_rd, %vfpu_rs  ; Accumulate Components of Pair <para/>
+		/// 		vavg.t %vfpu_rd, %vfpu_rs  ; Accumulate Components of Triple <para/>
+		/// 		vavg.q %vfpu_rd, %vfpu_rs  ; Accumulate Components of Quad <para/>
+		/// <para/>
+		/// 				%vfpu_rs:   VFPU Vector Source Register ([p|t|q]reg 0..127) <para/>
+		/// 				%vfpu_rd:   VFPU Vector Destination Register (sreg 0..127) <para/>
+		/// <para/>
+		/// 		vfpu_regs[%vfpu_rd] &lt;- Average_Of_Components(vfpu_regs[%vfpu_rs]) 
 		/// </summary>
 		public void vavg()
 		{

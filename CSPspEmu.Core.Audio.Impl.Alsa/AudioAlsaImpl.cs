@@ -1,24 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core;
-using CSPspEmu.Core.Audio;
 using CSPspEmu.Core.Audio.Impl.Alsa;
-using System.Threading;
-using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Audio
 {
-	unsafe public class AudioAlsaImpl : PspAudioImpl
+	/// <summary>
+	/// ALSA Implementation of PSP audio playback
+	/// </summary>
+	public unsafe class AudioAlsaImpl : PspAudioImpl
 	{
-		static public string Device = "default";
-		//static public string Device = "plughw:0,0";
-		//static public string Device = "hw:0,0";
-		static IntPtr playback_handle = IntPtr.Zero;
-		static IntPtr hw_params = IntPtr.Zero;
-		int periods = 2;       /* Number of periods */
-		int periodsize = 8192; /* Periodsize (bytes) */
+		private const string Device = "default";
+		//public static string Device = "plughw:0,0";
+		//public static string Device = "hw:0,0";
+		private static IntPtr playback_handle = IntPtr.Zero;
+		private static IntPtr hw_params = IntPtr.Zero;
+		private const int periods = 2;       /* Number of periods */
+		private const int periodsize = 8192; /* Periodsize (bytes) */
 
 		public override void InitializeComponent()
 		{
@@ -52,7 +48,7 @@ namespace CSPspEmu.Core.Audio
 			//available_start = Alsa.snd_pcm_avail_update(playback_handle);
 		}
 
-		static private void Assert(string Function, int Value)
+		private static void Assert(string Function, int Value)
 		{
 			Console.WriteLine("Alsa.{0} : {1}", Function, Value);
 			//if (Value < 0) throw(new Exception(String.Format("Alsa error({0}) calling function '{1}'", Value, Function)));
@@ -110,7 +106,7 @@ namespace CSPspEmu.Core.Audio
 					if (Platform.OperatingSystem == Platform.OS.Posix)
 					{
 						IntPtr temp_playback_handle = IntPtr.Zero;
-						var Result = Alsa.snd_pcm_open(&temp_playback_handle, "default", Alsa.snd_pcm_stream_t.SND_PCM_LB_OPEN_PLAYBACK, 0);
+						var Result = Alsa.snd_pcm_open(&temp_playback_handle, Device, Alsa.snd_pcm_stream_t.SND_PCM_LB_OPEN_PLAYBACK, 0);
 						if (Result >= 0)
 						{
 							Alsa.snd_pcm_close(temp_playback_handle);

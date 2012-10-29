@@ -1,8 +1,6 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Managers
@@ -71,7 +69,7 @@ namespace CSPspEmu.Hle.Managers
 		}
 	}
 
-	unsafe public class HleRegistryKeyNode
+	public unsafe class HleRegistryKeyNode
 	{
 		public RegKeyHandle Id;
 		public string Name;
@@ -82,15 +80,15 @@ namespace CSPspEmu.Hle.Managers
 			set
 			{
 				_Value = value;
-				if (value.GetType() == typeof(byte[]))
+				if (value is byte[])
 				{
 					Type = RegKeyTypes.Binary;
 				}
-				else if (value.GetType() == typeof(string))
+				else if (value is string)
 				{
 					Type = RegKeyTypes.String;
 				}
-				else if (value.GetType() == typeof(int) || value.GetType() == typeof(uint))
+				else if (value is int || value is uint)
 				{
 					Type = RegKeyTypes.Integer;
 				}
@@ -165,7 +163,7 @@ namespace CSPspEmu.Hle.Managers
 		{
 			try
 			{
-				return HleRegistryKeyNodeList.Where(Item => Item.Value.Name == Name).Single().Value;
+				return HleRegistryKeyNodeList.Single(Item => Item.Value.Name == Name).Value;
 			}
 			catch (InvalidOperationException)
 			{

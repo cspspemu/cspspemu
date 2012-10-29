@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
 using CSharpUtils;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	unsafe sealed public partial class CpuEmiter
+    public sealed partial class CpuEmitter
 	{
 		public void vmfvc() { throw (new NotImplementedException("")); }
 		public void vmtvc() { throw (new NotImplementedException("")); }
@@ -27,14 +23,14 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 			VectorOperationSaveVd(1, (Index) =>
 			{
-				MipsMethodEmiter.LoadGPR_Signed(RT);
-				MipsMethodEmiter.CallMethod((Func<int, float>)MathFloat.ReinterpretIntAsFloat);
+				MipsMethodEmitter.LoadGPR_Signed(RT);
+				MipsMethodEmitter.CallMethod((Func<int, float>)MathFloat.ReinterpretIntAsFloat);
 			});
 		}
 		public void mtvc() { throw (new NotImplementedException("mtvc")); }
 
 
-		static public uint _mfvc_impl(CpuThreadState CpuThreadState, VfpuControlRegistersEnum VfpuControlRegister)
+		public static uint _mfvc_impl(CpuThreadState CpuThreadState, VfpuControlRegistersEnum VfpuControlRegister)
 		{
 			switch (VfpuControlRegister)
 			{
@@ -62,18 +58,18 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		/// </summary>
 		public void mfvc()
 		{
-			MipsMethodEmiter.SaveGPR(RT, () =>
+			MipsMethodEmitter.SaveGPR(RT, () =>
 			{
 				SafeILGenerator.LoadArgument0CpuThreadState();
 				SafeILGenerator.Push((int)(Instruction.IMM7 + 128));
-				MipsMethodEmiter.CallMethod((Func<CpuThreadState, VfpuControlRegistersEnum, uint>)CpuEmiter._mfvc_impl);
+				MipsMethodEmitter.CallMethod((Func<CpuThreadState, VfpuControlRegistersEnum, uint>)CpuEmitter._mfvc_impl);
 			});
 		}
 
 		// Move From/to Vfpu (C?)_
 		public void mfv()
 		{
-			MipsMethodEmiter.SaveGPR_F(RT, () =>
+			MipsMethodEmitter.SaveGPR_F(RT, () =>
 			{
 				Load_VD(0, 1);
 			});

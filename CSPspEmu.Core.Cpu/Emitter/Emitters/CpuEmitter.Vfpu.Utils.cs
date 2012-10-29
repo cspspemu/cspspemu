@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
 using CSharpUtils;
 using Codegen;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
 	// http://forums.ps2dev.org/viewtopic.php?t=6929 
 	// http://wiki.fx-world.org/doku.php?do=index
@@ -106,7 +103,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 	  So Q_C010 specifies the Quad Column starting at S010, T_C011 the triple Column starting at S011.
 	*/
-	unsafe sealed public partial class CpuEmiter
+	public unsafe sealed partial class CpuEmitter
 	{
 
 		/// <summary>
@@ -158,10 +155,10 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		private void _call_debug_vfpu()
 		{
-			MipsMethodEmiter.CallMethodWithCpuThreadStateAsFirstArgument(this.GetType(), "_debug_vfpu");
+			MipsMethodEmitter.CallMethodWithCpuThreadStateAsFirstArgument(this.GetType(), "_debug_vfpu");
 		}
 
-		static public void _debug_vfpu(CpuThreadState CpuThreadState)
+		public static void _debug_vfpu(CpuThreadState CpuThreadState)
 		{
 			Console.Error.WriteLine("");
 			Console.Error.WriteLine("VPU DEBUG:");
@@ -187,9 +184,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		private void _load_memory_imm14_index(uint Index)
 		{
-			MipsMethodEmiter._getmemptr(() =>
+			MipsMethodEmitter._getmemptr(() =>
 			{
-				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmitter.LoadGPR_Unsigned(RS);
 				SafeILGenerator.Push((int)(Instruction.IMM14 * 4 + Index * 4));
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
 			}, Safe: true, CanBeNull: false);
@@ -318,7 +315,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				if (Prefix.SourceAbsolute(Index))
 				{
 					//MipsMethodEmiter.ILGenerator.Emit(OpCodes);
-					MipsMethodEmiter.CallMethod((Func<float, float>)MathFloat.Abs);
+					MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Abs);
 				}
 				if (Prefix.SourceNegate(Index))
 				{
@@ -361,13 +358,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 
 		private void Load_VCC(uint Index)
 		{
-			MipsMethodEmiter.LoadFieldPtr(typeof(CpuThreadState).GetField("VFR_CC_" + Index));
+			MipsMethodEmitter.LoadFieldPtr(typeof(CpuThreadState).GetField("VFR_CC_" + Index));
 			SafeILGenerator.LoadIndirect<sbyte>();
 		}
 
 		private void Save_VCC(int Index, Action Action)
 		{
-			MipsMethodEmiter.LoadFieldPtr(typeof(CpuThreadState).GetField("VFR_CC_" + Index));
+			MipsMethodEmitter.LoadFieldPtr(typeof(CpuThreadState).GetField("VFR_CC_" + Index));
 			{
 				Action();
 			}
@@ -398,13 +395,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 							{
 								SafeILGenerator.Push((int)Min);
 								SafeILGenerator.Push((int)Max);
-								MipsMethodEmiter.CallMethod((Func<int, int, int, int>)MathFloat.ClampInt);
+								MipsMethodEmitter.CallMethod((Func<int, int, int, int>)MathFloat.ClampInt);
 							}
 							else
 							{
 								SafeILGenerator.Push((float)Min);
 								SafeILGenerator.Push((float)Max);
-								MipsMethodEmiter.CallMethod((Func<float, float, float, float>)MathFloat.Clamp);
+								MipsMethodEmitter.CallMethod((Func<float, float, float, float>)MathFloat.Clamp);
 							}
 						}
 					}
@@ -486,7 +483,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VfpuSave_Register((uint)(Instruction.VT), Index, VectorSize, PrefixTarget, Action, Debug, AsInteger: AsInteger);
 		}
 
-		IEnumerable<int> XRange(int Start, int End)
+	    static IEnumerable<int> XRange(int Start, int End)
 		{
 			for (int Value = Start; Value < End; Value++)
 			{
@@ -494,7 +491,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		IEnumerable<int> XRange(uint Count)
+	    static IEnumerable<int> XRange(uint Count)
 		{
 			return XRange(0, (int)Count);
 		}
@@ -562,7 +559,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			LoadVprFieldPtr(RegisterIndex);
 		}
 
-		uint CalcVprRegisterIndex(uint Matrix, uint Column, uint Row)
+	    static uint CalcVprRegisterIndex(uint Matrix, uint Column, uint Row)
 		{
 			return Matrix * 16 + Column * 4 + Row;
 		}
@@ -582,7 +579,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			try
 			{
 				var FieldInfo = typeof(CpuThreadState).GetField("VFR" + RegisterIndex);
-				MipsMethodEmiter.LoadFieldPtr(FieldInfo);
+				MipsMethodEmitter.LoadFieldPtr(FieldInfo);
 			}
 			catch (Exception Exception)
 			{
@@ -628,7 +625,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			if (AccumulateAction != null) AccumulateAction();
 		}
 
-		static public float LogFloatResult(float Value, CpuThreadState CpuThreadState)
+		public static float LogFloatResult(float Value, CpuThreadState CpuThreadState)
 		{
 			Console.Error.WriteLine("LogFloatResult: {0}", Value);
 			//CpuThreadState.DumpVfpuRegisters(Console.Error);
@@ -638,7 +635,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		private void EmitLogFloatResult(bool Return = true)
 		{
 			SafeILGenerator.LoadArgument0CpuThreadState();
-			MipsMethodEmiter.CallMethod((Func<float, CpuThreadState, float>)CpuEmiter.LogFloatResult);
+			MipsMethodEmitter.CallMethod((Func<float, CpuThreadState, float>)CpuEmitter.LogFloatResult);
 			if (!Return)
 			{
 				SafeILGenerator.Pop();

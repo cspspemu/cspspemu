@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CSPspEmu.Hle.Vfs
+﻿namespace CSPspEmu.Hle.Vfs
 {
 	public enum SeekAnchor : int
 	{
@@ -11,5 +6,4 @@ namespace CSPspEmu.Hle.Vfs
 		Cursor = 1,
 		End = 2,
 	}
-
 }

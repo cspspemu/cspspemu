@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Cpu;
-using CSPspEmu.Core.Cpu.Emiter;
 using System.Reflection;
-using CSharpUtils;
+using CSPspEmu.Core;
+using CSPspEmu.Core.Cpu;
+using CSPspEmu.Core.Cpu.Emitter;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Core;
+using CSharpUtils;
+
 
 namespace CSPspEmu.Hle
 {
-	unsafe public partial class HleModuleHost : HleModule
+	public unsafe partial class HleModuleHost : HleModule
 	{
 		[Inject]
 		internal HleThreadManager ThreadManager;
@@ -22,12 +22,12 @@ namespace CSPspEmu.Hle
 
 		private Action<CpuThreadState> CreateDelegateForMethodInfo(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute)
 		{
-			var MipsMethodEmiter = new MipsMethodEmiter(CpuProcessor, 0);
+			var MipsMethodEmiter = new MipsMethodEmitter(CpuProcessor, 0);
 			int GprIndex = 4;
 			int FprIndex = 0;
 
 			var NotImplementedAttribute = (HlePspNotImplementedAttribute)MethodInfo.GetCustomAttributes(typeof(HlePspNotImplementedAttribute), true).FirstOrDefault();
-			bool NotImplementedFunc = (NotImplementedAttribute != null) ? NotImplementedAttribute.Notice : false;
+			bool NotImplementedFunc = (NotImplementedAttribute != null) && NotImplementedAttribute.Notice;
 			bool SkipLog = HlePspFunctionAttribute.SkipLog;
 			var SafeILGenerator = MipsMethodEmiter.SafeILGenerator;
 			SafeILGenerator.Comment("HleModuleHost.CreateDelegateForMethodInfo(" + MethodInfo + ", " + HlePspFunctionAttribute + ")");
@@ -270,9 +270,9 @@ namespace CSPspEmu.Hle
 				{
 					CpuThreadState.GPR[2] = (int)SceKernelException.SceKernelError;
 				}
-				catch (SceKernelSelfStopUnloadModuleException SceKernelSelfStopUnloadModuleException)
+				catch (SceKernelSelfStopUnloadModuleException)
 				{
-					throw (SceKernelSelfStopUnloadModuleException);
+					throw;
 				}
 #if !DO_NOT_PROPAGATE_EXCEPTIONS
 				catch (Exception Exception)
@@ -294,7 +294,7 @@ namespace CSPspEmu.Hle
 			};
 		}
 
-		static public string ToNormalizedTypeString(Type ParameterType, CpuThreadState CpuThreadState, uint Int4, float Float4)
+		public static string ToNormalizedTypeString(Type ParameterType, CpuThreadState CpuThreadState, uint Int4, float Float4)
 		{
 			if (ParameterType == typeof(void))
 			{
@@ -314,7 +314,7 @@ namespace CSPspEmu.Hle
 			if (ParameterType.IsEnum)
 			{
 				var Name = ParameterType.GetEnumName(Int4);
-				if (Name == null || Name.Length == 0) Name = Int4.ToString();
+				if (string.IsNullOrEmpty(Name)) Name = Int4.ToString();
 				return Name;
 			}
 

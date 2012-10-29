@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Gpu.State;
-using OpenTK.Graphics.OpenGL;
+﻿using CSPspEmu.Core.Gpu.State;
 using Mono.Simd;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
-	unsafe sealed public partial class GpuDisplayListRunner
+	public unsafe sealed partial class GpuDisplayListRunner
 	{
 		/**
 		 * Set the current clear-color
@@ -172,7 +167,7 @@ namespace CSPspEmu.Core.Gpu.Run
 			DrawBezier(UCount, VCount);
 		}
 
-		static private float[] BernsteinCoeff(float u)
+		private static float[] BernsteinCoeff(float u)
 		{
 			float uPow2 = u * u;
 			float uPow3 = uPow2 * u;
@@ -188,7 +183,7 @@ namespace CSPspEmu.Core.Gpu.Run
 			};
 		}
 
-		private void PointMultAdd(ref VertexInfo dest, ref VertexInfo src, float f)
+		private static void PointMultAdd(ref VertexInfo dest, ref VertexInfo src, float f)
 		{
 			dest.Position += src.Position * f;
 			dest.Texture += src.Texture * f;

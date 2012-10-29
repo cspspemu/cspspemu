@@ -5,6 +5,8 @@
  * Date: 28/11/2008 17:15 
  *
  * Change log:
+ * v2.5.1
+ * 2012-05-01  JPP  - Added IgnoreMissingAspects property
  * v2.5
  * 2011-05-20  JPP  - Accessing through an indexer when the target had both a integer and
  *                    a string indexer didn't work reliably.
@@ -20,7 +22,7 @@
  *
  * TO DO:
  *
- * Copyright (C) 2006-2008 Phillip Piper
+ * Copyright (C) 2006-2012 Phillip Piper
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +42,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Reflection;
 
 namespace BrightIdeasSoftware
@@ -98,10 +99,37 @@ namespace BrightIdeasSoftware
             catch (MungerException) {
                 // Not a lot we can do about this. Something went wrong in the bowels
                 // of the property. Let's take the ostrich approach and just ignore it :-)
+
+                // Normally, we would never just silently ignore an exception.
+                // However, in this case, this is a utility method that explicitly 
+                // contracts to catch and ignore errors. If this is not acceptible,
+                // the programmer should not use this method.
             } 
 
             return false;
         }
+
+        /// <summary>
+        /// Gets or sets whether Mungers will silently ignore missing aspect errors.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// By default, if a Munger is asked to fetch a field/property/method
+        /// that does not exist from a model, it returns an error message, since that 
+        /// condition is normally a programming error. There are some use cases where
+        /// this is not an error, and the munger should simply keep quiet.
+        /// </para>
+        /// <para>By default this is true during release builds.</para>
+        /// </remarks>
+        public static bool IgnoreMissingAspects {
+            get { return ignoreMissingAspects;  }
+            set { ignoreMissingAspects = value;  }
+        }
+        private static bool ignoreMissingAspects
+#if !DEBUG
+            = true
+#endif
+            ;
 
         #endregion
 
@@ -151,9 +179,26 @@ namespace BrightIdeasSoftware
             try {
                 return this.EvaluateParts(target, this.Parts);
             } catch (MungerException ex) {
-                return String.Format("'{0}' is not a parameter-less method, property or field of type '{1}'", 
-                    ex.Munger.AspectName, ex.Target.GetType());
+                if (Munger.IgnoreMissingAspects) 
+                    return null;
+                
+                return String.Format("'{0}' is not a parameter-less method, property or field of type '{1}'",
+                                         ex.Munger.AspectName, ex.Target.GetType());
             }
+        }
+
+        /// <summary>
+        /// Extract the value indicated by our AspectName from the given target, raising exceptions
+        /// if the munger fails.
+        /// </summary>
+        /// <remarks>If the aspect name is null or empty, this will return null.</remarks>
+        /// <param name="target">The object that will be peeked</param>
+        /// <returns>The value read from the target</returns>
+        public Object GetValueEx(Object target) {
+            if (this.Parts.Count == 0)
+                return null;
+
+            return this.EvaluateParts(target, this.Parts);
         }
 
         /// <summary>
@@ -250,7 +295,7 @@ namespace BrightIdeasSoftware
         }
 
         private void ReportPutValueException(MungerException ex) {
-            // How should we report this error?
+            //TODO: How should we report this error?
             System.Diagnostics.Debug.WriteLine("PutValue failed");
             System.Diagnostics.Debug.WriteLine(String.Format("- Culprit aspect: {0}", ex.Munger.AspectName));
             System.Diagnostics.Debug.WriteLine(String.Format("- Target: {0} of type {1}", ex.Target, ex.Target.GetType()));
@@ -299,7 +344,7 @@ namespace BrightIdeasSoftware
         public string AspectName {
             get { return aspectName; }
         }
-        private string aspectName;
+        private readonly string aspectName;
 
         #endregion
 
@@ -410,9 +455,12 @@ namespace BrightIdeasSoftware
                 // See if we can find an string indexer property while we are here.
                 // We also need to allow for old style <object> keyed collections.
                 if (indexerPropertyInfo == null && pinfo.Name == "Item") {
-                    Type parameterType = pinfo.GetGetMethod().GetParameters()[0].ParameterType;
-                    if (parameterType == typeof(string) || parameterType == typeof(object))
-                        indexerPropertyInfo = pinfo;
+                    ParameterInfo[] par = pinfo.GetGetMethod().GetParameters();
+                    if (par.Length > 0) {
+                         Type parameterType = par[0].ParameterType;
+                         if (parameterType == typeof(string) || parameterType == typeof(object))
+                              indexerPropertyInfo = pinfo;
+                    }
                 }
             }
 
@@ -466,7 +514,7 @@ namespace BrightIdeasSoftware
         public SimpleMunger Munger {
             get { return munger; }
         }
-        private SimpleMunger munger;
+        private readonly SimpleMunger munger;
 
         /// <summary>
         /// Gets the target that threw the exception
@@ -474,7 +522,7 @@ namespace BrightIdeasSoftware
         public object Target {
             get { return target; }
         }
-        private object target;
+        private readonly object target;
     }
 
     /*

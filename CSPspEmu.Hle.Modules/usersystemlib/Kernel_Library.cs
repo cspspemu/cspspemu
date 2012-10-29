@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSharpUtils;
-using CSPspEmu.Hle.Attributes;
-using CSPspEmu.Hle.Modules.threadman;
+﻿using CSharpUtils;
 using CSPspEmu.Core;
+using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
+using CSPspEmu.Hle.Modules.threadman;
 
 namespace CSPspEmu.Hle.Modules.usersystemlib
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class Kernel_Library : HleModuleHost
+	public unsafe class Kernel_Library : HleModuleHost
 	{
 		[Inject]
 		public HleInterruptManager HleInterruptManager;
@@ -36,7 +32,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		/// <summary>
 		/// Suspend all interrupts.
 		/// </summary>
-		/// <returns>The current state of the interrupt controller, to be used with ::sceKernelCpuResumeIntr().</returns>
+		/// <returns>The current state of the interrupt controller, to be used with <see cref="sceKernelCpuResumeIntr()"/></returns>
 		[HlePspFunction(NID = 0x092968F4, FirmwareVersion = 150)]
 		public uint sceKernelCpuSuspendIntr()
 		{
@@ -46,7 +42,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		/// <summary>
 		/// Resume/Enable all interrupts.
 		/// </summary>
-		/// <param name="Flags">The value returned from ::sceKernelCpuSuspendIntr().</param>
+		/// <param name="Flags">The value returned from <see cref="sceKernelCpuSuspendIntr()"/>.</param>
 		[HlePspFunction(NID = 0x5F10D406, FirmwareVersion = 150)]
 		public void sceKernelCpuResumeIntr(uint Flags)
 		{
@@ -56,7 +52,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		/// <summary>
 		/// Resume all interrupts (using sync instructions).
 		/// </summary>
-		/// <param name="Flags">The value returned from ::sceKernelCpuSuspendIntr()</param>
+		/// <param name="Flags">The value returned from <see cref="sceKernelCpuSuspendIntr()"/></param>
 		[HlePspFunction(NID = 0x3B84732D, FirmwareVersion = 150)]
 		public void sceKernelCpuResumeIntrWithSync(uint Flags)
 		{
@@ -66,7 +62,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		/// <summary>
 		/// Determine if interrupts are suspended or active, based on the given flags.
 		/// </summary>
-		/// <param name="Flags">The value returned from ::sceKernelCpuSuspendIntr().</param>
+		/// <param name="Flags">The value returned from <see cref="sceKernelCpuSuspendIntr()"/>.</param>
 		/// <returns>1 if flags indicate that interrupts were not suspended, 0 otherwise.</returns>
 		[HlePspFunction(NID = 0x47A0B729, FirmwareVersion = 150)]
 		public bool sceKernelIsCpuIntrSuspended(int Flags)
@@ -144,9 +140,9 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		}
 
 		/// <summary>
-		/// Get the current thread Id
+		/// Get the current thread ID
 		/// </summary>
-		/// <returns>The thread id of the calling thread.</returns>
+		/// <returns>The thread ID of the calling thread.</returns>
 		[HlePspFunction(NID = 0x293B45B8, FirmwareVersion = 150)]
 		public int sceKernelGetThreadId()
 		{

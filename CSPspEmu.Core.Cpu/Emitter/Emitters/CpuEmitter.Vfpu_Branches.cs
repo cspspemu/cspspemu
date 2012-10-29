@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
 using CSharpUtils;
 using Codegen;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	sealed public partial class CpuEmiter
+	public sealed partial class CpuEmitter
 	{
-		static public void _vcmp_end(CpuThreadState CpuThreadState, int VectorSize)
+		public static void _vcmp_end(CpuThreadState CpuThreadState, int VectorSize)
 		{
 			CpuThreadState.VFR_CC_4 = false;
 			CpuThreadState.VFR_CC_5 = true;
@@ -70,13 +66,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 							if ((Cond & 1) != 0)
 							{
 								Load_VS(Index);
-								MipsMethodEmiter.CallMethod((Func<float, bool>)MathFloat.IsNan);
+								MipsMethodEmitter.CallMethod((Func<float, bool>)MathFloat.IsNan);
 								SafeILGenerator.BinaryOperation(SafeBinaryOperator.Or); 
 							}
 							if ((Cond & 2) != 0)
 							{
 								Load_VS(Index);
-								MipsMethodEmiter.CallMethod((Func<float, bool>)MathFloat.IsInfinity);
+								MipsMethodEmitter.CallMethod((Func<float, bool>)MathFloat.IsInfinity);
 								SafeILGenerator.BinaryOperation(SafeBinaryOperator.Or);
 							}
 
@@ -91,7 +87,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Push((int)VectorSize);
-			MipsMethodEmiter.CallMethod((Action<CpuThreadState, int>)CpuEmiter._vcmp_end);
+			MipsMethodEmitter.CallMethod((Action<CpuThreadState, int>)CpuEmitter._vcmp_end);
 		}
 
 		public void _vsltge(SafeBinaryComparison SafeBinaryComparison)
@@ -134,12 +130,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		/*
-		static public void _vcmovtf_test(CpuThreadState CpuThreadState, int Register, int VectorSize)
+		public public static void _vcmovtf_test(CpuThreadState CpuThreadState, int Register, int VectorSize)
 		{
 			Console.Error.WriteLine("_vcmovtf({0}, {1}) : {2}", Register, VectorSize, CpuThreadState.VFR_CC(Register));
 		}
 
-		static public void _vcmovtf_set(CpuThreadState CpuThreadState, int Register, int VectorSize)
+		public static void _vcmovtf_set(CpuThreadState CpuThreadState, int Register, int VectorSize)
 		{
 			Console.Error.WriteLine("SET! _vcmovtf({0}, {1}) : {2}", Register, VectorSize, CpuThreadState.VFR_CC(Register));
 		}
@@ -217,7 +213,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		{
 			var Register = Instruction.IMM3;
 			//throw (new NotImplementedException());
-			MipsMethodEmiter.StoreBranchFlag(() =>
+			MipsMethodEmitter.StoreBranchFlag(() =>
 			{
 				Load_VCC(Register);
 				SafeILGenerator.Push((int)0);

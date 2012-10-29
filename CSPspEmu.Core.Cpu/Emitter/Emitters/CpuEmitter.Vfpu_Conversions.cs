@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
 using CSharpUtils;
 using Codegen;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	sealed public partial class CpuEmiter
+	public sealed partial class CpuEmitter
 	{
-		static public uint _vc2i_impl(uint Value)
+		public static uint _vc2i_impl(uint Value)
 		{
 			Value |= (Value >> 16);
 			Value |= (Value >> 8);
@@ -23,7 +19,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			return Value;
 		}
 
-		static public uint _vi2c_impl(uint x, uint y, uint z, uint w)
+		public static uint _vi2c_impl(uint x, uint y, uint z, uint w)
 		{
 			return
 				((x >> 24) << 0 ) |
@@ -47,7 +43,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftLeft);
 				SafeILGenerator.Push(unchecked((int)0xF0000000));
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.And);
-				MipsMethodEmiter.CallMethod((Func<uint, uint>)CpuEmiter._vc2i_impl);
+				MipsMethodEmitter.CallMethod((Func<uint, uint>)CpuEmitter._vc2i_impl);
 			}, AsInteger: true);
 		}
 
@@ -101,7 +97,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}, AsInteger: true);
 		}
 
-		static public uint _vi2uc(int x, int y, int z, int w)
+		public static uint _vi2uc(int x, int y, int z, int w)
 		{
 			return (0
 				| (uint)((x < 0) ? 0 : ((x >> 23) << 0))
@@ -119,7 +115,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				Load_VS(1, VectorSize, AsInteger: true);
 				Load_VS(2, VectorSize, AsInteger: true);
 				Load_VS(3, VectorSize, AsInteger: true);
-				MipsMethodEmiter.CallMethod((Func<int, int, int, int, uint>)_vi2uc);
+				MipsMethodEmitter.CallMethod((Func<int, int, int, int, uint>)_vi2uc);
 			}, AsInteger: true);
 		}
 
@@ -130,7 +126,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				Load_VS(Index, AsInteger: true);
 				SafeILGenerator.ConvertTo<float>();
 				SafeILGenerator.Push(-(int)Instruction.IMM5);
-				MipsMethodEmiter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
+				MipsMethodEmitter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
 			});
 		}
 
@@ -141,8 +137,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				Load_VS(Index, VectorSize);
 				SafeILGenerator.Push((int)Imm5);
-				MipsMethodEmiter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
-				MipsMethodEmiter.CallMethod((Func<float, int>)MathFloat.Floor);
+				MipsMethodEmitter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
+				MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Floor);
 			}, AsInteger: true);
 		}
 
@@ -154,8 +150,8 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				Load_VS(Index, VectorSize);
 				SafeILGenerator.Push((int)Imm5);
-				MipsMethodEmiter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
-				MipsMethodEmiter.CallMethod((Func<float, int>)MathFloat.Round);
+				MipsMethodEmitter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
+				MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Round);
 			}, AsInteger: true);
 		}
 
@@ -167,12 +163,12 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				Load_VS(Index, VectorSize);
 				SafeILGenerator.Push((int)Imm5);
-				MipsMethodEmiter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
-				MipsMethodEmiter.CallMethod((Func<float, int>)MathFloat.Ceil);
+				MipsMethodEmitter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
+				MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Ceil);
 			}, AsInteger: true);
 		}
 
-		static public float _vf2iz(float Value, int imm5)
+		public static float _vf2iz(float Value, int imm5)
 		{
 			float ScalabValue = MathFloat.Scalb(Value, imm5);
 			return (Value >= 0) ? (int)MathFloat.Floor(ScalabValue) : (int)MathFloat.Ceil(ScalabValue);
@@ -184,11 +180,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				Load_VS(Index);
 				SafeILGenerator.Push((int)Imm5);
-				MipsMethodEmiter.CallMethod((Func<float, int, float>)(CpuEmiter._vf2iz));
+				MipsMethodEmitter.CallMethod((Func<float, int, float>)(CpuEmitter._vf2iz));
 			});
 		}
 
-		static public uint _vi2s(uint v1, uint v2)
+		public static uint _vi2s(uint v1, uint v2)
 		{
 			return (
 				((v1 >> 16) << 0) |
@@ -203,7 +199,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				Load_VS(0);
 				Load_VS(1);
-				MipsMethodEmiter.CallMethod((Func<uint, uint, uint>)(CpuEmiter._vi2s));
+				MipsMethodEmitter.CallMethod((Func<uint, uint, uint>)(CpuEmitter._vi2s));
 			}, AsInteger: true);
 			if (VectorSize == 4)
 			{
@@ -211,7 +207,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				{
 					Load_VS(2);
 					Load_VS(3);
-					MipsMethodEmiter.CallMethod((Func<uint, uint, uint>)(CpuEmiter._vi2s));
+					MipsMethodEmitter.CallMethod((Func<uint, uint, uint>)(CpuEmitter._vi2s));
 				}, AsInteger: true);
 			}
 		}
@@ -219,7 +215,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void vf2h() { throw (new NotImplementedException("")); }
 		public void vh2f() { throw (new NotImplementedException("")); }
 
-		static public int _vi2us(int x, int y)
+		public static int _vi2us(int x, int y)
 		{
 			return (
 				((x < 0) ? 0 : ((x >> 15) << 0)) |
@@ -234,7 +230,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			{
 				Load_VS(Index * 2 + 0, AsInteger: true);
 				Load_VS(Index * 2 + 1, AsInteger: true);
-				MipsMethodEmiter.CallMethod((Func<int, int, int>)(CpuEmiter._vi2us));
+				MipsMethodEmitter.CallMethod((Func<int, int, int>)(CpuEmitter._vi2us));
 			}, AsInteger: true);
 		}
 	}

@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CSPspEmu.Hle.Threading.Semaphores;
 using CSharpUtils;
 using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Threading.Semaphores
 {
-	unsafe public class HleSemaphore : IDisposable
+	public unsafe class HleSemaphore : IDisposable
 	{
 		public class WaitingSemaphoreThread
 		{

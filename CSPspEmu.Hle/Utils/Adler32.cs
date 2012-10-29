@@ -43,13 +43,11 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 * Jean-loup Gailly(jloup@gzip.org) and Mark Adler(madler@alumni.caltech.edu)
 * and contributors of zlib.
 */
-using System;
+
 namespace ComponentAce.Compression.Libs.zlib
 {
-	
 	sealed class Adler32
 	{
-		
 		// largest prime smaller than 65536
 		private const int BASE = 65521;
 		// NMAX is the largest n such that 255n(n+1)/2 + (n+1)(BASE-1) <= 2^32-1

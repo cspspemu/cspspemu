@@ -7,7 +7,7 @@
  * Change log:
  * 2011-03-31  JPP  - Split into its own file
  * 
- * Copyright (C) 2011 Phillip Piper
+ * Copyright (C) 2011-2012 Phillip Piper
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,6 +75,26 @@ namespace BrightIdeasSoftware {
                 }
             }
         }
+
+        /// <summary>
+        /// Gets or sets how many pixels will be left blank around each cell of this item
+        /// </summary>
+        /// <remarks>This setting only takes effect when the control is owner drawn.</remarks>
+        public Rectangle? CellPadding {
+            get { return this.cellPadding; }
+            set { this.cellPadding = value; }
+        }
+        private Rectangle? cellPadding;
+
+        /// <summary>
+        /// Gets or sets how the cells of this item will be vertically aligned
+        /// </summary>
+        /// <remarks>This setting only takes effect when the control is owner drawn.</remarks>
+        public StringAlignment? CellVerticalAlignment {
+            get { return this.cellVerticalAlignment; }
+            set { this.cellVerticalAlignment = value; }
+        }
+        private StringAlignment? cellVerticalAlignment;
 
         /// <summary>
         /// Gets or sets the checkedness of this item.
@@ -221,8 +241,8 @@ namespace BrightIdeasSoftware {
         public virtual OLVListSubItem GetSubItem(int index) {
             if (index >= 0 && index < this.SubItems.Count)
                 return (OLVListSubItem)this.SubItems[index];
-            else
-                return null;
+            
+            return null;
         }
 
 
@@ -237,13 +257,10 @@ namespace BrightIdeasSoftware {
                 r.X = sides.X + 1;
                 r.Width = sides.Y - sides.X;
                 return r;
-            } else {
-                OLVListSubItem subItem = this.GetSubItem(subItemIndex);
-                if (subItem == null)
-                    return new Rectangle();
-                else
-                    return subItem.Bounds;
             }
+
+            OLVListSubItem subItem = this.GetSubItem(subItemIndex);
+            return subItem == null ? new Rectangle() : subItem.Bounds;
         }
 
         #endregion

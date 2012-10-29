@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules._unknownPrx
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	unsafe public partial class sceMp3 : HleModuleHost
+	public unsafe class sceMp3 : HleModuleHost
 	{
 		public struct SceMp3InitArg
 		{
@@ -72,7 +69,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
 		/// <summary>
 		/// sceMp3ReserveMp3Handle
 		/// </summary>
-		/// <param name="Mp3Arguments">Pointer to SceMp3InitArg structure</param>
+		/// <param name="Mp3Arguments">Pointer to an <see cref="SceMp3InitArg"/> structure</param>
 		/// <returns>sceMp3 handle on success, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0x07EC321A, FirmwareVersion = 150)]
 		public Mp3StreamId sceMp3ReserveMp3Handle(SceMp3InitArg* Mp3Arguments)
@@ -85,7 +82,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
 		/// sceMp3NotifyAddStreamData
 		/// </summary>
 		/// <param name="Mp3Stream">sceMp3 handle</param>
-		/// <param name="Size">number of bytes added to the stream data buffer</param>
+		/// <param name="Size">Number of bytes added to the stream data buffer</param>
 		/// <returns>0 if success, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0x0DB149F4, FirmwareVersion = 150)]
 		public int sceMp3NotifyAddStreamData(Mp3StreamId Mp3Stream, int Size)
@@ -187,7 +184,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
 		/// </summary>
 		/// <param name="Mp3Stream">sceMp3 handle</param>
 		/// <param name="OutputPcmPointer">Pointer to destination pcm samples buffer</param>
-		/// <returns>number of bytes in decoded pcm buffer, less than 0 on error.</returns>
+		/// <returns>Number of bytes in decoded pcm buffer, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xD021C0FB, FirmwareVersion = 150)]
 		public int sceMp3Decode(Mp3StreamId Mp3Stream, uint OutputPcmPointer)
 		{

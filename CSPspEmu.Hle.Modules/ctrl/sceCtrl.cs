@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
-using CSPspEmu.Core;
+﻿using CSPspEmu.Core;
 using CSPspEmu.Core.Controller;
 using CSPspEmu.Hle.Attributes;
 
@@ -15,7 +10,7 @@ namespace CSPspEmu.Hle.Modules.ctrl
 	}
 
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class sceCtrl : HleModuleHost
+	public unsafe class sceCtrl : HleModuleHost
 	{
 		[Inject]
 		PspController PspController;
@@ -46,11 +41,11 @@ namespace CSPspEmu.Hle.Modules.ctrl
 		///		
 		///		sceCtrlSetSamplingCycle(0);
 		///		sceCtrlSetSamplingMode(1);
-		///		sceCtrlReadBufferPositive(&pad, 1);
+		///		sceCtrlReadBufferPositive(&amp;pad, 1);
 		///		// Do something with the read controller data
 		/// </example>
-		/// <param name="pad_data">Pointer to a ::SceCtrlData structure used hold the returned pad data.</param>
-		/// <param name="count">Number of ::SceCtrlData buffers to read.</param>
+		/// <param name="SceCtrlData">Pointer to a <see cref="SceCtrlData"/> structure used hold the returned pad data.</param>
+		/// <param name="Count">Number of <see cref="SceCtrlData"/> buffers to read.</param>
 		/// <returns>Count?</returns>
 		[HlePspFunction(NID = 0x1F803938, FirmwareVersion = 150, SkipLog = true)]
 		public int sceCtrlReadBufferPositive(SceCtrlData* SceCtrlData, int Count)
@@ -85,7 +80,7 @@ namespace CSPspEmu.Hle.Modules.ctrl
 		}
 
 		/// <summary>
-		/// 
+		/// Gets the current controller mode.
 		/// </summary>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xDA6B76A1, FirmwareVersion = 150)]
@@ -170,7 +165,7 @@ namespace CSPspEmu.Hle.Modules.ctrl
 		/// Set between 1 - 128 to specify the movement on either axis needed by the analog to fire the event.
 		/// </remarks>
 		/// <returns>
-		///		less than 0 on error
+		///		Less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xA7144800, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -179,47 +174,58 @@ namespace CSPspEmu.Hle.Modules.ctrl
 			return 0;
 		}
 
-        [HlePspFunction(NID = 0xC152080A, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceCtrlPeekBufferNegative()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0xC152080A, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceCtrlPeekBufferNegative()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0xA68FD260, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceCtrlClearRapidFire()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0xA68FD260, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceCtrlClearRapidFire()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0x687660FA, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceCtrlGetIdleCancelThreshold()
-        {
-            return 0;
-        }
+		/// <summary>
+		/// Get the idle threshold values.
+		/// </summary>
+		/// <param name="idlerest">Movement needed by the analog to reset the idle timer.</param>
+		/// <param name="idleback">Movement needed by the analog to bring the PSP back from an idle state.</param>
+		/// <returns>&lt; 0 on error.</returns>
+		[HlePspFunction(NID = 0x687660FA, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceCtrlGetIdleCancelThreshold(int *idlerest, int *idleback)
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0x6841BE1A, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceCtrlSetRapidFire()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0x6841BE1A, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceCtrlSetRapidFire()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0x60B81F86, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceCtrlReadBufferNegative()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0x60B81F86, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceCtrlReadBufferNegative()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0x02BAAD91, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceCtrlGetSamplingCycle()
-        {
-            return 0;
-        }
+		/// <summary>
+		/// Get the controller current cycle setting.
+		/// </summary>
+		/// <param name="pcycle">Return value.</param>
+		/// <returns>Return 0</returns>
+		[HlePspFunction(NID = 0x02BAAD91, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceCtrlGetSamplingCycle(int *pcycle)
+		{
+			return 0;
+		}
 
 		/// <summary>
 		/// Controller latch.

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Battery;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core;
@@ -9,7 +6,7 @@ using CSPspEmu.Core;
 namespace CSPspEmu.Hle.Modules.power
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public partial class scePower : HleModuleHost
+	public unsafe partial class scePower : HleModuleHost
 	{
 		[Inject]
 		Battery PspBattery;
@@ -246,7 +243,7 @@ namespace CSPspEmu.Hle.Modules.power
 		}
 
 		/// <summary>
-		/// crashes PSP in usermode
+		/// Crashes PSP in usermode
 		/// </summary>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x862AE1A6, FirmwareVersion = 150)]
@@ -424,7 +421,7 @@ namespace CSPspEmu.Hle.Modules.power
 		/// Note: if the power switch is toggled while locked
 		/// it will fire immediately after being unlocked.
 		/// </summary>
-		/// <param name="unknown">pass 0</param>
+		/// <param name="unknown">Pass 0</param>
 		/// <returns>0 on success, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xD6D016EF, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -436,7 +433,7 @@ namespace CSPspEmu.Hle.Modules.power
 		/// <summary>
 		/// Unlock power switch
 		/// </summary>
-		/// <param name="unknown">pass 0</param>
+		/// <param name="unknown">Pass 0</param>
 		/// <returns>0 on success, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xCA3D34C1, FirmwareVersion = 150)]
 		[HlePspNotImplemented]

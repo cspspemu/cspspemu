@@ -5,6 +5,7 @@
 			<translation lang="en">&amp;Debug</translation>
 			<translation lang="es">&amp;Depuración</translation>
 			<translation lang="it">&amp;Esegui Debug</translation>
+			<translation lang="ja">&amp;デバッグ</translation>
 			<translation lang="pt">&amp;Depuração</translation>
 			<translation lang="fr">&amp;Debogage</translation>
 		</text>
@@ -12,6 +13,7 @@
 			<translation lang="en">Show &amp;Thread Info</translation>
 			<translation lang="es">Mostrar información de &amp;Hilos</translation>
 			<translation lang="it">Mostra info sul &amp;processo</translation>
+			<translation lang="ja">スレッド情報を表示</translation>
 			<translation lang="pt">Mostrar informação do &amp;Processo</translation>
 			<translation lang="fr">Montrer les informations du &amp;processus</translation>
 		</text>
@@ -19,6 +21,7 @@
 			<translation lang="en">Trace &amp;Syscalls</translation>
 			<translation lang="es">Trazar &amp;Syscalls</translation>
 			<translation lang="it">Traccia &amp;Syscalls</translation>
+			<translation lang="ja">トレース&amp;システムコール</translation>
 			<translation lang="pt">Traçar &amp;Syscalls</translation>
 			<translation lang="fr">Tracer &amp;Syscalls</translation>
 		</text>
@@ -26,6 +29,7 @@
 			<translation lang="en">Trace Unimplemented Gpu</translation>
 			<translation lang="es">Trazar Gpu no implementado</translation>
 			<translation lang="it">Traccia Gpu non implementata</translation>
+			<translation lang="ja">実装されていないGPUをトレース</translation>
 			<translation lang="pt">Traçar Gpu não implementada</translation>
 			<translation lang="fr">Tracer Gpu non implémentés</translation>
 		</text>
@@ -33,6 +37,7 @@
 			<translation lang="en">Trace Unimplemented Syscalls</translation>
 			<translation lang="es">Trazar Syscalls sin implementar</translation>
 			<translation lang="it">Traccia Syscalls non implementate</translation>
+			<translation lang="ja">実装されていないシステムコールをトレース</translation>
 			<translation lang="pt">Traçar Syscalls não implementados</translation>
 			<translation lang="fr">Trace Syscalls non implémentés</translation>
 		</text>
@@ -40,6 +45,7 @@
 			<translation lang="en">Dump &amp;Gpu Frame</translation>
 			<translation lang="es">Volcar frame de &amp;Gpu</translation>
 			<translation lang="it">Scarica Frame della &amp;Gpu</translation>
+			<translation lang="ja">&amp;GPUのフレームをダンプ</translation>
 			<translation lang="pt">Descarregar frame de &amp;Gpu</translation>
 			<translation lang="fr">Dumper les frames du &amp;Gpu</translation>
 		</text>
@@ -47,6 +53,7 @@
 			<translation lang="en">&amp;Exit</translation>
 			<translation lang="es">&amp;Salir</translation>
 			<translation lang="it">&amp;Esci</translation>
+			<translation lang="ja">&amp;終了</translation>
 			<translation lang="pt">&amp;Sair</translation>
 			<translation lang="fr">&amp;Quitter</translation>
 		</text>
@@ -54,6 +61,7 @@
 			<translation lang="en">&amp;File</translation>
 			<translation lang="es">&amp;Archivo</translation>
 			<translation lang="it">&amp;File</translation>
+			<translation lang="ja">&amp;ファイル</translation>
 			<translation lang="pt">&amp;Arquivo</translation>
 			<translation lang="fr">&amp;Fichier</translation>
 		</text>
@@ -61,6 +69,7 @@
 			<translation lang="en">&amp;Open...</translation>
 			<translation lang="es">&amp;Abrir...</translation>
 			<translation lang="it">&amp;Apri...</translation>
+			<translation lang="ja">&amp;開く...</translation>
 			<translation lang="pt">&amp;Abrir...</translation>
 			<translation lang="fr">&amp;Ouvrir...</translation>
 		</text>
@@ -68,6 +77,7 @@
 			<translation lang="en">Set &amp;Iso Folder...</translation>
 			<translation lang="es">Establecer Carpeta de &amp;Isos...</translation>
 			<translation lang="it">Seleziona la cartella &amp;Iso...</translation>
+			<translation lang="ja">&amp;ISOフォルダを設定...</translation>
 			<translation lang="pt">Selecionar Pasta das &amp;Isos...</translation>
 			<translation lang="fr">Selectionner le repertoire des Isos...</translation>
 		</text>
@@ -75,6 +85,7 @@
 			<translation lang="en">Open &amp;Recent</translation>
 			<translation lang="es">Abrir &amp;Recientes</translation>
 			<translation lang="it">Apri &amp;Recenti</translation>
+			<translation lang="ja">&amp;最近を開く...</translation>
 			<translation lang="pt">Abrir &amp;Recentes...</translation>
 			<translation lang="fr">Ouvrir &amp;Récents...</translation>
 		</text>
@@ -82,6 +93,7 @@
 			<translation lang="en">&amp;Website...</translation>
 			<translation lang="es">&amp;Página web...</translation>
 			<translation lang="it">&amp;Pagina web...</translation>
+			<translation lang="ja">&amp;ウェブサイト...</translation>
 			<translation lang="pt">&amp;Página da Web...</translation>
 			<translation lang="fr">&amp;Site Web...</translation>
 		</text>
@@ -89,6 +101,7 @@
 			<translation lang="en">&amp;About...</translation>
 			<translation lang="es">&amp;Sobre...</translation>
 			<translation lang="it">&amp;Informazioni...</translation>
+			<translation lang="ja">&amp;について...</translation>
 			<translation lang="pt">&amp;Sobre...</translation>
 			<translation lang="fr">&amp;A propos...</translation>
 		</text>
@@ -96,6 +109,7 @@
 			<translation lang="en">&amp;en.blog.cballesterosvelasco.es</translation>
 			<translation lang="es">&amp;es.blog.cballesterosvelasco.es</translation>
 			<translation lang="it">&amp;es.blog.cballesterosvelasco.es</translation>
+			<translation lang="ja">&amp;en.blog.cballesterosvelasco.es</translation>
 			<translation lang="pt">&amp;es.blog.cballesterosvelasco.es</translation>
 			<translation lang="fr">&amp;es.blog.cballesterosvelasco.es</translation>
 		</text>
@@ -103,6 +117,7 @@
 			<translation lang="en">Check for &amp;updates...</translation>
 			<translation lang="es">Buscar &amp;actualizacioes...</translation>
 			<translation lang="it">Cerca &amp;aggiornamenti...</translation>
+			<translation lang="ja">&amp;アップデートをチェック...</translation>
 			<translation lang="pt">Buscar &amp;atualizações...</translation>
 			<translation lang="fr">Rechercher &amp;une mise à jour...</translation>
 		</text>
@@ -110,6 +125,7 @@
 			<translation lang="en">&amp;github.com/soywiz/cspspemu</translation>
 			<translation lang="es">&amp;github.com/soywiz/cspspemu</translation>
 			<translation lang="it">&amp;github.com/soywiz/cspspemu</translation>
+			<translation lang="ja">&amp;github.com/soywiz/cspspemu</translation>
 			<translation lang="pt">&amp;github.com/soywiz/cspspemu</translation>
 			<translation lang="fr">&amp;github.com/soywiz/cspspemu</translation>
 		</text>
@@ -117,6 +133,7 @@
 			<translation lang="en">&amp;kawagames.com</translation>
 			<translation lang="es">&amp;kawagames.com</translation>
 			<translation lang="it">&amp;kawagames.com</translation>
+			<translation lang="ja">&amp;kawagames.com</translation>
 			<translation lang="pt">&amp;kawagames.com</translation>
 			<translation lang="fr">&amp;kawagames.com</translation>
 		</text>
@@ -124,6 +141,7 @@
 			<translation lang="en">emu&amp;releases.com</translation>
 			<translation lang="es">emu&amp;releases.com</translation>
 			<translation lang="it">emu&amp;releases.com</translation>
+			<translation lang="ja">emu&amp;releases.com</translation>
 			<translation lang="pt">emu&amp;releases.com</translation>
 			<translation lang="fr">emu&amp;releases.com</translation>
 		</text>
@@ -131,6 +149,7 @@
 			<translation lang="en">&amp;Help</translation>
 			<translation lang="es">&amp;Ayuda</translation>
 			<translation lang="it">&amp;Aiuto</translation>
+			<translation lang="ja">&amp;ヘルプ</translation>
 			<translation lang="pt">&amp;Ajuda</translation>
 			<translation lang="fr">&amp;Aide</translation>
 		</text>
@@ -138,6 +157,7 @@
 			<translation lang="en">Report an &amp;issue...</translation>
 			<translation lang="es">Informar sobre &amp;problema...</translation>
 			<translation lang="it">Riporta un &amp;problema...</translation>
+			<translation lang="ja">&amp;問題を報告。</translation>
 			<translation lang="pt">Informar sobre &amp;problemas...</translation>
 			<translation lang="fr">Informer d'un &amp;problème...</translation>
 			
@@ -145,7 +165,8 @@
 		<text id="UtilsAssociateExtensionsMenu">
 			<translation lang="en">Associate Extensions (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
 			<translation lang="es">Asociar Extensiones (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
-			<translation lang="it">Associa Estensioni (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
+      <translation lang="it">Associa Estensioni (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
+			<translation lang="ja">准ファイル拡張子 （.PBP, .CSO, .DAX, .ELF, .PRX）</translation>
 			<translation lang="pt">Associar Extensões (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
 			<translation lang="fr">Associer Extensions (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
 		</text>
@@ -153,6 +174,7 @@
 			<translation lang="en">&amp;Display</translation>
 			<translation lang="es">&amp;Tamaño de ventana</translation>
 			<translation lang="it">&amp;Dimensioni finestra</translation>
+			<translation lang="ja">&amp;ディスプレー</translation>
 			<translation lang="pt">&amp;Tamanho da janela</translation>
 			<translation lang="fr">&amp;Affichage</translation>
 		</text>
@@ -160,6 +182,7 @@
 			<translation lang="en">Configure &amp;Controller...</translation>
 			<translation lang="es">Configurar &amp;Controles...</translation>
 			<translation lang="it">Configura &amp;Controller...</translation>
+			<translation lang="ja">&amp;コントローラ設定</translation>
 			<translation lang="pt">Configurar os &amp;Controles...</translation>
 			<translation lang="fr">Configurer &amp; les controles...</translation>
 		</text>
@@ -167,6 +190,7 @@
 			<translation lang="en">1x</translation>
 			<translation lang="es">1x</translation>
 			<translation lang="it">1x</translation>
+			<translation lang="ja">1x</translation>
 			<translation lang="pt">1x</translation>
 			<translation lang="fr">1x</translation>
 		</text>
@@ -174,6 +198,7 @@
 			<translation lang="en">2x</translation>
 			<translation lang="es">2x</translation>
 			<translation lang="it">2x</translation>
+			<translation lang="ja">2x</translation>
 			<translation lang="pt">2x</translation>
 			<translation lang="fr">2x</translation>
 		</text>
@@ -181,6 +206,7 @@
 			<translation lang="en">3x</translation>
 			<translation lang="es">3x</translation>
 			<translation lang="it">3x</translation>
+			<translation lang="ja">3x</translation>
 			<translation lang="pt">3x</translation>
 			<translation lang="fr">3x</translation>
 		</text>
@@ -188,6 +214,7 @@
 			<translation lang="en">4x</translation>
 			<translation lang="es">4x</translation>
 			<translation lang="it">4x</translation>
+			<translation lang="ja">4x</translation>
 			<translation lang="pt">4x</translation>
 			<translation lang="fr">4x</translation>
 		</text>
@@ -195,6 +222,7 @@
 			<translation lang="en">Dump Main Memory...</translation>
 			<translation lang="es">Volcar memoria principal...</translation>
 			<translation lang="it">Scarica la memoria principale...</translation>
+			<translation lang="ja">メインメモリをダンプ...</translation>
 			<translation lang="pt">Descarregar memória principal...</translation>
 			<translation lang="fr">Décharger la mémoire principale...</translation>
 		</text>
@@ -202,6 +230,7 @@
 			<translation lang="en">Frame Limiting</translation>
 			<translation lang="es">Limitar a refresco vertical</translation>
 			<translation lang="it">Imposta il limite dei frame</translation>
+			<translation lang="ja">フレームリミット</translation>
 			<translation lang="pt">Limitar a atualização vertical</translation>
 			<translation lang="fr">Limiter le rafraichissement vertical</translation>
 		</text>
@@ -209,13 +238,15 @@
 			<translation lang="en">&amp;Language</translation>
 			<translation lang="es">&amp;Idioma</translation>
 			<translation lang="it">&amp;Lingua</translation>
+			<translation lang="ja">&amp;言語</translation>
 			<translation lang="pt">&amp;Linguagem</translation>
 			<translation lang="fr">&amp;Langage</translation>
 		</text>
 		<text id="UtilsMenu">
 			<translation lang="en">&amp;Utils</translation>
 			<translation lang="es">&amp;Utilidades</translation>
-			<translation lang="en">&amp;Utility</translation>
+			<translation lang="it">&amp;Utilità</translation>
+			<translation lang="ja">&amp;ユーティリティ</translation>
 			<translation lang="pt">&amp;Utilidades</translation>
 			<translation lang="fr">&amp;Utilitaires</translation>
 		</text>
@@ -223,6 +254,7 @@
 			<translation lang="en">Take Screenshot...</translation>
 			<translation lang="es">Sacar pantallazo...</translation>
 			<translation lang="it">Cattura schermata...</translation>
+			<translation lang="ja">スクリーンショットを撮る...</translation>
 			<translation lang="pt">Tirar Screenshot...</translation>
 			<translation lang="fr">Capture d'écran...</translation>
 		</text>
@@ -230,6 +262,7 @@
 			<translation lang="en">Use &amp;Fast but unsafe memory</translation>
 			<translation lang="es">Usar memoria &amp;rápida pero inestable</translation>
 			<translation lang="it">Usa memoria &amp;veloce ma instabile</translation>
+			<translation lang="ja">&amp;高速メモリを使用 （安全でない）</translation>
 			<translation lang="pt">Usar memória &amp;rápida porém instável</translation>
 			<translation lang="fr">Utiliser &amp;la memoire rapide mais instable</translation>
 		</text>
@@ -237,6 +270,7 @@
 			<translation lang="en">Enable &amp;Mpeg processing (unstable yet)</translation>
 			<translation lang="es">Habilitar procesado de &amp;Mpeg (inestable todavía)</translation>
 			<translation lang="it">Abilita il processo di &amp;Mpeg (non ancora stabile)</translation>
+			<translation lang="ja">MPEG処理を（不安定）を有効</translation>
 			<translation lang="pt">Permitir processamento de &amp;Mpeg (ainda instável)</translation>
 			<translation lang="fr">Activer le traitement du &amp;Mpeg (Encore instable)</translation>
 		</text>
@@ -244,6 +278,7 @@
 			<translation lang="en">&amp;Run</translation>
 			<translation lang="es">&amp;Ejecución</translation>
 			<translation lang="it">&amp;Esegui</translation>
+			<translation lang="ja">&amp;実行</translation>
 			<translation lang="pt">&amp;Executar</translation>
 			<translation lang="fr">&amp;Exécuter</translation>
 		</text>
@@ -251,6 +286,7 @@
 			<translation lang="en">&amp;Start/Resume</translation>
 			<translation lang="es">&amp;Ejecutar</translation>
 			<translation lang="it">&amp;Avvia/Riprendi</translation>
+			<translation lang="ja">&amp;開始/再開</translation>
 			<translation lang="pt">&amp;Executar</translation>
 			<translation lang="fr">&amp;Exécuter/Reprendre</translation>
 		</text>
@@ -258,6 +294,7 @@
 			<translation lang="en">&amp;Pause</translation>
 			<translation lang="es">&amp;Pausar</translation>
 			<translation lang="it">&amp;Pausa</translation>
+			<translation lang="ja">&amp;一時停止</translation>
 			<translation lang="pt">&amp;Pausar</translation>
 			<translation lang="fr">&amp;Pause</translation>
 		</text>
@@ -265,6 +302,7 @@
 			<translation lang="en">English</translation>
 			<translation lang="es">Inglés</translation>
 			<translation lang="it">Inglese</translation>
+			<translation lang="ja">英語</translation>
 			<translation lang="pt">Inglês</translation>
 			<translation lang="fr">Anglais</translation>
 		</text>
@@ -272,6 +310,7 @@
 			<translation lang="en">Spanish</translation>
 			<translation lang="es">Español</translation>
 			<translation lang="it">Spagnolo</translation>
+			<translation lang="ja">スペイン語</translation>
 			<translation lang="pt">Espanhol</translation>
 			<translation lang="fr">Espagnol</translation>
 		</text>
@@ -279,13 +318,24 @@
 			<translation lang="en">Italian</translation>
 			<translation lang="es">Italiano</translation>
 			<translation lang="it">Italiano</translation>
+			<translation lang="ja">イタリア語</translation>
 			<translation lang="pt">Italiano</translation>
 			<translation lang="fr">Italien</translation>
 		</text>
+    <text id="UtilsLanguageJapanese">
+			<translation lang="en">Japanese</translation>
+			<translation lang="es">Japonés</translation>
+			<translation lang="it">Giapponese</translation>
+			<translation lang="ja">日本語</translation>
+			<translation lang="pt">Japonês</translation>
+			<translation lang="fr">Japonais</translation>
+    
+    </text>
 		<text id="UtilsLanguagePortugueseMenu">
 			<translation lang="en">Portuguese</translation>
 			<translation lang="es">Portugués</translation>
 			<translation lang="it">Portoghese</translation>
+      <translation lang="ja">ポルトガル語</translation>
 			<translation lang="pt">Português</translation>
 			<translation lang="fr">Portuguais</translation>
 			</text>
@@ -293,6 +343,7 @@
 			<translation lang="en">French</translation>
 			<translation lang="es">Frances</translation>
 			<translation lang="it">Francese</translation>
+      <translation lang="ja">フランス語</translation>
 			<translation lang="pt">Francês</translation>
 			<translation lang="fr">Français</translation>
 		</text>
@@ -300,6 +351,7 @@
 			<translation lang="en">Install &amp;WavDest DirectShow Filter</translation>
 			<translation lang="es">Instalar filtro de DirectShow WavDest&amp;</translation>
 			<translation lang="it">Installa filtro &amp;WavDest DirectShow</translation>
+			<translation lang="ja">&amp;WavDest DirectShowフィルタをインストール</translation>
 			<translation lang="pt">Instalar filtro do DirectShow WavDest&amp;</translation>
 			<translation lang="fr">Installer filtre de DirectShow WavDest&amp;</translation>
 		</text>
@@ -309,6 +361,7 @@
 			<translation lang="en">&lt;Unknown Game&gt;</translation>
 			<translation lang="es">&lt;Juego Desconocido&gt;</translation>
 			<translation lang="it">&lt;Gioco Sconosciuto&gt;</translation>
+			<translation lang="ja">&lt;不明ゲーム&gt;</translation>
 			<translation lang="pt">&lt;Jogo Desconhecido&gt;</translation>
 			<translation lang="fr">&lt;Jeu inconnu&gt;</translation>
 		</text>
@@ -318,6 +371,7 @@
 			<translation lang="en">English</translation>
 			<translation lang="es">Inglés</translation>
 			<translation lang="it">Inglese</translation>
+			<translation lang="ja">英語</translation>
 			<translation lang="pt">Inglês</translation>
 			<translation lang="fr">Anglais</translation>
 		</text>
@@ -325,6 +379,7 @@
 			<translation lang="en">Spanish</translation>
 			<translation lang="es">Español</translation>
 			<translation lang="it">Spagnolo</translation>
+			<translation lang="ja">スペイン語</translation>
 			<translation lang="pt">Espanhol</translation>
 			<translation lang="fr">Espagnol</translation>
 		</text>
@@ -332,13 +387,23 @@
 			<translation lang="en">Italian</translation>
 			<translation lang="es">Italiano</translation>
 			<translation lang="it">Italiano</translation>
+			<translation lang="ja">イタリア語</translation>
 			<translation lang="pt">Italiano</translation>
 			<translation lang="fr">Italien</translation>
+		</text>
+		<text id="ja">
+			<translation lang="en">Japanese</translation>
+			<translation lang="es">Japonés</translation>
+			<translation lang="it">Giapponese</translation>
+			<translation lang="ja">日本語</translation>
+			<translation lang="pt">Japonês</translation>
+			<translation lang="fr">Japonais</translation>
 		</text>
 		<text id="pt">
 			<translation lang="en">Portuguese</translation>
 			<translation lang="es">Portugués</translation>
 			<translation lang="it">Portoghese</translation>
+			<translation lang="ja">ポルトガル語</translation>
 			<translation lang="pt">Português</translation>
 			<translation lang="fr">Portuguais</translation>
 		</text>
@@ -346,6 +411,7 @@
 			<translation lang="en">French</translation>
 			<translation lang="es">Frances</translation>
 			<translation lang="it">Francese</translation>
+			<translation lang="ja">フランス語</translation>
 			<translation lang="pt">Francês</translation>
 			<translation lang="fr">Français</translation>
 		</text>
@@ -355,6 +421,7 @@
 			<translation lang="en">en-US</translation>
 			<translation lang="es">es-ES</translation>
 			<translation lang="it">it-IT</translation>
+			<translation lang="ja">ja-JP</translation>
 			<translation lang="pt">pt-BR</translation>
 			<translation lang="fr">fr-FR</translation>
 		</text>
@@ -362,6 +429,7 @@
 			<translation lang="en">soywiz</translation>
 			<translation lang="es">soywiz</translation>
 			<translation lang="it">gambe</translation>
+			<translation lang="ja">Lioncash</translation>
 			<translation lang="pt">e-COS</translation>
 			<translation lang="fr">kalidor</translation>
 		</text>

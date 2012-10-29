@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Gpu.State.SubStates;
+﻿using CSPspEmu.Core.Gpu.State.SubStates;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
-	unsafe sealed public partial class GpuDisplayListRunner
+	public unsafe sealed partial class GpuDisplayListRunner
 	{
 		/**
 		 * Set transform matrices

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Memory;
-using CSPspEmu.Hle.Managers;
+﻿using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Modules.mpeg
 {
@@ -11,7 +6,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 	/// AVC: Advanced Video Coding
 	/// </summary>
 	/// <see cref="http://en.wikipedia.org/wiki/H.264/MPEG-4_AVC"/>
-	unsafe public partial class sceMpeg
+	public unsafe partial class sceMpeg
 	{
 		protected bool[] AbvEsBufAllocated = new bool[2];
 
@@ -60,10 +55,10 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// sceMpegGetAvcAu
 		/// </summary>
 		/// <param name="Mpeg">SceMpeg handle</param>
-		/// <param name="pStream">associated stream</param>
-		/// <param name="MpegAccessUnit">will contain pointer to Au</param>
-		/// <param name="DataAttributes">unknown</param>
-		/// <returns>0 if success.</returns>
+		/// <param name="StreamId">Associated stream</param>
+		/// <param name="MpegAccessUnit">Will contain pointer to Au</param>
+		/// <param name="DataAttributes">Unknown</param>
+		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0xFE246728, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceMpegGetAvcAu(SceMpegPointer* Mpeg, StreamId StreamId, SceMpegAu* MpegAccessUnit, int* DataAttributes)
@@ -86,7 +81,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// </summary>
 		/// <param name="Mpeg"></param>
 		/// <returns>
-		///		0 if error else a ElementaryStream id.
+		///		0 if error, else a ElementaryStream ID.
 		/// </returns>
 		[HlePspFunction(NID = 0xA780CF7E, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -107,7 +102,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// sceMpegFreeAvcEsBuf
 		/// </summary>
 		/// <param name="Mpeg"></param>
-		/// <param name="ElementaryStream">Value returned from sceMpegMallocAvcEsBuf</param>
+		/// <param name="ElementaryStream">Value returned from <see cref="sceMpegMallocAvcEsBuf"/></param>
 		[HlePspFunction(NID = 0xCEB870B1, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public uint sceMpegFreeAvcEsBuf(SceMpegPointer* Mpeg, int ElementaryStream)
@@ -120,7 +115,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// Sets the SceMpegAvcMode to a Mpeg
 		/// </summary>
 		/// <param name="Mpeg">SceMpeg handle</param>
-		/// <param name="Mode">pointer to SceMpegAvcMode struct defining the decode mode (pixelformat)</param>
+		/// <param name="Mode">Pointer to <see cref="SceMpegAvcMode"/> struct defining the decode mode (pixelformat)</param>
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0xA11C7026, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -143,9 +138,9 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <param name="Mpeg">SceMpeg handle</param>
 		/// <param name="MpegAccessUnit">Video Access Unit</param>
 		/// <param name="FrameWidth">Output buffer width, set to 512 if writing to framebuffer</param>
-		/// <param name="OutputBuffer">Buffer that will contain the decoded frame</param>
+		/// <param name="OutputBufferPointer">Buffer that will contain the decoded frame</param>
 		/// <param name="Init">Will be set to 0 on first call, then 1</param>
-		/// <returns>0 if success.</returns>
+		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0x0E3C2E9D, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceMpegAvcDecode(SceMpegPointer* Mpeg, SceMpegAu* MpegAccessUnit, int FrameWidth, PspPointer* OutputBufferPointer, int* Init)
@@ -178,10 +173,10 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// sceMpegAvcDecodeStop
 		/// </summary>
 		/// <param name="Mpeg">SceMpeg handle</param>
-		/// <param name="FrameWidth">output buffer width, set to 512 if writing to framebuffer</param>
-		/// <param name="OutputBuffer">buffer that will contain the decoded frame</param>
-		/// <param name="Status">frame number</param>
-		/// <returns>0 if success.</returns>
+		/// <param name="FrameWidth">Output buffer width, set to 512 if writing to framebuffer</param>
+		/// <param name="OutputBuffer">Buffer that will contain the decoded frame</param>
+		/// <param name="Status">Frame number</param>
+		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0x740FCCD1, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceMpegAvcDecodeStop(SceMpegPointer* Mpeg, int FrameWidth, byte* OutputBuffer, int* Status)

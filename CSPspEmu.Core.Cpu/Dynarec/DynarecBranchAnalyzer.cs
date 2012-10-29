@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Cpu.Table;
 
 namespace CSPspEmu.Core.Cpu.Dynarec
 {
-	sealed public class DynarecBranchAnalyzer
+	public sealed class DynarecBranchAnalyzer
 	{
-		static public Func<Instruction, JumpFlags> GetBranchInfo = (Instruction) =>
+		public static Func<Instruction, JumpFlags> GetBranchInfo = (Instruction) =>
 		{
 			return _GetBranchInfo(Instruction.Value);
 		};
 
-		static private Func<uint, JumpFlags> _GetBranchInfo = EmitLookupGenerator.GenerateInfoDelegate<DynarecBranchAnalyzer, JumpFlags>(
+		private static Func<uint, JumpFlags> _GetBranchInfo = EmitLookupGenerator.GenerateInfoDelegate<DynarecBranchAnalyzer, JumpFlags>(
 			EmitLookupGenerator.GenerateSwitchDelegateReturn<DynarecBranchAnalyzer, JumpFlags>(
 				InstructionTable.ALL, ThrowOnUnexistent: false
 			),

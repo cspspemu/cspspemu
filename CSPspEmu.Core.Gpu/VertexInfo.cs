@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Utils;
-using OpenTK;
 using System.Runtime.InteropServices;
+using OpenTK;
 using Mono.Simd;
 
 namespace CSPspEmu.Core.Gpu
@@ -15,7 +11,7 @@ namespace CSPspEmu.Core.Gpu
 	{
 		public float X, Y, Z;
 
-		static public Vector3F Zero = new Vector3F(0, 0, 0);
+		public static Vector3F Zero = new Vector3F(0, 0, 0);
 
 		public Vector3F(float X, float Y, float Z)
 		{
@@ -24,27 +20,27 @@ namespace CSPspEmu.Core.Gpu
 			this.Z = Z;
 		}
 
-		static public implicit operator Vector3(Vector3F Vector3F)
+		public static implicit operator Vector3(Vector3F Vector3F)
 		{
 			return new Vector3(Vector3F.X, Vector3F.Y, Vector3F.Z);
 		}
 
-		static public implicit operator Vector3F(Vector3 Vector3)
+		public static implicit operator Vector3F(Vector3 Vector3)
 		{
 			return new Vector3F(Vector3.X, Vector3.Y, Vector3.Z);
 		}
 
-		static public Vector3F operator +(Vector3F Left, Vector3F Right)
+		public static Vector3F operator +(Vector3F Left, Vector3F Right)
 		{
 			return new Vector3F(Left.X + Right.X, Left.Y + Right.Y, Left.Z + Right.Z);
 		}
 
-		static public Vector3F operator/(Vector3F Left, float Value)
+		public static Vector3F operator/(Vector3F Left, float Value)
 		{
 			return new Vector3F(Left.X / Value, Left.Y / Value, Left.Z / Value);
 		}
 
-		static public Vector3F operator*(Vector3F Left, float Value)
+		public static Vector3F operator*(Vector3F Left, float Value)
 		{
 			return new Vector3F(Left.X * Value, Left.Y * Value, Left.Z * Value);
 		}
@@ -73,7 +69,7 @@ namespace CSPspEmu.Core.Gpu
 			this.A = A;
 		}
 
-		static public implicit operator OutputPixel(Color4F Color4F)
+		public static implicit operator OutputPixel(Color4F Color4F)
 		{
 			return new OutputPixel()
 			{
@@ -84,7 +80,7 @@ namespace CSPspEmu.Core.Gpu
 			};
 		}
 
-		static public implicit operator Color4F(OutputPixel OutputPixel)
+		public static implicit operator Color4F(OutputPixel OutputPixel)
 		{
 			return new Color4F()
 			{
@@ -95,7 +91,7 @@ namespace CSPspEmu.Core.Gpu
 			};
 		}
 
-		static public Color4F operator +(Color4F Left, Color4F Right)
+		public static Color4F operator +(Color4F Left, Color4F Right)
 		{
 			return new Color4F(
 				Left.R + Right.R,
@@ -105,7 +101,7 @@ namespace CSPspEmu.Core.Gpu
 			);
 		}
 
-		static public Color4F operator *(Color4F Left, float Value)
+		public static Color4F operator *(Color4F Left, float Value)
 		{
 			return new Color4F(
 				Left.R + Value,
@@ -122,14 +118,14 @@ namespace CSPspEmu.Core.Gpu
 	}
 #endif
 
-	static public class Vector4fExtensions
+	public static class Vector4fExtensions
 	{
-		static public Vector4f Normalize(this Vector4f Vector)
+		public static Vector4f Normalize(this Vector4f Vector)
 		{
 			return Vector * (1.0f / (float)Math.Sqrt(Vector.X * Vector.X + Vector.Y * Vector.Y + Vector.Z * Vector.Z));
 		}
 
-		static public Vector3 ToVector3(this Vector4f Vector)
+		public static Vector3 ToVector3(this Vector4f Vector)
 		{
 			return new Vector3(Vector.X, Vector.Y, Vector.Z);
 		}
@@ -140,7 +136,7 @@ namespace CSPspEmu.Core.Gpu
 	/// Information about a vertex.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential, Pack = 4)]
-	unsafe public struct VertexInfo
+	public unsafe struct VertexInfo
 	{
 		public Vector4f Color;
 		public Vector4f Position;

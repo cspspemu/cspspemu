@@ -1,28 +1,17 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
-using System.IO.Compression;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Linq;
+using System.Security.Permissions;
 using System.Threading;
 using System.Windows.Forms;
-using ComponentAce.Compression.Libs.zlib;
-using CSPspEmu.Hle.Formats;
-using CSPspEmu.Hle.Vfs.Iso;
-using CSPspEmu.Core.Audio.Impl.WaveOut;
-using CSPspEmu.Core.Audio.Impl.Openal;
 using Microsoft.Win32;
+using CSPspEmu.Hle.Formats;
 using CSPspEmu.Core;
-using CSPspEmu.Resources;
 using CSPspEmu.AutoTests;
-using System.Diagnostics;
 using CSharpUtils;
 using CSharpUtils.Getopt;
-using Codegen;
-using CSPspEmu.Gui.Winforms;
-using System.Security.Permissions;
 using Mono.Simd;
 
 namespace CSPspEmu
@@ -49,7 +38,7 @@ namespace CSPspEmu
 		/// <see cref="http://en.wikipedia.org/wiki/Common_Intermediate_Language"/>
 		/// <see cref="http://en.wikipedia.org/wiki/List_of_CIL_instructions"/>
 		/// <see cref="http://www.microsoft.com/downloads/details.aspx?FamilyID=22914587-b4ad-4eae-87cf-b14ae6a939b0&displaylang=en" />
-		/// <param name="args"></param>
+		/// <param name="Arguments"></param>
 		[STAThread]
 		[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
 		static void Main(string[] Arguments)

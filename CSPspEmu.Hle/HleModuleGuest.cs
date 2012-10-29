@@ -8,12 +8,11 @@ using CSPspEmu.Hle.Loader;
 using CSPspEmu.Core.Memory;
 using CSharpUtils;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Core.Cpu.Emiter;
 using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle
 {
-	unsafe public struct SceModule
+	public unsafe struct SceModule
 	{
 		/// <summary>
 		/// 
@@ -165,7 +164,7 @@ namespace CSPspEmu.Hle
 	{
 	}
 
-	unsafe public class HleModuleGuest : HleModule
+    public class HleModuleGuest : HleModule
 	{
 		public int ID;
 		public string Name { get { return ModuleInfo.Name; } }

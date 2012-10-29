@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.sysmem
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class sceSysEventForKernel : HleModuleHost
+	public unsafe class sceSysEventForKernel : HleModuleHost
 	{
 		//int (*handler)(int ev_id, char* ev_name, void* param, int* result);
 		public enum PspSysEventHandlerFunc : uint { }
@@ -28,7 +25,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// <summary>
 		/// Register a SysEvent handler.
 		/// </summary>
-		/// <param name="PspSysEventHandler">the handler to register</param>
+		/// <param name="PspSysEventHandler">The handler to register</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xCD9E4BB5, FirmwareVersion = 150)]
 		public int sceKernelRegisterSysEventHandler(PspSysEventHandler* PspSysEventHandler)
@@ -45,7 +42,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// Dispatch a SysEvent event.
 		/// </summary>
 		/// <param name="EventTypeMask">The event type mask</param>
-		/// <param name="EventId">The event id</param>
+		/// <param name="EventId">The event ID</param>
 		/// <param name="EventNamePointer">The event name</param>
 		/// <param name="Parameter">The pointer to the custom parameters</param>
 		/// <param name="Result">The pointer to the result</param>

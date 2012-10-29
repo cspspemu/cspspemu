@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Rtc;
@@ -11,7 +7,7 @@ using CSharpUtils;
 namespace CSPspEmu.Hle.Modules.threadman
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public partial class ThreadManForUser : HleModuleHost
+	public unsafe partial class ThreadManForUser : HleModuleHost
 	{
 		[Inject]
 		PspRtc PspRtc;
@@ -53,7 +49,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// Convert a number of microseconds to a ::SceKernelSysClock structure
 		/// </summary>
 		/// <param name="MicroSeconds">Number of microseconds</param>
-		/// <param name="Clock">Pointer to a ::SceKernelSysClock structure</param>
+		/// <param name="Clock">Pointer to a <see cref="SceKernelSysClock"/> structure</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x110DEC9A, FirmwareVersion = 150)]
 		public int sceKernelUSec2SysClock(uint MicroSeconds, SceKernelSysClock* Clock)
@@ -65,8 +61,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="sysclock"></param>
-		/// <param name="addr"></param>
+		/// <param name="Clock"></param>
+		/// <param name="Low"></param>
+		/// <param name="High"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xE1619D7C, FirmwareVersion = 150)]
 		public int sceKernelSysClock2USecWide(long Clock, uint* Low, uint* High)
@@ -80,7 +77,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// Set an alarm.
 		/// </summary>
 		/// <param name="clock">The number of micro seconds till the alarm occurrs.</param>
-		/// <param name="handler">Pointer to a ::SceKernelAlarmHandler</param>
+		/// <param name="handler">Pointer to a SceKernelAlarmHandler</param>
 		/// <param name="common">Common pointer for the alarm handler</param>
 		/// <returns>
 		///		A UID representing the created alarm
@@ -111,7 +108,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Get the system time
 		/// </summary>
-		/// <param name="Time">Pointer to a ::SceKernelSysClock structure</param>
+		/// <param name="Time">Pointer to a <see cref="SceKernelSysClock"/> structure</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xDB738F35, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
@@ -123,9 +120,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		}
 
 		/// <summary>
-		/// Convert a ::SceKernelSysClock structure to microseconds
+		/// Convert a <see cref="SceKernelSysClock"/> structure to microseconds
 		/// </summary>
-		/// <param name="Clock">Pointer to a ::SceKernelSysClock structure</param>
+		/// <param name="Clock">Pointer to a <see cref="SceKernelSysClock"/> structure</param>
 		/// <param name="Low">Pointer to the low part of the time</param>
 		/// <param name="High">Pointer to the high part of the time</param>
 		/// <returns>0 on success, less than 0 on error</returns>
@@ -153,25 +150,25 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return 0;
 		}
 
-        [HlePspFunction(NID = 0xFFC36A14, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceKernelReferThreadRunStatus()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0xFFC36A14, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelReferThreadRunStatus()
+		{
+			return 0;
+		}
 
-        /**
-         * Delay the current thread by a specified number of sysclocks
-         *
-         * @param sysclocksPointer - Address of delay in sysclocks
-         *
-         * @return 0 on success, < 0 on error
-         */
-        [HlePspFunction(NID = 0xBD123D9E, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceKernelDelaySysClockThread()
-        {
-            return 0;
-        }
+		/**
+		 * Delay the current thread by a specified number of sysclocks
+		 *
+		 * @param sysclocksPointer - Address of delay in sysclocks
+		 *
+		 * @return 0 on success, < 0 on error
+		 */
+		[HlePspFunction(NID = 0xBD123D9E, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelDelaySysClockThread()
+		{
+			return 0;
+		}
 	}
 }

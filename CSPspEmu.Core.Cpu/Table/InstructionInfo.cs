@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Cpu.Table;
 
 namespace CSPspEmu.Core.Cpu.Table
 {
@@ -25,13 +21,13 @@ namespace CSPspEmu.Core.Cpu.Table
 		Psp    = (1 << 8),
 	}
 
-	public class InstructionInfo : Attribute
+	public sealed class InstructionInfo : Attribute
 	{
 		/// <summary>
 		/// Name of the instruction.
 		/// Example: add
 		/// </summary>
-		public String Name;
+		public string Name;
 
 		/// <summary>
 		/// Mask extracted from BinaryEncoding
@@ -46,12 +42,12 @@ namespace CSPspEmu.Core.Cpu.Table
 		/// <summary>
 		/// Example: 000000:rs:rt:rd:00000:100000
 		/// </summary>
-		protected String _BinaryEncoding;
+		private string _BinaryEncoding;
 
 		/// <summary>
 		/// Example: %d, %s, %t
 		/// </summary>
-		public String AsmEncoding;
+		public string AsmEncoding;
 
 		/// <summary>
 		/// 
@@ -67,7 +63,7 @@ namespace CSPspEmu.Core.Cpu.Table
 		/// 
 		/// </summary>
 		/// <param name="Encoding"></param>
-		protected void ParseBinaryEncoding(string Encoding)
+		private void ParseBinaryEncoding(string Encoding)
 		{
 			Value = Mask = 0;
 
@@ -132,7 +128,7 @@ namespace CSPspEmu.Core.Cpu.Table
 			}
 		}
 
-		public String BinaryEncoding
+		public string BinaryEncoding
 		{
 			set
 			{

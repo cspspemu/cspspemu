@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CSPspEmu.Hle.Threading.Semaphores
+﻿namespace CSPspEmu.Hle.Threading.Semaphores
 {
-	unsafe public struct SceKernelSemaInfo
+	public unsafe struct SceKernelSemaInfo
 	{
 		/// <summary>
 		/// Size of the ::SceKernelSemaInfo structure.

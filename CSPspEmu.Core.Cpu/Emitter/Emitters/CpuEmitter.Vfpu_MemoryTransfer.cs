@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection.Emit;
-using CSharpUtils;
-using System.Linq.Expressions;
 using Codegen;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	unsafe sealed public partial class CpuEmiter
+	public unsafe sealed partial class CpuEmitter
 	{
 		// Load/Store Vfpu (Left/Right)_
 		public void lv_s()
@@ -43,7 +37,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		static public void _lvl_svl_q(CpuThreadState CpuThreadState, uint m, uint i, uint address, bool dir, bool save)
+		public static void _lvl_svl_q(CpuThreadState CpuThreadState, uint m, uint i, uint address, bool dir, bool save)
 		{
 			uint k = 3 - ((address >> 2) & 3);
 			address &= unchecked((uint)~0xF);
@@ -74,7 +68,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			}
 		}
 
-		static public void _lvr_svr_q(CpuThreadState CpuThreadState, uint m, uint i, uint address, bool dir, bool save)
+		public static void _lvr_svr_q(CpuThreadState CpuThreadState, uint m, uint i, uint address, bool dir, bool save)
 		{
 			uint k = 4 - ((address >> 2) & 3);
 
@@ -115,7 +109,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				SafeILGenerator.LoadArgument0CpuThreadState();// CpuThreadState
 				SafeILGenerator.Push((int)(m));
 				SafeILGenerator.Push((int)(i));
-				MipsMethodEmiter.LoadGPR_Unsigned(RS);
+				MipsMethodEmitter.LoadGPR_Unsigned(RS);
 				SafeILGenerator.Push((int)(Instruction.IMM14 * 4));
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
 				SafeILGenerator.Push((int)(dir ? 1 : 0));
@@ -125,11 +119,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			if (left)
 			{
 
-				MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmiter._lvl_svl_q);
+				MipsMethodEmitter.CallMethod((Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmitter._lvl_svl_q);
 			}
 			else
 			{
-				MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmiter._lvr_svr_q);
+				MipsMethodEmitter.CallMethod((Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmitter._lvr_svr_q);
 			}
 		}
 

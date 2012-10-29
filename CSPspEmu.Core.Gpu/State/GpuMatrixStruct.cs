@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenTK;
 using System.Runtime.InteropServices;
+using OpenTK;
 
 namespace CSPspEmu.Core.Gpu.State
 {
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	unsafe public struct GpuMatrix4x4Struct
+    public unsafe struct GpuMatrix4x4Struct
 	{
-		readonly static public int[] Indexes = new int[] {
+		public readonly static int[] Indexes = new int[] {
 			0, 1, 2, 3,
 			4, 5, 6, 7,
 			8, 9, 10, 11,
@@ -102,9 +99,9 @@ namespace CSPspEmu.Core.Gpu.State
 	}
 
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	unsafe public struct GpuMatrix4x3Struct
+	public unsafe struct GpuMatrix4x3Struct
 	{
-		readonly static public int[] Indexes = new int[] {
+		public readonly static int[] Indexes = new int[] {
 			0, 1, 2,
 			4, 5, 6,
 			8, 9, 10,

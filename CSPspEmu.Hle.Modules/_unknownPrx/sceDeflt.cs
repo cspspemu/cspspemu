@@ -1,21 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Hle.Attributes;
-using System.IO.Compression;
-using CSPspEmu.Core.Memory;
-using CSPspEmu.Hle.Utils;
-using CSharpUtils;
 using System.IO;
-using ComponentAce.Compression.Libs.zlib;
-using System.Runtime.InteropServices;
+using CSPspEmu.Hle.Attributes;
+using CSharpUtils;
 using CSharpUtils.Streams;
+using ComponentAce.Compression.Libs.zlib;
 
 namespace CSPspEmu.Hle.Modules._unknownPrx
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class sceDeflt : HleModuleHost
+	public unsafe class sceDeflt : HleModuleHost
 	{
 		/// <summary>
 		/// 
@@ -89,7 +82,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
 			throw (new NotImplementedException());
 		}
 
-		private void _Decompress(Stream InStream, Stream OutStream)
+		private static void _Decompress(Stream InStream, Stream OutStream)
 		{
 			var ZStream = new ZStream();
 
@@ -211,7 +204,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
 		/// <param name="OutBuffer"></param>
 		/// <param name="OutBufferLength"></param>
 		/// <param name="InBuffer"></param>
-		/// <param name="crc32Addr"></param>
+		/// <param name="Crc32Addr"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xA9E4FB28, FirmwareVersion = 150)]
 		public int sceZlibDecompress(byte* OutBuffer, int OutBufferLength, byte* InBuffer, uint* Crc32Addr)

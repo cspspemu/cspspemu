@@ -18,7 +18,7 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 	/// Read_Position();
 	/// </summary>
 	[TestClass]
-	unsafe public class VertexReaderDynarecTest
+	public unsafe class VertexReaderDynarecTest
 	{
 		VertexInfo[] VertexInfoList = new VertexInfo[16];
 		VertexReaderDelegate ReadVertices;

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.pspnet
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | (ModuleFlags)0x00010011)]
-	unsafe public class sceNetAdhocMatching : HleModuleHost
+	public unsafe class sceNetAdhocMatching : HleModuleHost
 	{
 		/// <summary>
 		/// Initialise the Adhoc matching library
@@ -35,7 +32,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Create an Adhoc matching object
 		/// </summary>
-		/// <param name="mode">One of ::pspAdhocMatchingModes</param>
+		/// <param name="mode">One of pspAdhocMatchingModes</param>
 		/// <param name="maxPeers">Maximum number of peers to match (only used when mode is PSP_ADHOC_MATCHING_MODE_HOST)</param>
 		/// <param name="port">Port. Lumines uses 0x22B</param>
 		/// <param name="bufSize">Receiving buffer size</param>
@@ -55,7 +52,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Start a matching object
 		/// </summary>
-		/// <param name="matchingId">The ID returned from ::sceNetAdhocMatchingCreate</param>
+		/// <param name="matchingId">The ID returned from <see cref="sceNetAdhocMatchingCreate"/></param>
 		/// <param name="evthPri">Priority of the event handler thread. Lumines uses 0x10</param>
 		/// <param name="evthStack">Stack size of the event handler thread. Lumines uses 0x2000</param>
 		/// <param name="inthPri">Priority of the input handler thread. Lumines uses 0x10</param>
@@ -73,7 +70,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Stop a matching object
 		/// </summary>
-		/// <param name="matchingId">The ID returned from ::sceNetAdhocMatchingCreate</param>
+		/// <param name="matchingId">The ID returned from <see cref="sceNetAdhocMatchingCreate"/></param>
 		/// <returns>0 on success, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0x32B156B3, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -85,7 +82,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Delete an Adhoc matching object
 		/// </summary>
-		/// <param name="matchingId">The ID returned from ::sceNetAdhocMatchingCreate</param>
+		/// <param name="matchingId">The ID returned from <see cref="sceNetAdhocMatchingCreate"/></param>
 		/// <returns>0 on success, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xF16EAF4F, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -97,7 +94,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Send data to a matching target
 		/// </summary>
-		/// <param name="matchingId">The ID returned from ::sceNetAdhocMatchingCreate</param>
+		/// <param name="matchingId">The ID returned from <see cref="sceNetAdhocMatchingCreate"/></param>
 		/// <param name="macAddr">The MAC address to send the data to</param>
 		/// <param name="dataLen">Length of the data</param>
 		/// <param name="data">Pointer to the data</param>
@@ -112,7 +109,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Abort a data send to a matching target
 		/// </summary>
-		/// <param name="matchingId">The ID returned from ::sceNetAdhocMatchingCreate</param>
+		/// <param name="matchingId">The ID returned from <see cref="sceNetAdhocMatchingCreate"/></param>
 		/// <param name="macAddr">The MAC address to send the data to</param>
 		/// <returns>0 on success, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xEC19337D, FirmwareVersion = 150)]
@@ -125,7 +122,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Select a matching target
 		/// </summary>
-		/// <param name="matchingId">The ID returned from ::sceNetAdhocMatchingCreate</param>
+		/// <param name="matchingId">The ID returned from <see cref="sceNetAdhocMatchingCreate"/></param>
 		/// <param name="macAddr">MAC address to select</param>
 		/// <param name="optLen">Optional data length</param>
 		/// <param name="optData">Pointer to the optional data</param>
@@ -140,7 +137,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Cancel a matching target
 		/// </summary>
-		/// <param name="matchingId">The ID returned from ::sceNetAdhocMatchingCreate</param>
+		/// <param name="matchingId">The ID returned from <see cref="sceNetAdhocMatchingCreate"/></param>
 		/// <param name="macAddr">The MAC address to cancel</param>
 		/// <returns>0 on success, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xEA3C6108, FirmwareVersion = 150)]
@@ -153,7 +150,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Cancel a matching target (with optional data)
 		/// </summary>
-		/// <param name="matchingId">The ID returned from ::sceNetAdhocMatchingCreate</param>
+		/// <param name="matchingId">The ID returned from <see cref="sceNetAdhocMatchingCreate"/></param>
 		/// <param name="macAddr">The MAC address to cancel</param>
 		/// <param name="optLen">Optional data length</param>
 		/// <param name="optData">Pointer to the optional data</param>
@@ -168,7 +165,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Get the optional hello message
 		/// </summary>
-		/// <param name="matchingId">The ID returned from ::sceNetAdhocMatchingCreate</param>
+		/// <param name="matchingId">The ID returned from <see cref="sceNetAdhocMatchingCreate"/></param>
 		/// <param name="optLenAddr">Length of the hello data (input/output)</param>
 		/// <param name="optData">Pointer to the hello data</param>
 		/// <returns>0 on success, less than 0 on error.</returns>
@@ -182,7 +179,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Set the optional hello message
 		/// </summary>
-		/// <param name="matchingId">The ID returned from ::sceNetAdhocMatchingCreate</param>
+		/// <param name="matchingId">The ID returned from <see cref="sceNetAdhocMatchingCreate"/></param>
 		/// <param name="optLen">Length of the hello data</param>
 		/// <param name="optData">Pointer to the hello data</param>
 		/// <returns>0 on success, less than 0 on error.</returns>
@@ -196,7 +193,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Get a list of matching members
 		/// </summary>
-		/// <param name="matchingId">The ID returned from ::sceNetAdhocMatchingCreate</param>
+		/// <param name="matchingId">The ID returned from <see cref="sceNetAdhocMatchingCreate"/></param>
 		/// <param name="sizeAddr">The length of the list.</param>
 		/// <param name="buf">An allocated area of size length.</param>
 		/// <returns>0 on success, less than 0 on error.</returns>

@@ -247,7 +247,7 @@ namespace BrightIdeasSoftware
                 if (this.Scale == 1.0f)
                     return this.Font;
                 else
-                    // ::TODO: Cache this font and discard it when either Font or Scale changed.
+                    // TODO: Cache this font and discard it when either Font or Scale changed.
                     return new Font(this.Font.FontFamily, this.Font.SizeInPoints * this.Scale, this.Font.Style);
             }
         }

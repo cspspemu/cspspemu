@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core.Audio;
 using CSharpUtils;
@@ -9,14 +6,14 @@ using CSharpUtils;
 namespace CSPspEmu.Hle.Modules.sc_sascore
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public partial class sceSasCore : HleModuleHost
+	public unsafe partial class sceSasCore : HleModuleHost
 	{
 		static Logger Logger = Logger.GetLogger("sceSasCore");
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="SasCore"></param>
+		/// <param name="SasCorePointer"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xBD11B7C2, FirmwareVersion = 150)]
 		public int __sceSasGetGrain(uint SasCorePointer)
@@ -28,7 +25,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="SasCore"></param>
+		/// <param name="SasCorePointer"></param>
 		/// <param name="Grain"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xD1E0A01E, FirmwareVersion = 150)]
@@ -49,7 +46,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="SasCore"></param>
+		/// <param name="SasCorePointer"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xE175EF66, FirmwareVersion = 150)]
 		public OutputMode __sceSasGetOutputmode(uint SasCorePointer)
@@ -63,7 +60,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="SasCore"></param>
+		/// <param name="SasCorePointer"></param>
 		/// <param name="OutputMode"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xE855BF76, FirmwareVersion = 150)]
@@ -98,11 +95,11 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <example>
 		/// __sceSasInit(&sasCore, PSP_SAS_GRAIN_SAMPLES, PSP_SAS_VOICES_MAX, OutputMode.PSP_SAS_OUTPUTMODE_STEREO, 44100);
 		/// </example>
-		/// <param name="sasCore">Pointer to a SasCore structure that will contain information.</param>
-		/// <param name="grainSamples">Number of grainSamples</param>
-		/// <param name="maxVoices">Max number of voices</param>
-		/// <param name="outputMode">Out Mode</param>
-		/// <param name="sampleRate">Sample Rate</param>
+		/// <param name="SasCorePointer">Pointer to a <see cref="SasCore"/> structure that will contain information.</param>
+		/// <param name="GrainSamples">Number of grainSamples</param>
+		/// <param name="MaxVoices">Max number of voices</param>
+		/// <param name="OutputMode">Out Mode</param>
+		/// <param name="SampleRate">Sample Rate</param>
 		/// <returns>0 on success</returns>
 		[HlePspFunction(NID = 0x42778A9F, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
@@ -132,7 +129,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// Return a bitfield indicating the end of the voices.
 		/// </summary>
-		/// <param name="SasCore">Core</param>
+		/// <param name="SasCorePointer">Core</param>
 		/// <returns>A set of flags indiciating the end of the voices.</returns>
 		[HlePspFunction(NID = 0x68A46B95, FirmwareVersion = 150)]
 		public uint __sceSasGetEndFlag(uint SasCorePointer)
@@ -142,9 +139,9 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		}
 
 		/// <summary>
-		/// Sets the WaveformEffectType to the specified sasCore.
+		/// Sets the <see cref="WaveformEffectType"/> to the specified <see cref="SasCore"/>.
 		/// </summary>
-		/// <param name="SasCore">Core</param>
+		/// <param name="SasCorePointer">Core</param>
 		/// <param name="WaveformEffectType">Effect</param>
 		/// <returns>0 on success.</returns>
 		[HlePspFunction(NID = 0x33D4AB37, FirmwareVersion = 150)]
@@ -156,11 +153,11 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		}
 
 		/// <summary>
-		/// Sets the waveformEffectIsDry and waveformEffectIsWet to the specified sasCore.
+		/// Sets the WaveformEffectIsDry and WaveformEffectIsWet to the specified SasCore.
 		/// </summary>
-		/// <param name="SasCore">Core</param>
-		/// <param name="WaveformEffectIsDry">waveformEffectIsDry</param>
-		/// <param name="WaveformEffectIsWet">waveformEffectIsWet</param>
+		/// <param name="SasCorePointer">SasCore</param>
+		/// <param name="WaveformEffectIsDry">WaveformEffectIsDry</param>
+		/// <param name="WaveformEffectIsWet">WaveformEffectIsWet</param>
 		/// <returns>0 on success.</returns>
 		[HlePspFunction(NID = 0xF983B186, FirmwareVersion = 150)]
 		public uint __sceSasRevVON(uint SasCorePointer, bool WaveformEffectIsDry, bool WaveformEffectIsWet)
@@ -172,9 +169,9 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		}
 
 		/// <summary>
-		/// Sets the effect left and right volumes for the specified sasCore.
+		/// Sets the effect left and right volumes for the specified SasCore.
 		/// </summary>
-		/// <param name="SasCore">Core</param>
+		/// <param name="SasCorePointer">SasCore</param>
 		/// <param name="LeftVolume">Left volume</param>
 		/// <param name="RightVolume">Right volume</param>
 		/// <returns>0 on success</returns>
@@ -191,7 +188,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="SasCore"></param>
+		/// <param name="SasCorePointer"></param>
 		/// <param name="Delay"></param>
 		/// <param name="Feedback"></param>
 		/// <returns></returns>
@@ -208,9 +205,9 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		}
 
 		/// <summary>
-		/// Pauses a set of voice channels for that sasCore.
+		/// Pauses a set of voice channels for that SasCore.
 		/// </summary>
-		/// <param name="sasCore">SasCore</param>
+		/// <param name="SasCorePointer">SasCore</param>
 		/// <param name="voice_bits">Voice Bit Set</param>
 		/// <returns>0 on success.</returns>
 		[HlePspFunction(NID = 0x787D04D5, FirmwareVersion = 150)]
@@ -224,7 +221,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="sasCore"></param>
+		/// <param name="SasCorePointer"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x2C8E6AB3, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
@@ -238,7 +235,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// Process the voices and generate the next samples.
 		/// Mix the resulting samples in an exiting buffer.
 		/// </summary>
-		/// <param name="SasCore">sasCore handle</param>
+		/// <param name="SasCorePointer">SasCore handle</param>
 		/// <param name="SasInOut">
 		///		address for the input and output buffer.
 		///		Samples are stored as 2 16-bit values
@@ -248,7 +245,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="RightVolume">Right channel volume, [0..0x1000].</param>
 		/// <returns>
 		///		if OK 0
-		///		ERROR_SAS_NOT_INIT if an invalid sasCore handle is provided
+		///		ERROR_SAS_NOT_INIT if an invalid SasCore handle is provided
 		/// </returns>
 		[HlePspFunction(NID = 0x50A14DFC, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
@@ -285,7 +282,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// Process the voices and generate the next samples.
 		/// </summary>
-		/// <param name="SasCore">sasCore handle</param>
+		/// <param name="SasCorePointer">SasCore handle</param>
 		/// <param name="SasOut">
 		///		address for the output buffer.
 		///		Samples are stored as 2 16-bit values
@@ -361,8 +358,8 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// Get the current envelope height for all the voices.
 		/// </summary>
-		/// <param name="sasCore">sasCore handle</param>
-		/// <param name="heightsAddr">
+		/// <param name="SasCorePointer">SasCore handle</param>
+		/// <param name="Heights">
 		/// (int *) address where to return the envelope heights,
 		/// stored as 32 bit values [0..0x40000000].
 		///     heightsAddr[0] = envelope height of voice 0
@@ -371,7 +368,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// </param>
 		/// <returns>
 		/// 0 if OK
-		/// ERROR_SAS_NOT_INIT if an invalid sasCore handle is provided
+		/// ERROR_SAS_NOT_INIT if an invalid SasCore handle is provided
 		/// </returns>
 		[HlePspFunction(NID = 0x07F58C24, FirmwareVersion = 150)]
 		public int __sceSasGetAllEnvelopeHeights(uint SasCorePointer, int* Heights)
@@ -384,25 +381,25 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 			return 0;
 		}
 
-        [HlePspFunction(NID = 0xE1CD9561, FirmwareVersion = 500)]
-        [HlePspNotImplemented]
-        public int __sceSasSetVoicePCM()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0xE1CD9561, FirmwareVersion = 500)]
+		[HlePspNotImplemented]
+		public int __sceSasSetVoicePCM()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0xD5EBBBCD, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int __sceSasSetSteepWave()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0xD5EBBBCD, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int __sceSasSetSteepWave()
+		{
+			return 0;
+		}
 
-        [HlePspFunction(NID = 0xA232CBE6, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int __sceSasSetTriangularWave()
-        {
-            return 0;
-        }
+		[HlePspFunction(NID = 0xA232CBE6, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int __sceSasSetTriangularWave()
+		{
+			return 0;
+		}
 	}
 }

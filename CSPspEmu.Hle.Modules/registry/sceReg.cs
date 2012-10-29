@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using CSharpUtils;
+using CSPspEmu.Core;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.registry
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class sceReg : HleModuleHost
+	public unsafe class sceReg : HleModuleHost
 	{
 		[Inject]
 		HleRegistryManager HleRegistryManager;
@@ -159,9 +157,9 @@ namespace CSPspEmu.Hle.Modules.registry
 	}
 
 	/// <summary>
-	/// 
+	/// Struct used to open a registry
 	/// </summary>
-	unsafe public struct RegParam
+	public unsafe struct RegParam
 	{
 		/// <summary>
 		/// Set to 1 only for system

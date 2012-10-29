@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Cpu.Emiter;
 using CSPspEmu.Core.Memory;
 using CSharpUtils.Threading;
 
 namespace CSPspEmu.Core.Cpu
 {
-	unsafe sealed public class CpuProcessor : PspEmulatorComponent
+    public sealed class CpuProcessor : PspEmulatorComponent
 	{
-		readonly public Dictionary<string, uint> GlobalInstructionStats = new Dictionary<string, uint>();
+		public readonly Dictionary<string, uint> GlobalInstructionStats = new Dictionary<string, uint>();
 
 		public PspConfig PspConfig;
 
@@ -117,7 +114,7 @@ namespace CSPspEmu.Core.Cpu
 
 		public event Action DebugCurrentThreadEvent;
 
-		static public void DebugCurrentThread(CpuThreadState CpuThreadState)
+		public static void DebugCurrentThread(CpuThreadState CpuThreadState)
 		{
 			var CpuProcessor = CpuThreadState.CpuProcessor;
 			Console.Error.WriteLine("*******************************************");

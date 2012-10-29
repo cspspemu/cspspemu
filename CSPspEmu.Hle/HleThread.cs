@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
-using System.Text;
-using CSharpUtils.Threading;
-using CSPspEmu.Core.Cpu;
-using CSPspEmu.Core.Memory;
-using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
-using CSPspEmu.Core;
-using CSharpUtils;
-using System.Globalization;
+using System.Text;
 using System.Threading;
-using CSPspEmu.Hle.Threading.EventFlags;
-using System.IO;
-using CSPspEmu.Hle.Managers;
+using CSPspEmu.Core;
+using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Cpu.Dynarec;
+using CSPspEmu.Core.Memory;
+using CSPspEmu.Hle.Managers;
+using CSPspEmu.Hle.Threading.EventFlags;
+using CSharpUtils;
+using CSharpUtils.Threading;
 
 namespace CSPspEmu.Hle
 {
@@ -103,7 +102,7 @@ namespace CSPspEmu.Hle
 		}
 	}
 
-	unsafe public class HleThread : IDisposable, IPreemptiveItem
+	public unsafe class HleThread : IDisposable, IPreemptiveItem
 	{
 		protected MethodCacheFast MethodCache;
 
@@ -336,7 +335,7 @@ namespace CSPspEmu.Hle
 			}
 		}
 
-		[HandleProcessCorruptedStateExceptions()]
+		[HandleProcessCorruptedStateExceptions]
 		protected void MainLoop()
 		{
 			Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.CultureName);
@@ -376,7 +375,7 @@ namespace CSPspEmu.Hle
 			{
 				Console.Error.WriteLine(AccessViolationException);
 
-				var Field = typeof(AccessViolationException).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Where(FieldInfo => FieldInfo.Name == "_target").Single();
+				var Field = typeof(AccessViolationException).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Single(FieldInfo => FieldInfo.Name == "_target");
 				var Address = (ulong)((IntPtr)Field.GetValue(AccessViolationException)).ToInt64();
 				throw (new PspMemory.InvalidAddressException(Address));
 				//AccessViolationException.
@@ -600,7 +599,7 @@ namespace CSPspEmu.Hle
 		}
 	}
 
-	unsafe public struct SceKernelSysClock
+	public unsafe struct SceKernelSysClock
 	{
 		//ulong Value;
 		public uint Low;
@@ -692,7 +691,7 @@ namespace CSPspEmu.Hle
 	{
 	}
 
-	unsafe public struct SceKernelThreadInfo
+	public unsafe struct SceKernelThreadInfo
 	{
 		/// <summary>
 		/// 0x0000 - Size of the structure

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core;
-using CSharpUtils;
+﻿using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Managers

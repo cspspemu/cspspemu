@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using CSPspEmu.Core;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Runner.Components.Display
 {
-	sealed public class DisplayComponentThread : ComponentThread
+	public sealed class DisplayComponentThread : ComponentThread
 	{
 		[Inject]
 		private HleInterruptManager HleInterruptManager;

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Threading.EventFlags;
 using CSharpUtils;
@@ -22,7 +19,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		evid = sceKernelCreateEventFlag("wait_event", 0, 0, 0);
 		/// </example>
 		/// <param name="Name">The name of the event flag.</param>
-		/// <param name="Attributes">Attributes from ::PspEventFlagAttributes</param>
+		/// <param name="Attributes">Attributes from PspEventFlagAttributes</param>
 		/// <param name="BitPattern">Initial bit pattern.</param>
 		/// <param name="OptionsPtr">Options, set to NULL</param>
 		/// <returns>less than 0 on error. greater or equal to 0 event flag id.</returns>
@@ -51,8 +48,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Delete an event flag
 		/// </summary>
-		/// <param name="EventId">The event id returned by sceKernelCreateEventFlag.</param>
-		/// <returns>less than 0 on error</returns>
+		/// <param name="EventId">The event ID returned by <see cref="sceKernelCreateEventFlag"/>.</param>
+		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xEF9E4C70, FirmwareVersion = 150)]
 		public int sceKernelDeleteEventFlag(EventFlagId EventId)
 		{
@@ -63,9 +60,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Clear a event flag bit pattern
 		/// </summary>
-		/// <param name="EventId">The event id returned by ::sceKernelCreateEventFlag</param>
+		/// <param name="EventId">The event ID returned by <see cref="sceKernelCreateEventFlag"/></param>
 		/// <param name="BitsToClear">The bits to clean</param>
-		/// <returns>less than 0 on error</returns>
+		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x812346E4, FirmwareVersion = 150)]
 		public int sceKernelClearEventFlag(EventFlagId EventId, uint BitsToClear)
 		{
@@ -78,9 +75,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Wait for an event flag for a given bit pattern with callback.
 		/// </summary>
-		/// <param name="EventId">The event id returned by sceKernelCreateEventFlag.</param>
+		/// <param name="EventId">The event ID returned by <see cref="sceKernelCreateEventFlag"/>.</param>
 		/// <param name="Bits">The bit pattern to poll for.</param>
-		/// <param name="Wait">Wait type, one or more of ::PspEventFlagWaitTypes or'ed together</param>
+		/// <param name="Wait">Wait type, one or more of PspEventFlagWaitTypes or'ed together</param>
 		/// <param name="OutBits">The bit pattern that was matched.</param>
 		/// <param name="Timeout">Timeout in microseconds</param>
 		/// <param name="HandleCallbacks"></param>
@@ -136,12 +133,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Wait for an event flag for a given bit pattern.
 		/// </summary>
-		/// <param name="EventId">The event id returned by sceKernelCreateEventFlag.</param>
+		/// <param name="EventId">The event ID returned by <see cref="sceKernelCreateEventFlag"/>.</param>
 		/// <param name="Bits">The bit pattern to poll for.</param>
-		/// <param name="WaitType">Wait type, one or more of ::PspEventFlagWaitTypes or'ed together</param>
+		/// <param name="WaitType">Wait type, one or more of PspEventFlagWaitTypes OR'ed together</param>
 		/// <param name="OutBits">The bit pattern that was matched.</param>
 		/// <param name="Timeout">Timeout in microseconds</param>
-		/// <returns>less than 0 on error</returns>
+		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x402FCF22, FirmwareVersion = 150)]
 		public int sceKernelWaitEventFlag(EventFlagId EventId, uint Bits, EventFlagWaitTypeSet WaitType, uint* OutBits, uint* Timeout)
 		{
@@ -151,12 +148,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Wait for an event flag for a given bit pattern with callback.
 		/// </summary>
-		/// <param name="EventId">The event id returned by sceKernelCreateEventFlag.</param>
+		/// <param name="EventId">The event ID returned by <see cref="sceKernelCreateEventFlag"/>.</param>
 		/// <param name="Bits">The bit pattern to poll for.</param>
-		/// <param name="WaitType">Wait type, one or more of ::PspEventFlagWaitTypes or'ed together</param>
+		/// <param name="WaitType">Wait type, one or more of PspEventFlagWaitTypes OR'ed together</param>
 		/// <param name="OutBits">The bit pattern that was matched.</param>
 		/// <param name="Timeout">Timeout in microseconds</param>
-		/// <returns>less than 0 on error</returns>
+		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x328C546A, FirmwareVersion = 150)]
 		public int sceKernelWaitEventFlagCB(EventFlagId EventId, uint Bits, EventFlagWaitTypeSet WaitType, uint* OutBits, uint* Timeout)
 		{
@@ -166,9 +163,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Set an event flag bit pattern.
 		/// </summary>
-		/// <param name="EventId">The event id returned by sceKernelCreateEventFlag.</param>
+		/// <param name="EventId">The event ID returned by <see cref="sceKernelCreateEventFlag"/>.</param>
 		/// <param name="BitPattern">The bit pattern to set.</param>
-		/// <returns>less than 0 on error</returns>
+		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x1FB15A32, FirmwareVersion = 150)]
 		public int sceKernelSetEventFlag(EventFlagId EventId, uint BitPattern)
 		{
@@ -180,7 +177,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Poll an event flag for a given bit pattern.
 		/// </summary>
-		/// <param name="EventId">The event id returned by sceKernelCreateEventFlag.</param>
+		/// <param name="EventId">The event ID returned by <see cref="sceKernelCreateEventFlag"/>.</param>
 		/// <param name="Bits">The bit pattern to poll for.</param>
 		/// <param name="WaitType">Wait type, one or more of ::PspEventFlagWaitTypes or'ed together</param>
 		/// <param name="OutBits">The bit pattern that was matched.</param>
@@ -212,7 +209,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// Get the status of an event flag.
 		/// </summary>
 		/// <param name="EventId">The UID of the event.</param>
-		/// <param name="Info">A pointer to a ::SceKernelEventFlagInfo structure.</param>
+		/// <param name="Info">A pointer to a SceKernelEventFlagInfo structure.</param>
 		/// <returns>less than 0 on error</returns>
 		[HlePspFunction(NID = 0xA66B0120, FirmwareVersion = 150)]
 		[HlePspNotImplemented]

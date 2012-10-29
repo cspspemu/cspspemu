@@ -5,10 +5,16 @@
  * Date: 4-March-2011 11:59 pm
  *
  * Change log:
+ * 2012-05-20  JPP  - Allow the same model object to be in multiple clusters
+ *                    Useful for xor'ed flag fields, and multi-value strings
+ *                    (e.g. hobbies that are stored as comma separated values).
+ * v2.5.1
+ * 2012-04-14  JPP  - Fixed rare bug with clustering an empty list (SF #3445118)
+ * v2.5
  * 2011-04-12  JPP  - Added some images to menu
  * 2011-03-04  JPP  - First version
  * 
- * Copyright (C) 2011 Phillip Piper
+ * Copyright (C) 2011-2012 Phillip Piper
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -128,7 +134,7 @@ namespace BrightIdeasSoftware {
             if (listView == null) throw new ArgumentNullException("listView");
             if (column == null) throw new ArgumentNullException("column");
 
-            if (!column.UseFiltering || column.ClusteringStrategy == null)
+            if (!column.UseFiltering || column.ClusteringStrategy == null || listView.Objects == null)
                 return strip;
 
             List<ICluster> clusters = this.Cluster(column.ClusteringStrategy, listView, column);
@@ -151,20 +157,10 @@ namespace BrightIdeasSoftware {
             // Build a map that correlates cluster key to clusters
             NullableDictionary<object, ICluster> map = new NullableDictionary<object, ICluster>();
             int count = 0;
-            foreach (object model in listView.Objects) {
-                object key = strategy.GetClusterKey(model);
-                if (key == System.DBNull.Value)
-                    key = null;
-                if (key == null && !this.TreatNullAsDataValue)
-                    continue;
-                if (map.ContainsKey(key))
-                    map[key].Count += 1;
-                else
-                    map[key] = strategy.CreateCluster(key);
+            foreach (object model in listView.ObjectsForClustering) {
+                this.ClusterOneModel(strategy, map, model);
 
-                // Check our limit
-                count += 1;
-                if (count > this.MaxObjectsToConsider)
+                if (count++ > this.MaxObjectsToConsider)
                     break;
             }
 
@@ -173,6 +169,32 @@ namespace BrightIdeasSoftware {
                 cluster.DisplayLabel = strategy.GetClusterDisplayLabel(cluster);
 
             return new List<ICluster>(map.Values);
+        }
+
+        private void ClusterOneModel(IClusteringStrategy strategy, NullableDictionary<object, ICluster> map, object model) {
+            object clusterKey = strategy.GetClusterKey(model);
+
+            // If the returned value is an IEnumerable, that means the given model can belong to more than one cluster
+            IEnumerable keyEnumerable = clusterKey as IEnumerable;
+            if (clusterKey is string || keyEnumerable == null)
+                keyEnumerable = new object[] {clusterKey};
+
+            // Deal with nulls and DBNulls
+            ArrayList nullCorrected = new ArrayList();
+            foreach (object key in keyEnumerable) {
+                if (key == null || key == System.DBNull.Value) {
+                    if (this.TreatNullAsDataValue)
+                        nullCorrected.Add(null);
+                } else nullCorrected.Add(key);
+            }
+
+            // Group by key
+            foreach (object key in nullCorrected) {
+                if (map.ContainsKey(key))
+                    map[key].Count += 1;
+                else
+                    map[key] = strategy.CreateCluster(key);
+            }
         }
 
         /// <summary>
@@ -244,13 +266,12 @@ namespace BrightIdeasSoftware {
         /// <param name="e"></param>
         virtual protected void HandleItemChecked(object sender, ItemCheckEventArgs e) {
 
-            ToolStripCheckedListBox checkedList = (ToolStripCheckedListBox)sender;
-            OLVColumn column = (OLVColumn)checkedList.Tag;
-            ObjectListView listView = (ObjectListView)column.ListView;
-
-            // Sanity
-            if (checkedList == null || column == null || listView == null)
-                return;
+            ToolStripCheckedListBox checkedList = sender as ToolStripCheckedListBox;
+            if (checkedList == null) return;
+            OLVColumn column = checkedList.Tag as OLVColumn;
+            if (column == null) return;
+            ObjectListView listView = column.ListView as ObjectListView;
+            if (listView == null) return;
 
             // Deal with the "Select All" item if there is one
             int selectAllIndex = checkedList.Items.IndexOf(SELECT_ALL_LABEL);

@@ -13,7 +13,7 @@
  *
  * TO DO:
  *
- * Copyright (C) 2010 Phillip Piper
+ * Copyright (C) 2010-2012 Phillip Piper
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -118,7 +118,7 @@ namespace BrightIdeasSoftware
     /// A CompositeFilter joins several other filters together.
     /// If there are no filters, all model objects are included
     /// </summary>
-    abstract public class CompositeFilter : IModelFilter {
+    public abstract class CompositeFilter : IModelFilter {
 
         /// <summary>
         /// Create an empty filter
@@ -130,8 +130,11 @@ namespace BrightIdeasSoftware
         /// Create a composite filter from the given list of filters
         /// </summary>
         /// <param name="filters">A list of filters</param>
-        public CompositeFilter(IList<IModelFilter> filters) {
-            Filters = filters;
+        public CompositeFilter(IEnumerable<IModelFilter> filters) {
+            foreach (IModelFilter filter in filters) {
+                if (filter != null)
+                    Filters.Add(filter);
+            }
         }
 
         /// <summary>
@@ -161,7 +164,7 @@ namespace BrightIdeasSoftware
         /// <remarks>Filters is guaranteed to be non-empty when this method is called</remarks>
         /// <param name="modelObject">The model object under consideration</param>
         /// <returns>True if the object is included by the filter</returns>
-        abstract public bool FilterObject(object modelObject);
+        public abstract bool FilterObject(object modelObject);
     }
 
     /// <summary>
@@ -185,7 +188,7 @@ namespace BrightIdeasSoftware
         /// <remarks>Filters is guaranteed to be non-empty when this method is called</remarks>
         /// <param name="modelObject">The model object under consideration</param>
         /// <returns>True if the object is included by the filter</returns>
-        override public bool FilterObject(object modelObject) {
+        public override bool FilterObject(object modelObject) {
             foreach (IModelFilter filter in this.Filters)
                 if (!filter.Filter(modelObject))
                     return false;
@@ -215,7 +218,7 @@ namespace BrightIdeasSoftware
         /// <remarks>Filters is guaranteed to be non-empty when this method is called</remarks>
         /// <param name="modelObject">The model object under consideration</param>
         /// <returns>True if the object is included by the filter</returns>
-        override public bool FilterObject(object modelObject) {
+        public override bool FilterObject(object modelObject) {
             foreach (IModelFilter filter in this.Filters)
                 if (filter.Filter(modelObject))
                     return true;
@@ -256,7 +259,7 @@ namespace BrightIdeasSoftware
         /// Gets or sets the delegate that will be used to extract values
         /// from model objects
         /// </summary>
-        public AspectGetterDelegate ValueGetter {
+        virtual public AspectGetterDelegate ValueGetter {
             get { return valueGetter; }
             set { valueGetter = value; }
         }
@@ -266,7 +269,7 @@ namespace BrightIdeasSoftware
         /// Gets or sets the list of values that the value extracted from
         /// the model object must match in order to be included.
         /// </summary>
-        public IList PossibleValues {
+        virtual public IList PossibleValues {
             get { return possibleValues; }
             set { possibleValues = value; }
         }
@@ -281,8 +284,87 @@ namespace BrightIdeasSoftware
             if (this.ValueGetter == null || this.PossibleValues == null || this.PossibleValues.Count == 0)
                 return false;
 
-            return this.PossibleValues.Contains(this.ValueGetter(modelObject));
+            object result = this.ValueGetter(modelObject);
+            IEnumerable enumerable = result as IEnumerable;
+            if (result is string || enumerable == null)
+                return this.DoesValueMatch(result);
+
+            foreach (object x in enumerable) {
+                if (this.DoesValueMatch(x))
+                    return true;
+            }
+            return false;
         }
+
+        /// <summary>
+        /// Decides if the given property is a match for the values in the PossibleValues collection
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        protected virtual bool DoesValueMatch(object result) {
+            return this.PossibleValues.Contains(result);
+        }
+    }
+
+    /// <summary>
+    /// Instances of this class match a property of a model objects against
+    /// a list of bit flags. The property should be an xor-ed collection
+    /// of bits flags.
+    /// </summary>
+    /// <remarks>Both the property compared and the list of possible values 
+    /// must be convertible to ulongs.</remarks>
+    public class FlagBitSetFilter : OneOfFilter {
+
+        /// <summary>
+        /// Create an instance
+        /// </summary>
+        /// <param name="valueGetter"></param>
+        /// <param name="possibleValues"></param>
+        public FlagBitSetFilter(AspectGetterDelegate valueGetter, ICollection possibleValues) : base(valueGetter, possibleValues) {
+            this.ConvertPossibleValues();
+        }
+
+        /// <summary>
+        /// Gets or sets the collection of values that will be matched.
+        /// These must be ulongs (or convertible to ulongs).
+        /// </summary>
+        public override IList PossibleValues {
+            get { return base.PossibleValues; }
+            set {
+                base.PossibleValues = value;
+                this.ConvertPossibleValues();
+            }
+        }
+
+        private void ConvertPossibleValues() {
+            this.possibleValuesAsUlongs = new List<UInt64>();
+            foreach (object x in this.PossibleValues)
+                this.possibleValuesAsUlongs.Add(Convert.ToUInt64(x));
+        }
+
+        /// <summary>
+        /// Decides if the given property is a match for the values in the PossibleValues collection
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        protected override bool DoesValueMatch(object result) {
+            try {
+                UInt64 value = Convert.ToUInt64(result);
+                foreach (ulong flag in this.possibleValuesAsUlongs) {
+                    if ((value & flag) == flag)
+                        return true;
+                }
+                return false;
+            }
+            catch (InvalidCastException) {
+                return false;
+            }
+            catch (FormatException) {
+                return false;
+            }
+        }
+
+        private List<UInt64> possibleValuesAsUlongs = new List<UInt64>();
     }
 
     /// <summary>

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core;
-using CSPspEmu.Core.Gpu;
-using CSPspEmu.Core.Gpu.State;
+﻿using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Gpu
 {
-	unsafe public class GpuImplSoft : GpuImpl
+	public unsafe class GpuImplSoft : GpuImpl
 	{
 		public PspMemory PspMemory;
 

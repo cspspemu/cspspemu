@@ -296,7 +296,7 @@ namespace BrightIdeasSoftware
                     });
                     break;
                 case Shapes.EquiTriangle:
-                    // :: TODO
+                    //TODO
                     break;
                 default:
                     break;

@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using CSharpUtils;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu;
-using CSPspEmu.Core.Crypto;
 using CSPspEmu.Core.Memory;
 
 namespace CSPspEmuLLETest
@@ -95,7 +88,5 @@ namespace CSPspEmuLLETest
 
 			while (true) Thread.Sleep(int.MaxValue);
 		}
-
-		
 	}
 }

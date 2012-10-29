@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
 using CSharpUtils;
 
 namespace CSPspEmu.Core.Crypto
 {
-	unsafe public partial class Kirk
+	public unsafe partial class Kirk
 	{
 		/// <summary>
 		/// 
@@ -17,7 +14,7 @@ namespace CSPspEmu.Core.Crypto
 		/// <param name="Key"></param>
 		/// <param name="IV"></param>
 		/// <returns></returns>
-		static public byte[] DecryptAes(byte[] Input, byte[] Key, byte[] IV = null)
+		public static byte[] DecryptAes(byte[] Input, byte[] Key, byte[] IV = null)
 		{
 			if (IV == null) IV = new byte[16];
 
@@ -48,7 +45,7 @@ namespace CSPspEmu.Core.Crypto
 		/// <param name="Key"></param>
 		/// <param name="IV"></param>
 		/// <returns></returns>
-		static public byte[] EncryptAes(byte[] Input, byte[] Key, byte[] IV = null)
+		public static byte[] EncryptAes(byte[] Input, byte[] Key, byte[] IV = null)
 		{
 			if (IV == null) IV = new byte[16];
 
@@ -68,7 +65,7 @@ namespace CSPspEmu.Core.Crypto
 		/// <param name="Input"></param>
 		/// <param name="Output"></param>
 		/// <param name="Size"></param>
-		static public void DecryptAes(byte[] Key, byte* Input, byte* Output, int Size)
+		public static void DecryptAes(byte[] Key, byte* Input, byte* Output, int Size)
 		{
 			var InputArray = PointerUtils.PointerToByteArray(Input, Size);
 			var OutputArray = DecryptAes(InputArray, Key);

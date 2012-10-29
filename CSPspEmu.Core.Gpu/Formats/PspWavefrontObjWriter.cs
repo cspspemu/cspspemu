@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Gpu.State;
 using OpenTK;
 
 namespace CSPspEmu.Core.Gpu.Formats
 {
-	unsafe public class PspWavefrontObjWriter
+	public unsafe class PspWavefrontObjWriter
 	{
 		WavefrontObjWriter WavefrontObjWriter;
 

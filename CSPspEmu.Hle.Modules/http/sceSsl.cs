@@ -1,21 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Hle.Attributes;
+﻿using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.http
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
 	public class sceSsl : HleModuleHost
 	{
+        /// <summary>
+        /// Init the SSL library.
+        /// </summary>
+        /// <param name="unknown1">Memory size? Pass 0x28000</param>
+        /// <returns>Return 0 on success</returns>
 		[HlePspFunction(NID = 0x957ECBE2, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceSslInit()
+		public int sceSslInit(int unknown1)
 		{
 			return 0;
 		}
 
+        /// <summary>
+        /// Terminate the SSL library.
+        /// </summary>
+        /// <returns>0 on success</returns>
 		[HlePspFunction(NID = 0x191CDEFF, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceSslEnd()

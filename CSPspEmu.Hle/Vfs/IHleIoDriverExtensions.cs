@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using CSPspEmu.Hle.Vfs;
 
 namespace System
 {
-	unsafe static public class IHleIoDriverExtensions
+	public static unsafe class IHleIoDriverExtensions
 	{
-		static public Stream OpenRead(this IHleIoDriver HleIoDriver, string FileName)
+		public static Stream OpenRead(this IHleIoDriver HleIoDriver, string FileName)
 		{
 			var HleIoDrvFileArg = new HleIoDrvFileArg("none", HleIoDriver, 0, null);
 			HleIoDriver.IoOpen(HleIoDrvFileArg, FileName, HleIoFlags.Read, SceMode.All);
 			return HleIoDrvFileArg.GetStream();
 		}
 
-		static public bool FileExists(this IHleIoDriver HleIoDriver, string FileName)
+		public static bool FileExists(this IHleIoDriver HleIoDriver, string FileName)
 		{
 			try
 			{

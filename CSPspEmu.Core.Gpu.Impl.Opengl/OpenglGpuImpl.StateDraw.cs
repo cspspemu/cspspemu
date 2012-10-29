@@ -1,9 +1,6 @@
 ﻿#define ENABLE_TEXTURES
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Gpu.State.SubStates;
 
@@ -15,7 +12,7 @@ using MiniGL;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-	sealed unsafe public partial class OpenglGpuImpl
+	public sealed unsafe partial class OpenglGpuImpl
 	{
 		private void PrepareStateDraw(GpuStateStruct* GpuState)
 		{
@@ -48,7 +45,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			PrepareState_AlphaTest(GpuState);
 		}
 
-		private void PrepareState_AlphaTest(GpuStateStruct* GpuState)
+		private static void PrepareState_AlphaTest(GpuStateStruct* GpuState)
 		{
 			if (!GlEnableDisable(EnableCap.AlphaTest, GpuState->AlphaTestState.Enabled))
 			{
@@ -61,7 +58,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			);
 		}
 
-		private void PrepareState_Stencil(GpuStateStruct* GpuState)
+		private static void PrepareState_Stencil(GpuStateStruct* GpuState)
 		{
 			if (!GlEnableDisable(EnableCap.StencilTest, GpuState->StencilState.Enabled))
 			{
@@ -97,7 +94,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			);
 		}
 
-		private void PrepareState_CullFace(GpuStateStruct* GpuState)
+		private static void PrepareState_CullFace(GpuStateStruct* GpuState)
 		{
 			if (!GlEnableDisable(EnableCap.CullFace, GpuState->BackfaceCullingState.Enabled))
 			{
@@ -110,13 +107,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//GL.CullFace((GpuState->BackfaceCullingState.FrontFaceDirection == State.SubStates.FrontFaceDirectionEnum.ClockWise) ? CullFaceMode.Back : CullFaceMode.Front);
 		}
 
-		private void PrepareState_Depth(GpuStateStruct* GpuState)
+		private static void PrepareState_Depth(GpuStateStruct* GpuState)
 		{
 			GL.DepthRange((double)GpuState->DepthTestState.RangeFar, (double)GpuState->DepthTestState.RangeNear);
 			//GL.DepthRange((double)GpuState->DepthTestState.RangeNear, (double)GpuState->DepthTestState.RangeFar);
 		}
 
-		private void PrepareState_DepthTest(GpuStateStruct* GpuState)
+		private static void PrepareState_DepthTest(GpuStateStruct* GpuState)
 		{
 			if (GpuState->DepthTestState.Mask != 0 && GpuState->DepthTestState.Mask != 1)
 			{
@@ -201,7 +198,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Emission, &GpuState->LightingState.EmissiveModelColor.Red);
 		}
 
-		private void PrepareState_Lighting(GpuStateStruct* GpuState)
+		private static void PrepareState_Lighting(GpuStateStruct* GpuState)
 		{
 			//Console.WriteLine(GpuState->LightingState.AmbientModelColor);
 			var LightingState = &GpuState->LightingState;
@@ -253,7 +250,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 		}
 
-		private void PrepareState_Blend(GpuStateStruct* GpuState)
+		private static void PrepareState_Blend(GpuStateStruct* GpuState)
 		{
 			if (GpuState->ColorTestState.Enabled)
 			{
@@ -326,7 +323,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			);
 		}
 
-		private void PrepareState_Texture_2D(GpuStateStruct* GpuState)
+		private static void PrepareState_Texture_2D(GpuStateStruct* GpuState)
 		{
 			var TextureMappingState = &GpuState->TextureMappingState;
 			var Mipmap0 = &TextureMappingState->TextureState.Mipmap0;
@@ -346,7 +343,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 		}
 
-		private void PrepareState_Texture_3D(GpuStateStruct* GpuState)
+		private static void PrepareState_Texture_3D(GpuStateStruct* GpuState)
 		{
 			var TextureMappingState = &GpuState->TextureMappingState;
 			var TextureState = &TextureMappingState->TextureState;

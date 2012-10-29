@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace CSPspEmu.Core
 {
-	public class DebugUtils
+	public static class DebugUtils
 	{
-		static public void IsDebuggerPresentDebugBreak()
+		public static void IsDebuggerPresentDebugBreak()
 		{
 			if (Debugger.IsAttached) Debugger.Break();
 		}

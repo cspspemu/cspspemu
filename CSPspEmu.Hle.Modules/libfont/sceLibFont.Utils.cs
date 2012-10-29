@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSharpUtils;
-using CSPspEmu.Core;
+using System.Runtime.InteropServices;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Formats.Font;
-using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Modules.libfont
 {
-	unsafe public partial class sceLibFont
+	public unsafe partial class sceLibFont
 	{
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct FontNewLibParams
@@ -142,19 +137,19 @@ namespace CSPspEmu.Hle.Modules.libfont
 		}
 
 		/// <summary>
-		/// Char's metrics:
+		/// Char's metrics: <para/>
 		/// 
-		///           Width / Horizontal Advance
-		///           <---------->
-		///      |           000 |
-		///      |           000 |  Ascender
-		///      |           000 |
-		///      |     000   000 |
-		///      | -----000--000-------- Baseline
-		///      |        00000  |  Descender
-		/// Height /
-		/// Vertical Advance
-		/// 
+		///           Width / Horizontal Advance  <para/>
+		///           &lt;----------&gt;          <para/>
+		///      |           000 |                <para/>
+		///      |           000 |  Ascender      <para/>
+		///      |           000 |                <para/>
+		///      |     000   000 |                <para/>
+		///      | -----000--000-------- Baseline <para/>
+		///      |        00000  |  Descender     <para/>
+		/// Height /                              <para/>
+		/// Vertical Advance                      <para/>
+		/// <para/>
 		/// The char's bearings represent the difference between the
 		/// width and the horizontal advance and/or the difference
 		/// between the height and the vertical advance.

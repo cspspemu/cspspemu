@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection.Emit;
 using CSharpUtils;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	sealed public partial class CpuEmiter
+	public sealed partial class CpuEmitter
 	{
 		// Syscall
 		public void syscall()
@@ -33,7 +29,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 #endif
 		}
 
-		static public void _cache_impl(CpuThreadState CpuThreadState, uint Value)
+		public static void _cache_impl(CpuThreadState CpuThreadState, uint Value)
 		{
 			//Console.Error.WriteLine("cache! : 0x{0:X}", Value);
 			//CpuThreadState.CpuProcessor.sceKernelIcacheInvalidateAll();
@@ -42,13 +38,13 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public void cache() {
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Push((int)(uint)Instruction.Value);
-			SafeILGenerator.Call((Action<CpuThreadState, uint>)CpuEmiter._cache_impl);
+			SafeILGenerator.Call((Action<CpuThreadState, uint>)CpuEmitter._cache_impl);
 		}
 		public void sync() {
 			Console.WriteLine("Not implemented 'sync' instruction");
 		}
 
-		static public void _break_impl(CpuThreadState CpuThreadState)
+		public static void _break_impl(CpuThreadState CpuThreadState)
 		{
 			Console.Error.WriteLine("-------------------------------------------------------------------");
 			Console.Error.WriteLine("-- BREAK  ---------------------------------------------------------");
@@ -60,7 +56,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			_save_pc();
 			//CpuThreadState.PC =
 			SafeILGenerator.LoadArgument0CpuThreadState();
-			SafeILGenerator.Call((Action<CpuThreadState>)CpuEmiter._break_impl);
+			SafeILGenerator.Call((Action<CpuThreadState>)CpuEmitter._break_impl);
 		}
 		public void dbreak() { throw(new NotImplementedException()); }
 		public void halt() { throw(new NotImplementedException()); }
@@ -72,17 +68,17 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Move (From/To) IC
 		public void mfic()
 		{
-			MipsMethodEmiter.SaveGPR(RT, () =>
+			MipsMethodEmitter.SaveGPR(RT, () =>
 			{
-				MipsMethodEmiter.LoadFieldPtr(typeof(CpuThreadState).GetField("IC"));
+				MipsMethodEmitter.LoadFieldPtr(typeof(CpuThreadState).GetField("IC"));
 				SafeILGenerator.LoadIndirect<int>();
 			});
 		}
 		public void mtic()
 		{
-			MipsMethodEmiter.SaveField<int>(typeof(CpuThreadState).GetField("IC"), () =>
+			MipsMethodEmitter.SaveField<int>(typeof(CpuThreadState).GetField("IC"), () =>
 			{
-				MipsMethodEmiter.LoadGPR_Unsigned(RT);
+				MipsMethodEmitter.LoadGPR_Unsigned(RT);
 			});
 		}
 

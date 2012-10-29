@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
-	unsafe sealed public partial class GpuDisplayListRunner
+	public unsafe sealed partial class GpuDisplayListRunner
 	{
 		static Logger Logger = Logger.GetLogger("GpuDisplayListRunner");
 

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CSPspEmu.Core.Cpu.Analyzer
+﻿namespace CSPspEmu.Core.Cpu.Analyzer
 {
 	public class AnalyzerValue
 	{

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.pmfplayer
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public partial class scePsmfPlayer : HleModuleHost
+	public unsafe partial class scePsmfPlayer : HleModuleHost
 	{
 		/// <summary>
 		/// PSMF Player status.
@@ -91,7 +88,9 @@ namespace CSPspEmu.Hle.Modules.pmfplayer
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="processor"></param>
+		/// <param name="psmfPlayer"></param>
+		/// <param name="initPlayInfoAddr"></param>
+		/// <param name="initPts"></param>
 		[HlePspFunction(NID = 0x95A84EE5, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int scePsmfPlayerStart(int psmfPlayer, PlayInfoStruct* initPlayInfoAddr, int initPts)
@@ -102,7 +101,7 @@ namespace CSPspEmu.Hle.Modules.pmfplayer
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="processor"></param>
+		/// <param name="psmfPlayer"></param>
 		[HlePspFunction(NID = 0x3EA82A4B, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int scePsmfPlayerGetAudioOutSize(int psmfPlayer)
@@ -113,7 +112,7 @@ namespace CSPspEmu.Hle.Modules.pmfplayer
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="processor"></param>
+		/// <param name="psmfPlayer"></param>
 		[HlePspFunction(NID = 0x1078C008, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int scePsmfPlayerStop(int psmfPlayer)
@@ -133,11 +132,12 @@ namespace CSPspEmu.Hle.Modules.pmfplayer
 			return 0;
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="processor"></param>
-		[HlePspFunction(NID = 0x46F61F8B, FirmwareVersion = 150)]
+	    /// <summary>
+	    /// 
+	    /// </summary>
+	    /// <param name="psmfPlayer"></param>
+	    /// <param name="VideoData"> </param>
+	    [HlePspFunction(NID = 0x46F61F8B, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int scePsmfPlayerGetVideoData(int psmfPlayer, void* VideoData)
 		{

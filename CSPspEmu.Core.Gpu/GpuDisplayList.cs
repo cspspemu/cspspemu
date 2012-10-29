@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using CSPspEmu.Core.Threading.Synchronization;
-using CSPspEmu.Core.Gpu.State;
 using System.Reflection.Emit;
+using System.Threading;
 using CSPspEmu.Core.Gpu.Run;
+using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Core.Threading.Synchronization;
 using CSharpUtils;
 
 namespace CSPspEmu.Core.Gpu
 {
-	sealed unsafe public class GpuDisplayList
+	public sealed unsafe class GpuDisplayList
 	{
 		static Logger Logger = Logger.GetLogger("Gpu");
 
@@ -84,7 +82,8 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint InstructionAddressStart {
+		public uint InstructionAddressStart
+		{
 			get
 			{
 				return _InstructionAddressStart;
@@ -99,7 +98,8 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint InstructionAddressCurrent {
+		public uint InstructionAddressCurrent
+		{
 			get
 			{
 				return _InstructionAddressCurrent;
@@ -123,7 +123,7 @@ namespace CSPspEmu.Core.Gpu
 			set
 			{
 				_InstructionAddressStall = value & PspMemory.MemoryMask;
-				if (InstructionAddressStall != 0 && !Memory.IsAddressValid(InstructionAddressStall))
+				if (InstructionAddressStall != 0 && !PspMemory.IsAddressValid(InstructionAddressStall))
 				{
 					throw (new InvalidOperationException(String.Format("Invalid StallAddress! 0x{0}", InstructionAddressStall)));
 				}
@@ -134,7 +134,7 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// Stack with the InstructionAddressCurrent for the CALL/RET opcodes.
 		/// </summary>
-		readonly private Stack<IntPtr> ExecutionStack = new Stack<IntPtr>();
+		private readonly Stack<IntPtr> ExecutionStack = new Stack<IntPtr>();
 
 		/*
 		private bool Finished;
@@ -147,7 +147,7 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// Current status of the DisplayList.
 		/// </summary>
-		readonly public WaitableStateMachine<StatusEnum> Status = new WaitableStateMachine<StatusEnum>();
+		public readonly WaitableStateMachine<StatusEnum> Status = new WaitableStateMachine<StatusEnum>();
 
 		/// <summary>
 		/// Indicates if the list can be used.
@@ -241,10 +241,10 @@ namespace CSPspEmu.Core.Gpu
 
 		public delegate void GpuDisplayListRunnerDelegate(GpuDisplayListRunner GpuDisplayListRunner, GpuOpCodes GpuOpCode, uint Params);
 
-		static public GpuDisplayListRunnerDelegate InstructionSwitch;
-		private unsafe PspMemory Memory;
+		public static GpuDisplayListRunnerDelegate InstructionSwitch;
+		private PspMemory Memory;
 
-		static public GpuDisplayListRunnerDelegate GenerateSwitch()
+		public static GpuDisplayListRunnerDelegate GenerateSwitch()
 		{
 			//GpuDisplayListRunnerDelegate.
 			var DynamicMethod = new DynamicMethod("GpuDisplayList.GenerateSwitch", typeof(void), new Type[] { typeof(GpuDisplayListRunner), typeof(GpuOpCodes), typeof(uint) });
@@ -360,7 +360,7 @@ namespace CSPspEmu.Core.Gpu
 			Completed = 1,
 			Free = 2,
 		}
-		readonly public WaitableStateMachine<Status2Enum> Status2 = new WaitableStateMachine<Status2Enum>(Debug: false);
+		public readonly WaitableStateMachine<Status2Enum> Status2 = new WaitableStateMachine<Status2Enum>(Debug: false);
 		public PspGeCallbackData Callbacks;
 		public int CallbacksId;
 

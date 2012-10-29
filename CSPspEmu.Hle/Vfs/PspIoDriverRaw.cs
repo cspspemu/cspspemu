@@ -25,7 +25,7 @@ namespace CSPspEmu.Hle.Vfs
 	/// <summary>
 	/// Structure passed to the file functions of the io driver system
 	/// </summary>
-	unsafe public struct PspIoDrvFileArg
+	public unsafe struct PspIoDrvFileArg
 	{
 		/// <summary>
 		/// Unknown

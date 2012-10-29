@@ -1,33 +1,27 @@
-﻿using CSPspEmu.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Globalization;
 using System.Linq;
-using System.Text;
+using System.Net;
+using System.Threading;
+using System.Reflection;
+using System.Web;
 using System.Windows.Forms;
 using CSharpUtils;
 using CSPspEmu.Core;
-using System.Drawing.Imaging;
-using System.Diagnostics;
-using System.Drawing.Drawing2D;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Controller;
 using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Utils;
-using System.Threading;
-using System.Reflection;
-using System.Net;
-using System.Web;
-using System.Resources;
-using System.Globalization;
 using CSPspEmu.Resources;
-using System.Windows.Input;
 
 namespace CSPspEmu.Gui.Winforms
 {
-	unsafe public partial class PspDisplayForm : Form
+	public unsafe partial class PspDisplayForm : Form
 	{
 		/// <summary>
 		/// 
@@ -631,7 +625,7 @@ namespace CSPspEmu.Gui.Winforms
 			CheckForUpdates(NotifyIfNotFound: true);
 		}
 
-		static public string GetComparableVersion(string VersionName)
+		public static string GetComparableVersion(string VersionName)
 		{
 			string Return = "";
 			foreach (var Char in VersionName)
@@ -708,7 +702,7 @@ namespace CSPspEmu.Gui.Winforms
 			CheckForUpdatesThread.Start();
 		}
 
-		static private bool RunProgramInBackground(string ApplicationPath, string ApplicationArguments)
+		private static bool RunProgramInBackground(string ApplicationPath, string ApplicationArguments)
 		{
 			// This snippet needs the "System.Diagnostics"
 			// library
@@ -1062,7 +1056,7 @@ namespace CSPspEmu.Gui.Winforms
 			OpenFileRealOnNewThreadLock(ToolStripMenuItem.Text);
 		}
 
-		static private Keys ParseKeyName(string KeyName)
+		private static Keys ParseKeyName(string KeyName)
 		{
 			return (Keys)Enum.Parse(typeof(Keys), KeyName);
 		}

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -34,7 +33,7 @@ namespace CSPspEmu.AutoTests
 			}
 		}
 
-		static public void Init()
+		public static void Init()
 		{
 			PspConfig = new PspConfig();
 			PspConfig.DebugSyscalls = false;
@@ -54,7 +53,7 @@ namespace CSPspEmu.AutoTests
 			}
 		}
 
-		static protected string RunExecutableAndGetOutput(string PspAutoTestsFolder, string FileName, out string CapturedOutput, string FileNameBase)
+		protected static string RunExecutableAndGetOutput(string PspAutoTestsFolder, string FileName, out string CapturedOutput, string FileNameBase)
 		{
 			var OutputString = "";
 
@@ -130,7 +129,7 @@ namespace CSPspEmu.AutoTests
 			return OutputString;
 		}
 
-		static protected void RunFile(string PspAutoTestsFolder, string FileNameExecutable, string FileNameExpected, string FileNameBase)
+		protected static void RunFile(string PspAutoTestsFolder, string FileNameExecutable, string FileNameExpected, string FileNameBase)
 		{
 			Console.Write("{0}...", FileNameExecutable);
 			var ExpectedOutput = File.ReadAllText(FileNameExpected, Encoding.ASCII);
@@ -237,7 +236,7 @@ namespace CSPspEmu.AutoTests
 			}
 		}
 
-		static protected string ExecuteBat(string ExecutableFileName, string Arguments, double TimeoutSeconds = -1)
+		protected static string ExecuteBat(string ExecutableFileName, string Arguments, double TimeoutSeconds = -1)
 		{
 			var Process = new System.Diagnostics.Process(); // Declare New Process
 			//proc.StartInfo.FileName = fileName;
@@ -274,7 +273,7 @@ namespace CSPspEmu.AutoTests
 			return ErrorMessage + OutputMessage;
 		}
 
-		static protected void Run(string PspAutoTestsFolder, string WildCardFilter)
+		protected static void Run(string PspAutoTestsFolder, string WildCardFilter)
 		{
 			foreach (var FileNameExpected in Directory.GetFiles(PspAutoTestsFolder, "*.expected", SearchOption.AllDirectories))
 			{
@@ -305,7 +304,7 @@ namespace CSPspEmu.AutoTests
 					// FileNameBase
 					try { File.Delete(FileNameExecutable); } catch { }
 					var Output = ExecuteBat(PspAutoTestsFolder + @"\build.bat", FileNameBase);
-					if (Output != "")
+					if (!string.IsNullOrEmpty((Output)))
 					{
 						Console.Write("Compiling {0}...", FileNameBase);
 						Console.WriteLine("Result:");
@@ -331,10 +330,10 @@ namespace CSPspEmu.AutoTests
 			}
 		}
 
-		static public void Main(String[] Arguments)
+		public static void Main(String[] Arguments)
 		{
 			var BasePath = Path.GetDirectoryName(Application.ExecutablePath);
-			String PspAutoTestsFolder = "";
+			string PspAutoTestsFolder = "";
 
 			foreach (var TryName in new[] { "pspautotests/tests", "../../../pspautotests/tests" })
 			{
@@ -345,7 +344,7 @@ namespace CSPspEmu.AutoTests
 				}
 			}
 
-			if (PspAutoTestsFolder == "")
+			if (string.IsNullOrEmpty(PspAutoTestsFolder))
 			{
 				Console.Error.WriteLine("Can't find 'pspautotests/tests' folder.");
 				Console.ReadKey();

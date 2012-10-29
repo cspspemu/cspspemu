@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Core.Utils
 {
-	public class NumberUtils
+	public static class NumberUtils
 	{
-		static public int ParseIntegerConstant(String Value, int DefaultBase = 10)
+		public static int ParseIntegerConstant(String Value, int DefaultBase = 10)
 		{
 			try
 			{

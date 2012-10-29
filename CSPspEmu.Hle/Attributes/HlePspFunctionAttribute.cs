@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Hle
 {
 	[AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
-	public class HlePspFunctionAttribute : Attribute
+	public sealed class HlePspFunctionAttribute : Attribute
 	{
 		/// <summary>
 		/// ID for functions. It was initially the first 32 bits of the SHA-1 of the name of the function.

@@ -1,24 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSharpUtils;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	unsafe sealed public partial class CpuEmiter
+    public sealed partial class CpuEmitter
 	{
-		static public void _vpfxd_impl(CpuThreadState CpuThreadState, uint Value)
+		public static void _vpfxd_impl(CpuThreadState CpuThreadState, uint Value)
 		{
 			CpuThreadState.PrefixDestination.Value = Value;
 		}
 
-		static public void _vpfxs_impl(CpuThreadState CpuThreadState, uint Value)
+		public static void _vpfxs_impl(CpuThreadState CpuThreadState, uint Value)
 		{
 			CpuThreadState.PrefixSource.Value = Value;
 		}
 
-		static public void _vpfxt_impl(CpuThreadState CpuThreadState, uint Value)
+		public static void _vpfxt_impl(CpuThreadState CpuThreadState, uint Value)
 		{
 			CpuThreadState.PrefixTarget.Value = Value;
 		}
@@ -28,7 +25,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			PrefixDestination.EnableAndSetValueAndPc(Instruction.Value, PC);
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Push((uint)Instruction.Value);
-			MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint>)_vpfxd_impl);
+			MipsMethodEmitter.CallMethod((Action<CpuThreadState, uint>)_vpfxd_impl);
 		}
 
 		public void vpfxs()
@@ -36,7 +33,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			PrefixSource.EnableAndSetValueAndPc(Instruction.Value, PC);
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Push((uint)Instruction.Value);
-			MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint>)_vpfxs_impl);
+			MipsMethodEmitter.CallMethod((Action<CpuThreadState, uint>)_vpfxs_impl);
 		}
 
 		public void vpfxt()
@@ -44,7 +41,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			PrefixTarget.EnableAndSetValueAndPc(Instruction.Value, PC);
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.Push((uint)Instruction.Value);
-			MipsMethodEmiter.CallMethod((Action<CpuThreadState, uint>)_vpfxt_impl);
+			MipsMethodEmitter.CallMethod((Action<CpuThreadState, uint>)_vpfxt_impl);
 		}
 	}
 

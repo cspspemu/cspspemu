@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using CSharpUtils;
-using CSharpUtils.Streams;
 using CSPspEmu.Core.Utils;
 using CSPspEmu.Hle.Formats;
-using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Vfs.Iso
 {
-	unsafe public class HleIoDriverIso : IHleIoDriver
+	public unsafe class HleIoDriverIso : IHleIoDriver
 	{
 		public IsoFile Iso { get; protected set; }
 

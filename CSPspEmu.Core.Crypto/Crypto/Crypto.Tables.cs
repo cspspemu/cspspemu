@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CSPspEmu.Core.Crypto
+﻿namespace CSPspEmu.Core.Crypto
 {
-	unsafe public partial class Crypto
+	public unsafe partial class Crypto
 	{
 		//CMAC GLOBS
 		static readonly byte[] _const_Rb = new byte[16] {

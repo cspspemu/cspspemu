@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using CSharpUtils;
 using CSPspEmu.Hle.Formats.video;
 using CSPspEmu.Hle.Managers;
@@ -13,7 +10,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 	/// 
 	/// </summary>
 	/// <see cref="http://en.wikipedia.org/wiki/MPEG_program_stream"/>
-	unsafe public partial class sceMpeg
+	public unsafe partial class sceMpeg
 	{
 		public class StreamInfo : IDisposable
 		{
@@ -31,7 +28,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// sceMpegUnRegistStream
 		/// </summary>
 		/// <param name="Mpeg">SceMpeg handle</param>
-		/// <param name="pStream">pointer to stream</param>
+		/// <param name="StreamInfoId">Pointer to stream</param>
 		[HlePspFunction(NID = 0x591A4AA2, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public void sceMpegUnRegistStream(SceMpegPointer* Mpeg, int StreamInfoId)
@@ -44,9 +41,9 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// sceMpegRegistStream
 		/// </summary>
 		/// <param name="Mpeg">SceMpeg handle</param>
-		/// <param name="StreamId">stream id, 0 for video, 1 for audio</param>
-		/// <param name="StreamIndex">unknown, set to 0</param>
-		/// <returns>the id, 0 on error.</returns>
+		/// <param name="StreamId">Stream ID, 0 for video, 1 for audio</param>
+		/// <param name="StreamIndex">Unknown, set to 0</param>
+		/// <returns>The ID, 0 on error.</returns>
 		[HlePspFunction(NID = 0x42560F23, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		//public SceMpegStream* sceMpegRegistStream(SceMpeg* Mpeg, int iStreamID, int iUnk)
@@ -74,7 +71,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <param name="MpegPointer">SceMpeg handle</param>
 		/// <param name="PmfHeader">Pointer to file header</param>
 		/// <param name="Offset">Will contain the stream offset in bytes, usually 2048</param>
-		/// <returns>0 if success.</returns>
+		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0x21FF80E4, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceMpegQueryStreamOffset(SceMpegPointer* MpegPointer, byte* PmfHeader, out uint Offset)
@@ -92,9 +89,9 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <summary>
 		/// sceMpegQueryStreamSize
 		/// </summary>
-		/// <param name="PmfHeader">pointer to file header</param>
-		/// <param name="Size">will contain stream size in bytes</param>
-		/// <returns>0 if success.</returns>
+		/// <param name="PmfHeader">Pointer to file header</param>
+		/// <param name="Size">Will contain stream size in bytes</param>
+		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0x611E9E11, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceMpegQueryStreamSize(byte* PmfHeader, out uint Size)
@@ -110,7 +107,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// sceMpegFlushAllStreams
 		/// </summary>
 		/// <param name="Mpeg"></param>
-		/// <returns>0 if success.</returns>
+		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0x707B7629, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceMpegFlushAllStream(SceMpegPointer* Mpeg)

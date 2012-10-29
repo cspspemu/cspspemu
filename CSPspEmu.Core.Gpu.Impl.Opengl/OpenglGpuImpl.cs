@@ -7,30 +7,18 @@
 #endif
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.ExceptionServices;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
-using System.Globalization;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
-using System.Diagnostics;
-using System.IO;
 //using Cloo;
 //using Cloo.Bindings;
 
 #if OPENTK
-using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Platform;
 using CSPspEmu.Core.Gpu.Formats;
 using Mono.Simd;
 #else
@@ -39,7 +27,7 @@ using MiniGL;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-	sealed unsafe public partial class OpenglGpuImpl : GpuImpl
+	public sealed unsafe partial class OpenglGpuImpl : GpuImpl
 	{
 		/// <summary>
 		/// 
@@ -78,14 +66,14 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			this.VertexReader = new VertexReader();
 		}
 
-		//static public object GpuLock = new object();
+		//public static object GpuLock = new object();
 
 		/// <summary>
 		/// 
 		/// </summary>
-		void Initialize()
+		static void Initialize()
 		{
-			///GL.Enable(EnableCap.Blend);
+			// GL.Enable(EnableCap.Blend);
 			GL.Hint(HintTarget.LineSmoothHint, HintMode.Nicest);
 			/*
 			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.CombineRgb, (int)TextureEnvModeCombine.Modulate);
@@ -227,7 +215,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="VertexInfo"></param>
+		/// <param name="_VertexInfo"></param>
 		/// <param name="VertexType"></param>
 		private void PutVertex(ref VertexInfo _VertexInfo, ref VertexTypeStruct VertexType)
 		{
@@ -523,7 +511,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		}
 
-		override public unsafe void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
+		public override unsafe void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
 		{
 #if SLOW_SIMPLE_RENDER_TARGET
 			PrepareRead(GpuState);
@@ -573,7 +561,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="GlobalGpuState"></param>
 		/// <param name="GpuState"></param>
+		/// <param name="PrimitiveType"></param>
+		/// <param name="VertexCount"></param>
 		private unsafe void _Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
 		{
 			//if (PrimitiveType == GuPrimitiveType.TriangleStrip) VertexCount++;
@@ -908,7 +899,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		];
 		*/
 
-		[HandleProcessCorruptedStateExceptions()]
+		[HandleProcessCorruptedStateExceptions]
 		private void PrepareRead(GpuStateStruct* GpuState)
 		{
 #if true
@@ -977,7 +968,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			FB.Save(FileName);
 		}
 
-		[HandleProcessCorruptedStateExceptions()]
+		[HandleProcessCorruptedStateExceptions]
 		private void PrepareWrite(GpuStateStruct* GpuState)
 		{
 			//Console.WriteLine("PrepareWrite");
@@ -1034,7 +1025,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 		}
 
-		[HandleProcessCorruptedStateExceptions()]
+		[HandleProcessCorruptedStateExceptions]
 		public override void Finish(GpuStateStruct* GpuState)
 		{
 			//PrepareWrite(GpuState);

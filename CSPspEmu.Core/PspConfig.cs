@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSharpUtils.Factory;
 using System.Reflection;
-using CSPspEmu.Resources;
 using System.Text.RegularExpressions;
+using CSPspEmu.Resources;
 
 namespace CSPspEmu.Core
 {
@@ -24,7 +20,7 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
-		static public string CultureName = "en-US";
+		public static string CultureName = "en-US";
 
 		/// <summary>
 		/// 
@@ -172,7 +168,7 @@ namespace CSPspEmu.Core
 		public bool TraceThreadLoop = false;
 		public uint RelocatedBaseAddress;
 
-		static private string _GameUnknownTitle = Translations.GetString("extra", "UnknownGame");
+		private static string _GameUnknownTitle = Translations.GetString("extra", "UnknownGame");
 		private string _GameTitle;
 		public string GameTitle
 		{

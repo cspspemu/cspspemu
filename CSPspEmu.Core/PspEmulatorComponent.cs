@@ -1,22 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Core
 {
 	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-	public class InjectAttribute : Attribute
+	public sealed class InjectAttribute : Attribute
 	{
 	}
 
-	abstract public class PspEmulatorComponent : IDisposable
+	public abstract class PspEmulatorComponent : IDisposable
 	{
 		protected PspEmulatorContext PspEmulatorContext { get; private set; }
-
-		public PspEmulatorComponent()
-		{
-		}
 
 		public void _InitializeComponent(PspEmulatorContext PspEmulatorContext)
 		{
@@ -26,11 +19,11 @@ namespace CSPspEmu.Core
 			PspEmulatorContext.InjectDependencesTo(this);
 		}
 
-		virtual public void InitializeComponent()
+		public virtual void InitializeComponent()
 		{
 		}
 
-		virtual public void Dispose()
+		public virtual void Dispose()
 		{
 		}
 	}

@@ -11,11 +11,11 @@ namespace CSPspEmu.Hle.Modules.Tests
 	[TestClass]
 	public class BaseModuleTest
 	{
-		virtual protected void SetMocks(PspEmulatorContext PspEmulatorContext)
+		protected virtual void SetMocks(PspEmulatorContext PspEmulatorContext)
 		{
 		}
 
-		virtual protected void Initialize()
+		protected virtual void Initialize()
 		{
 		}
 

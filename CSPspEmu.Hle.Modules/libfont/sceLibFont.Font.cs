@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
 
 namespace CSPspEmu.Hle.Modules.libfont
 {
-	unsafe public partial class sceLibFont
+	public unsafe partial class sceLibFont
 	{
 		/// <summary>
 		/// Closes the specified font file.
@@ -28,7 +23,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// Obtains the FontInfo of a FontHandle.
 		/// </summary>
 		/// <param name="FontHandle">Font Handle to get the information from.</param>
-		/// <param name="FontInfoPointer">Pointer to a FontInfo structure that will hold the information.</param>
+		/// <param name="FontInfoPointer">Pointer to a <see cref="FontInfo"/> structure that will hold the information.</param>
 		/// <returns>
 		///		0 on success
 		/// </returns>

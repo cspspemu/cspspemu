@@ -22,7 +22,7 @@
  * 2009-04-15   JPP  - Separated DragDrop.cs into DropSink.cs
  * 2009-03-17   JPP  - Initial version
  * 
- * Copyright (C) 2009-2010 Phillip Piper
+ * Copyright (C) 2009-2012 Phillip Piper
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -514,6 +514,17 @@ namespace BrightIdeasSoftware
         }
         private int keyState;
 
+        /// <summary>
+        /// Gets or sets whether the drop sink will automatically use cursors
+        /// based on the drop effect. By default, this is true. If this is
+        /// set to false, you must set the Cursor yourself.
+        /// </summary>
+        public bool UseDefaultCursors {
+            get { return useDefaultCursors; }
+            set { useDefaultCursors = value; }
+        }
+        private bool useDefaultCursors = true;
+
         #endregion
 
         #region Events
@@ -602,6 +613,7 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="args"></param>
         public override void Drop(DragEventArgs args) {
+            this.dropEventArgs.DragEventArgs = args;
             this.TriggerDroppedEvent(args);
             this.timer.Stop();
             this.Cleanup();
@@ -632,6 +644,7 @@ namespace BrightIdeasSoftware
             this.dropEventArgs = new ModelDropEventArgs();
             this.dropEventArgs.DropSink = this;
             this.dropEventArgs.ListView = this.ListView;
+            this.dropEventArgs.DragEventArgs = args;
             this.dropEventArgs.DataObject = args.Data;
             OLVDataObject olvData = args.Data as OLVDataObject;
             if (olvData != null) {
@@ -643,11 +656,20 @@ namespace BrightIdeasSoftware
         }
 
         /// <summary>
+        /// Change the cursor to reflect the current drag operation.
+        /// </summary>
+        /// <param name="args"></param>
+        public override void GiveFeedback(GiveFeedbackEventArgs args) {
+            args.UseDefaultCursors = this.UseDefaultCursors;
+        }
+
+        /// <summary>
         /// The drag is moving over this control.
         /// </summary>
         /// <param name="args"></param>
         public override void Over(DragEventArgs args) {
             //System.Diagnostics.Debug.WriteLine("Over");
+            this.dropEventArgs.DragEventArgs = args;
             this.KeyState = args.KeyState;
             Point pt = this.ListView.PointToClient(new Point(args.X, args.Y));
             args.Effect = this.CalculateDropAction(args, pt);
@@ -822,6 +844,7 @@ namespace BrightIdeasSoftware
         /// <param name="pt"></param>
         /// <returns></returns>
         public virtual DragDropEffects CalculateDropAction(DragEventArgs args, Point pt) {
+
             this.CalculateDropTarget(this.dropEventArgs, pt);
 
             this.dropEventArgs.MouseLocation = pt;
@@ -1208,9 +1231,20 @@ namespace BrightIdeasSoftware
         #region Data Properties
 
         /// <summary>
+        /// Get the original drag-drop event args
+        /// </summary>
+        public DragEventArgs DragEventArgs
+        {
+            get { return this.dragEventArgs; }
+            internal set { this.dragEventArgs = value; }
+        }
+        private DragEventArgs dragEventArgs;
+
+        /// <summary>
         /// Get the data object that is being dragged
         /// </summary>
-        public object DataObject {
+        public object DataObject
+        {
             get { return this.dataObject; }
             internal set { this.dataObject = value; }
         }

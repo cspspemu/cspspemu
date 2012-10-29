@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Hle.Formats.Font
 {
@@ -85,14 +83,14 @@ namespace CSPspEmu.Hle.Formats.Font
 		}
 
 
-		static public uint ReadBitsAt(byte[] Data, int Offset, int Count)
+		public static uint ReadBitsAt(byte[] Data, int Offset, int Count)
 		{
 			var BitReader = new BitReader(Data);
 			BitReader.Position = Offset;
 			return BitReader.ReadBits(Count);
 		}
 
-		static public IEnumerable<KeyValuePair<uint, uint>> FixedBitReader(byte[] Data, int BitCount = 0, int Offset = 0)
+		public static IEnumerable<KeyValuePair<uint, uint>> FixedBitReader(byte[] Data, int BitCount = 0, int Offset = 0)
 		{
 			using (var BitReader = new BitReader(Data))
 			{

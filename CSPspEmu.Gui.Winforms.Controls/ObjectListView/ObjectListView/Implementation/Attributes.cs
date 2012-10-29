@@ -6,6 +6,9 @@
  * Date: 15/08/2009 22:01
  *
  * Change log:
+ * v2.6
+ * 2012-08-16  JPP  - Added [OLVChildren] and [OLVIgnore]
+ *                  - OLV attributes can now only be set on properties
  * v2.4
  * 2010-04-14  JPP  - Allow Name property to be set
  * 
@@ -14,7 +17,7 @@
  *
  * To do:
  * 
- * Copyright (C) 2009-2010 Phillip Piper
+ * Copyright (C) 2009-2012 Phillip Piper
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,15 +42,20 @@ using System.Windows.Forms;
 namespace BrightIdeasSoftware
 {
     /// <summary>
-    /// This attribute is used to mark a field, property, or parameter-less method of a model
+    /// This attribute is used to mark a property of a model
     /// class that should be noticed by Generator class.
     /// </summary>
     /// <remarks>
     /// All the attributes of this class match their equivilent properties on OLVColumn.
     /// </remarks>
+    [AttributeUsage(AttributeTargets.Property)]
     public class OLVColumnAttribute : Attribute
     {
         #region Constructor
+
+        // There are several property where we actually want nullable value (bool?, int?),
+        // but it seems attribute properties can't be nullable types.
+        // So we explicitly track if those properties have been set.
 
         /// <summary>
         /// Create a new OLVColumnAttribute
@@ -81,9 +89,13 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool CheckBoxes {
             get { return checkBoxes; }
-            set { checkBoxes = value; }
+            set {
+                checkBoxes = value;
+                this.IsCheckBoxesSet = true;
+            }
         }
         private bool checkBoxes;
+        internal bool IsCheckBoxesSet = false;
 
         /// <summary>
         /// 
@@ -106,11 +118,15 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// 
         /// </summary>
-        public int? FreeSpaceProportion {
+        public int FreeSpaceProportion {
             get { return freeSpaceProportion; }
-            set { freeSpaceProportion = value; }
+            set {
+                freeSpaceProportion = value;
+                IsFreeSpaceProportionSet = true;
+            }
         }
-        private int? freeSpaceProportion;
+        private int freeSpaceProportion;
+        internal bool IsFreeSpaceProportionSet = false;
 
         /// <summary>
         /// An array of IComparables that mark the cutoff points for values when
@@ -166,9 +182,6 @@ namespace BrightIdeasSoftware
             set { imageAspectName = value; }
         }
         private string imageAspectName;
-
-        // We actually want this to be bool? but it seems attribute properties can't be nullable types.
-        // So we explicitly track if the property has been set.
 
         /// <summary>
         /// 
@@ -233,9 +246,13 @@ namespace BrightIdeasSoftware
         /// </summary>
         public HorizontalAlignment TextAlign {
             get { return this.textAlign; }
-            set { this.textAlign = value; }
+            set {
+                this.textAlign = value;
+                IsTextAlignSet = true;
+            }
         }
         private HorizontalAlignment textAlign = HorizontalAlignment.Left;
+        internal bool IsTextAlignSet = false;
 
         /// <summary>
         /// 
@@ -269,9 +286,13 @@ namespace BrightIdeasSoftware
         /// </summary>
         public bool TriStateCheckBoxes {
             get { return triStateCheckBoxes; }
-            set { triStateCheckBoxes = value; }
+            set { 
+                triStateCheckBoxes = value;
+                this.IsTriStateCheckBoxesSet = true;
+            }
         }
         private bool triStateCheckBoxes;
+        internal bool IsTriStateCheckBoxesSet = false;
 
         /// <summary>
         /// 
@@ -292,5 +313,23 @@ namespace BrightIdeasSoftware
         private int width = 150;
 
         #endregion
+    }
+
+    /// <summary>
+    /// Properties marked with [OLVChildren] will be used as the children source in a TreeListView.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
+    public class OLVChildrenAttribute : Attribute
+    {
+        
+    }
+
+    /// <summary>
+    /// Properties marked with [OLVIgnore] will not have columns generated for them.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
+    public class OLVIgnoreAttribute : Attribute
+    {
+
     }
 }

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.hpremote
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class sceHprm : HleModuleHost
+	public unsafe class sceHprm : HleModuleHost
 	{
 		/// <summary>
 		/// Enumeration of the remote keys
@@ -49,7 +46,7 @@ namespace CSPspEmu.Hle.Modules.hpremote
 		/// <summary>
 		/// Peek at the current being pressed on the remote.
 		/// </summary>
-		/// <param name="Key">Pointer to the u32 to receive the key bitmap, should be one or more of ::PspHprmKeys</param>
+		/// <param name="Key">Pointer to the u32 to receive the key bitmap, should be one or more of PspHprmKeys</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x1910B327, FirmwareVersion = 150)]
 		public int sceHprmPeekCurrentKey(PspHprmKeysEnum* Key)

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Gpu;
 
 namespace CSPspEmu.Runner.Components.Gpu
 {
-	sealed public class GpuComponentThread : ComponentThread
+	public sealed class GpuComponentThread : ComponentThread
 	{
 		protected override string ThreadName { get { return "CpuThread"; } }
 
@@ -31,7 +27,7 @@ namespace CSPspEmu.Runner.Components.Gpu
 
 			while (true)
 			{
-				WaitHandle.WaitAny(new[] { GpuProcessor.DisplayListQueueUpdated, ThreadTaskQueue.EnqueuedEvent, RunningUpdatedEvent }, 10);
+				WaitHandle.WaitAny(new WaitHandle[] { GpuProcessor.DisplayListQueueUpdated, ThreadTaskQueue.EnqueuedEvent, RunningUpdatedEvent }, 10);
 
 				ThreadTaskQueue.HandleEnqueued();
 				if (!Running) break;

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	unsafe sealed public partial class CpuEmiter
+    public sealed partial class CpuEmitter
 	{
-		static public uint _vt4444_step(uint i0, uint i1)
+		public static uint _vt4444_step(uint i0, uint i1)
 		{
 			uint o0 = 0;
 			o0 |= ((i0 >> 4) & 15) << 0;
@@ -21,7 +18,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			return o0;
 		}
 
-		static public uint _vt5551_step(uint i0, uint i1)
+		public static uint _vt5551_step(uint i0, uint i1)
 		{
 			uint o0 = 0;
 			o0 |= ((i0 >> 3) & 31) << 0;
@@ -35,7 +32,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			return o0;
 		}
 
-		static public uint _vt5650_step(uint i0, uint i1)
+		public static uint _vt5650_step(uint i0, uint i1)
 		{
 			uint o0 = 0;
 			o0 |= ((i0 >> 3) & 31) << 0;
@@ -56,6 +53,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				SafeILGenerator.Call((Func<uint, uint, uint>)_vt4444_step);
 			}, AsInteger: true);
 		}
+
 		public void vt5551_q()
 		{
 			VectorOperationSaveVd(2, (Index) =>
@@ -65,6 +63,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				SafeILGenerator.Call((Func<uint, uint, uint>)_vt5551_step);
 			}, AsInteger: true);
 		}
+
 		public void vt5650_q()
 		{
 			VectorOperationSaveVd(2, (Index) =>

@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace CSPspEmu.Core.Tests.Crypto
 {
 	[TestClass]
-	unsafe public class KirkTest
+	public unsafe class KirkTest
 	{
 		[TestMethod]
 		public void TestSha1()

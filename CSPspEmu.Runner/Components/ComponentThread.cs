@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using CSharpUtils.Threading;
 using CSPspEmu.Core;
@@ -10,7 +7,7 @@ using CSharpUtils;
 
 namespace CSPspEmu.Runner.Components
 {
-	abstract public class ComponentThread : PspEmulatorComponent, IRunnableComponent
+	public abstract class ComponentThread : PspEmulatorComponent, IRunnableComponent
 	{
 		static Logger Logger = Logger.GetLogger("ComponentThread");
 
@@ -22,8 +19,8 @@ namespace CSPspEmu.Runner.Components
 		protected AutoResetEvent PauseEvent = new AutoResetEvent(false);
 		protected AutoResetEvent ResumeEvent = new AutoResetEvent(false);
 
-		readonly public TaskQueue ThreadTaskQueue = new TaskQueue();
-		abstract protected String ThreadName { get; }
+		public readonly TaskQueue ThreadTaskQueue = new TaskQueue();
+		protected abstract String ThreadName { get; }
 
 		public void StartSynchronized()
 		{
@@ -96,6 +93,6 @@ namespace CSPspEmu.Runner.Components
 			PauseEvent.Set();
 		}
 
-		abstract protected void Main();
+		protected abstract void Main();
 	}
 }

@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	sealed public partial class CpuEmiter
+	public sealed partial class CpuEmitter
 	{
 		// C? (From/To) Cop0
 		public void cfc0() {
@@ -23,11 +20,11 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		// Move (From/To) Cop0
 		public void mfc0() {
 			//Console.WriteLine("mfc0 {0}, {1}", RT, RD);
-			MipsMethodEmiter.SaveGPR(RT, () => { MipsMethodEmiter.LoadC0R(RD); });
+			MipsMethodEmitter.SaveGPR(RT, () => { MipsMethodEmitter.LoadC0R(RD); });
 		}
 		public void mtc0() {
 			//Console.WriteLine("mtc0 {0}, {1}", RD, RT);
-			MipsMethodEmiter.SaveC0R(RD, () => { MipsMethodEmiter.LoadGPR_Unsigned(RT); });
+			MipsMethodEmitter.SaveC0R(RD, () => { MipsMethodEmitter.LoadGPR_Unsigned(RT); });
 		}
 	}
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core.Audio;
 using CSPspEmu.Core;
@@ -12,7 +11,7 @@ namespace CSPspEmu.Hle.Formats.audio
 	/// Based on jpcsp. gid15 work.
 	/// http://code.google.com/p/jpcsp/source/browse/trunk/src/jpcsp/sound/SampleSourceVAG.java?r=1995
 	/// </summary>
-	unsafe public partial class Vag
+	public unsafe partial class Vag
 	{
 		//public byte[] Data;
 		//public StereoShortSoundSample[] DecodedSamples = new StereoShortSoundSample[0];
@@ -110,7 +109,7 @@ namespace CSPspEmu.Hle.Formats.audio
 			protected short History1 = 0, History2 = 0;
 			protected float Predict1, Predict2;
 
-			static public IEnumerable<StereoShortSoundSample> DecodeBlocksStream(Block[] Blocks)
+			public static IEnumerable<StereoShortSoundSample> DecodeBlocksStream(Block[] Blocks)
 			{
 				var DecodedBlock = new short[28];
 				var Decoder = new Decoder();
@@ -142,7 +141,7 @@ namespace CSPspEmu.Hle.Formats.audio
 				}
 			}
 
-			static public StereoShortSoundSample[] DecodeAllBlocks(Block[] Blocks)
+			public static StereoShortSoundSample[] DecodeAllBlocks(Block[] Blocks)
 			{
 				return DecodeBlocksStream(Blocks).ToArray();
 			}

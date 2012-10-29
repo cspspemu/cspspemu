@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Runtime.InteropServices;
 using CSPspEmu.Core.Utils;
-using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Gpu.State.SubStates
 {
@@ -16,7 +12,7 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 	}
 
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	unsafe public struct ColorTestStateStruct
+	public struct ColorTestStateStruct
 	{
 		/// <summary>
 		/// 

@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core;
+using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Rtc;
-using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Attributes;
-using System.Diagnostics;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.display
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class sceDisplay : HleModuleHost
+	public class sceDisplay : HleModuleHost
 	{
 		[Inject]
 		public PspDisplay PspDisplay;
@@ -192,7 +188,7 @@ namespace CSPspEmu.Hle.Modules.display
 		}
 
 		/// <summary>
-		/// 
+		/// Get number of frames per second
 		/// </summary>
 		/// <see cref="http://forums.ps2dev.org/viewtopic.php?t=9168"/>
 		/// <remarks>(pixel_clk_freq * cycles_per_pixel)/(row_pixels * column_pixel)</remarks>
@@ -271,11 +267,11 @@ namespace CSPspEmu.Hle.Modules.display
 		}
 
 		/// <summary>
-		/// 
+		/// Get display mode
 		/// </summary>
-		/// <param name="ModeOut"></param>
-		/// <param name="WidthOut"></param>
-		/// <param name="HeightOut"></param>
+		/// <param name="ModeOut">Integer to receive the current mode.</param>
+		/// <param name="WidthOut">Integer to receive the current width.</param>
+		/// <param name="HeightOut">Integer to receive the current height.</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xDEA197D4, FirmwareVersion = 150)]
 		public int sceDisplayGetMode(out int ModeOut, out int WidthOut, out int HeightOut)
@@ -290,6 +286,7 @@ namespace CSPspEmu.Hle.Modules.display
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="CpuThreadState"></param>
 		/// <param name="CycleCount">Number of VSYNCs to wait before blocking the thread on VBLANK.</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x40F1469C, FirmwareVersion = 500, CheckInsideInterrupt = true)]
@@ -301,6 +298,7 @@ namespace CSPspEmu.Hle.Modules.display
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="CpuThreadState"></param>
 		/// <param name="CycleCount">Number of VSYNCs to wait before blocking the thread on VBLANK.</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x77ED8B3A, FirmwareVersion = 500, CheckInsideInterrupt = true)]
@@ -309,11 +307,15 @@ namespace CSPspEmu.Hle.Modules.display
 			return _waitVblankCB(CpuThreadState, HandleCallbacks: true, CycleCount: CycleCount);
 		}
 
-        [HlePspFunction(NID = 0xB4F378FA, FirmwareVersion = 150)]
-        [HlePspNotImplemented]
-        public int sceDisplayIsForeground()
-        {
-            return 0;
-        }
+		/// <summary>
+		/// Get whether or not frame buffer is being displayed
+		/// </summary>
+		/// <returns></returns>
+		[HlePspFunction(NID = 0xB4F378FA, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceDisplayIsForeground()
+		{
+			return 0;
+		}
 	}
 }

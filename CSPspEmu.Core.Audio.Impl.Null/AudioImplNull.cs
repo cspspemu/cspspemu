@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core;
-using CSPspEmu.Core.Audio;
 
 namespace CSPspEmu.Core.Audio
 {
-	unsafe public class AudioImplNull : PspAudioImpl
+    public class AudioImplNull : PspAudioImpl
 	{
 		public override void InitializeComponent()
 		{

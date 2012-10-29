@@ -1,4 +1,4 @@
-﻿using CSPspEmu.Core.Cpu.Emiter;
+﻿using CSPspEmu.Core.Cpu.Emitter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using CSPspEmu.Core.Cpu.Table;
@@ -15,7 +15,7 @@ using CSPspEmu.Core.Cpu.Dynarec;
 namespace CSPspEmu.Core.Tests
 {
 	[TestClass]
-	unsafe public partial class CpuEmiterTest
+	public unsafe partial class CpuEmiterTest
 	{
 		[TestMethod]
 		public void SimplestTest()
@@ -838,7 +838,7 @@ namespace CSPspEmu.Core.Tests
 		}
 	}
 
-	unsafe public partial class CpuEmiterTest
+	public unsafe partial class CpuEmiterTest
 	{
 		[Inject]
 		protected CpuProcessor CpuProcessor;
@@ -848,9 +848,9 @@ namespace CSPspEmu.Core.Tests
 
 		protected CpuThreadState CpuThreadState;
 
-		static protected PspConfig PspConfig;
-		static protected PspEmulatorContext PspEmulatorContext;
-		static protected PspMemory Memory;
+		protected static PspConfig PspConfig;
+		protected static PspEmulatorContext PspEmulatorContext;
+		protected static PspMemory Memory;
 
 		[ClassInitialize]
 		public static void ClassInit(TestContext context)

@@ -1,24 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Drawing;
+using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Core.Threading.Synchronization;
-using CSharpUtils;
-using System.Drawing;
 using CSPspEmu.Core.Utils;
-using CSPspEmu.Core.Memory;
-using System.Drawing.Imaging;
 
 namespace CSPspEmu.Core.Display
 {
 	public class PspDisplay : PspEmulatorComponent
 	{
 		public const double ProcessedPixelsPerSecond = 9000000; // hz
-		public const double CyclesPerPixel            = 1;
+		public const double CyclesPerPixel           = 1;
 		public const double PixelsInARow             = 525;
-		public const double VsyncRow                   = 272;
-		public const double NumberOfRows              = 286;
+		public const double VsyncRow                 = 272;
+		public const double NumberOfRows             = 286;
 	
 		public const double HorizontalSyncHertz = (ProcessedPixelsPerSecond * CyclesPerPixel) / PixelsInARow;
 		public const double VeritcalSyncHertz = HorizontalSyncHertz / NumberOfRows;
@@ -100,7 +95,7 @@ namespace CSPspEmu.Core.Display
 			}
 		}
 
-		unsafe public Bitmap TakeScreenshot()
+		public unsafe Bitmap TakeScreenshot()
 		{
 			return new PspBitmap(
 				CurrentInfo.PixelFormat,

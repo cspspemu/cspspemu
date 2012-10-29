@@ -2,26 +2,23 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Linq;
 using Codegen;
-using System.Reflection.Emit;
-using CSharpUtils.Arrays;
-using CSPspEmu.Core.Cpu.Table;
-using CSPspEmu.Core.Cpu.Emiter;
 using CSPspEmu.Core.Cpu.Assembler;
+using CSPspEmu.Core.Cpu.Emitter;
+using CSPspEmu.Core.Cpu.Table;
 
 namespace CSPspEmu.Core.Cpu.Dynarec
 {
-	unsafe public partial class DynarecFunctionCompiler
+    public partial class DynarecFunctionCompiler
 	{
-		unsafe internal class InternalFunctionCompiler
+        internal class InternalFunctionCompiler
 		{
-			static public Action<uint, CpuEmiter> CpuEmiterInstruction = EmitLookupGenerator.GenerateSwitchDelegate<CpuEmiter>(InstructionTable.ALL);
+			public static Action<uint, CpuEmitter> CpuEmiterInstruction = EmitLookupGenerator.GenerateSwitchDelegate<CpuEmitter>(InstructionTable.ALL);
 			static MipsDisassembler MipsDisassembler = new MipsDisassembler();
-			CpuEmiter CpuEmiter;
-			MipsMethodEmiter MipsMethodEmiter;
+			CpuEmitter CpuEmiter;
+			MipsMethodEmitter MipsMethodEmiter;
 			SafeILGeneratorEx SafeILGenerator;
 			DynarecFunctionCompiler DynarecFunctionCompiler;
 			IInstructionReader InstructionReader;
@@ -34,7 +31,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			//const int MaxNumberOfInstructions = 128 * 1024;
 			//const int MaxNumberOfInstructions = 60;
 
-			static public Func<uint, Object, String> GetInstructionName = EmitLookupGenerator.GenerateSwitch<Func<uint, Object, String>>(
+			public static Func<uint, Object, String> GetInstructionName = EmitLookupGenerator.GenerateSwitch<Func<uint, Object, String>>(
 				InstructionTable.ALL,
 				(SafeILGenerator, InstructionInfo) =>
 				{
@@ -66,10 +63,10 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				if (_ExploreNewPcCallback != null) _ExploreNewPcCallback(PC);
 			}
 
-			internal InternalFunctionCompiler(CpuProcessor CpuProcessor, MipsMethodEmiter MipsMethodEmiter, DynarecFunctionCompiler DynarecFunctionCompiler, IInstructionReader InstructionReader, Action<uint> _ExploreNewPcCallback, uint EntryPC, bool DoLog)
+			internal InternalFunctionCompiler(CpuProcessor CpuProcessor, MipsMethodEmitter MipsMethodEmiter, DynarecFunctionCompiler DynarecFunctionCompiler, IInstructionReader InstructionReader, Action<uint> _ExploreNewPcCallback, uint EntryPC, bool DoLog)
 			{
 				this._ExploreNewPcCallback = _ExploreNewPcCallback;
-				this.CpuEmiter = new CpuEmiter(MipsMethodEmiter, InstructionReader, CpuProcessor);
+				this.CpuEmiter = new CpuEmitter(MipsMethodEmiter, InstructionReader, CpuProcessor);
 				this.CpuEmiter.AnalyzePCEvent += ExploreNewPcCallback;
 				this.MipsMethodEmiter = MipsMethodEmiter;
 				this.GlobalInstructionStats = CpuProcessor.GlobalInstructionStats;

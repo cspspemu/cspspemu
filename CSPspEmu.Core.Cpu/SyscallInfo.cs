@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CSPspEmu.Core.Cpu
+﻿namespace CSPspEmu.Core.Cpu
 {
 	public class SyscallInfo
 	{
 		public const ushort NativeCallSyscallCode = 0x1234;
 
-		static public uint NativeCallSyscallOpCode
+		public static uint NativeCallSyscallOpCode
 		{
 			get
 			{

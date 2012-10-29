@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using CSharpUtils;
-using CSPspEmu.Hle.Vfs.Iso;
 
 namespace CSPspEmu.Hle.Vfs.Local
 {
@@ -22,7 +21,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 		/// </summary>
 		/// <param name="Path"></param>
 		/// <returns></returns>
-		static public string GetSanitizedPath(string Path)
+		public static string GetSanitizedPath(string Path)
 		{
 			var Parts = new Stack<string>();
 			foreach (var Part in Path.Replace('\\', '/').Split('/'))
@@ -212,7 +211,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 			return 0;
 		}
 
-		unsafe static public HleIoDirent CreateFakeDirectoryHleIoDirent(string Name)
+		public unsafe static HleIoDirent CreateFakeDirectoryHleIoDirent(string Name)
 		{
 			var HleIoDirent = default(HleIoDirent);
 			PointerUtils.StoreStringOnPtr(Name, Encoding.UTF8, HleIoDirent.Name);
@@ -223,7 +222,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 			return HleIoDirent;
 		}
 
-		unsafe static public HleIoDirent ConvertFileSystemInfoToHleIoDirent(FileSystemInfo FileSystemInfo)
+		public unsafe static HleIoDirent ConvertFileSystemInfoToHleIoDirent(FileSystemInfo FileSystemInfo)
 		{
 			var HleIoDirent = default(HleIoDirent);
 			var FileInfo = (FileSystemInfo as FileInfo);

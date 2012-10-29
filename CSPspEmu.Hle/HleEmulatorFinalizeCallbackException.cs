@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Hle
 {
-	public class HleEmulatorFinalizeCallbackException : Exception
+	public sealed class HleEmulatorFinalizeCallbackException : Exception
 	{
 	}
 }

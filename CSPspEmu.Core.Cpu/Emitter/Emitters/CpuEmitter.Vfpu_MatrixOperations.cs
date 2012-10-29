@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
 using Codegen;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	unsafe sealed public partial class CpuEmiter
+	public sealed partial class CpuEmitter
 	{
 		// Vfpu Matrix MULtiplication
 		// @FIX!!!
@@ -143,23 +139,23 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		/// <summary>
-		/// +----------------------+--------------+----+--------------+---+--------------+
-		/// |31                 23 | 22        16 | 15 | 14         8 | 7 | 6         0  |
-		/// +----------------------+--------------+----+--------------+---+--------------+
-		/// |  opcode 0x65008080   | vfpu_rt[6-0] |    | vfpu_rs[6-0] |   | vfpu_rd[6-0] |
-		/// +----------------------+--------------+----+--------------+---+--------------+
-		/// 
-		/// MatrixScale.Pair/Triple/Quad, multiply all components by scale factor
-		/// 
-		/// vmscl.p %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Scale 2x2 Matrix by %vfpu_rt
-		/// vmscl.t %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Scale 3x3 Matrix by %vfpu_rt
-		/// vmscl.q %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Scale 4x4 Matrix by %vfpu_rt
-		/// 
-		/// %vfpu_rt:       VFPU Vector Source Register, Scale (sreg 0..127)
-		/// %vfpu_rs:       VFPU Vector Source Register, Matrix ([p|t|q]reg 0..127)
-		/// %vfpu_rd:       VFPU Vector Destination Register, Matrix ([s|p|t|q]reg 0..127)
-		/// 
-		/// vfpu_mtx[%vfpu_rd] <- vfpu_mtx[%vfpu_rs] * vfpu_reg[%vfpu_rt]
+		/// +----------------------+--------------+----+--------------+---+--------------+ <para/>
+		/// |31                 23 | 22        16 | 15 | 14         8 | 7 | 6         0  | <para/>
+		/// +----------------------+--------------+----+--------------+---+--------------+ <para/>
+		/// |  opcode 0x65008080   | vfpu_rt[6-0] |    | vfpu_rs[6-0] |   | vfpu_rd[6-0] | <para/>
+		/// +----------------------+--------------+----+--------------+---+--------------+ <para/>
+		/// <para/>
+		/// MatrixScale.Pair/Triple/Quad, multiply all components by scale factor <para/>
+		/// <para/>
+		/// vmscl.p %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Scale 2x2 Matrix by %vfpu_rt <para/>
+		/// vmscl.t %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Scale 3x3 Matrix by %vfpu_rt <para/>
+		/// vmscl.q %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Scale 4x4 Matrix by %vfpu_rt <para/>
+		/// <para/>
+		/// %vfpu_rt:       VFPU Vector Source Register, Scale (sreg 0..127) <para/>
+		/// %vfpu_rs:       VFPU Vector Source Register, Matrix ([p|t|q]reg 0..127) <para/>
+		/// %vfpu_rd:       VFPU Vector Destination Register, Matrix ([s|p|t|q]reg 0..127) <para/>
+		/// <para/>
+		/// vfpu_mtx[%vfpu_rd] &lt;- vfpu_mtx[%vfpu_rs] * vfpu_reg[%vfpu_rt]
 		/// </summary>
 		public void vmscl()
 		{

@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
 using CSharpUtils;
 
 namespace CSPspEmu.Core.Utils
 {
-	unsafe public class PspBitmap
+	public unsafe class PspBitmap
 	{
 		protected GuPixelFormats GuPixelFormat;
 		public int Width;

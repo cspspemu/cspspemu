@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using CSharpUtils;
 using OpenTK;
 using OpenTK.Audio;
 using OpenTK.Audio.OpenAL;
 
 namespace CSPspEmu.Core.Audio.Impl.Openal
 {
-	unsafe public class PspAudioOpenalImpl : PspAudioImpl
+    public class PspAudioOpenalImpl : PspAudioImpl
 	{
-		static protected AudioContext AudioContext;
-		//static protected XRamExtension XRam;
+		protected static AudioContext AudioContext;
+		//protected static XRamExtension XRam;
 		static internal AudioStream AudioStream;
 
 		public override void InitializeComponent()
@@ -35,13 +30,13 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 			}
 		}
 
-		override public void Update(Action<short[]> ReadStream)
+		public override void Update(Action<short[]> ReadStream)
 		{
 			AudioContext.Process();
 			AudioStream.Update(ReadStream);
 		}
 
-		override public void StopSynchronized()
+		public override void StopSynchronized()
 		{
 		}
 

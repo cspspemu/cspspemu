@@ -1,24 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
-using CSharpUtils;
 using System.Diagnostics;
 
 namespace CSPspEmu.Core.Memory
 {
-	unsafe sealed public class FastPspMemory : PspMemory
+	public unsafe sealed class FastPspMemory : PspMemory
 	{
-		//readonly public byte* Base = (byte*)0x50000000;
-		//readonly public byte* Base = (byte*)0x40000000;
-		static public byte* _Base = null;
-		static public byte* StaticNullPtr;
-		static public byte* StaticScratchPadPtr;
-		static public byte* StaticFrameBufferPtr;
-		static public byte* StaticMainPtr;
+		//public readonly byte* Base = (byte*)0x50000000;
+		//public readonly byte* Base = (byte*)0x40000000;
+		public static byte* _Base = null;
+		public static byte* StaticNullPtr;
+		public static byte* StaticScratchPadPtr;
+		public static byte* StaticFrameBufferPtr;
+		public static byte* StaticMainPtr;
 
-		public byte* Base { get { return _Base; } }
+		public static byte* Base { get { return _Base; } }
 
 		/*
 		// to RESERVE memory in Linux, use mmap with a private, anonymous, non-accessible mapping.

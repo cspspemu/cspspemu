@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace CSPspEmu.Core
 {
-	public class PspGlobalConfiguration
+	public static class PspGlobalConfiguration
 	{
-		static private string _CurrentVersion;
-		static private int? _CurrentVersionNumeric;
+		private static string _CurrentVersion;
+		private static int? _CurrentVersionNumeric;
 
-		static public string CurrentVersion
+		public static string CurrentVersion
 		{
 			get
 			{
@@ -23,7 +19,7 @@ namespace CSPspEmu.Core
 			}
 		}
 
-		static public int CurrentVersionNumeric
+		public static int CurrentVersionNumeric
 		{
 			get
 			{
@@ -42,9 +38,9 @@ namespace CSPspEmu.Core
 			}
 		}
 
-		static private string _GitRevision;
+		private static string _GitRevision;
 
-		static public string GitRevision
+		public static string GitRevision
 		{
 			get
 			{

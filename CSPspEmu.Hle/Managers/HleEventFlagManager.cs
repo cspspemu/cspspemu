@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Hle.Threading.EventFlags;
+﻿using CSPspEmu.Hle.Threading.EventFlags;
 using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Managers

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core;
+﻿using CSPspEmu.Core;
 using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.impose
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class sceImpose : HleModuleHost
+	public unsafe class sceImpose : HleModuleHost
 	{
 		uint umdPopupStatus;
 
@@ -72,7 +68,7 @@ namespace CSPspEmu.Hle.Modules.impose
 			Charging = 1,
 		}
 
-		public enum BateryStatusEnum : uint
+		public enum BatteryStatusEnum : uint
 		{
 			VeryLow = 0,
 			Low = 1,
@@ -81,34 +77,43 @@ namespace CSPspEmu.Hle.Modules.impose
 		}
 
 		/// <summary>
-		/// IsChargingPointer:
-		///		0 - if not charging
-		///		1 - if charging
-		///	IconStatusPointer:
-		///		0 - Battery is very low
-		///		1 - Battery is low
-		///		2 - Battery is partial filled
-		///		3 - Battery is fully filled
+		/// IsChargingPointer:      <para/>
+		///		0 - if not charging <para/>
+		///		1 - if charging     <para/>-<para/>
+		///	IconStatusPointer:                <para/>
+		///		0 - Battery is very low       <para/>       
+		///		1 - Battery is low            <para/>
+		///		2 - Battery is partial filled <para/>
+		///		3 - Battery is fully filled   <para/>
 		/// </summary>
 		/// <param name="IsChargingPointer"></param>
 		/// <param name="IconStatusPointer"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x8C943191, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
-		public uint sceImposeGetBatteryIconStatus(ChargingEnum* IsChargingPointer, BateryStatusEnum* IconStatusPointer)
+		public uint sceImposeGetBatteryIconStatus(ChargingEnum* IsChargingPointer, BatteryStatusEnum* IconStatusPointer)
 		{
 			*IsChargingPointer = ChargingEnum.NotCharging;
-			*IconStatusPointer = BateryStatusEnum.FullyPilled;
+			*IconStatusPointer = BatteryStatusEnum.FullyPilled;
 			return 0;
 		}
 
+		/// <summary>
+		/// Set the value of the backlight timer.
+		/// </summary>
+		/// <param name="value">The backlight timer. (30 to a lot of seconds)</param>
+		/// <returns>&lt; 0 on error.</returns>
         [HlePspFunction(NID = 0x967F6D4A, FirmwareVersion = 150)]
         [HlePspNotImplemented]
-        public int sceImposeSetBacklightOffTime()
+        public int sceImposeSetBacklightOffTime(int value)
         {
             return 0;
         }
 
+		/// <summary>
+		/// Get the value of the backlight timer.
+		/// </summary>
+		/// <returns>Backlight timer in seconds, or &lt; 0 on error</returns>
         [HlePspFunction(NID = 0x8F6E3518, FirmwareVersion = 150)]
         [HlePspNotImplemented]
         public int sceImposeGetBacklightOffTime()

@@ -13,7 +13,7 @@
  * 2008-10-21   JPP  - Generate dynamic methods
  * 2008-09-27   JPP  - Separated from ObjectListView.cs
  * 
- * Copyright (C) 2006-2008 Phillip Piper
+ * Copyright (C) 2006-2012 Phillip Piper
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -496,7 +496,7 @@ namespace BrightIdeasSoftware
         }
 
         private Type GeneratePart(ILGenerator il, Type type, string pathPart, bool isLastPart) {
-            // ::TODO: Generate check for null
+            // TODO: Generate check for null
 
             // Find the first member with the given nam that is a field, property, or parameter-less method
             List<MemberInfo> infos = new List<MemberInfo>(type.GetMember(pathPart));
@@ -512,7 +512,10 @@ namespace BrightIdeasSoftware
             // If we couldn't find anything with that name, pop the current result and return an error
             if (info == null) {
                 il.Emit(OpCodes.Pop);
-                il.Emit(OpCodes.Ldstr, String.Format("'{0}' is not a parameter-less method, property or field of type '{1}'", pathPart, type.FullName));
+                if (Munger.IgnoreMissingAspects)
+                    il.Emit(OpCodes.Ldnull);
+                else
+                    il.Emit(OpCodes.Ldstr, String.Format("'{0}' is not a parameter-less method, property or field of type '{1}'", pathPart, type.FullName));
                 return null;
             }
 

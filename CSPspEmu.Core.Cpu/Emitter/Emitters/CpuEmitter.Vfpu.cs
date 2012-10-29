@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection.Emit;
 using CSharpUtils;
-using System.Linq.Expressions;
 using Codegen;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	unsafe sealed public partial class CpuEmiter
+	public sealed partial class CpuEmitter
 	{
 		public enum VfpuControlRegistersEnum
 		{
@@ -173,7 +168,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 						Load_VS(0, 1); // Angle
 						SafeILGenerator.Push((float)(Math.PI / 2.0f));
 						SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-						MipsMethodEmiter.CallMethod((Func<float, float>)MathFloat.Sin);
+						MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Sin);
 						if (NegateSin)
 						{
 							SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate);
@@ -194,7 +189,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 					Load_VS(0, 1); // Angle
 					SafeILGenerator.Push((float)(Math.PI / 2.0f));
 					SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-					MipsMethodEmiter.CallMethod((Func<float, float>)MathFloat.Sin);
+					MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Sin);
 					if (NegateSin)
 					{
 						SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate);
@@ -208,7 +203,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 				Load_VS(0, 1); // Angle
 				SafeILGenerator.Push((float)(Math.PI / 2.0f));
 				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-				MipsMethodEmiter.CallMethod((Func<float, float>)MathFloat.Cos);
+				MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Cos);
 			});
 		}
 
@@ -236,7 +231,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveVd((Index) =>
 			{
 				Load_VS(Index);
-				MipsMethodEmiter.CallMethod((Func<float, float>)MathFloat.Abs);
+				MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Abs);
 			});
 		}
 		public void vneg()
@@ -259,7 +254,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveVd((Index) =>
 			{
 				Load_VS(Index);
-				MipsMethodEmiter.CallMethod((Func<float, float>)MathFloat.Sign);
+				MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Sign);
 			});
 		}
 		public void vrcp()
@@ -277,7 +272,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveVd((Index) =>
 			{
 				Load_VS(Index);
-				MipsMethodEmiter.CallMethod(Delegate);
+				MipsMethodEmitter.CallMethod(Delegate);
 			});
 		}
 
@@ -412,7 +407,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveVd((Index) =>
 			{
 				Load_VS_VT(Index);
-				MipsMethodEmiter.CallMethod((Func<float, float, float>)MathFloat.Min);
+				MipsMethodEmitter.CallMethod((Func<float, float, float>)MathFloat.Min);
 			});
 		}
 		public void vmax()
@@ -420,29 +415,29 @@ namespace CSPspEmu.Core.Cpu.Emiter
 			VectorOperationSaveVd((Index) =>
 			{
 				Load_VS_VT(Index);
-				MipsMethodEmiter.CallMethod((Func<float, float, float>)MathFloat.Max);
+				MipsMethodEmitter.CallMethod((Func<float, float, float>)MathFloat.Max);
 			});
 		}
 
 		/// <summary>
-		/// 	+----------------------+--------------+----+--------------+---+--------------+
-		///     |31                 23 | 22        16 | 15 | 14         8 | 7 | 6         0  |
-		///     +----------------------+--------------+----+--------------+---+--------------+
-		///     |  opcode 0x60000000   | vfpu_rt[6-0] |    | vfpu_rs[6-0] |   | vfpu_rd[6-0] |
-		///     +----------------------+--------------+----+--------------+---+--------------+
+		/// 	+----------------------+--------------+----+--------------+---+--------------+ <para/>
+		///     |31                 23 | 22        16 | 15 | 14         8 | 7 | 6         0  | <para/>
+		///     +----------------------+--------------+----+--------------+---+--------------+ <para/>
+		///     |  opcode 0x60000000   | vfpu_rt[6-0] |    | vfpu_rs[6-0] |   | vfpu_rd[6-0] | <para/>
+		///     +----------------------+--------------+----+--------------+---+--------------+ <para/>
 		///     
 		///     VectorAdd.Single/Pair/Triple/Quad
 		///     
-		///     vadd.s %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Single
-		///     vadd.p %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Pair
-		///     vadd.t %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Triple
-		///     vadd.q %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Quad
-		///     
-		///     %vfpu_rt:	VFPU Vector Source Register ([s|p|t|q]reg 0..127)
-		///     %vfpu_rs:	VFPU Vector Source Register ([s|p|t|q]reg 0..127)
-		///     %vfpu_rd:	VFPU Vector Destination Register ([s|p|t|q]reg 0..127)
-		///     
-		///     vfpu_regs[%vfpu_rd] <- vfpu_regs[%vfpu_rs] + vfpu_regs[%vfpu_rt]
+		///     vadd.s %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Single <para/>
+		///     vadd.p %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Pair <para/>
+		///     vadd.t %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Triple <para/>
+		///     vadd.q %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Quad <para/>
+		///     <para/>
+		///     %vfpu_rt:	VFPU Vector Source Register ([s|p|t|q]reg 0..127) <para/>
+		///     %vfpu_rs:	VFPU Vector Source Register ([s|p|t|q]reg 0..127) <para/>
+		///     %vfpu_rd:	VFPU Vector Destination Register ([s|p|t|q]reg 0..127) <para/>
+		///     <para/>
+		///     vfpu_regs[%vfpu_rd] &lt;- vfpu_regs[%vfpu_rs] + vfpu_regs[%vfpu_rt]
 		/// </summary>
 		public void vadd()
 		{
@@ -470,7 +465,7 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		}
 
 		/*
-		static public float _vmul(float a, float b)
+		public static float _vmul(float a, float b)
 		{
 			Console.Error.WriteLine("{0} * {1} = {2}", a, b, a * b);
 			return a * b;

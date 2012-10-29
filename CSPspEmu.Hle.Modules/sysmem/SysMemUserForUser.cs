@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
@@ -243,7 +240,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 
 
 		/// <summary>
-		/// Free a memory block allocated with ::sceKernelAllocPartitionMemory.
+		/// Free a memory block allocated with <see cref="sceKernelAllocPartitionMemory"/>.
 		/// </summary>
 		/// <param name="BlockId">UID of the block to free.</param>
 		/// <returns>? on success, less than 0 on error.</returns>
@@ -264,6 +261,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="Format"></param>
 		/// <param name="CpuThreadState"></param>
 		[HlePspFunction(NID = 0x13A5ABEF, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]

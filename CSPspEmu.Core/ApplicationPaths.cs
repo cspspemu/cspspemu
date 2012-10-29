@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Windows.Forms;
 using System.IO;
 
 namespace CSPspEmu.Core
 {
-	public class ApplicationPaths
+	public static class ApplicationPaths
 	{
-		static public string ExecutablePath
+		public static string ExecutablePath
 		{
 			get
 			{
@@ -18,9 +14,9 @@ namespace CSPspEmu.Core
 			}
 		}
 
-		static private string _MemoryStickRootFolder;
+		private static string _MemoryStickRootFolder;
 
-		static public string MemoryStickRootFolder
+		public static string MemoryStickRootFolder
 		{
 			get
 			{
@@ -39,8 +35,14 @@ namespace CSPspEmu.Core
 					{
 						_MemoryStickRootFolder = Path.GetFullPath(MemoryStickRootFolder + "/../../../../ms");
 					}
-					try { Directory.CreateDirectory(_MemoryStickRootFolder); }
-					catch { }
+					
+					try
+					{
+						Directory.CreateDirectory(_MemoryStickRootFolder);
+					}
+					catch
+					{
+					}
 				}
 				return _MemoryStickRootFolder;
 			}

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Hle.Attributes;
+﻿using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.sysmem
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00000011)]
-	unsafe public class sceSuspendForUser : HleModuleHost
+	public unsafe class sceSuspendForUser : HleModuleHost
 	{
 		[Inject]
 		HleMemoryManager MemoryManager;
@@ -47,7 +43,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		bool VolatileMemLocked = false;
 
 		/// <summary>
-		/// Allocate the extra 4megs of RAM
+		/// Allocate the extra 4 megs of RAM
 		/// </summary>
 		/// <param name="Type">No idea as it is never used, set to anything</param>
 		/// <param name="OutAddress">Pointer to a pointer to hold the address of the memory</param>

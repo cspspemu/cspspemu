@@ -42,16 +42,16 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 * and contributors of zlib.
 */
 using System;
+
 namespace ComponentAce.Compression.Libs.zlib
 {
-	
-	sealed public class ZStream
+	public sealed class ZStream
 	{
 		
 		private const int MAX_WBITS = 15; // 32K LZ77 window		
-		private static readonly int DEF_WBITS = MAX_WBITS;
-		
-		private const int Z_NO_FLUSH = 0;
+	    private const int DEF_WBITS = MAX_WBITS;
+
+	    private const int Z_NO_FLUSH = 0;
 		private const int Z_PARTIAL_FLUSH = 1;
 		private const int Z_SYNC_FLUSH = 2;
 		private const int Z_FULL_FLUSH = 3;
@@ -79,7 +79,7 @@ namespace ComponentAce.Compression.Libs.zlib
 		public int avail_out; // remaining free space at next_out
 		public long total_out; // total nb of bytes output so far
 		
-		public System.String msg;
+		public string msg;
 		
 		internal Deflate dstate;
 		internal Inflate istate;
@@ -93,6 +93,7 @@ namespace ComponentAce.Compression.Libs.zlib
 		{
 			return inflateInit(DEF_WBITS);
 		}
+
 		public int inflateInit(int w)
 		{
 			istate = new Inflate();
@@ -105,6 +106,7 @@ namespace ComponentAce.Compression.Libs.zlib
 				return Z_STREAM_ERROR;
 			return istate.inflate(this, f);
 		}
+
 		public int inflateEnd()
 		{
 			if (istate == null)
@@ -113,12 +115,14 @@ namespace ComponentAce.Compression.Libs.zlib
 			istate = null;
 			return ret;
 		}
+
 		public int inflateSync()
 		{
 			if (istate == null)
 				return Z_STREAM_ERROR;
 			return istate.inflateSync(this);
 		}
+
 		public int inflateSetDictionary(byte[] dictionary, int dictLength)
 		{
 			if (istate == null)
@@ -130,11 +134,13 @@ namespace ComponentAce.Compression.Libs.zlib
 		{
 			return deflateInit(level, MAX_WBITS);
 		}
+
 		public int deflateInit(int level, int bits)
 		{
 			dstate = new Deflate();
 			return dstate.deflateInit(this, level, bits);
 		}
+
 		public int deflate(int flush)
 		{
 			if (dstate == null)
@@ -143,6 +149,7 @@ namespace ComponentAce.Compression.Libs.zlib
 			}
 			return dstate.deflate(this, flush);
 		}
+
 		public int deflateEnd()
 		{
 			if (dstate == null)
@@ -151,12 +158,14 @@ namespace ComponentAce.Compression.Libs.zlib
 			dstate = null;
 			return ret;
 		}
+
 		public int deflateParams(int level, int strategy)
 		{
 			if (dstate == null)
 				return Z_STREAM_ERROR;
 			return dstate.deflateParams(this, level, strategy);
 		}
+
 		public int deflateSetDictionary(byte[] dictionary, int dictLength)
 		{
 			if (dstate == null)

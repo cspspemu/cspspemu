@@ -5,11 +5,13 @@
  * Date: 31/05/2011 7:45am 
  *
  * Change log:
+ * 2011-06-22  JPP  Handle searching for empty strings
+ * v2.5.0
  * 2011-05-31  JPP  Initial version
  *
  * TO DO:
  *
- * Copyright (C) 2011 Phillip Piper
+ * Copyright (C) 2011-2012 Phillip Piper
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -288,7 +290,7 @@ namespace BrightIdeasSoftware {
                 if (column.IsVisible && column.Searchable) {
                     string cellText = column.GetStringValue(modelObject);
                     foreach (TextMatchingStrategy filter in this.MatchingStrategies) {
-                        if (filter.MatchesText(cellText))
+                        if (String.IsNullOrEmpty(filter.Text) || filter.MatchesText(cellText))
                             return true;
                     }
                 }
@@ -308,7 +310,8 @@ namespace BrightIdeasSoftware {
             List<CharacterRange> ranges = new List<CharacterRange>();
 
             foreach (TextMatchingStrategy filter in this.MatchingStrategies) {
-                ranges.AddRange(filter.FindAllMatchedRanges(cellText));
+                 if (!String.IsNullOrEmpty(filter.Text))
+                    ranges.AddRange(filter.FindAllMatchedRanges(cellText));
             }
 
             return ranges;
@@ -375,18 +378,26 @@ namespace BrightIdeasSoftware {
             /// <summary>
             /// Find all the ways in which this filter matches the given string.
             /// </summary>
-            /// <remarks>This is used by the renderer to decide which bits of
-            /// the string should be highlighted</remarks>
-            /// <param name="cellText"></param>
+            /// <remarks>
+            /// <para>
+            /// This is used by the renderer to decide which bits of
+            /// the string should be highlighted.
+            /// </para>
+            /// <para>this.Text will not be null or empty when this is called.</para>
+            /// </remarks>
+            /// <param name="cellText">The text of the cell we want to search</param>
             /// <returns>A list of character ranges indicating the matched substrings</returns>
-            abstract public IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText);
+            public abstract IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText);
 
             /// <summary>
             /// Does the given text match the filter
             /// </summary>
-            /// <param name="cellText"></param>
-            /// <returns></returns>
-            abstract public bool MatchesText(string cellText);
+            /// <remarks>
+            /// <para>this.Text will not be null or empty when this is called.</para>
+            /// </remarks>
+            /// <param name="cellText">The text of the cell we want to search</param>
+            /// <returns>Return true if the given cellText matches our strategy</returns>
+            public abstract bool MatchesText(string cellText);
         }
 
         /// <summary>
@@ -407,20 +418,28 @@ namespace BrightIdeasSoftware {
             /// <summary>
             /// Does the given text match the filter
             /// </summary>
-            /// <param name="cellText"></param>
-            /// <returns></returns>
-            override public bool MatchesText(string cellText) {
+            /// <remarks>
+            /// <para>this.Text will not be null or empty when this is called.</para>
+            /// </remarks>
+            /// <param name="cellText">The text of the cell we want to search</param>
+            /// <returns>Return true if the given cellText matches our strategy</returns>
+            public override bool MatchesText(string cellText) {
                 return cellText.IndexOf(this.Text, this.StringComparison) != -1;
             }
 
             /// <summary>
             /// Find all the ways in which this filter matches the given string.
             /// </summary>
-            /// <remarks>This is used by the renderer to decide which bits of
-            /// the string should be highlighted</remarks>
-            /// <param name="cellText"></param>
+            /// <remarks>
+            /// <para>
+            /// This is used by the renderer to decide which bits of
+            /// the string should be highlighted.
+            /// </para>
+            /// <para>this.Text will not be null or empty when this is called.</para>
+            /// </remarks>
+            /// <param name="cellText">The text of the cell we want to search</param>
             /// <returns>A list of character ranges indicating the matched substrings</returns>
-            override public IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText) {
+            public override IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText) {
                 List<CharacterRange> ranges = new List<CharacterRange>();
 
                 int matchIndex = cellText.IndexOf(this.Text, this.StringComparison);
@@ -451,20 +470,28 @@ namespace BrightIdeasSoftware {
             /// <summary>
             /// Does the given text match the filter
             /// </summary>
-            /// <param name="cellText"></param>
-            /// <returns></returns>
-            override public bool MatchesText(string cellText) {
+            /// <remarks>
+            /// <para>this.Text will not be null or empty when this is called.</para>
+            /// </remarks>
+            /// <param name="cellText">The text of the cell we want to search</param>
+            /// <returns>Return true if the given cellText matches our strategy</returns>
+            public override bool MatchesText(string cellText) {
                 return cellText.StartsWith(this.Text, this.StringComparison);
             }
 
             /// <summary>
             /// Find all the ways in which this filter matches the given string.
             /// </summary>
-            /// <remarks>This is used by the renderer to decide which bits of
-            /// the string should be highlighted</remarks>
-            /// <param name="cellText"></param>
+            /// <remarks>
+            /// <para>
+            /// This is used by the renderer to decide which bits of
+            /// the string should be highlighted.
+            /// </para>
+            /// <para>this.Text will not be null or empty when this is called.</para>
+            /// </remarks>
+            /// <param name="cellText">The text of the cell we want to search</param>
             /// <returns>A list of character ranges indicating the matched substrings</returns>
-            override public IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText) {
+            public override IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText) {
                 List<CharacterRange> ranges = new List<CharacterRange>();
 
                 if (cellText.StartsWith(this.Text, this.StringComparison))
@@ -537,8 +564,11 @@ namespace BrightIdeasSoftware {
             /// <summary>
             /// Does the given text match the filter
             /// </summary>
-            /// <param name="cellText"></param>
-            /// <returns></returns>
+            /// <remarks>
+            /// <para>this.Text will not be null or empty when this is called.</para>
+            /// </remarks>
+            /// <param name="cellText">The text of the cell we want to search</param>
+            /// <returns>Return true if the given cellText matches our strategy</returns>
             public override bool MatchesText(string cellText) {
                 if (this.IsRegexInvalid)
                     return true;
@@ -548,11 +578,16 @@ namespace BrightIdeasSoftware {
             /// <summary>
             /// Find all the ways in which this filter matches the given string.
             /// </summary>
-            /// <remarks>This is used by the renderer to decide which bits of
-            /// the string should be highlighted</remarks>
-            /// <param name="cellText"></param>
+            /// <remarks>
+            /// <para>
+            /// This is used by the renderer to decide which bits of
+            /// the string should be highlighted.
+            /// </para>
+            /// <para>this.Text will not be null or empty when this is called.</para>
+            /// </remarks>
+            /// <param name="cellText">The text of the cell we want to search</param>
             /// <returns>A list of character ranges indicating the matched substrings</returns>
-            override public IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText) {
+            public override IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText) {
                 List<CharacterRange> ranges = new List<CharacterRange>();
 
                 if (!this.IsRegexInvalid) {

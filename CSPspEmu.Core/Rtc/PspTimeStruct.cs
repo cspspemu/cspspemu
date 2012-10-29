@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSharpUtils;
 
 namespace CSPspEmu.Core.Rtc
 {
 	public struct PspTimeStruct
 	{
-		static public Logger Logger = Logger.GetLogger("Rtc");
+		public static Logger Logger = Logger.GetLogger("Rtc");
 
 		public long TotalMicroseconds;
 
@@ -16,13 +13,13 @@ namespace CSPspEmu.Core.Rtc
 		{
 			//DateTime.GetTotalMicroseconds();
 			//var Seconds = (uint)(DateTime - Platform.UnixStart).TotalSeconds;
-			TotalMicroseconds = Platform.GetCurrentUnixMicroseconds();
+			TotalMicroseconds = Platform.GetCurrentUnixMicroseconds;
 		}
 
 		public void SetToNow()
 		{
 			var PrevTotalMicroseconds = TotalMicroseconds;
-			var CurrentTotalMicroseconds = Platform.GetCurrentUnixMicroseconds();
+			var CurrentTotalMicroseconds = Platform.GetCurrentUnixMicroseconds;
 
 			if (CurrentTotalMicroseconds < PrevTotalMicroseconds)
 			{

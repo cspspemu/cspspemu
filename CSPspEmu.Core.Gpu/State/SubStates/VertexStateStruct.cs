@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Runtime.InteropServices;
 using CSharpUtils;
-using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Gpu.State
 {
@@ -20,8 +16,8 @@ namespace CSPspEmu.Core.Gpu.State
 		/// </summary>
 		public byte NormalCount;
 
-		readonly static public int[] TypeSizeTable = new int[] { 0, sizeof(byte), sizeof(short), sizeof(float) };
-		readonly static public int[] ColorSizeTable = new int[] { 0, 1, 1, 1, 2, 2, 2, 4 };
+        public static readonly int[] TypeSizeTable = new int[] { 0, sizeof(byte), sizeof(short), sizeof(float) };
+		public static readonly int[] ColorSizeTable = new int[] { 0, 1, 1, 1, 2, 2, 2, 4 };
 
 		public enum IndexEnum
 		{

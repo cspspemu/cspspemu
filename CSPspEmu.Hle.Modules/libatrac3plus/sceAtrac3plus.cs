@@ -1,32 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Hle.Attributes;
-using CSPspEmu.Hle.Modules.threadman;
-using CSharpUtils;
-using CSPspEmu.Hle.Managers;
 using System.IO;
-using System.Runtime.InteropServices;
-using AForge.Video.DirectShow.Internals;
-using CSPspEmu.Media;
-using CSharpUtils.Endian;
-using CSPspEmu.Hle.Formats.audio;
-using CSPspEmu.Hle.Modules.audio;
-using CSPspEmu.Core.Audio;
-using CSPspEmu.Core;
 using System.Security.Cryptography;
-using CSPspEmu.Hle.Vfs.MemoryStick;
-using CSPspEmu.Hle.Vfs.Local;
-using System.Diagnostics;
-using CSharpUtils.Streams;
+using CSharpUtils;
 using CSharpUtils.Arrays;
+using CSharpUtils.Endian;
+using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Hle.Formats.audio;
+using CSPspEmu.Hle.Managers;
+using CSPspEmu.Hle.Modules.audio;
+using CSPspEmu.Core;
+using CSPspEmu.Core.Audio;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Media;
 
 namespace CSPspEmu.Hle.Modules.libatrac3plus
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	unsafe public partial class sceAtrac3plus : HleModuleHost
+	public unsafe partial class sceAtrac3plus : HleModuleHost
 	{
 		static Logger Logger = Logger.GetLogger("sceAtrac3plus");
 
@@ -463,8 +453,8 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// <summary>
 		/// Creates a new Atrac ID from the specified data
 		/// </summary>
-		/// <param name="DataPointer">the buffer holding the atrac3 data, including the RIFF/WAVE header.</param>
-		/// <param name="DataLength">the size of the buffer pointed by buf</param>
+		/// <param name="DataPointer">The buffer holding the atrac3 data, including the RIFF/WAVE header.</param>
+		/// <param name="DataLength">The size of the buffer pointed by buf</param>
 		/// <returns>The new atrac ID, or less than 0 on error </returns>
 		[HlePspFunction(NID = 0x7A20E7AF, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -480,7 +470,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// 
 		/// </summary>
 		/// <param name="AtracId"></param>
-		/// <param name="ChannelPointer"></param>
+		/// <param name="OutputChannel"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xB3B5D042, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -810,15 +800,15 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			return 0;
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="AtracId"></param>
-		/// <param name="EndSamplePointer"></param>
-		/// <param name="LoopStartSamplePointer"></param>
-		/// <param name="piLoopEndSample"></param>
-		/// <returns></returns>
-		[HlePspFunction(NID = 0xA2BBA8BE, FirmwareVersion = 150)]
+	    /// <summary>
+	    /// 
+	    /// </summary>
+	    /// <param name="AtracId"></param>
+	    /// <param name="EndSamplePointer"></param>
+	    /// <param name="LoopStartSamplePointer"></param>
+	    /// <param name="LoopEndSamplePointer"></param>
+	    /// <returns></returns>
+	    [HlePspFunction(NID = 0xA2BBA8BE, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceAtracGetSoundSample(int AtracId, int* EndSamplePointer, int* LoopStartSamplePointer, int* LoopEndSamplePointer)
 		{

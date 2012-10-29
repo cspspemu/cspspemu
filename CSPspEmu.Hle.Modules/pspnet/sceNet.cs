@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSharpUtils;
@@ -8,7 +6,7 @@ using CSharpUtils;
 namespace CSPspEmu.Hle.Modules.pspnet
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	unsafe public partial class sceNet : HleModuleHost
+	public unsafe class sceNet : HleModuleHost
 	{
 		/// <summary>
 		/// Initialise the networking library
@@ -20,7 +18,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="netintrstack">Stack size of the SceNetNetintr thread (defaults to 4096 on non 1.5 firmware regardless of what value is passed).</param>
 		/// <returns>
 		///		0 on success
-		///		less than 0 on error
+		///		Less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0x39AF39A6, FirmwareVersion = 150)]
 		public int sceNetInit(int MemoryPoolSize, int calloutprio, int calloutstack, int netintrprio, int netintrstack)
@@ -44,7 +42,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Free (delete) thread info/data
 		/// </summary>
-		/// <param name="thid">The thread id.</param>
+		/// <param name="thid">The thread ID.</param>
 		/// <returns>
 		///		0 on success
 		/// </returns>
@@ -116,7 +114,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Retrieve the networking library memory usage
 		/// </summary>
-		/// <param name="stat">Pointer to a ::SceNetMallocStat type to store the result.</param>
+		/// <param name="stat">Pointer to a <see cref="SceNetMallocStat"/> type to store the result.</param>
 		/// <returns>
 		///		0 on success
 		/// </returns>

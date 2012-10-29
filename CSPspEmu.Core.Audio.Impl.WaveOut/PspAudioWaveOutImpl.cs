@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using CSharpUtils;
-using System.Threading;
-using WaveLib;
 using System.Collections.Concurrent;
+using System.Runtime.InteropServices;
+using CSharpUtils;
+using WaveLib;
 
 namespace CSPspEmu.Core.Audio.Impl.WaveOut
 {
 	//[AttributeUsage(AttributeTargets.
-	unsafe public class PspAudioWaveOutImpl : PspAudioImpl
+	public unsafe class PspAudioWaveOutImpl : PspAudioImpl
 	{
 		public const int Frequency = 44100;
 		//public const int Frequency = 48000;

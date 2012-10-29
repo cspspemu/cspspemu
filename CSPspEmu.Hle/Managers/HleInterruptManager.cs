@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu;
 
@@ -21,7 +19,7 @@ namespace CSPspEmu.Hle.Managers
 		}
 	}
 
-	sealed public class HleInterruptHandler
+	public sealed class HleInterruptHandler
 	{
 		public PspInterrupts PspInterrupt;
 		public HleSubinterruptHandler[] SubinterruptHandlers;
@@ -53,7 +51,7 @@ namespace CSPspEmu.Hle.Managers
 		}
 	}
 
-	sealed public class HleInterruptManager : PspEmulatorComponent
+	public sealed class HleInterruptManager : PspEmulatorComponent
 	{
 		/// <summary>
 		/// Global Interrupt Enable

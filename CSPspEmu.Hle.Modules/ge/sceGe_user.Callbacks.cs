@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using CSPspEmu.Core.Gpu;
 using CSharpUtils;
 
 namespace CSPspEmu.Hle.Modules.ge
 {
-	unsafe public partial class sceGe_user
+    public partial class sceGe_user
 	{
 		static Logger Logger = Logger.GetLogger("sceGe");
 
@@ -48,7 +45,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// Unregister the callback handlers
 		/// </summary>
 		/// <param name="cbid">The ID of the callbacks from sceGeSetCallback</param>
-		/// <returns>less than 0 on error</returns>
+		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x05DB22CE, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
 		public int sceGeUnsetCallback(int cbid)

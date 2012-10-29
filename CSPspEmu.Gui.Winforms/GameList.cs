@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
-using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
 using CSPspEmu.Hle.Formats;
 using CSPspEmu.Hle.Vfs.Iso;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Drawing;
-using System.Security.Cryptography;
-using System.Xml.Serialization;
 
 namespace CSPspEmu.Gui.Winforms
 {
@@ -124,13 +122,13 @@ namespace CSPspEmu.Gui.Winforms
 		public event Action<GameEntry, bool> EntryAdded;
 		static XmlSerializer Serializer = new XmlSerializer(typeof(GameEntry));
 
-		static public String GetHash(string IsoFile)
+		public static String GetHash(string IsoFile)
 		{
 			var IsoFileInfo = new FileInfo(IsoFile);
 			return BitConverter.ToString(SHA1.Create().ComputeHash(Encoding.UTF8.GetBytes(IsoFileInfo.FullName + "_" + IsoFileInfo.Length))).Replace("-", "");
 		}
 
-		public GameEntry HandleIso(string IsoFile)
+		public static GameEntry HandleIso(string IsoFile)
 		{
 			var IsoFileInfo = new FileInfo(IsoFile);
 

@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Gpu.State.SubStates;
 using CSharpUtils;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
-	unsafe sealed public partial class GpuDisplayListRunner
+	public unsafe sealed partial class GpuDisplayListRunner
 	{
 		//static pure string TextureArrayOperation(string type, string code) { return ArrayOperation(type, 0, 7, code); }
 

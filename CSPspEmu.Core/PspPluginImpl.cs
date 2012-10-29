@@ -1,23 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Core
 {
-	abstract public class PspPluginImpl : PspEmulatorComponent
+	public abstract class PspPluginImpl : PspEmulatorComponent
 	{
 		/// <summary>
 		/// 
 		/// </summary>
-		abstract public PluginInfo PluginInfo { get; }
+		public abstract PluginInfo PluginInfo { get; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		abstract public bool IsWorking { get; }
+		public abstract bool IsWorking { get; }
 
-		static public void SelectWorkingPlugin<TType>(PspEmulatorContext PspEmulatorContext, params Type[] AvailablePluginImplementations) where TType : PspPluginImpl
+		public static void SelectWorkingPlugin<TType>(PspEmulatorContext PspEmulatorContext, params Type[] AvailablePluginImplementations) where TType : PspPluginImpl
 		{
 			foreach (var ImplementationType in AvailablePluginImplementations)
 			{

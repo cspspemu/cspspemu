@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CSPspEmu.Hle.Modules.utility
+﻿namespace CSPspEmu.Hle.Modules.utility
 {
-	unsafe public partial class sceUtility
+	public unsafe partial class sceUtility
 	{
 		/// <summary>
 		/// Create an on-screen keyboard
@@ -46,7 +41,7 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// <summary>
 		/// Get the status of a on-screen keyboard currently active.
 		/// </summary>
-		/// <returns>the current status of the keyboard. See ::pspUtilityDialogState for details.</returns>
+		/// <returns>the current status of the keyboard. See <see cref="pspUtilityDialogState"/> for details.</returns>
 		[HlePspFunction(NID = 0xF3F76017, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public pspUtilityDialogState sceUtilityOskGetStatus()

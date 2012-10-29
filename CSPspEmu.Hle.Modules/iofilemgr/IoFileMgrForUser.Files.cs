@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using CSharpUtils;
+using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Modules.stdio;
 using CSPspEmu.Hle.Vfs;
-using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.iofilemgr
 {
-	unsafe public partial class IoFileMgrForUser
+	public unsafe partial class IoFileMgrForUser
 	{
 		public class GuestHleIoDriver : IHleIoDriver
 		{
@@ -324,7 +322,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <example>
 		///     bytes_read = sceIoRead(fd, data, 100);
 		/// </example>
-		/// <param name="fd">Opened file descriptor to read from</param>
+		/// <param name="FileId">Opened file descriptor to read from</param>
 		/// <param name="OutputPointer">Pointer to the buffer where the read data will be placed</param>
 		/// <param name="OutputSize">Size of the read in bytes</param>
 		/// <returns>The number of bytes read</returns>
@@ -527,6 +525,9 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		}
 	}
 
+	/// <summary>
+	/// Structure to maintain the file driver pointers
+	/// </summary>
 	public struct PspIoDrvFuncs
 	{
 		/// <summary>

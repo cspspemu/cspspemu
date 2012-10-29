@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Net;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
-using System.Net;
 
 namespace CSPspEmu.Hle.Modules.pspnet
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
-	unsafe public class sceNetResolver : HleModuleHost
+	public unsafe class sceNetResolver : HleModuleHost
 	{
 		public struct in_addr
 		{
@@ -66,7 +63,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Create a resolver object
 		/// </summary>
-		/// <param name="PointerToResolverId">Pointer to receive the resolver id</param>
+		/// <param name="PointerToResolverId">Pointer to receive the resolver ID</param>
 		/// <param name="Buffer">Temporary buffer</param>
 		/// <param name="BufferLength">Length of the temporary buffer</param>
 		/// <returns>0 on sucess, less than 0 on error.</returns>
@@ -118,7 +115,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Begin a address to name lookup
 		/// </summary>
-		/// <param name="rid">Resolver id</param>
+		/// <param name="rid">Resolver ID</param>
 		/// <param name="addr">Pointer to the address to resolve</param>
 		/// <param name="hostname">Buffer to receive the name</param>
 		/// <param name="hostname_len">Length of the buffer</param>
@@ -134,7 +131,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Stop a resolver operation
 		/// </summary>
-		/// <param name="rid">Resolver id</param>
+		/// <param name="rid">Resolver ID</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x808F6063, FirmwareVersion = 150)]
 		public int sceNetResolverStop(int rid)

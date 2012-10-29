@@ -42,13 +42,12 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 * and contributors of zlib.
 */
 using System;
+
 namespace ComponentAce.Compression.Libs.zlib
 {
-	
 	sealed class InfCodes
 	{
-				
-		private static readonly int[] inflate_mask = new int[]{0x00000000, 0x00000001, 0x00000003, 0x00000007, 0x0000000f, 0x0000001f, 0x0000003f, 0x0000007f, 0x000000ff, 0x000001ff, 0x000003ff, 0x000007ff, 0x00000fff, 0x00001fff, 0x00003fff, 0x00007fff, 0x0000ffff};
+		private static readonly int[] inflate_mask = new int[] {0x00000000, 0x00000001, 0x00000003, 0x00000007, 0x0000000f, 0x0000001f, 0x0000003f, 0x0000007f, 0x000000ff, 0x000001ff, 0x000003ff, 0x000007ff, 0x00000fff, 0x00001fff, 0x00003fff, 0x00007fff, 0x0000ffff};
 		
 		private const int Z_OK = 0;
 		private const int Z_STREAM_END = 1;
@@ -63,15 +62,15 @@ namespace ComponentAce.Compression.Libs.zlib
 		// waiting for "i:"=input,
 		//             "o:"=output,
 		//             "x:"=nothing
-		private const int START = 0; // x: set up for LEN
-		private const int LEN = 1; // i: get length/literal/eob next
-		private const int LENEXT = 2; // i: getting length extra (have base)
-		private const int DIST = 3; // i: get distance next
+		private const int START = 0;   // x: set up for LEN
+		private const int LEN = 1;     // i: get length/literal/eob next
+		private const int LENEXT = 2;  // i: getting length extra (have base)
+		private const int DIST = 3;    // i: get distance next
 		private const int DISTEXT = 4; // i: getting distance extra
-		private const int COPY = 5; // o: copying bytes in window, waiting for space
-		private const int LIT = 6; // o: got literal, waiting for output space
-		private const int WASH = 7; // o: got eob, possibly still output waiting
-		private const int END = 8; // x: got eob and all data flushed
+		private const int COPY = 5;    // o: copying bytes in window, waiting for space
+		private const int LIT = 6;     // o: got literal, waiting for output space
+		private const int WASH = 7;    // o: got eob, possibly still output waiting
+		private const int END = 8;     // x: got eob and all data flushed
 		private const int BADCODE = 9; // x: got error
 		
 		internal int mode; // current inflate_codes mode
@@ -89,11 +88,11 @@ namespace ComponentAce.Compression.Libs.zlib
 		internal int get_Renamed; // bits to get for extra
 		internal int dist; // distance back to copy from
 		
-		internal byte lbits; // ltree bits decoded per branch
-		internal byte dbits; // dtree bits decoder per branch
-		internal int[] ltree; // literal/length/eob tree
+		internal byte lbits;      // ltree bits decoded per branch
+		internal byte dbits;      // dtree bits decoder per branch
+		internal int[] ltree;     // literal/length/eob tree
 		internal int ltree_index; // literal/length/eob tree
-		internal int[] dtree; // distance tree
+		internal int[] dtree;     // distance tree
 		internal int dtree_index; // distance tree
 		
 		internal InfCodes(int bl, int bd, int[] tl, int tl_index, int[] td, int td_index, ZStream z)
@@ -120,21 +119,25 @@ namespace ComponentAce.Compression.Libs.zlib
 		
 		internal int proc(InfBlocks s, ZStream z, int r)
 		{
-			int j; // temporary storage
+			int j;      // temporary storage
 			 //int[] t; // temporary pointer
 			int tindex; // temporary pointer
-			int e; // extra bits or operation
-			int b = 0; // bit buffer
-			int k = 0; // bits in bit buffer
-			int p = 0; // input data pointer
-			int n; // bytes available there
-			int q; // output window write pointer
-			int m; // bytes to end of window or read pointer
-			int f; // pointer to copy strings from
+			int e;      // extra bits or operation
+			int b = 0;  // bit buffer
+			int k = 0;  // bits in bit buffer
+			int p = 0;  // input data pointer
+			int n;      // bytes available there
+			int q;      // output window write pointer
+			int m;      // bytes to end of window or read pointer
+			int f;      // pointer to copy strings from
 			
 			// copy input/output information to locals (UPDATE macro restores)
-			p = z.next_in_index; n = z.avail_in; b = s.bitb; k = s.bitk;
-			q = s.write; m = q < s.read?s.read - q - 1:s.end - q;
+			p = z.next_in_index; 
+            n = z.avail_in; 
+            b = s.bitb; 
+            k = s.bitk;
+			q = s.write; 
+            m = q < s.read ? s.read - q - 1 : s.end - q;
 			
 			// process input and output based on current state
 			while (true)
@@ -481,21 +484,21 @@ namespace ComponentAce.Compression.Libs.zlib
 		
 		internal int inflate_fast(int bl, int bd, int[] tl, int tl_index, int[] td, int td_index, InfBlocks s, ZStream z)
 		{
-			int t; // temporary pointer
-			int[] tp; // temporary pointer
+			int t;        // temporary pointer
+			int[] tp;     // temporary pointer
 			int tp_index; // temporary pointer
-			int e; // extra bits or operation
-			int b; // bit buffer
-			int k; // bits in bit buffer
-			int p; // input data pointer
-			int n; // bytes available there
-			int q; // output window write pointer
-			int m; // bytes to end of window or read pointer
-			int ml; // mask for literal/length tree
-			int md; // mask for distance tree
-			int c; // bytes to copy
-			int d; // distance back to copy from
-			int r; // copy source pointer
+			int e;        // extra bits or operation
+			int b;        // bit buffer
+			int k;        // bits in bit buffer
+			int p;        // input data pointer
+			int n;        // bytes available there
+			int q;        // output window write pointer
+			int m;        // bytes to end of window or read pointer
+			int ml;       // mask for literal/length tree
+			int md;       // mask for distance tree
+			int c;        // bytes to copy
+			int d;        // distance back to copy from
+			int r;        // copy source pointer
 			
 			// load input, output, bit values
 			p = z.next_in_index; n = z.avail_in; b = s.bitb; k = s.bitk;

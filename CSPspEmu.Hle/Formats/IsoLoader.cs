@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using CSPspEmu.Hle.Vfs.Iso;
 
 namespace CSPspEmu.Hle.Formats
 {
 	public class IsoLoader
 	{
-		static public IsoFile GetIso(string IsoFile)
+		public static IsoFile GetIso(string IsoFile)
 		{
 			var IsoFileStream = (Stream)File.OpenRead(IsoFile);
 			FormatDetector.SubType DetectedFormat;

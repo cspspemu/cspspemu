@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using CSharpUtils;
 using System.Runtime.InteropServices;
+using CSharpUtils;
 
 namespace CSPspEmu.Hle.Formats.video
 {
@@ -27,7 +24,7 @@ namespace CSPspEmu.Hle.Formats.video
 	/// </summary>
 	/// <see cref="http://en.wikipedia.org/wiki/MPEG_program_stream"/>
 	/// <see cref="http://en.wikipedia.org/wiki/MPEG_transport_stream"/>
-	unsafe public class MpegPsDemuxer : IDemuxer
+	public unsafe class MpegPsDemuxer : IDemuxer
 	{
 		public const int MpegTimestampPerSecond = 90000; 
 		public const int PspVideoTimestampStep = 3003;      // Value based on pmfplayer ((mpegTimestampPerSecond * 1) / 29.970 (fps)).

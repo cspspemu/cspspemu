@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using CSharpUtils;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
-using System.Threading;
 
 namespace CSPspEmu.Hle
 {
@@ -112,7 +110,7 @@ namespace CSPspEmu.Hle
 			return CurrentFakeHleThread;
 		}
 
-		static public void SetArgumentsToCpuThreadState(CpuThreadState CpuThreadState, uint Function, params object[] Arguments)
+		public static void SetArgumentsToCpuThreadState(CpuThreadState CpuThreadState, uint Function, params object[] Arguments)
 		{
 			int GprIndex = 4;
 			//int FprIndex = 0;

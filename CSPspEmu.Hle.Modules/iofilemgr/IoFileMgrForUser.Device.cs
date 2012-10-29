@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CSPspEmu.Hle.Modules.iofilemgr
 {
-	unsafe public partial class IoFileMgrForUser
+	public unsafe partial class IoFileMgrForUser
 	{
 		/// <summary>
 		/// Perform an ioctl on a device.

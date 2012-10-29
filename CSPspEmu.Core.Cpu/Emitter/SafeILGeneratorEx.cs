@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Codegen;
+﻿using Codegen;
 using System.Reflection.Emit;
 
-namespace CSPspEmu.Core.Cpu.Emiter
+namespace CSPspEmu.Core.Cpu.Emitter
 {
 	public class SafeILGeneratorEx : SafeILGenerator
 	{

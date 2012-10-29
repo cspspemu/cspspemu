@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
-
-namespace CSPspEmu.Core.Memory
+﻿namespace CSPspEmu.Core.Memory
 {
-	unsafe public class LazyPspMemory : NormalPspMemory
+	public unsafe class LazyPspMemory : NormalPspMemory
 	{
 		protected override void Initialize()
 		{
@@ -20,13 +14,13 @@ namespace CSPspEmu.Core.Memory
 			}
 		}
 
-		override public uint PointerToPspAddressUnsafe(void* Pointer)
+		public override uint PointerToPspAddressUnsafe(void* Pointer)
 		{
 			LazyCreateMemory();
 			return base.PointerToPspAddressUnsafe(Pointer);
 		}
 
-		override public void* PspAddressToPointerUnsafe(uint _Address)
+		public override void* PspAddressToPointerUnsafe(uint _Address)
 		{
 			LazyCreateMemory();
 			return base.PspAddressToPointerUnsafe(_Address);

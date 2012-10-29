@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSharpUtils;
 using OpenTK;
 using OpenTK.Audio.OpenAL;
 
@@ -11,7 +7,7 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 	/// <summary>
 	/// 48 Samples 1 ms
 	/// </summary>
-	sealed internal class AudioStream
+	internal sealed class AudioStream
 	{
 		public const int Frequency = 44100;
 		//public const int Frequency = 48000;
@@ -114,7 +110,7 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 		{
 			//short[] BufferData;
 
-			int ReadSamples = SamplesPerBuffer;
+			const int ReadSamples = SamplesPerBuffer;
 			if (BufferData == null || BufferData.Length != ReadSamples)
 			{
 				BufferData = new short[ReadSamples];

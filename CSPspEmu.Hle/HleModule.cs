@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle
@@ -10,7 +7,7 @@ namespace CSPspEmu.Hle
 	{
 		protected PspConfig PspConfig { get { return PspEmulatorContext.PspConfig; } }
 
-		virtual public void Dispose()
+		public virtual void Dispose()
 		{
 		}
 

@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CSPspEmu.Hle.Modules.mpeg
+﻿namespace CSPspEmu.Hle.Modules.mpeg
 {
-	unsafe public partial class sceMpeg
+	public unsafe partial class sceMpeg
 	{
 		/// <summary>
 		/// sceMpegQueryAtracEsSize
 		/// </summary>
 		/// <param name="Mpeg">SceMpeg handle</param>
-		/// <param name="ElementaryStreamSize">will contain size of Es</param>
-		/// <param name="OutputSize">will contain size of decoded data</param>
-		/// <returns>0 if success.</returns>
+		/// <param name="ElementaryStreamSize">Will contain size of Es</param>
+		/// <param name="OutputSize">Will contain size of decoded data</param>
+		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0xF8DCB679, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceMpegQueryAtracEsSize(SceMpegPointer* Mpeg, int* ElementaryStreamSize, int* OutputSize)
@@ -28,10 +23,10 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// sceMpegGetAtracAu
 		/// </summary>
 		/// <param name="Mpeg">SceMpeg handle</param>
-		/// <param name="pStream">associated stream</param>
-		/// <param name="MpegAccessUnit">will contain pointer to Au</param>
+		/// <param name="StreamId">Associated stream</param>
+		/// <param name="MpegAccessUnit">Will contain pointer to Au</param>
 		/// <param name="Atrac3PlusPointer">Pointer to ATRAC3plus stream (from PSMF file).</param>
-		/// <returns>0 if success.</returns>
+		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0xE1CE83A7, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceMpegGetAtracAu(SceMpegPointer* Mpeg, StreamId StreamId, SceMpegAu* MpegAccessUnit, void* Atrac3PlusPointer)
@@ -48,11 +43,11 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// sceMpegAtracDecode
 		/// </summary>
 		/// <param name="Mpeg">SceMpeg handle</param>
-		/// <param name="MpegAccessUnit">video Au</param>
-		/// <param name="OutputBuffer">buffer that will contain the decoded frame</param>
-		/// <param name="Init">set this to 1 on first call</param>
+		/// <param name="MpegAccessUnit">Video Au</param>
+		/// <param name="OutputBuffer">Buffer that will contain the decoded frame</param>
+		/// <param name="Init">Set this to 1 on first call</param>
 		/// <returns>
-		///		0 if success.
+		///		0 if successful.
 		/// </returns>
 		[HlePspFunction(NID = 0x800C44DF, FirmwareVersion = 150)]
 		[HlePspNotImplemented]

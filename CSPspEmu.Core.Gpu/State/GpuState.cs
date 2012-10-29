@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Gpu.State.SubStates;
-using CSPspEmu.Core.Display;
-using CSPspEmu.Core.Memory;
+﻿using CSPspEmu.Core.Gpu.State.SubStates;
 using System.Runtime.InteropServices;
-using CSharpUtils;
 
 namespace CSPspEmu.Core.Gpu.State
 {
@@ -27,7 +20,7 @@ namespace CSPspEmu.Core.Gpu.State
 	}
 
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	unsafe public struct GpuStateStruct
+	public unsafe struct GpuStateStruct
 	{
 		public uint VertexAddress;
 		public uint IndexAddress;
@@ -84,7 +77,7 @@ namespace CSPspEmu.Core.Gpu.State
 		public fixed sbyte DitherMatrix[16];
 
 		/*
-		static public void Init(GpuStateStruct* GpuState)
+		public static void Init(GpuStateStruct* GpuState)
 		{
 			PointerUtils.Memset((byte*)GpuState, 0, sizeof(GpuStateStruct));
 

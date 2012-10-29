@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using CSharpUtils;
 using CSPspEmu.Hle.Formats.Font;
 using CSPspEmu.Hle.Managers;
@@ -10,7 +8,7 @@ using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.libfont
 {
-	unsafe public partial class sceLibFont
+	public unsafe partial class sceLibFont
 	{
 		[Inject]
 		HleIoManager HleIoManager;
@@ -150,7 +148,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// Obtains the FontInfo of a Font with its index.
 		/// </summary>
 		/// <param name="FontLibraryHandle">Handle of the library.</param>
-		/// <param name="FontInfoPointer">Pointer to a FontInfo structure that will hold the information.</param>
+		/// <param name="FontInfoPointer">Pointer to a <see cref="FontInfo"/> structure that will hold the information.</param>
 		/// <param name="Unknown">???</param>
 		/// <param name="FontIndex">Index of the font to get the information from.</param>
 		/// <returns>
@@ -241,7 +239,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// 
 		/// </summary>
 		/// <param name="FontLibraryHandle"></param>
-		/// <param name="FontPointsH"></param>
+		/// <param name="FontPointsV"></param>
 		/// <param name="ErrorCode"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xF8F0752E, FirmwareVersion = 150)]

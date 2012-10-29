@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using CSharpUtils;
-using CSharpUtils.Streams;
 using CSPspEmu.Core.Crypto;
 
 namespace CSPspEmu.Core
@@ -78,8 +75,10 @@ namespace CSPspEmu.Core
 		/// 
 		/// </summary>
 		/// <param name="IplData"></param>
+		/// <param name="OutputStream"></param>
+		/// <param name="ToMemoryAddress"></param>
 		/// <returns></returns>
-		unsafe static public IplInfo DecryptIplToMemory(byte[] IplData, Stream OutputStream, bool ToMemoryAddress = true)
+		public static unsafe IplInfo DecryptIplToMemory(byte[] IplData, Stream OutputStream, bool ToMemoryAddress = true)
 		{
 			var buffer = new byte[0x1000];
 			var IplInfo = default(IplInfo);

@@ -1,35 +1,31 @@
 ﻿//#define FULL_UNROLL
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSharpUtils;
 
 namespace CSPspEmu.Core.Crypto
 {
-	unsafe public partial class Crypto
+	public unsafe partial class Crypto
 	{
 #if false
 		//#define GETuint(pt) (((uint)(pt)[0] << 24) ^ ((uint)(pt)[1] << 16) ^ ((uint)(pt)[2] <<  8) ^ ((uint)(pt)[3]))
 		//#define PUTuint(ct, st) { (ct)[0] = (u8)((st) >> 24); (ct)[1] = (u8)((st) >> 16); (ct)[2] = (u8)((st) >>  8); (ct)[3] = (u8)(st); }
 
-		static private uint GETuint(byte[] pt) {
+		private static uint GETuint(byte[] pt) {
 			return (((uint)(pt)[0] << 24) ^ ((uint)(pt)[1] << 16) ^ ((uint)(pt)[2] <<  8) ^ ((uint)(pt)[3]));
 		}
 #endif
 
-		static private uint GETuint(byte* pt) {
+		private static uint GETuint(byte* pt) {
 			return (((uint)(pt)[0] << 24) ^ ((uint)(pt)[1] << 16) ^ ((uint)(pt)[2] <<  8) ^ ((uint)(pt)[3]));
 		}
 
 		//memcpy(block_buff, src, 16);
-		static public void memcpy(byte* dst, byte* src, int count)
+		public static void memcpy(byte* dst, byte* src, int count)
 		{
 			PointerUtils.Memcpy(dst, src, count);
 		}
 
-		static public int memcmp(byte* str1, byte* str2, int count)
+		public static int memcmp(byte* str1, byte* str2, int count)
 		{
 			for (int n = 0; n < count; n++)
 			{
@@ -42,13 +38,13 @@ namespace CSPspEmu.Core.Crypto
 		}
 
 
-		static public void memcpy(void* dst, void* src, int count)
+		public static void memcpy(void* dst, void* src, int count)
 		{
 			memcpy((byte*)dst, (byte*)src, count);
 		}
 
 #if false
-		static private void PUTuint(byte[] ct, uint st) {
+		private static void PUTuint(byte[] ct, uint st) {
 			(ct)[0] = (byte)((st) >> 24);
 			(ct)[1] = (byte)((st) >> 16);
 			(ct)[2] = (byte)((st) >>  8);
@@ -56,7 +52,7 @@ namespace CSPspEmu.Core.Crypto
 		}
 #else
 
-		static private void PUTuint(byte* ct, uint st) {
+		private static void PUTuint(byte* ct, uint st) {
 			(ct)[0] = (byte)((st) >> 24);
 			(ct)[1] = (byte)((st) >> 16);
 			(ct)[2] = (byte)((st) >>  8);
@@ -71,7 +67,7 @@ namespace CSPspEmu.Core.Crypto
 		/// <param name="cipherKey"></param>
 		/// <param name="keyBits"></param>
 		/// <returns>the number of rounds for the given cipher key size.</returns>
-		static public int rijndaelKeySetupEnc(uint* rk /*4*(Nr + 1)*/, byte* cipherKey, int keyBits)
+		public static int rijndaelKeySetupEnc(uint* rk /*4*(Nr + 1)*/, byte* cipherKey, int keyBits)
 		{
 			int i = 0;
 			uint temp;
@@ -156,9 +152,10 @@ namespace CSPspEmu.Core.Crypto
 		/// Expand the cipher key into the decryption key schedule.
 		/// </summary>
 		/// <param name="rk"></param>
-		/// <param name="?"></param>
+		/// <param name="cipherKey"></param>
+		/// <param name="keyBits"></param>
 		/// <returns>the number of rounds for the given cipher key size.</returns>
-		static public int rijndaelKeySetupDec(uint *rk /*4*(Nr + 1)*/, byte* cipherKey, int keyBits)
+		public static int rijndaelKeySetupDec(uint *rk /*4*(Nr + 1)*/, byte* cipherKey, int keyBits)
 		{
 			int Nr, i, j;
 			uint temp;
@@ -200,7 +197,7 @@ namespace CSPspEmu.Core.Crypto
 			return Nr;
 		}
 
-		static public void rijndaelEncrypt(uint *rk /*4*(Nr + 1)*/, int Nr, byte* pt /*16*/, byte* ct /*[16]*/) {
+		public static void rijndaelEncrypt(uint *rk /*4*(Nr + 1)*/, int Nr, byte* pt /*16*/, byte* ct /*[16]*/) {
 			uint s0, s1, s2, s3, t0, t1, t2, t3;
 		#if !FULL_UNROLL
 			int r;
@@ -375,7 +372,7 @@ namespace CSPspEmu.Core.Crypto
 			PUTuint(ct + 12, s3);
 		}
 
-		static public void rijndaelDecrypt(uint* rk /*4*(Nr + 1)*/, int Nr, byte* ct, byte *pt)
+		public static void rijndaelDecrypt(uint* rk /*4*(Nr + 1)*/, int Nr, byte* ct, byte *pt)
 		{
 			uint s0, s1, s2, s3, t0, t1, t2, t3;
 		#if !FULL_UNROLL
@@ -556,7 +553,7 @@ namespace CSPspEmu.Core.Crypto
 		}
 
 		/* setup key context for encryption only */
-		static public int rijndael_set_key_enc_only(rijndael_ctx* ctx, byte* key, int bits)
+		public static int rijndael_set_key_enc_only(rijndael_ctx* ctx, byte* key, int bits)
 		{
 			int rounds;
 
@@ -571,7 +568,7 @@ namespace CSPspEmu.Core.Crypto
 		}
 
 		/* setup key context for both encryption and decryption */
-		static public int rijndael_set_key(rijndael_ctx *ctx, byte *key, int bits)
+		public static int rijndael_set_key(rijndael_ctx *ctx, byte *key, int bits)
 		{
 			int rounds;
 
@@ -587,32 +584,32 @@ namespace CSPspEmu.Core.Crypto
 			return 0;
 		}
 
-		static public void rijndael_decrypt(rijndael_ctx* ctx, byte* src, byte* dst)
+		public static void rijndael_decrypt(rijndael_ctx* ctx, byte* src, byte* dst)
 		{
 			rijndaelDecrypt(ctx->dk, ctx->Nr, src, dst);
 		}
 
-		static public void rijndael_encrypt(rijndael_ctx *ctx, byte *src, byte *dst)
+		public static void rijndael_encrypt(rijndael_ctx *ctx, byte *src, byte *dst)
 		{
 			rijndaelEncrypt(ctx->ek, ctx->Nr, src, dst);
 		}
 
-		static public int AES_set_key(AES_ctx *ctx, byte *key, int bits)
+		public static int AES_set_key(AES_ctx *ctx, byte *key, int bits)
 		{
 			return rijndael_set_key((rijndael_ctx *)ctx, key, bits);
 		}
 
-		static public void AES_decrypt(AES_ctx* ctx, byte* src, byte* dst)
+		public static void AES_decrypt(AES_ctx* ctx, byte* src, byte* dst)
 		{
 			rijndaelDecrypt(ctx->dk, ctx->Nr, src, dst);
 		}
 
-		static public void AES_encrypt(AES_ctx* ctx, byte* src, byte* dst)
+		public static void AES_encrypt(AES_ctx* ctx, byte* src, byte* dst)
 		{
 			rijndaelEncrypt(ctx->ek, ctx->Nr, src, dst);
 		}
 
-		static private void xor_128(byte *a, byte *b, byte *Out)
+		private static void xor_128(byte *a, byte *b, byte *Out)
 		{
 			for (int i=0;i<16; i++)
 			{
@@ -621,7 +618,7 @@ namespace CSPspEmu.Core.Crypto
 		}
 
 		//No IV support!
-		static public void AES_cbc_encrypt(AES_ctx* ctx, byte* src, byte* dst, int size)
+		public static void AES_cbc_encrypt(AES_ctx* ctx, byte* src, byte* dst, int size)
 		{
 			var _block_buff = new byte[16];
 			fixed (byte* block_buff = _block_buff)
@@ -644,7 +641,7 @@ namespace CSPspEmu.Core.Crypto
 			}
 		}
 
-		static public void AES_cbc_decrypt(AES_ctx* ctx, byte* src, byte* dst, int size)
+		public static void AES_cbc_decrypt(AES_ctx* ctx, byte* src, byte* dst, int size)
 		{
 			var _block_buff = new byte[16];
 			var _block_buff_previous = new byte[16];
@@ -680,7 +677,7 @@ namespace CSPspEmu.Core.Crypto
 
 		/* AES-CMAC Generation Function */
 
-		static public void leftshift_onebit(byte* input, byte* output)
+		public static void leftshift_onebit(byte* input, byte* output)
 		{
 			int i;
 			byte overflow = 0;
@@ -693,7 +690,7 @@ namespace CSPspEmu.Core.Crypto
 			}
 		}
 
-		static public void generate_subkey(AES_ctx* ctx, byte* K1, byte* K2)
+		public static void generate_subkey(AES_ctx* ctx, byte* K1, byte* K2)
 		{
 			var _L = new byte[16];
 			var _Z = new byte[16];
@@ -727,7 +724,7 @@ namespace CSPspEmu.Core.Crypto
 			}
 		}
 
-		static public void padding(byte* lastb, byte* pad, int length)
+		public static void padding(byte* lastb, byte* pad, int length)
 		{
 			int j;
 	
@@ -745,7 +742,7 @@ namespace CSPspEmu.Core.Crypto
 			}
 		}
 
-		static public void AES_CMAC(AES_ctx* ctx, byte* input, int length, byte* mac)
+		public static void AES_CMAC(AES_ctx* ctx, byte* input, int length, byte* mac)
 		{
 			var _X = new byte[16];
 			var _Y = new byte[16];
@@ -802,7 +799,7 @@ namespace CSPspEmu.Core.Crypto
 			}
 		}
 
-		static public void AES_CMAC_forge(AES_ctx* ctx, byte* input, int length, byte* forge)
+		public static void AES_CMAC_forge(AES_ctx* ctx, byte* input, int length, byte* forge)
 		{
 			var _X = new byte[16];
 			var _Y = new byte[16];

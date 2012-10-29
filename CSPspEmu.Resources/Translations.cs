@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.XPath;
-using System.Globalization;
-using System.Reflection;
 using System.Drawing;
+using System.Globalization;
+using System.Linq;
+using System.Xml;
 
 namespace CSPspEmu.Resources
 {
 	public class Translations
 	{
-		static private Dictionary<string, Dictionary<string, Dictionary<string, string>>> Dictionary;
-		static private SortedSet<string> _AvailableLanguages;
-		static public SortedSet<string> AvailableLanguages
+		private static Dictionary<string, Dictionary<string, Dictionary<string, string>>> Dictionary;
+		private static SortedSet<string> _AvailableLanguages;
+		public static SortedSet<string> AvailableLanguages
 		{
 			get
 			{
@@ -24,9 +20,9 @@ namespace CSPspEmu.Resources
 			}
 		}
 
-		static public string DefaultLanguage = null;
+		public static string DefaultLanguage = null;
 
-		static private void Parse()
+		private static void Parse()
 		{
 
 			Dictionary = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
@@ -67,7 +63,7 @@ namespace CSPspEmu.Resources
 
 		private static Dictionary<string, Image> FlagCache = new Dictionary<string, Image>();
 
-		static public Image GetLangFlagImage(string LangId)
+		public static Image GetLangFlagImage(string LangId)
 		{
 			try
 			{
@@ -84,7 +80,7 @@ namespace CSPspEmu.Resources
 			}
 		}
 
-		static public string GetString(string CategoryId, string TextId, string LangId = null)
+		public static string GetString(string CategoryId, string TextId, string LangId = null)
 		{
 			if (Dictionary == null) Parse();
 			if (LangId == null) LangId = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
@@ -113,7 +109,7 @@ namespace CSPspEmu.Resources
 			}
 		}
 
-		static public string GetString(string CategoryId, string TextId, CultureInfo CultureInfo)
+		public static string GetString(string CategoryId, string TextId, CultureInfo CultureInfo)
 		{
 			var LangId = CultureInfo.TwoLetterISOLanguageName;
 

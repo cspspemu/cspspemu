@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core;
-using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
-	unsafe public partial class ThreadManForUser
+	public unsafe partial class ThreadManForUser
 	{
 		[Flags]
 		public enum MbxAttributesEnum : uint
@@ -118,7 +116,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Name">Specifies the name of the mbx</param>
 		/// <param name="Attributes">Mbx attribute flags (normally set to 0)</param>
 		/// <param name="Options">Mbx options (normally set to NULL)</param>
-		/// <returns>A messagebox id</returns>
+		/// <returns>A messagebox ID</returns>
 		[HlePspFunction(NID = 0x8125221D, FirmwareVersion = 150)]
 		public int sceKernelCreateMbx(string Name, MbxAttributesEnum Attributes, SceKernelMbxOptParam* Options)
 		{
@@ -160,8 +158,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// // Send the message
 		/// sceKernelSendMbx(mbxid, (void*) &msg);
 		/// </example>
-		/// <param name="mbxid">The mbx id returned from sceKernelCreateMbx</param>
-		/// <param name="message">
+		/// <param name="MessageBoxId">The mbx id returned from sceKernelCreateMbx</param>
+		/// <param name="Message">
 		/// A message to be forwarded to the receiver.
 		/// The start of the message should be the 
 		/// ::SceKernelMsgPacket structure, the rest
@@ -179,15 +177,15 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// </summary>
 		/// <example>
 		/// void *msg;
-		/// sceKernelReceiveMbx(mbxid, &msg, NULL);
+		/// sceKernelReceiveMbx(mbxid, &amp;msg, NULL);
 		/// </example>
-		/// <param name="mbxid">The mbx id returned from sceKernelCreateMbx</param>
-		/// <param name="pmessage">
+		/// <param name="MessageBoxId">The mbx ID returned from <see cref="sceKernelCreateMbx"/></param>
+		/// <param name="PointerToMessage">
 		///		A pointer to where a pointer to the
 		///		received message should be stored
 		/// </param>
-		/// <param name="timeout">Timeout in microseconds</param>
-		/// <returns>less than 0 on error</returns>
+		/// <param name="Timeout">Timeout in microseconds</param>
+		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x18260574, FirmwareVersion = 150)]
 		public int sceKernelReceiveMbx(int MessageBoxId, PspPointer* PointerToMessage, uint* Timeout)
 		{
@@ -226,7 +224,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// void *msg;
 		/// sceKernelPollMbx(mbxid, &msg);
 		/// </example>
-		/// <param name="MessageBoxId">The mbx id returned from sceKernelCreateMbx</param>
+		/// <param name="MessageBoxId">The mbx ID returned from <see cref="sceKernelCreateMbx"/></param>
 		/// <param name="PointerToMessage">A pointer to where a pointer to the received message should be stored</param>
 		/// <returns>Less than 0 on error (SCE_KERNEL_ERROR_MBOX_NOMSG if the mbx is empty)</returns>
 		[HlePspFunction(NID = 0x0D81716A, FirmwareVersion = 150)]

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Hle.Attributes;
+﻿using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core;
 using CSPspEmu.Hle.Managers;
 using CSharpUtils;
@@ -42,7 +38,7 @@ namespace CSPspEmu.Hle.Modules.loadexec
 		///		cbid = sceKernelCreateCallback("ExitCallback", exit_callback, NULL);
 		///		sceKernelRegisterExitCallback(cbid);
 		///	</example>
-		/// <param name="CallbackId">Callback id</param>
+		/// <param name="CallbackId">Callback ID</param>
 		/// <returns>&lt; 0 on error</returns>
 		[HlePspFunction(NID = 0x4AC57943, FirmwareVersion = 150)]
 		public int sceKernelRegisterExitCallback(int CallbackId)

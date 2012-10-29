@@ -1,13 +1,7 @@
 ﻿//#define MULTITHREADED_DYNAREC_COMPILATION
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Memory;
-using System.Threading.Tasks;
-using System.Threading;
-using CSPspEmu.Core.Threading.Synchronization;
 
 namespace CSPspEmu.Core.Cpu.Dynarec
 {

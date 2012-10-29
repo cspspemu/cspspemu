@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using CSharpUtils;
-using System.Diagnostics;
-using System.Security;
 
 namespace CSPspEmu.Core
 {
-	unsafe public class Platform
+	public static unsafe class Platform
 	{
 		static Logger Logger = Logger.GetLogger("Platform");
 
@@ -19,7 +14,7 @@ namespace CSPspEmu.Core
 			Posix,
 		}
 
-		static public OS OperatingSystem;
+		public static OS OperatingSystem;
 
 		public static bool Is32Bit
 		{
@@ -29,9 +24,9 @@ namespace CSPspEmu.Core
 			}
 		}
 
-		static private string _Architecture;
+		private static string _Architecture;
 
-		static public string Architecture
+		public static string Architecture
 		{
 			get
 			{
@@ -84,7 +79,7 @@ namespace CSPspEmu.Core
 			UnixStart = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 		}
 
-		public struct timespec
+		public struct TimeSpec
 		{
 			public long sec;
 			public long usec;
@@ -112,15 +107,15 @@ namespace CSPspEmu.Core
 #else
 			[DllImport("libc", EntryPoint = "strerror")]
 			private static extern IntPtr _strerror(int errno);
-			static public string strerror(int errno) { return Marshal.PtrToStringAnsi(_strerror(errno)); }
+			public static string strerror(int errno) { return Marshal.PtrToStringAnsi(_strerror(errno)); }
 #endif
 
-			static public int errno()
+			public static int errno()
 			{
 				return *InternalUnix.__errno_location();
 			}
 
-			static public void reset_errno()
+			public static void reset_errno()
 			{
 				*InternalUnix.__errno_location() = 0;
 			}
@@ -250,7 +245,7 @@ namespace CSPspEmu.Core
 		const int ELOOP         (_SIGN 40)  /* too many levels of symlinks detected */
 #endif
 
-		static public void Free(void* Address, uint Size)
+		public static void Free(void* Address, uint Size)
 		{
 			switch (OperatingSystem)
 			{
@@ -260,7 +255,7 @@ namespace CSPspEmu.Core
 			throw (new NotImplementedException());
 		}
 
-		static public void* AllocRange(void* Address, uint Size)
+		public static void* AllocRange(void* Address, uint Size)
 		{
 			switch (OperatingSystem)
 			{
@@ -317,11 +312,11 @@ namespace CSPspEmu.Core
 			throw (new NotImplementedException());
 		}
 
-		static public DateTime UnixStart;
+		public static DateTime UnixStart;
 
-		static public long GetCurrentUnixMicroseconds()
+		public static long GetCurrentUnixMicroseconds
 		{
-			return (DateTime.UtcNow - UnixStart).Ticks / (TimeSpan.TicksPerMillisecond / 1000);
+			get { return (DateTime.UtcNow - UnixStart).Ticks/(TimeSpan.TicksPerMillisecond/1000); }
 		}
 
 		private const Int32 SW_HIDE = 0;
@@ -332,6 +327,6 @@ namespace CSPspEmu.Core
 			InternalWindows.ShowWindow(hwnd, SW_HIDE);
 		}
 
-		static public bool IsMono { get; private set; }
+		public static bool IsMono { get; private set; }
 	}
 }

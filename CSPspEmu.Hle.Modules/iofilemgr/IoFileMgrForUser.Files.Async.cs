@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Vfs;
 
 namespace CSPspEmu.Hle.Modules.iofilemgr
 {
-	unsafe public partial class IoFileMgrForUser
+	public unsafe partial class IoFileMgrForUser
 	{
 		/// <summary>
 		/// Open or create a file for reading or writing (asynchronous)
@@ -148,6 +145,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// </summary>
 		/// <param name="FileId">The file descriptor which is current performing an asynchronous action.</param>
 		/// <param name="Result">The result of the async action.</param>
+		/// <param name="CpuThreadState"></param>
 		/// <returns>The given fd or a negative value on error.</returns>
 		[HlePspFunction(NID = 0xE23EEC33, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -162,6 +160,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// </summary>
 		/// <param name="FileId">The file descriptor which is current performing an asynchronous action.</param>
 		/// <param name="Result">The result of the async action.</param>
+		/// <param name="CpuThreadState"></param>
 		/// <returns>The given fd or a negative value on error.</returns>
 		[HlePspFunction(NID = 0x35DBD746, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]

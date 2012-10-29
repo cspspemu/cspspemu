@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace CSPspEmu.Core.Crypto
+﻿namespace CSPspEmu.Core.Crypto
 {
-	unsafe public partial class Kirk
+    public partial class Kirk
 	{
 		// kirk1
 		public byte[] kirk1_key   = new byte[] { 0x98, 0xC9, 0x40, 0x97, 0x5C, 0x1D, 0x10, 0xE8, 0x7F, 0xE6, 0x0E, 0xA3, 0xFD, 0x03, 0xA8, 0xBA };

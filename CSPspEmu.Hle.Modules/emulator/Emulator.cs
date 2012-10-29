@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Cpu;
-using System.Threading;
-using System.Globalization;
-using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core;
+using CSPspEmu.Core.Cpu;
+using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.emulator
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public partial class Emulator : HleModuleHost
+	public unsafe class Emulator : HleModuleHost
 	{
 		[Inject]
 		HleThreadManager ThreadManager;

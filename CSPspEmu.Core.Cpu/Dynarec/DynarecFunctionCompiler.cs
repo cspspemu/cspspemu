@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSharpUtils.Arrays;
-using CSPspEmu.Core.Cpu.Emiter;
-using CSharpUtils;
+using CSPspEmu.Core.Cpu.Emitter;
 
 namespace CSPspEmu.Core.Cpu.Dynarec
 {
 	/// <summary>
 	/// Compiles functions
 	/// </summary>
-	unsafe public partial class DynarecFunctionCompiler : PspEmulatorComponent
+	public partial class DynarecFunctionCompiler : PspEmulatorComponent
 	{
 		[Inject]
 		CpuProcessor CpuProcessor;
@@ -23,7 +18,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			//var Stopwatch = new Logger.Stopwatch();
 			//Stopwatch.Tick();
 			
-			var MipsMethodEmiter = new MipsMethodEmiter(CpuProcessor, PC, DoDebug, DoLog);
+			var MipsMethodEmiter = new MipsMethodEmitter(CpuProcessor, PC, DoDebug, DoLog);
 			var InternalFunctionCompiler = new InternalFunctionCompiler(CpuProcessor, MipsMethodEmiter, this, InstructionReader, ExploreNewPcCallback, PC, DoLog);
 			DynarecFunction = InternalFunctionCompiler.CreateFunction();
 

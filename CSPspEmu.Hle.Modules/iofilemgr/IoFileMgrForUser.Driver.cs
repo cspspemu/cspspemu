@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Modules.iofilemgr
 {
-	unsafe public partial class IoFileMgrForUser
+	public unsafe partial class IoFileMgrForUser
 	{
 		public struct PspIoDrv
 		{
@@ -38,16 +35,16 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 
 		/// <summary>
 		/// Adds a new IO driver to the system.
-		/// 
-		/// @note This is only exported in the kernel version of IoFileMgr
+		///  <para/>
+		/// @Note: This is only exported in the kernel version of IoFileMgr
 		/// </summary>
 		/// <example>
 		///		PspIoDrvFuncs host_funcs = { ... };
-		///		PspIoDrv host_driver = { "host", 0x10, 0x800, "HOST", &host_funcs };
+		///		PspIoDrv host_driver = { "host", 0x10, 0x800, "HOST", &amp;host_funcs };
 		///		sceIoDelDrv("host");
-		///		sceIoAddDrv(&host_driver);
+		///		sceIoAddDrv(&amp;host_driver);
 		/// </example>
-		/// <param name="drv">Pointer to a filled out driver structure</param>
+		/// <param name="PspIoDrv">Pointer to a filled out driver structure</param>
 		/// <returns>Less than 0 on error.</returns>
 		[HlePspFunction(NID = 0x8E982A74, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
@@ -62,8 +59,8 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 
 		/// <summary>
 		/// Deletes a IO driver from the system.
-		/// 
-		/// @note This is only exported in the kernel version of IoFileMgr
+		/// <para/>
+		/// @Note: This is only exported in the kernel version of IoFileMgr
 		/// </summary>
 		/// <param name="DriverName">Name of the driver to delete.</param>
 		/// <returns>Less than 0 on error</returns>

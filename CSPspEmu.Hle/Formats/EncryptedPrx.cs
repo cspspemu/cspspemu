@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using CSharpUtils;
 using CSPspEmu.Core.Crypto;
 
 namespace CSPspEmu.Hle.Formats
 {
-	unsafe public partial class EncryptedPrx
+	public unsafe partial class EncryptedPrx
 	{
 		Kirk Kirk;
 
@@ -26,14 +24,14 @@ namespace CSPspEmu.Hle.Formats
 
 		private TAG_INFO GetTagInfo(uint CheckTag)
 		{
-			var Result = g_tagInfo.Where(Tag => Tag.tag == CheckTag).SingleOrDefault();
+			var Result = g_tagInfo.SingleOrDefault(Tag => Tag.tag == CheckTag);
 			if (Result == null) throw(new InvalidDataException(String.Format("Can't find tag1 0x{0:X}", CheckTag)));
 			return Result;
 		}
 
 		private TAG_INFO2 GetTagInfo2(uint CheckTag)
 		{
-			var Result = g_tagInfo2.Where(Tag => Tag.tag == CheckTag).SingleOrDefault();
+			var Result = g_tagInfo2.SingleOrDefault(Tag => Tag.tag == CheckTag);
 			if (Result == null) throw (new InvalidDataException(String.Format("Can't find tag2 0x{0:X}", CheckTag)));
 			return Result;
 		}
@@ -330,7 +328,8 @@ namespace CSPspEmu.Hle.Formats
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="Stream"></param>
+        /// <param name="_pbIn"></param>
+        /// <param name="ShowInfo"></param>
 		public byte[] Decrypt(byte[] _pbIn, bool ShowInfo = false)
 		{
 			this.Kirk = new Kirk();

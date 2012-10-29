@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using CSharpUtils.Arrays;
-
-namespace CSPspEmu.Core.Cpu.Emiter
+﻿namespace CSPspEmu.Core.Cpu.Emitter
 {
-	sealed public partial class CpuEmiter
+	public sealed partial class CpuEmitter
 	{
 		public CpuProcessor CpuProcessor;
-		private MipsMethodEmiter MipsMethodEmiter;
+		private MipsMethodEmitter MipsMethodEmitter;
 		private IInstructionReader InstructionReader;
 		public Instruction Instruction { private set; get; }
 		public uint PC { private set; get; }
@@ -31,9 +24,9 @@ namespace CSPspEmu.Core.Cpu.Emiter
 		public int FD { get { return Instruction.FD; } }
 		public int FS { get { return Instruction.FS; } }
 
-		public CpuEmiter(MipsMethodEmiter MipsMethodEmiter, IInstructionReader InstructionReader, CpuProcessor CpuProcessor)
+		public CpuEmitter(MipsMethodEmitter MipsMethodEmitter, IInstructionReader InstructionReader, CpuProcessor CpuProcessor)
 		{
-			this.MipsMethodEmiter = MipsMethodEmiter;
+			this.MipsMethodEmitter = MipsMethodEmitter;
 			this.InstructionReader = InstructionReader;
 			this.CpuProcessor = CpuProcessor;
 		}

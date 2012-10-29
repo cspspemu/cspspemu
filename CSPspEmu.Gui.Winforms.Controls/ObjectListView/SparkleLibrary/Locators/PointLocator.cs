@@ -647,7 +647,7 @@ namespace BrightIdeasSoftware
                 return 3;
 
             // Point not on perimeter
-            // Do something clever here
+            //TODO: Do something clever here
             return this.Direction == WalkDirection.Clockwise ? 1 : 0;
         }
 

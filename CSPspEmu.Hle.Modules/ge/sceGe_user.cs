@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core;
@@ -10,7 +7,7 @@ using CSPspEmu.Core.Memory;
 namespace CSPspEmu.Hle.Modules.ge
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
-	unsafe public partial class sceGe_user : HleModuleHost
+	public unsafe partial class sceGe_user : HleModuleHost
 	{
 		[Inject]
 		CpuProcessor CpuProcessor;
@@ -55,11 +52,11 @@ namespace CSPspEmu.Hle.Modules.ge
 		}
 
 		/// <summary>
-		/// 
+		/// Interrupt drawing queue.
 		/// </summary>
-		/// <param name="Mode"></param>
-		/// <param name="BreakAddress"></param>
-		/// <returns></returns>
+		/// <param name="Mode">If set to 1, reset all the queues.</param>
+		/// <param name="BreakAddress">Unused (just K1-checked).</param>
+		/// <returns>The stopped queue ID if mode isn't set to 0, otherwise 0, and &lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0xB448EC0D, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceGeBreak(int Mode, void* BreakAddress)
@@ -68,9 +65,9 @@ namespace CSPspEmu.Hle.Modules.ge
 		}
 
 		/// <summary>
-		/// 
+		/// Restart drawing queue.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>&lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0x4C06E472, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceGeContinue()

@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSPspEmu.Core.Cpu.Table;
-using System.Reflection.Emit;
 using System.IO;
-using System.Text.RegularExpressions;
-using CSharpUtils.Streams;
+using System.Linq;
+using CSPspEmu.Core.Cpu.Table;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
 using CSharpUtils.Arrays;
-using System.Diagnostics;
+using CSharpUtils.Streams;
 
 namespace CSPspEmu.Core.Cpu.Assembler
 {
@@ -21,7 +17,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 		protected BinaryReader BinaryReader;
 		protected Dictionary<String, InstructionInfo> Instructions;
 
-		static public IArray<Instruction> StaticAssembleInstructions(string Program)
+		public static IArray<Instruction> StaticAssembleInstructions(string Program)
 		{
 			var Memory = new MemoryStream();
 			var Instructions = new StreamStructArrayWrapper<Instruction>(Memory);
@@ -37,18 +33,18 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			this.BinaryReader = new BinaryReader(this.OutputStream);
 		}
 
-		static protected bool IsIdent(char C)
+		protected static bool IsIdent(char C)
 		{
 			return ((C == '_') || (C == '%') || (C == '+') || (C == '-') || (C >= '0' && C <= '9') || (C >= 'a' && C <= 'z') || (C >= 'A' && C <= 'Z'));
 		}
 
-		static protected bool IsSpace(char C)
+		protected static bool IsSpace(char C)
 		{
 			return ((C == ' ') || (C == '\t'));
 		}
 
 		/*
-		static public IEnumerable<String> TokenizeRegex(String Line)
+		public static IEnumerable<String> TokenizeRegex(String Line)
 		{
 			var Matches = new Regex(@"(\+\d+|-\d+|[%\w]+|\S)", RegexOptions.Compiled).Matches(Line);
 			var Ret = new String[Matches.Count];
@@ -57,7 +53,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 		}
 		*/
 
-		static public IEnumerable<String> TokenizeFast(String Line)
+		public static IEnumerable<String> TokenizeFast(String Line)
 		{
 			var Parts = new List<String>();
 			for (int n = 0; n < Line.Length; n++)
@@ -80,13 +76,13 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			return Parts;
 		}
 
-		static public IEnumerable<String> Tokenize(String Line)
+		public static IEnumerable<String> Tokenize(String Line)
 		{
 			return TokenizeFast(Line);
 		}
 
 
-		static public List<Tuple<String, String>> MatchFormat(String Format, String Line)
+		public static List<Tuple<String, String>> MatchFormat(String Format, String Line)
 		{
 			var Matches = new List<Tuple<String, String>>();
 
@@ -121,7 +117,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			return Matches;
 		}
 
-		static public Dictionary<String, String> MatchFormatDictionary(String Format, String Line)
+		public static Dictionary<String, String> MatchFormatDictionary(String Format, String Line)
 		{
 			var Dictionary = new Dictionary<String, String>();
 			foreach (var Pair in MatchFormat(Format, Line))
@@ -131,7 +127,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			return Dictionary;
 		}
 
-		static public int ParseFprName(String RegisterName)
+		public static int ParseFprName(String RegisterName)
 		{
 			if (RegisterName[0] == 'f')
 			{
@@ -140,7 +136,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			throw (new InvalidDataException());
 		}
 
-		static public int ParseGprName(String RegisterName)
+		public static int ParseGprName(String RegisterName)
 		{
 			if (RegisterName[0] == 'r')
 			{

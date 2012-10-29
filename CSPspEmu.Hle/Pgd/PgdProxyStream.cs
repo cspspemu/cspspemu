@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using CSharpUtils.Streams;
-using System.IO;
 
 namespace CSPspEmu.Hle.Pgd
 {
 	public class PgdProxyStream : ProxyStream
 	{
-		public PgdProxyStream(Stream BaseStream)
-			: base(BaseStream)
+		public PgdProxyStream(Stream BaseStream) : base(BaseStream)
 		{
 		}
 	}

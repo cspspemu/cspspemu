@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Formats
 {
-	unsafe public class Pbp : IFormatDetector
+    public class Pbp : IFormatDetector
 	{
 		public enum Types
 		{
@@ -20,7 +19,7 @@ namespace CSPspEmu.Hle.Formats
 			PspData,
 			PsarData,
 		}
-		static readonly public String[] Names = new[] { "param.sfo", "icon0.png", "icon1.pmf", "pic0.png", "pic1.png", "snd0.at3", "psp.data", "psar.data" };
+		public static readonly String[] Names = new[] { "param.sfo", "icon0.png", "icon1.pmf", "pic0.png", "pic1.png", "snd0.at3", "psp.data", "psar.data" };
 
 		public struct HeaderStruct
 		{
