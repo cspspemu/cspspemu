@@ -1,1 +1,0 @@
-EXTRA_LIBS_PRE=glut glu gl pspvfpu

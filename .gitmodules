@@ -4,3 +4,6 @@
 [submodule "Libraries/SafeILGenerator"]
 	path = Libraries/SafeILGenerator
 	url = https://github.com/soywiz/SafeILGenerator.git
+[submodule "pspautotests"]
+	path = pspautotests
+	url = https://github.com/hrydgard/pspautotests.git

@@ -1,2 +1,0 @@
-EXTRA_C_FILES=../../../common/vram.c
-EXTRA_LIBS_PRE=pspgum_vfpu pspvfpu

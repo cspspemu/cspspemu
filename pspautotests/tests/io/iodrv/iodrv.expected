@@ -1,3 +1,0 @@
-test_IoInit(1)(777)
-test_IoOpen('path/to/file',7,0777)
-test_IoExit(777)
