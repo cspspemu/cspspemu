@@ -8,8 +8,8 @@ using CSharpUtils.Threading;
 using CSharpUtils;
 using System.IO;
 using CSPspEmu.Core.Memory;
-using CSPspEmu.Core.Cpu.Emiter;
 using CSPspEmu.Core.Cpu.Assembler;
+using CSPspEmu.Core.Cpu.Emitter;
 
 namespace CSPspEmu.Core.Cpu
 {

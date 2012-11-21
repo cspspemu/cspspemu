@@ -47,7 +47,6 @@
     <Compile Include="Dma.cs" />
     <Compile Include="DmaEnum.cs" />
     <Compile Include="ILleDma.cs" />
-    <Compile Include="LleKirk.cs" />
     <Compile Include="TransferUtils.cs" />
     <Compile Include="LleGPIO.cs" />
     <Compile Include="LleKirk.cs" />
@@ -57,7 +56,6 @@
     <Compile Include="LLEState.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TransferUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

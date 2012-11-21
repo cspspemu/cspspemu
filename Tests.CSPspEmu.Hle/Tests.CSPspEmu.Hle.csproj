@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Tests.CSPspEmu.Hle</RootNamespace>
     <AssemblyName>Tests.CSPspEmu.Hle</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -16,6 +16,7 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,6 +26,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,6 +35,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -102,6 +105,10 @@
       <Project>{827779a5-f05c-41c6-9ff9-fd274224a7ae}</Project>
       <Name>CSPspEmu.Core.Cpu</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Crypto\CSPspEmu.Core.Crypto.csproj">
+      <Project>{f4181553-01f3-425a-8ddc-927a97de6de2}</Project>
+      <Name>CSPspEmu.Core.Crypto</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Gpu.Impl.Null\CSPspEmu.Core.Gpu.Impl.Null.csproj">
       <Project>{db1b25c7-5adf-4190-8ea1-9c30f4021f94}</Project>
       <Name>CSPspEmu.Core.Gpu.Impl.Null</Name>
@@ -129,10 +136,6 @@
     <ProjectReference Include="..\CSPspEmu.Gui.Winforms\CSPspEmu.Gui.Winforms.csproj">
       <Project>{550e4f4e-704e-48eb-8392-c1eb229348cf}</Project>
       <Name>CSPspEmu.Gui.Winforms</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Hle.Modules.Tests\Tests.CSPspEmu.Hle.Modules.csproj">
-      <Project>{32300c4a-932a-4e50-8cde-ef31550cd739}</Project>
-      <Name>Tests.CSPspEmu.Hle.Modules</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Hle.Modules\CSPspEmu.Hle.Modules.csproj">
       <Project>{295b7bf1-1130-4098-b0fc-00555ddb09dd}</Project>
