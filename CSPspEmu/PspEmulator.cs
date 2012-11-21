@@ -20,6 +20,7 @@ using CSPspEmu.Core.Audio.Impl.WaveOut;
 using CSPspEmu.Core.Audio.Impl.Openal;
 using CSPspEmu.Hle.Modules;
 using CSPspEmu.Hle.Managers;
+using CSPspEmu.Core.Gpu.Impl.OpenglEs;
 
 namespace CSPspEmu
 {
@@ -245,6 +246,7 @@ namespace CSPspEmu
 				{
 					// GPU
 					PspPluginImpl.SelectWorkingPlugin<GpuImpl>(PspEmulatorContext,
+						typeof(GpuImplOpenglEs),
 						typeof(OpenglGpuImpl),
 						typeof(GpuImplSoft),
 						typeof(GpuImplNull)
@@ -257,13 +259,15 @@ namespace CSPspEmu
 						typeof(AudioAlsaImpl),
 						typeof(AudioImplNull)
 					);
-					
+
 					// Memory
+#if false // Disabled because crashes on x86
 					if (PspConfig.StoredConfig.UseFastMemory)
 					{
 						PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();
 					}
 					else
+#endif
 					{
 						PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
 					}

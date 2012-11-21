@@ -24,7 +24,7 @@ namespace Tests.GLES
 			int width = 512;
 			int height = 272;
 			var Context = new OffscreenContext(width, height);
-			Context.MakeCurrent();
+			Context.SetCurrent();
 
 			float[] vVertices = new float[]
 			{

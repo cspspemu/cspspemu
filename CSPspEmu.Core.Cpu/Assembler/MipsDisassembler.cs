@@ -30,6 +30,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 				{ "d", Result => RegisterIndexToRegisterName(Result.Instruction.RD) },
 				{ "t", Result => RegisterIndexToRegisterName(Result.Instruction.RT) },
 				{ "a", Result => Result.Instruction.POS.ToString() },
+				{ "i", Result => Result.Instruction.IMM.ToString() },
 			};
 
 			public override string ToString()

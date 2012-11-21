@@ -314,9 +314,9 @@ namespace CSPspEmu.Core
 
 		public static DateTime UnixStart;
 
-		public static long GetCurrentUnixMicroseconds
+		public static long CurrentUnixMicroseconds
 		{
-			get { return (DateTime.UtcNow - UnixStart).Ticks/(TimeSpan.TicksPerMillisecond/1000); }
+			get { return (DateTime.UtcNow - UnixStart).Ticks / (TimeSpan.TicksPerMillisecond / 1000); }
 		}
 
 		private const Int32 SW_HIDE = 0;

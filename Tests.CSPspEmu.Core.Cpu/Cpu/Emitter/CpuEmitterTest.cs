@@ -15,7 +15,7 @@ using CSPspEmu.Core.Cpu.Dynarec;
 namespace CSPspEmu.Core.Tests
 {
 	[TestClass]
-	public unsafe partial class CpuEmiterTest
+	public unsafe partial class CpuEmitterTest
 	{
 		[TestMethod]
 		public void SimplestTest()
@@ -838,7 +838,7 @@ namespace CSPspEmu.Core.Tests
 		}
 	}
 
-	public unsafe partial class CpuEmiterTest
+	public unsafe partial class CpuEmitterTest
 	{
 		[Inject]
 		protected CpuProcessor CpuProcessor;

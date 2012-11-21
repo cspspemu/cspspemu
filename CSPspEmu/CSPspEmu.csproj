@@ -31,7 +31,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
@@ -43,7 +43,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -148,6 +148,10 @@
       <Project>{DB1B25C7-5ADF-4190-8EA1-9C30F4021F94}</Project>
       <Name>CSPspEmu.Core.Gpu.Impl.Null</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Gpu.Impl.OpenglEs\CSPspEmu.Core.Gpu.Impl.OpenglEs.csproj">
+      <Project>{bc144f18-aac2-4678-a1f3-2ec956436451}</Project>
+      <Name>CSPspEmu.Core.Gpu.Impl.OpenglEs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Gpu.Impl.Opengl\CSPspEmu.Core.Gpu.Impl.Opengl.csproj">
       <Project>{72f560e3-9101-426b-b3e5-b83b78e536db}</Project>
       <Name>CSPspEmu.Core.Gpu.Impl.Opengl</Name>
@@ -238,6 +242,14 @@
       <Link>oma2wav.exe</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <Content Include="..\libegl.dll">
+      <Link>libegl.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\libglesv2.dll">
+      <Link>libglesv2.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\version_last.txt">
       <Link>version_last.txt</Link>
     </Content>

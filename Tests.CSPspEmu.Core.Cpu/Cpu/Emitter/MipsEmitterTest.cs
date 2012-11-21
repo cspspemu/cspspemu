@@ -9,7 +9,7 @@ using Codegen;
 namespace CSPspEmu.Core.Tests
 {
 	[TestClass]
-	public unsafe class MipsEmiterTest
+	public unsafe class MipsEmitterTest
 	{
 		[TestMethod]
 		public void CreateDelegateTest()

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B03B6268-3264-4E2B-BDD3-0252909C11CE}</ProjectGuid>
+    <ProjectGuid>{BC144F18-AAC2-4678-A1F3-2EC956436451}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GLES</RootNamespace>
-    <AssemblyName>GLES</AssemblyName>
+    <RootNamespace>CSPspEmu.Core.Gpu.Impl.OpenglEs</RootNamespace>
+    <AssemblyName>CSPspEmu.Core.Gpu.Impl.OpenglEs</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -34,8 +34,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,23 +41,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="VertexAttribLocation.cs" />
-    <Compile Include="EGL\egl.cs" />
-    <Compile Include="GLES2\gl2.cs" />
-    <Compile Include="OffscreenContext.cs" />
+    <Compile Include="GpuImplOpenglEs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Shader.cs" />
-    <Compile Include="ShaderProgram.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\libegl.dll">
-      <Link>libegl.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\libglesv2.dll">
-      <Link>libglesv2.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <ProjectReference Include="..\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">
+      <Project>{9a30ebf3-b702-47d9-aafc-e3e02b410dad}</Project>
+      <Name>CSPspEmu.Core.Gpu</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
+      <Project>{f783ecd3-0f79-43cc-abd0-d356a64049c4}</Project>
+      <Name>CSPspEmu.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GLES\GLES.csproj">
+      <Project>{b03b6268-3264-4e2b-bdd3-0252909c11ce}</Project>
+      <Name>GLES</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

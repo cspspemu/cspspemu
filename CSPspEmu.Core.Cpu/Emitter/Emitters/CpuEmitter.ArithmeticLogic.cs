@@ -174,7 +174,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				SafeILGenerator.Call((Func<int, int, int>)CpuEmiter._max_impl);
+				SafeILGenerator.Call((Func<int, int, int>)CpuEmitter._max_impl);
 			});
 #endif
 		}
@@ -186,7 +186,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			{
 				MipsMethodEmiter.LoadGPR_Unsigned(RS);
 				MipsMethodEmiter.LoadGPR_Unsigned(RT);
-				SafeILGenerator.Call((Func<int, int, int>)CpuEmiter._min_impl);
+				SafeILGenerator.Call((Func<int, int, int>)CpuEmitter._min_impl);
 			});
 #endif
 		}
@@ -285,7 +285,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			{
 				MipsMethodEmiter.LoadGPR_Signed(RS);
 				MipsMethodEmiter.LoadGPR_Signed(RT);
-				SafeILGenerator.Call((Func<uint, uint, ulong>)CpuEmiter._multu);
+				SafeILGenerator.Call((Func<uint, uint, ulong>)CpuEmitter._multu);
 				//_mult_common_op<TConvertType>(Signed);
 			});
 #endif

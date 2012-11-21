@@ -62,8 +62,8 @@
     <Compile Include="Cpu\Assembler\MipsDisassemblerTest.cs" />
     <Compile Include="Cpu\Dynarec\DynarecFunctionCompilerTaskTest.cs" />
     <Compile Include="Cpu\Dynarec\DynarecFunctionCompilerTest.cs" />
-    <Compile Include="Cpu\Emiter\CpuEmiterTest.cs" />
-    <Compile Include="Cpu\Emiter\MipsEmiterTest.cs" />
+    <Compile Include="Cpu\Emitter\CpuEmitterTest.cs" />
+    <Compile Include="Cpu\Emitter\MipsEmitterTest.cs" />
     <Compile Include="Cpu\InstructionTest.cs" />
     <Compile Include="Cpu\Switch\EmitLookupGeneratorTest.cs" />
     <Compile Include="Cpu\Table\InstructionTableTest.cs" />

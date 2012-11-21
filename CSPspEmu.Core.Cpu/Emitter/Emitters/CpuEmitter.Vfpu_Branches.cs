@@ -153,7 +153,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				SafeILGenerator.LoadArgument0CpuThreadState()
 				SafeILGenerator.Push((int)Register);
 				SafeILGenerator.Push((int)VectorSize);
-				MipsMethodEmiter.CallMethod(typeof(CpuEmiter), "_vcmovtf_test");
+				MipsMethodEmiter.CallMethod(typeof(CpuEmitter), "_vcmovtf_test");
 				*/
 
 				var SkipSetLabel = SafeILGenerator.DefineLabel("SkipSetLabel");

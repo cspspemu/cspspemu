@@ -117,7 +117,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 			else
 			{
-				var Base = FastPspMemory.Base;
+				var Base = ((FastPspMemory)Processor.Memory).Base;
 
 				if (Platform.Is32Bit)
 				{

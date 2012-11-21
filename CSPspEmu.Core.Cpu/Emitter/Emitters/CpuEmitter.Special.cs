@@ -86,7 +86,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public void mfdr() { throw(new NotImplementedException()); }
 		public void mtdr() { throw(new NotImplementedException()); }
 
-		Logger Logger = Logger.GetLogger("CpuEmiter");
+		Logger Logger = Logger.GetLogger("CpuEmitter");
 
 		public void unknown()
 		{

@@ -13,13 +13,13 @@ namespace CSPspEmu.Core.Rtc
 		{
 			//DateTime.GetTotalMicroseconds();
 			//var Seconds = (uint)(DateTime - Platform.UnixStart).TotalSeconds;
-			TotalMicroseconds = Platform.GetCurrentUnixMicroseconds;
+			TotalMicroseconds = Platform.CurrentUnixMicroseconds;
 		}
 
 		public void SetToNow()
 		{
 			var PrevTotalMicroseconds = TotalMicroseconds;
-			var CurrentTotalMicroseconds = Platform.GetCurrentUnixMicroseconds;
+			var CurrentTotalMicroseconds = Platform.CurrentUnixMicroseconds;
 
 			if (CurrentTotalMicroseconds < PrevTotalMicroseconds)
 			{

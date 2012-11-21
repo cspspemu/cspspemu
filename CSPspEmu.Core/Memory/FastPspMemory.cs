@@ -13,7 +13,7 @@ namespace CSPspEmu.Core.Memory
 		public static byte* StaticFrameBufferPtr;
 		public static byte* StaticMainPtr;
 
-		public static byte* Base { get { return _Base; } }
+		public byte* Base { get { return _Base; } }
 
 		/*
 		// to RESERVE memory in Linux, use mmap with a private, anonymous, non-accessible mapping.
@@ -54,7 +54,8 @@ namespace CSPspEmu.Core.Memory
 				{
 					if (Platform.OperatingSystem == Platform.OS.Windows)
 					{
-						TryBases = new ulong[] { 0x31000000, 0x40000000, 0x50000000 };
+						//TryBases = new ulong[] { 0x31000000, 0x40000000, 0x50000000 };
+						TryBases = new ulong[] { 0x50000000, 0x40000000, 0x31000000 };
 					}
 					else
 					{

@@ -213,23 +213,15 @@ namespace CSPspEmu.Runner.Components.Cpu
 						{
 							var Pbp = new Pbp().Load(LoadStream);
 							ElfLoadStreamTry.Add(Pbp[Pbp.Types.PspData]);
-							try
+							Logger.TryCatch(() =>
 							{
 								var ParamSfo = new Psf().Load(Pbp[Pbp.Types.ParamSfo]);
 								Title = (String)ParamSfo.EntryDictionary["TITLE"];
-								try
+								Logger.TryCatch(() =>
 								{
 									PspEmulatorContext.PspConfig.SetVersion(ParamSfo.EntryDictionary["PSP_SYSTEM_VER"].ToString());
-								}
-								catch (Exception Exception)
-								{
-									Logger.Error(Exception);
-								}
-							}
-							catch (Exception Exception)
-							{
-								Console.Error.WriteLine(Exception);
-							}
+								});
+							});
 						}
 						break;
 					case FormatDetector.SubType.Elf:
@@ -242,15 +234,11 @@ namespace CSPspEmu.Runner.Components.Cpu
 							Arguments[0] = "disc0:/PSP/GAME/SYSDIR/EBOOT.BIN";
 
 							var Iso = SetIso(FileName);
-							try
+							Logger.TryCatch(() =>
 							{
 								var ParamSfo = new Psf().Load(Iso.Root.Locate("/PSP_GAME/PARAM.SFO").Open());
 								Title = (String)ParamSfo.EntryDictionary["TITLE"];
-							}
-							catch (Exception Exception)
-							{
-								Console.Error.WriteLine(Exception);
-							}
+							});
 
 							var FilesToTry = new[] {
 								"/PSP_GAME/SYSDIR/BOOT.BIN",

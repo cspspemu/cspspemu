@@ -40,6 +40,23 @@ namespace GLES
 			//this.dc = GetDC(hWnd);
 		}
 
+		static public bool IsWorking
+		{
+			get
+			{
+				try
+				{
+					GL.eglGetError();
+					//return GL.eglInitialize(IntPtr.Zero, &Major, &Minor) != 0;
+					return true;
+				}
+				catch
+				{
+					return false;
+				}
+			}
+		}
+
 		private void Init()
 		{
 			int[] contextAttribs = new int[] { GL.EGL_CONTEXT_CLIENT_VERSION, 2, GL.EGL_NONE, GL.EGL_NONE };
@@ -100,9 +117,15 @@ namespace GLES
 			}
 		}
 
-		public void MakeCurrent()
+		public void SetCurrent()
 		{
 			EglExpectNotEquals(0, GL.eglMakeCurrent(display, surface, surface, context));
+		}
+
+		public void UnsetCurrent()
+		{
+			GL.eglMakeCurrent(IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
+			//EglExpectNotEquals(0, GL.eglMakeCurrent(display, surface, surface, context));
 		}
 
 		T EglExpectEquals<T>(T notExpected, T given)

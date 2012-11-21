@@ -486,6 +486,7 @@ namespace CSPspEmu.Hle.Loader
 		{
 			//var BaseMemoryStream = ElfLoader.MemoryStream.SliceWithLength(BaseAddress);
 			var ImportsStream = ElfLoader.MemoryStream.SliceWithBounds(HleModuleGuest.ModuleInfo.ImportsStart, HleModuleGuest.ModuleInfo.ImportsEnd);
+			//Console.WriteLine("ImportsStream.Length: {0}", ImportsStream.Length);
 			var ModuleImports = ImportsStream.ReadStructVectorUntilTheEndOfStream<ElfPsp.ModuleImport>();
 
 			Console.WriteLine("BASE ADDRESS: 0x{0:X}", BaseAddress);

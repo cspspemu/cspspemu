@@ -15,9 +15,9 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 	{
         internal class InternalFunctionCompiler
 		{
-			public static Action<uint, CpuEmitter> CpuEmiterInstruction = EmitLookupGenerator.GenerateSwitchDelegate<CpuEmitter>(InstructionTable.ALL);
+			public static Action<uint, CpuEmitter> CpuEmitterInstruction = EmitLookupGenerator.GenerateSwitchDelegate<CpuEmitter>(InstructionTable.ALL);
 			static MipsDisassembler MipsDisassembler = new MipsDisassembler();
-			CpuEmitter CpuEmiter;
+			CpuEmitter CpuEmitter;
 			MipsMethodEmitter MipsMethodEmiter;
 			SafeILGeneratorEx SafeILGenerator;
 			DynarecFunctionCompiler DynarecFunctionCompiler;
@@ -30,14 +30,6 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			const int MaxNumberOfInstructions = 64 * 1024;
 			//const int MaxNumberOfInstructions = 128 * 1024;
 			//const int MaxNumberOfInstructions = 60;
-
-			public static Func<uint, Object, String> GetInstructionName = EmitLookupGenerator.GenerateSwitch<Func<uint, Object, String>>(
-				InstructionTable.ALL,
-				(SafeILGenerator, InstructionInfo) =>
-				{
-					SafeILGenerator.Push((string)((InstructionInfo != null) ? InstructionInfo.Name : "unknown"));
-				}
-			);
 
 			Dictionary<string, uint> GlobalInstructionStats;
 			Dictionary<string, uint> InstructionStats;
@@ -66,8 +58,8 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			internal InternalFunctionCompiler(CpuProcessor CpuProcessor, MipsMethodEmitter MipsMethodEmiter, DynarecFunctionCompiler DynarecFunctionCompiler, IInstructionReader InstructionReader, Action<uint> _ExploreNewPcCallback, uint EntryPC, bool DoLog)
 			{
 				this._ExploreNewPcCallback = _ExploreNewPcCallback;
-				this.CpuEmiter = new CpuEmitter(MipsMethodEmiter, InstructionReader, CpuProcessor);
-				this.CpuEmiter.AnalyzePCEvent += ExploreNewPcCallback;
+				this.CpuEmitter = new CpuEmitter(MipsMethodEmiter, InstructionReader, CpuProcessor);
+				this.CpuEmitter.AnalyzePCEvent += ExploreNewPcCallback;
 				this.MipsMethodEmiter = MipsMethodEmiter;
 				this.GlobalInstructionStats = CpuProcessor.GlobalInstructionStats;
 				this.InstructionStats = MipsMethodEmiter.InstructionStats;
@@ -95,11 +87,15 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				};
 			}
 
-			private void LogInstruction(Instruction Instruction)
+
+			private void LogInstruction(uint PC, Instruction Instruction)
 			{
 				if (CpuProcessor.PspConfig.LogInstructionStats)
 				{
-					var InstructionName = GetInstructionName(CpuEmiter.Instruction.Value, null);
+					var DisassembledInstruction = MipsDisassembler.Disassemble(PC, Instruction);
+					//Console.WriteLine("{0}", DisassembledInstruction);
+					//var InstructionName = GetInstructionName(CpuEmitter.Instruction.Value, null);
+					var InstructionName = DisassembledInstruction.InstructionInfo.Name;
 
 					if (!InstructionStats.ContainsKey(InstructionName)) InstructionStats[InstructionName] = 0;
 					InstructionStats[InstructionName]++;
@@ -163,7 +159,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
 						var BranchInfo = DynarecBranchAnalyzer.GetBranchInfo(Instruction);
 
-						LogInstruction(Instruction);
+						LogInstruction(PC, Instruction);
 
 						// Branch instruction.
 						if (BranchInfo.HasFlag(DynarecBranchAnalyzer.JumpFlags.JumpInstruction))
@@ -213,7 +209,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 					Console.WriteLine("     PC=0x{0:X}", _PC);
 				}
 
-				var Instruction = CpuEmiter.LoadAT(_PC);
+				var Instruction = CpuEmitter.LoadAT(_PC);
 #if OPTIMIZE_LWL_LWR
 				var InstructionDisasm = MipsDisassembler.Disassemble(_PC, Instruction);
 
@@ -241,7 +237,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 							break;
 						}
 
-						var Instruction2 = CpuEmiter.LoadAT(PC2);
+						var Instruction2 = CpuEmitter.LoadAT(PC2);
 						var Instruction2Disasm = MipsDisassembler.Disassemble(PC2, Instruction2);
 
 						//Console.WriteLine(Instruction2Disasm);
@@ -266,8 +262,8 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 								Instruction.RT = lwr_rt;
 								Instruction.RS = lwr_rs;
 								Instruction.IMM = lwr_offset;
-								CpuEmiter._lw_unaligned();
-								//CpuEmiterInstruction(CpuEmiter.Instruction.Value, CpuEmiter);
+								CpuEmitter._lw_unaligned();
+								//CpuEmiterInstruction(CpuEmitter.Instruction.Value, CpuEmitter);
 								return;
 							}
 						}
@@ -275,8 +271,8 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				}
 #endif
 
-				Instruction = CpuEmiter.LoadAT(_PC);
-				CpuEmiterInstruction(CpuEmiter.Instruction, CpuEmiter);
+				Instruction = CpuEmitter.LoadAT(_PC);
+				CpuEmitterInstruction(CpuEmitter.Instruction, CpuEmitter);
 			}
 
 			uint PC;
@@ -438,7 +434,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 							{
 								//Console.WriteLine("Likely");
 								// Delayed instruction.
-								CpuEmiter._branch_likely(() =>
+								CpuEmitter._branch_likely(() =>
 								{
 									EmitCpuInstruction();
 								});
@@ -454,7 +450,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 							{
 								if (Labels.ContainsKey(BranchAddress))
 								{
-									CpuEmiter._branch_post(Labels[BranchAddress]);
+									CpuEmitter._branch_post(Labels[BranchAddress]);
 								}
 								// Code not reached.
 								else

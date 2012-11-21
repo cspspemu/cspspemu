@@ -13,7 +13,7 @@ namespace CSPspEmu.Core
 	/// </summary>
 	/// <see cref="http://silverspring.lan.st/NPSPTD_01.txt"/>
 	/// <see cref="http://daxhordes.org/forum/viewtopic.php?f=33&t=808"/>
-	public class IplReader
+	public unsafe class IplReader
 	{
 		/// <summary>
 		/// 
@@ -78,7 +78,7 @@ namespace CSPspEmu.Core
 		/// <param name="OutputStream"></param>
 		/// <param name="ToMemoryAddress"></param>
 		/// <returns></returns>
-		public static unsafe IplInfo DecryptIplToMemory(byte[] IplData, Stream OutputStream, bool ToMemoryAddress = true)
+		public static IplInfo DecryptIplToMemory(byte[] IplData, Stream OutputStream, bool ToMemoryAddress = true)
 		{
 			var buffer = new byte[0x1000];
 			var IplInfo = default(IplInfo);
