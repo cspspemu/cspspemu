@@ -79,7 +79,7 @@ namespace GLES
 
 			int[] surfaceAttribList = new int[]
 			{
-				EGL_POST_SUB_BUFFER_SUPPORTED_NV, GL.EGL_FALSE,
+				EGL_POST_SUB_BUFFER_SUPPORTED_NV, 0,
 				GL.EGL_NONE, GL.EGL_NONE,
 			};
 
@@ -91,15 +91,15 @@ namespace GLES
 
 			display = EglExpectNotEquals(GL.EGL_NO_DISPLAY, GL.eglGetDisplay(this.dc));
 
-			EglExpectNotEquals(0, GL.eglInitialize(display, &Major, &Minor));
+			EglExpectNotEquals(false, GL.eglInitialize(display, &Major, &Minor));
 			//Assert.AreEqual(1, Major);
 			//Assert.AreEqual(4, Minor);
 
-			EglExpectNotEquals(0, GL.eglGetConfigs(display, null, 0, &numConfigs));
+			EglExpectNotEquals(false, GL.eglGetConfigs(display, null, 0, &numConfigs));
 
 			fixed (int* configAttribListPtr = configAttribList)
 			{
-				EglExpectNotEquals(0, GL.eglChooseConfig(display, configAttribListPtr, &config, 1, &numConfigs));
+				EglExpectNotEquals(false, GL.eglChooseConfig(display, configAttribListPtr, &config, 1, &numConfigs));
 			}
 
 			//GL.eglCreateWindowSurface(
@@ -119,12 +119,13 @@ namespace GLES
 
 		public void SetCurrent()
 		{
-			EglExpectNotEquals(0, GL.eglMakeCurrent(display, surface, surface, context));
+			EglExpectNotEquals(false, GL.eglMakeCurrent(display, surface, surface, context));
 		}
 
 		public void UnsetCurrent()
 		{
-			GL.eglMakeCurrent(IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
+			//GL.eglMakeCurrent(IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
+			//GL.eglMakeCurrent(IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, context);
 			//EglExpectNotEquals(0, GL.eglMakeCurrent(display, surface, surface, context));
 		}
 

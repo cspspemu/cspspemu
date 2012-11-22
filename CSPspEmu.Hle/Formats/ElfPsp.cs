@@ -136,7 +136,7 @@ namespace CSPspEmu.Hle.Formats
 			/// <summary>
 			/// Module Name (0 terminated)
 			/// </summary>
-			public fixed byte NameRaw[28];
+			private fixed byte NameRaw[28];
 
 			/// <summary>
 			/// 

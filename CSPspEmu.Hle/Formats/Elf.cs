@@ -312,6 +312,11 @@ namespace CSPspEmu.Hle.Formats
 			/// Type of relocation (R_TYPE)
 			/// </summary>
 			public TypeEnum Type { get { return (TypeEnum)((Info >> 0) & 0xFF); } }
+
+			public override string ToString()
+			{
+				return this.ToStringDefault();
+			}
 		}
 
 		public struct Symbol

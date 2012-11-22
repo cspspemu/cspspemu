@@ -261,7 +261,7 @@ namespace CSPspEmu
 					);
 
 					// Memory
-#if false // Disabled because crashes on x86
+#if true // Disabled because crashes on x86
 					if (PspConfig.StoredConfig.UseFastMemory)
 					{
 						PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();
@@ -279,7 +279,7 @@ namespace CSPspEmu
 				PspRunner.StartSynchronized();
 
 				var GpuImpl = PspEmulatorContext.GetInstance<GpuImpl>();
-				GpuImpl.InitSynchronizedOnce();
+				//GpuImpl.InitSynchronizedOnce();
 			}
 			ContextInitializedFlag = true;
 			ContextInitialized.Set();

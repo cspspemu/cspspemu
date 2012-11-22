@@ -42,20 +42,23 @@ namespace GLES
 
 			if (compiled == 0)
 			{
+				string Info = GL.glGetShaderInfoLog(this.Index);
 				GL.glDeleteShader(this.Index);
 
-				throw (new Exception(GL.glGetShaderInfoLog(this.Index)));
+				throw (new Exception("glGetShaderInfoLog: " + Info));
 			}
 
 		}
 
 		public void Dispose()
 		{
+#if false
 			if (this.Index != 0)
 			{
 				GL.glDeleteShader(this.Index);
 				this.Index = 0;
 			}
+#endif
 		}
 	}
 }

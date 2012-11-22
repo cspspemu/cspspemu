@@ -7,6 +7,7 @@ using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core.Cpu;
 using CSharpUtils;
 using CSPspEmu.Core;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Loader
 {
@@ -107,6 +108,8 @@ namespace CSPspEmu.Hle.Loader
 
 			this.ElfLoader.AllocateAndWrite(MemoryStream, MemoryPartition, BaseAddress);
 
+			LoadModuleInfo();
+
 			if (this.ElfLoader.NeedsRelocation)
 			{
 				RelocateFromHeaders();
@@ -137,14 +140,20 @@ namespace CSPspEmu.Hle.Loader
 			Stream Stream = null;
 			if (ElfLoader.SectionHeadersByName.ContainsKey(SectionHeaderName))
 			{
-				Stream = ElfLoader.SectionHeaderMemoryStream(ElfLoader.SectionHeadersByName[".rodata.sceModuleInfo"]);
+				var SectionHeader = ElfLoader.SectionHeadersByName[".rodata.sceModuleInfo"];
+				Stream = ElfLoader.SectionHeaderMemoryStream(SectionHeader);
+				Console.WriteLine("LoadModuleInfo: .rodata.sceModuleInfo 0x{0:X8}[{1}]", BaseAddress + SectionHeader.Address, SectionHeader.Size);
 			}
 			else
 			{
-				Stream = ElfLoader.MemoryStream.SliceWithLength((uint)(BaseAddress + (ProgramHeader.PsysicalAddress & 0x7FFFFFFFL) - ProgramHeader.Offset));
+				uint ModuleInfoAddress = (uint)(BaseAddress + (ProgramHeader.PsysicalAddress & 0x7FFFFFFFL) - ProgramHeader.Offset);
+				int Size = Marshal.SizeOf(typeof(ElfPsp.ModuleInfo));
+				Stream = ElfLoader.MemoryStream.SliceWithLength(ModuleInfoAddress, Size);
+				Console.WriteLine("LoadModuleInfo: 0x{0:X8}[{1}]", ModuleInfoAddress, Size);
 			}
 
-			HleModuleGuest.ModuleInfo = Stream.ReadStruct<ElfPsp.ModuleInfo>(); ;
+			HleModuleGuest.ModuleInfo = Stream.ReadStruct<ElfPsp.ModuleInfo>();
+			Console.WriteLine("{0}", HleModuleGuest.ModuleInfo.ToStringDefault());
 		}
 
 		protected void RelocateFromHeaders()
@@ -262,6 +271,14 @@ namespace CSPspEmu.Hle.Loader
 
 				//Console.WriteLine(Reloc.Type);
 
+				bool DebugReloc = (RelocatedPointerAddress >= 0x08809320 && RelocatedPointerAddress <= 0x08809320 + 0x100);
+				//bool DebugReloc = false;
+
+				if (DebugReloc)
+				{
+					Console.WriteLine("{0:X8}[{1:X8}]: {2}", RelocatedPointerAddress, Instruction.Value, Reloc);
+				}
+
 				switch (Reloc.Type)
 				{
 					// Tested on PSP: R_MIPS_NONE just returns 0.
@@ -356,6 +373,11 @@ namespace CSPspEmu.Hle.Loader
 						RelocatedPointerAddress, InstructionBefore.Value, Instruction.Value
 					)
 				);
+
+				if (DebugReloc)
+				{
+					Console.WriteLine("   -> {0:X8}", Instruction.Value);
+				}
 
 				/*
 				log.error(String.format(
@@ -491,7 +513,7 @@ namespace CSPspEmu.Hle.Loader
 
 			Console.WriteLine("BASE ADDRESS: 0x{0:X}", BaseAddress);
 
-			Console.WriteLine("Imports:");
+			Console.WriteLine("Imports ({0:X8}-{1:X8}):", HleModuleGuest.ModuleInfo.ImportsStart, HleModuleGuest.ModuleInfo.ImportsEnd);
 
 			foreach (var ModuleImport in ModuleImports)
 			{

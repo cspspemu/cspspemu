@@ -26,6 +26,8 @@ namespace GLES
 
 		public void Dispose()
 		{
+			// TODO: It seems that this object is created in one thread but disposed in other one
+#if false
 			if (this.Index != 0)
 			{
 				if (this.VertexShader != null) this.VertexShader.Dispose();
@@ -35,6 +37,7 @@ namespace GLES
 				this.VertexShader = null;
 				this.FragmentShader = null;
 			}
+#endif
 		}
 
 		public void AttachShader(Shader Shader)
@@ -58,8 +61,9 @@ namespace GLES
 
 			if (linked == 0)
 			{
+				var Info = GL.glGetProgramInfoLog(this.Index);
 				GL.glDeleteProgram(this.Index);
-				throw (new Exception(GL.glGetProgramInfoLog(this.Index)));
+				throw (new Exception("ShaderProgram.Link: " + Info));
 			}
 		}
 
@@ -92,6 +96,15 @@ namespace GLES
 		{
 			if (!this.Linked) throw (new Exception("Program not linked"));
 			GL.glUseProgram(this.Index);
+		}
+
+		public Uniform GetUniformLocation(string Name)
+		{
+			if (!this.Linked) throw(new Exception("Can't find uniforms until linked"));
+			int location = GL.glGetUniformLocation(this.Index, Name);
+			if (location < 0) throw(new Exception(String.Format("Can't find uniform '{0}'", Name)));
+			//Console.WriteLine(location);
+			return new Uniform(location);
 		}
 	}
 }

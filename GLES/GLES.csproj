@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Matrix4.cs" />
+    <Compile Include="Uniform.cs" />
     <Compile Include="VertexAttribLocation.cs" />
     <Compile Include="EGL\egl.cs" />
     <Compile Include="GLES2\gl2.cs" />

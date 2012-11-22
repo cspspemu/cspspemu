@@ -88,7 +88,7 @@ namespace CSPspEmu.AutoTests
 					PspEmulatorContext.SetInstanceType<GpuImpl>(typeof(GpuImplNull));
 
 					var GpuImpl = PspEmulatorContext.GetInstance<GpuImpl>();
-					GpuImpl.InitSynchronizedOnce();
+					//GpuImpl.InitSynchronizedOnce();
 
 					//Console.Error.WriteLine("[b]");
 

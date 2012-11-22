@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
-using EGLBoolean = System.Int32;
+using EGLBoolean = System.Boolean;
 using EGLenum = System.Int32;
 using EGLint = System.Int32;
 
@@ -79,8 +79,8 @@ namespace GLES
 		 */
 
 		/* EGL aliases */
-		public const int EGL_FALSE = 0;
-		public const int EGL_TRUE = 1;
+		public const bool EGL_FALSE = false;
+		public const bool EGL_TRUE = true;
 
 		/* Out-of-band handle values */
 		public static EGLNativeDisplayType EGL_DEFAULT_DISPLAY = ((EGLNativeDisplayType)0);

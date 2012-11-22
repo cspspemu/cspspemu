@@ -30,7 +30,7 @@ namespace GLES
 
 		public void Pointer(int size, int type, bool normalized, int stride, void* ptr)
 		{
-			GL.glVertexAttribPointer(this.Index, size, type, (normalized ? GL.GL_TRUE : GL.GL_FALSE), stride, ptr);
+			GL.glVertexAttribPointer(this.Index, size, type, normalized, stride, ptr);
 		}
 	}
 }

@@ -125,7 +125,7 @@ namespace CSPspEmu.Core.Gpu.State
 		{
 			fixed (float* ValuesPtr = Values)
 			{
-				//ValuesPtr[15] = 1.0f;
+				ValuesPtr[15] = 1.0f;
 			}
 			this.Index = Index;
 		}

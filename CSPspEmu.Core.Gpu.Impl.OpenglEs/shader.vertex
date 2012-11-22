@@ -1,0 +1,13 @@
+﻿uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 worldMatrix;
+
+attribute vec4 a_position;
+attribute lowp vec4 a_color0;
+
+varying lowp vec4 v_color0;
+
+void main() {
+	v_color0 = a_color0;
+	gl_Position = projectionMatrix * viewMatrix * worldMatrix * a_position;
+}

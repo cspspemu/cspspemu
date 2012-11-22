@@ -404,26 +404,26 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 			var Module = Modules.Get(ModuleId);
 
 			/*
-		public struct SceKernelModuleInfo
-		{
-			public int size;
-			public byte nsegment;
-			public fixed byte reserved[3];
-			public fixed int segmentaddr[4];
-			public fixed int segmentsize[4];
-			public uint entry_addr;
-			public uint gp_value;
-			public uint text_addr;
-			public uint text_size;
-			public uint data_size;
-			public uint bss_size;
-			// The following is only available in the v1.5 firmware and above,
-			// but as sceKernelQueryModuleInfo is broken in v1.0 is doesn't matter ;)
-			public ElfPsp.ModuleInfo.AtributesEnum attribute;
-			public fixed byte version[2];
-			public fixed byte name[28];
-		}
-		*/
+			public struct SceKernelModuleInfo
+			{
+				public int size;
+				public byte nsegment;
+				public fixed byte reserved[3];
+				public fixed int segmentaddr[4];
+				public fixed int segmentsize[4];
+				public uint entry_addr;
+				public uint gp_value;
+				public uint text_addr;
+				public uint text_size;
+				public uint data_size;
+				public uint bss_size;
+				// The following is only available in the v1.5 firmware and above,
+				// but as sceKernelQueryModuleInfo is broken in v1.0 is doesn't matter ;)
+				public ElfPsp.ModuleInfo.AtributesEnum attribute;
+				public fixed byte version[2];
+				public fixed byte name[28];
+			}
+			*/
 
 			ModuleInfo.size = sizeof(SceKernelModuleInfo);
 			ModuleInfo.nsegment = 0;

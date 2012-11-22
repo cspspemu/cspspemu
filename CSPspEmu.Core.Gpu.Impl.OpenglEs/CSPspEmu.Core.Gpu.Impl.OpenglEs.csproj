@@ -42,6 +42,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GpuImplOpenglEs.cs" />
+    <Compile Include="GpuImplOpenglEs.StateClear.cs" />
+    <Compile Include="GpuImplOpenglEs.Utils.cs" />
+    <Compile Include="OpenglGpuImpl.ConversionTables.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +60,14 @@
       <Project>{b03b6268-3264-4e2b-bdd3-0252909c11ce}</Project>
       <Name>GLES</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
+      <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
+      <Name>CSharpUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="shader.fragment" />
+    <EmbeddedResource Include="shader.vertex" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

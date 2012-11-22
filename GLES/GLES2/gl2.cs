@@ -5,15 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
-using EGLBoolean = System.Int32;
+using EGLBoolean = System.Boolean;
 using EGLenum = System.Int32;
 using EGLint = System.Int32;
 
 using GLsizeiptr = System.UInt32;
 using GLbitfield = System.UInt32;
 using GLenum = System.Int32;
-using GLBoolean = System.UInt32;
-using GLboolean = System.UInt32;
+using GLboolean = System.Boolean;
 using GLsizei = System.Int32;
 using GLclampf = System.Single;
 using GLfloat = System.Single;
@@ -79,8 +78,8 @@ namespace GLES
 		public const int GL_COLOR_BUFFER_BIT = 0x00004000;
 
 		/* Boolean */
-		public const uint GL_FALSE = 0;
-		public const uint GL_TRUE = 1;
+		public const bool GL_FALSE = false;
+		public const bool GL_TRUE = true;
 
 		/* BeginMode */
 		public const int GL_POINTS = 0x0000;
@@ -579,7 +578,7 @@ namespace GLES
 		[DllImport("libGLESv2")] static public extern void glGetTexParameteriv(GLenum target, GLenum pname, GLint* @params);
 		[DllImport("libGLESv2")] static public extern void glGetUniformfv(GLuint program, GLint location, GLfloat* @params);
 		[DllImport("libGLESv2")] static public extern void glGetUniformiv(GLuint program, GLint location, GLint* @params);
-		[DllImport("libGLESv2")] static public extern int glGetUniformLocation(GLuint program, GLchar* name);
+		[DllImport("libGLESv2")] static public extern int glGetUniformLocation(GLuint program, string name);
 		[DllImport("libGLESv2")] static public extern void glGetVertexAttribfv(GLuint index, GLenum pname, GLfloat* @params);
 		[DllImport("libGLESv2")] static public extern void glGetVertexAttribiv(GLuint index, GLenum pname, GLint* @params);
 		[DllImport("libGLESv2")] static public extern void glGetVertexAttribPointerv(GLuint index, GLenum pname, void** pointer);
@@ -686,6 +685,18 @@ namespace GLES
 			}
 
 			return null;
+		}
+
+		static public void glEnableDisable(GLenum state, bool enable)
+		{
+			if (enable)
+			{
+				GL.glEnable(state);
+			}
+			else
+			{
+				GL.glDisable(state);
+			}
 		}
 	}
 }
