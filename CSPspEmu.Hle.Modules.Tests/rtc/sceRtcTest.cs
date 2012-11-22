@@ -7,6 +7,7 @@ using CSPspEmu.Core;
 using CSPspEmu.Hle.Modules.rtc;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Hle.Vfs;
+using CSharpUtils;
 
 namespace CSPspEmu.Hle.Modules.Tests.rtc
 {
@@ -16,27 +17,56 @@ namespace CSPspEmu.Hle.Modules.Tests.rtc
 		[Inject]
 		sceRtc sceRtc = null;
 
-		const int FakedYear = 2012;
-		const int FakedMonth = 4;
-		const int FakedDay = 30;
-		const int FakedHour = 12;
-		const int FakedMinute = 13;
-		const int FakedSecond = 14;
-		const int FakedMillisecond = 973;
+		int FakedYear;
+		int FakedMonth;
+		int FakedDay;
+		int FakedHour;
+		int FakedMinute;
+		int FakedSecond;
+		int FakedMillisecond;
 
-		class PspRtcMock : PspRtc
+		private void ResetTimes()
 		{
+			FakedYear = 2012;
+			FakedMonth = 4;
+			FakedDay = 30;
+			FakedHour = 12;
+			FakedMinute = 13;
+			FakedSecond = 14;
+			FakedMillisecond = 973;
+		}
+
+		public class PspRtcMock : PspRtc
+		{
+			public sceRtcTest sceRtcTest;
+
 			protected override void UpdateInternal()
 			{
-				var DateTime = new DateTime(FakedYear, FakedMonth, FakedDay, FakedHour, FakedMinute, FakedSecond, FakedMillisecond);
+				Console.WriteLine("PspRtcMock.UpdateInternal()");
+				var DateTime = new DateTime(
+					sceRtcTest.FakedYear,
+					sceRtcTest.FakedMonth,
+					sceRtcTest.FakedDay,
+					sceRtcTest.FakedHour,
+					sceRtcTest.FakedMinute,
+					sceRtcTest.FakedSecond,
+					sceRtcTest.FakedMillisecond
+				);
 				CurrentTime.SetToDateTime(DateTime);
 				this.CurrentDateTime = DateTime;
 			}
 		}
 
+		[TestInitialize]
+		public void TestInitialize()
+		{
+			ResetTimes();
+		}
+
 		protected override void SetMocks(PspEmulatorContext PspEmulatorContext)
 		{
 			PspEmulatorContext.SetInstanceType<PspRtc, PspRtcMock>();
+			(PspEmulatorContext.GetInstance<PspRtc>() as PspRtcMock).sceRtcTest = this;
 		}
 
 		[TestMethod]
@@ -61,6 +91,36 @@ namespace CSPspEmu.Hle.Modules.Tests.rtc
 			Assert.AreEqual(FakedMinute, (int)ScePspDateTime.Minute);
 			Assert.AreEqual(FakedSecond, (int)ScePspDateTime.Second);
 			Assert.AreEqual(FakedMillisecond, (int)ScePspDateTime.Microsecond / 1000);
+		}
+
+		[TestMethod]
+		public void Test_timeIsIncreasing()
+		{
+			DateTime PrevDateTime = DateTimeRange.ConvertFromUnixTimestamp(0);
+			ScePspDateTime ScePspDateTime;
+			for (int n = 0; n < 40; n++)
+			{
+				Console.WriteLine("Iter");
+				FakedMillisecond++;
+				if (FakedMillisecond >= 1000)
+				{
+					FakedSecond++;
+					FakedMillisecond = FakedMillisecond % 1000;
+				}
+				
+				var Result = sceRtc.sceRtcGetCurrentClock(out ScePspDateTime, 0);
+
+				var CurrentDateTime = ScePspDateTime.ToDateTime();
+
+				if (!(CurrentDateTime > PrevDateTime))
+				{
+					Console.WriteLine("N: {0}", n);
+					Console.WriteLine("P: {0}", PrevDateTime.Ticks);
+					Console.WriteLine("C: {0}", CurrentDateTime.Ticks);
+				}
+				Assert.IsTrue(CurrentDateTime.Ticks > PrevDateTime.Ticks);
+				PrevDateTime = CurrentDateTime;
+			}
 		}
 	}
 }

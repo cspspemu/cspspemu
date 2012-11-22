@@ -357,7 +357,7 @@ namespace CSPspEmu.Hle.Modules.rtc
 			PspRtc.Update();
 			var CurrentDateTime = PspRtc.CurrentDateTime;
 			CurrentDateTime += TimeSpan.FromMinutes(TimeZone);
-			PspRtc.Update();
+			//PspRtc.Update();
 
 			DateTime = new ScePspDateTime()
 			{
@@ -367,7 +367,7 @@ namespace CSPspEmu.Hle.Modules.rtc
 				Hour = (ushort)CurrentDateTime.Hour,
 				Minute = (ushort)(CurrentDateTime.Minute),
 				Second = (ushort)CurrentDateTime.Second,
-				Microsecond = (uint)(CurrentDateTime.GetTotalMicroseconds() % 1000000),
+				Microsecond = (uint)(CurrentDateTime.GetTotalMicroseconds() % 1000000L),
 			};
 
 			return 0;

@@ -350,6 +350,17 @@ namespace CSPspEmu.Hle
 					}
 					//Console.WriteLine("PC:{0:X}", CpuThreadState.PC);
 					uint PC = CpuThreadState.PC & PspMemory.MemoryMask;
+					if (PC == 0)
+					{
+						ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () =>
+						{
+							Console.Error.WriteLine("Trying to jump to 0x{0:X8}", PC);
+						});
+						SetWaitAndPrepareWakeUp(WaitType.None, "JUMP 0", new object(), (WakeupCallback) =>
+						{
+						});
+						Thread.Sleep(-1);
+					}
 					var Delegate = GetDelegateAt(PC);
 					{
 						CpuThreadState.LastValidPC = PC;

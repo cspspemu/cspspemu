@@ -216,11 +216,16 @@ namespace CSPspEmu.Runner.Components.Cpu
 							Logger.TryCatch(() =>
 							{
 								var ParamSfo = new Psf().Load(Pbp[Pbp.Types.ParamSfo]);
-								Title = (String)ParamSfo.EntryDictionary["TITLE"];
-								Logger.TryCatch(() =>
+								
+								if (ParamSfo.EntryDictionary.ContainsKey("TITLE"))
+								{
+									Title = (String)ParamSfo.EntryDictionary["TITLE"];
+								}
+
+								if (ParamSfo.EntryDictionary.ContainsKey("PSP_SYSTEM_VER"))
 								{
 									PspEmulatorContext.PspConfig.SetVersion(ParamSfo.EntryDictionary["PSP_SYSTEM_VER"].ToString());
-								});
+								}
 							});
 						}
 						break;

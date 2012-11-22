@@ -251,8 +251,8 @@ namespace CSPspEmu.Core
 			{
 				case OS.Windows: InternalWindows.VirtualFree(Address, 0, MEM_RELEASE); break;
 				case OS.Posix: InternalUnix.munmap(Address, Size); break;
+				default: throw (new NotImplementedException());
 			}
-			throw (new NotImplementedException());
 		}
 
 		public static void* AllocRange(void* Address, uint Size)

@@ -56,5 +56,10 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			Process.Start(@"http://tgames.fr.nf/");
 		}
+
+		private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			Process.Start(@"https://github.com/lioncash");
+		}
 	}
 }
