@@ -1,6 +1,10 @@
-﻿namespace CSPspEmu.Core.Cpu.Emitter
+﻿using System;
+using SafeILGenerator.Ast;
+using SafeILGenerator.Ast.Nodes;
+
+namespace CSPspEmu.Core.Cpu.Emitter
 {
-	public sealed partial class CpuEmitter
+	public sealed partial class CpuEmitter : IAstGenerator
 	{
 		public CpuProcessor CpuProcessor;
 		private MipsMethodEmitter MipsMethodEmitter;
@@ -30,5 +34,17 @@
 			this.InstructionReader = InstructionReader;
 			this.CpuProcessor = CpuProcessor;
 		}
+
+		// AST utilities
+		private AstNodeExprArgument GpuThreadStateArgument() { return this.Argument<CpuThreadState>(0, "CpuThreadState"); }
+		private AstNodeExprLValue GPR(int Index) { if (Index == 0) throw (new Exception("Can't get reference to GPR0")); return this.FieldAccess(this.GpuThreadStateArgument(), "GPR" + Index); }
+		private AstNodeExpr GPR_s(int Index) { if (Index == 0) return this.Immediate((int)0); return this.Cast<int>(GPR(Index)); }
+		private AstNodeExpr GPR_u(int Index) { if (Index == 0) return this.Immediate((uint)0); return this.Cast<uint>(GPR(Index)); }
+		private AstNodeExpr IMM_s() { return this.Immediate(IMM); }
+		private AstNodeExpr IMM_u() { return this.Immediate((uint)(ushort)IMM); }
+		private AstNodeExpr IMM_uex() { return this.Immediate((uint)IMM); }
+		private AstNodeStm AssignGPR(int Index, AstNodeExpr Expr) { if (Index == 0) return new AstNodeStmEmpty(); return this.Assign(GPR(Index), this.Cast<uint>(Expr)); }
+		private void GenerateAssignGPR(int Index, AstNodeExpr Expr) { MipsMethodEmitter.GenerateIL(AssignGPR(Index, Expr)); }
+
 	}
 }

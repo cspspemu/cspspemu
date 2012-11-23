@@ -319,7 +319,7 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
-		public void SetLessThanTest()
+		public void SetLessThanImmediateTest()
 		{
 			ExecuteAssembly(@"
 				li r1, 0x77777777
@@ -330,6 +330,31 @@ namespace CSPspEmu.Core.Tests
 				sltiu r2, r10, 7
 				sltiu r3, r11, -200
 				slti  r4, r11, -200
+			");
+
+			Assert.AreEqual(0, CpuThreadState.GPR[1]);
+			Assert.AreEqual(1, CpuThreadState.GPR[2]);
+			Assert.AreEqual(0, CpuThreadState.GPR[3]);
+			Assert.AreEqual(0, CpuThreadState.GPR[4]);
+		}
+
+		[TestMethod]
+		public void SetLessThanTest()
+		{
+			ExecuteAssembly(@"
+				li r1, 0x77777777
+				li r10, 0
+				li r11, -100
+				li r12, +100
+
+				li r20, 0				
+				li r21, 7
+				li r22, -200
+
+				sltu r1, r10, r20
+				sltu r2, r10, r21
+				sltu r3, r11, r22
+				slt  r4, r11, r22
 			");
 
 			Assert.AreEqual(0, CpuThreadState.GPR[1]);
@@ -447,18 +472,18 @@ namespace CSPspEmu.Core.Tests
 		public void SignExtendTest()
 		{
 			ExecuteAssembly(@"
-				li  r10, 0xFF
-				li  r11, 0xFFFF
+				li  r10, 0x666666_81
+				li  r11, 0x6666_8123
 				or  r1, r0, r10
 				seb r2, r10
 				or  r3, r0, r11
 				seh r4, r11
 			");
 
-			Assert.AreEqual((uint)0x000000FF, (uint)CpuThreadState.GPR[1]);
-			Assert.AreEqual((uint)0xFFFFFFFF, (uint)CpuThreadState.GPR[2]);
-			Assert.AreEqual((uint)0x0000FFFF, (uint)CpuThreadState.GPR[3]);
-			Assert.AreEqual((uint)0xFFFFFFFF, (uint)CpuThreadState.GPR[4]);
+			Assert.AreEqual("66666681", String.Format("{0:X8}", CpuThreadState.GPR[1]));
+			Assert.AreEqual("FFFFFF81", String.Format("{0:X8}", CpuThreadState.GPR[2]));
+			Assert.AreEqual("66668123", String.Format("{0:X8}", CpuThreadState.GPR[3]));
+			Assert.AreEqual("FFFF8123", String.Format("{0:X8}", CpuThreadState.GPR[4]));
 		}
 
 		[TestMethod]
@@ -540,7 +565,7 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
-		public void ExtractInsertTest()
+		public void ExtractTest()
 		{
 			// %t, %s, %a, %ne
 			ExecuteAssembly(@"
@@ -549,6 +574,21 @@ namespace CSPspEmu.Core.Tests
 			");
 
 			Assert.AreEqual("1111011101", "%010b".Sprintf(CpuThreadState.GPR[1]));
+		}
+
+		[TestMethod]
+		public void InsertTest()
+		{
+			// %t, %s, %a, %ne
+			ExecuteAssembly(@"
+				li r2, 0b_11000011001000000011111011101101
+				li r3, 0b_00000000000000000000000001010101
+				ins r2, r3, 0, 8
+			");
+
+			Assert.Inconclusive();
+
+			//Assert.AreEqual("1111011101", "%010b".Sprintf(CpuThreadState.GPR[1]));
 		}
 
 		[TestMethod]
@@ -610,6 +650,21 @@ namespace CSPspEmu.Core.Tests
 			");
 			Assert.AreEqual(0x12345678, CpuThreadState.GPR[1]);
 			Assert.AreEqual(0x87654321, CpuThreadState.Fcr31.Value);
+		}
+
+		[TestMethod]
+		public void wsbwTest()
+		{
+			ExecuteAssembly(@"
+				li  r11, 0x_12_34_56_78
+
+				wsbw r1, r11
+				wsbh r2, r11
+			");
+
+			Assert.AreEqual("12345678", String.Format("{0:X8}", CpuThreadState.GPR[11]));
+			Assert.AreEqual("78563412", String.Format("{0:X8}", CpuThreadState.GPR[1]));
+			Assert.AreEqual("34127856", String.Format("{0:X8}", CpuThreadState.GPR[2]));
 		}
 
 		[TestMethod]

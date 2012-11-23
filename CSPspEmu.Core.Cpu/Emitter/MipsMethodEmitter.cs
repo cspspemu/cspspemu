@@ -316,15 +316,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			// Optimize
 			AstNodeStm = (AstNodeStm)AstOptimizer.Optimize(AstNodeStm);
 
-			{
-				GeneratorCSharp.Reset();
-				Console.WriteLine("{0}", GeneratorCSharp.Generate(AstNodeStm).ToString());
-			}
-			{
-				var Generator = new GeneratorIL(DynamicMethod, SafeILGenerator.__ILGenerator);
-				Generator.Generate(AstNodeStm);
-				//SafeILGenerator
-			}
+			//Console.WriteLine("{0}", GeneratorCSharp.Reset().Generate(AstNodeStm).ToString());
+
+			new GeneratorIL(DynamicMethod, SafeILGenerator.__ILGenerator).Generate(AstNodeStm);
 		}
 
 		public void SaveGPR_F(int R, Action Action) { if (R != 0) SaveField<float>(Field_GPRList[R], Action); }

@@ -93,6 +93,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 			//var MemoryStick = new HleIoDriverMemoryStick(new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
 
 			// http://forums.ps2dev.org/viewtopic.php?t=5680
+			HleIoManager.SetDriver("host:", MemoryStick);
 			HleIoManager.SetDriver("ms:", MemoryStick);
 			HleIoManager.SetDriver("fatms:", MemoryStick);
 			HleIoManager.SetDriver("fatmsOem:", MemoryStick);

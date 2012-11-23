@@ -78,6 +78,7 @@
     <Compile Include="Dynarec\DynarecFunctionCompiler.Internal.cs" />
     <Compile Include="Dynarec\DynarecFunctionCompilerTask.cs" />
     <Compile Include="Emitter\CpuEmitter.cs" />
+    <Compile Include="Emitter\CpuEmitterUtils.cs" />
     <Compile Include="Emitter\Emitters\CpuEmitter.ArithmeticLogic.cs" />
     <Compile Include="Emitter\Emitters\CpuEmitter.Branches.cs" />
     <Compile Include="Emitter\Emitters\CpuEmitter.Cop0.cs" />
