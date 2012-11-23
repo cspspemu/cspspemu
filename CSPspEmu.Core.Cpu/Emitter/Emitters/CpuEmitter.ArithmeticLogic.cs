@@ -2,74 +2,81 @@
 using System.Runtime.CompilerServices;
 using CSharpUtils;
 using SafeILGenerator;
+using SafeILGenerator.Ast;
+using SafeILGenerator.Ast.Nodes;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
-	public sealed partial class CpuEmitter
+	public sealed partial class CpuEmitter : IAstGenerator
 	{
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Arithmetic operations.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 
-		public void add() { MipsMethodEmitter.OP_3REG_Signed(RD, RS, RT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); }); }
-		public void addu() { MipsMethodEmitter.OP_3REG_Unsigned(RD, RS, RT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); }); }
-		public void sub() { MipsMethodEmitter.OP_3REG_Signed(RD, RS, RT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned); }); }
-		public void subu() { MipsMethodEmitter.OP_3REG_Unsigned(RD, RS, RT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned); }); }
+		private AstNodeExprLValue GPR(int Index) {
+			if (Index == 0) throw(new Exception("Can't get reference to GPR0"));
+			return this.FieldAccess(this.Argument<CpuThreadState>(0, "CpuThreadState"), "GPR" + Index);
+		}
+		private AstNodeExpr GPR_s(int Index) { if (Index == 0) return this.Immediate((int)0); return this.Cast<int>(GPR(Index)); }
+		private AstNodeExpr GPR_u(int Index) { if (Index == 0) return this.Immediate((uint)0); return this.Cast<uint>(GPR(Index)); }
 
-		public void addi() {
-			SafeILGenerator.Comment("addi");
-			MipsMethodEmitter.OP_2REG_IMM_Signed(RT, RS, (short)IMM, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); });
+		private AstNodeExpr IMM_s() { return this.Immediate(IMM); }
+		private AstNodeExpr IMM_u() { return this.Immediate((uint)(ushort)IMM); }
+
+		private AstNodeStm AssignGPR(int Index, AstNodeExpr Expr)
+		{
+			if (Index == 0)
+			{
+				return new AstNodeStmEmpty();
+			}
+			else
+			{
+				return this.Assign(GPR(Index), this.Cast<uint>(Expr));
+			}
 		}
-		public void addiu() {
-			SafeILGenerator.Comment("addu");
-			MipsMethodEmitter.OP_2REG_IMM_Signed(RT, RS, (short)IMM, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); });
+
+		private void GenerateAssignGPR(int Index, AstNodeExpr Expr)
+		{
+			MipsMethodEmitter.GenerateIL(AssignGPR(Index, Expr));
 		}
+
+		public void add() { GenerateAssignGPR(RD, GPR_s(RS) + GPR_s(RT)); }
+		public void addu() { GenerateAssignGPR(RD, GPR_u(RS) + GPR_u(RT)); }
+		public void sub() { GenerateAssignGPR(RD, GPR_s(RS) - GPR_s(RT)); }
+		public void subu() { GenerateAssignGPR(RD, GPR_u(RS) - GPR_u(RT)); }
+
+		public void addi() { GenerateAssignGPR(RT, GPR_s(RS) + IMM_s()); }
+		public void addiu() { GenerateAssignGPR(RT, GPR_s(RS) + IMM_s()); }
 
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Logical Operations.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void and() { MipsMethodEmitter.OP_3REG_Unsigned(RD, RS, RT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.And); }); }
-		public void or() { MipsMethodEmitter.OP_3REG_Unsigned(RD, RS, RT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.Or); }); }
-		public void xor() { MipsMethodEmitter.OP_3REG_Unsigned(RD, RS, RT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.Xor); }); }
-		public void nor() { MipsMethodEmitter.OP_3REG_Unsigned(RD, RS, RT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.Or); SafeILGenerator.UnaryOperation(SafeUnaryOperator.Not); }); }
+		public void and() { GenerateAssignGPR(RD, GPR_u(RS) & GPR_u(RT)); }
+		public void or() { GenerateAssignGPR(RD, GPR_u(RS) | GPR_u(RT)); }
+		public void xor() { GenerateAssignGPR(RD, GPR_u(RS) ^ GPR_u(RT)); }
+		public void nor() { GenerateAssignGPR(RD, ~(GPR_u(RS) | GPR_u(RT))); }
 
-		public void andi() { MipsMethodEmitter.OP_2REG_IMM_Unsigned(RT, RS, IMMU, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.And); }); }
-		public void ori() { MipsMethodEmitter.OP_2REG_IMM_Unsigned(RT, RS, IMMU, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.Or); }); }
-		public void xori() { MipsMethodEmitter.OP_2REG_IMM_Unsigned(RT, RS, IMMU, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.Xor); }); }
+		public void andi() { GenerateAssignGPR(RT, GPR_u(RS) & IMM_u()); }
+		public void ori() { GenerateAssignGPR(RT, GPR_u(RS) | IMM_u()); }
+		public void xori() { GenerateAssignGPR(RT, GPR_u(RS) ^ IMM_u()); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Shift Left/Right Logical/Arithmethic (Variable).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 
-		public void sll() { MipsMethodEmitter.OP_2REG_IMM_Unsigned(RD, RT, Instruction.POS, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftLeft); }); }
-		public void sra() { MipsMethodEmitter.OP_2REG_IMM_Unsigned(RD, RT, Instruction.POS, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftRightSigned); }); }
-		public void srl() { MipsMethodEmitter.OP_2REG_IMM_Unsigned(RD, RT, Instruction.POS, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftRightUnsigned); }); }
+		public void sll() { GenerateAssignGPR(RD, this.Binary(GPR_u(RT), "<<", this.Immediate((uint)Instruction.POS)));  }
+		public void sra() { GenerateAssignGPR(RD, this.Binary(GPR_s(RT), ">>", this.Immediate((int)Instruction.POS))); }
+		public void srl() { GenerateAssignGPR(RD, this.Binary(GPR_u(RT), ">>", this.Immediate((uint)Instruction.POS))); }
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static uint _rotr(uint Value, int Offset) { return (Value >> Offset) | (Value << (32 - Offset)); }
 
-		public void sllv() { MipsMethodEmitter.OP_3REG_Unsigned(RD, RT, RS, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftLeft); }); }
-		public void srav() { MipsMethodEmitter.OP_3REG_Unsigned(RD, RT, RS, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftRightSigned); }); }
-		public void srlv() { MipsMethodEmitter.OP_3REG_Unsigned(RD, RT, RS, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftRightUnsigned); }); }
-		public void rotr() {
-			MipsMethodEmitter.SaveGPR(RD, () =>
-			{
-				MipsMethodEmitter.LoadGPR_Unsigned(RT);
-				SafeILGenerator.Push((int)Instruction.POS);
-				
-				MipsMethodEmitter.CallMethod((Func<uint, int, uint>)CpuEmitter._rotr);
-			});
-			//$rd = ROTR($rt, $ps);
-		}
-		public void rotrv() {
-			MipsMethodEmitter.SaveGPR(RD, () =>
-			{
-				MipsMethodEmitter.LoadGPR_Unsigned(RT);
-				MipsMethodEmitter.LoadGPR_Unsigned(RS);
-				MipsMethodEmitter.CallMethod((Func<uint, int, uint>)CpuEmitter._rotr);
-			});
-		}
+		public void sllv() { GenerateAssignGPR(RD, this.Binary(GPR_u(RT), "<<", GPR_u(RS))); }
+		public void srav() { GenerateAssignGPR(RD, this.Binary(GPR_s(RT), ">>", GPR_s(RS))); }
+		public void srlv() { GenerateAssignGPR(RD, this.Binary(GPR_u(RT), ">>", GPR_u(RS))); }
+		public void rotr() { GenerateAssignGPR(RD, this.CallStatic((Func<uint, int, uint>)CpuEmitter._rotr, GPR_u(RT), this.Immediate((int)Instruction.POS))); }
+		public void rotrv() { GenerateAssignGPR(RD, this.CallStatic((Func<uint, int, uint>)CpuEmitter._rotr, GPR_u(RT), GPR_s(RS))); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Set Less Than (Immediate) (Unsigned).
@@ -89,7 +96,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		public void lui()
 		{
-			MipsMethodEmitter.SET(RT, IMMU << 16);
+			GenerateAssignGPR(RT, this.Binary(IMM_u(), "<<", this.Immediate((uint)16)));
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////

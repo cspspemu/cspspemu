@@ -7,13 +7,17 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using CSPspEmu.Core.Memory;
 using SafeILGenerator;
+using SafeILGenerator.Ast.Nodes;
+using SafeILGenerator.Ast;
+using SafeILGenerator.Ast.Generators;
+using SafeILGenerator.Ast.Optimizers;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
 	/// <summary>
 	/// <see cref="http://www.mrc.uidaho.edu/mrc/people/jff/digital/MIPSir.html"/>
 	/// </summary>
-	public unsafe class MipsMethodEmitter
+	public unsafe class MipsMethodEmitter : IAstGenerator
 	{
 #if USE_DYNAMIC_METHOD
 		//protected DynamicMethod DynamicMethod;
@@ -302,6 +306,25 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			LoadFieldPtr(Field_LO);
 			SafeILGenerator.LoadIndirect<long>();
+		}
+
+		AstOptimizer AstOptimizer = new AstOptimizer();
+		GeneratorCSharp GeneratorCSharp = new GeneratorCSharp();
+
+		public void GenerateIL(AstNodeStm AstNodeStm)
+		{
+			// Optimize
+			AstNodeStm = (AstNodeStm)AstOptimizer.Optimize(AstNodeStm);
+
+			{
+				GeneratorCSharp.Reset();
+				Console.WriteLine("{0}", GeneratorCSharp.Generate(AstNodeStm).ToString());
+			}
+			{
+				var Generator = new GeneratorIL(DynamicMethod, SafeILGenerator.__ILGenerator);
+				Generator.Generate(AstNodeStm);
+				//SafeILGenerator
+			}
 		}
 
 		public void SaveGPR_F(int R, Action Action) { if (R != 0) SaveField<float>(Field_GPRList[R], Action); }

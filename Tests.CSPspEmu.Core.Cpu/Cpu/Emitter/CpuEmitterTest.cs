@@ -30,6 +30,18 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
+		public void TestRotating()
+		{
+			//CpuThreadState.GPR[11] = 0x;
+			ExecuteAssembly(@"
+				li r2 , 0b_10110111011110111110111111011111;
+				li r11, 0b_11110110111011110111110111111011;
+				rotr r1, r2, 3
+			");
+			Assert.AreEqual(CpuThreadState.GPR[11], CpuThreadState.GPR[1]);
+		}
+
+		[TestMethod]
 		public void ArithmeticTest()
 		{
 			CpuThreadState.GPR[1] = -1;
