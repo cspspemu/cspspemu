@@ -4,7 +4,7 @@ using System;
 using CSPspEmu.Core.Cpu;
 using System.Reflection.Emit;
 using CSPspEmu.Core.Memory;
-using Codegen;
+using SafeILGenerator;
 
 namespace CSPspEmu.Core.Tests
 {

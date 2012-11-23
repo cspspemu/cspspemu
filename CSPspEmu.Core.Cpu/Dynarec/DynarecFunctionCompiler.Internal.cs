@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Codegen;
+using SafeILGenerator;
 using CSPspEmu.Core.Cpu.Assembler;
 using CSPspEmu.Core.Cpu.Emitter;
 using CSPspEmu.Core.Cpu.Table;

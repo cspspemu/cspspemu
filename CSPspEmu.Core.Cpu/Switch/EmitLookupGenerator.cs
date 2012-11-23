@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Codegen;
+using SafeILGenerator;
 
 namespace CSPspEmu.Core.Cpu.Table
 {
@@ -68,9 +68,9 @@ namespace CSPspEmu.Core.Cpu.Table
 			});
 		}
 
-		public static TType GenerateSwitch<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Action<SafeILGenerator, InstructionInfo> GenerateCallDelegate)
+		public static TType GenerateSwitch<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Action<CSafeILGenerator, InstructionInfo> GenerateCallDelegate)
 		{
-			return SafeILGenerator.Generate<TType>("EmitLookupGenerator.GenerateSwitch", (Generator) =>
+			return CSafeILGenerator.Generate<TType>("EmitLookupGenerator.GenerateSwitch", (Generator) =>
 			{
 				GenerateSwitchCode(Generator, InstructionInfoList, GenerateCallDelegate);
 			});
@@ -83,7 +83,7 @@ namespace CSPspEmu.Core.Cpu.Table
 		/// <param name="InstructionInfoList"></param>
 		/// <param name="GenerateCallDelegate"></param>
 		/// <param name="Level"></param>
-		public static void GenerateSwitchCode(SafeILGenerator SafeILGenerator, IEnumerable<InstructionInfo> InstructionInfoList, Action<SafeILGenerator, InstructionInfo> GenerateCallDelegate, int Level = 0)
+		public static void GenerateSwitchCode(CSafeILGenerator SafeILGenerator, IEnumerable<InstructionInfo> InstructionInfoList, Action<CSafeILGenerator, InstructionInfo> GenerateCallDelegate, int Level = 0)
 		{
 			//var ILGenerator = SafeILGenerator._UnsafeGetILGenerator();
 			var CommonMask = InstructionInfoList.Aggregate(0xFFFFFFFF, (Base, InstructionInfo) => Base & InstructionInfo.Mask);

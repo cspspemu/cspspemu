@@ -1,5 +1,5 @@
 ﻿using System;
-using Codegen;
+using SafeILGenerator;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {

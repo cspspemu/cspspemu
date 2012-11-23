@@ -1,7 +1,7 @@
 ﻿using System;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
-using Codegen;
+using SafeILGenerator;
 
 namespace CSPspEmu.Core.Gpu.VertexReading
 {
@@ -12,7 +12,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 			Offset = MathUtils.NextAligned(Offset, (int)Alignment);
 			SafeILGenerator.LoadArgument(VertexDataArgument);
 			SafeILGenerator.Push((int)Offset);
-			SafeILGenerator.BinaryOperation(Codegen.SafeBinaryOperator.AdditionSigned);
+			SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
 		}
 
 		private void IncOffset(int Size)
@@ -24,7 +24,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 		private void _LoadIntegerAsInteger(int Size, bool Signed)
 		{
 			_LoadPointerAlignedTo(Alignment: Size);
-			SafeILGenerator.LoadIndirect(SafeILGenerator.GetIntegralTypeByDescription(Size, Signed));
+			SafeILGenerator.LoadIndirect(CSafeILGenerator.GetIntegralTypeByDescription(Size, Signed));
 			IncOffset(Size);
 		}
 

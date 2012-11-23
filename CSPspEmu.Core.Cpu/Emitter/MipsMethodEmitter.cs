@@ -6,7 +6,7 @@ using System.Reflection.Emit;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using CSPspEmu.Core.Memory;
-using Codegen;
+using SafeILGenerator;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {

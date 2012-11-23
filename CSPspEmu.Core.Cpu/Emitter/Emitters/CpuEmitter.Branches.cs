@@ -1,6 +1,6 @@
 ﻿using System;
 using CSPspEmu.Core.Memory;
-using Codegen;
+using SafeILGenerator;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {

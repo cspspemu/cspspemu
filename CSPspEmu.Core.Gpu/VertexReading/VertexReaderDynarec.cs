@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection.Emit;
-using Codegen;
+using SafeILGenerator;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
 
@@ -13,7 +13,7 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 	{
 		protected uint Offset;
 		protected VertexTypeStruct VertexType;
-		protected SafeILGenerator SafeILGenerator;
+		protected CSafeILGenerator SafeILGenerator;
 		protected LocalBuilder LocalColor;
 		protected SafeArgument VertexDataArgument;
 		protected SafeArgument VertexInfoArgument;
@@ -22,14 +22,14 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 
 		public static VertexReaderDelegate GenerateMethod(VertexTypeStruct VertexType)
 		{
-			return SafeILGenerator.Generate<VertexReaderDelegate>("VertexReaderDynarec.GenerateMethod", (Generator) =>
+			return CSafeILGenerator.Generate<VertexReaderDelegate>("VertexReaderDynarec.GenerateMethod", (Generator) =>
 			{
 				var VertexReaderDynarec = new VertexReaderDynarec(Generator, VertexType);
 				VertexReaderDynarec.GenerateCode();
 			}, CheckTypes: false);
 		}
 
-		protected VertexReaderDynarec(SafeILGenerator SafeILGenerator, VertexTypeStruct VertexType)
+		protected VertexReaderDynarec(CSafeILGenerator SafeILGenerator, VertexTypeStruct VertexType)
 		{
 			this.Offset = 0;
 			this.SafeILGenerator = SafeILGenerator;
