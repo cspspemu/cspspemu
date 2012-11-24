@@ -46,56 +46,56 @@ namespace CSPspEmu.Core.Cpu
 
 		public class GprList
 		{
-			public CpuThreadState Processor;
+			public CpuThreadState CpuThreadState;
 
 			public int this[int Index]
 			{
-				get { fixed (uint* PTR = &Processor.GPR0) return (int)PTR[Index]; }
-				set { if (Index == 0) return; fixed (uint* PTR = &Processor.GPR0) PTR[Index] = (uint)value; }
+				get { fixed (uint* PTR = &CpuThreadState.GPR0) return (int)PTR[Index]; }
+				set { if (Index == 0) return; fixed (uint* PTR = &CpuThreadState.GPR0) PTR[Index] = (uint)value; }
 			}
 		}
 
 		public class C0rList
 		{
-			public CpuThreadState Processor;
+			public CpuThreadState CpuThreadState;
 
 			public uint this[int Index]
 			{
-				get { fixed (uint* PTR = &Processor.C0R0) return (uint)PTR[Index]; }
-				set { fixed (uint* PTR = &Processor.C0R0) PTR[Index] = (uint)value; }
+				get { fixed (uint* PTR = &CpuThreadState.C0R0) return (uint)PTR[Index]; }
+				set { fixed (uint* PTR = &CpuThreadState.C0R0) PTR[Index] = (uint)value; }
 			}
 		}
 
 		public class FprList
 		{
-			public CpuThreadState Processor;
+			public CpuThreadState CpuThreadState;
 
 			public float this[int Index]
 			{
-				get { fixed (float* PTR = &Processor.FPR0) return PTR[Index]; }
-				set { fixed (float* PTR = &Processor.FPR0) PTR[Index] = value; }
+				get { fixed (float* PTR = &CpuThreadState.FPR0) return PTR[Index]; }
+				set { fixed (float* PTR = &CpuThreadState.FPR0) PTR[Index] = value; }
 			}
 		}
 
 		public class FprListInteger
 		{
-			public CpuThreadState Processor;
+			public CpuThreadState CpuThreadState;
 
 			public int this[int Index]
 			{
-				get { fixed (float* PTR = &Processor.FPR0) return ((int*)PTR)[Index]; }
-				set { fixed (float* PTR = &Processor.FPR0) ((int*)PTR)[Index] = value; }
+				get { fixed (float* PTR = &CpuThreadState.FPR0) return ((int*)PTR)[Index]; }
+				set { fixed (float* PTR = &CpuThreadState.FPR0) ((int*)PTR)[Index] = value; }
 			}
 		}
 
 		public class VfprList
 		{
-			public CpuThreadState Processor;
+			public CpuThreadState CpuThreadState;
 
 			public float this[int Index]
 			{
-				get { fixed (float* PTR = &Processor.VFR0) return PTR[Index]; }
-				set { fixed (float* PTR = &Processor.VFR0) PTR[Index] = value; }
+				get { fixed (float* PTR = &CpuThreadState.VFR0) return PTR[Index]; }
+				set { fixed (float* PTR = &CpuThreadState.VFR0) PTR[Index] = value; }
 			}
 
 			public float this[int Matrix, int Column, int Row]

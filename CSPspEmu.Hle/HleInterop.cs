@@ -21,6 +21,7 @@ namespace CSPspEmu.Hle
 
 		public override void InitializeComponent()
 		{
+			base.InitializeComponent();
 			CurrentFakeHleThreads = new ThreadLocal<HleThread>(() => new HleThread(PspEmulatorContext, new CpuThreadState(CpuProcessor)));
 			//throw new NotImplementedException();
 			//CurrentFakeHleThread = ;

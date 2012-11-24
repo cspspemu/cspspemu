@@ -134,7 +134,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
 		public static uint ParseVfprName(uint VfpuSize, string RegisterName)
 		{
-			return VfpuUtils.ParsedRegister.Parse(VfpuSize, RegisterName).Index;
+			return VfpuUtils.VfpuRegisterInfo.Parse(VfpuSize, RegisterName).Index;
 		}
 
 		public static int ParseFprName(string RegisterName)

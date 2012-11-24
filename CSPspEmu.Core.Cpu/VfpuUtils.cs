@@ -9,33 +9,7 @@ namespace CSPspEmu.Core.Cpu
 {
 	public class VfpuUtils
 	{
-		public struct ParsedBinaryRegister
-		{
-			public uint Value;
-
-			static public implicit operator uint(ParsedBinaryRegister Value)
-			{
-				return Value.Value;
-			}
-
-			static public implicit operator ParsedBinaryRegister(uint Value)
-			{
-				return new ParsedBinaryRegister() { Value = Value };
-			}
-
-			// LINES (Rows or Columns)
-			public uint RC_LINE { get { return BitUtils.Extract(Value, 0, 2); } set { BitUtils.Insert(ref Value, 0, 2, value); } }
-			public uint RC_MATRIX { get { return BitUtils.Extract(Value, 2, 3); } set { BitUtils.Insert(ref Value, 2, 3, value); } }
-			public uint RC_ROW_COLUMN { get { return BitUtils.Extract(Value, 5, 1); } set { BitUtils.Insert(ref Value, 5, 1, value); } }
-			public uint RC_OFFSET { get { return BitUtils.Extract(Value, 6, 1) * 2; } set { BitUtils.Insert(ref Value, 6, 1, value / 2); } }
-
-			// SINGLE
-			public uint S_ROW { get { return BitUtils.Extract(Value, 0, 2); } set { BitUtils.Insert(ref Value, 0, 2, value); } }
-			public uint S_MATRIX { get { return BitUtils.Extract(Value, 2, 3); } set { BitUtils.Insert(ref Value, 2, 3, value); } }
-			public uint S_COLUMN { get { return BitUtils.Extract(Value, 5, 2); } set { BitUtils.Insert(ref Value, 5, 2, value); } }
-		}
-
-		public struct ParsedRegister
+		public struct VfpuRegisterInfo
 		{
 			public uint VfpuSize;
 			public char Type;
@@ -43,10 +17,10 @@ namespace CSPspEmu.Core.Cpu
 			public int Column;
 			public int Row;
 
-			static public ParsedRegister Parse(uint VfpuSize, string Name)
+			static public VfpuRegisterInfo Parse(uint VfpuSize, string Name)
 			{
 				Name = Name.ToUpperInvariant();
-				return new ParsedRegister()
+				return new VfpuRegisterInfo()
 				{
 					VfpuSize = VfpuSize,
 					Type = Name[0],
@@ -69,7 +43,7 @@ namespace CSPspEmu.Core.Cpu
 							int Offset = (Type == 'R') ? Column : Row;
 							int RowColumn = (Type == 'R') ? 1 : 0;
 
-							return new ParsedBinaryRegister()
+							return new VfpuRegisterInt()
 							{
 								RC_LINE = (uint)Line,
 								RC_MATRIX = (uint)Matrix,
@@ -77,7 +51,7 @@ namespace CSPspEmu.Core.Cpu
 								RC_OFFSET = (uint)Offset,
 							};
 						case 'S':
-							return new ParsedBinaryRegister()
+							return new VfpuRegisterInt()
 							{
 								S_COLUMN = (uint)Column,
 								S_MATRIX = (uint)Matrix,
@@ -184,7 +158,7 @@ namespace CSPspEmu.Core.Cpu
 		{
 			if (Size < 1 || Size > 4) throw (new Exception(String.Format("Invalid Size {0} !€ [0, 4]", Size)));
 
-			var Register = ParsedRegister.Parse(Size, Name);
+			var Register = VfpuRegisterInfo.Parse(Size, Name);
 
 			if ((Register.Type == 'S') && (Size != 1)) throw (new Exception("Invalid"));
 

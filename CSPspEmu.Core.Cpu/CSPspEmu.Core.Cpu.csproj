@@ -112,6 +112,7 @@
     <Compile Include="Table\InstructionInfo.cs" />
     <Compile Include="Table\InstructionTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VfpuRegisterInt.cs" />
     <Compile Include="VfpuUtils.cs" />
   </ItemGroup>
   <ItemGroup>

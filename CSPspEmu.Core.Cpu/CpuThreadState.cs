@@ -10,6 +10,7 @@ using System.IO;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Cpu.Assembler;
 using CSPspEmu.Core.Cpu.Emitter;
+using System.Runtime.CompilerServices;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -18,9 +19,18 @@ namespace CSPspEmu.Core.Cpu
 
 	unsafe sealed public partial class CpuThreadState
 	{
-		static public readonly CpuThreadState Methods = new CpuThreadState(null);
+		static public readonly CpuThreadState Methods = new CpuThreadState();
 
 		public CpuProcessor CpuProcessor;
+
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public PspMemory Memory
+		{
+			get
+			{
+				return CpuProcessor.Memory;
+			}
+		}
 		public object ModuleObject;
 		public object CallerModule;
 
@@ -164,34 +174,44 @@ namespace CSPspEmu.Core.Cpu
 
 		public void* GetMemoryPtr(uint Address)
 		{
-			var Pointer = CpuProcessor.Memory.PspAddressToPointerUnsafe(Address);
+			var Pointer = Memory.PspAddressToPointerUnsafe(Address);
 			//Console.WriteLine("%08X".Sprintf((uint)Pointer));
 			return Pointer;
 		}
 
-		public byte Read1(uint Address) { return CpuProcessor.Memory.Read1(Address); }
-		public ushort Read2(uint Address) { return CpuProcessor.Memory.Read2(Address); }
-		public uint Read4(uint Address) { return CpuProcessor.Memory.Read4(Address); }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public byte Read1(uint Address) { return Memory.Read1(Address); }
+		
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public ushort Read2(uint Address) { return Memory.Read2(Address); }
+		
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public uint Read4(uint Address) { return Memory.Read4(Address); }
 
-		public void Write1(uint Address, byte Value) { CpuProcessor.Memory.Write1(Address, Value); }
-		public void Write2(uint Address, ushort Value) { CpuProcessor.Memory.Write2(Address, Value); }
-		public void Write4(uint Address, uint Value) { CpuProcessor.Memory.Write4(Address, Value); }
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void Write1(uint Address, byte Value) { Memory.Write1(Address, Value); }
+		
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void Write2(uint Address, ushort Value) { Memory.Write2(Address, Value); }
+		
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void Write4(uint Address, uint Value) { Memory.Write4(Address, Value); }
 
 		public void* GetMemoryPtrNotNull(uint Address)
 		{
-			return CpuProcessor.Memory.PspAddressToPointerNotNull(Address);
+			return Memory.PspAddressToPointerNotNull(Address);
 		}
 
 		public void* GetMemoryPtrSafe(uint Address)
 		{
-			return CpuProcessor.Memory.PspAddressToPointerSafe(Address, 0);
+			return Memory.PspAddressToPointerSafe(Address, 0);
 		}
 
 		public void* GetMemoryPtrSafeWithError(uint Address, String ErrorDescription, bool CanBeNull)
 		{
 			try
 			{
-				void *Result = CpuProcessor.Memory.PspAddressToPointerSafe(Address, 0, CanBeNull);
+				void *Result = Memory.PspAddressToPointerSafe(Address, 0, CanBeNull);
 				/*
 				if (Result == null && !CanBeNull)
 				{
@@ -221,6 +241,10 @@ namespace CSPspEmu.Core.Cpu
 			return Indexes.Select(Index => GPR[Index]);
 		}
 
+		private CpuThreadState()
+		{
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -228,12 +252,13 @@ namespace CSPspEmu.Core.Cpu
 		public CpuThreadState(CpuProcessor Processor)
 		{
 			this.CpuProcessor = Processor;
+			//this.Memory = Processor.Memory;
 
-			GPR = new GprList() { Processor = this };
-			FPR = new FprList() { Processor = this };
-			C0R = new C0rList() { Processor = this };
-			FPR_I = new FprListInteger() { Processor = this };
-			Vfpr = new VfprList() { Processor = this };
+			GPR = new GprList() { CpuThreadState = this };
+			FPR = new FprList() { CpuThreadState = this };
+			C0R = new C0rList() { CpuThreadState = this };
+			FPR_I = new FprListInteger() { CpuThreadState = this };
+			Vfpr = new VfprList() { CpuThreadState = this };
 
 			for (int n = 0; n < 32; n++)
 			{
@@ -287,15 +312,15 @@ namespace CSPspEmu.Core.Cpu
 		public void Trace(uint PC)
 		{
 			if (MipsDisassembler == null) MipsDisassembler = new MipsDisassembler();
-			var Result = MipsDisassembler.Disassemble(PC, (Instruction)CpuProcessor.Memory.Read4(PC));
-			Console.WriteLine("  Trace: PC:0x{0:X8} : DATA:0x{1:X8} : {2}", PC, CpuProcessor.Memory.Read4(PC), Result);
+			var Result = MipsDisassembler.Disassemble(PC, (Instruction)Memory.Read4(PC));
+			Console.WriteLine("  Trace: PC:0x{0:X8} : DATA:0x{1:X8} : {2}", PC, Memory.Read4(PC), Result);
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <see cref="http://msdn.microsoft.com/en-us/library/ms253512(v=vs.80).aspx"/>
-		private static string[] RegisterMnemonicNames = new string[] {
+		private static readonly string[] RegisterMnemonicNames = new string[] {
 			"zr", "at", "v0", "v1", "a0", "a1", "a2", "a3",
 			"t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",
 			"s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
@@ -412,7 +437,7 @@ namespace CSPspEmu.Core.Cpu
 		public void SetPCWriteAddress(uint Address, uint PC)
 		{
 			//Console.WriteLine("SetPCWriteAddress: {0:X} : {1:X}", Address, PC);
-			CpuProcessor.Memory.SetPCWriteAddress(Address, PC);
+			Memory.SetPCWriteAddress(Address, PC);
 		}
 	}
 }
