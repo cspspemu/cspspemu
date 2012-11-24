@@ -146,7 +146,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 		}
 
-		// ROTate
+		/// <summary>
+		/// Vector ROTate
+		/// </summary>
 		public void vrot()
 		{
 			var VectorSize = Instruction.ONE_TWO;
@@ -207,17 +209,14 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			});
 		}
 
-		// Vfpu ZERO/ONE
-		public void vzero()
-		{
-			VectorOperationSaveVd((Index) => { SafeILGenerator.Push((float)0.0f); });
-		}
-		public void vone()
-		{
-			VectorOperationSaveVd((Index) => { SafeILGenerator.Push((float)1.0f); });
-		}
+		// vzero: Vector ZERO
+		// vone : Vector ONE
+		public void vzero() { VectorOperationSaveVd((VectorIndex) => { SafeILGenerator.Push((float)0.0f); }); }
+		public void vone() { VectorOperationSaveVd((VectorIndex) => { SafeILGenerator.Push((float)1.0f); }); }
 
-		// Vfpu MOVe/SiGN/Reverse SQuare root/COSine/Arc SINe/LOG2
+		// vmov  : Vector MOVe
+		// vsgn  : Vector SiGN
+		// *     : Vector Reverse SQuare root/COSine/Arc SINe/LOG2
 		// @CHECK
 		public void vmov()
 		{

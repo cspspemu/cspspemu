@@ -87,13 +87,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm _popstack()
 		{
-			if (PopulateCallStack && (RS == 31))  return this.Statement(this.CallStatic((Action<CpuThreadState>)CpuThreadState.CallStackPop, this.CpuThreadStateArgument()));
+			if (PopulateCallStack && (RS == 31))  return this.Statement(this.CallInstance(this.CpuThreadStateArgument(), (Action)CpuThreadState.Methods.CallStackPop));
 			return this.Statement();
 		}
 
 		private AstNodeStm _pushstack()
 		{
-			if (PopulateCallStack)  return this.Statement(this.CallStatic((Action<CpuThreadState, uint>)CpuThreadState.CallStackPush, this.CpuThreadStateArgument(), PC));
+			if (PopulateCallStack) return this.Statement(this.CallInstance(this.CpuThreadStateArgument(), (Action<uint>)CpuThreadState.Methods.CallStackPush, PC));
 			return this.Statement();
 		}
 
