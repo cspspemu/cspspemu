@@ -1211,12 +1211,25 @@ namespace CSPspEmu.Core.Tests
 		{
 			var Value = 0x87654321;
 			Memory.WriteSafe<uint>(0x08010004, 0x87654321);
+			CpuThreadState.GPR[2] = (int)0x08010000;
 			ExecuteAssembly(@"
-				li r2, 0x08010000
 				lwl r1, 7(r2)
 				lwr r1, 4(r2)
 			");
 			Assert.AreEqual((uint)Value, (uint)CpuThreadState.GPR[1]);
+		}
+
+		[TestMethod]
+		public void StoreUnalignedTest()
+		{
+			var Value = (uint)0x87654321;
+			CpuThreadState.GPR[1] = (int)Value;
+			CpuThreadState.GPR[2] = (int)0x08010000;
+			ExecuteAssembly(@"
+				swl r1, 7(r2)
+				swr r1, 4(r2)
+			");
+			Assert.AreEqual((uint)Value, Memory.ReadSafe<uint>(0x08010004));
 		}
 
 		[TestMethod]

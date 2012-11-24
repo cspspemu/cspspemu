@@ -78,8 +78,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// DIVide (Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void div() { MipsMethodEmitter.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._div_impl, this.CpuThreadStateArgument(), GPR_s(RS), GPR_s(RT)))); }
-		public void divu() { MipsMethodEmitter.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._divu_impl, this.CpuThreadStateArgument(), GPR_u(RS), GPR_u(RT)))); }
+		public void div() { GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._div_impl, this.CpuThreadStateArgument(), GPR_s(RS), GPR_s(RT)))); }
+		public void divu() { GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._divu_impl, this.CpuThreadStateArgument(), GPR_u(RS), GPR_u(RT)))); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// MULTiply (ADD/SUBstract) (Unsigned).
@@ -102,8 +102,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move if Zero/Non zero.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void movz() { MipsMethodEmitter.GenerateIL(this.IfElse(this.Binary(this.GPR_s(RT), "==", 0), this.Assign(this.GPR(RD), this.GPR_u(RS)))); }
-		public void movn() { MipsMethodEmitter.GenerateIL(this.IfElse(this.Binary(this.GPR_s(RT), "!=", 0), this.Assign(this.GPR(RD), this.GPR_u(RS)))); }
+		public void movz() { GenerateIL(this.IfElse(this.Binary(this.GPR_s(RT), "==", 0), this.Assign(this.GPR(RD), this.GPR_u(RS)))); }
+		public void movn() { GenerateIL(this.IfElse(this.Binary(this.GPR_s(RT), "!=", 0), this.Assign(this.GPR(RD), this.GPR_u(RS)))); }
 
 		/// <summary>
 		/// EXTract/INSert

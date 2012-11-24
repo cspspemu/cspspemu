@@ -47,8 +47,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// CFC1 -- move Control word from/to floating point (C1)
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 
-		public void cfc1() { this.MipsMethodEmitter.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._cfc1_impl, this.CpuThreadStateArgument(), RD, RT))); }
-		public void ctc1() { this.MipsMethodEmitter.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._ctc1_impl, this.CpuThreadStateArgument(), RD, RT))); }
+		public void cfc1() { GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._cfc1_impl, this.CpuThreadStateArgument(), RD, RT))); }
+		public void ctc1() { GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._ctc1_impl, this.CpuThreadStateArgument(), RD, RT))); }
 
 		/// <summary>
 		/// Compare (condition) Single_
@@ -65,7 +65,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			//MipsMethodEmitter.LoadFPR(FS);
 			//MipsMethodEmitter.LoadFPR(FT);
 
-			this.MipsMethodEmitter.GenerateIL(this.Statement(this.CallStatic(
+			GenerateIL(this.Statement(this.CallStatic(
 				(Action<CpuThreadState, float, float, bool, bool, bool, bool>)CpuEmitterUtils._comp_impl,
 				this.CpuThreadStateArgument(),
 				FPR(FS),

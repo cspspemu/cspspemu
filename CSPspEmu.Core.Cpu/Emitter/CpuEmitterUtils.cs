@@ -182,5 +182,70 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				CpuThreadState.Fcr31.CC = (less || equal);
 			}
 		}
+		public static void _break_impl(CpuThreadState CpuThreadState, uint Value)
+		{
+			Console.Error.WriteLine("-------------------------------------------------------------------");
+			Console.Error.WriteLine("-- BREAK  ---------------------------------------------------------");
+			Console.Error.WriteLine("-------------------------------------------------------------------");
+			throw (new PspBreakException("Break!"));
+		}
+
+		public static void _cache_impl(CpuThreadState CpuThreadState, uint Value)
+		{
+			//Console.Error.WriteLine("cache! : 0x{0:X}", Value);
+			//CpuThreadState.CpuProcessor.sceKernelIcacheInvalidateAll();
+		}
+
+		public static void _sync_impl(CpuThreadState CpuThreadState, uint Value)
+		{
+			Console.WriteLine("Not implemented 'sync' instruction");
+		}
+
+		private static readonly uint[] LwrMask = new uint[] { 0x00000000, 0xFF000000, 0xFFFF0000, 0xFFFFFF00 };
+		private static readonly int[] LwrShift = new int[] { 0, 8, 16, 24 };
+
+		private static readonly uint[] LwlMask = new uint[] { 0x00FFFFFF, 0x0000FFFF, 0x000000FF, 0x00000000 };
+		private static readonly int[] LwlShift = new int[] { 24, 16, 8, 0 };
+
+		public static uint _lwl_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
+		{
+			uint Address = (uint)(RS + Offset);
+			uint AddressAlign = (uint)Address & 3;
+			uint Value = *(uint*)CpuThreadState.GetMemoryPtr(Address & 0xFFFFFFFC);
+			return (uint)((Value << LwlShift[AddressAlign]) | (RT & LwlMask[AddressAlign]));
+		}
+
+		public static uint _lwr_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
+		{
+			uint Address = (uint)(RS + Offset);
+			uint AddressAlign = (uint)Address & 3;
+			uint Value = *(uint*)CpuThreadState.GetMemoryPtr(Address & 0xFFFFFFFC);
+			return (uint)((Value >> LwrShift[AddressAlign]) | (RT & LwrMask[AddressAlign]));
+		}
+
+		private static readonly uint[] SwlMask = new uint[] { 0xFFFFFF00, 0xFFFF0000, 0xFF000000, 0x00000000 };
+		private static readonly int[] SwlShift = new int[] { 24, 16, 8, 0 };
+
+		private static readonly uint[] SwrMask = new uint[] { 0x00000000, 0x000000FF, 0x0000FFFF, 0x00FFFFFF };
+		private static readonly int[] SwrShift = new int[] { 0, 8, 16, 24 };
+
+		public static void _swl_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
+		{
+			uint Address = (uint)(RS + Offset);
+			uint AddressAlign = (uint)Address & 3;
+			uint* AddressPointer = (uint*)CpuThreadState.GetMemoryPtr(Address & 0xFFFFFFFC);
+
+			*AddressPointer = (RT >> SwlShift[AddressAlign]) | (*AddressPointer & SwlMask[AddressAlign]);
+		}
+
+		public static void _swr_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
+		{
+			uint Address = (uint)(RS + Offset);
+			uint AddressAlign = (uint)Address & 3;
+			uint* AddressPointer = (uint*)CpuThreadState.GetMemoryPtr(Address & 0xFFFFFFFC);
+
+			*AddressPointer = (RT << SwrShift[AddressAlign]) | (*AddressPointer & SwrMask[AddressAlign]);
+		}
+
 	}
 }

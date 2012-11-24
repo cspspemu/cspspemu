@@ -44,6 +44,9 @@ namespace CSPspEmu.Core.Cpu
 		/// </summary>
 		public int LO, HI;
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public uint IC;
 
 		public bool BranchFlag;

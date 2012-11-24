@@ -1,4 +1,4 @@
-﻿#define OPTIMIZE_LWL_LWR
+﻿//#define OPTIMIZE_LWL_LWR
 
 using System;
 using System.Collections.Generic;
@@ -262,7 +262,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 								Instruction.RT = lwr_rt;
 								Instruction.RS = lwr_rs;
 								Instruction.IMM = lwr_offset;
-								CpuEmitter._lw_unaligned();
+								CpuEmitter.lw();
 								//CpuEmiterInstruction(CpuEmitter.Instruction.Value, CpuEmitter);
 								return;
 							}

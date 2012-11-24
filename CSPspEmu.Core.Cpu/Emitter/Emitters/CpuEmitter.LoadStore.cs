@@ -1,244 +1,47 @@
 ﻿using System;
 using CSPspEmu.Core.Memory;
 using SafeILGenerator;
+using SafeILGenerator.Ast;
+using SafeILGenerator.Ast.Nodes;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
 	public unsafe sealed partial class CpuEmitter
 	{
-		private void _save_pc()
-		{
-			if (!(MipsMethodEmitter.Processor.Memory is FastPspMemory))
-			{
-				MipsMethodEmitter.SavePC(PC);
-			}
-		}
-
-		private void _load_i<TType>()
-		{
-			_save_pc();
-			MipsMethodEmitter.SaveGPR(RT, () =>
-			{
-				MipsMethodEmitter._loadfromaddress<TType>(_loadd_rs_plus_imm, CanBeNull: false);
-			});
-
-		}
-
-		private void _loadd_rs_plus_imm()
-		{
-			MipsMethodEmitter.LoadGPR_Unsigned(RS);
-			SafeILGenerator.Push((int)IMM);
-			SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-		}
-
-		/*
-		private void _load_i(Action Action)
-		{
-			_save_pc();
-			MipsMethodEmiter.SaveGPR(RT, () =>
-			{
-				MipsMethodEmiter._getmemptr(() => { _loadd_rs_plus_imm(); }, CanBeNull: false);
-				Action();
-			});
-		}
-		*/
-
-		private bool MustLogWrites
-		{
-			get
-			{
-				return !(MipsMethodEmitter.Processor.Memory is FastPspMemory) && CpuProcessor.PspConfig.MustLogWrites;
-			}
-		}
-
-		private void _save_common<TType>(Action ActionLoadValue)
-		{
-			_save_pc();
-#if false
-			MipsMethodEmiter._getmemptr(() =>
-			{
-				MipsMethodEmiter.LoadGPR_Unsigned(RS);
-				SafeILGenerator.Push((int)IMM);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-			}, CanBeNull: false);
-
-			ActionLoadValue();
-			SafeILGenerator.StoreIndirect<TType>();
-#else
-			MipsMethodEmitter._savetoaddress<TType>(_loadd_rs_plus_imm, ActionLoadValue);
-#endif
-
-			if (MustLogWrites)
-			{
-				SafeILGenerator.LoadArgument0CpuThreadState();
-				MipsMethodEmitter.LoadGPR_Unsigned(RS);
-				SafeILGenerator.Push((int)IMM);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-				SafeILGenerator.Push((int)PC);
-				SafeILGenerator.Call((Action<uint, uint>)CpuThreadState.Methods.SetPCWriteAddress);
-			}
-		}
-
-		private void _save_i<TType>()
-		{
-			_save_common<TType>(() =>
-			{
-				MipsMethodEmitter.LoadGPR_Unsigned(RT);
-			});
-		}
-
+		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Load Byte/Half word/Word (Left/Right/Unsigned).
-		public void lb() { _load_i<sbyte>(); }
-		public void lbu() { _load_i<byte>(); }
-		public void lh() { _load_i<short>(); }
-		public void lhu() { _load_i<ushort>(); }
-		public void lw() { _lw_unaligned(); }
-		public void _lw_unaligned() { _load_i<int>(); }
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public void lb() { GenerateAssignGPR(RT, this.AstMemoryGetValue<sbyte>(Address_RS_IMM())); }
+		public void lbu() { GenerateAssignGPR(RT, this.AstMemoryGetValue<byte>(Address_RS_IMM())); }
+		public void lh() { GenerateAssignGPR(RT, this.AstMemoryGetValue<short>(Address_RS_IMM())); }
+		public void lhu() { GenerateAssignGPR(RT, this.AstMemoryGetValue<ushort>(Address_RS_IMM())); }
+		public void lw() { GenerateAssignGPR(RT, this.AstMemoryGetValue<int>(Address_RS_IMM())); }
 
+		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Store Byte/Half word/Word (Left/Right).
-		public void sb() { _save_i<sbyte>(); }
-		public void sh() { _save_i<short>(); }
-		public void sw() { _save_i<int>(); }
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public void sb() { this.GenerateIL(this.AstMemorySetValue<byte>(Address_RS_IMM(), GPR_u(RT))); }
+		public void sh() { this.GenerateIL(this.AstMemorySetValue<ushort>(Address_RS_IMM(), GPR_u(RT))); }
+		public void sw() { this.GenerateIL(this.AstMemorySetValue<uint>(Address_RS_IMM(), GPR_u(RT))); }
 
-		private static readonly uint[] LwrMask = new uint[] { 0x00000000, 0xFF000000, 0xFFFF0000, 0xFFFFFF00 };
-		private static readonly int[] LwrShift = new int[] { 0, 8, 16, 24 };
+		public void lwl() { this.GenerateAssignGPR(RT, this.CallStatic((Func<CpuThreadState, uint, int, uint, uint>)CpuEmitterUtils._lwl_exec, this.CpuThreadStateArgument(), GPR_u(RS), IMM_s(), GPR_u(RT))); }
+		public void lwr() { this.GenerateAssignGPR(RT, this.CallStatic((Func<CpuThreadState, uint, int, uint, uint>)CpuEmitterUtils._lwr_exec, this.CpuThreadStateArgument(), GPR_u(RS), IMM_s(), GPR_u(RT))); }
 
-		private static readonly uint[] LwlMask = new uint[] { 0x00FFFFFF, 0x0000FFFF, 0x000000FF, 0x00000000 };
-		private static readonly int[] LwlShift = new int[] { 24, 16, 8, 0 };
+		public void swl() { this.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, uint, int, uint>)CpuEmitterUtils._swl_exec, this.CpuThreadStateArgument(), GPR_u(RS), IMM_s(), GPR_u(RT)))); }
+		public void swr() { this.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, uint, int, uint>)CpuEmitterUtils._swr_exec, this.CpuThreadStateArgument(), GPR_u(RS), IMM_s(), GPR_u(RT)))); }
 
-		public static uint _lwl_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
-		{
-			uint Address = (uint)(RS + Offset);
-			uint AddressAlign = (uint)Address & 3;
-			uint Value = *(uint*)CpuThreadState.GetMemoryPtr(Address & 0xFFFFFFFC);
-			return (uint)((Value << LwlShift[AddressAlign]) | (RT & LwlMask[AddressAlign]));
-		}
-
-		public static uint _lwr_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
-		{
-			uint Address = (uint)(RS + Offset);
-			uint AddressAlign = (uint)Address & 3;
-			uint Value = *(uint*)CpuThreadState.GetMemoryPtr(Address & 0xFFFFFFFC);
-			return (uint)((Value >> LwrShift[AddressAlign]) | (RT & LwrMask[AddressAlign]));
-		}
-
-		public void lwl()
-		{
-			MipsMethodEmitter.SaveGPR(RT, () =>
-			{
-				// ((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 0) << 0) & 0x_0000_FFFF)
-				_save_pc();
-
-				//_lwl_exec
-				SafeILGenerator.LoadArgument0CpuThreadState(); // CpuThreadState
-				MipsMethodEmitter.LoadGPR_Unsigned(RS);
-				SafeILGenerator.Push((int)IMM);
-				MipsMethodEmitter.LoadGPR_Unsigned(RT);
-				MipsMethodEmitter.CallMethod((Func<CpuThreadState, uint, int, uint, uint>)CpuEmitter._lwl_exec);
-			});
-		}
-
-		public void lwr()
-		{
-			MipsMethodEmitter.SaveGPR(RT, () =>
-			{
-				// ((memory.tread!(ushort)(registers[instruction.RS] + instruction.IMM - 0) << 0) & 0x_0000_FFFF)
-				_save_pc();
-
-				SafeILGenerator.LoadArgument0CpuThreadState(); // CpuThreadState
-				MipsMethodEmitter.LoadGPR_Unsigned(RS);
-				SafeILGenerator.Push((int)IMM);
-				MipsMethodEmitter.LoadGPR_Unsigned(RT);
-				MipsMethodEmitter.CallMethod((Func<CpuThreadState, uint, int, uint, uint>)CpuEmitter._lwr_exec);
-			});	
-		}
-
-		//MipsMethodEmiter.ILGenerator.EmitWriteLine(String.Format("PC(0x{0:X}) : SW: rt={1}, rs={2}, imm={3}", PC, RT, RS, Instruction.IMM));
-
-		private static readonly uint[] SwlMask = new uint[] { 0xFFFFFF00, 0xFFFF0000, 0xFF000000, 0x00000000 };
-		private static readonly int[] SwlShift = new int[] { 24, 16, 8, 0 };
-
-		private static readonly uint[] SwrMask = new uint[]  { 0x00000000, 0x000000FF, 0x0000FFFF, 0x00FFFFFF };
-		private static readonly int[] SwrShift = new int[] { 0, 8, 16, 24 };
-
-		public static void _swl_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
-		{
-			uint Address = (uint)(RS + Offset);
-			uint AddressAlign = (uint)Address & 3;
-			uint* AddressPointer = (uint *)CpuThreadState.GetMemoryPtr(Address & 0xFFFFFFFC);
-
-			*AddressPointer = (RT >> SwlShift[AddressAlign]) | (*AddressPointer & SwlMask[AddressAlign]);
-		}
-
-		public static void _swr_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
-		{
-			uint Address = (uint)(RS + Offset);
-			uint AddressAlign = (uint)Address & 3;
-			uint* AddressPointer = (uint*)CpuThreadState.GetMemoryPtr(Address & 0xFFFFFFFC);
-
-			*AddressPointer = (RT << SwrShift[AddressAlign]) | (*AddressPointer & SwrMask[AddressAlign]);
-		}
-
-		public void swl()
-		{
-			_save_pc();
-
-			SafeILGenerator.LoadArgument0CpuThreadState(); // CpuThreadState
-			MipsMethodEmitter.LoadGPR_Unsigned(RS);
-			SafeILGenerator.Push((int)IMM);
-			MipsMethodEmitter.LoadGPR_Unsigned(RT);
-			MipsMethodEmitter.CallMethod((Action<CpuThreadState, uint, int, uint>)CpuEmitter._swl_exec);
-		}
-
-
-		public void swr()
-		{
-			_save_pc();
-
-			SafeILGenerator.LoadArgument0CpuThreadState(); // CpuThreadState
-			MipsMethodEmitter.LoadGPR_Unsigned(RS);
-			SafeILGenerator.Push((int)IMM);
-			MipsMethodEmitter.LoadGPR_Unsigned(RT);
-			MipsMethodEmitter.CallMethod((Action<CpuThreadState, uint, int, uint>)CpuEmitter._swr_exec);
-		}
-
+		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Load Linked word.
 		// Store Conditional word.
-		public void ll() {
-			throw (new NotImplementedException());
-		}
-		public void sc() {
-			throw (new NotImplementedException());
-		}
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public void ll() { throw (new NotImplementedException()); }
+		public void sc() { throw (new NotImplementedException()); }
 
+		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Load Word to Cop1 floating point.
 		// Store Word from Cop1 floating point.
-		public void lwc1()
-		{
-#if false
-			MipsMethodEmiter.SaveFPR(FT, () =>
-			{
-				_save_pc();
-				MipsMethodEmiter._getmemptr(() =>
-				{
-					MipsMethodEmiter.LoadGPR_Unsigned(RS);
-					SafeILGenerator.Push((int)IMM);
-					SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-				});
-				SafeILGenerator.LoadIndirect<float>();
-			});
-#else
-			MipsMethodEmitter.SaveFPR_I(FT, () =>
-			{
-				MipsMethodEmitter._loadfromaddress<int>(_loadd_rs_plus_imm, CanBeNull: false);
-			});
-#endif
-		}
-		public void swc1() {
-			_save_common<int>(() =>
-			{
-				MipsMethodEmitter.LoadFPR_I(FT);
-			});
-		}
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public void lwc1() { GenerateAssignFPR_I(FT, AstMemoryGetValue<int>(this.Address_RS_IMM())); }
+		public void swc1() { this.GenerateIL(AstMemorySetValue<uint>(this.Address_RS_IMM(), FPR_I(FT))); }
 	}
 }
