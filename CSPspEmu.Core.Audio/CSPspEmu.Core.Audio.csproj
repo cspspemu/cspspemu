@@ -52,6 +52,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OpenTK">
+      <HintPath>..\OpenTK.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -62,6 +65,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AudioMixer.cs" />
+    <Compile Include="Impl\Alsa\Alsa.cs" />
+    <Compile Include="Impl\Alsa\AudioAlsaImpl.cs" />
+    <Compile Include="Impl\Null\AudioImplNull.cs" />
+    <Compile Include="Impl\Openal\AudioStream.cs" />
+    <Compile Include="Impl\Openal\PspAudioOpenalImpl.cs" />
+    <Compile Include="Impl\WaveOut\PspAudioWaveOutImpl.cs" />
+    <Compile Include="Impl\WaveOut\WaveLib\FifoStream.cs" />
+    <Compile Include="Impl\WaveOut\WaveLib\WaveIn.cs" />
+    <Compile Include="Impl\WaveOut\WaveLib\WaveNative.cs" />
+    <Compile Include="Impl\WaveOut\WaveLib\WaveOut.cs" />
+    <Compile Include="Impl\WaveOut\WaveLib\WaveStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PspAudio.cs" />
     <Compile Include="PspAudioChannel.cs" />
@@ -86,6 +100,7 @@
       <Name>CSharpUtils</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

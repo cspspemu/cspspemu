@@ -81,22 +81,6 @@
     <Folder Include="Hle\Formats\audio\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CSPspEmu.Core.Audio.Impl.Alsa\CSPspEmu.Core.Audio.Impl.Alsa.csproj">
-      <Project>{6aede93d-88ab-46a7-b647-2d5500047689}</Project>
-      <Name>CSPspEmu.Core.Audio.Impl.Alsa</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Audio.Impl.Null\CSPspEmu.Core.Audio.Impl.Null.csproj">
-      <Project>{adc15ea6-1d61-4ae9-8989-9969ca2e299b}</Project>
-      <Name>CSPspEmu.Core.Audio.Impl.Null</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Audio.Impl.Openal\CSPspEmu.Core.Audio.Impl.Openal.csproj">
-      <Project>{07c4ae15-8e61-4740-b5a9-44db87cecb46}</Project>
-      <Name>CSPspEmu.Core.Audio.Impl.Openal</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Audio.Impl.WaveOut\CSPspEmu.Core.Audio.Impl.WaveOut.csproj">
-      <Project>{b23c9d87-d587-4599-a94b-0168d3aa382a}</Project>
-      <Name>CSPspEmu.Core.Audio.Impl.WaveOut</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Audio\CSPspEmu.Core.Audio.csproj">
       <Project>{3be28d69-cfb4-4c9d-8874-7cf8f520dfb0}</Project>
       <Name>CSPspEmu.Core.Audio</Name>
@@ -108,18 +92,6 @@
     <ProjectReference Include="..\CSPspEmu.Core.Crypto\CSPspEmu.Core.Crypto.csproj">
       <Project>{f4181553-01f3-425a-8ddc-927a97de6de2}</Project>
       <Name>CSPspEmu.Core.Crypto</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Gpu.Impl.Null\CSPspEmu.Core.Gpu.Impl.Null.csproj">
-      <Project>{db1b25c7-5adf-4190-8ea1-9c30f4021f94}</Project>
-      <Name>CSPspEmu.Core.Gpu.Impl.Null</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Gpu.Impl.Opengl\CSPspEmu.Core.Gpu.Impl.Opengl.csproj">
-      <Project>{72f560e3-9101-426b-b3e5-b83b78e536db}</Project>
-      <Name>CSPspEmu.Core.Gpu.Impl.Opengl</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Gpu.Impl.Soft\CSPspEmu.Core.Gpu.Impl.Soft.csproj">
-      <Project>{2d629653-a87e-4ac4-9e58-3eaa1107c456}</Project>
-      <Name>CSPspEmu.Core.Gpu.Impl.Soft</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">
       <Project>{9a30ebf3-b702-47d9-aafc-e3e02b410dad}</Project>

@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;OPENTK</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -29,8 +29,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants>OPENTK</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -77,6 +76,23 @@
     <Compile Include="GpuDisplayList.cs" />
     <Compile Include="GpuOpCodesNotImplementedAttribute.cs" />
     <Compile Include="GpuProcessor.cs" />
+    <Compile Include="Impl\Null\GpuImplNull.cs" />
+    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.cs" />
+    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.StateClear.cs" />
+    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.Utils.cs" />
+    <Compile Include="Impl\OpenglEs\OpenglGpuImpl.ConversionTables.cs" />
+    <Compile Include="Impl\OpenglEs\TextureCacheOpengles.cs" />
+    <Compile Include="Impl\Opengl\OpenglGpuImpl.ConversionTables.cs" />
+    <Compile Include="Impl\Opengl\OpenglGpuImpl.cs" />
+    <Compile Include="Impl\Opengl\OpenglGpuImpl.Init.cs" />
+    <Compile Include="Impl\Opengl\OpenglGpuImpl.StateClear.cs" />
+    <Compile Include="Impl\Opengl\OpenglGpuImpl.StateCommon.cs" />
+    <Compile Include="Impl\Opengl\OpenglGpuImpl.StateDraw.cs" />
+    <Compile Include="Impl\Opengl\OpenglGpuImpl.StateMatrix.cs" />
+    <Compile Include="Impl\Opengl\OpenglGpuImpl.Transfer.cs" />
+    <Compile Include="Impl\Opengl\OpenglGpuImpl.Utils.cs" />
+    <Compile Include="Impl\Opengl\TextureCacheOpengl.cs" />
+    <Compile Include="Impl\Soft\GpuImplSoft.cs" />
     <Compile Include="MessagePipe.cs" />
     <Compile Include="PspGeCallbackData.cs" />
     <Compile Include="Run\GpuDisplayListRunner.BoundingBox.cs" />
@@ -141,6 +157,10 @@
       <Project>{288AF89E-B41A-4253-A8F7-43D1371516E9}</Project>
       <Name>CSPspEmu.Hle</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GLES\GLES.csproj">
+      <Project>{b03b6268-3264-4e2b-bdd3-0252909c11ce}</Project>
+      <Name>GLES</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
       <Project>{9b217880-48ae-43b6-ae1f-dc732fccbc7a}</Project>
       <Name>CSharpUtils.Drawing</Name>
@@ -160,6 +180,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Run\GpuDisplayListRunner.Transfer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Impl\OpenglEs\shader.fragment" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Impl\OpenglEs\shader.vertex" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
