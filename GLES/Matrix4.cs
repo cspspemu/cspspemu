@@ -70,5 +70,61 @@ namespace GLES
 
 			return Matrix;
 		}
+
+		public float this[int Row, int Column]
+		{
+			get
+			{
+				fixed (float* Values = this.Values)
+				{
+					return Values[Column * 4 + Row];
+				}
+			}
+			set
+			{
+				fixed (float* Values = this.Values)
+				{
+					Values[Column * 4 + Row] = value;
+				}
+			}
+		}
+
+		static public Matrix4 Multiply(Matrix4 Left, Matrix4 Right)
+		{
+			var New = Matrix4.Identity;
+			for (int i = 0; i < 4; i++)
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					float accum = 0;
+					for (int k = 0; k < 4; k++)
+					{
+						accum += Left[j, k] * Right[k, j];
+					}
+					New[i, j] = accum;
+				}
+			}
+			return New;
+		}
+
+		public Matrix4 Translate(float X, float Y, int Z)
+		{
+			return Multiply(this, Matrix4.Create(new float[] {
+				1, 0, 0, X,
+				0, 1, 0, Y,
+				0, 0, 1, Z,
+				0, 0, 0, 1,
+			}));
+		}
+
+		public Matrix4 Scale(float X, float Y, int Z)
+		{
+			return Multiply(this, Matrix4.Create(new float[] {
+				X, 0, 0, 0,
+				0, Y, 0, 0,
+				0, 0, Z, 0,
+				0, 0, 0, 1,
+			}));
+		}
 	}
 }

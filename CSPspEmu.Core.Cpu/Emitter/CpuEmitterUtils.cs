@@ -42,7 +42,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 			if (Left == int.MinValue && Right == -1)
 			{
-				CpuThreadState.LO = 0;
+				CpuThreadState.LO = int.MinValue;
 				CpuThreadState.HI = 0;
 			}
 			else

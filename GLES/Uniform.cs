@@ -53,7 +53,12 @@ namespace GLES
 
 		public void SetBool(bool Value)
 		{
-			GL.glUniform1i(this.Index, Value ? 1 : 0);
+			SetInt(Value ? 1 : 0);
+		}
+
+		public void SetInt(int Value)
+		{
+			GL.glUniform1i(this.Index, Value);
 		}
 	}
 }

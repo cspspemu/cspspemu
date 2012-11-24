@@ -46,6 +46,7 @@
     <Compile Include="GpuImplOpenglEs.Utils.cs" />
     <Compile Include="OpenglGpuImpl.ConversionTables.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TextureCacheOpengles.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">

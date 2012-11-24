@@ -9,46 +9,33 @@ using CSPspEmu.Core.Gpu.State.SubStates;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
 
-#if OPENTK
-using OpenTK.Graphics.OpenGL;
-#else
-using MiniGL;
-#endif
-
-namespace CSPspEmu.Core.Gpu.Impl.Opengl
+namespace CSPspEmu.Core.Gpu
 {
-	public sealed unsafe class Texture : IDisposable
+	public unsafe abstract class Texture<TGpuImpl> : IDisposable
 	{
-		public int TextureId { get; private set; }
-		public ulong TextureHash
-		{
-			get
-			{
-				return TextureCacheKey.TextureHash;
-			}
-		}
+		//public int TextureId { get; private set; }
+		public ulong TextureHash { get { return TextureCacheKey.TextureHash; } }
 
-		public OpenglGpuImpl OpenglGpuImpl;
+		public TGpuImpl GpuImpl;
 		public DateTime RecheckTimestamp;
 		public TextureCacheKey TextureCacheKey;
 		public int Width;
 		public int Height;
+		protected OutputPixel[] Data;
 
-		public Texture(OpenglGpuImpl OpenglGpuImpl)
+		public Texture()
 		{
-			this.OpenglGpuImpl = OpenglGpuImpl;
-			OpenglGpuImpl.GraphicsContext.MakeCurrent(OpenglGpuImpl.WindowInfo);
+		}
 
-			//lock (OpenglGpuImpl.GpuLock)
-			{
-				TextureId = GL.GenTexture();
-				var GlError = GL.GetError();
-				//Console.Error.WriteLine("GenTexture: {0} : Thread : {1} <- {2}", GlError, Thread.CurrentThread.ManagedThreadId, TextureId);
-				if (GlError != ErrorCode.NoError)
-				{
-					//TextureId = 0;
-				}
-			}
+		public Texture<TGpuImpl> Init(TGpuImpl GpuImpl)
+		{
+			this.GpuImpl = GpuImpl;
+			Init();
+			return this;
+		}
+
+		protected virtual void Init()
+		{
 		}
 
 		public void Save(string File)
@@ -70,9 +57,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			Bitmap.Save(File);
 		}
 
-		OutputPixel[] Data;
-
-		public Texture Load(string FileName)
+		public Texture<TGpuImpl> Load(string FileName)
 		{
 			var Bitmap = new Bitmap(Image.FromFile(FileName));
 			Bitmap.LockBitsUnlock(System.Drawing.Imaging.PixelFormat.Format32bppArgb, (BitmapData) =>
@@ -82,71 +67,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			return this;
 		}
 
-		public bool SetData(OutputPixel *Pixels, int TextureWidth, int TextureHeight)
-		{
-			//lock (OpenglGpuImpl.GpuLock)
-			{
-				//if (TextureId != 0)
-				{
-					this.Width = TextureWidth;
-					this.Height = TextureHeight;
-
-					Data = new OutputPixel[TextureWidth * TextureHeight];
-					fixed (OutputPixel* DataPtr = Data)
-					{
-						PointerUtils.Memcpy((byte*)DataPtr, (byte*)Pixels, TextureWidth * TextureHeight * sizeof(OutputPixel));
-					}
-
-					Bind();
-					GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, TextureWidth, TextureHeight, 0, PixelFormat.Rgba, PixelType.UnsignedInt8888Reversed, new IntPtr(Pixels));
-					var GlError = GL.GetError();
-					GL.Flush();
-
-					if (GlError != ErrorCode.NoError)
-					{
-						Console.Error.WriteLine("########## ERROR: TexImage2D: {0} : TexId:{1} : {2} : {3}x{4}", GlError, TextureId, new IntPtr(Pixels), TextureWidth, TextureHeight);
-						TextureId = 0;
-						Bind();
-						return false;
-					}
-				}
-			}
-			return true;
-
-			//glTexEnvf(GL_TEXTURE_ENV, GL_RGB_SCALE, 1.0); // 2.0 in scale_2x
-			//GL.TexEnv(TextureEnvTarget.TextureEnv, GL_TEXTURE_ENV_MODE, TextureEnvModeTranslate[state.texture.effect]);
-		}
-
-		public void Bind()
-		{
-			//lock (OpenglGpuImpl.GpuLock)
-			{
-				if (TextureId != 0)
-				{
-					//GL.Enable(EnableCap.Texture2D);
-					GL.BindTexture(TextureTarget.Texture2D, TextureId);
-
-					var GlError = GL.GetError();
-					if (GlError != ErrorCode.NoError)
-					{
-						//Console.Error.WriteLine("Bind: {0} : {1}", GlError, TextureId);
-					}
-				}
-				else
-				{
-					//GL.Disable(EnableCap.Texture2D);
-				}
-			}
-		}
-
-		public void Dispose()
-		{
-			if (TextureId != 0)
-			{
-				GL.DeleteTexture(TextureId);
-				TextureId = 0;
-			}
-		}
+		public abstract bool SetData(OutputPixel* Pixels, int TextureWidth, int TextureHeight);
+		public abstract void Bind();
+		public abstract void Dispose();
 
 		public override string ToString()
 		{
@@ -178,30 +101,31 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		}
 	}
 
-	public sealed unsafe class TextureCache : PspEmulatorComponent
+	public unsafe class TextureCache<TGpuImpl, TTexture> where TTexture : Texture<TGpuImpl>, new()
 	{
-		[Inject]
 		PspMemory PspMemory;
 		//Dictionary<TextureCacheKey, Texture> Cache = new Dictionary<TextureCacheKey, Texture>();
-		Dictionary<ulong, Texture> Cache = new Dictionary<ulong, Texture>();
-		public OpenglGpuImpl OpenglGpuImpl;
+		Dictionary<ulong, TTexture> Cache = new Dictionary<ulong, TTexture>();
+		public TGpuImpl GpuImpl;
 
 		byte[] SwizzlingBuffer = new byte[4 * 1024 * 1024];
 		OutputPixel[] DecodedTextureBuffer = new OutputPixel[1024 * 1024];
 
-		public override void InitializeComponent()
+		public TextureCache(PspMemory PspMemory, TGpuImpl GpuImpl)
 		{
+			this.PspMemory = PspMemory;
+			this.GpuImpl = GpuImpl;
 		}
 
-		Texture InvalidTexture;
+		TTexture InvalidTexture;
 
-		public Texture Get(GpuStateStruct *GpuState)
+		public TTexture Get(GpuStateStruct* GpuState)
 		{
 			var TextureMappingState = &GpuState->TextureMappingState;
 			var ClutState = &TextureMappingState->ClutState;
 			var TextureState = &TextureMappingState->TextureState;
 
-			Texture Texture;
+			TTexture Texture;
 			//GC.Collect();
 			bool Swizzled = TextureState->Swizzled;
 			uint TextureAddress = TextureState->Mipmap0.Address;
@@ -260,7 +184,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					Console.Error.WriteLine("Invalid TEXTURE!");
 					if (InvalidTexture == null)
 					{
-						InvalidTexture = new Texture(OpenglGpuImpl);
+						InvalidTexture = new TTexture();
+						InvalidTexture.Init(GpuImpl);
 
 						int ITWidth = 2, ITHeight = 2;
 						int ITWidthHeight = ITWidth * ITHeight;
@@ -307,7 +232,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 					Console.Error.WriteLine("UPDATE_TEXTURE(TEX={0},CLUT={1}:{2}:{3}:{4}:0x{5:X},SIZE={6}x{7},{8},Swizzled={9})", TextureFormat, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask, BufferWidth, Height, BufferWidth, Swizzled);
 #endif
-					Texture = new Texture(OpenglGpuImpl);
+					Texture = new TTexture();
+					Texture.Init(GpuImpl);
 					Texture.TextureCacheKey = TextureCacheKey;
 					{
 						//int TextureWidth = Math.Max(BufferWidth, Height);

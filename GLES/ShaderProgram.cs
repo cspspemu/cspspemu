@@ -102,7 +102,11 @@ namespace GLES
 		{
 			if (!this.Linked) throw(new Exception("Can't find uniforms until linked"));
 			int location = GL.glGetUniformLocation(this.Index, Name);
-			if (location < 0) throw(new Exception(String.Format("Can't find uniform '{0}'", Name)));
+			if (location < 0)
+			{
+				Console.Error.WriteLine("Can't find uniform '{0}'", Name);
+				//throw (new Exception(String.Format("Can't find uniform '{0}'", Name)));
+			}
 			//Console.WriteLine(location);
 			return new Uniform(location);
 		}

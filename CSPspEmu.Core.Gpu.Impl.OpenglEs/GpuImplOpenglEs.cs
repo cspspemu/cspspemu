@@ -28,11 +28,28 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 		Uniform projectionMatrix;
 		Uniform viewMatrix;
 		Uniform worldMatrix;
+		Uniform textureMatrix;
+
 		Uniform fColor;
 		Uniform u_has_vertex_color;
 
-		VertexAttribLocation vColorLocation;
-		VertexAttribLocation vPositionLocation;
+		Uniform u_has_texture;
+		Uniform u_texture;
+		Uniform u_texture_effect;
+
+		VertexAttribLocation aColorLocation;
+		VertexAttribLocation aPositionLocation;
+		VertexAttribLocation aTexCoord;
+
+		TextureCacheOpengles TextureCache;
+		TextureOpengles CurrentTexture;
+
+		public override void InitializeComponent()
+		{
+			base.InitializeComponent();
+
+			this.TextureCache = new TextureCacheOpengles(Memory, this);
+		}
 
 		public override void InitSynchronizedOnce()
 		{
@@ -50,16 +67,26 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 			{
 				this.ShaderProgram = ShaderProgram.CreateProgram(VertexProgram, FragmentProgram);
 				{
-					this.vColorLocation = this.ShaderProgram.GetVertexAttribLocation("a_color0");
-					this.vPositionLocation = this.ShaderProgram.GetVertexAttribLocation("a_position");
+					this.aColorLocation = this.ShaderProgram.GetVertexAttribLocation("a_color0");
+					this.aPositionLocation = this.ShaderProgram.GetVertexAttribLocation("a_position");
+					this.aTexCoord = this.ShaderProgram.GetVertexAttribLocation("a_texCoord");
 				}
 				this.ShaderProgram.Link();
 				{
+					// Matrices
 					this.projectionMatrix = this.ShaderProgram.GetUniformLocation("projectionMatrix");
 					this.viewMatrix = this.ShaderProgram.GetUniformLocation("viewMatrix");
 					this.worldMatrix = this.ShaderProgram.GetUniformLocation("worldMatrix");
+					this.textureMatrix = this.ShaderProgram.GetUniformLocation("textureMatrix");
+
+					// Colors
 					this.fColor = this.ShaderProgram.GetUniformLocation("u_color");
 					this.u_has_vertex_color = this.ShaderProgram.GetUniformLocation("u_has_vertex_color");
+
+					// Textures
+					this.u_has_texture = this.ShaderProgram.GetUniformLocation("u_has_texture");
+					this.u_texture = this.ShaderProgram.GetUniformLocation("u_texture");
+					this.u_texture_effect = this.ShaderProgram.GetUniformLocation("u_texture_effect");
 				}
 			}
 
@@ -75,6 +102,7 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 		public override void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
 		{
 			var VertexType = GpuState->VertexState.Type;
+			var TextureState = &GpuState->TextureMappingState.TextureState;
 
 			var VertexReader = new VertexReader();
 
@@ -91,12 +119,21 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 				projectionMatrix.SetMatrix4(Matrix4.Ortho(0, 480, 272, 0, 0, -0xFFFF));
 				worldMatrix.SetMatrix4(Matrix4.Identity);
 				viewMatrix.SetMatrix4(Matrix4.Identity);
+				textureMatrix.SetMatrix4(Matrix4.Identity);
 			}
 			else
 			{
 				projectionMatrix.SetMatrix4(GpuState->VertexState.ProjectionMatrix.Values);
 				worldMatrix.SetMatrix4(GpuState->VertexState.WorldMatrix.Values);
 				viewMatrix.SetMatrix4(GpuState->VertexState.ViewMatrix.Values);
+
+				textureMatrix.SetMatrix4(Matrix4.Identity);
+				/*
+				textureMatrix.SetMatrix4(Matrix4.Identity
+					.Translate(TextureState->OffsetU, TextureState->OffsetV, 0)
+					.Scale(TextureState->ScaleU, TextureState->ScaleV, 1)
+				);
+				*/
 			}
 
 			if (GpuState->ClearingMode)
@@ -125,6 +162,23 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 						//this.fColor.SetVec4(VertexInfo.Color.X, VertexInfo.Color.Y, VertexInfo.Color.Z, VertexInfo.Color.W);
 					}
 				}
+			}
+
+			if (GlEnableDisable(GL.GL_TEXTURE_2D, GpuState->TextureMappingState.Enabled))
+			{
+				GL.glActiveTexture(GL.GL_TEXTURE0);
+				CurrentTexture = TextureCache.Get(GpuState);
+				CurrentTexture.Bind();
+				//CurrentTexture.Save("c:/temp/" + CurrentTexture.TextureHash + ".png");
+
+				GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, (TextureState->FilterMinification == TextureFilter.Linear) ? GL.GL_LINEAR : GL.GL_NEAREST);
+				GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, (TextureState->FilterMagnification == TextureFilter.Linear) ? GL.GL_LINEAR : GL.GL_NEAREST);
+
+				GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, (TextureState->WrapU == WrapMode.Repeat) ? GL.GL_REPEAT : GL.GL_CLAMP_TO_EDGE);
+				GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, (TextureState->WrapV == WrapMode.Repeat) ? GL.GL_REPEAT : GL.GL_CLAMP_TO_EDGE);
+
+				//Console.WriteLine("{0}", TextureState->Effect);
+				//GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvModeTranslate[(int)TextureState->Effect]);
 			}
 
 			fixed (VertexInfo* VertexInfoBufferPtr = VertexInfoBuffer)
@@ -204,18 +258,36 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 
 				//if (PrimitiveType == GuPrimitiveType.LineStrip)
 				{
-					vPositionLocation.Pointer(3, GL.GL_FLOAT, false, sizeof(VertexInfo), ((byte*)VertexInfoBufferPtr) + (int)Marshal.OffsetOf(typeof(VertexInfo), "Position"));
-					vPositionLocation.Enable();
+					aPositionLocation.Pointer(3, GL.GL_FLOAT, false, sizeof(VertexInfo), ((byte*)VertexInfoBufferPtr) + (int)Marshal.OffsetOf(typeof(VertexInfo), "Position"));
+					aPositionLocation.Enable();
+
 					if (VertexType.ColorSize != 0)
 					{
-						vColorLocation.Pointer(4, GL.GL_FLOAT, false, sizeof(VertexInfo), ((byte*)VertexInfoBufferPtr) + (int)Marshal.OffsetOf(typeof(VertexInfo), "Color"));
-						vColorLocation.Enable();
+						aColorLocation.Pointer(4, GL.GL_FLOAT, false, sizeof(VertexInfo), ((byte*)VertexInfoBufferPtr) + (int)Marshal.OffsetOf(typeof(VertexInfo), "Color"));
+						aColorLocation.Enable();
 						u_has_vertex_color.SetBool(true);
 					}
 					else
 					{
+						aColorLocation.Disable();
 						u_has_vertex_color.SetBool(false);
 					}
+
+
+					if (GpuState->TextureMappingState.Enabled)
+					{
+						aTexCoord.Pointer(3, GL.GL_FLOAT, false, sizeof(VertexInfo), ((byte*)VertexInfoBufferPtr) + (int)Marshal.OffsetOf(typeof(VertexInfo), "Texture"));
+						aTexCoord.Enable();
+						u_has_texture.SetBool(true);
+						u_texture.SetInt(0);
+						u_texture_effect.SetInt((int)TextureState->Effect);
+					}
+					else
+					{
+						aTexCoord.Disable();
+						u_has_texture.SetBool(false);
+					}
+
 					GL.glDrawArrays(PrimitiveTypeTranslate[(int)PrimitiveType], 0, VertexCount);
 				}
 

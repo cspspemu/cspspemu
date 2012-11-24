@@ -48,13 +48,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
-		[Inject]
-		private TextureCache TextureCache;
+		private TextureCacheOpengl TextureCache;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		private Texture CurrentTexture;
+		private TextureOpengl CurrentTexture;
 
 		/// <summary>
 		/// 
@@ -62,8 +61,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		public override void InitializeComponent()
 		{
 			this.Config = PspEmulatorContext.PspConfig;
-			this.TextureCache.OpenglGpuImpl = this;
+			this.TextureCache.GpuImpl = this;
 			this.VertexReader = new VertexReader();
+			this.TextureCache = new TextureCacheOpengl(Memory, this);
 		}
 
 		//public static object GpuLock = new object();

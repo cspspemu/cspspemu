@@ -687,7 +687,7 @@ namespace GLES
 			return null;
 		}
 
-		static public void glEnableDisable(GLenum state, bool enable)
+		static public bool glEnableDisable(GLenum state, bool enable)
 		{
 			if (enable)
 			{
@@ -697,6 +697,20 @@ namespace GLES
 			{
 				GL.glDisable(state);
 			}
+
+			return enable;
+		}
+
+		static public void glDeleteTexture(GLuint texture)
+		{
+			glDeleteTextures(1, &texture);
+		}
+
+		static public GLuint glGenTexture()
+		{
+			GLuint texture = 0;
+			glGenTextures(1, &texture);
+			return texture;
 		}
 	}
 }
