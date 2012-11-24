@@ -78,72 +78,26 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// DIVide (Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void div() { MipsMethodEmitter.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._div_impl, this.GpuThreadStateArgument(), GPR_s(RS), GPR_s(RT)))); }
-		public void divu() { MipsMethodEmitter.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._divu_impl, this.GpuThreadStateArgument(), GPR_u(RS), GPR_u(RT)))); }
+		public void div() { MipsMethodEmitter.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._div_impl, this.CpuThreadStateArgument(), GPR_s(RS), GPR_s(RT)))); }
+		public void divu() { MipsMethodEmitter.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._divu_impl, this.CpuThreadStateArgument(), GPR_u(RS), GPR_u(RT)))); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		// MULTiply (Unsigned).
+		// MULTiply (ADD/SUBstract) (Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-
-		public void _mult_common_op<TConvertType>(bool Signed)
-		{
-			MipsMethodEmitter.LoadGPR_Signed(RS);
-			//if (!Signed) SafeILGenerator.ConvertTo<uint>();
-			SafeILGenerator.ConvertTo<TConvertType>();
-			MipsMethodEmitter.LoadGPR_Signed(RT);
-			//if (!Signed) SafeILGenerator.ConvertTo<uint>();
-			SafeILGenerator.ConvertTo<TConvertType>();
-			SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-		}
-
-		public void _mult_common_op<TConvertType>(SafeBinaryOperator Operator)
-		{
-			MipsMethodEmitter.SaveHI_LO(() =>
-			{
-				MipsMethodEmitter.LoadHI_LO();
-				SafeILGenerator.ConvertTo<TConvertType>();
-				_mult_common_op<TConvertType>(Signed: true);
-				SafeILGenerator.BinaryOperation(Operator);
-			});
-		}
-		public void _mult_common<TConvertType>(bool Signed)
-		{
-			MipsMethodEmitter.SaveHI_LO(() =>
-			{
-				_mult_common_op<TConvertType>(Signed);
-			});
-		}
-
-		public void mult() { _mult_common<long>(Signed : true); }
-		public void multu() {
-#if true
-			_mult_common<ulong>(Signed: false);
-#else
-			MipsMethodEmiter.SaveHI_LO(() =>
-			{
-				MipsMethodEmiter.LoadGPR_Signed(RS);
-				MipsMethodEmiter.LoadGPR_Signed(RT);
-				SafeILGenerator.Call((Func<uint, uint, ulong>)CpuEmitter._multu);
-				//_mult_common_op<TConvertType>(Signed);
-			});
-#endif
-		}
-
-		/////////////////////////////////////////////////////////////////////////////////////////////////
-		// Multiply ADD/SUBstract (Unsigned).
-		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void madd() { _mult_common_op<long>(SafeBinaryOperator.AdditionSigned); }
-		public void maddu() { _mult_common_op<ulong>(SafeBinaryOperator.AdditionSigned); }
-		public void msub() { _mult_common_op<long>(SafeBinaryOperator.SubstractionSigned); }
-		public void msubu() { _mult_common_op<ulong>(SafeBinaryOperator.SubstractionSigned); }
+		public void mult() { GenerateAssignHILO(this.GPR_sl(RS) * this.GPR_sl(RT)); }
+		public void multu() { GenerateAssignHILO(this.GPR_ul(RS) * this.GPR_ul(RT)); }
+		public void madd() { GenerateAssignHILO(HILO_sl() + this.GPR_sl(RS) * this.GPR_sl(RT)); }
+		public void maddu() { GenerateAssignHILO(HILO_ul() + this.GPR_ul(RS) * this.GPR_ul(RT)); }
+		public void msub() { GenerateAssignHILO(HILO_sl() - this.GPR_sl(RS) * this.GPR_sl(RT)); }
+		public void msubu() { GenerateAssignHILO(HILO_ul() - this.GPR_ul(RS) * this.GPR_ul(RT)); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move To/From HI/LO.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void mfhi() { MipsMethodEmitter.SaveGPR(RD, () => { MipsMethodEmitter.LoadHI(); }); }
-		public void mflo() { MipsMethodEmitter.SaveGPR(RD, () => { MipsMethodEmitter.LoadLO(); }); }
-		public void mthi() { MipsMethodEmitter.SaveHI(() => { MipsMethodEmitter.LoadGPR_Unsigned(RS); }); }
-		public void mtlo() { MipsMethodEmitter.SaveLO(() => { MipsMethodEmitter.LoadGPR_Unsigned(RS); }); }
+		public void mfhi() { GenerateAssignGPR(RD, this.Cast<uint>(REG("HI"))); }
+		public void mflo() { GenerateAssignGPR(RD, this.Cast<uint>(REG("LO"))); }
+		public void mthi() { GenerateAssignREG(REG("HI"), GPR_s(RS)); }
+		public void mtlo() { GenerateAssignREG(REG("LO"), GPR_s(RS)); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move if Zero/Non zero.
@@ -155,19 +109,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// EXTract/INSert
 		/// </summary>
 		public void ext() { GenerateAssignGPR(RT, this.CallStatic((Func<uint, int, int, uint>)CpuEmitterUtils._ext_impl, GPR_u(RS), this.Immediate((int)Instruction.POS), this.Immediate((int)Instruction.SIZE_E))); }
-		public void ins()
-		{
-			// @CHECK!!
-			GenerateAssignGPR(RT, this.CallStatic((Func<uint, uint, int, int, uint>)CpuEmitterUtils._ins_impl, GPR_u(RT), GPR_u(RS), this.Immediate((int)Instruction.POS), this.Immediate((int)Instruction.SIZE_E))); 
-			//MipsMethodEmitter.SaveGPR(RT, () =>
-			//{
-			//	MipsMethodEmitter.LoadGPR_Unsigned(RT);
-			//	MipsMethodEmitter.LoadGPR_Unsigned(RS);
-			//	SafeILGenerator.Push((int)Instruction.POS);
-			//	SafeILGenerator.Push((int)Instruction.SIZE_I);
-			//	SafeILGenerator.Call((Func<uint, uint, int, int, uint>)CpuEmitter._ins_impl);
-			//});
-		}
+		public void ins() { GenerateAssignGPR(RT, this.CallStatic((Func<uint, uint, int, int, uint>)CpuEmitterUtils._ins_impl, GPR_u(RT), GPR_u(RS), this.Immediate((int)Instruction.POS), this.Immediate((int)Instruction.SIZE_E)));  }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Count Leading Ones/Zeros in word.

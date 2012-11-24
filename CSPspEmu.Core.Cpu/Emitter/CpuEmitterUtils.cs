@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
-	public class CpuEmitterUtils
+	public unsafe class CpuEmitterUtils
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static uint _rotr_impl(uint Value, int Offset) { return (Value >> Offset) | (Value << (32 - Offset)); }
@@ -68,13 +68,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static ulong _multu(uint Left, uint Right)
-		{
-			return unchecked((ulong)Left * (ulong)Right);
-		}
-
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static uint _ext_impl(uint Data, int Pos, int Size) { return BitUtils.Extract(Data, Pos, Size); }
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -112,6 +105,82 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				((v & 0x0000FF00) << 8) |
 				((v & 0x000000FF) << 24)
 			);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void _assign_hi_lo_impl(CpuThreadState CpuThreadState, long Value)
+		{
+			fixed (int* LOPtr = &CpuThreadState.LO)
+			{
+				*(long*)LOPtr = Value;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static long _get_hi_lo_impl(CpuThreadState CpuThreadState)
+		{
+			fixed (int* LOPtr = &CpuThreadState.LO)
+			{
+				return *(long*)LOPtr;
+			}
+		}
+
+		public static int _cvt_w_s_impl(CpuThreadState CpuThreadState, float FS)
+		{
+			//Console.WriteLine("_cvt_w_s_impl: {0}", CpuThreadState.FPR[FS]);
+			switch (CpuThreadState.Fcr31.RM)
+			{
+				case CpuThreadState.FCR31.TypeEnum.Rint: return (int)MathFloat.Rint(FS);
+				case CpuThreadState.FCR31.TypeEnum.Cast: return (int)FS;
+				case CpuThreadState.FCR31.TypeEnum.Ceil: return (int)MathFloat.Ceil(FS);
+				case CpuThreadState.FCR31.TypeEnum.Floor: return (int)MathFloat.Floor(FS);
+			}
+
+			throw(new InvalidCastException("RM has an invalid value!!"));
+			//case CpuThreadState.FCR31.TypeEnum.Floor: CpuThreadState.FPR_I[FD] = (int)MathFloat.Floor(CpuThreadState.FPR[FS]); break;
+		}
+
+		public static void _cfc1_impl(CpuThreadState CpuThreadState, int RD, int RT)
+		{
+			switch (RD)
+			{
+				case 0: // readonly?
+					throw (new NotImplementedException());
+				case 31:
+					CpuThreadState.GPR[RT] = (int)CpuThreadState.Fcr31.Value;
+					break;
+				default: throw (new Exception(String.Format("Unsupported CFC1(%d)", RD)));
+			}
+		}
+
+		public static void _ctc1_impl(CpuThreadState CpuThreadState, int RD, int RT)
+		{
+			switch (RD)
+			{
+				case 31:
+					CpuThreadState.Fcr31.Value = (uint)CpuThreadState.GPR[RT];
+					break;
+				default: throw (new Exception(String.Format("Unsupported CFC1(%d)", RD)));
+			}
+		}
+
+		public static void _comp_impl(CpuThreadState CpuThreadState, float s, float t, bool fc_unordererd, bool fc_equal, bool fc_less, bool fc_inv_qnan)
+		{
+			if (float.IsNaN(s) || float.IsNaN(t))
+			{
+				CpuThreadState.Fcr31.CC = fc_unordererd;
+			}
+			else
+			{
+				//bool cc = false;
+				//if (fc_equal) cc = cc || (s == t);
+				//if (fc_less) cc = cc || (s < t);
+				//return cc;
+				bool equal = (fc_equal) && (s == t);
+				bool less = (fc_less) && (s < t);
+
+				CpuThreadState.Fcr31.CC = (less || equal);
+			}
 		}
 	}
 }

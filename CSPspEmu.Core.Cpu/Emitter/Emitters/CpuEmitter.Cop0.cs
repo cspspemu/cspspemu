@@ -17,14 +17,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			Console.WriteLine("Unimplemented ctc0 : {0}, {1}", RT, RD);
 		}
 
+		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move (From/To) Cop0
-		public void mfc0() {
-			//Console.WriteLine("mfc0 {0}, {1}", RT, RD);
-			MipsMethodEmitter.SaveGPR(RT, () => { MipsMethodEmitter.LoadC0R(RD); });
-		}
-		public void mtc0() {
-			//Console.WriteLine("mtc0 {0}, {1}", RD, RT);
-			MipsMethodEmitter.SaveC0R(RD, () => { MipsMethodEmitter.LoadGPR_Unsigned(RT); });
-		}
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public void mfc0() { this.GenerateAssignGPR(RT, this.REG("C0R" + RD)); }
+		public void mtc0() { this.GenerateAssignREG(this.REG("C0R" + RD), GPR(RT)); }
 	}
 }

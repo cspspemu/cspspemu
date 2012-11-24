@@ -316,7 +316,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			// Optimize
 			AstNodeStm = (AstNodeStm)AstOptimizer.Optimize(AstNodeStm);
 
-			//Console.WriteLine("{0}", GeneratorCSharp.Reset().Generate(AstNodeStm).ToString());
+			Console.WriteLine("{0}", GeneratorCSharp.Reset().Generate(AstNodeStm).ToString());
 
 			new GeneratorIL(DynamicMethod, SafeILGenerator.__ILGenerator).Generate(AstNodeStm);
 		}

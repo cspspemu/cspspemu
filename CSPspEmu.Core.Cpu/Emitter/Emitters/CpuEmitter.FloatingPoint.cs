@@ -1,175 +1,54 @@
 ﻿using System;
 using CSharpUtils;
 using SafeILGenerator;
+using SafeILGenerator.Ast;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
 	public sealed partial class CpuEmitter
 	{
-		/*
-		public static float _mul_s_impl(float a, float b)
-		{
-			//Console.WriteLine("MUL: {0} * {1} = {2}", a, b, a * b);
-			return a * b;
-		}
-
-		public static float _div_s_impl(CpuThreadState CpuThreadState, float a, float b)
-		{
-			//Console.WriteLine("{0}", CpuThreadState.FPR[2]);
-			//Console.WriteLine("DIV: {0} / {1} = {2}", a, b, a / b);
-			return a / b;
-		}
-		*/
-
+		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Binary Floating Point Unit Operations
-		public void add_s() { MipsMethodEmitter.OP_3REG_F(FD, FS, FT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); }); }
-		public void sub_s() { MipsMethodEmitter.OP_3REG_F(FD, FS, FT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned); }); }
-		public void mul_s() { MipsMethodEmitter.OP_3REG_F(FD, FS, FT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned); }); }
-		public void div_s() { MipsMethodEmitter.OP_3REG_F(FD, FS, FT, () => { SafeILGenerator.BinaryOperation(SafeBinaryOperator.DivideSigned); }); }
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public void add_s() { this.GenerateAssignFPR_F(FD, FPR(FS) + FPR(FT)); }
+		public void sub_s() { this.GenerateAssignFPR_F(FD, FPR(FS) - FPR(FT)); }
+		public void mul_s() { this.GenerateAssignFPR_F(FD, FPR(FS) * FPR(FT)); }
+		public void div_s() { this.GenerateAssignFPR_F(FD, FPR(FS) / FPR(FT)); }
 
+		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Unary Floating Point Unit Operations
-		public void sqrt_s() { MipsMethodEmitter.OP_2REG_F(FD, FS, () => { SafeILGenerator.Call((Func<float, float>)MathFloat.Sqrt); }); }
-		public void abs_s() { MipsMethodEmitter.OP_2REG_F(FD, FS, () => { SafeILGenerator.Call((Func<float, float>)MathFloat.Abs); }); }
-		public void mov_s() { MipsMethodEmitter.OP_2REG_F(FD, FS, () => { }); }
-		public void neg_s() { MipsMethodEmitter.OP_2REG_F(FD, FS, () => { SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate); }); }
-		public void trunc_w_s()
-		{
-			MipsMethodEmitter.SaveFPR_I(FD, () =>
-			{
-				MipsMethodEmitter.LoadFPR(FS);
-				MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Cast);
-			});
-		}
-		public void round_w_s()
-		{
-			MipsMethodEmitter.SaveFPR_I(FD, () =>
-			{
-				MipsMethodEmitter.LoadFPR(FS);
-				MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Round);
-			});
-		}
-		public void ceil_w_s()
-		{
-			MipsMethodEmitter.SaveFPR_I(FD, () =>
-			{
-				MipsMethodEmitter.LoadFPR(FS);
-				MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Ceil);
-			});
-		}
-		public void floor_w_s()
-		{
-			MipsMethodEmitter.SaveFPR_I(FD, () =>
-			{
-				MipsMethodEmitter.LoadFPR(FS);
-				MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Floor);
-			});
-		}
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public void sqrt_s() { this.GenerateAssignFPR_F(FD, this.CallStatic((Func<float, float>)MathFloat.Sqrt, FPR(FS))); }
+		public void abs_s() { this.GenerateAssignFPR_F(FD, this.CallStatic((Func<float, float>)MathFloat.Abs, FPR(FS))); }
+		public void mov_s() { this.GenerateAssignFPR_F(FD, FPR(FS)); }
+		public void neg_s() { this.GenerateAssignFPR_F(FD, -FPR(FS)); }
+		public void trunc_w_s() { this.GenerateAssignFPR_I(FD, this.CallStatic((Func<float, int>)MathFloat.Cast, FPR(FS))); }
+		public void round_w_s() { this.GenerateAssignFPR_I(FD, this.CallStatic((Func<float, int>)MathFloat.Round, FPR(FS))); }
+		public void ceil_w_s() { this.GenerateAssignFPR_I(FD, this.CallStatic((Func<float, int>)MathFloat.Ceil, FPR(FS))); }
+		public void floor_w_s() { this.GenerateAssignFPR_I(FD, this.CallStatic((Func<float, int>)MathFloat.Floor, FPR(FS))); }
 
 		/// <summary>
 		/// Convert FS register (stored as an int) to float and stores the result on FD.
 		/// </summary>
-		public void cvt_s_w()
-		{
-			MipsMethodEmitter.SaveFPR(FD, () =>
-			{
-				MipsMethodEmitter.LoadFPR_I(FS);
-				SafeILGenerator.ConvertTo<float>();
-			});
-		}
-
-		public static void _cvt_w_s_impl(CpuThreadState CpuThreadState, int FD, int FS)
-		{
-			//Console.WriteLine("_cvt_w_s_impl: {0}", CpuThreadState.FPR[FS]);
-			switch (CpuThreadState.Fcr31.RM)
-			{
-				case CpuThreadState.FCR31.TypeEnum.Rint: CpuThreadState.FPR_I[FD] = (int)MathFloat.Rint(CpuThreadState.FPR[FS]); break;
-				case CpuThreadState.FCR31.TypeEnum.Cast: CpuThreadState.FPR_I[FD] = (int)CpuThreadState.FPR[FS]; break;
-				case CpuThreadState.FCR31.TypeEnum.Ceil: CpuThreadState.FPR_I[FD] = (int)MathFloat.Ceil(CpuThreadState.FPR[FS]); break;
-				case CpuThreadState.FCR31.TypeEnum.Floor: CpuThreadState.FPR_I[FD] = (int)MathFloat.Floor(CpuThreadState.FPR[FS]); break;
-			}
-		}
+		public void cvt_s_w() { this.GenerateAssignFPR_F(FD, this.Cast<float>(FPR_I(FS))); }
 
 		/// <summary>
 		/// Floating-Point Convert to Word Fixed-Point
 		/// </summary>
-		public void cvt_w_s()
-		{
-			SafeILGenerator.LoadArgument0CpuThreadState();
-			SafeILGenerator.Push((int)FD);
-			SafeILGenerator.Push((int)FS);
-			SafeILGenerator.Call((Action<CpuThreadState, int, int>)CpuEmitter._cvt_w_s_impl);
-		}
+		public void cvt_w_s() { this.GenerateAssignFPR_I(FD, this.CallStatic((Func<CpuThreadState, float, int>)CpuEmitterUtils._cvt_w_s_impl, this.CpuThreadStateArgument(), FPR(FS))); }
 
+		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move (from/to) float point registers (reinterpreted)
-		public void mfc1() {
-			MipsMethodEmitter.SaveGPR(RT, () =>
-			{
-				MipsMethodEmitter.LoadFPR(FS);
-				SafeILGenerator.Call((Func<float, int>)MathFloat.ReinterpretFloatAsInt);
-			});
-		}
-		public void mtc1() {
-			MipsMethodEmitter.SaveFPR(FS, () =>
-			{
-				MipsMethodEmitter.LoadGPR_Signed(RT);
-				SafeILGenerator.Call((Func<int, float>)MathFloat.ReinterpretIntAsFloat);
-			});
-		}
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public void mfc1() { this.GenerateAssignGPR(RT, this.CallStatic((Func<float, int>)MathFloat.ReinterpretFloatAsInt, FPR(FS))); }
+		public void mtc1() { this.GenerateAssignFPR_F(FS, this.CallStatic((Func<int, float>)MathFloat.ReinterpretIntAsFloat, GPR_s(RT))); }
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// CFC1 -- move Control word from/to floating point (C1)
-		public static void _cfc1_impl(CpuThreadState CpuThreadState, int RD, int RT)
-		{
-			switch (RD)
-			{
-				case 0: // readonly?
-					throw(new NotImplementedException());
-				case 31:
-					CpuThreadState.GPR[RT] = (int)CpuThreadState.Fcr31.Value;
-					break;
-				default: throw(new Exception(String.Format("Unsupported CFC1(%d)", RD)));
-			}
-		}
+		/////////////////////////////////////////////////////////////////////////////////////////////////
 
-		public static void _ctc1_impl(CpuThreadState CpuThreadState, int RD, int RT)
-		{
-			switch (RD)
-			{
-				case 31:
-					CpuThreadState.Fcr31.Value = (uint)CpuThreadState.GPR[RT];
-					break;
-				default: throw (new Exception(String.Format("Unsupported CFC1(%d)", RD)));
-			}
-		}
-
-		public void cfc1()
-		{
-			SafeILGenerator.LoadArgument0CpuThreadState();
-			SafeILGenerator.Push((int)RD);
-			SafeILGenerator.Push((int)RT);
-			SafeILGenerator.Call((Action<CpuThreadState, int, int>)CpuEmitter._cfc1_impl);
-		}
-		public void ctc1()
-		{
-			SafeILGenerator.LoadArgument0CpuThreadState();
-			SafeILGenerator.Push((int)RD);
-			SafeILGenerator.Push((int)RT);
-			SafeILGenerator.Call((Action<CpuThreadState, int, int>)CpuEmitter._ctc1_impl);
-		}
-
-		public static bool _comp_impl(float s, float t, bool fc_unordererd, bool fc_equal, bool fc_less, bool fc_inv_qnan)
-		{
-			if (float.IsNaN(s) || float.IsNaN(t))
-			{
-				return fc_unordererd;
-			}
-			//bool cc = false;
-			//if (fc_equal) cc = cc || (s == t);
-			//if (fc_less) cc = cc || (s < t);
-			//return cc;
-			bool equal = (fc_equal) && (s == t);
-			bool less = (fc_less) && (s < t);
-
-			return less || equal;
-		}
+		public void cfc1() { this.MipsMethodEmitter.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._cfc1_impl, this.CpuThreadStateArgument(), RD, RT))); }
+		public void ctc1() { this.MipsMethodEmitter.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._ctc1_impl, this.CpuThreadStateArgument(), RD, RT))); }
 
 		/// <summary>
 		/// Compare (condition) Single_
@@ -183,98 +62,54 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			bool fc_less = ((fc02 & 4) != 0);
 			bool fc_inv_qnan = (fc3 != 0); // TODO -- Only used for detecting invalid operations?
 
-			MipsMethodEmitter.SaveFCR31_CC(() =>
-			{
-				MipsMethodEmitter.LoadFPR(FS);
-				MipsMethodEmitter.LoadFPR(FT);
-				SafeILGenerator.Push((int)(fc_unordererd ? 1 : 0));
-				SafeILGenerator.Push((int)(fc_equal ? 1 : 0));
-				SafeILGenerator.Push((int)(fc_less ? 1 : 0));
-				SafeILGenerator.Push((int)(fc_inv_qnan ? 1 : 0));
-				SafeILGenerator.Call((Func<float, float, bool, bool, bool, bool, bool>)CpuEmitter._comp_impl);
-			});
+			//MipsMethodEmitter.LoadFPR(FS);
+			//MipsMethodEmitter.LoadFPR(FT);
+
+			this.MipsMethodEmitter.GenerateIL(this.Statement(this.CallStatic(
+				(Action<CpuThreadState, float, float, bool, bool, bool, bool>)CpuEmitterUtils._comp_impl,
+				this.CpuThreadStateArgument(),
+				FPR(FS),
+				FPR(FT),
+				this.Immediate(fc_unordererd),
+				this.Immediate(fc_equal),
+				this.Immediate(fc_less),
+				this.Immediate(fc_inv_qnan)
+			)));
 		}
 
-		/// <summary>
-		/// Compare False Single
-		/// This predicate is always False it never has a True Result
-		/// </summary>
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		// c.f.s: Compare False Single : This predicate is always False it never has a True Result
+		// c.un.s: Compare UNordered Single
+		// c.eq.s: Compare EQual Single
+		// c.ueq.s: Compare Unordered or EQual Single
+		// c.olt.s: Compare Ordered or Less Than Single
+		// c.ult.s: Compare Unordered or Less Than Single
+		// c.ole.s: Compare Ordered or Less than or Equal Single
+		// c.ule.s: Compare Unordered or Less than or Equal Single
+		// c.sf.s: Compare Signaling False Single : This predicate always False
+		// c.ngle.s: Compare Non Greater Than or Less than or Equal Single
+		// c.seq.s: Compare Signaling Equal Single
+		// c.ngl.s: Compare Not Greater than or Less than Single
+		// c.lt.s: Compare Less Than Single
+		// c.nge.s: Compare Not Greater than or Equal Single
+		// c.le.s: Compare Less than or Equal Single
+		// c.ngt.s: Compare Not Greater Than Single
+		/////////////////////////////////////////////////////////////////////////////////////////////////
 		public void c_f_s() { _comp(0, 0); }
-
-		/// <summary>
-		/// Compare UNordered Single
-		/// </summary>
 		public void c_un_s() { _comp(1, 0); }
-
-		/// <summary>
-		/// Compare EQual Single
-		/// </summary>
 		public void c_eq_s() { _comp(2, 0); }
-
-		/// <summary>
-		/// Compare Unordered or EQual Single
-		/// </summary>
 		public void c_ueq_s() { _comp(3, 0); }
-
-		/// <summary>
-		/// Compare Ordered or Less Than Single
-		/// </summary>
 		public void c_olt_s() { _comp(4, 0); }
-
-		/// <summary>
-		/// Compare Unordered or Less Than Single
-		/// </summary>
 		public void c_ult_s() { _comp(5, 0); }
-
-		/// <summary>
-		/// Compare Ordered or Less than or Equal Single
-		/// </summary>
 		public void c_ole_s() { _comp(6, 0); }
-
-		/// <summary>
-		/// Compare Unordered or Less than or Equal Single
-		/// </summary>
 		public void c_ule_s() { _comp(7, 0); }
-		
-		/// <summary>
-		/// Compare Signaling False Single
-		/// This predicate always False
-		/// </summary>
 		public void c_sf_s() { _comp(0, 1); }
-
-		/// <summary>
-		/// Compare Non Greater Than or Less than or Equal Single
-		/// </summary>
 		public void c_ngle_s() { _comp(1, 1); }
-
-		/// <summary>
-		/// Compare Signaling Equal Single
-		/// </summary>
 		public void c_seq_s() { _comp(2, 1); }
-
-		/// <summary>
-		/// Compare Not Greater than or Less than Single
-		/// </summary>
 		public void c_ngl_s() { _comp(3, 1); }
-
-		/// <summary>
-		/// Compare Less Than Single
-		/// </summary>
 		public void c_lt_s() { _comp(4, 1); }
-
-		/// <summary>
-		/// Compare Not Greater than or Equal Single
-		/// </summary>
 		public void c_nge_s() { _comp(5, 1); }
-
-		/// <summary>
-		/// Compare Less than or Equal Single
-		/// </summary>
 		public void c_le_s() { _comp(6, 1); }
-
-		/// <summary>
-		/// Compare Not Greater Than Single
-		/// </summary>
 		public void c_ngt_s() { _comp(7, 1); }
 	}
 }
