@@ -1092,6 +1092,164 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
+		public void VfpuAssemblyTest()
+		{
+			//var MipsDisassembler = new MipsDisassembler();
+			//var Result = MipsDisassembler.Disassemble(0, 0xD00780A0);
+			Assert.AreEqual((uint)0xD00780A0, (uint)(new MipsAssembler(new MemoryStream())).AssembleInstruction("vone.q R000"));
+		}
+
+		[TestMethod]
+		public void VfpuConstantsTest()
+		{
+			CpuThreadState.Vfpr.ClearAll(float.NaN);
+
+			var Names = VfpuUtils.ConstantNames;
+			string Assembly = "";
+
+			Action<Action<string, int, int, int, int>> Iterate = (Action) =>
+			{
+				for (int n = 0; n < Names.Length; n++)
+				{
+					var ConstantName = Names[n];
+					int Matrix = (n >> 4) & 3;
+					int Column = (n >> 2) & 3;
+					int Row = (n >> 0) & 3;
+
+					Action(ConstantName, n, Matrix, Column, Row);
+				}
+			};
+
+			Iterate((ConstantName, n, Matrix, Column, Row) =>
+			{
+				Assembly += String.Format(
+					"vcst.s S{0}{1}{2}, {3}\n",
+					Matrix, Column, Row, ConstantName
+				);
+			});
+
+			Console.WriteLine("{0}", Assembly);
+
+			ExecuteAssembly(Assembly);
+
+			CpuThreadState.DumpVfpuRegisters(Console.Error);
+
+			Iterate((ConstantName, n, Matrix, Column, Row) =>
+			{
+				Assert.AreEqual(
+					VfpuUtils.GetConstantValueByName(ConstantName),
+					CpuThreadState.Vfpr[Matrix, Row, Column]
+				);
+			});
+		}
+
+		[TestMethod]
+		public void VfpuAddTest()
+		{
+			CpuThreadState.Vfpr.ClearAll(float.NaN);
+
+			CpuThreadState.Vfpr[4, "R100"] = new float[] { 1, 2, 3, 4 };
+			CpuThreadState.Vfpr[4, "R101"] = new float[] { 50, 60, 70, 80 };
+
+			ExecuteAssembly(@"
+				vadd.q C200, R100, R101
+			");
+
+			CpuThreadState.DumpVfpuRegisters(Console.Error);
+
+			CollectionAssert.AreEqual(new float[] { 51, 62, 73, 84 }, CpuThreadState.Vfpr[4, "C200"]);
+		}
+		
+		[TestMethod]
+		public void VfpuZeroOneMov2Test()
+		{
+			CpuThreadState.Vfpr.ClearAll(float.NaN);
+
+			ExecuteAssembly(@"
+				vone.p C120
+				vzero.p C122
+			");
+
+			CpuThreadState.DumpVfpuRegisters(Console.Error);
+
+			Assert.AreEqual(1f, CpuThreadState.Vfpr[1, 2, 0]);
+			Assert.AreEqual(1f, CpuThreadState.Vfpr[1, 2, 1]);
+			Assert.AreEqual(0f, CpuThreadState.Vfpr[1, 2, 2]);
+			Assert.AreEqual(0f, CpuThreadState.Vfpr[1, 2, 3]);
+		}
+
+		/*
+		[TestMethod]
+		public void VfpuZeroOneMov3Test()
+		{
+			CpuThreadState.Vfpr.ClearAll(float.NaN);
+
+			ExecuteAssembly(@"
+				vone.p R120
+				vzero.p R122
+			");
+
+			CpuThreadState.DumpVfpuRegisters(Console.Error);
+
+			Assert.AreEqual(1f, CpuThreadState.Vfpr[1, 2, 0]);
+			Assert.AreEqual(1f, CpuThreadState.Vfpr[1, 2, 1]);
+			Assert.AreEqual(0f, CpuThreadState.Vfpr[1, 2, 2]);
+			Assert.AreEqual(0f, CpuThreadState.Vfpr[1, 2, 3]);
+		}
+		*/
+
+		[TestMethod]
+		public void VfpuZeroOneMov4Test()
+		{
+			CpuThreadState.Vfpr.ClearAll(float.NaN);
+
+			var Vector0 = "0,0,0,0";
+			var Vector1 = "1,1,1,1";
+			var Vector2 = "0,1,1,0";
+			//CpuThreadState.Vfpr[4, "R320"] = new float[] { 2, 2, 2, 2 };
+			
+			ExecuteAssembly(@"
+				vzero.q R100
+				vone.q  R101
+				vone.q  R102
+				vzero.q R103
+
+				vzero.q C200
+				vone.q  C210
+				vone.q  C220
+				vzero.q C230
+
+				vmov.q R400, C100
+			");
+
+			CpuThreadState.DumpVfpuRegisters(Console.Error);
+
+			Func<string, string> GetLine = (string Name) => { return String.Join(",", CpuThreadState.Vfpr[4, Name]); };
+
+			Assert.AreEqual(Vector0, GetLine("R100"));
+			Assert.AreEqual(Vector1, GetLine("R101"));
+			Assert.AreEqual(Vector1, GetLine("R102"));
+			Assert.AreEqual(Vector0, GetLine("R103"));
+
+			Assert.AreEqual(Vector2, GetLine("C100"));
+			Assert.AreEqual(Vector2, GetLine("C110"));
+			Assert.AreEqual(Vector2, GetLine("C120"));
+			Assert.AreEqual(Vector2, GetLine("C130"));
+
+			Assert.AreEqual(Vector0, GetLine("C200"));
+			Assert.AreEqual(Vector1, GetLine("C210"));
+			Assert.AreEqual(Vector1, GetLine("C220"));
+			Assert.AreEqual(Vector0, GetLine("C230"));
+
+			Assert.AreEqual(Vector2, GetLine("R200"));
+			Assert.AreEqual(Vector2, GetLine("R201"));
+			Assert.AreEqual(Vector2, GetLine("R202"));
+			Assert.AreEqual(Vector2, GetLine("R203"));
+
+			Assert.AreEqual(Vector2, GetLine("R400"));
+		}
+
+		[TestMethod]
 		public void JumpTest2()
 		{
 			var Events = new List<int>();

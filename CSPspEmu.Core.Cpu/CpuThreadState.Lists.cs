@@ -97,6 +97,23 @@ namespace CSPspEmu.Core.Cpu
 				get { fixed (float* PTR = &Processor.VFR0) return PTR[Index]; }
 				set { fixed (float* PTR = &Processor.VFR0) PTR[Index] = value; }
 			}
+
+			public float this[int Matrix, int Column, int Row]
+			{
+				get { return this[VfpuUtils.GetCellIndex(Matrix, Column, Row)]; }
+				set { this[VfpuUtils.GetCellIndex(Matrix, Column, Row)] = value; }
+			}
+
+			public float[] this[uint Size, string Name]
+			{
+				get { return VfpuUtils.GetIndices(Size, Name).Select(Item => this[Item]).ToArray(); }
+				set { var Indices = VfpuUtils.GetIndices(Size, Name); for (int n = 0; n < value.Length; n++) this[Indices[n]] = value[n]; }
+			}
+
+			public void ClearAll(float Value = 0f)
+			{
+				for (int n = 0; n < 128; n++) this[n] = Value;
+			}
 		}
 	}
 }

@@ -33,34 +33,42 @@ namespace CSPspEmu.Core.Cpu.Assembler
 				{ "i", Result => Result.Instruction.IMM.ToString() },
 			};
 
+			public string AssemblyLine
+			{
+				get
+				{
+					var Parameters = "";
+					var Encoding = InstructionInfo.AsmEncoding;
+					for (int n = 0; n < Encoding.Length; n++)
+					{
+						var Char = Encoding[n];
+						if (Char == '%')
+						{
+							bool Found = false;
+							for (int Match = 2; Match >= 0; Match--)
+							{
+								var Part = Encoding.Substr(n + 1, Match);
+								if (Opcodes.ContainsKey(Part))
+								{
+									Parameters += Opcodes[Part](this);
+									n += Part.Length;
+									Found = true;
+									break;
+								}
+							}
+							if (Found) continue;
+							//Parameters += Char;
+						}
+						Parameters += Char;
+					}
+
+					return String.Format("{0} {1}", InstructionInfo.Name, Parameters);
+				}
+			}
+
 			public override string ToString()
 			{
-				var Parameters = "";
-				var Encoding = InstructionInfo.AsmEncoding;
-				for (int n = 0; n < Encoding.Length; n++)
-				{
-					var Char = Encoding[n];
-					if (Char == '%')
-					{
-						bool Found = false;
-						for (int Match = 2; Match >= 0; Match--)
-						{
-							var Part = Encoding.Substr(n + 1, Match);
-							if (Opcodes.ContainsKey(Part))
-							{
-								Parameters += Opcodes[Part](this);
-								n += Part.Length;
-								Found = true;
-								break;
-							}
-						}
-						if (Found) continue;
-						//Parameters += Char;
-					}
-					Parameters += Char;
-				}
-
-				return String.Format("{0} {1}", InstructionInfo.Name, Parameters);
+				return AssemblyLine;
 			}
 		}
 		protected Func<uint, MipsDisassembler, Result> ProcessCallback;

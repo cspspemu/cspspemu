@@ -127,7 +127,17 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			return Dictionary;
 		}
 
-		public static int ParseFprName(String RegisterName)
+		public static uint ParseVfprConstantName(string RegisterName)
+		{
+			return (uint)VfpuUtils.VfpuConstantsIndices[RegisterName];
+		}
+
+		public static uint ParseVfprName(uint VfpuSize, string RegisterName)
+		{
+			return VfpuUtils.ParsedRegister.Parse(VfpuSize, RegisterName).Index;
+		}
+
+		public static int ParseFprName(string RegisterName)
 		{
 			if (RegisterName[0] == 'f')
 			{
@@ -136,7 +146,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			throw (new InvalidDataException());
 		}
 
-		public static int ParseGprName(String RegisterName)
+		public static int ParseGprName(string RegisterName)
 		{
 			if (RegisterName[0] == 'r')
 			{
@@ -178,15 +188,39 @@ namespace CSPspEmu.Core.Cpu.Assembler
 		{
 			Line = Line.Trim();
 			if (Line.Length == 0) return new Instruction[] {};
+			string InstructionSuffix = "";
+			uint VfpuSize = 0;
 			var LineTokens = Line.Split(new char[] { ' ', '\t' }, 2);
 			var InstructionName = LineTokens[0].ToLower();
 			InstructionInfo InstructionInfo;
+
+			if (!Instructions.ContainsKey(InstructionName))
+			{
+				if (InstructionName.EndsWith(".s")) VfpuSize = 1;
+				if (InstructionName.EndsWith(".p")) VfpuSize = 2;
+				if (InstructionName.EndsWith(".t")) VfpuSize = 3;
+				if (InstructionName.EndsWith(".q")) VfpuSize = 4;
+				
+				// Vfpu instruction with suffix.
+				if (VfpuSize > 0)
+				{
+					InstructionSuffix = InstructionName.Substr(-2);
+					InstructionName = InstructionName.Substr(0, -2);
+				}
+			}
+
 			if (Instructions.TryGetValue(InstructionName, out InstructionInfo))
 			{
 				var Instruction = new Instruction()
 				{
 					Value = InstructionInfo.Value & InstructionInfo.Mask,
 				};
+
+				if (VfpuSize > 0)
+				{
+					Instruction.ONE_TWO = VfpuSize;
+				}
+
 				var Matches = MatchFormat(InstructionInfo.AsmEncoding, (LineTokens.Length > 1) ? LineTokens[1] : "");
 				foreach (var Match in Matches)
 				{
@@ -195,10 +229,20 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
 					switch (Key)
 					{
+						// VFPU
+						case "%zp": Instruction.VD = ParseVfprName(VfpuSize, Value); break;
+						case "%yp": Instruction.VS = ParseVfprName(VfpuSize, Value); break;
+						case "%xp": Instruction.VT = ParseVfprName(VfpuSize, Value); break;
+						case "%vk": Instruction.IMM5 = ParseVfprConstantName(Value); break;
+
+						//case "%xs": Instruction.VD = ParseVfprName(VfpuSize, Value); break;
+
+						// FPU
 						case "%S": Instruction.FS = ParseFprName(Value); break;
 						case "%D": Instruction.FD = ParseFprName(Value); break;
 						case "%T": Instruction.FT = ParseFprName(Value); break;
 
+						// CPU
 						case "%J":
 						case "%s": Instruction.RS = ParseGprName(Value); break;
 						case "%d": Instruction.RD = ParseGprName(Value); break;

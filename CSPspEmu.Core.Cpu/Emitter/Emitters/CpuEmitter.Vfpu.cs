@@ -293,7 +293,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public void vcst()
 		{
 			var VectorSize = Instruction.ONE_TWO;
-			float FloatConstant = (Instruction.IMM5 >= 0 && Instruction.IMM5 < VfpuConstants.Length) ? VfpuConstants[Instruction.IMM5] : 0.0f;
+			float FloatConstant = (Instruction.IMM5 >= 0 && Instruction.IMM5 < VfpuUtils.VfpuConstantsValues.Length) ? VfpuUtils.VfpuConstantsValues[Instruction.IMM5] : 0.0f;
 
 			foreach (var Index in XRange(VectorSize))
 			{

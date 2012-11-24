@@ -349,11 +349,11 @@ namespace CSPspEmu.Core.Cpu
 			for (int Matrix = 0; Matrix < 8; Matrix++)
 			{
 				TextWriter.WriteLine("Matrix: {0}", Matrix);
-				for (int Column = 0; Column < 4; Column++)
+				for (int Row = 0; Row < 4; Row++)
 				{
-					for (int Row = 0; Row < 4; Row++)
+					for (int Column = 0; Column < 4; Column++)
 					{
-						TextWriter.Write(", {0}", Vfpr[Matrix * 16 + Column * 4 + Row]);
+						TextWriter.Write(", {0}", Vfpr[Matrix, Column, Row]);
 					}
 					TextWriter.WriteLine("");
 				}

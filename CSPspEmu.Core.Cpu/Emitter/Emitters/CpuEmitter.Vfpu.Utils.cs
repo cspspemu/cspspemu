@@ -90,7 +90,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	   VFPU Registers can get accessed as Matrices, Vectors or single words.
 	   All registers are overlayed and enumerated in 3 digits (Matrix/Column/Row):
 
-		M000 | C000   C010   C020   C030	M100 | C110   C110   C120   C130
+		M000 | C000   C010   C020   C030	M100 | C100   C110   C120   C130
 		-----+--------------------------	-----+--------------------------
 		R000 | S000   S010   S020   S030	R100 | S100   S110   S120   S130
 		R001 | S001   S011   S021   S031	R101 | S101   S111   S121   S131
@@ -105,54 +105,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	*/
 	public unsafe sealed partial class CpuEmitter
 	{
-
-		/// <summary>
-		///  vcst.[s | p | t | q] vd, VFPU_CST
-		///  vd = vfpu_constant[VFPU_CST], where VFPU_CST is one of:
-		///    VFPU_HUGE      infinity
-		///    VFPU_SQRT2     sqrt(2)
-		///    VFPU_SQRT1_2   sqrt(1/2)
-		///    VFPU_2_SQRTPI  2/sqrt(pi)
-		///    VFPU_PI        pi
-		///    VFPU_2_PI      2/pi
-		///    VFPU_1_PI      1/pi
-		///    VFPU_PI_4      pi/4
-		///    VFPU_PI_2      pi/2
-		///    VFPU_E         e
-		///    VFPU_LOG2E     log2(e)
-		///    VFPU_LOG10E    log10(e)
-		///    VFPU_LN2       ln(2)
-		///    VFPU_LN10      ln(10)
-		///    VFPU_2PI       2*pi
-		///    VFPU_PI_6      pi/6
-		///    VFPU_LOG10TWO  log10(2)
-		///    VFPU_LOG2TEN   log2(10)
-		///    VFPU_SQRT3_2   sqrt(3)/2
-		/// </summary>
-		static readonly float[] VfpuConstants = new float[] {
-			(float)0.0f,                        /// VFPU_ZERO     - 0
-			(float)float.PositiveInfinity,      /// VFPU_HUGE     - infinity
-			(float)(Math.Sqrt(2.0)),            /// VFPU_SQRT2    - sqrt(2)
-			(float)(Math.Sqrt(1.0 / 2.0)),      /// VFPU_SQRT1_2  - sqrt(1 / 2)
-			(float)(2.0 / Math.Sqrt(Math.PI)),  /// VFPU_2_SQRTPI - 2 / sqrt(pi)
-			(float)(2.0 / Math.PI),             /// VFPU_2_PI     - 2 / pi
-			(float)(1.0 / Math.PI),             /// VFPU_1_PI     - 1 / pi
-			(float)(Math.PI / 4.0),             /// VFPU_PI_4     - pi / 4
-			(float)(Math.PI / 2.0),             /// VFPU_PI_2     - pi / 2
-			(float)(Math.PI),                   /// VFPU_PI       - pi
-			(float)(Math.E),                    /// VFPU_E        - e
-			(float)(Math.Log(Math.E, 2)),       /// VFPU_LOG2E    - log2(E) = log(E) / log(2)
-			(float)(Math.Log10(Math.E)),        /// VFPU_LOG10E   - log10(E)
-			(float)(Math.Log(2)),               /// VFPU_LN2      - ln(2)
-			(float)(Math.Log(10)),              /// VFPU_LN10     - ln(10)
-			(float)(2.0 * Math.PI),             /// VFPU_2PI      - 2 * pi
-			(float)(Math.PI / 6.0),             /// VFPU_PI_6     - pi / 6
-			(float)(Math.Log10(2.0)),           /// VFPU_LOG10TWO - log10(2)
-			(float)(Math.Log(10.0, 2)),         /// VFPU_LOG2TEN  - log2(10) = log(10) / log(2)
-			(float)(Math.Sqrt(3.0) / 2.0)       /// VFPU_SQRT3_2  - sqrt(3) / 2
-		};
-
-
 		private void _call_debug_vfpu()
 		{
 			MipsMethodEmitter.CallMethodWithCpuThreadStateAsFirstArgument(this.GetType(), "_debug_vfpu");

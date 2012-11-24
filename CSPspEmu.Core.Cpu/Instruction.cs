@@ -138,7 +138,10 @@ namespace CSPspEmu.Core.Cpu
 		public uint TWO { get { return get(15, 1); } set { set(15, 1, value); } }
 		public uint VT { get { return get(16, 7); } set { set(16, 7, value); } }
 
-		public uint ONE_TWO { get { return 1 + 1 * ONE + 2 * TWO; } }
+		public uint ONE_TWO {
+			get { return 1 + 1 * ONE + 2 * TWO; }
+			set { ONE = (((value - 1) >> 0) & 1); TWO = (((value - 1) >> 1) & 1); }
+		}
 
 		public static implicit operator Instruction(uint Value)
 		{
