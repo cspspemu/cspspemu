@@ -1,4 +1,5 @@
-﻿#define USE_DYNAMIC_METHOD
+﻿#define DEBUG_GENERATE_IL
+#define USE_DYNAMIC_METHOD
 
 using System;
 using System.Collections.Generic;
@@ -316,7 +317,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			// Optimize
 			AstNodeStm = (AstNodeStm)AstOptimizer.Optimize(AstNodeStm);
 
+#if DEBUG_GENERATE_IL
 			Console.WriteLine("{0}", GeneratorCSharp.Reset().Generate(AstNodeStm).ToString());
+#endif
 
 			new GeneratorIL(DynamicMethod, SafeILGenerator.__ILGenerator).Generate(AstNodeStm);
 		}

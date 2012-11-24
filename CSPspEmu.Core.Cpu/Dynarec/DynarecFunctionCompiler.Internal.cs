@@ -59,7 +59,6 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			{
 				this._ExploreNewPcCallback = _ExploreNewPcCallback;
 				this.CpuEmitter = new CpuEmitter(MipsMethodEmiter, InstructionReader, CpuProcessor);
-				this.CpuEmitter.AnalyzePCEvent += ExploreNewPcCallback;
 				this.MipsMethodEmiter = MipsMethodEmiter;
 				this.GlobalInstructionStats = CpuProcessor.GlobalInstructionStats;
 				this.InstructionStats = MipsMethodEmiter.InstructionStats;

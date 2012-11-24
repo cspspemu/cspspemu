@@ -712,5 +712,10 @@ namespace GLES
 			glGenTextures(1, &texture);
 			return texture;
 		}
+
+		static public string glGetString2(GLenum name)
+		{
+			return Marshal.PtrToStringAnsi(new IntPtr(glGetString(name)));
+		}
 	}
 }

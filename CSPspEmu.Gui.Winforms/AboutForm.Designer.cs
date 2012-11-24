@@ -64,7 +64,7 @@
 			// button1
 			// 
 			this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.button1.Location = new System.Drawing.Point(534, 360);
+			this.button1.Location = new System.Drawing.Point(621, 360);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(84, 35);
 			this.button1.TabIndex = 0;
@@ -231,7 +231,7 @@
 			// label11
 			// 
 			this.label11.AutoSize = true;
-			this.label11.Location = new System.Drawing.Point(402, 220);
+			this.label11.Location = new System.Drawing.Point(635, 167);
 			this.label11.Name = "label11";
 			this.label11.Size = new System.Drawing.Size(58, 13);
 			this.label11.TabIndex = 22;
@@ -241,7 +241,7 @@
 			// 
 			this.label12.AutoSize = true;
 			this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label12.Location = new System.Drawing.Point(402, 195);
+			this.label12.Location = new System.Drawing.Point(635, 142);
 			this.label12.Name = "label12";
 			this.label12.Size = new System.Drawing.Size(70, 13);
 			this.label12.TabIndex = 21;
@@ -250,7 +250,7 @@
 			// label13
 			// 
 			this.label13.AutoSize = true;
-			this.label13.Location = new System.Drawing.Point(402, 242);
+			this.label13.Location = new System.Drawing.Point(635, 189);
 			this.label13.Name = "label13";
 			this.label13.Size = new System.Drawing.Size(55, 13);
 			this.label13.TabIndex = 23;
@@ -291,7 +291,7 @@
 			// 
 			this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.pictureBox1.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.paypal_donate_button;
-			this.pictureBox1.Location = new System.Drawing.Point(426, 360);
+			this.pictureBox1.Location = new System.Drawing.Point(513, 360);
 			this.pictureBox1.Name = "pictureBox1";
 			this.pictureBox1.Size = new System.Drawing.Size(83, 35);
 			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -302,7 +302,7 @@
 			// linkLabel1
 			// 
 			this.linkLabel1.AutoSize = true;
-			this.linkLabel1.Location = new System.Drawing.Point(402, 263);
+			this.linkLabel1.Location = new System.Drawing.Point(635, 210);
 			this.linkLabel1.Name = "linkLabel1";
 			this.linkLabel1.Size = new System.Drawing.Size(58, 13);
 			this.linkLabel1.TabIndex = 25;
@@ -313,7 +313,7 @@
 			// linkLabel2
 			// 
 			this.linkLabel2.AutoSize = true;
-			this.linkLabel2.Location = new System.Drawing.Point(402, 285);
+			this.linkLabel2.Location = new System.Drawing.Point(635, 232);
 			this.linkLabel2.Name = "linkLabel2";
 			this.linkLabel2.Size = new System.Drawing.Size(68, 13);
 			this.linkLabel2.TabIndex = 26;
@@ -335,7 +335,7 @@
 			this.AcceptButton = this.button1;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(630, 407);
+			this.ClientSize = new System.Drawing.Size(729, 407);
 			this.Controls.Add(this.label14);
 			this.Controls.Add(this.linkLabel2);
 			this.Controls.Add(this.linkLabel1);

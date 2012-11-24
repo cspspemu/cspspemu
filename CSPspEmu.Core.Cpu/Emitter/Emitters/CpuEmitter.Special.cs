@@ -11,10 +11,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Syscall
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public void syscall() { this.GenerateIL(this.Statement(this.CallInstance(this.CpuThreadStateArgument(), (Action<int>)CpuThreadState.Methods.Syscall, this.Immediate((int)Instruction.CODE)))); }
-		public void cache() { this.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, uint>)CpuEmitterUtils._cache_impl, this.CpuThreadStateArgument(), this.Immediate((uint)Instruction.Value)))); }
-		public void sync() { this.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, uint>)CpuEmitterUtils._sync_impl, this.CpuThreadStateArgument(), this.Immediate((uint)Instruction.Value)))); }
-		public void _break() { this.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, uint>)CpuEmitterUtils._break_impl, this.CpuThreadStateArgument(), this.Immediate((uint)Instruction.Value)))); }
+		public void syscall() { this.GenerateIL(this.Statement(this.CallInstance(this.CpuThreadStateArgument(), (Action<int>)CpuThreadState.Methods.Syscall, (int)Instruction.CODE))); }
+		public void cache() { this.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._cache_impl, this.CpuThreadStateArgument(), PC, (uint)Instruction.Value))); }
+		public void sync() { this.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._sync_impl, this.CpuThreadStateArgument(), PC, (uint)Instruction.Value))); }
+		public void _break() { this.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._break_impl, this.CpuThreadStateArgument(), PC, (uint)Instruction.Value))); }
 		public void dbreak() { throw(new NotImplementedException()); }
 		public void halt() { throw(new NotImplementedException()); }
 

@@ -37,6 +37,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		// AST utilities
 		private AstNodeExprArgument CpuThreadStateArgument() { return this.Argument<CpuThreadState>(0, "CpuThreadState"); }
+		private AstNodeExprLValue FCR31_CC() { return this.FieldAccess(REG("Fcr31"), "CC"); }
 		private AstNodeExprLValue REG(string RegName) { return this.FieldAccess(this.CpuThreadStateArgument(), RegName); }
 		private AstNodeExprLValue GPR(int Index) { if (Index == 0) throw (new Exception("Can't get reference to GPR0")); return REG("GPR" + Index); }
 		private AstNodeExprLValue FPR(int Index) { return REG("FPR" + Index); }
@@ -48,6 +49,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		private AstNodeExpr IMM_s() { return this.Immediate(IMM); }
 		private AstNodeExpr IMM_u() { return this.Immediate((uint)(ushort)IMM); }
 		private AstNodeExpr IMM_uex() { return this.Immediate((uint)IMM); }
+
+		private AstNodeStm AssignREG(string RegName, AstNodeExpr Expr) { return this.Assign(REG(RegName), Expr); }
 		private AstNodeStm AssignGPR(int Index, AstNodeExpr Expr) { if (Index == 0) return new AstNodeStmEmpty(); return this.Assign(GPR(Index), this.Cast<uint>(Expr)); }
 
 		private AstNodeStm GenerateIL(AstNodeStm Expr)

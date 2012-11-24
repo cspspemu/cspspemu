@@ -182,22 +182,25 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				CpuThreadState.Fcr31.CC = (less || equal);
 			}
 		}
-		public static void _break_impl(CpuThreadState CpuThreadState, uint Value)
+		public static void _break_impl(CpuThreadState CpuThreadState, uint PC, uint Value)
 		{
+			CpuThreadState.PC = PC;
 			Console.Error.WriteLine("-------------------------------------------------------------------");
 			Console.Error.WriteLine("-- BREAK  ---------------------------------------------------------");
 			Console.Error.WriteLine("-------------------------------------------------------------------");
 			throw (new PspBreakException("Break!"));
 		}
 
-		public static void _cache_impl(CpuThreadState CpuThreadState, uint Value)
+		public static void _cache_impl(CpuThreadState CpuThreadState, uint PC, uint Value)
 		{
+			CpuThreadState.PC = PC;
 			//Console.Error.WriteLine("cache! : 0x{0:X}", Value);
 			//CpuThreadState.CpuProcessor.sceKernelIcacheInvalidateAll();
 		}
 
-		public static void _sync_impl(CpuThreadState CpuThreadState, uint Value)
+		public static void _sync_impl(CpuThreadState CpuThreadState, uint PC, uint Value)
 		{
+			CpuThreadState.PC = PC;
 			Console.WriteLine("Not implemented 'sync' instruction");
 		}
 

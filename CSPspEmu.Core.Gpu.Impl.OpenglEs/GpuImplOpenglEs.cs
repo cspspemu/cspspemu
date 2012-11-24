@@ -51,6 +51,12 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 			this.TextureCache = new TextureCacheOpengles(Memory, this);
 		}
 
+		private string glVENDOR;
+		private string glRENDERER;
+		private string glVERSION;
+		private string glSLVERSION;
+		private string glEXTENSIONS;
+
 		public override void InitSynchronizedOnce()
 		{
 			ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Magenta, () =>
@@ -62,6 +68,13 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 			var VertexProgram = Assembly.GetExecutingAssembly().GetManifestResourceStream("CSPspEmu.Core.Gpu.Impl.OpenglEs.shader.vertex").ReadAllContentsAsString(Encoding.UTF8);
 
 			this.GraphicsContext = new OffscreenContext(512, 272);
+
+			this.glVENDOR = GL.glGetString2(GL.GL_VENDOR);
+			this.glRENDERER = GL.glGetString2(GL.GL_RENDERER);
+			this.glVERSION = GL.glGetString2(GL.GL_VERSION);
+			this.glSLVERSION = GL.glGetString2(GL.GL_SHADING_LANGUAGE_VERSION);
+			this.glEXTENSIONS = GL.glGetString2(GL.GL_EXTENSIONS);
+
 			this.GraphicsContext.SetCurrent();
 			GL.glViewport(0, 0, 512, 272);
 			{
@@ -99,6 +112,24 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 
 		VertexInfo[] VertexInfoBuffer = new VertexInfo[1024 * 1024];
 
+		private static void PrepareState_DepthTest(GpuStateStruct* GpuState)
+		{
+			if (GpuState->DepthTestState.Mask != 0 && GpuState->DepthTestState.Mask != 1)
+			{
+				Console.Error.WriteLine("WARNING! DepthTestState.Mask: {0}", GpuState->DepthTestState.Mask);
+			}
+	
+			GL.glDepthMask(GpuState->DepthTestState.Mask == 0);
+
+			if (!GL.glEnableDisable(GL.GL_DEPTH_TEST, GpuState->DepthTestState.Enabled))
+			{
+				return;
+			}
+			//GL.DepthFunc(DepthFunction.Greater);
+			GL.glDepthFunc(DepthFunctionTranslate[(int)GpuState->DepthTestState.Function]);
+			//GL.DepthRange
+		}
+
 		public override void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
 		{
 			var VertexType = GpuState->VertexState.Type;
@@ -120,9 +151,12 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 				worldMatrix.SetMatrix4(Matrix4.Identity);
 				viewMatrix.SetMatrix4(Matrix4.Identity);
 				textureMatrix.SetMatrix4(Matrix4.Identity);
+				GL.glDepthRangef(0f, 1f);
 			}
 			else
 			{
+				GL.glDepthRangef(GpuState->DepthTestState.RangeFar, GpuState->DepthTestState.RangeNear);
+				PrepareState_DepthTest(GpuState);
 				projectionMatrix.SetMatrix4(GpuState->VertexState.ProjectionMatrix.Values);
 				worldMatrix.SetMatrix4(GpuState->VertexState.WorldMatrix.Values);
 				viewMatrix.SetMatrix4(GpuState->VertexState.ViewMatrix.Values);
@@ -138,8 +172,7 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 
 			if (GpuState->ClearingMode)
 			{
-				GL.glDisable(GL.GL_CULL_FACE);
-				this.fColor.SetVec4(0, 0, 0, 1);
+				PrepareStateClear(GpuState);
 			}
 			else
 			{
@@ -379,7 +412,7 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 			get {
 				return new PluginInfo()
 				{
-					Name = "OpenglEs",
+					Name = "OpenglEs - " + this.glRENDERER + " - " + this.glVERSION + " - " + this.glSLVERSION + " - " + this.glVENDOR,
 					Version = "0.1",
 				};
 			}

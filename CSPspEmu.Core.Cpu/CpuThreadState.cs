@@ -519,6 +519,15 @@ namespace CSPspEmu.Core.Cpu
 			}
 		}
 
+		/// <summary>
+		/// Must be tailcalled
+		/// </summary>
+		/// <param name="PC"></param>
+		public void Jump(uint PC)
+		{
+			this.PC = PC;
+		}
+
 		public void SetPCWriteAddress(uint Address, uint PC)
 		{
 			//Console.WriteLine("SetPCWriteAddress: {0:X} : {1:X}", Address, PC);
