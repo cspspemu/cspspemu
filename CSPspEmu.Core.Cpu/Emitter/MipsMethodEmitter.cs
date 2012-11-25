@@ -48,56 +48,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public readonly Dictionary<string, uint> InstructionStats = new Dictionary<string, uint>();
 
-		/*
-		public static MipsMethodEmiter()
-		{
-		}
-		*/
-
-		public void _savetoaddress<TType>(Action ActionAddress, Action ActionValue, bool Safe = false, String ErrorDescription = "", bool CanBeNull = true)
-		{
-			if (Safe || !(Processor.Memory is FastPspMemory))
-			{
-				SafeILGenerator.LoadArgument0CpuThreadState();
-				ActionAddress();
-				ActionValue();
-				switch (Marshal.SizeOf(typeof(TType)))
-				{
-					case 1: SafeILGenerator.Call((Action<uint, byte>)CpuThreadState.Methods.Write1); break;
-					case 2: SafeILGenerator.Call((Action<uint, ushort>)CpuThreadState.Methods.Write2); break;
-					case 4: SafeILGenerator.Call((Action<uint, uint>)CpuThreadState.Methods.Write4); break;
-					default: throw (new NotImplementedException());
-				}
-			}
-			else
-			{
-				_getmemptr(ActionAddress, Safe, ErrorDescription, CanBeNull);
-				ActionValue();
-				SafeILGenerator.StoreIndirect<TType>();
-			}
-		}
-
-		public void _loadfromaddress<TType>(Action ActionAddress, bool Safe = false, String ErrorDescription = "", bool CanBeNull = true)
-		{
-			if (Safe || !(Processor.Memory is FastPspMemory))
-			{
-				SafeILGenerator.LoadArgument0CpuThreadState();
-				ActionAddress();
-				switch (Marshal.SizeOf(typeof(TType)))
-				{
-					case 1: SafeILGenerator.Call((Func<uint, byte>)CpuThreadState.Methods.Read1); break;
-					case 2: SafeILGenerator.Call((Func<uint, ushort>)CpuThreadState.Methods.Read2); break;
-					case 4: SafeILGenerator.Call((Func<uint, uint>)CpuThreadState.Methods.Read4); break;
-					default: throw(new NotImplementedException());
-				}
-			}
-			else
-			{
-				_getmemptr(ActionAddress, Safe, ErrorDescription, CanBeNull);
-				SafeILGenerator.LoadIndirect<TType>();
-			}
-		}
-
 		public void _getmemptr(Action Action, bool Safe = false, String ErrorDescription = "", bool CanBeNull = true)
 		{
 			if (Safe || !(Processor.Memory is FastPspMemory))
@@ -233,10 +183,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 		}
 
-		MethodBody GetMethodBody()
-		{
-			return DynamicMethod.GetMethodBody();
-		}
+		//MethodBody GetMethodBody()
+		//{
+		//	return DynamicMethod.GetMethodBody();
+		//}
 
 		public void LoadFieldPtr(FieldInfo FieldInfo)
 		{
@@ -249,9 +199,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		protected void LoadGPR_Ptr(int R) { LoadFieldPtr(Field_GPRList[R]); }
 		protected void LoadC0R_Ptr(int R) { LoadFieldPtr(Field_C0RList[R]); }
 		protected void LoadFPR_Ptr(int R) { LoadFieldPtr(Field_FPRList[R]); }
-		protected void LoadPC_Ptr() { LoadFieldPtr(Field_PC); }
-		protected void LoadHI_Ptr() { LoadFieldPtr(Field_HI); }
-		protected void LoadLO_Ptr() { LoadFieldPtr(Field_LO); }
 		protected void LoadStepInstructionCountPtr() {
 			SafeILGenerator.LoadArgument0CpuThreadState();
 			SafeILGenerator.LoadFieldAddress(Field_StepInstructionCount);
@@ -278,35 +225,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			SafeILGenerator.LoadField(Field_BranchFlag);
 		}
 
-		public void StoreBranchFlag(Action Action)
-		{
-			SafeILGenerator.LoadArgument0CpuThreadState();
-			Action();
-			SafeILGenerator.StoreField(Field_BranchFlag);
-		}
-
 		public void SaveField<TType>(FieldInfo FieldInfo, Action Action)
 		{
 			LoadFieldPtr(FieldInfo);
 			Action();
 			SafeILGenerator.StoreIndirect<TType>();
-		}
-
-		public void SavePC(Action Action) { SaveField<int>(Field_PC, Action); }
-		public void SavePC(uint PC) { SaveField<int>(Field_PC, () => { SafeILGenerator.Push((int)PC); }); }
-		public void SaveLO(Action Action) { SaveField<int>(Field_LO, Action); }
-		public void SaveHI(Action Action) { SaveField<int>(Field_HI, Action); }
-
-		public void SaveHI_LO(Action Action) {
-			LoadFieldPtr(Field_LO);
-			Action();
-			SafeILGenerator.StoreIndirect<long>();
-		}
-
-		public void LoadHI_LO()
-		{
-			LoadFieldPtr(Field_LO);
-			SafeILGenerator.LoadIndirect<long>();
 		}
 
 		AstOptimizer AstOptimizer = new AstOptimizer();
@@ -324,9 +247,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			new GeneratorIL(DynamicMethod, SafeILGenerator.__ILGenerator).Generate(AstNodeStm);
 		}
 
-		public void SaveGPR_F(int R, Action Action) { if (R != 0) SaveField<float>(Field_GPRList[R], Action); }
 		public void SaveGPR(int R, Action Action) { if (R != 0) SaveField<int>(Field_GPRList[R], Action); }
-		public void SaveC0R(int R, Action Action) { SaveField<int>(Field_C0RList[R], Action); }
 		public void SaveGPRLong(int R, Action Action) { if (R != 0) SaveField<long>(Field_GPRList[R], Action); }
 		public void SaveFPR(int R, Action Action)
 		{
@@ -335,57 +256,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				Action();
 			}
 			SafeILGenerator.StoreIndirect<float>();
-		}
-		public void SaveFPR_I(int R, Action Action)
-		{
-			LoadFPR_Ptr(R);
-			{
-				Action();
-			}
-			SafeILGenerator.StoreIndirect<int>();
-		}
-
-		public static bool _LoadFcr31CC(CpuThreadState CpuThreadState)
-		{
-			return CpuThreadState.Fcr31.CC;
-		}
-
-		public static void _SaveFcr31CC(CpuThreadState CpuThreadState, bool Value)
-		{
-			CpuThreadState.Fcr31.CC = Value;
-		}
-
-		public void LoadFCR31_CC()
-		{
-			SafeILGenerator.LoadArgument0CpuThreadState();
-			SafeILGenerator.Call((Func<CpuThreadState, bool>)MipsMethodEmitter._LoadFcr31CC);
-		}
-
-		public void SaveFCR31_CC(Action Action)
-		{
-			SafeILGenerator.LoadArgument0CpuThreadState();
-			Action();
-			SafeILGenerator.Call((Action<CpuThreadState, bool>)MipsMethodEmitter._SaveFcr31CC);
-		}
-
-		public void LoadGPR_Signed(int R)
-		{
-			if (R == 0)
-			{
-				SafeILGenerator.Push((int)0);
-			}
-			else
-			{
-				LoadGPR_Ptr(R);
-				SafeILGenerator.LoadIndirect<int>();
-			}
-		}
-
-
-		public void LoadC0R(int R)
-		{
-			LoadC0R_Ptr(R);
-			SafeILGenerator.LoadIndirect<int>();
 		}
 
 		public void LoadGPR_Unsigned(int R)
@@ -404,93 +274,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public void LoadGPRLong_Signed(int R) { LoadGPR_Ptr(R); SafeILGenerator.LoadIndirect<long>(); }
 		public void LoadFPR(int R) { LoadFPR_Ptr(R); SafeILGenerator.LoadIndirect<float>(); }
-		public void LoadFPR_I(int R) { LoadFPR_Ptr(R); SafeILGenerator.LoadIndirect<uint>(); }
-		public void LoadPC() { LoadPC_Ptr(); SafeILGenerator.LoadIndirect<uint>(); }
-		public void LoadLO() { LoadLO_Ptr(); SafeILGenerator.LoadIndirect<uint>(); }
-		public void LoadHI() { LoadHI_Ptr(); SafeILGenerator.LoadIndirect<uint>(); }
-
-		public void OP_3REG_Unsigned(int RD, int RS, int RT, Action Action)
-		{
-			SaveGPR(RD, () =>
-			{
-				LoadGPR_Unsigned(RS);
-				LoadGPR_Unsigned(RT);
-				Action();
-			});
-		}
-
-		public void OP_3REG_Signed(int RD, int RS, int RT, Action Action)
-		{
-			SaveGPR(RD, () =>
-			{
-				LoadGPR_Signed(RS);
-				LoadGPR_Signed(RT);
-				Action();
-			});
-		}
-
-		public void OP_3REG_F(int FD, int FS, int FT, Action Action)
-		{
-			SaveFPR(FD, () =>
-			{
-				LoadFPR(FS);
-				LoadFPR(FT);
-				Action();
-			});
-		}
-
-		public void OP_2REG_IMM_F(int FD, int FS, float Immediate, Action Action)
-		{
-			SaveFPR(FD, () =>
-			{
-				LoadFPR(FS);
-				SafeILGenerator.Push((float)Immediate);
-				Action();
-			});
-		}
-
-		public void OP_2REG_F(int FD, int FS, Action Action)
-		{
-			SaveFPR(FD, () =>
-			{
-				LoadFPR(FS);
-				Action();
-			});
-		}
-
-		public void OP_2REG_IMM_Signed(int RT, int RS, short Immediate, Action Action)
-		{
-			SaveGPR(RT, () =>
-			{
-				LoadGPR_Unsigned(RS);
-				SafeILGenerator.ConvertTo<int>();
-				SafeILGenerator.Push((int)Immediate);
-				SafeILGenerator.ConvertTo<int>();
-				Action();
-			});
-		}
-
-		public void OP_2REG_IMM_Unsigned(int RT, int RS, uint Immediate, Action Action)
-		{
-			SaveGPR(RT, () =>
-			{
-				LoadGPR_Unsigned(RS);
-				SafeILGenerator.ConvertTo<uint>();
-				SafeILGenerator.Push((int)Immediate);
-				SafeILGenerator.ConvertTo<uint>();
-				Action();
-			});
-		}
-
-		public void SET(int RT, uint Value)
-		{
-			SaveGPR(RT, () => SafeILGenerator.Push((int)Value));
-		}
-
-		public void SET_REG(int RT, int RS)
-		{
-			SaveGPR(RT, () => LoadGPR_Unsigned(RS));
-		}
 
 		public void CallMethod(MethodInfo MethodInfo)
 		{
@@ -507,12 +290,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			var MethodInfo = Class.GetMethod(MethodName);
 			if (MethodInfo == null) throw (new KeyNotFoundException(String.Format("Can't find {0}::{1}", Class, MethodName)));
 			CallMethod(MethodInfo);
-		}
-
-		public void CallMethodWithCpuThreadStateAsFirstArgument(Type Class, String MethodName)
-		{
-			SafeILGenerator.LoadArgument0CpuThreadState();
-			CallMethod(Class, MethodName);
 		}
 	}
 }

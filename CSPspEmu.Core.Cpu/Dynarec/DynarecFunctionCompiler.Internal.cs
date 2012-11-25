@@ -278,7 +278,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
 			private void StorePC()
 			{
-				MipsMethodEmiter.SavePC(PC);
+				//MipsMethodEmiter.SavePC(PC);
 			}
 
 			private void EmitInstructionCountIncrement(bool CheckForYield)

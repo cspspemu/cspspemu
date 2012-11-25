@@ -109,7 +109,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	{
 		private void _call_debug_vfpu()
 		{
-			MipsMethodEmitter.CallMethodWithCpuThreadStateAsFirstArgument(this.GetType(), "_debug_vfpu");
+			throw(new NotImplementedException());
+			//MipsMethodEmitter.CallMethodWithCpuThreadStateAsFirstArgument(this.GetType(), "_debug_vfpu");
 		}
 
 		public static void _debug_vfpu(CpuThreadState CpuThreadState)
