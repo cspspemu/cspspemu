@@ -214,60 +214,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		// vzero: Vector ZERO
 		// vone : Vector ONE
-		public void vzero() { VectorOperationSaveVd((VectorIndex) => { SafeILGenerator.Push((float)0.0f); }); }
-		public void vone() { VectorOperationSaveVd((VectorIndex) => { SafeILGenerator.Push((float)1.0f); }); }
+		public void vzero() { AstVfpuGenerateAndStoreVd((Index) => 0f);  }
+		public void vone() { AstVfpuGenerateAndStoreVd((Index) => 1f); }
 
 		// vmov  : Vector MOVe
 		// vsgn  : Vector SiGN
 		// *     : Vector Reverse SQuare root/COSine/Arc SINe/LOG2
 		// @CHECK
-		public void vmov()
-		{
-			VectorOperationSaveVd((Index) =>
-			{
-				Load_VS(Index);
-			});
-		}
-		public void vabs()
-		{
-			VectorOperationSaveVd((Index) =>
-			{
-				Load_VS(Index);
-				MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Abs);
-			});
-		}
-		public void vneg()
-		{
-			VectorOperationSaveVd((Index) =>
-			{
-				Load_VS(Index);
-				SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate);
-			});
-		}
-		public void vocp() {
-			VectorOperationSaveVd((Index) => {
-				SafeILGenerator.Push((float)1.0f);
-				Load_VS(Index);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
-			});
-		}
-		public void vsgn()
-		{
-			VectorOperationSaveVd((Index) =>
-			{
-				Load_VS(Index);
-				MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Sign);
-			});
-		}
-		public void vrcp()
-		{
-			VectorOperationSaveVd((Index) =>
-			{
-				SafeILGenerator.Push((float)1.0f);
-				Load_VS(Index);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.DivideSigned);
-			});
-		}
+		public void vmov() { AstVfpuGenerateAndStoreVd((Index) => AstLoadVs(Index)); }
+		public void vabs() { AstVfpuGenerateAndStoreVd((Index) => this.CallStatic((Func<float, float>)MathFloat.Abs, AstLoadVs(Index))); }
+		public void vneg() { AstVfpuGenerateAndStoreVd((Index) => -AstLoadVs(Index)); }
+		public void vocp() { AstVfpuGenerateAndStoreVd((Index) => 1f - AstLoadVs(Index)); }
+		public void vsgn() { AstVfpuGenerateAndStoreVd((Index) => this.CallStatic((Func<float, float>)MathFloat.Sign, AstLoadVs(Index))); }
+		public void vrcp() { AstVfpuGenerateAndStoreVd((Index) => 1f / AstLoadVs(Index)); }
 
 		private void _vfpu_call_single_method(Delegate Delegate)
 		{
@@ -493,10 +452,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			});
 		}
 
-		public void vdet() { throw (new NotImplementedException("")); }
+		public void vdet() { throw (new NotImplementedException("vdet")); }
 
-		public void mfvme() { throw (new NotImplementedException("")); }
-		public void mtvme() { throw (new NotImplementedException("")); }
+		public void mfvme() { throw (new NotImplementedException("mfvme")); }
+		public void mtvme() { throw (new NotImplementedException("mtvme")); }
 
 		/// <summary>
 		/// ID("vfim",        VM("110111:11:1:vt:imm16"), "%xs, %vh",      ADDR_TYPE_NONE, INSTR_TYPE_PSP),
@@ -519,12 +478,5 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public void vus2i() { throw (new NotImplementedException("")); }
 
 		public void vwbn() { throw (new NotImplementedException("")); }
-		//public void vwb_q() { throw(new NotImplementedException()); }
 	}
-	/*
-	union {
-		struct { VfpuPrefix vfpu_prefix_s, vfpu_prefix_t, vfpu_prefix_d; }
-		struct { VfpuPrefix[3] vfpu_prefixes; }
-	}
-	*/
 }
