@@ -91,15 +91,40 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return this.Cast<uint>(this.Binary(GPR_s(RS), "+", IMM_s()));
 		}
 
-		private AstNodeStm AstMemorySetValue(Type Type, AstNodeExpr Address, AstNodeExpr Value)
+		delegate void* AddressToPointerFunc(uint Address);
+
+		private AstNodeExpr AstMemoryGetPointer(AstNodeExpr Address)
 		{
 #if ALLOW_FAST_MEMORY
 			var FastMemory = CpuProcessor.Memory as FastPspMemory;
 			if (FastMemory != null)
 			{
 				var AddressMasked = this.Binary(Address, "&", PspMemory.MemoryMask);
+				return this.Immediate(new IntPtr(FastMemory.Base)) + AddressMasked;
+			}
+			else
+#endif
+			{
+				return this.CallInstance(
+					CpuThreadStateArgument(),
+					(AddressToPointerFunc)CpuThreadState.Methods.GetMemoryPtr,
+					Address
+				);
+			}
+		}
+
+		private AstNodeExprIndirect AstMemoryGetPointerIndirect(Type Type, AstNodeExpr Address)
+		{
+			return this.Indirect(this.Cast(Type.MakePointerType(), AstMemoryGetPointer(Address)));
+		}
+
+		private AstNodeStm AstMemorySetValue(Type Type, AstNodeExpr Address, AstNodeExpr Value)
+		{
+#if ALLOW_FAST_MEMORY
+			if (CpuProcessor.Memory is FastPspMemory)
+			{
 				return this.Assign(
-					this.Indirect(this.Cast(Type.MakePointerType(), this.Immediate(new IntPtr(FastMemory.Base)) + AddressMasked)),
+					AstMemoryGetPointerIndirect(Type, Address),
 					this.Cast(Type, Value)
 				);
 			}
@@ -123,11 +148,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		private unsafe AstNodeExpr AstMemoryGetValue(Type Type, AstNodeExpr Address)
 		{
 #if ALLOW_FAST_MEMORY
-			var FastMemory = CpuProcessor.Memory as FastPspMemory;
-			if (FastMemory != null)
+			if (CpuProcessor.Memory is FastPspMemory)
 			{
-				var AddressMasked = this.Binary(Address, "&", PspMemory.MemoryMask);
-				return this.Indirect(this.Cast(Type.MakePointerType(), this.Immediate(new IntPtr(FastMemory.Base)) + AddressMasked));
+				return AstMemoryGetPointerIndirect(Type, Address);
 			}
 			else
 #endif

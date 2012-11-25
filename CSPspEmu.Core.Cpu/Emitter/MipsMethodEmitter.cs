@@ -18,7 +18,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	/// <summary>
 	/// <see cref="http://www.mrc.uidaho.edu/mrc/people/jff/digital/MIPSir.html"/>
 	/// </summary>
-	public unsafe class MipsMethodEmitter : IAstGenerator
+	public unsafe partial class MipsMethodEmitter : IAstGenerator
 	{
 #if USE_DYNAMIC_METHOD
 		//protected DynamicMethod DynamicMethod;

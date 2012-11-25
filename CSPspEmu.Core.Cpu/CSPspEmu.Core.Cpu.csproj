@@ -98,6 +98,7 @@
     <Compile Include="Emitter\Emitters\CpuEmitter.Vfpu_Prefixes.cs" />
     <Compile Include="Emitter\Emitters\CpuEmitter.Vfpu_Random.cs" />
     <Compile Include="Emitter\Emitters\CpuEmitter.Vfpu_RegisterTransfer.cs" />
+    <Compile Include="Emitter\MipsMethodEmitter.AstUtils.cs" />
     <Compile Include="Emitter\SafeILGeneratorEx.cs" />
     <Compile Include="MethodCacheFast.cs" />
     <Compile Include="MethodCacheSlow.cs" />

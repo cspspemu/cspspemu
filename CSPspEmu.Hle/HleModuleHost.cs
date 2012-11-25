@@ -12,6 +12,8 @@ namespace CSPspEmu.Hle
 {
 	public unsafe partial class HleModuleHost : HleModule
 	{
+		static readonly public HleModuleHost Methods = new HleModuleHost();
+
 		public string ModuleLocation;
 		public Dictionary<uint, HleFunctionEntry> EntriesByNID = new Dictionary<uint, HleFunctionEntry>();
 		public Dictionary<uint, Action<CpuThreadState>> DelegatesByNID = new Dictionary<uint, Action<CpuThreadState>>();

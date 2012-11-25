@@ -8,7 +8,9 @@ using CSPspEmu.Core.Cpu.Emitter;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
 using CSharpUtils;
-
+using SafeILGenerator;
+using SafeILGenerator.Ast.Nodes;
+using SafeILGenerator.Ast;
 
 namespace CSPspEmu.Hle
 {
@@ -20,6 +22,8 @@ namespace CSPspEmu.Hle
 		[Inject]
 		internal CpuProcessor CpuProcessor;
 
+		private IAstGenerator ast = new AstGenerator();
+
 		private Action<CpuThreadState> CreateDelegateForMethodInfo(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute)
 		{
 			var MipsMethodEmiter = new MipsMethodEmitter(CpuProcessor, 0);
@@ -29,16 +33,23 @@ namespace CSPspEmu.Hle
 			var NotImplementedAttribute = (HlePspNotImplementedAttribute)MethodInfo.GetCustomAttributes(typeof(HlePspNotImplementedAttribute), true).FirstOrDefault();
 			bool NotImplementedFunc = (NotImplementedAttribute != null) && NotImplementedAttribute.Notice;
 			bool SkipLog = HlePspFunctionAttribute.SkipLog;
-			var SafeILGenerator = MipsMethodEmiter.SafeILGenerator;
-			SafeILGenerator.Comment("HleModuleHost.CreateDelegateForMethodInfo(" + MethodInfo + ", " + HlePspFunctionAttribute + ")");
+			//var SafeILGenerator = MipsMethodEmiter.SafeILGenerator;
+
+			var Nodes = new AstNodeStmContainer();
+
+			Nodes.AddStatement(ast.Comment("HleModuleHost.CreateDelegateForMethodInfo(" + MethodInfo + ", " + HlePspFunctionAttribute + ")"));
 
 			var ParamInfoList = new List<ParamInfo>();
 
-			Action CallAction = () =>
+			AstNodeExprCall AstMethodCall;
 			{
-				SafeILGenerator.LoadArgument0CpuThreadState();
-				SafeILGenerator.LoadField(typeof(CpuThreadState).GetField("ModuleObject"));
-				SafeILGenerator.CastClass(this.GetType());
+				//var ModuleObject = this.Cast(this.GetType(), this.FieldAccess(this.Argument<CpuThreadState>(0, "CpuThreadState"), "ModuleObject"));
+				//SafeILGenerator.LoadArgument0CpuThreadState();
+				//SafeILGenerator.LoadField(typeof(CpuThreadState).GetField("ModuleObject"));
+				//SafeILGenerator.CastClass(this.GetType());
+
+				var AstParameters = new List<AstNodeExpr>();
+
 				foreach (var ParameterInfo in MethodInfo.GetParameters())
 				{
 					var ParameterType = ParameterInfo.ParameterType;
@@ -46,7 +57,7 @@ namespace CSPspEmu.Hle
 					// The CpuThreadState
 					if (ParameterType == typeof(CpuThreadState))
 					{
-						SafeILGenerator.LoadArgument0CpuThreadState();
+						AstParameters.Add(MipsMethodEmiter.CpuThreadStateArgument());
 					}
 					// A stringz
 					else if (ParameterType == typeof(string))
@@ -58,9 +69,15 @@ namespace CSPspEmu.Hle
 							RegisterIndex = GprIndex,
 							ParameterType = ParameterType,
 						});
-						SafeILGenerator.LoadArgument0CpuThreadState();
-						MipsMethodEmiter.LoadGPR_Unsigned(GprIndex);
-						SafeILGenerator.Call(typeof(HleModuleHost).GetMethod("StringFromAddress"));
+
+						AstParameters.Add(
+							ast.CallStatic(
+								(Func<CpuThreadState, uint, string>)HleModuleHost.StringFromAddress,
+								MipsMethodEmiter.CpuThreadStateArgument(),
+								MipsMethodEmiter.GPR_u(GprIndex)
+							)
+						);
+
 						GprIndex++;
 					}
 					// A pointer or ref/out
@@ -73,35 +90,20 @@ namespace CSPspEmu.Hle
 							RegisterIndex = GprIndex,
 							ParameterType = typeof(uint),
 						});
-						MipsMethodEmiter._getmemptr(() =>
-						{
-							MipsMethodEmiter.LoadGPR_Unsigned(GprIndex);
-						}, Safe: true, ErrorDescription: "Invalid Pointer for Argument '" + ParameterType.Name + " " + ParameterInfo.Name + "'");
+		
+						AstParameters.Add(
+							ast.Cast(
+								ParameterType,
+								MipsMethodEmiter.AstMemoryGetPointer(
+									MipsMethodEmiter.GPR_u(GprIndex),
+									Safe: true,
+									ErrorDescription: "Invalid Pointer for Argument '" + ParameterType.Name + " " + ParameterInfo.Name + "'"
+								)
+							)
+						);
+
 						GprIndex++;
 					}
-					/*
-					// An array
-					else if (ParameterType.IsArray)
-					{
-						ParamInfoList.Add(new ParamInfo()
-						{
-							ParameterName = ParameterInfo.Name,
-							RegisterType = ParamInfo.RegisterTypeEnum.Gpr,
-							RegisterIndex = GprIndex,
-							ParameterType = typeof(uint),
-						});
-						// Pointer
-						MipsMethodEmiter._getmemptr(() =>
-						{
-							MipsMethodEmiter.LoadGPR_Unsigned(GprIndex);
-						}, Safe: true, ErrorDescription: "Invalid Pointer for Argument '" + ParameterType.Name + " " + ParameterInfo.Name + "'");
-						GprIndex++;
-						// Array
-						MipsMethodEmiter.LoadGPR_Unsigned(GprIndex);
-						GprIndex++;
-						MipsMethodEmiter.CallMethod(HleModuleHost.PointerLengthToArrat);
-					}
-					*/
 					// A long type
 					else if (ParameterType == typeof(long) || ParameterType == typeof(ulong))
 					{
@@ -115,15 +117,15 @@ namespace CSPspEmu.Hle
 							ParameterType = ParameterType,
 						});
 
+						if (ParameterType == typeof(ulong))
+						{
+							AstParameters.Add(MipsMethodEmiter.GPR_ul(GprIndex + 0));
+						}
+						else
+						{
+							AstParameters.Add(MipsMethodEmiter.GPR_sl(GprIndex + 0));
+						}
 
-						MipsMethodEmiter.LoadGPRLong_Signed(GprIndex + 0);
-						/*
-						MipsMethodEmiter.LoadGPR_Unsigned(GprIndex + 0);
-						MipsMethodEmiter.LoadGPR_Unsigned(GprIndex + 1);
-						SafeILGenerator.Push((int)32);
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Shl);
-						MipsMethodEmiter.ILGenerator.Emit(OpCodes.Or);
-						*/
 						GprIndex += 2;
 					}
 					// A float register.
@@ -137,7 +139,8 @@ namespace CSPspEmu.Hle
 							ParameterType = ParameterType,
 						});
 
-						MipsMethodEmiter.LoadFPR(FprIndex);
+						AstParameters.Add(MipsMethodEmiter.FPR(FprIndex));
+
 						FprIndex++;
 					}
 					// Test
@@ -151,8 +154,11 @@ namespace CSPspEmu.Hle
 							ParameterType = ParameterType,
 						});
 
-						MipsMethodEmiter.LoadGPR_Unsigned(GprIndex);
-						MipsMethodEmiter.CallMethod(typeof(PspPointer).GetMethod("op_Implicit", new[] { typeof(uint) }));
+						AstParameters.Add(ast.CallStatic(
+							typeof(PspPointer).GetMethod("op_Implicit", new[] { typeof(uint) }),
+							MipsMethodEmiter.GPR_u(GprIndex)
+						));
+
 						GprIndex++;
 					}
 					// An integer register
@@ -166,32 +172,35 @@ namespace CSPspEmu.Hle
 							ParameterType = ParameterType,
 						});
 
-						MipsMethodEmiter.LoadGPR_Unsigned(GprIndex);
+						if (ParameterType == typeof(uint))
+						{
+							AstParameters.Add(ast.Cast(ParameterType, MipsMethodEmiter.GPR_u(GprIndex)));
+						}
+						else
+						{
+							AstParameters.Add(ast.Cast(ParameterType, MipsMethodEmiter.GPR_s(GprIndex)));
+						}
+
 						GprIndex++;
 					}
-					//MipsMethodEmiter.ILGenerator.Emit(OpCodes.ld
 				}
-				SafeILGenerator.Call(MethodInfo);
-			};
 
-			if (MethodInfo.ReturnType == typeof(void))
-			{
-				CallAction();
+				AstMethodCall = ast.CallInstance(
+					ast.Cast(this.GetType(), ast.FieldAccess(MipsMethodEmiter.CpuThreadStateArgument(), "ModuleObject")),
+					MethodInfo,
+					AstParameters.ToArray()
+				);
 			}
-			else if (MethodInfo.ReturnType == typeof(long))
-			{
-				MipsMethodEmiter.SaveGPRLong(2, CallAction);
-			}
-			else if (MethodInfo.ReturnType == typeof(float))
-			{
-				MipsMethodEmiter.SaveFPR(0, CallAction);
-			}
-			else
-			{
-				MipsMethodEmiter.SaveGPR(2, CallAction);
-			}
+
+			if (AstMethodCall.Type == typeof(void)) Nodes.AddStatement(ast.Statement(AstMethodCall));
+			else if (AstMethodCall.Type == typeof(long)) Nodes.AddStatement(ast.Assign(MipsMethodEmiter.GPR_l(2), ast.Cast<long>(AstMethodCall)));
+			else if (AstMethodCall.Type == typeof(float)) Nodes.AddStatement(ast.Assign(MipsMethodEmiter.FPR(0), ast.Cast<float>(AstMethodCall)));
+			else Nodes.AddStatement(ast.Assign(MipsMethodEmiter.GPR(2), ast.Cast<uint>(AstMethodCall)));
+
+			MipsMethodEmiter.GenerateIL(Nodes);
 
 			var Delegate = MipsMethodEmiter.CreateDelegate();
+
 			return (CpuThreadState) =>
 			{
 				bool Trace = (!SkipLog && CpuThreadState.CpuProcessor.PspConfig.DebugSyscalls);

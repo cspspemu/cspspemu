@@ -139,12 +139,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private void _load_memory_imm14_index(uint Index)
 		{
-			MipsMethodEmitter._getmemptr(() =>
-			{
-				MipsMethodEmitter.LoadGPR_Unsigned(RS);
-				SafeILGenerator.Push((int)(Instruction.IMM14 * 4 + Index * 4));
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-			}, Safe: true, CanBeNull: false);
+			throw(new NotImplementedException());
+			//MipsMethodEmitter._getmemptr(() =>
+			//{
+			//	MipsMethodEmitter.LoadGPR_Unsigned(RS);
+			//	SafeILGenerator.Push((int)(Instruction.IMM14 * 4 + Index * 4));
+			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
+			//}, Safe: true, CanBeNull: false);
 		}
 
 		public VfpuPrefix PrefixNone;

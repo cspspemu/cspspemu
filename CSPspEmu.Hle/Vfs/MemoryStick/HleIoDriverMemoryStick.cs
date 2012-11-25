@@ -8,10 +8,10 @@ namespace CSPspEmu.Hle.Vfs.MemoryStick
 	public unsafe class HleIoDriverMemoryStick : ProxyHleIoDriver
 	{
 		[Inject]
-		PspMemory Memory;
+		PspMemory Memory = null;
 
 		[Inject]
-		HleCallbackManager CallbackManager;
+		HleCallbackManager CallbackManager = null;
 
 		public HleIoDriverMemoryStick(PspEmulatorContext PspEmulatorContext, IHleIoDriver HleIoDriver)
 			: base(HleIoDriver)
