@@ -7,6 +7,7 @@ using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
 using CSharpUtils.Arrays;
 using CSharpUtils.Streams;
+using CSPspEmu.Core.Cpu.Emitter;
 
 namespace CSPspEmu.Core.Cpu.Assembler
 {
@@ -35,7 +36,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
 		protected static bool IsIdent(char C)
 		{
-			return ((C == '_') || (C == '%') || (C == '+') || (C == '-') || (C >= '0' && C <= '9') || (C >= 'a' && C <= 'z') || (C >= 'A' && C <= 'Z'));
+			return ((C == '/') || (C == ':') || (C == '_') || (C == '%') || (C == '+') || (C == '-') || (C >= '0' && C <= '9') || (C >= 'a' && C <= 'z') || (C >= 'A' && C <= 'Z'));
 		}
 
 		protected static bool IsSpace(char C)
@@ -125,6 +126,57 @@ namespace CSPspEmu.Core.Cpu.Assembler
 				Dictionary[Pair.Item1] = Pair.Item2;
 			}
 			return Dictionary;
+		}
+
+		public static void ParseAndUpdateVfprDestinationPrefix(int Index, string RegisterName, ref VfpuDestinationPrefix VfpuPrefix)
+		{
+			switch (RegisterName)
+			{
+				case "M": VfpuPrefix.DestinationMask(Index, true); break;
+				case "0:1": VfpuPrefix.DestinationMask(Index, false); VfpuPrefix.DestinationSaturation(Index, 1); break;
+				case "-1:1": VfpuPrefix.DestinationMask(Index, false); VfpuPrefix.DestinationSaturation(Index, 3); break;
+				default: throw (new NotImplementedException(String.Format("Invalid RegisterName {0}", RegisterName)));
+			}
+		}
+
+		public static void ParseAndUpdateVfprSourceTargetPrefix(int Index, string RegisterName, ref VfpuPrefix VfpuPrefix)
+		{
+			int SetIndex = Index;
+			bool IsConstant;
+
+			RegisterName = RegisterName.Replace(" ", "");
+			
+			if (RegisterName.StartsWith("-"))
+			{
+				RegisterName = RegisterName.Substring(1);
+				VfpuPrefix.SourceNegate(Index, true);
+			}
+
+			if (RegisterName.StartsWith("|") && RegisterName.EndsWith("|"))
+			{
+				RegisterName = RegisterName.Substr(1, -1);
+				VfpuPrefix.SourceAbsolute(Index, true);
+			}
+
+			switch (RegisterName)
+			{
+				case "x": IsConstant = false; SetIndex = 0; break;
+				case "y": IsConstant = false; SetIndex = 1; break;
+				case "z": IsConstant = false; SetIndex = 2; break;
+				case "w": IsConstant = false; SetIndex = 3; break;
+				case "3": IsConstant = true; SetIndex = 0; VfpuPrefix.SourceAbsolute(Index, true); break;
+				case "0": IsConstant = true; SetIndex = 0; VfpuPrefix.SourceAbsolute(Index, false); break;
+				case "1/3": IsConstant = true; SetIndex = 1; VfpuPrefix.SourceAbsolute(Index, true); break;
+				case "1": IsConstant = true; SetIndex = 1; VfpuPrefix.SourceAbsolute(Index, false); break;
+				case "1/4": IsConstant = true; SetIndex = 2; VfpuPrefix.SourceAbsolute(Index, true); break;
+				case "2": IsConstant = true; SetIndex = 2; VfpuPrefix.SourceAbsolute(Index, false); break;
+				case "1/6": IsConstant = true; SetIndex = 3; VfpuPrefix.SourceAbsolute(Index, true); break;
+				case "1/2": IsConstant = true; SetIndex = 3; VfpuPrefix.SourceAbsolute(Index, false); break;
+				default: throw(new NotImplementedException(String.Format("Invalid RegisterName {0}", RegisterName)));
+			}
+
+			VfpuPrefix.SourceConstant(Index, IsConstant);
+			VfpuPrefix.SourceIndex(Index, (uint)SetIndex);
 		}
 
 		public static uint ParseVfprConstantName(string RegisterName)
@@ -234,6 +286,31 @@ namespace CSPspEmu.Core.Cpu.Assembler
 						case "%yp": Instruction.VS = ParseVfprName(VfpuSize, Value); break;
 						case "%xp": Instruction.VT = ParseVfprName(VfpuSize, Value); break;
 						case "%vk": Instruction.IMM5 = ParseVfprConstantName(Value); break;
+
+						// VFPU: prefixes (source/target)
+						case "%vp0":
+						case "%vp1":
+						case "%vp2":
+						case "%vp3":
+							{
+								int Index = int.Parse(Key.Substr(-1));
+								VfpuPrefix VfpuPrefix = Instruction.Value;
+								ParseAndUpdateVfprSourceTargetPrefix(Index, Value, ref VfpuPrefix);
+								Instruction.Value = VfpuPrefix;
+							}
+							break;
+						// VFPU: prefixes (destination)
+						case "%vp4":
+						case "%vp5":
+						case "%vp6":
+						case "%vp7":
+							{
+								int Index = int.Parse(Key.Substr(-1)) - 4;
+								VfpuDestinationPrefix VfpuPrefix = Instruction.Value;
+								ParseAndUpdateVfprDestinationPrefix(Index, Value, ref VfpuPrefix);
+								Instruction.Value = VfpuPrefix;
+							}
+							break;
 
 						//case "%xs": Instruction.VD = ParseVfprName(VfpuSize, Value); break;
 

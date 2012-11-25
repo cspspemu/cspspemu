@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GLES2\gl2ext.cs" />
     <Compile Include="Matrix4.cs" />
     <Compile Include="OpenglEs.cs" />
     <Compile Include="Uniform.cs" />

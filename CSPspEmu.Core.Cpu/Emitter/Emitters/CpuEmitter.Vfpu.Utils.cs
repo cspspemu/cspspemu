@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using CSharpUtils;
 using SafeILGenerator;
+using SafeILGenerator.Ast;
+using SafeILGenerator.Ast.Nodes;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -146,75 +148,33 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public VfpuPrefix PrefixNone;
 		public VfpuPrefix PrefixSource;
-		public VfpuPrefix PrefixDestination;
 		public VfpuPrefix PrefixTarget;
+		public VfpuDestinationPrefix PrefixDestinationNone;
+		public VfpuDestinationPrefix PrefixDestination;
 
 		private void CheckPrefixUsage(ref VfpuPrefix Prefix, bool Debug = true)
 		{
 			// Disable the prefix once it have been used.
 			if (Prefix.Enabled)
 			{
-				/*
-				if (Prefix.UsedCount > 0 && Prefix.UsedPC != PC)
-				{
-					throw (new InvalidOperationException(
-						String.Format(
-							"[0] Prefix not used or not applied to the next instruction Prefix={0}, PC=0x{1:X}",
-							Prefix, PC
-						)
-					));
-				}
-				*/
-
 				if (Prefix.UsedCount > 0 && Prefix.UsedPC != PC)
 				{
 					Prefix.Enabled = false;
 				}
+			}
+		}
 
-				/*
-				// Additional consideration.
-				if (PC != Prefix.DeclaredPC + 4)
+		private void CheckPrefixUsage(ref VfpuDestinationPrefix Prefix, bool Debug = true)
+		{
+			// Disable the prefix once it have been used.
+			if (Prefix.Enabled)
+			{
+				if (Prefix.UsedCount > 0 && Prefix.UsedPC != PC)
 				{
-					if (Prefix.UsedCount == 0)
-					{
-						throw (new InvalidOperationException(
-							String.Format(
-								"[1] Prefix not used or not applied to the next instruction Prefix={0}, PC=0x{1:X}",
-								Prefix, PC
-							)
-						));
-					}
 					Prefix.Enabled = false;
 				}
-				*/
 			}
 		}
-
-		/*
-		if (enabled && prefix.enabled) {
-			foreach (i, ref value; dst) {
-				// Constant.
-				if (prefix.constant(i)) {
-					final switch (prefix.index(i)) {
-						case 0: value = prefix.absolute(i) ? (3.0f       ) : (0.0f); break;
-						case 1: value = prefix.absolute(i) ? (1.0f / 3.0f) : (1.0f); break;
-						case 2: value = prefix.absolute(i) ? (1.0f / 4.0f) : (2.0f); break;
-						case 3: value = prefix.absolute(i) ? (1.0f / 6.0f) : (0.5f); break;
-					}
-				}
-				// Value
-				else {
-					value = *src[prefix.index(i)];
-				}
-				
-				if (prefix.absolute(i)) value = abs(value);
-				if (prefix.negate  (i)) value = -value;
-			}
-			prefix.enabled = false;
-		} else {
-			foreach (n, ref value; dst) value = *src[n];
-		}
-		*/
 
 		private void VfpuLoad_Register(uint Register, int Index, uint VectorSize, ref VfpuPrefix Prefix, bool Debug = false, bool AsInteger = false)
 		{
@@ -323,7 +283,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			SafeILGenerator.StoreIndirect<sbyte>();
 		}
 
-		private void VfpuSave_Register(uint Register, int Index, uint VectorSize, VfpuPrefix Prefix, Action Action, bool Debug = false, bool AsInteger = false)
+		private void VfpuSave_Register(uint Register, int Index, uint VectorSize, VfpuDestinationPrefix Prefix, Action Action, bool Debug = false, bool AsInteger = false)
 		{
 			CheckPrefixUsage(ref Prefix);
 			_VfpuLoadVectorWithIndexPointer(Register, (uint)Index, VectorSize, Debug);
@@ -412,7 +372,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		private void Load_VD(int Index, uint VectorSize, int RegisterOffset = 0, bool Debug = false, bool AsInteger = false)
 		{
 			//Load_Register(Instruction.VD + RegisterOffset, Index, VectorSize, PrefixNone, Debug);
-			VfpuLoad_Register((uint)(Instruction.VD + RegisterOffset), Index, VectorSize, ref PrefixDestination, Debug, AsInteger: AsInteger);
+			VfpuLoad_Register((uint)(Instruction.VD + RegisterOffset), Index, VectorSize, ref PrefixNone, Debug, AsInteger: AsInteger);
 		}
 
 		private void Save_VD(int Index, uint VectorSize, int RegisterOffset, Action Action, bool Debug = false, bool AsInteger = false)
@@ -427,12 +387,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private void Save_VT(int Index, uint VectorSize, int RegisterOffset, Action Action, bool Debug = false, bool AsInteger = false)
 		{
-			VfpuSave_Register((uint)(Instruction.VT + RegisterOffset), Index, VectorSize, PrefixTarget, Action, Debug, AsInteger: AsInteger);
+			VfpuSave_Register((uint)(Instruction.VT + RegisterOffset), Index, VectorSize, PrefixDestinationNone, Action, Debug, AsInteger: AsInteger);
 		}
 
 		private void Save_VT(int Index, uint VectorSize, Action Action, bool Debug = false, bool AsInteger = false)
 		{
-			VfpuSave_Register((uint)(Instruction.VT), Index, VectorSize, PrefixTarget, Action, Debug, AsInteger: AsInteger);
+			VfpuSave_Register((uint)(Instruction.VT), Index, VectorSize, PrefixDestinationNone, Action, Debug, AsInteger: AsInteger);
 		}
 
 	    static IEnumerable<int> XRange(int Start, int End)
@@ -613,38 +573,135 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			);
 		}
 
-		/*
-		private void _VectorOperation0Registers(Action<uint> Action)
+		private AstNodeExprLValue VFR(int Index)
 		{
-			_VectorOperation_N_Registers(Instruction.ONE_TWO, 0, Action);
+			return REG("VFR" + Index);
 		}
 
-		private void _VectorOperation1Registers(Action<uint> Action)
+		//private void VfpuLoad_Register(uint Register, int Index, uint VectorSize, ref VfpuPrefix Prefix, bool Debug = false, bool AsInteger = false)
+
+		private AstNodeExpr AstLoadVfpuReg(uint Register, int Index, uint VectorSize, ref VfpuPrefix Prefix, bool AsInteger = false)
 		{
-			_VectorOperation_N_Registers(Instruction.ONE_TWO, 1, Action);
+			CheckPrefixUsage(ref Prefix);
+
+			var RegisterIndices = VfpuUtils.GetIndices(VectorSize, VfpuUtils.RegisterType.Vector, Register);
+			AstNodeExpr AstNodeExpr;
+
+			if (Prefix.Enabled)
+			{
+				//Console.Error.WriteLine("PREFIX [2]!" + Index);
+				Prefix.UsedPC = PC;
+				Prefix.UsedCount++;
+
+				// Constant.
+				if (Prefix.SourceConstant(Index))
+				{
+					float Value = 0.0f;
+					switch (Prefix.SourceIndex(Index))
+					{
+						case 0: Value = Prefix.SourceAbsolute(Index) ? (3.0f) : (0.0f); break;
+						case 1: Value = Prefix.SourceAbsolute(Index) ? (1.0f / 3.0f) : (1.0f); break;
+						case 2: Value = Prefix.SourceAbsolute(Index) ? (1.0f / 4.0f) : (2.0f); break;
+						case 3: Value = Prefix.SourceAbsolute(Index) ? (1.0f / 6.0f) : (0.5f); break;
+						default: throw (new InvalidOperationException());
+					}
+
+					if (AsInteger)
+					{
+						AstNodeExpr = this.Immediate((int)MathFloat.ReinterpretFloatAsInt(Value));
+					}
+					else
+					{
+						AstNodeExpr = this.Immediate((float)Value);
+					}
+				}
+				// Value.
+				else
+				{
+					if (AsInteger)
+					{
+						throw(new NotImplementedException());
+					}
+					else
+					{
+						AstNodeExpr = VFR(RegisterIndices[Prefix.SourceIndex(Index)]);
+					}
+					if (Prefix.SourceAbsolute(Index)) AstNodeExpr = this.CallStatic((Func<float, float>)MathFloat.Abs, AstNodeExpr);
+				}
+
+				if (Prefix.SourceNegate(Index)) AstNodeExpr = -AstNodeExpr;
+			}
+			else
+			{
+				
+				AstNodeExpr = VFR(RegisterIndices[Index]);
+			}
+
+			return AstNodeExpr;
 		}
 
-		private void _VectorOperation2Registers(Action<uint> Action)
+		private AstNodeExpr AstLoadVs(int Index, bool AsInteger = false)
 		{
-			_VectorOperation_N_Registers(Instruction.ONE_TWO, 2, Action);
-		}
-		*/
-
-		/*
-		private void _VectorOperation0Registers(uint VectorSize, Action<uint> Action)
-		{
-			_VectorOperation_N_Registers(VectorSize, 0, Action);
+			var VectorSize = Instruction.ONE_TWO;
+			return AstLoadVfpuReg(Instruction.VS, Index, VectorSize, ref PrefixSource, AsInteger);
 		}
 
-		private void _VectorOperation1Registers(uint VectorSize, Action<uint> Action)
+		private AstNodeExpr AstLoadVt(int Index, bool AsInteger = false)
 		{
-			_VectorOperation_N_Registers(VectorSize, 1, Action);
+			var VectorSize = Instruction.ONE_TWO;
+			return AstLoadVfpuReg(Instruction.VT, Index, VectorSize, ref PrefixTarget, AsInteger);
 		}
 
-		private void _VectorOperation2Registers(uint VectorSize, Action<uint> Action)
+		private AstNodeExpr PrefixVdTransform(int Index, AstNodeExpr AstNodeExpr, bool AsInteger)
 		{
-			_VectorOperation_N_Registers(VectorSize, 2, Action);
+			CheckPrefixUsage(ref PrefixTarget);
+
+			//Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAA ({0}, {1})", PrefixTarget.Enabled, PrefixDestination.DestinationMask(Index));
+
+			if (PrefixDestination.Enabled)
+			{
+				if (!PrefixDestination.DestinationMask(Index))
+				{
+					//Console.WriteLine("BBBBBBBBBBBBBBB ({0})", PrefixDestination.DestinationSaturation(Index));
+					float Min = 0, Max = 0;
+					bool DoClamp = false;
+					switch (PrefixDestination.DestinationSaturation(Index))
+					{
+						case 1: DoClamp = true; Min = 0.0f; Max = 1.0f; break;
+						case 3: DoClamp = true; Min = -1.0f; Max = 1.0f; break;
+						default: break;
+					}
+					if (DoClamp)
+					{
+						if (AsInteger)
+						{
+							AstNodeExpr = this.CallStatic((Func<int, int, int, int>)MathFloat.ClampInt, AstNodeExpr, (int)Min, (int)Max);
+						}
+						else
+						{
+							AstNodeExpr = this.CallStatic((Func<float, float, float, float>)MathFloat.Clamp, AstNodeExpr, (float)Min, (float)Max);
+						}
+					}
+				}
+			}
+
+			return AstNodeExpr;
 		}
-		*/
+
+		private void AstVfpuGenerateAndStoreVd(Func<int, AstNodeExpr> Generator, bool AsInteger = false)
+		{
+			var Size = Instruction.ONE_TWO;
+			var RegisterIndices = VfpuUtils.GetIndices(Size, VfpuUtils.RegisterType.Vector, Instruction.VD);
+			var Items = new List<AstNodeStm>();
+			for (int Index = 0; Index < Size; Index++)
+			{
+				Items.Add(this.Assign(VFR(RegisterIndices[Index]), PrefixVdTransform(Index, Generator(Index), AsInteger)));
+			}
+			this.GenerateIL(this.Statements(Items.ToArray()));
+			//foreach (var Index in RegisterIndices)
+			//{
+			//	Console.WriteLine("Index: {0}", Index);
+			//}
+		}
 	}
 }

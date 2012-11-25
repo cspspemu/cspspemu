@@ -1,6 +1,9 @@
 ﻿using System;
 using CSharpUtils;
 using SafeILGenerator;
+using SafeILGenerator.Ast;
+using SafeILGenerator.Ast.Nodes;
+using System.Collections.Generic;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -438,61 +441,17 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		///     <para/>
 		///     vfpu_regs[%vfpu_rd] &lt;- vfpu_regs[%vfpu_rs] + vfpu_regs[%vfpu_rt]
 		/// </summary>
-		public void vadd()
-		{
-			VectorOperationSaveVd((Index) =>
-			{
-				Load_VS_VT(Index);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-			});
-		}
-		public void vsub()
-		{
-			VectorOperationSaveVd((Index) =>
-			{
-				Load_VS_VT(Index);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
-			});
-		}
-		public void vdiv()
-		{
-			VectorOperationSaveVd((Index) =>
-			{
-				Load_VS_VT(Index);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.DivideSigned);
-			});
-		}
-
-		/*
-		public static float _vmul(float a, float b)
-		{
-			Console.Error.WriteLine("{0} * {1} = {2}", a, b, a * b);
-			return a * b;
-		}
-		*/
-
-		public void vmul()
-		{
-			VectorOperationSaveVd((Index) =>
-			{
-				Load_VS_VT(Index);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-				//MipsMethodEmiter.CallMethod(this.GetType(), "_vmul");
-			});
-			/*
-			_VectorOperation2Registers(Index =>
-			{
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			});
-			*/
-		}
+		public void vadd() { AstVfpuGenerateAndStoreVd((Index) => AstLoadVs(Index) + AstLoadVt(Index)); }
+		public void vsub() { AstVfpuGenerateAndStoreVd((Index) => AstLoadVs(Index) - AstLoadVt(Index)); }
+		public void vdiv() { AstVfpuGenerateAndStoreVd((Index) => AstLoadVs(Index) / AstLoadVt(Index)); }
+		public void vmul() { AstVfpuGenerateAndStoreVd((Index) => AstLoadVs(Index) * AstLoadVt(Index)); }
 
 		void _vidt_x(uint VectorSize, uint Register)
 		{
 			uint IndexOne = BitUtils.Extract(Register, 0, 2);
 			foreach (var Index in XRange(VectorSize))
 			{
-				VfpuSave_Register(Register, Index, VectorSize, PrefixNone, () =>
+				VfpuSave_Register(Register, Index, VectorSize, PrefixDestinationNone, () =>
 				{
 					SafeILGenerator.Push((float)((Index == IndexOne) ? 1.0f : 0.0f));
 				}
@@ -506,7 +465,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			uint IndexOne = BitUtils.Extract(Register, 0, 2);
 			foreach (var Index in XRange(VectorSize))
 			{
-				VfpuSave_Register(Register, Index, VectorSize, PrefixNone, () =>
+				VfpuSave_Register(Register, Index, VectorSize, PrefixDestinationNone, () =>
 				{
 					SafeILGenerator.Push((float) 0.0f);
 				}

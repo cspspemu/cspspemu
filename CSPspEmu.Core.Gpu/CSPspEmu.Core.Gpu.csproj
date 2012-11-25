@@ -79,6 +79,8 @@
     <Compile Include="Impl\Null\GpuImplNull.cs" />
     <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.cs" />
     <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.StateClear.cs" />
+    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.StateCommon.cs" />
+    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.StateDraw.cs" />
     <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.Utils.cs" />
     <Compile Include="Impl\OpenglEs\OpenglGpuImpl.ConversionTables.cs" />
     <Compile Include="Impl\OpenglEs\TextureCacheOpengles.cs" />

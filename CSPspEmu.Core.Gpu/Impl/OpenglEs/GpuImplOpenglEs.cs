@@ -32,6 +32,7 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 
 		Uniform fColor;
 		Uniform u_has_vertex_color;
+		Uniform u_transform_2d;
 
 		Uniform u_has_texture;
 		Uniform u_texture;
@@ -68,6 +69,7 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 			var VertexProgram = Assembly.GetExecutingAssembly().GetManifestResourceStream("CSPspEmu.Core.Gpu.Impl.OpenglEs.shader.vertex").ReadAllContentsAsString(Encoding.UTF8);
 
 			this.GraphicsContext = new OffscreenContext(512, 272);
+			this.GraphicsContext.SetCurrent();
 
 			this.glVENDOR = GL.glGetString2(GL.GL_VENDOR);
 			this.glRENDERER = GL.glGetString2(GL.GL_RENDERER);
@@ -75,7 +77,11 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 			this.glSLVERSION = GL.glGetString2(GL.GL_SHADING_LANGUAGE_VERSION);
 			this.glEXTENSIONS = GL.glGetString2(GL.GL_EXTENSIONS);
 
-			this.GraphicsContext.SetCurrent();
+			ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Magenta, () =>
+			{
+				Console.WriteLine("{0}", this.glEXTENSIONS);
+			});
+
 			GL.glViewport(0, 0, 512, 272);
 			{
 				this.ShaderProgram = ShaderProgram.CreateProgram(VertexProgram, FragmentProgram);
@@ -95,6 +101,7 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 					// Colors
 					this.fColor = this.ShaderProgram.GetUniformLocation("u_color");
 					this.u_has_vertex_color = this.ShaderProgram.GetUniformLocation("u_has_vertex_color");
+					this.u_transform_2d = this.ShaderProgram.GetUniformLocation("u_transform_2d");
 
 					// Textures
 					this.u_has_texture = this.ShaderProgram.GetUniformLocation("u_has_texture");
@@ -111,31 +118,12 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 		}
 
 		VertexInfo[] VertexInfoBuffer = new VertexInfo[1024 * 1024];
-
-		private static void PrepareState_DepthTest(GpuStateStruct* GpuState)
-		{
-			if (GpuState->DepthTestState.Mask != 0 && GpuState->DepthTestState.Mask != 1)
-			{
-				Console.Error.WriteLine("WARNING! DepthTestState.Mask: {0}", GpuState->DepthTestState.Mask);
-			}
-	
-			GL.glDepthMask(GpuState->DepthTestState.Mask == 0);
-
-			if (!GL.glEnableDisable(GL.GL_DEPTH_TEST, GpuState->DepthTestState.Enabled))
-			{
-				return;
-			}
-			//GL.DepthFunc(DepthFunction.Greater);
-			GL.glDepthFunc(DepthFunctionTranslate[(int)GpuState->DepthTestState.Function]);
-			//GL.DepthRange
-		}
+		VertexReader VertexReader = new VertexReader();
 
 		public override void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
 		{
 			var VertexType = GpuState->VertexState.Type;
 			var TextureState = &GpuState->TextureMappingState.TextureState;
-
-			var VertexReader = new VertexReader();
 
 			VertexReader.SetVertexTypeStruct(
 				VertexType,
@@ -145,30 +133,7 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 			// Set Matrices
 			this.ShaderProgram.Use();
 
-			if (VertexType.Transform2D)
-			{
-				projectionMatrix.SetMatrix4(Matrix4.Ortho(0, 480, 272, 0, 0, -0xFFFF));
-				worldMatrix.SetMatrix4(Matrix4.Identity);
-				viewMatrix.SetMatrix4(Matrix4.Identity);
-				textureMatrix.SetMatrix4(Matrix4.Identity);
-				GL.glDepthRangef(0f, 1f);
-			}
-			else
-			{
-				GL.glDepthRangef(GpuState->DepthTestState.RangeNear, GpuState->DepthTestState.RangeFar);
-				PrepareState_DepthTest(GpuState);
-				projectionMatrix.SetMatrix4(GpuState->VertexState.ProjectionMatrix.Values);
-				worldMatrix.SetMatrix4(GpuState->VertexState.WorldMatrix.Values);
-				viewMatrix.SetMatrix4(GpuState->VertexState.ViewMatrix.Values);
-
-				textureMatrix.SetMatrix4(Matrix4.Identity);
-				/*
-				textureMatrix.SetMatrix4(Matrix4.Identity
-					.Translate(TextureState->OffsetU, TextureState->OffsetV, 0)
-					.Scale(TextureState->ScaleU, TextureState->ScaleV, 1)
-				);
-				*/
-			}
+			this.PrepareState_Common(GpuState);
 
 			if (GpuState->ClearingMode)
 			{
@@ -176,43 +141,7 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 			}
 			else
 			{
-				if (PrimitiveType == GuPrimitiveType.Sprites)
-				{
-					GL.glDisable(GL.GL_CULL_FACE);
-				}
-				else
-				{
-					GL.glDisable(GL.GL_CULL_FACE);
-					GL.glEnableDisable(GL.GL_CULL_FACE, GpuState->BackfaceCullingState.Enabled);
-					GL.glCullFace((GpuState->BackfaceCullingState.FrontFaceDirection == FrontFaceDirectionEnum.ClockWise) ? GL.GL_CW : GL.GL_CCW);
-
-					//GL.glEnableDisable(GL.GL_CULL_FACE, true);
-					//GL.glCullFace(GL.GL_CCW);
-
-					//this.fColor.SetVec4(1, 0, 0, 1);
-					if (VertexType.Color == VertexTypeStruct.ColorEnum.Void)
-					{
-						this.fColor.SetVec4(&GpuState->LightingState.AmbientModelColor.Red);
-						//this.fColor.SetVec4(VertexInfo.Color.X, VertexInfo.Color.Y, VertexInfo.Color.Z, VertexInfo.Color.W);
-					}
-				}
-			}
-
-			if (GlEnableDisable(GL.GL_TEXTURE_2D, GpuState->TextureMappingState.Enabled))
-			{
-				GL.glActiveTexture(GL.GL_TEXTURE0);
-				CurrentTexture = TextureCache.Get(GpuState);
-				CurrentTexture.Bind();
-				//CurrentTexture.Save("c:/temp/" + CurrentTexture.TextureHash + ".png");
-
-				GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, (TextureState->FilterMinification == TextureFilter.Linear) ? GL.GL_LINEAR : GL.GL_NEAREST);
-				GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, (TextureState->FilterMagnification == TextureFilter.Linear) ? GL.GL_LINEAR : GL.GL_NEAREST);
-
-				GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, (TextureState->WrapU == WrapMode.Repeat) ? GL.GL_REPEAT : GL.GL_CLAMP_TO_EDGE);
-				GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, (TextureState->WrapV == WrapMode.Repeat) ? GL.GL_REPEAT : GL.GL_CLAMP_TO_EDGE);
-
-				//Console.WriteLine("{0}", TextureState->Effect);
-				//GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvModeTranslate[(int)TextureState->Effect]);
+				PrepareStateDraw(GpuState, PrimitiveType);
 			}
 
 			fixed (VertexInfo* VertexInfoBufferPtr = VertexInfoBuffer)
@@ -229,6 +158,10 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 							VertexReader.ReadVertex(n + 1, &BottomRight);
 							TopLeft.Color.W = 1.0f;
 							BottomRight.Color.W = 1.0f;
+
+							//Console.WriteLine("--------------");
+							//Console.WriteLine("({0},{1}) ({2},{3})", TopLeft.Position.X, TopLeft.Position.Y, TopLeft.Texture.X, TopLeft.Texture.Y);
+							//Console.WriteLine("({0},{1}) ({2},{3})", BottomRight.Position.X, BottomRight.Position.Y, BottomRight.Texture.X, BottomRight.Texture.Y);
 
 							{
 								//if (GpuState->ClearingMode) Console.WriteLine("{0} - {1}", VertexInfoTopLeft, VertexInfoBottomRight);
@@ -267,6 +200,12 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 							VertexInfoBufferPtr[m++] = TopLeft;
 							VertexInfoBufferPtr[m++] = BottomRight;
 							VertexInfoBufferPtr[m++] = _BottomLeft;
+
+							//Console.WriteLine("-----");
+							//Console.WriteLine("({0},{1}) ({2},{3})", _TopRight.Position.X, _TopRight.Position.Y, _TopRight.Texture.X, _TopRight.Texture.Y);
+							//Console.WriteLine("({0},{1}) ({2},{3})", TopLeft.Position.X, TopLeft.Position.Y, TopLeft.Texture.X, TopLeft.Texture.Y);
+							//Console.WriteLine("({0},{1}) ({2},{3})", BottomRight.Position.X, BottomRight.Position.Y, BottomRight.Texture.X, BottomRight.Texture.Y);
+							//Console.WriteLine("({0},{1}) ({2},{3})", _BottomLeft.Position.X, _BottomLeft.Position.Y, _BottomLeft.Texture.X, _BottomLeft.Texture.Y);
 
 							//VertexInfoBufferPtr[m++] = _BottomLeft;
 							//VertexInfoBufferPtr[m++] = BottomRight;
@@ -307,6 +246,7 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 						u_has_vertex_color.SetBool(false);
 					}
 
+					u_transform_2d.SetBool(VertexType.Transform2D);
 
 					if (GpuState->TextureMappingState.Enabled)
 					{

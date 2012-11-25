@@ -12,6 +12,7 @@ using CSPspEmu.Core.Memory;
 using CSharpUtils.Factory;
 using System.Threading;
 using CSPspEmu.Core.Cpu.Dynarec;
+using System.Globalization;
 
 namespace CSPspEmu.Core.Tests
 {
@@ -1167,7 +1168,7 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
-		public void VfpuAddTest()
+		public void VfpuAddSubTest()
 		{
 			CpuThreadState.Vfpr.ClearAll(float.NaN);
 
@@ -1176,11 +1177,41 @@ namespace CSPspEmu.Core.Tests
 
 			ExecuteAssembly(@"
 				vadd.q C200, R100, R101
+				vsub.q C210, R100, R101
 			");
 
 			CpuThreadState.DumpVfpuRegisters(Console.Error);
 
-			CollectionAssert.AreEqual(new float[] { 51, 62, 73, 84 }, CpuThreadState.Vfpr[4, "C200"]);
+			Assert.AreEqual("51,62,73,84", String.Join(",", CpuThreadState.Vfpr[4, "C200"]));
+			Assert.AreEqual("-49,-58,-67,-76", String.Join(",", CpuThreadState.Vfpr[4, "C210"]));
+		}
+
+		[TestMethod]
+		public void VfpuPrefixTest()
+		{
+			CpuThreadState.Vfpr.ClearAll(float.NaN);
+
+			CpuThreadState.Vfpr[4, "R100"] = new float[] { 1, 2, 0, 0 };
+			CpuThreadState.Vfpr[4, "R101"] = new float[] { 50, 60, 70, 80 };
+
+			ExecuteAssembly(@"
+				vpfxs [x,-x,y,-y]
+				vadd.q C200, R100, R101
+
+				vpfxs [0, 1/2, 1/4, 1/6]
+				vadd.q C210, R100, R101
+
+				vpfxs [0, 0, 0, 0]
+				vpfxt [-2, 2, -2, 2]
+				vpfxd [0:1, M, -1:1, 0:1]
+				vadd.q C220, R100, R101
+			");
+
+			CpuThreadState.DumpVfpuRegisters(Console.Error);
+
+			Assert.AreEqual("51,59,72,78", String.Join(",", CpuThreadState.Vfpr[4, "C200"]));
+			Assert.AreEqual("50,60.5,70.25,80.16666", String.Join(",", CpuThreadState.Vfpr[4, "C210"]));
+			Assert.AreEqual("0,2,-1,1", String.Join(",", CpuThreadState.Vfpr[4, "C220"]));
 		}
 		
 		[TestMethod]
@@ -1486,6 +1517,7 @@ namespace CSPspEmu.Core.Tests
 
 		protected void ExecuteAssembly(String Assembly, bool DoDebug = false, bool DoLog = false)
 		{
+			Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.ThreadCultureName);
 			CpuProcessor.MethodCache.Clear();
 
 			Assembly += "\r\nbreak\r\n";

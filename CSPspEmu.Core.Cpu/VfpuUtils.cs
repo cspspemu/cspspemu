@@ -9,6 +9,11 @@ namespace CSPspEmu.Core.Cpu
 {
 	public class VfpuUtils
 	{
+		public enum RegisterType
+		{
+			Cell, Vector, Matrix
+		}
+
 		public struct VfpuRegisterInfo
 		{
 			public uint VfpuSize;
@@ -16,6 +21,19 @@ namespace CSPspEmu.Core.Cpu
 			public int Matrix;
 			public int Column;
 			public int Row;
+			public RegisterType RegisterType
+			{
+				get
+				{
+					switch (Type)
+					{
+						case 'S': return VfpuUtils.RegisterType.Cell;
+						case 'R': case 'C': return VfpuUtils.RegisterType.Vector;
+						case 'M': return VfpuUtils.RegisterType.Matrix;
+						default: throw(new NotImplementedException());
+					}
+				}
+			}
 
 			static public VfpuRegisterInfo Parse(uint VfpuSize, string Name)
 			{
@@ -154,22 +172,41 @@ namespace CSPspEmu.Core.Cpu
 			return Matrix * 16 + Row * 4 + Column;
 		}
 
-		static public int[] GetIndices(uint Size, string Name)
+		static public uint GetCellIndex(uint Matrix, uint Column, uint Row)
+		{
+			//return Matrix * 16 + Column * 4 + Row;
+			return Matrix * 16 + Row * 4 + Column;
+		}
+
+		static public int[] GetIndices(uint Size, RegisterType RegisterType, VfpuRegisterInt Register, string Name = null)
 		{
 			if (Size < 1 || Size > 4) throw (new Exception(String.Format("Invalid Size {0} !€ [0, 4]", Size)));
 
-			var Register = VfpuRegisterInfo.Parse(Size, Name);
+			if (RegisterType == VfpuUtils.RegisterType.Vector && Size == 1) RegisterType = VfpuUtils.RegisterType.Cell;
 
-			if ((Register.Type == 'S') && (Size != 1)) throw (new Exception("Invalid"));
-
-			switch (Register.Type)
+			switch (RegisterType)
 			{
-				case 'S': return new int[] { GetCellIndex(Register.Matrix, Register.Column, Register.Row) };
-				case 'R': return XRange(0, (int)Size).Select(Index => GetCellIndex(Register.Matrix, Register.Column + Index, Register.Row)).ToArray();
-				case 'C': return XRange(0, (int)Size).Select(Index => GetCellIndex(Register.Matrix, Register.Column, Register.Row + Index)).ToArray();
-				case 'M': throw (new NotImplementedException("Matrices"));
-				default: throw (new NotImplementedException(String.Format("Invalid vfpu registry name {0}", Name)));
+				case RegisterType.Cell:
+					return new int[] { (int)GetCellIndex(Register.S_MATRIX, Register.S_COLUMN, Register.S_ROW) };
+				case RegisterType.Vector:
+					if (Register.RC_ROW_COLUMN == 1)
+					{
+						return XRange(0, (int)Size).Select(Index => (int)GetCellIndex(Register.RC_MATRIX, Register.RC_OFFSET + (uint)Index, Register.RC_LINE)).ToArray();
+					}
+					else
+					{
+						return XRange(0, (int)Size).Select(Index => (int)GetCellIndex(Register.RC_MATRIX, Register.RC_LINE, Register.RC_OFFSET + (uint)Index)).ToArray();
+					}
+				case RegisterType.Matrix: throw (new NotImplementedException("Matrices"));
+				default: throw (new NotImplementedException(String.Format("Invalid vfpu registry name {0}('{1}')", Register, Name)));
 			}
+		}
+
+		static public int[] GetIndices(uint Size, string Name)
+		{
+			var Register = VfpuRegisterInfo.Parse(Size, Name);
+			if ((Register.Type == 'S') && (Size != 1)) throw (new Exception("Invalid"));
+			return GetIndices(Size, Register.RegisterType, Register.Index, Name);
 		}
 
 		static public IEnumerable<int> XRange(int From, int To)

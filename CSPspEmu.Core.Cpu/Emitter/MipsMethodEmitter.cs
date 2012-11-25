@@ -1,4 +1,4 @@
-﻿//#define DEBUG_GENERATE_IL
+﻿#define DEBUG_GENERATE_IL
 #define USE_DYNAMIC_METHOD
 
 using System;
