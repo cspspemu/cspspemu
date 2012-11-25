@@ -612,6 +612,9 @@ namespace CSPspEmu.Core.Tests
 			CpuThreadState.FPR[29] = 81.0f;
 			CpuThreadState.FPR[30] = -1.0f;
 			CpuThreadState.FPR[31] = 3.5f;
+			float MemoryValue = -2.0f;
+
+			CpuThreadState.Memory.WriteSafe<float>(0x88000000, MemoryValue);
 
 			ExecuteAssembly(@"
 				; Unary
@@ -626,6 +629,11 @@ namespace CSPspEmu.Core.Tests
 				sub.s f11, f30, f31
 				div.s f12, f30, f31
 				mul.s f13, f30, f31
+
+				li r10, 0x88000000
+				lwc1 f14, 0(r10)
+				swc1 f14, 4(r10)
+				lwc1 f15, 4(r10)
 			");
 
 			// Unary
@@ -639,6 +647,8 @@ namespace CSPspEmu.Core.Tests
 			Assert.AreEqual(CpuThreadState.FPR[11], CpuThreadState.FPR[30] - CpuThreadState.FPR[31]);
 			Assert.AreEqual(CpuThreadState.FPR[12], CpuThreadState.FPR[30] / CpuThreadState.FPR[31]);
 			Assert.AreEqual(CpuThreadState.FPR[13], CpuThreadState.FPR[30] * CpuThreadState.FPR[31]);
+			Assert.AreEqual(CpuThreadState.FPR[14], MemoryValue);
+			Assert.AreEqual(CpuThreadState.FPR[15], MemoryValue);
 		}
 
 		[TestMethod]
@@ -936,14 +946,27 @@ namespace CSPspEmu.Core.Tests
 		{
 			// %t, %s, %a, %ne
 			ExecuteAssembly(@"
-				li r2, 0b_11000011001000000011111011101101
-				li r3, 0b_00000000000000000000000001010101
-				ins r2, r3, 0, 8
+				li r22, 0b_11011111110111111011111011101101
+				li r23, 0b_00100000001000000100000100010010
+				
+				add r2, r22, r0
+				add r3, r22, r0
+
+				ins r2, r23, 0, 8
+				ins r3, r23, 4, 10
 			");
 
-			Assert.Inconclusive();
+			//Assert.Inconclusive();
 
-			//Assert.AreEqual("1111011101", "%010b".Sprintf(CpuThreadState.GPR[1]));
+			Console.WriteLine("{0}", "%032b".Sprintf(CpuThreadState.GPR[22]));
+			Console.WriteLine("{0}", "%032b".Sprintf(CpuThreadState.GPR[23]));
+			Console.WriteLine("{0}", "%032b".Sprintf(CpuThreadState.GPR[2]));
+			Console.WriteLine("{0}", "%032b".Sprintf(CpuThreadState.GPR[3]));
+
+			Assert.AreEqual("11011111110111111011111011101101", "%032b".Sprintf(CpuThreadState.GPR[22]));
+			Assert.AreEqual("00100000001000000100000100010010", "%032b".Sprintf(CpuThreadState.GPR[23]));
+			Assert.AreEqual("11011111110111111011111000010010", "%032b".Sprintf(CpuThreadState.GPR[2]));
+			Assert.AreEqual("11011111110111111001000100101101", "%032b".Sprintf(CpuThreadState.GPR[3]));
 		}
 
 		[TestMethod]

@@ -1,4 +1,4 @@
-﻿//#define OPTIMIZE_LWL_LWR
+﻿#define OPTIMIZE_LWL_LWR
 
 using System;
 using System.Collections.Generic;

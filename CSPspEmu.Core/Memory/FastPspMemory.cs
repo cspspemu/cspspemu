@@ -54,8 +54,7 @@ namespace CSPspEmu.Core.Memory
 				{
 					if (Platform.OperatingSystem == Platform.OS.Windows)
 					{
-						//TryBases = new ulong[] { 0x31000000, 0x40000000, 0x50000000 };
-						TryBases = new ulong[] { 0x50000000, 0x40000000, 0x31000000 };
+						TryBases = new ulong[] { 0x31000000, 0x40000000, 0x50000000 };
 					}
 					else
 					{
@@ -85,8 +84,11 @@ namespace CSPspEmu.Core.Memory
 					Console.WriteLine("FastPspMemory.AllocMemoryOnce: Trying Base ... 0x{0:X}", TryBase);
 
 					StaticNullPtr = Base;
+					Platform.AllocRangeGuard(Base, Base + ScratchPadOffset);
 					StaticScratchPadPtr = (byte*)Platform.AllocRange(Base + ScratchPadOffset, ScratchPadAllocSize);
+					Platform.AllocRangeGuard(Base + ScratchPadOffset + ScratchPadAllocSize, Base + FrameBufferOffset);
 					StaticFrameBufferPtr = (byte*)Platform.AllocRange(Base + FrameBufferOffset, FrameBufferAllocSize);
+					Platform.AllocRangeGuard(Base + FrameBufferOffset + FrameBufferAllocSize, Base + MainOffset);
 					StaticMainPtr = (byte*)Platform.AllocRange(Base + MainOffset, MainAllocSize);
 
 					if (StaticScratchPadPtr != null && StaticFrameBufferPtr != null && StaticMainPtr != null)
@@ -109,6 +111,7 @@ namespace CSPspEmu.Core.Memory
 					throw (new InvalidOperationException("Can't allocate virtual memory!"));
 				}
 			}
+
 			NullPtr = StaticNullPtr;
 			ScratchPadPtr = StaticScratchPadPtr;
 			FrameBufferPtr = StaticFrameBufferPtr;
@@ -169,8 +172,6 @@ namespace CSPspEmu.Core.Memory
 
 		public override void Dispose()
 		{
-			Reset();
-			//FreeMemory();
 		}
 	}
 }

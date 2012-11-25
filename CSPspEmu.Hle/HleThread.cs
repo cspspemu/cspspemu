@@ -338,7 +338,7 @@ namespace CSPspEmu.Hle
 		[HandleProcessCorruptedStateExceptions]
 		protected void MainLoop()
 		{
-			Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.CultureName);
+			Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.ThreadCultureName);
 			var Memory = CpuThreadState.CpuProcessor.Memory;
 			try
 			{

@@ -16,6 +16,9 @@ using CSPspEmu.Runner;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.Drawing;
+using CSPspEmu.Core.Gpu.Impl.OpenglEs;
+using CSPspEmu.Hle.Modules.iofilemgr;
+using CSPspEmu.Hle.Vfs;
 
 namespace CSPspEmu.AutoTests
 {
@@ -57,11 +60,10 @@ namespace CSPspEmu.AutoTests
 		{
 			var OutputString = "";
 
-			GC.Collect();
+			IHleIoDriver HostDriver = null;
 
 			using (var PspEmulatorContext = new PspEmulatorContext(PspConfig))
 			{
-
 				CapturedOutput = ConsoleUtils.CaptureOutput(() =>
 				{
 					//Console.Error.WriteLine("[0]");
@@ -85,6 +87,7 @@ namespace CSPspEmu.AutoTests
 					//Console.Error.WriteLine("[a]");
 
 					// GPU -> NULL
+					//PspEmulatorContext.SetInstanceType<GpuImpl>(typeof(GpuImplOpenglEs));
 					PspEmulatorContext.SetInstanceType<GpuImpl>(typeof(GpuImplNull));
 
 					var GpuImpl = PspEmulatorContext.GetInstance<GpuImpl>();
@@ -103,9 +106,16 @@ namespace CSPspEmu.AutoTests
 							//PspRunner.CpuComponentThread.SetIso(PspAutoTestsFolder + "/../input/test.cso");
 							PspRunner.CpuComponentThread.SetIso(PspAutoTestsFolder + "/../input/cube.cso");
 							//Console.Error.WriteLine("[2]");
+
+							var HleIoManager = PspEmulatorContext.GetInstance<HleIoManager>();
+							HostDriver = HleIoManager.GetDriver("host:");
+
+							try { HostDriver.IoRemove(null, "/__testoutput.txt"); } catch { }
+							try { HostDriver.IoRemove(null, "/__testerror.txt"); } catch { }
+
 							PspRunner.CpuComponentThread._LoadFile(FileName);
 							//Console.Error.WriteLine("[3]");
-							if (!PspRunner.CpuComponentThread.StoppedEndedEvent.WaitOne(TimeSpan.FromSeconds(5)))
+							if (!PspRunner.CpuComponentThread.StoppedEndedEvent.WaitOne(TimeSpan.FromSeconds(10)))
 							{
 								Console.Error.WriteLine("Timeout!");
 							}
@@ -117,13 +127,19 @@ namespace CSPspEmu.AutoTests
 					}
 
 					PspRunner.StopSynchronized();
+					GC.Collect();
+
+					using (var test_output = HostDriver.OpenRead("/__testoutput.txt"))
+					{
+						OutputString = test_output.ReadAllContentsAsString();
+					}
 				},
 					//Capture: false
 				Capture: true
 				);
 
-				var HleOutputHandlerMock = (HleOutputHandlerMock)PspEmulatorContext.GetInstance<HleOutputHandler>();
-				OutputString = HleOutputHandlerMock.OutputString;
+				//var HleOutputHandlerMock = (HleOutputHandlerMock)PspEmulatorContext.GetInstance<HleOutputHandler>();
+				//OutputString = HleOutputHandlerMock.OutputString;
 			}
 
 			return OutputString;

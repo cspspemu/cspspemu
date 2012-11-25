@@ -6,27 +6,14 @@ namespace CSPspEmu.Core.Cpu.Emitter
 {
 	public sealed partial class CpuEmitter
 	{
-		public static uint _vc2i_impl(uint Value)
+		public static uint _vuc2i_impl(byte Value)
 		{
-			Value |= (Value >> 16);
-			Value |= (Value >> 8);
-			Value |= (Value >> 4);
-			Value |= 0x00808080;
-
-			// 0x01010101
-			// (((n      ) & 0xFF) * 0x01010101) >>> 1;
-
-			return Value;
+			return ((uint)Value * 0x01010101) >> 1;
 		}
 
 		public static uint _vi2c_impl(uint x, uint y, uint z, uint w)
 		{
-			return
-				((x >> 24) << 0 ) |
-				((y >> 24) << 8 ) |
-				((z >> 24) << 16) |
-				((w >> 24) << 24) |
-			0;
+			return ((x >> 24) << 0 ) | ((y >> 24) << 8 ) | ((z >> 24) << 16) | ((w >> 24) << 24) | 0;
 		}
 
 		public void vuc2i()
@@ -39,11 +26,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			VectorOperationSaveVd(4, (Index) =>
 			{
 				Load_VS(0, 1, AsInteger: true);
-				SafeILGenerator.Push((int)((3 - Index) * 4));
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftLeft);
-				SafeILGenerator.Push(unchecked((int)0xF0000000));
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.And);
-				MipsMethodEmitter.CallMethod((Func<uint, uint>)CpuEmitter._vc2i_impl);
+				SafeILGenerator.Push((int)Index * 8);
+				SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftRightUnsigned);
+				MipsMethodEmitter.CallMethod((Func<byte, uint>)CpuEmitter._vuc2i_impl);
 			}, AsInteger: true);
 		}
 

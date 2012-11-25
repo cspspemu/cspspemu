@@ -42,6 +42,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// Store Word from Cop1 floating point.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		public void lwc1() { GenerateAssignFPR_I(FT, AstMemoryGetValue<int>(this.Address_RS_IMM())); }
-		public void swc1() { this.GenerateIL(AstMemorySetValue<uint>(this.Address_RS_IMM(), FPR_I(FT))); }
+		public void swc1() { this.GenerateIL(AstMemorySetValue<int>(this.Address_RS_IMM(), FPR_I(FT))); }
 	}
 }

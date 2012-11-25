@@ -28,7 +28,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// Move (From/To) IC
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		public void mfic() { this.GenerateAssignGPR(RT, REG("IC")); }
-		public void mtic() { this.GenerateAssignREG(REG("IC"), GPR(RT)); }
+		public void mtic() { this.GenerateAssignREG(REG("IC"), GPR_u(RT)); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move (From/To) DR

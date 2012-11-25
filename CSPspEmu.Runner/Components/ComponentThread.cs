@@ -30,7 +30,7 @@ namespace CSPspEmu.Runner.Components
 				ComponentThreadThread = new Thread(() =>
 				{
 					ComponentThreadThread.Name = this.ThreadName;
-					Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.CultureName);
+					Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.ThreadCultureName);
 					try
 					{
 						Main();

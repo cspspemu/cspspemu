@@ -155,7 +155,7 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 			}
 			else
 			{
-				GL.glDepthRangef(GpuState->DepthTestState.RangeFar, GpuState->DepthTestState.RangeNear);
+				GL.glDepthRangef(GpuState->DepthTestState.RangeNear, GpuState->DepthTestState.RangeFar);
 				PrepareState_DepthTest(GpuState);
 				projectionMatrix.SetMatrix4(GpuState->VertexState.ProjectionMatrix.Values);
 				worldMatrix.SetMatrix4(GpuState->VertexState.WorldMatrix.Values);
@@ -182,6 +182,7 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 				}
 				else
 				{
+					GL.glDisable(GL.GL_CULL_FACE);
 					GL.glEnableDisable(GL.GL_CULL_FACE, GpuState->BackfaceCullingState.Enabled);
 					GL.glCullFace((GpuState->BackfaceCullingState.FrontFaceDirection == FrontFaceDirectionEnum.ClockWise) ? GL.GL_CW : GL.GL_CCW);
 

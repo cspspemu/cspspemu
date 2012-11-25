@@ -118,7 +118,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 			var Umd = new HleIoDriverIso(Iso);
 			HleIoManager.SetDriver("disc:", Umd);
 			HleIoManager.SetDriver("umd:", Umd);
-			HleIoManager.SetDriver("host:", Umd);
+			//HleIoManager.SetDriver("host:", Umd);
 			HleIoManager.SetDriver(":", Umd);
 			HleIoManager.Chdir("disc0:/PSP_GAME/USRDIR");
 			return Iso;

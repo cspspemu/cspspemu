@@ -152,6 +152,7 @@ namespace CSPspEmu.Core
 		const uint MEM_RESERVE = 0x2000;
 		const uint MEM_COMMIT = 0x1000;
 		const uint PAGE_READWRITE = 0x04;
+		const uint PAGE_GUARD = 0x100;
 
 		const uint MEM_DECOMMIT = 0x4000;
 		const uint MEM_RELEASE = 0x8000;
@@ -183,23 +184,23 @@ namespace CSPspEmu.Core
 		const uint MAP_LOCKED	= 0x2000	; // pages are locked
 		const uint MAP_NORESERVE = 0x4000;	  //  don't check for reservations
 
-		// #define MAP_FIXED	0x10		/* Interpret addr exactly */
-		// #define MAP_ANONYMOUS	0x20		/* don't use a file */
-		// #define MAP_GROWSDOWN	0x0100		/* stack-like segment */
-		// #define MAP_DENYWRITE	0x0800		/* ETXTBSY */
-		// #define MAP_EXECUTABLE	0x1000		/* mark it as an executable */
-		// #define MAP_LOCKED	0x2000		/* pages are locked */
-		// #define MAP_NORESERVE	0x4000		/* don't check for reservations */
-		// #define MS_ASYNC	1		/* sync memory asynchronously */
-		// #define MS_INVALIDATE	2		/* invalidate the caches */
-		// #define MS_SYNC		4		/* synchronous memory sync */
-		// #define MCL_CURRENT	1		/* lock all current mappings */
-		// #define MCL_FUTURE	2		/* lock all future mappings */
-		// #define MADV_NORMAL	0x0		/* default page-in behavior */
-		// #define MADV_RANDOM	0x1		/* page-in minimum required */
-		// #define MADV_SEQUENTIAL	0x2		/* read-ahead aggressively */
-		// #define MADV_WILLNEED	0x3		/* pre-fault pages */
-		// #define MADV_DONTNEED	0x4		/* discard these pages */
+		// const int MAP_FIXED	0x10		/* Interpret addr exactly */
+		// const int MAP_ANONYMOUS	0x20		/* don't use a file */
+		// const int MAP_GROWSDOWN	0x0100		/* stack-like segment */
+		// const int MAP_DENYWRITE	0x0800		/* ETXTBSY */
+		// const int MAP_EXECUTABLE	0x1000		/* mark it as an executable */
+		// const int MAP_LOCKED	0x2000		/* pages are locked */
+		// const int MAP_NORESERVE	0x4000		/* don't check for reservations */
+		// const int MS_ASYNC	1		/* sync memory asynchronously */
+		// const int MS_INVALIDATE	2		/* invalidate the caches */
+		// const int MS_SYNC		4		/* synchronous memory sync */
+		// const int MCL_CURRENT	1		/* lock all current mappings */
+		// const int MCL_FUTURE	2		/* lock all future mappings */
+		// const int MADV_NORMAL	0x0		/* default page-in behavior */
+		// const int MADV_RANDOM	0x1		/* page-in minimum required */
+		// const int MADV_SEQUENTIAL	0x2		/* read-ahead aggressively */
+		// const int MADV_WILLNEED	0x3		/* pre-fault pages */
+		// const int MADV_DONTNEED	0x4		/* discard these pages */
 
 #if false
 		const int EGENERIC      (_SIGN 99)  /* generic error */
@@ -255,13 +256,32 @@ namespace CSPspEmu.Core
 			}
 		}
 
-		public static void* AllocRange(void* Address, uint Size)
+		public static void* AllocRange(byte* Address, uint Size)
+		{
+			return _AllocRange(Address, Size, Guard: false);
+		}
+
+		public static void* AllocRangeGuard(byte* Low, byte* High)
+		{
+			if (High < Low) throw(new Exception("Invalid High"));
+			return _AllocRange(Low, (uint)(High - Low), Guard: true);
+		}
+
+		private static void* _AllocRange(void* Address, uint Size, bool Guard)
 		{
 			switch (OperatingSystem)
 			{
 				case OS.Windows:
 					{
-						var Pointer = InternalWindows.VirtualAlloc(Address, Size, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+						byte* Pointer;
+						if (Guard)
+						{
+							Pointer = InternalWindows.VirtualAlloc(Address, Size, MEM_RESERVE, PAGE_GUARD);
+						}
+						else
+						{
+							Pointer = InternalWindows.VirtualAlloc(Address, Size, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+						}
 
 						if (Pointer != null)
 						{

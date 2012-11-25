@@ -103,6 +103,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public void c_ult_s() { _comp(5, 0); }
 		public void c_ole_s() { _comp(6, 0); }
 		public void c_ule_s() { _comp(7, 0); }
+
 		public void c_sf_s() { _comp(0, 1); }
 		public void c_ngle_s() { _comp(1, 1); }
 		public void c_seq_s() { _comp(2, 1); }

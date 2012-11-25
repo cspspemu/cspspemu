@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Matrix4.cs" />
+    <Compile Include="OpenglEs.cs" />
     <Compile Include="Uniform.cs" />
     <Compile Include="VertexAttribLocation.cs" />
     <Compile Include="EGL\egl.cs" />
@@ -52,16 +53,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shader.cs" />
     <Compile Include="ShaderProgram.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\libegl.dll">
-      <Link>libegl.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\libglesv2.dll">
-      <Link>libglesv2.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

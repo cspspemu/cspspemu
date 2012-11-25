@@ -20,7 +20,7 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
-		public static string CultureName = "en-US";
+		public static readonly string ThreadCultureName = "en-US";
 
 		/// <summary>
 		/// 

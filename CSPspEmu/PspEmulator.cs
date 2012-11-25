@@ -247,15 +247,15 @@ namespace CSPspEmu
 					// GPU
 					PspPluginImpl.SelectWorkingPlugin<GpuImpl>(PspEmulatorContext,
 						typeof(GpuImplOpenglEs),
-						typeof(OpenglGpuImpl),
-						typeof(GpuImplSoft),
+						//typeof(OpenglGpuImpl),
+						//typeof(GpuImplSoft),
 						typeof(GpuImplNull)
 					);
 
 					// AUDIO
 					PspPluginImpl.SelectWorkingPlugin<PspAudioImpl>(PspEmulatorContext,
-						typeof(PspAudioOpenalImpl),
 						typeof(PspAudioWaveOutImpl),
+						typeof(PspAudioOpenalImpl),
 						typeof(AudioAlsaImpl),
 						typeof(AudioImplNull)
 					);

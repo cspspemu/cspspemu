@@ -109,7 +109,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// EXTract/INSert
 		/// </summary>
 		public void ext() { GenerateAssignGPR(RT, this.CallStatic((Func<uint, int, int, uint>)CpuEmitterUtils._ext_impl, GPR_u(RS), this.Immediate((int)Instruction.POS), this.Immediate((int)Instruction.SIZE_E))); }
-		public void ins() { GenerateAssignGPR(RT, this.CallStatic((Func<uint, uint, int, int, uint>)CpuEmitterUtils._ins_impl, GPR_u(RT), GPR_u(RS), this.Immediate((int)Instruction.POS), this.Immediate((int)Instruction.SIZE_E)));  }
+		public void ins() { GenerateAssignGPR(RT, this.CallStatic((Func<uint, uint, int, int, uint>)CpuEmitterUtils._ins_impl, GPR_u(RT), GPR_u(RS), this.Immediate((int)Instruction.POS), this.Immediate((int)Instruction.SIZE_I)));  }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Count Leading Ones/Zeros in word.

@@ -1,10 +1,13 @@
-﻿using System;
+﻿#define ALLOW_FAST_MEMORY
+
+using System;
 using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
-	public sealed partial class CpuEmitter : IAstGenerator
+	public unsafe sealed partial class CpuEmitter : IAstGenerator
 	{
 		public CpuProcessor CpuProcessor;
 		private MipsMethodEmitter MipsMethodEmitter;
@@ -90,12 +93,26 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm AstMemorySetValue(Type Type, AstNodeExpr Address, AstNodeExpr Value)
 		{
-			var SignedType = AstUtils.GetSignedType(Type);
-			if (false) { }
-			else if (SignedType == typeof(sbyte)) return this.Statement(this.CallInstance(this.CpuThreadStateArgument(), (Action<uint, byte>)CpuThreadState.Methods.Write1, Address, this.Cast(Type, Value)));
-			else if (SignedType == typeof(short)) return this.Statement(this.CallInstance(this.CpuThreadStateArgument(), (Action<uint, ushort>)CpuThreadState.Methods.Write2, Address, this.Cast(Type, Value)));
-			else if (SignedType == typeof(int)) return this.Statement(this.CallInstance(this.CpuThreadStateArgument(), (Action<uint, uint>)CpuThreadState.Methods.Write4, Address, this.Cast(Type, Value)));
-			throw (new NotImplementedException(String.Format("Can't handle type {0}", Type)));
+#if ALLOW_FAST_MEMORY
+			var FastMemory = CpuProcessor.Memory as FastPspMemory;
+			if (FastMemory != null)
+			{
+				var AddressMasked = this.Binary(Address, "&", PspMemory.MemoryMask);
+				return this.Assign(
+					this.Indirect(this.Cast(Type.MakePointerType(), this.Immediate(new IntPtr(FastMemory.Base)) + AddressMasked)),
+					this.Cast(Type, Value)
+				);
+			}
+			else
+#endif
+			{
+				var SignedType = AstUtils.GetSignedType(Type);
+				if (false) { }
+				else if (SignedType == typeof(sbyte)) return this.Statement(this.CallInstance(this.CpuThreadStateArgument(), (Action<uint, byte>)CpuThreadState.Methods.Write1, Address, this.Cast<byte>(Value)));
+				else if (SignedType == typeof(short)) return this.Statement(this.CallInstance(this.CpuThreadStateArgument(), (Action<uint, ushort>)CpuThreadState.Methods.Write2, Address, this.Cast<ushort>(Value)));
+				else if (SignedType == typeof(int)) return this.Statement(this.CallInstance(this.CpuThreadStateArgument(), (Action<uint, uint>)CpuThreadState.Methods.Write4, Address, this.Cast<uint>(Value)));
+				throw (new NotImplementedException(String.Format("Can't handle type {0}", Type)));
+			}
 		}
 
 		private AstNodeStm AstMemorySetValue<T>(AstNodeExpr Address, AstNodeExpr Value)
@@ -103,14 +120,25 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return AstMemorySetValue(typeof(T), Address, Value);
 		}
 
-		private AstNodeExpr AstMemoryGetValue(Type Type, AstNodeExpr Address)
+		private unsafe AstNodeExpr AstMemoryGetValue(Type Type, AstNodeExpr Address)
 		{
-			var SignedType = AstUtils.GetSignedType(Type);
-			if (false) { }
-			else if (SignedType == typeof(sbyte)) return this.Cast(Type, this.CallInstance(this.CpuThreadStateArgument(), (Func<uint, byte>)CpuThreadState.Methods.Read1, Address));
-			else if (SignedType == typeof(short)) return this.Cast(Type, this.CallInstance(this.CpuThreadStateArgument(), (Func<uint, ushort>)CpuThreadState.Methods.Read2, Address));
-			else if (SignedType == typeof(int)) return this.Cast(Type, this.CallInstance(this.CpuThreadStateArgument(), (Func<uint, uint>)CpuThreadState.Methods.Read4, Address));
-			throw (new NotImplementedException(String.Format("Can't handle type {0}", Type)));
+#if ALLOW_FAST_MEMORY
+			var FastMemory = CpuProcessor.Memory as FastPspMemory;
+			if (FastMemory != null)
+			{
+				var AddressMasked = this.Binary(Address, "&", PspMemory.MemoryMask);
+				return this.Indirect(this.Cast(Type.MakePointerType(), this.Immediate(new IntPtr(FastMemory.Base)) + AddressMasked));
+			}
+			else
+#endif
+			{
+				var SignedType = AstUtils.GetSignedType(Type);
+				if (false) { }
+				else if (SignedType == typeof(sbyte)) return this.Cast(Type, this.CallInstance(this.CpuThreadStateArgument(), (Func<uint, byte>)CpuThreadState.Methods.Read1, Address));
+				else if (SignedType == typeof(short)) return this.Cast(Type, this.CallInstance(this.CpuThreadStateArgument(), (Func<uint, ushort>)CpuThreadState.Methods.Read2, Address));
+				else if (SignedType == typeof(int)) return this.Cast(Type, this.CallInstance(this.CpuThreadStateArgument(), (Func<uint, uint>)CpuThreadState.Methods.Read4, Address));
+				throw (new NotImplementedException(String.Format("Can't handle type {0}", Type)));
+			}
 		}
 
 		private AstNodeExpr AstMemoryGetValue<T>(AstNodeExpr Address)

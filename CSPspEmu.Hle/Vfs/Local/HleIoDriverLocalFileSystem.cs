@@ -84,7 +84,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 
 			//if (Append) FileMode |= FileMode.Open;
 
-			var Stream = File.Open(RealFileName, FileMode, FileAccess, FileShare.Read);
+			var Stream = File.Open(RealFileName, FileMode, FileAccess, FileShare.Delete | FileShare.ReadWrite);
 			HleIoDrvFileArg.FileArgument = Stream;
 
 			if (Append)

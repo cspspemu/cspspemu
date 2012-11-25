@@ -46,6 +46,7 @@ namespace GLES
 			{
 				try
 				{
+					OpenglEs.LoadLibraryOnce();
 					GL.eglGetError();
 					//return GL.eglInitialize(IntPtr.Zero, &Major, &Minor) != 0;
 					return true;
@@ -145,6 +146,8 @@ namespace GLES
 		{
 			this.Width = Width;
 			this.Height = Height;
+
+			OpenglEs.LoadLibraryOnce();
 			Init();
 		}
 

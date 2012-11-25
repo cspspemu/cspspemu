@@ -14,7 +14,7 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 			GL.GL_DECR,
 		};
 
-		static readonly int[] StencilFunctionTranslate = new[]
+		static readonly int[] CompareFunctionTranslate = new[]
 		{
 			GL.GL_NEVER,
 			GL.GL_ALWAYS,
@@ -26,17 +26,9 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 			GL.GL_GEQUAL,
 		};
 
-		static readonly int[] DepthFunctionTranslate = new[]
-		{
-			GL.GL_NEVER,
-			GL.GL_ALWAYS,
-			GL.GL_EQUAL,
-			GL.GL_NOTEQUAL,
-			GL.GL_LESS,
-			GL.GL_LEQUAL,
-			GL.GL_GREATER,
-			GL.GL_GEQUAL,
-		};
+		static readonly int[] StencilFunctionTranslate = CompareFunctionTranslate;
+		static readonly int[] DepthFunctionTranslate = CompareFunctionTranslate;
+		static readonly int[] AlphaFunctionTranslate = CompareFunctionTranslate;
 
 		static readonly int[] BlendEquationTranslate = new[]
 		{

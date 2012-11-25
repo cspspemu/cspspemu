@@ -12,15 +12,9 @@ namespace Tests.GLES
 	[TestClass]
 	unsafe public class UnitTest1
 	{
-
-		[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-		static extern bool SetDllDirectory(string lpPathName);
-
 		[TestMethod]
 		unsafe public void TestMethod1()
 		{
-			SetDllDirectory(@"C:\projects\cspspemu");
-
 			int width = 512;
 			int height = 272;
 			var Context = new OffscreenContext(width, height);

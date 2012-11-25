@@ -60,8 +60,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// </summary>
 		public override void InitializeComponent()
 		{
+			base.InitializeComponent();
 			this.Config = PspEmulatorContext.PspConfig;
-			this.TextureCache.GpuImpl = this;
+			this.TextureCache = new TextureCacheOpengl(this.Memory, this);
 			this.VertexReader = new VertexReader();
 			this.TextureCache = new TextureCacheOpengl(Memory, this);
 		}
