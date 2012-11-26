@@ -8,6 +8,8 @@ using SafeILGenerator;
 using CSPspEmu.Core.Cpu.Assembler;
 using CSPspEmu.Core.Cpu.Emitter;
 using CSPspEmu.Core.Cpu.Table;
+using SafeILGenerator.Ast.Nodes;
+using SafeILGenerator.Ast;
 
 namespace CSPspEmu.Core.Cpu.Dynarec
 {
@@ -15,7 +17,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 	{
         internal class InternalFunctionCompiler
 		{
-			public static Action<uint, CpuEmitter> CpuEmitterInstruction = EmitLookupGenerator.GenerateSwitchDelegate<CpuEmitter>(InstructionTable.ALL);
+			public static Func<uint, CpuEmitter, AstNodeStm> CpuEmitterInstruction = EmitLookupGenerator.GenerateSwitchDelegateReturn<CpuEmitter, AstNodeStm>(InstructionTable.ALL);
 			static MipsDisassembler MipsDisassembler = new MipsDisassembler();
 			CpuEmitter CpuEmitter;
 			MipsMethodEmitter MipsMethodEmiter;
@@ -195,10 +197,10 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				}
 			}
 
-			private void _EmitCpuInstructionAT(uint _PC)
+			private AstNodeStm _EmitCpuInstructionAT(uint _PC)
 			{
 				// Skip emit instruction.
-				if (SkipPC.Contains(_PC)) return;
+				if (SkipPC.Contains(_PC)) return null;
 
 				if (CpuProcessor.PspConfig.TraceJIT)
 				{
@@ -209,140 +211,162 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				}
 
 				var Instruction = CpuEmitter.LoadAT(_PC);
-#if OPTIMIZE_LWL_LWR
-				var InstructionDisasm = MipsDisassembler.Disassemble(_PC, Instruction);
-
-				if (InstructionDisasm.InstructionInfo != null && InstructionDisasm.InstructionInfo.Name == "lwl")
-				{
-					// set: RT
-					// get: RT, RS
-					var lwl_rt = Instruction.RT;
-					var lwl_rs = Instruction.RS;
-					var lwl_offset = Instruction.IMM;
-
-					for (int n = 1; n < 16; n++)
-					{
-						var PC2 = (uint)(_PC + n * 4);
-
-						// A label between!
-						if (Labels.ContainsKey(PC2))
-						{
-							//Console.WriteLine("Label!");
-							break;
-						}
-						if (!AnalyzedPC.Contains(PC2))
-						{
-							//Console.WriteLine("Not analyzed!");
-							break;
-						}
-
-						var Instruction2 = CpuEmitter.LoadAT(PC2);
-						var Instruction2Disasm = MipsDisassembler.Disassemble(PC2, Instruction2);
-
-						//Console.WriteLine(Instruction2Disasm);
-
-						// TODO: Check if other instructions modify RT or RS register!!
-
-						if (Instruction2Disasm.InstructionInfo != null && Instruction2Disasm.InstructionInfo.Name == "lwr")
-						{
-							var lwr_rt = Instruction2.RT;
-							var lwr_rs = Instruction2.RS;
-							var lwr_offset = Instruction2.IMM;
-
-							if ((lwl_rt == lwr_rt) && (lwl_rs == lwr_rs) && (lwr_offset == lwl_offset - 3))
-							{
-								//Console.WriteLine("Found it!");
-
-								// FOUND IT!
-								SkipPC.Add(PC2);
-
-								// Emit Unaligned LW 
-								//SafeILGenerator.emi
-								Instruction.RT = lwr_rt;
-								Instruction.RS = lwr_rs;
-								Instruction.IMM = lwr_offset;
-								CpuEmitter.lw();
-								//CpuEmiterInstruction(CpuEmitter.Instruction.Value, CpuEmitter);
-								return;
-							}
-						}
-					}
-				}
-#endif
+//#if OPTIMIZE_LWL_LWR
+//				var InstructionDisasm = MipsDisassembler.Disassemble(_PC, Instruction);
+//
+//				if (InstructionDisasm.InstructionInfo != null && InstructionDisasm.InstructionInfo.Name == "lwl")
+//				{
+//					// set: RT
+//					// get: RT, RS
+//					var lwl_rt = Instruction.RT;
+//					var lwl_rs = Instruction.RS;
+//					var lwl_offset = Instruction.IMM;
+//
+//					for (int n = 1; n < 16; n++)
+//					{
+//						var PC2 = (uint)(_PC + n * 4);
+//
+//						// A label between!
+//						if (Labels.ContainsKey(PC2))
+//						{
+//							//Console.WriteLine("Label!");
+//							break;
+//						}
+//						if (!AnalyzedPC.Contains(PC2))
+//						{
+//							//Console.WriteLine("Not analyzed!");
+//							break;
+//						}
+//
+//						var Instruction2 = CpuEmitter.LoadAT(PC2);
+//						var Instruction2Disasm = MipsDisassembler.Disassemble(PC2, Instruction2);
+//
+//						//Console.WriteLine(Instruction2Disasm);
+//
+//						// TODO: Check if other instructions modify RT or RS register!!
+//
+//						if (Instruction2Disasm.InstructionInfo != null && Instruction2Disasm.InstructionInfo.Name == "lwr")
+//						{
+//							var lwr_rt = Instruction2.RT;
+//							var lwr_rs = Instruction2.RS;
+//							var lwr_offset = Instruction2.IMM;
+//
+//							if ((lwl_rt == lwr_rt) && (lwl_rs == lwr_rs) && (lwr_offset == lwl_offset - 3))
+//							{
+//								//Console.WriteLine("Found it!");
+//
+//								// FOUND IT!
+//								SkipPC.Add(PC2);
+//
+//								// Emit Unaligned LW 
+//								//SafeILGenerator.emi
+//								Instruction.RT = lwr_rt;
+//								Instruction.RS = lwr_rs;
+//								Instruction.IMM = lwr_offset;
+//								CpuEmitter.lw();
+//								//CpuEmiterInstruction(CpuEmitter.Instruction.Value, CpuEmitter);
+//								return null;
+//							}
+//						}
+//					}
+//				}
+//#endif
 
 				Instruction = CpuEmitter.LoadAT(_PC);
-				CpuEmitterInstruction(CpuEmitter.Instruction, CpuEmitter);
+				var Node = CpuEmitterInstruction(CpuEmitter.Instruction, CpuEmitter);
+				if (Node == null)
+				{
+					//var InstructionDisasm = MipsDisassembler.Disassemble(_PC, Instruction);
+					throw (new Exception(String.Format("Can't execute instruction {0}", MipsDisassembler.Disassemble(_PC, Instruction))));
+				}
+				return Node;
 			}
 
 			uint PC;
+			static private AstGenerator ast = AstGenerator.Instance;
 
-			private void StorePC()
+			private AstNodeStm StorePC()
 			{
 				//MipsMethodEmiter.SavePC(PC);
+				//Console.Error.WriteLine("Not implemented!");
+				return ast.Statement();
 			}
 
-			private void EmitInstructionCountIncrement(bool CheckForYield)
+			private AstNodeStm EmitInstructionCountIncrement(bool CheckForYield)
 			{
 				// CountInstructionsAndYield
 				if (!CpuProcessor.PspConfig.CountInstructionsAndYield)
 				{
-					return;
+					return ast.Statement();
 				}
 
-				//Console.WriteLine("EmiteInstructionCountIncrement: {0},{1}", InstructionsEmitedSinceLastWaypoint, CheckForYield);
-				if (InstructionsEmitedSinceLastWaypoint > 0)
-				{
-					MipsMethodEmiter.SaveStepInstructionCount(() =>
-					{
-						MipsMethodEmiter.LoadStepInstructionCount();
-						SafeILGenerator.Push((int)InstructionsEmitedSinceLastWaypoint);
-						SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
-					});
-					//ILGenerator.Emit(OpCodes.Ldc_I4, 100);
-					//ILGenerator.EmitCall(OpCodes.Call, typeof(Console).GetMethod("WriteLine"), new Type[] { typeof(int) });
-					InstructionsEmitedSinceLastWaypoint = 0;
-				}
+				throw(new NotImplementedException());
 
-				if (CheckForYield)
-				{
-					if (!CpuProcessor.PspConfig.BreakInstructionThreadSwitchingForSpeed)
-					{
-						var NoYieldLabel = SafeILGenerator.DefineLabel("NoYieldLabel");
-						MipsMethodEmiter.LoadStepInstructionCount();
-						SafeILGenerator.Push((int)0);
-						SafeILGenerator.BranchBinaryComparison(SafeBinaryComparison.GreaterThanSigned, NoYieldLabel);
-						//ILGenerator.Emit(OpCodes.Ldc_I4, 1000000);
-						//ILGenerator.Emit(OpCodes.Blt, NoYieldLabel);
-						MipsMethodEmiter.SaveStepInstructionCount(() =>
-						{
-							SafeILGenerator.Push((int)0);
-						});
-						StorePC();
-						SafeILGenerator.LoadArgument0CpuThreadState();
-						SafeILGenerator.Call((Action)CpuThreadState.Methods.Yield);
-						//ILGenerator.Emit(OpCodes.Call, typeof(GreenThread).GetMethod("Yield"));
-						NoYieldLabel.Mark();
-					}
-				}
+				////Console.WriteLine("EmiteInstructionCountIncrement: {0},{1}", InstructionsEmitedSinceLastWaypoint, CheckForYield);
+				//if (InstructionsEmitedSinceLastWaypoint > 0)
+				//{
+				//	MipsMethodEmiter.SaveStepInstructionCount(() =>
+				//	{
+				//		MipsMethodEmiter.LoadStepInstructionCount();
+				//		SafeILGenerator.Push((int)InstructionsEmitedSinceLastWaypoint);
+				//		SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
+				//	});
+				//	//ILGenerator.Emit(OpCodes.Ldc_I4, 100);
+				//	//ILGenerator.EmitCall(OpCodes.Call, typeof(Console).GetMethod("WriteLine"), new Type[] { typeof(int) });
+				//	InstructionsEmitedSinceLastWaypoint = 0;
+				//}
+				//
+				//if (CheckForYield)
+				//{
+				//	if (!CpuProcessor.PspConfig.BreakInstructionThreadSwitchingForSpeed)
+				//	{
+				//		var NoYieldLabel = SafeILGenerator.DefineLabel("NoYieldLabel");
+				//		MipsMethodEmiter.LoadStepInstructionCount();
+				//		SafeILGenerator.Push((int)0);
+				//		SafeILGenerator.BranchBinaryComparison(SafeBinaryComparison.GreaterThanSigned, NoYieldLabel);
+				//		//ILGenerator.Emit(OpCodes.Ldc_I4, 1000000);
+				//		//ILGenerator.Emit(OpCodes.Blt, NoYieldLabel);
+				//		MipsMethodEmiter.SaveStepInstructionCount(() =>
+				//		{
+				//			SafeILGenerator.Push((int)0);
+				//		});
+				//		StorePC();
+				//		SafeILGenerator.LoadArgument0CpuThreadState();
+				//		SafeILGenerator.Call((Action)CpuThreadState.Methods.Yield);
+				//		//ILGenerator.Emit(OpCodes.Call, typeof(GreenThread).GetMethod("Yield"));
+				//		NoYieldLabel.Mark();
+				//	}
+				//}
 			}
 
-			private void EmitCpuInstruction()
+			private AstNodeStm EmitCpuInstruction()
 			{
-				if (CpuProcessor.NativeBreakpoints.Contains(PC))
+				try
 				{
-					SafeILGenerator.Call((Action)DebugUtils.IsDebuggerPresentDebugBreak);
-				}
+					if (CpuProcessor.NativeBreakpoints.Contains(PC))
+					{
+						SafeILGenerator.Call((Action)DebugUtils.IsDebuggerPresentDebugBreak);
+					}
 
-				// Marks label.
-				if (Labels.ContainsKey(PC))
+					var Nodes = ast.Statements();
+
+					// Marks label.
+					if (Labels.ContainsKey(PC))
+					{
+						Nodes.AddStatement(EmitInstructionCountIncrement(false));
+						Nodes.AddStatement(ast.Label(AstLabel.CreateFromLabel(Labels[PC])));
+						//Labels[PC].Mark();
+					}
+
+					Nodes.AddStatement(_EmitCpuInstructionAT(PC));
+
+					return Nodes;
+				}
+				finally
 				{
-					EmitInstructionCountIncrement(false);
-					Labels[PC].Mark();
+					PC += 4;
+					InstructionsEmitedSinceLastWaypoint++;
 				}
-
-				_EmitCpuInstructionAT(PC);
-				PC += 4;
-				InstructionsEmitedSinceLastWaypoint++;
 			}
 
 			uint InstructionsEmitedSinceLastWaypoint;
@@ -393,6 +417,8 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				// Jumps to the entry point.
 				SafeILGenerator.BranchAlways(Labels[EntryPC]);
 
+				var Nodes = new AstNodeStmContainer();
+
 				for (PC = MinPC; PC <= MaxPC; )
 				{
 					uint CurrentInstructionPC = PC;
@@ -407,49 +433,47 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 					if ((BranchInfo & DynarecBranchAnalyzer.JumpFlags.BranchOrJumpInstruction) != 0)
 					{
 						InstructionsEmitedSinceLastWaypoint += 2;
-						EmitInstructionCountIncrement(true);
+						Nodes.AddStatement(EmitInstructionCountIncrement(true));
 
 						var BranchAddress = CurrentInstruction.GetBranchAddress(PC);
 
-						if ((BranchInfo & DynarecBranchAnalyzer.JumpFlags.JumpInstruction) != 0)
+						if (BranchInfo.HasFlag(DynarecBranchAnalyzer.JumpFlags.JumpInstruction))
 						{
 							// Marks label.
 							if (Labels.ContainsKey(PC))
 							{
-								Labels[PC].Mark();
+								Nodes.AddStatement(ast.Label(AstLabel.CreateFromLabel(Labels[PC])));
+								//Labels[PC].Mark();
 							}
 
-							_EmitCpuInstructionAT(PC + 4);
-							_EmitCpuInstructionAT(PC + 0);
+							Nodes.AddStatement(_EmitCpuInstructionAT(PC + 4));
+							Nodes.AddStatement(_EmitCpuInstructionAT(PC + 0));
 							PC += 8;
 						}
 						else
 						{
 							// Branch instruction.
-							EmitCpuInstruction();
+							Nodes.AddStatement(EmitCpuInstruction());
 
 							//if ((BranchInfo & CpuBranchAnalyzer.Flags.Likely) != 0)
 							if (BranchInfo.HasFlag(DynarecBranchAnalyzer.JumpFlags.Likely))
 							{
 								//Console.WriteLine("Likely");
 								// Delayed instruction.
-								CpuEmitter._branch_likely(() =>
-								{
-									EmitCpuInstruction();
-								});
+								Nodes.AddStatement(CpuEmitter._branch_likely(EmitCpuInstruction()));
 							}
 							else
 							{
 								//Console.WriteLine("Not Likely");
 								// Delayed instruction.
-								EmitCpuInstruction();
+								Nodes.AddStatement(EmitCpuInstruction());
 							}
 
 							if (CurrentInstructionPC + 4 != BranchAddress)
 							{
 								if (Labels.ContainsKey(BranchAddress))
 								{
-									CpuEmitter._branch_post(Labels[BranchAddress]);
+									Nodes.AddStatement(CpuEmitter._branch_post(Labels[BranchAddress]));
 								}
 								// Code not reached.
 								else
@@ -464,9 +488,9 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 						// Syscall instruction.
 						if ((BranchInfo & DynarecBranchAnalyzer.JumpFlags.SyscallInstruction) != 0)
 						{
-							StorePC();
+							Nodes.AddStatement(StorePC());
 						}
-						EmitCpuInstruction();
+						Nodes.AddStatement(EmitCpuInstruction());
 						if ((BranchInfo & DynarecBranchAnalyzer.JumpFlags.SyscallInstruction) != 0)
 						{
 							// On this special Syscall
@@ -479,6 +503,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 					}
 				}
 
+				MipsMethodEmiter.GenerateIL(Nodes);
 				ShowInstructionStats();
 
 				//if (BreakPoint) IsDebuggerPresentDebugBreak();

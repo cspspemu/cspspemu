@@ -1422,13 +1422,34 @@ namespace CSPspEmu.Core.Tests
 		public void LoadUnalignedTest()
 		{
 			var Value = 0x87654321;
-			Memory.WriteSafe<uint>(0x08010004, 0x87654321);
-			CpuThreadState.GPR[2] = (int)0x08010000;
-			ExecuteAssembly(@"
-				lwl r1, 7(r2)
-				lwr r1, 4(r2)
-			");
-			Assert.AreEqual((uint)Value, (uint)CpuThreadState.GPR[1]);
+			for (int n = 0; n <= 7; n++)
+			{
+				var Offset = (uint)n;
+				var Base = (uint)0x08010000;
+				Memory.WriteSafe<uint>(Base + Offset, Value);
+				CpuThreadState.GPR[2] = (int)Base;
+				ExecuteAssembly(String.Format(@"
+				lwl r1, {0}(r2)
+				lwr r1, {1}(r2)
+			", Offset + 3, Offset + 0));
+				Assert.AreEqual(String.Format("{0:X8}", Value), String.Format("{0:X8}", CpuThreadState.GPR[1]));
+			}
+		}
+
+		[TestMethod]
+		public void LoadInvalidUnalignedTest()
+		{
+			var Value = 0x87654321;
+			var Offset = (uint)3;
+			var Base = (uint)0x08010000;
+			Memory.WriteSafe<uint>(Base + Offset, Value);
+			CpuThreadState.GPR[2] = (int)Base;
+			ExecuteAssembly(String.Format(@"
+				lwl r1, {0}(r2)
+				sll r1, r1, 31
+				lwr r1, {1}(r2)
+			", Offset + 3, Offset + 0));
+			Assert.AreEqual(String.Format("{0:X8}", 0x21), String.Format("{0:X8}", CpuThreadState.GPR[1]));
 		}
 
 		[TestMethod]

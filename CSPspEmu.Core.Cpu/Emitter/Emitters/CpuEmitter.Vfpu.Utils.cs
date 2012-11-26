@@ -610,11 +610,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 					if (AsInteger)
 					{
-						AstNodeExpr = this.Immediate((int)MathFloat.ReinterpretFloatAsInt(Value));
+						AstNodeExpr = ast.Immediate((int)MathFloat.ReinterpretFloatAsInt(Value));
 					}
 					else
 					{
-						AstNodeExpr = this.Immediate((float)Value);
+						AstNodeExpr = ast.Immediate((float)Value);
 					}
 				}
 				// Value.
@@ -628,7 +628,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 					{
 						AstNodeExpr = VFR(RegisterIndices[Prefix.SourceIndex(Index)]);
 					}
-					if (Prefix.SourceAbsolute(Index)) AstNodeExpr = this.CallStatic((Func<float, float>)MathFloat.Abs, AstNodeExpr);
+					if (Prefix.SourceAbsolute(Index)) AstNodeExpr = ast.CallStatic((Func<float, float>)MathFloat.Abs, AstNodeExpr);
 				}
 
 				if (Prefix.SourceNegate(Index)) AstNodeExpr = -AstNodeExpr;
@@ -677,11 +677,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 					{
 						if (AsInteger)
 						{
-							AstNodeExpr = this.CallStatic((Func<int, int, int, int>)MathFloat.ClampInt, AstNodeExpr, (int)Min, (int)Max);
+							AstNodeExpr = ast.CallStatic((Func<int, int, int, int>)MathFloat.ClampInt, AstNodeExpr, (int)Min, (int)Max);
 						}
 						else
 						{
-							AstNodeExpr = this.CallStatic((Func<float, float, float, float>)MathFloat.Clamp, AstNodeExpr, (float)Min, (float)Max);
+							AstNodeExpr = ast.CallStatic((Func<float, float, float, float>)MathFloat.Clamp, AstNodeExpr, (float)Min, (float)Max);
 						}
 					}
 				}
@@ -690,16 +690,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return AstNodeExpr;
 		}
 
-		private void AstVfpuGenerateAndStoreVd(Func<int, AstNodeExpr> Generator, bool AsInteger = false)
+		private AstNodeStm AstVfpuStoreVd(Func<int, AstNodeExpr> Generator, bool AsInteger = false)
 		{
 			var Size = Instruction.ONE_TWO;
 			var RegisterIndices = VfpuUtils.GetIndices(Size, VfpuUtils.RegisterType.Vector, Instruction.VD);
 			var Items = new List<AstNodeStm>();
 			for (int Index = 0; Index < Size; Index++)
 			{
-				Items.Add(this.Assign(VFR(RegisterIndices[Index]), PrefixVdTransform(Index, Generator(Index), AsInteger)));
+				Items.Add(ast.Assign(VFR(RegisterIndices[Index]), PrefixVdTransform(Index, Generator(Index), AsInteger)));
 			}
-			this.GenerateIL(this.Statements(Items.ToArray()));
+			return ast.Statements(Items.ToArray());
 			//foreach (var Index in RegisterIndices)
 			//{
 			//	Console.WriteLine("Index: {0}", Index);

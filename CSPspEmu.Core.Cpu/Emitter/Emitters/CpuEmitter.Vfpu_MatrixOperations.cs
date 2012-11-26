@@ -1,5 +1,6 @@
 ﻿using System;
 using SafeILGenerator;
+using SafeILGenerator.Ast.Nodes;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -7,133 +8,139 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	{
 		// Vfpu Matrix MULtiplication
 		// @FIX!!!
-		public void vmmul()
+		public AstNodeStm vmmul()
 		{
-			var VectorSize = Instruction.ONE_TWO;
-			//var MatrixRank = VectorSize;
-
-			foreach (var IndexI in XRange(VectorSize))
-			{
-				foreach (var IndexJ in XRange(VectorSize))
-				{
-					// VD[j] += VS[k] * VT[k];
-					//
-					//VfpuSave_Register((uint)(Instruction.VD + IndexI), IndexJ, VectorSize, PrefixDestination, () =>
-					Save_VD(IndexJ, VectorSize, IndexI, () =>
-					{
-						SafeILGenerator.Push((float)0.0f);
-						foreach (var IndexK in XRange(VectorSize))
-						{
-							Load_VT(IndexK, VectorSize, IndexI);
-							Load_VS(IndexK, VectorSize, IndexJ);
-							SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-							SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-						}
-					});
-				}
-			}
-
-			/*
-			foreach (i; 0..vsize) {
-				loadVt(vsize, instruction.VT + i);
-				foreach (j; 0..vsize) {
-					loadVs(vsize, instruction.VS + j);
-					VD[j] = 0.0f; foreach (k; 0..vsize) VD[j] += VS[k] * VT[k];
-				}
-				saveVd(vsize, instruction.VD + i);
-			}
-			*/
-			//throw (new NotImplementedException(""));
+			throw(new NotImplementedException("vmmul"));
+			//var VectorSize = Instruction.ONE_TWO;
+			////var MatrixRank = VectorSize;
+			//
+			//foreach (var IndexI in XRange(VectorSize))
+			//{
+			//	foreach (var IndexJ in XRange(VectorSize))
+			//	{
+			//		// VD[j] += VS[k] * VT[k];
+			//		//
+			//		//VfpuSave_Register((uint)(Instruction.VD + IndexI), IndexJ, VectorSize, PrefixDestination, () =>
+			//		Save_VD(IndexJ, VectorSize, IndexI, () =>
+			//		{
+			//			SafeILGenerator.Push((float)0.0f);
+			//			foreach (var IndexK in XRange(VectorSize))
+			//			{
+			//				Load_VT(IndexK, VectorSize, IndexI);
+			//				Load_VS(IndexK, VectorSize, IndexJ);
+			//				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+			//				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
+			//			}
+			//		});
+			//	}
+			//}
+			//
+			///*
+			//foreach (i; 0..vsize) {
+			//	loadVt(vsize, instruction.VT + i);
+			//	foreach (j; 0..vsize) {
+			//		loadVs(vsize, instruction.VS + j);
+			//		VD[j] = 0.0f; foreach (k; 0..vsize) VD[j] += VS[k] * VT[k];
+			//	}
+			//	saveVd(vsize, instruction.VD + i);
+			//}
+			//*/
+			////throw (new NotImplementedException(""));
 		}
 
 		// -
 
-		private void _vtfm_x(uint VectorSize)
+		private AstNodeStm _vtfm_x(uint VectorSize)
 		{
-			VectorOperationSaveVd(VectorSize, Index =>
-			{
-				SafeILGenerator.Push((float)0.0f);
-				for (int n = 0; n < VectorSize; n++)
-				{
-					Load_VS(n, VectorSize, RegisterOffset: Index);
-					Load_VT(n, VectorSize);
-					SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-					SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-				}
-			});
+			throw (new NotImplementedException());
+			//VectorOperationSaveVd(VectorSize, Index =>
+			//{
+			//	SafeILGenerator.Push((float)0.0f);
+			//	for (int n = 0; n < VectorSize; n++)
+			//	{
+			//		Load_VS(n, VectorSize, RegisterOffset: Index);
+			//		Load_VT(n, VectorSize);
+			//		SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+			//		SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
+			//	}
+			//});
 		}
 
-		private void _vhtfm_x(uint VectorSize)
+		private AstNodeStm _vhtfm_x(uint VectorSize)
 		{
-			VectorOperationSaveVd(VectorSize, Index =>
-			{
-				SafeILGenerator.Push((float)0.0f);
-				for (int n = 0; n < VectorSize; n++)
-				{
-					Load_VS(n, VectorSize, RegisterOffset: Index);
-					if (n == VectorSize - 1)
-					{
-						SafeILGenerator.Push((float)1.0f);
-					}
-					else
-					{
-						Load_VT(n, VectorSize - 1);
-					}
-					SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-					SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-				}
-			});
+			throw(new NotImplementedException());
+			//VectorOperationSaveVd(VectorSize, Index =>
+			//{
+			//	SafeILGenerator.Push((float)0.0f);
+			//	for (int n = 0; n < VectorSize; n++)
+			//	{
+			//		Load_VS(n, VectorSize, RegisterOffset: Index);
+			//		if (n == VectorSize - 1)
+			//		{
+			//			SafeILGenerator.Push((float)1.0f);
+			//		}
+			//		else
+			//		{
+			//			Load_VT(n, VectorSize - 1);
+			//		}
+			//		SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+			//		SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
+			//	}
+			//});
 		}
 
-		public void vtfm2()
+		public AstNodeStm vtfm2()
 		{
-			_vtfm_x(2);
+			return _vtfm_x(2);
 		}
-		public void vtfm3()
+		public AstNodeStm vtfm3()
 		{
-			_vtfm_x(3);
+			return _vtfm_x(3);
 		}
-		public void vtfm4()
+		public AstNodeStm vtfm4()
 		{
-			_vtfm_x(4);
-		}
-
-		public void vhtfm2()
-		{
-			_vhtfm_x(2);
-		}
-		public void vhtfm3()
-		{
-			_vhtfm_x(3);
-		}
-		public void vhtfm4()
-		{
-			_vhtfm_x(4);
+			return _vtfm_x(4);
 		}
 
-		public void vmidt()
+		public AstNodeStm vhtfm2()
 		{
-			var MatrixSize = Instruction.ONE_TWO;
-
-			foreach (var Index in XRange(MatrixSize))
-			{
-				_vidt_x(MatrixSize, (uint)(Instruction.VD + Index));
-			}
+			return _vhtfm_x(2);
+		}
+		public AstNodeStm vhtfm3()
+		{
+			return _vhtfm_x(3);
+		}
+		public AstNodeStm vhtfm4()
+		{
+			return _vhtfm_x(4);
 		}
 
-		public void vmzero()
+		public AstNodeStm vmidt()
 		{
-			var MatrixSize = Instruction.ONE_TWO;
+			throw (new NotImplementedException(""));
 
-			foreach (var Index in XRange(MatrixSize))
-			{
-				_vzero_x(MatrixSize, (uint)(Instruction.VD + Index));
-			}
-
-			//throw (new NotImplementedException(""));
+			//var MatrixSize = Instruction.ONE_TWO;
+			//
+			//foreach (var Index in XRange(MatrixSize))
+			//{
+			//	_vidt_x(MatrixSize, (uint)(Instruction.VD + Index));
+			//}
 		}
 
-		public void vmone()
+		public AstNodeStm vmzero()
+		{
+			throw (new NotImplementedException(""));
+			//var MatrixSize = Instruction.ONE_TWO;
+			//
+			//foreach (var Index in XRange(MatrixSize))
+			//{
+			//	_vzero_x(MatrixSize, (uint)(Instruction.VD + Index));
+			//}
+			//
+			////throw (new NotImplementedException(""));
+		}
+
+		public AstNodeStm vmone()
 		{
 			throw (new NotImplementedException(""));
 		}
@@ -157,25 +164,25 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// <para/>
 		/// vfpu_mtx[%vfpu_rd] &lt;- vfpu_mtx[%vfpu_rs] * vfpu_reg[%vfpu_rt]
 		/// </summary>
-		public void vmscl()
+		public AstNodeStm vmscl()
 		{
-			var MatrixSize = Instruction.ONE_TWO;
-
-			foreach (var RowIndex in XRange(MatrixSize))
-			{
-				uint VectorSize = MatrixSize;
-
-				foreach (var Index in XRange(VectorSize))
-				{
-					Save_VD(Index, VectorSize, RowIndex, () =>
-					{
-						Load_VS(Index, VectorSize, RowIndex);
-						Load_VT(0, 1);
-						SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-					});
-				}
-			}
-			//throw (new NotImplementedException(""));
+			throw (new NotImplementedException("vmscl"));
+			//var MatrixSize = Instruction.ONE_TWO;
+			//
+			//foreach (var RowIndex in XRange(MatrixSize))
+			//{
+			//	uint VectorSize = MatrixSize;
+			//
+			//	foreach (var Index in XRange(VectorSize))
+			//	{
+			//		Save_VD(Index, VectorSize, RowIndex, () =>
+			//		{
+			//			Load_VS(Index, VectorSize, RowIndex);
+			//			Load_VT(0, 1);
+			//			SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+			//		});
+			//	}
+			//}
 		}
 
 		public float _vqmul_row0(float l0, float l1, float l2, float l3, float r0, float r1, float r2, float r3)
@@ -214,44 +221,46 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			saveVd(4, vd, v3);
 #endif
 
-		public void vqmul()
+		public AstNodeStm vqmul()
 		{
-			//var VectorSize = Instruction.ONE_TWO;
-			var VectorSize = (uint)4;
-			VectorOperationSaveVd(VectorSize, (Index) =>
-			{
-				Load_VS(0);
-				Load_VS(1);
-				Load_VS(2);
-				Load_VS(3);
-				Load_VT(0);
-				Load_VT(1);
-				Load_VT(2);
-				Load_VT(3);
-				switch (Index)
-				{
-					case 0: SafeILGenerator.Call((Func<float, float, float, float, float, float, float, float, float>)_vqmul_row0); break;
-					case 1: SafeILGenerator.Call((Func<float, float, float, float, float, float, float, float, float>)_vqmul_row1); break;
-					case 2: SafeILGenerator.Call((Func<float, float, float, float, float, float, float, float, float>)_vqmul_row2); break;
-					case 3: SafeILGenerator.Call((Func<float, float, float, float, float, float, float, float, float>)_vqmul_row3); break;
-				}
-			});
+			throw (new NotImplementedException());
+			////var VectorSize = Instruction.ONE_TWO;
+			//var VectorSize = (uint)4;
+			//VectorOperationSaveVd(VectorSize, (Index) =>
+			//{
+			//	Load_VS(0);
+			//	Load_VS(1);
+			//	Load_VS(2);
+			//	Load_VS(3);
+			//	Load_VT(0);
+			//	Load_VT(1);
+			//	Load_VT(2);
+			//	Load_VT(3);
+			//	switch (Index)
+			//	{
+			//		case 0: SafeILGenerator.Call((Func<float, float, float, float, float, float, float, float, float>)_vqmul_row0); break;
+			//		case 1: SafeILGenerator.Call((Func<float, float, float, float, float, float, float, float, float>)_vqmul_row1); break;
+			//		case 2: SafeILGenerator.Call((Func<float, float, float, float, float, float, float, float, float>)_vqmul_row2); break;
+			//		case 3: SafeILGenerator.Call((Func<float, float, float, float, float, float, float, float, float>)_vqmul_row3); break;
+			//	}
+			//});
 		}
 
-		public void vmmov()
+		public AstNodeStm vmmov()
 		{
-			var VectorSize = Instruction.ONE_TWO;
-
-			foreach (var y in XRange(VectorSize))
-			{
-				foreach (var x in XRange(VectorSize))
-				{
-					Save_VD(x, VectorSize, y, () =>
-					{
-						Load_VS(x, VectorSize, y);
-					});
-				}
-			}
+			throw(new NotImplementedException());
+			//var VectorSize = Instruction.ONE_TWO;
+			//
+			//foreach (var y in XRange(VectorSize))
+			//{
+			//	foreach (var x in XRange(VectorSize))
+			//	{
+			//		Save_VD(x, VectorSize, y, () =>
+			//		{
+			//			Load_VS(x, VectorSize, y);
+			//		});
+			//	}
+			//}
 		}
 	}
 }

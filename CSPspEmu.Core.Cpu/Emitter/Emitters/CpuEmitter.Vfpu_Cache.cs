@@ -1,21 +1,22 @@
-﻿using System;
+﻿using SafeILGenerator.Ast.Nodes;
+using System;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
     public sealed partial class CpuEmitter
 	{
-		public void vnop()
+		public AstNodeStm vnop()
 		{
-			Console.Error.WriteLine("vnop");
+			throw (new NotImplementedException("vnop"));
 		}
-		public void vsync()
+		public AstNodeStm vsync()
 		{
-			Console.Error.WriteLine("vsync");
-		}
+			throw (new NotImplementedException("vsync"));
+		}			
 
-		public void vflush()
+		public AstNodeStm vflush()
 		{
-			Console.Error.WriteLine("vflush");
+			throw (new NotImplementedException("vflush"));
 		}
 
 	}

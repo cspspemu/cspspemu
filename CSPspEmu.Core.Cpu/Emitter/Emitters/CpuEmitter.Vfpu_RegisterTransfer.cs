@@ -1,17 +1,18 @@
 ﻿using System;
 using CSharpUtils;
+using SafeILGenerator.Ast.Nodes;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
     public sealed partial class CpuEmitter
 	{
-		public void vmfvc() { throw (new NotImplementedException("vmfvc")); }
-		public void vmtvc() { throw (new NotImplementedException("vmtvc")); }
+		public AstNodeStm vmfvc() { throw (new NotImplementedException("vmfvc")); }
+		public AstNodeStm vmtvc() { throw (new NotImplementedException("vmtvc")); }
 
 		/// <summary>
 		/// ID("mtv",         VM("010010:00:111:rt:0:0000000:0:vd"), "%t, %zs", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
 		/// </summary>
-		public void mtv()
+		public AstNodeStm mtv()
 		{
 			throw(new NotImplementedException("mtv"));
 			///*
@@ -28,7 +29,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			//	MipsMethodEmitter.CallMethod((Func<int, float>)MathFloat.ReinterpretIntAsFloat);
 			//});
 		}
-		public void mtvc() { throw (new NotImplementedException("mtvc")); }
+		public AstNodeStm mtvc() { throw (new NotImplementedException("mtvc")); }
 
 
 		public static uint _mfvc_impl(CpuThreadState CpuThreadState, VfpuControlRegistersEnum VfpuControlRegister)
@@ -57,7 +58,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// <summary>
 		/// Copies a vfpu control register into a general purpose register.
 		/// </summary>
-		public void mfvc()
+		public AstNodeStm mfvc()
 		{
 			throw (new NotImplementedException("mfvc"));
 			//MipsMethodEmitter.SaveGPR(RT, () =>
@@ -69,7 +70,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		// Move From/to Vfpu (C?)_
-		public void mfv()
+		public AstNodeStm mfv()
 		{
 			throw (new NotImplementedException("mfv"));
 			//MipsMethodEmitter.SaveGPR_F(RT, () =>

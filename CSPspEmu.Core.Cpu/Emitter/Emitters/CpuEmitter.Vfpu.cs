@@ -97,287 +97,280 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// <summary>
 		/// ID("vdot",        VM("011001:001:vt:two:vs:one:vd"), "%zs, %yp, %xp", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
 		/// </summary>
-		public void vdot()
+		public AstNodeStm vdot()
 		{
-			uint VectorSize = Instruction.ONE_TWO;
-			if (VectorSize == 1)
-			{
-				throw (new NotImplementedException(""));
-			}
-			_VfpuLoadVectorWithIndexPointer(Instruction.VD, 0, 1);
-			{
-				SafeILGenerator.Push((float)0.0f);
-				for (uint Index = 0; Index < VectorSize; Index++)
-				{
-					_VfpuLoadVectorWithIndexPointer(Instruction.VS, Index, VectorSize);
-					SafeILGenerator.LoadIndirect<float>();
-
-					_VfpuLoadVectorWithIndexPointer(Instruction.VT, Index, VectorSize);
-					SafeILGenerator.LoadIndirect<float>();
-
-					SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-					SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-				}
-			}
-			SafeILGenerator.StoreIndirect<float>();
-
-			/*
-			loadVs(vsize);
-			loadVt(vsize);
-			{
-				VD[0] = 0.0;
-				foreach (n; 0..vsize) VD[0] += VS[n] * VT[n];
-			}
-			saveVd(1);
-			*/
+			throw(new NotImplementedException());
+			//uint VectorSize = Instruction.ONE_TWO;
+			//if (VectorSize == 1)
+			//{
+			//	throw (new NotImplementedException(""));
+			//}
+			//_VfpuLoadVectorWithIndexPointer(Instruction.VD, 0, 1);
+			//{
+			//	SafeILGenerator.Push((float)0.0f);
+			//	for (uint Index = 0; Index < VectorSize; Index++)
+			//	{
+			//		_VfpuLoadVectorWithIndexPointer(Instruction.VS, Index, VectorSize);
+			//		SafeILGenerator.LoadIndirect<float>();
+			//
+			//		_VfpuLoadVectorWithIndexPointer(Instruction.VT, Index, VectorSize);
+			//		SafeILGenerator.LoadIndirect<float>();
+			//
+			//		SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+			//		SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
+			//	}
+			//}
+			//SafeILGenerator.StoreIndirect<float>();
 		}
-		public void vscl() {
-			uint VectorSize = Instruction.ONE_TWO;
-			if (VectorSize == 1)
-			{
-				throw (new NotImplementedException(""));
-			}
-
-			foreach (var Index in XRange(VectorSize))
-			{
-				Save_VD(Index, VectorSize, () =>
-				{
-					Load_VS(Index, VectorSize);
-					Load_VT(0, 1);
-					SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-				});
-			}
+		public AstNodeStm vscl()
+		{
+			throw(new NotImplementedException());
+			//uint VectorSize = Instruction.ONE_TWO;
+			//if (VectorSize == 1)
+			//{
+			//	throw (new NotImplementedException(""));
+			//}
+			//
+			//foreach (var Index in XRange(VectorSize))
+			//{
+			//	Save_VD(Index, VectorSize, () =>
+			//	{
+			//		Load_VS(Index, VectorSize);
+			//		Load_VT(0, 1);
+			//		SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+			//	});
+			//}
 		}
 
 		/// <summary>
 		/// Vector ROTate
 		/// </summary>
-		public void vrot()
+		public AstNodeStm vrot()
 		{
-			var VectorSize = Instruction.ONE_TWO;
-			uint imm5 = Instruction.IMM5;
-			if (VectorSize == 1) throw(new NotImplementedException());
-
-			//uint imm5 = instruction.IMM5;
-			int SinIndex = (int)((imm5 >> 2) & 3);
-			int CosIndex = (int)((imm5 >> 0) & 3);
-			bool NegateSin = ((imm5 & 16) != 0);
-
-			foreach (var Index in XRange(VectorSize))
-			{
-				Save_VD(Index, VectorSize, () =>
-				{
-					if (SinIndex == CosIndex)
-					{
-						// Angle [-1, +1]
-						Load_VS(0, 1); // Angle
-						SafeILGenerator.Push((float)(Math.PI / 2.0f));
-						SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-						MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Sin);
-						if (NegateSin)
-						{
-							SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate);
-						}
-					}
-					else
-					{
-						SafeILGenerator.Push((float)(0.0f));
-					}
-				});
-			}
-
-			if (SinIndex != CosIndex)
-			{
-				Save_VD(SinIndex, VectorSize, () =>
-				{
-					// Angle [-1, +1]
-					Load_VS(0, 1); // Angle
-					SafeILGenerator.Push((float)(Math.PI / 2.0f));
-					SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-					MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Sin);
-					if (NegateSin)
-					{
-						SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate);
-					}
-				});
-			}
-
-			Save_VD(CosIndex, VectorSize, () =>
-			{
-				// Angle [-1, +1]
-				Load_VS(0, 1); // Angle
-				SafeILGenerator.Push((float)(Math.PI / 2.0f));
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-				MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Cos);
-			});
+			throw(new NotImplementedException());
+			//var VectorSize = Instruction.ONE_TWO;
+			//uint imm5 = Instruction.IMM5;
+			//if (VectorSize == 1) throw(new NotImplementedException());
+			//
+			////uint imm5 = instruction.IMM5;
+			//int SinIndex = (int)((imm5 >> 2) & 3);
+			//int CosIndex = (int)((imm5 >> 0) & 3);
+			//bool NegateSin = ((imm5 & 16) != 0);
+			//
+			//foreach (var Index in XRange(VectorSize))
+			//{
+			//	Save_VD(Index, VectorSize, () =>
+			//	{
+			//		if (SinIndex == CosIndex)
+			//		{
+			//			// Angle [-1, +1]
+			//			Load_VS(0, 1); // Angle
+			//			SafeILGenerator.Push((float)(Math.PI / 2.0f));
+			//			SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+			//			MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Sin);
+			//			if (NegateSin)
+			//			{
+			//				SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate);
+			//			}
+			//		}
+			//		else
+			//		{
+			//			SafeILGenerator.Push((float)(0.0f));
+			//		}
+			//	});
+			//}
+			//
+			//if (SinIndex != CosIndex)
+			//{
+			//	Save_VD(SinIndex, VectorSize, () =>
+			//	{
+			//		// Angle [-1, +1]
+			//		Load_VS(0, 1); // Angle
+			//		SafeILGenerator.Push((float)(Math.PI / 2.0f));
+			//		SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+			//		MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Sin);
+			//		if (NegateSin)
+			//		{
+			//			SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate);
+			//		}
+			//	});
+			//}
+			//
+			//Save_VD(CosIndex, VectorSize, () =>
+			//{
+			//	// Angle [-1, +1]
+			//	Load_VS(0, 1); // Angle
+			//	SafeILGenerator.Push((float)(Math.PI / 2.0f));
+			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+			//	MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Cos);
+			//});
 		}
 
 		// vzero: Vector ZERO
 		// vone : Vector ONE
-		public void vzero() { AstVfpuGenerateAndStoreVd((Index) => 0f);  }
-		public void vone() { AstVfpuGenerateAndStoreVd((Index) => 1f); }
+		public AstNodeStm vzero() { return AstVfpuStoreVd((Index) => 0f);  }
+		public AstNodeStm vone() { return AstVfpuStoreVd((Index) => 1f); }
 
 		// vmov  : Vector MOVe
 		// vsgn  : Vector SiGN
 		// *     : Vector Reverse SQuare root/COSine/Arc SINe/LOG2
 		// @CHECK
-		public void vmov() { AstVfpuGenerateAndStoreVd((Index) => AstLoadVs(Index)); }
-		public void vabs() { AstVfpuGenerateAndStoreVd((Index) => this.CallStatic((Func<float, float>)MathFloat.Abs, AstLoadVs(Index))); }
-		public void vneg() { AstVfpuGenerateAndStoreVd((Index) => -AstLoadVs(Index)); }
-		public void vocp() { AstVfpuGenerateAndStoreVd((Index) => 1f - AstLoadVs(Index)); }
-		public void vsgn() { AstVfpuGenerateAndStoreVd((Index) => this.CallStatic((Func<float, float>)MathFloat.Sign, AstLoadVs(Index))); }
-		public void vrcp() { AstVfpuGenerateAndStoreVd((Index) => 1f / AstLoadVs(Index)); }
+		public AstNodeStm vmov() { return AstVfpuStoreVd((Index) => AstLoadVs(Index)); }
+		public AstNodeStm vabs() { return AstVfpuStoreVd((Index) => ast.CallStatic((Func<float, float>)MathFloat.Abs, AstLoadVs(Index))); }
+		public AstNodeStm vneg() { return AstVfpuStoreVd((Index) => -AstLoadVs(Index)); }
+		public AstNodeStm vocp() { return AstVfpuStoreVd((Index) => 1f - AstLoadVs(Index)); }
+		public AstNodeStm vsgn() { return AstVfpuStoreVd((Index) => ast.CallStatic((Func<float, float>)MathFloat.Sign, AstLoadVs(Index))); }
+		public AstNodeStm vrcp() { return AstVfpuStoreVd((Index) => 1f / AstLoadVs(Index)); }
 
-		private void _vfpu_call_single_method(Delegate Delegate)
+		private AstNodeStm _vfpu_call_single_method(Delegate Delegate)
 		{
-			VectorOperationSaveVd((Index) =>
-			{
-				Load_VS(Index);
-				MipsMethodEmitter.CallMethod(Delegate);
-			});
+			throw(new NotImplementedException());
+			//VectorOperationSaveVd((Index) =>
+			//{
+			//	Load_VS(Index);
+			//	MipsMethodEmitter.CallMethod(Delegate);
+			//});
 		}
 
 		// OP_V_INTERNAL_IN_N!(1, "1.0f / sqrt(v)");
-		public void vsqrt() { _vfpu_call_single_method((Func<float, float>)MathFloat.Sqrt); }
-		public void vrsq() { _vfpu_call_single_method((Func<float, float>)MathFloat.RSqrt); }
-		public void vsin() { _vfpu_call_single_method((Func<float, float>)MathFloat.SinV1); }
-		public void vcos() { _vfpu_call_single_method((Func<float, float>)MathFloat.CosV1); }
-		public void vexp2() { _vfpu_call_single_method((Func<float, float>)MathFloat.Exp2); }
-		public void vlog2() { _vfpu_call_single_method((Func<float, float>)MathFloat.Log2); }
-		public void vasin() { _vfpu_call_single_method((Func<float, float>)MathFloat.AsinV1); }
-		public void vnrcp() { throw (new NotImplementedException("")); }
-		public void vnsin() { throw (new NotImplementedException("")); }
-		public void vrexp2() { throw (new NotImplementedException("")); }
-		public void vsat0() { _vfpu_call_single_method((Func<float, float>)MathFloat.Vsat0); }
-		public void vsat1() { _vfpu_call_single_method((Func<float, float>)MathFloat.Vsat1); }
+		public AstNodeStm vsqrt() { return _vfpu_call_single_method((Func<float, float>)MathFloat.Sqrt); }
+		public AstNodeStm vrsq() { return _vfpu_call_single_method((Func<float, float>)MathFloat.RSqrt); }
+		public AstNodeStm vsin() { return _vfpu_call_single_method((Func<float, float>)MathFloat.SinV1); }
+		public AstNodeStm vcos() { return _vfpu_call_single_method((Func<float, float>)MathFloat.CosV1); }
+		public AstNodeStm vexp2() { return _vfpu_call_single_method((Func<float, float>)MathFloat.Exp2); }
+		public AstNodeStm vlog2() { return _vfpu_call_single_method((Func<float, float>)MathFloat.Log2); }
+		public AstNodeStm vasin() { return _vfpu_call_single_method((Func<float, float>)MathFloat.AsinV1); }
+		public AstNodeStm vnrcp() { throw (new NotImplementedException("")); }
+		public AstNodeStm vnsin() { throw (new NotImplementedException("")); }
+		public AstNodeStm vrexp2() { throw (new NotImplementedException("")); }
+		public AstNodeStm vsat0() { return _vfpu_call_single_method((Func<float, float>)MathFloat.Vsat0); }
+		public AstNodeStm vsat1() { return _vfpu_call_single_method((Func<float, float>)MathFloat.Vsat1); }
 
 		// Vfpu ConSTant
-		public void vcst()
+		public AstNodeStm vcst()
 		{
-			var VectorSize = Instruction.ONE_TWO;
 			float FloatConstant = (Instruction.IMM5 >= 0 && Instruction.IMM5 < VfpuUtils.VfpuConstantsValues.Length) ? VfpuUtils.VfpuConstantsValues[Instruction.IMM5] : 0.0f;
-
-			foreach (var Index in XRange(VectorSize))
+			return AstVfpuStoreVd((Index) =>
 			{
-				//Console.Error.WriteLine("{0}/{1}", Index, VectorSize);
-				Save_VD(Index, VectorSize, () =>
-				{
-					SafeILGenerator.Push((float)FloatConstant);
-				}
-				//, Debug: true
-				);
-			}
-			//_call_debug_vfpu();
+				return ast.Immediate(FloatConstant);
+			});
 		}
 
 		// -
-		public void vhdp()
+		public AstNodeStm vhdp()
 		{
-			var VectorSize = Instruction.ONE_TWO;
-
-			VectorOperationSaveVd(1, (Index) =>
-			{
-				SafeILGenerator.Push(0.0f);
-				for (int n = 0; n < VectorSize - 1; n++)
-				{
-					Load_VS(n);
-					Load_VT(n);
-					SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-					SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-				}
-
-				Load_VT((int)(VectorSize - 1));
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-			});
+			throw(new NotImplementedException());
+			//var VectorSize = Instruction.ONE_TWO;
+			//
+			//VectorOperationSaveVd(1, (Index) =>
+			//{
+			//	SafeILGenerator.Push(0.0f);
+			//	for (int n = 0; n < VectorSize - 1; n++)
+			//	{
+			//		Load_VS(n);
+			//		Load_VT(n);
+			//		SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+			//		SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
+			//	}
+			//
+			//	Load_VT((int)(VectorSize - 1));
+			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
+			//});
 		}
 
-		public void vcrs_t() {
-			uint VectorSize = 3;
-
-			Save_VD(0, VectorSize, () =>
-			{
-				Load_VS(1, VectorSize);
-				Load_VT(2, VectorSize);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			});
-
-			Save_VD(1, VectorSize, () =>
-			{
-				Load_VS(2, VectorSize);
-				Load_VT(0, VectorSize);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			});
-
-			Save_VD(2, VectorSize, () =>
-			{
-				Load_VS(0, VectorSize);
-				Load_VT(1, VectorSize);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			});
+		public AstNodeStm vcrs_t()
+		{
+			throw (new NotImplementedException());
+			//uint VectorSize = 3;
+			//
+			//Save_VD(0, VectorSize, () =>
+			//{
+			//	Load_VS(1, VectorSize);
+			//	Load_VT(2, VectorSize);
+			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+			//});
+			//
+			//Save_VD(1, VectorSize, () =>
+			//{
+			//	Load_VS(2, VectorSize);
+			//	Load_VT(0, VectorSize);
+			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+			//});
+			//
+			//Save_VD(2, VectorSize, () =>
+			//{
+			//	Load_VS(0, VectorSize);
+			//	Load_VT(1, VectorSize);
+			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+			//});
 		}
 
 		/// <summary>
 		/// Cross product
 		/// </summary>
-		public void vcrsp_t() {
-			uint VectorSize = 3;
-
-			Save_VD(0, VectorSize, () =>
-			{
-				Load_VS(1, VectorSize);
-				Load_VT(2, VectorSize);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-				Load_VS(2, VectorSize);
-				Load_VT(1, VectorSize);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
-			});
-
-			Save_VD(1, VectorSize, () =>
-			{
-				Load_VS(2, VectorSize);
-				Load_VT(0, VectorSize);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-				Load_VS(0, VectorSize);
-				Load_VT(2, VectorSize);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
-			});
-
-			Save_VD(2, VectorSize, () =>
-			{
-				Load_VS(0, VectorSize);
-				Load_VT(1, VectorSize);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-				Load_VS(1, VectorSize);
-				Load_VT(0, VectorSize);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-				SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
-			});
-			/*
-			v3[0] = +v1[1] * v2[2] - v1[2] * v2[1];
-			v3[1] = +v1[2] * v2[0] - v1[0] * v2[2];
-			v3[2] = +v1[0] * v2[1] - v1[1] * v2[0];
-			throw (new NotImplementedException(""));
-			*/
+		public AstNodeStm vcrsp_t()
+		{
+			throw(new NotImplementedException());
+			//uint VectorSize = 3;
+			//
+			//Save_VD(0, VectorSize, () =>
+			//{
+			//	Load_VS(1, VectorSize);
+			//	Load_VT(2, VectorSize);
+			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+			//	Load_VS(2, VectorSize);
+			//	Load_VT(1, VectorSize);
+			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
+			//});
+			//
+			//Save_VD(1, VectorSize, () =>
+			//{
+			//	Load_VS(2, VectorSize);
+			//	Load_VT(0, VectorSize);
+			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+			//	Load_VS(0, VectorSize);
+			//	Load_VT(2, VectorSize);
+			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
+			//});
+			//
+			//Save_VD(2, VectorSize, () =>
+			//{
+			//	Load_VS(0, VectorSize);
+			//	Load_VT(1, VectorSize);
+			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+			//	Load_VS(1, VectorSize);
+			//	Load_VT(0, VectorSize);
+			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
+			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
+			//});
+			///*
+			//v3[0] = +v1[1] * v2[2] - v1[2] * v2[1];
+			//v3[1] = +v1[2] * v2[0] - v1[0] * v2[2];
+			//v3[2] = +v1[0] * v2[1] - v1[1] * v2[0];
+			//throw (new NotImplementedException(""));
+			//*/
 		}
 
 		// Vfpu MINimum/MAXium/ADD/SUB/DIV/MUL
-		public void vmin()
+		public AstNodeStm vmin()
 		{
-			VectorOperationSaveVd((Index) =>
-			{
-				Load_VS_VT(Index);
-				MipsMethodEmitter.CallMethod((Func<float, float, float>)MathFloat.Min);
-			});
+			throw(new NotImplementedException());
+			//VectorOperationSaveVd((Index) =>
+			//{
+			//	Load_VS_VT(Index);
+			//	MipsMethodEmitter.CallMethod((Func<float, float, float>)MathFloat.Min);
+			//});
 		}
-		public void vmax()
+		public AstNodeStm vmax()
 		{
-			VectorOperationSaveVd((Index) =>
-			{
-				Load_VS_VT(Index);
-				MipsMethodEmitter.CallMethod((Func<float, float, float>)MathFloat.Max);
-			});
+			throw (new NotImplementedException());
+			//VectorOperationSaveVd((Index) =>
+			//{
+			//	Load_VS_VT(Index);
+			//	MipsMethodEmitter.CallMethod((Func<float, float, float>)MathFloat.Max);
+			//});
 		}
 
 		/// <summary>
@@ -400,83 +393,87 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		///     <para/>
 		///     vfpu_regs[%vfpu_rd] &lt;- vfpu_regs[%vfpu_rs] + vfpu_regs[%vfpu_rt]
 		/// </summary>
-		public void vadd() { AstVfpuGenerateAndStoreVd((Index) => AstLoadVs(Index) + AstLoadVt(Index)); }
-		public void vsub() { AstVfpuGenerateAndStoreVd((Index) => AstLoadVs(Index) - AstLoadVt(Index)); }
-		public void vdiv() { AstVfpuGenerateAndStoreVd((Index) => AstLoadVs(Index) / AstLoadVt(Index)); }
-		public void vmul() { AstVfpuGenerateAndStoreVd((Index) => AstLoadVs(Index) * AstLoadVt(Index)); }
+		public AstNodeStm vadd() { return AstVfpuStoreVd((Index) => AstLoadVs(Index) + AstLoadVt(Index)); }
+		public AstNodeStm vsub() { return AstVfpuStoreVd((Index) => AstLoadVs(Index) - AstLoadVt(Index)); }
+		public AstNodeStm vdiv() { return AstVfpuStoreVd((Index) => AstLoadVs(Index) / AstLoadVt(Index)); }
+		public AstNodeStm vmul() { return AstVfpuStoreVd((Index) => AstLoadVs(Index) * AstLoadVt(Index)); }
 
-		void _vidt_x(uint VectorSize, uint Register)
+		AstNodeStm _vidt_x(uint VectorSize, uint Register)
 		{
-			uint IndexOne = BitUtils.Extract(Register, 0, 2);
-			foreach (var Index in XRange(VectorSize))
-			{
-				VfpuSave_Register(Register, Index, VectorSize, PrefixDestinationNone, () =>
-				{
-					SafeILGenerator.Push((float)((Index == IndexOne) ? 1.0f : 0.0f));
-				}
-				//, Debug: true
-				);
-			}
+			throw(new NotImplementedException());
+			//uint IndexOne = BitUtils.Extract(Register, 0, 2);
+			//foreach (var Index in XRange(VectorSize))
+			//{
+			//	VfpuSave_Register(Register, Index, VectorSize, PrefixDestinationNone, () =>
+			//	{
+			//		SafeILGenerator.Push((float)((Index == IndexOne) ? 1.0f : 0.0f));
+			//	}
+			//	//, Debug: true
+			//	);
+			//}
 		}
 
-		void _vzero_x(uint VectorSize, uint Register)
+		AstNodeStm _vzero_x(uint VectorSize, uint Register)
 		{
-			uint IndexOne = BitUtils.Extract(Register, 0, 2);
-			foreach (var Index in XRange(VectorSize))
-			{
-				VfpuSave_Register(Register, Index, VectorSize, PrefixDestinationNone, () =>
-				{
-					SafeILGenerator.Push((float) 0.0f);
-				}
-					//, Debug: true
-				);
-			}
+			throw (new NotImplementedException());
+			//uint IndexOne = BitUtils.Extract(Register, 0, 2);
+			//foreach (var Index in XRange(VectorSize))
+			//{
+			//	VfpuSave_Register(Register, Index, VectorSize, PrefixDestinationNone, () =>
+			//	{
+			//		SafeILGenerator.Push((float) 0.0f);
+			//	}
+			//		//, Debug: true
+			//	);
+			//}
 		}
 
 		// Vfpu (Matrix) IDenTity
-		public void vidt()
+		public AstNodeStm vidt()
 		{
 			var MatrixSize = Instruction.ONE_TWO;
-			_vidt_x(MatrixSize, (uint)(Instruction.VD));
+			return _vidt_x(MatrixSize, (uint)(Instruction.VD));
 			//throw (new NotImplementedException(""));
 		}
 
 		// Vfpu load Integer IMmediate
-		public void viim()
+		public AstNodeStm viim()
 		{
-			// @CHECK!
-			Save_VT(Index: 0, VectorSize: 1, Action: () =>
-			{
-				//SafeILGenerator.Push((float)Instruction.IMM);
-				SafeILGenerator.Push((float)Instruction.IMMU);
-			});
+			throw(new NotImplementedException());
+			//// @CHECK!
+			//Save_VT(Index: 0, VectorSize: 1, Action: () =>
+			//{
+			//	//SafeILGenerator.Push((float)Instruction.IMM);
+			//	SafeILGenerator.Push((float)Instruction.IMMU);
+			//});
 		}
 
-		public void vdet() { throw (new NotImplementedException("vdet")); }
+		public AstNodeStm vdet() { throw (new NotImplementedException("vdet")); }
 
-		public void mfvme() { throw (new NotImplementedException("mfvme")); }
-		public void mtvme() { throw (new NotImplementedException("mtvme")); }
+		public AstNodeStm mfvme() { throw (new NotImplementedException("mfvme")); }
+		public AstNodeStm mtvme() { throw (new NotImplementedException("mtvme")); }
 
 		/// <summary>
 		/// ID("vfim",        VM("110111:11:1:vt:imm16"), "%xs, %vh",      ADDR_TYPE_NONE, INSTR_TYPE_PSP),
 		/// </summary>
-		public void vfim()
+		public AstNodeStm vfim()
 		{
-			_VfpuLoadVectorWithIndexPointer(Instruction.VT, 0, 1);
-			SafeILGenerator.Push((float)Instruction.IMM_HF);
-			SafeILGenerator.StoreIndirect<float>();
+			throw(new NotImplementedException());
+			//_VfpuLoadVectorWithIndexPointer(Instruction.VT, 0, 1);
+			//SafeILGenerator.Push((float)Instruction.IMM_HF);
+			//SafeILGenerator.StoreIndirect<float>();
 
 			//_call_debug_vfpu();
 		}
 
 
-		public void vlgb() { throw (new NotImplementedException("")); }
-		public void vsbn() { throw (new NotImplementedException("")); }
+		public AstNodeStm vlgb() { throw (new NotImplementedException("")); }
+		public AstNodeStm vsbn() { throw (new NotImplementedException("")); }
 
-		public void vsbz() { throw (new NotImplementedException("")); }
-		public void vsocp() { throw (new NotImplementedException("")); }
-		public void vus2i() { throw (new NotImplementedException("")); }
+		public AstNodeStm vsbz() { throw (new NotImplementedException("")); }
+		public AstNodeStm vsocp() { throw (new NotImplementedException("")); }
+		public AstNodeStm vus2i() { throw (new NotImplementedException("")); }
 
-		public void vwbn() { throw (new NotImplementedException("")); }
+		public AstNodeStm vwbn() { throw (new NotImplementedException("")); }
 	}
 }

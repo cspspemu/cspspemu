@@ -1,12 +1,13 @@
 ﻿using System;
 using CSharpUtils;
 using SafeILGenerator;
+using SafeILGenerator.Ast.Nodes;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
 	public sealed partial class CpuEmitter
 	{
-		public static void _vcmp_end(CpuThreadState CpuThreadState, int VectorSize)
+		public static AstNodeStm _vcmp_end(CpuThreadState CpuThreadState, int VectorSize)
 		{
 			throw (new NotImplementedException());
 
@@ -29,7 +30,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			*/
 		}
 
-		public void vcmp() {
+		public AstNodeStm vcmp()
+		{
 			throw (new NotImplementedException());
 
 			//var VectorSize = Instruction.ONE_TWO;
@@ -94,7 +96,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			//MipsMethodEmitter.CallMethod((Action<CpuThreadState, int>)CpuEmitter._vcmp_end);
 		}
 
-		public void _vsltge(SafeBinaryComparison SafeBinaryComparison)
+		public AstNodeStm _vsltge(SafeBinaryComparison SafeBinaryComparison)
 		{
 			throw (new NotImplementedException());
 
@@ -116,13 +118,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		[PspUntested]
-		public void vslt() { _vsltge(SafeBinaryComparison.LessThanSigned); }
+		public AstNodeStm vslt() { return _vsltge(SafeBinaryComparison.LessThanSigned); }
 
 		[PspUntested]
-		public void vsge() { _vsltge(SafeBinaryComparison.GreaterOrEqualSigned); }
+		public AstNodeStm vsge() { return _vsltge(SafeBinaryComparison.GreaterOrEqualSigned); }
 		
 		[PspUntested]
-		public void vscmp()
+		public AstNodeStm vscmp()
 		{
 			throw(new NotImplementedException());
 			//var VectorSize = Instruction.ONE_TWO;
@@ -149,7 +151,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		*/
 
 		[PspUntested]
-		public void _vcmovtf(bool True)
+		public AstNodeStm _vcmovtf(bool True)
 		{
 			throw(new NotImplementedException());
 			//var Register = Instruction.IMM3;
@@ -214,10 +216,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			//}
 		}
 
-		public void vcmovf() { _vcmovtf(false); }
-		public void vcmovt() { _vcmovtf(true); }
+		public AstNodeStm vcmovf() { return _vcmovtf(false); }
+		public AstNodeStm vcmovt() { return _vcmovtf(true); }
 
-		private void _bvtf(bool True)
+		private AstNodeStm _bvtf(bool True)
 		{
 			throw(new NotImplementedException());
 			//var Register = Instruction.IMM3;
@@ -234,9 +236,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			//});
 		}
 
-		public void bvf() { _bvtf(false); }
-		public void bvfl() { bvf(); }
-		public void bvt() { _bvtf(true); }
-		public void bvtl() { bvt(); }
+		public AstNodeStm bvf() { return _bvtf(false); }
+		public AstNodeStm bvfl() { return bvf(); }
+		public AstNodeStm bvt() { return _bvtf(true); }
+		public AstNodeStm bvtl() { return bvt(); }
 	}
 }

@@ -26,7 +26,7 @@ namespace CSPspEmu.Hle
 		[Inject]
 		internal CpuProcessor CpuProcessor;
 
-		static private IAstGenerator ast = AstGenerator.Instance;
+		static private AstGenerator ast = AstGenerator.Instance;
 
 		private static AstNodeStmContainer CreateDelegateForMethodInfoPriv(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute, out List<ParamInfo> ParamInfoList)
 		{

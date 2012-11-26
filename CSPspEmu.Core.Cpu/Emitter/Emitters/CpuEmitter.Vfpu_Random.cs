@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SafeILGenerator.Ast.Nodes;
+using System;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -29,59 +30,65 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// <summary>
 		/// Seed
 		/// </summary>
-		public void vrnds() {
-			SafeILGenerator.LoadArgument0CpuThreadState();
-			Load_VS(0, true);
-			MipsMethodEmitter.CallMethod((Action<CpuThreadState, int>)_vrnds);
+		public AstNodeStm vrnds()
+		{
+			throw(new NotImplementedException());
+			//SafeILGenerator.LoadArgument0CpuThreadState();
+			//Load_VS(0, true);
+			//MipsMethodEmitter.CallMethod((Action<CpuThreadState, int>)_vrnds);
 		}
 
 		/// <summary>
 		/// -2^31 &lt;= value &lt; 2^31 
 		/// </summary>
-		public void vrndi()
+		public AstNodeStm vrndi()
 		{
-			var VectorSize = Instruction.ONE_TWO;
-			Save_VD(Index: 0, VectorSize: VectorSize, Action: () =>
-			{
-				for (int n = 0; n < VectorSize; n++)
-				{
-					SafeILGenerator.LoadArgument0CpuThreadState();
-					MipsMethodEmitter.CallMethod((Func<CpuThreadState, int>)_vrndi);
-				}
-			}, AsInteger: true);
+			throw (new NotImplementedException());
+			//var VectorSize = Instruction.ONE_TWO;
+			//Save_VD(Index: 0, VectorSize: VectorSize, Action: () =>
+			//{
+			//	for (int n = 0; n < VectorSize; n++)
+			//	{
+			//		SafeILGenerator.LoadArgument0CpuThreadState();
+			//		MipsMethodEmitter.CallMethod((Func<CpuThreadState, int>)_vrndi);
+			//	}
+			//}, AsInteger: true);
 		}
 
         // 0.0 <= value < 2.0.
 		/// <summary>
 		/// 0.0 &lt;= value &lt; 2.0.
 		/// </summary>
-		public void vrndf1() {
-			var VectorSize = Instruction.ONE_TWO;
-			Save_VD(Index: 0, VectorSize: VectorSize, Action: () =>
-			{
-				for (int n = 0; n < VectorSize; n++)
-				{
-					SafeILGenerator.LoadArgument0CpuThreadState();
-					MipsMethodEmitter.CallMethod((Func<CpuThreadState, float>)_vrndf1);
-				}
-			}, AsInteger: false);
+		public AstNodeStm vrndf1()
+		{
+			throw (new NotImplementedException());
+			//var VectorSize = Instruction.ONE_TWO;
+			//Save_VD(Index: 0, VectorSize: VectorSize, Action: () =>
+			//{
+			//	for (int n = 0; n < VectorSize; n++)
+			//	{
+			//		SafeILGenerator.LoadArgument0CpuThreadState();
+			//		MipsMethodEmitter.CallMethod((Func<CpuThreadState, float>)_vrndf1);
+			//	}
+			//}, AsInteger: false);
 		}
 
         // 0.0 <= value < 4.0 (max = 3.999979)
 		/// <summary>
 		/// 0.0 &lt;= value &lt; 4.0 (max = 3.999979)
 		/// </summary>
-		public void vrndf2() {
-			var VectorSize = Instruction.ONE_TWO;
-			Save_VD(Index: 0, VectorSize: VectorSize, Action: () =>
-			{
-				for (int n = 0; n < VectorSize; n++)
-				{
-					SafeILGenerator.LoadArgument0CpuThreadState();
-					MipsMethodEmitter.CallMethod((Func<CpuThreadState, float>)_vrndf2);
-				}
-			}, AsInteger: false);
-
+		public AstNodeStm vrndf2()
+		{
+			throw (new NotImplementedException());
+			//var VectorSize = Instruction.ONE_TWO;
+			//Save_VD(Index: 0, VectorSize: VectorSize, Action: () =>
+			//{
+			//	for (int n = 0; n < VectorSize; n++)
+			//	{
+			//		SafeILGenerator.LoadArgument0CpuThreadState();
+			//		MipsMethodEmitter.CallMethod((Func<CpuThreadState, float>)_vrndf2);
+			//	}
+			//}, AsInteger: false);
 		}
 	}
 }

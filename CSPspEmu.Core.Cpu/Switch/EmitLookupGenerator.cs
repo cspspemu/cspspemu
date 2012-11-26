@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SafeILGenerator;
+using System.Reflection;
 
 namespace CSPspEmu.Core.Cpu.Table
 {
@@ -15,17 +16,17 @@ namespace CSPspEmu.Core.Cpu.Table
 			};
 		}
 
+		static private string DefaultNameConverter(string Name)
+		{
+			if (Name == "Default") return "unknown";
+			if (Name == "break") return "_break";
+			return Name.Replace('.', '_');
+		}
+
 		public static Action<uint, TType> GenerateSwitchDelegate<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Func<String, String> NameConverter = null)
 		{
-			if (NameConverter == null)
-			{
-				NameConverter = Name =>
-				{
-					if (Name == "Default") return "unknown";
-					if (Name == "break") return "_break";
-					return Name.Replace('.', '_');
-				};
-			}
+			if (NameConverter == null) NameConverter = DefaultNameConverter;
+
 			return GenerateSwitch<Action<uint, TType>>(InstructionInfoList, (SafeILGenerator, InstructionInfo) =>
 			{
 				var InstructionInfoName = NameConverter((InstructionInfo != null) ? InstructionInfo.Name : "Default");
@@ -38,15 +39,8 @@ namespace CSPspEmu.Core.Cpu.Table
 
 		public static Func<uint, TType, TRetType> GenerateSwitchDelegateReturn<TType, TRetType>(IEnumerable<InstructionInfo> InstructionInfoList, Func<String, String> NameConverter = null, bool ThrowOnUnexistent = true)
 		{
-			if (NameConverter == null)
-			{
-				NameConverter = Name =>
-				{
-					if (Name == "Default") return "unknown";
-					if (Name == "break") return "_break";
-					return Name.Replace('.', '_');
-				};
-			}
+			if (NameConverter == null) NameConverter = DefaultNameConverter;
+
 			return GenerateSwitch<Func<uint, TType, TRetType>>(InstructionInfoList, (SafeILGenerator, InstructionInfo) =>
 			{
 				var InstructionInfoName = NameConverter((InstructionInfo != null) ? InstructionInfo.Name : "Default");
@@ -63,17 +57,32 @@ namespace CSPspEmu.Core.Cpu.Table
 				{
 					throw (new Exception("Cannot find method '" + InstructionInfoName + "' on type '" + typeof(TType).Name + "'"));
 				}
-				SafeILGenerator.Call(MethodInfo);
-				//ILGenerator.Emit(OpCodes.Call, MethodInfo);
+
+				if (MethodInfo.ReturnType == typeof(TRetType))
+				{
+					SafeILGenerator.Call(MethodInfo);
+					//ILGenerator.Emit(OpCodes.Call, MethodInfo);
+				}
+				else
+				{
+					//SafeILGenerator.LoadNull();
+					throw (new Exception(String.Format("Invalid method: '{0}' should return '{1}'", MethodInfo, typeof(TRetType))));
+				}
+
+			});
+		}
+
+		public static object GenerateSwitch(Type Type, IEnumerable<InstructionInfo> InstructionInfoList, Action<CSafeILGenerator, InstructionInfo> GenerateCallDelegate)
+		{
+			return CSafeILGenerator.Generate(Type, "EmitLookupGenerator.GenerateSwitch", (Generator) =>
+			{
+				GenerateSwitchCode(Generator, InstructionInfoList, GenerateCallDelegate);
 			});
 		}
 
 		public static TType GenerateSwitch<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Action<CSafeILGenerator, InstructionInfo> GenerateCallDelegate)
 		{
-			return CSafeILGenerator.Generate<TType>("EmitLookupGenerator.GenerateSwitch", (Generator) =>
-			{
-				GenerateSwitchCode(Generator, InstructionInfoList, GenerateCallDelegate);
-			});
+			return (TType)GenerateSwitch(typeof(TType), InstructionInfoList, GenerateCallDelegate);
 		}
 
 		/// <summary>

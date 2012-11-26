@@ -23,22 +23,22 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			CpuThreadState.PrefixTarget.Value = Value;
 		}
 
-		public void vpfxd()
+		public AstNodeStm vpfxd()
 		{
 			PrefixDestination.EnableAndSetValueAndPc(Instruction.Value, PC);
-			this.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, uint>)_vpfxd_impl, this.CpuThreadStateArgument(), Instruction.Value)));
+			return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint>)_vpfxd_impl, this.CpuThreadStateArgument(), Instruction.Value));
 		}
 
-		public void vpfxs()
+		public AstNodeStm vpfxs()
 		{
 			PrefixSource.EnableAndSetValueAndPc(Instruction.Value, PC);
-			this.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, uint>)_vpfxs_impl, this.CpuThreadStateArgument(), Instruction.Value)));
+			return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint>)_vpfxs_impl, this.CpuThreadStateArgument(), Instruction.Value));
 		}
 
-		public void vpfxt()
+		public AstNodeStm vpfxt()
 		{
 			PrefixTarget.EnableAndSetValueAndPc(Instruction.Value, PC);
-			this.GenerateIL(this.Statement(this.CallStatic((Action<CpuThreadState, uint>)_vpfxt_impl, this.CpuThreadStateArgument(), Instruction.Value)));
+			return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint>)_vpfxt_impl, this.CpuThreadStateArgument(), Instruction.Value));
 		}
 	}
 

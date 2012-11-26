@@ -18,7 +18,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	/// <summary>
 	/// <see cref="http://www.mrc.uidaho.edu/mrc/people/jff/digital/MIPSir.html"/>
 	/// </summary>
-	public unsafe partial class MipsMethodEmitter : IAstGenerator
+	public unsafe partial class MipsMethodEmitter
 	{
 #if USE_DYNAMIC_METHOD
 		//protected DynamicMethod DynamicMethod;
@@ -240,6 +240,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			AstNodeStm = (AstNodeStm)AstOptimizer.Optimize(AstNodeStm);
 
 #if DEBUG_GENERATE_IL
+			Console.WriteLine("{0}", GeneratorIL.GenerateToString(DynamicMethod, AstNodeStm));
 			Console.WriteLine("{0}", (new GeneratorCSharp()).Generate(AstNodeStm).ToString());
 #endif
 

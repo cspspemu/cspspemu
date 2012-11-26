@@ -29,8 +29,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		//public AstNodeExpr IMM_u() { return this.Immediate((uint)(ushort)IMM); }
 		//public AstNodeExpr IMM_uex() { return this.Immediate((uint)IMM); }
 
-		public AstNodeStm AssignREG(string RegName, AstNodeExpr Expr) { return this.Assign(REG(RegName), Expr); }
-		public AstNodeStm AssignGPR(int Index, AstNodeExpr Expr) { if (Index == 0) return new AstNodeStmEmpty(); return this.Assign(GPR(Index), this.Cast<uint>(Expr)); }
+		public AstNodeStm AssignREG(string RegName, AstNodeExpr Expr) { return ast.Assign(REG(RegName), Expr); }
+		public AstNodeStm AssignGPR(int Index, AstNodeExpr Expr) { if (Index == 0) return new AstNodeStmEmpty(); return ast.Assign(GPR(Index), ast.Cast<uint>(Expr)); }
 
 
 		delegate void* AddressToPointerFunc(uint Address);

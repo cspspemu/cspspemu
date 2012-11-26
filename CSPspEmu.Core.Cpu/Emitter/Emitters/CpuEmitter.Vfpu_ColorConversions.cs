@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SafeILGenerator.Ast.Nodes;
+using System;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -44,34 +45,38 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return o0;
 		}
 
-		public void vt4444_q()
+		public AstNodeStm vt4444_q()
 		{
-			VectorOperationSaveVd(2, (Index) =>
-			{
-				Load_VS(0 + Index * 2, AsInteger: true);
-				Load_VS(1 + Index * 2, AsInteger: true);
-				SafeILGenerator.Call((Func<uint, uint, uint>)_vt4444_step);
-			}, AsInteger: true);
+			throw(new NotImplementedException());
+			//VectorOperationSaveVd(2, (Index) =>
+			//{
+			//	Load_VS(0 + Index * 2, AsInteger: true);
+			//	Load_VS(1 + Index * 2, AsInteger: true);
+			//	SafeILGenerator.Call((Func<uint, uint, uint>)_vt4444_step);
+			//}, AsInteger: true);
 		}
 
-		public void vt5551_q()
+		public AstNodeStm vt5551_q()
 		{
-			VectorOperationSaveVd(2, (Index) =>
-			{
-				Load_VS(0 + Index * 2, AsInteger: true);
-				Load_VS(1 + Index * 2, AsInteger: true);
-				SafeILGenerator.Call((Func<uint, uint, uint>)_vt5551_step);
-			}, AsInteger: true);
+			throw (new NotImplementedException());
+			//VectorOperationSaveVd(2, (Index) =>
+			//{
+			//	Load_VS(0 + Index * 2, AsInteger: true);
+			//	Load_VS(1 + Index * 2, AsInteger: true);
+			//	SafeILGenerator.Call((Func<uint, uint, uint>)_vt5551_step);
+			//}, AsInteger: true);
 		}
 
-		public void vt5650_q()
+		public AstNodeStm vt5650_q()
 		{
-			VectorOperationSaveVd(2, (Index) =>
-			{
-				Load_VS(0 + Index * 2, AsInteger: true);
-				Load_VS(1 + Index * 2, AsInteger: true);
-				SafeILGenerator.Call((Func<uint, uint, uint>)_vt5650_step);
-			}, AsInteger: true);
+			throw (new NotImplementedException());
+
+			//VectorOperationSaveVd(2, (Index) =>
+			//{
+			//	Load_VS(0 + Index * 2, AsInteger: true);
+			//	Load_VS(1 + Index * 2, AsInteger: true);
+			//	SafeILGenerator.Call((Func<uint, uint, uint>)_vt5650_step);
+			//}, AsInteger: true);
 		}
 	}
 }
