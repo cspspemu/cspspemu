@@ -11,6 +11,8 @@ using CSharpUtils;
 using SafeILGenerator;
 using SafeILGenerator.Ast.Nodes;
 using SafeILGenerator.Ast;
+using SafeILGenerator.Ast.Generators;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle
 {
@@ -22,24 +24,20 @@ namespace CSPspEmu.Hle
 		[Inject]
 		internal CpuProcessor CpuProcessor;
 
-		private IAstGenerator ast = new AstGenerator();
+		static private IAstGenerator ast = AstGenerator.Instance;
 
-		private Action<CpuThreadState> CreateDelegateForMethodInfo(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute)
+		private static AstNodeStmContainer CreateDelegateForMethodInfoPriv(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute, out List<ParamInfo> ParamInfoList)
 		{
-			var MipsMethodEmiter = new MipsMethodEmitter(CpuProcessor, 0);
 			int GprIndex = 4;
 			int FprIndex = 0;
 
-			var NotImplementedAttribute = (HlePspNotImplementedAttribute)MethodInfo.GetCustomAttributes(typeof(HlePspNotImplementedAttribute), true).FirstOrDefault();
-			bool NotImplementedFunc = (NotImplementedAttribute != null) && NotImplementedAttribute.Notice;
-			bool SkipLog = HlePspFunctionAttribute.SkipLog;
 			//var SafeILGenerator = MipsMethodEmiter.SafeILGenerator;
 
-			var Nodes = new AstNodeStmContainer();
+			var AstNodes = new AstNodeStmContainer();
 
-			Nodes.AddStatement(ast.Comment("HleModuleHost.CreateDelegateForMethodInfo(" + MethodInfo + ", " + HlePspFunctionAttribute + ")"));
+			AstNodes.AddStatement(ast.Comment("HleModuleHost.CreateDelegateForMethodInfo(" + MethodInfo + ", " + HlePspFunctionAttribute + ")"));
 
-			var ParamInfoList = new List<ParamInfo>();
+			ParamInfoList = new List<ParamInfo>();
 
 			AstNodeExprCall AstMethodCall;
 			{
@@ -57,7 +55,7 @@ namespace CSPspEmu.Hle
 					// The CpuThreadState
 					if (ParameterType == typeof(CpuThreadState))
 					{
-						AstParameters.Add(MipsMethodEmiter.CpuThreadStateArgument());
+						AstParameters.Add(MipsMethodEmitter.CpuThreadStateArgument());
 					}
 					// A stringz
 					else if (ParameterType == typeof(string))
@@ -73,8 +71,8 @@ namespace CSPspEmu.Hle
 						AstParameters.Add(
 							ast.CallStatic(
 								(Func<CpuThreadState, uint, string>)HleModuleHost.StringFromAddress,
-								MipsMethodEmiter.CpuThreadStateArgument(),
-								MipsMethodEmiter.GPR_u(GprIndex)
+								MipsMethodEmitter.CpuThreadStateArgument(),
+								MipsMethodEmitter.GPR_u(GprIndex)
 							)
 						);
 
@@ -90,12 +88,12 @@ namespace CSPspEmu.Hle
 							RegisterIndex = GprIndex,
 							ParameterType = typeof(uint),
 						});
-		
+
 						AstParameters.Add(
 							ast.Cast(
 								ParameterType,
-								MipsMethodEmiter.AstMemoryGetPointer(
-									MipsMethodEmiter.GPR_u(GprIndex),
+								MipsMethodEmitter.AstMemoryGetPointer(
+									MipsMethodEmitter.GPR_u(GprIndex),
 									Safe: true,
 									ErrorDescription: "Invalid Pointer for Argument '" + ParameterType.Name + " " + ParameterInfo.Name + "'"
 								)
@@ -119,11 +117,11 @@ namespace CSPspEmu.Hle
 
 						if (ParameterType == typeof(ulong))
 						{
-							AstParameters.Add(MipsMethodEmiter.GPR_ul(GprIndex + 0));
+							AstParameters.Add(MipsMethodEmitter.GPR_ul(GprIndex + 0));
 						}
 						else
 						{
-							AstParameters.Add(MipsMethodEmiter.GPR_sl(GprIndex + 0));
+							AstParameters.Add(MipsMethodEmitter.GPR_sl(GprIndex + 0));
 						}
 
 						GprIndex += 2;
@@ -139,7 +137,7 @@ namespace CSPspEmu.Hle
 							ParameterType = ParameterType,
 						});
 
-						AstParameters.Add(MipsMethodEmiter.FPR(FprIndex));
+						AstParameters.Add(MipsMethodEmitter.FPR(FprIndex));
 
 						FprIndex++;
 					}
@@ -156,7 +154,7 @@ namespace CSPspEmu.Hle
 
 						AstParameters.Add(ast.CallStatic(
 							typeof(PspPointer).GetMethod("op_Implicit", new[] { typeof(uint) }),
-							MipsMethodEmiter.GPR_u(GprIndex)
+							MipsMethodEmitter.GPR_u(GprIndex)
 						));
 
 						GprIndex++;
@@ -174,11 +172,11 @@ namespace CSPspEmu.Hle
 
 						if (ParameterType == typeof(uint))
 						{
-							AstParameters.Add(ast.Cast(ParameterType, MipsMethodEmiter.GPR_u(GprIndex)));
+							AstParameters.Add(ast.Cast(ParameterType, MipsMethodEmitter.GPR_u(GprIndex)));
 						}
 						else
 						{
-							AstParameters.Add(ast.Cast(ParameterType, MipsMethodEmiter.GPR_s(GprIndex)));
+							AstParameters.Add(ast.Cast(ParameterType, MipsMethodEmitter.GPR_s(GprIndex)));
 						}
 
 						GprIndex++;
@@ -186,21 +184,35 @@ namespace CSPspEmu.Hle
 				}
 
 				AstMethodCall = ast.CallInstance(
-					ast.Cast(this.GetType(), ast.FieldAccess(MipsMethodEmiter.CpuThreadStateArgument(), "ModuleObject")),
+					ast.Cast(MethodInfo.DeclaringType, ast.FieldAccess(MipsMethodEmitter.CpuThreadStateArgument(), "ModuleObject")),
 					MethodInfo,
 					AstParameters.ToArray()
 				);
 			}
 
-			if (AstMethodCall.Type == typeof(void)) Nodes.AddStatement(ast.Statement(AstMethodCall));
-			else if (AstMethodCall.Type == typeof(long)) Nodes.AddStatement(ast.Assign(MipsMethodEmiter.GPR_l(2), ast.Cast<long>(AstMethodCall)));
-			else if (AstMethodCall.Type == typeof(float)) Nodes.AddStatement(ast.Assign(MipsMethodEmiter.FPR(0), ast.Cast<float>(AstMethodCall)));
-			else Nodes.AddStatement(ast.Assign(MipsMethodEmiter.GPR(2), ast.Cast<uint>(AstMethodCall)));
+			if (AstMethodCall.Type == typeof(void)) AstNodes.AddStatement(ast.Statement(AstMethodCall));
+			else if (AstMethodCall.Type == typeof(long)) AstNodes.AddStatement(ast.Assign(MipsMethodEmitter.GPR_l(2), ast.Cast<long>(AstMethodCall)));
+			else if (AstMethodCall.Type == typeof(float)) AstNodes.AddStatement(ast.Assign(MipsMethodEmitter.FPR(0), ast.Cast<float>(AstMethodCall)));
+			else AstNodes.AddStatement(ast.Assign(MipsMethodEmitter.GPR(2), ast.Cast<uint>(AstMethodCall)));
 
-			MipsMethodEmiter.GenerateIL(Nodes);
+			return AstNodes;
+		}
 
-			var Delegate = MipsMethodEmiter.CreateDelegate();
+		private Action<CpuThreadState> CreateDelegateForMethodInfo(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute)
+		{
+			bool SkipLog = HlePspFunctionAttribute.SkipLog;
+			var NotImplementedAttribute = (HlePspNotImplementedAttribute)MethodInfo.GetCustomAttributes(typeof(HlePspNotImplementedAttribute), true).FirstOrDefault();
+			bool NotImplementedFunc = (NotImplementedAttribute != null) && NotImplementedAttribute.Notice;
 
+			if (MethodInfo.DeclaringType != this.GetType()) throw(new Exception("Invalid"));
+
+			List<ParamInfo> ParamInfoList;
+			var AstNodes = CreateDelegateForMethodInfoPriv(MethodInfo, HlePspFunctionAttribute, out ParamInfoList);
+			var _MipsMethodEmiter = new MipsMethodEmitter(CpuProcessor, 0);
+			_MipsMethodEmiter.GenerateIL(AstNodes);
+			var Delegate = _MipsMethodEmiter.CreateDelegate();
+			//Marshal.Prelink(_MipsMethodEmiter.DynamicMethod);
+			
 			return (CpuThreadState) =>
 			{
 				bool Trace = (!SkipLog && CpuThreadState.CpuProcessor.PspConfig.DebugSyscalls);
@@ -270,6 +282,18 @@ namespace CSPspEmu.Hle
 				try
 				{
 					Delegate(CpuThreadState);
+				}
+				catch (InvalidProgramException)
+				{
+					Console.WriteLine("CALLING: {0}", MethodInfo);
+					Console.WriteLine("{0}", (new GeneratorCSharp()).Generate(AstNodes).ToString());
+					
+					foreach (var Line in GeneratorIL.GenerateToStringList(MethodInfo, AstNodes))
+					{
+						Console.WriteLine(Line);
+					}
+
+					throw;
 				}
 				catch (MemoryPartitionNoMemoryException)
 				{

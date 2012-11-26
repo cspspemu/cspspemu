@@ -12,18 +12,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	public unsafe partial class MipsMethodEmitter
 	{
 		// AST UTILS
+		static AstGenerator ast = AstGenerator.Instance;
 
-		public AstNodeExprArgument CpuThreadStateArgument() { return this.Argument<CpuThreadState>(0, "CpuThreadState"); }
-		public AstNodeExprLValue FCR31_CC() { return this.FieldAccess(REG("Fcr31"), "CC"); }
-		public AstNodeExprLValue REG(string RegName) { return this.FieldAccess(this.CpuThreadStateArgument(), RegName); }
-		public AstNodeExprLValue GPR(int Index) { if (Index == 0) throw (new Exception("Can't get reference to GPR0")); return REG("GPR" + Index); }
-		public AstNodeExprLValue GPR_l(int Index) { return this.Indirect(this.Cast(typeof(long*), this.GetAddress(GPR(Index)))); }
-		public AstNodeExprLValue FPR(int Index) { return REG("FPR" + Index); }
-		public AstNodeExprLValue FPR_I(int Index) { return this.Indirect(this.Cast(typeof(int*), this.GetAddress(REG("FPR" + Index)), Explicit: false)); }
-		public AstNodeExpr GPR_s(int Index) { if (Index == 0) return this.Immediate((int)0); return this.Cast<int>(GPR(Index)); }
-		public AstNodeExpr GPR_sl(int Index) { return this.Cast<long>(GPR_s(Index)); }
-		public AstNodeExpr GPR_u(int Index) { if (Index == 0) return this.Immediate((uint)0); return this.Cast<uint>(GPR(Index)); }
-		public AstNodeExpr GPR_ul(int Index) { return this.Cast<ulong>(GPR_u(Index)); }
+		public static AstNodeExprArgument CpuThreadStateArgument() { return ast.Argument<CpuThreadState>(0, "CpuThreadState"); }
+		public static AstNodeExprLValue FCR31_CC() { return ast.FieldAccess(REG("Fcr31"), "CC"); }
+		public static AstNodeExprLValue REG(string RegName) { return ast.FieldAccess(CpuThreadStateArgument(), RegName); }
+		public static AstNodeExprLValue GPR(int Index) { if (Index == 0) throw (new Exception("Can't get reference to GPR0")); return REG("GPR" + Index); }
+		public static AstNodeExprLValue GPR_l(int Index) { return ast.Indirect(ast.Cast(typeof(long*), ast.GetAddress(GPR(Index)))); }
+		public static AstNodeExprLValue FPR(int Index) { return REG("FPR" + Index); }
+		public static AstNodeExprLValue FPR_I(int Index) { return ast.Indirect(ast.Cast(typeof(int*), ast.GetAddress(REG("FPR" + Index)), Explicit: false)); }
+		public static AstNodeExpr GPR_s(int Index) { if (Index == 0) return ast.Immediate((int)0); return ast.Cast<int>(GPR(Index)); }
+		public static AstNodeExpr GPR_sl(int Index) { return ast.Cast<long>(GPR_s(Index)); }
+		public static AstNodeExpr GPR_u(int Index) { if (Index == 0) return ast.Immediate((uint)0); return ast.Cast<uint>(GPR(Index)); }
+		public static AstNodeExpr GPR_ul(int Index) { return ast.Cast<ulong>(GPR_u(Index)); }
 		//public AstNodeExpr IMM_s() { return this.Immediate(IMM); }
 		//public AstNodeExpr IMM_u() { return this.Immediate((uint)(ushort)IMM); }
 		//public AstNodeExpr IMM_uex() { return this.Immediate((uint)IMM); }
@@ -34,22 +35,22 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		delegate void* AddressToPointerFunc(uint Address);
 
-		public AstNodeExpr AstMemoryGetPointer(AstNodeExpr Address, bool Safe, string ErrorDescription = "ERROR")
+		public static AstNodeExpr AstMemoryGetPointer(AstNodeExpr Address, bool Safe, string ErrorDescription = "ERROR")
 		{
 			if (Safe)
 			{
-				return this.CallInstance(
+				return ast.CallInstance(
 					CpuThreadStateArgument(),
 					(AddressToPointerFunc)CpuThreadState.Methods.GetMemoryPtrSafe,
-					this.Cast<uint>(Address)
+					ast.Cast<uint>(Address)
 				);
 			}
 			else
 			{
-				return this.CallInstance(
+				return ast.CallInstance(
 					CpuThreadStateArgument(),
 					(AddressToPointerFunc)CpuThreadState.Methods.GetMemoryPtr,
-					this.Cast<uint>(Address)
+					ast.Cast<uint>(Address)
 				);
 			}
 		}

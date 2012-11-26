@@ -233,7 +233,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		AstOptimizer AstOptimizer = new AstOptimizer();
-		GeneratorCSharp GeneratorCSharp = new GeneratorCSharp();
 
 		public void GenerateIL(AstNodeStm AstNodeStm)
 		{
@@ -241,7 +240,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			AstNodeStm = (AstNodeStm)AstOptimizer.Optimize(AstNodeStm);
 
 #if DEBUG_GENERATE_IL
-			Console.WriteLine("{0}", GeneratorCSharp.Reset().Generate(AstNodeStm).ToString());
+			Console.WriteLine("{0}", (new GeneratorCSharp()).Generate(AstNodeStm).ToString());
 #endif
 
 			new GeneratorIL(DynamicMethod, SafeILGenerator.__ILGenerator).Generate(AstNodeStm);
