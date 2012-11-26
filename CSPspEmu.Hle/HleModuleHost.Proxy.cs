@@ -13,6 +13,8 @@ using SafeILGenerator.Ast.Nodes;
 using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Generators;
 using System.Runtime.InteropServices;
+using System.Reflection.Emit;
+using SafeILGenerator.Ast.Optimizers;
 
 namespace CSPspEmu.Hle
 {
@@ -200,18 +202,19 @@ namespace CSPspEmu.Hle
 
 		private Action<CpuThreadState> CreateDelegateForMethodInfo(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute)
 		{
+			if (MethodInfo.DeclaringType != this.GetType()) throw (new Exception("Invalid"));
+
 			bool SkipLog = HlePspFunctionAttribute.SkipLog;
 			var NotImplementedAttribute = (HlePspNotImplementedAttribute)MethodInfo.GetCustomAttributes(typeof(HlePspNotImplementedAttribute), true).FirstOrDefault();
 			bool NotImplementedFunc = (NotImplementedAttribute != null) && NotImplementedAttribute.Notice;
 
-			if (MethodInfo.DeclaringType != this.GetType()) throw(new Exception("Invalid"));
-
 			List<ParamInfo> ParamInfoList;
-			var AstNodes = CreateDelegateForMethodInfoPriv(MethodInfo, HlePspFunctionAttribute, out ParamInfoList);
-			var _MipsMethodEmiter = new MipsMethodEmitter(CpuProcessor, 0);
-			_MipsMethodEmiter.GenerateIL(AstNodes);
-			var Delegate = _MipsMethodEmiter.CreateDelegate();
-			//Marshal.Prelink(_MipsMethodEmiter.DynamicMethod);
+			var AstNodes = new AstOptimizer().Optimize(CreateDelegateForMethodInfoPriv(MethodInfo, HlePspFunctionAttribute, out ParamInfoList));
+
+			var Delegate = GeneratorIL.GenerateDelegate<Action<CpuThreadState>>(
+				String.Format("Proxy_{0}_{1}", this.GetType().Name, MethodInfo.Name),
+				AstNodes
+			);
 			
 			return (CpuThreadState) =>
 			{
