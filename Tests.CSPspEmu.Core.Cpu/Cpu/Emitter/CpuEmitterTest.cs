@@ -1274,6 +1274,21 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
+		public void VfpuLvQ()
+		{
+			uint Address = 0x08800000;
+			CpuThreadState.GPR[10] = (int)Address;
+			Memory.WriteSafe<float>(Address + 0x10 + 0, 1f);
+			Memory.WriteSafe<float>(Address + 0x10 + 4, 2f);
+			Memory.WriteSafe<float>(Address + 0x10 + 8, 3f);
+			Memory.WriteSafe<float>(Address + 0x10 + 12, 4f);
+			ExecuteAssembly(@"
+				lv.q    R000, 0x10+r10
+			");
+			Assert.AreEqual("1,2,3,4", String.Join(",", CpuThreadState.Vfpr[4, "R000"]));
+		}
+
+		[TestMethod]
 		public void VfpuZeroOneMov4Test()
 		{
 			CpuThreadState.Vfpr.ClearAll(float.NaN);

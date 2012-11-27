@@ -27,18 +27,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// ID("lv.q",        VM("110110:rs:vt5:imm14:0:vt1"), "%Xq, %Y", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
 		public AstNodeStm lv_q()
 		{
-			throw(new NotImplementedException());
-			//uint Register = Instruction.VT5_1;
-			//
-			//for (uint Index = 0; Index < 4; Index++)
-			//{
-			//	_VfpuLoadVectorWithIndexPointer(Register, Index, 4);
-			//
-			//	_load_memory_imm14_index(Index);
-			//	SafeILGenerator.LoadIndirect<float>();
-			//
-			//	SafeILGenerator.StoreIndirect<float>();
-			//}
+			int VectorSize = 4;
+
+			return ast.Statements(VfpuUtils.XRange(0, VectorSize).Select(Index =>
+				AstSaveVfpuReg(Instruction.VT5_1, Index, (uint)VectorSize, ref PrefixNone, AstMemoryGetValue<float>(Memory, Address_RS_IMM14(Index * 4)))
+			));
 		}
 
 		public static AstNodeStm _lvl_svl_q(CpuThreadState CpuThreadState, uint m, uint i, uint address, bool dir, bool save)

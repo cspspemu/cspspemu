@@ -710,10 +710,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				Items.Add(ast.Assign(VFR(RegisterIndices[Index]), PrefixVdTransform(Index, Generator(Index), AsInteger)));
 			}
 			return ast.Statements(Items.ToArray());
-			//foreach (var Index in RegisterIndices)
-			//{
-			//	Console.WriteLine("Index: {0}", Index);
-			//}
+		}
+
+		private AstNodeStm AstSaveVfpuReg(uint Register, int Index, uint VectorSize, ref VfpuPrefix Prefix, AstNodeExpr ValueExpr, bool AsInteger = false)
+		{
+			int[] RegisterIndices = VfpuUtils.GetIndices(VectorSize, VfpuUtils.RegisterType.Vector, Register);
+			return ast.Assign(VFR(RegisterIndices[Index]), PrefixVdTransform(Index, ValueExpr, AsInteger));
 		}
 	}
 }
