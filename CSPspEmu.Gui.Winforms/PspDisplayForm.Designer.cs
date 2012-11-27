@@ -52,6 +52,7 @@
 			this.UtilsFrameLimitingMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsUseFastmemMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsAstOptimizationsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.UtilsEnableMpegMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsInstallWavDestMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,7 +83,6 @@
 			this.HelpReportAnIssueMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
 			this.HelpAboutMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.UtilsAstOptimizations = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -168,7 +168,7 @@
             this.UtilsFrameLimitingMenu,
             this.toolStripMenuItem7,
             this.UtilsUseFastmemMenu,
-            this.UtilsAstOptimizations,
+            this.UtilsAstOptimizationsMenu,
             this.UtilsEnableMpegMenu,
             this.toolStripMenuItem10,
             this.UtilsInstallWavDestMenu,
@@ -285,6 +285,13 @@
 			this.UtilsUseFastmemMenu.Size = new System.Drawing.Size(306, 22);
 			this.UtilsUseFastmemMenu.Text = "Use &Fast and unsafe memory";
 			this.UtilsUseFastmemMenu.Click += new System.EventHandler(this.useFastAndUnsafeMemoryToolStripMenuItem_Click);
+			// 
+			// UtilsAstOptimizationsMenu
+			// 
+			this.UtilsAstOptimizationsMenu.Name = "UtilsAstOptimizationsMenu";
+			this.UtilsAstOptimizationsMenu.Size = new System.Drawing.Size(306, 22);
+			this.UtilsAstOptimizationsMenu.Text = "Enable &Ast optimizations";
+			this.UtilsAstOptimizationsMenu.Click += new System.EventHandler(this.UtilsAstOptimizations_Click);
 			// 
 			// UtilsEnableMpegMenu
 			// 
@@ -522,13 +529,6 @@
 			this.HelpAboutMenu.Text = "&About...";
 			this.HelpAboutMenu.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
-			// UtilsAstOptimizations
-			// 
-			this.UtilsAstOptimizations.Name = "UtilsAstOptimizations";
-			this.UtilsAstOptimizations.Size = new System.Drawing.Size(306, 22);
-			this.UtilsAstOptimizations.Text = "Enable &Ast optimizations";
-			this.UtilsAstOptimizations.Click += new System.EventHandler(this.UtilsAstOptimizations_Click);
-			// 
 			// PspDisplayForm
 			// 
 			this.AllowDrop = true;
@@ -608,6 +608,6 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem14;
 		private System.Windows.Forms.ToolStripMenuItem FileSetIsoFolderMenu;
 		private System.Windows.Forms.ToolStripMenuItem HelpEmureleasesMenu;
-		private System.Windows.Forms.ToolStripMenuItem UtilsAstOptimizations;
+		private System.Windows.Forms.ToolStripMenuItem UtilsAstOptimizationsMenu;
 	}
 }

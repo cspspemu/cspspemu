@@ -184,6 +184,22 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			return (uint)VfpuUtils.VfpuConstantsIndices[RegisterName];
 		}
 
+		public class ParseVfprOffsetInfo
+		{
+			public int Offset;
+			public int RS;
+		}
+
+		public static ParseVfprOffsetInfo ParseVfprOffset(uint VfpuSize, string Str)
+		{
+			var Parts = Str.Split('+');
+			return new ParseVfprOffsetInfo()
+			{
+				Offset = (Parts.Length > 1) ? ParseIntegerConstant(Parts.First()) : 0,
+				RS = ParseGprName(Parts.Last()),
+			};
+		}
+
 		public static uint ParseVfprName(uint VfpuSize, string RegisterName)
 		{
 			return VfpuUtils.VfpuRegisterInfo.Parse(VfpuSize, RegisterName).Index;
@@ -207,7 +223,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			throw(new InvalidDataException("Invalid Register Name '" + RegisterName + "'"));
 		}
 
-		public int ParseIntegerConstant(String Value)
+		public static int ParseIntegerConstant(String Value)
 		{
 			return NumberUtils.ParseIntegerConstant(Value);
 		}
@@ -286,6 +302,17 @@ namespace CSPspEmu.Core.Cpu.Assembler
 						case "%yp": Instruction.VS = ParseVfprName(VfpuSize, Value); break;
 						case "%xp": Instruction.VT = ParseVfprName(VfpuSize, Value); break;
 						case "%vk": Instruction.IMM5 = ParseVfprConstantName(Value); break;
+
+						// sv.q %Xq, %Y
+						case "%Xq": Instruction.VT5_1 = ParseVfprName(VfpuSize, Value); break;
+						case "%Y":
+							{
+								var Info = ParseVfprOffset(VfpuSize, Value);
+								if ((Info.Offset % 4) != 0) throw(new Exception("Offset must be multiple of 4"));
+								Instruction.IMM14 = Info.Offset / 4;
+								Instruction.RS = Info.RS;
+							}
+							break;
 
 						// VFPU: prefixes (source/target)
 						case "%vp0":

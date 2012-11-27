@@ -1161,8 +1161,8 @@ namespace CSPspEmu.Core.Tests
 			Iterate((ConstantName, n, Matrix, Column, Row) =>
 			{
 				Assert.AreEqual(
-					"VFR" + VfpuUtils.GetCellIndex(Matrix, Row, Column) + " : " + ConstantName + " : " + VfpuUtils.GetConstantValueByName(ConstantName),
-					"VFR" + VfpuUtils.GetCellIndex(Matrix, Row, Column) + " : " + ConstantName + " : " + CpuThreadState.Vfpr[Matrix, Row, Column]
+					"VFR" + VfpuUtils.GetCellIndex(Matrix, Column, Row) + " : " + ConstantName + " : " + VfpuUtils.GetConstantValueByName(ConstantName),
+					"VFR" + VfpuUtils.GetCellIndex(Matrix, Column, Row) + " : " + ConstantName + " : " + CpuThreadState.Vfpr[Matrix, Column, Row]
 				);
 			});
 		}
@@ -1251,6 +1251,27 @@ namespace CSPspEmu.Core.Tests
 			Assert.AreEqual(0f, CpuThreadState.Vfpr[1, 2, 3]);
 		}
 		*/
+
+		[TestMethod]
+		public void VfpuSvQ()
+		{
+			uint Address = 0x08800000;
+			CpuThreadState.GPR[10] = (int)Address;
+			Memory.WriteSafe<float>(Address + 0x10 + 0, 1f);
+			Memory.WriteSafe<float>(Address + 0x10 + 4, 2f);
+			Memory.WriteSafe<float>(Address + 0x10 + 8, 3f);
+			Memory.WriteSafe<float>(Address + 0x10 + 12, 4f);
+			ExecuteAssembly(@"
+				vpfxs [0, 1/2, 1/4, 1/6]
+				vpfxt [0, 0, 0, 0]
+				vadd.q R000, R000, R000
+				sv.q    R000, 0x10+r10
+			");
+			Assert.AreEqual(0f, Memory.ReadSafe<float>(Address + 0x10 + 0));
+			Assert.AreEqual(1f / 2f, Memory.ReadSafe<float>(Address + 0x10 + 4));
+			Assert.AreEqual(1f / 4f, Memory.ReadSafe<float>(Address + 0x10 + 8));
+			Assert.AreEqual(1f / 6f, Memory.ReadSafe<float>(Address + 0x10 + 12));
+		}
 
 		[TestMethod]
 		public void VfpuZeroOneMov4Test()

@@ -162,15 +162,15 @@ namespace CSPspEmu.Hle
 
 		public MemoryPartition Allocate(int Size, Anchor AllocateAnchor = Anchor.Low, uint Position = 0, int Alignment = 1, string Name = "<Unknown>")
 		{
-			if (_ChildPartitions.Count == 0)
-			{
-				_ChildPartitions.Add(new MemoryPartition(Low, High, false, ParentPartition: this, Name: Name));
-			}
-			MemoryPartition OldFreePartition;
-			MemoryPartition NewPartiton;
-
 			try
 			{
+				if (_ChildPartitions.Count == 0)
+				{
+					_ChildPartitions.Add(new MemoryPartition(Low, High, false, ParentPartition: this, Name: Name));
+				}
+				MemoryPartition OldFreePartition;
+				MemoryPartition NewPartiton;
+
 				var SizeCheck = Size;
 
 				// As much we will need those space.
@@ -191,6 +191,51 @@ namespace CSPspEmu.Hle
 						OldFreePartition = AcceptablePartitions.Single(Partition => (Partition.Low <= Position) && (Partition.High >= Position + Size));
 						break;
 				}
+
+				if (Alignment > 1)
+				{
+					switch (AllocateAnchor)
+					{
+						default:
+						case Anchor.Low:
+							{
+								var Low = MathUtils.NextAligned(OldFreePartition.Low, Alignment);
+								var High = (uint)(Low + Size);
+								return AllocateLowHigh(Low, High);
+							}
+						case Anchor.High:
+							{
+								var High = MathUtils.PrevAligned(OldFreePartition.High, Alignment);
+								var Low = (uint)(High - Size);
+								//Console.WriteLine("Low: {0:X}, High: {1:X}", Low, High);
+								return AllocateLowHigh(Low, High);
+							}
+					}
+				}
+
+				_ChildPartitions.Remove(OldFreePartition);
+
+				switch (AllocateAnchor)
+				{
+					default:
+					case Anchor.Low:
+						_ChildPartitions.Add(NewPartiton = new MemoryPartition(OldFreePartition.Low, (uint)(OldFreePartition.Low + Size), true, ParentPartition: this, Name: Name));
+						_ChildPartitions.Add(new MemoryPartition((uint)(OldFreePartition.Low + Size), OldFreePartition.High, false, ParentPartition: this, Name: "<Free>"));
+						break;
+					case Anchor.High:
+						_ChildPartitions.Add(NewPartiton = new MemoryPartition(OldFreePartition.Low, (uint)(OldFreePartition.High - Size), true, ParentPartition: this, Name: Name));
+						_ChildPartitions.Add(new MemoryPartition((uint)(OldFreePartition.High - Size), OldFreePartition.High, false, ParentPartition: this, Name: "<Free>"));
+						break;
+					case Anchor.Set:
+						_ChildPartitions.Add(new MemoryPartition(OldFreePartition.Low, Position, false, ParentPartition: this, Name: "<Free>"));
+						_ChildPartitions.Add(NewPartiton = new MemoryPartition(Position, (uint)(Position + Size), true, ParentPartition: this, Name: Name));
+						_ChildPartitions.Add(new MemoryPartition((uint)(Position + Size), OldFreePartition.High, false, ParentPartition: this, Name: "<Free>"));
+						break;
+				}
+
+				NormalizePartitions();
+
+				return NewPartiton;
 			}
 			catch (InvalidOperationException)
 			{
@@ -207,51 +252,6 @@ namespace CSPspEmu.Hle
 					)
 				));
 			}
-
-			if (Alignment > 1)
-			{
-				switch (AllocateAnchor)
-				{
-					default:
-					case Anchor.Low:
-						{
-							var Low = MathUtils.NextAligned(OldFreePartition.Low, Alignment);
-							var High = (uint)(Low + Size);
-							return AllocateLowHigh(Low, High);
-						}
-					case Anchor.High:
-						{
-							var High = MathUtils.PrevAligned(OldFreePartition.High, Alignment);
-							var Low = (uint)(High - Size);
-							//Console.WriteLine("Low: {0:X}, High: {1:X}", Low, High);
-							return AllocateLowHigh(Low, High);
-						}
-				}
-			}
-
-			_ChildPartitions.Remove(OldFreePartition);
-
-			switch (AllocateAnchor)
-			{
-				default:
-				case Anchor.Low:
-					_ChildPartitions.Add(NewPartiton = new MemoryPartition(OldFreePartition.Low, (uint)(OldFreePartition.Low + Size), true, ParentPartition: this, Name: Name));
-					_ChildPartitions.Add(new MemoryPartition((uint)(OldFreePartition.Low + Size), OldFreePartition.High, false, ParentPartition: this, Name: "<Free>"));
-					break;
-				case Anchor.High:
-					_ChildPartitions.Add(NewPartiton = new MemoryPartition(OldFreePartition.Low, (uint)(OldFreePartition.High - Size), true, ParentPartition: this, Name: Name));
-					_ChildPartitions.Add(new MemoryPartition((uint)(OldFreePartition.High - Size), OldFreePartition.High, false, ParentPartition: this, Name: "<Free>"));
-					break;
-				case Anchor.Set:
-					_ChildPartitions.Add(new MemoryPartition(OldFreePartition.Low, Position, false, ParentPartition: this, Name: "<Free>"));
-					_ChildPartitions.Add(NewPartiton = new MemoryPartition(Position, (uint)(Position + Size), true, ParentPartition: this, Name: Name));
-					_ChildPartitions.Add(new MemoryPartition((uint)(Position + Size), OldFreePartition.High, false, ParentPartition: this, Name: "<Free>"));
-					break;
-			}
-
-			NormalizePartitions();
-
-			return NewPartiton;
 		}
 
 		public void Dump(MemoryPartition Mark = null, int Level = 0)

@@ -226,6 +226,10 @@
 			<translation lang="pt">Descarregar memória principal...</translation>
 			<translation lang="fr">Décharger la mémoire principale...</translation>
 		</text>
+		<text id="UtilsAstOptimizationsMenu">
+			<translation lang="en">Enable &amp;Ast optimizations</translation>
+			<translation lang="es">Habilitar optimizaciones de &amp;Ast</translation>
+		</text>
 		<text id="UtilsFrameLimitingMenu">
 			<translation lang="en">Frame Limiting</translation>
 			<translation lang="es">Limitar a refresco vertical</translation>

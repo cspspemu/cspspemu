@@ -88,6 +88,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeExpr HILO_sl() { return ast.CallStatic((Func<CpuThreadState, long>)CpuEmitterUtils._get_hi_lo_impl, CpuThreadStateArgument()); }
 		public AstNodeExpr HILO_ul() { return ast.Cast<ulong>(HILO_sl()); }
 
+		public AstNodeExpr Address_RS_IMM14(int Offset = 0)
+		{
+			return ast.Cast<uint>(ast.Binary(GPR_s(RS), "+", Instruction.IMM14 * 4 + Offset));
+		}
+
 		public AstNodeExpr Address_RS_IMM()
 		{
 			return ast.Cast<uint>(ast.Binary(GPR_s(RS), "+", IMM_s()));
@@ -138,6 +143,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				else if (SignedType == typeof(sbyte)) return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<uint, byte>)CpuThreadState.Methods.Write1, Address, ast.Cast<byte>(Value)));
 				else if (SignedType == typeof(short)) return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<uint, ushort>)CpuThreadState.Methods.Write2, Address, ast.Cast<ushort>(Value)));
 				else if (SignedType == typeof(int)) return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<uint, uint>)CpuThreadState.Methods.Write4, Address, ast.Cast<uint>(Value)));
+				else if (SignedType == typeof(float)) return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<uint, float>)CpuThreadState.Methods.Write4F, Address, ast.Cast<float>(Value)));
 				throw (new NotImplementedException(String.Format("Can't handle type {0}", Type)));
 			}
 		}
@@ -162,6 +168,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				else if (SignedType == typeof(sbyte)) return ast.Cast(Type, ast.CallInstance(CpuThreadStateArgument(), (Func<uint, byte>)CpuThreadState.Methods.Read1, Address));
 				else if (SignedType == typeof(short)) return ast.Cast(Type, ast.CallInstance(CpuThreadStateArgument(), (Func<uint, ushort>)CpuThreadState.Methods.Read2, Address));
 				else if (SignedType == typeof(int)) return ast.Cast(Type, ast.CallInstance(CpuThreadStateArgument(), (Func<uint, uint>)CpuThreadState.Methods.Read4, Address));
+				else if (SignedType == typeof(float)) return ast.Cast(Type, ast.CallInstance(CpuThreadStateArgument(), (Func<uint, float>)CpuThreadState.Methods.Read4F, Address));
 				throw (new NotImplementedException(String.Format("Can't handle type {0}", Type)));
 			}
 		}

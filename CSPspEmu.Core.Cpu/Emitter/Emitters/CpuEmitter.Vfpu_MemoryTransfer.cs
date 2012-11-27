@@ -1,6 +1,7 @@
 ﻿using System;
 using SafeILGenerator;
 using SafeILGenerator.Ast.Nodes;
+using System.Linq;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -164,25 +165,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm sv_q()
 		{
-			throw(new NotImplementedException("sv_q"));
-			////loadVt(4, instruction.VT5_1);
-			//
-			//uint Register = Instruction.VT5_1;
-			//
-			//uint VectorSize = 4;
-			//
-			//foreach (var Index in XRange(VectorSize))
-			//{
-			//	_load_memory_imm14_index((uint)Index);
-			//	{
-			//		//Load_VT(
-			//		//VfpuLoad_Register(Register, Index, VectorSize, PrefixTarget);
-			//		VfpuLoad_Register(Register, Index, VectorSize, ref PrefixNone);
-			//		//_VfpuLoadVectorWithIndexPointer(Register, (uint)Index, 4);
-			//		//SafeILGenerator.LoadIndirect<float>();
-			//	}
-			//	SafeILGenerator.StoreIndirect<float>();
-			//}
+			int VectorSize = 4;
+			
+			return ast.Statements(VfpuUtils.XRange(0, VectorSize).Select(Index =>
+				AstMemorySetValue<float>(Memory, Address_RS_IMM14(Index * 4), AstLoadVfpuReg(Instruction.VT5_1, Index, (uint)VectorSize, ref PrefixNone))
+			));
 		}
 
 		public AstNodeStm svl_q()

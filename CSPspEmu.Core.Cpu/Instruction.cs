@@ -198,7 +198,14 @@ namespace CSPspEmu.Core.Cpu
 
 		public uint VT5 { get { return get(16, 5); } set { set(16, 5, value); } }
 
-		public uint VT5_1 { get { return VT5 | (VT1 << 5); } }
+		public uint VT5_1 {
+			get { return VT5 | (VT1 << 5); }
+			set
+			{
+				VT5 = value;
+				VT1 = value >> 5;
+			}
+		}
 		public uint VT5_2 { get { return VT5 | (VT2 << 5); } }
 
 		public float IMM_HF

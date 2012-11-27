@@ -45,7 +45,6 @@ namespace CSPspEmu.Core.Cpu.Table
 			{
 				var InstructionInfoName = NameConverter((InstructionInfo != null) ? InstructionInfo.Name : "Default");
 				SafeILGenerator.LoadArgument<TType>(1);
-				//ILGenerator.Emit(OpCodes.Ldarg_1);
 				var MethodInfo = typeof(TType).GetMethod(InstructionInfoName);
 
 				if (MethodInfo == null && !ThrowOnUnexistent)
@@ -61,14 +60,11 @@ namespace CSPspEmu.Core.Cpu.Table
 				if (MethodInfo.ReturnType == typeof(TRetType))
 				{
 					SafeILGenerator.Call(MethodInfo);
-					//ILGenerator.Emit(OpCodes.Call, MethodInfo);
 				}
 				else
 				{
-					//SafeILGenerator.LoadNull();
 					throw (new Exception(String.Format("Invalid method: '{0}' should return '{1}'", MethodInfo, typeof(TRetType))));
 				}
-
 			});
 		}
 
@@ -109,7 +105,6 @@ namespace CSPspEmu.Core.Cpu.Table
 			SafeILGenerator.BinaryOperation(SafeBinaryOperator.And);
 			SafeILGenerator.StoreLocal(MaskedLocalValue);
 
-#if true
 			SafeILGenerator.LoadLocal(MaskedLocalValue);
 
 			SafeILGenerator.Switch(
@@ -140,30 +135,6 @@ namespace CSPspEmu.Core.Cpu.Table
 			);
 
 			SafeILGenerator.Return(typeof(void));
-#else
-			foreach (var MaskGroup in MaskGroups.Select(MaskGroup => MaskGroup.ToArray()))
-			{
-				var NextLabel = SafeILGenerator.DefineLabel("NextLabel");
-				SafeILGenerator.LoadLocal(MaskedLocalValue);
-				SafeILGenerator.Push(MaskGroup[0].Value & CommonMask);
-				SafeILGenerator.BranchBinaryComparison(SafeBinaryComparison.NotEquals, NextLabel);
-				//Console.WriteLine("[" + Level + "] || (Value & " + CommonMask + " == " + (MaskGroup[0].Value & CommonMask) + ")");
-
-				if (MaskGroup.Length > 1)
-				{
-					GenerateSwitchCode(SafeILGenerator, MaskGroup, GenerateCallDelegate, Level + 1);
-				}
-				else
-				{
-					GenerateCallDelegate(SafeILGenerator, MaskGroup[0]);
-				}
-				SafeILGenerator.Return();
-				NextLabel.Mark();
-			}
-
-			GenerateCallDelegate(SafeILGenerator, null);
-			SafeILGenerator.Return();
-#endif
 		}
 	}
 }
