@@ -178,6 +178,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 		}
 
+		/*
 		private void VfpuLoad_Register(uint Register, int Index, uint VectorSize, ref VfpuPrefix Prefix, bool Debug = false, bool AsInteger = false)
 		{
 			//Console.Error.WriteLine("{0:X}", PC);
@@ -250,6 +251,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 			}
 		}
+		*/
 
 		/*
 		if (enabled && prefix.enabled) {
@@ -270,6 +272,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 		*/
 
+		/*
 		private void Load_VCC(uint Index)
 		{
 			MipsMethodEmitter.LoadFieldPtr(typeof(CpuThreadState).GetField("VFR_CC_" + Index));
@@ -396,8 +399,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			VfpuSave_Register((uint)(Instruction.VT), Index, VectorSize, PrefixDestinationNone, Action, Debug, AsInteger: AsInteger);
 		}
+		*/
 
-	    static IEnumerable<int> XRange(int Start, int End)
+		/*
+		static IEnumerable<int> XRange(int Start, int End)
 		{
 			for (int Value = Start; Value < End; Value++)
 			{
@@ -417,8 +422,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			Row = 1,
 			Column = 2,
 		}
+		*/
 
 		// S000 <-- S(Matrix)(Column)(Row)
+		/*
 		private void _VfpuLoadVectorWithIndexPointer(uint Register, uint Index, uint Size, bool Debug = false)
 		{
 			uint Line = BitUtils.Extract(Register, 0, 2); // 0-3
@@ -513,7 +520,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				});
 			}
 		}
+		*/
 
+		/*
 		private uint VectorSizeOneTwo
 		{
 			get
@@ -574,6 +583,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 			);
 		}
+		*/
 
 		private AstNodeExprLValue VFR(int Index)
 		{
@@ -693,7 +703,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		private AstNodeStm AstVfpuStoreVd(Func<int, AstNodeExpr> Generator, bool AsInteger = false)
 		{
 			var Size = Instruction.ONE_TWO;
-			var RegisterIndices = VfpuUtils.GetIndices(Size, VfpuUtils.RegisterType.Vector, Instruction.VD);
+			int[] RegisterIndices = VfpuUtils.GetIndices(Size, VfpuUtils.RegisterType.Vector, Instruction.VD);
 			var Items = new List<AstNodeStm>();
 			for (int Index = 0; Index < Size; Index++)
 			{

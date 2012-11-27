@@ -138,6 +138,12 @@ namespace CSPspEmu.Core.Cpu
 			}
 		}
 
+		static public float GetVfpuConstantsValue(int Index)
+		{
+			if (Index < 0 || Index >= VfpuConstantsValues.Length) return 0f;
+			return VfpuConstantsValues[Index];
+		}
+
 		static public float GetConstantValueByName(string Name)
 		{
 			return VfpuConstantsValues[VfpuConstantsIndices[Name]];
@@ -168,14 +174,12 @@ namespace CSPspEmu.Core.Cpu
 
 		static public int GetCellIndex(int Matrix, int Column, int Row)
 		{
-			//return Matrix * 16 + Column * 4 + Row;
-			return Matrix * 16 + Row * 4 + Column;
+			return Matrix * 16 + Column * 4 + Row;
 		}
 
 		static public uint GetCellIndex(uint Matrix, uint Column, uint Row)
 		{
-			//return Matrix * 16 + Column * 4 + Row;
-			return Matrix * 16 + Row * 4 + Column;
+			return (uint)GetCellIndex((int)Matrix, (int)Column, (int)Row);
 		}
 
 		static public int[] GetIndices(uint Size, RegisterType RegisterType, VfpuRegisterInt Register, string Name = null)

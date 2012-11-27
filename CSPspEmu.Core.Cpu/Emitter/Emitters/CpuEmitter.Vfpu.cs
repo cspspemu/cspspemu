@@ -233,6 +233,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		// OP_V_INTERNAL_IN_N!(1, "1.0f / sqrt(v)");
+		// vcst: Vfpu ConSTant
 		public AstNodeStm vsqrt() { return _vfpu_call_single_method((Func<float, float>)MathFloat.Sqrt); }
 		public AstNodeStm vrsq() { return _vfpu_call_single_method((Func<float, float>)MathFloat.RSqrt); }
 		public AstNodeStm vsin() { return _vfpu_call_single_method((Func<float, float>)MathFloat.SinV1); }
@@ -245,16 +246,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm vrexp2() { throw (new NotImplementedException("")); }
 		public AstNodeStm vsat0() { return _vfpu_call_single_method((Func<float, float>)MathFloat.Vsat0); }
 		public AstNodeStm vsat1() { return _vfpu_call_single_method((Func<float, float>)MathFloat.Vsat1); }
-
-		// Vfpu ConSTant
-		public AstNodeStm vcst()
-		{
-			float FloatConstant = (Instruction.IMM5 >= 0 && Instruction.IMM5 < VfpuUtils.VfpuConstantsValues.Length) ? VfpuUtils.VfpuConstantsValues[Instruction.IMM5] : 0.0f;
-			return AstVfpuStoreVd((Index) =>
-			{
-				return ast.Immediate(FloatConstant);
-			});
-		}
+		public AstNodeStm vcst() { return AstVfpuStoreVd((Index) => ast.Immediate(VfpuUtils.GetVfpuConstantsValue((int)Instruction.IMM5))); }
 
 		// -
 		public AstNodeStm vhdp()

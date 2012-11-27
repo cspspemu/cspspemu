@@ -1,4 +1,6 @@
 ﻿using CSharpUtils;
+using CSPspEmu.Core.Memory;
+using System;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -52,6 +54,11 @@ namespace CSPspEmu.Core.Cpu
 			//Console.WriteLine("{0:X8} - ", CurrentPC);
 			//var Result = (uint)(CurrentPC & ~PspMemory.MemoryMask) + (JUMP << 2);
 			var Result = (uint)(CurrentPC & ~0x0FFFFFFF) + (JUMP << 2);
+			if (!PspMemory.IsAddressValid(Result))
+			{
+				Console.Error.WriteLine("ERROR: Generating an invalid JumpAddress 0x{0:X8} from CurrentPC=0x{1:X8} with JUMP=0x{2:X8}", Result, CurrentPC, JUMP << 2);
+				//throw (new Exception(String.Format("Generating an invalid JumpAddress 0x{0:X8} from CurrentPC=0x{1:X8} with JUMP=0x{2:X8}", Result, CurrentPC, JUMP << 2)));
+			}
 			//Console.WriteLine("CurrentPC: 0x{0:X8} - 0x{1:X8} - 0x{2:X8} - 0x{3:X8}", CurrentPC, (CurrentPC & ~PspMemory.MemoryMask), JUMP << 2, Result);
 			return Result;
 		}

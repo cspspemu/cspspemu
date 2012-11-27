@@ -16,6 +16,7 @@ namespace CSPspEmu.Core.Cpu.Table
 		private const InstructionType INSTR_TYPE_LIKELY = InstructionType.Likely;
 		private const InstructionType INSTR_TYPE_JAL = InstructionType.Jal;
 		private const InstructionType INSTR_TYPE_JUMP = InstructionType.Jump;
+		private const InstructionType INSTR_TYPE_SYSCALL = InstructionType.Syscall;
 
 		private static InstructionInfo ID(String Name, String BinaryEncoding, String AsmEncoding, AddressType AddressType, InstructionType InstructionType)
 		{
@@ -310,7 +311,7 @@ namespace CSPspEmu.Core.Cpu.Table
 				{
 					_SPECIAL = new InstructionInfo[] {
 						// Syscall
-						ID("syscall",     VM("000000:imm20:001100" ), "%C",     ADDR_TYPE_NONE, 0),
+						ID("syscall",     VM("000000:imm20:001100" ), "%C",     ADDR_TYPE_NONE, INSTR_TYPE_SYSCALL),
 
 						ID("cache",       VM("101111--------------------------"), "%k, %o", ADDR_TYPE_NONE, 0),
 						ID("sync",        VM("000000:00000:00000:00000:00000:001111"), "", ADDR_TYPE_NONE, 0),

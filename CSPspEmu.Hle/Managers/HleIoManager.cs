@@ -107,6 +107,10 @@ namespace CSPspEmu.Hle.Managers
 			Int32.TryParse(Match.Groups[2].Value, out FileSystemNumber);
 			if (!Drivers.TryGetValue(DriverName, out HleIoDriver))
 			{
+				foreach (var Driver in Drivers)
+				{
+					Console.WriteLine("Available Driver: '{0}'", Driver.Key);
+				}
 				throw(new KeyNotFoundException("Can't find HleIoDriver '" + DriverName + "'"));
 			}
 

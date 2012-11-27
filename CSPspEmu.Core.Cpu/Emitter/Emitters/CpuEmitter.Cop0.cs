@@ -25,7 +25,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move (From/To) Cop0
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm mfc0() { return this.AssignGPR(RT, this.REG("C0R" + RD)); }
-		public AstNodeStm mtc0() { return this.AssignREG("C0R" + RD, GPR(RT)); }
+		public AstNodeStm mfc0() { return AssignGPR(RT, REG("C0R" + RD)); }
+		public AstNodeStm mtc0() { return AssignREG("C0R" + RD, GPR(RT)); }
 	}
 }

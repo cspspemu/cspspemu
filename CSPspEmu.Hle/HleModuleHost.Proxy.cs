@@ -15,6 +15,8 @@ using SafeILGenerator.Ast.Generators;
 using System.Runtime.InteropServices;
 using System.Reflection.Emit;
 using SafeILGenerator.Ast.Optimizers;
+using CSPspEmu.Core.Cpu.Dynarec;
+using CSPspEmu.Core.Cpu.Dynarec.Ast;
 
 namespace CSPspEmu.Hle
 {
@@ -209,9 +211,9 @@ namespace CSPspEmu.Hle
 			bool NotImplementedFunc = (NotImplementedAttribute != null) && NotImplementedAttribute.Notice;
 
 			List<ParamInfo> ParamInfoList;
-			var AstNodes = new AstOptimizer().Optimize(CreateDelegateForMethodInfoPriv(MethodInfo, HlePspFunctionAttribute, out ParamInfoList));
+			var AstNodes = AstOptimizerPsp.GlobalOptimize(CpuProcessor, CreateDelegateForMethodInfoPriv(MethodInfo, HlePspFunctionAttribute, out ParamInfoList));
 
-			var Delegate = GeneratorIL.GenerateDelegate<Action<CpuThreadState>>(
+			var Delegate = GeneratorIL.GenerateDelegate<GeneratorILPsp, Action<CpuThreadState>>(
 				String.Format("Proxy_{0}_{1}", this.GetType().Name, MethodInfo.Name),
 				AstNodes
 			);
@@ -289,9 +291,9 @@ namespace CSPspEmu.Hle
 				catch (InvalidProgramException)
 				{
 					Console.WriteLine("CALLING: {0}", MethodInfo);
-					Console.WriteLine("{0}", (new GeneratorCSharp()).Generate(AstNodes).ToString());
-					
-					foreach (var Line in GeneratorIL.GenerateToStringList(MethodInfo, AstNodes))
+					Console.WriteLine("{0}", (new GeneratorCSharp()).GenerateRoot(AstNodes).ToString());
+
+					foreach (var Line in GeneratorIL.GenerateToStringList<GeneratorILPsp>(MethodInfo, AstNodes))
 					{
 						Console.WriteLine(Line);
 					}

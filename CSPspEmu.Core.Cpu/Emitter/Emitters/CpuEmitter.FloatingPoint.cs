@@ -36,7 +36,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// <summary>
 		/// Floating-Point Convert to Word Fixed-Point
 		/// </summary>
-		public AstNodeStm cvt_w_s() { return AssignFPR_I(FD, ast.CallStatic((Func<CpuThreadState, float, int>)CpuEmitterUtils._cvt_w_s_impl, this.CpuThreadStateArgument(), FPR(FS))); }
+		public AstNodeStm cvt_w_s() { return AssignFPR_I(FD, ast.CallStatic((Func<CpuThreadState, float, int>)CpuEmitterUtils._cvt_w_s_impl, CpuThreadStateArgument(), FPR(FS))); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move (from/to) float point registers (reinterpreted)
@@ -47,8 +47,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// CFC1 -- move Control word from/to floating point (C1)
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm cfc1() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._cfc1_impl, this.CpuThreadStateArgument(), RD, RT)); }
-		public AstNodeStm ctc1() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._ctc1_impl, this.CpuThreadStateArgument(), RD, RT)); }
+		public AstNodeStm cfc1() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._cfc1_impl, CpuThreadStateArgument(), RD, RT)); }
+		public AstNodeStm ctc1() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._ctc1_impl, CpuThreadStateArgument(), RD, RT)); }
 
 		/// <summary>
 		/// Compare (condition) Single_
@@ -67,7 +67,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 			return ast.Statement(ast.CallStatic(
 				(Action<CpuThreadState, float, float, bool, bool, bool, bool>)CpuEmitterUtils._comp_impl,
-				this.CpuThreadStateArgument(),
+				CpuThreadStateArgument(),
 				FPR(FS),
 				FPR(FT),
 				ast.Immediate(fc_unordererd),

@@ -430,6 +430,15 @@ namespace CSPspEmu.Core.Cpu
 		}
 
 		/// <summary>
+		/// Calls a function.
+		/// </summary>
+		/// <param name="PC"></param>
+		public void JumpAndLink(uint PC)
+		{
+			this.PC = PC;
+		}
+
+		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="Address"></param>

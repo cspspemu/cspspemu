@@ -8,8 +8,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 {
 	public sealed partial class CpuEmitter
 	{
-		public SafeILGeneratorEx SafeILGenerator { get { return MipsMethodEmitter.SafeILGenerator; } }
-
 		public AstNodeStm _branch_likely(AstNodeStm Code)
 		{
 			return ast.IfElse(
@@ -19,16 +17,14 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		// Code executed after the delayed slot.
-		public AstNodeStm _branch_post(SafeLabel Label)
+		public AstNodeStm _branch_post(AstLabel BranchLabel)
 		{
-			var BranchLabel = AstLabel.CreateFromLabel(Label);
-
 			if (this.AndLink)
 			{
 				return ast.IfElse(
 					BranchFlag(),
 					ast.Statements(
-						this.AssignGPR(31, BranchPC + 8),
+						AssignGPR(31, BranchPC + 8),
 						ast.GotoAlways(BranchLabel)
 					)
 				);
@@ -85,19 +81,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm _popstack()
 		{
-			if (PopulateCallStack && (RS == 31)) return ast.Statement(ast.CallInstance(this.CpuThreadStateArgument(), (Action)CpuThreadState.Methods.CallStackPop));
+			if (PopulateCallStack && (RS == 31)) return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action)CpuThreadState.Methods.CallStackPop));
 			return ast.Statement();
 		}
 
 		private AstNodeStm _pushstack()
 		{
-			if (PopulateCallStack) return ast.Statement(ast.CallInstance(this.CpuThreadStateArgument(), (Action<uint>)CpuThreadState.Methods.CallStackPush, PC));
+			if (PopulateCallStack) return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<uint>)CpuThreadState.Methods.CallStackPush, PC));
 			return ast.Statement();
 		}
 
 		private AstNodeStm _link()
 		{
-			return ast.Statements(this._pushstack(), this.AssignGPR(31, ast.Immediate(PC + 8)));
+			return ast.Statements(this._pushstack(), AssignGPR(31, ast.Immediate(PC + 8)));
 		}
 
 		private AstNodeStm JumpToAddress(AstNodeExpr Address)
@@ -105,8 +101,21 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return ast.Statement(
 				ast.CallTail(
 					ast.CallInstance(
-						this.CpuThreadStateArgument(),
+						CpuThreadStateArgument(),
 						(Action<uint>)CpuThreadState.Methods.Jump,
+						Address
+					)
+				)
+			);
+		}
+
+		private AstNodeStm CallAddress(AstNodeExpr Address)
+		{
+			return ast.Statement(
+				ast.CallTail(
+					ast.CallInstance(
+						CpuThreadStateArgument(),
+						(Action<uint>)CpuThreadState.Methods.JumpAndLink,
 						Address
 					)
 				)
@@ -116,10 +125,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// j(al)(r): Jump (And Link) (Register)
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm j() { return this.JumpToAddress(Instruction.GetJumpAddress(PC)); }
-		public AstNodeStm jal() { return ast.Statements(_link(), j()); }
+		public AstNodeStm j() { return ast.Statements(this.JumpToAddress(Instruction.GetJumpAddress(PC))); }
+		public AstNodeStm jal() { return ast.Statements(_link(), this.CallAddress(Instruction.GetJumpAddress(PC))); }
 		public AstNodeStm jr() { return ast.Statements(_popstack(), JumpToAddress(GPR_u(RS))); }
-		public AstNodeStm jalr() { return ast.Statements(_link(), jr()); }
+		public AstNodeStm jalr() { return ast.Statements(_link(), _popstack(), this.CallAddress(GPR_u(RS))); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// bc1(f/t)(l): Branch on C1 (False/True) (Likely)

@@ -73,6 +73,10 @@
     <Compile Include="Assembler\MipsDisassembler.cs" />
     <Compile Include="CachedGetMethodCache.cs" />
     <Compile Include="CpuThreadState.Lists.cs" />
+    <Compile Include="Dynarec\Ast\AstNodeStmPspInstruction.cs" />
+    <Compile Include="Dynarec\Ast\AstOptimizerPsp.cs" />
+    <Compile Include="Dynarec\Ast\GeneratorCSharpPsp.cs" />
+    <Compile Include="Dynarec\Ast\GeneratorILPsp.cs" />
     <Compile Include="Dynarec\DynarecBranchAnalyzer.cs" />
     <Compile Include="Dynarec\DynarecFunction.cs" />
     <Compile Include="Dynarec\DynarecFunctionCompiler.cs" />
@@ -99,7 +103,7 @@
     <Compile Include="Emitter\Emitters\CpuEmitter.Vfpu_Random.cs" />
     <Compile Include="Emitter\Emitters\CpuEmitter.Vfpu_RegisterTransfer.cs" />
     <Compile Include="Emitter\MipsMethodEmitter.AstUtils.cs" />
-    <Compile Include="Emitter\SafeILGeneratorEx.cs" />
+    <Compile Include="VFpu\Vector4f.cs" />
     <Compile Include="MethodCacheFast.cs" />
     <Compile Include="MethodCacheSlow.cs" />
     <Compile Include="Emitter\MipsMethodEmitter.cs" />

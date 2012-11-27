@@ -12,10 +12,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Syscall
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm syscall() { return ast.Statement(ast.CallInstance(this.CpuThreadStateArgument(), (Action<int>)CpuThreadState.Methods.Syscall, (int)Instruction.CODE)); }
-		public AstNodeStm cache() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._cache_impl, this.CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
-		public AstNodeStm sync() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._sync_impl, this.CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
-		public AstNodeStm _break() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._break_impl, this.CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
+		public AstNodeStm syscall() { return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<int>)CpuThreadState.Methods.Syscall, (int)Instruction.CODE)); }
+		public AstNodeStm cache() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._cache_impl, CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
+		public AstNodeStm sync() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._sync_impl, CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
+		public AstNodeStm _break() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._break_impl, CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
 		public AstNodeStm dbreak() { throw (new NotImplementedException("dbreak")); }
 		public AstNodeStm halt() { throw (new NotImplementedException("halt")); }
 

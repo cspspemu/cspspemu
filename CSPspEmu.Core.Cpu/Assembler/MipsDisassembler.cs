@@ -29,8 +29,10 @@ namespace CSPspEmu.Core.Cpu.Assembler
 				{ "s", Result => RegisterIndexToRegisterName(Result.Instruction.RS) },
 				{ "d", Result => RegisterIndexToRegisterName(Result.Instruction.RD) },
 				{ "t", Result => RegisterIndexToRegisterName(Result.Instruction.RT) },
+				{ "C", Result => String.Format("{0}", Result.Instruction.CODE) },
 				{ "a", Result => Result.Instruction.POS.ToString() },
 				{ "i", Result => Result.Instruction.IMM.ToString() },
+				{ "I", Result => String.Format("0x{0:X4}", Result.Instruction.IMMU) },
 			};
 
 			public string AssemblyLine

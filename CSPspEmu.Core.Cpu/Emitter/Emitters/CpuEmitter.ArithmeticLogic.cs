@@ -84,12 +84,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// MULTiply (ADD/SUBstract) (Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm mult() { return AssignHILO(this.GPR_sl(RS) * this.GPR_sl(RT)); }
-		public AstNodeStm multu() { return AssignHILO(this.GPR_ul(RS) * this.GPR_ul(RT)); }
-		public AstNodeStm madd() { return AssignHILO(HILO_sl() + this.GPR_sl(RS) * this.GPR_sl(RT)); }
-		public AstNodeStm maddu() { return AssignHILO(HILO_ul() + this.GPR_ul(RS) * this.GPR_ul(RT)); }
-		public AstNodeStm msub() { return AssignHILO(HILO_sl() - this.GPR_sl(RS) * this.GPR_sl(RT)); }
-		public AstNodeStm msubu() { return AssignHILO(HILO_ul() - this.GPR_ul(RS) * this.GPR_ul(RT)); }
+		public AstNodeStm mult() { return AssignHILO(GPR_sl(RS) * GPR_sl(RT)); }
+		public AstNodeStm multu() { return AssignHILO(GPR_ul(RS) * GPR_ul(RT)); }
+		public AstNodeStm madd() { return AssignHILO(HILO_sl() + GPR_sl(RS) * GPR_sl(RT)); }
+		public AstNodeStm maddu() { return AssignHILO(HILO_ul() + GPR_ul(RS) * GPR_ul(RT)); }
+		public AstNodeStm msub() { return AssignHILO(HILO_sl() - GPR_sl(RS) * GPR_sl(RT)); }
+		public AstNodeStm msubu() { return AssignHILO(HILO_ul() - GPR_ul(RS) * GPR_ul(RT)); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move To/From HI/LO.
@@ -102,8 +102,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move if Zero/Non zero.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm movz() { return ast.IfElse(ast.Binary(this.GPR_s(RT), "==", 0), ast.Assign(this.GPR(RD), this.GPR_u(RS))); }
-		public AstNodeStm movn() { return ast.IfElse(ast.Binary(this.GPR_s(RT), "!=", 0), ast.Assign(this.GPR(RD), this.GPR_u(RS))); }
+		public AstNodeStm movz() { return ast.IfElse(ast.Binary(GPR_s(RT), "==", 0), ast.Assign(GPR(RD), GPR_u(RS))); }
+		public AstNodeStm movn() { return ast.IfElse(ast.Binary(GPR_s(RT), "!=", 0), ast.Assign(GPR(RD), GPR_u(RS))); }
 
 		/// <summary>
 		/// EXTract/INSert

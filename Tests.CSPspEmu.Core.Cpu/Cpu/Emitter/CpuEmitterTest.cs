@@ -1161,8 +1161,8 @@ namespace CSPspEmu.Core.Tests
 			Iterate((ConstantName, n, Matrix, Column, Row) =>
 			{
 				Assert.AreEqual(
-					VfpuUtils.GetConstantValueByName(ConstantName),
-					CpuThreadState.Vfpr[Matrix, Row, Column]
+					"VFR" + VfpuUtils.GetCellIndex(Matrix, Row, Column) + " : " + ConstantName + " : " + VfpuUtils.GetConstantValueByName(ConstantName),
+					"VFR" + VfpuUtils.GetCellIndex(Matrix, Row, Column) + " : " + ConstantName + " : " + CpuThreadState.Vfpr[Matrix, Row, Column]
 				);
 			});
 		}
@@ -1429,9 +1429,9 @@ namespace CSPspEmu.Core.Tests
 				Memory.WriteSafe<uint>(Base + Offset, Value);
 				CpuThreadState.GPR[2] = (int)Base;
 				ExecuteAssembly(String.Format(@"
-				lwl r1, {0}(r2)
-				lwr r1, {1}(r2)
-			", Offset + 3, Offset + 0));
+					lwl r1, {0}(r2)
+					lwr r1, {1}(r2)
+				", Offset + 3, Offset + 0));
 				Assert.AreEqual(String.Format("{0:X8}", Value), String.Format("{0:X8}", CpuThreadState.GPR[1]));
 			}
 		}
@@ -1450,6 +1450,23 @@ namespace CSPspEmu.Core.Tests
 				lwr r1, {1}(r2)
 			", Offset + 3, Offset + 0));
 			Assert.AreEqual(String.Format("{0:X8}", 0x21), String.Format("{0:X8}", CpuThreadState.GPR[1]));
+		}
+
+		[TestMethod]
+		public void LoadInvalidUnalignedTest2()
+		{
+			var Value = 0x87654321;
+			var Offset = (uint)3;
+			var Base = (uint)0x08010000;
+			Memory.WriteSafe<uint>(Base + Offset, Value);
+			Memory.WriteSafe<uint>(Base + Offset + 0x10, 0x00000000);
+			CpuThreadState.GPR[2] = (int)Base;
+			ExecuteAssembly(String.Format(@"
+				lwl r1, {0}(r2)
+				addi r2, r2, 0x10
+				lwr r1, {1}(r2)
+			", Offset + 3, Offset + 0));
+			Assert.AreEqual(String.Format("{0:X8}", 0x87654300), String.Format("{0:X8}", CpuThreadState.GPR[1]));
 		}
 
 		[TestMethod]
