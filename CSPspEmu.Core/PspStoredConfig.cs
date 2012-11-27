@@ -57,6 +57,11 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
+		public bool EnableAstOptimizations = true;
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool EnableMpeg = false;
 
 		/// <summary>

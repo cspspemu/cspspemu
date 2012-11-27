@@ -847,6 +847,7 @@ namespace CSPspEmu.Gui.Winforms
 		private void PspDisplayForm_Load_1(object sender, EventArgs e)
 		{
 			UtilsFrameLimitingMenu.Checked = this.PspConfig.VerticalSynchronization;
+			UtilsAstOptimizations.Checked = IGuiExternalInterface.GetConfig().StoredConfig.EnableAstOptimizations;
 			UtilsUseFastmemMenu.Checked = IGuiExternalInterface.GetConfig().StoredConfig.UseFastMemory;
 
 			Debug.WriteLine(String.Format("Now: {0}", DateTime.UtcNow));
@@ -891,20 +892,26 @@ namespace CSPspEmu.Gui.Winforms
 			});
 		}
 
+		private void RestartOptions()
+		{
+			IGuiExternalInterface.GetConfig().StoredConfig.UseFastMemory = UtilsUseFastmemMenu.Checked;
+			IGuiExternalInterface.GetConfig().StoredConfig.EnableAstOptimizations = UtilsAstOptimizations.Checked;
+			if (MessageBox.Show("This option requires restarting the emulator.\n\nDo you want to restart the emulator?", "Warning", MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				Application.Restart();
+			}
+		}
+
 		private void useFastAndUnsafeMemoryToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			UtilsUseFastmemMenu.Checked = !UtilsUseFastmemMenu.Checked;
-			IGuiExternalInterface.GetConfig().StoredConfig.UseFastMemory = UtilsUseFastmemMenu.Checked;
-#if false
-			MessageBox.Show("This option requires restarting the emulator.", "Warning", MessageBoxButtons.OK);
-#else
-			if (MessageBox.Show("This option requires restarting the emulator.\n\nDo you want to restart the emulator?", "Warning", MessageBoxButtons.YesNo) == DialogResult.Yes)
-			{
-				//IGuiExternalInterface.GetConfig().StoredConfig.Save();
-				//new StApplicationPaths.ExecutablePath;
-				Application.Restart();
-			}
-#endif
+			RestartOptions();
+		}
+
+		private void UtilsAstOptimizations_Click(object sender, EventArgs e)
+		{
+			UtilsAstOptimizations.Checked = !UtilsAstOptimizations.Checked;
+			RestartOptions();
 		}
 
 		private void DebugDumpGpuFrameMenu_Click(object sender, EventArgs e)

@@ -27,7 +27,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			CpuProcessor CpuProcessor;
 			uint EntryPC;
 			SortedDictionary<uint, AstLabel> Labels = new SortedDictionary<uint, AstLabel>();
-			//SortedDictionary<uint, AstLabel> LabelsNotAnalyze = new SortedDictionary<uint, AstLabel>();
+			SortedDictionary<uint, AstLabel> LabelsJump = new SortedDictionary<uint, AstLabel>();
 
 			//const int MaxNumberOfInstructions = 8 * 1024;
 			const int MaxNumberOfInstructions = 64 * 1024;
@@ -167,11 +167,14 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 						{
 							//Console.WriteLine("Instruction");
 
+// This breaks things out!
+#if false
 							var JumpAddress = Instruction.GetJumpAddress(PC);
-							if (!Labels.ContainsKey(JumpAddress))
+							if (!LabelsJump.ContainsKey(JumpAddress))
 							{
-								Labels[JumpAddress] = AstLabel.CreateDelayedWithName(String.Format("0x{0:X8}", JumpAddress));
+								LabelsJump[JumpAddress] = AstLabel.CreateDelayedWithName(String.Format("0x{0:X8}", JumpAddress));
 							}
+#endif
 							// Located a jump-always instruction with a delayed slot. Process next instruction too.
 							EndOfBranchFound = true;
 							continue;
@@ -179,7 +182,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 						else if (BranchInfo.HasFlag(DynarecBranchAnalyzer.JumpFlags.BranchOrJumpInstruction))
 						{
 							var BranchAddress = Instruction.GetBranchAddress(PC);
-							if (!Labels.ContainsKey(BranchAddress))
+							//if (!Labels.ContainsKey(BranchAddress))
 							{
 								Labels[BranchAddress] = AstLabel.CreateDelayedWithName(String.Format("0x{0:X8}", BranchAddress));
 								BranchesToAnalyze.Enqueue(BranchAddress);
@@ -295,14 +298,12 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				}
 
 				// Marks label.
-				/*
-				if (LabelsNotAnalyze.ContainsKey(PC))
+				if (LabelsJump.ContainsKey(PC))
 				{
 					Nodes.AddStatement(EmitInstructionCountIncrement(false));
-					Nodes.AddStatement(ast.Label(LabelsNotAnalyze[PC]));
+					Nodes.AddStatement(ast.Label(LabelsJump[PC]));
 					//Labels[PC].Mark();
 				}
-				*/
 			}
 
 			private AstNodeStm EmitCpuInstruction()
@@ -386,12 +387,12 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 							// An internal jump.
 							if (
 								(JumpDisasm.InstructionInfo.Name == "j")
-								&& (Labels.ContainsKey(JumpJumpPC))
+								&& (LabelsJump.ContainsKey(JumpJumpPC))
 							)
 							{
 								Nodes.AddStatement(ast.Statements(
 									ast.Comment(String.Format("{0:X8}: j 0x{1:X8}", JumpDisasm.InstructionPC, JumpJumpPC)),
-									ast.GotoAlways(Labels[JumpJumpPC])
+									ast.GotoAlways(LabelsJump[JumpJumpPC])
 								));
 							}
 							// A jump outside the current function.

@@ -1,5 +1,4 @@
-﻿#define ENABLE_OPTIMIZATIONS
-#define OPTIMIZE_LWL_LWR
+﻿#define ENABLE_OPTIMIZE_LWL_LWR
 
 using CSPspEmu.Core.Cpu.Emitter;
 using CSPspEmu.Core.Cpu.Table;
@@ -21,11 +20,12 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
 
 		static public AstNodeStm GlobalOptimize(CpuProcessor Processor, AstNodeStm AstNodeStm)
 		{
-#if ENABLE_OPTIMIZATIONS
-			return (AstNodeStm)(new AstOptimizerPsp(Processor)).Optimize(ast.Statements(AstNodeStm, ast.Return()));
-#else
-			return AstNodeStm;
-#endif
+			if (Processor.PspConfig.StoredConfig.EnableAstOptimizations)
+			{
+				return (AstNodeStm)(new AstOptimizerPsp(Processor)).Optimize(ast.Statements(AstNodeStm, ast.Return()));
+			} else {
+				return AstNodeStm;
+			}
 		}
 
 		private AstOptimizerPsp(CpuProcessor Processor)
@@ -133,7 +133,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
 			if (Node is AstNodeStmContainer)
 			{
 				var Container = Node as AstNodeStmContainer;
-#if OPTIMIZE_LWL_LWR
+#if ENABLE_OPTIMIZE_LWL_LWR
 				Container.Nodes = OptimizeLwlLwr(Container.Nodes);
 #endif
 				return base._Optimize(Container);
