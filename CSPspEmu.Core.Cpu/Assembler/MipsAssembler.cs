@@ -8,10 +8,11 @@ using CSPspEmu.Core.Utils;
 using CSharpUtils.Arrays;
 using CSharpUtils.Streams;
 using CSPspEmu.Core.Cpu.Emitter;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu.Assembler
 {
-	public class MipsAssembler
+	public unsafe partial class MipsAssembler
 	{
 		protected Stream OutputStream;
 		protected BinaryWriter BinaryWriter;
@@ -34,98 +35,30 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			this.BinaryReader = new BinaryReader(this.OutputStream);
 		}
 
-		protected static bool IsIdent(char C)
+		public static uint ParseVfprRotate(string Format)
 		{
-			return ((C == '/') || (C == ':') || (C == '_') || (C == '%') || (C == '+') || (C == '-') || (C >= '0' && C <= '9') || (C >= 'a' && C <= 'z') || (C >= 'A' && C <= 'Z'));
-		}
-
-		protected static bool IsSpace(char C)
-		{
-			return ((C == ' ') || (C == '\t'));
-		}
-
-		/*
-		public static IEnumerable<String> TokenizeRegex(String Line)
-		{
-			var Matches = new Regex(@"(\+\d+|-\d+|[%\w]+|\S)", RegexOptions.Compiled).Matches(Line);
-			var Ret = new String[Matches.Count];
-			for (int n = 0; n < Matches.Count; n++) Ret[n] = Matches[n].Value;
-			return Ret;
-		}
-		*/
-
-		public static IEnumerable<String> TokenizeFast(String Line)
-		{
-			var Parts = new List<String>();
-			for (int n = 0; n < Line.Length; n++)
+			var Parts = Format.Trim('[', ']').Split(',').Select(Item => Item.Trim()).ToArray();
+			uint imm5 = 0;
+			uint CosIndex = 0;
+			uint SinIndex = 0;
+			bool NegatedSin = false;
+			for (uint Index = 0; Index < Parts.Length; Index++)
 			{
-				if (IsIdent(Line[n]))
+				var Part = Parts[Index];
+				switch (Part)
 				{
-					int m = n;
-					for (; n < Line.Length && IsIdent(Line[n]); n++) { }
-					Parts.Add(Line.Substr(m, n - m));
-					n--;
-				}
-				else
-				{
-					if (!IsSpace(Line[n]))
-					{
-						Parts.Add("" + Line[n]);
-					}
+					case "c": CosIndex = Index;  break;
+					case "s": SinIndex = Index; break;
+					case "-s": SinIndex = Index; NegatedSin = true; break;
+					default: throw(new NotImplementedException(Part));
 				}
 			}
-			return Parts;
-		}
-
-		public static IEnumerable<String> Tokenize(String Line)
-		{
-			return TokenizeFast(Line);
-		}
-
-
-		public static List<Tuple<String, String>> MatchFormat(String Format, String Line)
-		{
-			var Matches = new List<Tuple<String, String>>();
-
-			var FormatChunks = new Queue<String>(Tokenize(Format));
-			var LineChunks = new Queue<String>(Tokenize(Line));
-
-			while (FormatChunks.Count > 0 && LineChunks.Count > 0)
-			{
-				var CurrentFormat = FormatChunks.Dequeue();
-				var CurrentLine = LineChunks.Dequeue();
-
-				switch (CurrentFormat)
-				{
-					default:
-						if (CurrentFormat[0] == '%')
-						{
-							Matches.Add(new Tuple<String, String>(CurrentFormat, CurrentLine));
-						}
-						else
-						{
-							if (CurrentLine != CurrentFormat) throw (new InvalidDataException());
-						}
-						break;
-				}
-			}
-
-			if (LineChunks.Count > 0)
-			{
-				throw (new InvalidDataException("Unexpected token '" + LineChunks.Dequeue() + "' on '" + Line + "' for format '" + Format + "'"));
-			}
-
-			return Matches;
-		}
-
-		public static Dictionary<String, String> MatchFormatDictionary(String Format, String Line)
-		{
-			var Dictionary = new Dictionary<String, String>();
-			foreach (var Pair in MatchFormat(Format, Line))
-			{
-				Dictionary[Pair.Item1] = Pair.Item2;
-			}
-			return Dictionary;
+			BitUtils.Insert(ref imm5, 0, 2, CosIndex);
+			BitUtils.Insert(ref imm5, 2, 2, SinIndex);
+			BitUtils.Insert(ref imm5, 4, 1, NegatedSin ? 1U : 0U);
+			//Console.WriteLine(Format);
+			//throw (new NotImplementedException("ParseVfprRotate"));
+			return imm5;
 		}
 
 		public static void ParseAndUpdateVfprDestinationPrefix(int Index, string RegisterName, ref VfpuDestinationPrefix VfpuPrefix)
@@ -289,19 +222,33 @@ namespace CSPspEmu.Core.Cpu.Assembler
 					Instruction.ONE_TWO = VfpuSize;
 				}
 
-				var Matches = MatchFormat(InstructionInfo.AsmEncoding, (LineTokens.Length > 1) ? LineTokens[1] : "");
+				var Matches = Matcher(InstructionInfo.AsmEncoding, (LineTokens.Length > 1) ? LineTokens[1] : "");
 				foreach (var Match in Matches)
 				{
-					var Key = Match.Item1;
-					var Value = Match.Item2;
+					var Key = Match.Key;
+					var Value = Match.Value;
 
 					switch (Key)
 					{
 						// VFPU
-						case "%zp": Instruction.VD = ParseVfprName(VfpuSize, Value); break;
-						case "%yp": Instruction.VS = ParseVfprName(VfpuSize, Value); break;
-						case "%xp": Instruction.VT = ParseVfprName(VfpuSize, Value); break;
+						// Vector registers
+						case "%zs": 
+						case "%zp":
+						case "%zm":
+							Instruction.VD = ParseVfprName(VfpuSize, Value); break;
+						case "%ys": 
+						case "%yp":
+						case "%ym":
+							Instruction.VS = ParseVfprName(VfpuSize, Value); break;
+						case "%xs": 
+						case "%xp":
+						case "%xm":
+							Instruction.VT = ParseVfprName(VfpuSize, Value); break;
 						case "%vk": Instruction.IMM5 = ParseVfprConstantName(Value); break;
+
+						case "%vr": Instruction.IMM5 = ParseVfprRotate(Value); break;
+
+						//case "%zm": throw(new NotImplementedException());
 
 						// sv.q %Xq, %Y
 						case "%Xq": Instruction.VT5_1 = ParseVfprName(VfpuSize, Value); break;
@@ -358,7 +305,9 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
 						case "%p": Instruction.RD = (int)ParseIntegerConstant(Value); break;
 
+						case "%c":
 						case "%C": Instruction.CODE = (uint)ParseIntegerConstant(Value); break;
+						case "%vi":
 						case "%i": Instruction.IMM = ParseIntegerConstant(Value); break;
 						case "%I": Instruction.IMMU = (uint)ParseIntegerConstant(Value); break;
 
@@ -391,12 +340,12 @@ namespace CSPspEmu.Core.Cpu.Assembler
 					}
 					case "b":
 					{
-						var Info = MatchFormatDictionary("%O", LineTokens[1]);
+						var Info = Matcher("%O", LineTokens[1]);
 						return AssembleInstructions(ref PC, "beq r0, r0, " + Info["%O"], Patches);
 					}
 					case "li":
 					{
-						var Info = MatchFormatDictionary("%d, %i", LineTokens[1]);
+						var Info = Matcher("%d, %i", LineTokens[1]);
 						var DestReg = Info["%d"];
 						var Value = ParseIntegerConstant(Info["%i"]);
 						// Needs LUI
@@ -418,6 +367,39 @@ namespace CSPspEmu.Core.Cpu.Assembler
 				}
 			}
 		}
+
+		/* Format codes
+		 * %d - Rd
+		 * %t - Rt
+		 * %s - Rs
+		 * %i - 16bit signed immediate
+		 * %I - 16bit unsigned immediate (always printed in hex)
+		 * %o - 16bit signed offset (rs base)
+		 * %O - 16bit signed offset (PC relative)
+		 * %j - 26bit absolute offset
+		 * %J - Register jump
+		 * %a - SA
+		 * %0 - Cop0 register
+		 * %1 - Cop1 register
+		 * %2? - Cop2 register (? is (s, d))
+		 * %p - General cop (i.e. numbered) register
+		 * %n? - ins/ext size, ? (e, i)
+		 * %r - Debug register
+		 * %k - Cache function
+		 * %D - Fd
+		 * %T - Ft
+		 * %S - Fs
+		 * %x? - Vt (? is (s/scalar, p/pair, t/triple, q/quad, m/matrix pair, n/matrix triple, o/matrix quad)
+		 * %y? - Vs
+		 * %z? - Vd
+		 * %X? - Vo (? is (s, q))
+		 * %Y - VFPU offset
+		 * %Z? - VFPU condition code/name (? is (c, n))
+		 * %v? - VFPU immediate, ? (3, 5, 8, k, i, h, r, p? (? is (0, 1, 2, 3, 4, 5, 6, 7)))
+		 * %c - code (for break)
+		 * %C - code (for syscall)
+		 * %? - Indicates vmmul special exception
+		 */
 
 		public void Assemble(String Lines)
 		{

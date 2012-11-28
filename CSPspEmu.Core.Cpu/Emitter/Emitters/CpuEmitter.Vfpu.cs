@@ -147,63 +147,33 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm vrot()
 		{
-			throw(new NotImplementedException());
-			//var VectorSize = Instruction.ONE_TWO;
-			//uint imm5 = Instruction.IMM5;
-			//if (VectorSize == 1) throw(new NotImplementedException());
-			//
-			////uint imm5 = instruction.IMM5;
-			//int SinIndex = (int)((imm5 >> 2) & 3);
-			//int CosIndex = (int)((imm5 >> 0) & 3);
-			//bool NegateSin = ((imm5 & 16) != 0);
-			//
-			//foreach (var Index in XRange(VectorSize))
-			//{
-			//	Save_VD(Index, VectorSize, () =>
-			//	{
-			//		if (SinIndex == CosIndex)
-			//		{
-			//			// Angle [-1, +1]
-			//			Load_VS(0, 1); // Angle
-			//			SafeILGenerator.Push((float)(Math.PI / 2.0f));
-			//			SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			//			MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Sin);
-			//			if (NegateSin)
-			//			{
-			//				SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate);
-			//			}
-			//		}
-			//		else
-			//		{
-			//			SafeILGenerator.Push((float)(0.0f));
-			//		}
-			//	});
-			//}
-			//
-			//if (SinIndex != CosIndex)
-			//{
-			//	Save_VD(SinIndex, VectorSize, () =>
-			//	{
-			//		// Angle [-1, +1]
-			//		Load_VS(0, 1); // Angle
-			//		SafeILGenerator.Push((float)(Math.PI / 2.0f));
-			//		SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			//		MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Sin);
-			//		if (NegateSin)
-			//		{
-			//			SafeILGenerator.UnaryOperation(SafeUnaryOperator.Negate);
-			//		}
-			//	});
-			//}
-			//
-			//Save_VD(CosIndex, VectorSize, () =>
-			//{
-			//	// Angle [-1, +1]
-			//	Load_VS(0, 1); // Angle
-			//	SafeILGenerator.Push((float)(Math.PI / 2.0f));
-			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			//	MipsMethodEmitter.CallMethod((Func<float, float>)MathFloat.Cos);
-			//});
+			var VectorSize = Instruction.ONE_TWO;
+			uint imm5 = Instruction.IMM5;
+			var CosIndex = BitUtils.Extract(imm5, 0, 2);
+			var SinIndex = BitUtils.Extract(imm5, 2, 2);
+			bool NegateSin = BitUtils.ExtractBool(imm5, 4);
+
+			AstNodeExpr Sine = ast.CallStatic((Func<float, float>)MathFloat.SinV1, AstLoadVs(0));
+			AstNodeExpr Cosine = ast.CallStatic((Func<float, float>)MathFloat.CosV1, AstLoadVs(0));
+			if (NegateSin) Sine = -Sine;
+
+			//Console.WriteLine("{0},{1},{2}", CosIndex, SinIndex, NegateSin);
+
+			return AstVfpuStoreVd((Index) =>
+			{
+				if (Index == CosIndex)
+				{
+					return Cosine;
+				}
+				else if (Index == SinIndex)
+				{
+					return Sine;
+				}
+				else
+				{
+					return (SinIndex == CosIndex) ? Cosine : Sine;
+				}
+			});
 		}
 
 		// vzero: Vector ZERO
@@ -429,19 +399,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		// Vfpu load Integer IMmediate
-		public AstNodeStm viim()
-		{
-			throw(new NotImplementedException());
-			//// @CHECK!
-			//Save_VT(Index: 0, VectorSize: 1, Action: () =>
-			//{
-			//	//SafeILGenerator.Push((float)Instruction.IMM);
-			//	SafeILGenerator.Push((float)Instruction.IMMU);
-			//});
-		}
-
+		public AstNodeStm viim() { return AstSaveVfpuReg(Instruction.VT, 0, 1, ref PrefixNone, (float)Instruction.IMM); }
 		public AstNodeStm vdet() { throw (new NotImplementedException("vdet")); }
-
 		public AstNodeStm mfvme() { throw (new NotImplementedException("mfvme")); }
 		public AstNodeStm mtvme() { throw (new NotImplementedException("mtvme")); }
 

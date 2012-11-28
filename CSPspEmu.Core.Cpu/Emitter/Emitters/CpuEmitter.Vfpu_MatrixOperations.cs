@@ -10,42 +10,22 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// @FIX!!!
 		public AstNodeStm vmmul()
 		{
-			throw(new NotImplementedException("vmmul"));
-			//var VectorSize = Instruction.ONE_TWO;
-			////var MatrixRank = VectorSize;
-			//
-			//foreach (var IndexI in XRange(VectorSize))
-			//{
-			//	foreach (var IndexJ in XRange(VectorSize))
-			//	{
-			//		// VD[j] += VS[k] * VT[k];
-			//		//
-			//		//VfpuSave_Register((uint)(Instruction.VD + IndexI), IndexJ, VectorSize, PrefixDestination, () =>
-			//		Save_VD(IndexJ, VectorSize, IndexI, () =>
-			//		{
-			//			SafeILGenerator.Push((float)0.0f);
-			//			foreach (var IndexK in XRange(VectorSize))
-			//			{
-			//				Load_VT(IndexK, VectorSize, IndexI);
-			//				Load_VS(IndexK, VectorSize, IndexJ);
-			//				SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			//				SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-			//			}
-			//		});
-			//	}
-			//}
-			//
-			///*
-			//foreach (i; 0..vsize) {
-			//	loadVt(vsize, instruction.VT + i);
-			//	foreach (j; 0..vsize) {
-			//		loadVs(vsize, instruction.VS + j);
-			//		VD[j] = 0.0f; foreach (k; 0..vsize) VD[j] += VS[k] * VT[k];
-			//	}
-			//	saveVd(vsize, instruction.VD + i);
-			//}
-			//*/
-			////throw (new NotImplementedException(""));
+			var VectorSize = Instruction.ONE_TWO;
+
+			return AstVfpuStoreVdMatrix((Column, Row) =>
+			{
+				var Adder = (AstNodeExpr)ast.Immediate(0f);
+				for (int n = 0; n < VectorSize; n++)
+				{
+					//Console.WriteLine("VS[{0}, {1}] * VT[{2}, {3}]", n, Row, Column, n);
+					Adder +=
+						AstVfpuLoadRegMatrixElement(VectorSize, Instruction.VS, n, Row)
+						*
+						AstVfpuLoadRegMatrixElement(VectorSize, Instruction.VT, Column, n)
+					;
+				}
+				return Adder;
+			});
 		}
 
 		// -
@@ -115,35 +95,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return _vhtfm_x(4);
 		}
 
-		public AstNodeStm vmidt()
-		{
-			throw (new NotImplementedException(""));
-
-			//var MatrixSize = Instruction.ONE_TWO;
-			//
-			//foreach (var Index in XRange(MatrixSize))
-			//{
-			//	_vidt_x(MatrixSize, (uint)(Instruction.VD + Index));
-			//}
-		}
-
-		public AstNodeStm vmzero()
-		{
-			throw (new NotImplementedException(""));
-			//var MatrixSize = Instruction.ONE_TWO;
-			//
-			//foreach (var Index in XRange(MatrixSize))
-			//{
-			//	_vzero_x(MatrixSize, (uint)(Instruction.VD + Index));
-			//}
-			//
-			////throw (new NotImplementedException(""));
-		}
-
-		public AstNodeStm vmone()
-		{
-			throw (new NotImplementedException(""));
-		}
+		public AstNodeStm vmidt() { return AstVfpuStoreVdMatrix((Column, Row) => (Column == Row) ? 1f : 0f); }
+		public AstNodeStm vmzero() { return AstVfpuStoreVdMatrix((Column, Row) => 0f); }
+		public AstNodeStm vmone() { return AstVfpuStoreVdMatrix((Column, Row) => 1f); }
 
 		/// <summary>
 		/// +----------------------+--------------+----+--------------+---+--------------+ <para/>
@@ -246,21 +200,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			//});
 		}
 
-		public AstNodeStm vmmov()
-		{
-			throw(new NotImplementedException());
-			//var VectorSize = Instruction.ONE_TWO;
-			//
-			//foreach (var y in XRange(VectorSize))
-			//{
-			//	foreach (var x in XRange(VectorSize))
-			//	{
-			//		Save_VD(x, VectorSize, y, () =>
-			//		{
-			//			Load_VS(x, VectorSize, y);
-			//		});
-			//	}
-			//}
-		}
+		public AstNodeStm vmmov() { return AstVfpuStoreVdMatrix((Column, Row) => AstVfpuLoadRegMatrixElement(Instruction.VS, Column, Row)); }
 	}
 }

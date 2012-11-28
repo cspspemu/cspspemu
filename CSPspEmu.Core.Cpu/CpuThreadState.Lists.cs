@@ -104,6 +104,12 @@ namespace CSPspEmu.Core.Cpu
 				set { this[VfpuUtils.GetCellIndex(Matrix, Column, Row)] = value; }
 			}
 
+			public float[] this[string NameWithSufix]
+			{
+				get { return VfpuUtils.GetIndices(NameWithSufix).Select(Item => this[Item]).ToArray(); }
+				set { var Indices = VfpuUtils.GetIndices(NameWithSufix); for (int n = 0; n < value.Length; n++) this[Indices[n]] = value[n]; }
+			}
+
 			public float[] this[uint Size, string Name]
 			{
 				get { return VfpuUtils.GetIndices(Size, Name).Select(Item => this[Item]).ToArray(); }

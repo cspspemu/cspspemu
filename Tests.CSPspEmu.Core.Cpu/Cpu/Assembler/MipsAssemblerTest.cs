@@ -43,30 +43,18 @@ namespace CSPspEmu.Core.Tests
 		[TestMethod]
 		public void MatchFormatTest()
 		{
-			var Parts = MipsAssembler.MatchFormat("%d, %s, %t", "  r1,  r2,   r3  ");
+			var Parts = MipsAssembler.Matcher("%d, %s, %t", "  r1,  r2,   r3  ");
 			Assert.AreEqual(3, Parts.Count);
-			Assert.AreEqual("(%d, r1)", Parts[0].ToString());
-			Assert.AreEqual("(%s, r2)", Parts[1].ToString());
-			Assert.AreEqual("(%t, r3)", Parts[2].ToString());
+			Assert.AreEqual("r1", Parts["%d"]);
+			Assert.AreEqual("r2", Parts["%s"]);
+			Assert.AreEqual("r3", Parts["%t"]);
 		}
 
 		[TestMethod]
-		public void TokenizeTest()
+		[ExpectedException(typeof(Exception))]
+		public void MatcherNoMatchTest()
 		{
-			Assert.AreEqual(
-				"add:r1:,:r2:,:r3",
-				String.Join(":", MipsAssembler.Tokenize("  add r1, r2,   r3   ").ToArray())
-			);
-
-			Assert.AreEqual(
-				",:,:,:,:.:.:.:[:]",
-				String.Join(":", MipsAssembler.Tokenize("  ,, , , .. .[]\t"))
-			);
-
-			Assert.AreEqual(
-				"%s:,:%t",
-				String.Join(":", MipsAssembler.Tokenize("%s, %t"))
-			);
+			MipsAssembler.Matcher("add %s, %t", "add 1, 2, 3");
 		}
 	}
 }

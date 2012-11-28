@@ -700,14 +700,46 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return AstNodeExpr;
 		}
 
-		private AstNodeStm AstVfpuStoreVd(Func<int, AstNodeExpr> Generator, bool AsInteger = false)
+		private AstNodeStm AstVfpuStoreVd(uint Size, Func<int, AstNodeExpr> Generator, bool AsInteger = false)
 		{
-			var Size = Instruction.ONE_TWO;
 			int[] RegisterIndices = VfpuUtils.GetIndices(Size, VfpuUtils.RegisterType.Vector, Instruction.VD);
 			var Items = new List<AstNodeStm>();
 			for (int Index = 0; Index < Size; Index++)
 			{
 				Items.Add(ast.Assign(VFR(RegisterIndices[Index]), PrefixVdTransform(Index, Generator(Index), AsInteger)));
+			}
+			return ast.Statements(Items.ToArray());
+		}
+
+		private AstNodeStm AstVfpuStoreVd(Func<int, AstNodeExpr> Generator, bool AsInteger = false)
+		{
+			return AstVfpuStoreVd(Instruction.ONE_TWO, Generator, AsInteger);
+		}
+
+		private AstNodeExpr AstVfpuLoadRegMatrixElement(uint Size, uint Register, int Column, int Row)
+		{
+			return VFR(VfpuUtils.GetIndicesMatrix(Size, Register)[Column, Row]);
+		}
+
+		private AstNodeExpr AstVfpuLoadRegMatrixElement(uint Register, int Column, int Row)
+		{
+			return VFR(VfpuUtils.GetIndicesMatrix(Instruction.ONE_TWO, Register)[Column, Row]);
+		}
+
+		private AstNodeStm AstVfpuStoreVdMatrix(Func<int, int, AstNodeExpr> Generator, bool AsInteger = false)
+		{
+			var Size = Instruction.ONE_TWO;
+			var Items = new List<AstNodeStm>();
+
+			var Register = (VfpuRegisterInt)Instruction.VD;
+			var RegisterIndices = VfpuUtils.GetIndicesMatrix(Size, Instruction.VD);
+
+			for (int Row = 0; Row < Size; Row++)
+			{
+				for (int Column = 0; Column < Size; Column++)
+				{
+					Items.Add(ast.Assign(VFR(RegisterIndices[Column, Row]), PrefixVdTransform(Column, Generator(Column, Row), AsInteger)));
+				}
 			}
 			return ast.Statements(Items.ToArray());
 		}

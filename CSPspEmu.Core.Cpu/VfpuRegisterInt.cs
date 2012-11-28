@@ -21,6 +21,12 @@ namespace CSPspEmu.Core.Cpu
 			return new VfpuRegisterInt() { Value = Value };
 		}
 
+		// MATRIX (Normal or transposed)
+		public uint M_ROW { get { return BitUtils.Extract(Value, 0, 2); } set { BitUtils.Insert(ref Value, 0, 2, value); } }
+		public uint M_MATRIX { get { return BitUtils.Extract(Value, 2, 3); } set { BitUtils.Insert(ref Value, 2, 3, value); } }
+		public uint M_COLUMN { get { return BitUtils.Extract(Value, 6, 1) * 2; } set { BitUtils.Insert(ref Value, 6, 1, value / 2); } }
+		public uint M_TRANSPOSED { get { return BitUtils.Extract(Value, 5, 1); } set { BitUtils.Insert(ref Value, 5, 1, value); } }
+
 		// LINES (Rows or Columns)
 		public uint RC_LINE { get { return BitUtils.Extract(Value, 0, 2); } set { BitUtils.Insert(ref Value, 0, 2, value); } }
 		public uint RC_MATRIX { get { return BitUtils.Extract(Value, 2, 3); } set { BitUtils.Insert(ref Value, 2, 3, value); } }

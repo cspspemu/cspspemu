@@ -1289,6 +1289,116 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
+		public void VfpuMtvViim()
+		{
+			CpuThreadState.GPR[10] = MathFloat.ReinterpretFloatAsInt(777f);
+
+			ExecuteAssembly(@"
+				mtv r10, S501
+				viim S502, -3
+				viim S503, 32767
+				viim S504, -1
+			");
+
+			Assert.AreEqual(777f, CpuThreadState.Vfpr["S501.s"][0]);
+			Assert.AreEqual(-3f, CpuThreadState.Vfpr["S502.s"][0]);
+			Assert.AreEqual(32767f, CpuThreadState.Vfpr["S503.s"][0]);
+			Assert.AreEqual(-1f, CpuThreadState.Vfpr["S504.s"][0]);
+		}
+
+		[TestMethod]
+		public void Vrot()
+		{
+			CpuThreadState.GPR[10] = MathFloat.ReinterpretFloatAsInt(0.2f);
+
+			ExecuteAssembly(@"
+				mtv r10, S000
+				vrot.p	R500, S000, [c, s]
+			");
+
+			Assert.AreEqual("0.9510565,0.309017", String.Join(",", CpuThreadState.Vfpr["R500.p"]));
+		}
+
+		[TestMethod]
+		public void VfpuMatrixMultAndMov()
+		{
+			CpuThreadState.Vfpr.ClearAll(float.NaN);
+
+			CpuThreadState.Vfpr["M100.q"] = new float[]
+			{
+				1, 2, 3, 4,
+				5, 6, 7, 8,
+				9, 10, 11, 12,
+				13, 14, 15, 16,
+			};
+
+			CpuThreadState.Vfpr["M200.q"] = new float[]
+			{
+				17, 18, 19, 20,
+				21, 22, 23, 24,
+				25, 26, 27, 28,
+				29, 30, 31, 32,
+			};
+
+			ExecuteAssembly(@"
+				vmmul.q M000, M100, M200
+				vmmov.q M400, M000
+			");
+
+			Assert.AreEqual(
+				"250,260,270,280," +
+				"618,644,670,696," +
+				"986,1028,1070,1112," +
+				"1354,1412,1470,1528",
+				String.Join(",", CpuThreadState.Vfpr["M000.q"])
+			);
+
+			Assert.AreEqual(
+				String.Join(",", CpuThreadState.Vfpr["M400.q"]),
+				String.Join(",", CpuThreadState.Vfpr["M000.q"])
+			);
+		}
+
+		[TestMethod]
+		public void VfpuVMidtZeroOne()
+		{
+			CpuThreadState.Vfpr.ClearAll(float.NaN);
+
+			ExecuteAssembly(@"
+				vmidt.q M300
+				vmzero.q M400
+				vmone.q M500
+			");
+	
+			Assert.AreEqual(
+				"1,0,0,0," +
+				"0,1,0,0," +
+				"0,0,1,0," +
+				"0,0,0,1"
+				,
+				String.Join(",", CpuThreadState.Vfpr["M300.q"])
+			);
+
+			Assert.AreEqual(
+				"0,0,0,0," +
+				"0,0,0,0," +
+				"0,0,0,0," +
+				"0,0,0,0"
+				,
+				String.Join(",", CpuThreadState.Vfpr["M400.q"])
+			);
+
+			Assert.AreEqual(
+				"1,1,1,1," +
+				"1,1,1,1," +
+				"1,1,1,1," +
+				"1,1,1,1"
+				,
+				String.Join(",", CpuThreadState.Vfpr["M500.q"])
+			);
+		}
+
+		[TestMethod]
 		public void VfpuZeroOneMov4Test()
 		{
 			CpuThreadState.Vfpr.ClearAll(float.NaN);
@@ -1594,7 +1704,7 @@ namespace CSPspEmu.Core.Tests
 			Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.ThreadCultureName);
 			CpuProcessor.MethodCache.Clear();
 
-			Assembly += "\r\nbreak\r\n";
+			Assembly += "\r\nbreak 0\r\n";
 			var MemoryStream = new MemoryStream();
 			MemoryStream.PreservePositionAndLock(() =>
 			{
