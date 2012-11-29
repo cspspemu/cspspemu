@@ -460,11 +460,9 @@ namespace CSPspEmu.Runner.Components.Cpu
 							ErrorOut.WriteLine("");
 							ErrorOut.WriteLine("Error on thread {0}", HleThreadManager.Current);
 							ErrorOut.WriteLine(Exception);
-							ErrorOut.WriteLine("Saved a memory dump to 'error_memorydump.bin'", HleThreadManager.Current);
-
-							var Memory = MemoryManager.Memory;
-
-							Memory.Dump("error_memorydump.bin");
+							
+							//ErrorOut.WriteLine("Saved a memory dump to 'error_memorydump.bin'", HleThreadManager.Current);
+							//MemoryManager.Memory.Dump("error_memorydump.bin");
 						}
 						catch (Exception Exception2)
 						{

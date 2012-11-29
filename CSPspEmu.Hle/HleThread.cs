@@ -344,42 +344,31 @@ namespace CSPspEmu.Hle
 			{
 				while (true)
 				{
-					if (PspConfig.TraceThreadLoop)
-					{
-						Console.Out.WriteLine("HleThread.MainLoop :: Thread({0:X}) : PC: {1:X}", this.Id, CpuThreadState.PC);
-					}
-					//Console.WriteLine("PC:{0:X}", CpuThreadState.PC);
-					uint PC = CpuThreadState.PC & PspMemory.MemoryMask;
-					if (PC == 0)
-					{
-						ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () =>
-						{
-							Console.Error.WriteLine("Trying to jump to 0x{0:X8}", PC);
-						});
-						SetWaitAndPrepareWakeUp(WaitType.None, "JUMP 0", new object(), (WakeupCallback) =>
-						{
-						});
-						Thread.Sleep(-1);
-					}
-					var Delegate = GetDelegateAt(PC);
-					{
-						CpuThreadState.LastValidPC = PC;
-					}
-					{
-						Delegate.Delegate(CpuThreadState);
-					}
-#if false
-					if (!Memory.IsAddressValid(CpuThreadState.PC))
-					{
-						throw (new Exception(
-							String.Format(
-								"Instruction at address 0x{0:X} changed the PC to an invalid address 0x{1:X}",
-								PC,
-								CpuThreadState.PC
-							)
-						));
-					}
-#endif
+					CpuThreadState.ExecuteAT(CpuThreadState.PC & PspMemory.MemoryMask);
+					//if (PspConfig.TraceThreadLoop)
+					//{
+					//	Console.Out.WriteLine("HleThread.MainLoop :: Thread({0:X}) : PC: {1:X}", this.Id, CpuThreadState.PC);
+					//}
+					////Console.WriteLine("PC:{0:X}", CpuThreadState.PC);
+					//uint PC = CpuThreadState.PC & PspMemory.MemoryMask;
+					//if (PC == 0)
+					//{
+					//	ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () =>
+					//	{
+					//		Console.Error.WriteLine("Trying to jump to 0x{0:X8}", PC);
+					//	});
+					//	SetWaitAndPrepareWakeUp(WaitType.None, "JUMP 0", new object(), (WakeupCallback) =>
+					//	{
+					//	});
+					//	Thread.Sleep(-1);
+					//}
+					//var Delegate = GetDelegateAt(PC);
+					//{
+					//	CpuThreadState.LastValidPC = PC;
+					//}
+					//{
+					//	Delegate.Delegate(CpuThreadState);
+					//}
 				}
 			}
 			catch (AccessViolationException AccessViolationException)
@@ -394,27 +383,6 @@ namespace CSPspEmu.Hle
 		}
 
 		// 8903E08
-
-		DynarecFunctionCompilerTask DynarecFunctionCompilerTask;
-
-		public DynarecFunction GetDelegateAt(uint PC)
-		{
-			var Delegate = MethodCache.TryGetMethodAt(PC);
-			if (Delegate == null)
-			{
-				if (DynarecFunctionCompilerTask == null)
-				{
-					DynarecFunctionCompilerTask = CpuThreadState.CpuProcessor.GetPspEmulatorContext().GetInstance<DynarecFunctionCompilerTask>();
-				}
-
-				MethodCache.SetMethodAt(
-					PC,
-					Delegate = DynarecFunctionCompilerTask.GetFunctionForAddress(PC)
-				);
-			}
-
-			return Delegate;
-		}
 
 		public void Step(int InstructionCountForYield = 1000000)
 		{

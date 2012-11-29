@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define ENABLE_NATIVE_CALLS
+
+using System;
 using CSPspEmu.Core.Memory;
 using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
@@ -97,36 +99,56 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm JumpToAddress(AstNodeExpr Address)
 		{
-			return ast.Statement(
-				ast.CallTail(
-					ast.CallInstance(
-						CpuThreadStateArgument(),
-						(Action<uint>)CpuThreadState.Methods.Jump,
-						Address
-					)
-				)
-			);
+			return ast.Statement(ast.CallTail(MipsMethodEmitter.MethodCacheInfoCallDynamicPC(Address)));
 		}
 
 		private AstNodeStm CallAddress(AstNodeExpr Address)
 		{
-			return ast.Statement(
-				ast.CallTail(
-					ast.CallInstance(
-						CpuThreadStateArgument(),
-						(Action<uint>)CpuThreadState.Methods.JumpAndLink,
-						Address
-					)
-				)
-			);
+#if ENABLE_NATIVE_CALLS
+			return ast.Statement(MipsMethodEmitter.MethodCacheInfoCallDynamicPC(Address));
+#else
+			return JumpToAddress(Address);
+#endif
+		}
+
+		private AstNodeStm JumpToFixedAddress(uint Address)
+		{
+			return ast.Statement(ast.CallTail(MipsMethodEmitter.MethodCacheInfoCallStaticPC(CpuProcessor, Address)));
+		}
+
+		private AstNodeStm CallFixedAddress(uint Address)
+		{
+#if ENABLE_NATIVE_CALLS
+			return ast.Statement(MipsMethodEmitter.MethodCacheInfoCallStaticPC(CpuProcessor, Address));
+#else
+			return JumpToFixedAddress(Address);
+#endif
+		}
+
+		private AstNodeStm ReturnFromFunction(AstNodeExpr AstNodeExpr)
+		{
+#if ENABLE_NATIVE_CALLS
+			return ast.Return();
+#else
+			return JumpToAddress(AstNodeExpr);
+#endif
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// j(al)(r): Jump (And Link) (Register)
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm j() { return ast.Statements(this.JumpToAddress(Instruction.GetJumpAddress(PC))); }
-		public AstNodeStm jal() { return ast.Statements(_link(), this.CallAddress(Instruction.GetJumpAddress(PC))); }
-		public AstNodeStm jr() { return ast.Statements(_popstack(), JumpToAddress(GPR_u(RS))); }
+		public AstNodeStm j() { return ast.Statements(this.JumpToFixedAddress(Instruction.GetJumpAddress(PC))); }
+		public AstNodeStm jal() { return ast.Statements(_link(), this.CallFixedAddress(Instruction.GetJumpAddress(PC))); }
+		public AstNodeStm jr() {
+			if (RS == 31)
+			{
+				return ast.Statements(_popstack(), ReturnFromFunction(GPR_u(RS)));
+			}
+			else
+			{
+				return ast.Statements(_popstack(), JumpToAddress(GPR_u(RS)));
+			}
+		}
 		public AstNodeStm jalr() { return ast.Statements(_link(), _popstack(), this.CallAddress(GPR_u(RS))); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////

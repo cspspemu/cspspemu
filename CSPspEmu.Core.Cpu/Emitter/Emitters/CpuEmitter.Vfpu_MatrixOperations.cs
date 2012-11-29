@@ -17,7 +17,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				{
 					//Console.WriteLine("VS[{0}, {1}] * VT[{2}, {3}]", n, Row, Column, n);
 					Adder +=
-						AstVfpuLoadRegMatrixElement(VectorSize, Instruction.VS, Row, n)
+						AstVfpuLoadRegMatrixElement(VectorSize, Instruction.VS, Row, n) // Matrix is transposed
 						*
 						AstVfpuLoadRegMatrixElement(VectorSize, Instruction.VT, Column, n)
 					;

@@ -7,6 +7,8 @@ using CSPspEmu.Core.Cpu.Assembler;
 using CSPspEmu.Core.Cpu.VFpu;
 using CSPspEmu.Core.Memory;
 using CSharpUtils.Threading;
+using CSPspEmu.Core.Cpu.CodeCache;
+using CSPspEmu.Core.Cpu.Dynarec;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -422,6 +424,7 @@ namespace CSPspEmu.Core.Cpu
 			}
 		}
 
+		/*
 		/// <summary>
 		/// Jumps to a PC. Must be tailcalled.
 		/// </summary>
@@ -438,6 +441,45 @@ namespace CSPspEmu.Core.Cpu
 		public void JumpAndLink(uint PC)
 		{
 			this.PC = PC;
+		}
+		*/
+
+		public void ExecuteAT(uint PC)
+		{
+			this.PC = PC;
+			_MethodCacheInfo_GetAtPC(PC).Delegate(this);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public MethodCacheInfo _MethodCacheInfo_GetAtPC(uint PC)
+		{
+			return CpuProcessor.NewMethodCache.GetForPC(PC);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public MethodCacheInfo _MethodCacheInfo_GetAtIndex(int Index)
+		{
+			return CpuProcessor.NewMethodCache.Methods[Index];
+		}
+
+		public void _MethodCacheInfo_SetInternal(MethodCacheInfo MethodCacheInfo, uint PC)
+		{
+			var DynarecFunction = CpuProcessor.DynarecFunctionCompiler.CreateFunction(new InstructionStreamReader(new PspMemoryStream(Memory)), PC);
+			if (DynarecFunction.EntryPC != PC) throw(new Exception("Unexpected error"));
+
+			DynarecFunction.AstNode = DynarecFunction.AstNode.Optimize(CpuProcessor);
+
+			Console.WriteLine("-------------------------------------");
+			Console.WriteLine("Created function for PC=0x{0:X8}", PC);
+			Console.WriteLine("-------------------------------------");
+			Console.WriteLine(DynarecFunction.AstNode.ToCSharpString());
+			Console.WriteLine("-------------------------------------");
+
+			MethodCacheInfo.AstTree = DynarecFunction.AstNode;
+			MethodCacheInfo.Delegate = DynarecFunction.Delegate;
+			MethodCacheInfo.EntryPC = DynarecFunction.EntryPC;
+			MethodCacheInfo.MinPC = DynarecFunction.MinPC;
+			MethodCacheInfo.MaxPC = DynarecFunction.MaxPC;
 		}
 
 		/// <summary>

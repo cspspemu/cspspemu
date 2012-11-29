@@ -61,7 +61,11 @@ namespace CSPspEmu.Hle.Managers
 			CpuProcessor.RegisterNativeSyscall(SyscallInfo.NativeCallSyscallCode, (CpuThreadState, Code) =>
 			{
 				uint Info = CpuThreadState.CpuProcessor.Memory.ReadSafe<uint>(CpuThreadState.PC + 4);
-				var DelegateInfo = DelegateTable[Info];
+				DelegateInfo DelegateInfo;
+				if (!DelegateTable.TryGetValue(Info, out DelegateInfo))
+				{
+					throw (new Exception(String.Format("Can't find DelegateInfo for PC={0:X8}, Info=0x{1:X8}", CpuThreadState.PC, Info)));
+				}
 				if (PspConfig.TraceLastSyscalls)
 				{
 					//Console.WriteLine("{0:X}", CpuThreadState.RA);

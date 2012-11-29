@@ -11,7 +11,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Syscall
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm syscall() { return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<int>)CpuThreadState.Methods.Syscall, (int)Instruction.CODE)); }
+		public AstNodeStm syscall() {
+			return ast.Statements(
+				ast.Assign(REG("PC"), PC),
+				ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<int>)CpuThreadState.Methods.Syscall, (int)Instruction.CODE))
+			);
+		}
 		public AstNodeStm cache() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._cache_impl, CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
 		public AstNodeStm sync() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._sync_impl, CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
 		public AstNodeStm _break() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._break_impl, CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }

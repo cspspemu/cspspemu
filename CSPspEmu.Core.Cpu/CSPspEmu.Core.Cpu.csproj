@@ -61,15 +61,13 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Analyzer\AnalyzerExpression.cs" />
-    <Compile Include="Analyzer\AnalyzerState.cs" />
-    <Compile Include="Analyzer\AnalyzerValue.cs" />
-    <Compile Include="Analyzer\InstructionAnalyzerInfo.cs" />
     <Compile Include="Assembler\MipsAssembler.cs" />
     <Compile Include="Assembler\MipsAssembler.Matcher.cs" />
     <Compile Include="Assembler\MipsDisassembler.cs" />
-    <Compile Include="CachedGetMethodCache.cs" />
+    <Compile Include="CodeCache\MethodCache.cs" />
+    <Compile Include="CodeCache\MethodCacheInfo.cs" />
     <Compile Include="CpuThreadState.Lists.cs" />
+    <Compile Include="Dynarec\Ast\AstNodeExtensions.cs" />
     <Compile Include="Dynarec\Ast\AstNodeStmPspInstruction.cs" />
     <Compile Include="Dynarec\Ast\AstOptimizerPsp.cs" />
     <Compile Include="Dynarec\Ast\GeneratorCSharpPsp.cs" />
@@ -78,7 +76,6 @@
     <Compile Include="Dynarec\DynarecFunction.cs" />
     <Compile Include="Dynarec\DynarecFunctionCompiler.cs" />
     <Compile Include="Dynarec\DynarecFunctionCompiler.Internal.cs" />
-    <Compile Include="Dynarec\DynarecFunctionCompilerTask.cs" />
     <Compile Include="Emitter\CpuEmitter.cs" />
     <Compile Include="Emitter\CpuEmitterUtils.cs" />
     <Compile Include="Emitter\Emitters\CpuEmitter.ArithmeticLogic.cs" />
@@ -101,6 +98,8 @@
     <Compile Include="Emitter\Emitters\CpuEmitter.Vfpu_RegisterTransfer.cs" />
     <Compile Include="Emitter\MipsMethodEmitter.AstUtils.cs" />
     <Compile Include="HalfFloat.cs" />
+    <Compile Include="Table\AddressType.cs" />
+    <Compile Include="Table\InstructionType.cs" />
     <Compile Include="VFpu\Vector4f.cs" />
     <Compile Include="MethodCacheFast.cs" />
     <Compile Include="MethodCacheSlow.cs" />

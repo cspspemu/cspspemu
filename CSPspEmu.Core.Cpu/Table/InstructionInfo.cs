@@ -2,26 +2,6 @@
 
 namespace CSPspEmu.Core.Cpu.Table
 {
-	public enum AddressType
-	{
-		None = 0,
-		T16 = 1,
-		T26 = 2,
-		Reg = 3,
-	}
-
-	[Flags]
-	public enum InstructionType
-	{
-		None    = 0x00,
-		B       = (1 << 0),
-		Jump    = (1 << 1),
-		Jal     = (1 << 2) | (1 << 3),
-		Likely  = (1 << 4),
-		Psp     = (1 << 8),
-		Syscall = (1 << 16),
-	}
-
 	public sealed class InstructionInfo : Attribute
 	{
 		/// <summary>
@@ -140,6 +120,11 @@ namespace CSPspEmu.Core.Cpu.Table
 			{
 				return _BinaryEncoding;
 			}
+		}
+
+		public override string ToString()
+		{
+			return String.Format("InstructionInfo({0} {1})", Name, AsmEncoding);
 		}
 	}
 }

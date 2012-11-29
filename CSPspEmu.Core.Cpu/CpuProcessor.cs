@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using CSPspEmu.Core.Memory;
 using CSharpUtils.Threading;
+using CSPspEmu.Core.Cpu.CodeCache;
+using CSPspEmu.Core.Cpu.Dynarec;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -16,6 +18,11 @@ namespace CSPspEmu.Core.Cpu
 
 		[Inject]
 		public MethodCacheFast MethodCache;
+
+		[Inject]
+		public DynarecFunctionCompiler DynarecFunctionCompiler;
+
+		public MethodCache NewMethodCache = new MethodCache();
 
 		private Dictionary<int, Action<CpuThreadState, int>> RegisteredNativeSyscalls;
 		public HashSet<uint> NativeBreakpoints;

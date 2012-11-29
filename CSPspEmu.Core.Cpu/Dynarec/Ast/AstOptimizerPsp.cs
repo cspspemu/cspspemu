@@ -133,6 +133,18 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
 #if ENABLE_OPTIMIZE_LWL_LWR
 				Container.Nodes = OptimizeLwlLwr(Container.Nodes);
 #endif
+				//foreach (var _Node in Container.Nodes)
+				//{
+				//	if (_Node is AstNodeStmPspInstruction)
+				//	{
+				//		var PspNode = (_Node as AstNodeStmPspInstruction);
+				//		if (PspNode.DisassembledResult.InstructionInfo.InstructionType == InstructionType.Psp)
+				//		{
+				//
+				//			Console.WriteLine(PspNode.DisassembledResult);
+				//		}
+				//	}
+				//}
 				return base._Optimize(Container);
 			}
 			return Node;

@@ -1772,40 +1772,19 @@ namespace CSPspEmu.Core.Tests
 		{
 			Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.ThreadCultureName);
 			CpuProcessor.MethodCache.Clear();
+			CpuProcessor.NewMethodCache.FlushAll();
 
 			Assembly += "\r\nbreak 0\r\n";
-			var MemoryStream = new MemoryStream();
-			MemoryStream.PreservePositionAndLock(() =>
+			var AssemblerStream = new PspMemoryStream(PspEmulatorContext.GetInstance<PspMemory>()).SliceWithLength(PspMemory.ScratchPadOffset);
+			new MipsAssembler(AssemblerStream).Assemble(Assembly);
+
+			try
 			{
-				var MipsAssembler = new MipsAssembler(MemoryStream);
-
-				MipsAssembler.Assemble(Assembly);
-			});
-			var InstructionReader = new InstructionStreamReader(MemoryStream);
-
-			//Console.WriteLine(Assembly);
-
-			Action<CpuThreadState> Method = (_CpuThreadState) =>
+				CpuThreadState.ExecuteAT(PspMemory.ScratchPadOffset);
+			}
+			catch (PspBreakException)
 			{
-				_CpuThreadState.PC = 0;
-
-				//Console.WriteLine("PC: {0:X}", _CpuThreadState.PC);
-				try
-				{
-					while (true)
-					{
-						//Console.WriteLine("PC: {0:X}", _CpuThreadState.PC);
-						var Delegate = DynarecFunctionCompiler.CreateFunction(InstructionReader, _CpuThreadState.PC, null, DoDebug: DoDebug, DoLog: DoLog);
-						_CpuThreadState.StepInstructionCount = 1000000;
-						Delegate.Delegate(_CpuThreadState);
-					}
-				}
-				catch (PspBreakException)
-				{
-				}
-			};
-
-			Method(CpuThreadState);
+			}
 		}
 	}
 }

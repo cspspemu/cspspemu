@@ -81,6 +81,10 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				var Nodes = GenerateCode();
 				return new DynarecFunction()
 				{
+					EntryPC = EntryPC,
+					MinPC = MinPC,
+					MaxPC = MaxPC,
+					AstNode = Nodes,
 					Delegate = MipsMethodEmitter.CreateDelegate(Nodes),
 				};
 			}
@@ -156,11 +160,18 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 						var Instruction = InstructionReader[PC];
 
 						var BranchInfo = DynarecBranchAnalyzer.GetBranchInfo(Instruction);
+						var DisassemblerInfo = MipsDisassembler.Disassemble(PC, Instruction);
 
 						LogInstruction(PC, Instruction);
 
+						// Break
+						if (DisassemblerInfo.InstructionInfo.Name == "break")
+						{
+							break;
+						}
 						// Branch instruction.
-						if (BranchInfo.HasFlag(DynarecBranchAnalyzer.JumpFlags.JumpInstruction))
+						//else if (BranchInfo.HasFlag(DynarecBranchAnalyzer.JumpFlags.JumpAlways))
+						else if (BranchInfo.HasFlag(DynarecBranchAnalyzer.JumpFlags.JumpInstruction))
 						{
 							//Console.WriteLine("Instruction");
 
@@ -173,8 +184,15 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 							}
 #endif
 							// Located a jump-always instruction with a delayed slot. Process next instruction too.
-							EndOfBranchFound = true;
-							continue;
+							if (BranchInfo.HasFlag(DynarecBranchAnalyzer.JumpFlags.AndLink))
+							{
+								// Just a function call. Continue analyzing.
+							}
+							else
+							{
+								EndOfBranchFound = true;
+								continue;
+							}
 						}
 						else if (BranchInfo.HasFlag(DynarecBranchAnalyzer.JumpFlags.BranchOrJumpInstruction))
 						{

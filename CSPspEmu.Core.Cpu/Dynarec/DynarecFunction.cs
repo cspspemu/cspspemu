@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SafeILGenerator.Ast.Nodes;
+using System;
 using System.Collections.Generic;
 
 namespace CSPspEmu.Core.Cpu.Dynarec
@@ -9,6 +10,11 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 	public class DynarecFunction
 	{
 		/// <summary>
+		/// 
+		/// </summary>
+		public AstNodeStm AstNode;
+
+		/// <summary>
 		/// Delegate to execute this function.
 		/// </summary>
 		public Action<CpuThreadState> Delegate;
@@ -17,5 +23,20 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 		/// A list of functions that have embedded this function.
 		/// </summary>
 		public List<DynarecFunction> InlinedAtFunctions;
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		public uint EntryPC;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public uint MinPC;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public uint MaxPC;
 	}
 }
