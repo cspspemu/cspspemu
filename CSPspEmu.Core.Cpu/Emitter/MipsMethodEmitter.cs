@@ -1,5 +1,5 @@
 ﻿//#define DEBUG_GENERATE_IL
-#define DEBUG_GENERATE_IL_CSHARP
+//#define DEBUG_GENERATE_IL_CSHARP
 #define USE_DYNAMIC_METHOD
 
 using System;

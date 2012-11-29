@@ -8,46 +8,7 @@ namespace CSPspEmu.Core.Cpu
 	{
 		public uint Value;
 
-		public static float HalfFloatToFloat(int imm16)
-		{
-			int s = (imm16 >> 15) & 0x00000001; // Sign
-			int e = (imm16 >> 10) & 0x0000001f; // Exponent
-			int f = (imm16 >> 0) & 0x000003ff;  // Fraction
-
-			// Need to handle 0x7C00 INF and 0xFC00 -INF?
-			if (e == 0)
-			{
-				// Need to handle +-0 case f==0 or f=0x8000?
-				if (f == 0)
-				{
-					// Plus or minus zero
-					return MathFloat.ReinterpretIntAsFloat(s << 31);
-				}
-				// Denormalized number -- renormalize it
-				while ((f & 0x00000400) == 0)
-				{
-					f <<= 1;
-					e -= 1;
-				}
-				e += 1;
-				f &= ~0x00000400;
-			}
-			else if (e == 31)
-			{
-				if (f == 0)
-				{
-					// Inf
-					return MathFloat.ReinterpretIntAsFloat((s << 31) | 0x7f800000);
-				}
-				// NaN
-				return MathFloat.ReinterpretIntAsFloat((s << 31) | 0x7f800000 | (f << 13));
-			}
-
-			e = e + (127 - 15);
-			f = f << 13;
-
-			return MathFloat.ReinterpretIntAsFloat((s << 31) | (e << 23) | f);
-		}
+		
 
 		public uint GetJumpAddress(uint CurrentPC)
 		{
@@ -56,31 +17,11 @@ namespace CSPspEmu.Core.Cpu
 			var Result = (uint)(CurrentPC & ~0x0FFFFFFF) + (JUMP << 2);
 			if (!PspMemory.IsAddressValid(Result))
 			{
-				Console.Error.WriteLine("ERROR: Generating an invalid JumpAddress 0x{0:X8} from CurrentPC=0x{1:X8} with JUMP=0x{2:X8}", Result, CurrentPC, JUMP << 2);
-				//throw (new Exception(String.Format("Generating an invalid JumpAddress 0x{0:X8} from CurrentPC=0x{1:X8} with JUMP=0x{2:X8}", Result, CurrentPC, JUMP << 2)));
+				//Console.Error.WriteLine("ERROR: Generating an invalid JumpAddress 0x{0:X8} from CurrentPC=0x{1:X8} with JUMP=0x{2:X8}", Result, CurrentPC, JUMP << 2);
 			}
 			//Console.WriteLine("CurrentPC: 0x{0:X8} - 0x{1:X8} - 0x{2:X8} - 0x{3:X8}", CurrentPC, (CurrentPC & ~PspMemory.MemoryMask), JUMP << 2, Result);
 			return Result;
 		}
-
-		/*
-		private static float HalfFloatToFloat(ushort ShortValue)
-		{
-			uint Value = 0;
-			var Significand = BitUtils.Extract(ShortValue, 0, 10);
-			var Exponent    = BitUtils.Extract(ShortValue, 10, 5);
-			var Sign        = BitUtils.Extract(ShortValue, 15, 1);
-			BitUtils.Insert(ref Value, 0, 23, Significand);
-			BitUtils.Insert(ref Value, 23, 8, Exponent);
-			//BitUtils.Insert(ref Value, 13, 10, Significand);
-			//BitUtils.Insert(ref Value, 26, 5, Exponent);
-			BitUtils.Insert(ref Value, 31, 1, Exponent);
-			//Console.Error.WriteLine("%032b".Sprintf(Value));
-			float ValueFloat = MathFloat.ReinterpretUIntAsFloat(Value);
-			Console.Error.WriteLine(ValueFloat);
-			return ValueFloat;
-		}
-		*/
 
 		private void set(int Offset, int Count, uint SetValue)
 		{
@@ -139,11 +80,12 @@ namespace CSPspEmu.Core.Cpu
 			return (uint)(PC + 4 + IMM * 4);
 		}
 
-		public uint VD { get { return get(0, 7); } set { set(0, 7, value); } }
+		public VfpuRegisterInt VD { get { return get(0, 7); } set { set(0, 7, value); } }
 		public uint ONE { get { return get(7, 1); } set { set(7, 1, value); } }
-		public uint VS { get { return get(8, 7); } set { set(8, 7, value); } }
+		public VfpuRegisterInt VS { get { return get(8, 7); } set { set(8, 7, value); } }
 		public uint TWO { get { return get(15, 1); } set { set(15, 1, value); } }
-		public uint VT { get { return get(16, 7); } set { set(16, 7, value); } }
+		public VfpuRegisterInt VT { get { return get(16, 7); } set { set(16, 7, value); } }
+		public VfpuRegisterInt VT5_1 { get { return VT5 | (VT1 << 5); } set { VT5 = value; VT1 = value >> 5; } }
 
 		public uint ONE_TWO {
 			get { return 1 + 1 * ONE + 2 * TWO; }
@@ -192,28 +134,10 @@ namespace CSPspEmu.Core.Cpu
 		public uint IMM3 { get { return get(16, 3); } set { set(16, 3, value); } }
 		public uint IMM7 { get { return get(0, 7); } set { set(0, 7, value); } }
 		public uint IMM4 { get { return get(0, 4); } set { set(0, 4, value); } }
-
 		public uint VT1 { get { return get(0, 1); } set { set(0, 1, value); } }
 		public uint VT2 { get { return get(0, 2); } set { set(0, 2, value); } }
-
 		public uint VT5 { get { return get(16, 5); } set { set(16, 5, value); } }
-
-		public uint VT5_1 {
-			get { return VT5 | (VT1 << 5); }
-			set
-			{
-				VT5 = value;
-				VT1 = value >> 5;
-			}
-		}
 		public uint VT5_2 { get { return VT5 | (VT2 << 5); } }
-
-		public float IMM_HF
-		{
-			get
-			{
-				return HalfFloatToFloat(IMM);
-			}
-		}
+		public float IMM_HF { get { return HalfFloat.ToFloat(IMM); } }
 	}
 }

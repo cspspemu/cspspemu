@@ -20,6 +20,14 @@ namespace CSPspEmu.Core.Cpu.Assembler
 				case "%vr": return @"\[[c|s|\s|0|\-|,]*\]";
 				case "%vi": case "%i": return @"[+\-]?[\w_]+";
 				case "%Y": return @"(?:\w+\+)?\w+";
+				case "%zp": case "%yp": case "%xp":
+				case "%zt": case "%yt": case "%xt":
+				case "%zq": case "%yq": case "%xq":
+				case "%zm": case "%ym": case "%xm":
+				case "%tym": 
+				case "%yn":
+				case "%Xq":
+					return @"[SRCME][0-8][0-4][0-4](?:\.[sptq])?";
 				case "%vp4": case "%vp5": case "%vp6": case "%vp7": return @"(?:0:1|-1:1|M)";
 				case "%vp0": case "%vp1": case "%vp2": case "%vp3": return @"\|?\-?[xyzw\d/]+\|?";
 				default: return @"\w+";

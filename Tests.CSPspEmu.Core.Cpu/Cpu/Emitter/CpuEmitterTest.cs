@@ -1116,12 +1116,59 @@ namespace CSPspEmu.Core.Tests
 			Assert.AreEqual(7 * 4, (int)CpuThreadState.PC);
 		}
 
+		static private string AssemblySingleInstruction(string Text)
+		{
+			var Data = new byte[4];
+			fixed (byte* DataPtr = Data)
+			{
+				var Instruction = (new MipsAssembler(new MemoryStream())).AssembleInstruction(Text);
+				*(uint*)DataPtr = (uint)Instruction;
+			}
+			return String.Format("{0:X2}{1:X2}{2:X2}{3:X2}", Data[0], Data[1], Data[2], Data[3]);
+		}
+
 		[TestMethod]
 		public void VfpuAssemblyTest()
 		{
-			//var MipsDisassembler = new MipsDisassembler();
-			//var Result = MipsDisassembler.Disassemble(0, 0xD00780A0);
-			Assert.AreEqual((uint)0xD00780A0, (uint)(new MipsAssembler(new MemoryStream())).AssembleInstruction("vone.q R000"));
+			Assert.AreEqual("A08007D0", AssemblySingleInstruction("vone.q R000"));
+			Assert.AreEqual("3000CBD8", AssemblySingleInstruction("lv.q    C230.q, 0x30+r6"));
+			Assert.AreEqual("000448D0", AssemblySingleInstruction("vsrt3.s S000.s, S100.s"));
+			Assert.AreEqual("80844AD0", AssemblySingleInstruction("vsgn.q  C000.q, C100.q"));
+		}
+
+		[TestMethod]
+		public void VfpuAssemblyTest2()
+		{
+			//var Instruction = (Instruction)MathUtils.ByteSwap(0xD67A5EF0);
+			//{
+			//	var Instruction = (Instruction)MathUtils.ByteSwap(0xF65A7EF0);
+			//	Console.WriteLine("%032b".Sprintf((uint)Instruction));
+			//	Console.WriteLine("%07b".Sprintf((uint)Instruction.VD));
+			//	Console.WriteLine("%07b".Sprintf((uint)Instruction.VS));
+			//	Console.WriteLine("%07b".Sprintf((uint)Instruction.VT));
+			//}
+			//{
+			//	var Instruction = (Instruction)MathUtils.ByteSwap(0xD67A5EF0);
+			//	Console.WriteLine("%032b".Sprintf((uint)Instruction));
+			//	Console.WriteLine("%07b".Sprintf((uint)Instruction.VD));
+			//	Console.WriteLine("%07b".Sprintf((uint)Instruction.VS));
+			//	Console.WriteLine("%07b".Sprintf((uint)Instruction.VT));
+			//}
+
+			//Console.WriteLine("%07b".Sprintf((uint)Instruction.VD.M_TRANSPOSED));
+			//Console.WriteLine("%07b".Sprintf((uint)Instruction.VS.M_TRANSPOSED));
+			//Console.WriteLine("%07b".Sprintf((uint)Instruction.VT.M_TRANSPOSED));
+
+			Assert.AreEqual("A08428F0", AssemblySingleInstruction("vmmul.q E000.q, E100.q, E200.q"));
+			Assert.AreEqual("D67A5EF0", AssemblySingleInstruction("vmmul.p M522.p, M622.p, M722.p"));
+			Assert.AreEqual("F65A7EF0", AssemblySingleInstruction("vmmul.p E522.p, E622.p, E722.p"));
+		}
+
+		[TestMethod]
+		public void VfpuAssemblyTest3()
+		{
+			Assert.AreEqual("802488F0", AssemblySingleInstruction("vhtfm2.p C000.p, E100.p, C200.p"));
+			Assert.AreEqual("802408F1", AssemblySingleInstruction("vhtfm3.t C000.t, E100.t, C200.t"));
 		}
 
 		[TestMethod]

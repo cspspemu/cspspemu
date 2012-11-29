@@ -16,21 +16,31 @@ namespace CSPspEmu.Core.Cpu
 			return new VfpuRegisterInt() { Value = Value };
 		}
 
+		private void set(int Offset, int Count, uint SetValue)
+		{
+			this.Value = BitUtils.Insert(this.Value, Offset, Count, SetValue);
+		}
+
+		private uint get(int Offset, int Count)
+		{
+			return BitUtils.Extract(this.Value, Offset, Count);
+		}
+
 		// MATRIX (Normal or transposed)
-		public uint M_ROW { get { return BitUtils.Extract(Value, 0, 2); } set { BitUtils.Insert(ref Value, 0, 2, value); } }
-		public uint M_MATRIX { get { return BitUtils.Extract(Value, 2, 3); } set { BitUtils.Insert(ref Value, 2, 3, value); } }
-		public uint M_COLUMN { get { return BitUtils.Extract(Value, 6, 1) * 2; } set { BitUtils.Insert(ref Value, 6, 1, value / 2); } }
-		public uint M_TRANSPOSED { get { return BitUtils.Extract(Value, 5, 1); } set { BitUtils.Insert(ref Value, 5, 1, value); } }
+		public uint M_ROW { get { return get(0, 2); } set { set(0, 2, value); } }
+		public uint M_MATRIX { get { return get(2, 3); } set { set(2, 3, value); } }
+		public uint M_COLUMN { get { return get(6, 1) * 2; } set { set(6, 1, value / 2); } }
+		public uint M_TRANSPOSED { get { return get(5, 1); } set { set(5, 1, value); } }
 
 		// LINES (Rows or Columns)
-		public uint RC_LINE { get { return BitUtils.Extract(Value, 0, 2); } set { BitUtils.Insert(ref Value, 0, 2, value); } }
-		public uint RC_MATRIX { get { return BitUtils.Extract(Value, 2, 3); } set { BitUtils.Insert(ref Value, 2, 3, value); } }
-		public uint RC_ROW_COLUMN { get { return BitUtils.Extract(Value, 5, 1); } set { BitUtils.Insert(ref Value, 5, 1, value); } }
-		public uint RC_OFFSET { get { return BitUtils.Extract(Value, 6, 1) * 2; } set { BitUtils.Insert(ref Value, 6, 1, value / 2); } }
+		public uint RC_LINE { get { return get(0, 2); } set { set(0, 2, value); } }
+		public uint RC_MATRIX { get { return get(2, 3); } set { set(2, 3, value); } }
+		public uint RC_ROW_COLUMN { get { return get(5, 1); } set { set(5, 1, value); } }
+		public uint RC_OFFSET { get { return get(6, 1) * 2; } set { set(6, 1, value / 2); } }
 
 		// SINGLE
-		public uint S_ROW { get { return BitUtils.Extract(Value, 0, 2); } set { BitUtils.Insert(ref Value, 0, 2, value); } }
-		public uint S_MATRIX { get { return BitUtils.Extract(Value, 2, 3); } set { BitUtils.Insert(ref Value, 2, 3, value); } }
-		public uint S_COLUMN { get { return BitUtils.Extract(Value, 5, 2); } set { BitUtils.Insert(ref Value, 5, 2, value); } }
+		public uint S_ROW { get { return get(0, 2); } set { set(0, 2, value); } }
+		public uint S_MATRIX { get { return get(2, 3); } set { set(2, 3, value); } }
+		public uint S_COLUMN { get { return get(5, 2); } set { set(5, 2, value); } }
 	}
 }

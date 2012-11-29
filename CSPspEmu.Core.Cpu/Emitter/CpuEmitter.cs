@@ -5,6 +5,7 @@ using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
 using CSPspEmu.Core.Memory;
 using System.Runtime.CompilerServices;
+using System.IO;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -79,7 +80,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			[CallerFilePath]string sourceFilePath = "",
 			[CallerLineNumber]int sourceLineNo = 0)
 		{
-			return AstNotImplemented(sourceFilePath + ":" + sourceLineNo + "(" + sourceMemberName + ")");
+			return AstNotImplemented(String.Format("('{0}') : {1}:{2}", sourceMemberName, Path.GetFileName(sourceFilePath), sourceLineNo));
 		}
 
 		//private AstNodeStm GenerateIL(AstNodeStm Expr) { MipsMethodEmitter.GenerateIL(Expr); return Expr; }

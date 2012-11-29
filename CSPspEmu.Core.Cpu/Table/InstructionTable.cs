@@ -418,7 +418,7 @@ namespace CSPspEmu.Core.Cpu.Table
 						ID("vcst",        VM("110100:00:011:imm5:two:0000000:one:vd"), "%zp, %vk", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
 
 						// Vfpu Matrix MULtiplication
-						ID("vmmul",       VM("111100:000:vt:two:vs:one:vd"), "%zm, %ym, %xm", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
+						ID("vmmul",       VM("111100:000:vt:two:vs:one:vd"), "%zm, %tym, %xm", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
 
 						// -
 						ID("vhdp",        VM("011001:100:vt:two:vs:one:vd"), "%zs, %yp, %xp", ADDR_TYPE_NONE, INSTR_TYPE_PSP),

@@ -249,14 +249,29 @@ namespace CSPspEmu.Core.Cpu.Assembler
 						// Vector registers
 						case "%zs": 
 						case "%zp":
+						case "%zt":
+						case "%zq":
 						case "%zm":
 							Instruction.VD = ParseVfprName(VfpuSize, Value); break;
 						case "%ys": 
 						case "%yp":
+						case "%yt":
+						case "%yq":
 						case "%ym":
-							Instruction.VS = ParseVfprName(VfpuSize, Value); break;
+						case "%yn":
+						case "%tym":
+							Instruction.VS = ParseVfprName(VfpuSize, Value);
+							if (Key == "%tym")
+							{
+								var Reg = Instruction.VS;
+								Reg.M_TRANSPOSED = (Reg.M_TRANSPOSED != 0) ? 0u : 1u;
+								Instruction.VS = Reg;
+							}
+							break;
 						case "%xs": 
 						case "%xp":
+						case "%xt":
+						case "%xq":
 						case "%xm":
 							Instruction.VT = ParseVfprName(VfpuSize, Value); break;
 						case "%vk": Instruction.IMM5 = ParseVfprConstantName(Value); break;
