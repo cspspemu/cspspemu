@@ -1,8 +1,5 @@
 ﻿using System;
-using CSharpUtils;
-using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
-using System.Collections.Generic;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {

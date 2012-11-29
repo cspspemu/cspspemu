@@ -1,6 +1,4 @@
-﻿using System;
-using CSharpUtils;
-using SafeILGenerator;
+﻿using CSharpUtils;
 using SafeILGenerator.Ast.Nodes;
 
 namespace CSPspEmu.Core.Cpu.Emitter

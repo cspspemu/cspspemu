@@ -1,5 +1,4 @@
 ﻿using System;
-using SafeILGenerator;
 using SafeILGenerator.Ast.Nodes;
 using System.Linq;
 using CSPspEmu.Core.Cpu.VFpu;

@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CSPspEmu.Core.Cpu.Table;
+using CSPspEmu.Core.Cpu.VFpu;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
 using CSharpUtils.Arrays;
 using CSharpUtils.Streams;
-using CSPspEmu.Core.Cpu.Emitter;
 using CSharpUtils;
-using CSPspEmu.Core.Cpu.VFpu;
 
 namespace CSPspEmu.Core.Cpu.Assembler
 {
@@ -188,7 +187,8 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			ABS_32 = 2,
 		}
 
-		public class Patch {
+		public class Patch
+		{
 			public uint Address;
 			public PatchType Type;
 			public String LabelName;
@@ -467,7 +467,8 @@ namespace CSPspEmu.Core.Cpu.Assembler
 					var LabelAddress = Labels[Patch.LabelName];
 					Instruction Instruction;
 
-					OutputStream.Position = Patch.Address; Instruction = (Instruction)BinaryReader.ReadUInt32();
+					OutputStream.Position = Patch.Address;
+					Instruction = (Instruction)BinaryReader.ReadUInt32();
 					{
 						switch (Patch.Type)
 						{
@@ -475,7 +476,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 								Instruction.IMM = ((int)LabelAddress - (int)Patch.Address - 4) / 4;
 								break;
 							case PatchType.ABS_26:
-								Console.Write(String.Format("0x{0:X} : {1}", (LabelAddress & PspMemory.MemoryMask) / 4, Patch.LabelName));
+								Console.Write("0x{0:X} : {1}", (LabelAddress & PspMemory.MemoryMask) / 4, Patch.LabelName);
 								Instruction.JUMP = (LabelAddress & PspMemory.MemoryMask) / 4;
 								break;
 							case PatchType.ABS_32:

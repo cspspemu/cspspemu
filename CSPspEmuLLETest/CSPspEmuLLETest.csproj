@@ -36,11 +36,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DebugPspMemory.cs" />
@@ -73,25 +68,9 @@
       <Project>{f783ecd3-0f79-43cc-abd0-d356a64049c4}</Project>
       <Name>CSPspEmu.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu\CSPspEmu.csproj">
-      <Project>{b4c3d929-6a7e-4a71-b896-d2c1c36c4554}</Project>
-      <Name>CSPspEmu</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
-      <Project>{9b217880-48ae-43b6-ae1f-dc732fccbc7a}</Project>
-      <Name>CSharpUtils.Drawing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Ext\CSharpUtils.Ext.csproj">
-      <Project>{c017fbbe-ef10-4030-a69e-204e766c8f9d}</Project>
-      <Name>CSharpUtils.Ext</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
       <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
       <Name>CSharpUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\SafeILGenerator\SafeILGenerator\SafeILGenerator.csproj">
-      <Project>{9a93c7e4-09da-46cf-b7dd-6bb09681d5ab}</Project>
-      <Name>SafeILGenerator</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -53,12 +53,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Audio\AudioComponentThread.cs" />
@@ -99,14 +93,6 @@
     <ProjectReference Include="..\CSPspEmu.Resources\CSPspEmu.Resources.csproj">
       <Project>{ba3187fa-a2a1-43e0-9fdd-69b377ee3152}</Project>
       <Name>CSPspEmu.Resources</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
-      <Project>{9b217880-48ae-43b6-ae1f-dc732fccbc7a}</Project>
-      <Name>CSharpUtils.Drawing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Ext\CSharpUtils.Ext.csproj">
-      <Project>{c017fbbe-ef10-4030-a69e-204e766c8f9d}</Project>
-      <Name>CSharpUtils.Ext</Name>
     </ProjectReference>
     <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
       <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>

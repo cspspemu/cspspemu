@@ -7,18 +7,15 @@ using SafeILGenerator.Ast.Nodes;
 using SafeILGenerator.Ast.Optimizers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSPspEmu.Core.Cpu.Dynarec.Ast
 {
 	public class AstOptimizerPsp : AstOptimizer
 	{
-		static private AstGenerator ast = AstGenerator.Instance;
+		private static AstGenerator ast = AstGenerator.Instance;
 		public CpuProcessor Processor;
 
-		static public AstNodeStm GlobalOptimize(CpuProcessor Processor, AstNodeStm AstNodeStm)
+		public static AstNodeStm GlobalOptimize(CpuProcessor Processor, AstNodeStm AstNodeStm)
 		{
 			if (Processor.PspConfig.StoredConfig.EnableAstOptimizations)
 			{

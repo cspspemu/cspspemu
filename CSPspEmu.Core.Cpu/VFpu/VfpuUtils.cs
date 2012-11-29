@@ -1,9 +1,6 @@
-﻿using CSharpUtils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSPspEmu.Core.Cpu.VFpu
 {
@@ -35,7 +32,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
 				}
 			}
 
-			static public VfpuRegisterInfo Parse(uint VfpuSize, string Name)
+			public static VfpuRegisterInfo Parse(uint VfpuSize, string Name)
 			{
 				Name = Name.ToUpperInvariant();
 				return new VfpuRegisterInfo()
@@ -125,29 +122,29 @@ namespace CSPspEmu.Core.Cpu.VFpu
 		///    VFPU_SQRT3_2   sqrt(3)/2
 		/// </summary>
 		public static readonly float[] VfpuConstantsValues = new float[] {
-			(float)0.0f,                        /// VFPU_ZERO     - 0
-			(float)float.PositiveInfinity,      /// VFPU_HUGE     - infinity
-			(float)(Math.Sqrt(2.0)),            /// VFPU_SQRT2    - sqrt(2)
-			(float)(Math.Sqrt(1.0 / 2.0)),      /// VFPU_SQRT1_2  - sqrt(1 / 2)
-			(float)(2.0 / Math.Sqrt(Math.PI)),  /// VFPU_2_SQRTPI - 2 / sqrt(pi)
-			(float)(2.0 / Math.PI),             /// VFPU_2_PI     - 2 / pi
-			(float)(1.0 / Math.PI),             /// VFPU_1_PI     - 1 / pi
-			(float)(Math.PI / 4.0),             /// VFPU_PI_4     - pi / 4
-			(float)(Math.PI / 2.0),             /// VFPU_PI_2     - pi / 2
-			(float)(Math.PI),                   /// VFPU_PI       - pi
-			(float)(Math.E),                    /// VFPU_E        - e
-			(float)(Math.Log(Math.E, 2)),       /// VFPU_LOG2E    - log2(E) = log(E) / log(2)
-			(float)(Math.Log10(Math.E)),        /// VFPU_LOG10E   - log10(E)
-			(float)(Math.Log(2)),               /// VFPU_LN2      - ln(2)
-			(float)(Math.Log(10)),              /// VFPU_LN10     - ln(10)
-			(float)(2.0 * Math.PI),             /// VFPU_2PI      - 2 * pi
-			(float)(Math.PI / 6.0),             /// VFPU_PI_6     - pi / 6
-			(float)(Math.Log10(2.0)),           /// VFPU_LOG10TWO - log10(2)
-			(float)(Math.Log(10.0, 2)),         /// VFPU_LOG2TEN  - log2(10) = log(10) / log(2)
-			(float)(Math.Sqrt(3.0) / 2.0)       /// VFPU_SQRT3_2  - sqrt(3) / 2
+			(float)0.0f,                        // VFPU_ZERO     - 0
+			(float)float.PositiveInfinity,      // VFPU_HUGE     - infinity
+			(float)(Math.Sqrt(2.0)),            // VFPU_SQRT2    - sqrt(2)
+			(float)(Math.Sqrt(1.0 / 2.0)),      // VFPU_SQRT1_2  - sqrt(1 / 2)
+			(float)(2.0 / Math.Sqrt(Math.PI)),  // VFPU_2_SQRTPI - 2 / sqrt(pi)
+			(float)(2.0 / Math.PI),             // VFPU_2_PI     - 2 / pi
+			(float)(1.0 / Math.PI),             // VFPU_1_PI     - 1 / pi
+			(float)(Math.PI / 4.0),             // VFPU_PI_4     - pi / 4
+			(float)(Math.PI / 2.0),             // VFPU_PI_2     - pi / 2
+			(float)(Math.PI),                   // VFPU_PI       - pi
+			(float)(Math.E),                    // VFPU_E        - e
+			(float)(Math.Log(Math.E, 2)),       // VFPU_LOG2E    - log2(E) = log(E) / log(2)
+			(float)(Math.Log10(Math.E)),        // VFPU_LOG10E   - log10(E)
+			(float)(Math.Log(2)),               // VFPU_LN2      - ln(2)
+			(float)(Math.Log(10)),              // VFPU_LN10     - ln(10)
+			(float)(2.0 * Math.PI),             // VFPU_2PI      - 2 * pi
+			(float)(Math.PI / 6.0),             // VFPU_PI_6     - pi / 6
+			(float)(Math.Log10(2.0)),           // VFPU_LOG10TWO - log10(2)
+			(float)(Math.Log(10.0, 2)),         // VFPU_LOG2TEN  - log2(10) = log(10) / log(2)
+			(float)(Math.Sqrt(3.0) / 2.0)       // VFPU_SQRT3_2  - sqrt(3) / 2
 		};
 
-		static public string[] ConstantNames
+		public static string[] ConstantNames
 		{
 			get
 			{
@@ -155,13 +152,13 @@ namespace CSPspEmu.Core.Cpu.VFpu
 			}
 		}
 
-		static public float GetVfpuConstantsValue(int Index)
+		public static float GetVfpuConstantsValue(int Index)
 		{
 			if (Index < 0 || Index >= VfpuConstantsValues.Length) return 0f;
 			return VfpuConstantsValues[Index];
 		}
 
-		static public float GetConstantValueByName(string Name)
+		public static float GetConstantValueByName(string Name)
 		{
 			return VfpuConstantsValues[VfpuConstantsIndices[Name]];
 		}
@@ -189,22 +186,22 @@ namespace CSPspEmu.Core.Cpu.VFpu
 			{ "VFPU_SQRT3_2", 19 },
 		};
 
-		static public int GetCellIndex(int Matrix, int Column, int Row)
+		public static int GetCellIndex(int Matrix, int Column, int Row)
 		{
 			return Matrix * 16 + Column * 4 + Row;
 		}
 
-		static public uint GetCellIndex(uint Matrix, uint Column, uint Row)
+		public static uint GetCellIndex(uint Matrix, uint Column, uint Row)
 		{
 			return (uint)GetCellIndex((int)Matrix, (int)Column, (int)Row);
 		}
 
-		static public int[] GetIndices(uint Size, RegisterType RegisterType, VfpuRegisterInt Register, string Name = null)
+		public static int[] GetIndices(uint Size, RegisterType RegisterType, VfpuRegisterInt Register, string Name = null)
 		{
 			return _GetIndices(Size, RegisterType, Register, Name).ToArray();
 		}
 
-		static public int[,] GetIndicesMatrix(uint Size, VfpuRegisterInt Register, string Name = null)
+		public static int[,] GetIndicesMatrix(uint Size, VfpuRegisterInt Register, string Name = null)
 		{
 			var IndicesMatrix = new int[Size, Size];
 
@@ -226,7 +223,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
 			return IndicesMatrix;
 		}
 
-		static private IEnumerable<int> _GetIndices(uint Size, RegisterType RegisterType, VfpuRegisterInt Register, string Name = null)
+		private static IEnumerable<int> _GetIndices(uint Size, RegisterType RegisterType, VfpuRegisterInt Register, string Name = null)
 		{
 			if (Size < 1 || Size > 4) throw (new Exception(String.Format("Invalid Size {0} !€ [0, 4]", Size)));
 
@@ -268,7 +265,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
 			}
 		}
 
-		static public int[] GetIndices(string NameWithSufix)
+		public static int[] GetIndices(string NameWithSufix)
 		{
 			uint Size = 0;
 			if (NameWithSufix.EndsWith(".q")) Size = 4;
@@ -279,14 +276,14 @@ namespace CSPspEmu.Core.Cpu.VFpu
 			return GetIndices(Size, NameWithSufix.Substring(0, NameWithSufix.Length - 2));
 		}
 
-		static public int[] GetIndices(uint Size, string Name)
+		public static int[] GetIndices(uint Size, string Name)
 		{
 			var Register = VfpuRegisterInfo.Parse(Size, Name);
 			if ((Register.Type == 'S') && (Size != 1)) throw (new Exception("Invalid"));
 			return GetIndices(Size, Register.RegisterType, Register.Index, Name);
 		}
 
-		static public IEnumerable<int> XRange(int From, int To)
+		public static IEnumerable<int> XRange(int From, int To)
 		{
 			for (int n = From; n < To; n++) yield return n;
 		}

@@ -1,6 +1,5 @@
 ﻿using System;
 using CSPspEmu.Core.Memory;
-using SafeILGenerator;
 using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
 

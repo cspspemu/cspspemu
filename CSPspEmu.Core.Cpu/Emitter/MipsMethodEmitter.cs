@@ -7,13 +7,7 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using CSPspEmu.Core.Memory;
-using SafeILGenerator;
 using SafeILGenerator.Ast.Nodes;
-using SafeILGenerator.Ast;
-using SafeILGenerator.Ast.Generators;
-using SafeILGenerator.Ast.Optimizers;
-using CSPspEmu.Core.Cpu.Dynarec;
 using CSPspEmu.Core.Cpu.Dynarec.Ast;
 
 namespace CSPspEmu.Core.Cpu.Emitter

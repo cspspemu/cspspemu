@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Runtime.InteropServices;
-using CSPspEmu.Core.Cpu;
-using CSharpUtils.Threading;
-using CSharpUtils;
 using System.IO;
-using CSPspEmu.Core.Memory;
-using CSPspEmu.Core.Cpu.Assembler;
-using CSPspEmu.Core.Cpu.Emitter;
 using System.Runtime.CompilerServices;
+using CSPspEmu.Core.Cpu.Assembler;
 using CSPspEmu.Core.Cpu.VFpu;
+using CSPspEmu.Core.Memory;
+using CSharpUtils.Threading;
 
 namespace CSPspEmu.Core.Cpu
 {

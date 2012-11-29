@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CSPspEmu.Core.Cpu.VFPu
+﻿namespace CSPspEmu.Core.Cpu.VFPu
 {
 	struct Vector4f
 	{
 		public float x, y, z, w;
 
-		static public Vector4f Create(float x, float y, float z, float w)
+		public static Vector4f Create(float x, float y, float z, float w)
 		{
 			return new Vector4f() { x = x, y = y, z = z, w = w };
 		}
@@ -23,7 +17,7 @@ namespace CSPspEmu.Core.Cpu.VFPu
 			w = this.w;
 		}
 
-		static public Vector4f Add(Vector4f l, Vector4f r)
+		public static Vector4f Add(Vector4f l, Vector4f r)
 		{
 			return Create(l.x + r.x, l.y + r.y, l.z + r.z, l.w + r.w);
 		}

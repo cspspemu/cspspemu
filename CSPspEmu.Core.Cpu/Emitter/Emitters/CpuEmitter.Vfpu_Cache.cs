@@ -1,5 +1,4 @@
 ﻿using SafeILGenerator.Ast.Nodes;
-using System;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -8,6 +7,5 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm vnop() { return AstNotImplemented(); }
 		public AstNodeStm vsync() { return AstNotImplemented(); }
 		public AstNodeStm vflush() { return AstNotImplemented(); }
-
 	}
 }

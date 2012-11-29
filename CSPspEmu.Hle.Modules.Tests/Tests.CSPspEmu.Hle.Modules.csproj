@@ -58,10 +58,6 @@
     <Compile Include="utils\UtilsForUserTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CSPspEmu.Utils\CSPspEmu.Utils.csproj">
-      <Project>{DC02A203-30F2-4613-950B-1529FD55AC81}</Project>
-      <Name>CSPspEmu.Utils</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
@@ -74,25 +70,9 @@
       <Project>{288AF89E-B41A-4253-A8F7-43D1371516E9}</Project>
       <Name>CSPspEmu.Hle</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu\CSPspEmu.csproj">
-      <Project>{B4C3D929-6A7E-4A71-B896-D2C1C36C4554}</Project>
-      <Name>CSPspEmu</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
-      <Project>{9b217880-48ae-43b6-ae1f-dc732fccbc7a}</Project>
-      <Name>CSharpUtils.Drawing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Ext\CSharpUtils.Ext.csproj">
-      <Project>{c017fbbe-ef10-4030-a69e-204e766c8f9d}</Project>
-      <Name>CSharpUtils.Ext</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
       <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
       <Name>CSharpUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\SafeILGenerator\SafeILGenerator\SafeILGenerator.csproj">
-      <Project>{9a93c7e4-09da-46cf-b7dd-6bb09681d5ab}</Project>
-      <Name>SafeILGenerator</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

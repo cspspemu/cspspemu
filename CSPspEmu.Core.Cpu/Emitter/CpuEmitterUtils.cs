@@ -1,10 +1,6 @@
 ﻿using CSharpUtils;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -149,7 +145,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				case 31:
 					CpuThreadState.GPR[RT] = (int)CpuThreadState.Fcr31.Value;
 					break;
-				default: throw (new Exception(String.Format("Unsupported CFC1(%d)", RD)));
+				default: throw (new Exception(String.Format("Unsupported CFC1({0})", RD)));
 			}
 		}
 
@@ -160,7 +156,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				case 31:
 					CpuThreadState.Fcr31.Value = (uint)CpuThreadState.GPR[RT];
 					break;
-				default: throw (new Exception(String.Format("Unsupported CFC1(%d)", RD)));
+				default: throw (new Exception(String.Format("Unsupported CFC1({0})", RD)));
 			}
 		}
 

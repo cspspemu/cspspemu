@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using CSharpUtils;
-using SafeILGenerator;
-using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
 using CSPspEmu.Core.Cpu.VFpu;
 

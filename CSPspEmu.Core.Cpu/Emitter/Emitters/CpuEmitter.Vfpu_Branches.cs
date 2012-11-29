@@ -1,5 +1,4 @@
 ﻿using System;
-using CSharpUtils;
 using SafeILGenerator;
 using SafeILGenerator.Ast.Nodes;
 

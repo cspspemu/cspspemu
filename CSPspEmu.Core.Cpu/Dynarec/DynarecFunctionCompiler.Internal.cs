@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using SafeILGenerator;
 using CSPspEmu.Core.Cpu.Assembler;
 using CSPspEmu.Core.Cpu.Emitter;
 using CSPspEmu.Core.Cpu.Table;
 using SafeILGenerator.Ast.Nodes;
 using SafeILGenerator.Ast;
-using SafeILGenerator.Ast.Generators;
-using SafeILGenerator.Ast.Optimizers;
 using CSPspEmu.Core.Cpu.Dynarec.Ast;
 
 namespace CSPspEmu.Core.Cpu.Dynarec
@@ -21,7 +18,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			public static Func<uint, CpuEmitter, AstNodeStm> CpuEmitterInstruction = EmitLookupGenerator.GenerateSwitchDelegateReturn<CpuEmitter, AstNodeStm>(InstructionTable.ALL);
 			static MipsDisassembler MipsDisassembler = new MipsDisassembler();
 			CpuEmitter CpuEmitter;
-			MipsMethodEmitter MipsMethodEmiter;
+			MipsMethodEmitter MipsMethodEmitter;
 			DynarecFunctionCompiler DynarecFunctionCompiler;
 			IInstructionReader InstructionReader;
 			CpuProcessor CpuProcessor;
@@ -62,7 +59,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			{
 				this._ExploreNewPcCallback = _ExploreNewPcCallback;
 				this.CpuEmitter = new CpuEmitter(MipsMethodEmiter, InstructionReader, CpuProcessor);
-				this.MipsMethodEmiter = MipsMethodEmiter;
+				this.MipsMethodEmitter = MipsMethodEmiter;
 				this.GlobalInstructionStats = CpuProcessor.GlobalInstructionStats;
 				this.InstructionStats = MipsMethodEmiter.InstructionStats;
 				this.NewInstruction = new Dictionary<string, bool>();
@@ -84,7 +81,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				var Nodes = GenerateCode();
 				return new DynarecFunction()
 				{
-					Delegate = MipsMethodEmiter.CreateDelegate(Nodes),
+					Delegate = MipsMethodEmitter.CreateDelegate(Nodes),
 				};
 			}
 

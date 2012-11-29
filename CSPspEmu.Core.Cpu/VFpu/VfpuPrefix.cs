@@ -1,9 +1,6 @@
 ﻿using CSharpUtils;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSPspEmu.Core.Cpu.VFpu
 {
@@ -15,8 +12,8 @@ namespace CSPspEmu.Core.Cpu.VFpu
 		public bool Enabled;
 		public int UsedCount;
 
-		static public implicit operator uint(VfpuPrefix Value) { return Value.Value; }
-		static public implicit operator VfpuPrefix(uint Value) { return new VfpuPrefix() { Value = Value }; }
+		public static implicit operator uint(VfpuPrefix Value) { return Value.Value; }
+		public static implicit operator VfpuPrefix(uint Value) { return new VfpuPrefix() { Value = Value }; }
 
 		// swz(xyzw)
 		//assert(i >= 0 && i < 4);
@@ -83,7 +80,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
 		}
 
 
-		static public readonly string[] ComponentNames = new string[] { "x", "y", "z", "w" };
+		public static readonly string[] ComponentNames = new string[] { "x", "y", "z", "w" };
 
 		public override string ToString()
 		{
@@ -102,8 +99,8 @@ namespace CSPspEmu.Core.Cpu.VFpu
 		public bool Enabled;
 		public int UsedCount;
 	
-		static public implicit operator uint(VfpuDestinationPrefix Value) { return Value.Value; }
-		static public implicit operator VfpuDestinationPrefix(uint Value) { return new VfpuDestinationPrefix() { Value = Value }; }
+		public static implicit operator uint(VfpuDestinationPrefix Value) { return Value.Value; }
+		public static implicit operator VfpuDestinationPrefix(uint Value) { return new VfpuDestinationPrefix() { Value = Value }; }
 	
 		// sat(xyzw)
 		//assert(i >= 0 && i < 4);

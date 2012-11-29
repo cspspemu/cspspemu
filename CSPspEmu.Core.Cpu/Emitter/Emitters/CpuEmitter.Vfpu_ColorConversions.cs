@@ -1,5 +1,4 @@
 ﻿using SafeILGenerator.Ast.Nodes;
-using System;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {

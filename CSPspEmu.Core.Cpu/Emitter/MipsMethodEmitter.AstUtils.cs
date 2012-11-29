@@ -1,9 +1,4 @@
-﻿using SafeILGenerator.Ast.Nodes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
 
@@ -12,7 +7,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	public unsafe partial class MipsMethodEmitter
 	{
 		// AST UTILS
-		static AstGenerator ast = AstGenerator.Instance;
+		private static AstGenerator ast = AstGenerator.Instance;
 
 		public static AstNodeExprArgument CpuThreadStateArgument() { return ast.Argument<CpuThreadState>(0, "CpuThreadState"); }
 		public static AstNodeExprLValue FCR31_CC() { return ast.FieldAccess(REG("Fcr31"), "CC"); }
@@ -33,7 +28,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm AssignGPR(int Index, AstNodeExpr Expr) { if (Index == 0) return new AstNodeStmEmpty(); return ast.Assign(GPR(Index), ast.Cast<uint>(Expr)); }
 
 
-		delegate void* AddressToPointerFunc(uint Address);
+		private delegate void* AddressToPointerFunc( uint Address );
 
 		public static AstNodeExpr AstMemoryGetPointer(AstNodeExpr Address, bool Safe, string ErrorDescription = "ERROR")
 		{

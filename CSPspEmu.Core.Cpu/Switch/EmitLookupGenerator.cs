@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using SafeILGenerator;
-using System.Reflection;
 
 namespace CSPspEmu.Core.Cpu.Table
 {
