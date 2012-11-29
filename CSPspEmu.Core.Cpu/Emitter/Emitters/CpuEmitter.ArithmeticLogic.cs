@@ -38,11 +38,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm sll() { return AssignGPR(RD, ast.Binary(GPR_u(RT), "<<", ast.Immediate((uint)Instruction.POS))); }
 		public AstNodeStm sra() { return AssignGPR(RD, ast.Binary(GPR_s(RT), ">>", ast.Immediate((int)Instruction.POS))); }
 		public AstNodeStm srl() { return AssignGPR(RD, ast.Binary(GPR_u(RT), ">>", ast.Immediate((uint)Instruction.POS))); }
+		public AstNodeStm rotr() { return AssignGPR(RD, ast.CallStatic((Func<uint, int, uint>)CpuEmitterUtils._rotr_impl, GPR_u(RT), ast.Immediate((int)Instruction.POS))); }
 
 		public AstNodeStm sllv() { return AssignGPR(RD, ast.Binary(GPR_u(RT), "<<", GPR_u(RS))); }
 		public AstNodeStm srav() { return AssignGPR(RD, ast.Binary(GPR_s(RT), ">>", GPR_s(RS))); }
 		public AstNodeStm srlv() { return AssignGPR(RD, ast.Binary(GPR_u(RT), ">>", GPR_u(RS))); }
-		public AstNodeStm rotr() { return AssignGPR(RD, ast.CallStatic((Func<uint, int, uint>)CpuEmitterUtils._rotr_impl, GPR_u(RT), ast.Immediate((int)Instruction.POS))); }
 		public AstNodeStm rotrv() { return AssignGPR(RD, ast.CallStatic((Func<uint, int, uint>)CpuEmitterUtils._rotr_impl, GPR_u(RT), GPR_s(RS))); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////

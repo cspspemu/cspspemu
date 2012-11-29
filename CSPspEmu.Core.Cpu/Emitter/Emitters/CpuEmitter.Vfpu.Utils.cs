@@ -4,6 +4,7 @@ using CSharpUtils;
 using SafeILGenerator;
 using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
+using CSPspEmu.Core.Cpu.VFpu;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {

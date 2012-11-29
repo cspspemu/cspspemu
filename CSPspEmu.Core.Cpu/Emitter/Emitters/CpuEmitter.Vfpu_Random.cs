@@ -32,7 +32,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm vrnds()
 		{
-			throw(new NotImplementedException());
+			return AstNotImplemented();
 			//SafeILGenerator.LoadArgument0CpuThreadState();
 			//Load_VS(0, true);
 			//MipsMethodEmitter.CallMethod((Action<CpuThreadState, int>)_vrnds);
@@ -43,7 +43,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm vrndi()
 		{
-			throw (new NotImplementedException());
+			return AstNotImplemented();
 			//var VectorSize = Instruction.ONE_TWO;
 			//Save_VD(Index: 0, VectorSize: VectorSize, Action: () =>
 			//{
@@ -61,7 +61,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm vrndf1()
 		{
-			throw (new NotImplementedException());
+			return AstNotImplemented();
 			//var VectorSize = Instruction.ONE_TWO;
 			//Save_VD(Index: 0, VectorSize: VectorSize, Action: () =>
 			//{
@@ -79,7 +79,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm vrndf2()
 		{
-			throw (new NotImplementedException());
+			return AstNotImplemented();
 			//var VectorSize = Instruction.ONE_TWO;
 			//Save_VD(Index: 0, VectorSize: VectorSize, Action: () =>
 			//{

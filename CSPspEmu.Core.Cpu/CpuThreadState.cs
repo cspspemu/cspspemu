@@ -11,6 +11,7 @@ using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Cpu.Assembler;
 using CSPspEmu.Core.Cpu.Emitter;
 using System.Runtime.CompilerServices;
+using CSPspEmu.Core.Cpu.VFpu;
 
 namespace CSPspEmu.Core.Cpu
 {

@@ -4,6 +4,7 @@ using System;
 using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
 using CSPspEmu.Core.Memory;
+using System.Runtime.CompilerServices;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -66,6 +67,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				CpuThreadStateArgument(),
 				ast.Cast<long>(Expr)
 			));
+		}
+
+		public static AstNodeStm AstNotImplemented(string Description)
+		{
+			return ast.Statement(ast.CallStatic((Action<string>)Console.WriteLine, "AstNotImplemented: " + Description));
+		}
+
+		public static AstNodeStm AstNotImplemented(
+			[CallerMemberName]string sourceMemberName = "",
+			[CallerFilePath]string sourceFilePath = "",
+			[CallerLineNumber]int sourceLineNo = 0)
+		{
+			return AstNotImplemented(sourceFilePath + ":" + sourceLineNo + "(" + sourceMemberName + ")");
 		}
 
 		//private AstNodeStm GenerateIL(AstNodeStm Expr) { MipsMethodEmitter.GenerateIL(Expr); return Expr; }

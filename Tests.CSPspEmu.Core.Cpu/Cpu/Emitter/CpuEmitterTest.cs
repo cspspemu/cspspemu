@@ -13,6 +13,7 @@ using CSharpUtils.Factory;
 using System.Threading;
 using CSPspEmu.Core.Cpu.Dynarec;
 using System.Globalization;
+using CSPspEmu.Core.Cpu.VFpu;
 
 namespace CSPspEmu.Core.Tests
 {
@@ -1124,6 +1125,25 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
+		public void VfpuTransferUnalignedTest()
+		{
+			CpuThreadState.Vfpr.ClearAll(float.NaN);
+
+			CpuThreadState.Vfpr[4, "R100"] = new float[] { 1, 2, 3, 4 };
+			CpuThreadState.Vfpr[4, "R101"] = new float[] { 50, 60, 70, 80 };
+
+			ExecuteAssembly(@"
+				lvl.q 
+				lvr.q 
+			");
+
+			CpuThreadState.DumpVfpuRegisters(Console.Error);
+
+			Assert.AreEqual("51,62,73,84", String.Join(",", CpuThreadState.Vfpr[4, "C200"]));
+			Assert.AreEqual("-49,-58,-67,-76", String.Join(",", CpuThreadState.Vfpr[4, "C210"]));
+		}
+
+		[TestMethod]
 		public void VfpuConstantsTest()
 		{
 			CpuThreadState.Vfpr.ClearAll(float.NaN);
@@ -1314,9 +1334,11 @@ namespace CSPspEmu.Core.Tests
 			ExecuteAssembly(@"
 				mtv r10, S000
 				vrot.p	R500, S000, [c, s]
+				vrot.q	R600, S000, [c, 0, -s, 0]
 			");
 
 			Assert.AreEqual("0.9510565,0.309017", String.Join(",", CpuThreadState.Vfpr["R500.p"]));
+			Assert.AreEqual("0.9510565,0,-0.309017,0", String.Join(",", CpuThreadState.Vfpr["R600.q"]));
 		}
 
 		[TestMethod]

@@ -2,6 +2,7 @@
 using SafeILGenerator;
 using SafeILGenerator.Ast.Nodes;
 using System.Linq;
+using CSPspEmu.Core.Cpu.VFpu;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -10,7 +11,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// Load/Store Vfpu (Left/Right)_
 		public AstNodeStm lv_s()
 		{
-			throw(new NotImplementedException());
+			return AstNotImplemented();
 			////return;
 			//uint VT = Instruction.VT5 | (Instruction.VT2 << 5);
 			//uint Column = (VT >> 5) & 3;
@@ -34,97 +35,84 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			));
 		}
 
-		public static AstNodeStm _lvl_svl_q(CpuThreadState CpuThreadState, uint m, uint i, uint address, bool dir, bool save)
+		public static void _lvl_svl_q(CpuThreadState CpuThreadState, uint m, uint i, uint address, bool dir, bool save)
 		{
-			throw (new NotImplementedException("_lvl_svl_q"));
-			//uint k = 3 - ((address >> 2) & 3);
-			//address &= unchecked((uint)~0xF);
-			//
-			//for (uint j = k; j < 4; ++j)
-			//{
-			//	fixed (float* VFPR = &CpuThreadState.VFR0)
-			//	{
-			//		float* ptr;
-			//		if (dir)
-			//		{
-			//			ptr = &VFPR[m * 16 + i * 4 + j];
-			//		}
-			//		else
-			//		{
-			//			ptr = &VFPR[m * 16 + j * 4 + i];
-			//		}
-			//		if (save)
-			//		{
-			//			*(float*)CpuThreadState.GetMemoryPtr(address) = *ptr;
-			//		}
-			//		else
-			//		{
-			//			*ptr = *(float*)CpuThreadState.GetMemoryPtr(address);
-			//		}
-			//	}
-			//	address += 4;
-			//}
+			uint k = 3 - ((address >> 2) & 3);
+			address &= unchecked((uint)~0xF);
+			
+			for (uint j = k; j < 4; ++j)
+			{
+				fixed (float* VFPR = &CpuThreadState.VFR0)
+				{
+					float* ptr;
+					if (dir)
+					{
+						ptr = &VFPR[VfpuUtils.GetCellIndex(m, i, j)];
+					}
+					else
+					{
+						ptr = &VFPR[VfpuUtils.GetCellIndex(m, j, i)];
+					}
+
+					if (save)
+					{
+						*(float*)CpuThreadState.GetMemoryPtr(address) = *ptr;
+					}
+					else
+					{
+						*ptr = *(float*)CpuThreadState.GetMemoryPtr(address);
+					}
+				}
+				address += 4;
+			}
 		}
 
-		public static AstNodeStm _lvr_svr_q(CpuThreadState CpuThreadState, uint m, uint i, uint address, bool dir, bool save)
+		public static void _lvr_svr_q(CpuThreadState CpuThreadState, uint m, uint i, uint address, bool dir, bool save)
 		{
-			throw (new NotImplementedException("_lvr_svr_q"));
-			//uint k = 4 - ((address >> 2) & 3);
-			//
-			//for (uint j = 0; j < k; ++j)
-			//{
-			//	fixed (float* VFPR = &CpuThreadState.VFR0)
-			//	{
-			//		float* ptr;
-			//		if (dir)
-			//		{
-			//			ptr = &VFPR[m * 16 + i * 4 + j];
-			//		}
-			//		else
-			//		{
-			//			ptr = &VFPR[m * 16 + j * 4 + i];
-			//		}
-			//		if (save)
-			//		{
-			//			*(float*)CpuThreadState.GetMemoryPtr(address) = *ptr;
-			//		}
-			//		else
-			//		{
-			//			*ptr = *(float*)CpuThreadState.GetMemoryPtr(address);
-			//		}
-			//	}
-			//	address += 4;
-			//}
+			uint k = 4 - ((address >> 2) & 3);
+			
+			for (uint j = 0; j < k; ++j)
+			{
+				fixed (float* VFPR = &CpuThreadState.VFR0)
+				{
+					float* ptr;
+					if (dir)
+					{
+						ptr = &VFPR[VfpuUtils.GetCellIndex(m, i, j)];
+					}
+					else
+					{
+						ptr = &VFPR[VfpuUtils.GetCellIndex(m, j, i)];
+					}
+					if (save)
+					{
+						*(float*)CpuThreadState.GetMemoryPtr(address) = *ptr;
+					}
+					else
+					{
+						*ptr = *(float*)CpuThreadState.GetMemoryPtr(address);
+					}
+				}
+				address += 4;
+			}
 		}
 
 		private AstNodeStm lv_sv_l_r_q(bool left, bool save)
 		{
-			throw (new NotImplementedException("lv_sv_l_r_q"));
-			//var vt = Instruction.VT5 | (Instruction.VT1 << 5);
-			//var m = (vt >> 2) & 7;
-			//var i = (vt >> 0) & 3;
-			//var dir = (vt & 32) != 0;
-			//
-			//{
-			//	SafeILGenerator.LoadArgument0CpuThreadState();// CpuThreadState
-			//	SafeILGenerator.Push((int)(m));
-			//	SafeILGenerator.Push((int)(i));
-			//	MipsMethodEmitter.LoadGPR_Unsigned(RS);
-			//	SafeILGenerator.Push((int)(Instruction.IMM14 * 4));
-			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-			//	SafeILGenerator.Push((int)(dir ? 1 : 0));
-			//	SafeILGenerator.Push((int)(save ? 1 : 0));
-			//}
-			//
-			//if (left)
-			//{
-			//
-			//	MipsMethodEmitter.CallMethod((Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmitter._lvl_svl_q);
-			//}
-			//else
-			//{
-			//	MipsMethodEmitter.CallMethod((Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmitter._lvr_svr_q);
-			//}
+			VfpuRegisterInt Register = Instruction.VT5_1;
+			var MethodInfo = left
+				? (Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmitter._lvl_svl_q
+				: (Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmitter._lvr_svr_q
+			;
+			return ast.Statement(ast.CallStatic(
+				MethodInfo,
+				CpuThreadStateArgument(),
+				Register.RC_MATRIX,
+				Register.RC_LINE,
+				Address_RS_IMM14(0),
+				(Register.RC_ROW_COLUMN != 0),
+				save
+			));
 		}
 
 		public AstNodeStm lvl_q()
@@ -139,7 +127,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm sv_s()
 		{
-			throw(new NotImplementedException("sv_s"));
+			return AstNotImplemented();
 			//uint VT = Instruction.VT5 | (Instruction.VT2 << 5);
 			//uint Column = (VT >> 5) & 3;
 			//uint Matrix = (VT >> 2) & 7;

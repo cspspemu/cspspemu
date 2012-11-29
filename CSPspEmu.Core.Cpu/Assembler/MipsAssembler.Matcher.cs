@@ -20,7 +20,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 		{
 			switch (Format)
 			{
-				case "%vr": return @"\[[c|s|\s|,]*\]";
+				case "%vr": return @"\[[c|s|\s|0|\-|,]*\]";
 				case "%vi": case "%i": return @"[+\-]?[\w_]+";
 				case "%Y": return @"(?:\w+\+)?\w+";
 				case "%vp4": case "%vp5": case "%vp6": case "%vp7": return @"(?:0:1|-1:1|M)";

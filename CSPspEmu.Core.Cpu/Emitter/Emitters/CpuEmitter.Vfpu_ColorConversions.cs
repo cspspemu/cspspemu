@@ -47,7 +47,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vt4444_q()
 		{
-			throw(new NotImplementedException());
+			return AstNotImplemented();
 			//VectorOperationSaveVd(2, (Index) =>
 			//{
 			//	Load_VS(0 + Index * 2, AsInteger: true);
@@ -58,7 +58,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vt5551_q()
 		{
-			throw (new NotImplementedException());
+			return AstNotImplemented();
 			//VectorOperationSaveVd(2, (Index) =>
 			//{
 			//	Load_VS(0 + Index * 2, AsInteger: true);
@@ -69,7 +69,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vt5650_q()
 		{
-			throw (new NotImplementedException());
+			return AstNotImplemented();
 
 			//VectorOperationSaveVd(2, (Index) =>
 			//{

@@ -32,7 +32,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm _vtfm_x(uint VectorSize)
 		{
-			throw (new NotImplementedException());
+			return AstNotImplemented();
 			//VectorOperationSaveVd(VectorSize, Index =>
 			//{
 			//	SafeILGenerator.Push((float)0.0f);
@@ -48,7 +48,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm _vhtfm_x(uint VectorSize)
 		{
-			throw(new NotImplementedException());
+			return AstNotImplemented();
 			//VectorOperationSaveVd(VectorSize, Index =>
 			//{
 			//	SafeILGenerator.Push((float)0.0f);
@@ -120,7 +120,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm vmscl()
 		{
-			throw (new NotImplementedException("vmscl"));
+			return AstNotImplemented();
 			//var MatrixSize = Instruction.ONE_TWO;
 			//
 			//foreach (var RowIndex in XRange(MatrixSize))
@@ -177,7 +177,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vqmul()
 		{
-			throw (new NotImplementedException());
+			return AstNotImplemented();
 			////var VectorSize = Instruction.ONE_TWO;
 			//var VectorSize = (uint)4;
 			//VectorOperationSaveVd(VectorSize, (Index) =>

@@ -119,7 +119,8 @@
     <Compile Include="Table\InstructionTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VfpuRegisterInt.cs" />
-    <Compile Include="VfpuUtils.cs" />
+    <Compile Include="VFpu\VfpuPrefix.cs" />
+    <Compile Include="VFpu\VfpuUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">

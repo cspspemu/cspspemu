@@ -4,6 +4,7 @@ using SafeILGenerator;
 using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
 using System.Collections.Generic;
+using CSPspEmu.Core.Cpu.VFpu;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -171,7 +172,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				}
 				else
 				{
-					return (SinIndex == CosIndex) ? Cosine : Sine;
+					//return (SinIndex == CosIndex) ? Cosine : Sine;
+					return 0f;
 				}
 			});
 		}
@@ -221,7 +223,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// -
 		public AstNodeStm vhdp()
 		{
-			throw(new NotImplementedException());
+			return AstNotImplemented();
 			//var VectorSize = Instruction.ONE_TWO;
 			//
 			//VectorOperationSaveVd(1, (Index) =>
@@ -242,7 +244,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vcrs_t()
 		{
-			throw (new NotImplementedException());
+			return AstNotImplemented();
 			//uint VectorSize = 3;
 			//
 			//Save_VD(0, VectorSize, () =>
@@ -272,7 +274,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm vcrsp_t()
 		{
-			throw(new NotImplementedException());
+			return AstNotImplemented();
 			//uint VectorSize = 3;
 			//
 			//Save_VD(0, VectorSize, () =>
@@ -318,7 +320,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// Vfpu MINimum/MAXium/ADD/SUB/DIV/MUL
 		public AstNodeStm vmin()
 		{
-			throw(new NotImplementedException());
+			return AstNotImplemented();
 			//VectorOperationSaveVd((Index) =>
 			//{
 			//	Load_VS_VT(Index);
@@ -327,7 +329,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 		public AstNodeStm vmax()
 		{
-			throw (new NotImplementedException());
+			return AstNotImplemented();
 			//VectorOperationSaveVd((Index) =>
 			//{
 			//	Load_VS_VT(Index);
@@ -362,7 +364,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		AstNodeStm _vidt_x(uint VectorSize, uint Register)
 		{
-			throw(new NotImplementedException());
+			return AstNotImplemented();
 			//uint IndexOne = BitUtils.Extract(Register, 0, 2);
 			//foreach (var Index in XRange(VectorSize))
 			//{
@@ -377,7 +379,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		AstNodeStm _vzero_x(uint VectorSize, uint Register)
 		{
-			throw (new NotImplementedException());
+			return AstNotImplemented();
 			//uint IndexOne = BitUtils.Extract(Register, 0, 2);
 			//foreach (var Index in XRange(VectorSize))
 			//{
@@ -400,16 +402,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		// Vfpu load Integer IMmediate
 		public AstNodeStm viim() { return AstSaveVfpuReg(Instruction.VT, 0, 1, ref PrefixNone, (float)Instruction.IMM); }
-		public AstNodeStm vdet() { throw (new NotImplementedException("vdet")); }
-		public AstNodeStm mfvme() { throw (new NotImplementedException("mfvme")); }
-		public AstNodeStm mtvme() { throw (new NotImplementedException("mtvme")); }
+		public AstNodeStm vdet() { return AstNotImplemented(); }
+		public AstNodeStm mfvme() { return AstNotImplemented(); }
+		public AstNodeStm mtvme() { return AstNotImplemented(); }
 
 		/// <summary>
 		/// ID("vfim",        VM("110111:11:1:vt:imm16"), "%xs, %vh",      ADDR_TYPE_NONE, INSTR_TYPE_PSP),
 		/// </summary>
 		public AstNodeStm vfim()
 		{
-			throw(new NotImplementedException());
+			return AstNotImplemented();
 			//_VfpuLoadVectorWithIndexPointer(Instruction.VT, 0, 1);
 			//SafeILGenerator.Push((float)Instruction.IMM_HF);
 			//SafeILGenerator.StoreIndirect<float>();
@@ -418,13 +420,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 
-		public AstNodeStm vlgb() { throw (new NotImplementedException("")); }
-		public AstNodeStm vsbn() { throw (new NotImplementedException("")); }
+		public AstNodeStm vlgb() { return AstNotImplemented(); }
+		public AstNodeStm vsbn() { return AstNotImplemented(); }
 
-		public AstNodeStm vsbz() { throw (new NotImplementedException("")); }
-		public AstNodeStm vsocp() { throw (new NotImplementedException("")); }
-		public AstNodeStm vus2i() { throw (new NotImplementedException("")); }
+		public AstNodeStm vsbz() { return AstNotImplemented(); }
+		public AstNodeStm vsocp() { return AstNotImplemented(); }
+		public AstNodeStm vus2i() { return AstNotImplemented(); }
 
-		public AstNodeStm vwbn() { throw (new NotImplementedException("")); }
+		public AstNodeStm vwbn() { return AstNotImplemented(); }
 	}
 }

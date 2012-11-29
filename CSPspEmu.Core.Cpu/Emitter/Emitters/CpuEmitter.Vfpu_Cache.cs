@@ -5,19 +5,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 {
     public sealed partial class CpuEmitter
 	{
-		public AstNodeStm vnop()
-		{
-			throw (new NotImplementedException("vnop"));
-		}
-		public AstNodeStm vsync()
-		{
-			throw (new NotImplementedException("vsync"));
-		}			
-
-		public AstNodeStm vflush()
-		{
-			throw (new NotImplementedException("vflush"));
-		}
+		public AstNodeStm vnop() { return AstNotImplemented(); }
+		public AstNodeStm vsync() { return AstNotImplemented(); }
+		public AstNodeStm vflush() { return AstNotImplemented(); }
 
 	}
 }

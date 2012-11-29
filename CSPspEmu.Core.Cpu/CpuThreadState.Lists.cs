@@ -1,4 +1,5 @@
 ﻿using CSharpUtils;
+using CSPspEmu.Core.Cpu.VFpu;
 using System;
 using System.Collections.Generic;
 using System.Linq;

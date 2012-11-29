@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSPspEmu.Core.Cpu
+namespace CSPspEmu.Core.Cpu.VFpu
 {
 	public class VfpuUtils
 	{

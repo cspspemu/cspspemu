@@ -10,7 +10,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm vbfy1()
 		{
-			throw (new NotImplementedException());
+			return AstNotImplemented();
 
 			//var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 2 || VectorSize != 4)
@@ -34,7 +34,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm vbfy2()
 		{
-			throw (new NotImplementedException());
+			return AstNotImplemented();
 
 			//var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 4)
@@ -57,7 +57,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm _vsrt_doMinMax(Func<float, float, float> Func, int Left, int Right)
 		{
-			throw (new NotImplementedException());
+			return AstNotImplemented();
 
 			//Load_VS(Left);
 			//Load_VS(Right);
@@ -67,7 +67,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm vsrt1()
 		{
-			throw (new NotImplementedException());
+			return AstNotImplemented();
 
 			//var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 4) Console.Error.WriteLine("vsrt1 : VectorSize != 4");
@@ -87,7 +87,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm vsrt2()
 		{
-			throw (new NotImplementedException());
+			return AstNotImplemented();
 
 			//var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 4) Console.Error.WriteLine("vsrt1 : VectorSize != 4");
@@ -107,7 +107,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm vsrt3()
 		{
-			throw (new NotImplementedException());
+			return AstNotImplemented();
 			//var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 4) Console.Error.WriteLine("vsrt1 : VectorSize != 4");
 			//
@@ -126,7 +126,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm vsrt4()
 		{
-			throw (new NotImplementedException());
+			return AstNotImplemented();
 			//var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 4) Console.Error.WriteLine("vsrt1 : VectorSize != 4");
 			//
@@ -164,7 +164,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm vfad()
 		{
-			throw (new NotImplementedException());
+			return AstNotImplemented();
 			//uint VectorSize = Instruction.ONE_TWO;
 			////Console.Error.WriteLine("VectorSize: {0}", VectorSize);
 			//VectorOperationSaveAggregatedVd(VectorSize,
@@ -208,7 +208,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm vavg()
 		{
-			throw(new NotImplementedException());
+			return AstNotImplemented();
 			//uint VectorSize = Instruction.ONE_TWO;
 			////Console.Error.WriteLine("VectorSize: {0}", VectorSize);
 			//VectorOperationSaveAggregatedVd(VectorSize,

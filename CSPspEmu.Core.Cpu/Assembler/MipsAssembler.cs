@@ -9,6 +9,7 @@ using CSharpUtils.Arrays;
 using CSharpUtils.Streams;
 using CSPspEmu.Core.Cpu.Emitter;
 using CSharpUtils;
+using CSPspEmu.Core.Cpu.VFpu;
 
 namespace CSPspEmu.Core.Cpu.Assembler
 {
@@ -39,22 +40,36 @@ namespace CSPspEmu.Core.Cpu.Assembler
 		{
 			var Parts = Format.Trim('[', ']').Split(',').Select(Item => Item.Trim()).ToArray();
 			uint imm5 = 0;
-			uint CosIndex = 0;
-			uint SinIndex = 0;
+			int CosIndex = -1;
+			int SinIndex = -1;
 			bool NegatedSin = false;
-			for (uint Index = 0; Index < Parts.Length; Index++)
+			for (int Index = 0; Index < Parts.Length; Index++)
 			{
 				var Part = Parts[Index];
 				switch (Part)
 				{
-					case "c": CosIndex = Index;  break;
-					case "s": SinIndex = Index; break;
-					case "-s": SinIndex = Index; NegatedSin = true; break;
-					default: throw(new NotImplementedException(Part));
+					case "c":
+						if (CosIndex != -1) throw (new Exception("Can't put cosine twice"));
+						CosIndex = Index;
+						break;
+					case "-s": 
+					case "s":
+						if (SinIndex != -1) throw (new Exception("Can't put sine twice"));
+						SinIndex = Index;
+						if (Part == "-s") NegatedSin = true;
+						break;
+					case "0":
+						break;
+					default:
+						throw(new NotImplementedException(Part));
 				}
 			}
-			BitUtils.Insert(ref imm5, 0, 2, CosIndex);
-			BitUtils.Insert(ref imm5, 2, 2, SinIndex);
+
+			if (CosIndex == -1) throw(new Exception("Didn't set cosine"));
+			if (SinIndex == -1) throw (new Exception("Didn't set sine"));
+
+			BitUtils.Insert(ref imm5, 0, 2, (uint)CosIndex);
+			BitUtils.Insert(ref imm5, 2, 2, (uint)SinIndex);
 			BitUtils.Insert(ref imm5, 4, 1, NegatedSin ? 1U : 0U);
 			//Console.WriteLine(Format);
 			//throw (new NotImplementedException("ParseVfprRotate"));
