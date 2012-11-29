@@ -6,7 +6,6 @@ using WaveLib;
 
 namespace CSPspEmu.Core.Audio.Impl.WaveOut
 {
-	//[AttributeUsage(AttributeTargets.
 	public unsafe class PspAudioWaveOutImpl : PspAudioImpl
 	{
 		public const int Frequency = 44100;
@@ -22,15 +21,15 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut
 		public const int SamplesPerBuffer = (int)(SamplesPerMillisecond * BufferMilliseconds * NumberOfChannels);
 		public const int BufferSize = (int)SamplesPerBuffer;
 
-		bool Initialized = false;
-		static IntPtr WaveOutHandle = IntPtr.Zero;
+		private bool Initialized = false;
+		private static IntPtr WaveOutHandle = IntPtr.Zero;
 
-		ConcurrentQueue<short[]> Queue = new ConcurrentQueue<short[]>();
+		private ConcurrentQueue<short[]> Queue = new ConcurrentQueue<short[]>();
 
-		WaveOutPlayer m_Player;
+		private WaveOutPlayer m_Player;
 
 
-		void BufferFillEventHandler(IntPtr data, int size)
+		private void BufferFillEventHandler(IntPtr data, int size)
 		{
 			if (Queue.Count > 0)
 			{

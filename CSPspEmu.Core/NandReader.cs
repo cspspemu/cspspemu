@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CSharpUtils;
-using CSharpUtils.Streams;
 
 namespace CSPspEmu.Core
 {
@@ -16,7 +11,7 @@ namespace CSPspEmu.Core
 	/// </summary>
 	public class NandReader : Stream
 	{
-		Stream Stream;
+		private Stream Stream;
 
 		public NandReader(Stream Stream)
 		{
@@ -76,18 +71,9 @@ namespace CSPspEmu.Core
 			get { return (Stream.Length / BytesPerRawPage) * BytesPerPage; }
 		}
 
-		long _Position;
-
 		public override long Position
 		{
-			get
-			{
-				return _Position;
-			}
-			set
-			{
-				_Position = value;
-			}
+			get; set;
 		}
 
 		int LastPageIndex = -1;

@@ -42,53 +42,53 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 
 		static readonly int[] BlendFuncSrcTranslate = new[]
 		{
-			/// 0 GU_SRC_COLOR,
+			// 0 GU_SRC_COLOR,
 			GL.GL_SRC_COLOR,
-			/// 1 GU_ONE_MINUS_SRC_COLOR,
+			// 1 GU_ONE_MINUS_SRC_COLOR,
 			GL.GL_ONE_MINUS_SRC_COLOR,
-			/// 2 GU_SRC_ALPHA,
+			// 2 GU_SRC_ALPHA,
 			GL.GL_SRC_ALPHA,
-			/// 3 GU_ONE_MINUS_SRC_ALPHA,
+			// 3 GU_ONE_MINUS_SRC_ALPHA,
 			GL.GL_ONE_MINUS_SRC_ALPHA,
-			/// 4 -,
+			// 4 -,
 			GL.GL_DST_ALPHA,
-			/// 5 -,
+			// 5 -,
 			GL.GL_ONE_MINUS_DST_ALPHA,
-			/// 6 -,
+			// 6 -,
 			GL.GL_SRC_ALPHA,
-			/// 7 -,
+			// 7 -,
 			GL.GL_ONE_MINUS_SRC_ALPHA,
-			/// 8 -,
+			// 8 -,
 			GL.GL_DST_ALPHA,
-			/// 9 -,
+			// 9 -,
 			GL.GL_ONE_MINUS_DST_ALPHA,
-			/// 10 GU_FIX
+			// 10 GU_FIX
 			GL.GL_SRC_ALPHA,
 		};
 
 		static readonly int[] BlendFuncDstTranslate = new[]
 		{
-			/// 0 GU_DST_COLOR,
+			// 0 GU_DST_COLOR,
 			GL.GL_DST_COLOR,
-			/// 1 GU_ONE_MINUS_DST_COLOR,
+			// 1 GU_ONE_MINUS_DST_COLOR,
 			GL.GL_ONE_MINUS_DST_COLOR,
-			/// 2 -,
+			// 2 -,
 			GL.GL_DST_ALPHA,
-			/// 3 -,
+			// 3 -,
 			GL.GL_ONE_MINUS_DST_ALPHA,
-			/// 4 GU_DST_ALPHA,
+			// 4 GU_DST_ALPHA,
 			GL.GL_DST_ALPHA,
-			/// 5 GU_ONE_MINUS_DST_ALPHA,
+			// 5 GU_ONE_MINUS_DST_ALPHA,
 			GL.GL_ONE_MINUS_DST_ALPHA,
-			/// 6 -,
+			// 6 -,
 			GL.GL_SRC_ALPHA,
-			/// 7 -,
+			// 7 -,
 			GL.GL_ONE_MINUS_SRC_ALPHA,
-			/// 8 -,
+			// 8 -,
 			GL.GL_DST_ALPHA,
-			/// 9 -,
+			// 9 -,
 			GL.GL_ONE_MINUS_DST_ALPHA,
-			/// 10 GU_FIX
+			// 10 GU_FIX
 			GL.GL_ONE_MINUS_SRC_ALPHA,
 		};
 
@@ -105,13 +105,13 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 
 		static readonly int[] PrimitiveTypeTranslate = new[]
 		{
-			GL.GL_POINTS,//Points = 0,
-			GL.GL_LINES,//Lines = 1,
-			GL.GL_LINE_STRIP,//LineStrip = 2,
-			GL.GL_TRIANGLES,//Triangles = 3,
-			GL.GL_TRIANGLE_STRIP,//TriangleStrip = 4,
-			GL.GL_TRIANGLE_FAN,//TriangleFan = 5,
-			GL.GL_TRIANGLE_STRIP,//Sprites = 6,
+			GL.GL_POINTS,         //Points = 0,
+			GL.GL_LINES,          //Lines = 1,
+			GL.GL_LINE_STRIP,     //LineStrip = 2,
+			GL.GL_TRIANGLES,      //Triangles = 3,
+			GL.GL_TRIANGLE_STRIP, //TriangleStrip = 4,
+			GL.GL_TRIANGLE_FAN,   //TriangleFan = 5,
+			GL.GL_TRIANGLE_STRIP, //Sprites = 6,
 		};
 
 		public struct GlPixelFormat

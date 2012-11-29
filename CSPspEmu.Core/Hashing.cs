@@ -6,7 +6,7 @@ namespace CSPspEmu.Core
 {
 	public static unsafe class Hashing
 	{
-		static Logger Logger = Logger.GetLogger("Hashing");
+		private static Logger Logger = Logger.GetLogger("Hashing");
 
 		[HandleProcessCorruptedStateExceptions]
 		public static ulong FastHash(byte* Pointer, int Count, ulong StartHash = 0)

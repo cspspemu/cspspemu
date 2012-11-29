@@ -21,7 +21,7 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 		public int[] BufferIds;
 		public int SourceId;
 
-		static void ALEnforce(string AT = "Unknown")
+		private static void ALEnforce(string AT = "Unknown")
 		{
 			var Error = AL.GetError();
 			if (Error != ALError.NoError)
@@ -31,7 +31,7 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 			}
 		}
 
-		static T ALEnforce<T>(T Input)
+		private static T ALEnforce<T>(T Input)
 		{
 			ALEnforce();
 			return Input;
@@ -105,7 +105,7 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 			}
 		}
 
-		short[] BufferData = null;
+		private short[] BufferData = null;
 		private void ReadStream(int BufferId, Action<short[]> ReadStreamCallback = null)
 		{
 			//short[] BufferData;

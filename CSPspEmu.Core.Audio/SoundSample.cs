@@ -21,8 +21,8 @@
 			return new StereoIntSoundSample((int)StereoShortSoundSample.Left, (int)StereoShortSoundSample.Right);
 		}
 
-
-		public short MonoLeftRight {
+		public short MonoLeftRight
+		{
 			set
 			{
 				Left = value;

@@ -9,7 +9,7 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 	{
 		protected static AudioContext AudioContext;
 		//protected static XRamExtension XRam;
-		static internal AudioStream AudioStream;
+		internal static AudioStream AudioStream;
 
 		public override void InitializeComponent()
 		{
@@ -42,7 +42,8 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 
 		public override PluginInfo PluginInfo
 		{
-			get {
+			get
+			{
 				return new PluginInfo()
 				{
 					Name = "OpenAl",

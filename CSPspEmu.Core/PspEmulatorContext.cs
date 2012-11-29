@@ -111,7 +111,7 @@ namespace CSPspEmu.Core
 
 		public void InjectDependencesTo(object Object)
 		{
-			var GetBindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+			var GetBindingFlags = (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
 			foreach (var Member in Object.GetType().GetMembers(GetBindingFlags))
 			{
@@ -123,7 +123,7 @@ namespace CSPspEmu.Core
 
 				var InjectAttributeList = Member.GetCustomAttributes(typeof(InjectAttribute), true);
 
-				if (typeof(PspEmulatorComponent).IsAssignableFrom(MemberType) && InjectAttributeList != null && InjectAttributeList.Length > 0)
+				if (typeof(PspEmulatorComponent).IsAssignableFrom(MemberType) && InjectAttributeList.Length > 0)
 				{
 					switch (Member.MemberType)
 					{

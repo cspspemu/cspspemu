@@ -39,7 +39,7 @@ namespace CSPspEmu.Core.Memory
 			//FreeMemory();
 		}
 
-		static bool AlreadyInitialized = false;
+		private static bool AlreadyInitialized = false;
 
 		private void AllocMemoryOnce()
 		{

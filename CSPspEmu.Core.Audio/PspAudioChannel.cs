@@ -129,7 +129,7 @@ namespace CSPspEmu.Core.Audio
 		/// </summary>
 		/// <param name="MonoSamples">Buffer that contains mono samples.</param>
 		/// <returns>A buffer that contains stereo samples.</returns>
-		short[] MonoToStereo(short[] MonoSamples)
+		private short[] MonoToStereo(short[] MonoSamples)
 		{
 			var StereoSamples = StereoSamplesBuffer;
 			for (int n = 0; n < MonoSamples.Length; n++)

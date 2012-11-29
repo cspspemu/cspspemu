@@ -173,7 +173,7 @@ namespace CSPspEmu.Core.Memory
 							}
 							uint Offset = Address - ScratchPadOffset;
 #if ADDITIONAL_CHECKS
-							if (Offset < 0 || Offset >= ScratchPadSize) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
+							if (Offset >= ScratchPadSize) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
 #endif
 							return &ScratchPadPtr[Address - ScratchPadOffset];
 						}
@@ -182,7 +182,7 @@ namespace CSPspEmu.Core.Memory
 						{
 							uint Offset = Address - FrameBufferOffset;
 #if ADDITIONAL_CHECKS
-							if (Offset < 0 || Offset >= FrameBufferSize) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
+							if (Offset >= FrameBufferSize) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
 #endif
 
 							return &FrameBufferPtr[Offset];
@@ -195,7 +195,7 @@ namespace CSPspEmu.Core.Memory
 						{
 							uint Offset = Address - MainOffset;
 #if ADDITIONAL_CHECKS
-							if (Offset < 0 || Offset >= MainSize) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
+							if (Offset >= MainSize) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
 #endif
 
 							return &MainPtr[Offset];
@@ -209,7 +209,7 @@ namespace CSPspEmu.Core.Memory
 							//return HardwareVectors
 							uint Offset = Address - VectorsOffset;
 #if ADDITIONAL_CHECKS
-							if (Offset < 0 || Offset >= VectorsSize) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
+							if (Offset >= VectorsSize) throw (new Exception(String.Format("Outside! 0x{0:X}", Address)));
 #endif
 							return &VectorsPtr[Offset];
 						}

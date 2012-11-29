@@ -26,9 +26,6 @@
 					Output[m++].MonoLeftRight = (short)((Sample1 + Sample2) / 2);
 					//Output[m++] = (short)((Sample1 + Sample2) / 2);
 				}
-				else
-				{
-				}
 			}
 			return Output;
 		}
