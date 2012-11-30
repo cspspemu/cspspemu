@@ -279,6 +279,29 @@ namespace CSPspEmu.Core.Cpu
 			CpuProcessor.Syscall(Code, this);
 		}
 
+		//private DateTime LastTick;
+		private int TickCount = 0;
+
+		DateTime LastTickYield = DateTime.UtcNow;
+
+		/// <summary>
+		/// Function called on some situations, that allow
+		/// to yield the thread.
+		/// </summary>
+		public void Tick()
+		{
+			TickCount++;
+			if (TickCount > 10000)
+			{
+				TickCount = 0;
+				if ((DateTime.UtcNow - LastTickYield).TotalMilliseconds >= 2)
+				{
+					LastTickYield = DateTime.UtcNow;
+					Yield();
+				}
+			}
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>

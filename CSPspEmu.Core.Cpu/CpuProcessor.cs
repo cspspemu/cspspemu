@@ -8,6 +8,11 @@ using SafeILGenerator.Utils;
 
 namespace CSPspEmu.Core.Cpu
 {
+	public class NativeSyscallInfo
+	{
+		public string Name;
+		public ILInstanceHolderPoolItem<Action<CpuThreadState>> PoolItem;
+	}
     public sealed class CpuProcessor : PspEmulatorComponent
 	{
 		public readonly Dictionary<string, uint> GlobalInstructionStats = new Dictionary<string, uint>();
@@ -23,7 +28,7 @@ namespace CSPspEmu.Core.Cpu
 		public MethodCache MethodCache = new MethodCache();
 
 		//public Dictionary<uint, Action<CpuThreadState>> RegisteredNativeSyscallMethods = new Dictionary<uint,Action<CpuThreadState>>();
-		public Dictionary<uint, ILInstanceHolderPoolItem<Action<CpuThreadState>>> RegisteredNativeSyscallMethods = new Dictionary<uint, ILInstanceHolderPoolItem<Action<CpuThreadState>>>();
+		public Dictionary<uint, NativeSyscallInfo> RegisteredNativeSyscallMethods = new Dictionary<uint, NativeSyscallInfo>();
 		private Dictionary<int, Action<CpuThreadState, int>> RegisteredNativeSyscalls;
 		public HashSet<uint> NativeBreakpoints;
 		public bool IsRunning;

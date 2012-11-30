@@ -53,17 +53,21 @@ namespace CSPspEmu.Runner
 
 		public void PauseSynchronized()
 		{
-			RunnableComponentList.ForEach((RunnableComponent) =>
-				RunnableComponent.PauseSynchronized()
-			);
+			RunnableComponentList.ForEach((RunnableComponent) => {
+				Console.Write("Pausing {0}...", RunnableComponent);
+				RunnableComponent.PauseSynchronized();
+				Console.WriteLine("Ok");
+			});
 			Paused = true;
 		}
 
 		public void ResumeSynchronized()
 		{
-			RunnableComponentList.ForEach((RunnableComponent) =>
-				RunnableComponent.ResumeSynchronized()
-			);
+			RunnableComponentList.ForEach((RunnableComponent) => {
+				Console.Write("Resuming {0}...", RunnableComponent);
+				RunnableComponent.ResumeSynchronized();
+				Console.WriteLine("Ok");
+			});
 			Paused = false;
 		}
 	}

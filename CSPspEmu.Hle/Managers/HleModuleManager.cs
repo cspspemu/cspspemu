@@ -154,7 +154,11 @@ namespace CSPspEmu.Hle.Managers
 					throw (new NotImplementedException("Not Implemented Syscall '" + ModuleImportName + ":" + FunctionEntry + "'"));
 				};
 			}
-			CpuProcessor.RegisteredNativeSyscallMethods[DelegateId] = ILInstanceHolder.TAlloc<Action<CpuThreadState>>(FunctionEntry.Delegate);
+			CpuProcessor.RegisteredNativeSyscallMethods[DelegateId] = new NativeSyscallInfo()
+			{
+				Name = String.Format("{0}.{1} (0x{2:X8})", ModuleImportName, FunctionEntry.Name, FunctionEntry.NID),
+				PoolItem = ILInstanceHolder.TAlloc<Action<CpuThreadState>>(FunctionEntry.Delegate),
+			};
 			DelegateTable[DelegateId] = new DelegateInfo()
 			{
 				Action = Action,

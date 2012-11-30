@@ -164,6 +164,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 			return ast.Statements(
 				AssignREG("PC", GPR(31)),
+				ast.Statement(ast.CallInstance(MipsMethodEmitter.CpuThreadStateArgument(), (Action)CpuThreadState.Methods.Tick)),
 				//ast.Statement(ast.CallStatic((Action)DumpStackTrace)),
 				ast.Return()
 			);

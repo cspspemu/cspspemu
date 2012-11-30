@@ -1,4 +1,5 @@
 ﻿//#define DEBUG_TRACE_INSTRUCTIONS
+//#define ENABLE_JUMP_GOTO
 
 using System;
 using System.Collections.Generic;
@@ -178,7 +179,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 							//Console.WriteLine("Instruction");
 
 // This breaks things out!
-#if false
+#if ENABLE_JUMP_GOTO
 							var JumpAddress = Instruction.GetJumpAddress(PC);
 							if (!LabelsJump.ContainsKey(JumpAddress))
 							{

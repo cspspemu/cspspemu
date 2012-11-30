@@ -1121,8 +1121,10 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void functionViewerToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-
-			new FunctionViewerForm((CpuProcessor)IGuiExternalInterface.GetCpuProcessor()).ShowDialog();
+			PauseResume(() =>
+			{
+				new FunctionViewerForm((CpuProcessor)IGuiExternalInterface.GetCpuProcessor()).ShowDialog();
+			});
 		}
 	}
 }
