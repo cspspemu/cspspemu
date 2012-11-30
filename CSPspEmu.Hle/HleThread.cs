@@ -18,91 +18,6 @@ using CSharpUtils.Threading;
 
 namespace CSPspEmu.Hle
 {
-	[Flags]
-	public enum PspThreadAttributes : uint
-	{
-		/// <summary>
-		/// 
-		/// </summary>
-		None = 0,
-
-		/// <summary>
-		/// Enable VFPU access for the thread.
-		/// </summary>
-		Vfpu = 0x00004000,
-
-		/// <summary>
-		/// Start the thread in user mode (done automatically if the thread creating it is in user mode).
-		/// </summary>
-		User = 0x80000000,
-
-		/// <summary>
-		/// Thread is part of the USB/WLAN API.
-		/// </summary>
-		UsbWlan = 0xa0000000,
-		
-		/// <summary>
-		/// Thread is part of the VSH API.
-		/// </summary>
-		Vsh = 0xc0000000,
-
-		/// <summary>
-		/// Allow using scratchpad memory for a thread, NOT USABLE ON V1.0
-		/// </summary>
-		ScratchRamEnable = 0x00008000,
-		
-		/// <summary>
-		/// Disables filling the stack with 0xFF on creation
-		/// </summary>
-		NoFillStack = 0x00100000,
-		
-		/// <summary>
-		/// Clear the stack when the thread is deleted
-		/// </summary>
-		ClearStack = 0x00200000,
-	}
-
-	public struct HleFunctionEntry
-	{
-		public uint NID;
-		public String Name;
-		public String Description;
-		public HleModuleHost Module;
-		public string ModuleName;
-		public Action<CpuThreadState> Delegate;
-
-		public override string ToString()
-		{
-			return String.Format("FunctionEntry(NID=0x{0:X}, Name='{1}', Description='{2}', Module='{3}')", NID, Name, Description, Module);
-		}
-	}
-
-	public struct DelegateInfo
-	{
-		public int CallIndex;
-		public uint PC;
-		public uint RA;
-		public string ModuleImportName;
-		public HleFunctionEntry FunctionEntry;
-		public Action<CpuThreadState> Action;
-		public HleThread Thread;
-
-		public override string ToString()
-		{
-			try
-			{
-				return String.Format(
-					"{0}: PC=0x{3:X}, RA=0x{4:X} => '{5}' : {1}::{2}",
-					CallIndex, ModuleImportName, FunctionEntry.Name, PC, RA, (Thread != null) ? Thread.Name : "-");
-			}
-			catch (Exception Exception)
-			{
-				return String.Format("Invalid DelegateInfo : " + Exception);
-			}
-			//return this.ToStringDefault();
-		}
-	}
-
 	public unsafe class HleThread : IDisposable, IPreemptiveItem
 	{
 		/// <summary>
@@ -197,14 +112,6 @@ namespace CSPspEmu.Hle
 				StatusUpdated();
 			}
 		}
-
-#if false
-		public void ChangeStatus(Status Add, Status Remove = 0)
-		{
-			AddStatus(Add);
-			if (Remove != 0) RemoveStatus(Remove);
-		}
-#endif
 
 		/// <summary>
 		/// Number of times the thread have been paused.
@@ -550,35 +457,9 @@ namespace CSPspEmu.Hle
 		}
 	}
 
-	public unsafe struct SceKernelSysClock
-	{
-		//ulong Value;
-		public uint Low;
-		public uint High;
-
-		public long MicroSeconds
-		{
-			get
-			{
-				fixed (uint* LowPtr = &Low)
-				{
-					return *(long*)LowPtr;
-				}
-			}
-			set
-			{
-				fixed (uint* LowPtr = &Low)
-				{
-					*(long*)LowPtr = value;
-				}
-			}
-		}
-	}
-
 	/// <summary>
 	/// Event flag wait types
 	/// </summary>
-	/*
 	public enum PspEventFlagWaitTypes : uint
 	{
 		/// <summary>
@@ -600,43 +481,9 @@ namespace CSPspEmu.Hle
 		/// Clear the wait pattern when it matches
 		/// </summary>
 		PSP_EVENT_WAITCLEAR = 0x20,
-	};
-	*/
-
-	[Flags]
-	public enum PspThreadStatus : uint
-	{
-		/// <summary>
-		/// 0x01 - Running.
-		/// </summary>
-		PSP_THREAD_RUNNING = 1,
-
-		/// <summary>
-		/// 0x02 - Ready.
-		/// </summary>
-		PSP_THREAD_READY = 2,
-
-		/// <summary>
-		/// 0x04 - Waiting.
-		/// </summary>
-		PSP_THREAD_WAITING = 4,
-
-		/// <summary>
-		/// 0x08 - Suspended.
-		/// </summary>
-		PSP_THREAD_SUSPEND = 8,
-
-		/// <summary>
-		/// 0x10 - Stopped. (Before startThread)
-		/// </summary>
-		PSP_THREAD_STOPPED = 16,
-
-		/// <summary>
-		/// 0x20 - Thread manager has killed the thread (stack overflow)
-		/// </summary>
-		PSP_THREAD_KILLED = 32,
 	}
 
+	
 	//alias int function(SceSize args, void* argp) SceKernelThreadEntry;
 	public enum SceKernelThreadEntry : uint
 	{

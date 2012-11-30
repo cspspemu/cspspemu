@@ -18,6 +18,8 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 
 		private Dictionary<uint, MethodCacheInfo> MethodMapping = new Dictionary<uint, MethodCacheInfo>();
 
+		public IEnumerable<uint> PCs { get { return MethodMapping.Keys; } }
+
 		public MethodCache()
 		{
 		}

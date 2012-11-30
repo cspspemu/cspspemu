@@ -57,6 +57,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
@@ -75,6 +76,12 @@
     </Compile>
     <Compile Include="ButtonMappingForm.Designer.cs">
       <DependentUpon>ButtonMappingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FunctionViewerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FunctionViewerForm.Designer.cs">
+      <DependentUpon>FunctionViewerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GameList.cs" />
     <Compile Include="GameListComponent.cs">
@@ -109,6 +116,9 @@
     <EmbeddedResource Include="ButtonMappingForm.resx">
       <DependentUpon>ButtonMappingForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FunctionViewerForm.resx">
+      <DependentUpon>FunctionViewerForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GameListComponent.resx">
       <DependentUpon>GameListComponent.cs</DependentUpon>
     </EmbeddedResource>
@@ -125,6 +135,18 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CSPspEmu.Core.Cpu\CSPspEmu.Core.Cpu.csproj">
+      <Project>{827779a5-f05c-41c6-9ff9-fd274224a7ae}</Project>
+      <Name>CSPspEmu.Core.Cpu</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Crypto\CSPspEmu.Core.Crypto.csproj">
+      <Project>{f4181553-01f3-425a-8ddc-927a97de6de2}</Project>
+      <Name>CSPspEmu.Core.Crypto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">
+      <Project>{9a30ebf3-b702-47d9-aafc-e3e02b410dad}</Project>
+      <Name>CSPspEmu.Core.Gpu</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
@@ -148,6 +170,10 @@
     <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
       <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
       <Name>CSharpUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\SafeILGenerator\SafeILGenerator\SafeILGenerator.csproj">
+      <Project>{9a93c7e4-09da-46cf-b7dd-6bb09681d5ab}</Project>
+      <Name>SafeILGenerator</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

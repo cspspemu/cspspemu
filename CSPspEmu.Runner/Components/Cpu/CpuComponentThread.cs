@@ -29,6 +29,7 @@ using CSPspEmu.Hle.Vfs.Iso;
 using CSPspEmu.Hle.Vfs.Zip;
 using CSPspEmu.Resources;
 using CSPspEmu.Hle.Formats.Archive;
+using System.Reflection;
 
 namespace CSPspEmu.Runner.Components.Cpu
 {
@@ -176,8 +177,13 @@ namespace CSPspEmu.Runner.Components.Cpu
 			RegisterModuleSyscall<Emulator>(0x1016, "emitLong");
 			RegisterModuleSyscall<Emulator>(0x1017, "testArguments");
 			//RegisterModuleSyscall<Emulator>(0x7777, "waitThreadForever");
-			RegisterModuleSyscall<ThreadManForUser>(0x7777, "_hle_sceKernelExitDeleteThread");
-			RegisterModuleSyscall<Emulator>(0x7778, "finalizeCallback");
+			RegisterModuleSyscall<ThreadManForUser>(0x7777, (Func<CpuThreadState, int>)new ThreadManForUser()._hle_sceKernelExitDeleteThread);
+			RegisterModuleSyscall<Emulator>(0x7778, (Action<CpuThreadState>)new Emulator().finalizeCallback);
+		}
+
+		void RegisterModuleSyscall<TType>(int SyscallCode, Delegate Delegate) where TType : HleModuleHost
+		{
+			RegisterModuleSyscall<TType>(SyscallCode, Delegate.Method.Name);
 		}
 
 		void RegisterModuleSyscall<TType>(int SyscallCode, string FunctionName) where TType : HleModuleHost

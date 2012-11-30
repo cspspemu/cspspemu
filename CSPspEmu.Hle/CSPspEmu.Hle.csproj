@@ -69,6 +69,7 @@
     </Compile>
     <Compile Include="Attributes\HlePspUnknownDefinitionAttribute.cs" />
     <Compile Include="CStringFormater.cs" />
+    <Compile Include="DelegateInfo.cs" />
     <Compile Include="Formats\EncryptedPrx.Keys16.cs" />
     <Compile Include="Formats\audio\RiffWaveReader.cs" />
     <Compile Include="Formats\audio\Wav.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Formats\Archive\ZipArchive.cs" />
     <Compile Include="HleCallback.cs" />
     <Compile Include="HleEmulatorFinalizeCallbackException.cs" />
+    <Compile Include="HleFunctionEntry.cs" />
     <Compile Include="HleInterop.cs" />
     <Compile Include="HleModule.cs" />
     <Compile Include="HleModuleHost.cs" />
@@ -117,9 +119,12 @@
     <Compile Include="Managers\HleUidPoolSpecial.cs" />
     <Compile Include="Pgd\PgdProxyStream.cs" />
     <Compile Include="PreemptiveScheduler.cs" />
+    <Compile Include="PspThreadAttributes.cs" />
+    <Compile Include="PspThreadStatus.cs" />
     <Compile Include="SceKernelErrors.cs" />
     <Compile Include="SceKernelException.cs" />
     <Compile Include="SceKernelSelfStopUnloadModuleException.cs" />
+    <Compile Include="SceKernelSysClock.cs" />
     <Compile Include="Threading\EventFlags\HleEventFlag.cs" />
     <Compile Include="Threading\Semaphores\HleSemaphore.cs" />
     <Compile Include="Managers\HleSemaphoreManager.cs" />

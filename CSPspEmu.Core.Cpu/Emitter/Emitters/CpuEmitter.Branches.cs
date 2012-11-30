@@ -49,16 +49,26 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		bool AndLink = false;
 		uint BranchPC = 0;
 
+		private AstLocal BranchFlagLocal = null;
+
 		private AstNodeExprLValue BranchFlag()
 		{
+#if true
+			if (BranchFlagLocal == null)
+			{
+				BranchFlagLocal = AstLocal.Create(MipsMethodEmitter.ILGenerator, typeof(bool), "BranchFlag");
+			}
+			return ast.Local(BranchFlagLocal);
+#else
 			return REG("BranchFlag");
+#endif
 		}
 
 		private AstNodeStm AssignBranchFlag(AstNodeExpr Expr, bool AndLink = false)
 		{
 			this.AndLink = AndLink;
 			this.BranchPC = PC;
-			return AssignREG("BranchFlag", ast.Cast<bool>(Expr, Explicit: false)); 
+			return ast.Assign(BranchFlag(), ast.Cast<bool>(Expr, Explicit: false));
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////

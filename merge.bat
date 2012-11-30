@@ -9,7 +9,7 @@ PUSHD %~dp0
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.exe"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSharpUtils.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSharpUtils.Drawing.dll"
-	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Utils.dll"
+	REM SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Utils.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Crypto.dll"
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.Core.Audio.dll"

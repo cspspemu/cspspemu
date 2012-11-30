@@ -496,5 +496,10 @@ namespace CSPspEmu
 		{
 			PspEmulatorContext.GetInstance<GpuProcessor>().CaptureFrame();
 		}
+
+		public object GetCpuProcessor()
+		{
+			return PspEmulatorContext.GetInstance<CpuProcessor>();
+		}
 	}
 }

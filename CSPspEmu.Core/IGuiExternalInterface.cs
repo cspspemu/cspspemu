@@ -8,6 +8,7 @@ namespace CSPspEmu.Core
 	public interface IGuiExternalInterface
 	{
 		// Get Object Methods
+		object GetCpuProcessor();
 		PspMemory GetMemory();
 		PspDisplay GetDisplay();
 		PspController GetController();

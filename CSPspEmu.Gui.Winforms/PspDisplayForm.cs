@@ -18,6 +18,7 @@ using CSPspEmu.Core.Controller;
 using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Utils;
 using CSPspEmu.Resources;
+using CSPspEmu.Core.Cpu;
 
 namespace CSPspEmu.Gui.Winforms
 {
@@ -1116,6 +1117,12 @@ namespace CSPspEmu.Gui.Winforms
 		private void emureleasescomToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			Process.Start(@"http://www.emureleases.com/?rf=csp");
+		}
+
+		private void functionViewerToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
+			new FunctionViewerForm((CpuProcessor)IGuiExternalInterface.GetCpuProcessor()).ShowDialog();
 		}
 	}
 }

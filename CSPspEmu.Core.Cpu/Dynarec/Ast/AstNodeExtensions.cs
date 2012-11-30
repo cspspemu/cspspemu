@@ -17,6 +17,11 @@ namespace CSPspEmu.Core.Cpu
 			return AstOptimizerPsp.GlobalOptimize(CpuProcessor, AstNodeStm);
 		}
 
+		static public string ToILString<TDelegate>(this AstNodeStm AstNodeStm)
+		{
+			return AstNodeStm.ToILString(typeof(TDelegate).GetMethod("Invoke"));
+		}
+
 		static public string ToILString(this AstNodeStm AstNodeStm, MethodInfo MethodInfo)
 		{
 			return GeneratorIL.GenerateToString<GeneratorILPsp>(MethodInfo, AstNodeStm);

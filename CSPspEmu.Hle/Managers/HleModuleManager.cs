@@ -59,6 +59,7 @@ namespace CSPspEmu.Hle.Managers
 
 			PspConfig = CpuProcessor.PspConfig;
 
+#if false
 			CpuProcessor.RegisterNativeSyscall(SyscallInfo.NativeCallSyscallCode, (CpuThreadState, Code) =>
 			{
 				uint Info = CpuThreadState.CpuProcessor.Memory.ReadSafe<uint>(CpuThreadState.PC + 4);
@@ -96,6 +97,7 @@ namespace CSPspEmu.Hle.Managers
 				DelegateInfo.Action(CpuThreadState);
 				CpuThreadState.PC = CpuThreadState.RA;
 			});
+#endif
 		}
 
 		public HleModuleHost GetModuleByType(Type Type)

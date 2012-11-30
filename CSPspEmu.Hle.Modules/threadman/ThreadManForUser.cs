@@ -41,9 +41,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x82BC5777, FirmwareVersion = 150)]
 		public long sceKernelGetSystemTimeWide()
 		{
-			PspRtc.Update();
-			return PspRtc.ElapsedTime.TotalMicroseconds;
-			//return Platform.CurrentUnixMicroseconds;
+			//PspRtc.Update();
+			//return PspRtc.ElapsedTime.TotalMicroseconds;
+			return Platform.CurrentUnixMicroseconds;
 		}
 
 		/// <summary>
@@ -116,6 +116,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelGetSystemTime(SceKernelSysClock* Time)
 		{
 			//Console.Error.WriteLine(sceKernelGetSystemTimeWide());
+			if (Time == null) throw(new SceKernelException(SceKernelErrors.ERROR_ERRNO_INVALID_ARGUMENT));
 			Time->MicroSeconds = sceKernelGetSystemTimeWide();
 			return 0;
 		}

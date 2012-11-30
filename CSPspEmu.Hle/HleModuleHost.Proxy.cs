@@ -234,6 +234,8 @@ namespace CSPspEmu.Hle
 				AstNodes
 			);
 
+			//return Delegate;
+
 			return (CpuThreadState) =>
 			{
 				bool Trace = (!SkipLog && CpuThreadState.CpuProcessor.PspConfig.DebugSyscalls);

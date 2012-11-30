@@ -464,6 +464,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x809CE29B, FirmwareVersion = 150)]
 		public int sceKernelExitDeleteThread(int ExitStatus)
 		{
+			if (ThreadManager.Current == null) throw (new Exception("ThreadManager.Current == null"));
 			var CurrentThreadId = ThreadManager.Current.Id;
 			int ResultExit = sceKernelExitThread(ExitStatus);
 			int ResultDelete = sceKernelDeleteThread(CurrentThreadId);
@@ -478,6 +479,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x11111111, FirmwareVersion = 150)]
 		public int _hle_sceKernelExitDeleteThread(CpuThreadState CpuThreadState)
 		{
+			Console.WriteLine(":::::" + CpuThreadState);
+			Console.WriteLine(":::::" + this);
 			//CpuThreadState.DumpRegisters(Console.Error);
 
 			//Console.Error.WriteLine(CpuThreadState.GPR[2]);

@@ -60,11 +60,6 @@ namespace CSPspEmu.Core.Cpu
 		/// </summary>
 		public uint IC;
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public bool BranchFlag;
-
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// GPR: General Purporse Registers
 		// FPR: Floating Point Registers
@@ -412,7 +407,6 @@ namespace CSPspEmu.Core.Cpu
 		public unsafe void CopyRegistersFrom(CpuThreadState that)
 		{
 			this.PC = that.PC;
-			this.BranchFlag = that.BranchFlag;
 			this.Fcr31 = that.Fcr31;
 			this.IC = that.IC;
 			this.LO = that.LO;
@@ -466,6 +460,7 @@ namespace CSPspEmu.Core.Cpu
 				Console.WriteLine(DynarecFunction.AstNode.ToCSharpString());
 				Console.WriteLine("-------------------------------------");
 			}
+			Console.WriteLine("Created function for PC=0x{0:X8}", PC);
 
 			MethodCacheInfo.AstTree = DynarecFunction.AstNode;
 			MethodCacheInfo.StaticField.Value = DynarecFunction.Delegate;

@@ -61,5 +61,10 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			Process.Start(@"https://github.com/lioncash");
 		}
+
+		private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			Process.Start(@"http://cballesterosvelasco.es/");
+		}
 	}
 }
