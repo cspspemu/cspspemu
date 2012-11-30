@@ -4,6 +4,7 @@ using CSPspEmu.Core.Memory;
 using CSharpUtils.Threading;
 using CSPspEmu.Core.Cpu.InstructionCache;
 using CSPspEmu.Core.Cpu.Dynarec;
+using SafeILGenerator.Utils;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -21,6 +22,8 @@ namespace CSPspEmu.Core.Cpu
 
 		public MethodCache MethodCache = new MethodCache();
 
+		//public Dictionary<uint, Action<CpuThreadState>> RegisteredNativeSyscallMethods = new Dictionary<uint,Action<CpuThreadState>>();
+		public Dictionary<uint, ILInstanceHolderPoolItem<Action<CpuThreadState>>> RegisteredNativeSyscallMethods = new Dictionary<uint, ILInstanceHolderPoolItem<Action<CpuThreadState>>>();
 		private Dictionary<int, Action<CpuThreadState, int>> RegisteredNativeSyscalls;
 		public HashSet<uint> NativeBreakpoints;
 		public bool IsRunning;

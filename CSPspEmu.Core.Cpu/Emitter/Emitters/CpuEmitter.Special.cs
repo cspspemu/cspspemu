@@ -12,12 +12,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// Syscall
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		public AstNodeStm syscall() {
-#if false
+#if true
 			if (Instruction.CODE == SyscallInfo.NativeCallSyscallCode)
 			{
+				var DelegateId = Memory.Read4(PC + 4);
 				return ast.Statements(
 					ast.Assign(REG("PC"), PC),
-					ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<int>)CpuThreadState.Methods.Syscall, (int)Instruction.CODE))
+					ast.Statement(ast.CallDelegate(CpuProcessor.RegisteredNativeSyscallMethods[DelegateId].GetAstFieldAccess(), CpuThreadStateArgument()))
 				);
 			}
 			else

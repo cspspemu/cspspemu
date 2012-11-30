@@ -5,6 +5,7 @@ using CSPspEmu.Core.Cpu;
 using System.Reflection;
 using CSPspEmu.Core;
 using CSharpUtils;
+using SafeILGenerator.Utils;
 
 namespace CSPspEmu.Hle.Managers
 {
@@ -151,6 +152,7 @@ namespace CSPspEmu.Hle.Managers
 					throw (new NotImplementedException("Not Implemented Syscall '" + ModuleImportName + ":" + FunctionEntry + "'"));
 				};
 			}
+			CpuProcessor.RegisteredNativeSyscallMethods[DelegateId] = ILInstanceHolder.TAlloc<Action<CpuThreadState>>(FunctionEntry.Delegate);
 			DelegateTable[DelegateId] = new DelegateInfo()
 			{
 				Action = Action,
