@@ -22,7 +22,7 @@ namespace GLES
 
 		public void SetMatrix4(Matrix4 Matrix)
 		{
-			SetMatrix4(Matrix.Values);
+			SetMatrix4((float *)&Matrix.Row0);
 		}
 
 		public void SetMatrix4(float[] values)

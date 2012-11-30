@@ -60,15 +60,19 @@ namespace GLES
 
 		private void Init()
 		{
-			int[] contextAttribs = new int[] { GL.EGL_CONTEXT_CLIENT_VERSION, 2, GL.EGL_NONE, GL.EGL_NONE };
+			int[] contextAttribs = new int[]
+			{
+				GL.EGL_CONTEXT_CLIENT_VERSION, 2,
+				GL.EGL_NONE, GL.EGL_NONE
+			};
 
 			int[] configAttribList = new int[]
 			{
 				GL.EGL_RED_SIZE,       8,
 				GL.EGL_GREEN_SIZE,     8,
 				GL.EGL_BLUE_SIZE,      8,
-				GL.EGL_ALPHA_SIZE,     8,
-				GL.EGL_DEPTH_SIZE,     8,
+				GL.EGL_ALPHA_SIZE,     GL.EGL_DONT_CARE,
+				GL.EGL_DEPTH_SIZE,     16,
 				GL.EGL_STENCIL_SIZE,   8,
 				GL.EGL_SAMPLE_BUFFERS, 0,
 				//GL.EGL_ALPHA_SIZE,     (flags & GL.ES_WINDOW_ALPHA) ? 8 : GL.EGL_DONT_CARE,
@@ -102,6 +106,14 @@ namespace GLES
 			{
 				EglExpectNotEquals(false, GL.eglChooseConfig(display, configAttribListPtr, &config, 1, &numConfigs));
 			}
+
+			Console.WriteLine("EGL_RED_SIZE: {0}", GL.eglGetConfigAttrib(display, config, GL.EGL_RED_SIZE));
+			Console.WriteLine("EGL_GREEN_SIZE: {0}", GL.eglGetConfigAttrib(display, config, GL.EGL_GREEN_SIZE));
+			Console.WriteLine("EGL_BLUE_SIZE: {0}", GL.eglGetConfigAttrib(display, config, GL.EGL_BLUE_SIZE));
+			Console.WriteLine("EGL_ALPHA_SIZE: {0}", GL.eglGetConfigAttrib(display, config, GL.EGL_ALPHA_SIZE));
+			Console.WriteLine("EGL_DEPTH_SIZE: {0}", GL.eglGetConfigAttrib(display, config, GL.EGL_DEPTH_SIZE));
+			Console.WriteLine("EGL_STENCIL_SIZE: {0}", GL.eglGetConfigAttrib(display, config, GL.EGL_STENCIL_SIZE));
+			Console.WriteLine("EGL_SAMPLE_BUFFERS: {0}", GL.eglGetConfigAttrib(display, config, GL.EGL_SAMPLE_BUFFERS));
 
 			//GL.eglCreateWindowSurface(
 

@@ -44,6 +44,7 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 
 		TextureCacheOpengles TextureCache;
 		TextureOpengles CurrentTexture;
+		VertexTypeStruct VertexType;
 
 		public override void InitializeComponent()
 		{
@@ -58,71 +59,12 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 		private string glSLVERSION;
 		private string glEXTENSIONS;
 
-		public override void InitSynchronizedOnce()
-		{
-			ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Magenta, () =>
-			{
-				Console.WriteLine("Gpu.InitSynchronizedOnce::Thread({0})", Thread.CurrentThread.ManagedThreadId);
-			});
-
-			var FragmentProgram = Assembly.GetExecutingAssembly().GetManifestResourceStream("CSPspEmu.Core.Gpu.Impl.OpenglEs.shader.fragment").ReadAllContentsAsString(Encoding.UTF8);
-			var VertexProgram = Assembly.GetExecutingAssembly().GetManifestResourceStream("CSPspEmu.Core.Gpu.Impl.OpenglEs.shader.vertex").ReadAllContentsAsString(Encoding.UTF8);
-
-			this.GraphicsContext = new OffscreenContext(512, 272);
-			this.GraphicsContext.SetCurrent();
-
-			this.glVENDOR = GL.glGetString2(GL.GL_VENDOR);
-			this.glRENDERER = GL.glGetString2(GL.GL_RENDERER);
-			this.glVERSION = GL.glGetString2(GL.GL_VERSION);
-			this.glSLVERSION = GL.glGetString2(GL.GL_SHADING_LANGUAGE_VERSION);
-			this.glEXTENSIONS = GL.glGetString2(GL.GL_EXTENSIONS);
-
-			ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Magenta, () =>
-			{
-				Console.WriteLine("{0}", this.glEXTENSIONS);
-			});
-
-			GL.glViewport(0, 0, 512, 272);
-			{
-				this.ShaderProgram = ShaderProgram.CreateProgram(VertexProgram, FragmentProgram);
-				{
-					this.aColorLocation = this.ShaderProgram.GetVertexAttribLocation("a_color0");
-					this.aPositionLocation = this.ShaderProgram.GetVertexAttribLocation("a_position");
-					this.aTexCoord = this.ShaderProgram.GetVertexAttribLocation("a_texCoord");
-				}
-				this.ShaderProgram.Link();
-				{
-					// Matrices
-					this.projectionMatrix = this.ShaderProgram.GetUniformLocation("projectionMatrix");
-					this.viewMatrix = this.ShaderProgram.GetUniformLocation("viewMatrix");
-					this.worldMatrix = this.ShaderProgram.GetUniformLocation("worldMatrix");
-					this.textureMatrix = this.ShaderProgram.GetUniformLocation("textureMatrix");
-
-					// Colors
-					this.fColor = this.ShaderProgram.GetUniformLocation("u_color");
-					this.u_has_vertex_color = this.ShaderProgram.GetUniformLocation("u_has_vertex_color");
-					this.u_transform_2d = this.ShaderProgram.GetUniformLocation("u_transform_2d");
-
-					// Textures
-					this.u_has_texture = this.ShaderProgram.GetUniformLocation("u_has_texture");
-					this.u_texture = this.ShaderProgram.GetUniformLocation("u_texture");
-					this.u_texture_effect = this.ShaderProgram.GetUniformLocation("u_texture_effect");
-				}
-			}
-
-			//TestingRender();
-		}
-
-		public override void StopSynchronized()
-		{
-		}
-
 		VertexInfo[] VertexInfoBuffer = new VertexInfo[1024 * 1024];
 		VertexReader VertexReader = new VertexReader();
 
 		public override void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
 		{
-			var VertexType = GpuState->VertexState.Type;
+			VertexType = GpuState->VertexState.Type;
 			var TextureState = &GpuState->TextureMappingState.TextureState;
 
 			VertexReader.SetVertexTypeStruct(
@@ -133,7 +75,7 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 			// Set Matrices
 			this.ShaderProgram.Use();
 
-			this.PrepareState_Common(GpuState);
+			PrepareStateCommon(GpuState);
 
 			if (GpuState->ClearingMode)
 			{
@@ -141,8 +83,10 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 			}
 			else
 			{
-				PrepareStateDraw(GpuState, PrimitiveType);
+				PrepareStateDraw(GpuState);
 			}
+
+			PrepareStateMatrix(GpuState);
 
 			fixed (VertexInfo* VertexInfoBufferPtr = VertexInfoBuffer)
 			{
@@ -275,15 +219,6 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 
 		public override void End(GpuStateStruct* GpuState)
 		{
-			/*
-			ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Magenta, () =>
-			{
-				Console.WriteLine("Gpu.End::Thread({0})", Thread.CurrentThread.ManagedThreadId);
-			});
-
-			TestingRender();
-			*/
-			
 			PrepareWrite(GpuState);
 		}
 
@@ -302,49 +237,6 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 		}
 
 		readonly byte[] TempBuffer = new byte[512 * 512 * 4];
-
-		private void PrepareWrite(GpuStateStruct* GpuState)
-		{
-			//Console.WriteLine("PrepareWrite");
-			var GlPixelFormat = GlPixelFormatList[(int)GpuState->DrawBufferState.Format];
-			int Width = (int)GpuState->DrawBufferState.Width;
-			if (Width == 0) Width = 512;
-			int Height = 272;
-			int ScanWidth = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, Width);
-			int PixelSize = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, 1);
-			//GpuState->DrawBufferState.Format
-			var Address = (void*)Memory.PspAddressToPointerSafe(GpuState->DrawBufferState.Address);
-
-			//Console.WriteLine("{0}", GlPixelFormat.GuPixelFormat);
-
-			//Console.WriteLine("{0:X}", GpuState->DrawBufferState.Address);
-			GL.glPixelStorei(GL.GL_PACK_ALIGNMENT, PixelSize);
-
-			fixed (void* _TempBufferPtr = &TempBuffer[0])
-			{
-				GL.glReadPixels(0, 0, Width, Height, GL.GL_RGBA, GlPixelFormat.OpenglPixelType, _TempBufferPtr);
-				/*
-				for (int n = 0; n < 512 * 272 * 4; n++)
-				{
-					if (TempBuffer[n] != 0)
-					{
-						Console.WriteLine(TempBuffer[n]);
-					}
-				}
-				*/
-
-				var Input = (byte*)_TempBufferPtr;
-				var Output = (byte*)Address;
-
-				for (int Row = 0; Row < Height; Row++)
-				{
-					var ScanIn = (byte*)&Input[ScanWidth * Row];
-					var ScanOut = (byte*)&Output[ScanWidth * (Height - Row - 1)];
-					//Console.WriteLine("{0}:{1},{2},{3}", Row, PixelSize, Width, ScanWidth);
-					PointerUtils.Memcpy(ScanOut, ScanIn, ScanWidth);
-				}
-			}
-		}
 
 		public bool SwapBuffers = false;
 

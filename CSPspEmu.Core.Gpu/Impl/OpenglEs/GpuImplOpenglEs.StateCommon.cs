@@ -10,35 +10,30 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 {
 	public unsafe partial class GpuImplOpenglEs
 	{
-		private void PrepareState_Common(GpuStateStruct* GpuState)
+		static private Matrix4 Matrix4Ortho = Matrix4.Ortho(0, 480, 272, 0, 0, -0xFFFF);
+		static private Matrix4 Matrix4Identity = Matrix4.Identity;
+
+		private static void PrepareStateCommon(GpuStateStruct* GpuState)
 		{
-			var VertexType = GpuState->VertexState.Type;
-			var TextureState = &GpuState->TextureMappingState.TextureState;
+			var Viewport = GpuState->Viewport;
 
-			if (VertexType.Transform2D)
-			{
-				projectionMatrix.SetMatrix4(Matrix4.Ortho(0, 480, 272, 0, 0, -0xFFFF));
-				worldMatrix.SetMatrix4(Matrix4.Identity);
-				viewMatrix.SetMatrix4(Matrix4.Identity);
-				textureMatrix.SetMatrix4(Matrix4.Identity.Scale(1f / 256f, 1f / 256f, 1));
-				GL.glDepthRangef(0f, 1f);
-			}
-			else
-			{
-				GL.glDepthRangef(GpuState->DepthTestState.RangeNear, GpuState->DepthTestState.RangeFar);
-				PrepareState_DepthTest(GpuState);
-				projectionMatrix.SetMatrix4(GpuState->VertexState.ProjectionMatrix.Values);
-				worldMatrix.SetMatrix4(GpuState->VertexState.WorldMatrix.Values);
-				viewMatrix.SetMatrix4(GpuState->VertexState.ViewMatrix.Values);
+			//GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Fastest);
+			//GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
+			//GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
+			//GL.Hint(HintTarget.PointSmoothHint, HintMode.Fastest);
 
-				textureMatrix.SetMatrix4(Matrix4.Identity);
-				/*
-				textureMatrix.SetMatrix4(Matrix4.Identity
-					.Translate(TextureState->OffsetU, TextureState->OffsetV, 0)
-					.Scale(TextureState->ScaleU, TextureState->ScaleV, 1)
-				);
-				*/
-			}
+			int ScreenWidth = 480;
+			int ScreenHeight = 272;
+
+			int ScaledWidth = (int)(((double)ScreenWidth / (double)Viewport.RegionSize.X) * (double)ScreenWidth);
+			int ScaledHeight = (int)(((double)ScreenHeight / (double)Viewport.RegionSize.Y) * (double)ScreenHeight);
+
+			GL.glViewport(
+				(int)Viewport.RegionTopLeft.X,
+				(int)Viewport.RegionTopLeft.Y,
+				ScaledWidth,
+				ScaledHeight
+			);
 		}
 	}
 }

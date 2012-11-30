@@ -26,7 +26,7 @@ namespace CSPspEmu.Core.Display
 
 		public Info CurrentInfo = new Info()
 		{
-			Address = 0x04000000,
+			FrameAddress = 0x04000000,
 			BufferWidth = 512,
 			PixelFormat = GuPixelFormats.RGBA_8888,
 			Sync = SyncMode.Immediate,
@@ -43,7 +43,7 @@ namespace CSPspEmu.Core.Display
 
 		public struct Info 
 		{
-			public uint Address;
+			public uint FrameAddress;
 			public int BufferWidth;
 			public GuPixelFormats PixelFormat;
 			public SyncMode Sync;
@@ -102,7 +102,7 @@ namespace CSPspEmu.Core.Display
 				CurrentInfo.BufferWidth,
 				CurrentInfo.Height,
 				(byte*)Memory.PspAddressToPointerSafe(
-					CurrentInfo.Address,
+					CurrentInfo.FrameAddress,
 					PixelFormatDecoder.GetPixelsSize(CurrentInfo.PixelFormat, CurrentInfo.BufferWidth * CurrentInfo.Height)
 				)
 			).ToBitmap();

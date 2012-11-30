@@ -73,11 +73,13 @@
     <Compile Include="GpuProcessor.cs" />
     <Compile Include="Impl\Null\GpuImplNull.cs" />
     <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.cs" />
+    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.Init.cs" />
     <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.StateClear.cs" />
     <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.StateCommon.cs" />
     <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.StateDraw.cs" />
+    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.Transfer.cs" />
     <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.Utils.cs" />
-    <Compile Include="Impl\OpenglEs\OpenglGpuImpl.ConversionTables.cs" />
+    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.ConversionTables.cs" />
     <Compile Include="Impl\OpenglEs\TextureCacheOpengles.cs" />
     <Compile Include="Impl\Opengl\OpenglGpuImpl.ConversionTables.cs" />
     <Compile Include="Impl\Opengl\OpenglGpuImpl.cs" />
@@ -179,6 +181,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Impl\OpenglEs\shader.vertex" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.StateMatrix.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

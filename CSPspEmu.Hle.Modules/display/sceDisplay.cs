@@ -135,7 +135,7 @@ namespace CSPspEmu.Hle.Modules.display
 				//Console.Error.WriteLine("Not immediate!");
 			}
 			//Console.WriteLine("sceDisplay.sceDisplaySetFrameBuf {0:X},{1},{2},{3}", Address, BufferWidth, PixelFormat, Sync);
-			PspDisplay.CurrentInfo.Address = Address;
+			PspDisplay.CurrentInfo.FrameAddress = Address;
 			PspDisplay.CurrentInfo.BufferWidth = BufferWidth;
 			PspDisplay.CurrentInfo.PixelFormat = PixelFormat;
 			PspDisplay.CurrentInfo.Sync = Sync;
@@ -236,7 +236,7 @@ namespace CSPspEmu.Hle.Modules.display
 		//public int sceDisplayGetFrameBuf(uint* topaddr, int* bufferwidth, PspDisplayPixelFormats* pixelformat, PspDisplaySetBufSync sync)
 		public int sceDisplayGetFrameBuf(ref uint topaddr, ref int bufferwidth, ref GuPixelFormats pixelformat, uint sync)
 		{
-			topaddr = PspDisplay.CurrentInfo.Address;
+			topaddr = PspDisplay.CurrentInfo.FrameAddress;
 			bufferwidth = PspDisplay.CurrentInfo.BufferWidth;
 			pixelformat = PspDisplay.CurrentInfo.PixelFormat;
 			return 0;

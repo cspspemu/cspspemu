@@ -234,6 +234,11 @@ namespace CSPspEmu.Gui.Winforms
 
 			UpdateTitle();
 
+			if (WindowState == FormWindowState.Minimized)
+			{
+				return;
+			}
+
 			if (EnableRefreshing)
 			{
 				try
@@ -241,12 +246,13 @@ namespace CSPspEmu.Gui.Winforms
 					int Width = 512;
 					int Height = 272;
 					//var Address = PspDisplay.CurrentInfo.Address | 0x04000000; // It causes artifacts
-					var Address = PspDisplay.CurrentInfo.Address;
+					var FrameAddress = PspDisplay.CurrentInfo.FrameAddress;
 					byte* FrameBuffer = null;
+					byte* DepthBuffer = null;
 					try
 					{
 						FrameBuffer = (byte*)Memory.PspAddressToPointerSafe(
-							Address,
+							FrameAddress,
 							PixelFormatDecoder.GetPixelsSize(PspDisplay.CurrentInfo.PixelFormat, Width * Height)
 						);
 					}

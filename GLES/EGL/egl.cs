@@ -333,5 +333,12 @@ namespace GLES
 
 		/* Now, define eglGetProcAddress using the generic function ptr. type */
 		//EGLAPI __eglMustCastToProperFunctionPointerType EGLAPIENTRY eglGetProcAddress(const char *procname);
+
+		public static EGLint eglGetConfigAttrib(EGLDisplay dpy, EGLConfig config, EGLint attribute)
+		{
+			EGLint @out = 0;
+			if (!eglGetConfigAttrib(dpy, config, attribute, &@out)) throw(new Exception("Can't get value"));
+			return @out;
+		}
 	}
 }

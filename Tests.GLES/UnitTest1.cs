@@ -12,6 +12,12 @@ namespace Tests.GLES
 	unsafe public class UnitTest1
 	{
 		[TestMethod]
+		unsafe public void TestMatrix()
+		{
+			Console.WriteLine(Matrix4.Identity.Translate(2, 2, 0));
+		}
+
+		[TestMethod]
 		unsafe public void TestMethod1()
 		{
 			int width = 512;
