@@ -54,7 +54,7 @@
 			this.splitContainer1.Panel2.Controls.Add(this.ViewTextBox);
 			this.splitContainer1.Panel2.Controls.Add(this.LanguageComboBox);
 			this.splitContainer1.Size = new System.Drawing.Size(632, 403);
-			this.splitContainer1.SplitterDistance = 82;
+			this.splitContainer1.SplitterDistance = 89;
 			this.splitContainer1.TabIndex = 3;
 			// 
 			// PcListBox
@@ -63,21 +63,22 @@
 			this.PcListBox.FormattingEnabled = true;
 			this.PcListBox.Location = new System.Drawing.Point(0, 0);
 			this.PcListBox.Name = "PcListBox";
-			this.PcListBox.Size = new System.Drawing.Size(82, 403);
+			this.PcListBox.Size = new System.Drawing.Size(89, 403);
 			this.PcListBox.TabIndex = 1;
 			this.PcListBox.SelectedIndexChanged += new System.EventHandler(this.PcListBox_SelectedIndexChanged_1);
 			// 
 			// ViewTextBox
 			// 
 			this.ViewTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.ViewTextBox.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.ViewTextBox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.ViewTextBox.Location = new System.Drawing.Point(0, 21);
 			this.ViewTextBox.Multiline = true;
 			this.ViewTextBox.Name = "ViewTextBox";
 			this.ViewTextBox.ReadOnly = true;
 			this.ViewTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.ViewTextBox.Size = new System.Drawing.Size(546, 382);
+			this.ViewTextBox.Size = new System.Drawing.Size(539, 382);
 			this.ViewTextBox.TabIndex = 4;
+			this.ViewTextBox.TextChanged += new System.EventHandler(this.ViewTextBox_TextChanged_1);
 			// 
 			// LanguageComboBox
 			// 
@@ -86,12 +87,12 @@
 			this.LanguageComboBox.FormattingEnabled = true;
 			this.LanguageComboBox.Items.AddRange(new object[] {
             "C#",
-            "IL",
             "Ast",
+            "IL",
             "Mips"});
 			this.LanguageComboBox.Location = new System.Drawing.Point(0, 0);
 			this.LanguageComboBox.Name = "LanguageComboBox";
-			this.LanguageComboBox.Size = new System.Drawing.Size(546, 21);
+			this.LanguageComboBox.Size = new System.Drawing.Size(539, 21);
 			this.LanguageComboBox.TabIndex = 3;
 			this.LanguageComboBox.SelectedIndexChanged += new System.EventHandler(this.LanguageComboBox_SelectedIndexChanged_1);
 			// 

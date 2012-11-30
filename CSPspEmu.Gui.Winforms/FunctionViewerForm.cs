@@ -1,5 +1,6 @@
 ﻿using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Cpu.Assembler;
+using SafeILGenerator.Ast.Nodes;
 using SafeILGenerator.Ast.Serializers;
 using System;
 using System.Collections.Generic;
@@ -43,10 +44,13 @@ namespace CSPspEmu.Gui.Winforms
 			PcListBox.SuspendLayout();
 			foreach (var PC in CpuProcessor.MethodCache.PCs)
 			{
-				PcListBox.Items.Add(new PCItem()
+				if (CpuProcessor.MethodCache.GetForPC(PC).AstTree != null)
 				{
-					PC = PC,
-				});
+					PcListBox.Items.Add(new PCItem()
+					{
+						PC = PC,
+					});
+				}
 			}
 			LanguageComboBox.SelectedIndex = 0;
 			if (PcListBox.Items.Count > 0)
@@ -65,35 +69,53 @@ namespace CSPspEmu.Gui.Winforms
 				var MinPC = MethodCacheInfo.MinPC;
 				var MaxPC = MethodCacheInfo.MaxPC;
 				var Memory = CpuProcessor.Memory;
-				var Node = MethodCacheInfo.AstTree.Optimize(CpuProcessor);
-				switch (LanguageComboBox.SelectedIndex)
+				AstNodeStm Node = null;
+				if (MethodCacheInfo.AstTree != null) Node = MethodCacheInfo.AstTree.Optimize(CpuProcessor);
+
+				var OutString = "";
+				switch (LanguageComboBox.SelectedItem.ToString())
 				{
-					case 0:
-						ViewTextBox.Text = Node.ToCSharpString().Replace("\n", "\r\n");
-						break;
-					case 1:
-						ViewTextBox.Text = Node.ToILString<Action<CpuThreadState>>().Replace("\n", "\r\n");
-						break;
-					case 2:
-						ViewTextBox.Text = AstSerializer.Serialize(Node);
-						break;
-					case 3:
+					case "C#":
+						if (Node != null)
 						{
-							var String = "";
+							OutString = Node.ToCSharpString().Replace("CpuThreadState.", "");
+						}
+						break;
+					case "IL":
+						if (Node != null)
+						{
+							OutString = Node.ToILString<Action<CpuThreadState>>();
+						}
+						break;
+					case "Ast":
+						if (Node != null)
+						{
+							OutString = AstSerializer.SerializeAsXml(Node);
+						}
+						break;
+					case "Mips":
+						{
 							var MipsDisassembler = new MipsDisassembler();
-							for (uint PC = MinPC; PC <= MaxPC; PC += 4)
+							try
 							{
-								var Instruction = Memory.ReadStruct<Instruction>(PC);
-								var Result = MipsDisassembler.Disassemble(PC, Instruction);
-								String += String.Format("0x{0:X8}: {1}\r\n", PC, Result.ToString());
+								for (uint PC = MinPC; PC <= MaxPC; PC += 4)
+								{
+									var Instruction = Memory.ReadSafe<Instruction>(PC);					
+									var Result = MipsDisassembler.Disassemble(PC, Instruction);
+									OutString += String.Format("0x{0:X8}: {1}\r\n", PC, Result.ToString());
+								}
 							}
-							ViewTextBox.Text = String;
+							catch (Exception Exception)
+							{
+								Console.Error.WriteLine(Exception);
+							}
 						}
 						break;
 					default:
-						ViewTextBox.Text = "";
 						break;
 				}
+
+				ViewTextBox.Text = OutString.Replace("\n", "\r\n");
 			}
 		}
 
@@ -110,6 +132,11 @@ namespace CSPspEmu.Gui.Winforms
 		private void LanguageComboBox_SelectedIndexChanged_1(object sender, EventArgs e)
 		{
 			UpdateText();
+		}
+
+		private void ViewTextBox_TextChanged_1(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

@@ -49,6 +49,10 @@
 			<translation lang="pt">Descarregar frame de &amp;Gpu</translation>
 			<translation lang="fr">Dumper les frames du &amp;Gpu</translation>
 		</text>
+		<text id="DebugFunctionViewer">
+			<translation lang="en">&amp;Function Viewer...</translation>
+			<translation lang="es">&amp;Visor de funciones...</translation>
+		</text>
 		<text id="FileExitMenu">
 			<translation lang="en">&amp;Exit</translation>
 			<translation lang="es">&amp;Salir</translation>

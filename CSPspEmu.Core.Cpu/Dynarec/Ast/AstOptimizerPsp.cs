@@ -124,6 +124,11 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
 			return ContainerNodes;
 		}
 
+		protected AstNode _Optimize(AstNodeStmPspInstruction PspInstruction)
+		{
+			return PspInstruction;
+		}
+
 		protected override AstNode _Optimize(AstNodeStmContainer _Container)
 		{
 			var Node = base._Optimize(_Container);
