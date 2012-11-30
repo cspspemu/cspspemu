@@ -211,13 +211,20 @@ namespace CSPspEmu.Hle
 			bool NotImplementedFunc = (NotImplementedAttribute != null) && NotImplementedAttribute.Notice;
 
 			List<ParamInfo> ParamInfoList;
-			var AstNodes = AstOptimizerPsp.GlobalOptimize(CpuProcessor, CreateDelegateForMethodInfoPriv(MethodInfo, HlePspFunctionAttribute, out ParamInfoList));
+			var AstNodes = AstOptimizerPsp.GlobalOptimize(
+				CpuProcessor,
+				ast.Statements(
+					// Do stuff before
+					CreateDelegateForMethodInfoPriv(MethodInfo, HlePspFunctionAttribute, out ParamInfoList)
+					// Do stuff after
+				)
+			);
 
 			var Delegate = GeneratorIL.GenerateDelegate<GeneratorILPsp, Action<CpuThreadState>>(
 				String.Format("Proxy_{0}_{1}", this.GetType().Name, MethodInfo.Name),
 				AstNodes
 			);
-			
+
 			return (CpuThreadState) =>
 			{
 				bool Trace = (!SkipLog && CpuThreadState.CpuProcessor.PspConfig.DebugSyscalls);

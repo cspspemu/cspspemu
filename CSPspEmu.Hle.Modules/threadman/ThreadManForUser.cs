@@ -43,6 +43,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		{
 			PspRtc.Update();
 			return PspRtc.ElapsedTime.TotalMicroseconds;
+			//return Platform.CurrentUnixMicroseconds;
 		}
 
 		/// <summary>
