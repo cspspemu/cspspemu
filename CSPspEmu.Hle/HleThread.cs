@@ -104,8 +104,6 @@ namespace CSPspEmu.Hle
 
 	public unsafe class HleThread : IDisposable, IPreemptiveItem
 	{
-		protected MethodCacheFast MethodCache;
-
 		/// <summary>
 		/// Lower priority value is a higher priority, so we negate the priorityvalue.
 		/// </summary>
@@ -246,7 +244,6 @@ namespace CSPspEmu.Hle
 		{
 			this.HleInterruptManager = PspEmulatorContext.GetInstance<HleInterruptManager>();
 			this.HleThreadManager = PspEmulatorContext.GetInstance<HleThreadManager>();
-			this.MethodCache = CpuThreadState.CpuProcessor.MethodCache;
 			this.PspConfig = CpuThreadState.CpuProcessor.PspConfig;
 
 			if (this.PspConfig.UseCoRoutines)
@@ -342,34 +339,8 @@ namespace CSPspEmu.Hle
 			var Memory = CpuThreadState.CpuProcessor.Memory;
 			try
 			{
-				while (true)
-				{
-					CpuThreadState.ExecuteAT(CpuThreadState.PC & PspMemory.MemoryMask);
-					//if (PspConfig.TraceThreadLoop)
-					//{
-					//	Console.Out.WriteLine("HleThread.MainLoop :: Thread({0:X}) : PC: {1:X}", this.Id, CpuThreadState.PC);
-					//}
-					////Console.WriteLine("PC:{0:X}", CpuThreadState.PC);
-					//uint PC = CpuThreadState.PC & PspMemory.MemoryMask;
-					//if (PC == 0)
-					//{
-					//	ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () =>
-					//	{
-					//		Console.Error.WriteLine("Trying to jump to 0x{0:X8}", PC);
-					//	});
-					//	SetWaitAndPrepareWakeUp(WaitType.None, "JUMP 0", new object(), (WakeupCallback) =>
-					//	{
-					//	});
-					//	Thread.Sleep(-1);
-					//}
-					//var Delegate = GetDelegateAt(PC);
-					//{
-					//	CpuThreadState.LastValidPC = PC;
-					//}
-					//{
-					//	Delegate.Delegate(CpuThreadState);
-					//}
-				}
+				CpuThreadState.ExecuteAT(CpuThreadState.PC & PspMemory.MemoryMask);
+				CpuThreadState.Syscall(0x7777);
 			}
 			catch (AccessViolationException AccessViolationException)
 			{

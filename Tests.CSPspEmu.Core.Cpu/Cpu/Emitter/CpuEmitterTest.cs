@@ -1109,6 +1109,8 @@ namespace CSPspEmu.Core.Tests
 				li r2, 2
 				nop
 			");
+			CpuThreadState.GPR[31] -= (int)PspMemory.ScratchPadOffset;
+			CpuThreadState.PC -= PspMemory.ScratchPadOffset;
 
 			Assert.AreEqual(1, CpuThreadState.GPR[1]);
 			Assert.AreEqual(2, CpuThreadState.GPR[2]);
@@ -1581,10 +1583,58 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[TestMethod]
+		public void JalTest2()
+		{
+			var Events = new List<int>();
+
+			ExecuteAssembly(@"
+				li r2, 0
+				li r3, 0
+
+				jal function1
+				nop
+				jal function1
+				nop
+				jal function1
+				nop
+
+				j end
+				nop
+
+			function1:
+				addiu r29, r29, -4
+				sw r31, 0(r29)
+
+				jal function2
+				nop
+				jal function2
+				nop
+				jal function2
+				nop
+
+				addiu r29, r29, 4
+				lw r31, 0(r29)
+
+				jr r31
+				addi r3, r3, 1
+
+			function2:
+				jr r31
+				addi r2, r2, 1
+
+			end:
+			");
+
+			Assert.AreEqual(3 * 3, CpuThreadState.GPR[2]);
+			Assert.AreEqual(3, CpuThreadState.GPR[3]);
+		}
+
+		[TestMethod]
 		public void BltzalTest()
 		{
 			var Events = new List<int>();
 
+			CpuProcessor.DebugFunctionCreation = true;
 			CpuProcessor.RegisterNativeSyscall(1, () => { Events.Add(1); });
 			CpuProcessor.RegisterNativeSyscall(2, () => { Events.Add(2); });
 			CpuProcessor.RegisterNativeSyscall(3, () => { Events.Add(3); });
@@ -1771,15 +1821,20 @@ namespace CSPspEmu.Core.Tests
 		protected void ExecuteAssembly(String Assembly, bool DoDebug = false, bool DoLog = false)
 		{
 			Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.ThreadCultureName);
-			CpuProcessor.MethodCache.Clear();
-			CpuProcessor.NewMethodCache.FlushAll();
+			CpuProcessor.MethodCache.FlushAll();
 
-			Assembly += "\r\nbreak 0\r\n";
-			var AssemblerStream = new PspMemoryStream(PspEmulatorContext.GetInstance<PspMemory>()).SliceWithLength(PspMemory.ScratchPadOffset);
+			uint StartOffset = PspMemory.ScratchPadOffset;
+			Assembly = 
+				String.Format(".code 0x{0:X8}\r\n", StartOffset) +
+				Assembly +
+				"\r\nbreak 0\r\n"
+			;
+			var AssemblerStream = new PspMemoryStream(PspEmulatorContext.GetInstance<PspMemory>());
 			new MipsAssembler(AssemblerStream).Assemble(Assembly);
 
 			try
 			{
+				CpuThreadState.SP = PspMemory.MainSegment.High - 0x10;
 				CpuThreadState.ExecuteAT(PspMemory.ScratchPadOffset);
 			}
 			catch (PspBreakException)

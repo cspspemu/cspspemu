@@ -17,12 +17,9 @@ namespace CSPspEmu.Core.Cpu
 		public PspMemory Memory;
 
 		[Inject]
-		public MethodCacheFast MethodCache;
-
-		[Inject]
 		public DynarecFunctionCompiler DynarecFunctionCompiler;
 
-		public MethodCache NewMethodCache = new MethodCache();
+		public MethodCache MethodCache = new MethodCache();
 
 		private Dictionary<int, Action<CpuThreadState, int>> RegisteredNativeSyscalls;
 		public HashSet<uint> NativeBreakpoints;
@@ -109,17 +106,16 @@ namespace CSPspEmu.Core.Cpu
 
 		public void sceKernelIcacheInvalidateAll()
 		{
-			MethodCache.Clear();
+			MethodCache.FlushAll();
 		}
 
 		public void sceKernelIcacheInvalidateRange(uint Address, uint Size)
 		{
-			//Console.Error.WriteLine("sceKernelIcacheInvalidateRange!!! (0x{0:X}, {1})", Address, Size);
-			MethodCache.ClearRange(Address, Address + Size);
-			//MethodCache.Clear();
+			MethodCache.FlushRange(Address, Address + Size);
 		}
 
 		public event Action DebugCurrentThreadEvent;
+		public bool DebugFunctionCreation;
 
 		public static void DebugCurrentThread(CpuThreadState CpuThreadState)
 		{

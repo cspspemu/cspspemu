@@ -1,4 +1,4 @@
-﻿//#define ENABLE_NATIVE_CALLS
+﻿#define ENABLE_NATIVE_CALLS
 
 using System;
 using CSPspEmu.Core.Memory;
@@ -18,10 +18,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		// Code executed after the delayed slot.
-		public AstNodeStm _branch_post(AstLabel BranchLabel)
+		public AstNodeStm _branch_post(AstLabel BranchLabel, uint BranchPC)
 		{
 			if (this.AndLink)
 			{
+#if ENABLE_NATIVE_CALLS
+				return ast.IfElse(
+					BranchFlag(),
+					ast.Statements(
+						AssignGPR(31, BranchPC + 8),
+						CallFixedAddress(BranchPC)
+					)
+				);
+#else
 				return ast.IfElse(
 					BranchFlag(),
 					ast.Statements(
@@ -29,6 +38,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 						ast.GotoAlways(BranchLabel)
 					)
 				);
+#endif
 			}
 			else
 			{
@@ -80,21 +90,23 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public bool PopulateCallStack { get { return !(CpuProcessor.Memory is FastPspMemory) && CpuProcessor.PspConfig.TrackCallStack; } }
 
+		/*
 		private AstNodeStm _popstack()
 		{
-			if (PopulateCallStack && (RS == 31)) return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action)CpuThreadState.Methods.CallStackPop));
+			//if (PopulateCallStack && (RS == 31)) return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action)CpuThreadState.Methods.CallStackPop));
 			return ast.Statement();
 		}
 
 		private AstNodeStm _pushstack()
 		{
-			if (PopulateCallStack) return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<uint>)CpuThreadState.Methods.CallStackPush, PC));
+			//if (PopulateCallStack) return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<uint>)CpuThreadState.Methods.CallStackPush, PC));
 			return ast.Statement();
 		}
+		*/
 
 		private AstNodeStm _link()
 		{
-			return ast.Statements(this._pushstack(), AssignGPR(31, ast.Immediate(PC + 8)));
+			return AssignGPR(31, ast.Immediate(PC + 8));
 		}
 
 		private AstNodeStm JumpToAddress(AstNodeExpr Address)
@@ -104,11 +116,14 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm CallAddress(AstNodeExpr Address)
 		{
+			return ast.Statements(
+				_link(),
 #if ENABLE_NATIVE_CALLS
-			return ast.Statement(MipsMethodEmitter.MethodCacheInfoCallDynamicPC(Address));
+				ast.Statement(MipsMethodEmitter.MethodCacheInfoCallDynamicPC(Address))
 #else
-			return JumpToAddress(Address);
+				JumpToAddress(Address)
 #endif
+			);
 		}
 
 		private AstNodeStm JumpToFixedAddress(uint Address)
@@ -118,17 +133,30 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm CallFixedAddress(uint Address)
 		{
+			return ast.Statements(
+				_link(),
 #if ENABLE_NATIVE_CALLS
-			return ast.Statement(MipsMethodEmitter.MethodCacheInfoCallStaticPC(CpuProcessor, Address));
+				ast.Statement(MipsMethodEmitter.MethodCacheInfoCallStaticPC(CpuProcessor, Address))
 #else
-			return JumpToFixedAddress(Address);
+				JumpToFixedAddress(Address)
 #endif
+			);
 		}
+
+		//static public void DumpStackTrace()
+		//{
+		//	Console.WriteLine(Environment.StackTrace);
+		//}
 
 		private AstNodeStm ReturnFromFunction(AstNodeExpr AstNodeExpr)
 		{
 #if ENABLE_NATIVE_CALLS
-			return ast.Return();
+
+			return ast.Statements(
+				AssignREG("PC", GPR(31)),
+				//ast.Statement(ast.CallStatic((Action)DumpStackTrace)),
+				ast.Return()
+			);
 #else
 			return JumpToAddress(AstNodeExpr);
 #endif
@@ -137,19 +165,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// j(al)(r): Jump (And Link) (Register)
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm j() { return ast.Statements(this.JumpToFixedAddress(Instruction.GetJumpAddress(PC))); }
-		public AstNodeStm jal() { return ast.Statements(_link(), this.CallFixedAddress(Instruction.GetJumpAddress(PC))); }
+		public AstNodeStm j() { return this.JumpToFixedAddress(Instruction.GetJumpAddress(PC)); }
+		public AstNodeStm jal() { return this.CallFixedAddress(Instruction.GetJumpAddress(PC)); }
 		public AstNodeStm jr() {
 			if (RS == 31)
 			{
-				return ast.Statements(_popstack(), ReturnFromFunction(GPR_u(RS)));
+				return ReturnFromFunction(GPR_u(RS));
 			}
 			else
 			{
-				return ast.Statements(_popstack(), JumpToAddress(GPR_u(RS)));
+				return JumpToAddress(GPR_u(RS));
 			}
 		}
-		public AstNodeStm jalr() { return ast.Statements(_link(), _popstack(), this.CallAddress(GPR_u(RS))); }
+		public AstNodeStm jalr() { return this.CallAddress(GPR_u(RS)); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// bc1(f/t)(l): Branch on C1 (False/True) (Likely)

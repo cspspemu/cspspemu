@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define DEBUG_FUNCTION_CREATION
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
@@ -29,6 +31,8 @@ namespace CSPspEmu.Core.Cpu
 				return CpuProcessor.Memory;
 			}
 		}
+		public MethodCache MethodCache;
+
 		public object ModuleObject;
 		public object CallerModule;
 
@@ -256,6 +260,7 @@ namespace CSPspEmu.Core.Cpu
 		public CpuThreadState(CpuProcessor Processor)
 		{
 			this.CpuProcessor = Processor;
+			this.MethodCache = Processor.MethodCache;
 			//this.Memory = Processor.Memory;
 
 			GPR = new GprList() { CpuThreadState = this };
@@ -269,13 +274,6 @@ namespace CSPspEmu.Core.Cpu
 				GPR[n] = 0;
 				FPR[n] = 0.0f;
 			}
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		~CpuThreadState()
-		{
 		}
 
 		/// <summary>
@@ -343,7 +341,7 @@ namespace CSPspEmu.Core.Cpu
 		/// 
 		/// </summary>
 		/// <param name="TextWriter"></param>
-		public void DumpRegisters(TextWriter TextWriter)
+		public void DumpRegistersCpu(TextWriter TextWriter)
 		{
 			for (int n = 0; n < 32; n++)
 			{
@@ -351,8 +349,11 @@ namespace CSPspEmu.Core.Cpu
 				TextWriter.Write("r{0,2}({1}) : 0x{2:X8}", n, RegisterMnemonicNames[n], GPR[n]);
 				if (n % 4 == 3) TextWriter.WriteLine();
 			}
-
 			TextWriter.WriteLine();
+		}
+
+		public void DumpRegistersFpu(TextWriter TextWriter)
+		{
 			for (int n = 0; n < 32; n++)
 			{
 				if (n % 4 != 0) TextWriter.Write(", ");
@@ -360,6 +361,10 @@ namespace CSPspEmu.Core.Cpu
 				if (n % 4 == 3) TextWriter.WriteLine();
 			}
 			TextWriter.WriteLine();
+		}
+
+		public void DumpRegistersVFpu(TextWriter TextWriter)
+		{
 			for (int n = 0; n < 32; n++)
 			{
 				if (n % 4 != 0) TextWriter.Write(", ");
@@ -367,6 +372,17 @@ namespace CSPspEmu.Core.Cpu
 				if (n % 4 == 3) TextWriter.WriteLine();
 			}
 			TextWriter.WriteLine();
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="TextWriter"></param>
+		public void DumpRegisters(TextWriter TextWriter)
+		{
+			DumpRegistersCpu(TextWriter);
+			DumpRegistersFpu(TextWriter);
+			DumpRegistersVFpu(TextWriter);
 		}
 
 		/// <summary>
@@ -424,26 +440,6 @@ namespace CSPspEmu.Core.Cpu
 			}
 		}
 
-		/*
-		/// <summary>
-		/// Jumps to a PC. Must be tailcalled.
-		/// </summary>
-		/// <param name="PC"></param>
-		public void Jump(uint PC)
-		{
-			this.PC = PC;
-		}
-
-		/// <summary>
-		/// Calls a function.
-		/// </summary>
-		/// <param name="PC"></param>
-		public void JumpAndLink(uint PC)
-		{
-			this.PC = PC;
-		}
-		*/
-
 		public void ExecuteAT(uint PC)
 		{
 			this.PC = PC;
@@ -453,13 +449,19 @@ namespace CSPspEmu.Core.Cpu
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public MethodCacheInfo _MethodCacheInfo_GetAtPC(uint PC)
 		{
-			return CpuProcessor.NewMethodCache.GetForPC(PC);
+			return MethodCache.GetForPC(PC);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public MethodCacheInfo _MethodCacheInfo_GetAtIndex(int Index)
 		{
-			return CpuProcessor.NewMethodCache.Methods[Index];
+			return MethodCache.Methods[Index];
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Action<CpuThreadState> _MethodCacheInfo_GetDelegateAtIndex(int Index)
+		{
+			return MethodCache.Methods[Index].Delegate;
 		}
 
 		public void _MethodCacheInfo_SetInternal(MethodCacheInfo MethodCacheInfo, uint PC)
@@ -469,11 +471,20 @@ namespace CSPspEmu.Core.Cpu
 
 			DynarecFunction.AstNode = DynarecFunction.AstNode.Optimize(CpuProcessor);
 
-			Console.WriteLine("-------------------------------------");
-			Console.WriteLine("Created function for PC=0x{0:X8}", PC);
-			Console.WriteLine("-------------------------------------");
-			Console.WriteLine(DynarecFunction.AstNode.ToCSharpString());
-			Console.WriteLine("-------------------------------------");
+#if DEBUG_FUNCTION_CREATION
+			CpuProcessor.DebugFunctionCreation = true;
+#endif
+
+			if (CpuProcessor.DebugFunctionCreation)
+			{
+				Console.WriteLine("-------------------------------------");
+				Console.WriteLine("Created function for PC=0x{0:X8}", PC);
+				Console.WriteLine("-------------------------------------");
+				this.DumpRegistersCpu(Console.Out);
+				Console.WriteLine("-------------------------------------");
+				Console.WriteLine(DynarecFunction.AstNode.ToCSharpString());
+				Console.WriteLine("-------------------------------------");
+			}
 
 			MethodCacheInfo.AstTree = DynarecFunction.AstNode;
 			MethodCacheInfo.Delegate = DynarecFunction.Delegate;

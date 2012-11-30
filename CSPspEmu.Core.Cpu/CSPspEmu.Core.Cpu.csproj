@@ -101,8 +101,6 @@
     <Compile Include="Table\AddressType.cs" />
     <Compile Include="Table\InstructionType.cs" />
     <Compile Include="VFpu\Vector4f.cs" />
-    <Compile Include="MethodCacheFast.cs" />
-    <Compile Include="MethodCacheSlow.cs" />
     <Compile Include="Emitter\MipsMethodEmitter.cs" />
     <Compile Include="Instruction.cs" />
     <Compile Include="InstructionReader.cs" />

@@ -12,8 +12,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		static public AstNodeExprCallDelegate MethodCacheInfoCallStaticPC(CpuProcessor CpuProcessor, uint PC)
 		{
-			var MethodCacheInfo = CpuProcessor.NewMethodCache.GetForPC(PC);
-			return ast.CallDelegate(ast.FieldAccess(MethodCacheInfoGetAtIndex(MethodCacheInfo.MethodIndex), "Delegate"), CpuThreadStateArgument());
+			var MethodCacheInfo = CpuProcessor.MethodCache.GetForPC(PC);
+			return ast.CallDelegate(MethodCacheInfoGetDelegateAtIndex(MethodCacheInfo.MethodIndex), CpuThreadStateArgument());
 		}
 
 		static public AstNodeExprCallDelegate MethodCacheInfoCallDynamicPC(AstNodeExpr PC)
@@ -26,12 +26,15 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return ast.CallInstance(MipsMethodEmitter.CpuThreadStateArgument(), (Func<uint, MethodCacheInfo>)CpuThreadState.Methods._MethodCacheInfo_GetAtPC, PC);
 		}
 
+		static public AstNodeExpr MethodCacheInfoGetDelegateAtIndex(int Index)
+		{
+			return ast.CallInstance(MipsMethodEmitter.CpuThreadStateArgument(), (Func<int, Action<CpuThreadState>>)CpuThreadState.Methods._MethodCacheInfo_GetDelegateAtIndex, Index);
+		}
+
 		static public AstNodeExpr MethodCacheInfoGetAtIndex(int Index)
 		{
 			return ast.CallInstance(MipsMethodEmitter.CpuThreadStateArgument(), (Func<int, MethodCacheInfo>)CpuThreadState.Methods._MethodCacheInfo_GetAtIndex, Index);
 		}
-		public static AstNodeExpr NewMethodCacheMethods() { return ast.FieldAccess(NewMethodCache(), "Methods"); }
-		public static AstNodeExpr NewMethodCache() { return ast.FieldAccess(ast.FieldAccess(CpuThreadStateArgument(), "CpuProcessor"), "NewMethodCache"); }
 		public static AstNodeExprArgument CpuThreadStateArgument() { return ast.Argument<CpuThreadState>(0, "CpuThreadState"); }
 		public static AstNodeExprLValue FCR31_CC() { return ast.FieldAccess(REG("Fcr31"), "CC"); }
 		public static AstNodeExprLValue REG(string RegName) { return ast.FieldAccess(CpuThreadStateArgument(), RegName); }

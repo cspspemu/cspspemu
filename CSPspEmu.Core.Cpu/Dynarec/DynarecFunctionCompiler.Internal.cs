@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define DEBUG_TRACE_INSTRUCTIONS
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -223,10 +225,21 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				}
 			}
 
-			private AstNodeStmPspInstruction _EmitCpuInstructionAT(uint _PC)
+			private AstNodeStm ProcessGeneratedInstruction(MipsDisassembler.Result Disasm, AstNodeStm AstNodeStm)
+			{
+				var PC = Disasm.InstructionPC;
+				return ast.Statements(
+#if DEBUG_TRACE_INSTRUCTIONS
+					ast.DebugWrite(String.Format("0x{0:X8}: {1}", PC, Disasm)),
+#endif
+					AstNodeStm
+				);
+			}
+
+			private AstNodeStmPspInstruction _EmitCpuInstructionAT(uint PC)
 			{
 				// Skip emit instruction.
-				if (SkipPC.Contains(_PC)) return null;
+				if (SkipPC.Contains(PC)) return null;
 
 				/*
 				if (CpuProcessor.PspConfig.TraceJIT)
@@ -238,10 +251,11 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				}
 				*/
 
-				var Instruction = CpuEmitter.LoadAT(_PC);
+				var Instruction = CpuEmitter.LoadAT(PC);
+				var DisassembleInstruction = MipsDisassembler.Disassemble(PC, Instruction);
 				return new AstNodeStmPspInstruction(
-					MipsDisassembler.Disassemble(_PC, Instruction),
-					CpuEmitterInstruction(Instruction, CpuEmitter)
+					DisassembleInstruction,
+					ProcessGeneratedInstruction(DisassembleInstruction, CpuEmitterInstruction(Instruction, CpuEmitter))
 				);
 			}
 
@@ -441,7 +455,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 							{
 								if (Labels.ContainsKey(BranchAddress))
 								{
-									Nodes.AddStatement(CpuEmitter._branch_post(Labels[BranchAddress]));
+									Nodes.AddStatement(CpuEmitter._branch_post(Labels[BranchAddress], BranchAddress));
 								}
 								// Code not reached.
 								else

@@ -44,17 +44,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		// AST utilities
-		public AstNodeExpr GetFunctionForPC(uint PC)
-		{
-			var MethodCacheInfo = this.CpuProcessor.NewMethodCache.GetForPC(PC);
-			return ast.ArrayAccess(ast.FieldAccess(ast.FieldAccess(ast.FieldAccess(CpuThreadStateArgument(), "CpuProcessor"), "NewMethodCache"), "Methods"), MethodCacheInfo.MethodIndex);
-		}
-
-		public AstNodeStm JumpPC(uint PC)
-		{
-			return ast.Statement(ast.CallTail(ast.CallInstance(GetFunctionForPC(PC), typeof(Action<CpuThreadState>).GetMethod("Invoke"), CpuThreadStateArgument())));
-		}
-
 		public static AstNodeExprArgument CpuThreadStateArgument() { return ast.Argument<CpuThreadState>(0, "CpuThreadState"); }
 		public static AstNodeExprLValue FCR31_CC() { return ast.FieldAccess(REG("Fcr31"), "CC"); }
 		public static AstNodeExprLValue REG(string RegName) { return ast.FieldAccess(CpuThreadStateArgument(), RegName); }

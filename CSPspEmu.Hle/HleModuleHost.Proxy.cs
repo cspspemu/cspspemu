@@ -225,6 +225,8 @@ namespace CSPspEmu.Hle
 
 				if (Trace && (MethodInfo.DeclaringType.Name == "Kernel_Library")) Trace = false;
 
+				//Console.WriteLine("aaaaaaaaaaaaa");
+
 				if (NotImplemented)
 				{
 					Trace = true;
