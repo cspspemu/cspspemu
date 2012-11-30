@@ -13,28 +13,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		static public AstNodeExprCallDelegate MethodCacheInfoCallStaticPC(CpuProcessor CpuProcessor, uint PC)
 		{
 			var MethodCacheInfo = CpuProcessor.MethodCache.GetForPC(PC);
-			return ast.CallDelegate(MethodCacheInfoGetDelegateAtIndex(MethodCacheInfo.MethodIndex), CpuThreadStateArgument());
+			return ast.CallDelegate(ast.StaticFieldAccess(MethodCacheInfo.StaticField.FieldInfo), CpuThreadStateArgument());
 		}
 
-		static public AstNodeExprCallDelegate MethodCacheInfoCallDynamicPC(AstNodeExpr PC)
+		static public AstNodeExprCall MethodCacheInfoCallDynamicPC(AstNodeExpr PC)
 		{
-			return ast.CallDelegate(ast.FieldAccess(MethodCacheInfoGetAtPC(PC), "Delegate"), CpuThreadStateArgument());
+			return ast.CallInstance(MethodCacheInfoGetAtPC(PC), (Action<CpuThreadState>)MethodCacheInfo.Methods.CallDelegate, CpuThreadStateArgument());
 		}
 
 		static public AstNodeExpr MethodCacheInfoGetAtPC(AstNodeExpr PC)
 		{
-			return ast.CallInstance(MipsMethodEmitter.CpuThreadStateArgument(), (Func<uint, MethodCacheInfo>)CpuThreadState.Methods._MethodCacheInfo_GetAtPC, PC);
+			return ast.CallInstance(ast.FieldAccess(MipsMethodEmitter.CpuThreadStateArgument(), "MethodCache"), (Func<uint, MethodCacheInfo>)MethodCache.Methods.GetForPC, PC);
 		}
 
-		static public AstNodeExpr MethodCacheInfoGetDelegateAtIndex(int Index)
-		{
-			return ast.CallInstance(MipsMethodEmitter.CpuThreadStateArgument(), (Func<int, Action<CpuThreadState>>)CpuThreadState.Methods._MethodCacheInfo_GetDelegateAtIndex, Index);
-		}
-
-		static public AstNodeExpr MethodCacheInfoGetAtIndex(int Index)
-		{
-			return ast.CallInstance(MipsMethodEmitter.CpuThreadStateArgument(), (Func<int, MethodCacheInfo>)CpuThreadState.Methods._MethodCacheInfo_GetAtIndex, Index);
-		}
 		public static AstNodeExprArgument CpuThreadStateArgument() { return ast.Argument<CpuThreadState>(0, "CpuThreadState"); }
 		public static AstNodeExprLValue FCR31_CC() { return ast.FieldAccess(REG("Fcr31"), "CC"); }
 		public static AstNodeExprLValue REG(string RegName) { return ast.FieldAccess(CpuThreadStateArgument(), RegName); }

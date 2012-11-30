@@ -1,18 +1,33 @@
 ﻿using SafeILGenerator.Ast.Nodes;
+using SafeILGenerator.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CSPspEmu.Core.Cpu.InstructionCache
 {
-	public class MethodCacheInfo
+	public sealed class MethodCacheInfo
 	{
+		static public readonly MethodCacheInfo Methods = new MethodCacheInfo();
+
 		/// <summary>
-		/// Index in MethodCache.Methods
+		/// 
 		/// </summary>
-		public int MethodIndex;
+		public MethodCache MethodCache;
+
+		/// <summary>
+		/// Functions that are calling to this one.
+		/// And that should be uncached when this function
+		/// </summary>
+		//public List<MethodCacheInfo> FunctionsUsingThis = new List<MethodCacheInfo>();
+
+		/// <summary>
+		/// Static Field that will hold the Delegate
+		/// </summary>
+		public ILInstanceHolderPoolItem<Action<CpuThreadState>> StaticField;
 
 		/// <summary>
 		/// 
@@ -40,8 +55,22 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 		public AstNodeStm AstTree;
 
 		/// <summary>
-		/// Function that will be executed.
+		/// 
 		/// </summary>
-		public Action<CpuThreadState> Delegate;
+		/// <param name="CpuThreadState"></param>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public void CallDelegate(CpuThreadState CpuThreadState)
+		{
+			//if (StaticField.Value == null) throw(new Exception(String.Format("Delegate not set! at 0x{0:X8}", EntryPC)));
+			StaticField.Value(CpuThreadState);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public void Free()
+		{
+			MethodCache.Free(this);
+		}
 	}
 }

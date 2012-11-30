@@ -16,8 +16,7 @@ namespace CSPspEmu.Hle
 
 		public string ModuleLocation;
 		public Dictionary<uint, HleFunctionEntry> EntriesByNID = new Dictionary<uint, HleFunctionEntry>();
-		public Dictionary<uint, Action<CpuThreadState>> DelegatesByNID = new Dictionary<uint, Action<CpuThreadState>>();
-		public Dictionary<string, Action<CpuThreadState>> DelegatesByName = new Dictionary<string, Action<CpuThreadState>>();
+		public Dictionary<string, HleFunctionEntry> EntriesByName = new Dictionary<string, HleFunctionEntry>();
 		public string Name { get { return this.GetType().Name; } }
 
 		[Inject]
@@ -54,20 +53,19 @@ namespace CSPspEmu.Hle
 							throw(new InvalidProgramException("Method " + MethodInfo + " is not public"));
 						}
 						var Delegate = CreateDelegateForMethodInfo(MethodInfo, Attributes.First());
-						DelegatesByName[MethodInfo.Name] = Delegate;
 						foreach (var Attribute in Attributes)
 						{
-							//Console.WriteLine("HleModuleHost: {0}, {1}", "0x%08X".Sprintf(Attribute.NID), MethodInfo.Name);
-							DelegatesByNID[Attribute.NID] = Delegate;
 							EntriesByNID[Attribute.NID] = new HleFunctionEntry()
 							{
 								NID = Attribute.NID,
 								Name = MethodInfo.Name,
 								Description = "",
+								Delegate = Delegate,
 								Module = this,
 								ModuleName = this.Name,
 							};
 						}
+						EntriesByName[MethodInfo.Name] = EntriesByNID[Attributes.First().NID];
 					}
 					else
 					{

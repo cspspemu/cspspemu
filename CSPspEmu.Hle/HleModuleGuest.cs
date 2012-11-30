@@ -311,7 +311,14 @@ namespace CSPspEmu.Hle
 			Action<CpuThreadState> Callback = null;
 			if (Module != null)
 			{
-				Callback = Module.DelegatesByNID.GetOrDefault(NID, null);
+				if (Module.EntriesByNID.ContainsKey(NID))
+				{
+					Callback = Module.EntriesByNID[NID].Delegate;
+				}
+				else
+				{
+					Callback = null;
+				}
 			}
 
 			return (CpuThreadState) =>

@@ -3,6 +3,7 @@ using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Generators;
 using SafeILGenerator.Ast.Nodes;
 using SafeILGenerator.Ast.Optimizers;
+using SafeILGenerator.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,18 +12,28 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu.Core.Cpu.InstructionCache
 {
-	public class MethodCache
+	public sealed class MethodCache
 	{
-		public MethodCacheInfo[] Methods = new MethodCacheInfo[16 * 1024];
-		private LinkedList<int> MethodsFree = new LinkedList<int>();
+		static public readonly MethodCache Methods = new MethodCache();
+
 		private Dictionary<uint, MethodCacheInfo> MethodMapping = new Dictionary<uint, MethodCacheInfo>();
 
 		public MethodCache()
 		{
-			for (int n = 0; n < Methods.Length; n++) MethodsFree.AddLast(n);
 		}
 
 		static private AstGenerator ast = AstGenerator.Instance;
+
+		static private Action<CpuThreadState> GetGeneratorForPC(uint PC)
+		{
+			var Ast = (AstNodeStm)new AstOptimizer().Optimize(ast.Statements(
+				ast.Statement(ast.CallInstance(MipsMethodEmitter.CpuThreadStateArgument(), (Action<MethodCacheInfo, uint>)CpuThreadState.Methods._MethodCacheInfo_SetInternal, MipsMethodEmitter.MethodCacheInfoGetAtPC(PC), PC)),
+				ast.Statement(ast.CallTail(ast.CallInstance(MipsMethodEmitter.MethodCacheInfoGetAtPC(PC), (Action<CpuThreadState>)MethodCacheInfo.Methods.CallDelegate, MipsMethodEmitter.CpuThreadStateArgument()))),
+				ast.Return()
+			));
+
+			return GeneratorIL.GenerateDelegate<GeneratorIL, Action<CpuThreadState>>("MethodCache.DynamicCreateNewFunction", Ast);
+		}
 
 		public MethodCacheInfo GetForPC(uint PC)
 		{
@@ -32,45 +43,24 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 			}
 			else
 			{
-				var FreeIndex = MethodsFree.RemoveFirstAndGet();
-
-				var Ast = (AstNodeStm)new AstOptimizer().Optimize(ast.Statements(
-					ast.Statement(ast.CallInstance(MipsMethodEmitter.CpuThreadStateArgument(), (Action<MethodCacheInfo, uint>)CpuThreadState.Methods._MethodCacheInfo_SetInternal, MipsMethodEmitter.MethodCacheInfoGetAtIndex(FreeIndex), PC)),
-					ast.Statement(ast.CallTail(ast.CallDelegate(ast.FieldAccess(MipsMethodEmitter.MethodCacheInfoGetAtIndex(FreeIndex), "Delegate"), MipsMethodEmitter.CpuThreadStateArgument()))),
-					ast.Return()
-				));
-
-				//Console.WriteLine(Ast.ToCSharpString());
-				//Console.WriteLine(Ast.ToILString(typeof(Action<CpuThreadState>).GetMethod("Invoke")));
-
-				var MethodCacheInfo = new MethodCacheInfo()
+				return MethodMapping[PC] = new MethodCacheInfo()
 				{
-					MethodIndex = FreeIndex,
-					Delegate = GeneratorIL.GenerateDelegate<GeneratorIL, Action<CpuThreadState>>(
-						"MethodCache.DynamicCreateNewFunction",
-						Ast
-					),
+					MethodCache = this,
+					StaticField = ILInstanceHolder.TAlloc<Action<CpuThreadState>>(GetGeneratorForPC(PC)),
 				};
-
-				Methods[FreeIndex] = MethodCacheInfo;
-				MethodMapping[PC] = MethodCacheInfo;
-
-				return MethodCacheInfo;
 			}
 		}
 
-		private void Remove(MethodCacheInfo MethodCacheInfo)
+		internal void Free(MethodCacheInfo MethodCacheInfo)
 		{
-			MethodsFree.AddLast(MethodCacheInfo.MethodIndex);
 			MethodMapping.Remove(MethodCacheInfo.EntryPC);
-			MethodCacheInfo.MethodIndex = -1;
 		}
 
 		public void FlushAll()
 		{
 			foreach (var MethodCacheInfo in MethodMapping.Values.ToArray())
 			{
-				Remove(MethodCacheInfo);
+				MethodCacheInfo.Free();
 			}
 		}
 
@@ -80,7 +70,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 			{
 				if (MethodCacheInfo.MaxPC >= Start && MethodCacheInfo.MinPC <= End)
 				{
-					Remove(MethodCacheInfo);
+					MethodCacheInfo.Free();
 				}
 			}
 		}

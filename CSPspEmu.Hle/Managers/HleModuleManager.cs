@@ -127,8 +127,8 @@ namespace CSPspEmu.Hle.Managers
 		public Action<CpuThreadState> GetModuleDelegate<TType>(String FunctionName) where TType : HleModuleHost
 		{
 			var Module = GetModule<TType>();
-			var DelegatesByName = Module.DelegatesByName;
-			if (!DelegatesByName.ContainsKey(FunctionName))
+			var EntriesByName = Module.EntriesByName;
+			if (!EntriesByName.ContainsKey(FunctionName))
 			{
 				throw (new KeyNotFoundException(
 					String.Format(
@@ -138,7 +138,7 @@ namespace CSPspEmu.Hle.Managers
 					)
 				));
 			}
-			return DelegatesByName[FunctionName];
+			return EntriesByName[FunctionName].Delegate;
 		}
 
 		public uint AllocDelegateSlot(Action<CpuThreadState> Action, string ModuleImportName, HleFunctionEntry FunctionEntry)

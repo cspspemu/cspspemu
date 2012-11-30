@@ -17,6 +17,7 @@ using System.Reflection.Emit;
 using SafeILGenerator.Ast.Optimizers;
 using CSPspEmu.Core.Cpu.Dynarec;
 using CSPspEmu.Core.Cpu.Dynarec.Ast;
+using SafeILGenerator.Utils;
 
 namespace CSPspEmu.Hle
 {
@@ -28,9 +29,17 @@ namespace CSPspEmu.Hle
 		[Inject]
 		internal CpuProcessor CpuProcessor;
 
+		private ILInstanceHolderPoolItem ThisILInstanceHolder = null;
+
 		static private AstGenerator ast = AstGenerator.Instance;
 
-		private static AstNodeStmContainer CreateDelegateForMethodInfoPriv(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute, out List<ParamInfo> ParamInfoList)
+		public override void InitializeComponent()
+		{
+			base.InitializeComponent();
+			ThisILInstanceHolder = ILInstanceHolder.Alloc(this.GetType(), this);
+		}
+
+		private AstNodeStmContainer CreateDelegateForMethodInfoPriv(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute, out List<ParamInfo> ParamInfoList)
 		{
 			int GprIndex = 4;
 			int FprIndex = 0;
@@ -188,7 +197,7 @@ namespace CSPspEmu.Hle
 				}
 
 				AstMethodCall = ast.CallInstance(
-					ast.Cast(MethodInfo.DeclaringType, ast.FieldAccess(MipsMethodEmitter.CpuThreadStateArgument(), "ModuleObject")),
+					ThisILInstanceHolder.GetAstFieldAccess(),
 					MethodInfo,
 					AstParameters.ToArray()
 				);
@@ -292,7 +301,6 @@ namespace CSPspEmu.Hle
 					//Console.WriteLine("");
 				}
 
-				CpuThreadState.ModuleObject = this;
 				try
 				{
 					Delegate(CpuThreadState);

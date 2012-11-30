@@ -64,8 +64,8 @@
     <Compile Include="Assembler\MipsAssembler.cs" />
     <Compile Include="Assembler\MipsAssembler.Matcher.cs" />
     <Compile Include="Assembler\MipsDisassembler.cs" />
-    <Compile Include="CodeCache\MethodCache.cs" />
-    <Compile Include="CodeCache\MethodCacheInfo.cs" />
+    <Compile Include="InstructionCache\MethodCache.cs" />
+    <Compile Include="InstructionCache\MethodCacheInfo.cs" />
     <Compile Include="CpuThreadState.Lists.cs" />
     <Compile Include="Dynarec\Ast\AstNodeExtensions.cs" />
     <Compile Include="Dynarec\Ast\AstNodeStmPspInstruction.cs" />

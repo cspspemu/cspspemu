@@ -69,6 +69,7 @@ namespace CSPspEmu.Hle
 		public String Description;
 		public HleModuleHost Module;
 		public string ModuleName;
+		public Action<CpuThreadState> Delegate;
 
 		public override string ToString()
 		{

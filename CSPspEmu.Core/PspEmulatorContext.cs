@@ -133,17 +133,6 @@ namespace CSPspEmu.Core
 					Logger.Notice("Inject {0} to {1}", MemberType, Object);
 				}
 			}
-
-			/*
-			foreach (var Field in Object.GetType().GetFields(GetBindingFlags))
-			{
-			}
-
-			foreach (var Property in Object.GetType().GetProperties(GetBindingFlags))
-			{
-				//Console.WriteLine(Property);
-			}
-			*/
 		}
 
 		public void Dispose()

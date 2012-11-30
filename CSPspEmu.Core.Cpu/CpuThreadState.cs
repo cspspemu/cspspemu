@@ -33,7 +33,6 @@ namespace CSPspEmu.Core.Cpu
 		}
 		public MethodCache MethodCache;
 
-		public object ModuleObject;
 		public object CallerModule;
 
 		public int StepInstructionCount;
@@ -443,25 +442,7 @@ namespace CSPspEmu.Core.Cpu
 		public void ExecuteAT(uint PC)
 		{
 			this.PC = PC;
-			_MethodCacheInfo_GetAtPC(PC).Delegate(this);
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public MethodCacheInfo _MethodCacheInfo_GetAtPC(uint PC)
-		{
-			return MethodCache.GetForPC(PC);
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public MethodCacheInfo _MethodCacheInfo_GetAtIndex(int Index)
-		{
-			return MethodCache.Methods[Index];
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Action<CpuThreadState> _MethodCacheInfo_GetDelegateAtIndex(int Index)
-		{
-			return MethodCache.Methods[Index].Delegate;
+			MethodCache.GetForPC(PC).CallDelegate(this);
 		}
 
 		public void _MethodCacheInfo_SetInternal(MethodCacheInfo MethodCacheInfo, uint PC)
@@ -469,7 +450,7 @@ namespace CSPspEmu.Core.Cpu
 			var DynarecFunction = CpuProcessor.DynarecFunctionCompiler.CreateFunction(new InstructionStreamReader(new PspMemoryStream(Memory)), PC);
 			if (DynarecFunction.EntryPC != PC) throw(new Exception("Unexpected error"));
 
-			DynarecFunction.AstNode = DynarecFunction.AstNode.Optimize(CpuProcessor);
+			//DynarecFunction.AstNode = DynarecFunction.AstNode.Optimize(CpuProcessor);
 
 #if DEBUG_FUNCTION_CREATION
 			CpuProcessor.DebugFunctionCreation = true;
@@ -487,7 +468,7 @@ namespace CSPspEmu.Core.Cpu
 			}
 
 			MethodCacheInfo.AstTree = DynarecFunction.AstNode;
-			MethodCacheInfo.Delegate = DynarecFunction.Delegate;
+			MethodCacheInfo.StaticField.Value = DynarecFunction.Delegate;
 			MethodCacheInfo.EntryPC = DynarecFunction.EntryPC;
 			MethodCacheInfo.MinPC = DynarecFunction.MinPC;
 			MethodCacheInfo.MaxPC = DynarecFunction.MaxPC;
