@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using CSPspEmu.Core.Memory;
 using CSharpUtils.Threading;
-using CSPspEmu.Core.Cpu.CodeCache;
+using CSPspEmu.Core.Cpu.InstructionCache;
 using CSPspEmu.Core.Cpu.Dynarec;
 
 namespace CSPspEmu.Core.Cpu

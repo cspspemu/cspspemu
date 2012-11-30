@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CSPspEmu.Core.Cpu.CodeCache
+namespace CSPspEmu.Core.Cpu.InstructionCache
 {
 	public class MethodCacheInfo
 	{
