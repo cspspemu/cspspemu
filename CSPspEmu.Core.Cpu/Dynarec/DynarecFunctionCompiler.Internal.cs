@@ -82,6 +82,16 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			{
 				AnalyzeBranches();
 				var Nodes = GenerateCode();
+
+				Nodes = ast.Statements(
+					ast.Comment("Returns immediately when argument CpuThreadState is null, so we can call it on the generation thread to do prelinking."),
+					ast.IfElse(
+						ast.Binary(MipsMethodEmitter.CpuThreadStateArgument(), "==", ast.Null<CpuThreadState>()),
+						ast.Return()
+					),
+					Nodes
+				);
+
 				return new DynarecFunction()
 				{
 					EntryPC = EntryPC,

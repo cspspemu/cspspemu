@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define ALLOW_RECTANGULAR_TEXTURES
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -48,7 +50,6 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 #else
 					int DataWidth = Side;
 					int DataHeight = Side;
-#endif
 
 					Data = new OutputPixel[DataWidth * DataHeight];
 
@@ -79,28 +80,34 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 							}
 
 						}
-
-						ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Magenta, () =>
-						{
-							Console.WriteLine("Trying to create texture: {0} ({1}x{2})", TextureId, DataWidth, DataHeight);
-						});
-
-						Bind();
-
-						GL.glGetError();
-						GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, DataWidth, DataHeight, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, DataPtr);
-						var GlError = GL.glGetError();
-
-						if (GlError != GL.GL_NO_ERROR)
-						{
-							Console.Error.WriteLine("########## ERROR: glTexImage2D: {0}('{1}') : TexId:{2} : {3} : {4}x{5} {6}x{7}", GlError, GL.glGetErrorString(GlError), TextureId, new IntPtr(Pixels), TextureWidth, TextureHeight, DataWidth, DataHeight);
-							TextureId = 0;
-							Bind();
-							return false;
-						}
-
-						//GL.glFlush();
 					}
+#endif
+
+					//ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Magenta, () =>
+					//{
+					//	Console.WriteLine("Trying to create texture: {0} ({1}x{2})", TextureId, DataWidth, DataHeight);
+					//});
+
+					Bind();
+
+					GL.glGetError();
+
+#if ALLOW_RECTANGULAR_TEXTURES
+					GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, DataWidth, DataHeight, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, Pixels);
+#else
+					GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, DataWidth, DataHeight, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, DataPtr);
+#endif
+					var GlError = GL.glGetError();
+
+					if (GlError != GL.GL_NO_ERROR)
+					{
+						Console.Error.WriteLine("########## ERROR: glTexImage2D: {0}('{1}') : TexId:{2} : {3} : {4}x{5} {6}x{7}", GlError, GL.glGetErrorString(GlError), TextureId, new IntPtr(Pixels), TextureWidth, TextureHeight, DataWidth, DataHeight);
+						TextureId = 0;
+						Bind();
+						return false;
+					}
+
+					//GL.glFlush();
 				}
 			}
 			return true;

@@ -436,6 +436,7 @@
 			// 
 			// DebugFunctionViewer
 			// 
+			this.DebugFunctionViewer.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.script_binary_icon;
 			this.DebugFunctionViewer.Name = "DebugFunctionViewer";
 			this.DebugFunctionViewer.Size = new System.Drawing.Size(235, 22);
 			this.DebugFunctionViewer.Text = "&Function viewer...";

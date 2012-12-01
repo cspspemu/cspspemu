@@ -23,6 +23,11 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 		/// A list of functions that have embedded this function.
 		/// </summary>
 		public List<DynarecFunction> InlinedAtFunctions;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public uint[] CallingPCs;
 		
 		/// <summary>
 		/// 

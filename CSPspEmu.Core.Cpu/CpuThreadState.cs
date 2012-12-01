@@ -11,6 +11,7 @@ using CSPspEmu.Core.Memory;
 using CSharpUtils.Threading;
 using CSPspEmu.Core.Cpu.InstructionCache;
 using CSPspEmu.Core.Cpu.Dynarec;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -464,8 +465,19 @@ namespace CSPspEmu.Core.Cpu
 
 		public void _MethodCacheInfo_SetInternal(MethodCacheInfo MethodCacheInfo, uint PC)
 		{
+			Console.Write("Creating function for PC=0x{0:X8}...", PC);
+			var Stopwatch = new Logger.Stopwatch();
+			
 			var DynarecFunction = CpuProcessor.DynarecFunctionCompiler.CreateFunction(new InstructionStreamReader(new PspMemoryStream(Memory)), PC);
 			if (DynarecFunction.EntryPC != PC) throw(new Exception("Unexpected error"));
+
+			var AstGenerationTime = Stopwatch.Tick();
+
+			DynarecFunction.Delegate(null);
+
+			var LinkingTime = Stopwatch.Tick();
+
+			Console.WriteLine("({0}): Ast: {1}ms, Link: {2}ms", (DynarecFunction.MaxPC - DynarecFunction.MinPC) / 4, (int)AstGenerationTime.TotalMilliseconds, (int)LinkingTime.TotalMilliseconds);
 
 			//DynarecFunction.AstNode = DynarecFunction.AstNode.Optimize(CpuProcessor);
 
@@ -483,7 +495,6 @@ namespace CSPspEmu.Core.Cpu
 				Console.WriteLine(DynarecFunction.AstNode.ToCSharpString());
 				Console.WriteLine("-------------------------------------");
 			}
-			Console.WriteLine("Created function for PC=0x{0:X8}", PC);
 
 			MethodCacheInfo.AstTree = DynarecFunction.AstNode;
 			MethodCacheInfo.StaticField.Value = DynarecFunction.Delegate;

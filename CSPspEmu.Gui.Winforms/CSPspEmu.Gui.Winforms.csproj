@@ -239,6 +239,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icons.txt" />
+    <Content Include="Resources\script-binary-icon.png" />
+    <None Include="Resources\script-binary-icon1.png" />
     <None Include="Resources\icon0.png" />
     <None Include="Resources\favicon.png" />
     <None Include="Resources\paypal-donate-button.gif" />

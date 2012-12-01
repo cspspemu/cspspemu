@@ -24,6 +24,6 @@ void main() {
 
 	if (u_has_texture) {
 		if (u_texture_effect == TEXTURE_EFFECT_ADD) gl_FragColor += texture2D(u_texture, v_texCoord);
-		else gl_FragColor = texture2D(u_texture, v_texCoord);
+		else gl_FragColor = texture2D(u_texture, v_texCoord) * gl_FragColor.a;
 	}
 }
