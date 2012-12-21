@@ -58,7 +58,9 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 		/// 
 		/// </summary>
 		/// <param name="CpuThreadState"></param>
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public void CallDelegate(CpuThreadState CpuThreadState)
 		{
 			//if (StaticField.Value == null) throw(new Exception(String.Format("Delegate not set! at 0x{0:X8}", EntryPC)));

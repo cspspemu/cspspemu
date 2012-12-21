@@ -176,29 +176,45 @@ namespace CSPspEmu.Core.Cpu
 			return Pointer;
 		}
 
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public byte Read1(uint Address) { return Memory.Read1(Address); }
-		
+
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public ushort Read2(uint Address) { return Memory.Read2(Address); }
-		
+
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public uint Read4(uint Address) { return Memory.Read4(Address); }
 
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public float Read4F(uint Address) { var Value = Memory.Read4(Address); return *(float *)&Value; }
+#endif
+		public float Read4F(uint Address) { var Value = Memory.Read4(Address); return *(float*)&Value; }
 
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public void Write1(uint Address, byte Value) { Memory.Write1(Address, Value); }
-		
+
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public void Write2(uint Address, ushort Value) { Memory.Write2(Address, Value); }
-		
+
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public void Write4(uint Address, uint Value) { Memory.Write4(Address, Value); }
 
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void Write4F(uint Address, float Value) { Memory.Write4(Address, *(uint *)&Value); }
+#endif
+		public void Write4F(uint Address, float Value) { Memory.Write4(Address, *(uint*)&Value); }
 
 		public void* GetMemoryPtrNotNull(uint Address)
 		{

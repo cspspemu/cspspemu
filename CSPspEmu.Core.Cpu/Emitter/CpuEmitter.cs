@@ -75,6 +75,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return ast.Statement(ast.CallStatic((Action<string>)Console.WriteLine, "AstNotImplemented: " + Description));
 		}
 
+#if NET_45
 		public static AstNodeStm AstNotImplemented(
 			[CallerMemberName]string sourceMemberName = "",
 			[CallerFilePath]string sourceFilePath = "",
@@ -82,6 +83,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			return AstNotImplemented(String.Format("('{0}') : {1}:{2}", sourceMemberName, Path.GetFileName(sourceFilePath), sourceLineNo));
 		}
+#else
+		public static AstNodeStm AstNotImplemented()
+		{
+			return AstNotImplemented(String.Format("('{0}') : {1}:{2}", "<unknown>", "<unknown>", -1));
+		}
+#endif
 
 		//private AstNodeStm GenerateIL(AstNodeStm Expr) { MipsMethodEmitter.GenerateIL(Expr); return Expr; }
 		//private void GenerateAssignREG(AstNodeExprLValue Reg, AstNodeExpr Expr) { GenerateIL(this.Assign(Reg, Expr)); }

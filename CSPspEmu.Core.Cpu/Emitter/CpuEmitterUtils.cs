@@ -6,18 +6,25 @@ namespace CSPspEmu.Core.Cpu.Emitter
 {
 	public unsafe class CpuEmitterUtils
 	{
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public static uint _rotr_impl(uint Value, int Offset) { return (Value >> Offset) | (Value << (32 - Offset)); }
 
 
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public unsafe static int _max_impl(int Left, int Right) { return (Left > Right) ? Left : Right; }
 
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public unsafe static int _min_impl(int Left, int Right) { return (Left < Right) ? Left : Right; }
 
-
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public static uint _bitrev_impl(uint v)
 		{
 			v = ((v >> 1) & 0x55555555) | ((v & 0x55555555) << 1); // swap odd and even bits
@@ -28,7 +35,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return v;
 		}
 
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public unsafe static void _div_impl(CpuThreadState CpuThreadState, int Left, int Right)
 		{
 			if (Right == 0)
@@ -48,7 +57,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 		}
 
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public unsafe static void _divu_impl(CpuThreadState CpuThreadState, uint Left, uint Right)
 		{
 			if (Right == 0)
@@ -63,14 +74,20 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 		}
 
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public static uint _ext_impl(uint Data, int Pos, int Size) { return BitUtils.Extract(Data, Pos, Size); }
 
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public static uint _ins_impl(uint InitialData, uint Data, int Pos, int Size) { return BitUtils.Insert(InitialData, Pos, Size, Data); }
 
 		// http://aggregate.org/MAGIC/
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public static uint _clo_impl(uint x)
 		{
 			uint ret = 0;
@@ -78,20 +95,26 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return ret;
 		}
 
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public static uint _clz_impl(uint x)
 		{
 			return _clo_impl(~x);
 		}
 
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public static uint _wsbh_impl(uint v)
 		{
 			// swap bytes
 			return ((v & 0xFF00FF00) >> 8) | ((v & 0x00FF00FF) << 8);
 		}
 
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public static uint _wsbw_impl(uint v)
 		{
 			// BSWAP
@@ -103,7 +126,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			);
 		}
 
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public static void _assign_hi_lo_impl(CpuThreadState CpuThreadState, long Value)
 		{
 			fixed (int* LOPtr = &CpuThreadState.LO)
@@ -112,7 +137,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 		}
 
+#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+#endif
 		public static long _get_hi_lo_impl(CpuThreadState CpuThreadState)
 		{
 			fixed (int* LOPtr = &CpuThreadState.LO)
