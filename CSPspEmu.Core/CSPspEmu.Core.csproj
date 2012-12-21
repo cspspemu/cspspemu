@@ -64,18 +64,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationPaths.cs" />
-    <Compile Include="Battery\Battery.cs" />
     <Compile Include="DebugUtils.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Hashing.cs" />
-    <Compile Include="IGuiExternalInterface.cs" />
     <Compile Include="ManagedPointer.cs" />
-    <Compile Include="Memory\PspMemory.cs" />
-    <Compile Include="Memory\LazyPspMemory.cs" />
-    <Compile Include="Memory\FastPspMemory.cs" />
-    <Compile Include="Memory\NormalPspMemory.cs" />
-    <Compile Include="Memory\PspMemoryStream.cs" />
-    <Compile Include="Memory\PspPointer.cs" />
     <Compile Include="Mono.Simd\AccelerationAttribute.cs" />
     <Compile Include="Mono.Simd\AccelMode.cs" />
     <Compile Include="Mono.Simd\ArrayExtensions.cs" />
@@ -97,17 +89,12 @@
     <Compile Include="PluginInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PspConfig.cs" />
-    <Compile Include="Controller\PspController.cs" />
-    <Compile Include="Display\PspDisplay.cs" />
     <Compile Include="PspEmulatorComponent.cs" />
     <Compile Include="PspEmulatorContext.cs" />
     <Compile Include="PspGlobalConfiguration.cs" />
     <Compile Include="PspPluginImpl.cs" />
     <Compile Include="PspStoredConfig.cs" />
     <Compile Include="PspUntestedAttribute.cs" />
-    <Compile Include="Rtc\PspRtc.cs" />
-    <Compile Include="Rtc\PspTimeStruct.cs" />
-    <Compile Include="Rtc\PspVirtualTimer.cs" />
     <Compile Include="Threading\Synchronization\MessagePipe.cs" />
     <Compile Include="Threading\Synchronization\PspAutoResetEvent.cs" />
     <Compile Include="Threading\Synchronization\PspManualResetEvent.cs" />

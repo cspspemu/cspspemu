@@ -8,8 +8,6 @@ namespace CSPspEmu.Core.Cpu
 	{
 		public uint Value;
 
-		
-
 		public uint GetJumpAddress(uint CurrentPC)
 		{
 			//Console.WriteLine("{0:X8} - ", CurrentPC);

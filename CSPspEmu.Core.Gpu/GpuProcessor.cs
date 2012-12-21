@@ -73,6 +73,9 @@ namespace CSPspEmu.Core.Gpu
 		[Inject]
 		public PspMemory Memory;
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[Inject]
 		public HleInterop HleInterop;
 

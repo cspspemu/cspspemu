@@ -176,6 +176,10 @@
       <Project>{3BE28D69-CFB4-4C9D-8874-7CF8F520DFB0}</Project>
       <Name>CSPspEmu.Core.Audio</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Components\CSPspEmu.Core.Components.csproj">
+      <Project>{c2263270-905b-4d00-9446-21c8d9890ddc}</Project>
+      <Name>CSPspEmu.Core.Components</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Cpu\CSPspEmu.Core.Cpu.csproj">
       <Project>{827779A5-F05C-41C6-9FF9-FD274224A7AE}</Project>
       <Name>CSPspEmu.Core.Cpu</Name>
@@ -183,6 +187,10 @@
     <ProjectReference Include="..\CSPspEmu.Core.Crypto\CSPspEmu.Core.Crypto.csproj">
       <Project>{f4181553-01f3-425a-8ddc-927a97de6de2}</Project>
       <Name>CSPspEmu.Core.Crypto</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
+      <Project>{fd27ef3a-4ebe-4867-a603-3e7048dcf459}</Project>
+      <Name>CSPspEmu.Core.Memory</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>

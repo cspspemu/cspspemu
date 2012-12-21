@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F379F844-CC84-42A8-881C-2724BE8EA952}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{FD27EF3A-4EBE-4867-A603-3E7048DCF459}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CSPspEmuLLETest</RootNamespace>
-    <AssemblyName>CSPspEmuLLETest</AssemblyName>
+    <RootNamespace>CSPspEmu.Core.Memory</RootNamespace>
+    <AssemblyName>CSPspEmu.Core.Memory</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,7 +23,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -37,42 +34,22 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DebugPspMemory.cs" />
-    <Compile Include="Dma.cs" />
-    <Compile Include="DmaEnum.cs" />
-    <Compile Include="ILleDma.cs" />
-    <Compile Include="TransferUtils.cs" />
-    <Compile Include="LleGPIO.cs" />
-    <Compile Include="LleKirk.cs" />
-    <Compile Include="LleNAND.cs" />
-    <Compile Include="LlePspComponent.cs" />
-    <Compile Include="LlePspCpu.cs" />
-    <Compile Include="LLEState.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="FastPspMemory.cs" />
+    <Compile Include="LazyPspMemory.cs" />
+    <Compile Include="NormalPspMemory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PspMemory.cs" />
+    <Compile Include="PspMemoryStream.cs" />
+    <Compile Include="PspPointer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CSPspEmu.Core.Components\CSPspEmu.Core.Components.csproj">
-      <Project>{c2263270-905b-4d00-9446-21c8d9890ddc}</Project>
-      <Name>CSPspEmu.Core.Components</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Cpu\CSPspEmu.Core.Cpu.csproj">
-      <Project>{827779a5-f05c-41c6-9ff9-fd274224a7ae}</Project>
-      <Name>CSPspEmu.Core.Cpu</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Crypto\CSPspEmu.Core.Crypto.csproj">
-      <Project>{f4181553-01f3-425a-8ddc-927a97de6de2}</Project>
-      <Name>CSPspEmu.Core.Crypto</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
-      <Project>{fd27ef3a-4ebe-4867-a603-3e7048dcf459}</Project>
-      <Name>CSPspEmu.Core.Memory</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{f783ecd3-0f79-43cc-abd0-d356a64049c4}</Project>
       <Name>CSPspEmu.Core</Name>

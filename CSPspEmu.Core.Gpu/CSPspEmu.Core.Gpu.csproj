@@ -148,12 +148,16 @@
     <Compile Include="VertexReading\VertexReaderDynarec.Utils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
+      <Project>{fd27ef3a-4ebe-4867-a603-3e7048dcf459}</Project>
+      <Name>CSPspEmu.Core.Memory</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Hle\CSPspEmu.Hle.csproj">
-      <Project>{288AF89E-B41A-4253-A8F7-43D1371516E9}</Project>
+      <Project>{288af89e-b41a-4253-a8f7-43d1371516e9}</Project>
       <Name>CSPspEmu.Hle</Name>
     </ProjectReference>
     <ProjectReference Include="..\GLES\GLES.csproj">

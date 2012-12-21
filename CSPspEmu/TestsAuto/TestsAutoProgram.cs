@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define ENABLE_RECOMPILE
+
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -295,7 +297,7 @@ namespace CSPspEmu.AutoTests
 			{
 				var FileNameBaseBase = Path.GetFileNameWithoutExtension(FileNameExpected);
 				var FileNameBase = Path.GetDirectoryName(FileNameExpected) + @"\" + FileNameBaseBase;
-				var FileNameExecutable = FileNameBase + ".elf";
+				var FileNameExecutable = FileNameBase + ".prx";
 				var FileNameSourceCode = FileNameBase + ".c";
 
 				var MatchName = FileNameBase.Substr(PspAutoTestsFolder.Length).Replace("\\", "/");
@@ -314,6 +316,7 @@ namespace CSPspEmu.AutoTests
 					Recompile = true;
 				}
 
+#if ENABLE_RECOMPILE
 				if (Recompile)
 				{
 					//PspAutoTestsFolder + @"\make.bat"
@@ -334,6 +337,7 @@ namespace CSPspEmu.AutoTests
 					{
 					}
 				}
+#endif
 
 				if (File.Exists(FileNameExecutable))
 				{
