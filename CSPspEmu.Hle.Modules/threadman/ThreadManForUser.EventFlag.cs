@@ -33,6 +33,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 				Name = Name,
 				Info = new EventFlagInfo(0)
 				{
+					Name = Name,
 					Attributes = Attributes,
 					InitialPattern = BitPattern,
 					CurrentPattern = BitPattern,
@@ -88,8 +89,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// </returns>
 		public int _sceKernelWaitEventFlagCB(EventFlagId EventId, uint Bits, EventFlagWaitTypeSet Wait, uint* OutBits, uint* Timeout, bool HandleCallbacks)
 		{
+			if ((Wait & ~(EventFlagWaitTypeSet.MaskValidBits)) != 0) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MODE));
+			if (Bits == 0) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_EVENT_FLAG_ILLEGAL_WAIT_PATTERN));
 			var EventFlag = EventFlagManager.EventFlags.Get(EventId);
 			bool TimedOut = false;
+
+			var PreviousPattern = EventFlag.Info.CurrentPattern;
 
 			ThreadManager.Current.SetWaitAndPrepareWakeUp(
 				HleThread.WaitType.Semaphore,
@@ -102,6 +107,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 					PspRtc.RegisterTimerInOnce(TimeSpanUtils.FromMicroseconds(*Timeout), () =>
 					{
 						TimedOut = true;
+						*Timeout = 0;
 						WakeUpCallback();
 					});
 				}
@@ -118,7 +124,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			if (OutBits != null)
 			{
-				*OutBits = EventFlag.Info.CurrentPattern;
+				*OutBits = PreviousPattern;
 			}
 
 			if (TimedOut)
@@ -217,7 +223,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		{
 			var EventFlag = EventFlagManager.EventFlags.Get(EventId);
 			Info = EventFlag.Info;
-			Console.WriteLine(Info);
+			//Console.WriteLine(Info);
 			return 0;
 		}
 

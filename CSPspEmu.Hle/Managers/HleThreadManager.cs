@@ -10,6 +10,7 @@ using CSPspEmu.Core;
 using CSPspEmu.Core.Components.Display;
 using CSharpUtils.Threading;
 using CSPspEmu.Core.Gpu;
+using CSPspEmu.Hle.Vfs.MemoryStick;
 
 namespace CSPspEmu.Hle.Managers
 {
@@ -106,10 +107,7 @@ namespace CSPspEmu.Hle.Managers
 			Console.Error.WriteLine("HleThreadManager.CpuProcessor.DebugCurrentThreadEvent:");
 			Console.Error.WriteLine(Current);
 		}
-	}
 
-	public partial class HleThreadManager
-	{
 		/// <summary>
 		/// Execute current thread steps until it can execute other thread.
 		/// </summary>
@@ -245,10 +243,7 @@ namespace CSPspEmu.Hle.Managers
 			}
 			this.Current = null;
 		}
-	}
 
-	public partial class HleThreadManager
-	{
 		public HleThread GetThreadById(int Id, bool AllowSelf = true)
 		{
 			//Debug.WriteLine(Threads.Count);

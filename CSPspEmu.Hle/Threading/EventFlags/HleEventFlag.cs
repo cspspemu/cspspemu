@@ -36,23 +36,7 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 			public uint* OutBits;
 		}
 
-		public string Name
-		{
-			get
-			{
-				fixed (byte* NamePointer = Info.Name)
-				{
-					return PointerUtils.PtrToString(NamePointer, Encoding.ASCII);
-				}
-			}
-			set
-			{
-				fixed (byte* NamePointer = Info.Name)
-				{
-					PointerUtils.StoreStringOnPtr(value, Encoding.ASCII, NamePointer, 32);
-				}
-			}
-		}
+		public string Name { get { return Info.Name; } set { Info.Name = value; } }
 
 		public void AddWaitingThread(WaitThread WaitThread)
 		{
@@ -170,7 +154,12 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 		/// Clear the wait pattern when it matches
 		/// </summary>
 		Clear = 0x20,
-	};
+
+		/// <summary>
+		/// Bits that can have the bit set.
+		/// </summary>
+		MaskValidBits = Or | Clear | ClearAll,
+	}
 
 	/// <summary>
 	/// Structure to hold the event flag information
@@ -185,7 +174,19 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 		/// <summary>
 		/// 0x0004 - 
 		/// </summary>
-		public fixed byte Name[32];
+		private fixed byte _Name[32];
+
+		public string Name
+		{
+			get
+			{
+				fixed (byte* _NamePtr = _Name) return PointerUtils.PtrToString(_NamePtr, Encoding.ASCII);
+			}
+			set
+			{
+				fixed (byte* _NamePtr = _Name) PointerUtils.StoreStringOnPtr(value, Encoding.ASCII, _NamePtr, 32);
+			}
+		}
 
 		/// <summary>
 		/// 0x0024 - 

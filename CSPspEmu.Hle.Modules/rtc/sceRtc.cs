@@ -93,17 +93,20 @@ namespace CSPspEmu.Hle.Modules.rtc
 		[HlePspFunction(NID = 0x57726BC1, FirmwareVersion = 150)]
 		public PspDaysOfWeek sceRtcGetDayOfWeek(int Year, int Month, int Day)
 		{
-			switch (Calendar.GetDayOfWeek(new DateTime(Year, Month, Day)))
-			{
-				case DayOfWeek.Monday: return PspDaysOfWeek.Monday;
-				case DayOfWeek.Tuesday: return PspDaysOfWeek.Tuesday;
-				case DayOfWeek.Wednesday: return PspDaysOfWeek.Wednesday;
-				case DayOfWeek.Thursday: return PspDaysOfWeek.Thursday;
-				case DayOfWeek.Friday: return PspDaysOfWeek.Friday;
-				case DayOfWeek.Saturday: return PspDaysOfWeek.Saturday;
-				case DayOfWeek.Sunday: return PspDaysOfWeek.Sunday;
-				default: throw (new InvalidCastException());
-			}
+			var MonthTranslate = new int[] { 0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4 };
+			Year -= (Month < 3) ? 1 : 0;
+			return (PspDaysOfWeek)((Year + Year / 4 - Year / 100 + Year / 400 + MonthTranslate[(Month - 1) % 12] + Day) % 7);
+			//switch (Calendar.GetDayOfWeek(new DateTime(Year, Month, Day)))
+			//{
+			//	case DayOfWeek.Monday: return PspDaysOfWeek.Monday;
+			//	case DayOfWeek.Tuesday: return PspDaysOfWeek.Tuesday;
+			//	case DayOfWeek.Wednesday: return PspDaysOfWeek.Wednesday;
+			//	case DayOfWeek.Thursday: return PspDaysOfWeek.Thursday;
+			//	case DayOfWeek.Friday: return PspDaysOfWeek.Friday;
+			//	case DayOfWeek.Saturday: return PspDaysOfWeek.Saturday;
+			//	case DayOfWeek.Sunday: return PspDaysOfWeek.Sunday;
+			//	default: throw (new InvalidCastException());
+			//}
 		}
 
 		private static int _sceRtcTickAddTimeSpan(long* dstPtr, long* srcPtr, TimeSpan TimeSpan)
@@ -251,11 +254,11 @@ namespace CSPspEmu.Hle.Modules.rtc
 				*Tick = (ulong)Date->ToDateTime().GetTotalNanoseconds();
 				return 0;
 			}
-			catch (Exception Exception)
+			catch (Exception)
 			{
-				Console.Error.WriteLine("sceRtcGetTick.Date: " + *Date);
-				Console.Error.WriteLine(Exception);
-				return -1;
+				//Console.Error.WriteLine("sceRtcGetTick.Date: " + *Date);
+				//Console.Error.WriteLine(Exception);
+				throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_VALUE));
 			}
 		}
 
@@ -350,14 +353,18 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <param name="TimeZone">Time zone to adjust to (minutes from UTC)</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x4CFA57B0, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		[PspUntested]
 		public int sceRtcGetCurrentClock(out ScePspDateTime DateTime, int TimeZone)
 		{
 			PspRtc.Update();
 			var CurrentDateTime = PspRtc.CurrentDateTime;
-			CurrentDateTime += TimeSpan.FromMinutes(TimeZone);
-			//PspRtc.Update();
+
+			try
+			{
+				CurrentDateTime += TimeSpan.FromMinutes(TimeZone);
+			}
+			catch
+			{
+			}
 
 			DateTime = new ScePspDateTime()
 			{
@@ -463,10 +470,33 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <returns>1 if year is a leap year, 0 if not</returns>
 		[HlePspFunction(NID = 0x42307A17, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceRtcIsLeapYear(int year)
+		public bool sceRtcIsLeapYear(int year)
 		{
-			return 0;
+			return Calendar.IsLeapYear(year);
 		}
+
+		public struct RtcPspTimeStruct
+		{
+			public ushort year;
+			public ushort month;
+			public ushort day;
+			public ushort hour;
+			public ushort minute;
+			public ushort second;
+			public uint microsecond;
+		}
+
+		public enum pspRtcCheckValidErrors
+		{
+			OK = 0,
+			PSP_TIME_INVALID_YEAR = -1,
+			PSP_TIME_INVALID_MONTH = -2,
+			PSP_TIME_INVALID_DAY = -3,
+			PSP_TIME_INVALID_HOUR = -4,
+			PSP_TIME_INVALID_MINUTES = -5,
+			PSP_TIME_INVALID_SECONDS = -6,
+			PSP_TIME_INVALID_MICROSECONDS = -7
+		};
 
 		/// <summary>
 		/// Validate PspDateStruct component ranges
@@ -474,10 +504,38 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <param name="date">Pointer to the PspDateStruct to be checked</param>
 		/// <returns>0 on success, one of ::CheckValidErrors on error</returns>
 		[HlePspFunction(NID = 0x4B1B5E82, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceRtcCheckValid(PspTimeStruct date)
+		public pspRtcCheckValidErrors sceRtcCheckValid(RtcPspTimeStruct* Date)
 		{
-			return 0;
+			if (Date->year < 1 || Date->year > 9999)  
+			{
+				return pspRtcCheckValidErrors.PSP_TIME_INVALID_YEAR;
+			}
+			else if (Date->month < 1 || Date->month > 12) 
+			{
+				return pspRtcCheckValidErrors.PSP_TIME_INVALID_MONTH;
+			}
+			else if (Date->day < 1 || Date->day > 31) // TODO: Needs to check actual days in month, including leaps 
+			{
+				return pspRtcCheckValidErrors.PSP_TIME_INVALID_DAY;
+			}
+			else if (Date->hour > 23) 
+			{
+				return pspRtcCheckValidErrors.PSP_TIME_INVALID_HOUR;
+			}
+			else if (Date->minute > 59) 
+			{
+				return pspRtcCheckValidErrors.PSP_TIME_INVALID_MINUTES;
+			}
+			else if (Date->second > 59) 
+			{
+				return pspRtcCheckValidErrors.PSP_TIME_INVALID_SECONDS;
+			}
+			else if (Date->microsecond >= 1000000) 
+			{
+				return pspRtcCheckValidErrors.PSP_TIME_INVALID_MICROSECONDS;
+			} 
+
+			return pspRtcCheckValidErrors.OK;
 		}
 
 		[HlePspFunction(NID = 0x62685E98, FirmwareVersion = 150)]

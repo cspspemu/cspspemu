@@ -292,6 +292,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		//[HlePspNotImplemented]
 		public int sceKernelFreeFpl(PoolId PoolId, PspPointer DataPointer)
 		{
+			if (!FixedPoolList.Contains(PoolId)) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MEMBLOCK));
 			var FixedPool = FixedPoolList.Get(PoolId);
 			FixedPool.Free(DataPointer);
 			return 0;

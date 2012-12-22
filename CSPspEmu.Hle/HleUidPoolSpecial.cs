@@ -61,6 +61,11 @@ namespace CSPspEmu.Hle.Managers
 		}
 #endif
 
+		public bool Contains(TKey Id)
+		{
+			return Items.ContainsKey(Id);
+		}
+
 		public TType Get(TKey Id)
 		{
 			if (!Items.ContainsKey(Id))

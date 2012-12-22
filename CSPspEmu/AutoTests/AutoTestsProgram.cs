@@ -28,6 +28,9 @@ namespace CSPspEmu.AutoTests
 {
 	public class AutoTestsProgram
 	{
+		//static TimeSpan TimeoutTime = TimeSpan.FromSeconds(30);
+		static TimeSpan TimeoutTime = TimeSpan.FromSeconds(10);
+
 		public class HleOutputHandlerMock : HleOutputHandler
 		{
 			public String OutputString = "";
@@ -79,22 +82,24 @@ namespace CSPspEmu.AutoTests
 
 			IHleIoDriver HostDriver = null;
 
-			using (var _InjectContext = new InjectContext())
+			InjectContext _InjectContext = null;
 			{
-				_InjectContext.SetInstance<PspStoredConfig>(StoredConfig);
-				_InjectContext.GetInstance<HleConfig>().HleModulesDll = typeof(HleModulesRoot).Assembly;
-
 				CapturedOutput = ConsoleUtils.CaptureOutput(() =>
 				{
+					_InjectContext = new InjectContext();
+					_InjectContext.SetInstance<PspStoredConfig>(StoredConfig);
+					_InjectContext.GetInstance<HleConfig>().HleModulesDll = typeof(HleModulesRoot).Assembly;
+
 					//Console.Error.WriteLine("[0]");
-					//PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
+					//_InjectContext.SetInstanceType<PspMemory, NormalPspMemory>();
 					_InjectContext.SetInstanceType<PspMemory, FastPspMemory>();
 
 					_InjectContext.SetInstanceType<ICpuConnector, HleThreadManager>();
 					_InjectContext.SetInstanceType<IGpuConnector, HleThreadManager>();
 
-					//PspEmulatorContext.SetInstanceType<GpuImpl, GpuImplMock>();
-					_InjectContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
+					//_InjectContext.SetInstanceType<GpuImpl, GpuImplMock>();
+					//_InjectContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
+					_InjectContext.SetInstanceType<GpuImpl, GpuImplOpenglEs>();
 
 					_InjectContext.SetInstanceType<PspAudioImpl, AudioImplNull>();
 					_InjectContext.SetInstanceType<HleOutputHandler, HleOutputHandlerMock>();
@@ -138,9 +143,12 @@ namespace CSPspEmu.AutoTests
 
 							PspRunner.CpuComponentThread._LoadFile(FileName);
 							//Console.Error.WriteLine("[3]");
-							if (!PspRunner.CpuComponentThread.StoppedEndedEvent.WaitOne(TimeSpan.FromSeconds(10)))
+							if (!PspRunner.CpuComponentThread.StoppedEndedEvent.WaitOne(TimeoutTime))
 							{
-								Console.Error.WriteLine("Timeout!");
+								ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () =>
+								{
+									Console.Error.WriteLine("Timeout!");
+								});
 							}
 						}
 						catch (Exception Exception)
@@ -164,13 +172,17 @@ namespace CSPspEmu.AutoTests
 				//var HleOutputHandlerMock = (HleOutputHandlerMock)PspEmulatorContext.GetInstance<HleOutputHandler>();
 				//OutputString = HleOutputHandlerMock.OutputString;
 			}
+			_InjectContext.Dispose();
 
 			return OutputString;
 		}
 
 		protected void RunFile(string PspAutoTestsFolder, string FileNameExecutable, string FileNameExpected, string FileNameBase)
 		{
-			Console.Write("{0}...", FileNameExecutable);
+			ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.DarkCyan, () =>
+			{
+				Console.Write("{0}...", FileNameExecutable);
+			});
 			var ExpectedOutput = File.ReadAllText(FileNameExpected, Encoding.ASCII);
 			var RealOutput = "";
 			string CapturedOutput = "";
@@ -266,11 +278,17 @@ namespace CSPspEmu.AutoTests
 
 			if (!HadAnError)
 			{
-				Console.WriteLine("Ok");
+				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Green, () =>
+				{
+					Console.WriteLine("Ok");
+				});
 			}
 			else
 			{
-				Console.WriteLine("Error");
+				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () =>
+				{
+					Console.WriteLine("Error");
+				});
 				Result.Print();
 			}
 		}

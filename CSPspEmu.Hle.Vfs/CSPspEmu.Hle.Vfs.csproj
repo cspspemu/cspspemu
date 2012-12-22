@@ -41,6 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Emulator\HleIoDriverEmulator.cs" />
+    <Compile Include="HleOutputHandler.cs" />
     <Compile Include="MemoryStick\IMemoryStickEventHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DirectoryEnumerator.cs" />

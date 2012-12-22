@@ -32,9 +32,12 @@ namespace CSPspEmu.Hle
 
 		public uint GetAnchoredAddress(Anchor Anchor)
 		{
-			if (Anchor == MemoryPartition.Anchor.High) return High;
-			if (Anchor == MemoryPartition.Anchor.Low) return Low;
-			throw(new InvalidOperationException());
+			switch (Anchor)
+			{
+				case MemoryPartition.Anchor.High: return High;
+				case MemoryPartition.Anchor.Low: return Low;
+			}
+			throw (new InvalidOperationException("Invalid Anchor Value : " + Anchor));
 		}
 
 		public MemoryPartition Root

@@ -74,7 +74,6 @@
     <Compile Include="Modules\HleModuleHost.cs" />
     <Compile Include="HleLibrary.cs" />
     <Compile Include="Modules\HleModuleHost.Proxy.cs" />
-    <Compile Include="HleOutputHandler.cs" />
     <Compile Include="HleUidPool.cs" />
     <Compile Include="HleUidPoolSpecial.cs" />
     <Compile Include="Loader\ElfConfig.cs" />

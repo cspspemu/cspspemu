@@ -8,5 +8,6 @@ namespace CSPspEmu.Core.Components.Display
 	public class DisplayConfig
 	{
 		public bool VerticalSynchronization;
+		public bool Enabled = true;
 	}
 }

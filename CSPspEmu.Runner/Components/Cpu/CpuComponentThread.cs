@@ -30,10 +30,11 @@ using CSPspEmu.Resources;
 using CSPspEmu.Hle.Formats.Archive;
 using System.Reflection;
 using CSPspEmu.Interop;
+using CSPspEmu.Hle.Vfs.Emulator;
 
 namespace CSPspEmu.Runner.Components.Cpu
 {
-	public unsafe sealed class CpuComponentThread : ComponentThread, IInjectInitialize, IMemoryStickEventHandler
+	public unsafe sealed class CpuComponentThread : ComponentThread, IInjectInitialize
 	{
 		static Logger Logger = Logger.GetLogger("CpuComponentThread");
 
@@ -58,6 +59,9 @@ namespace CSPspEmu.Runner.Components.Cpu
 		public HleMemoryManager MemoryManager;
 
 		[Inject]
+		public HleCallbackManager HleCallbackManager;
+
+		[Inject]
 		public HleModuleManager ModuleManager;
 
 		[Inject]
@@ -65,6 +69,9 @@ namespace CSPspEmu.Runner.Components.Cpu
 
 		[Inject]
 		public ThreadManForUser ThreadManForUser;
+
+		[Inject]
+		HleIoDriverEmulator HleIoDriverEmulator;
 
 		[Inject]
 		ElfConfig ElfConfig;
@@ -93,7 +100,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 
 			MemoryStickMountable = new HleIoDriverMountable();
 			MemoryStickMountable.Mount("/", new HleIoDriverLocalFileSystem(MemoryStickRootFolder));
-			var MemoryStick = new HleIoDriverMemoryStick(PspMemory, this, MemoryStickMountable);
+			var MemoryStick = new HleIoDriverMemoryStick(PspMemory, HleCallbackManager, MemoryStickMountable);
 			//var MemoryStick = new HleIoDriverMemoryStick(new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
 
 			// http://forums.ps2dev.org/viewtopic.php?t=5680
@@ -109,8 +116,8 @@ namespace CSPspEmu.Runner.Components.Cpu
 			HleIoManager.SetDriver("disc:", MemoryStick);
 			HleIoManager.SetDriver("umd:", MemoryStick);
 
-			//HleIoManager.SetDriver("emulator:", HleIoDriverEmulator);
-			//HleIoManager.SetDriver("kemulator:", HleIoDriverEmulator);
+			HleIoManager.SetDriver("emulator:", HleIoDriverEmulator);
+			HleIoManager.SetDriver("kemulator:", HleIoDriverEmulator);
 
 			HleIoManager.SetDriver("flash:", new HleIoDriverZip(new ZipArchive(ResourceArchive.GetFlash0ZipFileStream())));
 		}
@@ -494,11 +501,6 @@ namespace CSPspEmu.Runner.Components.Cpu
 				Thread.DumpStack(ErrorOut);
 			}
 			//throw new NotImplementedException();
-		}
-
-		void IMemoryStickEventHandler.ScheduleCallback(int CallbackId)
-		{
-			throw new NotImplementedException();
 		}
 	}
 }

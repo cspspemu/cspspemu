@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu;
+using CSPspEmu.Hle.Vfs.MemoryStick;
 
 namespace CSPspEmu.Hle.Managers
 {
 	[Obsolete("Should check Interop and decide which one to use, or refactor or something.")]
-	public class HleCallbackManager
+	public class HleCallbackManager : IMemoryStickEventHandler
 	{
 		public HleUidPool<HleCallback> Callbacks { get; protected set; }
 		private Queue<HleCallback> ScheduledCallbacks = new Queue<HleCallback>();
@@ -98,6 +99,12 @@ namespace CSPspEmu.Hle.Managers
 			}
 
 			return ExecutedCount;
+		}
+	
+		void IMemoryStickEventHandler.ScheduleCallback(int CallbackId)
+		{
+			ScheduleCallback(Callbacks.Get(CallbackId));
+			//Console.WriteLine("IMemoryStickEventHandler.ScheduleCallback");
 		}
 	}
 }
