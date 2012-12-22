@@ -28,7 +28,7 @@ using MiniGL;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-	public sealed unsafe partial class OpenglGpuImpl : GpuImpl
+	public sealed unsafe partial class OpenglGpuImpl : GpuImpl, IInjectInitialize
 	{
 		/// <summary>
 		/// 
@@ -55,6 +55,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// 
 		/// </summary>
 		private OpenglGpuImpl()
+		{
+		}
+
+		void IInjectInitialize.Initialize()
 		{
 			this.TextureCache = new TextureCacheOpengl(this.Memory, this);
 			this.VertexReader = new VertexReader();

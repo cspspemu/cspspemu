@@ -24,7 +24,7 @@ namespace CSPspEmu.Core.Gpu
 		public int Height;
 		protected OutputPixel[] Data;
 
-		public Texture()
+		protected Texture()
 		{
 		}
 

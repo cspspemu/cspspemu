@@ -270,8 +270,8 @@ namespace CSPspEmu
 				{
 					// GPU
 					PspPluginImpl.SelectWorkingPlugin<GpuImpl>(InjectContext,
-						typeof(GpuImplOpenglEs),
 						//typeof(OpenglGpuImpl),
+						typeof(GpuImplOpenglEs),
 						//typeof(GpuImplSoft),
 						typeof(GpuImplNull)
 					);
