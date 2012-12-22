@@ -1,4 +1,5 @@
-﻿using CSPspEmu.Core.Types;
+﻿using CSharpUtils;
+using CSPspEmu.Core.Types;
 using System;
 using System.Collections.Generic;
 
@@ -22,9 +23,13 @@ namespace CSPspEmu.Core.Controller
 
 		public PspController()
 		{
+			ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () =>
+			{
+				//Console.WriteLine("PspController");
+			});
 			for (int n = 0; n < MaxStoredFrames; n++)
 			{
-				InsertSceCtrlData(default(SceCtrlData));
+				InsertSceCtrlData(default(SceCtrlData).Init());
 			}
 		}
 

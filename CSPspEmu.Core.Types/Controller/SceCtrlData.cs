@@ -37,6 +37,13 @@ namespace CSPspEmu.Core.Types
 		public byte Rsrv4;
 		public byte Rsrv5;
 
+		public SceCtrlData Init()
+		{
+			this.X = 0;
+			this.Y = 0;
+			return this;
+		}
+
 		/// <summary>
 		/// Analog X : [-1.0, +1.0]
 		/// </summary>

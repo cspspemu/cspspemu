@@ -27,7 +27,7 @@ using CSPspEmu.Hle;
 
 namespace CSPspEmu.Gui.Winforms
 {
-	public unsafe partial class PspDisplayForm : Form, IInjectInitialize
+	public unsafe partial class PspDisplayForm : Form
 	{
 		/// <summary>
 		/// 
@@ -44,41 +44,20 @@ namespace CSPspEmu.Gui.Winforms
 		/// </summary>
 		SceCtrlData SceCtrlData;
 
-		[Inject]
-		CpuConfig CpuConfig;
-
-		[Inject]
-		GpuConfig GpuConfig;
-
-		[Inject]
-		HleConfig HleConfig;
-
-		[Inject]
-		ElfConfig ElfConfig;
-
-		[Inject]
-		GuiConfig GuiConfig;
-
-		[Inject]
-		DisplayConfig DisplayConfig;
-
-		[Inject]
-		PspStoredConfig StoredConfig;
-
-		[Inject]
 		IGuiExternalInterface IGuiExternalInterface;
+		InjectContext InjectContext { get { return IGuiExternalInterface.InjectContext; } }
 
-		[Inject]
-		PspMemory Memory;
-
-		[Inject]
-		PspDisplay PspDisplay;
-
-		[Inject]
-		PspController PspController;
-
-		[Inject]
-		InjectContext InjectContext;
+		CpuProcessor CpuProcessor { get { return InjectContext.GetInstance<CpuProcessor>(); } }
+		CpuConfig CpuConfig { get { return InjectContext.GetInstance<CpuConfig>(); } }
+		GpuConfig GpuConfig { get { return InjectContext.GetInstance<GpuConfig>(); } }
+		HleConfig HleConfig { get { return InjectContext.GetInstance<HleConfig>(); } }
+		ElfConfig ElfConfig { get { return InjectContext.GetInstance<ElfConfig>(); } }
+		GuiConfig GuiConfig { get { return InjectContext.GetInstance<GuiConfig>(); } }
+		DisplayConfig DisplayConfig { get { return InjectContext.GetInstance<DisplayConfig>(); } }
+		PspStoredConfig StoredConfig { get { return InjectContext.GetInstance<PspStoredConfig>(); } }
+		PspMemory Memory { get { return InjectContext.GetInstance<PspMemory>(); } }
+		PspDisplay PspDisplay { get { return InjectContext.GetInstance<PspDisplay>(); } }
+		PspController PspController { get { return InjectContext.GetInstance<PspController>(); } }
 
 		float AnalogX = 0.0f, AnalogY = 0.0f;
 
@@ -113,12 +92,10 @@ namespace CSPspEmu.Gui.Winforms
 		bool ShowMenus { get { return GuiConfig.ShowMenus; } }
 		bool AutoLoad { get { return GuiConfig.AutoLoad; } }
 
-		private PspDisplayForm()
+		public PspDisplayForm(IGuiExternalInterface IGuiExternalInterface)
 		{
-		}
+			this.IGuiExternalInterface = IGuiExternalInterface;
 
-		void IInjectInitialize.Initialize()
-		{
 			InitializeComponent();
 			HandleCreated += new EventHandler(PspDisplayForm_HandleCreated);
 
@@ -505,15 +482,12 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void TryUpdateAnalog(Keys Key, bool Press)
 		{
-			if (AnalogKeyMap.ContainsKey(Key))
+			switch (AnalogKeyMap.GetOrDefault(Key, PspCtrlAnalog.None))
 			{
-				switch (AnalogKeyMap[Key])
-				{
-					case PspCtrlAnalog.Up: AnalogUp = Press; break;
-					case PspCtrlAnalog.Down: AnalogDown = Press; break;
-					case PspCtrlAnalog.Left: AnalogLeft = Press; break;
-					case PspCtrlAnalog.Right: AnalogRight = Press; break;
-				}
+				case PspCtrlAnalog.Up: AnalogUp = Press; break;
+				case PspCtrlAnalog.Down: AnalogDown = Press; break;
+				case PspCtrlAnalog.Left: AnalogLeft = Press; break;
+				case PspCtrlAnalog.Right: AnalogRight = Press; break;
 			}
 		}
 
@@ -1027,6 +1001,7 @@ namespace CSPspEmu.Gui.Winforms
 		[Flags]
 		public enum PspCtrlAnalog
 		{
+			None = 0,
 			Left = (1 << 0),
 			Right = (1 << 1),
 			Up = (1 << 2),
@@ -1144,7 +1119,7 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			PauseResume(() =>
 			{
-				new FunctionViewerForm((CpuProcessor)IGuiExternalInterface.GetCpuProcessor()).ShowDialog();
+				InjectContext.NewInstance<FunctionViewerForm>().ShowDialog();
 			});
 		}
 	}

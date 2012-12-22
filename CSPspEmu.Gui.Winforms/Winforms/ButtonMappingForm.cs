@@ -6,7 +6,7 @@ using CSPspEmu.Core;
 
 namespace CSPspEmu.Gui.Winforms
 {
-	public partial class ButtonMappingForm : Form
+	public partial class ButtonMappingForm : Form, IInjectInitialize
 	{
 		[Inject]
 		PspStoredConfig StoredConfig;
@@ -14,6 +14,10 @@ namespace CSPspEmu.Gui.Winforms
 		ControllerConfig CurrentControllerConfig;
 
 		private ButtonMappingForm()
+		{
+		}
+
+		void IInjectInitialize.Initialize()
 		{
 			InitializeComponent();
 

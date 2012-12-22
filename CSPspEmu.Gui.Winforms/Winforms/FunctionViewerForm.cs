@@ -16,16 +16,11 @@ namespace CSPspEmu.Gui.Winforms
 {
 	public partial class FunctionViewerForm : Form
 	{
+		[Inject]
 		private CpuProcessor CpuProcessor;
 
-		public FunctionViewerForm()
+		private FunctionViewerForm()
 		{
-			InitializeComponent();
-		}
-
-		public FunctionViewerForm(CpuProcessor CpuProcessor)
-		{
-			this.CpuProcessor = CpuProcessor;
 			InitializeComponent();
 		}
 

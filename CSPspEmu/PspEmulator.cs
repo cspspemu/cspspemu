@@ -62,7 +62,7 @@ namespace CSPspEmu
 		PspDisplay PspDisplay;
 
 		[Inject]
-		InjectContext InjectContext;
+		public InjectContext InjectContext { get; private set; }
 
 		[Inject]
 		PspRunner PspRunner;
@@ -155,6 +155,8 @@ namespace CSPspEmu
 			}, ShowMenus: ShowMenus, AutoLoad: true);
 		}
 
+		PspDisplayForm PspDisplayForm;
+
 		/// <summary>
 		/// Start.
 		/// </summary>
@@ -182,7 +184,7 @@ namespace CSPspEmu
 				GuiConfig.ShowMenus = ShowMenus;
 				GuiConfig.AutoLoad = AutoLoad;
 				GuiConfig.DefaultDisplayScale = ShowMenus ? 1 : 2;
-				Application.Run(InjectContext.NewInstance<PspDisplayForm>());
+				Application.Run(PspDisplayForm = new PspDisplayForm(this));
 
 				ContextInitialized.WaitOne();
 				PspRunner.StopSynchronized();
@@ -284,6 +286,11 @@ namespace CSPspEmu
 				}
 
 				InjectContext.InjectDependencesTo(this);
+
+				//if (PspDisplayForm != null)
+				//{
+				//	InjectContext.InjectDependencesTo(PspDisplayForm);
+				//}
 
 				PspDisplay.VBlankEventCall += new Action(PspEmulator_VBlankEventCall);
 				PspRunner.StartSynchronized();

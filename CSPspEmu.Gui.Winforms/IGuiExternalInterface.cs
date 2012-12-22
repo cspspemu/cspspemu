@@ -7,9 +7,8 @@ namespace CSPspEmu.Core
 {
 	public interface IGuiExternalInterface
 	{
-		// Get Object Methods
-		object GetCpuProcessor();
-		
+		InjectContext InjectContext { get; }
+
 		bool IsInitialized();
 
 		// Load Methods
