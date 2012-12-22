@@ -293,7 +293,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
 						case "%vr": Instruction.IMM5 = ParseVfprRotate(Value); break;
 
-						//case "%zm": throw(new NotImplementedException());
+						//case "%zm": throw(new NotImplementedException("zm"));
 
 						// sv.q %Xq, %Y
 						case "%Xq": Instruction.VT5_1 = ParseVfprName(VfpuSize, Value); break;

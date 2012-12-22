@@ -47,6 +47,7 @@ namespace CSPspEmu.Runner.Components
 						Logger.Notice("Component {0} Stopped!", this);
 					}
 				});
+				ComponentThreadThread.IsBackground = true;
 				ComponentThreadThread.Start();
 				ThreadTaskQueue.EnqueueAndWaitCompleted(() =>
 				{

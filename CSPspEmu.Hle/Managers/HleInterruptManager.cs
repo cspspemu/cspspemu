@@ -51,7 +51,7 @@ namespace CSPspEmu.Hle.Managers
 		}
 	}
 
-	public sealed class HleInterruptManager : IInjectInitialize
+	public sealed class HleInterruptManager : IInjectInitialize, IInterruptManager
 	{
 		[Inject]
 		private HleCallbackManager HleCallbackManager;
@@ -65,7 +65,14 @@ namespace CSPspEmu.Hle.Managers
 		/// <summary>
 		/// Global Interrupt Enable
 		/// </summary>
-		public bool Enabled = true;
+		public bool Enabled { get { return CpuProcessor.InterruptEnabled; } set { CpuProcessor.InterruptEnabled = value; } }
+		//public bool Enabled;
+
+		/// <summary>
+		/// Global Interrupt Flag
+		/// </summary>
+		public bool Flag { get { return CpuProcessor.InterruptFlag; } set { CpuProcessor.InterruptFlag = value; } }
+		//public bool Flag;
 
 		/// <summary>
 		/// 
@@ -102,7 +109,13 @@ namespace CSPspEmu.Hle.Managers
 			lock (HleCallbackList)
 			{
 				HleCallbackList.Add(HleCallback);
+				Flag = true;
 			}
+		}
+
+		void IInterruptManager.Interrupt(CpuThreadState CpuThreadState)
+		{
+			ExecuteQueued(CpuThreadState);
 		}
 
 		public void ExecuteQueued(CpuThreadState BaseCpuThreadState)
@@ -114,6 +127,7 @@ namespace CSPspEmu.Hle.Managers
 				{
 					HleCallbackListCopy = HleCallbackList.ToArray();
 					HleCallbackList.Clear();
+					Flag = false;
 				}
 
 				foreach (var HleCallback in HleCallbackListCopy)
@@ -122,11 +136,13 @@ namespace CSPspEmu.Hle.Managers
 					FakeCpuThreadState.CopyRegistersFrom(BaseCpuThreadState);
 					HleCallback.SetArgumentsToCpuThreadState(FakeCpuThreadState);
 
-					HleInterop.Execute(FakeCpuThreadState);
+					FakeCpuThreadState.EnableYielding = false;
+					FakeCpuThreadState.ExecuteAT(FakeCpuThreadState.PC);
+					//HleInterop.Execute(FakeCpuThreadState);
 					//Console.Error.WriteLine("Execute queued");
 
 					// Execute just one!
-					break;
+					//break;
 				}
 			}
 		}

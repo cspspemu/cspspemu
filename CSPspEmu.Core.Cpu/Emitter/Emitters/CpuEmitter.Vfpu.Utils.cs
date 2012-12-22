@@ -108,7 +108,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	{
 		private void _call_debug_vfpu()
 		{
-			throw(new NotImplementedException());
+			throw (new NotImplementedException("_call_debug_vfpu"));
 			//MipsMethodEmitter.CallMethodWithCpuThreadStateAsFirstArgument(this.GetType(), "_debug_vfpu");
 		}
 
@@ -138,7 +138,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private void _load_memory_imm14_index(uint Index)
 		{
-			throw(new NotImplementedException());
+			throw (new NotImplementedException("_load_memory_imm14_index"));
 			//MipsMethodEmitter._getmemptr(() =>
 			//{
 			//	MipsMethodEmitter.LoadGPR_Unsigned(RS);
@@ -631,7 +631,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				{
 					if (AsInteger)
 					{
-						throw(new NotImplementedException());
+						throw (new NotImplementedException("AstLoadVfpuReg.AsInteger"));
 					}
 					else
 					{

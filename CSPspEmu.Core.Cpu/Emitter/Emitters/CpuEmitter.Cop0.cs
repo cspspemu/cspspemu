@@ -8,7 +8,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// C? (From/To) Cop0
 		public AstNodeStm cfc0()
 		{
-			//throw (new NotImplementedException());
 			Console.WriteLine("Unimplemented cfc0 : {0}, {1}", RT, RD);
 			return ast.Statement();
 		}

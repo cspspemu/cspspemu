@@ -299,20 +299,31 @@ namespace CSPspEmu.Core.Cpu
 
 		DateTime LastTickYield = DateTime.UtcNow;
 
+		public bool EnableYielding = true;
+
 		/// <summary>
 		/// Function called on some situations, that allow
 		/// to yield the thread.
 		/// </summary>
 		public void Tick()
 		{
-			TickCount++;
-			if (TickCount > 10000)
+			if (EnableYielding)
 			{
-				TickCount = 0;
-				if ((DateTime.UtcNow - LastTickYield).TotalMilliseconds >= 2)
+				TickCount++;
+
+				if ((TickCount & 0x1F) == 1)
 				{
-					LastTickYield = DateTime.UtcNow;
-					Yield();
+					CpuProcessor.ExecuteInterrupt(this);
+				}
+
+				if (TickCount > 10000)
+				{
+					TickCount = 0;
+					if ((DateTime.UtcNow - LastTickYield).TotalMilliseconds >= 2)
+					{
+						LastTickYield = DateTime.UtcNow;
+						Yield();
+					}
 				}
 			}
 		}
@@ -322,7 +333,10 @@ namespace CSPspEmu.Core.Cpu
 		/// </summary>
 		public void Yield()
 		{
-			this.CpuProcessor.CpuConnector.Yield(this);
+			if (EnableYielding)
+			{
+				this.CpuProcessor.CpuConnector.Yield(this);
+			}
 		}
 
 		/// <summary>

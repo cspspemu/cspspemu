@@ -70,8 +70,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			));
 		}
 
-		public static AstNodeStm AstNotImplemented(string Description)
+		private static AstNodeStm _AstNotImplemented(string Description)
 		{
+			throw (new NotImplementedException("AstNotImplemented: " + Description));
 			return ast.Statement(ast.CallStatic((Action<string>)Console.WriteLine, "AstNotImplemented: " + Description));
 		}
 
@@ -81,12 +82,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			[CallerFilePath]string sourceFilePath = "",
 			[CallerLineNumber]int sourceLineNo = 0)
 		{
-			return AstNotImplemented(String.Format("('{0}') : {1}:{2}", sourceMemberName, Path.GetFileName(sourceFilePath), sourceLineNo));
+			return _AstNotImplemented(String.Format("('{0}') : {1}:{2}", sourceMemberName, Path.GetFileName(sourceFilePath), sourceLineNo));
 		}
 #else
-		public static AstNodeStm AstNotImplemented()
+		public static AstNodeStm AstNotImplemented(string Name)
 		{
-			return AstNotImplemented(String.Format("('{0}') : {1}:{2}", "<unknown>", "<unknown>", -1));
+			return _AstNotImplemented(String.Format("('{0}') : {1}:{2}", Name, "<unknown>", -1));
 		}
 #endif
 

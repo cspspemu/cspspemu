@@ -1,4 +1,4 @@
-﻿#define DISABLE_CALLBACKS
+﻿//#define DISABLE_CALLBACKS
 
 using System;
 using System.Collections.Generic;

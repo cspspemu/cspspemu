@@ -291,7 +291,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 					return ast.Statement();
 				}
 
-				throw(new NotImplementedException());
+				throw (new NotImplementedException("EmitInstructionCountIncrement"));
 
 				////Console.WriteLine("EmiteInstructionCountIncrement: {0},{1}", InstructionsEmitedSinceLastWaypoint, CheckForYield);
 				//if (InstructionsEmitedSinceLastWaypoint > 0)

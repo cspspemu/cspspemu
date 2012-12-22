@@ -301,40 +301,53 @@ namespace CSPspEmu.Core.Utils
 
 		private unsafe void Decode_PALETTE_T32()
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException("Decode_PALETTE_T32");
 		}
 
 		private unsafe void Decode_PALETTE_T16()
 		{
-			throw new NotImplementedException();
+			throw new NotImplementedException("Decode_PALETTE_T16");
 		}
 
 		private unsafe void Decode_PALETTE_T8()
 		{
 			var Input = (byte*)_Input;
 
-			if (Palette == null || PaletteType == GuPixelFormats.NONE) throw (new Exception("Palette required!"));
-			OutputPixel[] PalettePixels;
 			int PaletteSize = 256;
-			PalettePixels = new OutputPixel[PaletteSize];
+			OutputPixel[] PalettePixels = new OutputPixel[PaletteSize];
 			var Translate = new int[PaletteSize];
-			fixed (OutputPixel* PalettePixelsPtr = PalettePixels)
-			{
-				Decode(PaletteType, Palette, PalettePixelsPtr, PalettePixels.Length, 1);
-				//Decode(PaletteType, Palette, PalettePixelsPtr, PaletteCount);
-			}
-			for (int n = 0; n < PaletteSize; n++)
-			{
-				Translate[n] = ((PaletteStart + n) >> PaletteShift) & PaletteMask;
-			}
 
-			for (int y = 0, n = 0; y < Height; y++)
+			if (Palette == null || PaletteType == GuPixelFormats.NONE)
 			{
-				var InputRow = (byte *)&InputByte[y * StrideWidth];
-				for (int x = 0; x < Width; x++, n++)
+				for (int y = 0, n = 0; y < Height; y++)
 				{
-					byte Value = InputRow[x];
-					Output[n] = PalettePixels[Translate[(Value >> 0) & 0xFF]];
+					var InputRow = (byte*)&InputByte[y * StrideWidth];
+					for (int x = 0; x < Width; x++, n++)
+					{
+						Output[n] = PalettePixels[0];
+					}
+				}
+			}
+			else
+			{
+				fixed (OutputPixel* PalettePixelsPtr = PalettePixels)
+				{
+					Decode(PaletteType, Palette, PalettePixelsPtr, PalettePixels.Length, 1);
+					//Decode(PaletteType, Palette, PalettePixelsPtr, PaletteCount);
+				}
+				for (int n = 0; n < PaletteSize; n++)
+				{
+					Translate[n] = ((PaletteStart + n) >> PaletteShift) & PaletteMask;
+				}
+
+				for (int y = 0, n = 0; y < Height; y++)
+				{
+					var InputRow = (byte*)&InputByte[y * StrideWidth];
+					for (int x = 0; x < Width; x++, n++)
+					{
+						byte Value = InputRow[x];
+						Output[n] = PalettePixels[Translate[(Value >> 0) & 0xFF]];
+					}
 				}
 			}
 		}

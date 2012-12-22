@@ -86,23 +86,9 @@ namespace CSPspEmu.AutoTests
 			{
 				CapturedOutput = ConsoleUtils.CaptureOutput(() =>
 				{
-					_InjectContext = new InjectContext();
-					_InjectContext.SetInstance<PspStoredConfig>(StoredConfig);
-					_InjectContext.GetInstance<HleConfig>().HleModulesDll = typeof(HleModulesRoot).Assembly;
-
-					//Console.Error.WriteLine("[0]");
-					//_InjectContext.SetInstanceType<PspMemory, NormalPspMemory>();
-					_InjectContext.SetInstanceType<PspMemory, FastPspMemory>();
-
-					_InjectContext.SetInstanceType<ICpuConnector, HleThreadManager>();
-					_InjectContext.SetInstanceType<IGpuConnector, HleThreadManager>();
-
-					//_InjectContext.SetInstanceType<GpuImpl, GpuImplMock>();
-					//_InjectContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
-					_InjectContext.SetInstanceType<GpuImpl, GpuImplOpenglEs>();
-
-					_InjectContext.SetInstanceType<PspAudioImpl, AudioImplNull>();
+					_InjectContext = PspInjectContext.CreateInjectContext(StoredConfig, Test: true);
 					_InjectContext.SetInstanceType<HleOutputHandler, HleOutputHandlerMock>();
+
 					//Console.Error.WriteLine("[1]");
 
 					this.FileNameBase = FileNameBase;

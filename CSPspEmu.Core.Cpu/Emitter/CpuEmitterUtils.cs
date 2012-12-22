@@ -168,7 +168,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			switch (RD)
 			{
 				case 0: // readonly?
-					throw (new NotImplementedException());
+					throw (new NotImplementedException("_cfc1_impl.RD=0"));
 				case 31:
 					CpuThreadState.GPR[RT] = (int)CpuThreadState.Fcr31.Value;
 					break;

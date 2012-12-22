@@ -17,11 +17,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vuc2i()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("vuc2i");
 
 			//var VectorSize = Instruction.ONE_TWO;
-			////if (VectorSize != 4) throw (new NotImplementedException());
-			////if (VectorSize != 1) throw (new NotImplementedException());
+			////if (VectorSize != 4) throw (new NotImplementedException("vuc2i.VectorSize"));
+			////if (VectorSize != 1) throw (new NotImplementedException("vuc2i.VectorSize"));
 			//
 			////VectorOperationSaveVd(VectorSize, (Index) =>
 			//VectorOperationSaveVd(4, (Index) =>
@@ -35,11 +35,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vc2i()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("vc2i");
 
 			//var VectorSize = Instruction.ONE_TWO;
-			////if (VectorSize != 4) throw (new NotImplementedException());
-			////if (VectorSize != 1) throw (new NotImplementedException());
+			////if (VectorSize != 4) throw (new NotImplementedException("vc2i.VectorSize"));
+			////if (VectorSize != 1) throw (new NotImplementedException("vc2i.VectorSize"));
 			//
 			////VectorOperationSaveVd(VectorSize, (Index) =>
 			//VectorOperationSaveVd(4, (Index) =>
@@ -55,7 +55,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// Vfpu Integer to(2) Color?
 		public AstNodeStm vi2c()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("vi2c");
 			//var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 4) throw (new NotImplementedException(""));
 			//
@@ -71,9 +71,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vs2i()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("vs2i");
 			//var VectorSize = Instruction.ONE_TWO;
-			//if (VectorSize > 2) throw(new NotImplementedException());
+			//if (VectorSize > 2) throw(new NotImplementedException("vs2i.VectorSize"));
 			//VectorOperationSaveVd(VectorSize * 2, (Index) =>
 			//{
 			//	Load_VS((Index / 2), VectorSize, AsInteger : true);
@@ -99,7 +99,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vi2uc()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("vi2uc");
 			//var VectorSize = Instruction.ONE_TWO;
 			//Save_VD(Index: 0, VectorSize: 1, Action: () =>
 			//{
@@ -113,7 +113,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vi2f()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("vi2f");
 			//VectorOperationSaveVd(Index =>
 			//{
 			//	Load_VS(Index, AsInteger: true);
@@ -125,7 +125,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vf2id()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("vf2id");
 			//var VectorSize = Instruction.ONE_TWO;
 			//var Imm5 = Instruction.IMM5;
 			//VectorOperationSaveVd(VectorSize, Index =>
@@ -139,7 +139,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vf2in()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("vf2in");
 			//var VectorSize = Instruction.ONE_TWO;
 			//var Imm5 = Instruction.IMM5;
 			//VectorOperationSaveVd(VectorSize, Index =>
@@ -153,7 +153,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vf2iu()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("vf2iu");
 			//var VectorSize = Instruction.ONE_TWO;
 			//var Imm5 = Instruction.IMM5;
 			//VectorOperationSaveVd(VectorSize, Index =>
@@ -173,7 +173,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vf2iz()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("vf2iz");
 			//var Imm5 = Instruction.IMM5;
 			//VectorOperationSaveVd(Index =>
 			//{
@@ -193,7 +193,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vi2s()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("vi2s");
 			//var VectorSize = VectorSizeOneTwo;
 			//Save_VD(0, VectorSize, () =>
 			//{
@@ -212,8 +212,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			//}
 		}
 
-		public AstNodeStm vf2h() { return AstNotImplemented(); }
-		public AstNodeStm vh2f() { return AstNotImplemented(); }
+		public AstNodeStm vf2h() { return AstNotImplemented("vf2h"); }
+		public AstNodeStm vh2f() { return AstNotImplemented("vh2f"); }
 
 		public static int _vi2us(int x, int y)
 		{
@@ -225,7 +225,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vi2us()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("vi2us");
 			//var VectorSize = VectorSizeOneTwo;
 			//VectorOperationSaveVd(VectorSize / 2, (Index) =>
 			//{

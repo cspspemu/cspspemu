@@ -66,6 +66,7 @@
     <Compile Include="Assembler\MipsDisassembler.cs" />
     <Compile Include="CpuConfig.cs" />
     <Compile Include="ICpuConnector.cs" />
+    <Compile Include="IInterruptManager.cs" />
     <Compile Include="InvalidAddressException.cs" />
     <Compile Include="NativeSyscallInfo.cs" />
     <Compile Include="PspUntestedAttribute.cs" />

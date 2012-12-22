@@ -379,7 +379,7 @@ namespace CSPspEmu.Core.Gpu
 		public void GeListSync(Gpu.GpuProcessor.SyncTypeEnum SyncType, Action NotifyOnceCallback)
 		{
 			//Console.WriteLine("GeListSync");
-			if (SyncType != Gpu.GpuProcessor.SyncTypeEnum.ListDone) throw new NotImplementedException();
+			if (SyncType != Gpu.GpuProcessor.SyncTypeEnum.ListDone) throw new NotImplementedException("GeListSync");
 			lock (this)
 			{
 				Status2.CallbackOnStateOnce(Status2Enum.Free, () =>

@@ -61,6 +61,7 @@
     <Compile Include="Components\Display\DisplayComponentThread.cs" />
     <Compile Include="Components\Gpu\GpuComponentThread.cs" />
     <Compile Include="Components\IRunnableComponent.cs" />
+    <Compile Include="PspInjectContext.cs" />
     <Compile Include="PspRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="README" />

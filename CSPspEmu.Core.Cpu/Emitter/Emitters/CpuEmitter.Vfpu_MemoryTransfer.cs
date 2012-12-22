@@ -10,7 +10,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// Load/Store Vfpu (Left/Right)_
 		public AstNodeStm lv_s()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("lv_s");
 			////return;
 			//uint VT = Instruction.VT5 | (Instruction.VT2 << 5);
 			//uint Column = (VT >> 5) & 3;
@@ -126,7 +126,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm sv_s()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("sv_s");
 			//uint VT = Instruction.VT5 | (Instruction.VT2 << 5);
 			//uint Column = (VT >> 5) & 3;
 			//uint Matrix = (VT >> 2) & 7;

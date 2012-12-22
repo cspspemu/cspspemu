@@ -97,7 +97,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm vdot()
 		{
-			throw(new NotImplementedException());
+			throw(new NotImplementedException("vdot"));
 			//uint VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize == 1)
 			//{
@@ -122,7 +122,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 		public AstNodeStm vscl()
 		{
-			throw(new NotImplementedException());
+			throw(new NotImplementedException("vscl"));
 			//uint VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize == 1)
 			//{
@@ -193,7 +193,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm _vfpu_call_single_method(Delegate Delegate)
 		{
-			throw(new NotImplementedException());
+			throw (new NotImplementedException("_vfpu_call_single_method"));
 			//VectorOperationSaveVd((Index) =>
 			//{
 			//	Load_VS(Index);
@@ -220,7 +220,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// -
 		public AstNodeStm vhdp()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("vhdp");
 			//var VectorSize = Instruction.ONE_TWO;
 			//
 			//VectorOperationSaveVd(1, (Index) =>
@@ -241,7 +241,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vcrs_t()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("vcrs_t");
 			//uint VectorSize = 3;
 			//
 			//Save_VD(0, VectorSize, () =>
@@ -271,7 +271,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm vcrsp_t()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("vcrsp_t");
 			//uint VectorSize = 3;
 			//
 			//Save_VD(0, VectorSize, () =>
@@ -317,7 +317,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// Vfpu MINimum/MAXium/ADD/SUB/DIV/MUL
 		public AstNodeStm vmin()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("vmin");
 			//VectorOperationSaveVd((Index) =>
 			//{
 			//	Load_VS_VT(Index);
@@ -326,7 +326,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 		public AstNodeStm vmax()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("vmax");
 			//VectorOperationSaveVd((Index) =>
 			//{
 			//	Load_VS_VT(Index);
@@ -361,7 +361,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		AstNodeStm _vidt_x(uint VectorSize, uint Register)
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("_vidt_x");
 			//uint IndexOne = BitUtils.Extract(Register, 0, 2);
 			//foreach (var Index in XRange(VectorSize))
 			//{
@@ -376,7 +376,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		AstNodeStm _vzero_x(uint VectorSize, uint Register)
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("_vzero_x");
 			//uint IndexOne = BitUtils.Extract(Register, 0, 2);
 			//foreach (var Index in XRange(VectorSize))
 			//{
@@ -399,16 +399,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		// Vfpu load Integer IMmediate
 		public AstNodeStm viim() { return AstSaveVfpuReg(Instruction.VT, 0, 1, ref PrefixNone, (float)Instruction.IMM); }
-		public AstNodeStm vdet() { return AstNotImplemented(); }
-		public AstNodeStm mfvme() { return AstNotImplemented(); }
-		public AstNodeStm mtvme() { return AstNotImplemented(); }
+		public AstNodeStm vdet() { return AstNotImplemented("vdet"); }
+		public AstNodeStm mfvme() { return AstNotImplemented("mfvme"); }
+		public AstNodeStm mtvme() { return AstNotImplemented("mtvme"); }
 
 		/// <summary>
 		/// ID("vfim",        VM("110111:11:1:vt:imm16"), "%xs, %vh",      ADDR_TYPE_NONE, INSTR_TYPE_PSP),
 		/// </summary>
 		public AstNodeStm vfim()
 		{
-			return AstNotImplemented();
+			return AstNotImplemented("vfim");
 			//_VfpuLoadVectorWithIndexPointer(Instruction.VT, 0, 1);
 			//SafeILGenerator.Push((float)Instruction.IMM_HF);
 			//SafeILGenerator.StoreIndirect<float>();
@@ -417,13 +417,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 
-		public AstNodeStm vlgb() { return AstNotImplemented(); }
-		public AstNodeStm vsbn() { return AstNotImplemented(); }
+		public AstNodeStm vlgb() { return AstNotImplemented("vlgb"); }
+		public AstNodeStm vsbn() { return AstNotImplemented("vsbn"); }
 
-		public AstNodeStm vsbz() { return AstNotImplemented(); }
-		public AstNodeStm vsocp() { return AstNotImplemented(); }
-		public AstNodeStm vus2i() { return AstNotImplemented(); }
+		public AstNodeStm vsbz() { return AstNotImplemented("vsbz"); }
+		public AstNodeStm vsocp() { return AstNotImplemented("vsocp"); }
+		public AstNodeStm vus2i() { return AstNotImplemented("vus2i"); }
 
-		public AstNodeStm vwbn() { return AstNotImplemented(); }
+		public AstNodeStm vwbn() { return AstNotImplemented("vwbn"); }
 	}
 }

@@ -26,6 +26,9 @@ namespace CSPspEmu.Core.Cpu
 		[Inject]
 		public DynarecFunctionCompiler DynarecFunctionCompiler;
 
+		[Inject]
+		public IInterruptManager IInterruptManager;
+
 		public MethodCache MethodCache = new MethodCache();
 
 		public Dictionary<uint, NativeSyscallInfo> RegisteredNativeSyscallMethods = new Dictionary<uint, NativeSyscallInfo>();
@@ -34,6 +37,17 @@ namespace CSPspEmu.Core.Cpu
 
 		public event Action DebugCurrentThreadEvent;
 		public bool DebugFunctionCreation;
+
+		public bool InterruptEnabled = true;
+		public bool InterruptFlag = false;
+
+		public void ExecuteInterrupt(CpuThreadState CpuThreadState)
+		{
+			if (InterruptEnabled && InterruptFlag)
+			{
+				IInterruptManager.Interrupt(CpuThreadState);
+			}
+		}
 
 		private CpuProcessor()
 		{

@@ -29,9 +29,6 @@ using System.Reflection;
 
 namespace CSPspEmu
 {
-	[InjectMap(typeof(ICpuConnector), typeof(HleThreadManager))]
-	[InjectMap(typeof(IGpuConnector), typeof(HleThreadManager))]
-	[InjectMap(typeof(IGuiExternalInterface), typeof(PspEmulator))]
     class PspEmulator : IGuiExternalInterface
 	{
 		[Inject]
@@ -263,41 +260,9 @@ namespace CSPspEmu
 
 				lock (this)
 				{
-					_InjectContext = new InjectContext();
-					_InjectContext.SetInstance<PspStoredConfig>(StoredConfig);
-					_InjectContext.GetInstance<HleConfig>().HleModulesDll = typeof(HleModulesRoot).Assembly;
-					_InjectContext.MapFromClassAttributes(this);
 
-					// Memory
-#if true // Disabled because crashes on x86
-					if (StoredConfig.UseFastMemory)
-					{
-						_InjectContext.SetInstanceType<PspMemory, FastPspMemory>();
-					}
-					else
-#endif
-					{
-						_InjectContext.SetInstanceType<PspMemory, NormalPspMemory>();
-					}
-
-					{
-						// GPU
-						PspPluginImpl.SelectWorkingPlugin<GpuImpl>(_InjectContext,
-							typeof(OpenglGpuImpl),
-							typeof(GpuImplOpenglEs),
-							//typeof(GpuImplSoft),
-							typeof(GpuImplNull)
-						);
-
-						// AUDIO
-						PspPluginImpl.SelectWorkingPlugin<PspAudioImpl>(_InjectContext,
-							typeof(PspAudioWaveOutImpl),
-							typeof(AudioAlsaImpl),
-							typeof(PspAudioOpenalImpl),
-							typeof(AudioImplNull)
-						);
-					}
-
+					_InjectContext = PspInjectContext.CreateInjectContext(StoredConfig, Test: false);
+					_InjectContext.SetInstanceType<IGuiExternalInterface, PspEmulator>();
 					_InjectContext.InjectDependencesTo(this);
 
 					//if (PspDisplayForm != null)

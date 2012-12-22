@@ -40,7 +40,9 @@ namespace CSPspEmu.Hle
 			{
 				CurrentFakeHleThread.CpuThreadState.RA = HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK;
 
-				throw (new NotImplementedException("HleInterop.ExecuteFunctionNow"));
+				CurrentFakeHleThread.CpuThreadState.ExecuteAT(CurrentFakeHleThread.CpuThreadState.PC);
+
+				//throw (new NotImplementedException("HleInterop.ExecuteFunctionNow"));
 
 				//CpuProcessor.RunningCallback = true;
 				//while (CpuProcessor.RunningCallback)
