@@ -1,12 +1,11 @@
 ﻿using System;
-using CSharpUtils;
 using SafeILGenerator.Ast.Nodes;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
 	public sealed partial class CpuEmitter
 	{
-		Logger Logger = Logger.GetLogger("CpuEmitter");
+		//Logger Logger = Logger.GetLogger("CpuEmitter");
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Syscall
@@ -63,8 +62,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		public AstNodeStm unknown()
 		{
-			Logger.Error("0x%08X : %032b at 0x%08X".Sprintf(Instruction.Value, Instruction.Value, PC));
-
+			//Logger.Error(String.Format("0x{0:X8} : 0x{1:X8} at 0x{2:X8}", Instruction.Value, Instruction.Value, PC));
 			return _break();
 		}
 	}

@@ -1,7 +1,7 @@
 ﻿using CSharpUtils;
 using CSPspEmu.Core.Cpu;
 
-namespace CSPspEmu.Hle
+namespace CSPspEmu
 {
 	public unsafe class ArgumentReader : IArgumentReader
 	{

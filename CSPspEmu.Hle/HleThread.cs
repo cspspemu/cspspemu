@@ -15,6 +15,7 @@ using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Threading.EventFlags;
 using CSharpUtils;
 using CSharpUtils.Threading;
+using CSPspEmu.Hle.Loader;
 
 namespace CSPspEmu.Hle
 {
@@ -63,6 +64,20 @@ namespace CSPspEmu.Hle
 			}
 		}
 
+		[Inject]
+		HleInterruptManager HleInterruptManager;
+
+		[Inject]
+		private HleThreadManager HleThreadManager;
+
+		[Inject]
+		private HleConfig HleConfig;
+
+		[Inject]
+		private ElfConfig ElfConfig;
+
+		public event Action End;
+
 		public DelegateInfo LastCalledHleFunction;
 
 		//public int Priority = 1;
@@ -70,7 +85,6 @@ namespace CSPspEmu.Hle
 
 		protected Coroutine Coroutine;
 
-		HleInterruptManager HleInterruptManager;
 		public CpuThreadState CpuThreadState { get; protected set; }
 		//protected int MinimalInstructionCountForYield = 1000000;
 		public int Id;
@@ -137,7 +151,7 @@ namespace CSPspEmu.Hle
 			get { fixed (byte* NamePtr = Info.Name) return PointerUtils.PtrToString(NamePtr, Encoding.ASCII); }
 			set {
 				fixed (byte* NamePtr = Info.Name) PointerUtils.StoreStringOnPtr(value, Encoding.ASCII, NamePtr);
-				if (this.PspConfig.UseCoRoutines)
+				if (this.HleConfig.UseCoRoutines)
 				{
 					this.Coroutine.Name = value;
 				}
@@ -148,15 +162,14 @@ namespace CSPspEmu.Hle
 			}
 		}
 
-		public HleThread(PspEmulatorContext PspEmulatorContext, CpuThreadState CpuThreadState)
+		public HleThread(InjectContext InjectContext, CpuThreadState CpuThreadState)
 		{
-			this.HleInterruptManager = PspEmulatorContext.GetInstance<HleInterruptManager>();
-			this.HleThreadManager = PspEmulatorContext.GetInstance<HleThreadManager>();
-			this.PspConfig = CpuThreadState.CpuProcessor.PspConfig;
+			InjectContext.InjectDependencesTo(this);
+			//this.PspConfig = CpuThreadState.CpuProcessor.CpuConfig;
 
-			if (this.PspConfig.UseCoRoutines)
+			if (this.HleConfig.UseCoRoutines)
 			{
-				this.Coroutine = HleThreadManager.Processor.CoroutinePool.CreateCoroutine(this.Name, MainLoop);
+				this.Coroutine = HleThreadManager.CoroutinePool.CreateCoroutine(this.Name, MainLoop);
 			}
 			else
 			{
@@ -243,7 +256,7 @@ namespace CSPspEmu.Hle
 		[HandleProcessCorruptedStateExceptions]
 		protected void MainLoop()
 		{
-			Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.ThreadCultureName);
+			Thread.CurrentThread.CurrentCulture = new CultureInfo(GlobalConfig.ThreadCultureName);
 			var Memory = CpuThreadState.CpuProcessor.Memory;
 			try
 			{
@@ -270,7 +283,7 @@ namespace CSPspEmu.Hle
 				//CpuThreadState.hlest
 				CpuThreadState.StepInstructionCount = InstructionCountForYield;
 				//this.MinimalInstructionCountForYield = InstructionCountForYield;
-				if (this.PspConfig.UseCoRoutines)
+				if (this.HleConfig.UseCoRoutines)
 				{
 					Coroutine.ExecuteStep();
 				}
@@ -386,10 +399,6 @@ namespace CSPspEmu.Hle
 			}
 		}
 
-		public event Action End;
-		private PspConfig PspConfig;
-		private HleThreadManager HleThreadManager;
-
 		public void Dispose()
 		{
 			if (Coroutine!= null) Coroutine.Dispose();
@@ -403,7 +412,7 @@ namespace CSPspEmu.Hle
 			TextWriter.WriteLine("   CallStack({0})", FullCallStack.Length);
 			foreach (var CallerPC in FullCallStack.Slice(0, 4))
 			{
-				TextWriter.WriteLine("     MEM(0x{0:X}) : NOREL(0x{1:X})", CallerPC, CallerPC - PspConfig.RelocatedBaseAddress);
+				TextWriter.WriteLine("     MEM(0x{0:X}) : NOREL(0x{1:X})", CallerPC, CallerPC - ElfConfig.RelocatedBaseAddress);
 			}
 			if (FullCallStack.Length > 4)
 			{

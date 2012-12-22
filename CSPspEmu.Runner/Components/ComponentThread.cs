@@ -7,7 +7,7 @@ using CSharpUtils;
 
 namespace CSPspEmu.Runner.Components
 {
-	public abstract class ComponentThread : PspEmulatorComponent, IRunnableComponent
+	public abstract class ComponentThread : IRunnableComponent
 	{
 		static Logger Logger = Logger.GetLogger("ComponentThread");
 
@@ -22,6 +22,10 @@ namespace CSPspEmu.Runner.Components
 		public readonly TaskQueue ThreadTaskQueue = new TaskQueue();
 		protected abstract String ThreadName { get; }
 
+		protected ComponentThread()
+		{
+		}
+
 		public void StartSynchronized()
 		{
 			Logger.Notice("Component {0} StartSynchronized!", this);
@@ -30,7 +34,7 @@ namespace CSPspEmu.Runner.Components
 				ComponentThreadThread = new Thread(() =>
 				{
 					ComponentThreadThread.Name = this.ThreadName;
-					Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.ThreadCultureName);
+					Thread.CurrentThread.CurrentCulture = new CultureInfo(GlobalConfig.ThreadCultureName);
 					try
 					{
 						Main();

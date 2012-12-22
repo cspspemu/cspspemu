@@ -2,7 +2,7 @@
 
 namespace CSPspEmu.Core
 {
-	public abstract class PspPluginImpl : PspEmulatorComponent
+	public abstract class PspPluginImpl
 	{
 		/// <summary>
 		/// 
@@ -14,7 +14,12 @@ namespace CSPspEmu.Core
 		/// </summary>
 		public abstract bool IsWorking { get; }
 
-		public static void SelectWorkingPlugin<TType>(PspEmulatorContext PspEmulatorContext, params Type[] AvailablePluginImplementations) where TType : PspPluginImpl
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="TType"></typeparam>
+		/// <param name="AvailablePluginImplementations"></param>
+		public static void SelectWorkingPlugin<TType>(InjectContext InjectContext, params Type[] AvailablePluginImplementations) where TType : PspPluginImpl
 		{
 			foreach (var ImplementationType in AvailablePluginImplementations)
 			{
@@ -22,7 +27,7 @@ namespace CSPspEmu.Core
 
 				try
 				{
-					IsWorking = ((PspPluginImpl)Activator.CreateInstance(ImplementationType)).IsWorking;
+					IsWorking = ((PspPluginImpl)InjectContext.GetInstance(ImplementationType)).IsWorking;
 				}
 				catch (Exception Exception)
 				{
@@ -32,10 +37,13 @@ namespace CSPspEmu.Core
 				if (IsWorking)
 				{
 					// Found a working implementation
-					PspEmulatorContext.SetInstanceType<TType>(ImplementationType);
-					break;
+					InjectContext.SetInstanceType<TType>(ImplementationType);
+					return;
 				}
 			}
+
+			throw (new Exception("Can't find working type for '" + AvailablePluginImplementations + "'"));
+			//return null;
 		}
 	}
 }

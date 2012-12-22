@@ -95,6 +95,10 @@
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\libraries\csharpplatform\CSharpPlatform\CSharpPlatform.csproj">
+      <Project>{b4b107b5-030b-451c-8532-13b2306692c3}</Project>
+      <Name>CSharpPlatform</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
       <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
       <Name>CSharpUtils</Name>

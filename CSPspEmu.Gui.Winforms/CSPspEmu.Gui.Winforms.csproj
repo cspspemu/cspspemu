@@ -65,35 +65,37 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutForm.cs">
+    <Compile Include="GuiConfig.cs" />
+    <Compile Include="Winforms\AboutForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AboutForm.Designer.cs">
+    <Compile Include="Winforms\AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ButtonMappingForm.cs">
+    <Compile Include="Winforms\ButtonMappingForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ButtonMappingForm.Designer.cs">
+    <Compile Include="Winforms\ButtonMappingForm.Designer.cs">
       <DependentUpon>ButtonMappingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="FunctionViewerForm.cs">
+    <Compile Include="Winforms\FunctionViewerForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FunctionViewerForm.Designer.cs">
+    <Compile Include="Winforms\FunctionViewerForm.Designer.cs">
       <DependentUpon>FunctionViewerForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="GameList.cs" />
-    <Compile Include="GameListComponent.cs">
+    <Compile Include="Winforms\GameList.cs" />
+    <Compile Include="Winforms\GameListComponent.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GameListComponent.Designer.cs">
+    <Compile Include="Winforms\GameListComponent.Designer.cs">
       <DependentUpon>GameListComponent.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProgressForm.cs">
+    <Compile Include="IGuiExternalInterface.cs" />
+    <Compile Include="Winforms\ProgressForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ProgressForm.Designer.cs">
+    <Compile Include="Winforms\ProgressForm.Designer.cs">
       <DependentUpon>ProgressForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -102,27 +104,27 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="PspDisplayForm.cs">
+    <Compile Include="Winforms\PspDisplayForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PspDisplayForm.Designer.cs">
+    <Compile Include="Winforms\PspDisplayForm.Designer.cs">
       <DependentUpon>PspDisplayForm.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="AboutForm.resx">
+    <EmbeddedResource Include="Winforms\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ButtonMappingForm.resx">
+    <EmbeddedResource Include="Winforms\ButtonMappingForm.resx">
       <DependentUpon>ButtonMappingForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FunctionViewerForm.resx">
+    <EmbeddedResource Include="Winforms\FunctionViewerForm.resx">
       <DependentUpon>FunctionViewerForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GameListComponent.resx">
+    <EmbeddedResource Include="Winforms\GameListComponent.resx">
       <DependentUpon>GameListComponent.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ProgressForm.resx">
+    <EmbeddedResource Include="Winforms\ProgressForm.resx">
       <DependentUpon>ProgressForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -130,7 +132,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="PspDisplayForm.resx">
+    <EmbeddedResource Include="Winforms\PspDisplayForm.resx">
       <DependentUpon>PspDisplayForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
@@ -155,6 +157,10 @@
       <Project>{fd27ef3a-4ebe-4867-a603-3e7048dcf459}</Project>
       <Name>CSPspEmu.Core.Memory</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Types\CSPspEmu.Core.Types.csproj">
+      <Project>{bb80d126-2a98-4ece-99ed-3098f9bd7594}</Project>
+      <Name>CSPspEmu.Core.Types</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
@@ -163,13 +169,37 @@
       <Project>{4056a286-e040-450f-bad8-de8e6b9b57b8}</Project>
       <Name>CSPspEmu.Gui.Winforms.Controls</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Hle.Formats\CSPspEmu.Hle.Formats.csproj">
+      <Project>{b7d8a67e-0046-4ef7-80fe-444bc7efbc70}</Project>
+      <Name>CSPspEmu.Hle.Formats</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Hle.Types\CSPspEmu.Hle.Types.csproj">
+      <Project>{3c997fe1-117f-4f2c-8e3b-3c820b0adfb0}</Project>
+      <Name>CSPspEmu.Hle.Types</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Hle.Vfs\CSPspEmu.Hle.Vfs.csproj">
+      <Project>{24475fa3-5baa-4cfd-8a9f-d0c54ed5597e}</Project>
+      <Name>CSPspEmu.Hle.Vfs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Hle\CSPspEmu.Hle.csproj">
       <Project>{288af89e-b41a-4253-a8f7-43d1371516e9}</Project>
       <Name>CSPspEmu.Hle</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Inject\CSPspEmu.Inject.csproj">
+      <Project>{e68ae26e-e969-4413-8d3c-e60a7d2a2950}</Project>
+      <Name>CSPspEmu.Inject</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Resources\CSPspEmu.Resources.csproj">
       <Project>{BA3187FA-A2A1-43E0-9FDD-69B377EE3152}</Project>
       <Name>CSPspEmu.Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Utils\CSPspEmu.Utils.csproj">
+      <Project>{dc02a203-30f2-4613-950b-1529fd55ac81}</Project>
+      <Name>CSPspEmu.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\libraries\csharpplatform\CSharpPlatform\CSharpPlatform.csproj">
+      <Project>{b4b107b5-030b-451c-8532-13b2306692c3}</Project>
+      <Name>CSharpPlatform</Name>
     </ProjectReference>
     <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
       <Project>{9b217880-48ae-43b6-ae1f-dc732fccbc7a}</Project>
@@ -185,7 +215,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="Winforms\app.config" />
     <None Include="Resources\btn_donate_LG.gif" />
   </ItemGroup>
   <ItemGroup>
@@ -246,7 +276,7 @@
     <None Include="Resources\us.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Icons.txt" />
+    <Content Include="Winforms\Icons.txt" />
     <Content Include="Resources\script-binary-icon.png" />
     <None Include="Resources\script-binary-icon1.png" />
     <None Include="Resources\icon0.png" />

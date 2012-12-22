@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CSPspEmu.Core.Cpu.Table;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu.Assembler
 {
@@ -14,6 +15,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			public uint InstructionPC;
 			public Instruction Instruction;
 			public InstructionInfo InstructionInfo;
+			public IPspMemoryInfo MemoryInfo;
 
 			public static String RegisterIndexToRegisterName(int RegisterIndex)
 			{
@@ -25,7 +27,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 				//return (uint)(PC & ~PspMemory.MemoryMask) | (Instruction.JUMP << 2);
 
 				{ "J", Result => RegisterIndexToRegisterName(Result.Instruction.RS) },
-				{ "j", Result => String.Format("0x{0:X8}", Result.Instruction.GetJumpAddress(Result.InstructionPC)) },
+				{ "j", Result => String.Format("0x{0:X8}", Result.Instruction.GetJumpAddress(Result.MemoryInfo, Result.InstructionPC)) },
 				{ "s", Result => RegisterIndexToRegisterName(Result.Instruction.RS) },
 				{ "d", Result => RegisterIndexToRegisterName(Result.Instruction.RD) },
 				{ "t", Result => RegisterIndexToRegisterName(Result.Instruction.RT) },
@@ -107,6 +109,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 		{
 			return new Result()
 			{
+				MemoryInfo = DefaultMemoryInfo.Instance,
 				Instruction = Data,
 				InstructionInfo = (Index != -1) ? MipsDisassembler.InstructionLookup[Index] : null,
 			};

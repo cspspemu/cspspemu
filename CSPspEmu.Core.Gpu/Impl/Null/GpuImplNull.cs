@@ -4,10 +4,6 @@ namespace CSPspEmu.Core.Gpu
 {
 	public unsafe class GpuImplNull : GpuImpl
 	{
-		public override void InitializeComponent()
-		{
-		}
-
 		public override void InitSynchronizedOnce()
 		{
 		}

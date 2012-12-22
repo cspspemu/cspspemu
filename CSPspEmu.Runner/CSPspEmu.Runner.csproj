@@ -90,13 +90,29 @@
       <Project>{f783ecd3-0f79-43cc-abd0-d356a64049c4}</Project>
       <Name>CSPspEmu.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Hle.Formats\CSPspEmu.Hle.Formats.csproj">
+      <Project>{b7d8a67e-0046-4ef7-80fe-444bc7efbc70}</Project>
+      <Name>CSPspEmu.Hle.Formats</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Hle.Modules\CSPspEmu.Hle.Modules.csproj">
       <Project>{295b7bf1-1130-4098-b0fc-00555ddb09dd}</Project>
       <Name>CSPspEmu.Hle.Modules</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Hle.Types\CSPspEmu.Hle.Types.csproj">
+      <Project>{3c997fe1-117f-4f2c-8e3b-3c820b0adfb0}</Project>
+      <Name>CSPspEmu.Hle.Types</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Hle.Vfs\CSPspEmu.Hle.Vfs.csproj">
+      <Project>{24475fa3-5baa-4cfd-8a9f-d0c54ed5597e}</Project>
+      <Name>CSPspEmu.Hle.Vfs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Hle\CSPspEmu.Hle.csproj">
       <Project>{288af89e-b41a-4253-a8f7-43d1371516e9}</Project>
       <Name>CSPspEmu.Hle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Inject\CSPspEmu.Inject.csproj">
+      <Project>{e68ae26e-e969-4413-8d3c-e60a7d2a2950}</Project>
+      <Name>CSPspEmu.Inject</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Resources\CSPspEmu.Resources.csproj">
       <Project>{ba3187fa-a2a1-43e0-9fdd-69b377ee3152}</Project>

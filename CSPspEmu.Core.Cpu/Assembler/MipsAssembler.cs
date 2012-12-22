@@ -5,13 +5,38 @@ using System.Linq;
 using CSPspEmu.Core.Cpu.Table;
 using CSPspEmu.Core.Cpu.VFpu;
 using CSPspEmu.Core.Memory;
-using CSPspEmu.Core.Utils;
-using CSharpUtils.Arrays;
-using CSharpUtils.Streams;
 using CSharpUtils;
+using CSharpUtils.Streams;
+using CSharpUtils.Arrays;
+//using CSPspEmu.Core.Memory;
+//using CSPspEmu.Core.Utils;
+//using CSharpUtils.Arrays;
+//using CSharpUtils.Streams;
+//using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu.Assembler
 {
+	public class AssemblerResult
+	{
+		public IArray<Instruction> Instructions;
+		public Dictionary<String, uint> Labels = new Dictionary<String, uint>();
+		public List<AssemblerPatch> Patches = new List<AssemblerPatch>();
+	}
+
+	public enum AssemblerPatchType
+	{
+		REL_16 = 0,
+		ABS_26 = 1,
+		ABS_32 = 2,
+	}
+
+	public class AssemblerPatch
+	{
+		public uint Address;
+		public AssemblerPatchType Type;
+		public String LabelName;
+	}
+
 	public unsafe partial class MipsAssembler
 	{
 		protected Stream OutputStream;
@@ -19,12 +44,16 @@ namespace CSPspEmu.Core.Cpu.Assembler
 		protected BinaryReader BinaryReader;
 		protected Dictionary<String, InstructionInfo> Instructions;
 
-		public static IArray<Instruction> StaticAssembleInstructions(string Program)
+		public static AssemblerResult StaticAssembleInstructions(string Program)
 		{
 			var Memory = new MemoryStream();
-			var Instructions = new StreamStructArrayWrapper<Instruction>(Memory);
-			new MipsAssembler(Memory).Assemble(Program);
-			return Instructions;
+			var Result = new AssemblerResult()
+			{
+				Instructions = new StreamStructArrayWrapper<Instruction>(Memory),
+			};
+			var MipsAssembler = new MipsAssembler(Memory);
+			MipsAssembler.Assemble(Program, Result);
+			return Result;
 		}
 
 		public MipsAssembler(Stream OutputStream)
@@ -95,7 +124,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			
 			if (RegisterName.StartsWith("-"))
 			{
-				RegisterName = RegisterName.Substring(1);
+				RegisterName = RegisterName.Substr(1);
 				VfpuPrefix.SourceNegate(Index, true);
 			}
 
@@ -156,7 +185,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 		{
 			if (RegisterName[0] == 'f')
 			{
-				return Convert.ToInt32(RegisterName.Substring(1));
+				return Convert.ToInt32(RegisterName.Substr(1));
 			}
 			throw (new InvalidDataException());
 		}
@@ -165,7 +194,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 		{
 			if (RegisterName[0] == 'r')
 			{
-				return Convert.ToInt32(RegisterName.Substring(1));
+				return Convert.ToInt32(RegisterName.Substr(1));
 			}
 			throw(new InvalidDataException("Invalid Register Name '" + RegisterName + "'"));
 		}
@@ -180,27 +209,13 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			return AssembleInstructions(Line)[0];
 		}
 
-		public enum PatchType
-		{
-			REL_16 = 0,
-			ABS_26 = 1,
-			ABS_32 = 2,
-		}
-
-		public class Patch
-		{
-			public uint Address;
-			public PatchType Type;
-			public String LabelName;
-		}
-
 		public Instruction[] AssembleInstructions(String Line)
 		{
 			uint PC = 0;
 			return AssembleInstructions(ref PC, Line, null);
 		}
 
-		public Instruction[] AssembleInstructions(ref uint PC, String Line, List<Patch> Patches)
+		public Instruction[] AssembleInstructions(ref uint PC, String Line, List<AssemblerPatch> Patches)
 		{
 			Line = Line.Trim();
 			if (Line.Length == 0) return new Instruction[] {};
@@ -341,8 +356,8 @@ namespace CSPspEmu.Core.Cpu.Assembler
 						case "%i": Instruction.IMM = ParseIntegerConstant(Value); break;
 						case "%I": Instruction.IMMU = (uint)ParseIntegerConstant(Value); break;
 
-						case "%j": Patches.Add(new Patch() { Address = PC, LabelName = Value, Type = PatchType.ABS_26 }); break;
-						case "%O": Patches.Add(new Patch() { Address = PC, LabelName = Value, Type = PatchType.REL_16 }); break;
+						case "%j": Patches.Add(new AssemblerPatch() { Address = PC, LabelName = Value, Type = AssemblerPatchType.ABS_26 }); break;
+						case "%O": Patches.Add(new AssemblerPatch() { Address = PC, LabelName = Value, Type = AssemblerPatchType.REL_16 }); break;
 
 						default: throw (new InvalidDataException("Unknown format '" + Key + "' <-- (" + InstructionInfo.AsmEncoding + ")"));
 					}
@@ -431,10 +446,12 @@ namespace CSPspEmu.Core.Cpu.Assembler
 		 * %? - Indicates vmmul special exception
 		 */
 
-		public void Assemble(String Lines)
+		public void Assemble(String Lines, AssemblerResult AssemblerResult = null)
 		{
-			var Labels = new Dictionary<String, uint>();
-			var Patches = new List<Patch>();
+			if (AssemblerResult == null) AssemblerResult = new AssemblerResult();
+
+			var Labels = AssemblerResult.Labels;
+			var Patches = AssemblerResult.Patches;
 
 			foreach (var Line in Lines.Split(new char[] { '\n' }).Select(Str => Str.Trim()).Where(Str => Str.Length > 0))
 			{
@@ -458,7 +475,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 				else
 				{
 					// Label
-					if (RealLine.Substr(-1) == ":")
+					if (RealLine.EndsWith(":"))
 					{
 						Labels[RealLine.Substr(0, -1).Trim()] = (uint)OutputStream.Position;
 					}
@@ -487,14 +504,14 @@ namespace CSPspEmu.Core.Cpu.Assembler
 					{
 						switch (Patch.Type)
 						{
-							case PatchType.REL_16:
+							case AssemblerPatchType.REL_16:
 								Instruction.IMM = ((int)LabelAddress - (int)Patch.Address - 4) / 4;
 								break;
-							case PatchType.ABS_26:
+							case AssemblerPatchType.ABS_26:
 								Console.Write("0x{0:X} : {1}", (LabelAddress & PspMemory.MemoryMask) / 4, Patch.LabelName);
 								Instruction.JUMP = (LabelAddress & PspMemory.MemoryMask) / 4;
 								break;
-							case PatchType.ABS_32:
+							case AssemblerPatchType.ABS_32:
 								Instruction.Value = LabelAddress;
 								break;
 						}

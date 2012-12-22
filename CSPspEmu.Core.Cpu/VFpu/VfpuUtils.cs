@@ -39,9 +39,9 @@ namespace CSPspEmu.Core.Cpu.VFpu
 				{
 					VfpuSize = VfpuSize,
 					Type = Name[0],
-					Matrix = int.Parse(Name.Substring(1, 1)),
-					Column = int.Parse(Name.Substring(2, 1)),
-					Row = int.Parse(Name.Substring(3, 1))
+					Matrix = int.Parse(Name.Substr(1, 1)),
+					Column = int.Parse(Name.Substr(2, 1)),
+					Row = int.Parse(Name.Substr(3, 1))
 				};
 			}
 
@@ -273,7 +273,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
 			else if (NameWithSufix.EndsWith(".p")) Size = 2;
 			else if (NameWithSufix.EndsWith(".s")) Size = 1;
 			if (Size == 0) throw(new Exception("Register doesn't have sufix"));
-			return GetIndices(Size, NameWithSufix.Substring(0, NameWithSufix.Length - 2));
+			return GetIndices(Size, NameWithSufix.Substr(0, -2));
 		}
 
 		public static int[] GetIndices(uint Size, string Name)

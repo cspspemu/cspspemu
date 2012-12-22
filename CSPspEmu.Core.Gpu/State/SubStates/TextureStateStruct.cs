@@ -1,4 +1,5 @@
-﻿namespace CSPspEmu.Core.Gpu.State.SubStates
+﻿using CSPspEmu.Core.Types;
+namespace CSPspEmu.Core.Gpu.State.SubStates
 {
     public struct TextureStateStruct
 	{

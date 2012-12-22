@@ -7,6 +7,7 @@ using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Gpu.State.SubStates;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Core.Types;
 using CSPspEmu.Core.Utils;
 
 namespace CSPspEmu.Core.Gpu

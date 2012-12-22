@@ -72,7 +72,7 @@ namespace CSPspEmu.Hle.Modules.emulator
 		[HlePspFunction(NID = 0x10000001, FirmwareVersion = 150)]
 		public void finalizeCallback(CpuThreadState CpuThreadState)
 		{
-			CpuThreadState.CpuProcessor.RunningCallback = false;
+			//CpuThreadState.CpuProcessor.RunningCallback = false;
 			CpuThreadState.Yield();
 			//throw (new HleEmulatorFinalizeCallbackException());
 		}

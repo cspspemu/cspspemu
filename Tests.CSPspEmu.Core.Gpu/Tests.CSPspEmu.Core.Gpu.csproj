@@ -38,8 +38,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Gpu\GpuProcessorTest.cs" />
-    <Compile Include="Gpu\VertexReading\VertexReaderDynarecTest.cs" />
+    <Compile Include="GpuProcessorTest.cs" />
+    <Compile Include="VertexReading\VertexReaderDynarecTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

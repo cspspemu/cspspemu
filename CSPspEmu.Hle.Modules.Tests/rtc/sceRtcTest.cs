@@ -63,10 +63,10 @@ namespace CSPspEmu.Hle.Modules.Tests.rtc
 			ResetTimes();
 		}
 
-		protected override void SetMocks(PspEmulatorContext PspEmulatorContext)
+		protected override void SetMocks(InjectContext InjectContext)
 		{
-			PspEmulatorContext.SetInstanceType<PspRtc, PspRtcMock>();
-			(PspEmulatorContext.GetInstance<PspRtc>() as PspRtcMock).sceRtcTest = this;
+			InjectContext.SetInstanceType<PspRtc, PspRtcMock>();
+			(InjectContext.GetInstance<PspRtc>() as PspRtcMock).sceRtcTest = this;
 		}
 
 		[TestMethod]

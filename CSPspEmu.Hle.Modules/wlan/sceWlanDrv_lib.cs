@@ -9,6 +9,9 @@ namespace CSPspEmu.Hle.Modules.wlan
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	public unsafe class sceWlanDrv : HleModuleHost
 	{
+		[Inject]
+		HleConfig HleConfig;
+
 		/// <summary>
 		/// Determine the state of the WLAN power switch
 		/// </summary>
@@ -17,7 +20,7 @@ namespace CSPspEmu.Hle.Modules.wlan
 		public bool sceWlanGetSwitchState()
 		{
 			//throw(new NotImplementedException());
-			return PspConfig.WlanIsOn;
+			return HleConfig.WlanIsOn;
 		}
 
 		/// <summary>
@@ -50,6 +53,9 @@ namespace CSPspEmu.Hle.Modules.wlan
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	public unsafe class sceWlanDrv_lib : HleModuleHost
 	{
+		[Inject]
+		HleConfig HleConfig;
+
 		/// <summary>
 		/// Determine if the WLAN device is currently powered on
 		/// </summary>
@@ -57,7 +63,7 @@ namespace CSPspEmu.Hle.Modules.wlan
 		[HlePspFunction(NID = 0x93440B11, FirmwareVersion = 150)]
 		public bool sceWlanDevIsPowerOn()
 		{
-			return PspConfig.WlanIsOn;
+			return HleConfig.WlanIsOn;
 		}
 
 		/// <summary>

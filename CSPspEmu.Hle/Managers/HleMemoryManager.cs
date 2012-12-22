@@ -3,7 +3,7 @@ using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Managers
 {
-	public class HleMemoryManager : PspEmulatorComponent
+	public class HleMemoryManager : IInjectInitialize
 	{
 		/// <summary>
 		/// Specifies the type of allocation used for memory blocks.
@@ -56,7 +56,11 @@ namespace CSPspEmu.Hle.Managers
 			return MemoryPartitionsUid.Get((int)Partition);
 		}
 
-		public override void InitializeComponent()
+		private HleMemoryManager()
+		{
+		}
+
+		void IInjectInitialize.Initialize()
 		{
 #if true
 				MemoryPartitionsUid.Set(0, new MemoryPartition(Low: 0x88000000, High: 0x88300000, Allocated: false, Name: "Kernel Partition 1")); // 3MB

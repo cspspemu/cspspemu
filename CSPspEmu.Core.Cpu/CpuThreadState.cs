@@ -7,11 +7,9 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using CSPspEmu.Core.Cpu.Assembler;
 using CSPspEmu.Core.Cpu.VFpu;
-using CSPspEmu.Core.Memory;
-using CSharpUtils.Threading;
 using CSPspEmu.Core.Cpu.InstructionCache;
 using CSPspEmu.Core.Cpu.Dynarec;
-using CSharpUtils;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -239,9 +237,9 @@ namespace CSPspEmu.Core.Cpu
 				*/
 				return Result;
 			}
-			catch (PspMemory.InvalidAddressException InvalidAddressException)
+			catch (InvalidAddressException InvalidAddressException)
 			{
-				throw (new PspMemory.InvalidAddressException("GetMemoryPtrSafeWithError:" + ErrorDescription + " : " + InvalidAddressException.Message, InvalidAddressException));
+				throw (new InvalidAddressException("GetMemoryPtrSafeWithError:" + ErrorDescription + " : " + InvalidAddressException.Message, InvalidAddressException));
 			}
 			catch (Exception Exception)
 			{
@@ -324,16 +322,7 @@ namespace CSPspEmu.Core.Cpu
 		/// </summary>
 		public void Yield()
 		{
-			//Console.WriteLine(StepInstructionCount);
-			if (CpuProcessor.PspConfig.UseCoRoutines)
-			{
-				CpuProcessor.CoroutinePool.YieldInPool();
-			}
-			else
-			{
-				GreenThread.Yield();
-			}
-			//Console.WriteLine(StepInstructionCount);
+			this.CpuProcessor.CpuConnector.Yield(this);
 		}
 
 		/// <summary>
@@ -482,16 +471,20 @@ namespace CSPspEmu.Core.Cpu
 		public void _MethodCacheInfo_SetInternal(MethodCacheInfo MethodCacheInfo, uint PC)
 		{
 			Console.Write("Creating function for PC=0x{0:X8}...", PC);
-			var Stopwatch = new Logger.Stopwatch();
+			//var Stopwatch = new Logger.Stopwatch();
+			var Time0 = DateTime.UtcNow;
 			
 			var DynarecFunction = CpuProcessor.DynarecFunctionCompiler.CreateFunction(new InstructionStreamReader(new PspMemoryStream(Memory)), PC);
 			if (DynarecFunction.EntryPC != PC) throw(new Exception("Unexpected error"));
 
-			var AstGenerationTime = Stopwatch.Tick();
+			var Time1 = DateTime.UtcNow;
 
 			DynarecFunction.Delegate(null);
 
-			var LinkingTime = Stopwatch.Tick();
+			var Time2 = DateTime.UtcNow;
+
+			var AstGenerationTime = Time1 - Time0;
+			var LinkingTime = Time2 - Time1;
 
 			Console.WriteLine("({0}): Ast: {1}ms, Link: {2}ms", (DynarecFunction.MaxPC - DynarecFunction.MinPC) / 4, (int)AstGenerationTime.TotalMilliseconds, (int)LinkingTime.TotalMilliseconds);
 

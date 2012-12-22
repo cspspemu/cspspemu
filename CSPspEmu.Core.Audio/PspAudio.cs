@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace CSPspEmu.Core.Audio
 {
-    public class PspAudio : PspEmulatorComponent
+    public class PspAudio : IInjectInitialize
 	{
 		/// <summary>
 		/// Output formats for PSP audio.
@@ -51,15 +51,14 @@ namespace CSPspEmu.Core.Audio
 		/// <summary>
 		/// 
 		/// </summary>
-		public override void InitializeComponent()
+		private PspAudio()
 		{
-			Initialize();
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		protected void Initialize()
+		void IInjectInitialize.Initialize()
 		{
 			Channels = new PspAudioChannel[MaxChannels];
 			for (int n = 0; n < MaxChannels; n++)

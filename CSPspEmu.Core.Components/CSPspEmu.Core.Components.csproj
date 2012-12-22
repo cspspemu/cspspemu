@@ -44,8 +44,8 @@
   <ItemGroup>
     <Compile Include="Battery\Battery.cs" />
     <Compile Include="Controller\PspController.cs" />
+    <Compile Include="Display\DisplayConfig.cs" />
     <Compile Include="Display\PspDisplay.cs" />
-    <Compile Include="IGuiExternalInterface.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rtc\PspRtc.cs" />
     <Compile Include="Rtc\PspTimeStruct.cs" />
@@ -56,9 +56,25 @@
       <Project>{fd27ef3a-4ebe-4867-a603-3e7048dcf459}</Project>
       <Name>CSPspEmu.Core.Memory</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Types\CSPspEmu.Core.Types.csproj">
+      <Project>{bb80d126-2a98-4ece-99ed-3098f9bd7594}</Project>
+      <Name>CSPspEmu.Core.Types</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{f783ecd3-0f79-43cc-abd0-d356a64049c4}</Project>
       <Name>CSPspEmu.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Inject\CSPspEmu.Inject.csproj">
+      <Project>{e68ae26e-e969-4413-8d3c-e60a7d2a2950}</Project>
+      <Name>CSPspEmu.Inject</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Utils\CSPspEmu.Utils.csproj">
+      <Project>{dc02a203-30f2-4613-950b-1529fd55ac81}</Project>
+      <Name>CSPspEmu.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\libraries\csharpplatform\CSharpPlatform\CSharpPlatform.csproj">
+      <Project>{b4b107b5-030b-451c-8532-13b2306692c3}</Project>
+      <Name>CSharpPlatform</Name>
     </ProjectReference>
     <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
       <Project>{9b217880-48ae-43b6-ae1f-dc732fccbc7a}</Project>

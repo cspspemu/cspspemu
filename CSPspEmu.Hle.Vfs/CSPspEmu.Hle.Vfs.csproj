@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{24475FA3-5BAA-4CFD-8A9F-D0C54ED5597E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CSPspEmu.Hle.Vfs</RootNamespace>
+    <AssemblyName>CSPspEmu.Hle.Vfs</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MemoryStick\IMemoryStickEventHandler.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DirectoryEnumerator.cs" />
+    <Compile Include="FileHandle.cs" />
+    <Compile Include="HleIoDriverExtensions.cs" />
+    <Compile Include="HleIoDriverMountable.cs" />
+    <Compile Include="HleIoDrvFileArgExtensions.cs" />
+    <Compile Include="IHleIoDriver.cs" />
+    <Compile Include="IHleIoDriverExtensions.cs" />
+    <Compile Include="Iso\DisposableDummy.cs" />
+    <Compile Include="Iso\HleIoDriverIso.cs" />
+    <Compile Include="Local\HleIoDriverLocalFileSystem.cs" />
+    <Compile Include="MemoryStick\HleIoDriverMemoryStick.cs" />
+    <Compile Include="ProxyHleIoDriver.cs" />
+    <Compile Include="PspIoDriverRaw.cs" />
+    <Compile Include="ReadonlyHleIoDriver.cs" />
+    <Compile Include="SeekAnchor.cs" />
+    <Compile Include="Zip\HleIoDriverZip.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CSPspEmu.Core.Components\CSPspEmu.Core.Components.csproj">
+      <Project>{c2263270-905b-4d00-9446-21c8d9890ddc}</Project>
+      <Name>CSPspEmu.Core.Components</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
+      <Project>{fd27ef3a-4ebe-4867-a603-3e7048dcf459}</Project>
+      <Name>CSPspEmu.Core.Memory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Hle.Formats\CSPspEmu.Hle.Formats.csproj">
+      <Project>{b7d8a67e-0046-4ef7-80fe-444bc7efbc70}</Project>
+      <Name>CSPspEmu.Hle.Formats</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Hle.Types\CSPspEmu.Hle.Types.csproj">
+      <Project>{3c997fe1-117f-4f2c-8e3b-3c820b0adfb0}</Project>
+      <Name>CSPspEmu.Hle.Types</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Inject\CSPspEmu.Inject.csproj">
+      <Project>{e68ae26e-e969-4413-8d3c-e60a7d2a2950}</Project>
+      <Name>CSPspEmu.Inject</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Utils\CSPspEmu.Utils.csproj">
+      <Project>{dc02a203-30f2-4613-950b-1529fd55ac81}</Project>
+      <Name>CSPspEmu.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
+      <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
+      <Name>CSharpUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

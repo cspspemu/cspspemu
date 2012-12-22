@@ -21,44 +21,59 @@ using CSPspEmu.Core.Audio.Impl.Openal;
 using CSPspEmu.Hle.Modules;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core.Gpu.Impl.OpenglEs;
+using CSharpUtils;
+using CSPspEmu.Hle;
+using CSPspEmu.Core.Components.Display;
+using CSPspEmu.Hle.Loader;
+using System.Reflection;
 
 namespace CSPspEmu
 {
+	[InjectMap(typeof(ICpuConnector), typeof(HleThreadManager))]
+	[InjectMap(typeof(IGpuConnector), typeof(HleThreadManager))]
+	[InjectMap(typeof(IGuiExternalInterface), typeof(PspEmulator))]
     class PspEmulator : IGuiExternalInterface
 	{
-		private PspConfig PspConfig;
-		private PspEmulatorContext PspEmulatorContext;
-		protected PspRunner PspRunner;
+		[Inject]
+		CpuConfig CpuConfig;
+
+		[Inject]
+		GpuConfig GpuConfig;
+
+		[Inject]
+		GuiConfig GuiConfig;
+
+		[Inject]
+		HleConfig HleConfig;
+
+		[Inject]
+		DisplayConfig DisplayConfig;
+
+		[Inject]
+		PspMemory PspMemory;
+
+		[Inject]
+		ElfConfig ElfConfig;
+
+		[Inject]
+		GpuImpl GpuImpl;
+
+		[Inject]
+		PspDisplay PspDisplay;
+
+		[Inject]
+		InjectContext InjectContext;
+
+		[Inject]
+		PspRunner PspRunner;
+
+		PspStoredConfig StoredConfig;
 
 		/// <summary>
 		/// 
 		/// </summary>
 		public ManualResetEvent ContextInitialized = new ManualResetEvent(false);
 		public bool ContextInitializedFlag = false;
-
-
-		PspMemory IGuiExternalInterface.GetMemory()
-		{
-			ContextInitialized.WaitOne();
-			return PspEmulatorContext.GetInstance<PspMemory>();
-		}
-
-		public PspDisplay GetDisplay()
-		{
-			ContextInitialized.WaitOne();
-			return PspEmulatorContext.GetInstance<PspDisplay>();
-		}
-
-		public PspConfig GetConfig()
-		{
-			return PspConfig;
-		}
-
-		public PspController GetController()
-		{
-			ContextInitialized.WaitOne();
-			return PspEmulatorContext.GetInstance<PspController>();
-		}
 
 		public bool IsInitialized()
 		{
@@ -103,7 +118,6 @@ namespace CSPspEmu
 		{
 			if (!Paused)
 			{
-				InitializedEvent.WaitOne();
 				PspRunner.PauseSynchronized();
 			}
 		}
@@ -121,7 +135,7 @@ namespace CSPspEmu
 		/// </summary>
 		public PspEmulator()
 		{
-			PspConfig = new PspConfig();
+			StoredConfig = PspStoredConfig.Load();
 		}
 
 		/// <summary>
@@ -129,19 +143,17 @@ namespace CSPspEmu
 		/// </summary>
 		public void StartAndLoad(string File, bool TraceSyscalls = false, bool ShowMenus = true, bool TrackCallStack = true, bool? EnableMpeg = null)
 		{
-			PspConfig.DebugSyscalls = TraceSyscalls;
-			PspConfig.TrackCallStack = TrackCallStack;
+			CpuConfig.DebugSyscalls = TraceSyscalls;
+			CpuConfig.TrackCallStack = TrackCallStack;
 			if (EnableMpeg.HasValue)
 			{
-				PspConfig.StoredConfig.EnableMpeg = EnableMpeg.Value;
+				StoredConfig.EnableMpeg = EnableMpeg.Value;
 			}
 			Start(() =>
 			{
 				LoadFile(File);
 			}, ShowMenus: ShowMenus, AutoLoad: true);
 		}
-
-		ManualResetEvent InitializedEvent = new ManualResetEvent(false);
 
 		/// <summary>
 		/// Start.
@@ -154,18 +166,12 @@ namespace CSPspEmu
 				//PspEmulatorContext = new PspEmulatorContext(PspConfig);
 
 				// Creates a new context.
-				new Thread(() =>
+				CreateNewContextAndRemoveOldOne();
+
+				if (CallbackOnInit != null)
 				{
-					CreateNewContextAndRemoveOldOne();
-
-					if (CallbackOnInit != null)
-					{
-						CallbackOnInit();
-					}
-
-					InitializedEvent.Set();
-				}).Start();
-
+					CallbackOnInit();
+				}
 				// GUI Thread.
 				Thread.CurrentThread.Name = "GuiThread";
 				if (Platform.OperatingSystem == Platform.OS.Windows)
@@ -173,7 +179,10 @@ namespace CSPspEmu
 					Application.EnableVisualStyles();
 				}
 				Application.SetCompatibleTextRenderingDefault(false);
-				Application.Run(new PspDisplayForm(this, ShowMenus: ShowMenus, AutoLoad: AutoLoad, DefaultDisplayScale: ShowMenus ? 1 : 2));
+				GuiConfig.ShowMenus = ShowMenus;
+				GuiConfig.AutoLoad = AutoLoad;
+				GuiConfig.DefaultDisplayScale = ShowMenus ? 1 : 2;
+				Application.Run(InjectContext.NewInstance<PspDisplayForm>());
 
 				ContextInitialized.WaitOne();
 				PspRunner.StopSynchronized();
@@ -184,7 +193,7 @@ namespace CSPspEmu
 			}
 			finally
 			{
-				PspConfig.StoredConfig.Save();
+				StoredConfig.Save();
 			}
 
 			Environment.Exit(0);
@@ -215,16 +224,14 @@ namespace CSPspEmu
 				{
 					PspRunner.StopSynchronized();
 
-					PspEmulatorContext.GetInstance<PspMemory>().Dispose();
-					PspEmulatorContext.GetInstance<GpuImpl>().StopSynchronized();
-					PspEmulatorContext.GetInstance<PspAudioImpl>().StopSynchronized();
+					InjectContext.GetInstance<PspMemory>().Dispose();
+					InjectContext.GetInstance<GpuImpl>().StopSynchronized();
+					InjectContext.GetInstance<PspAudioImpl>().StopSynchronized();
 
 					PspRunner = null;
-					PspEmulatorContext = null;
+					InjectContext = null;
 					GC.Collect();
 				}
-
-				PspConfig.HleModulesDll = typeof(HleModulesRoot).Assembly;
 
 				/*
 				foreach (var FileName in new [] {
@@ -241,11 +248,26 @@ namespace CSPspEmu
 				*/
 				//
 
-				PspEmulatorContext = new PspEmulatorContext(PspConfig);
+				InjectContext = new InjectContext();
+				InjectContext.SetInstance<PspStoredConfig>(StoredConfig);
+				InjectContext.GetInstance<HleConfig>().HleModulesDll = typeof(HleModulesRoot).Assembly;
+				InjectContext.MapFromClassAttributes(this);
+
+				// Memory
+#if true // Disabled because crashes on x86
+				if (StoredConfig.UseFastMemory)
+				{
+					InjectContext.SetInstanceType<PspMemory, FastPspMemory>();
+				}
+				else
+#endif
+				{
+					InjectContext.SetInstanceType<PspMemory, NormalPspMemory>();
+				}
 
 				{
 					// GPU
-					PspPluginImpl.SelectWorkingPlugin<GpuImpl>(PspEmulatorContext,
+					PspPluginImpl.SelectWorkingPlugin<GpuImpl>(InjectContext,
 						typeof(GpuImplOpenglEs),
 						//typeof(OpenglGpuImpl),
 						//typeof(GpuImplSoft),
@@ -253,32 +275,19 @@ namespace CSPspEmu
 					);
 
 					// AUDIO
-					PspPluginImpl.SelectWorkingPlugin<PspAudioImpl>(PspEmulatorContext,
+					PspPluginImpl.SelectWorkingPlugin<PspAudioImpl>(InjectContext,
 						typeof(PspAudioWaveOutImpl),
 						typeof(PspAudioOpenalImpl),
 						typeof(AudioAlsaImpl),
 						typeof(AudioImplNull)
 					);
-
-					// Memory
-#if true // Disabled because crashes on x86
-					if (PspConfig.StoredConfig.UseFastMemory)
-					{
-						PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();
-					}
-					else
-#endif
-					{
-						PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
-					}
 				}
 
-				PspEmulatorContext.GetInstance<PspDisplay>().VBlankEventCall += new Action(PspEmulator_VBlankEventCall);
+				InjectContext.InjectDependencesTo(this);
 
-				PspRunner = PspEmulatorContext.GetInstance<PspRunner>();
+				PspDisplay.VBlankEventCall += new Action(PspEmulator_VBlankEventCall);
 				PspRunner.StartSynchronized();
 
-				var GpuImpl = PspEmulatorContext.GetInstance<GpuImpl>();
 				//GpuImpl.InitSynchronizedOnce();
 			}
 			ContextInitializedFlag = true;
@@ -287,7 +296,7 @@ namespace CSPspEmu
 
 		public void ShowDebugInformation()
 		{
-			var CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();
+			var CpuProcessor = InjectContext.GetInstance<CpuProcessor>();
 			Console.WriteLine("-----------------------------------------------------------------");
 			Console.WriteLine("ShowDebugInformation:");
 			Console.WriteLine("-----------------------------------------------------------------");
@@ -309,7 +318,7 @@ namespace CSPspEmu
 			Console.WriteLine("Last called syscalls: ");
 			try
 			{
-				foreach (var CalledCallback in PspEmulatorContext.GetInstance<HleModuleManager>().LastCalledCallbacks.ToArray().Reverse())
+				foreach (var CalledCallback in InjectContext.GetInstance<HleModuleManager>().LastCalledCallbacks.ToArray().Reverse())
 				{
 					Console.WriteLine("  {0}", CalledCallback);
 				}
@@ -415,7 +424,6 @@ namespace CSPspEmu
 
 		void PspEmulator_VBlankEventCall()
 		{
-			var PspMemory = (this as IGuiExternalInterface).GetMemory();
 			foreach (var CWCheat in CWCheats)
 			{
 				if (PspMemory != null)
@@ -484,22 +492,22 @@ namespace CSPspEmu
 
 		public PluginInfo GetAudioPluginInfo()
 		{
-			return PspEmulatorContext.GetInstance<PspAudioImpl>().PluginInfo;
+			return InjectContext.GetInstance<PspAudioImpl>().PluginInfo;
 		}
 
 		public PluginInfo GetGpuPluginInfo()
 		{
-			return PspEmulatorContext.GetInstance<GpuImpl>().PluginInfo;
+			return InjectContext.GetInstance<GpuImpl>().PluginInfo;
 		}
 
 		public void CaptureGpuFrame()
 		{
-			PspEmulatorContext.GetInstance<GpuProcessor>().CaptureFrame();
+			InjectContext.GetInstance<GpuProcessor>().CaptureFrame();
 		}
 
 		public object GetCpuProcessor()
 		{
-			return PspEmulatorContext.GetInstance<CpuProcessor>();
+			return InjectContext.GetInstance<CpuProcessor>();
 		}
 	}
 }

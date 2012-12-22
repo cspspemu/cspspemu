@@ -2,6 +2,7 @@
 using CSharpUtils;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Utils;
 
 namespace CSPspEmu.Hle.Modules.sysmem
 {

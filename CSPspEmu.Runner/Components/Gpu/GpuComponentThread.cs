@@ -14,10 +14,6 @@ namespace CSPspEmu.Runner.Components.Gpu
 		[Inject]
 		private GpuImpl GpuImpl;
 
-		public override void InitializeComponent()
-		{
-		}
-
 		protected override void Main()
 		{
 			GpuImpl.InitSynchronizedOnce();

@@ -2,6 +2,7 @@
 using CSharpUtils.Endian;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Core.Types;
 
 namespace CSPspEmu.Hle.Modules.mpeg
 {

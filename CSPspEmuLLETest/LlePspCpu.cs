@@ -12,7 +12,7 @@ namespace CSPspEmuLLETest
 		CpuThreadState CpuThreadState;
 		uint EntryPoint;
 
-		public LlePspCpu(string Name, PspEmulatorContext PspEmulatorContext, CpuProcessor CpuProcessor, uint EntryPoint = 0x1fc00000)
+		public LlePspCpu(string Name, InjectContext InjectContext, CpuProcessor CpuProcessor, uint EntryPoint = 0x1fc00000)
 		{
 			this.Name = Name;
 			//this.CachedGetMethodCache = PspEmulatorContext.GetInstance<CachedGetMethodCache>();

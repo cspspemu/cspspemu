@@ -13,7 +13,6 @@ using System.Runtime.ExceptionServices;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Memory;
-using CSPspEmu.Core.Utils;
 //using Cloo;
 //using Cloo.Bindings;
 
@@ -21,6 +20,8 @@ using CSPspEmu.Core.Utils;
 using OpenTK.Graphics.OpenGL;
 using CSPspEmu.Core.Gpu.Formats;
 using Mono.Simd;
+using CSPspEmu.Core.Utils;
+using CSPspEmu.Core.Types;
 #else
 using MiniGL;
 #endif
@@ -29,11 +30,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
 	public sealed unsafe partial class OpenglGpuImpl : GpuImpl
 	{
-		/// <summary>
-		/// 
-		/// </summary>
-		private PspConfig Config;
-
 		/// <summary>
 		/// 
 		/// </summary>
@@ -58,10 +54,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
-		public override void InitializeComponent()
+		private OpenglGpuImpl()
 		{
-			base.InitializeComponent();
-			this.Config = PspEmulatorContext.PspConfig;
 			this.TextureCache = new TextureCacheOpengl(this.Memory, this);
 			this.VertexReader = new VertexReader();
 			this.TextureCache = new TextureCacheOpengl(Memory, this);

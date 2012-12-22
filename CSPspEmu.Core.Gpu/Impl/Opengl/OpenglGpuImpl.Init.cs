@@ -102,7 +102,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				AutoResetEvent CompletedEvent = new AutoResetEvent(false);
 				var CThread = new Thread(() =>
 				{
-					Thread.CurrentThread.CurrentCulture = new CultureInfo(PspConfig.ThreadCultureName);
+					Thread.CurrentThread.CurrentCulture = new CultureInfo(GlobalConfig.ThreadCultureName);
 
 					var UsedGraphicsMode = new GraphicsMode(
 						color: new OpenTK.Graphics.ColorFormat(8, 8, 8, 8),

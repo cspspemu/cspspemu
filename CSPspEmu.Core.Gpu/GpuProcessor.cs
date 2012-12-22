@@ -4,12 +4,11 @@ using System.Threading;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Threading.Synchronization;
-using CSPspEmu.Hle;
 using CSharpUtils;
 
 namespace CSPspEmu.Core.Gpu
 {
-	public unsafe class GpuProcessor : PspEmulatorComponent
+	public unsafe class GpuProcessor : IInjectInitialize
 	{
 		/*
 		 *   - GU_SYNC_FINISH - 0 - Wait until the last sceGuFinish command is reached
@@ -63,23 +62,7 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
-		public PspConfig PspConfig;
-
 		public GlobalGpuState GlobalGpuState = new GlobalGpuState();
-
-		/// <summary>
-		/// 
-		/// </summary>
-		[Inject]
-		public PspMemory Memory;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		[Inject]
-		public HleInterop HleInterop;
-
-		//HleInterop
 
 		/// <summary>
 		/// 
@@ -116,7 +99,26 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
-		public override void InitializeComponent()
+		[Inject]
+		public GpuConfig GpuConfig;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Inject]
+		public PspMemory Memory;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Inject]
+		public IGpuConnector Connector;
+
+		private GpuProcessor()
+		{
+		}
+
+		void IInjectInitialize.Initialize()
 		{
 			if (sizeof(GpuStateStruct) > sizeof(uint) * 512)
 			{
@@ -126,10 +128,9 @@ namespace CSPspEmu.Core.Gpu
 					Console.WriteLine("GpuStateStruct too big. Maybe 64bit? . Size: " + sizeof(GpuStateStruct));
 					Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 				});
-				
+
 			}
 
-			this.PspConfig = PspEmulatorContext.PspConfig;
 			this.DisplayListQueue = new LinkedList<GpuDisplayList>();
 			this.DisplayListFreeQueue = new Queue<GpuDisplayList>();
 			for (int n = 0; n < DisplayLists.Length; n++)

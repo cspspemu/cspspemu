@@ -52,14 +52,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK">
-      <HintPath>..\OpenTK.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AudioMixer.cs" />
     <Compile Include="Impl\Alsa\Alsa.cs" />
     <Compile Include="Impl\Alsa\AudioAlsaImpl.cs" />
     <Compile Include="Impl\Null\AudioImplNull.cs" />
@@ -75,12 +71,27 @@
     <Compile Include="PspAudio.cs" />
     <Compile Include="PspAudioChannel.cs" />
     <Compile Include="PspAudioImpl.cs" />
-    <Compile Include="SoundSample.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Inject\CSPspEmu.Inject.csproj">
+      <Project>{e68ae26e-e969-4413-8d3c-e60a7d2a2950}</Project>
+      <Name>CSPspEmu.Inject</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Utils\CSPspEmu.Utils.csproj">
+      <Project>{dc02a203-30f2-4613-950b-1529fd55ac81}</Project>
+      <Name>CSPspEmu.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\csharpplatform\CSharpPlatform.AL\CSharpPlatform.AL.csproj">
+      <Project>{40a74ee2-9d85-46ed-b751-fc46d915d714}</Project>
+      <Name>CSharpPlatform.AL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\libraries\csharpplatform\CSharpPlatform\CSharpPlatform.csproj">
+      <Project>{b4b107b5-030b-451c-8532-13b2306692c3}</Project>
+      <Name>CSharpPlatform</Name>
     </ProjectReference>
     <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
       <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>

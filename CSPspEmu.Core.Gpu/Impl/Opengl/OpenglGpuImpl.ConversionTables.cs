@@ -1,4 +1,5 @@
 ﻿#if OPENTK
+using CSPspEmu.Core.Types;
 using OpenTK.Graphics.OpenGL;
 #else
 using MiniGL;

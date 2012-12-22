@@ -4,7 +4,7 @@ using CSharpUtils;
 
 namespace CSPspEmu.Core.Rtc
 {
-	public unsafe class PspRtc : PspEmulatorComponent
+	public unsafe class PspRtc
 	{
 		public static Logger Logger = Logger.GetLogger("Rtc");
 
@@ -41,7 +41,7 @@ namespace CSPspEmu.Core.Rtc
 		/// <summary>
 		/// 
 		/// </summary>
-		public override void InitializeComponent()
+		public PspRtc()
 		{
 			Start();
 		}

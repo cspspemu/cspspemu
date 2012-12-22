@@ -51,15 +51,8 @@ namespace CSPspEmu.Hle.Managers
 		}
 	}
 
-	public sealed class HleInterruptManager : PspEmulatorComponent
+	public sealed class HleInterruptManager : IInjectInitialize
 	{
-		/// <summary>
-		/// Global Interrupt Enable
-		/// </summary>
-		public bool Enabled = true;
-
-		private HleInterruptHandler[] InterruptHandlers;
-
 		[Inject]
 		private HleCallbackManager HleCallbackManager;
 
@@ -69,12 +62,26 @@ namespace CSPspEmu.Hle.Managers
 		[Inject]
 		private HleInterop HleInterop;
 
+		/// <summary>
+		/// Global Interrupt Enable
+		/// </summary>
+		public bool Enabled = true;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		private HleInterruptHandler[] InterruptHandlers;
+
 		public HleInterruptHandler GetInterruptHandler(PspInterrupts PspInterrupt)
 		{
 			return InterruptHandlers[(int)PspInterrupt];
 		}
 
-		public override void InitializeComponent()
+		private HleInterruptManager()
+		{
+		}
+
+		void IInjectInitialize.Initialize()
 		{
 			//uint MaxHandlers = Enum.GetValues(typeof(PspInterrupts)).OfType<uint>().Max() + 1;
 			InterruptHandlers = new HleInterruptHandler[(int)PspInterrupts._MAX];

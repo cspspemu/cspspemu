@@ -5,6 +5,9 @@ namespace CSPspEmu.Core.Memory
 {
 	public unsafe sealed class FastPspMemory : PspMemory
 	{
+		override public bool HasFixedGlobalAddress { get { return true; } }
+		override public IntPtr FixedGlobalAddress { get { return new IntPtr(this.Base); } }
+
 		//public readonly byte* Base = (byte*)0x50000000;
 		//public readonly byte* Base = (byte*)0x40000000;
 		public static byte* _Base = null;
@@ -28,7 +31,7 @@ namespace CSPspEmu.Core.Memory
 		int result3 = mprotect((void*)0x10000000, 0x100000, PROT_READ | PROT_WRITE);
 		*/
 
-		public override void InitializeComponent()
+		public FastPspMemory()
 		{
 			AllocMemoryOnce();
 		}
@@ -47,7 +50,7 @@ namespace CSPspEmu.Core.Memory
 			{
 				AlreadyInitialized = true;
 
-				Logger.Info("FastPspMemory.AllocMemory");
+				//Logger.Info("FastPspMemory.AllocMemory");
 
 				ulong[] TryBases;
 				if (Platform.Is32Bit)
@@ -58,7 +61,7 @@ namespace CSPspEmu.Core.Memory
 					}
 					else
 					{
-						Logger.Error("Using mmap on linux x86 is known to cause problems");
+						//Logger.Error("Using mmap on linux x86 is known to cause problems");
 						TryBases = new ulong[] { 0xE1000000, 0x31008008, 0x40008000, 0x50008000, 0x31000000, 0x40000000, 0x50000000 };
 					}
 				}
@@ -106,7 +109,7 @@ namespace CSPspEmu.Core.Memory
 
 				if (_Base == null || StaticScratchPadPtr == null || StaticFrameBufferPtr == null || StaticMainPtr == null)
 				{
-					Logger.Fatal("Can't allocate virtual memory!");
+					//Logger.Fatal("Can't allocate virtual memory!");
 					Debug.Fail("Can't allocate virtual memory!");
 					throw (new InvalidOperationException("Can't allocate virtual memory!"));
 				}

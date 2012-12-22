@@ -38,12 +38,38 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AudioMixer.cs" />
+    <Compile Include="CStringFormater.cs" />
+    <Compile Include="Hashing.cs" />
+    <Compile Include="IArgumentReader.cs" />
     <Compile Include="Threading\HybridEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Threading\HybridThread.cs" />
     <Compile Include="Threading\HybridThreadManager.cs" />
+    <Compile Include="Utils\ColorFormatExtensions.cs" />
+    <Compile Include="Utils\PixelFormatDecoder.cs" />
+    <Compile Include="Utils\PspBitmap.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CSPspEmu.Core.Types\CSPspEmu.Core.Types.csproj">
+      <Project>{bb80d126-2a98-4ece-99ed-3098f9bd7594}</Project>
+      <Name>CSPspEmu.Core.Types</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Hle.Types\CSPspEmu.Hle.Types.csproj">
+      <Project>{3c997fe1-117f-4f2c-8e3b-3c820b0adfb0}</Project>
+      <Name>CSPspEmu.Hle.Types</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
+      <Project>{9b217880-48ae-43b6-ae1f-dc732fccbc7a}</Project>
+      <Name>CSharpUtils.Drawing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
+      <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
+      <Name>CSharpUtils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

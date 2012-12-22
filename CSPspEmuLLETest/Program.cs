@@ -26,44 +26,62 @@ namespace CSPspEmuLLETest
 			}
 		}
 
-		static void Main(string[] args)
+		[Inject]
+		DebugPspMemory PspMemory;
+
+		[Inject]
+		CpuProcessor CpuProcessor;
+
+		[Inject]
+		InjectContext InjectContext;
+
+		public Program()
 		{
-			var PspConfig = new PspConfig();
-			var PspEmulatorContext = new PspEmulatorContext(PspConfig);
-			var DebugPspMemory = PspEmulatorContext.GetInstance<DebugPspMemory>();
-			PspEmulatorContext.SetInstance<PspMemory>(DebugPspMemory);
-			var CpuProcessor = PspEmulatorContext.GetInstance<CpuProcessor>();
+			var InjectContext = new InjectContext();
+			{
+				InjectContext.SetInstanceType<PspMemory, DebugPspMemory>();
+				InjectContext.SetInstanceType<DebugPspMemory, DebugPspMemory>();
+			}
+			InjectContext.InjectDependencesTo(this);
+		}
+
+		public void Run()
+		{
 			var CpuThreadState = new CpuThreadState(CpuProcessor);
 			var Dma = new Dma(CpuThreadState);
-			DebugPspMemory.CpuThreadState = CpuThreadState;
-			DebugPspMemory.Dma = Dma;
-
-
+		
 			Console.SetWindowSize(120, 60);
 			Console.SetBufferSize(120, 8000);
 
-			PspConfig.MustLogWrites = true;
-
 			var NandStream = File.OpenRead(NandPath);
+			var IplReader = new IplReader(new NandReader(NandStream));
+			var Info = IplReader.LoadIplToMemory(new PspMemoryStream(PspMemory));
+			uint StartPC = Info.EntryFunction;
+
+			var LLEState = new LLEState();
+
+			Dma.LLEState = LLEState;
+			LLEState.GPIO = new LleGPIO();
+			LLEState.NAND = new LleNAND(NandStream);
+			LLEState.Cpu = new LlePspCpu("CPU", InjectContext, CpuProcessor, StartPC);
+			LLEState.Me = new LlePspCpu("ME", InjectContext, CpuProcessor, StartPC);
+			LLEState.LleKirk = new LleKirk(PspMemory);
+			LLEState.Memory = PspMemory;
+
+			LLEState.Cpu.Start();
+
+			while (true) Thread.Sleep(int.MaxValue);
+		}
+
+		static void Main(string[] args)
+		{
+			new Program().Run();
+
 
 			//DebugPspMemory.Write4(0xBFC00FFC, 0x20040420);
 
 			// It doesn't start the ME
 			//DebugPspMemory.Write4(0xBFC00FFC, 0xFFFFFFFF);
-
-#if false
-			// PRE-IPL
-			uint StartPC = 0x1FC00000;
-			DebugPspMemory.WriteBytes(StartPC, File.ReadAllBytes(PreIplPath));
-
-			PspConfig.TraceJal = true;
-			//PspConfig.TraceJIT = true;
-#else
-			var IplReader = new IplReader(new NandReader(NandStream));
-			var Info = IplReader.LoadIplToMemory(new PspMemoryStream(DebugPspMemory));
-			uint StartPC = Info.EntryFunction;
-#endif
-
 
 			/*
 			ME:
@@ -74,19 +92,7 @@ namespace CSPspEmuLLETest
 
 			//IplReader.WriteIplToFile(File.Open(NandPath + ".ipl.bin", FileMode.Create, FileAccess.Write));
 
-			var LLEState = new LLEState();
-
-			Dma.LLEState = LLEState;
-			LLEState.GPIO = new LleGPIO();
-			LLEState.NAND = new LleNAND(NandStream);
-			LLEState.Cpu = new LlePspCpu("CPU", PspEmulatorContext, CpuProcessor, StartPC);
-			LLEState.Me = new LlePspCpu("ME", PspEmulatorContext, CpuProcessor, StartPC);
-			LLEState.LleKirk = new LleKirk(DebugPspMemory);
-			LLEState.Memory = DebugPspMemory;
-
-			LLEState.Cpu.Start();
-
-			while (true) Thread.Sleep(int.MaxValue);
+			
 		}
 	}
 }

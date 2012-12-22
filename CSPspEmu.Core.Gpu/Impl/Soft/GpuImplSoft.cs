@@ -7,10 +7,6 @@ namespace CSPspEmu.Core.Gpu
 	{
 		public PspMemory PspMemory;
 
-		public override void InitializeComponent()
-		{
-		}
-
 		public override void InitSynchronizedOnce()
 		{
 		}

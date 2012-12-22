@@ -1,5 +1,5 @@
-﻿using System.Runtime.InteropServices;
-using CSPspEmu.Core.Utils;
+﻿using CSPspEmu.Core.Types;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Gpu.State.SubStates
 {

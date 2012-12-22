@@ -66,7 +66,7 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut
 			m_Player.Stop();
 		}
 
-		public override void InitializeComponent()
+		public PspAudioWaveOutImpl()
 		{
 			m_Player = new WaveOutPlayer(-1, new WaveFormat(rate: Frequency, bits: 16, channels: NumberOfChannels), BufferSize, NumberOfBuffers, BufferFillEventHandler);
 			Initialized = true;

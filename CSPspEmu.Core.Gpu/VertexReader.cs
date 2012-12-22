@@ -2,6 +2,7 @@
 
 using System;
 using CSPspEmu.Core.Gpu.State;
+using CSPspEmu.Core.Types;
 using CSPspEmu.Core.Utils;
 
 namespace CSPspEmu.Core.Gpu

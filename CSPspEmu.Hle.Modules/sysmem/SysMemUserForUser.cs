@@ -11,6 +11,9 @@ namespace CSPspEmu.Hle.Modules.sysmem
 	public class SysMemUserForUser : HleModuleHost
 	{
 		[Inject]
+		HleConfig HleConfig;
+
+		[Inject]
 		HleMemoryManager MemoryManager;
 
 		[Inject]
@@ -33,7 +36,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		[HlePspFunction(NID = 0x3FC9AE6A, FirmwareVersion = 150)]
 		public int sceKernelDevkitVersion()
 		{
-			var Version = PspConfig.FirmwareVersion;
+			var Version = HleConfig.FirmwareVersion;
 			return (Version.Major << 24) | (Version.Minor << 16) | (Version.Revision << 8) | 0x10;
 		}
 

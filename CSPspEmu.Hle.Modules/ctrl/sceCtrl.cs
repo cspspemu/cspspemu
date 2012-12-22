@@ -1,5 +1,6 @@
 ﻿using CSPspEmu.Core;
 using CSPspEmu.Core.Controller;
+using CSPspEmu.Core.Types;
 using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.ctrl

@@ -2,7 +2,7 @@
 {
 	public unsafe class LazyPspMemory : NormalPspMemory
 	{
-		protected override void Initialize()
+		public LazyPspMemory()
 		{
 		}
 

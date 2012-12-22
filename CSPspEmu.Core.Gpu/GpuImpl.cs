@@ -5,10 +5,6 @@ namespace CSPspEmu.Core.Gpu
 {
 	public unsafe abstract class GpuImpl : PspPluginImpl
 	{
-		public override void InitializeComponent()
-		{
-		}
-
 		public abstract void InitSynchronizedOnce();
 		public abstract void StopSynchronized();
 

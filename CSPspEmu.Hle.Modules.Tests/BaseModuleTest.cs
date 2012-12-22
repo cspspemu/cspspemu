@@ -11,7 +11,7 @@ namespace CSPspEmu.Hle.Modules.Tests
 	[TestClass]
 	public class BaseModuleTest
 	{
-		protected virtual void SetMocks(PspEmulatorContext PspEmulatorContext)
+		protected virtual void SetMocks(InjectContext InjectContext)
 		{
 		}
 
@@ -22,12 +22,12 @@ namespace CSPspEmu.Hle.Modules.Tests
 		[TestInitialize]
 		public void SetUp()
 		{
-			var PspEmulatorContext = new PspEmulatorContext(new PspConfig());
+			var InjectContext = new InjectContext();
 
-			PspEmulatorContext.SetInstanceType<PspMemory, LazyPspMemory>();
-			SetMocks(PspEmulatorContext);
+			InjectContext.SetInstanceType<PspMemory, LazyPspMemory>();
+			SetMocks(InjectContext);
 
-			PspEmulatorContext.InjectDependencesTo(this);
+			InjectContext.InjectDependencesTo(this);
 			Initialize();
 		}
 	}

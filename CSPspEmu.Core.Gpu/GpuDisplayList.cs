@@ -307,7 +307,8 @@ namespace CSPspEmu.Core.Gpu
 					InstructionAddressCurrent,
 					InstructionAddressStall,
 					WritePC,
-					WritePC - GpuProcessor.PspConfig.RelocatedBaseAddress,
+					//WritePC - GpuProcessor.PspConfig.RelocatedBaseAddress,
+					WritePC - 0,
 					OpCode,
 					Params
 				);
@@ -430,7 +431,9 @@ namespace CSPspEmu.Core.Gpu
 #if true
 				// triggerAsyncCallback(cbid, listId, PSP_GE_SIGNAL_HANDLER_SUSPEND, callbackNotifyArg1, finishCallbacks);
 
-				GpuProcessor.HleInterop.ExecuteFunctionLater(
+				GpuProcessor.Connector.Finish(Arg);
+				/*
+				GpuProcessor.NewInterop.ExecuteFunctionLater(
 					Callbacks.FinishFunction,
 					(Result) =>
 					{
@@ -439,6 +442,7 @@ namespace CSPspEmu.Core.Gpu
 					CallbacksId,
 					Callbacks.FinishArgument
 				);
+				*/
 #else
 				GpuProcessor.HleInterop.ExecuteFunctionLater(
 					Callbacks.FinishFunction,
@@ -480,7 +484,11 @@ namespace CSPspEmu.Core.Gpu
 					);
 					Console.Error.WriteLine("OP_SIGNAL! : ENDED : {0}", Result);
 					*/
-					GpuProcessor.HleInterop.ExecuteFunctionLater(
+
+					GpuProcessor.Connector.Signal(Signal, Behavior);
+
+					/*
+					GpuProcessor.NewInterop.ExecuteFunctionLater(
 						Callbacks.SignalFunction,
 						(Result) =>
 						{
@@ -490,6 +498,8 @@ namespace CSPspEmu.Core.Gpu
 						(int)Behavior,
 						Callbacks.SignalArgument
 					);
+					*/
+
 					Console.Error.WriteLine("OP_SIGNAL! : ENQUEUED");
 
 					Logger.Error("Not implemented Signal Behavior: " + Behavior);

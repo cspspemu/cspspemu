@@ -17,22 +17,28 @@ namespace CSPspEmu.Hle.Loader
 		public uint GP;
 	}
 
-    public class ElfPspLoader : PspEmulatorComponent
+    public class ElfPspLoader
 	{
 		static Logger Logger = Logger.GetLogger("Loader");
 
-		public override void InitializeComponent()
-		{
-		}
-
-		protected uint BaseAddress;
-		
 		[Inject]
 		protected ElfLoader ElfLoader;
 
 		[Inject]
 		protected HleModuleManager ModuleManager;
 
+		[Inject]
+		protected ElfConfig ElfConfig;
+
+		[Inject]
+		protected InjectContext InjectContext;
+
+		private ElfPspLoader()
+		{
+		}
+
+		protected uint BaseAddress;
+		
 		protected HleModuleGuest HleModuleGuest;
 
 		Stream _RelocOutputStream;
@@ -61,7 +67,7 @@ namespace CSPspEmu.Hle.Loader
 
 		public HleModuleGuest LoadModule(Stream FileStream, Stream MemoryStream, MemoryPartition MemoryPartition, HleModuleManager ModuleManager, String GameTitle, string ModuleName, bool IsMainModule)
 		{
-			this.HleModuleGuest = new HleModuleGuest(PspEmulatorContext);
+			this.HleModuleGuest = InjectContext.NewInstance<HleModuleGuest>();
 
 			this.ElfLoader = new ElfLoader();
 			this.ModuleManager = ModuleManager;
@@ -85,7 +91,7 @@ namespace CSPspEmu.Hle.Loader
 
 			this.ElfLoader.Load(FileStream, ModuleName);
 
-			PspEmulatorContext.PspConfig.InfoExeHasRelocation = this.ElfLoader.NeedsRelocation;
+			ElfConfig.InfoExeHasRelocation = this.ElfLoader.NeedsRelocation;
 
 			if (this.ElfLoader.NeedsRelocation)
 			{
@@ -103,8 +109,8 @@ namespace CSPspEmu.Hle.Loader
 				BaseAddress = 0;
 			}
 
-			PspEmulatorContext.PspConfig.RelocatedBaseAddress = BaseAddress;
-			PspEmulatorContext.PspConfig.GameTitle = GameTitle;
+			ElfConfig.RelocatedBaseAddress = BaseAddress;
+			ElfConfig.GameTitle = GameTitle;
 
 			this.ElfLoader.AllocateAndWrite(MemoryStream, MemoryPartition, BaseAddress);
 

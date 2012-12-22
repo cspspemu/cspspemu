@@ -1,4 +1,5 @@
-﻿using GLES;
+﻿using CSPspEmu.Core.Types;
+using GLES;
 
 namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 {
@@ -118,7 +119,7 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 		{
 			public GuPixelFormats GuPixelFormat;
 			public int OpenglPixelType;
-		};
+		}
 
 		static public readonly GlPixelFormat[] GlPixelFormatList = new GlPixelFormat[]
 		{

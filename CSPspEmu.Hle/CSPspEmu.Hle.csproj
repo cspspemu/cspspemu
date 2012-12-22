@@ -62,114 +62,46 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArgumentReader.cs" />
-    <Compile Include="Attributes\HlePspFunctionAttribute.cs" />
-    <Compile Include="Attributes\HlePspModuleAttribute.cs" />
-    <Compile Include="Attributes\HlePspNotImplementedAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Attributes\HlePspUnknownDefinitionAttribute.cs" />
-    <Compile Include="CStringFormater.cs" />
     <Compile Include="DelegateInfo.cs" />
-    <Compile Include="Formats\EncryptedPrx.Keys16.cs" />
-    <Compile Include="Formats\audio\RiffWaveReader.cs" />
-    <Compile Include="Formats\audio\Wav.cs" />
-    <Compile Include="Formats\audio\Vag.cs" />
-    <Compile Include="Formats\audio\Vag.Structs.cs" />
-    <Compile Include="Formats\Cso.cs" />
-    <Compile Include="Formats\Dax.cs" />
-    <Compile Include="Formats\EncryptedPrx.cs" />
-    <Compile Include="Formats\EncryptedPrx.Keys144.cs" />
-    <Compile Include="Formats\EncryptedPrx.Utils.cs" />
-    <Compile Include="Formats\Font\BitReader.cs" />
-    <Compile Include="Formats\Font\PGF.cs" />
-    <Compile Include="Formats\Font\PGF.Structs.cs" />
-    <Compile Include="Formats\FormatDetector.cs" />
-    <Compile Include="Formats\Elf.cs" />
-    <Compile Include="Formats\ElfPsp.cs" />
-    <Compile Include="Formats\ICompressedIso.cs" />
-    <Compile Include="Formats\IsoFile.cs" />
-    <Compile Include="Formats\IsoLoader.cs" />
-    <Compile Include="Formats\Pbp.cs" />
-    <Compile Include="Formats\Psf.cs" />
-    <Compile Include="Formats\video\IDemuxer.cs" />
-    <Compile Include="Formats\video\MpegPsDemuxer.cs" />
-    <Compile Include="Formats\video\Pmf.cs" />
-    <Compile Include="Formats\Archive\ZipArchive.cs" />
     <Compile Include="HleCallback.cs" />
+    <Compile Include="HleCallbackManager.cs" />
+    <Compile Include="HleConfig.cs" />
     <Compile Include="HleEmulatorFinalizeCallbackException.cs" />
+    <Compile Include="Interop\HleEmulatorSpecialAddresses.cs" />
     <Compile Include="HleFunctionEntry.cs" />
-    <Compile Include="HleInterop.cs" />
-    <Compile Include="HleModule.cs" />
-    <Compile Include="HleModuleHost.cs" />
+    <Compile Include="Interop\HleInterop.cs" />
+    <Compile Include="Modules\HleModule.cs" />
+    <Compile Include="Modules\HleModuleHost.cs" />
     <Compile Include="HleLibrary.cs" />
-    <Compile Include="HleModuleHost.Proxy.cs" />
+    <Compile Include="Modules\HleModuleHost.Proxy.cs" />
     <Compile Include="HleOutputHandler.cs" />
-    <Compile Include="IArgumentReader.cs" />
+    <Compile Include="HleUidPool.cs" />
+    <Compile Include="HleUidPoolSpecial.cs" />
+    <Compile Include="Loader\ElfConfig.cs" />
     <Compile Include="Loader\ElfLoader.cs" />
     <Compile Include="Loader\ElfPspLoader.cs" />
-    <Compile Include="Managers\HleCallbackManager.cs" />
     <Compile Include="Managers\HleEventFlagManager.cs" />
     <Compile Include="Managers\HleInterruptManager.cs" />
     <Compile Include="Managers\HleIoManager.cs" />
     <Compile Include="Managers\HleMemoryManager.cs" />
-    <Compile Include="HleModuleGuest.cs" />
+    <Compile Include="Modules\HleModuleGuest.cs" />
     <Compile Include="Managers\HleModuleManager.cs" />
     <Compile Include="HleThread.cs" />
     <Compile Include="Managers\HleRegistryManager.cs" />
-    <Compile Include="Managers\HleUidPoolSpecial.cs" />
-    <Compile Include="Pgd\PgdProxyStream.cs" />
+    <Compile Include="Modules\SceModule.cs" />
+    <Compile Include="NewInterop.cs" />
     <Compile Include="PreemptiveScheduler.cs" />
-    <Compile Include="PspThreadAttributes.cs" />
-    <Compile Include="PspThreadStatus.cs" />
-    <Compile Include="SceKernelErrors.cs" />
-    <Compile Include="SceKernelException.cs" />
-    <Compile Include="SceKernelSelfStopUnloadModuleException.cs" />
-    <Compile Include="SceKernelSysClock.cs" />
     <Compile Include="Threading\EventFlags\HleEventFlag.cs" />
     <Compile Include="Threading\Semaphores\HleSemaphore.cs" />
     <Compile Include="Managers\HleSemaphoreManager.cs" />
     <Compile Include="Managers\HleThreadManager.cs" />
-    <Compile Include="Managers\HleUidPool.cs" />
     <Compile Include="MemoryPartition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Threading\Semaphores\SceKernelSemaInfo.cs" />
     <Compile Include="Threading\Semaphores\SceKernelSemaOptParam.cs" />
     <Compile Include="Threading\Semaphores\SemaphoreAttribute.cs" />
     <Compile Include="Threading\Semaphores\SemaphoreId.cs" />
-    <Compile Include="Types.cs" />
-    <Compile Include="Utils\Adler32.cs" />
-    <Compile Include="Utils\Deflate.cs" />
-    <Compile Include="Utils\InfBlocks.cs" />
-    <Compile Include="Utils\InfCodes.cs" />
-    <Compile Include="Utils\Inflate.cs" />
-    <Compile Include="Utils\InflateInputStream.cs" />
-    <Compile Include="Utils\InfTree.cs" />
-    <Compile Include="Utils\StaticTree.cs" />
-    <Compile Include="Utils\SupportClass.cs" />
-    <Compile Include="Utils\Tree.cs" />
-    <Compile Include="Utils\ZInputStream.cs" />
-    <Compile Include="Utils\Zlib.cs" />
-    <Compile Include="Utils\ZOutputStream.cs" />
-    <Compile Include="Utils\ZStream.cs" />
-    <Compile Include="Utils\ZStreamException.cs" />
-    <Compile Include="Vfs\DirectoryEnumerator.cs" />
-    <Compile Include="Vfs\Emulator\HleIoDriverEmulator.cs" />
-    <Compile Include="Vfs\FileHandle.cs" />
-    <Compile Include="Vfs\HleIoDriverExtensions.cs" />
-    <Compile Include="Vfs\HleIoDrvFileArgExtensions.cs" />
-    <Compile Include="Vfs\IHleIoDriver.cs" />
-    <Compile Include="Vfs\IHleIoDriverExtensions.cs" />
-    <Compile Include="Vfs\Iso\CompressedIsoProxyStream.cs" />
-    <Compile Include="Vfs\Iso\DisposableDummy.cs" />
-    <Compile Include="Vfs\Iso\HleIoDriverIso.cs" />
-    <Compile Include="Vfs\Local\HleIoDriverLocalFileSystem.cs" />
-    <Compile Include="Vfs\HleIoDriverMountable.cs" />
-    <Compile Include="Vfs\MemoryStick\HleIoDriverMemoryStick.cs" />
-    <Compile Include="Vfs\ProxyHleIoDriver.cs" />
-    <Compile Include="Vfs\PspIoDriverRaw.cs" />
-    <Compile Include="Vfs\ReadonlyHleIoDriver.cs" />
-    <Compile Include="Vfs\SeekAnchor.cs" />
-    <Compile Include="Vfs\Zip\HleIoDriverZip.cs" />
+    <Compile Include="WakeUpCallbackDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSPspEmu.Core.Audio\CSPspEmu.Core.Audio.csproj">
@@ -188,13 +120,41 @@
       <Project>{f4181553-01f3-425a-8ddc-927a97de6de2}</Project>
       <Name>CSPspEmu.Core.Crypto</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">
+      <Project>{9a30ebf3-b702-47d9-aafc-e3e02b410dad}</Project>
+      <Name>CSPspEmu.Core.Gpu</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
       <Project>{fd27ef3a-4ebe-4867-a603-3e7048dcf459}</Project>
       <Name>CSPspEmu.Core.Memory</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Types\CSPspEmu.Core.Types.csproj">
+      <Project>{bb80d126-2a98-4ece-99ed-3098f9bd7594}</Project>
+      <Name>CSPspEmu.Core.Types</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Hle.Formats\CSPspEmu.Hle.Formats.csproj">
+      <Project>{b7d8a67e-0046-4ef7-80fe-444bc7efbc70}</Project>
+      <Name>CSPspEmu.Hle.Formats</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Hle.Types\CSPspEmu.Hle.Types.csproj">
+      <Project>{3c997fe1-117f-4f2c-8e3b-3c820b0adfb0}</Project>
+      <Name>CSPspEmu.Hle.Types</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Hle.Vfs\CSPspEmu.Hle.Vfs.csproj">
+      <Project>{24475fa3-5baa-4cfd-8a9f-d0c54ed5597e}</Project>
+      <Name>CSPspEmu.Hle.Vfs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Inject\CSPspEmu.Inject.csproj">
+      <Project>{e68ae26e-e969-4413-8d3c-e60a7d2a2950}</Project>
+      <Name>CSPspEmu.Inject</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Utils\CSPspEmu.Utils.csproj">
+      <Project>{dc02a203-30f2-4613-950b-1529fd55ac81}</Project>
+      <Name>CSPspEmu.Utils</Name>
     </ProjectReference>
     <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
       <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>

@@ -23,17 +23,17 @@ using CSPspEmu.Hle.Modules.threadman;
 using CSPspEmu.Hle.Modules.utils;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Hle.Vfs.Local;
-using CSPspEmu.Hle.Vfs.Emulator;
 using CSPspEmu.Hle.Vfs.MemoryStick;
 using CSPspEmu.Hle.Vfs.Iso;
 using CSPspEmu.Hle.Vfs.Zip;
 using CSPspEmu.Resources;
 using CSPspEmu.Hle.Formats.Archive;
 using System.Reflection;
+using CSPspEmu.Interop;
 
 namespace CSPspEmu.Runner.Components.Cpu
 {
-	public unsafe sealed class CpuComponentThread : ComponentThread
+	public unsafe sealed class CpuComponentThread : ComponentThread, IInjectInitialize, IMemoryStickEventHandler
 	{
 		static Logger Logger = Logger.GetLogger("CpuComponentThread");
 
@@ -67,13 +67,16 @@ namespace CSPspEmu.Runner.Components.Cpu
 		public ThreadManForUser ThreadManForUser;
 
 		[Inject]
-		public HleIoDriverEmulator HleIoDriverEmulator;
+		ElfConfig ElfConfig;
+
+		[Inject]
+		HleConfig HleConfig;
 
 		public HleIoDriverMountable MemoryStickMountable;
 
 		public AutoResetEvent StoppedEndedEvent = new AutoResetEvent(false);
 
-		public override void InitializeComponent()
+		void IInjectInitialize.Initialize()
 		{
 			RegisterDevices();
 		}
@@ -90,7 +93,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 
 			MemoryStickMountable = new HleIoDriverMountable();
 			MemoryStickMountable.Mount("/", new HleIoDriverLocalFileSystem(MemoryStickRootFolder));
-			var MemoryStick = new HleIoDriverMemoryStick(PspEmulatorContext, MemoryStickMountable);
+			var MemoryStick = new HleIoDriverMemoryStick(PspMemory, this, MemoryStickMountable);
 			//var MemoryStick = new HleIoDriverMemoryStick(new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
 
 			// http://forums.ps2dev.org/viewtopic.php?t=5680
@@ -106,8 +109,8 @@ namespace CSPspEmu.Runner.Components.Cpu
 			HleIoManager.SetDriver("disc:", MemoryStick);
 			HleIoManager.SetDriver("umd:", MemoryStick);
 
-			HleIoManager.SetDriver("emulator:", HleIoDriverEmulator);
-			HleIoManager.SetDriver("kemulator:", HleIoDriverEmulator);
+			//HleIoManager.SetDriver("emulator:", HleIoDriverEmulator);
+			//HleIoManager.SetDriver("kemulator:", HleIoDriverEmulator);
 
 			HleIoManager.SetDriver("flash:", new HleIoDriverZip(new ZipArchive(ResourceArchive.GetFlash0ZipFileStream())));
 		}
@@ -231,7 +234,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 
 								if (ParamSfo.EntryDictionary.ContainsKey("PSP_SYSTEM_VER"))
 								{
-									PspEmulatorContext.PspConfig.SetVersion(ParamSfo.EntryDictionary["PSP_SYSTEM_VER"].ToString());
+									HleConfig.FirmwareVersion = ParamSfo.EntryDictionary["PSP_SYSTEM_VER"].ToString();
 								}
 							});
 						}
@@ -436,8 +439,8 @@ namespace CSPspEmu.Runner.Components.Cpu
 								"Last registered PC = 0x{0:X}, RA = 0x{1:X}, RelocatedBaseAddress=0x{2:X}, UnrelocatedPC=0x{3:X}",
 								HleThreadManager.Current.CpuThreadState.PC,
 								HleThreadManager.Current.CpuThreadState.RA,
-								PspEmulatorContext.PspConfig.RelocatedBaseAddress,
-								HleThreadManager.Current.CpuThreadState.PC - PspEmulatorContext.PspConfig.RelocatedBaseAddress
+								ElfConfig.RelocatedBaseAddress,
+								HleThreadManager.Current.CpuThreadState.PC - ElfConfig.RelocatedBaseAddress
 							);
 
 							ErrorOut.WriteLine("Last called syscalls: ");
@@ -452,15 +455,15 @@ namespace CSPspEmu.Runner.Components.Cpu
 								ErrorOut.WriteLine(
 									"Last valid PC: 0x{0:X} :, 0x{1:X}",
 									Thread.CpuThreadState.LastValidPC,
-									Thread.CpuThreadState.LastValidPC - PspEmulatorContext.PspConfig.RelocatedBaseAddress
+									Thread.CpuThreadState.LastValidPC - ElfConfig.RelocatedBaseAddress
 								);
 								Thread.DumpStack(ErrorOut);
 							}
 
 							ErrorOut.WriteLine(
 								"Executable had relocation: {0}. RelocationAddress: 0x{1:X}",
-								PspEmulatorContext.PspConfig.InfoExeHasRelocation,
-								PspEmulatorContext.PspConfig.RelocatedBaseAddress
+								ElfConfig.InfoExeHasRelocation,
+								ElfConfig.RelocatedBaseAddress
 							);
 
 							ErrorOut.WriteLine("");
@@ -491,6 +494,11 @@ namespace CSPspEmu.Runner.Components.Cpu
 				Thread.DumpStack(ErrorOut);
 			}
 			//throw new NotImplementedException();
+		}
+
+		void IMemoryStickEventHandler.ScheduleCallback(int CallbackId)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

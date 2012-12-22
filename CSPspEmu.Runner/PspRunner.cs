@@ -9,7 +9,7 @@ using CSPspEmu.Runner.Components.Gpu;
 
 namespace CSPspEmu.Runner
 {
-	public unsafe class PspRunner : PspEmulatorComponent, IRunnableComponent
+	public unsafe class PspRunner : IRunnableComponent, IInjectInitialize
 	{
 		[Inject]
 		public CpuComponentThread CpuComponentThread { get; protected set; }
@@ -27,7 +27,11 @@ namespace CSPspEmu.Runner
 
 		public bool Paused { get; protected set; }
 
-		public override void InitializeComponent()
+		private PspRunner()
+		{
+		}
+
+		void IInjectInitialize.Initialize()
 		{
 			RunnableComponentList.Add(CpuComponentThread);
 			RunnableComponentList.Add(GpuComponentThread);

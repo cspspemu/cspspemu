@@ -11,10 +11,12 @@ using CSPspEmu.Core.Cpu.Table;
 using SafeILGenerator.Ast.Nodes;
 using SafeILGenerator.Ast;
 using CSPspEmu.Core.Cpu.Dynarec.Ast;
+using System.Diagnostics;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu.Dynarec
 {
-    public partial class DynarecFunctionCompiler
+	public partial class DynarecFunctionCompiler
 	{
         internal class InternalFunctionCompiler
 		{
@@ -25,6 +27,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			DynarecFunctionCompiler DynarecFunctionCompiler;
 			IInstructionReader InstructionReader;
 			CpuProcessor CpuProcessor;
+			PspMemory Memory { get { return CpuProcessor.Memory; } }
 			uint EntryPC;
 			SortedDictionary<uint, AstLabel> Labels = new SortedDictionary<uint, AstLabel>();
 			SortedDictionary<uint, AstLabel> LabelsJump = new SortedDictionary<uint, AstLabel>();
@@ -105,7 +108,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
 			private void LogInstruction(uint PC, Instruction Instruction)
 			{
-				if (CpuProcessor.PspConfig.LogInstructionStats)
+				if (CpuProcessor.CpuConfig.LogInstructionStats)
 				{
 					var DisassembledInstruction = MipsDisassembler.Disassemble(PC, Instruction);
 					//Console.WriteLine("{0}", DisassembledInstruction);
@@ -253,7 +256,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				if (SkipPC.Contains(PC)) return null;
 
 				/*
-				if (CpuProcessor.PspConfig.TraceJIT)
+				if (CpuProcessor.CpuConfig.TraceJIT)
 				{
 					SafeILGenerator.LoadArgument<CpuThreadState>(0);
 					SafeILGenerator.Push((int)_PC);
@@ -283,7 +286,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			private AstNodeStm EmitInstructionCountIncrement(bool CheckForYield)
 			{
 				// CountInstructionsAndYield
-				if (!CpuProcessor.PspConfig.CountInstructionsAndYield)
+				if (!CpuProcessor.CpuConfig.CountInstructionsAndYield)
 				{
 					return ast.Statement();
 				}
@@ -306,7 +309,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				//
 				//if (CheckForYield)
 				//{
-				//	if (!CpuProcessor.PspConfig.BreakInstructionThreadSwitchingForSpeed)
+				//	if (!CpuProcessor.CpuConfig.BreakInstructionThreadSwitchingForSpeed)
 				//	{
 				//		var NoYieldLabel = SafeILGenerator.DefineLabel("NoYieldLabel");
 				//		MipsMethodEmiter.LoadStepInstructionCount();
@@ -346,6 +349,11 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				}
 			}
 
+			public static void IsDebuggerPresentDebugBreak()
+			{
+				if (Debugger.IsAttached) Debugger.Break();
+			}
+
 			private AstNodeStm EmitCpuInstruction()
 			{
 				try
@@ -354,7 +362,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
 					if (CpuProcessor.NativeBreakpoints.Contains(PC))
 					{
-						Nodes.AddStatement(ast.Statement(ast.CallStatic((Action)DebugUtils.IsDebuggerPresentDebugBreak)));
+						Nodes.AddStatement(ast.Statement(ast.CallStatic((Action)IsDebuggerPresentDebugBreak)));
 					}
 
 					TryPutLabelAT(PC, Nodes);
@@ -423,7 +431,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
 #if true
 							var JumpDisasm = JumpInstruction.DisassembledResult;
-							var JumpJumpPC = JumpDisasm.Instruction.GetJumpAddress(JumpDisasm.InstructionPC);
+							var JumpJumpPC = JumpDisasm.Instruction.GetJumpAddress(Memory, JumpDisasm.InstructionPC);
 							// An internal jump.
 							if (
 								(JumpDisasm.InstructionInfo.Name == "j")
@@ -507,7 +515,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			/*
 			private void ShowInstructionStats()
 			{
-				if (CpuProcessor.PspConfig.ShowInstructionStats)
+				if (CpuProcessor.CpuConfig.ShowInstructionStats)
 				{
 					bool HasNew = false;
 					foreach (var Pair in InstructionStats.OrderByDescending(Item => Item.Value))
@@ -518,13 +526,13 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 						}
 					}
 
-					if (!CpuProcessor.PspConfig.ShowInstructionStatsJustNew || HasNew)
+					if (!CpuProcessor.CpuConfig.ShowInstructionStatsJustNew || HasNew)
 					{
 						Console.Error.WriteLine("-------------------------- {0:X}-{1:X} ", MinPC, MaxPC);
 						foreach (var Pair in InstructionStats.OrderByDescending(Item => Item.Value))
 						{
 							var IsNew = NewInstruction.ContainsKey(Pair.Key);
-							if (!CpuProcessor.PspConfig.ShowInstructionStatsJustNew || IsNew)
+							if (!CpuProcessor.CpuConfig.ShowInstructionStatsJustNew || IsNew)
 							{
 								Console.Error.Write("{0} : {1}", Pair.Key, Pair.Value);
 								if (IsNew) Console.Error.Write(" <-- NEW!");

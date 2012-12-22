@@ -4,7 +4,7 @@ namespace CSPspEmu.Core.Audio
 {
     public class AudioImplNull : PspAudioImpl
 	{
-		public override void InitializeComponent()
+		public AudioImplNull()
 		{
 		}
 

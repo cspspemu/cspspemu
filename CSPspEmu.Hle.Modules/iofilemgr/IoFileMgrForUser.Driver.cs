@@ -5,6 +5,9 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 {
 	public unsafe partial class IoFileMgrForUser
 	{
+		[Inject]
+		InjectContext InjectContext;
+
 		public struct PspIoDrv
 		{
 			/// <summary>
@@ -53,7 +56,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			return 0;
 
 			var Name = PspMemory.ReadStringz(PspIoDrv->name, Encoding.UTF8);
-			HleIoManager.SetDriver(Name + ":", new GuestHleIoDriver(PspEmulatorContext, PspIoDrv));
+			HleIoManager.SetDriver(Name + ":", new GuestHleIoDriver(InjectContext, PspIoDrv));
 			return 0;
 		}
 

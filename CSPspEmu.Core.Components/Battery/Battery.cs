@@ -1,11 +1,7 @@
 ﻿namespace CSPspEmu.Core.Battery
 {
-	public class Battery : PspEmulatorComponent
+	public class Battery
 	{
-		public override void InitializeComponent()
-		{
-		}
-
 		/// <summary>
 		/// 
 		/// </summary>

@@ -1,5 +1,5 @@
-﻿using System;
-using CSPspEmu.Core.Utils;
+﻿using CSPspEmu.Core.Types;
+using System;
 
 namespace CSPspEmu.Hle.Modules.libfont
 {

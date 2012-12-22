@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using GLES;
 using System.Runtime.ExceptionServices;
 using CSPspEmu.Core.Gpu.State;
-using CSPspEmu.Core.Utils;
 using CSharpUtils;
 using CSPspEmu.Core.Memory;
 using System.Runtime.InteropServices;
@@ -17,11 +16,8 @@ using CSPspEmu.Core.Gpu.State.SubStates;
 
 namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 {
-	public sealed unsafe partial class GpuImplOpenglEs : GpuImpl
+	public sealed unsafe partial class GpuImplOpenglEs : GpuImpl, IInjectInitialize
     {
-		[Inject]
-		private PspMemory Memory;
-
 		OffscreenContext GraphicsContext;
 		ShaderProgram ShaderProgram;
 
@@ -46,10 +42,15 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 		TextureOpengles CurrentTexture;
 		VertexTypeStruct VertexType;
 
-		public override void InitializeComponent()
-		{
-			base.InitializeComponent();
+		[Inject]
+		PspMemory Memory;
 
+		private GpuImplOpenglEs()
+		{
+		}
+
+		void IInjectInitialize.Initialize()
+		{
 			this.TextureCache = new TextureCacheOpengles(Memory, this);
 		}
 

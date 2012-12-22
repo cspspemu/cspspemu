@@ -185,12 +185,8 @@ namespace CSPspEmu.Hle.Managers
 		}
 	}
 
-	public class HleRegistryManager : PspEmulatorComponent
+	public class HleRegistryManager
 	{
-		public override void InitializeComponent()
-		{
-		}
-
 		public HleUidPool<HleRegistryNode> RegHandles = new HleUidPool<HleRegistryNode>();
 		public HleUidPool<HleRegistryCategoryNode> RegCategoryHandles = new HleUidPool<HleRegistryCategoryNode>();
 	}

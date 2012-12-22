@@ -3,12 +3,8 @@ using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle
 {
-	public class HleOutputHandler : PspEmulatorComponent
+	public class HleOutputHandler
 	{
-		public override void InitializeComponent()
-		{
-		}
-
 		public virtual void Output(string Output)
 		{
 			Console.WriteLine("   OUTPUT:  {0}", Output);

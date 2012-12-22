@@ -7,28 +7,24 @@ using System.Threading;
 using CSharpUtils;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core;
+using CSPspEmu.Core.Components.Display;
+using CSharpUtils.Threading;
+using CSPspEmu.Core.Gpu;
 
 namespace CSPspEmu.Hle.Managers
 {
-	public class HleEmulatorSpecialAddresses
-	{
-		public const uint CODE_PTR_EXIT_THREAD = 0x08000010;
-		public const uint CODE_PTR_FINALIZE_CALLBACK = 0x08000020;
-	}
-
-	public partial class HleThreadManager : PspEmulatorComponent
+	public partial class HleThreadManager : IInjectInitialize, ICpuConnector, IGpuConnector
 	{
 		static Logger Logger = Logger.GetLogger("HleThreadManager");
 
 		[Inject]
 		internal CpuProcessor Processor;
 
-		public List<HleThread> Threads = new List<HleThread>();
+		[Inject]
+		DisplayConfig DisplayConfig;
 
-		public Dictionary<int, HleThread> ThreadsById = new Dictionary<int, HleThread>();
-
-		protected int LastId = 1;
-		public HleThread Current;
+		[Inject]
+		HleConfig HleConfig;
 
 		[Inject]
 		private HleCallbackManager HleCallbackManager;
@@ -38,6 +34,50 @@ namespace CSPspEmu.Hle.Managers
 
 		[Inject]
 		private HleInterop HleInterop;
+
+		[Inject]
+		private InjectContext InjectContext;
+
+		public List<HleThread> Threads = new List<HleThread>();
+
+		public Dictionary<int, HleThread> ThreadsById = new Dictionary<int, HleThread>();
+
+		protected int LastId = 1;
+
+		public HleThread Current;
+
+		public CoroutinePool CoroutinePool = new CoroutinePool();
+
+		private HleThreadManager()
+		{
+		}
+
+		void ICpuConnector.Yield(CpuThreadState CpuThreadState)
+		{
+			if (HleConfig.UseCoRoutines)
+			{
+				CoroutinePool.YieldInPool();
+			}
+			else
+			{
+				GreenThread.Yield();
+			}
+		}
+
+		void IGpuConnector.Signal(uint Signal, GpuDisplayList.GuBehavior Behavior)
+		{
+			//Console.WriteLine("IGpuConnector.Signal");
+		}
+
+		void IGpuConnector.Finish(uint Arg)
+		{
+			//Console.WriteLine("IGpuConnector.Finish");
+		}
+
+		void IInjectInitialize.Initialize()
+		{
+			Processor.DebugCurrentThreadEvent += DebugCurrentThread;
+		}
 
 		/// <summary>
 		/// 
@@ -51,11 +91,6 @@ namespace CSPspEmu.Hle.Managers
 		}
 
 		public SCE_KERNEL_DISPATCHTHREAD_STATE DispatchingThreads = SCE_KERNEL_DISPATCHTHREAD_STATE.ENABLED;
-
-		public override void InitializeComponent()
-		{
-			this.Processor.DebugCurrentThreadEvent += DebugCurrentThread;
-		}
 
 		public HleThread CurrentOrAny
 		{
@@ -166,7 +201,7 @@ namespace CSPspEmu.Hle.Managers
 			// No thread found.
 			if (NextThread == null)
 			{
-				if (Processor.PspConfig.VerticalSynchronization)
+				if (DisplayConfig.VerticalSynchronization)
 				{
 					Thread.Sleep(1);
 				}
@@ -186,7 +221,7 @@ namespace CSPspEmu.Hle.Managers
 
 				try
 				{
-					if (Processor.PspConfig.DebugThreadSwitching)
+					if (HleConfig.DebugThreadSwitching)
 					{
 						ConsoleUtils.SaveRestoreConsoleState(() =>
 						{
@@ -230,7 +265,7 @@ namespace CSPspEmu.Hle.Managers
 
 		public HleThread Create()
 		{
-			var HlePspThread = new HleThread(PspEmulatorContext, new CpuThreadState(Processor));
+			var HlePspThread = new HleThread(InjectContext, new CpuThreadState(Processor));
 			HlePspThread.Id = LastId++;
 			HlePspThread.Name = "Thread-" + HlePspThread.Id;
 			HlePspThread.SetStatus(HleThread.Status.Stopped);

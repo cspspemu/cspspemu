@@ -147,9 +147,12 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 		[Inject]
 		public ElfPspLoader Loader;
 
+		[Inject]
+		InjectContext InjectContext;
+
 		public int sceKernelLoadModuleWithStream(Func<Stream> GetStreamAction, string Path, uint Flags, SceKernelLMOption* SceKernelLMOption)
 		{
-			var Module = new HleModuleGuest(PspEmulatorContext);
+			var Module = InjectContext.NewInstance<HleModuleGuest>();
 
 			try
 			{

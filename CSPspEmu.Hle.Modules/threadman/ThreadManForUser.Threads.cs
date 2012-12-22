@@ -6,6 +6,7 @@ using CSharpUtils;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core;
+using CSPspEmu.Interop;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {

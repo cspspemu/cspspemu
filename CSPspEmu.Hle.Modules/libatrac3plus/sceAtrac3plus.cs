@@ -26,6 +26,9 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[Inject]
 		public HleMemoryManager HleMemoryManager;
 
+		[Inject]
+		InjectContext InjectContext;
+
 		public enum CodecType
 		{
 			PSP_MODE_AT_3_PLUS = 0x00001000,
@@ -243,18 +246,18 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 				public int PlayCount;
 			}
 
-			public Atrac(PspEmulatorContext PspEmulatorContext, CodecType CodecType)
+			public Atrac(InjectContext InjectContext, CodecType CodecType)
 			{
-				PspEmulatorContext.InjectDependencesTo(this);
+				InjectContext.InjectDependencesTo(this);
 
 				PrimaryBuffer = HleMemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.User).Allocate(1024);
 
 				this.CodecType = CodecType;
 			}
 
-			public Atrac(PspEmulatorContext PspEmulatorContext, byte[] Data)
+			public Atrac(InjectContext InjectContext, byte[] Data)
 			{
-				PspEmulatorContext.InjectDependencesTo(this);
+				InjectContext.InjectDependencesTo(this);
 
 				PrimaryBuffer = HleMemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.User).Allocate(1024);
 
@@ -461,7 +464,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		public int sceAtracSetDataAndGetID(byte* DataPointer, int DataLength)
 		{
 			var Data = ArrayUtils.CreateArray<byte>(DataPointer, DataLength);
-			var Atrac = new Atrac(PspEmulatorContext, Data);
+			var Atrac = new Atrac(InjectContext, Data);
 			var AtracId = AtracList.Create(Atrac);
 			return AtracId;
 		}
@@ -645,7 +648,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public int sceAtracGetAtracID(CodecType CodecType)
 		{
-			var Atrac = new Atrac(PspEmulatorContext, CodecType);
+			var Atrac = new Atrac(InjectContext, CodecType);
 			var AtracId = AtracList.Create(Atrac);
 			return AtracId;
 		}

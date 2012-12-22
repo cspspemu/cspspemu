@@ -9,19 +9,10 @@ namespace CSPspEmu.Core.Memory
 {
 	public unsafe class NormalPspMemory : PspMemory
 	{
-		public override void InitializeComponent()
-		{
-			Initialize();
-		}
+		override public bool HasFixedGlobalAddress { get { return false; } }
+		override public IntPtr FixedGlobalAddress { get { return IntPtr.Zero; } }
 
-		/*
-		~NormalPspMemory()
-		{
-			Dispose();
-		}
-		*/
-
-		protected virtual void Initialize()
+		public NormalPspMemory()
 		{
 			AllocateMemory();
 		}

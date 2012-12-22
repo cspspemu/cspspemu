@@ -16,7 +16,7 @@ namespace CSPspEmu.Core.Audio
 		private const int periods = 2;       /* Number of periods */
 		private const int periodsize = 8192; /* Periodsize (bytes) */
 
-		public override void InitializeComponent()
+		public AudioAlsaImpl()
 		{
 			if (playback_handle == IntPtr.Zero)
 			{

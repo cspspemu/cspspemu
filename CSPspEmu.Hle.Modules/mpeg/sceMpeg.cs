@@ -1,18 +1,22 @@
 ﻿using System.Text;
 using CSharpUtils;
 using CSPspEmu.Hle.Attributes;
+using CSPspEmu.Core.Types;
 
 namespace CSPspEmu.Hle.Modules.mpeg
 {
 	[HlePspModule(ModuleFlags = ModuleFlags.KernelMode | ModuleFlags.Flags0x00010011)]
 	public unsafe partial class sceMpeg : HleModuleHost
 	{
+		[Inject]
+		HleConfig HleConfig;
+
 		public bool EnableMpeg
 		{
 			get
 			{
 				//return true;
-				return PspConfig.StoredConfig.EnableMpeg;
+				return HleConfig.EnableMpeg;
 			}
 		}
 
@@ -104,7 +108,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			SceMpegData->RingBufferAddress = PspMemory.PointerToPspPointer(SceMpegRingbuffer);
 			SceMpegData->RingBufferAddressDataUpper = SceMpegRingbuffer->DataUpperBound;
 			SceMpegData->FrameWidth = FrameWidth;
-			SceMpegData->SceMpegAvcMode.PixelFormat = Core.GuPixelFormats.RGBA_8888;
+			SceMpegData->SceMpegAvcMode.PixelFormat = GuPixelFormats.RGBA_8888;
 			SceMpegData->VideoFrameCount = 0;
 			SceMpegData->AudioFrameCount = 0;
 

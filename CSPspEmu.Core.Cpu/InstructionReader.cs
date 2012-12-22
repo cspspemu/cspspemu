@@ -1,5 +1,5 @@
-﻿using System.IO;
-using CSharpUtils.Arrays;
+﻿using CSharpUtils.Arrays;
+using System.IO;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -39,10 +39,14 @@ namespace CSPspEmu.Core.Cpu
 	public class InstructionStreamReader : IInstructionReader
 	{
 		protected Stream Stream;
+		protected BinaryReader BinaryReader;
+		protected BinaryWriter BinaryWriter;
 
 		public InstructionStreamReader(Stream Stream)
 		{
 			this.Stream = Stream;
+			this.BinaryReader = new BinaryReader(Stream);
+			this.BinaryWriter = new BinaryWriter(Stream);
 		}
 
 		public Instruction this[uint Index]
@@ -51,13 +55,13 @@ namespace CSPspEmu.Core.Cpu
 			{
 				var Instruction = default(Instruction);
 				Stream.Position = Index;
-				Instruction.Value = Stream.ReadStruct<uint>();
+				Instruction.Value = BinaryReader.ReadUInt32();
 				return Instruction;
 			}
 			set
 			{
 				Stream.Position = Index;
-				Stream.WriteStruct((uint)value.Value);
+				BinaryWriter.Write((uint)value.Value);
 			}
 		}
 

@@ -9,7 +9,7 @@ using SafeILGenerator.Utils;
 
 namespace CSPspEmu.Hle.Managers
 {
-	public class HleModuleManager : PspEmulatorComponent
+	public class HleModuleManager : IInjectInitialize, IDisposable
 	{
 		protected Dictionary<Type, HleModuleHost> HleModules = new Dictionary<Type, HleModuleHost>();
 		public List<HleModuleGuest> LoadedGuestModules = new List<HleModuleGuest>();
@@ -18,13 +18,16 @@ namespace CSPspEmu.Hle.Managers
 		public Queue<DelegateInfo> LastCalledCallbacks = new Queue<DelegateInfo>();
 
 		[Inject]
-		protected HleThreadManager HleThreadManager;
+		HleThreadManager HleThreadManager;
 
 		[Inject]
-		protected CpuProcessor CpuProcessor;
+		CpuProcessor CpuProcessor;
+		
+		[Inject]
+		InjectContext InjectContext;
 
 		[Inject]
-		protected PspConfig PspConfig;
+		HleConfig HleConfig;
 
 		public static IEnumerable<Type> GetAllHleModules(Assembly ModulesAssembly)
 		{
@@ -37,14 +40,14 @@ namespace CSPspEmu.Hle.Managers
 
 		protected int LastCallIndex = 0;
 
-		public override void InitializeComponent()
+		void IInjectInitialize.Initialize()
 		{
-			if (PspEmulatorContext.PspConfig.HleModulesDll == null)
+			if (HleConfig.HleModulesDll == null)
 			{
 				throw (new ArgumentNullException("PspEmulatorContext.PspConfig.HleModulesDll Can't be null"));
 			}
 
-			HleModuleTypes = GetAllHleModules(PspEmulatorContext.PspConfig.HleModulesDll).ToDictionary(Type => Type.Name);
+			HleModuleTypes = GetAllHleModules(HleConfig.HleModulesDll).ToDictionary(Type => Type.Name);
 			Console.WriteLine("HleModuleTypes: {0}", HleModuleTypes.Count);
 
 			if (HleModuleTypes.Count < 10)
@@ -56,8 +59,6 @@ namespace CSPspEmu.Hle.Managers
 					Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!");
 				});
 			}
-
-			PspConfig = CpuProcessor.PspConfig;
 
 #if false
 			CpuProcessor.RegisterNativeSyscall(SyscallInfo.NativeCallSyscallCode, (CpuThreadState, Code) =>
@@ -104,8 +105,8 @@ namespace CSPspEmu.Hle.Managers
 		{
 			if (!HleModules.ContainsKey(Type))
 			{
-				var HleModule = HleModules[Type] = (HleModuleHost)PspEmulatorContext.GetInstance(Type);
-				HleModule.Initialize(PspEmulatorContext);
+				var HleModule = HleModules[Type] = (HleModuleHost)InjectContext.GetInstance(Type);
+				InjectContext.InjectDependencesTo(HleModule);
 			}
 
 			return (HleModuleHost)HleModules[Type];
@@ -168,7 +169,7 @@ namespace CSPspEmu.Hle.Managers
 			return DelegateId;
 		}
 
-		public override void Dispose()
+		public void Dispose()
 		{
 			foreach (var HleModule in HleModules)
 			{

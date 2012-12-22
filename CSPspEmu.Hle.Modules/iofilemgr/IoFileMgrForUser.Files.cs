@@ -19,9 +19,9 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			PspIoDrv* PspIoDrv;
 			PspIoDrvFuncs* PspIoDrvFuncs { get { return PspIoDrv->funcs; } }
 
-			public GuestHleIoDriver(PspEmulatorContext PspEmulatorContext, PspIoDrv* PspIoDrv)
+			public GuestHleIoDriver(InjectContext InjectContext, PspIoDrv* PspIoDrv)
 			{
-				PspEmulatorContext.InjectDependencesTo(this);
+				InjectContext.InjectDependencesTo(this);
 				this.PspIoDrv = PspIoDrv;
 			}
 

@@ -268,7 +268,7 @@ namespace CSPspEmu
 				});
 				Getopt.AddRule("/tests", () =>
 				{
-					TestsAutoProgram.Main(Arguments.Skip(1).ToArray());
+					AutoTestsProgram.Main(Arguments.Skip(1).ToArray());
 					Environment.Exit(0);
 				});
 				Getopt.AddRule((Name) =>

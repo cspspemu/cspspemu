@@ -1,4 +1,5 @@
 ﻿using CSPspEmu.Core;
+using CSPspEmu.Core.Types;
 using CSPspEmu.Hle.Attributes;
 
 namespace CSPspEmu.Hle.Modules.impose
@@ -6,6 +7,9 @@ namespace CSPspEmu.Hle.Modules.impose
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	public unsafe class sceImpose : HleModuleHost
 	{
+		[Inject]
+		HleConfig HleConfig;
+
 		uint umdPopupStatus;
 
 		/// <summary>
@@ -42,8 +46,8 @@ namespace CSPspEmu.Hle.Modules.impose
 		[HlePspNotImplemented]
 		public int sceImposeSetLanguageMode(PspLanguages Language, PspConfirmButton ConfirmButton)
 		{
-			PspConfig.Language = Language;
-			PspConfig.ConfirmButton = ConfirmButton;
+			HleConfig.Language = Language;
+			HleConfig.ConfirmButton = ConfirmButton;
 			return 0;
 		}
 
@@ -57,8 +61,8 @@ namespace CSPspEmu.Hle.Modules.impose
 		[HlePspNotImplemented]
 		public int sceImposeGetLanguageMode(out PspLanguages Language, out PspConfirmButton ConfirmButton)
 		{
-			Language = PspConfig.Language;
-			ConfirmButton = PspConfig.ConfirmButton;
+			Language = HleConfig.Language;
+			ConfirmButton = HleConfig.ConfirmButton;
 			return 0;
 		}
 

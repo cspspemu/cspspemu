@@ -10,10 +10,6 @@ namespace CSPspEmu.Runner.Components.Display
 		[Inject]
 		private HleInterruptManager HleInterruptManager;
 
-		public override void InitializeComponent()
-		{
-		}
-
 		protected override string ThreadName { get { return "DisplayThread"; } }
 
 		protected override void Main()

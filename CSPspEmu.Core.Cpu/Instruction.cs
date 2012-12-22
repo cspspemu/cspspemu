@@ -8,17 +8,9 @@ namespace CSPspEmu.Core.Cpu
 	{
 		public uint Value;
 
-		public uint GetJumpAddress(uint CurrentPC)
+		public uint GetJumpAddress(IPspMemoryInfo MemoryInfo, uint CurrentPC)
 		{
-			//Console.WriteLine("{0:X8} - ", CurrentPC);
-			//var Result = (uint)(CurrentPC & ~PspMemory.MemoryMask) + (JUMP << 2);
-			var Result = (uint)(CurrentPC & ~0x0FFFFFFF) + (JUMP << 2);
-			if (!PspMemory.IsAddressValid(Result))
-			{
-				//Console.Error.WriteLine("ERROR: Generating an invalid JumpAddress 0x{0:X8} from CurrentPC=0x{1:X8} with JUMP=0x{2:X8}", Result, CurrentPC, JUMP << 2);
-			}
-			//Console.WriteLine("CurrentPC: 0x{0:X8} - 0x{1:X8} - 0x{2:X8} - 0x{3:X8}", CurrentPC, (CurrentPC & ~PspMemory.MemoryMask), JUMP << 2, Result);
-			return Result;
+			return (uint)(CurrentPC & ~0x0FFFFFFF) + (JUMP << 2);
 		}
 
 		private void set(int Offset, int Count, uint SetValue)

@@ -65,8 +65,7 @@
   <ItemGroup>
     <Compile Include="ApplicationPaths.cs" />
     <Compile Include="DebugUtils.cs" />
-    <Compile Include="Enums.cs" />
-    <Compile Include="Hashing.cs" />
+    <Compile Include="GlobalConfig.cs" />
     <Compile Include="ManagedPointer.cs" />
     <Compile Include="Mono.Simd\AccelerationAttribute.cs" />
     <Compile Include="Mono.Simd\AccelMode.cs" />
@@ -84,13 +83,9 @@
     <Compile Include="Mono.Simd\Vector8us.cs" />
     <Compile Include="Mono.Simd\VectorOperations.cs" />
     <Compile Include="NandReader.cs" />
-    <Compile Include="PixelFormats.cs" />
-    <Compile Include="Platform\Platform.cs" />
     <Compile Include="PluginInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PspConfig.cs" />
-    <Compile Include="PspEmulatorComponent.cs" />
-    <Compile Include="PspEmulatorContext.cs" />
+    <Compile Include="__PspConfig.cs" />
     <Compile Include="PspGlobalConfiguration.cs" />
     <Compile Include="PspPluginImpl.cs" />
     <Compile Include="PspStoredConfig.cs" />
@@ -101,14 +96,16 @@
     <Compile Include="Threading\Synchronization\PspResetEvent.cs" />
     <Compile Include="Threading\Synchronization\PspWaitEvent.cs" />
     <Compile Include="Threading\Synchronization\WaitableStateMachine.cs" />
-    <Compile Include="Utils\ColorFormatExtensions.cs" />
-    <Compile Include="Utils\NumberUtils.cs" />
-    <Compile Include="Utils\OutputPixel.cs" />
-    <Compile Include="Utils\PixelFormatDecoder.cs" />
-    <Compile Include="Utils\PspBitmap.cs" />
-    <Compile Include="WakeUpCallbackDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CSPspEmu.Core.Types\CSPspEmu.Core.Types.csproj">
+      <Project>{bb80d126-2a98-4ece-99ed-3098f9bd7594}</Project>
+      <Name>CSPspEmu.Core.Types</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Inject\CSPspEmu.Inject.csproj">
+      <Project>{e68ae26e-e969-4413-8d3c-e60a7d2a2950}</Project>
+      <Name>CSPspEmu.Inject</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Resources\CSPspEmu.Resources.csproj">
       <Project>{BA3187FA-A2A1-43E0-9FDD-69B377EE3152}</Project>
       <Name>CSPspEmu.Resources</Name>

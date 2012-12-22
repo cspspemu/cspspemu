@@ -58,14 +58,15 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Cpu\Assembler\MipsAssemblerTest.cs" />
-    <Compile Include="Cpu\Assembler\MipsDisassemblerTest.cs" />
-    <Compile Include="Cpu\Dynarec\DynarecFunctionCompilerTaskTest.cs" />
-    <Compile Include="Cpu\Dynarec\DynarecFunctionCompilerTest.cs" />
-    <Compile Include="Cpu\Emitter\CpuEmitterTest.cs" />
-    <Compile Include="Cpu\InstructionTest.cs" />
-    <Compile Include="Cpu\Switch\EmitLookupGeneratorTest.cs" />
-    <Compile Include="Cpu\Table\InstructionTableTest.cs" />
+    <Compile Include="Assembler\MipsAssemblerTest.cs" />
+    <Compile Include="Assembler\MipsDisassemblerTest.cs" />
+    <Compile Include="CpuUtils.cs" />
+    <Compile Include="Dynarec\DynarecFunctionCompilerTaskTest.cs" />
+    <Compile Include="Dynarec\DynarecFunctionCompilerTest.cs" />
+    <Compile Include="Emitter\CpuEmitterTest.cs" />
+    <Compile Include="InstructionTest.cs" />
+    <Compile Include="Switch\EmitLookupGeneratorTest.cs" />
+    <Compile Include="Table\InstructionTableTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -80,6 +81,10 @@
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{f783ecd3-0f79-43cc-abd0-d356a64049c4}</Project>
       <Name>CSPspEmu.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Inject\CSPspEmu.Inject.csproj">
+      <Project>{e68ae26e-e969-4413-8d3c-e60a7d2a2950}</Project>
+      <Name>CSPspEmu.Inject</Name>
     </ProjectReference>
     <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
       <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>

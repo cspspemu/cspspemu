@@ -3,9 +3,9 @@
 using System;
 using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
-using CSPspEmu.Core.Memory;
 using System.Runtime.CompilerServices;
 using System.IO;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -127,11 +127,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public static AstNodeExpr AstMemoryGetPointer(PspMemory Memory, AstNodeExpr Address)
 		{
 #if ALLOW_FAST_MEMORY
-			var FastMemory = Memory as FastPspMemory;
-			if (FastMemory != null)
+			if (Memory.HasFixedGlobalAddress)
 			{
-				var AddressMasked = ast.Binary(Address, "&", PspMemory.MemoryMask);
-				return ast.Immediate(new IntPtr(FastMemory.Base)) + AddressMasked;
+				var AddressMasked = ast.Binary(Address, "&", ast.Immediate(PspMemory.MemoryMask));
+				return ast.Immediate(Memory.FixedGlobalAddress) + AddressMasked;
 			}
 			else
 #endif
@@ -152,7 +151,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public static AstNodeStm AstMemorySetValue(PspMemory Memory, Type Type, AstNodeExpr Address, AstNodeExpr Value)
 		{
 #if ALLOW_FAST_MEMORY
-			if (Memory is FastPspMemory)
+			if (Memory.HasFixedGlobalAddress)
 			{
 				return ast.Assign(
 					AstMemoryGetPointerIndirect(Memory, Type, Address),
@@ -180,7 +179,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public static unsafe AstNodeExpr AstMemoryGetValue(PspMemory Memory, Type Type, AstNodeExpr Address)
 		{
 #if ALLOW_FAST_MEMORY
-			if (Memory is FastPspMemory)
+			if (Memory.HasFixedGlobalAddress)
 			{
 				return AstMemoryGetPointerIndirect(Memory, Type, Address);
 			}

@@ -53,14 +53,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 			try
 			{
-				var Method = (Action<CpuThreadState>)DynamicMethod.CreateDelegate(typeof(Action<CpuThreadState>));
-				//Console.WriteLine(Method.Method.);
-				if (Platform.IsMono)
-				{
-					Marshal.Prelink(Method.Method);
-				}
-
-				return Method;
+				return (Action<CpuThreadState>)DynamicMethod.CreateDelegate(typeof(Action<CpuThreadState>));
 			}
 			catch (InvalidProgramException InvalidProgramException)
 			{

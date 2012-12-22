@@ -1,58 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
-using CSPspEmu.Core.Memory;
-using CSharpUtils.Threading;
 using CSPspEmu.Core.Cpu.InstructionCache;
 using CSPspEmu.Core.Cpu.Dynarec;
 using SafeILGenerator.Utils;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu
 {
-	public class NativeSyscallInfo
-	{
-		public string Name;
-		public ILInstanceHolderPoolItem<Action<CpuThreadState>> PoolItem;
-	}
-    public sealed class CpuProcessor : PspEmulatorComponent
+	/// <summary>
+	/// CpuState shareed by all CpuThreadState
+	/// </summary>
+    public sealed class CpuProcessor
 	{
 		public readonly Dictionary<string, uint> GlobalInstructionStats = new Dictionary<string, uint>();
 
-		public PspConfig PspConfig;
+		[Inject]
+		public CpuConfig CpuConfig;
 
 		[Inject]
 		public PspMemory Memory;
+
+		[Inject]
+		public ICpuConnector CpuConnector;
 
 		[Inject]
 		public DynarecFunctionCompiler DynarecFunctionCompiler;
 
 		public MethodCache MethodCache = new MethodCache();
 
-		//public Dictionary<uint, Action<CpuThreadState>> RegisteredNativeSyscallMethods = new Dictionary<uint,Action<CpuThreadState>>();
 		public Dictionary<uint, NativeSyscallInfo> RegisteredNativeSyscallMethods = new Dictionary<uint, NativeSyscallInfo>();
-		private Dictionary<int, Action<CpuThreadState, int>> RegisteredNativeSyscalls;
-		public HashSet<uint> NativeBreakpoints;
-		public bool IsRunning;
-		public bool RunningCallback;
-		public CoroutinePool CoroutinePool;
+		private Dictionary<int, Action<CpuThreadState, int>> RegisteredNativeSyscalls = new Dictionary<int,Action<CpuThreadState,int>>();
+		public HashSet<uint> NativeBreakpoints = new HashSet<uint>();
 
-		public PspEmulatorContext GetPspEmulatorContext()
-		{
-			return PspEmulatorContext;
-		}
+		public event Action DebugCurrentThreadEvent;
+		public bool DebugFunctionCreation;
 
-		public override void InitializeComponent()
+		private CpuProcessor()
 		{
-			this.PspConfig = PspEmulatorContext.PspConfig;
-			if (this.PspConfig.UseCoRoutines)
-			{
-				this.CoroutinePool = new CoroutinePool();
-			}
-			else
-			{
-			}
-			NativeBreakpoints = new HashSet<uint>();
-			RegisteredNativeSyscalls = new Dictionary<int, Action<CpuThreadState, int>>();
-			IsRunning = true;
 		}
 
 		public CpuProcessor RegisterNativeSyscall(int Code, Action Callback)
@@ -121,9 +105,6 @@ namespace CSPspEmu.Core.Cpu
 		{
 			MethodCache.FlushRange(Address, Address + Size);
 		}
-
-		public event Action DebugCurrentThreadEvent;
-		public bool DebugFunctionCreation;
 
 		public static void DebugCurrentThread(CpuThreadState CpuThreadState)
 		{

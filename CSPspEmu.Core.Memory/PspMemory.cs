@@ -20,9 +20,12 @@ namespace CSPspEmu.Core.Memory
 	/// 0x1fc00000  0x1fcfffff  1mb   Hardware Exception Vectors (RAM)
 	/// 0x1fd00000  0x1fffffff        Hardware I/O
 	/// </summary>
-	public unsafe abstract class PspMemory : PspEmulatorComponent, IDisposable
+	public unsafe abstract class PspMemory : IPspMemoryInfo, IDisposable
 	{
-		internal static Logger Logger = Logger.GetLogger("Memory");
+		//internal static Logger Logger = Logger.GetLogger("Memory");
+
+		abstract public bool HasFixedGlobalAddress { get; }
+		abstract public IntPtr FixedGlobalAddress { get; }
 
 		public const uint MemoryMask = 0x1FFFFFFF;
 
@@ -317,6 +320,11 @@ namespace CSPspEmu.Core.Memory
 				Stream.Flush();
 				Stream.Close();
 			}
+		}
+
+		bool IPspMemoryInfo.IsAddressValid(uint Address)
+		{
+			return PspMemory.IsAddressValid(Address);
 		}
 	}
 }

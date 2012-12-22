@@ -5,6 +5,8 @@ using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
+using CSPspEmu.Core.Types;
+using CSPspEmu.Core.Components.Display;
 
 namespace CSPspEmu.Hle.Modules.display
 {
@@ -12,13 +14,16 @@ namespace CSPspEmu.Hle.Modules.display
 	public class sceDisplay : HleModuleHost
 	{
 		[Inject]
-		public PspDisplay PspDisplay;
+		PspDisplay PspDisplay;
 
 		[Inject]
-		public PspRtc PspRtc;
+		DisplayConfig DisplayConfig;
 
 		[Inject]
-		public HleThreadManager ThreadManager;
+		PspRtc PspRtc;
+
+		[Inject]
+		HleThreadManager ThreadManager;
 
 		/// <summary>
 		/// Set display mode
@@ -43,8 +48,9 @@ namespace CSPspEmu.Hle.Modules.display
 
 		private int _waitVblankCB(CpuThreadState CpuThreadState, bool HandleCallbacks, int CycleCount)
 		{
-			if (PspConfig.VerticalSynchronization && LastVblankCount != PspDisplay.VblankCount)
+			if (DisplayConfig.VerticalSynchronization && LastVblankCount != PspDisplay.VblankCount)
 			{
+				LastVblankCount = PspDisplay.VblankCount;
 				var SleepThread = ThreadManager.Current;
 
 				SleepThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Display, "sceDisplayWaitVblankStart", null, (WakeUpCallbackDelegate) =>

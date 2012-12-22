@@ -1,7 +1,7 @@
 ﻿using System;
-using CSharpUtils;
 using SafeILGenerator.Ast.Nodes;
 using CSPspEmu.Core.Cpu.VFpu;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {

@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using GLES;
 using CSharpUtils;
-using CSPspEmu.Core.Utils;
 using CSPspEmu.Core.Memory;
 using System.Threading;
+using CSPspEmu.Core.Types;
 
 namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 {

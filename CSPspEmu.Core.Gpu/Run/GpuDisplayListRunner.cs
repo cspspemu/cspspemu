@@ -60,7 +60,7 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		public void UNIMPLEMENTED_NOTICE()
 		{
-			if (GpuDisplayList.GpuProcessor.PspConfig.NoticeUnimplementedGpuCommands)
+			if (GpuDisplayList.GpuProcessor.GpuConfig.NoticeUnimplementedGpuCommands)
 			{
 				Console.WriteLine("Unimplemented GpuOpCode: {0} : {1:X}", OpCode, Params24);
 			}

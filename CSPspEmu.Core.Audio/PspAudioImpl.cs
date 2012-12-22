@@ -31,7 +31,6 @@ namespace CSPspEmu.Core.Audio
 					//Console.WriteLine(Data[n]);
 				}
 			};
-			this.InitializeComponent();
 			byte[] GcTestData;
 			while (true)
 			{

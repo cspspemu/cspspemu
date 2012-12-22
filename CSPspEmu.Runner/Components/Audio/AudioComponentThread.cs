@@ -9,10 +9,6 @@ namespace CSPspEmu.Runner.Components.Audio
 		[Inject]
 		private PspAudio PspAudio;
 
-		public override void InitializeComponent()
-		{
-		}
-
 		protected override string ThreadName { get { return "AudioThread"; } }
 
 		protected override void Main()

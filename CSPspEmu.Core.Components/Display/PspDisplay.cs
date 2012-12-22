@@ -4,10 +4,11 @@ using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Core.Threading.Synchronization;
 using CSPspEmu.Core.Utils;
+using CSPspEmu.Core.Types;
 
 namespace CSPspEmu.Core.Display
 {
-	public class PspDisplay : PspEmulatorComponent
+	public class PspDisplay
 	{
 		public const double ProcessedPixelsPerSecond = 9000000; // hz
 		public const double CyclesPerPixel           = 1;
@@ -19,10 +20,14 @@ namespace CSPspEmu.Core.Display
 		public const double VeritcalSyncHertz = HorizontalSyncHertz / NumberOfRows;
 
 		[Inject]
-		public PspRtc PspRtc;
+		PspRtc PspRtc;
 
 		[Inject]
-		public PspMemory Memory;
+		PspMemory Memory;
+
+		private PspDisplay()
+		{
+		}
 
 		public Info CurrentInfo = new Info()
 		{
@@ -58,10 +63,6 @@ namespace CSPspEmu.Core.Display
 					return BufferWidth * Height;
 				}
 			}
-		}
-
-		public override void InitializeComponent()
-		{
 		}
 
 		public void TriggerVBlankStart()

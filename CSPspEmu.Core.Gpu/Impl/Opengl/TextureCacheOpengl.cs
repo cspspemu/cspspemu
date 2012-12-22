@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 #if OPENTK
 using OpenTK.Graphics.OpenGL;
-using CSPspEmu.Core.Utils;
 using CSharpUtils;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Core.Types;
 #else
 using MiniGL;
 #endif

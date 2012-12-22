@@ -13,7 +13,7 @@ namespace CSPspEmu.Core
 			{
 				if (_CurrentVersion == null)
 				{
-					_CurrentVersion = Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.version_current.txt").ReadAllContentsAsString();
+					_CurrentVersion = Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.References.version_current.txt").ReadAllContentsAsString();
 				}
 				return _CurrentVersion;
 			}
@@ -27,7 +27,7 @@ namespace CSPspEmu.Core
 				{
 					if (!_CurrentVersionNumeric.HasValue)
 					{
-						_CurrentVersionNumeric = int.Parse(Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.version_current_numeric.txt").ReadAllContentsAsString());
+						_CurrentVersionNumeric = int.Parse(Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.References.version_current_numeric.txt").ReadAllContentsAsString());
 					}
 					return _CurrentVersionNumeric.Value;
 				}
@@ -46,7 +46,7 @@ namespace CSPspEmu.Core
 			{
 				if (_GitRevision == null)
 				{
-					_GitRevision = Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.git_revision.txt").ReadAllContentsAsString();
+					_GitRevision = Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.References.git_revision.txt").ReadAllContentsAsString();
 				}
 				return _GitRevision;
 			}

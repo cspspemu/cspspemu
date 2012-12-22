@@ -70,14 +70,14 @@ namespace CSPspEmu.Hle.Managers
 		}
 	}
 
-    public class HleIoManager : PspEmulatorComponent
+    public class HleIoManager
 	{
 		protected Dictionary<string, IHleIoDriver> Drivers = new Dictionary<string, IHleIoDriver>();
 		public HleIoWrapper HleIoWrapper;
 
 		public HleUidPoolSpecial<HleIoDrvFileArg, SceUID> HleIoDrvFileArgPool = new HleUidPoolSpecial<HleIoDrvFileArg, SceUID>();
 
-		public override void InitializeComponent()
+		public HleIoManager()
 		{
 			HleIoWrapper = new HleIoWrapper(this);
 		}

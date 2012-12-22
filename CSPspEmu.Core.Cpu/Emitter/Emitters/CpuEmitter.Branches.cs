@@ -1,7 +1,6 @@
 ﻿#define ENABLE_NATIVE_CALLS
 
 using System;
-using CSPspEmu.Core.Memory;
 using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
 
@@ -98,7 +97,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm bgezal() { return AssignBranchFlag(ast.Binary(GPR_s(RS), ">=", 0), AndLink: true); }
 		public AstNodeStm bgezall() { return bgezal(); }
 
-		public bool PopulateCallStack { get { return !(CpuProcessor.Memory is FastPspMemory) && CpuProcessor.PspConfig.TrackCallStack; } }
+		public bool PopulateCallStack { get { return !(CpuProcessor.Memory.HasFixedGlobalAddress) && CpuProcessor.CpuConfig.TrackCallStack; } }
 
 		/*
 		private AstNodeStm _popstack()
@@ -176,8 +175,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// j(al)(r): Jump (And Link) (Register)
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm j() { return this.JumpToFixedAddress(Instruction.GetJumpAddress(PC)); }
-		public AstNodeStm jal() { return this.CallFixedAddress(Instruction.GetJumpAddress(PC)); }
+		public AstNodeStm j() { return this.JumpToFixedAddress(Instruction.GetJumpAddress(this.Memory, PC)); }
+		public AstNodeStm jal() { return this.CallFixedAddress(Instruction.GetJumpAddress(this.Memory, PC)); }
 		public AstNodeStm jr() {
 			if (RS == 31)
 			{
