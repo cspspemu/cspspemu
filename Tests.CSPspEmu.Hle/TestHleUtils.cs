@@ -3,6 +3,8 @@ using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Tests;
+using CSPspEmu.Hle.Managers;
+using CSPspEmu.Hle.Modules.interruptman;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,7 @@ using System.Text;
 [InjectMap(typeof(GpuImpl), typeof(GpuImplNull))]
 [InjectMap(typeof(PspAudioImpl), typeof(AudioImplNull))]
 [InjectMap(typeof(ICpuConnector), typeof(CpuConnector))]
+[InjectMap(typeof(IInterruptManager), typeof(HleInterruptManager))]
 public class TestHleUtils
 {
 	class CpuConnector : ICpuConnector

@@ -14,6 +14,13 @@ namespace Tests.CSPspEmu.Core.Cpu.Cpu
 		}
 	}
 
+	public class TestInterruptManager : IInterruptManager
+	{
+		void IInterruptManager.Interrupt(CpuThreadState CpuThreadState)
+		{
+		}
+	}
+
 	static public class CpuUtils
 	{
 		static LazyPspMemory LazyPspMemory = new LazyPspMemory();
@@ -24,6 +31,7 @@ namespace Tests.CSPspEmu.Core.Cpu.Cpu
 			var InjectContext = new InjectContext();
 			InjectContext.SetInstance<PspMemory>(Memory);
 			InjectContext.SetInstance<ICpuConnector>(new TestConnector());
+			InjectContext.SetInstance<IInterruptManager>(new TestInterruptManager());
 			return InjectContext.GetInstance<CpuProcessor>();
 		}
 	}
