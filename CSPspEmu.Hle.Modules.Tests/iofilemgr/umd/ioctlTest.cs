@@ -14,7 +14,7 @@ using CSPspEmu.Hle.Formats;
 namespace CSPspEmu.Hle.Modules.Tests.iofilemgr.umd
 {
 	[TestClass]
-	public unsafe class ioctlTest : BaseModuleTest
+	public unsafe class ioctlTest : BaseModuleTest, IInjectInitialize
 	{
 		[Inject]
 		IoFileMgrForUser IoFileMgrForUser = null;
@@ -24,7 +24,7 @@ namespace CSPspEmu.Hle.Modules.Tests.iofilemgr.umd
 
 		SceUID BootBinFileHandle;
 
-		protected override void Initialize()
+		void IInjectInitialize.Initialize()
 		{
 			var Iso = IsoLoader.GetIso("../../../pspautotests/input/iotest.iso");
 			var Umd = new HleIoDriverIso(Iso);

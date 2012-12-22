@@ -698,7 +698,14 @@ namespace CSPspEmu.Gui.Winforms
 			CheckForUpdatesThread.Start();
 		}
 
-		private static bool RunProgramInBackground(string ApplicationPath, string ApplicationArguments)
+		public struct Result
+		{
+			public string OutputString;
+			public string ErrorString;
+			public bool Success;
+		}
+
+		private static Result RunProgramInBackground(string ApplicationPath, string ApplicationArguments)
 		{
 			// This snippet needs the "System.Diagnostics"
 			// library
@@ -725,9 +732,11 @@ namespace CSPspEmu.Gui.Winforms
 				// These two optional flags ensure that no DOS window appears
 				CreateNoWindow = true,
 				WindowStyle = ProcessWindowStyle.Hidden,
-				//RedirectStandardOutput = true,
+				//RedirectStandardOutput = false,
 			};
 
+			string OutputString = "";
+			string ErrorString = "";
 			bool Error = false;
 			// Wait that the process exits
 			try
@@ -735,6 +744,8 @@ namespace CSPspEmu.Gui.Winforms
 				// Start the process
 				ProcessObj.Start();
 
+				OutputString = ProcessObj.StandardOutput.ReadToEnd();
+				ErrorString = ProcessObj.StandardError.ReadToEnd();
 				ProcessObj.WaitForExit();
 			}
 			catch
@@ -742,7 +753,12 @@ namespace CSPspEmu.Gui.Winforms
 				Error = true;
 			}
 
-			return !Error && (ProcessObj.ExitCode == 0);
+			return new Result()
+			{
+				OutputString = OutputString,
+				ErrorString = ErrorString,
+				Success = !Error && (ProcessObj.ExitCode == 0),
+			};
 		}
 
 		/// <summary>
@@ -753,15 +769,15 @@ namespace CSPspEmu.Gui.Winforms
 		/// <seealso cref="http://social.msdn.microsoft.com/Forums/en-US/winforms/thread/db6647a3-85ca-4dc4-b661-fbbd36bd561f/"/>
 		private void associateWithPBPAndCSOToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var Success = !RunProgramInBackground(ApplicationPaths.ExecutablePath, "/associate");
+			var Result = RunProgramInBackground(ApplicationPaths.ExecutablePath, "/associate");
 
-			if (!Success)
+			if (Result.Success)
 			{
 				MessageBox.Show("Associations done!", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 			else
 			{
-				MessageBox.Show("Can't associate", "Done", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show("Can't associate\n\n" + Result.ErrorString, "Done", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 
 			// Now read the output of the DOS application
@@ -932,15 +948,15 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void installWavDestDirectShowFilterToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var Success = !RunProgramInBackground(ApplicationPaths.ExecutablePath, "/installat3");
+			var Result = RunProgramInBackground(ApplicationPaths.ExecutablePath, "/installat3");
 
-			if (!Success)
+			if (Result.Success)
 			{
 				MessageBox.Show("Registered done!", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
 			}
 			else
 			{
-				MessageBox.Show("Can't register WavDest.dll", "Done", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show("Can't register WavDest.dll\n\n" + Result.ErrorString, "Done", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
 

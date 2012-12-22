@@ -22,6 +22,7 @@ using CSPspEmu.Core.Gpu.Impl.OpenglEs;
 using CSPspEmu.Hle.Modules.iofilemgr;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Core.Cpu;
+using CSPspEmu.Hle.Modules;
 
 namespace CSPspEmu.AutoTests
 {
@@ -78,25 +79,31 @@ namespace CSPspEmu.AutoTests
 
 			IHleIoDriver HostDriver = null;
 
-			using (var PspEmulatorContext = new InjectContext())
+			using (var _InjectContext = new InjectContext())
 			{
+				_InjectContext.SetInstance<PspStoredConfig>(StoredConfig);
+				_InjectContext.GetInstance<HleConfig>().HleModulesDll = typeof(HleModulesRoot).Assembly;
+
 				CapturedOutput = ConsoleUtils.CaptureOutput(() =>
 				{
 					//Console.Error.WriteLine("[0]");
 					//PspEmulatorContext.SetInstanceType<PspMemory, NormalPspMemory>();
-					PspEmulatorContext.SetInstanceType<PspMemory, FastPspMemory>();
+					_InjectContext.SetInstanceType<PspMemory, FastPspMemory>();
+
+					_InjectContext.SetInstanceType<ICpuConnector, HleThreadManager>();
+					_InjectContext.SetInstanceType<IGpuConnector, HleThreadManager>();
 
 					//PspEmulatorContext.SetInstanceType<GpuImpl, GpuImplMock>();
-					PspEmulatorContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
+					_InjectContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
 
-					PspEmulatorContext.SetInstanceType<PspAudioImpl, AudioImplNull>();
-					PspEmulatorContext.SetInstanceType<HleOutputHandler, HleOutputHandlerMock>();
+					_InjectContext.SetInstanceType<PspAudioImpl, AudioImplNull>();
+					_InjectContext.SetInstanceType<HleOutputHandler, HleOutputHandlerMock>();
 					//Console.Error.WriteLine("[1]");
 
 					this.FileNameBase = FileNameBase;
 
 					var Start = DateTime.UtcNow;
-					PspEmulatorContext.GetInstance<HleModuleManager>();
+					_InjectContext.GetInstance<HleModuleManager>();
 					var End = DateTime.UtcNow;
 					Console.WriteLine(End - Start);
 
@@ -104,14 +111,14 @@ namespace CSPspEmu.AutoTests
 
 					// GPU -> NULL
 					//PspEmulatorContext.SetInstanceType<GpuImpl>(typeof(GpuImplOpenglEs));
-					PspEmulatorContext.SetInstanceType<GpuImpl>(typeof(GpuImplNull));
+					_InjectContext.SetInstanceType<GpuImpl>(typeof(GpuImplNull));
 
-					var GpuImpl = PspEmulatorContext.GetInstance<GpuImpl>();
+					var GpuImpl = _InjectContext.GetInstance<GpuImpl>();
 					//GpuImpl.InitSynchronizedOnce();
 
 					//Console.Error.WriteLine("[b]");
 
-					var PspRunner = PspEmulatorContext.GetInstance<PspRunner>();
+					var PspRunner = _InjectContext.GetInstance<PspRunner>();
 					PspRunner.StartSynchronized();
 
 					//Console.Error.WriteLine("[c]");
@@ -123,7 +130,7 @@ namespace CSPspEmu.AutoTests
 							PspRunner.CpuComponentThread.SetIso(PspAutoTestsFolder + "/../input/cube.cso");
 							//Console.Error.WriteLine("[2]");
 
-							var HleIoManager = PspEmulatorContext.GetInstance<HleIoManager>();
+							var HleIoManager = _InjectContext.GetInstance<HleIoManager>();
 							HostDriver = HleIoManager.GetDriver("host:");
 
 							try { HostDriver.IoRemove(null, "/__testoutput.txt"); } catch { }

@@ -8,17 +8,18 @@ namespace CSPspEmu.Core.Tests
 	[TestClass]
 	public class HlePspThreadManagerTest
 	{
-		protected InjectContext InjectContext;
-		protected CpuProcessor Processor;
-		protected MipsAssembler MipsAssembler;
+		[Inject]
+		InjectContext InjectContext;
+
+		[Inject]
+		CpuProcessor Processor;
+	
+		MipsAssembler MipsAssembler;
 
 		[TestInitialize]
 		public void SetUp()
 		{
-			InjectContext = new InjectContext();
-			InjectContext.SetInstanceType<PspMemory, LazyPspMemory>();
-
-			Processor = InjectContext.GetInstance<CpuProcessor>();
+			TestHleUtils.CreateInjectContext(this);
 			MipsAssembler = new MipsAssembler(new PspMemoryStream(InjectContext.GetInstance<PspMemory>()));
 		}
 

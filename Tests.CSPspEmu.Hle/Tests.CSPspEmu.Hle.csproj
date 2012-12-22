@@ -71,6 +71,7 @@
     <Compile Include="Loader\ElfLoaderTest.cs" />
     <Compile Include="MemoryPartitionTest.cs" />
     <Compile Include="PreemptiveSchedulerTest.cs" />
+    <Compile Include="TestHleUtils.cs" />
     <Compile Include="Vfs\HleIoManagerTest.cs" />
     <Compile Include="Vfs\Iso\CsoProxyStreamTest.cs" />
     <Compile Include="Vfs\Iso\IsoTest.cs" />

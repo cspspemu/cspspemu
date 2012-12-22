@@ -61,8 +61,19 @@ namespace CSPspEmu
 		[Inject]
 		PspDisplay PspDisplay;
 
+		public InjectContext InjectContext
+		{
+			get
+			{
+				lock (this)
+				{
+					return _InjectContext;
+				}
+			}
+		}
+
 		[Inject]
-		public InjectContext InjectContext { get; private set; }
+		private InjectContext _InjectContext;
 
 		[Inject]
 		PspRunner PspRunner;
@@ -143,14 +154,14 @@ namespace CSPspEmu
 		/// </summary>
 		public void StartAndLoad(string File, bool TraceSyscalls = false, bool ShowMenus = true, bool TrackCallStack = true, bool? EnableMpeg = null)
 		{
-			CpuConfig.DebugSyscalls = TraceSyscalls;
-			CpuConfig.TrackCallStack = TrackCallStack;
-			if (EnableMpeg.HasValue)
-			{
-				StoredConfig.EnableMpeg = EnableMpeg.Value;
-			}
 			Start(() =>
 			{
+				CpuConfig.DebugSyscalls = TraceSyscalls;
+				CpuConfig.TrackCallStack = TrackCallStack;
+				if (EnableMpeg.HasValue)
+				{
+					StoredConfig.EnableMpeg = EnableMpeg.Value;
+				}
 				LoadFile(File);
 			}, ShowMenus: ShowMenus, AutoLoad: true);
 		}
@@ -231,7 +242,7 @@ namespace CSPspEmu
 					InjectContext.GetInstance<PspAudioImpl>().StopSynchronized();
 
 					PspRunner = null;
-					InjectContext = null;
+					_InjectContext = null;
 					GC.Collect();
 				}
 
@@ -250,50 +261,53 @@ namespace CSPspEmu
 				*/
 				//
 
-				InjectContext = new InjectContext();
-				InjectContext.SetInstance<PspStoredConfig>(StoredConfig);
-				InjectContext.GetInstance<HleConfig>().HleModulesDll = typeof(HleModulesRoot).Assembly;
-				InjectContext.MapFromClassAttributes(this);
+				lock (this)
+				{
+					_InjectContext = new InjectContext();
+					_InjectContext.SetInstance<PspStoredConfig>(StoredConfig);
+					_InjectContext.GetInstance<HleConfig>().HleModulesDll = typeof(HleModulesRoot).Assembly;
+					_InjectContext.MapFromClassAttributes(this);
 
-				// Memory
+					// Memory
 #if true // Disabled because crashes on x86
-				if (StoredConfig.UseFastMemory)
-				{
-					InjectContext.SetInstanceType<PspMemory, FastPspMemory>();
-				}
-				else
+					if (StoredConfig.UseFastMemory)
+					{
+						_InjectContext.SetInstanceType<PspMemory, FastPspMemory>();
+					}
+					else
 #endif
-				{
-					InjectContext.SetInstanceType<PspMemory, NormalPspMemory>();
+					{
+						_InjectContext.SetInstanceType<PspMemory, NormalPspMemory>();
+					}
+
+					{
+						// GPU
+						PspPluginImpl.SelectWorkingPlugin<GpuImpl>(_InjectContext,
+							typeof(OpenglGpuImpl),
+							typeof(GpuImplOpenglEs),
+							//typeof(GpuImplSoft),
+							typeof(GpuImplNull)
+						);
+
+						// AUDIO
+						PspPluginImpl.SelectWorkingPlugin<PspAudioImpl>(_InjectContext,
+							typeof(PspAudioWaveOutImpl),
+							typeof(AudioAlsaImpl),
+							typeof(PspAudioOpenalImpl),
+							typeof(AudioImplNull)
+						);
+					}
+
+					_InjectContext.InjectDependencesTo(this);
+
+					//if (PspDisplayForm != null)
+					//{
+					//	InjectContext.InjectDependencesTo(PspDisplayForm);
+					//}
+
+					PspDisplay.VBlankEventCall += new Action(PspEmulator_VBlankEventCall);
+					PspRunner.StartSynchronized();
 				}
-
-				{
-					// GPU
-					PspPluginImpl.SelectWorkingPlugin<GpuImpl>(InjectContext,
-						//typeof(OpenglGpuImpl),
-						typeof(GpuImplOpenglEs),
-						//typeof(GpuImplSoft),
-						typeof(GpuImplNull)
-					);
-
-					// AUDIO
-					PspPluginImpl.SelectWorkingPlugin<PspAudioImpl>(InjectContext,
-						typeof(PspAudioWaveOutImpl),
-						typeof(PspAudioOpenalImpl),
-						typeof(AudioAlsaImpl),
-						typeof(AudioImplNull)
-					);
-				}
-
-				InjectContext.InjectDependencesTo(this);
-
-				//if (PspDisplayForm != null)
-				//{
-				//	InjectContext.InjectDependencesTo(PspDisplayForm);
-				//}
-
-				PspDisplay.VBlankEventCall += new Action(PspEmulator_VBlankEventCall);
-				PspRunner.StartSynchronized();
 
 				//GpuImpl.InitSynchronizedOnce();
 			}

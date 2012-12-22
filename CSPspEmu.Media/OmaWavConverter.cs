@@ -41,7 +41,7 @@ namespace CSPspEmu.Media
 				var Oma2WavFile = String.Format("{0}/oma2wav.exe", Folder);
 				if (!File.Exists(Oma2WavFile))
 				{
-					File.WriteAllBytes(Oma2WavFile, Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.oma2wav.exe").ReadAll());
+					File.WriteAllBytes(Oma2WavFile, Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.References.oma2wav.exe").ReadAll());
 				}
 
 				ProcessUtils.ExecuteCommand(Oma2WavFile, String.Format(@" ""{0}"" ""{1}"" ", Source, Destination));

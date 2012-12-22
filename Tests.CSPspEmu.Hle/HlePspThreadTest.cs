@@ -12,18 +12,7 @@ using System.Collections.Generic;
 
 namespace CSPspEmu.Core.Tests
 {
-	class CpuConnector : ICpuConnector
-	{
-		public void Yield(CpuThreadState CpuThreadState)
-		{
-		}
-	}
-
-	[TestClass()]
-	[InjectMap(typeof(PspMemory), typeof(LazyPspMemory))]
-	[InjectMap(typeof(GpuImpl), typeof(GpuImplNull))]
-	[InjectMap(typeof(PspAudioImpl), typeof(AudioImplNull))]
-	[InjectMap(typeof(ICpuConnector), typeof(CpuConnector))]
+	[TestClass]
 	public class HlePspThreadTest
 	{
 		[Inject]
@@ -43,7 +32,7 @@ namespace CSPspEmu.Core.Tests
 		[TestInitialize()]
 		public void SetUp()
 		{
-			InjectContext.Bootstrap(this);
+			TestHleUtils.CreateInjectContext(this);
 
 			MipsAssembler = new MipsAssembler(new PspMemoryStream(Memory));
 		}

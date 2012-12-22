@@ -222,6 +222,8 @@ public sealed class InjectContext : IDisposable
 	{
 		foreach (var Item in ObjectsByType.Values)
 		{
+			if (Item == this) continue;
+
 			if (Item.GetType().GetInterfaces().Contains(typeof(IDisposable)))
 			{
 				((IDisposable)Item).Dispose();

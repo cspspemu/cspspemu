@@ -12,6 +12,7 @@ using CSharpUtils;
 namespace CSPspEmu.Hle.Modules.Tests.rtc
 {
 	[TestClass]
+	[InjectMap(typeof(PspRtc), typeof(PspRtcMock))]
 	public class sceRtcTest : BaseModuleTest
 	{
 		[Inject]
@@ -61,12 +62,6 @@ namespace CSPspEmu.Hle.Modules.Tests.rtc
 		public void TestInitialize()
 		{
 			ResetTimes();
-		}
-
-		protected override void SetMocks(InjectContext InjectContext)
-		{
-			InjectContext.SetInstanceType<PspRtc, PspRtcMock>();
-			(InjectContext.GetInstance<PspRtc>() as PspRtcMock).sceRtcTest = this;
 		}
 
 		[TestMethod]
