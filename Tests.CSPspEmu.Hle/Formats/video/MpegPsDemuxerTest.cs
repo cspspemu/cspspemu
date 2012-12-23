@@ -1,15 +1,15 @@
 ﻿using CSPspEmu.Hle.Formats.video;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using System.IO;
 using CSharpUtils;
 
 namespace CSPspEmu.Core.Tests
 {
-	[TestClass]
+	[TestFixture]
 	public class MpegPsDemuxerTest
 	{
-		[TestMethod]
+		[Test]
 		public void GetNextPacketAndSyncTest()
 		{
 			var MpegPsDemuxer = new MpegPsDemuxer(File.OpenRead("../../../TestInput/test.pmf").SliceWithLength(0x800));
@@ -23,7 +23,7 @@ namespace CSPspEmu.Core.Tests
 			Assert.AreEqual((uint)0x106, (uint)MpegPsDemuxer.GetNextPacketAndSync());
 		}
 
-		[TestMethod]
+		[Test]
 		public void ReadPacketizedElementaryStreamHeaderTest()
 		{
 			MpegPsDemuxer.Packet Packet;

@@ -2,7 +2,7 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using CSPspEmu.Core;
 using CSPspEmu.Hle.Modules.iofilemgr;
 using CSPspEmu.Hle.Vfs;
@@ -13,7 +13,7 @@ using CSPspEmu.Hle.Formats;
 
 namespace CSPspEmu.Hle.Modules.Tests.iofilemgr.umd
 {
-	[TestClass]
+	[TestFixture]
 	public unsafe class ioctlTest : BaseModuleTest, IInjectInitialize
 	{
 		[Inject]
@@ -33,7 +33,7 @@ namespace CSPspEmu.Hle.Modules.Tests.iofilemgr.umd
 			BootBinFileHandle = IoFileMgrForUser.sceIoOpen("disc0:/PSP_GAME/SYSDIR/BOOT.BIN", HleIoFlags.Read, SceMode.All);
 		}
 
-		[TestMethod]
+		[Test]
 		public void GetPrimaryVolumeDescriptorTest()
 		{
 			var PrimaryVolumeDescriptor = default(PrimaryVolumeDescriptor);
@@ -57,7 +57,7 @@ namespace CSPspEmu.Hle.Modules.Tests.iofilemgr.umd
 			);
 		}
 
-		[TestMethod]
+		[Test]
 		public void GetSectorSizeTest()
 		{
 			uint SectorSize;

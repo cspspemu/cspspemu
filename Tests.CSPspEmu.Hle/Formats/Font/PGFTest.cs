@@ -2,15 +2,15 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using CSPspEmu.Hle.Formats.Font;
 
 namespace CSPspEmu.Core.Tests.Hle.Formats.Font
 {
-	[TestClass]
+	[TestFixture]
 	public class PGFTest
 	{
-		[TestMethod]
+		[Test]
 		public void TestMethod1()
 		{
 			var PGF = new PGF().Load("../../../TestInput/ltn0.pgf");

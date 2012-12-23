@@ -1,5 +1,5 @@
 ﻿using CSPspEmu.Hle;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace CSPspEmu.Core.Tests
 {
-	[TestClass]
+	[TestFixture]
 	public class HlePspThreadTest
 	{
 		[Inject]
@@ -29,7 +29,7 @@ namespace CSPspEmu.Core.Tests
 
 		protected MipsAssembler MipsAssembler;
 
-		[TestInitialize()]
+		[SetUp]
 		public void SetUp()
 		{
 			TestHleUtils.CreateInjectContext(this);
@@ -37,7 +37,7 @@ namespace CSPspEmu.Core.Tests
 			MipsAssembler = new MipsAssembler(new PspMemoryStream(Memory));
 		}
 
-		[TestMethod()]
+		[Test]
 		public void CpuThreadStateTest()
 		{
 			Assert.Inconclusive();

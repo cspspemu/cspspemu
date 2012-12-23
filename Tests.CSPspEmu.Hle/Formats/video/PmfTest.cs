@@ -1,14 +1,14 @@
 ﻿using CSPspEmu.Hle.Formats.video;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using System.IO;
 
 namespace CSPspEmu.Core.Tests
 {
-	[TestClass]
+	[TestFixture]
 	public class PmfTest
 	{
-		[TestMethod]
+		[Test]
 		public void LoadTest()
 		{
 			var Pmf = new Pmf();

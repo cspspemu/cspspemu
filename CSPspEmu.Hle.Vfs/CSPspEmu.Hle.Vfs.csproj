@@ -9,27 +9,28 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CSPspEmu.Hle.Vfs</RootNamespace>
     <AssemblyName>CSPspEmu.Hle.Vfs</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
+    <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>False</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>True</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -64,31 +65,31 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSPspEmu.Core.Components\CSPspEmu.Core.Components.csproj">
-      <Project>{c2263270-905b-4d00-9446-21c8d9890ddc}</Project>
+      <Project>{C2263270-905B-4D00-9446-21C8D9890DDC}</Project>
       <Name>CSPspEmu.Core.Components</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
-      <Project>{fd27ef3a-4ebe-4867-a603-3e7048dcf459}</Project>
+      <Project>{FD27EF3A-4EBE-4867-A603-3E7048DCF459}</Project>
       <Name>CSPspEmu.Core.Memory</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Hle.Formats\CSPspEmu.Hle.Formats.csproj">
-      <Project>{b7d8a67e-0046-4ef7-80fe-444bc7efbc70}</Project>
+      <Project>{B7D8A67E-0046-4EF7-80FE-444BC7EFBC70}</Project>
       <Name>CSPspEmu.Hle.Formats</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Hle.Types\CSPspEmu.Hle.Types.csproj">
-      <Project>{3c997fe1-117f-4f2c-8e3b-3c820b0adfb0}</Project>
+      <Project>{3C997FE1-117F-4F2C-8E3B-3C820B0ADFB0}</Project>
       <Name>CSPspEmu.Hle.Types</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Inject\CSPspEmu.Inject.csproj">
-      <Project>{e68ae26e-e969-4413-8d3c-e60a7d2a2950}</Project>
+      <Project>{E68AE26E-E969-4413-8D3C-E60A7D2A2950}</Project>
       <Name>CSPspEmu.Inject</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Utils\CSPspEmu.Utils.csproj">
-      <Project>{dc02a203-30f2-4613-950b-1529fd55ac81}</Project>
+      <Project>{DC02A203-30F2-4613-950B-1529FD55AC81}</Project>
       <Name>CSPspEmu.Utils</Name>
     </ProjectReference>
     <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
-      <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
+      <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
     </ProjectReference>
   </ItemGroup>

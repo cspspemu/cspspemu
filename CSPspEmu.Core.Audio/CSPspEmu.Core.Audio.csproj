@@ -10,36 +10,34 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CSPspEmu.Core.Audio</RootNamespace>
     <AssemblyName>CSPspEmu.Core.Audio</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
+    <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>False</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>True</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Trace|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
+    <DebugSymbols>True</DebugSymbols>
     <OutputPath>bin\Trace\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisLogFile>bin\Debug\CSPspEmu.Core.Audio.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
@@ -50,6 +48,8 @@
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -78,24 +78,24 @@
       <Name>CSPspEmu.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Inject\CSPspEmu.Inject.csproj">
-      <Project>{e68ae26e-e969-4413-8d3c-e60a7d2a2950}</Project>
+      <Project>{E68AE26E-E969-4413-8D3C-E60A7D2A2950}</Project>
       <Name>CSPspEmu.Inject</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Utils\CSPspEmu.Utils.csproj">
-      <Project>{dc02a203-30f2-4613-950b-1529fd55ac81}</Project>
+      <Project>{DC02A203-30F2-4613-950B-1529FD55AC81}</Project>
       <Name>CSPspEmu.Utils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
+      <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
+      <Name>CSharpUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Libraries\csharpplatform\CSharpPlatform.AL\CSharpPlatform.AL.csproj">
-      <Project>{40a74ee2-9d85-46ed-b751-fc46d915d714}</Project>
+      <Project>{40A74EE2-9D85-46ED-B751-FC46D915D714}</Project>
       <Name>CSharpPlatform.AL</Name>
     </ProjectReference>
     <ProjectReference Include="..\libraries\csharpplatform\CSharpPlatform\CSharpPlatform.csproj">
-      <Project>{b4b107b5-030b-451c-8532-13b2306692c3}</Project>
+      <Project>{B4B107B5-030B-451C-8532-13B2306692C3}</Project>
       <Name>CSharpPlatform</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
-      <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
-      <Name>CSharpUtils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

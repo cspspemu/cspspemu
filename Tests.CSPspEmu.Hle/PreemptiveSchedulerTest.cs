@@ -2,12 +2,12 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using CSPspEmu.Hle;
 
 namespace CSPspEmu.Tests.Hle
 {
-	[TestClass]
+	[TestFixture]
 	public class PreemptiveSchedulerTest
 	{
 		public class PreemptiveItem : IPreemptiveItem
@@ -30,14 +30,14 @@ namespace CSPspEmu.Tests.Hle
 
 		PreemptiveItem PreemptiveItem4 = new PreemptiveItem() { Name = "4", Priority = 8, Ready = true };
 
-		[TestMethod]
+		[Test]
 		[ExpectedException(typeof(Exception))]
 		public void TestNextWithoutItems()
 		{
 			Scheduler.Next();
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestNextSingleItem()
 		{
 			Scheduler.Update(PreemptiveItem1);
@@ -49,7 +49,7 @@ namespace CSPspEmu.Tests.Hle
 			}
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestNextTwoItemsWithSamePriority()
 		{
 			Scheduler.Update(PreemptiveItem1);
@@ -66,7 +66,7 @@ namespace CSPspEmu.Tests.Hle
 			}
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestNextTwoItemsWithSamePriorityAndOtherWithLowerPriority()
 		{
 			Scheduler.Update(PreemptiveItem1);

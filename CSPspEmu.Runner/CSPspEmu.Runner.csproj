@@ -8,37 +8,35 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CSPspEmu.Runner</RootNamespace>
     <AssemblyName>CSPspEmu.Runner</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
+    <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>False</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>True</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Trace|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
+    <DebugSymbols>True</DebugSymbols>
     <OutputPath>bin\Trace\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisLogFile>bin\Debug\CSPspEmu.Runner.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
@@ -49,6 +47,8 @@
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -72,55 +72,55 @@
       <Name>CSPspEmu.Core.Audio</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Components\CSPspEmu.Core.Components.csproj">
-      <Project>{c2263270-905b-4d00-9446-21c8d9890ddc}</Project>
+      <Project>{C2263270-905B-4D00-9446-21C8D9890DDC}</Project>
       <Name>CSPspEmu.Core.Components</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Cpu\CSPspEmu.Core.Cpu.csproj">
-      <Project>{827779a5-f05c-41c6-9ff9-fd274224a7ae}</Project>
+      <Project>{827779A5-F05C-41C6-9FF9-FD274224A7AE}</Project>
       <Name>CSPspEmu.Core.Cpu</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">
-      <Project>{9a30ebf3-b702-47d9-aafc-e3e02b410dad}</Project>
+      <Project>{9A30EBF3-B702-47D9-AAFC-E3E02B410DAD}</Project>
       <Name>CSPspEmu.Core.Gpu</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
-      <Project>{fd27ef3a-4ebe-4867-a603-3e7048dcf459}</Project>
+      <Project>{FD27EF3A-4EBE-4867-A603-3E7048DCF459}</Project>
       <Name>CSPspEmu.Core.Memory</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
-      <Project>{f783ecd3-0f79-43cc-abd0-d356a64049c4}</Project>
+      <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Hle.Formats\CSPspEmu.Hle.Formats.csproj">
-      <Project>{b7d8a67e-0046-4ef7-80fe-444bc7efbc70}</Project>
+      <Project>{B7D8A67E-0046-4EF7-80FE-444BC7EFBC70}</Project>
       <Name>CSPspEmu.Hle.Formats</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Hle.Modules\CSPspEmu.Hle.Modules.csproj">
-      <Project>{295b7bf1-1130-4098-b0fc-00555ddb09dd}</Project>
+      <Project>{295B7BF1-1130-4098-B0FC-00555DDB09DD}</Project>
       <Name>CSPspEmu.Hle.Modules</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Hle.Types\CSPspEmu.Hle.Types.csproj">
-      <Project>{3c997fe1-117f-4f2c-8e3b-3c820b0adfb0}</Project>
+      <Project>{3C997FE1-117F-4F2C-8E3B-3C820B0ADFB0}</Project>
       <Name>CSPspEmu.Hle.Types</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Hle.Vfs\CSPspEmu.Hle.Vfs.csproj">
-      <Project>{24475fa3-5baa-4cfd-8a9f-d0c54ed5597e}</Project>
+      <Project>{24475FA3-5BAA-4CFD-8A9F-D0C54ED5597E}</Project>
       <Name>CSPspEmu.Hle.Vfs</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Hle\CSPspEmu.Hle.csproj">
-      <Project>{288af89e-b41a-4253-a8f7-43d1371516e9}</Project>
+      <Project>{288AF89E-B41A-4253-A8F7-43D1371516E9}</Project>
       <Name>CSPspEmu.Hle</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Inject\CSPspEmu.Inject.csproj">
-      <Project>{e68ae26e-e969-4413-8d3c-e60a7d2a2950}</Project>
+      <Project>{E68AE26E-E969-4413-8D3C-E60A7D2A2950}</Project>
       <Name>CSPspEmu.Inject</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Resources\CSPspEmu.Resources.csproj">
-      <Project>{ba3187fa-a2a1-43e0-9fdd-69b377ee3152}</Project>
+      <Project>{BA3187FA-A2A1-43E0-9FDD-69B377EE3152}</Project>
       <Name>CSPspEmu.Resources</Name>
     </ProjectReference>
     <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
-      <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
+      <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
     </ProjectReference>
   </ItemGroup>

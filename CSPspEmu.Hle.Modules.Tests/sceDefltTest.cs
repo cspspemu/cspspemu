@@ -2,20 +2,20 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using CSPspEmu.Hle.Modules._unknownPrx;
 using CSPspEmu.Core;
 using System.IO;
 
 namespace CSPspEmu.Hle.Modules.Tests
 {
-	[TestClass]
+	[TestFixture]
 	public unsafe class sceDefltTest : BaseModuleTest
 	{
 		[Inject]
 		sceDeflt sceDeflt = null;
 
-		[TestMethod]
+		[Test]
 		public void TestMethod1()
 		{
 			var inflated = File.ReadAllBytes("../../../TestInput/sample.inflated");
