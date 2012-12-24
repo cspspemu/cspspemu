@@ -10,3 +10,6 @@
 [submodule "Libraries/csharpplatform"]
 	path = Libraries/csharpplatform
 	url = https://github.com/soywiz/csharpplatform.git
+[submodule "Libraries/cscodec"]
+	path = Libraries/cscodec
+	url = https://github.com/soywiz/cscodec.git

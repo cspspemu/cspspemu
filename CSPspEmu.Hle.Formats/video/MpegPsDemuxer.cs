@@ -118,8 +118,21 @@ namespace CSPspEmu.Hle.Formats.video
 
 		public class Packet
 		{
-			public uint Type;
+			public ChunkType Type;
 			public Stream Stream;
+
+			public override string ToString()
+			{
+				return this.ToStringDefault();
+			}
+		}
+
+		public bool HasMorePackets
+		{
+			get
+			{
+				return !Stream.Eof();
+			}
 		}
 
 		/// <summary>
@@ -171,7 +184,7 @@ namespace CSPspEmu.Hle.Formats.video
 					var PacketStream = Stream.ReadStream(PacketSize);
 					return new Packet()
 					{
-						Type = StartCode,
+						Type = (ChunkType)StartCode,
 						Stream = PacketStream,
 					};
 				}
@@ -179,15 +192,21 @@ namespace CSPspEmu.Hle.Formats.video
 				//throw(new NotImplementedException(String.Format("Invalid stream 0x{0:X}", StartCode)));
 				Console.Error.WriteLine("Invalid stream 0x{0:X}", StartCode);
 			}
-			throw(new Exception("End of Stream"));
+			throw(new EndOfStreamException());
 		}
 
-		public void ParsePacketizedStream(Stream PacketStream)
+		public struct PacketizedStream
+		{
+			public TimeStamp dts, pts;
+			public Stream Stream;
+		}
+
+		public PacketizedStream ParsePacketizedStream(Stream PacketStream)
 		{
 			var c = (byte)PacketStream.ReadByte();
-			Console.WriteLine("c: 0x{0:X}", c);
+			//Console.WriteLine("c: 0x{0:X}", c);
 
-			TimeStamp dts, pts;
+			var PacketizedStream = default(PacketizedStream);
 
 			// mpeg 2 PES
 			if ((c & 0xC0) == 0x80)
@@ -197,23 +216,28 @@ namespace CSPspEmu.Hle.Formats.video
 				var HeaderStream = PacketStream.ReadStream(header_len);
 
 				//PacketStream.Skip(header_len);
-				Console.WriteLine("flags: 0x{0:X}", flags);
+				
+				//Console.WriteLine("flags: 0x{0:X}", flags);
 
 				// Has PTS/DTS
 				if ((flags & 0x80) != 0)
 				{
-					dts = pts = HeaderStream.ReadStruct<TimeStamp>();
+					PacketizedStream.dts = PacketizedStream.pts = HeaderStream.ReadStruct<TimeStamp>();
 
 					// Has DTS
 					// On PSP, video DTS is always 1 frame behind PTS
 					if ((flags & 0x40) != 0)
 					{
-						dts = HeaderStream.ReadStruct<TimeStamp>();
+						PacketizedStream.dts = HeaderStream.ReadStruct<TimeStamp>();
 					}
 
-					Console.WriteLine("pts: {0}, dts: {1}", pts, dts);
+					//Console.WriteLine("pts: {0}, dts: {1}", PacketizedStream.pts, PacketizedStream.dts);
 				}
 			}
+
+			PacketizedStream.Stream = PacketStream.ReadStream();
+
+			return PacketizedStream;
 		}
 
 		public ushort Read16()

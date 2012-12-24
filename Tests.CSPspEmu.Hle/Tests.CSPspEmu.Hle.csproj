@@ -138,6 +138,22 @@
       <Project>{dc02a203-30f2-4613-950b-1529fd55ac81}</Project>
       <Name>CSPspEmu.Utils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Libraries\cscodec\cscodec\cscodec.h264\cscodec.h264.csproj">
+      <Project>{e8791c5d-f790-404c-b661-d509844dbbff}</Project>
+      <Name>cscodec.h264</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\cscodec\cscodec\cscodec\cscodec.csproj">
+      <Project>{351dcb00-efcf-435a-9c72-9a7e1d5950b0}</Project>
+      <Name>cscodec</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
+      <Project>{9b217880-48ae-43b6-ae1f-dc732fccbc7a}</Project>
+      <Name>CSharpUtils.Drawing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Ext\CSharpUtils.Ext.csproj">
+      <Project>{c017fbbe-ef10-4030-a69e-204e766c8f9d}</Project>
+      <Name>CSharpUtils.Ext</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
       <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
       <Name>CSharpUtils</Name>

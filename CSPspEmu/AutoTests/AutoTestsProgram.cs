@@ -205,37 +205,14 @@ namespace CSPspEmu.AutoTests
 						var OutputBitmap = new Bitmap(ImageOutputFile);
 						if (ReferenceBitmap.Size == OutputBitmap.Size)
 						{
-							int PixelTotalDifference = 0;
-							int DifferentPixelCount = 0;
-							int TotalPixelCount = 0;
-							for (int y = 0; y < ReferenceBitmap.Height; y++)
-							{
-								for (int x = 0; x < ReferenceBitmap.Width; x++)
-								{
-									Color ColorReference = ReferenceBitmap.GetPixel(x, y);
-									Color ColorOutput = OutputBitmap.GetPixel(x, y);
-									int Difference3 = (
-										Math.Abs((int)ColorOutput.R - (int)ColorReference.R) +
-										Math.Abs((int)ColorOutput.G - (int)ColorReference.G) +
-										Math.Abs((int)ColorOutput.B - (int)ColorReference.B)
-									);
-									PixelTotalDifference += Difference3;
-									if (Difference3 > 6)
-									{
-										DifferentPixelCount++;
-									}
-									TotalPixelCount++;
-								}
-							}
+							var CompareResult = BitmapUtils.CompareBitmaps(ReferenceBitmap, OutputBitmap, 0.01);
 
-							var PixelTotalDifferencePercentage = (double)DifferentPixelCount * 100 / (double)TotalPixelCount;
-
-							if (PixelTotalDifferencePercentage > 0.01)
+							if (CompareResult.Equal)
 							{
 								Console.Error.WriteLine(
 									"Files '{0}:{1}' and '{2}:{3}' have different contents {4}/{5} different pixels {6}%",
 									ImageReferenceFile, ReferenceBitmap.Size, ImageOutputFile, OutputBitmap.Size,
-									DifferentPixelCount, TotalPixelCount, PixelTotalDifferencePercentage
+									CompareResult.DifferentPixelCount, CompareResult.TotalPixelCount, CompareResult.PixelTotalDifferencePercentage
 								);
 								HadAnError |= true;
 							}

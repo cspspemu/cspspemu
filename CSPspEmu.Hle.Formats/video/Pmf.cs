@@ -71,6 +71,7 @@ namespace CSPspEmu.Hle.Formats.video
 			public Stream Stream;
 		}
 
+		private Stream Stream;
 		public HeaderStruct Header;
 		public InfoHeaderStruct InfoHeader;
 
@@ -87,8 +88,14 @@ namespace CSPspEmu.Hle.Formats.video
 			};
 		}
 
+		public MpegPsDemuxer GetMpegPs()
+		{
+			return new MpegPsDemuxer(this.Stream.SliceWithLength(0x800));
+		}
+
 		public Pmf Load(Stream Stream)
 		{
+			this.Stream = Stream;
 			Header = Stream.ReadStruct<HeaderStruct>();
 
 			var Chunk = ReadChunk(Stream.SliceWithLength(0x50));
