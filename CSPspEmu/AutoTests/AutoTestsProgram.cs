@@ -58,7 +58,6 @@ namespace CSPspEmu.AutoTests
 			CpuConfig.DebugSyscalls = false;
 			CpuConfig.ShowInstructionStats = false;
 			HleConfig.TraceLastSyscalls = false;
-			StoredConfig.EnableMpeg = true;
 		}
 
 		public void Init()

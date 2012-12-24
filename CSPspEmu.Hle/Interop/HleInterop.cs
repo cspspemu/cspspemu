@@ -10,9 +10,9 @@ using CSPspEmu.Interop;
 
 namespace CSPspEmu.Hle
 {
-	public class HleInterop : IInjectInitialize
+	public class HleInterop
 	{
-		ThreadLocal<HleThread> CurrentFakeHleThreads;
+		//ThreadLocal<HleThread> CurrentFakeHleThreads;
 
 		[Inject]
 		protected HleThreadManager HleThreadManager;
@@ -27,14 +27,9 @@ namespace CSPspEmu.Hle
 		{
 		}
 
-		void IInjectInitialize.Initialize()
-		{
-			CurrentFakeHleThreads = new ThreadLocal<HleThread>(() => new HleThread(InjectContext, new CpuThreadState(CpuProcessor)));
-		}
-
 		public uint ExecuteFunctionNow(uint Function, params object[] Arguments)
 		{
-			var CurrentFakeHleThread = CurrentFakeHleThreads.Value;
+			var CurrentFakeHleThread = HleThreadManager.CurrentOrAny;
 			CurrentFakeHleThread.CpuThreadState.CopyRegistersFrom(HleThreadManager.CurrentOrAny.CpuThreadState);
 			SetArgumentsToCpuThreadState(CurrentFakeHleThread.CpuThreadState, Function, Arguments);
 			{
@@ -101,7 +96,7 @@ namespace CSPspEmu.Hle
 
 		public HleThread Execute(CpuThreadState FakeCpuThreadState)
 		{
-			var CurrentFakeHleThread = CurrentFakeHleThreads.Value;
+			var CurrentFakeHleThread = HleThreadManager.CurrentOrAny;
 
 			CurrentFakeHleThread.CpuThreadState.CopyRegistersFrom(FakeCpuThreadState);
 			//HleCallback.SetArgumentsToCpuThreadState(CurrentFake.CpuThreadState);

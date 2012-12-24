@@ -931,18 +931,11 @@ namespace CSPspEmu.Gui.Winforms
 			IGuiExternalInterface.CaptureGpuFrame();
 		}
 
-		private void enableMpegProcessinginestableYetToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			StoredConfig.EnableMpeg = !UtilsEnableMpegMenu.Checked;
-			UpdateCheckMenusFromConfig();
-		}
-
 		private void UpdateCheckMenusFromConfig()
 		{
 			DebugTraceSyscallsMenu.Checked = HleConfig.DebugSyscalls;
 			DebugTraceUnimplementedSyscallsMenu.Checked = HleConfig.DebugNotImplemented;
 			DebugTraceUnimplementedGpuMenu.Checked = GpuConfig.NoticeUnimplementedGpuCommands;
-			UtilsEnableMpegMenu.Checked = StoredConfig.EnableMpeg;
 			//UtilsUseFastmemMenu.Checked = !PspConfig.;
 		}
 

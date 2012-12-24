@@ -53,7 +53,6 @@
 			this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsUseFastmemMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.UtilsAstOptimizationsMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.UtilsEnableMpegMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsInstallWavDestMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem13 = new System.Windows.Forms.ToolStripSeparator();
@@ -171,7 +170,6 @@
             this.toolStripMenuItem7,
             this.UtilsUseFastmemMenu,
             this.UtilsAstOptimizationsMenu,
-            this.UtilsEnableMpegMenu,
             this.toolStripMenuItem10,
             this.UtilsInstallWavDestMenu,
             this.toolStripMenuItem13,
@@ -294,13 +292,6 @@
 			this.UtilsAstOptimizationsMenu.Size = new System.Drawing.Size(306, 22);
 			this.UtilsAstOptimizationsMenu.Text = "Enable &Ast optimizations";
 			this.UtilsAstOptimizationsMenu.Click += new System.EventHandler(this.UtilsAstOptimizations_Click);
-			// 
-			// UtilsEnableMpegMenu
-			// 
-			this.UtilsEnableMpegMenu.Name = "UtilsEnableMpegMenu";
-			this.UtilsEnableMpegMenu.Size = new System.Drawing.Size(306, 22);
-			this.UtilsEnableMpegMenu.Text = "Enable &Mpeg processing (unstable yet)";
-			this.UtilsEnableMpegMenu.Click += new System.EventHandler(this.enableMpegProcessinginestableYetToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem10
 			// 
@@ -617,7 +608,6 @@
 		public System.Windows.Forms.ToolStripMenuItem UtilsDumpMainMemoryMenu;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem12;
 		public System.Windows.Forms.ToolStripMenuItem DebugDumpGpuFrameMenu;
-		public System.Windows.Forms.ToolStripMenuItem UtilsEnableMpegMenu;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem13;
 		public System.Windows.Forms.ToolStripMenuItem UtilsInstallWavDestMenu;
 		private System.Windows.Forms.ToolStripMenuItem UtilsConfigureControllerMenu;

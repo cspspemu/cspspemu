@@ -17,8 +17,6 @@
 		[HlePspNotImplemented]
 		public int sceMpegInitAu(SceMpegPointer* Mpeg, int ElementaryStreamBuffer, SceMpegAu* MpegAccessUnit)
 		{
-			CheckEnabledMpeg();
-
 			MpegAccessUnit->PresentationTimestampBe = unchecked((uint)0);
 			MpegAccessUnit->PresentationTimestampLe = unchecked((uint)0);
 			MpegAccessUnit->DecodeTimestampBe = unchecked((uint)0);

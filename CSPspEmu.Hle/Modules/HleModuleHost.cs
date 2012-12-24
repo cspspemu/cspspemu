@@ -25,6 +25,9 @@ namespace CSPspEmu.Hle
 		[Inject]
 		protected PspMemory PspMemory;
 
+		[Inject]
+		protected InjectContext InjectContext;
+
 		protected HleModuleHost()
 		{
 			this.ModuleLocation = "flash0:/kd/" + this.GetType().Namespace.Split('.').Last() + ".prx";

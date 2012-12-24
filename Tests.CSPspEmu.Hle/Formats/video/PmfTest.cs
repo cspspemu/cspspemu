@@ -20,6 +20,8 @@ namespace CSPspEmu.Core.Tests
 			Pmf.Load(File.OpenRead("../../../TestInput/sample.pmf"));
 			var Sample5Reference = new Bitmap(Image.FromFile("../../../TestInput/sample_5.png"));
 			//Console.WriteLine(Pmf.InfoHeader.ToStringDefault());
+			Assert.AreEqual(0x800, Pmf.Header.StreamOffset);
+			Assert.AreEqual(137216, Pmf.Header.StreamSize);
 			Assert.AreEqual(144, Pmf.InfoHeader.Width);
 			Assert.AreEqual(80, Pmf.InfoHeader.Height);
 			var MpegPs = Pmf.GetMpegPs();

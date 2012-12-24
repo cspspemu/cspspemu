@@ -85,8 +85,8 @@ namespace CSPspEmu.Resources
 			if (Dictionary == null) Parse();
 			if (LangId == null) LangId = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
-			dynamic Category = null;
-			dynamic CategoryText = null;
+			Dictionary<string, Dictionary<string, string>> Category = null;
+			Dictionary<string, string> CategoryText = null;
 
 			try
 			{

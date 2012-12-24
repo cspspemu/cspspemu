@@ -17,7 +17,6 @@ namespace CSPspEmu.Hle
 
 		public bool DebugThreadSwitching = false;
 		public bool DebugNotImplemented = false;
-		public bool EnableMpeg { get { return PspStoredConfig.EnableMpeg; } set { PspStoredConfig.EnableMpeg = value; } }
 
 		public PspLanguages Language;
 		public PspConfirmButton ConfirmButton;

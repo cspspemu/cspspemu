@@ -62,11 +62,6 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
-		public bool EnableMpeg = false;
-
-		/// <summary>
-		/// 
-		/// </summary>
 		public ControllerConfig ControllerConfig = new ControllerConfig();
 
 		/// <summary>

@@ -31,8 +31,6 @@
 		[HlePspNotImplemented]
 		public int sceMpegGetAtracAu(SceMpegPointer* Mpeg, StreamId StreamId, SceMpegAu* MpegAccessUnit, void* Atrac3PlusPointer)
 		{
-			CheckEnabledMpeg();
-
 			//Mpeg->SceMpegData.
 
 			throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
@@ -53,8 +51,6 @@
 		[HlePspNotImplemented]
 		public int sceMpegAtracDecode(SceMpegPointer* Mpeg, SceMpegAu* MpegAccessUnit, byte* OutputBuffer, int Init)
 		{
-			CheckEnabledMpeg();
-
 			throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_NO_DATA));
 		}
 

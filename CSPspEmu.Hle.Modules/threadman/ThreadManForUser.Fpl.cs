@@ -33,7 +33,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 			public int Alignment;
 		}
 
-		public class FixedPool : IDisposable
+		[HleUidPoolClass(FirstItem = 1, NotFoundError = SceKernelErrors.ERROR_KERNEL_NOT_FOUND_FPOOL)]
+		public class FixedPool : IDisposable, IHleUidPoolClass
 		{
 			public class WaitItem
 			{
@@ -189,13 +190,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 			}
 		}
 
-		public enum PoolId : int { }
-
-		HleUidPoolSpecial<FixedPool, PoolId> FixedPoolList = new HleUidPoolSpecial<FixedPool, PoolId>()
-		{
-			OnKeyNotFoundError = SceKernelErrors.ERROR_KERNEL_NOT_FOUND_FPOOL,
-		};
-
 		/// <summary>
 		/// Create a fixed pool
 		/// </summary>
@@ -207,8 +201,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Options">Options (set to NULL)</param>
 		/// <returns>The UID of the created pool, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xC07BB470, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
-		public PoolId sceKernelCreateFpl(string Name, HleMemoryManager.Partitions PartitionId, FplAttributes Attributes, int BlockSize, int NumberOfBlocks, FplOptionsStruct* Options)
+		public FixedPool sceKernelCreateFpl(string Name, HleMemoryManager.Partitions PartitionId, FplAttributes Attributes, int BlockSize, int NumberOfBlocks, FplOptionsStruct* Options)
 		{
 			var FixedPool = new FixedPool(this)
 			{
@@ -222,20 +215,18 @@ namespace CSPspEmu.Hle.Modules.threadman
 			if (Options != null) FixedPool.Options = *Options;
 			FixedPool.Init();
 
-			return FixedPoolList.Create(FixedPool);
+			return FixedPool;
 		}
 
 		/// <summary>
 		/// Try to allocate from the pool immediately.
 		/// </summary>
-		/// <param name="PoolId">The UID of the pool</param>
+		/// <param name="FixedPool">The UID of the pool</param>
 		/// <param name="DataPointer">Receives the address of the allocated data</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x623AE665, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
-		public int sceKernelTryAllocateFpl(PoolId PoolId, PspPointer* DataPointer)
+		public int sceKernelTryAllocateFpl(FixedPool FixedPool, PspPointer* DataPointer)
 		{
-			var FixedPool = FixedPoolList.Get(PoolId);
 			if (!FixedPool.TryAllocate(DataPointer))
 			{
 				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_NO_MEMORY));
@@ -247,15 +238,13 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Allocate from the pool. It will wait for a free block to be available the specified time.
 		/// </summary>
-		/// <param name="PoolId">The UID of the pool</param>
+		/// <param name="FixedPool">The UID of the pool</param>
 		/// <param name="DataPointer">Receives the address of the allocated data</param>
 		/// <param name="Timeout">Amount of time to wait for allocation?</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xD979E9BF, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
-		public int sceKernelAllocateFpl(PoolId PoolId, PspPointer* DataPointer, uint* Timeout)
+		public int sceKernelAllocateFpl(FixedPool FixedPool, PspPointer* DataPointer, uint* Timeout)
 		{
-			var FixedPool = FixedPoolList.Get(PoolId);
 			FixedPool.Allocate(DataPointer, Timeout, HandleCallbacks: false);
 
 			//Console.WriteLine("Allocated: Address: 0x{0:X}", DataPointer->Address);
@@ -265,14 +254,13 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Allocate from the pool (with callback)
 		/// </summary>
-		/// <param name="PoolId">The UID of the pool</param>
+		/// <param name="FixedPool">The UID of the pool</param>
 		/// <param name="DataPointer">Receives the address of the allocated data</param>
 		/// <param name="Timeout">Amount of time to wait for allocation?</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xE7282CB6, FirmwareVersion = 150)]
-		public int sceKernelAllocateFplCB(PoolId PoolId, PspPointer* DataPointer, uint* Timeout)
+		public int sceKernelAllocateFplCB(FixedPool FixedPool, PspPointer* DataPointer, uint* Timeout)
 		{
-			var FixedPool = FixedPoolList.Get(PoolId);
 			FixedPool.Allocate(DataPointer, Timeout, HandleCallbacks: true);
 
 			//Console.WriteLine("Allocated: Address: 0x{0:X}", DataPointer->Address);
@@ -282,18 +270,16 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Free a block
 		/// </summary>
-		/// <param name="PoolId">The UID of the pool</param>
+		/// <param name="FixedPool">The UID of the pool</param>
 		/// <param name="DataPointer">The data block to deallocate</param>
 		/// <returns>
 		///		0 on success
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xF6414A71, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
-		public int sceKernelFreeFpl(PoolId PoolId, PspPointer DataPointer)
+		public int sceKernelFreeFpl(FixedPool FixedPool, PspPointer DataPointer)
 		{
-			if (!FixedPoolList.Contains(PoolId)) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MEMBLOCK));
-			var FixedPool = FixedPoolList.Get(PoolId);
+			//if (!FixedPoolList.Contains(FixedPool)) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MEMBLOCK));
 			FixedPool.Free(DataPointer);
 			return 0;
 		}
@@ -301,16 +287,15 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Delete a fixed pool
 		/// </summary>
-		/// <param name="PoolId">The UID of the pool</param>
+		/// <param name="FixedPool">The UID of the pool</param>
 		/// <returns>
 		///		0 on success
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xED1410E0, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceKernelDeleteFpl(PoolId PoolId)
+		public int sceKernelDeleteFpl(FixedPool FixedPool)
 		{
-			FixedPoolList.Remove(PoolId);
+			FixedPool.RemoveUid(InjectContext);
 			return 0;
 		}
 	}

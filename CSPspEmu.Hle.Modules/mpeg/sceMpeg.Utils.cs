@@ -244,7 +244,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			/// <summary>
 			/// 0000 - unknown, set to -1
 			/// </summary>
-			public int Unknown;
+			public int Mode;
 			
 			/// <summary>
 			/// 0004 - Decode pixelformat

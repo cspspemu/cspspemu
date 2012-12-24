@@ -1,4 +1,6 @@
 ﻿using CSPspEmu.Core.Memory;
+using CSPspEmu.Core.Utils;
+using System;
 
 namespace CSPspEmu.Hle.Modules.mpeg
 {
@@ -11,17 +13,15 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		protected bool[] AbvEsBufAllocated = new bool[2];
 
 		/// <summary>
-		/// 
+		/// sceMpegAvcDecodeDetail
 		/// </summary>
-		/// <param name="Mpeg"></param>
-		/// <param name="AvcDecodeDetail"></param>
-		/// <returns></returns>
+		/// <param name="Mpeg">SceMpeg handle</param>
+		/// <param name="AvcDecodeDetail">AvcDecodeDetail</param>
+		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0x0F6C18D7, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceMpegAvcDecodeDetail(SceMpegPointer* Mpeg, AvcDecodeDetailStruct* AvcDecodeDetail)
 		{
-			CheckEnabledMpeg();
-
 			var SceMpegData = GetSceMpegData(Mpeg);
 
 			//throw(new NotImplementedException());
@@ -39,20 +39,34 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		}
 
 		/// <summary>
-		/// 
+		/// sceMpegAvcDecodeFlush
 		/// </summary>
-		/// <param name="Mpeg"></param>
-		/// <returns></returns>
+		/// <param name="Mpeg">SceMpeg handle</param>
+		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0x4571CC64, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceMpegAvcDecodeFlush(SceMpegPointer* Mpeg)
 		{
+			var SceMpegData = GetSceMpegData(Mpeg);
+
+			// Finish the Mpeg only if we are not at the start of a new video,
+			// otherwise the analyzed video could be lost.
+			if (SceMpegData->VideoFrameCount > 0 || SceMpegData->AudioFrameCount > 0)
+			{
+				_FinishMpeg(SceMpegData);
+			}
+
 			//throw(new NotImplementedException());
 			return 0;
 		}
 
+		private void _FinishMpeg(SceMpeg* SceMpegData)
+		{
+			Console.WriteLine("_FinishMpeg");
+		}
+
 		/// <summary>
-		/// sceMpegGetAvcAu
+		/// Get Mpeg AVC Access Unit
 		/// </summary>
 		/// <param name="Mpeg">SceMpeg handle</param>
 		/// <param name="StreamId">Associated stream</param>
@@ -63,8 +77,6 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegGetAvcAu(SceMpegPointer* Mpeg, StreamId StreamId, SceMpegAu* MpegAccessUnit, int* DataAttributes)
 		{
-			CheckEnabledMpeg();
-
 			if (DataAttributes != null)
 			{
 				*DataAttributes = 1;
@@ -118,17 +130,23 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <param name="Mode">Pointer to <see cref="SceMpegAvcMode"/> struct defining the decode mode (pixelformat)</param>
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0xA11C7026, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
 		public int sceMpegAvcDecodeMode(SceMpegPointer* Mpeg, SceMpegAvcMode* Mode)
 		{
-			CheckEnabledMpeg();
-
 			var SceMpegData = GetSceMpegData(Mpeg);
 
 			if (Mode != null)
 			{
-				SceMpegData->SceMpegAvcMode = *Mode;
+				switch (Mode->PixelFormat)
+				{
+					case Core.Types.GuPixelFormats.RGBA_5650:
+					case Core.Types.GuPixelFormats.RGBA_8888:
+						SceMpegData->SceMpegAvcMode = *Mode;
+						break;
+					default:
+						throw (new Exception("Invalid PixelFormat in sceMpegAvcDecodeMode: " + Mode->Mode + ", " + Mode->PixelFormat));
+				}
 			}
+
 			return 0;
 		}
 
@@ -145,8 +163,6 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegAvcDecode(SceMpegPointer* Mpeg, SceMpegAu* MpegAccessUnit, int FrameWidth, PspPointer* OutputBufferPointer, int* Init)
 		{
-			CheckEnabledMpeg();
-
 			if (*Init == 1)
 			{
 				throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
@@ -158,7 +174,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 
 			var OutputBuffer = (byte*)PspMemory.PspAddressToPointerSafe(OutputBufferPointer->Address);
 
-			for (int n = 0; n < FrameWidth * 272 * 4; n++)
+			int TotalBytes = PixelFormatDecoder.GetPixelsSize(SceMpegData->SceMpegAvcMode.PixelFormat, FrameWidth * 272);
+			for (int n = 0; n < TotalBytes; n++)
 			{
 				OutputBuffer[n] = 0xFF;
 			}
@@ -182,6 +199,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		public int sceMpegAvcDecodeStop(SceMpegPointer* Mpeg, int FrameWidth, byte* OutputBuffer, int* Status)
 		{
 			var SceMpegData = GetSceMpegData(Mpeg);
+
+			*Status = 0;
 
 			//throw(new NotImplementedException());
 			return 0;

@@ -15,6 +15,9 @@ namespace CSPspEmu.Core.Cpu
 		public readonly Dictionary<string, uint> GlobalInstructionStats = new Dictionary<string, uint>();
 
 		[Inject]
+		public InjectContext InjectContext;
+
+		[Inject]
 		public CpuConfig CpuConfig;
 
 		[Inject]

@@ -37,8 +37,6 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegRingbufferConstruct(SceMpegRingbuffer* Ringbuffer, int Packets, PspPointer Data, int Size, PspPointer Callback, PspPointer CallbackParam)
 		{
-			//return -1;
-			//throw(new NotImplementedException());
 			Ringbuffer->Packets = Packets;
 			Ringbuffer->PacketsRead = 0;
 			Ringbuffer->PacketsWritten = 0;
@@ -82,8 +80,6 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegRingbufferAvailableSize(SceMpegRingbuffer* Ringbuffer)
 		{
-			if (Ringbuffer->PacketsFree > 0) Ringbuffer->PacketsFree--;
-			//if (Ringbuffer->avai > 0) Ringbuffer->PacketsFree--;
 			return Ringbuffer->PacketsFree;
 		}
 
@@ -100,16 +96,12 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		[HlePspNotImplemented]
 		public int sceMpegRingbufferPut(SceMpegRingbuffer* Ringbuffer, int NumPackets, int Available)
 		{
-			//throw(new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_MEMORY));
-
-			if (NumPackets < 0)
-			{
-				return 0;
-			}
+			if (NumPackets < 0) return 0;
 
 			NumPackets = Math.Min(Available, NumPackets);
 
 			var SceMpegPointer = (SceMpegPointer *)Ringbuffer->SceMpeg.GetPointer<SceMpegPointer>(PspMemory);
+			var Mpeg = GetMpeg(SceMpegPointer);
 			var SceMpeg = SceMpegPointer->GetSceMpeg(PspMemory);
 			var MpegStreamPackets = (int)MathUtils.RequiredBlocks(SceMpeg->StreamSize, Ringbuffer->PacketSize);
 			var RemainingPackets = Math.Max(0, MpegStreamPackets - Ringbuffer->PacketsRead);
@@ -117,7 +109,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			NumPackets = Math.Min(NumPackets, RemainingPackets);
 
 			//Ringbuffer->Data
-			var Result = (int)HleInterop.ExecuteFunctionNow(
+			var packetsAdded = (int)HleInterop.ExecuteFunctionNow(
 				// Functions
 				Ringbuffer->Callback,
 				// Arguments
@@ -126,10 +118,43 @@ namespace CSPspEmu.Hle.Modules.mpeg
 				Ringbuffer->CallbackParameter
 			);
 
+			if (packetsAdded > 0)
+			{
+				var addr = Ringbuffer->Data.GetPointer(PspMemory, 0);
+				var length = packetsAdded * Ringbuffer->PacketSize;
+				
+				if (length > 0)
+				{
+					//if (checkMediaEngineState())
+					//{
+					//	if (meChannel == null)
+					//	{
+					//		// If no MPEG header has been provided by the application (and none could be found),
+					//		// just use the MPEG stream as it is, without header analysis.
+					//		me.init(addr, Math.max(length, mpegStreamSize), 0);
+					//		meChannel = new PacketChannel();
+					//	}
+					//	meChannel.write(addr, length);
+					//}
+					//else if (isEnableConnector())
+					//{
+					//	mpegCodec.writeVideo(addr, length);
+					//}
+				}
+
+				if (packetsAdded > Ringbuffer->PacketsFree)
+				{
+					packetsAdded = Ringbuffer->PacketsFree;
+				}
+				//mpegRingbuffer.addPackets(packetsAdded);
+				//mpegRingbuffer.write(mpegRingbufferAddr);
+				throw(new NotImplementedException());
+			}
+
 			//Ringbuffer->PacketsFree -= NumPackets;
 			//Ringbuffer->PacketsWritten += NumPackets;
 
-			return Result;
+			return packetsAdded;
 		}
 	}
 }

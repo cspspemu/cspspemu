@@ -155,10 +155,6 @@ namespace CSPspEmu
 			{
 				CpuConfig.DebugSyscalls = TraceSyscalls;
 				CpuConfig.TrackCallStack = TrackCallStack;
-				if (EnableMpeg.HasValue)
-				{
-					StoredConfig.EnableMpeg = EnableMpeg.Value;
-				}
 				LoadFile(File);
 			}, ShowMenus: ShowMenus, AutoLoad: true);
 		}

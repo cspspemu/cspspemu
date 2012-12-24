@@ -90,7 +90,7 @@ namespace CSPspEmu.Hle.Formats.video
 
 		public MpegPsDemuxer GetMpegPs()
 		{
-			return new MpegPsDemuxer(this.Stream.SliceWithLength(0x800));
+			return new MpegPsDemuxer(this.Stream.SliceWithLength(Header.StreamOffset, Header.StreamSize));
 		}
 
 		public Pmf Load(Stream Stream)

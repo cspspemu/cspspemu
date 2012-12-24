@@ -9,9 +9,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 {
 	public unsafe partial class ThreadManForUser
 	{
-		public enum VariablePoolId : int { }
-
-		public class VariablePool : IDisposable
+		[HleUidPoolClass(FirstItem = 1, NotFoundError = SceKernelErrors.ERROR_KERNEL_NOT_FOUND_VPOOL)]
+		public class VariablePool : IDisposable, IHleUidPoolClass
 		{
 			public ThreadManForUser ThreadManForUser;
 			public HleMemoryManager.Partitions PartitionId;
@@ -121,11 +120,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 			}
 		}
 
-		HleUidPoolSpecial<VariablePool, VariablePoolId> VariablePoolList = new HleUidPoolSpecial<VariablePool, VariablePoolId>()
-		{
-			OnKeyNotFoundError = SceKernelErrors.ERROR_KERNEL_NOT_FOUND_VPOOL,
-		};
-
 		/// <summary>
 		/// Create a variable pool
 		/// </summary>
@@ -139,7 +133,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		 less than 0 on error.
 		/// </returns>
 		[HlePspFunction(NID = 0x56C039B5, FirmwareVersion = 150)]
-		public VariablePoolId sceKernelCreateVpl(string Name, HleMemoryManager.Partitions PartitionId, VplAttributeEnum Attribute, int Size, void* Options)
+		public VariablePool sceKernelCreateVpl(string Name, HleMemoryManager.Partitions PartitionId, VplAttributeEnum Attribute, int Size, void* Options)
 		{
 			var VariablePool = new VariablePool(this)
 			{
@@ -154,16 +148,14 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			VariablePool.Init();
 
-			var VariablePoolId = VariablePoolList.Create(VariablePool);
-
-			return VariablePoolId;
+			return VariablePool;
 		}
 
 		/// <summary>
 		/// Allocate from the pool
 		/// </summary>
 		/// <param name="CpuThreadState"></param>
-		/// <param name="VariablePoolId">The UID of the pool</param>
+		/// <param name="VariablePool">The UID of the pool</param>
 		/// <param name="Size">The size to allocate</param>
 		/// <param name="AddressPointer">Receives the address of the allocated data</param>
 		/// <param name="Timeout">Amount of time to wait for allocation?</param>
@@ -172,9 +164,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xBED27435, FirmwareVersion = 150)]
-		public int sceKernelAllocateVpl(CpuThreadState CpuThreadState, VariablePoolId VariablePoolId, int Size, PspPointer* AddressPointer, uint* Timeout)
+		public int sceKernelAllocateVpl(CpuThreadState CpuThreadState, VariablePool VariablePool, int Size, PspPointer* AddressPointer, uint* Timeout)
 		{
-			var VariablePool = VariablePoolList.Get(VariablePoolId);
 			VariablePool.Allocate(CpuThreadState, Size, AddressPointer, Timeout, HandleCallbacks: false);
 			return 0;
 		}
@@ -183,7 +174,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// Allocate from the pool (Handling Callbacks)
 		/// </summary>
 		/// <param name="CpuThreadState"></param>
-		/// <param name="VariablePoolId">The UID of the pool</param>
+		/// <param name="VariablePool">The UID of the pool</param>
 		/// <param name="Size">The size to allocate</param>
 		/// <param name="AddressPointer">Receives the address of the allocated data</param>
 		/// <param name="Timeout">Amount of time to wait for allocation?</param>
@@ -192,9 +183,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xEC0A693F, FirmwareVersion = 150)]
-		public int sceKernelAllocateVplCB(CpuThreadState CpuThreadState, VariablePoolId VariablePoolId, int Size, PspPointer* AddressPointer, uint* Timeout)
+		public int sceKernelAllocateVplCB(CpuThreadState CpuThreadState, VariablePool VariablePool, int Size, PspPointer* AddressPointer, uint* Timeout)
 		{
-			var VariablePool = VariablePoolList.Get(VariablePoolId);
 			VariablePool.Allocate(CpuThreadState, Size, AddressPointer, Timeout, HandleCallbacks: true);
 			return 0;
 		}
@@ -203,7 +193,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// Try to allocate from the pool 
 		/// </summary>
 		/// <param name="CpuThreadState"></param>
-		/// <param name="VariablePoolId">The UID of the pool</param>
+		/// <param name="VariablePool">The UID of the pool</param>
 		/// <param name="Size">The size to allocate</param>
 		/// <param name="AddressPointer">Receives the address of the allocated data</param>
 		/// <returns>
@@ -211,9 +201,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xAF36D708, FirmwareVersion = 150)]
-		public int sceKernelTryAllocateVpl(CpuThreadState CpuThreadState, VariablePoolId VariablePoolId, int Size, PspPointer* AddressPointer)
+		public int sceKernelTryAllocateVpl(CpuThreadState CpuThreadState, VariablePool VariablePool, int Size, PspPointer* AddressPointer)
 		{
-			var VariablePool = VariablePoolList.Get(VariablePoolId);
 			if (VariablePool.TryAllocate(CpuThreadState, Size, AddressPointer))
 			{
 				return 0;
@@ -227,16 +216,15 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Get the status of an VPL
 		/// </summary>
-		/// <param name="VariablePoolId">The uid of the VPL</param>
+		/// <param name="VariablePool">The uid of the VPL</param>
 		/// <param name="Info">Pointer to a <see cref="SceKernelVplInfo"/> structure</param>
 		/// <returns>
 		///		0 on success
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0x39810265, FirmwareVersion = 150)]
-		public int sceKernelReferVplStatus(VariablePoolId VariablePoolId, SceKernelVplInfo* Info)
+		public int sceKernelReferVplStatus(VariablePool VariablePool, SceKernelVplInfo* Info)
 		{
-			var VariablePool = VariablePoolList.Get(VariablePoolId);
 			*Info = VariablePool.Info;
 			return 0;
 		}
@@ -245,16 +233,15 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// Free a block
 		/// </summary>
 		///<param name="CpuThreadState"></param>
-		///<param name="VariablePoolId">The UID of the pool</param>
+		///<param name="VariablePool">The UID of the pool</param>
 		/// <param name="Data">The data block to deallocate</param>
 		/// <returns>
 		///		0 on success
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xB736E9FF, FirmwareVersion = 150)]
-		public int sceKernelFreeVpl(CpuThreadState CpuThreadState, VariablePoolId VariablePoolId, PspPointer Data)
+		public int sceKernelFreeVpl(CpuThreadState CpuThreadState, VariablePool VariablePool, PspPointer Data)
 		{
-			var VariablePool = VariablePoolList.Get(VariablePoolId);
 			VariablePool.Free(CpuThreadState, Data);
 			return 0;
 		}
@@ -262,12 +249,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Delete a variable pool
 		/// </summary>
-		/// <param name="VariablePoolId">The UID of the pool</param>
+		/// <param name="VariablePool">The UID of the pool</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x89B3D48C, FirmwareVersion = 150)]
-		public int sceKernelDeleteVpl(VariablePoolId VariablePoolId)
+		public int sceKernelDeleteVpl(VariablePool VariablePool)
 		{
-			VariablePoolList.Remove(VariablePoolId);
+			VariablePool.RemoveUid(InjectContext);
 			return 0;
 		}
 

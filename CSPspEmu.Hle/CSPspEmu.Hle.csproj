@@ -68,6 +68,7 @@
     <Compile Include="Interop\HleEmulatorSpecialAddresses.cs" />
     <Compile Include="HleFunctionEntry.cs" />
     <Compile Include="Interop\HleInterop.cs" />
+    <Compile Include="Managers\HleUidPoolManager.cs" />
     <Compile Include="Modules\HleModule.cs" />
     <Compile Include="Modules\HleModuleHost.cs" />
     <Compile Include="HleLibrary.cs" />

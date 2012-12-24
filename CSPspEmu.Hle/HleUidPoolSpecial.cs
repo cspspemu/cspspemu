@@ -12,11 +12,7 @@ namespace CSPspEmu.Hle.Managers
 
 		public HleUidPoolSpecial()
 		{
-#if true
 			this.LastId = (TKey)(object)1;
-#else
-			this.LastId = (TKey)(dynamic)0;
-#endif
 		}
 
 		public HleUidPoolSpecial(TKey FirstId)
@@ -43,7 +39,7 @@ namespace CSPspEmu.Hle.Managers
 			return Value;
 		}
 
-#if false
+		/*
 		public TKey? Find(TType Value)
 		{
 			foreach (var Pair in Items) if (Pair.Value.Equals(Value)) return Pair.Key;
@@ -59,7 +55,7 @@ namespace CSPspEmu.Hle.Managers
 			}
 			return Result.Value;
 		}
-#endif
+		*/
 
 		public bool Contains(TKey Id)
 		{

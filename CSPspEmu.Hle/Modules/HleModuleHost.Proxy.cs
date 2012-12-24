@@ -47,7 +47,19 @@ namespace CSPspEmu.Hle
 
 		static private readonly AstGenerator ast = AstGenerator.Instance;
 
-		private AstNodeStmContainer CreateDelegateForMethodInfoPriv(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute, out List<ParamInfo> ParamInfoList)
+		static public object GetObjectFromPoolHelper(CpuThreadState CpuThreadState, Type Type, int Index)
+		{
+			//Console.Error.WriteLine("GetObjectFromPoolHelper");
+			return CpuThreadState.CpuProcessor.InjectContext.GetInstance<HleUidPoolManager>().Get(Type, Index);
+		}
+
+		static public uint AllocIndexFromPoolHelper(CpuThreadState CpuThreadState, Type Type, IHleUidPoolClass Item)
+		{
+			//Console.Error.WriteLine("AllocIndexFromPoolHelper");
+			return (uint)CpuThreadState.CpuProcessor.InjectContext.GetInstance<HleUidPoolManager>().Alloc(Type, Item);
+		}
+
+		private AstNodeStmContainer CreateDelegateForMethodInfoPriv(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute, out List<ParamInfo> OutParamInfoList)
 		{
 			int GprIndex = 4;
 			int FprIndex = 0;
@@ -58,7 +70,8 @@ namespace CSPspEmu.Hle
 
 			AstNodes.AddStatement(ast.Comment("HleModuleHost.CreateDelegateForMethodInfo(" + MethodInfo + ", " + HlePspFunctionAttribute + ")"));
 
-			ParamInfoList = new List<ParamInfo>();
+			var ParamInfoList = new List<ParamInfo>();
+			OutParamInfoList = ParamInfoList;
 
 			AstNodeExprCall AstMethodCall;
 			{
@@ -68,6 +81,18 @@ namespace CSPspEmu.Hle
 				//SafeILGenerator.CastClass(this.GetType());
 
 				var AstParameters = new List<AstNodeExpr>();
+
+				Action<ParameterInfo, Type> AddGprIndex = (ParameterInfo ParameterInfo, Type ParameterType) =>
+				{
+					if (ParameterType == null) ParameterType = ParameterInfo.ParameterType;
+					ParamInfoList.Add(new ParamInfo()
+					{
+						ParameterName = ParameterInfo.Name,
+						RegisterType = ParamInfo.RegisterTypeEnum.Gpr,
+						RegisterIndex = GprIndex,
+						ParameterType = ParameterType,
+					});
+				};
 
 				foreach (var ParameterInfo in MethodInfo.GetParameters())
 				{
@@ -81,13 +106,7 @@ namespace CSPspEmu.Hle
 					// A stringz
 					else if (ParameterType == typeof(string))
 					{
-						ParamInfoList.Add(new ParamInfo()
-						{
-							ParameterName = ParameterInfo.Name,
-							RegisterType = ParamInfo.RegisterTypeEnum.Gpr,
-							RegisterIndex = GprIndex,
-							ParameterType = ParameterType,
-						});
+						AddGprIndex(ParameterInfo, null);
 
 						AstParameters.Add(
 							ast.CallStatic(
@@ -102,13 +121,7 @@ namespace CSPspEmu.Hle
 					// A pointer or ref/out
 					else if (ParameterType.IsPointer || ParameterType.IsByRef)
 					{
-						ParamInfoList.Add(new ParamInfo()
-						{
-							ParameterName = ParameterInfo.Name,
-							RegisterType = ParamInfo.RegisterTypeEnum.Gpr,
-							RegisterIndex = GprIndex,
-							ParameterType = typeof(uint),
-						});
+						AddGprIndex(ParameterInfo, typeof(uint));
 
 						AstParameters.Add(
 							ast.Cast(
@@ -128,13 +141,7 @@ namespace CSPspEmu.Hle
 					{
 						while (GprIndex % 2 != 0) GprIndex++;
 
-						ParamInfoList.Add(new ParamInfo()
-						{
-							ParameterName = ParameterInfo.Name,
-							RegisterType = ParamInfo.RegisterTypeEnum.Gpr,
-							RegisterIndex = GprIndex,
-							ParameterType = ParameterType,
-						});
+						AddGprIndex(ParameterInfo, null);
 
 						if (ParameterType == typeof(ulong))
 						{
@@ -162,16 +169,10 @@ namespace CSPspEmu.Hle
 
 						FprIndex++;
 					}
-					// Test
+					// PspPointer
 					else if (ParameterType == typeof(PspPointer))
 					{
-						ParamInfoList.Add(new ParamInfo()
-						{
-							ParameterName = ParameterInfo.Name,
-							RegisterType = ParamInfo.RegisterTypeEnum.Gpr,
-							RegisterIndex = GprIndex,
-							ParameterType = ParameterType,
-						});
+						AddGprIndex(ParameterInfo, null);
 
 						AstParameters.Add(ast.CallStatic(
 							typeof(PspPointer).GetMethod("op_Implicit", new[] { typeof(uint) }),
@@ -180,16 +181,29 @@ namespace CSPspEmu.Hle
 
 						GprIndex++;
 					}
+					// A class
+					else if (ParameterType.IsClass)
+					{
+						AddGprIndex(ParameterInfo, null);
+
+						if (!ParameterType.Implements(typeof(IHleUidPoolClass)))
+						{
+							throw (new InvalidCastException("Can't use a class not implementing IHleUidPoolClass as parameter"));
+						}
+
+						AstParameters.Add(ast.Cast(ParameterType, ast.CallStatic(
+							(Func<CpuThreadState, Type, int, object>)GetObjectFromPoolHelper,
+							MipsMethodEmitter.CpuThreadStateArgument(),
+							ast.Immediate(ParameterType),
+							MipsMethodEmitter.GPR_s(GprIndex)
+						)));
+
+						GprIndex++;
+					}
 					// An integer register
 					else
 					{
-						ParamInfoList.Add(new ParamInfo()
-						{
-							ParameterName = ParameterInfo.Name,
-							RegisterType = ParamInfo.RegisterTypeEnum.Gpr,
-							RegisterIndex = GprIndex,
-							ParameterType = ParameterType,
-						});
+						AddGprIndex(ParameterInfo, null);
 
 						if (ParameterType == typeof(uint))
 						{
@@ -214,6 +228,22 @@ namespace CSPspEmu.Hle
 			if (AstMethodCall.Type == typeof(void)) AstNodes.AddStatement(ast.Statement(AstMethodCall));
 			else if (AstMethodCall.Type == typeof(long)) AstNodes.AddStatement(ast.Assign(MipsMethodEmitter.GPR_l(2), ast.Cast<long>(AstMethodCall)));
 			else if (AstMethodCall.Type == typeof(float)) AstNodes.AddStatement(ast.Assign(MipsMethodEmitter.FPR(0), ast.Cast<float>(AstMethodCall)));
+			else if (AstMethodCall.Type.IsClass)
+			{
+				if (!AstMethodCall.Type.Implements(typeof(IHleUidPoolClass)))
+				{
+					throw (new InvalidCastException("Can't use a class not implementing IHleUidPoolClass as return value"));
+				}
+				AstNodes.AddStatement(ast.Assign(
+					MipsMethodEmitter.GPR(2),
+					ast.CallStatic(
+						(Func<CpuThreadState, Type, IHleUidPoolClass, uint>)AllocIndexFromPoolHelper,
+						MipsMethodEmitter.CpuThreadStateArgument(),
+						ast.Immediate(AstMethodCall.Type),
+						ast.Cast<IHleUidPoolClass>(AstMethodCall)
+					)
+				));
+			}
 			else AstNodes.AddStatement(ast.Assign(MipsMethodEmitter.GPR(2), ast.Cast<uint>(AstMethodCall)));
 
 			return AstNodes;
