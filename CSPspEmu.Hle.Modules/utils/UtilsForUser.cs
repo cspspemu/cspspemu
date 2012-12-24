@@ -5,6 +5,8 @@ using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Core;
+using System.Security.Cryptography;
+using CSharpUtils;
 
 namespace CSPspEmu.Hle.Modules.utils
 {
@@ -267,7 +269,12 @@ namespace CSPspEmu.Hle.Modules.utils
 		[HlePspFunction(NID = 0x840259F1, FirmwareVersion = 150)]
 		public int sceKernelUtilsSha1Digest(byte* Data, uint Size, byte* Digest)
 		{
-			throw(new NotImplementedException());
+			PointerUtils.Memcpy(
+				Digest,
+				SHA1.Create().ComputeHash(PointerUtils.PointerToByteArray(Data, (int)Size)),
+				20
+			);
+			return 0;
 		}
 
 	    /// <summary>
@@ -277,9 +284,9 @@ namespace CSPspEmu.Hle.Modules.utils
 	    /// <param name="Address"></param>
 	    /// <param name="Size"></param>
 	    [HlePspFunction(NID = 0xC2DF770E, FirmwareVersion = 150)]
-		public void sceKernelIcacheInvalidateRange(CpuThreadState CpuThreadState, uint Address, uint Size)
+		public void sceKernelIcacheInvalidateRange(uint Address, uint Size)
 		{
-			CpuThreadState.CpuProcessor.sceKernelIcacheInvalidateRange(Address, Size);
+			this.CpuProcessor.sceKernelIcacheInvalidateRange(Address, Size);
 			// Unimplemented cache.	
 		}
 
@@ -287,9 +294,9 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// Invalidate the entire instruction cache
 		/// </summary>
 		[HlePspFunction(NID = 0x920F104A, FirmwareVersion = 150)]
-		public void sceKernelIcacheInvalidateAll(CpuThreadState CpuThreadState)
+		public void sceKernelIcacheInvalidateAll()
 		{
-			CpuThreadState.CpuProcessor.sceKernelIcacheInvalidateAll();
+			this.CpuProcessor.sceKernelIcacheInvalidateAll();
 		}
 
 		/// <summary>

@@ -20,7 +20,7 @@ namespace CSPspEmu.Core.Tests
 			InjectContext.SetInstanceType<PspMemory, LazyPspMemory>();
 			var Memory = InjectContext.GetInstance<PspMemory>();
 			var MemoryStream = new PspMemoryStream(Memory);
-			var MemoryPartition = new MemoryPartition(PspMemory.MainOffset, PspMemory.MainOffset + PspMemory.MainSize);
+			var MemoryPartition = new MemoryPartition(InjectContext, PspMemory.MainOffset, PspMemory.MainOffset + PspMemory.MainSize);
 
 			var ElfLoader = new ElfLoader();
 

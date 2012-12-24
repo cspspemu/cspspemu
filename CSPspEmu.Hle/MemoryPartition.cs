@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using CSharpUtils;
+using CSPspEmu.Core.Memory;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle
 {
@@ -13,7 +15,7 @@ namespace CSPspEmu.Hle
 		}
 	}
 
-	public class MemoryPartition : IDisposable
+	unsafe public class MemoryPartition : IDisposable
 	{
 		public enum Anchor
 		{
@@ -22,6 +24,12 @@ namespace CSPspEmu.Hle
 			Set = 3,
 		}
 
+		[Inject]
+		InjectContext InjectContext;
+
+		[Inject]
+		PspMemory PspMemory;
+
 		public bool Allocated;
 		public String Name;
 		public uint Low { get; protected set; }
@@ -29,6 +37,7 @@ namespace CSPspEmu.Hle
 		public int Size { get { return (int)(High - Low); } }
 		public MemoryPartition ParentPartition { get; private set; }
 		private SortedSet<MemoryPartition> _ChildPartitions;
+		public void* LowPointer { get { return PspMemory.PspPointerToPointerSafe(Low, Size); } }
 
 		public uint GetAnchoredAddress(Anchor Anchor)
 		{
@@ -80,9 +89,10 @@ namespace CSPspEmu.Hle
 			}
 		}
 
-		public MemoryPartition(uint Low, uint High, bool Allocated = true, string Name = "<Unknown>", MemoryPartition ParentPartition = null)
+		public MemoryPartition(InjectContext InjectContext, uint Low, uint High, bool Allocated = true, string Name = "<Unknown>", MemoryPartition ParentPartition = null)
 		{
 			if (Low > High) throw (new InvalidOperationException());
+			InjectContext.InjectDependencesTo(this);
 			this.ParentPartition = ParentPartition;
 			this.Name = Name;
 			this.Low = Low;
@@ -120,6 +130,7 @@ namespace CSPspEmu.Hle
 						_ChildPartitions.Remove(Previous);
 						_ChildPartitions.Remove(Current);
 						_ChildPartitions.Add(new MemoryPartition(
+							InjectContext,
 							Math.Min(Previous.Low, Current.Low),
 							Math.Max(Previous.High, Current.High),
 							false,
@@ -163,13 +174,29 @@ namespace CSPspEmu.Hle
 			return Allocate(Size, Anchor.Set, Low, Name: Name);
 		}
 
+		public MemoryPartition AllocateItem<T>(T Value) where T : struct
+		{
+			var Partition = Allocate(Marshal.SizeOf(typeof(T)));
+			var PartitionStream = new PspMemoryStream(PspMemory).SliceWithBounds(Partition.Low, Partition.High);
+			PartitionStream.WriteStruct(Value);
+			return Partition;
+		}
+
+		public MemoryPartition AllocateItem(string Value)
+		{
+			var Partition = Allocate(Value.Length + 1);
+			var PartitionStream = new PspMemoryStream(PspMemory).SliceWithBounds(Partition.Low, Partition.High);
+			PartitionStream.WriteStringz(Value);
+			return Partition;
+		}
+
 		public MemoryPartition Allocate(int Size, Anchor AllocateAnchor = Anchor.Low, uint Position = 0, int Alignment = 1, string Name = "<Unknown>")
 		{
 			try
 			{
 				if (_ChildPartitions.Count == 0)
 				{
-					_ChildPartitions.Add(new MemoryPartition(Low, High, false, ParentPartition: this, Name: Name));
+					_ChildPartitions.Add(new MemoryPartition(InjectContext, Low, High, false, ParentPartition: this, Name: Name));
 				}
 				MemoryPartition OldFreePartition;
 				MemoryPartition NewPartiton;
@@ -222,17 +249,17 @@ namespace CSPspEmu.Hle
 				{
 					default:
 					case Anchor.Low:
-						_ChildPartitions.Add(NewPartiton = new MemoryPartition(OldFreePartition.Low, (uint)(OldFreePartition.Low + Size), true, ParentPartition: this, Name: Name));
-						_ChildPartitions.Add(new MemoryPartition((uint)(OldFreePartition.Low + Size), OldFreePartition.High, false, ParentPartition: this, Name: "<Free>"));
+						_ChildPartitions.Add(NewPartiton = new MemoryPartition(InjectContext, OldFreePartition.Low, (uint)(OldFreePartition.Low + Size), true, ParentPartition: this, Name: Name));
+						_ChildPartitions.Add(new MemoryPartition(InjectContext, (uint)(OldFreePartition.Low + Size), OldFreePartition.High, false, ParentPartition: this, Name: "<Free>"));
 						break;
 					case Anchor.High:
-						_ChildPartitions.Add(NewPartiton = new MemoryPartition(OldFreePartition.Low, (uint)(OldFreePartition.High - Size), true, ParentPartition: this, Name: Name));
-						_ChildPartitions.Add(new MemoryPartition((uint)(OldFreePartition.High - Size), OldFreePartition.High, false, ParentPartition: this, Name: "<Free>"));
+						_ChildPartitions.Add(NewPartiton = new MemoryPartition(InjectContext, OldFreePartition.Low, (uint)(OldFreePartition.High - Size), true, ParentPartition: this, Name: Name));
+						_ChildPartitions.Add(new MemoryPartition(InjectContext, (uint)(OldFreePartition.High - Size), OldFreePartition.High, false, ParentPartition: this, Name: "<Free>"));
 						break;
 					case Anchor.Set:
-						_ChildPartitions.Add(new MemoryPartition(OldFreePartition.Low, Position, false, ParentPartition: this, Name: "<Free>"));
-						_ChildPartitions.Add(NewPartiton = new MemoryPartition(Position, (uint)(Position + Size), true, ParentPartition: this, Name: Name));
-						_ChildPartitions.Add(new MemoryPartition((uint)(Position + Size), OldFreePartition.High, false, ParentPartition: this, Name: "<Free>"));
+						_ChildPartitions.Add(new MemoryPartition(InjectContext, OldFreePartition.Low, Position, false, ParentPartition: this, Name: "<Free>"));
+						_ChildPartitions.Add(NewPartiton = new MemoryPartition(InjectContext, Position, (uint)(Position + Size), true, ParentPartition: this, Name: Name));
+						_ChildPartitions.Add(new MemoryPartition(InjectContext, (uint)(Position + Size), OldFreePartition.High, false, ParentPartition: this, Name: "<Free>"));
 						break;
 				}
 
@@ -285,7 +312,7 @@ namespace CSPspEmu.Hle
 
 		public override string ToString()
 		{
-			if (_ChildPartitions.Count > 0)
+			if ((_ChildPartitions != null) && _ChildPartitions.Count > 0)
 			{
 				return String.Format(
 					"MemoryPartition(Low={0:X}, High={1:X}, Allocated={2}, Name='{3}', ChildPartitions=[{4}])",

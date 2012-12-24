@@ -1,13 +1,11 @@
 ﻿using System.Text;
 using CSPspEmu.Core.Memory;
+using System;
 
 namespace CSPspEmu.Hle.Modules.iofilemgr
 {
 	public unsafe partial class IoFileMgrForUser
 	{
-		[Inject]
-		InjectContext InjectContext;
-
 		public struct PspIoDrv
 		{
 			/// <summary>
@@ -33,7 +31,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			/// <summary>
 			/// Pointer to a filled out functions table
 			/// </summary>
-			public PspIoDrvFuncs* funcs;
+			public PspPointer funcs;
 		}
 
 		/// <summary>
@@ -53,8 +51,6 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspNotImplemented]
 		public int sceIoAddDrv(PspIoDrv* PspIoDrv)
 		{
-			return 0;
-
 			var Name = PspMemory.ReadStringz(PspIoDrv->name, Encoding.UTF8);
 			HleIoManager.SetDriver(Name + ":", new GuestHleIoDriver(InjectContext, PspIoDrv));
 			return 0;

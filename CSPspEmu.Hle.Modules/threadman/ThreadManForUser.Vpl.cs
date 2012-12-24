@@ -39,6 +39,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 #if true
 				ExternalMemoryAnchor = High ? Hle.MemoryPartition.Anchor.High : Hle.MemoryPartition.Anchor.Low;
+				//InternalMemoryAnchor = Hle.MemoryPartition.Anchor.High;
 				InternalMemoryAnchor = Hle.MemoryPartition.Anchor.Low;
 				InternalMemoryAnchorReturn = Hle.MemoryPartition.Anchor.Low;
 #else
@@ -55,7 +56,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			public void Allocate(CpuThreadState CpuThreadState, int Size, PspPointer* AddressPointer, uint* Timeout, bool HandleCallbacks)
 			{
-				//Size = (int)MathUtils.NextAligned(Size, 4);
 				if (!TryAllocate(CpuThreadState, Size, AddressPointer))
 				{
 					bool TimedOut = false;
@@ -83,7 +83,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			public bool TryAllocate(CpuThreadState CpuThreadState, int Size, PspPointer* AddressPointer)
 			{
-				if (Size > Info.PoolSize) throw(new SceKernelException((SceKernelErrors)(-1)));
+				Size = (int)MathUtils.NextAligned(Size, 4);
+				if (Size > Info.PoolSize) throw (new SceKernelException((SceKernelErrors)(-1)));
 				try
 				{
 					var AllocatedSegment = MemoryPartition.Allocate(Size, InternalMemoryAnchor);

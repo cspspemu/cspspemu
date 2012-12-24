@@ -204,7 +204,7 @@ public sealed class InjectContext : IDisposable
 					case MemberTypes.Field: Field.SetValue(Object, this.GetInstance(MemberType)); break;
 					case MemberTypes.Property: Property.SetValue(Object, this.GetInstance(MemberType), null); break;
 				}
-				Logger.Notice("Inject {0} to {1}", MemberType, Object);
+				Logger.Notice("Inject {0} to {1}", MemberType, Object.GetType());
 			}
 		}
 

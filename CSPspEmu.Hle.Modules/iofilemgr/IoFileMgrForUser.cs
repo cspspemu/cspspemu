@@ -12,7 +12,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		static Logger Logger = Logger.GetLogger("IoFileMgrForUser");
 
 		[Inject]
-		HleIoManager HleIoManager;
+		protected HleIoManager HleIoManager;
 
 		/// <summary>
 		/// 

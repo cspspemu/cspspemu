@@ -21,10 +21,10 @@ namespace CSPspEmu.Hle.Modules.registry
 		/// <param name="RegHandle">Pointer to a REGHANDLE to receive the registry handle</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x92E41280, FirmwareVersion = 150)]
-		public int sceRegOpenRegistry(RegParam* RegParam, OpenRegistryMode Mode, RegHandle* RegHandle)
+		public int sceRegOpenRegistry(RegParam* RegParam, OpenRegistryMode Mode, out RegHandle RegHandle)
 		{
 			var HleRegistryNode = new HleRegistryNode(RegParam[0].Name);
-			*RegHandle = (RegHandle)HleRegistryManager.RegHandles.Create(HleRegistryNode);
+			RegHandle = (RegHandle)HleRegistryManager.RegHandles.Create(HleRegistryNode);
 			return 0;
 		}
 
@@ -68,11 +68,11 @@ namespace CSPspEmu.Hle.Modules.registry
 		/// <param name="RegCategoryHandle">Pointer to a REGHANDLE to receive the registry dir handle</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x1D8A762E, FirmwareVersion = 150)]
-		public int sceRegOpenCategory(RegHandle RegHandle, string Name, OpenRegistryMode Mode, RegCategoryHandle* RegCategoryHandle)
+		public int sceRegOpenCategory(RegHandle RegHandle, string Name, OpenRegistryMode Mode, out RegCategoryHandle RegCategoryHandle)
 		{
 			var HleRegistryNode = HleRegistryManager.RegHandles.Get((int)RegHandle);
 			var HleRegistryCategoryNode = new HleRegistryCategoryNode(HleRegistryNode, Name);
-			*RegCategoryHandle = (RegCategoryHandle)HleRegistryManager.RegCategoryHandles.Create(HleRegistryCategoryNode);
+			RegCategoryHandle = (RegCategoryHandle)HleRegistryManager.RegCategoryHandles.Create(HleRegistryCategoryNode);
 
 			return 0;
 		}
@@ -117,9 +117,9 @@ namespace CSPspEmu.Hle.Modules.registry
 		{
 			var HleRegistryCategoryNode = HleRegistryManager.RegCategoryHandles.Get((int)RegCategoryHandle);
 			var KeyNode = HleRegistryCategoryNode.GetKeyByName(Name);
-			*RegKeyHandle = KeyNode.Id;
-			*Type = KeyNode.Type;
-			*Size = KeyNode.Size;
+			if (RegKeyHandle != null) *RegKeyHandle = KeyNode.Id;
+			if (Type != null) *Type = KeyNode.Type;
+			if (Size != null) *Size = KeyNode.Size;
 
 			return 0;
 		}

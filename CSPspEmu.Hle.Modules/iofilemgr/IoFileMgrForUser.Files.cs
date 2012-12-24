@@ -6,62 +6,120 @@ using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Modules.stdio;
 using CSPspEmu.Hle.Vfs;
+using CSPspEmu.Hle.Managers;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Hle.Modules.iofilemgr
 {
 	public unsafe partial class IoFileMgrForUser
 	{
-		public class GuestHleIoDriver : IHleIoDriver
+		public class GuestHleIoDriver : IHleIoDriver, IDisposable
 		{
 			[Inject]
-			HleInterop HleInterop;
+			protected HleInterop HleInterop;
 
-			PspIoDrv* PspIoDrv;
-			PspIoDrvFuncs* PspIoDrvFuncs { get { return PspIoDrv->funcs; } }
+			[Inject]
+			protected PspMemory PspMemory;
+
+			[Inject]
+			protected HleMemoryManager HleMemoryManager;
+
+			protected PspIoDrvArg* PspIoDrvArg;
+			protected PspIoDrv* PspIoDrv;
+			protected PspIoDrvFuncs* PspIoDrvFuncs { get { return (PspIoDrvFuncs*)PspIoDrv->funcs.GetPointer<PspIoDrvFuncs>(PspMemory); } }
+			protected MemoryPartition PspIoDrvArgPartition;
+
+			public MemoryPartition Alloc<T>(T Value) where T : struct
+			{
+				return HleMemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.Kernel0).AllocateItem(Value);
+			}
+
+			public MemoryPartition Alloc(string Value)
+			{
+				return HleMemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.Kernel0).AllocateItem(Value);
+			}
 
 			public GuestHleIoDriver(InjectContext InjectContext, PspIoDrv* PspIoDrv)
 			{
 				InjectContext.InjectDependencesTo(this);
+
+				this.PspIoDrvArgPartition = Alloc(new PspIoDrvArg()
+				{
+					DriverPointer = PspMemory.PointerToPspAddressUnsafe(PspIoDrv),
+					ArgumentPointer = 0,
+				});
+				this.PspIoDrvArg = (PspIoDrvArg*)PspIoDrvArgPartition.LowPointer;
 				this.PspIoDrv = PspIoDrv;
+			}
+
+			void IDisposable.Dispose()
+			{
+				//throw new NotImplementedException();
 			}
 
 			public int IoInit()
 			{
-				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.WriteLine("Not Implemented: GuestHleIoDriver.IoInit"); });
-				return (int)HleInterop.ExecuteFunctionNow(PspIoDrvFuncs->IoInit);
+				//Console.Error.WriteLine("HleInterop: " + HleInterop);
+				//Console.Error.WriteLine("PspIoDrv: " + new IntPtr(PspIoDrv));
+				//Console.Error.WriteLine("PspIoDrvFuncs: " + new IntPtr(PspIoDrvFuncs));
+				//Console.Error.WriteLine("IoInit: " + new IntPtr(PspIoDrvFuncs->IoInit));
+				return (int)HleInterop.ExecuteFunctionNow(
+					PspIoDrvFuncs->IoInit,
+					PspMemory.PointerToPspAddressUnsafe(PspIoDrvArg)
+				);
 			}
 
 			public int IoExit()
 			{
-				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.WriteLine("Not Implemented: GuestHleIoDriver.IoExit"); });
-				return (int)HleInterop.ExecuteFunctionNow(PspIoDrvFuncs->IoExit);
+				this.PspIoDrvArgPartition.DeallocateFromParent();
+				
+				return (int)HleInterop.ExecuteFunctionNow(
+					PspIoDrvFuncs->IoExit,
+					PspMemory.PointerToPspAddressUnsafe(PspIoDrvArg)
+				);
 			}
 
 			public int IoOpen(HleIoDrvFileArg HleIoDrvFileArg, string FileName, HleIoFlags Flags, SceMode Mode)
 			{
-				//HleInterop.ExecuteFunctionNow(PspIoDrvFuncs->IoOpen);
-				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.WriteLine("Not Implemented: GuestHleIoDriver.IoOpen"); });
-				//throw new NotImplementedException();
-				return 0;
+				var PspIoDrvFileArgPartition = Alloc(new PspIoDrvFileArg() {
+					fs_num = 0,
+					drv = PspMemory.PointerToPspAddressUnsafe(PspIoDrv),
+				});
+				var FileNamePartition = Alloc(FileName);
+
+				try
+				{
+					return (int)HleInterop.ExecuteFunctionNow(
+						PspIoDrvFuncs->IoOpen,
+						PspIoDrvFileArgPartition.Low,
+						FileNamePartition.Low,
+						Flags,
+						Mode
+					);
+				}
+				finally
+				{
+					FileNamePartition.DeallocateFromParent();
+				}
 			}
 
 			public int IoClose(HleIoDrvFileArg HleIoDrvFileArg)
 			{
-				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.WriteLine("Not Implemented: GuestHleIoDriver.IoClose"); });
+				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.Error.WriteLine("Not Implemented: GuestHleIoDriver.IoClose"); });
 				//throw new NotImplementedException();
 				return 0;
 			}
 
 			public int IoRead(HleIoDrvFileArg HleIoDrvFileArg, byte* OutputPointer, int OutputLength)
 			{
-				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.WriteLine("Not Implemented: GuestHleIoDriver.IoRead"); });
+				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.Error.WriteLine("Not Implemented: GuestHleIoDriver.IoRead"); });
 				//throw new NotImplementedException();
 				return 0;
 			}
 
 			public int IoWrite(HleIoDrvFileArg HleIoDrvFileArg, byte* InputPointer, int InputLength)
 			{
-				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.WriteLine("Not Implemented: GuestHleIoDriver.IoWrite"); });
+				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.Error.WriteLine("Not Implemented: GuestHleIoDriver.IoWrite"); });
 				//throw new NotImplementedException();
 				return 0;
 			}
@@ -523,6 +581,53 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		{
 			return 0;
 		}
+	}
+
+	/// <summary>
+	/// Structure passed to the init and exit functions of the io driver system
+	/// </summary>
+	public struct PspIoDrvArg
+	{
+		/// <summary>
+		/// Pointer to the original driver which was added (PspIoDrv *)
+		/// </summary>
+		public PspPointer DriverPointer;
+
+		/// <summary>
+		/// Pointer to a user defined argument (if written by the driver will preseve across calls
+		/// </summary>
+		public PspPointer ArgumentPointer;
+	}
+
+	/// <summary>
+	/// Structure passed to the file functions of the io driver system
+	/// </summary>
+	public unsafe struct PspIoDrvFileArg
+	{
+		/// <summary>
+		/// Unknown
+		/// </summary>
+		public uint unk1;
+
+		/// <summary>
+		/// The file system number, e.g. if a file is opened as host5:/myfile.txt this field will be 5
+		/// </summary>
+		public uint fs_num;
+
+		/// <summary>
+		/// Pointer to the driver structure
+		/// </summary>
+		public PspPointer drv; // PspIoDrvArg*
+
+		/// <summary>
+		/// Unknown, again
+		/// </summary>
+		public uint unk2;
+
+		/// <summary>
+		/// Pointer to a user defined argument, this is preserved on a per file basis
+		/// </summary>
+		public PspPointer arg; // void*
 	}
 
 	/// <summary>

@@ -100,7 +100,7 @@ namespace CSPspEmu.Hle.Managers
 			Console.WriteLine(FullPath);
 
 			//Console.Error.WriteLine("FullPath: {0}", FullPath);
-			var Match = new Regex(@"^(\w+)(\d+):(.*)$").Match(FullPath);
+			var Match = new Regex(@"^([a-zA-Z]+)(\d*):(.*)$").Match(FullPath);
 			var DriverName = Match.Groups[1].Value.ToLower() + ":";
 			int FileSystemNumber = 0;
 			IHleIoDriver HleIoDriver = null;
@@ -133,6 +133,7 @@ namespace CSPspEmu.Hle.Managers
 		/// <param name="Driver"></param>
 		public void SetDriver(string Name, IHleIoDriver Driver)
 		{
+			//Console.Error.WriteLine("SetDriver: {0}", Name);
 			//Drivers.Add(Name, Driver);
 			Drivers[Name] = Driver;
 			try

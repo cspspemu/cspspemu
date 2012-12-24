@@ -143,6 +143,11 @@ namespace CSPspEmu.Hle
 					GprAlign(1);
 					CpuThreadState.GPR[GprIndex++] = (int)(uint)(PspPointer)Argument;
 				}
+				else if (ArgumentType.IsEnum)
+				{
+					GprAlign(1);
+					CpuThreadState.GPR[GprIndex++] = Convert.ToInt32(Argument);
+				}
 				else
 				{
 					throw (new NotImplementedException(String.Format("Can't handle type '{0}'", ArgumentType)));

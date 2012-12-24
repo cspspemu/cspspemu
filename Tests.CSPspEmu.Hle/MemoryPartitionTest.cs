@@ -8,12 +8,13 @@ namespace CSPspEmu.Core.Tests
 	[TestFixture]
 	public class MemoryPartitionTest
 	{
+		InjectContext InjectContext;
 		protected MemoryPartition PartitionRoot;
 
 		[SetUp]
 		public void SetUp()
 		{
-			PartitionRoot = new MemoryPartition(0x000, 0x100);
+			PartitionRoot = new MemoryPartition(InjectContext, 0x000, 0x100);
 		}
 
 		[Test]
@@ -80,7 +81,7 @@ namespace CSPspEmu.Core.Tests
 		[Test]
 		public void AllocateAlignedStackOnNonAlignedSegmentTest()
 		{
-			PartitionRoot = new MemoryPartition(0x000, 0x260);
+			PartitionRoot = new MemoryPartition(InjectContext, 0x000, 0x260);
 			PartitionRoot.Allocate(0x100, MemoryPartition.Anchor.High, Alignment: 0x100);
 		}
 	}

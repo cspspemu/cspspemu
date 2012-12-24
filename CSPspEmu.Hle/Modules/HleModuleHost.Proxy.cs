@@ -251,7 +251,10 @@ namespace CSPspEmu.Hle
 
 		private Action<CpuThreadState> CreateDelegateForMethodInfo(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute)
 		{
-			if (MethodInfo.DeclaringType != this.GetType()) throw (new Exception("Invalid"));
+			if (!MethodInfo.DeclaringType.IsAssignableFrom(this.GetType()))
+			{
+				throw (new Exception(String.Format("Invalid {0} != {1}", MethodInfo.DeclaringType, this.GetType())));
+			}
 
 			bool SkipLog = HlePspFunctionAttribute.SkipLog;
 			var NotImplementedAttribute = (HlePspNotImplementedAttribute)MethodInfo.GetCustomAttributes(typeof(HlePspNotImplementedAttribute), true).FirstOrDefault();
