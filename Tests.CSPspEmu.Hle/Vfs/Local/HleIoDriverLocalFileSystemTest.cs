@@ -1,12 +1,12 @@
 ﻿using CSPspEmu.Hle.Vfs.Local;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSPspEmu.Core.Tests
 {
-	[TestClass]
+	[TestFixture]
 	public class HleIoDriverLocalFileSystemTest
 	{
-		[TestMethod]
+		[Test]
 		public void GetSanitizedPathTest()
 		{
 			Assert.AreEqual("/test/1/2", HleIoDriverLocalFileSystem.GetSanitizedPath("/test/1/2"));
