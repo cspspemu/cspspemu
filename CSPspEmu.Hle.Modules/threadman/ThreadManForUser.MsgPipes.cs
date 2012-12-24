@@ -35,9 +35,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 			PSP_MPP_ATTR_SEND = PSP_MPP_ATTR_SEND_FIFO | PSP_MPP_ATTR_SEND_PRIORITY,
 		}
 
-		public enum MsgPipeId : int { }
-
-		public class MsgPipe : IDisposable
+		[HleUidPoolClass(NotFoundError = SceKernelErrors.ERROR_KERNEL_NOT_FOUND_MESSAGE_PIPE)]
+		public class MsgPipe : IHleUidPoolClass, IDisposable
 		{
 			public string Name;
 			public MsgPipeAttributes Attributes;
@@ -151,11 +150,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 			}
 		}
 
-		HleUidPoolSpecial<MsgPipe, MsgPipeId> MessagePipeList = new HleUidPoolSpecial<MsgPipe, MsgPipeId>()
-		{
-			OnKeyNotFoundError = SceKernelErrors.ERROR_KERNEL_NOT_FOUND_MESSAGE_PIPE,
-		};
-
 		/// <summary>
 		/// Create a message pipe
 		/// </summary>
@@ -166,7 +160,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Options">Message pipe options (set to NULL)</param>
 		/// <returns>The UID of the created pipe, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x7C0DC2A0, FirmwareVersion = 150)]
-		public MsgPipeId sceKernelCreateMsgPipe(string Name, HleMemoryManager.Partitions PartitionId, MsgPipeAttributes Attributes, int Size, void* Options)
+		public MsgPipe sceKernelCreateMsgPipe(string Name, HleMemoryManager.Partitions PartitionId, MsgPipeAttributes Attributes, int Size, void* Options)
 		{
 			if (Options != null) throw(new NotImplementedException());
 
@@ -180,27 +174,26 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			MsgPipe.Init(ThreadManager, MemoryManager.Memory, MemoryManager);
 
-			return MessagePipeList.Create(MsgPipe);
+			return MsgPipe;
 		}
 
 		/// <summary>
 		/// Delete a message pipe
 		/// </summary>
-		/// <param name="PipeId">The UID of the pipe</param>
+		/// <param name="MsgPipe">The UID of the pipe</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xF0B7DA1C, FirmwareVersion = 150)]
-		public int sceKernelDeleteMsgPipe(MsgPipeId PipeId)
+		public int sceKernelDeleteMsgPipe(MsgPipe MsgPipe)
 		{
-			var MsgPipe = MessagePipeList.Get(PipeId);
 			MsgPipe.Delete();
-			MessagePipeList.Remove(PipeId);
+			MsgPipe.RemoveUid(InjectContext);
 			return 0;
 		}
 
 		/// <summary>
 		/// Send a message to a pipe
 		/// </summary>
-		/// <param name="PipeId">The UID of the pipe</param>
+		/// <param name="MsgPipe">The UID of the pipe</param>
 		/// <param name="Message">Pointer to the message</param>
 		/// <param name="Size">Size of the message</param>
 		/// <param name="WaitMode">Unknown</param>
@@ -208,7 +201,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Timeout">Timeout for send</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x876DBFAD, FirmwareVersion = 150)]
-		public int sceKernelSendMsgPipe(MsgPipeId PipeId, byte* Message, int Size, int WaitMode, int* ResultSizeAddr, uint* Timeout)
+		public int sceKernelSendMsgPipe(MsgPipe MsgPipe, byte* Message, int Size, int WaitMode, int* ResultSizeAddr, uint* Timeout)
 		{
 			if (Timeout != null)
 			{
@@ -222,7 +215,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 			bool Transferred = false;
 			while (!Transferred)
 			{
-				var MsgPipe = MessagePipeList.Get(PipeId);
 				try
 				{
 					//bool WaitiMsgPipe.OnAvailableForRecv.Count
@@ -255,16 +247,15 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Try to send a message to a pipe
 		/// </summary>
-		/// <param name="PipeId">The UID of the pipe</param>
+		/// <param name="MsgPipe">The UID of the pipe</param>
 		/// <param name="Message">Pointer to the message</param>
 		/// <param name="Size">Size of the message</param>
 		/// <param name="WaitMode">Unknown</param>
 		/// <param name="ResultSizeAddr">Unknown</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x884C9F90, FirmwareVersion = 150)]
-		public int sceKernelTrySendMsgPipe(MsgPipeId PipeId, byte* Message, int Size, int WaitMode, int* ResultSizeAddr)
+		public int sceKernelTrySendMsgPipe(MsgPipe MsgPipe, byte* Message, int Size, int WaitMode, int* ResultSizeAddr)
 		{
-			var MsgPipe = MessagePipeList.Get(PipeId);
 			MsgPipe.Enqueue(Message, Size);
 			if (ResultSizeAddr != null)
 			{
@@ -276,7 +267,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Receive a message from a pipe
 		/// </summary>
-		/// <param name="PipeId">The UID of the pipe</param>
+		/// <param name="MsgPipe">The UID of the pipe</param>
 		/// <param name="Message">Pointer to the message</param>
 		/// <param name="Size">Size of the message</param>
 		/// <param name="WaitMode">Unknown</param>
@@ -284,7 +275,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Timeout">Timeout for receive</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x74829B76, FirmwareVersion = 150)]
-		public int sceKernelReceiveMsgPipe(MsgPipeId PipeId, byte* Message, int Size, int WaitMode, int* ResultSizeAddr, uint* Timeout)
+		public int sceKernelReceiveMsgPipe(MsgPipe MsgPipe, byte* Message, int Size, int WaitMode, int* ResultSizeAddr, uint* Timeout)
 		{
 			if (Timeout != null) throw(new NotImplementedException());
 
@@ -293,7 +284,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 #endif
 
 			bool Transferred = false;
-			var MsgPipe = MessagePipeList.Get(PipeId);
 			while (!Transferred)
 			{
 				try
@@ -326,16 +316,15 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Receive a message from a pipe
 		/// </summary>
-		/// <param name="PipeId">The UID of the pipe</param>
+		/// <param name="MsgPipe">The UID of the pipe</param>
 		/// <param name="Message">Pointer to the message</param>
 		/// <param name="Size">Size of the message</param>
 		/// <param name="WaitMode">Unknown</param>
 		/// <param name="ResultSizeAddr">Unknown</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xDF52098F, FirmwareVersion = 150)]
-		public int sceKernelTryReceiveMsgPipe(MsgPipeId PipeId, byte* Message, int Size, int WaitMode, int* ResultSizeAddr)
+		public int sceKernelTryReceiveMsgPipe(MsgPipe MsgPipe, byte* Message, int Size, int WaitMode, int* ResultSizeAddr)
 		{
-			var MsgPipe = MessagePipeList.Get(PipeId);
 			MsgPipe.Dequeue(Message, Size, ResultSizeAddr);
 			return 0;
 		}
@@ -343,11 +332,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Get the status of a Message Pipe
 		/// </summary>
-		/// <param name="PipeId">The uid of the Message Pipe</param>
+		/// <param name="MsgPipe">The uid of the Message Pipe</param>
 		/// <param name="SceKernelMppInfo">Pointer to a ::SceKernelMppInfo structure</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x33BE4024, FirmwareVersion = 150)]
-		public int sceKernelReferMsgPipeStatus(MsgPipeId PipeId, /*SceKernelMppInfo*/void* SceKernelMppInfo)
+		public int sceKernelReferMsgPipeStatus(MsgPipe MsgPipe, /*SceKernelMppInfo*/void* SceKernelMppInfo)
 		{
 			throw(new NotImplementedException());
 		}
@@ -355,7 +344,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Cancel a message pipe
 		/// </summary>
-		/// <param name="uid">UID of the pipe to cancel</param>
+		/// <param name="MsgPipe">UID of the pipe to cancel</param>
 		/// <param name="psend">Receive number of sending threads?</param>
 		/// <param name="precv">Receive number of receiving threads?</param>
 		/// <returns>
@@ -363,7 +352,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0x349B864D, FirmwareVersion = 150)]
-		public int sceKernelCancelMsgPipe(MsgPipeId uid, int *psend, int *precv)
+		public int sceKernelCancelMsgPipe(MsgPipe MsgPipe, int* psend, int* precv)
 		{
 			throw (new NotImplementedException());
 		}

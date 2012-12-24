@@ -36,7 +36,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 			SendPriority = 0x400,
 		}
 
-		public class MessageBox : IDisposable
+		[HleUidPoolClass(NotFoundError = SceKernelErrors.ERROR_KERNEL_NOT_FOUND_MESSAGE_BOX)]
+		public class MessageBox : IHleUidPoolClass, IDisposable
 		{
 			public string Name;
 			public MbxAttributesEnum Attributes;
@@ -101,11 +102,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 			}
 		}
 
-		public HleUidPoolSpecial<MessageBox, int> MessageBoxList = new HleUidPoolSpecial<MessageBox, int>()
-		{
-			OnKeyNotFoundError = SceKernelErrors.ERROR_KERNEL_NOT_FOUND_MESSAGE_BOX,
-		};
-
 		/// <summary>
 		/// Creates a new messagebox
 		/// </summary>
@@ -118,7 +114,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Options">Mbx options (normally set to NULL)</param>
 		/// <returns>A messagebox ID</returns>
 		[HlePspFunction(NID = 0x8125221D, FirmwareVersion = 150)]
-		public int sceKernelCreateMbx(string Name, MbxAttributesEnum Attributes, SceKernelMbxOptParam* Options)
+		public MessageBox sceKernelCreateMbx(string Name, MbxAttributesEnum Attributes, SceKernelMbxOptParam* Options)
 		{
 			if (Options != null) throw(new NotImplementedException());
 			if (Attributes.HasFlag(MbxAttributesEnum.RecvPriority)) throw(new NotImplementedException());
@@ -130,18 +126,18 @@ namespace CSPspEmu.Hle.Modules.threadman
 				Attributes = Attributes,
 			};
 			if (Options != null) Mbx.Options = *Options;
-			return MessageBoxList.Create(Mbx);
+			return Mbx;
 		}
 
 		/// <summary>
 		/// Destroy a messagebox
 		/// </summary>
-		/// <param name="MessageBoxId">The mbxid returned from a previous create call.</param>
+		/// <param name="MessageBox">The mbxid returned from a previous create call.</param>
 		/// <returns>Returns the value 0 if its succesful otherwise an error code</returns>
 		[HlePspFunction(NID = 0x86255ADA, FirmwareVersion = 150)]
-		public int sceKernelDeleteMbx(int MessageBoxId)
+		public int sceKernelDeleteMbx(MessageBox MessageBox)
 		{
-			MessageBoxList.Remove(MessageBoxId);
+			MessageBox.RemoveUid(InjectContext);
 			return 0;
 		}
 
@@ -166,9 +162,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// </param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xE9B3061E, FirmwareVersion = 150)]
-		public int sceKernelSendMbx(int MessageBoxId, PspPointer Message)
+		public int sceKernelSendMbx(MessageBox MessageBox, PspPointer Message)
 		{
-			var MessageBox = MessageBoxList.Get(MessageBoxId);
 			return MessageBox.Send(Message);
 		}
 
@@ -179,7 +174,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// void *msg;
 		/// sceKernelReceiveMbx(mbxid, &amp;msg, NULL);
 		/// </example>
-		/// <param name="MessageBoxId">The mbx ID returned from <see cref="sceKernelCreateMbx"/></param>
+		/// <param name="MessageBox">The mbx ID returned from <see cref="sceKernelCreateMbx"/></param>
 		/// <param name="PointerToMessage">
 		///		A pointer to where a pointer to the
 		///		received message should be stored
@@ -187,10 +182,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Timeout">Timeout in microseconds</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x18260574, FirmwareVersion = 150)]
-		public int sceKernelReceiveMbx(int MessageBoxId, PspPointer* PointerToMessage, uint* Timeout)
+		public int sceKernelReceiveMbx(MessageBox MessageBox, PspPointer* PointerToMessage, uint* Timeout)
 		{
 			var CurrentThread = ThreadManager.Current;
-			var MessageBox = MessageBoxList.Get(MessageBoxId);
 			bool TimedOut = false;
 			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelReceiveMbx", MessageBox, WakeUpCallback =>
 			{
@@ -228,9 +222,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="PointerToMessage">A pointer to where a pointer to the received message should be stored</param>
 		/// <returns>Less than 0 on error (SCE_KERNEL_ERROR_MBOX_NOMSG if the mbx is empty)</returns>
 		[HlePspFunction(NID = 0x0D81716A, FirmwareVersion = 150)]
-		public int sceKernelPollMbx(int MessageBoxId, PspPointer* PointerToMessage)
+		public int sceKernelPollMbx(MessageBox MessageBox, PspPointer* PointerToMessage)
 		{
-			var MessageBox = MessageBoxList.Get(MessageBoxId);
 			if (!MessageBox.Poll(PointerToMessage))
 			{
 				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_MESSAGEBOX_NO_MESSAGE));

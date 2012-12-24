@@ -10,7 +10,8 @@ using System.Text;
 
 namespace CSPspEmu.Hle.Modules.threadman
 {
-	unsafe public class VirtualTimer : IDisposable
+	[HleUidPoolClass(NotFoundError = SceKernelErrors.ERROR_KERNEL_NOT_FOUND_VTIMER)]
+	unsafe public class VirtualTimer : IHleUidPoolClass, IDisposable
 	{
 		[Inject]
 		PspRtc PspRtc;

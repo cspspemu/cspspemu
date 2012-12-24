@@ -8,30 +8,29 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// <summary>
 		/// Closes the specified font file.
 		/// </summary>
-		/// <param name="FontHandle">Handle of the font.</param>
+		/// <param name="Font">Handle of the font.</param>
 		/// <returns>
 		///		0 on success.
 		/// </returns>
 		[HlePspFunction(NID = 0x3AEA8CB6, FirmwareVersion = 150)]
-		public int sceFontClose(FontHandle FontHandle)
+		public int sceFontClose(Font Font)
 		{
-			Fonts.Remove(FontHandle);
+			Font.RemoveUid(InjectContext);
 			return 0;
 		}
 
 		/// <summary>
 		/// Obtains the FontInfo of a FontHandle.
 		/// </summary>
-		/// <param name="FontHandle">Font Handle to get the information from.</param>
+		/// <param name="Font">Font Handle to get the information from.</param>
 		/// <param name="FontInfoPointer">Pointer to a <see cref="FontInfo"/> structure that will hold the information.</param>
 		/// <returns>
 		///		0 on success
 		/// </returns>
 		[HlePspFunction(NID = 0x0DA7535E, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceFontGetFontInfo(FontHandle FontHandle, FontInfo* FontInfoPointer)
+		public int sceFontGetFontInfo(Font Font, FontInfo* FontInfoPointer)
 		{
-			var Font = Fonts.Get(FontHandle);
 			*FontInfoPointer = Font.GetFontInfo();
 			return 0;
 		}
@@ -39,17 +38,16 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="FontHandle"></param>
+		/// <param name="Font"></param>
 		/// <param name="CharCode"></param>
 		/// <param name="FontCharInfoPointer"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xDCC80C2F, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceFontGetCharInfo(FontHandle FontHandle, ushort CharCode, ref FontCharInfo FontCharInfoPointer)
+		public int sceFontGetCharInfo(Font Font, ushort CharCode, ref FontCharInfo FontCharInfoPointer)
 		{
 			try
 			{
-				var Font = Fonts.Get(FontHandle);
 				FontCharInfoPointer = Font.GetCharInfo(CharCode);
 				Console.WriteLine("sceFontGetCharInfo({0}) : {1}", CharCode, FontCharInfoPointer);
 				return 0;
@@ -64,16 +62,15 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="FontHandle"></param>
+		/// <param name="Font"></param>
 		/// <param name="CharCode"></param>
 		/// <param name="GlyphImagePointer"></param>
 		[HlePspFunction(NID = 0x980F4895, FirmwareVersion = 150)]
-		public int sceFontGetCharGlyphImage(FontHandle FontHandle, ushort CharCode, ref GlyphImage GlyphImagePointer)
+		public int sceFontGetCharGlyphImage(Font Font, ushort CharCode, ref GlyphImage GlyphImagePointer)
 		{
-			var Font = Fonts.Get(FontHandle);
 			var CharInfo = Font.GetCharInfo(CharCode);
 			return sceFontGetCharGlyphImage_Clip(
-				FontHandle, CharCode, ref GlyphImagePointer,
+				Font, CharCode, ref GlyphImagePointer,
 				//(int)CharInfo.BitmapLeft,
 				//(int)CharInfo.BitmapTop,
 				0,
@@ -153,7 +150,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="FontHandle"></param>
+		/// <param name="Font"></param>
 		/// <param name="CharCode"></param>
 		/// <param name="GlyphImage"></param>
 		/// <param name="ClipX"></param>
@@ -161,11 +158,10 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// <param name="ClipWidth"></param>
 		/// <param name="ClipHeight"></param>
 		[HlePspFunction(NID = 0xCA1E6945, FirmwareVersion = 150)]
-		public int sceFontGetCharGlyphImage_Clip(FontHandle FontHandle, ushort CharCode, ref GlyphImage GlyphImage, int ClipX, int ClipY, int ClipWidth, int ClipHeight)
+		public int sceFontGetCharGlyphImage_Clip(Font Font, ushort CharCode, ref GlyphImage GlyphImage, int ClipX, int ClipY, int ClipWidth, int ClipHeight)
 		{
 			try
 			{
-				var Font = Fonts.Get(FontHandle);
 				var Glyph = Font.GetGlyph(CharCode);
 				var CharInfo = Font.GetCharInfo(CharCode);
 				var Face = Glyph.Face;
@@ -224,12 +220,12 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="FontHandle"></param>
+		/// <param name="Font"></param>
 		/// <param name="CharCode"></param>
 		/// <param name="CharRectPointer"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x5C3E4A9E, FirmwareVersion = 150)]
-		public int sceFontGetCharImageRect(FontHandle FontHandle, ushort CharCode, CharRect* CharRectPointer)
+		public int sceFontGetCharImageRect(Font Font, ushort CharCode, CharRect* CharRectPointer)
 		{
 			throw (new NotImplementedException());
 		}
@@ -237,10 +233,10 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="FontHandle"></param>
+		/// <param name="Font"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x02D7F94B, FirmwareVersion = 150)]
-		public int sceFontFlush(FontHandle FontHandle)
+		public int sceFontFlush(Font Font)
 		{
 			return 0;
 		}

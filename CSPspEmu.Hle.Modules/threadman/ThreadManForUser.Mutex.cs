@@ -31,7 +31,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 			AllowRecursive = 0x200,
 		}
 
-		public class PspMutex : IDisposable
+		[HleUidPoolClass(NotFoundError = SceKernelErrors.ERROR_KERNEL_MUTEX_NOT_FOUND)]
+		public class PspMutex : IHleUidPoolClass, IDisposable
 		{
 			public string Name;
 			public MutexAttributesEnum Attributes;
@@ -110,11 +111,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 			}
 		}
 
-		HleUidPoolSpecial<PspMutex, int> MutexList = new HleUidPoolSpecial<PspMutex, int>()
-		{
-			OnKeyNotFoundError = SceKernelErrors.ERROR_KERNEL_MUTEX_NOT_FOUND,
-		};
-
 		/// <summary>
 		/// 
 		/// </summary>
@@ -124,7 +120,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Options"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xB7D098C6, FirmwareVersion = 150)]
-		public int sceKernelCreateMutex(CpuThreadState CpuThreadState, string Name, MutexAttributesEnum Attributes, uint Options)
+		public PspMutex sceKernelCreateMutex(CpuThreadState CpuThreadState, string Name, MutexAttributesEnum Attributes, uint Options)
 		{
 			var PspMutex = new PspMutex(this)
 			{
@@ -133,20 +129,19 @@ namespace CSPspEmu.Hle.Modules.threadman
 				Options = Options,
 				LockCpuThreadState = CpuThreadState,
 			};
-			var PspMutexId = MutexList.Create(PspMutex);
-			return PspMutexId;
+			return PspMutex;
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="CpuThreadState"></param>
-		/// <param name="MutexId"></param>
+		/// <param name="Mutex"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xF8170FBE, FirmwareVersion = 150)]
-		public int sceKernelDeleteMutex(CpuThreadState CpuThreadState, int MutexId)
+		public int sceKernelDeleteMutex(CpuThreadState CpuThreadState, PspMutex Mutex)
 		{
-			MutexList.Remove(MutexId);
+			Mutex.RemoveUid(InjectContext);
 			return 0;
 		}
 
@@ -154,14 +149,13 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// 
 		/// </summary>
 		/// <param name="CpuThreadState"></param>
-		/// <param name="MutexId"></param>
+		/// <param name="Mutex"></param>
 		/// <param name="Count"></param>
 		/// <param name="Timeout"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xB011B11F, FirmwareVersion = 150)]
-		public int sceKernelLockMutex(CpuThreadState CpuThreadState, int MutexId, int Count, uint* Timeout)
+		public int sceKernelLockMutex(CpuThreadState CpuThreadState, PspMutex Mutex, int Count, uint* Timeout)
 		{
-			var Mutex = MutexList.Get(MutexId);
 			Mutex.Lock(CpuThreadState, Count, Timeout);
 			return 0;
 		}
@@ -171,22 +165,21 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// </summary>
 		[HlePspFunction(NID = 0x5BF4DD27, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceKernelLockMutexCB(CpuThreadState CpuThreadState, int MutexId, int Count, uint* Timeout)
+		public int sceKernelLockMutexCB(CpuThreadState CpuThreadState, PspMutex Mutex, int Count, uint* Timeout)
 		{
-			return sceKernelLockMutex(CpuThreadState, MutexId, Count, Timeout);
+			return sceKernelLockMutex(CpuThreadState, Mutex, Count, Timeout);
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="CpuThreadState"></param>
-		/// <param name="MutexId"></param>
+		/// <param name="Mutex"></param>
 		/// <param name="Count"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x0DDCD2C9, FirmwareVersion = 150)]
-		public int sceKernelTryLockMutex(CpuThreadState CpuThreadState, int MutexId, int Count)
+		public int sceKernelTryLockMutex(CpuThreadState CpuThreadState, PspMutex Mutex, int Count)
 		{
-			var Mutex = MutexList.Get(MutexId);
 			Mutex.TryLock(CpuThreadState, Count);
 			return 0;
 		}
@@ -195,13 +188,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// 
 		/// </summary>
 		/// <param name="CpuThreadState"></param>
-		/// <param name="MutexId"></param>
+		/// <param name="Mutex"></param>
 		/// <param name="Count"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x6B30100F, FirmwareVersion = 150)]
-		public int sceKernelUnlockMutex(CpuThreadState CpuThreadState, int MutexId, int Count)
+		public int sceKernelUnlockMutex(CpuThreadState CpuThreadState, PspMutex Mutex, int Count)
 		{
-			var Mutex = MutexList.Get(MutexId);
 			Mutex.Unlock(CpuThreadState, Count);
 			return 0;
 		}

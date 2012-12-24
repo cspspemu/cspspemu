@@ -11,8 +11,8 @@ namespace CSPspEmu.Hle.Modules.libfont
 	{
 		public const float PointDPI = 72.0f;
 
-		public enum FontLibraryHandle : int { }
-		public class FontLibrary : IDisposable
+		//public enum FontLibraryHandle : int { }
+		public class FontLibrary : IHleUidPoolClass, IDisposable
 		{
 			public FontNewLibParams Params;
 			public float HorizontalResolution = 128.0f;
@@ -51,8 +51,9 @@ namespace CSPspEmu.Hle.Modules.libfont
 			}
 		}
 
-		public enum FontHandle : int { }
-		public class Font : IDisposable
+		//public enum FontHandle : int { }
+		[HleUidPoolClass(NotFoundError = (SceKernelErrors)(-1))]
+		public class Font : IHleUidPoolClass, IDisposable
 		{
 			public FontLibrary FontLibrary;
 			public PGF PGF;
@@ -135,13 +136,6 @@ namespace CSPspEmu.Hle.Modules.libfont
 			}
 		}
 
-		HleUidPoolSpecial<FontLibrary, FontLibraryHandle> FontLibraries = new HleUidPoolSpecial<FontLibrary, FontLibraryHandle>()
-		{
-		};
-		HleUidPoolSpecial<Font, FontHandle> Fonts = new HleUidPoolSpecial<Font, FontHandle>()
-		{
-		};
-
 		/// <summary>
 		/// Creates a new font library.
 		/// </summary>
@@ -150,7 +144,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 		/// <returns>FontLibraryHandle</returns>
 		[HlePspFunction(NID = 0x67F17ED7, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public FontLibraryHandle sceFontNewLib(FontNewLibParams* Params, uint* ErrorCode)
+		public FontLibrary sceFontNewLib(FontNewLibParams* Params, uint* ErrorCode)
 		{
 			//if (Params != null) throw (new NotImplementedException("(Params != null)"));
 
@@ -161,20 +155,20 @@ namespace CSPspEmu.Hle.Modules.libfont
 
 			*ErrorCode = 0;
 
-			return FontLibraries.Create(FontLibrary);
+			return FontLibrary;
 		}
 
 		/// <summary>
 		/// Releases the font library.
 		/// </summary>
-		/// <param name="FontLibraryHandle">Handle of the library.</param>
+		/// <param name="FontLibrary">Handle of the library.</param>
 		/// <returns>
 		///		0 - success
 		/// </returns>
 		[HlePspFunction(NID = 0x574B6FBC, FirmwareVersion = 150)]
-		public int sceFontDoneLib(FontLibraryHandle FontLibraryHandle)
+		public int sceFontDoneLib(FontLibrary FontLibrary)
 		{
-			FontLibraries.Remove(FontLibraryHandle);
+			FontLibrary.RemoveUid(InjectContext);
 			return 0;
 		}
 	}

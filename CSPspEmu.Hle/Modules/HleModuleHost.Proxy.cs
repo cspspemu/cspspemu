@@ -53,10 +53,10 @@ namespace CSPspEmu.Hle
 			return CpuThreadState.CpuProcessor.InjectContext.GetInstance<HleUidPoolManager>().Get(Type, Index);
 		}
 
-		static public uint AllocIndexFromPoolHelper(CpuThreadState CpuThreadState, Type Type, IHleUidPoolClass Item)
+		static public uint GetOrAllocIndexFromPoolHelper(CpuThreadState CpuThreadState, Type Type, IHleUidPoolClass Item)
 		{
 			//Console.Error.WriteLine("AllocIndexFromPoolHelper");
-			return (uint)CpuThreadState.CpuProcessor.InjectContext.GetInstance<HleUidPoolManager>().Alloc(Type, Item);
+			return (uint)CpuThreadState.CpuProcessor.InjectContext.GetInstance<HleUidPoolManager>().GetOrAllocIndex(Type, Item);
 		}
 
 		private AstNodeStmContainer CreateDelegateForMethodInfoPriv(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute, out List<ParamInfo> OutParamInfoList)
@@ -237,7 +237,7 @@ namespace CSPspEmu.Hle
 				AstNodes.AddStatement(ast.Assign(
 					MipsMethodEmitter.GPR(2),
 					ast.CallStatic(
-						(Func<CpuThreadState, Type, IHleUidPoolClass, uint>)AllocIndexFromPoolHelper,
+						(Func<CpuThreadState, Type, IHleUidPoolClass, uint>)GetOrAllocIndexFromPoolHelper,
 						MipsMethodEmitter.CpuThreadStateArgument(),
 						ast.Immediate(AstMethodCall.Type),
 						ast.Cast<IHleUidPoolClass>(AstMethodCall)

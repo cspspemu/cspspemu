@@ -10,14 +10,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 {
 	public unsafe partial class ThreadManForUser
 	{
-		[Inject]
-		InjectContext InjectContext;
-
-		HleUidPoolSpecial<VirtualTimer, int> VirtualTimerPool = new HleUidPoolSpecial<VirtualTimer, int>()
-		{
-			OnKeyNotFoundError = SceKernelErrors.ERROR_KERNEL_NOT_FOUND_VTIMER,
-		};
-
 		public struct SceKernelVTimerOptParam
 		{
 			public uint StructSize;
@@ -30,24 +22,22 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="SceKernelVTimerOptParam">Pointer to an <see cref="SceKernelVTimerOptParam"/> (pass NULL)</param>
 		/// <returns>The VTimer's UID or less than 0 on error.</returns>
 		[HlePspFunction(NID = 0x20FFF560, FirmwareVersion = 150)]
-		public int sceKernelCreateVTimer(string Name, SceKernelVTimerOptParam *SceKernelVTimerOptParam)
+		public VirtualTimer sceKernelCreateVTimer(string Name, SceKernelVTimerOptParam* SceKernelVTimerOptParam)
 		{
 			var VirtualTimer = new VirtualTimer(InjectContext, Name);
 			if (SceKernelVTimerOptParam != null) VirtualTimer.SceKernelVTimerOptParam = *SceKernelVTimerOptParam;
-			var VirtualTimerId = VirtualTimerPool.Create(VirtualTimer);
-			VirtualTimer.Id = VirtualTimerId;
-			return VirtualTimerId;
+			VirtualTimer.Id = VirtualTimer.GetUidIndex(InjectContext);
+			return VirtualTimer;
 		}
 
 		/// <summary>
 		/// Start a virtual timer
 		/// </summary>
-		/// <param name="VirtualTimerId">The UID of the timer</param>
+		/// <param name="VirtualTimer">The UID of the timer</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xC68D9437, FirmwareVersion = 150)]
-		public int sceKernelStartVTimer(int VirtualTimerId)
+		public int sceKernelStartVTimer(VirtualTimer VirtualTimer)
 		{
-			var VirtualTimer = VirtualTimerPool.Get(VirtualTimerId);
 			VirtualTimer.Start();
 			return 0;
 		}
@@ -55,12 +45,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Stop a virtual timer
 		/// </summary>
-		/// <param name="VirtualTimerId">The UID of the timer</param>
+		/// <param name="VirtualTimer">The UID of the timer</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0xD0AEEE87, FirmwareVersion = 150)]
-		public int sceKernelStopVTimer(int VirtualTimerId)
+		public int sceKernelStopVTimer(VirtualTimer VirtualTimer)
 		{
-			var VirtualTimer = VirtualTimerPool.Get(VirtualTimerId);
 			VirtualTimer.Stop();
 			return 0;
 		}
@@ -68,15 +57,15 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Set the timer time (wide format)
 		/// </summary>
-		/// <param name="VirtualTimerId">UID of the vtimer</param>
+		/// <param name="VirtualTimer">UID of the vtimer</param>
 		/// <param name="Time">A <see cref="SceKernelSysClock"/> structure</param>
 		/// <returns>Possibly the last time</returns>
 		[HlePspFunction(NID = 0xFB6425C3, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		[PspUntested]
-		public int sceKernelSetVTimerTimeWide(int VirtualTimerId, long Time)
+		public int sceKernelSetVTimerTimeWide(VirtualTimer VirtualTimer, long Time)
 		{
-			var VirtualTimer = VirtualTimerPool.Get(VirtualTimerId);
+			throw(new NotImplementedException());
 			//VirtualTimer.ElapsedMicroseconds = Time;
 			return 0;
 		}
@@ -84,25 +73,23 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Get the timer time
 		/// </summary>
-		/// <param name="VirtualTimerId">UID of the vtimer</param>
+		/// <param name="VirtualTimer">UID of the vtimer</param>
 		/// <param name="Time">Pointer to a <see cref="SceKernelSysClock"/> structure</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x034A921F, FirmwareVersion = 150)]
-		public int sceKernelGetVTimerTime(int VirtualTimerId, SceKernelSysClock* Time)
+		public int sceKernelGetVTimerTime(VirtualTimer VirtualTimer, SceKernelSysClock* Time)
 		{
-			var VirtualTimer = VirtualTimerPool.Get(VirtualTimerId);
 			return (int)VirtualTimer.ElapsedMicroseconds;
 		}
 
 		/// <summary>
 		/// Get the timer time (wide format)
 		/// </summary>
-		/// <param name="VirtualTimerId">UID of the vtimer</param>
+		/// <param name="VirtualTimer">UID of the vtimer</param>
 		/// <returns>The 64bit timer time</returns>
 		[HlePspFunction(NID = 0xC0B3FFD2, FirmwareVersion = 150)]
-		public long sceKernelGetVTimerTimeWide(int VirtualTimerId)
+		public long sceKernelGetVTimerTimeWide(VirtualTimer VirtualTimer)
 		{
-			var VirtualTimer = VirtualTimerPool.Get(VirtualTimerId);
 			return VirtualTimer.ElapsedMicroseconds;
 		}
 
@@ -111,15 +98,14 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// 
 		/// Timer handler will be executed once after
 		/// </summary>
-		/// <param name="VirtualTimerId">UID of the vtimer</param>
+		/// <param name="VirtualTimer">UID of the vtimer</param>
 		/// <param name="Time">Time to call the handler?</param>
 		/// <param name="HandlerCallback">The timer handler</param>
 		/// <param name="HandlerArgument">Common pointer</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xD8B299AE, FirmwareVersion = 150)]
-		public int sceKernelSetVTimerHandler(int VirtualTimerId, SceKernelSysClock* Time, PspPointer HandlerCallback, PspPointer HandlerArgument)
+		public int sceKernelSetVTimerHandler(VirtualTimer VirtualTimer, SceKernelSysClock* Time, PspPointer HandlerCallback, PspPointer HandlerArgument)
 		{
-			var VirtualTimer = VirtualTimerPool.Get(VirtualTimerId);
 			VirtualTimer.SetHandler(Time: Time->MicroSeconds, HandlerCallback: HandlerCallback, HandlerArgument: HandlerArgument, HandlerIsWide: false);
 			return 0;
 		}
@@ -127,15 +113,14 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Set the timer handler (wide mode)
 		/// </summary>
-		/// <param name="VirtualTimerId">UID of the vtimer</param>
+		/// <param name="VirtualTimer">UID of the vtimer</param>
 		/// <param name="Time">Time to call the handler?</param>
 		/// <param name="HandlerCallback">The timer handler</param>
 		/// <param name="HandlerArgument">Common pointer</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x53B00E9A, FirmwareVersion = 150)]
-		public int sceKernelSetVTimerHandlerWide(int VirtualTimerId, long Time, PspPointer HandlerCallback, PspPointer HandlerArgument)
+		public int sceKernelSetVTimerHandlerWide(VirtualTimer VirtualTimer, long Time, PspPointer HandlerCallback, PspPointer HandlerArgument)
 		{
-			var VirtualTimer = VirtualTimerPool.Get(VirtualTimerId);
 			VirtualTimer.SetHandler(Time: Time, HandlerCallback: HandlerCallback, HandlerArgument: HandlerArgument, HandlerIsWide: true);
 			return 0;
 		}
@@ -143,12 +128,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Cancel the timer handler
 		/// </summary>
-		/// <param name="VirtualTimerId">The UID of the vtimer</param>
+		/// <param name="VirtualTimer">The UID of the vtimer</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0xD2D615EF, FirmwareVersion = 150)]
-		public int sceKernelCancelVTimerHandler(int VirtualTimerId)
+		public int sceKernelCancelVTimerHandler(VirtualTimer VirtualTimer)
 		{
-			var VirtualTimer = VirtualTimerPool.Get(VirtualTimerId);
 			VirtualTimer.CancelHandler();
 			return 0;
 		}
@@ -156,12 +140,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <summary>
 		/// Deletes the timer handler
 		/// </summary>
-		/// <param name="VirtualTimerId">The UID of the vtimer</param>
+		/// <param name="VirtualTimer">The UID of the vtimer</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x328F9E52, FirmwareVersion = 150)]
-		public int sceKernelDeleteVTimer(int VirtualTimerId)
+		public int sceKernelDeleteVTimer(VirtualTimer VirtualTimer)
 		{
-			VirtualTimerPool.Remove(VirtualTimerId);
+			VirtualTimer.RemoveUid(InjectContext);
 			return 0;
 		}
 	}

@@ -17,6 +17,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			public SceKernelVplInfo Info;
 			public MemoryPartition MemoryPartition;
 			public MemoryPartition.Anchor InternalMemoryAnchor;
+			public MemoryPartition.Anchor InternalMemoryAnchorReturn;
 			public MemoryPartition.Anchor ExternalMemoryAnchor;
 
 			public class WaitVariablePoolItem
@@ -39,6 +40,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 #if true
 				ExternalMemoryAnchor = High ? Hle.MemoryPartition.Anchor.High : Hle.MemoryPartition.Anchor.Low;
 				InternalMemoryAnchor = Hle.MemoryPartition.Anchor.Low;
+				InternalMemoryAnchorReturn = Hle.MemoryPartition.Anchor.Low;
 #else
 				InternalMemoryAnchor = High ? Hle.MemoryPartition.Anchor.High : Hle.MemoryPartition.Anchor.Low;
 				ExternalMemoryAnchor = Hle.MemoryPartition.Anchor.Low;
@@ -53,6 +55,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			public void Allocate(CpuThreadState CpuThreadState, int Size, PspPointer* AddressPointer, uint* Timeout, bool HandleCallbacks)
 			{
+				//Size = (int)MathUtils.NextAligned(Size, 4);
 				if (!TryAllocate(CpuThreadState, Size, AddressPointer))
 				{
 					bool TimedOut = false;
@@ -84,7 +87,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 				try
 				{
 					var AllocatedSegment = MemoryPartition.Allocate(Size, InternalMemoryAnchor);
-					AddressPointer->Address = AllocatedSegment.GetAnchoredAddress(InternalMemoryAnchor);
+					AddressPointer->Address = AllocatedSegment.GetAnchoredAddress(InternalMemoryAnchorReturn);
 					return true;
 				}
 				catch (MemoryPartitionNoMemoryException)
@@ -96,7 +99,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			public void Free(CpuThreadState CpuThreadState, PspPointer Address)
 			{
-				MemoryPartition.DeallocateAnchoredAddress(Address, InternalMemoryAnchor);
+				MemoryPartition.DeallocateAnchoredAddress(Address, InternalMemoryAnchorReturn);
 
 				var TotalFreeSize = MemoryPartition.TotalFreeSize;
 				foreach (var Item in WaitList.ToArray())

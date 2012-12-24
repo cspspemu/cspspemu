@@ -18,6 +18,12 @@ namespace CSPspEmu.Hle
 
 	static public class IHleUidPoolClassExtensions
 	{
+		static public T AllocateUid<T>(this T IHleUidPoolClass, InjectContext InjectContext) where T : IHleUidPoolClass
+		{
+			InjectContext.GetInstance<HleUidPoolManager>().Alloc(IHleUidPoolClass.GetType(), IHleUidPoolClass);
+			return IHleUidPoolClass;
+		}
+
 		static public void RemoveUid(this IHleUidPoolClass IHleUidPoolClass, InjectContext InjectContext)
 		{
 			InjectContext.GetInstance<HleUidPoolManager>().RemoveItem(IHleUidPoolClass.GetType(), IHleUidPoolClass);
@@ -25,7 +31,7 @@ namespace CSPspEmu.Hle
 
 		static public int GetUidIndex(this IHleUidPoolClass IHleUidPoolClass, InjectContext InjectContext)
 		{
-			return InjectContext.GetInstance<HleUidPoolManager>().GetIndex(IHleUidPoolClass.GetType(), IHleUidPoolClass);
+			return InjectContext.GetInstance<HleUidPoolManager>().GetOrAllocIndex(IHleUidPoolClass.GetType(), IHleUidPoolClass);
 		}
 	}
 }
@@ -96,6 +102,12 @@ namespace CSPspEmu.Hle.Managers
 				return Items[Index];
 			}
 
+			public int GetOrAllocIndex(IHleUidPoolClass Item)
+			{
+				if (!RevItems.ContainsKey(Item)) return Alloc(Item);
+				return GetIndex(Item);
+			}
+
 			public int GetIndex(IHleUidPoolClass Item)
 			{
 				if (!RevItems.ContainsKey(Item)) ThrowNotFound();
@@ -138,6 +150,11 @@ namespace CSPspEmu.Hle.Managers
 		public IHleUidPoolClass Get(Type Type, int Index)
 		{
 			return _GetTypePool(Type).Get(Index);
+		}
+
+		public int GetOrAllocIndex(Type Type, IHleUidPoolClass Item)
+		{
+			return _GetTypePool(Type).GetOrAllocIndex(Item);
 		}
 
 		public int GetIndex(Type Type, IHleUidPoolClass Item)
