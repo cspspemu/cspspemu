@@ -1,5 +1,28 @@
 ﻿namespace CSPspEmu.Core.Audio
 {
+	public struct MonoShortSoundSample
+	{
+		public short Value;  // Left/Right audio
+
+		public MonoShortSoundSample(short Value)
+		{
+			this.Value = Value;
+		}
+
+		public static MonoShortSoundSample Mix(MonoShortSoundSample A, MonoShortSoundSample B)
+		{
+			return new MonoShortSoundSample((short)((A.Value + B.Value) / 2));
+		}
+
+		public short MonoLeftRight
+		{
+			set
+			{
+				Value = value;
+			}
+		}
+	}
+
 	public struct StereoShortSoundSample
 	{
 		public short Left;  // Left audio

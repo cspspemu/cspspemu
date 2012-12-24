@@ -118,10 +118,10 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 				SasCore.SampleRate = SampleRate;
 			}
 
-			VoiceOnCount = new int[SasCore.GrainSamples];
-			BufferTemp = new StereoIntSoundSample[SasCore.GrainSamples];
-			BufferShort = new StereoShortSoundSample[SasCore.GrainSamples];
-			MixBufferShort = new StereoShortSoundSample[SasCore.GrainSamples];
+			VoiceOnCount = new int[SasCore.GrainSamples * 2];
+			BufferTemp = new StereoIntSoundSample[SasCore.GrainSamples * 2];
+			BufferShort = new StereoShortSoundSample[SasCore.GrainSamples * 2];
+			MixBufferShort = new StereoShortSoundSample[SasCore.GrainSamples * 2];
 
 			return 0;
 		}
@@ -249,7 +249,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// </returns>
 		[HlePspFunction(NID = 0x50A14DFC, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
-		public int __sceSasCoreWithMix(uint SasCorePointer, StereoShortSoundSample* SasInOut, int LeftVolume, int RightVolume)
+		public int __sceSasCoreWithMix(uint SasCorePointer, short* SasInOut, int LeftVolume, int RightVolume)
 		{
 #if false
 			var SasCore = GetSasCore(SasCorePointer);
@@ -294,7 +294,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// </returns>
 		[HlePspFunction(NID = 0xA3589D81, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
-		public int __sceSasCore(uint SasCorePointer, StereoShortSoundSample* SasOut)
+		public int __sceSasCore(uint SasCorePointer, short* SasOut)
 		{
 			var SasCore = GetSasCore(SasCorePointer);
 
@@ -304,7 +304,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 			}
 
 			int NumberOfChannels = SasCore.OutputMode == OutputMode.PSP_SAS_OUTPUTMODE_STEREO ? 2 : 1;
-			int NumberOfSamples = SasCore.GrainSamples;
+			int NumberOfSamples = SasCore.GrainSamples * 2 / NumberOfChannels;
 
 			for (int n = 0; n < NumberOfSamples; n++)
 			{
@@ -347,9 +347,17 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 			}
 
 			// Output converted 44100 data
-			for (int n = 0; n < NumberOfSamples; n++)
+			if (NumberOfChannels == 1)
 			{
-				SasOut[n] = BufferShort[n];
+				for (int n = 0; n < NumberOfSamples; n++) SasOut[n] = BufferShort[n].Left;
+			}
+			else
+			{
+				for (int n = 0; n < NumberOfSamples; n++)
+				{
+					SasOut[n * 2 + 0] = BufferShort[n].Left;
+					SasOut[n * 2 + 1] = BufferShort[n].Right;
+				}
 			}
 			//throw(new NotImplementedException());
 			return 0;

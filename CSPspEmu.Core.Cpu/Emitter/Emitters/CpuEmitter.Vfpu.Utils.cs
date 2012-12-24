@@ -584,9 +584,21 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 		*/
 
-		private AstNodeExprLValue VFR(int Index)
+		private AstNodeExprLValue VFR(int Index, bool AsInteger = false)
 		{
-			return REG("VFR" + Index);
+			var Ret = REG("VFR" + Index);
+			if (AsInteger) Ret = ast.Reinterpret<int>(Ret);
+			return Ret;
+		}
+
+		private AstNodeExpr VFR_f(int Index)
+		{
+			return VFR(Index, AsInteger: false);
+		}
+
+		private AstNodeExpr VFR_i(int Index)
+		{
+			return VFR(Index, AsInteger: true);
 		}
 
 		//private void VfpuLoad_Register(uint Register, int Index, uint VectorSize, ref VfpuPrefix Prefix, bool Debug = false, bool AsInteger = false)
@@ -629,14 +641,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				// Value.
 				else
 				{
-					if (AsInteger)
-					{
-						throw (new NotImplementedException("AstLoadVfpuReg.AsInteger"));
-					}
-					else
-					{
-						AstNodeExpr = VFR(RegisterIndices[Prefix.SourceIndex(Index)]);
-					}
+					AstNodeExpr = VFR(RegisterIndices[Prefix.SourceIndex(Index)], AsInteger);
 					if (Prefix.SourceAbsolute(Index)) AstNodeExpr = ast.CallStatic((Func<float, float>)MathFloat.Abs, AstNodeExpr);
 				}
 
@@ -644,11 +649,15 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 			else
 			{
-				
-				AstNodeExpr = VFR(RegisterIndices[Index]);
+				AstNodeExpr = VFR(RegisterIndices[Index], AsInteger);
 			}
 
 			return AstNodeExpr;
+		}
+
+		private AstNodeExpr AstLoadVs(uint VectorSize, int Index, bool AsInteger = false)
+		{
+			return AstLoadVfpuReg(VectorSize, Index, VectorSize, ref PrefixSource, AsInteger);
 		}
 
 		private AstNodeExpr AstLoadVs(int Index, bool AsInteger = false)
@@ -705,7 +714,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			var Items = new List<AstNodeStm>();
 			for (int Index = 0; Index < Size; Index++)
 			{
-				Items.Add(ast.Assign(VFR(RegisterIndices[Index]), PrefixVdTransform(Index, Generator(Index), AsInteger)));
+				Items.Add(ast.Assign(VFR(RegisterIndices[Index], AsInteger), PrefixVdTransform(Index, Generator(Index), AsInteger)));
 			}
 			return ast.Statements(Items.ToArray());
 		}

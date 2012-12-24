@@ -26,7 +26,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 				var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
 				SasVoice.Vag = new Vag();
 				SasVoice.Vag.Load(VagPointer, VagSize);
-				SasVoice.SampleOffset = 0;
+				SasVoice.ResetSampleOffset();
 				SasVoice.LoopCount = LoopCount;
 
 				//var VagPointer = (byte *)MemoryManager.Memory.PspAddressToPointerSafe(VagAddress);

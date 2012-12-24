@@ -75,7 +75,7 @@ namespace CSPspEmu.AutoTests
 			}
 		}
 
-		protected string RunExecutableAndGetOutput(string PspAutoTestsFolder, string FileName, out string CapturedOutput, string FileNameBase)
+		protected string RunExecutableAndGetOutput(bool RunTestsViewOut, string PspAutoTestsFolder, string FileName, out string CapturedOutput, string FileNameBase)
 		{
 			var OutputString = "";
 
@@ -83,6 +83,8 @@ namespace CSPspEmu.AutoTests
 
 			InjectContext _InjectContext = null;
 			{
+				//var Capture = false;
+				var Capture = !RunTestsViewOut;
 				CapturedOutput = ConsoleUtils.CaptureOutput(() =>
 				{
 					_InjectContext = PspInjectContext.CreateInjectContext(StoredConfig, Test: true);
@@ -150,8 +152,7 @@ namespace CSPspEmu.AutoTests
 						OutputString = test_output.ReadAllContentsAsString();
 					}
 				},
-					//Capture: false
-				Capture: true
+				Capture: Capture
 				);
 
 				//var HleOutputHandlerMock = (HleOutputHandlerMock)PspEmulatorContext.GetInstance<HleOutputHandler>();
@@ -162,7 +163,7 @@ namespace CSPspEmu.AutoTests
 			return OutputString;
 		}
 
-		protected void RunFile(string PspAutoTestsFolder, string FileNameExecutable, string FileNameExpected, string FileNameBase)
+		protected void RunFile(bool RunTestsViewOut, string PspAutoTestsFolder, string FileNameExecutable, string FileNameExpected, string FileNameBase)
 		{
 			ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.DarkCyan, () =>
 			{
@@ -174,7 +175,7 @@ namespace CSPspEmu.AutoTests
 
 			// Execute.
 			{
-				RealOutput = RunExecutableAndGetOutput(PspAutoTestsFolder, FileNameExecutable, out CapturedOutput, FileNameBase);
+				RealOutput = RunExecutableAndGetOutput(RunTestsViewOut, PspAutoTestsFolder, FileNameExecutable, out CapturedOutput, FileNameBase);
 			}
 
 			var ExpectedOutputLines = ExpectedOutput.Trim().Replace("\r\n", "\n").Split('\n');
@@ -292,7 +293,7 @@ namespace CSPspEmu.AutoTests
 			return ErrorMessage + OutputMessage;
 		}
 
-		protected void Run(string PspAutoTestsFolder, string WildCardFilter)
+		protected void Run(bool RunTestsViewOut, string PspAutoTestsFolder, string WildCardFilter)
 		{
 			foreach (var FileNameExpected in Directory.GetFiles(PspAutoTestsFolder, "*.expected", SearchOption.AllDirectories))
 			{
@@ -342,7 +343,7 @@ namespace CSPspEmu.AutoTests
 
 				if (File.Exists(FileNameExecutable))
 				{
-					RunFile(PspAutoTestsFolder, FileNameExecutable, FileNameExpected, FileNameBase);
+					RunFile(RunTestsViewOut, PspAutoTestsFolder, FileNameExecutable, FileNameExpected, FileNameBase);
 				}
 				else
 				{
@@ -351,7 +352,7 @@ namespace CSPspEmu.AutoTests
 			}
 		}
 
-		private void InternalMain(String[] Arguments)
+		private void InternalMain(bool RunTestsViewOut, String[] Arguments)
 		{
 var BasePath = Path.GetDirectoryName(Application.ExecutablePath);
 			string PspAutoTestsFolder = "";
@@ -399,7 +400,7 @@ var BasePath = Path.GetDirectoryName(Application.ExecutablePath);
 			}
 
 			Init();
-			Run(PspAutoTestsFolder, WildCardFilter);
+			Run(RunTestsViewOut, PspAutoTestsFolder, WildCardFilter);
 			if (Debugger.IsAttached)
 			{
 				Console.WriteLine("Done");
@@ -407,9 +408,9 @@ var BasePath = Path.GetDirectoryName(Application.ExecutablePath);
 			}
 		}
 
-		public static void Main(String[] Arguments)
+		public static void Main(bool RunTestsViewOut, String[] Arguments)
 		{
-			new AutoTestsProgram().InternalMain(Arguments);
+			new AutoTestsProgram().InternalMain(RunTestsViewOut, Arguments);
 		}			
 	}
 }

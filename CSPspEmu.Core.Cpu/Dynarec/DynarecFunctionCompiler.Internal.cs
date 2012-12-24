@@ -1,6 +1,8 @@
 ﻿//#define DEBUG_TRACE_INSTRUCTIONS
 //#define ENABLE_JUMP_GOTO
 
+#define ENABLE_NATIVE_CALLS
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,11 +25,17 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			public static Func<uint, CpuEmitter, AstNodeStm> CpuEmitterInstruction = EmitLookupGenerator.GenerateSwitchDelegateReturn<CpuEmitter, AstNodeStm>(InstructionTable.ALL);
 			static MipsDisassembler MipsDisassembler = new MipsDisassembler();
 			CpuEmitter CpuEmitter;
-			MipsMethodEmitter MipsMethodEmitter;
 			DynarecFunctionCompiler DynarecFunctionCompiler;
 			IInstructionReader InstructionReader;
+
+			[Inject]
 			CpuProcessor CpuProcessor;
-			PspMemory Memory { get { return CpuProcessor.Memory; } }
+
+			[Inject]
+			PspMemory Memory;
+
+			MipsMethodEmitter MipsMethodEmitter;
+
 			uint EntryPC;
 			SortedDictionary<uint, AstLabel> Labels = new SortedDictionary<uint, AstLabel>();
 			SortedDictionary<uint, AstLabel> LabelsJump = new SortedDictionary<uint, AstLabel>();
@@ -61,17 +69,17 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				if (_ExploreNewPcCallback != null) _ExploreNewPcCallback(PC);
 			}
 
-			internal InternalFunctionCompiler(CpuProcessor CpuProcessor, MipsMethodEmitter MipsMethodEmiter, DynarecFunctionCompiler DynarecFunctionCompiler, IInstructionReader InstructionReader, Action<uint> _ExploreNewPcCallback, uint EntryPC, bool DoLog)
+			internal InternalFunctionCompiler(InjectContext InjectContext, MipsMethodEmitter MipsMethodEmitter, DynarecFunctionCompiler DynarecFunctionCompiler, IInstructionReader InstructionReader, Action<uint> _ExploreNewPcCallback, uint EntryPC, bool DoLog)
 			{
+				InjectContext.InjectDependencesTo(this);
 				this._ExploreNewPcCallback = _ExploreNewPcCallback;
-				this.CpuEmitter = new CpuEmitter(MipsMethodEmiter, InstructionReader, CpuProcessor);
-				this.MipsMethodEmitter = MipsMethodEmiter;
+				this.MipsMethodEmitter = MipsMethodEmitter;
+				this.CpuEmitter = new CpuEmitter(InjectContext, MipsMethodEmitter, InstructionReader);
 				this.GlobalInstructionStats = CpuProcessor.GlobalInstructionStats;
-				this.InstructionStats = MipsMethodEmiter.InstructionStats;
+				this.InstructionStats = MipsMethodEmitter.InstructionStats;
 				this.NewInstruction = new Dictionary<string, bool>();
 				this.DoLog = DoLog;
 
-				this.CpuProcessor = CpuProcessor;
 				this.DynarecFunctionCompiler = DynarecFunctionCompiler;
 				this.InstructionReader = InstructionReader;
 				this.EntryPC = EntryPC;
@@ -203,6 +211,10 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 							if (BranchInfo.HasFlag(DynarecBranchAnalyzer.JumpFlags.AndLink))
 							{
 								// Just a function call. Continue analyzing.
+#if !ENABLE_NATIVE_CALLS
+								EndOfBranchFound = true;
+								continue;
+#endif
 							}
 							else
 							{

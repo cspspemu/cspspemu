@@ -154,6 +154,11 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		public void SetPlaying(bool Set)
 		{
 			Playing = Set;
+			ResetSampleOffset();
+		}
+
+		public void ResetSampleOffset()
+		{
 			SampleOffset = 0;
 		}
 

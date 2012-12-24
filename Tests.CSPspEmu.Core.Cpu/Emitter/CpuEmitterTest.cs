@@ -1179,18 +1179,48 @@ namespace CSPspEmu.Core.Tests
 		{
 			CpuThreadState.Vfpr.ClearAll(float.NaN);
 
-			CpuThreadState.Vfpr[4, "R100"] = new float[] { 1, 2, 3, 4 };
-			CpuThreadState.Vfpr[4, "R101"] = new float[] { 50, 60, 70, 80 };
+			CpuThreadState.GPR[4] = (int)PspMemory.MainOffset;
+			var PtrIn = (float*)Memory.PspAddressToPointerSafe((uint)CpuThreadState.GPR[4]);
+			PtrIn[0] = 1f;
+			PtrIn[1] = 2f;
+			PtrIn[2] = 3f;
+			PtrIn[3] = 4f;
 
 			ExecuteAssembly(@"
-				lvl.q 
-				lvr.q 
+				lvl.q C100, 12+r4
+				lvr.q C100, 0+r4
 			");
 
 			CpuThreadState.DumpVfpuRegisters(Console.Error);
 
-			Assert.AreEqual("51,62,73,84", String.Join(",", CpuThreadState.Vfpr[4, "C200"]));
-			Assert.AreEqual("-49,-58,-67,-76", String.Join(",", CpuThreadState.Vfpr[4, "C210"]));
+			Assert.AreEqual("1,2,3,4", String.Join(",", CpuThreadState.Vfpr[4, "C100"]));
+		}
+
+		[Test]
+		public void VfpuColorConversion()
+		{
+			CpuThreadState.GPR[4] = (int)PspMemory.MainOffset;
+			CpuThreadState.GPR[5] = (int)PspMemory.MainOffset + 0x100;
+			var PtrIn = (uint*)Memory.PspAddressToPointerSafe((uint)CpuThreadState.GPR[4]);
+			var PtrOut = (ushort*)Memory.PspAddressToPointerSafe((uint)CpuThreadState.GPR[5]);
+
+			PtrIn[0] = 0xFFFF00FF;
+			PtrIn[1] = 0x801100FF;
+			PtrIn[2] = 0x7F5500FF;
+			PtrIn[3] = 0x00aa00FF;
+
+			ExecuteAssembly(@"
+				lvl.q C000, 12+r4
+				lvr.q C000, 0+r4
+				vt4444.q C010, C000
+			");
+
+			Assert.AreEqual("1,2,3,4", String.Join(",", CpuThreadState.Vfpr[2, "C010"]));
+
+			//Assert.AreEqual(0xFF0F, PtrOut[0]);
+			//Assert.AreEqual(0x810F, PtrOut[1]);
+			//Assert.AreEqual(0x750F, PtrOut[2]);
+			//Assert.AreEqual(0x0A0F, PtrOut[3]);
 		}
 
 		[Test]

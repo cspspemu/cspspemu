@@ -38,9 +38,9 @@ namespace CSPspEmu
 			return Type.GetType("System.Reflection.ReflectionContext", false) != null;
 		}
 
-		static void RunTests(string[] Arguments)
+		static void RunTests(bool RunTestsViewOut, string[] Arguments)
 		{
-			AutoTestsProgram.Main(Arguments.Skip(1).ToArray());
+			AutoTestsProgram.Main(RunTestsViewOut, Arguments.ToArray());
 			Environment.Exit(0);
 		}
 
@@ -119,6 +119,7 @@ namespace CSPspEmu
 #endif
 
 			string FileToLoad = null;
+			bool RunTestsViewOut = false;
 
 			var Getopt = new Getopt(Arguments);
 			{
@@ -133,7 +134,7 @@ namespace CSPspEmu
 					Console.WriteLine("   /gitrevision         - Outputs the git revision");
 					Console.WriteLine("   /installat3          - Installs the WavDest filter. Requires be launched with administrative rights.");
 					Console.WriteLine("   /associate           - Associates extensions with the program. Requires be launched with administrative rights.");
-					Console.WriteLine("   /tests               - Run integration tests.");
+					Console.WriteLine("   /viewout /tests      - Run integration tests.");
 					Console.WriteLine("");
 					Console.WriteLine(" Examples:");
 					Console.WriteLine("   cspspemu.exe <path_to_psp_executable>");
@@ -220,9 +221,13 @@ namespace CSPspEmu
 						Environment.Exit(-1);
 					}
 				});
+				Getopt.AddRule("/viewout", () =>
+				{
+					RunTestsViewOut = true;
+				});
 				Getopt.AddRule("/tests", () =>
 				{
-					RunTests(Arguments);
+					RunTests(RunTestsViewOut, Getopt.DequeueAllNext());
 				});
 				Getopt.AddRule((Name) =>
 				{

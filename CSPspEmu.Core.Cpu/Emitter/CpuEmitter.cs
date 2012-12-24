@@ -11,8 +11,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 {
 	public unsafe sealed partial class CpuEmitter
 	{
+		[Inject]
 		public CpuProcessor CpuProcessor;
+
 		private MipsMethodEmitter MipsMethodEmitter;
+
 		private IInstructionReader InstructionReader;
 		public Instruction Instruction { private set; get; }
 		public uint PC { private set; get; }
@@ -36,11 +39,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public int FD { get { return Instruction.FD; } }
 		public int FS { get { return Instruction.FS; } }
 
-		public CpuEmitter(MipsMethodEmitter MipsMethodEmitter, IInstructionReader InstructionReader, CpuProcessor CpuProcessor)
+		public CpuEmitter(InjectContext InjectContext, MipsMethodEmitter MipsMethodEmitter, IInstructionReader InstructionReader)
 		{
+			InjectContext.InjectDependencesTo(this);
 			this.MipsMethodEmitter = MipsMethodEmitter;
 			this.InstructionReader = InstructionReader;
-			this.CpuProcessor = CpuProcessor;
 		}
 
 		// AST utilities
@@ -51,7 +54,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public static AstNodeExprLValue FPR(int Index) { return REG("FPR" + Index); }
 		public static AstNodeExprLValue FPR_I(int Index) { return ast.Indirect(ast.Cast(typeof(int*), ast.GetAddress(REG("FPR" + Index)), Explicit: false)); }
 
-		public static AstNodeExpr GPR_f(int Index) { if (Index == 0) return ast.Immediate((int)0); return ast.Indirect(ast.Cast(typeof(float*), ast.GetAddress(GPR(Index)), Explicit: false)); }
+		public static AstNodeExpr GPR_f(int Index) { if (Index == 0) return ast.Immediate((int)0); return ast.Reinterpret<float>(GPR(Index)); }
 		public static AstNodeExpr GPR_s(int Index) { if (Index == 0) return ast.Immediate((int)0); return ast.Cast<int>(GPR(Index)); }
 		public static AstNodeExpr GPR_sl(int Index) { return ast.Cast<long>(GPR_s(Index)); }
 		public static AstNodeExpr GPR_u(int Index) { if (Index == 0) return ast.Immediate((uint)0); return ast.Cast<uint>(GPR(Index)); }
@@ -70,10 +73,15 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			));
 		}
 
+		public static void ErrorWriteLine(string Line)
+		{
+			Console.Error.WriteLine(Line);
+		}
+
 		private static AstNodeStm _AstNotImplemented(string Description)
 		{
-			throw (new NotImplementedException("AstNotImplemented: " + Description));
-			return ast.Statement(ast.CallStatic((Action<string>)Console.WriteLine, "AstNotImplemented: " + Description));
+			//throw (new NotImplementedException("AstNotImplemented: " + Description));
+			return ast.Statement(ast.CallStatic((Action<string>)ErrorWriteLine, "AstNotImplemented: " + Description));
 		}
 
 #if NET_45
