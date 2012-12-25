@@ -101,6 +101,11 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			}
 
 			var Result = ProcessCallback(Instruction, this);
+			if (Result.InstructionInfo == null)
+			{
+				Console.Error.WriteLine(String.Format("Instruction at 0x{0:X8} with data 0x{1:X8} didn't generate a value", PC, (uint)Instruction));
+				Result.InstructionInfo = InstructionTable.Unknown;
+			}
 			Result.InstructionPC = PC;
 			return Result;
 		}

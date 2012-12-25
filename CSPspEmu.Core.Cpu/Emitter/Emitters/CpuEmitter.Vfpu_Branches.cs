@@ -8,7 +8,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	{
 		public static AstNodeStm _vcmp_end(CpuThreadState CpuThreadState, int VectorSize)
 		{
-			throw (new NotImplementedException("_vcmp_end"));
+			return AstNotImplemented("_vcmp_end");
 
 			//CpuThreadState.VFR_CC_4 = false;
 			//CpuThreadState.VFR_CC_5 = true;
@@ -31,7 +31,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vcmp()
 		{
-			throw (new NotImplementedException("vcmp"));
+			return AstNotImplemented("vcmp");
 
 			//var VectorSize = Instruction.ONE_TWO;
 			//var Cond = Instruction.IMM4;
@@ -97,7 +97,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm _vsltge(SafeBinaryComparison SafeBinaryComparison)
 		{
-			throw (new NotImplementedException("_vsltge"));
+			return AstNotImplemented("_vsltge");
 
 			//var VectorSize = Instruction.ONE_TWO;
 			//
@@ -125,7 +125,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm vscmp()
 		{
-			throw (new NotImplementedException("vscmp"));
+			return AstNotImplemented("vscmp");
 			//var VectorSize = Instruction.ONE_TWO;
 			//
 			//VectorOperationSaveVd(VectorSize, (Index) =>
@@ -152,7 +152,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm _vcmovtf(bool True)
 		{
-			throw (new NotImplementedException("_vcmovtf"));
+			return AstNotImplemented("_vcmovtf"); ;
 			//var Register = Instruction.IMM3;
 			//var VectorSize = Instruction.ONE_TWO;
 			//
@@ -220,7 +220,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm _bvtf(bool True)
 		{
-			throw (new NotImplementedException("_bvtf"));
+			return AstNotImplemented("_bvtf"); ;
 			//var Register = Instruction.IMM3;
 			//MipsMethodEmitter.StoreBranchFlag(() =>
 			//{

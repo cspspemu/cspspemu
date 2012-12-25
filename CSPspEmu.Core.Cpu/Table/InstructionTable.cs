@@ -57,6 +57,8 @@ namespace CSPspEmu.Core.Cpu.Table
 			}
 		}
 
+		public static InstructionInfo Unknown = ID("unknwon", VM("111111:11111:11111:11111:11111:111111"), "", ADDR_TYPE_NONE, 0);
+
 		private static InstructionInfo[] _ALU;
 		public static InstructionInfo[] ALU
 		{

@@ -1,15 +1,11 @@
 ﻿using CSharpUtils;
 using SafeILGenerator.Ast.Nodes;
+using System;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
 	public sealed partial class CpuEmitter
 	{
-		public static uint _vuc2i_impl(byte Value)
-		{
-			return ((uint)Value * 0x01010101) >> 1;
-		}
-
 		public static uint _vi2c_impl(uint x, uint y, uint z, uint w)
 		{
 			return ((x >> 24) << 0 ) | ((y >> 24) << 8 ) | ((z >> 24) << 16) | ((w >> 24) << 24) | 0;
@@ -17,39 +13,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vuc2i()
 		{
-			return AstNotImplemented("vuc2i");
-
-			//var VectorSize = Instruction.ONE_TWO;
-			////if (VectorSize != 4) throw (new NotImplementedException("vuc2i.VectorSize"));
-			////if (VectorSize != 1) throw (new NotImplementedException("vuc2i.VectorSize"));
-			//
-			////VectorOperationSaveVd(VectorSize, (Index) =>
-			//VectorOperationSaveVd(4, (Index) =>
-			//{
-			//	Load_VS(0, 1, AsInteger: true);
-			//	SafeILGenerator.Push((int)Index * 8);
-			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftRightUnsigned);
-			//	MipsMethodEmitter.CallMethod((Func<byte, uint>)CpuEmitter._vuc2i_impl);
-			//}, AsInteger: true);
+			return _Vector(VD, VUInt).SetVector((Index) =>
+				ast.Binary((ast.Binary(_Cell(VS, VUInt).Get(), ">>", (Index * 8)) & 0xFF) * 0x01010101, ">>", 1)
+			);
 		}
 
 		public AstNodeStm vc2i()
 		{
-			return AstNotImplemented("vc2i");
-
-			//var VectorSize = Instruction.ONE_TWO;
-			////if (VectorSize != 4) throw (new NotImplementedException("vc2i.VectorSize"));
-			////if (VectorSize != 1) throw (new NotImplementedException("vc2i.VectorSize"));
-			//
-			////VectorOperationSaveVd(VectorSize, (Index) =>
-			//VectorOperationSaveVd(4, (Index) =>
-			//{
-			//	Load_VS(0, 1, AsInteger: true);
-			//	SafeILGenerator.Push((int)((3 - Index) * 8));
-			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftLeft);
-			//	SafeILGenerator.Push(unchecked((int)0xFF000000));
-			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.And);
-			//}, AsInteger: true);
+			return _Vector(VD, VUInt).SetVector((Index) =>
+				ast.Binary(_Cell(VS, VUInt).Get(), "<<", ((3 - Index) * 8)) & 0xFF000000
+			);
 		}
 
 		// Vfpu Integer to(2) Color?
@@ -71,20 +44,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vs2i()
 		{
-			return AstNotImplemented("vs2i");
-			//var VectorSize = Instruction.ONE_TWO;
-			//if (VectorSize > 2) throw(new NotImplementedException("vs2i.VectorSize"));
-			//VectorOperationSaveVd(VectorSize * 2, (Index) =>
-			//{
-			//	Load_VS((Index / 2), VectorSize, AsInteger : true);
-			//	if ((Index % 2) == 0)
-			//	{
-			//		SafeILGenerator.Push((int)16);
-			//		SafeILGenerator.BinaryOperation(SafeBinaryOperator.ShiftLeft);
-			//	}
-			//	SafeILGenerator.Push(unchecked((int)0xFFFF0000));
-			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.And);
-			//}, AsInteger: true);
+			var VectorSize = Instruction.ONE_TWO;
+			if (VectorSize > 2) throw (new NotImplementedException("vs2i.VectorSize"));
+			var Dest = _Vector(VD, VUInt, VectorSize * 2);
+			var Src = _Vector(VS, VUInt, VectorSize);
+			return Dest.SetVector((Index) =>
+			{
+				var Value = Src[Index / 2];
+				if ((Index % 2) == 0) Value = ast.Binary(Value, "<<", 16);
+				return Value & 0xFFFF0000;
+			});
 		}
 
 		public static uint _vi2uc(int x, int y, int z, int w)
@@ -99,7 +68,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vi2uc()
 		{
-			return AstNotImplemented("vi2uc");
+			return _Vector(VD, VInt, 1).SetVector((Index) =>
+				ast.CallStatic(
+					(Func<int, int, int, int, uint>)_vi2uc,
+					_Vector(VS, VInt)[0],
+					_Vector(VS, VInt)[1],
+					_Vector(VS, VInt)[2],
+					_Vector(VS, VInt)[3]
+				)
+			);
+			//return AstNotImplemented("vi2uc");
 			//var VectorSize = Instruction.ONE_TWO;
 			//Save_VD(Index: 0, VectorSize: 1, Action: () =>
 			//{
@@ -113,14 +91,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vi2f()
 		{
-			return AstNotImplemented("vi2f");
-			//VectorOperationSaveVd(Index =>
-			//{
-			//	Load_VS(Index, AsInteger: true);
-			//	SafeILGenerator.ConvertTo<float>();
-			//	SafeILGenerator.Push(-(int)Instruction.IMM5);
-			//	MipsMethodEmitter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
-			//});
+			return _Vector(VD).SetVector((Index) =>
+				ast.CallStatic(
+					(Func<float, int, float>)MathFloat.Scalb,
+					ast.Cast<float>(_Vector(VS, VInt)[Index]),
+					-(int)Instruction.IMM5
+				)
+			);
 		}
 
 		public AstNodeStm vf2id()

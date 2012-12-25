@@ -1,5 +1,6 @@
 ﻿using System;
 using SafeILGenerator.Ast.Nodes;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -62,8 +63,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		public AstNodeStm unknown()
 		{
-			//Logger.Error(String.Format("0x{0:X8} : 0x{1:X8} at 0x{2:X8}", Instruction.Value, Instruction.Value, PC));
-			return _break();
+			Console.Error.WriteLine("UNKNOWN INSTRUCTION: 0x{0:X8} : 0x{1:X8} at 0x{2:X8}", Instruction.Value, Instruction.Value, PC);
+			//return _break();
+			return ast.Statement();
 		}
 	}
 }

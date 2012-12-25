@@ -1,5 +1,6 @@
 ﻿using System;
 using SafeILGenerator.Ast.Nodes;
+using System.Linq;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -162,26 +163,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm vfad()
 		{
-			return AstNotImplemented("vfad");
-			//uint VectorSize = Instruction.ONE_TWO;
-			////Console.Error.WriteLine("VectorSize: {0}", VectorSize);
-			//VectorOperationSaveAggregatedVd(VectorSize,
-			//	delegate()
-			//	{
-			//		SafeILGenerator.Push((float)0.0f);
-			//	},
-			//	delegate(int Index, Action<int> Load)
-			//	{
-			//		Load(1);
-			//		//Load_VS(Index, VectorSize);
-			//		SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-			//		//EmitLogFloatResult();
-			//	},
-			//	delegate()
-			//	{
-			//		//EmitLogResult();
-			//	}
-			//);
+			var VectorSize = Instruction.ONE_TWO;
+			var Value = (AstNodeExpr)0f;
+			foreach (var Index in Enumerable.Range(0, VectorSize)) Value += _Vector(VS)[Index];
+			return _Cell(VD).Set(Value);
 		}
 
 		/// <summary>

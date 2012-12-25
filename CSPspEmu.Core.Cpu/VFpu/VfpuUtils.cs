@@ -127,7 +127,8 @@ namespace CSPspEmu.Core.Cpu.VFpu
 		/// </summary>
 		public static readonly float[] VfpuConstantsValues = new float[] {
 			(float)0.0f,                        // VFPU_ZERO     - 0
-			(float)float.PositiveInfinity,      // VFPU_HUGE     - infinity
+			//(float)float.PositiveInfinity,      // VFPU_HUGE     - infinity
+			(float)340282346638528859811704183484516925440f,      // VFPU_HUGE     - infinity
 			(float)(Math.Sqrt(2.0)),            // VFPU_SQRT2    - sqrt(2)
 			(float)(Math.Sqrt(1.0 / 2.0)),      // VFPU_SQRT1_2  - sqrt(1 / 2)
 			(float)(2.0 / Math.Sqrt(Math.PI)),  // VFPU_2_SQRTPI - 2 / sqrt(pi)
