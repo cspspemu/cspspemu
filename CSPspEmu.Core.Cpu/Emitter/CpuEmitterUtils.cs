@@ -237,7 +237,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			uint Address = (uint)(RS + Offset);
 			uint AddressAlign = (uint)Address & 3;
-			uint Value = *(uint*)CpuThreadState.GetMemoryPtr(Address & 0xFFFFFFFC);
+			uint Value = *(uint*)CpuThreadState.GetMemoryPtr(Address & unchecked((uint)~3));
 			return (uint)((Value << LwlShift[AddressAlign]) | (RT & LwlMask[AddressAlign]));
 		}
 
@@ -245,7 +245,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			uint Address = (uint)(RS + Offset);
 			uint AddressAlign = (uint)Address & 3;
-			uint Value = *(uint*)CpuThreadState.GetMemoryPtr(Address & 0xFFFFFFFC);
+			uint Value = *(uint*)CpuThreadState.GetMemoryPtr(Address & unchecked((uint)~3));
 			return (uint)((Value >> LwrShift[AddressAlign]) | (RT & LwrMask[AddressAlign]));
 		}
 

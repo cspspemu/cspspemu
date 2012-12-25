@@ -38,7 +38,7 @@ namespace CSPspEmu.Core.Cpu
 		// MATRIX (Normal or transposed)
 		public int M_ROW { get { return get(0, 2); } set { set(0, 2, value); } }
 		public int M_MATRIX { get { return get(2, 3); } set { set(2, 3, value); } }
-		public int M_COLUMN { get { return get(6, 1) * 2; } set { set(6, 1, value / 2); } }
+		public int M_COLUMN { get { return get(6, 1); } set { set(6, 1, value); } }
 		public int M_TRANSPOSED { get { return get(5, 1); } set { set(5, 1, value); } }
 
 		// LINES (Rows or Columns)

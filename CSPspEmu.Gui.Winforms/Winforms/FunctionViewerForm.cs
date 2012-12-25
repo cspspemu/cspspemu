@@ -37,7 +37,7 @@ namespace CSPspEmu.Gui.Winforms
 		private void FunctionViewerForm_Load(object sender, EventArgs e)
 		{
 			PcListBox.SuspendLayout();
-			foreach (var PC in CpuProcessor.MethodCache.PCs)
+			foreach (var PC in CpuProcessor.MethodCache.PCs.OrderBy(Item => Item))
 			{
 				if (CpuProcessor.MethodCache.GetForPC(PC).AstTree != null)
 				{

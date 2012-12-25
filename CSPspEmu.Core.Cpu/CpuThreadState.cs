@@ -433,11 +433,12 @@ namespace CSPspEmu.Core.Cpu
 				TextWriter.WriteLine("Matrix: {0}", Matrix);
 				for (int Row = 0; Row < 4; Row++)
 				{
+					var Line = "";
 					for (int Column = 0; Column < 4; Column++)
 					{
-						TextWriter.Write(", {0}", Vfpr[Matrix, Column, Row]);
+						Line += String.Format(", {0}", Vfpr[Matrix, Column, Row]);
 					}
-					TextWriter.WriteLine("");
+					TextWriter.WriteLine(Line);
 				}
 				TextWriter.WriteLine("");
 			}

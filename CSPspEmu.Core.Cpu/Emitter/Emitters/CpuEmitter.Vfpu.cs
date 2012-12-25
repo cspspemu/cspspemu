@@ -218,7 +218,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm vrexp2() { throw (new NotImplementedException("")); }
 		public AstNodeStm vsat0() { return _vfpu_call_single_method((Func<float, float>)MathFloat.Vsat0); }
 		public AstNodeStm vsat1() { return _vfpu_call_single_method((Func<float, float>)MathFloat.Vsat1); }
-		public AstNodeStm vcst() { return _Vector(VD).SetVector((Index) => ast.Immediate(VfpuUtils.GetVfpuConstantsValue((int)Instruction.IMM5))); }
+		public AstNodeStm vcst() { return _Cell(VD).Set(VfpuUtils.GetVfpuConstantsValue((int)Instruction.IMM5)); }
 
 		// -
 		public AstNodeStm vhdp()

@@ -1308,7 +1308,7 @@ namespace CSPspEmu.Core.Tests
 				for (int n = 0; n < Names.Length; n++)
 				{
 					var ConstantName = Names[n];
-					int Matrix = (n >> 4) & 3;
+					int Matrix = (n >> 4) & 7;
 					int Column = (n >> 2) & 3;
 					int Row = (n >> 0) & 3;
 
@@ -1332,6 +1332,11 @@ namespace CSPspEmu.Core.Tests
 
 			Iterate((ConstantName, n, Matrix, Column, Row) =>
 			{
+				Console.WriteLine(
+					"{0}, {1}",
+					"VFR" + VfpuUtils.GetIndexCell(Matrix, Column, Row) + " : " + ConstantName + " : " + VfpuUtils.GetConstantValueByName(ConstantName),
+					"VFR" + VfpuUtils.GetIndexCell(Matrix, Column, Row) + " : " + ConstantName + " : " + CpuThreadState.Vfpr[Matrix, Column, Row]
+				);
 				Assert.AreEqual(
 					"VFR" + VfpuUtils.GetIndexCell(Matrix, Column, Row) + " : " + ConstantName + " : " + VfpuUtils.GetConstantValueByName(ConstantName),
 					"VFR" + VfpuUtils.GetIndexCell(Matrix, Column, Row) + " : " + ConstantName + " : " + CpuThreadState.Vfpr[Matrix, Column, Row]

@@ -19,6 +19,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			o0 |= ((i1 >> 12) & 15) << 20;
 			o0 |= ((i1 >> 20) & 15) << 24;
 			o0 |= ((i1 >> 28) & 15) << 28;
+			//Console.Error.WriteLine("{0:X8} {1:X8} -> {2:X8}", i0, i1, o0);
 			//throw(new Exception("" + i0 + ";" + i1));
 			return o0;
 		}

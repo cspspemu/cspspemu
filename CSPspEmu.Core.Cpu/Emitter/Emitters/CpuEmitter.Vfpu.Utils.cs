@@ -187,8 +187,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				}
 			}
 
-			protected AstNodeExprLValue GetVRegRef(int RegIndex)
+			protected AstNodeExprLValue _GetVRegRef(int RegIndex)
 			{
+				if (GetVTypeType() == typeof(float)) return VFR(RegIndex);
 				return ast.Reinterpret(GetVTypeType(), VFR(RegIndex));
 			}
 
@@ -197,7 +198,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				var Prefix = VReg.VfpuPrefix;
 				Prefix.CheckPrefixUsage(PC);
 
-				AstNodeExpr AstNodeExpr = GetVRegRef(Indices[RegIndex]);
+				AstNodeExpr AstNodeExpr = _GetVRegRef(Indices[RegIndex]);
 
 				if (Prefix.Enabled && Prefix.IsValidIndex(PrefixIndex))
 				{
@@ -219,7 +220,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 					// Value.
 					else
 					{
-						AstNodeExpr = GetVRegRef(Indices[(int)Prefix.SourceIndex(PrefixIndex)]);
+						AstNodeExpr = _GetVRegRef(Indices[(int)Prefix.SourceIndex(PrefixIndex)]);
 						if (Prefix.SourceAbsolute(PrefixIndex)) AstNodeExpr = ast.CallStatic((Func<float, float>)MathFloat.Abs, AstNodeExpr);
 					}
 
@@ -261,7 +262,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 					}
 				}
 
-				return ast.Assign(GetVRegRef(RegIndex), AstNodeExpr);
+				return ast.Assign(_GetVRegRef(RegIndex), AstNodeExpr);
 			}
 
 		}
@@ -278,7 +279,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 			public AstNodeExpr Get()
 			{
-				return GetRegApplyPrefix(new int[this.Index], 0, 0);
+				return GetRegApplyPrefix(new int[] { this.Index }, 0, 0);
 			}
 
 			public AstNodeStm Set(AstNodeExpr Value)
@@ -300,6 +301,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			public AstNodeExpr this[int Index]
 			{
 				get { return Get(Index); }
+			}
+
+			public AstNodeExprLValue GetIndexRef(int Index)
+			{
+				return this._GetVRegRef(Indices[Index]);
 			}
 
 			private AstNodeExpr Get(int Index)
@@ -338,9 +344,14 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				get { return Get(Column, Row); }
 			}
 
+			public AstNodeExprLValue GetIndexRef(int Column, int Row)
+			{
+				return this._GetVRegRef(Indices[Column, Row]);
+			}
+
 			private AstNodeExpr Get(int Column, int Row)
 			{
-				return GetVRegRef(this.Indices[Column, Row]);
+				return _GetVRegRef(this.Indices[Column, Row]);
 				//return GetRegApplyPrefix(this.Indices[Column, Row], -1);
 			}
 
