@@ -32,11 +32,11 @@ namespace CSPspEmu
 			Application.Exit();
 		}
 
-		public static bool IsNet45OrNewer()
-		{
-			// Class "ReflectionContext" exists from .NET 4.5 onwards.
-			return Type.GetType("System.Reflection.ReflectionContext", false) != null;
-		}
+		//public static bool IsNet45OrNewer()
+		//{
+		//	// Class "ReflectionContext" exists from .NET 4.5 onwards.
+		//	return Type.GetType("System.Reflection.ReflectionContext", false) != null;
+		//}
 
 		static void RunTests(bool RunTestsViewOut, string[] Arguments)
 		{
@@ -55,11 +55,11 @@ namespace CSPspEmu
 		[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
 		static void Main(string[] Arguments)
 		{
-			if (!IsNet45OrNewer())
-			{
-				MessageBox.Show(".NET 4.5 required", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-				return;
-			}
+			//if (!IsNet45OrNewer())
+			//{
+			//	MessageBox.Show(".NET 4.5 required", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+			//	return;
+			//}
 #if false
 			var Test = new byte[4 * 1024 * 1024];
 			Console.WriteLine(Logger.Measure(() =>

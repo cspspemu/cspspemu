@@ -4,13 +4,28 @@ using System.Collections.Generic;
 
 namespace CSPspEmu.Core.Cpu.VFpu
 {
-	public struct VfpuPrefix
+	public class VfpuPrefix
 	{
 		public uint DeclaredPC;
 		public uint UsedPC;
 		public uint Value;
 		public bool Enabled;
 		public int UsedCount;
+
+		public void CheckPrefixUsage(uint PC)
+		{
+			// Disable the prefix once it have been used.
+			if (this.Enabled)
+			{
+				if (this.UsedCount > 0 && this.UsedPC != PC)
+				{
+					this.Enabled = false;
+				}
+
+				this.UsedPC = PC;
+				this.UsedCount++;
+			}
+		}
 
 		public static implicit operator uint(VfpuPrefix Value) { return Value.Value; }
 		public static implicit operator VfpuPrefix(uint Value) { return new VfpuPrefix() { Value = Value }; }
@@ -89,15 +104,32 @@ namespace CSPspEmu.Core.Cpu.VFpu
 				Enabled, UsedPC, DeclaredPC, Format
 			);
 		}
+
+		public bool IsValidIndex(int Index)
+		{
+			return (Index >= 0) && (Index < 4);
+		}
 	}
 
-	public struct VfpuDestinationPrefix
+	public class VfpuDestinationPrefix
 	{
 		public uint DeclaredPC;
 		public uint UsedPC;
 		public uint Value;
 		public bool Enabled;
 		public int UsedCount;
+
+		public void CheckPrefixUsage(uint PC)
+		{
+			// Disable the prefix once it have been used.
+			if (this.Enabled)
+			{
+				if (this.UsedCount > 0 && this.UsedPC != PC)
+				{
+					this.Enabled = false;
+				}
+			}
+		}
 	
 		public static implicit operator uint(VfpuDestinationPrefix Value) { return Value.Value; }
 		public static implicit operator VfpuDestinationPrefix(uint Value) { return new VfpuDestinationPrefix() { Value = Value }; }
@@ -156,6 +188,11 @@ namespace CSPspEmu.Core.Cpu.VFpu
 				"VfpuDestinationPrefix(Enabled={0}, UsedPC=0x{1:X}, DeclaredPC=0x{2:X})({3})",
 				Enabled, UsedPC, DeclaredPC, Format
 			);
+		}
+
+		public bool IsValidIndex(int Index)
+		{
+			return (Index >= 0) && (Index < 4);
 		}
 	}
 }

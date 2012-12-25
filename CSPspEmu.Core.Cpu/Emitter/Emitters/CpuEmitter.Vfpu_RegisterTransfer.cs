@@ -11,7 +11,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// <summary>
 		/// ID("mtv",         VM("010010:00:111:rt:0:0000000:0:vd"), "%t, %zs", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
 		/// </summary>
-		public AstNodeStm mtv() { return AstVfpuStoreVd(1, (Index) => GPR_f(RT)); }
+		public AstNodeStm mtv() { return _Cell(VD).Set(GPR_f(RT)); }
 		public AstNodeStm mtvc() { return AstNotImplemented("mtvc"); }
 
 

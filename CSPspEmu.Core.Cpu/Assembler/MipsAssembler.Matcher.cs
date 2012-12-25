@@ -28,7 +28,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 				case "%yn":
 				case "%Xq":
 					return @"[SRCME][0-8][0-4][0-4](?:\.[sptq])?";
-				case "%vp4": case "%vp5": case "%vp6": case "%vp7": return @"(?:0:1|-1:1|M)";
+				case "%vp4": case "%vp5": case "%vp6": case "%vp7": return @"(?:0:1|-1:1|M|m)";
 				case "%vp0": case "%vp1": case "%vp2": case "%vp3": return @"\|?\-?[xyzw\d/]+\|?";
 				default: return @"\w+";
 			}

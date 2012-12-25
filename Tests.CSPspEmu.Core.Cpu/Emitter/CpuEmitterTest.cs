@@ -1130,13 +1130,77 @@ namespace CSPspEmu.Core.Tests
 			return String.Format("{0:X2}{1:X2}{2:X2}{3:X2}", Data[0], Data[1], Data[2], Data[3]);
 		}
 
+		private void TestAssembly(string Encoded, string Assembly)
+		{
+			Assert.AreEqual(Encoded, AssemblySingleInstruction(Assembly), Assembly);
+		}
+
+		[Test]
+		public void VfpuAssemblyRegisterVector4Test()
+		{
+			TestAssembly("A08000D0", "vmov.q  R000.q, C000.q");
+			TestAssembly("AC8C00D0", "vmov.q  R300.q, C300.q");
+			TestAssembly("BC9C00D0", "vmov.q  R700.q, C700.q");
+			TestAssembly("A59900D0", "vmov.q  R101.q, C610.q");
+			TestAssembly("AA9200D0", "vmov.q  R202.q, C420.q");
+			TestAssembly("B78300D0", "vmov.q  R503.q, C030.q");
+		}
+
+		[Test]
+		public void VfpuAssemblyRegisterVector3Test()
+		{
+			TestAssembly("248400D0", "vmov.t  R100.t, C100.t");
+			TestAssembly("6BCB00D0", "vmov.t  R213.t, C231.t");
+			TestAssembly("2E8E00D0", "vmov.t  R302.t, C320.t");
+		}
+
+		[Test]
+		public void VfpuAssemblyRegisterVector2Test()
+		{
+			TestAssembly("A00000D0", "vmov.p  R000.p, C000.p");
+			TestAssembly("AD0D00D0", "vmov.p  R301.p, C310.p");
+			TestAssembly("AF0F00D0", "vmov.p  R303.p, C330.p");
+			TestAssembly("FD5D00D0", "vmov.p  R721.p, C712.p");
+			TestAssembly("FF5F00D0", "vmov.p  R723.p, C732.p");
+		}
+
+		[Test]
+		public void VfpuAssemblyRegisterSingleTest()
+		{
+			TestAssembly("667A00D0", "vmov.s  S123.s, S623.s");
+		}
+
+		[Test]
+		public void VfpuAssemblyLvTest()
+		{
+			TestAssembly("00007ED8", "lv.q C720.q, 0+r3");
+			TestAssembly("3000CBD8", "lv.q C230.q, 0x30+r6");
+		}
+
 		[Test]
 		public void VfpuAssemblyTest()
 		{
-			Assert.AreEqual("A08007D0", AssemblySingleInstruction("vone.q R000"));
-			Assert.AreEqual("3000CBD8", AssemblySingleInstruction("lv.q    C230.q, 0x30+r6"));
-			Assert.AreEqual("000448D0", AssemblySingleInstruction("vsrt3.s S000.s, S100.s"));
-			Assert.AreEqual("80844AD0", AssemblySingleInstruction("vsgn.q  C000.q, C100.q"));
+			TestAssembly("A08007D0", "vone.q R000");
+			TestAssembly("000448D0", "vsrt3.s S000.s, S100.s");
+			TestAssembly("80844AD0", "vsgn.q  C000.q, C100.q");
+		}
+
+		[Test]
+		public void VfpuAssemblyPrefixTest()
+		{
+			TestAssembly("00F000DC", "vpfxs [0, 0, 0, 0]");
+			TestAssembly("E51000DC", "vpfxs [1, y, z, w]");
+			TestAssembly("550000DE", "vpfxd [0:1, 0:1, 0:1, 0:1]");
+			TestAssembly("24F800DC", "vpfxs [0, 1, 2, 3]");
+			TestAssembly("100B00DE", "vpfxd [m, m, 0:1, m]");
+			TestAssembly("18F100DC", "vpfxs [3, 2, 1, 0]");
+			TestAssembly("65200ADC", "vpfxs [y, -1, z, -y]");
+		}
+
+		[Test]
+		public void VfpuAssemblyVrotTest()
+		{
+			TestAssembly("B434A4F3", "vrot.p  R500, S501, [c,s]");
 		}
 
 		[Test]
@@ -1162,16 +1226,24 @@ namespace CSPspEmu.Core.Tests
 			//Console.WriteLine("%07b".Sprintf((uint)Instruction.VS.M_TRANSPOSED));
 			//Console.WriteLine("%07b".Sprintf((uint)Instruction.VT.M_TRANSPOSED));
 
-			Assert.AreEqual("A08428F0", AssemblySingleInstruction("vmmul.q E000.q, E100.q, E200.q"));
-			Assert.AreEqual("D67A5EF0", AssemblySingleInstruction("vmmul.p M522.p, M622.p, M722.p"));
-			Assert.AreEqual("F65A7EF0", AssemblySingleInstruction("vmmul.p E522.p, E622.p, E722.p"));
+			TestAssembly("A08428F0", "vmmul.q E000.q, E100.q, E200.q");
+			TestAssembly("D67A5EF0", "vmmul.p M522.p, M622.p, M722.p");
+			TestAssembly("F65A7EF0", "vmmul.p E522.p, E622.p, E722.p");
 		}
 
 		[Test]
 		public void VfpuAssemblyTest3()
 		{
-			Assert.AreEqual("802488F0", AssemblySingleInstruction("vhtfm2.p C000.p, E100.p, C200.p"));
-			Assert.AreEqual("802408F1", AssemblySingleInstruction("vhtfm3.t C000.t, E100.t, C200.t"));
+			TestAssembly("802488F0", "vhtfm2.p C000.p, E100.p, C200.p");
+			TestAssembly("802408F1", "vhtfm3.t C000.t, E100.t, C200.t");
+		}
+
+		[Test]
+		public void VfpuColorConversionEncode()
+		{
+			TestAssembly("818059D0", "vt4444.q C010.p, C000.q");
+			TestAssembly("81805AD0", "vt5551.q C010.p, C000.q");
+			TestAssembly("81805BD0", "vt5650.q C010.p, C000.q");
 		}
 
 		[Test]
@@ -1200,9 +1272,9 @@ namespace CSPspEmu.Core.Tests
 		public void VfpuColorConversion()
 		{
 			CpuThreadState.GPR[4] = (int)PspMemory.MainOffset;
-			CpuThreadState.GPR[5] = (int)PspMemory.MainOffset + 0x100;
+			//CpuThreadState.GPR[5] = (int)PspMemory.MainOffset + 0x100;
 			var PtrIn = (uint*)Memory.PspAddressToPointerSafe((uint)CpuThreadState.GPR[4]);
-			var PtrOut = (ushort*)Memory.PspAddressToPointerSafe((uint)CpuThreadState.GPR[5]);
+			//var PtrOut = (ushort*)Memory.PspAddressToPointerSafe((uint)CpuThreadState.GPR[5]);
 
 			PtrIn[0] = 0xFFFF00FF;
 			PtrIn[1] = 0x801100FF;
@@ -1215,7 +1287,7 @@ namespace CSPspEmu.Core.Tests
 				vt4444.q C010, C000
 			");
 
-			Assert.AreEqual("1,2,3,4", String.Join(",", CpuThreadState.Vfpr[2, "C010"]));
+			Assert.AreEqual("810FFF0F,0A0F750F", String.Join(",", CpuThreadState.Vfpr["C010.p"].Select(Item => String.Format("{0:X8}", MathFloat.ReinterpretFloatAsInt(Item)))));
 
 			//Assert.AreEqual(0xFF0F, PtrOut[0]);
 			//Assert.AreEqual(0x810F, PtrOut[1]);
@@ -1261,8 +1333,8 @@ namespace CSPspEmu.Core.Tests
 			Iterate((ConstantName, n, Matrix, Column, Row) =>
 			{
 				Assert.AreEqual(
-					"VFR" + VfpuUtils.GetCellIndex(Matrix, Column, Row) + " : " + ConstantName + " : " + VfpuUtils.GetConstantValueByName(ConstantName),
-					"VFR" + VfpuUtils.GetCellIndex(Matrix, Column, Row) + " : " + ConstantName + " : " + CpuThreadState.Vfpr[Matrix, Column, Row]
+					"VFR" + VfpuUtils.GetIndexCell(Matrix, Column, Row) + " : " + ConstantName + " : " + VfpuUtils.GetConstantValueByName(ConstantName),
+					"VFR" + VfpuUtils.GetIndexCell(Matrix, Column, Row) + " : " + ConstantName + " : " + CpuThreadState.Vfpr[Matrix, Column, Row]
 				);
 			});
 		}

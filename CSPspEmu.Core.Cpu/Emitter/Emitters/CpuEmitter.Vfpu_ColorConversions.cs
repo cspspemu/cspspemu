@@ -1,4 +1,7 @@
-﻿using SafeILGenerator.Ast.Nodes;
+﻿using CSharpUtils;
+using CSPspEmu.Core.Cpu.VFpu;
+using SafeILGenerator.Ast.Generators;
+using SafeILGenerator.Ast.Nodes;
 using System;
 
 namespace CSPspEmu.Core.Cpu.Emitter
@@ -31,6 +34,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			o0 |= ((i1 >> 11) & 31) << 21;
 			o0 |= ((i1 >> 19) & 31) << 26;
 			o0 |= ((i1 >> 31) & 1) << 31;
+			//throw (new Exception("" + i0 + ";" + i1));
 			return o0;
 		}
 
@@ -43,37 +47,34 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			o0 |= ((i1 >> 3) & 31) << 16;
 			o0 |= ((i1 >> 10) & 63) << 21;
 			o0 |= ((i1 >> 19) & 31) << 27;
+			//throw (new Exception("" + i0 + ";" + i1));
 			return o0;
 		}
 
-		private AstNodeStm _vtXXXX_q(Func<uint, uint, uint> Callback)
+		private AstNodeStm _vtXXXX_q(Func<uint, uint, uint> _vtXXXX_stepCallback)
 		{
-			return AstVfpuStoreVd(2, (Index) => ast.Cast<int>(ast.CallStatic(
-				Callback,
-				ast.Cast<uint>(AstLoadVs(4, 0 + Index * 2, AsInteger: true), Explicit: false),
-				ast.Cast<uint>(AstLoadVs(4, 1 + Index * 2, AsInteger: true), Explicit: false)
-			)), AsInteger: true);
-			//VectorOperationSaveVd(2, (Index) =>
-			//{
-			//	Load_VS(0 + Index * 2, AsInteger: true);
-			//	Load_VS(1 + Index * 2, AsInteger: true);
-			//	SafeILGenerator.Call((Func<uint, uint, uint>)_vt4444_step);
-			//}, AsInteger: true);
+			var VectorSize = Instruction.ONE_TWO;
+			if (VectorSize != 4) throw (new Exception("Not implemented _vtXXXX_q for VectorSize=" + VectorSize));
+			var Dest = _Vector(VD_NoPrefix, VUInt, 2);
+			var Src = _Vector(VS_NoPrefix, VUInt, 4);
+			//AstLoadVfpuReg
+
+			var Node = Dest.SetVector((Index) =>
+			{
+				return ast.CallStatic(
+					_vtXXXX_stepCallback,
+					Src[Index * 2 + 0],
+					Src[Index * 2 + 1]
+				);
+			});
+
+			//throw(new Exception(GeneratorCSharp.GenerateString<GeneratorCSharp>(Node)));
+
+			return Node;
 		}
 
-		public AstNodeStm vt4444_q()
-		{
-			return _vtXXXX_q(_vt4444_step);
-		}
-
-		public AstNodeStm vt5551_q()
-		{
-			return _vtXXXX_q(_vt5551_step);
-		}
-
-		public AstNodeStm vt5650_q()
-		{
-			return _vtXXXX_q(_vt5650_step);
-		}
+		public AstNodeStm vt4444_q() { return _vtXXXX_q(_vt4444_step); }
+		public AstNodeStm vt5551_q() { return _vtXXXX_q(_vt5551_step); }
+		public AstNodeStm vt5650_q() { return _vtXXXX_q(_vt5650_step); }
 	}
 }

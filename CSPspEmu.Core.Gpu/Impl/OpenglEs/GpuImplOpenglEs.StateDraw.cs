@@ -1,5 +1,6 @@
 ﻿#define ENABLE_TEXTURES
 
+using CSharpPlatform;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Gpu.State.SubStates;
 using GLES;

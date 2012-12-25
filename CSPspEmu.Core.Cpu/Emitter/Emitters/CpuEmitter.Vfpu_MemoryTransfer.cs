@@ -31,24 +31,40 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			int VectorSize = 4;
 
+			var Dest = _Vector(VT5_1, VFloat, VectorSize);
+
+			return Dest.SetVector((Index) =>
+				AstMemoryGetValue<float>(Memory, Address_RS_IMM14(Index * 4))
+			);
+		}
+
+		/// <summary>
+		/// ID("sv.q",        VM("111110:rs:vt5:imm14:0:vt1"), "%Xq, %Y", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
+		/// </summary>
+		public AstNodeStm sv_q()
+		{
+			int VectorSize = 4;
+
+			var Dest = _Vector(VT5_1, VFloat, VectorSize);
+
 			return ast.Statements(Enumerable.Range(0, VectorSize).Select(Index =>
-				AstSaveVfpuReg(Instruction.VT5_1, Index, (uint)VectorSize, ref PrefixNone, AstMemoryGetValue<float>(Memory, Address_RS_IMM14(Index * 4)))
+				AstMemorySetValue<float>(Memory, Address_RS_IMM14(Index * 4), Dest[Index])
 			));
 		}
 
-		public static void _lvl_svl_q(CpuThreadState CpuThreadState, uint m, uint i, uint address, bool dir, bool save)
+		public static void _lvl_svl_q(CpuThreadState CpuThreadState, int m, int i, uint address, bool dir, bool save)
 		{
 			//Console.Error.WriteLine("++++++++++++++");
 
-			uint k = 3 - ((address >> 2) & 3);
+			int k = (int)(3 - ((address >> 2) & 3));
 			address &= unchecked((uint)~0xF);
 
 			fixed (float* VFPR = &CpuThreadState.VFR0)
-			for (uint j = k; j < 4; j++, address += 4)
+			for (int j = k; j < 4; j++, address += 4)
 			{
 				float* ptr;
 				var memory = (float*)CpuThreadState.GetMemoryPtr(address);
-				uint vfpr_register = VfpuUtils.GetCellIndex(m, dir ? j : i, dir ? i : j);
+				var vfpr_register = VfpuUtils.GetIndexCell(m, dir ? j : i, dir ? i : j);
 				ptr = &VFPR[vfpr_register];
 
 				//Console.Error.WriteLine("_lvl_svl_q({0}): {1:X8}: {2:X8} {3} {4:X8}", j, memory_address, *(int*)ptr, save ? "<-" : "->", *(int*)memory);
@@ -65,20 +81,20 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			//Console.Error.WriteLine("--------------");
 		}
 
-		public static void _lvr_svr_q(CpuThreadState CpuThreadState, uint m, uint i, uint address, bool dir, bool save)
+		public static void _lvr_svr_q(CpuThreadState CpuThreadState, int m, int i, uint address, bool dir, bool save)
 		{
 			//Console.Error.WriteLine("++++++++++++++");
 
-			uint k = 4 - ((address >> 2) & 3);
+			int k = (int)(4 - ((address >> 2) & 3));
 			address &= unchecked((uint)~0xF);
 
 			fixed (float* VFPR = &CpuThreadState.VFR0)
-			for (uint j = 0; j < k; j++, address += 4)
+			for (int j = 0; j < k; j++, address += 4)
 			{
 				float* ptr;
 				var memory_address = address;
 				var memory = (float*)CpuThreadState.GetMemoryPtr(memory_address);
-				uint vfpr_register = VfpuUtils.GetCellIndex(m, dir ? j : i, dir ? i : j);
+				var vfpr_register = VfpuUtils.GetIndexCell(m, dir ? j : i, dir ? i : j);
 				ptr = &VFPR[vfpr_register];
 
 				//Console.Error.WriteLine("_lvl_svr_q({0}): {1:X8}: {2:X8} {3} {4:X8}", j, memory_address, *(int*)ptr, save ? "<-" : "->", *(int*)memory);
@@ -97,8 +113,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			VfpuRegisterInt Register = Instruction.VT5_1;
 			var MethodInfo = left
-				? (Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmitter._lvl_svl_q
-				: (Action<CpuThreadState, uint, uint, uint, bool, bool>)CpuEmitter._lvr_svr_q
+				? (Action<CpuThreadState, int, int, uint, bool, bool>)CpuEmitter._lvl_svl_q
+				: (Action<CpuThreadState, int, int, uint, bool, bool>)CpuEmitter._lvr_svr_q
 			;
 			return ast.Statement(ast.CallStatic(
 				MethodInfo,
@@ -135,18 +151,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			//	SafeILGenerator.LoadIndirect<float>();
 			//}
 			//SafeILGenerator.StoreIndirect<float>();
-		}
-
-		/// <summary>
-		/// ID("sv.q",        VM("111110:rs:vt5:imm14:0:vt1"), "%Xq, %Y", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
-		/// </summary>
-		public AstNodeStm sv_q()
-		{
-			int VectorSize = 4;
-			
-			return ast.Statements(Enumerable.Range(0, VectorSize).Select(Index =>
-				AstMemorySetValue<float>(Memory, Address_RS_IMM14(Index * 4), AstLoadVfpuReg(Instruction.VT5_1, Index, (uint)VectorSize, ref PrefixNone))
-			));
 		}
 
 		public AstNodeStm svl_q()

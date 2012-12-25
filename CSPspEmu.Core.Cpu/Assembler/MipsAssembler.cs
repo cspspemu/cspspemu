@@ -66,6 +66,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
 		public static uint ParseVfprRotate(string Format)
 		{
+			//return 0;
 			var Parts = Format.Trim('[', ']').Split(',').Select(Item => Item.Trim()).ToArray();
 			uint imm5 = 0;
 			int CosIndex = -1;
@@ -108,6 +109,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 		{
 			switch (RegisterName)
 			{
+				case "m": 
 				case "M": VfpuPrefix.DestinationMask(Index, true); break;
 				case "0:1": VfpuPrefix.DestinationMask(Index, false); VfpuPrefix.DestinationSaturation(Index, 1); break;
 				case "-1:1": VfpuPrefix.DestinationMask(Index, false); VfpuPrefix.DestinationSaturation(Index, 3); break;
@@ -166,7 +168,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			public int RS;
 		}
 
-		public static ParseVfprOffsetInfo ParseVfprOffset(uint VfpuSize, string Str)
+		public static ParseVfprOffsetInfo ParseVfprOffset(int VfpuSize, string Str)
 		{
 			var Parts = Str.Split('+');
 			return new ParseVfprOffsetInfo()
@@ -176,7 +178,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			};
 		}
 
-		public static uint ParseVfprName(uint VfpuSize, string RegisterName)
+		public static int ParseVfprName(int VfpuSize, string RegisterName)
 		{
 			return VfpuUtils.VfpuRegisterInfo.Parse(VfpuSize, RegisterName).Index;
 		}
@@ -220,18 +222,18 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			Line = Line.Trim();
 			if (Line.Length == 0) return new Instruction[] {};
 			string InstructionSuffix = "";
-			uint VfpuSize = 0;
+			int VfpuSize = 0;
 			var LineTokens = Line.Split(new char[] { ' ', '\t' }, 2);
 			var InstructionName = LineTokens[0].ToLower();
 			InstructionInfo InstructionInfo;
 
+			if (InstructionName.EndsWith(".s")) VfpuSize = 1;
+			if (InstructionName.EndsWith(".p")) VfpuSize = 2;
+			if (InstructionName.EndsWith(".t")) VfpuSize = 3;
+			if (InstructionName.EndsWith(".q")) VfpuSize = 4;
+
 			if (!Instructions.ContainsKey(InstructionName))
 			{
-				if (InstructionName.EndsWith(".s")) VfpuSize = 1;
-				if (InstructionName.EndsWith(".p")) VfpuSize = 2;
-				if (InstructionName.EndsWith(".t")) VfpuSize = 3;
-				if (InstructionName.EndsWith(".q")) VfpuSize = 4;
-				
 				// Vfpu instruction with suffix.
 				if (VfpuSize > 0)
 				{
@@ -267,7 +269,8 @@ namespace CSPspEmu.Core.Cpu.Assembler
 						case "%zt":
 						case "%zq":
 						case "%zm":
-							Instruction.VD = ParseVfprName(VfpuSize, Value); break;
+							Instruction.VD = ParseVfprName(VfpuSize, Value);
+							break;
 						case "%ys": 
 						case "%yp":
 						case "%yt":
@@ -279,7 +282,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 							if (Key == "%tym")
 							{
 								var Reg = Instruction.VS;
-								Reg.M_TRANSPOSED = (Reg.M_TRANSPOSED != 0) ? 0u : 1u;
+								Reg.M_TRANSPOSED = (Reg.M_TRANSPOSED != 0) ? 0 : 1;
 								Instruction.VS = Reg;
 							}
 							break;

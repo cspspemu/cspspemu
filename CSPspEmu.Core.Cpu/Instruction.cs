@@ -75,11 +75,11 @@ namespace CSPspEmu.Core.Cpu
 		public VfpuRegisterInt VS { get { return get(8, 7); } set { set(8, 7, value); } }
 		public uint TWO { get { return get(15, 1); } set { set(15, 1, value); } }
 		public VfpuRegisterInt VT { get { return get(16, 7); } set { set(16, 7, value); } }
-		public VfpuRegisterInt VT5_1 { get { return VT5 | (VT1 << 5); } set { VT5 = value; VT1 = value >> 5; } }
+		public VfpuRegisterInt VT5_1 { get { return VT5 | (VT1 << 5); } set { VT5 = value; VT1 = ((uint)value >> 5); } }
 
-		public uint ONE_TWO {
-			get { return 1 + 1 * ONE + 2 * TWO; }
-			set { ONE = (((value - 1) >> 0) & 1); TWO = (((value - 1) >> 1) & 1); }
+		public int ONE_TWO {
+			get { return (int)(1 + 1 * ONE + 2 * TWO); }
+			set { ONE = ((((uint)value - 1) >> 0) & 1); TWO = ((((uint)value - 1) >> 1) & 1); }
 		}
 
 		public static implicit operator Instruction(uint Value)

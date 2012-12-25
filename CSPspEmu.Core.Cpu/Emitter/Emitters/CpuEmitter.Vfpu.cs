@@ -151,13 +151,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			var SinIndex = BitUtils.Extract(imm5, 2, 2);
 			bool NegateSin = BitUtils.ExtractBool(imm5, 4);
 
-			AstNodeExpr Sine = ast.CallStatic((Func<float, float>)MathFloat.SinV1, AstLoadVs(0));
-			AstNodeExpr Cosine = ast.CallStatic((Func<float, float>)MathFloat.CosV1, AstLoadVs(0));
+			var Dest = _Vector(VD, VFloat, VectorSize);
+			var Src = _Cell(VS, VFloat);
+
+			AstNodeExpr Sine = ast.CallStatic((Func<float, float>)MathFloat.SinV1, Src.Get());
+			AstNodeExpr Cosine = ast.CallStatic((Func<float, float>)MathFloat.CosV1, Src.Get());
 			if (NegateSin) Sine = -Sine;
 
 			//Console.WriteLine("{0},{1},{2}", CosIndex, SinIndex, NegateSin);
 
-			return AstVfpuStoreVd((Index) =>
+			return Dest.SetVector((Index) =>
 			{
 				if (Index == CosIndex)
 				{
@@ -177,19 +180,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		// vzero: Vector ZERO
 		// vone : Vector ONE
-		public AstNodeStm vzero() { return AstVfpuStoreVd((Index) => 0f);  }
-		public AstNodeStm vone() { return AstVfpuStoreVd((Index) => 1f); }
+		public AstNodeStm vzero() { return _Vector(VD).SetVector((Index) => 0f);  }
+		public AstNodeStm vone() { return _Vector(VD).SetVector((Index) => 1f); }
 
 		// vmov  : Vector MOVe
 		// vsgn  : Vector SiGN
 		// *     : Vector Reverse SQuare root/COSine/Arc SINe/LOG2
 		// @CHECK
-		public AstNodeStm vmov() { return AstVfpuStoreVd((Index) => AstLoadVs(Index)); }
-		public AstNodeStm vabs() { return AstVfpuStoreVd((Index) => ast.CallStatic((Func<float, float>)MathFloat.Abs, AstLoadVs(Index))); }
-		public AstNodeStm vneg() { return AstVfpuStoreVd((Index) => -AstLoadVs(Index)); }
-		public AstNodeStm vocp() { return AstVfpuStoreVd((Index) => 1f - AstLoadVs(Index)); }
-		public AstNodeStm vsgn() { return AstVfpuStoreVd((Index) => ast.CallStatic((Func<float, float>)MathFloat.Sign, AstLoadVs(Index))); }
-		public AstNodeStm vrcp() { return AstVfpuStoreVd((Index) => 1f / AstLoadVs(Index)); }
+		public AstNodeStm vmov() { return _Vector(VD).SetVector((Index) => _Vector(VS)[Index]); }
+		public AstNodeStm vabs() { return _Vector(VD).SetVector((Index) => ast.CallStatic((Func<float, float>)MathFloat.Abs, _Vector(VS)[Index])); }
+		public AstNodeStm vneg() { return _Vector(VD).SetVector((Index) => -_Vector(VS)[Index]); }
+		public AstNodeStm vocp() { return _Vector(VD).SetVector((Index) => 1f - _Vector(VS)[Index]); }
+		public AstNodeStm vsgn() { return _Vector(VD).SetVector((Index) => ast.CallStatic((Func<float, float>)MathFloat.Sign, _Vector(VS)[Index])); }
+		public AstNodeStm vrcp() { return _Vector(VD).SetVector((Index) => 1f / _Vector(VS)[Index]); }
 
 		private AstNodeStm _vfpu_call_single_method(Delegate Delegate)
 		{
@@ -215,7 +218,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm vrexp2() { throw (new NotImplementedException("")); }
 		public AstNodeStm vsat0() { return _vfpu_call_single_method((Func<float, float>)MathFloat.Vsat0); }
 		public AstNodeStm vsat1() { return _vfpu_call_single_method((Func<float, float>)MathFloat.Vsat1); }
-		public AstNodeStm vcst() { return AstVfpuStoreVd((Index) => ast.Immediate(VfpuUtils.GetVfpuConstantsValue((int)Instruction.IMM5))); }
+		public AstNodeStm vcst() { return _Vector(VD).SetVector((Index) => ast.Immediate(VfpuUtils.GetVfpuConstantsValue((int)Instruction.IMM5))); }
 
 		// -
 		public AstNodeStm vhdp()
@@ -354,12 +357,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		///     <para/>
 		///     vfpu_regs[%vfpu_rd] &lt;- vfpu_regs[%vfpu_rs] + vfpu_regs[%vfpu_rt]
 		/// </summary>
-		public AstNodeStm vadd() { return AstVfpuStoreVd((Index) => AstLoadVs(Index) + AstLoadVt(Index)); }
-		public AstNodeStm vsub() { return AstVfpuStoreVd((Index) => AstLoadVs(Index) - AstLoadVt(Index)); }
-		public AstNodeStm vdiv() { return AstVfpuStoreVd((Index) => AstLoadVs(Index) / AstLoadVt(Index)); }
-		public AstNodeStm vmul() { return AstVfpuStoreVd((Index) => AstLoadVs(Index) * AstLoadVt(Index)); }
+		public AstNodeStm vadd() { return _Vector(VD, VFloat).SetVector((Index) => _Vector(VS, VFloat)[Index] + _Vector(VT, VFloat)[Index]); }
+		public AstNodeStm vsub() { return _Vector(VD, VFloat).SetVector((Index) => _Vector(VS, VFloat)[Index] - _Vector(VT, VFloat)[Index]); }
+		public AstNodeStm vdiv() { return _Vector(VD, VFloat).SetVector((Index) => _Vector(VS, VFloat)[Index] / _Vector(VT, VFloat)[Index]); }
+		public AstNodeStm vmul() { return _Vector(VD, VFloat).SetVector((Index) => _Vector(VS, VFloat)[Index] * _Vector(VT, VFloat)[Index]); }
 
-		AstNodeStm _vidt_x(uint VectorSize, uint Register)
+		AstNodeStm _vidt_x(int VectorSize, uint Register)
 		{
 			return AstNotImplemented("_vidt_x");
 			//uint IndexOne = BitUtils.Extract(Register, 0, 2);
@@ -398,7 +401,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		// Vfpu load Integer IMmediate
-		public AstNodeStm viim() { return AstSaveVfpuReg(Instruction.VT, 0, 1, ref PrefixNone, (float)Instruction.IMM); }
+		public AstNodeStm viim() { return _Cell(VT_NoPrefix, VFloat).Set((float)Instruction.IMM); }
 		public AstNodeStm vdet() { return AstNotImplemented("vdet"); }
 		public AstNodeStm mfvme() { return AstNotImplemented("mfvme"); }
 		public AstNodeStm mtvme() { return AstNotImplemented("mtvme"); }

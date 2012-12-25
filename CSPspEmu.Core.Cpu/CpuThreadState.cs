@@ -89,10 +89,10 @@ namespace CSPspEmu.Core.Cpu
 			}
 		}
 
-		public VfpuPrefix PrefixNone;
-		public VfpuPrefix PrefixSource;
-		public VfpuPrefix PrefixDestination;
-		public VfpuPrefix PrefixTarget;
+		public VfpuPrefix PrefixNone = new VfpuPrefix();
+		public VfpuPrefix PrefixSource = new VfpuPrefix();
+		public VfpuDestinationPrefix PrefixDestination = new VfpuDestinationPrefix();
+		public VfpuPrefix PrefixTarget = new VfpuPrefix();
 
 		public Random Random = new Random();
 

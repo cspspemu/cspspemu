@@ -13,7 +13,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
 
 		public struct VfpuRegisterInfo
 		{
-			public uint VfpuSize;
+			public int VfpuSize;
 			public char Type;
 			public int Matrix;
 			public int Column;
@@ -32,7 +32,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
 				}
 			}
 
-			public static VfpuRegisterInfo Parse(uint VfpuSize, string Name)
+			public static VfpuRegisterInfo Parse(int VfpuSize, string Name)
 			{
 				Name = Name.ToUpperInvariant();
 				return new VfpuRegisterInfo()
@@ -45,7 +45,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
 				};
 			}
 
-			public uint Index
+			public int Index
 			{
 				get
 				{
@@ -54,17 +54,19 @@ namespace CSPspEmu.Core.Cpu.VFpu
 						case 'R':
 						case 'C':
 							{
-								//return (uint)VfpuUtils.GetCellIndex(Register.Matrix, Register.Row, Register.Column);
+								//return (int)VfpuUtils.GetCellIndex(Register.Matrix, Register.Row, Register.Column);
 								int Line = (Type == 'R') ? Row : Column;
 								int Offset = (Type == 'R') ? Column : Row;
 								int RowColumn = (Type == 'R') ? 1 : 0;
 
+								if (VfpuSize == 2) Offset /= 2;
+
 								return new VfpuRegisterInt()
 								{
-									RC_LINE = (uint)Line,
-									RC_MATRIX = (uint)Matrix,
-									RC_ROW_COLUMN = (uint)RowColumn,
-									RC_OFFSET = (uint)Offset,
+									RC_LINE = Line,
+									RC_MATRIX = Matrix,
+									RC_ROW_COLUMN = RowColumn,
+									RC_OFFSET = Offset,
 								};
 							}
 						case 'M':
@@ -74,20 +76,22 @@ namespace CSPspEmu.Core.Cpu.VFpu
 								int _Column = (Type == 'M') ? Column : Row;
 								int Transposed = (Type == 'M') ? 0 : 1;
 
+								if (VfpuSize == 2) { Row /= 2; Column /= 2; }
+
 								return new VfpuRegisterInt()
 								{
-									M_MATRIX = (uint)Matrix,
-									M_ROW = (uint)_Row,
-									M_COLUMN = (uint)_Column,
-									M_TRANSPOSED = (uint)Transposed,
+									M_MATRIX = Matrix,
+									M_ROW = _Row,
+									M_COLUMN = _Column,
+									M_TRANSPOSED = Transposed,
 								};
 							}
 						case 'S':
 							return new VfpuRegisterInt()
 							{
-								S_COLUMN = (uint)Column,
-								S_MATRIX = (uint)Matrix,
-								S_ROW = (uint)Row,
+								S_COLUMN = Column,
+								S_ROW = Row,
+								S_MATRIX = Matrix,
 							};
 						default:
 							throw (new NotImplementedException(String.Format("Not implemented VfpuUtils.ParsedRegister.Index Type:'{0}'", Type)));
@@ -186,36 +190,55 @@ namespace CSPspEmu.Core.Cpu.VFpu
 			{ "VFPU_SQRT3_2", 19 },
 		};
 
-		public static int GetCellIndex(int Matrix, int Column, int Row)
+		public static int GetIndexCell(int Matrix, int Column, int Row)
 		{
 			return Matrix * 16 + Column * 4 + Row;
 		}
 
-		public static uint GetCellIndex(uint Matrix, uint Column, uint Row)
-		{
-			return (uint)GetCellIndex((int)Matrix, (int)Column, (int)Row);
-		}
-
-		public static int[] GetIndices(uint Size, RegisterType RegisterType, VfpuRegisterInt Register, string Name = null)
+		public static int[] GetIndices(int Size, RegisterType RegisterType, VfpuRegisterInt Register, string Name = null)
 		{
 			return _GetIndices(Size, RegisterType, Register, Name).ToArray();
 		}
 
-		public static int[,] GetIndicesMatrix(uint Size, VfpuRegisterInt Register, string Name = null)
+		public static int GetIndexCell(VfpuRegisterInt Register, string Name = null)
+		{
+			return GetIndexCell(Register.S_MATRIX, Register.S_COLUMN, Register.S_ROW);
+		}
+
+		public static int[] GetIndicesVector(int Size, VfpuRegisterInt Register, string Name = null)
+		{
+			var IndicesVector = new int[Size];
+			int OffsetMultiplier = (Size == 2) ? 2 : 1;
+			for (int Index = 0; Index < Size; Index++)
+			{
+				if (Register.RC_ROW_COLUMN == 1)
+				{
+					IndicesVector[Index] = (int)GetIndexCell(Register.RC_MATRIX, Register.RC_OFFSET * OffsetMultiplier + Index, Register.RC_LINE);
+				}
+				else
+				{
+					IndicesVector[Index] = (int)GetIndexCell(Register.RC_MATRIX, Register.RC_LINE, Register.RC_OFFSET * OffsetMultiplier + Index);
+				}
+			}
+			return IndicesVector;
+		}
+
+		public static int[,] GetIndicesMatrix(int Size, VfpuRegisterInt Register, string Name = null)
 		{
 			var IndicesMatrix = new int[Size, Size];
+			int OffsetMultiplier = (Size == 2) ? 2 : 1;
 
-			for (uint Row = 0; Row < Size; Row++)
+			for (int Row = 0; Row < Size; Row++)
 			{
-				for (uint Column = 0; Column < Size; Column++)
+				for (int Column = 0; Column < Size; Column++)
 				{
 					if (Register.M_TRANSPOSED != 0)
 					{
-						IndicesMatrix[Column, Row] = (int)GetCellIndex(Register.M_MATRIX, Register.M_ROW + Row, Register.M_COLUMN + Column);
+						IndicesMatrix[Column, Row] = (int)GetIndexCell(Register.M_MATRIX, Register.M_ROW * OffsetMultiplier + Row, Register.M_COLUMN * OffsetMultiplier + Column);
 					}
 					else
 					{
-						IndicesMatrix[Column, Row] = (int)GetCellIndex(Register.M_MATRIX, Register.M_COLUMN + Column, Register.M_ROW + Row);
+						IndicesMatrix[Column, Row] = (int)GetIndexCell(Register.M_MATRIX, Register.M_COLUMN * OffsetMultiplier + Column, Register.M_ROW * OffsetMultiplier + Row);
 					}
 				}
 			}
@@ -223,7 +246,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
 			return IndicesMatrix;
 		}
 
-		private static IEnumerable<int> _GetIndices(uint Size, RegisterType RegisterType, VfpuRegisterInt Register, string Name = null)
+		private static IEnumerable<int> _GetIndices(int Size, RegisterType RegisterType, VfpuRegisterInt Register, string Name = null)
 		{
 			if (Size < 1 || Size > 4) throw (new Exception(String.Format("Invalid Size {0} !€ [0, 4]", Size)));
 
@@ -233,41 +256,37 @@ namespace CSPspEmu.Core.Cpu.VFpu
 			{
 				case RegisterType.Cell:
 					{
-						yield return (int)GetCellIndex(Register.S_MATRIX, Register.S_COLUMN, Register.S_ROW);
+						yield return (int)GetIndexCell(Register, Name);
 						yield break;
 					}
 				case RegisterType.Vector:
-					for (uint Index = 0; Index < Size; Index++)
 					{
-						if (Register.RC_ROW_COLUMN == 1)
+						var Vector = GetIndicesVector(Size, Register, Name);
+						for (int Index = 0; Index < Size; Index++)
 						{
-							yield return (int)GetCellIndex(Register.RC_MATRIX, Register.RC_OFFSET + Index, Register.RC_LINE);
+							yield return (int)Vector[Index];
 						}
-						else
-						{
-							yield return (int)GetCellIndex(Register.RC_MATRIX, Register.RC_LINE, Register.RC_OFFSET + Index);
-						}
+						yield break;
 					}
-					yield break;
 				case RegisterType.Matrix:
 					{
 						var Matrix = GetIndicesMatrix(Size, Register, Name);
-						for (uint Row = 0; Row < Size; Row++)
+						for (int Row = 0; Row < Size; Row++)
 						{
-							for (uint Column = 0; Column < Size; Column++)
+							for (int Column = 0; Column < Size; Column++)
 							{
 								yield return Matrix[Column, Row];
 							}
 						}
+						yield break;
 					}
-					yield break;
 				default: throw (new NotImplementedException(String.Format("Invalid vfpu registry name {0}('{1}')", Register, Name)));
 			}
 		}
 
 		public static int[] GetIndices(string NameWithSufix)
 		{
-			uint Size = 0;
+			int Size = 0;
 			if (NameWithSufix.EndsWith(".q")) Size = 4;
 			else if (NameWithSufix.EndsWith(".t")) Size = 3;
 			else if (NameWithSufix.EndsWith(".p")) Size = 2;
@@ -276,16 +295,11 @@ namespace CSPspEmu.Core.Cpu.VFpu
 			return GetIndices(Size, NameWithSufix.Substr(0, -2));
 		}
 
-		public static int[] GetIndices(uint Size, string Name)
+		public static int[] GetIndices(int Size, string Name)
 		{
 			var Register = VfpuRegisterInfo.Parse(Size, Name);
 			if ((Register.Type == 'S') && (Size != 1)) throw (new Exception("Invalid"));
 			return GetIndices(Size, Register.RegisterType, Register.Index, Name);
-		}
-
-		public static IEnumerable<int> XRange(int From, int To)
-		{
-			for (int n = From; n < To; n++) yield return n;
 		}
 	}
 }

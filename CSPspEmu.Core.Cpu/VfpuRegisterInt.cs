@@ -5,6 +5,16 @@ namespace CSPspEmu.Core.Cpu
 	{
 		public uint Value;
 
+		static public implicit operator int(VfpuRegisterInt Value)
+		{
+			return (int)Value.Value;
+		}
+
+		static public implicit operator VfpuRegisterInt(int Value)
+		{
+			return new VfpuRegisterInt() { Value = (uint)Value };
+		}
+
 		static public implicit operator uint(VfpuRegisterInt Value)
 		{
 			return Value.Value;
@@ -15,31 +25,31 @@ namespace CSPspEmu.Core.Cpu
 			return new VfpuRegisterInt() { Value = Value };
 		}
 
-		private void set(int Offset, int Count, uint SetValue)
+		private void set(int Offset, int Count, int SetValue)
 		{
-			this.Value = BitUtils.Insert(this.Value, Offset, Count, SetValue);
+			this.Value = BitUtils.Insert(this.Value, Offset, Count, (uint)SetValue);
 		}
 
-		private uint get(int Offset, int Count)
+		private int get(int Offset, int Count)
 		{
-			return BitUtils.Extract(this.Value, Offset, Count);
+			return (int)BitUtils.Extract(this.Value, Offset, Count);
 		}
 
 		// MATRIX (Normal or transposed)
-		public uint M_ROW { get { return get(0, 2); } set { set(0, 2, value); } }
-		public uint M_MATRIX { get { return get(2, 3); } set { set(2, 3, value); } }
-		public uint M_COLUMN { get { return get(6, 1) * 2; } set { set(6, 1, value / 2); } }
-		public uint M_TRANSPOSED { get { return get(5, 1); } set { set(5, 1, value); } }
+		public int M_ROW { get { return get(0, 2); } set { set(0, 2, value); } }
+		public int M_MATRIX { get { return get(2, 3); } set { set(2, 3, value); } }
+		public int M_COLUMN { get { return get(6, 1) * 2; } set { set(6, 1, value / 2); } }
+		public int M_TRANSPOSED { get { return get(5, 1); } set { set(5, 1, value); } }
 
 		// LINES (Rows or Columns)
-		public uint RC_LINE { get { return get(0, 2); } set { set(0, 2, value); } }
-		public uint RC_MATRIX { get { return get(2, 3); } set { set(2, 3, value); } }
-		public uint RC_ROW_COLUMN { get { return get(5, 1); } set { set(5, 1, value); } }
-		public uint RC_OFFSET { get { return get(6, 1) * 2; } set { set(6, 1, value / 2); } }
+		public int RC_LINE { get { return get(0, 2); } set { set(0, 2, value); } }
+		public int RC_MATRIX { get { return get(2, 3); } set { set(2, 3, value); } }
+		public int RC_ROW_COLUMN { get { return get(5, 1); } set { set(5, 1, value); } }
+		public int RC_OFFSET { get { return get(6, 1); } set { set(6, 1, value); } }
 
 		// SINGLE
-		public uint S_ROW { get { return get(0, 2); } set { set(0, 2, value); } }
-		public uint S_MATRIX { get { return get(2, 3); } set { set(2, 3, value); } }
-		public uint S_COLUMN { get { return get(5, 2); } set { set(5, 2, value); } }
+		public int S_COLUMN { get { return get(0, 2); } set { set(0, 2, value); } }
+		public int S_MATRIX { get { return get(2, 3); } set { set(2, 3, value); } }
+		public int S_ROW { get { return get(5, 2); } set { set(5, 2, value); } }
 	}
 }

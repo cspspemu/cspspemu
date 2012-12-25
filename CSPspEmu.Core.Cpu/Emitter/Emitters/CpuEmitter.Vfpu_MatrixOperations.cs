@@ -8,19 +8,17 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// @FIX!!!
 		public AstNodeStm vmmul()
 		{
-			var VectorSize = Instruction.ONE_TWO;
+			int VectorSize = Instruction.ONE_TWO;
+			var Dest = _Matrix(VD_NoPrefix);
+			var Src = _Matrix(VS_NoPrefix);
+			var Target = _Matrix(VT_NoPrefix);
 
-			return AstVfpuStoreVdMatrix((Column, Row) =>
+			return Dest.SetMatrix((Column, Row) =>
 			{
 				var Adder = (AstNodeExpr)ast.Immediate(0f);
 				for (int n = 0; n < VectorSize; n++)
 				{
-					//Console.WriteLine("VS[{0}, {1}] * VT[{2}, {3}]", n, Row, Column, n);
-					Adder +=
-						AstVfpuLoadRegMatrixElement(VectorSize, Instruction.VS, Row, n) // Matrix is transposed
-						*
-						AstVfpuLoadRegMatrixElement(VectorSize, Instruction.VT, Column, n)
-					;
+					Adder += Target[Column, n] * Src[Row, n];
 				}
 				return Adder;
 			});
@@ -93,9 +91,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return _vhtfm_x(4);
 		}
 
-		public AstNodeStm vmidt() { return AstVfpuStoreVdMatrix((Column, Row) => (Column == Row) ? 1f : 0f); }
-		public AstNodeStm vmzero() { return AstVfpuStoreVdMatrix((Column, Row) => 0f); }
-		public AstNodeStm vmone() { return AstVfpuStoreVdMatrix((Column, Row) => 1f); }
+		public AstNodeStm vmidt() { return _Matrix(VD).SetMatrix((Column, Row) => (Column == Row) ? 1f : 0f); }
+		public AstNodeStm vmzero() { return _Matrix(VD).SetMatrix((Column, Row) => 0f); }
+		public AstNodeStm vmone() { return _Matrix(VD).SetMatrix((Column, Row) => 1f); }
 
 		/// <summary>
 		/// +----------------------+--------------+----+--------------+---+--------------+ <para/>
@@ -198,6 +196,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			//});
 		}
 
-		public AstNodeStm vmmov() { return AstVfpuStoreVdMatrix((Column, Row) => AstVfpuLoadRegMatrixElement(Instruction.VS, Column, Row)); }
+		public AstNodeStm vmmov() { return _Matrix(VD).SetMatrix((Column, Row) => _Matrix(VS)[Column, Row]); }
 	}
 }
