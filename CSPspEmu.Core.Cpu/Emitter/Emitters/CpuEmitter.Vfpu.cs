@@ -389,7 +389,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm vfim()
 		{
-			return _Cell(VT).Set((float)Instruction.IMM_HF);
+			return _Cell(VT_NoPrefix).Set((float)Instruction.IMM_HF);
 		}
 
 

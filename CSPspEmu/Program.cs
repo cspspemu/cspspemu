@@ -38,9 +38,9 @@ namespace CSPspEmu
 		//	return Type.GetType("System.Reflection.ReflectionContext", false) != null;
 		//}
 
-		static void RunTests(bool RunTestsViewOut, string[] Arguments)
+		static void RunTests(bool RunTestsViewOut, string[] Arguments, int Timeout = 10)
 		{
-			AutoTestsProgram.Main(RunTestsViewOut, Arguments.ToArray());
+			AutoTestsProgram.Main(RunTestsViewOut, Arguments.ToArray(), Timeout);
 			Environment.Exit(0);
 		}
 
@@ -120,6 +120,7 @@ namespace CSPspEmu
 
 			string FileToLoad = null;
 			bool RunTestsViewOut = false;
+			int RunTestsTimeout = 10;
 
 			var Getopt = new Getopt(Arguments);
 			{
@@ -128,13 +129,13 @@ namespace CSPspEmu
 					Console.WriteLine("Soywiz's Psp Emulator - {0} - r{1} - {2}", PspGlobalConfiguration.CurrentVersion, PspGlobalConfiguration.CurrentVersionNumeric, PspGlobalConfiguration.GitRevision);
 					Console.WriteLine("");
 					Console.WriteLine(" Switches:");
-					Console.WriteLine("   /version             - Outputs the program version");
-					Console.WriteLine("   /version2            - Outputs the program numeric version");
-					Console.WriteLine("   /decrypt <EBOOT.BIN> - Decrypts an EBOOT.BIN");
-					Console.WriteLine("   /gitrevision         - Outputs the git revision");
-					Console.WriteLine("   /installat3          - Installs the WavDest filter. Requires be launched with administrative rights.");
-					Console.WriteLine("   /associate           - Associates extensions with the program. Requires be launched with administrative rights.");
-					Console.WriteLine("   /viewout /tests      - Run integration tests.");
+					Console.WriteLine("   /version                   - Outputs the program version");
+					Console.WriteLine("   /version2                  - Outputs the program numeric version");
+					Console.WriteLine("   /decrypt <EBOOT.BIN>       - Decrypts an EBOOT.BIN");
+					Console.WriteLine("   /gitrevision               - Outputs the git revision");
+					Console.WriteLine("   /installat3                - Installs the WavDest filter. Requires be launched with administrative rights.");
+					Console.WriteLine("   /associate                 - Associates extensions with the program. Requires be launched with administrative rights.");
+					Console.WriteLine("   /viewout /timeout X /tests - Run integration tests.");
 					Console.WriteLine("");
 					Console.WriteLine(" Examples:");
 					Console.WriteLine("   cspspemu.exe <path_to_psp_executable>");
@@ -225,9 +226,13 @@ namespace CSPspEmu
 				{
 					RunTestsViewOut = true;
 				});
+				Getopt.AddRule("/timeout", (int seconds) =>
+				{
+					RunTestsTimeout = seconds;
+				});
 				Getopt.AddRule("/tests", () =>
 				{
-					RunTests(RunTestsViewOut, Getopt.DequeueAllNext());
+					RunTests(RunTestsViewOut, Getopt.DequeueAllNext(), RunTestsTimeout);
 				});
 				Getopt.AddRule((Name) =>
 				{

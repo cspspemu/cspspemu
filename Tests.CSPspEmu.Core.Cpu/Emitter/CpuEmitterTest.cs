@@ -1484,6 +1484,48 @@ namespace CSPspEmu.Core.Tests
 		}
 
 		[Test]
+		public void vFim()
+		{
+			CpuThreadState.Vfpr.ClearAll(float.NaN);
+
+			ExecuteAssembly(@"
+				vfim.s	 S000, 00
+				vfim.s	 S001, 01
+				vfim.s	 S002, 02
+				vfim.s	 S003, 03
+				vfim.s	 S010, 10
+				vfim.s	 S011, 11
+				vfim.s	 S012, 12
+				vfim.s	 S013, 13
+				vfim.s	 S020, 20
+				vfim.s	 S021, 21
+				vfim.s	 S022, 22
+				vfim.s	 S023, 23
+				vfim.s	 S030, 30
+				vfim.s	 S031, 31
+				vfim.s	 S032, 32
+				vfim.s	 S033, 33
+				vfim.s	 S200, -1
+				vmscl.q M100, E000, S200
+			");
+
+			Assert.AreEqual(",", String.Join(",", CpuThreadState.Vfpr["E000.q"]));
+		}
+
+		[Test]
+		public void Vfad()
+		{
+			CpuThreadState.Vfpr["C100.q"] = new float[] { 3, 7, 11, 13 };
+
+			ExecuteAssembly(@"
+				vfad.q  S000.s, C100.q
+			");
+
+			Assert.AreEqual((float)(3 + 7 + 11 + 13), CpuThreadState.Vfpr["S000.s"][0]);
+		}
+
+
+		[Test]
 		public void Vrot()
 		{
 			CpuThreadState.GPR[10] = MathFloat.ReinterpretFloatAsInt(0.2f);

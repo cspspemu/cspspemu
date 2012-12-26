@@ -10,22 +10,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	public unsafe sealed partial class CpuEmitter
 	{
 		// Load/Store Vfpu (Left/Right)_
-		public AstNodeStm lv_s()
-		{
-			return AstNotImplemented("lv_s");
-			////return;
-			//uint VT = Instruction.VT5 | (Instruction.VT2 << 5);
-			//uint Column = (VT >> 5) & 3;
-			//uint Matrix = (VT >> 2) & 7;
-			//uint Row = (VT >> 0) & 3;
-			//
-			//SaveVprField(CalcVprRegisterIndex(Matrix, Column, Row), () =>
-			//{
-			//	_load_memory_imm14_index(0);
-			//	SafeILGenerator.LoadIndirect<float>();
-			//});
-		}
-
 		// ID("lv.q",        VM("110110:rs:vt5:imm14:0:vt1"), "%Xq, %Y", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
 		public AstNodeStm lv_q()
 		{
@@ -146,20 +130,14 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return lv_sv_l_r_q(left: false, save: false);
 		}
 
+		public AstNodeStm lv_s()
+		{
+			return _Cell(VT5_2).Set(AstMemoryGetValue<float>(Memory, Address_RS_IMM14()));
+		}
+
 		public AstNodeStm sv_s()
 		{
-			return AstNotImplemented("sv_s");
-			//uint VT = Instruction.VT5 | (Instruction.VT2 << 5);
-			//uint Column = (VT >> 5) & 3;
-			//uint Matrix = (VT >> 2) & 7;
-			//uint Row = (VT >> 0) & 3;
-			//
-			//_load_memory_imm14_index(0);
-			//{
-			//	LoadVprFieldPtr(CalcVprRegisterIndex(Matrix, Column, Row));
-			//	SafeILGenerator.LoadIndirect<float>();
-			//}
-			//SafeILGenerator.StoreIndirect<float>();
+			return AstMemorySetValue<float>(Memory, Address_RS_IMM14(), _Cell(VT5_2).Get());
 		}
 
 		public AstNodeStm svl_q()

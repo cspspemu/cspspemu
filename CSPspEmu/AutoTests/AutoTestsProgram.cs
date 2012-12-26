@@ -354,7 +354,7 @@ namespace CSPspEmu.AutoTests
 
 		private void InternalMain(bool RunTestsViewOut, String[] Arguments)
 		{
-var BasePath = Path.GetDirectoryName(Application.ExecutablePath);
+			var BasePath = Path.GetDirectoryName(Application.ExecutablePath);
 			string PspAutoTestsFolder = "";
 
 			foreach (var TryName in new[] { "pspautotests/tests", "../../../pspautotests/tests" })
@@ -408,8 +408,9 @@ var BasePath = Path.GetDirectoryName(Application.ExecutablePath);
 			}
 		}
 
-		public static void Main(bool RunTestsViewOut, String[] Arguments)
+		public static void Main(bool RunTestsViewOut, String[] Arguments, int Timeout = 10)
 		{
+			AutoTestsProgram.TimeoutTime = TimeSpan.FromSeconds(Timeout);
 			new AutoTestsProgram().InternalMain(RunTestsViewOut, Arguments);
 		}			
 	}

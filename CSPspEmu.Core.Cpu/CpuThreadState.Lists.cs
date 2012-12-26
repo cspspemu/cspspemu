@@ -1,5 +1,6 @@
 ﻿using CSharpUtils;
 using CSPspEmu.Core.Cpu.VFpu;
+using System;
 using System.Linq;
 
 namespace CSPspEmu.Core.Cpu
@@ -44,6 +45,17 @@ namespace CSPspEmu.Core.Cpu
 		public class GprList
 		{
 			public CpuThreadState CpuThreadState;
+
+			private int NameToIndex(string Name)
+			{
+				return Array.IndexOf(CpuThreadState.RegisterMnemonicNames, Name);
+			}
+
+			public int this[string Name]
+			{
+				get { return this[NameToIndex(Name)]; }
+				set { this[NameToIndex(Name)] = value; }
+			}
 
 			public int this[int Index]
 			{

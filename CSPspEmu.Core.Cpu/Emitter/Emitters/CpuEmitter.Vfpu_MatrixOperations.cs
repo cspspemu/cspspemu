@@ -116,23 +116,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm vmscl()
 		{
-			return AstNotImplemented("vmscl");
-			//var MatrixSize = Instruction.ONE_TWO;
-			//
-			//foreach (var RowIndex in XRange(MatrixSize))
-			//{
-			//	uint VectorSize = MatrixSize;
-			//
-			//	foreach (var Index in XRange(VectorSize))
-			//	{
-			//		Save_VD(Index, VectorSize, RowIndex, () =>
-			//		{
-			//			Load_VS(Index, VectorSize, RowIndex);
-			//			Load_VT(0, 1);
-			//			SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			//		});
-			//	}
-			//}
+			var D = _Matrix(VD);
+			var S = _Matrix(VS);
+			var T = _Cell(VT);
+			return D.SetMatrix((Column, Row) =>
+				S[Column, Row] * T.Get()
+			);
 		}
 
 		public float _vqmul_row0(float l0, float l1, float l2, float l3, float r0, float r1, float r2, float r3)

@@ -394,6 +394,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		private VReg VS { get { return new VReg() { Reg = Instruction.VS, VfpuPrefix = PrefixSource, VfpuDestinationPrefix = PrefixDestinationNone }; } }
 		private VReg VT { get { return new VReg() { Reg = Instruction.VT, VfpuPrefix = PrefixTarget, VfpuDestinationPrefix = PrefixDestinationNone }; } }
 		private VReg VT5_1 { get { return new VReg() { Reg = Instruction.VT5_1, VfpuPrefix = PrefixNone, VfpuDestinationPrefix = PrefixDestinationNone }; } }
+		private VReg VT5_2 { get { return new VReg() { Reg = Instruction.VT5_2, VfpuPrefix = PrefixNone, VfpuDestinationPrefix = PrefixDestinationNone }; } }
 
 		private VReg VD_NoPrefix { get { return new VReg() { Reg = Instruction.VD, VfpuPrefix = PrefixNone, VfpuDestinationPrefix = PrefixDestinationNone }; } }
 		private VReg VS_NoPrefix { get { return new VReg() { Reg = Instruction.VS, VfpuPrefix = PrefixNone, VfpuDestinationPrefix = PrefixDestinationNone }; } }
