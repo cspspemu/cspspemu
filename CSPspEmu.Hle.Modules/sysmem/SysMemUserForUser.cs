@@ -105,7 +105,17 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		public void sceKernelSetCompiledSdkVersion380_390(uint Param)
 		{
 		}
-	
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Param"></param>
+        [HlePspFunction(NID = 0x358CA1BB, FirmwareVersion = 660)]
+        [HlePspNotImplemented]
+        public void sceKernelSetCompiledSdkVersion660(uint Param)
+        {
+        }
+
 		/// <summary>
 		/// 
 		/// </summary>

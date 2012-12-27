@@ -42,10 +42,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			if (Right == 0)
 			{
-				CpuThreadState.LO = 0;
-				CpuThreadState.HI = 0;
+				CpuThreadState.LO = Right;
+				CpuThreadState.HI = Left;
 			}
-			if (Left == int.MinValue && Right == -1)
+			else if (Left == int.MinValue && Right == -1)
 			{
 				CpuThreadState.LO = int.MinValue;
 				CpuThreadState.HI = 0;
@@ -64,8 +64,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			if (Right == 0)
 			{
-				CpuThreadState.LO = 0;
-				CpuThreadState.HI = 0;
+				CpuThreadState.LO = (int)Right;
+				CpuThreadState.HI = (int)Left;
 			}
 			else
 			{

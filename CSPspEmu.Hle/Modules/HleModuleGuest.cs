@@ -91,7 +91,7 @@ namespace CSPspEmu.Hle
 			));
 
 			Console.WriteLine(
-				"    CODE_ADDR({0:X})  :  NID(0x{1,8:X}) : {2} - {3}",
+				"    CODE_ADDR({0:X})  :  NID(0x{1:X8}) : {2} - {3}",
 				CallAddress, NativeFunction.NID, NativeFunction.Name, NativeFunction.Description
 			);
 		}
