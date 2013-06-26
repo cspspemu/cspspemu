@@ -4,6 +4,8 @@ using System.Reflection.Emit;
 using SafeILGenerator;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
+using SafeILGenerator.Ast;
+using SafeILGenerator.Ast.Nodes;
 
 namespace CSPspEmu.Core.Gpu.VertexReading
 {
@@ -11,10 +13,17 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 
 	public unsafe partial class VertexReaderDynarec
 	{
+		static private AstGenerator ast = AstGenerator.Instance;
+
+		public static VertexReaderDelegate GenerateMethod(VertexTypeStruct VertexType)
+		{
+			throw (new NotImplementedException("Not implemented VertexReaderDynarec.GenerateMethod"));
+		}
+#if false
 		protected uint Offset;
 		protected VertexTypeStruct VertexType;
-		protected CSafeILGenerator SafeILGenerator;
-		protected LocalBuilder LocalColor;
+		//protected CSafeILGenerator SafeILGenerator;
+		protected AstLocal LocalColor;
 		protected SafeArgument VertexDataArgument;
 		protected SafeArgument VertexInfoArgument;
 		protected SafeArgument IndexArgument;
@@ -133,18 +142,21 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 			});
 		}
 
-		private void Read_Color(ColorFormat ColorFormat)
+		private AstNodeStm Read_Color(ColorFormat ColorFormat)
 		{
-			_LoadIntegerAsInteger(Size: ColorFormat.TotalBytes, Signed: false);
-			SafeILGenerator.StoreLocal(LocalColor);
-			Read_Color_Component("Color.R", ColorFormat.Red);
-			Read_Color_Component("Color.G", ColorFormat.Green);
-			Read_Color_Component("Color.B", ColorFormat.Blue);
-			Read_Color_Component("Color.A", ColorFormat.Alpha);
-
+			return ast.Statements(
+				ast.Assign(
+					ast.Local(LocalColor),
+					_LoadIntegerAsInteger(Size: ColorFormat.TotalBytes, Signed: false)
+				),
+				Read_Color_Component("Color.R", ColorFormat.Red),
+				Read_Color_Component("Color.G", ColorFormat.Green),
+				Read_Color_Component("Color.B", ColorFormat.Blue),
+				Read_Color_Component("Color.A", ColorFormat.Alpha)
+			);
 		}
 
-		private void Read_Color_Component(String ComponentName, ColorFormat.Component ComponentInfo)
+		private AstNodeStm Read_Color_Component(String ComponentName, ColorFormat.Component ComponentInfo)
 		{
 			_SaveFloatField(ComponentName, () =>
 			{
@@ -217,5 +229,6 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 			SafeILGenerator.Return(typeof(void));
 			//Console.Error.WriteLine(DynamicMethod.GetMethodBody().GetILAsByteArray());
 		}
+#endif
 	}
 }

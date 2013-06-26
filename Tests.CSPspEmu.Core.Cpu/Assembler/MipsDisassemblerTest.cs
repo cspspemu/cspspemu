@@ -4,20 +4,20 @@ using System.IO;
 using CSharpUtils.Streams;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Cpu.Assembler;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CSPspEmu.Core.Tests.Cpu.Assembler
 {
-	[TestFixture]
+	[TestClass]
 	public class MipsDisassemblerTest
 	{
-		[Test]
+		[TestMethod]
 		public void DisassembleRegisterInstruction()
 		{
 			Assert.AreEqual(@"sll r0, r0, 0", new MipsDisassembler().Disassemble(PC: 0x00000000, Instruction: 0x00000000).ToString());
 		}
 
-		[Test]
+		[TestMethod]
 		public void DisassembleJumpInstruction()
 		{
 			var AssemblerResult = MipsAssembler.StaticAssembleInstructions(@"

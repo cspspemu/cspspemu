@@ -148,7 +148,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				AnalyzedPC = new HashSet<uint>();
 				var BranchesToAnalyze = new Queue<uint>();
 
-				Labels[EntryPC] = AstLabel.CreateDelayedWithName("EntryPoint");
+				Labels[EntryPC] = AstLabel.CreateLabel("EntryPoint");
 
 				uint EndPC = (uint)InstructionReader.EndPC;
 				PC = EntryPC;
@@ -227,7 +227,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 							var BranchAddress = Instruction.GetBranchAddress(PC);
 							//if (!Labels.ContainsKey(BranchAddress))
 							{
-								Labels[BranchAddress] = AstLabel.CreateDelayedWithName(String.Format("0x{0:X8}", BranchAddress));
+								Labels[BranchAddress] = AstLabel.CreateLabel(String.Format("0x{0:X8}", BranchAddress));
 								BranchesToAnalyze.Enqueue(BranchAddress);
 							}
 						}

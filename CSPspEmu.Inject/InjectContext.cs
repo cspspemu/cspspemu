@@ -186,9 +186,12 @@ public sealed class InjectContext : IDisposable
 	{
 		var GetBindingFlags = (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
+		//Console.WriteLine("aaaaaaaaaaaaaaaaa");
+
 		// Initialize all [Inject]
 		foreach (var Member in Object.GetType().GetMembers(GetBindingFlags))
 		{
+			//Console.WriteLine("{0}", Member);
 			var Field = Member as FieldInfo;
 			var Property = Member as PropertyInfo;
 			Type MemberType = null;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CSPspEmu.Core.Cpu.Table;
 using CSPspEmu.Core.Memory;
+using SafeILGenerator.Ast;
 
 namespace CSPspEmu.Core.Cpu.Assembler
 {
@@ -82,6 +83,9 @@ namespace CSPspEmu.Core.Cpu.Assembler
 		}
 
 		protected static InstructionInfo[] InstructionLookup;
+
+		static private AstGenerator ast = AstGenerator.Instance;
+
 		public Result Disassemble(uint PC, Instruction Instruction)
 		{
 			if (ProcessCallback == null)
@@ -91,12 +95,13 @@ namespace CSPspEmu.Core.Cpu.Assembler
 				InstructionLookup = InstructionTable.ALL.ToArray();
 				for (int n = 0; n < InstructionLookup.Length; n++) Dictionary[InstructionLookup[n]] = n;
 
-				ProcessCallback = EmitLookupGenerator.GenerateSwitch<Func<uint, MipsDisassembler, Result>>(InstructionTable.ALL, (SafeILGenerator, InstructionInfo) =>
+				ProcessCallback = EmitLookupGenerator.GenerateSwitch<Func<uint, MipsDisassembler, Result>>(InstructionTable.ALL, (InstructionInfo) =>
 				{
-					//SafeILGenerator.LoadArgument<MipsDisassembler>(1);
-					SafeILGenerator.LoadArgument<uint>(0);
-					SafeILGenerator.Push((InstructionInfo != null) ? Dictionary[InstructionInfo] : -1);
-					SafeILGenerator.Call((Func<uint, int, Result>)MipsDisassembler._InternalHandle);
+					return ast.Return(ast.CallStatic(
+						(Func<uint, int, Result>)MipsDisassembler._InternalHandle,
+						ast.Argument<uint>(0),
+						(InstructionInfo != null) ? Dictionary[InstructionInfo] : -1
+					));
 				});
 			}
 

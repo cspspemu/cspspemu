@@ -95,7 +95,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			//MipsMethodEmitter.CallMethod((Action<CpuThreadState, int>)CpuEmitter._vcmp_end);
 		}
 
-		public AstNodeStm _vsltge(SafeBinaryComparison SafeBinaryComparison)
+		public AstNodeStm _vsltge(string BinaryComparison)
 		{
 			return AstNotImplemented("_vsltge");
 
@@ -117,10 +117,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		[PspUntested]
-		public AstNodeStm vslt() { return _vsltge(SafeBinaryComparison.LessThanSigned); }
+		public AstNodeStm vslt() { return _vsltge("<"); }
 
 		[PspUntested]
-		public AstNodeStm vsge() { return _vsltge(SafeBinaryComparison.GreaterOrEqualSigned); }
+		public AstNodeStm vsge() { return _vsltge(">="); }
 		
 		[PspUntested]
 		public AstNodeStm vscmp()

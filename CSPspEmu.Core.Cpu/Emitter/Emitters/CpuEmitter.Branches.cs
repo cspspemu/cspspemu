@@ -55,7 +55,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 #if true
 			if (BranchFlagLocal == null)
 			{
-				BranchFlagLocal = AstLocal.Create(MipsMethodEmitter.ILGenerator, typeof(bool), "BranchFlag");
+				BranchFlagLocal = AstLocal.Create<bool>("BranchFlag");
 			}
 			return ast.Local(BranchFlagLocal);
 #else

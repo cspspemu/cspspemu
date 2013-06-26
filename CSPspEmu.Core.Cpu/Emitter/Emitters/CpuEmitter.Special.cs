@@ -17,11 +17,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			{
 				var DelegateId = Memory.Read4(PC + 4);
 				var SyscallInfoInfo = CpuProcessor.RegisteredNativeSyscallMethods[DelegateId];
+
 				return ast.Statements(
 					ast.Assign(REG("PC"), PC),
 					ast.Comment(SyscallInfoInfo.Name),
 					ast.Statement(ast.CallInstance(MipsMethodEmitter.CpuThreadStateArgument(), (Action)CpuThreadState.Methods.Tick)),
-					ast.Statement(ast.CallDelegate(SyscallInfoInfo.PoolItem.GetAstFieldAccess(), CpuThreadStateArgument()))
+					ast.Statement(ast.CallDelegate(SyscallInfoInfo.PoolItem.AstFieldAccess, CpuThreadStateArgument()))
 				);
 			}
 			else

@@ -5,6 +5,7 @@ using SafeILGenerator;
 
 namespace CSPspEmu.Core.Gpu.VertexReading
 {
+#if false
     public partial class VertexReaderDynarec
 	{
 		private void _LoadPointerAlignedTo(int Alignment)
@@ -101,4 +102,5 @@ namespace CSPspEmu.Core.Gpu.VertexReading
 			return VertexTypeStruct.TypeSizeTable[(int)Type];
 		}
 	}
+#endif
 }

@@ -1,14 +1,14 @@
 ﻿using CSPspEmu.Core.Cpu.Table;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 
 namespace CSPspEmu.Core.Tests
 {
-	[TestFixture]
+	[TestClass]
 	public class InstructionTableTest
 	{
-		[Test]
+		[TestMethod]
 		public void PspInstructionsTest()
 		{
 			var Instructions = InstructionTable.ALL;

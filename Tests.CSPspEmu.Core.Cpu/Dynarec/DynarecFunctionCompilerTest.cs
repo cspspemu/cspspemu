@@ -2,20 +2,20 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Cpu.Dynarec;
 using CSPspEmu.Core.Cpu.Assembler;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 using Tests.CSPspEmu.Core.Cpu.Cpu;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CSPspEmu.Tests.Cpu.Dynarec
 {
-	[TestFixture]
+	[TestClass]
 	public class DynarecFunctionCompilerTest
 	{
-		[Test]
+		[TestMethod]
 		public void TestMethod1()
 		{
 			var CpuProcessor = CpuUtils.CreateCpuProcessor();

@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using SafeILGenerator;
+using SafeILGenerator.Ast;
+using SafeILGenerator.Ast.Nodes;
+using SafeILGenerator.Ast.Generators;
 
 namespace CSPspEmu.Core.Cpu.Table
 {
 	public class EmitLookupGenerator
 	{
+		static private AstGenerator ast = AstGenerator.Instance;
+
 		public static Func<uint, TRetType> GenerateInfoDelegate<TType, TRetType>(Func<uint, TType, TRetType> Callback, TType Instance)
 		{
 			return Value =>
@@ -26,13 +31,23 @@ namespace CSPspEmu.Core.Cpu.Table
 		{
 			if (NameConverter == null) NameConverter = DefaultNameConverter;
 
-			return GenerateSwitch<Action<uint, TType>>(InstructionInfoList, (SafeILGenerator, InstructionInfo) =>
+			return GenerateSwitch<Action<uint, TType>>(InstructionInfoList, (InstructionInfo) =>
 			{
 				var InstructionInfoName = NameConverter((InstructionInfo != null) ? InstructionInfo.Name : "Default");
-				SafeILGenerator.LoadArgument<TType>(1);
 				var MethodInfo = typeof(TType).GetMethod(InstructionInfoName);
 				if (MethodInfo == null) throw (new Exception("Cannot find method '" + InstructionInfoName + "' on type '" + typeof(TType).Name + "'"));
-				SafeILGenerator.Call(MethodInfo);
+				
+				//Console.WriteLine("MethodInfo: {0}", MethodInfo);
+				//Console.WriteLine("Argument(1): {0}", typeof(TType));
+
+				if (MethodInfo.IsStatic)
+				{
+					return ast.Statement(ast.CallStatic(MethodInfo, ast.Argument<TType>(1)));
+				}
+				else
+				{
+					return ast.Statement(ast.CallInstance(ast.Argument<TType>(1), MethodInfo));
+				}
 			});
 		}
 
@@ -40,10 +55,9 @@ namespace CSPspEmu.Core.Cpu.Table
 		{
 			if (NameConverter == null) NameConverter = DefaultNameConverter;
 
-			return GenerateSwitch<Func<uint, TType, TRetType>>(InstructionInfoList, (SafeILGenerator, InstructionInfo) =>
+			return GenerateSwitch<Func<uint, TType, TRetType>>(InstructionInfoList, (InstructionInfo) =>
 			{
 				var InstructionInfoName = NameConverter((InstructionInfo != null) ? InstructionInfo.Name : "Default");
-				SafeILGenerator.LoadArgument<TType>(1);
 				var MethodInfo = typeof(TType).GetMethod(InstructionInfoName);
 
 				if (MethodInfo == null && !ThrowOnUnexistent)
@@ -58,7 +72,14 @@ namespace CSPspEmu.Core.Cpu.Table
 
 				if (MethodInfo.ReturnType == typeof(TRetType))
 				{
-					SafeILGenerator.Call(MethodInfo);
+					if (MethodInfo.IsStatic)
+					{
+						return ast.Return(ast.CallStatic(MethodInfo, ast.Argument<TType>(1)));
+					}
+					else
+					{
+						return ast.Return(ast.CallInstance(ast.Argument<TType>(1), MethodInfo));
+					}
 				}
 				else
 				{
@@ -67,17 +88,17 @@ namespace CSPspEmu.Core.Cpu.Table
 			});
 		}
 
-		public static object GenerateSwitch(Type Type, IEnumerable<InstructionInfo> InstructionInfoList, Action<CSafeILGenerator, InstructionInfo> GenerateCallDelegate)
-		{
-			return CSafeILGenerator.Generate(Type, "EmitLookupGenerator.GenerateSwitch", (Generator) =>
-			{
-				GenerateSwitchCode(Generator, InstructionInfoList, GenerateCallDelegate);
-			});
-		}
+		//public static object GenerateSwitch(Type Type, IEnumerable<InstructionInfo> InstructionInfoList, Func<InstructionInfo, AstNodeStm> GenerateCallDelegate)
+		//{
+		//	return CSafeILGenerator.Generate(Type, "EmitLookupGenerator.GenerateSwitch", (Generator) =>
+		//	{
+		//		GenerateSwitchCode(Generator, InstructionInfoList, GenerateCallDelegate);
+		//	});
+		//}
 
-		public static TType GenerateSwitch<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Action<CSafeILGenerator, InstructionInfo> GenerateCallDelegate)
+		public static TType GenerateSwitch<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Func<InstructionInfo, AstNodeStm> GenerateCallDelegate)
 		{
-			return (TType)GenerateSwitch(typeof(TType), InstructionInfoList, GenerateCallDelegate);
+			return GeneratorIL.GenerateDelegate<GeneratorIL, TType>("EmitLookupGenerator.GenerateSwitch", GenerateSwitchCode(InstructionInfoList, GenerateCallDelegate));
 		}
 
 		/// <summary>
@@ -87,53 +108,31 @@ namespace CSPspEmu.Core.Cpu.Table
 		/// <param name="InstructionInfoList"></param>
 		/// <param name="GenerateCallDelegate"></param>
 		/// <param name="Level"></param>
-		public static void GenerateSwitchCode(CSafeILGenerator SafeILGenerator, IEnumerable<InstructionInfo> InstructionInfoList, Action<CSafeILGenerator, InstructionInfo> GenerateCallDelegate, int Level = 0)
+		public static AstNodeStm GenerateSwitchCode(IEnumerable<InstructionInfo> InstructionInfoList, Func<InstructionInfo, AstNodeStm> GenerateCallDelegate, int Level = 0)
 		{
 			//var ILGenerator = SafeILGenerator._UnsafeGetILGenerator();
 			var CommonMask = InstructionInfoList.Aggregate(0xFFFFFFFF, (Base, InstructionInfo) => Base & InstructionInfo.Mask);
 			var MaskGroups = InstructionInfoList.GroupBy((InstructionInfo) => InstructionInfo.Value & CommonMask);
-			var MaskGroupsCount = MaskGroups.Count();
+			//var MaskGroupsCount = MaskGroups.Count();
 
 			//Console.WriteLine("[" + Level + "]{0:X}", CommonMask);
-
 			//var MaskedLocal = SafeILGenerator.DeclareLocal<int>();
 
-			var MaskedLocalValue = SafeILGenerator.DeclareLocal<int>();
-			SafeILGenerator.LoadArgument<int>(0);
-			SafeILGenerator.Push((int)CommonMask);
-			SafeILGenerator.BinaryOperation(SafeBinaryOperator.And);
-			SafeILGenerator.StoreLocal(MaskedLocalValue);
-
-			SafeILGenerator.LoadLocal(MaskedLocalValue);
-
-			SafeILGenerator.Switch(
-				// List
-				MaskGroups.Select(MaskGroup => MaskGroup.ToArray()),
-				// Get int Key
-				(MaskGroup) =>
-				{
-					return (int)(MaskGroup[0].Value & CommonMask);
-				},
-				// Case
-				(MaskGroup) =>
-				{
-					if (MaskGroup.Length > 1)
-					{
-						GenerateSwitchCode(SafeILGenerator, MaskGroup, GenerateCallDelegate, Level + 1);
-					}
-					else
-					{
-						GenerateCallDelegate(SafeILGenerator, MaskGroup[0]);
-					}
-				},
-				// Default
-				() => 
-				{
-					GenerateCallDelegate(SafeILGenerator, null);
-				}
+			return ast.Statements(
+				ast.Switch(
+					ast.Argument<uint>(0) & (uint)CommonMask,
+					ast.Default(GenerateCallDelegate(null)),
+					MaskGroups.Select((MaskGroup) => 
+						ast.Case(
+							(uint)(MaskGroup.First().Value & CommonMask),
+							(MaskGroup.Count() > 1)
+							? GenerateSwitchCode(MaskGroup, GenerateCallDelegate, Level + 1)
+							: GenerateCallDelegate(MaskGroup.First())
+						)
+					).ToArray()
+				),
+				ast.Throw(ast.New<Exception>("Unexpected reach!"))
 			);
-
-			SafeILGenerator.Return(typeof(void));
 		}
 	}
 }
