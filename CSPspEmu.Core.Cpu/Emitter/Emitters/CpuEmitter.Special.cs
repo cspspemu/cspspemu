@@ -18,19 +18,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				var DelegateId = Memory.Read4(PC + 4);
 				var SyscallInfoInfo = CpuProcessor.RegisteredNativeSyscallMethods[DelegateId];
 
-				return ast.Statements(
+				return ast.StatementsInline(
 					ast.Assign(REG("PC"), PC),
 					ast.Comment(SyscallInfoInfo.Name),
-					ast.Statement(ast.CallInstance(MipsMethodEmitter.CpuThreadStateArgument(), (Action)CpuThreadState.Methods.Tick)),
+					GetTickCall(),
 					ast.Statement(ast.CallDelegate(SyscallInfoInfo.PoolItem.AstFieldAccess, CpuThreadStateArgument()))
 				);
 			}
 			else
 #endif
 			{
-				return ast.Statements(
+				return ast.StatementsInline(
 					ast.Assign(REG("PC"), PC),
-					ast.Statement(ast.CallInstance(MipsMethodEmitter.CpuThreadStateArgument(), (Action)CpuThreadState.Methods.Tick)),
+					GetTickCall(),
 					ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<int>)CpuThreadState.Methods.Syscall, (int)Instruction.CODE))
 				);
 			}

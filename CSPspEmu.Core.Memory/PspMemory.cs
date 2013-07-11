@@ -41,11 +41,12 @@ namespace CSPspEmu.Core.Memory
 		{
 			public readonly uint Low;
 			public readonly uint High;
-			public int Size { get { return (int)(High - Low); } }
+			public readonly uint Size;
 
 			public Segment(uint Offset, uint Size)
 			{
 				this.Low = Offset;
+				this.Size = Size;
 				this.High = Offset + Size;
 			}
 
@@ -64,7 +65,7 @@ namespace CSPspEmu.Core.Memory
 
 		public void ZeroFillSegment(Segment Segment)
 		{
-			PointerUtils.Memset((byte *)PspAddressToPointerSafe(Segment.Low), 0, Segment.Size);
+			PointerUtils.Memset((byte *)PspAddressToPointerSafe(Segment.Low), 0, (int)Segment.Size);
 		}
 
 		public static readonly Segment ScratchPadSegment = new Segment(ScratchPadOffset, ScratchPadSize);
@@ -158,7 +159,6 @@ namespace CSPspEmu.Core.Memory
 		{
 			if (Address == 0 && CanBeNull) return null;
 			ValidateRange(Address, Size);
-			if (!IsAddressValid(Address)) throw(new InvalidAddressException(Address));
 			return PspAddressToPointerUnsafe(Address);
 		}
 

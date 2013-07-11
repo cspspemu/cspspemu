@@ -10,6 +10,7 @@ using CSPspEmu.Core.Cpu.VFpu;
 using CSPspEmu.Core.Cpu.InstructionCache;
 using CSPspEmu.Core.Cpu.Dynarec;
 using CSPspEmu.Core.Memory;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -58,6 +59,11 @@ namespace CSPspEmu.Core.Cpu
 		/// 
 		/// </summary>
 		public uint IC;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool BranchFlag;
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// GPR: General Purporse Registers
@@ -174,44 +180,28 @@ namespace CSPspEmu.Core.Cpu
 			return Pointer;
 		}
 
-#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
 		public byte Read1(uint Address) { return Memory.Read1(Address); }
 
-#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
 		public ushort Read2(uint Address) { return Memory.Read2(Address); }
 
-#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
 		public uint Read4(uint Address) { return Memory.Read4(Address); }
 
-#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
 		public float Read4F(uint Address) { var Value = Memory.Read4(Address); return *(float*)&Value; }
 
-#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
 		public void Write1(uint Address, byte Value) { Memory.Write1(Address, Value); }
 
-#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
 		public void Write2(uint Address, ushort Value) { Memory.Write2(Address, Value); }
 
-#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
 		public void Write4(uint Address, uint Value) { Memory.Write4(Address, Value); }
 
-#if NET_45
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-#endif
 		public void Write4F(uint Address, float Value) { Memory.Write4(Address, *(uint*)&Value); }
 
 		public void* GetMemoryPtrNotNull(uint Address)
@@ -501,15 +491,18 @@ namespace CSPspEmu.Core.Cpu
 			var AstGenerationTime = Time1 - Time0;
 			var LinkingTime = Time2 - Time1;
 
-			Console.WriteLine(
-				"({0}): Ast: {1}ms, Link: {2}ms, Times(analyze, create, generate): ({3}, {4}, {5})ms",
-				(DynarecFunction.MaxPC - DynarecFunction.MinPC) / 4,
-				(int)AstGenerationTime.TotalMilliseconds,
-				(int)LinkingTime.TotalMilliseconds,
-				(int)DynarecFunction.TimeAnalyzeBranches.TotalMilliseconds,
-				(int)DynarecFunction.TimeCreateDelegate.TotalMilliseconds,
-				(int)DynarecFunction.TimeGenerateCode.TotalMilliseconds
-			);
+			ConsoleUtils.SaveRestoreConsoleColor(((AstGenerationTime + LinkingTime).TotalMilliseconds > 10) ? ConsoleColor.Red : ConsoleColor.Gray, () =>
+			{
+				Console.WriteLine(
+					"({0}): Times(ms)(analyze, create, generate, link): ({1}, {2}, {3}, {4}) : {5} ms",
+					(DynarecFunction.MaxPC - DynarecFunction.MinPC) / 4,
+					(int)DynarecFunction.TimeAnalyzeBranches.TotalMilliseconds,
+					(int)DynarecFunction.TimeCreateDelegate.TotalMilliseconds,
+					(int)DynarecFunction.TimeGenerateCode.TotalMilliseconds,
+					(int)LinkingTime.TotalMilliseconds,
+					(int)(AstGenerationTime + LinkingTime).TotalMilliseconds
+				);
+			});
 
 			//DynarecFunction.AstNode = DynarecFunction.AstNode.Optimize(CpuProcessor);
 

@@ -29,7 +29,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		[HlePspFunction(NID = 0x1F6752AD, FirmwareVersion = 150)]
 		public int sceGeEdramGetSize()
 		{
-			return PspMemory.FrameBufferSegment.Size;
+			return (int)PspMemory.FrameBufferSegment.Size;
 		}
 
 		private int eDRAMMemoryWidth;

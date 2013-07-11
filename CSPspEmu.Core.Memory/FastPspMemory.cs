@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace CSPspEmu.Core.Memory
 {
 	public unsafe sealed class FastPspMemory : PspMemory
 	{
 		override public bool HasFixedGlobalAddress { get { return true; } }
-		override public IntPtr FixedGlobalAddress { get { return new IntPtr(this.Base); } }
+		override public IntPtr FixedGlobalAddress { get { return new IntPtr(_Base); } }
 
 		//public readonly byte* Base = (byte*)0x50000000;
 		//public readonly byte* Base = (byte*)0x40000000;
@@ -16,7 +17,8 @@ namespace CSPspEmu.Core.Memory
 		public static byte* StaticFrameBufferPtr;
 		public static byte* StaticMainPtr;
 
-		public byte* Base { get { return _Base; } }
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//public byte* Base { get { return _Base; } }
 
 		/*
 		// to RESERVE memory in Linux, use mmap with a private, anonymous, non-accessible mapping.
@@ -86,13 +88,13 @@ namespace CSPspEmu.Core.Memory
 					_Base = (byte*)TryBase;
 					Console.WriteLine("FastPspMemory.AllocMemoryOnce: Trying Base ... 0x{0:X}", TryBase);
 
-					StaticNullPtr = Base;
-					Platform.AllocRangeGuard(Base, Base + ScratchPadOffset);
-					StaticScratchPadPtr = (byte*)Platform.AllocRange(Base + ScratchPadOffset, ScratchPadAllocSize);
-					Platform.AllocRangeGuard(Base + ScratchPadOffset + ScratchPadAllocSize, Base + FrameBufferOffset);
-					StaticFrameBufferPtr = (byte*)Platform.AllocRange(Base + FrameBufferOffset, FrameBufferAllocSize);
-					Platform.AllocRangeGuard(Base + FrameBufferOffset + FrameBufferAllocSize, Base + MainOffset);
-					StaticMainPtr = (byte*)Platform.AllocRange(Base + MainOffset, MainAllocSize);
+					StaticNullPtr = _Base;
+					Platform.AllocRangeGuard(_Base, _Base + ScratchPadOffset);
+					StaticScratchPadPtr = (byte*)Platform.AllocRange(_Base + ScratchPadOffset, ScratchPadAllocSize);
+					Platform.AllocRangeGuard(_Base + ScratchPadOffset + ScratchPadAllocSize, _Base + FrameBufferOffset);
+					StaticFrameBufferPtr = (byte*)Platform.AllocRange(_Base + FrameBufferOffset, FrameBufferAllocSize);
+					Platform.AllocRangeGuard(_Base + FrameBufferOffset + FrameBufferAllocSize, _Base + MainOffset);
+					StaticMainPtr = (byte*)Platform.AllocRange(_Base + MainOffset, MainAllocSize);
 
 					if (StaticScratchPadPtr != null && StaticFrameBufferPtr != null && StaticMainPtr != null)
 					{
@@ -159,7 +161,7 @@ namespace CSPspEmu.Core.Memory
 		public override uint PointerToPspAddressUnsafe(void* Pointer)
 		{
 			if (Pointer == null) return 0;
-			return (uint)((byte*)Pointer - Base);
+			return (uint)((byte*)Pointer - _Base);
 		}
 
 		public override void* PspAddressToPointerUnsafe(uint _Address)
@@ -168,9 +170,9 @@ namespace CSPspEmu.Core.Memory
 			//Console.WriteLine("Base: 0x{0:X} ; Address: 0x{1:X}", (ulong)Base, Address);
 			if (Address == 0) return null;
 #if false
-			if (Base == null) throw(new InvalidProgramException("Base is null"));
+			if (_Base == null) throw(new InvalidProgramException("Base is null"));
 #endif
-			return Base + Address;
+			return _Base + Address;
 		}
 
 		public override void Dispose()

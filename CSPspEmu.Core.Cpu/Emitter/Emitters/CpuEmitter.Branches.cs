@@ -1,4 +1,5 @@
-﻿#define ENABLE_NATIVE_CALLS
+﻿#define BRANCH_FLAG_AS_LOCAL
+#define ENABLE_NATIVE_CALLS
 
 using System;
 using SafeILGenerator.Ast;
@@ -10,10 +11,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	{
 		public AstNodeStm _branch_likely(AstNodeStm Code)
 		{
-			return ast.IfElse(
-				BranchFlag(),
-				Code
-			);
+			return ast.If(BranchFlag(), Code);
 		}
 
 		// Code executed after the delayed slot.
@@ -22,17 +20,17 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			if (this.AndLink)
 			{
 #if ENABLE_NATIVE_CALLS
-				return ast.IfElse(
+				return ast.If(
 					BranchFlag(),
-					ast.Statements(
+					ast.StatementsInline(
 						AssignGPR(31, BranchPC + 8),
 						CallFixedAddress(BranchPC)
 					)
 				);
 #else
-				return ast.IfElse(
+				return ast.If(
 					BranchFlag(),
-					ast.Statements(
+					ast.StatementsInline(
 						AssignGPR(31, BranchPC + 8),
 						ast.GotoAlways(BranchLabel)
 					)
@@ -48,11 +46,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		bool AndLink = false;
 		uint BranchPC = 0;
 
+#if BRANCH_FLAG_AS_LOCAL
 		private AstLocal BranchFlagLocal = null;
+#endif
 
 		private AstNodeExprLValue BranchFlag()
 		{
-#if true
+#if BRANCH_FLAG_AS_LOCAL
 			if (BranchFlagLocal == null)
 			{
 				BranchFlagLocal = AstLocal.Create<bool>("BranchFlag");
@@ -125,7 +125,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm CallAddress(AstNodeExpr Address)
 		{
-			return ast.Statements(
+			return ast.StatementsInline(
 				_link(),
 #if ENABLE_NATIVE_CALLS
 				ast.Statement(MipsMethodEmitter.MethodCacheInfoCallDynamicPC(Address))
@@ -142,7 +142,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm CallFixedAddress(uint Address)
 		{
-			return ast.Statements(
+			return ast.StatementsInline(
 				_link(),
 #if ENABLE_NATIVE_CALLS
 				ast.Statement(MipsMethodEmitter.MethodCacheInfoCallStaticPC(CpuProcessor, Address))
@@ -160,11 +160,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		private AstNodeStm ReturnFromFunction(AstNodeExpr AstNodeExpr)
 		{
 #if ENABLE_NATIVE_CALLS
-
-			return ast.Statements(
+			return ast.StatementsInline(
 				AssignREG("PC", GPR(31)),
-				ast.Statement(ast.CallInstance(MipsMethodEmitter.CpuThreadStateArgument(), (Action)CpuThreadState.Methods.Tick)),
-				//ast.Statement(ast.CallStatic((Action)DumpStackTrace)),
+				GetTickCall(),
 				ast.Return()
 			);
 #else

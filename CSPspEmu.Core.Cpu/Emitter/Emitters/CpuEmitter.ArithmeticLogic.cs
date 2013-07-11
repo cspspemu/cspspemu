@@ -98,8 +98,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move if Zero/Non zero.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm movz() { return ast.IfElse(ast.Binary(GPR_s(RT), "==", 0), ast.Assign(GPR(RD), GPR_u(RS))); }
-		public AstNodeStm movn() { return ast.IfElse(ast.Binary(GPR_s(RT), "!=", 0), ast.Assign(GPR(RD), GPR_u(RS))); }
+		public AstNodeStm movz() { return ast.If(ast.Binary(GPR_s(RT), "==", 0), ast.Assign(GPR(RD), GPR_u(RS))); }
+		public AstNodeStm movn() { return ast.If(ast.Binary(GPR_s(RT), "!=", 0), ast.Assign(GPR(RD), GPR_u(RS))); }
 
 		/// <summary>
 		/// EXTract/INSert

@@ -1,4 +1,5 @@
 ﻿#define ALLOW_FAST_MEMORY
+#define EMIT_CALL_TICK
 
 using System;
 using SafeILGenerator.Ast;
@@ -46,6 +47,15 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			this.InstructionReader = InstructionReader;
 		}
 
+		private AstNodeStm GetTickCall()
+		{
+#if EMIT_CALL_TICK
+			return ast.Statement(ast.CallInstance(MipsMethodEmitter.CpuThreadStateArgument(), (Action)CpuThreadState.Methods.Tick));
+#else
+			return ast.Statement();
+#endif
+		}
+
 		// AST utilities
 		public static AstNodeExprArgument CpuThreadStateArgument() { return ast.Argument<CpuThreadState>(0, "CpuThreadState"); }
 		public static AstNodeExprLValue FCR31_CC() { return ast.FieldAccess(REG("Fcr31"), "CC"); }
@@ -55,15 +65,18 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public static AstNodeExprLValue FPR_I(int Index) { return ast.Indirect(ast.Cast(typeof(int*), ast.GetAddress(REG("FPR" + Index)), Explicit: false)); }
 
 		public static AstNodeExpr GPR_f(int Index) { if (Index == 0) return ast.Immediate((int)0); return ast.Reinterpret<float>(GPR(Index)); }
-		public static AstNodeExpr GPR_s(int Index) { if (Index == 0) return ast.Immediate((int)0); return ast.Cast<int>(GPR(Index)); }
+		public static AstNodeExpr GPR_s(int Index) { if (Index == 0) return ast.Immediate((int)0); return ast.Cast<int>(GPR(Index), false); }
 		public static AstNodeExpr GPR_sl(int Index) { return ast.Cast<long>(GPR_s(Index)); }
-		public static AstNodeExpr GPR_u(int Index) { if (Index == 0) return ast.Immediate((uint)0); return ast.Cast<uint>(GPR(Index)); }
+		public static AstNodeExpr GPR_u(int Index) { if (Index == 0) return ast.Immediate((uint)0); return ast.Cast<uint>(GPR(Index), false); }
 		public static AstNodeExpr GPR_ul(int Index) { return ast.Cast<ulong>(GPR_u(Index)); }
 
 		public static AstNodeStm AssignFPR_F(int Index, AstNodeExpr Expr) { return ast.Assign(FPR(Index), Expr); }
 		public static AstNodeStm AssignFPR_I(int Index, AstNodeExpr Expr) { return ast.Assign(FPR_I(Index), Expr); }
 		public static AstNodeStm AssignREG(string RegName, AstNodeExpr Expr) { return ast.Assign(REG(RegName), Expr); }
-		public static AstNodeStm AssignGPR(int Index, AstNodeExpr Expr) { if (Index == 0) return new AstNodeStmEmpty(); return ast.Assign(GPR(Index), ast.Cast<uint>(Expr)); }
+		public static AstNodeStm AssignGPR(int Index, AstNodeExpr Expr) {
+			if (Index == 0) return new AstNodeStmEmpty();
+			return ast.Assign(GPR(Index), ast.Cast<uint>(Expr, false));
+		}
 		public static AstNodeStm AssignHILO(AstNodeExpr Expr)
 		{
 			return ast.Statement(ast.CallStatic(
@@ -84,7 +97,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return ast.Statement(ast.CallStatic((Action<string>)ErrorWriteLine, "AstNotImplemented: " + Description));
 		}
 
-#if NET_45
 		public static AstNodeStm AstNotImplemented(
 			[CallerMemberName]string sourceMemberName = "",
 			[CallerFilePath]string sourceFilePath = "",
@@ -92,12 +104,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			return _AstNotImplemented(String.Format("('{0}') : {1}:{2}", sourceMemberName, Path.GetFileName(sourceFilePath), sourceLineNo));
 		}
-#else
-		public static AstNodeStm AstNotImplemented(string Name)
-		{
-			return _AstNotImplemented(String.Format("('{0}') : {1}:{2}", Name, "<unknown>", -1));
-		}
-#endif
 
 		//private AstNodeStm GenerateIL(AstNodeStm Expr) { MipsMethodEmitter.GenerateIL(Expr); return Expr; }
 		//private void GenerateAssignREG(AstNodeExprLValue Reg, AstNodeExpr Expr) { GenerateIL(this.Assign(Reg, Expr)); }
@@ -123,12 +129,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeExpr Address_RS_IMM14(int Offset = 0)
 		{
-			return ast.Cast<uint>(ast.Binary(GPR_s(RS), "+", Instruction.IMM14 * 4 + Offset));
+			return ast.Cast<uint>(ast.Binary(GPR_s(RS), "+", Instruction.IMM14 * 4 + Offset), false);
 		}
 
 		public AstNodeExpr Address_RS_IMM()
 		{
-			return ast.Cast<uint>(ast.Binary(GPR_s(RS), "+", IMM_s()));
+			return ast.Cast<uint>(ast.Binary(GPR_s(RS), "+", IMM_s()), false);
 		}
 
 		delegate void* AddressToPointerFunc(uint Address);
@@ -154,7 +160,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public static AstNodeExprIndirect AstMemoryGetPointerIndirect(PspMemory Memory, Type Type, AstNodeExpr Address)
 		{
-			return ast.Indirect(ast.Cast(Type.MakePointerType(), AstMemoryGetPointer(Memory, Address)));
+			return ast.Indirect(ast.Cast(Type.MakePointerType(), AstMemoryGetPointer(Memory, Address), false));
 		}
 
 		public static AstNodeStm AstMemorySetValue(PspMemory Memory, Type Type, AstNodeExpr Address, AstNodeExpr Value)
@@ -164,7 +170,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			{
 				return ast.Assign(
 					AstMemoryGetPointerIndirect(Memory, Type, Address),
-					ast.Cast(Type, Value)
+					ast.Cast(Type, Value, false)
 				);
 			}
 			else
@@ -172,10 +178,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			{
 				var SignedType = AstUtils.GetSignedType(Type);
 				if (false) { }
-				else if (SignedType == typeof(sbyte)) return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<uint, byte>)CpuThreadState.Methods.Write1, Address, ast.Cast<byte>(Value)));
-				else if (SignedType == typeof(short)) return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<uint, ushort>)CpuThreadState.Methods.Write2, Address, ast.Cast<ushort>(Value)));
-				else if (SignedType == typeof(int)) return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<uint, uint>)CpuThreadState.Methods.Write4, Address, ast.Cast<uint>(Value)));
-				else if (SignedType == typeof(float)) return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<uint, float>)CpuThreadState.Methods.Write4F, Address, ast.Cast<float>(Value)));
+				else if (SignedType == typeof(sbyte)) return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<uint, byte>)CpuThreadState.Methods.Write1, Address, ast.Cast<byte>(Value, false)));
+				else if (SignedType == typeof(short)) return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<uint, ushort>)CpuThreadState.Methods.Write2, Address, ast.Cast<ushort>(Value, false)));
+				else if (SignedType == typeof(int)) return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<uint, uint>)CpuThreadState.Methods.Write4, Address, ast.Cast<uint>(Value, false)));
+				else if (SignedType == typeof(float)) return ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<uint, float>)CpuThreadState.Methods.Write4F, Address, ast.Cast<float>(Value, false)));
 				throw (new NotImplementedException(String.Format("Can't handle type {0}", Type)));
 			}
 		}
@@ -197,10 +203,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			{
 				var SignedType = AstUtils.GetSignedType(Type);
 				if (false) { }
-				else if (SignedType == typeof(sbyte)) return ast.Cast(Type, ast.CallInstance(CpuThreadStateArgument(), (Func<uint, byte>)CpuThreadState.Methods.Read1, Address));
-				else if (SignedType == typeof(short)) return ast.Cast(Type, ast.CallInstance(CpuThreadStateArgument(), (Func<uint, ushort>)CpuThreadState.Methods.Read2, Address));
-				else if (SignedType == typeof(int)) return ast.Cast(Type, ast.CallInstance(CpuThreadStateArgument(), (Func<uint, uint>)CpuThreadState.Methods.Read4, Address));
-				else if (SignedType == typeof(float)) return ast.Cast(Type, ast.CallInstance(CpuThreadStateArgument(), (Func<uint, float>)CpuThreadState.Methods.Read4F, Address));
+				else if (SignedType == typeof(sbyte)) return ast.Cast(Type, ast.CallInstance(CpuThreadStateArgument(), (Func<uint, byte>)CpuThreadState.Methods.Read1, Address), false);
+				else if (SignedType == typeof(short)) return ast.Cast(Type, ast.CallInstance(CpuThreadStateArgument(), (Func<uint, ushort>)CpuThreadState.Methods.Read2, Address), false);
+				else if (SignedType == typeof(int)) return ast.Cast(Type, ast.CallInstance(CpuThreadStateArgument(), (Func<uint, uint>)CpuThreadState.Methods.Read4, Address), false);
+				else if (SignedType == typeof(float)) return ast.Cast(Type, ast.CallInstance(CpuThreadStateArgument(), (Func<uint, float>)CpuThreadState.Methods.Read4F, Address), false);
 				throw (new NotImplementedException(String.Format("Can't handle type {0}", Type)));
 			}
 		}
