@@ -27,11 +27,11 @@ namespace CSPspEmu.Core.Cpu.Table
 			return Name.Replace('.', '_');
 		}
 
-		public static Action<uint, TType> GenerateSwitchDelegate<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Func<String, String> NameConverter = null)
+		public static Action<uint, TType> GenerateSwitchDelegate<TType>(string Name, IEnumerable<InstructionInfo> InstructionInfoList, Func<String, String> NameConverter = null)
 		{
 			if (NameConverter == null) NameConverter = DefaultNameConverter;
 
-			return GenerateSwitch<Action<uint, TType>>(InstructionInfoList, (InstructionInfo) =>
+			return GenerateSwitch<Action<uint, TType>>(Name, InstructionInfoList, (InstructionInfo) =>
 			{
 				var InstructionInfoName = NameConverter((InstructionInfo != null) ? InstructionInfo.Name : "Default");
 				var MethodInfo = typeof(TType).GetMethod(InstructionInfoName);
@@ -51,11 +51,11 @@ namespace CSPspEmu.Core.Cpu.Table
 			});
 		}
 
-		public static Func<uint, TType, TRetType> GenerateSwitchDelegateReturn<TType, TRetType>(IEnumerable<InstructionInfo> InstructionInfoList, Func<String, String> NameConverter = null, bool ThrowOnUnexistent = true)
+		public static Func<uint, TType, TRetType> GenerateSwitchDelegateReturn<TType, TRetType>(string Name, IEnumerable<InstructionInfo> InstructionInfoList, Func<String, String> NameConverter = null, bool ThrowOnUnexistent = true)
 		{
 			if (NameConverter == null) NameConverter = DefaultNameConverter;
 
-			return GenerateSwitch<Func<uint, TType, TRetType>>(InstructionInfoList, (InstructionInfo) =>
+			return GenerateSwitch<Func<uint, TType, TRetType>>(Name, InstructionInfoList, (InstructionInfo) =>
 			{
 				var InstructionInfoName = NameConverter((InstructionInfo != null) ? InstructionInfo.Name : "Default");
 				var MethodInfo = typeof(TType).GetMethod(InstructionInfoName);
@@ -94,11 +94,13 @@ namespace CSPspEmu.Core.Cpu.Table
 		//	{
 		//		GenerateSwitchCode(Generator, InstructionInfoList, GenerateCallDelegate);
 		//	});
-		//}
 
-		public static TType GenerateSwitch<TType>(IEnumerable<InstructionInfo> InstructionInfoList, Func<InstructionInfo, AstNodeStm> GenerateCallDelegate)
+
+		static private readonly GeneratorIL GeneratorILInstance = new GeneratorIL();
+
+		public static TType GenerateSwitch<TType>(string Name, IEnumerable<InstructionInfo> InstructionInfoList, Func<InstructionInfo, AstNodeStm> GenerateCallDelegate)
 		{
-			return GeneratorIL.GenerateDelegate<GeneratorIL, TType>("EmitLookupGenerator.GenerateSwitch", GenerateSwitchCode(InstructionInfoList, GenerateCallDelegate));
+			return GeneratorILInstance.GenerateDelegate<TType>("EmitLookupGenerator.GenerateSwitch::" + Name, GenerateSwitchCode(InstructionInfoList, GenerateCallDelegate));
 		}
 
 		/// <summary>

@@ -39,8 +39,8 @@ namespace CSPspEmu.Core.Memory
 
 		public sealed class Segment
 		{
-			public uint Low { get; private set; }
-			public uint High { get; private set; }
+			public readonly uint Low;
+			public readonly uint High;
 			public int Size { get { return (int)(High - Low); } }
 
 			public Segment(uint Offset, uint Size)

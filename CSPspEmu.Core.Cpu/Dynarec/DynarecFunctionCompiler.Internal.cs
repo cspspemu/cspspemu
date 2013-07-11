@@ -22,7 +22,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 	{
         internal class InternalFunctionCompiler
 		{
-			public static Func<uint, CpuEmitter, AstNodeStm> CpuEmitterInstruction = EmitLookupGenerator.GenerateSwitchDelegateReturn<CpuEmitter, AstNodeStm>(InstructionTable.ALL);
+			public static readonly Func<uint, CpuEmitter, AstNodeStm> CpuEmitterInstruction = EmitLookupGenerator.GenerateSwitchDelegateReturn<CpuEmitter, AstNodeStm>("CpuEmitterInstruction", InstructionTable.ALL);
 			static MipsDisassembler MipsDisassembler = new MipsDisassembler();
 			CpuEmitter CpuEmitter;
 			DynarecFunctionCompiler DynarecFunctionCompiler;
@@ -91,7 +91,12 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			/// <returns></returns>
 			internal DynarecFunction CreateFunction()
 			{
+				var Time0 = DateTime.UtcNow;
+				
 				AnalyzeBranches();
+				
+				var Time1 = DateTime.UtcNow;
+
 				var Nodes = GenerateCode();
 
 				Nodes = ast.Statements(
@@ -103,13 +108,22 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 					Nodes
 				);
 
+				var Time2 = DateTime.UtcNow;
+
+				var Delegate = MipsMethodEmitter.CreateDelegate(Nodes);
+
+				var Time3 = DateTime.UtcNow;
+
 				return new DynarecFunction()
 				{
 					EntryPC = EntryPC,
 					MinPC = MinPC,
 					MaxPC = MaxPC,
 					AstNode = Nodes,
-					Delegate = MipsMethodEmitter.CreateDelegate(Nodes),
+					Delegate = Delegate,
+					TimeAnalyzeBranches = Time1 - Time0,
+					TimeGenerateCode = Time2 - Time1,
+					TimeCreateDelegate = Time3 - Time2,
 				};
 			}
 
@@ -279,10 +293,9 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
 				var Instruction = CpuEmitter.LoadAT(PC);
 				var DisassembleInstruction = MipsDisassembler.Disassemble(PC, Instruction);
-				return new AstNodeStmPspInstruction(
-					DisassembleInstruction,
-					ProcessGeneratedInstruction(DisassembleInstruction, CpuEmitterInstruction(Instruction, CpuEmitter))
-				);
+				var Call = CpuEmitterInstruction(Instruction, CpuEmitter);
+				var AstNodeStm = ProcessGeneratedInstruction(DisassembleInstruction, Call);
+				return new AstNodeStmPspInstruction(DisassembleInstruction, AstNodeStm);
 			}
 
 			uint PC;

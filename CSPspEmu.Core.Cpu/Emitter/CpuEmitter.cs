@@ -21,7 +21,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public uint PC { private set; get; }
 		public PspMemory Memory { get { return CpuProcessor.Memory; } }
 
-		static private AstGenerator ast = AstGenerator.Instance;
+		static private AstMipsGenerator ast = AstMipsGenerator.Instance;
 
 		public Instruction LoadAT(uint PC)
 		{

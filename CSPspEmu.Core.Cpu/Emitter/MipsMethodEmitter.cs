@@ -36,10 +36,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			);
 		}
 
+		private static GeneratorILPsp GeneratorILPsp = new GeneratorILPsp();
+
 		public Action<CpuThreadState> CreateDelegate(AstNodeStm AstNodeStm)
 		{
-			//ILGenerator.Emit(OpCodes.Ret);
-			// Optimize
 			AstNodeStm = AstOptimizerPsp.GlobalOptimize(Processor, ast.Statements(AstNodeStm, ast.Return()));
 
 #if DEBUG_GENERATE_IL
@@ -49,7 +49,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			Console.WriteLine("{0}", (new GeneratorCSharpPsp()).GenerateRoot(AstNodeStm).ToString().Replace("CpuThreadState.", ""));
 #endif
 
-			new GeneratorILPsp().Init(DynamicMethod, ILGenerator).GenerateRoot(AstNodeStm);
+			GeneratorILPsp.Init(DynamicMethod, ILGenerator).Reset().GenerateRoot(AstNodeStm);
 
 			try
 			{

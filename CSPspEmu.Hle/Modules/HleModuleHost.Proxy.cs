@@ -249,6 +249,8 @@ namespace CSPspEmu.Hle
 			return AstNodes;
 		}
 
+		static private readonly GeneratorILPsp GeneratorILPspInstance = new GeneratorILPsp();
+
 		private Action<CpuThreadState> CreateDelegateForMethodInfo(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute)
 		{
 			if (!MethodInfo.DeclaringType.IsAssignableFrom(this.GetType()))
@@ -270,7 +272,7 @@ namespace CSPspEmu.Hle
 				)
 			);
 
-			var Delegate = GeneratorIL.GenerateDelegate<GeneratorILPsp, Action<CpuThreadState>>(
+			var Delegate = GeneratorILPspInstance.GenerateDelegate<Action<CpuThreadState>>(
 				String.Format("Proxy_{0}_{1}", this.GetType().Name, MethodInfo.Name),
 				AstNodes
 			);

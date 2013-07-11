@@ -5,7 +5,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
 {
 	public class GeneratorILPsp : GeneratorIL
 	{
-		public GeneratorILPsp()
+		public GeneratorILPsp() : base()
 		{
 		}
 

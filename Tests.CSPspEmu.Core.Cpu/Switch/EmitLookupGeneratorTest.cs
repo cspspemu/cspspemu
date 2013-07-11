@@ -37,7 +37,7 @@ namespace CSPspEmu.Core.Tests
 		public void GenerateSwitchDelegateTest()
 		{
 			var EmitLookupGenerator = new EmitLookupGenerator();
-			var Callback = EmitLookupGenerator.GenerateSwitchDelegate<HandlerClass>(new InstructionInfo[] {
+			var Callback = EmitLookupGenerator.GenerateSwitchDelegate<HandlerClass>("GenerateSwitchDelegateTest", new InstructionInfo[] {
 				new InstructionInfo() {
 					BinaryEncoding = "----------------------------0001",
 					Name = "test1"

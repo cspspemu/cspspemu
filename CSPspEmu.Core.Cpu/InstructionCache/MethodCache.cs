@@ -26,15 +26,17 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 
 		static private AstGenerator ast = AstGenerator.Instance;
 
+		static private readonly GeneratorIL GeneratorILInstance = new GeneratorIL();
+
 		static private Action<CpuThreadState> GetGeneratorForPC(uint PC)
 		{
-			var Ast = (AstNodeStm)new AstOptimizer().Optimize(ast.Statements(
+			var Ast = ast.Statements(
 				ast.Statement(ast.CallInstance(MipsMethodEmitter.CpuThreadStateArgument(), (Action<MethodCacheInfo, uint>)CpuThreadState.Methods._MethodCacheInfo_SetInternal, MipsMethodEmitter.MethodCacheInfoGetAtPC(PC), PC)),
 				ast.Statement(ast.CallTail(ast.CallInstance(MipsMethodEmitter.MethodCacheInfoGetAtPC(PC), (Action<CpuThreadState>)MethodCacheInfo.Methods.CallDelegate, MipsMethodEmitter.CpuThreadStateArgument()))),
 				ast.Return()
-			));
+			);
 
-			return GeneratorIL.GenerateDelegate<GeneratorIL, Action<CpuThreadState>>("MethodCache.DynamicCreateNewFunction", Ast);
+			return GeneratorILInstance.GenerateDelegate<Action<CpuThreadState>>("MethodCache.DynamicCreateNewFunction", Ast);
 		}
 
 		public MethodCacheInfo GetForPC(uint PC)
@@ -45,10 +47,11 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 			}
 			else
 			{
+				var DelegateGeneratorForPC = GetGeneratorForPC(PC);
 				return MethodMapping[PC] = new MethodCacheInfo()
 				{
 					MethodCache = this,
-					StaticField = ILInstanceHolder.TAlloc<Action<CpuThreadState>>(GetGeneratorForPC(PC)),
+					StaticField = ILInstanceHolder.TAlloc<Action<CpuThreadState>>(DelegateGeneratorForPC),
 				};
 			}
 		}

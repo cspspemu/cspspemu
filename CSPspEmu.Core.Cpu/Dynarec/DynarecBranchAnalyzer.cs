@@ -12,6 +12,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
 		private static Func<uint, JumpFlags> _GetBranchInfo = EmitLookupGenerator.GenerateInfoDelegate<DynarecBranchAnalyzer, JumpFlags>(
 			EmitLookupGenerator.GenerateSwitchDelegateReturn<DynarecBranchAnalyzer, JumpFlags>(
+				"_GetBranchInfo",
 				InstructionTable.ALL, ThrowOnUnexistent: false
 			),
 			new DynarecBranchAnalyzer()

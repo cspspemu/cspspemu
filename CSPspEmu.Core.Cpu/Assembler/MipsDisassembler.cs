@@ -76,7 +76,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 				return AssemblyLine;
 			}
 		}
-		protected Func<uint, MipsDisassembler, Result> ProcessCallback;
+		static protected Func<uint, MipsDisassembler, Result> ProcessCallback;
 
 		public MipsDisassembler()
 		{
@@ -95,7 +95,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 				InstructionLookup = InstructionTable.ALL.ToArray();
 				for (int n = 0; n < InstructionLookup.Length; n++) Dictionary[InstructionLookup[n]] = n;
 
-				ProcessCallback = EmitLookupGenerator.GenerateSwitch<Func<uint, MipsDisassembler, Result>>(InstructionTable.ALL, (InstructionInfo) =>
+				ProcessCallback = EmitLookupGenerator.GenerateSwitch<Func<uint, MipsDisassembler, Result>>("", InstructionTable.ALL, (InstructionInfo) =>
 				{
 					return ast.Return(ast.CallStatic(
 						(Func<uint, int, Result>)MipsDisassembler._InternalHandle,

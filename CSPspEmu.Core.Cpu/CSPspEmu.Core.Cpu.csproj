@@ -64,6 +64,7 @@
     <Compile Include="Assembler\MipsAssembler.Matcher.cs" />
     <Compile Include="Assembler\MipsDisassembler.cs" />
     <Compile Include="CpuConfig.cs" />
+    <Compile Include="Emitter\AstMipsGenerator.cs" />
     <Compile Include="ICpuConnector.cs" />
     <Compile Include="IInterruptManager.cs" />
     <Compile Include="InvalidAddressException.cs" />

@@ -43,5 +43,12 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 		/// 
 		/// </summary>
 		public uint MaxPC;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public TimeSpan TimeAnalyzeBranches;
+		public TimeSpan TimeGenerateCode;
+		public TimeSpan TimeCreateDelegate;
 	}
 }

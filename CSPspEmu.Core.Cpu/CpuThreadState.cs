@@ -501,7 +501,15 @@ namespace CSPspEmu.Core.Cpu
 			var AstGenerationTime = Time1 - Time0;
 			var LinkingTime = Time2 - Time1;
 
-			Console.WriteLine("({0}): Ast: {1}ms, Link: {2}ms", (DynarecFunction.MaxPC - DynarecFunction.MinPC) / 4, (int)AstGenerationTime.TotalMilliseconds, (int)LinkingTime.TotalMilliseconds);
+			Console.WriteLine(
+				"({0}): Ast: {1}ms, Link: {2}ms, Times(analyze, create, generate): ({3}, {4}, {5})ms",
+				(DynarecFunction.MaxPC - DynarecFunction.MinPC) / 4,
+				(int)AstGenerationTime.TotalMilliseconds,
+				(int)LinkingTime.TotalMilliseconds,
+				(int)DynarecFunction.TimeAnalyzeBranches.TotalMilliseconds,
+				(int)DynarecFunction.TimeCreateDelegate.TotalMilliseconds,
+				(int)DynarecFunction.TimeGenerateCode.TotalMilliseconds
+			);
 
 			//DynarecFunction.AstNode = DynarecFunction.AstNode.Optimize(CpuProcessor);
 
