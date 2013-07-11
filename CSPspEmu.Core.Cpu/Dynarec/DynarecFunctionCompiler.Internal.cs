@@ -1,5 +1,5 @@
 ﻿//#define DEBUG_TRACE_INSTRUCTIONS
-//#define ENABLE_JUMP_GOTO
+#define ENABLE_JUMP_GOTO
 
 #define ENABLE_NATIVE_CALLS
 
@@ -158,6 +158,12 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				return PC >= MinPC && PC <= MaxPC;
 			}
 
+			private void UpdateMinMax(uint PC)
+			{
+				MinPC = Math.Min(MinPC, PC);
+				MaxPC = Math.Max(MaxPC, PC);
+			}
+
 			/// <summary>
 			/// PASS 1: Analyze Branches
 			/// </summary>
@@ -195,8 +201,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 							throw (new InvalidDataException(String.Format("Code sequence too long: >= {0} at 0x{1:X8}", MaxNumberOfInstructions, EntryPC)));
 						}
 
-						MinPC = Math.Min(MinPC, PC);
-						MaxPC = Math.Max(MaxPC, PC);
+						UpdateMinMax(PC);
 
 						//Console.WriteLine("    PC:{0:X}", PC);
 
@@ -219,10 +224,6 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 							//Console.WriteLine("Instruction");
 
 							var JumpAddress = Instruction.GetJumpAddress(Memory, PC);
-							if (!LabelsJump.ContainsKey(JumpAddress))
-							{
-								LabelsJump[JumpAddress] = AstLabel.CreateLabel(String.Format("Jump_0x{0:X8}", JumpAddress));
-							}
 
 							// Located a jump-always instruction with a delayed slot. Process next instruction too.
 							if (BranchInfo.HasFlag(DynarecBranchAnalyzer.JumpFlags.AndLink))
@@ -235,6 +236,19 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 							}
 							else
 							{
+								if (PspMemory.IsAddressValid(JumpAddress))
+								{
+									if (!LabelsJump.ContainsKey(JumpAddress))
+									{
+										if (AddressInsideFunction(JumpAddress))
+										{
+											//Console.WriteLine("JumpAddress: {0:X8}", JumpAddress);
+											LabelsJump[JumpAddress] = AstLabel.CreateLabel(String.Format("Jump_0x{0:X8}", JumpAddress));
+											BranchesToAnalyze.Enqueue(JumpAddress);
+										}
+									}
+								}
+
 								EndOfBranchFound = true;
 								continue;
 							}
@@ -242,8 +256,10 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 						else if (BranchInfo.HasFlag(DynarecBranchAnalyzer.JumpFlags.BranchOrJumpInstruction))
 						{
 							var BranchAddress = Instruction.GetBranchAddress(PC);
-							//if (!Labels.ContainsKey(BranchAddress))
+							if (!Labels.ContainsKey(BranchAddress))
 							{
+								//Console.WriteLine("BranchAddress: {0:X8}", BranchAddress);
+								UpdateMinMax(BranchAddress);
 								Labels[BranchAddress] = AstLabel.CreateLabel(String.Format("Label_0x{0:X8}", BranchAddress));
 								BranchesToAnalyze.Enqueue(BranchAddress);
 							}
@@ -266,6 +282,8 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 						}
 					}
 				}
+
+				//Console.WriteLine("FunctionSegment({0:X8}-{1:X8})", MinPC, MaxPC);
 
 				foreach (var LabelAddress in LabelsJump.Keys.ToArray())
 				{
@@ -407,7 +425,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
 			uint InstructionsEmitedSinceLastWaypoint;
 
-			static int DummyTempCounter = 0;
+			//static int DummyTempCounter = 0;
 
 			/// <summary>
 			/// PASS 2: Generate code and put labels;
@@ -434,6 +452,11 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
 				for (PC = MinPC; PC <= MaxPC; )
 				{
+					if (!AnalyzedPC.Contains(PC))
+					{
+						PC += 4;
+						continue;
+					}
 					uint CurrentInstructionPC = PC;
 					Instruction CurrentInstruction = InstructionReader[PC];
 					InstructionsProcessed++;
@@ -459,24 +482,23 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 							var JumpInstruction2 = CpuEmitter.LoadAT(PC + 0);
 							var JumpDisasm = MipsDisassembler.Disassemble(PC + 0, JumpInstruction2);
 							var JumpJumpPC = JumpDisasm.Instruction.GetJumpAddress(Memory, JumpDisasm.InstructionPC);
+							
 							// An internal jump.
 							if (
 								(JumpDisasm.InstructionInfo.Name == "j")
 								&& (LabelsJump.ContainsKey(JumpJumpPC))
 							)
 							{
+								JumpInstruction = new AstNodeStmPspInstruction(JumpDisasm, ast.GotoAlways(LabelsJump[JumpJumpPC]));
+
 								//Console.WriteLine(
-								//	"{0} : Function({1:X8}-{2:X8})",
-								//	GeneratorCSharpPsp.GenerateString<GeneratorCSharpPsp>(JumpInstruction),
+								//	"{0}: {1} : Function({2:X8}-{3:X8})",
+								//	DummyTempCounter,
+								//	GeneratorCSharpPsp.GenerateString<GeneratorCSharpPsp>(AstOptimizerPsp.GlobalOptimize(CpuProcessor, JumpInstruction)),
 								//	MinPC, MaxPC
 								//);
-								//if (DummyTempCounter++ <= 6)
-								{
-									JumpInstruction = new AstNodeStmPspInstruction(JumpDisasm, ast.Statements(
-										ast.Comment(String.Format("{0:X8}: j 0x{1:X8}", JumpDisasm.InstructionPC, JumpJumpPC)),
-										ast.GotoAlways(LabelsJump[JumpJumpPC])
-									));
-								}
+
+								//DummyTempCounter++;
 							}
 #endif
 
@@ -515,7 +537,12 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 								// Code not reached.
 								else
 								{
+									throw (new InvalidOperationException("!Labels.ContainsKey(BranchAddress)"));
 								}
+							}
+							else
+							{
+								throw (new InvalidOperationException("Invalid branch!"));
 							}
 						}
 					}

@@ -2,6 +2,7 @@
 
 using CSPspEmu.Core.Cpu.Emitter;
 using CSPspEmu.Core.Cpu.Table;
+using CSPspEmu.Core.Memory;
 using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
 using SafeILGenerator.Ast.Optimizers;
@@ -13,21 +14,21 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
 	public class AstOptimizerPsp : AstOptimizer
 	{
 		private static AstGenerator ast = AstGenerator.Instance;
-		public CpuProcessor Processor;
+		public PspMemory Memory;
 
 		public static AstNodeStm GlobalOptimize(CpuProcessor Processor, AstNodeStm AstNodeStm)
 		{
 			if (Processor.CpuConfig.EnableAstOptimizations)
 			{
-				return (AstNodeStm)(new AstOptimizerPsp(Processor)).Optimize(ast.Statements(AstNodeStm, ast.Return()));
+				return (AstNodeStm)(new AstOptimizerPsp(Processor.Memory)).Optimize(ast.Statements(AstNodeStm, ast.Return()));
 			} else {
 				return AstNodeStm;
 			}
 		}
 
-		private AstOptimizerPsp(CpuProcessor Processor)
+		private AstOptimizerPsp(PspMemory Memory)
 		{
-			this.Processor = Processor;
+			this.Memory = Memory;
 		}
 
 		public class LwlLwrState
@@ -110,7 +111,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
 									CpuEmitter.AssignGPR(
 										Instruction.RT,
 										CpuEmitter.AstMemoryGetValue<int>(
-											Processor.Memory,
+											Memory,
 											ast.Cast<uint>(ast.Binary(CpuEmitter.GPR_s(Instruction.RS), "+", Instruction.IMM))
 										)
 									)
