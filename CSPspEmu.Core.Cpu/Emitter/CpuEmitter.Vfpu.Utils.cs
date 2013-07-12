@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SafeILGenerator.Ast.Nodes;
 using CSPspEmu.Core.Cpu.VFpu;
 using CSharpUtils;
+using System.Linq;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -106,89 +107,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	*/
 	public unsafe sealed partial class CpuEmitter
 	{
-		public enum VfpuControlRegistersEnum
-		{
-			/// <summary>
-			/// Source prefix stack
-			/// </summary>
-			VFPU_PFXS = 128,
-
-			/// <summary>
-			/// Target prefix stack
-			/// </summary>
-			VFPU_PFXT = 129,
-
-			/// <summary>
-			/// Destination prefix stack
-			/// </summary>
-			VFPU_PFXD = 130,
-
-			/// <summary>
-			/// Condition information
-			/// </summary>
-			VFPU_CC = 131,
-
-			/// <summary>
-			/// VFPU internal information 4
-			/// </summary>
-			VFPU_INF4 = 132,
-
-			/// <summary>
-			/// Not used (reserved)
-			/// </summary>
-			VFPU_RSV5 = 133,
-
-			/// <summary>
-			/// Not used (reserved)
-			/// </summary>
-			VFPU_RSV6 = 134,
-
-			/// <summary>
-			/// VFPU revision information
-			/// </summary>
-			VFPU_REV = 135,
-
-			/// <summary>
-			/// Pseudorandom number generator information 0
-			/// </summary>
-			VFPU_RCX0 = 136,
-
-			/// <summary>
-			/// Pseudorandom number generator information 1
-			/// </summary>
-			VFPU_RCX1 = 137,
-
-			/// <summary>
-			/// Pseudorandom number generator information 2
-			/// </summary>
-			VFPU_RCX2 = 138,
-
-			/// <summary>
-			/// Pseudorandom number generator information 3
-			/// </summary>
-			VFPU_RCX3 = 139,
-
-			/// <summary>
-			/// Pseudorandom number generator information 4
-			/// </summary>
-			VFPU_RCX4 = 140,
-
-			/// <summary>
-			/// Pseudorandom number generator information 5
-			/// </summary>
-			VFPU_RCX5 = 141,
-
-			/// <summary>
-			/// Pseudorandom number generator information 6
-			/// </summary>
-			VFPU_RCX6 = 142,
-
-			/// <summary>
-			/// Pseudorandom number generator information 7
-			/// </summary>
-			VFPU_RCX7 = 143,
-		}
-
 		private void _call_debug_vfpu()
 		{
 			throw (new NotImplementedException("_call_debug_vfpu"));
@@ -391,7 +309,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				return this._GetVRegRef(Indices[Index]);
 			}
 
-			private AstNodeExpr Get(int Index)
+			public AstNodeExpr Get(int Index)
 			{
 				return GetRegApplyPrefix(this.Indices, Index, Index);
 			}
@@ -409,6 +327,22 @@ namespace CSPspEmu.Core.Cpu.Emitter
 					Statements.Add(SetRegApplyPrefix(this.Indices[Index], Index, Generator(Index)));
 				}
 				return ast.Statements(Statements);
+			}
+		}
+
+		internal sealed class VFpuVectorRef
+		{
+			private AstNodeExprLValue[] Refs;
+			public VFpuVectorRef(params AstNodeExprLValue[] Refs) { this.Refs = Refs; }
+
+			public AstNodeExprLValue this[int Index]
+			{
+				get { return Refs[Index]; }
+			}
+
+			static public VFpuVectorRef Generate(int VectorSize, Func<int, AstNodeExprLValue> Callback)
+			{
+				return new VFpuVectorRef(Enumerable.Range(0, VectorSize).Select(Index => Callback(Index)).ToArray());
 			}
 		}
 
@@ -486,5 +420,65 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		private VfpuCell _Cell(VReg VReg, VType VType = VType.VFloat) { return new VfpuCell(this, VReg, VType); }
 		private VfpuVector _Vector(VReg VReg, VType VType = VType.VFloat, int Size = 0) { return new VfpuVector(this, VReg, VType, Size); }
 		private VfpuMatrix _Matrix(VReg VReg, VType VType = VType.VFloat, int Size = 0) { return new VfpuMatrix(this, VReg, VType, Size); }
+
+		private VfpuVector VEC(VReg VReg, VType VType = VType.VFloat, int Size = 0) { return new VfpuVector(this, VReg, VType, Size); }
+		private VfpuCell CEL(VReg VReg, VType VType = VType.VFloat) { return new VfpuCell(this, VReg, VType); }
+
+		private VfpuVector VEC_VS { get { return VEC(VS); } }
+		private VfpuVector VEC_VD { get { return VEC(VD); } }
+		private VfpuVector VEC_VT { get { return VEC(VT); } }
+
+		private VfpuVector VEC_VS_i { get { return VEC(VS, VType.VInt); } }
+		private VfpuVector VEC_VD_i { get { return VEC(VD, VType.VInt); } }
+		private VfpuVector VEC_VT_i { get { return VEC(VT, VType.VInt); } }
+
+		private VfpuVector VEC_VS_u { get { return VEC(VS, VType.VUInt); } }
+		private VfpuVector VEC_VD_u { get { return VEC(VD, VType.VUInt); } }
+		private VfpuVector VEC_VT_u { get { return VEC(VT, VType.VUInt); } }
+
+		private VfpuCell CEL_VS { get { return CEL(VS); } }
+		private VfpuCell CEL_VD { get { return CEL(VD); } }
+		private VfpuCell CEL_VT { get { return CEL(VT); } }
+		private VfpuCell CEL_VT_NoPrefix { get { return CEL(VT_NoPrefix); } }
+
+		private VfpuCell CEL_VS_i { get { return CEL(VS, VType.VInt); } }
+		private VfpuCell CEL_VD_i { get { return CEL(VD, VType.VInt); } }
+		private VfpuCell CEL_VT_i { get { return CEL(VT, VType.VInt); } }
+		private VfpuCell CEL_VT_i_NoPrefix { get { return CEL(VT_NoPrefix, VType.VInt); } }
+
+		private VfpuCell CEL_VS_u { get { return CEL(VS, VType.VUInt); } }
+		private VfpuCell CEL_VD_u { get { return CEL(VD, VType.VUInt); } }
+		private VfpuCell CEL_VT_u { get { return CEL(VT, VType.VUInt); } }
+		private VfpuCell CEL_VT_u_NoPrefix { get { return CEL(VT_NoPrefix, VType.VUInt); } }
+
+		private AstNodeExpr _Aggregate(AstNodeExpr First, Func<AstNodeExpr, int, AstNodeExpr> Callback)
+		{
+			return _Aggregate(First, ONE_TWO, Callback);
+		}
+
+		private AstNodeStmContainer _List(Func<int, AstNodeStm> Callback)
+		{
+			return _List(ONE_TWO, Callback);
+		}
+
+		private AstNodeStmContainer _List(int VectorSize, Func<int, AstNodeStm> Callback)
+		{
+			var Statements = ast.Statements();
+			for (int Index = 0; Index < VectorSize; Index++)
+			{
+				Statements.AddStatement(Callback(Index));
+			}
+			return Statements;
+		}
+
+		private AstNodeExpr _Aggregate(AstNodeExpr First, int VectorSize, Func<AstNodeExpr, int, AstNodeExpr> Callback)
+		{
+			var Value = First;
+			for (int Index = 0; Index < VectorSize; Index++)
+			{
+				Value = Callback(Value, Index);
+			}
+			return Value;
+		}
 	}
 }

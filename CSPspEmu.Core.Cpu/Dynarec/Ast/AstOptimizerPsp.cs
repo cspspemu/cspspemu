@@ -110,7 +110,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
 									ast.Comment(String.Format("{0:X8}+{1:X8} lwl+lwr", LwlLwrState.LwlPC, PC)),
 									ast.AssignGPR(
 										Instruction.RT,
-										ast.AstMemoryGetValue<int>(
+										ast.MemoryGetValue<int>(
 											Memory,
 											ast.Cast<uint>(ast.Binary(ast.GPR_s(Instruction.RS), "+", Instruction.IMM))
 										)

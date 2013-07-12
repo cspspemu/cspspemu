@@ -1,4 +1,5 @@
 ﻿using CSharpUtils;
+using CSPspEmu.Core.Cpu.VFpu;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -99,18 +100,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				((v & 0x0000FF00) << 8) |
 				((v & 0x000000FF) << 24)
 			);
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void _assign_hi_lo_impl(CpuThreadState CpuThreadState, long Value)
-		{
-			fixed (int* LOPtr = &CpuThreadState.LO) *(long*)LOPtr = Value;
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static long _get_hi_lo_impl(CpuThreadState CpuThreadState)
-		{
-			fixed (int* LOPtr = &CpuThreadState.LO) return *(long*)LOPtr;
 		}
 
 		public static int _cvt_w_s_impl(CpuThreadState CpuThreadState, float FS)
@@ -238,5 +227,174 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			*AddressPointer = (RT << SwrShift[AddressAlign]) | (*AddressPointer & SwrMask[AddressAlign]);
 		}
 
+		public static void _lvl_svl_q(CpuThreadState CpuThreadState, bool Save, float* r0, float* r1, float* r2, float* r3, uint Address)
+		{
+			//Console.Error.WriteLine("+LLLLLLLLLLLLL {0:X8}", Address);
+
+			int k = (int)(3 - ((Address >> 2) & 3));
+			Address &= unchecked((uint)~0xF);
+
+			float*[] registers = new float*[] { r0, r1, r2, r3 };
+
+			fixed (float* VFPR = &CpuThreadState.VFR0)
+				for (int j = k; j < 4; j++, Address += 4)
+				{
+					float* ptr = registers[j];
+					var memory_address = Address;
+					var memory = (float*)CpuThreadState.GetMemoryPtr(memory_address);
+
+					//Console.Error.WriteLine("_lvl_svl_q({0}): {1:X8}: Reg({2:X8}) {3} Mem({4:X8})", j, memory_address, *(int*)ptr, Save ? "->" : "<-", *(int*)memory);
+
+					LanguageUtils.Transfer(
+						ref *memory,
+						ref *ptr,
+						Save
+					);
+
+					//Console.Error.WriteLine("_lvl_svl_q({0}): {1:X8}: Reg({2:X8}) {3} Mem({4:X8})", j, memory_address, *(int*)ptr, Save ? "->" : "<-", *(int*)memory);
+				}
+
+			//Console.Error.WriteLine("--------------");
+		}
+
+		public static void _lvr_svr_q(CpuThreadState CpuThreadState, bool Save, float* r0, float* r1, float* r2, float* r3, uint Address)
+		{
+			//Console.Error.WriteLine("+RRRRRRRRRRRRR {0:X8}", Address);
+
+			int k = (int)(4 - ((Address >> 2) & 3));
+			//Address &= unchecked((uint)~0xF);
+
+			float*[] registers = new float*[] { r0, r1, r2, r3 };
+
+			fixed (float* VFPR = &CpuThreadState.VFR0)
+				for (int j = 0; j < k; j++, Address += 4)
+				{
+					float* ptr = registers[j];
+					var memory_address = Address;
+					var memory = (float*)CpuThreadState.GetMemoryPtr(memory_address);
+
+					//Console.Error.WriteLine("_lvl_svr_q({0}): {1:X8}: Reg({2:X8}) {3} Mem({4:X8})", j, memory_address, *(int*)ptr, Save ? "->" : "<-", *(int*)memory);
+
+					LanguageUtils.Transfer(
+						ref *memory,
+						ref *ptr,
+						Save
+					);
+
+					//Console.Error.WriteLine("_lvl_svr_q({0}): {1:X8}: Reg({2:X8}) {3} Mem({4:X8})", j, memory_address, *(int*)ptr, Save ? "->" : "<-", *(int*)memory);
+				}
+
+			//Console.Error.WriteLine("--------------");
+		}
+
+		public static void _vrnds(CpuThreadState CpuThreadState, int Seed)
+		{
+			CpuThreadState.Random = new Random(Seed);
+		}
+
+		public static int _vrndi(CpuThreadState CpuThreadState)
+		{
+			byte[] Data = new byte[4];
+			CpuThreadState.Random.NextBytes(Data);
+			return BitConverter.ToInt32(Data, 0);
+		}
+
+		public static float _vrndf1(CpuThreadState CpuThreadState)
+		{
+			return (float)(CpuThreadState.Random.NextDouble() * 2.0f);
+		}
+
+		public static float _vrndf2(CpuThreadState CpuThreadState)
+		{
+			return (float)(CpuThreadState.Random.NextDouble() * 4.0f);
+		}
+
+		public static void _vpfxd_impl(CpuThreadState CpuThreadState, uint Value) { CpuThreadState.PrefixDestination.Value = Value; }
+		public static void _vpfxs_impl(CpuThreadState CpuThreadState, uint Value) { CpuThreadState.PrefixSource.Value = Value; }
+		public static void _vpfxt_impl(CpuThreadState CpuThreadState, uint Value) { CpuThreadState.PrefixTarget.Value = Value; }
+
+
+		static public float _vqmul_row0(float l0, float l1, float l2, float l3, float r0, float r1, float r2, float r3)
+		{
+			return +(l0 * r3) + (l1 * r2) - (l2 * r1) + (l3 * r0);
+			//v3[0] = +(v1[0] * v2[3]) + (v1[1] * v2[2]) - (v1[2] * v2[1]) + (v1[3] * v2[0]);
+		}
+
+		static public float _vqmul_row1(float l0, float l1, float l2, float l3, float r0, float r1, float r2, float r3)
+		{
+			return -(l0 * r2) + (l1 * r3) + (l2 * r0) + (l3 * r1);
+			//v3[1] = -(v1[0] * v2[2]) + (v1[1] * v2[3]) + (v1[2] * v2[0]) + (v1[3] * v2[1]);
+		}
+
+		static public float _vqmul_row2(float l0, float l1, float l2, float l3, float r0, float r1, float r2, float r3)
+		{
+			return +(l0 * r1) - (l1 * r0) + (l2 * r3) + (l3 * r2);
+			//v3[2] = +(v1[0] * v2[1]) - (v1[1] * v2[0]) + (v1[2] * v2[3]) + (v1[3] * v2[2]);
+		}
+
+		static public float _vqmul_row3(float l0, float l1, float l2, float l3, float r0, float r1, float r2, float r3)
+		{
+			return -(l0 * r0) - (l1 * r1) - (l2 * r2) + (l3 * r3);
+			//v3[3] = -(v1[0] * v2[0]) - (v1[1] * v2[1]) - (v1[2] * v2[2]) + (v1[3] * v2[3]);
+		}
+
+		public static uint _vi2uc_impl(int x, int y, int z, int w)
+		{
+			return (0
+				| (uint)((x < 0) ? 0 : ((x >> 23) << 0))
+				| (uint)((y < 0) ? 0 : ((y >> 23) << 8))
+				| (uint)((z < 0) ? 0 : ((z >> 23) << 16))
+				| (uint)((w < 0) ? 0 : ((w >> 23) << 24))
+			);
+		}
+
+		public static uint _vi2c_impl(uint x, uint y, uint z, uint w)
+		{
+			return ((x >> 24) << 0) | ((y >> 24) << 8) | ((z >> 24) << 16) | ((w >> 24) << 24) | 0;
+		}
+
+		public static float _vf2iz(float Value, int imm5)
+		{
+			float ScalabValue = MathFloat.Scalb(Value, imm5);
+			return (Value >= 0) ? (int)MathFloat.Floor(ScalabValue) : (int)MathFloat.Ceil(ScalabValue);
+		}
+
+		public static uint _vi2s(uint v1, uint v2)
+		{
+			return (
+				((v1 >> 16) << 0) |
+				((v2 >> 16) << 16)
+			);
+		}
+
+		public static int _vi2us(int x, int y)
+		{
+			return (
+				((x < 0) ? 0 : ((x >> 15) << 0)) |
+				((y < 0) ? 0 : ((y >> 15) << 16))
+			);
+		}
+
+		public static uint _mfvc_impl(CpuThreadState CpuThreadState, VfpuControlRegistersEnum VfpuControlRegister)
+		{
+			switch (VfpuControlRegister)
+			{
+				case VfpuControlRegistersEnum.VFPU_PFXS: return CpuThreadState.PrefixSource.Value;
+				case VfpuControlRegistersEnum.VFPU_PFXT: return CpuThreadState.PrefixTarget.Value;
+				case VfpuControlRegistersEnum.VFPU_PFXD: return CpuThreadState.PrefixDestination.Value;
+				case VfpuControlRegistersEnum.VFPU_CC: return CpuThreadState.VFR_CC_Value;
+				case VfpuControlRegistersEnum.VFPU_RCX0: return (uint)MathFloat.ReinterpretFloatAsInt((float)(new Random().NextDouble()));
+				case VfpuControlRegistersEnum.VFPU_RCX1:
+				case VfpuControlRegistersEnum.VFPU_RCX2:
+				case VfpuControlRegistersEnum.VFPU_RCX3:
+				case VfpuControlRegistersEnum.VFPU_RCX4:
+				case VfpuControlRegistersEnum.VFPU_RCX5:
+				case VfpuControlRegistersEnum.VFPU_RCX6:
+				case VfpuControlRegistersEnum.VFPU_RCX7:
+					return (uint)MathFloat.ReinterpretFloatAsInt(1.0f);
+				default:
+					throw (new NotImplementedException("_mfvc_impl: " + VfpuControlRegister));
+			}
+		}
 	}
 }

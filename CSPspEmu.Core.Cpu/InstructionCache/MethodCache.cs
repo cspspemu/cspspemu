@@ -31,8 +31,8 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 		static private Action<CpuThreadState> GetGeneratorForPC(uint PC)
 		{
 			var Ast = ast.Statements(
-				ast.Statement(ast.CallInstance(ast.CpuThreadStateArgument(), (Action<MethodCacheInfo, uint>)CpuThreadState.Methods._MethodCacheInfo_SetInternal, ast.GetMethodCacheInfoAtPC(PC), PC)),
-				ast.Statement(ast.CallTail(ast.CallInstance(ast.GetMethodCacheInfoAtPC(PC), (Action<CpuThreadState>)MethodCacheInfo.Methods.CallDelegate, ast.CpuThreadStateArgument()))),
+				ast.Statement(ast.CallInstance(ast.CpuThreadState, (Action<MethodCacheInfo, uint>)CpuThreadState.Methods._MethodCacheInfo_SetInternal, ast.GetMethodCacheInfoAtPC(PC), PC)),
+				ast.Statement(ast.CallTail(ast.CallInstance(ast.GetMethodCacheInfoAtPC(PC), (Action<CpuThreadState>)MethodCacheInfo.Methods.CallDelegate, ast.CpuThreadState))),
 				ast.Return()
 			);
 

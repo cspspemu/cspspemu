@@ -101,7 +101,7 @@ namespace CSPspEmu.Hle
 					// The CpuThreadState
 					if (ParameterType == typeof(CpuThreadState))
 					{
-						AstParameters.Add(ast.CpuThreadStateArgument());
+						AstParameters.Add(ast.CpuThreadState);
 					}
 					// A stringz
 					else if (ParameterType == typeof(string))
@@ -111,7 +111,7 @@ namespace CSPspEmu.Hle
 						AstParameters.Add(
 							ast.CallStatic(
 								(Func<CpuThreadState, uint, string>)HleModuleHost.StringFromAddress,
-								ast.CpuThreadStateArgument(),
+								ast.CpuThreadState,
 								ast.GPR_u(GprIndex)
 							)
 						);
@@ -126,7 +126,7 @@ namespace CSPspEmu.Hle
 						AstParameters.Add(
 							ast.Cast(
 								ParameterType,
-								ast.AstMemoryGetPointer(
+								ast.MemoryGetPointer(
 									CpuProcessor.Memory,
 									ast.GPR_u(GprIndex),
 									Safe: true,
@@ -194,7 +194,7 @@ namespace CSPspEmu.Hle
 
 						AstParameters.Add(ast.Cast(ParameterType, ast.CallStatic(
 							(Func<CpuThreadState, Type, int, object>)GetObjectFromPoolHelper,
-							ast.CpuThreadStateArgument(),
+							ast.CpuThreadState,
 							ast.Immediate(ParameterType),
 							ast.GPR_s(GprIndex)
 						)));
@@ -239,7 +239,7 @@ namespace CSPspEmu.Hle
 					ast.GPR(2),
 					ast.CallStatic(
 						(Func<CpuThreadState, Type, IHleUidPoolClass, uint>)GetOrAllocIndexFromPoolHelper,
-						ast.CpuThreadStateArgument(),
+						ast.CpuThreadState,
 						ast.Immediate(AstMethodCall.Type),
 						ast.Cast<IHleUidPoolClass>(AstMethodCall)
 					)
@@ -249,8 +249,6 @@ namespace CSPspEmu.Hle
 
 			return AstNodes;
 		}
-
-		static private readonly GeneratorILPsp GeneratorILPspInstance = new GeneratorILPsp();
 
 		private Action<CpuThreadState> CreateDelegateForMethodInfo(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute)
 		{
@@ -273,7 +271,7 @@ namespace CSPspEmu.Hle
 				)
 			);
 
-			var Delegate = GeneratorILPspInstance.GenerateDelegate<Action<CpuThreadState>>(
+			var Delegate = AstNodeExtensions._GeneratorILPsp.GenerateDelegate<Action<CpuThreadState>>(
 				String.Format("Proxy_{0}_{1}", this.GetType().Name, MethodInfo.Name),
 				AstNodes
 			);
@@ -357,7 +355,7 @@ namespace CSPspEmu.Hle
 					Console.WriteLine("CALLING: {0}", MethodInfo);
 					Console.WriteLine("{0}", (new GeneratorCSharp()).GenerateRoot(AstNodes).ToString());
 
-					foreach (var Line in GeneratorIL.GenerateToStringList<GeneratorILPsp>(MethodInfo, AstNodes))
+					foreach (var Line in AstNodeExtensions._GeneratorILPsp.GenerateToStringList(MethodInfo, AstNodes))
 					{
 						Console.WriteLine(Line);
 					}

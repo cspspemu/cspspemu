@@ -15,30 +15,26 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	/// <summary>
 	/// <see cref="http://www.mrc.uidaho.edu/mrc/people/jff/digital/MIPSir.html"/>
 	/// </summary>
-	public unsafe partial class MipsMethodEmitter
+	public unsafe sealed class MipsMethodEmitter
 	{
-		public DynamicMethod DynamicMethod;
-		protected String MethodName;
-		public CpuProcessor Processor;
-		public ILGenerator ILGenerator { get { return DynamicMethod.GetILGenerator(); } }
+		private DynamicMethod DynamicMethod;
+		private CpuProcessor Processor;
 
-		static public readonly AstMipsGenerator ast = AstMipsGenerator.Instance;
-		
-		public readonly Dictionary<string, uint> InstructionStats = new Dictionary<string, uint>();
+		private static readonly AstMipsGenerator ast = AstMipsGenerator.Instance;
+
+		//public readonly Dictionary<string, uint> InstructionStats = new Dictionary<string, uint>();
 
 		public MipsMethodEmitter(CpuProcessor Processor, uint PC, bool DoDebug = false, bool DoLog = false)
 		{
 			this.Processor = Processor;
 
-			DynamicMethod = new DynamicMethod(
+			this.DynamicMethod = new DynamicMethod(
 				String.Format("DynamicMethod_0x{0:X}", PC),
 				typeof(void),
 				new Type[] { typeof(CpuThreadState) },
 				Assembly.GetExecutingAssembly().ManifestModule
 			);
 		}
-
-		private static GeneratorILPsp GeneratorILPsp = new GeneratorILPsp();
 
 		public Action<CpuThreadState> CreateDelegate(AstNodeStm AstNodeStm)
 		{
@@ -48,10 +44,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			Console.WriteLine("{0}", GeneratorIL.GenerateToString<GeneratorILPsp>(DynamicMethod, AstNodeStm));
 #endif
 #if DEBUG_GENERATE_IL_CSHARP
-			Console.WriteLine("{0}", (new GeneratorCSharpPsp()).GenerateRoot(AstNodeStm).ToString().Replace("CpuThreadState.", ""));
+			Console.WriteLine("{0}", AstNodeExtensions.ToCSharpString(AstNodeStm).Replace("CpuThreadState.", ""));
 #endif
 
-			GeneratorILPsp.Init(DynamicMethod, ILGenerator).Reset().GenerateRoot(AstNodeStm);
+			AstNodeStm.GenerateIL(DynamicMethod);
 
 			try
 			{

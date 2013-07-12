@@ -512,7 +512,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 								break;
 							case AssemblerPatchType.ABS_26:
 								Console.Write("0x{0:X} : {1}", (LabelAddress & PspMemory.MemoryMask) / 4, Patch.LabelName);
-								Instruction.JUMP = (LabelAddress & PspMemory.MemoryMask) / 4;
+								Instruction.JUMP_Bits = (LabelAddress & PspMemory.MemoryMask) / 4;
 								break;
 							case AssemblerPatchType.ABS_32:
 								Instruction.Value = LabelAddress;

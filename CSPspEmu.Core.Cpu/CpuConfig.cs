@@ -7,11 +7,34 @@ namespace CSPspEmu.Core.Cpu
 {
 	public class CpuConfig
 	{
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool EnableAstOptimizations = true;
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool TrackCallStack = false;
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool CountInstructionsAndYield = false;
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool LogInstructionStats = false;
+		
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool DebugSyscalls = false;
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool ShowInstructionStats;
 
 		/// <summary>

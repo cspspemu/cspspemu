@@ -1,5 +1,5 @@
 ﻿using CSharpUtils;
-namespace CSPspEmu.Core.Cpu
+namespace CSPspEmu.Core.Cpu.VFpu
 {
 	public struct VfpuRegisterInt
 	{

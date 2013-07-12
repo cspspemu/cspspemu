@@ -74,8 +74,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// DIVide (Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm div() { return (ast.Statement(ast.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._div_impl, ast.CpuThreadStateArgument(), ast.GPR_s(RS), ast.GPR_s(RT)))); }
-		public AstNodeStm divu() { return (ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._divu_impl, ast.CpuThreadStateArgument(), ast.GPR_u(RS), ast.GPR_u(RT)))); }
+		public AstNodeStm div() { return (ast.Statement(ast.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._div_impl, ast.CpuThreadState, ast.GPR_s(RS), ast.GPR_s(RT)))); }
+		public AstNodeStm divu() { return (ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._divu_impl, ast.CpuThreadState, ast.GPR_u(RS), ast.GPR_u(RT)))); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// MULTiply (ADD/SUBstract) (Unsigned).
@@ -134,24 +134,24 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Load Byte/Half word/Word (Left/Right/Unsigned).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm lb() { return ast.AssignGPR(RT, ast.AstMemoryGetValue<sbyte>(Memory, Address_RS_IMM())); }
-		public AstNodeStm lbu() { return ast.AssignGPR(RT, ast.AstMemoryGetValue<byte>(Memory, Address_RS_IMM())); }
-		public AstNodeStm lh() { return ast.AssignGPR(RT, ast.AstMemoryGetValue<short>(Memory, Address_RS_IMM())); }
-		public AstNodeStm lhu() { return ast.AssignGPR(RT, ast.AstMemoryGetValue<ushort>(Memory, Address_RS_IMM())); }
-		public AstNodeStm lw() { return ast.AssignGPR(RT, ast.AstMemoryGetValue<int>(Memory, Address_RS_IMM())); }
+		public AstNodeStm lb() { return ast.AssignGPR(RT, ast.MemoryGetValue<sbyte>(Memory, Address_RS_IMM())); }
+		public AstNodeStm lbu() { return ast.AssignGPR(RT, ast.MemoryGetValue<byte>(Memory, Address_RS_IMM())); }
+		public AstNodeStm lh() { return ast.AssignGPR(RT, ast.MemoryGetValue<short>(Memory, Address_RS_IMM())); }
+		public AstNodeStm lhu() { return ast.AssignGPR(RT, ast.MemoryGetValue<ushort>(Memory, Address_RS_IMM())); }
+		public AstNodeStm lw() { return ast.AssignGPR(RT, ast.MemoryGetValue<int>(Memory, Address_RS_IMM())); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Store Byte/Half word/Word (Left/Right).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm sb() { return ast.AstMemorySetValue<byte>(Memory, Address_RS_IMM(), ast.GPR_u(RT)); }
-		public AstNodeStm sh() { return ast.AstMemorySetValue<ushort>(Memory, Address_RS_IMM(), ast.GPR_u(RT)); }
-		public AstNodeStm sw() { return ast.AstMemorySetValue<uint>(Memory, Address_RS_IMM(), ast.GPR_u(RT)); }
+		public AstNodeStm sb() { return ast.MemorySetValue<byte>(Memory, Address_RS_IMM(), ast.GPR_u(RT)); }
+		public AstNodeStm sh() { return ast.MemorySetValue<ushort>(Memory, Address_RS_IMM(), ast.GPR_u(RT)); }
+		public AstNodeStm sw() { return ast.MemorySetValue<uint>(Memory, Address_RS_IMM(), ast.GPR_u(RT)); }
 
-		public AstNodeStm lwl() { return ast.AssignGPR(RT, ast.CallStatic((Func<CpuThreadState, uint, int, uint, uint>)CpuEmitterUtils._lwl_exec, ast.CpuThreadStateArgument(), ast.GPR_u(RS), IMM_s(), ast.GPR_u(RT))); }
-		public AstNodeStm lwr() { return ast.AssignGPR(RT, ast.CallStatic((Func<CpuThreadState, uint, int, uint, uint>)CpuEmitterUtils._lwr_exec, ast.CpuThreadStateArgument(), ast.GPR_u(RS), IMM_s(), ast.GPR_u(RT))); }
+		public AstNodeStm lwl() { return ast.AssignGPR(RT, ast.CallStatic((Func<CpuThreadState, uint, int, uint, uint>)CpuEmitterUtils._lwl_exec, ast.CpuThreadState, ast.GPR_u(RS), IMM_s(), ast.GPR_u(RT))); }
+		public AstNodeStm lwr() { return ast.AssignGPR(RT, ast.CallStatic((Func<CpuThreadState, uint, int, uint, uint>)CpuEmitterUtils._lwr_exec, ast.CpuThreadState, ast.GPR_u(RS), IMM_s(), ast.GPR_u(RT))); }
 
-		public AstNodeStm swl() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, int, uint>)CpuEmitterUtils._swl_exec, ast.CpuThreadStateArgument(), ast.GPR_u(RS), IMM_s(), ast.GPR_u(RT))); }
-		public AstNodeStm swr() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, int, uint>)CpuEmitterUtils._swr_exec, ast.CpuThreadStateArgument(), ast.GPR_u(RS), IMM_s(), ast.GPR_u(RT))); }
+		public AstNodeStm swl() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, int, uint>)CpuEmitterUtils._swl_exec, ast.CpuThreadState, ast.GPR_u(RS), IMM_s(), ast.GPR_u(RT))); }
+		public AstNodeStm swr() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, int, uint>)CpuEmitterUtils._swr_exec, ast.CpuThreadState, ast.GPR_u(RS), IMM_s(), ast.GPR_u(RT))); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Load Linked word.
@@ -164,8 +164,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// Load Word to Cop1 floating point.
 		// Store Word from Cop1 floating point.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm lwc1() { return ast.AssignFPR_I(FT, ast.AstMemoryGetValue<int>(Memory, this.Address_RS_IMM())); }
-		public AstNodeStm swc1() { return ast.AstMemorySetValue<int>(Memory, this.Address_RS_IMM(), ast.FPR_I(FT)); }
+		public AstNodeStm lwc1() { return ast.AssignFPR_I(FT, ast.MemoryGetValue<int>(Memory, this.Address_RS_IMM())); }
+		public AstNodeStm swc1() { return ast.MemorySetValue<int>(Memory, this.Address_RS_IMM(), ast.FPR_I(FT)); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Syscall
@@ -182,7 +182,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 					ast.Assign(ast.REG("PC"), PC),
 					ast.Comment(SyscallInfoInfo.Name),
 					ast.GetTickCall(),
-					ast.Statement(ast.CallDelegate(SyscallInfoInfo.PoolItem.AstFieldAccess, ast.CpuThreadStateArgument()))
+					ast.Statement(ast.CallDelegate(SyscallInfoInfo.PoolItem.AstFieldAccess, ast.CpuThreadState))
 				);
 			}
 			else
@@ -191,13 +191,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				return ast.StatementsInline(
 					ast.Assign(ast.REG("PC"), PC),
 					ast.GetTickCall(),
-					ast.Statement(ast.CallInstance(ast.CpuThreadStateArgument(), (Action<int>)CpuThreadState.Methods.Syscall, (int)Instruction.CODE))
+					ast.Statement(ast.CallInstance(ast.CpuThreadState, (Action<int>)CpuThreadState.Methods.Syscall, (int)Instruction.CODE))
 				);
 			}
 		}
-		public AstNodeStm cache() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._cache_impl, ast.CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
-		public AstNodeStm sync() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._sync_impl, ast.CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
-		public AstNodeStm _break() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._break_impl, ast.CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
+		public AstNodeStm cache() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._cache_impl, ast.CpuThreadState, PC, (uint)Instruction.Value)); }
+		public AstNodeStm sync() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._sync_impl, ast.CpuThreadState, PC, (uint)Instruction.Value)); }
+		public AstNodeStm _break() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._break_impl, ast.CpuThreadState, PC, (uint)Instruction.Value)); }
 		public AstNodeStm dbreak() { throw (new NotImplementedException("dbreak")); }
 		public AstNodeStm halt() { throw (new NotImplementedException("halt")); }
 

@@ -31,7 +31,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// Floating-Point Convert to Word Fixed-Point
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		public AstNodeStm cvt_s_w() { return ast.AssignFPR_F(FD, ast.Cast<float>(ast.FPR_I(FS))); }
-		public AstNodeStm cvt_w_s() { return ast.AssignFPR_I(FD, ast.CallStatic((Func<CpuThreadState, float, int>)CpuEmitterUtils._cvt_w_s_impl, ast.CpuThreadStateArgument(), ast.FPR(FS))); }
+		public AstNodeStm cvt_w_s() { return ast.AssignFPR_I(FD, ast.CallStatic((Func<CpuThreadState, float, int>)CpuEmitterUtils._cvt_w_s_impl, ast.CpuThreadState, ast.FPR(FS))); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move (from/to) float point registers (reinterpreted)
@@ -42,8 +42,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// CFC1 -- move Control word from/to floating point (C1)
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm cfc1() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._cfc1_impl, ast.CpuThreadStateArgument(), RD, RT)); }
-		public AstNodeStm ctc1() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._ctc1_impl, ast.CpuThreadStateArgument(), RD, RT)); }
+		public AstNodeStm cfc1() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._cfc1_impl, ast.CpuThreadState, RD, RT)); }
+		public AstNodeStm ctc1() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._ctc1_impl, ast.CpuThreadState, RD, RT)); }
 
 		/// <summary>
 		/// Compare (condition) Single_
@@ -62,7 +62,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 			return ast.Statement(ast.CallStatic(
 				(Action<CpuThreadState, float, float, bool, bool, bool, bool>)CpuEmitterUtils._comp_impl,
-				ast.CpuThreadStateArgument(),
+				ast.CpuThreadState,
 				ast.FPR(FS),
 				ast.FPR(FT),
 				ast.Immediate(fc_unordererd),

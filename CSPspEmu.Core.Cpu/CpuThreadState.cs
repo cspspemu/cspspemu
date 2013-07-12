@@ -56,6 +56,14 @@ namespace CSPspEmu.Core.Cpu
 		/// </summary>
 		public int LO, HI;
 
+		public long HI_LO
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get { fixed (int* LOPtr = &LO) return *(long*)LOPtr; }
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			set { fixed (int* LOPtr = &LO) *(long*)LOPtr = value; }
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>

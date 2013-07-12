@@ -6,31 +6,14 @@ using System.Linq;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
-	public sealed partial class CpuEmitter
+	unsafe public sealed partial class CpuEmitter
 	{
+		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Vfpu DOT product
 		// Vfpu SCaLe/ROTate
-		/// <summary>
-		/// ID("vdot",        VM("011001:001:vt:two:vs:one:vd"), "%zs, %yp, %xp", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
-		/// </summary>
-		public AstNodeStm vdot()
-		{
-			var Src = _Vector(VS);
-			var Target = _Vector(VT);
-
-			var Value = (AstNodeExpr)0f;
-			foreach (var Index in Enumerable.Range(0, ONE_TWO)) Value += Src[Index] * Target[Index];
-			return _Cell(VD).Set(Value);
-		}
-
-		public AstNodeStm vscl()
-		{
-			var Dest = _Vector(VD);
-			var Src = _Vector(VS);
-			var Target = _Cell(VT);
-
-			return Dest.SetVector(Index => Src[Index] * Target.Get());
-		}
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public AstNodeStm vdot() { return CEL_VD.Set(_Aggregate(0f, ONE_TWO, (Value, Index) => Value + VEC_VS[Index] * VEC_VT[Index])); }
+		public AstNodeStm vscl() { return VEC_VD.SetVector(Index => VEC_VS[Index] * CEL_VT.Get()); }
 
 		/// <summary>
 		/// Vector ROTate
@@ -63,19 +46,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		// vzero: Vector ZERO
 		// vone : Vector ONE
-		public AstNodeStm vzero() { return _Vector(VD).SetVector((Index) => 0f);  }
-		public AstNodeStm vone() { return _Vector(VD).SetVector((Index) => 1f); }
+		public AstNodeStm vzero() { return VEC_VD.SetVector((Index) => 0f);  }
+		public AstNodeStm vone() { return VEC_VD.SetVector((Index) => 1f); }
 
 		// vmov  : Vector MOVe
 		// vsgn  : Vector SiGN
 		// *     : Vector Reverse SQuare root/COSine/Arc SINe/LOG2
 		// @CHECK
-		public AstNodeStm vmov() { return _Vector(VD).SetVector((Index) => _Vector(VS)[Index]); }
-		public AstNodeStm vabs() { return _Vector(VD).SetVector((Index) => ast.CallStatic((Func<float, float>)MathFloat.Abs, _Vector(VS)[Index])); }
-		public AstNodeStm vneg() { return _Vector(VD).SetVector((Index) => -_Vector(VS)[Index]); }
-		public AstNodeStm vocp() { return _Vector(VD).SetVector((Index) => 1f - _Vector(VS)[Index]); }
-		public AstNodeStm vsgn() { return _Vector(VD).SetVector((Index) => ast.CallStatic((Func<float, float>)MathFloat.Sign, _Vector(VS)[Index])); }
-		public AstNodeStm vrcp() { return _Vector(VD).SetVector((Index) => 1f / _Vector(VS)[Index]); }
+		public AstNodeStm vmov() { return VEC_VD.SetVector((Index) => VEC_VS[Index]); }
+		public AstNodeStm vabs() { return VEC_VD.SetVector((Index) => ast.CallStatic((Func<float, float>)MathFloat.Abs, _Vector(VS)[Index])); }
+		public AstNodeStm vneg() { return VEC_VD.SetVector((Index) => -VEC_VS[Index]); }
+		public AstNodeStm vocp() { return VEC_VD.SetVector((Index) => 1f - VEC_VS[Index]); }
+		public AstNodeStm vsgn() { return VEC_VD.SetVector((Index) => ast.CallStatic((Func<float, float>)MathFloat.Sign, _Vector(VS)[Index])); }
+		public AstNodeStm vrcp() { return VEC_VD.SetVector((Index) => 1f / VEC_VS[Index]); }
 
 		private AstNodeStm _vfpu_call_single_method(Delegate Delegate)
 		{
@@ -96,12 +79,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm vrexp2() { throw (new NotImplementedException("")); }
 		public AstNodeStm vsat0() { return _vfpu_call_single_method((Func<float, float>)MathFloat.Vsat0); }
 		public AstNodeStm vsat1() { return _vfpu_call_single_method((Func<float, float>)MathFloat.Vsat1); }
-		public AstNodeStm vcst() { return _Cell(VD).Set(VfpuUtils.GetVfpuConstantsValue((int)Instruction.IMM5)); }
+		public AstNodeStm vcst() { return CEL_VD.Set(VfpuUtils.GetVfpuConstantsValue((int)Instruction.IMM5)); }
 
 		// -
 		public AstNodeStm vhdp()
 		{
-			return ast.AstNotImplemented("vhdp");
+			return ast.NotImplemented("vhdp");
 			//var VectorSize = Instruction.ONE_TWO;
 			//
 			//VectorOperationSaveVd(1, (Index) =>
@@ -122,7 +105,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vcrs_t()
 		{
-			return ast.AstNotImplemented("vcrs_t");
+			return ast.NotImplemented("vcrs_t");
 			//uint VectorSize = 3;
 			//
 			//Save_VD(0, VectorSize, () =>
@@ -152,7 +135,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm vcrsp_t()
 		{
-			return ast.AstNotImplemented("vcrsp_t");
+			return ast.NotImplemented("vcrsp_t");
 			//uint VectorSize = 3;
 			//
 			//Save_VD(0, VectorSize, () =>
@@ -196,55 +179,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		// Vfpu MINimum/MAXium/ADD/SUB/DIV/MUL
-		public AstNodeStm vmin()
-		{
-			return _Vector(VD).SetVector((Index) =>
-				ast.CallStatic(
-					(Func<float, float, float>)MathFloat.Min,
-					_Vector(VS)[Index],
-					_Vector(VT)[Index]
-				)
-			);
-		}
-		public AstNodeStm vmax()
-		{
-			return _Vector(VD).SetVector((Index) =>
-				ast.CallStatic(
-					(Func<float, float, float>)MathFloat.Max,
-					_Vector(VS)[Index],
-					_Vector(VT)[Index]
-				)
-			);
-		}
-
-		/// <summary>
-		/// 	+----------------------+--------------+----+--------------+---+--------------+ <para/>
-		///     |31                 23 | 22        16 | 15 | 14         8 | 7 | 6         0  | <para/>
-		///     +----------------------+--------------+----+--------------+---+--------------+ <para/>
-		///     |  opcode 0x60000000   | vfpu_rt[6-0] |    | vfpu_rs[6-0] |   | vfpu_rd[6-0] | <para/>
-		///     +----------------------+--------------+----+--------------+---+--------------+ <para/>
-		///     
-		///     VectorAdd.Single/Pair/Triple/Quad
-		///     
-		///     vadd.s %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Single <para/>
-		///     vadd.p %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Pair <para/>
-		///     vadd.t %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Triple <para/>
-		///     vadd.q %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Add Quad <para/>
-		///     <para/>
-		///     %vfpu_rt:	VFPU Vector Source Register ([s|p|t|q]reg 0..127) <para/>
-		///     %vfpu_rs:	VFPU Vector Source Register ([s|p|t|q]reg 0..127) <para/>
-		///     %vfpu_rd:	VFPU Vector Destination Register ([s|p|t|q]reg 0..127) <para/>
-		///     <para/>
-		///     vfpu_regs[%vfpu_rd] &lt;- vfpu_regs[%vfpu_rs] + vfpu_regs[%vfpu_rt]
-		/// </summary>
-		public AstNodeStm vadd() { return _Vector(VD).SetVector((Index) => _Vector(VS)[Index] + _Vector(VT)[Index]); }
-		public AstNodeStm vsub() { return _Vector(VD).SetVector((Index) => _Vector(VS)[Index] - _Vector(VT)[Index]); }
-		public AstNodeStm vdiv() { return _Vector(VD).SetVector((Index) => _Vector(VS)[Index] / _Vector(VT)[Index]); }
-		public AstNodeStm vmul() { return _Vector(VD).SetVector((Index) => _Vector(VS)[Index] * _Vector(VT)[Index]); }
+		public AstNodeStm vmin() { return VEC_VD.SetVector(Index => ast.CallStatic((Func<float, float, float>)MathFloat.Min, VEC_VS[Index], VEC_VT[Index])); }
+		public AstNodeStm vmax() { return VEC_VD.SetVector(Index => ast.CallStatic((Func<float, float, float>)MathFloat.Max, VEC_VS[Index], VEC_VT[Index])); }
+		public AstNodeStm vadd() { return VEC_VD.SetVector(Index => VEC_VS[Index] + VEC_VT[Index]); }
+		public AstNodeStm vsub() { return VEC_VD.SetVector(Index => VEC_VS[Index] - VEC_VT[Index]); }
+		public AstNodeStm vdiv() { return VEC_VD.SetVector(Index => VEC_VS[Index] / VEC_VT[Index]); }
+		public AstNodeStm vmul() { return VEC_VD.SetVector(Index => VEC_VS[Index] * VEC_VT[Index]); }
 
 		AstNodeStm _vidt_x(int VectorSize, uint Register)
 		{
-			return ast.AstNotImplemented("_vidt_x");
+			return ast.NotImplemented("_vidt_x");
 			//uint IndexOne = BitUtils.Extract(Register, 0, 2);
 			//foreach (var Index in XRange(VectorSize))
 			//{
@@ -259,7 +203,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		AstNodeStm _vzero_x(uint VectorSize, uint Register)
 		{
-			return ast.AstNotImplemented("_vzero_x");
+			return ast.NotImplemented("_vzero_x");
 			//uint IndexOne = BitUtils.Extract(Register, 0, 2);
 			//foreach (var Index in XRange(VectorSize))
 			//{
@@ -273,40 +217,28 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		// Vfpu (Matrix) IDenTity
-		public AstNodeStm vidt()
-		{
-			var MatrixSize = Instruction.ONE_TWO;
-			return _vidt_x(MatrixSize, (uint)(Instruction.VD));
-			//throw (new NotImplementedException(""));
-		}
+		public AstNodeStm vidt() { return _vidt_x(ONE_TWO, (uint)(Instruction.VD)); }
 
 		// Vfpu load Integer IMmediate
-		public AstNodeStm viim() { return _Cell(VT_NoPrefix, VFloat).Set((float)Instruction.IMM); }
-		public AstNodeStm vdet() { return ast.AstNotImplemented("vdet"); }
-		public AstNodeStm mfvme() { return ast.AstNotImplemented("mfvme"); }
-		public AstNodeStm mtvme() { return ast.AstNotImplemented("mtvme"); }
-
-		/// <summary>
-		/// ID("vfim",        VM("110111:11:1:vt:imm16"), "%xs, %vh",      ADDR_TYPE_NONE, INSTR_TYPE_PSP),
-		/// </summary>
-		public AstNodeStm vfim()
-		{
-			return _Cell(VT_NoPrefix).Set((float)Instruction.IMM_HF);
-		}
+		public AstNodeStm viim() { return CEL_VT_NoPrefix.Set((float)Instruction.IMM); }
+		public AstNodeStm vdet() { return ast.NotImplemented("vdet"); }
+		public AstNodeStm mfvme() { return ast.NotImplemented("mfvme"); }
+		public AstNodeStm mtvme() { return ast.NotImplemented("mtvme"); }
+		public AstNodeStm vfim() { return CEL_VT_NoPrefix.Set((float)Instruction.IMM_HF); }
 
 
-		public AstNodeStm vlgb() { return ast.AstNotImplemented("vlgb"); }
-		public AstNodeStm vsbn() { return ast.AstNotImplemented("vsbn"); }
+		public AstNodeStm vlgb() { return ast.NotImplemented("vlgb"); }
+		public AstNodeStm vsbn() { return ast.NotImplemented("vsbn"); }
 
-		public AstNodeStm vsbz() { return ast.AstNotImplemented("vsbz"); }
-		public AstNodeStm vsocp() { return ast.AstNotImplemented("vsocp"); }
-		public AstNodeStm vus2i() { return ast.AstNotImplemented("vus2i"); }
+		public AstNodeStm vsbz() { return ast.NotImplemented("vsbz"); }
+		public AstNodeStm vsocp() { return ast.NotImplemented("vsocp"); }
+		public AstNodeStm vus2i() { return ast.NotImplemented("vus2i"); }
 
-		public AstNodeStm vwbn() { return ast.AstNotImplemented("vwbn"); }
+		public AstNodeStm vwbn() { return ast.NotImplemented("vwbn"); }
 
-		public AstNodeStm vnop() { return ast.AstNotImplemented("vnop"); }
-		public AstNodeStm vsync() { return ast.AstNotImplemented("vsync"); }
-		public AstNodeStm vflush() { return ast.AstNotImplemented("vflush"); }
+		public AstNodeStm vnop() { return ast.NotImplemented("vnop"); }
+		public AstNodeStm vsync() { return ast.NotImplemented("vsync"); }
+		public AstNodeStm vflush() { return ast.NotImplemented("vflush"); }
 
 		public static uint _vt4444_step(uint i0, uint i1)
 		{
@@ -356,8 +288,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			var VectorSize = Instruction.ONE_TWO;
 			if (VectorSize != 4) throw (new Exception("Not implemented _vtXXXX_q for VectorSize=" + VectorSize));
-			var Dest = _Vector(VD_NoPrefix, VUInt, 2);
-			var Src = _Vector(VS_NoPrefix, VUInt, 4);
+			var Dest = VEC(VD_NoPrefix, VUInt, 2);
+			var Src = VEC(VS_NoPrefix, VUInt, 4);
 			//AstLoadVfpuReg
 
 			var Node = Dest.SetVector((Index) =>
@@ -381,7 +313,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm vbfy1()
 		{
-			return ast.AstNotImplemented("vbfy1");
+			return ast.NotImplemented("vbfy1");
 
 			//var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 2 || VectorSize != 4)
@@ -405,7 +337,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm vbfy2()
 		{
-			return ast.AstNotImplemented("vbfy2");
+			return ast.NotImplemented("vbfy2");
 
 			//var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 4)
@@ -428,7 +360,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm _vsrt_doMinMax(Func<float, float, float> Func, int Left, int Right)
 		{
-			return ast.AstNotImplemented("_vsrt_doMinMax");
+			return ast.NotImplemented("_vsrt_doMinMax");
 
 			//Load_VS(Left);
 			//Load_VS(Right);
@@ -438,7 +370,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm vsrt1()
 		{
-			return ast.AstNotImplemented("vsrt1");
+			return ast.NotImplemented("vsrt1");
 
 			//var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 4) Console.Error.WriteLine("vsrt1 : VectorSize != 4");
@@ -458,7 +390,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm vsrt2()
 		{
-			return ast.AstNotImplemented("vsrt2");
+			return ast.NotImplemented("vsrt2");
 
 			//var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 4) Console.Error.WriteLine("vsrt1 : VectorSize != 4");
@@ -478,7 +410,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm vsrt3()
 		{
-			return ast.AstNotImplemented("vsrt3");
+			return ast.NotImplemented("vsrt3");
 			//var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 4) Console.Error.WriteLine("vsrt1 : VectorSize != 4");
 			//
@@ -497,7 +429,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm vsrt4()
 		{
-			return ast.AstNotImplemented("vsrt4");
+			return ast.NotImplemented("vsrt4");
 			//var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 4) Console.Error.WriteLine("vsrt1 : VectorSize != 4");
 			//
@@ -513,176 +445,34 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			//}, AsInteger: false);
 		}
 
-		/// <summary>
-		/// +-------------------------------------+----+--------------+---+--------------+ <para/>
-		/// |31                                16 | 15 | 14         8 | 7 | 6         0  | <para/>
-		/// +-------------------------------------+----+--------------+---+--------------+ <para/>
-		/// |        opcode 0xd046 (p)            | 0  | vfpu_rs[6-0] | 1 | vfpu_rd[6-0] | <para/>
-		/// |        opcode 0xd046 (t)            | 1  | vfpu_rs[6-0] | 0 | vfpu_rd[6-0] | <para/>
-		/// |        opcode 0xd046 (q)            | 1  | vfpu_rs[6-0] | 1 | vfpu_rd[6-0] | <para/>
-		/// +-------------------------------------+----+--------------+---+--------------+ <para/>
-		/// <para/>
-		/// Float ADD?.Pair/Triple/Quad  --  Accumulate Components of Vector into Single Float
-		/// <para/>
-		/// vfad.p %vfpu_rd, %vfpu_rs  ; Accumulate Components of Pair <para/>
-		/// vfad.t %vfpu_rd, %vfpu_rs  ; Accumulate Components of Triple <para/>
-		/// vfad.q %vfpu_rd, %vfpu_rs  ; Accumulate Components of Quad <para/>
-		/// <para/>
-		/// %vfpu_rs:   VFPU Vector Source Register ([p|t|q]reg 0..127) <para/>
-		/// %vfpu_rd:   VFPU Vector Destination Register (sreg 0..127) <para/>
-		/// <para/>
-		/// vfpu_regs[%vfpu_rd] &lt;- Sum_Of_Components(vfpu_regs[%vfpu_rs]) 
-		/// </summary>
-		public AstNodeStm vfad()
-		{
-			var VectorSize = Instruction.ONE_TWO;
-			var Value = (AstNodeExpr)0f;
-			foreach (var Index in Enumerable.Range(0, VectorSize)) Value += _Vector(VS)[Index];
-			return _Cell(VD).Set(Value);
-		}
-
-		/// <summary>
-		/// +-------------------------------------+----+--------------+---+--------------+ <para/>
-		/// |31                                16 | 15 | 14         8 | 7 | 6         0  | <para/>
-		/// +-------------------------------------+----+--------------+---+--------------+ <para/>
-		/// |        opcode 0xd047 (p)            | 0  | vfpu_rs[6-0] | 1 | vfpu_rd[6-0] | <para/>
-		/// |        opcode 0xd047 (t)            | 1  | vfpu_rs[6-0] | 0 | vfpu_rd[6-0] | <para/>
-		/// |        opcode 0xd047 (q)            | 1  | vfpu_rs[6-0] | 1 | vfpu_rd[6-0] | <para/>
-		/// +-------------------------------------+----+--------------+---+--------------+ <para/>
-		/// <para/>
-		///   VectorAverage.Pair/Triple/Quad  --  Average Components of Vector into Single Float
-		/// <para/>
-		/// 		vavg.p %vfpu_rd, %vfpu_rs  ; Accumulate Components of Pair <para/>
-		/// 		vavg.t %vfpu_rd, %vfpu_rs  ; Accumulate Components of Triple <para/>
-		/// 		vavg.q %vfpu_rd, %vfpu_rs  ; Accumulate Components of Quad <para/>
-		/// <para/>
-		/// 				%vfpu_rs:   VFPU Vector Source Register ([p|t|q]reg 0..127) <para/>
-		/// 				%vfpu_rd:   VFPU Vector Destination Register (sreg 0..127) <para/>
-		/// <para/>
-		/// 		vfpu_regs[%vfpu_rd] &lt;- Average_Of_Components(vfpu_regs[%vfpu_rs]) 
-		/// </summary>
-		public AstNodeStm vavg()
-		{
-			var VectorSize = Instruction.ONE_TWO;
-			var Value = (AstNodeExpr)0f;
-			foreach (var Index in Enumerable.Range(0, VectorSize)) Value += _Vector(VS)[Index];
-			return _Cell(VD).Set(Value / (float)VectorSize);
-		}
+		public AstNodeStm vfad() { return CEL_VD.Set(_Aggregate(0f, (Value, Index) => Value + VEC_VS[Index])); }
+		public AstNodeStm vavg() { return CEL_VD.Set(_Aggregate(0f, (Value, Index) => Value + VEC_VS[Index]) / (float)ONE_TWO); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Prefixes
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 
-		public static void _vpfxd_impl(CpuThreadState CpuThreadState, uint Value)
-		{
-			CpuThreadState.PrefixDestination.Value = Value;
-		}
-
-		public static void _vpfxs_impl(CpuThreadState CpuThreadState, uint Value)
-		{
-			CpuThreadState.PrefixSource.Value = Value;
-		}
-
-		public static void _vpfxt_impl(CpuThreadState CpuThreadState, uint Value)
-		{
-			CpuThreadState.PrefixTarget.Value = Value;
-		}
-
 		private AstNodeStm _vpfx_dst(IVfpuPrefixCommon Prefix, Action<CpuThreadState, uint> _vpfx_dst_impl)
 		{
 			Prefix.EnableAndSetValueAndPc(Instruction.Value, PC);
-			return ast.Statement(ast.CallStatic(_vpfx_dst_impl, ast.CpuThreadStateArgument(), Instruction.Value));
+			return ast.Statement(ast.CallStatic(_vpfx_dst_impl, ast.CpuThreadState, Instruction.Value));
 		}
 
-		public AstNodeStm vpfxd() { return _vpfx_dst(PrefixDestination, _vpfxd_impl); }
-		public AstNodeStm vpfxs() { return _vpfx_dst(PrefixSource, _vpfxs_impl); }
-		public AstNodeStm vpfxt() { return _vpfx_dst(PrefixTarget, _vpfxt_impl); }
+		public AstNodeStm vpfxd() { return _vpfx_dst(PrefixDestination, CpuEmitterUtils._vpfxd_impl); }
+		public AstNodeStm vpfxs() { return _vpfx_dst(PrefixSource, CpuEmitterUtils._vpfxs_impl); }
+		public AstNodeStm vpfxt() { return _vpfx_dst(PrefixTarget, CpuEmitterUtils._vpfxt_impl); }
 
-		public static void _vrnds(CpuThreadState CpuThreadState, int Seed)
-		{
-			CpuThreadState.Random = new Random(Seed);
-		}
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		// Random:
+		//   Seed
+		//   Integer: -2^31 <= value < 2^31 
+		//   Float  : 0.0 <= value < 2.0.
+		/////////////////////////////////////////////////////////////////////////////////////////////////
 
-		public static int _vrndi(CpuThreadState CpuThreadState)
-		{
-			byte[] Data = new byte[4];
-			CpuThreadState.Random.NextBytes(Data);
-			return BitConverter.ToInt32(Data, 0);
-		}
-
-		public static float _vrndf1(CpuThreadState CpuThreadState)
-		{
-			return (float)(CpuThreadState.Random.NextDouble() * 2.0f);
-		}
-
-		public static float _vrndf2(CpuThreadState CpuThreadState)
-		{
-			return (float)(CpuThreadState.Random.NextDouble() * 4.0f);
-		}
-
-		/// <summary>
-		/// Seed
-		/// </summary>
-		public AstNodeStm vrnds()
-		{
-			return ast.AstNotImplemented("vrnds");
-			//SafeILGenerator.LoadArgument0CpuThreadState();
-			//Load_VS(0, true);
-			//MipsMethodEmitter.CallMethod((Action<CpuThreadState, int>)_vrnds);
-		}
-
-		/// <summary>
-		/// -2^31 &lt;= value &lt; 2^31 
-		/// </summary>
-		public AstNodeStm vrndi()
-		{
-			return ast.AstNotImplemented("vrndi");
-			//var VectorSize = Instruction.ONE_TWO;
-			//Save_VD(Index: 0, VectorSize: VectorSize, Action: () =>
-			//{
-			//	for (int n = 0; n < VectorSize; n++)
-			//	{
-			//		SafeILGenerator.LoadArgument0CpuThreadState();
-			//		MipsMethodEmitter.CallMethod((Func<CpuThreadState, int>)_vrndi);
-			//	}
-			//}, AsInteger: true);
-		}
-
-		// 0.0 <= value < 2.0.
-		/// <summary>
-		/// 0.0 &lt;= value &lt; 2.0.
-		/// </summary>
-		public AstNodeStm vrndf1()
-		{
-			return ast.AstNotImplemented("vrndf1");
-			//var VectorSize = Instruction.ONE_TWO;
-			//Save_VD(Index: 0, VectorSize: VectorSize, Action: () =>
-			//{
-			//	for (int n = 0; n < VectorSize; n++)
-			//	{
-			//		SafeILGenerator.LoadArgument0CpuThreadState();
-			//		MipsMethodEmitter.CallMethod((Func<CpuThreadState, float>)_vrndf1);
-			//	}
-			//}, AsInteger: false);
-		}
-
-		// 0.0 <= value < 4.0 (max = 3.999979)
-		/// <summary>
-		/// 0.0 &lt;= value &lt; 4.0 (max = 3.999979)
-		/// </summary>
-		public AstNodeStm vrndf2()
-		{
-			return ast.AstNotImplemented("vrndf2");
-			//var VectorSize = Instruction.ONE_TWO;
-			//Save_VD(Index: 0, VectorSize: VectorSize, Action: () =>
-			//{
-			//	for (int n = 0; n < VectorSize; n++)
-			//	{
-			//		SafeILGenerator.LoadArgument0CpuThreadState();
-			//		MipsMethodEmitter.CallMethod((Func<CpuThreadState, float>)_vrndf2);
-			//	}
-			//}, AsInteger: false);
-		}
+		public AstNodeStm vrnds() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, int>)CpuEmitterUtils._vrnds, ast.CpuThreadState)); }
+		public AstNodeStm vrndi() { return VEC_VD_i.SetVector(Index => ast.CallStatic((Func<CpuThreadState, int>)CpuEmitterUtils._vrndi, ast.CpuThreadState)); }
+		public AstNodeStm vrndf1() { return VEC_VD.SetVector(Index => ast.CallStatic((Func<CpuThreadState, float>)CpuEmitterUtils._vrndf1, ast.CpuThreadState)); }
+		public AstNodeStm vrndf2() { return VEC_VD.SetVector(Index => ast.CallStatic((Func<CpuThreadState, float>)CpuEmitterUtils._vrndf2, ast.CpuThreadState)); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Matrix Operations
@@ -712,7 +502,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm _vtfm_x(uint VectorSize)
 		{
-			return ast.AstNotImplemented("_vtfm_x");
+			return ast.NotImplemented("_vtfm_x");
 			//VectorOperationSaveVd(VectorSize, Index =>
 			//{
 			//	SafeILGenerator.Push((float)0.0f);
@@ -728,7 +518,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm _vhtfm_x(uint VectorSize)
 		{
-			return ast.AstNotImplemented("_vhtfm_x");
+			return ast.NotImplemented("_vhtfm_x");
 			//VectorOperationSaveVd(VectorSize, Index =>
 			//{
 			//	SafeILGenerator.Push((float)0.0f);
@@ -760,59 +550,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm vmidt() { return _Matrix(VD).SetMatrix((Column, Row) => (Column == Row) ? 1f : 0f); }
 		public AstNodeStm vmzero() { return _Matrix(VD).SetMatrix((Column, Row) => 0f); }
 		public AstNodeStm vmone() { return _Matrix(VD).SetMatrix((Column, Row) => 1f); }
+		public AstNodeStm vmscl() { return _Matrix(VD).SetMatrix((Column, Row) => _Matrix(VS)[Column, Row] * _Cell(VT).Get() ); }
 
-		/// <summary>
-		/// +----------------------+--------------+----+--------------+---+--------------+ <para/>
-		/// |31                 23 | 22        16 | 15 | 14         8 | 7 | 6         0  | <para/>
-		/// +----------------------+--------------+----+--------------+---+--------------+ <para/>
-		/// |  opcode 0x65008080   | vfpu_rt[6-0] |    | vfpu_rs[6-0] |   | vfpu_rd[6-0] | <para/>
-		/// +----------------------+--------------+----+--------------+---+--------------+ <para/>
-		/// <para/>
-		/// MatrixScale.Pair/Triple/Quad, multiply all components by scale factor <para/>
-		/// <para/>
-		/// vmscl.p %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Scale 2x2 Matrix by %vfpu_rt <para/>
-		/// vmscl.t %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Scale 3x3 Matrix by %vfpu_rt <para/>
-		/// vmscl.q %vfpu_rd, %vfpu_rs, %vfpu_rt   ; Scale 4x4 Matrix by %vfpu_rt <para/>
-		/// <para/>
-		/// %vfpu_rt:       VFPU Vector Source Register, Scale (sreg 0..127) <para/>
-		/// %vfpu_rs:       VFPU Vector Source Register, Matrix ([p|t|q]reg 0..127) <para/>
-		/// %vfpu_rd:       VFPU Vector Destination Register, Matrix ([s|p|t|q]reg 0..127) <para/>
-		/// <para/>
-		/// vfpu_mtx[%vfpu_rd] &lt;- vfpu_mtx[%vfpu_rs] * vfpu_reg[%vfpu_rt]
-		/// </summary>
-		public AstNodeStm vmscl()
-		{
-			var D = _Matrix(VD);
-			var S = _Matrix(VS);
-			var T = _Cell(VT);
-			return D.SetMatrix((Column, Row) =>
-				S[Column, Row] * T.Get()
-			);
-		}
-
-		public float _vqmul_row0(float l0, float l1, float l2, float l3, float r0, float r1, float r2, float r3)
-		{
-			return +(l0 * r3) + (l1 * r2) - (l2 * r1) + (l3 * r0);
-			//v3[0] = +(v1[0] * v2[3]) + (v1[1] * v2[2]) - (v1[2] * v2[1]) + (v1[3] * v2[0]);
-		}
-
-		public float _vqmul_row1(float l0, float l1, float l2, float l3, float r0, float r1, float r2, float r3)
-		{
-			return -(l0 * r2) + (l1 * r3) + (l2 * r0) + (l3 * r1);
-			//v3[1] = -(v1[0] * v2[2]) + (v1[1] * v2[3]) + (v1[2] * v2[0]) + (v1[3] * v2[1]);
-		}
-
-		public float _vqmul_row2(float l0, float l1, float l2, float l3, float r0, float r1, float r2, float r3)
-		{
-			return +(l0 * r1) - (l1 * r0) + (l2 * r3) + (l3 * r2);
-			//v3[2] = +(v1[0] * v2[1]) - (v1[1] * v2[0]) + (v1[2] * v2[3]) + (v1[3] * v2[2]);
-		}
-
-		public float _vqmul_row3(float l0, float l1, float l2, float l3, float r0, float r1, float r2, float r3)
-		{
-			return -(l0 * r0) - (l1 * r1) - (l2 * r2) + (l3 * r3);
-			//v3[3] = -(v1[0] * v2[0]) - (v1[1] * v2[1]) - (v1[2] * v2[2]) + (v1[3] * v2[3]);
-		}
 
 #if false
 			loadVs(4, vs);
@@ -828,7 +567,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vqmul()
 		{
-			return ast.AstNotImplemented("vqmul");
+			return ast.NotImplemented("vqmul");
 			////var VectorSize = Instruction.ONE_TWO;
 			//var VectorSize = (uint)4;
 			//VectorOperationSaveVd(VectorSize, (Index) =>
@@ -853,5 +592,199 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vmmov() { return _Matrix(VD).SetMatrix((Column, Row) => _Matrix(VS)[Column, Row]); }
 
+		public AstNodeStm vuc2i() { return VEC_VD_u.SetVector(Index => ast.Binary((ast.Binary(CEL_VS_u.Get(), ">>", (Index * 8)) & 0xFF) * 0x01010101, ">>", 1)); }
+		public AstNodeStm vc2i()  { return VEC_VD_u.SetVector(Index => ast.Binary(CEL_VS_u.Get(), "<<", ((3 - Index) * 8)) & 0xFF000000); }
+
+		// Vfpu Integer to(2) Color?
+		public AstNodeStm vi2c() { var VEC_VS = VEC(VS, VType.VUInt, 4); return CEL_VD_u.Set(ast.CallStatic((Func<uint, uint, uint, uint, uint>)CpuEmitterUtils._vi2c_impl, VEC_VS[0], VEC_VS[1], VEC_VS[2], VEC_VS[3])); }
+		public AstNodeStm vi2uc() { var VEC_VS = VEC(VS, VType.VInt, 4); return CEL_VD_u.Set(ast.CallStatic((Func<int, int, int, int, uint>)CpuEmitterUtils._vi2uc_impl, VEC_VS[0], VEC_VS[1], VEC_VS[2], VEC_VS[3])); }
+
+		public AstNodeStm vs2i()
+		{
+			var VectorSize = Instruction.ONE_TWO;
+			if (VectorSize > 2) throw (new NotImplementedException("vs2i.VectorSize"));
+			var Dest = _Vector(VD, VUInt, VectorSize * 2);
+			var Src = _Vector(VS, VUInt, VectorSize);
+			return Dest.SetVector((Index) =>
+			{
+				var Value = Src[Index / 2];
+				if ((Index % 2) == 0) Value = ast.Binary(Value, "<<", 16);
+				return Value & 0xFFFF0000;
+			});
+		}
+
+		public AstNodeStm vi2f() { return VEC_VD.SetVector(Index => ast.CallStatic((Func<float, int, float>)MathFloat.Scalb, ast.Cast<float>(VEC_VS_i[Index]), -(int)Instruction.IMM5)); }
+
+		public AstNodeStm vf2id()
+		{
+			return ast.NotImplemented("vf2id");
+			//var VectorSize = Instruction.ONE_TWO;
+			//var Imm5 = Instruction.IMM5;
+			//VectorOperationSaveVd(VectorSize, Index =>
+			//{
+			//	Load_VS(Index, VectorSize);
+			//	SafeILGenerator.Push((int)Imm5);
+			//	MipsMethodEmitter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
+			//	MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Floor);
+			//}, AsInteger: true);
+		}
+
+		public AstNodeStm vf2in()
+		{
+			return ast.NotImplemented("vf2in");
+			//var VectorSize = Instruction.ONE_TWO;
+			//var Imm5 = Instruction.IMM5;
+			//VectorOperationSaveVd(VectorSize, Index =>
+			//{
+			//	Load_VS(Index, VectorSize);
+			//	SafeILGenerator.Push((int)Imm5);
+			//	MipsMethodEmitter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
+			//	MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Round);
+			//}, AsInteger: true);
+		}
+
+		public AstNodeStm vf2iu()
+		{
+			return ast.NotImplemented("vf2iu");
+			//var VectorSize = Instruction.ONE_TWO;
+			//var Imm5 = Instruction.IMM5;
+			//VectorOperationSaveVd(VectorSize, Index =>
+			//{
+			//	Load_VS(Index, VectorSize);
+			//	SafeILGenerator.Push((int)Imm5);
+			//	MipsMethodEmitter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
+			//	MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Ceil);
+			//}, AsInteger: true);
+		}
+
+		public AstNodeStm vf2iz()
+		{
+			return ast.NotImplemented("vf2iz");
+			//var Imm5 = Instruction.IMM5;
+			//VectorOperationSaveVd(Index =>
+			//{
+			//	Load_VS(Index);
+			//	SafeILGenerator.Push((int)Imm5);
+			//	MipsMethodEmitter.CallMethod((Func<float, int, float>)(CpuEmitter._vf2iz));
+			//});
+		}
+
+		public AstNodeStm vi2s()
+		{
+			return ast.NotImplemented("vi2s");
+			//var VectorSize = VectorSizeOneTwo;
+			//Save_VD(0, VectorSize, () =>
+			//{
+			//	Load_VS(0);
+			//	Load_VS(1);
+			//	MipsMethodEmitter.CallMethod((Func<uint, uint, uint>)(CpuEmitter._vi2s));
+			//}, AsInteger: true);
+			//if (VectorSize == 4)
+			//{
+			//	Save_VD(1, VectorSize, () =>
+			//	{
+			//		Load_VS(2);
+			//		Load_VS(3);
+			//		MipsMethodEmitter.CallMethod((Func<uint, uint, uint>)(CpuEmitter._vi2s));
+			//	}, AsInteger: true);
+			//}
+		}
+
+		public AstNodeStm vf2h() { return ast.NotImplemented("vf2h"); }
+		public AstNodeStm vh2f() { return ast.NotImplemented("vh2f"); }
+		public AstNodeStm vi2us()
+		{
+			return ast.NotImplemented("vi2us");
+			//var VectorSize = VectorSizeOneTwo;
+			//VectorOperationSaveVd(VectorSize / 2, (Index) =>
+			//{
+			//	Load_VS(Index * 2 + 0, AsInteger: true);
+			//	Load_VS(Index * 2 + 1, AsInteger: true);
+			//	MipsMethodEmitter.CallMethod((Func<int, int, int>)(CpuEmitter._vi2us));
+			//}, AsInteger: true);
+		}
+
+		public AstNodeStm vmfvc() { return ast.NotImplemented("vmfvc"); }
+		public AstNodeStm vmtvc() { return ast.NotImplemented("vmtvc"); }
+
+		public AstNodeStm mtv() { return _Cell(VD).Set(ast.GPR_f(RT)); }
+		public AstNodeStm mtvc() { return ast.NotImplemented("mtvc"); }
+
+		/// <summary>
+		/// Copies a vfpu control register into a general purpose register.
+		/// </summary>
+		public AstNodeStm mfvc()
+		{
+			return ast.NotImplemented("mfvc");
+			//MipsMethodEmitter.SaveGPR(RT, () =>
+			//{
+			//	SafeILGenerator.LoadArgument0CpuThreadState();
+			//	SafeILGenerator.Push((int)(Instruction.IMM7 + 128));
+			//	MipsMethodEmitter.CallMethod((Func<CpuThreadState, VfpuControlRegistersEnum, uint>)CpuEmitter._mfvc_impl);
+			//});
+		}
+
+		// Move From/to Vfpu (C?)_
+		public AstNodeStm mfv()
+		{
+			return ast.NotImplemented("mfv");
+			//MipsMethodEmitter.SaveGPR_F(RT, () =>
+			//{
+			//	Load_VD(0, 1);
+			//});
+		}
+
+		// Load/Store Vfpu (Left/Right)_
+		// ID("lv.q",        VM("110110:rs:vt5:imm14:0:vt1"), "%Xq, %Y", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
+		public AstNodeStm lv_q()
+		{
+			const int VectorSize = 4;
+			var Dest = _Vector(VT5_1, VFloat, Size: VectorSize);
+
+			return Dest.SetVector(Index => ast.MemoryGetValue<float>(Memory, Address_RS_IMM14(Index * 4)));
+		}
+
+		/// <summary>
+		/// ID("sv.q",        VM("111110:rs:vt5:imm14:0:vt1"), "%Xq, %Y", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
+		/// </summary>
+		public AstNodeStm sv_q()
+		{
+			int VectorSize = 4;
+			var Dest = _Vector(VT5_1, VFloat, VectorSize);
+			return _List(VectorSize, Index => ast.MemorySetValue<float>(Memory, Address_RS_IMM14(Index * 4), Dest[Index]));
+		}
+
+		private delegate void _lvl_svl_q_Delegate(CpuThreadState CpuThreadState, bool Save, float* r0, float* r1, float* r2, float* r3, uint Address);
+
+		private AstNodeStm _lv_sv_l_r_q(bool left, bool save)
+		{
+			VfpuRegisterInt Register = Instruction.VT5_1;
+			var MethodInfo = left
+				? (_lvl_svl_q_Delegate)CpuEmitterUtils._lvl_svl_q
+				: (_lvl_svl_q_Delegate)CpuEmitterUtils._lvr_svr_q
+			;
+
+			var VT5 = _Vector(VT5_1, VFloat, 4);
+
+			return ast.Statement(ast.CallStatic(
+				MethodInfo,
+				ast.CpuThreadState,
+				save,
+				ast.GetAddress(VT5.GetIndexRef(0)),
+				ast.GetAddress(VT5.GetIndexRef(1)),
+				ast.GetAddress(VT5.GetIndexRef(2)),
+				ast.GetAddress(VT5.GetIndexRef(3)),
+				Address_RS_IMM14(0)
+			));
+		}
+
+		public AstNodeStm lvl_q() { return _lv_sv_l_r_q(left: true, save: false); }
+		public AstNodeStm svl_q() { return _lv_sv_l_r_q(left: true, save: true); }
+	
+		public AstNodeStm lvr_q() { return _lv_sv_l_r_q(left: false, save: false); }
+		public AstNodeStm svr_q() { return _lv_sv_l_r_q(left: false, save: true); }
+
+		public AstNodeStm lv_s() { return _Cell(VT5_2).Set(ast.MemoryGetValue<float>(Memory, Address_RS_IMM14())); }
+		public AstNodeStm sv_s() { return ast.MemorySetValue<float>(Memory, Address_RS_IMM14(), _Cell(VT5_2).Get()); }
 	}
 }

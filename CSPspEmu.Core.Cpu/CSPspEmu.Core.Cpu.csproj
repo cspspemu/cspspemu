@@ -65,7 +65,7 @@
     <Compile Include="Assembler\MipsDisassembler.cs" />
     <Compile Include="CpuConfig.cs" />
     <Compile Include="Emitter\AstMipsGenerator.cs" />
-    <Compile Include="Emitter\Emitters\CpuEmitter.Fpu_Branches.cs" />
+    <Compile Include="Emitter\CpuEmitter.Fpu_Branches.cs" />
     <Compile Include="ICpuConnector.cs" />
     <Compile Include="IInterruptManager.cs" />
     <Compile Include="InvalidAddressException.cs" />
@@ -85,16 +85,12 @@
     <Compile Include="Dynarec\DynarecFunctionCompiler.Internal.cs" />
     <Compile Include="Emitter\CpuEmitter.cs" />
     <Compile Include="Emitter\CpuEmitterUtils.cs" />
-    <Compile Include="Emitter\Emitters\CpuEmitter.Cpu.cs" />
-    <Compile Include="Emitter\Emitters\CpuEmitter.Cpu_Branches.cs" />
-    <Compile Include="Emitter\Emitters\CpuEmitter.Fpu.cs" />
-    <Compile Include="Emitter\Emitters\CpuEmitter.Vfpu.cs" />
-    <Compile Include="Emitter\Emitters\CpuEmitter.Vfpu.Utils.cs" />
-    <Compile Include="Emitter\Emitters\CpuEmitter.Vfpu_Branches.cs" />
-    <Compile Include="Emitter\Emitters\CpuEmitter.Vfpu_Conversions.cs" />
-    <Compile Include="Emitter\Emitters\CpuEmitter.Vfpu_MemoryTransfer.cs" />
-    <Compile Include="Emitter\Emitters\CpuEmitter.Vfpu_RegisterTransfer.cs" />
-    <Compile Include="Emitter\MipsMethodEmitter.AstUtils.cs" />
+    <Compile Include="Emitter\CpuEmitter.Cpu.cs" />
+    <Compile Include="Emitter\CpuEmitter.Cpu_Branches.cs" />
+    <Compile Include="Emitter\CpuEmitter.Fpu.cs" />
+    <Compile Include="Emitter\CpuEmitter.Vfpu.cs" />
+    <Compile Include="Emitter\CpuEmitter.Vfpu.Utils.cs" />
+    <Compile Include="Emitter\CpuEmitter.Vfpu_Branches.cs" />
     <Compile Include="HalfFloat.cs" />
     <Compile Include="Table\AddressType.cs" />
     <Compile Include="Table\InstructionType.cs" />
@@ -110,7 +106,8 @@
     <Compile Include="Table\InstructionInfo.cs" />
     <Compile Include="Table\InstructionTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VfpuRegisterInt.cs" />
+    <Compile Include="VFpu\VfpuControlRegistersEnum.cs" />
+    <Compile Include="VFpu\VfpuRegisterInt.cs" />
     <Compile Include="VFpu\VfpuPrefix.cs" />
     <Compile Include="VFpu\VfpuUtils.cs" />
   </ItemGroup>

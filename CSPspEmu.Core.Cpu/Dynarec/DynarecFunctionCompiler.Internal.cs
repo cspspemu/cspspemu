@@ -76,7 +76,8 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				this.MipsMethodEmitter = MipsMethodEmitter;
 				this.CpuEmitter = new CpuEmitter(InjectContext, MipsMethodEmitter, InstructionReader);
 				this.GlobalInstructionStats = CpuProcessor.GlobalInstructionStats;
-				this.InstructionStats = MipsMethodEmitter.InstructionStats;
+				//this.InstructionStats = MipsMethodEmitter.InstructionStats;
+				this.InstructionStats = new Dictionary<string, uint>();
 				this.NewInstruction = new Dictionary<string, bool>();
 				this.DoLog = DoLog;
 
@@ -108,7 +109,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 					ast.Comment(String.Format("Function {0:X8}-{1:X8}. Entry: {2:X8}", MinPC, MaxPC, EntryPC)),
 					//ast.Comment("Returns immediately when argument CpuThreadState is null, so we can call it on the generation thread to do prelinking."),
 					ast.If(
-						ast.Binary(ast.CpuThreadStateArgument(), "==", ast.Null<CpuThreadState>()),
+						ast.Binary(ast.CpuThreadState, "==", ast.Null<CpuThreadState>()),
 						ast.Return()
 					),
 					Nodes
