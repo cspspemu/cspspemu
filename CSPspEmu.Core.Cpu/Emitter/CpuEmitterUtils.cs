@@ -104,19 +104,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void _assign_hi_lo_impl(CpuThreadState CpuThreadState, long Value)
 		{
-			fixed (int* LOPtr = &CpuThreadState.LO)
-			{
-				*(long*)LOPtr = Value;
-			}
+			fixed (int* LOPtr = &CpuThreadState.LO) *(long*)LOPtr = Value;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static long _get_hi_lo_impl(CpuThreadState CpuThreadState)
 		{
-			fixed (int* LOPtr = &CpuThreadState.LO)
-			{
-				return *(long*)LOPtr;
-			}
+			fixed (int* LOPtr = &CpuThreadState.LO) return *(long*)LOPtr;
 		}
 
 		public static int _cvt_w_s_impl(CpuThreadState CpuThreadState, float FS)

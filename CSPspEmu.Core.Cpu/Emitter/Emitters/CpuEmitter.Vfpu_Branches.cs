@@ -6,7 +6,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 {
 	public sealed partial class CpuEmitter
 	{
-		public static AstNodeStm _vcmp_end(CpuThreadState CpuThreadState, int VectorSize)
+		private AstNodeStm _vcmp_end(CpuThreadState CpuThreadState, int VectorSize)
 		{
 			return ast.AstNotImplemented("_vcmp_end");
 

@@ -4,7 +4,12 @@ using System.Collections.Generic;
 
 namespace CSPspEmu.Core.Cpu.VFpu
 {
-	public class VfpuPrefix
+	public interface IVfpuPrefixCommon
+	{
+		void EnableAndSetValueAndPc(uint Value, uint PC);
+	}
+
+	public class VfpuPrefix : IVfpuPrefixCommon
 	{
 		public uint DeclaredPC;
 		public uint UsedPC;
@@ -111,7 +116,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
 		}
 	}
 
-	public class VfpuDestinationPrefix
+	public class VfpuDestinationPrefix : IVfpuPrefixCommon
 	{
 		public uint DeclaredPC;
 		public uint UsedPC;

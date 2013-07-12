@@ -8,9 +8,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm vmfvc() { return ast.AstNotImplemented("vmfvc"); }
 		public AstNodeStm vmtvc() { return ast.AstNotImplemented("vmtvc"); }
 
-		/// <summary>
-		/// ID("mtv",         VM("010010:00:111:rt:0:0000000:0:vd"), "%t, %zs", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
-		/// </summary>
 		public AstNodeStm mtv() { return _Cell(VD).Set(ast.GPR_f(RT)); }
 		public AstNodeStm mtvc() { return ast.AstNotImplemented("mtvc"); }
 

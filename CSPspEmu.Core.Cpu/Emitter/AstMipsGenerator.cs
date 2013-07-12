@@ -73,7 +73,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		//public AstNodeExpr IMM_u() { return this.Immediate((uint)(ushort)IMM); }
 		//public AstNodeExpr IMM_uex() { return this.Immediate((uint)IMM); }
 
-
+		public AstNodeExpr HILO_sl() { return ast.CallStatic((Func<CpuThreadState, long>)CpuEmitterUtils._get_hi_lo_impl, ast.CpuThreadStateArgument()); }
+		public AstNodeExpr HILO_ul() { return ast.Cast<ulong>(HILO_sl()); }
 
 		private delegate void* AddressToPointerFunc(uint Address);
 		//delegate void* AddressToPointerFunc(uint Address);

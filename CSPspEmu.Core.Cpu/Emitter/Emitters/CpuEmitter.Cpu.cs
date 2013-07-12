@@ -82,10 +82,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		public AstNodeStm mult() { return ast.AssignHILO(ast.GPR_sl(RS) * ast.GPR_sl(RT)); }
 		public AstNodeStm multu() { return ast.AssignHILO(ast.GPR_ul(RS) * ast.GPR_ul(RT)); }
-		public AstNodeStm madd() { return ast.AssignHILO(HILO_sl() + ast.GPR_sl(RS) * ast.GPR_sl(RT)); }
-		public AstNodeStm maddu() { return ast.AssignHILO(HILO_ul() + ast.GPR_ul(RS) * ast.GPR_ul(RT)); }
-		public AstNodeStm msub() { return ast.AssignHILO(HILO_sl() - ast.GPR_sl(RS) * ast.GPR_sl(RT)); }
-		public AstNodeStm msubu() { return ast.AssignHILO(HILO_ul() - ast.GPR_ul(RS) * ast.GPR_ul(RT)); }
+		public AstNodeStm madd() { return ast.AssignHILO(ast.HILO_sl() + ast.GPR_sl(RS) * ast.GPR_sl(RT)); }
+		public AstNodeStm maddu() { return ast.AssignHILO(ast.HILO_ul() + ast.GPR_ul(RS) * ast.GPR_ul(RT)); }
+		public AstNodeStm msub() { return ast.AssignHILO(ast.HILO_sl() - ast.GPR_sl(RS) * ast.GPR_sl(RT)); }
+		public AstNodeStm msubu() { return ast.AssignHILO(ast.HILO_ul() - ast.GPR_ul(RS) * ast.GPR_ul(RT)); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move To/From HI/LO.
@@ -118,5 +118,115 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		public AstNodeStm wsbh() { return ast.AssignGPR(RD, ast.CallStatic((Func<uint, uint>)CpuEmitterUtils._wsbh_impl, ast.GPR_u(RT))); }
 		public AstNodeStm wsbw() { return ast.AssignGPR(RD, ast.CallStatic((Func<uint, uint>)CpuEmitterUtils._wsbw_impl, ast.GPR_u(RT))); }
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		// Move Control (From/To) Cop0
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public AstNodeStm cfc0() { Console.WriteLine("Unimplemented cfc0 : {0}, {1}", RT, RD); return ast.Statement(); }
+		public AstNodeStm ctc0() { Console.WriteLine("Unimplemented ctc0 : {0}, {1}", RT, RD); return ast.Statement(); }
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		// Move (From/To) Cop0
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public AstNodeStm mfc0() { return ast.AssignGPR(RT, ast.REG("C0R" + RD)); }
+		public AstNodeStm mtc0() { return ast.AssignREG("C0R" + RD, ast.GPR(RT)); }
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		// Load Byte/Half word/Word (Left/Right/Unsigned).
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public AstNodeStm lb() { return ast.AssignGPR(RT, ast.AstMemoryGetValue<sbyte>(Memory, Address_RS_IMM())); }
+		public AstNodeStm lbu() { return ast.AssignGPR(RT, ast.AstMemoryGetValue<byte>(Memory, Address_RS_IMM())); }
+		public AstNodeStm lh() { return ast.AssignGPR(RT, ast.AstMemoryGetValue<short>(Memory, Address_RS_IMM())); }
+		public AstNodeStm lhu() { return ast.AssignGPR(RT, ast.AstMemoryGetValue<ushort>(Memory, Address_RS_IMM())); }
+		public AstNodeStm lw() { return ast.AssignGPR(RT, ast.AstMemoryGetValue<int>(Memory, Address_RS_IMM())); }
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		// Store Byte/Half word/Word (Left/Right).
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public AstNodeStm sb() { return ast.AstMemorySetValue<byte>(Memory, Address_RS_IMM(), ast.GPR_u(RT)); }
+		public AstNodeStm sh() { return ast.AstMemorySetValue<ushort>(Memory, Address_RS_IMM(), ast.GPR_u(RT)); }
+		public AstNodeStm sw() { return ast.AstMemorySetValue<uint>(Memory, Address_RS_IMM(), ast.GPR_u(RT)); }
+
+		public AstNodeStm lwl() { return ast.AssignGPR(RT, ast.CallStatic((Func<CpuThreadState, uint, int, uint, uint>)CpuEmitterUtils._lwl_exec, ast.CpuThreadStateArgument(), ast.GPR_u(RS), IMM_s(), ast.GPR_u(RT))); }
+		public AstNodeStm lwr() { return ast.AssignGPR(RT, ast.CallStatic((Func<CpuThreadState, uint, int, uint, uint>)CpuEmitterUtils._lwr_exec, ast.CpuThreadStateArgument(), ast.GPR_u(RS), IMM_s(), ast.GPR_u(RT))); }
+
+		public AstNodeStm swl() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, int, uint>)CpuEmitterUtils._swl_exec, ast.CpuThreadStateArgument(), ast.GPR_u(RS), IMM_s(), ast.GPR_u(RT))); }
+		public AstNodeStm swr() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, int, uint>)CpuEmitterUtils._swr_exec, ast.CpuThreadStateArgument(), ast.GPR_u(RS), IMM_s(), ast.GPR_u(RT))); }
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		// Load Linked word.
+		// Store Conditional word.
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public AstNodeStm ll() { throw (new NotImplementedException("ll")); }
+		public AstNodeStm sc() { throw (new NotImplementedException("sc")); }
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		// Load Word to Cop1 floating point.
+		// Store Word from Cop1 floating point.
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public AstNodeStm lwc1() { return ast.AssignFPR_I(FT, ast.AstMemoryGetValue<int>(Memory, this.Address_RS_IMM())); }
+		public AstNodeStm swc1() { return ast.AstMemorySetValue<int>(Memory, this.Address_RS_IMM(), ast.FPR_I(FT)); }
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		// Syscall
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public AstNodeStm syscall()
+		{
+#if true
+			if (Instruction.CODE == SyscallInfo.NativeCallSyscallCode)
+			{
+				var DelegateId = Memory.Read4(PC + 4);
+				var SyscallInfoInfo = CpuProcessor.RegisteredNativeSyscallMethods[DelegateId];
+
+				return ast.StatementsInline(
+					ast.Assign(ast.REG("PC"), PC),
+					ast.Comment(SyscallInfoInfo.Name),
+					ast.GetTickCall(),
+					ast.Statement(ast.CallDelegate(SyscallInfoInfo.PoolItem.AstFieldAccess, ast.CpuThreadStateArgument()))
+				);
+			}
+			else
+#endif
+			{
+				return ast.StatementsInline(
+					ast.Assign(ast.REG("PC"), PC),
+					ast.GetTickCall(),
+					ast.Statement(ast.CallInstance(ast.CpuThreadStateArgument(), (Action<int>)CpuThreadState.Methods.Syscall, (int)Instruction.CODE))
+				);
+			}
+		}
+		public AstNodeStm cache() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._cache_impl, ast.CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
+		public AstNodeStm sync() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._sync_impl, ast.CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
+		public AstNodeStm _break() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._break_impl, ast.CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
+		public AstNodeStm dbreak() { throw (new NotImplementedException("dbreak")); }
+		public AstNodeStm halt() { throw (new NotImplementedException("halt")); }
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		// (D?/Exception) RETurn
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public AstNodeStm dret() { throw (new NotImplementedException("dret")); }
+		public AstNodeStm eret() { throw (new NotImplementedException("eret")); }
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		// Move (From/To) IC
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public AstNodeStm mfic() { return ast.AssignGPR(RT, ast.REG("IC")); }
+		public AstNodeStm mtic() { return ast.AssignREG("IC", ast.GPR_u(RT)); }
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		// Move (From/To) DR
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public AstNodeStm mfdr() { throw (new NotImplementedException("mfdr")); }
+		public AstNodeStm mtdr() { throw (new NotImplementedException("mtdr")); }
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		// Unknown instruction
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public AstNodeStm unknown()
+		{
+			Console.Error.WriteLine("UNKNOWN INSTRUCTION: 0x{0:X8} : 0x{1:X8} at 0x{2:X8}", Instruction.Value, Instruction.Value, PC);
+			//return _break();
+			return ast.Statement();
+		}
 	}
 }

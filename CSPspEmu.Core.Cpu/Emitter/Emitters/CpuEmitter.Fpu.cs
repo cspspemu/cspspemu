@@ -26,14 +26,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm ceil_w_s() { return ast.AssignFPR_I(FD, ast.CallStatic((Func<float, int>)MathFloat.Ceil, ast.FPR(FS))); }
 		public AstNodeStm floor_w_s() { return ast.AssignFPR_I(FD, ast.CallStatic((Func<float, int>)MathFloat.Floor, ast.FPR(FS))); }
 
-		/// <summary>
-		/// Convert FS register (stored as an int) to float and stores the result on FD.
-		/// </summary>
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		// Convert FS register (stored as an int) to float and stores the result on FD.
+		// Floating-Point Convert to Word Fixed-Point
+		/////////////////////////////////////////////////////////////////////////////////////////////////
 		public AstNodeStm cvt_s_w() { return ast.AssignFPR_F(FD, ast.Cast<float>(ast.FPR_I(FS))); }
-
-		/// <summary>
-		/// Floating-Point Convert to Word Fixed-Point
-		/// </summary>
 		public AstNodeStm cvt_w_s() { return ast.AssignFPR_I(FD, ast.CallStatic((Func<CpuThreadState, float, int>)CpuEmitterUtils._cvt_w_s_impl, ast.CpuThreadStateArgument(), ast.FPR(FS))); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
