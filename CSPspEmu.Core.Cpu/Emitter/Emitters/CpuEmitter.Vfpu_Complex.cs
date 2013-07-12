@@ -9,7 +9,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm vbfy1()
 		{
-			return AstNotImplemented("vbfy1");
+			return ast.AstNotImplemented("vbfy1");
 
 			//var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 2 || VectorSize != 4)
@@ -33,7 +33,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm vbfy2()
 		{
-			return AstNotImplemented("vbfy2");
+			return ast.AstNotImplemented("vbfy2");
 
 			//var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 4)
@@ -56,7 +56,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm _vsrt_doMinMax(Func<float, float, float> Func, int Left, int Right)
 		{
-			return AstNotImplemented("_vsrt_doMinMax");
+			return ast.AstNotImplemented("_vsrt_doMinMax");
 
 			//Load_VS(Left);
 			//Load_VS(Right);
@@ -66,7 +66,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm vsrt1()
 		{
-			return AstNotImplemented("vsrt1");
+			return ast.AstNotImplemented("vsrt1");
 
 			//var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 4) Console.Error.WriteLine("vsrt1 : VectorSize != 4");
@@ -86,7 +86,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm vsrt2()
 		{
-			return AstNotImplemented("vsrt2");
+			return ast.AstNotImplemented("vsrt2");
 
 			//var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 4) Console.Error.WriteLine("vsrt1 : VectorSize != 4");
@@ -106,7 +106,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm vsrt3()
 		{
-			return AstNotImplemented("vsrt3");
+			return ast.AstNotImplemented("vsrt3");
 			//var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 4) Console.Error.WriteLine("vsrt1 : VectorSize != 4");
 			//
@@ -125,7 +125,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[PspUntested]
 		public AstNodeStm vsrt4()
 		{
-			return AstNotImplemented("vsrt4");
+			return ast.AstNotImplemented("vsrt4");
 			//var VectorSize = Instruction.ONE_TWO;
 			//if (VectorSize != 4) Console.Error.WriteLine("vsrt1 : VectorSize != 4");
 			//

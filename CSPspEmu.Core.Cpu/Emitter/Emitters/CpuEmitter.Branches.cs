@@ -19,23 +19,17 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			if (this.AndLink)
 			{
+				return ast.If(
+					BranchFlag(),
+					ast.StatementsInline(
+						ast.AssignGPR(31, BranchPC + 8),
 #if ENABLE_NATIVE_CALLS
-				return ast.If(
-					BranchFlag(),
-					ast.StatementsInline(
-						AssignGPR(31, BranchPC + 8),
 						CallFixedAddress(BranchPC)
-					)
-				);
 #else
-				return ast.If(
-					BranchFlag(),
-					ast.StatementsInline(
-						AssignGPR(31, BranchPC + 8),
 						ast.GotoAlways(BranchLabel)
+#endif
 					)
 				);
-#endif
 			}
 			else
 			{
@@ -78,23 +72,23 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// bgtz(l)    : Branch on Great Than Zero (Likely).
 		// bgez(al)(l): Branch on Greater Equal Zero (And Link) (Likely).
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm beq() { return AssignBranchFlag(ast.Binary(GPR_s(RS), "==", GPR_s(RT))); }
+		public AstNodeStm beq() { return AssignBranchFlag(ast.Binary(ast.GPR_s(RS), "==", ast.GPR_s(RT))); }
 		public AstNodeStm beql() { return beq(); }
-		public AstNodeStm bne() { return AssignBranchFlag(ast.Binary(GPR_s(RS), "!=", GPR_s(RT))); }
+		public AstNodeStm bne() { return AssignBranchFlag(ast.Binary(ast.GPR_s(RS), "!=", ast.GPR_s(RT))); }
 		public AstNodeStm bnel() { return bne(); }
-		public AstNodeStm bltz() { return AssignBranchFlag(ast.Binary(GPR_s(RS), "<", 0)); }
+		public AstNodeStm bltz() { return AssignBranchFlag(ast.Binary(ast.GPR_s(RS), "<", 0)); }
 		public AstNodeStm bltzl() { return bltz(); }
 		[PspUntested]
-		public AstNodeStm bltzal() { return AssignBranchFlag(ast.Binary(GPR_s(RS), "<", 0), AndLink: true); }
+		public AstNodeStm bltzal() { return AssignBranchFlag(ast.Binary(ast.GPR_s(RS), "<", 0), AndLink: true); }
 		public AstNodeStm bltzall() { return bltzal(); }
-		public AstNodeStm blez() { return AssignBranchFlag(ast.Binary(GPR_s(RS), "<=", 0)); }
+		public AstNodeStm blez() { return AssignBranchFlag(ast.Binary(ast.GPR_s(RS), "<=", 0)); }
 		public AstNodeStm blezl() { return blez(); }
-		public AstNodeStm bgtz() { return AssignBranchFlag(ast.Binary(GPR_s(RS), ">", 0)); }
+		public AstNodeStm bgtz() { return AssignBranchFlag(ast.Binary(ast.GPR_s(RS), ">", 0)); }
 		public AstNodeStm bgtzl() { return bgtz(); }
-		public AstNodeStm bgez() { return AssignBranchFlag(ast.Binary(GPR_s(RS), ">=", 0)); }
+		public AstNodeStm bgez() { return AssignBranchFlag(ast.Binary(ast.GPR_s(RS), ">=", 0)); }
 		public AstNodeStm bgezl() { return bgez(); }
 		[PspUntested]
-		public AstNodeStm bgezal() { return AssignBranchFlag(ast.Binary(GPR_s(RS), ">=", 0), AndLink: true); }
+		public AstNodeStm bgezal() { return AssignBranchFlag(ast.Binary(ast.GPR_s(RS), ">=", 0), AndLink: true); }
 		public AstNodeStm bgezall() { return bgezal(); }
 
 		public bool PopulateCallStack { get { return !(CpuProcessor.Memory.HasFixedGlobalAddress) && CpuProcessor.CpuConfig.TrackCallStack; } }
@@ -115,12 +109,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm _link()
 		{
-			return AssignGPR(31, ast.Immediate(PC + 8));
+			return ast.AssignGPR(31, ast.Immediate(PC + 8));
 		}
 
 		private AstNodeStm JumpToAddress(AstNodeExpr Address)
 		{
-			return ast.Statement(ast.CallTail(MipsMethodEmitter.MethodCacheInfoCallDynamicPC(Address)));
+#if true
+			return ast.Statement(ast.CallTail(ast.MethodCacheInfoCallDynamicPC(Address)));
+#else
+			return ast.Statements(
+				MipsMethodEmitter.AssignREG("PC", Address),
+				ast.Return()
+			);
+#endif
 		}
 
 		private AstNodeStm CallAddress(AstNodeExpr Address)
@@ -128,7 +129,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return ast.StatementsInline(
 				_link(),
 #if ENABLE_NATIVE_CALLS
-				ast.Statement(MipsMethodEmitter.MethodCacheInfoCallDynamicPC(Address))
+				ast.Statement(ast.MethodCacheInfoCallDynamicPC(Address))
 #else
 				JumpToAddress(Address)
 #endif
@@ -137,7 +138,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm JumpToFixedAddress(uint Address)
 		{
-			return ast.Statement(ast.CallTail(MipsMethodEmitter.MethodCacheInfoCallStaticPC(CpuProcessor, Address)));
+#if true
+			return ast.Statement(
+				ast.CallTail(ast.MethodCacheInfoCallStaticPC(CpuProcessor, Address))
+			);
+#else
+			return ast.StatementsInline(
+				MipsMethodEmitter.AssignREG("PC", Address),
+				ast.Return()
+			);
+#endif
 		}
 
 		private AstNodeStm CallFixedAddress(uint Address)
@@ -145,7 +155,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return ast.StatementsInline(
 				_link(),
 #if ENABLE_NATIVE_CALLS
-				ast.Statement(MipsMethodEmitter.MethodCacheInfoCallStaticPC(CpuProcessor, Address))
+				ast.Statement(ast.MethodCacheInfoCallStaticPC(CpuProcessor, Address))
 #else
 				JumpToFixedAddress(Address)
 #endif
@@ -161,8 +171,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 #if ENABLE_NATIVE_CALLS
 			return ast.StatementsInline(
-				AssignREG("PC", GPR(31)),
-				GetTickCall(),
+				ast.AssignREG("PC", ast.GPR(31)),
+				ast.GetTickCall(),
 				ast.Return()
 			);
 #else
@@ -178,21 +188,21 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm jr() {
 			if (RS == 31)
 			{
-				return ReturnFromFunction(GPR_u(RS));
+				return ReturnFromFunction(ast.GPR_u(RS));
 			}
 			else
 			{
-				return JumpToAddress(GPR_u(RS));
+				return JumpToAddress(ast.GPR_u(RS));
 			}
 		}
-		public AstNodeStm jalr() { return this.CallAddress(GPR_u(RS)); }
+		public AstNodeStm jalr() { return this.CallAddress(ast.GPR_u(RS)); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// bc1(f/t)(l): Branch on C1 (False/True) (Likely)
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm bc1f() { return AssignBranchFlag(ast.Unary("!", FCR31_CC())); }
+		public AstNodeStm bc1f() { return AssignBranchFlag(ast.Unary("!", ast.FCR31_CC())); }
 		public AstNodeStm bc1fl() { return bc1f(); }
-		public AstNodeStm bc1t() { return AssignBranchFlag(FCR31_CC()); }
+		public AstNodeStm bc1t() { return AssignBranchFlag(ast.FCR31_CC()); }
 		public AstNodeStm bc1tl() { return bc1t(); }
 	}
 }

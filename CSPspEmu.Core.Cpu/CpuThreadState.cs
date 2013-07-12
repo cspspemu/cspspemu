@@ -1,4 +1,5 @@
-﻿//#define DEBUG_FUNCTION_CREATION
+﻿#define ENABLE_NATIVE_CALLS
+//#define DEBUG_FUNCTION_CREATION
 
 using System;
 using System.Collections.Generic;
@@ -297,6 +298,7 @@ namespace CSPspEmu.Core.Cpu
 		/// </summary>
 		public void Tick()
 		{
+			//Console.WriteLine("Tick1");
 			if (EnableYielding)
 			{
 				TickCount++;
@@ -469,8 +471,26 @@ namespace CSPspEmu.Core.Cpu
 
 		public void ExecuteAT(uint PC)
 		{
+#if ENABLE_NATIVE_CALLS
+			MethodCache.GetForPC(this.PC).CallDelegate(this);
+#else
 			this.PC = PC;
-			MethodCache.GetForPC(PC).CallDelegate(this);
+			this.GPR31 = 0x08000010;
+			//this.GPR31 = HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD;
+			//this.GPR31 = 0;
+			//int n = 0;
+			while (true)
+			{
+				if ((this.PC & PspMemory.MemoryMask) == 0) break;
+				//Console.WriteLine("ExecuteAT: {0:X8}", this.PC);
+				
+				MethodCache.GetForPC(this.PC).CallDelegate(this);
+
+				//Console.WriteLine("ExecuteAT: {0:X8}", this.PC);
+				//Tick();
+				//if (n++ >= 10) break;
+			}
+#endif
 		}
 
 		public void _MethodCacheInfo_SetInternal(MethodCacheInfo MethodCacheInfo, uint PC)

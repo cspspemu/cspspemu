@@ -18,7 +18,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			var Dest = _Vector(VT5_1, VFloat, VectorSize);
 
 			return Dest.SetVector((Index) =>
-				AstMemoryGetValue<float>(Memory, Address_RS_IMM14(Index * 4))
+				ast.AstMemoryGetValue<float>(Memory, Address_RS_IMM14(Index * 4))
 			);
 		}
 
@@ -32,7 +32,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			var Dest = _Vector(VT5_1, VFloat, VectorSize);
 
 			return ast.Statements(Enumerable.Range(0, VectorSize).Select(Index =>
-				AstMemorySetValue<float>(Memory, Address_RS_IMM14(Index * 4), Dest[Index])
+				ast.AstMemorySetValue<float>(Memory, Address_RS_IMM14(Index * 4), Dest[Index])
 			));
 		}
 
@@ -110,7 +110,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 			return ast.Statement(ast.CallStatic(
 				MethodInfo,
-				CpuThreadStateArgument(),
+				ast.CpuThreadStateArgument(),
 				save,
 				ast.GetAddress(VT5.GetIndexRef(0)),
 				ast.GetAddress(VT5.GetIndexRef(1)),
@@ -132,12 +132,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm lv_s()
 		{
-			return _Cell(VT5_2).Set(AstMemoryGetValue<float>(Memory, Address_RS_IMM14()));
+			return _Cell(VT5_2).Set(ast.AstMemoryGetValue<float>(Memory, Address_RS_IMM14()));
 		}
 
 		public AstNodeStm sv_s()
 		{
-			return AstMemorySetValue<float>(Memory, Address_RS_IMM14(), _Cell(VT5_2).Get());
+			return ast.AstMemorySetValue<float>(Memory, Address_RS_IMM14(), _Cell(VT5_2).Get());
 		}
 
 		public AstNodeStm svl_q()

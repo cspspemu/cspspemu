@@ -92,9 +92,9 @@
     <Compile Include="video\Pmf.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CSPspEmu.Core.Crypto\CSPspEmu.Core.Crypto.csproj">
-      <Project>{F4181553-01F3-425A-8DDC-927A97DE6DE2}</Project>
-      <Name>CSPspEmu.Core.Crypto</Name>
+    <ProjectReference Include="..\CSPspEmu.Core.Components\CSPspEmu.Core.Components.csproj">
+      <Project>{c2263270-905b-4d00-9446-21c8d9890ddc}</Project>
+      <Name>CSPspEmu.Core.Components</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Types\CSPspEmu.Core.Types.csproj">
       <Project>{BB80D126-2A98-4ECE-99ED-3098F9BD7594}</Project>

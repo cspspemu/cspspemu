@@ -13,7 +13,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
 {
 	public class AstOptimizerPsp : AstOptimizer
 	{
-		private static AstGenerator ast = AstGenerator.Instance;
+		private static AstMipsGenerator ast = AstMipsGenerator.Instance;
 		public PspMemory Memory;
 
 		public static AstNodeStm GlobalOptimize(CpuProcessor Processor, AstNodeStm AstNodeStm)
@@ -108,11 +108,11 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
 								ContainerNodes[LwlLwrState.LwlListIndex] = null;
 								ContainerNodes[n] = ast.Statements(
 									ast.Comment(String.Format("{0:X8}+{1:X8} lwl+lwr", LwlLwrState.LwlPC, PC)),
-									CpuEmitter.AssignGPR(
+									ast.AssignGPR(
 										Instruction.RT,
-										CpuEmitter.AstMemoryGetValue<int>(
+										ast.AstMemoryGetValue<int>(
 											Memory,
-											ast.Cast<uint>(ast.Binary(CpuEmitter.GPR_s(Instruction.RS), "+", Instruction.IMM))
+											ast.Cast<uint>(ast.Binary(ast.GPR_s(Instruction.RS), "+", Instruction.IMM))
 										)
 									)
 								);

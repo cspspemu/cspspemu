@@ -24,15 +24,15 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 		{
 		}
 
-		static private AstGenerator ast = AstGenerator.Instance;
+		static private AstMipsGenerator ast = AstMipsGenerator.Instance;
 
 		static private readonly GeneratorIL GeneratorILInstance = new GeneratorIL();
 
 		static private Action<CpuThreadState> GetGeneratorForPC(uint PC)
 		{
 			var Ast = ast.Statements(
-				ast.Statement(ast.CallInstance(MipsMethodEmitter.CpuThreadStateArgument(), (Action<MethodCacheInfo, uint>)CpuThreadState.Methods._MethodCacheInfo_SetInternal, MipsMethodEmitter.MethodCacheInfoGetAtPC(PC), PC)),
-				ast.Statement(ast.CallTail(ast.CallInstance(MipsMethodEmitter.MethodCacheInfoGetAtPC(PC), (Action<CpuThreadState>)MethodCacheInfo.Methods.CallDelegate, MipsMethodEmitter.CpuThreadStateArgument()))),
+				ast.Statement(ast.CallInstance(ast.CpuThreadStateArgument(), (Action<MethodCacheInfo, uint>)CpuThreadState.Methods._MethodCacheInfo_SetInternal, ast.GetMethodCacheInfoAtPC(PC), PC)),
+				ast.Statement(ast.CallTail(ast.CallInstance(ast.GetMethodCacheInfoAtPC(PC), (Action<CpuThreadState>)MethodCacheInfo.Methods.CallDelegate, ast.CpuThreadStateArgument()))),
 				ast.Return()
 			);
 

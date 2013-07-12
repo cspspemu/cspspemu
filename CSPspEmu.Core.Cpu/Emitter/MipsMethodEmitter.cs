@@ -21,6 +21,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		protected String MethodName;
 		public CpuProcessor Processor;
 		public ILGenerator ILGenerator { get { return DynamicMethod.GetILGenerator(); } }
+
+		static public readonly AstMipsGenerator ast = AstMipsGenerator.Instance;
 		
 		public readonly Dictionary<string, uint> InstructionStats = new Dictionary<string, uint>();
 

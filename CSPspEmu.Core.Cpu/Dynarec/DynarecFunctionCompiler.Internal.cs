@@ -1,7 +1,7 @@
 ﻿//#define DEBUG_TRACE_INSTRUCTIONS
-#define ENABLE_JUMP_GOTO
+//#define DISABLE_JUMP_GOTO
 
-#define ENABLE_NATIVE_CALLS
+//#define ENABLE_NATIVE_CALLS
 
 using System;
 using System.Collections.Generic;
@@ -83,6 +83,11 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				this.DynarecFunctionCompiler = DynarecFunctionCompiler;
 				this.InstructionReader = InstructionReader;
 				this.EntryPC = EntryPC;
+
+				if (!PspMemory.IsAddressValid(EntryPC))
+				{
+					throw (new InvalidOperationException(String.Format("Trying to get invalid function 0x{0:X8}", EntryPC)));
+				}
 			}
 
 			/// <summary>
@@ -100,9 +105,10 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				var Nodes = GenerateCode();
 
 				Nodes = ast.Statements(
-					ast.Comment("Returns immediately when argument CpuThreadState is null, so we can call it on the generation thread to do prelinking."),
+					ast.Comment(String.Format("Function {0:X8}-{1:X8}. Entry: {2:X8}", MinPC, MaxPC, EntryPC)),
+					//ast.Comment("Returns immediately when argument CpuThreadState is null, so we can call it on the generation thread to do prelinking."),
 					ast.If(
-						ast.Binary(MipsMethodEmitter.CpuThreadStateArgument(), "==", ast.Null<CpuThreadState>()),
+						ast.Binary(ast.CpuThreadStateArgument(), "==", ast.Null<CpuThreadState>()),
 						ast.Return()
 					),
 					Nodes
@@ -229,10 +235,10 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 							if (BranchInfo.HasFlag(DynarecBranchAnalyzer.JumpFlags.AndLink))
 							{
 								// Just a function call. Continue analyzing.
-#if !ENABLE_NATIVE_CALLS
-								EndOfBranchFound = true;
-								continue;
-#endif
+//#if !ENABLE_NATIVE_CALLS
+//								EndOfBranchFound = true;
+//								continue;
+//#endif
 							}
 							else
 							{
@@ -328,7 +334,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			}
 
 			uint PC;
-			static private AstGenerator ast = AstGenerator.Instance;
+			static private AstMipsGenerator ast = AstMipsGenerator.Instance;
 
 			private AstNodeStm StorePC()
 			{
@@ -478,7 +484,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 							var DelayedBranchInstruction = _GetAstCpuInstructionAT(PC + 4); // Delayed
 							var JumpInstruction = _GetAstCpuInstructionAT(PC + 0); // Jump
 
-#if ENABLE_JUMP_GOTO
+#if !DISABLE_JUMP_GOTO
 							var JumpInstruction2 = CpuEmitter.LoadAT(PC + 0);
 							var JumpDisasm = MipsDisassembler.Disassemble(PC + 0, JumpInstruction2);
 							var JumpJumpPC = JumpDisasm.Instruction.GetJumpAddress(Memory, JumpDisasm.InstructionPC);

@@ -19,25 +19,25 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				var SyscallInfoInfo = CpuProcessor.RegisteredNativeSyscallMethods[DelegateId];
 
 				return ast.StatementsInline(
-					ast.Assign(REG("PC"), PC),
+					ast.Assign(ast.REG("PC"), PC),
 					ast.Comment(SyscallInfoInfo.Name),
-					GetTickCall(),
-					ast.Statement(ast.CallDelegate(SyscallInfoInfo.PoolItem.AstFieldAccess, CpuThreadStateArgument()))
+					ast.GetTickCall(),
+					ast.Statement(ast.CallDelegate(SyscallInfoInfo.PoolItem.AstFieldAccess, ast.CpuThreadStateArgument()))
 				);
 			}
 			else
 #endif
 			{
 				return ast.StatementsInline(
-					ast.Assign(REG("PC"), PC),
-					GetTickCall(),
-					ast.Statement(ast.CallInstance(CpuThreadStateArgument(), (Action<int>)CpuThreadState.Methods.Syscall, (int)Instruction.CODE))
+					ast.Assign(ast.REG("PC"), PC),
+					ast.GetTickCall(),
+					ast.Statement(ast.CallInstance(ast.CpuThreadStateArgument(), (Action<int>)CpuThreadState.Methods.Syscall, (int)Instruction.CODE))
 				);
 			}
 		}
-		public AstNodeStm cache() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._cache_impl, CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
-		public AstNodeStm sync() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._sync_impl, CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
-		public AstNodeStm _break() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._break_impl, CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
+		public AstNodeStm cache() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._cache_impl, ast.CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
+		public AstNodeStm sync() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._sync_impl, ast.CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
+		public AstNodeStm _break() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, uint, uint>)CpuEmitterUtils._break_impl, ast.CpuThreadStateArgument(), PC, (uint)Instruction.Value)); }
 		public AstNodeStm dbreak() { throw (new NotImplementedException("dbreak")); }
 		public AstNodeStm halt() { throw (new NotImplementedException("halt")); }
 
@@ -50,8 +50,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move (From/To) IC
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm mfic() { return AssignGPR(RT, REG("IC")); }
-		public AstNodeStm mtic() { return AssignREG("IC", GPR_u(RT)); }
+		public AstNodeStm mfic() { return ast.AssignGPR(RT, ast.REG("IC")); }
+		public AstNodeStm mtic() { return ast.AssignREG("IC", ast.GPR_u(RT)); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move (From/To) DR

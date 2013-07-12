@@ -185,10 +185,6 @@
       <Project>{C2263270-905B-4D00-9446-21C8D9890DDC}</Project>
       <Name>CSPspEmu.Core.Components</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Crypto\CSPspEmu.Core.Crypto.csproj">
-      <Project>{F4181553-01F3-425A-8DDC-927A97DE6DE2}</Project>
-      <Name>CSPspEmu.Core.Crypto</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Audio\CSPspEmu.Core.Audio.csproj">
       <Project>{3BE28D69-CFB4-4C9D-8874-7CF8F520DFB0}</Project>
       <Name>CSPspEmu.Core.Audio</Name>

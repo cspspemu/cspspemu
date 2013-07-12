@@ -28,7 +28,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm _vtfm_x(uint VectorSize)
 		{
-			return AstNotImplemented("_vtfm_x");
+			return ast.AstNotImplemented("_vtfm_x");
 			//VectorOperationSaveVd(VectorSize, Index =>
 			//{
 			//	SafeILGenerator.Push((float)0.0f);
@@ -44,7 +44,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm _vhtfm_x(uint VectorSize)
 		{
-			return AstNotImplemented("_vhtfm_x");
+			return ast.AstNotImplemented("_vhtfm_x");
 			//VectorOperationSaveVd(VectorSize, Index =>
 			//{
 			//	SafeILGenerator.Push((float)0.0f);
@@ -162,7 +162,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vqmul()
 		{
-			return AstNotImplemented("vqmul");
+			return ast.AstNotImplemented("vqmul");
 			////var VectorSize = Instruction.ONE_TWO;
 			//var VectorSize = (uint)4;
 			//VectorOperationSaveVd(VectorSize, (Index) =>

@@ -155,7 +155,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		static private AstNodeExprLValue VFR(int Index)
 		{
-			return REG("VFR" + Index);
+			return ast.REG("VFR" + Index);
 		}
 
 
@@ -189,8 +189,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 			protected AstNodeExprLValue _GetVRegRef(int RegIndex)
 			{
-				if (GetVTypeType() == typeof(float)) return VFR(RegIndex);
-				return ast.Reinterpret(GetVTypeType(), VFR(RegIndex));
+				var ToType = GetVTypeType();
+				if (ToType == typeof(float)) return VFR(RegIndex);
+				return ast.Reinterpret(ToType, VFR(RegIndex));
 			}
 
 			protected AstNodeExpr GetRegApplyPrefix(int[] Indices, int RegIndex, int PrefixIndex)
@@ -262,7 +263,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 					}
 				}
 
-				return ast.Assign(_GetVRegRef(RegIndex), AstNodeExpr);
+				return ast.Assign(_GetVRegRef(RegIndex), ast.Cast(GetVTypeType(), AstNodeExpr));
 			}
 
 		}

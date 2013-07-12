@@ -45,7 +45,7 @@ namespace CSPspEmu.Hle
 			}
 		}
 
-		static private readonly AstGenerator ast = AstGenerator.Instance;
+		static private readonly AstMipsGenerator ast = AstMipsGenerator.Instance;
 
 		static public object GetObjectFromPoolHelper(CpuThreadState CpuThreadState, Type Type, int Index)
 		{
@@ -101,7 +101,7 @@ namespace CSPspEmu.Hle
 					// The CpuThreadState
 					if (ParameterType == typeof(CpuThreadState))
 					{
-						AstParameters.Add(MipsMethodEmitter.CpuThreadStateArgument());
+						AstParameters.Add(ast.CpuThreadStateArgument());
 					}
 					// A stringz
 					else if (ParameterType == typeof(string))
@@ -111,8 +111,8 @@ namespace CSPspEmu.Hle
 						AstParameters.Add(
 							ast.CallStatic(
 								(Func<CpuThreadState, uint, string>)HleModuleHost.StringFromAddress,
-								MipsMethodEmitter.CpuThreadStateArgument(),
-								MipsMethodEmitter.GPR_u(GprIndex)
+								ast.CpuThreadStateArgument(),
+								ast.GPR_u(GprIndex)
 							)
 						);
 
@@ -126,8 +126,9 @@ namespace CSPspEmu.Hle
 						AstParameters.Add(
 							ast.Cast(
 								ParameterType,
-								MipsMethodEmitter.AstMemoryGetPointer(
-									MipsMethodEmitter.GPR_u(GprIndex),
+								ast.AstMemoryGetPointer(
+									CpuProcessor.Memory,
+									ast.GPR_u(GprIndex),
 									Safe: true,
 									ErrorDescription: "Invalid Pointer for Argument '" + ParameterType.Name + " " + ParameterInfo.Name + "'"
 								)
@@ -145,11 +146,11 @@ namespace CSPspEmu.Hle
 
 						if (ParameterType == typeof(ulong))
 						{
-							AstParameters.Add(MipsMethodEmitter.GPR_ul(GprIndex + 0));
+							AstParameters.Add(ast.GPR_ul(GprIndex + 0));
 						}
 						else
 						{
-							AstParameters.Add(MipsMethodEmitter.GPR_sl(GprIndex + 0));
+							AstParameters.Add(ast.GPR_sl(GprIndex + 0));
 						}
 
 						GprIndex += 2;
@@ -165,7 +166,7 @@ namespace CSPspEmu.Hle
 							ParameterType = ParameterType,
 						});
 
-						AstParameters.Add(MipsMethodEmitter.FPR(FprIndex));
+						AstParameters.Add(ast.FPR(FprIndex));
 
 						FprIndex++;
 					}
@@ -176,7 +177,7 @@ namespace CSPspEmu.Hle
 
 						AstParameters.Add(ast.CallStatic(
 							typeof(PspPointer).GetMethod("op_Implicit", new[] { typeof(uint) }),
-							MipsMethodEmitter.GPR_u(GprIndex)
+							ast.GPR_u(GprIndex)
 						));
 
 						GprIndex++;
@@ -193,9 +194,9 @@ namespace CSPspEmu.Hle
 
 						AstParameters.Add(ast.Cast(ParameterType, ast.CallStatic(
 							(Func<CpuThreadState, Type, int, object>)GetObjectFromPoolHelper,
-							MipsMethodEmitter.CpuThreadStateArgument(),
+							ast.CpuThreadStateArgument(),
 							ast.Immediate(ParameterType),
-							MipsMethodEmitter.GPR_s(GprIndex)
+							ast.GPR_s(GprIndex)
 						)));
 
 						GprIndex++;
@@ -207,11 +208,11 @@ namespace CSPspEmu.Hle
 
 						if (ParameterType == typeof(uint))
 						{
-							AstParameters.Add(ast.Cast(ParameterType, MipsMethodEmitter.GPR_u(GprIndex)));
+							AstParameters.Add(ast.Cast(ParameterType, ast.GPR_u(GprIndex)));
 						}
 						else
 						{
-							AstParameters.Add(ast.Cast(ParameterType, MipsMethodEmitter.GPR_s(GprIndex)));
+							AstParameters.Add(ast.Cast(ParameterType, ast.GPR_s(GprIndex)));
 						}
 
 						GprIndex++;
@@ -226,8 +227,8 @@ namespace CSPspEmu.Hle
 			}
 
 			if (AstMethodCall.Type == typeof(void)) AstNodes.AddStatement(ast.Statement(AstMethodCall));
-			else if (AstMethodCall.Type == typeof(long)) AstNodes.AddStatement(ast.Assign(MipsMethodEmitter.GPR_l(2), ast.Cast<long>(AstMethodCall)));
-			else if (AstMethodCall.Type == typeof(float)) AstNodes.AddStatement(ast.Assign(MipsMethodEmitter.FPR(0), ast.Cast<float>(AstMethodCall)));
+			else if (AstMethodCall.Type == typeof(long)) AstNodes.AddStatement(ast.Assign(ast.GPR_l(2), ast.Cast<long>(AstMethodCall)));
+			else if (AstMethodCall.Type == typeof(float)) AstNodes.AddStatement(ast.Assign(ast.FPR(0), ast.Cast<float>(AstMethodCall)));
 			else if (AstMethodCall.Type.IsClass)
 			{
 				if (!AstMethodCall.Type.Implements(typeof(IHleUidPoolClass)))
@@ -235,16 +236,16 @@ namespace CSPspEmu.Hle
 					throw (new InvalidCastException("Can't use a class not implementing IHleUidPoolClass as return value"));
 				}
 				AstNodes.AddStatement(ast.Assign(
-					MipsMethodEmitter.GPR(2),
+					ast.GPR(2),
 					ast.CallStatic(
 						(Func<CpuThreadState, Type, IHleUidPoolClass, uint>)GetOrAllocIndexFromPoolHelper,
-						MipsMethodEmitter.CpuThreadStateArgument(),
+						ast.CpuThreadStateArgument(),
 						ast.Immediate(AstMethodCall.Type),
 						ast.Cast<IHleUidPoolClass>(AstMethodCall)
 					)
 				));
 			}
-			else AstNodes.AddStatement(ast.Assign(MipsMethodEmitter.GPR(2), ast.Cast<uint>(AstMethodCall)));
+			else AstNodes.AddStatement(ast.Assign(ast.GPR(2), ast.Cast<uint>(AstMethodCall)));
 
 			return AstNodes;
 		}
@@ -348,6 +349,7 @@ namespace CSPspEmu.Hle
 
 				try
 				{
+					CpuThreadState.PC = CpuThreadState.RA;
 					Delegate(CpuThreadState);
 				}
 				catch (InvalidProgramException)

@@ -9,44 +9,44 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Binary Floating Point Unit Operations
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm add_s() { return AssignFPR_F(FD, FPR(FS) + FPR(FT)); }
-		public AstNodeStm sub_s() { return AssignFPR_F(FD, FPR(FS) - FPR(FT)); }
-		public AstNodeStm mul_s() { return AssignFPR_F(FD, FPR(FS) * FPR(FT)); }
-		public AstNodeStm div_s() { return AssignFPR_F(FD, FPR(FS) / FPR(FT)); }
+		public AstNodeStm add_s() { return ast.AssignFPR_F(FD, ast.FPR(FS) + ast.FPR(FT)); }
+		public AstNodeStm sub_s() { return ast.AssignFPR_F(FD, ast.FPR(FS) - ast.FPR(FT)); }
+		public AstNodeStm mul_s() { return ast.AssignFPR_F(FD, ast.FPR(FS) * ast.FPR(FT)); }
+		public AstNodeStm div_s() { return ast.AssignFPR_F(FD, ast.FPR(FS) / ast.FPR(FT)); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Unary Floating Point Unit Operations
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm sqrt_s() { return AssignFPR_F(FD, ast.CallStatic((Func<float, float>)MathFloat.Sqrt, FPR(FS))); }
-		public AstNodeStm abs_s() { return AssignFPR_F(FD, ast.CallStatic((Func<float, float>)MathFloat.Abs, FPR(FS))); }
-		public AstNodeStm mov_s() { return AssignFPR_F(FD, FPR(FS)); }
-		public AstNodeStm neg_s() { return AssignFPR_F(FD, -FPR(FS)); }
-		public AstNodeStm trunc_w_s() { return AssignFPR_I(FD, ast.CallStatic((Func<float, int>)MathFloat.Cast, FPR(FS))); }
-		public AstNodeStm round_w_s() { return AssignFPR_I(FD, ast.CallStatic((Func<float, int>)MathFloat.Round, FPR(FS))); }
-		public AstNodeStm ceil_w_s() { return AssignFPR_I(FD, ast.CallStatic((Func<float, int>)MathFloat.Ceil, FPR(FS))); }
-		public AstNodeStm floor_w_s() { return AssignFPR_I(FD, ast.CallStatic((Func<float, int>)MathFloat.Floor, FPR(FS))); }
+		public AstNodeStm sqrt_s() { return ast.AssignFPR_F(FD, ast.CallStatic((Func<float, float>)MathFloat.Sqrt, ast.FPR(FS))); }
+		public AstNodeStm abs_s() { return ast.AssignFPR_F(FD, ast.CallStatic((Func<float, float>)MathFloat.Abs, ast.FPR(FS))); }
+		public AstNodeStm mov_s() { return ast.AssignFPR_F(FD, ast.FPR(FS)); }
+		public AstNodeStm neg_s() { return ast.AssignFPR_F(FD, -ast.FPR(FS)); }
+		public AstNodeStm trunc_w_s() { return ast.AssignFPR_I(FD, ast.CallStatic((Func<float, int>)MathFloat.Cast, ast.FPR(FS))); }
+		public AstNodeStm round_w_s() { return ast.AssignFPR_I(FD, ast.CallStatic((Func<float, int>)MathFloat.Round, ast.FPR(FS))); }
+		public AstNodeStm ceil_w_s() { return ast.AssignFPR_I(FD, ast.CallStatic((Func<float, int>)MathFloat.Ceil, ast.FPR(FS))); }
+		public AstNodeStm floor_w_s() { return ast.AssignFPR_I(FD, ast.CallStatic((Func<float, int>)MathFloat.Floor, ast.FPR(FS))); }
 
 		/// <summary>
 		/// Convert FS register (stored as an int) to float and stores the result on FD.
 		/// </summary>
-		public AstNodeStm cvt_s_w() { return AssignFPR_F(FD, ast.Cast<float>(FPR_I(FS))); }
+		public AstNodeStm cvt_s_w() { return ast.AssignFPR_F(FD, ast.Cast<float>(ast.FPR_I(FS))); }
 
 		/// <summary>
 		/// Floating-Point Convert to Word Fixed-Point
 		/// </summary>
-		public AstNodeStm cvt_w_s() { return AssignFPR_I(FD, ast.CallStatic((Func<CpuThreadState, float, int>)CpuEmitterUtils._cvt_w_s_impl, CpuThreadStateArgument(), FPR(FS))); }
+		public AstNodeStm cvt_w_s() { return ast.AssignFPR_I(FD, ast.CallStatic((Func<CpuThreadState, float, int>)CpuEmitterUtils._cvt_w_s_impl, ast.CpuThreadStateArgument(), ast.FPR(FS))); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move (from/to) float point registers (reinterpreted)
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm mfc1() { return AssignGPR(RT, ast.CallStatic((Func<float, int>)MathFloat.ReinterpretFloatAsInt, FPR(FS))); }
-		public AstNodeStm mtc1() { return AssignFPR_F(FS, ast.CallStatic((Func<int, float>)MathFloat.ReinterpretIntAsFloat, GPR_s(RT))); }
+		public AstNodeStm mfc1() { return ast.AssignGPR(RT, ast.CallStatic((Func<float, int>)MathFloat.ReinterpretFloatAsInt, ast.FPR(FS))); }
+		public AstNodeStm mtc1() { return ast.AssignFPR_F(FS, ast.CallStatic((Func<int, float>)MathFloat.ReinterpretIntAsFloat, ast.GPR_s(RT))); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// CFC1 -- move Control word from/to floating point (C1)
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm cfc1() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._cfc1_impl, CpuThreadStateArgument(), RD, RT)); }
-		public AstNodeStm ctc1() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._ctc1_impl, CpuThreadStateArgument(), RD, RT)); }
+		public AstNodeStm cfc1() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._cfc1_impl, ast.CpuThreadStateArgument(), RD, RT)); }
+		public AstNodeStm ctc1() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._ctc1_impl, ast.CpuThreadStateArgument(), RD, RT)); }
 
 		/// <summary>
 		/// Compare (condition) Single_
@@ -65,9 +65,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 			return ast.Statement(ast.CallStatic(
 				(Action<CpuThreadState, float, float, bool, bool, bool, bool>)CpuEmitterUtils._comp_impl,
-				CpuThreadStateArgument(),
-				FPR(FS),
-				FPR(FT),
+				ast.CpuThreadStateArgument(),
+				ast.FPR(FS),
+				ast.FPR(FT),
 				ast.Immediate(fc_unordererd),
 				ast.Immediate(fc_equal),
 				ast.Immediate(fc_less),

@@ -5,14 +5,14 @@ namespace CSPspEmu.Core.Cpu.Emitter
 {
     public sealed partial class CpuEmitter
 	{
-		public AstNodeStm vmfvc() { return AstNotImplemented("vmfvc"); }
-		public AstNodeStm vmtvc() { return AstNotImplemented("vmtvc"); }
+		public AstNodeStm vmfvc() { return ast.AstNotImplemented("vmfvc"); }
+		public AstNodeStm vmtvc() { return ast.AstNotImplemented("vmtvc"); }
 
 		/// <summary>
 		/// ID("mtv",         VM("010010:00:111:rt:0:0000000:0:vd"), "%t, %zs", ADDR_TYPE_NONE, INSTR_TYPE_PSP),
 		/// </summary>
-		public AstNodeStm mtv() { return _Cell(VD).Set(GPR_f(RT)); }
-		public AstNodeStm mtvc() { return AstNotImplemented("mtvc"); }
+		public AstNodeStm mtv() { return _Cell(VD).Set(ast.GPR_f(RT)); }
+		public AstNodeStm mtvc() { return ast.AstNotImplemented("mtvc"); }
 
 
 		public static uint _mfvc_impl(CpuThreadState CpuThreadState, VfpuControlRegistersEnum VfpuControlRegister)
@@ -43,7 +43,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm mfvc()
 		{
-			return AstNotImplemented("mfvc");
+			return ast.AstNotImplemented("mfvc");
 			//MipsMethodEmitter.SaveGPR(RT, () =>
 			//{
 			//	SafeILGenerator.LoadArgument0CpuThreadState();
@@ -55,7 +55,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// Move From/to Vfpu (C?)_
 		public AstNodeStm mfv()
 		{
-			return AstNotImplemented("mfv");
+			return ast.AstNotImplemented("mfv");
 			//MipsMethodEmitter.SaveGPR_F(RT, () =>
 			//{
 			//	Load_VD(0, 1);

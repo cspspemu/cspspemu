@@ -149,14 +149,17 @@ namespace CSPspEmu.Runner.Components.Cpu
 			new MipsAssembler(new PspMemoryStream(PspMemory)).Assemble(
 				@"
 					.code CODE_PTR_EXIT_THREAD
-						syscall 0x7777
+						syscall CODE_PTR_EXIT_THREAD_SYSCALL
 						jr r31
 						nop
 					.code CODE_PTR_FINALIZE_CALLBACK
-						syscall 0x7778
+						syscall CODE_PTR_FINALIZE_CALLBACK_SYSCALL
 						jr r31
 						nop
 				"
+				.Replace("CODE_PTR_EXIT_THREAD_SYSCALL", String.Format("0x{0:X}", HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD_SYSCALL))
+				.Replace("CODE_PTR_FINALIZE_CALLBACK_SYSCALL", String.Format("0x{0:X}", HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK_SYSCALL))
+
 				.Replace("CODE_PTR_EXIT_THREAD", String.Format("0x{0:X}", HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD))
 				.Replace("CODE_PTR_FINALIZE_CALLBACK", String.Format("0x{0:X}", HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK))
 			);
@@ -187,8 +190,8 @@ namespace CSPspEmu.Runner.Components.Cpu
 			RegisterModuleSyscall<Emulator>(0x1016, "emitLong");
 			RegisterModuleSyscall<Emulator>(0x1017, "testArguments");
 			//RegisterModuleSyscall<Emulator>(0x7777, "waitThreadForever");
-			RegisterModuleSyscall<ThreadManForUser>(0x7777, (Func<CpuThreadState, int>)new ThreadManForUser()._hle_sceKernelExitDeleteThread);
-			RegisterModuleSyscall<Emulator>(0x7778, (Action<CpuThreadState>)new Emulator().finalizeCallback);
+			RegisterModuleSyscall<ThreadManForUser>(HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD_SYSCALL, (Func<CpuThreadState, int>)new ThreadManForUser()._hle_sceKernelExitDeleteThread);
+			RegisterModuleSyscall<Emulator>(HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK_SYSCALL, (Action<CpuThreadState>)new Emulator().finalizeCallback);
 		}
 
 		void RegisterModuleSyscall<TType>(int SyscallCode, Delegate Delegate) where TType : HleModuleHost

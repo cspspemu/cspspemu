@@ -49,8 +49,17 @@
   <ItemGroup>
     <Compile Include="Battery\Battery.cs" />
     <Compile Include="Controller\PspController.cs" />
+    <Compile Include="Crypto\Crypto.cs" />
+    <Compile Include="Crypto\Crypto.Tables.cs" />
+    <Compile Include="Crypto\Kirk.cs" />
+    <Compile Include="Crypto\Kirk.Impl.Ecdsa.cs" />
+    <Compile Include="Crypto\Kirk.Impl.Sha1.cs" />
+    <Compile Include="Crypto\Kirk.Keys.cs" />
+    <Compile Include="Crypto\Kirk.Tables.cs" />
+    <Compile Include="Crypto\Kirk.Utils.cs" />
     <Compile Include="Display\DisplayConfig.cs" />
     <Compile Include="Display\PspDisplay.cs" />
+    <Compile Include="IplReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rtc\PspRtc.cs" />
     <Compile Include="Rtc\PspTimeStruct.cs" />

@@ -16,6 +16,7 @@ using CSPspEmu.Hle.Threading.EventFlags;
 using CSharpUtils;
 using CSharpUtils.Threading;
 using CSPspEmu.Hle.Loader;
+using CSPspEmu.Interop;
 
 namespace CSPspEmu.Hle
 {
@@ -261,7 +262,7 @@ namespace CSPspEmu.Hle
 			try
 			{
 				CpuThreadState.ExecuteAT(CpuThreadState.PC & PspMemory.MemoryMask);
-				CpuThreadState.Syscall(0x7777);
+				CpuThreadState.Syscall(HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD_SYSCALL);
 			}
 			catch (AccessViolationException AccessViolationException)
 			{

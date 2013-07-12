@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Security.Cryptography;
 using CSPspEmu.Core.Crypto;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CSPspEmu.Core.Tests.Crypto
 {
-	[TestFixture]
+	[TestClass]
 	public unsafe class KirkTest
 	{
-		[Test]
+		[TestMethod]
 		public void TestSha1()
 		{
 			var Kirk = new Kirk();
@@ -42,7 +42,7 @@ namespace CSPspEmu.Core.Tests.Crypto
 			//Console.WriteLine(BitConverter.ToString(Hash));
 		}
 
-		[Test]
+		[TestMethod]
 		public void TestCmd1()
 		{
 			var Kirk = new Kirk();
@@ -74,7 +74,7 @@ namespace CSPspEmu.Core.Tests.Crypto
 		}
 
 
-		[Test]
+		[TestMethod]
 		public void TestCmd7()
 		{
 			var Kirk = new Kirk();
