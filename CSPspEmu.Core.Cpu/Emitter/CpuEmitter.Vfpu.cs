@@ -740,8 +740,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			const int VectorSize = 4;
 			var Dest = _Vector(VT5_1, VFloat, Size: VectorSize);
-
-			return Dest.SetVector(Index => ast.MemoryGetValue<float>(Memory, Address_RS_IMM14(Index * 4)));
+			var MemoryVector = _MemoryVectorIMM14<float>(VectorSize);
+			return Dest.SetVector(Index => MemoryVector[Index]);
 		}
 
 		/// <summary>
@@ -751,7 +751,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			int VectorSize = 4;
 			var Dest = _Vector(VT5_1, VFloat, VectorSize);
-			return _List(VectorSize, Index => ast.MemorySetValue<float>(Memory, Address_RS_IMM14(Index * 4), Dest[Index]));
+			var MemoryVector = _MemoryVectorIMM14<float>(VectorSize);
+			return MemoryVector.SetVector(Index => Dest[Index]);
 		}
 
 		private delegate void _lvl_svl_q_Delegate(CpuThreadState CpuThreadState, bool Save, float* r0, float* r1, float* r2, float* r3, uint Address);

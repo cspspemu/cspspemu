@@ -4,6 +4,7 @@ using SafeILGenerator.Ast.Nodes;
 using CSPspEmu.Core.Cpu.VFpu;
 using CSharpUtils;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -321,12 +322,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 			public AstNodeStm SetVector(Func<int, AstNodeExpr> Generator)
 			{
-				var Statements = new List<AstNodeStm>();
-				for (int Index = 0; Index < this.VectorSize; Index++)
-				{
-					Statements.Add(SetRegApplyPrefix(this.Indices[Index], Index, Generator(Index)));
-				}
-				return ast.Statements(Statements);
+				return ast.Statements(Enumerable.Range(0, this.VectorSize).Select(Index => SetRegApplyPrefix(this.Indices[Index], Index, Generator(Index))));
 			}
 		}
 
@@ -334,6 +330,14 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			private AstNodeExprLValue[] Refs;
 			public VFpuVectorRef(params AstNodeExprLValue[] Refs) { this.Refs = Refs; }
+
+			public int VectorSize { get { return Refs.Length; } }
+
+			public AstNodeStm SetVector(Func<int, AstNodeExpr> Generator)
+			{
+				return ast.Statements(Enumerable.Range(0, this.VectorSize).Select(Index => ast.Assign(this[Index], Generator(Index))));
+			}
+
 
 			public AstNodeExprLValue this[int Index]
 			{
@@ -416,6 +420,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		private VReg VD_NoPrefix { get { return new VReg() { Reg = Instruction.VD, VfpuPrefix = PrefixNone, VfpuDestinationPrefix = PrefixDestinationNone }; } }
 		private VReg VS_NoPrefix { get { return new VReg() { Reg = Instruction.VS, VfpuPrefix = PrefixNone, VfpuDestinationPrefix = PrefixDestinationNone }; } }
 		private VReg VT_NoPrefix { get { return new VReg() { Reg = Instruction.VT, VfpuPrefix = PrefixNone, VfpuDestinationPrefix = PrefixDestinationNone }; } }
+
+		private VFpuVectorRef _MemoryVectorIMM14<TType>(int VectorSize)
+		{
+			int ElementSize = Marshal.SizeOf(typeof(TType));
+			return VFpuVectorRef.Generate(VectorSize, Index => ast.MemoryGetPointerRef<TType>(Memory, Address_RS_IMM14(Index * ElementSize)));
+		}
 
 		private VfpuCell _Cell(VReg VReg, VType VType = VType.VFloat) { return new VfpuCell(this, VReg, VType); }
 		private VfpuVector _Vector(VReg VReg, VType VType = VType.VFloat, int Size = 0) { return new VfpuVector(this, VReg, VType, Size); }

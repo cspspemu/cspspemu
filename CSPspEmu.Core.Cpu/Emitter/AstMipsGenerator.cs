@@ -66,7 +66,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		private delegate void* AddressToPointerFunc(uint Address);
 		//delegate void* AddressToPointerFunc(uint Address);
 
-
 		public AstNodeExpr MemoryGetPointer(PspMemory Memory, AstNodeExpr Address, bool Safe, string ErrorDescription = "ERROR")
 		{
 			if (Safe)
@@ -102,62 +101,37 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return MemoryGetPointer(Memory, Address, false);
 		}
 
-		public AstNodeExprIndirect MemoryGetPointerIndirect(PspMemory Memory, Type Type, AstNodeExpr Address)
+		public AstNodeExprLValue MemoryGetPointerRef(Type Type, PspMemory Memory, AstNodeExpr Address)
 		{
 			return ast.Indirect(ast.Cast(Type.MakePointerType(), MemoryGetPointer(Memory, Address), false));
 		}
 
-		public AstNodeStm MemorySetValue(PspMemory Memory, Type Type, AstNodeExpr Address, AstNodeExpr Value)
+		public AstNodeExprLValue MemoryGetPointerRef<TType>(PspMemory Memory, AstNodeExpr Address)
 		{
-#if ALLOW_FAST_MEMORY
-			if (Memory.HasFixedGlobalAddress)
-			{
-				return ast.Assign(
-					MemoryGetPointerIndirect(Memory, Type, Address),
-					ast.Cast(Type, Value, false)
-				);
-			}
-			else
-#endif
-			{
-				var SignedType = AstUtils.GetSignedType(Type);
-				if (false) { }
-				else if (SignedType == typeof(sbyte)) return ast.Statement(ast.CallInstance(ast.CpuThreadState, (Action<uint, byte>)CSPspEmu.Core.Cpu.CpuThreadState.Methods.Write1, Address, ast.Cast<byte>(Value, false)));
-				else if (SignedType == typeof(short)) return ast.Statement(ast.CallInstance(ast.CpuThreadState, (Action<uint, ushort>)CSPspEmu.Core.Cpu.CpuThreadState.Methods.Write2, Address, ast.Cast<ushort>(Value, false)));
-				else if (SignedType == typeof(int)) return ast.Statement(ast.CallInstance(ast.CpuThreadState, (Action<uint, uint>)CSPspEmu.Core.Cpu.CpuThreadState.Methods.Write4, Address, ast.Cast<uint>(Value, false)));
-				else if (SignedType == typeof(float)) return ast.Statement(ast.CallInstance(ast.CpuThreadState, (Action<uint, float>)CSPspEmu.Core.Cpu.CpuThreadState.Methods.Write4F, Address, ast.Cast<float>(Value, false)));
-				throw (new NotImplementedException(String.Format("Can't handle type {0}", Type)));
-			}
+			return MemoryGetPointerRef(typeof(TType), Memory, Address);
+		}
+
+		public AstNodeStm MemorySetValue(Type Type, PspMemory Memory, AstNodeExpr Address, AstNodeExpr Value)
+		{
+			return ast.Assign(
+				MemoryGetPointerRef(Type, Memory, Address),
+				ast.Cast(Type, Value, false)
+			);
 		}
 
 		public AstNodeStm MemorySetValue<T>(PspMemory Memory, AstNodeExpr Address, AstNodeExpr Value)
 		{
-			return MemorySetValue(Memory, typeof(T), Address, Value);
+			return MemorySetValue(typeof(T), Memory, Address, Value);
 		}
 
-		public AstNodeExpr MemoryGetValue(PspMemory Memory, Type Type, AstNodeExpr Address)
+		public AstNodeExpr MemoryGetValue(Type Type, PspMemory Memory, AstNodeExpr Address)
 		{
-#if ALLOW_FAST_MEMORY
-			if (Memory.HasFixedGlobalAddress)
-			{
-				return MemoryGetPointerIndirect(Memory, Type, Address);
-			}
-			else
-#endif
-			{
-				var SignedType = AstUtils.GetSignedType(Type);
-				if (false) { }
-				else if (SignedType == typeof(sbyte)) return ast.Cast(Type, ast.CallInstance(ast.CpuThreadState, (Func<uint, byte>)CSPspEmu.Core.Cpu.CpuThreadState.Methods.Read1, Address), false);
-				else if (SignedType == typeof(short)) return ast.Cast(Type, ast.CallInstance(ast.CpuThreadState, (Func<uint, ushort>)CSPspEmu.Core.Cpu.CpuThreadState.Methods.Read2, Address), false);
-				else if (SignedType == typeof(int)) return ast.Cast(Type, ast.CallInstance(ast.CpuThreadState, (Func<uint, uint>)CSPspEmu.Core.Cpu.CpuThreadState.Methods.Read4, Address), false);
-				else if (SignedType == typeof(float)) return ast.Cast(Type, ast.CallInstance(ast.CpuThreadState, (Func<uint, float>)CSPspEmu.Core.Cpu.CpuThreadState.Methods.Read4F, Address), false);
-				throw (new NotImplementedException(String.Format("Can't handle type {0}", Type)));
-			}
+			return MemoryGetPointerRef(Type, Memory, Address);
 		}
 
 		public AstNodeExpr MemoryGetValue<T>(PspMemory Memory, AstNodeExpr Address)
 		{
-			return MemoryGetValue(Memory, typeof(T), Address);
+			return MemoryGetValue(typeof(T), Memory, Address);
 		}
 
 		public AstNodeStm GetTickCall()

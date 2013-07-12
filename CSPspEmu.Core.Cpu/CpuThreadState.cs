@@ -189,30 +189,6 @@ namespace CSPspEmu.Core.Cpu
 			return Pointer;
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public byte Read1(uint Address) { return Memory.Read1(Address); }
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public ushort Read2(uint Address) { return Memory.Read2(Address); }
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public uint Read4(uint Address) { return Memory.Read4(Address); }
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public float Read4F(uint Address) { var Value = Memory.Read4(Address); return *(float*)&Value; }
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void Write1(uint Address, byte Value) { Memory.Write1(Address, Value); }
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void Write2(uint Address, ushort Value) { Memory.Write2(Address, Value); }
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void Write4(uint Address, uint Value) { Memory.Write4(Address, Value); }
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public void Write4F(uint Address, float Value) { Memory.Write4(Address, *(uint*)&Value); }
-
 		public void* GetMemoryPtrNotNull(uint Address)
 		{
 			return Memory.PspAddressToPointerNotNull(Address);
