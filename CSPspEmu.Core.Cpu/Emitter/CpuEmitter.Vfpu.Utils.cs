@@ -234,6 +234,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 			protected AstNodeStm SetRegApplyPrefix(int RegIndex, int PrefixIndex, AstNodeExpr AstNodeExpr)
 			{
+				if (AstNodeExpr == null) return null;
+
 				var PrefixDestination = VReg.VfpuDestinationPrefix;
 				PrefixDestination.CheckPrefixUsage(PC);
 
@@ -322,7 +324,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 			public AstNodeStm SetVector(Func<int, AstNodeExpr> Generator)
 			{
-				return ast.Statements(Enumerable.Range(0, this.VectorSize).Select(Index => SetRegApplyPrefix(this.Indices[Index], Index, Generator(Index))));
+				return ast.Statements(
+					Enumerable.Range(0, this.VectorSize)
+						.Select(Index => Set(Index, Generator(Index)))
+						.Where(Statement => Statement != null)
+				);
 			}
 		}
 

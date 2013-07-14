@@ -7,6 +7,20 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu.Core.Cpu
 {
+	public struct Float32
+	{
+		public uint Value;
+	}
+
+	public struct Float16
+	{
+		public ushort Value;
+		
+		public bool Sign { get { return BitUtils.Extract(Value, 15, 1) != 0; } }
+		public uint Exponent { get { return BitUtils.Extract(Value, 10, 5); } }
+		public uint Fraction { get { return BitUtils.Extract(Value, 0, 10); } }
+	}
+
 	public class HalfFloat
 	{
 		//public ushort Value;
@@ -14,6 +28,86 @@ namespace CSPspEmu.Core.Cpu
 		//public bool Sign { get { return BitUtils.Extract(Value, 15, 1) != 0; } }
 		//public uint Exponent { get { return BitUtils.Extract(Value, 10, 5); } }
 		//public uint Fraction { get { return BitUtils.Extract(Value, 0, 10); } }
+
+		//public static ushort FloatToHalfFloat(float f)
+		//{
+		//	return FloatToHalfFloat(MathFloat.ReinterpretFloatAsUInt(f));
+		//}
+		//
+		//public static ushort FloatToHalfFloat(uint f)
+		//{
+		//	const uint f32infty = 255 << 23;
+		//	const uint f16infty = 31 << 23;
+		//	const uint magic = 15 << 23;
+		//
+		//	const uint round_mask = ~0xfffu;
+		//	const uint sign_mask = 0x80000000u;
+		//
+		//	ushort o;
+		//
+		//	uint sign = f & sign_mask;
+		//	f ^= sign;
+		//
+		//	// Inf or NaN (all exponent bits set)
+		//	if (f >= f32infty)
+		//	{
+		//		o = (ushort)((f > f32infty) ? 0x7e00 : 0x7c00); // NaN->qNaN and Inf->Inf
+		//	}
+		//	// (De)normalized number or zero
+		//	else 
+		//	{
+		//		f &= round_mask;
+		//		f = MathFloat.ReinterpretFloatAsUInt(MathFloat.ReinterpretUIntAsFloat(f) * MathFloat.ReinterpretUIntAsFloat(magic));
+		//		f -= round_mask;
+		//		if (f > f16infty) f = f16infty; // Clamp to signed infinity if overflowed
+		//
+		//		o = (ushort)(f >> 13); // Take the bits!
+		//	}
+		//
+		//	o |= (ushort)(sign >> 16);
+		//	return o;
+		//}
+
+		static public int FloatToHalfFloat(float Float)
+		{
+			var i = MathFloat.ReinterpretFloatAsInt(Float);
+			int s = ((i >> 16) & 0x00008000);              // sign
+			int e = ((i >> 23) & 0x000000ff) - (127 - 15); // exponent
+			int f = ((i >> 0) & 0x007fffff);              // fraction
+		
+			// need to handle NaNs and Inf?
+			if (e <= 0)
+			{
+				if (e < -10)
+				{
+					if (s != 0)
+					{
+						// handle -0.0
+						return 0x8000;
+					}
+					return 0;
+				}
+				f = (f | 0x00800000) >> (1 - e);
+				return s | (f >> 13);
+			}
+			else if (e == 0xff - (127 - 15))
+			{
+				if (f == 0)
+				{
+					// Inf
+					return s | 0x7c00;
+				}
+				// NAN
+				f >>= 13;
+				return s | 0x7c00 | f | ((f == 0) ? 1 : 0);
+			}
+			if (e > 30)
+			{
+				// Overflow
+				return s | 0x7c00;
+			}
+			return s | (e << 10) | (f >> 13);
+		}
 
 		public static float ToFloat(int imm16)
 		{

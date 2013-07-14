@@ -20,14 +20,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm vrot()
 		{
-			var VectorSize = Instruction.ONE_TWO;
 			uint imm5 = Instruction.IMM5;
 			var CosIndex = BitUtils.Extract(imm5, 0, 2);
 			var SinIndex = BitUtils.Extract(imm5, 2, 2);
 			bool NegateSin = BitUtils.ExtractBool(imm5, 4);
 
-			var Dest = _Vector(VD, VFloat, VectorSize);
-			var Src = _Cell(VS, VFloat);
+			var Dest = VEC_VD;
+			var Src = CEL_VS;
 
 			AstNodeExpr Sine = ast.CallStatic((Func<float, float>)MathFloat.SinV1, Src.Get());
 			AstNodeExpr Cosine = ast.CallStatic((Func<float, float>)MathFloat.CosV1, Src.Get());
@@ -39,8 +38,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			{
 				if (Index == CosIndex) return Cosine;
 				if (Index == SinIndex) return Sine;
-				//return (SinIndex == CosIndex) ? Cosine : Sine;
-				return 0f;
+				return (SinIndex == CosIndex) ? Sine : 0f;
 			});
 		}
 
@@ -74,60 +72,40 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm vexp2() { return _vfpu_call_single_method((Func<float, float>)MathFloat.Exp2); }
 		public AstNodeStm vlog2() { return _vfpu_call_single_method((Func<float, float>)MathFloat.Log2); }
 		public AstNodeStm vasin() { return _vfpu_call_single_method((Func<float, float>)MathFloat.AsinV1); }
-		public AstNodeStm vnrcp() { throw (new NotImplementedException("")); }
-		public AstNodeStm vnsin() { throw (new NotImplementedException("")); }
-		public AstNodeStm vrexp2() { throw (new NotImplementedException("")); }
+		public AstNodeStm vnrcp() { return _vfpu_call_single_method((Func<float, float>)MathFloat.NRcp); }
+		public AstNodeStm vnsin() { return _vfpu_call_single_method((Func<float, float>)MathFloat.NSinV1); }
+		public AstNodeStm vrexp2() { return _vfpu_call_single_method((Func<float, float>)MathFloat.RExp2); }
 		public AstNodeStm vsat0() { return _vfpu_call_single_method((Func<float, float>)MathFloat.Vsat0); }
 		public AstNodeStm vsat1() { return _vfpu_call_single_method((Func<float, float>)MathFloat.Vsat1); }
-		public AstNodeStm vcst() { return CEL_VD.Set(VfpuUtils.GetVfpuConstantsValue((int)Instruction.IMM5)); }
 
-		// -
-		public AstNodeStm vhdp()
-		{
-			return ast.NotImplemented("vhdp");
-			//var VectorSize = Instruction.ONE_TWO;
-			//
-			//VectorOperationSaveVd(1, (Index) =>
-			//{
-			//	SafeILGenerator.Push(0.0f);
-			//	for (int n = 0; n < VectorSize - 1; n++)
-			//	{
-			//		Load_VS(n);
-			//		Load_VT(n);
-			//		SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			//		SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-			//	}
-			//
-			//	Load_VT((int)(VectorSize - 1));
-			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-			//});
-		}
+		// Vector -> Cell operations
+		public AstNodeStm vcst() { return CEL_VD.Set(VfpuUtils.GetVfpuConstantsValue((int)Instruction.IMM5)); }
+		public AstNodeStm vhdp() { return CEL_VD.Set(_Aggregate(0f, (Aggregate, Index) => {
+			if (Index == ONE_TWO - 1)
+			{
+				return Aggregate + VEC_VT[Index];
+			}
+			else
+			{
+				return Aggregate + VEC_VS[Index] * VEC_VT[Index];
+			}
+		})); }
 
 		public AstNodeStm vcrs_t()
 		{
-			return ast.NotImplemented("vcrs_t");
-			//uint VectorSize = 3;
-			//
-			//Save_VD(0, VectorSize, () =>
-			//{
-			//	Load_VS(1, VectorSize);
-			//	Load_VT(2, VectorSize);
-			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			//});
-			//
-			//Save_VD(1, VectorSize, () =>
-			//{
-			//	Load_VS(2, VectorSize);
-			//	Load_VT(0, VectorSize);
-			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			//});
-			//
-			//Save_VD(2, VectorSize, () =>
-			//{
-			//	Load_VS(0, VectorSize);
-			//	Load_VT(1, VectorSize);
-			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			//});
+			var V_VD = VEC(VD, VType.VFloat, 3);
+			var V_VS = VEC(VS, VType.VFloat, 3);
+			var V_VT = VEC(VT, VType.VFloat, 3);
+			return V_VD.SetVector(Index =>
+			{
+				switch (Index)
+				{
+					case 0: return V_VS[1] * V_VT[2];
+					case 1: return V_VS[2] * V_VT[0];
+					case 2: return V_VS[0] * V_VT[1];
+					default: throw (new InvalidOperationException("vcrs_t.Assert!"));
+				}
+			});
 		}
 
 		/// <summary>
@@ -135,47 +113,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm vcrsp_t()
 		{
-			return ast.NotImplemented("vcrsp_t");
-			//uint VectorSize = 3;
-			//
-			//Save_VD(0, VectorSize, () =>
-			//{
-			//	Load_VS(1, VectorSize);
-			//	Load_VT(2, VectorSize);
-			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			//	Load_VS(2, VectorSize);
-			//	Load_VT(1, VectorSize);
-			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
-			//});
-			//
-			//Save_VD(1, VectorSize, () =>
-			//{
-			//	Load_VS(2, VectorSize);
-			//	Load_VT(0, VectorSize);
-			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			//	Load_VS(0, VectorSize);
-			//	Load_VT(2, VectorSize);
-			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
-			//});
-			//
-			//Save_VD(2, VectorSize, () =>
-			//{
-			//	Load_VS(0, VectorSize);
-			//	Load_VT(1, VectorSize);
-			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			//	Load_VS(1, VectorSize);
-			//	Load_VT(0, VectorSize);
-			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			//	SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned);
-			//});
-			//*
-			//v3[0] = +v1[1] * v2[2] - v1[2] * v2[1];
-			//v3[1] = +v1[2] * v2[0] - v1[0] * v2[2];
-			//v3[2] = +v1[0] * v2[1] - v1[1] * v2[0];
-			//throw (new NotImplementedException(""));
-			//*/
+			var s = VEC_VS;
+			var t = VEC_VT;
+
+			return VEC_VD.SetVector(Index =>
+			{
+				switch (Index)
+				{
+					case 0: return s[1] * t[2] - s[2] * t[1];
+					case 1: return s[2] * t[0] - s[0] * t[2];
+					case 2: return s[0] * t[1] - s[1] * t[0];
+					default: throw (new InvalidOperationException("vcrsp_t.Assert!"));
+				}
+			});
 		}
 
 		// Vfpu MINimum/MAXium/ADD/SUB/DIV/MUL
@@ -221,7 +171,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		// Vfpu load Integer IMmediate
 		public AstNodeStm viim() { return CEL_VT_NoPrefix.Set((float)Instruction.IMM); }
-		public AstNodeStm vdet() { return ast.NotImplemented("vdet"); }
+		public AstNodeStm vdet() {
+			var v1 = VEC(VS, VType.VFloat, 2);
+			var v2 = VEC(VT, VType.VFloat, 2);
+			return CEL_VD.Set(v1[0] * v2[1] - v1[1] * v2[0]);
+		}
 		public AstNodeStm mfvme() { return ast.NotImplemented("mfvme"); }
 		public AstNodeStm mtvme() { return ast.NotImplemented("mtvme"); }
 		public AstNodeStm vfim() { return CEL_VT_NoPrefix.Set((float)Instruction.IMM_HF); }
@@ -234,11 +188,22 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm vsocp() { return ast.NotImplemented("vsocp"); }
 		public AstNodeStm vus2i() { return ast.NotImplemented("vus2i"); }
 
-		public AstNodeStm vwbn() { return ast.NotImplemented("vwbn"); }
+		static public float _vwbn_impl(float Source, int Imm8)
+		{
+			double modulo = Math.Pow(2.0, 127 - Imm8);
+			double bn = (double)Source;
+			if (bn > 0.0) bn = bn % modulo;
+			return (float)((Source < 0.0f) ? (bn - modulo) : (bn + modulo));
+		}
 
-		public AstNodeStm vnop() { return ast.NotImplemented("vnop"); }
-		public AstNodeStm vsync() { return ast.NotImplemented("vsync"); }
-		public AstNodeStm vflush() { return ast.NotImplemented("vflush"); }
+		public AstNodeStm vwbn()
+		{
+			return VEC_VD.SetVector(Index => ast.CallStatic((Func<float, int, float>)_vwbn_impl, VEC_VS[Index], (int)Instruction.IMM8));
+		}
+
+		public AstNodeStm vnop() { return ast.Statement(); }
+		public AstNodeStm vsync() { return ast.Statement(); }
+		public AstNodeStm vflush() { return ast.Statement(); }
 
 		public static uint _vt4444_step(uint i0, uint i1)
 		{
@@ -310,139 +275,93 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm vt5551_q() { return _vtXXXX_q(_vt5551_step); }
 		public AstNodeStm vt5650_q() { return _vtXXXX_q(_vt5650_step); }
 
-		[PspUntested]
 		public AstNodeStm vbfy1()
 		{
-			return ast.NotImplemented("vbfy1");
-
-			//var VectorSize = Instruction.ONE_TWO;
-			//if (VectorSize != 2 || VectorSize != 4)
-			//{
-			//	Console.Error.WriteLine("vbfy1 : just support .p or .q");
-			//	return;
-			//}
-			//
-			//VectorOperationSaveVd(VectorSize, (Index) =>
-			//{
-			//	switch (Index)
-			//	{
-			//		case 0: Load_VS(0); Load_VS(1); SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); break;
-			//		case 1: Load_VS(0); Load_VS(1); SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned); break;
-			//		case 2: Load_VS(2); Load_VS(3); SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); break;
-			//		case 3: Load_VS(2); Load_VS(3); SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned); break;
-			//	}
-			//}, AsInteger: false);
+			return VEC_VD.SetVector(Index => {
+				switch (Index)
+				{
+					case 0: return VEC_VS[0] + VEC_VS[1];
+					case 1: return VEC_VS[0] - VEC_VS[1];
+					case 2: return VEC_VS[2] + VEC_VS[3];
+					case 3: return VEC_VS[2] - VEC_VS[3];
+					default: throw (new InvalidOperationException("vbfy1.Assert!"));
+				}
+			});
 		}
 
-		[PspUntested]
 		public AstNodeStm vbfy2()
 		{
-			return ast.NotImplemented("vbfy2");
-
-			//var VectorSize = Instruction.ONE_TWO;
-			//if (VectorSize != 4)
-			//{
-			//	Console.Error.WriteLine("vbfy2 : just support .q");
-			//	return;
-			//}
-			//
-			//VectorOperationSaveVd(VectorSize, (Index) =>
-			//{
-			//	switch (Index)
-			//	{
-			//		case 0: Load_VS(0); Load_VS(2); SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); break;
-			//		case 1: Load_VS(1); Load_VS(3); SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned); break;
-			//		case 2: Load_VS(0); Load_VS(2); SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned); break;
-			//		case 3: Load_VS(1); Load_VS(3); SafeILGenerator.BinaryOperation(SafeBinaryOperator.SubstractionSigned); break;
-			//	}
-			//}, AsInteger: false);
+			return VEC_VD.SetVector(Index =>
+			{
+				switch (Index)
+				{
+					case 0: return VEC_VS[0] + VEC_VS[2];
+					case 1: return VEC_VS[1] + VEC_VS[3];
+					case 2: return VEC_VS[0] - VEC_VS[2];
+					case 3: return VEC_VS[1] - VEC_VS[3];
+					default: throw (new InvalidOperationException("vbfy2.Assert!"));
+				}
+			});
 		}
 
-		private AstNodeStm _vsrt_doMinMax(Func<float, float, float> Func, int Left, int Right)
-		{
-			return ast.NotImplemented("_vsrt_doMinMax");
-
-			//Load_VS(Left);
-			//Load_VS(Right);
-			//MipsMethodEmitter.CallMethod(Func);
-		}
-
-		[PspUntested]
 		public AstNodeStm vsrt1()
 		{
-			return ast.NotImplemented("vsrt1");
-
-			//var VectorSize = Instruction.ONE_TWO;
-			//if (VectorSize != 4) Console.Error.WriteLine("vsrt1 : VectorSize != 4");
-			//
-			//VectorOperationSaveVd(4, (Index) =>
-			//{
-			//	switch (Index)
-			//	{
-			//		case 0: _vsrt_doMinMax(MathFloat.Min, 0, 1); break;
-			//		case 1: _vsrt_doMinMax(MathFloat.Max, 0, 1); break;
-			//		case 2: _vsrt_doMinMax(MathFloat.Min, 2, 3); break;
-			//		case 3: _vsrt_doMinMax(MathFloat.Max, 2, 3); break;
-			//	}
-			//}, AsInteger: false);
+			return VEC_VD.SetVector(Index =>
+			{
+				switch (Index)
+				{
+					case 0: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VEC_VS[0], VEC_VS[1]);
+					case 1: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VEC_VS[0], VEC_VS[1]);
+					case 2: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VEC_VS[2], VEC_VS[3]);
+					case 3: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VEC_VS[2], VEC_VS[3]);
+					default: throw (new InvalidOperationException("vsrt1.Assert!"));
+				}
+			});
 		}
 
-		[PspUntested]
 		public AstNodeStm vsrt2()
 		{
-			return ast.NotImplemented("vsrt2");
-
-			//var VectorSize = Instruction.ONE_TWO;
-			//if (VectorSize != 4) Console.Error.WriteLine("vsrt1 : VectorSize != 4");
-			//
-			//VectorOperationSaveVd(4, (Index) =>
-			//{
-			//	switch (Index)
-			//	{
-			//		case 0: _vsrt_doMinMax(MathFloat.Min, 0, 3); break;
-			//		case 1: _vsrt_doMinMax(MathFloat.Min, 1, 2); break;
-			//		case 2: _vsrt_doMinMax(MathFloat.Max, 1, 2); break;
-			//		case 3: _vsrt_doMinMax(MathFloat.Max, 0, 3); break;
-			//	}
-			//}, AsInteger: false);
+			return VEC_VD.SetVector(Index =>
+			{
+				switch (Index)
+				{
+					case 0: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VEC_VS[0], VEC_VS[3]);
+					case 1: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VEC_VS[1], VEC_VS[2]);
+					case 2: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VEC_VS[1], VEC_VS[2]);
+					case 3: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VEC_VS[0], VEC_VS[3]);
+					default: throw (new InvalidOperationException("vsrt2.Assert!"));
+				}
+			});
 		}
 
-		[PspUntested]
 		public AstNodeStm vsrt3()
 		{
-			return ast.NotImplemented("vsrt3");
-			//var VectorSize = Instruction.ONE_TWO;
-			//if (VectorSize != 4) Console.Error.WriteLine("vsrt1 : VectorSize != 4");
-			//
-			//VectorOperationSaveVd(4, (Index) =>
-			//{
-			//	switch (Index)
-			//	{
-			//		case 0: _vsrt_doMinMax(MathFloat.Max, 0, 1); break;
-			//		case 1: _vsrt_doMinMax(MathFloat.Min, 0, 1); break;
-			//		case 2: _vsrt_doMinMax(MathFloat.Max, 2, 3); break;
-			//		case 3: _vsrt_doMinMax(MathFloat.Min, 2, 3); break;
-			//	}
-			//}, AsInteger: false);
+			return VEC_VD.SetVector(Index =>
+			{
+				switch (Index)
+				{
+					case 0: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VEC_VS[0], VEC_VS[1]);
+					case 1: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VEC_VS[0], VEC_VS[1]);
+					case 2: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VEC_VS[2], VEC_VS[3]);
+					case 3: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VEC_VS[2], VEC_VS[3]);
+					default: throw (new InvalidOperationException("vsrt3.Assert!"));
+				}
+			});
 		}
 
-		[PspUntested]
 		public AstNodeStm vsrt4()
 		{
-			return ast.NotImplemented("vsrt4");
-			//var VectorSize = Instruction.ONE_TWO;
-			//if (VectorSize != 4) Console.Error.WriteLine("vsrt1 : VectorSize != 4");
-			//
-			//VectorOperationSaveVd(4, (Index) =>
-			//{
-			//	switch (Index)
-			//	{
-			//		case 0: _vsrt_doMinMax(MathFloat.Max, 0, 3); break;
-			//		case 1: _vsrt_doMinMax(MathFloat.Max, 1, 2); break;
-			//		case 2: _vsrt_doMinMax(MathFloat.Min, 1, 2); break;
-			//		case 3: _vsrt_doMinMax(MathFloat.Min, 0, 3); break;
-			//	}
-			//}, AsInteger: false);
+			return VEC_VD.SetVector(Index =>
+			{
+				switch (Index)
+				{
+					case 0: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VEC_VS[0], VEC_VS[3]);
+					case 1: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VEC_VS[1], VEC_VS[2]);
+					case 2: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VEC_VS[1], VEC_VS[2]);
+					case 3: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VEC_VS[0], VEC_VS[3]);
+					default: throw (new InvalidOperationException("vsrt4.Assert!"));
+				}
+			});
 		}
 
 		public AstNodeStm vfad() { return CEL_VD.Set(_Aggregate(0f, (Value, Index) => Value + VEC_VS[Index])); }
@@ -552,42 +471,22 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm vmone() { return _Matrix(VD).SetMatrix((Column, Row) => 1f); }
 		public AstNodeStm vmscl() { return _Matrix(VD).SetMatrix((Column, Row) => _Matrix(VS)[Column, Row] * _Cell(VT).Get() ); }
 
-
-#if false
-			loadVs(4, vs);
-			loadVt(4, vt);
-
-			v3[0] = +(v1[0] * v2[3]) + (v1[1] * v2[2]) - (v1[2] * v2[1]) + (v1[3] * v2[0]);
-			v3[1] = -(v1[0] * v2[2]) + (v1[1] * v2[3]) + (v1[2] * v2[0]) + (v1[3] * v2[1]);
-			v3[2] = +(v1[0] * v2[1]) - (v1[1] * v2[0]) + (v1[2] * v2[3]) + (v1[3] * v2[2]);
-			v3[3] = -(v1[0] * v2[0]) - (v1[1] * v2[1]) - (v1[2] * v2[2]) + (v1[3] * v2[3]);
-
-			saveVd(4, vd, v3);
-#endif
-
 		public AstNodeStm vqmul()
 		{
-			return ast.NotImplemented("vqmul");
-			////var VectorSize = Instruction.ONE_TWO;
-			//var VectorSize = (uint)4;
-			//VectorOperationSaveVd(VectorSize, (Index) =>
-			//{
-			//	Load_VS(0);
-			//	Load_VS(1);
-			//	Load_VS(2);
-			//	Load_VS(3);
-			//	Load_VT(0);
-			//	Load_VT(1);
-			//	Load_VT(2);
-			//	Load_VT(3);
-			//	switch (Index)
-			//	{
-			//		case 0: SafeILGenerator.Call((Func<float, float, float, float, float, float, float, float, float>)_vqmul_row0); break;
-			//		case 1: SafeILGenerator.Call((Func<float, float, float, float, float, float, float, float, float>)_vqmul_row1); break;
-			//		case 2: SafeILGenerator.Call((Func<float, float, float, float, float, float, float, float, float>)_vqmul_row2); break;
-			//		case 3: SafeILGenerator.Call((Func<float, float, float, float, float, float, float, float, float>)_vqmul_row3); break;
-			//	}
-			//});
+			var v1 = VEC(VS, VType.VFloat, 4);
+			var v2 = VEC(VT, VType.VFloat, 4);
+
+			return VEC(VD, VType.VFloat, 4).SetVector(Index =>
+			{
+				switch (Index)
+				{
+					case 0: return +(v1[0] * v2[3]) + (v1[1] * v2[2]) - (v1[2] * v2[1]) + (v1[3] * v2[0]);
+					case 1: return -(v1[0] * v2[2]) + (v1[1] * v2[3]) + (v1[2] * v2[0]) + (v1[3] * v2[1]);
+					case 2: return +(v1[0] * v2[1]) - (v1[1] * v2[0]) + (v1[2] * v2[3]) + (v1[3] * v2[2]);
+					case 3: return -(v1[0] * v2[0]) - (v1[1] * v2[1]) - (v1[2] * v2[2]) + (v1[3] * v2[3]);
+					default: throw (new InvalidOperationException("vqmul.Assert"));
+				}
+			});
 		}
 
 		public AstNodeStm vmmov() { return _Matrix(VD).SetMatrix((Column, Row) => _Matrix(VS)[Column, Row]); }
@@ -615,58 +514,33 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vi2f() { return VEC_VD.SetVector(Index => ast.CallStatic((Func<float, int, float>)MathFloat.Scalb, ast.Cast<float>(VEC_VS_i[Index]), -(int)Instruction.IMM5)); }
 
-		public AstNodeStm vf2id()
+		private AstNodeStm _vf2i_dnu(Func<float, int> RoundingFunc)
 		{
-			return ast.NotImplemented("vf2id");
-			//var VectorSize = Instruction.ONE_TWO;
-			//var Imm5 = Instruction.IMM5;
-			//VectorOperationSaveVd(VectorSize, Index =>
-			//{
-			//	Load_VS(Index, VectorSize);
-			//	SafeILGenerator.Push((int)Imm5);
-			//	MipsMethodEmitter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
-			//	MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Floor);
-			//}, AsInteger: true);
+			return VEC_VD_i.SetVector(Index =>
+				ast.CallStatic(
+					RoundingFunc,
+					ast.CallStatic(
+						(Func<float, int, float>)MathFloat.Scalb,
+						VEC_VS[Index],
+						(int)Instruction.IMM5
+					)
+				)
+			);
 		}
 
-		public AstNodeStm vf2in()
-		{
-			return ast.NotImplemented("vf2in");
-			//var VectorSize = Instruction.ONE_TWO;
-			//var Imm5 = Instruction.IMM5;
-			//VectorOperationSaveVd(VectorSize, Index =>
-			//{
-			//	Load_VS(Index, VectorSize);
-			//	SafeILGenerator.Push((int)Imm5);
-			//	MipsMethodEmitter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
-			//	MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Round);
-			//}, AsInteger: true);
-		}
-
-		public AstNodeStm vf2iu()
-		{
-			return ast.NotImplemented("vf2iu");
-			//var VectorSize = Instruction.ONE_TWO;
-			//var Imm5 = Instruction.IMM5;
-			//VectorOperationSaveVd(VectorSize, Index =>
-			//{
-			//	Load_VS(Index, VectorSize);
-			//	SafeILGenerator.Push((int)Imm5);
-			//	MipsMethodEmitter.CallMethod((Func<float, int, float>)MathFloat.Scalb);
-			//	MipsMethodEmitter.CallMethod((Func<float, int>)MathFloat.Ceil);
-			//}, AsInteger: true);
-		}
+		public AstNodeStm vf2id() { return _vf2i_dnu(MathFloat.Floor); }
+		public AstNodeStm vf2in() { return _vf2i_dnu(MathFloat.Round); }
+		public AstNodeStm vf2iu() { return _vf2i_dnu(MathFloat.Ceil); }
 
 		public AstNodeStm vf2iz()
 		{
-			return ast.NotImplemented("vf2iz");
-			//var Imm5 = Instruction.IMM5;
-			//VectorOperationSaveVd(Index =>
-			//{
-			//	Load_VS(Index);
-			//	SafeILGenerator.Push((int)Imm5);
-			//	MipsMethodEmitter.CallMethod((Func<float, int, float>)(CpuEmitter._vf2iz));
-			//});
+			return VEC_VD.SetVector(Index =>
+				ast.CallStatic(
+					(Func<float, int, float>)CpuEmitterUtils._vf2iz,
+					VEC_VS[Index],
+					(int)Instruction.IMM5
+				)
+			);
 		}
 
 		public AstNodeStm vi2s()
@@ -690,8 +564,46 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			//}
 		}
 
-		public AstNodeStm vf2h() { return ast.NotImplemented("vf2h"); }
-		public AstNodeStm vh2f() { return ast.NotImplemented("vh2f"); }
+		static public uint _vf2h(float a, float b)
+		{
+			return (uint)((HalfFloat.FloatToHalfFloat(b) << 16) | (HalfFloat.FloatToHalfFloat(a) << 0));
+		}
+
+		public AstNodeStm vf2h() 
+		{
+			var VEC_VD = VEC(VD, VType.VUInt, ONE_TWO / 2);
+			var VEC_VS = VEC(VS, VType.VFloat, ONE_TWO);
+			return VEC_VD.SetVector(Index =>
+				ast.CallStatic(
+					(Func<float, float, uint>)_vf2h,
+					VEC_VS[Index * 2 + 0],
+					VEC_VS[Index * 2 + 1]
+				)
+			);
+		}
+
+		static public float _vh2f_0(uint a)
+		{
+			return HalfFloat.ToFloat((int)BitUtils.Extract(a, 0, 16));
+		}
+
+		static public float _vh2f_1(uint a)
+		{
+			return HalfFloat.ToFloat((int)BitUtils.Extract(a, 16, 16));
+		}
+
+		public AstNodeStm vh2f()
+		{
+			var VEC_VD = VEC(VD, VType.VFloat, ONE_TWO * 2);
+			var VEC_VS = VEC(VS, VType.VUInt, ONE_TWO);
+			return VEC_VD.SetVector(Index =>
+			{
+				return ast.CallStatic(
+					(((Index % 2) == 0) ? (Func<uint, float>)_vh2f_0 : (Func<uint, float>)_vh2f_1),
+					VEC_VS[Index / 2]
+				);
+			});
+		}
 		public AstNodeStm vi2us()
 		{
 			return ast.NotImplemented("vi2us");
@@ -707,31 +619,33 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm vmfvc() { return ast.NotImplemented("vmfvc"); }
 		public AstNodeStm vmtvc() { return ast.NotImplemented("vmtvc"); }
 
-		public AstNodeStm mtv() { return _Cell(VD).Set(ast.GPR_f(RT)); }
-		public AstNodeStm mtvc() { return ast.NotImplemented("mtvc"); }
+		public AstNodeStm mtv() { return CEL_VD.Set(ast.GPR_f(RT)); }
+		public AstNodeStm mtvc() {
+			return ast.Statement(ast.CallStatic(
+				(Action<CpuThreadState, VfpuControlRegistersEnum, uint>)CpuEmitterUtils._mtvc_impl,
+				ast.CpuThreadState,
+				ast.Cast<VfpuControlRegistersEnum>((int)(Instruction.IMM7 + 128), false),
+				CEL_VD_u.Get()
+			));
+			//_mtvc_impl
+		}
 
 		/// <summary>
 		/// Copies a vfpu control register into a general purpose register.
 		/// </summary>
 		public AstNodeStm mfvc()
 		{
-			return ast.NotImplemented("mfvc");
-			//MipsMethodEmitter.SaveGPR(RT, () =>
-			//{
-			//	SafeILGenerator.LoadArgument0CpuThreadState();
-			//	SafeILGenerator.Push((int)(Instruction.IMM7 + 128));
-			//	MipsMethodEmitter.CallMethod((Func<CpuThreadState, VfpuControlRegistersEnum, uint>)CpuEmitter._mfvc_impl);
-			//});
+			return ast.AssignGPR(RT, ast.CallStatic(
+				(Func<CpuThreadState, VfpuControlRegistersEnum, uint>)CpuEmitterUtils._mfvc_impl,
+				ast.CpuThreadState,
+				ast.Cast<VfpuControlRegistersEnum>((int)(Instruction.IMM7 + 128), false)
+			));
 		}
 
 		// Move From/to Vfpu (C?)_
 		public AstNodeStm mfv()
 		{
-			return ast.NotImplemented("mfv");
-			//MipsMethodEmitter.SaveGPR_F(RT, () =>
-			//{
-			//	Load_VD(0, 1);
-			//});
+			return ast.AssignGPR_F(RT, CEL_VD.Get());
 		}
 
 		// Load/Store Vfpu (Left/Right)_

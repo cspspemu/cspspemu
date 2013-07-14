@@ -104,7 +104,7 @@ namespace CSPspEmu
 				if (Level >= Logger.Level.Info)
 				{
 					var Method = StackFrame.GetMethod();
-					Console.WriteLine("{0} : {1} : {2}.{3} : {4}", LogName, Level, Method.DeclaringType.Name, Method.Name, Text);
+					Console.WriteLine("{0} : {1} : {2}.{3} : {4}", LogName, Level, (Method.DeclaringType != null) ? Method.DeclaringType.Name : null, Method.Name, Text);
 				}
 			};
 
@@ -120,7 +120,7 @@ namespace CSPspEmu
 
 			string FileToLoad = null;
 			bool RunTestsViewOut = false;
-			int RunTestsTimeout = 10;
+			int RunTestsTimeout = 30;
 
 			var Getopt = new Getopt(Arguments);
 			{

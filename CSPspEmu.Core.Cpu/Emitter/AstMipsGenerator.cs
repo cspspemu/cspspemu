@@ -5,6 +5,7 @@ using CSPspEmu.Core.Cpu.InstructionCache;
 using CSPspEmu.Core.Memory;
 using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
+using SafeILGenerator.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -44,14 +45,34 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeExprLValue FPR(int Index) { return REG("FPR" + Index); }
 		public AstNodeExprLValue HI_LO() { return ast.PropertyAccess(ast.CpuThreadState, "HI_LO"); }
 		public AstNodeExprLValue FPR_I(int Index) { return ast.Indirect(ast.Cast(typeof(int*), ast.GetAddress(REG("FPR" + Index)), Explicit: false)); }
+		public AstNodeExprLValue GPR_F(int Index) { return ast.Indirect(ast.Cast(typeof(float*), ast.GetAddress(REG("GPR" + Index)), Explicit: false)); }
 
 		public AstNodeStm AssignFPR_F(int Index, AstNodeExpr Expr) { return ast.Assign(ast.FPR(Index), Expr); }
 		public AstNodeStm AssignFPR_I(int Index, AstNodeExpr Expr) { return ast.Assign(ast.FPR_I(Index), Expr); }
 		public AstNodeStm AssignREG(string RegName, AstNodeExpr Expr) { return ast.Assign(ast.REG(RegName), Expr); }
 		public AstNodeStm AssignHILO(AstNodeExpr Expr) { return ast.Assign(HI_LO(), ast.Cast<long>(Expr)); }
 		public AstNodeStm AssignGPR(int Index, AstNodeExpr Expr) { if (Index == 0) return new AstNodeStmEmpty(); return ast.Assign(GPR(Index), ast.Cast<uint>(Expr, false)); }
+		public AstNodeStm AssignGPR_F(int Index, AstNodeExpr Expr) { if (Index == 0) return new AstNodeStmEmpty(); return ast.Assign(GPR_F(Index), ast.Cast<float>(Expr, false)); }
 		//public AstNodeStm AssignREG(string RegName, AstNodeExpr Expr) { return ast.Assign(REG(RegName), Expr); }
 		//public AstNodeStm AssignGPR(int Index, AstNodeExpr Expr) { if (Index == 0) return new AstNodeStmEmpty(); return ast.Assign(GPR(Index), ast.Cast<uint>(Expr)); }
+
+		static private CpuThreadState CpuThreadStateMethods = CSPspEmu.Core.Cpu.CpuThreadState.Methods;
+
+		public AstNodeExprLValue PrefixSource() { return ast.FieldAccess(ast.CpuThreadState, ILFieldInfo.GetFieldInfo(() => CpuThreadStateMethods.PrefixSource)); }
+		public AstNodeExprLValue PrefixSourceEnabled() { return ast.FieldAccess(PrefixSource(), ILFieldInfo.GetFieldInfo(() => CpuThreadStateMethods.PrefixSource.Enabled)); }
+
+		public AstNodeExprLValue PrefixDestination() { return ast.FieldAccess(ast.CpuThreadState, ILFieldInfo.GetFieldInfo(() => CpuThreadStateMethods.PrefixSource)); }
+		public AstNodeExprLValue PrefixDestinationEnabled() { return ast.FieldAccess(PrefixDestination(), ILFieldInfo.GetFieldInfo(() => CpuThreadStateMethods.PrefixDestination.Enabled)); }
+
+		public AstNodeExprLValue VCC(int Index)
+		{
+			return REG("VFR_CC_" + Index);
+		}
+
+		public AstNodeStm AssignVCC(int Index, AstNodeExpr Expr)
+		{
+			return ast.Assign(VCC(Index), Expr);
+		}
 
 		public AstNodeExprLValue GPR(int Index) { if (Index == 0) throw (new Exception("Can't get reference to GPR0")); return REG("GPR" + Index); }
 		public AstNodeExprLValue GPR_l(int Index) { return ast.Indirect(ast.Cast(typeof(long*), ast.GetAddress(GPR(Index)))); }
@@ -143,7 +164,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 #endif
 		}
 
-		public void ErrorWriteLine(string Line)
+		static public void ErrorWriteLine(string Line)
 		{
 			Console.Error.WriteLine(Line);
 		}

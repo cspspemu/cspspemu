@@ -108,7 +108,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			switch (CpuThreadState.Fcr31.RM)
 			{
 				case CpuThreadState.FCR31.TypeEnum.Rint: return (int)MathFloat.Rint(FS);
-				case CpuThreadState.FCR31.TypeEnum.Cast: return (int)FS;
+				case CpuThreadState.FCR31.TypeEnum.Cast: return (int)MathFloat.Cast(FS);
 				case CpuThreadState.FCR31.TypeEnum.Ceil: return (int)MathFloat.Ceil(FS);
 				case CpuThreadState.FCR31.TypeEnum.Floor: return (int)MathFloat.Floor(FS);
 			}
@@ -314,30 +314,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public static void _vpfxt_impl(CpuThreadState CpuThreadState, uint Value) { CpuThreadState.PrefixTarget.Value = Value; }
 
 
-		static public float _vqmul_row0(float l0, float l1, float l2, float l3, float r0, float r1, float r2, float r3)
-		{
-			return +(l0 * r3) + (l1 * r2) - (l2 * r1) + (l3 * r0);
-			//v3[0] = +(v1[0] * v2[3]) + (v1[1] * v2[2]) - (v1[2] * v2[1]) + (v1[3] * v2[0]);
-		}
-
-		static public float _vqmul_row1(float l0, float l1, float l2, float l3, float r0, float r1, float r2, float r3)
-		{
-			return -(l0 * r2) + (l1 * r3) + (l2 * r0) + (l3 * r1);
-			//v3[1] = -(v1[0] * v2[2]) + (v1[1] * v2[3]) + (v1[2] * v2[0]) + (v1[3] * v2[1]);
-		}
-
-		static public float _vqmul_row2(float l0, float l1, float l2, float l3, float r0, float r1, float r2, float r3)
-		{
-			return +(l0 * r1) - (l1 * r0) + (l2 * r3) + (l3 * r2);
-			//v3[2] = +(v1[0] * v2[1]) - (v1[1] * v2[0]) + (v1[2] * v2[3]) + (v1[3] * v2[2]);
-		}
-
-		static public float _vqmul_row3(float l0, float l1, float l2, float l3, float r0, float r1, float r2, float r3)
-		{
-			return -(l0 * r0) - (l1 * r1) - (l2 * r2) + (l3 * r3);
-			//v3[3] = -(v1[0] * v2[0]) - (v1[1] * v2[1]) - (v1[2] * v2[2]) + (v1[3] * v2[3]);
-		}
-
 		public static uint _vi2uc_impl(int x, int y, int z, int w)
 		{
 			return (0
@@ -394,6 +370,29 @@ namespace CSPspEmu.Core.Cpu.Emitter
 					return (uint)MathFloat.ReinterpretFloatAsInt(1.0f);
 				default:
 					throw (new NotImplementedException("_mfvc_impl: " + VfpuControlRegister));
+			}
+		}
+
+		public static void _mtvc_impl(CpuThreadState CpuThreadState, VfpuControlRegistersEnum VfpuControlRegister, uint Value)
+		{
+			switch (VfpuControlRegister)
+			{
+				case VfpuControlRegistersEnum.VFPU_PFXS: CpuThreadState.PrefixSource.Value = Value; return;
+				case VfpuControlRegistersEnum.VFPU_PFXT: CpuThreadState.PrefixTarget.Value = Value; return;
+				case VfpuControlRegistersEnum.VFPU_PFXD: CpuThreadState.PrefixDestination.Value = Value; return;
+				case VfpuControlRegistersEnum.VFPU_CC: CpuThreadState.VFR_CC_Value = Value; return;
+				case VfpuControlRegistersEnum.VFPU_RCX0: new Random((int)Value); return;
+				case VfpuControlRegistersEnum.VFPU_RCX1:
+				case VfpuControlRegistersEnum.VFPU_RCX2:
+				case VfpuControlRegistersEnum.VFPU_RCX3:
+				case VfpuControlRegistersEnum.VFPU_RCX4:
+				case VfpuControlRegistersEnum.VFPU_RCX5:
+				case VfpuControlRegistersEnum.VFPU_RCX6:
+				case VfpuControlRegistersEnum.VFPU_RCX7:
+					//(uint)MathFloat.ReinterpretFloatAsInt(1.0f) = Value;
+					return;
+				default:
+					throw (new NotImplementedException("_mtvc_impl: " + VfpuControlRegister));
 			}
 		}
 	}

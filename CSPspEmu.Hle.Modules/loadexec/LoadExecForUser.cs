@@ -8,7 +8,7 @@ namespace CSPspEmu.Hle.Modules.loadexec
 	[HlePspModule(ModuleFlags = ModuleFlags.UserMode | ModuleFlags.Flags0x00010011)]
 	public class LoadExecForUser : HleModuleHost
 	{
-		Logger Logger = Logger.GetLogger("LoadExecForUser");
+		private Logger Logger = Logger.GetLogger("LoadExecForUser");
 
 		[Inject]
 		HleCallbackManager CallbackManager;

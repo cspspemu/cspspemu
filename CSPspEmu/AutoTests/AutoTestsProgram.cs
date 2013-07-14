@@ -28,8 +28,7 @@ namespace CSPspEmu.AutoTests
 {
 	public class AutoTestsProgram
 	{
-		//static TimeSpan TimeoutTime = TimeSpan.FromSeconds(30);
-		static TimeSpan TimeoutTime = TimeSpan.FromSeconds(10);
+		static TimeSpan TimeoutTime = TimeSpan.FromSeconds(90);
 
 		public class HleOutputHandlerMock : HleOutputHandler
 		{

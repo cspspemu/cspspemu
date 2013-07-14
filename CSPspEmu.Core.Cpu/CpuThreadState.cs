@@ -102,6 +102,16 @@ namespace CSPspEmu.Core.Cpu
 				}
 				return Value;
 			}
+			set
+			{
+				fixed (bool* VFR_CC = &VFR_CC_0)
+				{
+					for (int n = 0; n < 8; n++)
+					{
+						VFR_CC[n] = (((value >> n) & 1) != 0);
+					}
+				}
+			}
 		}
 
 		public VfpuPrefix PrefixNone = new VfpuPrefix();
