@@ -48,6 +48,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Archive\ZipArchive.cs" />
+    <Compile Include="audio\At3\MaiAT3PlusCoreDecoder.cs" />
+    <Compile Include="audio\At3\MaiAT3PlusCoreDecoder_DecFunc.cs" />
+    <Compile Include="audio\At3\MaiAT3PlusCoreDecoder_StaticData.cs" />
+    <Compile Include="audio\At3\MaiAT3PlusCoreDecoder_SubFunc.cs" />
+    <Compile Include="audio\At3\MaiAT3PlusFrameDecoder.cs" />
+    <Compile Include="audio\At3\ManagedPointer.cs" />
+    <Compile Include="audio\At3\Sample\MiniPlayer.cs" />
+    <Compile Include="audio\At3\SUB\MaiBitReader.cs" />
+    <Compile Include="audio\At3\SUB\MaiQueue0.cs" />
     <Compile Include="audio\RiffWaveReader.cs" />
     <Compile Include="audio\Vag.cs" />
     <Compile Include="audio\Vag.Structs.cs" />

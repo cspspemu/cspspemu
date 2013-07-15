@@ -13,6 +13,7 @@ using CSPspEmu.AutoTests;
 using CSharpUtils;
 using CSharpUtils.Getopt;
 using Mono.Simd;
+using CSPspEmu.Hle.Formats.audio.At3.Sample;
 
 namespace CSPspEmu
 {
@@ -55,6 +56,11 @@ namespace CSPspEmu
 		[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
 		static void Main(string[] Arguments)
 		{
+			//MiniPlayer.Play(
+			//	File.OpenRead(@"C:\projects\cspspemu\ms\temp\1C-99-F2-16-B6-41-D9-27-8D-41-80-6A-AB-D1-EB-77-29-61-17-0F.oma"),
+			//	File.OpenWrite(@"C:\projects\cspspemu\ms\temp\1C-99-F2-16-B6-41-D9-27-8D-41-80-6A-AB-D1-EB-77-29-61-17-0F.raw")
+			//);
+
 			//if (!IsNet45OrNewer())
 			//{
 			//	MessageBox.Show(".NET 4.5 required", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -194,10 +200,17 @@ namespace CSPspEmu
 				});
 				Getopt.AddRule("/installat3", () =>
 				{
-					var OutFile = Environment.SystemDirectory + @"\WavDest.dll";
+#if true
+					var OutFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\WavDestPsp.dll";
+#else
+					var OutFile = Environment.SystemDirectory + @"\WavDestPsp.dll";
+#endif
 					File.WriteAllBytes(OutFile, Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.References.WavDest.dll").ReadAll());
-					ProcessUtils.ExecuteCommand("regsvr32", String.Format(@"/s ""{0}"" ", OutFile));
-					Environment.Exit(0);
+					var Result = ProcessUtils.ExecuteCommand("regsvr32", String.Format(@"/s ""{0}__"" ", OutFile));
+					Console.Out.WriteLine("{0}", Result.OutputString);
+					Console.Error.WriteLine("{0}", Result.ErrorString);
+					//ProcessUtils.ExecuteCommand("regsvr32", String.Format(@"""{0}"" ", OutFile));
+					Environment.Exit(Result.ExitCode);
 				});
 				Getopt.AddRule("/associate", () =>
 				{

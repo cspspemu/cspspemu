@@ -274,12 +274,28 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 
 				//var Ms0Path = new DirectoryInfo(MemoryStickRootLocalFolder).FullName;
 				var Ms0Path = new DirectoryInfo(ApplicationPaths.MemoryStickRootFolder).FullName;
-				try { Directory.CreateDirectory(Ms0Path + "/temp"); } catch { }
+				try { Directory.CreateDirectory(Ms0Path + "/temp"); }
+				catch { }
 
 				var BaseFileName = Ms0Path + "/temp/" + BitConverter.ToString(DataHash);
 
+				var At3OutFileName = BaseFileName + ".at3";
 				var OmaOutFileName = BaseFileName + ".oma";
 				var WavOutFileName = BaseFileName + ".wav";
+
+
+				if (!File.Exists(At3OutFileName))
+				{
+					File.WriteAllBytes(At3OutFileName, Data);
+				}
+
+				if (!File.Exists(OmaOutFileName))
+				{
+					ParseAtracData(new MemoryStream(Data));
+					{
+						WriteOma(OmaOutFileName);
+					}
+				}
 
 				if (Platform.OperatingSystem == Platform.OS.Windows)
 				{

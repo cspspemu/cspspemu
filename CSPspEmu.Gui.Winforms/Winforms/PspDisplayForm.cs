@@ -698,69 +698,6 @@ namespace CSPspEmu.Gui.Winforms
 			CheckForUpdatesThread.Start();
 		}
 
-		public struct Result
-		{
-			public string OutputString;
-			public string ErrorString;
-			public bool Success;
-		}
-
-		private static Result RunProgramInBackground(string ApplicationPath, string ApplicationArguments)
-		{
-			// This snippet needs the "System.Diagnostics"
-			// library
-
-
-			// Application path and command line arguments
-			//string ApplicationPath = ApplicationPaths.ExecutablePath;
-			//string ApplicationArguments = "/associate";
-
-			//Console.WriteLine(ExecutablePath);
-
-			// Create a new process object
-			Process ProcessObj = new Process();
-
-			ProcessObj.StartInfo = new ProcessStartInfo()
-			{
-				// StartInfo contains the startup information of the new process
-				FileName = ApplicationPath,
-				Arguments = ApplicationArguments,
-
-				UseShellExecute = true,
-				Verb = "runas",
-
-				// These two optional flags ensure that no DOS window appears
-				CreateNoWindow = true,
-				WindowStyle = ProcessWindowStyle.Hidden,
-				//RedirectStandardOutput = false,
-			};
-
-			string OutputString = "";
-			string ErrorString = "";
-			bool Error = false;
-			// Wait that the process exits
-			try
-			{
-				// Start the process
-				ProcessObj.Start();
-
-				OutputString = ProcessObj.StandardOutput.ReadToEnd();
-				ErrorString = ProcessObj.StandardError.ReadToEnd();
-				ProcessObj.WaitForExit();
-			}
-			catch
-			{
-				Error = true;
-			}
-
-			return new Result()
-			{
-				OutputString = OutputString,
-				ErrorString = ErrorString,
-				Success = !Error && (ProcessObj.ExitCode == 0),
-			};
-		}
-
 		/// <summary>
 		/// 
 		/// </summary>
@@ -769,7 +706,10 @@ namespace CSPspEmu.Gui.Winforms
 		/// <seealso cref="http://social.msdn.microsoft.com/Forums/en-US/winforms/thread/db6647a3-85ca-4dc4-b661-fbbd36bd561f/"/>
 		private void associateWithPBPAndCSOToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var Result = RunProgramInBackground(ApplicationPaths.ExecutablePath, "/associate");
+
+			var Result = ProcessUtils.RunProgramInBackgroundAsRoot(ApplicationPaths.ExecutablePath, "/associate");
+			Console.WriteLine(Result.OutputString);
+			Console.WriteLine(Result.ErrorString);
 
 			if (Result.Success)
 			{
@@ -941,7 +881,11 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void installWavDestDirectShowFilterToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var Result = RunProgramInBackground(ApplicationPaths.ExecutablePath, "/installat3");
+			var Result = ProcessUtils.RunProgramInBackgroundAsRoot(ApplicationPaths.ExecutablePath, "/installat3");
+
+			Console.WriteLine(Result.ErrorString);
+			Console.WriteLine(Result.OutputString);
+			Console.WriteLine(Result.Success);
 
 			if (Result.Success)
 			{
