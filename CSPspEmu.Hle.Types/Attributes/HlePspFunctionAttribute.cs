@@ -2,6 +2,16 @@
 
 namespace CSPspEmu.Hle
 {
+	[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
+	public sealed class HleInvalidAsNullAttribute : Attribute
+	{
+	}
+
+	[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
+	public sealed class HleInvalidAsInvalidPointerAttribute : Attribute
+	{
+	}
+
 	[AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
 	public sealed class HlePspFunctionAttribute : Attribute
 	{

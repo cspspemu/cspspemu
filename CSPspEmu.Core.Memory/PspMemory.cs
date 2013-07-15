@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using CSharpUtils;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Memory
 {
@@ -28,6 +29,9 @@ namespace CSPspEmu.Core.Memory
 		abstract public IntPtr FixedGlobalAddress { get; }
 
 		public const uint MemoryMask = 0x1FFFFFFF;
+
+		static public readonly void* InvalidPointer = Marshal.AllocHGlobal(0x10000).ToPointer();
+		public readonly void* InvalidPointerInstance = PspMemory.InvalidPointer;
 
 		public class InvalidAddressException : Exception
 		{
@@ -155,7 +159,7 @@ namespace CSPspEmu.Core.Memory
 			}
 		}
 
-		public virtual void* PspAddressToPointerSafe(uint Address, int Size = 0, bool CanBeNull = true)
+		public virtual void* PspAddressToPointerSafe(uint Address, int Size = 0, bool CanBeNull = true, bool InvalidAsNull = false)
 		{
 			if (Address == 0 && CanBeNull) return null;
 			ValidateRange(Address, Size);

@@ -148,7 +148,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 				}
 				//mpegRingbuffer.addPackets(packetsAdded);
 				//mpegRingbuffer.write(mpegRingbufferAddr);
-				throw(new NotImplementedException());
+				//throw(new NotImplementedException());
+				Console.Error.WriteLine("sceMpegRingbufferPut.NotImplemented");
 			}
 
 			//Ringbuffer->PacketsFree -= NumPackets;

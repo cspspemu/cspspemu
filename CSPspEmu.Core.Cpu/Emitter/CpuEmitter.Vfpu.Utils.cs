@@ -208,13 +208,14 @@ namespace CSPspEmu.Core.Cpu.Emitter
 					if (Prefix.SourceConstant(PrefixIndex))
 					{
 						float Value = 0.0f;
-						switch (Prefix.SourceIndex(PrefixIndex))
+						var SourceIndex = Prefix.SourceIndex(PrefixIndex);
+						switch (SourceIndex)
 						{
 							case 0: Value = Prefix.SourceAbsolute(PrefixIndex) ? (3.0f) : (0.0f); break;
 							case 1: Value = Prefix.SourceAbsolute(PrefixIndex) ? (1.0f / 3.0f) : (1.0f); break;
 							case 2: Value = Prefix.SourceAbsolute(PrefixIndex) ? (1.0f / 4.0f) : (2.0f); break;
 							case 3: Value = Prefix.SourceAbsolute(PrefixIndex) ? (1.0f / 6.0f) : (0.5f); break;
-							default: throw (new InvalidOperationException("Invalid SourceIndex"));
+							default: throw (new InvalidOperationException("Invalid SourceIndex : " + SourceIndex));
 						}
 
 						AstNodeExpr = ast.Cast(GetVTypeType(), Value);
@@ -437,8 +438,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		private VfpuVector _Vector(VReg VReg, VType VType = VType.VFloat, int Size = 0) { return new VfpuVector(this, VReg, VType, Size); }
 		private VfpuMatrix _Matrix(VReg VReg, VType VType = VType.VFloat, int Size = 0) { return new VfpuMatrix(this, VReg, VType, Size); }
 
+		private VfpuMatrix MAT(VReg VReg, VType VType = VType.VFloat, int Size = 0) { return new VfpuMatrix(this, VReg, VType, Size); }
 		private VfpuVector VEC(VReg VReg, VType VType = VType.VFloat, int Size = 0) { return new VfpuVector(this, VReg, VType, Size); }
 		private VfpuCell CEL(VReg VReg, VType VType = VType.VFloat) { return new VfpuCell(this, VReg, VType); }
+
+		private VfpuMatrix MAT_VS { get { return MAT(VS); } }
+		private VfpuMatrix MAT_VD { get { return MAT(VD); } }
+		private VfpuMatrix MAT_VT { get { return MAT(VT); } }
 
 		private VfpuVector VEC_VS { get { return VEC(VS); } }
 		private VfpuVector VEC_VD { get { return VEC(VD); } }

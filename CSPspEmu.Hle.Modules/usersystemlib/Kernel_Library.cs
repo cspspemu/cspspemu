@@ -157,10 +157,16 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		/// <param name="Size"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xA089ECA4, FirmwareVersion = 150)]
-		public int sceKernelMemset(byte* Pointer, int Data, int Size)
+		public uint sceKernelMemset(uint PspPointer, int Data, int Size)
 		{
-			PointerUtils.Memset(Pointer, (byte)Data, Size);
-			return 0;
+			try
+			{
+				PointerUtils.Memset((byte*)PspMemory.PspAddressToPointerSafe(PspPointer, Size), (byte)Data, Size);
+			}
+			catch
+			{
+			}
+			return PspPointer;
 		}
 
 		/// <summary>
@@ -171,10 +177,19 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		/// <param name="Size"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x1839852A, FirmwareVersion = 150)]
-		public uint sceKernelMemcpy(byte* Destination, byte* Source, int Size)
+		public uint sceKernelMemcpy(uint DestinationPointer, uint SourcePointer, int Size)
 		{
-			PointerUtils.Memcpy(Destination, Source, Size);
-			return PspMemory.PointerToPspAddressSafe(Destination);
+			try
+			{
+				var Destination = (byte*)PspMemory.PspAddressToPointerSafe(DestinationPointer, Size);
+				var Source = (byte*)PspMemory.PspAddressToPointerSafe(SourcePointer, Size);
+				PointerUtils.Memcpy(Destination, Source, Size);
+			}
+			catch
+			{
+			}
+
+			return DestinationPointer;
 		}
 	}
 }

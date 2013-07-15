@@ -97,18 +97,22 @@ namespace CSPspEmu.Core.Cpu
 		{
 		}
 
-		public void sceKernelDcacheWritebackRange(uint Address, uint Size)
+		public void sceKernelDcacheWritebackRange(uint Address, int Size)
 		{
 		}
 
-		public void sceKernelDcacheWritebackInvalidateRange(uint Address, uint Size)
+		public void sceKernelDcacheWritebackInvalidateRange(uint Address, int Size)
 		{
 		}
 
-		public void sceKernelDcacheInvalidateRange(uint Address, uint Size)
+		public void sceKernelDcacheInvalidateRange(uint Address, int Size)
 		{
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		public void sceKernelDcacheWritebackAll()
 		{
 		}

@@ -16,6 +16,13 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
+	public enum InvalidAddressAsEnum
+	{
+		Null = 0,
+		InvalidAddress = 1,
+		Exception = 2,
+	}
+
 	unsafe public class AstMipsGenerator : AstGenerator
 	{
 		static public readonly new AstMipsGenerator Instance = new AstMipsGenerator();
@@ -84,17 +91,20 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeExpr HILO_sl() { return HI_LO(); }
 		public AstNodeExpr HILO_ul() { return ast.Cast<ulong>(HILO_sl()); }
 
+		private delegate void* AddressToPointerWithErrorFunc(uint Address, string ErrorDescription, bool CanBeNull, InvalidAddressAsEnum Invalid);
 		private delegate void* AddressToPointerFunc(uint Address);
-		//delegate void* AddressToPointerFunc(uint Address);
 
-		public AstNodeExpr MemoryGetPointer(PspMemory Memory, AstNodeExpr Address, bool Safe, string ErrorDescription = "ERROR")
+		public AstNodeExpr MemoryGetPointer(PspMemory Memory, AstNodeExpr Address, bool Safe, string ErrorDescription = "ERROR", InvalidAddressAsEnum InvalidAddress = InvalidAddressAsEnum.Exception)
 		{
 			if (Safe)
 			{
 				return ast.CallInstance(
 					ast.CpuThreadState,
-					(AddressToPointerFunc)CSPspEmu.Core.Cpu.CpuThreadState.Methods.GetMemoryPtrSafe,
-					ast.Cast<uint>(Address)
+					(AddressToPointerWithErrorFunc)CSPspEmu.Core.Cpu.CpuThreadState.Methods.GetMemoryPtrSafeWithError,
+					ast.Cast<uint>(Address),
+					ErrorDescription,
+					true,
+					ast.Immediate(InvalidAddress)
 				);
 			}
 			else

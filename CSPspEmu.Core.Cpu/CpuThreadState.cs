@@ -12,6 +12,7 @@ using CSPspEmu.Core.Cpu.InstructionCache;
 using CSPspEmu.Core.Cpu.Dynarec;
 using CSPspEmu.Core.Memory;
 using CSharpUtils;
+using CSPspEmu.Core.Cpu.Emitter;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -209,11 +210,12 @@ namespace CSPspEmu.Core.Cpu
 			return Memory.PspAddressToPointerSafe(Address, 0);
 		}
 
-		public void* GetMemoryPtrSafeWithError(uint Address, String ErrorDescription, bool CanBeNull)
+		public void* GetMemoryPtrSafeWithError(uint Address, String ErrorDescription, bool CanBeNull, InvalidAddressAsEnum Invalid)
 		{
+			//Console.Error.WriteLine("{0:X8}, {1}, {2}", Address, CanBeNull, InvalidAsNull);
 			try
 			{
-				void *Result = Memory.PspAddressToPointerSafe(Address, 0, CanBeNull);
+				void* Result = Memory.PspAddressToPointerSafe(Address, 0, CanBeNull);
 				/*
 				if (Result == null && !CanBeNull)
 				{
@@ -224,10 +226,14 @@ namespace CSPspEmu.Core.Cpu
 			}
 			catch (InvalidAddressException InvalidAddressException)
 			{
+				if (Invalid == InvalidAddressAsEnum.Null) return null;
+				if (Invalid == InvalidAddressAsEnum.InvalidAddress) return PspMemory.InvalidPointer;
 				throw (new InvalidAddressException("GetMemoryPtrSafeWithError:" + ErrorDescription + " : " + InvalidAddressException.Message, InvalidAddressException));
 			}
 			catch (Exception Exception)
 			{
+				if (Invalid == InvalidAddressAsEnum.Null) return null;
+				if (Invalid == InvalidAddressAsEnum.InvalidAddress) return PspMemory.InvalidPointer;
 				throw (new Exception("GetMemoryPtrSafeWithError: " + ErrorDescription + " : " + Exception.Message, Exception));
 			}
 		}

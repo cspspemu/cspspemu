@@ -76,20 +76,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vslt() { return VEC_VD.SetVector(Index => ast.CallStatic((Func<float, float, float>)_vslt_impl, VEC_VS[Index], VEC_VT[Index])); }
 		public AstNodeStm vsge() { return VEC_VD.SetVector(Index => ast.CallStatic((Func<float, float, float>)_vsge_impl, VEC_VS[Index], VEC_VT[Index])); }
-		
 		public AstNodeStm vscmp() { return VEC_VD.SetVector(Index => ast.CallStatic((Func<float, float>)MathFloat.Sign, VEC_VS[Index] - VEC_VT[Index])); }
 
-		/*
-		public public static void _vcmovtf_test(CpuThreadState CpuThreadState, int Register, int VectorSize)
-		{
-			Console.Error.WriteLine("_vcmovtf({0}, {1}) : {2}", Register, VectorSize, CpuThreadState.VFR_CC(Register));
-		}
-
-		public static void _vcmovtf_set(CpuThreadState CpuThreadState, int Register, int VectorSize)
-		{
-			Console.Error.WriteLine("SET! _vcmovtf({0}, {1}) : {2}", Register, VectorSize, CpuThreadState.VFR_CC(Register));
-		}
-		*/
 
 		public AstNodeStm _vcmovtf(bool True)
 		{
@@ -129,18 +117,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm _bvtf(bool True)
 		{
-			return ast.NotImplemented("_bvtf"); ;
-			//var Register = Instruction.IMM3;
-			//MipsMethodEmitter.StoreBranchFlag(() =>
-			//{
-			//	Load_VCC(Register);
-			//	SafeILGenerator.Push((int)0);
-			//	if (True)
-			//	{
-			//		SafeILGenerator.UnaryOperation(SafeUnaryOperator.Not);
-			//	}
-			//	SafeILGenerator.CompareBinary(SafeBinaryComparison.Equals);
-			//});
+			var Register = (int)Instruction.IMM3;
+			AstNodeExpr BranchExpr = ast.VCC(Register);
+			if (!True) BranchExpr = ast.Unary("!", BranchExpr);
+			return AssignBranchFlag(BranchExpr);
 		}
 
 		public AstNodeStm bvf() { return _bvtf(false); }

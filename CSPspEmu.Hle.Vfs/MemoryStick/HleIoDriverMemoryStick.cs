@@ -64,7 +64,7 @@ namespace CSPspEmu.Hle.Vfs.MemoryStick
 					{
 						if (InputPointer == null || InputLength < 4) return (int)SceKernelErrors.ERROR_ERRNO_INVALID_ARGUMENT;
 						int CallbackId = *(int*)InputPointer;
-						MemoryStickEventHandler.ScheduleCallback(CallbackId);
+						MemoryStickEventHandler.ScheduleCallback(CallbackId, 1, 1);
 						//var Callback = CallbackManager.Callbacks.Get(CallbackId);
 						//CallbackManager.ScheduleCallback(
 						//	HleCallback.Create(

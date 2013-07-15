@@ -14,6 +14,23 @@ namespace CSPspEmu.Hle
 		{
 		}
 
+		public HleCallback Clone()
+		{
+			return new HleCallback()
+			{
+				Name = Name,
+				Function = Function,
+				Arguments = Arguments,
+				ExecutedNotify = ExecutedNotify,
+			};
+		}
+
+		public HleCallback PrependArguments(params object[] Arguments)
+		{
+			this.Arguments = Arguments.Concat(this.Arguments);
+			return this;
+		}
+
 		public static HleCallback Create(string Name, uint Function, params object[] Arguments)
 		{
 			return new HleCallback() { Name = Name, Function = Function, Arguments = Arguments };

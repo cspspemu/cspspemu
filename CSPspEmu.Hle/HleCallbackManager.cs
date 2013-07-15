@@ -101,9 +101,10 @@ namespace CSPspEmu.Hle.Managers
 			return ExecutedCount;
 		}
 	
-		void IMemoryStickEventHandler.ScheduleCallback(int CallbackId)
+		void IMemoryStickEventHandler.ScheduleCallback(int CallbackId, int Arg1, int Arg2)
 		{
-			ScheduleCallback(Callbacks.Get(CallbackId));
+			var Callback = Callbacks.Get(CallbackId);
+			ScheduleCallback(Callback.Clone().PrependArguments(Arg1, Arg2));
 			//Console.WriteLine("IMemoryStickEventHandler.ScheduleCallback");
 		}
 	}

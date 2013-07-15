@@ -123,6 +123,14 @@ namespace CSPspEmu.Hle
 					{
 						AddGprIndex(ParameterInfo, typeof(uint));
 
+						var HleInvalidAsNullAttribute = ParameterInfo.GetCustomAttribute<HleInvalidAsNullAttribute>();
+						var HleInvalidAsInvalidPointerAttribute = ParameterInfo.GetCustomAttribute<HleInvalidAsInvalidPointerAttribute>();
+						InvalidAddressAsEnum InvalidAddressAsEnum = InvalidAddressAsEnum.Exception;
+						if (HleInvalidAsNullAttribute != null) InvalidAddressAsEnum = InvalidAddressAsEnum.Null;
+						if (HleInvalidAsInvalidPointerAttribute != null) InvalidAddressAsEnum = InvalidAddressAsEnum.InvalidAddress;
+
+						//Console.Error.WriteLine(ParameterInfo.CustomAttributes.Count());
+
 						AstParameters.Add(
 							ast.Cast(
 								ParameterType,
@@ -130,7 +138,8 @@ namespace CSPspEmu.Hle
 									CpuProcessor.Memory,
 									ast.GPR_u(GprIndex),
 									Safe: true,
-									ErrorDescription: "Invalid Pointer for Argument '" + ParameterType.Name + " " + ParameterInfo.Name + "'"
+									ErrorDescription: "Invalid Pointer for Argument '" + ParameterType.Name + " " + ParameterInfo.Name + "'",
+									InvalidAddress: InvalidAddressAsEnum
 								)
 							)
 						);

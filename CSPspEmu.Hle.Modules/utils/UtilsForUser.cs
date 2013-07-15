@@ -80,9 +80,10 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// Write back the data cache to memory
 		/// </summary>
 		[HlePspFunction(NID = 0x79D1C3FA, FirmwareVersion = 150)]
-		public void sceKernelDcacheWritebackAll()
+		public uint sceKernelDcacheWritebackAll()
 		{
 			CpuProcessor.sceKernelDcacheWritebackAll();
+			return 0;
 		}
 
 		/// <summary>
@@ -91,9 +92,10 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// <param name="Pointer"></param>
 		/// <param name="Size"></param>
 		[HlePspFunction(NID = 0xBFA98062, FirmwareVersion = 150)]
-		public void sceKernelDcacheInvalidateRange(uint Pointer, uint Size)
+		public uint sceKernelDcacheInvalidateRange(uint Pointer, int Size)
 		{
 			CpuProcessor.sceKernelDcacheInvalidateRange(Pointer, Size);
+			return 0;
 		}
 
 		/// <summary>
@@ -102,9 +104,10 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// <param name="Pointer"></param>
 		/// <param name="Size"></param>
 		[HlePspFunction(NID = 0x34B9FA9E, FirmwareVersion = 150)]
-		public void sceKernelDcacheWritebackInvalidateRange(uint Pointer, uint Size)
+		public uint sceKernelDcacheWritebackInvalidateRange(uint Pointer, int Size)
 		{
 			CpuProcessor.sceKernelDcacheWritebackInvalidateRange(Pointer, Size);
+			return 0;
 		}
 
 		/// <summary>
@@ -113,18 +116,21 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// <param name="Pointer"></param>
 		/// <param name="Size"></param>
 		[HlePspFunction(NID = 0xB435DEC5, FirmwareVersion = 150)]
-		public void sceKernelDcacheWritebackRange(uint Pointer, uint Size)
+		public uint sceKernelDcacheWritebackRange(uint Pointer, int Size)
 		{
+			if (Size < 0) throw(new SceKernelException(SceKernelErrors.ERROR_INVALID_SIZE));
 			CpuProcessor.sceKernelDcacheWritebackRange(Pointer, Size);
+			return 0;
 		}
 
 		/// <summary>
 		/// Write back and invalidate the data cache
 		/// </summary>
 		[HlePspFunction(NID = 0x3EE30821, FirmwareVersion = 150)]
-		public void sceKernelDcacheWritebackInvalidateAll()
+		public uint sceKernelDcacheWritebackInvalidateAll()
 		{
 			CpuProcessor.sceKernelDcacheWritebackInvalidateAll();
+			return 0;
 		}
 
 		/// <summary>
@@ -209,8 +215,10 @@ namespace CSPspEmu.Hle.Modules.utils
 		/// <param name="Time"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x27CC57F0, FirmwareVersion = 150)]
-		public time_t sceKernelLibcTime(time_t* Time)
+		public time_t sceKernelLibcTime([HleInvalidAsInvalidPointer] time_t* Time)
 		{
+			if (Time == PspMemory.InvalidPointerInstance) return 0;
+
 			PspRtc.Update();
 
 			var CalculatedTime = (time_t)PspRtc.UnixTimeStamp;
@@ -219,6 +227,7 @@ namespace CSPspEmu.Hle.Modules.utils
 			{
 				*Time = CalculatedTime;
 			}
+
 			return CalculatedTime;
 		}
 
