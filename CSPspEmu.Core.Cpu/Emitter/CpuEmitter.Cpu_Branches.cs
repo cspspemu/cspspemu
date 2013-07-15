@@ -1,5 +1,4 @@
-﻿#define BRANCH_FLAG_AS_LOCAL
-#define ENABLE_NATIVE_CALLS
+﻿#define ENABLE_NATIVE_CALLS
 
 using System;
 using SafeILGenerator.Ast;
@@ -40,21 +39,22 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		bool AndLink = false;
 		uint BranchPC = 0;
 
-#if BRANCH_FLAG_AS_LOCAL
 		private AstLocal BranchFlagLocal = null;
-#endif
 
 		private AstNodeExprLValue BranchFlag()
 		{
-#if BRANCH_FLAG_AS_LOCAL
-			if (BranchFlagLocal == null)
+			if (_DynarecConfig.BRANCH_FLAG_AS_LOCAL)
 			{
-				BranchFlagLocal = AstLocal.Create<bool>("BranchFlag");
+				if (BranchFlagLocal == null)
+				{
+					BranchFlagLocal = AstLocal.Create<bool>("BranchFlag");
+				}
+				return ast.Local(BranchFlagLocal);
 			}
-			return ast.Local(BranchFlagLocal);
-#else
-			return REG("BranchFlag");
-#endif
+			else
+			{
+				return ast.REG("BranchFlag");
+			}
 		}
 
 		private AstNodeStm AssignBranchFlag(AstNodeExpr Expr, bool AndLink = false)
@@ -78,7 +78,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm bnel() { return bne(); }
 		public AstNodeStm bltz() { return AssignBranchFlag(ast.Binary(ast.GPR_s(RS), "<", 0)); }
 		public AstNodeStm bltzl() { return bltz(); }
-		[PspUntested]
 		public AstNodeStm bltzal() { return AssignBranchFlag(ast.Binary(ast.GPR_s(RS), "<", 0), AndLink: true); }
 		public AstNodeStm bltzall() { return bltzal(); }
 		public AstNodeStm blez() { return AssignBranchFlag(ast.Binary(ast.GPR_s(RS), "<=", 0)); }
@@ -87,7 +86,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm bgtzl() { return bgtz(); }
 		public AstNodeStm bgez() { return AssignBranchFlag(ast.Binary(ast.GPR_s(RS), ">=", 0)); }
 		public AstNodeStm bgezl() { return bgez(); }
-		[PspUntested]
 		public AstNodeStm bgezal() { return AssignBranchFlag(ast.Binary(ast.GPR_s(RS), ">=", 0), AndLink: true); }
 		public AstNodeStm bgezall() { return bgezal(); }
 
@@ -114,14 +112,17 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm JumpToAddress(AstNodeExpr Address)
 		{
-#if true
-			return ast.Statement(ast.CallTail(ast.MethodCacheInfoCallDynamicPC(Address)));
-#else
-			return ast.Statements(
-				MipsMethodEmitter.AssignREG("PC", Address),
-				ast.Return()
-			);
-#endif
+			if (_DynarecConfig.ENABLE_TAIL_CALL)
+			{
+				return ast.Statement(ast.CallTail(ast.MethodCacheInfoCallDynamicPC(Address)));
+			}
+			else
+			{
+				return ast.Statements(
+					ast.AssignREG("PC", Address),
+					ast.Return()
+				);
+			}
 		}
 
 		private AstNodeStm CallAddress(AstNodeExpr Address)
@@ -138,16 +139,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm JumpToFixedAddress(uint Address)
 		{
-#if true
-			return ast.Statement(
-				ast.CallTail(ast.MethodCacheInfoCallStaticPC(CpuProcessor, Address))
-			);
-#else
-			return ast.StatementsInline(
-				MipsMethodEmitter.AssignREG("PC", Address),
-				ast.Return()
-			);
-#endif
+			if (_DynarecConfig.ENABLE_TAIL_CALL)
+			{
+				return ast.Statement(
+					ast.CallTail(ast.MethodCacheInfoCallStaticPC(CpuProcessor, Address))
+				);
+			}
+			else
+			{
+				return ast.StatementsInline(
+					ast.AssignREG("PC", Address),
+					ast.Return()
+				);
+			}
 		}
 
 		private AstNodeStm CallFixedAddress(uint Address)

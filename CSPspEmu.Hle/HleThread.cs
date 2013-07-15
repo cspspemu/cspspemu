@@ -366,13 +366,16 @@ namespace CSPspEmu.Hle
 
 		public override string ToString()
 		{
-			return String.Format("HleThread(Id={0}, Priority={1}, Name='{2}', Status={3})", Id, PriorityValue, Name, CurrentStatus);
+			return String.Format(
+				"HleThread(Id={0}, Priority={1}, Name='{2}', Status={3}, WaitDescription='{4}', YieldCount={5})",
+				Id, PriorityValue, Name, CurrentStatus, WaitDescription, YieldCount
+			);
 		}
 
 		public string ToExtendedString()
 		{
 			var Ret = String.Format(
-				"HleThread(Id={0}, Priority={1}, PC=0x{2:X}, LastValidPC=0x{3:X}, SP=0x{4:X}, Name='{5}', Status={6}, WaitCount={7}",
+				"HleThread(Id={0}, Priority={1}, PC=0x{2:X}, LastValidPC=0x{3:X}, SP=0x{4:X}, Name='{5}', Status={6}, YieldCount={7}",
 				Id, PriorityValue,
 				CpuThreadState.PC, CpuThreadState.LastValidPC, CpuThreadState.SP,
 				Name, CurrentStatus, YieldCount

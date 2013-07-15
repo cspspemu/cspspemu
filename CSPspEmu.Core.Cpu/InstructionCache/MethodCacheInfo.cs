@@ -1,4 +1,5 @@
-﻿using SafeILGenerator.Ast.Nodes;
+﻿using CSPspEmu.Core.Cpu.Dynarec;
+using SafeILGenerator.Ast.Nodes;
 using SafeILGenerator.Utils;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,31 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 	public sealed class MethodCacheInfo
 	{
 		static public readonly MethodCacheInfo Methods = new MethodCacheInfo();
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public DynarecFunction DynarecFunction;
+
+		public bool HasSpecialName
+		{
+			get
+			{
+				return (DynarecFunction != null) && !String.IsNullOrEmpty(DynarecFunction.Name);
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public string Name
+		{
+			get
+			{
+				if (HasSpecialName) return DynarecFunction.Name;
+				return String.Format("0x{0:X8}", EntryPC);
+			}
+		}
 
 		/// <summary>
 		/// 
@@ -52,7 +78,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 		/// <summary>
 		/// Ast for this function.
 		/// </summary>
-		public AstNodeStm AstTree;
+		public AstNodeStm AstTree { get { return DynarecFunction != null ? DynarecFunction.AstNode : null; } } 
 
 		/// <summary>
 		/// 

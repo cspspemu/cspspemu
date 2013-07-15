@@ -1,7 +1,4 @@
-﻿#define ALLOW_FAST_MEMORY
-#define EMIT_CALL_TICK
-
-using CSPspEmu.Core.Cpu.InstructionCache;
+﻿using CSPspEmu.Core.Cpu.InstructionCache;
 using CSPspEmu.Core.Memory;
 using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
@@ -30,13 +27,27 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeExprCallDelegate MethodCacheInfoCallStaticPC(CpuProcessor CpuProcessor, uint PC)
 		{
-			var MethodCacheInfo = CpuProcessor.MethodCache.GetForPC(PC);
-			return ast.CallDelegate(ast.StaticFieldAccess(MethodCacheInfo.StaticField.FieldInfo), ast.CpuThreadState);
+			if (_DynarecConfig.FunctionCallWithStaticReferences)
+			{
+				var MethodCacheInfo = CpuProcessor.MethodCache.GetForPC(PC);
+				return ast.CallDelegate(ast.StaticFieldAccess(MethodCacheInfo.StaticField.FieldInfo), ast.CpuThreadState);
+			}
+			else
+			{
+				return ast.CallDelegate(ast.CallInstance(ast.CpuThreadState, (Func<uint, Action<CpuThreadState>>)CpuThreadStateMethods.GetFuncAtPC, PC), ast.CpuThreadState);
+			}
 		}
 
 		public AstNodeExprCall MethodCacheInfoCallDynamicPC(AstNodeExpr PC)
 		{
-			return ast.CallInstance(GetMethodCacheInfoAtPC(PC), (Action<CpuThreadState>)MethodCacheInfo.Methods.CallDelegate, ast.CpuThreadState);
+			if (_DynarecConfig.FunctionCallWithStaticReferences)
+			{
+				return ast.CallInstance(GetMethodCacheInfoAtPC(PC), (Action<CpuThreadState>)MethodCacheInfo.Methods.CallDelegate, ast.CpuThreadState);
+			}
+			else
+			{
+				return ast.CallDelegate(ast.CallInstance(ast.CpuThreadState, (Func<uint, Action<CpuThreadState>>)CpuThreadStateMethods.GetFuncAtPC, PC), ast.CpuThreadState);
+			}
 		}
 
 		public AstNodeExpr GetMethodCacheInfoAtPC(AstNodeExpr PC)
@@ -84,9 +95,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeExprLValue GPR(int Index) { if (Index == 0) throw (new Exception("Can't get reference to GPR0")); return REG("GPR" + Index); }
 		public AstNodeExprLValue GPR_l(int Index) { return ast.Indirect(ast.Cast(typeof(long*), ast.GetAddress(GPR(Index)))); }
 		public AstNodeExpr GPR_f(int Index) { if (Index == 0) return ast.Immediate((int)0); return ast.Reinterpret<float>(GPR(Index)); }
-		public AstNodeExpr GPR_s(int Index) { if (Index == 0) return ast.Immediate((int)0); return ast.Cast<int>(GPR(Index)); }
+		public AstNodeExpr GPR_s(int Index) { if (Index == 0) return ast.Immediate((int)0); return ast.Cast<int>(GPR(Index), Explicit: false); }
 		public AstNodeExpr GPR_sl(int Index) { return ast.Cast<long>(GPR_s(Index)); }
-		public AstNodeExpr GPR_u(int Index) { if (Index == 0) return ast.Immediate((uint)0); return ast.Cast<uint>(GPR(Index)); }
+		public AstNodeExpr GPR_u(int Index) { if (Index == 0) return ast.Immediate((uint)0); return ast.Cast<uint>(GPR(Index), Explicit: false); }
 		public AstNodeExpr GPR_ul(int Index) { return ast.Cast<ulong>(GPR_u(Index)); }
 		public AstNodeExpr HILO_sl() { return HI_LO(); }
 		public AstNodeExpr HILO_ul() { return ast.Cast<ulong>(HILO_sl()); }
@@ -109,14 +120,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 			else
 			{
-#if ALLOW_FAST_MEMORY
-				if (Memory.HasFixedGlobalAddress)
+				if (_DynarecConfig.AllowFastMemory && Memory.HasFixedGlobalAddress)
 				{
 					var AddressMasked = ast.Binary(Address, "&", ast.Immediate(PspMemory.MemoryMask));
 					return ast.Immediate(Memory.FixedGlobalAddress) + AddressMasked;
 				}
 				else
-#endif
 				{
 					return ast.CallInstance(
 						ast.CpuThreadState,
@@ -167,11 +176,14 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm GetTickCall()
 		{
-#if EMIT_CALL_TICK
-			return ast.Statement(ast.CallInstance(ast.CpuThreadState, (Action)CSPspEmu.Core.Cpu.CpuThreadState.Methods.Tick));
-#else
-			return ast.Statement();
-#endif
+			if (_DynarecConfig.EMIT_CALL_TICK)
+			{
+				return ast.Statement(ast.CallInstance(ast.CpuThreadState, (Action)CSPspEmu.Core.Cpu.CpuThreadState.Methods.Tick));
+			}
+			else
+			{
+				return ast.Statement();
+			}
 		}
 
 		static public void ErrorWriteLine(string Line)

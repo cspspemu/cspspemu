@@ -1,5 +1,6 @@
 ﻿using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Cpu.Assembler;
+using CSPspEmu.Core.Cpu.InstructionCache;
 using SafeILGenerator.Ast.Nodes;
 using SafeILGenerator.Ast.Serializers;
 using System;
@@ -7,8 +8,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -27,10 +32,28 @@ namespace CSPspEmu.Gui.Winforms
 		public class PCItem
 		{
 			public uint PC;
+			public MethodCacheInfo Entry;
+
+			public Color ItemColor
+			{
+				get
+				{
+					if (Entry.HasSpecialName) return Color.Red;
+					return Color.Black;
+				}
+			}
+
+			public string Message
+			{
+				get
+				{
+					return Entry.Name;
+				}
+			}
 
 			public override string ToString()
 			{
-				return String.Format("0x{0:X8}", PC);
+				return Message;
 			}
 		}
 
@@ -39,10 +62,12 @@ namespace CSPspEmu.Gui.Winforms
 			PcListBox.SuspendLayout();
 			foreach (var PC in CpuProcessor.MethodCache.PCs.OrderBy(Item => Item))
 			{
-				if (CpuProcessor.MethodCache.GetForPC(PC).AstTree != null)
+				var Entry = CpuProcessor.MethodCache.GetForPC(PC);
+				if (Entry.AstTree != null)
 				{
 					PcListBox.Items.Add(new PCItem()
 					{
+						Entry = Entry,
 						PC = PC,
 					});
 				}
@@ -114,24 +139,93 @@ namespace CSPspEmu.Gui.Winforms
 			}
 		}
 
-		private void ViewTextBox_TextChanged(object sender, EventArgs e)
+		private void saveILAsDLLToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			if (_DynarecConfig.FunctionCallWithStaticReferences)
+			{
+				MessageBox.Show("_DynarecConfig.FunctionCallWithStaticReferences enabled. It will break exporting.");
+			}
 
+			var nameOfAssembly = "OutputAssembly";
+			var nameOfModule = "OutputModule";
+			var nameOfDLL = "cspspemu_temp_output.dll";
+			var nameOfType = "OutputType";
+
+			var SaveFileDialog = new SaveFileDialog();
+			SaveFileDialog.FileName = nameOfDLL;
+			SaveFileDialog.DefaultExt = ".dll";
+			SaveFileDialog.AddExtension = true;
+			var Result = SaveFileDialog.ShowDialog();
+			if (Result != System.Windows.Forms.DialogResult.Cancel)
+			{
+				var AssemblyName = new System.Reflection.AssemblyName { Name = nameOfAssembly };
+				var AssemblyBuilder = Thread.GetDomain().DefineDynamicAssembly(AssemblyName, AssemblyBuilderAccess.Save);
+				var ModuleBuilder = AssemblyBuilder.DefineDynamicModule(nameOfModule, nameOfDLL);
+				var TypeBuilder = ModuleBuilder.DefineType(nameOfType, TypeAttributes.Public | TypeAttributes.Class);
+
+				//FieldBuilder targetWrapedObjectField = typeBuilder.DefineField("_" + targetWrapType.FullName.Replace(".", ""), targetWrapType, System.Reflection.FieldAttributes.Private);
+				//MethodAttributes constructorAttributes = System.Reflection.MethodAttributes.Public;
+				//
+				//Type objType = Type.GetType("System.Object");
+				//ConstructorInfo objCtor = objType.GetConstructor(new Type[0]);
+				//ConstructorBuilder constructorBuilder = typeBuilder.DefineConstructor(constructorAttributes, System.Reflection.CallingConventions.Standard, new Type[] { targetWrapType });
+				//System.Reflection.Emit.ILGenerator ilConstructor = constructorBuilder.GetILGenerator();
+
+				foreach (var PC in CpuProcessor.MethodCache.PCs.OrderBy(Item => Item))
+				{
+					var Entry = CpuProcessor.MethodCache.GetForPC(PC);
+					if (Entry.AstTree != null)
+					{
+						var MethodBuilder = TypeBuilder.DefineMethod("Method_" + Entry.Name, MethodAttributes.Public | MethodAttributes.Static, typeof(void), new[] { typeof(CpuThreadState) });
+						Entry.AstTree.GenerateIL(MethodBuilder, MethodBuilder.GetILGenerator());
+						//MethodBuilder.CreateDelegate(typeof(Action<CpuThreadState>));
+					}
+
+					//break;
+				}
+
+				TypeBuilder.CreateType();
+
+				AssemblyBuilder.Save(nameOfDLL);
+				File.Copy(nameOfDLL, SaveFileDialog.FileName, true);
+			}
+			
 		}
 
-		private void PcListBox_SelectedIndexChanged_1(object sender, EventArgs e)
+		private void PcListBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			UpdateText();
 		}
 
-		private void LanguageComboBox_SelectedIndexChanged_1(object sender, EventArgs e)
+		private void LanguageComboBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			UpdateText();
 		}
 
-		private void ViewTextBox_TextChanged_1(object sender, EventArgs e)
+		private void PcListBox_DrawItem_1(object sender, DrawItemEventArgs e)
 		{
+			e.DrawBackground();
+			e.DrawFocusRectangle();
 
+			if (e.Index >= 0)
+			{
+				var ListBox = (ListBox)sender;
+				var item = ListBox.Items[e.Index] as PCItem;
+
+				var Color = item.ItemColor;
+
+				if (item == ListBox.SelectedItem)
+				{
+					//Color = SystemColors.HighlightText;
+				}
+
+				e.Graphics.DrawString(
+					item.ToString(),
+					ListBox.Font,
+					new SolidBrush(Color),
+					e.Bounds
+				);
+			}
 		}
 	}
 }

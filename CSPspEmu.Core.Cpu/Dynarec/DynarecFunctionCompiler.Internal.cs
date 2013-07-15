@@ -97,6 +97,8 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			/// <returns></returns>
 			internal DynarecFunction CreateFunction()
 			{
+				CpuEmitter.SpecialName = "";
+				
 				var Time0 = DateTime.UtcNow;
 				
 				AnalyzeBranches();
@@ -123,6 +125,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
 				return new DynarecFunction()
 				{
+					Name = CpuEmitter.SpecialName,
 					EntryPC = EntryPC,
 					MinPC = MinPC,
 					MaxPC = MaxPC,

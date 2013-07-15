@@ -20,9 +20,15 @@ public static class AstNodeExtensions
 		return AstOptimizerPsp.GlobalOptimize(CpuProcessor, AstNodeStm);
 	}
 
+	static public void GenerateIL(this AstNodeStm AstNodeStm, MethodInfo MethodInfo, ILGenerator ILGenerator)
+	{
+		_GeneratorILPsp.Init(MethodInfo, ILGenerator).Reset().GenerateRoot(AstNodeStm);
+	}
+
+
 	static public void GenerateIL(this AstNodeStm AstNodeStm, DynamicMethod DynamicMethod)
 	{
-		_GeneratorILPsp.Init(DynamicMethod, DynamicMethod.GetILGenerator()).Reset().GenerateRoot(AstNodeStm);
+		GenerateIL(AstNodeStm, DynamicMethod, DynamicMethod.GetILGenerator());
 	}
 
 	static public string ToILString<TDelegate>(this AstNodeStm AstNodeStm)
@@ -32,7 +38,7 @@ public static class AstNodeExtensions
 
 	static public string ToILString(this AstNodeStm AstNodeStm, MethodInfo MethodInfo)
 	{
-		return _GeneratorILPsp.GenerateToString(MethodInfo, AstNodeStm);
+		return _GeneratorILPsp.Reset().GenerateToString(MethodInfo, AstNodeStm);
 	}
 
 	static public string ToCSharpString(this AstNode AstNode)

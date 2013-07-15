@@ -9,6 +9,8 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 	/// </summary>
 	public class DynarecFunction
 	{
+		public string Name;
+
 		/// <summary>
 		/// 
 		/// </summary>

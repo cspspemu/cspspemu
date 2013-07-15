@@ -167,26 +167,39 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm lwc1() { return ast.AssignFPR_I(FT, ast.MemoryGetValue<int>(Memory, this.Address_RS_IMM())); }
 		public AstNodeStm swc1() { return ast.MemorySetValue<int>(Memory, this.Address_RS_IMM(), ast.FPR_I(FT)); }
 
+		public string SpecialName = "";
+
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Syscall
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		public AstNodeStm syscall()
 		{
-#if true
 			if (Instruction.CODE == SyscallInfo.NativeCallSyscallCode)
 			{
 				var DelegateId = Memory.Read4(PC + 4);
 				var SyscallInfoInfo = CpuProcessor.RegisteredNativeSyscallMethods[DelegateId];
+				SpecialName = SyscallInfoInfo.FunctionEntryName;
 
-				return ast.StatementsInline(
+				var Statements = ast.StatementsInline(
 					ast.Assign(ast.REG("PC"), PC),
 					ast.Comment(SyscallInfoInfo.Name),
-					ast.GetTickCall(),
-					ast.Statement(ast.CallDelegate(SyscallInfoInfo.PoolItem.AstFieldAccess, ast.CpuThreadState))
+					ast.GetTickCall()
 				);
+
+				if (_DynarecConfig.FunctionCallWithStaticReferences)
+				{
+					Statements.AddStatement(ast.Statement(ast.CallDelegate(SyscallInfoInfo.PoolItem.AstFieldAccess, ast.CpuThreadState)));
+				}
+				else
+				{
+					Statements.AddStatement(ast.Statement(ast.CallInstance(ast.CpuThreadState, (Action<uint>)CpuThreadState.Methods.SyscallNative, DelegateId)));
+				}
+				
+				Statements.AddStatement(ast.Return());
+
+				return Statements;
 			}
 			else
-#endif
 			{
 				return ast.StatementsInline(
 					ast.Assign(ast.REG("PC"), PC),

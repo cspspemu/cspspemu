@@ -110,6 +110,7 @@
     <Compile Include="VFpu\VfpuRegisterInt.cs" />
     <Compile Include="VFpu\VfpuPrefix.cs" />
     <Compile Include="VFpu\VfpuUtils.cs" />
+    <Compile Include="_DynarecConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">

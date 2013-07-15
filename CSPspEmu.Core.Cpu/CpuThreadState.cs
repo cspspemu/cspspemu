@@ -285,6 +285,15 @@ namespace CSPspEmu.Core.Cpu
 			CpuProcessor.Syscall(Code, this);
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="DelegateId"></param>
+		public void SyscallNative(uint DelegateId)
+		{
+			CpuProcessor.RegisteredNativeSyscallMethods[DelegateId].PoolItem.Value(this);
+		}
+
 		//private DateTime LastTick;
 		private int TickCount = 0;
 
@@ -546,7 +555,7 @@ namespace CSPspEmu.Core.Cpu
 				Console.WriteLine("-------------------------------------");
 			}
 
-			MethodCacheInfo.AstTree = DynarecFunction.AstNode;
+			MethodCacheInfo.DynarecFunction = DynarecFunction;
 			MethodCacheInfo.StaticField.Value = DynarecFunction.Delegate;
 			MethodCacheInfo.EntryPC = DynarecFunction.EntryPC;
 			MethodCacheInfo.MinPC = DynarecFunction.MinPC;
@@ -562,6 +571,16 @@ namespace CSPspEmu.Core.Cpu
 		{
 			//Console.WriteLine("SetPCWriteAddress: {0:X} : {1:X}", Address, PC);
 			Memory.SetPCWriteAddress(Address, PC);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="PC"></param>
+		/// <returns></returns>
+		public Action<CpuThreadState> GetFuncAtPC(uint PC)
+		{
+			return CpuProcessor.MethodCache.GetForPC(PC).CallDelegate;
 		}
 	}
 }
