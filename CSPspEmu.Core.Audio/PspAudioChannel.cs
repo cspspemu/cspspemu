@@ -35,9 +35,24 @@ namespace CSPspEmu.Core.Audio
 		public bool Available;
 
 		/// <summary>
+		/// 
+		/// </summary>
+		public bool IsReserved
+		{
+			get { return !Available; }
+			set { Available = !value; }
+		}
+
+		/// <summary>
 		/// Total amount of samples in the channel.
 		/// </summary>
-		public int SampleCount;
+		private int _SampleCount;
+
+		public int SampleCount
+		{
+			get { return _SampleCount; }
+			set { _SampleCount = Math.Max(0, value); }
+		}
 
 		/// <summary>
 		/// Format of the audio in the channel.
@@ -70,13 +85,27 @@ namespace CSPspEmu.Core.Audio
 				{
 					case PspAudio.FormatEnum.Mono: return 1;
 					case PspAudio.FormatEnum.Stereo: return 2;
-					default: throw (new NotImplementedException());
+					default: throw (new InvalidAudioFormatException());
+				}
+			}
+			set
+			{
+				switch (value)
+				{
+					case 1: Format = PspAudio.FormatEnum.Mono; break;
+					case 2: Format = PspAudio.FormatEnum.Stereo; break;
+					default: throw (new InvalidAudioFormatException());
 				}
 			}
 		}
 
 		private short[] Samples;
 		private short[] StereoSamplesBuffer;
+
+		public void Release()
+		{
+			IsReserved = false;
+		}
 
 		public void Updated()
 		{
@@ -222,5 +251,8 @@ namespace CSPspEmu.Core.Audio
 		{
 			return String.Format("AudioChannel(Index={0},Frequency={1},Format={2},Channels={3},SampleCount={4})", Index, Frequency, Format, NumberOfChannels, SampleCount);
 		}
+	}
+	public class InvalidAudioFormatException : Exception
+	{
 	}
 }

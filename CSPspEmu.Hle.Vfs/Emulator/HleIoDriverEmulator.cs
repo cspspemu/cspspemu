@@ -4,6 +4,7 @@ using System.Text;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Components.Display;
+using System.Drawing.Imaging;
 
 namespace CSPspEmu.Hle.Vfs.Emulator
 {
@@ -29,6 +30,9 @@ namespace CSPspEmu.Hle.Vfs.Emulator
 
 		[Inject]
 		HleOutputHandler HleOutputHandler;
+
+		[Inject]
+		PspHleRunningConfig PspHleRunningConfig;
 
 		public unsafe int IoInit()
 		{
@@ -154,9 +158,10 @@ namespace CSPspEmu.Hle.Vfs.Emulator
 					break;
 				case EmulatorDevclEnum.IsEmulator:
 					return 0;
-				//case EmulatorDevclEnum.EmitScreenshot:
-				//	this.PspDisplay.TakeScreenshot().Save(String.Format("{0}.lastoutput.{1}.png", PspConfig.FileNameBase, ScreenShotCount++), ImageFormat.Png);
-				//	break;
+				case EmulatorDevclEnum.EmitScreenshot:
+					if (PspHleRunningConfig.FileNameBase == null || PspHleRunningConfig.FileNameBase == "") throw (new Exception("PspHleRunningConfig.FileNameBase is empty"));
+					this.PspDisplay.TakeScreenshot().Save(String.Format("{0}.lastoutput.{1}.png", PspHleRunningConfig.FileNameBase, ScreenShotCount++), ImageFormat.Png);
+					break;
 				default:
 					Console.Error.WriteLine("Unknown emulator command '{0}':0x{1:X} <- {2}", DeviceName, Command, (EmulatorDevclEnum)Command);
 					return -1;

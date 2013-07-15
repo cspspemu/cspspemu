@@ -39,6 +39,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -75,6 +76,10 @@
     <ProjectReference Include="..\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
       <Project>{FD27EF3A-4EBE-4867-A603-3E7048DCF459}</Project>
       <Name>CSPspEmu.Core.Memory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
+      <Project>{f783ecd3-0f79-43cc-abd0-d356a64049c4}</Project>
+      <Name>CSPspEmu.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Hle.Formats\CSPspEmu.Hle.Formats.csproj">
       <Project>{B7D8A67E-0046-4EF7-80FE-444BC7EFBC70}</Project>

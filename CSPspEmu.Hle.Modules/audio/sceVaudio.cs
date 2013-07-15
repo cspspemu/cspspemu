@@ -1,5 +1,8 @@
 ﻿using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core;
+using CSPspEmu.Core.Audio;
+using CSPspEmu.Hle.Modules.threadman;
+using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Hle.Modules.audio
 {
@@ -9,21 +12,19 @@ namespace CSPspEmu.Hle.Modules.audio
 		[Inject]
 		public sceAudio sceAudio;
 
-		public class PspVaudioChannelClass
+		[Inject]
+		public PspAudio PspAudio;
+
+		[Inject]
+		public HleThreadManager HleThreadManager;
+
+		PspAudioChannel PspVaudioChannel
 		{
-			public bool IsReserved;
-			internal void Release()
+			get
 			{
+				return PspAudio.SrcOutput2Channel;
 			}
-
-			public int SampleCount { get; set; }
-
-			public int SampleRate { get; set; }
-
-			public int Format { get; set; }
 		}
-
-		PspVaudioChannelClass PspVaudioChannel = new PspVaudioChannelClass();
 
 		/// <summary>
 		/// 
@@ -39,32 +40,57 @@ namespace CSPspEmu.Hle.Modules.audio
 			}
 
 			PspVaudioChannel.Release();
-			PspVaudioChannel.IsReserved = false;
+			VAudioReserved = false;
 
 			return 0;
 		}
+
+
+		bool VAudioReserved = false;
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="SampleCount"></param>
-		/// <param name="SampleRate"></param>
-		/// <param name="Format"></param>
+		/// <param name="Frequency"></param>
+		/// <param name="Channels"></param>
 		[HlePspFunction(NID = 0x03B6807D, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceVaudioChReserve(int SampleCount, int SampleRate, int Format)
+		public int sceVaudioChReserve(int SampleCount, int Frequency, int Channels)
 		{
-			if (PspVaudioChannel.IsReserved)
+			try
 			{
-				throw (new SceKernelException((SceKernelErrors)unchecked(-1)));
+				if (VAudioReserved)
+				{
+					throw (new SceKernelException(SceKernelErrors.ERROR_BUSY));
+				}
+
+				if (PspVaudioChannel.IsReserved)
+				{
+					throw (new SceKernelException(SceKernelErrors.ERROR_AUDIO_CHANNEL_ALREADY_RESERVED));
+				}
+
+				if (SampleCount != 256 && SampleCount != 1024 && SampleCount != 2048)
+				{
+					throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_SIZE));
+				}
+
+				if (Channels != 2)
+				{
+					throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_FORMAT));
+				}
+
+				VAudioReserved = true;
+				PspVaudioChannel.IsReserved = true;
+				PspVaudioChannel.SampleCount = SampleCount;
+				PspVaudioChannel.Frequency = Frequency;
+				PspVaudioChannel.NumberOfChannels = Channels;
+
+				return 0;
 			}
-
-			PspVaudioChannel.IsReserved = true;
-			PspVaudioChannel.SampleCount = SampleCount;
-			PspVaudioChannel.SampleRate = SampleRate;
-			PspVaudioChannel.Format = Format;
-
-			return 0;
+			catch (InvalidAudioFormatException)
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_AUDIO_CHANNEL_ALREADY_RESERVED));
+			}
 		}
 
 		/// <summary>

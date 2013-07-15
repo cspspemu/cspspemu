@@ -314,6 +314,11 @@ namespace CSPspEmu.Core.Cpu
 			}
 		}
 
+		public void Reschedule()
+		{
+			Yield();
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>

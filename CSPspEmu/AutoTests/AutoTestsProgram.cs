@@ -49,8 +49,6 @@ namespace CSPspEmu.AutoTests
 		[Inject]
 		PspStoredConfig StoredConfig;
 
-		string FileNameBase;
-
 		public AutoTestsProgram()
 		{
 			InjectContext.Bootstrap(this);
@@ -80,6 +78,8 @@ namespace CSPspEmu.AutoTests
 
 			IHleIoDriver HostDriver = null;
 
+			//Console.WriteLine(FileNameBase);
+
 			InjectContext _InjectContext = null;
 			{
 				//var Capture = false;
@@ -90,8 +90,6 @@ namespace CSPspEmu.AutoTests
 					_InjectContext.SetInstanceType<HleOutputHandler, HleOutputHandlerMock>();
 
 					//Console.Error.WriteLine("[1]");
-
-					this.FileNameBase = FileNameBase;
 
 					var Start = DateTime.UtcNow;
 					_InjectContext.GetInstance<HleModuleManager>();
@@ -127,6 +125,7 @@ namespace CSPspEmu.AutoTests
 							try { HostDriver.IoRemove(null, "/__testoutput.txt"); } catch { }
 							try { HostDriver.IoRemove(null, "/__testerror.txt"); } catch { }
 
+							_InjectContext.GetInstance<PspHleRunningConfig>().FileNameBase = FileNameBase;
 							PspRunner.CpuComponentThread._LoadFile(FileName);
 							//Console.Error.WriteLine("[3]");
 							if (!PspRunner.CpuComponentThread.StoppedEndedEvent.WaitOne(TimeoutTime))

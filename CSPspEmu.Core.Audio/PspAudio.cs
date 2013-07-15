@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CSPspEmu.Core.Audio
@@ -27,20 +28,30 @@ namespace CSPspEmu.Core.Audio
 		public const int MaxVolume = 0x8000;
 
 		/// <summary>
+		/// 
+		/// </summary>
+		public const int SamplesMax = 0x10000 - 64;
+
+		/// <summary>
 		/// Used to request the next available hardware channel.
 		/// </summary>
-		public const int FreeChannel = -1;
+		//public const int FreeChannel = -1;
 
 		/// <summary>
 		/// Maximum number of allowed audio channels
 		/// </summary>
-		//public const int MaxChannels = 8;
-		public const int MaxChannels = 32;
+		public const int MaxChannels = 8;
+		//public const int MaxChannels = 32;
 
 		/// <summary>
 		/// Number of audio channels
 		/// </summary>
 		public PspAudioChannel[] Channels;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public PspAudioChannel SrcOutput2Channel;
 
 		/// <summary>
 		/// 
@@ -69,6 +80,12 @@ namespace CSPspEmu.Core.Audio
 					Available = true,
 				};
 			}
+
+			SrcOutput2Channel = new PspAudioChannel(this)
+			{
+				Index = MaxChannels,
+				Available = true,
+			};
 		}
 
 		/// <summary>
@@ -77,7 +94,8 @@ namespace CSPspEmu.Core.Audio
 		/// <returns></returns>
 		public PspAudioChannel GetFreeChannel()
 		{
-			return Channels.First(Channel => Channel.Available);
+			if (!Channels.Any(Channel => Channel.Available)) throw(new NoChannelsAvailableException());
+			return Channels.Reverse().First(Channel => Channel.Available);
 		}
 
 		/// <summary>
@@ -88,7 +106,7 @@ namespace CSPspEmu.Core.Audio
 		{
 			if (ChannelId < 0 || ChannelId >= Channels.Length)
 			{
-				throw(new InvalidOperationException());
+				throw(new InvalidChannelException());
 			}
 		}
 
@@ -101,7 +119,7 @@ namespace CSPspEmu.Core.Audio
 		public PspAudioChannel GetChannel(int ChannelId, bool CanAlloc = false)
 		{
 			PspAudioChannel Channel;
-			if (CanAlloc && ChannelId == FreeChannel)
+			if (CanAlloc && ChannelId < 0)
 			{
 				Channel = GetFreeChannel();
 			}
@@ -110,7 +128,6 @@ namespace CSPspEmu.Core.Audio
 				CheckChannelId(ChannelId);
 				Channel = Channels[ChannelId];
 			}
-			Channel.Available = false;
 			return Channel;
 		}
 
@@ -144,5 +161,11 @@ namespace CSPspEmu.Core.Audio
 				}
 			});
 		}
+	}
+	public class InvalidChannelException : Exception
+	{
+	}
+	public class NoChannelsAvailableException : Exception
+	{
 	}
 }

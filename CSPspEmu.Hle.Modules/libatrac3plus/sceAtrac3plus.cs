@@ -12,6 +12,7 @@ using CSPspEmu.Core;
 using CSPspEmu.Core.Audio;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Media;
+using CSPspEmu.Core.Cpu;
 
 namespace CSPspEmu.Hle.Modules.libatrac3plus
 {
@@ -477,11 +478,11 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xB3B5D042, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceAtracGetOutputChannel(int AtracId, out int OutputChannel)
+		public int sceAtracGetOutputChannel(CpuThreadState CpuThreadState, int AtracId, out int OutputChannel)
 		{
 			//throw(new NotImplementedException());
 			var Atrac = AtracList.Get(AtracId);
-			OutputChannel = sceAudio.sceAudioChReserve(-1, Atrac.MaximumSamples, PspAudio.FormatEnum.Stereo);
+			OutputChannel = sceAudio.sceAudioChReserve(CpuThreadState , - 1, Atrac.MaximumSamples, PspAudio.FormatEnum.Stereo);
 			//Console.WriteLine("{0}", *OutputChannelPointer); Console.ReadKey();
 			return 0;
 		}
