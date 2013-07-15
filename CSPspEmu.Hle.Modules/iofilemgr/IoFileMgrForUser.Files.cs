@@ -390,6 +390,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			try
 			{
 				var HleIoDrvFileArg = GetFileArgFromHandle(FileId);
+				//Console.WriteLine("sceIoRead: {0}", OutputSize);
 				var Result = HleIoDrvFileArg.HleIoDriver.IoRead(HleIoDrvFileArg, OutputPointer, OutputSize);
 				//for (int n = 0; n < OutputSize; n++) Console.Write("{0:X},", OutputPointer[n]);
 				return Result;

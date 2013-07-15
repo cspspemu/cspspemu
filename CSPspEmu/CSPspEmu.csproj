@@ -206,17 +206,9 @@
     <EmbeddedResource Include="..\version_current_numeric.txt">
       <Link>References\version_current_numeric.txt</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\utils\oma2wav\oma2wav.exe">
-      <Link>References\oma2wav.exe</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
     <Content Include="..\version_last.txt">
       <Link>References\version_last.txt</Link>
     </Content>
-    <EmbeddedResource Include="..\WavDest.dll">
-      <Link>References\WavDest.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
     <Content Include="References\psp.ico" />
   </ItemGroup>
   <ItemGroup>

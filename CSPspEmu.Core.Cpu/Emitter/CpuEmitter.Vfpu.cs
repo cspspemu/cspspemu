@@ -388,31 +388,15 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		private AstNodeStm _vtfm_x(int VectorSize)
 		{
 			return VEC(VD, VType.VFloat, VectorSize).SetVector(Index =>
-				_Aggregate(0f, (Aggregated, Index2) => Aggregated + MAT_VS[Index, Index2] * VEC_VT[Index2])
+				_Aggregate(0f, VectorSize, (Aggregated, Index2) => Aggregated + MAT_VS[Index, Index2] * VEC_VT[Index2])
 			);
 		}
 
-		private AstNodeStm _vhtfm_x(uint VectorSize)
+		private AstNodeStm _vhtfm_x(int VectorSize)
 		{
-			return ast.NotImplemented("_vhtfm_x");
-			//VectorOperationSaveVd(VectorSize, Index =>
-			//{
-			//	SafeILGenerator.Push((float)0.0f);
-			//	for (int n = 0; n < VectorSize; n++)
-			//	{
-			//		Load_VS(n, VectorSize, RegisterOffset: Index);
-			//		if (n == VectorSize - 1)
-			//		{
-			//			SafeILGenerator.Push((float)1.0f);
-			//		}
-			//		else
-			//		{
-			//			Load_VT(n, VectorSize - 1);
-			//		}
-			//		SafeILGenerator.BinaryOperation(SafeBinaryOperator.MultiplySigned);
-			//		SafeILGenerator.BinaryOperation(SafeBinaryOperator.AdditionSigned);
-			//	}
-			//});
+			return VEC(VD, VType.VFloat, VectorSize).SetVector(Index =>
+				_Aggregate(0f, VectorSize, (Aggregated, Index2) => Aggregated + MAT_VS[Index, Index2] * ((Index2 == VectorSize - 1) ? 1f : VEC_VT[Index2]))
+			);
 		}
 
 		public AstNodeStm vtfm2() { return _vtfm_x(2); }

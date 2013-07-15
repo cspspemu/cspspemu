@@ -54,8 +54,6 @@
 			this.UtilsUseFastmemMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.UtilsAstOptimizationsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripSeparator();
-			this.UtilsInstallWavDestMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem13 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsAssociateExtensionsMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.RunMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.RunRunResumeMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -171,8 +169,6 @@
             this.UtilsUseFastmemMenu,
             this.UtilsAstOptimizationsMenu,
             this.toolStripMenuItem10,
-            this.UtilsInstallWavDestMenu,
-            this.toolStripMenuItem13,
             this.UtilsAssociateExtensionsMenu});
 			this.UtilsMenu.Name = "UtilsMenu";
 			this.UtilsMenu.Size = new System.Drawing.Size(42, 20);
@@ -297,19 +293,6 @@
 			// 
 			this.toolStripMenuItem10.Name = "toolStripMenuItem10";
 			this.toolStripMenuItem10.Size = new System.Drawing.Size(303, 6);
-			// 
-			// UtilsInstallWavDestMenu
-			// 
-			this.UtilsInstallWavDestMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.uac_icon;
-			this.UtilsInstallWavDestMenu.Name = "UtilsInstallWavDestMenu";
-			this.UtilsInstallWavDestMenu.Size = new System.Drawing.Size(306, 22);
-			this.UtilsInstallWavDestMenu.Text = "Install &WavDest DirectShow Filter";
-			this.UtilsInstallWavDestMenu.Click += new System.EventHandler(this.installWavDestDirectShowFilterToolStripMenuItem_Click);
-			// 
-			// toolStripMenuItem13
-			// 
-			this.toolStripMenuItem13.Name = "toolStripMenuItem13";
-			this.toolStripMenuItem13.Size = new System.Drawing.Size(303, 6);
 			// 
 			// UtilsAssociateExtensionsMenu
 			// 
@@ -608,8 +591,6 @@
 		public System.Windows.Forms.ToolStripMenuItem UtilsDumpMainMemoryMenu;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem12;
 		public System.Windows.Forms.ToolStripMenuItem DebugDumpGpuFrameMenu;
-		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem13;
-		public System.Windows.Forms.ToolStripMenuItem UtilsInstallWavDestMenu;
 		private System.Windows.Forms.ToolStripMenuItem UtilsConfigureControllerMenu;
 		private System.Windows.Forms.ToolStripMenuItem FileOpenRecentMenu;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem14;

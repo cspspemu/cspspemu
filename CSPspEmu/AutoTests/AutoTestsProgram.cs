@@ -40,9 +40,9 @@ namespace CSPspEmu.AutoTests
 			}
 		}
 
-		[Inject]
-		CpuConfig CpuConfig;
-
+		//[Inject]
+		//CpuConfig CpuConfig;
+		//
 		[Inject]
 		HleConfig HleConfig;
 
@@ -52,9 +52,6 @@ namespace CSPspEmu.AutoTests
 		public AutoTestsProgram()
 		{
 			InjectContext.Bootstrap(this);
-			CpuConfig.DebugSyscalls = false;
-			CpuConfig.ShowInstructionStats = false;
-			HleConfig.TraceLastSyscalls = false;
 		}
 
 		public void Init()
@@ -88,6 +85,13 @@ namespace CSPspEmu.AutoTests
 				{
 					_InjectContext = PspInjectContext.CreateInjectContext(StoredConfig, Test: true);
 					_InjectContext.SetInstanceType<HleOutputHandler, HleOutputHandlerMock>();
+
+					var CpuConfig = _InjectContext.GetInstance<CpuConfig>();
+					var HleConfig = _InjectContext.GetInstance<HleConfig>();
+					CpuConfig.DebugSyscalls = false;
+					CpuConfig.ShowInstructionStats = false;
+					HleConfig.TraceLastSyscalls = false;
+					HleConfig.DebugSyscalls = false;
 
 					//Console.Error.WriteLine("[1]");
 

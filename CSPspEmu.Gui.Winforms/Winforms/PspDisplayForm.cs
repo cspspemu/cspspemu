@@ -879,24 +879,6 @@ namespace CSPspEmu.Gui.Winforms
 			//UtilsUseFastmemMenu.Checked = !PspConfig.;
 		}
 
-		private void installWavDestDirectShowFilterToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			var Result = ProcessUtils.RunProgramInBackgroundAsRoot(ApplicationPaths.ExecutablePath, "/installat3");
-
-			Console.WriteLine(Result.ErrorString);
-			Console.WriteLine(Result.OutputString);
-			Console.WriteLine(Result.Success);
-
-			if (Result.Success)
-			{
-				MessageBox.Show("Registered done!", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
-			}
-			else
-			{
-				MessageBox.Show("Can't register WavDest.dll\n\n" + Result.ErrorString, "Done", MessageBoxButtons.OK, MessageBoxIcon.Error);
-			}
-		}
-
 		private void configureControllerToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			PauseResume(() =>

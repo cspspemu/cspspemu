@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,9 +18,9 @@ static public class ManagedPointerExtensions
 	}
 }
 
-public class ManagedPointer<T>
+unsafe public class ManagedPointer<T>
 {
-	private readonly T[] Array;
+	private readonly T[] Container;
 	private readonly int Offset;
 	private readonly int Length;
 
@@ -27,7 +28,7 @@ public class ManagedPointer<T>
 	{
 		if (Length < 0) Length = Array.Length;
 		if (Length > Offset + Array.Length) Length = Offset + Array.Length;
-		this.Array = Array;
+		this.Container = Array;
 		this.Offset = Offset;
 		this.Length = Length;
 	}
@@ -39,24 +40,24 @@ public class ManagedPointer<T>
 
 	public T this[int Index]
 	{
-		get { CheckBounds(Index); return Array[Offset + Index]; }
-		set { CheckBounds(Index); Array[Offset + Index] = value; }
+		get { CheckBounds(Index); return Container[Offset + Index]; }
+		set { CheckBounds(Index); Container[Offset + Index] = value; }
 	}
 
 	public T this[uint Index]
 	{
-		get { CheckBounds((int)Index); return Array[Offset + Index]; }
-		set { CheckBounds((int)Index); Array[Offset + Index] = value; }
+		get { CheckBounds((int)Index); return Container[Offset + Index]; }
+		set { CheckBounds((int)Index); Container[Offset + Index] = value; }
 	}
 
 	public static ManagedPointer<T> operator +(ManagedPointer<T> Left, int Right)
 	{
-		return new ManagedPointer<T>(Left.Array, Left.Offset + Right, Left.Length - Right);
+		return new ManagedPointer<T>(Left.Container, Left.Offset + Right, Left.Length - Right);
 	}
 
 	public static ManagedPointer<T> operator +(int Right, ManagedPointer<T> Left)
 	{
-		return new ManagedPointer<T>(Left.Array, Left.Offset + Right, Left.Length - Right);
+		return new ManagedPointer<T>(Left.Container, Left.Offset + Right, Left.Length - Right);
 	}
 
 	public static implicit operator ManagedPointer<T>(T[] That)
@@ -72,13 +73,28 @@ public class ManagedPointer<T>
 	{
 		if (Length < 0) Length = this.Length;
 		if (Length >= this.Length - Offset) Length = this.Length - Offset;
-		return new ManagedPointer<T>(this.Array, this.Offset + Offset, Length);
+		return new ManagedPointer<T>(this.Container, this.Offset + Offset, Length);
 	}
 
 	public void Memcpy(ManagedPointer<T> Src, int Length)
 	{
 		var Dst = this;
-		for (int n = 0; n < Length; n++) Dst[n] = Src[n];
+		Array.Copy(Src.Container, Src.Offset, Dst.Container, Dst.Offset, Length);
+		//Src.Array.CopyTo(Dst.Array, 
+		//for (int n = 0; n < Length; n++) Dst[n] = Src[n];
+	}
+
+	public void GetRawPointer(Action<IntPtr> Callback)
+	{
+		var Handle = GCHandle.Alloc(this.Container);
+		try
+		{
+			Callback(Marshal.UnsafeAddrOfPinnedArrayElement(this.Container, this.Offset));
+		}
+		finally
+		{
+			Handle.Free();
+		}
 	}
 
 	public T[] GetArray(int len_s = -1)

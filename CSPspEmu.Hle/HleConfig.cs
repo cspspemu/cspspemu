@@ -16,7 +16,7 @@ namespace CSPspEmu.Hle
 		PspStoredConfig PspStoredConfig;
 
 		public bool DebugThreadSwitching = false;
-		public bool DebugNotImplemented = false;
+		public bool DebugNotImplemented = true;
 
 		public PspLanguages Language;
 		public PspConfirmButton ConfirmButton;

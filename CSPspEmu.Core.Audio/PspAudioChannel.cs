@@ -99,8 +99,8 @@ namespace CSPspEmu.Core.Audio
 			}
 		}
 
-		private short[] Samples;
-		private short[] StereoSamplesBuffer;
+		private short[] Samples = new short[0];
+		private short[] StereoSamplesBuffer = new short[0];
 
 		public void Release()
 		{
@@ -109,6 +109,8 @@ namespace CSPspEmu.Core.Audio
 
 		public void Updated()
 		{
+			if (SampleCount < 1) throw(new InvalidOperationException("SampleCount < 1"));
+			if (NumberOfChannels < 1) throw (new InvalidOperationException("NumberOfChannels < 1"));
 			Samples = new short[SampleCount * NumberOfChannels];
 			StereoSamplesBuffer = new short[SampleCount * 2];
 		}
@@ -176,6 +178,8 @@ namespace CSPspEmu.Core.Audio
 		/// <param name="ActionCallbackOnReaded"></param>
 		public void Write(short[] Samples, Action ActionCallbackOnReaded)
 		{
+			if (Samples == null) throw (new InvalidOperationException("short[] Samples is null"));
+
 			short[] StereoSamples;
 
 			switch (Format)

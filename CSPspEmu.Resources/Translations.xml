@@ -355,14 +355,6 @@
 			<translation lang="pt">Francês</translation>
 			<translation lang="fr">Français</translation>
 		</text>
-		<text id="UtilsInstallWavDestMenu">
-			<translation lang="en">Install &amp;WavDest DirectShow Filter</translation>
-			<translation lang="es">Instalar filtro de DirectShow WavDest&amp;</translation>
-			<translation lang="it">Installa filtro &amp;WavDest DirectShow</translation>
-			<translation lang="ja">&amp;WavDest DirectShowフィルタをインストール</translation>
-			<translation lang="pt">Instalar filtro do DirectShow WavDest&amp;</translation>
-			<translation lang="fr">Installer filtre de DirectShow WavDest&amp;</translation>
-		</text>
 	</category>
 	<category id="extra">
 		<text id="UnknownGame">

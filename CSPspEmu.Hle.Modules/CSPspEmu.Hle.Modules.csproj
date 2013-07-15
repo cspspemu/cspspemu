@@ -229,10 +229,6 @@
       <Project>{E68AE26E-E969-4413-8D3C-E60A7D2A2950}</Project>
       <Name>CSPspEmu.Inject</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Media\CSPspEmu.Media.csproj">
-      <Project>{3AD1738D-5D2E-4517-A2B0-3C94155E69DF}</Project>
-      <Name>CSPspEmu.Media</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Utils\CSPspEmu.Utils.csproj">
       <Project>{DC02A203-30F2-4613-950B-1529FD55AC81}</Project>
       <Name>CSPspEmu.Utils</Name>

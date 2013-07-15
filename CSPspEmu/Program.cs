@@ -14,6 +14,7 @@ using CSharpUtils;
 using CSharpUtils.Getopt;
 using Mono.Simd;
 using CSPspEmu.Hle.Formats.audio.At3.Sample;
+using CSPspEmu.Hle;
 
 namespace CSPspEmu
 {
@@ -57,9 +58,11 @@ namespace CSPspEmu
 		static void Main(string[] Arguments)
 		{
 			//MiniPlayer.Play(
-			//	File.OpenRead(@"C:\projects\cspspemu\ms\temp\1C-99-F2-16-B6-41-D9-27-8D-41-80-6A-AB-D1-EB-77-29-61-17-0F.oma"),
+			//	File.OpenRead(@"C:\projects\cspspemu\ms\temp\1C-99-F2-16-B6-41-D9-27-8D-41-80-6A-AB-D1-EB-77-29-61-17-0F.at3"),
 			//	File.OpenWrite(@"C:\projects\cspspemu\ms\temp\1C-99-F2-16-B6-41-D9-27-8D-41-80-6A-AB-D1-EB-77-29-61-17-0F.raw")
 			//);
+			//
+			//return;
 
 			//if (!IsNet45OrNewer())
 			//{
@@ -139,7 +142,6 @@ namespace CSPspEmu
 					Console.WriteLine("   /version2                  - Outputs the program numeric version");
 					Console.WriteLine("   /decrypt <EBOOT.BIN>       - Decrypts an EBOOT.BIN");
 					Console.WriteLine("   /gitrevision               - Outputs the git revision");
-					Console.WriteLine("   /installat3                - Installs the WavDest filter. Requires be launched with administrative rights.");
 					Console.WriteLine("   /associate                 - Associates extensions with the program. Requires be launched with administrative rights.");
 					Console.WriteLine("   /viewout /timeout X /tests - Run integration tests.");
 					Console.WriteLine("");
@@ -197,20 +199,6 @@ namespace CSPspEmu
 				{
 					Console.Write("{0}", PspGlobalConfiguration.GitRevision);
 					Environment.Exit(0);
-				});
-				Getopt.AddRule("/installat3", () =>
-				{
-#if true
-					var OutFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\WavDestPsp.dll";
-#else
-					var OutFile = Environment.SystemDirectory + @"\WavDestPsp.dll";
-#endif
-					File.WriteAllBytes(OutFile, Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.References.WavDest.dll").ReadAll());
-					var Result = ProcessUtils.ExecuteCommand("regsvr32", String.Format(@"/s ""{0}__"" ", OutFile));
-					Console.Out.WriteLine("{0}", Result.OutputString);
-					Console.Error.WriteLine("{0}", Result.ErrorString);
-					//ProcessUtils.ExecuteCommand("regsvr32", String.Format(@"""{0}"" ", OutFile));
-					Environment.Exit(Result.ExitCode);
 				});
 				Getopt.AddRule("/associate", () =>
 				{

@@ -55,7 +55,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x110DEC9A, FirmwareVersion = 150)]
 		public int sceKernelUSec2SysClock(uint MicroSeconds, SceKernelSysClock* Clock)
 		{
-			Clock->MicroSeconds = MicroSeconds;
+			if (Clock != null) Clock->MicroSeconds = MicroSeconds;
 			return 0;
 		}
 
@@ -86,9 +86,9 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// </returns>
 		[HlePspFunction(NID = 0x6652B8CA, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceKernelSetAlarm(int clock, /*SceKernelAlarmHandler*/uint handler, void* common)
+		public int sceKernelSetAlarm(int clock, /*SceKernelAlarmHandler*/uint handler, uint common)
 		{
-			//throw(new NotImplementedException());
+			throw(new NotImplementedException());
 			return -1;
 		}
 
@@ -145,31 +145,40 @@ namespace CSPspEmu.Hle.Modules.threadman
 			return MicroSeconds;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0x64D4540E, FirmwareVersion = 150)]
 		public long sceKernelReferThreadProfiler()
 		{
+			throw (new NotImplementedException());
 			//Valid only on actual hardware with debug mode enabled.
 			return 0;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0xFFC36A14, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
 		public int sceKernelReferThreadRunStatus()
 		{
+			throw (new NotImplementedException());
 			return 0;
 		}
 
-		/**
-		 * Delay the current thread by a specified number of sysclocks
-		 *
-		 * @param sysclocksPointer - Address of delay in sysclocks
-		 *
-		 * @return 0 on success, < 0 on error
-		 */
+		/// <summary>
+		/// Delay the current thread by a specified number of sysclocks
+		/// </summary>
+		/// <param name="sysclocksPointer">Address of delay in sysclocks</param>
+		/// <returns>0 on success, &lt; 0 on error</returns>
 		[HlePspFunction(NID = 0xBD123D9E, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceKernelDelaySysClockThread()
+		public int sceKernelDelaySysClockThread(uint sysclocksPointer)
 		{
+			throw(new NotImplementedException());
 			return 0;
 		}
 	}

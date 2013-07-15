@@ -287,10 +287,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 			{
 				for (uint a1 = 0; a1 < 0x20; a1++)
 				{
-					if ( (chn_infos[a0].table0[a1] < 0) ||
-						(chn_infos[a0].table0[a1] >= 8)
-						)
-						return -0x10B;
+					if ( (chn_infos[a0].table0[a1] < 0) || (chn_infos[a0].table0[a1] >= 8)) return -0x10B;
 				}
 			}
 	

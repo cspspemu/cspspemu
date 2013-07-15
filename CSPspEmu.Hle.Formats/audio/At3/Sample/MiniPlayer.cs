@@ -59,7 +59,8 @@ namespace CSPspEmu.Hle.Formats.audio.At3.Sample
 				//EA3 block that contains at3+ stream
 				Console.WriteLine("EA3 header");
 				Stream.Skip(0x22);
-	
+
+				Console.WriteLine("{0:X}", Stream.Position);
 				bztmp = (ushort)Stream.ReadStruct<ushort_be>();
 				Stream.Skip(0x3c);
 			}
@@ -71,7 +72,8 @@ namespace CSPspEmu.Hle.Formats.audio.At3.Sample
 			int block_size = blocksz * 8 + 8;
 
 			Console.WriteLine("frame_block_size 0x{0:X}\n", block_size);
-	
+
+			Console.ReadKey();
 	
 			//so we make a new at3+ frame decoder
 			MaiAT3PlusFrameDecoder d2 = new MaiAT3PlusFrameDecoder();
@@ -98,8 +100,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3.Sample
 				if ((rs = d2.decodeFrame(buf0, block_size, out chns, out p_buf)) != 0) Console.WriteLine("decode error {0}", rs);
 				//play it
 
-
-				for (int n = 0; n < 0x800 * chns; n++) { OutStream.WriteStruct<short>(p_buf[n]);  }
+				OutStream.WriteStructVector(p_buf, 0x800 * chns);
 
 				//mwo0.enqueue((Mai_I8*)p_buf, 0x800 * chns * 2);
 			}

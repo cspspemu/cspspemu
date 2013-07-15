@@ -157,8 +157,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// Load Linked word.
 		// Store Conditional word.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm ll() { throw (new NotImplementedException("ll")); }
-		public AstNodeStm sc() { throw (new NotImplementedException("sc")); }
+		public AstNodeStm ll() { return lw();  }
+		public AstNodeStm sc() { return ast.Statements(sw(), ast.AssignGPR(RT, 1)); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Load Word to Cop1 floating point.

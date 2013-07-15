@@ -431,5 +431,19 @@
 		ERROR_AUDIO_INVALID_VOLUME = unchecked((int)0x8026000B),
 		ERROR_AUDIO_CHANNEL_ALREADY_RESERVED = unchecked((int)0x80268002),
 		PSP_AUDIO_ERROR_SRC_FORMAT_4 = unchecked((int)0x80000003),
+
+		ATRAC_ERROR_API_FAIL                 = unchecked((int)0x80630002),
+		ATRAC_ERROR_NO_ATRACID               = unchecked((int)0x80630003),
+		ATRAC_ERROR_INVALID_CODECTYPE        = unchecked((int)0x80630004),
+		ATRAC_ERROR_BAD_ATRACID              = unchecked((int)0x80630005),
+		ATRAC_ERROR_ALL_DATA_LOADED          = unchecked((int)0x80630009),
+		ATRAC_ERROR_NO_DATA		             = unchecked((int)0x80630010),
+		ATRAC_ERROR_SECOND_BUFFER_NEEDED	 = unchecked((int)0x80630012),
+		ATRAC_ERROR_INCORRECT_READ_SIZE	     = unchecked((int)0x80630013),
+		ATRAC_ERROR_ADD_DATA_IS_TOO_BIG      = unchecked((int)0x80630018),
+		ATRAC_ERROR_UNSET_PARAM              = unchecked((int)0x80630021),
+		ATRAC_ERROR_SECOND_BUFFER_NOT_NEEDED = unchecked((int)0x80630022),
+		ATRAC_ERROR_BUFFER_IS_EMPTY			 = unchecked((int)0x80630023),
+		ATRAC_ERROR_ALL_DATA_DECODED         = unchecked((int)0x80630024),
 	}
 }
