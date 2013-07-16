@@ -34,11 +34,11 @@ namespace CSPspEmu
 			Application.Exit();
 		}
 
-		//public static bool IsNet45OrNewer()
-		//{
-		//	// Class "ReflectionContext" exists from .NET 4.5 onwards.
-		//	return Type.GetType("System.Reflection.ReflectionContext", false) != null;
-		//}
+		public static bool IsNet45OrNewer()
+		{
+			// Class "ReflectionContext" exists from .NET 4.5 onwards.
+			return Type.GetType("System.Reflection.ReflectionContext", false) != null;
+		}
 
 		static void RunTests(bool RunTestsViewOut, string[] Arguments, int Timeout = 10)
 		{
@@ -58,17 +58,15 @@ namespace CSPspEmu
 		static void Main(string[] Arguments)
 		{
 			//MiniPlayer.Play(
-			//	File.OpenRead(@"C:\projects\cspspemu\ms\temp\1C-99-F2-16-B6-41-D9-27-8D-41-80-6A-AB-D1-EB-77-29-61-17-0F.at3"),
-			//	File.OpenWrite(@"C:\projects\cspspemu\ms\temp\1C-99-F2-16-B6-41-D9-27-8D-41-80-6A-AB-D1-EB-77-29-61-17-0F.raw")
-			//);
-			//
-			//return;
+			//	File.OpenRead(@"F:\isos\psp2\temp\1C-99-F2-16-B6-41-D9-27-8D-41-80-6A-AB-D1-EB-77-29-61-17-0F.oma"),
+			//	File.OpenWrite(@"F:\isos\psp2\temp\1C-99-F2-16-B6-41-D9-27-8D-41-80-6A-AB-D1-EB-77-29-61-17-0F.raw")
+			//); return;
 
-			//if (!IsNet45OrNewer())
-			//{
-			//	MessageBox.Show(".NET 4.5 required", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-			//	return;
-			//}
+			if (!IsNet45OrNewer())
+			{
+				MessageBox.Show(".NET 4.5 required", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+				return;
+			}
 #if false
 			var Test = new byte[4 * 1024 * 1024];
 			Console.WriteLine(Logger.Measure(() =>

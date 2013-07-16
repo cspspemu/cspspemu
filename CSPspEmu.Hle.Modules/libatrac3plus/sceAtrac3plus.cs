@@ -14,6 +14,7 @@ using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Formats.audio.At3;
 using System.Runtime.InteropServices;
+using CSharpUtils.Streams;
 
 namespace CSPspEmu.Hle.Modules.libatrac3plus
 {
@@ -67,6 +68,15 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 				this.Unknown6 = 0x2480451c;
 				this.OmaInfo = omaInfo;
 			}
+
+			static public void WriteOma(string FileName, CSPspEmu.Hle.Modules.libatrac3plus.sceAtrac3plus.Atrac.At3FormatStruct Format, Stream DataStream)
+			{
+				using (var Stream = File.Open(FileName, FileMode.Create, FileAccess.Write))
+				{
+					Stream.WriteStruct(new OMAHeader(Format.OmaInfo));
+					Stream.WriteStream(DataStream);
+				}
+			}
 		}
 
 		[HleUidPoolClass(NotFoundError = SceKernelErrors.ERROR_ATRAC_BAD_ID, FirstItem = 0)]
@@ -75,7 +85,6 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			[Inject]
 			protected HleMemoryManager HleMemoryManager;
 
-			public ManagedPointer<byte> Data;
 			public At3FormatStruct Format;
 			public FactStruct Fact;
 			public SmplStruct Smpl;
@@ -85,16 +94,26 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 				get
 				{
 					switch (CodecType) {
-						case sceAtrac3plus.CodecType.PSP_MODE_AT_3_PLUS: return 2048;
-						case sceAtrac3plus.CodecType.PSP_MODE_AT_3: return 1024;
+						case sceAtrac3plus.CodecType.PSP_MODE_AT_3_PLUS: return 0x800;
+						case sceAtrac3plus.CodecType.PSP_MODE_AT_3: return 0x400;
 						default: throw(new NotImplementedException());
 					}
 				}
 			}
 			public CodecType CodecType;
 			public int NumberOfLoops;
-			public int DecodingOffset;
-			public MemoryStream DataStream;
+			private int _DecodingOffset;
+			public int DecodingOffset {
+				get {
+					return _DecodingOffset;
+				}
+				set
+				{
+					_DecodingOffset = value & ~0x7FF;
+					DataStream.Position = _DecodingOffset * this.Format.BlockSize / this.MaximumSamples;
+				}
+			}
+			public SliceStream DataStream;
 			//public IArray<StereoShortSoundSample> DecodedSamples;
 			protected MaiAT3PlusFrameDecoder MaiAT3PlusFrameDecoder = new MaiAT3PlusFrameDecoder();
 
@@ -145,6 +164,44 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 				/// short.sizeof * numberOfChannels
 				/// </summary>
 				public ushort BlockAlignment;
+
+				static public StreamStructCachedArrayWrapper<StereoShortSoundSample> ParseWavData(Stream Stream)
+				{
+					StreamStructCachedArrayWrapper<StereoShortSoundSample> DecodedSamples = null;
+					var RiffWaveReader = new RiffWaveReader();
+					WavFormatStruct WavFormat;
+					RiffWaveReader.HandleChunk += (ChunkType, ChunkStream) =>
+					{
+						switch (ChunkType)
+						{
+							case "fmt ":
+								WavFormat = ChunkStream.ReadStruct<WavFormatStruct>();
+								break;
+							case "data":
+								#if false
+									DecodedSamples = new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoShortSoundSample>(ChunkStream.ReadAll()));
+								#else
+									DecodedSamples = ChunkStream.ConvertToStreamStructCachedArrayWrapper<StereoShortSoundSample>(16 * 1024);
+								#endif
+								break;
+							default:
+								throw (new NotImplementedException(String.Format("Can't handle chunk '{0}'", ChunkType)));
+						}
+					};
+					RiffWaveReader.Parse(Stream);
+				
+					//new WaveStream().WriteWave(@"c:\temp\3.wav", DecodedData);
+				
+					//Console.WriteLine("DecodedSamples: {0}", DecodedSamples.Length);
+					//Console.WriteLine("EndSample: {0}", Fact.EndSample);
+					//if (Fact.EndSample == 0)
+					//{
+					//	Fact.EndSample = DecodedSamples.Length / 2;
+					//}
+					//Console.ReadKey();
+
+					return DecodedSamples;
+				}
 			}
 
 			[StructLayout(LayoutKind.Explicit)]
@@ -192,7 +249,13 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 				/// </summary>
 				[FieldOffset(0x0010)]
 				private fixed uint Unknown[6];
-				
+
+				/// <summary>
+				/// 
+				/// </summary>
+				[FieldOffset(0x0028)]
+				public uint OmaInfo;
+
 				/// <summary>
 				/// 
 				/// </summary>
@@ -293,121 +356,20 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 				this.CodecType = CodecType;
 			}
 
-			public Atrac(InjectContext InjectContext, byte[] Data)
+			public Atrac(InjectContext InjectContext, byte* Data, int DataLength)
 			{
 				InjectContext.InjectDependencesTo(this);
 
 				PrimaryBuffer = HleMemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.User).Allocate(1024);
 
 				CodecType = CodecType.PSP_MODE_AT_3_PLUS;
-				SetData(Data);
+				SetData(Data, DataLength);
 			}
 
-			public void SetData(byte[] Data)
+			public void SetData(byte* Data, int DataLength)
 			{
-				ParseAtracData(new MemoryStream(Data));
-				this.Data = DataStream.ToArray().GetPointer(0);
-
-				//DecodedSamples = new ArrayWrapper<StereoShortSoundSample>();
-
-				//var DataHash = SHA1.Create().ComputeHash(Data);
-
-				//var Ms0Path = new DirectoryInfo(MemoryStickRootLocalFolder).FullName;
-				//var Ms0Path = new DirectoryInfo(ApplicationPaths.MemoryStickRootFolder).FullName;
-				//try { Directory.CreateDirectory(Ms0Path + "/temp"); }
-				//catch { }
-				//
-				//var BaseFileName = Ms0Path + "/temp/" + BitConverter.ToString(DataHash);
-				//
-				//var At3OutFileName = BaseFileName + ".at3";
-				//var OmaOutFileName = BaseFileName + ".oma";
-				//var WavOutFileName = BaseFileName + ".wav";
-				//
-				//
-				//if (!File.Exists(At3OutFileName))
-				//{
-				//	File.WriteAllBytes(At3OutFileName, Data);
-				//}
-				//
-				//if (!File.Exists(OmaOutFileName))
-				//{
-				//	ParseAtracData(new MemoryStream(Data));
-				//	{
-				//		WriteOma(OmaOutFileName);
-				//	}
-				//}
-
-				//if (Platform.OperatingSystem == Platform.OS.Windows)
-				//{
-				//	if (!File.Exists(WavOutFileName))
-				//	{
-				//		//ArrayUtils.HexDump(Data, 1024);
-				//		//Console.ReadKey();
-				//
-				//		//Debug.WriteLine("{0} -> {1}", OmaOutFileName, WavOutFileName);
-				//
-				//		//Debug.WriteLine("[a]");
-				//		ParseAtracData(new MemoryStream(Data));
-				//		{
-				//			WriteOma(OmaOutFileName);
-				//			//Debug.WriteLine("[aa]");
-				//			File.Delete(WavOutFileName);
-				//			OmaWavConverter.convertOmaToWav(OmaOutFileName, WavOutFileName);
-				//		}
-				//		//Debug.WriteLine("[b]");
-				//	}
-				//	try
-				//	{
-				//		ParseWavData(File.OpenRead(WavOutFileName));
-				//	}
-				//	catch
-				//	{
-				//		DecodedSamples = new ArrayWrapper<StereoShortSoundSample>();
-				//	}
-				//}
-				//else
-				//{
-				//	Logger.Error("atrac3+ not implemented on unix");
-				//	DecodedSamples = new ArrayWrapper<StereoShortSoundSample>();
-				//}
-
-				//Debug.WriteLine("[c]");
+				ParseAtracData(new UnmanagedMemoryStream(Data, DataLength));
 			}
-
-			//private void ParseWavData(Stream Stream)
-			//{
-			//	var RiffWaveReader = new RiffWaveReader();
-			//	WavFormatStruct WavFormat;
-			//	RiffWaveReader.HandleChunk += (ChunkType, ChunkStream) =>
-			//	{
-			//		switch (ChunkType)
-			//		{
-			//			case "fmt ":
-			//				WavFormat = ChunkStream.ReadStruct<WavFormatStruct>();
-			//				break;
-			//			case "data":
-			//				#if false
-			//					DecodedSamples = new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoShortSoundSample>(ChunkStream.ReadAll()));
-			//				#else
-			//					DecodedSamples = ChunkStream.ConvertToStreamStructCachedArrayWrapper<StereoShortSoundSample>(16 * 1024);
-			//				#endif
-			//				break;
-			//			default:
-			//				throw (new NotImplementedException(String.Format("Can't handle chunk '{0}'", ChunkType)));
-			//		}
-			//	};
-			//	RiffWaveReader.Parse(Stream);
-			//
-			//	//new WaveStream().WriteWave(@"c:\temp\3.wav", DecodedData);
-			//
-			//	Console.WriteLine("DecodedSamples: {0}", DecodedSamples.Length);
-			//	Console.WriteLine("EndSample: {0}", Fact.EndSample);
-			//	if (Fact.EndSample == 0)
-			//	{
-			//		Fact.EndSample = DecodedSamples.Length / 2;
-			//	}
-			//	//Console.ReadKey();
-			//}
 
 			private void ParseAtracData(Stream Stream)
 			{
@@ -430,7 +392,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 							foreach (var LoopInfo in LoopInfoList) Console.WriteLine("Loop: {0}", LoopInfo.ToStringDefault());
 							break;
 						case "data":
-							this.DataStream = new MemoryStream(ChunkStream.ReadAll());
+							this.DataStream = ChunkStream;
 							break;
 						default:
 							throw (new NotImplementedException(String.Format("Can't handle chunk '{0}'", ChunkType)));
@@ -438,15 +400,6 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 				};
 				RiffWaveReader.Parse(Stream);
 			}
-
-			//public void WriteOma(string FileName)
-			//{
-			//	using (var Stream = File.Open(FileName, FileMode.Create, FileAccess.Write))
-			//	{
-			//		Stream.WriteStruct(new OMAHeader(Format.OmaInfo));
-			//		Stream.WriteStream(DataStream);
-			//	}
-			//}
 
 			void IDisposable.Dispose()
 			{
@@ -499,24 +452,38 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 
 				int rc;
 
-				if ((rc = this.MaiAT3PlusFrameDecoder.decodeFrame(this.Data, BlockSize, out channels, out buf)) != 0)
+				if (this.DataStream.Available() < BlockSize)
 				{
-					Console.WriteLine("MaiAT3PlusFrameDecoder.decodeFrame: {0}", rc);
+					Console.WriteLine("EndOfData {0} < {1} : {2}, {3}", this.DataStream.Available(), BlockSize, DecodingOffset, TotalSamples);
 					return 0;
 				}
-				else
+
+				var Data = new byte[BlockSize];
+				this.DataStream.Read(Data, 0, Data.Length);
+
+				fixed (byte* DataPtr = Data)
 				{
-					int DecodedSamples = 0x800 * channels;
-					this.Data += BlockSize;
-					for (int n = 0; n < DecodedSamples; n += channels)
+					if ((rc = this.MaiAT3PlusFrameDecoder.decodeFrame(DataPtr, BlockSize, out channels, out buf)) != 0)
 					{
-						SamplesOut[0].Left = buf[n + 0];
-						SamplesOut[0].Right = buf[n + 1];
-						SamplesOut++;
-						DecodingOffset++;
+						Console.WriteLine("MaiAT3PlusFrameDecoder.decodeFrame: {0}", rc);
+						return 0;
 					}
 
-					return 0x800;
+					int DecodedSamples = this.MaximumSamples;
+					int DecodedSamplesChannels = DecodedSamples * channels;
+					_DecodingOffset += DecodedSamples;
+
+					fixed (short* buf_ptr = buf)
+					{
+						for (int n = 0; n < DecodedSamplesChannels; n += channels)
+						{
+							SamplesOut->Left = buf_ptr[n + 0];
+							SamplesOut->Right = buf_ptr[n + 1];
+							SamplesOut++;
+						}
+					}
+
+					return DecodedSamples;
 				}
 			}
 		}
@@ -531,8 +498,8 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public Atrac sceAtracSetDataAndGetID(byte* DataPointer, int DataLength)
 		{
-			var Data = ArrayUtils.CreateArray<byte>(DataPointer, DataLength);
-			return new Atrac(InjectContext, Data);
+			//var Data = ArrayUtils.CreateArray<byte>(DataPointer, DataLength);
+			return new Atrac(InjectContext, DataPointer, DataLength);
 		}
 
 		/// <summary>
@@ -585,7 +552,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public int sceAtracSetData(Atrac Atrac, byte* BufferPointer, int BufferSizeInBytes)
 		{
-			Atrac.SetData(ArrayUtils.CreateArray<byte>(BufferPointer, BufferSizeInBytes));
+			Atrac.SetData(BufferPointer, BufferSizeInBytes);
 			return 0;
 		}
 
@@ -685,7 +652,8 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 					throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED));
 				}
 				if (Atrac.NumberOfLoops > 0) Atrac.NumberOfLoops--;
-				Atrac.DecodingOffset = 0;
+				
+				Atrac.DecodingOffset = (Atrac.LoopInfoList.Length > 0) ? Atrac.LoopInfoList[0].StartSample : 0;
 			}
 
 			ReachedEnd = 0;

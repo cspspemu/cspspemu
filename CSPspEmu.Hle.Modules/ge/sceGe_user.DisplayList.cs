@@ -6,6 +6,7 @@ using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core;
 using CSPspEmu.Hle.Managers;
+using System.Threading;
 
 namespace CSPspEmu.Hle.Modules.ge
 {
@@ -202,13 +203,30 @@ namespace CSPspEmu.Hle.Modules.ge
 				return -1;
 			}
 
+#if false
+			// Sync
+			var AutoResetEvent = new AutoResetEvent(false);
+			Console.WriteLine("SyncStart");
+			GpuProcessor.GeDrawSync(SyncType, () =>
+			{
+				Console.WriteLine("SyncEnd1");
+				//WakeUpCallbackDelegate();
+				AutoResetEvent.Set();
+			});
+			AutoResetEvent.WaitOne();
+			Console.WriteLine("SyncEnd2");
+
+#else
+			//Console.WriteLine("SyncStart");
 			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeDrawSync", null, (WakeUpCallbackDelegate) =>
 			{
 				GpuProcessor.GeDrawSync(SyncType, () =>
 				{
+					//Console.WriteLine("SyncEnd");
 					WakeUpCallbackDelegate();
 				});
 			});
+#endif
 
 			return 0;
 		}

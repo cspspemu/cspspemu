@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu.Hle.Formats.audio.At3.Sample
 {
-	public class MiniPlayer
+	unsafe public class MiniPlayer
 	{
 		static public int Play(Stream Stream, Stream OutStream)
 		{
@@ -67,46 +67,48 @@ namespace CSPspEmu.Hle.Formats.audio.At3.Sample
 			int blocksz = bztmp & 0x3FF;
 	
 			var buf0 = new byte[0x3000];
-	
-			//calculate the frame block size here
-			int block_size = blocksz * 8 + 8;
-
-			Console.WriteLine("frame_block_size 0x{0:X}\n", block_size);
-
-			//Console.ReadKey();
-	
-			//so we make a new at3+ frame decoder
-			MaiAT3PlusFrameDecoder d2 = new MaiAT3PlusFrameDecoder();
-
-			Stream.Read(buf0, 0, block_size);
-			int chns = 0;
-			short[] p_buf;
-			int rs;
-			//decode the first frame and get channel num
-			//for (int n = 0; n < block_size; n++) Console.Write(buf0[n]);
-			if ((rs = d2.decodeFrame(buf0, block_size, out chns, out p_buf)) != 0) Console.WriteLine("decode error {0}", rs);
-			Console.WriteLine("channels: {0}\n", chns);
-			if (chns > 2) Console.WriteLine("warning: waveout doesn't support {0} chns\n", chns);
-
-			//just waveout
-			//MaiWaveOutI *mwo0 = new MaiWaveOutI(chns, 44100, 16);
-
-			//mwo0.play();
-			while (!Stream.Eof())
+			fixed (byte* buf0_ptr = buf0)
 			{
+				//calculate the frame block size here
+				int block_size = blocksz * 8 + 8;
+
+				Console.WriteLine("frame_block_size 0x{0:X}\n", block_size);
+
+				//Console.ReadKey();
+
+				//so we make a new at3+ frame decoder
+				MaiAT3PlusFrameDecoder d2 = new MaiAT3PlusFrameDecoder();
+
 				Stream.Read(buf0, 0, block_size);
+				int chns = 0;
+				short[] p_buf;
+				int rs;
+				//decode the first frame and get channel num
+				//for (int n = 0; n < block_size; n++) Console.Write(buf0[n]);
+				if ((rs = d2.decodeFrame(buf0_ptr, block_size, out chns, out p_buf)) != 0) Console.WriteLine("decode error {0}", rs);
+				Console.WriteLine("channels: {0}\n", chns);
+				if (chns > 2) Console.WriteLine("warning: waveout doesn't support {0} chns\n", chns);
 
-				//decode frame and get sample data
-				if ((rs = d2.decodeFrame(buf0, block_size, out chns, out p_buf)) != 0) Console.WriteLine("decode error {0}", rs);
-				//play it
+				//just waveout
+				//MaiWaveOutI *mwo0 = new MaiWaveOutI(chns, 44100, 16);
 
-				OutStream.WriteStructVector(p_buf, 0x800 * chns);
+				//mwo0.play();
+				while (!Stream.Eof())
+				{
+					Stream.Read(buf0, 0, block_size);
 
-				//mwo0.enqueue((Mai_I8*)p_buf, 0x800 * chns * 2);
+					//decode frame and get sample data
+					if ((rs = d2.decodeFrame(buf0_ptr, block_size, out chns, out p_buf)) != 0) Console.WriteLine("decode error {0}", rs);
+					//play it
+
+					OutStream.WriteStructVector(p_buf, 0x800 * chns);
+
+					//mwo0.enqueue((Mai_I8*)p_buf, 0x800 * chns * 2);
+				}
+
+				//while (mwo0.getRemainBufSize()) Mai_Sleep(1);
+				return 0;
 			}
-
-			//while (mwo0.getRemainBufSize()) Mai_Sleep(1);
-			return 0;
 		}
 	}
 }

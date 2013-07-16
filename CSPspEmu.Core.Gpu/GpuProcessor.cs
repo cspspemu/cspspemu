@@ -231,7 +231,7 @@ namespace CSPspEmu.Core.Gpu
 			{
 				CompletedDrawingEvent.Reset();
 				//Console.WriteLine("ProcessStep START");
-				TimeSpanUtils.InfiniteLoopDetector(() =>
+				TimeSpanUtils.InfiniteLoopDetector("CpuProcessor.ProcessStep", () =>
 				{
 					while (DisplayListQueue.GetCountLock() > 0)
 					{

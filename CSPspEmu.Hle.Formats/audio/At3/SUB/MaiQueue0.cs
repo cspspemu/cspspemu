@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CSPspEmu.Hle.Formats.audio.At3.SUB
 {
-	public class MaiQueue0
+	unsafe public sealed class MaiQueue0
 	{
 		byte[] @base;
 		int rear,front;
@@ -42,7 +43,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3.SUB
 			Dis();
 		}
 
-		public int In(ManagedPointer<byte> head, int length)
+		public int In(byte* head, int length)
 		{
 			if (status != 0) return 0;
 
@@ -53,7 +54,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3.SUB
 #endif
 			{
 
-				byte[] @base = this.@base;
+				var @base = this.@base;
 				int rear = this.rear;
 				int front = this.front;
 				int max_size = this.max_size;
@@ -67,14 +68,16 @@ namespace CSPspEmu.Hle.Formats.audio.At3.SUB
 
 				if (copy1 != 0)
 				{
-					@base.GetPointer(rear).Memcpy(head, copy1);
+					//for (int n = 0; n < copy1; n++) @base[rear + n] = head[n];
+					Marshal.Copy(new IntPtr(head), @base, rear, copy1);
 					rear = (rear + copy1) % max_size;
 					head += copy1;
 				}
 
 				if (copy2 != 0)
 				{
-					@base.GetPointer(rear).Memcpy(head, copy2);
+					//for (int n = 0; n < copy2; n++) @base[rear + n] = head[n];
+					Marshal.Copy(new IntPtr(head), @base, rear, copy2);
 					rear = (rear + copy2) % max_size;
 					head += copy2;
 				}

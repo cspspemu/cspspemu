@@ -22,7 +22,7 @@ unsafe public class ManagedPointer<T>
 {
 	private readonly T[] Container;
 	private readonly int Offset;
-	private readonly int Length;
+	public readonly int Length;
 
 	public ManagedPointer(T[] Array, int Offset = 0, int Length = -1)
 	{

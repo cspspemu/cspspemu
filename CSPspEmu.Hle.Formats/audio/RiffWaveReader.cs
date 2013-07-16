@@ -1,11 +1,12 @@
-﻿using System;
+﻿using CSharpUtils.Streams;
+using System;
 using System.IO;
 
 namespace CSPspEmu.Hle.Formats.audio
 {
 	public class RiffWaveReader
 	{
-		public event Action<string, Stream> HandleChunk;
+		public event Action<string, SliceStream> HandleChunk;
 
 		public RiffWaveReader()
 		{
@@ -36,7 +37,7 @@ namespace CSPspEmu.Hle.Formats.audio
 			}
 		}
 
-		private void HandleChunkInternal(string ChunkType, Stream ChunkStream)
+		private void HandleChunkInternal(string ChunkType, SliceStream ChunkStream)
 		{
 			if (HandleChunk != null) HandleChunk(ChunkType, ChunkStream);
 		}

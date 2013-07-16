@@ -189,9 +189,10 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <param name="ycbcr_addr"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x67179B1B, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceMpegAvcInitYCbCr(SceMpegPointer* Mpeg, int mode, int width, int height, int ycbcr_addr)
 		{
-			throw (new NotImplementedException());
+			//throw (new NotImplementedException());
 			//return -1;
 			return 0;
 		}
@@ -219,9 +220,10 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <param name="status_addr"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xF2930C9C, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceMpegAvcDecodeStopYCbCr(SceMpegPointer* Mpeg, int buffer_addr, int status_addr)
 		{
-			throw (new NotImplementedException());
+			//throw (new NotImplementedException());
 			return -1;
 		}
 	}

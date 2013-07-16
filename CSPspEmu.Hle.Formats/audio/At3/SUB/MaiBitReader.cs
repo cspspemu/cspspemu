@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu.Hle.Formats.audio.At3.SUB
 {
-	public class MaiBitReader : IDisposable
+	unsafe public sealed class MaiBitReader : IDisposable
 	{
 		public const int MaiBitReaderTypeHigh = 0;
 		public const int MaiBitReaderTypeLow = 1;
@@ -61,7 +61,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3.SUB
 			}
 		}
 
-		public int addData(ManagedPointer<byte> src, int len_s)
+		public int addData(byte* src, int len_s)
 		{
 			int ret = _addData(src, len_s);
 #if DEBUG_BIT_READER
@@ -70,7 +70,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3.SUB
 			return ret;
 		}
 
-		private int _addData(ManagedPointer<byte> src, int len_s)
+		private int _addData(byte* src, int len_s)
 		{
 #if BIT_READER_THREAD_SAFE
 			lock (this)

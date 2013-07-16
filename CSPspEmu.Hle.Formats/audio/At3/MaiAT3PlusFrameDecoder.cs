@@ -9,22 +9,23 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 {
 	unsafe public sealed class MaiAT3PlusFrameDecoder
 	{
-		MaiAT3PlusCoreDecoder[] cores = new MaiAT3PlusCoreDecoder[0x10];
-		short[] sample_buf = new short[0x8000];
-		short[] sample_buf_tmp = new short[0x8000];
+		private MaiAT3PlusCoreDecoder[] cores = new MaiAT3PlusCoreDecoder[0x10];
+		private short[] sample_buf = new short[0x8000];
+		private short[] sample_buf_tmp = new short[0x8000];
 		//int num_cores = 0;
 
 		public MaiAT3PlusFrameDecoder()
 		{
 		}
 
-		public int decodeFrame(ManagedPointer<byte> p_frame_data, int data_len, out int p_chns, out short[] pp_sample_buf)
+		public int decodeFrame(byte* p_frame_data, int data_len, out int p_chns, out short[] pp_sample_buf)
 		{
 			int rs = 0;
 
 			var mbr0 = new MaiBitReader(data_len + 0x10);
 			mbr0.addData(p_frame_data, data_len);
-			mbr0.addData(new byte[0x10], 0x10);
+			var Pad = stackalloc byte[0x10];
+			mbr0.addData(Pad, 0x10);
 
 			if (mbr0.getWithI32Buffer(1) != 0)
 			{
