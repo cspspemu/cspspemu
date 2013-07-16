@@ -7,233 +7,225 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu.Hle.Formats.audio.At3
 {
-	unsafe public partial class MaiAT3PlusCoreDecoder
+	unsafe public sealed partial class MaiAT3PlusCoreDecoder
 	{
-		int MAPCDDF_initMDataTable(MaiAT3PlusCoreDecoderChnInfo[] chn_infos, float[][] pptablef0, uint chns)
+		static readonly uint[] table_tmp0_o = { 0x00000000, 0x3F3F7E00, 0x3EE5CC00, 0x3EA42400, 0x3E50E600, 0x3E193200, 0x3D944200, 0x3D11E600 };
+		static readonly uint[] table_tmp1_o = { 0x3CE42A00, 0x3D0FBC00, 0x3D351800, 0x3D642A00, 0x3D8FBC00, 0x3DB51800, 0x3DE42A00, 0x3E0FBC00, 0x3E351800, 0x3E642A00, 0x3E8FBC00, 0x3EB51800, 0x3EE42A00, 0x3F0FBC00, 0x3F351800, 0x3F642A00, 0x3F8FBC00, 0x3FB51800, 0x3FE42A00, 0x400FBC00, 0x40351800, 0x40642A00, 0x408FBC00, 0x40B51800, 0x40E42A00, 0x410FBC00, 0x41351800, 0x41642A00, 0x418FBC00, 0x41B51800, 0x41E42A00, 0x420FBC00, 0x42351800, 0x42642A00, 0x428FBC00, 0x42B51800, 0x42E42A00, 0x430FBC00, 0x43351800, 0x43642A00, 0x438FBC00, 0x43B51800, 0x43E42A00, 0x440FBC00, 0x44351800, 0x44642A00, 0x448FBC00, 0x44B51800, 0x44E42A00, 0x450FBC00, 0x45351800, 0x45642A00, 0x458FBC00, 0x45B51800, 0x45E42A00, 0x460FBC00, 0x46351800, 0x46642A00, 0x468FBC00, 0x46B51800, 0x46E42A00, 0x470FBC00, 0x47351800, 0x47642A00 };
+		static readonly uint[] table_search0 = { 0, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, 0x80, 0xa0, 0xc0, 0xe0, 0x100, 0x120, 0x140, 0x160, 0x180, 0x1c0, 0x200, 0x240, 0x280, 0x2c0, 0x300, 0x380, 0x400, 0x480, 0x500, 0x580, 0x600, 0x680, 0x700, 0x780, 0x800 };
+		static readonly uint[] table_search1 = { 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80 };
+		static readonly byte[] table_tmp2 = { 0x00, 0x01, 0x01, 0x02, 0x02, 0x02, 0x03, 0x03, 0x03, 0x03, 0x03, 0x04, 0x04, 0x04, 0x04, 0x04 };
+		static readonly float[] table_tmp3 = { 3.968750f, 3.156250f, 2.500000f, 2.000000f, 1.593750f, 1.250000f, 1.000000f, 0.7812500f, 0.6250000f, 0.5000000f, 0.4062500f, 0.3125000f, 0.2500000f, 0.1875000f, 0.1562500f, 0.0f };
+		static readonly int[] MAPCDDF_initMDataTable_table_tmp4 = { -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+		static readonly byte[] MAPCDDF_initMDataTable_table_tmp5 = { 0x02, 0x08, 0x0C, 0x10, 0x12, 0x14, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F };
+		static readonly byte[] MAPCDDF_initMDataTable_table_tmp6 = { 0x08, 0x0C, 0x10, 0x12, 0x14, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20 };
+		static readonly byte[] MAPCDDF_initMDataTable_table_tmp7 = { 0x00, 0x08, 0x0C, 0x10, 0x12, 0x14, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20 };
+
+		int MAPCDDF_initMDataTable(MaiAT3PlusCoreDecoderChnInfo[] chn_infos, float** pptablef0, uint chns)
 		{
-			int rs = 0;
-
-			uint[] table_tmp0_o = {0x00000000, 0x3F3F7E00, 0x3EE5CC00, 0x3EA42400, 0x3E50E600, 0x3E193200, 0x3D944200, 0x3D11E600};
-			float[] table_tmp0 = table_tmp0_o.Select(Item => MathFloat.ReinterpretUIntAsFloat(Item)).ToArray();
-			uint[] table_tmp1_o = {0x3CE42A00, 0x3D0FBC00, 0x3D351800, 0x3D642A00, 0x3D8FBC00, 0x3DB51800, 0x3DE42A00, 0x3E0FBC00, 0x3E351800, 0x3E642A00, 0x3E8FBC00, 0x3EB51800, 0x3EE42A00, 0x3F0FBC00, 0x3F351800, 0x3F642A00, 0x3F8FBC00, 0x3FB51800, 0x3FE42A00, 0x400FBC00, 0x40351800, 0x40642A00, 0x408FBC00, 0x40B51800, 0x40E42A00, 0x410FBC00, 0x41351800, 0x41642A00, 0x418FBC00, 0x41B51800, 0x41E42A00, 0x420FBC00, 0x42351800, 0x42642A00, 0x428FBC00, 0x42B51800, 0x42E42A00, 0x430FBC00, 0x43351800, 0x43642A00, 0x438FBC00, 0x43B51800, 0x43E42A00, 0x440FBC00, 0x44351800, 0x44642A00, 0x448FBC00, 0x44B51800, 0x44E42A00, 0x450FBC00, 0x45351800, 0x45642A00, 0x458FBC00, 0x45B51800, 0x45E42A00, 0x460FBC00, 0x46351800, 0x46642A00, 0x468FBC00, 0x46B51800, 0x46E42A00, 0x470FBC00, 0x47351800, 0x47642A00};
-			float[] table_tmp1 = table_tmp1_o.Select(Item => MathFloat.ReinterpretUIntAsFloat(Item)).ToArray();
-
-			uint[] table_search0 = {0, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, 0x80, 0xa0, 0xc0, 0xe0, 0x100, 0x120, 0x140, 0x160, 0x180, 0x1c0, 0x200, 0x240, 0x280, 0x2c0, 0x300, 0x380, 0x400, 0x480, 0x500, 0x580, 0x600, 0x680, 0x700, 0x780, 0x800};
-			uint[] table_search1 = {0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80};
-	
-			short[] l136 = new short[0x10];
-
+			fixed (uint* _table_tmp0 = table_tmp0_o)
+			fixed (uint* _table_tmp1 = table_tmp1_o)
 			{
-				short l0 = 0;
-		
-				for (uint a00 = 0; a00 < chns; a00++)
+				var table_tmp0 = (float*)_table_tmp0;
+				var table_tmp1 = (float*)_table_tmp1;
+
+				int rs = 0;
+				short* l136 = stackalloc short[0x10];
+
+				{
+					short l0 = 0;
+
+					for (uint a00 = 0; a00 < chns; a00++)
+					{
+						for (uint a0 = 0; a0 < chn_infos[0].joint_chn_info.num_band_splited_used; a0++)
+						{
+							l0 += (short)chn_infos[a00].table1[a0];
+						}
+					}
+
+					l0 &= 0x3fc;
+
+					for (uint a0 = 0; a0 < chn_infos[0].joint_chn_info.num_band_used; a0++)
+					{
+						l136[a0] = l0;
+						l0 += 0x80;
+						l0 &= 0x3fc;
+					}
+				}
+
+				if (chns == 2)
 				{
 					for (uint a0 = 0; a0 < chn_infos[0].joint_chn_info.num_band_splited_used; a0++)
 					{
-						l0 += (short)chn_infos[a00].table1[a0];
+						if (chn_infos[1].table0[a0] == 0)
+						{
+							if (chn_infos[0].table0[a0] != 0)
+							{
+								for (uint a1 = 0; a1 < table_search1[a0]; a1++)
+								{
+									chn_infos[1].table3[table_search0[a0] + a1] =
+										chn_infos[0].table3[table_search0[a0] + a1];
+								}
+
+								chn_infos[1].table0[a0] = chn_infos[0].table0[a0];
+							}
+						}
 					}
 				}
-		
-				l0 &= 0x3fc;
 
-				for (uint a0 = 0; a0 < chn_infos[0].joint_chn_info.num_band_used; a0++)
+				for (int a00 = 0; a00 < chns; a00++)
 				{
-					l136[a0] = l0;
-					l0 += 0x80;
-					l0 &= 0x3fc;
-				}
-			}
+					for (uint a0 = 0; a0 < 0x800; a0++) pptablef0[a00][a0] = 0.0f;
 
-			if (chns == 2)
-			{
-				for (uint a0 = 0; a0 < chn_infos[0].joint_chn_info.num_band_splited_used; a0++)
-				{
-					if (chn_infos[1].table0[a0] == 0)
+					for (uint a0 = 0; a0 < chn_infos[0].joint_chn_info.num_band_splited_used; a0++)
 					{
-						if (chn_infos[0].table0[a0] != 0)
+						if (chn_infos[a00].table0[a0] > 0)
 						{
 							for (uint a1 = 0; a1 < table_search1[a0]; a1++)
 							{
-								chn_infos[1].table3[table_search0[a0] + a1] = 
-									chn_infos[0].table3[table_search0[a0] + a1];
+								pptablef0[a00][table_search0[a0] + a1] = chn_infos[a00].table3[table_search0[a0] + a1] * table_tmp0[chn_infos[a00].table0[a0]] * table_tmp1[chn_infos[a00].table1[a0]];
 							}
-
-							chn_infos[1].table0[a0] = chn_infos[0].table0[a0];
 						}
 					}
-				}
-			}
 
-			for (int a00 = 0; a00 < chns; a00++)
-			{
-				for (uint a0 = 0; a0 < 0x800; a0++) pptablef0[a00][a0] = 0.0f;
-
-				for (uint a0 = 0; a0 < chn_infos[0].joint_chn_info.num_band_splited_used; a0++)
-				{
-					if (chn_infos[a00].table0[a0] > 0)
+					for (uint a0 = 0; a0 < chn_infos[0].joint_chn_info.num_band_used; a0++)
 					{
-						for (uint a1 = 0; a1 < table_search1[a0]; a1++)
 						{
-							pptablef0[a00][table_search0[a0] + a1] = chn_infos[a00].table3[table_search0[a0] + a1] * table_tmp0[chn_infos[a00].table0[a0]] * table_tmp1[chn_infos[a00].table1[a0]];
-						}
-					}
-				}
+							uint[] mtmp0;
 
-				for (uint a0 = 0; a0 < chn_infos[0].joint_chn_info.num_band_used; a0++)
-				{
-					byte[] table_tmp2 = {0x00, 0x01, 0x01, 0x02, 0x02, 0x02, 0x03, 0x03, 0x03, 0x03, 0x03, 0x04, 0x04, 0x04, 0x04, 0x04};
-					float[] table_tmp3 = {3.968750f, 3.156250f, 2.500000f, 2.000000f, 1.593750f, 1.250000f, 1.000000f, 0.7812500f, 0.6250000f, 0.5000000f, 0.4062500f, 0.3125000f, 0.2500000f, 0.1875000f, 0.1562500f, 0.0f};
-
-					{
-						uint[] mtmp0;
-
-						MaiAT3PlusCoreDecoderChnACCData acc_data1;
-						MaiAT3PlusCoreDecoderChnACCData acc_data2;
-						if ( (chn_infos[0].joint_chn_info.chns != 2) || (0 == chn_infos[0].joint_chn_info.table48.data[a0]) )
-						{
-							mtmp0 = chn_infos[a00].table4;
-
-							acc_data1 = chn_infos[a00].acc_data_old;
-							acc_data2 = chn_infos[a00].acc_data_now;
-						}
-						else
-						{
-							if (a00 == 0)
+							MaiAT3PlusCoreDecoderChnACCData acc_data1;
+							MaiAT3PlusCoreDecoderChnACCData acc_data2;
+							if ((chn_infos[0].joint_chn_info.chns != 2) || (0 == chn_infos[0].joint_chn_info.table48.data[a0]))
 							{
-								mtmp0 = chn_infos[1].table4;
-								acc_data1 = chn_infos[1].acc_data_old;
-								acc_data2 = chn_infos[1].acc_data_now;//
+								mtmp0 = chn_infos[a00].table4;
+
+								acc_data1 = chn_infos[a00].acc_data_old;
+								acc_data2 = chn_infos[a00].acc_data_now;
 							}
 							else
 							{
-								mtmp0 = chn_infos[0].table4;
-								acc_data1 = chn_infos[0].acc_data_old;
-								acc_data2 = chn_infos[0].acc_data_now;//
+								if (a00 == 0)
+								{
+									mtmp0 = chn_infos[1].table4;
+									acc_data1 = chn_infos[1].acc_data_old;
+									acc_data2 = chn_infos[1].acc_data_now;//
+								}
+								else
+								{
+									mtmp0 = chn_infos[0].table4;
+									acc_data1 = chn_infos[0].acc_data_old;
+									acc_data2 = chn_infos[0].acc_data_now;//
+								}
+							}
+
+							if (table_tmp3[mtmp0[table_tmp2[a0]]] > 0.0f)
+							{
+								float* l127 = stackalloc float[0x80];
+								int arg3_1 = l136[a0];
+								for (uint a1 = 0; a1 < 0x80; a1++)
+								{
+									uint tmp0 = 0x38000000;
+									l127[a1] = MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_0[arg3_1 & 0x3FF] * (*(float*)&tmp0);
+									arg3_1++;
+								}
+
+								int rt0 = 0;
+								{
+									int dl_0;
+									if (acc_data2.table[a0].num_acc <= 0) dl_0 = 0;
+									else dl_0 = 0 - MAPCDDF_initMDataTable_table_tmp4[acc_data2.table[a0].data1[0]];
+
+
+									int al_0 = 0;
+
+									for (int a1 = 0; a1 < acc_data1.table[a0].num_acc; a1++)
+									{
+										if (al_0 < (dl_0 - MAPCDDF_initMDataTable_table_tmp4[acc_data1.table[a0].data1[a1]]))
+										{
+											al_0 = (dl_0 - MAPCDDF_initMDataTable_table_tmp4[acc_data1.table[a0].data1[a1]]);
+										}
+									}
+
+									for (int a1 = 0; a1 < acc_data2.table[a0].num_acc; a1++)
+									{
+										if (al_0 < (0 - MAPCDDF_initMDataTable_table_tmp4[acc_data2.table[a0].data1[a1]]))
+										{
+											al_0 = (0 - MAPCDDF_initMDataTable_table_tmp4[acc_data2.table[a0].data1[a1]]);
+										}
+									}
+
+									rt0 = al_0;
+								}
+
+								int dtmp1 = (rt0 < 0) ? 0 : (1 << rt0);
+								float l128 = table_tmp3[mtmp0[table_tmp2[a0]]] / dtmp1;
+
+								for (uint a1 = MAPCDDF_initMDataTable_table_tmp5[a0]; a1 < MAPCDDF_initMDataTable_table_tmp6[a0]; a1++)
+								{
+									if (chn_infos[a00].table0[a1] > 0)
+									{
+										float l129 = table_tmp0[chn_infos[a00].table0[a1]]
+											* table_tmp1[chn_infos[a00].table1[a1]]
+											* l128
+											/ (1 << (int)chn_infos[a00].table0[a1]);
+
+										for (int a2 = (int)table_search0[a1], a3 = 0;
+											a2 < table_search0[a1 + 1];
+											a2++, a3++)
+										{
+											pptablef0[a00][a2] += l129 * l127[a3];
+										}
+									}
+								}
+
 							}
 						}
-				
-						if ( table_tmp3[mtmp0[table_tmp2[a0]]] > 0.0f )
-						{
-							float[] l127 = new float[0x80];
-							int arg3_1 = l136[a0];
-							for (uint a1 = 0; a1 < 0x80; a1++)
-							{
-								uint tmp0 = 0x38000000;
-								l127[a1] = MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_0[arg3_1 & 0x3FF] * (*(float*)&tmp0);
-								arg3_1++;
-							}
 
-							int rt0 = 0;
-							{
-								int[] table_tmp4 = {-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-
-								int dl_0;
-								if (acc_data2.table[a0].num_acc <= 0) dl_0 = 0;
-								else dl_0 = 0 - table_tmp4[acc_data2.table[a0].data1[0]];
-
-
-								int al_0 = 0;
-
-								for (int a1 = 0; a1 < acc_data1.table[a0].num_acc; a1++)
-								{
-									if (al_0 < (dl_0 - table_tmp4[acc_data1.table[a0].data1[a1]]))
-									{
-										al_0 = (dl_0 - table_tmp4[acc_data1.table[a0].data1[a1]]);
-									}
-								}
-
-								for (int a1 = 0; a1 < acc_data2.table[a0].num_acc; a1++)
-								{
-									if (al_0 < (0 - table_tmp4[acc_data2.table[a0].data1[a1]]))
-									{
-										al_0 = (0 - table_tmp4[acc_data2.table[a0].data1[a1]]);
-									}
-								}
-
-								rt0 = al_0;
-							}
-
-
-							byte[] table_tmp5 = {0x02, 0x08, 0x0C, 0x10, 0x12, 0x14, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F};
-							byte[] table_tmp6 = {0x08, 0x0C, 0x10, 0x12, 0x14, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20};
-
-							int dtmp1 = (rt0 < 0) ? 0 : (1 << rt0);
-							float l128 = table_tmp3[mtmp0[table_tmp2[a0]]] / dtmp1;
-
-							for (uint a1 = table_tmp5[a0]; a1 < table_tmp6[a0]; a1++)
-							{
-								if (chn_infos[a00].table0[a1] > 0)
-								{
-									float l129 = table_tmp0[chn_infos[a00].table0[a1]]
-										* table_tmp1[chn_infos[a00].table1[a1]]
-										* l128
-										/ (1 << (int)chn_infos[a00].table0[a1]);
-
-									for (int a2 = (int)table_search0[a1], a3 = 0;
-										a2 < table_search0[a1 + 1];
-										a2++, a3++)
-									{
-										pptablef0[a00][a2] += l129 * l127[a3];
-									}
-								}
-							}
-
-						}
 					}
 
 				}
 
-			}
 
-
-			if (chns == 2)
-			{
-				for (uint a0 = 0; a0 < chn_infos[0].joint_chn_info.num_band_used; a0++)
+				if (chns == 2)
 				{
-					if (chn_infos[0].joint_chn_info.table48.data[a0] == 1)
+					for (uint a0 = 0; a0 < chn_infos[0].joint_chn_info.num_band_used; a0++)
 					{
-						float[] l128 = new float[0x80];
-						for (uint a1 = 0; a1 < 0x80; a1++)
-							l128[a1] = pptablef0[0][a0 * 0x80 + a1];
-						for (uint a1 = 0; a1 < 0x80; a1++)
-							pptablef0[0][a0 * 0x80 + a1] = pptablef0[1][a0 * 0x80 + a1];
-						for (uint a1 = 0; a1 < 0x80; a1++)
-							pptablef0[1][a0 * 0x80 + a1] = l128[a1];
-					}
-					if (chn_infos[0].joint_chn_info.table00.data[a0] == 1)
-					{
-						byte[] table_tmp7 = {0x00, 0x08, 0x0C, 0x10, 0x12, 0x14, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20};
-
-						for (uint a1 = table_tmp7[a0]; a1 < table_tmp7[a0 + 1]; a1++)
+						if (chn_infos[0].joint_chn_info.table48.data[a0] == 1)
 						{
-							for (int a2 = (int)table_search0[a1];
-								a2 < table_search0[a1 + 1];
-								a2++)
+							float* l128 = stackalloc float[0x80];
+							for (uint a1 = 0; a1 < 0x80; a1++) l128[a1] = pptablef0[0][a0 * 0x80 + a1];
+							for (uint a1 = 0; a1 < 0x80; a1++) pptablef0[0][a0 * 0x80 + a1] = pptablef0[1][a0 * 0x80 + a1];
+							for (uint a1 = 0; a1 < 0x80; a1++) pptablef0[1][a0 * 0x80 + a1] = l128[a1];
+						}
+						if (chn_infos[0].joint_chn_info.table00.data[a0] == 1)
+						{
+							for (uint a1 = MAPCDDF_initMDataTable_table_tmp7[a0]; a1 < MAPCDDF_initMDataTable_table_tmp7[a0 + 1]; a1++)
 							{
-								pptablef0[1][a2] *= (-1.0f);
+								for (int a2 = (int)table_search0[a1]; a2 < table_search0[a1 + 1]; a2++)
+								{
+									pptablef0[1][a2] *= (-1.0f);
+								}
 							}
 						}
 					}
 				}
-			}
 
-			if (chn_infos[0].joint_chn_info.var118 == 1)
-			{
-				for (uint a0 = 0; a0 < 0x800; a0++) pptablef0[0][a0] = 0.0f;
-				for (uint a0 = 0; a0 < 0x800; a0++) pptablef0[1][a0] = 0.0f;
-			}
+				if (chn_infos[0].joint_chn_info.var118 == 1)
+				{
+					for (uint a0 = 0; a0 < 0x800; a0++) pptablef0[0][a0] = 0.0f;
+					for (uint a0 = 0; a0 < 0x800; a0++) pptablef0[1][a0] = 0.0f;
+				}
 
-			return rs;
+				return rs;
+			}
 		}
 
+		static readonly byte[] _makeSL128_table_tmp0_o = { 0x00, 0x38, 0x18, 0x3F, 0x00, 0x04, 0x35, 0x3F, 0x00, 0x44, 0x57, 0x3F, 0x00, 0x00, 0x80, 0x3F, 0x00, 0x38, 0x98, 0x3F, 0x00, 0x04, 0xB5, 0x3F, 0x00, 0x44, 0xD7, 0x3F, 0x00, 0x00, 0x00, 0x40, 0x00, 0x38, 0x18, 0x40, 0x00, 0x04, 0x35, 0x40, 0x00, 0x44, 0x57, 0x40, 0x00, 0x00, 0x80, 0x40, 0x00, 0x38, 0x98, 0x40, 0x00, 0x04, 0xB5, 0x40, 0x00, 0x44, 0xD7, 0x40, 0x00, 0x00, 0x00, 0x41, 0x00, 0x38, 0x18, 0x41, 0x00, 0x04, 0x35, 0x41, 0x00, 0x44, 0x57, 0x41, 0x00, 0x00, 0x80, 0x41, 0x00, 0x38, 0x98, 0x41, 0x00, 0x04, 0xB5, 0x41, 0x00, 0x44, 0xD7, 0x41, 0x00, 0x00, 0x00, 0x42, 0x00, 0x38, 0x18, 0x42, 0x00, 0x04, 0x35, 0x42, 0x00, 0x44, 0x57, 0x42, 0x00, 0x00, 0x80, 0x42, 0x00, 0x38, 0x98, 0x42, 0x00, 0x04, 0xB5, 0x42, 0x00, 0x44, 0xD7, 0x42, 0x00, 0x00, 0x00, 0x43, 0x00, 0x38, 0x18, 0x43, 0x00, 0x04, 0x35, 0x43, 0x00, 0x44, 0x57, 0x43, 0x00, 0x00, 0x80, 0x43, 0x00, 0x38, 0x98, 0x43, 0x00, 0x04, 0xB5, 0x43, 0x00, 0x44, 0xD7, 0x43, 0x00, 0x00, 0x00, 0x44, 0x00, 0x38, 0x18, 0x44, 0x00, 0x04, 0x35, 0x44, 0x00, 0x44, 0x57, 0x44, 0x00, 0x00, 0x80, 0x44, 0x00, 0x38, 0x98, 0x44, 0x00, 0x04, 0xB5, 0x44, 0x00, 0x44, 0xD7, 0x44, 0x00, 0x00, 0x00, 0x45, 0x00, 0x38, 0x18, 0x45, 0x00, 0x04, 0x35, 0x45, 0x00, 0x44, 0x57, 0x45, 0x00, 0x00, 0x80, 0x45, 0x00, 0x38, 0x98, 0x45, 0x00, 0x04, 0xB5, 0x45, 0x00, 0x44, 0xD7, 0x45, 0x00, 0x00, 0x00, 0x46, 0x00, 0x38, 0x18, 0x46, 0x00, 0x04, 0x35, 0x46, 0x00, 0x44, 0x57, 0x46, 0x00, 0x00, 0x80, 0x46, 0x00, 0x38, 0x98, 0x46, 0x00, 0x04, 0xB5, 0x46, 0x00, 0x44, 0xD7, 0x46, 0x00, 0x00, 0x00, 0x47 };
+		static readonly byte[] _makeSL128_table_tmp1_o = { 0x00, 0x5C, 0x87, 0x3D, 0x00, 0x5C, 0x07, 0x3E, 0x00, 0x0A, 0x4B, 0x3E, 0x00, 0x5C, 0x87, 0x3E, 0x00, 0x34, 0xA9, 0x3E, 0x00, 0x0A, 0xCB, 0x3E, 0x00, 0xE2, 0xEC, 0x3E, 0x00, 0x5C, 0x07, 0x3F, 0x00, 0x48, 0x18, 0x3F, 0x00, 0x34, 0x29, 0x3F, 0x00, 0x1E, 0x3A, 0x3F, 0x00, 0x0A, 0x4B, 0x3F, 0x00, 0xF6, 0x5B, 0x3F, 0x00, 0xE2, 0x6C, 0x3F, 0x00, 0xCC, 0x7D, 0x3F, 0x00, 0x5C, 0x87, 0x3F };
 
-		static int makeSL128(MaiAT3PlusCoreDecoderChnACCTableTable acc, ManagedPointer<float> lo, int num0, int num1, int acc_4, int acc_360, int chn)
+		static int makeSL128(MaiAT3PlusCoreDecoderChnACCTableTable acc, float* lo, int num0, int num1, int acc_4, int acc_360, int chn)
 		{
-			byte[] _table_tmp0_o = {0x00, 0x38, 0x18, 0x3F, 0x00, 0x04, 0x35, 0x3F, 0x00, 0x44, 0x57, 0x3F, 0x00, 0x00, 0x80, 0x3F,   0x00, 0x38, 0x98, 0x3F, 0x00, 0x04, 0xB5, 0x3F, 0x00, 0x44, 0xD7, 0x3F, 0x00, 0x00, 0x00, 0x40,   0x00, 0x38, 0x18, 0x40, 0x00, 0x04, 0x35, 0x40, 0x00, 0x44, 0x57, 0x40, 0x00, 0x00, 0x80, 0x40,   0x00, 0x38, 0x98, 0x40, 0x00, 0x04, 0xB5, 0x40, 0x00, 0x44, 0xD7, 0x40, 0x00, 0x00, 0x00, 0x41,   0x00, 0x38, 0x18, 0x41, 0x00, 0x04, 0x35, 0x41, 0x00, 0x44, 0x57, 0x41, 0x00, 0x00, 0x80, 0x41,   0x00, 0x38, 0x98, 0x41, 0x00, 0x04, 0xB5, 0x41, 0x00, 0x44, 0xD7, 0x41, 0x00, 0x00, 0x00, 0x42,   0x00, 0x38, 0x18, 0x42, 0x00, 0x04, 0x35, 0x42, 0x00, 0x44, 0x57, 0x42, 0x00, 0x00, 0x80, 0x42,   0x00, 0x38, 0x98, 0x42, 0x00, 0x04, 0xB5, 0x42, 0x00, 0x44, 0xD7, 0x42, 0x00, 0x00, 0x00, 0x43,   0x00, 0x38, 0x18, 0x43, 0x00, 0x04, 0x35, 0x43, 0x00, 0x44, 0x57, 0x43, 0x00, 0x00, 0x80, 0x43,   0x00, 0x38, 0x98, 0x43, 0x00, 0x04, 0xB5, 0x43, 0x00, 0x44, 0xD7, 0x43, 0x00, 0x00, 0x00, 0x44,   0x00, 0x38, 0x18, 0x44, 0x00, 0x04, 0x35, 0x44, 0x00, 0x44, 0x57, 0x44, 0x00, 0x00, 0x80, 0x44,   0x00, 0x38, 0x98, 0x44, 0x00, 0x04, 0xB5, 0x44, 0x00, 0x44, 0xD7, 0x44, 0x00, 0x00, 0x00, 0x45,   0x00, 0x38, 0x18, 0x45, 0x00, 0x04, 0x35, 0x45, 0x00, 0x44, 0x57, 0x45, 0x00, 0x00, 0x80, 0x45,   0x00, 0x38, 0x98, 0x45, 0x00, 0x04, 0xB5, 0x45, 0x00, 0x44, 0xD7, 0x45, 0x00, 0x00, 0x00, 0x46,   0x00, 0x38, 0x18, 0x46, 0x00, 0x04, 0x35, 0x46, 0x00, 0x44, 0x57, 0x46, 0x00, 0x00, 0x80, 0x46,   0x00, 0x38, 0x98, 0x46, 0x00, 0x04, 0xB5, 0x46, 0x00, 0x44, 0xD7, 0x46, 0x00, 0x00, 0x00, 0x47};
-			byte[] _table_tmp1_o = {0x00, 0x5C, 0x87, 0x3D, 0x00, 0x5C, 0x07, 0x3E, 0x00, 0x0A, 0x4B, 0x3E, 0x00, 0x5C, 0x87, 0x3E,   0x00, 0x34, 0xA9, 0x3E, 0x00, 0x0A, 0xCB, 0x3E, 0x00, 0xE2, 0xEC, 0x3E, 0x00, 0x5C, 0x07, 0x3F,   0x00, 0x48, 0x18, 0x3F, 0x00, 0x34, 0x29, 0x3F, 0x00, 0x1E, 0x3A, 0x3F, 0x00, 0x0A, 0x4B, 0x3F,   0x00, 0xF6, 0x5B, 0x3F, 0x00, 0xE2, 0x6C, 0x3F, 0x00, 0xCC, 0x7D, 0x3F, 0x00, 0x5C, 0x87, 0x3F};
-
-			fixed (byte* table_tmp0_o = _table_tmp0_o)
-			fixed (byte* table_tmp1_o = _table_tmp1_o)
+			fixed (byte* table_tmp0_o = _makeSL128_table_tmp0_o)
+			fixed (byte* table_tmp1_o = _makeSL128_table_tmp1_o)
 			{
 				float* table_tmp0 = (float*)table_tmp0_o;
 				float* table_tmp1 = (float*)table_tmp1_o;
@@ -288,8 +280,6 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 					}
 				}
 
-
-
 				if ((chn != 0) && (acc_360 != 0))
 				{
 					for (int a1 = 0; a1 < num1; a1++)
@@ -298,7 +288,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 					}
 				}
 
-				float[] l256 = new float[0x100];
+				float* l256 = stackalloc float[0x100];
 
 				{
 					for (int a0 = 0; a0 < 0x100; a0++) l256[a0] = 1.0f;
@@ -320,14 +310,10 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 					}
 				}
 
-
-
 				for (int a1 = 0; a1 < num1; a1++)
 				{
 					lo[a1] *= l256[num0 + a1];
 				}
-
-
 
 				return 0;
 			}
@@ -335,21 +321,15 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 
 		int MAPCDDF_makeL128(MaiAT3PlusCoreDecoderChnACCTableTable acc5, int acc5_4, int acc5_360, 
 				MaiAT3PlusCoreDecoderChnACCTableTable acc6, int acc6_4, int acc6_360, 
-				float[] l128, int chn)
+				float* l128, int chn)
 		{
 			int rs = 0;
 
-			var lo256 = new ManagedPointer<float>(new float[0x100], 0x00, 0x100);
-			var lo128 = lo256.Slice(0x80);
+			var lo256 = stackalloc float[0x100];
+			var lo128 = &lo256[0x80];
 
-			{
-				makeSL128(acc5, lo128, 0x80, 0x80, acc5_4, acc5_360, chn);
-			}
-
-			{
-				makeSL128(acc6, lo256, 0, 0x80, acc6_4, acc6_360, chn);
-			}
-
+			makeSL128(acc5, lo128, 0x80, 0x80, acc5_4, acc5_360, chn);
+			makeSL128(acc6, lo256, 0, 0x80, acc6_4, acc6_360, chn);
 
 			if ( (acc5.num_uk > 0) && (acc6.num_uk > 0) && (acc5.unk[3] - 0x80 >= acc6.unk[2]) )
 			{
@@ -381,10 +361,10 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 				}
 			}
 
-	
-
 			for (int a0 = 0; a0 < 0x80; a0++)
+			{
 				l128[a0] = lo256[a0] + lo128[a0];
+			}
 
 			return rs;
 		}
@@ -414,9 +394,11 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 		{
 			int rs = 0;
 
-			float[] mdata0_0 = new float[0x800];
-			float[] mdata0_1 = new float[0x800];
-			float[][] mdata0_table = {mdata0_0, mdata0_1};
+			float* mdata0_0 = stackalloc float[0x800];
+			float* mdata0_1 = stackalloc float[0x800];
+			float** mdata0_table = stackalloc float*[2];
+			mdata0_table[0] = mdata0_0;
+			mdata0_table[1] = mdata0_1;
 
 			{
 				MAPCDDF_initMDataTable(chn_info, mdata0_table, chns);//
@@ -426,14 +408,14 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 					for (int a00 = 0; a00 < chns; a00++)
 					{
 						
-						ManagedPointer<float>[] l2080 = new ManagedPointer<float>[0x10];
-						float[] l2048 = new float[0x800];
+						float** l2080 = stackalloc float*[0x10];
+						float* l2048 = stackalloc float[0x800];
 
 						for (int a0 = 0; a0 < 0x800; a0++) l2048[a0] = 0.0f;
 
 						for (int a0 = 0; a0 < 0x10; a0++)
 						{
-							l2080[a0] = l2048.GetPointer(a0 * 0x80);
+							l2080[a0] = &l2048[a0 * 0x80];
 						}
 
 						for (int a0 = 0; a0 < chn_info[0].joint_chn_info.num_band_declared; a0++)
@@ -443,8 +425,8 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 						}
 
 						{
-							float[] l512 = new float[0x100];
-							float[] l256 = new float[0x100];
+							float* l512 = stackalloc float[0x100];
+							float* l256 = stackalloc float[0x100];
 
 							for (int a0 = 0; a0 < chn_info[0].joint_chn_info.num_band_declared; a0++)
 							{
@@ -477,9 +459,10 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 								}
 
 								{
-									float[] stmp40 = new float[0x80];
+									float* stmp40 = stackalloc float[0x80];
 
 									for (uint a1 = 0; a1 < 0x40; a1++)
+									{
 										if ((a0 & 1) != 0)
 										{
 											stmp40[a1 * 2] = mdata0_table[a00][0x80 * a0 + a1 * 2] * MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_sin0[a1]
@@ -495,6 +478,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 											stmp40[a1 * 2 + 1] = mdata0_table[a00][0x80 * a0 + a1 * 2] * MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_sin0[a1]
 												- mdata0_table[a00][0x80 * a0 + 0x80 - a1 * 2 - 1] * MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_cos0[a1];
 										}
+									}
 
 									for (uint a2 = 0; a2 < 6; a2++)
 									{
@@ -538,7 +522,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 									int rt_3 = 0;
 
 									{
-										int[] l63 = new int[0x40];
+										int* l63 = stackalloc int[0x40];
 										for (int a1 = 0; a1 < 0x40; a1++) l63[a1] = 0;
 
 										int dtmp0 = 0;
@@ -772,7 +756,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 
 									if ( (chn_info[a00].acc_table_now.table[a0].num_uk != 0) || (chn_info[a00].acc_table_old.table[a0].num_uk != 0) )
 									{
-										float[] l128 = new float[0x80];
+										float* l128 = stackalloc float[0x80];
 
 										{
 											MAPCDDF_makeL128(
@@ -824,8 +808,8 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 
 							for (int a0 = 0; a0 < 0x80; a0++)
 							{
-								float[] stmp140 = new float[0x10];
-								float[] stmp30 = new float[0x100];
+								float* stmp140 = stackalloc float[0x10];
+								float* stmp30 = stackalloc float[0x100];
 
 								ulong atmp0 = 0x55555556;
 								atmp0 *= (ulong)(a0 + c900);
@@ -859,38 +843,24 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 
 								for (int a1 = 0; a1 < 4; a1++)
 								{
-									stmp30[0xC + a1] = stmp140[0x7 - a1]
-										- stmp140[0x8 + a1];
-
+									stmp30[0xC + a1] = stmp140[0x7 - a1] - stmp140[0x8 + a1];
 									stmp30[0xC + a1] *= table_626ae0[3 - a1];
-
-									stmp30[0xC + a1] = (stmp140[a1]
-										- stmp140[0xF - a1])
-										* table_626ad0[a1]
-										- stmp30[0xC + a1];
-
+									stmp30[0xC + a1] = (stmp140[a1] - stmp140[0xF - a1]) * table_626ad0[a1] - stmp30[0xC + a1];
 									stmp30[0xC + a1] *= table_626af0[a1];
 								}
 
 								for (int a1 = 0; a1 < 4; a1++)
 								{
-									stmp30[0x8 + a1] = stmp140[0x7 - a1]
-										- stmp140[0x8 + a1];
-
+									stmp30[0x8 + a1] = stmp140[0x7 - a1] - stmp140[0x8 + a1];
 									stmp30[0x8 + a1] *= table_626ae0[3 - a1];
-
-									stmp30[0x8 + a1] = (stmp140[a1]
-										- stmp140[0xF - a1])
-										* table_626ad0[a1]
-										+ stmp30[0x8 + a1];
-
+									stmp30[0x8 + a1] = (stmp140[a1] - stmp140[0xF - a1]) * table_626ad0[a1] + stmp30[0x8 + a1];
 								}
 
-								float[] locals = new float[0x100];
+								float* locals = stackalloc float[0x100];
 								locals[72] = stmp30[0] + stmp30[1] + stmp30[2] + stmp30[3];
 								locals[72] *= 0.5f;
 
-								float[] calc_buf = new float[0x100];
+								float* calc_buf = stackalloc float[0x100];
 								int calc_n = 0;
 								calc_buf[++calc_n] = stmp30[0] - stmp30[1] - stmp30[2] + stmp30[3];
 								calc_buf[calc_n] *= 0.7071068f;
@@ -946,15 +916,13 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 								calc_n -= 4;
 								locals[68] = (calc_buf[calc_n] + calc_buf[calc_n - 1]) * 0.5f - locals[69];
 								calc_n -= 2;
-
 								calc_buf[++calc_n] = stmp30[12] - stmp30[15];
 								calc_buf[calc_n] *= 1.847759f;
 								locals[67] = locals[27] - locals[68];
 								calc_buf[++calc_n] = stmp30[13] - stmp30[14];
 								calc_buf[calc_n] *= 0.7653669f;
 								locals[66] = locals[26] - locals[67];
-								locals[37] = calc_buf[calc_n] + calc_buf[calc_n - 1]
-									- stmp30[12] - stmp30[13] - stmp30[14] - stmp30[15];
+								locals[37] = calc_buf[calc_n] + calc_buf[calc_n - 1] - stmp30[12] - stmp30[13] - stmp30[14] - stmp30[15];
 								locals[37] *= 0.5f;
 								locals[35] = stmp30[12] - stmp30[13] - stmp30[14] + stmp30[15];
 								locals[35] *= 0.7071068f;
@@ -985,8 +953,6 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 								calc_n -= 2;
 
 								uint atmp2 = table_5b4050[mtmp0 + 0xF];
-						
-						
 
 								for (int a2 = 0; a2 < 0x10; a2++)
 								{
@@ -995,39 +961,22 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 
 								for (int a2 = 0; a2 < 4; a2++)
 								{
-									buf_ctmp1[table_5b4050[mtmp0] + 0x30 + a2] = 
-										buf_ctmp1[table_5b4050[mtmp0 + 0x12] + 0x4 + 3 - a2]
-										* table_5b3ed0[a2]
-										+ table_5b3d50[a2]
-										* buf_ctmp1[table_5b4050[mtmp0 + 3] + a2];
+									buf_ctmp1[table_5b4050[mtmp0] + 0x30 + a2] =  buf_ctmp1[table_5b4050[mtmp0 + 0x12] + 0x4 + 3 - a2] * table_5b3ed0[a2] + table_5b3d50[a2] * buf_ctmp1[table_5b4050[mtmp0 + 3] + a2];
+								}
+
+								for (int a2 = 0; a2 < 4; a2++)
+								{
+									buf_ctmp1[table_5b4050[mtmp0 + 3] + 0x30 + a2] = buf_ctmp1[table_5b4050[mtmp0 + 0xF] - 3 + 3 - a2] * table_5b3ee0[3 - a2] - buf_ctmp1[table_5b4050[mtmp0 + 0x12] + a2] * table_5b3d60[3 - a2];
+								}
+
+								for (int a2 = 0; a2 < 4; a2++)
+								{
+									buf_ctmp1[table_5b4050[mtmp0] + 0x34 + a2] = buf_ctmp1[table_5b4050[mtmp0 + 0x12] + 3 - a2] * table_5b3ee0[a2] + buf_ctmp1[table_5b4050[mtmp0 + 3] + 4 + a2] *  table_5b3d60[a2];
 
 								}
 								for (int a2 = 0; a2 < 4; a2++)
 								{
-									buf_ctmp1[table_5b4050[mtmp0 + 3] + 0x30 + a2] = 
-										buf_ctmp1[table_5b4050[mtmp0 + 0xF] - 3 + 3 - a2]
-										* table_5b3ee0[3 - a2]
-										- buf_ctmp1[table_5b4050[mtmp0 + 0x12] + a2]
-										* table_5b3d60[3 - a2];
-
-								}
-								for (int a2 = 0; a2 < 4; a2++)
-								{
-									buf_ctmp1[table_5b4050[mtmp0] + 0x34 + a2] = 
-										buf_ctmp1[table_5b4050[mtmp0 + 0x12] + 3 - a2]
-										* table_5b3ee0[a2]
-										+ buf_ctmp1[table_5b4050[mtmp0 + 3] + 4 + a2]
-										*  table_5b3d60[a2];
-
-								}
-								for (int a2 = 0; a2 < 4; a2++)
-								{
-									buf_ctmp1[table_5b4050[mtmp0 + 3] + 0x34 + a2] = 
-										buf_ctmp1[table_5b4050[mtmp0 + 0xF] - 7 + 3 - a2]
-										* table_5b3ed0[3 - a2]
-										- buf_ctmp1[table_5b4050[mtmp0 + 0x12] + 4 + a2]
-										* table_5b3d50[3 - a2];
-
+									buf_ctmp1[table_5b4050[mtmp0 + 3] + 0x34 + a2] = buf_ctmp1[table_5b4050[mtmp0 + 0xF] - 7 + 3 - a2] * table_5b3ed0[3 - a2] - buf_ctmp1[table_5b4050[mtmp0 + 0x12] + 4 + a2] * table_5b3d50[3 - a2];
 								}
 
 								for (int a3 = 0; a3 < 10; a3++)
@@ -1037,8 +986,8 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 										buf_ctmp1[table_5b4050[mtmp0] + 0x60 + a2 + a3 * 0x30] = 
 											buf_ctmp1[table_5b4050[mtmp0] + 0x60 + a2 + a3 * 0x30 - 0x30]
 											+ MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_6[a2 + a3 * 8]
-											* buf_ctmp1[table_5b4050[mtmp0 + 0xC] + 0x29 + 4 + 3 - a2 + a3 * 0x30];
-								
+											* buf_ctmp1[table_5b4050[mtmp0 + 0xC] + 0x29 + 4 + 3 - a2 + a3 * 0x30]
+										;
 									}
 
 									for (int a2 = 0; a2 < 4; a2++)
@@ -1046,8 +995,8 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 										buf_ctmp1[table_5b4050[mtmp0 + 3] + 0x60 + a2 + a3 * 0x30] = 
 											buf_ctmp1[table_5b4050[mtmp0 + 0x9] + 0x29 + 4 + 3 - a2 + a3 * 0x30]
 											* MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_6[3 - a2 + 4 + a3 * 8]
-											- buf_ctmp1[table_5b4050[mtmp0 + 0x6] + 0x30 + a2 + a3 * 0x30];
-
+											- buf_ctmp1[table_5b4050[mtmp0 + 0x6] + 0x30 + a2 + a3 * 0x30]
+										;
 									}
 
 									for (int a2 = 0; a2 < 4; a2++)
@@ -1055,8 +1004,8 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 										buf_ctmp1[table_5b4050[mtmp0] + 0x60 + 4 + a2 + a3 * 0x30] = 
 											buf_ctmp1[table_5b4050[mtmp0] + 0x60 + a2 + a3 * 0x30 - 0x2C]
 											+ buf_ctmp1[table_5b4050[mtmp0 + 0xC] + 0x29 + 3 - a2 + a3 * 0x30]
-											* MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_6[a2 + 4 + a3 * 8];
-
+											* MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_6[a2 + 4 + a3 * 8]
+										;
 									}
 
 									for (int a2 = 0; a2 < 4; a2++)
@@ -1064,8 +1013,8 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 										buf_ctmp1[table_5b4050[mtmp0 + 3] + 0x60 + 4 + a2 + a3 * 0x30] = 
 											buf_ctmp1[table_5b4050[mtmp0 + 0x9] + 0x29 + 3 - a2 + a3 * 0x30]
 											* MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_6[3 - a2 + a3 * 8]
-											- buf_ctmp1[table_5b4050[mtmp0 + 0x6] + 0x30 + 4 + a2 + a3 * 0x30];
-
+											- buf_ctmp1[table_5b4050[mtmp0 + 0x6] + 0x30 + 4 + a2 + a3 * 0x30]
+										;
 									}
 
 								}
@@ -1075,8 +1024,8 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 									dst0[a0 * 0x10 + a2] = 
 										buf_ctmp1[table_5b4050[mtmp0 + 0xC] + 0x20D + 3 - a2]
 										* MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_6[0x50 + a2]
-										+ buf_ctmp1[table_5b4050[mtmp0] + 0x210 + a2];
-
+										+ buf_ctmp1[table_5b4050[mtmp0] + 0x210 + a2]
+									;
 								}
 
 								for (int a2 = 0; a2 < 4; a2++)
@@ -1084,8 +1033,8 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 									dst0[a0 * 0x10 + 8 + a2] = 
 										buf_ctmp1[table_5b4050[mtmp0 + 0x9] + 0x20D + 3 - a2]
 										* MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_6[0x54 + 3 - a2]
-										- buf_ctmp1[table_5b4050[mtmp0 + 0x6] + 0x210 + a2];
-
+										- buf_ctmp1[table_5b4050[mtmp0 + 0x6] + 0x210 + a2]
+									;
 								}
 
 								for (int a2 = 0; a2 < 4; a2++)
@@ -1093,8 +1042,8 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 									dst0[a0 * 0x10 + 4 + a2] = 
 										buf_ctmp1[table_5b4050[mtmp0 + 0xC] + 0x20D - 4 + 3 - a2]
 										* MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_6[0x54 + a2]
-										+ buf_ctmp1[table_5b4050[mtmp0] + 0x210 + 4 + a2];
-
+										+ buf_ctmp1[table_5b4050[mtmp0] + 0x210 + 4 + a2]
+									;
 								}
 
 								for (int a2 = 0; a2 < 4; a2++)
@@ -1102,19 +1051,13 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 									dst0[a0 * 0x10 + 0xC + a2] = 
 										buf_ctmp1[table_5b4050[mtmp0 + 0x9] + 0x20D - 4 + 3 - a2]
 										* MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_6[0x50 + 3 - a2]
-										- buf_ctmp1[table_5b4050[mtmp0 + 0x6] + 0x210 + 4 + a2];
-
+										- buf_ctmp1[table_5b4050[mtmp0 + 0x6] + 0x210 + 4 + a2]
+									;
 								}
-
 							}
-
-
 						}
 					}
-
-
 				}
-
 			}
 
 			c900--;

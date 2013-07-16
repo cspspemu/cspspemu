@@ -73,7 +73,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3.Sample
 
 			Console.WriteLine("frame_block_size 0x{0:X}\n", block_size);
 
-			Console.ReadKey();
+			//Console.ReadKey();
 	
 			//so we make a new at3+ frame decoder
 			MaiAT3PlusFrameDecoder d2 = new MaiAT3PlusFrameDecoder();

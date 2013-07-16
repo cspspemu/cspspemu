@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu.Hle.Formats.audio.At3
 {
-	public class MaiAT3PlusCoreDecoderSearchTableDes
+	public sealed class MaiAT3PlusCoreDecoderSearchTableDes
 	{
 		public ushort[] table0;
 		public byte[] table1;
@@ -38,7 +38,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 		}
 	}
 
-	class MaiAT3PlusCoreDecoder_StaticData
+	internal sealed class MaiAT3PlusCoreDecoder_StaticData
 	{
 		public static readonly byte[] MAPCDSD_band_num_table0 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 4, 4, 5, 5, 6, 7, 8, 9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf};
 		public static readonly byte[] MAPCDSD_band_num_table1 = {0,0,1,1,2,2,2,3,3,3,3,3,4,4,4,4,4};

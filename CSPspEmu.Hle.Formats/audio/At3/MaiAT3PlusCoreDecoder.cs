@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu.Hle.Formats.audio.At3
 {
-	public class MaiAT3PlusCoreDecoderChnACCData_Entry
+	public sealed class MaiAT3PlusCoreDecoderChnACCData_Entry
 	{
 		public int num_acc;
 		public int[] data0 = new int[7];
@@ -16,7 +16,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 		public int[] reserved = new int[0x16];
 	}
 
-	public class MaiAT3PlusCoreDecoderChnACCData
+	public sealed class MaiAT3PlusCoreDecoderChnACCData
 	{
 		public MaiAT3PlusCoreDecoderChnACCData_Entry[] table = CreateTable();
 		public MaiAT3PlusCoreDecoderPackTable0 acc = new MaiAT3PlusCoreDecoderPackTable0();
@@ -32,7 +32,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 		}
 	}
 
-	unsafe public class MaiAT3PlusCoreDecoderChnACCTableTable
+	unsafe public sealed class MaiAT3PlusCoreDecoderChnACCTableTable
 	{
 		public int[] unk = new int[8];
 		public int num_uk;
@@ -40,7 +40,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 	}
 
 
-	public class MaiAT3PlusCoreDecoderChnACCTable
+	public sealed class MaiAT3PlusCoreDecoderChnACCTable
 	{
 		public MaiAT3PlusCoreDecoderChnACCTableInner inner;
 		public MaiAT3PlusCoreDecoderChnACCTableTable[] table = CreateTable();
@@ -56,7 +56,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 		}
 	}
 
-	unsafe public class MaiAT3PlusCoreDecoderChnInfo
+	unsafe public sealed class MaiAT3PlusCoreDecoderChnInfo
 	{
 		public int chn_flag;
 		public MaiAT3PlusCoreDecoderJointChnInfo joint_chn_info = new MaiAT3PlusCoreDecoderJointChnInfo();
@@ -88,7 +88,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 		public uint[] inner_pack_table0_check_table = new uint[0x10];
 	}
 
-	public class MaiAT3PlusCoreDecoderChnACCTableData
+	public sealed class MaiAT3PlusCoreDecoderChnACCTableData
 	{
 		public int unk0;
 		public int unk1;
@@ -96,7 +96,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 		public int unk3;
 	}
 
-	public class MaiAT3PlusCoreDecoderChnACCTableInner
+	public sealed class MaiAT3PlusCoreDecoderChnACCTableInner
 	{
 		public int unk0;
 		public int unk1;
@@ -108,14 +108,14 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 		public MaiAT3PlusCoreDecoderPackTable0 table_unk2;
 	}
 
-	public class MaiAT3PlusCoreDecoderPackTable0
+	public sealed class MaiAT3PlusCoreDecoderPackTable0
 	{
 		public int check_data0;
 		public int check_data1;
 		public int[] data = new int[0x10];
 	}
 
-	public class MaiAT3PlusCoreDecoderJointChnInfo
+	public sealed class MaiAT3PlusCoreDecoderJointChnInfo
 	{
 		public MaiAT3PlusCoreDecoderPackTable0 table00 = new MaiAT3PlusCoreDecoderPackTable0();
 		public MaiAT3PlusCoreDecoderPackTable0 table48 = new MaiAT3PlusCoreDecoderPackTable0();
@@ -137,7 +137,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 		public int[] table11c = new int[0x100];
 	}
 
-	public partial class MaiAT3PlusCoreDecoder
+	public sealed partial class MaiAT3PlusCoreDecoder
 	{
 		MaiAT3PlusCoreDecoderChnInfo[] chn_info = new MaiAT3PlusCoreDecoderChnInfo[2];
 

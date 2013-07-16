@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu.Hle.Formats.audio.At3
 {
-	unsafe public class MaiAT3PlusFrameDecoder
+	unsafe public sealed class MaiAT3PlusFrameDecoder
 	{
 		MaiAT3PlusCoreDecoder[] cores = new MaiAT3PlusCoreDecoder[0x10];
 		short[] sample_buf = new short[0x8000];
