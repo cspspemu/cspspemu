@@ -11,8 +11,8 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 	{
 		static readonly uint[] table_tmp0_o = { 0x00000000, 0x3F3F7E00, 0x3EE5CC00, 0x3EA42400, 0x3E50E600, 0x3E193200, 0x3D944200, 0x3D11E600 };
 		static readonly uint[] table_tmp1_o = { 0x3CE42A00, 0x3D0FBC00, 0x3D351800, 0x3D642A00, 0x3D8FBC00, 0x3DB51800, 0x3DE42A00, 0x3E0FBC00, 0x3E351800, 0x3E642A00, 0x3E8FBC00, 0x3EB51800, 0x3EE42A00, 0x3F0FBC00, 0x3F351800, 0x3F642A00, 0x3F8FBC00, 0x3FB51800, 0x3FE42A00, 0x400FBC00, 0x40351800, 0x40642A00, 0x408FBC00, 0x40B51800, 0x40E42A00, 0x410FBC00, 0x41351800, 0x41642A00, 0x418FBC00, 0x41B51800, 0x41E42A00, 0x420FBC00, 0x42351800, 0x42642A00, 0x428FBC00, 0x42B51800, 0x42E42A00, 0x430FBC00, 0x43351800, 0x43642A00, 0x438FBC00, 0x43B51800, 0x43E42A00, 0x440FBC00, 0x44351800, 0x44642A00, 0x448FBC00, 0x44B51800, 0x44E42A00, 0x450FBC00, 0x45351800, 0x45642A00, 0x458FBC00, 0x45B51800, 0x45E42A00, 0x460FBC00, 0x46351800, 0x46642A00, 0x468FBC00, 0x46B51800, 0x46E42A00, 0x470FBC00, 0x47351800, 0x47642A00 };
-		static readonly uint[] table_search0 = { 0, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, 0x80, 0xa0, 0xc0, 0xe0, 0x100, 0x120, 0x140, 0x160, 0x180, 0x1c0, 0x200, 0x240, 0x280, 0x2c0, 0x300, 0x380, 0x400, 0x480, 0x500, 0x580, 0x600, 0x680, 0x700, 0x780, 0x800 };
-		static readonly uint[] table_search1 = { 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80 };
+		static readonly uint[] table_search0_o = { 0, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, 0x80, 0xa0, 0xc0, 0xe0, 0x100, 0x120, 0x140, 0x160, 0x180, 0x1c0, 0x200, 0x240, 0x280, 0x2c0, 0x300, 0x380, 0x400, 0x480, 0x500, 0x580, 0x600, 0x680, 0x700, 0x780, 0x800 };
+		static readonly uint[] table_search1_o = { 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80 };
 		static readonly byte[] table_tmp2 = { 0x00, 0x01, 0x01, 0x02, 0x02, 0x02, 0x03, 0x03, 0x03, 0x03, 0x03, 0x04, 0x04, 0x04, 0x04, 0x04 };
 		static readonly float[] table_tmp3 = { 3.968750f, 3.156250f, 2.500000f, 2.000000f, 1.593750f, 1.250000f, 1.000000f, 0.7812500f, 0.6250000f, 0.5000000f, 0.4062500f, 0.3125000f, 0.2500000f, 0.1875000f, 0.1562500f, 0.0f };
 		static readonly int[] MAPCDDF_initMDataTable_table_tmp4 = { -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
@@ -24,6 +24,8 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 		{
 			fixed (uint* _table_tmp0 = table_tmp0_o)
 			fixed (uint* _table_tmp1 = table_tmp1_o)
+			fixed (uint* table_search0 = table_search0_o)
+			fixed (uint* table_search1 = table_search1_o)
 			{
 				var table_tmp0 = (float*)_table_tmp0;
 				var table_tmp1 = (float*)_table_tmp1;
@@ -74,15 +76,22 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 
 				for (int a00 = 0; a00 < chns; a00++)
 				{
-					for (uint a0 = 0; a0 < 0x800; a0++) pptablef0[a00][a0] = 0.0f;
-
-					for (uint a0 = 0; a0 < chn_infos[0].joint_chn_info.num_band_splited_used; a0++)
+					var chn_infos_a00 = chn_infos[a00];
+					var pptablef0_a00 = pptablef0[a00];
+					fixed (uint* chn_infos_a00_table0 = chn_infos_a00.table0)
+					fixed (uint* chn_infos_a00_table1 = chn_infos_a00.table1)
+					fixed (short* chn_infos_a00_table3 = chn_infos_a00.table3)
 					{
-						if (chn_infos[a00].table0[a0] > 0)
+						for (uint a0 = 0; a0 < 0x800; a0++) pptablef0_a00[a0] = 0.0f;
+
+						for (uint a0 = 0; a0 < chn_infos[0].joint_chn_info.num_band_splited_used; a0++)
 						{
-							for (uint a1 = 0; a1 < table_search1[a0]; a1++)
+							if (chn_infos_a00_table0[a0] > 0)
 							{
-								pptablef0[a00][table_search0[a0] + a1] = chn_infos[a00].table3[table_search0[a0] + a1] * table_tmp0[chn_infos[a00].table0[a0]] * table_tmp1[chn_infos[a00].table1[a0]];
+								for (uint a1 = 0; a1 < table_search1[a0]; a1++)
+								{
+									pptablef0_a00[table_search0[a0] + a1] = chn_infos_a00_table3[table_search0[a0] + a1] * table_tmp0[chn_infos_a00_table0[a0]] * table_tmp1[chn_infos_a00_table1[a0]];
+								}
 							}
 						}
 					}
@@ -825,19 +834,12 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 
 								for (int a1 = 0; a1 < 4; a1++)
 								{
-									stmp30[a1] = stmp140[a1]
-										+ stmp140[0x7 - a1]
-										+ stmp140[0x8 + a1]
-										+ stmp140[0xF - a1];
+									stmp30[a1] = stmp140[a1] + stmp140[0x7 - a1] + stmp140[0x8 + a1] + stmp140[0xF - a1];
 								}
 
 								for (int a1 = 0; a1 < 4; a1++)
 								{
-									stmp30[0x4 + a1] = stmp140[a1]
-										+ stmp140[0xF - a1]
-										- stmp140[0x7 - a1]
-										- stmp140[0x8 + a1];
-
+									stmp30[0x4 + a1] = stmp140[a1] + stmp140[0xF - a1] - stmp140[0x7 - a1] - stmp140[0x8 + a1];
 									stmp30[0x4 + a1] *= table_626af0[a1];
 								}
 
@@ -979,80 +981,39 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 									buf_ctmp1[table_5b4050[mtmp0 + 3] + 0x34 + a2] = buf_ctmp1[table_5b4050[mtmp0 + 0xF] - 7 + 3 - a2] * table_5b3ed0[3 - a2] - buf_ctmp1[table_5b4050[mtmp0 + 0x12] + 4 + a2] * table_5b3d50[3 - a2];
 								}
 
-								for (int a3 = 0; a3 < 10; a3++)
+								var table_5b4050_mtmp0_0 = table_5b4050[mtmp0 + 0x0];
+								var table_5b4050_mtmp0_3 = table_5b4050[mtmp0 + 0x3];
+								var table_5b4050_mtmp0_6 = table_5b4050[mtmp0 + 0x6];
+								var table_5b4050_mtmp0_9 = table_5b4050[mtmp0 + 0x9];
+								var table_5b4050_mtmp0_c = table_5b4050[mtmp0 + 0xC];
+
+								fixed (float* table_6 = MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_6)
+								fixed (float* buf_ctmp1_ptr = buf_ctmp1)
+								fixed (float* dst0_ptr = dst0)
 								{
-									for (int a2 = 0; a2 < 4; a2++)
+									for (int a3 = 0; a3 < 10; a3++)
 									{
-										buf_ctmp1[table_5b4050[mtmp0] + 0x60 + a2 + a3 * 0x30] = 
-											buf_ctmp1[table_5b4050[mtmp0] + 0x60 + a2 + a3 * 0x30 - 0x30]
-											+ MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_6[a2 + a3 * 8]
-											* buf_ctmp1[table_5b4050[mtmp0 + 0xC] + 0x29 + 4 + 3 - a2 + a3 * 0x30]
-										;
+										var a3_0x8 = a3 * 0x8;
+										var a3_0x30 = a3 * 0x30;
+										int a3_0x30_0x60 = 0x60 + a3_0x30;
+										// @TODO: VERY SLOW
+										for (int a2 = 0; a2 < 4; a2++)
+										{
+											buf_ctmp1_ptr[table_5b4050_mtmp0_0 + a3_0x30_0x60 + 0 + a2] = buf_ctmp1_ptr[table_5b4050_mtmp0_0 + 0x60 + 0 + 0 + a3_0x30 - 0x30 + a2] + table_6[0 + 0 + a3_0x8 + a2] * buf_ctmp1_ptr[table_5b4050_mtmp0_c + 0x29 + 4 + 3 + a3_0x30 - a2];
+											buf_ctmp1_ptr[table_5b4050_mtmp0_3 + a3_0x30_0x60 + 0 + a2] = buf_ctmp1_ptr[table_5b4050_mtmp0_9 + 0x29 + 4 + 3 + a3_0x30 - 0x00 - a2] * table_6[3 + 4 + a3_0x8 - a2] - buf_ctmp1_ptr[table_5b4050_mtmp0_6 + 0x30 + 0 + 0 + a3_0x30 + a2];
+											buf_ctmp1_ptr[table_5b4050_mtmp0_0 + a3_0x30_0x60 + 4 + a2] = buf_ctmp1_ptr[table_5b4050_mtmp0_0 + 0x60 + 0 + 0 + a3_0x30 - 0x2C + a2] + table_6[0 + 4 + a3_0x8 + a2] * buf_ctmp1_ptr[table_5b4050_mtmp0_c + 0x29 + 0 + 3 + a3_0x30 - a2];
+											buf_ctmp1_ptr[table_5b4050_mtmp0_3 + a3_0x30_0x60 + 4 + a2] = buf_ctmp1_ptr[table_5b4050_mtmp0_9 + 0x29 + 0 + 3 + a3_0x30 - 0x00 - a2] * table_6[3 + 0 + a3_0x8 - a2] - buf_ctmp1_ptr[table_5b4050_mtmp0_6 + 0x30 + 0 + 4 + a3_0x30 + a2];
+										}
 									}
 
+									// @TODO: SLOW
 									for (int a2 = 0; a2 < 4; a2++)
 									{
-										buf_ctmp1[table_5b4050[mtmp0 + 3] + 0x60 + a2 + a3 * 0x30] = 
-											buf_ctmp1[table_5b4050[mtmp0 + 0x9] + 0x29 + 4 + 3 - a2 + a3 * 0x30]
-											* MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_6[3 - a2 + 4 + a3 * 8]
-											- buf_ctmp1[table_5b4050[mtmp0 + 0x6] + 0x30 + a2 + a3 * 0x30]
-										;
+										dst0_ptr[a0 * 0x10 + 0x0 + a2] = buf_ctmp1_ptr[table_5b4050_mtmp0_c + 0x20D - 0 + 3 - a2] * table_6[0x50 + 0 + a2] + buf_ctmp1_ptr[table_5b4050_mtmp0_0 + 0x210 + 0 + a2];
+										dst0_ptr[a0 * 0x10 + 0x8 + a2] = buf_ctmp1_ptr[table_5b4050_mtmp0_9 + 0x20D - 0 + 3 - a2] * table_6[0x54 + 3 - a2] - buf_ctmp1_ptr[table_5b4050_mtmp0_6 + 0x210 + 0 + a2];
+										dst0_ptr[a0 * 0x10 + 0x4 + a2] = buf_ctmp1_ptr[table_5b4050_mtmp0_c + 0x20D - 4 + 3 - a2] * table_6[0x54 + 0 + a2] + buf_ctmp1_ptr[table_5b4050_mtmp0_0 + 0x210 + 4 + a2];
+										dst0_ptr[a0 * 0x10 + 0xC + a2] = buf_ctmp1_ptr[table_5b4050_mtmp0_9 + 0x20D - 4 + 3 - a2] * table_6[0x50 + 3 - a2] - buf_ctmp1_ptr[table_5b4050_mtmp0_6 + 0x210 + 4 + a2];
 									}
-
-									for (int a2 = 0; a2 < 4; a2++)
-									{
-										buf_ctmp1[table_5b4050[mtmp0] + 0x60 + 4 + a2 + a3 * 0x30] = 
-											buf_ctmp1[table_5b4050[mtmp0] + 0x60 + a2 + a3 * 0x30 - 0x2C]
-											+ buf_ctmp1[table_5b4050[mtmp0 + 0xC] + 0x29 + 3 - a2 + a3 * 0x30]
-											* MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_6[a2 + 4 + a3 * 8]
-										;
-									}
-
-									for (int a2 = 0; a2 < 4; a2++)
-									{
-										buf_ctmp1[table_5b4050[mtmp0 + 3] + 0x60 + 4 + a2 + a3 * 0x30] = 
-											buf_ctmp1[table_5b4050[mtmp0 + 0x9] + 0x29 + 3 - a2 + a3 * 0x30]
-											* MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_6[3 - a2 + a3 * 8]
-											- buf_ctmp1[table_5b4050[mtmp0 + 0x6] + 0x30 + 4 + a2 + a3 * 0x30]
-										;
-									}
-
-								}
-
-								for (int a2 = 0; a2 < 4; a2++)
-								{
-									dst0[a0 * 0x10 + a2] = 
-										buf_ctmp1[table_5b4050[mtmp0 + 0xC] + 0x20D + 3 - a2]
-										* MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_6[0x50 + a2]
-										+ buf_ctmp1[table_5b4050[mtmp0] + 0x210 + a2]
-									;
-								}
-
-								for (int a2 = 0; a2 < 4; a2++)
-								{
-									dst0[a0 * 0x10 + 8 + a2] = 
-										buf_ctmp1[table_5b4050[mtmp0 + 0x9] + 0x20D + 3 - a2]
-										* MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_6[0x54 + 3 - a2]
-										- buf_ctmp1[table_5b4050[mtmp0 + 0x6] + 0x210 + a2]
-									;
-								}
-
-								for (int a2 = 0; a2 < 4; a2++)
-								{
-									dst0[a0 * 0x10 + 4 + a2] = 
-										buf_ctmp1[table_5b4050[mtmp0 + 0xC] + 0x20D - 4 + 3 - a2]
-										* MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_6[0x54 + a2]
-										+ buf_ctmp1[table_5b4050[mtmp0] + 0x210 + 4 + a2]
-									;
-								}
-
-								for (int a2 = 0; a2 < 4; a2++)
-								{
-									dst0[a0 * 0x10 + 0xC + a2] = 
-										buf_ctmp1[table_5b4050[mtmp0 + 0x9] + 0x20D - 4 + 3 - a2]
-										* MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_6[0x50 + 3 - a2]
-										- buf_ctmp1[table_5b4050[mtmp0 + 0x6] + 0x210 + 4 + a2]
-									;
 								}
 							}
 						}

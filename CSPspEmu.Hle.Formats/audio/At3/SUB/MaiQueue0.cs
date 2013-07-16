@@ -48,7 +48,9 @@ namespace CSPspEmu.Hle.Formats.audio.At3.SUB
 
 			//while ( (is_ining) || (is_outing) ) Mai_Sleep(1);
 			//is_ining = 1;
+#if BIT_READER_THREAD_SAFE
 			lock (this)
+#endif
 			{
 
 				byte[] @base = this.@base;
@@ -90,7 +92,9 @@ namespace CSPspEmu.Hle.Formats.audio.At3.SUB
 
 			//while ( (is_ining) || (is_outing) ) Mai_Sleep(1);
 			//is_outing = 1;
+#if BIT_READER_THREAD_SAFE
 			lock (this)
+#endif
 			{
 
 				byte[] @base = this.@base;
@@ -132,7 +136,9 @@ namespace CSPspEmu.Hle.Formats.audio.At3.SUB
 
 			//while ( (is_ining) || (is_outing) ) Mai_Sleep(1);
 			//is_outing = 1;
+#if BIT_READER_THREAD_SAFE
 			lock (this)
+#endif
 			{
 
 				byte[] @base = this.@base;

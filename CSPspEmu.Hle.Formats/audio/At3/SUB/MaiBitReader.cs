@@ -1,8 +1,10 @@
-﻿//#define DEBUG_BIT_READER
+﻿//#define BIT_READER_THREAD_SAFE
+//#define DEBUG_BIT_READER
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,7 +30,9 @@ namespace CSPspEmu.Hle.Formats.audio.At3.SUB
 
 		public void Dispose()
 		{
+#if BIT_READER_THREAD_SAFE
 			lock (this)
+#endif
 			{
 				quene_in.Dis();
 			}
@@ -41,9 +45,13 @@ namespace CSPspEmu.Hle.Formats.audio.At3.SUB
 				var temp = new byte[1];
 				quene_in.Out(temp, 1);
 				if (type == MaiBitReaderTypeHigh)
+				{
 					buffer = (buffer << 8) | (temp[0] & 0xFF);
+				}
 				else if (type == MaiBitReaderTypeLow)
+				{
 					buffer |= (temp[0] & 0xFF) << bits_num;
+				}
 				bits_num += 8;
 				return false;
 			}
@@ -64,7 +72,9 @@ namespace CSPspEmu.Hle.Formats.audio.At3.SUB
 
 		private int _addData(ManagedPointer<byte> src, int len_s)
 		{
+#if BIT_READER_THREAD_SAFE
 			lock (this)
+#endif
 			{
 				quene_in.In(src, len_s);
 			}
@@ -74,16 +84,17 @@ namespace CSPspEmu.Hle.Formats.audio.At3.SUB
 
 		public int getRemainingBitsNum()
 		{
+#if BIT_READER_THREAD_SAFE
 			lock (this)
+#endif
 			{
-
 				int bits_remain = (quene_in.GetLength() << 3) + bits_num;
 
 				return bits_remain;
 			}
-
 		}
 
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public int getWithI32Buffer(int bnum, bool get_then_del_in_buf = true)
 		{
 			var value = _getWithI32Buffer(bnum, get_then_del_in_buf);
@@ -93,29 +104,44 @@ namespace CSPspEmu.Hle.Formats.audio.At3.SUB
 			return value;
 		}
 
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private int _getWithI32Buffer(int bnum, bool get_then_del_in_buf = true)
 		{
+#if BIT_READER_THREAD_SAFE
 			lock (this)
+#endif
 			{
 
-				while (bnum > bits_num) if (moreByte()) break;
+				while (bnum > bits_num)
+				{
+					if (moreByte()) break;
+				}
+
 				if (bnum <= bits_num)
 				{
 					int to_out = 0;
 
 					if (type == MaiBitReaderTypeHigh)
+					{
 						to_out = (buffer >> (bits_num - bnum)) & ((1 << bnum) - 1);
+					}
 					else if (type == MaiBitReaderTypeLow)
+					{
 						to_out = buffer & ((1 << bnum) - 1);
+					}
 
 					if (get_then_del_in_buf)
 					{
 						bits_num -= bnum;
 
 						if (type == MaiBitReaderTypeHigh)
+						{
 							buffer = buffer & ((1 << bits_num) - 1);
+						}
 						else if (type == MaiBitReaderTypeLow)
+						{
 							buffer = (buffer >> bnum) & ((1 << bits_num) - 1);
+						}
 					}
 
 					return to_out;
