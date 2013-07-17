@@ -1,7 +1,7 @@
 @ECHO OFF
 ECHO MERGE
 PUSHD %~dp0
-	SET BASE_FOLDER=%~dp0\CSPspEmu\bin\Debug
+	SET BASE_FOLDER=%~dp0\CSPspEmu\bin\Release
 	SET FILES=
 	SET FILES=%FILES% "%BASE_FOLDER%\CSPspEmu.exe"
 

@@ -18,9 +18,9 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
 
 		public static AstNodeStm GlobalOptimize(CpuProcessor Processor, AstNodeStm AstNodeStm)
 		{
-			if (Processor.CpuConfig.EnableAstOptimizations)
+			if (Processor == null || Processor.CpuConfig.EnableAstOptimizations)
 			{
-				return (AstNodeStm)(new AstOptimizerPsp(Processor.Memory)).Optimize(ast.Statements(AstNodeStm, ast.Return()));
+				return (AstNodeStm)(new AstOptimizerPsp(Processor != null ? Processor.Memory : null)).Optimize(ast.Statements(AstNodeStm, ast.Return()));
 			} else {
 				return AstNodeStm;
 			}

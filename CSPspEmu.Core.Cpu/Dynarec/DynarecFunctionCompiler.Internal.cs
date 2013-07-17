@@ -119,9 +119,8 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
 				var Time2 = DateTime.UtcNow;
 
-				var Delegate = MipsMethodEmitter.CreateDelegate(Nodes);
+				var MipsMethodEmitterResult = MipsMethodEmitter.CreateDelegate(Nodes);
 
-				var Time3 = DateTime.UtcNow;
 
 				return new DynarecFunction()
 				{
@@ -130,10 +129,12 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 					MinPC = MinPC,
 					MaxPC = MaxPC,
 					AstNode = Nodes,
-					Delegate = Delegate,
+					Delegate = MipsMethodEmitterResult.Delegate,
+					TimeOptimize = MipsMethodEmitterResult.TimeOptimize,
+					TimeGenerateIL = MipsMethodEmitterResult.TimeGenerateIL,
+					TimeCreateDelegate = MipsMethodEmitterResult.TimeCreateDelegate,
 					TimeAnalyzeBranches = Time1 - Time0,
-					TimeGenerateCode = Time2 - Time1,
-					TimeCreateDelegate = Time3 - Time2,
+					TimeGenerateAst = Time2 - Time1,
 				};
 			}
 
@@ -434,6 +435,8 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			}
 
 			uint InstructionsEmitedSinceLastWaypoint;
+			private TimeSpan CreateDelegateTime;
+			private TimeSpan GenerateILTime;
 
 			//static int DummyTempCounter = 0;
 

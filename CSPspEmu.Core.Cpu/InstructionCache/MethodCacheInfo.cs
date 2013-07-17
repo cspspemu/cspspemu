@@ -63,17 +63,17 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 		/// <summary>
 		/// EntryPoint for this function.
 		/// </summary>
-		public uint EntryPC;
+		public uint EntryPC { get { return DynarecFunction.EntryPC; } }
 
 		/// <summary>
 		/// Address of the start of the function. Usually is equal to EntryPC but not always.
 		/// </summary>
-		public uint MinPC;
+		public uint MinPC { get { return DynarecFunction.MinPC; } }
 
 		/// <summary>
 		/// Last address with code for this function.
 		/// </summary>
-		public uint MaxPC;
+		public uint MaxPC { get { return DynarecFunction.MaxPC; } }
 
 		/// <summary>
 		/// Ast for this function.

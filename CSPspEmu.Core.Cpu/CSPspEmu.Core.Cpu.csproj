@@ -66,6 +66,7 @@
     <Compile Include="CpuConfig.cs" />
     <Compile Include="Emitter\AstMipsGenerator.cs" />
     <Compile Include="Emitter\CpuEmitter.Fpu_Branches.cs" />
+    <Compile Include="FastPspMemoryUtils.cs" />
     <Compile Include="ICpuConnector.cs" />
     <Compile Include="IInterruptManager.cs" />
     <Compile Include="InvalidAddressException.cs" />

@@ -25,6 +25,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
 				if (this.UsedCount > 0 && this.UsedPC != PC)
 				{
 					this.Enabled = false;
+					//Console.WriteLine("VfpuPrefix.Enabled = false | {0:X8} : {1:X8} | {2:X8}", Value, DeclaredPC, PC);
 				}
 
 				this.UsedPC = PC;
@@ -65,6 +66,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
 			this.Value = Value;
 			this.DeclaredPC = PC;
 			this.UsedCount = 0;
+			//Console.WriteLine("VfpuPrefix.Enabled = true | {0:X8} : {1:X8} | {2:X8}", Value, DeclaredPC, PC);
 		}
 
 		public string Format
@@ -126,13 +128,18 @@ namespace CSPspEmu.Core.Cpu.VFpu
 
 		public void CheckPrefixUsage(uint PC)
 		{
+			//Console.WriteLine("VfpuDestinationPrefix.CheckPrefixUsage | {0:X8} : {1:X8} | {2:X8} | {3} | {4}", Value, DeclaredPC, PC, Enabled, UsedCount);
 			// Disable the prefix once it have been used.
 			if (this.Enabled)
 			{
 				if (this.UsedCount > 0 && this.UsedPC != PC)
 				{
 					this.Enabled = false;
+					//Console.WriteLine("VfpuDestinationPrefix.Enabled = false | {0:X8} : {1:X8} | {2:X8}", Value, DeclaredPC, PC);
 				}
+
+				this.UsedPC = PC;
+				this.UsedCount++;
 			}
 		}
 	
@@ -157,6 +164,7 @@ namespace CSPspEmu.Core.Cpu.VFpu
 			this.Value = Value;
 			this.DeclaredPC = PC;
 			this.UsedCount = 0;
+			//Console.WriteLine("VfpuDestinationPrefix.Enabled = true | {0:X8} : {1:X8} | {2:X8}", Value, DeclaredPC, PC);
 		}
 	
 		public string Format

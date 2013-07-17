@@ -1,4 +1,7 @@
-﻿using CSPspEmu.Core.Cpu.Emitter;
+﻿using CSharpUtils;
+using CSPspEmu.Core.Cpu.Dynarec.Ast;
+using CSPspEmu.Core.Cpu.Emitter;
+using CSPspEmu.Core.Memory;
 using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Generators;
 using SafeILGenerator.Ast.Nodes;
@@ -7,6 +10,7 @@ using SafeILGenerator.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -78,6 +82,80 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 					MethodCacheInfo.Free();
 				}
 			}
+		}
+
+		static private bool PrelinkedAll = false;
+
+		public void _MethodCacheInfo_SetInternal(CpuThreadState CpuThreadState, MethodCacheInfo MethodCacheInfo, uint PC)
+		{
+			if (!PrelinkedAll)
+			{
+				PrelinkedAll = true;
+				Marshal.PrelinkAll(typeof(CpuEmitter));
+				Marshal.PrelinkAll(typeof(GeneratorIL));
+				Marshal.PrelinkAll(typeof(GeneratorILPsp));
+				Marshal.PrelinkAll(typeof(AstOptimizer));
+				Marshal.PrelinkAll(typeof(AstOptimizerPsp));
+			}
+
+			var Memory = CpuThreadState.Memory;
+			var CpuProcessor = CpuThreadState.CpuProcessor;
+			if (_DynarecConfig.DebugFunctionCreation)
+			{
+				Console.Write("PC=0x{0:X8}...", PC);
+			}
+			//var Stopwatch = new Logger.Stopwatch();
+			var Time0 = DateTime.UtcNow;
+
+			var DynarecFunction = CpuProcessor.DynarecFunctionCompiler.CreateFunction(new InstructionStreamReader(new PspMemoryStream(Memory)), PC);
+			if (DynarecFunction.EntryPC != PC) throw (new Exception("Unexpected error"));
+
+			var Time1 = DateTime.UtcNow;
+
+			DynarecFunction.Delegate(null);
+
+			var Time2 = DateTime.UtcNow;
+
+			var AstGenerationTime = Time1 - Time0;
+			var LinkingTime = Time2 - Time1;
+
+			if (_DynarecConfig.DebugFunctionCreation)
+			{
+				ConsoleUtils.SaveRestoreConsoleColor(((AstGenerationTime + LinkingTime).TotalMilliseconds > 10) ? ConsoleColor.Red : ConsoleColor.Gray, () =>
+				{
+					Console.WriteLine(
+						"({0}): (analyze: {1}, generateAST: {2}, optimize: {3}, generateIL: {4}, createDelegate: {5}, link: {6}): ({1}, {2}, {3}, {4}, {5}, {6}) : {7} ms",
+						(DynarecFunction.MaxPC - DynarecFunction.MinPC) / 4,
+						(int)DynarecFunction.TimeAnalyzeBranches.TotalMilliseconds,
+						(int)DynarecFunction.TimeGenerateAst.TotalMilliseconds,
+						(int)DynarecFunction.TimeOptimize.TotalMilliseconds,
+						(int)DynarecFunction.TimeGenerateIL.TotalMilliseconds,
+						(int)DynarecFunction.TimeCreateDelegate.TotalMilliseconds,
+						(int)LinkingTime.TotalMilliseconds,
+						(int)(AstGenerationTime + LinkingTime).TotalMilliseconds
+					);
+				});
+			}
+
+			//DynarecFunction.AstNode = DynarecFunction.AstNode.Optimize(CpuProcessor);
+
+#if DEBUG_FUNCTION_CREATION
+			CpuProcessor.DebugFunctionCreation = true;
+#endif
+
+			if (CpuProcessor.DebugFunctionCreation)
+			{
+				Console.WriteLine("-------------------------------------");
+				Console.WriteLine("Created function for PC=0x{0:X8}", PC);
+				Console.WriteLine("-------------------------------------");
+				CpuThreadState.DumpRegistersCpu(Console.Out);
+				Console.WriteLine("-------------------------------------");
+				Console.WriteLine(DynarecFunction.AstNode.ToCSharpString());
+				Console.WriteLine("-------------------------------------");
+			}
+
+			MethodCacheInfo.DynarecFunction = DynarecFunction;
+			MethodCacheInfo.StaticField.Value = DynarecFunction.Delegate;
 		}
 	}
 }

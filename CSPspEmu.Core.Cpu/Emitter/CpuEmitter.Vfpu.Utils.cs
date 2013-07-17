@@ -5,6 +5,7 @@ using CSPspEmu.Core.Cpu.VFpu;
 using CSharpUtils;
 using System.Linq;
 using System.Runtime.InteropServices;
+using SafeILGenerator.Ast;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -167,6 +168,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			protected VReg VReg;
 			protected VType VType;
 			protected int VectorSize;
+			protected Dictionary<int, AstLocal> _Locals = new Dictionary<int,AstLocal>();
+
+			protected AstLocal GetLocal(int Index)
+			{
+				if (!_Locals.ContainsKey(Index)) _Locals[Index] = AstLocal.Create(GetVTypeType(), "LocalVFPR" + Index);
+				return _Locals[Index];
+			}
 
 			protected VfpuRuntimeRegister(CpuEmitter CpuEmitter, VReg VReg, VType VType, int VectorSize)
 			{
@@ -199,6 +207,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			{
 				var Prefix = VReg.VfpuPrefix;
 				Prefix.CheckPrefixUsage(PC);
+
+				//Console.WriteLine("[Get] {0:X8}:: {1}", PC, Prefix.Enabled);
 
 				AstNodeExpr AstNodeExpr = _GetVRegRef(Indices[RegIndex]);
 
@@ -240,9 +250,17 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				var PrefixDestination = VReg.VfpuDestinationPrefix;
 				PrefixDestination.CheckPrefixUsage(PC);
 
+				//Console.WriteLine("[Set] {0:X8}:: {1}", PC, PrefixDestination.Enabled);
+
 				if (PrefixDestination.Enabled && PrefixDestination.IsValidIndex(PrefixIndex))
 				{
-					if (!PrefixDestination.DestinationMask(PrefixIndex))
+					// It is masked. It won't write the value.
+					if (PrefixDestination.DestinationMask(PrefixIndex))
+					{
+						//return ast.Statement();
+						AstNodeExpr = _GetVRegRef(RegIndex);
+					}
+					else
 					{
 						float Min = 0, Max = 0;
 						bool DoClamp = false;
@@ -267,7 +285,14 @@ namespace CSPspEmu.Core.Cpu.Emitter
 					}
 				}
 
-				return ast.Assign(_GetVRegRef(RegIndex), ast.Cast(GetVTypeType(), AstNodeExpr));
+				//return ast.Assign(_GetVRegRef(RegIndex), ast.Cast(GetVTypeType(), AstNodeExpr));
+				//Console.Error.WriteLine("PrefixIndex:{0}", PrefixIndex);
+				return ast.Assign(ast.Local(GetLocal(PrefixIndex)), ast.Cast(GetVTypeType(), AstNodeExpr));
+			}
+
+			protected AstNodeStm SetRegApplyPrefix2(int RegIndex, int PrefixIndex)
+			{
+				return ast.Assign(_GetVRegRef(RegIndex), ast.Local(GetLocal(PrefixIndex)));
 			}
 
 		}
@@ -289,7 +314,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 			public AstNodeStm Set(AstNodeExpr Value)
 			{
-				return SetRegApplyPrefix(this.Index, 0, Value);
+				return ast.Statements(
+					SetRegApplyPrefix(this.Index, 0, Value),
+					SetRegApplyPrefix2(this.Index, 0)
+				);
 			}
 		}
 
@@ -323,12 +351,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				return SetRegApplyPrefix(this.Indices[Index], Index, Value);
 			}
 
+			public AstNodeStm Set2(int Index)
+			{
+				return SetRegApplyPrefix2(this.Indices[Index], Index);
+			}
+
 			public AstNodeStm SetVector(Func<int, AstNodeExpr> Generator)
 			{
 				return ast.Statements(
-					Enumerable.Range(0, this.VectorSize)
-						.Select(Index => Set(Index, Generator(Index)))
-						.Where(Statement => Statement != null)
+					ast.Statements(Enumerable.Range(0, this.VectorSize).Select(Index => Set(Index, Generator(Index))).Where(Statement => Statement != null)),
+					ast.StatementsInline(Enumerable.Range(0, this.VectorSize).Select(Index => Set2(Index)).Where(Statement => Statement != null))
 				);
 			}
 		}
@@ -385,17 +417,30 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 			public AstNodeStm Set(int Column, int Row, AstNodeExpr Value)
 			{
-				return SetRegApplyPrefix(this.Indices[Column, Row], -1, Value);
+				return SetRegApplyPrefix(this.Indices[Column, Row], 0, Value);
+			}
+
+			public AstNodeStm Set2(int Column, int Row)
+			{
+				return SetRegApplyPrefix2(this.Indices[Column, Row], 0);
 			}
 
 			public AstNodeStm SetMatrix(Func<int, int, AstNodeExpr> Generator)
 			{
 				var Statements = new List<AstNodeStm>();
+				
 				for (int Row = 0; Row < VectorSize; Row++)
 				for (int Column = 0; Column < VectorSize; Column++)
 				{
 					Statements.Add(Set(Column, Row, Generator(Column, Row)));
 				}
+				
+				for (int Row = 0; Row < VectorSize; Row++)
+				for (int Column = 0; Column < VectorSize; Column++)
+				{
+					Statements.Add(Set2(Column, Row));
+				}
+
 				return ast.Statements(Statements);
 			}
 		}

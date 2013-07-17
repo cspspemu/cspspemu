@@ -5,6 +5,7 @@ using SafeILGenerator;
 using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
 using SafeILGenerator.Ast.Generators;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu.Table
 {
@@ -88,19 +89,19 @@ namespace CSPspEmu.Core.Cpu.Table
 			});
 		}
 
-		//public static object GenerateSwitch(Type Type, IEnumerable<InstructionInfo> InstructionInfoList, Func<InstructionInfo, AstNodeStm> GenerateCallDelegate)
-		//{
-		//	return CSafeILGenerator.Generate(Type, "EmitLookupGenerator.GenerateSwitch", (Generator) =>
-		//	{
-		//		GenerateSwitchCode(Generator, InstructionInfoList, GenerateCallDelegate);
-		//	});
-
-
-		static private readonly GeneratorIL GeneratorILInstance = new GeneratorIL();
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="TType"></typeparam>
+		/// <param name="Name"></param>
+		/// <param name="InstructionInfoList"></param>
+		/// <param name="GenerateCallDelegate"></param>
+		/// <returns></returns>
 		public static TType GenerateSwitch<TType>(string Name, IEnumerable<InstructionInfo> InstructionInfoList, Func<InstructionInfo, AstNodeStm> GenerateCallDelegate)
 		{
-			return GeneratorILInstance.GenerateDelegate<TType>("EmitLookupGenerator.GenerateSwitch::" + Name, GenerateSwitchCode(InstructionInfoList, GenerateCallDelegate));
+			//Console.WriteLine(GenerateSwitchCode(InstructionInfoList, GenerateCallDelegate).Optimize(null).ToCSharpString());
+			//Console.WriteLine(GenerateSwitchCode(InstructionInfoList, GenerateCallDelegate).Optimize(null).ToILString<TType>());
+			return GenerateSwitchCode(InstructionInfoList, GenerateCallDelegate).GenerateDelegate<TType>("EmitLookupGenerator.GenerateSwitch::" + Name);
 		}
 
 		/// <summary>
@@ -115,6 +116,17 @@ namespace CSPspEmu.Core.Cpu.Table
 			//var ILGenerator = SafeILGenerator._UnsafeGetILGenerator();
 			var CommonMask = InstructionInfoList.Aggregate(0xFFFFFFFF, (Base, InstructionInfo) => Base & InstructionInfo.Mask);
 			var MaskGroups = InstructionInfoList.GroupBy((InstructionInfo) => InstructionInfo.Value & CommonMask);
+			
+#if false
+			int ShiftOffset = 0;
+			var CommonMaskShifted = CommonMask >> ShiftOffset;
+			uint MinValue = 0;
+#else
+			int ShiftOffset = BitUtils.GetFirstBit1(CommonMask);
+			var CommonMaskShifted = CommonMask >> ShiftOffset;
+			uint MinValue = MaskGroups.Select(MaskGroup => (uint)((MaskGroup.First().Value >> ShiftOffset) & CommonMaskShifted)).Min();
+#endif
+
 			//var MaskGroupsCount = MaskGroups.Count();
 
 			//Console.WriteLine("[" + Level + "]{0:X}", CommonMask);
@@ -122,11 +134,11 @@ namespace CSPspEmu.Core.Cpu.Table
 
 			return ast.Statements(
 				ast.Switch(
-					ast.Argument<uint>(0) & (uint)CommonMask,
+					ast.Binary(ast.Binary(ast.Binary(ast.Argument<uint>(0), ">>", ShiftOffset), "&", (uint)CommonMaskShifted), "-", MinValue),
 					ast.Default(GenerateCallDelegate(null)),
-					MaskGroups.Select((MaskGroup) => 
+					MaskGroups.Select(MaskGroup => 
 						ast.Case(
-							(uint)(MaskGroup.First().Value & CommonMask),
+							(uint)((MaskGroup.First().Value >> ShiftOffset) & CommonMaskShifted) - MinValue,
 							(MaskGroup.Count() > 1)
 							? GenerateSwitchCode(MaskGroup, GenerateCallDelegate, Level + 1)
 							: GenerateCallDelegate(MaskGroup.First())

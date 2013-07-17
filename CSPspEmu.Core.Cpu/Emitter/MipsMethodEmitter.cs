@@ -9,6 +9,8 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using SafeILGenerator.Ast.Nodes;
 using CSPspEmu.Core.Cpu.Dynarec.Ast;
+using SafeILGenerator.Ast.Optimizers;
+using SafeILGenerator.Ast.Generators;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -36,9 +38,21 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			);
 		}
 
-		public Action<CpuThreadState> CreateDelegate(AstNodeStm AstNodeStm)
+		public class Result
 		{
+			public TimeSpan TimeOptimize;
+			public TimeSpan TimeGenerateIL;
+			public TimeSpan TimeCreateDelegate;
+			public Action<CpuThreadState> Delegate;
+		}
+
+		public Result CreateDelegate(AstNodeStm AstNodeStm)
+		{
+			var Time0 = DateTime.UtcNow;
+
 			AstNodeStm = AstOptimizerPsp.GlobalOptimize(Processor, ast.Statements(AstNodeStm, ast.Return()));
+
+			var Time1 = DateTime.UtcNow;
 
 #if DEBUG_GENERATE_IL
 			Console.WriteLine("{0}", GeneratorIL.GenerateToString<GeneratorILPsp>(DynamicMethod, AstNodeStm));
@@ -49,9 +63,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 			AstNodeStm.GenerateIL(DynamicMethod);
 
+			var Time2 = DateTime.UtcNow;
+
+			Action<CpuThreadState> Delegate;
+
 			try
 			{
-				return (Action<CpuThreadState>)DynamicMethod.CreateDelegate(typeof(Action<CpuThreadState>));
+				Delegate = (Action<CpuThreadState>)DynamicMethod.CreateDelegate(typeof(Action<CpuThreadState>));
 			}
 			catch (InvalidProgramException InvalidProgramException)
 			{
@@ -71,6 +89,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
 #endif
 				throw (InvalidProgramException);
 			}
+
+			var Time3 = DateTime.UtcNow;
+
+			return new Result()
+			{
+				Delegate = Delegate,
+				TimeOptimize = Time1 - Time0,
+				TimeGenerateIL = Time2 - Time1,
+				TimeCreateDelegate = Time3 - Time2,
+			};
 		}
 	}
 }

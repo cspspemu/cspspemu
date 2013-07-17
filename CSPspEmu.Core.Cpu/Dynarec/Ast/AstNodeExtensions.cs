@@ -20,11 +20,15 @@ public static class AstNodeExtensions
 		return AstOptimizerPsp.GlobalOptimize(CpuProcessor, AstNodeStm);
 	}
 
+	static public TType GenerateDelegate<TType>(this AstNodeStm AstNodeStm, string MethodName)
+	{
+		return _GeneratorILPsp.GenerateDelegate<TType>(MethodName, AstNodeStm);
+	}
+
 	static public void GenerateIL(this AstNodeStm AstNodeStm, MethodInfo MethodInfo, ILGenerator ILGenerator)
 	{
 		_GeneratorILPsp.Init(MethodInfo, ILGenerator).Reset().GenerateRoot(AstNodeStm);
 	}
-
 
 	static public void GenerateIL(this AstNodeStm AstNodeStm, DynamicMethod DynamicMethod)
 	{

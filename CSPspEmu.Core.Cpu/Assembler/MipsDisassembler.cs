@@ -18,20 +18,31 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			public InstructionInfo InstructionInfo;
 			public IPspMemoryInfo MemoryInfo;
 
-			public static String RegisterIndexToRegisterName(int RegisterIndex)
+			public static String GprIndexToRegisterName(int RegisterIndex)
 			{
 				return String.Format("r{0}", RegisterIndex);
+			}
+
+			public static String FprIndexToRegisterName(int RegisterIndex)
+			{
+				return String.Format("f{0}", RegisterIndex);
 			}
 
 			public static readonly Dictionary<string, Func<Result, string>> Opcodes = new Dictionary<string, Func<Result, string>>()
 			{
 				//return (uint)(PC & ~PspMemory.MemoryMask) | (Instruction.JUMP << 2);
 				{ "O", Result => String.Format("0x{0:X8}", Result.Instruction.GetBranchAddress(Result.InstructionPC)) },
-				{ "J", Result => RegisterIndexToRegisterName(Result.Instruction.RS) },
+				{ "J", Result => GprIndexToRegisterName(Result.Instruction.RS) },
 				{ "j", Result => String.Format("0x{0:X8}", Result.Instruction.GetJumpAddress(Result.MemoryInfo, Result.InstructionPC)) },
-				{ "s", Result => RegisterIndexToRegisterName(Result.Instruction.RS) },
-				{ "d", Result => RegisterIndexToRegisterName(Result.Instruction.RD) },
-				{ "t", Result => RegisterIndexToRegisterName(Result.Instruction.RT) },
+				
+				{ "s", Result => GprIndexToRegisterName(Result.Instruction.RS) },
+				{ "d", Result => GprIndexToRegisterName(Result.Instruction.RD) },
+				{ "t", Result => GprIndexToRegisterName(Result.Instruction.RT) },
+
+				{ "S", Result => FprIndexToRegisterName(Result.Instruction.FS) },
+				{ "D", Result => FprIndexToRegisterName(Result.Instruction.FD) },
+				{ "T", Result => FprIndexToRegisterName(Result.Instruction.FT) },
+
 				{ "C", Result => String.Format("{0}", Result.Instruction.CODE) },
 				{ "a", Result => Result.Instruction.POS.ToString() },
 				{ "i", Result => Result.Instruction.IMM.ToString() },

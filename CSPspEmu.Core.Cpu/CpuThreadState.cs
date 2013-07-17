@@ -507,59 +507,14 @@ namespace CSPspEmu.Core.Cpu
 #endif
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="MethodCacheInfo"></param>
+		/// <param name="PC"></param>
 		public void _MethodCacheInfo_SetInternal(MethodCacheInfo MethodCacheInfo, uint PC)
 		{
-			Console.Write("Creating function for PC=0x{0:X8}...", PC);
-			//var Stopwatch = new Logger.Stopwatch();
-			var Time0 = DateTime.UtcNow;
-			
-			var DynarecFunction = CpuProcessor.DynarecFunctionCompiler.CreateFunction(new InstructionStreamReader(new PspMemoryStream(Memory)), PC);
-			if (DynarecFunction.EntryPC != PC) throw(new Exception("Unexpected error"));
-
-			var Time1 = DateTime.UtcNow;
-
-			DynarecFunction.Delegate(null);
-
-			var Time2 = DateTime.UtcNow;
-
-			var AstGenerationTime = Time1 - Time0;
-			var LinkingTime = Time2 - Time1;
-
-			ConsoleUtils.SaveRestoreConsoleColor(((AstGenerationTime + LinkingTime).TotalMilliseconds > 10) ? ConsoleColor.Red : ConsoleColor.Gray, () =>
-			{
-				Console.WriteLine(
-					"({0}): Times(ms)(analyze, create, generate, link): ({1}, {2}, {3}, {4}) : {5} ms",
-					(DynarecFunction.MaxPC - DynarecFunction.MinPC) / 4,
-					(int)DynarecFunction.TimeAnalyzeBranches.TotalMilliseconds,
-					(int)DynarecFunction.TimeCreateDelegate.TotalMilliseconds,
-					(int)DynarecFunction.TimeGenerateCode.TotalMilliseconds,
-					(int)LinkingTime.TotalMilliseconds,
-					(int)(AstGenerationTime + LinkingTime).TotalMilliseconds
-				);
-			});
-
-			//DynarecFunction.AstNode = DynarecFunction.AstNode.Optimize(CpuProcessor);
-
-#if DEBUG_FUNCTION_CREATION
-			CpuProcessor.DebugFunctionCreation = true;
-#endif
-
-			if (CpuProcessor.DebugFunctionCreation)
-			{
-				Console.WriteLine("-------------------------------------");
-				Console.WriteLine("Created function for PC=0x{0:X8}", PC);
-				Console.WriteLine("-------------------------------------");
-				this.DumpRegistersCpu(Console.Out);
-				Console.WriteLine("-------------------------------------");
-				Console.WriteLine(DynarecFunction.AstNode.ToCSharpString());
-				Console.WriteLine("-------------------------------------");
-			}
-
-			MethodCacheInfo.DynarecFunction = DynarecFunction;
-			MethodCacheInfo.StaticField.Value = DynarecFunction.Delegate;
-			MethodCacheInfo.EntryPC = DynarecFunction.EntryPC;
-			MethodCacheInfo.MinPC = DynarecFunction.MinPC;
-			MethodCacheInfo.MaxPC = DynarecFunction.MaxPC;
+			MethodCache._MethodCacheInfo_SetInternal(this, MethodCacheInfo, PC);
 		}
 
 		/// <summary>

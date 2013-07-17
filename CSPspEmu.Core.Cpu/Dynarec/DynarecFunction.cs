@@ -9,10 +9,13 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 	/// </summary>
 	public class DynarecFunction
 	{
+		/// <summary>
+		/// Special function name.
+		/// </summary>
 		public string Name;
 
 		/// <summary>
-		/// 
+		/// Root node containing the whole function code.
 		/// </summary>
 		public AstNodeStm AstNode;
 
@@ -24,12 +27,12 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 		/// <summary>
 		/// A list of functions that have embedded this function.
 		/// </summary>
-		public List<DynarecFunction> InlinedAtFunctions;
+		public List<DynarecFunction> InlinedAtFunctions = new List<DynarecFunction>();
 
 		/// <summary>
-		/// 
+		/// A list of Calling PCs
 		/// </summary>
-		public uint[] CallingPCs;
+		public List<uint> CallingPCs = new List<uint>();
 		
 		/// <summary>
 		/// 
@@ -50,7 +53,9 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 		/// 
 		/// </summary>
 		public TimeSpan TimeAnalyzeBranches;
-		public TimeSpan TimeGenerateCode;
+		public TimeSpan TimeGenerateAst;
+		public TimeSpan TimeOptimize;
+		public TimeSpan TimeGenerateIL;
 		public TimeSpan TimeCreateDelegate;
 	}
 }

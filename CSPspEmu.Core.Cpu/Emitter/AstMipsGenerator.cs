@@ -122,8 +122,15 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			{
 				if (_DynarecConfig.AllowFastMemory && Memory.HasFixedGlobalAddress)
 				{
-					var AddressMasked = ast.Binary(Address, "&", ast.Immediate(PspMemory.MemoryMask));
-					return ast.Immediate(Memory.FixedGlobalAddress) + AddressMasked;
+					if (_DynarecConfig.EnableFastPspMemoryUtilsGetFastMemoryReader)
+					{
+						return ast.CallStatic(FastPspMemoryUtils.GetFastMemoryReader(Memory.FixedGlobalAddress), Address);
+					}
+					else
+					{
+						var AddressMasked = ast.Binary(Address, "&", ast.Immediate(PspMemory.MemoryMask));
+						return ast.Immediate(Memory.FixedGlobalAddress) + AddressMasked;
+					}
 				}
 				else
 				{

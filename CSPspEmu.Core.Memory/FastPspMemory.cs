@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace CSPspEmu.Core.Memory
@@ -71,7 +72,7 @@ namespace CSPspEmu.Core.Memory
 				{
 					if (Platform.OperatingSystem == Platform.OS.Windows)
 					{
-						TryBases = new ulong[] { 0xE1000000, 0x0012340080000000, 0x00123400A0000000 };
+						TryBases = new ulong[] { 0xE7000000, 0xE1000000, 0x0012340080000000, 0x00123400A0000000 };
 					}
 					else
 					{
