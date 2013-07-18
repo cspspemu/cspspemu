@@ -159,7 +159,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
 		public static uint ParseVfprConstantName(string RegisterName)
 		{
-			return (uint)VfpuUtils.VfpuConstantsIndices[RegisterName];
+			return (uint)VfpuConstants.GetConstantIndexByName(RegisterName);
 		}
 
 		public class ParseVfprOffsetInfo
@@ -180,7 +180,7 @@ namespace CSPspEmu.Core.Cpu.Assembler
 
 		public static int ParseVfprName(int VfpuSize, string RegisterName)
 		{
-			return VfpuUtils.VfpuRegisterInfo.Parse(VfpuSize, RegisterName).Index;
+			return VfpuRegisterInfo.Parse(VfpuSize, RegisterName).RegisterIndex;
 		}
 
 		public static int ParseFprName(string RegisterName)
@@ -278,13 +278,11 @@ namespace CSPspEmu.Core.Cpu.Assembler
 						case "%ym":
 						case "%yn":
 						case "%tym":
-							Instruction.VS = ParseVfprName(VfpuSize, Value);
 							if (Key == "%tym")
 							{
-								var Reg = Instruction.VS;
-								Reg.M_TRANSPOSED = (Reg.M_TRANSPOSED != 0) ? 0 : 1;
-								Instruction.VS = Reg;
+								Value = ((Value[0] == 'M') ? 'E' : 'M') + Value.Substring(1);
 							}
+							Instruction.VS = ParseVfprName(VfpuSize, Value);
 							break;
 						case "%xs": 
 						case "%xp":
@@ -511,8 +509,8 @@ namespace CSPspEmu.Core.Cpu.Assembler
 								Instruction.IMM = ((int)LabelAddress - (int)Patch.Address - 4) / 4;
 								break;
 							case AssemblerPatchType.ABS_26:
-								Console.Write("0x{0:X} : {1}", (LabelAddress & PspMemory.MemoryMask) / 4, Patch.LabelName);
 								Instruction.JUMP_Bits = (LabelAddress & PspMemory.MemoryMask) / 4;
+								Console.Write("0x{0:X} : {1}", Instruction.JUMP_Bits, Patch.LabelName);
 								break;
 							case AssemblerPatchType.ABS_32:
 								Instruction.Value = LabelAddress;

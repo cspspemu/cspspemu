@@ -233,6 +233,14 @@
       <Project>{DC02A203-30F2-4613-950B-1529FD55AC81}</Project>
       <Name>CSPspEmu.Utils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Libraries\cscodec\cscodec\cscodec.h264\cscodec.h264.csproj">
+      <Project>{e8791c5d-f790-404c-b661-d509844dbbff}</Project>
+      <Name>cscodec.h264</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\cscodec\cscodec\cscodec\cscodec.csproj">
+      <Project>{351dcb00-efcf-435a-9c72-9a7e1d5950b0}</Project>
+      <Name>cscodec</Name>
+    </ProjectReference>
     <ProjectReference Include="..\libraries\csharpplatform\CSharpPlatform\CSharpPlatform.csproj">
       <Project>{B4B107B5-030B-451C-8532-13B2306692C3}</Project>
       <Name>CSharpPlatform</Name>

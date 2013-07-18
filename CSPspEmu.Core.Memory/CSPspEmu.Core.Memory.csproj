@@ -46,8 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DefaultMemoryInfo.cs" />
     <Compile Include="FastPspMemory.cs" />
+    <Compile Include="DefaultMemoryInfo.cs" />
+    <Compile Include="FastPspMemoryUnsafe.cs" />
     <Compile Include="LazyPspMemory.cs" />
     <Compile Include="NormalPspMemory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

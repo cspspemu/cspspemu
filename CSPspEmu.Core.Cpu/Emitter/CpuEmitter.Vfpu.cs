@@ -79,7 +79,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm vsat1() { return _vfpu_call_ff((Func<float, float>)MathFloat.Vsat1); }
 
 		// Vector -> Cell operations
-		public AstNodeStm vcst() { return CEL_VD.Set(VfpuUtils.GetVfpuConstantsValue((int)Instruction.IMM5)); }
+		public AstNodeStm vcst() { return CEL_VD.Set(VfpuConstants.GetConstantValueByIndex((int)Instruction.IMM5).Value); }
 		public AstNodeStm vhdp()
 		{
 			return CEL_VD.Set(_Aggregate(0f, (Aggregate, Index) =>
@@ -378,6 +378,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				for (int n = 0; n < VectorSize; n++)
 				{
 					Adder += Target[Column, n] * Src[Row, n];
+					//Adder += Target[Column, n] * Src[Row, n];
+					//Adder += Target[Row, n] * Src[Column, n];
+					//Adder += Target[n, Column] * Src[n, Row];
 				}
 				return Adder;
 			});
@@ -387,15 +390,23 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm _vtfm_x(int VectorSize)
 		{
-			return VEC(VD, VType.VFloat, VectorSize).SetVector(Index =>
-				_Aggregate(0f, VectorSize, (Aggregated, Index2) => Aggregated + MAT_VS[Index, Index2] * VEC_VT[Index2])
+			var VecVD = VEC(VD, VType.VFloat, VectorSize);
+			var VecVT = VEC(VT, VType.VFloat, VectorSize);
+			var MatVS = MAT(VS, VType.VFloat, VectorSize);
+
+			return VecVD.SetVector(Index =>
+				_Aggregate(0f, VectorSize, (Aggregated, Index2) => Aggregated + MatVS[Index, Index2] * VecVT[Index2])
 			);
 		}
 
 		private AstNodeStm _vhtfm_x(int VectorSize)
 		{
-			return VEC(VD, VType.VFloat, VectorSize).SetVector(Index =>
-				_Aggregate(0f, VectorSize, (Aggregated, Index2) => Aggregated + MAT_VS[Index, Index2] * ((Index2 == VectorSize - 1) ? 1f : VEC_VT[Index2]))
+			var VecVD = VEC(VD, VType.VFloat, VectorSize);
+			var VecVT = VEC(VT, VType.VFloat, VectorSize);
+			var MatVS = MAT(VS, VType.VFloat, VectorSize);
+
+			return VecVD.SetVector(Index =>
+				_Aggregate(0f, VectorSize, (Aggregated, Index2) => Aggregated + MatVS[Index, Index2] * ((Index2 == VectorSize - 1) ? 1f : VecVT[Index2]))
 			);
 		}
 
@@ -475,9 +486,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vf2iz()
 		{
-			return VEC_VD.SetVector(Index =>
+			return VEC_VD_i.SetVector(Index =>
 				ast.CallStatic(
-					(Func<float, int, float>)CpuEmitterUtils._vf2iz,
+					(Func<float, int, int>)CpuEmitterUtils._vf2iz,
 					VEC_VS[Index],
 					(int)Instruction.IMM5
 				)

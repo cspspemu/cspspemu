@@ -20,7 +20,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 	{
 		static public readonly MethodCache Methods = new MethodCache();
 
-		private Dictionary<uint, MethodCacheInfo> MethodMapping = new Dictionary<uint, MethodCacheInfo>();
+		private Dictionary<uint, MethodCacheInfo> MethodMapping = new Dictionary<uint, MethodCacheInfo>(64 * 1024);
 
 		public IEnumerable<uint> PCs { get { return MethodMapping.Keys; } }
 
@@ -36,7 +36,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 		{
 			var Ast = ast.Statements(
 				ast.Statement(ast.CallInstance(ast.CpuThreadState, (Action<MethodCacheInfo, uint>)CpuThreadState.Methods._MethodCacheInfo_SetInternal, ast.GetMethodCacheInfoAtPC(PC), PC)),
-				ast.Statement(ast.CallTail(ast.CallInstance(ast.GetMethodCacheInfoAtPC(PC), (Action<CpuThreadState>)MethodCacheInfo.Methods.CallDelegate, ast.CpuThreadState))),
+				ast.Statement(ast.TailCall(ast.CallInstance(ast.GetMethodCacheInfoAtPC(PC), (Action<CpuThreadState>)MethodCacheInfo.Methods.CallDelegate, ast.CpuThreadState))),
 				ast.Return()
 			);
 
@@ -52,11 +52,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 			else
 			{
 				var DelegateGeneratorForPC = GetGeneratorForPC(PC);
-				return MethodMapping[PC] = new MethodCacheInfo()
-				{
-					MethodCache = this,
-					StaticField = ILInstanceHolder.TAlloc<Action<CpuThreadState>>(DelegateGeneratorForPC),
-				};
+				return MethodMapping[PC] = new MethodCacheInfo(this, DelegateGeneratorForPC);
 			}
 		}
 
@@ -154,8 +150,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 				Console.WriteLine("-------------------------------------");
 			}
 
-			MethodCacheInfo.DynarecFunction = DynarecFunction;
-			MethodCacheInfo.StaticField.Value = DynarecFunction.Delegate;
+			MethodCacheInfo.SetDynarecFunction(DynarecFunction);
 		}
 	}
 }

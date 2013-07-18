@@ -39,7 +39,7 @@ namespace CSPspEmu.Core.Cpu
 				var AstTree = ast.Return(
 					ast.Cast(
 						typeof(void*),
-						ast.Immediate(FixedGlobalAddress) + ast.Binary(ast.Argument<uint>(0), "&", ast.Immediate(PspMemory.MemoryMask))
+						ast.Immediate(FixedGlobalAddress) + ast.Binary(ast.Argument<uint>(0), "&", ast.Immediate(FastPspMemory.FastMemoryMask))
 					)
 				);
 

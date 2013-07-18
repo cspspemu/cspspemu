@@ -267,12 +267,12 @@
 			<translation lang="fr">Capture d'écran...</translation>
 		</text>
 		<text id="UtilsUseFastmemMenu">
-			<translation lang="en">Use &amp;Fast but unsafe memory</translation>
-			<translation lang="es">Usar memoria &amp;rápida pero inestable</translation>
-			<translation lang="it">Usa memoria &amp;veloce ma instabile</translation>
-			<translation lang="ja">&amp;高速メモリを使用 （安全でない）</translation>
-			<translation lang="pt">Usar memória &amp;rápida porém instável</translation>
-			<translation lang="fr">Utiliser &amp;la memoire rapide mais instable</translation>
+			<translation lang="en">Use &amp;Fast memory</translation>
+			<translation lang="es">Usar memoria &amp;rápida</translation>
+			<translation lang="it">Usa memoria &amp;veloce</translation>
+			<translation lang="ja">&amp;高速メモリを使用</translation>
+			<translation lang="pt">Usar memória &amp;rápida</translation>
+			<translation lang="fr">Utiliser &amp;la memoire rapide</translation>
 		</text>
 		<text id="UtilsEnableMpegMenu">
 			<translation lang="en">Enable &amp;Mpeg processing (unstable yet)</translation>

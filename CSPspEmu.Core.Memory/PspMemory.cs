@@ -16,6 +16,9 @@ namespace CSPspEmu.Core.Memory
 	/// Start       End         Size  Description
 	/// 0x00010000  0x00013fff  16kb  Scratchpad
 	/// 0x04000000  0x041fffff  2mb   Video Memory / Frame Buffer
+	/// 0x04200000                    Video Memory (Unswizzled)
+	/// 0x04400000  0x046fffff  2mb   Video Memory (Mirror)
+	/// 0x04600000  0x048fffff  2mb   VRAM with "swizzle" + 32-byte column interleave. Reading from VRAM+6Mib will give you a proper linearized version of the depth buffer with no effort. The GE sees the same view; a GE copy operation returns the same data (represented as RGB 565): images/readdepth.png
 	/// 0x08000000  0x09ffffff  32mb  Main Memory
 	/// 0x1c000000  0x1fbfffff        Hardware I/O
 	/// 0x1fc00000  0x1fcfffff  1mb   Hardware Exception Vectors (RAM)

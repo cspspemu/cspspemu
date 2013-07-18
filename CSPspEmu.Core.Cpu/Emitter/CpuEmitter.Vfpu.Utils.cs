@@ -285,14 +285,21 @@ namespace CSPspEmu.Core.Cpu.Emitter
 					}
 				}
 
-				//return ast.Assign(_GetVRegRef(RegIndex), ast.Cast(GetVTypeType(), AstNodeExpr));
+#if false
+				return ast.Assign(_GetVRegRef(RegIndex), ast.Cast(GetVTypeType(), AstNodeExpr));
+#else
 				//Console.Error.WriteLine("PrefixIndex:{0}", PrefixIndex);
 				return ast.Assign(ast.Local(GetLocal(PrefixIndex)), ast.Cast(GetVTypeType(), AstNodeExpr));
+#endif
 			}
 
 			protected AstNodeStm SetRegApplyPrefix2(int RegIndex, int PrefixIndex)
 			{
+#if false
+				return ast.Statement();
+#else
 				return ast.Assign(_GetVRegRef(RegIndex), ast.Local(GetLocal(PrefixIndex)));
+#endif
 			}
 
 		}
@@ -417,12 +424,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 			public AstNodeStm Set(int Column, int Row, AstNodeExpr Value)
 			{
-				return SetRegApplyPrefix(this.Indices[Column, Row], 0, Value);
+				return SetRegApplyPrefix(this.Indices[Column, Row], Row * 4 + Column, Value);
 			}
 
 			public AstNodeStm Set2(int Column, int Row)
 			{
-				return SetRegApplyPrefix2(this.Indices[Column, Row], 0);
+				return SetRegApplyPrefix2(this.Indices[Column, Row], Row * 4 + Column);
 			}
 
 			public AstNodeStm SetMatrix(Func<int, int, AstNodeExpr> Generator)

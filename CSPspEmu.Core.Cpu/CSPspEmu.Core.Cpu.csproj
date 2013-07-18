@@ -95,7 +95,6 @@
     <Compile Include="HalfFloat.cs" />
     <Compile Include="Table\AddressType.cs" />
     <Compile Include="Table\InstructionType.cs" />
-    <Compile Include="VFpu\Vector4f.cs" />
     <Compile Include="Emitter\MipsMethodEmitter.cs" />
     <Compile Include="Instruction.cs" />
     <Compile Include="InstructionReader.cs" />
@@ -107,9 +106,13 @@
     <Compile Include="Table\InstructionInfo.cs" />
     <Compile Include="Table\InstructionTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VFpu\VfpuCell.cs" />
+    <Compile Include="VFpu\VfpuConstants.cs" />
     <Compile Include="VFpu\VfpuControlRegistersEnum.cs" />
-    <Compile Include="VFpu\VfpuRegisterInt.cs" />
     <Compile Include="VFpu\VfpuPrefix.cs" />
+    <Compile Include="VFpu\VfpuRegisterInfo.cs" />
+    <Compile Include="VFpu\VfpuRegisterInt.cs" />
+    <Compile Include="VFpu\VfpuRegisterType.cs" />
     <Compile Include="VFpu\VfpuUtils.cs" />
     <Compile Include="_DynarecConfig.cs" />
   </ItemGroup>

@@ -1300,7 +1300,7 @@ namespace CSPspEmu.Core.Tests
 		{
 			CpuThreadState.Vfpr.ClearAll(float.NaN);
 
-			var Names = VfpuUtils.ConstantNames;
+			var Names = VfpuConstants.Constants.Select(Info => Info.Name).ToArray();
 			string Assembly = "";
 
 			Action<Action<string, int, int, int, int>> Iterate = (Action) =>
@@ -1334,12 +1334,12 @@ namespace CSPspEmu.Core.Tests
 			{
 				Console.WriteLine(
 					"{0}, {1}",
-					"VFR" + VfpuUtils.GetIndexCell(Matrix, Column, Row) + " : " + ConstantName + " : " + VfpuUtils.GetConstantValueByName(ConstantName),
-					"VFR" + VfpuUtils.GetIndexCell(Matrix, Column, Row) + " : " + ConstantName + " : " + CpuThreadState.Vfpr[Matrix, Column, Row]
+					VfpuUtils.GetRegisterName(Matrix, Column, Row) + " : " + ConstantName + " : " + VfpuConstants.GetConstantValueByName(ConstantName).Value,
+					VfpuUtils.GetRegisterName(Matrix, Column, Row) + " : " + ConstantName + " : " + CpuThreadState.Vfpr[Matrix, Column, Row]
 				);
 				Assert.AreEqual(
-					"VFR" + VfpuUtils.GetIndexCell(Matrix, Column, Row) + " : " + ConstantName + " : " + VfpuUtils.GetConstantValueByName(ConstantName),
-					"VFR" + VfpuUtils.GetIndexCell(Matrix, Column, Row) + " : " + ConstantName + " : " + CpuThreadState.Vfpr[Matrix, Column, Row]
+					VfpuUtils.GetRegisterName(Matrix, Column, Row) + " : " + ConstantName + " : " + VfpuConstants.GetConstantValueByName(ConstantName).Value,
+					VfpuUtils.GetRegisterName(Matrix, Column, Row) + " : " + ConstantName + " : " + CpuThreadState.Vfpr[Matrix, Column, Row]
 				);
 			});
 		}

@@ -329,10 +329,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return ((x >> 24) << 0) | ((y >> 24) << 8) | ((z >> 24) << 16) | ((w >> 24) << 24) | 0;
 		}
 
-		public static float _vf2iz(float Value, int imm5)
+		public static int _vf2iz(float Value, int imm5)
 		{
 			float ScalabValue = MathFloat.Scalb(Value, imm5);
-			return (Value >= 0) ? (int)MathFloat.Floor(ScalabValue) : (int)MathFloat.Ceil(ScalabValue);
+			var DoubleValue = (Value >= 0) ? (int)MathFloat.Floor(ScalabValue) : (int)MathFloat.Ceil(ScalabValue);
+			return (Double.IsNaN(DoubleValue)) ? 0x7FFFFFFF : (int)DoubleValue;
 		}
 
 		public static uint _vi2s(uint v1, uint v2)

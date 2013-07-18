@@ -52,7 +52,7 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
-		public bool UseFastMemory = false;
+		public bool UseFastMemory = true;
 
 		/// <summary>
 		/// 

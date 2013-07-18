@@ -110,11 +110,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return ast.AssignGPR(31, ast.Immediate(PC + 8));
 		}
 
-		private AstNodeStm JumpToAddress(AstNodeExpr Address)
+		private AstNodeStm JumpDynamicToAddress(AstNodeExpr Address)
 		{
 			if (_DynarecConfig.ENABLE_TAIL_CALL)
 			{
-				return ast.Statement(ast.CallTail(ast.MethodCacheInfoCallDynamicPC(Address)));
+				return ast.MethodCacheInfoCallDynamicPC(Address, TailCall: true);
 			}
 			else
 			{
@@ -125,12 +125,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 		}
 
-		private AstNodeStm CallAddress(AstNodeExpr Address)
+		private AstNodeStm CallDynamicAddress(AstNodeExpr Address)
 		{
 			return ast.StatementsInline(
 				_link(),
 #if ENABLE_NATIVE_CALLS
-				ast.Statement(ast.MethodCacheInfoCallDynamicPC(Address))
+				ast.MethodCacheInfoCallDynamicPC(Address, TailCall: false)
 #else
 				JumpToAddress(Address)
 #endif
@@ -142,7 +142,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			if (_DynarecConfig.ENABLE_TAIL_CALL)
 			{
 				return ast.Statement(
-					ast.CallTail(ast.MethodCacheInfoCallStaticPC(CpuProcessor, Address))
+					ast.TailCall(ast.MethodCacheInfoCallStaticPC(CpuProcessor, Address))
 				);
 			}
 			else
@@ -196,9 +196,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 			else
 			{
-				return JumpToAddress(ast.GPR_u(RS));
+				return JumpDynamicToAddress(ast.GPR_u(RS));
 			}
 		}
-		public AstNodeStm jalr() { return this.CallAddress(ast.GPR_u(RS)); }
+		public AstNodeStm jalr() { return this.CallDynamicAddress(ast.GPR_u(RS)); }
 	}
 }

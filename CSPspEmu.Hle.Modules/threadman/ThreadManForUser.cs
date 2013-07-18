@@ -47,6 +47,21 @@ namespace CSPspEmu.Hle.Modules.threadman
 		}
 
 		/// <summary>
+		/// Get the system time
+		/// </summary>
+		/// <param name="Time">Pointer to a <see cref="SceKernelSysClock"/> structure</param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0xDB738F35, FirmwareVersion = 150)]
+		//[HlePspNotImplemented]
+		public int sceKernelGetSystemTime(SceKernelSysClock* Time)
+		{
+			//Console.Error.WriteLine(sceKernelGetSystemTimeWide());
+			if (Time == null) throw (new SceKernelException(SceKernelErrors.ERROR_ERRNO_INVALID_ARGUMENT));
+			Time->MicroSeconds = sceKernelGetSystemTimeWide();
+			return 0;
+		}
+
+		/// <summary>
 		/// Convert a number of microseconds to a ::SceKernelSysClock structure
 		/// </summary>
 		/// <param name="MicroSeconds">Number of microseconds</param>
@@ -104,21 +119,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelCancelAlarm(int alarmid)
 		{
 			throw(new NotImplementedException());
-		}
-
-		/// <summary>
-		/// Get the system time
-		/// </summary>
-		/// <param name="Time">Pointer to a <see cref="SceKernelSysClock"/> structure</param>
-		/// <returns>0 on success, less than 0 on error</returns>
-		[HlePspFunction(NID = 0xDB738F35, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
-		public int sceKernelGetSystemTime(SceKernelSysClock* Time)
-		{
-			//Console.Error.WriteLine(sceKernelGetSystemTimeWide());
-			if (Time == null) throw(new SceKernelException(SceKernelErrors.ERROR_ERRNO_INVALID_ARGUMENT));
-			Time->MicroSeconds = sceKernelGetSystemTimeWide();
-			return 0;
 		}
 
 		/// <summary>

@@ -1,4 +1,5 @@
-﻿using CSPspEmu.Core.Memory;
+﻿using cscodec.h264.player;
+using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
 using System;
 
@@ -169,6 +170,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			}
 			var SceMpegData = GetSceMpegData(Mpeg);
 
+			// Dummy
+			var VideoPacket = new VideoPacket();
 			
 			//Console.Error.WriteLine("0x{0:X}", PspMemory.PointerToPspAddress(OutputBuffer));
 

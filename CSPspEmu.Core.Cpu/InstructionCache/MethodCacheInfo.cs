@@ -17,7 +17,27 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 		/// <summary>
 		/// 
 		/// </summary>
-		public DynarecFunction DynarecFunction;
+		private DynarecFunction _DynarecFunction;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		private Action<CpuThreadState> FunctionDelegate;
+
+		public DynarecFunction DynarecFunction
+		{
+			get
+			{
+				return _DynarecFunction;
+			}
+		}
+
+		public void SetDynarecFunction(DynarecFunction DynarecFunction)
+		{
+			this._DynarecFunction = DynarecFunction;
+			this.FunctionDelegate = DynarecFunction.Delegate;
+			this.StaticField.Value = DynarecFunction.Delegate;
+		}
 
 		public bool HasSpecialName
 		{
@@ -60,6 +80,17 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 		/// </summary>
 		public bool FollowPspCallingConventions;
 
+		private MethodCacheInfo()
+		{
+		}
+
+		public MethodCacheInfo(MethodCache MethodCache, Action<CpuThreadState> DelegateGeneratorForPC)
+		{
+			this.MethodCache = MethodCache;
+			this.FunctionDelegate = DelegateGeneratorForPC;
+			this.StaticField = ILInstanceHolder.TAlloc<Action<CpuThreadState>>(DelegateGeneratorForPC);
+		}
+
 		/// <summary>
 		/// EntryPoint for this function.
 		/// </summary>
@@ -87,8 +118,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void CallDelegate(CpuThreadState CpuThreadState)
 		{
-			//if (StaticField.Value == null) throw(new Exception(String.Format("Delegate not set! at 0x{0:X8}", EntryPC)));
-			StaticField.Value(CpuThreadState);
+			FunctionDelegate(CpuThreadState);
 		}
 
 		/// <summary>

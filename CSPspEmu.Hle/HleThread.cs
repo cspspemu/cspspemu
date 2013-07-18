@@ -261,7 +261,7 @@ namespace CSPspEmu.Hle
 			var Memory = CpuThreadState.CpuProcessor.Memory;
 			try
 			{
-				CpuThreadState.ExecuteAT(CpuThreadState.PC & PspMemory.MemoryMask);
+				CpuThreadState.ExecuteAT(CpuThreadState.PC & FastPspMemory.FastMemoryMask);
 				CpuThreadState.Syscall(HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD_SYSCALL);
 			}
 			catch (AccessViolationException AccessViolationException)
