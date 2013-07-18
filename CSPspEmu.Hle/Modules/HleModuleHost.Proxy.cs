@@ -47,6 +47,12 @@ namespace CSPspEmu.Hle
 
 		static private readonly AstMipsGenerator ast = AstMipsGenerator.Instance;
 
+		static public TType GetObjectFromPoolHelper<TType>(CpuThreadState CpuThreadState, int Index)
+		{
+			//Console.Error.WriteLine("GetObjectFromPoolHelper");
+			return (TType)CpuThreadState.CpuProcessor.InjectContext.GetInstance<HleUidPoolManager>().Get(typeof(TType), Index);
+		}
+
 		static public object GetObjectFromPoolHelper(CpuThreadState CpuThreadState, Type Type, int Index)
 		{
 			//Console.Error.WriteLine("GetObjectFromPoolHelper");
@@ -198,7 +204,7 @@ namespace CSPspEmu.Hle
 
 						if (!ParameterType.Implements(typeof(IHleUidPoolClass)))
 						{
-							throw (new InvalidCastException("Can't use a class not implementing IHleUidPoolClass as parameter"));
+							throw (new InvalidCastException(String.Format("Can't use a class '{0}' not implementing IHleUidPoolClass as parameter", ParameterType)));
 						}
 
 						AstParameters.Add(ast.Cast(ParameterType, ast.CallStatic(
@@ -242,7 +248,7 @@ namespace CSPspEmu.Hle
 			{
 				if (!AstMethodCall.Type.Implements(typeof(IHleUidPoolClass)))
 				{
-					throw (new InvalidCastException("Can't use a class not implementing IHleUidPoolClass as return value"));
+					throw (new InvalidCastException(String.Format("Can't use a class '{0}' not implementing IHleUidPoolClass as return value", AstMethodCall.Type)));
 				}
 				AstNodes.AddStatement(ast.Assign(
 					ast.GPR(2),

@@ -82,12 +82,24 @@ namespace CSPspEmu.Runner.Components
 		{
 			Logger.Notice("Component {0} PauseSynchronized!", this);
 
+			//Console.WriteLine("[1]");
+
 			ThreadTaskQueue.EnqueueAndWaitStarted(() =>
 			{
+				int MaxCounts = 200;
+				//Console.WriteLine("[2]");
 				while (!PauseEvent.WaitOne(TimeSpan.FromMilliseconds(10)))
 				{
+					//Console.WriteLine("[3]");
 					if (!Running) break;
+					if (MaxCounts-- < 0)
+					{
+						Console.Error.WriteLine("Infinite loop detected!");
+						break;
+					}
 				}
+			}, TimeSpan.FromSeconds(2), () =>
+			{
 			});
 		}
 

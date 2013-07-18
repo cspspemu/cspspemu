@@ -412,8 +412,10 @@ namespace CSPspEmu.Hle
 		public void DumpStack(TextWriter TextWriter)
 		{
 			var FullCallStack = CpuThreadState.GetCurrentCallStack();
+			TextWriter.WriteLine("   PC=(0x{0:X8})", CpuThreadState.PC);
 			TextWriter.WriteLine("   LastCalledHleFunction: {0}", LastCalledHleFunction);
 			TextWriter.WriteLine("   CallStack({0})", FullCallStack.Length);
+			CpuThreadState.DumpRegistersCpu(TextWriter);
 			foreach (var CallerPC in FullCallStack.Slice(0, 4))
 			{
 				TextWriter.WriteLine("     MEM(0x{0:X}) : NOREL(0x{1:X})", CallerPC, CallerPC - ElfConfig.RelocatedBaseAddress);

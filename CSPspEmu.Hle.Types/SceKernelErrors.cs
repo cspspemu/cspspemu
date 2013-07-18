@@ -350,13 +350,6 @@
 
 		ERROR_WLAN_BAD_PARAMS = unchecked((int)0x80410d13),
 
-		ERROR_SAS_INVALID_VOICE = unchecked((int)0x80420010),
-		ERROR_SAS_INVALID_ADSR_CURVE_MODE = unchecked((int)0x80420013),
-		ERROR_SAS_INVALID_PARAMETER = unchecked((int)0x80420014),
-		ERROR_SAS_VOICE_PAUSED = unchecked((int)0x80420016),
-		ERROR_SAS_BUSY = unchecked((int)0x80420030),
-		ERROR_SAS_NOT_INIT = unchecked((int)0x80420100),
-
 		ERROR_HTTP_NOT_INIT = unchecked((int)0x80431001),
 		ERROR_HTTP_ALREADY_INIT = unchecked((int)0x80431020),
 		ERROR_HTTP_NO_MEMORY = unchecked((int)0x80431077),
@@ -447,5 +440,35 @@
 		ATRAC_ERROR_ALL_DATA_DECODED         = unchecked((int)0x80630024),
 
 		PSP_SYSTEMPARAM_RETVAL = unchecked((int)0x80110103),
+
+		ERROR_SAS_INVALID_VOICE = unchecked((int)0x80420010),
+		ERROR_SAS_INVALID_ADSR_CURVE_MODE = unchecked((int)0x80420013),
+		ERROR_SAS_INVALID_PARAMETER = unchecked((int)0x80420014),
+		ERROR_SAS_VOICE_PAUSED = unchecked((int)0x80420016),
+		ERROR_SAS_BUSY = unchecked((int)0x80420030),
+		ERROR_SAS_NOT_INIT = unchecked((int)0x80420100),
+
+		ERROR_SAS_INVALID_GRAIN                             = unchecked((int)0x80420001),
+		ERROR_SAS_INVALID_MAX_VOICES                        = unchecked((int)0x80420002),
+		ERROR_SAS_INVALID_OUTPUT_MODE                       = unchecked((int)0x80420003),
+		ERROR_SAS_INVALID_SAMPLE_RATE                       = unchecked((int)0x80420004),
+		ERROR_SAS_INVALID_ADDRESS                           = unchecked((int)0x80420005),
+		ERROR_SAS_INVALID_VOICE_INDEX                       = unchecked((int)0x80420010),
+		ERROR_SAS_INVALID_NOISE_CLOCK                       = unchecked((int)0x80420011),
+		ERROR_SAS_INVALID_PITCH_VAL                         = unchecked((int)0x80420012),
+		//ERROR_SAS_INVALID_ADSR_CURVE_MODE                   = unchecked((int)0x80420013),
+		ERROR_SAS_INVALID_ADPCM_SIZE                        = unchecked((int)0x80420014),
+		ERROR_SAS_INVALID_LOOP_MODE                         = unchecked((int)0x80420015),
+		//ERROR_SAS_VOICE_PAUSED                              = unchecked((int)0x80420016),
+		ERROR_SAS_INVALID_VOLUME_VAL                        = unchecked((int)0x80420018),
+		ERROR_SAS_INVALID_ADSR_VAL                          = unchecked((int)0x80420019),
+		ERROR_SAS_INVALID_SIZE                              = unchecked((int)0x8042001A),
+		ERROR_SAS_INVALID_FX_TYPE                           = unchecked((int)0x80420020),
+		ERROR_SAS_INVALID_FX_FEEDBACK                       = unchecked((int)0x80420021),
+		ERROR_SAS_INVALID_FX_DELAY                          = unchecked((int)0x80420022),
+		ERROR_SAS_INVALID_FX_VOLUME_VAL                     = unchecked((int)0x80420023),
+		//ERROR_SAS_BUSY                                      = unchecked((int)0x80420030),
+		//ERROR_SAS_NOT_INIT                                  = unchecked((int)0x80420100),
+		ERROR_SAS_ALREADY_INIT                              = unchecked((int)0x80420101),
 	}
 }

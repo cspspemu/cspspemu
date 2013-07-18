@@ -5,7 +5,8 @@ using CSharpUtils;
 
 namespace CSPspEmu.Hle.Threading.EventFlags
 {
-	public unsafe class HleEventFlag : IDisposable
+	[HleUidPoolClass(NotFoundError = SceKernelErrors.ERROR_KERNEL_NOT_FOUND_EVENT_FLAG)]
+	public unsafe class HleEventFlag : IDisposable, IHleUidPoolClass
 	{
 		public EventFlagInfo Info = new EventFlagInfo(0);
 		protected List<WaitThread> _WaitingThreads = new List<WaitThread>();
@@ -124,6 +125,11 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 		}
 
 		void IDisposable.Dispose()
+		{
+			Delete();
+		}
+
+		public void Delete()
 		{
 			// TODO
 		}

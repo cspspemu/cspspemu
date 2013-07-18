@@ -49,9 +49,9 @@ namespace CSPspEmu.Hle.Modules.hpremote
 		/// <param name="Key">Pointer to the u32 to receive the key bitmap, should be one or more of PspHprmKeys</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x1910B327, FirmwareVersion = 150)]
-		public int sceHprmPeekCurrentKey(PspHprmKeysEnum* Key)
+		public int sceHprmPeekCurrentKey(out PspHprmKeysEnum Key)
 		{
-			*Key = PspHprmKeysEnum.None;
+			Key = PspHprmKeysEnum.None;
 			return 0;
 		}
 

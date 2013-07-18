@@ -109,6 +109,8 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 			if (MaxVoices != 32) throw (new NotImplementedException("(MaxVoices != 32)"));
 			//if (MaxVoices != 32) throw (new NotImplementedException("(MaxVoices != 32)"));
 
+			if (GrainSamples < 0) throw(new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_PARAMETER));
+
 			var SasCore = GetSasCore(SasCorePointer, CreateIfNotExists: true);
 			{
 				SasCore.Initialized = true;

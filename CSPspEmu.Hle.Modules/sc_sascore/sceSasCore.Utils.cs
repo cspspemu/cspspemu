@@ -18,9 +18,9 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 
 		public SasCore GetSasCore(uint SasCorePointer, bool CreateIfNotExists = false)
 		{
-			if (SasCorePointer == 0)
+			if ((SasCorePointer == 0) || (SasCorePointer % 64 != 0))
 			{
-				throw (new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_PARAMETER));
+				throw (new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_ADDRESS));
 			}
 
 			if (CreateIfNotExists)

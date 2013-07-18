@@ -8,7 +8,14 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	public unsafe class CpuEmitterUtils
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static uint _rotr_impl(uint Value, int Offset) { return (Value >> Offset) | (Value << (32 - Offset)); }
+		public static uint _rotr_impl(uint Value, int Offset) {
+			//if (Offset < 0) Offset += 32;
+			//Offset %= 32;
+			
+			//Console.WriteLine("{0:X8} : {1} : {2:X8}", Value, Offset, (Value >> Offset) | (Value << (32 - Offset)));
+
+			return (Value >> Offset) | (Value << (32 - Offset));
+		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public unsafe static int _max_impl(int Left, int Right) { return (Left > Right) ? Left : Right; }

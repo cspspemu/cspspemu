@@ -90,10 +90,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move To/From HI/LO.
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm mfhi() { return ast.AssignGPR(RD, ast.Cast<uint>(ast.REG("HI"))); }
-		public AstNodeStm mflo() { return ast.AssignGPR(RD, ast.Cast<uint>(ast.REG("LO"))); }
-		public AstNodeStm mthi() { return ast.AssignREG("HI", ast.GPR_s(RS)); }
-		public AstNodeStm mtlo() { return ast.AssignREG("LO", ast.GPR_s(RS)); }
+		public AstNodeStm mfhi() { return ast.AssignGPR(RD, ast.Cast<uint>(ast.HI())); }
+		public AstNodeStm mflo() { return ast.AssignGPR(RD, ast.Cast<uint>(ast.LO())); }
+		public AstNodeStm mthi() { return ast.AssignHI(ast.GPR_s(RS)); }
+		public AstNodeStm mtlo() { return ast.AssignLO(ast.GPR_s(RS)); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move if Zero/Non zero.
@@ -128,8 +128,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move (From/To) Cop0
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm mfc0() { return ast.AssignGPR(RT, ast.REG("C0R" + RD)); }
-		public AstNodeStm mtc0() { return ast.AssignREG("C0R" + RD, ast.GPR(RT)); }
+		public AstNodeStm mfc0() { return ast.AssignGPR(RT, ast.C0R(RD)); }
+		public AstNodeStm mtc0() { return ast.AssignC0R(RD, ast.GPR(RT)); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Load Byte/Half word/Word (Left/Right/Unsigned).
@@ -181,7 +181,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				SpecialName = SyscallInfoInfo.FunctionEntryName;
 
 				var Statements = ast.StatementsInline(
-					ast.Assign(ast.REG("PC"), PC),
+					ast.Assign(ast.PC(), PC),
 					ast.Comment(SyscallInfoInfo.Name),
 					ast.GetTickCall()
 				);
@@ -202,7 +202,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			else
 			{
 				return ast.StatementsInline(
-					ast.Assign(ast.REG("PC"), PC),
+					ast.AssignPC(PC),
 					ast.GetTickCall(),
 					ast.Statement(ast.CallInstance(ast.CpuThreadState, (Action<int>)CpuThreadState.Methods.Syscall, (int)Instruction.CODE))
 				);
@@ -223,8 +223,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move (From/To) IC
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm mfic() { return ast.AssignGPR(RT, ast.REG("IC")); }
-		public AstNodeStm mtic() { return ast.AssignREG("IC", ast.GPR_u(RT)); }
+		public AstNodeStm mfic() { return ast.AssignGPR(RT, ast.IC()); }
+		public AstNodeStm mtic() { return ast.AssignIC(ast.GPR_u(RT)); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// Move (From/To) DR

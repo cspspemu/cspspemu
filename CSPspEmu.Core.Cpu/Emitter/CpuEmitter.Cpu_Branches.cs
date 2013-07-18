@@ -32,7 +32,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 			else
 			{
-				return ast.GotoIfTrue(BranchLabel, BranchFlag());
+				return ast.Statements(
+					//ast.AssignPC(PC),
+					//ast.GetTickCall(),
+					ast.GotoIfTrue(BranchLabel, BranchFlag())
+				);
 			}
 		}
 
@@ -53,7 +57,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 			else
 			{
-				return ast.REG("BranchFlag");
+				return ast.BranchFlag();
 			}
 		}
 
@@ -119,7 +123,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			else
 			{
 				return ast.Statements(
-					ast.AssignREG("PC", Address),
+					ast.AssignPC(Address),
 					ast.Return()
 				);
 			}
@@ -148,7 +152,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			else
 			{
 				return ast.StatementsInline(
-					ast.AssignREG("PC", Address),
+					ast.AssignPC(Address),
 					ast.Return()
 				);
 			}
@@ -175,7 +179,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 #if ENABLE_NATIVE_CALLS
 			return ast.StatementsInline(
-				ast.AssignREG("PC", ast.GPR(31)),
+				ast.AssignPC(ast.GPR(31)),
 				ast.GetTickCall(),
 				ast.Return()
 			);

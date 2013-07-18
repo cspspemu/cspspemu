@@ -286,7 +286,10 @@ namespace CSPspEmu
 			Console.WriteLine("-----------------------------------------------------------------");
 			try
 			{
-				foreach (var Pair in CpuProcessor.GlobalInstructionStats.OrderBy(Pair => Pair.Value)) Console.WriteLine("{0} -> {1}", Pair.Key, Pair.Value);
+				foreach (var Pair in CpuProcessor.GlobalInstructionStats.OrderBy(Pair => Pair.Value))
+				{
+					Console.WriteLine("{0} -> {1}", Pair.Key, Pair.Value);
+				}
 			}
 			catch (Exception Exception)
 			{

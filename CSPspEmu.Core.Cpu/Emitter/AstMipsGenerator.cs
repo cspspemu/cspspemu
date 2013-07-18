@@ -82,7 +82,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		static private readonly Dictionary<string, AstNodeExprFieldAccess> _REG_Cache = new Dictionary<string, AstNodeExprFieldAccess>(1024);
 
-		public AstNodeExprLValue REG(string RegName)
+		public AstNodeExprLValue BranchFlag()
+		{
+			return REG("BranchFlag");
+		}
+
+		private AstNodeExprLValue REG(string RegName)
 		{
 #if true
 			if (!_REG_Cache.ContainsKey(RegName))
@@ -117,7 +122,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm AssignFPR_F(int Index, AstNodeExpr Expr) { return ast.Assign(ast.FPR(Index), Expr); }
 		public AstNodeStm AssignFPR_I(int Index, AstNodeExpr Expr) { return ast.Assign(ast.FPR_I(Index), Expr); }
-		public AstNodeStm AssignREG(string RegName, AstNodeExpr Expr) { return ast.Assign(ast.REG(RegName), Expr); }
+		private AstNodeStm AssignREG(string RegName, AstNodeExpr Expr) { return ast.Assign(ast.REG(RegName), Expr); }
+		public AstNodeStm AssignPC(AstNodeExpr Expr) { return ast.Assign(ast.PC(), Expr); }
+		public AstNodeStm AssignHI(AstNodeExpr Expr) { return ast.Assign(ast.HI(), Expr); }
+		public AstNodeStm AssignLO(AstNodeExpr Expr) { return ast.Assign(ast.LO(), Expr); }
+		public AstNodeStm AssignIC(AstNodeExpr Expr) { return ast.Assign(ast.IC(), Expr); }
+		public AstNodeStm AssignC0R(int Index, AstNodeExpr Expr) { return ast.Assign(ast.C0R(Index), Expr); }
 		public AstNodeStm AssignHILO(AstNodeExpr Expr) { return ast.Assign(HI_LO(), ast.Cast<long>(Expr)); }
 		public AstNodeStm AssignGPR(int Index, AstNodeExpr Expr) { if (Index == 0) return new AstNodeStmEmpty(); return ast.Assign(GPR(Index), ast.Cast<uint>(Expr, false)); }
 		public AstNodeStm AssignGPR_F(int Index, AstNodeExpr Expr) { if (Index == 0) return new AstNodeStmEmpty(); return ast.Assign(GPR_F(Index), ast.Cast<float>(Expr, false)); }
@@ -138,11 +148,22 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return REG("VFR_CC_" + Index);
 		}
 
+		public AstNodeExprLValue VFR(int Index)
+		{
+			return ast.REG("VFR" + Index);
+		}
+
+
 		public AstNodeStm AssignVCC(int Index, AstNodeExpr Expr)
 		{
 			return ast.Assign(VCC(Index), Expr);
 		}
 
+		public AstNodeExprLValue IC() { return REG("IC"); }
+		public AstNodeExprLValue PC() { return REG("PC"); }
+		public AstNodeExprLValue HI() { return REG("HI"); }
+		public AstNodeExprLValue LO() { return REG("LO"); }
+		public AstNodeExprLValue C0R(int Index) { return REG("C0R" + Index); }
 		public AstNodeExprLValue GPR(int Index) { if (Index == 0) throw (new Exception("Can't get reference to GPR0")); return RefGPRIndex(Index); }
 		public AstNodeExprLValue GPR_l(int Index) { return ast.Indirect(ast.Cast(typeof(long*), ast.GetAddress(GPR(Index)))); }
 		public AstNodeExpr GPR_f(int Index) { if (Index == 0) return ast.Immediate((int)0); return ast.Reinterpret<float>(GPR(Index)); }

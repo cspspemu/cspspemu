@@ -6,6 +6,7 @@ using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core.Types;
+using CSPspEmu.Core.Cpu;
 
 namespace CSPspEmu.Hle.Modules.utility
 {
@@ -1000,8 +1001,12 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// </returns>
 		[HlePspFunction(NID = 0x2A2B3DE0, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceUtilityLoadModule(PspModule PspModule)
+		public int sceUtilityLoadModule(CpuThreadState CpuThreadState, PspModule PspModule)
 		{
+			if (PspModule == Hle.PspModule.PSP_MODULE_AV_SASCORE)
+			{
+				CpuThreadState.Reschedule();
+			}
 			//throw (new NotImplementedException());
 			return 0;
 		}

@@ -156,11 +156,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public VfpuDestinationPrefix PrefixDestinationNone = new VfpuDestinationPrefix();
 		public VfpuDestinationPrefix PrefixDestination = new VfpuDestinationPrefix();
 
-		static private AstNodeExprLValue VFR(int Index)
-		{
-			return ast.REG("VFR" + Index);
-		}
-
 		internal abstract class VfpuRuntimeRegister
 		{
 			protected uint PC;
@@ -169,6 +164,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			protected VType VType;
 			protected int VectorSize;
 			protected Dictionary<int, AstLocal> _Locals = new Dictionary<int,AstLocal>();
+			static private AstMipsGenerator ast = AstMipsGenerator.Instance;
 
 			protected AstLocal GetLocal(int Index)
 			{
@@ -199,8 +195,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			protected AstNodeExprLValue _GetVRegRef(int RegIndex)
 			{
 				var ToType = GetVTypeType();
-				if (ToType == typeof(float)) return VFR(RegIndex);
-				return ast.Reinterpret(ToType, VFR(RegIndex));
+				if (ToType == typeof(float)) return ast.VFR(RegIndex);
+				return ast.Reinterpret(ToType, ast.VFR(RegIndex));
 			}
 
 			protected AstNodeExpr GetRegApplyPrefix(int[] Indices, int RegIndex, int PrefixIndex)

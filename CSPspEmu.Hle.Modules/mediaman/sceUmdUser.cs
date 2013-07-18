@@ -179,7 +179,7 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		/// </summary>
 		/// <returns>Less than 0 on error, one or more of <see cref="PspUmdState"/> on success</returns>
 		[HlePspFunction(NID = 0x6B4A146C, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public PspUmdState sceUmdGetDriveStat()
 		{
 			return PspUmdState.PSP_UMD_PRESENT | PspUmdState.PSP_UMD_READY | PspUmdState.PSP_UMD_READABLE;
