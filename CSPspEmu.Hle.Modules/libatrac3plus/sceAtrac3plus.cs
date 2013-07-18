@@ -115,7 +115,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			}
 			public SliceStream DataStream;
 			//public IArray<StereoShortSoundSample> DecodedSamples;
-			protected MaiAT3PlusFrameDecoder MaiAT3PlusFrameDecoder = new MaiAT3PlusFrameDecoder();
+			protected MaiAT3PlusFrameDecoder MaiAT3PlusFrameDecoder;
 
 			public MemoryPartition PrimaryBuffer;
 			public int PrimaryBufferReaded;
@@ -369,6 +369,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			public void SetData(byte* Data, int DataLength)
 			{
 				ParseAtracData(new UnmanagedMemoryStream(Data, DataLength));
+				MaiAT3PlusFrameDecoder = new MaiAT3PlusFrameDecoder();
 			}
 
 			private void ParseAtracData(Stream Stream)
@@ -441,49 +442,57 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			/// <returns></returns>
 			public int Decode(StereoShortSoundSample* SamplesOut)
 			{
-				//int Channels = 2;
-
-				//ToReadSamples /= 2;
-
-				var BlockSize = this.Format.BlockSize;
-				//this.Data
-				int channels;
-				short[] buf;
-
-				int rc;
-
-				if (this.DataStream.Available() < BlockSize)
+				try
 				{
-					Console.WriteLine("EndOfData {0} < {1} : {2}, {3}", this.DataStream.Available(), BlockSize, DecodingOffset, TotalSamples);
-					return 0;
-				}
+					//int Channels = 2;
 
-				var Data = new byte[BlockSize];
-				this.DataStream.Read(Data, 0, Data.Length);
+					//ToReadSamples /= 2;
 
-				fixed (byte* DataPtr = Data)
-				{
-					if ((rc = this.MaiAT3PlusFrameDecoder.decodeFrame(DataPtr, BlockSize, out channels, out buf)) != 0)
+					var BlockSize = this.Format.BlockSize;
+					//this.Data
+					int channels;
+					short[] buf;
+
+					int rc;
+
+					if (this.DataStream.Available() < BlockSize)
 					{
-						Console.WriteLine("MaiAT3PlusFrameDecoder.decodeFrame: {0}", rc);
+						Console.WriteLine("EndOfData {0} < {1} : {2}, {3}", this.DataStream.Available(), BlockSize, DecodingOffset, TotalSamples);
 						return 0;
 					}
 
-					int DecodedSamples = this.MaximumSamples;
-					int DecodedSamplesChannels = DecodedSamples * channels;
-					_DecodingOffset += DecodedSamples;
+					var Data = new byte[BlockSize];
+					this.DataStream.Read(Data, 0, Data.Length);
 
-					fixed (short* buf_ptr = buf)
+					fixed (byte* DataPtr = Data)
 					{
-						for (int n = 0; n < DecodedSamplesChannels; n += channels)
+						if ((rc = this.MaiAT3PlusFrameDecoder.decodeFrame(DataPtr, BlockSize, out channels, out buf)) != 0)
 						{
-							SamplesOut->Left = buf_ptr[n + 0];
-							SamplesOut->Right = buf_ptr[n + 1];
-							SamplesOut++;
+							Console.WriteLine("MaiAT3PlusFrameDecoder.decodeFrame: {0}", rc);
+							return 0;
 						}
-					}
 
-					return DecodedSamples;
+						int DecodedSamples = this.MaximumSamples;
+						int DecodedSamplesChannels = DecodedSamples * channels;
+						_DecodingOffset += DecodedSamples;
+
+						fixed (short* buf_ptr = buf)
+						{
+							for (int n = 0; n < DecodedSamplesChannels; n += channels)
+							{
+								SamplesOut->Left = buf_ptr[n + 0];
+								SamplesOut->Right = buf_ptr[n + 1];
+								SamplesOut++;
+							}
+						}
+
+						return DecodedSamples;
+					}
+				}
+				catch 
+				{
+					Console.Error.WriteLine("Error Atrac3.Decode");
+					return 0;
 				}
 			}
 		}
@@ -635,13 +644,23 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// <returns>Less than 0 on error, otherwise 0</returns>
 		[HlePspFunction(NID = 0x6A8C3CD5, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceAtracDecodeData(Atrac Atrac, StereoShortSoundSample* SamplesOut, out int DecodedSamples, out int ReachedEnd, out int RemainingFramesToDecode)
-		{			
+		public int sceAtracDecodeData(Atrac Atrac, StereoShortSoundSample* SamplesOut, int* DecodedSamples, int* ReachedEnd, int* RemainingFramesToDecode)
+		{
+			if (SamplesOut == null) return -1;
+			int* Temp = stackalloc int[1];
+			if (DecodedSamples == null) DecodedSamples = Temp;
+			if (ReachedEnd == null) ReachedEnd = Temp;
+			if (RemainingFramesToDecode == null) RemainingFramesToDecode = Temp;
+			return _sceAtracDecodeData(Atrac, SamplesOut, out *DecodedSamples, out *ReachedEnd, out *RemainingFramesToDecode);
+		}
+
+		private int _sceAtracDecodeData(Atrac Atrac, StereoShortSoundSample* SamplesOut, out int DecodedSamples, out int ReachedEnd, out int RemainingFramesToDecode)
+		{
 			// Decode
 			DecodedSamples = Atrac.Decode(SamplesOut);
 
 			//Console.WriteLine("{0}/{1} -> {2} : {3}", Atrac.DecodingOffsetInSamples, Atrac.TotalSamples, DecodedSamples, Atrac.DecodingReachedEnd);
-			
+
 			RemainingFramesToDecode = -1;
 
 			if (Atrac.DecodingReachedEnd)
@@ -652,7 +671,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 					throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED));
 				}
 				if (Atrac.NumberOfLoops > 0) Atrac.NumberOfLoops--;
-				
+
 				Atrac.DecodingOffset = (Atrac.LoopInfoList.Length > 0) ? Atrac.LoopInfoList[0].StartSample : 0;
 			}
 

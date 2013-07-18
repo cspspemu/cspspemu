@@ -17,6 +17,9 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		[Inject]
 		ThreadManForUser ThreadManForUser;
 
+		[Inject]
+		HleThreadManager HleThreadManager;
+
 		Dictionary<int, HleCallback> RegisteredCallbacks = new Dictionary<int, HleCallback>();
 
 		/// <summary>
@@ -176,14 +179,10 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		/// </summary>
 		/// <returns>Less than 0 on error, one or more of <see cref="PspUmdState"/> on success</returns>
 		[HlePspFunction(NID = 0x6B4A146C, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public PspUmdState sceUmdGetDriveStat()
 		{
 			return PspUmdState.PSP_UMD_PRESENT | PspUmdState.PSP_UMD_READY | PspUmdState.PSP_UMD_READABLE;
-			//throw (new NotImplementedException());
-			/*
-			logTrace("Partially implemented: sceUmdGetDriveStat");
-			return PspUmdState.PSP_UMD_PRESENT | PspUmdState.PSP_UMD_READY | PspUmdState.PSP_UMD_READABLE;
-			*/
 		}
 
 		/// <summary>
@@ -193,14 +192,10 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x8EF08FCE, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceUmdWaitDriveStat(PspUmdState PspUmdState)
+		public int sceUmdWaitDriveStat(CpuThreadState CpuThreadState, PspUmdState PspUmdState)
 		{
+			CpuThreadState.Reschedule();
 			return 0;
-			//throw (new NotImplementedException());
-			/*
-			logWarning("Not implemented: sceUmdWaitDriveStat(%d)", stat);
-			return 0;
-			*/
 		}
 
 	    /// <summary>

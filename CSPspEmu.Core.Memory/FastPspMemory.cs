@@ -39,8 +39,14 @@ namespace CSPspEmu.Core.Memory
 				AlreadyInitialized = true;
 
 				_Base = (byte *)Marshal.AllocHGlobal((int)FastMemorySize).ToPointer();
+
 				//Console.WriteLine("*****************************");
 			}
+
+			NullPtr = _Base;
+			ScratchPadPtr = _Base + ScratchPadOffset;
+			FrameBufferPtr = _Base + FrameBufferOffset;
+			MainPtr = _Base + MainOffset;
 		}
 
 		public override uint PointerToPspAddressUnsafe(void* Pointer)

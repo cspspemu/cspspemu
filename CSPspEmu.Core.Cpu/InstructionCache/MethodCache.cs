@@ -112,12 +112,12 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 
 			var Time2 = DateTime.UtcNow;
 
-			var AstGenerationTime = Time1 - Time0;
-			var LinkingTime = Time2 - Time1;
+			DynarecFunction.TimeLinking = Time2 - Time1;
+			var TimeAstGeneration = Time1 - Time0;
 
 			if (_DynarecConfig.DebugFunctionCreation)
 			{
-				ConsoleUtils.SaveRestoreConsoleColor(((AstGenerationTime + LinkingTime).TotalMilliseconds > 10) ? ConsoleColor.Red : ConsoleColor.Gray, () =>
+				ConsoleUtils.SaveRestoreConsoleColor(((TimeAstGeneration + DynarecFunction.TimeLinking).TotalMilliseconds > 10) ? ConsoleColor.Red : ConsoleColor.Gray, () =>
 				{
 					Console.WriteLine(
 						"({0}): (analyze: {1}, generateAST: {2}, optimize: {3}, generateIL: {4}, createDelegate: {5}, link: {6}): ({1}, {2}, {3}, {4}, {5}, {6}) : {7} ms",
@@ -127,8 +127,8 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 						(int)DynarecFunction.TimeOptimize.TotalMilliseconds,
 						(int)DynarecFunction.TimeGenerateIL.TotalMilliseconds,
 						(int)DynarecFunction.TimeCreateDelegate.TotalMilliseconds,
-						(int)LinkingTime.TotalMilliseconds,
-						(int)(AstGenerationTime + LinkingTime).TotalMilliseconds
+						(int)DynarecFunction.TimeLinking.TotalMilliseconds,
+						(int)(TimeAstGeneration + DynarecFunction.TimeLinking).TotalMilliseconds
 					);
 				});
 			}

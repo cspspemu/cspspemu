@@ -26,6 +26,7 @@ using CSPspEmu.Hle;
 using CSPspEmu.Core.Components.Display;
 using CSPspEmu.Hle.Loader;
 using System.Reflection;
+using System.Globalization;
 
 namespace CSPspEmu
 {
@@ -188,6 +189,7 @@ namespace CSPspEmu
 				GuiConfig.ShowMenus = ShowMenus;
 				GuiConfig.AutoLoad = AutoLoad;
 				GuiConfig.DefaultDisplayScale = ShowMenus ? 1 : 2;
+				Thread.CurrentThread.CurrentCulture = new CultureInfo(GlobalConfig.ThreadCultureName);
 				Application.Run(PspDisplayForm = new PspDisplayForm(this));
 
 				ContextInitialized.WaitOne();

@@ -5,6 +5,7 @@ using CSharpUtils;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
+using CSPspEmu.Core.Types;
 
 namespace CSPspEmu.Hle.Modules.utility
 {
@@ -391,7 +392,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			/// <summary>
 			/// 0004 - Language
 			/// </summary>
-			public Language Language;
+			public PspLanguages Language;
 			
 			/// <summary>
 			/// 0008 - Set to 1 for X/O button swap

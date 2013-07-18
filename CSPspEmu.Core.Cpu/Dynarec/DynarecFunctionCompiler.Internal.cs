@@ -121,7 +121,6 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
 				var MipsMethodEmitterResult = MipsMethodEmitter.CreateDelegate(Nodes);
 
-
 				return new DynarecFunction()
 				{
 					Name = CpuEmitter.SpecialName,

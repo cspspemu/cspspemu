@@ -57,5 +57,6 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 		public TimeSpan TimeOptimize;
 		public TimeSpan TimeGenerateIL;
 		public TimeSpan TimeCreateDelegate;
+		public TimeSpan TimeLinking;
 	}
 }

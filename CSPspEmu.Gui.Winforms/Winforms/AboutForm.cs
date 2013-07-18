@@ -66,5 +66,15 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			Process.Start(@"http://cballesterosvelasco.es/");
 		}
+
+		private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			Process.Start(@"http://sourceforge.net/projects/maiat3plusdec/");
+		}
+
+		private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			Process.Start(@"http://www.opentk.com/");
+		}
 	}
 }

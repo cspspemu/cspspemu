@@ -55,6 +55,9 @@
 			this.linkLabel2 = new System.Windows.Forms.LinkLabel();
 			this.label14 = new System.Windows.Forms.Label();
 			this.linkLabel3 = new System.Windows.Forms.LinkLabel();
+			this.label15 = new System.Windows.Forms.Label();
+			this.linkLabel4 = new System.Windows.Forms.LinkLabel();
+			this.linkLabel5 = new System.Windows.Forms.LinkLabel();
 			((System.ComponentModel.ISupportInitialize)(this.TwitterPictureBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.FacebookPictureBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -64,7 +67,7 @@
 			// button1
 			// 
 			this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.button1.Location = new System.Drawing.Point(621, 360);
+			this.button1.Location = new System.Drawing.Point(633, 414);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(84, 35);
 			this.button1.TabIndex = 0;
@@ -87,7 +90,7 @@
 			// 
 			this.label2.AutoSize = true;
 			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label2.Location = new System.Drawing.Point(259, 119);
+			this.label2.Location = new System.Drawing.Point(259, 236);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(61, 16);
 			this.label2.TabIndex = 4;
@@ -97,7 +100,7 @@
 			// 
 			this.label3.AutoSize = true;
 			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label3.Location = new System.Drawing.Point(259, 142);
+			this.label3.Location = new System.Drawing.Point(259, 259);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(104, 13);
 			this.label3.TabIndex = 5;
@@ -107,7 +110,7 @@
 			// 
 			this.label5.AutoSize = true;
 			this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label5.Location = new System.Drawing.Point(402, 142);
+			this.label5.Location = new System.Drawing.Point(402, 259);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(95, 13);
 			this.label5.TabIndex = 7;
@@ -116,7 +119,7 @@
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(402, 166);
+			this.label6.Location = new System.Drawing.Point(402, 283);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(32, 13);
 			this.label6.TabIndex = 8;
@@ -126,7 +129,7 @@
 			// 
 			this.label7.AutoSize = true;
 			this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label7.Location = new System.Drawing.Point(259, 282);
+			this.label7.Location = new System.Drawing.Point(259, 115);
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(63, 16);
 			this.label7.TabIndex = 9;
@@ -135,7 +138,7 @@
 			// GpuPluginInfoLabel
 			// 
 			this.GpuPluginInfoLabel.AutoSize = true;
-			this.GpuPluginInfoLabel.Location = new System.Drawing.Point(259, 309);
+			this.GpuPluginInfoLabel.Location = new System.Drawing.Point(259, 142);
 			this.GpuPluginInfoLabel.Name = "GpuPluginInfoLabel";
 			this.GpuPluginInfoLabel.Size = new System.Drawing.Size(74, 13);
 			this.GpuPluginInfoLabel.TabIndex = 10;
@@ -144,7 +147,7 @@
 			// AudioPluginInfoLabel
 			// 
 			this.AudioPluginInfoLabel.AutoSize = true;
-			this.AudioPluginInfoLabel.Location = new System.Drawing.Point(259, 333);
+			this.AudioPluginInfoLabel.Location = new System.Drawing.Point(259, 166);
 			this.AudioPluginInfoLabel.Name = "AudioPluginInfoLabel";
 			this.AudioPluginInfoLabel.Size = new System.Drawing.Size(81, 13);
 			this.AudioPluginInfoLabel.TabIndex = 11;
@@ -185,7 +188,7 @@
 			// 
 			this.label1.AutoSize = true;
 			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label1.Location = new System.Drawing.Point(546, 142);
+			this.label1.Location = new System.Drawing.Point(546, 259);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(49, 13);
 			this.label1.TabIndex = 17;
@@ -194,7 +197,7 @@
 			// label8
 			// 
 			this.label8.AutoSize = true;
-			this.label8.Location = new System.Drawing.Point(546, 166);
+			this.label8.Location = new System.Drawing.Point(546, 283);
 			this.label8.Name = "label8";
 			this.label8.Size = new System.Drawing.Size(46, 13);
 			this.label8.TabIndex = 18;
@@ -204,7 +207,7 @@
 			// 
 			this.label9.AutoSize = true;
 			this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label9.Location = new System.Drawing.Point(259, 195);
+			this.label9.Location = new System.Drawing.Point(259, 312);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(79, 13);
 			this.label9.TabIndex = 19;
@@ -213,7 +216,7 @@
 			// label10
 			// 
 			this.label10.AutoSize = true;
-			this.label10.Location = new System.Drawing.Point(259, 220);
+			this.label10.Location = new System.Drawing.Point(259, 337);
 			this.label10.Name = "label10";
 			this.label10.Size = new System.Drawing.Size(51, 13);
 			this.label10.TabIndex = 20;
@@ -222,7 +225,7 @@
 			// label11
 			// 
 			this.label11.AutoSize = true;
-			this.label11.Location = new System.Drawing.Point(635, 167);
+			this.label11.Location = new System.Drawing.Point(635, 284);
 			this.label11.Name = "label11";
 			this.label11.Size = new System.Drawing.Size(58, 13);
 			this.label11.TabIndex = 22;
@@ -232,7 +235,7 @@
 			// 
 			this.label12.AutoSize = true;
 			this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label12.Location = new System.Drawing.Point(635, 142);
+			this.label12.Location = new System.Drawing.Point(635, 259);
 			this.label12.Name = "label12";
 			this.label12.Size = new System.Drawing.Size(70, 13);
 			this.label12.TabIndex = 21;
@@ -241,7 +244,7 @@
 			// label13
 			// 
 			this.label13.AutoSize = true;
-			this.label13.Location = new System.Drawing.Point(635, 189);
+			this.label13.Location = new System.Drawing.Point(635, 306);
 			this.label13.Name = "label13";
 			this.label13.Size = new System.Drawing.Size(55, 13);
 			this.label13.TabIndex = 23;
@@ -251,7 +254,7 @@
 			// 
 			this.TwitterPictureBox.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.TwitterPictureBox.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.twitter_icon_png8;
-			this.TwitterPictureBox.Location = new System.Drawing.Point(12, 336);
+			this.TwitterPictureBox.Location = new System.Drawing.Point(12, 399);
 			this.TwitterPictureBox.Name = "TwitterPictureBox";
 			this.TwitterPictureBox.Size = new System.Drawing.Size(51, 50);
 			this.TwitterPictureBox.TabIndex = 14;
@@ -262,7 +265,7 @@
 			// 
 			this.FacebookPictureBox.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.FacebookPictureBox.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.facebook_icon_png8;
-			this.FacebookPictureBox.Location = new System.Drawing.Point(69, 336);
+			this.FacebookPictureBox.Location = new System.Drawing.Point(69, 399);
 			this.FacebookPictureBox.Name = "FacebookPictureBox";
 			this.FacebookPictureBox.Size = new System.Drawing.Size(51, 50);
 			this.FacebookPictureBox.TabIndex = 13;
@@ -282,7 +285,7 @@
 			// 
 			this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.pictureBox1.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.paypal_donate_button;
-			this.pictureBox1.Location = new System.Drawing.Point(513, 360);
+			this.pictureBox1.Location = new System.Drawing.Point(525, 414);
 			this.pictureBox1.Name = "pictureBox1";
 			this.pictureBox1.Size = new System.Drawing.Size(83, 35);
 			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -293,7 +296,7 @@
 			// linkLabel1
 			// 
 			this.linkLabel1.AutoSize = true;
-			this.linkLabel1.Location = new System.Drawing.Point(635, 210);
+			this.linkLabel1.Location = new System.Drawing.Point(635, 327);
 			this.linkLabel1.Name = "linkLabel1";
 			this.linkLabel1.Size = new System.Drawing.Size(58, 13);
 			this.linkLabel1.TabIndex = 25;
@@ -304,7 +307,7 @@
 			// linkLabel2
 			// 
 			this.linkLabel2.AutoSize = true;
-			this.linkLabel2.Location = new System.Drawing.Point(635, 232);
+			this.linkLabel2.Location = new System.Drawing.Point(635, 349);
 			this.linkLabel2.Name = "linkLabel2";
 			this.linkLabel2.Size = new System.Drawing.Size(68, 13);
 			this.linkLabel2.TabIndex = 26;
@@ -315,7 +318,7 @@
 			// label14
 			// 
 			this.label14.AutoSize = true;
-			this.label14.Location = new System.Drawing.Point(259, 242);
+			this.label14.Location = new System.Drawing.Point(259, 359);
 			this.label14.Name = "label14";
 			this.label14.Size = new System.Drawing.Size(50, 13);
 			this.label14.TabIndex = 27;
@@ -324,7 +327,7 @@
 			// linkLabel3
 			// 
 			this.linkLabel3.AutoSize = true;
-			this.linkLabel3.Location = new System.Drawing.Point(259, 166);
+			this.linkLabel3.Location = new System.Drawing.Point(259, 283);
 			this.linkLabel3.Name = "linkLabel3";
 			this.linkLabel3.Size = new System.Drawing.Size(38, 13);
 			this.linkLabel3.TabIndex = 28;
@@ -332,12 +335,47 @@
 			this.linkLabel3.Text = "soywiz";
 			this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
 			// 
+			// label15
+			// 
+			this.label15.AutoSize = true;
+			this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))));
+			this.label15.Location = new System.Drawing.Point(511, 117);
+			this.label15.Name = "label15";
+			this.label15.Size = new System.Drawing.Size(69, 16);
+			this.label15.TabIndex = 29;
+			this.label15.Text = "Libraries";
+			// 
+			// linkLabel4
+			// 
+			this.linkLabel4.AutoSize = true;
+			this.linkLabel4.Location = new System.Drawing.Point(511, 142);
+			this.linkLabel4.Name = "linkLabel4";
+			this.linkLabel4.Size = new System.Drawing.Size(185, 13);
+			this.linkLabel4.TabIndex = 31;
+			this.linkLabel4.TabStop = true;
+			this.linkLabel4.Text = "MaiAT3PlusDecoder : ryuukazenomai";
+			this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
+			// 
+			// linkLabel5
+			// 
+			this.linkLabel5.AutoSize = true;
+			this.linkLabel5.Location = new System.Drawing.Point(511, 166);
+			this.linkLabel5.Name = "linkLabel5";
+			this.linkLabel5.Size = new System.Drawing.Size(47, 13);
+			this.linkLabel5.TabIndex = 32;
+			this.linkLabel5.TabStop = true;
+			this.linkLabel5.Text = "OpenTK";
+			this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel5_LinkClicked);
+			// 
 			// AboutForm
 			// 
 			this.AcceptButton = this.button1;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(729, 407);
+			this.ClientSize = new System.Drawing.Size(729, 461);
+			this.Controls.Add(this.linkLabel5);
+			this.Controls.Add(this.linkLabel4);
+			this.Controls.Add(this.label15);
 			this.Controls.Add(this.linkLabel3);
 			this.Controls.Add(this.label14);
 			this.Controls.Add(this.linkLabel2);
@@ -412,5 +450,8 @@
 		private System.Windows.Forms.LinkLabel linkLabel2;
 		private System.Windows.Forms.Label label14;
 		private System.Windows.Forms.LinkLabel linkLabel3;
+		private System.Windows.Forms.Label label15;
+		private System.Windows.Forms.LinkLabel linkLabel4;
+		private System.Windows.Forms.LinkLabel linkLabel5;
 	}
 }

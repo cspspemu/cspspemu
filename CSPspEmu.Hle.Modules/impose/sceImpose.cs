@@ -44,7 +44,7 @@ namespace CSPspEmu.Hle.Modules.impose
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x36AA6E91, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceImposeSetLanguageMode(PspLanguages Language, PspConfirmButton ConfirmButton)
+		public int sceImposeSetLanguageMode(PspLanguages Language, PSP_SYSTEMPARAM_BUTTON_PREFERENCE ConfirmButton)
 		{
 			HleConfig.Language = Language;
 			HleConfig.ConfirmButton = ConfirmButton;
@@ -59,7 +59,7 @@ namespace CSPspEmu.Hle.Modules.impose
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x24FD7BCF, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceImposeGetLanguageMode(out PspLanguages Language, out PspConfirmButton ConfirmButton)
+		public int sceImposeGetLanguageMode(out PspLanguages Language, out PSP_SYSTEMPARAM_BUTTON_PREFERENCE ConfirmButton)
 		{
 			Language = HleConfig.Language;
 			ConfirmButton = HleConfig.ConfirmButton;

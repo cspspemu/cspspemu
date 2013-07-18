@@ -92,6 +92,21 @@ namespace CSPspEmu.Gui.Winforms
 				AstNodeStm Node = null;
 				if (MethodCacheInfo.AstTree != null) Node = MethodCacheInfo.AstTree.Optimize(CpuProcessor);
 
+				var InfoLines = new List<string>();
+
+				InfoLines.Add(String.Format("Name: {0}", MethodCacheInfo.Name));
+				InfoLines.Add(String.Format("EntryPC: 0x{0:X8}", MethodCacheInfo.EntryPC));
+				InfoLines.Add(String.Format("MinPC: 0x{0:X8}", MethodCacheInfo.MinPC));
+				InfoLines.Add(String.Format("MaxPC: 0x{0:X8}", MethodCacheInfo.MaxPC));
+				InfoLines.Add(String.Format("TimeAnalyzeBranches: {0}", MethodCacheInfo.DynarecFunction.TimeAnalyzeBranches.TotalMilliseconds));
+				InfoLines.Add(String.Format("TimeCreateDelegate: {0}", MethodCacheInfo.DynarecFunction.TimeCreateDelegate.TotalMilliseconds));
+				InfoLines.Add(String.Format("TimeGenerateAst: {0}", MethodCacheInfo.DynarecFunction.TimeGenerateAst.TotalMilliseconds));
+				InfoLines.Add(String.Format("TimeGenerateIL: {0}", MethodCacheInfo.DynarecFunction.TimeGenerateIL.TotalMilliseconds));
+				InfoLines.Add(String.Format("TimeOptimize: {0}", MethodCacheInfo.DynarecFunction.TimeOptimize.TotalMilliseconds));
+				InfoLines.Add(String.Format("TimeLinking: {0}", MethodCacheInfo.DynarecFunction.TimeLinking.TotalMilliseconds));
+
+				InfoTextBox.Text = String.Join("\r\n", InfoLines);
+
 				var OutString = "";
 				switch (LanguageComboBox.SelectedItem.ToString())
 				{
@@ -226,6 +241,16 @@ namespace CSPspEmu.Gui.Winforms
 					e.Bounds
 				);
 			}
+		}
+
+		private void ViewTextBox_TextChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		private void ViewTextBox_TextChanged_1(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

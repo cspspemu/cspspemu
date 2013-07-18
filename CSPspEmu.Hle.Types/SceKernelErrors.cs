@@ -445,5 +445,7 @@
 		ATRAC_ERROR_SECOND_BUFFER_NOT_NEEDED = unchecked((int)0x80630022),
 		ATRAC_ERROR_BUFFER_IS_EMPTY			 = unchecked((int)0x80630023),
 		ATRAC_ERROR_ALL_DATA_DECODED         = unchecked((int)0x80630024),
+
+		PSP_SYSTEMPARAM_RETVAL = unchecked((int)0x80110103),
 	}
 }

@@ -434,7 +434,13 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 
 			try
 			{
-				Console.WriteLine("Opened ({3}) '{0}' with driver '{1}' and local path '{2}' : '{2}'", FileName, Info.HleIoDriver, Info.LocalPath, Async ? "Async" : "NO Async");
+				Console.WriteLine(
+					"Opened ({0}) '{1}' with driver '{2}' and local path '{3}'",
+					Async ? "Async" : "NO Async",
+					FileName,
+					Info.HleIoDriver,
+					Info.LocalPath
+				);
 				Info.HleIoDrvFileArg.HleIoDriver.IoOpen(Info.HleIoDrvFileArg, Info.LocalPath, Flags, Mode);
 				Info.HleIoDrvFileArg.FullFileName = FileName;
 				var Uid = HleIoManager.HleIoDrvFileArgPool.Create(Info.HleIoDrvFileArg);
@@ -446,11 +452,11 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			}
 			catch (IOException IOException)
 			{
-				Logger.Notice("IOException: {0}", IOException);
+				Logger.Error("IOException: {0}", IOException);
 			}
 			catch (InvalidOperationException InvalidOperationException)
 			{
-				Logger.Warning("InvalidOperationException: {0}", InvalidOperationException);
+				Logger.Error("InvalidOperationException: {0}", InvalidOperationException);
 			}
 			finally
 			{

@@ -13,6 +13,9 @@ namespace CSPspEmu.Hle.Modules.registry
 		[Inject]
 		HleRegistryManager HleRegistryManager;
 
+		[Inject]
+		HleConfig HleConfig;
+
 		/// <summary>
 		/// Open the registry
 		/// </summary>
@@ -71,7 +74,7 @@ namespace CSPspEmu.Hle.Modules.registry
 		public int sceRegOpenCategory(RegHandle RegHandle, string Name, OpenRegistryMode Mode, out RegCategoryHandle RegCategoryHandle)
 		{
 			var HleRegistryNode = HleRegistryManager.RegHandles.Get((int)RegHandle);
-			var HleRegistryCategoryNode = new HleRegistryCategoryNode(HleRegistryNode, Name);
+			var HleRegistryCategoryNode = new HleRegistryCategoryNode(HleConfig, HleRegistryNode, Name);
 			RegCategoryHandle = (RegCategoryHandle)HleRegistryManager.RegCategoryHandles.Create(HleRegistryCategoryNode);
 
 			return 0;
