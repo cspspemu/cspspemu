@@ -3,16 +3,6 @@ using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Gpu.State.SubStates
 {
-	[Flags]
-	public enum LightComponentsSet {
-		Ambient = 1,
-		Diffuse = 2,
-		Specular = 4,
-		AmbientAndDiffuse = Ambient | Diffuse,
-		DiffuseAndSpecular = Diffuse | Specular,
-		UnknownLightComponent = 8,
-	}
-
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct LightingStateStruct
 	{

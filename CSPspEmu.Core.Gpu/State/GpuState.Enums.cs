@@ -2,7 +2,7 @@
 
 namespace CSPspEmu.Core.Gpu.State
 {
-	public enum TransformModeEnum
+	public enum TransformModeEnum : byte
 	{
 		Normal = 0,
 		Raw = 1,
@@ -19,13 +19,13 @@ namespace CSPspEmu.Core.Gpu.State
 		Sprites = 6,
 	}
 
-	public enum TextureColorComponent
+	public enum TextureColorComponent : byte
 	{
 		Rgb = 0,
 		Rgba = 1,
 	}
 
-	public enum TextureEffect
+	public enum TextureEffect : byte
 	{
 		Modulate = 0,
 		Decal = 1,
@@ -34,7 +34,7 @@ namespace CSPspEmu.Core.Gpu.State
 		Add = 4,
 	}
 
-	public enum TextureFilter
+	public enum TextureFilter : byte
 	{
 		Nearest = 0,
 		Linear = 1,
@@ -45,7 +45,7 @@ namespace CSPspEmu.Core.Gpu.State
 		LinearMipmapLinear = 7,
 	}
 
-	public enum WrapMode
+	public enum WrapMode : byte
 	{
 		Repeat = 0,
 		Clamp = 1,
@@ -96,7 +96,7 @@ namespace CSPspEmu.Core.Gpu.State
 		FastClear = 16
 	}
 
-	public enum BlendingOpEnum : int
+	public enum BlendingOpEnum : byte
 	{
 		Add = 0,
 		Substract = 1,
@@ -106,7 +106,7 @@ namespace CSPspEmu.Core.Gpu.State
 		Abs = 5,
 	}
 
-	public enum GuBlendingFactorSource : int
+	public enum GuBlendingFactorSource : byte
 	{
 		// Source
 		GU_SRC_COLOR = 0, GU_ONE_MINUS_SRC_COLOR = 1, GU_SRC_ALPHA = 2, GU_ONE_MINUS_SRC_ALPHA = 3,
@@ -114,11 +114,94 @@ namespace CSPspEmu.Core.Gpu.State
 		GU_FIX = 10
 	}
 
-	public enum GuBlendingFactorDestination : int
+	public enum GuBlendingFactorDestination : byte
 	{
 		// Dest
 		GU_DST_COLOR = 0, GU_ONE_MINUS_DST_COLOR = 1, GU_DST_ALPHA = 4, GU_ONE_MINUS_DST_ALPHA = 5,
 		// Both?
 		GU_FIX = 10
+	}
+
+	public enum TestFunctionEnum : byte
+	{
+		Never = 0,
+		Always = 1,
+		Equal = 2,
+		NotEqual = 3,
+		Less = 4,
+		LessOrEqual = 5,
+		Greater = 6,
+		GreaterOrEqual = 7,
+	}
+
+	public enum FrontFaceDirectionEnum : byte
+	{
+		CounterClockWise = 0, ClockWise = 1
+	}
+
+	public enum ColorTestFunctionEnum : byte
+	{
+		GU_NEVER,
+		GU_ALWAYS,
+		GU_EQUAL,
+		GU_NOTEQUAL,
+	}
+
+	[Flags]
+	public enum LightComponentsSet : byte
+	{
+		Ambient = 1,
+		Diffuse = 2,
+		Specular = 4,
+		AmbientAndDiffuse = Ambient | Diffuse,
+		DiffuseAndSpecular = Diffuse | Specular,
+		UnknownLightComponent = 8,
+	}
+
+	public enum LightTypeEnum : byte
+	{
+		Directional = 0,
+		PointLight = 1,
+		SpotLight = 2,
+	}
+
+	public enum LightModelEnum : byte
+	{
+		SingleColor = 0,
+		SeparateSpecularColor = 1,
+	}
+
+	public enum TextureMapMode : byte
+	{
+		GU_TEXTURE_COORDS = 0,
+		GU_TEXTURE_MATRIX = 1,
+		GU_ENVIRONMENT_MAP = 2,
+	}
+
+	public enum TextureProjectionMapMode : byte
+	{
+		/// <summary>
+		/// TMAP_TEXTURE_PROJECTION_MODE_POSITION
+		/// 3 texture components
+		/// </summary>
+		GU_POSITION = 0,
+
+		/// <summary>
+		/// TMAP_TEXTURE_PROJECTION_MODE_TEXTURE_COORDINATES
+		/// 2 texture components
+		/// </summary>
+		GU_UV = 1,
+
+		/// <summary>
+		/// TMAP_TEXTURE_PROJECTION_MODE_NORMALIZED_NORMAL
+		/// 3 texture components
+		/// </summary>
+		GU_NORMALIZED_NORMAL = 2,
+
+		/// <summary>
+		/// TMAP_TEXTURE_PROJECTION_MODE_NORMAL
+		/// 3 texture components
+		/// </summary>
+		GU_NORMAL = 3,
 	}
 }

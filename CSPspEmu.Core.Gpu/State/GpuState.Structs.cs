@@ -65,6 +65,24 @@ namespace CSPspEmu.Core.Gpu.State
 	}
 
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
+	public struct ColorbStruct
+	{
+		public byte Red, Green, Blue, Alpha;
+
+		public void SetRGB_A1(uint Params24)
+		{
+			Alpha = 0xFF;
+		}
+
+		public void SetRGB(uint Params24)
+		{
+			Red = (byte)((Params24 >> 0) & 0xFF);
+			Green = (byte)((Params24 >> 8) & 0xFF);
+			Blue = (byte)((Params24 >> 16) & 0xFF);
+		}
+	}
+
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct ColorfStruct
 	{
 		public float Red, Green, Blue, Alpha;

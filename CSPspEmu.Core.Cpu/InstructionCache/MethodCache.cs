@@ -18,21 +18,19 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 {
 	public sealed class MethodCache
 	{
-		static public readonly MethodCache Methods = new MethodCache();
+		public static readonly MethodCache Methods = new MethodCache();
 
-		private Dictionary<uint, MethodCacheInfo> MethodMapping = new Dictionary<uint, MethodCacheInfo>(64 * 1024);
+		private static readonly AstMipsGenerator ast = AstMipsGenerator.Instance;
+		private static readonly GeneratorIL GeneratorILInstance = new GeneratorIL();
 
+		private readonly Dictionary<uint, MethodCacheInfo> MethodMapping = new Dictionary<uint, MethodCacheInfo>(64 * 1024);
 		public IEnumerable<uint> PCs { get { return MethodMapping.Keys; } }
 
 		public MethodCache()
 		{
 		}
 
-		static private AstMipsGenerator ast = AstMipsGenerator.Instance;
-
-		static private readonly GeneratorIL GeneratorILInstance = new GeneratorIL();
-
-		static private Action<CpuThreadState> GetGeneratorForPC(uint PC)
+		private static Action<CpuThreadState> GetGeneratorForPC(uint PC)
 		{
 			var Ast = ast.Statements(
 				ast.Statement(ast.CallInstance(ast.CpuThreadState, (Action<MethodCacheInfo, uint>)CpuThreadState.Methods._MethodCacheInfo_SetInternal, ast.GetMethodCacheInfoAtPC(PC), PC)),
@@ -80,20 +78,8 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 			}
 		}
 
-		static private bool PrelinkedAll = false;
-
 		public void _MethodCacheInfo_SetInternal(CpuThreadState CpuThreadState, MethodCacheInfo MethodCacheInfo, uint PC)
 		{
-			if (!PrelinkedAll)
-			{
-				PrelinkedAll = true;
-				Marshal.PrelinkAll(typeof(CpuEmitter));
-				Marshal.PrelinkAll(typeof(GeneratorIL));
-				Marshal.PrelinkAll(typeof(GeneratorILPsp));
-				Marshal.PrelinkAll(typeof(AstOptimizer));
-				Marshal.PrelinkAll(typeof(AstOptimizerPsp));
-			}
-
 			var Memory = CpuThreadState.Memory;
 			var CpuProcessor = CpuThreadState.CpuProcessor;
 			if (_DynarecConfig.DebugFunctionCreation)

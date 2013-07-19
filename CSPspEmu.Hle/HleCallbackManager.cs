@@ -34,8 +34,9 @@ namespace CSPspEmu.Hle.Managers
 
 		public HleCallback DequeueScheduledCallback()
 		{
-			Console.WriteLine("DequeueScheduledCallback!");
-			return ScheduledCallbacks.Dequeue();
+			var HleCallback = ScheduledCallbacks.Dequeue();
+			Console.WriteLine("DequeueScheduledCallback! : {0}", HleCallback);
+			return HleCallback;
 		}
 
 		public bool HasScheduledCallbacks

@@ -30,7 +30,7 @@ using System.Runtime.InteropServices;
 
 namespace Mono.Simd
 {
-	public enum ShuffleSel
+	public enum ShuffleSel : byte
 	{
 		XFromX,
 		XFromY,
@@ -84,7 +84,7 @@ namespace Mono.Simd
 		Replace Shuffle with less bug prone methods
 */
 
-	[StructLayout(LayoutKind.Explicit, Pack = 0, Size = 16)]
+	[StructLayout(LayoutKind.Explicit, Pack = 1, Size = 16)]
 	public struct Vector4f
 	{
 		[ FieldOffset(0) ]

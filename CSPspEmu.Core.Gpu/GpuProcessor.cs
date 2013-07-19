@@ -227,15 +227,17 @@ namespace CSPspEmu.Core.Gpu
 			//Thread.Sleep(1);
 			//DisplayListQueueUpdated.WaitOne(PspConfig.VerticalSynchronization ? 1 : 0);
 
+			GpuDisplayList CurrentGpuDisplayList = null;
+
 			if (DisplayListQueue.GetCountLock() > 0)
 			{
 				CompletedDrawingEvent.Reset();
 				//Console.WriteLine("ProcessStep START");
-				TimeSpanUtils.InfiniteLoopDetector("CpuProcessor.ProcessStep", () =>
+				TimeSpanUtils.InfiniteLoopDetector("GpuProcessor.ProcessStep", () =>
 				{
 					while (DisplayListQueue.GetCountLock() > 0)
 					{
-						var CurrentGpuDisplayList = DisplayListQueue.First.Value;
+						CurrentGpuDisplayList = DisplayListQueue.First.Value;
 						{
 							//Console.WriteLine("Executing list : {0}", CurrentGpuDisplayList.Id);
 							CurrentGpuDisplayList.Process();
@@ -243,6 +245,17 @@ namespace CSPspEmu.Core.Gpu
 						DisplayListQueue.RemoveFirst();
 						EnqueueFreeDisplayList(CurrentGpuDisplayList);
 					}
+				}, () =>
+				{
+					ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Magenta, () =>
+					{
+						Console.WriteLine("DisplayListQueue.GetCountLock(): {0}", DisplayListQueue.GetCountLock());
+						if (CurrentGpuDisplayList != null)
+						{
+							Console.WriteLine("CurrentGpuDisplayList.Status: {0}", CurrentGpuDisplayList.Status.ToStringDefault());
+							Console.WriteLine("CurrentGpuDisplayList2.Status: {0}", CurrentGpuDisplayList.Status2.ToStringDefault());
+						}
+					});
 				});
 
 				CompletedDrawingEvent.Set();

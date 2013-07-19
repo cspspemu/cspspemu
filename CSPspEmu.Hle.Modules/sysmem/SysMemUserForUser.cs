@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
@@ -18,6 +19,16 @@ namespace CSPspEmu.Hle.Modules.sysmem
 
 		[Inject]
 		KDebugForKernel KDebugForKernel;
+
+		[Flags]
+		public enum MyFlags
+		{
+			SCE_KERNEL_HASCOMPILEDSDKVERSION = 0x1000,
+			SCE_KERNEL_HASCOMPILERVERSION = 0x2000,
+		}
+
+		MyFlags Flags;
+		uint SdkVersion;
 
 		/// <summary>
 		/// Get the firmware version.
@@ -76,14 +87,31 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		{
 		}
 
+		private void _sceKernelSetCompiledSdkVersion(uint SdkVersion)
+		{
+			this.SdkVersion = SdkVersion;
+			this.Flags |= MyFlags.SCE_KERNEL_HASCOMPILEDSDKVERSION;
+		}
+
+		private void _sceKernelSetCompiledSdkVersion(uint SdkVersion, string Name, uint[] ValidMainVersions)
+		{
+			var SdkMainVersion = SdkVersion & 0xFFFF0000;
+			if (!ValidMainVersions.Contains(SdkMainVersion))
+			{
+				Console.WriteLine("{0} unknown SDK : {1:X8}\n", Name, SdkVersion);
+			}
+			_sceKernelSetCompiledSdkVersion(SdkVersion);
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="Param"></param>
 		[HlePspFunction(NID = 0x7591C7DB, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public void sceKernelSetCompiledSdkVersion(uint Param)
+		//[HlePspNotImplemented]
+		public void sceKernelSetCompiledSdkVersion(uint SdkVersion)
 		{
+			_sceKernelSetCompiledSdkVersion(SdkVersion);
 		}
 
 		/// <summary>
@@ -92,8 +120,9 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// <param name="Param"></param>
 		[HlePspFunction(NID = 0x342061E5, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public void sceKernelSetCompiledSdkVersion370(uint Param)
+		public void sceKernelSetCompiledSdkVersion370(uint SdkVersion)
 		{
+			_sceKernelSetCompiledSdkVersion(SdkVersion, "sceKernelSetCompiledSdkVersion370", new uint[] { 0x3070000 });
 		}
 	
 		/// <summary>
@@ -288,17 +317,35 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// 
 		/// </summary>
 		/// <returns></returns>
-		[HlePspFunction(NID = 0x91DE343C, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public void SysMemUserForUser_91DE343C()
+		[HlePspFunction(NID = 0xfc114573, FirmwareVersion = 150)]
+		public uint sceKernelGetCompiledSdkVersion()
 		{
-			//throw (new NotImplementedException());
+			if ((Flags & MyFlags.SCE_KERNEL_HASCOMPILEDSDKVERSION) != 0)
+			{
+				return this.SdkVersion;
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
-		[HlePspFunction(NID = 0xFE707FDF, FirmwareVersion = 150)]
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="SdkVersion"></param>
+		[HlePspFunction(NID = 0x91DE343C, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public void SysMemUserForUser_FE707FDF()
+		public void sceKernelSetCompiledSdkVersion500_505(uint SdkVersion)
 		{
+			_sceKernelSetCompiledSdkVersion(SdkVersion, "sceKernelSetCompiledSdkVersion500_505", new uint[] { 0x5000000, 0x5050000 });
+		}
+
+		[HlePspFunction(NID = 0xFE707FDF, FirmwareVersion = 150, Name = "SysMemUserForUser_FE707FDF")]
+		[HlePspNotImplemented]
+		public int AllocMemoryBlock(string Name, uint Type, uint Size, uint ParamsAddrPtr)
+		{
+			return 0;
 		}
 
 		[HlePspFunction(NID = 0xDB83A952, FirmwareVersion = 150)]

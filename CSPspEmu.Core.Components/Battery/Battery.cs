@@ -16,6 +16,11 @@
 		/// 
 		/// </summary>
 		public bool BatteryExist = true;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool IsStandBy = false;
 		
 		/// <summary>
 		/// 

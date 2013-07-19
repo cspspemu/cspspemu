@@ -22,6 +22,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			PrepareState_Texture_Common(GpuState);
 #endif
 			PrepareState_Blend(GpuState);
+			PrepareState_Clip(GpuState);
 
 			if (GpuState->VertexState.Type.Transform2D)
 			{
@@ -43,6 +44,16 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 			GL.ShadeModel((GpuState->ShadeModel == ShadingModelEnum.Flat) ? ShadingModel.Flat : ShadingModel.Smooth);
 			PrepareState_AlphaTest(GpuState);
+		}
+
+		private static void PrepareState_Clip(GpuStateStruct* GpuState)
+		{
+			if (!GlEnableDisable(EnableCap.ScissorTest, GpuState->ClipPlaneState.Enabled))
+			{
+				return;
+			}
+			var Scissor = &GpuState->ClipPlaneState.Scissor;
+			GL.Scissor(Scissor->Left, Scissor->Top, Scissor->Right - Scissor->Left, Scissor->Bottom - Scissor->Top);
 		}
 
 		private static void PrepareState_AlphaTest(GpuStateStruct* GpuState)
@@ -103,8 +114,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			//GlEnableDisable(EnableCap.CullFace, false);
 
-			GL.CullFace((GpuState->BackfaceCullingState.FrontFaceDirection == State.SubStates.FrontFaceDirectionEnum.ClockWise) ? CullFaceMode.Front : CullFaceMode.Back);
-			//GL.CullFace((GpuState->BackfaceCullingState.FrontFaceDirection == State.SubStates.FrontFaceDirectionEnum.ClockWise) ? CullFaceMode.Back : CullFaceMode.Front);
+			GL.CullFace((GpuState->BackfaceCullingState.FrontFaceDirection == FrontFaceDirectionEnum.ClockWise) ? CullFaceMode.Front : CullFaceMode.Back);
+			//GL.CullFace((GpuState->BackfaceCullingState.FrontFaceDirection == FrontFaceDirectionEnum.ClockWise) ? CullFaceMode.Back : CullFaceMode.Front);
 		}
 
 		private static void PrepareState_Depth(GpuStateStruct* GpuState)

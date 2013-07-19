@@ -1,6 +1,7 @@
 ﻿using CSharpUtils;
 using CSPspEmu.Core.Cpu.VFpu;
 using System;
+using System.Runtime;
 using System.Runtime.CompilerServices;
 
 namespace CSPspEmu.Core.Cpu.Emitter
@@ -8,6 +9,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	public unsafe class CpuEmitterUtils
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _rotr_impl(uint Value, int Offset) {
 			//if (Offset < 0) Offset += 32;
 			//Offset %= 32;
@@ -18,12 +20,15 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public unsafe static int _max_impl(int Left, int Right) { return (Left > Right) ? Left : Right; }
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public unsafe static int _min_impl(int Left, int Right) { return (Left < Right) ? Left : Right; }
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _bitrev_impl(uint v)
 		{
 			v = ((v >> 1) & 0x55555555) | ((v & 0x55555555) << 1); // swap odd and even bits
@@ -35,6 +40,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public unsafe static void _div_impl(CpuThreadState CpuThreadState, int Left, int Right)
 		{
 			if (Right == 0)
@@ -55,6 +61,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public unsafe static void _divu_impl(CpuThreadState CpuThreadState, uint Left, uint Right)
 		{
 			if (Right == 0)
@@ -70,13 +77,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _ext_impl(uint Data, int Pos, int Size) { return BitUtils.Extract(Data, Pos, Size); }
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _ins_impl(uint InitialData, uint Data, int Pos, int Size) { return BitUtils.Insert(InitialData, Pos, Size, Data); }
 
 		// http://aggregate.org/MAGIC/
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _clo_impl(uint x)
 		{
 			uint ret = 0;
@@ -85,12 +95,14 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _clz_impl(uint x)
 		{
 			return _clo_impl(~x);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _wsbh_impl(uint v)
 		{
 			// swap bytes
@@ -98,6 +110,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _wsbw_impl(uint v)
 		{
 			// BSWAP
@@ -185,7 +198,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public static void _sync_impl(CpuThreadState CpuThreadState, uint PC, uint Value)
 		{
 			CpuThreadState.PC = PC;
-			Console.WriteLine("Not implemented 'sync' instruction");
+			//Console.WriteLine("Not implemented 'sync' instruction at 0x{0:X8} with value 0x{1:X8}", PC, Value);
 		}
 
 		private static readonly uint[] LwrMask = new uint[] { 0x00000000, 0xFF000000, 0xFFFF0000, 0xFFFFFF00 };
@@ -241,25 +254,23 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			int k = (int)(3 - ((Address >> 2) & 3));
 			Address &= unchecked((uint)~0xF);
 
-			float*[] registers = new float*[] { r0, r1, r2, r3 };
+			var r = stackalloc float*[4]; r[0] = r0; r[1] = r1; r[2] = r2; r[3] = r3;
 
 			fixed (float* VFPR = &CpuThreadState.VFR0)
+			{
 				for (int j = k; j < 4; j++, Address += 4)
 				{
-					float* ptr = registers[j];
+					float* ptr = r[j];
 					var memory_address = Address;
 					var memory = (float*)CpuThreadState.GetMemoryPtr(memory_address);
 
 					//Console.Error.WriteLine("_lvl_svl_q({0}): {1:X8}: Reg({2:X8}) {3} Mem({4:X8})", j, memory_address, *(int*)ptr, Save ? "->" : "<-", *(int*)memory);
 
-					LanguageUtils.Transfer(
-						ref *memory,
-						ref *ptr,
-						Save
-					);
+					LanguageUtils.Transfer(ref *memory, ref *ptr, Save);
 
 					//Console.Error.WriteLine("_lvl_svl_q({0}): {1:X8}: Reg({2:X8}) {3} Mem({4:X8})", j, memory_address, *(int*)ptr, Save ? "->" : "<-", *(int*)memory);
 				}
+			}
 
 			//Console.Error.WriteLine("--------------");
 		}
@@ -271,27 +282,37 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			int k = (int)(4 - ((Address >> 2) & 3));
 			//Address &= unchecked((uint)~0xF);
 
-			float*[] registers = new float*[] { r0, r1, r2, r3 };
+			var r = stackalloc float*[4]; r[0] = r0; r[1] = r1; r[2] = r2; r[3] = r3;
 
 			fixed (float* VFPR = &CpuThreadState.VFR0)
+			{
 				for (int j = 0; j < k; j++, Address += 4)
 				{
-					float* ptr = registers[j];
+					float* ptr = r[j];
 					var memory_address = Address;
 					var memory = (float*)CpuThreadState.GetMemoryPtr(memory_address);
 
 					//Console.Error.WriteLine("_lvl_svr_q({0}): {1:X8}: Reg({2:X8}) {3} Mem({4:X8})", j, memory_address, *(int*)ptr, Save ? "->" : "<-", *(int*)memory);
 
-					LanguageUtils.Transfer(
-						ref *memory,
-						ref *ptr,
-						Save
-					);
+					LanguageUtils.Transfer(ref *memory, ref *ptr, Save);
 
 					//Console.Error.WriteLine("_lvl_svr_q({0}): {1:X8}: Reg({2:X8}) {3} Mem({4:X8})", j, memory_address, *(int*)ptr, Save ? "->" : "<-", *(int*)memory);
 				}
+			}
 
 			//Console.Error.WriteLine("--------------");
+		}
+
+		static public float _vslt_impl(float a, float b)
+		{
+			if (float.IsNaN(a) || float.IsNaN(b)) return 0f;
+			return (a < b) ? 1f : 0f;
+		}
+
+		static public float _vsge_impl(float a, float b)
+		{
+			if (float.IsNaN(a) || float.IsNaN(b)) return 0f;
+			return (a >= b) ? 1f : 0f;
 		}
 
 		public static void _vrnds(CpuThreadState CpuThreadState, int Seed)
@@ -306,11 +327,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return BitConverter.ToInt32(Data, 0);
 		}
 
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static float _vrndf1(CpuThreadState CpuThreadState)
 		{
 			return (float)(CpuThreadState.Random.NextDouble() * 2.0f);
 		}
 
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static float _vrndf2(CpuThreadState CpuThreadState)
 		{
 			return (float)(CpuThreadState.Random.NextDouble() * 4.0f);
@@ -331,11 +354,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			);
 		}
 
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _vi2c_impl(uint x, uint y, uint z, uint w)
 		{
 			return ((x >> 24) << 0) | ((y >> 24) << 8) | ((z >> 24) << 16) | ((w >> 24) << 24) | 0;
 		}
 
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static int _vf2iz(float Value, int imm5)
 		{
 			float ScalabValue = MathFloat.Scalb(Value, imm5);
@@ -343,7 +368,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return (Double.IsNaN(DoubleValue)) ? 0x7FFFFFFF : (int)DoubleValue;
 		}
 
-		public static uint _vi2s(uint v1, uint v2)
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+		public static uint _vi2s_impl(uint v1, uint v2)
 		{
 			return (
 				((v1 >> 16) << 0) |
@@ -351,7 +377,26 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			);
 		}
 
-		public static int _vi2us(int x, int y)
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+		static public float _vh2f_0(uint a)
+		{
+			return HalfFloat.ToFloat((int)BitUtils.Extract(a, 0, 16));
+		}
+
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+		static public float _vh2f_1(uint a)
+		{
+			return HalfFloat.ToFloat((int)BitUtils.Extract(a, 16, 16));
+		}
+
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+		static public uint _vf2h_impl(float a, float b)
+		{
+			return (uint)((HalfFloat.FloatToHalfFloat(b) << 16) | (HalfFloat.FloatToHalfFloat(a) << 0));
+		}
+
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+		public static int _vi2us_impl(int x, int y)
 		{
 			return (
 				((x < 0) ? 0 : ((x >> 15) << 0)) |

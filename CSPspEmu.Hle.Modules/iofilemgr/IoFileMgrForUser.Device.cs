@@ -43,6 +43,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <param name="OutputLength">Length of outdata, if 0 receives no data</param>
 		/// <returns>0 on success, &lt; 0 on error</returns>
 		[HlePspFunction(NID = 0x54F5FB11, FirmwareVersion = 150)]
+		//[HlePspNotImplemented]
 		public int sceIoDevctl(string DeviceName, uint Command, byte* InputPointer, int InputLength, byte* OutputPointer, int OutputLength)
 		{
 			try

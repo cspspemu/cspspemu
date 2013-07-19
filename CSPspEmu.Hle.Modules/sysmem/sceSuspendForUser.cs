@@ -15,9 +15,11 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// </summary>
 		[HlePspFunction(NID = 0xEADB1BD7, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
-		public void sceKernelPowerLock()
+		public int sceKernelPowerLock(int LockType)
 		{
+			if (LockType != 0) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_MODE));
 			//unimplemented_notice();
+			return 0;
 		}
 
 		/// <summary>
@@ -25,9 +27,11 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// </summary>
 		[HlePspFunction(NID = 0x3AEE7261, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
-		public void sceKernelPowerUnlock()
+		public int sceKernelPowerUnlock(int LockType)
 		{
+			if (LockType != 0) throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_MODE));
 			//unimplemented_notice();
+			return 0;
 		}
 
 		/// <summary>
@@ -35,9 +39,10 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// </summary>
 		/// <param name="value"></param>
 		[HlePspFunction(NID = 0x090CCB3F, FirmwareVersion = 150)]
-		public void sceKernelPowerTick(uint value)
+		public int sceKernelPowerTick(uint value)
 		{
 			//logWarning("Not Implemented sceKernelPowerTick");
+			return 0;
 		}
 
 		bool VolatileMemLocked = false;

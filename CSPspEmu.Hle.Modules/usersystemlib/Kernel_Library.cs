@@ -15,19 +15,38 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		[Inject]
 		public ThreadManForUser ThreadManForUser;
 
-		/*
-		void initNids() {
-			
-			
+		public struct SceLwMutexWorkarea
+		{
+			public int count;
+			public SceUID thread;
+			public int attr;
+			public int numWaitThreads;
+			public SceUID uid;
+			private fixed int pad[3];
 		}
-	
-		const int Enabled  = 1;
-		const int Disabled = 0;
-	
-		ref bool enabledInterrupts() {
-			return hleEmulatorState.emulatorState.enabledInterrupts;
+
+		public struct SceKernelLwMutexInfo
+		{
+			public SceSize size;
+			public fixed byte _name[32];
+			public uint attr;
+			public SceUID uid;
+			public void *workarea;
+			public int initCount;
+			public int currentCount;
+			public SceUID lockThread;
+			public int numWaitThreads;
 		}
-		*/
+
+		private int _sceKernelLockLwMutexCB(SceLwMutexWorkarea* WorkAreaPointer, int Count, int* TimeOut, bool HandleCallbacks)
+		{
+			return 0;
+		}
+
+		private int _sceKernelTryLockLwMutex(SceLwMutexWorkarea* WorkAreaPointer, int Count)
+		{
+			return 0;
+		}
 
 		/// <summary>
 		/// Suspend all interrupts.
@@ -39,6 +58,11 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 			return HleInterruptManager.sceKernelCpuSuspendIntr();
 		}
 
+		private void _sceKernelCpuResumeIntr(uint Flags)
+		{
+			HleInterruptManager.sceKernelCpuResumeIntr(Flags);
+		}
+
 		/// <summary>
 		/// Resume/Enable all interrupts.
 		/// </summary>
@@ -46,7 +70,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		[HlePspFunction(NID = 0x5F10D406, FirmwareVersion = 150)]
 		public void sceKernelCpuResumeIntr(uint Flags)
 		{
-			HleInterruptManager.sceKernelCpuResumeIntr(Flags);
+			_sceKernelCpuResumeIntr(Flags);
 		}
 
 		/// <summary>
@@ -56,7 +80,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		[HlePspFunction(NID = 0x3B84732D, FirmwareVersion = 150)]
 		public void sceKernelCpuResumeIntrWithSync(uint Flags)
 		{
-			sceKernelCpuResumeIntr(Flags);
+			_sceKernelCpuResumeIntr(Flags);
 		}
 
 		/// <summary>
@@ -78,17 +102,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x15B6446B, FirmwareVersion = 380)]
 		[HlePspNotImplemented]
-		public int sceKernelUnlockLwMutex(void* WorkAreaPointer, int Count)
-		{
-			return 0;
-		}
-
-		private int _sceKernelLockLwMutexCB(void* WorkAreaPointer, int Count, int* TimeOut, bool HandleCallbacks)
-		{
-			return 0;
-		}
-
-		private int _sceKernelTryLockLwMutex(void* WorkAreaPointer, int Count)
+		public int sceKernelUnlockLwMutex(SceLwMutexWorkarea* WorkAreaPointer, int Count)
 		{
 			return 0;
 		}
@@ -102,14 +116,20 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xBEA46419, FirmwareVersion = 380)]
 		[HlePspNotImplemented]
-		public int sceKernelLockLwMutex(void* WorkAreaPointer, int Count, int* TimeOut)
+		public int sceKernelLockLwMutex(SceLwMutexWorkarea* WorkAreaPointer, int Count, int* TimeOut)
 		{
 			return _sceKernelLockLwMutexCB(WorkAreaPointer, Count, TimeOut, HandleCallbacks: false);
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="WorkAreaPointer"></param>
+		/// <param name="Count"></param>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0x37431849, FirmwareVersion = 380)]
 		[HlePspNotImplemented]
-		public int sceKernelTryLockLwMutex_600(void* WorkAreaPointer, int Count)
+		public int sceKernelTryLockLwMutex_600(SceLwMutexWorkarea* WorkAreaPointer, int Count)
 		{
 			return _sceKernelTryLockLwMutex(WorkAreaPointer, Count);
 		}
@@ -124,7 +144,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x1FC64E09, FirmwareVersion = 380)]
 		[HlePspNotImplemented]
-		public int sceKernelLockLwMutexCB(void* WorkAreaPointer, int Count, int* TimeOut)
+		public int sceKernelLockLwMutexCB(SceLwMutexWorkarea* WorkAreaPointer, int Count, int* TimeOut)
 		{
 			return _sceKernelLockLwMutexCB(WorkAreaPointer, Count, TimeOut, HandleCallbacks: true);
 		}

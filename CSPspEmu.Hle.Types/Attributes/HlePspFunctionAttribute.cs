@@ -34,5 +34,10 @@ namespace CSPspEmu.Hle
 		/// Avoids being executed inside an interrupt.
 		/// </summary>
 		public bool CheckInsideInterrupt = true;
+
+		/// <summary>
+		/// Optional name.
+		/// </summary>
+		public string Name = "";
 	}
 }

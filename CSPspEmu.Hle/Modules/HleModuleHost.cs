@@ -36,10 +36,19 @@ namespace CSPspEmu.Hle
 
 		private void InitializeOnce()
 		{
-			if (_EntriesByNID == null) Initialize();
+			if (_EntriesByNID == null) _Initialize();
+			ModuleInitializeOnce();
 		}
 
-		private void Initialize()
+		protected virtual void ModuleInitializeOnce()
+		{
+		}
+
+		protected virtual void ModuleInitialize()
+		{
+		}
+
+		private void _Initialize()
 		{
 			_EntriesByNID = new Dictionary<uint, HleFunctionEntry>();
 			_EntriesByName = new Dictionary<string, HleFunctionEntry>();
@@ -93,6 +102,8 @@ namespace CSPspEmu.Hle
 			//	Console.WriteLine(Exception);
 			//	throw (Exception);
 			//}
+
+			ModuleInitialize();
 		}
 
 		public static string StringFromAddress(CpuThreadState CpuThreadState, uint Address)

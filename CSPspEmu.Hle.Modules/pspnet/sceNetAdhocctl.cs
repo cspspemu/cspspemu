@@ -12,6 +12,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="product">Pass a filled in <see cref="productStruct"/></param>
 		/// <returns>0 on success, &lt; 0 on error</returns>
 		[HlePspFunction(NID = 0xE26F226E, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceNetAdhocctlInit(int stacksize, int priority, productStruct* product)
 		{
 			//throw(new NotImplementedException());
@@ -23,20 +24,22 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// </summary>
 		/// <returns>0 on success, &lt; on error.</returns>
 		[HlePspFunction(NID = 0x9D689E13, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceNetAdhocctlTerm()
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
 		/// Connect to the Adhoc control
 		/// </summary>
-		/// <param name="name">The name of the connection (maximum 8 alphanumeric characters).</param>
+		/// <param name="Name">The name of the connection (maximum 8 alphanumeric characters).</param>
 		/// <returns>0 on success, &lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0x0AD043ED, FirmwareVersion = 150)]
-		public int sceNetAdhocctlConnect(string name)
+		[HlePspNotImplemented]
+		public int sceNetAdhocctlConnect(string Name)
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -44,9 +47,10 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// </summary>
 		/// <returns>0 on success, &lt; 0 on error</returns>
 		[HlePspFunction(NID = 0x34401D65, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceNetAdhocctlDisconnect()
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -55,20 +59,23 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="Event">Pointer to an integer to receive the status. Can continue when it becomes 1.</param>
 		/// <returns>0 on success, &lt; 0 on error</returns>
 		[HlePspFunction(NID = 0x75ECD386, FirmwareVersion = 150)]
-		public int sceNetAdhocctlGetState(int* Event)
+		//[HlePspNotImplemented]
+		public int sceNetAdhocctlGetState(out int Event)
 		{
-			throw(new NotImplementedException());
+			Event = 0;
+			return 0;
 		}
 
 		/// <summary>
 		/// Connect to the Adhoc control (as a host)
 		/// </summary>
-		/// <param name="name">The name of the connection (maximum 8 alphanumeric characters).</param>
+		/// <param name="Name">The name of the connection (maximum 8 alphanumeric characters).</param>
 		/// <returns> on success, &lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0xEC0635C1, FirmwareVersion = 150)]
-		public int sceNetAdhocctlCreate(string name)
+		[HlePspNotImplemented]
+		public int sceNetAdhocctlCreate(string Name)
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -77,9 +84,10 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="scaninfo">A valid ::SceNetAdhocctlScanInfo struct that has been filled by sceNetAchocctlGetScanInfo</param>
 		/// <returns>0 on success, &lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0x5E7F79C9, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceNetAdhocctlJoin(SceNetAdhocctlScanInfo* scaninfo)
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -91,7 +99,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		[HlePspNotImplemented]
 		public int sceNetAdhocctlGetAdhocId(productStruct* product)
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -108,7 +116,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		[HlePspNotImplemented]
 		public int sceNetAdhocctlCreateEnterGameMode(string name, int unknown, int num, string macs, uint timeout, int unknown2)
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -123,7 +131,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		[HlePspNotImplemented]
 		public int sceNetAdhocctlJoinEnterGameMode(string name, string hostmac, uint timeout, int unknown)
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -135,7 +143,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		[HlePspNotImplemented]
 		public int sceNetAdhocctlGetGameModeInfo(SceNetAdhocctlGameModeInfo* gamemodeinfo)
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -146,7 +154,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		[HlePspNotImplemented]
 		public int sceNetAdhocctlExitGameMode()
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -156,9 +164,10 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="buf">An allocated area of size length.</param>
 		/// <returns>0 on success, &lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0xE162CB14, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceNetAdhocctlGetPeerList(int* length, void* buf)
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -169,9 +178,10 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="peerinfo">Pointer to store the information.</param>
 		/// <returns>0 on success, &lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0x8DB83FDC, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceNetAdhocctlGetPeerInfo(string mac, int size, SceNetAdhocctlPeerInfo* peerinfo)
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -182,7 +192,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		[HlePspNotImplemented]
 		public int sceNetAdhocctlScan()
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -194,10 +204,12 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		[HlePspFunction(NID = 0x81AEE1BE, FirmwareVersion = 150)]
 		public int sceNetAdhocctlGetScanInfo(int* length, void* buf)
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
 		//typedef void (*sceNetAdhocctlHandler)(int flag, int error, void *unknown);
+
+		delegate void sceNetAdhocctlHandler(int flag, int error, int unknown);
 
 		/// <summary>
 		/// Register an adhoc event handler
@@ -219,9 +231,10 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="id">he handler ID as returned by <see cref="sceNetAdhocctlAddHandler"/>.</param>
 		/// <returns>0 on success, &lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0x6402490B, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceNetAdhocctlDelHandler(int id)
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -231,9 +244,10 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <param name="nickname">Pointer to a char buffer where the nickname will be stored.</param>
 		/// <returns>0 on success, &lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0x8916C003, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceNetAdhocctlGetNameByAddr(string mac, char* nickname)
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -247,7 +261,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		[HlePspNotImplemented]
 		public int sceNetAdhocctlGetAddrByName(char* nickname, int* length, void* buf)
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -259,7 +273,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		[HlePspNotImplemented]
 		public int sceNetAdhocctlGetParameter(SceNetAdhocctlParams* Params)
 		{
-			throw(new NotImplementedException());
+			return 0;
 		}
 	}
 }

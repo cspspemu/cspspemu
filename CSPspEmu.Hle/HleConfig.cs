@@ -25,7 +25,7 @@ namespace CSPspEmu.Hle
 		public bool DebugSyscalls = false;
 
 		//public PspVersion FirmwareVersion = new PspVersion(6, 3, 0);
-		public PspVersion FirmwareVersion = new PspVersion("6.3.0.0");
+		public PspVersion FirmwareVersion = new PspVersion("6.6.0.0");
 		public Assembly HleModulesDll;
 		public bool TraceLastSyscalls;
 

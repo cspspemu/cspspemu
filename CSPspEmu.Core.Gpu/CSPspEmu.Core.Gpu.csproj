@@ -121,7 +121,6 @@
     <Compile Include="State\SubStates\SkinningStateStruct.cs" />
     <Compile Include="State\GpuMatrixStruct.cs" />
     <Compile Include="State\GpuRectStruct.cs" />
-    <Compile Include="State\GpuVectorStruct.cs" />
     <Compile Include="State\SubStates\AlphaTestStateStruct.cs" />
     <Compile Include="State\SubStates\BackfaceCullingStateStruct.cs" />
     <Compile Include="State\SubStates\BlendingStateStruct.cs" />
@@ -143,7 +142,6 @@
     <Compile Include="State\SubStates\TextureMappingStateStruct.cs" />
     <Compile Include="State\SubStates\TextureStateStruct.cs" />
     <Compile Include="State\SubStates\TextureTransferStateStruct.cs" />
-    <Compile Include="State\TestFunctionEnum.cs" />
     <Compile Include="State\SubStates\VertexStateStruct.cs" />
     <Compile Include="TextureCache.cs" />
     <Compile Include="VertexInfo.cs" />

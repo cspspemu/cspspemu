@@ -1,11 +1,14 @@
 ﻿using CSPspEmu.Core.Types;
+using System.Runtime.InteropServices;
 namespace CSPspEmu.Core.Gpu.State.SubStates
 {
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct TextureStateStruct
 	{
 		/// <summary>
 		/// Mimaps
 		/// </summary>
+		[StructLayout(LayoutKind.Sequential, Pack = 1)]
 		public struct MipmapState
 		{
 			/// <summary>
@@ -19,17 +22,17 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 			/// Bufferwidth = 480, Width = 512, Height = 512
 			/// Texture is 512x512 but there is data just for 480x512
 			/// </summary>
-			public int BufferWidth;
+			public ushort BufferWidth;
 
 			/// <summary>
 			/// Texture Width
 			/// </summary>
-			public int TextureWidth;
+			public ushort TextureWidth;
 
 			/// <summary>
 			/// Texture Height
 			/// </summary>
-			public int TextureHeight;
+			public ushort TextureHeight;
 		}
 
 		/// <summary>

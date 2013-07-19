@@ -354,27 +354,17 @@ namespace CSPspEmu.Hle.Modules.threadman
 		{
 			var CurrentThread = ThreadManager.Current;
 
-#if true
-			if (DelayInMicroseconds < 1000)
+			// TODO: Simply reschedules!
+			//if (DelayInMicroseconds < 1000) DelayInMicroseconds = 1000;
+			//DelayInMicroseconds = 100000;
+
+			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, "sceKernelDelayThread", null, WakeUpCallback =>
 			{
-				if (HandleCallbacks)
+				PspRtc.RegisterTimerInOnce(TimeSpanUtils.FromMicroseconds(DelayInMicroseconds), () =>
 				{
-					sceKernelCheckCallback(CurrentThread.CpuThreadState);
-				}
-				//ThreadManager.ScheduleNext();
-				CurrentThread.CpuThreadState.Yield();
-			}
-			else
-#endif
-			{
-				CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, "sceKernelDelayThread", null, WakeUpCallback =>
-				{
-					PspRtc.RegisterTimerInOnce(TimeSpanUtils.FromMicroseconds(DelayInMicroseconds), () =>
-					{
-						WakeUpCallback();
-					});
-				}, HandleCallbacks: HandleCallbacks);
-			}
+					WakeUpCallback();
+				});
+			}, HandleCallbacks: HandleCallbacks);
 
 			return 0;
 		}

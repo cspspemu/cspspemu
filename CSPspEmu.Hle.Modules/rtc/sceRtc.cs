@@ -94,19 +94,25 @@ namespace CSPspEmu.Hle.Modules.rtc
 		public PspDaysOfWeek sceRtcGetDayOfWeek(int Year, int Month, int Day)
 		{
 			var MonthTranslate = new int[] { 0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4 };
-			Year -= (Month < 3) ? 1 : 0;
-			return (PspDaysOfWeek)((Year + Year / 4 - Year / 100 + Year / 400 + MonthTranslate[(Month - 1) % 12] + Day) % 7);
-			//switch (Calendar.GetDayOfWeek(new DateTime(Year, Month, Day)))
+			if (Month == 0)
+			{
+				Month = 8;
+			}
+			//if(Month > 12) // After month 12, psp months does 31/31/30/31/30 and repeat
 			//{
-			//	case DayOfWeek.Monday: return PspDaysOfWeek.Monday;
-			//	case DayOfWeek.Tuesday: return PspDaysOfWeek.Tuesday;
-			//	case DayOfWeek.Wednesday: return PspDaysOfWeek.Wednesday;
-			//	case DayOfWeek.Thursday: return PspDaysOfWeek.Thursday;
-			//	case DayOfWeek.Friday: return PspDaysOfWeek.Friday;
-			//	case DayOfWeek.Saturday: return PspDaysOfWeek.Saturday;
-			//	case DayOfWeek.Sunday: return PspDaysOfWeek.Sunday;
-			//	default: throw (new InvalidCastException());
+			//	int restMonth = Month-12;
+			//	int grp5 = restMonth / 5;
+			//	restMonth = restMonth % 5;
+			//	Day += grp5 * (31*3+30*2);
+			//	int[] t = { 31, 31*2, 31*2+30, 31*3+30, 31*3+30*2 };
+			//	Day += t[restMonth-1];
+			//	Month = 12;
 			//}
+			int MonthMod = (Month - 1) % 12;
+			if (MonthMod < 0) MonthMod += 12;
+			Year -= (Month < 3) ? 1 : 0;
+			return (PspDaysOfWeek)((Year + Year / 4 - Year / 100 + Year / 400 + MonthTranslate[MonthMod] + Day) % 7);
+
 		}
 
 		private static int _sceRtcTickAddTimeSpan(long* dstPtr, long* srcPtr, TimeSpan TimeSpan)
@@ -397,7 +403,7 @@ namespace CSPspEmu.Hle.Modules.rtc
 
 		[HlePspFunction(NID = 0xCF561893, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceRtcGetWin32FileTime(ScePspDateTime DateTime)
+		public int sceRtcGetWin32FileTime(ScePspDateTime* DateTime, ulong* Win32Time)
 		{
 			return 0;
 		}

@@ -336,6 +336,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspFunction(NID = 0x27EB27B8, FirmwareVersion = 150)]
 		public long sceIoLseek(SceUID FileId, long Offset, SeekAnchor Whence)
 		{
+			// TODO: Works with directories?
 			try
 			{
 				var HleIoDrvFileArg = GetFileArgFromHandle(FileId);

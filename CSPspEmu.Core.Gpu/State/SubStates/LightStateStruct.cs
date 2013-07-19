@@ -1,5 +1,8 @@
-﻿namespace CSPspEmu.Core.Gpu.State.SubStates
+﻿using Mono.Simd;
+using System.Runtime.InteropServices;
+namespace CSPspEmu.Core.Gpu.State.SubStates
 {
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct AttenuationStruct
 	{
 		public float Constant;
@@ -7,19 +10,12 @@
 		public float Quadratic;
 	}
 
-	public enum LightTypeEnum
+	public struct Vector4fRef
 	{
-		Directional = 0,
-		PointLight = 1,
-		SpotLight = 2,
+		public float X, Y, Z, W;
 	}
 
-	public enum LightModelEnum
-	{
-		SingleColor = 0,
-		SeparateSpecularColor = 1,
-	}
-
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct LightStateStruct
 	{
 		/// <summary>
@@ -40,12 +36,12 @@
 		/// <summary>
 		/// 
 		/// </summary>
-		public GpuVectorStruct Position;
+		public Vector4fRef Position;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public GpuVectorStruct SpotDirection;
+		public Vector4fRef SpotDirection;
 
 		/// <summary>
 		/// 

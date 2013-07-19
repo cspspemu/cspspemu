@@ -189,7 +189,7 @@ namespace CSPspEmu
 				GuiConfig.ShowMenus = ShowMenus;
 				GuiConfig.AutoLoad = AutoLoad;
 				GuiConfig.DefaultDisplayScale = ShowMenus ? 1 : 2;
-				Thread.CurrentThread.CurrentCulture = new CultureInfo(GlobalConfig.ThreadCultureName);
+				//Thread.CurrentThread.CurrentUICulture = new CultureInfo(GlobalConfig.ThreadCultureName);
 				Application.Run(PspDisplayForm = new PspDisplayForm(this));
 
 				ContextInitialized.WaitOne();

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace CSPspEmu.Hle
@@ -42,11 +43,11 @@ namespace CSPspEmu.Hle.Managers
 	{
 		class TypePool
 		{
-			int LastId = 0;
-			Type Type;
-			HleUidPoolClassAttribute Info;
-			Dictionary<int, IHleUidPoolClass> Items = new Dictionary<int, IHleUidPoolClass>();
-			Dictionary<IHleUidPoolClass, int> RevItems = new Dictionary<IHleUidPoolClass, int>();
+			private int LastId = 0;
+			private Type Type;
+			private HleUidPoolClassAttribute Info;
+			private readonly Dictionary<int, IHleUidPoolClass> Items = new Dictionary<int, IHleUidPoolClass>();
+			private readonly Dictionary<IHleUidPoolClass, int> RevItems = new Dictionary<IHleUidPoolClass, int>();
 
 			public TypePool(Type Type)
 			{
@@ -58,6 +59,7 @@ namespace CSPspEmu.Hle.Managers
 				}
 			}
 
+			[MethodImpl(MethodImplOptions.Synchronized)]
 			public int Alloc(IHleUidPoolClass Item)
 			{
 				if (Item.GetType() != this.Type) throw(new InvalidOperationException("Trying to insert invalid object type"));
@@ -67,17 +69,20 @@ namespace CSPspEmu.Hle.Managers
 				return Index;
 			}
 
+			[MethodImpl(MethodImplOptions.Synchronized)]
 			public bool Contains(int Index)
 			{
 				return this.Items.ContainsKey(Index);
 			}
 
+			//[MethodImpl(MethodImplOptions.Synchronized)]
 			public void Remove(int Index)
 			{
 				RevItems.Remove(Items[Index]);
 				Items.Remove(Index);
 			}
 
+			//[MethodImpl(MethodImplOptions.Synchronized)]
 			public void RemoveItem(IHleUidPoolClass Item)
 			{
 				Items.Remove(RevItems[Item]);
@@ -96,6 +101,7 @@ namespace CSPspEmu.Hle.Managers
 				}
 			}
 
+			//[MethodImpl(MethodImplOptions.Synchronized)]
 			public IHleUidPoolClass Get(int Index)
 			{
 				if (!Items.ContainsKey(Index)) ThrowNotFound();

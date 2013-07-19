@@ -157,8 +157,8 @@ namespace CSPspEmu.Core.Gpu.Run
 			WidthExp = Math.Min(WidthExp, 9);
 			HeightExp = Math.Min(HeightExp, 9);
 
-			MipMap->TextureWidth = (int)(1 << WidthExp);
-			MipMap->TextureHeight = (int)(1 << HeightExp);
+			MipMap->TextureWidth = (ushort)(1 << WidthExp);
+			MipMap->TextureHeight = (ushort)(1 << HeightExp);
 		}
 
 		public void OP_TSIZE0() { _OP_TSIZE(0); }

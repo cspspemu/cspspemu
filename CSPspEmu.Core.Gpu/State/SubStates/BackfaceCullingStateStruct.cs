@@ -2,8 +2,6 @@
 
 namespace CSPspEmu.Core.Gpu.State.SubStates
 {
-	public enum FrontFaceDirectionEnum { CounterClockWise = 0, ClockWise = 1 }
-
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct BackfaceCullingStateStruct
 	{

@@ -19,7 +19,7 @@ namespace CSPspEmu.Core.Gpu.State
         public static readonly int[] TypeSizeTable = new int[] { 0, sizeof(byte), sizeof(short), sizeof(float) };
 		public static readonly int[] ColorSizeTable = new int[] { 0, 1, 1, 1, 2, 2, 2, 4 };
 
-		public enum IndexEnum
+		public enum IndexEnum : byte
 		{
 			Void = 0,
 			Byte = 1,
@@ -27,7 +27,7 @@ namespace CSPspEmu.Core.Gpu.State
 			Invalid1 = 1,
 		}
 
-		public enum NumericEnum
+		public enum NumericEnum : byte
 		{
 			Void = 0,
 			Byte = 1,
@@ -35,7 +35,7 @@ namespace CSPspEmu.Core.Gpu.State
 			Float = 3,
 		}
 
-		public enum ColorEnum
+		public enum ColorEnum : byte
 		{
 			Void = 0,
 			Invalid1 = 1,

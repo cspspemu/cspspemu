@@ -97,11 +97,14 @@ namespace CSPspEmu.Gui.Winforms
 							}
 						}
 
-						Entries.Add(Entry);
-
-						if (EntryAdded != null && Entry != null)
+						lock (Entries)
 						{
-							EntryAdded(Entry, Cached);
+							Entries.Add(Entry);
+
+							if (EntryAdded != null && Entry != null)
+							{
+								EntryAdded(Entry, Cached);
+							}
 						}
 					}
 					catch (Exception Exception)

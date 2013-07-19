@@ -1,27 +1,22 @@
-﻿using System;
+﻿using CSPspEmu.Core.Gpu.State;
+using System;
 
 namespace CSPspEmu.Hle.Modules.ge
 {
 	public unsafe partial class sceGe_user
 	{
 		/// <summary>
-		/// Context.
-		/// </summary>
-		public struct PspGeContext
-		{
-			public fixed uint Data[512];
-		}
-
-		/// <summary>
 		/// Save the GE's current state. Save the GE's current state.
 		/// </summary>
-		/// <param name="contextAddr">Pointer to a <see cref="PspGeContext"/>.</param>
+		/// <param name="ContextPtr">Pointer to a <see cref="PspGeContext"/>.</param>
 		/// <returns>&lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0x438A385A, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceGeSaveContext(PspGeContext* contextAddr)
+		//[HlePspNotImplemented]
+		public int sceGeSaveContext(GpuStateStruct* Context)
 		{
-			throw (new NotImplementedException());
+			*Context = *this.GpuStateStructPointer;
+			//throw (new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -30,10 +25,11 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <param name="contextAddr">Pointer to a <see cref="PspGeContext"/>.</param>
 		/// <returns>&lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0x0BF608FB, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceGeRestoreContext(PspGeContext* contextAddr)
+		//[HlePspNotImplemented]
+		public int sceGeRestoreContext(GpuStateStruct* Context)
 		{
-			throw (new NotImplementedException());
+			*this.GpuStateStructPointer = *Context;
+			return 0;
 		}
 
 		/// <summary>

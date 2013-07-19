@@ -206,7 +206,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Info">A pointer to a SceKernelEventFlagInfo structure.</param>
 		/// <returns>less than 0 on error</returns>
 		[HlePspFunction(NID = 0xA66B0120, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceKernelReferEventFlagStatus(HleEventFlag EventFlag, out EventFlagInfo Info)
 		{
 			Info = EventFlag.Info;

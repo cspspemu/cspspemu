@@ -5,12 +5,12 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 {
 	public sealed class DynarecBranchAnalyzer
 	{
-		public static Func<Instruction, JumpFlags> GetBranchInfo = (Instruction) =>
+		public static readonly Func<Instruction, JumpFlags> GetBranchInfo = (Instruction) =>
 		{
 			return _GetBranchInfo(Instruction.Value);
 		};
 
-		private static Func<uint, JumpFlags> _GetBranchInfo = EmitLookupGenerator.GenerateInfoDelegate<DynarecBranchAnalyzer, JumpFlags>(
+		private static readonly Func<uint, JumpFlags> _GetBranchInfo = EmitLookupGenerator.GenerateInfoDelegate<DynarecBranchAnalyzer, JumpFlags>(
 			EmitLookupGenerator.GenerateSwitchDelegateReturn<DynarecBranchAnalyzer, JumpFlags>(
 				"_GetBranchInfo",
 				InstructionTable.ALL, ThrowOnUnexistent: false

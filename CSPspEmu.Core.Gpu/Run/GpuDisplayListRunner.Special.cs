@@ -129,8 +129,8 @@ namespace CSPspEmu.Core.Gpu.Run
 		/// </summary>
 		public void OP_SCISSOR1()
 		{
-			GpuState->ClipPlaneState.Scissor.Left = BitUtils.Extract(Params24, 0, 10);
-			GpuState->ClipPlaneState.Scissor.Top = BitUtils.Extract(Params24, 10, 10);
+			GpuState->ClipPlaneState.Scissor.Left = (short)BitUtils.Extract(Params24, 0, 10);
+			GpuState->ClipPlaneState.Scissor.Top = (short)BitUtils.Extract(Params24, 10, 10);
 		}
 
 		/// <summary>
@@ -138,8 +138,8 @@ namespace CSPspEmu.Core.Gpu.Run
 		/// </summary>
 		public void OP_SCISSOR2()
 		{
-			GpuState->ClipPlaneState.Scissor.Right = BitUtils.Extract(Params24, 0, 10);
-			GpuState->ClipPlaneState.Scissor.Bottom = BitUtils.Extract(Params24, 10, 10);
+			GpuState->ClipPlaneState.Scissor.Right = (short)BitUtils.Extract(Params24, 0, 10);
+			GpuState->ClipPlaneState.Scissor.Bottom = (short)BitUtils.Extract(Params24, 10, 10);
 		}
 
 		/**

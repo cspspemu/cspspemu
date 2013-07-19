@@ -7,6 +7,8 @@ using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core;
 using CSPspEmu.Hle.Managers;
 using System.Threading;
+using CSPspEmu.Core.Cpu;
+using CSharpUtils;
 
 namespace CSPspEmu.Hle.Modules.ge
 {
@@ -28,18 +30,18 @@ namespace CSPspEmu.Hle.Modules.ge
 		MemoryPartition GpuStateStructPartition = null;
 		GpuStateStruct* GpuStateStructPointer = null;
 
+		protected override void ModuleInitialize()
+		{
+			GpuStateStructPartition = MemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.Kernel0).Allocate(
+				sizeof(GpuStateStruct),
+				Name: "GpuStateStruct"
+			);
+			GpuStateStructPointer = (GpuStateStruct*)MemoryManager.Memory.PspAddressToPointerSafe(GpuStateStructPartition.Low, Marshal.SizeOf(typeof(GpuStateStruct)));
+		}
+
 		public int _sceGeListEnQueue(uint InstructionAddressStart, uint InstructionAddressStall, int CallbackId, PspGeListArgs* Args, Action<GpuDisplayList> Action)
 		{
 			//Console.WriteLine("aaaaaaaaaaa");
-
-			if (GpuStateStructPartition == null)
-			{
-				GpuStateStructPartition = MemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.Kernel0).Allocate(
-					sizeof(GpuStateStruct),
-					Name: "GpuStateStruct"
-				);
-				GpuStateStructPointer = (GpuStateStruct*)MemoryManager.Memory.PspAddressToPointerSafe(GpuStateStructPartition.Low, Marshal.SizeOf(typeof(GpuStateStruct)));
-			}
 
 			//Console.WriteLine("_sceGeListEnQueue");
 			try
@@ -202,6 +204,8 @@ namespace CSPspEmu.Hle.Modules.ge
 				Console.Error.WriteLine("sceGeDrawSync.CurrentThread == null");
 				return -1;
 			}
+
+			//ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Cyan, () => { Console.WriteLine("{0}", SyncType); });
 
 #if false
 			// Sync

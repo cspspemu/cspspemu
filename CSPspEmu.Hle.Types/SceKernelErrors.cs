@@ -470,5 +470,12 @@
 		//ERROR_SAS_BUSY                                      = unchecked((int)0x80420030),
 		//ERROR_SAS_NOT_INIT                                  = unchecked((int)0x80420100),
 		ERROR_SAS_ALREADY_INIT                              = unchecked((int)0x80420101),
+
+		PSP_POWER_ERROR_TAKEN_SLOT   = unchecked((int)0x80000020),
+		PSP_POWER_ERROR_SLOTS_FULL   = unchecked((int)0x80000022),
+		PSP_POWER_ERROR_PRIVATE_SLOT = unchecked((int)0x80000023),
+		PSP_POWER_ERROR_EMPTY_SLOT   = unchecked((int)0x80000025),
+		PSP_POWER_ERROR_INVALID_CB   = unchecked((int)0x80000100),
+		PSP_POWER_ERROR_INVALID_SLOT = unchecked((int)0x80000102),
 	}
 }

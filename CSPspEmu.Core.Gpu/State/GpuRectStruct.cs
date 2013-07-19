@@ -1,26 +1,28 @@
-﻿namespace CSPspEmu.Core.Gpu.State
+﻿using System.Runtime.InteropServices;
+namespace CSPspEmu.Core.Gpu.State
 {
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct GpuRectStruct
 	{
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint Left;
+		public short Left;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint Top;
+		public short Top;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint Right;
+		public short Right;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint Bottom;
+		public short Bottom;
 
 		/// <summary>
 		/// 

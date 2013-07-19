@@ -203,6 +203,7 @@ namespace CSPspEmu.Core.Gpu
 		Loop:
 			for (Done = false; !Done; _InstructionAddressCurrent += 4)
 			{
+				if (Debug) Console.WriteLine("[0]");
 				//Console.WriteLine("{0:X}", (uint)InstructionAddressCurrent);
 				//if ((InstructionAddressStall != 0) && (InstructionAddressCurrent >= InstructionAddressStall)) break;
 				if ((InstructionAddressStall != 0) && (InstructionAddressCurrent == InstructionAddressStall)) break;
@@ -232,7 +233,20 @@ namespace CSPspEmu.Core.Gpu
 				if (Debug) Console.WriteLine("- STALLED --------------------------------------------------------------------");
 				Status.SetValue(StatusEnum.StallReached);
 				Status2.SetValue(Status2Enum.Completed);
+#if true
 				StallAddressUpdated.WaitOne();
+#else
+				while (!StallAddressUpdated.WaitOne(TimeSpan.FromMilliseconds(200)))
+				{
+					ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Magenta, () =>
+					{
+						Console.WriteLine("Stalled for 400 ms");
+					});
+					Status.SetValue(StatusEnum.Done);
+					Status2.SetValue(Status2Enum.Completed);
+					return;
+				}
+#endif
 				goto Loop;
 			}
 
@@ -380,7 +394,7 @@ namespace CSPspEmu.Core.Gpu
 		public void GeListSync(Gpu.GpuProcessor.SyncTypeEnum SyncType, Action NotifyOnceCallback)
 		{
 			//Console.WriteLine("GeListSync");
-			if (SyncType != Gpu.GpuProcessor.SyncTypeEnum.ListDone) throw new NotImplementedException("GeListSync");
+			if (SyncType != Gpu.GpuProcessor.SyncTypeEnum.ListDone) throw new NotImplementedException("GeListSync : " + SyncType.ToStringDefault());
 			lock (this)
 			{
 				Status2.CallbackOnStateOnce(Status2Enum.Free, () =>
@@ -427,6 +441,8 @@ namespace CSPspEmu.Core.Gpu
 
 		public void Finish(uint Arg)
 		{
+			Console.WriteLine("FINISH: Arg:{0}", Arg);
+
 			if (Callbacks.FinishFunction != 0)
 			{
 #if true

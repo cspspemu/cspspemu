@@ -422,6 +422,11 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
 					TryPutLabelAT(PC, Nodes);
 
+					if (_DynarecConfig.UpdatePCEveryInstruction)
+					{
+						Nodes.AddStatement(ast.AssignPC(PC));
+					}
+
 					Nodes.AddStatement(_GetAstCpuInstructionAT(PC));
 
 					return Nodes;

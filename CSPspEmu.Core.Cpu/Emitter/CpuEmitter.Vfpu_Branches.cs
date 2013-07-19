@@ -63,19 +63,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			);
 		}
 
-		static public float _vslt_impl(float a, float b) {
-			if (float.IsNaN(a) || float.IsNaN(b)) return 0f;
-			return (a < b) ? 1f : 0f;
-		}
 
-		static public float _vsge_impl(float a, float b)
-		{
-			if (float.IsNaN(a) || float.IsNaN(b)) return 0f;
-			return (a >= b) ? 1f : 0f;
-		}
 
-		public AstNodeStm vslt() { return VEC_VD.SetVector(Index => ast.CallStatic((Func<float, float, float>)_vslt_impl, VEC_VS[Index], VEC_VT[Index])); }
-		public AstNodeStm vsge() { return VEC_VD.SetVector(Index => ast.CallStatic((Func<float, float, float>)_vsge_impl, VEC_VS[Index], VEC_VT[Index])); }
+		public AstNodeStm vslt() { return VEC_VD.SetVector(Index => ast.CallStatic((Func<float, float, float>)CpuEmitterUtils._vslt_impl, VEC_VS[Index], VEC_VT[Index])); }
+		public AstNodeStm vsge() { return VEC_VD.SetVector(Index => ast.CallStatic((Func<float, float, float>)CpuEmitterUtils._vsge_impl, VEC_VS[Index], VEC_VT[Index])); }
 		public AstNodeStm vscmp() { return VEC_VD.SetVector(Index => ast.CallStatic((Func<float, float>)MathFloat.Sign, VEC_VS[Index] - VEC_VT[Index])); }
 
 

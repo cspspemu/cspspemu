@@ -3,14 +3,6 @@ using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Gpu.State.SubStates
 {
-	public enum ColorTestFunctionEnum : byte
-	{
-		GU_NEVER,
-		GU_ALWAYS,
-		GU_EQUAL,
-		GU_NOTEQUAL,
-	}
-
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct ColorTestStateStruct
 	{

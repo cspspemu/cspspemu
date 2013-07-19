@@ -104,7 +104,7 @@ namespace CSPspEmu.Hle.Vfs.MemoryStick
 				case CommandType.CheckMemoryStickStatus:
 					// 0 <- Busy
 					// 1 <- Ready
-					*((uint*)OutputPointer) = 1;
+					*((uint*)OutputPointer) = 4;
 					break;
 				default:
 					Console.Error.WriteLine("MemoryStick.IoDevctl Not Implemented! ({0}, 0x{1:X})", DeviceName, Command);

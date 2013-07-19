@@ -72,6 +72,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		1 - if the calling thread has reported callbacks which were executed successfully.
 		/// </returns>
 		[HlePspFunction(NID = 0x349D6D6C, FirmwareVersion = 150)]
+		//[HlePspNotImplemented]
 		public int sceKernelCheckCallback(CpuThreadState CpuThreadState)
 		{
 			return (CallbackManager.ExecuteQueued(CpuThreadState, false) > 0) ? 1 : 0;

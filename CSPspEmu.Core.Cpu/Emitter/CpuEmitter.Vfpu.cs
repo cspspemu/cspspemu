@@ -497,28 +497,14 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vi2s()
 		{
-			return ast.NotImplemented("vi2s");
-			//var VectorSize = VectorSizeOneTwo;
-			//Save_VD(0, VectorSize, () =>
-			//{
-			//	Load_VS(0);
-			//	Load_VS(1);
-			//	MipsMethodEmitter.CallMethod((Func<uint, uint, uint>)(CpuEmitter._vi2s));
-			//}, AsInteger: true);
-			//if (VectorSize == 4)
-			//{
-			//	Save_VD(1, VectorSize, () =>
-			//	{
-			//		Load_VS(2);
-			//		Load_VS(3);
-			//		MipsMethodEmitter.CallMethod((Func<uint, uint, uint>)(CpuEmitter._vi2s));
-			//	}, AsInteger: true);
-			//}
-		}
-
-		static public uint _vf2h(float a, float b)
-		{
-			return (uint)((HalfFloat.FloatToHalfFloat(b) << 16) | (HalfFloat.FloatToHalfFloat(a) << 0));
+			int VectorSize = ONE_TWO;
+			return _Vector(VD, VType.VUInt, VectorSize / 2)
+				.SetVector(Index => ast.CallStatic(
+					(Func<uint, uint, uint>)CpuEmitterUtils._vi2s_impl,
+					VEC_VS_u[Index * 2 + 0],
+					VEC_VS_u[Index * 2 + 1]
+				))
+			;
 		}
 
 		public AstNodeStm vf2h() 
@@ -527,21 +513,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			var VEC_VS = VEC(VS, VType.VFloat, ONE_TWO);
 			return VEC_VD.SetVector(Index =>
 				ast.CallStatic(
-					(Func<float, float, uint>)_vf2h,
+					(Func<float, float, uint>)CpuEmitterUtils._vf2h_impl,
 					VEC_VS[Index * 2 + 0],
 					VEC_VS[Index * 2 + 1]
 				)
 			);
-		}
-
-		static public float _vh2f_0(uint a)
-		{
-			return HalfFloat.ToFloat((int)BitUtils.Extract(a, 0, 16));
-		}
-
-		static public float _vh2f_1(uint a)
-		{
-			return HalfFloat.ToFloat((int)BitUtils.Extract(a, 16, 16));
 		}
 
 		public AstNodeStm vh2f()
@@ -551,21 +527,21 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return VEC_VD.SetVector(Index =>
 			{
 				return ast.CallStatic(
-					(((Index % 2) == 0) ? (Func<uint, float>)_vh2f_0 : (Func<uint, float>)_vh2f_1),
+					(((Index % 2) == 0) ? (Func<uint, float>)CpuEmitterUtils._vh2f_0 : (Func<uint, float>)CpuEmitterUtils._vh2f_1),
 					VEC_VS[Index / 2]
 				);
 			});
 		}
 		public AstNodeStm vi2us()
 		{
-			return ast.NotImplemented("vi2us");
-			//var VectorSize = VectorSizeOneTwo;
-			//VectorOperationSaveVd(VectorSize / 2, (Index) =>
-			//{
-			//	Load_VS(Index * 2 + 0, AsInteger: true);
-			//	Load_VS(Index * 2 + 1, AsInteger: true);
-			//	MipsMethodEmitter.CallMethod((Func<int, int, int>)(CpuEmitter._vi2us));
-			//}, AsInteger: true);
+			int VectorSize = ONE_TWO;
+			return _Vector(VD, VType.VInt, VectorSize / 2)
+				.SetVector(Index => ast.CallStatic(
+					(Func<int, int, int>)CpuEmitterUtils._vi2us_impl,
+					VEC_VS_i[Index * 2 + 0],
+					VEC_VS_i[Index * 2 + 1]
+				))
+			;
 		}
 
 		public AstNodeStm vmfvc() { return ast.NotImplemented("vmfvc"); }

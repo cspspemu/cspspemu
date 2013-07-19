@@ -9,13 +9,13 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		/// <summary>
 		/// Initialise the Adhoc matching library
 		/// </summary>
-		/// <param name="memsize">Internal memory pool size. Lumines uses 0x20000</param>
+		/// <param name="MemSize">Internal memory pool size. Lumines uses 0x20000</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x2A2A1E07, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceNetAdhocMatchingInit(int memsize)
+		public int sceNetAdhocMatchingInit(int MemSize)
 		{
-			throw (new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -26,7 +26,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		[HlePspNotImplemented]
 		public int sceNetAdhocMatchingTerm()
 		{
-			throw (new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>

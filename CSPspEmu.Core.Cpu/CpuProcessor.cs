@@ -32,7 +32,8 @@ namespace CSPspEmu.Core.Cpu
 		[Inject]
 		public IInterruptManager IInterruptManager;
 
-		public MethodCache MethodCache = new MethodCache();
+		[Inject]
+		public MethodCache MethodCache;
 
 		public Dictionary<uint, NativeSyscallInfo> RegisteredNativeSyscallMethods = new Dictionary<uint, NativeSyscallInfo>();
 		private Dictionary<int, Action<CpuThreadState, int>> RegisteredNativeSyscalls = new Dictionary<int,Action<CpuThreadState,int>>();

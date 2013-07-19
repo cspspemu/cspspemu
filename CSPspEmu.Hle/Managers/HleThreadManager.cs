@@ -67,12 +67,12 @@ namespace CSPspEmu.Hle.Managers
 
 		void IGpuConnector.Signal(uint Signal, GpuDisplayList.GuBehavior Behavior)
 		{
-			//Console.WriteLine("IGpuConnector.Signal");
+			Console.WriteLine("IGpuConnector.Signal");
 		}
 
 		void IGpuConnector.Finish(uint Arg)
 		{
-			//Console.WriteLine("IGpuConnector.Finish");
+			Console.WriteLine("IGpuConnector.Finish");
 		}
 
 		void IInjectInitialize.Initialize()
@@ -291,5 +291,9 @@ namespace CSPspEmu.Hle.Managers
 			ExitThread(Thread);
 		}
 
+
+		public void ScheduleNext()
+		{
+		}
 	}
 }
