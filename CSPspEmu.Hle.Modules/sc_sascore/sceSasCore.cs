@@ -253,33 +253,9 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		//[HlePspNotImplemented]
 		public int __sceSasCoreWithMix(uint SasCorePointer, short* SasInOut, int LeftVolume, int RightVolume)
 		{
-#if false
-			var SasCore = GetSasCore(SasCorePointer);
-			int NumberOfChannels = SasCore.OutputMode == OutputMode.PSP_SAS_OUTPUTMODE_STEREO ? 2 : 1;
-			int NumberOfSamples = SasCore.GrainSamples * NumberOfChannels;
-
-			fixed (short* FixedMixBufferShort = MixBufferShort)
-			{
-				__sceSasCore(SasCorePointer, FixedMixBufferShort);
-			}
-
-			int MaxVolume = 0x1000;
-
-			int LeftVolumeComp = MaxVolume - LeftVolume;
-			int RightVolumeComp = MaxVolume - RightVolume;
-
-			for (int n = 0; n < NumberOfSamples; n += 2)
-			{
-				SasInOut[n + 0] = (short)(((int)SasInOut[n + 0] * LeftVolumeComp + (int)MixBufferShort[n + 0] * LeftVolume) * short.MaxValue / MaxVolume);
-				SasInOut[n + 1] = (short)(((int)SasInOut[n + 1] * RightVolumeComp + (int)MixBufferShort[n + 1] * RightVolume) * short.MaxValue / MaxVolume);
-			}
-
-			//throw (new NotImplementedException());
-			return 0;
-#else
-			return __sceSasCore(SasCorePointer, SasInOut);
-#endif
+			return __sceSasCore_Internal(GetSasCore(SasCorePointer), SasInOut, SasInOut, LeftVolume, RightVolume);
 		}
+
 
 		/// <summary>
 		/// Process the voices and generate the next samples.
@@ -298,69 +274,93 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		//[HlePspNotImplemented]
 		public int __sceSasCore(uint SasCorePointer, short* SasOut)
 		{
-			var SasCore = GetSasCore(SasCorePointer);
+			return __sceSasCore_Internal(GetSasCore(SasCorePointer), SasOut, null, 0x1000, 0x1000);
+		}
 
-			if (SasCore.OutputMode != OutputMode.PSP_SAS_OUTPUTMODE_STEREO)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="SasCore"></param>
+		/// <param name="SasOut"></param>
+		/// <param name="SasIn"></param>
+		/// <param name="LeftVolume"></param>
+		/// <param name="RightVolume"></param>
+		/// <returns></returns>
+		public int __sceSasCore_Internal(SasCore SasCore, short* SasOut, short* SasIn, int LeftVolume, int RightVolume)
+		{
+			fixed (StereoShortSoundSample* BufferShortPtr = BufferShort)
+			fixed (StereoIntSoundSample* BufferTempPtr = BufferTemp)
+			fixed (int* VoiceOnCountPtr = VoiceOnCount)
 			{
-				Logger.Unimplemented("SasCore.OutputMode != OutputMode.PSP_SAS_OUTPUTMODE_STEREO");
-			}
+				if (SasCore.OutputMode != OutputMode.PSP_SAS_OUTPUTMODE_STEREO)
+				{
+					Logger.Unimplemented("SasCore.OutputMode != OutputMode.PSP_SAS_OUTPUTMODE_STEREO");
+				}
 
-			int NumberOfChannels = SasCore.OutputMode == OutputMode.PSP_SAS_OUTPUTMODE_STEREO ? 2 : 1;
-			int NumberOfSamples = SasCore.GrainSamples * 2 / NumberOfChannels;
+				int NumberOfChannels = SasCore.OutputMode == OutputMode.PSP_SAS_OUTPUTMODE_STEREO ? 2 : 1;
+				int NumberOfSamples = SasCore.GrainSamples * 2 / NumberOfChannels;
 
-			for (int n = 0; n < NumberOfSamples; n++)
-			{
-				BufferTemp[n] = default(StereoIntSoundSample);
-				VoiceOnCount[n] = 0;
-			}
+				for (int n = 0; n < NumberOfSamples; n++)
+				{
+					BufferTempPtr[n] = default(StereoIntSoundSample);
+					VoiceOnCountPtr[n] = 0;
+				}
 
-			// Read and mix voices.
-			foreach (var Voice in SasCore.Voices)
-			{
-				if (Voice.OnAndPlaying)
+				// Read and mix voices.
+				foreach (var Voice in SasCore.Voices)
+				{
+					if (Voice.OnAndPlaying)
+					{
+						for (int n = 0, Pos = 0; n < NumberOfSamples; n++, Pos += Voice.Pitch)
+						{
+							if (Voice.SampleOffset < Voice.Vag.SamplesCount)
+							{
+								//int PosDiv = n;
+								int PosDiv = Pos / PSP_SAS_PITCH_BASE;
+
+								VoiceOnCountPtr[PosDiv]++;
+								BufferTempPtr[PosDiv] += Voice.Vag.GetSampleAt(Voice.SampleOffset++);
+							}
+							else
+							{
+								Voice.SetPlaying(false);
+								break;
+							}
+						}
+					}
+				}
+
+				// Normalize output
+				for (int n = 0; n < NumberOfSamples; n++)
+				{
+					if (VoiceOnCount[n] > 0)
+					{
+						BufferShortPtr[n] = (BufferTempPtr[n] / VoiceOnCount[n]);
+					}
+					else
+					{
+						BufferShortPtr[n] = default(StereoShortSoundSample);
+					}
+				}
+
+				// Output converted 44100 data
+				if (NumberOfChannels == 1)
 				{
 					for (int n = 0; n < NumberOfSamples; n++)
 					{
-						if (Voice.SampleOffset < Voice.Vag.SamplesCount)
-						{
-							VoiceOnCount[n]++;
-							BufferTemp[n] += Voice.Vag.GetSampleAt(Voice.SampleOffset++);
-						}
-						else
-						{
-							Voice.SetPlaying(false);
-							break;
-						}
+						SasOut[n] = (short)((int)BufferShortPtr[n].Left * LeftVolume >> 12);
+					}
+				}
+				else
+				{
+					for (int n = 0; n < NumberOfSamples; n++)
+					{
+						SasOut[n * 2 + 0] = (short)((int)BufferShortPtr[n].Left * LeftVolume >> 12);
+						SasOut[n * 2 + 1] = (short)((int)BufferShortPtr[n].Right * RightVolume >> 12);
 					}
 				}
 			}
 
-			// Normalize output
-			for (int n = 0; n < NumberOfSamples; n++)
-			{
-				if (VoiceOnCount[n] > 0)
-				{
-					BufferShort[n] = (BufferTemp[n] / VoiceOnCount[n]);
-				}
-				else
-				{
-					BufferShort[n] = default(StereoShortSoundSample);
-				}
-			}
-
-			// Output converted 44100 data
-			if (NumberOfChannels == 1)
-			{
-				for (int n = 0; n < NumberOfSamples; n++) SasOut[n] = BufferShort[n].Left;
-			}
-			else
-			{
-				for (int n = 0; n < NumberOfSamples; n++)
-				{
-					SasOut[n * 2 + 0] = BufferShort[n].Left;
-					SasOut[n * 2 + 1] = BufferShort[n].Right;
-				}
-			}
 			//throw(new NotImplementedException());
 			return 0;
 		}

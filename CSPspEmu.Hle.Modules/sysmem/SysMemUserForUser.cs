@@ -155,7 +155,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 			//foreach (var Partition in MemoryManager.RootPartition.ChildPartitions) Console.WriteLine(Partition);
 			//return 24 * 1024 * 1024;
 
-			return MemoryManager.GetPartition(HleMemoryManager.Partitions.User).MaxFreeSize - 0x40000;
+			return MemoryManager.GetPartition(MemoryPartitions.User).MaxFreeSize - 0x40000;
 		}
 
 		/// <summary>
@@ -165,7 +165,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		[HlePspFunction(NID = 0xF919F628, FirmwareVersion = 150)]
 		public int sceKernelTotalFreeMemSize()
 		{
-			return MemoryManager.GetPartition(HleMemoryManager.Partitions.User).TotalFreeSize - 0x8000;
+			return MemoryManager.GetPartition(MemoryPartitions.User).TotalFreeSize - 0x8000;
 		}
 
 		/// <summary>
@@ -189,7 +189,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// <param name="Address">If type is PSP_SMEM_Addr, then addr specifies the lowest address allocate the block from. If not, the alignment size.</param>
 		/// <returns>The UID of the new block, or if less than 0 an error.</returns>
 		[HlePspFunction(NID = 0x237DBD4F, FirmwareVersion = 150)]
-		public int sceKernelAllocPartitionMemory(HleMemoryManager.Partitions PartitionId, string Name, HleMemoryManager.BlockTypeEnum Type, int Size, /* void* */uint Address)
+		public int sceKernelAllocPartitionMemory(MemoryPartitions PartitionId, string Name, HleMemoryManager.BlockTypeEnum Type, int Size, /* void* */uint Address)
 		{
 			MemoryPartition MemoryPartition;
 			int Alignment = 1;

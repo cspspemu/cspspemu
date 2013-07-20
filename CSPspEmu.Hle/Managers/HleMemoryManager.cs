@@ -3,6 +3,15 @@ using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Managers
 {
+	public enum MemoryPartitions : int
+	{
+		Kernel0 = 0,
+		Kernel1 = 1,
+		User = 2,
+		VolatilePartition = 3,
+		UserStacks = 12,
+	}
+
 	public class HleMemoryManager : IInjectInitialize
 	{
 		/// <summary>
@@ -36,15 +45,6 @@ namespace CSPspEmu.Hle.Managers
 			HighAligned = 4,
 		}
 
-		public enum Partitions : int
-		{
-			Kernel0 = 0,
-			Kernel1 = 1,
-			User = 2,
-			VolatilePartition = 3,
-			UserStacks = 12,
-		}
-
 		//public MemoryPartition RootPartition = new MemoryPartition(PspMemory.MainOffset, PspMemory.MainOffset + PspMemory.MainSize);
 		[Inject]
 		public PspMemory Memory;
@@ -54,7 +54,7 @@ namespace CSPspEmu.Hle.Managers
 
 		public HleUidPool<MemoryPartition> MemoryPartitionsUid = new HleUidPool<MemoryPartition>();
 
-		public MemoryPartition GetPartition(Partitions Partition)
+		public MemoryPartition GetPartition(MemoryPartitions Partition)
 		{
 			return MemoryPartitionsUid.Get((int)Partition);
 		}

@@ -31,7 +31,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 
 		public SceMpeg* GetSceMpegData(SceMpegPointer* SceMpeg)
 		{
-			return SceMpeg->GetSceMpeg(PspMemory);
+			return SceMpeg->GetSceMpeg(Memory);
 		}
 
 		public enum StreamId : int

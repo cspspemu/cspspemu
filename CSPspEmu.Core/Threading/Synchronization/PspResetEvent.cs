@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace CSPspEmu.Core.Threading.Synchronization
 {
 	public abstract class PspResetEvent
 	{
-		protected bool Value;
-		protected bool AutoReset;
-		Queue<Action> Actions = new Queue<Action>();
+		private bool Value;
+		private bool AutoReset;
+		private Queue<Action> Actions = new Queue<Action>();
 
 		protected PspResetEvent(bool InitialValue, bool AutoReset)
 		{
@@ -15,42 +16,37 @@ namespace CSPspEmu.Core.Threading.Synchronization
 			this.AutoReset = AutoReset;
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void Set()
 		{
-			lock (this)
+			Value = true;
+			if (Actions.Count > 0) Reset();
+			while (Actions.Count > 0)
 			{
-				Value = true;
-				if (Actions.Count > 0) Reset();
-				while (Actions.Count > 0)
-				{
-					var Action = Actions.Dequeue();
-					Action();
-				}
+				var Action = Actions.Dequeue();
+				Action();
 			}
+			if (AutoReset) Reset();
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void Reset()
 		{
-			lock (this)
-			{
-				Value = false;
-			}
+			Value = false;
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void CallbackOnSet(Action Action)
 		{
-			lock (this)
+			bool CurrentValue = this.Value;
+			if (CurrentValue)
 			{
-				bool CurrentValue = this.Value;
-				if (CurrentValue)
-				{
-					Action();
-					if (AutoReset) Reset();
-				}
-				else
-				{
-					Actions.Enqueue(Action);
-				}
+				Action();
+				if (AutoReset) Reset();
+			}
+			else
+			{
+				Actions.Enqueue(Action);
 			}
 		}
 	}

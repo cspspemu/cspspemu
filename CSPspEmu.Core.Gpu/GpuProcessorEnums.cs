@@ -79,4 +79,35 @@ namespace CSPspEmu.Core.Gpu
 		/// </summary>
 		Paused = 4,
 	}
+
+	unsafe public struct PspGeStack
+	{
+		public fixed uint Stack[8];
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	unsafe public struct PspGeListArgs
+	{
+		/// <summary>
+		/// Size of the structure
+		/// </summary>
+		public uint Size;
+
+		/// <summary>
+		/// Pointer to a GpuStateStruct
+		/// </summary>
+		public uint GpuStateStructAddress;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public uint NumberOfStacks;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public uint StacksAddress;
+	}
 }

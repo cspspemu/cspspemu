@@ -40,7 +40,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		{
 			public string Name;
 			public MsgPipeAttributes Attributes;
-			public HleMemoryManager.Partitions PartitionId;
+			public MemoryPartitions PartitionId;
 			public int Size;
 			protected PspMemory PspMemory;
 			protected MemoryPartition PoolPartition;
@@ -160,7 +160,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Options">Message pipe options (set to NULL)</param>
 		/// <returns>The UID of the created pipe, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x7C0DC2A0, FirmwareVersion = 150)]
-		public MsgPipe sceKernelCreateMsgPipe(string Name, HleMemoryManager.Partitions PartitionId, MsgPipeAttributes Attributes, int Size, void* Options)
+		public MsgPipe sceKernelCreateMsgPipe(string Name, MemoryPartitions PartitionId, MsgPipeAttributes Attributes, int Size, void* Options)
 		{
 			if (Options != null) throw(new NotImplementedException());
 

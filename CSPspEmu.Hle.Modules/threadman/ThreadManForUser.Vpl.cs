@@ -13,7 +13,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public class VariablePool : IDisposable, IHleUidPoolClass
 		{
 			public ThreadManForUser ThreadManForUser;
-			public HleMemoryManager.Partitions PartitionId;
+			public MemoryPartitions PartitionId;
 			public SceKernelVplInfo Info;
 			public MemoryPartition MemoryPartition;
 			public MemoryPartition.Anchor InternalMemoryAnchor;
@@ -137,7 +137,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		 less than 0 on error.
 		/// </returns>
 		[HlePspFunction(NID = 0x56C039B5, FirmwareVersion = 150)]
-		public VariablePool sceKernelCreateVpl(string Name, HleMemoryManager.Partitions PartitionId, VplAttributeEnum Attribute, int Size, void* Options)
+		public VariablePool sceKernelCreateVpl(string Name, MemoryPartitions PartitionId, VplAttributeEnum Attribute, int Size, void* Options)
 		{
 			var VariablePool = new VariablePool(this)
 			{

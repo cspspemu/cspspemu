@@ -76,7 +76,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		{
 			var Pmf = new Pmf().Load(new MemoryStream(PointerUtils.PointerToByteArray(PmfHeader, 2048)));
 
-			var SceMpeg = MpegPointer->GetSceMpeg(PspMemory);
+			var SceMpeg = MpegPointer->GetSceMpeg(Memory);
 
 			SceMpeg->StreamSize = (int)(uint)Pmf.Header.StreamSize;
 

@@ -51,7 +51,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		[HlePspNotImplemented]
 		public int sceIoAddDrv(PspIoDrv* PspIoDrv)
 		{
-			var Name = PspMemory.ReadStringz(PspIoDrv->name, Encoding.UTF8);
+			var Name = Memory.ReadStringz(PspIoDrv->name, Encoding.UTF8);
 			HleIoManager.SetDriver(Name + ":", new GuestHleIoDriver(InjectContext, PspIoDrv));
 			return 0;
 		}

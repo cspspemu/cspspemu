@@ -9,6 +9,7 @@ using CSPspEmu.Hle.Managers;
 using System.Threading;
 using CSPspEmu.Core.Cpu;
 using CSharpUtils;
+using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Modules.ge
 {
@@ -20,6 +21,18 @@ namespace CSPspEmu.Hle.Modules.ge
 		[Inject]
 		HleMemoryManager MemoryManager;
 
+		private MemoryPartition GpuStateStructPartition = null;
+		private GpuStateStruct* GpuStateStructPointer = null;
+
+		protected override void ModuleInitialize()
+		{
+			GpuStateStructPartition = MemoryManager.GetPartition(MemoryPartitions.Kernel0).Allocate(
+				sizeof(GpuStateStruct),
+				Name: "GpuStateStruct"
+			);
+			GpuStateStructPointer = (GpuStateStruct*)GpuStateStructPartition.GetLowPointerSafe<GpuStateStruct>();
+		}
+
 		private GpuDisplayList GetDisplayListFromId(int DisplayListId)
 		{
 			if (DisplayListId < 0 || DisplayListId >= GpuProcessor.DisplayListsCount)
@@ -30,64 +43,35 @@ namespace CSPspEmu.Hle.Modules.ge
 			return GpuProcessor.GetDisplayList(DisplayListId);
 		}
 
-		MemoryPartition GpuStateStructPartition = null;
-		GpuStateStruct* GpuStateStructPointer = null;
-
-		protected override void ModuleInitialize()
+		private GpuDisplayList _sceGeListEnQueue(uint InstructionAddressStart, uint InstructionAddressStall, int CallbackId, PspGeListArgs* Args)
 		{
-			GpuStateStructPartition = MemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.Kernel0).Allocate(
-				sizeof(GpuStateStruct),
-				Name: "GpuStateStruct"
-			);
-			GpuStateStructPointer = (GpuStateStruct*)MemoryManager.Memory.PspAddressToPointerSafe(GpuStateStructPartition.Low, Marshal.SizeOf(typeof(GpuStateStruct)));
-		}
-
-		public int _sceGeListEnQueue(uint InstructionAddressStart, uint InstructionAddressStall, int CallbackId, PspGeListArgs* Args, Action<GpuDisplayList> Action)
-		{
-			//Console.WriteLine("aaaaaaaaaaa");
-
-			//Console.WriteLine("_sceGeListEnQueue");
-			try
+			var DisplayList = GpuProcessor.DequeueFreeDisplayList();
+			
+			DisplayList.InstructionAddressStart = InstructionAddressStart;
+			DisplayList.InstructionAddressCurrent = InstructionAddressStart;
+			DisplayList.SetInstructionAddressStall(InstructionAddressStall);
+			DisplayList.CallbacksId = -1;
+			DisplayList.Callbacks = default(PspGeCallbackData);
+	
+			if (CallbackId != -1)
 			{
-				var DisplayList = GpuProcessor.DequeueFreeDisplayList();
-				{
-					DisplayList.InstructionAddressStart = InstructionAddressStart;
-					DisplayList.InstructionAddressCurrent = InstructionAddressStart;
-					DisplayList.SetInstructionAddressStall(InstructionAddressStall);
-					DisplayList.CallbacksId = -1;
-					DisplayList.Callbacks = default(PspGeCallbackData);
-					if (CallbackId != -1)
-					{
-						try
-						{
-							//DisplayList.Callbacks = Callbacks[CallbackId];
-							DisplayList.Callbacks = Callbacks[CallbackId];
-							DisplayList.CallbacksId = CallbackId;
-						}
-						catch
-						{
-						}
-					}
-					DisplayList.GpuStateStructPointer = null;
-					if (Args != null)
-					{
-						DisplayList.GpuStateStructPointer = (GpuStateStruct*)CpuProcessor.Memory.PspAddressToPointerSafe(Args[0].GpuStateStructAddress, Marshal.SizeOf(typeof(GpuStateStruct)));
-					}
+				DisplayList.Callbacks = Callbacks[CallbackId];
+				DisplayList.CallbacksId = CallbackId;
+			}
 
-					if (DisplayList.GpuStateStructPointer == null)
-					{
-						DisplayList.GpuStateStructPointer = GpuStateStructPointer;
-					}
-					Action(DisplayList);
-				}
-				return DisplayList.Id;
-			}
-			catch (Exception Exception)
+			DisplayList.GpuStateStructPointer = null;
+
+			if (Args != null)
 			{
-				Console.Error.WriteLine(Exception);
-				//return -1;
-				throw(Exception);
+				DisplayList.GpuStateStructPointer = (GpuStateStruct*)CpuProcessor.Memory.PspAddressToPointerSafe(Args->GpuStateStructAddress, Marshal.SizeOf(typeof(GpuStateStruct)));
 			}
+
+			if (DisplayList.GpuStateStructPointer == null)
+			{
+				DisplayList.GpuStateStructPointer = GpuStateStructPointer;
+			}
+
+			return DisplayList;
 		}
 
 		/// <summary>
@@ -99,16 +83,12 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <param name="Args">Structure containing GE context buffer address</param>
 		/// <returns>The DisplayList ID</returns>
 		[HlePspFunction(NID = 0xAB49E76A, FirmwareVersion = 150)]
-		[HlePspNotImplemented(PartialImplemented = true, Notice = false)]
+		//[HlePspNotImplemented]
 		public int sceGeListEnQueue(uint InstructionAddressStart, uint InstructionAddressStall, int CallbackId, PspGeListArgs* Args)
 		{
-			return _sceGeListEnQueue(InstructionAddressStart, InstructionAddressStall, CallbackId, Args, (DisplayList) =>
-			{
-				GpuProcessor.EnqueueDisplayListLast(DisplayList);
-#if LIST_SYNC
-				DisplayList.WaitCompletedSync();
-#endif
-			});
+			var DisplayList = _sceGeListEnQueue(InstructionAddressStart, InstructionAddressStall, CallbackId, Args);
+			GpuProcessor.EnqueueDisplayListLast(DisplayList);
+			return DisplayList.Id;
 		}
 
 		/// <summary>
@@ -120,16 +100,12 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <param name="Args">Structure containing GE context buffer address</param>
 		/// <returns>The DisplayList ID</returns>
 		[HlePspFunction(NID = 0x1C0D95A6, FirmwareVersion = 150)]
-		[HlePspNotImplemented(PartialImplemented = true, Notice = false)]
+		//[HlePspNotImplemented]
 		public int sceGeListEnQueueHead(uint InstructionAddressStart, uint InstructionAddressStall, int CallbackId, PspGeListArgs* Args)
 		{
-			return _sceGeListEnQueue(InstructionAddressStart, InstructionAddressStall, CallbackId, Args, (DisplayList) =>
-			{
-				GpuProcessor.EnqueueDisplayListFirst(DisplayList);
-#if LIST_SYNC
-				DisplayList.WaitCompletedSync();
-#endif
-			});
+			var DisplayList = _sceGeListEnQueue(InstructionAddressStart, InstructionAddressStall, CallbackId, Args);
+			GpuProcessor.EnqueueDisplayListFirst(DisplayList);
+			return DisplayList.Id;
 		}
 
 		/// <summary>
@@ -138,7 +114,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <param name="DisplayListId">A DisplayList ID</param>
 		/// <returns>&lt; 0 on error.</returns>
 		[HlePspFunction(NID = 0x5FB86AB0, FirmwareVersion = 150)]
-		[HlePspNotImplemented(PartialImplemented = true)]
+		//[HlePspNotImplemented]
 		public int sceGeListDeQueue(int DisplayListId)
 		{
 			var DisplayList = GetDisplayListFromId(DisplayListId);
@@ -153,18 +129,24 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <param name="InstructionAddressStall">The stall address to update</param>
 		/// <returns>Unknown. Probably 0 if successful. &lt; 0 on error</returns>
 		[HlePspFunction(NID = 0xE0D68148, FirmwareVersion = 150)]
+		//[HlePspNotImplemented]
 		public int sceGeListUpdateStallAddr(int DisplayListId, uint InstructionAddressStall)
 		{
 			//hleEatCycles(190);
 
 			var DisplayList = GetDisplayListFromId(DisplayListId);
 
-			DisplayList.SetInstructionAddressStall(InstructionAddressStall);
+			//if (!PspMemory.IsAddressValid(InstructionAddressStall))
+			//{
+			//	throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_POINTER));
+			//}
 
 			if (DisplayList.Status.Value == DisplayListStatusEnum.Completed)
 			{
 				throw (new SceKernelException(SceKernelErrors.ERROR_ALREADY));
 			}
+
+			DisplayList.SetInstructionAddressStall(InstructionAddressStall);
 
 			if (DisplayList.Signal == SignalBehavior.PSP_GE_SIGNAL_HANDLER_PAUSE)
 			{
@@ -181,6 +163,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <param name="SyncType">Specifies the condition to wait on.  One of PspGeSyncType.</param>
 		/// <returns>???</returns>
 		[HlePspFunction(NID = 0x03444EB4, FirmwareVersion = 150)]
+		//[HlePspNotImplemented]
 		public DisplayListStatusEnum sceGeListSync(int DisplayListId, SyncTypeEnum SyncType)
 		{
 			var DisplayList = GetDisplayListFromId(DisplayListId);
@@ -206,6 +189,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <param name="SyncType">Specifies the condition to wait on.  One of ::PspGeSyncType.</param>
 		/// <returns>???</returns>
 		[HlePspFunction(NID = 0xB287BD61, FirmwareVersion = 150, CheckInsideInterrupt = true)]
+		//[HlePspNotImplemented]
 		public DisplayListStatusEnum sceGeDrawSync(SyncTypeEnum SyncType)
 		{
 			switch (SyncType)
@@ -221,37 +205,6 @@ namespace CSPspEmu.Hle.Modules.ge
 				default:
 					throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_MODE));
 			}
-		}
-
-		public struct PspGeStack
-		{
-			public fixed uint Stack[8];
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public struct PspGeListArgs
-		{
-			/// <summary>
-			/// Size of the structure
-			/// </summary>
-			public uint Size;
-
-			/// <summary>
-			/// Pointer to a GpuStateStruct
-			/// </summary>
-			public uint GpuStateStructAddress;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public uint NumberOfStacks;
-
-			/// <summary>
-			/// 
-			/// </summary>
-			public uint StacksAddress;
 		}
 	}
 }

@@ -100,9 +100,9 @@ namespace CSPspEmu.Hle.Modules.mpeg
 
 			NumPackets = Math.Min(Available, NumPackets);
 
-			var SceMpegPointer = (SceMpegPointer *)Ringbuffer->SceMpeg.GetPointer<SceMpegPointer>(PspMemory);
+			var SceMpegPointer = (SceMpegPointer *)Ringbuffer->SceMpeg.GetPointer<SceMpegPointer>(Memory);
 			var Mpeg = GetMpeg(SceMpegPointer);
-			var SceMpeg = SceMpegPointer->GetSceMpeg(PspMemory);
+			var SceMpeg = SceMpegPointer->GetSceMpeg(Memory);
 			var MpegStreamPackets = (int)MathUtils.RequiredBlocks(SceMpeg->StreamSize, Ringbuffer->PacketSize);
 			var RemainingPackets = Math.Max(0, MpegStreamPackets - Ringbuffer->PacketsRead);
 
@@ -120,7 +120,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 
 			if (packetsAdded > 0)
 			{
-				var addr = Ringbuffer->Data.GetPointer(PspMemory, 0);
+				var addr = Ringbuffer->Data.GetPointer(Memory, 0);
 				var length = packetsAdded * Ringbuffer->PacketSize;
 				
 				if (length > 0)

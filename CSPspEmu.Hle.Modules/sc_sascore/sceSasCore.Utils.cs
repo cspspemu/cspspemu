@@ -202,7 +202,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// 
 		/// </summary>
 		public int LoopCount;
-		public int Pitch;
+		public int Pitch = sceSasCore.PSP_SAS_PITCH_BASE;
 		public int LeftVolume;
 		public int RightVolume;
 		public int SustainLevel;

@@ -175,7 +175,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			
 			//Console.Error.WriteLine("0x{0:X}", PspMemory.PointerToPspAddress(OutputBuffer));
 
-			var OutputBuffer = (byte*)PspMemory.PspAddressToPointerSafe(OutputBufferPointer->Address);
+			var OutputBuffer = (byte*)Memory.PspAddressToPointerSafe(OutputBufferPointer->Address);
 
 			int TotalBytes = PixelFormatDecoder.GetPixelsSize(SceMpegData->SceMpegAvcMode.PixelFormat, FrameWidth * 272);
 			for (int n = 0; n < TotalBytes; n++)

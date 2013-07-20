@@ -309,7 +309,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 						HleModuleGuest = Loader.LoadModule(
 							ElfLoadStream,
 							MemoryStream,
-							MemoryManager.GetPartition(HleMemoryManager.Partitions.User),
+							MemoryManager.GetPartition(MemoryPartitions.User),
 							ModuleManager,
 							Title,
 							ModuleName: FileName,
@@ -338,11 +338,11 @@ namespace CSPspEmu.Runner.Components.Cpu
 					.Aggregate(new byte[] { }, (Accumulate, Chunk) => (byte[])Accumulate.Concat(Chunk))
 				;
 
-				var ReservedSyscallsPartition = MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(
+				var ReservedSyscallsPartition = MemoryManager.GetPartition(MemoryPartitions.Kernel0).Allocate(
 					0x100,
 					Name: "ReservedSyscallsPartition"
 				);
-				var ArgumentsPartition = MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(
+				var ArgumentsPartition = MemoryManager.GetPartition(MemoryPartitions.Kernel0).Allocate(
 					ArgumentsChunk.Length,
 					Name: "ArgumentsPartition"
 				);
@@ -367,7 +367,7 @@ namespace CSPspEmu.Runner.Components.Cpu
 					//Console.WriteLine("RA: 0x{0:X}", CurrentCpuThreadState.RA);
 				}
 				CurrentCpuThreadState.DumpRegisters();
-				MemoryManager.GetPartition(HleMemoryManager.Partitions.User).Dump();
+				MemoryManager.GetPartition(MemoryPartitions.User).Dump();
 				//ModuleManager.LoadedGuestModules.Add(HleModuleGuest);
 					
 				//MainThread.CurrentStatus = HleThread.Status.Ready;

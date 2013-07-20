@@ -31,12 +31,12 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 
 			public MemoryPartition Alloc<T>(T Value) where T : struct
 			{
-				return HleMemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.Kernel0).AllocateItem(Value);
+				return HleMemoryManager.GetPartition(MemoryPartitions.Kernel0).AllocateItem(Value);
 			}
 
 			public MemoryPartition Alloc(string Value)
 			{
-				return HleMemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.Kernel0).AllocateItem(Value);
+				return HleMemoryManager.GetPartition(MemoryPartitions.Kernel0).AllocateItem(Value);
 			}
 
 			public GuestHleIoDriver(InjectContext InjectContext, PspIoDrv* PspIoDrv)

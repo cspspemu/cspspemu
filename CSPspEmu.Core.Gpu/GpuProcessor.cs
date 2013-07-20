@@ -92,11 +92,16 @@ namespace CSPspEmu.Core.Gpu
 			//return DisplayLists[Index];
 		}
 
+		public enum Status2Enum
+		{
+			Completed = 0,
+			HavePendingLists = 1,
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
-		public PspAutoResetEvent CompletedDrawingEvent = new PspAutoResetEvent(false);
-		//public PspManualResetEvent CompletedDrawingEvent = new PspManualResetEvent(false);
+		public readonly WaitableStateMachine<Status2Enum> Status2 = new WaitableStateMachine<Status2Enum>(Status2Enum.Completed, Debug: false);
 
 		/// <summary>
 		/// 
@@ -128,17 +133,6 @@ namespace CSPspEmu.Core.Gpu
 
 		void IInjectInitialize.Initialize()
 		{
-			if (sizeof(GpuStateStruct) > sizeof(uint) * 512)
-			{
-				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () =>
-				{
-					Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-					Console.WriteLine("GpuStateStruct too big. Maybe 64bit? . Size: " + sizeof(GpuStateStruct));
-					Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-				});
-
-			}
-
 			this.DisplayListQueue = new LinkedList<GpuDisplayList>();
 			this.DisplayListFreeQueue = new Queue<GpuDisplayList>();
 			for (int n = 0; n < DisplayListsCount; n++)
@@ -148,11 +142,6 @@ namespace CSPspEmu.Core.Gpu
 				//this.DisplayListFreeQueue.Enqueue(DisplayLists[n]);
 				EnqueueFreeDisplayList(DisplayLists[n]);
 			}
-		}
-
-		protected void AddedDisplayList()
-		{
-			GpuImpl.AddedDisplayList();
 		}
 
 		AutoResetEvent DisplayListFreeEvent = new AutoResetEvent(false);
@@ -178,11 +167,10 @@ namespace CSPspEmu.Core.Gpu
 		public void EnqueueFreeDisplayList(GpuDisplayList GpuDisplayList)
 		{
 			//Console.WriteLine("EnqueueFreeDisplayList: {0}", this.DisplayListFreeQueue.Count);
-			AddedDisplayList();
 			lock (DisplayListFreeQueue)
 			{
 				this.DisplayListFreeQueue.Enqueue(GpuDisplayList);
-				GpuDisplayList.Freed();
+				GpuDisplayList.SetFree();
 			}
 			DisplayListFreeEvent.Set();
 		}
@@ -228,7 +216,7 @@ namespace CSPspEmu.Core.Gpu
 
 		public AutoResetEvent ListEnqueuedEvent = new AutoResetEvent(false);
 
-		private GpuDisplayList CurrentGpuDisplayList = null;
+		volatile private GpuDisplayList CurrentGpuDisplayList = null;
 
 		/// <summary>
 		/// 
@@ -242,7 +230,12 @@ namespace CSPspEmu.Core.Gpu
 
 			if (DisplayListQueue.GetCountLock() > 0)
 			{
+				//Status2.SetValue(Status2Enum.HavePendingLists);
+
+				//Console.WriteLine("ProcessStep.Start");
+				//CompletedDrawingEvent.Reset();
 				//Console.WriteLine("ProcessStep START");
+
 				TimeSpanUtils.InfiniteLoopDetector("GpuProcessor.ProcessStep", () =>
 				{
 					while (DisplayListQueue.GetCountLock() > 0)
@@ -252,8 +245,8 @@ namespace CSPspEmu.Core.Gpu
 						CurrentGpuDisplayList.SetDequeued();
 						CurrentGpuDisplayList.Process();
 						EnqueueFreeDisplayList(CurrentGpuDisplayList);
-						CurrentGpuDisplayList = null;
 					}
+					CurrentGpuDisplayList = null;
 				}, () =>
 				{
 					ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Magenta, () =>
@@ -262,23 +255,30 @@ namespace CSPspEmu.Core.Gpu
 						if (CurrentGpuDisplayList != null)
 						{
 							Console.WriteLine("CurrentGpuDisplayList.Status: {0}", CurrentGpuDisplayList.Status.ToStringDefault());
-							Console.WriteLine("CurrentGpuDisplayList2.Status: {0}", CurrentGpuDisplayList.Status2.ToStringDefault());
+							//Console.WriteLine("CurrentGpuDisplayList.Status2: {0}", CurrentGpuDisplayList.Status2.ToStringDefault());
 						}
 					});
 				});
 
-				CompletedDrawingEvent.Set();
+				//Console.WriteLine("ProcessStep.End");
+				Status2.SetValue(Status2Enum.Completed);
+				//if (CompletedDrawingEvent != null) CompletedDrawingEvent();
 				//Console.WriteLine("ProcessStep END");
 			}
 			//if (DrawSync != null) DrawSync();
 		}
 
+		protected void AddedDisplayList()
+		{
+			//Console.WriteLine("Running");
+			Status2.SetValue(Status2Enum.HavePendingLists);
+			GpuImpl.AddedDisplayList();
+		}
+
 		public void GeDrawSync(Action SyncCallback)
 		{
-			CompletedDrawingEvent.CallbackOnSet(() =>
+			Status2.CallbackOnStateOnce(Status2Enum.Completed, () =>
 			{
-				//Console.Error.WriteLine("-- GeDrawSync Completed --------------------------------");
-				CompletedDrawingEvent.Reset();
 				CapturingWaypoint();
 				SyncCallback();
 			});

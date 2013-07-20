@@ -166,7 +166,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 				var CharInfo = Font.GetCharInfo(CharCode);
 				var Face = Glyph.Face;
 				var PixelFormat = GlyphImage.PixelFormat;
-				var Buffer = PspMemory.PspAddressToPointerSafe(GlyphImage.Buffer);
+				var Buffer = Memory.PspAddressToPointerSafe(GlyphImage.Buffer);
 				var BufferHeight = GlyphImage.BufferHeight;
 				var BufferWidth = GlyphImage.BufferWidth;
 				var BytesPerLine = GlyphImage.BytesPerLine;

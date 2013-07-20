@@ -181,7 +181,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		{
 			try
 			{
-				PointerUtils.Memset((byte*)PspMemory.PspAddressToPointerSafe(PspPointer, Size), (byte)Data, Size);
+				PointerUtils.Memset((byte*)Memory.PspAddressToPointerSafe(PspPointer, Size), (byte)Data, Size);
 			}
 			catch
 			{
@@ -201,8 +201,8 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		{
 			try
 			{
-				var Destination = (byte*)PspMemory.PspAddressToPointerSafe(DestinationPointer, Size);
-				var Source = (byte*)PspMemory.PspAddressToPointerSafe(SourcePointer, Size);
+				var Destination = (byte*)Memory.PspAddressToPointerSafe(DestinationPointer, Size);
+				var Source = (byte*)Memory.PspAddressToPointerSafe(SourcePointer, Size);
 				PointerUtils.Memcpy(Destination, Source, Size);
 			}
 			catch

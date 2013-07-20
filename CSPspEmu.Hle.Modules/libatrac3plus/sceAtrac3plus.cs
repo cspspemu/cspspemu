@@ -357,7 +357,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			{
 				InjectContext.InjectDependencesTo(this);
 
-				PrimaryBuffer = HleMemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.User).Allocate(1024);
+				PrimaryBuffer = HleMemoryManager.GetPartition(MemoryPartitions.User).Allocate(1024);
 
 				this.CodecType = CodecType;
 			}
@@ -366,7 +366,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			{
 				InjectContext.InjectDependencesTo(this);
 
-				PrimaryBuffer = HleMemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.User).Allocate(1024);
+				PrimaryBuffer = HleMemoryManager.GetPartition(MemoryPartitions.User).Allocate(1024);
 
 				CodecType = CodecType.PSP_MODE_AT_3_PLUS;
 				SetData(Data, DataLength);

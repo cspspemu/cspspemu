@@ -45,7 +45,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			public ThreadManForUser ThreadManForUser;
 			public HleMemoryManager MemoryManager;
 			public string Name;
-			public HleMemoryManager.Partitions PartitionId;
+			public MemoryPartitions PartitionId;
 			public FplAttributes Attributes;
 			public int BlockSize;
 			public int NumberOfBlocks;
@@ -201,7 +201,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Options">Options (set to NULL)</param>
 		/// <returns>The UID of the created pool, less than 0 on error.</returns>
 		[HlePspFunction(NID = 0xC07BB470, FirmwareVersion = 150)]
-		public FixedPool sceKernelCreateFpl(string Name, HleMemoryManager.Partitions PartitionId, FplAttributes Attributes, int BlockSize, int NumberOfBlocks, FplOptionsStruct* Options)
+		public FixedPool sceKernelCreateFpl(string Name, MemoryPartitions PartitionId, FplAttributes Attributes, int BlockSize, int NumberOfBlocks, FplOptionsStruct* Options)
 		{
 			var FixedPool = new FixedPool(this)
 			{

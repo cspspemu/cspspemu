@@ -32,6 +32,10 @@ namespace CSPspEmu.Hle
 
 		public bool Allocated;
 		public String Name;
+		public void* GetLowPointerSafe<TType>()
+		{
+			return PspMemory.PspAddressToPointerSafe(Low, Marshal.SizeOf(typeof(TType)));
+		}
 		public uint Low { get; protected set; }
 		public uint High { get; protected set; }
 		public int Size { get { return (int)(High - Low); } }

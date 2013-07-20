@@ -217,7 +217,7 @@ namespace CSPspEmu.Hle.Modules.utils
 		[HlePspFunction(NID = 0x27CC57F0, FirmwareVersion = 150)]
 		public time_t sceKernelLibcTime([HleInvalidAsInvalidPointer] time_t* Time)
 		{
-			if (Time == PspMemory.InvalidPointerInstance) return 0;
+			if (Time == Memory.InvalidPointerInstance) return 0;
 
 			PspRtc.Update();
 

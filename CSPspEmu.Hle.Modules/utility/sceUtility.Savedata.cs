@@ -158,7 +158,7 @@ namespace CSPspEmu.Hle.Modules.utility
 				{
 					HleIoManager.HleIoWrapper.WriteBytes(
 						FileName,
-						PspMemory.ReadBytes(PspUtilitySavedataFileData.BufferPointer, PspUtilitySavedataFileData.Size)
+						Memory.ReadBytes(PspUtilitySavedataFileData.BufferPointer, PspUtilitySavedataFileData.Size)
 					);
 				}
 			};
@@ -173,7 +173,7 @@ namespace CSPspEmu.Hle.Modules.utility
 						{
 							try
 							{
-								PspMemory.WriteBytes(
+								Memory.WriteBytes(
 									Params->DataBufPointer,
 									HleIoManager.HleIoWrapper.ReadBytes(SaveDataBin)
 								);
@@ -199,7 +199,7 @@ namespace CSPspEmu.Hle.Modules.utility
 
 								HleIoManager.HleIoWrapper.WriteBytes(
 									SaveDataBin,
-									PspMemory.ReadBytes(Params->DataBufPointer, Params->DataSize)
+									Memory.ReadBytes(Params->DataBufPointer, Params->DataSize)
 								);
 
 								Save(Params->Icon0FileData, SaveIcon0);
@@ -260,7 +260,7 @@ namespace CSPspEmu.Hle.Modules.utility
 							// Gets the ammount of free space in the Memory Stick. If null,
 							// the size is ignored and no error is returned.
 							{
-								var SizeFreeInfo = (SizeFreeInfo*)Params->msFreeAddr.GetPointer<SizeFreeInfo>(PspMemory);
+								var SizeFreeInfo = (SizeFreeInfo*)Params->msFreeAddr.GetPointer<SizeFreeInfo>(Memory);
 								SizeFreeInfo->SectorSize = SectorSize;
 								SizeFreeInfo->FreeSectors = FreeSize / SectorSize;
 								SizeFreeInfo->FreeKb = FreeSize / 1024;
@@ -272,7 +272,7 @@ namespace CSPspEmu.Hle.Modules.utility
 							// Gets the size of the data already saved in the Memory Stick.
 							// If null, the size is ignored and no error is returned.
 							{
-								var SizeUsedInfo = (SizeUsedInfo*)Params->msDataAddr.GetPointer<SizeUsedInfo>(PspMemory);
+								var SizeUsedInfo = (SizeUsedInfo*)Params->msDataAddr.GetPointer<SizeUsedInfo>(Memory);
 
 								if (SizeUsedInfo != null)
 								{
@@ -302,7 +302,7 @@ namespace CSPspEmu.Hle.Modules.utility
 							// Gets the size of the data to be saved in the Memory Stick.
 							// If null, the size is ignored and no error is returned.
 							{
-								var SizeRequiredSpaceInfo = (SizeRequiredSpaceInfo*)Params->utilityDataAddr.GetPointer<SizeRequiredSpaceInfo>(PspMemory);
+								var SizeRequiredSpaceInfo = (SizeRequiredSpaceInfo*)Params->utilityDataAddr.GetPointer<SizeRequiredSpaceInfo>(Memory);
 								if (SizeRequiredSpaceInfo != null)
 								{
 									long RequiredSize = 0;
@@ -326,7 +326,7 @@ namespace CSPspEmu.Hle.Modules.utility
 						break;
 					case PspUtilitySavedataMode.List:
 						{
-							var ListRequest = (ListRequest*)Params->idListAddr.GetPointer<ListRequest>(PspMemory);
+							var ListRequest = (ListRequest*)Params->idListAddr.GetPointer<ListRequest>(Memory);
 							ListRequest->NumEntriesReaded = 0;
 						}
 						break;

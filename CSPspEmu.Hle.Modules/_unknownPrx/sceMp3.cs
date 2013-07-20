@@ -101,7 +101,7 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
 		public int sceMp3NotifyAddStreamData(Mp3Stream Mp3Stream, int Size)
 		{
 			Mp3Stream.AddStreamData(
-				PointerUtils.PointerToByteArray((byte*)Mp3Stream.Mp3Arguments->Mp3BufferPointer.GetPointer(PspMemory, Size), Size)
+				PointerUtils.PointerToByteArray((byte*)Mp3Stream.Mp3Arguments->Mp3BufferPointer.GetPointer(Memory, Size), Size)
 			);
 			return 0;
 		}

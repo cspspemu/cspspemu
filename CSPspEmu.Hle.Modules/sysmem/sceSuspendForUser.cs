@@ -68,7 +68,7 @@ namespace CSPspEmu.Hle.Modules.sysmem
 				throw(new SceKernelException(SceKernelErrors.ERROR_POWER_VMEM_IN_USE));
 			}
 
-			var Partition = MemoryManager.GetPartition(Managers.HleMemoryManager.Partitions.VolatilePartition);
+			var Partition = MemoryManager.GetPartition(MemoryPartitions.VolatilePartition);
 			OutAddress = Partition.Low;
 			OutSize = Partition.Size;    // 4 MB
 			VolatileMemLocked = true;

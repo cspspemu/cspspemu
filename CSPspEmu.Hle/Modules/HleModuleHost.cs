@@ -23,7 +23,7 @@ namespace CSPspEmu.Hle
 		public string Name { get { return this.GetType().Name; } }
 
 		[Inject]
-		protected PspMemory PspMemory;
+		protected PspMemory Memory;
 
 		[Inject]
 		protected InjectContext InjectContext;
@@ -45,6 +45,10 @@ namespace CSPspEmu.Hle
 		}
 
 		protected virtual void ModuleInitialize()
+		{
+		}
+
+		protected virtual void ModuleDeinitialize()
 		{
 		}
 

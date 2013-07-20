@@ -185,17 +185,17 @@ namespace CSPspEmu.Hle.Modules.modulemgr
 
 				var HleModuleGuest = Loader.LoadModule(
 					ModuleStream,
-					new PspMemoryStream(PspMemory),
-					MemoryManager.GetPartition(HleMemoryManager.Partitions.User),
+					new PspMemoryStream(Memory),
+					MemoryManager.GetPartition(MemoryPartitions.User),
 					ModuleManager,
 					"",
 					ModuleName: Path,
 					IsMainModule: false
 				);
 
-				var SceModulePartition = MemoryManager.GetPartition(HleMemoryManager.Partitions.Kernel0).Allocate(sizeof(SceModule));
+				var SceModulePartition = MemoryManager.GetPartition(MemoryPartitions.Kernel0).Allocate(sizeof(SceModule));
 
-				var SceModulePtr = (SceModule*)PspMemory.PspAddressToPointerSafe(SceModulePartition.Low, Marshal.SizeOf(typeof(SceModule)));
+				var SceModulePtr = (SceModule*)Memory.PspAddressToPointerSafe(SceModulePartition.Low, Marshal.SizeOf(typeof(SceModule)));
 
 				SceModulePtr->Attributes = HleModuleGuest.ModuleInfo.ModuleAtributes;
 				SceModulePtr->Version = HleModuleGuest.ModuleInfo.ModuleVersion;

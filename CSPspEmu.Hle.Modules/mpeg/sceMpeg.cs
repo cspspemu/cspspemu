@@ -100,15 +100,15 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			{
 				SceMpegRingbuffer->PacketsFree = (int)((SceMpegRingbuffer->DataUpperBound.Address - SceMpegRingbuffer->Data.Address) / SceMpegRingbuffer->PacketSize);
 			}
-			SceMpegRingbuffer->SceMpeg = PspMemory.PointerToPspPointer(Mpeg);
+			SceMpegRingbuffer->SceMpeg = Memory.PointerToPspPointer(Mpeg);
 
 			SceMpeg* SceMpegData = (SceMpeg*)&((byte*)MpegData)[0x30];
 
-			Mpeg->SceMpeg = PspMemory.PointerToPspPointer(SceMpegData);
+			Mpeg->SceMpeg = Memory.PointerToPspPointer(SceMpegData);
 
 			PointerUtils.StoreStringOnPtr("LIBMPEG.001", Encoding.UTF8, SceMpegData->MagicBytes);
 			SceMpegData->Unknown1 = -1;
-			SceMpegData->RingBufferAddress = PspMemory.PointerToPspPointer(SceMpegRingbuffer);
+			SceMpegData->RingBufferAddress = Memory.PointerToPspPointer(SceMpegRingbuffer);
 			SceMpegData->RingBufferAddressDataUpper = SceMpegRingbuffer->DataUpperBound;
 			SceMpegData->FrameWidth = FrameWidth;
 			SceMpegData->SceMpegAvcMode.Mode = -1;

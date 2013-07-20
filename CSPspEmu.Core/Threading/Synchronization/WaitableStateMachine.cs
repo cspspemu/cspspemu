@@ -4,29 +4,25 @@ using System.Threading;
 
 namespace CSPspEmu.Core.Threading.Synchronization
 {
-	public class WaitableStateMachine<TEnum>
+	public sealed class WaitableStateMachine<TEnum>
 	{
-		protected TEnum _Value;
-		protected AutoResetEvent ValueUpdatedEvent = new AutoResetEvent(false);
-		protected bool Debug = false;
+		private TEnum _Value;
+		private AutoResetEvent ValueUpdatedEvent = new AutoResetEvent(false);
+		private bool Debug = false;
+		private readonly Dictionary<TEnum, List<Action>> Notifications = new Dictionary<TEnum, List<Action>>();
 
 		public WaitableStateMachine(bool Debug = false)
 		{
 			this.Debug = Debug;
 		}
 
+		public WaitableStateMachine(TEnum InitialValue, bool Debug = false)
+		{
+			this.SetValue(InitialValue);
+			this.Debug = Debug;
+		}
+
 		public TEnum Value {
-			/*
-			set
-			{
-				if (!_Value.Equals(value))
-				{
-					_Value = value;
-					//ValueWasUpdated();
-				}
-				ValueWasUpdated();
-			}
-			*/
 			get
 			{
 				return _Value;
@@ -37,14 +33,13 @@ namespace CSPspEmu.Core.Threading.Synchronization
 		{
 			lock (Notifications)
 			{
-				_Value = value;
-				ValueWasUpdated();
+				if (Debug) Console.WriteLine("WaitableStateMachine::SetValue({0})", value);
+				this._Value = value;
+				this._ValueWasUpdated();
 			}
 		}
 
-		Dictionary<TEnum, List<Action>> Notifications = new Dictionary<TEnum, List<Action>>();
-
-		protected void ValueWasUpdated()
+		private void _ValueWasUpdated()
 		{
 			if (Debug) Console.WriteLine("WaitableStateMachine::ValueWasUpdated: " + Value);
 			if (Notifications.ContainsKey(Value))
@@ -65,6 +60,8 @@ namespace CSPspEmu.Core.Threading.Synchronization
 		{
 			lock (Notifications)
 			{
+				if (Debug) Console.WriteLine(String.Format("CallbackOnStateOnce({0}, Callback). Current: {1}", ExpectedValue, Value));
+
 				if (Value.Equals(ExpectedValue))
 				{
 					Callback();
@@ -88,10 +85,7 @@ namespace CSPspEmu.Core.Threading.Synchronization
 
 		public void WaitForState(TEnum ExpectedValue)
 		{
-			while (!ExpectedValue.Equals(Value))
-			{
-				ValueUpdatedEvent.WaitOne();
-			}
+			WaitForAnyState(ExpectedValue);
 		}
 	}
 }

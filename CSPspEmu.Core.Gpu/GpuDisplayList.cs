@@ -14,9 +14,8 @@ namespace CSPspEmu.Core.Gpu
 	{
 		private static readonly Logger Logger = Logger.GetLogger("Gpu");
 
-		//private const bool Debug = false;
 		private static bool Debug = false;
-		//private const bool Debug = true;
+		//private static bool Debug = true;
 
 		/// <summary>
 		/// 
@@ -41,19 +40,17 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint _InstructionAddressStart;
-		//volatile public uint InstructionAddressStart;
+		volatile public uint _InstructionAddressStart;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public uint _InstructionAddressCurrent;
-		//volatile public uint InstructionAddressCurrent;
+		volatile public uint _InstructionAddressCurrent;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		private uint _InstructionAddressStall;
+		volatile private uint _InstructionAddressStall;
 
 		/// <summary>
 		/// 
@@ -134,15 +131,13 @@ namespace CSPspEmu.Core.Gpu
 		public Stack<uint> CallStack = new Stack<uint>();
 
 		//PspWaitEvent OnFreed = new PspWaitEvent();
-		public enum Status2Enum
-		{
-			//Enqueued,
-			//Dequeued,
-			Drawing,
-			Completed,
-			Free,
-		}
-		public readonly WaitableStateMachine<Status2Enum> Status2 = new WaitableStateMachine<Status2Enum>(Debug: false);
+		//public enum Status2Enum
+		//{
+		//	Drawing,
+		//	Free,
+		//}
+		//public readonly WaitableStateMachine<Status2Enum> Status2 = new WaitableStateMachine<Status2Enum>(Debug: false);
+
 		public PspGeCallbackData Callbacks;
 		public int CallbacksId;
 
@@ -178,63 +173,26 @@ namespace CSPspEmu.Core.Gpu
 		/// </summary>
 		internal void Process()
 		{
-			Status2.SetValue(Status2Enum.Drawing);
+			Status.SetValue(DisplayListStatusEnum.Drawing);
 
 			if (Debug) Console.WriteLine("Process() : {0} : 0x{1:X8} : 0x{2:X8} : 0x{3:X8}", this.Id, this.InstructionAddressCurrent, this.InstructionAddressStart, this.InstructionAddressStall);
 
-		Loop:
 			//for (Done = false; !Done; _InstructionAddressCurrent += 4)
 			Done = false;
 			while (!Done)
 			{
 				//Console.WriteLine("{0:X}", (uint)InstructionAddressCurrent);
 				//if ((InstructionAddressStall != 0) && (InstructionAddressCurrent >= InstructionAddressStall)) break;
-				if ((InstructionAddressStall != 0) && (InstructionAddressCurrent == InstructionAddressStall)) break;
+				if ((InstructionAddressStall != 0) && (InstructionAddressCurrent >= InstructionAddressStall))
+				{
+					if (Debug) Console.WriteLine("- STALLED --------------------------------------------------------------------");
+					Status.SetValue(DisplayListStatusEnum.Stalling);
+					StallAddressUpdated.WaitOne();
+				}
+
 				ProcessInstruction();
 			}
 
-			if (Debug) Console.WriteLine("[1]");
-
-			if (Done)
-			{
-				if (Debug) Console.WriteLine("- DONE0 ----------------------------------------------------------------------");
-				Status.SetValue(DisplayListStatusEnum.Completed);
-				Status2.SetValue(Status2Enum.Completed);
-				return;
-			}
-
-			if (InstructionAddressStall == 0)
-			{
-				if (Debug) Console.WriteLine("- DONE1 ----------------------------------------------------------------------");
-				Status.SetValue(DisplayListStatusEnum.Completed);
-				Status2.SetValue(Status2Enum.Completed);
-				return;
-			}
-
-			if (InstructionAddressCurrent == InstructionAddressStall)
-			{
-				//StallAddressUpdated.Reset();
-				if (Debug) Console.WriteLine("- STALLED --------------------------------------------------------------------");
-				Status.SetValue(DisplayListStatusEnum.Stalling);
-				Status2.SetValue(Status2Enum.Completed);
-#if true
-				WaitHandle.WaitAll(new[] { StallAddressUpdated });
-#else
-				while (!StallAddressUpdated.WaitOne(TimeSpan.FromMilliseconds(200)))
-				{
-					ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Magenta, () =>
-					{
-						Console.WriteLine("Stalled for 400 ms");
-					});
-					Status.SetValue(StatusEnum.Done);
-					Status2.SetValue(Status2Enum.Completed);
-					return;
-				}
-#endif
-				goto Loop;
-			}
-
-			if (Debug) Console.WriteLine("- DONE2 ----------------------------------------------------------------------");
 			Status.SetValue(DisplayListStatusEnum.Completed);
 		}
 
@@ -355,20 +313,11 @@ namespace CSPspEmu.Core.Gpu
 			}
 		}
 
-		public void Freed()
-		{
-			//Console.Error.WriteLine(Id);
-			lock (this)
-			{
-				//OnFreed.Signal();
-				Status2.SetValue(Status2Enum.Free);
-				Available = true;
-			}
-		}
-
 		public void GeListSync(Action NotifyOnceCallback)
 		{
-			Status2.CallbackOnStateOnce(Status2Enum.Free, NotifyOnceCallback);
+			//Thread.Sleep(200);
+			//Status2.CallbackOnStateOnce(Status2Enum.Free, NotifyOnceCallback);
+			Status.CallbackOnStateOnce(DisplayListStatusEnum.Completed, NotifyOnceCallback);
 		}
 
 		public void DoFinish(uint PC, uint Arg)
@@ -385,26 +334,31 @@ namespace CSPspEmu.Core.Gpu
 		{
 			if (Debug) Console.WriteLine("SIGNAL : Behavior:{0}", Behavior);
 
+			Status.SetValue(DisplayListStatusEnum.Paused);
+
 			if (Callbacks.SignalFunction != 0)
 			{
 				//Console.Error.WriteLine("OP_SIGNAL! ({0}, {1})", Signal, Behavior);
 				GpuProcessor.Connector.Signal(PC, Callbacks, Signal, Behavior);
 			}
-		}
 
-		public void WaitCompletedSync()
-		{
-			Status.WaitForAnyState(DisplayListStatusEnum.Stalling, DisplayListStatusEnum.Drawing, DisplayListStatusEnum.Completed);
+			Status.SetValue(DisplayListStatusEnum.Drawing);
 		}
 
 		public void SetQueued()
 		{
-			//Status2.SetValue(Status2Enum.Enqueued);
+			Status.SetValue(DisplayListStatusEnum.Queued);
 		}
 
 		public void SetDequeued()
 		{
 			//Status2.SetValue(Status2Enum.Dequeued);
+		}
+
+		public void SetFree()
+		{
+			//Status2.SetValue(Status2Enum.Free);
+			Available = true;
 		}
 
 		public DisplayListStatusEnum PeekStatus()
