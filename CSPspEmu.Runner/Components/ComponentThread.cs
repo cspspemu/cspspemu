@@ -98,9 +98,10 @@ namespace CSPspEmu.Runner.Components
 					//	break;
 					//}
 				}
-			}/*, TimeSpan.FromSeconds(2), () =>
+			}, TimeSpan.FromSeconds(2), () =>
 			{
-			}*/);
+				Console.WriteLine("Timed Out!");
+			});
 		}
 
 		public void ResumeSynchronized()

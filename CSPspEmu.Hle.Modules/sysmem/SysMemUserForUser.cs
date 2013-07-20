@@ -20,16 +20,6 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		[Inject]
 		KDebugForKernel KDebugForKernel;
 
-		[Flags]
-		public enum MyFlags
-		{
-			SCE_KERNEL_HASCOMPILEDSDKVERSION = 0x1000,
-			SCE_KERNEL_HASCOMPILERVERSION = 0x2000,
-		}
-
-		MyFlags Flags;
-		uint SdkVersion;
-
 		/// <summary>
 		/// Get the firmware version.
 		/// 
@@ -80,17 +70,17 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="Param"></param>
+		/// <param name="Version"></param>
 		[HlePspFunction(NID = 0xF77D77CB, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public void sceKernelSetCompilerVersion(uint Param)
+		public void sceKernelSetCompilerVersion(uint Version)
 		{
+			HleConfig.CompilerVersion = Version;
 		}
 
 		private void _sceKernelSetCompiledSdkVersion(uint SdkVersion)
 		{
-			this.SdkVersion = SdkVersion;
-			this.Flags |= MyFlags.SCE_KERNEL_HASCOMPILEDSDKVERSION;
+			HleConfig.CompiledSdkVersion = SdkVersion;
+			HleConfig.SdkFlags |= SdkFlags.SCE_KERNEL_HASCOMPILEDSDKVERSION;
 		}
 
 		private void _sceKernelSetCompiledSdkVersion(uint SdkVersion, string Name, uint[] ValidMainVersions)
@@ -320,9 +310,9 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		[HlePspFunction(NID = 0xfc114573, FirmwareVersion = 150)]
 		public uint sceKernelGetCompiledSdkVersion()
 		{
-			if ((Flags & MyFlags.SCE_KERNEL_HASCOMPILEDSDKVERSION) != 0)
+			if ((HleConfig.SdkFlags & SdkFlags.SCE_KERNEL_HASCOMPILEDSDKVERSION) != 0)
 			{
-				return this.SdkVersion;
+				return HleConfig.CompiledSdkVersion;
 			}
 			else
 			{

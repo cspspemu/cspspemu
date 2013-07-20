@@ -3,6 +3,8 @@ using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
+using CSPspEmu.Core.Gpu;
+using CSPspEmu.Hle.Modules.sysmem;
 
 namespace CSPspEmu.Hle.Modules.ge
 {
@@ -10,7 +12,13 @@ namespace CSPspEmu.Hle.Modules.ge
 	public unsafe partial class sceGe_user : HleModuleHost
 	{
 		[Inject]
-		CpuProcessor CpuProcessor;
+		public GpuProcessor GpuProcessor;
+
+		[Inject]
+		public CpuProcessor CpuProcessor;
+
+		[Inject]
+		public SysMemUserForUser SysMemUserForUser;
 
 		/// <summary>
 		/// Get the address of VRAM.
@@ -72,7 +80,45 @@ namespace CSPspEmu.Hle.Modules.ge
 		[HlePspNotImplemented]
 		public int sceGeContinue()
 		{
-			throw (new NotImplementedException());
+			var currentList = GpuProcessor.GetCurrentGpuDisplayList();
+			if (currentList == null)
+			{
+				return 0;
+			}
+
+			if (currentList.Status.Value == DisplayListStatusEnum.Paused)
+			{
+				if (!GpuProcessor.IsBreak)
+				{
+					if (currentList.Signal == SignalBehavior.PSP_GE_SIGNAL_HANDLER_PAUSE) return unchecked((int)0x80000021);
+
+					currentList.Status.SetValue(DisplayListStatusEnum.Drawing);
+					currentList.Signal = SignalBehavior.PSP_GE_SIGNAL_NONE;
+
+					// TODO Restore context of DL is necessary
+					// TODO Restore BASE
+
+					// We have a list now, so it's not complete.
+					//drawCompleteTicks = (u64) - 1;
+				}
+				else
+				{
+					currentList.Status.SetValue(DisplayListStatusEnum.Queued);
+				}
+			}
+			else if (currentList.Status.Value == DisplayListStatusEnum.Drawing)
+			{
+				if (SysMemUserForUser.sceKernelGetCompiledSdkVersion() >= 0x02000000) return unchecked((int)0x80000020);
+				return -1;
+			}
+			else
+			{
+				if (SysMemUserForUser.sceKernelGetCompiledSdkVersion() >= 0x02000000) return unchecked((int)0x80000004);
+				return -1;
+			}
+
+			//ProcessDLQueue();
+			return 0;
 		}
 	}
 }

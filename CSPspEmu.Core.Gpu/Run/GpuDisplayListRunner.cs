@@ -6,13 +6,26 @@ namespace CSPspEmu.Core.Gpu.Run
 {
 	public unsafe sealed partial class GpuDisplayListRunner
 	{
-		static Logger Logger = Logger.GetLogger("GpuDisplayListRunner");
+		public static readonly GpuDisplayListRunner Methods = new GpuDisplayListRunner();
+
+		private static readonly Logger Logger = Logger.GetLogger("GpuDisplayListRunner");
 
 		public GlobalGpuState GlobalGpuState;
 		public GpuDisplayList GpuDisplayList;
 		public GpuOpCodes OpCode;
 		public uint Params24;
-		public static uint PC;
+		public uint PC;
+
+
+		private GpuDisplayListRunner()
+		{
+		}
+
+		public GpuDisplayListRunner(GpuDisplayList GpuDisplayList, State.GlobalGpuState GlobalGpuState)
+		{
+			this.GpuDisplayList = GpuDisplayList;
+			this.GlobalGpuState = GlobalGpuState;
+		}
 
 		public ushort Param16(int Offset)
 		{

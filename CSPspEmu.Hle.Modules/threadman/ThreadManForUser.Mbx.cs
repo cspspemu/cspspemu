@@ -65,7 +65,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 				}
 			}
 
-			public void Receive(PspPointer* PointerToMessage, WakeUpCallbackDelegate WakeUpCallback)
+			public void Receive(PspPointer* PointerToMessage, Action WakeUp)
 			{
 				lock (this)
 				{
@@ -73,7 +73,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 					{
 						*PointerToMessage = Messages.Last.Value;
 						Messages.RemoveLast();
-						if (WakeUpCallback != null) WakeUpCallback();
+						if (WakeUp != null) WakeUp();
 					};
 					ExtractQueue.Enqueue(Extract);
 					CheckQueue();

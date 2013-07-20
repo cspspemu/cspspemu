@@ -93,14 +93,8 @@
 
 		public void OP_FINISH()
 		{
-			GpuDisplayList.Finish(Params24);
+			GpuDisplayList.DoFinish(PC, Params24);
 			GpuDisplayList.GpuProcessor.GpuImpl.Finish(GpuDisplayList.GpuStateStructPointer);
-			//Console.Error.WriteLine("OP_FINISH!");
-			//gpu.storeFrameBuffer();
-			/*
-			gpu.impl.flush();
-			gpu.finishEvent();
-			*/
 		}
 
 		//[GpuOpCodesNotImplemented]
@@ -129,7 +123,7 @@
 		[GpuOpCodesNotImplemented]
 		public void OP_SIGNAL()
 		{
-			GpuDisplayList.Signal(Extract(16, 8), (GpuDisplayList.GuBehavior)Extract(0, 16));
+			GpuDisplayList.DoSignal(PC, Extract(16, 8), (SignalBehavior)Extract(0, 16));
 		}
 	}
 }

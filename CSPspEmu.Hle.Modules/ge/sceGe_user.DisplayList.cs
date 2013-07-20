@@ -15,16 +15,19 @@ namespace CSPspEmu.Hle.Modules.ge
 	public unsafe partial class sceGe_user
 	{
 		[Inject]
-		public GpuProcessor GpuProcessor;
-
-		[Inject]
 		HleThreadManager ThreadManager;
 
 		[Inject]
 		HleMemoryManager MemoryManager;
 
-		private GpuDisplayList GetDisplayListFromId(int DisplayListId) {
-			return GpuProcessor.DisplayLists[DisplayListId];
+		private GpuDisplayList GetDisplayListFromId(int DisplayListId)
+		{
+			if (DisplayListId < 0 || DisplayListId >= GpuProcessor.DisplayListsCount)
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_ID));
+			}
+
+			return GpuProcessor.GetDisplayList(DisplayListId);
 		}
 
 		MemoryPartition GpuStateStructPartition = null;
@@ -50,7 +53,7 @@ namespace CSPspEmu.Hle.Modules.ge
 				{
 					DisplayList.InstructionAddressStart = InstructionAddressStart;
 					DisplayList.InstructionAddressCurrent = InstructionAddressStart;
-					DisplayList.InstructionAddressStall = InstructionAddressStall;
+					DisplayList.SetInstructionAddressStall(InstructionAddressStall);
 					DisplayList.CallbacksId = -1;
 					DisplayList.Callbacks = default(PspGeCallbackData);
 					if (CallbackId != -1)
@@ -139,7 +142,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		public int sceGeListDeQueue(int DisplayListId)
 		{
 			var DisplayList = GetDisplayListFromId(DisplayListId);
-			GpuProcessor.DisplayListQueue.Remove(DisplayList);
+			DisplayList.DeQueue();
 			return 0;
 		}
 
@@ -152,8 +155,22 @@ namespace CSPspEmu.Hle.Modules.ge
 		[HlePspFunction(NID = 0xE0D68148, FirmwareVersion = 150)]
 		public int sceGeListUpdateStallAddr(int DisplayListId, uint InstructionAddressStall)
 		{
+			//hleEatCycles(190);
+
 			var DisplayList = GetDisplayListFromId(DisplayListId);
-			DisplayList.InstructionAddressStall = InstructionAddressStall;
+
+			DisplayList.SetInstructionAddressStall(InstructionAddressStall);
+
+			if (DisplayList.Status.Value == DisplayListStatusEnum.Completed)
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_ALREADY));
+			}
+
+			if (DisplayList.Signal == SignalBehavior.PSP_GE_SIGNAL_HANDLER_PAUSE)
+			{
+				DisplayList.Signal = SignalBehavior.PSP_GE_SIGNAL_HANDLER_SUSPEND;
+			}
+
 			return 0;
 		}
 
@@ -164,23 +181,23 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <param name="SyncType">Specifies the condition to wait on.  One of PspGeSyncType.</param>
 		/// <returns>???</returns>
 		[HlePspFunction(NID = 0x03444EB4, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
-		public int sceGeListSync(int DisplayListId, GpuProcessor.SyncTypeEnum SyncType)
+		public DisplayListStatusEnum sceGeListSync(int DisplayListId, SyncTypeEnum SyncType)
 		{
-			//return 0;
-			//Console.WriteLine("sceGeListSync:{0},{1}", DisplayListId, SyncType);
-
 			var DisplayList = GetDisplayListFromId(DisplayListId);
 
-			ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeListSync", DisplayList, (WakeUpCallbackDelegate) =>
+			switch (SyncType)
 			{
-				DisplayList.GeListSync(SyncType, () =>
-				{
-					WakeUpCallbackDelegate();
-				});
-			});
-
-			return 0;
+				case SyncTypeEnum.WaitForCompletion:
+					ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeListSync", DisplayList, (WakeUp) =>
+					{
+						DisplayList.GeListSync(WakeUp);
+					});
+					return 0;
+				case SyncTypeEnum.Peek:
+					return DisplayList.PeekStatus();
+				default:
+					throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_MODE));
+			}
 		}
 
 		/// <summary>
@@ -189,50 +206,26 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// <param name="SyncType">Specifies the condition to wait on.  One of ::PspGeSyncType.</param>
 		/// <returns>???</returns>
 		[HlePspFunction(NID = 0xB287BD61, FirmwareVersion = 150, CheckInsideInterrupt = true)]
-		[HlePspNotImplemented(PartialImplemented = true, Notice = false)]
-		public int sceGeDrawSync(GpuProcessor.SyncTypeEnum SyncType)
+		public DisplayListStatusEnum sceGeDrawSync(SyncTypeEnum SyncType)
 		{
-			//return 0;
-			//return 0;
-
-			//Console.WriteLine("sceGeDrawSync:{0}", SyncType);
-
-			var CurrentThread = ThreadManager.Current;
-
-			if (CurrentThread == null)
+			switch (SyncType)
 			{
-				Console.Error.WriteLine("sceGeDrawSync.CurrentThread == null");
-				return -1;
+				case SyncTypeEnum.WaitForCompletion:
+					ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeDrawSync", GpuProcessor, (WakeUp) =>
+					{
+						GpuProcessor.GeDrawSync(WakeUp);
+					});
+					return 0;
+				case SyncTypeEnum.Peek:
+					return GpuProcessor.PeekStatus();
+				default:
+					throw (new SceKernelException(SceKernelErrors.ERROR_INVALID_MODE));
 			}
+		}
 
-			//ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Cyan, () => { Console.WriteLine("{0}", SyncType); });
-
-#if false
-			// Sync
-			var AutoResetEvent = new AutoResetEvent(false);
-			Console.WriteLine("SyncStart");
-			GpuProcessor.GeDrawSync(SyncType, () =>
-			{
-				Console.WriteLine("SyncEnd1");
-				//WakeUpCallbackDelegate();
-				AutoResetEvent.Set();
-			});
-			AutoResetEvent.WaitOne();
-			Console.WriteLine("SyncEnd2");
-
-#else
-			//Console.WriteLine("SyncStart");
-			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.GraphicEngine, "sceGeDrawSync", null, (WakeUpCallbackDelegate) =>
-			{
-				GpuProcessor.GeDrawSync(SyncType, () =>
-				{
-					//Console.WriteLine("SyncEnd");
-					WakeUpCallbackDelegate();
-				});
-			});
-#endif
-
-			return 0;
+		public struct PspGeStack
+		{
+			public fixed uint Stack[8];
 		}
 
 		/// <summary>
@@ -249,6 +242,16 @@ namespace CSPspEmu.Hle.Modules.ge
 			/// Pointer to a GpuStateStruct
 			/// </summary>
 			public uint GpuStateStructAddress;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public uint NumberOfStacks;
+
+			/// <summary>
+			/// 
+			/// </summary>
+			public uint StacksAddress;
 		}
 	}
 }

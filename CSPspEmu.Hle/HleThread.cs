@@ -315,7 +315,7 @@ namespace CSPspEmu.Hle
 			}
 		}
 
-		public void SetWaitAndPrepareWakeUp(WaitType WaitType, String WaitDescription, object WaitObject, Action<WakeUpCallbackDelegate> PrepareCallback, bool HandleCallbacks = false)
+		public void SetWaitAndPrepareWakeUp(WaitType WaitType, String WaitDescription, object WaitObject, Action<Action> PrepareCallback, bool HandleCallbacks = false)
 		{
 			if (this.HasAllStatus(Status.Waiting))
 			{

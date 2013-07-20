@@ -483,6 +483,12 @@ namespace CSPspEmu.Core.Cpu
 			}
 		}
 
+		public void ExecuteFunctionAndReturn(uint PC)
+		{
+			RA = 0;
+			ExecuteAT(PC);
+		}
+
 		public void ExecuteAT(uint PC)
 		{
 #if ENABLE_NATIVE_CALLS

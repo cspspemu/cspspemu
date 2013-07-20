@@ -67,7 +67,7 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
-		public volatile LinkedList<GpuDisplayList> DisplayListQueue;
+		internal volatile LinkedList<GpuDisplayList> DisplayListQueue;
 
 		/// <summary>
 		/// 
@@ -79,16 +79,24 @@ namespace CSPspEmu.Core.Gpu
 		/// </summary>
 		protected volatile Queue<GpuDisplayList> DisplayListFreeQueue;
 
+		public const int DisplayListsCount = 64;
+
 		/// <summary>
 		/// All the supported Psp Display Lists (Available and not available).
 		/// </summary>
-		public readonly GpuDisplayList[] DisplayLists = new GpuDisplayList[64];
+		private readonly GpuDisplayList[] DisplayLists = new GpuDisplayList[DisplayListsCount];
+
+		public GpuDisplayList GetDisplayList(int Index)
+		{
+			lock (DisplayLists) return DisplayLists[Index];
+			//return DisplayLists[Index];
+		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		//public PspAutoResetEvent CompletedDrawingEvent = new PspAutoResetEvent(false);
-		public PspManualResetEvent CompletedDrawingEvent = new PspManualResetEvent(false);
+		public PspAutoResetEvent CompletedDrawingEvent = new PspAutoResetEvent(false);
+		//public PspManualResetEvent CompletedDrawingEvent = new PspManualResetEvent(false);
 
 		/// <summary>
 		/// 
@@ -133,7 +141,7 @@ namespace CSPspEmu.Core.Gpu
 
 			this.DisplayListQueue = new LinkedList<GpuDisplayList>();
 			this.DisplayListFreeQueue = new Queue<GpuDisplayList>();
-			for (int n = 0; n < DisplayLists.Length; n++)
+			for (int n = 0; n < DisplayListsCount; n++)
 			{
 				var DisplayList = new GpuDisplayList(Memory, this, n);
 				this.DisplayLists[n] = DisplayList;
@@ -190,6 +198,7 @@ namespace CSPspEmu.Core.Gpu
 			lock (DisplayListQueue)
 			{
 				DisplayListQueue.AddFirst(DisplayList);
+				DisplayList.SetQueued();
 			}
 			DisplayListQueueUpdated.Set();
 			ListEnqueuedEvent.Set();
@@ -206,6 +215,7 @@ namespace CSPspEmu.Core.Gpu
 			lock (DisplayListQueue)
 			{
 				DisplayListQueue.AddLast(DisplayList);
+				DisplayList.SetQueued();
 			}
 			DisplayListQueueUpdated.Set();
 			ListEnqueuedEvent.Set();
@@ -214,10 +224,11 @@ namespace CSPspEmu.Core.Gpu
 
 		public void ProcessInit()
 		{
-			GpuDisplayList.InstructionSwitch = GpuDisplayList.GenerateSwitch();
 		}
 
 		public AutoResetEvent ListEnqueuedEvent = new AutoResetEvent(false);
+
+		private GpuDisplayList CurrentGpuDisplayList = null;
 
 		/// <summary>
 		/// 
@@ -227,23 +238,21 @@ namespace CSPspEmu.Core.Gpu
 			//Thread.Sleep(1);
 			//DisplayListQueueUpdated.WaitOne(PspConfig.VerticalSynchronization ? 1 : 0);
 
-			GpuDisplayList CurrentGpuDisplayList = null;
+			CurrentGpuDisplayList = null;
 
 			if (DisplayListQueue.GetCountLock() > 0)
 			{
-				CompletedDrawingEvent.Reset();
 				//Console.WriteLine("ProcessStep START");
 				TimeSpanUtils.InfiniteLoopDetector("GpuProcessor.ProcessStep", () =>
 				{
 					while (DisplayListQueue.GetCountLock() > 0)
 					{
-						CurrentGpuDisplayList = DisplayListQueue.First.Value;
-						{
-							//Console.WriteLine("Executing list : {0}", CurrentGpuDisplayList.Id);
-							CurrentGpuDisplayList.Process();
-						}
-						DisplayListQueue.RemoveFirst();
+						CurrentGpuDisplayList = DisplayListQueue.RemoveFirstAndGet();
+						//Console.WriteLine("Executing list : {0}", CurrentGpuDisplayList.Id);
+						CurrentGpuDisplayList.SetDequeued();
+						CurrentGpuDisplayList.Process();
 						EnqueueFreeDisplayList(CurrentGpuDisplayList);
+						CurrentGpuDisplayList = null;
 					}
 				}, () =>
 				{
@@ -264,30 +273,15 @@ namespace CSPspEmu.Core.Gpu
 			//if (DrawSync != null) DrawSync();
 		}
 
-		public void GeDrawSync(SyncTypeEnum SyncType, Action SyncCallback)
+		public void GeDrawSync(Action SyncCallback)
 		{
-			//Console.Error.WriteLine("-- GeDrawSync --------------------------------");
-			if (SyncType != SyncTypeEnum.ListDone)
+			CompletedDrawingEvent.CallbackOnSet(() =>
 			{
-				Console.Error.WriteLine("SyncType != SyncTypeEnum.ListDone :: {0}", SyncType);
-			}
-
-			if (DisplayListQueue.GetCountLock() == 0)
-			{
+				//Console.Error.WriteLine("-- GeDrawSync Completed --------------------------------");
 				CompletedDrawingEvent.Reset();
 				CapturingWaypoint();
 				SyncCallback();
-			}
-			else
-			{
-				CompletedDrawingEvent.CallbackOnSet(() =>
-				{
-					//Console.Error.WriteLine("-- GeDrawSync Completed --------------------------------");
-					CompletedDrawingEvent.Reset();
-					CapturingWaypoint();
-					SyncCallback();
-				});
-			}
+			});
 		}
 
 		private void CapturingWaypoint()
@@ -329,6 +323,25 @@ namespace CSPspEmu.Core.Gpu
 		{
 			StartCapturingFrame = true;
 			Console.WriteLine("Waiting StartCapturingFrame!");
+		}
+
+		public int GeContinue()
+		{
+			throw new NotImplementedException();
+		}
+
+		public GpuDisplayList GetCurrentGpuDisplayList()
+		{
+			return CurrentGpuDisplayList;
+		}
+
+		public bool IsBreak = false;
+
+		public DisplayListStatusEnum PeekStatus()
+		{
+			var GpuDisplayList = CurrentGpuDisplayList;
+			if (GpuDisplayList == null) return DisplayListStatusEnum.Completed;
+			return GpuDisplayList.PeekStatus();
 		}
 	}
 

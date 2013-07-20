@@ -94,7 +94,15 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 
 			var Time1 = DateTime.UtcNow;
 
-			DynarecFunction.Delegate(null);
+			//try
+			//{
+				DynarecFunction.Delegate(null);
+			//}
+			//catch (InvalidProgramException InvalidProgramException)
+			//{
+			//	//Console.Error.WriteLine(DynarecFunction.AstNode.ToXmlString());
+			//	throw (InvalidProgramException);
+			//}
 
 			var Time2 = DateTime.UtcNow;
 

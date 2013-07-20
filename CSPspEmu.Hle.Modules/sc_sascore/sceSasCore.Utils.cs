@@ -97,10 +97,10 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 	[Flags]
 	public enum AdsrFlags : uint
 	{
-		hasAttack = (1 << 0),
-		hasDecay = (1 << 1),
-		hasSustain = (1 << 2),
-		hasRelease = (1 << 3),
+		HasAttack = (1 << 0),
+		HasDecay = (1 << 1),
+		HasSustain = (1 << 2),
+		HasRelease = (1 << 3),
 	}
 
 	public enum OutputMode : uint

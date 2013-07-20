@@ -1,22 +1,29 @@
 <?php
 
-date_default_timezone_set('Europe/Madrid');
+require_once(__DIR__ . '/common.php');
 
-chdir(dirname(__DIR__));
+chdir(Common::getRootPath());
 
-echo "BUILDING RELEASE...\n";
-`MSBuild /p:Configuration=Release`;
-`merge.bat`;
-`copy /Y cspspemu.exe deploy\\cspspemu\\cspspemu.exe`;
+$msbuild = Common::getMsBuildPath();
+$git = Common::getGitPath();
+
+if (!Common::getGitVersion()) {
+	die("Can't find GIT!\n");
+}
+
+$git_revision_count = count(explode("\n", `git rev-list --all`));
+$commitDate = strtotime(trim(`git log -1 --no-decorate --pretty=format:%ai`));
+
+printf("BUILDING RELEASE (%d, %s)...\n", $git_revision_count, date('d-m-Y H:i:s', $commitDate));
+`"{$msbuild}" /p:Configuration=Release`;
+`merge_release.bat`;
+copy("cspspemu.exe", "deploy/cspspemu/cspspemu.exe");
 
 echo "REMOVING OLD FILES...\n";
 `DEL /Q deploy\\cspspemu.7z 2> NUL`;
 `DEL /Q deploy\\cspspemu\\src.zip 2> NUL`;
 `RD /S /Q deploy\\cspspemu\\ms 2> NUL`;
 `RD /S /Q deploy\\cspspemu\\src 2> NUL`;
-
-$git_revision_count = count(explode("\n", `git rev-list --all`));
-$commitDate = strtotime(trim(`git log -1 --no-decorate --pretty=format:%ai`));
 
 echo "ARCHIVING GIT SOURCE...\n";
 `git archive master --format zip -0 --output deploy\\cspspemu\\src.zip`;

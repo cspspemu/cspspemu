@@ -33,17 +33,9 @@ namespace CSPspEmu.Hle
 			CurrentFakeHleThread.CpuThreadState.CopyRegistersFrom(HleThreadManager.CurrentOrAny.CpuThreadState);
 			SetArgumentsToCpuThreadState(CurrentFakeHleThread.CpuThreadState, Function, Arguments);
 			{
-				CurrentFakeHleThread.CpuThreadState.RA = HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK;
-
-				CurrentFakeHleThread.CpuThreadState.ExecuteAT(CurrentFakeHleThread.CpuThreadState.PC);
-
-				//throw (new NotImplementedException("HleInterop.ExecuteFunctionNow"));
-
-				//CpuProcessor.RunningCallback = true;
-				//while (CpuProcessor.RunningCallback)
-				//{
-				//	CurrentFakeHleThread.Step();
-				//}
+				//CurrentFakeHleThread.CpuThreadState.RA = HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK;
+				//CurrentFakeHleThread.CpuThreadState.ExecuteAT(CurrentFakeHleThread.CpuThreadState.PC);
+				CurrentFakeHleThread.CpuThreadState.ExecuteFunctionAndReturn(CurrentFakeHleThread.CpuThreadState.PC);
 			}
 			return (uint)CurrentFakeHleThread.CpuThreadState.GPR2;
 		}
@@ -79,6 +71,11 @@ namespace CSPspEmu.Hle
 				}
 				return ExecutedCount;
 			}
+		}
+
+		public void ExecuteFunctionLater(uint Function, params object[] Arguments)
+		{
+			ExecuteFunctionLater(Function, (Result) => { }, Arguments);
 		}
 
 		public void ExecuteFunctionLater(uint Function, Action<uint> ExecutedCallback, params object[] Arguments)

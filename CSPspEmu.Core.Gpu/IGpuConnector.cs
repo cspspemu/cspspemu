@@ -7,7 +7,7 @@ namespace CSPspEmu.Core.Gpu
 {
 	public interface IGpuConnector
 	{
-		void Signal(uint Signal, GpuDisplayList.GuBehavior Behavior);
-		void Finish(uint Arg);
+		void Signal(uint PC, PspGeCallbackData PspGeCallbackData, uint Signal, SignalBehavior Behavior);
+		void Finish(uint PC, PspGeCallbackData PspGeCallbackData, uint Arg);
 	}
 }

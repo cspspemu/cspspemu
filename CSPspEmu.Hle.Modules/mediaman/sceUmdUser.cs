@@ -194,7 +194,7 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		[HlePspNotImplemented]
 		public int sceUmdWaitDriveStat(CpuThreadState CpuThreadState, PspUmdState PspUmdState)
 		{
-			CpuThreadState.Reschedule();
+			//CpuThreadState.Reschedule();
 			return 0;
 		}
 

@@ -11,6 +11,13 @@ using System.Text.RegularExpressions;
 
 namespace CSPspEmu.Hle
 {
+	[Flags]
+	public enum SdkFlags
+	{
+		SCE_KERNEL_HASCOMPILEDSDKVERSION = 0x1000,
+		SCE_KERNEL_HASCOMPILERVERSION = 0x2000,
+	}
+
 	public class HleConfig
 	{
 		[Inject]
@@ -28,6 +35,10 @@ namespace CSPspEmu.Hle
 		public PspVersion FirmwareVersion = new PspVersion("6.6.0.0");
 		public Assembly HleModulesDll;
 		public bool TraceLastSyscalls;
+
+		public SdkFlags SdkFlags;
+		public uint CompilerVersion;
+		public uint CompiledSdkVersion;
 
 		public PspLanguages Language = HleConfigUtils.CultureInfoToPspLanguage(CultureInfo.InstalledUICulture);
 		public PSP_SYSTEMPARAM_ADHOC_CHANNEL AdhocChannel = PSP_SYSTEMPARAM_ADHOC_CHANNEL.AUTOMATIC;

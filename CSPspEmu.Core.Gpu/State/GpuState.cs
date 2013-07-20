@@ -17,7 +17,7 @@ namespace CSPspEmu.Core.Gpu.State
 		}
 
 		public uint Base;
-		public int BaseOffset;
+		public uint BaseOffset;
 	}
 
 	[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 2048)]

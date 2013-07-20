@@ -53,6 +53,11 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		{
 			var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
 
+			if (Pitch < PSP_SAS_PITCH_MIN || Pitch > PSP_SAS_PITCH_MAX)
+			{
+				return -1;
+			}
+
 			SasVoice.Pitch = Pitch;
 
 			//throw(new NotImplementedException());
@@ -120,17 +125,23 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// Sets the ADSR (Attack Decay Sustain Release) for a SasCore.voice.
 		/// </summary>
 		/// <param name="SasCorePointer">SasCore</param>
-		/// <param name="voice">Voice</param>
-		/// <param name="flags">Bitfield to set each envelope on or off.</param>
-		/// <param name="attackRate">ADSR Envelope's attack type.</param>
-		/// <param name="decayRate">ADSR Envelope's decay type.</param>
-		/// <param name="sustainRate">ADSR Envelope's sustain type.</param>
-		/// <param name="releaseRate">ADSR Envelope's release type.</param>
+		/// <param name="Voice">Voice</param>
+		/// <param name="Flags">Bitfield to set each envelope on or off.</param>
+		/// <param name="AttackRate">ADSR Envelope's attack type.</param>
+		/// <param name="DecayRate">ADSR Envelope's decay type.</param>
+		/// <param name="SustainRate">ADSR Envelope's sustain type.</param>
+		/// <param name="ReleaseRate">ADSR Envelope's release type.</param>
 		/// <returns>0 on success.</returns>
 		[HlePspFunction(NID = 0x019B25EB, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int __sceSasSetADSR(uint SasCorePointer, int voice, AdsrFlags flags, uint attackRate, uint decayRate, uint sustainRate, uint releaseRate)
+		public int __sceSasSetADSR(uint SasCorePointer, int Voice, AdsrFlags Flags, int AttackRate, int DecayRate, int SustainRate, int ReleaseRate)
 		{
+			var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
+			
+			if (Flags.HasFlag(AdsrFlags.HasAttack)) SasVoice.Envelope.AttackRate = AttackRate;
+			if (Flags.HasFlag(AdsrFlags.HasDecay)) SasVoice.Envelope.DecayRate = DecayRate;
+			if (Flags.HasFlag(AdsrFlags.HasSustain)) SasVoice.Envelope.SustainRate = SustainRate;
+			if (Flags.HasFlag(AdsrFlags.HasRelease)) SasVoice.Envelope.ReleaseRate = ReleaseRate;
+
 			return 0;
 		}
 
