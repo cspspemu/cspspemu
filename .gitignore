@@ -52,3 +52,4 @@ obj
 /deploy/cspspemu/src
 /deploy/cspspemu/F0
 /utils/MaiAT3PlusDecoder/*.obj
+/*.vspx

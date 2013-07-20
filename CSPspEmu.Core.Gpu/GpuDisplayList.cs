@@ -177,17 +177,22 @@ namespace CSPspEmu.Core.Gpu
 
 			if (Debug) Console.WriteLine("Process() : {0} : 0x{1:X8} : 0x{2:X8} : 0x{3:X8}", this.Id, this.InstructionAddressCurrent, this.InstructionAddressStart, this.InstructionAddressStall);
 
-			//for (Done = false; !Done; _InstructionAddressCurrent += 4)
 			Done = false;
 			while (!Done)
 			{
-				//Console.WriteLine("{0:X}", (uint)InstructionAddressCurrent);
-				//if ((InstructionAddressStall != 0) && (InstructionAddressCurrent >= InstructionAddressStall)) break;
 				if ((InstructionAddressStall != 0) && (InstructionAddressCurrent >= InstructionAddressStall))
 				{
 					if (Debug) Console.WriteLine("- STALLED --------------------------------------------------------------------");
 					Status.SetValue(DisplayListStatusEnum.Stalling);
-					StallAddressUpdated.WaitOne();
+					while (!StallAddressUpdated.WaitOne(TimeSpan.FromSeconds(2)))
+					{
+						ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Magenta, () =>
+						{
+							Console.WriteLine("DisplayListQueue.GetCountLock(): {0}", GpuProcessor.DisplayListQueue.GetCountLock());
+							Console.WriteLine("CurrentGpuDisplayList.Status: {0}", Status.ToStringDefault());
+						});
+					}
+
 				}
 
 				ProcessInstruction();

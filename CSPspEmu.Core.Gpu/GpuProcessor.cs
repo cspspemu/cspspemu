@@ -223,49 +223,21 @@ namespace CSPspEmu.Core.Gpu
 		/// </summary>
 		public void ProcessStep()
 		{
-			//Thread.Sleep(1);
-			//DisplayListQueueUpdated.WaitOne(PspConfig.VerticalSynchronization ? 1 : 0);
-
 			CurrentGpuDisplayList = null;
 
 			if (DisplayListQueue.GetCountLock() > 0)
 			{
-				//Status2.SetValue(Status2Enum.HavePendingLists);
-
-				//Console.WriteLine("ProcessStep.Start");
-				//CompletedDrawingEvent.Reset();
-				//Console.WriteLine("ProcessStep START");
-
-				TimeSpanUtils.InfiniteLoopDetector("GpuProcessor.ProcessStep", () =>
+				while (DisplayListQueue.GetCountLock() > 0)
 				{
-					while (DisplayListQueue.GetCountLock() > 0)
-					{
-						CurrentGpuDisplayList = DisplayListQueue.RemoveFirstAndGet();
-						//Console.WriteLine("Executing list : {0}", CurrentGpuDisplayList.Id);
-						CurrentGpuDisplayList.SetDequeued();
-						CurrentGpuDisplayList.Process();
-						EnqueueFreeDisplayList(CurrentGpuDisplayList);
-					}
-					CurrentGpuDisplayList = null;
-				}, () =>
-				{
-					ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Magenta, () =>
-					{
-						Console.WriteLine("DisplayListQueue.GetCountLock(): {0}", DisplayListQueue.GetCountLock());
-						if (CurrentGpuDisplayList != null)
-						{
-							Console.WriteLine("CurrentGpuDisplayList.Status: {0}", CurrentGpuDisplayList.Status.ToStringDefault());
-							//Console.WriteLine("CurrentGpuDisplayList.Status2: {0}", CurrentGpuDisplayList.Status2.ToStringDefault());
-						}
-					});
-				});
+					CurrentGpuDisplayList = DisplayListQueue.RemoveFirstAndGet();
+					CurrentGpuDisplayList.SetDequeued();
+					CurrentGpuDisplayList.Process();
+					EnqueueFreeDisplayList(CurrentGpuDisplayList);
+				}
+				CurrentGpuDisplayList = null;
 
-				//Console.WriteLine("ProcessStep.End");
 				Status2.SetValue(Status2Enum.Completed);
-				//if (CompletedDrawingEvent != null) CompletedDrawingEvent();
-				//Console.WriteLine("ProcessStep END");
 			}
-			//if (DrawSync != null) DrawSync();
 		}
 
 		protected void AddedDisplayList()

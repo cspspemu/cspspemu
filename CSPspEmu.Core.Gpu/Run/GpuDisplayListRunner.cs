@@ -1,6 +1,8 @@
 ﻿using System;
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
+using System.Runtime.CompilerServices;
+using System.Runtime;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -27,25 +29,33 @@ namespace CSPspEmu.Core.Gpu.Run
 			this.GlobalGpuState = GlobalGpuState;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public ushort Param16(int Offset)
 		{
 			return (ushort)(Params24 >> Offset);
 		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public byte Param8(int Offset)
 		{
 			return (byte)(Params24 >> Offset);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public uint Extract(int Offset, int Count)
 		{
 			return BitUtils.Extract(Params24, Offset, Count);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public TType Extract<TType>(int Offset, int Count)
 		{
 			return (TType)(object)BitUtils.Extract(Params24, Offset, Count);
 		}
-
 
 		public GpuStateStruct* GpuState
 		{

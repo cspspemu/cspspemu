@@ -54,6 +54,17 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
+		private GpuStateStruct* GpuState;
+
+		private VertexTypeStruct VertexType;
+		private byte* IndexListByte;
+		private ushort* IndexListShort;
+		private VertexInfo[] Vertices = new VertexInfo[ushort.MaxValue];
+
+
+		/// <summary>
+		/// 
+		/// </summary>
 		private OpenglGpuImpl()
 		{
 		}
@@ -72,45 +83,17 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// </summary>
 		static void Initialize()
 		{
-			// GL.Enable(EnableCap.Blend);
 			GL.Hint(HintTarget.LineSmoothHint, HintMode.Nicest);
-			/*
-			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.CombineRgb, (int)TextureEnvModeCombine.Modulate);
-			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Source0Rgb, (int)TextureEnvModeSource.Texture);
-			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Operand0Rgb, (int)TextureEnvModeOperandRgb.SrcColor);
-			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Src1Rgb, (int)TextureEnvModeSource.Previous);
-			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Operand1Rgb, (int)TextureEnvModeOperandRgb.SrcColor);
-			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.CombineAlpha, (int)TextureEnvModeCombine.Replace);
-			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Src0Alpha, (int)TextureEnvModeSource.Previous);
-			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.Operand0Alpha, (int)TextureEnvModeOperandAlpha.SrcAlpha);
-			*/
-			//GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Combine);
-
 			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvColor, Color.FromArgb(1, 0, 0, 0));
-			//glAlphaFunc(GL_GREATER,0.000000)
-
-
-			//glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE)
-
-
-			//glTexEnvfv(GL_TEXTURE_ENV,GL_TEXTURE_ENV_COLOR, { 0.000000, 0.000000, 0.000000, 1.000000 } )
-
 			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Modulate);
-
-			//drawBeginClear(GpuState);
-			/*
-			GL.ClearColor(0, 0, 0, 1);
-			GL.ClearDepth(0);
-			GL.ClearStencil(0);
-			GL.ClearAccum(0, 0, 0, 0);
-			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit | ClearBufferMask.AccumBufferBit);
-			*/
 		}
 
-		GpuStateStruct* GpuState;
-
-#if true
-		VertexInfo PerformSkinning(VertexInfo VertexInfo)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="VertexInfo"></param>
+		/// <returns></returns>
+		private VertexInfo PerformSkinning(VertexInfo VertexInfo)
 		{
 			int SkinningWeightCount = VertexType.RealSkinningWeightCount;
 			if (SkinningWeightCount == 0) return VertexInfo;
@@ -146,70 +129,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			return VertexInfo;
 		}
-#else
-		VertexInfo PerformSkinning(VertexInfo VertexInfo)
-		{
-			if (VertexType.RealSkinningWeightCount == 0) return VertexInfo;
-			//return VertexInfo;
-
-			var SkinnedVertexState = VertexInfo;
-
-			SkinnedVertexState.Position = Vector3.Zero;
-			SkinnedVertexState.Normal = Vector3.Zero;
-
-			var BoneMatrices = &GpuState->SkinningState.BoneMatrix0;
-			//Console.WriteLine(VertexType.SkinningWeightCount);
-
-			int SkinningWeightCount = VertexType.RealSkinningWeightCount;
-
-			for (int m = 0; m < SkinningWeightCount; m++)
-			{
-				var BoneMatrix = BoneMatrices[m].Matrix4;
-				//BoneMatrix.Transpose();
-				//Console.WriteLine("{0}", VertexInfo.Weights[m]);
-				SkinnedVertexState.Position += Vector3.Transform(VertexInfo.Position, BoneMatrix) * VertexInfo.Weights[m];
-				SkinnedVertexState.Normal += Vector3.Transform(VertexInfo.Normal, BoneMatrix) * VertexInfo.Weights[m];
-			}
-
-			return SkinnedVertexState;
-
-			/*
-			if (!shouldPerformSkin) return vertexState;
-			
-			//writefln("%s", gpu.state.boneMatrix[0]);
-			VertexState skinnedVertexState = vertexState;
-			(cast(float *)&skinnedVertexState.px)[0..3] = 0.0;
-			(cast(float *)&skinnedVertexState.nx)[0..3] = 0.0;
-			*/
-			
-			/*
-			float[3] p, n;
-
-			for (int m = 0; m < vertexType.skinningWeightCount; m++) {
-				multiplyVectorPerMatrix!(true)(
-					p,
-					(cast(float *)&vertexState.px)[0..3],
-					boneMatrix[m],
-					vertexState.weights[m]
-				);
-
-				multiplyVectorPerMatrix!(false)(
-					n,
-					(cast(float *)&vertexState.nx)[0..3],
-					boneMatrix[m],
-					vertexState.weights[m]
-				);
-				
-				//writefln("%s", p);
-				
-				(cast(float *)&skinnedVertexState.px)[0..3] += p[];
-				(cast(float *)&skinnedVertexState.nx)[0..3] += n[];
-			}
-			
-			return skinnedVertexState;
-			*/
-		}
-#endif
 
 		/// <summary>
 		/// 
@@ -222,27 +141,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			_CapturePutVertex(ref VertexInfo);
 
-			//Console.WriteLine(VertexType);
-			//Console.WriteLine(VertexInfo);
-			/*
-			if (GpuState->ClearingMode)
-			{
-				Console.WriteLine(VertexInfo);
-			}
-			*/
-			//Console.WriteLine(VertexInfo);
-
-			//Console.WriteLine(VertexInfo);
-			//Console.WriteLine(VertexInfo);
-
 #if DEBUG_VERTEX_TYPE
 			if (OutputVertexInfoStream != null) OutputVertexInfoStream.WriteBytes(Encoding.UTF8.GetBytes(String.Format("{0}\n", VertexInfo)));
 #endif
-
-#if false
-			GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
-			GL.Vertex3(VertexInfo.PX, VertexInfo.PY, 0.5f);
-#else
 
 			if (VertexType.Color != VertexTypeStruct.ColorEnum.Void)
 			{
@@ -250,38 +151,16 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 			if (VertexType.Texture != VertexTypeStruct.NumericEnum.Void)
 			{
-				/*
-				if (VertexType.Texture == VertexTypeStruct.NumericEnum.Short)
-				{
-					var Texture = CurrentTexture;
-
-					Console.WriteLine(
-						"U={0}, V={1}, OFFSET({2}, {3}), SCALE({4}, {5}) : SIZE({6},{7}) : {8}",
-						VertexInfo.U, VertexInfo.V,
-						GpuState->TextureMappingState.TextureState.OffsetU, GpuState->TextureMappingState.TextureState.OffsetV,
-						GpuState->TextureMappingState.TextureState.ScaleU, GpuState->TextureMappingState.TextureState.ScaleV,
-						Texture.Width, Texture.Height,
-						GpuState->TextureMappingState.TextureState
-					);
-					
-					//return;
-				}
-				*/
-
-				//Console.WriteLine("{0}, {1}", VertexInfo.U, VertexInfo.V);
-				//GL.TexCoord2(VertexInfo.TX, VertexInfo.TY);
 				GL.TexCoord3(VertexInfo.Texture.X, VertexInfo.Texture.Y, VertexInfo.Texture.Z);
 			}
 			//Console.Write(",{0}", VertexInfo.PZ);
 			if (VertexType.Normal != VertexTypeStruct.NumericEnum.Void)
 			{
-#if false
 				if (VertexType.ReversedNormal)
 				{
 					GL.Normal3(-VertexInfo.Normal.X, -VertexInfo.Normal.Y, -VertexInfo.Normal.Z);
 				}
 				else
-#endif
 				{
 					GL.Normal3(VertexInfo.Normal.X, VertexInfo.Normal.Y, VertexInfo.Normal.Z);
 				}
@@ -290,48 +169,27 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			{
 				GL.Vertex3(VertexInfo.Position.X, VertexInfo.Position.Y, VertexInfo.Position.Z);
 			}
-#endif
 		}
 
-		VertexTypeStruct VertexType;
-		byte* IndexListByte;
-		ushort* IndexListShort;
-		VertexInfo[] Vertices = new VertexInfo[ushort.MaxValue];
-
-		/*
-		void ReadVertex(int Index, VertexInfo* VertexInfo)
-		{
-			if (VertexType.Index == VertexTypeStruct.IndexEnum.Byte)
-			{
-				*VertexInfo = Vertices[IndexListByte[Index]];
-			}
-			else if (VertexType.Index == VertexTypeStruct.IndexEnum.Short)
-			{
-				*VertexInfo = Vertices[IndexListShort[Index]];
-			}
-			else *VertexInfo = Vertices[Index];
-		}
-		*/
-
-		void ReadVertex_Byte(int Index, VertexInfo* VertexInfo)
+		private void ReadVertex_Byte(int Index, VertexInfo* VertexInfo)
 		{
 			*VertexInfo = Vertices[IndexListByte[Index]];
 		}
 
-		void ReadVertex_Short(int Index, VertexInfo* VertexInfo)
+		private void ReadVertex_Short(int Index, VertexInfo* VertexInfo)
 		{
 			*VertexInfo = Vertices[IndexListShort[Index]];
 		}
 
-		void ReadVertex_Void(int Index, VertexInfo* VertexInfo)
+		private void ReadVertex_Void(int Index, VertexInfo* VertexInfo)
 		{
 			*VertexInfo = Vertices[Index];
 		}
 
-		delegate void ReadVertexDelegate(int Index, VertexInfo* VertexInfo);
+		private delegate void ReadVertexDelegate(int Index, VertexInfo* VertexInfo);
 
-		object PspWavefrontObjWriterLock = new object();
-		PspWavefrontObjWriter PspWavefrontObjWriter = null;
+		private object PspWavefrontObjWriterLock = new object();
+		private PspWavefrontObjWriter PspWavefrontObjWriter = null;
 
 		public override void StartCapture()
 		{
@@ -403,7 +261,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			GL.Color3(Color.White);
 		}
 
-		private GuPrimitiveType[] patch_prim_types = { GuPrimitiveType.TriangleStrip, GuPrimitiveType.LineStrip, GuPrimitiveType.Points };
+		private static readonly GuPrimitiveType[] patch_prim_types = { GuPrimitiveType.TriangleStrip, GuPrimitiveType.LineStrip, GuPrimitiveType.Points };
 
 		public override void DrawCurvedSurface(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuStateStruct, VertexInfo[,] Patch, int UCount, int VCount)
 		{
@@ -418,63 +276,38 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			PrepareState_Texture_3D(GpuState);
 
 			GL.ActiveTexture(TextureUnit.Texture0);
-			/*
-			GL.Enable(EnableCap.Texture2D);
-			GL.Disable(EnableCap.Lighting);
-			GL.Disable(EnableCap.CullFace);
-			//GL.Disable(EnableCap.Texture2D);
-			//var CurrentTexture = TextureCache.Get(GpuState);
-			var CurrentTexture = new Texture(this).Load("Bezier2.png");
-			CurrentTexture.Bind();
-
-
-			var Mipmap0 = &GpuStateStruct->TextureMappingState.TextureState.Mipmap0;
-			int MipmapWidth = Mipmap0->BufferWidth;
-			int MipmapHeight = Mipmap0->TextureHeight;
-			*/
-
-			/*
-
-			GL.Scale(
-				1.0f * Mipmap0->BufferWidth,
-				1.0f * Mipmap0->TextureHeight,
-				1.0f
-			);
-			*/
-			//GL.LoadIdentity();
-
-			//var CurrentTexture = TextureCache.Get(GpuState);
-			//CurrentTexture.Save("Bezier.png");
-
 			
 			var VertexType = GpuStateStruct->VertexState.Type;
 
 			//GL.Color3(Color.White);
 
-#if true
 			GL.Begin(BeginMode.Triangles);
-			for (int t = 0; t < Patch.GetLength(1) - 1; t++)
+
+			//GpuState->TextureMappingState
+
+			int s_len = Patch.GetLength(0);
+			int t_len = Patch.GetLength(1);
+
+			for (int t = 0; t < t_len - 1; t++)
 			{
-				for (int s = 0; s < Patch.GetLength(0) - 1; s++)
+				for (int s = 0; s < s_len - 1; s++)
 				{
 					var VertexInfo1 = Patch[s + 0, t + 0];
 					var VertexInfo2 = Patch[s + 0, t + 1];
 					var VertexInfo3 = Patch[s + 1, t + 1];
 					var VertexInfo4 = Patch[s + 1, t + 0];
 
-					/*
-					VertexInfo1.Texture.X = (s + 0) * MipmapWidth / Patch.GetLength(0);
-					VertexInfo1.Texture.Y = (t + 0) * MipmapWidth / Patch.GetLength(1);
-
-					VertexInfo2.Texture.X = (s + 0) * MipmapWidth / Patch.GetLength(0);
-					VertexInfo2.Texture.Y = (t + 1) * MipmapWidth / Patch.GetLength(1);
-
-					VertexInfo3.Texture.X = (s + 1) * MipmapWidth / Patch.GetLength(0);
-					VertexInfo3.Texture.Y = (t + 1) * MipmapWidth / Patch.GetLength(1);
-
-					VertexInfo4.Texture.X = (s + 1) * MipmapWidth / Patch.GetLength(0);
-					VertexInfo4.Texture.Y = (t + 0) * MipmapWidth / Patch.GetLength(1);
-					*/
+					//VertexInfo1.Texture.X = (s + 0) * MipmapWidth / s_len;
+					//VertexInfo1.Texture.Y = (t + 0) * MipmapWidth / t_len;
+					//
+					//VertexInfo2.Texture.X = (s + 0) * MipmapWidth / s_len;
+					//VertexInfo2.Texture.Y = (t + 1) * MipmapWidth / t_len;
+					//
+					//VertexInfo3.Texture.X = (s + 1) * MipmapWidth / s_len;
+					//VertexInfo3.Texture.Y = (t + 1) * MipmapWidth / t_len;
+					//
+					//VertexInfo4.Texture.X = (s + 1) * MipmapWidth / s_len;
+					//VertexInfo4.Texture.Y = (t + 0) * MipmapWidth / t_len;
 
 					PutVertex(ref VertexInfo1, ref VertexType);
 					PutVertex(ref VertexInfo2, ref VertexType);
@@ -489,24 +322,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				}
 			}
 			GL.End();
-#else
-			GL.Begin(BeginMode.TriangleStrip);
-			//GL.Begin(BeginMode.LineStrip);
-			//GL.Begin(BeginMode.Points);
-			for (int t = 0; t < Patch.GetLength(1) - 1; t++)
-			{
-				for (int s = 0; s < Patch.GetLength(0); s++)
-				{
-					var VertexInfo1 = Patch[s, t];
-					var VertexInfo2 = Patch[s, t + 1];
-					PutVertex(ref VertexInfo1, ref VertexType);
-					PutVertex(ref VertexInfo2, ref VertexType);
-					//GL.Color3(Color.White);
-					Console.WriteLine("{0}, {1} : {2}", s, t, VertexInfo1);
-				}
-			}
-			GL.End();
-#endif
 
 		}
 
@@ -515,7 +330,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 #if SLOW_SIMPLE_RENDER_TARGET
 			PrepareRead(GpuState);
 #endif
-
 
 			//Console.WriteLine("VertexCount: {0}", VertexCount);
 			var Start = DateTime.UtcNow;
@@ -535,22 +349,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			{
 				//Console.WriteLine("{0}", (*GpuState).ToStringDefault());
 			}
-
-#if false
-			if (GpuState->ClearingMode)
-			{
-				ResetState();
-				GL.Begin(BeginMode.Quads);
-				{
-					GL.Vertex2(0, 0);
-					GL.Vertex2(100, 0);
-					GL.Vertex2(100, 100);
-					GL.Vertex2(0, 100);
-				}
-				GL.End();
-				SaveFrameBuffer(GpuState, "frameBuffer.png");
-			}
-#endif
 		}
 
 #if DEBUG_VERTEX_TYPE

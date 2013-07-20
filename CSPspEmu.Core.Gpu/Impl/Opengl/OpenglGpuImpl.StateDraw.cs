@@ -150,58 +150,59 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			GlEnableDisable(EnableCap.ColorMaterial, VertexType.Color != VertexTypeStruct.ColorEnum.Void);
 	
 			var Color = GpuState->LightingState.AmbientModelColor;
+			var LightingState = &GpuState->LightingState;
 			GL.Color4(&Color.Red);
 		
-			if (VertexType.Color != VertexTypeStruct.ColorEnum.Void && GpuState->LightingState.Enabled)
+			if (VertexType.Color != VertexTypeStruct.ColorEnum.Void && LightingState->Enabled)
 			{
-				ColorMaterialParameter flags = (ColorMaterialParameter)0;
+				var Flags = (ColorMaterialParameter)0;
 				/*
 				glMaterialfv(faces, GL_AMBIENT , [0.0f, 0.0f, 0.0f, 0.0f].ptr);
 				glMaterialfv(faces, GL_DIFFUSE , [0.0f, 0.0f, 0.0f, 0.0f].ptr);
 				glMaterialfv(faces, GL_SPECULAR, [0.0f, 0.0f, 0.0f, 0.0f].ptr);
 				*/
 
-				var MaterialColorComponents = GpuState->LightingState.MaterialColorComponents;
+				var MaterialColorComponents = LightingState->MaterialColorComponents;
 
 				if (MaterialColorComponents.HasFlag(LightComponentsSet.Ambient))
 				{
-					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, &GpuState->LightingState.AmbientModelColor.Red);
+					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, &LightingState->AmbientModelColor.Red);
 				}
 
 				if (MaterialColorComponents.HasFlag(LightComponentsSet.Diffuse))
 				{
-					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, &GpuState->LightingState.DiffuseModelColor.Red);
+					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, &LightingState->DiffuseModelColor.Red);
 				}
 
 				if (MaterialColorComponents.HasFlag(LightComponentsSet.Specular))
 				{
-					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, &GpuState->LightingState.SpecularModelColor.Red);
+					GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Specular, &LightingState->SpecularModelColor.Red);
 				}
 
 				if (MaterialColorComponents.HasFlag(LightComponentsSet.AmbientAndDiffuse))
 				{
-					flags = ColorMaterialParameter.AmbientAndDiffuse;
+					Flags = ColorMaterialParameter.AmbientAndDiffuse;
 				}
 				else if (MaterialColorComponents.HasFlag(LightComponentsSet.Ambient))
 				{
-					flags = ColorMaterialParameter.Ambient;
+					Flags = ColorMaterialParameter.Ambient;
 				}
 				else if (MaterialColorComponents.HasFlag(LightComponentsSet.Diffuse))
 				{
-					flags = ColorMaterialParameter.Diffuse;
+					Flags = ColorMaterialParameter.Diffuse;
 				}
 				else if (MaterialColorComponents.HasFlag(LightComponentsSet.Specular))
 				{
-					flags = ColorMaterialParameter.Specular;
+					Flags = ColorMaterialParameter.Specular;
 				}
 				else
 				{
 					//throw (new NotImplementedException("Error! : " + MaterialColorComponents));
 				}
 				//flags = GL_SPECULAR;
-				if (flags != 0)
+				if (Flags != 0)
 				{
-					GL.ColorMaterial(MaterialFace.FrontAndBack, flags);
+					GL.ColorMaterial(MaterialFace.FrontAndBack, Flags);
 				}
 				//glEnable(GL_COLOR_MATERIAL);
 			}

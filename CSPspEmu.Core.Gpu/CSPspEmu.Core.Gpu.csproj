@@ -146,9 +146,7 @@
     <Compile Include="State\SubStates\VertexStateStruct.cs" />
     <Compile Include="TextureCache.cs" />
     <Compile Include="VertexInfo.cs" />
-    <Compile Include="VertexReader.cs" />
-    <Compile Include="VertexReading\VertexReaderDynarec.cs" />
-    <Compile Include="VertexReading\VertexReaderDynarec.Utils.cs" />
+    <Compile Include="VertexReading\VertexReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">

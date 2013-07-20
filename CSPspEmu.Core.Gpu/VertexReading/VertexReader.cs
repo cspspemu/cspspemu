@@ -9,32 +9,6 @@ namespace CSPspEmu.Core.Gpu
 {
     public unsafe class VertexReader
 	{
-#if USE_VERTEX_READER_DYNAREC
-		public Dictionary<uint, VertexReaderDelegate> Readers = new Dictionary<uint, VertexReaderDelegate>();
-		VertexReaderDelegate CurrentReader;
-		byte* BasePointer;
-
-		public void SetVertexTypeStruct(VertexTypeStruct VertexTypeStruct, byte* BasePointer)
-		{
-			var Key = VertexTypeStruct.Value;
-			if (!Readers.TryGetValue(Key, out CurrentReader))
-			{
-				this.CurrentReader = Readers[Key] = VertexReaderDynarec.GenerateMethod(VertexTypeStruct);
-			}
-			this.BasePointer = BasePointer;
-		}
-
-		public void ReadVertices(int Index, VertexInfo* VertexInfo, int Count)
-		{
-			CurrentReader(BasePointer, VertexInfo, Index, Count);
-		}
-
-		public void ReadVertex(int Index, VertexInfo* VertexInfo)
-		{
-			CurrentReader(BasePointer, VertexInfo, Index, 1);
-		}
-
-#else
 		protected int VertexAlignSize = 1;
 		protected int VertexSize;
 		protected int SkinningWeightCount;
@@ -131,10 +105,6 @@ namespace CSPspEmu.Core.Gpu
 		{
 		}
 
-#if false
-		protected void Align2() { Pointer = (byte*)((uint)Pointer & unchecked((uint)~1)); }
-		protected void Align4() { Pointer = (byte*)((uint)Pointer & unchecked((uint)~4)); }
-#else
 		protected void Align2()
 		{
 			if (((uint)Pointer & 1) != 0)
@@ -149,7 +119,6 @@ namespace CSPspEmu.Core.Gpu
 				Pointer = (byte*)(((uint)Pointer + 4) & unchecked((uint)~3));
 			}
 		}
-#endif
 
 		protected void Void()
 		{
@@ -333,6 +302,5 @@ namespace CSPspEmu.Core.Gpu
 			VertexInfo->Normal.Z = (float)((float*)Pointer)[2];
 			Pointer += sizeof(float) * 3;
 		}
-#endif
 	}
 }

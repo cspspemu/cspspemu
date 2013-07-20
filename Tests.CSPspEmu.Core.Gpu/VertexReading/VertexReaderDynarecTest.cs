@@ -3,7 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using CSPspEmu.Core.Gpu.VertexReading;
+//using CSPspEmu.Core.Gpu.VertexReading;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Gpu;
 using CSharpUtils;
@@ -20,6 +20,7 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 	[TestFixture]
 	public unsafe class VertexReaderDynarecTest
 	{
+#if false
 		VertexInfo[] VertexInfoList = new VertexInfo[16];
 		VertexReaderDelegate ReadVertices;
 
@@ -166,5 +167,6 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 				VertexInfoList[0].ToString()
 			);
 		}
+#endif
 	}
 }
