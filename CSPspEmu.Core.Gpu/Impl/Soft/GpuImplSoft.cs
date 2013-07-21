@@ -56,5 +56,10 @@ namespace CSPspEmu.Core.Gpu
 			get { return true; }
 		}
 
+
+		public override void Sync(GpuStateStruct* GpuState)
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 }

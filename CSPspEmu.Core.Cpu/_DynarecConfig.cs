@@ -21,6 +21,7 @@ namespace CSPspEmu.Core.Cpu
 		public const bool EMIT_CALL_TICK = true;
 		public const bool ENABLE_TAIL_CALL = true;
 		public const bool BRANCH_FLAG_AS_LOCAL = true;
-		public const bool DebugFunctionCreation = true;
+		//public const bool DebugFunctionCreation = true;
+		public const bool DebugFunctionCreation = false;
 	}
 }

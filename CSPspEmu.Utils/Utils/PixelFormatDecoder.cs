@@ -385,7 +385,7 @@ namespace CSPspEmu.Core.Utils
 			}
 		}
 
-		private unsafe void Decode_RGBA_8888()
+		private unsafe void _Decode_RGBA_XXXX_uint(Func<uint, OutputPixel> DecodePixel)
 		{
 			var Input = (uint*)_Input;
 
@@ -394,106 +394,74 @@ namespace CSPspEmu.Core.Utils
 				var InputRow = (uint*)&InputByte[y * StrideWidth];
 				for (int x = 0; x < Width; x++, n++)
 				{
-					OutputPixel Value = *((OutputPixel*)&InputRow[x]);
-					Output[n].R = Value.R;
-					Output[n].G = Value.G;
-					Output[n].B = Value.B;
-					Output[n].A = Value.A;
+					Output[n] = DecodePixel(InputRow[x]);
 				}
 			}
+		}
+
+		private unsafe void _Decode_RGBA_XXXX_ushort(Func<ushort, OutputPixel> DecodePixel)
+		{
+			var Input = (uint*)_Input;
+
+			for (int y = 0, n = 0; y < Height; y++)
+			{
+				var InputRow = (ushort*)&InputByte[y * StrideWidth];
+				for (int x = 0; x < Width; x++, n++)
+				{
+					Output[n] = DecodePixel(InputRow[x]);
+				}
+			}
+		}
+
+		private unsafe void Decode_RGBA_8888()
+		{
+			_Decode_RGBA_XXXX_uint(Decode_RGBA_8888_Pixel);
 		}
 
 		private unsafe void Decode_RGBA_4444()
 		{
-			//throw(new NotImplementedException());
-			var Input = (ushort*)_Input;
-
-			for (int y = 0, n = 0; y < Height; y++)
-			{
-				var InputRow = (ushort*)&InputByte[y * StrideWidth];
-				for (int x = 0; x < Width; x++, n++)
-				{
-					Output[n] = Decode_RGBA_4444_Pixel(InputRow[x]);
-				}
-			}
-
+			_Decode_RGBA_XXXX_ushort(Decode_RGBA_4444_Pixel);
 		}
 
 		private unsafe void Decode_RGBA_5551()
 		{
-			var Input = (ushort*)_Input;
-
-			//long CheckSum = 0;
-
-			for (int y = 0, n = 0; y < Height; y++)
-			{
-				var InputRow = (ushort*)&InputByte[y * StrideWidth];
-				for (int x = 0; x < Width; x++, n++)
-				{
-					Decode_RGBA_5551_Pixel(InputRow[x], out Output[n]);
-					//CheckSum += (long)Output[n].CheckSum;
-				}
-			}
-
-			/*
-			try
-			{
-			}
-			catch (Exception Exception)
-			{
-				Console.Error.WriteLine(Exception);
-				Console.Error.WriteLine("Decode_RGBA_5551 : {0}x{1} : {2}", Width, Height, CheckSum);
-			}
-			*/
+			_Decode_RGBA_XXXX_ushort(Decode_RGBA_5551_Pixel);
 		}
 
 		private unsafe void Decode_RGBA_5650()
 		{
-			var Input = (ushort*)_Input;
-
-			for (int y = 0, n = 0; y < Height; y++)
-			{
-				var InputRow = (ushort*)&InputByte[y * StrideWidth];
-				for (int x = 0; x < Width; x++, n++)
-				{
-					Output[n] = Decode_RGBA_5650_Pixel(InputRow[x]);
-				}
-			}
+			_Decode_RGBA_XXXX_ushort(Decode_RGBA_5650_Pixel);
 		}
 
 		public static unsafe OutputPixel Decode_RGBA_4444_Pixel(ushort Value)
 		{
 			return new OutputPixel()
 			{
-				R = (byte)Value.ExtractUnsignedScale(0, 4, 255),
-				G = (byte)Value.ExtractUnsignedScale(4, 4, 255),
-				B = (byte)Value.ExtractUnsignedScale(8, 4, 255),
-				A = (byte)Value.ExtractUnsignedScale(12, 4, 255),
+				R = (byte)BitUtils.ExtractScaled(Value, 0, 4, 255),
+				G = (byte)BitUtils.ExtractScaled(Value, 4, 4, 255),
+				B = (byte)BitUtils.ExtractScaled(Value, 8, 4, 255),
+				A = (byte)BitUtils.ExtractScaled(Value, 12, 4, 255),
 			};
 		}
 
-		public static unsafe void Decode_RGBA_5551_Pixel(ushort Value, out OutputPixel OutputPixel)
+		public static unsafe OutputPixel Decode_RGBA_5551_Pixel(ushort Value)
 		{
-#if true
-			OutputPixel.R = (byte)(((Value >> 0) & 0x1F) * 255 / 0x1F);
-			OutputPixel.G = (byte)(((Value >> 5) & 0x1F) * 255 / 0x1F);
-			OutputPixel.B = (byte)(((Value >> 10) & 0x1F) * 255 / 0x1F);
-			OutputPixel.A = (byte)(((Value >> 15) != 0) ? 255 : 0);
-#else
-			OutputPixel.R = (byte)Value.ExtractUnsignedScale(0, 5, 255);
-			OutputPixel.G = (byte)Value.ExtractUnsignedScale(5, 5, 255);
-			OutputPixel.B = (byte)Value.ExtractUnsignedScale(10, 5, 255);
-			OutputPixel.A = (byte)Value.ExtractUnsignedScale(15, 1, 255);
-#endif
+			return new OutputPixel()
+			{
+				R = (byte)BitUtils.ExtractScaled(Value, 0, 5, 255),
+				G = (byte)BitUtils.ExtractScaled(Value, 5, 5, 255),
+				B = (byte)BitUtils.ExtractScaled(Value, 10, 5, 255),
+				A = (byte)BitUtils.ExtractScaled(Value, 15, 1, 255),
+			};
 		}
 
 		public static unsafe OutputPixel Decode_RGBA_5650_Pixel(ushort Value)
 		{
 			return new OutputPixel()
 			{
-				R = (byte)Value.ExtractUnsignedScale(0, 5, 255),
-				G = (byte)Value.ExtractUnsignedScale(5, 6, 255),
-				B = (byte)Value.ExtractUnsignedScale(11, 5, 255),
+				R = (byte)BitUtils.ExtractScaled(Value, 0, 5, 255),
+				G = (byte)BitUtils.ExtractScaled(Value, 5, 6, 255),
+				B = (byte)BitUtils.ExtractScaled(Value, 11, 5, 255),
 				A = 0xFF,
 			};
 		}
@@ -502,6 +470,7 @@ namespace CSPspEmu.Core.Utils
 		{
 			return *(OutputPixel*)&Value;
 		}
+
 		/// <summary>
 		/// 
 		/// </summary>

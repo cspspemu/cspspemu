@@ -254,11 +254,10 @@ namespace CSPspEmu.Core.Gpu
 		{
 			//Console.WriteLine("{0:X}", InstructionAddressCurrent);
 
-			//var Instruction = *(uint *)Memory.PspAddressToPointerUnsafe(_InstructionAddressCurrent);
+			var Instruction = *(uint *)Memory.PspAddressToPointerUnsafe(_InstructionAddressCurrent);
 			//var Instruction = Memory.Read4(_InstructionAddressCurrent);
-			var Instruction = Memory.ReadSafe<uint>(_InstructionAddressCurrent);
+			//var Instruction = Memory.ReadSafe<uint>(_InstructionAddressCurrent);
 
-			var WritePC = Memory.GetPCWriteAddress(_InstructionAddressCurrent);
 			var OpCode = (GpuOpCodes)((Instruction >> 24) & 0xFF);
 			var Params = ((Instruction) & 0xFFFFFF);
 
@@ -271,6 +270,8 @@ namespace CSPspEmu.Core.Gpu
 
 			if (Debug)
 			{
+				var WritePC = Memory.GetPCWriteAddress(_InstructionAddressCurrent);
+
 				Console.Error.WriteLine(
 					"CODE(0x{0:X}-0x{1:X}) : PC(0x{2:X}) : {3} : 0x{4:X} : Done:{5}",
 					InstructionAddressCurrent,

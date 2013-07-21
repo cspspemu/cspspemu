@@ -444,15 +444,28 @@ namespace CSPspEmu.Hle.Modules.audio
 		/// <summary>
 		/// Change the volume of a channel
 		/// </summary>
-		/// <param name="Channel">The channel number.</param>
-		/// <param name="LeftVolume">The left volume.</param>
-		/// <param name="RightVolume">The right volume.</param>
+		/// <param name="ChannelId">The channel number.</param>
+		/// <param name="VolumeLeft">The left volume.</param>
+		/// <param name="VolumeRight">The right volume.</param>
 		/// <returns>0 on success, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0xB7E1D8E7, FirmwareVersion = 150)]
-		[HlePspNotImplemented()]
-		public int sceAudioChangeChannelVolume(int Channel, int LeftVolume, int RightVolume)
+		//[HlePspNotImplemented()]
+		public int sceAudioChangeChannelVolume(int ChannelId, int VolumeLeft, int VolumeRight)
 		{
-			//throw (new NotImplementedException());
+			var Channel = PspAudio.GetChannel(ChannelId);
+
+			if (VolumeLeft > 0xFFFF || VolumeRight > 0xFFFF) {
+				throw(new SceKernelException(SceKernelErrors.ERROR_AUDIO_INVALID_VOLUME));
+			}
+
+			if (!Channel.IsReserved)
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_AUDIO_CHANNEL_NOT_RESERVED));
+			}
+			
+			if (VolumeLeft >= 0) Channel.VolumeLeft = VolumeLeft;
+			if (VolumeRight >= 0) Channel.VolumeRight = VolumeRight;
+			
 			return 0;
 		}
 

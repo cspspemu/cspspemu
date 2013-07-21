@@ -73,16 +73,27 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			this.TextureCache = new TextureCacheOpengl(this.Memory, this);
 			this.VertexReader = new VertexReader();
-			this.TextureCache = new TextureCacheOpengl(Memory, this);
 		}
 
 		//public static object GpuLock = new object();
 
+		static public int FrameBufferTexture = -1;
+
 		/// <summary>
 		/// 
 		/// </summary>
-		static void Initialize()
+		static private void Initialize()
 		{
+			FrameBufferTexture = GL.GenTexture();
+			GL.BindTexture(TextureTarget.Texture2D, FrameBufferTexture);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, 1, 1, 0, PixelFormat.Bgra, PixelType.UnsignedInt8888Reversed, new uint[] { 0xFF000000 });
+			
+			GL.BindTexture(TextureTarget.Texture2D, 0);
+
 			GL.Hint(HintTarget.LineSmoothHint, HintMode.Nicest);
 			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvColor, Color.FromArgb(1, 0, 0, 0));
 			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Modulate);
@@ -650,6 +661,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 						}
 					}
 					GL.End();
+					var Error = GL.GetError();
+					if (Error != ErrorCode.NoError)
+					{
+						//Console.Error.WriteLine("GL.Error: GL.End: {0}", Error);
+					}
 				}
 			}
 
@@ -730,44 +746,97 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 #endif
 		}
 
-		private void SaveFrameBuffer(GpuStateStruct* GpuState, string FileName)
+		int[] pboIds = { -1 };
+
+		static bool UsePbo = false;
+
+		private void PreParePbos()
 		{
-			var GlPixelFormat = GlPixelFormatList[(int)GuPixelFormats.RGBA_8888];
-			int Width = (int)GpuState->DrawBufferState.Width;
-			if (Width == 0) Width = 512;
-			int Height = 272;
-			int ScanWidth = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, Width);
-			int PixelSize = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, 1);
-
-			if (Width == 0) Width = 512;
-
-			GL.PixelStore(PixelStoreParameter.PackAlignment, PixelSize);
-
-			var FB = new Bitmap(Width, Height);
-			var Data = new byte[Width * Height * 4];
-
-			fixed (byte* DataPtr = Data)
+			if (UsePbo)
 			{
-				GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, new IntPtr(DataPtr));
-
-				BitmapUtils.TransferChannelsDataInterleaved(
-					FB.GetFullRectangle(),
-					FB,
-					DataPtr,
-					BitmapUtils.Direction.FromDataToBitmap,
-					BitmapChannel.Red,
-					BitmapChannel.Green,
-					BitmapChannel.Blue,
-					BitmapChannel.Alpha
-				);
+				if (pboIds[0] == -1)
+				{
+					GL.GenBuffers(1, pboIds);
+					GL.BindBuffer(BufferTarget.PixelUnpackBuffer, pboIds[0]);
+					GL.BufferData(BufferTarget.PixelUnpackBuffer, new IntPtr(512 * 272 * 4), IntPtr.Zero, BufferUsageHint.StreamRead);
+					GL.BindBuffer(BufferTarget.PixelUnpackBuffer, 0);
+				}
+				GL.BindBuffer(BufferTarget.PixelPackBuffer, pboIds[0]);
 			}
-
-			FB.Save(FileName);
 		}
+
+		private void UnPreParePbos()
+		{
+			if (UsePbo)
+			{
+				GL.BindBuffer(BufferTarget.PixelPackBuffer, 0);
+			}
+		}
+		
+		//private void SaveFrameBuffer(GpuStateStruct* GpuState, string FileName)
+		//{
+		//	var GlPixelFormat = GlPixelFormatList[(int)GuPixelFormats.RGBA_8888];
+		//	int Width = (int)GpuState->DrawBufferState.Width;
+		//	if (Width == 0) Width = 512;
+		//	int Height = 272;
+		//	int ScanWidth = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, Width);
+		//	int PixelSize = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, 1);
+		//
+		//	if (Width == 0) Width = 512;
+		//
+		//	GL.PixelStore(PixelStoreParameter.PackAlignment, PixelSize);
+		//
+		//	var FB = new Bitmap(Width, Height);
+		//	var Data = new byte[Width * Height * 4];
+		//
+		//	fixed (byte* DataPtr = Data)
+		//	{
+		//		//glBindBufferARB(GL_PIXEL_PACK_BUFFER_ARB, pboIds[index]);
+		//		GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, new IntPtr(DataPtr));
+		//
+		//		BitmapUtils.TransferChannelsDataInterleaved(
+		//			FB.GetFullRectangle(),
+		//			FB,
+		//			DataPtr,
+		//			BitmapUtils.Direction.FromDataToBitmap,
+		//			BitmapChannel.Red,
+		//			BitmapChannel.Green,
+		//			BitmapChannel.Blue,
+		//			BitmapChannel.Alpha
+		//		);
+		//	}
+		//
+		//	FB.Save(FileName);
+		//}
 
 		[HandleProcessCorruptedStateExceptions]
 		private void PrepareWrite(GpuStateStruct* GpuState)
 		{
+			GL.Flush();
+			//return;
+
+#if true
+			if (SwapBuffers)
+			{
+				RenderGraphicsContext.SwapBuffers();
+			}
+
+			GL.PushAttrib(AttribMask.EnableBit);
+			GL.PushAttrib(AttribMask.TextureBit);
+			{
+				GL.Enable(EnableCap.Texture2D);
+				GL.BindTexture(TextureTarget.Texture2D, FrameBufferTexture);
+				{
+					//GL.CopyTexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, 0, 0, 512, 272);
+					GL.CopyTexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, 0, 0, 512, 272, 0);
+					//GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, 1, 1, 0, PixelFormat.Bgra, PixelType.UnsignedInt8888Reversed, new uint[] { 0xFFFF00FF });
+				}
+				GL.BindTexture(TextureTarget.Texture2D, 0);
+			}
+			GL.PopAttrib();
+			GL.PopAttrib();
+#else
+
 			//Console.WriteLine("PrepareWrite");
 			try
 			{
@@ -778,38 +847,43 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				int ScanWidth = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, Width);
 				int PixelSize = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, 1);
 				//GpuState->DrawBufferState.Format
-				var Address = (void *)Memory.PspAddressToPointerSafe(GpuState->DrawBufferState.Address);
+				var Address = (void*)Memory.PspAddressToPointerSafe(GpuState->DrawBufferState.Address);
 
 				//Console.WriteLine("{0}", GlPixelFormat.GuPixelFormat);
 
 				//Console.WriteLine("{0:X}", GpuState->DrawBufferState.Address);
 				GL.PixelStore(PixelStoreParameter.PackAlignment, PixelSize);
 
-#if false
-				//GL.WindowPos2(0, 272);
-				//GL.PixelZoom(1, -1);
-
-				GL.WindowPos2(0, 0);
-				GL.PixelZoom(1, 1);
-
-				GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, new IntPtr(Address));
-#else
 				fixed (void* _TempBufferPtr = &TempBuffer[0])
 				{
-					GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, new IntPtr(_TempBufferPtr));
-
 					var Input = (byte*)_TempBufferPtr;
 					var Output = (byte*)Address;
 
+					PreParePbos();
+					if (this.pboIds[0] > 0)
+					{
+						GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, IntPtr.Zero);
+						Input = (byte*)GL.MapBuffer(BufferTarget.PixelPackBuffer, BufferAccess.ReadOnly).ToPointer();
+						GL.UnmapBuffer(BufferTarget.PixelPackBuffer);
+						if (Input == null)
+						{
+							Console.WriteLine("PBO ERROR!");
+						}
+					}
+					else
+					{
+						GL.ReadPixels(0, 0, Width, Height, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, new IntPtr(_TempBufferPtr));
+					}
+					UnPreParePbos();
+
 					for (int Row = 0; Row < Height; Row++)
 					{
-						var ScanIn = (byte *)&Input[ScanWidth * Row];
+						var ScanIn = (byte*)&Input[ScanWidth * Row];
 						var ScanOut = (byte*)&Output[ScanWidth * (Height - Row - 1)];
 						//Console.WriteLine("{0}:{1},{2},{3}", Row, PixelSize, Width, ScanWidth);
 						PointerUtils.Memcpy(ScanOut, ScanIn, ScanWidth);
 					}
 				}
-#endif
 			}
 			catch (Exception Exception)
 			{
@@ -818,8 +892,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			if (SwapBuffers)
 			{
-				GraphicsContext.SwapBuffers();
+				RenderGraphicsContext.SwapBuffers();
 			}
+#endif
 		}
 
 		[HandleProcessCorruptedStateExceptions]
@@ -851,12 +926,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		public override void End(GpuStateStruct* GpuState)
 		{
-			//Console.WriteLine("End");
 			PrepareWrite(GpuState);
+		}
 
-			//SaveFrameBuffer(GpuState, "framebuffer.png");
-
-			//throw new NotImplementedException();
+		public override void Sync(GpuStateStruct* GpuState)
+		{
+			//PrepareWrite(GpuState);
 		}
 
 		public override void TextureFlush(GpuStateStruct* GpuState)

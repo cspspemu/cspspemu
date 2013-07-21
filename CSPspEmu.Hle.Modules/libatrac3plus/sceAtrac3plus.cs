@@ -80,7 +80,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		}
 
 		[HleUidPoolClass(NotFoundError = SceKernelErrors.ERROR_ATRAC_BAD_ID, FirstItem = 0)]
-		public class Atrac : IHleUidPoolClass, IDisposable
+		public class Atrac : IHleUidPoolClass
 		{
 			[Inject]
 			protected HleMemoryManager HleMemoryManager;
@@ -410,6 +410,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 
 			void IDisposable.Dispose()
 			{
+				Console.WriteLine("Atrac3+ Dispose");
 			}
 
 			public int EndSample
@@ -699,7 +700,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// <param name="AtracId">The atrac ID to release</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x61EB33F5, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceAtracReleaseAtracID(Atrac Atrac)
 		{
 			Atrac.RemoveUid(InjectContext);
@@ -750,7 +751,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// <param name="ErrorResult"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xE88F759B, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		[HlePspNotImplemented(Notice = false)]
 		public int sceAtracGetInternalErrorInfo(Atrac Atrac, out int ErrorResult)
 		{
 			ErrorResult = 0;

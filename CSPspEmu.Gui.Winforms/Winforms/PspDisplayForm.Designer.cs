@@ -535,8 +535,6 @@
 			this.Load += new System.EventHandler(this.PspDisplayForm_Load_1);
 			this.DragDrop += new System.Windows.Forms.DragEventHandler(this.PspDisplayForm_DragDrop);
 			this.DragEnter += new System.Windows.Forms.DragEventHandler(this.PspDisplayForm_DragEnter);
-			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PspDisplayForm_KeyDown);
-			this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.PspDisplayForm_KeyUp);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.ResumeLayout(false);

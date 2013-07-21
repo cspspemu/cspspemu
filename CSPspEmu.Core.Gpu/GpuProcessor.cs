@@ -217,6 +217,7 @@ namespace CSPspEmu.Core.Gpu
 		public AutoResetEvent ListEnqueuedEvent = new AutoResetEvent(false);
 
 		volatile private GpuDisplayList CurrentGpuDisplayList = null;
+		volatile private GpuDisplayList LastProcessedGpuDisplayList = null;
 
 		/// <summary>
 		/// 
@@ -231,6 +232,7 @@ namespace CSPspEmu.Core.Gpu
 				{
 					CurrentGpuDisplayList = DisplayListQueue.RemoveFirstAndGet();
 					CurrentGpuDisplayList.SetDequeued();
+					LastProcessedGpuDisplayList = CurrentGpuDisplayList;
 					CurrentGpuDisplayList.Process();
 					EnqueueFreeDisplayList(CurrentGpuDisplayList);
 				}
@@ -252,6 +254,7 @@ namespace CSPspEmu.Core.Gpu
 			Status2.CallbackOnStateOnce(Status2Enum.Completed, () =>
 			{
 				CapturingWaypoint();
+				GpuImpl.Sync(LastProcessedGpuDisplayList.GpuStateStructPointer);
 				SyncCallback();
 			});
 		}

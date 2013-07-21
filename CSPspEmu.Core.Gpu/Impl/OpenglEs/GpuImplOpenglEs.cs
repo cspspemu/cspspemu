@@ -259,5 +259,10 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 				return OffscreenContext.IsWorking;
 			}
 		}
+
+		public override void Sync(GpuStateStruct* GpuState)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace CSPspEmu.Core.Audio
 {
-    public class PspAudio : IInjectInitialize
+    unsafe public sealed class PspAudio : IInjectInitialize
 	{
 		/// <summary>
 		/// Output formats for PSP audio.
@@ -138,25 +138,31 @@ namespace CSPspEmu.Core.Audio
 		{
 			PspAudioImpl.Update((MixedSamples) =>
 			{
-				int RequiredSamples = MixedSamples.Length;
-				int[] MixedSamplesDenormalized = new int[RequiredSamples];
-				int[] NumberOfChannels = new int[RequiredSamples];
-				foreach (var Channel in Channels)
+				var RequiredSamples = MixedSamples.Length;
+				fixed (short* MixedSamplesPtr = MixedSamples)
 				{
-					var ChannelSamples = Channel.Read(RequiredSamples);
-
-					for (int n = 0; n < ChannelSamples.Length; n++)
+					var MixedSamplesDenormalized = stackalloc int[RequiredSamples];
+					var NumberOfChannels = stackalloc int[RequiredSamples];
+					foreach (var Channel in Channels)
 					{
-						MixedSamplesDenormalized[n] += ChannelSamples[n];
-						NumberOfChannels[n]++;
+						var ChannelSamples = Channel.Read(RequiredSamples);
+
+						fixed (short* ChannelSamplesPtr = ChannelSamples)
+						{
+							for (int n = 0; n < ChannelSamples.Length; n++)
+							{
+								MixedSamplesDenormalized[n] += ChannelSamplesPtr[n];
+								NumberOfChannels[n]++;
+							}
+						}
 					}
-				}
 
-				for (int n = 0; n < RequiredSamples; n++)
-				{
-					if (NumberOfChannels[n] != 0)
+					for (int n = 0; n < RequiredSamples; n++)
 					{
-						MixedSamples[n] = (short)(MixedSamplesDenormalized[n] / NumberOfChannels[n]);
+						if (NumberOfChannels[n] != 0)
+						{
+							MixedSamplesPtr[n] = (short)(MixedSamplesDenormalized[n] / NumberOfChannels[n]);
+						}
 					}
 				}
 			});

@@ -148,7 +148,7 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 		/// <param name="CpuThreadState"></param>
 		/// <returns>The given fd or a negative value on error.</returns>
 		[HlePspFunction(NID = 0xE23EEC33, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceIoWaitAsync(SceUID FileId, out long Result, CpuThreadState CpuThreadState)
 		{
 			//throw(new NotImplementedException());

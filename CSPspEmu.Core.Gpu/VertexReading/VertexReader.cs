@@ -177,7 +177,7 @@ namespace CSPspEmu.Core.Gpu
 			Align2();
 			var Value = *((ushort*)Pointer);
 			OutputPixel Color;
-			PixelFormatDecoder.Decode_RGBA_5551_Pixel(Value, out Color);
+			Color = PixelFormatDecoder.Decode_RGBA_5551_Pixel(Value);
 			_SetVertexInfoColor(Color);
 			Pointer += sizeof(ushort);
 		}

@@ -24,10 +24,15 @@ using CSPspEmu.Hle.Loader;
 using CSPspEmu.Core.Components.Display;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Hle;
+using OpenTK;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
+using CSPspEmu.Core.Gpu.Impl.Opengl;
+using CSPspEmu.Gui.Winforms.Winforms;
 
 namespace CSPspEmu.Gui.Winforms
 {
-	public unsafe partial class PspDisplayForm : Form
+	public unsafe partial class PspDisplayForm : Form//, IMessageFilter
 	{
 		/// <summary>
 		/// 
@@ -44,10 +49,13 @@ namespace CSPspEmu.Gui.Winforms
 		/// </summary>
 		SceCtrlData SceCtrlData;
 
+		static internal PspDisplayForm Singleton;
+
 		IGuiExternalInterface IGuiExternalInterface;
 		InjectContext InjectContext { get { return IGuiExternalInterface.InjectContext; } }
 
 		CpuProcessor CpuProcessor { get { return InjectContext.GetInstance<CpuProcessor>(); } }
+		internal GpuProcessor GpuProcessor { get { return InjectContext.GetInstance<GpuProcessor>(); } }
 		CpuConfig CpuConfig { get { return InjectContext.GetInstance<CpuConfig>(); } }
 		GpuConfig GpuConfig { get { return InjectContext.GetInstance<GpuConfig>(); } }
 		HleConfig HleConfig { get { return InjectContext.GetInstance<HleConfig>(); } }
@@ -94,6 +102,8 @@ namespace CSPspEmu.Gui.Winforms
 
 		public PspDisplayForm(IGuiExternalInterface IGuiExternalInterface)
 		{
+			Singleton = this;
+
 			this.IGuiExternalInterface = IGuiExternalInterface;
 
 			InitializeComponent();
@@ -214,6 +224,9 @@ namespace CSPspEmu.Gui.Winforms
 
 		protected override void OnPaintBackground(PaintEventArgs PaintEventArgs)
 		{
+			UpdateTitle();
+
+#if false
 			if (!IGuiExternalInterface.IsInitialized())
 			{
 				var Buffer = new Bitmap(512, 272);
@@ -224,12 +237,13 @@ namespace CSPspEmu.Gui.Winforms
 				return;
 			}
 
-			UpdateTitle();
-
 			if (WindowState == FormWindowState.Minimized)
 			{
 				return;
 			}
+
+
+			return;
 
 			if (EnableRefreshing)
 			{
@@ -271,7 +285,7 @@ namespace CSPspEmu.Gui.Winforms
 					if (Hash != LastHash)
 					{
 						LastHash = Hash;
-						Buffer.LockBitsUnlock(PixelFormat.Format32bppArgb, (BitmapData) =>
+						Buffer.LockBitsUnlock(System.Drawing.Imaging.PixelFormat.Format32bppArgb, (BitmapData) =>
 						{
 							var Count = Width * Height;
 							fixed (OutputPixel* BitmapDataDecodePtr = BitmapDataDecode)
@@ -337,6 +351,7 @@ namespace CSPspEmu.Gui.Winforms
 				)
 			);
 			//PaintEventArgs.Graphics.DrawImageUnscaled(Buffer, new Point(0, menuStrip1.Height));
+#endif
 		}
 
 		protected bool EnableRefreshing = true;
@@ -463,23 +478,6 @@ namespace CSPspEmu.Gui.Winforms
 		bool AnalogLeft = false;
 		bool AnalogRight = false;
 
-		private void PspDisplayForm_KeyDown(object sender, KeyEventArgs e)
-		{
-			//Console.WriteLine("aaaaaaaaaaaa");
-			switch (e.KeyCode)
-			{
-				case Keys.D1: DisplayScale = 1; break;
-				case Keys.D2: DisplayScale = 2; break;
-				case Keys.D3: DisplayScale = 3; break;
-				case Keys.D4: DisplayScale = 4; break;
-				//case Keys.F2: IGuiExternalInterface.ShowDebugInformation(); break;
-			}
-
-			TryUpdateAnalog(e.KeyCode, true);
-
-			SceCtrlData.UpdateButtons(GetButtonsFromKeys(e.KeyCode), true);
-		}
-
 		private void TryUpdateAnalog(Keys Key, bool Press)
 		{
 			switch (AnalogKeyMap.GetOrDefault(Key, PspCtrlAnalog.None))
@@ -491,14 +489,52 @@ namespace CSPspEmu.Gui.Winforms
 			}
 		}
 
-		private void PspDisplayForm_KeyUp(object sender, KeyEventArgs e)
+		//bool IMessageFilter.PreFilterMessage(ref Message m)
+		//{
+		//	Console.WriteLine(m);
+		//	return true;
+		//}
+		//
+		//public override bool PreProcessMessage(ref Message msg)
+		//{
+		//	Console.WriteLine(msg);
+		//	return base.PreProcessMessage(ref msg);
+		//}
+
+		internal void DoKeyDown(Keys KeyCode)
 		{
-			//Console.WriteLine("Keup!");
-			var Key = e.KeyCode;
+			//Console.WriteLine("DoKeyDown: {0}", KeyCode);
+			switch (KeyCode)
+			{
+				case Keys.D1: DisplayScale = 1; break;
+				case Keys.D2: DisplayScale = 2; break;
+				case Keys.D3: DisplayScale = 3; break;
+				case Keys.D4: DisplayScale = 4; break;
+				//case Keys.F2: IGuiExternalInterface.ShowDebugInformation(); break;
+			}
 
-			TryUpdateAnalog(e.KeyCode, false);
+			TryUpdateAnalog(KeyCode, true);
 
-			SceCtrlData.UpdateButtons(GetButtonsFromKeys(e.KeyCode), false);
+			SceCtrlData.UpdateButtons(GetButtonsFromKeys(KeyCode), true);
+		}
+
+		internal void DoKeyUp(Keys KeyCode)
+		{
+			//Console.WriteLine("DoKeyUp: {0}", KeyCode);
+
+			TryUpdateAnalog(KeyCode, false);
+
+			SceCtrlData.UpdateButtons(GetButtonsFromKeys(KeyCode), false);
+		}
+
+		protected override void OnKeyDown(KeyEventArgs e)
+		{
+			DoKeyDown(e.KeyCode);
+		}
+
+		protected override void OnKeyUp(KeyEventArgs e)
+		{
+			DoKeyUp(e.KeyCode);
 		}
 
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -537,7 +573,7 @@ namespace CSPspEmu.Gui.Winforms
 			{
 				if (GameListComponent != null)
 				{
-					GameListComponent.Visible = false;
+					EnablePspDisplay(true);
 				}
 				this.Focus();
 			}));
@@ -798,6 +834,12 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void PspDisplayForm_Load_1(object sender, EventArgs e)
 		{
+			Console.WriteLine("PspDisplayForm.Thread: {0}", Thread.CurrentThread.ManagedThreadId);
+			this.GLControl = new PspOpenglDisplayControl(OpenglGpuImpl.UsedGraphicsMode);
+			//var GLControl = new GLControl(OpenglGpuImpl.UsedGraphicsMode);
+			this.Controls.Add(this.GLControl);
+
+			//GLControl.add
 			UtilsFrameLimitingMenu.Checked = DisplayConfig.VerticalSynchronization;
 			UtilsAstOptimizationsMenu.Checked = StoredConfig.EnableAstOptimizations;
 			UtilsUseFastmemMenu.Checked = StoredConfig.UseFastMemory;
@@ -825,16 +867,33 @@ namespace CSPspEmu.Gui.Winforms
 				if (!AutoLoad)
 				{
 					RefreshGameList();
-					GameListComponent.Visible = true;
+					EnablePspDisplay(false);
 				}
 				else
 				{
-					GameListComponent.Visible = false;
+					EnablePspDisplay(true);
 				}
 
 				GameListComponent.Parent = this;
 			}
+
 		}
+
+		private void EnablePspDisplay(bool Enable)
+		{
+			this.GLControl.Visible = Enable;
+			this.GameListComponent.Visible = !Enable;
+			if (Enable)
+			{
+				this.GLControl.Focus();
+			}
+			else
+			{
+				this.GameListComponent.Focus();
+			}
+		}
+
+		Control GLControl;
 
 		public void RefreshGameList()
 		{

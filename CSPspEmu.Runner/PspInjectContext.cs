@@ -44,10 +44,14 @@ namespace CSPspEmu.Runner
 			{
 				// GPU
 				PspPluginImpl.SelectWorkingPlugin<GpuImpl>(_InjectContext,
+#if false
+					typeof(GpuImplNull)
+#else
 					typeof(OpenglGpuImpl),
 					typeof(GpuImplOpenglEs),
 					//typeof(GpuImplSoft),
 					typeof(GpuImplNull)
+#endif
 				);
 
 				// AUDIO

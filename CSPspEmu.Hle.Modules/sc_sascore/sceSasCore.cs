@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define ENABLE_PITCH
+
+using System;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core.Audio;
 using CSharpUtils;
@@ -315,8 +317,11 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 						{
 							if (Voice.SampleOffset < Voice.Vag.SamplesCount)
 							{
-								//int PosDiv = n;
+#if !ENABLE_PITCH
+								int PosDiv = n;
+#else
 								int PosDiv = Pos / PSP_SAS_PITCH_BASE;
+#endif
 
 								VoiceOnCountPtr[PosDiv]++;
 								BufferTempPtr[PosDiv] += Voice.Vag.GetSampleAt(Voice.SampleOffset++);

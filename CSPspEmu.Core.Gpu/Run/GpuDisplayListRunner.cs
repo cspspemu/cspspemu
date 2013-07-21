@@ -50,12 +50,12 @@ namespace CSPspEmu.Core.Gpu.Run
 			return BitUtils.Extract(Params24, Offset, Count);
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-		public TType Extract<TType>(int Offset, int Count)
-		{
-			return (TType)(object)BitUtils.Extract(Params24, Offset, Count);
-		}
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+		//public TType Extract<TType>(int Offset, int Count)
+		//{
+		//	return (TType)BitUtils.Extract(Params24, Offset, Count);
+		//}
 
 		public GpuStateStruct* GpuState
 		{

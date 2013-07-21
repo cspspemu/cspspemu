@@ -19,7 +19,6 @@ namespace CSPspEmu.Runner.Components.Gpu
 			GpuImpl.InitSynchronizedOnce();
 
 			GpuProcessor.ProcessInit();
-			GpuProcessor.SetCurrent();
 
 			while (true)
 			{
@@ -27,10 +26,10 @@ namespace CSPspEmu.Runner.Components.Gpu
 
 				ThreadTaskQueue.HandleEnqueued();
 				if (!Running) break;
+				GpuProcessor.SetCurrent();
 				GpuProcessor.ProcessStep();
+				GpuProcessor.UnsetCurrent();
 			}
-
-			GpuProcessor.UnsetCurrent();
 		}
 	}
 }

@@ -36,6 +36,10 @@ namespace CSPspEmu.Core.Gpu
 		{
 		}
 
+		public override void Sync(GpuStateStruct* GpuState)
+		{
+		}
+
 		public override PluginInfo PluginInfo
 		{
 			get

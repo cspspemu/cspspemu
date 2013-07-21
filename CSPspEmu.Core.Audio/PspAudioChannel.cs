@@ -102,17 +102,24 @@ namespace CSPspEmu.Core.Audio
 		private short[] Samples = new short[0];
 		private short[] StereoSamplesBuffer = new short[0];
 
+		public int VolumeLeft = PspAudio.MaxVolume;
+		public int VolumeRight = PspAudio.MaxVolume;
+
 		public void Release()
 		{
-			IsReserved = false;
+			this.IsReserved = false;
+			this.VolumeLeft = PspAudio.MaxVolume;
+			this.VolumeRight = PspAudio.MaxVolume;
 		}
 
 		public void Updated()
 		{
 			if (SampleCount < 1) throw(new InvalidOperationException("SampleCount < 1"));
 			if (NumberOfChannels < 1) throw (new InvalidOperationException("NumberOfChannels < 1"));
-			Samples = new short[SampleCount * NumberOfChannels];
-			StereoSamplesBuffer = new short[SampleCount * 2];
+			this.Samples = new short[SampleCount * NumberOfChannels];
+			this.StereoSamplesBuffer = new short[SampleCount * 2];
+			this.VolumeLeft = PspAudio.MaxVolume;
+			this.VolumeRight = PspAudio.MaxVolume;
 		}
 
 		/// <summary>
@@ -217,6 +224,10 @@ namespace CSPspEmu.Core.Audio
 		/// <param name="ActionCallbackOnReaded"></param>
 		public void Write(short* SamplePointer, int VolumeLeft, int VolumeRight, Action ActionCallbackOnReaded)
 		{
+			//Console.WriteLine("{0}", this.Frequency);
+			VolumeLeft = VolumeLeft * this.VolumeLeft / PspAudio.MaxVolume;
+			VolumeRight = VolumeRight * this.VolumeRight / PspAudio.MaxVolume;
+
 			if (SamplePointer != null)
 			{
 				if (NumberOfChannels == 1)

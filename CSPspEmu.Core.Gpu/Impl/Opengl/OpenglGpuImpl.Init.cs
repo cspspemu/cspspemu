@@ -1,5 +1,5 @@
-﻿//#define USE_GL_CONTROL
-//#define SHOW_WINDOW
+﻿#define USE_GL_CONTROL
+#define SHOW_WINDOW
 
 using System;
 using System.Globalization;
@@ -11,13 +11,14 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
 using CSharpUtils;
+using System.Diagnostics;
 #else
 using MiniGL;
 #endif
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-    public partial class OpenglGpuImpl
+	public sealed partial class OpenglGpuImpl
 	{
 		//Thread CThread;
 		AutoResetEvent StopEvent = new AutoResetEvent(false);
@@ -27,7 +28,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
-		public static IGraphicsContext GraphicsContext;
+		public static IGraphicsContext RenderGraphicsContext;
 
 		/// <summary>
 		/// 
@@ -54,14 +55,14 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			if (!IsCurrentWindow)
 			{
-				GraphicsContext.MakeCurrent(WindowInfo);
+				RenderGraphicsContext.MakeCurrent(WindowInfo);
 				IsCurrentWindow = true;
 			}
 		}
 
 		public override void UnsetCurrent()
 		{
-			GraphicsContext.MakeCurrent(null);
+			RenderGraphicsContext.MakeCurrent(null);
 			IsCurrentWindow = false;
 		}
 
@@ -75,7 +76,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
-		protected static GLControl GLControl;
+		private static GLControl GLControl;
 #else
 		/// <summary>
 		/// 
@@ -90,6 +91,17 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			return Value;
 		}
 
+		static public readonly GraphicsMode UsedGraphicsMode = new GraphicsMode(
+			color: new OpenTK.Graphics.ColorFormat(8, 8, 8, 8),
+			depth: 16,
+			stencil: 8,
+			samples: 0,
+			accum: new OpenTK.Graphics.ColorFormat(16, 16, 16, 16),
+			//accum: new OpenTK.Graphics.ColorFormat(0, 0, 0, 0),
+			buffers: 2,
+			stereo: false
+		);
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -102,46 +114,40 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				AutoResetEvent CompletedEvent = new AutoResetEvent(false);
 				var CThread = new Thread(() =>
 				{
+					//CompletedEvent.Set(); return;
+
 					Thread.CurrentThread.CurrentCulture = new CultureInfo(GlobalConfig.ThreadCultureName);
 
-					var UsedGraphicsMode = new GraphicsMode(
-						color: new OpenTK.Graphics.ColorFormat(8, 8, 8, 8),
-						depth: 16,
-						stencil: 8,
-						samples: 0,
-						accum: new OpenTK.Graphics.ColorFormat(16, 16, 16, 16),
-						//accum: new OpenTK.Graphics.ColorFormat(0, 0, 0, 0),
-						buffers: 2,
-						stereo: false
-					);
-
-					var UsedGameWindowFlags = GameWindowFlags.Default;
+					//GraphicsContext.DirectRendering = true;
 
 					//Console.Error.WriteLine(UsedGraphicsMode);
 					//Console.ReadKey();
 #if USE_GL_CONTROL
 					GLControl = new GLControl(UsedGraphicsMode, 3, 0, GraphicsContextFlags.Default);
+					GLControl.Size = new System.Drawing.Size(512, 272);
+					RenderGraphicsContext = GLControl.Context;
 #else
-					NativeWindow = new NativeWindow(512, 272, "PspGraphicEngine", UsedGameWindowFlags, UsedGraphicsMode, DisplayDevice.GetDisplay(DisplayIndex.Default));
+					NativeWindow = new NativeWindow(512, 272, "PspGraphicEngine", GameWindowFlags.Default, UsedGraphicsMode, DisplayDevice.GetDisplay(DisplayIndex.Default));
+					RenderGraphicsContext = new GraphicsContext(UsedGraphicsMode, WindowInfo);
 #endif
-					
+
+					RenderGraphicsContext.MakeCurrent(WindowInfo);
+					{
+						RenderGraphicsContext.LoadAll();
+						Initialize();
+					}
+					RenderGraphicsContext.SwapInterval = 0;
+
+#if !USE_GL_CONTROL
 #if SHOW_WINDOW
 					NativeWindow.Visible = true;
 #endif
+#endif
 					//Utilities.CreateWindowsWindowInfo(handle);
 
-					GraphicsContext = new GraphicsContext(UsedGraphicsMode, WindowInfo);
-					GraphicsContext.MakeCurrent(WindowInfo);
-					{
-						GraphicsContext.LoadAll();
-						Initialize();
-					}
-					GraphicsContext.SwapInterval = 0;
-
-#if true
 					//Console.WriteLine("## {0}", UsedGraphicsMode);
 					Console.WriteLine("## UsedGraphicsMode: {0}", UsedGraphicsMode);
-					Console.WriteLine("## GraphicsContext.GraphicsMode: {0}", GraphicsContext.GraphicsMode);
+					Console.WriteLine("## GraphicsContext.GraphicsMode: {0}", RenderGraphicsContext.GraphicsMode);
 
 					Console.WriteLine("## OpenGL Context Version: {0}.{1}", GlGetInteger(GetPName.MajorVersion), GlGetInteger(GetPName.MinorVersion));
 
@@ -151,29 +157,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 					if (GlGetInteger(GetPName.StencilBits) <= 0)
 					{
-						ConsoleUtils.SaveRestoreConsoleState(() =>
+						ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () =>
 						{
-							Console.ForegroundColor = ConsoleColor.Red;
 							Console.Error.WriteLine("No stencil bits available!");
 						});
 					}
 
-					/*
-					GL.Enable(EnableCap.StencilTest);
-					GL.StencilMask(0xFF);
-					GL.ClearColor(new Color4(Color.FromArgb(0x11, 0x22, 0x33, 0x44)));
-					GL.ClearStencil(0x7F);
-					GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.StencilBufferBit);
-
-					var TestData = new uint[16 * 16];
-					TestData[0] = 0x12345678;
-					GL.ReadPixels(0, 0, 16, 16, PixelFormat.Rgba, PixelType.UnsignedInt8888Reversed, TestData);
-					Console.WriteLine(GL.GetError());
-					for (int n = 0; n < TestData.Length; n++) Console.Write("{0:X}", TestData[n]);
-					*/
-#endif
-
-					GraphicsContext.MakeCurrent(null);
+					RenderGraphicsContext.MakeCurrent(null);
 					CompletedEvent.Set();
 					while (Running)
 					{

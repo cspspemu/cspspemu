@@ -13,7 +13,7 @@ namespace CSPspEmu.Hle
 		public int FirstItem = 1;
 	}
 
-	public interface IHleUidPoolClass
+	public interface IHleUidPoolClass : IDisposable
 	{
 	}
 
@@ -85,6 +85,7 @@ namespace CSPspEmu.Hle.Managers
 			//[MethodImpl(MethodImplOptions.Synchronized)]
 			public void RemoveItem(IHleUidPoolClass Item)
 			{
+				Item.Dispose();
 				Items.Remove(RevItems[Item]);
 				RevItems.Remove(Item);
 			}

@@ -11,13 +11,13 @@ namespace CSPspEmu.Hle.Formats.audio
 	/// Based on jpcsp. gid15 work.
 	/// http://code.google.com/p/jpcsp/source/browse/trunk/src/jpcsp/sound/SampleSourceVAG.java?r=1995
 	/// </summary>
-	public unsafe partial class Vag
+	public unsafe sealed partial class Vag
 	{
 		//public byte[] Data;
 		//public StereoShortSoundSample[] DecodedSamples = new StereoShortSoundSample[0];
 
-		protected List<StereoShortSoundSample> DecodedSamples = new List<StereoShortSoundSample>();
-		protected IEnumerator<StereoShortSoundSample> SamplesDecoder;
+		private List<StereoShortSoundSample> DecodedSamples = new List<StereoShortSoundSample>();
+		private IEnumerator<StereoShortSoundSample> SamplesDecoder;
 		public bool SamplesDecoderEnd = false;
 
 		public StereoShortSoundSample GetSampleAt(int Index)
@@ -76,6 +76,8 @@ namespace CSPspEmu.Hle.Formats.audio
 				throw (new NotImplementedException("Invalid VAG header"));
 			}
 			var Hash = CSPspEmu.Core.Hashing.FastHash(DataPointer, DataLength);
+			//Console.WriteLine("Header.SampleRate: {0}", Header.SampleRate);
+			//Console.ReadKey();
 
 			/*
 			switch (Header.magic) {
@@ -102,12 +104,12 @@ namespace CSPspEmu.Hle.Formats.audio
 			WaveStream.WriteWave(FileName, GetAllDecodedSamples());
 		}
 
-		internal class Decoder
+		internal sealed class Decoder
 		{
-			protected short[] Samples;
-			protected int SampleOffset = 0;
-			protected short History1 = 0, History2 = 0;
-			protected float Predict1, Predict2;
+			private short[] Samples;
+			private int SampleOffset = 0;
+			private short History1 = 0, History2 = 0;
+			private float Predict1, Predict2;
 
 			public static IEnumerable<StereoShortSoundSample> DecodeBlocksStream(Block[] Blocks)
 			{
@@ -179,7 +181,7 @@ namespace CSPspEmu.Hle.Formats.audio
 				return false;
 			}
 
-			protected short HandleSample(int UnpackedSample)
+			private short HandleSample(int UnpackedSample)
 			{
 				int Sample = 0;
 				Sample += UnpackedSample * 1;
@@ -188,7 +190,7 @@ namespace CSPspEmu.Hle.Formats.audio
 				return (short)MathUtils.Clamp<int>(Sample, short.MinValue, short.MaxValue); 
 			}
 
-			protected void PutSample(int UnpackedSample)
+			private void PutSample(int UnpackedSample)
 			{
 				short Sample = HandleSample(UnpackedSample);
 				History2 = History1;
