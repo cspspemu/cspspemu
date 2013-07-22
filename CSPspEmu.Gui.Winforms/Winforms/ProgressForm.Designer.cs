@@ -59,6 +59,8 @@
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "ProgressForm";
+			this.ShowIcon = false;
+			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Progress...";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ProgressForm_FormClosing);

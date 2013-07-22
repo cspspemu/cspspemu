@@ -83,7 +83,7 @@ namespace CSPspEmu.Core.Memory
 		//public static Segment ScratchPadSegment = new Segment() { Offset = 0x00010000, Size = 4 * 1024 };
 
 		public const int ScratchPadSize = 4 * 1024; // 4KB
-		public const int FrameBufferSize = 2 * 0x100000; // 2MB
+		public const int FrameBufferSize = 2 * 0x00100000; // 2MB
 		public const int MainSize = (PspModel.IsSlim ? 64 : 32) * 0x100000; // 32MB (PHAT) / 64MB (SLIM)
 		//public const int HardwareVectorsSize = 1 * 1024 * 1024;
 		public const int VectorsSize = 4 * 1024 * 1024;

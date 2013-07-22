@@ -71,14 +71,28 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="Voice">Voice</param>
 		/// <param name="LeftVolume">Left  Volume 0-0x1000</param>
 		/// <param name="RightVolume">Right Volume 0-0x1000</param>
+		/// <param name="EffectLeftVol">Left  Volume 0-0x1000</param>
+		/// <param name="EffectRightVol">Right Volume 0-0x1000</param>
 		/// <returns>0 on success.</returns>
 		[HlePspFunction(NID = 0x440CA7D8, FirmwareVersion = 150)]
-		public int __sceSasSetVolume(uint SasCorePointer, int Voice, int LeftVolume, int RightVolume)
+		public int __sceSasSetVolume(uint SasCorePointer, int Voice, int LeftVolume, int RightVolume, int EffectLeftVol, int EffectRightVol)
 		{
 			var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
 
+			LeftVolume = Math.Abs(LeftVolume);
+			RightVolume = Math.Abs(RightVolume);
+			EffectLeftVol = Math.Abs(EffectLeftVol);
+			EffectRightVol = Math.Abs(EffectRightVol);
+
+			if (LeftVolume > PSP_SAS_VOL_MAX || RightVolume > PSP_SAS_VOL_MAX || EffectLeftVol > PSP_SAS_VOL_MAX || EffectRightVol > PSP_SAS_VOL_MAX)
+			{
+				throw(new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_VOLUME_VAL));
+			}
+
 			SasVoice.LeftVolume = LeftVolume;
 			SasVoice.RightVolume = RightVolume;
+			SasVoice.EffectLeftVolume = EffectLeftVol;
+			SasVoice.EffectRightVolume = EffectRightVol;
 
 			//throw(new NotImplementedException());
 			return 0;

@@ -107,11 +107,25 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		//[HlePspNotImplemented]
 		public uint __sceSasInit(uint SasCorePointer, int GrainSamples, int MaxVoices, OutputMode OutputMode, int SampleRate)
 		{
-			if (SampleRate != 44100) throw (new NotImplementedException("(SampleRate != 44100)"));
-			if (MaxVoices != 32) throw (new NotImplementedException("(MaxVoices != 32)"));
-			//if (MaxVoices != 32) throw (new NotImplementedException("(MaxVoices != 32)"));
+			if (SampleRate != 44100)
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_SAMPLE_RATE));
+			}
 
-			if (GrainSamples < 0) throw(new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_PARAMETER));
+			if (GrainSamples < 0x40 || GrainSamples > 0x800 || (GrainSamples & 0x1F) != 0)
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_GRAIN));
+			}
+
+			if (MaxVoices < 1 || MaxVoices > PSP_SAS_VOICES_MAX)
+			{
+				throw(new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_MAX_VOICES));
+			}
+
+			if (OutputMode != sc_sascore.OutputMode.PSP_SAS_OUTPUTMODE_STEREO && OutputMode != sc_sascore.OutputMode.PSP_SAS_OUTPUTMODE_MULTICHANNEL)
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_SAS_INVALID_OUTPUT_MODE));
+			}
 
 			var SasCore = GetSasCore(SasCorePointer, CreateIfNotExists: true);
 			{

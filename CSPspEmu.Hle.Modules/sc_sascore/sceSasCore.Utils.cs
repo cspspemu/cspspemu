@@ -203,8 +203,12 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// </summary>
 		public int LoopCount;
 		public int Pitch = sceSasCore.PSP_SAS_PITCH_BASE;
+		
 		public int LeftVolume;
 		public int RightVolume;
+		public int EffectLeftVolume;
+		public int EffectRightVolume;
+
 		public int SustainLevel;
 		public int EnvelopeHeight;
 

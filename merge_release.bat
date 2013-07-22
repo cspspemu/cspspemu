@@ -13,6 +13,7 @@ PUSHD %~dp0
 	echo ---
 
 	SET TARGET=/targetplatform:v4,"%ProgramFiles(x86)%\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5"
+	DEL cspspemu.exe
 	"%~dp0\utils\ilmerge\ILMerge.exe" /lib:"%BASE_FOLDER%" %TARGET% /out:cspspemu.exe %FILES%
 	COPY %BASE_FOLDER%\OpenTK.dll .
 POPD

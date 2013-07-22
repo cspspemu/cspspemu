@@ -2,6 +2,7 @@
 using System.Threading;
 using CSPspEmu.Core;
 using CSPspEmu.Hle.Managers;
+using CSPspEmu.Core.Display;
 
 namespace CSPspEmu.Runner.Components.Display
 {
@@ -10,19 +11,28 @@ namespace CSPspEmu.Runner.Components.Display
 		[Inject]
 		private HleInterruptManager HleInterruptManager;
 
+		[Inject]
+		private PspDisplay PspDisplay;
+
 		protected override string ThreadName { get { return "DisplayThread"; } }
 
 		protected override void Main()
 		{
 			while (true)
 			{
+				// TODO: Count this time!
 				ThreadTaskQueue.HandleEnqueued();
 				if (!Running) return;
 
-				//Console.Error.WriteLine("Triggered!");
+				// Draw time
+				PspDisplay.TriggerDrawStart();
+				Thread.Sleep(TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.VsyncRow))));
+
+				// VBlank time
+				PspDisplay.TriggerVBlankStart();
 				HleInterruptManager.GetInterruptHandler(PspInterrupts.PSP_VBLANK_INT).Trigger();
-				//PspDisplay.Update();
-				Thread.Sleep(TimeSpan.FromSeconds(1.0 / 59.94));
+				Thread.Sleep(TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.NumberOfRows - PspDisplay.VsyncRow))));
+				PspDisplay.TriggerVBlankEnd();
 			}
 		}
 	}

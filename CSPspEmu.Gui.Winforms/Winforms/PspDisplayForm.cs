@@ -209,19 +209,13 @@ namespace CSPspEmu.Gui.Winforms
 
 		void Timer_Tick(object sender, EventArgs e)
 		{
-			SendControllerFrame();
-			
-			if (GameListComponent == null || !GameListComponent.Visible)
+			if (!GLControl.Visible)
 			{
-				Refresh();
+				return;
 			}
 
-			if (IGuiExternalInterface.IsInitialized())
-			{
-				PspDisplay.TriggerVBlankStart();
-				Thread.Sleep(TimeSpan.FromMilliseconds(4));
-				PspDisplay.TriggerVBlankEnd();
-			}
+			SendControllerFrame();
+			Refresh();
 		}
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)

@@ -5,6 +5,7 @@ using CSPspEmu.Core.Rtc;
 using CSPspEmu.Core.Threading.Synchronization;
 using CSPspEmu.Core.Utils;
 using CSPspEmu.Core.Types;
+using System.Collections.Generic;
 
 namespace CSPspEmu.Core.Display
 {
@@ -15,9 +16,11 @@ namespace CSPspEmu.Core.Display
 		public const double PixelsInARow             = 525;
 		public const double VsyncRow                 = 272;
 		public const double NumberOfRows             = 286;
-	
+		public const float hCountPerVblank = 285.72f;
+
+
 		public const double HorizontalSyncHertz = (ProcessedPixelsPerSecond * CyclesPerPixel) / PixelsInARow;
-		public const double VeritcalSyncHertz = HorizontalSyncHertz / NumberOfRows;
+		public const double VerticalSyncHertz = HorizontalSyncHertz / NumberOfRows;
 
 		[Inject]
 		PspRtc PspRtc;
@@ -65,8 +68,32 @@ namespace CSPspEmu.Core.Display
 			}
 		}
 
+		private DateTime StartDrawTime;
+
+		public void TriggerDrawStart()
+		{
+			StartDrawTime = DateTime.UtcNow;
+		}
+
+		public int GetHCount()
+		{
+			var ElaspedTime = DateTime.UtcNow - StartDrawTime;
+			return (int)(ElaspedTime.TotalSeconds / (1 / HorizontalSyncHertz));
+		}
+
+		private readonly Queue<Action> WakeUpActions = new Queue<Action>();
+
+		public void RegisterVBlankOnce(Action WakeUp)
+		{
+			WakeUpActions.Enqueue(WakeUp);
+		}
+
 		public void TriggerVBlankStart()
 		{
+			while (WakeUpActions.Count > 0)
+			{
+				WakeUpActions.Dequeue()();
+			}
 			VBlankEvent.Signal();
 			if (VBlankEventCall != null) VBlankEventCall();
 			VblankCount++;
@@ -87,7 +114,7 @@ namespace CSPspEmu.Core.Display
 		{
 			set
 			{
-				_VblankCount++;
+				_VblankCount = value;
 			}
 			get
 			{
@@ -110,5 +137,6 @@ namespace CSPspEmu.Core.Display
 		}
 
 		public bool IsVblank { get; protected set; }
+
 	}
 }

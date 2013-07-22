@@ -33,7 +33,6 @@ namespace CSPspEmu.Runner.Components
 			{
 				ComponentThreadThread = new Thread(() =>
 				{
-					ComponentThreadThread.Name = this.ThreadName;
 					Thread.CurrentThread.CurrentCulture = new CultureInfo(GlobalConfig.ThreadCultureName);
 					try
 					{
@@ -46,8 +45,11 @@ namespace CSPspEmu.Runner.Components
 						StopCompleteEvent.Set();
 						Logger.Notice("Component {0} Stopped!", this);
 					}
-				});
-				ComponentThreadThread.IsBackground = true;
+				})
+				{
+					Name = this.ThreadName,
+					IsBackground = true,
+				};
 				ComponentThreadThread.Start();
 				ThreadTaskQueue.EnqueueAndWaitCompleted(() =>
 				{

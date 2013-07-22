@@ -20,7 +20,7 @@ namespace CSPspEmu.Hle.Modules.pmfplayer
 			PlayingFinished = 0x200,
 		}
 
-		PsmfPlayerStatusSet PsmfPlayerStatus = PsmfPlayerStatusSet.PlayingFinished;
+		PsmfPlayerStatusSet PsmfPlayerStatus = PsmfPlayerStatusSet.Error;
 
 		/// <summary>
 		/// 
