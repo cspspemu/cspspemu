@@ -22,6 +22,7 @@ using CSPspEmu.Core.Gpu.Formats;
 using Mono.Simd;
 using CSPspEmu.Core.Utils;
 using CSPspEmu.Core.Types;
+using CSharpPlatform;
 #else
 using MiniGL;
 #endif
@@ -109,8 +110,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			int SkinningWeightCount = VertexType.RealSkinningWeightCount;
 			if (SkinningWeightCount == 0) return VertexInfo;
 
-			var OutputPosition = default(Vector4f);
-			var OutputNormal = default(Vector4f);
+			var OutputPosition = default(Vector4fRaw);
+			var OutputNormal = default(Vector4fRaw);
 			var InputPosition = VertexInfo.Position;
 			var InputNormal = VertexInfo.Normal;
 
@@ -119,19 +120,20 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			for (int m = 0; m < SkinningWeightCount; m++)
 			{
 				var BoneMatrix = BoneMatrices[m];
+				var BoneMatrixValues = BoneMatrix.Values;
 				float Weight = VertexInfo.Weights[m];
 
 				BoneMatrix.SetLastColumn();
 
 				if (Weight != 0)
 				{
-					OutputPosition.X += (InputPosition.X * BoneMatrix.Values[0] + InputPosition.Y * BoneMatrix.Values[4] + InputPosition.Z * BoneMatrix.Values[8] + 1 * BoneMatrix.Values[12]) * Weight;
-					OutputPosition.Y += (InputPosition.X * BoneMatrix.Values[1] + InputPosition.Y * BoneMatrix.Values[5] + InputPosition.Z * BoneMatrix.Values[9] + 1 * BoneMatrix.Values[13]) * Weight;
-					OutputPosition.Z += (InputPosition.X * BoneMatrix.Values[2] + InputPosition.Y * BoneMatrix.Values[6] + InputPosition.Z * BoneMatrix.Values[10] + 1 * BoneMatrix.Values[14]) * Weight;
+					OutputPosition.X += (InputPosition.X * BoneMatrixValues[0] + InputPosition.Y * BoneMatrixValues[4] + InputPosition.Z * BoneMatrixValues[8] + 1 * BoneMatrixValues[12]) * Weight;
+					OutputPosition.Y += (InputPosition.X * BoneMatrixValues[1] + InputPosition.Y * BoneMatrixValues[5] + InputPosition.Z * BoneMatrixValues[9] + 1 * BoneMatrixValues[13]) * Weight;
+					OutputPosition.Z += (InputPosition.X * BoneMatrixValues[2] + InputPosition.Y * BoneMatrixValues[6] + InputPosition.Z * BoneMatrixValues[10] + 1 * BoneMatrixValues[14]) * Weight;
 
-					OutputNormal.X += (InputNormal.X * BoneMatrix.Values[0] + InputNormal.Y * BoneMatrix.Values[4] + InputNormal.Z * BoneMatrix.Values[8] + 0 * BoneMatrix.Values[12]) * Weight;
-					OutputNormal.Y += (InputNormal.X * BoneMatrix.Values[1] + InputNormal.Y * BoneMatrix.Values[5] + InputNormal.Z * BoneMatrix.Values[9] + 0 * BoneMatrix.Values[13]) * Weight;
-					OutputNormal.Z += (InputNormal.X * BoneMatrix.Values[2] + InputNormal.Y * BoneMatrix.Values[6] + InputNormal.Z * BoneMatrix.Values[10] + 0 * BoneMatrix.Values[14]) * Weight;
+					OutputNormal.X += (InputNormal.X * BoneMatrixValues[0] + InputNormal.Y * BoneMatrixValues[4] + InputNormal.Z * BoneMatrixValues[8] + 0 * BoneMatrixValues[12]) * Weight;
+					OutputNormal.Y += (InputNormal.X * BoneMatrixValues[1] + InputNormal.Y * BoneMatrixValues[5] + InputNormal.Z * BoneMatrixValues[9] + 0 * BoneMatrixValues[13]) * Weight;
+					OutputNormal.Z += (InputNormal.X * BoneMatrixValues[2] + InputNormal.Y * BoneMatrixValues[6] + InputNormal.Z * BoneMatrixValues[10] + 0 * BoneMatrixValues[14]) * Weight;
 				}
 			}
 
@@ -283,53 +285,71 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			PrepareStateDraw(GpuState);
 			PrepareStateMatrix(GpuState);
 
+#if true
 			PrepareState_Texture_Common(GpuState);
 			PrepareState_Texture_3D(GpuState);
 
 			GL.ActiveTexture(TextureUnit.Texture0);
-			
+#endif
+
+			//GL.ActiveTexture(TextureUnit.Texture0);
+			//GL.Disable(EnableCap.Texture2D);
+
 			var VertexType = GpuStateStruct->VertexState.Type;
 
 			//GL.Color3(Color.White);
 
-			GL.Begin(BeginMode.Triangles);
-
-			//GpuState->TextureMappingState
-
 			int s_len = Patch.GetLength(0);
 			int t_len = Patch.GetLength(1);
 
-			for (int t = 0; t < t_len - 1; t++)
+			float s_len_float = s_len;
+			float t_len_float = t_len;
+
+			var Mipmap0 = &GpuStateStruct->TextureMappingState.TextureState.Mipmap0;
+
+			float MipmapWidth = Mipmap0->TextureWidth;
+			float MipmapHeight = Mipmap0->TextureHeight;
+
+			//float MipmapWidth = 1f;
+			//float MipmapHeight = 1f;
+
+			GL.Begin(BeginMode.Triangles);
 			{
-				for (int s = 0; s < s_len - 1; s++)
+				for (int t = 0; t < t_len - 1; t++)
 				{
-					var VertexInfo1 = Patch[s + 0, t + 0];
-					var VertexInfo2 = Patch[s + 0, t + 1];
-					var VertexInfo3 = Patch[s + 1, t + 1];
-					var VertexInfo4 = Patch[s + 1, t + 0];
+					for (int s = 0; s < s_len - 1; s++)
+					{
+						var VertexInfo1 = Patch[s + 0, t + 0];
+						var VertexInfo2 = Patch[s + 0, t + 1];
+						var VertexInfo3 = Patch[s + 1, t + 1];
+						var VertexInfo4 = Patch[s + 1, t + 0];
 
-					//VertexInfo1.Texture.X = (s + 0) * MipmapWidth / s_len;
-					//VertexInfo1.Texture.Y = (t + 0) * MipmapWidth / t_len;
-					//
-					//VertexInfo2.Texture.X = (s + 0) * MipmapWidth / s_len;
-					//VertexInfo2.Texture.Y = (t + 1) * MipmapWidth / t_len;
-					//
-					//VertexInfo3.Texture.X = (s + 1) * MipmapWidth / s_len;
-					//VertexInfo3.Texture.Y = (t + 1) * MipmapWidth / t_len;
-					//
-					//VertexInfo4.Texture.X = (s + 1) * MipmapWidth / s_len;
-					//VertexInfo4.Texture.Y = (t + 0) * MipmapWidth / t_len;
+						if (VertexType.Texture != VertexTypeStruct.NumericEnum.Void)
+						{
+							VertexInfo1.Texture.X = ((float)s + 0) * MipmapWidth / s_len_float;
+							VertexInfo1.Texture.Y = ((float)t + 0) * MipmapHeight / t_len_float;
 
-					PutVertex(ref VertexInfo1, ref VertexType);
-					PutVertex(ref VertexInfo2, ref VertexType);
-					PutVertex(ref VertexInfo3, ref VertexType);
+							VertexInfo2.Texture.X = ((float)s + 0) * MipmapWidth / s_len_float;
+							VertexInfo2.Texture.Y = ((float)t + 1) * MipmapHeight / t_len_float;
 
-					PutVertex(ref VertexInfo1, ref VertexType);
-					PutVertex(ref VertexInfo3, ref VertexType);
-					PutVertex(ref VertexInfo4, ref VertexType);
+							VertexInfo3.Texture.X = ((float)s + 1) * MipmapWidth / s_len_float;
+							VertexInfo3.Texture.Y = ((float)t + 1) * MipmapHeight / t_len_float;
 
-					//GL.Color3(Color.White);
-					//Console.WriteLine("{0}, {1} : {2}", s, t, VertexInfo1);
+							VertexInfo4.Texture.X = ((float)s + 1) * MipmapWidth / s_len_float;
+							VertexInfo4.Texture.Y = ((float)t + 0) * MipmapHeight / t_len_float;
+						}
+
+						PutVertex(ref VertexInfo1, ref VertexType);
+						PutVertex(ref VertexInfo2, ref VertexType);
+						PutVertex(ref VertexInfo3, ref VertexType);
+
+						PutVertex(ref VertexInfo1, ref VertexType);
+						PutVertex(ref VertexInfo3, ref VertexType);
+						PutVertex(ref VertexInfo4, ref VertexType);
+
+						//GL.Color3(Color.White);
+						//Console.WriteLine("{0}, {1} : {2}", s, t, VertexInfo1);
+					}
 				}
 			}
 			GL.End();
@@ -616,16 +636,16 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 									V2 = new VertexInfo()
 									{
-										Texture = new Vector4f(V3.Texture.X, V1.Texture.Y, TZ, 0),
-										Position = new Vector4f(V3.Position.X, V1.Position.Y, PZ, 0),
-										Normal = new Vector4f(V3.Normal.X, V1.Normal.Y, NZ, 0),
+										Texture = new Vector4fRaw(V3.Texture.X, V1.Texture.Y, TZ, 0),
+										Position = new Vector4fRaw(V3.Position.X, V1.Position.Y, PZ, 0),
+										Normal = new Vector4fRaw(V3.Normal.X, V1.Normal.Y, NZ, 0),
 									};
 
 									V4 = new VertexInfo()
 									{
-										Texture = new Vector4f(V1.Texture.X, V3.Texture.Y, TZ, 0),
-										Position = new Vector4f(V1.Position.X, V3.Position.Y, PZ, 0),
-										Normal = new Vector4f(V1.Normal.X, V3.Normal.Y, NZ, 0),
+										Texture = new Vector4fRaw(V1.Texture.X, V3.Texture.Y, TZ, 0),
+										Position = new Vector4fRaw(V1.Position.X, V3.Position.Y, PZ, 0),
+										Normal = new Vector4fRaw(V1.Normal.X, V3.Normal.Y, NZ, 0),
 									};
 
 									V4.Color = V3.Color = V2.Color = V1.Color = Color;

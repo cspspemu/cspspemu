@@ -1,4 +1,5 @@
-﻿using CSPspEmu.Core.Gpu.State;
+﻿using CSharpPlatform;
+using CSPspEmu.Core.Gpu.State;
 using Mono.Simd;
 
 namespace CSPspEmu.Core.Gpu.Run
@@ -276,8 +277,8 @@ namespace CSPspEmu.Core.Gpu.Run
 					ucoeff[i] = BernsteinCoeff(u);
 
 					var p = default(VertexInfo);
-					p.Position = Vector4f.Zero;
-					p.Normal = Vector4f.Zero;
+					p.Position = Vector4fRaw.Zero;
+					p.Normal = Vector4fRaw.Zero;
 
 					for (int ii = 0; ii < 4; ++ii)
 					{

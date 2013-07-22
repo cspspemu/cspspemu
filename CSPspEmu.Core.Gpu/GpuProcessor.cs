@@ -218,6 +218,7 @@ namespace CSPspEmu.Core.Gpu
 
 		volatile private GpuDisplayList CurrentGpuDisplayList = null;
 		volatile private GpuDisplayList LastProcessedGpuDisplayList = null;
+		public bool UsingGe { get; private set; }
 
 		/// <summary>
 		/// 
@@ -228,6 +229,7 @@ namespace CSPspEmu.Core.Gpu
 
 			if (DisplayListQueue.GetCountLock() > 0)
 			{
+				UsingGe = true;
 				while (DisplayListQueue.GetCountLock() > 0)
 				{
 					CurrentGpuDisplayList = DisplayListQueue.RemoveFirstAndGet();

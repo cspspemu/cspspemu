@@ -32,40 +32,30 @@ using CSPspEmu.Gui.Winforms.Winforms;
 
 namespace CSPspEmu.Gui.Winforms
 {
-	public unsafe partial class PspDisplayForm : Form//, IMessageFilter
+	public unsafe partial class PspDisplayForm : Form, IMessageFilter
 	{
 		/// <summary>
 		/// 
 		/// </summary>
-		public Bitmap Buffer = new Bitmap(512, 272);
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public Graphics BufferGraphics;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		SceCtrlData SceCtrlData;
+		internal SceCtrlData SceCtrlData;
 
 		static internal PspDisplayForm Singleton;
 
-		IGuiExternalInterface IGuiExternalInterface;
-		InjectContext InjectContext { get { return IGuiExternalInterface.InjectContext; } }
+		internal IGuiExternalInterface IGuiExternalInterface;
+		internal InjectContext InjectContext { get { return IGuiExternalInterface.InjectContext; } }
 
-		CpuProcessor CpuProcessor { get { return InjectContext.GetInstance<CpuProcessor>(); } }
+		internal CpuProcessor CpuProcessor { get { return InjectContext.GetInstance<CpuProcessor>(); } }
 		internal GpuProcessor GpuProcessor { get { return InjectContext.GetInstance<GpuProcessor>(); } }
-		CpuConfig CpuConfig { get { return InjectContext.GetInstance<CpuConfig>(); } }
-		GpuConfig GpuConfig { get { return InjectContext.GetInstance<GpuConfig>(); } }
-		HleConfig HleConfig { get { return InjectContext.GetInstance<HleConfig>(); } }
-		ElfConfig ElfConfig { get { return InjectContext.GetInstance<ElfConfig>(); } }
-		GuiConfig GuiConfig { get { return InjectContext.GetInstance<GuiConfig>(); } }
-		DisplayConfig DisplayConfig { get { return InjectContext.GetInstance<DisplayConfig>(); } }
-		PspStoredConfig StoredConfig { get { return InjectContext.GetInstance<PspStoredConfig>(); } }
-		PspMemory Memory { get { return InjectContext.GetInstance<PspMemory>(); } }
-		PspDisplay PspDisplay { get { return InjectContext.GetInstance<PspDisplay>(); } }
-		PspController PspController { get { return InjectContext.GetInstance<PspController>(); } }
+		internal CpuConfig CpuConfig { get { return InjectContext.GetInstance<CpuConfig>(); } }
+		internal GpuConfig GpuConfig { get { return InjectContext.GetInstance<GpuConfig>(); } }
+		internal HleConfig HleConfig { get { return InjectContext.GetInstance<HleConfig>(); } }
+		internal ElfConfig ElfConfig { get { return InjectContext.GetInstance<ElfConfig>(); } }
+		internal GuiConfig GuiConfig { get { return InjectContext.GetInstance<GuiConfig>(); } }
+		internal DisplayConfig DisplayConfig { get { return InjectContext.GetInstance<DisplayConfig>(); } }
+		internal PspStoredConfig StoredConfig { get { return InjectContext.GetInstance<PspStoredConfig>(); } }
+		internal PspMemory Memory { get { return InjectContext.GetInstance<PspMemory>(); } }
+		internal PspDisplay PspDisplay { get { return InjectContext.GetInstance<PspDisplay>(); } }
+		internal PspController PspController { get { return InjectContext.GetInstance<PspController>(); } }
 
 		float AnalogX = 0.0f, AnalogY = 0.0f;
 
@@ -103,6 +93,7 @@ namespace CSPspEmu.Gui.Winforms
 		public PspDisplayForm(IGuiExternalInterface IGuiExternalInterface)
 		{
 			Singleton = this;
+			Application.AddMessageFilter(this);
 
 			this.IGuiExternalInterface = IGuiExternalInterface;
 
@@ -120,10 +111,6 @@ namespace CSPspEmu.Gui.Winforms
 
 			//GuiConfig.DefaultDisplayScale
 			DisplayScale = StoredConfig.DisplayScale;
-
-			BufferGraphics = Graphics.FromImage(Buffer);
-			//BufferGraphics.Clear(Color.Red);
-			BufferGraphics.Clear(Color.Black);
 
 			updateResumePause();
 			UpdateCheckMenusFromConfig();
@@ -188,16 +175,7 @@ namespace CSPspEmu.Gui.Winforms
 		{
 		}
 
-		public struct BGRA
-		{
-			public byte B, G, R, A;
-		}
-
-		byte* OldFrameBuffer = (byte *)-1;
-		ulong LastHash = unchecked((ulong)-1);
 		String LastText = "";
-
-		OutputPixel[] BitmapDataDecode = new OutputPixel[512 * 512];
 
 		private void UpdateTitle()
 		{
@@ -225,136 +203,9 @@ namespace CSPspEmu.Gui.Winforms
 		protected override void OnPaintBackground(PaintEventArgs PaintEventArgs)
 		{
 			UpdateTitle();
-
-#if false
-			if (!IGuiExternalInterface.IsInitialized())
-			{
-				var Buffer = new Bitmap(512, 272);
-				var BufferGraphics = Graphics.FromImage(Buffer);
-				BufferGraphics.FillRectangle(new SolidBrush(Color.Black), new Rectangle(0, 0, Buffer.Width, Buffer.Height));
-				//BufferGraphics.DrawString("Initializing...", new Font("Arial", 10), new SolidBrush(Color.White), new PointF(8, 8));
-				PaintEventArgs.Graphics.DrawImage(Buffer, new Rectangle(0, MainMenuStripHeight, 512 * DisplayScale, 272 * DisplayScale));
-				return;
-			}
-
-			if (WindowState == FormWindowState.Minimized)
-			{
-				return;
-			}
-
-
-			return;
-
-			if (EnableRefreshing)
-			{
-				try
-				{
-					int Width = 512;
-					int Height = 272;
-					//var Address = PspDisplay.CurrentInfo.Address | 0x04000000; // It causes artifacts
-					var FrameAddress = PspDisplay.CurrentInfo.FrameAddress;
-					byte* FrameBuffer = null;
-					byte* DepthBuffer = null;
-					try
-					{
-						FrameBuffer = (byte*)Memory.PspAddressToPointerSafe(
-							FrameAddress,
-							PixelFormatDecoder.GetPixelsSize(PspDisplay.CurrentInfo.PixelFormat, Width * Height)
-						);
-					}
-					catch (Exception Exception)
-					{
-						Console.Error.WriteLine(Exception);
-					}
-
-					//Console.Error.WriteLine("FrameBuffer == 0x{0:X}!!", (long)FrameBuffer);
-
-					if (FrameBuffer == null)
-					{
-						//Console.Error.WriteLine("FrameBuffer == null!!");
-					}
-
-					//Console.WriteLine("{0:X}", Address);
-
-					var Hash = PixelFormatDecoder.Hash(
-						PspDisplay.CurrentInfo.PixelFormat,
-						(void*)FrameBuffer,
-						Width, Height
-					);
-
-					if (Hash != LastHash)
-					{
-						LastHash = Hash;
-						Buffer.LockBitsUnlock(System.Drawing.Imaging.PixelFormat.Format32bppArgb, (BitmapData) =>
-						{
-							var Count = Width * Height;
-							fixed (OutputPixel* BitmapDataDecodePtr = BitmapDataDecode)
-							{
-								var BitmapDataPtr = (BGRA*)BitmapData.Scan0.ToPointer();
-
-								//var LastRow = (FrameBuffer + 512 * 260 * 4 + 4 * 10);
-								//Console.WriteLine("{0},{1},{2},{3}", LastRow[0], LastRow[1], LastRow[2], LastRow[3]);
-
-								if (FrameBuffer == null)
-								{
-									if (OldFrameBuffer != null)
-									{
-										Console.Error.WriteLine("FrameBuffer == null");
-									}
-								}
-								else if (BitmapDataPtr == null)
-								{
-									Console.Error.WriteLine("BitmapDataPtr == null");
-								}
-								else
-								{
-									PixelFormatDecoder.Decode(
-										PspDisplay.CurrentInfo.PixelFormat,
-										(void*)FrameBuffer,
-										BitmapDataDecodePtr,
-										Width, Height
-									);
-								}
-
-								// Converts the decoded data to Window's format.
-								for (int n = 0; n < Count; n++)
-								{
-									BitmapDataPtr[n].R = BitmapDataDecodePtr[n].R;
-									BitmapDataPtr[n].G = BitmapDataDecodePtr[n].G;
-									BitmapDataPtr[n].B = BitmapDataDecodePtr[n].B;
-									BitmapDataPtr[n].A = 0xFF;
-								}
-
-								OldFrameBuffer = FrameBuffer;
-							}
-						});
-					}
-					//else
-					{
-						//Console.WriteLine("Display not updated!");
-					}
-				}
-				catch (Exception Exception)
-				{
-					Console.Error.WriteLine(Exception);
-				}
-			}
-			//Console.WriteLine(this.ClientRectangle);
-			PaintEventArgs.Graphics.CompositingMode = CompositingMode.SourceCopy;
-			PaintEventArgs.Graphics.CompositingQuality = CompositingQuality.HighSpeed;
-			PaintEventArgs.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
-			PaintEventArgs.Graphics.DrawImage(
-				Buffer,
-				new Rectangle(
-					0, MainMenuStripHeight,
-					512 * DisplayScale, 272 * DisplayScale
-				)
-			);
-			//PaintEventArgs.Graphics.DrawImageUnscaled(Buffer, new Point(0, menuStrip1.Height));
-#endif
 		}
 
-		protected bool EnableRefreshing = true;
+		internal bool EnableRefreshing = true;
 
 		void Timer_Tick(object sender, EventArgs e)
 		{
@@ -402,8 +253,9 @@ namespace CSPspEmu.Gui.Winforms
 				SaveFileDialog.DefaultExt = "png";
 				if (SaveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 				{
-					var Buffer2 = new Bitmap(480, 272);
-					Graphics.FromImage(Buffer2).DrawImage(Buffer, Point.Empty);
+					var Buffer2 = GLControl.GrabScreenshot();
+					//var Buffer2 = new Bitmap(480, 272);
+					//Graphics.FromImage(Buffer2).DrawImage(Buffer, Point.Empty);
 					Buffer2.Save(SaveFileDialog.FileName, ImageFormat.Png);
 				}
 			});
@@ -489,17 +341,22 @@ namespace CSPspEmu.Gui.Winforms
 			}
 		}
 
-		//bool IMessageFilter.PreFilterMessage(ref Message m)
-		//{
-		//	Console.WriteLine(m);
-		//	return true;
-		//}
-		//
-		//public override bool PreProcessMessage(ref Message msg)
-		//{
-		//	Console.WriteLine(msg);
-		//	return base.PreProcessMessage(ref msg);
-		//}
+		bool IMessageFilter.PreFilterMessage(ref Message msg)
+		{
+			var Key = (Keys)msg.WParam;
+
+			switch (msg.Msg)
+			{
+				case 256: // WM_KEYDOWN
+					PspDisplayForm.Singleton.DoKeyDown(Key);
+					return false;
+				case 257: // WM_KEYUP
+					PspDisplayForm.Singleton.DoKeyUp(Key);
+					return false;
+			}
+			//Console.WriteLine(m);
+			return false;
+		}
 
 		internal void DoKeyDown(Keys KeyCode)
 		{
@@ -510,6 +367,8 @@ namespace CSPspEmu.Gui.Winforms
 				case Keys.D2: DisplayScale = 2; break;
 				case Keys.D3: DisplayScale = 3; break;
 				case Keys.D4: DisplayScale = 4; break;
+				case Keys.O:
+					break;
 				//case Keys.F2: IGuiExternalInterface.ShowDebugInformation(); break;
 			}
 
@@ -893,7 +752,7 @@ namespace CSPspEmu.Gui.Winforms
 			}
 		}
 
-		Control GLControl;
+		GLControl GLControl;
 
 		public void RefreshGameList()
 		{

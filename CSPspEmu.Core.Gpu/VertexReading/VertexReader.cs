@@ -137,7 +137,12 @@ namespace CSPspEmu.Core.Gpu
 			VertexInfo->Texture.Y = (float)((byte*)Pointer)[1];
 			VertexInfo->Texture.Z = (VertexType.NormalCount > 2) ? (float)((byte*)Pointer)[2] : 0.0f;
 
-			if (!Transform2D) VertexInfo->Texture *= 1.0f / 128.0f;
+			if (!Transform2D)
+			{
+				VertexInfo->Texture.X *= 1.0f / 128.0f;
+				VertexInfo->Texture.Y *= 1.0f / 128.0f;
+				VertexInfo->Texture.Z *= 1.0f / 128.0f;
+			}
 
 			Pointer += sizeof(byte) * VertexType.NormalCount;
 		}
@@ -149,7 +154,12 @@ namespace CSPspEmu.Core.Gpu
 			VertexInfo->Texture.Y = (float)((ushort*)Pointer)[1];
 			VertexInfo->Texture.Z = (VertexType.NormalCount > 2) ? (float)((ushort*)Pointer)[2] : 0.0f;
 
-			if (!Transform2D) VertexInfo->Texture *= 1.0f / 32768f;
+			if (!Transform2D)
+			{
+				VertexInfo->Texture.X *= 1.0f / 32768f;
+				VertexInfo->Texture.Y *= 1.0f / 32768f;
+				VertexInfo->Texture.Z *= 1.0f / 32768f;
+			}
 
 			Pointer += sizeof(short) * VertexType.NormalCount;
 		}
@@ -218,7 +228,12 @@ namespace CSPspEmu.Core.Gpu
 			VertexInfo->Position.Y = (float)((sbyte*)Pointer)[1];
 			VertexInfo->Position.Z = Transform2D ? (float)((byte*)Pointer)[2] : (float)((sbyte*)Pointer)[2];
 
-			if (!Transform2D) VertexInfo->Position *= 1.0f / 127f;
+			if (!Transform2D)
+			{
+				VertexInfo->Position.X *= 1.0f / 127f;
+				VertexInfo->Position.Y *= 1.0f / 127f;
+				VertexInfo->Position.Z *= 1.0f / 127f;
+			}
 
 			//Console.Error.WriteLine(VertexInfo->PZ);
 
@@ -232,7 +247,12 @@ namespace CSPspEmu.Core.Gpu
 			VertexInfo->Position.Y = (float)((short*)Pointer)[1];
 			VertexInfo->Position.Z = Transform2D ? (float)((ushort*)Pointer)[2] : (float)((short*)Pointer)[2];
 
-			if (!Transform2D) VertexInfo->Position *= 1.0f / 32767f;
+			if (!Transform2D)
+			{
+				VertexInfo->Position.X *= 1.0f / 32767f;
+				VertexInfo->Position.Y *= 1.0f / 32767f;
+				VertexInfo->Position.Z *= 1.0f / 32767f;
+			}
 			//Console.Error.WriteLine(VertexInfo->PZ);
 
 			Pointer += sizeof(short) * 3;
@@ -280,7 +300,12 @@ namespace CSPspEmu.Core.Gpu
 			VertexInfo->Normal.X = (float)((byte*)Pointer)[0];
 			VertexInfo->Normal.Y = (float)((byte*)Pointer)[1];
 			VertexInfo->Normal.Z = (float)((byte*)Pointer)[2];
-			if (!Transform2D) VertexInfo->Normal *= 1.0f / 127f;
+			if (!Transform2D)
+			{
+				VertexInfo->Normal.X *= 1.0f / 127f;
+				VertexInfo->Normal.Y *= 1.0f / 127f;
+				VertexInfo->Normal.Z *= 1.0f / 127f;
+			}
 			Pointer += sizeof(byte) * 3;
 		}
 
@@ -290,7 +315,12 @@ namespace CSPspEmu.Core.Gpu
 			VertexInfo->Normal.X = (float)((short*)Pointer)[0];
 			VertexInfo->Normal.Y = (float)((short*)Pointer)[1];
 			VertexInfo->Normal.Z = (float)((short*)Pointer)[2];
-			if (!Transform2D) VertexInfo->Normal *= 1.0f / 32767f;
+			if (!Transform2D)
+			{
+				VertexInfo->Normal.X *= 1.0f / 32767f;
+				VertexInfo->Normal.Y *= 1.0f / 32767f;
+				VertexInfo->Normal.Z *= 1.0f / 32767f;
+			}
 			Pointer += sizeof(short) * 3;
 		}
 

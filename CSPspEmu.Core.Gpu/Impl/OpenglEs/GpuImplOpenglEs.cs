@@ -13,6 +13,7 @@ using System.Threading;
 using System.Reflection;
 using Mono.Simd;
 using CSPspEmu.Core.Gpu.State.SubStates;
+using CSharpPlatform;
 
 namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 {
@@ -118,16 +119,16 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 
 								_TopRight = new VertexInfo()
 								{
-									Texture = new Vector4f(BottomRight.Texture.X, TopLeft.Texture.Y, TZ, 0),
-									Position = new Vector4f(BottomRight.Position.X, TopLeft.Position.Y, PZ, 0),
-									Normal = new Vector4f(BottomRight.Normal.X, TopLeft.Normal.Y, NZ, 0),
+									Texture = new Vector4fRaw(BottomRight.Texture.X, TopLeft.Texture.Y, TZ, 0),
+									Position = new Vector4fRaw(BottomRight.Position.X, TopLeft.Position.Y, PZ, 0),
+									Normal = new Vector4fRaw(BottomRight.Normal.X, TopLeft.Normal.Y, NZ, 0),
 								};
 
 								_BottomLeft = new VertexInfo()
 								{
-									Texture = new Vector4f(TopLeft.Texture.X, BottomRight.Texture.Y, TZ, 0),
-									Position = new Vector4f(TopLeft.Position.X, BottomRight.Position.Y, PZ, 0),
-									Normal = new Vector4f(TopLeft.Normal.X, BottomRight.Normal.Y, NZ, 0),
+									Texture = new Vector4fRaw(TopLeft.Texture.X, BottomRight.Texture.Y, TZ, 0),
+									Position = new Vector4fRaw(TopLeft.Position.X, BottomRight.Position.Y, PZ, 0),
+									Normal = new Vector4fRaw(TopLeft.Normal.X, BottomRight.Normal.Y, NZ, 0),
 								};
 
 								_BottomLeft.Color = BottomRight.Color = _TopRight.Color = TopLeft.Color = Color;

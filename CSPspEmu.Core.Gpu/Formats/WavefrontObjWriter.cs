@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using OpenTK;
+using CSharpPlatform;
 
 namespace CSPspEmu.Core.Gpu.Formats
 {

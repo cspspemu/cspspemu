@@ -146,6 +146,9 @@
     <EmbeddedResource Include="Winforms\PspDisplayForm.resx">
       <DependentUpon>PspDisplayForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Winforms\PspOpenglDisplayControl.resx">
+      <DependentUpon>PspOpenglDisplayControl.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CSPspEmu.Core.Components\CSPspEmu.Core.Components.csproj">
