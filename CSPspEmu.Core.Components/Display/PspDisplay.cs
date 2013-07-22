@@ -70,9 +70,11 @@ namespace CSPspEmu.Core.Display
 
 		private DateTime StartDrawTime;
 
+		static public event Action DrawEvent;
 		public void TriggerDrawStart()
 		{
 			StartDrawTime = DateTime.UtcNow;
+			if (DrawEvent != null) DrawEvent();
 		}
 
 		public int GetHCount()
@@ -81,19 +83,11 @@ namespace CSPspEmu.Core.Display
 			return (int)(ElaspedTime.TotalSeconds / (1 / HorizontalSyncHertz));
 		}
 
-		private readonly Queue<Action> WakeUpActions = new Queue<Action>();
-
-		public void RegisterVBlankOnce(Action WakeUp)
-		{
-			WakeUpActions.Enqueue(WakeUp);
-		}
+		static public event Action VBlankCallback;
 
 		public void TriggerVBlankStart()
 		{
-			while (WakeUpActions.Count > 0)
-			{
-				WakeUpActions.Dequeue()();
-			}
+			if (VBlankCallback != null) VBlankCallback();
 			VBlankEvent.Signal();
 			if (VBlankEventCall != null) VBlankEventCall();
 			VblankCount++;
@@ -137,6 +131,5 @@ namespace CSPspEmu.Core.Display
 		}
 
 		public bool IsVblank { get; protected set; }
-
 	}
 }

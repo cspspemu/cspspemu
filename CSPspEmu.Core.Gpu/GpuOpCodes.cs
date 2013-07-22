@@ -1280,6 +1280,6 @@
 		/// <summary>
 		/// 0xFF - 
 		/// </summary>
-		Unknown0xFF,
+		Dummy,
 	}
 }

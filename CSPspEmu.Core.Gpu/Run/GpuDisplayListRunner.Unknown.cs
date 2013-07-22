@@ -97,8 +97,7 @@
 		
 		[GpuOpCodesNotImplemented]
 		public void OP_Unknown0xFE() { }
-		
-		[GpuOpCodesNotImplemented]
-		public void OP_Unknown0xFF() { }
+
+		public void OP_Dummy() { }
 	}
 }

@@ -4,6 +4,7 @@ using System;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Types;
 using CSPspEmu.Core.Utils;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Gpu
 {
@@ -13,7 +14,8 @@ namespace CSPspEmu.Core.Gpu
 		protected int VertexSize;
 		protected int SkinningWeightCount;
 		protected byte* BasePointer;
-		protected byte* Pointer;
+		protected int PointerOffset;
+		protected byte* Pointer { get { return BasePointer + PointerOffset; } }
 		protected VertexInfo* VertexInfo;
 
 		// Lists
@@ -73,6 +75,7 @@ namespace CSPspEmu.Core.Gpu
 
 		public void ReadVertices(int Index, VertexInfo* VertexInfo, int Count)
 		{
+			//Console.WriteLine("ReadVertices: {0:X8} : {1}, {2}, {3}", new IntPtr(BasePointer), Index, Count, VertexSize);
 			for (int n = 0; n < Count; n++)
 			{
 				ReadVertex(Index + n, &VertexInfo[n]);
@@ -81,7 +84,7 @@ namespace CSPspEmu.Core.Gpu
 
 		public void ReadVertex(int Index, VertexInfo* VertexInfo)
 		{
-			this.Pointer = &BasePointer[VertexSize * Index];
+			this.PointerOffset = VertexSize * Index;
 			this.VertexInfo = VertexInfo;
 			
 			// Vertex has to be aligned to the maxium size of any component. 
@@ -101,23 +104,26 @@ namespace CSPspEmu.Core.Gpu
 			return OutVertexInfo;
 		}
 
+		protected void Align(int Size)
+		{
+			// Fixme !
+			while ((this.PointerOffset % Size) != 0)
+			{
+				this.PointerOffset++;
+			}
+		}
+
 		protected void Align1()
 		{
 		}
 
 		protected void Align2()
 		{
-			if (((uint)Pointer & 1) != 0)
-			{
-				Pointer = (byte*)(((uint)Pointer + 2) & unchecked((uint)~1));
-			}
+			Align(2);
 		}
 		protected void Align4()
 		{
-			if (((uint)Pointer & 3) != 0)
-			{
-				Pointer = (byte*)(((uint)Pointer + 4) & unchecked((uint)~3));
-			}
+			Align(4);
 		}
 
 		protected void Void()
@@ -144,7 +150,7 @@ namespace CSPspEmu.Core.Gpu
 				VertexInfo->Texture.Z *= 1.0f / 128.0f;
 			}
 
-			Pointer += sizeof(byte) * VertexType.NormalCount;
+			PointerOffset += sizeof(byte) * VertexType.NormalCount;
 		}
 
 		protected void ReadTextureCoordinatesShort()
@@ -161,7 +167,7 @@ namespace CSPspEmu.Core.Gpu
 				VertexInfo->Texture.Z *= 1.0f / 32768f;
 			}
 
-			Pointer += sizeof(short) * VertexType.NormalCount;
+			PointerOffset += sizeof(short) * VertexType.NormalCount;
 		}
 
 		protected void ReadTextureCoordinatesFloat()
@@ -171,7 +177,7 @@ namespace CSPspEmu.Core.Gpu
 			VertexInfo->Texture.Y = (float)((float*)Pointer)[1];
 			VertexInfo->Texture.Z = (VertexType.NormalCount > 2) ? (float)((float*)Pointer)[2] : 0.0f;
 
-			Pointer += sizeof(float) * VertexType.NormalCount;
+			PointerOffset += sizeof(float) * VertexType.NormalCount;
 		}
 
 		protected void ReadColor5650()
@@ -179,7 +185,7 @@ namespace CSPspEmu.Core.Gpu
 			Align2();
 			var Value = *((ushort*)Pointer);
 			_SetVertexInfoColor(PixelFormatDecoder.Decode_RGBA_5650_Pixel(Value));
-			Pointer += sizeof(ushort);
+			PointerOffset += sizeof(ushort);
 		}
 
 		protected void ReadColor5551()
@@ -189,7 +195,7 @@ namespace CSPspEmu.Core.Gpu
 			OutputPixel Color;
 			Color = PixelFormatDecoder.Decode_RGBA_5551_Pixel(Value);
 			_SetVertexInfoColor(Color);
-			Pointer += sizeof(ushort);
+			PointerOffset += sizeof(ushort);
 		}
 
 		protected void ReadColor4444()
@@ -197,7 +203,7 @@ namespace CSPspEmu.Core.Gpu
 			Align2();
 			var Value = *((ushort*)Pointer);
 			_SetVertexInfoColor(PixelFormatDecoder.Decode_RGBA_4444_Pixel(Value));
-			Pointer += sizeof(ushort);
+			PointerOffset += sizeof(ushort);
 		}
 
 		protected void ReadColor8888()
@@ -205,7 +211,7 @@ namespace CSPspEmu.Core.Gpu
 			Align4();
 			var Value = *((uint*)Pointer);
 			_SetVertexInfoColor(PixelFormatDecoder.Decode_RGBA_8888_Pixel(Value));
-			Pointer += sizeof(uint);
+			PointerOffset += sizeof(uint);
 			//Console.WriteLine("{0}, {1}, {2}, {3}", VertexInfo->R, VertexInfo->G, VertexInfo->B, VertexInfo->A);
 		}
 
@@ -237,7 +243,7 @@ namespace CSPspEmu.Core.Gpu
 
 			//Console.Error.WriteLine(VertexInfo->PZ);
 
-			Pointer += sizeof(byte) * 3;
+			PointerOffset += sizeof(byte) * 3;
 		}
 
 		public void ReadPositionShort()
@@ -255,7 +261,7 @@ namespace CSPspEmu.Core.Gpu
 			}
 			//Console.Error.WriteLine(VertexInfo->PZ);
 
-			Pointer += sizeof(short) * 3;
+			PointerOffset += sizeof(short) * 3;
 		}
 
 		public void ReadPositionFloat()
@@ -264,7 +270,7 @@ namespace CSPspEmu.Core.Gpu
 			VertexInfo->Position.X = (float)((float*)Pointer)[0];
 			VertexInfo->Position.Y = (float)((float*)Pointer)[1];
 			VertexInfo->Position.Z = (float)((float*)Pointer)[2];
-			Pointer += sizeof(float) * 3;
+			PointerOffset += sizeof(float) * 3;
 		}
 
 		public void ReadWeightByte()
@@ -273,7 +279,7 @@ namespace CSPspEmu.Core.Gpu
 			{
 				VertexInfo->Weights[n] = (float)((sbyte*)Pointer)[n] / 128f;
 			}
-			Pointer += sizeof(sbyte) * SkinningWeightCount;
+			PointerOffset += sizeof(sbyte) * SkinningWeightCount;
 		}
 
 		public void ReadWeightShort()
@@ -282,7 +288,7 @@ namespace CSPspEmu.Core.Gpu
 			{
 				VertexInfo->Weights[n] = (float)((short*)Pointer)[n] / 32768f;
 			}
-			Pointer += sizeof(short) * SkinningWeightCount;
+			PointerOffset += sizeof(short) * SkinningWeightCount;
 		}
 
 		public void ReadWeightFloat()
@@ -291,7 +297,7 @@ namespace CSPspEmu.Core.Gpu
 			{
 				VertexInfo->Weights[n] = (float)((float*)Pointer)[n];
 			}
-			Pointer += sizeof(float) * SkinningWeightCount;
+			PointerOffset += sizeof(float) * SkinningWeightCount;
 		}
 
 		public void ReadNormalByte()
@@ -306,7 +312,7 @@ namespace CSPspEmu.Core.Gpu
 				VertexInfo->Normal.Y *= 1.0f / 127f;
 				VertexInfo->Normal.Z *= 1.0f / 127f;
 			}
-			Pointer += sizeof(byte) * 3;
+			PointerOffset += sizeof(byte) * 3;
 		}
 
 		public void ReadNormalShort()
@@ -321,7 +327,7 @@ namespace CSPspEmu.Core.Gpu
 				VertexInfo->Normal.Y *= 1.0f / 32767f;
 				VertexInfo->Normal.Z *= 1.0f / 32767f;
 			}
-			Pointer += sizeof(short) * 3;
+			PointerOffset += sizeof(short) * 3;
 		}
 
 		public void ReadNormalFloat()
@@ -330,7 +336,7 @@ namespace CSPspEmu.Core.Gpu
 			VertexInfo->Normal.X = (float)((float*)Pointer)[0];
 			VertexInfo->Normal.Y = (float)((float*)Pointer)[1];
 			VertexInfo->Normal.Z = (float)((float*)Pointer)[2];
-			Pointer += sizeof(float) * 3;
+			PointerOffset += sizeof(float) * 3;
 		}
 	}
 }

@@ -59,6 +59,106 @@ namespace CSPspEmu.Gui.Winforms
 
 		float AnalogX = 0.0f, AnalogY = 0.0f;
 
+		GLControl GLControl;
+
+		public PspDisplayForm(IGuiExternalInterface IGuiExternalInterface)
+		{
+			Singleton = this;
+			Application.AddMessageFilter(this);
+
+			this.IGuiExternalInterface = IGuiExternalInterface;
+
+			InitializeComponent();
+			HandleCreated += new EventHandler(PspDisplayForm_HandleCreated);
+
+			this.ShowIcon = ShowMenus;
+			this.MainMenuStrip.Visible = ShowMenus;
+
+			/*
+			this.MainMenuStrip = null;
+			this.PerformLayout();
+			*/
+			//this.MainMenuStrip.Visible = false;
+
+			//GuiConfig.DefaultDisplayScale
+			DisplayScale = StoredConfig.DisplayScale;
+
+			updateResumePause();
+			UpdateCheckMenusFromConfig();
+			updateDebugGpu();
+			ReLoadControllerConfig();
+			UpdateRecentList();
+		}
+
+		private void PspDisplayForm_Load_1(object sender, EventArgs e)
+		{
+			Console.WriteLine("PspDisplayForm.Thread: {0}", Thread.CurrentThread.ManagedThreadId);
+			this.GLControl = new PspOpenglDisplayControl(OpenglGpuImpl.UsedGraphicsMode);
+			//var GLControl = new GLControl(OpenglGpuImpl.UsedGraphicsMode);
+			this.Controls.Add(this.GLControl);
+
+			//GLControl.add
+			UtilsFrameLimitingMenu.Checked = DisplayConfig.VerticalSynchronization;
+			UtilsAstOptimizationsMenu.Checked = StoredConfig.EnableAstOptimizations;
+			UtilsUseFastmemMenu.Checked = StoredConfig.UseFastMemory;
+
+			Debug.WriteLine(String.Format("Now: {0}", DateTime.UtcNow));
+			Debug.WriteLine(String.Format("LastCheckedTime: {0}", StoredConfig.LastCheckedTime));
+			Debug.WriteLine(String.Format("Elapsed: {0}", (DateTime.UtcNow - StoredConfig.LastCheckedTime)));
+			if ((DateTime.UtcNow - StoredConfig.LastCheckedTime).TotalDays > 3)
+			{
+				CheckForUpdates(NotifyIfNotFound: false);
+			}
+
+			if (Platform.OperatingSystem == Platform.OS.Windows)
+			//if (false)
+			{
+				GameListComponent = new GameListComponent();
+
+				GameListComponent.SelectedItem += (IsoFile) =>
+				{
+					OpenFileRealOnNewThreadLock(IsoFile);
+				};
+				GameListComponent.Dock = DockStyle.Fill;
+
+				//PspConfig.IsosPath = @"e:\isos\pspa";
+				if (!AutoLoad)
+				{
+					RefreshGameList();
+					EnablePspDisplay(false);
+				}
+				else
+				{
+					EnablePspDisplay(true);
+				}
+
+				GameListComponent.Parent = this;
+			}
+
+			PspDisplay.DrawEvent += PspDisplayTick;
+		}
+
+		private void PspDisplayTick()
+		{
+			if (this.IsDisposed) return;
+
+			try
+			{
+				this.Invoke((Action)(() =>
+				{
+					if (!GLControl.Visible) return;
+					SendControllerFrame();
+					Refresh();
+				}));
+			}
+			catch (ObjectDisposedException)
+			{
+			}
+			catch (InvalidOperationException)
+			{
+			}
+		}
+
 		public void SendControllerFrame()
 		{
 			if (IGuiExternalInterface.IsInitialized())
@@ -89,40 +189,6 @@ namespace CSPspEmu.Gui.Winforms
 
 		bool ShowMenus { get { return GuiConfig.ShowMenus; } }
 		bool AutoLoad { get { return GuiConfig.AutoLoad; } }
-
-		public PspDisplayForm(IGuiExternalInterface IGuiExternalInterface)
-		{
-			Singleton = this;
-			Application.AddMessageFilter(this);
-
-			this.IGuiExternalInterface = IGuiExternalInterface;
-
-			InitializeComponent();
-			HandleCreated += new EventHandler(PspDisplayForm_HandleCreated);
-
-			this.ShowIcon = ShowMenus;
-			this.MainMenuStrip.Visible = ShowMenus;
-
-			/*
-			this.MainMenuStrip = null;
-			this.PerformLayout();
-			*/
-			//this.MainMenuStrip.Visible = false;
-
-			//GuiConfig.DefaultDisplayScale
-			DisplayScale = StoredConfig.DisplayScale;
-
-			updateResumePause();
-			UpdateCheckMenusFromConfig();
-			updateDebugGpu();
-			ReLoadControllerConfig();
-			UpdateRecentList();
-
-			var Timer = new System.Windows.Forms.Timer();
-			Timer.Interval = 1000 / 60;
-			Timer.Tick += new EventHandler(Timer_Tick);
-			Timer.Start();
-		}
 
 		void PspDisplayForm_HandleCreated(object sender, EventArgs e)
 		{
@@ -206,17 +272,6 @@ namespace CSPspEmu.Gui.Winforms
 		}
 
 		internal bool EnableRefreshing = true;
-
-		void Timer_Tick(object sender, EventArgs e)
-		{
-			if (!GLControl.Visible)
-			{
-				return;
-			}
-
-			SendControllerFrame();
-			Refresh();
-		}
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
 		{
@@ -335,18 +390,41 @@ namespace CSPspEmu.Gui.Winforms
 			}
 		}
 
+		bool PressingShift = false;
+		bool PressingCtrl = false;
 		bool IMessageFilter.PreFilterMessage(ref Message msg)
 		{
-			var Key = (Keys)msg.WParam;
-
 			switch (msg.Msg)
 			{
-				case 256: // WM_KEYDOWN
-					PspDisplayForm.Singleton.DoKeyDown(Key);
-					return false;
-				case 257: // WM_KEYUP
-					PspDisplayForm.Singleton.DoKeyUp(Key);
-					return false;
+				case 0x100: // WM_KEYDOWN
+				case 0x101: // WM_KEYUP
+					var Key = (Keys)msg.WParam;
+					//Console.WriteLine("{0}", msg);
+
+					if (Key == Keys.ShiftKey)
+					{
+						PressingShift = (msg.Msg == 0x100);
+						break;
+					}
+					if (Key == Keys.ControlKey)
+					{
+						PressingCtrl = (msg.Msg == 0x100);
+						break;
+					}
+
+					if (!PressingShift && !PressingCtrl)
+					{
+						if (msg.Msg == 256)
+						{
+							PspDisplayForm.Singleton.DoKeyDown(Key);
+						}
+						else
+						{
+							PspDisplayForm.Singleton.DoKeyUp(Key);
+						}
+						return false;
+					}
+					break;
 			}
 			//Console.WriteLine(m);
 			return false;
@@ -685,53 +763,6 @@ namespace CSPspEmu.Gui.Winforms
 
 		GameListComponent GameListComponent;
 
-		private void PspDisplayForm_Load_1(object sender, EventArgs e)
-		{
-			Console.WriteLine("PspDisplayForm.Thread: {0}", Thread.CurrentThread.ManagedThreadId);
-			this.GLControl = new PspOpenglDisplayControl(OpenglGpuImpl.UsedGraphicsMode);
-			//var GLControl = new GLControl(OpenglGpuImpl.UsedGraphicsMode);
-			this.Controls.Add(this.GLControl);
-
-			//GLControl.add
-			UtilsFrameLimitingMenu.Checked = DisplayConfig.VerticalSynchronization;
-			UtilsAstOptimizationsMenu.Checked = StoredConfig.EnableAstOptimizations;
-			UtilsUseFastmemMenu.Checked = StoredConfig.UseFastMemory;
-
-			Debug.WriteLine(String.Format("Now: {0}", DateTime.UtcNow));
-			Debug.WriteLine(String.Format("LastCheckedTime: {0}", StoredConfig.LastCheckedTime));
-			Debug.WriteLine(String.Format("Elapsed: {0}", (DateTime.UtcNow - StoredConfig.LastCheckedTime)));
-			if ((DateTime.UtcNow - StoredConfig.LastCheckedTime).TotalDays > 3)
-			{
-				CheckForUpdates(NotifyIfNotFound: false);
-			}
-
-			if (Platform.OperatingSystem == Platform.OS.Windows)
-			//if (false)
-			{
-				GameListComponent = new GameListComponent();
-
-				GameListComponent.SelectedItem += (IsoFile) =>
-				{
-					OpenFileRealOnNewThreadLock(IsoFile);
-				};
-				GameListComponent.Dock = DockStyle.Fill;
-
-				//PspConfig.IsosPath = @"e:\isos\pspa";
-				if (!AutoLoad)
-				{
-					RefreshGameList();
-					EnablePspDisplay(false);
-				}
-				else
-				{
-					EnablePspDisplay(true);
-				}
-
-				GameListComponent.Parent = this;
-			}
-
-		}
-
 		private void EnablePspDisplay(bool Enable)
 		{
 			this.GLControl.Visible = Enable;
@@ -745,8 +776,6 @@ namespace CSPspEmu.Gui.Winforms
 				this.GameListComponent.Focus();
 			}
 		}
-
-		GLControl GLControl;
 
 		public void RefreshGameList()
 		{

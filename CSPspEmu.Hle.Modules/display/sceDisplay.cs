@@ -43,9 +43,6 @@ namespace CSPspEmu.Hle.Modules.display
 			return 0;
 		}
 
-		int LastVblankCount = 0;
-		DateTime LastWaitVblankStart = DateTime.MinValue;
-
 		private int _waitVblankCB(CpuThreadState CpuThreadState, bool HandleCallbacks, int CycleCount, bool Start)
 		{
 			if (CycleCount <= 0)
@@ -55,32 +52,36 @@ namespace CSPspEmu.Hle.Modules.display
 
 			int Wait = 1;
 
-			if (Start || !PspDisplay.IsVblank)
+			//if (DisplayConfig.VerticalSynchronization && (Start || !PspDisplay.IsVblank))
+			if (DisplayConfig.VerticalSynchronization)
 			{
-				if (DisplayConfig.VerticalSynchronization && LastVblankCount != PspDisplay.VblankCount)
+				ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Display, "sceDisplayWaitVblankStart", null, (WakeUp) =>
 				{
-					LastVblankCount = PspDisplay.VblankCount;
-					var SleepThread = ThreadManager.Current;
-
-					SleepThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Display, "sceDisplayWaitVblankStart", null, (WakeUp) =>
+					Action Next = null;
+					Action WakeUpRemoveCallback = () =>
 					{
-						Action Next = null;
-						Next = () =>
+						PspDisplay.VBlankCallback -= Next;
+						WakeUp();
+					};
+					Next = () =>
+					{
+						if (!Start && PspDisplay.IsVblank)
 						{
-							if (CycleCount <= 0)
+							WakeUpRemoveCallback();
+						}
+						else
+						{
+							//CycleCount--;
+							if (CycleCount-- <= 0)
 							{
-								WakeUp();
-							}
-							else
-							{
-								CycleCount--;
 								Wait = 0;
-								PspDisplay.RegisterVBlankOnce(Next);
+								WakeUpRemoveCallback();
 							}
-						};
-						Next();
-					}, HandleCallbacks: HandleCallbacks);
-				}
+						}
+					};
+					PspDisplay.VBlankCallback += Next;
+					Next();
+				}, HandleCallbacks: HandleCallbacks);
 			}
 
 			return Wait;
@@ -295,7 +296,14 @@ namespace CSPspEmu.Hle.Modules.display
 		[HlePspNotImplemented]
 		public int sceDisplayIsForeground()
 		{
-			return 0;
+			if (PspDisplay.CurrentInfo.FrameAddress == 0)
+			{
+				return 0;
+			}
+			else
+			{
+				return 1;
+			}
 		}
 	}
 }

@@ -358,7 +358,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			//if (DelayInMicroseconds < 1000) DelayInMicroseconds = 1000;
 			//DelayInMicroseconds = 100000;
 
-			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, "sceKernelDelayThread", null, WakeUpCallback =>
+			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, String.Format("sceKernelDelayThread({0}, {1})", DelayInMicroseconds, HandleCallbacks), null, WakeUpCallback =>
 			{
 				PspRtc.RegisterTimerInOnce(TimeSpanUtils.FromMicroseconds(DelayInMicroseconds), () =>
 				{

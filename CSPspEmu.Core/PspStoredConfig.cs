@@ -47,7 +47,7 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
-		public int DisplayScale = 1;
+		public int DisplayScale = 2;
 
 		/// <summary>
 		/// 

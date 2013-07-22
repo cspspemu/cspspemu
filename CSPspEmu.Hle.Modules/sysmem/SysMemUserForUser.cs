@@ -352,8 +352,9 @@ namespace CSPspEmu.Hle.Modules.sysmem
 
 		[HlePspFunction(NID = 0x1B4217BC, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public void SysMemUserForUser_1B4217BC()
+		public void sceKernelSetCompiledSdkVersion603_605(uint SdkVersion)
 		{
+			_sceKernelSetCompiledSdkVersion(SdkVersion, "sceKernelSetCompiledSdkVersion603_605", new uint[] { 0x6040000, 0x6030000, 0x6050000 });
 		}
 	}
 }

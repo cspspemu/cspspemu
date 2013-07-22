@@ -11,10 +11,10 @@
 		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0xF8DCB679, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegQueryAtracEsSize(SceMpegPointer* Mpeg, int* ElementaryStreamSize, int* OutputSize)
+		public int sceMpegQueryAtracEsSize(SceMpegPointer* Mpeg, out int ElementaryStreamSize, out int OutputSize)
 		{
-			*ElementaryStreamSize = MPEG_ATRAC_ES_SIZE;
-			*OutputSize = MPEG_ATRAC_ES_OUTPUT_SIZE;
+			ElementaryStreamSize = MPEG_ATRAC_ES_SIZE;
+			OutputSize = MPEG_ATRAC_ES_OUTPUT_SIZE;
 			//throw(new NotImplementedException());
 			return 0;
 		}

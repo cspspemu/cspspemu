@@ -64,6 +64,7 @@
 			this.objectListView1.TabIndex = 1;
 			this.objectListView1.UseCompatibleStateImageBehavior = false;
 			this.objectListView1.View = System.Windows.Forms.View.Details;
+			this.objectListView1.SelectedIndexChanged += new System.EventHandler(this.objectListView1_SelectedIndexChanged);
 			this.objectListView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.objectListView1_MouseDoubleClick);
 			// 
 			// panel1

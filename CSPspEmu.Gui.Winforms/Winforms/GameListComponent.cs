@@ -337,6 +337,7 @@ namespace CSPspEmu.Gui.Winforms
 			FirmwareColumnSize.MaximumWidth = FirmwareColumnSize.MinimumWidth = FirmwareColumnSize.Width = 60;
 			PathColumnSize.Width = 120;
 			TitleColumnSize.Width = 400;
+			TitleColumnSize.MaximumWidth = 420;
 			TitleColumnSize.MinimumWidth = 120;
 			RegionColumnSize.Width = 60;
 		}
@@ -437,6 +438,7 @@ namespace CSPspEmu.Gui.Winforms
 			finally
 			{
 				ProgressForm.End();
+				textBox1.Focus();
 			}
 		}
 
@@ -473,6 +475,11 @@ namespace CSPspEmu.Gui.Winforms
 		}
 
 		private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+		{
+
+		}
+
+		private void objectListView1_SelectedIndexChanged(object sender, EventArgs e)
 		{
 
 		}

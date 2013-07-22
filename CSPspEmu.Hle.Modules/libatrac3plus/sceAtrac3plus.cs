@@ -977,10 +977,10 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x0FAE370E, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceAtracSetHalfwayBufferAndGetID()
+		public int sceAtracSetHalfwayBufferAndGetID(uint HalfBufferPointer, uint ReadSize, uint HalfBufferSize)
 		{
-			throw (new NotImplementedException());
-			return 0;
+			//throw (new NotImplementedException());
+			return -1;
 		}
 
 		/// <summary>

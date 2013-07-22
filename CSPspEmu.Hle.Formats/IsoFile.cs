@@ -8,7 +8,7 @@ using CSharpUtils.Endian;
 
 namespace CSPspEmu.Hle.Formats
 {
-	public unsafe class IsoFile
+	public unsafe class IsoFile : IDisposable
 	{
 		public const uint SectorSize = 0x800;
 
@@ -99,6 +99,11 @@ namespace CSPspEmu.Hle.Formats
 			this.PrimaryVolumeDescriptor = this.Stream.ReadStruct<PrimaryVolumeDescriptor>();
 			this.Root = new IsoNode(this, PrimaryVolumeDescriptor.DirectoryRecord);
 			ProcessDirectoryRecord(this.Root);
+		}
+
+		public void Dispose()
+		{
+			this.Stream.Dispose();
 		}
 	}
 
@@ -544,6 +549,7 @@ namespace CSPspEmu.Hle.Formats
 
 		public void Dispose()
 		{
+			Iso.Dispose();
 		}
 	}
 }
