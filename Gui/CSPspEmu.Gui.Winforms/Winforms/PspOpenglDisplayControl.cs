@@ -44,10 +44,17 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 			var OpenglGpuImpl = (PspDisplayForm.Singleton.GpuProcessor.GpuImpl as OpenglGpuImpl);
 			if (OpenglGpuImpl != null)
 			{
-				if (GL.IsTexture(OpenglGpuImpl.FrameBufferTexture))
+				var CurrentDrawBufferTexture = OpenglGpuImpl.GetCurrentDrawBufferTexture(new CSPspEmu.Core.Gpu.Impl.Opengl.OpenglGpuImpl.DrawBufferKey() {
+					Address = PspDisplayForm.Singleton.PspDisplay.CurrentInfo.FrameAddress,
+					//Width = PspDisplayForm.Singleton.PspDisplay.CurrentInfo.Width,
+					//Height = PspDisplayForm.Singleton.PspDisplay.CurrentInfo.Height
+				});
+				var Texture = CurrentDrawBufferTexture.TextureColor;
+
+				if (GL.IsTexture(Texture))
 				{
 					//GL.Enable(EnableCap.Texture2D);
-					GL.BindTexture(TextureTarget.Texture2D, OpenglGpuImpl.FrameBufferTexture);
+					GL.BindTexture(TextureTarget.Texture2D, Texture);
 					VerticalFlip = true;
 					return true;
 				}

@@ -15,6 +15,10 @@ namespace CSPspEmu.Core.Gpu
 		{
 		}
 
+		public override void BeforeDraw(GpuStateStruct* GpuState)
+		{
+		}
+
 		public override void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
 		{
 		}

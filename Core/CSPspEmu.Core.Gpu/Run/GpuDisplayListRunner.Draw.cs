@@ -323,6 +323,7 @@ namespace CSPspEmu.Core.Gpu.Run
 				}
 			}
 
+			GpuDisplayList.GpuProcessor.GpuImpl.BeforeDraw(GpuDisplayList.GpuStateStructPointer);
 			GpuDisplayList.GpuProcessor.GpuImpl.DrawCurvedSurface(GlobalGpuState, GpuDisplayList.GpuStateStructPointer, Patch, UCount, VCount);
 		}
 
@@ -336,6 +337,7 @@ namespace CSPspEmu.Core.Gpu.Run
 
 			//Console.WriteLine("PRIM: {0}, {1}", PrimitiveType, VertexCount);
 
+			GpuDisplayList.GpuProcessor.GpuImpl.BeforeDraw(GpuDisplayList.GpuStateStructPointer);
 			GpuDisplayList.GpuProcessor.GpuImpl.Prim(GlobalGpuState, GpuDisplayList.GpuStateStructPointer, PrimitiveType, VertexCount);
 		}
 	}

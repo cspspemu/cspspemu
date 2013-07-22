@@ -28,7 +28,8 @@ namespace CSPspEmu.Hle.Modules.ctrl
 		/// <param name="Count"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x3A622550, FirmwareVersion = 150)]
-		public int sceCtrlPeekBufferPositive(SceCtrlData* SceCtrlData, int Count) {
+		public int sceCtrlPeekBufferPositive(SceCtrlData* SceCtrlData, int Count)
+		{
 			_ReadCount(SceCtrlData, Count, Peek: true, Positive: true);
 			return Count;
 		}

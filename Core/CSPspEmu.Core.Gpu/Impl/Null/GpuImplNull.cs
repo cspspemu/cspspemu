@@ -40,6 +40,10 @@ namespace CSPspEmu.Core.Gpu
 		{
 		}
 
+		public override void BeforeDraw(GpuStateStruct* GpuState)
+		{
+		}
+
 		public override PluginInfo PluginInfo
 		{
 			get

@@ -13,6 +13,8 @@ namespace CSPspEmu.Core.Gpu
 		public abstract void End(GpuStateStruct* GpuState);
 		public abstract void Sync(GpuStateStruct* LastGpuState);
 
+		public abstract void BeforeDraw(GpuStateStruct* GpuState);
+
 		public virtual void TextureFlush(GpuStateStruct* GpuState)
 		{
 		}

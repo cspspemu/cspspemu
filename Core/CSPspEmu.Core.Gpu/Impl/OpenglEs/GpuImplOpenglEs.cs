@@ -265,5 +265,10 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 		{
 			throw new NotImplementedException();
 		}
+
+		public override void BeforeDraw(GpuStateStruct* GpuState)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

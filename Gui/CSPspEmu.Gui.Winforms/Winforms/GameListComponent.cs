@@ -438,7 +438,10 @@ namespace CSPspEmu.Gui.Winforms
 			finally
 			{
 				ProgressForm.End();
-				textBox1.Focus();
+				this.Invoke(new Action(() =>
+				{
+					textBox1.Focus();
+				}));
 			}
 		}
 

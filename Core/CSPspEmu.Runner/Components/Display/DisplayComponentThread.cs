@@ -3,6 +3,7 @@ using System.Threading;
 using CSPspEmu.Core;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core.Display;
+using CSharpUtils;
 
 namespace CSPspEmu.Runner.Components.Display
 {
@@ -20,18 +21,21 @@ namespace CSPspEmu.Runner.Components.Display
 		{
 			while (true)
 			{
-				// TODO: Count this time!
+				var StartTime = DateTime.UtcNow;
+				var VSyncTime = StartTime + TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.VsyncRow)));
+				var EndTime = StartTime + TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.NumberOfRows)));
+				
 				ThreadTaskQueue.HandleEnqueued();
 				if (!Running) return;
 
 				// Draw time
 				PspDisplay.TriggerDrawStart();
-				Thread.Sleep(TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.VsyncRow))));
+				ThreadUtils.SleepUntilUtc(VSyncTime);
 
 				// VBlank time
 				PspDisplay.TriggerVBlankStart();
 				HleInterruptManager.GetInterruptHandler(PspInterrupts.PSP_VBLANK_INT).Trigger();
-				Thread.Sleep(TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.NumberOfRows - PspDisplay.VsyncRow))));
+				ThreadUtils.SleepUntilUtc(EndTime);
 				PspDisplay.TriggerVBlankEnd();
 			}
 		}

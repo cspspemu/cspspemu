@@ -146,6 +146,7 @@ namespace CSPspEmu.Gui.Winforms
 			{
 				this.Invoke((Action)(() =>
 				{
+					UpdateTitle();
 					if (!GLControl.Visible) return;
 					SendControllerFrame();
 					Refresh();

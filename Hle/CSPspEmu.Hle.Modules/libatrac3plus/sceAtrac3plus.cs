@@ -425,7 +425,8 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			{
 				get
 				{
-					return DecodingOffset >= EndSample;
+					return RemainingFrames <= 0;
+					//return DecodingOffset >= EndSample;
 				}
 			}
 
@@ -675,13 +676,15 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 
 			//Console.WriteLine("{0}/{1} -> {2} : {3}", Atrac.DecodingOffsetInSamples, Atrac.TotalSamples, DecodedSamples, Atrac.DecodingReachedEnd);
 
-			RemainingFramesToDecode = -1;
+			RemainingFramesToDecode = Atrac.RemainingFrames;
 
 			if (Atrac.DecodingReachedEnd)
 			{
 				if (Atrac.NumberOfLoops == 0)
 				{
-					ReachedEnd = -1;
+					DecodedSamples = 0;
+					ReachedEnd = 1;
+					RemainingFramesToDecode = 0;
 					throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED));
 				}
 				if (Atrac.NumberOfLoops > 0) Atrac.NumberOfLoops--;

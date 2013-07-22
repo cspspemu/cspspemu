@@ -23,6 +23,8 @@ using Mono.Simd;
 using CSPspEmu.Core.Utils;
 using CSPspEmu.Core.Types;
 using CSharpPlatform;
+using CSPspEmu.Core.Gpu.State.SubStates;
+using System.Collections.Generic;
 #else
 using MiniGL;
 #endif
@@ -829,6 +831,86 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		//	FB.Save(FileName);
 		//}
 
+		public struct DrawBufferKey
+		{
+			public uint Address;
+			//public int Width;
+			//public int Height;
+		}
+
+		public class DrawBufferValue : IDisposable
+		{
+			public uint FBO;
+			public uint TextureColor;
+			public uint TextureDepthStencil;
+
+			public DrawBufferValue(DrawBufferKey DrawBufferKey)
+			{
+				GL.GenFramebuffers(1, out FBO);
+				GL.GenTextures(1, out TextureColor);
+				GL.GenTextures(1, out TextureDepthStencil);
+
+				int Width = 512;
+				int Height = 272;
+				var EmptyDataPtr = stackalloc uint[Width * Height];
+				
+				GL.BindTexture(TextureTarget.Texture2D, TextureColor);
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+				GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Width, Height, 0, PixelFormat.Bgra, PixelType.UnsignedInt8888Reversed, new IntPtr(EmptyDataPtr));
+
+				GL.BindTexture(TextureTarget.Texture2D, TextureDepthStencil);
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+				GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthStencil, Width, Height, 0, PixelFormat.DepthStencil, PixelType.UnsignedInt248, new IntPtr(EmptyDataPtr));
+			}
+
+			public void Bind()
+			{
+				GL.BindFramebuffer(FramebufferTarget.DrawFramebuffer, FBO);
+				GL.FramebufferTexture2D(FramebufferTarget.DrawFramebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, TextureColor, 0);
+				GL.FramebufferTexture2D(FramebufferTarget.DrawFramebuffer, FramebufferAttachment.DepthStencilAttachment, TextureTarget.Texture2D, TextureDepthStencil, 0);
+			}
+
+			public void Dispose()
+			{
+				GL.DeleteFramebuffers(1, ref FBO);
+				GL.DeleteTextures(1, ref TextureColor);
+				GL.DeleteTextures(1, ref TextureDepthStencil);
+				FBO = 0;
+				TextureColor = 0;
+				TextureDepthStencil = 0;
+			}
+		}
+
+		private readonly Dictionary<DrawBufferKey, DrawBufferValue> DrawBufferTextures = new Dictionary<DrawBufferKey, DrawBufferValue>();
+
+		public DrawBufferValue GetCurrentDrawBufferTexture(DrawBufferKey Key)
+		{
+			if (!DrawBufferTextures.ContainsKey(Key)) DrawBufferTextures[Key] = new DrawBufferValue(Key);
+			return DrawBufferTextures[Key];
+		}
+
+		void BindCurrentDrawBufferTexture(GpuStateStruct* GpuState)
+		{
+			var Key = new DrawBufferKey()
+			{
+				Address = GpuState->DrawBufferState.Address,
+				//Width = (int)GpuState->DrawBufferState.Width,
+				//Height = (int)272,
+			};
+			GetCurrentDrawBufferTexture(Key).Bind();
+		}
+
+		public override void BeforeDraw(GpuStateStruct* GpuState)
+		{
+			BindCurrentDrawBufferTexture(GpuState);
+		}
+
 		[HandleProcessCorruptedStateExceptions]
 		private void PrepareWrite(GpuStateStruct* GpuState)
 		{
@@ -836,25 +918,25 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//return;
 
 #if true
-			if (SwapBuffers)
-			{
-				RenderGraphicsContext.SwapBuffers();
-			}
-
-			GL.PushAttrib(AttribMask.EnableBit);
-			GL.PushAttrib(AttribMask.TextureBit);
-			{
-				GL.Enable(EnableCap.Texture2D);
-				GL.BindTexture(TextureTarget.Texture2D, FrameBufferTexture);
-				{
-					//GL.CopyTexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, 0, 0, 512, 272);
-					GL.CopyTexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, 0, 0, 512, 272, 0);
-					//GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, 1, 1, 0, PixelFormat.Bgra, PixelType.UnsignedInt8888Reversed, new uint[] { 0xFFFF00FF });
-				}
-				GL.BindTexture(TextureTarget.Texture2D, 0);
-			}
-			GL.PopAttrib();
-			GL.PopAttrib();
+			//if (SwapBuffers)
+			//{
+			//	RenderGraphicsContext.SwapBuffers();
+			//}
+			//
+			//GL.PushAttrib(AttribMask.EnableBit);
+			//GL.PushAttrib(AttribMask.TextureBit);
+			//{
+			//	GL.Enable(EnableCap.Texture2D);
+			//	GL.BindTexture(TextureTarget.Texture2D, FrameBufferTexture);
+			//	{
+			//		//GL.CopyTexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, 0, 0, 512, 272);
+			//		GL.CopyTexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, 0, 0, 512, 272, 0);
+			//		//GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, 1, 1, 0, PixelFormat.Bgra, PixelType.UnsignedInt8888Reversed, new uint[] { 0xFFFF00FF });
+			//	}
+			//	GL.BindTexture(TextureTarget.Texture2D, 0);
+			//}
+			//GL.PopAttrib();
+			//GL.PopAttrib();
 #else
 
 			//Console.WriteLine("PrepareWrite");
