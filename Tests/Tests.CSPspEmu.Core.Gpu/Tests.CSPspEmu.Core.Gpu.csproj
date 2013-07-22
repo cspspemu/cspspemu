@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F379F844-CC84-42A8-881C-2724BE8EA952}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{83BC2E9E-F96C-44B0-B735-4C048F3F2530}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CSPspEmuLLETest</RootNamespace>
-    <AssemblyName>CSPspEmuLLETest</AssemblyName>
+    <RootNamespace>Tests.CSPspEmu.Core.Gpu</RootNamespace>
+    <AssemblyName>Tests.CSPspEmu.Core.Gpu</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProductVersion>12.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
@@ -16,7 +16,6 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
@@ -28,7 +27,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>True</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -39,52 +37,37 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DebugPspMemory.cs" />
-    <Compile Include="Dma.cs" />
-    <Compile Include="DmaEnum.cs" />
-    <Compile Include="ILleDma.cs" />
-    <Compile Include="TransferUtils.cs" />
-    <Compile Include="LleGPIO.cs" />
-    <Compile Include="LleKirk.cs" />
-    <Compile Include="LleNAND.cs" />
-    <Compile Include="LlePspComponent.cs" />
-    <Compile Include="LlePspCpu.cs" />
-    <Compile Include="LLEState.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="GpuProcessorTest.cs" />
+    <Compile Include="VertexReading\VertexReaderDynarecTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Core\CSPspEmu.Core.Components\CSPspEmu.Core.Components.csproj">
-      <Project>{C2263270-905B-4D00-9446-21C8D9890DDC}</Project>
-      <Name>CSPspEmu.Core.Components</Name>
+    <ProjectReference Include="..\..\Core\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">
+      <Project>{9A30EBF3-B702-47D9-AAFC-E3E02B410DAD}</Project>
+      <Name>CSPspEmu.Core.Gpu</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core\CSPspEmu.Core.Cpu\CSPspEmu.Core.Cpu.csproj">
-      <Project>{827779A5-F05C-41C6-9FF9-FD274224A7AE}</Project>
-      <Name>CSPspEmu.Core.Cpu</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Core\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
+    <ProjectReference Include="..\..\Core\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
       <Project>{FD27EF3A-4EBE-4867-A603-3E7048DCF459}</Project>
       <Name>CSPspEmu.Core.Memory</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core\CSPspEmu.Core\CSPspEmu.Core.csproj">
+    <ProjectReference Include="..\..\Core\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core\CSPspEmu.Inject\CSPspEmu.Inject.csproj">
-      <Project>{E68AE26E-E969-4413-8D3C-E60A7D2A2950}</Project>
-      <Name>CSPspEmu.Inject</Name>
+    <ProjectReference Include="..\..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
+      <Project>{9B217880-48AE-43B6-AE1F-DC732FCCBC7A}</Project>
+      <Name>CSharpUtils.Drawing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
-      <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
-      <Name>CSharpUtils</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

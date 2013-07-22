@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D302E160-F421-4DD6-BAAE-304891DDEFA2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Tests.CSPspEmu.Hle</RootNamespace>
+    <AssemblyName>Tests.CSPspEmu.Hle</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise />
+  </Choose>
+  <ItemGroup>
+    <Compile Include="CStringFormaterTest.cs" />
+    <Compile Include="Formats\Archive\ZipTest.cs" />
+    <Compile Include="Formats\CsoTest.cs" />
+    <Compile Include="Formats\EncryptedPrxTest.cs" />
+    <Compile Include="Formats\Font\PGFTest.cs" />
+    <Compile Include="Formats\PbpTest.cs" />
+    <Compile Include="Formats\PsfTest.cs" />
+    <Compile Include="Formats\video\MpegPsDemuxerTest.cs" />
+    <Compile Include="Formats\video\PmfTest.cs" />
+    <Compile Include="HlePspThreadManagerTest.cs" />
+    <Compile Include="HlePspThreadTest.cs" />
+    <Compile Include="Loader\ElfLoaderTest.cs" />
+    <Compile Include="MemoryPartitionTest.cs" />
+    <Compile Include="PreemptiveSchedulerTest.cs" />
+    <Compile Include="TestHleUtils.cs" />
+    <Compile Include="Vfs\HleIoManagerTest.cs" />
+    <Compile Include="Vfs\Iso\CsoProxyStreamTest.cs" />
+    <Compile Include="Vfs\Iso\IsoTest.cs" />
+    <Compile Include="Vfs\Local\HleIoDriverLocalFileSystemTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Formats\audio\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\CSPspEmu.Core.Audio\CSPspEmu.Core.Audio.csproj">
+      <Project>{3be28d69-cfb4-4c9d-8874-7cf8f520dfb0}</Project>
+      <Name>CSPspEmu.Core.Audio</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\CSPspEmu.Core.Cpu\CSPspEmu.Core.Cpu.csproj">
+      <Project>{827779a5-f05c-41c6-9ff9-fd274224a7ae}</Project>
+      <Name>CSPspEmu.Core.Cpu</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">
+      <Project>{9a30ebf3-b702-47d9-aafc-e3e02b410dad}</Project>
+      <Name>CSPspEmu.Core.Gpu</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
+      <Project>{fd27ef3a-4ebe-4867-a603-3e7048dcf459}</Project>
+      <Name>CSPspEmu.Core.Memory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\CSPspEmu.Core.Types\CSPspEmu.Core.Types.csproj">
+      <Project>{bb80d126-2a98-4ece-99ed-3098f9bd7594}</Project>
+      <Name>CSPspEmu.Core.Types</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\CSPspEmu.Core\CSPspEmu.Core.csproj">
+      <Project>{f783ecd3-0f79-43cc-abd0-d356a64049c4}</Project>
+      <Name>CSPspEmu.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hle\CSPspEmu.Hle.Formats\CSPspEmu.Hle.Formats.csproj">
+      <Project>{b7d8a67e-0046-4ef7-80fe-444bc7efbc70}</Project>
+      <Name>CSPspEmu.Hle.Formats</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hle\CSPspEmu.Hle.Modules\CSPspEmu.Hle.Modules.csproj">
+      <Project>{295b7bf1-1130-4098-b0fc-00555ddb09dd}</Project>
+      <Name>CSPspEmu.Hle.Modules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hle\CSPspEmu.Hle.Types\CSPspEmu.Hle.Types.csproj">
+      <Project>{3c997fe1-117f-4f2c-8e3b-3c820b0adfb0}</Project>
+      <Name>CSPspEmu.Hle.Types</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hle\CSPspEmu.Hle.Vfs\CSPspEmu.Hle.Vfs.csproj">
+      <Project>{24475fa3-5baa-4cfd-8a9f-d0c54ed5597e}</Project>
+      <Name>CSPspEmu.Hle.Vfs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Hle\CSPspEmu.Hle\CSPspEmu.Hle.csproj">
+      <Project>{288af89e-b41a-4253-a8f7-43d1371516e9}</Project>
+      <Name>CSPspEmu.Hle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\CSPspEmu.Inject\CSPspEmu.Inject.csproj">
+      <Project>{e68ae26e-e969-4413-8d3c-e60a7d2a2950}</Project>
+      <Name>CSPspEmu.Inject</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\CSPspEmu.Resources\CSPspEmu.Resources.csproj">
+      <Project>{ba3187fa-a2a1-43e0-9fdd-69b377ee3152}</Project>
+      <Name>CSPspEmu.Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\CSPspEmu.Utils\CSPspEmu.Utils.csproj">
+      <Project>{dc02a203-30f2-4613-950b-1529fd55ac81}</Project>
+      <Name>CSPspEmu.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\cscodec\cscodec\cscodec.h264\cscodec.h264.csproj">
+      <Project>{e8791c5d-f790-404c-b661-d509844dbbff}</Project>
+      <Name>cscodec.h264</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\cscodec\cscodec\cscodec\cscodec.csproj">
+      <Project>{351dcb00-efcf-435a-9c72-9a7e1d5950b0}</Project>
+      <Name>cscodec</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
+      <Project>{9b217880-48ae-43b6-ae1f-dc732fccbc7a}</Project>
+      <Name>CSharpUtils.Drawing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Ext\CSharpUtils.Ext.csproj">
+      <Project>{c017fbbe-ef10-4030-a69e-204e766c8f9d}</Project>
+      <Name>CSharpUtils.Ext</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
+      <Project>{746fadf2-d613-4ffd-8551-2181adae3cd1}</Project>
+      <Name>CSharpUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

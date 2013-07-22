@@ -9,6 +9,7 @@ obj
 *.userprefs
 *.user
 *.dump
+*.obj
 *.idb
 *.idc
 /games
@@ -30,8 +31,8 @@ obj
 *.dax
 *.bin
 /ms
-/TestInput/EBOOT.BIN
-/TestOutput/*
+/Tests/TestInput/EBOOT.BIN
+/Tests/TestOutput/*
 /pspsdk
 /_pspautotests_svn
 /flash0
@@ -44,12 +45,10 @@ obj
 *.sdf
 *.log
 /version_current_numeric.txt
-/version_current_numeric.txt
 /_ReSharper.CSPspEmu-2010
 /_ReSharper.CSPspEmu-2012
 
 /deploy/cspspemu/ms
 /deploy/cspspemu/src
 /deploy/cspspemu/F0
-/utils/MaiAT3PlusDecoder/*.obj
 /*.vspx

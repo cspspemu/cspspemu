@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9A30EBF3-B702-47D9-AAFC-E3E02B410DAD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CSPspEmu.Core.Gpu</RootNamespace>
+    <AssemblyName>CSPspEmu.Core.Gpu</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;OPENTK</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>OPENTK</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Trace|AnyCPU'">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>bin\Trace\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Debug\CSPspEmu.Core.Gpu.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="OpenTK">
+      <HintPath>..\..\Libraries\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK.GLControl">
+      <HintPath>..\..\Libraries\OpenTK.GLControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Formats\PspWavefrontObjWriter.cs" />
+    <Compile Include="Formats\WavefrontObjWriter.cs" />
+    <Compile Include="GpuConfig.cs" />
+    <Compile Include="GpuImpl.cs" />
+    <Compile Include="GpuOpCodes.cs" />
+    <Compile Include="GpuDisplayList.cs" />
+    <Compile Include="GpuOpCodesNotImplementedAttribute.cs" />
+    <Compile Include="GpuProcessor.cs" />
+    <Compile Include="GpuProcessorEnums.cs" />
+    <Compile Include="IGpuConnector.cs" />
+    <Compile Include="Impl\Null\GpuImplNull.cs" />
+    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.cs" />
+    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.Init.cs" />
+    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.StateClear.cs" />
+    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.StateCommon.cs" />
+    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.StateDraw.cs" />
+    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.Transfer.cs" />
+    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.Utils.cs" />
+    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.ConversionTables.cs" />
+    <Compile Include="Impl\OpenglEs\TextureCacheOpengles.cs" />
+    <Compile Include="Impl\Opengl\OpenglGpuImpl.ConversionTables.cs" />
+    <Compile Include="Impl\Opengl\OpenglGpuImpl.cs" />
+    <Compile Include="Impl\Opengl\OpenglGpuImpl.Init.cs" />
+    <Compile Include="Impl\Opengl\OpenglGpuImpl.StateClear.cs" />
+    <Compile Include="Impl\Opengl\OpenglGpuImpl.StateCommon.cs" />
+    <Compile Include="Impl\Opengl\OpenglGpuImpl.StateDraw.cs" />
+    <Compile Include="Impl\Opengl\OpenglGpuImpl.StateMatrix.cs" />
+    <Compile Include="Impl\Opengl\OpenglGpuImpl.Transfer.cs" />
+    <Compile Include="Impl\Opengl\OpenglGpuImpl.Utils.cs" />
+    <Compile Include="Impl\Opengl\TextureCacheOpengl.cs" />
+    <Compile Include="Impl\Soft\GpuImplSoft.cs" />
+    <Compile Include="MessagePipe.cs" />
+    <Compile Include="PspGeCallbackData.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.BoundingBox.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Clut.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Color.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Depth.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Dither.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Draw.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Enable.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Flow.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Fog.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Lights.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Matrix.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Morph.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Special.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Spline.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Texture.cs" />
+    <Compile Include="Run\GpuDisplayListRunner.Unknown.cs" />
+    <Compile Include="State\GpuState.Enums.cs" />
+    <Compile Include="State\GpuState.Structs.cs" />
+    <Compile Include="State\SubStates\ScreenBufferStateStruct.cs" />
+    <Compile Include="State\SubStates\SkinningStateStruct.cs" />
+    <Compile Include="State\GpuMatrixStruct.cs" />
+    <Compile Include="State\GpuRectStruct.cs" />
+    <Compile Include="State\SubStates\AlphaTestStateStruct.cs" />
+    <Compile Include="State\SubStates\BackfaceCullingStateStruct.cs" />
+    <Compile Include="State\SubStates\BlendingStateStruct.cs" />
+    <Compile Include="State\SubStates\ClipPlaneStateStruct.cs" />
+    <Compile Include="State\SubStates\ClutStateStruct.cs" />
+    <Compile Include="State\SubStates\ColorTestStateStruct.cs" />
+    <Compile Include="State\SubStates\DepthStateStruct.cs" />
+    <Compile Include="State\SubStates\DitheringStateStruct.cs" />
+    <Compile Include="State\SubStates\FogStateStruct.cs" />
+    <Compile Include="State\GpuState.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="State\SubStates\LightingStateStruct.cs" />
+    <Compile Include="State\SubStates\LightStateStruct.cs" />
+    <Compile Include="State\SubStates\LineSmoothStateStruct.cs" />
+    <Compile Include="State\SubStates\LogicalOperationStateStruct.cs" />
+    <Compile Include="State\SubStates\MorphingStateStruct.cs" />
+    <Compile Include="State\SubStates\PatchCullingStateStruct.cs" />
+    <Compile Include="State\SubStates\StencilStateStruct.cs" />
+    <Compile Include="State\SubStates\TextureMappingStateStruct.cs" />
+    <Compile Include="State\SubStates\TextureStateStruct.cs" />
+    <Compile Include="State\SubStates\TextureTransferStateStruct.cs" />
+    <Compile Include="State\SubStates\VertexStateStruct.cs" />
+    <Compile Include="TextureCache.cs" />
+    <Compile Include="VertexInfo.cs" />
+    <Compile Include="VertexReading\VertexReader.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
+      <Project>{FD27EF3A-4EBE-4867-A603-3E7048DCF459}</Project>
+      <Name>CSPspEmu.Core.Memory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core.Types\CSPspEmu.Core.Types.csproj">
+      <Project>{BB80D126-2A98-4ECE-99ED-3098F9BD7594}</Project>
+      <Name>CSPspEmu.Core.Types</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
+      <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
+      <Name>CSPspEmu.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Inject\CSPspEmu.Inject.csproj">
+      <Project>{E68AE26E-E969-4413-8D3C-E60A7D2A2950}</Project>
+      <Name>CSPspEmu.Inject</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Utils\CSPspEmu.Utils.csproj">
+      <Project>{DC02A203-30F2-4613-950B-1529FD55AC81}</Project>
+      <Name>CSPspEmu.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\csharpplatform\CSharpPlatform.GL\CSharpPlatform.GL.csproj">
+      <Project>{65E8804F-DEAB-42BC-B88E-E2A81052DF30}</Project>
+      <Name>CSharpPlatform.GL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\libraries\csharpplatform\CSharpPlatform\CSharpPlatform.csproj">
+      <Project>{B4B107B5-030B-451C-8532-13B2306692C3}</Project>
+      <Name>CSharpPlatform</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
+      <Project>{9B217880-48AE-43B6-AE1F-DC732FCCBC7A}</Project>
+      <Name>CSharpUtils.Drawing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
+      <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
+      <Name>CSharpUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\SafeILGenerator\SafeILGenerator\SafeILGenerator.csproj">
+      <Project>{9A93C7E4-09DA-46CF-B7DD-6BB09681D5AB}</Project>
+      <Name>SafeILGenerator</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Run\GpuDisplayListRunner.Transfer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Impl\OpenglEs\shader.fragment" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Impl\OpenglEs\shader.vertex" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.StateMatrix.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -2,31 +2,30 @@
 
 ![Kaiten Patissier PSP](http://soywiz.github.com/cspspemu/screenshoots/kaiten_patissier.png)
 
-A PSP Emulator for >= .NET 4.0 made in C# by soywiz - Carlos Ballesteros Velasco
+A PSP Emulator for >= .NET 4.5 made in C# by soywiz - Carlos Ballesteros Velasco
 
 Work In Progress emulator
 
 ## EMULATOR STATUS:
 
-* Cpu and Fpu is almost fully implemented
-* VFpu still has lots of functions without implementation 
+* Cpu, Fpu and VFpu are almost fully implemented
 * Audio is implemented
 * Gpu still requires lots of works
-* Hle emulation has implemented a basic set of APIs (still lot of work left)
+* Hle emulation has implemented lots of APIs (still lot of work left)
 * There are lot of homebrew games running
-* There are a small number of commercial games running
+* There are a growing number of commercial games running at full speed
 
 
 ## KEY FEATURES:
 
 ### Fully Managed and Disengaged
 
-	Being fully managed (thought it will need unsafe access) will allow to port to lots of platforms in the future: AKA: Linux, Mac, Xbox360, Android, future devices...
+	Being fully managed (thought it will need unsafe access) will allow to port to lots of platforms in the future: AKA: Linux, Mac, PS3, Android, future devices...
 
 ### Very Fast Dynamic Recompilation
 
 	The quality of the generated code is fantastic.
-	Lots of MIPs instructions encodes in a single X86 instruction.
+	Lots of MIPs instructions encodes in a single X86/64 instruction.
 	The registers are inlined in the CpuThreadState class, so access
 	to a register is as fast as accessing a non-virtual field.
 
@@ -115,6 +114,7 @@ Work In Progress emulator
 
 	The idea is to create a full set of tests, testing the emulator interface, code generation, and HLE APIs.
 	UnitTests are integrated in the code, and HLE APIs are external integration tests in form of PSP executables than can be executed on any emulator to test APIs.
+	There is a project called pspautotests used by all the active emulators to test regressions and new APIs.
 	
 ### Fully Open Source
 

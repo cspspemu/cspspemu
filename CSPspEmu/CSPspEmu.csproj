@@ -112,67 +112,67 @@
     <Compile Include="AutoTests\AutoTestsProgram.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CSPspEmu.Core.Audio\CSPspEmu.Core.Audio.csproj">
+    <ProjectReference Include="..\Core\CSPspEmu.Core.Audio\CSPspEmu.Core.Audio.csproj">
       <Project>{3BE28D69-CFB4-4C9D-8874-7CF8F520DFB0}</Project>
       <Name>CSPspEmu.Core.Audio</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Components\CSPspEmu.Core.Components.csproj">
+    <ProjectReference Include="..\Core\CSPspEmu.Core.Components\CSPspEmu.Core.Components.csproj">
       <Project>{C2263270-905B-4D00-9446-21C8D9890DDC}</Project>
       <Name>CSPspEmu.Core.Components</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Cpu\CSPspEmu.Core.Cpu.csproj">
+    <ProjectReference Include="..\Core\CSPspEmu.Core.Cpu\CSPspEmu.Core.Cpu.csproj">
       <Project>{827779A5-F05C-41C6-9FF9-FD274224A7AE}</Project>
       <Name>CSPspEmu.Core.Cpu</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">
+    <ProjectReference Include="..\Core\CSPspEmu.Core.Gpu\CSPspEmu.Core.Gpu.csproj">
       <Project>{9A30EBF3-B702-47D9-AAFC-E3E02B410DAD}</Project>
       <Name>CSPspEmu.Core.Gpu</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
+    <ProjectReference Include="..\Core\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
       <Project>{FD27EF3A-4EBE-4867-A603-3E7048DCF459}</Project>
       <Name>CSPspEmu.Core.Memory</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Types\CSPspEmu.Core.Types.csproj">
+    <ProjectReference Include="..\Core\CSPspEmu.Core.Types\CSPspEmu.Core.Types.csproj">
       <Project>{BB80D126-2A98-4ECE-99ED-3098F9BD7594}</Project>
       <Name>CSPspEmu.Core.Types</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Hle.Formats\CSPspEmu.Hle.Formats.csproj">
+    <ProjectReference Include="..\Hle\CSPspEmu.Hle.Formats\CSPspEmu.Hle.Formats.csproj">
       <Project>{B7D8A67E-0046-4EF7-80FE-444BC7EFBC70}</Project>
       <Name>CSPspEmu.Hle.Formats</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Hle.Types\CSPspEmu.Hle.Types.csproj">
+    <ProjectReference Include="..\Hle\CSPspEmu.Hle.Types\CSPspEmu.Hle.Types.csproj">
       <Project>{3C997FE1-117F-4F2C-8E3B-3C820B0ADFB0}</Project>
       <Name>CSPspEmu.Hle.Types</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Hle.Vfs\CSPspEmu.Hle.Vfs.csproj">
+    <ProjectReference Include="..\Hle\CSPspEmu.Hle.Vfs\CSPspEmu.Hle.Vfs.csproj">
       <Project>{24475FA3-5BAA-4CFD-8A9F-D0C54ED5597E}</Project>
       <Name>CSPspEmu.Hle.Vfs</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Inject\CSPspEmu.Inject.csproj">
+    <ProjectReference Include="..\Core\CSPspEmu.Inject\CSPspEmu.Inject.csproj">
       <Project>{E68AE26E-E969-4413-8D3C-E60A7D2A2950}</Project>
       <Name>CSPspEmu.Inject</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Runner\CSPspEmu.Runner.csproj">
+    <ProjectReference Include="..\Core\CSPspEmu.Runner\CSPspEmu.Runner.csproj">
       <Project>{6552E4E6-198A-46B6-864A-53CA5C1ED851}</Project>
       <Name>CSPspEmu.Runner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
+    <ProjectReference Include="..\Core\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Gui.Winforms\CSPspEmu.Gui.Winforms.csproj">
+    <ProjectReference Include="..\Gui\CSPspEmu.Gui.Winforms\CSPspEmu.Gui.Winforms.csproj">
       <Project>{550E4F4E-704E-48EB-8392-C1EB229348CF}</Project>
       <Name>CSPspEmu.Gui.Winforms</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Hle.Modules\CSPspEmu.Hle.Modules.csproj">
+    <ProjectReference Include="..\Hle\CSPspEmu.Hle.Modules\CSPspEmu.Hle.Modules.csproj">
       <Project>{295B7BF1-1130-4098-B0FC-00555DDB09DD}</Project>
       <Name>CSPspEmu.Hle.Modules</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Hle\CSPspEmu.Hle.csproj">
+    <ProjectReference Include="..\Hle\CSPspEmu.Hle\CSPspEmu.Hle.csproj">
       <Project>{288AF89E-B41A-4253-A8F7-43D1371516E9}</Project>
       <Name>CSPspEmu.Hle</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Utils\CSPspEmu.Utils.csproj">
+    <ProjectReference Include="..\Core\CSPspEmu.Utils\CSPspEmu.Utils.csproj">
       <Project>{DC02A203-30F2-4613-950B-1529FD55AC81}</Project>
       <Name>CSPspEmu.Utils</Name>
     </ProjectReference>
