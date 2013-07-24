@@ -48,19 +48,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Archive\ZipArchive.cs" />
-    <Compile Include="audio\At3\MaiAT3PlusCoreDecoder.cs" />
-    <Compile Include="audio\At3\MaiAT3PlusCoreDecoder_DecFunc.cs" />
-    <Compile Include="audio\At3\MaiAT3PlusCoreDecoder_StaticData.cs" />
-    <Compile Include="audio\At3\MaiAT3PlusCoreDecoder_SubFunc.cs" />
-    <Compile Include="audio\At3\MaiAT3PlusFrameDecoder.cs" />
-    <Compile Include="audio\At3\ManagedPointer.cs" />
-    <Compile Include="audio\At3\Sample\MiniPlayer.cs" />
-    <Compile Include="audio\At3\SUB\MaiBitReader.cs" />
-    <Compile Include="audio\At3\SUB\MaiQueue0.cs" />
-    <Compile Include="audio\RiffWaveReader.cs" />
-    <Compile Include="audio\Vag.cs" />
-    <Compile Include="audio\Vag.Structs.cs" />
-    <Compile Include="audio\Wav.cs" />
     <Compile Include="CompressedIsoProxyStream.cs" />
     <Compile Include="Cso.cs" />
     <Compile Include="Dax.cs" />
@@ -96,9 +83,6 @@
     <Compile Include="Utils\ZOutputStream.cs" />
     <Compile Include="Utils\ZStream.cs" />
     <Compile Include="Utils\ZStreamException.cs" />
-    <Compile Include="video\IDemuxer.cs" />
-    <Compile Include="video\MpegPsDemuxer.cs" />
-    <Compile Include="video\Pmf.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\CSPspEmu.Core.Components\CSPspEmu.Core.Components.csproj">
@@ -120,14 +104,6 @@
     <ProjectReference Include="..\..\Core\CSPspEmu.Utils\CSPspEmu.Utils.csproj">
       <Project>{DC02A203-30F2-4613-950B-1529FD55AC81}</Project>
       <Name>CSPspEmu.Utils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\cscodec\cscodec\cscodec.h264\cscodec.h264.csproj">
-      <Project>{e8791c5d-f790-404c-b661-d509844dbbff}</Project>
-      <Name>cscodec.h264</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\cscodec\cscodec\cscodec\cscodec.csproj">
-      <Project>{351dcb00-efcf-435a-9c72-9a7e1d5950b0}</Project>
-      <Name>cscodec</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
       <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>

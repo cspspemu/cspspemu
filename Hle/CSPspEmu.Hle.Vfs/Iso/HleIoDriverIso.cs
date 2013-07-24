@@ -321,7 +321,7 @@ namespace CSPspEmu.Hle.Vfs.Iso
 				//Console.Error.WriteLine("'{0}'", Enumerator.Current.ToString());
 				var IsoNode = Enumerator.Current;
 				{
-					PointerUtils.StoreStringOnPtr(IsoNode.Name, Encoding.UTF8, IoDirent->Name);
+					IoDirent->Name = IsoNode.Name;
 					_IoGetstat(IsoNode, &IoDirent->Stat);
 				}
 			}

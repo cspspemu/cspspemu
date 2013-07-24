@@ -21,6 +21,7 @@ namespace CSPspEmu.Runner.Components.Display
 		{
 			while (true)
 			{
+				//Console.WriteLine("[1]");
 				var StartTime = DateTime.UtcNow;
 				var VSyncTime = StartTime + TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.VsyncRow)));
 				var EndTime = StartTime + TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.NumberOfRows)));

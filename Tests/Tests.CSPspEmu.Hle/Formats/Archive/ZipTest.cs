@@ -2,17 +2,17 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CSPspEmu.Hle.Formats.Archive;
 using CSPspEmu.Resources;
 using CSharpUtils;
 
 namespace CSPspEmu.Core.Tests.Hle.Formats.Archive
 {
-	[TestFixture]
+	[TestClass]
 	public class ZipTest
 	{
-		[Test]
+		[TestMethod]
 		public void TestUncompressedZip()
 		{
 			var Zip = new ZipArchive();
@@ -23,7 +23,7 @@ namespace CSPspEmu.Core.Tests.Hle.Formats.Archive
 			}
 		}
 
-		[Test]
+		[TestMethod]
 		public void TestCompressedZip()
 		{
 			var Zip = new ZipArchive();
@@ -33,7 +33,7 @@ namespace CSPspEmu.Core.Tests.Hle.Formats.Archive
 			Assert.AreEqual(ExpectedString, ResultString);
 		}
 
-		[Test]
+		[TestMethod]
 		public void TestZip2()
 		{
 			var Zip = new ZipArchive();

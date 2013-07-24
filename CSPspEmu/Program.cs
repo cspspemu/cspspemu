@@ -13,8 +13,8 @@ using CSPspEmu.AutoTests;
 using CSharpUtils;
 using CSharpUtils.Getopt;
 using Mono.Simd;
-using CSPspEmu.Hle.Formats.audio.At3.Sample;
 using CSPspEmu.Hle;
+using CSPspEmu.Hle.Vfs.Iso;
 
 namespace CSPspEmu
 {
@@ -115,7 +115,6 @@ namespace CSPspEmu
 				}
 			};
 
-			Logger.Info("Running ... plat:{0} ... int*:{1} ... simd:{2}", Environment.Is64BitProcess ? "64bit" : "32bit", sizeof(int*), SimdRuntime.AccelMode);
 #if false
 			Console.WriteLine(CSPspEmu.Resources.Translations.GetString("extra", "UnknownGame"));
 			Console.ReadKey(); Environment.Exit(0);
@@ -136,12 +135,16 @@ namespace CSPspEmu
 					Console.WriteLine("Soywiz's Psp Emulator - {0} - r{1} - {2}", PspGlobalConfiguration.CurrentVersion, PspGlobalConfiguration.CurrentVersionNumeric, PspGlobalConfiguration.GitRevision);
 					Console.WriteLine("");
 					Console.WriteLine(" Switches:");
-					Console.WriteLine("   /version                   - Outputs the program version");
-					Console.WriteLine("   /version2                  - Outputs the program numeric version");
-					Console.WriteLine("   /decrypt <EBOOT.BIN>       - Decrypts an EBOOT.BIN");
-					Console.WriteLine("   /gitrevision               - Outputs the git revision");
-					Console.WriteLine("   /associate                 - Associates extensions with the program. Requires be launched with administrative rights.");
-					Console.WriteLine("   /viewout /timeout X /tests - Run integration tests.");
+					Console.WriteLine("   /version                         - Outputs the program version");
+					Console.WriteLine("   /version2                        - Outputs the program numeric version");
+					Console.WriteLine("   /decrypt <EBOOT.BIN>             - Decrypts an EBOOT.BIN");
+					Console.WriteLine("   /gitrevision                     - Outputs the git revision");
+					Console.WriteLine("   /associate                       - Associates extensions with the program. Requires be launched with administrative rights.");
+					Console.WriteLine("   /viewout /timeout X /tests       - Run integration tests.");
+					Console.WriteLine("   ");
+					Console.WriteLine("   /isolist <pathto.iso|cso|dax>    - Lists the content of an iso.");
+					Console.WriteLine("   /isoextract <in.iso> <outfolder> - Extracts the content of an iso.");
+					Console.WriteLine("   /isoconvert <in.xxx> <out.yyy>   - Converts a iso/cso/dax file into other format.");
 					Console.WriteLine("");
 					Console.WriteLine(" Examples:");
 					Console.WriteLine("   cspspemu.exe <path_to_psp_executable>");
@@ -158,25 +161,72 @@ namespace CSPspEmu
 					Console.Write("{0}", PspGlobalConfiguration.CurrentVersionNumeric);
 					Environment.Exit(0);
 				});
+				Getopt.AddRule("/isoconvert", () =>
+				{
+					var IsoInPath = Getopt.DequeueNext();
+					var IsoOutPath = Getopt.DequeueNext();
+					
+					if (Path.GetExtension(IsoOutPath) != ".iso")
+					{
+						Console.WriteLine("Just support outputing .iso files");
+						Environment.Exit(-1);
+					}
+
+					var IsoInFile = IsoLoader.GetIso(IsoInPath);
+					Console.Write("{0} -> {1}...", IsoInPath, IsoOutPath);
+					IsoInFile.Stream.Slice().CopyToFile(IsoOutPath);
+					Console.WriteLine("Ok");
+					Environment.Exit(0);
+				});
+				Getopt.AddRule("/isolist", () =>
+				{
+					var IsoPath = Getopt.DequeueNext();
+					var IsoFile = IsoLoader.GetIso(IsoPath);
+					var IsoFileSystem = new HleIoDriverIso(IsoFile);
+					foreach (var FileName in IsoFileSystem.ListDirRecursive("/"))
+					{
+						var Stat = IsoFileSystem.GetStat(FileName);
+						Console.WriteLine("{0} : {1}", FileName, Stat.Size);
+					}
+					//Console.Write("{0}", PspGlobalConfiguration.CurrentVersionNumeric);
+					Environment.Exit(0);
+				});
+				Getopt.AddRule("/isoextract", () =>
+				{
+					var IsoPath = Getopt.DequeueNext();
+					var OutputPath = Getopt.DequeueNext();
+					var IsoFile = IsoLoader.GetIso(IsoPath);
+					var IsoFileSystem = new HleIoDriverIso(IsoFile);
+					foreach (var FileName in IsoFileSystem.ListDirRecursive("/"))
+					{
+						var Stat = IsoFileSystem.GetStat(FileName);
+						var OutputFileName = OutputPath + "/" + FileName;
+						Console.Write("{0} : {1}...", FileName, Stat.Size);
+
+						if (!Stat.Attributes.HasFlag(Hle.Vfs.IOFileModes.Directory))
+						{
+							var ParentDirectory = Directory.GetParent(OutputFileName).FullName;
+							//Console.WriteLine(ParentDirectory);
+							try { Directory.CreateDirectory(ParentDirectory); }
+							catch
+							{
+							}
+							using (var InputStream = IsoFileSystem.OpenRead(FileName))
+							{
+								InputStream.CopyToFile(OutputFileName);
+							}
+						}
+						Console.WriteLine("Ok");
+					}
+					//Console.Write("{0}", PspGlobalConfiguration.CurrentVersionNumeric);
+					Environment.Exit(0);
+				});
 				Getopt.AddRule("/decrypt", (string EncryptedFile) =>
 				{
 					try
 					{
 						using (var EncryptedStream = File.OpenRead(EncryptedFile))
 						{
-							/*
-							var Format = new FormatDetector().DetectSubType(EncryptedStream);
-
-							switch (Format)
-							{
-								case FormatDetector.SubType.Cso:
-								case FormatDetector.SubType.Dax:
-								case FormatDetector.SubType.Iso:
-
-									break;
-							}
-							*/
-
 							var DecryptedFile = String.Format("{0}.decrypted", EncryptedFile);
 							Console.Write("'{0}' -> '{1}'...", EncryptedFile, DecryptedFile);
 
@@ -247,24 +297,8 @@ namespace CSPspEmu
 				Console.Error.WriteLine(Exception);
 				Environment.Exit(-1);
 			}
-			//new PspAudioOpenalImpl().__TestAudio();
-			//new PspAudioWaveOutImpl().__TestAudio();
-			//return;
 
-			/*
-			var CsoName = "../../../TestInput/test.cso";
-			var Cso = new Cso(File.OpenRead(CsoName));
-			var Iso = new IsoFile();
-			Console.WriteLine("[1]");
-			Iso.SetStream(new CsoProxyStream(Cso), CsoName);
-			Console.WriteLine("[2]");
-			foreach (var Node in Iso.Root.Descendency())
-			{
-				Console.WriteLine(Node);
-			}
-			Console.ReadKey();
-			return;
-			*/
+			Logger.Info("Running ... plat:{0} ... int*:{1} ... simd:{2}", Environment.Is64BitProcess ? "64bit" : "32bit", sizeof(int*), SimdRuntime.AccelMode);
 
 #if !RELEASE
 			try

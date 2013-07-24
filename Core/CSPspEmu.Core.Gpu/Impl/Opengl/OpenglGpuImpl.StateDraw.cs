@@ -120,8 +120,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private static void PrepareState_Depth(GpuStateStruct* GpuState)
 		{
-			//GL.DepthRange((double)GpuState->DepthTestState.RangeFar, (double)GpuState->DepthTestState.RangeNear);
-			GL.DepthRange(GpuState->DepthTestState.RangeNear, GpuState->DepthTestState.RangeFar);
+			GL.DepthRange((double)GpuState->DepthTestState.RangeNear, (double)GpuState->DepthTestState.RangeFar);
+			//GL.DepthRange(GpuState->DepthTestState.RangeNear, GpuState->DepthTestState.RangeFar);
 		}
 
 		private static void PrepareState_DepthTest(GpuStateStruct* GpuState)

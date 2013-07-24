@@ -1,5 +1,6 @@
 ﻿#define USE_GL_CONTROL
-#define SHOW_WINDOW
+//#define DO_NOT_USE_STENCIL
+//#define SHOW_WINDOW
 
 using System;
 using System.Globalization;
@@ -12,6 +13,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
 using CSharpUtils;
 using System.Diagnostics;
+using System.Runtime.ExceptionServices;
 #else
 using MiniGL;
 #endif
@@ -91,14 +93,18 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			return Value;
 		}
 
-		static public readonly GraphicsMode UsedGraphicsMode = new GraphicsMode(
+		public static GraphicsMode UsedGraphicsMode = new GraphicsMode(
 			color: new OpenTK.Graphics.ColorFormat(8, 8, 8, 8),
 			depth: 16,
+#if DO_NOT_USE_STENCIL
+			stencil: 0,
+#else
 			stencil: 8,
+#endif
 			samples: 0,
 			accum: new OpenTK.Graphics.ColorFormat(16, 16, 16, 16),
 			//accum: new OpenTK.Graphics.ColorFormat(0, 0, 0, 0),
-			buffers: 2,
+			buffers: 1,
 			stereo: false
 		);
 
@@ -106,6 +112,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// 
 		/// </summary>
 		/// <see cref="http://www.opentk.com/doc/graphics/graphicscontext"/>
+		//[HandleProcessCorruptedStateExceptions]
 		public override void InitSynchronizedOnce()
 		{
 			if (!AlreadyInitialized)
@@ -122,10 +129,21 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 					//Console.Error.WriteLine(UsedGraphicsMode);
 					//Console.ReadKey();
+
 #if USE_GL_CONTROL
-					GLControl = new GLControl(UsedGraphicsMode, 3, 0, GraphicsContextFlags.Default);
-					GLControl.Size = new System.Drawing.Size(512, 272);
-					RenderGraphicsContext = GLControl.Context;
+					//try
+					//{
+						GLControl = new GLControl(UsedGraphicsMode, 3, 0, GraphicsContextFlags.Default);
+						GLControl.Size = new System.Drawing.Size(512, 272);
+						RenderGraphicsContext = GLControl.Context;
+					//}
+					//catch (AccessViolationException)
+					//{
+					//	UsedGraphicsMode = GraphicsMode.Default;
+					//	GLControl = new GLControl(GraphicsMode.Default, 3, 0, GraphicsContextFlags.Default);
+					//	GLControl.Size = new System.Drawing.Size(512, 272);
+					//	RenderGraphicsContext = GLControl.Context;
+					//}
 #else
 					NativeWindow = new NativeWindow(512, 272, "PspGraphicEngine", GameWindowFlags.Default, UsedGraphicsMode, DisplayDevice.GetDisplay(DisplayIndex.Default));
 					RenderGraphicsContext = new GraphicsContext(UsedGraphicsMode, WindowInfo);

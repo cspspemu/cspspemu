@@ -1,5 +1,5 @@
 ﻿using CSPspEmu.Hle.Vfs.Iso;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using CSPspEmu.Hle.Formats;
@@ -8,10 +8,10 @@ using CSharpUtils;
 
 namespace CSPspEmu.Core.Tests
 {
-	[TestFixture]
+	[TestClass]
 	public class CsoProxyStreamTest
 	{
-		[Test]
+		[TestMethod]
 		public void ReadTest()
 		{
 			var Cso = new Cso(File.OpenRead("../../../TestInput/cube.cso"));
