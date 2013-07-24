@@ -104,7 +104,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			samples: 0,
 			accum: new OpenTK.Graphics.ColorFormat(16, 16, 16, 16),
 			//accum: new OpenTK.Graphics.ColorFormat(0, 0, 0, 0),
-			buffers: 1,
+			buffers: 2,
 			stereo: false
 		);
 

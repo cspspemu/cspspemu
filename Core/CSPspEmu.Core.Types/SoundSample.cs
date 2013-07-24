@@ -1,4 +1,5 @@
-﻿namespace CSPspEmu.Core.Audio
+﻿using System;
+namespace CSPspEmu.Core.Audio
 {
 	public struct MonoShortSoundSample
 	{
@@ -34,6 +35,14 @@
 			this.Right = Right;
 		}
 
+		public int MaxAmplitudeLeftRight
+		{
+			get
+			{
+				return Math.Max(Math.Abs((int)Left), Math.Abs((int)Right));
+			}
+		}
+
 		public static StereoShortSoundSample Mix(StereoShortSoundSample A, StereoShortSoundSample B)
 		{
 			return new StereoShortSoundSample((short)((A.Left + B.Left) / 2), (short)((A.Right + B.Right) / 2));
@@ -65,6 +74,14 @@
 			this.Right = Right;
 		}
 
+		public int MaxAmplitudeLeftRight
+		{
+			get
+			{
+				return Math.Max(Math.Abs(Left), Math.Abs(Right));
+			}
+		}
+
 		public static StereoIntSoundSample Mix(StereoIntSoundSample A, StereoIntSoundSample B)
 		{
 			return new StereoIntSoundSample((int)((A.Left + B.Left) / 2), (int)((A.Right + B.Right) / 2));
@@ -78,6 +95,11 @@
 		public static StereoIntSoundSample operator /(StereoIntSoundSample A, int Div)
 		{
 			return new StereoIntSoundSample((A.Left / Div), (A.Right / Div));
+		}
+
+		public static StereoIntSoundSample operator *(StereoIntSoundSample A, int Mult)
+		{
+			return new StereoIntSoundSample((A.Left * Mult), (A.Right * Mult));
 		}
 
 		public static implicit operator StereoShortSoundSample(StereoIntSoundSample StereoIntSoundSample)
