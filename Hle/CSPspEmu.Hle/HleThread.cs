@@ -295,6 +295,11 @@ namespace CSPspEmu.Hle
 			} while (!HleInterruptManager.Enabled);
 		}
 
+		public void WakeUpAndReschedule()
+		{
+			WakeUp();
+		}
+
 		public void WakeUp()
 		{
 			if (!this.HasAllStatus(Status.Waiting))

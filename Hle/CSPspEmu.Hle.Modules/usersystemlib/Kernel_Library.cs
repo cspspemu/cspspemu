@@ -15,36 +15,92 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		[Inject]
 		public ThreadManForUser ThreadManForUser;
 
-		public struct SceLwMutexWorkarea
-		{
-			public int count;
-			public SceUID thread;
-			public int attr;
-			public int numWaitThreads;
-			public SceUID uid;
-			private fixed int pad[3];
-		}
 
-		public struct SceKernelLwMutexInfo
+		private int _sceKernelLockLwMutexCB(SceLwMutexWorkarea* workarea, int count, int* TimeOut, bool HandleCallbacks)
 		{
-			public SceSize size;
-			public fixed byte _name[32];
-			public uint attr;
-			public SceUID uid;
-			public void *workarea;
-			public int initCount;
-			public int currentCount;
-			public SceUID lockThread;
-			public int numWaitThreads;
-		}
+#if false
+			if (count <= 0) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT));
+			if (count > 1 && workarea->attr.HasFlagGeneric(ThreadManForUser.MutexAttributesEnum.AllowRecursive)) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT));
+			if (count + workarea->lockLevel < 0) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_LWMUTEX_LOCK_OVERFLOW));
+			if (workarea->uid == -1) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_LWMUTEX_NOT_FOUND));
 
-		private int _sceKernelLockLwMutexCB(SceLwMutexWorkarea* WorkAreaPointer, int Count, int* TimeOut, bool HandleCallbacks)
-		{
+			if (workarea->lockLevel == 0)
+			{
+				if (workarea->lockThread != 0)
+				{
+					// Validate that it actually exists so we can return an error if not.
+					kernelObjects.Get<LwMutex>(workarea->uid, error);
+					if (error)
+						return false;
+				}
+
+				workarea->lockLevel = count;
+				workarea->lockThread = __KernelGetCurThread();
+				return true;
+			}
+
+			if (workarea->lockThread == __KernelGetCurThread())
+			{
+				// Recursive mutex, let's just increase the lock count and keep going
+				if (workarea->attr & PSP_MUTEX_ATTR_ALLOW_RECURSIVE)
+				{
+					workarea->lockLevel += count;
+					return true;
+				}
+				else
+				{
+					error = PSP_LWMUTEX_ERROR_ALREADY_LOCKED;
+					return false;
+				}
+			}
+#endif
 			return 0;
 		}
 
 		private int _sceKernelTryLockLwMutex(SceLwMutexWorkarea* WorkAreaPointer, int Count)
 		{
+			return 0;
+		}
+
+		[Inject]
+		HleThreadManager HleThreadManager;
+
+		private int _sceKernelUnlockLwMutex(SceLwMutexWorkarea* workarea, int count)
+		{
+			return 0;
+
+			if (workarea->uid == -1)
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_LWMUTEX_NOT_FOUND));
+			}
+			
+			if (count <= 0)
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT));
+			}
+
+			if ((workarea->attr & ThreadManForUser.MutexAttributesEnum.AllowRecursive) == 0 && count > 1)
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT));
+			}
+
+			if (workarea->lockLevel == 0 || workarea->lockThread != HleThreadManager.Current.Id)
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_LWMUTEX_UNLOCKED));
+			}
+			
+			if (workarea->lockLevel < count)
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_LWMUTEX_UNLOCK_UNDERFLOW));
+			}
+
+			workarea->lockLevel -= count;
+
+			if (workarea->lockLevel == 0)
+			{
+				HleThreadManager.GetThreadById(workarea->lockThread).WakeUpAndReschedule();
+			}
+
 			return 0;
 		}
 
@@ -58,6 +114,10 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 			return HleInterruptManager.sceKernelCpuSuspendIntr();
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Flags"></param>
 		private void _sceKernelCpuResumeIntr(uint Flags)
 		{
 			HleInterruptManager.sceKernelCpuResumeIntr(Flags);
@@ -104,7 +164,7 @@ namespace CSPspEmu.Hle.Modules.usersystemlib
 		[HlePspNotImplemented]
 		public int sceKernelUnlockLwMutex(SceLwMutexWorkarea* WorkAreaPointer, int Count)
 		{
-			return 0;
+			return _sceKernelUnlockLwMutex(WorkAreaPointer, Count);
 		}
 
 		/// <summary>

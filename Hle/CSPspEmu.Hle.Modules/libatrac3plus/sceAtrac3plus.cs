@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using CSharpUtils;
 using CSharpUtils.Arrays;
@@ -79,7 +80,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			}
 		}
 
-		[HleUidPoolClass(NotFoundError = SceKernelErrors.ERROR_ATRAC_BAD_ID, FirstItem = 0)]
+		[HleUidPoolClass(NotFoundError = SceKernelErrors.ERROR_ATRAC_BAD_ID, FirstItem = 0, ReuseIds = true)]
 		public class Atrac : IHleUidPoolClass
 		{
 			[Inject]
@@ -446,6 +447,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			{
 				get
 				{
+					if (this.BlockSize == 0) return -1;
 					return (int)(this.DataStream.Available() / this.BlockSize);
 				}
 			}
@@ -524,7 +526,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		public Atrac sceAtracSetDataAndGetID(byte* DataPointer, int DataLength)
 		{
 			//var Data = ArrayUtils.CreateArray<byte>(DataPointer, DataLength);
-			return new Atrac(InjectContext, DataPointer, DataLength);
+			return TryToAlloc(new Atrac(InjectContext, DataPointer, DataLength));
 		}
 
 		/// <summary>
@@ -721,7 +723,33 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public Atrac sceAtracGetAtracID(CodecType CodecType)
 		{
-			return new Atrac(InjectContext, CodecType);
+			if (CodecType != CodecType.PSP_MODE_AT_3 && CodecType != CodecType.PSP_MODE_AT_3_PLUS)
+			{
+				throw(new SceKernelException(SceKernelErrors.ATRAC_ERROR_INVALID_CODECTYPE));
+			}
+
+			return TryToAlloc(new Atrac(InjectContext, CodecType));
+		}
+
+		private Atrac TryToAlloc(Atrac Atrac)
+		{
+			var CodecType = Atrac.CodecType;
+			var Count = InjectContext.GetInstance<HleUidPoolManager>().List<Atrac>().Count(_Atrac => _Atrac.CodecType == CodecType);
+			if (CodecType == CodecType.PSP_MODE_AT_3_PLUS)
+			{
+				if (Count >= MaxAtrac3Plus)
+				{
+					throw (new SceKernelException(SceKernelErrors.ATRAC_ERROR_NO_ATRACID));
+				}
+			}
+			else if (CodecType == CodecType.PSP_MODE_AT_3)
+			{
+				if (Count >= MaxAtrac3)
+				{
+					throw (new SceKernelException(SceKernelErrors.ATRAC_ERROR_NO_ATRACID));
+				}
+			}
+			return Atrac;
 		}
 
 		/// <summary>
@@ -953,6 +981,10 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			return 0;
 		}
 
+		private const int MAX_PSP_NUM_ATRAC_IDS = 6;
+		int MaxAtrac3Plus = 2;
+		int MaxAtrac3 = 2;
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -962,7 +994,44 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public int sceAtracReinit(int at3Count, int at3plusCount)
 		{
-			throw (new SceKernelException((SceKernelErrors)(-1)));
+			//int at3CountAlready = InjectContext.GetInstance<HleUidPoolManager>().List<Atrac>().Count(Atrac => Atrac.CodecType == CodecType.PSP_MODE_AT_3);
+			//int at3PlusCountAlready = InjectContext.GetInstance<HleUidPoolManager>().List<Atrac>().Count(Atrac => Atrac.CodecType == CodecType.PSP_MODE_AT_3_PLUS);
+			//
+			//if (at3CountAlready == at3Count && at3PlusCountAlready == at3plusCount)
+			//{
+			//	throw (new SceKernelException(SceKernelErrors.ERROR_BUSY));
+			//}
+
+			InjectContext.GetInstance<HleUidPoolManager>().RemoveAll<Atrac>();
+
+			int Space = MAX_PSP_NUM_ATRAC_IDS;
+			MaxAtrac3Plus = 0;
+			MaxAtrac3 = 0;
+			for (int n = 0; n < at3plusCount; n++)
+			{
+				if (Space >= 2)
+				{
+					Space -= 2;
+					MaxAtrac3Plus++;
+				}
+				else
+				{
+					throw (new SceKernelException(SceKernelErrors.ERROR_OUT_OF_MEMORY));
+				}
+			}
+			for (int n = 0; n < at3Count; n++)
+			{
+				if (Space >= 1)
+				{
+					Space -= 1;
+					MaxAtrac3++;
+				}
+				else
+				{
+					throw (new SceKernelException(SceKernelErrors.ERROR_OUT_OF_MEMORY));
+				}
+			}
+			return 0;
 		}
 
 		/// <summary>

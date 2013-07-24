@@ -52,11 +52,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
-		private TextureOpengl CurrentTexture;
-
-		/// <summary>
-		/// 
-		/// </summary>
 		private GpuStateStruct* GpuState;
 
 		private VertexTypeStruct VertexType;
@@ -896,6 +891,26 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		}
 
 		private readonly Dictionary<DrawBufferKey, DrawBufferValue> DrawBufferTextures = new Dictionary<DrawBufferKey, DrawBufferValue>();
+
+		public void TextureCacheGetAndBind(GpuStateStruct* GpuState)
+		{
+			var TextureMappingState = &GpuState->TextureMappingState;
+			var ClutState = &TextureMappingState->ClutState;
+			var TextureState = &TextureMappingState->TextureState;
+			var Key = new DrawBufferKey() {
+				Address = TextureState->Mipmap0.Address,
+			};
+
+			if (DrawBufferTextures.ContainsKey(Key))
+			{
+				GL.BindTexture(TextureTarget.ProxyTexture2D, GetCurrentDrawBufferTexture(Key).TextureColor);
+			}
+			else
+			{
+				var CurrentTexture = TextureCache.Get(GpuState);
+				CurrentTexture.Bind();
+			}
+		}
 
 		public int GetDrawTexture(DrawBufferKey Key)
 		{

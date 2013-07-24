@@ -1,5 +1,6 @@
 ﻿using CSPspEmu.Hle.Managers;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -11,6 +12,7 @@ namespace CSPspEmu.Hle
 	{
 		public SceKernelErrors NotFoundError = (SceKernelErrors)(-1);
 		public int FirstItem = 1;
+		public bool ReuseIds = false;
 	}
 
 	public interface IHleUidPoolClass : IDisposable
@@ -46,6 +48,7 @@ namespace CSPspEmu.Hle.Managers
 			private int LastId = 0;
 			private Type Type;
 			private HleUidPoolClassAttribute Info;
+			private readonly HashSet<int> FreedIds = new HashSet<int>();
 			private readonly Dictionary<int, IHleUidPoolClass> Items = new Dictionary<int, IHleUidPoolClass>();
 			private readonly Dictionary<IHleUidPoolClass, int> RevItems = new Dictionary<IHleUidPoolClass, int>();
 
@@ -59,11 +62,29 @@ namespace CSPspEmu.Hle.Managers
 				}
 			}
 
+			public bool ReuseIds
+			{
+				get { return (this.Info != null) ? this.Info.ReuseIds : false; }
+			}
+
 			[MethodImpl(MethodImplOptions.Synchronized)]
 			public int Alloc(IHleUidPoolClass Item)
 			{
 				if (Item.GetType() != this.Type) throw(new InvalidOperationException("Trying to insert invalid object type"));
-				int Index = LastId++;
+				int Index = -1;
+
+				if (ReuseIds)
+				{
+					//Console.Error.WriteLine("******************************************");
+					if (FreedIds.Count > 0)
+					{
+						Index = FreedIds.Min();
+						FreedIds.Remove(Index);
+					}
+				}
+
+				if (Index == -1) Index = LastId++;
+				
 				Items[Index] = Item;
 				RevItems[Item] = Index;
 				return Index;
@@ -76,18 +97,26 @@ namespace CSPspEmu.Hle.Managers
 			}
 
 			//[MethodImpl(MethodImplOptions.Synchronized)]
-			public void Remove(int Index)
-			{
-				RevItems.Remove(Items[Index]);
-				Items.Remove(Index);
-			}
-
-			//[MethodImpl(MethodImplOptions.Synchronized)]
 			public void RemoveItem(IHleUidPoolClass Item)
 			{
 				Item.Dispose();
+				if (ReuseIds) FreedIds.Add(RevItems[Item]);
 				Items.Remove(RevItems[Item]);
 				RevItems.Remove(Item);
+			}
+
+			//[MethodImpl(MethodImplOptions.Synchronized)]
+			public void Remove(int Index)
+			{
+				RemoveItem(Items[Index]);
+			}
+
+			public void RemoveAll()
+			{
+				foreach (var Item in List().ToArray())
+				{
+					RemoveItem(Item);
+				}
 			}
 
 			private void ThrowNotFound()
@@ -103,9 +132,13 @@ namespace CSPspEmu.Hle.Managers
 			}
 
 			//[MethodImpl(MethodImplOptions.Synchronized)]
-			public IHleUidPoolClass Get(int Index)
+			public IHleUidPoolClass Get(int Index, bool CanReturnNull = false)
 			{
-				if (!Items.ContainsKey(Index)) ThrowNotFound();
+				if (!Items.ContainsKey(Index))
+				{
+					if (CanReturnNull) return null;
+					ThrowNotFound();
+				}
 				return Items[Index];
 			}
 
@@ -119,6 +152,16 @@ namespace CSPspEmu.Hle.Managers
 			{
 				if (!RevItems.ContainsKey(Item)) ThrowNotFound();
 				return RevItems[Item];
+			}
+
+			public int Count
+			{
+				get { return Items.Count; }
+			}
+
+			public IEnumerable<IHleUidPoolClass> List()
+			{
+				foreach (var Value in Items.Values) yield return Value;
 			}
 		}
 
@@ -144,6 +187,16 @@ namespace CSPspEmu.Hle.Managers
 			return _GetTypePool(Type).Contains(Index);
 		}
 
+		public int Count(Type Type)
+		{
+			return _GetTypePool(Type).Count;
+		}
+
+		public IEnumerable<TType> List<TType>()
+		{
+			return _GetTypePool(typeof(TType)).List().Select(Item => (TType)Item);
+		}
+
 		public void Remove(Type Type, int Index)
 		{
 			_GetTypePool(Type).Remove(Index);
@@ -154,9 +207,9 @@ namespace CSPspEmu.Hle.Managers
 			_GetTypePool(Type).RemoveItem(Item);
 		}
 
-		public IHleUidPoolClass Get(Type Type, int Index)
+		public IHleUidPoolClass Get(Type Type, int Index, bool CanReturnNull = false)
 		{
-			return _GetTypePool(Type).Get(Index);
+			return _GetTypePool(Type).Get(Index, CanReturnNull);
 		}
 
 		public int GetOrAllocIndex(Type Type, IHleUidPoolClass Item)
@@ -167,6 +220,11 @@ namespace CSPspEmu.Hle.Managers
 		public int GetIndex(Type Type, IHleUidPoolClass Item)
 		{
 			return _GetTypePool(Type).GetIndex(Item);
+		}
+
+		public void RemoveAll<TType>()
+		{
+			_GetTypePool(typeof(TType)).RemoveAll();
 		}
 	}
 }

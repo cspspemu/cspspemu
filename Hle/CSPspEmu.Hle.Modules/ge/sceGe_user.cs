@@ -90,7 +90,10 @@ namespace CSPspEmu.Hle.Modules.ge
 			{
 				if (!GpuProcessor.IsBreak)
 				{
-					if (currentList.Signal == SignalBehavior.PSP_GE_SIGNAL_HANDLER_PAUSE) return unchecked((int)0x80000021);
+					if (currentList.Signal == SignalBehavior.PSP_GE_SIGNAL_HANDLER_PAUSE)
+					{
+						return unchecked((int)SceKernelErrors.ERROR_BUSY);
+					}
 
 					currentList.Status.SetValue(DisplayListStatusEnum.Drawing);
 					currentList.Signal = SignalBehavior.PSP_GE_SIGNAL_NONE;
@@ -108,12 +111,18 @@ namespace CSPspEmu.Hle.Modules.ge
 			}
 			else if (currentList.Status.Value == DisplayListStatusEnum.Drawing)
 			{
-				if (SysMemUserForUser.sceKernelGetCompiledSdkVersion() >= 0x02000000) return unchecked((int)0x80000020);
+				if (SysMemUserForUser.sceKernelGetCompiledSdkVersion() >= 0x02000000)
+				{
+					return unchecked((int)SceKernelErrors.ERROR_ALREADY);
+				}
 				return -1;
 			}
 			else
 			{
-				if (SysMemUserForUser.sceKernelGetCompiledSdkVersion() >= 0x02000000) return unchecked((int)0x80000004);
+				if (SysMemUserForUser.sceKernelGetCompiledSdkVersion() >= 0x02000000)
+				{
+					return unchecked((int)0x80000004);
+				}
 				return -1;
 			}
 

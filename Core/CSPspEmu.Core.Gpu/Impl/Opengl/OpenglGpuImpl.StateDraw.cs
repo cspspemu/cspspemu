@@ -434,8 +434,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
 			//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-			CurrentTexture = TextureCache.Get(GpuState);
-			CurrentTexture.Bind();
+			TextureCacheGetAndBind(GpuState);
 			//CurrentTexture.Save("test.png");
 
 			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)((TextureState->FilterMinification == TextureFilter.Linear) ? TextureMinFilter.Linear : TextureMinFilter.Nearest));

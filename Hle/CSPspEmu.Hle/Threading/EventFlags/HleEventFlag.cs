@@ -49,27 +49,13 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 		{
 			foreach (var WaitingThread in _WaitingThreads.ToArray())
 			{
-				uint Matching = 0;
+				//uint Matching = 0;
 				//Console.Error.WriteLine("");
 				//Console.Error.WriteLine("|| " + WaitingThread + " || ");
 				//Console.Error.WriteLine("");
-				if (Poll(WaitingThread.BitsToMatch, WaitingThread.WaitType, &Matching))
+				if (Poll(WaitingThread.BitsToMatch, WaitingThread.WaitType, WaitingThread.OutBits))
 				{
-					if (WaitingThread.OutBits != null)
-					{
-						*WaitingThread.OutBits = Matching;
-					}
-					if (WaitingThread.WaitType.HasFlag(EventFlagWaitTypeSet.Clear))
-					{
-						Info.CurrentPattern &= ~WaitingThread.BitsToMatch;
-						//Matching
-						//throw(new NotImplementedException());
-					}
-					else if (WaitingThread.WaitType.HasFlag(EventFlagWaitTypeSet.ClearAll))
-					{
-						Info.CurrentPattern = 0;
-						//throw (new NotImplementedException());
-					}
+					//if (WaitingThread.OutBits != null) *WaitingThread.OutBits = Matching;
 					_WaitingThreads.Remove(WaitingThread);
 					WaitingThread.WakeUpCallback();
 					//Console.Error.WriteLine("WAKE UP!!");
@@ -94,34 +80,46 @@ namespace CSPspEmu.Hle.Threading.EventFlags
 		/// Remove bits from BitPattern
 		/// </summary>
 		/// <param name="BitsToClear"></param>
-		public void ClearBits(uint BitsToClear)
+		public void ClearBits(uint BitsToClear, bool DoUpdateWaitingThreads = true)
 		{
 			Info.CurrentPattern &= BitsToClear;
-			UpdateWaitingThreads();
+			if (DoUpdateWaitingThreads) UpdateWaitingThreads();
 		}
 
-		public bool Poll(uint BitsToMatch, EventFlagWaitTypeSet WaitType, uint* CheckedBits)
-		{
-			if (CheckedBits != null)
-			{
-				*CheckedBits = Info.CurrentPattern;
-			}
-
-			if (WaitType.HasFlag(EventFlagWaitTypeSet.Or))
-			{
-				return (Info.CurrentPattern & BitsToMatch) != 0;
-			}
-			else
-			{
-				return (Info.CurrentPattern & BitsToMatch) == BitsToMatch;
-			}
-		}
-
-		public void Set(uint Bits)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="Bits"></param>
+		public void SetBits(uint Bits, bool DoUpdateWaitingThreads = true)
 		{
 			Info.CurrentPattern |= Bits;
-			UpdateWaitingThreads();
+			if (DoUpdateWaitingThreads) UpdateWaitingThreads();
 			//BitPattern = Bits;
+		}
+
+		private void _DoClear(EventFlagWaitTypeSet WaitType, uint BitsToMatch)
+		{
+			if (WaitType.HasFlag(EventFlagWaitTypeSet.ClearAll)) ClearBits(~uint.MaxValue, false);
+			if (WaitType.HasFlag(EventFlagWaitTypeSet.Clear)) ClearBits(~BitsToMatch, false);
+		}
+
+		public bool Poll(uint BitsToMatch, EventFlagWaitTypeSet WaitType, uint* OutBits)
+		{
+			if (OutBits != null)
+			{
+				*OutBits = Info.CurrentPattern;
+			}
+
+			if (
+				(WaitType.HasFlag(EventFlagWaitTypeSet.Or))
+				? ((Info.CurrentPattern & BitsToMatch) != 0) // one or more bits of the mask
+				: ((Info.CurrentPattern & BitsToMatch) == BitsToMatch)) // all the bits of the mask
+			{
+				_DoClear(WaitType, BitsToMatch);
+				return true;
+			}
+
+			return false;
 		}
 
 		void IDisposable.Dispose()
