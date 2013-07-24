@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CSharpUtils;
+using System;
+using System.Text;
 
 namespace CSPspEmu.Hle.Vfs
 {
@@ -326,6 +328,11 @@ namespace CSPspEmu.Hle.Vfs
 		public uint DeviceDependentData3;
 		public uint DeviceDependentData4;
 		public uint DeviceDependentData5;
+
+		public override string ToString()
+		{
+			return String.Format("SceIoStat({0}, {1})", Mode, Size);
+		}
 	}
 
 	/// <summary>
@@ -341,7 +348,19 @@ namespace CSPspEmu.Hle.Vfs
 		/// <summary>
 		/// File name.
 		/// </summary>
-		public fixed byte Name[256];
+		private fixed byte _Name[256];
+
+		public string Name
+		{
+			set
+			{
+				fixed (byte* _NamePtr = _Name) PointerUtils.StoreStringOnPtr(value, Encoding.UTF8, _NamePtr);
+			}
+			get
+			{
+				fixed (byte* _NamePtr = _Name) return PointerUtils.PtrToStringUtf8(_NamePtr);
+			}
+		}
 		
 		/// <summary>
 		/// Device-specific data.
@@ -358,6 +377,11 @@ namespace CSPspEmu.Hle.Vfs
 		/// </summary>
 		public void Dispose()
 		{
+		}
+
+		public override string ToString()
+		{
+			return String.Format("HleIoDirent('{0}', {1})", Name, Stat);
 		}
 	}
 

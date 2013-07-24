@@ -1,15 +1,15 @@
 ﻿using CSPspEmu.Hle.Managers;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Hle.Vfs.Local;
 
 namespace CSPspEmu.Core.Tests
 {
-	[TestFixture]
+	[TestClass]
 	public class HleIoManagerTest
 	{
-		[Test]
+		[TestMethod]
 		public void ParsePathTest()
 		{
 			var InjectContext = new InjectContext();

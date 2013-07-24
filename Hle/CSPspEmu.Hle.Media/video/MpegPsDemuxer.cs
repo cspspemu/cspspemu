@@ -242,8 +242,10 @@ namespace CSPspEmu.Hle.Formats.video
 
 		public ushort Read16()
 		{
-			byte Hi = (byte)Stream.ReadByte();
-			byte Lo = (byte)Stream.ReadByte();
+			var Out = new byte[2];
+			Stream.Read(Out, 0, 2);
+			byte Hi = Out[0];
+			byte Lo = Out[1];
 			return (ushort)(((ushort)Hi << 8) | (ushort)Lo);
 		}
 

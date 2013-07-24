@@ -44,19 +44,24 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 			var OpenglGpuImpl = (PspDisplayForm.Singleton.GpuProcessor.GpuImpl as OpenglGpuImpl);
 			if (OpenglGpuImpl != null)
 			{
-				var CurrentDrawBufferTexture = OpenglGpuImpl.GetCurrentDrawBufferTexture(new CSPspEmu.Core.Gpu.Impl.Opengl.OpenglGpuImpl.DrawBufferKey() {
+				var Texture = OpenglGpuImpl.GetDrawTexture(new CSPspEmu.Core.Gpu.Impl.Opengl.OpenglGpuImpl.DrawBufferKey()
+				{
 					Address = PspDisplayForm.Singleton.PspDisplay.CurrentInfo.FrameAddress,
 					//Width = PspDisplayForm.Singleton.PspDisplay.CurrentInfo.Width,
 					//Height = PspDisplayForm.Singleton.PspDisplay.CurrentInfo.Height
 				});
-				var Texture = CurrentDrawBufferTexture.TextureColor;
 
 				if (GL.IsTexture(Texture))
 				{
 					//GL.Enable(EnableCap.Texture2D);
 					GL.BindTexture(TextureTarget.Texture2D, Texture);
-					VerticalFlip = true;
+					//Console.WriteLine(GL.GetError());
+					TextureVerticalFlip = true;
 					return true;
+				}
+				else
+				{
+					Console.WriteLine("Not shared contexts");
 				}
 			}
 			return false;
@@ -69,7 +74,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 		ulong LastHash = unchecked((ulong)-1);
 		OutputPixel[] BitmapDataDecode = new OutputPixel[512 * 512];
 		byte* OldFrameBuffer = (byte*)-1;
-		bool VerticalFlip;
+		bool TextureVerticalFlip;
 
 		private void BindTexVram()
 		{
@@ -186,7 +191,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 							OldFrameBuffer = FrameBuffer;
 
 							GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, 512, 272, 0, PixelFormat.Bgra, PixelType.UnsignedInt8888Reversed, new IntPtr(BitmapDataPtr));
-							VerticalFlip = false;
+							TextureVerticalFlip = false;
 						}
 					});
 				}
@@ -254,7 +259,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 			float x0 = 0f, x1 = 1f * 480f / 512f;
 			float y0 = 0f, y1 = 1f;
 
-			if (VerticalFlip) LanguageUtils.Swap(ref y0, ref y1);
+			if (TextureVerticalFlip) LanguageUtils.Swap(ref y0, ref y1);
 
 			GL.Begin(BeginMode.Quads);
 			{

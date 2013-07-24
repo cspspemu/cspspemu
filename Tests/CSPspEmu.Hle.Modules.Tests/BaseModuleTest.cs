@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Modules.Tests
 {
-	[TestFixture]
+	[TestClass]
 	public class BaseModuleTest
 	{
-		[SetUp]
+		[TestInitialize]
 		public void SetUp()
 		{
 			TestHleUtils.CreateInjectContext(this);

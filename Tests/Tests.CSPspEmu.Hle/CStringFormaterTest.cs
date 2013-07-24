@@ -1,14 +1,14 @@
 ﻿using System;
 using CSPspEmu.Hle;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CSPspEmu.Utils;
 
 namespace CSPspEmu.Core.Tests.Hle
 {
-	[TestFixture]
+	[TestClass]
 	public class CStringFormaterTest
 	{
-		[Test]
+		[TestMethod]
 		public void TestSprintf()
 		{
 			var Expected = "Hello 0x00000001, 'World     '!";

@@ -1,9 +1,9 @@
 ﻿using System;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.CSPspEmu.Inject
 {
-	[TestFixture]
+	[TestClass]
 	public class InjectTest
 	{
 		public class Test : IInjectInitialize
@@ -42,7 +42,7 @@ namespace Tests.CSPspEmu.Inject
 			public InjectContext InjectContext2 { get { return _InjectContext2; } }
 		}
 
-		[Test]
+		[TestMethod]
 		public void TestInjection()
 		{
 			var Context = new InjectContext();
@@ -52,7 +52,7 @@ namespace Tests.CSPspEmu.Inject
 			Assert.AreEqual(null, Test.InjectContext3);
 		}
 
-		[Test]
+		[TestMethod]
 		public void TestInjectionExtended()
 		{
 			var Context = new InjectContext();

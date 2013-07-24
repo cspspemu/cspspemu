@@ -840,12 +840,15 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		public class DrawBufferValue : IDisposable
 		{
-			public uint FBO;
-			public uint TextureColor;
-			public uint TextureDepthStencil;
+			public DrawBufferKey DrawBufferKey;
+			public int FBO;
+			public int TextureColor;
+			public int TextureDepthStencil;
 
 			public DrawBufferValue(DrawBufferKey DrawBufferKey)
 			{
+				this.DrawBufferKey = DrawBufferKey;
+
 				GL.GenFramebuffers(1, out FBO);
 				GL.GenTextures(1, out TextureColor);
 				GL.GenTextures(1, out TextureDepthStencil);
@@ -871,9 +874,14 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			public void Bind()
 			{
+				//Console.WriteLine("BindCurrentDrawBufferTexture: 0x{0:X8}, {1}, {2}", DrawBufferKey.Address, TextureColor, TextureDepthStencil);
 				GL.BindFramebuffer(FramebufferTarget.DrawFramebuffer, FBO);
+				//Console.WriteLine(GL.GetError());
 				GL.FramebufferTexture2D(FramebufferTarget.DrawFramebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, TextureColor, 0);
+				//Console.WriteLine(GL.GetError());
 				GL.FramebufferTexture2D(FramebufferTarget.DrawFramebuffer, FramebufferAttachment.DepthStencilAttachment, TextureTarget.Texture2D, TextureDepthStencil, 0);
+				//Console.WriteLine(GL.GetError());
+				//Console.WriteLine("{0}, {1}, {2}", FBO, TextureColor, TextureDepthStencil);
 			}
 
 			public void Dispose()
@@ -889,21 +897,33 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private readonly Dictionary<DrawBufferKey, DrawBufferValue> DrawBufferTextures = new Dictionary<DrawBufferKey, DrawBufferValue>();
 
+		public int GetDrawTexture(DrawBufferKey Key)
+		{
+			//Console.WriteLine("GetDrawTexture: {0}", GetCurrentDrawBufferTexture(Key).TextureColor);
+			return GetCurrentDrawBufferTexture(Key).TextureColor;
+		}
+
 		public DrawBufferValue GetCurrentDrawBufferTexture(DrawBufferKey Key)
 		{
 			if (!DrawBufferTextures.ContainsKey(Key)) DrawBufferTextures[Key] = new DrawBufferValue(Key);
 			return DrawBufferTextures[Key];
 		}
 
+		private uint CachedBindAddress;
+
 		void BindCurrentDrawBufferTexture(GpuStateStruct* GpuState)
 		{
-			var Key = new DrawBufferKey()
+			if (CachedBindAddress != GpuState->DrawBufferState.Address)
 			{
-				Address = GpuState->DrawBufferState.Address,
-				//Width = (int)GpuState->DrawBufferState.Width,
-				//Height = (int)272,
-			};
-			GetCurrentDrawBufferTexture(Key).Bind();
+				CachedBindAddress = GpuState->DrawBufferState.Address;
+				var Key = new DrawBufferKey()
+				{
+					Address = GpuState->DrawBufferState.Address,
+					//Width = (int)GpuState->DrawBufferState.Width,
+					//Height = (int)272,
+				};
+				GetCurrentDrawBufferTexture(Key).Bind();
+			}
 		}
 
 		public override void BeforeDraw(GpuStateStruct* GpuState)

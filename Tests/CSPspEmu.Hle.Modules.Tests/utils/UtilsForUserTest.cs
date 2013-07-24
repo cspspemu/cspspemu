@@ -2,19 +2,19 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CSPspEmu.Hle.Modules.utils;
 using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Modules.Tests.utils
 {
-	[TestFixture]
+	[TestClass]
 	public class UtilsForUserTest : BaseModuleTest
 	{
 		[Inject]
 		UtilsForUser UtilsForUser = null;
 
-		[Test]
+		[TestMethod]
 		public void TestMt19937()
 		{
 			SceKernelUtilsMt19937Context SceKernelUtilsMt19937Context;

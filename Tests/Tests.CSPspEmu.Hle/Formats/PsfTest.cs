@@ -1,14 +1,14 @@
 ﻿using CSPspEmu.Hle.Formats;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 
 namespace CSPspEmu.Core.Tests
 {
-	[TestFixture]
+	[TestClass]
 	public class PsfTest
 	{
-		[Test]
+		[TestMethod]
 		public void LoadTest()
 		{
 			var Psf = new Psf();

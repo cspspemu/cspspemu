@@ -29,6 +29,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Gui.Winforms.Winforms;
+using System.Threading.Tasks;
 
 namespace CSPspEmu.Gui.Winforms
 {
@@ -56,6 +57,8 @@ namespace CSPspEmu.Gui.Winforms
 		internal PspMemory Memory { get { return InjectContext.GetInstance<PspMemory>(); } }
 		internal PspDisplay PspDisplay { get { return InjectContext.GetInstance<PspDisplay>(); } }
 		internal PspController PspController { get { return InjectContext.GetInstance<PspController>(); } }
+
+		internal bool EnableRefreshing = true;
 
 		float AnalogX = 0.0f, AnalogY = 0.0f;
 
@@ -142,21 +145,27 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			if (this.IsDisposed) return;
 
-			try
+			if (this.EnableRefreshing)
 			{
-				this.Invoke((Action)(() =>
+				Task.Run(() =>
 				{
-					UpdateTitle();
-					if (!GLControl.Visible) return;
-					SendControllerFrame();
-					Refresh();
-				}));
-			}
-			catch (ObjectDisposedException)
-			{
-			}
-			catch (InvalidOperationException)
-			{
+					try
+					{
+						this.Invoke((Action)(() =>
+						{
+							UpdateTitle();
+							if (!GLControl.Visible) return;
+							SendControllerFrame();
+							Refresh();
+						}));
+					}
+					catch (ObjectDisposedException)
+					{
+					}
+					catch (InvalidOperationException)
+					{
+					}
+				});
 			}
 		}
 
@@ -271,8 +280,6 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			UpdateTitle();
 		}
-
-		internal bool EnableRefreshing = true;
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
 		{

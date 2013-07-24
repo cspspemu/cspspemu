@@ -26,6 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,11 +36,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -108,6 +108,10 @@
       <Project>{b7d8a67e-0046-4ef7-80fe-444bc7efbc70}</Project>
       <Name>CSPspEmu.Hle.Formats</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Hle\CSPspEmu.Hle.Media\CSPspEmu.Hle.Media.csproj">
+      <Project>{492d76d0-edac-4a3a-a000-0b761e052128}</Project>
+      <Name>CSPspEmu.Hle.Media</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Hle\CSPspEmu.Hle.Modules\CSPspEmu.Hle.Modules.csproj">
       <Project>{295b7bf1-1130-4098-b0fc-00555ddb09dd}</Project>
       <Name>CSPspEmu.Hle.Modules</Name>
@@ -135,14 +139,6 @@
     <ProjectReference Include="..\..\Core\CSPspEmu.Utils\CSPspEmu.Utils.csproj">
       <Project>{dc02a203-30f2-4613-950b-1529fd55ac81}</Project>
       <Name>CSPspEmu.Utils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\cscodec\cscodec\cscodec.h264\cscodec.h264.csproj">
-      <Project>{e8791c5d-f790-404c-b661-d509844dbbff}</Project>
-      <Name>cscodec.h264</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\cscodec\cscodec\cscodec\cscodec.csproj">
-      <Project>{351dcb00-efcf-435a-9c72-9a7e1d5950b0}</Project>
-      <Name>cscodec</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
       <Project>{9b217880-48ae-43b6-ae1f-dc732fccbc7a}</Project>

@@ -214,7 +214,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 		public unsafe static HleIoDirent CreateFakeDirectoryHleIoDirent(string Name)
 		{
 			var HleIoDirent = default(HleIoDirent);
-			PointerUtils.StoreStringOnPtr(Name, Encoding.UTF8, HleIoDirent.Name);
+			HleIoDirent.Name = Name;
 			HleIoDirent.Stat.Size = 0;
 			HleIoDirent.Stat.Mode = SceMode.Directory | (SceMode)Convert.ToInt32("777", 8);
 			HleIoDirent.Stat.Attributes = IOFileModes.Directory;
@@ -233,7 +233,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 					HleIoDirent.Stat.Size = 0;
 					HleIoDirent.Stat.Mode = SceMode.Directory | (SceMode)Convert.ToInt32("777", 8);
 					HleIoDirent.Stat.Attributes = IOFileModes.Directory;
-					PointerUtils.StoreStringOnPtr(FileSystemInfo.Name, Encoding.UTF8, HleIoDirent.Name);
+					HleIoDirent.Name = FileSystemInfo.Name;
 				}
 				else
 				{
@@ -241,7 +241,7 @@ namespace CSPspEmu.Hle.Vfs.Local
 					HleIoDirent.Stat.Mode = SceMode.File | (SceMode)Convert.ToInt32("777", 8);
 					//HleIoDirent.Stat.Attributes = IOFileModes.File | IOFileModes.CanRead | IOFileModes.CanWrite | IOFileModes.CanExecute;
 					HleIoDirent.Stat.Attributes = IOFileModes.File;
-					PointerUtils.StoreStringOnPtr(FileSystemInfo.Name.ToUpper(), Encoding.UTF8, HleIoDirent.Name);
+					HleIoDirent.Name = FileSystemInfo.Name.ToUpper();
 				}
 
 				HleIoDirent.Stat.DeviceDependentData0 = 10;

@@ -2,7 +2,7 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 //using CSPspEmu.Core.Gpu.VertexReading;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Gpu;
@@ -17,7 +17,7 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 	/// Read_Normal();
 	/// Read_Position();
 	/// </summary>
-	[TestFixture]
+	[TestClass]
 	public unsafe class VertexReaderDynarecTest
 	{
 #if false
@@ -42,7 +42,7 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 			new VertexType1() { X = 7f, Y = 8f, Z = -4f },
 		};
 
-		[Test]
+		[TestMethod]
 		public void VertexType1_Test1()
 		{
 			this.ReadVertices = VertexReaderDynarec.GenerateMethod(VertexType1Info);
@@ -62,7 +62,7 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 			Assert.AreEqual("FVector3d(X=3,Y=4,Z=-2)", VertexInfoList[0].Position.ToString());
 		}
 
-		[Test]
+		[TestMethod]
 		public void VertexType1_Test2()
 		{
 			this.ReadVertices = VertexReaderDynarec.GenerateMethod(VertexType1Info);
@@ -99,7 +99,7 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 			new VertexType2() { U = 32, V = 64, NX = -80, NY = -40, PX = 16000, PY = 32000, PZ = -200 },
 		};
 
-		[Test]
+		[TestMethod]
 		public void VertexType2_Test1()
 		{
 			this.ReadVertices = VertexReaderDynarec.GenerateMethod(VertexType2Info);
@@ -151,7 +151,7 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 			new VertexType3() { Color = (ushort)ColorFormats.RGBA_4444.Encode(0x11, 0x22, 0x33, 0x44), Position = new Vector3(4.0f, 5.0f, 6.0f) },
 		};
 
-		[Test]
+		[TestMethod]
 		public void VertexType3_Test1()
 		{
 			this.ReadVertices = VertexReaderDynarec.GenerateMethod(VertexType3Info);

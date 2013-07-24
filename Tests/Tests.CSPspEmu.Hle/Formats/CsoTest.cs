@@ -1,15 +1,15 @@
 ﻿using CSPspEmu.Hle.Formats;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 using System.Linq;
 
 namespace CSPspEmu.Core.Tests
 {
-	[TestFixture]
+	[TestClass]
 	public class CsoTest
 	{
-		[Test]
+		[TestMethod]
 		public void ReadSectorDecompressedTest()
 		{
 			var Cso = new Cso(File.OpenRead("../../../TestInput/cube.cso"));
