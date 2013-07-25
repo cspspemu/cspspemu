@@ -154,8 +154,7 @@ namespace CSPspEmu.Core.Gpu
 				//Console.Write(".");
 
 				//Console.WriteLine("{0:X}", ClutAddress);
-				var TexturePointer = (byte*)PspMemory.PspAddressToPointerSafe(TextureAddress);
-				var ClutPointer = (byte *)PspMemory.PspAddressToPointerSafe(ClutAddress);
+
 				var TextureFormat = TextureState->PixelFormat;
 				//var Width = TextureState->Mipmap0.TextureWidth;
 
@@ -206,6 +205,19 @@ namespace CSPspEmu.Core.Gpu
 
 				//Console.WriteLine("TextureAddress=0x{0:X}, TextureDataSize=0x{1:X}", TextureAddress, TextureDataSize);
 
+				byte* TexturePointer = null;
+				byte* ClutPointer = null;
+
+				try
+				{
+					TexturePointer = (byte*)PspMemory.PspAddressToPointerSafe(TextureAddress);
+					ClutPointer = (byte*)PspMemory.PspAddressToPointerSafe(ClutAddress);
+				}
+				catch (PspMemory.InvalidAddressException InvalidAddressException)
+				{
+					throw(InvalidAddressException);
+				}
+
 				TextureCacheKey TextureCacheKey = new TextureCacheKey()
 				{
 					TextureAddress = TextureAddress,
@@ -236,6 +248,7 @@ namespace CSPspEmu.Core.Gpu
 					Texture = new TTexture();
 					Texture.Init(GpuImpl);
 					Texture.TextureCacheKey = TextureCacheKey;
+
 					{
 						//int TextureWidth = Math.Max(BufferWidth, Height);
 						//int TextureHeight = Math.Max(BufferWidth, Height);

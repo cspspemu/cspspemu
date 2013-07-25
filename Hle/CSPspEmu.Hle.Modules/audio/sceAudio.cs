@@ -158,6 +158,22 @@ namespace CSPspEmu.Hle.Modules.audio
 			return Channel.SampleCount;
 		}
 
+		private PspAudioChannel GetChannel(int ChannelId, bool CanAlloc = false)
+		{
+			try
+			{
+				return PspAudio.GetChannel(ChannelId, CanAlloc);
+			}
+			catch (NoChannelsAvailableException)
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_AUDIO_NO_CHANNELS_AVAILABLE));
+			}
+			catch (InvalidChannelException)
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_AUDIO_INVALID_CHANNEL));
+			}
+		}
+
 		/// <summary>
 		/// Output panned audio of the specified channel (blocking)
 		/// </summary>
@@ -174,7 +190,7 @@ namespace CSPspEmu.Hle.Modules.audio
 		{
 			//Console.WriteLine(ChannelId);
 			return _sceAudioOutputPannedBlocking(
-				PspAudio.GetChannel(ChannelId),
+				GetChannel(ChannelId),
 				LeftVolume,
 				RightVolume,
 				Buffer,
@@ -287,7 +303,7 @@ namespace CSPspEmu.Hle.Modules.audio
 		[HlePspFunction(NID = 0xCB2E439E, FirmwareVersion = 150)]
 		public int sceAudioSetChannelDataLen(int ChannelId, int SampleCount)
 		{
-			var Channel = PspAudio.GetChannel(ChannelId);
+			var Channel = GetChannel(ChannelId);
 			Channel.SampleCount = SampleCount;
 			Channel.Updated();
 			return 0;
@@ -302,7 +318,7 @@ namespace CSPspEmu.Hle.Modules.audio
 		[HlePspFunction(NID = 0x95FD0C2D, FirmwareVersion = 150)]
 		public int sceAudioChangeChannelConfig(int ChannelId, PspAudio.FormatEnum Format)
 		{
-			var Channel = PspAudio.GetChannel(ChannelId);
+			var Channel = GetChannel(ChannelId);
 			Channel.Format = Format;
 			Channel.Updated();
 			return 0;
@@ -353,7 +369,7 @@ namespace CSPspEmu.Hle.Modules.audio
 			}
 
 			return _sceAudioChReserve(
-				() => PspAudio.GetChannel(ChannelId, CanAlloc: true),
+				() => GetChannel(ChannelId, CanAlloc: true),
 				SampleCount,
 				Format
 			);
@@ -406,7 +422,7 @@ namespace CSPspEmu.Hle.Modules.audio
 		{
 			try
 			{
-				_sceAudioChRelease(PspAudio.GetChannel(ChannelId));
+				_sceAudioChRelease(GetChannel(ChannelId));
 				return 0;
 			}
 			catch (InvalidChannelException)
@@ -452,7 +468,7 @@ namespace CSPspEmu.Hle.Modules.audio
 		//[HlePspNotImplemented()]
 		public int sceAudioChangeChannelVolume(int ChannelId, int VolumeLeft, int VolumeRight)
 		{
-			var Channel = PspAudio.GetChannel(ChannelId);
+			var Channel = GetChannel(ChannelId);
 
 			if (VolumeLeft > 0xFFFF || VolumeRight > 0xFFFF) {
 				throw(new SceKernelException(SceKernelErrors.ERROR_AUDIO_INVALID_VOLUME));
@@ -543,7 +559,8 @@ namespace CSPspEmu.Hle.Modules.audio
 		[HlePspNotImplemented]
 		public int sceAudioOutput2GetRestSample()
 		{
-			throw (new NotImplementedException());
+			//throw (new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>

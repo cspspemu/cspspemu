@@ -83,6 +83,18 @@ namespace CSPspEmu.Hle.Modules.mpeg
 				*DataAttributes = 1;
 			}
 
+			/*
+			if (MpegAccessUnit != null)
+			{
+				MpegAccessUnit->AuSize = 1;
+				MpegAccessUnit->DecodeTimestampHigh = 123;
+				MpegAccessUnit->DecodeTimestampLow = 456;
+				MpegAccessUnit->EsBuffer = 2;
+				MpegAccessUnit->PresentationTimestampHigh = 123;
+				MpegAccessUnit->PresentationTimestampLow = 456;
+			}
+			*/
+
 			throw(new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
 
 			//throw(new NotImplementedException());

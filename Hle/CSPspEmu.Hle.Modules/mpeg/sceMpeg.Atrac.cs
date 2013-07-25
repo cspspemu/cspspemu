@@ -29,9 +29,24 @@
 		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0xE1CE83A7, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegGetAtracAu(SceMpegPointer* Mpeg, StreamId StreamId, SceMpegAu* MpegAccessUnit, void* Atrac3PlusPointer)
+		public int sceMpegGetAtracAu(SceMpegPointer* Mpeg, StreamId StreamId, SceMpegAu* MpegAccessUnit, uint Atrac3PlusPointer)
 		{
-			//Mpeg->SceMpegData.
+			//if (DataAttributes != null)
+			//{
+			//	*DataAttributes = 1;
+			//}
+
+			/*
+			if (MpegAccessUnit != null)
+			{
+				MpegAccessUnit->AuSize = 1;
+				MpegAccessUnit->DecodeTimestampHigh = 123;
+				MpegAccessUnit->DecodeTimestampLow = 456;
+				MpegAccessUnit->EsBuffer = 2;
+				MpegAccessUnit->PresentationTimestampHigh = 123;
+				MpegAccessUnit->PresentationTimestampLow = 456;
+			}
+			*/
 
 			throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
 		}

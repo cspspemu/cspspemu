@@ -302,11 +302,11 @@ namespace CSPspEmu.Hle.Modules.rtc
 		///		Less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0xE7C27D1B, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int sceRtcGetCurrentClockLocalTime(out ScePspDateTime Time)
 		{
-			var CurrentDateTime = PspRtc.CurrentDateTime;
 			PspRtc.Update();
+			var CurrentDateTime = PspRtc.CurrentDateTime;
 
 			Time = new ScePspDateTime()
 			{

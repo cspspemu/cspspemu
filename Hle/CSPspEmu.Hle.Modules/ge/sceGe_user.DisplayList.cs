@@ -47,8 +47,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		{
 			var DisplayList = GpuProcessor.DequeueFreeDisplayList();
 			
-			DisplayList.InstructionAddressStart = InstructionAddressStart;
-			DisplayList.InstructionAddressCurrent = InstructionAddressStart;
+			DisplayList.SetInstructionAddressStartAndCurrent(InstructionAddressStart);
 			DisplayList.SetInstructionAddressStall(InstructionAddressStall);
 			DisplayList.CallbacksId = -1;
 			DisplayList.Callbacks = default(PspGeCallbackData);

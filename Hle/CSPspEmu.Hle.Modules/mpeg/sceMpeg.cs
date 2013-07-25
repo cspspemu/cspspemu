@@ -106,7 +106,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 
 			Mpeg->SceMpeg = Memory.PointerToPspPointer(SceMpegData);
 
-			PointerUtils.StoreStringOnPtr("LIBMPEG.001", Encoding.UTF8, SceMpegData->MagicBytes);
+			//PointerUtils.StoreStringOnPtr("LIBMPEG.001", Encoding.UTF8, SceMpegData->MagicBytes);
+			PointerUtils.StoreStringOnPtr("LIBMPEG", Encoding.UTF8, SceMpegData->MagicBytes);
 			SceMpegData->Unknown1 = -1;
 			SceMpegData->RingBufferAddress = Memory.PointerToPspPointer(SceMpegRingbuffer);
 			SceMpegData->RingBufferAddressDataUpper = SceMpegRingbuffer->DataUpperBound;

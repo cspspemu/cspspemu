@@ -144,22 +144,22 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			/// <summary>
 			/// 0000 - presentation timestamp (PTS) MSB
 			/// </summary>
-			public uint_be PresentationTimestampBe;
+			public uint PresentationTimestampHigh;
 
 			/// <summary>
 			/// 0004 - presentation timestamp (PTS) LSB
 			/// </summary>
-			public uint_le PresentationTimestampLe;
+			public uint PresentationTimestampLow;
 
 			/// <summary>
 			/// 0008 - decode timestamp (DTS) MSB
 			/// </summary>
-			public uint_be DecodeTimestampBe;
+			public uint DecodeTimestampHigh;
 
 			/// <summary>
 			/// 000C - decode timestamp (DTS) LSB
 			/// </summary>
-			public uint_le DecodeTimestampLe;
+			public uint DecodeTimestampLow;
 
 			/// <summary>
 			/// 0010 - Es buffer handle

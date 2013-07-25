@@ -199,7 +199,7 @@ namespace CSPspEmu.Hle
 			// Sleep if sleeping decrement.
 			if (Increment < 0 && CurrentWakeupCount < 0)
 			{
-				ThreadToSleep.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelSleepThread", null, WakeUpCallback =>
+				ThreadToSleep.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelSleepThread(" + HandleCallbacks + ")", null, WakeUpCallback =>
 				{
 					ThreadToSleep.WakeUpCallback = () =>
 					{

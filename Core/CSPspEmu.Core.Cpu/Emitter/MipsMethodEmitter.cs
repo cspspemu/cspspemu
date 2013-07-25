@@ -73,6 +73,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 			catch (InvalidProgramException InvalidProgramException)
 			{
+				Console.Error.WriteLine("Invalid Delegate:");
 #if LOG_TRACE
 				Console.WriteLine("Invalid Delegate:");
 				foreach (var Line in SafeILGenerator.GetEmittedInstructions())

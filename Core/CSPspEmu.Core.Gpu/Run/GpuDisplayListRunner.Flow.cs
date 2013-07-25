@@ -1,4 +1,5 @@
-﻿namespace CSPspEmu.Core.Gpu.Run
+﻿using System;
+namespace CSPspEmu.Core.Gpu.Run
 {
 	public unsafe sealed partial class GpuDisplayListRunner
 	{
@@ -87,14 +88,14 @@
 
 		public void OP_END()
 		{
-			GpuDisplayList.GpuProcessor.GpuImpl.End(GpuState);
 			GpuDisplayList.Done = true;
+			GpuDisplayList.GpuProcessor.GpuImpl.End(GpuState);
 		}
 
 		public void OP_FINISH()
 		{
-			GpuDisplayList.DoFinish(PC, Params24);
 			GpuDisplayList.GpuProcessor.GpuImpl.Finish(GpuDisplayList.GpuStateStructPointer);
+			GpuDisplayList.DoFinish(PC, Params24, ExecuteNow: true);
 		}
 
 		//[GpuOpCodesNotImplemented]
@@ -123,7 +124,27 @@
 		[GpuOpCodesNotImplemented]
 		public void OP_SIGNAL()
 		{
-			GpuDisplayList.DoSignal(PC, Extract(16, 8), (SignalBehavior)Extract(0, 16));
+			var Signal = Extract(0, 16);
+			var Behaviour = (SignalBehavior)Extract(16, 8);
+
+			switch (Behaviour)
+			{
+				case SignalBehavior.PSP_GE_SIGNAL_NONE:
+					break;
+				case SignalBehavior.PSP_GE_SIGNAL_HANDLER_CONTINUE:
+				case SignalBehavior.PSP_GE_SIGNAL_HANDLER_PAUSE:
+				case SignalBehavior.PSP_GE_SIGNAL_HANDLER_SUSPEND:
+					var Next = GpuDisplayList.ReadInstructionAndMoveNext();
+					if (Next.OpCode != GpuOpCodes.END)
+					{
+						throw (new NotImplementedException("Error! Next Signal not an END! : " + Next.OpCode));
+					}
+					break;
+				default:
+					throw(new NotImplementedException(String.Format("Not implemented {0}", Behaviour)));
+			}
+
+			GpuDisplayList.DoSignal(PC, Signal, Behaviour, ExecuteNow: true);
 		}
 	}
 }

@@ -7,9 +7,18 @@ using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Threading.Synchronization;
 using CSharpUtils;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Gpu
 {
+	[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 4)]
+	public struct GpuInstruction
+	{
+		public uint Instruction;
+		public GpuOpCodes OpCode { get { return (GpuOpCodes)((Instruction >> 24) & 0xFF); } }
+		public uint Params { get { return ((Instruction) & 0xFFFFFF); } }
+	}
+
 	public sealed unsafe class GpuDisplayList
 	{
 		private static readonly Logger Logger = Logger.GetLogger("Gpu");
@@ -40,17 +49,17 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
-		volatile public uint _InstructionAddressStart;
+		volatile private uint InstructionAddressStart;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		volatile public uint _InstructionAddressCurrent;
+		volatile private uint InstructionAddressCurrent;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		volatile private uint _InstructionAddressStall;
+		volatile private uint InstructionAddressStall;
 
 		/// <summary>
 		/// 
@@ -67,33 +76,7 @@ namespace CSPspEmu.Core.Gpu
 		/// </summary>
 		private GlobalGpuState GlobalGpuState;
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public uint InstructionAddressStart
-		{
-			get { return _InstructionAddressStart; }
-			set { _InstructionAddressStart = value & PspMemory.MemoryMask; }
-		}
-		//volatile public uint InstructionAddressStart;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public uint InstructionAddressCurrent
-		{
-			get { return _InstructionAddressCurrent; }
-			set { _InstructionAddressCurrent = value & PspMemory.MemoryMask; }
-		}
 		//volatile public uint InstructionAddressCurrent;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public uint InstructionAddressStall
-		{
-			get { return _InstructionAddressStall; }
-		}
 
 		/// <summary>
 		/// Stack with the InstructionAddressCurrent for the CALL/RET opcodes.
@@ -157,9 +140,15 @@ namespace CSPspEmu.Core.Gpu
 			this.GpuDisplayListRunner = new GpuDisplayListRunner(this, GpuProcessor.GlobalGpuState);
 		}
 
+		public void SetInstructionAddressStartAndCurrent(uint value)
+		{
+			this.InstructionAddressCurrent = value & PspMemory.MemoryMask;
+			this.InstructionAddressStart = value & PspMemory.MemoryMask;
+		}
+
 		public void SetInstructionAddressStall(uint value)
 		{
-			_InstructionAddressStall = value & PspMemory.MemoryMask;
+			InstructionAddressStall = value & PspMemory.MemoryMask;
 			if (InstructionAddressStall != 0 && !PspMemory.IsAddressValid(InstructionAddressStall))
 			{
 				throw (new InvalidOperationException(String.Format("Invalid StallAddress! 0x{0}", InstructionAddressStall)));
@@ -250,56 +239,51 @@ namespace CSPspEmu.Core.Gpu
 			return (GpuDisplayListRunnerDelegate)DynamicMethod.CreateDelegate(typeof(GpuDisplayListRunnerDelegate));
 		}
 
+		internal GpuInstruction ReadInstructionAndMoveNext()
+		{
+			var Value = *(GpuInstruction*)Memory.PspAddressToPointerUnsafe(InstructionAddressCurrent);
+			InstructionAddressCurrent += 4;
+			return Value;
+		}
+
 		private void ProcessInstruction()
 		{
-			//Console.WriteLine("{0:X}", InstructionAddressCurrent);
+			GpuDisplayListRunner.PC = InstructionAddressCurrent;
+			var Instruction = ReadInstructionAndMoveNext();
+			GpuDisplayListRunner.OpCode = Instruction.OpCode;
+			GpuDisplayListRunner.Params24 = Instruction.Params;
 
-			var Instruction = *(uint *)Memory.PspAddressToPointerUnsafe(_InstructionAddressCurrent);
-			//var Instruction = Memory.Read4(_InstructionAddressCurrent);
-			//var Instruction = Memory.ReadSafe<uint>(_InstructionAddressCurrent);
-
-			var OpCode = (GpuOpCodes)((Instruction >> 24) & 0xFF);
-			var Params = ((Instruction) & 0xFFFFFF);
-
-			//if (OpCode == GpuOpCodes.Unknown0xFF)
-			GpuDisplayListRunner.PC = _InstructionAddressCurrent;
-			GpuDisplayListRunner.OpCode = OpCode;
-			GpuDisplayListRunner.Params24 = Params;
-
-			InstructionSwitch(GpuDisplayListRunner, OpCode, Params);
+			InstructionSwitch(GpuDisplayListRunner, Instruction.OpCode, Instruction.Params);
 
 			if (Debug)
 			{
-				var WritePC = Memory.GetPCWriteAddress(_InstructionAddressCurrent);
+				var WritePC = Memory.GetPCWriteAddress(GpuDisplayListRunner.PC);
 
 				Console.Error.WriteLine(
 					"CODE(0x{0:X}-0x{1:X}) : PC(0x{2:X}) : {3} : 0x{4:X} : Done:{5}",
 					InstructionAddressCurrent,
 					InstructionAddressStall,
 					WritePC,
-					OpCode,
-					Params,
+					Instruction.OpCode,
+					Instruction.Params,
 					Done
 				);
 			}
-
-			_InstructionAddressCurrent += 4;
 		}
 
 		internal void JumpRelativeOffset(uint Address)
 		{
-			InstructionAddressCurrent = GlobalGpuState.GetAddressRelativeToBaseOffset(Address - 4);
-			//throw new NotImplementedException();
+			InstructionAddressCurrent = GlobalGpuState.GetAddressRelativeToBaseOffset(Address);
 		}
 
 		internal void JumpAbsolute(uint Address)
 		{
-			InstructionAddressCurrent = (Address - 4);
+			InstructionAddressCurrent = Address;
 		}
 
 		internal void CallRelativeOffset(uint Address)
 		{
-			CallStack.Push(InstructionAddressCurrent + 4);
+			CallStack.Push(InstructionAddressCurrent);
 			CallStack.Push((uint)GlobalGpuState.BaseOffset);
 			//CallStack.Push(InstructionAddressCurrent);
 			JumpRelativeOffset(Address);
@@ -326,26 +310,26 @@ namespace CSPspEmu.Core.Gpu
 			Status.CallbackOnStateOnce(DisplayListStatusEnum.Completed, NotifyOnceCallback);
 		}
 
-		public void DoFinish(uint PC, uint Arg)
+		public void DoFinish(uint PC, uint Arg, bool ExecuteNow)
 		{
 			if (Debug) Console.WriteLine("FINISH: Arg:{0}", Arg);
 
 			if (Callbacks.FinishFunction != 0)
 			{
-				GpuProcessor.Connector.Finish(PC, Callbacks, Arg);
+				GpuProcessor.Connector.Finish(PC, Callbacks, Arg, ExecuteNow);
 			}
 		}
 
-		public void DoSignal(uint PC, uint Signal, SignalBehavior Behavior)
+		public void DoSignal(uint PC, uint Signal, SignalBehavior Behavior, bool ExecuteNow)
 		{
-			if (Debug) Console.WriteLine("SIGNAL : Behavior:{0}", Behavior);
+			if (Debug) Console.WriteLine("SIGNAL : {0}: Behavior:{1}", Signal, Behavior);
 
 			Status.SetValue(DisplayListStatusEnum.Paused);
 
 			if (Callbacks.SignalFunction != 0)
 			{
 				//Console.Error.WriteLine("OP_SIGNAL! ({0}, {1})", Signal, Behavior);
-				GpuProcessor.Connector.Signal(PC, Callbacks, Signal, Behavior);
+				GpuProcessor.Connector.Signal(PC, Callbacks, Signal, Behavior, ExecuteNow);
 			}
 
 			Status.SetValue(DisplayListStatusEnum.Drawing);

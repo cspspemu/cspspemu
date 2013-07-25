@@ -27,6 +27,19 @@ namespace CSPspEmu.Hle
 		{
 		}
 
+		public uint ExecuteFunctionNowLater(uint Function, bool ExecuteNow, params object[] Arguments)
+		{
+			if (ExecuteNow)
+			{
+				return ExecuteFunctionNow(Function, Arguments);
+			}
+			else
+			{
+				ExecuteFunctionLater(Function, Arguments);
+				return 0;
+			}
+		}
+
 		public uint ExecuteFunctionNow(uint Function, params object[] Arguments)
 		{
 			var CurrentFakeHleThread = HleThreadManager.CurrentOrAny;

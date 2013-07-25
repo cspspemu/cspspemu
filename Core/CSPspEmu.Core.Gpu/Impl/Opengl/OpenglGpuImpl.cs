@@ -25,6 +25,7 @@ using CSPspEmu.Core.Types;
 using CSharpPlatform;
 using CSPspEmu.Core.Gpu.State.SubStates;
 using System.Collections.Generic;
+using CSPspEmu.Core.Cpu;
 #else
 using MiniGL;
 #endif
@@ -894,22 +895,25 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		public void TextureCacheGetAndBind(GpuStateStruct* GpuState)
 		{
-			var TextureMappingState = &GpuState->TextureMappingState;
-			var ClutState = &TextureMappingState->ClutState;
-			var TextureState = &TextureMappingState->TextureState;
-			var Key = new DrawBufferKey() {
-				Address = TextureState->Mipmap0.Address,
-			};
+			if (_DynarecConfig.EnableRenderTarget)
+			{
+				var TextureMappingState = &GpuState->TextureMappingState;
+				var ClutState = &TextureMappingState->ClutState;
+				var TextureState = &TextureMappingState->TextureState;
+				var Key = new DrawBufferKey()
+				{
+					Address = TextureState->Mipmap0.Address,
+				};
 
-			if (DrawBufferTextures.ContainsKey(Key))
-			{
-				GL.BindTexture(TextureTarget.ProxyTexture2D, GetCurrentDrawBufferTexture(Key).TextureColor);
+				if (DrawBufferTextures.ContainsKey(Key))
+				{
+					GL.BindTexture(TextureTarget.Texture2D, GetCurrentDrawBufferTexture(Key).TextureColor);
+					return;
+				}
 			}
-			else
-			{
-				var CurrentTexture = TextureCache.Get(GpuState);
-				CurrentTexture.Bind();
-			}
+
+			var CurrentTexture = TextureCache.Get(GpuState);
+			CurrentTexture.Bind();
 		}
 
 		public int GetDrawTexture(DrawBufferKey Key)

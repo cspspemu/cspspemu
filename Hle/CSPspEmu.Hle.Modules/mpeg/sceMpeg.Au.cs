@@ -17,10 +17,10 @@
 		[HlePspNotImplemented]
 		public int sceMpegInitAu(SceMpegPointer* Mpeg, int ElementaryStreamBuffer, SceMpegAu* MpegAccessUnit)
 		{
-			MpegAccessUnit->PresentationTimestampBe = unchecked((uint)0);
-			MpegAccessUnit->PresentationTimestampLe = unchecked((uint)0);
-			MpegAccessUnit->DecodeTimestampBe = unchecked((uint)0);
-			MpegAccessUnit->DecodeTimestampLe = unchecked((uint)0);
+			MpegAccessUnit->PresentationTimestampHigh = unchecked((uint)0);
+			MpegAccessUnit->PresentationTimestampLow = unchecked((uint)0);
+			MpegAccessUnit->DecodeTimestampHigh = unchecked((uint)0);
+			MpegAccessUnit->DecodeTimestampLow = unchecked((uint)0);
 			MpegAccessUnit->EsBuffer = ElementaryStreamBuffer;
 
 			if (ElementaryStreamBuffer >= 1 && ElementaryStreamBuffer <= AbvEsBufAllocated.Length && AbvEsBufAllocated[ElementaryStreamBuffer - 1])

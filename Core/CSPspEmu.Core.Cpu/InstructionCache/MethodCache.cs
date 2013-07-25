@@ -94,15 +94,17 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 
 			var Time1 = DateTime.UtcNow;
 
-			//try
-			//{
+			try
+			{
 				DynarecFunction.Delegate(null);
-			//}
-			//catch (InvalidProgramException InvalidProgramException)
-			//{
-			//	//Console.Error.WriteLine(DynarecFunction.AstNode.ToXmlString());
-			//	throw (InvalidProgramException);
-			//}
+			}
+			catch (InvalidProgramException InvalidProgramException)
+			{
+				Console.Error.WriteLine("Invalid delegate:");
+				Console.Error.WriteLine(DynarecFunction.AstNode.ToCSharpString());
+				Console.Error.WriteLine(DynarecFunction.AstNode.ToILString<Action<CpuThreadState>>());
+				throw (InvalidProgramException);
+			}
 
 			var Time2 = DateTime.UtcNow;
 

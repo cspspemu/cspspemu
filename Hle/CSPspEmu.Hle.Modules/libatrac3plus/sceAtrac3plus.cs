@@ -459,6 +459,8 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			/// <returns></returns>
 			public int Decode(StereoShortSoundSample* SamplesOut)
 			{
+				if (SamplesOut == null) return 0;
+
 				//Console.Error.WriteLine("Decode");
 				try
 				{
@@ -662,14 +664,9 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// <returns>Less than 0 on error, otherwise 0</returns>
 		[HlePspFunction(NID = 0x6A8C3CD5, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
-		public int sceAtracDecodeData(Atrac Atrac, StereoShortSoundSample* SamplesOut, int* DecodedSamples, int* ReachedEnd, int* RemainingFramesToDecode)
+		public int sceAtracDecodeData(Atrac Atrac, StereoShortSoundSample* SamplesOut, [HleInvalidAsInvalidPointer] out int DecodedSamples, [HleInvalidAsInvalidPointer] out int ReachedEnd, [HleInvalidAsInvalidPointer] out int RemainingFramesToDecode)
 		{
-			if (SamplesOut == null) return -1;
-			int* Temp = stackalloc int[1];
-			if (DecodedSamples == null) DecodedSamples = Temp;
-			if (ReachedEnd == null) ReachedEnd = Temp;
-			if (RemainingFramesToDecode == null) RemainingFramesToDecode = Temp;
-			return _sceAtracDecodeData(Atrac, SamplesOut, out *DecodedSamples, out *ReachedEnd, out *RemainingFramesToDecode);
+			return _sceAtracDecodeData(Atrac, SamplesOut, out DecodedSamples, out ReachedEnd, out RemainingFramesToDecode);
 		}
 
 		private int _sceAtracDecodeData(Atrac Atrac, StereoShortSoundSample* SamplesOut, out int DecodedSamples, out int ReachedEnd, out int RemainingFramesToDecode)

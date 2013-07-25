@@ -153,6 +153,10 @@
     <Compile Include="VertexReading\VertexReader.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CSPspEmu.Core.Cpu\CSPspEmu.Core.Cpu.csproj">
+      <Project>{827779a5-f05c-41c6-9ff9-fd274224a7ae}</Project>
+      <Name>CSPspEmu.Core.Cpu</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
       <Project>{FD27EF3A-4EBE-4867-A603-3E7048DCF459}</Project>
       <Name>CSPspEmu.Core.Memory</Name>
