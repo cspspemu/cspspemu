@@ -99,7 +99,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			var Semaphore = GetSemaphoreById(SemaphoreId);
 			bool TimedOut = false;
 
-			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, "sceKernelWaitSema", Semaphore, WakeUpCallback =>
+			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Semaphore, String.Format("sceKernelWaitSema('{0}')", Semaphore.Name), Semaphore, WakeUpCallback =>
 			{
 				PspRtc.RegisterTimeout(Timeout, () => { TimedOut = true; WakeUpCallback(); });
 

@@ -12,9 +12,9 @@ using CSPspEmu.Core;
 using CSPspEmu.AutoTests;
 using CSharpUtils;
 using CSharpUtils.Getopt;
-using Mono.Simd;
 using CSPspEmu.Hle;
 using CSPspEmu.Hle.Vfs.Iso;
+using System.Diagnostics;
 
 namespace CSPspEmu
 {
@@ -57,6 +57,8 @@ namespace CSPspEmu
 		[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
 		static void Main(string[] Arguments)
 		{
+			//Arguments = new[] { "/isoconvert", @"f:\isos\psp\Princess Crown.cso", @"c:\isos\psp\pricess.iso" };
+
 			//MiniPlayer.Play(
 			//	File.OpenRead(@"F:\isos\psp2\temp\1C-99-F2-16-B6-41-D9-27-8D-41-80-6A-AB-D1-EB-77-29-61-17-0F.oma"),
 			//	File.OpenWrite(@"F:\isos\psp2\temp\1C-99-F2-16-B6-41-D9-27-8D-41-80-6A-AB-D1-EB-77-29-61-17-0F.raw")
@@ -173,9 +175,11 @@ namespace CSPspEmu
 					}
 
 					var IsoInFile = IsoLoader.GetIso(IsoInPath);
+					var Stopwatch = new Stopwatch();
+					Stopwatch.Start();
 					Console.Write("{0} -> {1}...", IsoInPath, IsoOutPath);
 					IsoInFile.Stream.Slice().CopyToFile(IsoOutPath);
-					Console.WriteLine("Ok");
+					Console.WriteLine("Ok ({0})", Stopwatch.Elapsed);
 					Environment.Exit(0);
 				});
 				Getopt.AddRule("/isolist", () =>
@@ -298,7 +302,7 @@ namespace CSPspEmu
 				Environment.Exit(-1);
 			}
 
-			Logger.Info("Running ... plat:{0} ... int*:{1} ... simd:{2}", Environment.Is64BitProcess ? "64bit" : "32bit", sizeof(int*), SimdRuntime.AccelMode);
+			Logger.Info("Running ... plat:{0} ... int*:{1}", Environment.Is64BitProcess ? "64bit" : "32bit", sizeof(int*));
 
 #if !RELEASE
 			try

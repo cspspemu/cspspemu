@@ -32,5 +32,11 @@ namespace CSPspEmu.Core.Cpu
 
 		//public const bool EnableRenderTarget = false;
 		public const bool EnableRenderTarget = true;
+
+		//public const bool ImmediateLinking = false;
+		public const bool ImmediateLinking = true;
+
+		public const bool AllowCreatingUsedFunctionsInBackground = false;
+		//public const bool AllowCreatingUsedFunctionsInBackground = true;
 	}
 }

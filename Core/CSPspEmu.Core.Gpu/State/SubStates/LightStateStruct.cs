@@ -1,5 +1,4 @@
-﻿using Mono.Simd;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 namespace CSPspEmu.Core.Gpu.State.SubStates
 {
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]

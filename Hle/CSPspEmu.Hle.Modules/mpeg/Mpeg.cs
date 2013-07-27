@@ -3,6 +3,7 @@
 using cscodec;
 using cscodec.h264.player;
 using CSharpUtils;
+using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Core.Memory;
@@ -28,10 +29,13 @@ namespace CSPspEmu.Hle.Modules.mpeg
 	unsafe class Mpeg
 	{
 		[Inject]
-		public PspMemory PspMemory;
+		public PspMemory Memory;
 
 		[Inject]
 		public GpuImpl GpuImpl;
+
+		[Inject]
+		public PspDisplay PspDisplay;
 
 		public SceMpegPointer* _Mpeg;
 		public SceMpeg* Data;
@@ -45,6 +49,8 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		private MpegPsDemuxer MpegPsDemuxer;
 		public H264FrameDecoder H264FrameDecoder;
 		public Func<int, int> ReadPackets;
+		//private const bool SaveBitmapFrame = true;
+		private const bool SaveBitmapFrame = false;
 		int FrameIndex;
 
 
@@ -67,17 +73,21 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			MpegStream = new ProduceConsumerBufferStream();
 			AudioStream = new ProduceConsumerBufferStream();
 			VideoStream = new ProduceConsumerBufferStream();
-
 			MpegPsDemuxer = new MpegPsDemuxer(MpegStream);
+			H264FrameDecoder = new H264FrameDecoder(VideoStream);
+
+			//PspDisplay.CurrentInfo.PlayingVideo = true;
 		}
 
 
 		public void Delete()
 		{
+			PspDisplay.CurrentInfo.PlayingVideo = false;
 		}
 
 		public void Stop()
 		{
+			PspDisplay.CurrentInfo.PlayingVideo = false;
 		}
 
 		public void AvcFlush()
@@ -178,14 +188,9 @@ namespace CSPspEmu.Hle.Modules.mpeg
 
 			try
 			{
-				if (H264FrameDecoder == null)
-				{
-					H264FrameDecoder = new H264FrameDecoder(VideoStream);
-				}
-
 				//if (H264FrameDecoder.HasMorePackets)
 				{
-					Console.WriteLine("VideoStream.Length: {0}", VideoStream.Length);
+					//Console.WriteLine("VideoStream.Length: {0}", VideoStream.Length);
 					var Frame = H264FrameDecoder.DecodeFrame();
 
 					ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.DarkGreen, () => { Console.WriteLine("DecodedFrame: {0}", FrameIndex); });
@@ -198,13 +203,29 @@ namespace CSPspEmu.Hle.Modules.mpeg
 						var TempBufferPtr2 = TempBufferPtr;
 						Bitmap.LockBitsUnlock(PixelFormat.Format32bppArgb, (BitmapData) =>
 						{
-							PixelFormatDecoder.Encode(GuPixelFormat, (OutputPixel*)BitmapData.Scan0.ToPointer(), TempBufferPtr2, Bitmap.Width * Bitmap.Height);
+							var InputBuffer = (OutputPixel*)BitmapData.Scan0.ToPointer();
+							int Count = Bitmap.Width * Bitmap.Height;
+
+							for (int n = 0; n < Count; n++)
+							{
+								var Color = InputBuffer[n];
+								InputBuffer[n].R = Color.B;
+								InputBuffer[n].G = Color.G;
+								InputBuffer[n].B = Color.R;
+								InputBuffer[n].A = 0xFF;
+							}
+
+							PixelFormatDecoder.Encode(GuPixelFormat, InputBuffer, TempBufferPtr2, Bitmap.Width * Bitmap.Height);
+							PixelFormatDecoder.Encode(PspDisplay.CurrentInfo.PixelFormat, InputBuffer, (byte*)Memory.PspAddressToPointerSafe(PspDisplay.CurrentInfo.FrameAddress), 512, Bitmap.Width, Bitmap.Height);
+							PspDisplay.CurrentInfo.PlayingVideo = true;
 						});
-						PspMemory.WriteBytes(OutputBuffer.Address, TempBufferPtr, TempBuffer.Length);
+						PspDisplay.CurrentInfo.PlayingVideo = true;
+						Memory.WriteBytes(OutputBuffer.Address, TempBufferPtr, TempBuffer.Length);
 						GpuImpl.InvalidateCache(OutputBuffer.Address, TempBuffer.Length);
 					}
 
-					//Bitmap.Save(@"c:\temp\frame" + (FrameIndex++) + ".png");
+					if (SaveBitmapFrame) Bitmap.Save(@"c:\temp\frame" + (FrameIndex) + ".png");
+					FrameIndex++;
 				}
 				//PixelFormat
 

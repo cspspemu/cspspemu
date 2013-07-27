@@ -19,7 +19,6 @@ using CSPspEmu.Core.Memory;
 #if OPENTK
 using OpenTK.Graphics.OpenGL;
 using CSPspEmu.Core.Gpu.Formats;
-using Mono.Simd;
 using CSPspEmu.Core.Utils;
 using CSPspEmu.Core.Types;
 using CSharpPlatform;
@@ -70,15 +69,15 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		override public void InvalidateCache(uint Address, int Size)
 		{
-			ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.White, () =>
-			{
-				//foreach ()
-				Console.WriteLine("OnMemoryWrite: {0:X8}, {1}", Address, Size);
-				foreach (var DrawBufferTexture in DrawBufferTextures)
-				{
-					Console.WriteLine("::{0:X8}", DrawBufferTexture.Key.Address);
-				}
-			});
+			//ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.White, () =>
+			//{
+			//	//foreach ()
+			//	//Console.WriteLine("OnMemoryWrite: {0:X8}, {1}", Address, Size);
+			//	//foreach (var DrawBufferTexture in DrawBufferTextures)
+			//	//{
+			//	//	Console.WriteLine("::{0:X8}", DrawBufferTexture.Key.Address);
+			//	//}
+			//});
 		}
 
 		void IInjectInitialize.Initialize()
@@ -965,6 +964,17 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			if (!DrawBufferTextures.ContainsKey(Key)) DrawBufferTextures[Key] = new DrawBufferValue(this, Key);
 			return DrawBufferTextures[Key];
+		}
+
+		public override void DrawVideo(uint FrameBufferAddress, OutputPixel* OutputPixel, int Width, int Height)
+		{
+			var DrawBuffer = GetCurrentDrawBufferTexture(new DrawBufferKey()
+			{
+				Address = FrameBufferAddress,
+			});
+			DrawBuffer.Bind();
+			GL.DrawPixels(Width, Height, PixelFormat.Bgra, PixelType.UnsignedInt8888Reversed, new IntPtr(OutputPixel));
+			Console.WriteLine("DrawVideo: {0:X8}, {1}x{2}", FrameBufferAddress, Width, Height);
 		}
 
 		private uint CachedBindAddress;

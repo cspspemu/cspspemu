@@ -182,7 +182,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
 			var VideoPacket = new VideoPacket();
 			
 			//Console.Error.WriteLine("0x{0:X}", PspMemory.PointerToPspAddress(OutputBuffer));
-			Console.WriteLine("{0:X8}", (*OutputBufferPointer).Address);
+			//Console.WriteLine("{0:X8}", (*OutputBufferPointer).Address);
 			Mpeg.AvcDecode(
 				MpegAccessUnit,
 				FrameWidth,

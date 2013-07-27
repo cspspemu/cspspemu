@@ -1,6 +1,5 @@
 ﻿using CSharpPlatform;
 using CSPspEmu.Core.Gpu.State;
-using Mono.Simd;
 
 namespace CSPspEmu.Core.Gpu.Run
 {

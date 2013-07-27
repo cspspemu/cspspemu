@@ -433,6 +433,40 @@ namespace CSPspEmu.Core.Utils
 			_Decode_RGBA_XXXX_ushort(Decode_RGBA_5650_Pixel);
 		}
 
+		public static unsafe ushort Encode_RGBA_4444_Pixel(OutputPixel Pixel)
+		{
+			uint Out = 0;
+			BitUtils.InsertScaled(ref Out, 0, 4, Pixel.R, 255);
+			BitUtils.InsertScaled(ref Out, 4, 4, Pixel.G, 255);
+			BitUtils.InsertScaled(ref Out, 8, 4, Pixel.B, 255);
+			BitUtils.InsertScaled(ref Out, 12, 4, Pixel.A, 255);
+			return (ushort)Out;
+		}
+
+		public static unsafe ushort Encode_RGBA_5551_Pixel(OutputPixel Pixel)
+		{
+			uint Out = 0;
+			BitUtils.InsertScaled(ref Out, 0, 5, Pixel.R, 255);
+			BitUtils.InsertScaled(ref Out, 5, 5, Pixel.G, 255);
+			BitUtils.InsertScaled(ref Out, 10, 5, Pixel.B, 255);
+			BitUtils.InsertScaled(ref Out, 15, 1, Pixel.A, 255);
+			return (ushort)Out;
+		}
+
+		public static unsafe ushort Encode_RGBA_5650_Pixel(OutputPixel Pixel)
+		{
+			uint Out = 0;
+			BitUtils.InsertScaled(ref Out, 0, 5, Pixel.R, 255);
+			BitUtils.InsertScaled(ref Out, 5, 6, Pixel.G, 255);
+			BitUtils.InsertScaled(ref Out, 11, 5, Pixel.B, 255);
+			return (ushort)Out;
+		}
+
+		public static unsafe uint Encode_RGBA_8888_Pixel(OutputPixel Pixel)
+		{
+			return *(uint *)&Pixel;
+		}
+
 		public static unsafe OutputPixel Decode_RGBA_4444_Pixel(ushort Value)
 		{
 			return new OutputPixel()
@@ -540,14 +574,24 @@ namespace CSPspEmu.Core.Utils
 		{
 			switch (GuPixelFormat)
 			{
-				case GuPixelFormats.RGBA_8888:
-					{
-						var Output = (OutputPixel*)_Output;
-						for (int n = 0; n < Count; n++) *Output++ = *Input++;
-					}
-					break;
+				case GuPixelFormats.RGBA_8888: { var Output = (uint*)_Output; for (int n = 0; n < Count; n++) *Output++ = Encode_RGBA_8888_Pixel(*Input++); } break;
+				case GuPixelFormats.RGBA_5551: { var Output = (ushort*)_Output; for (int n = 0; n < Count; n++) *Output++ = Encode_RGBA_5551_Pixel(*Input++); } break;
+				case GuPixelFormats.RGBA_5650: { var Output = (ushort*)_Output; for (int n = 0; n < Count; n++) *Output++ = Encode_RGBA_5650_Pixel(*Input++); } break;
+				case GuPixelFormats.RGBA_4444: { var Output = (ushort*)_Output; for (int n = 0; n < Count; n++) *Output++ = Encode_RGBA_4444_Pixel(*Input++); } break;
 				default:
 					throw(new NotImplementedException("Not implemented " + GuPixelFormat));
+			}
+		}
+
+		public static void Encode(GuPixelFormats GuPixelFormat, OutputPixel* Input, byte* Output, int BufferWidth, int Width, int Height)
+		{
+			var IncOut = GetPixelsSize(GuPixelFormat, BufferWidth);
+
+			for (int y = 0; y < Height; y++)
+			{
+				Encode(GuPixelFormat, Input, Output, Width);
+				Input += Width;
+				Output += IncOut;
 			}
 		}
 	}

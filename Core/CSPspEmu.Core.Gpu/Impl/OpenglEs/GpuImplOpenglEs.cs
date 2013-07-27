@@ -11,7 +11,6 @@ using CSPspEmu.Core.Memory;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Reflection;
-using Mono.Simd;
 using CSPspEmu.Core.Gpu.State.SubStates;
 using CSharpPlatform;
 

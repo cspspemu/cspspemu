@@ -63,9 +63,11 @@ namespace CSPspEmu.Gui.Winforms
 		float AnalogX = 0.0f, AnalogY = 0.0f;
 
 		GLControl GLControl;
+		Thread GuiThread;
 
 		public PspDisplayForm(IGuiExternalInterface IGuiExternalInterface)
 		{
+			GuiThread = Thread.CurrentThread;
 			Singleton = this;
 			Application.AddMessageFilter(this);
 
@@ -114,8 +116,9 @@ namespace CSPspEmu.Gui.Winforms
 				CheckForUpdates(NotifyIfNotFound: false);
 			}
 
-			if (Platform.OperatingSystem == Platform.OS.Windows)
-			//if (false)
+			Console.WriteLine("[1]");
+
+			if (Platform.OperatingSystem == Platform.OS.Windows && !Platform.IsMono)
 			{
 				GameListComponent = new GameListComponent();
 
@@ -140,6 +143,7 @@ namespace CSPspEmu.Gui.Winforms
 			}
 
 			PspDisplay.DrawEvent += PspDisplayTick;
+			Console.WriteLine("[2]");
 		}
 
 		private void PspDisplayTick()
@@ -152,7 +156,7 @@ namespace CSPspEmu.Gui.Winforms
 				{
 					try
 					{
-						this.Invoke((Action)(() =>
+						this.DoInvoke((Action)(() =>
 						{
 							UpdateTitle();
 							if (!GLControl.Visible) return;
@@ -217,7 +221,12 @@ namespace CSPspEmu.Gui.Winforms
 					//Console.WriteLine(this.menuStrip1.Height);
 					//Console.ReadKey();
 					//return 24;
-					return this.menuStrip1.Visible ? this.menuStrip1.Height : 0;
+					//return this.menuStrip1.Visible ? this.menuStrip1.Height : 0;
+					if (IsFullScreen)
+					{
+						return 0;
+					}
+					return this.menuStrip1.Height;
 				}
 				return 0;
 			}
@@ -483,11 +492,11 @@ namespace CSPspEmu.Gui.Winforms
 					{
 						if (msg.Msg == 256)
 						{
-							PspDisplayForm.Singleton.DoKeyDown(Key);
+							return PspDisplayForm.Singleton.DoKeyDown(Key);
 						}
 						else
 						{
-							PspDisplayForm.Singleton.DoKeyUp(Key);
+							return PspDisplayForm.Singleton.DoKeyUp(Key);
 						}
 						return false;
 					}
@@ -497,30 +506,33 @@ namespace CSPspEmu.Gui.Winforms
 			return false;
 		}
 
-		internal void DoKeyDown(Keys KeyCode)
+		internal bool DoKeyDown(Keys KeyCode)
 		{
 			//Console.WriteLine("DoKeyDown: {0}", KeyCode);
 			switch (KeyCode)
 			{
-				case Keys.D1: DisplayScale = 1; break;
-				case Keys.D2: DisplayScale = 2; break;
-				case Keys.D3: DisplayScale = 3; break;
-				case Keys.D4: DisplayScale = 4; break;
+				case Keys.D1: DisplayScale = 1; return true;
+				case Keys.D2: DisplayScale = 2; return true;
+				case Keys.D3: DisplayScale = 3; return true;
+				case Keys.D4: DisplayScale = 4; return true;
 				//case Keys.F2: IGuiExternalInterface.ShowDebugInformation(); break;
 			}
 
 			TryUpdateAnalog(KeyCode, true);
 
 			SceCtrlData.UpdateButtons(GetButtonsFromKeys(KeyCode), true);
+			return false;
 		}
 
-		internal void DoKeyUp(Keys KeyCode)
+		internal bool DoKeyUp(Keys KeyCode)
 		{
 			//Console.WriteLine("DoKeyUp: {0}", KeyCode);
 
 			TryUpdateAnalog(KeyCode, false);
 
 			SceCtrlData.UpdateButtons(GetButtonsFromKeys(KeyCode), false);
+
+			return false;
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
@@ -554,6 +566,7 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			var BackgroundThread = new Thread(() =>
 			{
+				Console.WriteLine("PauseResume");
 				PauseResume(() =>
 				{
 					OpenFileReal(FilePath);
@@ -563,19 +576,39 @@ namespace CSPspEmu.Gui.Winforms
 			BackgroundThread.Start();
 		}
 
+		private void DoInvoke(Action Action)
+		{
+			//if (this.InvokeRequired && GuiThread != Thread.CurrentThread && !Platform.IsMono)
+			if (this.InvokeRequired && GuiThread != Thread.CurrentThread)
+			{
+				this.Invoke(Action);
+			}
+			else
+			{
+				Action();
+			}
+		}
+
 		private void OpenFileReal(string FilePath)
 		{
-			this.Invoke(new Action(() =>
+			Console.WriteLine("OpenFileReal");
+
+			this.DoInvoke(new Action(() =>
 			{
+				Console.WriteLine("[a]");
 				if (GameListComponent != null)
 				{
 					EnablePspDisplay(true);
 				}
 				this.Focus();
+				Console.WriteLine("[b]");
 			}));
+
+			Console.WriteLine("[c]");
 
 			OpenRecentHook(FilePath);
 			IGuiExternalInterface.LoadFile(FilePath);
+			Console.WriteLine("[d]");
 		}
 
 		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -970,7 +1003,7 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void UpdateRecentList()
 		{
-			this.Invoke(new Action(() =>
+			this.DoInvoke(new Action(() =>
 			{
 				try
 				{

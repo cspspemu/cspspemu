@@ -48,7 +48,7 @@ namespace CSPspEmu.Runner
 					typeof(GpuImplNull)
 #else
 					typeof(OpenglGpuImpl),
-					typeof(GpuImplOpenglEs),
+					//typeof(GpuImplOpenglEs),
 					//typeof(GpuImplSoft),
 					typeof(GpuImplNull)
 #endif
@@ -64,7 +64,7 @@ namespace CSPspEmu.Runner
 			}
 			else
 			{
-				_InjectContext.SetInstanceType<GpuImpl, GpuImplOpenglEs>();
+				_InjectContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
 				_InjectContext.SetInstanceType<PspAudioImpl, AudioImplNull>();
 			}
 

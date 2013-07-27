@@ -1,5 +1,6 @@
 ﻿using System;
 using CSPspEmu.Core.Gpu.State;
+using CSPspEmu.Core.Types;
 
 namespace CSPspEmu.Core.Gpu
 {
@@ -67,6 +68,10 @@ namespace CSPspEmu.Core.Gpu
 		public virtual void DrawCurvedSurface(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuStateStruct, VertexInfo[,] Patch, int UCount, int VCount)
 		{
 			Console.Error.WriteLine("GpuImpl.DrawCurvedSurface Not Implemented!!");
+		}
+
+		public virtual void DrawVideo(uint FrameBufferAddress, OutputPixel* OutputPixel, int Width, int Height)
+		{
 		}
 	}
 }

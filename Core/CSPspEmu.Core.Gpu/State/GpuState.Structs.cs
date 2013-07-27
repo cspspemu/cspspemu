@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using Mono.Simd;
+using CSharpPlatform;
 
 namespace CSPspEmu.Core.Gpu.State
 {
@@ -35,8 +35,8 @@ namespace CSPspEmu.Core.Gpu.State
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct ViewportStruct
 	{
-		public Vector4f Position;
-		public Vector4f Scale;
+		public Vector4fRaw Position;
+		public Vector4fRaw Scale;
 		public PointS RegionTopLeft;
 		public PointS RegionBottomRight;
 

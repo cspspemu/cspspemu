@@ -53,6 +53,7 @@ namespace CSPspEmu.Core.Display
 		public struct Info 
 		{
 			public bool Enabled;
+			public bool PlayingVideo;
 			public uint FrameAddress;
 			public int BufferWidth;
 			public GuPixelFormats PixelFormat;

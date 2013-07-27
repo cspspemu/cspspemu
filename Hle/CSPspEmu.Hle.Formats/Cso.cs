@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using ComponentAce.Compression.Libs.zlib;
+using System.IO.Compression;
 
 namespace CSPspEmu.Hle.Formats
 {
@@ -197,8 +198,12 @@ namespace CSPspEmu.Hle.Formats
 
 			var Out = new byte[this.Header.BlockSize];
 
-			In = (byte[])In.Concat(new byte[] { 0x00 });
+			//In = (byte[])In.Concat(new byte[] { 0x00 });
 
+#if true
+			var DS = new DeflateStream(new MemoryStream(In), CompressionMode.Decompress);
+			DS.Read(Out, 0, Out.Length);
+#else
 			var ZStream = new ZStream();
 
 			if (ZStream.inflateInit(-15) != zlibConst.Z_OK)
@@ -222,6 +227,7 @@ namespace CSPspEmu.Hle.Formats
 			{
 				ZStream.inflateEnd();
 			}
+#endif
 
 			return Out;
 		}

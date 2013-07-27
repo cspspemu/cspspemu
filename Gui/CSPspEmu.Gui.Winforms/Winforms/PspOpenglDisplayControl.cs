@@ -211,7 +211,11 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 		{
 			//BindTexVram(); return;
 
-			if (PspDisplayForm.Singleton.GpuProcessor.UsingGe)
+			if (PspDisplayForm.Singleton.PspDisplay.CurrentInfo.PlayingVideo)
+			{
+				BindTexVram();
+			}
+			else if (PspDisplayForm.Singleton.GpuProcessor.UsingGe)
 			{
 				if (!BindTexOpengl())
 				{
@@ -252,7 +256,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 
 			if (
 				!PspDisplayForm.Singleton.IGuiExternalInterface.IsInitialized()
-				|| !PspDisplayForm.Singleton.PspDisplay.CurrentInfo.Enabled
+				|| (!PspDisplayForm.Singleton.PspDisplay.CurrentInfo.Enabled && !PspDisplayForm.Singleton.PspDisplay.CurrentInfo.PlayingVideo)
 				//|| true
 			)
 			{
