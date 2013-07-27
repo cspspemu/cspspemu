@@ -116,6 +116,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		public override void InitSynchronizedOnce()
 		{
 			//Memory.WriteBytesHook += OnMemoryWrite;
+			this.ScaleViewport = PspStoredConfig.RenderScale;
 
 			if (!AlreadyInitialized)
 			{
@@ -136,18 +137,18 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					//try
 					//{
 						GLControl = new GLControl(UsedGraphicsMode, 3, 0, GraphicsContextFlags.Default);
-						GLControl.Size = new System.Drawing.Size(512, 272);
+						GLControl.Size = new System.Drawing.Size(512 * ScaleViewport, 272 * ScaleViewport);
 						RenderGraphicsContext = GLControl.Context;
 					//}
 					//catch (AccessViolationException)
 					//{
 					//	UsedGraphicsMode = GraphicsMode.Default;
 					//	GLControl = new GLControl(GraphicsMode.Default, 3, 0, GraphicsContextFlags.Default);
-					//	GLControl.Size = new System.Drawing.Size(512, 272);
+					//	GLControl.Size = new System.Drawing.Size(512 * ScaleViewport, 272 * ScaleViewport);
 					//	RenderGraphicsContext = GLControl.Context;
 					//}
 #else
-					NativeWindow = new NativeWindow(512, 272, "PspGraphicEngine", GameWindowFlags.Default, UsedGraphicsMode, DisplayDevice.GetDisplay(DisplayIndex.Default));
+					NativeWindow = new NativeWindow(512 * ScaleViewport, 272 * ScaleViewport, "PspGraphicEngine", GameWindowFlags.Default, UsedGraphicsMode, DisplayDevice.GetDisplay(DisplayIndex.Default));
 					RenderGraphicsContext = new GraphicsContext(UsedGraphicsMode, WindowInfo);
 #endif
 

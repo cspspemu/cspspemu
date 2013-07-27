@@ -271,7 +271,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
-			GL.Ortho(0, RectWidth, RectHeight, 0, 0, -0xFFFF);
+			GL.Ortho(0, RectWidth , RectHeight, 0, 0, -0xFFFF);
 
 			GL.Color3(Color.White);
 

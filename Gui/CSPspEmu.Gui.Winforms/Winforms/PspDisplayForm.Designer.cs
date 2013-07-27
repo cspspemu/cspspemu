@@ -43,6 +43,10 @@
 			this.UtilsDisplay2xMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.UtilsDisplay3xMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.UtilsDisplay4xMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsRenderScaleMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsRenderScale1xMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsRenderScale2xMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsRenderScale4xMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
 			this.UtilsLanguageMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.UtilsConfigureControllerMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -158,6 +162,7 @@
 			// 
 			this.UtilsMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.UtilsDisplayMenu,
+            this.UtilsRenderScaleMenu,
             this.toolStripMenuItem2,
             this.UtilsLanguageMenu,
             this.UtilsConfigureControllerMenu,
@@ -190,7 +195,7 @@
 			// 
 			this.UtilsDisplay1xMenu.Name = "UtilsDisplay1xMenu";
 			this.UtilsDisplay1xMenu.ShortcutKeyDisplayString = "1";
-			this.UtilsDisplay1xMenu.Size = new System.Drawing.Size(98, 22);
+			this.UtilsDisplay1xMenu.Size = new System.Drawing.Size(152, 22);
 			this.UtilsDisplay1xMenu.Text = "&1x";
 			this.UtilsDisplay1xMenu.Click += new System.EventHandler(this.xToolStripMenuItem1_Click);
 			// 
@@ -198,7 +203,7 @@
 			// 
 			this.UtilsDisplay2xMenu.Name = "UtilsDisplay2xMenu";
 			this.UtilsDisplay2xMenu.ShortcutKeyDisplayString = "2";
-			this.UtilsDisplay2xMenu.Size = new System.Drawing.Size(98, 22);
+			this.UtilsDisplay2xMenu.Size = new System.Drawing.Size(152, 22);
 			this.UtilsDisplay2xMenu.Text = "&2x";
 			this.UtilsDisplay2xMenu.Click += new System.EventHandler(this.xToolStripMenuItem2_Click);
 			// 
@@ -206,7 +211,7 @@
 			// 
 			this.UtilsDisplay3xMenu.Name = "UtilsDisplay3xMenu";
 			this.UtilsDisplay3xMenu.ShortcutKeyDisplayString = "3";
-			this.UtilsDisplay3xMenu.Size = new System.Drawing.Size(98, 22);
+			this.UtilsDisplay3xMenu.Size = new System.Drawing.Size(152, 22);
 			this.UtilsDisplay3xMenu.Text = "&3x";
 			this.UtilsDisplay3xMenu.Click += new System.EventHandler(this.xToolStripMenuItem3_Click);
 			// 
@@ -214,9 +219,40 @@
 			// 
 			this.UtilsDisplay4xMenu.Name = "UtilsDisplay4xMenu";
 			this.UtilsDisplay4xMenu.ShortcutKeyDisplayString = "4";
-			this.UtilsDisplay4xMenu.Size = new System.Drawing.Size(98, 22);
+			this.UtilsDisplay4xMenu.Size = new System.Drawing.Size(152, 22);
 			this.UtilsDisplay4xMenu.Text = "&4x";
 			this.UtilsDisplay4xMenu.Click += new System.EventHandler(this.xToolStripMenuItem4_Click);
+			// 
+			// UtilsRenderScaleMenu
+			// 
+			this.UtilsRenderScaleMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.UtilsRenderScale1xMenu,
+            this.UtilsRenderScale2xMenu,
+            this.UtilsRenderScale4xMenu});
+			this.UtilsRenderScaleMenu.Name = "UtilsRenderScaleMenu";
+			this.UtilsRenderScaleMenu.Size = new System.Drawing.Size(306, 22);
+			this.UtilsRenderScaleMenu.Text = "&Render scale";
+			// 
+			// UtilsRenderScale1xMenu
+			// 
+			this.UtilsRenderScale1xMenu.Name = "UtilsRenderScale1xMenu";
+			this.UtilsRenderScale1xMenu.Size = new System.Drawing.Size(152, 22);
+			this.UtilsRenderScale1xMenu.Text = "1x";
+			this.UtilsRenderScale1xMenu.Click += new System.EventHandler(this.UtilsRenderScale1xMenu_Click);
+			// 
+			// UtilsRenderScale2xMenu
+			// 
+			this.UtilsRenderScale2xMenu.Name = "UtilsRenderScale2xMenu";
+			this.UtilsRenderScale2xMenu.Size = new System.Drawing.Size(152, 22);
+			this.UtilsRenderScale2xMenu.Text = "2x";
+			this.UtilsRenderScale2xMenu.Click += new System.EventHandler(this.UtilsRenderScale2xMenu_Click);
+			// 
+			// UtilsRenderScale4xMenu
+			// 
+			this.UtilsRenderScale4xMenu.Name = "UtilsRenderScale4xMenu";
+			this.UtilsRenderScale4xMenu.Size = new System.Drawing.Size(152, 22);
+			this.UtilsRenderScale4xMenu.Text = "4x";
+			this.UtilsRenderScale4xMenu.Click += new System.EventHandler(this.UtilsRenderScale4xMenu_Click);
 			// 
 			// toolStripMenuItem2
 			// 
@@ -597,5 +633,9 @@
 		private System.Windows.Forms.ToolStripMenuItem UtilsAstOptimizationsMenu;
 		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem15;
 		private System.Windows.Forms.ToolStripMenuItem DebugFunctionViewer;
+		private System.Windows.Forms.ToolStripMenuItem UtilsRenderScaleMenu;
+		private System.Windows.Forms.ToolStripMenuItem UtilsRenderScale1xMenu;
+		private System.Windows.Forms.ToolStripMenuItem UtilsRenderScale2xMenu;
+		private System.Windows.Forms.ToolStripMenuItem UtilsRenderScale4xMenu;
 	}
 }

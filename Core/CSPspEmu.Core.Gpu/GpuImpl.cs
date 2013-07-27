@@ -5,6 +5,26 @@ namespace CSPspEmu.Core.Gpu
 {
 	public unsafe abstract class GpuImpl : PspPluginImpl
 	{
+		[Inject]
+		protected PspStoredConfig PspStoredConfig;
+
+		protected int _ScaleViewport = 1;
+
+		protected event Action<int> OnScaleViewport;
+
+		public int ScaleViewport
+		{
+			set
+			{
+				if (OnScaleViewport != null) OnScaleViewport(value);
+				this._ScaleViewport = value;
+			}
+			get
+			{
+				return _ScaleViewport;
+			}
+		}
+
 		public abstract void InitSynchronizedOnce();
 		public abstract void StopSynchronized();
 

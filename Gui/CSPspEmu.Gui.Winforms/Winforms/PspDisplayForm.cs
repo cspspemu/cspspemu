@@ -85,6 +85,7 @@ namespace CSPspEmu.Gui.Winforms
 
 			//GuiConfig.DefaultDisplayScale
 			DisplayScale = StoredConfig.DisplayScale;
+			RenderScale = StoredConfig.RenderScale;
 
 			updateResumePause();
 			UpdateCheckMenusFromConfig();
@@ -216,9 +217,25 @@ namespace CSPspEmu.Gui.Winforms
 					//Console.WriteLine(this.menuStrip1.Height);
 					//Console.ReadKey();
 					//return 24;
-					return this.menuStrip1.Height;
+					return this.menuStrip1.Visible ? this.menuStrip1.Height : 0;
 				}
 				return 0;
+			}
+		}
+
+		public int RenderScale
+		{
+			get
+			{
+				return GpuProcessor.GpuImpl.ScaleViewport;
+			}
+			set
+			{
+				GpuProcessor.GpuImpl.ScaleViewport = value;
+				UtilsRenderScale1xMenu.Checked = (value == 1);
+				UtilsRenderScale2xMenu.Checked = (value == 2);
+				UtilsRenderScale4xMenu.Checked = (value == 4);
+				StoredConfig.RenderScale = value;
 			}
 		}
 
@@ -398,12 +415,54 @@ namespace CSPspEmu.Gui.Winforms
 			}
 		}
 
+		bool IsFullScreen;
+
+		private void SetFullScreen(bool SetFullScreen)
+		{
+			IsFullScreen = SetFullScreen;
+			if (SetFullScreen)
+			{
+				this.TopMost = true;
+				this.MainMenuStrip.Visible = false;
+				this.FormBorderStyle = FormBorderStyle.None;
+				this.MaximumSize = new Size(4096, 4096);
+				this.WindowState = FormWindowState.Maximized;
+				Cursor.Hide();
+			}
+			else
+			{
+				this.MainMenuStrip.Visible = true;
+				this.TopMost = false;
+				this.FormBorderStyle = FormBorderStyle.Sizable;
+				this.MaximumSize = new Size(4096, 4096);
+				this.WindowState = FormWindowState.Normal;
+				Cursor.Show();
+			}
+		}
+
 		bool PressingShift = false;
 		bool PressingCtrl = false;
+		//bool PressingAlt = false;
 		bool IMessageFilter.PreFilterMessage(ref Message msg)
 		{
+			//Console.WriteLine(msg);
 			switch (msg.Msg)
 			{
+				// WM_SYSKEYDOWN
+				case 0x104:
+				// WM_SYSKEYUP
+				case 0x105:
+					//Console.WriteLine(msg);
+					if (((int)msg.WParam) == 0xd)
+					{
+						if (msg.Msg == 0x104)
+						{
+							SetFullScreen(!IsFullScreen);
+							return true;
+						}
+						//PressingAlt = (msg.Msg == 0x104);
+					}
+					break;
 				case 0x100: // WM_KEYDOWN
 				case 0x101: // WM_KEYUP
 					var Key = (Keys)msg.WParam;
@@ -447,8 +506,6 @@ namespace CSPspEmu.Gui.Winforms
 				case Keys.D2: DisplayScale = 2; break;
 				case Keys.D3: DisplayScale = 3; break;
 				case Keys.D4: DisplayScale = 4; break;
-				case Keys.O:
-					break;
 				//case Keys.F2: IGuiExternalInterface.ShowDebugInformation(); break;
 			}
 
@@ -1005,6 +1062,21 @@ namespace CSPspEmu.Gui.Winforms
 			{
 				InjectContext.NewInstance<FunctionViewerForm>().ShowDialog();
 			});
+		}
+
+		private void UtilsRenderScale1xMenu_Click(object sender, EventArgs e)
+		{
+			RenderScale = 1;
+		}
+
+		private void UtilsRenderScale2xMenu_Click(object sender, EventArgs e)
+		{
+			RenderScale = 2;
+		}
+
+		private void UtilsRenderScale4xMenu_Click(object sender, EventArgs e)
+		{
+			RenderScale = 4;
 		}
 	}
 }
