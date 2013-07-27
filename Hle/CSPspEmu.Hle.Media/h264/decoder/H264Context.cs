@@ -2300,7 +2300,7 @@ namespace cscodec.h264.decoder
 					if (status < 0)
 					{
 						//av_log(this.s.avctx, AV_LOG_ERROR, "top block unavailable for requested intra4x4 mode %d at %d %d\n", status, s->mb_x, s->mb_y);
-						return -1;
+						return -11;
 					}
 					else if (status != 0)
 					{
@@ -2320,7 +2320,7 @@ namespace cscodec.h264.decoder
 						if (status < 0)
 						{
 							//av_log(this.s.avctx, AV_LOG_ERROR, "left block unavailable for requested intra4x4 mode %d at %d %d\n", status, s->mb_x, s->mb_y);
-							return -1;
+							return -12;
 						}
 						else if (status != 0)
 						{
@@ -2344,7 +2344,7 @@ namespace cscodec.h264.decoder
 			if (mode > 6)
 			{
 				//av_log(h->s.avctx, AV_LOG_ERROR, "out of range intra chroma pred mode at %d %d\n", s->mb_x, s->mb_y);
-				return -1;
+				return -13;
 			}
 
 			if (0 == (this.top_samples_available & 0x08000))
@@ -2353,7 +2353,7 @@ namespace cscodec.h264.decoder
 				if (mode < 0)
 				{
 					//av_log(h->s.avctx, AV_LOG_ERROR, "top block unavailable for requested intra mode at %d %d\n", s->mb_x, s->mb_y);
-					return -1;
+					return -14;
 				}
 			}
 
@@ -2367,7 +2367,7 @@ namespace cscodec.h264.decoder
 				if (mode < 0)
 				{
 					//av_log(this.s.avctx, AV_LOG_ERROR, "left block unavailable for requested intra mode at %d %d\n", s->mb_x, s->mb_y);
-					return -1;
+					return -15;
 				}
 			}
 
@@ -3586,12 +3586,12 @@ namespace cscodec.h264.decoder
 						}
 					}
 					ff_h264_write_back_intra_pred_mode();
-					if (ff_h264_check_intra4x4_pred_mode() < 0) return -1;
+					if (ff_h264_check_intra4x4_pred_mode() < 0) return -16;
 				}
 				else
 				{
 					intra16x16_pred_mode = ff_h264_check_intra_pred_mode(intra16x16_pred_mode);
-					if (intra16x16_pred_mode < 0) return -1;
+					if (intra16x16_pred_mode < 0) return -17;
 				}
 				if (sps.chroma_format_idc != 0)
 				{
@@ -3599,7 +3599,7 @@ namespace cscodec.h264.decoder
 					pred_mode = cabac.decode_cabac_mb_chroma_pre_mode(this);
 
 					pred_mode = ff_h264_check_intra_pred_mode(pred_mode);
-					if (pred_mode < 0) return -1;
+					if (pred_mode < 0) return -18;
 					chroma_pred_mode = pred_mode;
 				}
 			}
@@ -3653,7 +3653,7 @@ namespace cscodec.h264.decoder
 								if (@ref[list][i] >= (int)ref_count[list])
 								{
 									// av_log(s.avctx, AV_LOG_ERROR, "Reference %d >= %d\n", ref[list][i], h->ref_count[list]);
-									return -1;
+									return -19;
 								}
 							}
 							else
@@ -3800,7 +3800,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 								if (@ref >= (int)ref_count[list])
 								{
 									//av_log(s.avctx, AV_LOG_ERROR, "Reference %d >= %d\n", ref, h->ref_count[list]);
-									return -1;
+									return -20;
 								}
 							}
 							else
@@ -3860,7 +3860,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 									if (@ref >= (int)ref_count[list])
 									{
 										//av_log(s.avctx, AV_LOG_ERROR, "Reference %d >= %d\n", ref, h->ref_count[list]);
-										return -1;
+										return -21;
 									}
 								}
 								else
@@ -3938,7 +3938,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 									if (@ref >= (int)ref_count[list])
 									{
 										//av_log(s.avctx, AV_LOG_ERROR, "Reference %d >= %d\n", ref, h->ref_count[list]);
-										return -1;
+										return -22;
 									}
 								}
 								else
@@ -4051,7 +4051,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 						if (val > 102)
 						{ //prevent infinite loop
 							//av_log(h->s.avctx, AV_LOG_ERROR, "cabac decode of qscale diff failed at %d %d\n", s.mb_x, s.mb_y);
-							return -1;
+							return -23;
 						}
 					}
 
@@ -5690,7 +5690,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 					{
 						//av_log(this.s.avctx, AV_LOG_ERROR, "error while decoding MB %d %d, bytestream (%td)\n", s.mb_x, s.mb_y, this.cabac.bytestream_end - this.cabac.bytestream);
 						ErrorResilience.ff_er_add_slice(s, s.resync_mb_x, s.resync_mb_y, s.mb_x, s.mb_y, (MpegEncContext.AC_ERROR | MpegEncContext.DC_ERROR | MpegEncContext.MV_ERROR) & part_mask);
-						return -1;
+						return -24;
 					}
 
 					if (++s.mb_x >= s.mb_width)
@@ -5746,7 +5746,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 						//av_log(this.s.avctx, AV_LOG_ERROR, "error while decoding MB %d %d\n", s.mb_x, s.mb_y);
 						ErrorResilience.ff_er_add_slice(s, s.resync_mb_x, s.resync_mb_y, s.mb_x, s.mb_y, (MpegEncContext.AC_ERROR | MpegEncContext.DC_ERROR | MpegEncContext.MV_ERROR) & part_mask);
 
-						return -1;
+						return -25;
 					}
 
 					if (++s.mb_x >= s.mb_width)
@@ -5776,7 +5776,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 							{
 								ErrorResilience.ff_er_add_slice(s, s.resync_mb_x, s.resync_mb_y, s.mb_x, s.mb_y, (MpegEncContext.AC_END | MpegEncContext.DC_END | MpegEncContext.MV_END) & part_mask);
 
-								return -1;
+								return -26;
 							}
 						}
 					}
@@ -5794,7 +5794,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 						{
 							ErrorResilience.ff_er_add_slice(s, s.resync_mb_x, s.resync_mb_y, s.mb_x, s.mb_y, (MpegEncContext.AC_ERROR | MpegEncContext.DC_ERROR | MpegEncContext.MV_ERROR) & part_mask);
 
-							return -1;
+							return -27;
 						}
 					}
 				}
@@ -6565,7 +6565,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 				this.sei_ct_type = 0;
 
 				if (this.sei_pic_struct > SEI_PIC_STRUCT_FRAME_TRIPLING)
-					return -1;
+					return -28;
 
 				int num_clock_ts = sei_num_clock_ts_table[this.sei_pic_struct];
 
@@ -6619,7 +6619,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 			int e, build, i;
 
 			if (size < 16)
-				return -1;
+				return -29;
 
 			for (i = 0; i < user_data.Length - 1 && i < size; i++)
 			{
@@ -6663,7 +6663,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 			if (sps_id > 31 || null == this.sps_buffers[sps_id])
 			{
 				//av_log(this.s.avctx, AV_LOG_ERROR, "non-existing SPS %d referenced in buffering period\n", sps_id);
-				return -1;
+				return -30;
 			}
 			sps = this.sps_buffers[sps_id];
 
@@ -6712,19 +6712,19 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 				{
 					case SEI_TYPE_PIC_TIMING: // Picture timing SEI
 						if (this.decode_picture_timing() < 0)
-							return -1;
+							return -31;
 						break;
 					case SEI_TYPE_USER_DATA_UNREGISTERED:
 						if (this.decode_unregistered_user_data(size) < 0)
-							return -1;
+							return -32;
 						break;
 					case SEI_TYPE_RECOVERY_POINT:
 						if (this.decode_recovery_point() < 0)
-							return -1;
+							return -33;
 						break;
 					case SEI_BUFFERING_PERIOD:
 						if (this.decode_buffering_period() < 0)
-							return -1;
+							return -34;
 						break;
 					default:
 						s.gb.skip_bits(8 * size);
@@ -6822,7 +6822,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 			if (cpb_count > 32)
 			{
 				//av_log(this.s.avctx, AV_LOG_ERROR, "cpb_count %d invalid\n", cpb_count);
-				return -1;
+				return -35;
 			}
 
 			s.gb.get_bits(4, "bit_rate_scale"); /* bit_rate_scale */
@@ -6876,7 +6876,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 				else
 				{
 					//av_log(this.s.avctx, AV_LOG_ERROR, "illegal aspect ratio\n");
-					return -1;
+					return -36;
 				}
 			}
 			else
@@ -6945,7 +6945,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 				if (0 == sps.num_units_in_tick || 0 == sps.time_scale)
 				{
 					//av_log(this.s.avctx, AV_LOG_ERROR, "time_scale/num_units_in_tick invalid or unsupported (%d/%d)\n", sps.time_scale, sps.num_units_in_tick);
-					return -1;
+					return -37;
 				}
 				sps.fixed_frame_rate_flag = (int)s.gb.get_bits1("fixed_frame_rate_flag");
 			}
@@ -6953,11 +6953,11 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 			sps.nal_hrd_parameters_present_flag = (int)s.gb.get_bits1("nal_hrd_parameters_present_flag");
 			if (0 != sps.nal_hrd_parameters_present_flag)
 				if (this.decode_hrd_parameters(sps) < 0)
-					return -1;
+					return -38;
 			sps.vcl_hrd_parameters_present_flag = (int)s.gb.get_bits1("vcl_hrd_parameters_present_flag");
 			if (0 != sps.vcl_hrd_parameters_present_flag)
 				if (this.decode_hrd_parameters(sps) < 0)
-					return -1;
+					return -39;
 			if (0 != sps.nal_hrd_parameters_present_flag || 0 != sps.vcl_hrd_parameters_present_flag)
 				s.gb.get_bits1("low_delay_hrd_flag");     /* low_delay_hrd_flag */
 			sps.pic_struct_present_flag = (int)s.gb.get_bits1("pic_struct_present_flag");
@@ -6983,7 +6983,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 				if (sps.num_reorder_frames > 16 /*max_dec_frame_buffering || max_dec_frame_buffering > 16*/)
 				{
 					//av_log(this.s.avctx, AV_LOG_ERROR, "illegal num_reorder_frames %d\n", sps.num_reorder_frames);
-					return -1;
+					return -40;
 				}
 			}
 
@@ -7008,17 +7008,17 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 			if (pps_id >= MAX_PPS_COUNT)
 			{
 				//av_log(this.s.avctx, AV_LOG_ERROR, "pps_id (%d) out of range\n", pps_id);
-				return -1;
+				return -41;
 			}
 
 			pps = new PictureParameterSet();
 			if (pps == null)
-				return -1;
+				return -42;
 			pps.sps_id = s.gb.get_ue_golomb_31("sps_id");
 			if (/*(unsigned)*/pps.sps_id >= MAX_SPS_COUNT || this.sps_buffers[(int)pps.sps_id] == null)
 			{
 				//av_log(this.s.avctx, AV_LOG_ERROR, "sps_id out of range\n");
-				return -1;
+				return -43;
 			}
 
 			pps.cabac = (int)s.gb.get_bits1("cabac");
@@ -7047,7 +7047,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 			if (pps.ref_count[0] - 1 > 32 - 1 || pps.ref_count[1] - 1 > 32 - 1)
 			{
 				//av_log(this.s.avctx, AV_LOG_ERROR, "reference overflow (pps)\n");
-				return -1;
+				return -44;
 			}
 
 			pps.weighted_pred = (int)s.gb.get_bits1("weighted_pred");
@@ -7128,11 +7128,11 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 			if (sps_id >= MAX_SPS_COUNT)
 			{
 				//av_log(this.s.avctx, AV_LOG_ERROR, "sps_id (%d) out of range\n", sps_id);
-				return -1;
+				return -45;
 			}
 			sps = new SequenceParameterSet();
 			if (sps == null)
-				return -1;
+				return -46;
 
 			sps.time_offset_length = 24;
 			sps.profile_idc = profile_idc;
@@ -7193,7 +7193,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 				if (/*(unsigned)*/sps.poc_cycle_length >= sps.offset_for_ref_frame.Length)
 				{
 					//av_log(this.s.avctx, AV_LOG_ERROR, "poc_cycle_length overflow %u\n", sps.poc_cycle_length);
-					return -1;
+					return -47;
 				}
 
 				for (i = 0; i < sps.poc_cycle_length; i++)
@@ -7206,7 +7206,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 			else if (sps.poc_type != 2)
 			{
 				//av_log(this.s.avctx, AV_LOG_ERROR, "illegal POC type %d\n", sps.poc_type);
-				return -1;
+				return -48;
 			}
 
 			sps.ref_frame_count = s.gb.get_ue_golomb_31("ref_frame_count");
@@ -7215,7 +7215,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 			if (sps.ref_frame_count > MpegEncContext.MAX_PICTURE_COUNT - 2 || sps.ref_frame_count >= 32)
 			{
 				//av_log(this.s.avctx, AV_LOG_ERROR, "too many reference frames\n");
-				return -1;
+				return -49;
 			}
 			sps.gaps_in_frame_num_allowed_flag = (int)s.gb.get_bits1("gaps_in_frame_num_allowed_flag");
 			sps.mb_width = s.gb.get_ue_golomb("mb_width") + 1;
@@ -7224,7 +7224,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 			   MpegEncContext.av_image_check_size(16 * sps.mb_width, 16 * sps.mb_height, 0, this.s) != 0)
 			{
 				//av_log(this.s.avctx, AV_LOG_ERROR, "mb_width/height overflow\n");
-				return -1;
+				return -50;
 			}
 
 			// DebugTool.printDebugString("SPS: gaps_in_frame_num_allowed_flag = "+sps.gaps_in_frame_num_allowed_flag+"\n");
@@ -7245,7 +7245,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 			if (0 == sps.frame_mbs_only_flag && 0 == sps.direct_8x8_inference_flag)
 			{
 				//av_log(this.s.avctx, AV_LOG_ERROR, "This stream was generated by a broken encoder, invalid 8x8 inference\n");
-				return -1;
+				return -51;
 			}
 
 			// DebugTool.printDebugString("SPS: direct_8x8_inference_flag = "+sps.direct_8x8_inference_flag+"\n");
@@ -7285,7 +7285,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 			sps.vui_parameters_present_flag = (int)s.gb.get_bits1("vui_parameters_present_flag");
 			if (0 != sps.vui_parameters_present_flag)
 				if (this.decode_vui_parameters(sps) < 0)
-					return -1;
+					return -52;
 
 			if (0 == sps.sar.den)
 				sps.sar.den = 1;
@@ -7383,7 +7383,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 				ptr_offset = param[2];
 				if (ptr_base == null || dst_length < 0)
 				{
-					return -1;
+					return -53;
 				}
 				i = buf_index + consumed;
 				if ((s.workaround_bugs & MpegEncContext.FF_BUG_AUTODETECT) != 0 && i + 3 < next_avc &&
@@ -7427,7 +7427,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 							{
 								// DebugTool.printDebugString("*Decoding NAL_IDR_SLICE return -1...\n");
 								//av_log(this.s.avctx, AV_LOG_ERROR, "Invalid mix of idr and non-idr slices");
-								return -1;
+								return -51;
 							}
 							idr(); //FIXME ensure we don't loose some frames if there is reordering
 
@@ -8200,7 +8200,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 			if (s.MPV_frame_start() < 0)
 			{
 				// DebugTool.printDebugString("     ----- ff_h264_frame_start error case 0\n");
-				return -1;
+				return -52;
 			}
 			ErrorResilience.ff_er_frame_start(s);
 			/*
@@ -8531,7 +8531,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 						if (index >= this.ref_count[list])
 						{
 							//av_log(this.s.avctx, AV_LOG_ERROR, "reference count overflow\n");
-							return -1;
+							return -53;
 						}
 
 						if (reordering_of_pic_nums_idc < 3)
@@ -8545,7 +8545,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 								if (abs_diff_pic_num > this.max_pic_num)
 								{
 									//av_log(this.s.avctx, AV_LOG_ERROR, "abs_diff_pic_num overflow\n");
-									return -1;
+									return -54;
 								}
 
 								if (reordering_of_pic_nums_idc == 0) pred -= abs_diff_pic_num;
@@ -8582,7 +8582,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 								if (long_idx > 31)
 								{
 									//av_log(this.s.avctx, AV_LOG_ERROR, "long_term_pic_idx overflow\n");
-									return -1;
+									return -55;
 								}
 								@ref = this.long_ref[long_idx];
 								//assert(!(ref!=null && 0==ref.reference));
@@ -8625,7 +8625,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 						else
 						{
 							//av_log(this.s.avctx, AV_LOG_ERROR, "illegal reordering_of_pic_nums_idc\n");
-							return -1;
+							return -56;
 						}
 					}
 				}
@@ -8640,7 +8640,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 						if (null != this.default_ref_list[list][0].data_base[0])
 							this.ref_list[list][index] = this.default_ref_list[list][0];
 						else
-							return -1;
+							return -57;
 					}
 				}
 			}
@@ -8833,7 +8833,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 							if (long_arg >= 32 || (long_arg >= 16 && !(opcode == MMCO.MMCO_LONG2UNUSED && (s.picture_structure != Constants.PICT_FRAME))))
 							{
 								//av_log(this.s.avctx, AV_LOG_ERROR, "illegal long ref in memory management control operation %d\n", opcode);
-								return -1;
+								return -58;
 							}
 							this.mmco[i].long_arg = long_arg;
 						}
@@ -8841,7 +8841,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 						if (opcode > /*(unsigned)*/MMCO.MMCO_LONG)
 						{
 							//av_log(this.s.avctx, AV_LOG_ERROR, "illegal memory management control operation %d\n", opcode);
-							return -1;
+							return -59;
 						}
 						if (opcode == MMCO.MMCO_END)
 							break;
@@ -9074,7 +9074,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 			{
 				// DebugTool.printDebugString("   --- decode_slide_header error case 0\n");
 				//av_log(h.s.avctx, AV_LOG_ERROR, "slice type too large (%d) at %d %d\n", h.slice_type, s.mb_x, s.mb_y);
-				return -1;
+				return -60;
 			}
 			if (slice_type > 4)
 			{
@@ -9119,13 +9119,13 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 			{
 				//av_log(h.s.avctx, AV_LOG_ERROR, "pps_id out of range\n");
 				// DebugTool.printDebugString("   --- decode_slide_header error case 1\n");
-				return -1;
+				return -61;
 			}
 			if (null == h0.pps_buffers[pps_id])
 			{
 				//av_log(h.s.avctx, AV_LOG_ERROR, "non-existing PPS %u referenced\n", pps_id);
 				// DebugTool.printDebugString("   --- decode_slide_header error case 2\n");
-				return -1;
+				return -62;
 			}
 			h0.pps_buffers[pps_id].copyTo(h.pps);
 
@@ -9133,7 +9133,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 			{
 				//av_log(h.s.avctx, AV_LOG_ERROR, "non-existing SPS %u referenced\n", h.pps.sps_id);
 				// DebugTool.printDebugString("   --- decode_slide_header error case 3\n");
-				return -1;
+				return -63;
 			}
 			h0.sps_buffers[(int)h.pps.sps_id].copyTo(h.sps);
 
@@ -9166,7 +9166,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 				if (h != h0)
 				{
 					// DebugTool.printDebugString("   --- decode_slide_header error case 4\n");
-					return -1;   // width / height changed during parallelized decoding
+					return -64;   // width / height changed during parallelized decoding
 				}
 				h.free_tables();
 				s.flush_dpb();
@@ -9178,7 +9178,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 				if (h != h0)
 				{
 					// DebugTool.printDebugString("   --- decode_slide_header error case 5\n");
-					return -1;  // we cant (re-)initialize context during parallel decoding
+					return -65;  // we cant (re-)initialize context during parallel decoding
 				}
 
 				s.avcodec_set_dimensions(s.width, s.height);
@@ -9218,7 +9218,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 				if (s.MPV_common_init() < 0)
 				{
 					// DebugTool.printDebugString("   --- decode_slide_header error case 6\n");
-					return -1;
+					return -66;
 				}
 				s.first_field = 0;
 				h.prev_interlaced_frame = 1;
@@ -9243,7 +9243,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 					if (h.thread_context[i].context_init() < 0)
 					{
 						// DebugTool.printDebugString("   --- decode_slide_header error case 7\n");
-						return -1;
+						return -67;
 					}
 			}
 
@@ -9280,7 +9280,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 					if (h.ff_h264_frame_start() < 0)
 					{
 						// DebugTool.printDebugString("   --- decode_slide_header error case 8\n");
-						return -1;
+						return -68;
 					}
 					h.prev_frame_num++;
 					h.prev_frame_num %= 1 << h.sps.log2_max_frame_num;
@@ -9362,7 +9362,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 					s0.first_field = 0;
 					// DebugTool.printDebugString("   --- decode_slide_header error case 9\n");
 
-					return -1;
+					return -69;
 				}
 			}
 			if (h != h0)
@@ -9376,7 +9376,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 			{
 				//av_log(h.s.avctx, AV_LOG_ERROR, "first_mb_in_slice overflow\n");
 				// DebugTool.printDebugString("   --- decode_slide_header error case 10\n");
-				return -1;
+				return -70;
 			}
 			s.resync_mb_x = s.mb_x = first_mb_in_slice % s.mb_width;
 			s.resync_mb_y = s.mb_y = (first_mb_in_slice / s.mb_width) << ((h.mb_aff_frame != 0 || (s.picture_structure != Constants.PICT_FRAME)) ? 1 : 0);
@@ -9449,7 +9449,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 						h.ref_count[0] = h.ref_count[1] = 1;
 						// DebugTool.printDebugString("   --- decode_slide_header error case 11\n");
 
-						return -1;
+						return -71;
 					}
 				}
 				if (h.slice_type_nos == FF_B_TYPE)
@@ -9469,7 +9469,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 			{
 				// DebugTool.printDebugString("   --- decode_slide_header error case 12\n");
 
-				return -1;
+				return -72;
 			}
 
 			if (h.slice_type_nos != FF_I_TYPE)
@@ -9526,7 +9526,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 					//av_log(s.avctx, AV_LOG_ERROR, "cabac_init_idc overflow\n");
 					// DebugTool.printDebugString("   --- decode_slide_header error case 13\n");
 
-					return -1;
+					return -73;
 				}
 				h.cabac_init_idc = tmp;
 			}
@@ -9538,7 +9538,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 				//av_log(s.avctx, AV_LOG_ERROR, "QP %u out of range\n", tmp);
 				// DebugTool.printDebugString("   --- decode_slide_header error case 14\n");
 
-				return -1;
+				return -74;
 			}
 			s.qscale = tmp;
 			h.chroma_qp[0] = h.pps.chroma_qp_table[0][s.qscale];
@@ -9564,7 +9564,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 					// DebugTool.printDebugString("   --- decode_slide_header error case 15\n");
 
 					//av_log(s.avctx, AV_LOG_ERROR, "deblocking_filter_idc %u out of range\n", tmp);
-					return -1;
+					return -75;
 				}
 				h.deblocking_filter = tmp;
 				if (h.deblocking_filter < 2)
@@ -9580,7 +9580,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 						// DebugTool.printDebugString("   --- decode_slide_header error case 16\n");
 
 						//av_log(s.avctx, AV_LOG_ERROR, "deblocking filter parameters %d %d out of range\n", h.slice_alpha_c0_offset, h.slice_beta_offset);
-						return -1;
+						return -76;
 					}
 				}
 			}
@@ -9715,7 +9715,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 				if (s.extradata_size < 7)
 				{
 					//av_log(avctx, AV_LOG_ERROR, "avcC too short\n");
-					return -1;
+					return -77;
 				}
 				/* sps and pps in the avcC always have length coded with 2 bytes,
 				   so put a fake nal_length_size = 2 while parsing them */
@@ -9730,7 +9730,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 					if (decode_nal_units(p_base, p_offset, nalsize) < 0)
 					{
 						//av_log(avctx, AV_LOG_ERROR, "Decoding sps %d from avcC failed\n", i);
-						return -1;
+						return -78;
 					}
 					p_offset += nalsize;
 				}
@@ -9743,7 +9743,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 					if (decode_nal_units(p_base, p_offset, nalsize) != nalsize)
 					{
 						//av_log(avctx, AV_LOG_ERROR, "Decoding pps %d from avcC failed\n", i);
-						return -1;
+						return -79;
 					}
 					p_offset += nalsize;
 				}
@@ -9754,7 +9754,7 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 			{
 				this.is_avc = 0;
 				if (decode_nal_units(s.extradata, 0, s.extradata_size) < 0)
-					return -1;
+					return -80;
 			}
 			return 0;
 		}
@@ -9838,7 +9838,9 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 
 				buf_index = this.decode_nal_units(buf_base, buf_offset, buf_size);
 				if (buf_index < 0)
-					return -1;
+				{
+					return -8;
+				}
 
 				if (null == s.current_picture_ptr
 						&& this.nal_unit_type == NAL_END_SEQUENCE)
@@ -9849,16 +9851,13 @@ ref_cache[list][scan8[4 * i] + 8] = ref_cache[list][scan8[4 * i] + 9] = @ref[lis
 
 			} while (loop);
 
-			if (0 == (s.flags2 & MpegEncContext.CODEC_FLAG2_CHUNKS)
-					&& null == s.current_picture_ptr)
+			if (0 == (s.flags2 & MpegEncContext.CODEC_FLAG2_CHUNKS) && null == s.current_picture_ptr)
 			{
-				if (s.skip_frame >= MpegEncContext.AVDISCARD_NONREF
-						|| s.hurry_up != 0)
-					return 0;
+				if (s.skip_frame >= MpegEncContext.AVDISCARD_NONREF || s.hurry_up != 0) return 0;
 				// av_log(avctx, AV_LOG_ERROR, "no frame!\n");
 				//Console.WriteLine("!!!! NO FRAME !!!!");
 				//return s.get_consumed_bytes(buf_index, buf_size); //-1;
-				return -1;
+				return -9;
 			}
 
 			if (0 == (s.flags2 & MpegEncContext.CODEC_FLAG2_CHUNKS)

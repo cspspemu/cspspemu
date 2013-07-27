@@ -238,8 +238,7 @@ namespace cscodec.h264.decoder
 		private static int OP_PUT(int a, int b) { return (((b) + 32) >> 6); }
 
 		//	static void OPNAME ## h264_chroma_mc2_c(uint8_t *dst/*align 8*/, uint8_t *src/*align 1*/, int stride, int h, int x, int y){
-		public void put_h264_chroma_mc2_c(byte[] dst_base/*align 8*/, int dst_offset,
-				byte[] src_base/*align 1*/, int src_offset, int stride, int h, int x, int y)
+		public void put_h264_chroma_mc2_c(byte[] dst_base/*align 8*/, int dst_offset, byte[] src_base/*align 1*/, int src_offset, int stride, int h, int x, int y)
 		{
 			int A = (8 - x) * (8 - y);
 			int B = (x) * (8 - y);
@@ -274,8 +273,7 @@ namespace cscodec.h264.decoder
 		}
 
 		//	static void OPNAME ## h264_chroma_mc4_c(uint8_t *dst/*align 8*/, uint8_t *src/*align 1*/, int stride, int h, int x, int y){
-		public void put_h264_chroma_mc4_c(byte[] dst_base/*align 8*/, int dst_offset,
-				byte[] src_base/*align 1*/, int src_offset, int stride, int h, int x, int y)
+		public void put_h264_chroma_mc4_c(byte[] dst_base/*align 8*/, int dst_offset, byte[] src_base/*align 1*/, int src_offset, int stride, int h, int x, int y)
 		{
 			int A = (8 - x) * (8 - y);
 			int B = (x) * (8 - y);
@@ -314,54 +312,59 @@ namespace cscodec.h264.decoder
 		}
 
 		//	public void put_h264_chroma_mc8_c(uint8_t *dst/*align 8*/, uint8_t *src/*align 1*/, int stride, int h, int x, int y){\
-		public void put_h264_chroma_mc8_c(byte[] dst_base/*align 8*/, int dst_offset,
-				byte[] src_base/*align 1*/, int src_offset, int stride, int h, int x, int y)
+		unsafe public void put_h264_chroma_mc8_c(byte[] dst_base/*align 8*/, int dst_offset, byte[] src_base/*align 1*/, int src_offset, int stride, int h, int x, int y)
 		{
-			int A = (8 - x) * (8 - y);
-			int B = (x) * (8 - y);
-			int C = (8 - x) * (y);
-			int D = (x) * (y);
-			int i;
-			////assert(x<8 && y<8 && x>=0 && y>=0);\	
-			if (D != 0)
+			fixed (byte* dst_base_ptr = dst_base)
+			fixed (byte* src_base_ptr = src_base)
 			{
-				for (i = 0; i < h; i++)
+				var dst = dst_base_ptr + dst_offset;
+				var src = src_base_ptr + src_offset;
+
+				int A = (8 - x) * (8 - y);
+				int B = (x) * (8 - y);
+				int C = (8 - x) * (y);
+				int D = (x) * (y);
+				int i;
+				////assert(x<8 && y<8 && x>=0 && y>=0);\	
+				if (D != 0)
 				{
-					dst_base[dst_offset + 0] = (byte)OP_PUT(dst_base[dst_offset + 0], (A * src_base[src_offset + 0] + B * src_base[src_offset + 1] + C * src_base[src_offset + stride + 0] + D * src_base[src_offset + stride + 1]));
-					dst_base[dst_offset + 1] = (byte)OP_PUT(dst_base[dst_offset + 1], (A * src_base[src_offset + 1] + B * src_base[src_offset + 2] + C * src_base[src_offset + stride + 1] + D * src_base[src_offset + stride + 2]));
-					dst_base[dst_offset + 2] = (byte)OP_PUT(dst_base[dst_offset + 2], (A * src_base[src_offset + 2] + B * src_base[src_offset + 3] + C * src_base[src_offset + stride + 2] + D * src_base[src_offset + stride + 3]));
-					dst_base[dst_offset + 3] = (byte)OP_PUT(dst_base[dst_offset + 3], (A * src_base[src_offset + 3] + B * src_base[src_offset + 4] + C * src_base[src_offset + stride + 3] + D * src_base[src_offset + stride + 4]));
-					dst_base[dst_offset + 4] = (byte)OP_PUT(dst_base[dst_offset + 4], (A * src_base[src_offset + 4] + B * src_base[src_offset + 5] + C * src_base[src_offset + stride + 4] + D * src_base[src_offset + stride + 5]));
-					dst_base[dst_offset + 5] = (byte)OP_PUT(dst_base[dst_offset + 5], (A * src_base[src_offset + 5] + B * src_base[src_offset + 6] + C * src_base[src_offset + stride + 5] + D * src_base[src_offset + stride + 6]));
-					dst_base[dst_offset + 6] = (byte)OP_PUT(dst_base[dst_offset + 6], (A * src_base[src_offset + 6] + B * src_base[src_offset + 7] + C * src_base[src_offset + stride + 6] + D * src_base[src_offset + stride + 7]));
-					dst_base[dst_offset + 7] = (byte)OP_PUT(dst_base[dst_offset + 7], (A * src_base[src_offset + 7] + B * src_base[src_offset + 8] + C * src_base[src_offset + stride + 7] + D * src_base[src_offset + stride + 8]));
-					dst_offset += stride;
-					src_offset += stride;
+					for (i = 0; i < h; i++)
+					{
+						dst[0] = (byte)OP_PUT(dst[0], (A * src[0] + B * src[1] + C * src[stride + 0] + D * src[stride + 1]));
+						dst[1] = (byte)OP_PUT(dst[1], (A * src[1] + B * src[2] + C * src[stride + 1] + D * src[stride + 2]));
+						dst[2] = (byte)OP_PUT(dst[2], (A * src[2] + B * src[3] + C * src[stride + 2] + D * src[stride + 3]));
+						dst[3] = (byte)OP_PUT(dst[3], (A * src[3] + B * src[4] + C * src[stride + 3] + D * src[stride + 4]));
+						dst[4] = (byte)OP_PUT(dst[4], (A * src[4] + B * src[5] + C * src[stride + 4] + D * src[stride + 5]));
+						dst[5] = (byte)OP_PUT(dst[5], (A * src[5] + B * src[6] + C * src[stride + 5] + D * src[stride + 6]));
+						dst[6] = (byte)OP_PUT(dst[6], (A * src[6] + B * src[7] + C * src[stride + 6] + D * src[stride + 7]));
+						dst[7] = (byte)OP_PUT(dst[7], (A * src[7] + B * src[8] + C * src[stride + 7] + D * src[stride + 8]));
+						dst += stride;
+						src += stride;
+					}
 				}
-			}
-			else
-			{
-				int E = B + C;
-				int step = (C != 0 ? stride : 1);
-				for (i = 0; i < h; i++)
+				else
 				{
-					dst_base[dst_offset + 0] = (byte)OP_PUT(dst_base[dst_offset + 0], (A * src_base[src_offset + 0] + E * src_base[src_offset + step + 0]));
-					dst_base[dst_offset + 1] = (byte)OP_PUT(dst_base[dst_offset + 1], (A * src_base[src_offset + 1] + E * src_base[src_offset + step + 1]));
-					dst_base[dst_offset + 2] = (byte)OP_PUT(dst_base[dst_offset + 2], (A * src_base[src_offset + 2] + E * src_base[src_offset + step + 2]));
-					dst_base[dst_offset + 3] = (byte)OP_PUT(dst_base[dst_offset + 3], (A * src_base[src_offset + 3] + E * src_base[src_offset + step + 3]));
-					dst_base[dst_offset + 4] = (byte)OP_PUT(dst_base[dst_offset + 4], (A * src_base[src_offset + 4] + E * src_base[src_offset + step + 4]));
-					dst_base[dst_offset + 5] = (byte)OP_PUT(dst_base[dst_offset + 5], (A * src_base[src_offset + 5] + E * src_base[src_offset + step + 5]));
-					dst_base[dst_offset + 6] = (byte)OP_PUT(dst_base[dst_offset + 6], (A * src_base[src_offset + 6] + E * src_base[src_offset + step + 6]));
-					dst_base[dst_offset + 7] = (byte)OP_PUT(dst_base[dst_offset + 7], (A * src_base[src_offset + 7] + E * src_base[src_offset + step + 7]));
-					dst_offset += stride;
-					src_offset += stride;
+					int E = B + C;
+					int step = (C != 0 ? stride : 1);
+					for (i = 0; i < h; i++)
+					{
+						dst[0] = (byte)OP_PUT(dst[0], (A * src[0] + E * src[step + 0]));
+						dst[1] = (byte)OP_PUT(dst[1], (A * src[1] + E * src[step + 1]));
+						dst[2] = (byte)OP_PUT(dst[2], (A * src[2] + E * src[step + 2]));
+						dst[3] = (byte)OP_PUT(dst[3], (A * src[3] + E * src[step + 3]));
+						dst[4] = (byte)OP_PUT(dst[4], (A * src[4] + E * src[step + 4]));
+						dst[5] = (byte)OP_PUT(dst[5], (A * src[5] + E * src[step + 5]));
+						dst[6] = (byte)OP_PUT(dst[6], (A * src[6] + E * src[step + 6]));
+						dst[7] = (byte)OP_PUT(dst[7], (A * src[7] + E * src[step + 7]));
+						dst += stride;
+						src += stride;
+					}
 				}
 			}
 		}
 
 		//	static void OPNAME ## h264_chroma_mc2_c(uint8_t *dst/*align 8*/, uint8_t *src/*align 1*/, int stride, int h, int x, int y){
-		public void avg_h264_chroma_mc2_c(byte[] dst_base/*align 8*/, int dst_offset,
-				byte[] src_base/*align 1*/, int src_offset, int stride, int h, int x, int y)
+		public void avg_h264_chroma_mc2_c(byte[] dst_base/*align 8*/, int dst_offset,byte[] src_base/*align 1*/, int src_offset, int stride, int h, int x, int y)
 		{
 			int A = (8 - x) * (8 - y);
 			int B = (x) * (8 - y);

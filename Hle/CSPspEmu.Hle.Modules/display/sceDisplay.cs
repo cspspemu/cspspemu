@@ -107,17 +107,37 @@ namespace CSPspEmu.Hle.Modules.display
 		/// <param name="Sync">One of ::PspDisplaySetBufSync</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x289D82FE, FirmwareVersion = 150)]
+		//[HlePspNotImplemented]
 		public int sceDisplaySetFrameBuf(uint Address, int BufferWidth, GuPixelFormats PixelFormat, PspDisplay.SyncMode Sync)
 		{
-			if (Sync != Core.Display.PspDisplay.SyncMode.Immediate)
+			Action UpdateInfo = () =>
 			{
-				//Console.Error.WriteLine("Not immediate!");
+				PspDisplay.CurrentInfo.Enabled = (Address != 0);
+				if (PspDisplay.CurrentInfo.Enabled)
+				{
+					PspDisplay.CurrentInfo.FrameAddress = Address;
+					PspDisplay.CurrentInfo.BufferWidth = BufferWidth;
+					PspDisplay.CurrentInfo.PixelFormat = PixelFormat;
+				}
+			};
+			switch (Sync)
+			{
+				case PspDisplay.SyncMode.Immediate:
+					UpdateInfo();
+					break;
+				case Core.Display.PspDisplay.SyncMode.NextFrame:
+					ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.Display, "sceDisplaySetFrameBuf", null, (WakeUp) =>
+					{
+						PspDisplay.VBlankCallbackOnce(() =>
+						{
+							UpdateInfo();
+							WakeUp();
+						});
+					}, HandleCallbacks: false);
+					break;
+				default:
+					throw(new NotImplementedException("Not implemented " + Sync));
 			}
-			//Console.WriteLine("sceDisplay.sceDisplaySetFrameBuf {0:X},{1},{2},{3}", Address, BufferWidth, PixelFormat, Sync);
-			PspDisplay.CurrentInfo.FrameAddress = Address;
-			PspDisplay.CurrentInfo.BufferWidth = BufferWidth;
-			PspDisplay.CurrentInfo.PixelFormat = PixelFormat;
-			PspDisplay.CurrentInfo.Sync = Sync;
 			return 0;
 		}
 

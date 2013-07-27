@@ -118,19 +118,19 @@ namespace CSPspEmu.Core.Memory
 
 		public bool IsNull { get { return Address == 0; } }
 
-		public unsafe void* GetPointer(PspMemory pspMemory, int Size)
+		public unsafe void* GetPointer(PspMemory PspMemory, int Size)
 		{
-			return pspMemory.PspPointerToPointerSafe(this, Size);
+			return PspMemory.PspPointerToPointerSafe(this, Size);
 		}
 
-		public unsafe void* GetPointer<TType>(PspMemory pspMemory)
+		public unsafe void* GetPointer<TType>(PspMemory PspMemory)
 		{
-			return pspMemory.PspPointerToPointerSafe(this, Marshal.SizeOf(typeof(TType)));
+			return PspMemory.PspPointerToPointerSafe(this, Marshal.SizeOf(typeof(TType)));
 		}
 
-		public unsafe void* GetPointerNotNull<TType>(PspMemory pspMemory)
+		public unsafe void* GetPointerNotNull<TType>(PspMemory PspMemory)
 		{
-			var Pointer = this.GetPointer<TType>(pspMemory);
+			var Pointer = this.GetPointer<TType>(PspMemory);
 			if (Pointer == null) throw(new NullReferenceException(String.Format("Pointer for {0} can't be null", typeof(TType))));
 			return Pointer;
 		}

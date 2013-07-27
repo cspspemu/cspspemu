@@ -68,6 +68,19 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 		}
 
+		override public void InvalidateCache(uint Address, int Size)
+		{
+			ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.White, () =>
+			{
+				//foreach ()
+				Console.WriteLine("OnMemoryWrite: {0:X8}, {1}", Address, Size);
+				foreach (var DrawBufferTexture in DrawBufferTextures)
+				{
+					Console.WriteLine("::{0:X8}", DrawBufferTexture.Key.Address);
+				}
+			});
+		}
+
 		void IInjectInitialize.Initialize()
 		{
 			this.TextureCache = new TextureCacheOpengl(this.Memory, this);

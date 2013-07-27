@@ -535,5 +535,20 @@ namespace CSPspEmu.Core.Utils
 
 			return Hashing.FastHash((byte*)Input, TotalBytes, (ulong)((int)PixelFormat * Width * Height));
 		}
+
+		public static void Encode(GuPixelFormats GuPixelFormat, OutputPixel* Input, byte* _Output, int Count)
+		{
+			switch (GuPixelFormat)
+			{
+				case GuPixelFormats.RGBA_8888:
+					{
+						var Output = (OutputPixel*)_Output;
+						for (int n = 0; n < Count; n++) *Output++ = *Input++;
+					}
+					break;
+				default:
+					throw(new NotImplementedException("Not implemented " + GuPixelFormat));
+			}
+		}
 	}
 }

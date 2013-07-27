@@ -34,10 +34,11 @@ namespace CSPspEmu.Core.Display
 
 		public Info CurrentInfo = new Info()
 		{
+			Enabled = true,
 			FrameAddress = 0x04000000,
 			BufferWidth = 512,
 			PixelFormat = GuPixelFormats.RGBA_8888,
-			Sync = SyncMode.Immediate,
+			//Sync = SyncMode.Immediate,
 			Mode = 0,
 			Width = 480,
 			Height = 272,
@@ -51,10 +52,11 @@ namespace CSPspEmu.Core.Display
 
 		public struct Info 
 		{
+			public bool Enabled;
 			public uint FrameAddress;
 			public int BufferWidth;
 			public GuPixelFormats PixelFormat;
-			public SyncMode Sync;
+			//public SyncMode Sync;
 			public int Mode;
 			public int Width;
 			public int Height;
@@ -84,6 +86,17 @@ namespace CSPspEmu.Core.Display
 		}
 
 		static public event Action VBlankCallback;
+
+		public void VBlankCallbackOnce(Action Callback)
+		{
+			Action Callback2 = null;
+			Callback2  = () =>
+			{
+				VBlankCallback -= Callback2;
+				Callback();
+			};
+			VBlankCallback += Callback2;
+		}
 
 		public void TriggerVBlankStart()
 		{

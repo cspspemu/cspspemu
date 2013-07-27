@@ -801,8 +801,10 @@ namespace CSPspEmu.Hle.Formats.audio.At3
 								{
 									for (int a1 = 0; a1 < 0x80; a1++)
 									{
-										l2080[a0][a1] += MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_0[table_59e660[chn_info[0].joint_chn_info.var9c] + a1]
-											* tmpf0;
+										// @TODO: Check
+										int index1 = table_59e660[chn_info[0].joint_chn_info.var9c];
+										//int index1 = table_59e660[chn_info[0].joint_chn_info.var9c % table_59e660.Length];
+										l2080[a0][a1] += MaiAT3PlusCoreDecoder_StaticData.MAPCDSD_table_static_0[index1 + a1] * tmpf0;
 									}
 									chn_info[0].joint_chn_info.var9c++;
 								}

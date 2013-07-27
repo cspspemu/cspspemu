@@ -15,6 +15,10 @@ namespace CSPspEmu.Core.Gpu
 
 		public abstract void BeforeDraw(GpuStateStruct* GpuState);
 
+		public virtual void InvalidateCache(uint Address, int Size)
+		{
+		}
+
 		public virtual void TextureFlush(GpuStateStruct* GpuState)
 		{
 		}

@@ -52,23 +52,28 @@ namespace cscodec
 			int stride = f.linesize[0];
 			int strideChroma = f.linesize[1];
 
-			for (int y = 0; y < f.imageHeight; y++)
+			fixed (int* rgbPtr = rgb)
 			{
-				int lineOffLuma = y * stride;
-				int lineOffChroma = (y >> 1) * strideChroma;
-
-				for (int x = 0; x < f.imageWidth; x++)
+				for (int y = 0; y < f.imageHeight; y++)
 				{
-					int c = luma[lineOffLuma + x] - 16;
-					int d = cb[lineOffChroma + (x >> 1)] - 128;
-					int e = cr[lineOffChroma + (x >> 1)] - 128;
+					int lineOffLuma = y * stride;
+					int lineOffChroma = (y >> 1) * strideChroma;
 
-					byte red = (byte)MathUtils.Clamp((298 * c + 409 * e + 128) >> 8, 0, 255);
-					byte green = (byte)MathUtils.Clamp((298 * c - 100 * d - 208 * e + 128) >> 8, 0, 255);
-					byte blue = (byte)MathUtils.Clamp((298 * c + 516 * d + 128) >> 8, 0, 255);
-					byte alpha = 255;
+					for (int x = 0; x < f.imageWidth; x++)
+					{
+						int c = luma[lineOffLuma + x] - 16;
+						int d = cb[lineOffChroma + (x >> 1)] - 128;
+						int e = cr[lineOffChroma + (x >> 1)] - 128;
 
-					rgb[lineOffLuma + x] = (alpha << 24) | (red << 16) | (green << 8) | (blue << 0);
+						var c298 = 298 * c;
+
+						byte red = (byte)MathUtils.Clamp((c298 + 409 * e + 128) >> 8, 0, 255);
+						byte green = (byte)MathUtils.Clamp((c298 - 100 * d - 208 * e + 128) >> 8, 0, 255);
+						byte blue = (byte)MathUtils.Clamp((c298 + 516 * d + 128) >> 8, 0, 255);
+						byte alpha = 255;
+
+						rgbPtr[lineOffLuma + x] = (alpha << 24) | (red << 16) | (green << 8) | (blue << 0);
+					}
 				}
 			}
 		}

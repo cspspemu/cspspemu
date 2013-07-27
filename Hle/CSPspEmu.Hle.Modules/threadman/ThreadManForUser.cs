@@ -103,7 +103,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspNotImplemented]
 		public int sceKernelSetAlarm(int clock, /*SceKernelAlarmHandler*/uint handler, uint common)
 		{
-			throw(new NotImplementedException());
+			//throw(new NotImplementedException());
 			return -1;
 		}
 

@@ -20,7 +20,7 @@ using MiniGL;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-	public sealed partial class OpenglGpuImpl
+	unsafe public sealed partial class OpenglGpuImpl
 	{
 		//Thread CThread;
 		AutoResetEvent StopEvent = new AutoResetEvent(false);
@@ -115,6 +115,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		//[HandleProcessCorruptedStateExceptions]
 		public override void InitSynchronizedOnce()
 		{
+			//Memory.WriteBytesHook += OnMemoryWrite;
+
 			if (!AlreadyInitialized)
 			{
 				AlreadyInitialized = true;
