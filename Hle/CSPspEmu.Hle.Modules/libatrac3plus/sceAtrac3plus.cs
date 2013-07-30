@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using CSharpUtils;
 using CSharpUtils.Arrays;
@@ -79,7 +80,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			}
 		}
 
-		[HleUidPoolClass(NotFoundError = SceKernelErrors.ERROR_ATRAC_BAD_ID, FirstItem = 0)]
+		[HleUidPoolClass(NotFoundError = SceKernelErrors.ERROR_ATRAC_BAD_ID, FirstItem = 0, ReuseIds = true)]
 		public class Atrac : IHleUidPoolClass
 		{
 			[Inject]
@@ -446,6 +447,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			{
 				get
 				{
+					if (this.BlockSize == 0) return -1;
 					return (int)(this.DataStream.Available() / this.BlockSize);
 				}
 			}
@@ -457,6 +459,8 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 			/// <returns></returns>
 			public int Decode(StereoShortSoundSample* SamplesOut)
 			{
+				if (SamplesOut == null) return 0;
+
 				//Console.Error.WriteLine("Decode");
 				try
 				{
@@ -524,7 +528,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		public Atrac sceAtracSetDataAndGetID(byte* DataPointer, int DataLength)
 		{
 			//var Data = ArrayUtils.CreateArray<byte>(DataPointer, DataLength);
-			return new Atrac(InjectContext, DataPointer, DataLength);
+			return TryToAlloc(new Atrac(InjectContext, DataPointer, DataLength));
 		}
 
 		/// <summary>
@@ -659,24 +663,21 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// </param>
 		/// <returns>Less than 0 on error, otherwise 0</returns>
 		[HlePspFunction(NID = 0x6A8C3CD5, FirmwareVersion = 150)]
-		public int sceAtracDecodeData(Atrac Atrac, StereoShortSoundSample* SamplesOut, int* DecodedSamples, int* ReachedEnd, int* RemainingFramesToDecode)
+		//[HlePspNotImplemented]
+		public int sceAtracDecodeData(Atrac Atrac, StereoShortSoundSample* SamplesOut, [HleInvalidAsInvalidPointer] out int DecodedSamples, [HleInvalidAsInvalidPointer] out int ReachedEnd, [HleInvalidAsInvalidPointer] out int RemainingFramesToDecode)
 		{
-			if (SamplesOut == null) return -1;
-			int* Temp = stackalloc int[1];
-			if (DecodedSamples == null) DecodedSamples = Temp;
-			if (ReachedEnd == null) ReachedEnd = Temp;
-			if (RemainingFramesToDecode == null) RemainingFramesToDecode = Temp;
-			return _sceAtracDecodeData(Atrac, SamplesOut, out *DecodedSamples, out *ReachedEnd, out *RemainingFramesToDecode);
+			return _sceAtracDecodeData(Atrac, SamplesOut, out DecodedSamples, out ReachedEnd, out RemainingFramesToDecode);
 		}
 
 		private int _sceAtracDecodeData(Atrac Atrac, StereoShortSoundSample* SamplesOut, out int DecodedSamples, out int ReachedEnd, out int RemainingFramesToDecode)
 		{
 			// Decode
 			DecodedSamples = Atrac.Decode(SamplesOut);
+			ReachedEnd = 0;
+			RemainingFramesToDecode = Atrac.RemainingFrames;
 
 			//Console.WriteLine("{0}/{1} -> {2} : {3}", Atrac.DecodingOffsetInSamples, Atrac.TotalSamples, DecodedSamples, Atrac.DecodingReachedEnd);
 
-			RemainingFramesToDecode = Atrac.RemainingFrames;
 
 			if (Atrac.DecodingReachedEnd)
 			{
@@ -685,6 +686,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 					DecodedSamples = 0;
 					ReachedEnd = 1;
 					RemainingFramesToDecode = 0;
+					Console.WriteLine("SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED)");
 					throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED));
 				}
 				if (Atrac.NumberOfLoops > 0) Atrac.NumberOfLoops--;
@@ -692,7 +694,6 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 				Atrac.DecodingOffset = (Atrac.LoopInfoList.Length > 0) ? Atrac.LoopInfoList[0].StartSample : 0;
 			}
 
-			ReachedEnd = 0;
 			//return Atrac.GetUidIndex(InjectContext);
 			return 0;
 		}
@@ -703,7 +704,7 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// <param name="AtracId">The atrac ID to release</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x61EB33F5, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
+		[HlePspNotImplemented]
 		public int sceAtracReleaseAtracID(Atrac Atrac)
 		{
 			Atrac.RemoveUid(InjectContext);
@@ -719,7 +720,33 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public Atrac sceAtracGetAtracID(CodecType CodecType)
 		{
-			return new Atrac(InjectContext, CodecType);
+			if (CodecType != CodecType.PSP_MODE_AT_3 && CodecType != CodecType.PSP_MODE_AT_3_PLUS)
+			{
+				throw(new SceKernelException(SceKernelErrors.ATRAC_ERROR_INVALID_CODECTYPE));
+			}
+
+			return TryToAlloc(new Atrac(InjectContext, CodecType));
+		}
+
+		private Atrac TryToAlloc(Atrac Atrac)
+		{
+			var CodecType = Atrac.CodecType;
+			var Count = InjectContext.GetInstance<HleUidPoolManager>().List<Atrac>().Count(_Atrac => _Atrac.CodecType == CodecType);
+			if (CodecType == CodecType.PSP_MODE_AT_3_PLUS)
+			{
+				if (Count >= MaxAtrac3Plus)
+				{
+					throw (new SceKernelException(SceKernelErrors.ATRAC_ERROR_NO_ATRACID));
+				}
+			}
+			else if (CodecType == CodecType.PSP_MODE_AT_3)
+			{
+				if (Count >= MaxAtrac3)
+				{
+					throw (new SceKernelException(SceKernelErrors.ATRAC_ERROR_NO_ATRACID));
+				}
+			}
+			return Atrac;
 		}
 
 		/// <summary>
@@ -863,9 +890,9 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		//[HlePspNotImplemented]
 		public int sceAtracGetNextDecodePosition(Atrac Atrac, out int SamplePosition)
 		{
+			if (Atrac.DecodingReachedEnd) throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED));
 			SamplePosition = Atrac.DecodingOffset;
 			//Console.WriteLine("  {0}", SamplePosition);
-			if (Atrac.DecodingReachedEnd) throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_ALL_DATA_DECODED));
 			return 0;
 		}
 
@@ -944,11 +971,16 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		/// <param name="Channels"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x31668baa, FirmwareVersion = 250)]
+		//[HlePspNotImplemented]
 		public int sceAtracGetChannel(Atrac Atrac, out int Channels)
 		{
 			Channels = Atrac.Format.AtracChannels;
 			return 0;
 		}
+
+		private const int MAX_PSP_NUM_ATRAC_IDS = 6;
+		int MaxAtrac3Plus = 2;
+		int MaxAtrac3 = 2;
 
 		/// <summary>
 		/// 
@@ -959,7 +991,44 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		[HlePspNotImplemented]
 		public int sceAtracReinit(int at3Count, int at3plusCount)
 		{
-			throw (new SceKernelException((SceKernelErrors)(-1)));
+			//int at3CountAlready = InjectContext.GetInstance<HleUidPoolManager>().List<Atrac>().Count(Atrac => Atrac.CodecType == CodecType.PSP_MODE_AT_3);
+			//int at3PlusCountAlready = InjectContext.GetInstance<HleUidPoolManager>().List<Atrac>().Count(Atrac => Atrac.CodecType == CodecType.PSP_MODE_AT_3_PLUS);
+			//
+			//if (at3CountAlready == at3Count && at3PlusCountAlready == at3plusCount)
+			//{
+			//	throw (new SceKernelException(SceKernelErrors.ERROR_BUSY));
+			//}
+
+			InjectContext.GetInstance<HleUidPoolManager>().RemoveAll<Atrac>();
+
+			int Space = MAX_PSP_NUM_ATRAC_IDS;
+			MaxAtrac3Plus = 0;
+			MaxAtrac3 = 0;
+			for (int n = 0; n < at3plusCount; n++)
+			{
+				if (Space >= 2)
+				{
+					Space -= 2;
+					MaxAtrac3Plus++;
+				}
+				else
+				{
+					throw (new SceKernelException(SceKernelErrors.ERROR_OUT_OF_MEMORY));
+				}
+			}
+			for (int n = 0; n < at3Count; n++)
+			{
+				if (Space >= 1)
+				{
+					Space -= 1;
+					MaxAtrac3++;
+				}
+				else
+				{
+					throw (new SceKernelException(SceKernelErrors.ERROR_OUT_OF_MEMORY));
+				}
+			}
+			return 0;
 		}
 
 		/// <summary>

@@ -119,7 +119,7 @@ namespace CSPspEmu.Hle.Formats.video
 		public class Packet
 		{
 			public ChunkType Type;
-			public Stream Stream;
+			public MemoryStream Stream;
 
 			public override string ToString()
 			{
@@ -144,27 +144,25 @@ namespace CSPspEmu.Hle.Formats.video
 			while (!Stream.Eof())
 			{
 				var StartCode = (uint)GetNextPacketAndSync();
-				switch ((ChunkType)StartCode)
+				var ChunkCodeType = (ChunkType)StartCode;
+				//ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Yellow, () => { Console.Error.WriteLine("ReadPacketizedElementaryStreamHeader: {0}: {1:X2}", (ChunkType)StartCode, StartCode); });
+
+				switch (ChunkCodeType)
 				{
 					// PACK_START_CODE
 					case ChunkType.Start:
+						Stream.Skip(10);
 						continue;
 					// SYSTEM_HEADER_START_CODE
 					case ChunkType.SystemHeader:
+						Stream.Skip(14);
 						continue;
 					// PADDING_STREAM
+					// PRIVATE_STREAM_2
+					case ChunkType.ST_Private2:
 					case ChunkType.ST_Padding:
 						Stream.Skip(Read16());
 						continue;
-					// PRIVATE_STREAM_2
-					case ChunkType.ST_Private2:
-						Stream.Skip(Read16());
-						continue;
-					/*
-					// PROGRAM_STREAM_MAP
-					case 0x1bc:
-						break;
-						*/
 				}
 
 				if (
@@ -173,7 +171,7 @@ namespace CSPspEmu.Hle.Formats.video
 					// Video Stream
 					(StartCode >= 0x1E0 && StartCode <= 0x1EF) ||
 					// Private Stream (Atrac3+)
-					StartCode == 0x1bd ||
+					ChunkCodeType == ChunkType.ST_Private1||
 					// ???
 					StartCode == 0x1fd
 				)
@@ -181,7 +179,8 @@ namespace CSPspEmu.Hle.Formats.video
 					// Found packet.
 					//Console.WriteLine("Position: 0x{0:X}", Stream.Position);
 					ushort PacketSize = Read16();
-					var PacketStream = Stream.ReadStream(PacketSize);
+					var PacketStream = Stream.ReadStreamCopy(PacketSize);
+					if (PacketStream.Length != PacketSize) throw(new Exception("Didn't read the entire packet"));
 					return new Packet()
 					{
 						Type = (ChunkType)StartCode,
@@ -198,7 +197,12 @@ namespace CSPspEmu.Hle.Formats.video
 		public struct PacketizedStream
 		{
 			public TimeStamp dts, pts;
-			public Stream Stream;
+			public MemoryStream Stream;
+
+			public override string ToString()
+			{
+				return String.Format("PacketizedStream(dts={0}, pts={1}, length={2})", dts.Value, pts.Value, Stream.Length);
+			}
 		}
 
 		public PacketizedStream ParsePacketizedStream(Stream PacketStream)
@@ -213,7 +217,8 @@ namespace CSPspEmu.Hle.Formats.video
 			{
 				var flags = (byte)PacketStream.ReadByte();
 				var header_len = (byte)PacketStream.ReadByte();
-				var HeaderStream = PacketStream.ReadStream(header_len);
+				var HeaderStream = PacketStream.ReadStreamCopy(header_len);
+				if (HeaderStream.Length != header_len) throw (new Exception("Didn't read the entire packet"));
 
 				//PacketStream.Skip(header_len);
 				
@@ -235,7 +240,7 @@ namespace CSPspEmu.Hle.Formats.video
 				}
 			}
 
-			PacketizedStream.Stream = PacketStream.ReadStream();
+			PacketizedStream.Stream = PacketStream.ReadStreamCopy();
 
 			return PacketizedStream;
 		}

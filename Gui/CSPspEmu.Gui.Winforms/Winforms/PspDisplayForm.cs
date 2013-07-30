@@ -63,9 +63,11 @@ namespace CSPspEmu.Gui.Winforms
 		float AnalogX = 0.0f, AnalogY = 0.0f;
 
 		GLControl GLControl;
+		Thread GuiThread;
 
 		public PspDisplayForm(IGuiExternalInterface IGuiExternalInterface)
 		{
+			GuiThread = Thread.CurrentThread;
 			Singleton = this;
 			Application.AddMessageFilter(this);
 
@@ -85,6 +87,7 @@ namespace CSPspEmu.Gui.Winforms
 
 			//GuiConfig.DefaultDisplayScale
 			DisplayScale = StoredConfig.DisplayScale;
+			RenderScale = StoredConfig.RenderScale;
 
 			updateResumePause();
 			UpdateCheckMenusFromConfig();
@@ -113,8 +116,9 @@ namespace CSPspEmu.Gui.Winforms
 				CheckForUpdates(NotifyIfNotFound: false);
 			}
 
-			if (Platform.OperatingSystem == Platform.OS.Windows)
-			//if (false)
+			Console.WriteLine("[1]");
+
+			if (Platform.OperatingSystem == Platform.OS.Windows && !Platform.IsMono)
 			{
 				GameListComponent = new GameListComponent();
 
@@ -139,6 +143,7 @@ namespace CSPspEmu.Gui.Winforms
 			}
 
 			PspDisplay.DrawEvent += PspDisplayTick;
+			Console.WriteLine("[2]");
 		}
 
 		private void PspDisplayTick()
@@ -151,7 +156,7 @@ namespace CSPspEmu.Gui.Winforms
 				{
 					try
 					{
-						this.Invoke((Action)(() =>
+						this.DoInvoke((Action)(() =>
 						{
 							UpdateTitle();
 							if (!GLControl.Visible) return;
@@ -216,9 +221,30 @@ namespace CSPspEmu.Gui.Winforms
 					//Console.WriteLine(this.menuStrip1.Height);
 					//Console.ReadKey();
 					//return 24;
+					//return this.menuStrip1.Visible ? this.menuStrip1.Height : 0;
+					if (IsFullScreen)
+					{
+						return 0;
+					}
 					return this.menuStrip1.Height;
 				}
 				return 0;
+			}
+		}
+
+		public int RenderScale
+		{
+			get
+			{
+				return GpuProcessor.GpuImpl.ScaleViewport;
+			}
+			set
+			{
+				GpuProcessor.GpuImpl.ScaleViewport = value;
+				UtilsRenderScale1xMenu.Checked = (value == 1);
+				UtilsRenderScale2xMenu.Checked = (value == 2);
+				UtilsRenderScale4xMenu.Checked = (value == 4);
+				StoredConfig.RenderScale = value;
 			}
 		}
 
@@ -398,12 +424,54 @@ namespace CSPspEmu.Gui.Winforms
 			}
 		}
 
+		bool IsFullScreen;
+
+		private void SetFullScreen(bool SetFullScreen)
+		{
+			IsFullScreen = SetFullScreen;
+			if (SetFullScreen)
+			{
+				this.TopMost = true;
+				this.MainMenuStrip.Visible = false;
+				this.FormBorderStyle = FormBorderStyle.None;
+				this.MaximumSize = new Size(4096, 4096);
+				this.WindowState = FormWindowState.Maximized;
+				Cursor.Hide();
+			}
+			else
+			{
+				this.MainMenuStrip.Visible = true;
+				this.TopMost = false;
+				this.FormBorderStyle = FormBorderStyle.Sizable;
+				this.MaximumSize = new Size(4096, 4096);
+				this.WindowState = FormWindowState.Normal;
+				Cursor.Show();
+			}
+		}
+
 		bool PressingShift = false;
 		bool PressingCtrl = false;
+		//bool PressingAlt = false;
 		bool IMessageFilter.PreFilterMessage(ref Message msg)
 		{
+			//Console.WriteLine(msg);
 			switch (msg.Msg)
 			{
+				// WM_SYSKEYDOWN
+				case 0x104:
+				// WM_SYSKEYUP
+				case 0x105:
+					//Console.WriteLine(msg);
+					if (((int)msg.WParam) == 0xd)
+					{
+						if (msg.Msg == 0x104)
+						{
+							SetFullScreen(!IsFullScreen);
+							return true;
+						}
+						//PressingAlt = (msg.Msg == 0x104);
+					}
+					break;
 				case 0x100: // WM_KEYDOWN
 				case 0x101: // WM_KEYUP
 					var Key = (Keys)msg.WParam;
@@ -424,11 +492,11 @@ namespace CSPspEmu.Gui.Winforms
 					{
 						if (msg.Msg == 256)
 						{
-							PspDisplayForm.Singleton.DoKeyDown(Key);
+							return PspDisplayForm.Singleton.DoKeyDown(Key);
 						}
 						else
 						{
-							PspDisplayForm.Singleton.DoKeyUp(Key);
+							return PspDisplayForm.Singleton.DoKeyUp(Key);
 						}
 						return false;
 					}
@@ -438,32 +506,33 @@ namespace CSPspEmu.Gui.Winforms
 			return false;
 		}
 
-		internal void DoKeyDown(Keys KeyCode)
+		internal bool DoKeyDown(Keys KeyCode)
 		{
 			//Console.WriteLine("DoKeyDown: {0}", KeyCode);
 			switch (KeyCode)
 			{
-				case Keys.D1: DisplayScale = 1; break;
-				case Keys.D2: DisplayScale = 2; break;
-				case Keys.D3: DisplayScale = 3; break;
-				case Keys.D4: DisplayScale = 4; break;
-				case Keys.O:
-					break;
+				case Keys.D1: DisplayScale = 1; return true;
+				case Keys.D2: DisplayScale = 2; return true;
+				case Keys.D3: DisplayScale = 3; return true;
+				case Keys.D4: DisplayScale = 4; return true;
 				//case Keys.F2: IGuiExternalInterface.ShowDebugInformation(); break;
 			}
 
 			TryUpdateAnalog(KeyCode, true);
 
 			SceCtrlData.UpdateButtons(GetButtonsFromKeys(KeyCode), true);
+			return false;
 		}
 
-		internal void DoKeyUp(Keys KeyCode)
+		internal bool DoKeyUp(Keys KeyCode)
 		{
 			//Console.WriteLine("DoKeyUp: {0}", KeyCode);
 
 			TryUpdateAnalog(KeyCode, false);
 
 			SceCtrlData.UpdateButtons(GetButtonsFromKeys(KeyCode), false);
+
+			return false;
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
@@ -497,6 +566,7 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			var BackgroundThread = new Thread(() =>
 			{
+				Console.WriteLine("PauseResume");
 				PauseResume(() =>
 				{
 					OpenFileReal(FilePath);
@@ -506,19 +576,39 @@ namespace CSPspEmu.Gui.Winforms
 			BackgroundThread.Start();
 		}
 
+		private void DoInvoke(Action Action)
+		{
+			//if (this.InvokeRequired && GuiThread != Thread.CurrentThread && !Platform.IsMono)
+			if (this.InvokeRequired && GuiThread != Thread.CurrentThread)
+			{
+				this.Invoke(Action);
+			}
+			else
+			{
+				Action();
+			}
+		}
+
 		private void OpenFileReal(string FilePath)
 		{
-			this.Invoke(new Action(() =>
+			Console.WriteLine("OpenFileReal");
+
+			this.DoInvoke(new Action(() =>
 			{
+				Console.WriteLine("[a]");
 				if (GameListComponent != null)
 				{
 					EnablePspDisplay(true);
 				}
 				this.Focus();
+				Console.WriteLine("[b]");
 			}));
+
+			Console.WriteLine("[c]");
 
 			OpenRecentHook(FilePath);
 			IGuiExternalInterface.LoadFile(FilePath);
+			Console.WriteLine("[d]");
 		}
 
 		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -913,7 +1003,7 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void UpdateRecentList()
 		{
-			this.Invoke(new Action(() =>
+			this.DoInvoke(new Action(() =>
 			{
 				try
 				{
@@ -1005,6 +1095,21 @@ namespace CSPspEmu.Gui.Winforms
 			{
 				InjectContext.NewInstance<FunctionViewerForm>().ShowDialog();
 			});
+		}
+
+		private void UtilsRenderScale1xMenu_Click(object sender, EventArgs e)
+		{
+			RenderScale = 1;
+		}
+
+		private void UtilsRenderScale2xMenu_Click(object sender, EventArgs e)
+		{
+			RenderScale = 2;
+		}
+
+		private void UtilsRenderScale4xMenu_Click(object sender, EventArgs e)
+		{
+			RenderScale = 4;
 		}
 	}
 }

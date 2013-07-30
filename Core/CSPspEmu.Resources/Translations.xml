@@ -169,7 +169,7 @@
 		<text id="UtilsAssociateExtensionsMenu">
 			<translation lang="en">Associate Extensions (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
 			<translation lang="es">Asociar Extensiones (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
-      <translation lang="it">Associa Estensioni (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
+			<translation lang="it">Associa Estensioni (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
 			<translation lang="ja">准ファイル拡張子 （.PBP, .CSO, .DAX, .ELF, .PRX）</translation>
 			<translation lang="pt">Associar Extensões (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
 			<translation lang="fr">Associer Extensions (.PBP, .CSO, .DAX, .ELF, .PRX)</translation>
@@ -182,6 +182,14 @@
 			<translation lang="pt">&amp;Tamanho da janela</translation>
 			<translation lang="fr">&amp;Affichage</translation>
 		</text>
+		<text id="UtilsRenderScaleMenu">
+			<translation lang="en">&amp;Render scale</translation>
+			<translation lang="es">&amp;Escalado de renderización</translation>
+			<translation lang="it">&amp;Render scale</translation>
+			<translation lang="ja">&amp;Render scale</translation>
+			<translation lang="pt">&amp;Render scale</translation>
+			<translation lang="fr">&amp;Render scale</translation>
+		</text>
 		<text id="UtilsConfigureControllerMenu">
 			<translation lang="en">Configure &amp;Controller...</translation>
 			<translation lang="es">Configurar &amp;Controles...</translation>
@@ -190,38 +198,20 @@
 			<translation lang="pt">Configurar os &amp;Controles...</translation>
 			<translation lang="fr">Configurer &amp; les controles...</translation>
 		</text>
-		<text id="UtilsDisplay1xMenu">
-			<translation lang="en">1x</translation>
-			<translation lang="es">1x</translation>
-			<translation lang="it">1x</translation>
-			<translation lang="ja">1x</translation>
-			<translation lang="pt">1x</translation>
-			<translation lang="fr">1x</translation>
+		<text id="UtilsDisplay1xMenu"><translation lang="xx">1x</translation></text>
+		<text id="UtilsDisplay2xMenu"><translation lang="xx">2x</translation></text>
+		<text id="UtilsDisplay3xMenu"><translation lang="xx">3x</translation></text>
+		<text id="UtilsDisplay4xMenu"><translation lang="xx">3x</translation></text>
+		<text id="UtilsRenderScale1xMenu">
+			<translation lang="xx">1x</translation>
 		</text>
-		<text id="UtilsDisplay2xMenu">
-			<translation lang="en">2x</translation>
-			<translation lang="es">2x</translation>
-			<translation lang="it">2x</translation>
-			<translation lang="ja">2x</translation>
-			<translation lang="pt">2x</translation>
-			<translation lang="fr">2x</translation>
+		<text id="UtilsRenderScale2xMenu">
+			<translation lang="xx">2x</translation>
 		</text>
-		<text id="UtilsDisplay3xMenu">
-			<translation lang="en">3x</translation>
-			<translation lang="es">3x</translation>
-			<translation lang="it">3x</translation>
-			<translation lang="ja">3x</translation>
-			<translation lang="pt">3x</translation>
-			<translation lang="fr">3x</translation>
+		<text id="UtilsRenderScale4xMenu">
+			<translation lang="xx">4x</translation>
 		</text>
-		<text id="UtilsDisplay4xMenu">
-			<translation lang="en">4x</translation>
-			<translation lang="es">4x</translation>
-			<translation lang="it">4x</translation>
-			<translation lang="ja">4x</translation>
-			<translation lang="pt">4x</translation>
-			<translation lang="fr">4x</translation>
-		</text>
+
 		<text id="UtilsDumpMainMemoryMenu">
 			<translation lang="en">Dump Main Memory...</translation>
 			<translation lang="es">Volcar memoria principal...</translation>

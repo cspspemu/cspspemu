@@ -386,6 +386,7 @@ namespace CSPspEmu.Core.Cpu
 		/// <param name="TextWriter"></param>
 		public void DumpRegistersCpu(TextWriter TextWriter)
 		{
+			TextWriter.WriteLine("PC: 0x{0:X8}, HI: 0x{1:X8}, LO: 0x{2:X8}", PC, HI, LO);
 			for (int n = 0; n < 32; n++)
 			{
 				if (n % 4 != 0) TextWriter.Write(", ");

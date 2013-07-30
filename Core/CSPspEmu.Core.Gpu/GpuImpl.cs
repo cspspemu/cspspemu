@@ -1,10 +1,31 @@
 ﻿using System;
 using CSPspEmu.Core.Gpu.State;
+using CSPspEmu.Core.Types;
 
 namespace CSPspEmu.Core.Gpu
 {
 	public unsafe abstract class GpuImpl : PspPluginImpl
 	{
+		[Inject]
+		protected PspStoredConfig PspStoredConfig;
+
+		protected int _ScaleViewport = 1;
+
+		protected event Action<int> OnScaleViewport;
+
+		public int ScaleViewport
+		{
+			set
+			{
+				if (OnScaleViewport != null) OnScaleViewport(value);
+				this._ScaleViewport = value;
+			}
+			get
+			{
+				return _ScaleViewport;
+			}
+		}
+
 		public abstract void InitSynchronizedOnce();
 		public abstract void StopSynchronized();
 
@@ -14,6 +35,10 @@ namespace CSPspEmu.Core.Gpu
 		public abstract void Sync(GpuStateStruct* LastGpuState);
 
 		public abstract void BeforeDraw(GpuStateStruct* GpuState);
+
+		public virtual void InvalidateCache(uint Address, int Size)
+		{
+		}
 
 		public virtual void TextureFlush(GpuStateStruct* GpuState)
 		{
@@ -43,6 +68,10 @@ namespace CSPspEmu.Core.Gpu
 		public virtual void DrawCurvedSurface(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuStateStruct, VertexInfo[,] Patch, int UCount, int VCount)
 		{
 			Console.Error.WriteLine("GpuImpl.DrawCurvedSurface Not Implemented!!");
+		}
+
+		public virtual void DrawVideo(uint FrameBufferAddress, OutputPixel* OutputPixel, int Width, int Height)
+		{
 		}
 	}
 }

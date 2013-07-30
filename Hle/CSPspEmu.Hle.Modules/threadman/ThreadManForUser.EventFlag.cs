@@ -165,7 +165,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelSetEventFlag(HleEventFlag EventFlag, uint BitPattern)
 		{
 			//Console.WriteLine("FLAG:{0} : {1:X}", EventId, BitPattern);
-			EventFlag.Set(BitPattern);
+			EventFlag.SetBits(BitPattern);
 			return 0;
 		}
 
@@ -182,11 +182,28 @@ namespace CSPspEmu.Hle.Modules.threadman
 		///		ERROR_KERNEL_EVENT_FLAG_POLL_FAILED
 		///	</returns>
 		[HlePspFunction(NID = 0x30FD48F0, FirmwareVersion = 150)]
-		public int sceKernelPollEventFlag(HleEventFlag EventFlag, uint Bits, EventFlagWaitTypeSet WaitType, uint* OutBits)
+		public int sceKernelPollEventFlag([HleInvalidAsNull] HleEventFlag EventFlag, uint Bits, EventFlagWaitTypeSet WaitType, uint* OutBits)
 		{
+			if ((WaitType & ~EventFlagWaitTypeSet.MaskValidBits) != 0)
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MODE));
+			}
+			
+			// Poll seems to also fail when CLEAR and CLEARALL are used together, but not wait.
+			if ((WaitType & (EventFlagWaitTypeSet.Clear | EventFlagWaitTypeSet.ClearAll)) == (EventFlagWaitTypeSet.Clear | EventFlagWaitTypeSet.ClearAll))
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MODE));
+			}
+			
+			// Can't wait on 0, it never matches.
 			if (Bits == 0)
 			{
 				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_EVENT_FLAG_ILLEGAL_WAIT_PATTERN));
+			}
+
+			if (EventFlag == null)
+			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_NOT_FOUND_EVENT_FLAG));
 			}
 
 			bool Matched = EventFlag.Poll(Bits, WaitType, OutBits);
@@ -207,9 +224,20 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <returns>less than 0 on error</returns>
 		[HlePspFunction(NID = 0xA66B0120, FirmwareVersion = 150)]
 		//[HlePspNotImplemented]
-		public int sceKernelReferEventFlagStatus(HleEventFlag EventFlag, out EventFlagInfo Info)
+		public int sceKernelReferEventFlagStatus(HleEventFlag EventFlag, ref EventFlagInfo Info)
 		{
-			Info = EventFlag.Info;
+#if true
+			if (Info.Size != 0)
+			{
+				Info = EventFlag.Info;
+			}
+#else
+			fixed (void* OutPtr = &Info)
+			fixed (void* InPtr = &EventFlag.Info)
+			{
+				PointerUtils.Memcpy((byte*)OutPtr, (byte*)InPtr, Info.Size);
+			}
+#endif
 			//Console.WriteLine(Info);
 			return 0;
 		}

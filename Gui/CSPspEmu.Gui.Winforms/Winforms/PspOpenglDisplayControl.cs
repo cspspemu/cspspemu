@@ -44,12 +44,14 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 			var OpenglGpuImpl = (PspDisplayForm.Singleton.GpuProcessor.GpuImpl as OpenglGpuImpl);
 			if (OpenglGpuImpl != null)
 			{
-				var Texture = OpenglGpuImpl.GetDrawTexture(new CSPspEmu.Core.Gpu.Impl.Opengl.OpenglGpuImpl.DrawBufferKey()
+				var DrawBuffer = OpenglGpuImpl.GetCurrentDrawBufferTexture(new OpenglGpuImpl.DrawBufferKey()
 				{
 					Address = PspDisplayForm.Singleton.PspDisplay.CurrentInfo.FrameAddress,
 					//Width = PspDisplayForm.Singleton.PspDisplay.CurrentInfo.Width,
 					//Height = PspDisplayForm.Singleton.PspDisplay.CurrentInfo.Height
 				});
+
+				var Texture = DrawBuffer.TextureColor;
 
 				if (GL.IsTexture(Texture))
 				{
@@ -114,7 +116,6 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 			{
 				int Width = 512;
 				int Height = 272;
-				//var Address = PspDisplay.CurrentInfo.Address | 0x04000000; // It causes artifacts
 				var FrameAddress = PspDisplayForm.Singleton.PspDisplay.CurrentInfo.FrameAddress;
 				byte* FrameBuffer = null;
 				byte* DepthBuffer = null;
@@ -208,7 +209,13 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 
 		private void BindTex()
 		{
-			if (PspDisplayForm.Singleton.GpuProcessor.UsingGe)
+			//BindTexVram(); return;
+
+			if (PspDisplayForm.Singleton.PspDisplay.CurrentInfo.PlayingVideo)
+			{
+				BindTexVram();
+			}
+			else if (PspDisplayForm.Singleton.GpuProcessor.UsingGe)
 			{
 				if (!BindTexOpengl())
 				{
@@ -221,25 +228,44 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 			}
 		}
 
+		private void UnbindTex()
+		{
+			GL.BindTexture(TextureTarget.Texture2D, 0);
+		}
+
+		private void BindUnbindTex(Action Callback)
+		{
+			BindTex();
+			try
+			{
+				Callback();
+			}
+			finally
+			{
+				UnbindTex();
+			}
+		}
+
 		protected override void OnPaint(PaintEventArgs e)
 		{
-			if (!PspDisplayForm.Singleton.IGuiExternalInterface.IsInitialized())
-			{
-				GL.ClearColor(Color.Black);
-				GL.Clear(ClearBufferMask.ColorBufferBit);
-				return;
-			}
-
 			this.Top = PspDisplayForm.Singleton.MainMenuStripHeight;
 			this.Size = new System.Drawing.Size(PspDisplayForm.Singleton.ClientSize.Width, PspDisplayForm.Singleton.ClientSize.Height - this.Top);
 			int RectWidth = 512;
 			int RectHeight = 272;
-
-			//OpenglGpuImpl.RenderGraphicsContext.Update(
-
-			//OpenglGpuImpl.RenderGraphicsContext.MakeCurrent(this.WindowInfo);
-
 			GL.Viewport(this.ClientRectangle);
+
+			if (
+				!PspDisplayForm.Singleton.IGuiExternalInterface.IsInitialized()
+				|| (!PspDisplayForm.Singleton.PspDisplay.CurrentInfo.Enabled && !PspDisplayForm.Singleton.PspDisplay.CurrentInfo.PlayingVideo)
+				//|| true
+			)
+			{
+				GL.ClearColor(Color.FromArgb(0xFF, 0x00, 0x00, 0x00));
+				GL.Clear(ClearBufferMask.ColorBufferBit);
+				SwapBuffers();
+				return;
+			}
+
 			GL.ClearColor(Color.Black);
 			GL.Clear(ClearBufferMask.ColorBufferBit);
 
@@ -249,26 +275,28 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
-			GL.Ortho(0, RectWidth, RectHeight, 0, 0, -0xFFFF);
+			GL.Ortho(0, RectWidth , RectHeight, 0, 0, -0xFFFF);
 
 			GL.Color3(Color.White);
-				
+
 			//UpdateTex();
-			BindTex();
-
-			float x0 = 0f, x1 = 1f * 480f / 512f;
-			float y0 = 0f, y1 = 1f;
-
-			if (TextureVerticalFlip) LanguageUtils.Swap(ref y0, ref y1);
-
-			GL.Begin(BeginMode.Quads);
+			BindUnbindTex(() =>
 			{
-				GL.TexCoord2(x0, y0); GL.Vertex2(0, 0);
-				GL.TexCoord2(x1, y0); GL.Vertex2(RectWidth, 0);
-				GL.TexCoord2(x1, y1); GL.Vertex2(RectWidth, RectHeight);
-				GL.TexCoord2(x0, y1); GL.Vertex2(0, RectHeight); 
-			}
-			GL.End();
+				float x0 = 0f, x1 = 1f * 480f / 512f;
+				float y0 = 0f, y1 = 1f;
+
+				if (TextureVerticalFlip) LanguageUtils.Swap(ref y0, ref y1);
+
+				GL.Begin(BeginMode.Quads);
+				{
+					GL.TexCoord2(x0, y0); GL.Vertex2(0, 0);
+					GL.TexCoord2(x1, y0); GL.Vertex2(RectWidth, 0);
+					GL.TexCoord2(x1, y1); GL.Vertex2(RectWidth, RectHeight);
+					GL.TexCoord2(x0, y1); GL.Vertex2(0, RectHeight);
+				}
+				GL.End();
+				GL.Flush();
+			});
 			SwapBuffers();
 		}
 

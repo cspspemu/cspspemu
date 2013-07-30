@@ -52,6 +52,11 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
+		public int RenderScale = 1;
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public bool UseFastMemory = true;
 
 		/// <summary>

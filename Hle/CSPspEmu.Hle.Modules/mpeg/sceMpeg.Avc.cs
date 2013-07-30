@@ -16,19 +16,20 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <summary>
 		/// sceMpegAvcDecodeDetail
 		/// </summary>
-		/// <param name="Mpeg">SceMpeg handle</param>
+		/// <param name="SceMpegPointer">SceMpeg handle</param>
 		/// <param name="AvcDecodeDetail">AvcDecodeDetail</param>
 		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0x0F6C18D7, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegAvcDecodeDetail(SceMpegPointer* Mpeg, AvcDecodeDetailStruct* AvcDecodeDetail)
+		public int sceMpegAvcDecodeDetail(SceMpegPointer* SceMpegPointer, AvcDecodeDetailStruct* AvcDecodeDetail)
 		{
-			var SceMpegData = GetSceMpegData(Mpeg);
+			var Mpeg = GetMpeg(SceMpegPointer);
+			var SceMpegData = GetSceMpegData(SceMpegPointer);
 
 			//throw(new NotImplementedException());
 			AvcDecodeDetail->AvcDecodeResult = 0;
 			AvcDecodeDetail->VideoFrameCount = 0;
-			AvcDecodeDetail->AvcDetailFrameWidth = 512;
+			AvcDecodeDetail->AvcDetailFrameWidth = SceMpegData->FrameWidth;
 			AvcDecodeDetail->AvcDetailFrameHeight = 272;
 			AvcDecodeDetail->FrameCropRectLeft = 0;
 			AvcDecodeDetail->FrameCropRectRight = 0;
@@ -42,13 +43,16 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <summary>
 		/// sceMpegAvcDecodeFlush
 		/// </summary>
-		/// <param name="Mpeg">SceMpeg handle</param>
+		/// <param name="SceMpegPointer">SceMpeg handle</param>
 		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0x4571CC64, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegAvcDecodeFlush(SceMpegPointer* Mpeg)
+		public int sceMpegAvcDecodeFlush(SceMpegPointer* SceMpegPointer)
 		{
-			var SceMpegData = GetSceMpegData(Mpeg);
+			var Mpeg = GetMpeg(SceMpegPointer);
+			var SceMpegData = GetSceMpegData(SceMpegPointer);
+
+			Mpeg.AvcFlush();
 
 			// Finish the Mpeg only if we are not at the start of a new video,
 			// otherwise the analyzed video could be lost.
@@ -75,18 +79,18 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <param name="DataAttributes">Unknown</param>
 		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0xFE246728, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceMpegGetAvcAu(SceMpegPointer* Mpeg, StreamId StreamId, SceMpegAu* MpegAccessUnit, int* DataAttributes)
+		//[HlePspNotImplemented]
+		public int sceMpegGetAvcAu(SceMpegPointer* SceMpegPointer, StreamId StreamId, out SceMpegAu MpegAccessUnit, int* DataAttributes)
 		{
 			if (DataAttributes != null)
 			{
 				*DataAttributes = 1;
 			}
 
-			throw(new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
-
-			//throw(new NotImplementedException());
-			//return 0;
+			var Mpeg = GetMpeg(SceMpegPointer);
+			if (!Mpeg.HasData) throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
+			MpegAccessUnit = Mpeg.GetAvcAu(StreamId);
+			return 0;
 		}
 
 		/// <summary>
@@ -127,13 +131,15 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <summary>
 		/// Sets the SceMpegAvcMode to a Mpeg
 		/// </summary>
-		/// <param name="Mpeg">SceMpeg handle</param>
+		/// <param name="SceMpegPointer">SceMpeg handle</param>
 		/// <param name="Mode">Pointer to <see cref="SceMpegAvcMode"/> struct defining the decode mode (pixelformat)</param>
 		/// <returns>0 if success.</returns>
 		[HlePspFunction(NID = 0xA11C7026, FirmwareVersion = 150)]
-		public int sceMpegAvcDecodeMode(SceMpegPointer* Mpeg, SceMpegAvcMode* Mode)
+		[HlePspNotImplemented]
+		public int sceMpegAvcDecodeMode(SceMpegPointer* SceMpegPointer, SceMpegAvcMode* Mode)
 		{
-			var SceMpegData = GetSceMpegData(Mpeg);
+			var Mpeg = GetMpeg(SceMpegPointer);
+			var SceMpegData = GetSceMpegData(SceMpegPointer);
 
 			if (Mode != null)
 			{
@@ -154,37 +160,39 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <summary>
 		/// sceMpegAvcDecode
 		/// </summary>
-		/// <param name="Mpeg">SceMpeg handle</param>
+		/// <param name="SceMpegPointer">SceMpeg handle</param>
 		/// <param name="MpegAccessUnit">Video Access Unit</param>
 		/// <param name="FrameWidth">Output buffer width, set to 512 if writing to framebuffer</param>
 		/// <param name="OutputBufferPointer">Buffer that will contain the decoded frame</param>
 		/// <param name="Init">Will be set to 0 on first call, then 1</param>
 		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0x0E3C2E9D, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceMpegAvcDecode(SceMpegPointer* Mpeg, SceMpegAu* MpegAccessUnit, int FrameWidth, PspPointer* OutputBufferPointer, int* Init)
+		//[HlePspNotImplemented]
+		public int sceMpegAvcDecode(SceMpegPointer* SceMpegPointer, SceMpegAu* MpegAccessUnit, int FrameWidth, PspPointer* OutputBufferPointer, PspPointer* Init)
 		{
-			if (*Init == 1)
-			{
-				throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
-			}
-			var SceMpegData = GetSceMpegData(Mpeg);
+			//if (*Init == 1)
+			//{
+			//	throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
+			//}
+
+			var SceMpegData = GetSceMpegData(SceMpegPointer);
+			var Mpeg = GetMpeg(SceMpegPointer);
 
 			// Dummy
 			var VideoPacket = new VideoPacket();
 			
 			//Console.Error.WriteLine("0x{0:X}", PspMemory.PointerToPspAddress(OutputBuffer));
-
-			var OutputBuffer = (byte*)Memory.PspAddressToPointerSafe(OutputBufferPointer->Address);
-
-			int TotalBytes = PixelFormatDecoder.GetPixelsSize(SceMpegData->SceMpegAvcMode.PixelFormat, FrameWidth * 272);
-			for (int n = 0; n < TotalBytes; n++)
-			{
-				OutputBuffer[n] = 0xFF;
-			}
+			//Console.WriteLine("{0:X8}", (*OutputBufferPointer).Address);
+			Mpeg.AvcDecode(
+				MpegAccessUnit,
+				FrameWidth,
+				SceMpegData->SceMpegAvcMode.PixelFormat,
+				(*OutputBufferPointer)
+			);
 
 			SceMpegData->AvcFrameStatus = 1;
-			*Init = SceMpegData->AvcFrameStatus;
+			//Init = SceMpegData->AvcFrameStatus;
+
 			//throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
 			return 0;
 		}
@@ -280,16 +288,20 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <summary>
 		/// sceMpegAvcDecodeStop
 		/// </summary>
-		/// <param name="Mpeg">SceMpeg handle</param>
+		/// <param name="SceMpegPointer">SceMpeg handle</param>
 		/// <param name="FrameWidth">Output buffer width, set to 512 if writing to framebuffer</param>
 		/// <param name="OutputBuffer">Buffer that will contain the decoded frame</param>
 		/// <param name="Status">Frame number</param>
 		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0x740FCCD1, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegAvcDecodeStop(SceMpegPointer* Mpeg, int FrameWidth, byte* OutputBuffer, out int Status)
+		public int sceMpegAvcDecodeStop(SceMpegPointer* SceMpegPointer, int FrameWidth, byte* OutputBuffer, out int Status)
 		{
-			var SceMpegData = GetSceMpegData(Mpeg);
+			//throw(new NotImplementedException());
+			var Mpeg = GetMpeg(SceMpegPointer);
+			var SceMpegData = GetSceMpegData(SceMpegPointer);
+
+			Mpeg.Stop();
 
 			Status = 0;
 

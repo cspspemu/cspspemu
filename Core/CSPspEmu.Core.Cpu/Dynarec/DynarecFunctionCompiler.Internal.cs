@@ -55,6 +55,8 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			uint MinPC;
 			uint MaxPC;
 
+			public List<uint> CallingPCs = new List<uint>();
+
 			uint InstructionsProcessed;
 
 			HashSet<uint> AnalyzedPC;
@@ -124,6 +126,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				return new DynarecFunction()
 				{
 					Name = CpuEmitter.SpecialName,
+					CallingPCs = CallingPCs,
 					EntryPC = EntryPC,
 					MinPC = MinPC,
 					MaxPC = MaxPC,
@@ -516,6 +519,10 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 								//);
 
 								//DummyTempCounter++;
+							}
+							else if (JumpDisasm.InstructionInfo.Name == "j" || JumpDisasm.InstructionInfo.Name == "jal")
+							{
+								CallingPCs.Add(JumpJumpPC);
 							}
 #endif
 

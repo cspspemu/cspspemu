@@ -53,10 +53,10 @@ namespace CSPspEmu.Hle
 			return (TType)CpuThreadState.CpuProcessor.InjectContext.GetInstance<HleUidPoolManager>().Get(typeof(TType), Index);
 		}
 
-		static public object GetObjectFromPoolHelper(CpuThreadState CpuThreadState, Type Type, int Index)
+		static public object GetObjectFromPoolHelper(CpuThreadState CpuThreadState, Type Type, int Index, bool CanReturnNull)
 		{
 			//Console.Error.WriteLine("GetObjectFromPoolHelper");
-			return CpuThreadState.CpuProcessor.InjectContext.GetInstance<HleUidPoolManager>().Get(Type, Index);
+			return CpuThreadState.CpuProcessor.InjectContext.GetInstance<HleUidPoolManager>().Get(Type, Index, CanReturnNull: CanReturnNull);
 		}
 
 		static public uint GetOrAllocIndexFromPoolHelper(CpuThreadState CpuThreadState, Type Type, IHleUidPoolClass Item)
@@ -104,6 +104,12 @@ namespace CSPspEmu.Hle
 				{
 					var ParameterType = ParameterInfo.ParameterType;
 
+					var HleInvalidAsNullAttribute = ParameterInfo.GetCustomAttribute<HleInvalidAsNullAttribute>();
+					var HleInvalidAsInvalidPointerAttribute = ParameterInfo.GetCustomAttribute<HleInvalidAsInvalidPointerAttribute>();
+					InvalidAddressAsEnum InvalidAddressAsEnum = InvalidAddressAsEnum.Exception;
+					if (HleInvalidAsNullAttribute != null) InvalidAddressAsEnum = InvalidAddressAsEnum.Null;
+					if (HleInvalidAsInvalidPointerAttribute != null) InvalidAddressAsEnum = InvalidAddressAsEnum.InvalidAddress;
+
 					// The CpuThreadState
 					if (ParameterType == typeof(CpuThreadState))
 					{
@@ -128,14 +134,6 @@ namespace CSPspEmu.Hle
 					else if (ParameterType.IsPointer || ParameterType.IsByRef)
 					{
 						AddGprIndex(ParameterInfo, typeof(uint));
-
-						var HleInvalidAsNullAttribute = ParameterInfo.GetCustomAttribute<HleInvalidAsNullAttribute>();
-						var HleInvalidAsInvalidPointerAttribute = ParameterInfo.GetCustomAttribute<HleInvalidAsInvalidPointerAttribute>();
-						InvalidAddressAsEnum InvalidAddressAsEnum = InvalidAddressAsEnum.Exception;
-						if (HleInvalidAsNullAttribute != null) InvalidAddressAsEnum = InvalidAddressAsEnum.Null;
-						if (HleInvalidAsInvalidPointerAttribute != null) InvalidAddressAsEnum = InvalidAddressAsEnum.InvalidAddress;
-
-						//Console.Error.WriteLine(ParameterInfo.CustomAttributes.Count());
 
 						AstParameters.Add(
 							ast.Cast(
@@ -208,10 +206,11 @@ namespace CSPspEmu.Hle
 						}
 
 						AstParameters.Add(ast.Cast(ParameterType, ast.CallStatic(
-							(Func<CpuThreadState, Type, int, object>)GetObjectFromPoolHelper,
+							(Func<CpuThreadState, Type, int, bool, object>)GetObjectFromPoolHelper,
 							ast.CpuThreadState,
 							ast.Immediate(ParameterType),
-							ast.GPR_s(GprIndex)
+							ast.GPR_s(GprIndex),
+							(InvalidAddressAsEnum == InvalidAddressAsEnum.Null)
 						)));
 
 						GprIndex++;

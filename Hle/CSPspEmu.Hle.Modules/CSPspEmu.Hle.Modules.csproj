@@ -93,11 +93,9 @@
     <Compile Include="libfont\sceLibFont.Font.cs" />
     <Compile Include="libfont\sceLibFont.Library.cs" />
     <Compile Include="modulemgr\sceModuleManager.cs" />
+    <Compile Include="mpeg\Mpeg.cs" />
     <Compile Include="mpeg\sceMpeg.Atrac.cs" />
-    <Compile Include="mpeg\sceMpeg.Au.cs" />
     <Compile Include="mpeg\sceMpeg.Avc.cs" />
-    <Compile Include="mpeg\sceMpeg.Ringbuffer.cs" />
-    <Compile Include="mpeg\sceMpeg.Streams.cs" />
     <Compile Include="mpeg\sceMpegbase.cs" />
     <Compile Include="pmfplayer\scePsmf.cs" />
     <Compile Include="pspnet\sceNetAdhocDiscover.cs" />
@@ -113,7 +111,6 @@
     <Compile Include="mediaman\sceUmdUser.cs" />
     <Compile Include="modulemgr\ModuleMgrForUser.cs" />
     <Compile Include="mpeg\sceMpeg.cs" />
-    <Compile Include="mpeg\sceMpeg.Utils.cs" />
     <Compile Include="openpsid\sceOpenPSID.cs" />
     <Compile Include="pmfplayer\scePsmfPlayer.cs" />
     <Compile Include="power\scePower.Callbacks.cs" />
@@ -208,6 +205,10 @@
     <ProjectReference Include="..\..\Core\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils.Drawing\CSharpUtils.Drawing.csproj">
+      <Project>{9b217880-48ae-43b6-ae1f-dc732fccbc7a}</Project>
+      <Name>CSharpUtils.Drawing</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Hle.Formats\CSPspEmu.Hle.Formats.csproj">
       <Project>{B7D8A67E-0046-4EF7-80FE-444BC7EFBC70}</Project>

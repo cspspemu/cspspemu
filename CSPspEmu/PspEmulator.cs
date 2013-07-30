@@ -127,7 +127,9 @@ namespace CSPspEmu
 		{
 			if (!Paused)
 			{
+				Console.WriteLine("Pausing...");
 				PspRunner.PauseSynchronized();
+				Console.WriteLine("Pausing...Ok");
 			}
 		}
 
@@ -209,6 +211,7 @@ namespace CSPspEmu
 
 		public void LoadFile(String FileName)
 		{
+			Console.WriteLine("LoadFile...{0}", FileName);
 			CreateNewContextAndRemoveOldOne();
 
 			if (File.Exists(FileName + ".cwcheat"))

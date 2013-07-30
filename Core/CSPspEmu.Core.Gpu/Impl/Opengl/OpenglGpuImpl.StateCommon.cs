@@ -10,7 +10,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
 	public sealed unsafe partial class OpenglGpuImpl
 	{
-		private static void PrepareStateCommon(GpuStateStruct* GpuState)
+		private void PrepareStateCommon(GpuStateStruct* GpuState)
 		{
 			var Viewport = GpuState->Viewport;
 			//ViewportStruct(
@@ -55,10 +55,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			int ScaledHeight = (int)(((double)ScreenHeight / (double)Viewport.RegionSize.Y) * (double)ScreenHeight);
 
 			GL.Viewport(
-				(int)Viewport.RegionTopLeft.X,
-				(int)Viewport.RegionTopLeft.Y,
-				ScaledWidth,
-				ScaledHeight
+				(int)Viewport.RegionTopLeft.X * ScaleViewport,
+				(int)Viewport.RegionTopLeft.Y * ScaleViewport,
+				ScaledWidth * ScaleViewport,
+				ScaledHeight * ScaleViewport
 			);
 		}
 	}

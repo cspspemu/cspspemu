@@ -84,12 +84,18 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 		{
 		}
 
-		public MethodCacheInfo(MethodCache MethodCache, Action<CpuThreadState> DelegateGeneratorForPC)
+		public MethodCacheInfo(MethodCache MethodCache, Action<CpuThreadState> DelegateGeneratorForPC, uint PC)
 		{
 			this.MethodCache = MethodCache;
 			this.FunctionDelegate = DelegateGeneratorForPC;
 			this.StaticField = ILInstanceHolder.TAlloc<Action<CpuThreadState>>(DelegateGeneratorForPC);
+			this.PC = PC;
 		}
+
+		/// <summary>
+		/// EntryPoint setted first.
+		/// </summary>
+		public uint PC;
 
 		/// <summary>
 		/// EntryPoint for this function.

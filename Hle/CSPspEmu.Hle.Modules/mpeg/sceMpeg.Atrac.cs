@@ -1,4 +1,5 @@
-﻿namespace CSPspEmu.Hle.Modules.mpeg
+﻿using CSPspEmu.Core.Memory;
+namespace CSPspEmu.Hle.Modules.mpeg
 {
 	public unsafe partial class sceMpeg
 	{
@@ -15,7 +16,6 @@
 		{
 			ElementaryStreamSize = MPEG_ATRAC_ES_SIZE;
 			OutputSize = MPEG_ATRAC_ES_OUTPUT_SIZE;
-			//throw(new NotImplementedException());
 			return 0;
 		}
 
@@ -29,11 +29,13 @@
 		/// <returns>0 if successful.</returns>
 		[HlePspFunction(NID = 0xE1CE83A7, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegGetAtracAu(SceMpegPointer* Mpeg, StreamId StreamId, SceMpegAu* MpegAccessUnit, void* Atrac3PlusPointer)
+		public int sceMpegGetAtracAu(SceMpegPointer* SceMpegPointer, StreamId StreamId, out SceMpegAu MpegAccessUnit, out PspPointer Atrac3PlusPointer)
 		{
-			//Mpeg->SceMpegData.
-
-			throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
+			var Mpeg = GetMpeg(SceMpegPointer);
+			if (!Mpeg.HasData) throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
+			MpegAccessUnit = Mpeg.GetAtracAu(StreamId);
+			Atrac3PlusPointer.Address = 0;
+			return 0;
 		}
 
 
@@ -49,10 +51,12 @@
 		/// </returns>
 		[HlePspFunction(NID = 0x800C44DF, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceMpegAtracDecode(SceMpegPointer* Mpeg, SceMpegAu* MpegAccessUnit, byte* OutputBuffer, int Init)
+		public int sceMpegAtracDecode(SceMpegPointer* SceMpegPointer, SceMpegAu* MpegAccessUnit, byte* OutputBuffer, int Init)
 		{
-			throw (new SceKernelException(SceKernelErrors.ERROR_ATRAC_NO_DATA));
+			var Mpeg = GetMpeg(SceMpegPointer);
+			if (!Mpeg.HasData) throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_DATA));
+			Mpeg.AtracDecode(MpegAccessUnit, OutputBuffer, (Init != 0));
+			return 0;
 		}
-
 	}
 }

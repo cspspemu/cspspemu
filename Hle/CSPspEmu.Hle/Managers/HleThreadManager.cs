@@ -65,29 +65,29 @@ namespace CSPspEmu.Hle.Managers
 			}
 		}
 
-		void IGpuConnector.Signal(uint PC, PspGeCallbackData CallbackData, uint Signal, SignalBehavior Behavior)
+		void IGpuConnector.Signal(uint PC, PspGeCallbackData CallbackData, uint Signal, SignalBehavior Behavior, bool ExecuteNow)
 		{
-			if (HleConfig.CompilerVersion <= 0x01FFFFFF) PC = 0;
+			if (_DynarecConfig.EnableGpuSignalsCallback)
+			{
+				if (HleConfig.CompilerVersion <= 0x01FFFFFF) PC = 0;
 
-			//Console.Error.WriteLine("HleThreadManager:: IGpuConnector.Signal :: 0x{0:X8}, 0x{1:X8}, 0x{2:X8}", CallbackData.SignalFunction, CallbackData.SignalArgument, PC);
-
-			//var Result = HleInterop.ExecuteFunctionNow(CallbackData.SignalFunction, new Object[] { Signal, CallbackData.SignalArgument, PC });
-			//Console.Error.WriteLine("   :: 0x{0:X8}", Result);
+				Console.Error.WriteLine("HleThreadManager:: IGpuConnector.Signal :: 0x{0:X8}, 0x{1:X8}, 0x{2:X8}, {3}, {4}", CallbackData.SignalFunction, CallbackData.SignalArgument, PC, Signal, Behavior);
+				HleInterop.ExecuteFunctionNowLater(CallbackData.SignalFunction, ExecuteNow, new Object[] { Signal, CallbackData.SignalArgument, PC });
+			}
+			else
+			{
+			}
 		}
 
-		void IGpuConnector.Finish(uint PC, PspGeCallbackData CallbackData, uint Arg)
+		void IGpuConnector.Finish(uint PC, PspGeCallbackData CallbackData, uint Arg, bool ExecuteNow)
 		{
-			//Console.Error.WriteLine("HleThreadManager:: IGpuConnector.Finish :: 0x{0:X8}, 0x{1:X8}, 0x{2:X8}", CallbackData.FinishFunction, CallbackData.FinishArgument, PC);
-			
-			//HleInterop.ExecuteFunctionLater(CallbackData.FinishFunction, (Result) => {
-			//	Console.Error.WriteLine("   :: 0x{0:X8}", Result);
-			//}, new Object[] { Arg, CallbackData.FinishArgument, PC });
+			if (_DynarecConfig.EnableGpuFinishCallback)
+			{
+				if (HleConfig.CompilerVersion <= 0x01FFFFFF) PC = 0;
 
-			if (HleConfig.CompilerVersion <= 0x01FFFFFF) PC = 0;
-
-			//HleInterop.ExecuteFunctionNow(CallbackData.FinishFunction, new Object[] { Arg, CallbackData.FinishArgument, PC });
-
-			//Console.Error.WriteLine("HleThreadManager:: IGpuConnector.Finish :: Completed");
+				Console.Error.WriteLine("HleThreadManager:: IGpuConnector.Finish :: 0x{0:X8}, 0x{1:X8}, 0x{2:X8}, {3}", CallbackData.FinishFunction, CallbackData.FinishArgument, PC, Arg);
+				HleInterop.ExecuteFunctionNowLater(CallbackData.FinishFunction, ExecuteNow, new Object[] { Arg, CallbackData.FinishArgument, PC });
+			}
 		}
 
 		void IInjectInitialize.Initialize()

@@ -296,7 +296,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 
 			bool TimedOut = false;
 
-			ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, "sceKernelWaitThreadEnd", ThreadToWaitEnd, WakeUpCallback =>
+			ThreadManager.Current.SetWaitAndPrepareWakeUp(HleThread.WaitType.None, String.Format("sceKernelWaitThreadEnd('{0}')", ThreadToWaitEnd.Name), ThreadToWaitEnd, WakeUpCallback =>
 			{
 				if (Timeout != null)
 				{

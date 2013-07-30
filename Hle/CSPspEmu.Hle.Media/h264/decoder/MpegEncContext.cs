@@ -2395,21 +2395,19 @@ namespace cscodec.h264.decoder
 			return 0;
 		}
 
-		public int avcodec_decode_video2(AVFrame picture,
-				int[] got_picture_ptr /* [0] = in/out param */, AVPacket avpkt)
+		public int avcodec_decode_video2(AVFrame picture, int[] got_picture_ptr /* [0] = in/out param */, AVPacket avpkt)
 		{
 			int ret;
 
 			got_picture_ptr[0] = 0;
-			if ((this.coded_width != 0 || this.coded_height != 0)
-					&& av_image_check_size(this.coded_width, this.coded_height, 0,
-							this) != 0)
-				return -1;
+			if ((this.coded_width != 0 || this.coded_height != 0) && av_image_check_size(this.coded_width, this.coded_height, 0, this) != 0)
+			{
+				return -7;
+			}
 
 			this.pkt = avpkt;
 
-			if ((this.codec.capabilities & H264Decoder.CODEC_CAP_DELAY) != 0
-					|| avpkt.size != 0)
+			if ((this.codec.capabilities & H264Decoder.CODEC_CAP_DELAY) != 0 || avpkt.size != 0)
 			{
 				ret = this.codec.decode(this, picture, got_picture_ptr, avpkt);
 
@@ -2418,10 +2416,14 @@ namespace cscodec.h264.decoder
 				picture.pkt_dts = avpkt.dts;
 
 				if (got_picture_ptr[0] != 0)
+				{
 					this.frame_number++;
+				}
 			}
 			else
+			{
 				ret = 0;
+			}
 
 			return ret;
 		}

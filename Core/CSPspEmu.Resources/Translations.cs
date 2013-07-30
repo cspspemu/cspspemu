@@ -48,7 +48,10 @@ namespace CSPspEmu.Resources
 							{
 								DefaultLanguage = LangId;
 							}
-							AvailableLanguages.Add(LangId);
+							if (LangId != "xx")
+							{
+								AvailableLanguages.Add(LangId);
+							}
 							//Console.WriteLine("{0}.{1}.{2} = {3}", CategoryId, TextId, LangId, Text);
 							Dictionary[CategoryId][TextId][LangId] = Text;
 						}
@@ -92,6 +95,7 @@ namespace CSPspEmu.Resources
 			{
 				Category = Dictionary[CategoryId];
 				CategoryText = Category[TextId];
+				if (CategoryText.ContainsKey("xx")) return CategoryText["xx"];
 				return CategoryText[LangId];
 			}
 			catch (Exception Exception)

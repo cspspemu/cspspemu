@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using cscodec;
+using CSharpUtils;
 
 namespace cscodec.h264.player
 {
@@ -64,7 +65,7 @@ namespace cscodec.h264.player
 			//Console.WriteLine(FrameCrc.GetFrameLine(avpkt));
 			if (len < 0)
 			{
-				//Console.WriteLine("Error while decoding frame " + frame);
+				//ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.WriteLine("Error while decoding frame: {0}, error: {1}", frame, this.len); });
 				// Discard current packet and proceed to next packet
 				return null;
 			}
@@ -73,15 +74,19 @@ namespace cscodec.h264.player
 			{
 				picture = Context.priv_data.displayPicture;
 
+				//ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Magenta, () => { Console.WriteLine("Generated picture"); });
 				//int bufferSize = picture.imageWidth * picture.imageHeight;
 				//if (buffer == null || bufferSize != buffer.Length)
 				//{
 				//	buffer = new int[bufferSize];
 				//}
+				return picture;
 			}
-
-			if (got_picture[0] == 0) return null;
-			return picture;
+			else
+			{
+				//ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.DarkMagenta, () => { Console.WriteLine("NOT Generated picture"); });
+				return null;
+			}
 		}
 	}
 }

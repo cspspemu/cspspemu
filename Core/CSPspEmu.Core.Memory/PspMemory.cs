@@ -83,7 +83,7 @@ namespace CSPspEmu.Core.Memory
 		//public static Segment ScratchPadSegment = new Segment() { Offset = 0x00010000, Size = 4 * 1024 };
 
 		public const int ScratchPadSize = 4 * 1024; // 4KB
-		public const int FrameBufferSize = 2 * 0x00100000; // 2MB
+		public const int FrameBufferSize = 0x00200000; // 2MB
 		public const int MainSize = (PspModel.IsSlim ? 64 : 32) * 0x100000; // 32MB (PHAT) / 64MB (SLIM)
 		//public const int HardwareVectorsSize = 1 * 1024 * 1024;
 		public const int VectorsSize = 4 * 1024 * 1024;
@@ -213,11 +213,18 @@ namespace CSPspEmu.Core.Memory
 
 		public void WriteBytes(uint Address, byte[] DataIn)
 		{
-			PointerUtils.Memcpy((byte*)PspAddressToPointerSafe(Address, DataIn.Length), DataIn, DataIn.Length);
+			fixed (byte* DataInPtr = DataIn)
+			{
+				WriteBytes(Address, DataInPtr, DataIn.Length);
+			}
 		}
+
+		//public delegate void WriteBytesDelegate(uint Address, byte* DataInPointer, int DataInLength);
+		//public event WriteBytesDelegate WriteBytesHook;
 
 		public void WriteBytes(uint Address, byte* DataInPointer, int DataInLength)
 		{
+			//if (WriteBytesHook != null) WriteBytesHook(Address, DataInPointer, DataInLength);
 			PointerUtils.Memcpy((byte*)PspAddressToPointerSafe(Address, DataInLength), DataInPointer, DataInLength);
 		}
 

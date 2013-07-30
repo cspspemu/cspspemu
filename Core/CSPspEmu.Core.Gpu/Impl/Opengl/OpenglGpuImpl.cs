@@ -19,12 +19,12 @@ using CSPspEmu.Core.Memory;
 #if OPENTK
 using OpenTK.Graphics.OpenGL;
 using CSPspEmu.Core.Gpu.Formats;
-using Mono.Simd;
 using CSPspEmu.Core.Utils;
 using CSPspEmu.Core.Types;
 using CSharpPlatform;
 using CSPspEmu.Core.Gpu.State.SubStates;
 using System.Collections.Generic;
+using CSPspEmu.Core.Cpu;
 #else
 using MiniGL;
 #endif
@@ -52,11 +52,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <summary>
 		/// 
 		/// </summary>
-		private TextureOpengl CurrentTexture;
-
-		/// <summary>
-		/// 
-		/// </summary>
 		private GpuStateStruct* GpuState;
 
 		private VertexTypeStruct VertexType;
@@ -70,6 +65,19 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// </summary>
 		private OpenglGpuImpl()
 		{
+		}
+
+		override public void InvalidateCache(uint Address, int Size)
+		{
+			//ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.White, () =>
+			//{
+			//	//foreach ()
+			//	//Console.WriteLine("OnMemoryWrite: {0:X8}, {1}", Address, Size);
+			//	//foreach (var DrawBufferTexture in DrawBufferTextures)
+			//	//{
+			//	//	Console.WriteLine("::{0:X8}", DrawBufferTexture.Key.Address);
+			//	//}
+			//});
 		}
 
 		void IInjectInitialize.Initialize()
@@ -258,7 +266,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private void ResetState()
 		{
-			GL.Viewport(0, 0, 512, 272);
+			GL.Viewport(0, 0, 512 * ScaleViewport, 272 * ScaleViewport);
 			GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Fastest);
 			GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
 			GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
@@ -269,7 +277,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 
 			GL.MatrixMode(MatrixMode.Projection); GL.LoadIdentity();
-			GL.Ortho(0, 480, 272, 0, 0, -0xFFFF);
+			GL.Ortho(0, 480 * ScaleViewport, 272 * ScaleViewport, 0, 0, -0xFFFF);
 
 			GL.MatrixMode(MatrixMode.Modelview); GL.LoadIdentity();
 			GL.MatrixMode(MatrixMode.Color); GL.LoadIdentity();
@@ -768,32 +776,32 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 #endif
 		}
 
-		int[] pboIds = { -1 };
-
-		static bool UsePbo = false;
-
-		private void PreParePbos()
-		{
-			if (UsePbo)
-			{
-				if (pboIds[0] == -1)
-				{
-					GL.GenBuffers(1, pboIds);
-					GL.BindBuffer(BufferTarget.PixelUnpackBuffer, pboIds[0]);
-					GL.BufferData(BufferTarget.PixelUnpackBuffer, new IntPtr(512 * 272 * 4), IntPtr.Zero, BufferUsageHint.StreamRead);
-					GL.BindBuffer(BufferTarget.PixelUnpackBuffer, 0);
-				}
-				GL.BindBuffer(BufferTarget.PixelPackBuffer, pboIds[0]);
-			}
-		}
-
-		private void UnPreParePbos()
-		{
-			if (UsePbo)
-			{
-				GL.BindBuffer(BufferTarget.PixelPackBuffer, 0);
-			}
-		}
+		//int[] pboIds = { -1 };
+		//
+		//static bool UsePbo = false;
+		//
+		//private void PreParePbos()
+		//{
+		//	if (UsePbo)
+		//	{
+		//		if (pboIds[0] == -1)
+		//		{
+		//			GL.GenBuffers(1, pboIds);
+		//			GL.BindBuffer(BufferTarget.PixelUnpackBuffer, pboIds[0]);
+		//			GL.BufferData(BufferTarget.PixelUnpackBuffer, new IntPtr(512 * 272 * 4), IntPtr.Zero, BufferUsageHint.StreamRead);
+		//			GL.BindBuffer(BufferTarget.PixelUnpackBuffer, 0);
+		//		}
+		//		GL.BindBuffer(BufferTarget.PixelPackBuffer, pboIds[0]);
+		//	}
+		//}
+		//
+		//private void UnPreParePbos()
+		//{
+		//	if (UsePbo)
+		//	{
+		//		GL.BindBuffer(BufferTarget.PixelPackBuffer, 0);
+		//	}
+		//}
 		
 		//private void SaveFrameBuffer(GpuStateStruct* GpuState, string FileName)
 		//{
@@ -838,38 +846,60 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//public int Height;
 		}
 
-		public class DrawBufferValue : IDisposable
+		//static int ViewportWidth = 512 * 2;
+		//static int ViewportHeight = 272 * 2;
+		//
+		//static int ScreenWidth = 480 * 2;
+		//static int ScreenHeight = 272 * 2;
+
+		unsafe public class DrawBufferValue : IDisposable
 		{
 			public DrawBufferKey DrawBufferKey;
 			public int FBO;
 			public int TextureColor;
 			public int TextureDepthStencil;
+			public int Width, Height;
+			private OpenglGpuImpl OpenglGpuImpl;
+			private int CurrentScaleViewport;
 
-			public DrawBufferValue(DrawBufferKey DrawBufferKey)
+			public DrawBufferValue(OpenglGpuImpl OpenglGpuImpl, DrawBufferKey DrawBufferKey)
 			{
+				this.OpenglGpuImpl = OpenglGpuImpl;
 				this.DrawBufferKey = DrawBufferKey;
 
 				GL.GenFramebuffers(1, out FBO);
 				GL.GenTextures(1, out TextureColor);
 				GL.GenTextures(1, out TextureDepthStencil);
 
-				int Width = 512;
-				int Height = 272;
-				var EmptyDataPtr = stackalloc uint[Width * Height];
-				
-				GL.BindTexture(TextureTarget.Texture2D, TextureColor);
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-				GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Width, Height, 0, PixelFormat.Bgra, PixelType.UnsignedInt8888Reversed, new IntPtr(EmptyDataPtr));
+				OpenglGpuImpl.OnScaleViewport += UpdateTextures;
+				UpdateTextures(OpenglGpuImpl.ScaleViewport);
+			}
 
-				GL.BindTexture(TextureTarget.Texture2D, TextureDepthStencil);
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-				GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-				GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthStencil, Width, Height, 0, PixelFormat.DepthStencil, PixelType.UnsignedInt248, new IntPtr(EmptyDataPtr));
+			private void UpdateTextures(int ScaleViewport)
+			{
+				if (CurrentScaleViewport == ScaleViewport) return;
+				CurrentScaleViewport = ScaleViewport;
+
+				Width = 512 * ScaleViewport;
+				Height = 272 * ScaleViewport;
+				var EmptyData = new uint[Width * Height];
+				fixed (uint* EmptyDataPtr = EmptyData)
+				{
+					GL.BindTexture(TextureTarget.Texture2D, TextureColor);
+					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+					GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Width, Height, 0, PixelFormat.Bgra, PixelType.UnsignedInt8888Reversed, new IntPtr(EmptyDataPtr));
+
+					GL.BindTexture(TextureTarget.Texture2D, TextureDepthStencil);
+					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+					GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthStencil, Width, Height, 0, PixelFormat.DepthStencil, PixelType.UnsignedInt248, new IntPtr(EmptyDataPtr));
+				}
+				EmptyData = null;
 			}
 
 			public void Bind()
@@ -880,12 +910,16 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				GL.FramebufferTexture2D(FramebufferTarget.DrawFramebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, TextureColor, 0);
 				//Console.WriteLine(GL.GetError());
 				GL.FramebufferTexture2D(FramebufferTarget.DrawFramebuffer, FramebufferAttachment.DepthStencilAttachment, TextureTarget.Texture2D, TextureDepthStencil, 0);
+
+				//GL.Viewport(0, 0, Width, Height);
+
 				//Console.WriteLine(GL.GetError());
 				//Console.WriteLine("{0}, {1}, {2}", FBO, TextureColor, TextureDepthStencil);
 			}
 
 			public void Dispose()
 			{
+				OpenglGpuImpl.OnScaleViewport -= UpdateTextures;
 				GL.DeleteFramebuffers(1, ref FBO);
 				GL.DeleteTextures(1, ref TextureColor);
 				GL.DeleteTextures(1, ref TextureDepthStencil);
@@ -897,6 +931,29 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private readonly Dictionary<DrawBufferKey, DrawBufferValue> DrawBufferTextures = new Dictionary<DrawBufferKey, DrawBufferValue>();
 
+		public void TextureCacheGetAndBind(GpuStateStruct* GpuState)
+		{
+			if (_DynarecConfig.EnableRenderTarget)
+			{
+				var TextureMappingState = &GpuState->TextureMappingState;
+				var ClutState = &TextureMappingState->ClutState;
+				var TextureState = &TextureMappingState->TextureState;
+				var Key = new DrawBufferKey()
+				{
+					Address = TextureState->Mipmap0.Address,
+				};
+
+				if (DrawBufferTextures.ContainsKey(Key))
+				{
+					GL.BindTexture(TextureTarget.Texture2D, GetCurrentDrawBufferTexture(Key).TextureColor);
+					return;
+				}
+			}
+
+			var CurrentTexture = TextureCache.Get(GpuState);
+			CurrentTexture.Bind();
+		}
+
 		public int GetDrawTexture(DrawBufferKey Key)
 		{
 			//Console.WriteLine("GetDrawTexture: {0}", GetCurrentDrawBufferTexture(Key).TextureColor);
@@ -905,8 +962,19 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		public DrawBufferValue GetCurrentDrawBufferTexture(DrawBufferKey Key)
 		{
-			if (!DrawBufferTextures.ContainsKey(Key)) DrawBufferTextures[Key] = new DrawBufferValue(Key);
+			if (!DrawBufferTextures.ContainsKey(Key)) DrawBufferTextures[Key] = new DrawBufferValue(this, Key);
 			return DrawBufferTextures[Key];
+		}
+
+		public override void DrawVideo(uint FrameBufferAddress, OutputPixel* OutputPixel, int Width, int Height)
+		{
+			var DrawBuffer = GetCurrentDrawBufferTexture(new DrawBufferKey()
+			{
+				Address = FrameBufferAddress,
+			});
+			DrawBuffer.Bind();
+			GL.DrawPixels(Width, Height, PixelFormat.Bgra, PixelType.UnsignedInt8888Reversed, new IntPtr(OutputPixel));
+			Console.WriteLine("DrawVideo: {0:X8}, {1}x{2}", FrameBufferAddress, Width, Height);
 		}
 
 		private uint CachedBindAddress;
