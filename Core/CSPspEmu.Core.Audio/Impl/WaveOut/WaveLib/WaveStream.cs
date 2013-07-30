@@ -15,7 +15,7 @@ using System.IO;
 
 namespace WaveLib
 {
-	public class WaveStream : Stream, IDisposable
+	public class WaveStream : Stream
 	{
 		private Stream m_Stream;
 		private long m_DataPos;
@@ -96,9 +96,10 @@ namespace WaveLib
 		{
 			Dispose();
 		}
-		
-        public void Dispose()
+
+		protected override void Dispose (bool disposing)
 		{
+			base.Dispose (disposing);
 			if (m_Stream != null)
 				m_Stream.Close();
 			GC.SuppressFinalize(this);

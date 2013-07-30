@@ -52,3 +52,5 @@ obj
 /deploy/cspspemu/src
 /deploy/cspspemu/F0
 /*.vspx
+
+.DS_Store

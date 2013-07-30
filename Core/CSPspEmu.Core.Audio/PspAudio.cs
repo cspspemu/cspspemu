@@ -102,7 +102,7 @@ namespace CSPspEmu.Core.Audio
 		/// 
 		/// </summary>
 		/// <param name="ChannelId"></param>
-		protected void CheckChannelId(int ChannelId)
+		private void CheckChannelId(int ChannelId)
 		{
 			if (ChannelId < 0 || ChannelId >= Channels.Length)
 			{
