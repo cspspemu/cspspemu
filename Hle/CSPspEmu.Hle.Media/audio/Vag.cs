@@ -4,45 +4,66 @@ using System.Linq;
 using CSharpUtils;
 using CSPspEmu.Core.Audio;
 using CSPspEmu.Core;
+using System.Runtime.CompilerServices;
+using CSharpUtils.Endian;
 
 namespace CSPspEmu.Hle.Formats.audio
 {
+	public interface ISoundDecoder
+	{
+		bool HasMore { get; }
+		void Reset();
+		StereoShortSoundSample GetNextSample();
+	}
+
 	/// <summary>
 	/// Based on jpcsp. gid15 work.
 	/// http://code.google.com/p/jpcsp/source/browse/trunk/src/jpcsp/sound/SampleSourceVAG.java?r=1995
 	/// </summary>
-	public unsafe sealed partial class Vag
+	public unsafe sealed partial class Vag : ISoundDecoder
 	{
 		//public byte[] Data;
 		//public StereoShortSoundSample[] DecodedSamples = new StereoShortSoundSample[0];
 
 		private List<StereoShortSoundSample> DecodedSamples = new List<StereoShortSoundSample>();
-		private IEnumerator<StereoShortSoundSample> SamplesDecoder;
+		private Decoder SamplesDecoder;
 		public bool SamplesDecoderEnd = false;
 
-		public StereoShortSoundSample GetSampleAt(int Index)
+		bool ISoundDecoder.HasMore { get { return SamplesDecoder.HasMore; } }
+
+		void ISoundDecoder.Reset()
 		{
-			while (Index >= DecodedSamples.Count)
-			{
-				if (!DecodeSample())
-				{
-					return new StereoShortSoundSample();
-				}
-			}
-			return DecodedSamples[Index];
+			SamplesDecoder.Reset();
+		}
+
+		StereoShortSoundSample ISoundDecoder.GetNextSample()
+		{
+			return SamplesDecoder.GetNextSample();
 		}
 
 		public StereoShortSoundSample[] GetAllDecodedSamples()
 		{
-			while (DecodeSample()) ;
-			return DecodedSamples.ToArray();
+			var Samples = new StereoShortSoundSample[SamplesCount];
+			SamplesDecoder.Reset();
+			for (int n = 0; n < SamplesCount; n++)
+			{
+				Samples[n] = SamplesDecoder.GetNextSample();
+			}
+			return Samples;
 		}
 
+		/*
 		public bool DecodeSample()
 		{
 			if (!SamplesDecoderEnd)
 			{
-				DecodedSamples.Add(SamplesDecoder.Current);
+				if (SamplesDecoder.HasMore)
+				{
+					DecodedSamples.Add(SamplesDecoder.Current);
+				}
+				else
+				{
+				}
 				if (!SamplesDecoder.MoveNext()) SamplesDecoderEnd = true;
 				return true;
 			}
@@ -51,22 +72,11 @@ namespace CSPspEmu.Hle.Formats.audio
 				return false;
 			}
 		}
+		*/
 
 		public int SamplesCount { get; protected set; }
 
-		public Vag()
-		{
-		}
-
-		public void Load(byte[] Data)
-		{
-			fixed (byte* DataPointer = Data)
-			{
-				Load(DataPointer, Data.Length);
-			}
-		}
-
-		public void Load(byte* DataPointer, int DataLength)
+		public Vag(byte* DataPointer, int DataLength)
 		{
 			//this.Data = Data;
 			var Header = *(Header*)DataPointer;
@@ -75,7 +85,7 @@ namespace CSPspEmu.Hle.Formats.audio
 				Console.Error.WriteLine("Error VAG Magic: {0:X}", Header.Magic);
 				throw (new NotImplementedException("Invalid VAG header"));
 			}
-			var Hash = CSPspEmu.Core.Hashing.FastHash(DataPointer, DataLength);
+			//var Hash = CSPspEmu.Core.Hashing.FastHash(DataPointer, DataLength);
 			//Console.WriteLine("Header.SampleRate: {0}", Header.SampleRate);
 			//Console.ReadKey();
 
@@ -91,9 +101,11 @@ namespace CSPspEmu.Hle.Formats.audio
 			}
 			*/
 
-			var Blocks = PointerUtils.PointerToArray<Block>((Block*)&DataPointer[0x10], DataLength - 0x10);
-			SamplesCount = Blocks.Length * 56 / 16;
-			SamplesDecoder = Decoder.DecodeBlocksStream(Blocks).GetEnumerator();
+			//ArrayUtils.HexDump(PointerUtils.PointerToByteArray(DataPointer, DataLength), 0xA0);
+
+			SamplesCount = (DataLength - 0x10) * 56 / 16;
+			SamplesDecoder = new Decoder((Block*)&DataPointer[0x10], (DataLength - 0x10) / 16);
+			//SamplesDecoder = Decoder.DecodeBlocksStream(Blocks).GetEnumerator();
 
 			//SaveToWav("output.wav");
 		}
@@ -106,97 +118,188 @@ namespace CSPspEmu.Hle.Formats.audio
 
 		internal sealed class Decoder
 		{
-			private short[] Samples;
-			private int SampleOffset = 0;
-			private short History1 = 0, History2 = 0;
+			private const int CompressedBytesInBlock = 14;
+			private const int DecompressedSamplesInBlock = CompressedBytesInBlock * 2; // 28
+			private readonly short[] DecodedBlockSamples = new short[DecompressedSamplesInBlock];
+			//private short History1 = 0, History2 = 0;
 			private float Predict1, Predict2;
 
-			public static IEnumerable<StereoShortSoundSample> DecodeBlocksStream(Block[] Blocks)
+			private Block* BlockPointer;
+			private int BlockTotalCount;
+			//private int BlockIndex;
+			private int SampleIndexInBlock;
+			private int SampleIndexInBlock2;
+			private bool ReachedEnd;
+			//private StereoShortSoundSample CurrentSample;
+			//private StereoShortSoundSample LastSample;
+			private readonly Stack<State> LoopStack = new Stack<State>(1);
+			private State CurrentState;
+
+			public struct State
 			{
-				var DecodedBlock = new short[28];
-				var Decoder = new Decoder();
-				int SamplesOffset = 0;
-				bool Ended = false;
-				var LastSample = default(StereoShortSoundSample);
-				var CurrentSample = default(StereoShortSoundSample);
-				for (int n = 0; !Ended && (n < Blocks.Length); n++)
+				public int BlockIndex;
+				public int History1;
+				public int History2;
+
+				public State(int BlockIndex, int History1, int History2)
 				{
-					var CurrentBlock = Blocks[n];
-					SamplesOffset = 0;
-					Decoder.DecodeBlock(CurrentBlock, DecodedBlock, ref SamplesOffset);
-					switch (CurrentBlock.Type)
-					{
-						case Block.TypeEnum.None:
-							// 16 bytes = 56 stereo 44100 samples
-							foreach (var DecodedMonoSample in DecodedBlock)
-							{
-								CurrentSample = new StereoShortSoundSample(DecodedMonoSample, DecodedMonoSample);
-								yield return StereoShortSoundSample.Mix(LastSample, CurrentSample);
-								yield return CurrentSample;
-								LastSample = CurrentSample;
-							}
-							break;
-						case Block.TypeEnum.End:
-							Ended = true;
-							break;
-					}
+					this.BlockIndex = BlockIndex;
+					this.History1 = History1;
+					this.History2 = History2;
 				}
 			}
 
-			public static StereoShortSoundSample[] DecodeAllBlocks(Block[] Blocks)
+			public bool HasMore { get { return !ReachedEnd; } }
+
+			public Decoder(Block* BlockPointer, int BlockTotalCount)
 			{
-				return DecodeBlocksStream(Blocks).ToArray();
+				this.BlockPointer = BlockPointer;
+				this.BlockTotalCount = BlockTotalCount;
+				Reset();
 			}
 
-			public bool DecodeBlock(Block Block, short[] Samples, ref int SampleOffset)
+			public void Reset()
 			{
-				this.Samples = Samples;
-				this.SampleOffset = SampleOffset;
+				this.CurrentState = default(State);
+				this.SampleIndexInBlock = 0;
+				this.SampleIndexInBlock2 = 0;
+				this.ReachedEnd = false;
+			}
 
+			private void SeekNextBlock()
+			{
+				if (this.ReachedEnd || this.CurrentState.BlockIndex >= BlockTotalCount)
+				{
+					this.ReachedEnd = true;
+					return;
+				}
+
+				var Block = BlockPointer[this.CurrentState.BlockIndex++];
+				switch (Block.Type)
+				{
+					case Vag.Block.TypeEnum.LoopStart:
+						{
+							var CopyState = this.CurrentState;
+							CopyState.BlockIndex--;
+							LoopStack.Push(CopyState);
+						}
+						break;
+
+					case Vag.Block.TypeEnum.LoopEnd:
+						{
+							this.CurrentState = LoopStack.Pop();
+						}
+						break;
+
+					case Vag.Block.TypeEnum.End:
+						this.ReachedEnd = true;
+						return;
+
+					//default:
+					//	//Console.Error.WriteLine("Not implemented: Vag.Block.Type: {0}", Block.Type);
+					//	break;
+				}
+				DecodeBlock(Block);
+			}
+
+			//private readonly int[] GetNextSampleStory = new int[4];
+
+			public StereoShortSoundSample GetNextSample()
+			{
+				if (this.ReachedEnd) return default(StereoShortSoundSample);
+
+				SampleIndexInBlock %= DecompressedSamplesInBlock;
+
+				if (SampleIndexInBlock == 0)
+				{
+					SeekNextBlock();
+				}
+
+				if (this.ReachedEnd) return default(StereoShortSoundSample);
+
+				//Console.WriteLine("BlockIndex: {0}, SampleIndexInBlock: {1}, SampleIndexInBlock2: {2}", CurrentState.BlockIndex, SampleIndexInBlock, SampleIndexInBlock2);
+
+				return new StereoShortSoundSample(DecodedBlockSamples[SampleIndexInBlock++]);
+			}
+
+			public void DecodeBlock(Block Block)
+			{
+				int SampleOffset = 0;
 				int ShiftFactor = (int)BitUtils.Extract(Block.Modificator, 0, 4);
 				int PredictIndex = (int)BitUtils.Extract(Block.Modificator, 4, 4) % Vag.VAG_f.Length;
 				//if (predict_nr > VAG_f.length) predict_nr = 0; 
 
-				if (Block.Type == Block.TypeEnum.End) return true;
-
 				// @TODO: maybe we can change << 12 >> shift_factor for "<< (12 - shift_factor)"
 				// and move the substract outside the for. 
 
-				Predict1 = VAG_f[PredictIndex][0];
-				Predict2 = VAG_f[PredictIndex][1];
+				Predict1 = VAG_f[PredictIndex * 2 + 0];
+				Predict2 = VAG_f[PredictIndex * 2 + 1];
+
+				//History1 = 0;
+				//History2 = 0;
 
 				// Mono 4-bit/28 Samples per block.
-				for (int n = 0; n < 14; n++)
+				for (int n = 0; n < CompressedBytesInBlock; n++)
 				{
 					var DataByte = Block.Data[n];
 
-					PutSample(((short)(BitUtils.Extract(DataByte, 0, 4) << 12)) >> ShiftFactor);
-					PutSample(((short)(BitUtils.Extract(DataByte, 4, 4) << 12)) >> ShiftFactor);
-					//PutSample(SampleLeft);
-					//PutSample(SampleRight);
+					DecodedBlockSamples[SampleOffset++] = HandleSampleKeepHistory(((short)((((uint)DataByte >> 0) & 0xF) << 12)) >> ShiftFactor);
+					DecodedBlockSamples[SampleOffset++] = HandleSampleKeepHistory(((short)((((uint)DataByte >> 4) & 0xF) << 12)) >> ShiftFactor);
 				}
-
-				SampleOffset = this.SampleOffset;
-
-				return false;
 			}
 
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			private short HandleSampleKeepHistory(int UnpackedSample)
+			{
+				short Sample = HandleSample(UnpackedSample);
+				this.CurrentState.History2 = this.CurrentState.History1;
+				this.CurrentState.History1 = Sample;
+				return Sample;
+			}
+
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			private short HandleSample(int UnpackedSample)
 			{
 				int Sample = 0;
 				Sample += UnpackedSample * 1;
-				Sample += (int)(History1 * Predict1);
-				Sample += (int)(History2 * Predict2);
-				return (short)MathUtils.Clamp<int>(Sample, short.MinValue, short.MaxValue); 
+				Sample += (int)(this.CurrentState.History1 * Predict1) / 64;
+				Sample += (int)(this.CurrentState.History2 * Predict2) / 64;
+				return (short)MathUtils.FastClamp(Sample, short.MinValue, short.MaxValue);
+			}
+		}
+
+		internal static readonly int[] VAG_f =
+		{
+			0, 0,
+			60, 0,
+			115, -52,
+			98, -55,
+			122, -60,
+		};
+
+		public struct Header
+		{
+			public uint Magic;
+
+			public uint_be VagVersion;
+			public uint_be DataSize;
+			public uint_be SampleRate;
+
+			public fixed byte Name[16];
+		}
+
+		public struct Block
+		{
+			public enum TypeEnum : byte
+			{
+				LoopEnd = 3,
+				LoopStart = 6,
+				End = 7,
 			}
 
-			private void PutSample(int UnpackedSample)
-			{
-				short Sample = HandleSample(UnpackedSample);
-				History2 = History1;
-				History1 = Sample;
-				Samples[SampleOffset++] = Sample;
-			}
+			public byte Modificator;
+			public TypeEnum Type;
+			public fixed byte Data[14];
 		}
 	}
 }

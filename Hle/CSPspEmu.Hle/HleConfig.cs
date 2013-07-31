@@ -28,7 +28,10 @@ namespace CSPspEmu.Hle
 
 		//public PspConfirmButton ConfirmButton;
 		public bool WlanIsOn = false;
+		
 		public bool UseCoRoutines = false;
+		//public bool UseCoRoutines = true;
+
 		public bool DebugSyscalls = false;
 
 		//public PspVersion FirmwareVersion = new PspVersion(6, 3, 0);

@@ -70,7 +70,7 @@ namespace CSPspEmu.Core.Gpu.Impl.OpenglEs
 
 			VertexReader.SetVertexTypeStruct(
 				VertexType,
-				(byte*)Memory.PspAddressToPointerSafe(GlobalGpuState.GetAddressRelativeToBaseOffset(GpuState->VertexAddress), 0)
+				(byte*)Memory.PspAddressToPointerSafe(GpuState->GetAddressRelativeToBaseOffset(GpuState->VertexAddress), 0)
 			);
 
 			// Set Matrices

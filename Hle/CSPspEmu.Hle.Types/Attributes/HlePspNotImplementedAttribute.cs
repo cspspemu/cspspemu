@@ -2,7 +2,7 @@
 
 namespace CSPspEmu.Hle
 {
-	[AttributeUsage(AttributeTargets.All, AllowMultiple = true)]
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
 	public sealed class HlePspNotImplementedAttribute : Attribute
 	{
 		/// <summary>

@@ -29,23 +29,34 @@ namespace CSPspEmu.Core.Audio
 		public short Left;  // Left audio
 		public short Right; // Right audio
 
-		public StereoShortSoundSample(short Left, short Right)
+		public short GetByIndex(int Index)
 		{
-			this.Left = Left;
-			this.Right = Right;
+			return (Index == 0) ? Left : Right;
+		}
+
+		public StereoShortSoundSample(int Left, int Right)
+		{
+			this.Left = Clamp(Left);
+			this.Right = Clamp(Right);
+		}
+
+		public StereoShortSoundSample(int LeftRight)
+		{
+			this.Left = Clamp(LeftRight);
+			this.Right = Clamp(LeftRight);
 		}
 
 		public int MaxAmplitudeLeftRight
 		{
 			get
 			{
-				return Math.Max(Math.Abs((int)Left), Math.Abs((int)Right));
+				return Math.Min(short.MaxValue, Math.Max(Math.Abs((int)Left), Math.Abs((int)Right)));
 			}
 		}
 
 		public static StereoShortSoundSample Mix(StereoShortSoundSample A, StereoShortSoundSample B)
 		{
-			return new StereoShortSoundSample((short)((A.Left + B.Left) / 2), (short)((A.Right + B.Right) / 2));
+			return new StereoShortSoundSample(Clamp((A.Left + B.Left) / 2), Clamp((A.Right + B.Right) / 2));
 		}
 
 		public static implicit operator StereoIntSoundSample(StereoShortSoundSample StereoShortSoundSample)
@@ -60,6 +71,21 @@ namespace CSPspEmu.Core.Audio
 				Left = value;
 				Right = value;
 			}
+		}
+
+		static public short Clamp(int Value)
+		{
+			if (Value < short.MinValue) return short.MinValue;
+			if (Value > short.MaxValue) return short.MaxValue;
+			return (short)Value;
+		}
+
+		public StereoShortSoundSample ApplyVolumes(int LeftVolume, int RightVolume)
+		{
+			return new StereoShortSoundSample(
+				Clamp(this.Left * LeftVolume / 0x8000),
+				Clamp(this.Right * RightVolume / 0x8000)
+			);
 		}
 	}
 
@@ -104,7 +130,7 @@ namespace CSPspEmu.Core.Audio
 
 		public static implicit operator StereoShortSoundSample(StereoIntSoundSample StereoIntSoundSample)
 		{
-			return new StereoShortSoundSample((short)StereoIntSoundSample.Left, (short)StereoIntSoundSample.Right);
+			return new StereoShortSoundSample(StereoIntSoundSample.Left, StereoIntSoundSample.Right);
 		}
 
 		public int MonoLeftRight

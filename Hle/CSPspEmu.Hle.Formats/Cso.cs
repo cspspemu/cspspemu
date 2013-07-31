@@ -2,6 +2,8 @@
 using System.IO;
 using ComponentAce.Compression.Libs.zlib;
 using System.IO.Compression;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CSPspEmu.Hle.Formats
 {
@@ -25,7 +27,7 @@ namespace CSPspEmu.Hle.Formats
 			public ulong TotalBytes;
 			
 			/// <summary>
-			/// +10 : number of compressed block size
+			/// +10 : Size in bytes of the uncompressed block
 			/// </summary>
 			public uint BlockSize;
 			
@@ -150,6 +152,7 @@ namespace CSPspEmu.Hle.Formats
 		/// <param name="Stream"></param>
 		public void SetStream(Stream Stream)
 		{
+			//this.Stream = new BufferedStream(Stream, 0x20000);
 			this.Stream = Stream;
 
 			// Read the header.
@@ -167,14 +170,22 @@ namespace CSPspEmu.Hle.Formats
 		/// 
 		/// </summary>
 		/// <returns></returns>
-		public byte[] ReadBlockCompressed(uint Block)
+		public ArraySegment<byte>[] ReadBlocksCompressed(uint Block, int Count)
 		{
+			var List = new ArraySegment<byte>[Count];
 			var BlockStart = this.Blocks[Block + 0].Position;
-			var BlockEnd = this.Blocks[Block + 1].Position;
+			var BlockEnd = this.Blocks[Block + Count].Position;
 			var BlockLength = BlockEnd - BlockStart;
 
 			Stream.Position = BlockStart;
-			return Stream.ReadBytes((int)BlockLength);
+			var Data = Stream.ReadBytes((int)BlockLength);
+			for (int n = 0; n < Count; n++)
+			{
+				var Start = (int)(this.Blocks[Block + n + 0].Position - BlockStart);
+				var End = (int)(this.Blocks[Block + n + 1].Position - BlockStart);
+				List[n] = new ArraySegment<byte>(Data, Start, End - Start);
+			}
+			return List;
 		}
 
 		/// <summary>
@@ -182,54 +193,33 @@ namespace CSPspEmu.Hle.Formats
 		/// </summary>
 		/// <param name="Block"></param>
 		/// <returns></returns>
-		public byte[] ReadBlockDecompressed(uint Block)
+		public ArraySegment<byte>[] ReadBlocksDecompressed(uint Block, int Count)
 		{
-			if (Block >= NumberOfBlocks)
+			if (Block + Count >= NumberOfBlocks)
 			{
-				return new byte[0];
-			}
-			var In = ReadBlockCompressed(Block);
-
-			// If block is not compressed, get the contents.
-			if (!Blocks[Block].IsCompressed)
-			{
-				return In;
+				Count = (int)(NumberOfBlocks - Block);
 			}
 
-			var Out = new byte[this.Header.BlockSize];
-
-			//In = (byte[])In.Concat(new byte[] { 0x00 });
-
-#if true
-			var DS = new DeflateStream(new MemoryStream(In), CompressionMode.Decompress);
-			DS.Read(Out, 0, Out.Length);
-#else
-			var ZStream = new ZStream();
-
-			if (ZStream.inflateInit(-15) != zlibConst.Z_OK)
+			if (Count <= 0)
 			{
-				throw (new InvalidProgramException("Can't initialize inflater"));
+				return new ArraySegment<byte>[0];
 			}
-			try
+			else
 			{
-				ZStream.next_in = In;
-				ZStream.next_in_index = 0;
-				ZStream.avail_in = In.Length;
+				var Segments = ReadBlocksCompressed(Block, Count);
+				for (int n = 0; n < Count; n++)
+				{
+					if (Blocks[Block + n].IsCompressed)
+					{
+						Segments[n] = new ArraySegment<byte>(new DeflateStream(
+							new MemoryStream(Segments[n].Array, Segments[n].Offset, Segments[n].Count),
+							CompressionMode.Decompress
+						).ReadBytes((int)this.Header.BlockSize));
+					}
+				}
 
-				ZStream.next_out = Out;
-				ZStream.next_out_index = 0;
-				ZStream.avail_out = Out.Length;
-
-				int Status = ZStream.inflate(zlibConst.Z_FULL_FLUSH);
-				if (Status != zlibConst.Z_STREAM_END) throw (new InvalidDataException("" + ZStream.msg));
+				return Segments;
 			}
-			finally
-			{
-				ZStream.inflateEnd();
-			}
-#endif
-
-			return Out;
 		}
 	}
 }

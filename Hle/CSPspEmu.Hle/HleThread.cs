@@ -77,7 +77,10 @@ namespace CSPspEmu.Hle
 		[Inject]
 		private ElfConfig ElfConfig;
 
-		public event Action End;
+		/// <summary>
+		/// Event
+		/// </summary>
+		public event Action OnTerminate;
 
 		public DelegateInfo LastCalledHleFunction;
 
@@ -297,10 +300,10 @@ namespace CSPspEmu.Hle
 
 		public void WakeUpAndReschedule()
 		{
-			WakeUp();
+			ReleaseWaitThread();
 		}
 
-		public void WakeUp()
+		public void ReleaseWaitThread()
 		{
 			if (!this.HasAllStatus(Status.Waiting))
 			{
@@ -337,7 +340,7 @@ namespace CSPspEmu.Hle
 					if (!CalledAlready)
 					{
 						CalledAlready = true;
-						WakeUp();
+						ReleaseWaitThread();
 					}
 				});
 			}
@@ -398,13 +401,11 @@ namespace CSPspEmu.Hle
 			return Ret + ")";
 		}
 
-		public void Exit()
+		public void Terminate()
 		{
-			if (End != null)
+			if (OnTerminate != null)
 			{
-				var End2 = End;
-				End = null;
-				End2();
+				OnTerminate();
 			}
 		}
 

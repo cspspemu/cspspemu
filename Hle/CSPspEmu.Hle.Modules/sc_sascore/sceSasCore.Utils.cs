@@ -159,7 +159,10 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 
 		public void ResetSampleOffset()
 		{
-			SampleOffset = 0;
+			if (Vag != null)
+			{
+				Vag.Reset();
+			}
 		}
 
 		/// <summary>
@@ -196,7 +199,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// 
 		/// </summary>
-		public Vag Vag;
+		public ISoundDecoder Vag = null;
 
 		/// <summary>
 		/// 
@@ -211,8 +214,6 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 
 		public int SustainLevel;
 		public int EnvelopeHeight;
-
-		public int SampleOffset;
 
 		public SasEnvelope Envelope;
 

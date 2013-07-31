@@ -57,7 +57,28 @@ namespace CSPspEmu
 		[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
 		static void Main(string[] Arguments)
 		{
+			//Thread.Sleep(1000);
+			//var Cso = new Cso(new MemoryStream(File.ReadAllBytes(@"F:\isos\psp\luxor.cso")));
+			//var Cso = new Cso(File.OpenRead(@"F:\isos\psp\Puyo.cso"));
+			//var Stopwatch1 = new Stopwatch();
+			//Stopwatch1.Start();
+			////var IsoBytes = File.ReadAllBytes("../../../TestInput/cube.iso");
+			////Assert.AreEqual(ExpectedNumberOfBlocks, Cso.NumberOfBlocks);
+			////Assert.AreEqual(ExpectedBlockSize, Cso.BlockSize);
+			//for (uint Block = 0; Block < Cso.NumberOfBlocks; Block++)
+			//{
+			//	var DecompressedBlockData = Cso.ReadBlockDecompressed(Block);
+			//	//CollectionAssert.AreEqual(
+			//	//	IsoBytes.Skip((int)(ExpectedBlockSize * Block)).Take(ExpectedBlockSize).ToArray(),
+			//	//	DecompressedBlockData.ToArray()
+			//	//);
+			//}
+			//Console.WriteLine(Stopwatch1.Elapsed);
+			//Console.ReadKey();
+			//return;
+			//Environment.Exit(0);
 			//Arguments = new[] { "/isoconvert", @"f:\isos\psp\Princess Crown.cso", @"c:\isos\psp\pricess.iso" };
+			//Arguments = new[] { "/isoextract", @"f:\isos\psp\Puyo.cso", @"c:\isos\psp\puyo" };
 
 			//MiniPlayer.Play(
 			//	File.OpenRead(@"F:\isos\psp2\temp\1C-99-F2-16-B6-41-D9-27-8D-41-80-6A-AB-D1-EB-77-29-61-17-0F.oma"),

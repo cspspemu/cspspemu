@@ -19,13 +19,13 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="LoopCount">Number of times the voice should play</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x99944089, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int __sceSasSetVoice(uint SasCorePointer, int Voice, byte* VagPointer, int VagSize, int LoopCount)
 		{
 			try
 			{
 				var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
-				SasVoice.Vag = new Vag();
-				SasVoice.Vag.Load(VagPointer, VagSize);
+				SasVoice.Vag = new Vag(VagPointer, VagSize);
 				SasVoice.ResetSampleOffset();
 				SasVoice.LoopCount = LoopCount;
 
@@ -49,6 +49,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="Pitch">Pitch to set. A value between 1 and 16384. The default value is 4096.</param>
 		/// <returns>0 on success</returns>
 		[HlePspFunction(NID = 0xAD84D37F, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int __sceSasSetPitch(uint SasCorePointer, int Voice, int Pitch)
 		{
 			var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
@@ -75,6 +76,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="EffectRightVol">Right Volume 0-0x1000</param>
 		/// <returns>0 on success.</returns>
 		[HlePspFunction(NID = 0x440CA7D8, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int __sceSasSetVolume(uint SasCorePointer, int Voice, int LeftVolume, int RightVolume, int EffectLeftVol, int EffectRightVol)
 		{
 			var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
@@ -107,6 +109,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="SustainLevel"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x5F9529F6, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int __sceSasSetSL(uint SasCorePointer, int Voice, int SustainLevel)
 		{
 			var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
@@ -124,6 +127,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="Voice"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x74AE582A, FirmwareVersion = 150, SkipLog = true)]
+		//[HlePspNotImplemented]
 		public int __sceSasGetEnvelopeHeight(uint SasCorePointer, int Voice)
 		{
 			var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
@@ -146,7 +150,9 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="SustainRate">ADSR Envelope's sustain type.</param>
 		/// <param name="ReleaseRate">ADSR Envelope's release type.</param>
 		/// <returns>0 on success.</returns>
+		/// <seealso cref="http://en.wikipedia.org/wiki/Synthesizer#ADSR_envelope"/>
 		[HlePspFunction(NID = 0x019B25EB, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int __sceSasSetADSR(uint SasCorePointer, int Voice, AdsrFlags Flags, int AttackRate, int DecayRate, int SustainRate, int ReleaseRate)
 		{
 			var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
@@ -220,7 +226,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="Voice"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x76F01ACA, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
+		[HlePspNotImplemented]
 		public int __sceSasSetKeyOn(uint SasCorePointer, int Voice)
 		{
 			var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
@@ -236,7 +242,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="Voice"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xA0CF2FA4, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
+		[HlePspNotImplemented]
 		public int __sceSasSetKeyOff(uint SasCorePointer, int Voice)
 		{
 			var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);

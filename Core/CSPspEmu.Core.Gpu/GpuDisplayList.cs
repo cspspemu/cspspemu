@@ -273,7 +273,7 @@ namespace CSPspEmu.Core.Gpu
 
 		internal void JumpRelativeOffset(uint Address)
 		{
-			InstructionAddressCurrent = GlobalGpuState.GetAddressRelativeToBaseOffset(Address);
+			InstructionAddressCurrent = GpuStateStructPointer->GetAddressRelativeToBaseOffset(Address);
 		}
 
 		internal void JumpAbsolute(uint Address)
@@ -284,7 +284,7 @@ namespace CSPspEmu.Core.Gpu
 		internal void CallRelativeOffset(uint Address)
 		{
 			CallStack.Push(InstructionAddressCurrent);
-			CallStack.Push((uint)GlobalGpuState.BaseOffset);
+			CallStack.Push((uint)GpuStateStructPointer->BaseOffset);
 			//CallStack.Push(InstructionAddressCurrent);
 			JumpRelativeOffset(Address);
 			//throw new NotImplementedException();
@@ -294,7 +294,7 @@ namespace CSPspEmu.Core.Gpu
 		{
 			if (CallStack.Count > 0)
 			{
-				GlobalGpuState.BaseOffset = CallStack.Pop();
+				GpuStateStructPointer->BaseOffset = CallStack.Pop();
 				JumpAbsolute(CallStack.Pop());
 			}
 			else

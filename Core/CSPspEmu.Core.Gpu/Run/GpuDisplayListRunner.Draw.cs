@@ -195,7 +195,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		{
 			var ControlPoints = new VertexInfo[UCount, VCount];
 
-			var VertexPtr = (byte*)GpuDisplayList.GpuProcessor.Memory.PspAddressToPointerSafe(GlobalGpuState.GetAddressRelativeToBaseOffset(GpuState->VertexAddress), 0);
+			var VertexPtr = (byte*)GpuDisplayList.GpuProcessor.Memory.PspAddressToPointerSafe(GpuState->GetAddressRelativeToBaseOffset(GpuState->VertexAddress), 0);
 			var VertexReader = new VertexReader();
 			VertexReader.SetVertexTypeStruct(GpuState->VertexState.Type, VertexPtr);
 

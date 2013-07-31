@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using CSharpUtils;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace CSPspEmu.Core.Audio
 {
@@ -204,7 +206,11 @@ namespace CSPspEmu.Core.Audio
 			{
 				if (Buffer.ConsumeRemaining < FillSamples)
 				{
-					ActionCallbackOnReaded();
+					Task.Run(() =>
+					{
+						Thread.Sleep(1);
+						ActionCallbackOnReaded();
+					});
 				}
 				else
 				{

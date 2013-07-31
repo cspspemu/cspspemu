@@ -428,7 +428,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			/// <summary>
 			/// 0020 - Set to 0
 			/// </summary>
-			public fixed int Reserved[4];
+			private fixed int Reserved[4];
 		}
 
 		[StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -457,7 +457,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			/// <summary>
 			/// 003C - GameName: name used from the game for saves, equal for all saves
 			/// </summary>
-			public fixed byte GameNameRaw[16];
+			private fixed byte GameNameRaw[16];
 
 			public string GameName
 			{
@@ -473,7 +473,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			/// <summary>
 			/// 004C - SaveName: name of the particular save, normally a number
 			/// </summary>
-			public fixed byte SaveNameRaw[20];
+			private fixed byte SaveNameRaw[20];
 
 			public string SaveName
 			{

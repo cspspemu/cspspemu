@@ -1,6 +1,4 @@
-﻿//#define ENABLE_PITCH
-
-using System;
+﻿using System;
 using System.Linq;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Core.Audio;
@@ -40,21 +38,15 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="GrainSamples"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xD1E0A01E, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int __sceSasSetGrain(uint SasCorePointer, int GrainSamples)
 		{
 			var SasCore = GetSasCore(SasCorePointer);
 
 			CheckGrains(GrainSamples);
 
-			try
-			{
-				return 0;
-				//return SasCore.GrainSamples;
-			}
-			finally
-			{
-				SasCore.GrainSamples = GrainSamples;
-			}
+			SasCore.GrainSamples = GrainSamples;
+			return 0;
 		}
 
 		/// <summary>
@@ -63,6 +55,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="SasCorePointer"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xE175EF66, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public OutputMode __sceSasGetOutputmode(uint SasCorePointer)
 		{
 			var SasCore = GetSasCore(SasCorePointer);
@@ -78,20 +71,13 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="OutputMode"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xE855BF76, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int __sceSasSetOutputmode(uint SasCorePointer, OutputMode OutputMode)
 		{
 			var SasCore = GetSasCore(SasCorePointer);
 
-			//throw(new NotImplementedException());
-			try
-			{
-				return 0;
-				//return SasCore.OutputMode;
-			}
-			finally
-			{
-				SasCore.OutputMode = OutputMode;
-			}
+			SasCore.OutputMode = OutputMode;
+			return 0;
 		}
 
 		protected StereoIntSoundSample[] BufferTemp;
@@ -115,7 +101,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="SampleRate">Sample Rate</param>
 		/// <returns>0 on success</returns>
 		[HlePspFunction(NID = 0x42778A9F, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
+		[HlePspNotImplemented]
 		public uint __sceSasInit(uint SasCorePointer, int GrainSamples, int MaxVoices, OutputMode OutputMode, int SampleRate)
 		{
 			if (SampleRate != 44100)
@@ -157,6 +143,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="SasCorePointer">Core</param>
 		/// <returns>A set of flags indiciating the end of the voices.</returns>
 		[HlePspFunction(NID = 0x68A46B95, FirmwareVersion = 150)]
+		//[HlePspNotImplemented]
 		public uint __sceSasGetEndFlag(uint SasCorePointer)
 		{
 			var SasCore = GetSasCore(SasCorePointer);
@@ -170,6 +157,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="WaveformEffectType">Effect</param>
 		/// <returns>0 on success.</returns>
 		[HlePspFunction(NID = 0x33D4AB37, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public uint __sceSasRevType(uint SasCorePointer, WaveformEffectType WaveformEffectType)
 		{
 			var SasCore = GetSasCore(SasCorePointer);
@@ -185,6 +173,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="WaveformEffectIsWet">WaveformEffectIsWet</param>
 		/// <returns>0 on success.</returns>
 		[HlePspFunction(NID = 0xF983B186, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public uint __sceSasRevVON(uint SasCorePointer, bool WaveformEffectIsDry, bool WaveformEffectIsWet)
 		{
 			var SasCore = GetSasCore(SasCorePointer);
@@ -201,6 +190,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="RightVolume">Right volume</param>
 		/// <returns>0 on success</returns>
 		[HlePspFunction(NID = 0xD5A229C9, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public uint __sceSasRevEVOL(uint SasCorePointer, int LeftVolume, int RightVolume)
 		{
 			var SasCore = GetSasCore(SasCorePointer);
@@ -218,6 +208,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="Feedback"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x267A6DD2, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int __sceSasRevParam(uint SasCorePointer, int Delay, int Feedback)
 		{
 			var SasCore = GetSasCore(SasCorePointer);
@@ -249,7 +240,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="SasCorePointer"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x2C8E6AB3, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
+		[HlePspNotImplemented]
 		public int __sceSasGetPauseFlag(uint SasCorePointer)
 		{
 			//throw(new NotImplementedException());
@@ -319,33 +310,38 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 					Logger.Unimplemented("SasCore.OutputMode != OutputMode.PSP_SAS_OUTPUTMODE_STEREO");
 				}
 
-				int NumberOfChannels = SasCore.OutputMode == OutputMode.PSP_SAS_OUTPUTMODE_STEREO ? 2 : 1;
-				int NumberOfSamples = SasCore.GrainSamples * 2 / NumberOfChannels;
+				int NumberOfChannels = (SasCore.OutputMode == OutputMode.PSP_SAS_OUTPUTMODE_STEREO) ? 2 : 1;
+				int NumberOfSamples = SasCore.GrainSamples;
+				int NumberOfVoicesPlaying = Math.Max(1, SasCore.Voices.Count(Voice => Voice.OnAndPlaying));
 
-				for (int n = 0; n < NumberOfSamples; n++)
-				{
-					BufferTempPtr[n] = default(StereoIntSoundSample);
-				}
+				for (int n = 0; n < NumberOfSamples; n++) BufferTempPtr[n] = default(StereoIntSoundSample);
 
 				// Read and mix voices.
-				int MaxSampleIn = 0;
+				//int MaxSampleIn = 0;
+				int PrevPosDiv = -1;
 				foreach (var Voice in SasCore.Voices)
 				{
 					if (Voice.OnAndPlaying)
 					{
-						for (int n = 0, Pos = 0; n < NumberOfSamples; n++, Pos += Voice.Pitch)
+						//Console.WriteLine("Voice.Pitch: {0}", Voice.Pitch);
+						//for (int n = 0, Pos = 0; n < NumberOfSamples; n++, Pos += Voice.Pitch)
+						int Pos = 0;
+						while (true)
 						{
-							if (Voice.SampleOffset < Voice.Vag.SamplesCount)
+							if ((Voice.Vag != null) && (Voice.Vag.HasMore))
 							{
-#if !ENABLE_PITCH
-								int PosDiv = n;
-#else
-								int PosDiv = Pos / PSP_SAS_PITCH_BASE;
-#endif
+								int PosDiv = Pos / Voice.Pitch;
 
-								var Sample = Voice.Vag.GetSampleAt(Voice.SampleOffset++);
-								MaxSampleIn = Math.Max(MaxSampleIn, Sample.MaxAmplitudeLeftRight);
-								BufferTempPtr[PosDiv] += Sample;
+								if (PosDiv >= NumberOfSamples) break;
+
+								//var Sample = Voice.Vag.GetNextSample().ApplyVolumes(Voice.LeftVolume, Voice.RightVolume);
+								var Sample = Voice.Vag.GetNextSample();
+								//MaxSampleIn = Math.Max(MaxSampleIn, Sample.MaxAmplitudeLeftRight);
+
+								for (int m = PrevPosDiv + 1; m <= PosDiv; m++) BufferTempPtr[m] += Sample;
+								
+								PrevPosDiv = PosDiv;
+								Pos += PSP_SAS_PITCH_BASE;
 							}
 							else
 							{
@@ -357,31 +353,24 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 				}
 
 				// Normalize output
-				int MaxSampleOut = 1;
-				for (int n = 0; n < NumberOfSamples; n++) MaxSampleOut = Math.Max(MaxSampleOut, BufferTempPtr[n].MaxAmplitudeLeftRight);
+				//int MaxSampleOut = 1;
+				//for (int n = 0; n < NumberOfSamples; n++) MaxSampleOut = Math.Max(MaxSampleOut, BufferTempPtr[n].MaxAmplitudeLeftRight);
+				//
+				//int Numerator = MaxSampleIn;
+				//int Divisor = MaxSampleOut;
+				//
+				//for (int n = 0; n < NumberOfSamples; n++)
+				//{
+				//	BufferShortPtr[n] = ((BufferTempPtr[n] * Numerator) / Divisor);
+				//}
 
-				int Numerator = MaxSampleIn;
-				int Divisor = MaxSampleOut;
+				for (int n = 0; n < NumberOfSamples; n++) BufferShortPtr[n] = BufferTempPtr[n];
 
-				for (int n = 0; n < NumberOfSamples; n++)
-				{
-					BufferShortPtr[n] = (BufferTempPtr[n] * Numerator / Divisor);
-				}
-
-				// Output converted 44100 data
-				if (NumberOfChannels == 1)
-				{
-					for (int n = 0; n < NumberOfSamples; n++)
-					{
-						SasOut[n] = (short)((int)BufferShortPtr[n].Left * LeftVolume >> 12);
-					}
-				}
-				else
+				for (int channel = 0; channel < NumberOfChannels; channel++)
 				{
 					for (int n = 0; n < NumberOfSamples; n++)
 					{
-						SasOut[n * 2 + 0] = (short)((int)BufferShortPtr[n].Left * LeftVolume >> 12);
-						SasOut[n * 2 + 1] = (short)((int)BufferShortPtr[n].Right * RightVolume >> 12);
+						SasOut[n * NumberOfChannels + channel] = BufferShortPtr[n].ApplyVolumes(LeftVolume, RightVolume).GetByIndex(channel);
 					}
 				}
 			}
@@ -406,6 +395,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// ERROR_SAS_NOT_INIT if an invalid SasCore handle is provided
 		/// </returns>
 		[HlePspFunction(NID = 0x07F58C24, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int __sceSasGetAllEnvelopeHeights(uint SasCorePointer, int* Heights)
 		{
 			var SasCore = GetSasCore(SasCorePointer);

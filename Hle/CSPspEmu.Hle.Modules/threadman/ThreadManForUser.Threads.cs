@@ -308,12 +308,17 @@ namespace CSPspEmu.Hle.Modules.threadman
 				}
 
 				Console.WriteLine("Wait End!");
-				ThreadToWaitEnd.End += () =>
+				Action OnTerminate = null;
+
+				OnTerminate = () =>
 				{
+					ThreadToWaitEnd.OnTerminate -= OnTerminate;
 					Console.WriteLine("Ended!");
 					//throw(new Exception("aaaaaaaaaaaa"));
 					WakeUpCallback();
 				};
+
+				ThreadToWaitEnd.OnTerminate += OnTerminate;
 			}, HandleCallbacks: HandleCallbacks);
 
 			if (TimedOut)
@@ -484,24 +489,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelExitThread(int ExitStatus)
 		{
 			var Thread = ThreadManager.Current;
-			
-			//Console.Error.WriteLine(ExitStatus);
-			
-			Thread.Info.ExitStatus = ExitStatus;
-
-#if TEST_STOP_THREADS_INSTEAD_OF_KILLING
-			Thread.SetStatus(HleThread.Status.Stopped);
-#else
-			Thread.SetStatus(HleThread.Status.Killed);
-#endif
-
-			Thread.Exit();
-
-			//ThreadManager.ExitThread(Thread);
-
-			Thread.CpuThreadState.Yield();
-
-
+			ThreadManager.ExitThread(Thread, ExitStatus);
 			return 0;
 		}
 
@@ -515,9 +503,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		{
 			var Thread = ThreadManager.GetThreadById(ThreadId);
 			ThreadManager.DeleteThread(Thread);
-			ThreadManager.ExitThread(Thread);
 			return 0;
-			//return _sceKernelExitDeleteThread(-1, GetThreadById(ThreadId));
 		}
 
 		/// <summary>
@@ -528,40 +514,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspFunction(NID = 0x383F7BCC, FirmwareVersion = 150)]
 		public int sceKernelTerminateDeleteThread(int ThreadId)
 		{
-			return sceKernelDeleteThread(ThreadId);
-			//throw(new NotImplementedException());
+			var Thread = ThreadManager.GetThreadById(ThreadId);
+			ThreadManager.TerminateThread(Thread);
+			ThreadManager.DeleteThread(Thread);
+			return 0;
 
-		}
-
-		/// <summary>
-		/// Get the current priority of the thread you are in.
-		/// </summary>
-		/// <returns>The current thread priority</returns>
-		[HlePspFunction(NID = 0x94AA61EE, FirmwareVersion = 150)]
-		public int sceKernelGetThreadCurrentPriority()
-		{
-			return ThreadManager.Current.Info.PriorityCurrent;
-		}
-
-		/// <summary>
-		/// Get the free stack size for a thread.
-		/// </summary>
-		/// <param name="ThreadId">
-		///		The thread ID. Seem to take current thread if set to 0.
-		/// </param>
-		/// <returns>The free size.</returns>
-		[HlePspFunction(NID = 0x52089CA1, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public int sceKernelGetThreadStackFreeSize(int ThreadId)
-		{
-			var HleThread = ThreadManager.GetThreadById(ThreadId, AllowSelf: true);
-			var SpHigh = (uint)HleThread.Info.StackPointer;
-			var SpLow = (uint)HleThread.Info.StackPointer - HleThread.Info.StackSize;
-			var SpCurrent = (uint)HleThread.CpuThreadState.SP;
-			Console.Error.WriteLine("{0:X} - {1:X} - {2:X}", SpLow, SpCurrent, SpHigh);
-			return (int)(SpCurrent - SpLow);
-			//throw(new NotImplementedException());
-			//return SpHigh - SpCurrent;
 		}
 
 		/// <summary>
@@ -640,11 +597,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelSuspendThread(int ThreadId)
 		{
 			var Thread = GetThreadById(ThreadId);
-			Thread.SetStatus(HleThread.Status.Suspend);
-			if (Thread == ThreadManager.Current)
-			{
-				ThreadManager.Yield();
-			}
+			ThreadManager.SuspendThread(Thread);
 			return 0;
 		}
 
@@ -658,7 +611,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelResumeThread(int ThreadId)
 		{
 			var Thread = GetThreadById(ThreadId);
-			Thread.SetStatus(HleThread.Status.Ready);
+			ThreadManager.ResumeThread(Thread);
 			return 0;
 		}
 
@@ -671,7 +624,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// </param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x27E22EC2, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
+		[HlePspNotImplemented]
 		[PspUntested]
 		public int sceKernelResumeDispatchThread(HleThreadManager.SCE_KERNEL_DISPATCHTHREAD_STATE State)
 		{
@@ -684,8 +637,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// </summary>
 		/// <returns>The current state of the dispatch thread, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x3AD58B8C, FirmwareVersion = 150)]
-		//[HlePspNotImplemented]
-		[PspUntested]
+		[HlePspNotImplemented]
+		//[PspUntested]
 		public HleThreadManager.SCE_KERNEL_DISPATCHTHREAD_STATE sceKernelSuspendDispatchThread()
 		{
 			try
@@ -705,15 +658,10 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <returns>Success if greater than 0, an error if less than 0.</returns>
 		[HlePspFunction(NID = 0x616403BA, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceKernelTerminateThread(int ThreadId)
+		public uint sceKernelTerminateThread(int ThreadId)
 		{
 			var Thread = GetThreadById(ThreadId);
-
-			//Console.Error.WriteLine(ExitStatus);
-
-			Thread.Info.ExitStatus = -1;
-			Thread.SetStatus(HleThread.Status.Killed);
-			Thread.Exit();
+			ThreadManager.TerminateThread(Thread);
 			return 0;
 		}
 
@@ -730,7 +678,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			var CurrentThread = ThreadManager.Current;
 			if (Thread == CurrentThread) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_THREAD));
 			if (!Thread.HasAnyStatus(HleThread.Status.Waiting)) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_THREAD_IS_NOT_WAIT));
-			Thread.WakeUp();
+			Thread.ReleaseWaitThread();
 			return 0;
 		}
 
@@ -795,6 +743,37 @@ namespace CSPspEmu.Hle.Modules.threadman
 		{
 			// Can be safely ignored. Only valid in debug mode on a real PSP.
 			return 0;
+		}
+
+		/// <summary>
+		/// Get the current priority of the thread you are in.
+		/// </summary>
+		/// <returns>The current thread priority</returns>
+		[HlePspFunction(NID = 0x94AA61EE, FirmwareVersion = 150)]
+		public int sceKernelGetThreadCurrentPriority()
+		{
+			return ThreadManager.Current.Info.PriorityCurrent;
+		}
+
+		/// <summary>
+		/// Get the free stack size for a thread.
+		/// </summary>
+		/// <param name="ThreadId">
+		///		The thread ID. Seem to take current thread if set to 0.
+		/// </param>
+		/// <returns>The free size.</returns>
+		[HlePspFunction(NID = 0x52089CA1, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
+		public int sceKernelGetThreadStackFreeSize(int ThreadId)
+		{
+			var HleThread = ThreadManager.GetThreadById(ThreadId, AllowSelf: true);
+			var SpHigh = (uint)HleThread.Info.StackPointer;
+			var SpLow = (uint)HleThread.Info.StackPointer - HleThread.Info.StackSize;
+			var SpCurrent = (uint)HleThread.CpuThreadState.SP;
+			Console.Error.WriteLine("sceKernelGetThreadStackFreeSize: {0:X} - {1:X} - {2:X}", SpLow, SpCurrent, SpHigh);
+			return (int)(SpCurrent - SpLow);
+			//throw(new NotImplementedException());
+			//return SpHigh - SpCurrent;
 		}
 
 		/*

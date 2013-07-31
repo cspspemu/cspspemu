@@ -416,7 +416,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			ReadVertexDelegate ReadVertex = ReadVertex_Void;
 			VertexReader.SetVertexTypeStruct(
 				VertexType,
-				(byte*)Memory.PspAddressToPointerSafe(GlobalGpuState.GetAddressRelativeToBaseOffset(GpuState->VertexAddress), 0)
+				(byte*)Memory.PspAddressToPointerSafe(GpuState->GetAddressRelativeToBaseOffset(GpuState->VertexAddress), 0)
 			);
 
 #if DEBUG_VERTEX_TYPE
@@ -458,7 +458,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			void* IndexPointer = null;
 			if (VertexType.Index != VertexTypeStruct.IndexEnum.Void)
 			{
-				IndexPointer = Memory.PspAddressToPointerSafe(GlobalGpuState.GetAddressRelativeToBaseOffset(GpuState->IndexAddress), 0);
+				IndexPointer = Memory.PspAddressToPointerSafe(GpuState->GetAddressRelativeToBaseOffset(GpuState->IndexAddress), 0);
 			}
 
 			//Console.Error.WriteLine(VertexType.Index);
@@ -579,7 +579,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 			*/
 
-			_CaptureStartPrimitive(PrimitiveType, GlobalGpuState.GetAddressRelativeToBaseOffset(GpuState->VertexAddress), VertexCount, ref VertexType);
+			_CaptureStartPrimitive(PrimitiveType, GpuState->GetAddressRelativeToBaseOffset(GpuState->VertexAddress), VertexCount, ref VertexType);
 
 			// DRAW ACTUALLY
 			{

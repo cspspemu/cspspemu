@@ -264,6 +264,26 @@ namespace CSPspEmu.Hle.Formats
 
 			return Out;
 		}
+
+		long ICompressedIso.UncompressedLength
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		int ICompressedIso.BlockSize
+		{
+			get { throw new NotImplementedException(); }
+		}
+
+		ArraySegment<byte>[] ICompressedIso.ReadBlocksDecompressed(uint Block, int Count)
+		{
+			var Segments = new ArraySegment<byte>[Count];
+			for (int n = 0; n < Count; n++)
+			{
+				Segments[n] = new ArraySegment<byte>(ReadBlockDecompressed((uint)(Block + n)));
+			}
+			return Segments;
+		}
 	}
 
 }

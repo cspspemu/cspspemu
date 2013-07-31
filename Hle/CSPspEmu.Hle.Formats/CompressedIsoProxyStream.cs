@@ -51,47 +51,56 @@ namespace CSPspEmu.Hle.Vfs.Iso
 			}
 		}
 
-		protected int SelectedCurrentPositionInBlock;
-		protected int SelectedCurrentBlock = -1;
-		protected byte[] SelectedCurrentBlockData;
+		protected int SelectedCurrentPositionInMacroBlock;
+		protected int SelectedCurrentMacroBlock = -1;
+		protected ArraySegment<byte> SelectedCurrentMacroBlockData;
 
-		protected int AvailableBytesInBlock
+		protected int AvailableBytesInMacroBlock
 		{
 			get
 			{
-				return Math.Max(0, (int)(SelectedCurrentBlockData.Length - SelectedCurrentPositionInBlock));
+				return Math.Max(0, (int)(SelectedCurrentMacroBlockData.Count - SelectedCurrentPositionInMacroBlock));
 			}
 		}
 
+		private const int MacroBlockCount = 0x10;
+
 		protected void PrepareBlock()
 		{
-			int CurrentBlock = (int)(Position / this.CompressedIso.BlockSize);
+			var MacroBlockSize = this.CompressedIso.BlockSize * MacroBlockCount;
+			int CurrentMacroBlock = (int)(Position / MacroBlockSize);
 
-			if (CurrentBlock != this.SelectedCurrentBlock)
+			if (CurrentMacroBlock != this.SelectedCurrentMacroBlock)
 			{
-				this.SelectedCurrentBlock = CurrentBlock;
-				this.SelectedCurrentBlockData = CompressedIso.ReadBlockDecompressed((uint)CurrentBlock);
+				this.SelectedCurrentMacroBlock = CurrentMacroBlock;
+				//Console.WriteLine("[1]");
+				this.SelectedCurrentMacroBlockData = new ArraySegment<byte>(CompressedIso.ReadBlocksDecompressed((uint)(CurrentMacroBlock * MacroBlockCount), MacroBlockCount).CombineAsASingleByteArray());
+				//var Data = CompressedIso.ReadBlocksDecompressed((uint)(CurrentMacroBlock * this.MacroBlockCount), 1);
+				//ArrayUtils.HexDump(this.SelectedCurrentMacroBlockData.Array);
+				//Console.WriteLine("[2]");
 			}
 
-			SelectedCurrentPositionInBlock = (int)(Position % this.CompressedIso.BlockSize);
+			SelectedCurrentPositionInMacroBlock = (int)(Position % MacroBlockSize);
 		}
 
 		public override int Read(byte[] buffer, int offset, int count)
 		{
 			int readed = 0;
 			{
+				//Console.WriteLine("[a]");
 				while (count > 0)
 				{
 					PrepareBlock();
-					int bytesToRead = Math.Min(AvailableBytesInBlock, count);
-					if (bytesToRead <= 0) break;
+					int BytesToRead = Math.Min(AvailableBytesInMacroBlock, count);
+					if (BytesToRead <= 0) break;
 					//Console.WriteLine("{0}, {1}, {2}, {3}", Position, SelectedCurrentPositionInBlock, offset, bytesToRead);
-					Array.Copy(SelectedCurrentBlockData, SelectedCurrentPositionInBlock, buffer, offset, bytesToRead);
-					Position += bytesToRead;
-					count -= bytesToRead;
-					offset += bytesToRead;
-					readed += bytesToRead;
+					Array.Copy(SelectedCurrentMacroBlockData.Array, SelectedCurrentPositionInMacroBlock + SelectedCurrentMacroBlockData.Offset, buffer, offset, BytesToRead);
+					Position += BytesToRead;
+					count -= BytesToRead;
+					offset += BytesToRead;
+					readed += BytesToRead;
 				}
+				//Console.WriteLine("[b]");
 			}
 			return readed;
 		}

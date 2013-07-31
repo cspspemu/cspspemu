@@ -3,7 +3,11 @@ using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Gpu.State
 {
-	[StructLayout(LayoutKind.Sequential, Pack = 1)]
+	public class GlobalGpuState
+	{
+	}
+
+	/*
 	public class GlobalGpuState
 	{
 		public uint GetAddressRelativeToBase(uint RelativeAddress)
@@ -19,10 +23,25 @@ namespace CSPspEmu.Core.Gpu.State
 		public uint Base;
 		public uint BaseOffset;
 	}
+	*/
 
 	[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 2048)]
 	public unsafe struct GpuStateStruct
 	{
+		public uint BaseAddress;
+		public uint BaseOffset;
+
+		public uint GetAddressRelativeToBase(uint RelativeAddress)
+		{
+			return (uint)(this.BaseAddress | RelativeAddress);
+		}
+
+		public uint GetAddressRelativeToBaseOffset(uint RelativeAddress)
+		{
+			return (uint)((this.BaseAddress | RelativeAddress) + this.BaseOffset);
+		}
+
+
 		public uint VertexAddress;
 		public uint IndexAddress;
 		public bool ToggleUpdateState;

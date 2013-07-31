@@ -1,4 +1,6 @@
-﻿//#define DISABLE_CALLBACKS
+﻿//#define DEBUG_THREADS
+
+//#define DISABLE_CALLBACKS
 
 using System;
 using System.Collections.Generic;
@@ -39,9 +41,9 @@ namespace CSPspEmu.Hle.Managers
 		[Inject]
 		private InjectContext InjectContext;
 
-		public List<HleThread> Threads = new List<HleThread>();
+		public readonly List<HleThread> Threads = new List<HleThread>(128);
 
-		public Dictionary<int, HleThread> ThreadsById = new Dictionary<int, HleThread>();
+		public readonly Dictionary<int, HleThread> ThreadsById = new Dictionary<int, HleThread>(128);
 
 		protected int LastId = 1;
 
@@ -204,7 +206,17 @@ namespace CSPspEmu.Hle.Managers
 
 			// Select the thread with the lowest PriorityValue
 			var NextThread = CalculateNext();
-			//Console.WriteLine("NextThread: {0} : {1}", NextThread.Id, NextThread.PriorityValue);
+#if DEBUG_THREADS
+			if (NextThread != null)
+			{
+				Console.Error.WriteLine("+++++++++++++++++++++++++++++++++");
+				foreach (var Thread in Threads)
+				{
+					Console.Error.WriteLine(Thread);
+				}
+				Console.Error.WriteLine("NextThread: {0} : {1}", NextThread.Id, NextThread.PriorityValue);
+			}
+#endif
 
 			//Console.WriteLine("{0} -> {1}", String.Join(",", PreemptiveScheduler.GetThreadsInQueue().Select(Item => Item.Name)), (NextThread != null) ? NextThread.Name : "-");
 
@@ -280,6 +292,7 @@ namespace CSPspEmu.Hle.Managers
 			HlePspThread.Name = "Thread-" + HlePspThread.Id;
 			HlePspThread.SetStatus(HleThread.Status.Stopped);
 
+			//Console.Error.WriteLine("Created: {0}", HlePspThread);
 			PreemptiveScheduler.Update(HlePspThread);
 			Threads.Add(HlePspThread);
 			ThreadsById[HlePspThread.Id] = HlePspThread;
@@ -287,28 +300,60 @@ namespace CSPspEmu.Hle.Managers
 			return HlePspThread;
 		}
 
-		public void Remove(HleThread HleThread)
+		public void ExitThread(HleThread HleThread, int ExitStatus)
 		{
-			ExitThread(HleThread);
+#if DEBUG_THREADS
+			ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () =>
+			{
+				Console.Error.WriteLine("TerminateThread: {0}", HleThread);
+			});
+#endif
+			HleThread.Info.ExitStatus = ExitStatus;
+			HleThread.SetStatus(HleThread.Status.Killed);
+			HleThread.Terminate();
+			if (HleThread == Current)
+			{
+				HleThread.CpuThreadState.Yield();
+			}
 		}
 
-		public void ExitThread(HleThread HleThread)
+		public void TerminateThread(HleThread HleThread)
 		{
+			ExitThread(HleThread, -1);
+		}
+
+		public unsafe void DeleteThread(HleThread HleThread)
+		{
+#if DEBUG_THREADS
+			ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () =>
+			{
+				Console.Error.WriteLine("DeleteThread: {0}", HleThread);
+				Console.Error.WriteLine("{0}", Environment.StackTrace);
+			});
+#endif
+			HleThread.Stack.DeallocateFromParent();
 			Threads.Remove(HleThread);
 			ThreadsById.Remove(HleThread.Id);
 			PreemptiveScheduler.Remove(HleThread);
 		}
 
-		public unsafe void DeleteThread(HleThread Thread)
-		{
-			Thread.SetStatus(HleThread.Status.Killed);
-			Thread.Stack.DeallocateFromParent();
-			ExitThread(Thread);
-		}
-
 
 		public void ScheduleNext()
 		{
+		}
+
+		public unsafe void SuspendThread(HleThread Thread)
+		{
+			Thread.SetStatus(HleThread.Status.Suspend);
+			if (Thread == this.Current)
+			{
+				this.Yield();
+			}
+		}
+
+		public unsafe void ResumeThread(HleThread Thread)
+		{
+			Thread.SetStatus(HleThread.Status.Ready);
 		}
 	}
 }

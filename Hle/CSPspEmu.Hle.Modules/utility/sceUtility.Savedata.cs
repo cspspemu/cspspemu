@@ -55,7 +55,8 @@ namespace CSPspEmu.Hle.Modules.utility
 			/// <summary>
 			/// 
 			/// </summary>
-			public fixed byte FreeKbStringFixed[8];
+			private fixed byte FreeKbStringFixed[8];
+
 			public string FreeKbString { get { fixed (byte* Ptr = FreeKbStringFixed) return PointerUtils.FixedByteGet(8, Ptr); } set { fixed (byte* Ptr = FreeKbStringFixed) PointerUtils.FixedByteSet(8, Ptr, value); } }
 		}
 
@@ -65,13 +66,13 @@ namespace CSPspEmu.Hle.Modules.utility
 			/// <summary>
 			/// +0000 - 
 			/// </summary>
-			public fixed byte gameNameFixed[16];
+			private fixed byte gameNameFixed[16];
 			public string gameName { get { fixed (byte* Ptr = gameNameFixed) return PointerUtils.FixedByteGet(16, Ptr); } set { fixed (byte* Ptr = gameNameFixed) PointerUtils.FixedByteSet(16, Ptr, value); } }
 
 			/// <summary>
 			/// +0010 - 
 			/// </summary>
-			public fixed byte saveNameFixed[20];
+			private fixed byte saveNameFixed[20];
 			public string saveName { get { fixed (byte* Ptr = saveNameFixed) return PointerUtils.FixedByteGet(20, Ptr); } set { fixed (byte* Ptr = saveNameFixed) PointerUtils.FixedByteSet(20, Ptr, value); } }
 
 			/// <summary>
@@ -87,7 +88,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			/// <summary>
 			/// +002C - 
 			/// </summary>
-			public fixed byte UsedKbStringFixed[8];
+			private fixed byte UsedKbStringFixed[8];
 			public string UsedKbString { get { fixed (byte* Ptr = UsedKbStringFixed) return PointerUtils.FixedByteGet(8, Ptr); } set { fixed (byte* Ptr = UsedKbStringFixed) PointerUtils.FixedByteSet(8, Ptr, value); } }
 
 			/// <summary>
@@ -98,7 +99,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			/// <summary>
 			/// +0038 - 
 			/// </summary>
-			public fixed byte UsedKb32StringFixed[8];
+			private fixed byte UsedKb32StringFixed[8];
 			public string UsedKb32String { get { fixed (byte* Ptr = UsedKb32StringFixed) return PointerUtils.FixedByteGet(8, Ptr); } set { fixed (byte* Ptr = UsedKb32StringFixed) PointerUtils.FixedByteSet(8, Ptr, value); } }
 		}
 
@@ -142,12 +143,14 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// <returns>0 on success</returns>
 		[HlePspFunction(NID = 0x50C4CD57, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceUtilitySavedataInitStart(SceUtilitySavedataParam* Params)
+		public int sceUtilitySavedataInitStart(ref SceUtilitySavedataParam Params)
 		{
-			//Params->DataBufPointer
-			Params->Base.Result = 0;
+			Console.WriteLine(Params.Mode);
+			Console.WriteLine(Params.ToStringDefault());
+			//Params.DataBufPointer
+			Params.Base.Result = 0;
 
-			var SavePathFolder = "ms0:/PSP/SAVEDATA/" + Params->GameName + Params->SaveName;
+			var SavePathFolder = "ms0:/PSP/SAVEDATA/" + Params.GameName + Params.SaveName;
 			var SaveDataBin = SavePathFolder + "/DATA.BIN";
 			var SaveIcon0 = SavePathFolder + "/ICON0.PNG";
 			var SavePic1 = SavePathFolder + "/PIC1.PNG";
@@ -165,7 +168,7 @@ namespace CSPspEmu.Hle.Modules.utility
 
 			try
 			{
-				switch (Params->Mode)
+				switch (Params.Mode)
 				{
 					case PspUtilitySavedataMode.Autoload:
 					case PspUtilitySavedataMode.Load:
@@ -174,7 +177,7 @@ namespace CSPspEmu.Hle.Modules.utility
 							try
 							{
 								Memory.WriteBytes(
-									Params->DataBufPointer,
+									Params.DataBufPointer,
 									HleIoManager.HleIoWrapper.ReadBytes(SaveDataBin)
 								);
 							}
@@ -199,12 +202,12 @@ namespace CSPspEmu.Hle.Modules.utility
 
 								HleIoManager.HleIoWrapper.WriteBytes(
 									SaveDataBin,
-									Memory.ReadBytes(Params->DataBufPointer, Params->DataSize)
+									Memory.ReadBytes(Params.DataBufPointer, Params.DataSize)
 								);
 
-								Save(Params->Icon0FileData, SaveIcon0);
-								Save(Params->Pic1FileData, SavePic1);
-								//Save(Params->SfoParam, SavePic1);
+								Save(Params.Icon0FileData, SaveIcon0);
+								Save(Params.Pic1FileData, SavePic1);
+								//Save(Params.SfoParam, SavePic1);
 							}
 							catch (Exception Exception)
 							{
@@ -260,7 +263,7 @@ namespace CSPspEmu.Hle.Modules.utility
 							// Gets the ammount of free space in the Memory Stick. If null,
 							// the size is ignored and no error is returned.
 							{
-								var SizeFreeInfo = (SizeFreeInfo*)Params->msFreeAddr.GetPointer<SizeFreeInfo>(Memory);
+								var SizeFreeInfo = (SizeFreeInfo*)Params.msFreeAddr.GetPointer<SizeFreeInfo>(Memory);
 								SizeFreeInfo->SectorSize = SectorSize;
 								SizeFreeInfo->FreeSectors = FreeSize / SectorSize;
 								SizeFreeInfo->FreeKb = FreeSize / 1024;
@@ -272,7 +275,7 @@ namespace CSPspEmu.Hle.Modules.utility
 							// Gets the size of the data already saved in the Memory Stick.
 							// If null, the size is ignored and no error is returned.
 							{
-								var SizeUsedInfo = (SizeUsedInfo*)Params->msDataAddr.GetPointer<SizeUsedInfo>(Memory);
+								var SizeUsedInfo = (SizeUsedInfo*)Params.msDataAddr.GetPointer<SizeUsedInfo>(Memory);
 
 								if (SizeUsedInfo != null)
 								{
@@ -293,7 +296,7 @@ namespace CSPspEmu.Hle.Modules.utility
 										SceKernelError = SceKernelErrors.ERROR_SAVEDATA_SIZES_NO_DATA;
 									}
 #else
-									SceKernelError = SceKernelErrors.ERROR_SAVEDATA_SIZES_NO_DATA;
+									//SceKernelError = SceKernelErrors.ERROR_SAVEDATA_SIZES_NO_DATA;
 #endif
 								}
 							}
@@ -302,15 +305,15 @@ namespace CSPspEmu.Hle.Modules.utility
 							// Gets the size of the data to be saved in the Memory Stick.
 							// If null, the size is ignored and no error is returned.
 							{
-								var SizeRequiredSpaceInfo = (SizeRequiredSpaceInfo*)Params->utilityDataAddr.GetPointer<SizeRequiredSpaceInfo>(Memory);
+								var SizeRequiredSpaceInfo = (SizeRequiredSpaceInfo*)Params.utilityDataAddr.GetPointer<SizeRequiredSpaceInfo>(Memory);
 								if (SizeRequiredSpaceInfo != null)
 								{
 									long RequiredSize = 0;
-									RequiredSize += Params->Icon0FileData.Size;
-									RequiredSize += Params->Icon1FileData.Size;
-									RequiredSize += Params->Pic1FileData.Size;
-									RequiredSize += Params->Snd0FileData.Size;
-									RequiredSize += Params->DataSize;
+									RequiredSize += Params.Icon0FileData.Size;
+									RequiredSize += Params.Icon1FileData.Size;
+									RequiredSize += Params.Pic1FileData.Size;
+									RequiredSize += Params.Snd0FileData.Size;
+									RequiredSize += Params.DataSize;
 
 									SizeRequiredSpaceInfo->RequiredSpaceSectors = (uint)MathUtils.RequiredBlocks(RequiredSize, SectorSize);
 									SizeRequiredSpaceInfo->RequiredSpaceKb = (uint)MathUtils.RequiredBlocks(RequiredSize, 1024);
@@ -321,18 +324,18 @@ namespace CSPspEmu.Hle.Modules.utility
 								}
 							}
 
-							if (SceKernelError != SceKernelErrors.ERROR_OK) throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_SIZES_NO_DATA));
+							if (SceKernelError != SceKernelErrors.ERROR_OK) throw (new SceKernelException(SceKernelError));
 						}
 						break;
 					case PspUtilitySavedataMode.List:
 						{
-							var ListRequest = (ListRequest*)Params->idListAddr.GetPointer<ListRequest>(Memory);
+							var ListRequest = (ListRequest*)Params.idListAddr.GetPointer<ListRequest>(Memory);
 							ListRequest->NumEntriesReaded = 0;
 						}
 						break;
 					case PspUtilitySavedataMode.GetSize:
 						{
-							//Params->DataSize
+							//Params.DataSize
 							//throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_RW_NO_MEMSTICK));
 							//throw (new SceKernelException(SceKernelErrors.ERROR_SAVEDATA_RW_NO_DATA));
 							Console.Error.WriteLine("Not Implemented: sceUtilitySavedataInitStart.GetSize");
@@ -346,18 +349,18 @@ namespace CSPspEmu.Hle.Modules.utility
 						}
 						break;
 					default:
-						Console.Error.WriteLine("sceUtilitySavedataInitStart: Unsupported mode: " + Params->Mode);
-						Debug.Fail("sceUtilitySavedataInitStart: Unsupported mode: " + Params->Mode);
+						Console.Error.WriteLine("sceUtilitySavedataInitStart: Unsupported mode: " + Params.Mode);
+						Debug.Fail("sceUtilitySavedataInitStart: Unsupported mode: " + Params.Mode);
 						throw (new SceKernelException((SceKernelErrors)(-1)));
 						//break;
 				}
 				//throw(new NotImplementedException());
 
-				Params->Base.Result = SceKernelErrors.ERROR_OK;
+				Params.Base.Result = SceKernelErrors.ERROR_OK;
 			}
 			catch (SceKernelException SceKernelException)
 			{
-				Params->Base.Result = SceKernelException.SceKernelError;
+				Params.Base.Result = SceKernelException.SceKernelError;
 			}
 			finally
 			{

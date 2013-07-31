@@ -20,10 +20,10 @@ namespace CSPspEmu.Core.Tests
 			Assert.AreEqual(ExpectedBlockSize, Cso.BlockSize);
 			for (uint Block = 0; Block < ExpectedNumberOfBlocks; Block++)
 			{
-				var DecompressedBlockData = Cso.ReadBlockDecompressed(Block);
+				var DecompressedBlockData = Cso.ReadBlocksDecompressed(Block, 1)[0];
 				CollectionAssert.AreEqual(
 					IsoBytes.Skip((int)(ExpectedBlockSize * Block)).Take(ExpectedBlockSize).ToArray(),
-					DecompressedBlockData
+					DecompressedBlockData.ToArray()
 				);
 			}
 		}

@@ -118,7 +118,14 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 				set
 				{
 					_DecodingOffset = value & ~0x7FF;
-					DataStream.Position = _DecodingOffset * this.BlockSize / this.MaximumSamples;
+					if (this.MaximumSamples == 0)
+					{
+						DataStream.Position = 0;
+					}
+					else
+					{
+						DataStream.Position = _DecodingOffset * this.BlockSize / this.MaximumSamples;
+					}
 				}
 			}
 			public SliceStream DataStream;
@@ -474,6 +481,12 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 					short[] buf;
 
 					int rc;
+
+					if (BlockSize <= 0)
+					{
+						Console.WriteLine("BlockSize <= 0");
+						return -1;
+					}
 
 					if (this.DataStream.Available() < BlockSize)
 					{
