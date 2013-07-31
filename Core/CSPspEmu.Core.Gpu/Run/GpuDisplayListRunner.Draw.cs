@@ -1,5 +1,6 @@
 ﻿using CSharpPlatform;
 using CSPspEmu.Core.Gpu.State;
+using System;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -331,10 +332,8 @@ namespace CSPspEmu.Core.Gpu.Run
 		/// </summary>
 		public void OP_PRIM()
 		{
-			var PrimitiveType = (GuPrimitiveType)Param8(16);
-			var VertexCount = Param16(0);
-
-			//Console.WriteLine("PRIM: {0}, {1}", PrimitiveType, VertexCount);
+			var PrimitiveType = (GuPrimitiveType)Extract(16, 3);
+			var VertexCount = (ushort)Extract(0, 16);
 
 			GpuDisplayList.GpuProcessor.GpuImpl.BeforeDraw(GpuDisplayList.GpuStateStructPointer);
 			GpuDisplayList.GpuProcessor.GpuImpl.Prim(GlobalGpuState, GpuDisplayList.GpuStateStructPointer, PrimitiveType, VertexCount);

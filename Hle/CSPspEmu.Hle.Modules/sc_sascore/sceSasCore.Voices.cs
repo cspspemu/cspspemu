@@ -19,15 +19,15 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="LoopCount">Number of times the voice should play</param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x99944089, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int __sceSasSetVoice(uint SasCorePointer, int Voice, byte* VagPointer, int VagSize, int LoopCount)
 		{
 			try
 			{
 				var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
 				SasVoice.Vag = new Vag(VagPointer, VagSize);
-				SasVoice.ResetSampleOffset();
-				SasVoice.LoopCount = LoopCount;
+				SasVoice.Vag.Reset();
+				SasVoice.Vag.SetLoopCount(LoopCount);
 
 				//var VagPointer = (byte *)MemoryManager.Memory.PspAddressToPointerSafe(VagAddress);
 				//File.WriteAllBytes("test.vag", PointerUtils.PointerToByteArray(VagPointer, VagSize));
@@ -49,7 +49,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="Pitch">Pitch to set. A value between 1 and 16384. The default value is 4096.</param>
 		/// <returns>0 on success</returns>
 		[HlePspFunction(NID = 0xAD84D37F, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int __sceSasSetPitch(uint SasCorePointer, int Voice, int Pitch)
 		{
 			var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
@@ -226,7 +226,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="Voice"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0x76F01ACA, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int __sceSasSetKeyOn(uint SasCorePointer, int Voice)
 		{
 			var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
@@ -242,7 +242,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="Voice"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xA0CF2FA4, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int __sceSasSetKeyOff(uint SasCorePointer, int Voice)
 		{
 			var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);

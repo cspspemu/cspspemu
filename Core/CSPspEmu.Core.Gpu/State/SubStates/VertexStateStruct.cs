@@ -24,7 +24,7 @@ namespace CSPspEmu.Core.Gpu.State
 			Void = 0,
 			Byte = 1,
 			Short = 2,
-			Invalid1 = 1,
+			//Invalid1 = 1,
 		}
 
 		public enum NumericEnum : byte

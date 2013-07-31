@@ -40,8 +40,8 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			SortedDictionary<uint, AstLabel> Labels = new SortedDictionary<uint, AstLabel>();
 			SortedDictionary<uint, AstLabel> LabelsJump = new SortedDictionary<uint, AstLabel>();
 
-			//const int MaxNumberOfInstructions = 8 * 1024;
-			const int MaxNumberOfInstructions = 64 * 1024;
+			const int MaxNumberOfInstructions = 32 * 1024;
+			//const int MaxNumberOfInstructions = 64 * 1024;
 			//const int MaxNumberOfInstructions = 128 * 1024;
 			//const int MaxNumberOfInstructions = 60;
 

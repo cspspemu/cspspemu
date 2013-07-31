@@ -11,7 +11,7 @@ namespace CSPspEmu.Core.Gpu
     public unsafe class VertexReader
 	{
 		protected int VertexAlignSize = 1;
-		protected int VertexSize;
+		public int VertexSize;
 		protected int SkinningWeightCount;
 		protected byte* BasePointer;
 		protected int PointerOffset;

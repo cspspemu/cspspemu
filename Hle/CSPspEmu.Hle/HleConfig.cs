@@ -27,7 +27,8 @@ namespace CSPspEmu.Hle
 		public bool DebugNotImplemented = true;
 
 		//public PspConfirmButton ConfirmButton;
-		public bool WlanIsOn = false;
+		//public bool WlanIsOn = false;
+		public bool WlanIsOn = true;
 		
 		public bool UseCoRoutines = false;
 		//public bool UseCoRoutines = true;

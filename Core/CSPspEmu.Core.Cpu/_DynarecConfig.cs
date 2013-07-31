@@ -27,11 +27,11 @@ namespace CSPspEmu.Core.Cpu
 		//public const bool DebugFunctionCreation = true;
 		public const bool DebugFunctionCreation = false;
 		
-		//public const bool EnableGpuSignalsCallback = true;
-		//public const bool EnableGpuFinishCallback = true;
+		public const bool EnableGpuSignalsCallback = true;
+		public const bool EnableGpuFinishCallback = true;
 
-		public const bool EnableGpuSignalsCallback = false;
-		public const bool EnableGpuFinishCallback = false;
+		//public const bool EnableGpuSignalsCallback = false;
+		//public const bool EnableGpuFinishCallback = false;
 
 		//public const bool EnableRenderTarget = false;
 		public const bool EnableRenderTarget = true;

@@ -209,6 +209,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public static uint _lwl_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
 		{
+			//Console.WriteLine("_lwl_exec");
 			uint Address = (uint)(RS + Offset);
 			uint AddressAlign = (uint)Address & 3;
 			uint Value = *(uint*)CpuThreadState.GetMemoryPtr(Address & unchecked((uint)~3));
@@ -217,6 +218,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public static uint _lwr_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
 		{
+			//Console.WriteLine("_lwr_exec");
 			uint Address = (uint)(RS + Offset);
 			uint AddressAlign = (uint)Address & 3;
 			uint Value = *(uint*)CpuThreadState.GetMemoryPtr(Address & unchecked((uint)~3));

@@ -65,19 +65,159 @@ namespace CSPspEmu.Hle
 			return (uint)CpuThreadState.CpuProcessor.InjectContext.GetInstance<HleUidPoolManager>().GetOrAllocIndex(Type, Item);
 		}
 
+		class NormalRegisterReader : RegisterReaderBase<object>
+		{
+			public CpuThreadState CpuThreadState;
+
+			public NormalRegisterReader(CpuThreadState CpuThreadState)
+			{
+				this.CpuThreadState = CpuThreadState;
+			}
+
+
+			protected override object ReadFromFpr(Type Type, int Index)
+			{
+				return this.CpuThreadState.FPR[Index];
+			}
+
+			protected override object ReadFromGpr(Type Type, int Index)
+			{
+				return this.CpuThreadState.GPR[Index];
+			}
+
+			protected override object ReadFromStack(Type Type, int Index)
+			{
+				if (Type == typeof(int) || Type == typeof(uint))
+				{
+					return CpuThreadState.Memory.ReadSafe<uint>((uint)(this.CpuThreadState.GPR[29] + ((MaxGprIndex - Index) * 4)));
+				}
+				if (Type == typeof(long) || Type == typeof(ulong))
+				{
+					return CpuThreadState.Memory.ReadSafe<ulong>((uint)(this.CpuThreadState.GPR[29] + ((MaxGprIndex - Index) * 4)));
+				}
+				throw(new NotImplementedException("Invalid operation"));
+			}
+		}
+
+		class AstRegisterReader : RegisterReaderBase<AstNodeExpr>
+		{
+			public MethodInfo MethodInfo;
+			public PspMemory PspMemory;
+
+			public AstRegisterReader(MethodInfo MethodInfo, PspMemory PspMemory)
+			{
+				this.MethodInfo = MethodInfo;
+				this.PspMemory = PspMemory;
+			}
+
+
+			protected override AstNodeExpr ReadFromFpr(Type Type, int Index)
+			{
+				return ast.FPR(Index);
+			}
+
+			protected override AstNodeExpr ReadFromGpr(Type Type, int Index)
+			{
+				return ast.GPR(Type, Index);
+			}
+
+			protected override AstNodeExpr ReadFromStack(Type Type, int Index)
+			{
+				return ast.MemoryGetValue(Type, PspMemory, ast.GPR_u(29) + ((MaxGprIndex - Index) * 4));
+			}
+		}
+
+		abstract class RegisterReaderBase<TReturn>
+		{
+			public const int MaxGprIndex = 12;
+			public int GprIndex = 4;
+			public int FprIndex = 0;
+			public List<ParamInfo> ParamInfoList = new List<ParamInfo>();
+
+			public TReturn Read(ParameterInfo ParameterInfo)
+			{
+				return Read(ParameterInfo.ParameterType, ParameterInfo);
+			}
+
+			public TReturn Read<TType>(ParameterInfo ParameterInfo)
+			{
+				return Read(typeof(TType), ParameterInfo);
+			}
+
+			abstract protected TReturn ReadFromFpr(Type Type, int Index);
+			abstract protected TReturn ReadFromGpr(Type Type, int Index);
+			abstract protected TReturn ReadFromStack(Type Type, int Index);
+
+			public TReturn Read(Type Type, ParameterInfo ParameterInfo)
+			{
+				var IsFloat = (Type == typeof(float));
+				var IsInt32 = (Type == typeof(uint) || Type == typeof(int));
+				var IsInt64 = (Type == typeof(ulong) || Type == typeof(long));
+				int SizeInWords = Marshal.SizeOf(Type) / 4;
+				if (IsFloat)
+				{
+					try
+					{
+						return ReadFromFpr(Type, FprIndex);
+					}
+					finally
+					{
+						ParamInfoList.Add(new ParamInfo()
+						{
+							ParameterInfo = ParameterInfo,
+							RegisterType = ParamInfo.RegisterTypeEnum.Fpr,
+							RegisterIndex = FprIndex,
+						});
+
+						FprIndex++;
+					}
+				}
+				else if (IsInt32 || IsInt64)
+				{
+					try
+					{
+						while (GprIndex % SizeInWords != 0) GprIndex++;
+
+						if (GprIndex >= MaxGprIndex)
+						{
+							//Console.WriteLine("{0}: STACK[{1}]", MethodInfo.Name, ((MaxGprIndex - GprIndex) * 4));
+							return ReadFromStack(Type, GprIndex);
+						}
+						else
+						{
+							//Console.WriteLine("{0}: {1}", MethodInfo.Name, GprIndex);
+							return ReadFromGpr(Type, GprIndex);
+						}
+					}
+					finally
+					{
+						ParamInfoList.Add(new ParamInfo()
+						{
+							ParameterInfo = ParameterInfo,
+							RegisterType = ParamInfo.RegisterTypeEnum.Gpr,
+							RegisterIndex = GprIndex,
+						});
+
+						GprIndex += SizeInWords;
+					}
+				}
+				else
+				{
+					throw(new NotImplementedException("Can't handle type " + Type));
+				}
+			}
+		}
+
 		private AstNodeStmContainer CreateDelegateForMethodInfoPriv(MethodInfo MethodInfo, HlePspFunctionAttribute HlePspFunctionAttribute, out List<ParamInfo> OutParamInfoList)
 		{
-			int GprIndex = 4;
-			int FprIndex = 0;
+			var RegisterReader = new AstRegisterReader(MethodInfo, Memory);
+			OutParamInfoList = RegisterReader.ParamInfoList;
 
 			//var SafeILGenerator = MipsMethodEmiter.SafeILGenerator;
 
 			var AstNodes = new AstNodeStmContainer();
 
 			AstNodes.AddStatement(ast.Comment("HleModuleHost.CreateDelegateForMethodInfo(" + MethodInfo + ", " + HlePspFunctionAttribute + ")"));
-
-			var ParamInfoList = new List<ParamInfo>();
-			OutParamInfoList = ParamInfoList;
 
 			AstNodeExprCall AstMethodCall;
 			{
@@ -87,18 +227,6 @@ namespace CSPspEmu.Hle
 				//SafeILGenerator.CastClass(this.GetType());
 
 				var AstParameters = new List<AstNodeExpr>();
-
-				Action<ParameterInfo, Type> AddGprIndex = (ParameterInfo ParameterInfo, Type ParameterType) =>
-				{
-					if (ParameterType == null) ParameterType = ParameterInfo.ParameterType;
-					ParamInfoList.Add(new ParamInfo()
-					{
-						ParameterName = ParameterInfo.Name,
-						RegisterType = ParamInfo.RegisterTypeEnum.Gpr,
-						RegisterIndex = GprIndex,
-						ParameterType = ParameterType,
-					});
-				};
 
 				foreach (var ParameterInfo in MethodInfo.GetParameters())
 				{
@@ -118,88 +246,51 @@ namespace CSPspEmu.Hle
 					// A stringz
 					else if (ParameterType == typeof(string))
 					{
-						AddGprIndex(ParameterInfo, null);
-
 						AstParameters.Add(
 							ast.CallStatic(
 								(Func<CpuThreadState, uint, string>)HleModuleHost.StringFromAddress,
 								ast.CpuThreadState,
-								ast.GPR_u(GprIndex)
+								RegisterReader.Read<uint>(ParameterInfo)
 							)
 						);
-
-						GprIndex++;
 					}
 					// A pointer or ref/out
 					else if (ParameterType.IsPointer || ParameterType.IsByRef)
 					{
-						AddGprIndex(ParameterInfo, typeof(uint));
-
 						AstParameters.Add(
 							ast.Cast(
 								ParameterType,
 								ast.MemoryGetPointer(
 									CpuProcessor.Memory,
-									ast.GPR_u(GprIndex),
+									RegisterReader.Read<uint>(ParameterInfo),
 									Safe: true,
 									ErrorDescription: "Invalid Pointer for Argument '" + ParameterType.Name + " " + ParameterInfo.Name + "'",
 									InvalidAddress: InvalidAddressAsEnum
 								)
 							)
 						);
-
-						GprIndex++;
 					}
 					// A long type
 					else if (ParameterType == typeof(long) || ParameterType == typeof(ulong))
 					{
-						while (GprIndex % 2 != 0) GprIndex++;
-
-						AddGprIndex(ParameterInfo, null);
-
-						if (ParameterType == typeof(ulong))
-						{
-							AstParameters.Add(ast.GPR_ul(GprIndex + 0));
-						}
-						else
-						{
-							AstParameters.Add(ast.GPR_sl(GprIndex + 0));
-						}
-
-						GprIndex += 2;
+						AstParameters.Add(RegisterReader.Read(ParameterInfo));
 					}
 					// A float register.
 					else if (ParameterType == typeof(float))
 					{
-						ParamInfoList.Add(new ParamInfo()
-						{
-							ParameterName = ParameterInfo.Name,
-							RegisterType = ParamInfo.RegisterTypeEnum.Fpr,
-							RegisterIndex = FprIndex,
-							ParameterType = ParameterType,
-						});
-
-						AstParameters.Add(ast.FPR(FprIndex));
-
-						FprIndex++;
+						AstParameters.Add(RegisterReader.Read(ParameterInfo));
 					}
 					// PspPointer
 					else if (ParameterType == typeof(PspPointer))
 					{
-						AddGprIndex(ParameterInfo, null);
-
 						AstParameters.Add(ast.CallStatic(
 							typeof(PspPointer).GetMethod("op_Implicit", new[] { typeof(uint) }),
-							ast.GPR_u(GprIndex)
+							RegisterReader.Read<uint>(ParameterInfo)
 						));
-
-						GprIndex++;
 					}
 					// A class
 					else if (ParameterType.IsClass)
 					{
-						AddGprIndex(ParameterInfo, null);
-
 						if (!ParameterType.Implements(typeof(IHleUidPoolClass)))
 						{
 							throw (new InvalidCastException(String.Format("Can't use a class '{0}' not implementing IHleUidPoolClass as parameter", ParameterType)));
@@ -209,27 +300,14 @@ namespace CSPspEmu.Hle
 							(Func<CpuThreadState, Type, int, bool, object>)GetObjectFromPoolHelper,
 							ast.CpuThreadState,
 							ast.Immediate(ParameterType),
-							ast.GPR_s(GprIndex),
+							RegisterReader.Read<int>(ParameterInfo),
 							(InvalidAddressAsEnum == InvalidAddressAsEnum.Null)
 						)));
-
-						GprIndex++;
 					}
 					// An integer register
 					else
 					{
-						AddGprIndex(ParameterInfo, null);
-
-						if (ParameterType == typeof(uint))
-						{
-							AstParameters.Add(ast.Cast(ParameterType, ast.GPR_u(GprIndex)));
-						}
-						else
-						{
-							AstParameters.Add(ast.Cast(ParameterType, ast.GPR_s(GprIndex)));
-						}
-
-						GprIndex++;
+						AstParameters.Add(ast.Cast(ParameterType, RegisterReader.Read((ParameterType == typeof(uint)) ? typeof(uint) : typeof(int), ParameterInfo)));
 					}
 				}
 
@@ -338,17 +416,18 @@ namespace CSPspEmu.Hle
 					Out.Write(" : {0}.{1}", MethodInfo.DeclaringType.Name, MethodInfo.Name);
 					Out.Write("(");
 					int Count = 0;
+
+					var NormalRegisterReader = new NormalRegisterReader(CpuThreadState);
 					foreach (var ParamInfo in ParamInfoList)
 					{
 						if (Count > 0) Out.Write(", ");
-						Out.Write("{0}:", ParamInfo.ParameterName);
+						Out.Write("{0}:", ParamInfo.ParameterInfo.Name);
 						switch (ParamInfo.RegisterType)
 						{
 							case HleModuleHost.ParamInfo.RegisterTypeEnum.Fpr:
 							case HleModuleHost.ParamInfo.RegisterTypeEnum.Gpr:
-								uint Int4 = (uint)CpuThreadState.GPR[ParamInfo.RegisterIndex];
-								uint Float4 = (uint)CpuThreadState.FPR[ParamInfo.RegisterIndex];
-								Out.Write("{0}", ToNormalizedTypeString(ParamInfo.ParameterType, CpuThreadState, Int4, Float4));
+								var Object = NormalRegisterReader.Read<uint>(ParamInfo.ParameterInfo);
+								Out.Write("{0}", ToNormalizedTypeString(ParamInfo.ParameterInfo.ParameterType, CpuThreadState, Object));
 								break;
 							default:
 								throw (new NotImplementedException());
@@ -401,14 +480,14 @@ namespace CSPspEmu.Hle
 				{
 					if (Trace)
 					{
-						Out.WriteLine(" : {0}", ToNormalizedTypeString(MethodInfo.ReturnType, CpuThreadState, (uint)CpuThreadState.GPR[2], (float)CpuThreadState.FPR[0]));
+						Out.WriteLine(" : {0}", ToNormalizedTypeString(MethodInfo.ReturnType, CpuThreadState, ((MethodInfo.ReturnType == typeof(float)) ? (object)CpuThreadState.FPR[0] : (object)CpuThreadState.GPR[2])));
 						Out.WriteLine("");
 					}
 				}
 			};
 		}
 
-		public static string ToNormalizedTypeString(Type ParameterType, CpuThreadState CpuThreadState, uint Int4, float Float4)
+		public static string ToNormalizedTypeString(Type ParameterType, CpuThreadState CpuThreadState, object Value)
 		{
 			if (ParameterType == typeof(void))
 			{
@@ -417,46 +496,32 @@ namespace CSPspEmu.Hle
 
 			if (ParameterType == typeof(string))
 			{
-				return String.Format("'{0}'", StringFromAddress(CpuThreadState, Int4));
+				return String.Format("'{0}'", StringFromAddress(CpuThreadState, (uint)Convert.ToInt64(Value)));
 			}
 
 			if (ParameterType == typeof(int))
 			{
-				return String.Format("{0}", (int)Int4);
+				return String.Format("{0}", Convert.ToInt32(Value));
 			}
 
 			if (ParameterType.IsEnum)
 			{
-				var Name = ParameterType.GetEnumName(Int4);
-				if (string.IsNullOrEmpty(Name)) Name = Int4.ToString();
+				var Name = ParameterType.GetEnumName(Value);
+				if (string.IsNullOrEmpty(Name)) Name = Value.ToString();
 				return Name;
 			}
 
 			if (ParameterType.IsPointer)
 			{
-				try
-				{
-					return "0x%08X".Sprintf(CpuThreadState.CpuProcessor.Memory.PointerToPspAddressUnsafe((void*)Int4));
-				}
-				catch (Exception)
-				{
-					return String.Format("0x{0:X}", CpuThreadState.CpuProcessor.Memory.PointerToPspAddressUnsafe((void*)Int4));
-				}
+				return String.Format("0x{0:X8}", CpuThreadState.CpuProcessor.Memory.PointerToPspAddressUnsafe((void*)Convert.ToInt64(Value)));
 			}
 
 			if (ParameterType == typeof(float))
 			{
-				return String.Format("{0}", Float4);
+				return String.Format("{0}", Convert.ToSingle(Value));
 			}
 
-			try
-			{
-				return "0x%08X".Sprintf(Int4);
-			}
-			catch (Exception)
-			{
-				return String.Format("0x{0:X}", Int4);
-			}
+			return String.Format("0x{0:X8}", Value);
 		}
 	}
 }

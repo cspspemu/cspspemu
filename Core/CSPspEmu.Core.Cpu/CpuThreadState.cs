@@ -486,7 +486,7 @@ namespace CSPspEmu.Core.Cpu
 
 		public void ExecuteFunctionAndReturn(uint PC)
 		{
-			RA = 0;
+			RA = 0xDEADBEEF;
 			ExecuteAT(PC);
 		}
 
@@ -542,6 +542,10 @@ namespace CSPspEmu.Core.Cpu
 		/// <returns></returns>
 		public Action<CpuThreadState> GetFuncAtPC(uint PC)
 		{
+			if (PC == 0xDEADBEEF) return (CpuThreadState) =>
+			{
+				throw(new PspBreakException("Return from callback"));
+			};
 			return CpuProcessor.MethodCache.GetForPC(PC).CallDelegate;
 		}
 	}

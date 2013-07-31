@@ -171,6 +171,15 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeExpr GPR_sl(int Index) { return ast.Cast<long>(GPR_s(Index)); }
 		public AstNodeExpr GPR_u(int Index) { if (Index == 0) return ast.Immediate((uint)0); return GPR(Index); }
 		public AstNodeExpr GPR_ul(int Index) { return ast.Cast<ulong>(GPR_u(Index)); }
+		public AstNodeExpr GPR<TType>(int Index)  { return GPR(typeof(TType), Index); }
+		public AstNodeExpr GPR(Type Type, int Index)
+		{
+			if (Type == typeof(int)) return GPR_s(Index);
+			if (Type == typeof(uint)) return GPR_u(Index);
+			if (Type == typeof(long)) return GPR_sl(Index);
+			if (Type == typeof(ulong)) return GPR_ul(Index);
+			throw (new NotImplementedException("Invalid GPR type " + Type + "!"));
+		}
 		public AstNodeExpr HILO_sl() { return HI_LO(); }
 		public AstNodeExpr HILO_ul() { return ast.Cast<ulong>(HILO_sl()); }
 

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using CSPspEmu.Hle.Attributes;
 using CSharpUtils;
+using System.Net.NetworkInformation;
 
 namespace CSPspEmu.Hle.Modules.pspnet
 {
@@ -36,7 +38,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
 		[HlePspFunction(NID = 0x281928A9, FirmwareVersion = 150)]
 		public int sceNetTerm()
 		{
-			throw (new NotImplementedException());
+			return 0;
 		}
 
 		/// <summary>
@@ -98,17 +100,21 @@ namespace CSPspEmu.Hle.Modules.pspnet
 			//throw (new NotImplementedException());
 		}
 
+		public readonly MacAddress SelfMacAddress = MacAddress.GenerateRandom();
+
 		/// <summary>
 		/// Retrieve the local Mac address
 		/// </summary>
-		/// <param name="mac">Pointer to a buffer to store the result.</param>
+		/// <param name="Mac">Pointer to a buffer to store the result.</param>
 		/// <returns>
 		///		0 on success
 		/// </returns>
 		[HlePspFunction(NID = 0x0BF0A3AE, FirmwareVersion = 150)]
-		public int sceNetGetLocalEtherAddr(byte* mac)
+		public int sceNetGetLocalEtherAddr(byte* Mac)
 		{
-			throw (new NotImplementedException());
+			var Bytes = SelfMacAddress.GetAddressBytes();
+			for (int n = 0; n < 8; n++) Mac[n] = (n < Bytes.Length) ? Bytes[n] : (byte)0;
+			return 0;
 		}
 
 		/// <summary>

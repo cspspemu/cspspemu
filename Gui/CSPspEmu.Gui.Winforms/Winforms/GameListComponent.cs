@@ -61,31 +61,31 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void GameListForm_Load(object sender, EventArgs e)
 		{
-			TypedObjectListViewEntry = new TypedObjectListView<GameList.GameEntry>(objectListView1);
-			objectListView1.ShowGroups = false;
-			objectListView1.FullRowSelect = true;
+			TypedObjectListViewEntry = new TypedObjectListView<GameList.GameEntry>(GameListView);
+			GameListView.ShowGroups = false;
+			GameListView.FullRowSelect = true;
 			DiscIdColumn.TextAlign = HorizontalAlignment.Center;
 			FirmwareColumn.TextAlign = HorizontalAlignment.Center;
 
-			objectListView1.StateImageList = new ImageList();
+			GameListView.StateImageList = new ImageList();
 			var img = new Bitmap(640, 120);
 			var g = Graphics.FromImage(img);
 			g.DrawLine(new Pen(new SolidBrush(Color.Red)), new Point(0, 0), new Point(100, 100));
-			objectListView1.StateImageList.Images.Add("test", img);
-			objectListView1.OwnerDraw = true;
+			GameListView.StateImageList.Images.Add("test", img);
+			GameListView.OwnerDraw = true;
 
 			//var IconSize = new Size(144, 80);
 			var IconSize = new Size(108, 60);
 
-			objectListView1.RowHeight = IconSize.Height;
+			GameListView.RowHeight = IconSize.Height;
 			//objectListView1.AllowColumnReorder = true;
 			//objectListView1.AutoResizeColumns();
 
-			objectListView1.Resize += objectListView1_Resize;
+			GameListView.Resize += objectListView1_Resize;
 			ResetColumns();
-			objectListView1.GridLines = true;
+			GameListView.GridLines = true;
 
-			objectListView1.Sort(TitleColumn, SortOrder.Ascending);
+			GameListView.Sort(TitleColumn, SortOrder.Ascending);
 
 			//TitleColumn.HeaderFont = new Font("MS Gothic Normal", 16);
 			TitleColumn.RendererDelegate = (ee, gg, rr, oo) =>
@@ -93,7 +93,7 @@ namespace CSPspEmu.Gui.Winforms
 				try
 				{
 					var Entry = ((GameList.GameEntry)oo);
-					var Selected = (objectListView1.SelectedObjects.Contains((object)Entry));
+					var Selected = (GameListView.SelectedObjects.Contains((object)Entry));
 					gg.FillRectangle(new SolidBrush(!Selected ? SystemColors.Window : SystemColors.Highlight), new Rectangle(rr.Left - 1, rr.Top - 1, rr.Width + 1, rr.Height + 1));
 
 					var Text = Entry.TITLE;
@@ -294,16 +294,16 @@ namespace CSPspEmu.Gui.Winforms
 			ResetColumnsWidths();
 			UpdateColumnsWidths();
 
-			objectListView1.Columns.Clear();
-			objectListView1.Columns.Add(BannerColumn);
-			objectListView1.Columns.Add(DiscIdColumn);
-			objectListView1.Columns.Add(TitleColumn);
-			objectListView1.Columns.Add(FirmwareColumn);
-			objectListView1.Columns.Add(RegionColumn);
-			objectListView1.Columns.Add(MediaTypeColumn);
+			GameListView.Columns.Clear();
+			GameListView.Columns.Add(BannerColumn);
+			GameListView.Columns.Add(DiscIdColumn);
+			GameListView.Columns.Add(TitleColumn);
+			GameListView.Columns.Add(FirmwareColumn);
+			GameListView.Columns.Add(RegionColumn);
+			GameListView.Columns.Add(MediaTypeColumn);
 			//objectListView1.Columns.Add(LicenseTypeColumn);
 			//objectListView1.Columns.Add(ReleaseTypeColumn);
-			objectListView1.Columns.Add(PathColumn);
+			GameListView.Columns.Add(PathColumn);
 		}
 
 		ColumnSize BannerColumnSize = new ColumnSize();
@@ -366,7 +366,7 @@ namespace CSPspEmu.Gui.Winforms
 			bool Updated = false;
 
 			//ResetColumns();
-			var InitialWidth = objectListView1.Width - 32;
+			var InitialWidth = GameListView.Width - 32;
 			var RestColumnWidth = GetColumnsWidth(TitleColumnSize);
 			TitleColumnSize.Width = InitialWidth - RestColumnWidth;
 
@@ -407,7 +407,7 @@ namespace CSPspEmu.Gui.Winforms
 						List.Add(Entry);
 						if (!Cached)
 						{
-							objectListView1.AddObject(Entry);
+							GameListView.AddObject(Entry);
 						}
 					};
 
@@ -415,8 +415,8 @@ namespace CSPspEmu.Gui.Winforms
 
 					this.Invoke(new Action(() =>
 					{
-						objectListView1.SetObjects(List);
-						objectListView1.Sort(TitleColumn, SortOrder.Ascending);
+						GameListView.SetObjects(List);
+						GameListView.Sort(TitleColumn, SortOrder.Ascending);
 					}));
 
 					Console.WriteLine("Done");
@@ -440,41 +440,28 @@ namespace CSPspEmu.Gui.Winforms
 				ProgressForm.End();
 				this.Invoke(new Action(() =>
 				{
-					textBox1.Focus();
+					FilterTextBox.Focus();
 				}));
-			}
-		}
-
-		private void textBox1_TextChanged(object sender, EventArgs e)
-		{
-			var Text = textBox1.Text;
-			if (Text.Length > 0)
-			{
-				TextMatchFilter filter = new TextMatchFilter(objectListView1, Text);
-				objectListView1.UseFiltering = true;
-				objectListView1.ModelFilter = filter;
-				//objectListView1.DefaultRenderer = new HighlightTextRenderer(filter);
-			}
-			else
-			{
-				objectListView1.UseFiltering = false;
-				objectListView1.ModelFilter = null;
-				//objectListView1.DefaultRenderer = new BaseRenderer();
 			}
 		}
 
 		private void textBox1_Enter(object sender, EventArgs e)
 		{
 			//Console.WriteLine("aaaaaaaaaa");
-			textBox1.SelectAll();
+			FilterTextBox.SelectAll();
 		}
 
 		public event Action<string> SelectedItem;
 
+		private void SelectSelectedItem()
+		{
+			var Entry = (GameList.GameEntry)GameListView.SelectedObject;
+			SelectedItem(Entry.IsoFile);
+		}
+
 		private void objectListView1_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
-			var Entry = (GameList.GameEntry)objectListView1.SelectedObject;
-			SelectedItem(Entry.IsoFile);
+			SelectSelectedItem();
 		}
 
 		private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
@@ -485,6 +472,71 @@ namespace CSPspEmu.Gui.Winforms
 		private void objectListView1_SelectedIndexChanged(object sender, EventArgs e)
 		{
 
+		}
+
+		private void textBox1_TextChanged(object sender, EventArgs e)
+		{
+			var Text = FilterTextBox.Text;
+			if (Text.Length > 0)
+			{
+				TextMatchFilter filter = new TextMatchFilter(GameListView, Text);
+				GameListView.UseFiltering = true;
+				GameListView.ModelFilter = filter;
+				//objectListView1.DefaultRenderer = new HighlightTextRenderer(filter);
+			}
+			else
+			{
+				GameListView.UseFiltering = false;
+				GameListView.ModelFilter = null;
+				//objectListView1.DefaultRenderer = new BaseRenderer();
+			}
+			GameListView.FullRowSelect = true;
+			GameListView.SelectedIndex = MathUtils.Clamp(GameListView.SelectedIndex, 0, GameListView.Items.Count - 1);
+		}
+
+		private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			//Console.WriteLine("KeyPress: {0}", e);
+		}
+
+		private void textBox1_KeyDown(object sender, KeyEventArgs e)
+		{
+			//Console.WriteLine("KeyDown: {0}", e);
+			int SelectedIndex = GameListView.SelectedIndex;
+			switch (e.KeyCode)
+			{
+				case Keys.Up:
+				case Keys.Down:
+				case Keys.Return:
+					e.Handled = true;
+					e.SuppressKeyPress = true;
+					switch (e.KeyCode)
+					{
+						case Keys.Up: SelectedIndex--; break;
+						case Keys.Down: SelectedIndex++; break;
+					}
+				break;
+			}
+			GameListView.FullRowSelect = true;
+			GameListView.SelectedIndex = MathUtils.Clamp(SelectedIndex, 0, GameListView.Items.Count - 1);
+			if (e.KeyCode == Keys.Return)
+			{
+				SelectSelectedItem();
+			}
+		}
+
+		private void objectListView1_KeyPress(object sender, KeyPressEventArgs e)
+		{
+		}
+
+		private void objectListView1_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Return)
+			{
+				SelectSelectedItem();
+				e.Handled = true;
+				e.SuppressKeyPress = true;
+			}
 		}
 	}
 }

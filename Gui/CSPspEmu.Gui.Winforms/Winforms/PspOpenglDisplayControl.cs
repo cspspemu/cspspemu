@@ -51,6 +51,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 					//Height = PspDisplayForm.Singleton.PspDisplay.CurrentInfo.Height
 				});
 
+				//DrawBuffer.WaitUnbinded();
 				var Texture = DrawBuffer.TextureColor;
 
 				if (GL.IsTexture(Texture))

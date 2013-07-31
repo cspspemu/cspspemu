@@ -25,6 +25,7 @@ using CSharpPlatform;
 using CSPspEmu.Core.Gpu.State.SubStates;
 using System.Collections.Generic;
 using CSPspEmu.Core.Cpu;
+using System.Threading;
 #else
 using MiniGL;
 #endif
@@ -160,6 +161,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <param name="VertexType"></param>
 		private void PutVertex(ref VertexInfo _VertexInfo, ref VertexTypeStruct VertexType)
 		{
+			//Console.Write("({0},{1},{2})", _VertexInfo.Position.X, _VertexInfo.Position.Y, _VertexInfo.Position.Z);
 			VertexInfo VertexInfo = PerformSkinning(_VertexInfo);
 
 			_CapturePutVertex(ref VertexInfo);
@@ -194,22 +196,22 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 		}
 
-		private void ReadVertex_Byte(int Index, VertexInfo* VertexInfo)
+		private void ReadVertex_Void(int Index, out VertexInfo VertexInfo)
 		{
-			*VertexInfo = Vertices[IndexListByte[Index]];
+			VertexInfo = Vertices[Index];
 		}
 
-		private void ReadVertex_Short(int Index, VertexInfo* VertexInfo)
+		private void ReadVertex_Byte(int Index, out VertexInfo VertexInfo)
 		{
-			*VertexInfo = Vertices[IndexListShort[Index]];
+			VertexInfo = Vertices[IndexListByte[Index]];
 		}
 
-		private void ReadVertex_Void(int Index, VertexInfo* VertexInfo)
+		private void ReadVertex_Short(int Index, out VertexInfo VertexInfo)
 		{
-			*VertexInfo = Vertices[Index];
+			VertexInfo = Vertices[IndexListShort[Index]];
 		}
 
-		private delegate void ReadVertexDelegate(int Index, VertexInfo* VertexInfo);
+		private delegate void ReadVertexDelegate(int Index, out VertexInfo VertexInfo);
 
 		private object PspWavefrontObjWriterLock = new object();
 		private PspWavefrontObjWriter PspWavefrontObjWriter = null;
@@ -419,6 +421,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				(byte*)Memory.PspAddressToPointerSafe(GpuState->GetAddressRelativeToBaseOffset(GpuState->VertexAddress), 0)
 			);
 
+			// Fix missing geometry! At least!
+			if (VertexType.Index == VertexTypeStruct.IndexEnum.Void)
+			{
+				GpuState->VertexAddress += (uint)(VertexReader.VertexSize * VertexCount);
+			}
+
 #if DEBUG_VERTEX_TYPE
 			try
 			{
@@ -443,17 +451,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//IndexReader.SetVertexTypeStruct(VertexType, VertexCount, (byte*)Memory.PspAddressToPointerSafe(GpuState->IndexAddress));
 
 			uint TotalVerticesWithoutMorphing = VertexCount;
-
-			//Console.Error.WriteLine("GpuState->IndexAddress: {0:X}", GpuState->IndexAddress);
-
-			// Invalid
-			/*
-			if (GpuState->IndexAddress == 0xFFFFFFFF)
-			{
-				//Debug.Fail("Invalid IndexAddress");
-				throw (new Exception("Invalid IndexAddress == 0xFFFFFFFF"));
-			}
-			*/
 
 			void* IndexPointer = null;
 			if (VertexType.Index != VertexTypeStruct.IndexEnum.Void)
@@ -487,7 +484,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					}
 					break;
 				default:
-					throw (new NotImplementedException());
+					throw (new NotImplementedException("VertexType.Index: " + VertexType.Index));
 			}
 			TotalVerticesWithoutMorphing++;
 
@@ -631,8 +628,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 							{
 								VertexInfo V1, V2, V3, V4;
 
-								ReadVertex(n + 0, &V1);
-								ReadVertex(n + 1, &V3);
+								ReadVertex(n + 0, out V1);
+								ReadVertex(n + 1, out V3);
 								V1.Color.W = 1.0f;
 								V3.Color.W = 1.0f;
 
@@ -685,7 +682,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 							//Console.Error.WriteLine("{0} : {1} : {2}", BeginMode, VertexCount, VertexType.Index);
 							for (int n = 0; n < VertexCount; n++)
 							{
-								ReadVertex(n, &VertexInfo);
+								ReadVertex(n, out VertexInfo);
 								PutVertex(ref VertexInfo, ref VertexType);
 							}
 						}
@@ -902,23 +899,40 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				EmptyData = null;
 			}
 
+			public bool Binded = false;
+			public ManualResetEvent UnbindedEvent = new ManualResetEvent(false);
+
+			public void WaitUnbinded()
+			{
+				UnbindedEvent.WaitOne();
+			}
+
+			public void Unbind()
+			{
+				if (Binded)
+				{
+					GL.Flush();
+					GL.BindFramebuffer(FramebufferTarget.DrawFramebuffer, 0);
+					Binded = false;
+					UnbindedEvent.Set();
+				}
+			}
+
 			public void Bind()
 			{
-				//Console.WriteLine("BindCurrentDrawBufferTexture: 0x{0:X8}, {1}, {2}", DrawBufferKey.Address, TextureColor, TextureDepthStencil);
-				GL.BindFramebuffer(FramebufferTarget.DrawFramebuffer, FBO);
-				//Console.WriteLine(GL.GetError());
-				GL.FramebufferTexture2D(FramebufferTarget.DrawFramebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, TextureColor, 0);
-				//Console.WriteLine(GL.GetError());
-				GL.FramebufferTexture2D(FramebufferTarget.DrawFramebuffer, FramebufferAttachment.DepthStencilAttachment, TextureTarget.Texture2D, TextureDepthStencil, 0);
-
-				//GL.Viewport(0, 0, Width, Height);
-
-				//Console.WriteLine(GL.GetError());
-				//Console.WriteLine("{0}, {1}, {2}", FBO, TextureColor, TextureDepthStencil);
+				if (!Binded)
+				{
+					GL.BindFramebuffer(FramebufferTarget.DrawFramebuffer, FBO);
+					GL.FramebufferTexture2D(FramebufferTarget.DrawFramebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, TextureColor, 0);
+					GL.FramebufferTexture2D(FramebufferTarget.DrawFramebuffer, FramebufferAttachment.DepthStencilAttachment, TextureTarget.Texture2D, TextureDepthStencil, 0);
+					Binded = true;
+					UnbindedEvent.Reset();
+				}
 			}
 
 			public void Dispose()
 			{
+				Unbind();
 				OpenglGpuImpl.OnScaleViewport -= UpdateTextures;
 				GL.DeleteFramebuffers(1, ref FBO);
 				GL.DeleteTextures(1, ref TextureColor);
@@ -962,6 +976,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		public DrawBufferValue GetCurrentDrawBufferTexture(DrawBufferKey Key)
 		{
+			GL.Flush();
 			if (!DrawBufferTextures.ContainsKey(Key)) DrawBufferTextures[Key] = new DrawBufferValue(this, Key);
 			return DrawBufferTextures[Key];
 		}
@@ -974,10 +989,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			});
 			DrawBuffer.Bind();
 			GL.DrawPixels(Width, Height, PixelFormat.Bgra, PixelType.UnsignedInt8888Reversed, new IntPtr(OutputPixel));
+			DrawBuffer.Unbind();
 			Console.WriteLine("DrawVideo: {0:X8}, {1}x{2}", FrameBufferAddress, Width, Height);
 		}
 
 		private uint CachedBindAddress;
+		DrawBufferValue CurrentDrawBuffer;
 
 		void BindCurrentDrawBufferTexture(GpuStateStruct* GpuState)
 		{
@@ -990,7 +1007,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					//Width = (int)GpuState->DrawBufferState.Width,
 					//Height = (int)272,
 				};
-				GetCurrentDrawBufferTexture(Key).Bind();
+				if (CurrentDrawBuffer != null)
+				{
+					CurrentDrawBuffer.Unbind();
+				}
+				CurrentDrawBuffer = GetCurrentDrawBufferTexture(Key);
+				CurrentDrawBuffer.Bind();
 			}
 		}
 

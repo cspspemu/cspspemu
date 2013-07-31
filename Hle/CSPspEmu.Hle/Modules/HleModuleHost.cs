@@ -124,8 +124,7 @@ namespace CSPspEmu.Hle
 			}
 			public RegisterTypeEnum RegisterType;
 			public int RegisterIndex;
-			public Type ParameterType;
-			public String ParameterName;
+			public ParameterInfo ParameterInfo;
 		}
 	}
 }

@@ -15,6 +15,7 @@ using CSharpUtils.Getopt;
 using CSPspEmu.Hle;
 using CSPspEmu.Hle.Vfs.Iso;
 using System.Diagnostics;
+using System.Net.NetworkInformation;
 
 namespace CSPspEmu
 {
@@ -336,6 +337,39 @@ namespace CSPspEmu
 			{
 			}
 #endif
+
+			/*
+			foreach (var NI in NetworkInterface.GetAllNetworkInterfaces())
+			{
+				if (NI.SupportsMulticast && NI.OperationalStatus == OperationalStatus.Up)
+				{
+					var IPProperties = NI.GetIPProperties();
+					Console.WriteLine("[A]:{0}", NI.ToStringDefault());
+					foreach (var Item in IPProperties.DhcpServerAddresses)
+					{
+						Console.WriteLine("[B]:{0},{1}", Item.ToString(), Item.IsIPv6Multicast);
+					}
+					foreach (var Item in IPProperties.AnycastAddresses)
+					{
+						Console.WriteLine("[D]:{0}", Item.Address.ToString());
+					}
+					foreach (var Item in IPProperties.MulticastAddresses)
+					{
+						Console.WriteLine("[E]:{0}", Item.Address.ToString());
+					}
+					foreach (var Item in IPProperties.UnicastAddresses)
+					{
+						Console.WriteLine("[F]:{0}", Item.Address.ToString());
+					}
+					Console.WriteLine("[G]:{0}", NI.GetPhysicalAddress());
+				}
+				else
+				{
+					Console.WriteLine("-");
+				}
+			}
+			*/
+
 			var PspEmulator = new PspEmulator();
 			//PspEmulator.UseFastMemory = true;
 			var CodeBase = Assembly.GetExecutingAssembly().Location;

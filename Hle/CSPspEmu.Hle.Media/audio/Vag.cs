@@ -14,6 +14,7 @@ namespace CSPspEmu.Hle.Formats.audio
 		bool HasMore { get; }
 		void Reset();
 		StereoShortSoundSample GetNextSample();
+		void SetLoopCount(int LoopCount);
 	}
 
 	/// <summary>
@@ -34,6 +35,11 @@ namespace CSPspEmu.Hle.Formats.audio
 		void ISoundDecoder.Reset()
 		{
 			SamplesDecoder.Reset();
+		}
+
+		void ISoundDecoder.SetLoopCount(int LoopCount)
+		{
+			SamplesDecoder.SetLoopCount(LoopCount);
 		}
 
 		StereoShortSoundSample ISoundDecoder.GetNextSample()
@@ -134,6 +140,7 @@ namespace CSPspEmu.Hle.Formats.audio
 			//private StereoShortSoundSample LastSample;
 			private readonly Stack<State> LoopStack = new Stack<State>(1);
 			private State CurrentState;
+			private int CurrentLoopCount, TotalLoopCount;
 
 			public struct State
 			{
@@ -164,6 +171,13 @@ namespace CSPspEmu.Hle.Formats.audio
 				this.SampleIndexInBlock = 0;
 				this.SampleIndexInBlock2 = 0;
 				this.ReachedEnd = false;
+				this.CurrentLoopCount = 0;
+			}
+
+			public void SetLoopCount(int LoopCount)
+			{
+				this.CurrentLoopCount = 0;
+				this.TotalLoopCount = LoopCount;
 			}
 
 			private void SeekNextBlock()
@@ -187,7 +201,14 @@ namespace CSPspEmu.Hle.Formats.audio
 
 					case Vag.Block.TypeEnum.LoopEnd:
 						{
-							this.CurrentState = LoopStack.Pop();
+							if (this.CurrentLoopCount++ < this.TotalLoopCount)
+							{
+								this.CurrentState = LoopStack.Pop();
+							}
+							else
+							{
+								LoopStack.Pop();
+							}
 						}
 						break;
 

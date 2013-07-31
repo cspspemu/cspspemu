@@ -154,15 +154,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		public void SetPlaying(bool Set)
 		{
 			Playing = Set;
-			ResetSampleOffset();
-		}
-
-		public void ResetSampleOffset()
-		{
-			if (Vag != null)
-			{
-				Vag.Reset();
-			}
+			if (Vag != null) Vag.Reset();
 		}
 
 		/// <summary>
@@ -204,7 +196,6 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <summary>
 		/// 
 		/// </summary>
-		public int LoopCount;
 		public int Pitch = sceSasCore.PSP_SAS_PITCH_BASE;
 		
 		public int LeftVolume;
