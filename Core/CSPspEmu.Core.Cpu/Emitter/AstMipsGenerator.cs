@@ -285,6 +285,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			[CallerLineNumber]int sourceLineNo = 0)
 		{
 			var Description = String.Format("('{0}') : {1}:{2}", sourceMemberName, Path.GetFileName(sourceFilePath), sourceLineNo);
+			//throw(new NotImplementedException(String.Format("AstNotImplemented: {0}", Description)));
 			return ast.Statement(ast.CallStatic((Action<string>)ErrorWriteLine, "AstNotImplemented: " + Description));
 		}
 	}

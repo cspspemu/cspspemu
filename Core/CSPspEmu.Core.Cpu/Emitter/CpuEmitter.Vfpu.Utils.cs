@@ -205,6 +205,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				Prefix.CheckPrefixUsage(PC);
 
 				//Console.WriteLine("[Get] {0:X8}:: {1}", PC, Prefix.Enabled);
+				//Console.WriteLine("GetRegApplyPrefix: {0}, {1}", Indices.Length, RegIndex);
 
 				AstNodeExpr AstNodeExpr = _GetVRegRef(Indices[RegIndex]);
 

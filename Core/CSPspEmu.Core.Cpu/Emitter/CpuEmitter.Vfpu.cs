@@ -85,8 +85,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm vcst() { return CEL_VD.Set(VfpuConstants.GetConstantValueByIndex((int)Instruction.IMM5).Value); }
 		public AstNodeStm vhdp()
 		{
+			uint VectorSize = (uint)ONE_TWO;
 			return CEL_VD.Set(_Aggregate(0f, (Aggregate, Index) =>
-				Aggregate + VEC_VT[Index] * ((Index == ONE_TWO - 1) ? 1f : VEC_VT[Index])
+				Aggregate + VEC_VT[Index] * ((Index == VectorSize - 1) ? 1f : VEC_VS[Index])
 			));
 		}
 
@@ -154,7 +155,23 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm vsbn() { return ast.NotImplemented("vsbn"); }
 
 		public AstNodeStm vsbz() { return ast.NotImplemented("vsbz"); }
-		public AstNodeStm vsocp() { return ast.NotImplemented("vsocp"); }
+		public AstNodeStm vsocp()
+		{
+			int VectorSize = ONE_TWO;
+			//Console.WriteLine("VECTOR_SIZE: {0}", VectorSize);
+			var VVD = VEC(VD, VType.VFloat, VectorSize * 2);
+			var VVS = VEC(VS, VType.VFloat, VectorSize);
+			return VVD.SetVector((Index) => {
+				switch (Index)
+				{
+					case 0: return ast.CallStatic((Func<float, float, float, float>)MathFloat.Clamp, 1f - VVS[0], 0f, 1f);
+					case 1: return ast.CallStatic((Func<float, float, float, float>)MathFloat.Clamp, VVS[0], 0f, 1f);
+					case 2: return ast.CallStatic((Func<float, float, float, float>)MathFloat.Clamp, 1f - VVS[1], 0f, 1f);
+					case 3: return ast.CallStatic((Func<float, float, float, float>)MathFloat.Clamp, VVS[1], 0f, 1f);
+					default: throw (new NotImplementedException("vsocp: " + Index));
+				}
+			});
+		}
 		public AstNodeStm vus2i() { return ast.NotImplemented("vus2i"); }
 
 		static public float _vwbn_impl(float Source, int Imm8)
@@ -275,14 +292,20 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vsrt1()
 		{
-			return VEC_VD.SetVector(Index =>
+			int VectorSize = ONE_TWO;
+			if (VectorSize != 4) return ast.Statement();
+
+			var VVD = VEC(VD, VType.VFloat, VectorSize);
+			var VVS = VEC(VS, VType.VFloat, VectorSize);
+
+			return VVD.SetVector(Index =>
 			{
 				switch (Index)
 				{
-					case 0: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VEC_VS[0], VEC_VS[1]);
-					case 1: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VEC_VS[0], VEC_VS[1]);
-					case 2: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VEC_VS[2], VEC_VS[3]);
-					case 3: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VEC_VS[2], VEC_VS[3]);
+					case 0: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VVS[0], VVS[1]);
+					case 1: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VVS[0], VVS[1]);
+					case 2: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VVS[2], VVS[3]);
+					case 3: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VVS[2], VVS[3]);
 					default: throw (new InvalidOperationException("vsrt1.Assert!"));
 				}
 			});
@@ -290,14 +313,20 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vsrt2()
 		{
-			return VEC_VD.SetVector(Index =>
+			int VectorSize = ONE_TWO;
+			if (VectorSize != 4) return ast.Statement();
+
+			var VVD = VEC(VD, VType.VFloat, VectorSize);
+			var VVS = VEC(VS, VType.VFloat, VectorSize);
+
+			return VVD.SetVector(Index =>
 			{
 				switch (Index)
 				{
-					case 0: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VEC_VS[0], VEC_VS[3]);
-					case 1: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VEC_VS[1], VEC_VS[2]);
-					case 2: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VEC_VS[1], VEC_VS[2]);
-					case 3: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VEC_VS[0], VEC_VS[3]);
+					case 0: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VVS[0], VVS[3]);
+					case 1: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VVS[1], VVS[2]);
+					case 2: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VVS[1], VVS[2]);
+					case 3: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VVS[0], VVS[3]);
 					default: throw (new InvalidOperationException("vsrt2.Assert!"));
 				}
 			});
@@ -305,14 +334,20 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vsrt3()
 		{
-			return VEC_VD.SetVector(Index =>
+			int VectorSize = ONE_TWO;
+			if (VectorSize != 4) return ast.Statement();
+
+			var VVD = VEC(VD, VType.VFloat, VectorSize);
+			var VVS = VEC(VS, VType.VFloat, VectorSize);
+
+			return VVD.SetVector(Index =>
 			{
 				switch (Index)
 				{
-					case 0: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VEC_VS[0], VEC_VS[1]);
-					case 1: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VEC_VS[0], VEC_VS[1]);
-					case 2: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VEC_VS[2], VEC_VS[3]);
-					case 3: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VEC_VS[2], VEC_VS[3]);
+					case 0: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VVS[0], VVS[1]);
+					case 1: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VVS[0], VVS[1]);
+					case 2: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VVS[2], VVS[3]);
+					case 3: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VVS[2], VVS[3]);
 					default: throw (new InvalidOperationException("vsrt3.Assert!"));
 				}
 			});
@@ -320,14 +355,20 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm vsrt4()
 		{
-			return VEC_VD.SetVector(Index =>
+			int VectorSize = ONE_TWO;
+			if (VectorSize != 4) return ast.Statement();
+
+			var VVD = VEC(VD, VType.VFloat, VectorSize);
+			var VVS = VEC(VS, VType.VFloat, VectorSize);
+
+			return VVD.SetVector(Index =>
 			{
 				switch (Index)
 				{
-					case 0: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VEC_VS[0], VEC_VS[3]);
-					case 1: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VEC_VS[1], VEC_VS[2]);
-					case 2: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VEC_VS[1], VEC_VS[2]);
-					case 3: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VEC_VS[0], VEC_VS[3]);
+					case 0: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VVS[0], VVS[3]);
+					case 1: return ast.CallStatic((Func<float, float, float>)MathFloat.Max, VVS[1], VVS[2]);
+					case 2: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VVS[1], VVS[2]);
+					case 3: return ast.CallStatic((Func<float, float, float>)MathFloat.Min, VVS[0], VVS[3]);
 					default: throw (new InvalidOperationException("vsrt4.Assert!"));
 				}
 			});

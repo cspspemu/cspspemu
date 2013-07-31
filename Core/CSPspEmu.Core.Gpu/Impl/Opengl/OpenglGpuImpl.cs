@@ -1,4 +1,4 @@
-﻿#define DISABLE_SKINNING
+﻿//#define DISABLE_SKINNING
 //#define SLOW_SIMPLE_RENDER_TARGET
 
 //#define DEBUG_PRIM
@@ -132,13 +132,22 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			var BoneMatrices = &GpuState->SkinningState.BoneMatrix0;
 
+			//Console.WriteLine("------");
+			float WeightTotal = 0f;
+			for (int m = 0; m < SkinningWeightCount; m++)
+			{
+				WeightTotal += VertexInfo.Weights[m];
+			}
 			for (int m = 0; m < SkinningWeightCount; m++)
 			{
 				var BoneMatrix = BoneMatrices[m];
 				var BoneMatrixValues = BoneMatrix.Values;
-				float Weight = VertexInfo.Weights[m];
+				float Weight = VertexInfo.Weights[m] / WeightTotal;
 
 				BoneMatrix.SetLastColumn();
+
+				//Console.WriteLine("{0}", Weight);
+				//Console.WriteLine("{0}", BoneMatrix);
 
 				if (Weight != 0)
 				{

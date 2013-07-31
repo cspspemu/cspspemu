@@ -63,12 +63,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			);
 		}
 
-
-
 		public AstNodeStm vslt() { return VEC_VD.SetVector(Index => ast.CallStatic((Func<float, float, float>)CpuEmitterUtils._vslt_impl, VEC_VS[Index], VEC_VT[Index])); }
 		public AstNodeStm vsge() { return VEC_VD.SetVector(Index => ast.CallStatic((Func<float, float, float>)CpuEmitterUtils._vsge_impl, VEC_VS[Index], VEC_VT[Index])); }
 		public AstNodeStm vscmp() { return VEC_VD.SetVector(Index => ast.CallStatic((Func<float, float>)MathFloat.Sign, VEC_VS[Index] - VEC_VT[Index])); }
-
 
 		public AstNodeStm _vcmovtf(bool True)
 		{
@@ -92,15 +89,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
 					)
 				);
 			}
-			else if (Register == 6)
+
+			if (Register == 6)
 			{
 				return VEC_VD.SetVector(Index => ast.Ternary(_VCC(Index), VEC_VS[Index], VEC_VD[Index]));
 			}
-			else
-			{
-				// Never copy (checked on a PSP)
-				return ast.Statement();
-			}
+
+			// Register == 7
+
+			// Never copy (checked on a PSP)
+			return ast.Statement();
 		}
 
 		public AstNodeStm vcmovf() { return _vcmovtf(false); }
