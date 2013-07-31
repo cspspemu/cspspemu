@@ -1,4 +1,7 @@
-﻿using CSharpPlatform;
+﻿#define PRIM_BATCH
+
+using CSharpPlatform;
+using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
 using System;
 
@@ -327,6 +330,8 @@ namespace CSPspEmu.Core.Gpu.Run
 			GpuDisplayList.GpuProcessor.GpuImpl.DrawCurvedSurface(GlobalGpuState, GpuDisplayList.GpuStateStructPointer, Patch, UCount, VCount);
 		}
 
+		int PrimCount = 0;
+
 		/// <summary>
 		/// Primitive Kick - draw PRIMitive
 		/// </summary>
@@ -335,8 +340,35 @@ namespace CSPspEmu.Core.Gpu.Run
 			var PrimitiveType = (GuPrimitiveType)Extract(16, 3);
 			var VertexCount = (ushort)Extract(0, 16);
 
-			GpuDisplayList.GpuProcessor.GpuImpl.BeforeDraw(GpuDisplayList.GpuStateStructPointer);
+#if PRIM_BATCH
+			var NextInstruction = *(GpuInstruction*)GpuDisplayList.Memory.PspAddressToPointerUnsafe(PC + 4);
+
+			if (PrimCount == 0)
+			{
+				GpuDisplayList.GpuProcessor.GpuImpl.BeforeDraw(GpuDisplayList.GpuStateStructPointer);
+				GpuDisplayList.GpuProcessor.GpuImpl.PrimStart(GlobalGpuState, GpuDisplayList.GpuStateStructPointer);
+			}
+
 			GpuDisplayList.GpuProcessor.GpuImpl.Prim(GlobalGpuState, GpuDisplayList.GpuStateStructPointer, PrimitiveType, VertexCount);
+
+			if (NextInstruction.OpCode == GpuOpCodes.PRIM)
+			{
+				//Console.WriteLine();
+				PrimCount++;
+			}
+			else
+			{
+				//Console.WriteLine("{0:X8}", PC);
+
+				PrimCount = 0;
+				GpuDisplayList.GpuProcessor.GpuImpl.PrimEnd(GlobalGpuState, GpuDisplayList.GpuStateStructPointer);
+			}
+#else
+			GpuDisplayList.GpuProcessor.GpuImpl.BeforeDraw(GpuDisplayList.GpuStateStructPointer);
+			GpuDisplayList.GpuProcessor.GpuImpl.PrimStart(GlobalGpuState, GpuDisplayList.GpuStateStructPointer);
+			GpuDisplayList.GpuProcessor.GpuImpl.Prim(GlobalGpuState, GpuDisplayList.GpuStateStructPointer, PrimitiveType, VertexCount);
+			GpuDisplayList.GpuProcessor.GpuImpl.PrimEnd(GlobalGpuState, GpuDisplayList.GpuStateStructPointer);
+#endif
 		}
 	}
 }

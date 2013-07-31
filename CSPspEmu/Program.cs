@@ -189,7 +189,7 @@ namespace CSPspEmu
 				{
 					var IsoInPath = Getopt.DequeueNext();
 					var IsoOutPath = Getopt.DequeueNext();
-					
+
 					if (Path.GetExtension(IsoOutPath) != ".iso")
 					{
 						Console.WriteLine("Just support outputing .iso files");
@@ -311,7 +311,7 @@ namespace CSPspEmu
 				});
 				Getopt.AddRule((Name) =>
 				{
-				    FileToLoad = Name;
+					FileToLoad = Name;
 				});
 			}
 			try
@@ -325,6 +325,15 @@ namespace CSPspEmu
 			}
 
 			Logger.Info("Running ... plat:{0} ... int*:{1}", Environment.Is64BitProcess ? "64bit" : "32bit", sizeof(int*));
+			{
+				var MonoRuntimeType = Type.GetType("Mono.Runtime");
+				if (MonoRuntimeType != null)
+				{
+					var GetDisplayNameMethod = MonoRuntimeType.GetMethod("GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static);
+					if (GetDisplayNameMethod != null) Console.WriteLine("Mono: {0}", GetDisplayNameMethod.Invoke(null, null));
+				}
+			}
+			Console.WriteLine("ImageRuntimeVersion: {0}", Assembly.GetExecutingAssembly().ImageRuntimeVersion);
 
 #if !RELEASE
 			try

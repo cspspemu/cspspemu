@@ -51,7 +51,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// vsgn  : Vector SiGN
 		// *     : Vector Reverse SQuare root/COSine/Arc SINe/LOG2
 		// @CHECK
-		public AstNodeStm vmov() { return VEC_VD.SetVector((Index) => VEC_VS[Index]); }
+		public AstNodeStm vmov() {
+			PrefixTarget.Consume();
+			return VEC_VD.SetVector((Index) => VEC_VS[Index]);
+		}
 		public AstNodeStm vabs() { return VEC_VD.SetVector((Index) => ast.CallStatic((Func<float, float>)MathFloat.Abs, _Vector(VS)[Index])); }
 		public AstNodeStm vneg() { return VEC_VD.SetVector((Index) => -VEC_VS[Index]); }
 		public AstNodeStm vocp() { return VEC_VD.SetVector((Index) => 1f - VEC_VS[Index]); }

@@ -16,6 +16,21 @@ namespace CSPspEmu.Core.Gpu.State
 		/// </summary>
 		public byte NormalCount;
 
+		/// <summary>
+		/// 
+		/// </summary>
+		public uint Value;
+
+		static public bool operator ==(VertexTypeStruct a, VertexTypeStruct b)
+		{
+			return (a.ReversedNormal == b.ReversedNormal) && (a.NormalCount == b.NormalCount) && (a.Value == b.Value);
+		}
+
+		static public bool operator !=(VertexTypeStruct a, VertexTypeStruct b)
+		{
+			return !(a == b);
+		}
+
         public static readonly int[] TypeSizeTable = new int[] { 0, sizeof(byte), sizeof(short), sizeof(float) };
 		public static readonly int[] ColorSizeTable = new int[] { 0, 1, 1, 1, 2, 2, 2, 4 };
 
@@ -46,8 +61,6 @@ namespace CSPspEmu.Core.Gpu.State
 			Color4444 = 6,
 			Color8888 = 7,
 		}
-
-		public uint Value;
 
 		public NumericEnum Weight {
 			get { return (NumericEnum)BitUtils.Extract(Value, 9, 2); }

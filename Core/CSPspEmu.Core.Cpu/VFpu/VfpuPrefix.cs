@@ -17,6 +17,11 @@ namespace CSPspEmu.Core.Cpu.VFpu
 		public bool Enabled;
 		public int UsedCount;
 
+		internal void Consume()
+		{
+			this.Enabled = false;
+		}
+
 		public void CheckPrefixUsage(uint PC)
 		{
 			// Disable the prefix once it have been used.

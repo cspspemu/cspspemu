@@ -14,7 +14,7 @@ namespace CSPspEmu.Core.Gpu
 		public int VertexSize;
 		protected int SkinningWeightCount;
 		protected byte* BasePointer;
-		protected int PointerOffset;
+		public int PointerOffset;
 		protected byte* Pointer { get { return BasePointer + PointerOffset; } }
 		protected VertexInfo* VertexInfo;
 
@@ -71,6 +71,7 @@ namespace CSPspEmu.Core.Gpu
 			}
 			//public VertexTypeStruct VertexTypeStruct;
 			this.BasePointer = BasePointer;
+			this.PointerOffset = PointerOffset;
 		}
 
 		public void ReadVertices(int Index, VertexInfo* VertexInfo, int Count)

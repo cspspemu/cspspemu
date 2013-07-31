@@ -498,6 +498,7 @@ namespace CSPspEmu.Gui.Winforms
 						{
 							return PspDisplayForm.Singleton.DoKeyUp(Key);
 						}
+						if (GLControl.Visible) return true;
 						return false;
 					}
 					break;
@@ -578,8 +579,8 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void DoInvoke(Action Action)
 		{
-			//if (this.InvokeRequired && GuiThread != Thread.CurrentThread && !Platform.IsMono)
-			if (this.InvokeRequired && GuiThread != Thread.CurrentThread)
+			if (this.InvokeRequired && GuiThread != Thread.CurrentThread && (!Platform.IsMono || Platform.OperatingSystem != Platform.OS.Windows))
+			//if (this.InvokeRequired && GuiThread != Thread.CurrentThread)
 			{
 				this.Invoke(Action);
 			}

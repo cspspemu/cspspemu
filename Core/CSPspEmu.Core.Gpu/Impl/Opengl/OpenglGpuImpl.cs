@@ -1,4 +1,5 @@
-﻿//#define SLOW_SIMPLE_RENDER_TARGET
+﻿#define DISABLE_SKINNING
+//#define SLOW_SIMPLE_RENDER_TARGET
 
 //#define DEBUG_PRIM
 
@@ -118,6 +119,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <returns></returns>
 		private VertexInfo PerformSkinning(VertexInfo VertexInfo)
 		{
+#if DISABLE_SKINNING
+			return VertexInfo;
+#else
 			int SkinningWeightCount = VertexType.RealSkinningWeightCount;
 			if (SkinningWeightCount == 0) return VertexInfo;
 
@@ -152,6 +156,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			VertexInfo.Normal = OutputNormal;
 
 			return VertexInfo;
+#endif
 		}
 
 		/// <summary>
@@ -398,6 +403,19 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		Stream OutputVertexInfoStream;
 #endif
 
+		bool DoPrimStart = false;
+		VertexTypeStruct CachedVertexType;
+
+		public override unsafe void PrimStart(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState)
+		{
+			DoPrimStart = true;
+		}
+
+		public override void PrimEnd(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState)
+		{
+
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -407,13 +425,32 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <param name="VertexCount"></param>
 		private unsafe void _Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
 		{
-			//if (PrimitiveType == GuPrimitiveType.TriangleStrip) VertexCount++;
-
-			//Console.WriteLine("Prim: {0}, {1}", PrimitiveType, VertexCount);
 			this.GpuState = GpuState;
-
-			//Console.WriteLine("--------------------------------------------------------");
 			VertexType = GpuState->VertexState.Type;
+
+			if (DoPrimStart || (VertexType != CachedVertexType))
+			{
+				CachedVertexType = VertexType;
+				DoPrimStart = false;
+
+				PrepareStateCommon(GpuState);
+
+				if (GpuState->ClearingMode)
+				{
+					PrepareStateClear(GpuState);
+				}
+				else
+				{
+					PrepareStateDraw(GpuState);
+				}
+
+				PrepareStateMatrix(GpuState);
+			}
+
+			int MorpingVertexCount = (int)VertexType.MorphingVertexCount + 1;
+
+
+			//if (PrimitiveType == GuPrimitiveType.TriangleStrip) VertexCount++;
 
 			ReadVertexDelegate ReadVertex = ReadVertex_Void;
 			VertexReader.SetVertexTypeStruct(
@@ -424,8 +461,15 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			// Fix missing geometry! At least!
 			if (VertexType.Index == VertexTypeStruct.IndexEnum.Void)
 			{
-				GpuState->VertexAddress += (uint)(VertexReader.VertexSize * VertexCount);
+				GpuState->VertexAddress += (uint)(VertexReader.VertexSize * VertexCount * MorpingVertexCount);
+				//GpuState->VertexAddress += (uint)(VertexReader.VertexSize * VertexCount);
 			}
+
+			if (MorpingVertexCount != 1 || VertexType.RealSkinningWeightCount != 0)
+			{
+				//Console.WriteLine("PRIM: {0}, {1}, Morphing:{2}, Skinning:{3}", PrimitiveType, VertexCount, MorpingVertexCount, VertexType.RealSkinningWeightCount);
+			}
+
 
 #if DEBUG_VERTEX_TYPE
 			try
@@ -465,7 +509,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					break;
 				case VertexTypeStruct.IndexEnum.Byte:
 					ReadVertex = ReadVertex_Byte;
-					IndexListByte = (byte *)IndexPointer;
+					IndexListByte = (byte*)IndexPointer;
 					TotalVerticesWithoutMorphing = 0;
 					for (int n = 0; n < VertexCount; n++)
 					{
@@ -488,9 +532,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 			TotalVerticesWithoutMorphing++;
 
+
 			//Console.WriteLine(TotalVerticesWithoutMorphing);
 
-			int MorpingVertexCount = (int)VertexType.MorphingVertexCount + 1;
 			int z = 0;
 			VertexInfo TempVertexInfo;
 
@@ -545,36 +589,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				}
 #endif
 			}
-
-			//VertexType.Texture == VertexTypeStruct.TextureEnum.Byte
-			//return;
-			//PrepareRead(GpuState);
-
-			PrepareStateCommon(GpuState);
-
-			if (GpuState->ClearingMode)
-			{
-				PrepareStateClear(GpuState);
-			}
-			else
-			{
-				PrepareStateDraw(GpuState);
-			}
-
-			PrepareStateMatrix(GpuState);
-
-			//GL.Enable(EnableCap.Blend);
-
-			/*
-			if (CurrentTexture != null)
-			{
-				if (CurrentTexture.TextureHash == 0x2202293873)
-				{
-					Console.Error.WriteLine(CurrentTexture);
-					Console.Error.WriteLine(VertexCount);
-				}
-			}
-			*/
 
 			_CaptureStartPrimitive(PrimitiveType, GpuState->GetAddressRelativeToBaseOffset(GpuState->VertexAddress), VertexCount, ref VertexType);
 

@@ -113,6 +113,11 @@ namespace CSPspEmu.Core.Gpu
 		/// </summary>
 		public Stack<uint> CallStack = new Stack<uint>();
 
+		public delegate void GpuDisplayListRunnerDelegate(GpuDisplayListRunner GpuDisplayListRunner, GpuOpCodes GpuOpCode, uint Params);
+		private static readonly GpuDisplayListRunnerDelegate InstructionSwitch = GpuDisplayList.GenerateSwitch();
+		internal PspMemory Memory;
+
+
 		//PspWaitEvent OnFreed = new PspWaitEvent();
 		//public enum Status2Enum
 		//{
@@ -189,11 +194,6 @@ namespace CSPspEmu.Core.Gpu
 
 			Status.SetValue(DisplayListStatusEnum.Completed);
 		}
-
-		public delegate void GpuDisplayListRunnerDelegate(GpuDisplayListRunner GpuDisplayListRunner, GpuOpCodes GpuOpCode, uint Params);
-
-		private static readonly GpuDisplayListRunnerDelegate InstructionSwitch = GpuDisplayList.GenerateSwitch();
-		private PspMemory Memory;
 
 		private static GpuDisplayListRunnerDelegate GenerateSwitch()
 		{
