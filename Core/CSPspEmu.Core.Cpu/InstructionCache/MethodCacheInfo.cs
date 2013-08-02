@@ -113,6 +113,11 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 		public uint MaxPC { get { return DynarecFunction.MaxPC; } }
 
 		/// <summary>
+		/// 
+		/// </summary>
+		public uint TotalInstructions { get { return (DynarecFunction.MaxPC - DynarecFunction.MinPC) / 7; } }
+
+		/// <summary>
 		/// Ast for this function.
 		/// </summary>
 		public AstNodeStm AstTree { get { return DynarecFunction != null ? DynarecFunction.AstNode : null; } } 

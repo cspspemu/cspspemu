@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,6 +35,7 @@ namespace CSPspEmu.Core.Cpu
 				var TypeBuilder = ModuleBuilder.DefineType(TypeName, TypeAttributes.Sealed | TypeAttributes.Public | TypeAttributes.Class);
 				var Method = TypeBuilder.DefineMethod(MethodName, MethodAttributes.Final | MethodAttributes.Public | MethodAttributes.Static, CallingConventions.Standard, typeof(void*), new[] { typeof(uint) });
 				Method.SetCustomAttribute(new CustomAttributeBuilder(typeof(MethodImplAttribute).GetConstructor(new Type[] { typeof(MethodImplOptions) }), new object[] { MethodImplOptions.AggressiveInlining }));
+				Method.SetCustomAttribute(new CustomAttributeBuilder(typeof(TargetedPatchingOptOutAttribute).GetConstructor(new Type[] { typeof(string) }), new object[] { "Performance critical to inline across NGen image boundaries" }));
 				//Method.GetILGenerator();
 
 				var AstTree = ast.Return(

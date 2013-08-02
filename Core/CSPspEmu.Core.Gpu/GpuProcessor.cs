@@ -251,13 +251,17 @@ namespace CSPspEmu.Core.Gpu
 			GpuImpl.AddedDisplayList();
 		}
 
+		internal bool Syncing = false;
+
 		public void GeDrawSync(Action SyncCallback)
 		{
+			Syncing = true;
 			Status2.CallbackOnStateOnce(Status2Enum.Completed, () =>
 			{
 				CapturingWaypoint();
 				GpuImpl.Sync(LastProcessedGpuDisplayList.GpuStateStructPointer);
 				SyncCallback();
+				Syncing = false;
 			});
 		}
 

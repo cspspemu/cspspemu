@@ -17,7 +17,7 @@ $commitDate = strtotime(trim(`git log -1 --no-decorate --pretty=format:%ai`));
 printf("BUILDING RELEASE (%d, %s)...\n", $git_revision_count, date('d-m-Y H:i:s', $commitDate));
 `"{$msbuild}" /p:Configuration=Release`;
 `merge_release.bat`;
-copy("cspspemu.exe", "deploy/cspspemu/cspspemu.exe");
+copy("cspspemu_release.exe", "deploy/cspspemu/cspspemu.exe");
 
 echo "REMOVING OLD FILES...\n";
 `DEL /Q deploy\\cspspemu.7z 2> NUL`;

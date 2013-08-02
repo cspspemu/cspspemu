@@ -95,14 +95,15 @@ namespace CSPspEmu.Gui.Winforms
 				var InfoLines = new List<string>();
 
 				InfoLines.Add(String.Format("Name: {0}", MethodCacheInfo.Name));
+				InfoLines.Add(String.Format("TotalInstructions: {0}", MethodCacheInfo.TotalInstructions));
 				InfoLines.Add(String.Format("EntryPC: 0x{0:X8}", MethodCacheInfo.EntryPC));
 				InfoLines.Add(String.Format("MinPC: 0x{0:X8}", MethodCacheInfo.MinPC));
 				InfoLines.Add(String.Format("MaxPC: 0x{0:X8}", MethodCacheInfo.MaxPC));
 				InfoLines.Add(String.Format("TimeAnalyzeBranches: {0}", MethodCacheInfo.DynarecFunction.TimeAnalyzeBranches.TotalMilliseconds));
-				InfoLines.Add(String.Format("TimeCreateDelegate: {0}", MethodCacheInfo.DynarecFunction.TimeCreateDelegate.TotalMilliseconds));
 				InfoLines.Add(String.Format("TimeGenerateAst: {0}", MethodCacheInfo.DynarecFunction.TimeGenerateAst.TotalMilliseconds));
-				InfoLines.Add(String.Format("TimeGenerateIL: {0}", MethodCacheInfo.DynarecFunction.TimeGenerateIL.TotalMilliseconds));
 				InfoLines.Add(String.Format("TimeOptimize: {0}", MethodCacheInfo.DynarecFunction.TimeOptimize.TotalMilliseconds));
+				InfoLines.Add(String.Format("TimeGenerateIL: {0}", MethodCacheInfo.DynarecFunction.TimeGenerateIL.TotalMilliseconds));
+				InfoLines.Add(String.Format("TimeCreateDelegate: {0}", MethodCacheInfo.DynarecFunction.TimeCreateDelegate.TotalMilliseconds));
 				InfoLines.Add(String.Format("TimeLinking: {0}", MethodCacheInfo.DynarecFunction.TimeLinking.TotalMilliseconds));
 
 				InfoTextBox.Text = String.Join("\r\n", InfoLines);

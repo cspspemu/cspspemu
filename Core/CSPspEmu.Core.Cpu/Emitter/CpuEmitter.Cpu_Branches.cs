@@ -47,7 +47,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeExprLValue BranchFlag()
 		{
-			if (_DynarecConfig.BRANCH_FLAG_AS_LOCAL)
+			if (_DynarecConfig.BranchFlagAsLocal)
 			{
 				if (BranchFlagLocal == null)
 				{
@@ -116,7 +116,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm JumpDynamicToAddress(AstNodeExpr Address)
 		{
-			if (_DynarecConfig.ENABLE_TAIL_CALL)
+			if (_DynarecConfig.EnableTailCalling)
 			{
 				return ast.MethodCacheInfoCallDynamicPC(Address, TailCall: true);
 			}
@@ -143,7 +143,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm JumpToFixedAddress(uint Address)
 		{
-			if (_DynarecConfig.ENABLE_TAIL_CALL)
+			if (_DynarecConfig.EnableTailCalling)
 			{
 				return ast.Statement(
 					ast.TailCall(ast.MethodCacheInfoCallStaticPC(CpuProcessor, Address))
@@ -180,7 +180,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 #if ENABLE_NATIVE_CALLS
 			return ast.StatementsInline(
 				ast.AssignPC(ast.GPR(31)),
-				ast.GetTickCall(),
+				ast.GetTickCall(false),
 				ast.Return()
 			);
 #else

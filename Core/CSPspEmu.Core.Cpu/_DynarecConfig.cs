@@ -18,12 +18,15 @@ namespace CSPspEmu.Core.Cpu
 		//public const bool EnableFastPspMemoryUtilsGetFastMemoryReader = true;
 
 		public const bool AllowFastMemory = true;
-		public const bool EMIT_CALL_TICK = true;
 		
-		public const bool ENABLE_TAIL_CALL = true;
-		//public const bool ENABLE_TAIL_CALL = false;
+		
+		//public const bool EmitCallTick = true;
+		public const bool EmitCallTick = false;
+		
+		public const bool EnableTailCalling = true;
+		//public const bool EnableTailCall = false;
 
-		public const bool BRANCH_FLAG_AS_LOCAL = true;
+		public const bool BranchFlagAsLocal = true;
 		//public const bool DebugFunctionCreation = true;
 		public const bool DebugFunctionCreation = false;
 		
@@ -40,6 +43,10 @@ namespace CSPspEmu.Core.Cpu
 		public const bool ImmediateLinking = true;
 
 		public const bool AllowCreatingUsedFunctionsInBackground = false;
+
+		public const bool DisableOptimizations = true;
+		//public const bool DisableOptimizations = false;
+
 		//public const bool AllowCreatingUsedFunctionsInBackground = true;
 	}
 }

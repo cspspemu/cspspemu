@@ -54,7 +54,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				var LocalCalculatePC = ast.Local(AstLocal.Create<uint>("CalculatePC"));
 	
 				var Call = (AstNodeExpr)ast.CallDelegate(LocalCachedFunction, ast.CpuThreadState);
-				if (TailCall) Call = ast.TailCall(Call as AstNodeExprCall);
+				var CallStm = (AstNodeStm)ast.Statement(Call);
+				if (TailCall) CallStm = ast.Statements(ast.Statement(ast.TailCall(Call as AstNodeExprCall)), ast.Return());
 
 				return ast.Statements(
 					ast.Assign(LocalCalculatePC, PC),
@@ -65,7 +66,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 							ast.Assign(LocalCachedFunction, ast.CallInstance(ast.CpuThreadState, (Func<uint, Action<CpuThreadState>>)CpuThreadStateMethods.GetFuncAtPC, PC))
 						)
 					),
-					ast.Statement(Call)
+					CallStm
 				);
 			}
 		}
@@ -262,9 +263,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return MemoryGetValue(typeof(T), Memory, Address);
 		}
 
-		public AstNodeStm GetTickCall()
+		public AstNodeStm GetTickCall(bool Mandatory)
 		{
-			if (_DynarecConfig.EMIT_CALL_TICK)
+			if (Mandatory || _DynarecConfig.EmitCallTick)
 			{
 				return ast.Statement(ast.CallInstance(ast.CpuThreadState, (Action)CSPspEmu.Core.Cpu.CpuThreadState.Methods.Tick));
 			}

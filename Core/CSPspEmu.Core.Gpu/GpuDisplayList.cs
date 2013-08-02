@@ -185,6 +185,12 @@ namespace CSPspEmu.Core.Gpu
 							Console.WriteLine("DisplayListQueue.GetCountLock(): {0}", GpuProcessor.DisplayListQueue.GetCountLock());
 							Console.WriteLine("CurrentGpuDisplayList.Status: {0}", Status.ToStringDefault());
 						});
+						if (GpuProcessor.Syncing)
+						{
+							Done = true;
+							Status.SetValue(DisplayListStatusEnum.Completed);
+							return;
+						}
 					}
 
 				}

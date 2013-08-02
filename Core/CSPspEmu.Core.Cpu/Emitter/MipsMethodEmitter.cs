@@ -11,6 +11,7 @@ using SafeILGenerator.Ast.Nodes;
 using CSPspEmu.Core.Cpu.Dynarec.Ast;
 using SafeILGenerator.Ast.Optimizers;
 using SafeILGenerator.Ast.Generators;
+using SafeILGenerator.Utils;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -19,7 +20,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	/// </summary>
 	public unsafe sealed class MipsMethodEmitter
 	{
-		private DynamicMethod DynamicMethod;
+		private uint PC;
 		private CpuProcessor Processor;
 
 		private static readonly AstMipsGenerator ast = AstMipsGenerator.Instance;
@@ -29,13 +30,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public MipsMethodEmitter(CpuProcessor Processor, uint PC, bool DoDebug = false, bool DoLog = false)
 		{
 			this.Processor = Processor;
-
-			this.DynamicMethod = new DynamicMethod(
-				String.Format("DynamicMethod_0x{0:X}", PC),
-				typeof(void),
-				new Type[] { typeof(CpuThreadState) },
-				Assembly.GetExecutingAssembly().ManifestModule
-			);
+			this.PC = PC;
 		}
 
 		public class Result
@@ -61,15 +56,23 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			Console.WriteLine("{0}", AstNodeExtensions.ToCSharpString(AstNodeStm).Replace("CpuThreadState.", ""));
 #endif
 
-			AstNodeStm.GenerateIL(DynamicMethod);
-
-			var Time2 = DateTime.UtcNow;
-
 			Action<CpuThreadState> Delegate;
+			var Time2 = Time1;
 
 			try
 			{
-				Delegate = (Action<CpuThreadState>)DynamicMethod.CreateDelegate(typeof(Action<CpuThreadState>));
+				
+				Delegate = MethodCreator.CreateDynamicMethod<Action<CpuThreadState>>(
+				//Delegate = MethodCreator.CreateMethodInClass<Action<CpuThreadState>>(
+					Assembly.GetExecutingAssembly().ManifestModule,
+					String.Format("DynamicMethod_0x{0:X}", this.PC),
+					_DynarecConfig.DisableOptimizations,
+					(DynamicMethod) =>
+					{
+						AstNodeStm.GenerateIL(DynamicMethod);
+						Time2 = DateTime.UtcNow;
+					}
+				);
 			}
 			catch (InvalidProgramException InvalidProgramException)
 			{

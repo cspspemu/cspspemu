@@ -58,6 +58,9 @@ namespace CSPspEmu
 		[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
 		static void Main(string[] Arguments)
 		{
+			//System.Runtime.CompilerServices.DynamicAttribute
+			//System.Runtime.ProfileOptimization.StartProfile();
+
 			//Thread.Sleep(1000);
 			//var Cso = new Cso(new MemoryStream(File.ReadAllBytes(@"F:\isos\psp\luxor.cso")));
 			//var Cso = new Cso(File.OpenRead(@"F:\isos\psp\Puyo.cso"));

@@ -183,7 +183,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				var Statements = ast.StatementsInline(
 					ast.Assign(ast.PC(), PC),
 					ast.Comment(SyscallInfoInfo.Name),
-					ast.GetTickCall()
+					ast.GetTickCall(true)
 				);
 
 				if (_DynarecConfig.FunctionCallWithStaticReferences)
@@ -203,7 +203,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			{
 				return ast.StatementsInline(
 					ast.AssignPC(PC),
-					ast.GetTickCall(),
+					ast.GetTickCall(true),
 					ast.Statement(ast.CallInstance(ast.CpuThreadState, (Action<int>)CpuThreadState.Methods.Syscall, (int)Instruction.CODE))
 				);
 			}

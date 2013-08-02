@@ -14,7 +14,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			var Cond = Instruction.IMM4;
 			bool NormalFlag = (Cond & 8) == 0;
 			bool NotFlag = (Cond & 4) != 0;
-			uint TypeFlag = Cond & 3;
+			uint TypeFlag = (Cond & 3);
 
 			var Local_CC_TEMP = ast.Local(AstLocal.Create<bool>());
 			var Local_CC_OR = ast.Local(AstLocal.Create<bool>());

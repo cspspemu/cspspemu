@@ -30,7 +30,16 @@ public static class AstNodeExtensions
 		_GeneratorILPsp.Init(MethodInfo, ILGenerator).Reset().GenerateRoot(AstNodeStm);
 	}
 
-	static public void GenerateIL(this AstNodeStm AstNodeStm, DynamicMethod DynamicMethod)
+	static public void GenerateIL(this AstNodeStm AstNodeStm, MethodInfo DynamicMethod)
+	{
+		ILGenerator ILGenerator = null;
+		if (DynamicMethod is DynamicMethod) ILGenerator = ((DynamicMethod)DynamicMethod).GetILGenerator();
+		if (DynamicMethod is MethodBuilder) ILGenerator = ((MethodBuilder)DynamicMethod).GetILGenerator();
+		if (ILGenerator == null) throw(new InvalidOperationException("Not a DynamicMethod/MethodBuilder"));
+		GenerateIL(AstNodeStm, DynamicMethod, ILGenerator);
+	}
+
+	static public void GenerateIL(this AstNodeStm AstNodeStm, MethodBuilder DynamicMethod)
 	{
 		GenerateIL(AstNodeStm, DynamicMethod, DynamicMethod.GetILGenerator());
 	}

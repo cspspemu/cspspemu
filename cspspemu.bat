@@ -1,2 +1,2 @@
 @echo off
-"%~dp0\CSPspEmu\bin\Debug\CSPspEmu.exe" %*
+cls && color && "%~dp0\CSPspEmu\bin\Debug\CSPspEmu.exe" %*
