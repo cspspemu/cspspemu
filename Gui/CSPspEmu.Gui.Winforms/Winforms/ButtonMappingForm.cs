@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using CSPspEmu.Core;
+using System.Reflection;
+using System.Collections.Generic;
 
 namespace CSPspEmu.Gui.Winforms
 {
@@ -17,6 +19,17 @@ namespace CSPspEmu.Gui.Winforms
 		{
 		}
 
+		static private readonly Dictionary<string, FieldInfo> _CacheControllerConfigField = new Dictionary<string, FieldInfo>();
+
+		static FieldInfo GetCachedControllerConfigField(string Name)
+		{
+			if (!_CacheControllerConfigField.ContainsKey(Name))
+			{
+				_CacheControllerConfigField[Name] = typeof(ControllerConfig).GetField(Name);
+			}
+			return _CacheControllerConfigField[Name];
+		}
+
 		void IInjectInitialize.Initialize()
 		{
 			InitializeComponent();
@@ -29,7 +42,7 @@ namespace CSPspEmu.Gui.Winforms
 				TextBox.KeyDown += this.HandleKeyDown;
 				TextBox.GotFocus += HandleGotFocus;
 				TextBox.LostFocus += HandleLostFocus;
-				var ConfigField = typeof(ControllerConfig).GetField(TextBox.Name);
+				var ConfigField = GetCachedControllerConfigField(TextBox.Name);
 				if (ConfigField != null) TextBox.Text = (String)ConfigField.GetValue(CurrentControllerConfig);
 			}
 
@@ -77,7 +90,7 @@ namespace CSPspEmu.Gui.Winforms
 				if (Key == Keys.Alt) return;
 
 				TextBox.Text = Key.ToString();
-				var ConfigField = typeof(ControllerConfig).GetField(TextBox.Name);
+				var ConfigField = GetCachedControllerConfigField(TextBox.Name);
 				if (ConfigField != null) ConfigField.SetValue(CurrentControllerConfig, TextBox.Text);
 				e.SuppressKeyPress = true;
 				(this.AcceptButton as Button).Focus();

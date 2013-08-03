@@ -25,6 +25,20 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				}
 				else
 				{
+					if (float.IsNaN(GpuState->VertexState.WorldMatrix.Values[0]))
+					{
+						Console.Error.WriteLine("Invalid WorldMatrix");
+						Console.Error.WriteLine("Projection:");
+						GpuState->VertexState.ProjectionMatrix.Dump();
+						Console.Error.WriteLine("View:");
+						GpuState->VertexState.ViewMatrix.Dump();
+						Console.Error.WriteLine("World:");
+						GpuState->VertexState.WorldMatrix.Dump();
+						//GpuState->VertexState.WorldMatrix.LoadIdentity();
+
+						//throw (new Exception("Invalid WorldMatrix"));
+					}
+
 					GL.MatrixMode(MatrixMode.Projection); GL.LoadIdentity();
 					GL.MultMatrix(GpuState->VertexState.ProjectionMatrix.Values);
 
@@ -33,11 +47,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					GpuState->VertexState.WorldMatrix.SetLastColumn();
 					GL.MultMatrix(GpuState->VertexState.ViewMatrix.Values);
 					GL.MultMatrix(GpuState->VertexState.WorldMatrix.Values);
-
-					if (float.IsNaN(GpuState->VertexState.WorldMatrix.Values[0]))
-					{
-						throw (new Exception("Invalid WorldMatrix"));
-					}
 
 					//GpuState->VertexState.ViewMatrix.Dump();
 					//GpuState->VertexState.WorldMatrix.Dump();

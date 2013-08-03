@@ -142,7 +142,7 @@ namespace CSPspEmu.Core.Audio
 				fixed (short* MixedSamplesPtr = MixedSamples)
 				{
 					var MixedSamplesDenormalized = stackalloc int[RequiredSamples];
-					//var NumberOfChannels = stackalloc int[RequiredSamples];
+
 					foreach (var Channel in Channels)
 					{
 						var ChannelSamples = Channel.Read(RequiredSamples);
@@ -152,18 +152,14 @@ namespace CSPspEmu.Core.Audio
 							for (int n = 0; n < ChannelSamples.Length; n++)
 							{
 								MixedSamplesDenormalized[n] += ChannelSamplesPtr[n];
-								//NumberOfChannels[n]++;
 							}
 						}
 					}
 
 					for (int n = 0; n < RequiredSamples; n++)
 					{
-						//if (NumberOfChannels[n] != 0)
-						{
-							//MixedSamplesPtr[n] = (short)(MixedSamplesDenormalized[n] / NumberOfChannels[n]);
-							MixedSamplesPtr[n] = StereoShortSoundSample.Clamp(MixedSamplesDenormalized[n]);
-						}
+
+						MixedSamplesPtr[n] = StereoShortSoundSample.Clamp(MixedSamplesDenormalized[n]);
 					}
 				}
 			});

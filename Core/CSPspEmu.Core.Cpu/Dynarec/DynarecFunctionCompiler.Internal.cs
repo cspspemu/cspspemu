@@ -121,7 +121,8 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
 				var Time2 = DateTime.UtcNow;
 
-				var MipsMethodEmitterResult = MipsMethodEmitter.CreateDelegate(Nodes);
+				//var MipsMethodEmitterResult = MipsMethodEmitter.CreateDelegate(Nodes, (int)((MaxPC - MinPC) / 4));
+				var MipsMethodEmitterResult = MipsMethodEmitter.CreateDelegate(Nodes, AnalyzedPC.Count);
 
 				return new DynarecFunction()
 				{
@@ -131,7 +132,9 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 					MinPC = MinPC,
 					MaxPC = MaxPC,
 					AstNode = Nodes,
+					DisableOptimizations = MipsMethodEmitterResult.DisableOptimizations,
 					Delegate = MipsMethodEmitterResult.Delegate,
+					InstructionStats = InstructionStats,
 					TimeOptimize = MipsMethodEmitterResult.TimeOptimize,
 					TimeGenerateIL = MipsMethodEmitterResult.TimeGenerateIL,
 					TimeCreateDelegate = MipsMethodEmitterResult.TimeCreateDelegate,
@@ -305,6 +308,8 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 						LabelsJump.Remove(LabelAddress);
 					}
 				}
+
+				this.CpuEmitter.BranchCount = Labels.Count;
 			}
 
 			private AstNodeStm ProcessGeneratedInstruction(MipsDisassembler.Result Disasm, AstNodeStm AstNodeStm)
@@ -592,14 +597,13 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 				}
 
 				//MipsMethodEmiter.GenerateIL(Nodes);
-				//ShowInstructionStats();
+				ShowInstructionStats();
 
 				//if (BreakPoint) IsDebuggerPresentDebugBreak();
 
 				return Nodes;
 			}
 
-			/*
 			private void ShowInstructionStats()
 			{
 				if (CpuProcessor.CpuConfig.ShowInstructionStats)
@@ -629,13 +633,12 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 					}
 				}
 
-				if (DoLog)
-				{
-					Console.WriteLine("----------------------------");
-					foreach (var Instruction in MipsMethodEmiter.SafeILGenerator.GetEmittedInstructions()) Console.WriteLine(Instruction);
-				}
+				//if (DoLog)
+				//{
+				//	Console.WriteLine("----------------------------");
+				//	foreach (var Instruction in MipsMethodEmiter.SafeILGenerator.GetEmittedInstructions()) Console.WriteLine(Instruction);
+				//}
 			}
-			*/
 		}
 	}
 }

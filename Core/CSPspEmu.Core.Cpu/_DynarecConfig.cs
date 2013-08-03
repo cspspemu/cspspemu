@@ -43,9 +43,14 @@ namespace CSPspEmu.Core.Cpu
 		public const bool ImmediateLinking = true;
 
 		public const bool AllowCreatingUsedFunctionsInBackground = false;
+		//public const bool AllowCreatingUsedFunctionsInBackground = true; // Cause sometimes "System.InvalidProgramException: Common Language Runtime detectó un programa no válido."
 
-		public const bool DisableOptimizations = true;
-		//public const bool DisableOptimizations = false;
+		//public const bool DisableDotNetJitOptimizations = true;
+		public const bool DisableDotNetJitOptimizations = false;
+
+		//public const int InstructionCountToDisableOptimizations = 500;
+		//public const int InstructionCountToDisableOptimizations = 200;
+		public const int InstructionCountToDisableOptimizations = 100;
 
 		//public const bool AllowCreatingUsedFunctionsInBackground = true;
 	}

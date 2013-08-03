@@ -435,13 +435,10 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 
 			try
 			{
-				Console.WriteLine(
-					"Opened ({0}) '{1}' with driver '{2}' and local path '{3}'",
-					Async ? "Async" : "NO Async",
-					FileName,
-					Info.HleIoDriver,
-					Info.LocalPath
-				);
+				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.DarkGreen, () =>
+				{
+					Console.WriteLine("Opened ({0}): '{1}'", Async ? "Async" : "NO Async", FileName);
+				});
 				Info.HleIoDrvFileArg.HleIoDriver.IoOpen(Info.HleIoDrvFileArg, Info.LocalPath, Flags, Mode);
 				Info.HleIoDrvFileArg.FullFileName = FileName;
 				var Uid = HleIoManager.HleIoDrvFileArgPool.Create(Info.HleIoDrvFileArg);

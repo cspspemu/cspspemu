@@ -58,6 +58,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assembler\MipsAssembler.cs" />
@@ -117,6 +118,10 @@
     <Compile Include="_DynarecConfig.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\libraries\csharpplatform\CSharpPlatform\CSharpPlatform.csproj">
+      <Project>{b4b107b5-030b-451c-8532-13b2306692c3}</Project>
+      <Name>CSharpPlatform</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
       <Project>{FD27EF3A-4EBE-4867-A603-3E7048DCF459}</Project>
       <Name>CSPspEmu.Core.Memory</Name>

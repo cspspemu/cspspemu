@@ -19,25 +19,36 @@ namespace CSPspEmu.Runner.Components.Display
 
 		protected override void Main()
 		{
-			while (true)
+			Console.WriteLine("DisplayComponentThread.Start()");
+			try
 			{
-				//Console.WriteLine("[1]");
-				var StartTime = DateTime.UtcNow;
-				var VSyncTime = StartTime + TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.VsyncRow)));
-				var EndTime = StartTime + TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.NumberOfRows)));
-				
-				ThreadTaskQueue.HandleEnqueued();
-				if (!Running) return;
+				var VSyncTimeIncrement = TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.VsyncRow)));
+				var EndTimeIncrement = TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.NumberOfRows)));
+				var VBlankInterruptHandler = HleInterruptManager.GetInterruptHandler(PspInterrupts.PSP_VBLANK_INT);
+				while (true)
+				{
+					//Console.WriteLine("[1]");
+					var StartTime = DateTime.UtcNow;
+					var VSyncTime = StartTime + VSyncTimeIncrement;
+					var EndTime = StartTime + EndTimeIncrement;
 
-				// Draw time
-				PspDisplay.TriggerDrawStart();
-				ThreadUtils.SleepUntilUtc(VSyncTime);
+					ThreadTaskQueue.HandleEnqueued();
+					if (!Running) return;
 
-				// VBlank time
-				PspDisplay.TriggerVBlankStart();
-				HleInterruptManager.GetInterruptHandler(PspInterrupts.PSP_VBLANK_INT).Trigger();
-				ThreadUtils.SleepUntilUtc(EndTime);
-				PspDisplay.TriggerVBlankEnd();
+					// Draw time
+					PspDisplay.TriggerDrawStart();
+					ThreadUtils.SleepUntilUtc(VSyncTime);
+
+					// VBlank time
+					PspDisplay.TriggerVBlankStart();
+					VBlankInterruptHandler.Trigger();
+					ThreadUtils.SleepUntilUtc(EndTime);
+					PspDisplay.TriggerVBlankEnd();
+				}
+			}
+			finally
+			{
+				Console.WriteLine("DisplayComponentThread.End()");
 			}
 		}
 	}

@@ -241,9 +241,10 @@ namespace CSPspEmu.Gui.Winforms
 			set
 			{
 				GpuProcessor.GpuImpl.ScaleViewport = value;
-				UtilsRenderScale1xMenu.Checked = (value == 1);
-				UtilsRenderScale2xMenu.Checked = (value == 2);
-				UtilsRenderScale4xMenu.Checked = (value == 4);
+				foreach (var DropDown in UtilsRenderScaleMenu.DropDownItems.Cast<ToolStripMenuItem>())
+				{
+					DropDown.Checked = (Convert.ToInt32(DropDown.Tag) == value);
+				}
 				StoredConfig.RenderScale = value;
 			}
 		}
@@ -1111,6 +1112,16 @@ namespace CSPspEmu.Gui.Winforms
 		private void UtilsRenderScale4xMenu_Click(object sender, EventArgs e)
 		{
 			RenderScale = 4;
+		}
+
+		private void xToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			RenderScale = 8;
+		}
+
+		private void UtilsRenderScaleMenu_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

@@ -3,6 +3,7 @@ using SafeILGenerator.Ast.Nodes;
 using CSPspEmu.Core.Cpu.VFpu;
 using CSharpUtils;
 using System.Linq;
+using System.Numerics;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -12,7 +13,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		// Vfpu DOT product
 		// Vfpu SCaLe/ROTate
 		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm vdot() { return CEL_VD.Set(_Aggregate(0f, ONE_TWO, (Value, Index) => Value + VEC_VS[Index] * VEC_VT[Index])); }
+		public AstNodeStm vdot() { return CEL_VD.Set(_Aggregate(0f, ONE_TWO, (Aggregated, Index) => Aggregated + (VEC_VS[Index] * VEC_VT[Index]))); }
 		public AstNodeStm vscl() { return VEC_VD.SetVector(Index => VEC_VS[Index] * CEL_VT.Get()); }
 
 		/// <summary>
@@ -55,10 +56,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			PrefixTarget.Consume();
 			return VEC_VD.SetVector((Index) => VEC_VS[Index]);
 		}
-		public AstNodeStm vabs() { return VEC_VD.SetVector((Index) => ast.CallStatic((Func<float, float>)MathFloat.Abs, _Vector(VS)[Index])); }
+		public AstNodeStm vabs() { return VEC_VD.SetVector((Index) => ast.CallStatic((Func<float, float>)MathFloat.Abs, VEC_VS[Index])); }
 		public AstNodeStm vneg() { return VEC_VD.SetVector((Index) => -VEC_VS[Index]); }
 		public AstNodeStm vocp() { return VEC_VD.SetVector((Index) => 1f - VEC_VS[Index]); }
-		public AstNodeStm vsgn() { return VEC_VD.SetVector((Index) => ast.CallStatic((Func<float, float>)MathFloat.Sign, _Vector(VS)[Index])); }
+		public AstNodeStm vsgn() { return VEC_VD.SetVector((Index) => ast.CallStatic((Func<float, float>)MathFloat.Sign, VEC_VS[Index])); }
 		public AstNodeStm vrcp() { return VEC_VD.SetVector((Index) => 1f / VEC_VS[Index]); }
 
 		private AstNodeStm _vfpu_call_ff(Delegate Delegate)
@@ -113,10 +114,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm vcrsp_t()
 		{
-			var s = VEC_VS;
-			var t = VEC_VT;
+			var d = VEC(VD, VType.VFloat, 3);
+			var s = VEC(VS, VType.VFloat, 3);
+			var t = VEC(VT, VType.VFloat, 3);
 
-			return VEC_VD.SetVector(Index =>
+			return d.SetVector(Index =>
 			{
 				switch (Index)
 				{
@@ -137,7 +139,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm vmul() { return VEC_VD.SetVector(Index => VEC_VS[Index] * VEC_VT[Index]); }
 
 		// Vfpu (Matrix) IDenTity
-		public AstNodeStm vidt() { return _Matrix(VD).SetMatrix((Column, Row) => (Column == Row) ? 1f : 0f); }
+		public AstNodeStm vidt() {
+			return VEC_VD.SetVector((Index) => (Index == Instruction.IMM7) ? 1f : 0f);
+		}
 
 		// Vfpu load Integer IMmediate
 		public AstNodeStm viim() { return CEL_VT_NoPrefix.Set((float)Instruction.IMM); }
@@ -176,10 +180,22 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		static public float _vwbn_impl(float Source, int Imm8)
 		{
-			double modulo = Math.Pow(2.0, 127 - Imm8);
+			return 0f;
+#if true
+			var exp = new BigInteger((int)Math.Pow(2, 127 - Imm8));
+			var bn = new BigInteger((int)Source);
+			if ((int)bn > 0)
+			{
+				bn = BigInteger.ModPow(bn, exp, bn);
+			}
+			return (float)(bn + ((Source < 0.0f) ? -exp : exp));
+
+#else
+			double exp = Math.Pow(2.0, 127 - Imm8);
 			double bn = (double)Source;
-			if (bn > 0.0) bn = bn % modulo;
-			return (float)((Source < 0.0f) ? (bn - modulo) : (bn + modulo));
+			if (bn > 0.0) bn = Math.Pow(bn, exp) % bn;
+			return (float)((Source < 0.0f) ? (bn - exp) : (bn + exp));
+#endif
 		}
 
 		public AstNodeStm vwbn()
@@ -439,7 +455,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			var MatVS = MAT(VS, VType.VFloat, VectorSize);
 
 			return VecVD.SetVector(Index =>
-				_Aggregate(0f, VectorSize, (Aggregated, Index2) => Aggregated + MatVS[Index, Index2] * VecVT[Index2])
+				_Aggregate(0f, VectorSize, (AggregatedValue, Index2) => AggregatedValue + (MatVS[Index, Index2] * VecVT[Index2]))
 			);
 		}
 

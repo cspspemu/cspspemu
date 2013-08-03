@@ -1,4 +1,5 @@
-﻿using CSPspEmu.Core.Cpu;
+﻿using CSharpUtils;
+using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Cpu.Assembler;
 using CSPspEmu.Core.Cpu.InstructionCache;
 using SafeILGenerator.Ast.Nodes;
@@ -31,14 +32,26 @@ namespace CSPspEmu.Gui.Winforms
 
 		public class PCItem
 		{
+			public MethodCache MethodCache;
 			public uint PC;
 			public MethodCacheInfo Entry;
+
+			public MethodCacheInfo MethodCacheInfo
+			{
+				get
+				{
+					return MethodCache.GetForPC(PC);
+				}
+			}
 
 			public Color ItemColor
 			{
 				get
 				{
-					if (Entry.HasSpecialName) return Color.Red;
+					if (Entry.HasSpecialName) return Color.Blue;
+					if (MethodCacheInfo.DynarecFunction.TimeTotal >= TimeSpan.FromMilliseconds(40)) return ColorUtils.Mix(Color.White, Color.Red, 1);
+					if (MethodCacheInfo.DynarecFunction.TimeTotal >= TimeSpan.FromMilliseconds(20)) return ColorUtils.Mix(Color.White, Color.Red, 0.75);
+					if (MethodCacheInfo.DynarecFunction.TimeTotal >= TimeSpan.FromMilliseconds(10)) return ColorUtils.Mix(Color.White, Color.Red, 0.5);
 					return Color.Black;
 				}
 			}
@@ -67,6 +80,7 @@ namespace CSPspEmu.Gui.Winforms
 				{
 					PcListBox.Items.Add(new PCItem()
 					{
+						MethodCache = CpuProcessor.MethodCache,
 						Entry = Entry,
 						PC = PC,
 					});
@@ -85,7 +99,7 @@ namespace CSPspEmu.Gui.Winforms
 			if (PcListBox.SelectedItem != null)
 			{
 				var PCItem = (PCItem)PcListBox.SelectedItem;
-				var MethodCacheInfo = CpuProcessor.MethodCache.GetForPC(PCItem.PC);
+				var MethodCacheInfo = PCItem.MethodCacheInfo;
 				var MinPC = MethodCacheInfo.MinPC;
 				var MaxPC = MethodCacheInfo.MaxPC;
 				var Memory = CpuProcessor.Memory;
@@ -96,6 +110,8 @@ namespace CSPspEmu.Gui.Winforms
 
 				InfoLines.Add(String.Format("Name: {0}", MethodCacheInfo.Name));
 				InfoLines.Add(String.Format("TotalInstructions: {0}", MethodCacheInfo.TotalInstructions));
+				InfoLines.Add(String.Format("DisableOptimizations: {0}", MethodCacheInfo.DynarecFunction.DisableOptimizations));
+				
 				InfoLines.Add(String.Format("EntryPC: 0x{0:X8}", MethodCacheInfo.EntryPC));
 				InfoLines.Add(String.Format("MinPC: 0x{0:X8}", MethodCacheInfo.MinPC));
 				InfoLines.Add(String.Format("MaxPC: 0x{0:X8}", MethodCacheInfo.MaxPC));
@@ -105,6 +121,13 @@ namespace CSPspEmu.Gui.Winforms
 				InfoLines.Add(String.Format("TimeGenerateIL: {0}", MethodCacheInfo.DynarecFunction.TimeGenerateIL.TotalMilliseconds));
 				InfoLines.Add(String.Format("TimeCreateDelegate: {0}", MethodCacheInfo.DynarecFunction.TimeCreateDelegate.TotalMilliseconds));
 				InfoLines.Add(String.Format("TimeLinking: {0}", MethodCacheInfo.DynarecFunction.TimeLinking.TotalMilliseconds));
+				InfoLines.Add(String.Format("TimeTotal: {0}", MethodCacheInfo.DynarecFunction.TimeTotal.TotalMilliseconds));
+
+				InfoLines.Add(String.Format(""));
+				foreach (var Item in MethodCacheInfo.DynarecFunction.InstructionStats.OrderBy(Pair => Pair.Value))
+				{
+					InfoLines.Add(String.Format("{0}: {1}", Item.Key, Item.Value));
+				}
 
 				InfoTextBox.Text = String.Join("\r\n", InfoLines);
 

@@ -13,6 +13,7 @@ using CSPspEmu.Core.Cpu.Dynarec;
 using CSPspEmu.Core.Memory;
 using CSharpUtils;
 using CSPspEmu.Core.Cpu.Emitter;
+using System.Runtime;
 
 namespace CSPspEmu.Core.Cpu
 {
@@ -305,6 +306,8 @@ namespace CSPspEmu.Core.Cpu
 		/// Function called on some situations, that allow
 		/// to yield the thread.
 		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public void Tick()
 		{
 			//Console.WriteLine("Tick1");
@@ -313,18 +316,23 @@ namespace CSPspEmu.Core.Cpu
 				TickCount++;
 
 				if ((TickCount & 0x1F) == 1)
+				//if ((TickCount & 3) == 1)
 				{
-					CpuProcessor.ExecuteInterrupt(this);
+					Tick2();
 				}
+			}
+		}
 
-				if (TickCount > 10000)
+		private void Tick2()
+		{
+			CpuProcessor.ExecuteInterrupt(this);
+			if (TickCount > 10000)
+			{
+				TickCount = 0;
+				if ((DateTime.UtcNow - LastTickYield).TotalMilliseconds >= 2)
 				{
-					TickCount = 0;
-					if ((DateTime.UtcNow - LastTickYield).TotalMilliseconds >= 2)
-					{
-						LastTickYield = DateTime.UtcNow;
-						Yield();
-					}
+					LastTickYield = DateTime.UtcNow;
+					Yield();
 				}
 			}
 		}

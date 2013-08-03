@@ -188,6 +188,10 @@
       <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Libraries\SafeILGenerator\SafeILGenerator\SafeILGenerator.csproj">
+      <Project>{9a93c7e4-09da-46cf-b7dd-6bb09681d5ab}</Project>
+      <Name>SafeILGenerator</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

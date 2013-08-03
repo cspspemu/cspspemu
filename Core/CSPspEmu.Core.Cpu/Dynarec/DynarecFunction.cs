@@ -49,6 +49,8 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 		/// </summary>
 		public uint MaxPC;
 
+		public bool DisableOptimizations;
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -58,5 +60,14 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 		public TimeSpan TimeGenerateIL;
 		public TimeSpan TimeCreateDelegate;
 		public TimeSpan TimeLinking;
+		public Dictionary<string, uint> InstructionStats;
+
+		public TimeSpan TimeTotal
+		{
+			get
+			{
+				return TimeAnalyzeBranches + TimeGenerateAst + TimeOptimize + TimeGenerateIL + TimeCreateDelegate + TimeLinking;
+			}
+		}
 	}
 }

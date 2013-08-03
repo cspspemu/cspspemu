@@ -42,8 +42,8 @@ namespace CSPspEmu.Core.Cpu
 		public event Action DebugCurrentThreadEvent;
 		public bool DebugFunctionCreation;
 
-		public bool InterruptEnabled = true;
-		public bool InterruptFlag = false;
+		public volatile bool InterruptEnabled = true;
+		public volatile bool InterruptFlag = false;
 
 		public void ExecuteInterrupt(CpuThreadState CpuThreadState)
 		{

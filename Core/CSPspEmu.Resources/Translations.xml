@@ -211,7 +211,9 @@
 		<text id="UtilsRenderScale4xMenu">
 			<translation lang="xx">4x</translation>
 		</text>
-
+		<text id="UtilsRenderScale8xMenu">
+			<translation lang="xx">8x</translation>
+		</text>
 		<text id="UtilsDumpMainMemoryMenu">
 			<translation lang="en">Dump Main Memory...</translation>
 			<translation lang="es">Volcar memoria principal...</translation>

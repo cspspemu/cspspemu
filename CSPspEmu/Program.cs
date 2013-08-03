@@ -16,6 +16,8 @@ using CSPspEmu.Hle;
 using CSPspEmu.Hle.Vfs.Iso;
 using System.Diagnostics;
 using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
+using SafeILGenerator.Utils;
 
 namespace CSPspEmu
 {
@@ -41,11 +43,32 @@ namespace CSPspEmu
 			return Type.GetType("System.Reflection.ReflectionContext", false) != null;
 		}
 
-		static void RunTests(bool RunTestsViewOut, string[] Arguments, int Timeout = 10)
+		static void RunTests(bool RunTestsViewOut, string[] Arguments, int Timeout)
 		{
 			AutoTestsProgram.Main(RunTestsViewOut, Arguments.ToArray(), Timeout);
 			Environment.Exit(0);
 		}
+
+		//static Action[] ActionList = new Action[10];
+		//static int[] ActionList = new int[10];
+
+		/*
+		static Action MyAction1Ref = MyAction1;
+		static Action MyAction2Ref = MyAction2;
+		static int Count = 0;
+
+		static void MyAction1()
+		{
+			MyAction2Ref();
+			MyAction2Ref();
+			MyAction2Ref();
+		}
+
+		static void MyAction2()
+		{
+			Count++;
+		}
+		*/
 
 		/// <summary>
 		/// 
@@ -58,6 +81,23 @@ namespace CSPspEmu
 		[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
 		static void Main(string[] Arguments)
 		{
+			//ILInstanceHolder.TAlloc<Action>();
+
+			//var Time1 = DateTime.UtcNow;
+			//for (int n = 0; n < 1000000; n++)
+			//{
+			//	MyAction1Ref();
+			//}
+			//var Time2 = DateTime.UtcNow;
+			//Console.WriteLine(Time2 - Time1);
+			//Console.ReadKey();
+			//Environment.Exit(0);
+
+			//var Ptr = GCHandle.Alloc(ActionList, GCHandleType.Pinned).AddrOfPinnedObject();
+			//
+			//Console.ReadKey();
+			//Environment.Exit(0);
+
 			//System.Runtime.CompilerServices.DynamicAttribute
 			//System.Runtime.ProfileOptimization.StartProfile();
 
@@ -153,7 +193,7 @@ namespace CSPspEmu
 
 			string FileToLoad = null;
 			bool RunTestsViewOut = false;
-			int RunTestsTimeout = 30;
+			int RunTestsTimeout = 60;
 
 			var Getopt = new Getopt(Arguments);
 			{

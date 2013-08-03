@@ -145,8 +145,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			if (_DynarecConfig.EnableTailCalling)
 			{
-				return ast.Statement(
-					ast.TailCall(ast.MethodCacheInfoCallStaticPC(CpuProcessor, Address))
+				return ast.Statements(
+					ast.Statement(ast.TailCall(ast.MethodCacheInfoCallStaticPC(CpuProcessor, Address))),
+					ast.Return()
 				);
 			}
 			else
@@ -180,7 +181,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 #if ENABLE_NATIVE_CALLS
 			return ast.StatementsInline(
 				ast.AssignPC(ast.GPR(31)),
-				ast.GetTickCall(false),
+				ast.GetTickCall((BranchCount > 0) ? true : false),
 				ast.Return()
 			);
 #else

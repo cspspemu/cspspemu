@@ -70,10 +70,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				);
 			}
 		}
+		static readonly FieldInfo CpuThreadState_MethodCache_FieldInfo = typeof(CSPspEmu.Core.Cpu.CpuThreadState).GetField("MethodCache");
 
 		public AstNodeExpr GetMethodCacheInfoAtPC(AstNodeExpr PC)
 		{
-			return ast.CallInstance(ast.FieldAccess(ast.CpuThreadState, "MethodCache"), (Func<uint, MethodCacheInfo>)MethodCache.Methods.GetForPC, PC);
+			return ast.CallInstance(ast.FieldAccess(ast.CpuThreadState, CpuThreadState_MethodCache_FieldInfo), (Func<uint, MethodCacheInfo>)MethodCache.Methods.GetForPC, PC);
 		}
 
 		public AstNodeExprArgument CpuThreadState { get { return ast.Argument<CpuThreadState>(0, "CpuThreadState"); } }

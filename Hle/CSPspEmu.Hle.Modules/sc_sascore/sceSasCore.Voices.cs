@@ -22,23 +22,19 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		//[HlePspNotImplemented]
 		public int __sceSasSetVoice(uint SasCorePointer, int Voice, byte* VagPointer, int VagSize, int LoopCount)
 		{
-			try
+			var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
+			if (VagPointer == null)
 			{
-				var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);
+				SasVoice.Vag = null;
+			}
+			else
+			{
 				SasVoice.Vag = new Vag(VagPointer, VagSize);
 				SasVoice.Vag.Reset();
 				SasVoice.Vag.SetLoopCount(LoopCount);
-
-				//var VagPointer = (byte *)MemoryManager.Memory.PspAddressToPointerSafe(VagAddress);
-				//File.WriteAllBytes("test.vag", PointerUtils.PointerToByteArray(VagPointer, VagSize));
-
-				return 0;
 			}
-			catch (Exception Exception)
-			{
-				Console.Error.WriteLine(Exception);
-				return 0;
-			}
+
+			return 0;
 		}
 
 		/// <summary>
@@ -76,7 +72,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// <param name="EffectRightVol">Right Volume 0-0x1000</param>
 		/// <returns>0 on success.</returns>
 		[HlePspFunction(NID = 0x440CA7D8, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int __sceSasSetVolume(uint SasCorePointer, int Voice, int LeftVolume, int RightVolume, int EffectLeftVol, int EffectRightVol)
 		{
 			var SasVoice = GetSasCoreVoice(SasCorePointer, Voice);

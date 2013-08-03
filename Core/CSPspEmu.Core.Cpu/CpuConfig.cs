@@ -25,7 +25,7 @@ namespace CSPspEmu.Core.Cpu
 		/// <summary>
 		/// 
 		/// </summary>
-		public bool LogInstructionStats = false;
+		public bool LogInstructionStats = true;
 		
 		/// <summary>
 		/// 
@@ -35,7 +35,12 @@ namespace CSPspEmu.Core.Cpu
 		/// <summary>
 		/// 
 		/// </summary>
-		public bool ShowInstructionStats;
+		public bool ShowInstructionStats = true;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool ShowInstructionStatsJustNew = true;
 
 		/// <summary>
 		/// CPU clock:

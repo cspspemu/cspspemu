@@ -316,8 +316,6 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 
 				for (int n = 0; n < NumberOfSamples; n++) BufferTempPtr[n] = default(StereoIntSoundSample);
 
-				// Read and mix voices.
-				//int MaxSampleIn = 0;
 				int PrevPosDiv = -1;
 				foreach (var Voice in SasCore.Voices)
 				{
@@ -334,9 +332,7 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 
 								if (PosDiv >= NumberOfSamples) break;
 
-								//var Sample = Voice.Vag.GetNextSample().ApplyVolumes(Voice.LeftVolume, Voice.RightVolume);
-								var Sample = Voice.Vag.GetNextSample();
-								//MaxSampleIn = Math.Max(MaxSampleIn, Sample.MaxAmplitudeLeftRight);
+								var Sample = Voice.Vag.GetNextSample().ApplyVolumes(Voice.LeftVolume, Voice.RightVolume);
 
 								for (int m = PrevPosDiv + 1; m <= PosDiv; m++) BufferTempPtr[m] += Sample;
 								
@@ -351,18 +347,6 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 						}
 					}
 				}
-
-				// Normalize output
-				//int MaxSampleOut = 1;
-				//for (int n = 0; n < NumberOfSamples; n++) MaxSampleOut = Math.Max(MaxSampleOut, BufferTempPtr[n].MaxAmplitudeLeftRight);
-				//
-				//int Numerator = MaxSampleIn;
-				//int Divisor = MaxSampleOut;
-				//
-				//for (int n = 0; n < NumberOfSamples; n++)
-				//{
-				//	BufferShortPtr[n] = ((BufferTempPtr[n] * Numerator) / Divisor);
-				//}
 
 				for (int n = 0; n < NumberOfSamples; n++) BufferShortPtr[n] = BufferTempPtr[n];
 

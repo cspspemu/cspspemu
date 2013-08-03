@@ -51,7 +51,7 @@ namespace CSPspEmu.Hle.Managers
 		}
 	}
 
-	public sealed class HleInterruptManager : IInjectInitialize, IInterruptManager
+	public sealed class HleInterruptManager : IInterruptManager
 	{
 		[Inject]
 		private HleCallbackManager HleCallbackManager;
@@ -77,7 +77,7 @@ namespace CSPspEmu.Hle.Managers
 		/// <summary>
 		/// 
 		/// </summary>
-		private HleInterruptHandler[] InterruptHandlers;
+		private readonly HleInterruptHandler[] InterruptHandlers = new HleInterruptHandler[(int)PspInterrupts._MAX];
 
 		public HleInterruptHandler GetInterruptHandler(PspInterrupts PspInterrupt)
 		{
@@ -86,12 +86,6 @@ namespace CSPspEmu.Hle.Managers
 
 		private HleInterruptManager()
 		{
-		}
-
-		void IInjectInitialize.Initialize()
-		{
-			//uint MaxHandlers = Enum.GetValues(typeof(PspInterrupts)).OfType<uint>().Max() + 1;
-			InterruptHandlers = new HleInterruptHandler[(int)PspInterrupts._MAX];
 			for (int n = 0; n < InterruptHandlers.Length; n++)
 			{
 				InterruptHandlers[n] = new HleInterruptHandler(

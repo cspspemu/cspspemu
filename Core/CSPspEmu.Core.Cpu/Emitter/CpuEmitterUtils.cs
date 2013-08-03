@@ -161,6 +161,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static void _comp_impl(CpuThreadState CpuThreadState, float s, float t, bool fc_unordererd, bool fc_equal, bool fc_less, bool fc_inv_qnan)
 		{
 			if (float.IsNaN(s) || float.IsNaN(t))
@@ -332,7 +334,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static float _vrndf1(CpuThreadState CpuThreadState)
 		{
-			return (float)(CpuThreadState.Random.NextDouble() * 2.0f);
+			var Result = (float)(CpuThreadState.Random.NextDouble() * 2.0f);
+			//Console.WriteLine(Result);
+			return Result;
 		}
 
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
@@ -408,6 +412,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public static uint _mfvc_impl(CpuThreadState CpuThreadState, VfpuControlRegistersEnum VfpuControlRegister)
 		{
+			Console.Error.WriteLine("Warning: _mfvc_impl");
 			switch (VfpuControlRegister)
 			{
 				case VfpuControlRegistersEnum.VFPU_PFXS: return CpuThreadState.PrefixSource.Value;
@@ -430,6 +435,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public static void _mtvc_impl(CpuThreadState CpuThreadState, VfpuControlRegistersEnum VfpuControlRegister, uint Value)
 		{
+			Console.Error.WriteLine("Warning: _mtvc_impl");
 			switch (VfpuControlRegister)
 			{
 				case VfpuControlRegistersEnum.VFPU_PFXS: CpuThreadState.PrefixSource.Value = Value; return;

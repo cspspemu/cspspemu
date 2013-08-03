@@ -198,8 +198,8 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		/// </summary>
 		public int Pitch = sceSasCore.PSP_SAS_PITCH_BASE;
 		
-		public int LeftVolume;
-		public int RightVolume;
+		public int LeftVolume = sceSasCore.PSP_SAS_VOL_MAX;
+		public int RightVolume = sceSasCore.PSP_SAS_VOL_MAX;
 		public int EffectLeftVolume;
 		public int EffectRightVolume;
 

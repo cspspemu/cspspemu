@@ -160,13 +160,6 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm ll() { return lw();  }
 		public AstNodeStm sc() { return ast.Statements(sw(), ast.AssignGPR(RT, 1)); }
 
-		/////////////////////////////////////////////////////////////////////////////////////////////////
-		// Load Word to Cop1 floating point.
-		// Store Word from Cop1 floating point.
-		/////////////////////////////////////////////////////////////////////////////////////////////////
-		public AstNodeStm lwc1() { return ast.AssignFPR_I(FT, ast.MemoryGetValue<int>(Memory, this.Address_RS_IMM())); }
-		public AstNodeStm swc1() { return ast.MemorySetValue<int>(Memory, this.Address_RS_IMM(), ast.FPR_I(FT)); }
-
 		public string SpecialName = "";
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////

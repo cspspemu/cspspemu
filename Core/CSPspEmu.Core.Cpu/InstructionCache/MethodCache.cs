@@ -191,6 +191,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 			{
 				try
 				{
+					if (Platform.IsMono) Marshal.Prelink(DynarecFunction.Delegate.Method);
 					DynarecFunction.Delegate(null);
 				}
 				catch (InvalidProgramException InvalidProgramException)

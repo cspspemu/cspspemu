@@ -208,5 +208,24 @@ namespace CSPspEmu.Core.Gpu.State
 				ValuesPtr[15] = 1.0f;
 			}
 		}
+
+		public void SetPosition(int Column, int Row, float Value)
+		{
+			fixed (float* ValuesPtr = Values)
+			{
+				ValuesPtr[Row * 4 + Column] = Value;
+			}
+		}
+
+		public void LoadIdentity()
+		{
+			for (int Row = 0; Row < 4; Row++)
+			{
+				for (int Column = 0; Column < 4; Column++)
+				{
+					SetPosition(Column, Row, (Column == Row) ? 1f : 0f);
+				}
+			}
+		}
 	}
 }

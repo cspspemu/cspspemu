@@ -20,6 +20,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		private Instruction Instruction;
 		private uint PC;
 
+		public int BranchCount = 0;
+
 		static private AstMipsGenerator ast = AstMipsGenerator.Instance;
 
 		public CpuEmitter(InjectContext InjectContext, MipsMethodEmitter MipsMethodEmitter, IInstructionReader InstructionReader)

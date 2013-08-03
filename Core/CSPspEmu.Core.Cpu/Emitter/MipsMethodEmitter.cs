@@ -39,9 +39,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			public TimeSpan TimeGenerateIL;
 			public TimeSpan TimeCreateDelegate;
 			public Action<CpuThreadState> Delegate;
+			public bool DisableOptimizations;
 		}
 
-		public Result CreateDelegate(AstNodeStm AstNodeStm)
+		public Result CreateDelegate(AstNodeStm AstNodeStm, int TotalInstructions)
 		{
 			var Time0 = DateTime.UtcNow;
 
@@ -59,14 +60,18 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			Action<CpuThreadState> Delegate;
 			var Time2 = Time1;
 
+			bool DisableOptimizations = _DynarecConfig.DisableDotNetJitOptimizations;
+			if (TotalInstructions >= _DynarecConfig.InstructionCountToDisableOptimizations) DisableOptimizations = true;
+
+			if (Platform.IsMono) DisableOptimizations = false;
+
 			try
 			{
-				
 				Delegate = MethodCreator.CreateDynamicMethod<Action<CpuThreadState>>(
 				//Delegate = MethodCreator.CreateMethodInClass<Action<CpuThreadState>>(
 					Assembly.GetExecutingAssembly().ManifestModule,
 					String.Format("DynamicMethod_0x{0:X}", this.PC),
-					_DynarecConfig.DisableOptimizations,
+					DisableOptimizations,
 					(DynamicMethod) =>
 					{
 						AstNodeStm.GenerateIL(DynamicMethod);
@@ -99,6 +104,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return new Result()
 			{
 				Delegate = Delegate,
+				DisableOptimizations = DisableOptimizations,
 				TimeOptimize = Time1 - Time0,
 				TimeGenerateIL = Time2 - Time1,
 				TimeCreateDelegate = Time3 - Time2,

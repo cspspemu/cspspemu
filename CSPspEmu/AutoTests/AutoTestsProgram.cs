@@ -28,7 +28,7 @@ namespace CSPspEmu.AutoTests
 {
 	public class AutoTestsProgram
 	{
-		static TimeSpan TimeoutTime = TimeSpan.FromSeconds(90);
+		static TimeSpan TimeoutTime = TimeSpan.FromMilliseconds(0);
 
 		public class HleOutputHandlerMock : HleOutputHandler
 		{
@@ -254,8 +254,13 @@ namespace CSPspEmu.AutoTests
 				{
 					Console.WriteLine("Error");
 				});
-				Result.Print();
+				Result.Print(AvoidKeep: true);
 			}
+
+			File.WriteAllText(
+				Path.ChangeExtension(FileNameExpected, ".lastdiff"),
+				Result.ToString()
+			);
 		}
 
 		protected string ExecuteBat(string ExecutableFileName, string Arguments, double TimeoutSeconds = -1)
@@ -410,7 +415,7 @@ namespace CSPspEmu.AutoTests
 			}
 		}
 
-		public static void Main(bool RunTestsViewOut, String[] Arguments, int Timeout = 10)
+		public static void Main(bool RunTestsViewOut, String[] Arguments, int Timeout)
 		{
 			AutoTestsProgram.TimeoutTime = TimeSpan.FromSeconds(Timeout);
 			new AutoTestsProgram().InternalMain(RunTestsViewOut, Arguments);

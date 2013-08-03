@@ -40,6 +40,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm mtc1() { return ast.AssignFPR_F(FS, ast.CallStatic((Func<int, float>)MathFloat.ReinterpretIntAsFloat, ast.GPR_s(RT))); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
+		// Load Word to Cop1 floating point.
+		// Store Word from Cop1 floating point.
+		/////////////////////////////////////////////////////////////////////////////////////////////////
+		public AstNodeStm lwc1() { return ast.AssignFPR_I(FT, ast.MemoryGetValue<int>(Memory, this.Address_RS_IMM())); }
+		public AstNodeStm swc1() { return ast.MemorySetValue<int>(Memory, this.Address_RS_IMM(), ast.FPR_I(FT)); }
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// CFC1 -- move Control word from/to floating point (C1)
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		public AstNodeStm cfc1() { return ast.Statement(ast.CallStatic((Action<CpuThreadState, int, int>)CpuEmitterUtils._cfc1_impl, ast.CpuThreadState, RD, RT)); }
@@ -57,6 +64,22 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			bool fc_less = ((fc02 & 4) != 0);
 			bool fc_inv_qnan = (fc3 != 0); // TODO -- Only used for detecting invalid operations?
 
+			//if (float.IsNaN(s) || float.IsNaN(t))
+			//{
+			//	CpuThreadState.Fcr31.CC = fc_unordererd;
+			//}
+			//else
+			//{
+			//	//bool cc = false;
+			//	//if (fc_equal) cc = cc || (s == t);
+			//	//if (fc_less) cc = cc || (s < t);
+			//	//return cc;
+			//	bool equal = (fc_equal) && (s == t);
+			//	bool less = (fc_less) && (s < t);
+			//
+			//	CpuThreadState.Fcr31.CC = (less || equal);
+			//}
+
 			//MipsMethodEmitter.LoadFPR(FS);
 			//MipsMethodEmitter.LoadFPR(FT);
 
@@ -71,6 +94,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				ast.Immediate(fc_inv_qnan)
 			));
 		}
+
+		//private AstNodeStm _comp_assign(AstNodeExpr Value)
+		//{
+		//	return ast.Assign();
+		//}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
 		// c.f.s: Compare False Single : This predicate is always False it never has a True Result

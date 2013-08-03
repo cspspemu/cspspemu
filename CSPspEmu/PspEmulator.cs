@@ -27,6 +27,7 @@ using CSPspEmu.Core.Components.Display;
 using CSPspEmu.Hle.Loader;
 using System.Reflection;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace CSPspEmu
 {
@@ -192,6 +193,7 @@ namespace CSPspEmu
 				GuiConfig.AutoLoad = AutoLoad;
 				GuiConfig.DefaultDisplayScale = ShowMenus ? 1 : 2;
 				//Thread.CurrentThread.CurrentUICulture = new CultureInfo(GlobalConfig.ThreadCultureName);
+
 				Application.Run(PspDisplayForm = new PspDisplayForm(this));
 
 				ContextInitialized.WaitOne();
@@ -206,7 +208,13 @@ namespace CSPspEmu
 				StoredConfig.Save();
 			}
 
+			Console.WriteLine("Exiting...");
+			//foreach (var thread in Process.GetCurrentProcess().Threads.Cast<ProcessThread>())
+			//{
+			//	Console.WriteLine("Thread: {0}, {1}", thread.ThreadState, (thread.ThreadState == System.Diagnostics.ThreadState.Wait) ?  thread.WaitReason.ToString() : "");
+			//}
 			Environment.Exit(0);
+			return;
 		}
 
 		public void LoadFile(String FileName)
@@ -244,32 +252,13 @@ namespace CSPspEmu
 					GC.Collect();
 				}
 
-				/*
-				foreach (var FileName in new [] {
-					Path.GetDirectoryName(typeof(Program).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll",
-					Application.ExecutablePath,
-				})
-				{
-					if (File.Exists(FileName))
-					{
-						PspConfig.HleModulesDll = Assembly.LoadFile(FileName);
-						break;
-					}
-				}
-				*/
-				//
-
 				lock (this)
 				{
 
 					_InjectContext = PspInjectContext.CreateInjectContext(StoredConfig, Test: false);
 					_InjectContext.SetInstanceType<IGuiExternalInterface, PspEmulator>();
-					_InjectContext.InjectDependencesTo(this);
 
-					//if (PspDisplayForm != null)
-					//{
-					//	InjectContext.InjectDependencesTo(PspDisplayForm);
-					//}
+					_InjectContext.InjectDependencesTo(this);
 
 					PspDisplay.VBlankEventCall += new Action(PspEmulator_VBlankEventCall);
 					PspRunner.StartSynchronized();
@@ -326,6 +315,13 @@ namespace CSPspEmu
 			{
 				Console.Error.WriteLine(Exception);
 			}
+			Console.WriteLine("-----------------------------------------------------------------");
+
+			foreach (var Instruction in CpuProcessor.GlobalInstructionStats.OrderBy(Item => Item.Key))
+			{
+				Console.WriteLine("{0}: {1}", Instruction.Key, Instruction.Value);
+			}
+
 			Console.WriteLine("-----------------------------------------------------------------");
 		}
 
