@@ -15,98 +15,97 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	// http://hitmen.c02.at/files/yapspd/psp_doc/chap4.html
 	// pspgl_codegen.h
 	// 
-	/**
-	 * Before you begin messing with the vfpu, you need to do one thing in your project:
-	 * PSP_MAIN_THREAD_ATTR(PSP_THREAD_ATTR_VFPU);
-	 * Almost all psp applications define this in the projects main c file. It sets a value that tells the psp how to handle your applications thread
-	 * in case the kernel needs to switch to another thread and back to yours. You need to add PSP_THREAD_ATTR_VFPU to this so the psp's kernel will
-	 * properly save/restore the vfpu state on thread switch, otherwise bad things might happen if another thread uses the vfpu and stomps on whatever was in there.
-	 *
-	 * Before diving into the more exciting bits, first you need to know how the VFPU registers are configured.
-	 * The vfpu contains 128 32-bit floating point registers (same format as the float type in C).
-	 * These registers can be accessed individually or in groups of 2, 3, 4, 9 or 16 in one instruction.
-	 * They are organized as 8 blocks of registers, 16 per block.When you write code to access these registers, there is a naming convention you must use.
-	 * 
-	 * Every register name has 4 characters: Xbcr
-	 * 
-	 * X can be one of:
-	 *   M - this identifies a matrix block of 4, 9 or 16 registers
-	 *   E - this identifies a transposed matrix block of 4, 9 or 16 registers
-	 *   C - this identifies a column of 2, 3 or 4 registers
-	 *   R - this identifies a row of 2, 3, or 4 registers
-	 *   S - this identifies a single register
-	 *
-	 * b can be one of:
-	 *   0 - register block 0
-	 *   1 - register block 1
-	 *   2 - register block 2
-	 *   3 - register block 3
-	 *   4 - register block 4
-	 *   5 - register block 5
-	 *   6 - register block 6
-	 *   7 - register block 7
-	 *
-	 * c can be one of:
-	 *   0 - column 0
-	 *   1 - column 1
-	 *   2 - column 2
-	 *   3 - column 3
-	 *
-	 * r can be one of:
-	 *   0 - row 0
-	 *   1 - row 1
-	 *   2 - row 2
-	 *   3 - row 3
-	 *
-	 * So for example, the register name S132 would be a single register in column 3, row 2 in register block 1.
-	 * M500 would be a matrix of registers in register block 5.
-	 *
-	 * Almost every vfpu instruction will end with one of the following extensions:
-	 *   .s - instruction works on a single register
-	 *   .p - instruction works on a 2 register vector or 2x2 matrix
-	 *   .t - instruction works on a 3 register vector or 3x3 matrix
-	 *   .q - instruction works on a 4 register vector or 4x4 matrix
-	 * 
-	 * http://wiki.fx-world.org/doku.php?id=general:vfpu_registers
-	 *
-	 * This is something you need to know about how to transfer data in or out of the vfpu. First lets show the instructions used to load/store data from the vfpu:
-	 *   lv.s (load 1 vfpu reg from unaligned memory)
-	 *   lv.q (load 4 vfpu regs from 16 byte aligned memory)
-	 *   sv.s (write 1 vfpu reg to unaligned memory)
-	 *   sv.q (write 4 vfpu regs to 16 byte aligned memory)
-	 *
-	 * There are limitations with these instructions. You can only transfer to or from column or row registers in the vfpu.
-	 *
-	 * You can also load values into the vfpu from a MIPS register, this will work with all single registers:
-	 *   mtv (move MIPS register to vfpu register)
-	 *   mfv (move from vfpu register to MIPS register)
-	 *
-	 * There are 2 instructions, ulv.q and usv.q, that perform unaligned ran transfers to/from the vfpu. These have been found to be faulty so it is not recommended to use them.
-	 *
-	 * The vfpu performs a few trig functions, but they dont behave like the normal C functions we are used to.
-	 * Normally we would pass in the angle in radians from -pi/2 to +pi/2, but the vfpu wants the input value in the range of -1 to 1.
-	 *
-	**/
+	// *
+	//  Before you begin messing with the vfpu, you need to do one thing in your project:
+	//  PSP_MAIN_THREAD_ATTR(PSP_THREAD_ATTR_VFPU);
+	//  Almost all psp applications define this in the projects main c file. It sets a value that tells the psp how to handle your applications thread
+	//  in case the kernel needs to switch to another thread and back to yours. You need to add PSP_THREAD_ATTR_VFPU to this so the psp's kernel will
+	//  properly save/restore the vfpu state on thread switch, otherwise bad things might happen if another thread uses the vfpu and stomps on whatever was in there.
+	// 
+	//  Before diving into the more exciting bits, first you need to know how the VFPU registers are configured.
+	//  The vfpu contains 128 32-bit floating point registers (same format as the float type in C).
+	//  These registers can be accessed individually or in groups of 2, 3, 4, 9 or 16 in one instruction.
+	//  They are organized as 8 blocks of registers, 16 per block.When you write code to access these registers, there is a naming convention you must use.
+	//  
+	//  Every register name has 4 characters: Xbcr
+	//  
+	//  X can be one of:
+	//    M - this identifies a matrix block of 4, 9 or 16 registers
+	//    E - this identifies a transposed matrix block of 4, 9 or 16 registers
+	//    C - this identifies a column of 2, 3 or 4 registers
+	//    R - this identifies a row of 2, 3, or 4 registers
+	//    S - this identifies a single register
+	// 
+	//  b can be one of:
+	//    0 - register block 0
+	//    1 - register block 1
+	//    2 - register block 2
+	//    3 - register block 3
+	//    4 - register block 4
+	//    5 - register block 5
+	//    6 - register block 6
+	//    7 - register block 7
+	// 
+	//  c can be one of:
+	//    0 - column 0
+	//    1 - column 1
+	//    2 - column 2
+	//    3 - column 3
+	// 
+	//  r can be one of:
+	//    0 - row 0
+	//    1 - row 1
+	//    2 - row 2
+	//    3 - row 3
+	// 
+	//  So for example, the register name S132 would be a single register in column 3, row 2 in register block 1.
+	//  M500 would be a matrix of registers in register block 5.
+	// 
+	//  Almost every vfpu instruction will end with one of the following extensions:
+	//    .s - instruction works on a single register
+	//    .p - instruction works on a 2 register vector or 2x2 matrix
+	//    .t - instruction works on a 3 register vector or 3x3 matrix
+	//    .q - instruction works on a 4 register vector or 4x4 matrix
+	//  
+	//  http://wiki.fx-world.org/doku.php?id=general:vfpu_registers
+	// 
+	//  This is something you need to know about how to transfer data in or out of the vfpu. First lets show the instructions used to load/store data from the vfpu:
+	//    lv.s (load 1 vfpu reg from unaligned memory)
+	//    lv.q (load 4 vfpu regs from 16 byte aligned memory)
+	//    sv.s (write 1 vfpu reg to unaligned memory)
+	//    sv.q (write 4 vfpu regs to 16 byte aligned memory)
+	// 
+	//  There are limitations with these instructions. You can only transfer to or from column or row registers in the vfpu.
+	// 
+	//  You can also load values into the vfpu from a MIPS register, this will work with all single registers:
+	//    mtv (move MIPS register to vfpu register)
+	//    mfv (move from vfpu register to MIPS register)
+	// 
+	//  There are 2 instructions, ulv.q and usv.q, that perform unaligned ran transfers to/from the vfpu. These have been found to be faulty so it is not recommended to use them.
+	// 
+	//  The vfpu performs a few trig functions, but they dont behave like the normal C functions we are used to.
+	//  Normally we would pass in the angle in radians from -pi/2 to +pi/2, but the vfpu wants the input value in the range of -1 to 1.
+	// 
 
-	/**
-	   The VFPU contains 32 registers (128bits each, 4x32bits).
-
-	   VFPU Registers can get accessed as Matrices, Vectors or single words.
-	   All registers are overlayed and enumerated in 3 digits (Matrix/Column/Row):
-
-		M000 | C000   C010   C020   C030	M100 | C100   C110   C120   C130
-		-----+--------------------------	-----+--------------------------
-		R000 | S000   S010   S020   S030	R100 | S100   S110   S120   S130
-		R001 | S001   S011   S021   S031	R101 | S101   S111   S121   S131
-		R002 | S002   S012   S022   S032	R102 | S102   S112   S122   S132
-		R003 | S003   S013   S023   S033	R103 | S103   S113   S123   S133
-
-	  same for matrices starting at M200 - M700.
-	  Subvectors can get addressed as singles/pairs/triplets/quads.
-	  Submatrices can get addressed 2x2 pairs, 3x3 triplets or 4x4 quads.
-
-	  So Q_C010 specifies the Quad Column starting at S010, T_C011 the triple Column starting at S011.
-	*/
+	//
+	//   The VFPU contains 32 registers (128bits each, 4x32bits).
+	//
+	//   VFPU Registers can get accessed as Matrices, Vectors or single words.
+	//   All registers are overlayed and enumerated in 3 digits (Matrix/Column/Row):
+	//
+	//	M000 | C000   C010   C020   C030	M100 | C100   C110   C120   C130
+	//	-----+--------------------------	-----+--------------------------
+	//	R000 | S000   S010   S020   S030	R100 | S100   S110   S120   S130
+	//	R001 | S001   S011   S021   S031	R101 | S101   S111   S121   S131
+	//	R002 | S002   S012   S022   S032	R102 | S102   S112   S122   S132
+	//	R003 | S003   S013   S023   S033	R103 | S103   S113   S123   S133
+	//
+	//  same for matrices starting at M200 - M700.
+	//  Subvectors can get addressed as singles/pairs/triplets/quads.
+	//  Submatrices can get addressed 2x2 pairs, 3x3 triplets or 4x4 quads.
+	//
+	//  So Q_C010 specifies the Quad Column starting at S010, T_C011 the triple Column starting at S011.
+	//
 	public unsafe sealed partial class CpuEmitter
 	{
 		private void _call_debug_vfpu()
@@ -286,7 +285,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				return ast.Assign(_GetVRegRef(RegIndex), ast.Cast(GetVTypeType(), AstNodeExpr));
 #else
 				//Console.Error.WriteLine("PrefixIndex:{0}", PrefixIndex);
-				return ast.Assign(ast.Local(GetLocal(PrefixIndex)), ast.Cast(GetVTypeType(), AstNodeExpr));
+				return ast.Assign(ast.Local(GetLocal(RegIndex)), ast.Cast(GetVTypeType(), AstNodeExpr));
 #endif
 			}
 
@@ -295,7 +294,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 #if false
 				return ast.Statement();
 #else
-				return ast.Assign(_GetVRegRef(RegIndex), ast.Local(GetLocal(PrefixIndex)));
+				return ast.Assign(_GetVRegRef(RegIndex), ast.Local(GetLocal(RegIndex)));
 #endif
 			}
 
@@ -419,14 +418,24 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				//return GetRegApplyPrefix(this.Indices[Column, Row], -1);
 			}
 
+			private int GetPrefixIndex(int Column, int Row)
+			{
+				//return 0;
+				return -1;
+				//return Row;
+				//return Row * 4 + Column;
+				//return Column;
+			}
+
 			public AstNodeStm Set(int Column, int Row, AstNodeExpr Value)
 			{
-				return SetRegApplyPrefix(this.Indices[Column, Row], Row * 4 + Column, Value);
+
+				return SetRegApplyPrefix(this.Indices[Column, Row], GetPrefixIndex(Column, Row), Value);
 			}
 
 			public AstNodeStm Set2(int Column, int Row)
 			{
-				return SetRegApplyPrefix2(this.Indices[Column, Row], Row * 4 + Column);
+				return SetRegApplyPrefix2(this.Indices[Column, Row], GetPrefixIndex(Column, Row));
 			}
 
 			public AstNodeStm SetMatrix(Func<int, int, AstNodeExpr> Generator)

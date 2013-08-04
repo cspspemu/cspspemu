@@ -140,7 +140,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		// Vfpu (Matrix) IDenTity
 		public AstNodeStm vidt() {
-			return VEC_VD.SetVector((Index) => (Index == Instruction.IMM7) ? 1f : 0f);
+			return VEC_VD.SetVector((Index) => (Index == (Instruction.IMM7 % ONE_TWO)) ? 1f : 0f);
 		}
 
 		// Vfpu load Integer IMmediate
@@ -428,9 +428,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm vmmul()
 		{
 			int VectorSize = Instruction.ONE_TWO;
-			var Dest = _Matrix(VD_NoPrefix);
-			var Src = _Matrix(VS_NoPrefix);
-			var Target = _Matrix(VT_NoPrefix);
+			//var Dest = MAT(VD_NoPrefix);
+			//var Src = MAT(VS_NoPrefix);
+			//var Target = MAT(VT_NoPrefix);
+			var Dest = MAT_VD;
+			var Src = MAT_VS;
+			var Target = MAT_VT;
 
 			return Dest.SetMatrix((Column, Row) =>
 			{

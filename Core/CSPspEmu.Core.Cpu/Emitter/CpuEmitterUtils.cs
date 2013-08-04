@@ -209,6 +209,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		private static readonly uint[] LwlMask = new uint[] { 0x00FFFFFF, 0x0000FFFF, 0x000000FF, 0x00000000 };
 		private static readonly int[] LwlShift = new int[] { 24, 16, 8, 0 };
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _lwl_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
 		{
 			//Console.WriteLine("_lwl_exec");
@@ -218,6 +220,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return (uint)((Value << LwlShift[AddressAlign]) | (RT & LwlMask[AddressAlign]));
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _lwr_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
 		{
 			//Console.WriteLine("_lwr_exec");
@@ -233,6 +237,8 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		private static readonly uint[] SwrMask = new uint[] { 0x00000000, 0x000000FF, 0x0000FFFF, 0x00FFFFFF };
 		private static readonly int[] SwrShift = new int[] { 0, 8, 16, 24 };
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static void _swl_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
 		{
 			uint Address = (uint)(RS + Offset);
@@ -242,8 +248,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			*AddressPointer = (RT >> SwlShift[AddressAlign]) | (*AddressPointer & SwlMask[AddressAlign]);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static void _swr_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
 		{
+			//Console.WriteLine("_swr_exec");
 			uint Address = (uint)(RS + Offset);
 			uint AddressAlign = (uint)Address & 3;
 			uint* AddressPointer = (uint*)CpuThreadState.GetMemoryPtr(Address & 0xFFFFFFFC);

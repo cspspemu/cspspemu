@@ -15,6 +15,7 @@ using SafeILGenerator.Ast;
 using CSPspEmu.Core.Cpu.Dynarec.Ast;
 using System.Diagnostics;
 using CSPspEmu.Core.Memory;
+using CSharpUtils;
 
 namespace CSPspEmu.Core.Cpu.Dynarec
 {
@@ -40,6 +41,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 			SortedDictionary<uint, AstLabel> Labels = new SortedDictionary<uint, AstLabel>();
 			SortedDictionary<uint, AstLabel> LabelsJump = new SortedDictionary<uint, AstLabel>();
 
+			//const int MaxNumberOfInstructions = 3000;
 			const int MaxNumberOfInstructions = 32 * 1024;
 			//const int MaxNumberOfInstructions = 64 * 1024;
 			//const int MaxNumberOfInstructions = 128 * 1024;
@@ -620,16 +622,19 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 					if (!CpuProcessor.CpuConfig.ShowInstructionStatsJustNew || HasNew)
 					{
 						Console.Error.WriteLine("-------------------------- {0:X}-{1:X} ", MinPC, MaxPC);
-						foreach (var Pair in InstructionStats.OrderByDescending(Item => Item.Value))
+						ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.White, () =>
 						{
-							var IsNew = NewInstruction.ContainsKey(Pair.Key);
-							if (!CpuProcessor.CpuConfig.ShowInstructionStatsJustNew || IsNew)
+							foreach (var Pair in InstructionStats.OrderByDescending(Item => Item.Value))
 							{
-								Console.Error.Write("{0} : {1}", Pair.Key, Pair.Value);
-								if (IsNew) Console.Error.Write(" <-- NEW!");
-								Console.Error.WriteLine("");
+								var IsNew = NewInstruction.ContainsKey(Pair.Key);
+								if (!CpuProcessor.CpuConfig.ShowInstructionStatsJustNew || IsNew)
+								{
+									Console.Error.Write("{0} : {1}", Pair.Key, Pair.Value);
+									if (IsNew) Console.Error.Write(" <-- NEW!");
+									Console.Error.WriteLine("");
+								}
 							}
-						}
+						});
 					}
 				}
 

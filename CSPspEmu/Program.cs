@@ -18,6 +18,8 @@ using System.Diagnostics;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using SafeILGenerator.Utils;
+using SafeILGenerator.Ast;
+using System.Reflection.Emit;
 
 namespace CSPspEmu
 {
@@ -49,27 +51,6 @@ namespace CSPspEmu
 			Environment.Exit(0);
 		}
 
-		//static Action[] ActionList = new Action[10];
-		//static int[] ActionList = new int[10];
-
-		/*
-		static Action MyAction1Ref = MyAction1;
-		static Action MyAction2Ref = MyAction2;
-		static int Count = 0;
-
-		static void MyAction1()
-		{
-			MyAction2Ref();
-			MyAction2Ref();
-			MyAction2Ref();
-		}
-
-		static void MyAction2()
-		{
-			Count++;
-		}
-		*/
-
 		/// <summary>
 		/// 
 		/// </summary>
@@ -81,8 +62,6 @@ namespace CSPspEmu
 		[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
 		static void Main(string[] Arguments)
 		{
-			//ILInstanceHolder.TAlloc<Action>();
-
 			//var Time1 = DateTime.UtcNow;
 			//for (int n = 0; n < 1000000; n++)
 			//{

@@ -168,7 +168,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeExprLValue C0R(int Index) { return REG("C0R" + Index); }
 		public AstNodeExprLValue GPR(int Index) { if (Index == 0) throw (new Exception("Can't get reference to GPR0")); return RefGPRIndex(Index); }
 		public AstNodeExprLValue GPR_l(int Index) { return ast.Indirect(ast.Cast(typeof(long*), ast.GetAddress(GPR(Index)))); }
-		public AstNodeExpr GPR_f(int Index) { if (Index == 0) return ast.Immediate((int)0); return ast.Reinterpret<float>(GPR(Index)); }
+		public AstNodeExpr GPR_f(int Index) { if (Index == 0) return ast.Immediate((float)0); return ast.Reinterpret<float>(GPR(Index)); }
 		public AstNodeExpr GPR_s(int Index) { if (Index == 0) return ast.Immediate((int)0); return ast.Cast<int>(GPR(Index), Explicit: false); }
 		public AstNodeExpr GPR_sl(int Index) { return ast.Cast<long>(GPR_s(Index)); }
 		public AstNodeExpr GPR_u(int Index) { if (Index == 0) return ast.Immediate((uint)0); return GPR(Index); }

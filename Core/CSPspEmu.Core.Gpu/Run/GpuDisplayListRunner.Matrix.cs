@@ -1,4 +1,5 @@
 ﻿using CSPspEmu.Core.Gpu.State.SubStates;
+using System;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
@@ -36,6 +37,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		public void OP_WORLD()
 		{
 			//Console.WriteLine("{0:X}, {1}", Params24, Float1);
+			//Console.WriteLine(Float1);
 			GpuDisplayList.GpuStateStructPointer->VertexState.WorldMatrix.Write(Float1);
 		}
 
