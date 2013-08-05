@@ -401,34 +401,36 @@ namespace CSPspEmu
 			}
 			*/
 
-			var PspEmulator = new PspEmulator();
-			//PspEmulator.UseFastMemory = true;
-			var CodeBase = Assembly.GetExecutingAssembly().Location;
-			var Base = Path.GetDirectoryName(CodeBase) + @"\" + Path.GetFileNameWithoutExtension(CodeBase);
-			foreach (var TryExtension in new[] { "iso", "cso", "elf", "pbp" })
+			using (var PspEmulator = new PspEmulator())
 			{
-				var TryIsoFile = Base + "." + TryExtension;
-
-				//Console.WriteLine(TryIsoFile);
-				//Console.ReadKey();
-
-				if (File.Exists(TryIsoFile))
+				//PspEmulator.UseFastMemory = true;
+				var CodeBase = Assembly.GetExecutingAssembly().Location;
+				var Base = Path.GetDirectoryName(CodeBase) + @"\" + Path.GetFileNameWithoutExtension(CodeBase);
+				foreach (var TryExtension in new[] { "iso", "cso", "elf", "pbp" })
 				{
-					Platform.HideConsole();
+					var TryIsoFile = Base + "." + TryExtension;
 
-					PspEmulator.StartAndLoad(TryIsoFile, TraceSyscalls: false, ShowMenus: false);
-					return;
+					//Console.WriteLine(TryIsoFile);
+					//Console.ReadKey();
+
+					if (File.Exists(TryIsoFile))
+					{
+						Platform.HideConsole();
+
+						PspEmulator.StartAndLoad(TryIsoFile, TraceSyscalls: false, ShowMenus: false);
+						return;
+					}
 				}
-			}
 
-			if (FileToLoad != null)
-			{
-				PspEmulator.StartAndLoad(FileToLoad, TraceSyscalls: false);
-			}
-			else
-			{
-				//StartWithoutArguments(PspEmulator);
-				PspEmulator.Start();
+				if (FileToLoad != null)
+				{
+					PspEmulator.StartAndLoad(FileToLoad, TraceSyscalls: false);
+				}
+				else
+				{
+					//StartWithoutArguments(PspEmulator);
+					PspEmulator.Start();
+				}
 			}
 		}
 	}

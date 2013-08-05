@@ -1125,5 +1125,15 @@ namespace CSPspEmu.Gui.Winforms
 		{
 
 		}
+
+		public static void RunStart(IGuiExternalInterface IGuiExternalInterface)
+		{
+			if (Platform.OperatingSystem == Platform.OS.Windows)
+			{
+				Application.EnableVisualStyles();
+			}
+			Application.SetCompatibleTextRenderingDefault(false);
+			Application.Run(new PspDisplayForm(IGuiExternalInterface));
+		}
 	}
 }

@@ -22,11 +22,13 @@ namespace CSPspEmu.Runner.Components.Audio
 				while (true)
 				{
 					ThreadTaskQueue.HandleEnqueued();
-					if (!Running) return;
+					if (!Running) break;
 
 					PspAudio.Update();
 					Thread.Sleep(1);
 				}
+
+				PspAudio.StopSynchronized();
 			}
 			finally
 			{

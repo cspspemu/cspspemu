@@ -190,27 +190,39 @@ namespace WaveLib
 		
         private void ThreadProc()
 		{
-			while (!m_Finished && !Disposing)
+			Console.WriteLine("WaveOut.Start()");
+			try
 			{
-				//Console.Write("a{0}", m_Finished);
-				Advance();
-				//Console.Write("b");
-				if (m_FillProc != null && !m_Finished)
-					m_FillProc(m_CurrentBuffer.Data, m_CurrentBuffer.Size);
-				else
+				while (!m_Finished && !Disposing)
 				{
-					// zero out buffer
-					byte v = m_zero;
-					byte[] b = new byte[m_CurrentBuffer.Size];
-					for (int i = 0; i < b.Length; i++)
-						b[i] = v;
-					Marshal.Copy(b, 0, m_CurrentBuffer.Data, b.Length);
+					//Console.WriteLine("[1] {0}", Thread.CurrentThread.ManagedThreadId);
+					//Console.Write("a{0}", m_Finished);
+					Advance();
+					//Console.Write("b");
+					if (m_FillProc != null && !m_Finished)
+					{
+						m_FillProc(m_CurrentBuffer.Data, m_CurrentBuffer.Size);
+					}
+					else
+					{
+						// zero out buffer
+						byte v = m_zero;
+						byte[] b = new byte[m_CurrentBuffer.Size];
+						for (int i = 0; i < b.Length; i++) b[i] = v;
+						Marshal.Copy(b, 0, m_CurrentBuffer.Data, b.Length);
 
+					}
+					m_CurrentBuffer.Play();
 				}
-				m_CurrentBuffer.Play();
+				//Console.WriteLine("Test!");
+				//Console.Write("X");
+				//WaitForAllBuffers();
+				//Console.WriteLine("Test2!");
 			}
-			//Console.Write("X");
-			WaitForAllBuffers();
+			finally
+			{
+				Console.WriteLine("WaveOut.End()");
+			}
 		}
 		
         private void AllocateBuffers(int bufferSize, int bufferCount)

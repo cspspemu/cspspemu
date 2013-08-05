@@ -186,12 +186,20 @@ namespace WaveLib
 		
         private void ThreadProc()
 		{
-			while (!m_Finished)
+			Console.WriteLine("WaveIn.Start()");
+			try
 			{
-				Advance();
-				if (m_DoneProc != null && !m_Finished)
-					m_DoneProc(m_CurrentBuffer.Data, m_CurrentBuffer.Size);
-				m_CurrentBuffer.Record();
+				while (!m_Finished)
+				{
+					Advance();
+					if (m_DoneProc != null && !m_Finished)
+						m_DoneProc(m_CurrentBuffer.Data, m_CurrentBuffer.Size);
+					m_CurrentBuffer.Record();
+				}
+			}
+			finally
+			{
+				Console.WriteLine("WaveIn.End()");
 			}
 		}
 		

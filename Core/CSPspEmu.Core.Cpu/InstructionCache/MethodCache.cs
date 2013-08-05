@@ -150,14 +150,22 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 
 		private void Main()
 		{
-			while (true)
+			Console.WriteLine("MethodCache.Start()");
+			try
 			{
-				var PC = ExploreQueue.ReadOne();
-				//Console.Write("Compiling {0:X8}...", PC);
-				var DynarecFunction = _GenerateForPC(PC);
-				lock (this) this.Functions[PC] = DynarecFunction;
-				//Console.WriteLine("Ok");
-				CompletedFunction.Set();
+				while (true)
+				{
+					var PC = ExploreQueue.ReadOne();
+					//Console.Write("Compiling {0:X8}...", PC);
+					var DynarecFunction = _GenerateForPC(PC);
+					lock (this) this.Functions[PC] = DynarecFunction;
+					//Console.WriteLine("Ok");
+					CompletedFunction.Set();
+				}
+			}
+			finally
+			{
+				Console.WriteLine("MethodCache.End()");
 			}
 		}
 

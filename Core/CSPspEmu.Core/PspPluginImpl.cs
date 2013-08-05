@@ -14,6 +14,8 @@ namespace CSPspEmu.Core
 		/// </summary>
 		public abstract bool IsWorking { get; }
 
+		//public abstract void Start();
+
 		/// <summary>
 		/// 
 		/// </summary>

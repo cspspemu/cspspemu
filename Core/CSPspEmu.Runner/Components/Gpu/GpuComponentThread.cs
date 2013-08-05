@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Gpu;
+using System;
 
 namespace CSPspEmu.Runner.Components.Gpu
 {
@@ -20,15 +21,23 @@ namespace CSPspEmu.Runner.Components.Gpu
 
 			GpuProcessor.ProcessInit();
 
-			while (true)
+			Console.WriteLine("GpuComponentThread.Start()");
+			try
 			{
-				WaitHandle.WaitAny(new WaitHandle[] { GpuProcessor.DisplayListQueueUpdated, ThreadTaskQueue.EnqueuedEvent, RunningUpdatedEvent }, 10);
+				while (true)
+				{
+					WaitHandle.WaitAny(new WaitHandle[] { GpuProcessor.DisplayListQueueUpdated, ThreadTaskQueue.EnqueuedEvent, RunningUpdatedEvent }, 10);
 
-				ThreadTaskQueue.HandleEnqueued();
-				if (!Running) break;
-				GpuProcessor.SetCurrent();
-				GpuProcessor.ProcessStep();
-				GpuProcessor.UnsetCurrent();
+					ThreadTaskQueue.HandleEnqueued();
+					if (!Running) break;
+					GpuProcessor.SetCurrent();
+					GpuProcessor.ProcessStep();
+					GpuProcessor.UnsetCurrent();
+				}
+			}
+			finally
+			{
+				Console.WriteLine("GpuComponentThread.End()");
 			}
 		}
 	}

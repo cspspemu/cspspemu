@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace CSPspEmu.Core.Audio
 {
-    unsafe public sealed class PspAudio : IInjectInitialize
+    unsafe public sealed class PspAudio : IInjectInitialize, IDisposable
 	{
 		/// <summary>
 		/// Output formats for PSP audio.
@@ -162,6 +162,22 @@ namespace CSPspEmu.Core.Audio
 					}
 				}
 			});
+		}
+
+		private bool Disposed = false;
+
+		public void StopSynchronized()
+		{
+			if (!Disposed)
+			{
+				Disposed = true;
+				PspAudioImpl.StopSynchronized();
+			}
+		}
+
+		void IDisposable.Dispose()
+		{
+			StopSynchronized();
 		}
 	}
 	public class InvalidChannelException : Exception

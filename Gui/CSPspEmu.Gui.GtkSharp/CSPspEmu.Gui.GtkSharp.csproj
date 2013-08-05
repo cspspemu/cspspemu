@@ -4,37 +4,44 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E68AE26E-E969-4413-8D3C-E60A7D2A2950}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{27E3A3F9-AF76-449D-BDBB-324FB124BCA6}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CSPspEmu.Inject</RootNamespace>
-    <AssemblyName>CSPspEmu.Inject</AssemblyName>
-    <FileAlignment>512</FileAlignment>
-    <ProductVersion>12.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
+    <RootNamespace>CSPspEmu.Gui.GtkSharp</RootNamespace>
+    <AssemblyName>CSPspEmu.Gui.GtkSharp</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
+    <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>True</DebugSymbols>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>False</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>True</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL" />
+    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL" />
+    <Reference Include="GLWidget">
+      <HintPath>..\..\Libraries\OpenTK\GLWidget\GLWidget.dll</HintPath>
+    </Reference>
+    <Reference Include="gtk-dotnet, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL" />
+    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL" />
+    <Reference Include="OpenTK">
+      <HintPath>..\..\OpenTK.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,18 +51,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IInjectInitialize.cs" />
-    <Compile Include="InjectAttribute.cs" />
-    <Compile Include="InjectMapAttribute.cs" />
-    <Compile Include="MessageBus.cs" />
+    <Compile Include="GtkProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="InjectContext.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
-      <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
-      <Name>CSharpUtils</Name>
-    </ProjectReference>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

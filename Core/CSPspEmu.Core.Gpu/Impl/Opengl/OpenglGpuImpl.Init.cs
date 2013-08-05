@@ -1,4 +1,4 @@
-﻿#define USE_GL_CONTROL
+﻿//#define USE_GL_CONTROL
 //#define DO_NOT_USE_STENCIL
 //#define SHOW_WINDOW
 
@@ -186,14 +186,22 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 					RenderGraphicsContext.MakeCurrent(null);
 					CompletedEvent.Set();
-					while (Running)
+					Console.WriteLine("OpenglGpuImpl.Init.Start()");
+					try
 					{
+						while (Running)
+						{
 #if !USE_GL_CONTROL
-						NativeWindow.ProcessEvents();
+							NativeWindow.ProcessEvents();
 #endif
-						Thread.Sleep(1);
+							Thread.Sleep(1);
+						}
+						StopEvent.Set();
 					}
-					StopEvent.Set();
+					finally
+					{
+						Console.WriteLine("OpenglGpuImpl.Init.End()");
+					}
 				});
 				CThread.Name = "GpuImplEventHandling";
 				CThread.IsBackground = true;

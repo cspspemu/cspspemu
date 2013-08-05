@@ -6,7 +6,7 @@ using WaveLib;
 
 namespace CSPspEmu.Core.Audio.Impl.WaveOut
 {
-	public unsafe class PspAudioWaveOutImpl : PspAudioImpl
+	public unsafe class PspAudioWaveOutImpl : PspAudioImpl, IInjectInitialize
 	{
 		public const int Frequency = 44100;
 		//public const int Frequency = 48000;
@@ -62,14 +62,27 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut
 
 		public override void StopSynchronized()
 		{
+			//Console.ReadKey();
 			Initialized = false;
-			m_Player.Stop();
+			if (m_Player != null)
+			{
+				m_Player.Stop();
+				m_Player = null;
+			}
+		}
+
+		void IInjectInitialize.Initialize()
+		{
+			Console.WriteLine("PspAudioWaveOutImpl.Initialize()!");
+			if (m_Player == null)
+			{
+				m_Player = new WaveOutPlayer(-1, new WaveFormat(rate: Frequency, bits: 16, channels: NumberOfChannels), BufferSize, NumberOfBuffers, BufferFillEventHandler);
+			}
+			Initialized = true;
 		}
 
 		public PspAudioWaveOutImpl()
 		{
-			m_Player = new WaveOutPlayer(-1, new WaveFormat(rate: Frequency, bits: 16, channels: NumberOfChannels), BufferSize, NumberOfBuffers, BufferFillEventHandler);
-			Initialized = true;
 		}
 
 		public override PluginInfo PluginInfo
