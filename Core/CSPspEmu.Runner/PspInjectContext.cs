@@ -55,12 +55,21 @@ namespace CSPspEmu.Runner
 				);
 
 				// AUDIO
-				PspPluginImpl.SelectWorkingPlugin<PspAudioImpl>(_InjectContext,
-					typeof(PspAudioWaveOutImpl),
-					typeof(AudioAlsaImpl),
-					typeof(PspAudioOpenalImpl),
-					typeof(AudioImplNull)
-				);
+
+				var AudioPlugins = new List<Type>();
+
+				if (Platform.OperatingSystem == Platform.OS.Windows)
+				{
+					AudioPlugins.Add(typeof(PspAudioWaveOutImpl));
+				}
+				if (Platform.OperatingSystem == Platform.OS.Posix)
+				{
+					AudioPlugins.Add(typeof(AudioAlsaImpl));
+				}
+				AudioPlugins.Add(typeof(PspAudioOpenalImpl));
+				AudioPlugins.Add(typeof(AudioImplNull));
+
+				PspPluginImpl.SelectWorkingPlugin<PspAudioImpl>(_InjectContext, AudioPlugins.ToArray());
 			}
 			else
 			{

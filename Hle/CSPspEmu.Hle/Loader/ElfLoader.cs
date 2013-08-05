@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define DEBUG_ELF_LOADER
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -88,7 +90,7 @@ namespace CSPspEmu.Hle.Loader
 			AllocateMemory();
 			WriteToMemory();
 
-#if DEBUG
+#if DEBUG_ELF_LOADER
 			((PspMemoryStream)MemoryStream).Memory.Dump("after_allocate_and_write_dump.bin");
 #endif
 		}

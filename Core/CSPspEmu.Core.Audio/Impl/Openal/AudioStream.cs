@@ -1,4 +1,4 @@
-﻿using CSharpPlatform.AL;
+﻿using OpenTK.Audio.OpenAL;
 using System;
 
 namespace CSPspEmu.Core.Audio.Impl.Openal
@@ -22,10 +22,10 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 
 		private static void ALEnforce(string AT = "Unknown")
 		{
-			var Error = AL.alGetError();
-			if (Error != AL.AL_NO_ERROR)
+			var Error = AL.GetError();
+			if (Error != ALError.NoError)
 			{
-				Console.Error.WriteLine("ALEnforce: " + AL.alGetErrorString(Error) + "(" + Error + ") : " + AT);
+				Console.Error.WriteLine("ALEnforce: " + AL.GetErrorString(Error) + "(" + Error + ") : " + AT);
 				//throw (new Exception("Error: " + AL.GetErrorString(Error)));
 			}
 		}
@@ -40,18 +40,17 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 		{
 			this.BufferIds = new uint[NumberOfBuffers];
 
-			fixed (uint* SourceIdPtr = &this.SourceId)
 			fixed (uint* BufferIdsPtr = this.BufferIds)
 			{
-				AL.alGenBuffers(NumberOfBuffers, BufferIdsPtr); ALEnforce();
-				AL.alGenSources(1, SourceIdPtr); ALEnforce();
+				AL.GenBuffers(NumberOfBuffers, BufferIdsPtr); ALEnforce();
+				AL.GenSources(1, out this.SourceId); ALEnforce();
 			}
 
-			AL.alSourcef(SourceId, AL.AL_PITCH, 1.0f); ALEnforce();
-			AL.alSourcef(SourceId, AL.AL_GAIN, 1.0f); ALEnforce();
-			AL.alSourcef(SourceId, AL.AL_ROLLOFF_FACTOR, 0.0f); ALEnforce();
-			AL.alSource3f(SourceId, AL.AL_VELOCITY, 0, 0, 0); ALEnforce();
-			AL.alSource3f(SourceId, AL.AL_POSITION, 0, 0, 0); ALEnforce();
+			AL.Source(SourceId, ALSourcef.Pitch, 1.0f); ALEnforce();
+			AL.Source(SourceId, ALSourcef.Gain, 1.0f); ALEnforce();
+			AL.Source(SourceId, ALSourcef.RolloffFactor, 0.0f); ALEnforce();
+			AL.Source(SourceId, ALSource3f.Velocity, 0f, 0f, 0f); ALEnforce();
+			AL.Source(SourceId, ALSource3f.Position, 0f, 0f, 0f); ALEnforce();
 			//AL.Source(SourceId, ALSourceb.Looping, true); ALEnforce();
 		}
 
@@ -60,8 +59,8 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 			fixed (uint* SourceIdPtr = &this.SourceId)
 			fixed (uint* BufferIdsPtr = this.BufferIds)
 			{
-				AL.alDeleteSources(1, SourceIdPtr);
-				AL.alDeleteBuffers(this.BufferIds.Length, BufferIdsPtr);
+				AL.DeleteSources(1, SourceIdPtr);
+				AL.DeleteBuffers(this.BufferIds.Length, BufferIdsPtr);
 			}
 		}
 
@@ -71,19 +70,17 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 			{
 				uint BufferId = _BufferId;
 				ReadStream(BufferId);
-				AL.alSourceQueueBuffers(SourceId, 1, &BufferId);
+				AL.SourceQueueBuffers(SourceId, 1, &BufferId);
 				ALEnforce();
 			}
-			AL.alSourcePlay(SourceId); ALEnforce();
+			AL.SourcePlay(SourceId); ALEnforce();
 		}
 
 		public bool IsPlaying
 		{
 			get
 			{
-				int state = 0;
-				AL.alGetSourcei(SourceId, AL.AL_SOURCE_STATE, &state);
-				return (state == AL.AL_PLAYING);
+				return AL.GetSourceState(SourceId) == ALSourceState.Playing;
 			}
 		}
 
@@ -93,27 +90,24 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 
 			if (!IsPlaying)
 			{
-				fixed (uint* SourceIdPtr = &this.SourceId)
-				{
-					AL.alDeleteSources(1, SourceIdPtr); ALEnforce();
-					AL.alGenSources(1, SourceIdPtr); ALEnforce();
-				}
+				AL.DeleteSources(1, ref this.SourceId); ALEnforce();
+				AL.GenSources(1, out this.SourceId); ALEnforce();
 				//AL.SourceStop(SourceId);
 				Start();
 				//AL.SourcePlay(SourceId); ALEnforce();
 			}
 
-			AL.alGetSourcei(SourceId, AL.AL_BUFFERS_PROCESSED, &Processed);
+			AL.GetSource(SourceId, ALGetSourcei.BuffersProcessed, out Processed);
 			ALEnforce();
 
 			while (Processed-- > 0)
 			{
 				uint DequeuedBufferId = 0;
-				AL.alSourceUnqueueBuffers(SourceId, 1, &DequeuedBufferId);
+				AL.SourceUnqueueBuffers(SourceId, 1, &DequeuedBufferId);
 				{
 					ReadStream(DequeuedBufferId, ReadStreamCallback);
 				}
-				AL.alSourceQueueBuffers(SourceId, 1, &DequeuedBufferId); ALEnforce();
+				AL.SourceQueueBuffers(SourceId, 1, &DequeuedBufferId); ALEnforce();
 			}
 		}
 
@@ -141,7 +135,7 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 
 			fixed (short* BufferDataPtr = BufferData)
 			{
-				AL.alBufferData(BufferId, AL.AL_FORMAT_STEREO16, BufferDataPtr, BufferData.Length * sizeof(short), Frequency);
+				AL.BufferData(BufferId, ALFormat.Stereo16, new IntPtr(BufferDataPtr), BufferData.Length * sizeof(short), Frequency);
 				ALEnforce("ReadStream");
 			}
 		}

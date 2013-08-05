@@ -296,5 +296,39 @@ namespace CSPspEmu.Core.Audio.Impl.Alsa
 		/// <returns>PCM state snd_pcm_state_t of given PCM handle</returns>
 		[DllImport(DLL)]
 		internal static extern _snd_pcm_state snd_pcm_state(IntPtr playback_handle);
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="playback_handle"></param>
+		/// <param name="hw_params"></param>
+		/// <param name="val"></param>
+		/// <param name="dir"></param>
+		/// <returns></returns>
+		[DllImport(DLL)]
+		internal static extern int snd_pcm_hw_params_set_buffer_time_near(IntPtr playback_handle, IntPtr hw_params, int* val, int* dir);
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="playback_handle"></param>
+		/// <param name="hw_params"></param>
+		/// <param name="val"></param>
+		/// <param name="dir"></param>
+		/// <returns></returns>
+		[DllImport(DLL)]
+		internal static extern int snd_pcm_hw_params_set_period_time_near(IntPtr playback_handle, IntPtr hw_params, int* val, int* dir);
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="playback_handle"></param>
+		/// <param name="hw_params"></param>
+		/// <param name="val"></param>
+		/// <param name="dir"></param>
+		/// <returns></returns>
+		[DllImport(DLL)]
+		internal static extern int snd_pcm_hw_params_set_period_size(IntPtr playback_handle, IntPtr hw_params, int val, int* dir);
 	}
 }

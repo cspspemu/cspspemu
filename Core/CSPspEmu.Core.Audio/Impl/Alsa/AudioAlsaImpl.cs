@@ -13,9 +13,26 @@ namespace CSPspEmu.Core.Audio
 		//public static string Device = "hw:0,0";
 		private static IntPtr playback_handle = IntPtr.Zero;
 		private static IntPtr hw_params = IntPtr.Zero;
+		private const int channels = 2;
 		private const int periods = 2;       /* Number of periods */
-		private const int periodsize = 8192; /* Periodsize (bytes) */
+		//private const int periodsize = 8192; /* Periodsize (bytes) */
+		//private const int periodsize = 2048;
 
+		const int SampleRate = 44100;
+
+		private const int periodsize = SampleRate / 10 / 2;
+
+
+		//const int NumBuffers = periods;
+
+		//protected short[] Buffer = new short[periodsize / channels / periods];
+		protected short[] Buffer = new short[periodsize * channels];
+		const int SndOutPacketSize = 512;
+		//short[] Buffer = new short[2 * 1024];
+
+		// Frame = 2 * sizeof(ushort)
+		// Period = is the number of frames in between each hardware interrupt. The poll() will return once a period.
+		// PeriodsPerBuffer
 		public AudioAlsaImpl()
 		{
 			if (playback_handle == IntPtr.Zero)
@@ -25,16 +42,27 @@ namespace CSPspEmu.Core.Audio
 					fixed (IntPtr* playback_handle_ptr = &playback_handle)
 					fixed (IntPtr* hw_params_ptr = &hw_params)
 					{
-						int rate = 44100;
+						int rate = SampleRate;
+						
+						//int period_time = (SndOutPacketSize * 1000) / (SampleRate / 1000);
+						//int buffer_time = period_time * NumBuffers;
+
 						Assert("snd_pcm_open", Alsa.snd_pcm_open(playback_handle_ptr, Device, Alsa.snd_pcm_stream_t.SND_PCM_LB_OPEN_PLAYBACK, 0));
 						Assert("snd_pcm_hw_params_malloc", Alsa.snd_pcm_hw_params_malloc(hw_params_ptr));
 						Assert("snd_pcm_hw_params_any", Alsa.snd_pcm_hw_params_any(playback_handle, hw_params));
 						Assert("snd_pcm_hw_params_set_access", Alsa.snd_pcm_hw_params_set_access(playback_handle, hw_params, Alsa.snd_pcm_access.SND_PCM_ACCESS_RW_INTERLEAVED));
 						Assert("snd_pcm_hw_params_set_format", Alsa.snd_pcm_hw_params_set_format(playback_handle, hw_params, Alsa.snd_pcm_format.SND_PCM_FORMAT_S16_LE));
 						Assert("snd_pcm_hw_params_set_rate_near", Alsa.snd_pcm_hw_params_set_rate_near(playback_handle, hw_params, &rate, null));
-						Assert("snd_pcm_hw_params_set_channels", Alsa.snd_pcm_hw_params_set_channels(playback_handle, hw_params, 2));
+
+						//Assert("snd_pcm_hw_params_set_buffer_time_near", Alsa.snd_pcm_hw_params_set_buffer_time_near(playback_handle, hw_params, &buffer_time, null));
+						//Assert("snd_pcm_hw_params_set_period_time_near", Alsa.snd_pcm_hw_params_set_period_time_near(playback_handle, hw_params, &period_time, null));
+						 
+						Assert("snd_pcm_hw_params_set_channels", Alsa.snd_pcm_hw_params_set_channels(playback_handle, hw_params, channels));
+
 						Assert("snd_pcm_hw_params_set_periods", Alsa.snd_pcm_hw_params_set_periods(playback_handle, hw_params, periods, 0));
-						Assert("snd_pcm_hw_params_set_buffer_size", Alsa.snd_pcm_hw_params_set_buffer_size(playback_handle, hw_params, (periodsize * periods) >> 2));
+						Assert("snd_pcm_hw_params_set_period_size", Alsa.snd_pcm_hw_params_set_period_size(playback_handle, hw_params, periodsize, null));
+						Assert("snd_pcm_hw_params_set_buffer_size", Alsa.snd_pcm_hw_params_set_buffer_size(playback_handle, hw_params, 4 * periodsize));
+
 						Assert("snd_pcm_hw_params", Alsa.snd_pcm_hw_params(playback_handle, hw_params));
 						Assert("snd_pcm_hw_params_free", Alsa.snd_pcm_hw_params_free(hw_params));
 					}
@@ -56,9 +84,6 @@ namespace CSPspEmu.Core.Audio
 
 		//public int available_start;
 
-		protected short[] Buffer = new short[512];
-		//short[] Buffer = new short[2 * 1024];
-
 		public override void Update(Action<short[]> ReadStream)
 		{
 			ReadStream(Buffer);
@@ -68,7 +93,7 @@ namespace CSPspEmu.Core.Audio
 				{
 					Alsa.snd_pcm_prepare(playback_handle);
 				}
-				Alsa.snd_pcm_writei(playback_handle, BufferPtr, Buffer.Length / 2);
+				Alsa.snd_pcm_writei(playback_handle, BufferPtr, Buffer.Length / channels);
 			}
 		}
 

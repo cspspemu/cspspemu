@@ -848,7 +848,9 @@ namespace CSPspEmu.Gui.Winforms
 				{
 					var ToolStripMenuItem = (ToolStripMenuItem)Field.GetValue(this);
 					var Translation = Translations.GetString("menus", ToolStripMenuItem.Name);
-					ToolStripMenuItem.Text = ((Translation != null) ? Translation : ToolStripMenuItem.Text);
+					var FinalText = ((Translation != null) ? Translation : ToolStripMenuItem.Text);
+					if (Platform.IsMono) FinalText = FinalText.Replace("&", "");
+					ToolStripMenuItem.Text = FinalText;
 				}
 			}
 

@@ -52,7 +52,7 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
-		public int RenderScale = 1;
+		public int RenderScale = 2;
 
 		/// <summary>
 		/// 

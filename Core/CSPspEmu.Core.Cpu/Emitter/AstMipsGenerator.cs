@@ -266,6 +266,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		public AstNodeStm GetTickCall(bool Mandatory)
 		{
+			Mandatory = true;
 			if (Mandatory || _DynarecConfig.EmitCallTick)
 			{
 				return ast.Statement(ast.CallInstance(ast.CpuThreadState, (Action)CSPspEmu.Core.Cpu.CpuThreadState.Methods.Tick));

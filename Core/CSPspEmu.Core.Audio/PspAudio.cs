@@ -158,7 +158,6 @@ namespace CSPspEmu.Core.Audio
 
 					for (int n = 0; n < RequiredSamples; n++)
 					{
-
 						MixedSamplesPtr[n] = StereoShortSoundSample.Clamp(MixedSamplesDenormalized[n]);
 					}
 				}

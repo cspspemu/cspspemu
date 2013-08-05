@@ -1,12 +1,13 @@
-﻿using CSharpPlatform.AL;
+﻿using OpenTK;
+using OpenTK.Audio.OpenAL;
 using System;
 
 namespace CSPspEmu.Core.Audio.Impl.Openal
 {
     unsafe public class PspAudioOpenalImpl : PspAudioImpl
 	{
-		protected static IntPtr* device;
-		protected static IntPtr* context;
+		protected static IntPtr device;
+		protected static ContextHandle context;
 		//protected static XRamExtension XRam;
 		internal static AudioStream AudioStream;
 
@@ -16,18 +17,18 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 
 		private void InitOnce()
 		{
-			if (context == null)
+			if (AudioStream == null)
 			{
 				//AudioContext = new AudioContext(AudioContext.DefaultDevice, 44100, 4410);
 				//AudioContext = new AudioContext();
 				//XRam = new XRamExtension();
 
-				device = AL.alcOpenDevice(AL.alcGetString(null, AL.ALC_DEFAULT_DEVICE_SPECIFIER));
-				context = AL.alcCreateContext(device, null);
-				AL.alcMakeContextCurrent(context);
+				device = Alc.OpenDevice(Alc.GetString(IntPtr.Zero, AlcGetString.DefaultDeviceSpecifier));
+				context = Alc.CreateContext(device, new int[] { 0, 0 });
+				Alc.MakeContextCurrent(context);
 
-				AL.alListener3f(AL.AL_POSITION, 0, 0, 0);
-				AL.alListener3f(AL.AL_VELOCITY, 0, 0, 0);
+				AL.Listener(ALListener3f.Position, 0f, 0f, 0f);
+				AL.Listener(ALListener3f.Velocity, 0f, 0f, 0f);
 
 				AudioStream = new AudioStream();
 			}
@@ -36,12 +37,7 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 		public override void Update(Action<short[]> ReadStream)
 		{
 			InitOnce();
-
-			if (context != null)
-			{
-				AL.alcProcessContext(context);
-			}
-
+			Alc.ProcessContext(context);
 			AudioStream.Update(ReadStream);
 		}
 
@@ -67,11 +63,12 @@ namespace CSPspEmu.Core.Audio.Impl.Openal
 			{
 				try
 				{
-					AL.alGetError();
+					AL.GetError();
 					return true;
 				}
-				catch
+				catch (Exception Exception)
 				{
+					Console.Error.WriteLine(Exception);
 					return false;
 				}
 			}

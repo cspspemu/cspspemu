@@ -54,6 +54,9 @@
     <Optimize>False</Optimize>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OpenTK">
+      <HintPath>..\..\OpenTK.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -94,10 +97,6 @@
     <ProjectReference Include="..\..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
       <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\csharpplatform\CSharpPlatform.AL\CSharpPlatform.AL.csproj">
-      <Project>{40A74EE2-9D85-46ED-B751-FC46D915D714}</Project>
-      <Name>CSharpPlatform.AL</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\libraries\csharpplatform\CSharpPlatform\CSharpPlatform.csproj">
       <Project>{B4B107B5-030B-451C-8532-13B2306692C3}</Project>
