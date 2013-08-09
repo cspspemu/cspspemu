@@ -12,21 +12,10 @@ using CSPspEmu.Core;
 using CSPspEmu.AutoTests;
 using CSharpUtils;
 using CSharpUtils.Getopt;
-using CSPspEmu.Hle;
 using CSPspEmu.Hle.Vfs.Iso;
 using System.Diagnostics;
-using System.Net.NetworkInformation;
-using System.Runtime.InteropServices;
-using SafeILGenerator.Utils;
-using SafeILGenerator.Ast;
-using System.Reflection.Emit;
-using CSharpPlatform.AL;
-using CSharpPlatform;
 using CSharpPlatform.GL;
-using CSharpPlatform.GL.Impl;
-using System.Drawing;
-using OpenTK;
-using OpenTK.Graphics;
+using CSharpPlatform.GL.Utils;
 
 namespace CSPspEmu
 {
@@ -58,18 +47,54 @@ namespace CSPspEmu
 			Environment.Exit(0);
 		}
 
-		public static GraphicsMode UsedGraphicsMode = new GraphicsMode(
-			color: new OpenTK.Graphics.ColorFormat(8, 8, 8, 8),
-			depth: 16,
-			 stencil: 8,
-			 samples: 0,
-			accum: new OpenTK.Graphics.ColorFormat(16, 16, 16, 16),
-			buffers: 2,
-			stereo: false
-		);
+		static private void _MainData()
+		{
+			var Context = OpenglContextFactory.Create();
 
-		//[DllImport("opengl32.dll")]
-		//static unsafe public extern byte* glGetString(int name);
+			//var RenderTarget = GLRenderTarget.Default;
+			var RenderTarget = GLRenderTarget.Create(128, 128);
+			RenderTarget.Bind();
+
+			GL.glClearColor(0.5f, 0, 1, 1);
+			GL.glClear(GL.GL_COLOR_BUFFER_BIT);
+
+			var Shader = new GLShader(
+				@"attribute vec4 vPosition; void main() { gl_Position = vPosition; }",
+				@"void main() { gl_FragColor = vec4 ( 0.1, 0.1, 0.1, 1 ); }"
+			);
+
+			var vPosition = Shader.GetAttribute("vPosition");
+
+			var Vertices = new float[]
+			{
+				0f, 0f, 0f, 0f,
+				1f, 0f, 0f, 0f,
+				1f, 1f, 0f, 0f,
+				0f, 1f, 0f, 0f,
+			};
+
+			Shader.Use();
+			Console.WriteLine(vPosition);
+
+			var Buffer = new GLBuffer();
+
+			fixed (float* VerticesPtr = Vertices)
+			{
+				vPosition.SetPointer(VerticesPtr);
+				//vPosition.SetData(Buffer.SetData(Vertices.Length * sizeof(float), VerticesPtr));
+				GL.glDrawArrays(GL.GL_TRIANGLE_STRIP, 0, 4);
+			}
+
+
+			var Pixels = RenderTarget.ReadPixels();
+			Console.WriteLine("{0:X2}{1:X2}{2:X2}{3:X2}", Pixels[0], Pixels[1], Pixels[2], Pixels[3]);
+			File.WriteAllBytes(@"c:\temp\out.bin", Pixels);
+
+			//Console.WriteLine("{0}", Marshal.PtrToStringAnsi(new IntPtr(GL.glGetString(GL.GL_VERSION))));
+			//Console.WriteLine(Context);
+			Console.ReadKey();
+			Environment.Exit(0);
+		}
 
 		/// <summary>
 		/// 
@@ -82,147 +107,8 @@ namespace CSPspEmu
 		[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
 		unsafe static void Main(string[] Arguments)
 		{
-			//var Context2 = WGL_Tools.CreateContext();
-			////Console.WriteLine(new IntPtr(GL.glGetString(GL.GL_VERSION)));
-			//GL.LoadAll();
-			//Console.WriteLine(Context2);
-			//Console.WriteLine(new IntPtr(glGetString(GL.GL_VERSION)));
-			//
-			//Console.ReadKey();
-			//
-			//return;
-
-			////var Form = ;
-			//var Form = new Form();
-			////Form.CreateControl();
-			//Form.HandleCreated += (sender, e) =>
-			//{
-			//	Console.WriteLine("*************************");
-			//	var DC = Form.CreateGraphics().GetHdc();
-			//
-			//	Console.WriteLine("DC: {0:X8}", DC);
-			//
-			//	var pfd = new PixelFormatDescriptor();
-			//	pfd.Size = (short)sizeof(PixelFormatDescriptor);
-			//	pfd.Version = 1;
-			//	pfd.Flags = PixelFormatDescriptorFlags.SUPPORT_OPENGL | PixelFormatDescriptorFlags.DRAW_TO_WINDOW;
-			//	for (int n = 1; n < 10; n++)
-			//	{
-			//		int Return = WGL.wglDescribePixelFormat(DC, n, (uint)sizeof(PixelFormatDescriptor), &pfd);
-			//		Console.WriteLine("{0}: {1}, {2}, {3}, {4}", n, Return, Marshal.GetLastWin32Error(), pfd.Flags, pfd.ToStringDefault());
-			//	}
-			//
-			//	WGL.wglChoosePixelFormat(DC, &pfd);
-			//	int mode = WGL.wglGetPixelFormat(DC);
-			//	mode = 10;
-			//	Console.WriteLine("Mode: {0:X8}, {1:X8}", mode, Marshal.GetLastWin32Error());
-			//
-			//	//for (int n = 0; n < 1000; n++)
-			//	//{
-			//	//	WGL.wglDescribePixelFormat(DC, n, (uint)sizeof(PixelFormatDescriptor), &pfd);
-			//	//	Console.WriteLine(pfd.ToStringDefault());
-			//	//}
-			//
-			//	WGL.wglDescribePixelFormat(DC, mode, (uint)sizeof(PixelFormatDescriptor), &pfd);
-			//	Console.WriteLine(pfd.ToStringDefault());
-			//
-			//	if (!WGL.wglSetPixelFormat(DC, mode, &pfd))
-			//	{
-			//		Console.WriteLine("Requested GraphicsMode not available. SetPixelFormat error: {0:X8}", Marshal.GetLastWin32Error());
-			//	}
-			//
-			//	Console.WriteLine("createContext.before: {0:X8}", Marshal.GetLastWin32Error());
-			//	var Context = WGL.wglCreateContext(DC);
-			//	Console.WriteLine("createContext: {0:X8}, {1:X8}, {2:X8}", Context, DC, Marshal.GetLastWin32Error());
-			//
-			//	WGL.wglMakeCurrent(DC, Context);
-			//	//GL.LoadAll();
-			//	WGL.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
-			//
-			//	int Version = 0;
-			//	GL.glGetIntegerv(GL.GL_VERSION, &Version);
-			//	Console.WriteLine(Version);
-			//
-			//
-			//	//Form.Handle
-			//
-			//	var sw = new Stopwatch();
-			//	sw.Start();
-			//	GL.glEnable(GL.GL_TEXTURE_2D);
-			//	AL.alEnable(0);
-			//	Console.WriteLine(sw.Elapsed);
-			//};
-			//Application.Run(Form);
-			//
-			//return;
-
-			//Console.ReadKey();
-			//uint m = 0;
-			//for (int n = 0; n < 10000000; n++)
-			//{
-			//	//m += Intrinsics.ByteSwap((uint)n);
-			//	m += Intrinsics.Portable_ByteSwap_uint((uint)n);
-			//	
-			//}
-			//Console.WriteLine(sw.Elapsed);
-			//
-			//Console.WriteLine("{0:X8}", Intrinsics.ByteSwap(0x78563412));
-			//return;
-			//AL.alGetError();
-			//
-			//var device = AL.alcOpenDevice(AL.alcGetString(null, AL.ALC_DEFAULT_DEVICE_SPECIFIER));
-			//var context = AL.alcCreateContext(null, null);
-			//AL.alcDestroyContext(context);
-			//AL.alcCloseDevice(device);
-			//
-			////Console.ReadKey();
-			//return;
-			//var Time1 = DateTime.UtcNow;
-			//for (int n = 0; n < 1000000; n++)
-			//{
-			//	MyAction1Ref();
-			//}
-			//var Time2 = DateTime.UtcNow;
-			//Console.WriteLine(Time2 - Time1);
-			//Console.ReadKey();
-			//Environment.Exit(0);
-
-			//var Ptr = GCHandle.Alloc(ActionList, GCHandleType.Pinned).AddrOfPinnedObject();
-			//
-			//Console.ReadKey();
-			//Environment.Exit(0);
-
-			//System.Runtime.CompilerServices.DynamicAttribute
-			//System.Runtime.ProfileOptimization.StartProfile();
-
-			//Thread.Sleep(1000);
-			//var Cso = new Cso(new MemoryStream(File.ReadAllBytes(@"F:\isos\psp\luxor.cso")));
-			//var Cso = new Cso(File.OpenRead(@"F:\isos\psp\Puyo.cso"));
-			//var Stopwatch1 = new Stopwatch();
-			//Stopwatch1.Start();
-			////var IsoBytes = File.ReadAllBytes("../../../TestInput/cube.iso");
-			////Assert.AreEqual(ExpectedNumberOfBlocks, Cso.NumberOfBlocks);
-			////Assert.AreEqual(ExpectedBlockSize, Cso.BlockSize);
-			//for (uint Block = 0; Block < Cso.NumberOfBlocks; Block++)
-			//{
-			//	var DecompressedBlockData = Cso.ReadBlockDecompressed(Block);
-			//	//CollectionAssert.AreEqual(
-			//	//	IsoBytes.Skip((int)(ExpectedBlockSize * Block)).Take(ExpectedBlockSize).ToArray(),
-			//	//	DecompressedBlockData.ToArray()
-			//	//);
-			//}
-			//Console.WriteLine(Stopwatch1.Elapsed);
-			//Console.ReadKey();
-			//return;
-			//Environment.Exit(0);
-			//Arguments = new[] { "/isoconvert", @"f:\isos\psp\Princess Crown.cso", @"c:\isos\psp\pricess.iso" };
-			//Arguments = new[] { "/isoextract", @"f:\isos\psp\Puyo.cso", @"c:\isos\psp\puyo" };
-
-			//MiniPlayer.Play(
-			//	File.OpenRead(@"F:\isos\psp2\temp\1C-99-F2-16-B6-41-D9-27-8D-41-80-6A-AB-D1-EB-77-29-61-17-0F.oma"),
-			//	File.OpenWrite(@"F:\isos\psp2\temp\1C-99-F2-16-B6-41-D9-27-8D-41-80-6A-AB-D1-EB-77-29-61-17-0F.raw")
-			//); return;
-
+			//_MainData();
+			
 			if (!IsNet45OrNewer())
 			{
 				MessageBox.Show(".NET 4.5 required", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);

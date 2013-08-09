@@ -20,7 +20,6 @@ using CSPspEmu.Core.Audio.Impl.WaveOut;
 using CSPspEmu.Core.Audio.Impl.Openal;
 using CSPspEmu.Hle.Modules;
 using CSPspEmu.Hle.Managers;
-using CSPspEmu.Core.Gpu.Impl.OpenglEs;
 using CSharpUtils;
 using CSPspEmu.Hle;
 using CSPspEmu.Core.Components.Display;

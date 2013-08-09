@@ -5,7 +5,6 @@ using CSPspEmu.Core.Audio.Impl.WaveOut;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Gpu.Impl.Opengl;
-using CSPspEmu.Core.Gpu.Impl.OpenglEs;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle;
 using CSPspEmu.Hle.Managers;

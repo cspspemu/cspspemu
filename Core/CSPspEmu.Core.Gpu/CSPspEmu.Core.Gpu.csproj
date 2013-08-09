@@ -75,15 +75,6 @@
     <Compile Include="GpuProcessorEnums.cs" />
     <Compile Include="IGpuConnector.cs" />
     <Compile Include="Impl\Null\GpuImplNull.cs" />
-    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.cs" />
-    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.Init.cs" />
-    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.StateClear.cs" />
-    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.StateCommon.cs" />
-    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.StateDraw.cs" />
-    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.Transfer.cs" />
-    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.Utils.cs" />
-    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.ConversionTables.cs" />
-    <Compile Include="Impl\OpenglEs\TextureCacheOpengles.cs" />
     <Compile Include="Impl\Opengl\OpenglGpuImpl.ConversionTables.cs" />
     <Compile Include="Impl\Opengl\OpenglGpuImpl.cs" />
     <Compile Include="Impl\Opengl\OpenglGpuImpl.Init.cs" />
@@ -94,7 +85,6 @@
     <Compile Include="Impl\Opengl\OpenglGpuImpl.Transfer.cs" />
     <Compile Include="Impl\Opengl\OpenglGpuImpl.Utils.cs" />
     <Compile Include="Impl\Opengl\TextureCacheOpengl.cs" />
-    <Compile Include="Impl\Soft\GpuImplSoft.cs" />
     <Compile Include="MessagePipe.cs" />
     <Compile Include="PspGeCallbackData.cs" />
     <Compile Include="Run\GpuDisplayListRunner.BoundingBox.cs" />
@@ -179,10 +169,6 @@
       <Project>{DC02A203-30F2-4613-950B-1529FD55AC81}</Project>
       <Name>CSPspEmu.Utils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\csharpplatform\CSharpPlatform.GL\CSharpPlatform.GL.csproj">
-      <Project>{65E8804F-DEAB-42BC-B88E-E2A81052DF30}</Project>
-      <Name>CSharpPlatform.GL</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\libraries\csharpplatform\CSharpPlatform\CSharpPlatform.csproj">
       <Project>{B4B107B5-030B-451C-8532-13B2306692C3}</Project>
       <Name>CSharpPlatform</Name>
@@ -202,15 +188,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Run\GpuDisplayListRunner.Transfer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Impl\OpenglEs\shader.fragment" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Impl\OpenglEs\shader.vertex" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Impl\OpenglEs\GpuImplOpenglEs.StateMatrix.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

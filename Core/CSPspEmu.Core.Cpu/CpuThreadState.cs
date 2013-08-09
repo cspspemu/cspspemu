@@ -275,6 +275,11 @@ namespace CSPspEmu.Core.Cpu
 				GPR[n] = 0;
 				FPR[n] = 0.0f;
 			}
+
+			for (int n = 0; n < 128; n++)
+			{
+				Vfpr[n] = 0.0f;
+			}
 		}
 
 		/// <summary>

@@ -18,7 +18,6 @@ using CSPspEmu.Runner;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.Drawing;
-using CSPspEmu.Core.Gpu.Impl.OpenglEs;
 using CSPspEmu.Hle.Modules.iofilemgr;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Core.Cpu;
