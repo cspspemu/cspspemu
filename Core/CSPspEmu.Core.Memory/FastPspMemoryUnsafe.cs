@@ -18,7 +18,7 @@ namespace CSPspEmu.Core.Memory
 		public static byte* StaticFrameBufferPtr;
 		public static byte* StaticMainPtr;
 
-		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		////[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		//public byte* Base { get { return _Base; } }
 
 		/*
@@ -58,7 +58,7 @@ namespace CSPspEmu.Core.Memory
 				ulong[] TryBases;
 				if (Platform.Is32Bit)
 				{
-					if (Platform.OperatingSystem == Platform.OS.Windows)
+					if (Platform.OS == OS.Windows)
 					{
 						TryBases = new ulong[] { 0x31000000, 0x40000000, 0x50000000 };
 					}
@@ -70,7 +70,7 @@ namespace CSPspEmu.Core.Memory
 				}
 				else
 				{
-					if (Platform.OperatingSystem == Platform.OS.Windows)
+					if (Platform.OS == OS.Windows)
 					{
 						TryBases = new ulong[] { 0xE7000000, 0xE1000000, 0x0012340080000000, 0x00123400A0000000 };
 					}

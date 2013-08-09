@@ -315,12 +315,12 @@ namespace CSPspEmu
 			}
 			Console.WriteLine("-----------------------------------------------------------------");
 
-			foreach (var Instruction in CpuProcessor.GlobalInstructionStats.OrderBy(Item => Item.Key))
-			{
-				Console.WriteLine("{0}: {1}", Instruction.Key, Instruction.Value);
-			}
-
-			Console.WriteLine("-----------------------------------------------------------------");
+			//foreach (var Instruction in CpuProcessor.GlobalInstructionStats.OrderBy(Item => Item.Key))
+			//{
+			//	Console.WriteLine("{0}: {1}", Instruction.Key, Instruction.Value);
+			//}
+			//
+			//Console.WriteLine("-----------------------------------------------------------------");
 		}
 
 		public PluginInfo GetAudioPluginInfo()

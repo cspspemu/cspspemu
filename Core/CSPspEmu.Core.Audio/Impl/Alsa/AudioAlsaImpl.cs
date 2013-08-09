@@ -128,7 +128,7 @@ namespace CSPspEmu.Core.Audio
 			{
 				try
 				{
-					if (Platform.OperatingSystem == Platform.OS.Posix)
+					if (Platform.IsPosix)
 					{
 						IntPtr temp_playback_handle = IntPtr.Zero;
 						var Result = Alsa.snd_pcm_open(&temp_playback_handle, Device, Alsa.snd_pcm_stream_t.SND_PCM_LB_OPEN_PLAYBACK, 0);

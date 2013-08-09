@@ -9,7 +9,7 @@ namespace cscodec
 {
 	public class MathUtils
 	{
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		static public int Clamp(int Value, int Min, int Max)
 		{

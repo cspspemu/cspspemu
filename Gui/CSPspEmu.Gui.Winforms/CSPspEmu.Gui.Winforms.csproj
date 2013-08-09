@@ -55,13 +55,6 @@
     <Optimize>False</Optimize>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Libraries\OpenTK.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK.GLControl">
-      <HintPath>..\..\Libraries\OpenTK.GLControl.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -98,7 +91,6 @@
     <Compile Include="Winforms\GameListComponent.Designer.cs">
       <DependentUpon>GameListComponent.cs</DependentUpon>
     </Compile>
-    <Compile Include="IGuiExternalInterface.cs" />
     <Compile Include="Winforms\IPspDisplayControl.cs" />
     <Compile Include="Winforms\ProgressForm.cs">
       <SubType>Form</SubType>
@@ -121,6 +113,7 @@
     <Compile Include="Winforms\PspOpenglDisplayControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Winforms\PspOpenglDisplayWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Winforms\AboutForm.resx">
@@ -175,6 +168,14 @@
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\OpenTK\GLControl\OpenTK.GLControl.csproj">
+      <Project>{a625be88-0000-0000-0000-000000000000}</Project>
+      <Name>OpenTK.GLControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\OpenTK\OpenTK\OpenTK.csproj">
+      <Project>{a37a7e14-0000-0000-0000-000000000000}</Project>
+      <Name>OpenTK</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Gui.Winforms.Controls\CSPspEmu.Gui.Winforms.Controls.csproj">
       <Project>{4056A286-E040-450F-BAD8-DE8E6B9B57B8}</Project>
       <Name>CSPspEmu.Gui.Winforms.Controls</Name>
@@ -222,6 +223,10 @@
     <ProjectReference Include="..\..\Libraries\SafeILGenerator\SafeILGenerator\SafeILGenerator.csproj">
       <Project>{9A93C7E4-09DA-46CF-B7DD-6BB09681D5AB}</Project>
       <Name>SafeILGenerator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Gui\CSPspEmu.Gui.csproj">
+      <Project>{ee3eb2a5-24c3-440e-8ac7-0c70fa753e89}</Project>
+      <Name>CSPspEmu.Gui</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -36,7 +36,7 @@ namespace CSPspEmu.Core.Audio
 			return (Index == 0) ? Left : Right;
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public StereoShortSoundSample(int Left, int Right)
 		{
@@ -44,7 +44,7 @@ namespace CSPspEmu.Core.Audio
 			this.Right = Clamp(Right);
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public StereoShortSoundSample(int LeftRight)
 		{
@@ -54,7 +54,7 @@ namespace CSPspEmu.Core.Audio
 
 		public int MaxAmplitudeLeftRight
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 			get
 			{
@@ -62,14 +62,14 @@ namespace CSPspEmu.Core.Audio
 			}
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static StereoShortSoundSample Mix(StereoShortSoundSample A, StereoShortSoundSample B)
 		{
 			return new StereoShortSoundSample(Clamp((A.Left + B.Left) / 2), Clamp((A.Right + B.Right) / 2));
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static implicit operator StereoIntSoundSample(StereoShortSoundSample StereoShortSoundSample)
 		{
@@ -85,7 +85,7 @@ namespace CSPspEmu.Core.Audio
 			}
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		static public short Clamp(int Value)
 		{
@@ -94,7 +94,7 @@ namespace CSPspEmu.Core.Audio
 			return (short)Value;
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public StereoShortSoundSample ApplyVolumes(int LeftVolume, int RightVolume)
 		{
@@ -124,35 +124,35 @@ namespace CSPspEmu.Core.Audio
 			}
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static StereoIntSoundSample Mix(StereoIntSoundSample A, StereoIntSoundSample B)
 		{
 			return new StereoIntSoundSample((int)((A.Left + B.Left) / 2), (int)((A.Right + B.Right) / 2));
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static StereoIntSoundSample operator +(StereoIntSoundSample A, StereoIntSoundSample B)
 		{
 			return new StereoIntSoundSample((A.Left + B.Left), (A.Right + B.Right));
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static StereoIntSoundSample operator /(StereoIntSoundSample A, int Div)
 		{
 			return new StereoIntSoundSample((A.Left / Div), (A.Right / Div));
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static StereoIntSoundSample operator *(StereoIntSoundSample A, int Mult)
 		{
 			return new StereoIntSoundSample((A.Left * Mult), (A.Right * Mult));
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static implicit operator StereoShortSoundSample(StereoIntSoundSample StereoIntSoundSample)
 		{
@@ -161,7 +161,7 @@ namespace CSPspEmu.Core.Audio
 
 		public int MonoLeftRight
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 			set
 			{

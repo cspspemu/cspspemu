@@ -262,9 +262,10 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		/// <param name="init_addr"></param>
 		/// <returns></returns>
 		[HlePspFunction(NID = 0xF0EB1125, FirmwareVersion = 150)]
+		[HlePspNotImplemented]
 		public int sceMpegAvcDecodeYCbCr(SceMpegPointer* Mpeg, int au_addr, int buffer_addr, int init_addr)
 		{
-			throw (new NotImplementedException());
+			//throw (new NotImplementedException());
 			return -1;
 		}
 

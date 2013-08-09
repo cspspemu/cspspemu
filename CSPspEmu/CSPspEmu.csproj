@@ -140,9 +140,9 @@
       <Project>{BB80D126-2A98-4ECE-99ED-3098F9BD7594}</Project>
       <Name>CSPspEmu.Core.Types</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Gui\CSPspEmu.Gui.GtkSharp\CSPspEmu.Gui.GtkSharp.csproj">
-      <Project>{27e3a3f9-af76-449d-bdbb-324fb124bca6}</Project>
-      <Name>CSPspEmu.Gui.GtkSharp</Name>
+    <ProjectReference Include="..\Gui\CSPspEmu.Gui\CSPspEmu.Gui.csproj">
+      <Project>{ee3eb2a5-24c3-440e-8ac7-0c70fa753e89}</Project>
+      <Name>CSPspEmu.Gui</Name>
     </ProjectReference>
     <ProjectReference Include="..\Hle\CSPspEmu.Hle.Formats\CSPspEmu.Hle.Formats.csproj">
       <Project>{B7D8A67E-0046-4EF7-80FE-444BC7EFBC70}</Project>
@@ -195,6 +195,14 @@
     <ProjectReference Include="..\Libraries\CSharpUtils\CSharpUtils\CSharpUtils\CSharpUtils.csproj">
       <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
       <Name>CSharpUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\OpenTK\GLControl\OpenTK.GLControl.csproj">
+      <Project>{a625be88-0000-0000-0000-000000000000}</Project>
+      <Name>OpenTK.GLControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\OpenTK\OpenTK\OpenTK.csproj">
+      <Project>{a37a7e14-0000-0000-0000-000000000000}</Project>
+      <Name>OpenTK</Name>
     </ProjectReference>
     <ProjectReference Include="..\Libraries\SafeILGenerator\SafeILGenerator\SafeILGenerator.csproj">
       <Project>{9a93c7e4-09da-46cf-b7dd-6bb09681d5ab}</Project>

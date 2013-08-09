@@ -126,7 +126,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 		/// 
 		/// </summary>
 		/// <param name="CpuThreadState"></param>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public void CallDelegate(CpuThreadState CpuThreadState)
 		{
 			FunctionDelegate(CpuThreadState);

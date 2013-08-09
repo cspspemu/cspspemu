@@ -9,7 +9,7 @@ namespace CSPspEmu.Core.Gpu
 		[Inject]
 		protected PspStoredConfig PspStoredConfig;
 
-		protected int _ScaleViewport = 1;
+		protected int _ScaleViewport = 2;
 
 		protected event Action<int> OnScaleViewport;
 

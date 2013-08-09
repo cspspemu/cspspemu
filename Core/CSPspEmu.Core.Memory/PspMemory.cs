@@ -328,11 +328,18 @@ namespace CSPspEmu.Core.Memory
 
 		public void Dump(string OutputFile)
 		{
-			using (var Stream = File.OpenWrite(OutputFile))
+			try
 			{
-				Stream.WriteStream(new PspMemoryStream(this).SliceWithBounds(MainSegment.Low, MainSegment.High - 1));
-				Stream.Flush();
-				Stream.Close();
+				using (var Stream = File.OpenWrite(OutputFile))
+				{
+					Stream.WriteStream(new PspMemoryStream(this).SliceWithBounds(MainSegment.Low, MainSegment.High - 1));
+					Stream.Flush();
+					Stream.Close();
+				}
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLine(Exception);
 			}
 		}
 

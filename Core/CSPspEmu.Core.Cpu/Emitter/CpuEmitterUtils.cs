@@ -8,7 +8,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 {
 	public unsafe class CpuEmitterUtils
 	{
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _rotr_impl(uint Value, int Offset) {
 			//if (Offset < 0) Offset += 32;
@@ -19,15 +19,15 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return (Value >> Offset) | (Value << (32 - Offset));
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public unsafe static int _max_impl(int Left, int Right) { return (Left > Right) ? Left : Right; }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public unsafe static int _min_impl(int Left, int Right) { return (Left < Right) ? Left : Right; }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _bitrev_impl(uint v)
 		{
@@ -39,7 +39,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return v;
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public unsafe static void _div_impl(CpuThreadState CpuThreadState, int Left, int Right)
 		{
@@ -60,7 +60,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public unsafe static void _divu_impl(CpuThreadState CpuThreadState, uint Left, uint Right)
 		{
@@ -76,16 +76,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _ext_impl(uint Data, int Pos, int Size) { return BitUtils.Extract(Data, Pos, Size); }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _ins_impl(uint InitialData, uint Data, int Pos, int Size) { return BitUtils.Insert(InitialData, Pos, Size, Data); }
 
 		// http://aggregate.org/MAGIC/
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _clo_impl(uint x)
 		{
@@ -94,14 +94,14 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return ret;
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _clz_impl(uint x)
 		{
 			return _clo_impl(~x);
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _wsbh_impl(uint v)
 		{
@@ -109,7 +109,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return ((v & 0xFF00FF00) >> 8) | ((v & 0x00FF00FF) << 8);
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _wsbw_impl(uint v)
 		{
@@ -161,7 +161,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static void _comp_impl(CpuThreadState CpuThreadState, float s, float t, bool fc_unordererd, bool fc_equal, bool fc_less, bool fc_inv_qnan)
 		{
@@ -209,7 +209,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		private static readonly uint[] LwlMask = new uint[] { 0x00FFFFFF, 0x0000FFFF, 0x000000FF, 0x00000000 };
 		private static readonly int[] LwlShift = new int[] { 24, 16, 8, 0 };
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _lwl_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
 		{
@@ -220,7 +220,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			return (uint)((Value << LwlShift[AddressAlign]) | (RT & LwlMask[AddressAlign]));
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static uint _lwr_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
 		{
@@ -237,7 +237,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		private static readonly uint[] SwrMask = new uint[] { 0x00000000, 0x000000FF, 0x0000FFFF, 0x00FFFFFF };
 		private static readonly int[] SwrShift = new int[] { 0, 8, 16, 24 };
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static void _swl_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
 		{
@@ -248,7 +248,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			*AddressPointer = (RT >> SwlShift[AddressAlign]) | (*AddressPointer & SwlMask[AddressAlign]);
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public static void _swr_exec(CpuThreadState CpuThreadState, uint RS, int Offset, uint RT)
 		{

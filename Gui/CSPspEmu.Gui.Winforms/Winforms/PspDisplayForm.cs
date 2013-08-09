@@ -30,16 +30,13 @@ using OpenTK.Graphics.OpenGL;
 using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Gui.Winforms.Winforms;
 using System.Threading.Tasks;
+using CSharpPlatform.GL.Impl;
+using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Gui.Winforms
 {
 	public unsafe partial class PspDisplayForm : Form, IMessageFilter
 	{
-		/// <summary>
-		/// 
-		/// </summary>
-		internal SceCtrlData SceCtrlData;
-
 		static internal PspDisplayForm Singleton;
 
 		internal IGuiExternalInterface IGuiExternalInterface;
@@ -60,10 +57,10 @@ namespace CSPspEmu.Gui.Winforms
 
 		internal bool EnableRefreshing = true;
 
-		float AnalogX = 0.0f, AnalogY = 0.0f;
-
+		GameListComponent GameListComponent;
 		GLControl GLControl;
 		Thread GuiThread;
+		CommonGuiInput CommonGuiInput;
 
 		public PspDisplayForm(IGuiExternalInterface IGuiExternalInterface)
 		{
@@ -75,6 +72,7 @@ namespace CSPspEmu.Gui.Winforms
 
 			InitializeComponent();
 			HandleCreated += new EventHandler(PspDisplayForm_HandleCreated);
+			CommonGuiInput = new CommonGuiInput(IGuiExternalInterface);
 
 			this.ShowIcon = ShowMenus;
 			this.MainMenuStrip.Visible = ShowMenus;
@@ -92,16 +90,47 @@ namespace CSPspEmu.Gui.Winforms
 			updateResumePause();
 			UpdateCheckMenusFromConfig();
 			updateDebugGpu();
-			ReLoadControllerConfig();
+			CommonGuiInput.ReLoadControllerConfig();
 			UpdateRecentList();
 		}
+
+		//[DllImport("User32.dll", CharSet = CharSet.Auto)]
+		//public static extern IntPtr GetWindowDC(IntPtr hWnd);
 
 		private void PspDisplayForm_Load_1(object sender, EventArgs e)
 		{
 			Console.WriteLine("PspDisplayForm.Thread: {0}", Thread.CurrentThread.ManagedThreadId);
-			this.GLControl = new PspOpenglDisplayControl(OpenglGpuImpl.UsedGraphicsMode);
-			//var GLControl = new GLControl(OpenglGpuImpl.UsedGraphicsMode);
-			this.Controls.Add(this.GLControl);
+
+			//SetStyle(ControlStyles.Opaque, true);
+			//SetStyle(ControlStyles.UserPaint, true);
+			//SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+			//
+			//var DC = this.CreateGraphics().GetHdc();
+			//int mode = WGL.wglGetPixelFormat(DC);
+			//Console.WriteLine("this.CreateGraphics().GetHdc(): {0}, {1}", DC, mode);
+
+			if (true)
+			{
+				this.GLControl = new PspOpenglDisplayControl(OpenglGpuImpl.UsedGraphicsMode);
+
+				//var DC2 = GetWindowDC(this.GLControl.Handle);
+				//int mode2 = WGL.wglGetPixelFormat(DC2);
+				//Console.WriteLine("this.CreateGraphics().GetHdc(): {0}, {1}", DC2, mode2);
+
+
+				this.Controls.Add(this.GLControl);
+			}
+			else
+			{
+				new Thread(() =>
+				{
+					var PspOpenglDisplayWindow = new PspOpenglDisplayWindow(OpenglGpuImpl.UsedGraphicsMode);
+					PspOpenglDisplayWindow.Run(60);
+				})
+				{
+					IsBackground = true,
+				}.Start();
+			}
 
 			//GLControl.add
 			UtilsFrameLimitingMenu.Checked = DisplayConfig.VerticalSynchronization;
@@ -118,7 +147,7 @@ namespace CSPspEmu.Gui.Winforms
 
 			Console.WriteLine("[1]");
 
-			if (Platform.OperatingSystem == Platform.OS.Windows && !Platform.IsMono)
+			if (Platform.OS == OS.Windows && !Platform.IsMono)
 			{
 				GameListComponent = new GameListComponent();
 
@@ -159,9 +188,10 @@ namespace CSPspEmu.Gui.Winforms
 						this.DoInvoke((Action)(() =>
 						{
 							UpdateTitle();
-							if (!GLControl.Visible) return;
-							SendControllerFrame();
-							Refresh();
+							if (GLControl == null || !GLControl.Visible) return;
+							CommonGuiInput.SendControllerFrame();
+							if (GLControl != null) GLControl.Refresh();
+							//Refresh();
 						}));
 					}
 					catch (ObjectDisposedException)
@@ -171,34 +201,6 @@ namespace CSPspEmu.Gui.Winforms
 					{
 					}
 				});
-			}
-		}
-
-		public void SendControllerFrame()
-		{
-			if (IGuiExternalInterface.IsInitialized())
-			{
-				SceCtrlData.X = 0;
-				SceCtrlData.Y = 0;
-
-				bool AnalogXUpdated = false;
-				bool AnalogYUpdated = false;
-				if (AnalogUp) { AnalogY -= 0.4f; AnalogYUpdated = true; }
-				if (AnalogDown) { AnalogY += 0.4f; AnalogYUpdated = true; }
-				if (AnalogLeft) { AnalogX -= 0.4f; AnalogXUpdated = true; }
-				if (AnalogRight) { AnalogX += 0.4f; AnalogXUpdated = true; }
-				if (!AnalogXUpdated) AnalogX /= 2.0f;
-				if (!AnalogYUpdated) AnalogY /= 2.0f;
-
-				AnalogX = MathFloat.Clamp(AnalogX, -1.0f, 1.0f);
-				AnalogY = MathFloat.Clamp(AnalogY, -1.0f, 1.0f);
-
-				//Console.WriteLine("{0}, {1}", AnalogX, AnalogY);
-
-				SceCtrlData.X = AnalogX;
-				SceCtrlData.Y = AnalogY;
-
-				this.PspController.InsertSceCtrlData(SceCtrlData);
 			}
 		}
 
@@ -337,10 +339,13 @@ namespace CSPspEmu.Gui.Winforms
 				SaveFileDialog.DefaultExt = "png";
 				if (SaveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 				{
-					var Buffer2 = GLControl.GrabScreenshot();
-					//var Buffer2 = new Bitmap(480, 272);
-					//Graphics.FromImage(Buffer2).DrawImage(Buffer, Point.Empty);
-					Buffer2.Save(SaveFileDialog.FileName, ImageFormat.Png);
+					if (GLControl != null)
+					{
+						var Buffer2 = GLControl.GrabScreenshot();
+						//var Buffer2 = new Bitmap(480, 272);
+						//Graphics.FromImage(Buffer2).DrawImage(Buffer, Point.Empty);
+						Buffer2.Save(SaveFileDialog.FileName, ImageFormat.Png);
+					}
 				}
 			});
 		}
@@ -400,29 +405,6 @@ namespace CSPspEmu.Gui.Winforms
 					Stream.Close();
 				}
 			});
-		}
-
-		private PspCtrlButtons GetButtonsFromKeys(Keys Key)
-		{
-			if (!KeyMap.ContainsKey(Key)) return PspCtrlButtons.None;
-			return KeyMap[Key];
-		}
-
-		//float AnalogX, AnalogY;
-		bool AnalogUp = false;
-		bool AnalogDown = false;
-		bool AnalogLeft = false;
-		bool AnalogRight = false;
-
-		private void TryUpdateAnalog(Keys Key, bool Press)
-		{
-			switch (AnalogKeyMap.GetOrDefault(Key, PspCtrlAnalog.None))
-			{
-				case PspCtrlAnalog.Up: AnalogUp = Press; break;
-				case PspCtrlAnalog.Down: AnalogDown = Press; break;
-				case PspCtrlAnalog.Left: AnalogLeft = Press; break;
-				case PspCtrlAnalog.Right: AnalogRight = Press; break;
-			}
 		}
 
 		bool IsFullScreen;
@@ -499,6 +481,7 @@ namespace CSPspEmu.Gui.Winforms
 						{
 							return PspDisplayForm.Singleton.DoKeyUp(Key);
 						}
+						if (GLControl != null) return true;
 						if (GLControl.Visible) return true;
 						return false;
 					}
@@ -520,9 +503,7 @@ namespace CSPspEmu.Gui.Winforms
 				//case Keys.F2: IGuiExternalInterface.ShowDebugInformation(); break;
 			}
 
-			TryUpdateAnalog(KeyCode, true);
-
-			SceCtrlData.UpdateButtons(GetButtonsFromKeys(KeyCode), true);
+			CommonGuiInput.KeyPress(KeyCode.ToString());
 			return false;
 		}
 
@@ -530,10 +511,7 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			//Console.WriteLine("DoKeyUp: {0}", KeyCode);
 
-			TryUpdateAnalog(KeyCode, false);
-
-			SceCtrlData.UpdateButtons(GetButtonsFromKeys(KeyCode), false);
-
+			CommonGuiInput.KeyRelease(KeyCode.ToString());
 			return false;
 		}
 
@@ -580,7 +558,7 @@ namespace CSPspEmu.Gui.Winforms
 
 		private void DoInvoke(Action Action)
 		{
-			if (this.InvokeRequired && GuiThread != Thread.CurrentThread && (!Platform.IsMono || Platform.OperatingSystem != Platform.OS.Windows))
+			if (this.InvokeRequired && GuiThread != Thread.CurrentThread && (!Platform.IsMono || Platform.OS != OS.Windows))
 			//if (this.InvokeRequired && GuiThread != Thread.CurrentThread)
 			{
 				this.Invoke(Action);
@@ -863,15 +841,13 @@ namespace CSPspEmu.Gui.Winforms
 			LanguageUpdated();
 		}
 
-		GameListComponent GameListComponent;
-
 		private void EnablePspDisplay(bool Enable)
 		{
-			this.GLControl.Visible = Enable;
+			if (GLControl != null) this.GLControl.Visible = Enable;
 			this.GameListComponent.Visible = !Enable;
 			if (Enable)
 			{
-				this.GLControl.Focus();
+				if (GLControl != null) this.GLControl.Focus();
 			}
 			else
 			{
@@ -927,67 +903,10 @@ namespace CSPspEmu.Gui.Winforms
 			PauseResume(() =>
 			{
 				InjectContext.NewInstance<ButtonMappingForm>().ShowDialog();
-				ReLoadControllerConfig();
+				CommonGuiInput.ReLoadControllerConfig();
 				StoreConfig();
 			});
 		}
-
-		private void ReLoadControllerConfig()
-		{
-			var ControllerConfig = StoredConfig.ControllerConfig;
-
-			AnalogKeyMap = new Dictionary<Keys, PspCtrlAnalog>();
-			{
-				AnalogKeyMap[ParseKeyName(ControllerConfig.AnalogLeft)] = PspCtrlAnalog.Left;
-				AnalogKeyMap[ParseKeyName(ControllerConfig.AnalogRight)] = PspCtrlAnalog.Right;
-				AnalogKeyMap[ParseKeyName(ControllerConfig.AnalogUp)] = PspCtrlAnalog.Up;
-				AnalogKeyMap[ParseKeyName(ControllerConfig.AnalogDown)] = PspCtrlAnalog.Down;
-			}
-
-			KeyMap = new Dictionary<Keys, PspCtrlButtons>();
-			{
-				KeyMap[ParseKeyName(ControllerConfig.DigitalLeft)] = PspCtrlButtons.Left;
-				KeyMap[ParseKeyName(ControllerConfig.DigitalRight)] = PspCtrlButtons.Right;
-				KeyMap[ParseKeyName(ControllerConfig.DigitalUp)] = PspCtrlButtons.Up;
-				KeyMap[ParseKeyName(ControllerConfig.DigitalDown)] = PspCtrlButtons.Down;
-
-				KeyMap[ParseKeyName(ControllerConfig.TriangleButton)] = PspCtrlButtons.Triangle;
-				KeyMap[ParseKeyName(ControllerConfig.CrossButton)] = PspCtrlButtons.Cross;
-				KeyMap[ParseKeyName(ControllerConfig.SquareButton)] = PspCtrlButtons.Square;
-				KeyMap[ParseKeyName(ControllerConfig.CircleButton)] = PspCtrlButtons.Circle;
-
-				KeyMap[ParseKeyName(ControllerConfig.StartButton)] = PspCtrlButtons.Start;
-				KeyMap[ParseKeyName(ControllerConfig.SelectButton)] = PspCtrlButtons.Select;
-
-				KeyMap[ParseKeyName(ControllerConfig.LeftTriggerButton)] = PspCtrlButtons.LeftTrigger;
-				KeyMap[ParseKeyName(ControllerConfig.RightTriggerButton)] = PspCtrlButtons.RightTrigger;
-			}
-
-			Console.WriteLine("KeyMapping:");
-
-			foreach (var Map in AnalogKeyMap)
-			{
-				Console.WriteLine("  '{0}' -> PspCtrlAnalog.{1}", Map.Key, Map.Value);
-			}
-
-			foreach (var Map in KeyMap)
-			{
-				Console.WriteLine("  '{0}' -> PspCtrlButtons.{1}", Map.Key, Map.Value);
-			}
-		}
-
-		[Flags]
-		public enum PspCtrlAnalog
-		{
-			None = 0,
-			Left = (1 << 0),
-			Right = (1 << 1),
-			Up = (1 << 2),
-			Down = (1 << 3),
-		}
-
-		private Dictionary<Keys, PspCtrlButtons> KeyMap = new Dictionary<Keys, PspCtrlButtons>();
-		private Dictionary<Keys, PspCtrlAnalog> AnalogKeyMap = new Dictionary<Keys, PspCtrlAnalog>();
 
 		private void StoreConfig()
 		{
@@ -1128,7 +1047,7 @@ namespace CSPspEmu.Gui.Winforms
 
 		public static void RunStart(IGuiExternalInterface IGuiExternalInterface)
 		{
-			if (Platform.OperatingSystem == Platform.OS.Windows)
+			if (Platform.OS == OS.Windows)
 			{
 				Application.EnableVisualStyles();
 			}

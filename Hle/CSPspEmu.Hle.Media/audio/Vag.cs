@@ -269,7 +269,7 @@ namespace CSPspEmu.Hle.Formats.audio
 				}
 			}
 
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			private short HandleSampleKeepHistory(int UnpackedSample)
 			{
 				short Sample = HandleSample(UnpackedSample);
@@ -278,7 +278,7 @@ namespace CSPspEmu.Hle.Formats.audio
 				return Sample;
 			}
 
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			private short HandleSample(int UnpackedSample)
 			{
 				int Sample = 0;

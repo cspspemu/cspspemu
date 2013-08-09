@@ -17,7 +17,10 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut
 		//public const int BufferSize = 16384;
 		public const int NumberOfBuffers = 4;
 		public const int NumberOfChannels = 2;
-		public const int BufferMilliseconds = 10;
+		
+		//public const int BufferMilliseconds = 10;
+		public const int BufferMilliseconds = 20;
+
 		public const int SamplesPerBuffer = (int)(SamplesPerMillisecond * BufferMilliseconds * NumberOfChannels);
 		public const int BufferSize = (int)SamplesPerBuffer;
 
@@ -63,12 +66,14 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut
 		public override void StopSynchronized()
 		{
 			//Console.ReadKey();
+#if false
 			Initialized = false;
 			if (m_Player != null)
 			{
 				m_Player.Stop();
 				m_Player = null;
 			}
+#endif
 		}
 
 		void IInjectInitialize.Initialize()
@@ -101,7 +106,7 @@ namespace CSPspEmu.Core.Audio.Impl.WaveOut
 		{
 			get
 			{
-				if (Platform.OperatingSystem != Platform.OS.Windows) return false;
+				if (Platform.OS != OS.Windows) return false;
 				if (WaveOutPlayer.DeviceCount == 0) return false;
 				return true;
 			}

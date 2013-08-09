@@ -20,6 +20,13 @@ using System.Runtime.InteropServices;
 using SafeILGenerator.Utils;
 using SafeILGenerator.Ast;
 using System.Reflection.Emit;
+using CSharpPlatform.AL;
+using CSharpPlatform;
+using CSharpPlatform.GL;
+using CSharpPlatform.GL.Impl;
+using System.Drawing;
+using OpenTK;
+using OpenTK.Graphics;
 
 namespace CSPspEmu
 {
@@ -51,6 +58,19 @@ namespace CSPspEmu
 			Environment.Exit(0);
 		}
 
+		public static GraphicsMode UsedGraphicsMode = new GraphicsMode(
+			color: new OpenTK.Graphics.ColorFormat(8, 8, 8, 8),
+			depth: 16,
+			 stencil: 8,
+			 samples: 0,
+			accum: new OpenTK.Graphics.ColorFormat(16, 16, 16, 16),
+			buffers: 2,
+			stereo: false
+		);
+
+		//[DllImport("opengl32.dll")]
+		//static unsafe public extern byte* glGetString(int name);
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -60,8 +80,103 @@ namespace CSPspEmu
 		/// <param name="Arguments"></param>
 		[STAThread]
 		[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
-		static void Main(string[] Arguments)
+		unsafe static void Main(string[] Arguments)
 		{
+			//var Context2 = WGL_Tools.CreateContext();
+			////Console.WriteLine(new IntPtr(GL.glGetString(GL.GL_VERSION)));
+			//GL.LoadAll();
+			//Console.WriteLine(Context2);
+			//Console.WriteLine(new IntPtr(glGetString(GL.GL_VERSION)));
+			//
+			//Console.ReadKey();
+			//
+			//return;
+
+			////var Form = ;
+			//var Form = new Form();
+			////Form.CreateControl();
+			//Form.HandleCreated += (sender, e) =>
+			//{
+			//	Console.WriteLine("*************************");
+			//	var DC = Form.CreateGraphics().GetHdc();
+			//
+			//	Console.WriteLine("DC: {0:X8}", DC);
+			//
+			//	var pfd = new PixelFormatDescriptor();
+			//	pfd.Size = (short)sizeof(PixelFormatDescriptor);
+			//	pfd.Version = 1;
+			//	pfd.Flags = PixelFormatDescriptorFlags.SUPPORT_OPENGL | PixelFormatDescriptorFlags.DRAW_TO_WINDOW;
+			//	for (int n = 1; n < 10; n++)
+			//	{
+			//		int Return = WGL.wglDescribePixelFormat(DC, n, (uint)sizeof(PixelFormatDescriptor), &pfd);
+			//		Console.WriteLine("{0}: {1}, {2}, {3}, {4}", n, Return, Marshal.GetLastWin32Error(), pfd.Flags, pfd.ToStringDefault());
+			//	}
+			//
+			//	WGL.wglChoosePixelFormat(DC, &pfd);
+			//	int mode = WGL.wglGetPixelFormat(DC);
+			//	mode = 10;
+			//	Console.WriteLine("Mode: {0:X8}, {1:X8}", mode, Marshal.GetLastWin32Error());
+			//
+			//	//for (int n = 0; n < 1000; n++)
+			//	//{
+			//	//	WGL.wglDescribePixelFormat(DC, n, (uint)sizeof(PixelFormatDescriptor), &pfd);
+			//	//	Console.WriteLine(pfd.ToStringDefault());
+			//	//}
+			//
+			//	WGL.wglDescribePixelFormat(DC, mode, (uint)sizeof(PixelFormatDescriptor), &pfd);
+			//	Console.WriteLine(pfd.ToStringDefault());
+			//
+			//	if (!WGL.wglSetPixelFormat(DC, mode, &pfd))
+			//	{
+			//		Console.WriteLine("Requested GraphicsMode not available. SetPixelFormat error: {0:X8}", Marshal.GetLastWin32Error());
+			//	}
+			//
+			//	Console.WriteLine("createContext.before: {0:X8}", Marshal.GetLastWin32Error());
+			//	var Context = WGL.wglCreateContext(DC);
+			//	Console.WriteLine("createContext: {0:X8}, {1:X8}, {2:X8}", Context, DC, Marshal.GetLastWin32Error());
+			//
+			//	WGL.wglMakeCurrent(DC, Context);
+			//	//GL.LoadAll();
+			//	WGL.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
+			//
+			//	int Version = 0;
+			//	GL.glGetIntegerv(GL.GL_VERSION, &Version);
+			//	Console.WriteLine(Version);
+			//
+			//
+			//	//Form.Handle
+			//
+			//	var sw = new Stopwatch();
+			//	sw.Start();
+			//	GL.glEnable(GL.GL_TEXTURE_2D);
+			//	AL.alEnable(0);
+			//	Console.WriteLine(sw.Elapsed);
+			//};
+			//Application.Run(Form);
+			//
+			//return;
+
+			//Console.ReadKey();
+			//uint m = 0;
+			//for (int n = 0; n < 10000000; n++)
+			//{
+			//	//m += Intrinsics.ByteSwap((uint)n);
+			//	m += Intrinsics.Portable_ByteSwap_uint((uint)n);
+			//	
+			//}
+			//Console.WriteLine(sw.Elapsed);
+			//
+			//Console.WriteLine("{0:X8}", Intrinsics.ByteSwap(0x78563412));
+			//return;
+			//AL.alGetError();
+			//
+			//var device = AL.alcOpenDevice(AL.alcGetString(null, AL.ALC_DEFAULT_DEVICE_SPECIFIER));
+			//var context = AL.alcCreateContext(null, null);
+			//AL.alcDestroyContext(context);
+			//AL.alcCloseDevice(device);
+			//
+			////Console.ReadKey();
+			//return;
 			//var Time1 = DateTime.UtcNow;
 			//for (int n = 0; n < 1000000; n++)
 			//{

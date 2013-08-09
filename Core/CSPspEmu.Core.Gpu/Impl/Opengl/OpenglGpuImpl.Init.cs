@@ -1,4 +1,4 @@
-﻿//#define USE_GL_CONTROL
+﻿#define USE_GL_CONTROL
 //#define DO_NOT_USE_STENCIL
 //#define SHOW_WINDOW
 
@@ -151,6 +151,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					NativeWindow = new NativeWindow(512 * ScaleViewport, 272 * ScaleViewport, "PspGraphicEngine", GameWindowFlags.Default, UsedGraphicsMode, DisplayDevice.GetDisplay(DisplayIndex.Default));
 					RenderGraphicsContext = new GraphicsContext(UsedGraphicsMode, WindowInfo);
 #endif
+
+					RenderGraphicsContext.ErrorChecking = false;
 
 					RenderGraphicsContext.MakeCurrent(WindowInfo);
 					{

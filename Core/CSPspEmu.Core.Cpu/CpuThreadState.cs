@@ -26,7 +26,7 @@ namespace CSPspEmu.Core.Cpu
 
 		public CpuProcessor CpuProcessor;
 
-		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		////[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public PspMemory Memory
 		{
 			get
@@ -60,9 +60,9 @@ namespace CSPspEmu.Core.Cpu
 
 		public long HI_LO
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			get { fixed (int* LOPtr = &LO) return *(long*)LOPtr; }
-			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			set { fixed (int* LOPtr = &LO) *(long*)LOPtr = value; }
 		}
 
@@ -306,7 +306,7 @@ namespace CSPspEmu.Core.Cpu
 		/// Function called on some situations, that allow
 		/// to yield the thread.
 		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
 		public void Tick()
 		{
