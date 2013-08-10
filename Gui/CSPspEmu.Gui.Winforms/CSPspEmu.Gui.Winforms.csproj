@@ -91,6 +91,9 @@
     <Compile Include="Winforms\GameListComponent.Designer.cs">
       <DependentUpon>GameListComponent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Winforms\GLControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Winforms\IPspDisplayControl.cs" />
     <Compile Include="Winforms\ProgressForm.cs">
       <SubType>Form</SubType>
@@ -113,7 +116,6 @@
     <Compile Include="Winforms\PspOpenglDisplayControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Winforms\PspOpenglDisplayWindow.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Winforms\AboutForm.resx">
@@ -167,14 +169,6 @@
     <ProjectReference Include="..\..\Core\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\OpenTK\GLControl\OpenTK.GLControl.csproj">
-      <Project>{a625be88-0000-0000-0000-000000000000}</Project>
-      <Name>OpenTK.GLControl</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\OpenTK\OpenTK\OpenTK.csproj">
-      <Project>{a37a7e14-0000-0000-0000-000000000000}</Project>
-      <Name>OpenTK</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Gui.Winforms.Controls\CSPspEmu.Gui.Winforms.Controls.csproj">
       <Project>{4056A286-E040-450F-BAD8-DE8E6B9B57B8}</Project>

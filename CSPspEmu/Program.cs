@@ -16,6 +16,10 @@ using CSPspEmu.Hle.Vfs.Iso;
 using System.Diagnostics;
 using CSharpPlatform.GL;
 using CSharpPlatform.GL.Utils;
+using CSPspEmu.Core.Gpu;
+using System.Runtime.InteropServices;
+using CSharpPlatform.GL.Impl;
+using System.Windows;
 
 namespace CSPspEmu
 {
@@ -47,54 +51,81 @@ namespace CSPspEmu
 			Environment.Exit(0);
 		}
 
-		static private void _MainData()
-		{
-			var Context = OpenglContextFactory.Create();
-
-			//var RenderTarget = GLRenderTarget.Default;
-			var RenderTarget = GLRenderTarget.Create(128, 128);
-			RenderTarget.Bind();
-
-			GL.glClearColor(0.5f, 0, 1, 1);
-			GL.glClear(GL.GL_COLOR_BUFFER_BIT);
-
-			var Shader = new GLShader(
-				@"attribute vec4 vPosition; void main() { gl_Position = vPosition; }",
-				@"void main() { gl_FragColor = vec4 ( 0.1, 0.1, 0.1, 1 ); }"
-			);
-
-			var vPosition = Shader.GetAttribute("vPosition");
-
-			var Vertices = new float[]
-			{
-				0f, 0f, 0f, 0f,
-				1f, 0f, 0f, 0f,
-				1f, 1f, 0f, 0f,
-				0f, 1f, 0f, 0f,
-			};
-
-			Shader.Use();
-			Console.WriteLine(vPosition);
-
-			var Buffer = new GLBuffer();
-
-			fixed (float* VerticesPtr = Vertices)
-			{
-				vPosition.SetPointer(VerticesPtr);
-				//vPosition.SetData(Buffer.SetData(Vertices.Length * sizeof(float), VerticesPtr));
-				GL.glDrawArrays(GL.GL_TRIANGLE_STRIP, 0, 4);
-			}
 
 
-			var Pixels = RenderTarget.ReadPixels();
-			Console.WriteLine("{0:X2}{1:X2}{2:X2}{3:X2}", Pixels[0], Pixels[1], Pixels[2], Pixels[3]);
-			File.WriteAllBytes(@"c:\temp\out.bin", Pixels);
-
-			//Console.WriteLine("{0}", Marshal.PtrToStringAnsi(new IntPtr(GL.glGetString(GL.GL_VERSION))));
-			//Console.WriteLine(Context);
-			Console.ReadKey();
-			Environment.Exit(0);
-		}
+		//static private void _MainData()
+		//{
+		//	var Form = new Form();
+		//	//Form.CreateControl();
+		//	Form.Controls.Add(new GLControl());
+		//	Form.Show();
+		//
+		//	Application.Run(Form);
+		//
+		//	Console.ReadKey();
+		//
+		//	var IdentityMatrix = default(GLMatrix4);
+		//	IdentityMatrix.LoadIdentity();
+		//
+		//	var Context = OpenglContextFactory.CreateWindowless();
+		//
+		//	//var RenderTarget = GLRenderTarget.Default;
+		//	var RenderTarget = GLRenderTarget.Create(128, 128);
+		//	RenderTarget.Bind();
+		//
+		//	GL.glClearColor(0.5f, 0, 1, 1);
+		//	GL.glClear(GL.GL_COLOR_BUFFER_BIT);
+		//
+		//	//foreach (var Name in typeof(GpuConfig).Assembly.GetManifestResourceNames())
+		//	//{
+		//	//	Console.WriteLine(Name);
+		//	//}
+		//	//Console.ReadKey();
+		//
+		//	var Shader = new GLShader(
+		//		typeof(GpuConfig).Assembly.GetManifestResourceStream("CSPspEmu.Core.Gpu.Impl.Opengl.shader.vert").ReadAllContentsAsString(),
+		//		typeof(GpuConfig).Assembly.GetManifestResourceStream("CSPspEmu.Core.Gpu.Impl.Opengl.shader.frag").ReadAllContentsAsString()
+		//	);
+		//
+		//	var vertexPosition = Shader.GetAttribute("vertexPosition");
+		//	var UniformMatrixWorld = Shader.GetUniform("matrixWorld");
+		//	var UniformMatrixView = Shader.GetUniform("matrixView");
+		//	var UniformMatrixProjection = Shader.GetUniform("matrixProjection");
+		//
+		//	var Vertices = new float[]
+		//	{
+		//		0f, 0f, 0f, 0f,
+		//		1f, 0f, 0f, 0f,
+		//		1f, 1f, 0f, 0f,
+		//		0f, 1f, 0f, 0f,
+		//	};
+		//
+		//	Shader.Use();
+		//	Console.WriteLine(vertexPosition);
+		//
+		//	UniformMatrixWorld.Set(IdentityMatrix);
+		//	UniformMatrixView.Set(IdentityMatrix);
+		//	UniformMatrixProjection.Set(IdentityMatrix);
+		//
+		//	var Buffer = new GLBuffer();
+		//
+		//	fixed (float* VerticesPtr = Vertices)
+		//	{
+		//		//vPosition.SetPointer(VerticesPtr);
+		//		vertexPosition.SetData<float>(Buffer.SetData(Vertices.Length * sizeof(float), VerticesPtr));
+		//		GL.glDrawArrays(GL.GL_TRIANGLE_STRIP, 0, 4);
+		//	}
+		//
+		//
+		//	var Pixels = RenderTarget.ReadPixels();
+		//	Console.WriteLine("{0:X2}{1:X2}{2:X2}{3:X2}", Pixels[0], Pixels[1], Pixels[2], Pixels[3]);
+		//	File.WriteAllBytes(@"c:\temp\out.bin", Pixels);
+		//
+		//	//Console.WriteLine("{0}", Marshal.PtrToStringAnsi(new IntPtr(GL.glGetString(GL.GL_VERSION))));
+		//	//Console.WriteLine(Context);
+		//	Console.ReadKey();
+		//	Environment.Exit(0);
+		//}
 
 		/// <summary>
 		/// 

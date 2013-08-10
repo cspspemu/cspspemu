@@ -24,9 +24,6 @@ using CSPspEmu.Hle.Loader;
 using CSPspEmu.Core.Components.Display;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Hle;
-using OpenTK;
-using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL;
 using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Gui.Winforms.Winforms;
 using System.Threading.Tasks;
@@ -109,28 +106,14 @@ namespace CSPspEmu.Gui.Winforms
 			//int mode = WGL.wglGetPixelFormat(DC);
 			//Console.WriteLine("this.CreateGraphics().GetHdc(): {0}, {1}", DC, mode);
 
-			if (true)
-			{
-				this.GLControl = new PspOpenglDisplayControl(OpenglGpuImpl.UsedGraphicsMode);
+			this.GLControl = new PspOpenglDisplayControl();
 
-				//var DC2 = GetWindowDC(this.GLControl.Handle);
-				//int mode2 = WGL.wglGetPixelFormat(DC2);
-				//Console.WriteLine("this.CreateGraphics().GetHdc(): {0}, {1}", DC2, mode2);
+			//var DC2 = GetWindowDC(this.GLControl.Handle);
+			//int mode2 = WGL.wglGetPixelFormat(DC2);
+			//Console.WriteLine("this.CreateGraphics().GetHdc(): {0}, {1}", DC2, mode2);
 
 
-				this.Controls.Add(this.GLControl);
-			}
-			else
-			{
-				new Thread(() =>
-				{
-					var PspOpenglDisplayWindow = new PspOpenglDisplayWindow(OpenglGpuImpl.UsedGraphicsMode);
-					PspOpenglDisplayWindow.Run(60);
-				})
-				{
-					IsBackground = true,
-				}.Start();
-			}
+			this.Controls.Add(this.GLControl);
 
 			//GLControl.add
 			UtilsFrameLimitingMenu.Checked = DisplayConfig.VerticalSynchronization;

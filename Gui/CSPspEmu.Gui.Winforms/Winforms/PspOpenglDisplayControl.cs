@@ -2,9 +2,6 @@
 using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Core.Types;
 using CSPspEmu.Core.Utils;
-using OpenTK;
-using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -20,7 +17,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 	{
 		CommonGuiDisplayOpengl DisplayOpengl;
 
-		public PspOpenglDisplayControl(GraphicsMode mode) : base(mode)
+		public PspOpenglDisplayControl()
 		{
 			//this.CanFocus = false;
 			DisplayOpengl = new CommonGuiDisplayOpengl(PspDisplayForm.Singleton.IGuiExternalInterface, this);
@@ -29,9 +26,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 		protected override void OnCreateControl()
 		{
 			base.OnCreateControl();
-
-			Context.SwapInterval = 0;
-			MakeCurrent();
+			this.Context.MakeCurrent();
 		}
 
 		protected override void OnPaint(PaintEventArgs e)
@@ -69,7 +64,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 
 		void IGuiWindowInfo.SwapBuffers()
 		{
-			this.SwapBuffers();
+			this.Context.SwapBuffers();
 		}
 
 		GuiRectangle IGuiWindowInfo.ClientRectangle
