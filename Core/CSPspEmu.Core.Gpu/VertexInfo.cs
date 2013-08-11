@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using OpenTK;
+//using OpenTK;
 using CSharpPlatform;
+using CSharpPlatform.GL.Utils;
 
 namespace CSPspEmu.Core.Gpu
 {
@@ -12,9 +13,9 @@ namespace CSPspEmu.Core.Gpu
 			return Vector * (1.0f / (float)Math.Sqrt(Vector.X * Vector.X + Vector.Y * Vector.Y + Vector.Z * Vector.Z));
 		}
 
-		public static Vector3 ToVector3(this Vector4fRaw Vector)
+		public static GLVector3 ToVector3(this Vector4fRaw Vector)
 		{
-			return new Vector3(Vector.X, Vector.Y, Vector.Z);
+			return new GLVector3(Vector.X, Vector.Y, Vector.Z);
 		}
 	}
 

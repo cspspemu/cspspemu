@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using OpenTK;
 using CSharpPlatform;
+using CSharpPlatform.GL.Utils;
 
 namespace CSPspEmu.Core.Gpu.Formats
 {
@@ -50,8 +50,8 @@ namespace CSPspEmu.Core.Gpu.Formats
 			VertexWriter.WriteLine(Line);
 		}
 
-		List<Vector3> Vertices = new List<Vector3>();
-		Dictionary<Vector3, int> VerticesIndices = new Dictionary<Vector3, int>();
+		List<GLVector3> Vertices = new List<GLVector3>();
+		Dictionary<GLVector3, int> VerticesIndices = new Dictionary<GLVector3, int>();
 
 		private void _EndVertices()
 		{
@@ -77,7 +77,7 @@ namespace CSPspEmu.Core.Gpu.Formats
 			}
 		}
 
-		public int AddVertex(Vector3 Position)
+		public int AddVertex(GLVector3 Position)
 		{
 			WriteLine("# v " + Position.X + " " + Position.Y + " " + Position.Z + " ");
 

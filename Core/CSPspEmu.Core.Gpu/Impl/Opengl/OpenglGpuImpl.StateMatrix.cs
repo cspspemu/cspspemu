@@ -1,27 +1,21 @@
 ﻿using System;
 using CSPspEmu.Core.Gpu.State;
-
-#if OPENTK
-using OpenTK.Graphics.OpenGL;
-#else
-using MiniGL;
-#endif
+using CSharpPlatform.GL;
+using CSharpPlatform.GL.Utils;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
 	public sealed unsafe partial class OpenglGpuImpl
 	{
-		private static void PrepareStateMatrix(GpuStateStruct* GpuState)
+		private void PrepareStateMatrix(GpuStateStruct* GpuState)
 		{
 			// DRAW BEGIN COMMON
 			{
 				if (GpuState->VertexState.Type.Transform2D)
 				//if (true)
 				{
-					GL.MatrixMode(MatrixMode.Projection); GL.LoadIdentity();
-					GL.Ortho(0, 480, 272, 0, 0, -0xFFFF);
-
-					GL.MatrixMode(MatrixMode.Modelview); GL.LoadIdentity();
+					ModelViewProjectionMatrix.LoadIdentity();
+					ModelViewProjectionMatrix.Ortho(0, 480, 272, 0, 0, -0xFFFF);
 				}
 				else
 				{
@@ -39,19 +33,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 						//throw (new Exception("Invalid WorldMatrix"));
 					}
 
-					GL.MatrixMode(MatrixMode.Projection); GL.LoadIdentity();
-					GL.MultMatrix(GpuState->VertexState.ProjectionMatrix.Values);
-
-					GL.MatrixMode(MatrixMode.Modelview); GL.LoadIdentity();
 					GpuState->VertexState.ViewMatrix.SetLastColumn();
 					GpuState->VertexState.WorldMatrix.SetLastColumn();
-					GL.MultMatrix(GpuState->VertexState.ViewMatrix.Values);
-					GL.MultMatrix(GpuState->VertexState.WorldMatrix.Values);
 
-					//GpuState->VertexState.ViewMatrix.Dump();
-					//GpuState->VertexState.WorldMatrix.Dump();
-
-					//Console.WriteLine("NO Transform2D");
+					ModelViewProjectionMatrix.LoadIdentity();
+					ModelViewProjectionMatrix.Multiply(GpuState->VertexState.ViewMatrix.Matrix4);
+					ModelViewProjectionMatrix.Multiply(GpuState->VertexState.WorldMatrix.Matrix4);
+					ModelViewProjectionMatrix.Multiply(GpuState->VertexState.ProjectionMatrix.Matrix4);
 				}
 			}
 		}

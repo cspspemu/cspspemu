@@ -2,44 +2,43 @@
 using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
 
-using OpenTK.Graphics.OpenGL;
-
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
 	public sealed unsafe partial class OpenglGpuImpl
 	{
 		private void TransferToFrameBuffer(GpuStateStruct* GpuState)
 		{
-			var TextureTransferState = GpuState->TextureTransferState;
-
-			var GlPixelFormat = GlPixelFormatList[(int)GpuState->DrawBufferState.Format];
-
-			GL.PixelZoom(1, -1);
-			GL.WindowPos2(TextureTransferState.DestinationX, 272 - TextureTransferState.DestinationY);
+			Console.WriteLine("TransferToFrameBuffer Not Implemented");
+			//var TextureTransferState = GpuState->TextureTransferState;
+			//
+			//var GlPixelFormat = GlPixelFormatList[(int)GpuState->DrawBufferState.Format];
+			//
 			//GL.PixelZoom(1, -1);
-			//GL.PixelZoom(1, 1);
-			GL.PixelStore(PixelStoreParameter.UnpackAlignment, TextureTransferState.BytesPerPixel);
-			GL.PixelStore(PixelStoreParameter.UnpackRowLength, TextureTransferState.SourceLineWidth);
-			GL.PixelStore(PixelStoreParameter.UnpackSkipPixels, TextureTransferState.SourceX);
-			GL.PixelStore(PixelStoreParameter.UnpackSkipRows, TextureTransferState.SourceY);
-
-			{
-				GL.DrawPixels(
-					TextureTransferState.Width,
-					TextureTransferState.Height,
-					PixelFormat.Rgba,
-					GlPixelFormat.OpenglPixelType,
-					new IntPtr(Memory.PspAddressToPointerSafe(
-						TextureTransferState.SourceAddress,
-						TextureTransferState.Width * TextureTransferState.Height * 4
-					))
-				);
-			}
-
-			GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
-			GL.PixelStore(PixelStoreParameter.UnpackRowLength, 0);
-			GL.PixelStore(PixelStoreParameter.UnpackSkipPixels, 0);
-			GL.PixelStore(PixelStoreParameter.UnpackSkipRows, 0);
+			//GL.WindowPos2(TextureTransferState.DestinationX, 272 - TextureTransferState.DestinationY);
+			////GL.PixelZoom(1, -1);
+			////GL.PixelZoom(1, 1);
+			//GL.PixelStore(PixelStoreParameter.UnpackAlignment, TextureTransferState.BytesPerPixel);
+			//GL.PixelStore(PixelStoreParameter.UnpackRowLength, TextureTransferState.SourceLineWidth);
+			//GL.PixelStore(PixelStoreParameter.UnpackSkipPixels, TextureTransferState.SourceX);
+			//GL.PixelStore(PixelStoreParameter.UnpackSkipRows, TextureTransferState.SourceY);
+			//
+			//{
+			//	GL.DrawPixels(
+			//		TextureTransferState.Width,
+			//		TextureTransferState.Height,
+			//		PixelFormat.Rgba,
+			//		GlPixelFormat.OpenglPixelType,
+			//		new IntPtr(Memory.PspAddressToPointerSafe(
+			//			TextureTransferState.SourceAddress,
+			//			TextureTransferState.Width * TextureTransferState.Height * 4
+			//		))
+			//	);
+			//}
+			//
+			//GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
+			//GL.PixelStore(PixelStoreParameter.UnpackRowLength, 0);
+			//GL.PixelStore(PixelStoreParameter.UnpackSkipPixels, 0);
+			//GL.PixelStore(PixelStoreParameter.UnpackSkipRows, 0);
 		}
 
 		private void TransferGeneric(GpuStateStruct* GpuState)

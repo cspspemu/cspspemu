@@ -1,10 +1,5 @@
-﻿using CSPspEmu.Core.Gpu.State;
-
-#if OPENTK
-using OpenTK.Graphics.OpenGL;
-#else
-using MiniGL;
-#endif
+﻿using CSharpPlatform.GL;
+using CSPspEmu.Core.Gpu.State;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
@@ -28,10 +23,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//)
 			//Console.Error.WriteLine(Viewport.ToString());
 
-			GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Fastest);
-			GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
-			GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
-			GL.Hint(HintTarget.PointSmoothHint, HintMode.Fastest);
+			//GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Fastest);
+			//GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
+			//GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
+			//GL.Hint(HintTarget.PointSmoothHint, HintMode.Fastest);
 
 /*
 				int halfHeight = Math.abs(context.viewport_height);
@@ -54,7 +49,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			int ScaledWidth = (int)(((double)ScreenWidth / (double)Viewport.RegionSize.X) * (double)ScreenWidth);
 			int ScaledHeight = (int)(((double)ScreenHeight / (double)Viewport.RegionSize.Y) * (double)ScreenHeight);
 
-			GL.Viewport(
+			GL.glViewport(
 				(int)Viewport.RegionTopLeft.X * ScaleViewport,
 				(int)Viewport.RegionTopLeft.Y * ScaleViewport,
 				ScaledWidth * ScaleViewport,

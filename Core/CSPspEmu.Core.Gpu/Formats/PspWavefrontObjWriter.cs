@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CSPspEmu.Core.Gpu.State;
-using OpenTK;
+using CSharpPlatform.GL.Utils;
 
 namespace CSPspEmu.Core.Gpu.Formats
 {
@@ -21,7 +21,7 @@ namespace CSPspEmu.Core.Gpu.Formats
 
 		State.GuPrimitiveType CurrentPrimitiveType;
 		List<int> PrimitiveIndices = new List<int>();
-		Matrix4 ModelMatrix;
+		GLMatrix4 ModelMatrix;
 		GpuStateStruct* GpuState;
 		State.VertexTypeStruct VertexType;
 
@@ -31,7 +31,8 @@ namespace CSPspEmu.Core.Gpu.Formats
 			this.VertexType = VertexType;
 			var ViewMatrix = GpuState->VertexState.ViewMatrix.Matrix4;
 			var WorldMatrix = GpuState->VertexState.WorldMatrix.Matrix4;
-			ModelMatrix = Matrix4.Mult(ViewMatrix, WorldMatrix);
+			ModelMatrix.Multiply(ViewMatrix);
+			ModelMatrix.Multiply(WorldMatrix);
 
 			this.CurrentPrimitiveType = PrimitiveType;
 			WavefrontObjWriter.StartComment("Start: " + this.CurrentPrimitiveType + " : VertexAddress: 0x" + String.Format("{0:X}", VertexAddress) + " : " + VertexCount + " : " + this.VertexType);
@@ -54,7 +55,7 @@ namespace CSPspEmu.Core.Gpu.Formats
 				var Vector = VertexInfo.Position.ToVector3();
 				if (!VertexType.Transform2D)
 				{
-					Vector = Vector3.Transform(Vector, ModelMatrix);
+					//Vector = GLVector3.Transform(Vector, ModelMatrix);
 				}
 
 				PrimitiveIndices.Add(WavefrontObjWriter.AddVertex(Vector));

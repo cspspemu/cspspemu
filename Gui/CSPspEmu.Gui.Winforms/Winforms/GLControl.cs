@@ -62,6 +62,10 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 			Context.SwapBuffers();
 		}
 
+		protected override void OnPaintBackground(PaintEventArgs e)
+		{
+		}
+
 		public Bitmap GrabScreenshot()
 		{
 			throw new NotImplementedException();

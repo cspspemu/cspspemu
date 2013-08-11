@@ -17,8 +17,6 @@ using CSPspEmu.Core.Memory;
 //using Cloo;
 //using Cloo.Bindings;
 
-#if OPENTK
-using OpenTK.Graphics.OpenGL;
 using CSPspEmu.Core.Gpu.Formats;
 using CSPspEmu.Core.Utils;
 using CSPspEmu.Core.Types;
@@ -27,9 +25,10 @@ using CSPspEmu.Core.Gpu.State.SubStates;
 using System.Collections.Generic;
 using CSPspEmu.Core.Cpu;
 using System.Threading;
-#else
-using MiniGL;
-#endif
+using CSharpPlatform.GL;
+using CSharpPlatform.GL.Utils;
+using System.Runtime.InteropServices;
+using CSharpPlatform.GL.Impl;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
@@ -82,35 +81,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//});
 		}
 
-		void IInjectInitialize.Initialize()
-		{
-			this.TextureCache = new TextureCacheOpengl(this.Memory, this);
-			this.VertexReader = new VertexReader();
-		}
-
 		//public static object GpuLock = new object();
-
-		static public int FrameBufferTexture = -1;
-
-		/// <summary>
-		/// 
-		/// </summary>
-		static private void Initialize()
-		{
-			FrameBufferTexture = GL.GenTexture();
-			GL.BindTexture(TextureTarget.Texture2D, FrameBufferTexture);
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-			GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-			GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, 1, 1, 0, PixelFormat.Bgra, PixelType.UnsignedInt8888Reversed, new uint[] { 0xFF000000 });
-			
-			GL.BindTexture(TextureTarget.Texture2D, 0);
-
-			GL.Hint(HintTarget.LineSmoothHint, HintMode.Nicest);
-			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvColor, Color.FromArgb(1, 0, 0, 0));
-			GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Modulate);
-		}
 
 		/// <summary>
 		/// 
@@ -168,6 +139,64 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 #endif
 		}
 
+		private int VertexInfoIndex = 0;
+		private VertexInfo[] VertexInfoList = new VertexInfo[ushort.MaxValue];
+		private GLMatrix4 ModelViewProjectionMatrix = default(GLMatrix4);
+		private GLShader Shader;
+		private GLBuffer VertexBuffer;
+
+		private GLUniform Uniform_ModelViewProjection;
+		private GLAttribute Attribute_vertexPosition;
+
+		void IInjectInitialize.Initialize()
+		{
+			this.TextureCache = new TextureCacheOpengl(this.Memory, this);
+			this.VertexReader = new VertexReader();
+		}
+
+		private void DrawInitVertices()
+		{
+			//Console.WriteLine(WGL.wglGetCurrentContext());
+			VertexBuffer = GLBuffer.Create();
+			Shader = new GLShader(
+				typeof(OpenglGpuImpl).Assembly.GetManifestResourceStream("CSPspEmu.Core.Gpu.Impl.Opengl.shader.vert").ReadAllContentsAsString(),
+				typeof(OpenglGpuImpl).Assembly.GetManifestResourceStream("CSPspEmu.Core.Gpu.Impl.Opengl.shader.frag").ReadAllContentsAsString()
+			);
+			Console.WriteLine("###################################");
+			foreach (var Uniform in Shader.Uniforms) Console.WriteLine(Uniform);
+			foreach (var Attribute in Shader.Attributes) Console.WriteLine(Attribute);
+			Console.WriteLine("###################################");
+			Uniform_ModelViewProjection = Shader.GetUniform("matrixWorldViewProjection");
+			Attribute_vertexPosition = Shader.GetAttribute("vertexPosition");
+		}
+
+		private void DrawVertices(GLGeometry Type)
+		{
+			if (Shader == null)
+			{
+				this.DrawInitVertices();
+			}
+			VertexBuffer.SetData(this.VertexInfoList, 0, VertexInfoIndex);
+
+			Shader.Draw(Type, 0, VertexInfoIndex, () =>
+			{
+				ModelViewProjectionMatrix.Dump();
+				Uniform_ModelViewProjection.Set(ModelViewProjectionMatrix);
+				Attribute_vertexPosition.SetData<float>(
+					VertexBuffer,
+					4,
+					Marshal.OffsetOf(typeof(VertexInfo), "Position").ToInt32(),
+					Marshal.SizeOf(typeof(VertexInfo)),
+					false
+				);
+			});
+		}
+
+		private void ResetVertex()
+		{
+			VertexInfoIndex = 0;
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -180,34 +209,36 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			_CapturePutVertex(ref VertexInfo);
 
+			VertexInfoList[VertexInfoIndex++] = VertexInfo;
+
 #if DEBUG_VERTEX_TYPE
 			if (OutputVertexInfoStream != null) OutputVertexInfoStream.WriteBytes(Encoding.UTF8.GetBytes(String.Format("{0}\n", VertexInfo)));
 #endif
 
-			if (VertexType.Color != VertexTypeStruct.ColorEnum.Void)
-			{
-				GL.Color4(VertexInfo.Color.X, VertexInfo.Color.Y, VertexInfo.Color.Z, VertexInfo.Color.W);
-			}
-			if (VertexType.Texture != VertexTypeStruct.NumericEnum.Void)
-			{
-				GL.TexCoord3(VertexInfo.Texture.X, VertexInfo.Texture.Y, VertexInfo.Texture.Z);
-			}
-			//Console.Write(",{0}", VertexInfo.PZ);
-			if (VertexType.Normal != VertexTypeStruct.NumericEnum.Void)
-			{
-				if (VertexType.ReversedNormal)
-				{
-					GL.Normal3(-VertexInfo.Normal.X, -VertexInfo.Normal.Y, -VertexInfo.Normal.Z);
-				}
-				else
-				{
-					GL.Normal3(VertexInfo.Normal.X, VertexInfo.Normal.Y, VertexInfo.Normal.Z);
-				}
-			}
-			if (VertexType.Position != VertexTypeStruct.NumericEnum.Void)
-			{
-				GL.Vertex3(VertexInfo.Position.X, VertexInfo.Position.Y, VertexInfo.Position.Z);
-			}
+			//if (VertexType.Color != VertexTypeStruct.ColorEnum.Void)
+			//{
+			//	GL.Color4(VertexInfo.Color.X, VertexInfo.Color.Y, VertexInfo.Color.Z, VertexInfo.Color.W);
+			//}
+			//if (VertexType.Texture != VertexTypeStruct.NumericEnum.Void)
+			//{
+			//	GL.TexCoord3(VertexInfo.Texture.X, VertexInfo.Texture.Y, VertexInfo.Texture.Z);
+			//}
+			////Console.Write(",{0}", VertexInfo.PZ);
+			//if (VertexType.Normal != VertexTypeStruct.NumericEnum.Void)
+			//{
+			//	if (VertexType.ReversedNormal)
+			//	{
+			//		GL.Normal3(-VertexInfo.Normal.X, -VertexInfo.Normal.Y, -VertexInfo.Normal.Z);
+			//	}
+			//	else
+			//	{
+			//		GL.Normal3(VertexInfo.Normal.X, VertexInfo.Normal.Y, VertexInfo.Normal.Z);
+			//	}
+			//}
+			//if (VertexType.Position != VertexTypeStruct.NumericEnum.Void)
+			//{
+			//	GL.Vertex3(VertexInfo.Position.X, VertexInfo.Position.Y, VertexInfo.Position.Z);
+			//}
 		}
 
 		private void ReadVertex_Void(int Index, out VertexInfo VertexInfo)
@@ -282,22 +313,22 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private void ResetState()
 		{
-			GL.Viewport(0, 0, 512 * ScaleViewport, 272 * ScaleViewport);
-			GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Fastest);
-			GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
-			GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
-			GL.Hint(HintTarget.PointSmoothHint, HintMode.Fastest);
-			foreach (var Item in Enum.GetValues(typeof(EnableCap)).Cast<EnableCap>())
-			{
-				GL.Disable(Item);
-			}
+			GL.glViewport(0, 0, 512 * ScaleViewport, 272 * ScaleViewport);
+			//GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Fastest);
+			//GL.Hint(HintTarget.LineSmoothHint, HintMode.Fastest);
+			//GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
+			//GL.Hint(HintTarget.PointSmoothHint, HintMode.Fastest);
+			//foreach (var Item in Enum.GetValues(typeof(EnableCap)).Cast<EnableCap>())
+			//{
+			//	GL.Disable(Item);
+			//}
 
-			GL.MatrixMode(MatrixMode.Projection); GL.LoadIdentity();
-			GL.Ortho(0, 480 * ScaleViewport, 272 * ScaleViewport, 0, 0, -0xFFFF);
-
-			GL.MatrixMode(MatrixMode.Modelview); GL.LoadIdentity();
-			GL.MatrixMode(MatrixMode.Color); GL.LoadIdentity();
-			GL.Color3(Color.White);
+			//GL.MatrixMode(MatrixMode.Projection); GL.LoadIdentity();
+			//GL.Ortho(0, 480 * ScaleViewport, 272 * ScaleViewport, 0, 0, -0xFFFF);
+			//
+			//GL.MatrixMode(MatrixMode.Modelview); GL.LoadIdentity();
+			//GL.MatrixMode(MatrixMode.Color); GL.LoadIdentity();
+			//GL.Color3(Color.White);
 		}
 
 		private static readonly GuPrimitiveType[] patch_prim_types = { GuPrimitiveType.TriangleStrip, GuPrimitiveType.LineStrip, GuPrimitiveType.Points };
@@ -314,8 +345,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 #if true
 			PrepareState_Texture_Common(GpuState);
 			PrepareState_Texture_3D(GpuState);
-
-			GL.ActiveTexture(TextureUnit.Texture0);
 #endif
 
 			//GL.ActiveTexture(TextureUnit.Texture0);
@@ -339,47 +368,44 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//float MipmapWidth = 1f;
 			//float MipmapHeight = 1f;
 
-			GL.Begin(BeginMode.Triangles);
+			ResetVertex();
+			for (int t = 0; t < t_len - 1; t++)
 			{
-				for (int t = 0; t < t_len - 1; t++)
+				for (int s = 0; s < s_len - 1; s++)
 				{
-					for (int s = 0; s < s_len - 1; s++)
+					var VertexInfo1 = Patch[s + 0, t + 0];
+					var VertexInfo2 = Patch[s + 0, t + 1];
+					var VertexInfo3 = Patch[s + 1, t + 1];
+					var VertexInfo4 = Patch[s + 1, t + 0];
+
+					if (VertexType.Texture != VertexTypeStruct.NumericEnum.Void)
 					{
-						var VertexInfo1 = Patch[s + 0, t + 0];
-						var VertexInfo2 = Patch[s + 0, t + 1];
-						var VertexInfo3 = Patch[s + 1, t + 1];
-						var VertexInfo4 = Patch[s + 1, t + 0];
+						VertexInfo1.Texture.X = ((float)s + 0) * MipmapWidth / s_len_float;
+						VertexInfo1.Texture.Y = ((float)t + 0) * MipmapHeight / t_len_float;
 
-						if (VertexType.Texture != VertexTypeStruct.NumericEnum.Void)
-						{
-							VertexInfo1.Texture.X = ((float)s + 0) * MipmapWidth / s_len_float;
-							VertexInfo1.Texture.Y = ((float)t + 0) * MipmapHeight / t_len_float;
+						VertexInfo2.Texture.X = ((float)s + 0) * MipmapWidth / s_len_float;
+						VertexInfo2.Texture.Y = ((float)t + 1) * MipmapHeight / t_len_float;
 
-							VertexInfo2.Texture.X = ((float)s + 0) * MipmapWidth / s_len_float;
-							VertexInfo2.Texture.Y = ((float)t + 1) * MipmapHeight / t_len_float;
+						VertexInfo3.Texture.X = ((float)s + 1) * MipmapWidth / s_len_float;
+						VertexInfo3.Texture.Y = ((float)t + 1) * MipmapHeight / t_len_float;
 
-							VertexInfo3.Texture.X = ((float)s + 1) * MipmapWidth / s_len_float;
-							VertexInfo3.Texture.Y = ((float)t + 1) * MipmapHeight / t_len_float;
-
-							VertexInfo4.Texture.X = ((float)s + 1) * MipmapWidth / s_len_float;
-							VertexInfo4.Texture.Y = ((float)t + 0) * MipmapHeight / t_len_float;
-						}
-
-						PutVertex(ref VertexInfo1, ref VertexType);
-						PutVertex(ref VertexInfo2, ref VertexType);
-						PutVertex(ref VertexInfo3, ref VertexType);
-
-						PutVertex(ref VertexInfo1, ref VertexType);
-						PutVertex(ref VertexInfo3, ref VertexType);
-						PutVertex(ref VertexInfo4, ref VertexType);
-
-						//GL.Color3(Color.White);
-						//Console.WriteLine("{0}, {1} : {2}", s, t, VertexInfo1);
+						VertexInfo4.Texture.X = ((float)s + 1) * MipmapWidth / s_len_float;
+						VertexInfo4.Texture.Y = ((float)t + 0) * MipmapHeight / t_len_float;
 					}
+
+					PutVertex(ref VertexInfo1, ref VertexType);
+					PutVertex(ref VertexInfo2, ref VertexType);
+					PutVertex(ref VertexInfo3, ref VertexType);
+
+					PutVertex(ref VertexInfo1, ref VertexType);
+					PutVertex(ref VertexInfo3, ref VertexType);
+					PutVertex(ref VertexInfo4, ref VertexType);
+
+					//GL.Color3(Color.White);
+					//Console.WriteLine("{0}, {1} : {2}", s, t, VertexInfo1);
 				}
 			}
-			GL.End();
-
+			DrawVertices(GLGeometry.GL_TRIANGLES);
 		}
 
 		public override unsafe void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
@@ -609,23 +635,23 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 				//Console.WriteLine(VertexSize);
 
-				var BeginMode = default(BeginMode);
+				var BeginMode = default(GLGeometry);
 
 				switch (PrimitiveType)
 				{
-					case GuPrimitiveType.Lines: BeginMode = BeginMode.Lines; break;
-					case GuPrimitiveType.LineStrip: BeginMode = BeginMode.LineStrip; break;
-					case GuPrimitiveType.Triangles: BeginMode = BeginMode.Triangles; break;
-					case GuPrimitiveType.Points: BeginMode = BeginMode.Points; break;
-					case GuPrimitiveType.TriangleFan: BeginMode = BeginMode.TriangleFan; break;
-					case GuPrimitiveType.TriangleStrip: BeginMode = BeginMode.TriangleStrip; break;
-					case GuPrimitiveType.Sprites: BeginMode = BeginMode.Quads; break;
+					case GuPrimitiveType.Lines: BeginMode = GLGeometry.GL_LINES; break;
+					case GuPrimitiveType.LineStrip: BeginMode = GLGeometry.GL_LINE_STRIP; break;
+					case GuPrimitiveType.Triangles: BeginMode = GLGeometry.GL_TRIANGLES; break;
+					case GuPrimitiveType.Points: BeginMode = GLGeometry.GL_POINTS; break;
+					case GuPrimitiveType.TriangleFan: BeginMode = GLGeometry.GL_TRIANGLE_FAN; break;
+					case GuPrimitiveType.TriangleStrip: BeginMode = GLGeometry.GL_TRIANGLE_STRIP; break;
+					case GuPrimitiveType.Sprites: BeginMode = GLGeometry.GL_TRIANGLE_STRIP; break;
 					default: throw (new NotImplementedException("Not implemented PrimitiveType:'" + PrimitiveType + "'"));
 				}
 
 				if (PrimitiveType == GuPrimitiveType.Sprites)
 				{
-					GL.Disable(EnableCap.CullFace);
+					GL.glDisable(GL.GL_CULL_FACE);
 				}
 
 				//Console.WriteLine(BeginMode);
@@ -636,7 +662,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				//lock (GpuLock)
 				{
 					//Console.Error.WriteLine("GL.Begin : Thread : {0}", Thread.CurrentThread.ManagedThreadId);
-					GL.Begin(BeginMode);
+					ResetVertex();
 					{
 						if (PrimitiveType == GuPrimitiveType.Sprites)
 						{
@@ -646,7 +672,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 								Console.WriteLine("************************");
 							}
 #endif
-							GL.Disable(EnableCap.CullFace);
 							for (int n = 0; n < VertexCount; n += 2)
 							{
 								VertexInfo V1, V2, V3, V4;
@@ -710,12 +735,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 							}
 						}
 					}
-					GL.End();
-					var Error = GL.GetError();
-					if (Error != ErrorCode.NoError)
-					{
-						//Console.Error.WriteLine("GL.Error: GL.End: {0}", Error);
-					}
+					DrawVertices(BeginMode);
 				}
 			}
 
@@ -762,39 +782,39 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		];
 		*/
 
-		[HandleProcessCorruptedStateExceptions]
-		private void PrepareRead(GpuStateStruct* GpuState)
-		{
-#if true
-//#else
-			var GlPixelFormat = GlPixelFormatList[(int)GpuState->DrawBufferState.Format];
-			int Width = (int)GpuState->DrawBufferState.Width;
-			if (Width == 0) Width = 512;
-			int Height = 272;
-			int ScanWidth = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, Width);
-			int PixelSize = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, 1);
-			//GpuState->DrawBufferState.Format
-			var Address = (void*)Memory.PspAddressToPointerSafe(GpuState->DrawBufferState.Address, 0);
-			GL.PixelStore(PixelStoreParameter.PackAlignment, PixelSize);
-			//Console.WriteLine("PrepareRead: {0:X}", Address);
-
-			try
-			{
-				GL.WindowPos2(0, 272);
-				GL.PixelZoom(1, -1);
-
-				GL.DrawPixels(Width, Height, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, new IntPtr(Address));
-				//GL.DrawPixels(512, 272, PixelFormat.AbgrExt, PixelType.UnsignedInt8888, new IntPtr(Memory.PspAddressToPointerSafe(Address)));
-
-				//GL.WindowPos2(0, 0);
-				//GL.PixelZoom(1, 1);
-			}
-			catch (Exception Exception)
-			{
-				Console.WriteLine(Exception);
-			}
-#endif
-		}
+		//[HandleProcessCorruptedStateExceptions]
+		//private void PrepareRead(GpuStateStruct* GpuState)
+		//{
+		//	if (true)
+		//	{
+		//		var GlPixelFormat = GlPixelFormatList[(int)GpuState->DrawBufferState.Format];
+		//		int Width = (int)GpuState->DrawBufferState.Width;
+		//		if (Width == 0) Width = 512;
+		//		int Height = 272;
+		//		int ScanWidth = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, Width);
+		//		int PixelSize = PixelFormatDecoder.GetPixelsSize(GlPixelFormat.GuPixelFormat, 1);
+		//		//GpuState->DrawBufferState.Format
+		//		var Address = (void*)Memory.PspAddressToPointerSafe(GpuState->DrawBufferState.Address, 0);
+		//		GL.PixelStore(PixelStoreParameter.PackAlignment, PixelSize);
+		//		//Console.WriteLine("PrepareRead: {0:X}", Address);
+		//
+		//		try
+		//		{
+		//			GL.WindowPos2(0, 272);
+		//			GL.PixelZoom(1, -1);
+		//
+		//			GL.DrawPixels(Width, Height, PixelFormat.Rgba, GlPixelFormat.OpenglPixelType, new IntPtr(Address));
+		//			//GL.DrawPixels(512, 272, PixelFormat.AbgrExt, PixelType.UnsignedInt8888, new IntPtr(Memory.PspAddressToPointerSafe(Address)));
+		//
+		//			//GL.WindowPos2(0, 0);
+		//			//GL.PixelZoom(1, 1);
+		//		}
+		//		catch (Exception Exception)
+		//		{
+		//			Console.WriteLine(Exception);
+		//		}
+		//	}
+		//}
 
 		//int[] pboIds = { -1 };
 		//
@@ -875,9 +895,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		unsafe public class DrawBufferValue : IDisposable
 		{
 			public DrawBufferKey DrawBufferKey;
-			public int FBO;
-			public int TextureColor;
-			public int TextureDepthStencil;
+			public GLRenderTarget RenderTarget;
 			public int Width, Height;
 			private OpenglGpuImpl OpenglGpuImpl;
 			private int CurrentScaleViewport;
@@ -886,10 +904,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			{
 				this.OpenglGpuImpl = OpenglGpuImpl;
 				this.DrawBufferKey = DrawBufferKey;
-
-				GL.GenFramebuffers(1, out FBO);
-				GL.GenTextures(1, out TextureColor);
-				GL.GenTextures(1, out TextureDepthStencil);
 
 				OpenglGpuImpl.OnScaleViewport += UpdateTextures;
 				UpdateTextures(OpenglGpuImpl.ScaleViewport);
@@ -900,26 +914,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				if (CurrentScaleViewport == ScaleViewport) return;
 				CurrentScaleViewport = ScaleViewport;
 
-				Width = 512 * ScaleViewport;
-				Height = 272 * ScaleViewport;
-				var EmptyData = new uint[Width * Height];
-				fixed (uint* EmptyDataPtr = EmptyData)
-				{
-					GL.BindTexture(TextureTarget.Texture2D, TextureColor);
-					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-					GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, Width, Height, 0, PixelFormat.Bgra, PixelType.UnsignedInt8888Reversed, new IntPtr(EmptyDataPtr));
-
-					GL.BindTexture(TextureTarget.Texture2D, TextureDepthStencil);
-					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-					GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-					GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthStencil, Width, Height, 0, PixelFormat.DepthStencil, PixelType.UnsignedInt248, new IntPtr(EmptyDataPtr));
-				}
-				EmptyData = null;
+				RenderTarget = GLRenderTarget.Create(
+					Width = 512 * ScaleViewport,
+					Height = 272 * ScaleViewport
+				);
 			}
 
 			public bool Binded = false;
@@ -935,7 +933,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				if (Binded)
 				{
 					//GL.Flush();
-					GL.BindFramebuffer(FramebufferTarget.DrawFramebuffer, 0);
+					GLRenderTarget.Default.Bind();
 					Binded = false;
 					UnbindedEvent.Set();
 				}
@@ -945,9 +943,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			{
 				if (!Binded)
 				{
-					GL.BindFramebuffer(FramebufferTarget.DrawFramebuffer, FBO);
-					GL.FramebufferTexture2D(FramebufferTarget.DrawFramebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, TextureColor, 0);
-					GL.FramebufferTexture2D(FramebufferTarget.DrawFramebuffer, FramebufferAttachment.DepthStencilAttachment, TextureTarget.Texture2D, TextureDepthStencil, 0);
+					RenderTarget.Bind();
 					Binded = true;
 					UnbindedEvent.Reset();
 				}
@@ -957,12 +953,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			{
 				Unbind();
 				OpenglGpuImpl.OnScaleViewport -= UpdateTextures;
-				GL.DeleteFramebuffers(1, ref FBO);
-				GL.DeleteTextures(1, ref TextureColor);
-				GL.DeleteTextures(1, ref TextureDepthStencil);
-				FBO = 0;
-				TextureColor = 0;
-				TextureDepthStencil = 0;
+				RenderTarget.Dispose();
 			}
 		}
 
@@ -982,7 +973,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 				if (DrawBufferTextures.ContainsKey(Key))
 				{
-					GL.BindTexture(TextureTarget.Texture2D, GetCurrentDrawBufferTexture(Key).TextureColor);
+					GetCurrentDrawBufferTexture(Key).RenderTarget.TextureColor.Bind();
 					return;
 				}
 			}
@@ -991,11 +982,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			CurrentTexture.Bind();
 		}
 
-		public int GetDrawTexture(DrawBufferKey Key)
-		{
-			//Console.WriteLine("GetDrawTexture: {0}", GetCurrentDrawBufferTexture(Key).TextureColor);
-			return GetCurrentDrawBufferTexture(Key).TextureColor;
-		}
+		//public int GetDrawTexture(DrawBufferKey Key)
+		//{
+		//	//Console.WriteLine("GetDrawTexture: {0}", GetCurrentDrawBufferTexture(Key).TextureColor);
+		//	return GetCurrentDrawBufferTexture(Key).TextureColor;
+		//}
 
 		public DrawBufferValue GetCurrentDrawBufferTexture(DrawBufferKey Key)
 		{
@@ -1011,7 +1002,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				Address = FrameBufferAddress,
 			});
 			DrawBuffer.Bind();
-			GL.DrawPixels(Width, Height, PixelFormat.Bgra, PixelType.UnsignedInt8888Reversed, new IntPtr(OutputPixel));
+			//GL.DrawPixels(Width, Height, PixelFormat.Bgra, PixelType.UnsignedInt8888Reversed, new IntPtr(OutputPixel));
 			DrawBuffer.Unbind();
 			Console.WriteLine("DrawVideo: {0:X8}, {1}x{2}", FrameBufferAddress, Width, Height);
 		}
@@ -1194,7 +1185,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			{
 				return new PluginInfo()
 				{
-					Name = "OpenGl",
+					Name = "OpenGl 2.0 (|ES)",
 					Version = "0.1",
 				};
 			}
