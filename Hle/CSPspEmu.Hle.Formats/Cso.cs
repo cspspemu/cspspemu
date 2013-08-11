@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using ComponentAce.Compression.Libs.zlib;
 using System.IO.Compression;
 using System.Collections.Generic;
 using System.Linq;

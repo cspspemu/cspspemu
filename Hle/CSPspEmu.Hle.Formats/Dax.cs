@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using ComponentAce.Compression.Libs.zlib;
+using System.IO.Compression;
 
 namespace CSPspEmu.Hle.Formats
 {
@@ -233,36 +233,7 @@ namespace CSPspEmu.Hle.Formats
 				return In;
 			}
 
-			var Out = new byte[this.BlockSize];
-
-			In = (byte[])In.Concat(new byte[] { 0x00 });
-
-			//return new GZipStream(new MemoryStream(In), CompressionMode.Decompress).ReadAll(FromStart: false);
-			var ZStream = new ZStream();
-
-			if (ZStream.inflateInit(15) != zlibConst.Z_OK)
-			{
-				throw (new InvalidProgramException("Can't initialize inflater"));
-			}
-			try
-			{
-				ZStream.next_in = In;
-				ZStream.next_in_index = 0;
-				ZStream.avail_in = In.Length;
-
-				ZStream.next_out = Out;
-				ZStream.next_out_index = 0;
-				ZStream.avail_out = Out.Length;
-
-				int Status = ZStream.inflate(zlibConst.Z_FULL_FLUSH);
-				if (Status != zlibConst.Z_STREAM_END) throw (new InvalidDataException("" + ZStream.msg));
-			}
-			finally
-			{
-				ZStream.inflateEnd();
-			}
-
-			return Out;
+			return new DeflateStream(new MemoryStream((byte[])In.Concat(new byte[] { 0x00 })), CompressionMode.Decompress).ReadAll();
 		}
 
 		long ICompressedIso.UncompressedLength

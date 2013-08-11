@@ -464,9 +464,9 @@ namespace CSPspEmu.Gui.Winforms
 						{
 							return PspDisplayForm.Singleton.DoKeyUp(Key);
 						}
-						if (GLControl != null) return true;
-						if (GLControl.Visible) return true;
-						return false;
+						//if (GLControl != null) return true;
+						//if (GLControl.Visible) return true;
+						//return false;
 					}
 					break;
 			}

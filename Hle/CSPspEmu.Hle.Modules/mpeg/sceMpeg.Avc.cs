@@ -232,7 +232,6 @@ namespace CSPspEmu.Hle.Modules.mpeg
 		public int sceMpegAvcCsc(SceMpegPointer* Mpeg, int source_addr, int range_addr, int frameWidth, int dest_addr)
 		{
 			throw (new NotImplementedException());
-			return -1;
 		}
 
 		/// <summary>

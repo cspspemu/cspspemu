@@ -61,17 +61,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ObjectListView\ListViewPrinter\BrushForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ObjectListView\ListViewPrinter\BrushForm.Designer.cs">
-      <DependentUpon>BrushForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ObjectListView\ListViewPrinter\BrushPen.DesignTime.cs" />
-    <Compile Include="ObjectListView\ListViewPrinter\BrushPenData.cs" />
-    <Compile Include="ObjectListView\ListViewPrinter\ListViewPrinter.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="ObjectListView\ObjectListView\CellEditing\CellEditKeyEngine.cs" />
     <Compile Include="ObjectListView\ObjectListView\CellEditing\CellEditors.cs">
       <SubType>Component</SubType>
@@ -165,21 +154,6 @@
     <Compile Include="ObjectListView\ObjectListView\VirtualObjectListView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ObjectListView\SparkleLibrary\Adapters\AnimationAdapter.cs" />
-    <Compile Include="ObjectListView\SparkleLibrary\Animation\Animateable.cs" />
-    <Compile Include="ObjectListView\SparkleLibrary\Animation\Animation.cs" />
-    <Compile Include="ObjectListView\SparkleLibrary\Animation\Events.cs" />
-    <Compile Include="ObjectListView\SparkleLibrary\Effects\Effect.cs" />
-    <Compile Include="ObjectListView\SparkleLibrary\Effects\Effects.cs" />
-    <Compile Include="ObjectListView\SparkleLibrary\Locators\Locators.cs" />
-    <Compile Include="ObjectListView\SparkleLibrary\Locators\PointLocator.cs" />
-    <Compile Include="ObjectListView\SparkleLibrary\Locators\RectangleLocator.cs" />
-    <Compile Include="ObjectListView\SparkleLibrary\Sprites\Audio.cs" />
-    <Compile Include="ObjectListView\SparkleLibrary\Sprites\ImageSprite.cs" />
-    <Compile Include="ObjectListView\SparkleLibrary\Sprites\ISprite.cs" />
-    <Compile Include="ObjectListView\SparkleLibrary\Sprites\ShapeSprite.cs" />
-    <Compile Include="ObjectListView\SparkleLibrary\Sprites\Sprite.cs" />
-    <Compile Include="ObjectListView\SparkleLibrary\Sprites\TextSprite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -188,9 +162,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ObjectListView\ListViewPrinter\BrushForm.resx">
-      <DependentUpon>BrushForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="ObjectListView\ObjectListView\Utilities\ColumnSelectionForm.resx">
       <DependentUpon>ColumnSelectionForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -203,7 +174,6 @@
   <ItemGroup>
     <Content Include="ObjectListView\ObjectListView\CustomDictionary.xml" />
     <Content Include="ObjectListView\ObjectListView\Resources\clear-filter.png" />
-    <Content Include="ObjectListView\ObjectListView\Resources\coffee.jpg" />
     <Content Include="ObjectListView\ObjectListView\Resources\filter-icons3.png" />
     <Content Include="ObjectListView\ObjectListView\Resources\filter.png" />
     <Content Include="ObjectListView\ObjectListView\Resources\sort-ascending.png" />

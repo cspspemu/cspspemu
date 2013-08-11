@@ -66,6 +66,15 @@
     <Compile Include="DebugUtils.cs" />
     <Compile Include="GlobalConfig.cs" />
     <Compile Include="ManagedPointer.cs" />
+    <Compile Include="Memory\DefaultMemoryInfo.cs" />
+    <Compile Include="Memory\FastPspMemory.cs" />
+    <Compile Include="Memory\FastPspMemoryUnsafe.cs" />
+    <Compile Include="Memory\IPspMemoryInfo.cs" />
+    <Compile Include="Memory\LazyPspMemory.cs" />
+    <Compile Include="Memory\NormalPspMemory.cs" />
+    <Compile Include="Memory\PspMemory.cs" />
+    <Compile Include="Memory\PspMemoryStream.cs" />
+    <Compile Include="Memory\PspPointer.cs" />
     <Compile Include="NandReader.cs" />
     <Compile Include="PluginInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -82,6 +91,10 @@
     <Compile Include="Threading\Synchronization\WaitableStateMachine.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\libraries\csharpplatform\CSharpPlatform\CSharpPlatform.csproj">
+      <Project>{b4b107b5-030b-451c-8532-13b2306692c3}</Project>
+      <Name>CSharpPlatform</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Types\CSPspEmu.Core.Types.csproj">
       <Project>{BB80D126-2A98-4ECE-99ED-3098F9BD7594}</Project>
       <Name>CSPspEmu.Core.Types</Name>

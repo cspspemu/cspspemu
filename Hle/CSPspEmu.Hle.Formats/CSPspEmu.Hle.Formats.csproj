@@ -68,21 +68,6 @@
     <Compile Include="Pgd\PgdProxyStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Psf.cs" />
-    <Compile Include="Utils\Adler32.cs" />
-    <Compile Include="Utils\Deflate.cs" />
-    <Compile Include="Utils\InfBlocks.cs" />
-    <Compile Include="Utils\InfCodes.cs" />
-    <Compile Include="Utils\Inflate.cs" />
-    <Compile Include="Utils\InflateInputStream.cs" />
-    <Compile Include="Utils\InfTree.cs" />
-    <Compile Include="Utils\StaticTree.cs" />
-    <Compile Include="Utils\SupportClass.cs" />
-    <Compile Include="Utils\Tree.cs" />
-    <Compile Include="Utils\ZInputStream.cs" />
-    <Compile Include="Utils\Zlib.cs" />
-    <Compile Include="Utils\ZOutputStream.cs" />
-    <Compile Include="Utils\ZStream.cs" />
-    <Compile Include="Utils\ZStreamException.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\CSPspEmu.Core.Components\CSPspEmu.Core.Components.csproj">

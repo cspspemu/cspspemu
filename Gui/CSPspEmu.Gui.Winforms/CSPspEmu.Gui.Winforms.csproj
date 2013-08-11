@@ -158,10 +158,6 @@
       <Project>{9A30EBF3-B702-47D9-AAFC-E3E02B410DAD}</Project>
       <Name>CSPspEmu.Core.Gpu</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Core\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
-      <Project>{FD27EF3A-4EBE-4867-A603-3E7048DCF459}</Project>
-      <Name>CSPspEmu.Core.Memory</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Core\CSPspEmu.Core.Types\CSPspEmu.Core.Types.csproj">
       <Project>{BB80D126-2A98-4ECE-99ED-3098F9BD7594}</Project>
       <Name>CSPspEmu.Core.Types</Name>
@@ -285,13 +281,15 @@
     <None Include="Resources\us.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\quality.png" />
+    <None Include="Resources\quality1.png" />
     <Content Include="Winforms\Icons.txt" />
     <Content Include="Resources\script-binary-icon.png" />
     <None Include="Resources\script-binary-icon1.png" />
     <None Include="Resources\icon0.png" />
     <None Include="Resources\favicon.png" />
     <None Include="Resources\paypal-donate-button.gif" />
-    <None Include="Resources\pspicon_16.jpg" />
+    <Content Include="Resources\pspicon_16.png" />
     <None Include="Resources\psp8-png8.png" />
     <None Include="Resources\uac_icon.png" />
     <None Include="Resources\twitter_icon-png8.png" />

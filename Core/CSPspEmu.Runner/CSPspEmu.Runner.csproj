@@ -90,10 +90,6 @@
       <Project>{9A30EBF3-B702-47D9-AAFC-E3E02B410DAD}</Project>
       <Name>CSPspEmu.Core.Gpu</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
-      <Project>{FD27EF3A-4EBE-4867-A603-3E7048DCF459}</Project>
-      <Name>CSPspEmu.Core.Memory</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{F783ECD3-0F79-43CC-ABD0-D356A64049C4}</Project>
       <Name>CSPspEmu.Core</Name>

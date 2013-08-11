@@ -2,6 +2,7 @@
 using CSPspEmu.Core.Gpu.State;
 using CSharpPlatform.GL;
 using CSharpPlatform.GL.Utils;
+using CSharpPlatform;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
@@ -14,8 +15,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				if (GpuState->VertexState.Type.Transform2D)
 				//if (true)
 				{
-					ModelViewProjectionMatrix.LoadIdentity();
-					ModelViewProjectionMatrix.Ortho(0, 480, 272, 0, 0, -0xFFFF);
+					ModelViewProjectionMatrix = Matrix4f.Ortho(0, 480, 272, 0, 0, -0xFFFF);
 				}
 				else
 				{
@@ -36,10 +36,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					GpuState->VertexState.ViewMatrix.SetLastColumn();
 					GpuState->VertexState.WorldMatrix.SetLastColumn();
 
-					ModelViewProjectionMatrix.LoadIdentity();
-					ModelViewProjectionMatrix.Multiply(GpuState->VertexState.ViewMatrix.Matrix4);
-					ModelViewProjectionMatrix.Multiply(GpuState->VertexState.WorldMatrix.Matrix4);
-					ModelViewProjectionMatrix.Multiply(GpuState->VertexState.ProjectionMatrix.Matrix4);
+					ModelViewProjectionMatrix =
+						Matrix4f.Identity
+						.Multiply(GpuState->VertexState.ViewMatrix.Matrix4)
+						.Multiply(GpuState->VertexState.WorldMatrix.Matrix4)
+						.Multiply(GpuState->VertexState.ProjectionMatrix.Matrix4)
+					;
 				}
 			}
 		}

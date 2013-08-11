@@ -3,7 +3,6 @@ using System.IO;
 using CSPspEmu.Hle.Attributes;
 using CSharpUtils;
 using CSharpUtils.Streams;
-using ComponentAce.Compression.Libs.zlib;
 
 namespace CSPspEmu.Hle.Modules._unknownPrx
 {
@@ -84,64 +83,65 @@ namespace CSPspEmu.Hle.Modules._unknownPrx
 
 		private static void _Decompress(Stream InStream, Stream OutStream)
 		{
-			var ZStream = new ZStream();
-
-			//if (ZStream.inflateInit(-15) != zlibConst.Z_OK)
-			if (ZStream.inflateInit(15) != zlibConst.Z_OK)
-			{
-				throw (new InvalidProgramException("Can't initialize inflater"));
-			}
-
-			var Out = new byte[4096];
-			var In = new byte[4096];
-
-			try
-			{
-				bool ReadedAll = false;
-				while (!ReadedAll)
-				{
-					int InReaded = InStream.Read(In, 0, In.Length);
-					ZStream.next_in = In;
-					ZStream.next_in_index = 0;
-					ZStream.avail_in = InReaded;
-
-					ZStream.next_out = Out;
-					ZStream.next_out_index = 0;
-					ZStream.avail_out = Out.Length;
-
-					int Status = ZStream.inflate(zlibConst.Z_FULL_FLUSH);
-					//Console.WriteLine(BitConverter.ToString(Out));
-
-					/*
-					Console.WriteLine(
-						"{0}, {1}, {2}, {3}",
-						ZStream.avail_out,
-						ZStream.next_out,
-						ZStream.next_out_index,
-						ZStream.total_out
-					);
-					*/
-					OutStream.Write(Out, 0, (int)ZStream.next_out_index);
-
-					switch (Status)
-					{
-						case zlibConst.Z_OK:
-							break;
-						case zlibConst.Z_STREAM_END:
-							ReadedAll = true;
-							break;
-						default:
-							Console.Error.WriteLine("" + ZStream.msg);
-							ReadedAll = true;
-							//throw (new InvalidDataException("" + ZStream.msg));
-							break;
-					}
-				}
-			}
-			finally
-			{
-				ZStream.inflateEnd();
-			}
+			throw (new NotImplementedException());
+			//var ZStream = new ZStream();
+			//
+			////if (ZStream.inflateInit(-15) != zlibConst.Z_OK)
+			//if (ZStream.inflateInit(15) != zlibConst.Z_OK)
+			//{
+			//	throw (new InvalidProgramException("Can't initialize inflater"));
+			//}
+			//
+			//var Out = new byte[4096];
+			//var In = new byte[4096];
+			//
+			//try
+			//{
+			//	bool ReadedAll = false;
+			//	while (!ReadedAll)
+			//	{
+			//		int InReaded = InStream.Read(In, 0, In.Length);
+			//		ZStream.next_in = In;
+			//		ZStream.next_in_index = 0;
+			//		ZStream.avail_in = InReaded;
+			//
+			//		ZStream.next_out = Out;
+			//		ZStream.next_out_index = 0;
+			//		ZStream.avail_out = Out.Length;
+			//
+			//		int Status = ZStream.inflate(zlibConst.Z_FULL_FLUSH);
+			//		//Console.WriteLine(BitConverter.ToString(Out));
+			//
+			//		/*
+			//		Console.WriteLine(
+			//			"{0}, {1}, {2}, {3}",
+			//			ZStream.avail_out,
+			//			ZStream.next_out,
+			//			ZStream.next_out_index,
+			//			ZStream.total_out
+			//		);
+			//		*/
+			//		OutStream.Write(Out, 0, (int)ZStream.next_out_index);
+			//
+			//		switch (Status)
+			//		{
+			//			case zlibConst.Z_OK:
+			//				break;
+			//			case zlibConst.Z_STREAM_END:
+			//				ReadedAll = true;
+			//				break;
+			//			default:
+			//				Console.Error.WriteLine("" + ZStream.msg);
+			//				ReadedAll = true;
+			//				//throw (new InvalidDataException("" + ZStream.msg));
+			//				break;
+			//		}
+			//	}
+			//}
+			//finally
+			//{
+			//	ZStream.inflateEnd();
+			//}
 		}
 
 		static uint[] crc32_table = {  0x0,

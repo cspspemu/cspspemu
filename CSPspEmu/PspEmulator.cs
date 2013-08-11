@@ -83,17 +83,6 @@ namespace CSPspEmu
 
 		PspStoredConfig StoredConfig;
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public ManualResetEvent ContextInitialized = new ManualResetEvent(false);
-		public bool ContextInitializedFlag = false;
-
-		public bool IsInitialized()
-		{
-			return ContextInitializedFlag;
-		}
-
 		public void PauseResume(Action Action)
 		{
 			if (Paused)
@@ -190,9 +179,10 @@ namespace CSPspEmu
 				GuiConfig.ShowMenus = ShowMenus;
 				GuiConfig.AutoLoad = AutoLoad;
 				GuiConfig.DefaultDisplayScale = ShowMenus ? 1 : 2;
+				//ContextInitialized.WaitOne();
+
 				new GuiRunner(this).Start();
 
-				ContextInitialized.WaitOne();
 				PspRunner.StopSynchronized();
 			}
 			catch (Exception Exception)
@@ -232,39 +222,33 @@ namespace CSPspEmu
 		void CreateNewContextAndRemoveOldOne()
 		{
 			Console.WriteLine("----------------------------------------------");
-			ContextInitializedFlag = false;
-			ContextInitialized.Reset();
+			// Stops the current context if it has one already.
+			if (PspRunner != null)
 			{
-				// Stops the current context if it has one already.
-				if (PspRunner != null)
-				{
-					PspRunner.StopSynchronized();
+				PspRunner.StopSynchronized();
 
-					InjectContext.GetInstance<PspMemory>().Dispose();
-					InjectContext.GetInstance<GpuImpl>().StopSynchronized();
-					InjectContext.GetInstance<PspAudioImpl>().StopSynchronized();
+				InjectContext.GetInstance<PspMemory>().Dispose();
+				InjectContext.GetInstance<GpuImpl>().StopSynchronized();
+				InjectContext.GetInstance<PspAudioImpl>().StopSynchronized();
 
-					PspRunner = null;
-					_InjectContext.Dispose();
-					_InjectContext = null;
-					GC.Collect();
-				}
-
-				lock (this)
-				{
-
-					_InjectContext = PspInjectContext.CreateInjectContext(StoredConfig, Test: false);
-					_InjectContext.SetInstanceType<IGuiExternalInterface, PspEmulator>();
-
-					_InjectContext.InjectDependencesTo(this);
-
-					PspRunner.StartSynchronized();
-				}
-
-				//GpuImpl.InitSynchronizedOnce();
+				PspRunner = null;
+				_InjectContext.Dispose();
+				_InjectContext = null;
+				GC.Collect();
 			}
-			ContextInitializedFlag = true;
-			ContextInitialized.Set();
+
+			lock (this)
+			{
+
+				_InjectContext = PspInjectContext.CreateInjectContext(StoredConfig, Test: false);
+				_InjectContext.SetInstanceType<IGuiExternalInterface, PspEmulator>();
+
+				_InjectContext.InjectDependencesTo(this);
+
+				PspRunner.StartSynchronized();
+			}
+
+			//GpuImpl.InitSynchronizedOnce();
 		}
 
 		public void ShowDebugInformation()

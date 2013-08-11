@@ -275,8 +275,7 @@ namespace CSPspEmu.Gui
 			GL.glClear(GL.GL_COLOR_BUFFER_BIT);
 
 			if (
-				IGuiExternalInterface.IsInitialized()
-				&& (PspDisplay.CurrentInfo.Enabled || PspDisplay.CurrentInfo.PlayingVideo)
+				(PspDisplay.CurrentInfo.Enabled || PspDisplay.CurrentInfo.PlayingVideo)
 			)
 			{
 				//if (TestTexture == null)

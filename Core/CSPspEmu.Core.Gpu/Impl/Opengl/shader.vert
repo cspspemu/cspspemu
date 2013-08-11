@@ -9,6 +9,6 @@ attribute vec4 vertexWeight_0_3;
 attribute vec4 vertexWeight_4_7;
 
 void main() {
-	gl_Position = matrixWorldViewProjection * vertexPosition;
-	//gl_Position = vertexPosition;
+	//gl_Position = matrixWorldViewProjection * vertexPosition;
+	gl_Position = vertexPosition;
 }

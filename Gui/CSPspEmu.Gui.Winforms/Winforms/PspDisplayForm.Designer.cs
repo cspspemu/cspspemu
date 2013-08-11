@@ -231,6 +231,7 @@
             this.UtilsRenderScale2xMenu,
             this.UtilsRenderScale4xMenu,
             this.UtilsRenderScale8xMenu});
+			this.UtilsRenderScaleMenu.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.quality;
 			this.UtilsRenderScaleMenu.Name = "UtilsRenderScaleMenu";
 			this.UtilsRenderScaleMenu.Size = new System.Drawing.Size(306, 22);
 			this.UtilsRenderScaleMenu.Text = "&Render scale";

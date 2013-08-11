@@ -85,6 +85,7 @@
     <Compile Include="Impl\Opengl\OpenglGpuImpl.Transfer.cs" />
     <Compile Include="Impl\Opengl\OpenglGpuImpl.Utils.cs" />
     <Compile Include="Impl\Opengl\TextureCacheOpengl.cs" />
+    <Compile Include="Impl\Opengl\Utils\VertexUtils.cs" />
     <Compile Include="MessagePipe.cs" />
     <Compile Include="PspGeCallbackData.cs" />
     <Compile Include="Run\GpuDisplayListRunner.BoundingBox.cs" />
@@ -140,10 +141,6 @@
     <ProjectReference Include="..\CSPspEmu.Core.Cpu\CSPspEmu.Core.Cpu.csproj">
       <Project>{827779a5-f05c-41c6-9ff9-fd274224a7ae}</Project>
       <Name>CSPspEmu.Core.Cpu</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
-      <Project>{FD27EF3A-4EBE-4867-A603-3E7048DCF459}</Project>
-      <Name>CSPspEmu.Core.Memory</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Types\CSPspEmu.Core.Types.csproj">
       <Project>{BB80D126-2A98-4ECE-99ED-3098F9BD7594}</Project>

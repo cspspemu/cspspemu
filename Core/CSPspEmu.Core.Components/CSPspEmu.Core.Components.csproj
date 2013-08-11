@@ -66,10 +66,6 @@
     <Compile Include="Rtc\PspVirtualTimer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
-      <Project>{FD27EF3A-4EBE-4867-A603-3E7048DCF459}</Project>
-      <Name>CSPspEmu.Core.Memory</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Core.Types\CSPspEmu.Core.Types.csproj">
       <Project>{BB80D126-2A98-4ECE-99ED-3098F9BD7594}</Project>
       <Name>CSPspEmu.Core.Types</Name>

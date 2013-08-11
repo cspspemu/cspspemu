@@ -50,8 +50,8 @@ namespace CSPspEmu.Core.Gpu.Formats
 			VertexWriter.WriteLine(Line);
 		}
 
-		List<GLVector3> Vertices = new List<GLVector3>();
-		Dictionary<GLVector3, int> VerticesIndices = new Dictionary<GLVector3, int>();
+		List<Vector4f> Vertices = new List<Vector4f>();
+		Dictionary<Vector4f, int> VerticesIndices = new Dictionary<Vector4f, int>();
 
 		private void _EndVertices()
 		{
@@ -77,7 +77,7 @@ namespace CSPspEmu.Core.Gpu.Formats
 			}
 		}
 
-		public int AddVertex(GLVector3 Position)
+		public int AddVertex(Vector4f Position)
 		{
 			WriteLine("# v " + Position.X + " " + Position.Y + " " + Position.Z + " ");
 

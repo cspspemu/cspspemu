@@ -57,7 +57,6 @@
 			this.linkLabel3 = new System.Windows.Forms.LinkLabel();
 			this.label15 = new System.Windows.Forms.Label();
 			this.linkLabel4 = new System.Windows.Forms.LinkLabel();
-			this.linkLabel5 = new System.Windows.Forms.LinkLabel();
 			((System.ComponentModel.ISupportInitialize)(this.TwitterPictureBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.FacebookPictureBox)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -356,24 +355,12 @@
 			this.linkLabel4.Text = "MaiAT3PlusDecoder : ryuukazenomai";
 			this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
 			// 
-			// linkLabel5
-			// 
-			this.linkLabel5.AutoSize = true;
-			this.linkLabel5.Location = new System.Drawing.Point(511, 166);
-			this.linkLabel5.Name = "linkLabel5";
-			this.linkLabel5.Size = new System.Drawing.Size(47, 13);
-			this.linkLabel5.TabIndex = 32;
-			this.linkLabel5.TabStop = true;
-			this.linkLabel5.Text = "OpenTK";
-			this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel5_LinkClicked);
-			// 
 			// AboutForm
 			// 
 			this.AcceptButton = this.button1;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(729, 461);
-			this.Controls.Add(this.linkLabel5);
 			this.Controls.Add(this.linkLabel4);
 			this.Controls.Add(this.label15);
 			this.Controls.Add(this.linkLabel3);
@@ -452,6 +439,5 @@
 		private System.Windows.Forms.LinkLabel linkLabel3;
 		private System.Windows.Forms.Label label15;
 		private System.Windows.Forms.LinkLabel linkLabel4;
-		private System.Windows.Forms.LinkLabel linkLabel5;
 	}
 }

@@ -73,10 +73,6 @@
       <Project>{C2263270-905B-4D00-9446-21C8D9890DDC}</Project>
       <Name>CSPspEmu.Core.Components</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Core\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
-      <Project>{FD27EF3A-4EBE-4867-A603-3E7048DCF459}</Project>
-      <Name>CSPspEmu.Core.Memory</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Core\CSPspEmu.Core\CSPspEmu.Core.csproj">
       <Project>{f783ecd3-0f79-43cc-abd0-d356a64049c4}</Project>
       <Name>CSPspEmu.Core</Name>

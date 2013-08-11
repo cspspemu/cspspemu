@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CSPspEmu.Core.Gpu.State;
 using CSharpPlatform.GL.Utils;
+using CSharpPlatform;
 
 namespace CSPspEmu.Core.Gpu.Formats
 {
@@ -21,7 +22,7 @@ namespace CSPspEmu.Core.Gpu.Formats
 
 		State.GuPrimitiveType CurrentPrimitiveType;
 		List<int> PrimitiveIndices = new List<int>();
-		GLMatrix4 ModelMatrix;
+		Matrix4f ModelMatrix;
 		GpuStateStruct* GpuState;
 		State.VertexTypeStruct VertexType;
 

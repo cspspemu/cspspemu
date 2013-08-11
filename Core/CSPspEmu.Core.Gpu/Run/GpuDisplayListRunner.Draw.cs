@@ -280,8 +280,8 @@ namespace CSPspEmu.Core.Gpu.Run
 					ucoeff[i] = BernsteinCoeff(u);
 
 					var p = default(VertexInfo);
-					p.Position = Vector4fRaw.Zero;
-					p.Normal = Vector4fRaw.Zero;
+					p.Position = Vector4f.Zero;
+					p.Normal = Vector4f.Zero;
 
 					for (int ii = 0; ii < 4; ++ii)
 					{

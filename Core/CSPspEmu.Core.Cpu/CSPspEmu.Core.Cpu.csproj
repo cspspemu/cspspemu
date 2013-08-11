@@ -122,9 +122,9 @@
       <Project>{b4b107b5-030b-451c-8532-13b2306692c3}</Project>
       <Name>CSharpPlatform</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
-      <Project>{FD27EF3A-4EBE-4867-A603-3E7048DCF459}</Project>
-      <Name>CSPspEmu.Core.Memory</Name>
+    <ProjectReference Include="..\CSPspEmu.Core\CSPspEmu.Core.csproj">
+      <Project>{f783ecd3-0f79-43cc-abd0-d356a64049c4}</Project>
+      <Name>CSPspEmu.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\CSPspEmu.Inject\CSPspEmu.Inject.csproj">
       <Project>{E68AE26E-E969-4413-8D3C-E60A7D2A2950}</Project>

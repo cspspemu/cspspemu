@@ -6,8 +6,6 @@ namespace CSPspEmu.Core
 	{
 		InjectContext InjectContext { get; }
 
-		bool IsInitialized();
-
 		// Load Methods
 		void LoadFile(string FileName);
 

@@ -92,10 +92,6 @@
       <Project>{9a30ebf3-b702-47d9-aafc-e3e02b410dad}</Project>
       <Name>CSPspEmu.Core.Gpu</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Core\CSPspEmu.Core.Memory\CSPspEmu.Core.Memory.csproj">
-      <Project>{fd27ef3a-4ebe-4867-a603-3e7048dcf459}</Project>
-      <Name>CSPspEmu.Core.Memory</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Core\CSPspEmu.Core.Types\CSPspEmu.Core.Types.csproj">
       <Project>{bb80d126-2a98-4ece-99ed-3098f9bd7594}</Project>
       <Name>CSPspEmu.Core.Types</Name>

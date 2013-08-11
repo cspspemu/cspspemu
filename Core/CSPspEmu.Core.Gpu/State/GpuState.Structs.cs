@@ -35,8 +35,8 @@ namespace CSPspEmu.Core.Gpu.State
 	[StructLayout(LayoutKind.Sequential, Pack = 1)]
 	public struct ViewportStruct
 	{
-		public Vector4fRaw Position;
-		public Vector4fRaw Scale;
+		public Vector4f Position;
+		public Vector4f Scale;
 		public PointS RegionTopLeft;
 		public PointS RegionBottomRight;
 

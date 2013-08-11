@@ -111,7 +111,7 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
-		public Stack<uint> CallStack = new Stack<uint>();
+		public Stack<uint> CallStack = new Stack<uint>(0x10);
 
 		public delegate void GpuDisplayListRunnerDelegate(GpuDisplayListRunner GpuDisplayListRunner, GpuOpCodes GpuOpCode, uint Params);
 		private static readonly GpuDisplayListRunnerDelegate InstructionSwitch = GpuDisplayList.GenerateSwitch();

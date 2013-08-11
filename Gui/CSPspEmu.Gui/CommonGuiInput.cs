@@ -114,31 +114,28 @@ namespace CSPspEmu.Gui
 
 		public void SendControllerFrame()
 		{
-			if (IGuiExternalInterface.IsInitialized())
-			{
-				SceCtrlData.X = 0;
-				SceCtrlData.Y = 0;
+			SceCtrlData.X = 0;
+			SceCtrlData.Y = 0;
 
-				bool AnalogXUpdated = false;
-				bool AnalogYUpdated = false;
-				if (AnalogUp) { AnalogY -= 0.4f; AnalogYUpdated = true; }
-				if (AnalogDown) { AnalogY += 0.4f; AnalogYUpdated = true; }
-				if (AnalogLeft) { AnalogX -= 0.4f; AnalogXUpdated = true; }
-				if (AnalogRight) { AnalogX += 0.4f; AnalogXUpdated = true; }
-				if (!AnalogXUpdated) AnalogX /= 2.0f;
-				if (!AnalogYUpdated) AnalogY /= 2.0f;
+			bool AnalogXUpdated = false;
+			bool AnalogYUpdated = false;
+			if (AnalogUp) { AnalogY -= 0.4f; AnalogYUpdated = true; }
+			if (AnalogDown) { AnalogY += 0.4f; AnalogYUpdated = true; }
+			if (AnalogLeft) { AnalogX -= 0.4f; AnalogXUpdated = true; }
+			if (AnalogRight) { AnalogX += 0.4f; AnalogXUpdated = true; }
+			if (!AnalogXUpdated) AnalogX /= 2.0f;
+			if (!AnalogYUpdated) AnalogY /= 2.0f;
 
-				AnalogX = MathFloat.Clamp(AnalogX, -1.0f, 1.0f);
-				AnalogY = MathFloat.Clamp(AnalogY, -1.0f, 1.0f);
+			AnalogX = MathFloat.Clamp(AnalogX, -1.0f, 1.0f);
+			AnalogY = MathFloat.Clamp(AnalogY, -1.0f, 1.0f);
 
-				//Console.WriteLine("{0}, {1}", AnalogX, AnalogY);
+			//Console.WriteLine("{0}, {1}", AnalogX, AnalogY);
 
-				SceCtrlData.X = AnalogX;
-				SceCtrlData.Y = AnalogY;
+			SceCtrlData.X = AnalogX;
+			SceCtrlData.Y = AnalogY;
 
-				PspController.InsertSceCtrlData(SceCtrlData);
-				//Console.WriteLine("CommonGuiInput.SendControllerFrame()");
-			}
+			PspController.InsertSceCtrlData(SceCtrlData);
+			//Console.WriteLine("CommonGuiInput.SendControllerFrame()");
 		}
 
 		public void KeyPress(string Key)

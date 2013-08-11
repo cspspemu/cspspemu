@@ -1,4 +1,4 @@
-﻿#define DEBUG_ELF_LOADER
+﻿//#define DEBUG_ELF_LOADER
 
 using System;
 using System.Collections.Generic;
@@ -90,9 +90,7 @@ namespace CSPspEmu.Hle.Loader
 			AllocateMemory();
 			WriteToMemory();
 
-#if DEBUG_ELF_LOADER
-			((PspMemoryStream)MemoryStream).Memory.Dump("after_allocate_and_write_dump.bin");
-#endif
+			//((PspMemoryStream)MemoryStream).Memory.Dump("after_allocate_and_write_dump.bin");
 		}
 
 		protected void AllocateMemory()
@@ -102,15 +100,6 @@ namespace CSPspEmu.Hle.Loader
 			uint Highest = 0;
 			foreach (var SectionHeader in SectionHeadersWithFlag(Elf.SectionHeader.FlagsSet.Allocate))
 			{
-				/*
-				Console.WriteLine(
-					"AllocateLowSize:(0x{0:X}:0x{1:X}) : 0x{2:X} : {3}",
-					SectionHeader.Address,
-					SectionHeader.Address + BaseAddress,
-					SectionHeader.Size,
-					SectionHeader
-				);
-				*/
 				Lowest = Math.Min(Lowest, (uint)(BaseAddress + SectionHeader.Address));
 				Highest = Math.Max(Highest, (uint)(BaseAddress + SectionHeader.Address + SectionHeader.Size));
 			}

@@ -1053,7 +1053,6 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 		public int sceAtracSetMOutHalfwayBuffer()
 		{
 			throw (new NotImplementedException());
-			return 0;
 		}
 
 		/// <summary>

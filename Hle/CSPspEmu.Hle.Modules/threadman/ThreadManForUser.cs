@@ -166,7 +166,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelReferThreadRunStatus()
 		{
 			throw (new NotImplementedException());
-			return 0;
 		}
 
 		/// <summary>
@@ -179,7 +178,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 		public int sceKernelDelaySysClockThread(uint sysclocksPointer)
 		{
 			throw(new NotImplementedException());
-			return 0;
 		}
 	}
 }
