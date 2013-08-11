@@ -11,6 +11,7 @@ using CSPspEmu.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,7 +54,7 @@ namespace CSPspEmu.Gui
 		internal PspDisplay PspDisplay { get { return InjectContext.GetInstance<PspDisplay>(); } }
 		internal PspMemory Memory { get { return InjectContext.GetInstance<PspMemory>(); } }
 
-		int TexVram = -1;
+		GLTexture TexVram;
 		public Bitmap Buffer = new Bitmap(512, 272);
 		public Graphics BufferGraphics;
 		ulong LastHash = unchecked((ulong)-1);
@@ -101,20 +102,14 @@ namespace CSPspEmu.Gui
 
 		private void BindTexVram()
 		{
-			if (TexVram == -1)
+			if (TexVram == null)
 			{
-				TexVram = (int)GL.glGenTexture();
-				GL.glBindTexture(GL.GL_TEXTURE_2D, (uint)TexVram);
-				GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR_MIPMAP_LINEAR);
-				GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
-				GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_CLAMP_TO_EDGE);
-				GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_CLAMP_TO_EDGE);
-				GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, 1, 1, 0, GL.GL_RGBA, GL.GL_RGBA, null);
+				TexVram = GLTexture.Create().SetFormat(TextureFormat.RGBA).SetSize(1, 1);
 			}
 
 			//Console.WriteLine(TexVram);
 
-			GL.glBindTexture(GL.GL_TEXTURE_2D, (uint)TexVram);
+			TexVram.Bind();
 
 			if (BufferGraphics == null)
 			{
@@ -274,13 +269,15 @@ namespace CSPspEmu.Gui
 
 		GLShader Shader;
 		GLAttribute AttributeVertexPosition;
+		GLUniform UniformTexture;
 		GLBuffer VertexBuffer;
+		GLTexture TestTexture;
 
 		private void Initialize()
 		{
 			Shader = new GLShader(
-				"attribute vec4 vertexPosition, vertexTexture; void main() { gl_Position = vertexPosition; }",
-				"void main() { gl_FragColor = vec4(1, 0.1, 0.1, 1); }"
+				"attribute vec4 vertexPosition; varying vec2 texCoord; void main() { gl_Position = vertexPosition; texCoord = vertexPosition.xy * 0.5 + 1.0; }",
+				"uniform sampler2D texture; varying vec2 texCoord; void main() { gl_FragColor = texture2D(texture, texCoord); }"
 			);
 
 			var Vertices = new float[] {
@@ -290,10 +287,10 @@ namespace CSPspEmu.Gui
 				+1, +1, 0, 0,
 			};
 
-			VertexBuffer = new GLBuffer();
-			VertexBuffer.SetData(Vertices);
+			VertexBuffer = GLBuffer.Create().SetData(Vertices);
 
 			AttributeVertexPosition = Shader.GetAttribute("vertexPosition");
+			UniformTexture = Shader.GetUniform("texture");
 		}
 
 		public void DrawVram()
@@ -305,44 +302,42 @@ namespace CSPspEmu.Gui
 			var Rectangle = IGuiWindowInfo.ClientRectangle;
 			GL.glViewport(Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
 
-			if (
-				!IGuiExternalInterface.IsInitialized()
-				|| (!PspDisplay.CurrentInfo.Enabled && !PspDisplay.CurrentInfo.PlayingVideo)
-				//|| true
-			)
-			{
-				GL.glClearColor(0, 0, 0, 1);
-				GL.glClear(GL.GL_COLOR_BUFFER_BIT);
-				IGuiWindowInfo.SwapBuffers();
-				return;
-			}
-
-			GL.glEnable(GL.GL_TEXTURE_2D);
 			GL.glClearColor(0, 0, 0, 1);
 			GL.glClear(GL.GL_COLOR_BUFFER_BIT);
 
-
-			BindUnbindTex(() =>
+			if (
+				IGuiExternalInterface.IsInitialized()
+				&& (PspDisplay.CurrentInfo.Enabled || PspDisplay.CurrentInfo.PlayingVideo)
+			)
 			{
 				Shader.Use();
+
+				if (TestTexture == null)
+				{
+					TestTexture = GLTexture.Create().SetFormat(TextureFormat.RGBA).SetSize(2, 2).SetData(new uint[] { 0xFF0000FF, 0xFF00FFFF, 0xFFFF00FF, 0xFFFFFFFF });
+				}
+				var RenderTarget = GLRenderTarget.Create(128, 128);
+				RenderTarget.Bind();
+
+				var TextureUnit = GLTextureUnit.CreateAtIndex(0);
+				TextureUnit.MakeCurrent();
+				GL.glEnable(GL.GL_TEXTURE_2D);
+				UniformTexture.Set(TextureUnit);
+
+				TestTexture.Bind();
+
 				AttributeVertexPosition.SetData<float>(VertexBuffer, 4, 0);
 				GL.glDrawArrays(GL.GL_TRIANGLE_STRIP, 0, 4);
 
-				//float x0 = 0f, x1 = 1f * 480f / 512f;
-				//float y0 = 0f, y1 = 1f;
-				//
-				//if (TextureVerticalFlip) LanguageUtils.Swap(ref y0, ref y1);
-				//
-				//GL.glBegin(BeginMode.Quads);
+				File.WriteAllBytes(@"c:\temp\out777.bin", RenderTarget.ReadPixels());
+
+				//BindUnbindTex(() =>
 				//{
-				//	GL.glTexCoord2(x0, y0); GL.glVertex2(0, 0);
-				//	GL.glTexCoord2(x1, y0); GL.glVertex2(RectWidth, 0);
-				//	GL.glTexCoord2(x1, y1); GL.glVertex2(RectWidth, RectHeight);
-				//	GL.glTexCoord2(x0, y1); GL.glVertex2(0, RectHeight);
-				//}
-				//GL.glEnd();
-				//GL.glFlush();
-			});
+				//	AttributeVertexPosition.SetData<float>(VertexBuffer, 4, 0);
+				//	GL.glDrawArrays(GL.GL_TRIANGLE_STRIP, 0, 4);
+				//});
+			}
+
 			IGuiWindowInfo.SwapBuffers();
 		}
 	}

@@ -20,6 +20,7 @@ using CSPspEmu.Core.Gpu;
 using System.Runtime.InteropServices;
 using CSharpPlatform.GL.Impl;
 using System.Windows;
+using System.Drawing;
 
 namespace CSPspEmu
 {
@@ -127,6 +128,68 @@ namespace CSPspEmu
 		//	Environment.Exit(0);
 		//}
 
+		//static private void _MainData2()
+		//{
+		//	var Context = OpenglContextFactory.CreateWindowless();
+		//	Context.MakeCurrent();
+		//
+		//	//var RenderTarget = GLRenderTarget.Default;
+		//	var RenderTarget = GLRenderTarget.Create(1024, 1024);
+		//
+		//	var Shader = new GLShader(
+		//		@"
+		//			attribute vec4 vertexPosition;
+		//			attribute vec2 vertexTexture;
+		//			varying vec2 v_texCoord;
+		//			void main() {
+		//				gl_Position = vertexPosition;
+		//				v_texCoord = vertexTexture;
+		//			}
+		//		",
+		//		@"
+		//			uniform sampler2D texture1;
+		//			varying vec2 v_texCoord;
+		//			void main() {
+		//				gl_FragColor = texture2D(texture1, v_texCoord);
+		//			}
+		//		"
+		//	);
+		//
+		//	var VertexBuffer = GLBuffer.Create().SetData(new float[] {
+		//		-1, -1,   0, 0,
+		//		+1, -1,   1, 0,
+		//		-1, +1,   0, 1,
+		//		+1, +1,   1, 1,
+		//	});
+		//
+		//	GL.glClearColor(0, 0, 1, 1);
+		//	GL.glClear(GL.GL_COLOR_BUFFER_BIT);
+		//
+		//	var Image1 = new Bitmap(Image.FromFile(@"C:\temp\1.jpg"));
+		//	var Image1Data = Image1.GetChannelsDataInterleaved(BitmapChannelList.RGBA);
+		//
+		//	var TestTexture = GLTexture.Create().SetFormat(TextureFormat.RGBA).SetSize(Image1.Width, Image1.Height).SetData(Image1Data);
+		//	//var TestTexture = GLTexture.Create().SetFormat(TextureFormat.RGBA).SetSize(2, 2).SetData(new uint[] { 0xFFFFFFFF, 0xFF00FFFF, 0xFFF00FFF, 0xFFFF00FF }).Upload();
+		//	//var TestTexture = GLTexture.Create().SetFormat(TextureFormat.RGBA).SetSize(2, 1).SetData(new uint[] { 0xFF0000FF, 0xFFFF00FF }).Upload();
+		//
+		//	Shader.Draw(GLGeometry.GL_TRIANGLE_STRIP, 0, 4, () =>
+		//	{
+		//		Shader.GetUniform("texture1").Set(GLTextureUnit.CreateAtIndex(0).SetTexture(TestTexture));
+		//		Shader.GetAttribute("vertexPosition").SetData<float>(VertexBuffer, 2, 0 * sizeof(float), 4 * sizeof(float));
+		//		Shader.GetAttribute("vertexTexture").SetData<float>(VertexBuffer, 2, 2 * sizeof(float), 4 * sizeof(float));
+		//	});
+		//
+		//	File.WriteAllBytes(@"c:\temp\out.bin", RenderTarget.ReadPixels());
+		//
+		//	new Bitmap(RenderTarget.Width, RenderTarget.Height)
+		//		.SetChannelsDataInterleaved(RenderTarget.ReadPixels(), BitmapChannel.Red, BitmapChannel.Green, BitmapChannel.Blue, BitmapChannel.Alpha)
+		//		.Save(@"c:\temp\out.png")
+		//	;
+		//
+		//	Console.ReadKey();
+		//	Environment.Exit(0);
+		//}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -139,6 +202,7 @@ namespace CSPspEmu
 		unsafe static void Main(string[] Arguments)
 		{
 			//_MainData();
+			//_MainData2();
 			
 			if (!IsNet45OrNewer())
 			{

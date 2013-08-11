@@ -934,7 +934,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			{
 				if (Binded)
 				{
-					GL.Flush();
+					//GL.Flush();
 					GL.BindFramebuffer(FramebufferTarget.DrawFramebuffer, 0);
 					Binded = false;
 					UnbindedEvent.Set();
@@ -999,7 +999,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		public DrawBufferValue GetCurrentDrawBufferTexture(DrawBufferKey Key)
 		{
-			GL.Flush();
+			//GL.Flush();
 			if (!DrawBufferTextures.ContainsKey(Key)) DrawBufferTextures[Key] = new DrawBufferValue(this, Key);
 			return DrawBufferTextures[Key];
 		}
@@ -1047,7 +1047,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		[HandleProcessCorruptedStateExceptions]
 		private void PrepareWrite(GpuStateStruct* GpuState)
 		{
-			GL.Flush();
+			//GL.Flush();
 			//return;
 
 #if true

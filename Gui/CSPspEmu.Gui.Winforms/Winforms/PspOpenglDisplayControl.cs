@@ -31,9 +31,16 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
-			this.Top = PspDisplayForm.Singleton.MainMenuStripHeight;
-			this.Size = new System.Drawing.Size(PspDisplayForm.Singleton.ClientSize.Width, PspDisplayForm.Singleton.ClientSize.Height - this.Top);
-			DisplayOpengl.DrawVram();
+			//try
+			//{
+				this.Top = PspDisplayForm.Singleton.MainMenuStripHeight;
+				this.Size = new System.Drawing.Size(PspDisplayForm.Singleton.ClientSize.Width, PspDisplayForm.Singleton.ClientSize.Height - this.Top);
+				DisplayOpengl.DrawVram();
+			//}
+			//catch (Exception Exception)
+			//{
+			//	Console.WriteLine("GLControl.OnPaint.Exception: {0}", Exception);
+			//}
 		}
 
 		private void InitializeComponent()

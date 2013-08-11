@@ -53,7 +53,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					Bind();
 					GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, TextureWidth, TextureHeight, 0, PixelFormat.Rgba, PixelType.UnsignedInt8888Reversed, new IntPtr(Pixels));
 					var GlError = GL.GetError();
-					GL.Flush();
+					//GL.Flush();
 
 					if (GlError != ErrorCode.NoError)
 					{
