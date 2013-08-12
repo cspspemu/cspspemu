@@ -72,10 +72,10 @@ namespace CSPspEmu.Hle.Managers
 
     public class HleIoManager
 	{
-		protected Dictionary<string, IHleIoDriver> Drivers = new Dictionary<string, IHleIoDriver>();
-		public HleIoWrapper HleIoWrapper;
+		protected readonly Dictionary<string, IHleIoDriver> Drivers = new Dictionary<string, IHleIoDriver>();
+		public readonly HleUidPoolSpecial<HleIoDrvFileArg, SceUID> HleIoDrvFileArgPool = new HleUidPoolSpecial<HleIoDrvFileArg, SceUID>();
 
-		public HleUidPoolSpecial<HleIoDrvFileArg, SceUID> HleIoDrvFileArgPool = new HleUidPoolSpecial<HleIoDrvFileArg, SceUID>();
+		public HleIoWrapper HleIoWrapper;
 
 		public HleIoManager()
 		{

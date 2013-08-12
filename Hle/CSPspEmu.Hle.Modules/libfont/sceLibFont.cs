@@ -56,10 +56,10 @@ namespace CSPspEmu.Hle.Modules.libfont
 		public class Font : IHleUidPoolClass, IDisposable
 		{
 			public FontLibrary FontLibrary;
-			public PGF PGF;
+			public IPGF PGF;
 			//public FontInfo FontInfo;
 
-			public Font(FontLibrary FontLibrary, PGF PGF)
+			public Font(FontLibrary FontLibrary, IPGF PGF)
 			{
 				this.FontLibrary = FontLibrary;
 				this.PGF = PGF;
@@ -69,7 +69,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 			{
 			}
 
-			public PGF.Glyph GetGlyph(ushort CharCode)
+			public IGlyph GetGlyph(ushort CharCode)
 			{
 				return PGF.GetGlyph((char)CharCode, (char)FontLibrary.AlternateCharCode);
 			}
@@ -78,6 +78,8 @@ namespace CSPspEmu.Hle.Modules.libfont
 			{
 				var Glyph = GetGlyph(CharCode);
 				var Face = Glyph.Face;
+
+				var Advance = PGF.GetAdvance(Face.AdvanceIndex);
 				
 				var FontCharInfo = new sceLibFont.FontCharInfo()
 				{
@@ -93,8 +95,8 @@ namespace CSPspEmu.Hle.Modules.libfont
 					BearingHY = Face.Top,
 					BearingVX = Face.Left,
 					BearingVY = Face.Top,
-					AdvanceH = PGF.AdvanceTable[Face.AdvanceIndex].Src,
-					AdvanceV = PGF.AdvanceTable[Face.AdvanceIndex].Dst,
+					AdvanceH = Advance.Width,
+					AdvanceV = Advance.Height,
 					Unknown = 0,
 				};
 
@@ -103,36 +105,7 @@ namespace CSPspEmu.Hle.Modules.libfont
 
 			internal FontInfo GetFontInfo()
 			{
-				return new FontInfo()
-				{
-					MaxGlyphWidth = PGF.Header.MaxGlyphWidth,
-					MaxGlyphHeight = PGF.Header.MaxGlyphHeight,
-
-					MaxGlyphWidthI = PGF.Header.MaxGlyphWidth,
-					MaxGlyphHeightI = PGF.Header.MaxGlyphHeight,
-					MaxGlyphAscenderI = PGF.Header.MaxBaseYAdjust,
-					MaxGlyphDescenderI = PGF.Header.MaxBaseYAdjust - PGF.Header.MaxGlyphHeight,
-					MaxGlyphLeftXI = PGF.Header.MaxLeftXAdjust,
-					MaxGlyphBaseYI = PGF.Header.MaxBaseYAdjust,
-					MinGlyphCenterXI = PGF.Header.MinCenterXAdjust,
-					MaxGlyphTopYI = PGF.Header.MaxTopYAdjust,
-					MaxGlyphAdvanceXI = PGF.Header.MaxAdvance.X,
-					MaxGlyphAdvanceYI = PGF.Header.MaxAdvance.Y,
-
-					MaxGlyphWidthF = PGF.Header.MaxGlyphWidth,
-					MaxGlyphHeightF = PGF.Header.MaxGlyphHeight,
-					MaxGlyphAscenderF = PGF.Header.MaxBaseYAdjust,
-					MaxGlyphDescenderF = PGF.Header.MaxBaseYAdjust - PGF.Header.MaxGlyphHeight,
-					MaxGlyphLeftXF = PGF.Header.MaxLeftXAdjust,
-					MaxGlyphBaseYF = PGF.Header.MaxBaseYAdjust,
-					MinGlyphCenterXF = PGF.Header.MinCenterXAdjust,
-					MaxGlyphTopYF = PGF.Header.MaxTopYAdjust,
-					MaxGlyphAdvanceXF = PGF.Header.MaxAdvance.X,
-					MaxGlyphAdvanceYF = PGF.Header.MaxAdvance.Y,
-
-					FontStyle = PGF.FontStyle,
-					BPP = 4,
-				};
+				return PGF.GetFontInfo();
 			}
 		}
 

@@ -4,6 +4,8 @@ using System;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Gpu.State.SubStates;
 using CSharpPlatform.GL;
+using CSPspEmu.Core.Gpu.Impl.Opengl.Utils;
+using CSharpPlatform;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
@@ -43,7 +45,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private void PrepareState_Clip(GpuStateStruct* GpuState)
 		{
-			if (!GlEnableDisable(GL.GL_SCISSOR_TEST, GpuState->ClipPlaneState.Enabled))
+			if (!GL.EnableDisable(GL.GL_SCISSOR_TEST, GpuState->ClipPlaneState.Enabled))
 			{
 				return;
 			}
@@ -58,7 +60,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private void PrepareState_AlphaTest(GpuStateStruct* GpuState)
 		{
-			//if (!GlEnableDisable(EnableCap.AlphaTest, GpuState->AlphaTestState.Enabled))
+			//if (!GL.EnableDisable(EnableCap.AlphaTest, GpuState->AlphaTestState.Enabled))
 			//{
 			//	return;
 			//}
@@ -71,7 +73,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private void PrepareState_Stencil(GpuStateStruct* GpuState)
 		{
-			if (!GlEnableDisable(GL.GL_STENCIL_TEST, GpuState->StencilState.Enabled))
+			if (!GL.EnableDisable(GL.GL_STENCIL_TEST, GpuState->StencilState.Enabled))
 			{
 				return;
 			}
@@ -81,38 +83,37 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//if (state.stencilFuncFunc == 2) { outputDepthAndStencil(); assert(0); }
 
 #if false
-											Console.Error.WriteLine(
-			"{0}:{1}:{2} - {3}, {4}, {5}",
-			StencilFunctionTranslate[(int)GpuState->StencilState.Function],
-			GpuState->StencilState.FunctionRef,
-			GpuState->StencilState.FunctionMask,
-			StencilOperationTranslate[(int)GpuState->StencilState.OperationFail],
-			StencilOperationTranslate[(int)GpuState->StencilState.OperationZFail],
-			StencilOperationTranslate[(int)GpuState->StencilState.OperationZPass]
-		);
-#endif
-
-			GL.glStencilFunc(
+			Console.Error.WriteLine(
+				"{0}:{1}:{2} - {3}, {4}, {5}",
 				StencilFunctionTranslate[(int)GpuState->StencilState.Function],
+				GpuState->StencilState.FunctionRef,
+				GpuState->StencilState.FunctionMask,
+				StencilOperationTranslate[(int)GpuState->StencilState.OperationFail],
+				StencilOperationTranslate[(int)GpuState->StencilState.OperationZFail],
+				StencilOperationTranslate[(int)GpuState->StencilState.OperationZPass]
+			);
+#endif
+			GL.glStencilFunc(
+				OpenglGpuImplConversionTables.StencilFunctionTranslate[(int)GpuState->StencilState.Function],
 				GpuState->StencilState.FunctionRef,
 				GpuState->StencilState.FunctionMask
 			);
 
 			GL.glStencilOp(
-				StencilOperationTranslate[(int)GpuState->StencilState.OperationFail],
-				StencilOperationTranslate[(int)GpuState->StencilState.OperationZFail],
-				StencilOperationTranslate[(int)GpuState->StencilState.OperationZPass]
+				OpenglGpuImplConversionTables.StencilOperationTranslate[(int)GpuState->StencilState.OperationFail],
+				OpenglGpuImplConversionTables.StencilOperationTranslate[(int)GpuState->StencilState.OperationZFail],
+				OpenglGpuImplConversionTables.StencilOperationTranslate[(int)GpuState->StencilState.OperationZPass]
 			);
 		}
 
 		private void PrepareState_CullFace(GpuStateStruct* GpuState)
 		{
-			if (!GlEnableDisable(GL.GL_CULL_FACE, GpuState->BackfaceCullingState.Enabled))
+			if (!GL.EnableDisable(GL.GL_CULL_FACE, GpuState->BackfaceCullingState.Enabled))
 			{
 				return;
 			}
 
-			//GlEnableDisable(EnableCap.CullFace, false);
+			//GL.EnableDisable(EnableCap.CullFace, false);
 
 			GL.glCullFace((GpuState->BackfaceCullingState.FrontFaceDirection == FrontFaceDirectionEnum.ClockWise) ? GL.GL_FRONT : GL.GL_BACK);
 		}
@@ -130,11 +131,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				Console.Error.WriteLine("WARNING! DepthTestState.Mask: {0}", GpuState->DepthTestState.Mask);
 			}
 			GL.glDepthMask(GpuState->DepthTestState.Mask == 0);
-			if (!GlEnableDisable(GL.GL_DEPTH_TEST, GpuState->DepthTestState.Enabled))
+			if (!GL.EnableDisable(GL.GL_DEPTH_TEST, GpuState->DepthTestState.Enabled))
 			{
 				return;
 			}
-			GL.glDepthFunc(DepthFunctionTranslate[(int)GpuState->DepthTestState.Function]);
+			GL.glDepthFunc(OpenglGpuImplConversionTables.DepthFunctionTranslate[(int)GpuState->DepthTestState.Function]);
 		}
 
 		private void PrepareState_Colors_2D(GpuStateStruct* GpuState)
@@ -144,7 +145,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private void PrepareState_Colors_3D(GpuStateStruct* GpuState)
 		{
-			//GlEnableDisable(EnableCap.ColorMaterial, VertexType.Color != VertexTypeStruct.ColorEnum.Void);
+			//GL.EnableDisable(EnableCap.ColorMaterial, VertexType.Color != VertexTypeStruct.ColorEnum.Void);
 			//
 			//var Color = GpuState->LightingState.AmbientModelColor;
 			//var LightingState = &GpuState->LightingState;
@@ -211,7 +212,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			//var LightingState = &GpuState->LightingState;
 			//
-			//if (!GlEnableDisable(EnableCap.Lighting, LightingState->Enabled))
+			//if (!GL.EnableDisable(EnableCap.Lighting, LightingState->Enabled))
 			//{
 			//	return;
 			//}
@@ -227,7 +228,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//	var LightState = &(&LightingState->Light0)[n];
 			//	LightName LightName = (LightName)(LightName.Light0 + n);
 			//
-			//	if (!GlEnableDisable((EnableCap)(EnableCap.Light0 + n), LightState->Enabled))
+			//	if (!GL.EnableDisable((EnableCap)(EnableCap.Light0 + n), LightState->Enabled))
 			//	{
 			//		continue;
 			//	}
@@ -259,31 +260,31 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private void PrepareState_Blend(GpuStateStruct* GpuState)
 		{
-			if (GpuState->ColorTestState.Enabled)
-			{
-				GlEnableDisable(GL.GL_BLEND, true);
-				GL.glBlendEquation(GL.GL_FUNC_ADD);
-				GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-				GL.glBlendColor(0, 0, 0, 0);
-
-				return;
-			}
-			else
-			{
-				GlEnableDisable(GL.GL_BLEND, false);
-			}
+			//if (GpuState->ColorTestState.Enabled)
+			//{
+			//	GL.EnableDisable(GL.GL_BLEND, true);
+			//	GL.glBlendEquation(GL.GL_FUNC_ADD);
+			//	GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+			//	GL.glBlendColor(0, 0, 0, 0);
+			//
+			//	return;
+			//}
+			//else
+			//{
+			//	GL.EnableDisable(GL.GL_BLEND, false);
+			//}
 
 			var BlendingState = &GpuState->BlendingState;
-			if (!GlEnableDisable(GL.GL_BLEND, BlendingState->Enabled))
+			if (!GL.EnableDisable(GL.GL_BLEND, BlendingState->Enabled))
 			{
 				return;
 			}
 
 			//Console.WriteLine("Blend!");
 
-			var OpenglFunctionSource = BlendFuncSrcTranslate[(int)BlendingState->FunctionSource];
+			var OpenglFunctionSource = OpenglGpuImplConversionTables.BlendFuncSrcTranslate[(int)BlendingState->FunctionSource];
 			//var OpenglFunctionDestination = BlendFuncDstTranslate[(int)BlendingState->FunctionDestination];
-			var OpenglFunctionDestination = BlendFuncSrcTranslate[(int)BlendingState->FunctionDestination];
+			var OpenglFunctionDestination = OpenglGpuImplConversionTables.BlendFuncSrcTranslate[(int)BlendingState->FunctionDestination];
 
 			Func<ColorfStruct, int> getBlendFix = (Color) =>
 			{
@@ -310,7 +311,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			}
 			//Console.WriteLine("{0}, {1}", OpenglFunctionSource, OpenglFunctionDestination);
 
-			var OpenglBlendEquation = BlendEquationTranslate[(int)BlendingState->Equation];
+			var OpenglBlendEquation = OpenglGpuImplConversionTables.BlendEquationTranslate[(int)BlendingState->Equation];
 
 			/*
 			Console.WriteLine(
@@ -337,6 +338,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			if (TextureMappingState->Enabled)
 			{
+				TextureMatrix = Matrix4f.Identity
+					.Scale(
+						1.0f / Mipmap0->BufferWidth,
+						1.0f / Mipmap0->TextureHeight,
+						1.0f
+					)
+				;
 				//GL.ActiveTexture(TextureUnit.Texture0);
 				//GL.MatrixMode(MatrixMode.Texture);
 				//GL.LoadIdentity();
@@ -356,15 +364,15 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			if (TextureMappingState->Enabled)
 			{
-				//GL.ActiveTexture(TextureUnit.Texture0);
-				//GL.MatrixMode(MatrixMode.Texture);
-				//GL.LoadIdentity();
+				TextureMatrix = Matrix4f.Identity;
 
 				switch (TextureMappingState->TextureMapMode)
 				{
 					case TextureMapMode.GU_TEXTURE_COORDS:
-						//GL.Translate(TextureState->OffsetU, TextureState->OffsetV, 0);
-						//GL.Scale(TextureState->ScaleU, TextureState->ScaleV, 1);
+						TextureMatrix = TextureMatrix
+							.Translate(TextureState->OffsetU, TextureState->OffsetV, 0)
+							.Scale(TextureState->ScaleU, TextureState->ScaleV, 1)
+						;
 						break;
 					case TextureMapMode.GU_TEXTURE_MATRIX:
 						switch (GpuState->TextureMappingState.TextureProjectionMapMode)
@@ -390,7 +398,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//var ClutState = &TextureMappingState->ClutState;
 			var TextureState = &TextureMappingState->TextureState;
 
-			if (!GlEnableDisable(GL.GL_TEXTURE_2D, TextureMappingState->Enabled))
+			if (!GL.EnableDisable(GL.GL_TEXTURE_2D, TextureMappingState->Enabled))
 			{
 				return;
 			}
@@ -407,13 +415,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			//GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
 			//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-			TextureCacheGetAndBind(GpuState);
+			RenderbufferManager.TextureCacheGetAndBind(GpuState);
 			//CurrentTexture.Save("test.png");
-
-			GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, (int)((TextureState->FilterMinification == TextureFilter.Linear) ? GL.GL_LINEAR : GL.GL_NEAREST));
-			GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, (int)((TextureState->FilterMagnification == TextureFilter.Linear) ? GL.GL_LINEAR : GL.GL_NEAREST));
-			GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, (int)((TextureState->WrapU == WrapMode.Repeat) ? GL.GL_REPEAT : GL.GL_CLAMP_TO_EDGE));
-			GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, (int)((TextureState->WrapV == WrapMode.Repeat) ? GL.GL_REPEAT : GL.GL_CLAMP_TO_EDGE));
 
 			//GL.glTexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvModeTranslate[(int)TextureState->Effect]);
 		}

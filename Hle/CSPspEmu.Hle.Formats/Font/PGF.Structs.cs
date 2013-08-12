@@ -417,7 +417,7 @@ namespace CSPspEmu.Hle.Formats.Font
 		/// <summary>
 		/// 
 		/// </summary>
-		public fixed byte RawFileName[64];
+		private fixed byte RawFileName[64];
 
 		public string FileName
 		{
@@ -428,7 +428,7 @@ namespace CSPspEmu.Hle.Formats.Font
 		/// <summary>
 		/// 
 		/// </summary>
-		public fixed byte RawName[64];
+		private fixed byte RawName[64];
 
 		public string Name
 		{

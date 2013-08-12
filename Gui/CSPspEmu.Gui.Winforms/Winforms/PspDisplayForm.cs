@@ -995,14 +995,6 @@ namespace CSPspEmu.Gui.Winforms
 			Process.Start(@"http://www.emureleases.com/?rf=csp");
 		}
 
-		private void functionViewerToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			PauseResume(() =>
-			{
-				InjectContext.NewInstance<FunctionViewerForm>().ShowDialog();
-			});
-		}
-
 		private void UtilsRenderScale1xMenu_Click(object sender, EventArgs e)
 		{
 			RenderScale = 1;
@@ -1036,6 +1028,22 @@ namespace CSPspEmu.Gui.Winforms
 			}
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new PspDisplayForm(IGuiExternalInterface));
+		}
+
+		private void functionViewerToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			PauseResume(() =>
+			{
+				InjectContext.NewInstance<FunctionViewerForm>().ShowDialog();
+			});
+		}
+
+		private void DebugTextureViewer_Click(object sender, EventArgs e)
+		{
+			PauseResume(() =>
+			{
+				InjectContext.NewInstance<TextureViewerForm>().ShowDialog();
+			});
 		}
 	}
 }

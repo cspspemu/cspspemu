@@ -53,6 +53,10 @@
 			<translation lang="en">&amp;Function Viewer...</translation>
 			<translation lang="es">&amp;Visor de funciones...</translation>
 		</text>
+		<text id="DebugTextureViewer">
+			<translation lang="en">&amp;Texture Editor...</translation>
+			<translation lang="es">&amp;Editor de texturas...</translation>
+		</text>
 		<text id="FileExitMenu">
 			<translation lang="en">&amp;Exit</translation>
 			<translation lang="es">&amp;Salir</translation>

@@ -28,11 +28,20 @@ namespace CSPspEmu.Hle.Modules.libfont
 		public Font sceFontOpen(FontLibrary FontLibrary, int Index, int Mode, uint* ErrorCode)
 		{
 			var FontRegistry = FontLibrary.FontRegistryList[Index];
-			var FontFileStream = HleIoManager.HleIoWrapper.Open("flash0:/font/" + FontRegistry.FontStyle.FileName, Vfs.HleIoFlags.Read, Vfs.SceMode.All);
-			var PGF = new PGF().Load(FontFileStream);
-			var Font = new Font(FontLibrary, PGF);
-			*ErrorCode = 0;
-			return Font;
+			try
+			{
+				var FontFileStream = HleIoManager.HleIoWrapper.Open("flash0:/font/" + FontRegistry.FontStyle.FileName, Vfs.HleIoFlags.Read, Vfs.SceMode.All);
+				var PGF = new PGF().Load(FontFileStream);
+				var Font = new Font(FontLibrary, PGF);
+				*ErrorCode = 0;
+				return Font;
+			}
+			catch (FileNotFoundException)
+			{
+				var Font = new Font(FontLibrary, new NativeFontIPGF());
+				*ErrorCode = 0;
+				return Font;
+			}
 		}
 
 		/// <summary>

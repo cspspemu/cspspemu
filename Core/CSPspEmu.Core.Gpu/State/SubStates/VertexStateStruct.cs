@@ -66,23 +66,37 @@ namespace CSPspEmu.Core.Gpu.State
 			get { return (NumericEnum)BitUtils.Extract(Value, 9, 2); }
 			set { BitUtils.Insert(ref Value, 9, 2, (uint)value); }
 		}
-		public NumericEnum Texture {
+
+		public bool HasTexture { get { return Texture != VertexTypeStruct.NumericEnum.Void; } }
+		public NumericEnum Texture
+		{
 			get { return (NumericEnum)BitUtils.Extract(Value, 0, 2); }
 			set { BitUtils.Insert(ref Value, 0, 2, (uint)value); }
 		}
-		public ColorEnum Color {
+
+		public bool HasColor { get { return Color != VertexTypeStruct.ColorEnum.Void; } }
+		public ColorEnum Color
+		{
 			get { return (ColorEnum)BitUtils.Extract(Value, 2, 3); }
 			set { BitUtils.Insert(ref Value, 2, 3, (uint)value); }
 		}
-		public NumericEnum Normal {
+
+		public bool HasNormal { get { return Normal != VertexTypeStruct.NumericEnum.Void; } }
+		public NumericEnum Normal
+		{
 			get { return (NumericEnum)BitUtils.Extract(Value, 5, 2); }
 			set { BitUtils.Insert(ref Value, 5, 2, (uint)value); }
 		}
+
+		public bool HasPosition { get { return Position != VertexTypeStruct.NumericEnum.Void; } }
 		public NumericEnum Position {
 			get { return (NumericEnum)BitUtils.Extract(Value, 7, 2); }
 			set { BitUtils.Insert(ref Value, 7, 2, (uint)value); }
 		}
-		public IndexEnum Index {
+
+		public bool HasIndex { get { return Index != VertexTypeStruct.IndexEnum.Void; } }
+		public IndexEnum Index
+		{
 			get { return (IndexEnum)BitUtils.Extract(Value, 11, 2); }
 			set { BitUtils.Insert(ref Value, 11, 2, (uint)value); }
 		}

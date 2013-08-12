@@ -356,7 +356,12 @@ namespace CSPspEmu.Core.Utils
 		{
 			var Input = (byte*)_Input;
 
-			if (Palette == null || PaletteType == GuPixelFormats.NONE) throw(new Exception("Palette required!"));
+			if (Palette == null || PaletteType == GuPixelFormats.NONE)
+			{
+				Console.WriteLine("Palette required!");
+				return;
+			}
+
 			OutputPixel[] PalettePixels;
 			int PaletteSize = 256;
 			PalettePixels = new OutputPixel[PaletteSize];

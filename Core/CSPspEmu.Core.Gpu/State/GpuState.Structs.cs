@@ -127,5 +127,10 @@ namespace CSPspEmu.Core.Gpu.State
 			};
 		}
 
+
+		public Vector4f ToVector4f()
+		{
+			return new Vector4f(Red, Green, Blue, Alpha);
+		}
 	}
 }

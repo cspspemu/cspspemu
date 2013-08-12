@@ -104,13 +104,12 @@ namespace CSPspEmu.Core.Gpu
 
 	public unsafe class TextureCache<TGpuImpl, TTexture> where TTexture : Texture<TGpuImpl>, new()
 	{
-		PspMemory PspMemory;
-		//Dictionary<TextureCacheKey, Texture> Cache = new Dictionary<TextureCacheKey, Texture>();
-		Dictionary<ulong, TTexture> Cache = new Dictionary<ulong, TTexture>();
+		private PspMemory PspMemory;
+		public readonly Dictionary<ulong, TTexture> Cache = new Dictionary<ulong, TTexture>();
 		public TGpuImpl GpuImpl;
 
-		byte[] SwizzlingBuffer = new byte[4 * 1024 * 1024];
-		OutputPixel[] DecodedTextureBuffer = new OutputPixel[1024 * 1024];
+		private byte[] SwizzlingBuffer = new byte[4 * 1024 * 1024];
+		private OutputPixel[] DecodedTextureBuffer = new OutputPixel[1024 * 1024];
 
 		public TextureCache(PspMemory PspMemory, TGpuImpl GpuImpl)
 		{
@@ -248,6 +247,7 @@ namespace CSPspEmu.Core.Gpu
 					Texture = new TTexture();
 					Texture.Init(GpuImpl);
 					Texture.TextureCacheKey = TextureCacheKey;
+					//Texture.Hash = Hash1;
 
 					{
 						//int TextureWidth = Math.Max(BufferWidth, Height);

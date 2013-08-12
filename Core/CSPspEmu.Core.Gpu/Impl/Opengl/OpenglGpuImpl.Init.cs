@@ -100,7 +100,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					{
 						while (Running)
 						{
-							Thread.Sleep(1);
+							Thread.Sleep(10);
 						}
 						StopEvent.Set();
 					}

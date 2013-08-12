@@ -11,7 +11,7 @@ namespace CSPspEmu.Core.Gpu
 
 		protected int _ScaleViewport = 2;
 
-		protected event Action<int> OnScaleViewport;
+		internal event Action<int> OnScaleViewport;
 
 		public int ScaleViewport
 		{

@@ -54,6 +54,12 @@ public sealed class InjectContext : IDisposable
 
 				try
 				{
+					//object Instance2 = null;
+					//var ElapsedTime2 = Logger.Measure(() =>
+					//{
+					//	Instance2 = Activator.CreateInstance(RealType, true);
+					//});
+					//Console.Error.WriteLine("{0} : {1} : {2}", ElapsedTime2, Type, RealType);
 					Instance = _SetInstance(Type, Activator.CreateInstance(RealType, true));
 				}
 				catch (MissingMethodException)
@@ -66,7 +72,7 @@ public sealed class InjectContext : IDisposable
 				//Instance.InitializeComponent();
 			});
 
-			//Console.WriteLine("GetInstance<{0}>: Miss! : LoadTime({1})", Type, ElapsedTime.TotalSeconds);
+			//Console.Out.WriteLineColored((ElapsedTime.TotalSeconds >= 0.05) ? ConsoleColor.Red : ConsoleColor.Gray, "GetInstance<{0}>: Miss! : LoadTime({1})", Type, ElapsedTime.TotalSeconds);
 			Logger.Notice("GetInstance<{0}>: Miss! : LoadTime({1})", Type, ElapsedTime.TotalSeconds);
 
 			return Instance;

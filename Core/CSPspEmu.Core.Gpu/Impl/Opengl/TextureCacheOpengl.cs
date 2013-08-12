@@ -13,7 +13,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
 	public unsafe class TextureOpengl : Texture<OpenglGpuImpl>
 	{
-		GLTexture Texture;
+		public GLTexture Texture;
 		public int TextureId { get { return (int)Texture.Texture; } }
 
 		protected override void Init()
@@ -36,6 +36,14 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			Texture.SetFormat(TextureFormat.RGBA).SetSize(TextureWidth, TextureHeight).SetData(Pixels);
 
 			return true;
+		}
+
+		public void SetData(byte[] Data, int Width, int Height)
+		{
+			fixed (byte* DataPtr = Data)
+			{
+				SetData((OutputPixel*)DataPtr, Width, Height);
+			}
 		}
 
 		public override void Bind()

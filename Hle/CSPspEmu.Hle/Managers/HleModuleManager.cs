@@ -9,13 +9,13 @@ using SafeILGenerator.Utils;
 
 namespace CSPspEmu.Hle.Managers
 {
-	public class HleModuleManager : IInjectInitialize, IDisposable
+	sealed public class HleModuleManager : IInjectInitialize, IDisposable
 	{
-		protected Dictionary<Type, HleModuleHost> HleModules = new Dictionary<Type, HleModuleHost>();
-		public List<HleModuleGuest> LoadedGuestModules = new List<HleModuleGuest>();
-		public uint DelegateLastId = 0;
-		public Dictionary<uint, DelegateInfo> DelegateTable = new Dictionary<uint, DelegateInfo>();
-		public Queue<DelegateInfo> LastCalledCallbacks = new Queue<DelegateInfo>();
+		private readonly Dictionary<Type, HleModuleHost> HleModules = new Dictionary<Type, HleModuleHost>();
+		public readonly List<HleModuleGuest> LoadedGuestModules = new List<HleModuleGuest>();
+		private readonly Dictionary<uint, DelegateInfo> DelegateTable = new Dictionary<uint, DelegateInfo>();
+		public readonly Queue<DelegateInfo> LastCalledCallbacks = new Queue<DelegateInfo>();
+		private uint DelegateLastId = 0;
 
 		[Inject]
 		HleThreadManager HleThreadManager;
@@ -177,7 +177,7 @@ namespace CSPspEmu.Hle.Managers
 			{
 				HleModule.Value.Dispose();
 			}
-			HleModules = new Dictionary<Type, HleModuleHost>();
+			HleModules.Clear();
 		}
 	}
 }

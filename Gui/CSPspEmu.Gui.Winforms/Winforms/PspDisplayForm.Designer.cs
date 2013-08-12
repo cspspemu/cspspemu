@@ -74,6 +74,7 @@
 			this.DebugShowThreadInfoMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem15 = new System.Windows.Forms.ToolStripSeparator();
 			this.DebugFunctionViewer = new System.Windows.Forms.ToolStripMenuItem();
+			this.DebugTextureViewer = new System.Windows.Forms.ToolStripMenuItem();
 			this.HelpMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.HelpWebsiteMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
@@ -240,7 +241,7 @@
 			// UtilsRenderScale1xMenu
 			// 
 			this.UtilsRenderScale1xMenu.Name = "UtilsRenderScale1xMenu";
-			this.UtilsRenderScale1xMenu.Size = new System.Drawing.Size(152, 22);
+			this.UtilsRenderScale1xMenu.Size = new System.Drawing.Size(85, 22);
 			this.UtilsRenderScale1xMenu.Tag = "1";
 			this.UtilsRenderScale1xMenu.Text = "1x";
 			this.UtilsRenderScale1xMenu.Click += new System.EventHandler(this.UtilsRenderScale1xMenu_Click);
@@ -248,7 +249,7 @@
 			// UtilsRenderScale2xMenu
 			// 
 			this.UtilsRenderScale2xMenu.Name = "UtilsRenderScale2xMenu";
-			this.UtilsRenderScale2xMenu.Size = new System.Drawing.Size(152, 22);
+			this.UtilsRenderScale2xMenu.Size = new System.Drawing.Size(85, 22);
 			this.UtilsRenderScale2xMenu.Tag = "2";
 			this.UtilsRenderScale2xMenu.Text = "2x";
 			this.UtilsRenderScale2xMenu.Click += new System.EventHandler(this.UtilsRenderScale2xMenu_Click);
@@ -256,7 +257,7 @@
 			// UtilsRenderScale4xMenu
 			// 
 			this.UtilsRenderScale4xMenu.Name = "UtilsRenderScale4xMenu";
-			this.UtilsRenderScale4xMenu.Size = new System.Drawing.Size(152, 22);
+			this.UtilsRenderScale4xMenu.Size = new System.Drawing.Size(85, 22);
 			this.UtilsRenderScale4xMenu.Tag = "4";
 			this.UtilsRenderScale4xMenu.Text = "4x";
 			this.UtilsRenderScale4xMenu.Click += new System.EventHandler(this.UtilsRenderScale4xMenu_Click);
@@ -264,7 +265,7 @@
 			// UtilsRenderScale8xMenu
 			// 
 			this.UtilsRenderScale8xMenu.Name = "UtilsRenderScale8xMenu";
-			this.UtilsRenderScale8xMenu.Size = new System.Drawing.Size(152, 22);
+			this.UtilsRenderScale8xMenu.Size = new System.Drawing.Size(85, 22);
 			this.UtilsRenderScale8xMenu.Tag = "8";
 			this.UtilsRenderScale8xMenu.Text = "8x";
 			this.UtilsRenderScale8xMenu.Click += new System.EventHandler(this.xToolStripMenuItem_Click);
@@ -392,7 +393,8 @@
             this.toolStripMenuItem12,
             this.DebugShowThreadInfoMenu,
             this.toolStripMenuItem15,
-            this.DebugFunctionViewer});
+            this.DebugFunctionViewer,
+            this.DebugTextureViewer});
 			this.DebugMenu.Name = "DebugMenu";
 			this.DebugMenu.Size = new System.Drawing.Size(54, 20);
 			this.DebugMenu.Text = "&Debug";
@@ -466,6 +468,14 @@
 			this.DebugFunctionViewer.Size = new System.Drawing.Size(235, 22);
 			this.DebugFunctionViewer.Text = "&Function viewer...";
 			this.DebugFunctionViewer.Click += new System.EventHandler(this.functionViewerToolStripMenuItem_Click);
+			// 
+			// DebugTextureViewer
+			// 
+			this.DebugTextureViewer.Image = global::CSPspEmu.Gui.Winforms.Properties.Resources.Gallery_icon;
+			this.DebugTextureViewer.Name = "DebugTextureViewer";
+			this.DebugTextureViewer.Size = new System.Drawing.Size(235, 22);
+			this.DebugTextureViewer.Text = "&Texture viewer...";
+			this.DebugTextureViewer.Click += new System.EventHandler(this.DebugTextureViewer_Click);
 			// 
 			// HelpMenu
 			// 
@@ -653,5 +663,6 @@
 		private System.Windows.Forms.ToolStripMenuItem UtilsRenderScale2xMenu;
 		private System.Windows.Forms.ToolStripMenuItem UtilsRenderScale4xMenu;
 		private System.Windows.Forms.ToolStripMenuItem UtilsRenderScale8xMenu;
+		private System.Windows.Forms.ToolStripMenuItem DebugTextureViewer;
 	}
 }

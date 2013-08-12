@@ -1,4 +1,5 @@
 ﻿using CSPspEmu.Core.Types;
+using CSPspEmu.Hle.Formats.Font;
 using System;
 
 namespace CSPspEmu.Hle.Modules.libfont

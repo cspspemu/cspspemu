@@ -22,17 +22,17 @@ namespace CSPspEmu.Core.Gpu.State
 
 	public enum TextureColorComponent : byte
 	{
-		Rgb = 0,
-		Rgba = 1,
+		Rgb = 0,    // GU_TCC_RGB
+		Rgba = 1,   // GU_TCC_RGBA
 	}
 
 	public enum TextureEffect : byte
 	{
-		Modulate = 0,
-		Decal = 1,
-		Blend = 2,
-		Replace = 3,
-		Add = 4,
+		Modulate = 0,  // GU_TFX_MODULATE
+		Decal = 1,     // GU_TFX_DECAL
+		Blend = 2,     // GU_TFX_BLEND
+		Replace = 3,   // GU_TFX_REPLACE
+		Add = 4,	   // GU_TFX_ADD
 	}
 
 	public enum TextureFilter : byte

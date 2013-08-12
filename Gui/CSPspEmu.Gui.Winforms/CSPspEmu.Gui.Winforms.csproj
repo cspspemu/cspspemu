@@ -66,6 +66,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GuiConfig.cs" />
+    <Compile Include="HQ2X\RGBA.cs" />
+    <Compile Include="HQ2X\ColorAlphaLerp.cs" />
+    <Compile Include="HQ2X\ColorAlphaThreshold.cs" />
+    <Compile Include="HQ2X\ColorOnlyLerp.cs" />
+    <Compile Include="HQ2X\ColorOnlyThreshold.cs" />
+    <Compile Include="HQ2X\ColorSimpleAlphaLerp.cs" />
+    <Compile Include="HQ2X\ColorSimpleAlphaThreshold.cs" />
+    <Compile Include="HQ2X\Engine.cs" />
+    <Compile Include="HQ2X\ILerp.cs" />
+    <Compile Include="HQ2X\IThreshold.cs" />
     <Compile Include="Winforms\AboutForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -116,6 +126,12 @@
     <Compile Include="Winforms\PspOpenglDisplayControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Winforms\TextureViewerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Winforms\TextureViewerForm.Designer.cs">
+      <DependentUpon>TextureViewerForm.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Winforms\AboutForm.resx">
@@ -130,6 +146,9 @@
     <EmbeddedResource Include="Winforms\GameListComponent.resx">
       <DependentUpon>GameListComponent.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Winforms\GLControl.resx">
+      <DependentUpon>GLControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Winforms\ProgressForm.resx">
       <DependentUpon>ProgressForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -143,6 +162,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Winforms\PspOpenglDisplayControl.resx">
       <DependentUpon>PspOpenglDisplayControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Winforms\TextureViewerForm.resx">
+      <DependentUpon>TextureViewerForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -281,6 +303,7 @@
     <None Include="Resources\us.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Gallery-icon.png" />
     <Content Include="Resources\quality.png" />
     <None Include="Resources\quality1.png" />
     <Content Include="Winforms\Icons.txt" />

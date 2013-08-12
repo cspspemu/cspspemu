@@ -55,7 +55,8 @@ namespace CSPspEmu.Runner.Components
 				{
 				});
 			});
-			Logger.Notice("Component {0} Started! StartedTime({1})", this, ElapsedTime.TotalSeconds);
+			//Logger.Notice("Component {0} Started! StartedTime({1})", this, ElapsedTime.TotalSeconds);
+			Console.WriteLine("Component {0} Started! StartedTime({1})", this, ElapsedTime.TotalSeconds);
 		}
 
 		public void StopSynchronized()
