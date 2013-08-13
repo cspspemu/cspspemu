@@ -36,9 +36,9 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeStm srl() { return ast.AssignGPR(RD, ast.Binary(ast.GPR_u(RT), ">>", ast.Immediate((uint)Instruction.POS))); }
 		public AstNodeStm rotr() { return ast.AssignGPR(RD, ast.CallStatic((Func<uint, int, uint>)CpuEmitterUtils._rotr_impl, ast.GPR_u(RT), ast.Immediate((int)Instruction.POS))); }
 
-		public AstNodeStm sllv() { return ast.AssignGPR(RD, ast.Binary(ast.GPR_u(RT), "<<", ast.GPR_u(RS))); }
-		public AstNodeStm srav() { return ast.AssignGPR(RD, ast.Binary(ast.GPR_s(RT), ">>", ast.GPR_s(RS))); }
-		public AstNodeStm srlv() { return ast.AssignGPR(RD, ast.Binary(ast.GPR_u(RT), ">>", ast.GPR_u(RS))); }
+		public AstNodeStm sllv() { return ast.AssignGPR(RD, ast.Binary(ast.GPR_u(RT), "<<", ast.GPR_u(RS) & 31)); }
+		public AstNodeStm srav() { return ast.AssignGPR(RD, ast.Binary(ast.GPR_s(RT), ">>", ast.GPR_s(RS) & 31)); }
+		public AstNodeStm srlv() { return ast.AssignGPR(RD, ast.Binary(ast.GPR_u(RT), ">>", ast.GPR_u(RS) & 31)); }
 		public AstNodeStm rotrv() { return ast.AssignGPR(RD, ast.CallStatic((Func<uint, int, uint>)CpuEmitterUtils._rotr_impl, ast.GPR_u(RT), ast.GPR_s(RS))); }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////
