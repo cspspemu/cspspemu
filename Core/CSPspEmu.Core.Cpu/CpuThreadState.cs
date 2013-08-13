@@ -276,6 +276,8 @@ namespace CSPspEmu.Core.Cpu
 				FPR[n] = 0.0f;
 			}
 
+			VFR_CC_7 = VFR_CC_6 = VFR_CC_5 = VFR_CC_4 = VFR_CC_3 = VFR_CC_2 = VFR_CC_1 = VFR_CC_0 = true;
+
 			for (int n = 0; n < 128; n++)
 			{
 				Vfpr[n] = 0.0f;

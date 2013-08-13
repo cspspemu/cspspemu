@@ -76,8 +76,12 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 
 		public void FlushRange(uint Start, uint End)
 		{
+			//Console.Error.WriteLine("[{0}]", MethodMapping);
+			//Console.Error.WriteLine("[{0}]", MethodMapping.Values);
 			foreach (var MethodCacheInfo in MethodMapping.Values.ToArray())
+			//foreach (var MethodCacheInfo in MethodMapping.Values)
 			{
+				//Console.Error.WriteLine("[{0}]", MethodCacheInfo);
 				if (MethodCacheInfo.MaxPC >= Start && MethodCacheInfo.MinPC <= End)
 				{
 					MethodCacheInfo.Free();

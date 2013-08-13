@@ -173,7 +173,12 @@ namespace CSPspEmu.Gui.Winforms
 							UpdateTitle();
 							if (GLControl == null || !GLControl.Visible) return;
 							CommonGuiInput.SendControllerFrame();
-							if (GLControl != null) GLControl.Refresh();
+							if (GLControl != null)
+							{
+								// @TODO: Causes flickering and slowness in mono
+								//GLControl.Refresh();
+								GLControl.ReDraw();
+							}
 							//Refresh();
 						}));
 					}
@@ -311,26 +316,48 @@ namespace CSPspEmu.Gui.Winforms
 			}
 		}
 
+		private void ScheduleCallback(TimeSpan Time, Action Action)
+		{
+			var Timer = new System.Windows.Forms.Timer();
+			Timer.Interval = (int)Time.TotalMilliseconds;
+			Timer.Tick += (sender, e) =>
+			{
+				Timer.Stop();
+				Timer.Dispose();
+				Action();
+			};
+			Timer.Start();
+		}
+
 		private void takeScreenshotToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			PauseResume(() =>
+			//this.MainMenuStrip.Visible = true;
+			//this.WindowState = FormWindowState.Normal;
+			//this.TopMost = false;
+			//this.FormBorderStyle = FormBorderStyle.Sizable;
+			//this.MaximumSize = new Size(4096, 4096);
+			//LanguageUtils.PropertyLocalSet(this, "TopMost", false, () =>
 			{
-				var SaveFileDialog = new SaveFileDialog();
-				SaveFileDialog.Filter = "PNG|*.png|All Files|*.*";
-				SaveFileDialog.FileName = String.Format("{0} - screenshot.png", ElfConfig.GameTitle);
-				SaveFileDialog.AddExtension = true;
-				SaveFileDialog.DefaultExt = "png";
-				if (SaveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+				PauseResume(() =>
 				{
-					if (GLControl != null)
+					var SaveFileDialog = new SaveFileDialog();
+					SaveFileDialog.Filter = "PNG|*.png|All Files|*.*";
+					SaveFileDialog.FileName = String.Format("{0} - screenshot - {1:yyyy-MM-dd-H-mm-ss}.png", ElfConfig.GameTitle, DateTime.Now);
+					SaveFileDialog.AddExtension = true;
+					SaveFileDialog.DefaultExt = "png";
+					if (SaveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 					{
-						var Buffer2 = GLControl.GrabScreenshot();
-						//var Buffer2 = new Bitmap(480, 272);
-						//Graphics.FromImage(Buffer2).DrawImage(Buffer, Point.Empty);
-						Buffer2.Save(SaveFileDialog.FileName, ImageFormat.Png);
+						if (GLControl != null)
+						{
+							var Buffer2 = GLControl.GrabScreenshot();
+							//var Buffer2 = new Bitmap(480, 272);
+							//Graphics.FromImage(Buffer2).DrawImage(Buffer, Point.Empty);
+							Buffer2.Save(SaveFileDialog.FileName, ImageFormat.Png);
+						}
 					}
-				}
-			});
+				});
+			}
+			//);
 		}
 
 		/*
@@ -397,12 +424,14 @@ namespace CSPspEmu.Gui.Winforms
 			IsFullScreen = SetFullScreen;
 			if (SetFullScreen)
 			{
-				this.TopMost = true;
+				//this.TopMost = true;
+				this.TopMost = false;
 				this.MainMenuStrip.Visible = false;
 				this.FormBorderStyle = FormBorderStyle.None;
 				this.MaximumSize = new Size(4096, 4096);
 				this.WindowState = FormWindowState.Maximized;
-				Cursor.Hide();
+				//Cursor.Hide();
+				Cursor.Show();
 			}
 			else
 			{

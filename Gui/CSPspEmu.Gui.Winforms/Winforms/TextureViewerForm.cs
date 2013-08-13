@@ -2,6 +2,8 @@
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Gpu.Impl.Opengl;
 using HQ2x;
+using Imager;
+using Imager.Filters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,7 +34,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 
 			public override string ToString()
 			{
-				return String.Format("{0:X8}", this.TextureOpengl.TextureHash);
+				return String.Format("{0:X16}", this.TextureOpengl.TextureHash);
 			}
 		}
 
@@ -80,7 +82,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 			TextureView.Size = new System.Drawing.Size(Texture.Width, Texture.Height);
 
 			var InfoLines = new List<string>();
-			InfoLines.Add(String.Format("Hash: 0x{0:X8}", TextureOpengl.TextureHash));
+			InfoLines.Add(String.Format("Hash: 0x{0:X16}", TextureOpengl.TextureHash));
 			InfoLines.Add(String.Format("Size: {0}x{1}", TextureOpengl.Width, TextureOpengl.Height));
 			InfoLines.Add(String.Format("Swizzled: {0}", TextureOpengl.TextureCacheKey.Swizzled));
 			InfoLines.Add(String.Format("--"));
@@ -89,15 +91,15 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 			InfoLines.Add(String.Format("ColorTestFunction: {0}", TextureOpengl.TextureCacheKey.ColorTestFunction));
 			InfoLines.Add(String.Format("ColorTestRef: {0}", TextureOpengl.TextureCacheKey.ColorTestRef));
 			InfoLines.Add(String.Format("--"));
-			InfoLines.Add(String.Format("ClutHash: 0x{0:X8}", TextureOpengl.TextureCacheKey.ClutHash));
-			InfoLines.Add(String.Format("ClutAddress: 0x{0:X4}", TextureOpengl.TextureCacheKey.ClutAddress));
+			InfoLines.Add(String.Format("ClutHash: 0x{0:X16}", TextureOpengl.TextureCacheKey.ClutHash));
+			InfoLines.Add(String.Format("ClutAddress: 0x{0:X8}", TextureOpengl.TextureCacheKey.ClutAddress));
 			InfoLines.Add(String.Format("ClutFormat: {0}", TextureOpengl.TextureCacheKey.ClutFormat));
 			InfoLines.Add(String.Format("ClutMask: {0}", TextureOpengl.TextureCacheKey.ClutMask));
 			InfoLines.Add(String.Format("ClutShift: {0}", TextureOpengl.TextureCacheKey.ClutShift));
 			InfoLines.Add(String.Format("ClutStart: {0}", TextureOpengl.TextureCacheKey.ClutStart));
 			InfoLines.Add(String.Format("--"));
-			InfoLines.Add(String.Format("TextureHash: 0x{0:X8}", TextureOpengl.TextureCacheKey.TextureHash));
-			InfoLines.Add(String.Format("TextureAddress: 0x{0:X4}", TextureOpengl.TextureCacheKey.TextureAddress));
+			InfoLines.Add(String.Format("TextureHash: 0x{0:X16}", TextureOpengl.TextureCacheKey.TextureHash));
+			InfoLines.Add(String.Format("TextureAddress: 0x{0:X8}", TextureOpengl.TextureCacheKey.TextureAddress));
 			InfoLines.Add(String.Format("TextureFormat: {0}", TextureOpengl.TextureCacheKey.TextureFormat));
 
 			TextureInfo.Text = String.Join("\r\n", InfoLines);
@@ -139,11 +141,22 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 		private void button1_Click(object sender, EventArgs e)
 		{
 			var Item = (TextureElement)TextureList.SelectedItem;
-			//var Engine = new Engine(new ColorAlphaLerp(), new ColorAlphaThreshold(48, 7, 6, 0));
-			var Engine = new Engine(new ColorAlphaLerp(), new ColorAlphaThreshold(32, 32, 32, 32));
-			var Bitmap = Engine.Process((Bitmap)TextureView.Image);
-			Item.TextureOpengl.SetData(Bitmap.GetChannelsDataInterleaved(BitmapChannelList.RGBA), Bitmap.Width, Bitmap.Height);
+			var InBitmap = (Bitmap)TextureView.Image;
+			Bitmap OutBitmap;
+
+			if (false)
+			{
+				var OutImage = new cImage(InBitmap.Width * 2, InBitmap.Height * 2);
+				libXBR.Xbr2X(cImage.FromBitmap(InBitmap), 0, 0, OutImage, 0, 0, true);
+				OutBitmap = OutImage.ToBitmap();
+			}
+			else
+			{
+				OutBitmap = (new Engine(new ColorAlphaLerp(), new ColorAlphaThreshold(32, 32, 32, 32))).Process(InBitmap);
+			}
+			Item.TextureOpengl.SetData(OutBitmap.GetChannelsDataInterleaved(BitmapChannelList.RGBA), OutBitmap.Width, OutBitmap.Height);
 			UpdateTexture();
+			TextureList.Focus();
 		}
 	}
 }

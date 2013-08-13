@@ -49,13 +49,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			IsCurrentWindow = false;
 		}
 
-		public static int GlGetInteger(int Name)
-		{
-			int Value;
-			GL.glGetIntegerv(Name, &Value);
-			return Value;
-		}
-
 		public static string GlGetString(int Name)
 		{
 			return Marshal.PtrToStringAnsi(new IntPtr(GL.glGetString(Name)));
@@ -83,11 +76,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					OpenglContext.MakeCurrent();
 
 					Console.Out.WriteLineColored(ConsoleColor.White, "## OpenGL Context Version: {0}", GlGetString(GL.GL_VERSION));
-					Console.Out.WriteLineColored(ConsoleColor.White, "## Depth Bits: {0}", GlGetInteger(GL.GL_DEPTH_BITS));
-					Console.Out.WriteLineColored(ConsoleColor.White, "## Stencil Bits: {0}", GlGetInteger(GL.GL_STENCIL_BITS));
-					Console.Out.WriteLineColored(ConsoleColor.White, "## Color Bits: {0},{1},{2},{3}", GlGetInteger(GL.GL_RED_BITS), GlGetInteger(GL.GL_GREEN_BITS), GlGetInteger(GL.GL_BLUE_BITS), GlGetInteger(GL.GL_ALPHA_BITS));
+					Console.Out.WriteLineColored(ConsoleColor.White, "## Depth Bits: {0}", GL.glGetInteger(GL.GL_DEPTH_BITS));
+					Console.Out.WriteLineColored(ConsoleColor.White, "## Stencil Bits: {0}", GL.glGetInteger(GL.GL_STENCIL_BITS));
+					Console.Out.WriteLineColored(ConsoleColor.White, "## Color Bits: {0},{1},{2},{3}", GL.glGetInteger(GL.GL_RED_BITS), GL.glGetInteger(GL.GL_GREEN_BITS), GL.glGetInteger(GL.GL_BLUE_BITS), GL.glGetInteger(GL.GL_ALPHA_BITS));
 
-					if (GlGetInteger(GL.GL_STENCIL_BITS) <= 0)
+					if (GL.glGetInteger(GL.GL_STENCIL_BITS) <= 0)
 					{
 						Console.Error.WriteLineColored(ConsoleColor.Red, "No stencil bits available!");
 					}

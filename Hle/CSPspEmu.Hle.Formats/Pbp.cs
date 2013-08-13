@@ -60,6 +60,16 @@ namespace CSPspEmu.Hle.Formats
 			return this;
 		}
 
+		public bool ContainsKey(Types Type)
+		{
+			return Files.ContainsKey(Names[(int)Type]);
+		}
+
+		public bool ContainsKey(String Key)
+		{
+			return Files.ContainsKey(Key);
+		}
+
 		public Stream this[Types Type]
 		{
 			get

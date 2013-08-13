@@ -100,6 +100,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		{
 			public GLUniform matrixWorldViewProjection;
 			public GLUniform matrixTexture;
+			public GLUniform matrixBones;
 
 			public GLUniform hasPerVertexColor;
 			public GLUniform hasTexture;
@@ -108,6 +109,15 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			public GLUniform texture0;
 			public GLUniform uniformColor;
 
+			public GLUniform colorTest;
+
+			public GLUniform alphaTest;
+			public GLUniform alphaFunction;
+			public GLUniform alphaValue;
+			public GLUniform alphaMask;
+
+			public GLUniform weightCount;
+
 			public GLUniform tfx;
 			public GLUniform tcc;
 
@@ -115,6 +125,15 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			public GLAttribute vertexTexCoords;
 			public GLAttribute vertexColor;
 			public GLAttribute vertexNormal;
+
+			public GLAttribute vertexWeight0;
+			public GLAttribute vertexWeight1;
+			public GLAttribute vertexWeight2;
+			public GLAttribute vertexWeight3;
+			public GLAttribute vertexWeight4;
+			public GLAttribute vertexWeight5;
+			public GLAttribute vertexWeight6;
+			public GLAttribute vertexWeight7;
 		}
 
 		ShaderInfoClass ShaderInfo = new ShaderInfoClass();
@@ -142,37 +161,67 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			Shader.BindUniformsAndAttributes(ShaderInfo);
 		}
 
-		private void DrawVertices(GLGeometry Type)
+		private void PrepareDrawStateFirst()
 		{
-			if (Shader == null)
+			if (Shader == null) this.DrawInitVertices();
+
+			ShaderInfo.matrixWorldViewProjection.Set(WorldViewProjectionMatrix);
+			ShaderInfo.matrixTexture.Set(TextureMatrix);
+			ShaderInfo.uniformColor.Set(GpuState->LightingState.AmbientModelColor.ToVector4f());
+			ShaderInfo.hasPerVertexColor.Set(VertexType.HasColor);
+			ShaderInfo.clearingMode.Set(GpuState->ClearingMode);
+			ShaderInfo.hasTexture.Set(GpuState->TextureMappingState.Enabled);
+
+			ShaderInfo.weightCount.Set(VertexType.RealSkinningWeightCount);
+			//ShaderInfo.weightCount.Set(0);
+			if (VertexType.HasWeight)
 			{
-				this.DrawInitVertices();
+				ShaderInfo.matrixBones.Set(new Matrix4f[]
+				{
+					GpuState->SkinningState.BoneMatrix0.Matrix4,
+					GpuState->SkinningState.BoneMatrix1.Matrix4,
+					GpuState->SkinningState.BoneMatrix2.Matrix4,
+					GpuState->SkinningState.BoneMatrix3.Matrix4,
+					GpuState->SkinningState.BoneMatrix4.Matrix4,
+					GpuState->SkinningState.BoneMatrix5.Matrix4,
+					GpuState->SkinningState.BoneMatrix6.Matrix4,
+					GpuState->SkinningState.BoneMatrix7.Matrix4,
+				});
 			}
 
-			//var RenderTarget = GLRenderTarget.Create(512, 272);
-			//RenderTarget.Bind();
+			if (VertexType.HasTexture && GpuState->TextureMappingState.Enabled)
+			{
+				var TextureState = &GpuState->TextureMappingState.TextureState;
 
-			//Console.WriteLine("{0}, {1}", Type, VertexInfoIndex);
-			//Console.WriteLine(VertexInfoList[0]);
-			//Console.WriteLine(VertexInfoList[1]);
-			//Console.WriteLine(VertexInfoList[2]);
-			//Console.WriteLine(VertexInfoList[3]);
+				ShaderInfo.tfx.Set((int)TextureState->Effect);
+				ShaderInfo.tcc.Set((int)TextureState->ColorComponent);
+				ShaderInfo.colorTest.NoWarning().Set(GpuState->ColorTestState.Enabled);
 
-			//RenderbufferManager.CurrentDrawBuffer.RenderTarget.Bind();
-			//var Target = GLRenderTarget.Create(512 * 2, 272 * 2);
-			//Target.Bind();
+				ShaderInfo.alphaTest.Set(GpuState->AlphaTestState.Enabled);
+				ShaderInfo.alphaFunction.Set((int)GpuState->AlphaTestState.Function);
+				ShaderInfo.alphaMask.NoWarning().Set(GpuState->AlphaTestState.Mask);
+				ShaderInfo.alphaValue.Set(GpuState->AlphaTestState.Value);
 
+				//Console.WriteLine("{0}, {1}, {2}, {3}, {4}, {5}", TextureState->Effect, TextureState->ColorComponent, GpuState->BlendingState.Enabled, GpuState->BlendingState.FunctionSource, GpuState->BlendingState.FunctionDestination, GpuState->ColorTestState.Enabled);
+
+				ShaderInfo.texture0.Set(GLTextureUnit.CreateAtIndex(0)
+					.SetWrap(
+						(GLWrap)((TextureState->WrapU == WrapMode.Repeat) ? GL.GL_REPEAT : GL.GL_CLAMP_TO_EDGE),
+						(GLWrap)((TextureState->WrapV == WrapMode.Repeat) ? GL.GL_REPEAT : GL.GL_CLAMP_TO_EDGE)
+					)
+					.SetFiltering(
+						(GLScaleFilter)((TextureState->FilterMinification == TextureFilter.Linear) ? GL.GL_LINEAR : GL.GL_NEAREST),
+						(GLScaleFilter)((TextureState->FilterMagnification == TextureFilter.Linear) ? GL.GL_LINEAR : GL.GL_NEAREST)
+					)
+					.SetTexture(RenderbufferManager.TextureCacheGetAndBind(GpuState))
+				);
+			}
+		}
+
+		private void DrawVertices(GLGeometry Type)
+		{
 			Shader.Draw(Type, 0, VertexInfoIndex, () =>
 			{
-				//Console.WriteLine(ModelViewProjectionMatrix);
-				ShaderInfo.matrixWorldViewProjection.Set(WorldViewProjectionMatrix);
-				ShaderInfo.matrixTexture.Set(TextureMatrix);
-
-				//Attribute_vertexPosition.SetData<float>(
-				//	VertexBuffer.SetData(VertexUtils.CreateFloat2TriangleStripRectagle(new RectangleF(100, 100, 480, 100))),
-				//	2
-				//);
-				
 				VertexBuffer.SetData(this.VertexInfoList, 0, VertexInfoIndex);
 				
 				if (VertexType.HasPosition)
@@ -180,29 +229,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 					ShaderInfo.vertexPosition.SetData<float>(VertexBuffer, 3, Marshal.OffsetOf(typeof(VertexInfo), "Position").ToInt32(), Marshal.SizeOf(typeof(VertexInfo)), false);
 				}
 
-				ShaderInfo.uniformColor.Set(GpuState->LightingState.AmbientModelColor.ToVector4f());
-				ShaderInfo.hasPerVertexColor.Set(VertexType.HasColor);
-				ShaderInfo.clearingMode.Set(GpuState->ClearingMode);
-				ShaderInfo.hasTexture.Set(GpuState->TextureMappingState.Enabled);
-
-				if (VertexType.HasTexture && GpuState->TextureMappingState.Enabled)
+				if (VertexType.HasTexture)
 				{
-					var TextureState = &GpuState->TextureMappingState.TextureState;
-
-					ShaderInfo.tfx.Set((int)TextureState->Effect);
-					ShaderInfo.tcc.Set((int)TextureState->ColorComponent);
-
-					ShaderInfo.texture0.Set(GLTextureUnit.CreateAtIndex(0)
-						.SetWrap(
-							(GLWrap)((TextureState->WrapU == WrapMode.Repeat) ? GL.GL_REPEAT : GL.GL_CLAMP_TO_EDGE),
-							(GLWrap)((TextureState->WrapV == WrapMode.Repeat) ? GL.GL_REPEAT : GL.GL_CLAMP_TO_EDGE)
-						)
-						.SetFiltering(
-							(GLScaleFilter)((TextureState->FilterMinification == TextureFilter.Linear) ? GL.GL_LINEAR : GL.GL_NEAREST),
-							(GLScaleFilter)((TextureState->FilterMagnification == TextureFilter.Linear) ? GL.GL_LINEAR : GL.GL_NEAREST)
-						)
-						.SetTexture(RenderbufferManager.TextureCacheGetAndBind(GpuState))
-					);
 					ShaderInfo.vertexTexCoords.SetData<float>(VertexBuffer, 3, Marshal.OffsetOf(typeof(VertexInfo), "Texture").ToInt32(), Marshal.SizeOf(typeof(VertexInfo)), false);
 				}
 
@@ -214,6 +242,15 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				if (VertexType.HasNormal)
 				{
 					ShaderInfo.vertexNormal.SetData<float>(VertexBuffer, 4, Marshal.OffsetOf(typeof(VertexInfo), "Normal").ToInt32(), Marshal.SizeOf(typeof(VertexInfo)), false);
+				}
+
+				if (VertexType.HasWeight)
+				{
+					var vertexWeights = new[] { ShaderInfo.vertexWeight0, ShaderInfo.vertexWeight1, ShaderInfo.vertexWeight2, ShaderInfo.vertexWeight3, ShaderInfo.vertexWeight4, ShaderInfo.vertexWeight5, ShaderInfo.vertexWeight6, ShaderInfo.vertexWeight7 };
+					for (int n = 0; n < VertexType.RealSkinningWeightCount; n++)
+					{
+						vertexWeights[n].SetData<float>(VertexBuffer, 1, Marshal.OffsetOf(typeof(VertexInfo), "Weights").ToInt32() + 4 * n, Marshal.SizeOf(typeof(VertexInfo)), false);
+					}
 				}
 			});
 		}
@@ -238,7 +275,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <param name="VertexType"></param>
 		private void PutVertex(ref VertexTypeStruct VertexType, VertexInfo _VertexInfo)
 		{
-			var VertexInfo = VertexUtils.PerformSkinning(ref VertexType, GpuState, _VertexInfo);
+			//var VertexInfo = VertexUtils.PerformSkinning(ref VertexType, GpuState, _VertexInfo);
+			var VertexInfo = _VertexInfo;
 			_CapturePutVertex(ref VertexInfo);
 			if (VertexType.ReversedNormal) VertexInfo.Normal = -VertexInfo.Normal;
 			if (VertexInfoIndex >= VertexInfoList.Length)
@@ -432,6 +470,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				}
 
 				OpenglGpuImplMatrix.PrepareStateMatrix(GpuState, ref WorldViewProjectionMatrix);
+				PrepareDrawStateFirst();
 			}
 
 			int MorpingVertexCount = (int)VertexType.MorphingVertexCount + 1;

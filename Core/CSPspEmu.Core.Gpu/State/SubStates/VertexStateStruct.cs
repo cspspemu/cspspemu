@@ -62,7 +62,9 @@ namespace CSPspEmu.Core.Gpu.State
 			Color8888 = 7,
 		}
 
-		public NumericEnum Weight {
+		public bool HasWeight { get { return Weight != NumericEnum.Void; } }
+		public NumericEnum Weight
+		{
 			get { return (NumericEnum)BitUtils.Extract(Value, 9, 2); }
 			set { BitUtils.Insert(ref Value, 9, 2, (uint)value); }
 		}

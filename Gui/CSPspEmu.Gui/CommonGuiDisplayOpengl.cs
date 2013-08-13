@@ -91,11 +91,14 @@ namespace CSPspEmu.Gui
 				else
 				{
 					//DrawBuffer.WaitUnbinded();
-					var Texture = (uint)DrawBuffer.RenderTarget.TextureColor.Texture;
+					//var Texture = (uint)DrawBuffer.RenderTarget.TextureColor.Texture;
+					var Texture = (uint)DrawBuffer.RenderTarget.TextureColorBuffered.Texture;
+
+					//return GLTexture.Wrap(Texture);
 
 					if (GL.glIsTexture(Texture))
 					{
-						TextureVerticalFlip = true;
+						TextureVerticalFlip = false;
 						//Console.Out.WriteLineColored(ConsoleColor.Red, "Texture: {0}", Texture);
 
 						//var Data = new byte[512 * 2 * 272 * 2 * 4];
@@ -218,16 +221,16 @@ namespace CSPspEmu.Gui
 								// Converts the decoded data to Window's format.
 								for (int n = 0; n < Count; n++)
 								{
-									BitmapDataPtr[n].R = BitmapDataDecodePtr[n].R;
+									BitmapDataPtr[n].R = BitmapDataDecodePtr[n].B;
 									BitmapDataPtr[n].G = BitmapDataDecodePtr[n].G;
-									BitmapDataPtr[n].B = BitmapDataDecodePtr[n].B;
+									BitmapDataPtr[n].B = BitmapDataDecodePtr[n].R;
 									BitmapDataPtr[n].A = 0xFF;
 								}
 
 								OldFrameBuffer = FrameBuffer;
 
 								GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, 512, 272, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, BitmapDataPtr);
-								TextureVerticalFlip = false;
+								TextureVerticalFlip = true;
 							}
 						});
 					}
@@ -276,7 +279,6 @@ namespace CSPspEmu.Gui
 			);
 
 			VertexBuffer = GLBuffer.Create().SetData(CSharpPlatform.RectangleF.FromCoords(-1, -1, +1, +1).GetFloat2TriangleStripCoords());
-			TexCoordsBuffer = GLBuffer.Create().SetData(CSharpPlatform.RectangleF.FromCoords(0, 0, 480f / 512f, 1).GetFloat2TriangleStripCoords());
 			
 			Shader.BindUniformsAndAttributes(ShaderInfo);
 
@@ -309,6 +311,10 @@ namespace CSPspEmu.Gui
 				{
 					Shader.Draw(GLGeometry.GL_TRIANGLE_STRIP, 0, 4, () =>
 					{
+						var TextureRect = CSharpPlatform.RectangleF.FromCoords(0, 0, (float)PspDisplay.CurrentInfo.Width / 512f, (float)PspDisplay.CurrentInfo.Height / 272f);
+						if (TextureVerticalFlip) TextureRect = TextureRect.VFlip();
+						TexCoordsBuffer = GLBuffer.Create().SetData(TextureRect.GetFloat2TriangleStripCoords());
+
 						ShaderInfo.texture.Set(GLTextureUnit.CreateAtIndex(0).SetFiltering(GLScaleFilter.Nearest).SetWrap(GLWrap.ClampToEdge).SetTexture(Tex));
 						ShaderInfo.position.SetData<float>(VertexBuffer, 2);
 						ShaderInfo.texCoords.SetData<float>(TexCoordsBuffer, 2);

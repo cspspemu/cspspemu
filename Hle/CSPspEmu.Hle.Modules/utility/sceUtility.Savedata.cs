@@ -279,8 +279,8 @@ namespace CSPspEmu.Hle.Modules.utility
 
 								if (SizeUsedInfo != null)
 								{
-#if false
-									if (false)
+#if true
+									if (true)
 									{
 										Console.WriteLine(SizeUsedInfo->saveName);
 										Console.WriteLine(SizeUsedInfo->gameName);
@@ -296,7 +296,7 @@ namespace CSPspEmu.Hle.Modules.utility
 										SceKernelError = SceKernelErrors.ERROR_SAVEDATA_SIZES_NO_DATA;
 									}
 #else
-									//SceKernelError = SceKernelErrors.ERROR_SAVEDATA_SIZES_NO_DATA;
+									SceKernelError = SceKernelErrors.ERROR_SAVEDATA_SIZES_NO_DATA;
 #endif
 								}
 							}

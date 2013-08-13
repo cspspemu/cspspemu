@@ -132,6 +132,12 @@
     <Compile Include="Winforms\TextureViewerForm.Designer.cs">
       <DependentUpon>TextureViewerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="XBR\cImage.cs" />
+    <Compile Include="XBR\cRGBCache.cs" />
+    <Compile Include="XBR\Image.Bitmaps.cs" />
+    <Compile Include="XBR\libXBR2x.cs" />
+    <Compile Include="XBR\OutOfBoundsMode.cs" />
+    <Compile Include="XBR\sPixel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Winforms\AboutForm.resx">
@@ -318,6 +324,7 @@
     <None Include="Resources\twitter_icon-png8.png" />
     <None Include="Resources\facebook_icon-png8.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

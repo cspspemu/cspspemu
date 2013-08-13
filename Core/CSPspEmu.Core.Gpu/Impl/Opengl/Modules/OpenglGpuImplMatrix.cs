@@ -24,16 +24,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
 				{
 					if (float.IsNaN(GpuState->VertexState.WorldMatrix.Values[0]))
 					{
-						Console.Error.WriteLine("Invalid WorldMatrix");
-						Console.Error.WriteLine("Projection:");
-						GpuState->VertexState.ProjectionMatrix.Dump();
-						Console.Error.WriteLine("View:");
-						GpuState->VertexState.ViewMatrix.Dump();
-						Console.Error.WriteLine("World:");
-						GpuState->VertexState.WorldMatrix.Dump();
-						//GpuState->VertexState.WorldMatrix.LoadIdentity();
-
-						//throw (new Exception("Invalid WorldMatrix"));
+						//Console.Error.WriteLine("Invalid WorldMatrix");
+						//Console.Error.WriteLine("Projection:");
+						//GpuState->VertexState.ProjectionMatrix.Dump();
+						//Console.Error.WriteLine("View:");
+						//GpuState->VertexState.ViewMatrix.Dump();
+						//Console.Error.WriteLine("World:");
+						//GpuState->VertexState.WorldMatrix.Dump();
 					}
 
 					GpuState->VertexState.ViewMatrix.SetLastColumn();

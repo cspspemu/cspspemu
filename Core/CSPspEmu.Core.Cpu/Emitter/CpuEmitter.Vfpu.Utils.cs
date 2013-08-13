@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define CHECK_VFPU_REGISTER_SET
+
+using System;
 using System.Collections.Generic;
 using SafeILGenerator.Ast.Nodes;
 using CSPspEmu.Core.Cpu.VFpu;
@@ -6,6 +8,7 @@ using CSharpUtils;
 using System.Linq;
 using System.Runtime.InteropServices;
 using SafeILGenerator.Ast;
+using System.Runtime.CompilerServices;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
@@ -165,10 +168,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			protected Dictionary<int, AstLocal> _Locals = new Dictionary<int,AstLocal>();
 			static private AstMipsGenerator ast = AstMipsGenerator.Instance;
 
-			protected AstLocal GetLocal(int Index)
+			protected AstNodeExprLocal GetLocal(int Index)
 			{
 				if (!_Locals.ContainsKey(Index)) _Locals[Index] = AstLocal.Create(GetVTypeType(), "LocalVFPR" + Index);
-				return _Locals[Index];
+				return ast.Local(_Locals[Index]);
 			}
 
 			protected VfpuRuntimeRegister(CpuEmitter CpuEmitter, VReg VReg, VType VType, int VectorSize)
@@ -281,21 +284,26 @@ namespace CSPspEmu.Core.Cpu.Emitter
 					}
 				}
 
-#if false
-				return ast.Assign(_GetVRegRef(RegIndex), ast.Cast(GetVTypeType(), AstNodeExpr));
-#else
 				//Console.Error.WriteLine("PrefixIndex:{0}", PrefixIndex);
-				return ast.Assign(ast.Local(GetLocal(RegIndex)), ast.Cast(GetVTypeType(), AstNodeExpr));
-#endif
+				return ast.Assign(GetLocal(RegIndex), ast.Cast(GetVTypeType(), AstNodeExpr));
 			}
 
-			protected AstNodeStm SetRegApplyPrefix2(int RegIndex, int PrefixIndex)
+			protected AstNodeStm SetRegApplyPrefix2(int RegIndex, int PrefixIndex, uint PC, string CalledFrom)
 			{
-#if false
-				return ast.Statement();
-#else
-				return ast.Assign(_GetVRegRef(RegIndex), ast.Local(GetLocal(RegIndex)));
+				return ast.Statements(
+#if CHECK_VFPU_REGISTER_SET
+					ast.Statement(ast.CallStatic((Action<string, int, uint, float>)CheckVfpuRegister, CalledFrom, RegIndex, PC, ast.Cast<float>(GetLocal(RegIndex)))),
 #endif
+					ast.Assign(_GetVRegRef(RegIndex), GetLocal(RegIndex))
+				);
+			}
+
+			static public void CheckVfpuRegister(string Opcode, int RegIndex, uint PC, float Value)
+			{
+				//if (float.IsNaN(Value))
+				{
+					Console.WriteLine("VFPU_SET:{0:X4}:{1}:VR{2}:{3:X8}:{4},", PC, Opcode, RegIndex, MathFloat.ReinterpretFloatAsUInt(Value), Value);
+				}
 			}
 
 		}
@@ -315,11 +323,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				return GetRegApplyPrefix(new int[] { this.Index }, 0, 0);
 			}
 
-			public AstNodeStm Set(AstNodeExpr Value)
+			public AstNodeStm Set(AstNodeExpr Value, uint PC, [CallerMemberName] string CalledFrom = "")
 			{
 				return ast.Statements(
 					SetRegApplyPrefix(this.Index, 0, Value),
-					SetRegApplyPrefix2(this.Index, 0)
+					SetRegApplyPrefix2(this.Index, 0, PC, CalledFrom)
 				);
 			}
 		}
@@ -354,16 +362,16 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				return SetRegApplyPrefix(this.Indices[Index], Index, Value);
 			}
 
-			public AstNodeStm Set2(int Index)
+			public AstNodeStm Set2(int Index, uint PC, [CallerMemberName] string CalledFrom = "")
 			{
-				return SetRegApplyPrefix2(this.Indices[Index], Index);
+				return SetRegApplyPrefix2(this.Indices[Index], Index, PC, CalledFrom);
 			}
 
-			public AstNodeStm SetVector(Func<int, AstNodeExpr> Generator)
+			public AstNodeStm SetVector(Func<int, AstNodeExpr> Generator, uint PC, [CallerMemberName] string CalledFrom = "")
 			{
 				return ast.Statements(
 					ast.Statements(Enumerable.Range(0, this.VectorSize).Select(Index => Set(Index, Generator(Index))).Where(Statement => Statement != null)),
-					ast.StatementsInline(Enumerable.Range(0, this.VectorSize).Select(Index => Set2(Index)).Where(Statement => Statement != null))
+					ast.StatementsInline(Enumerable.Range(0, this.VectorSize).Select(Index => Set2(Index, PC, CalledFrom)).Where(Statement => Statement != null))
 				);
 			}
 		}
@@ -433,12 +441,12 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				return SetRegApplyPrefix(this.Indices[Column, Row], GetPrefixIndex(Column, Row), Value);
 			}
 
-			public AstNodeStm Set2(int Column, int Row)
+			public AstNodeStm Set2(int Column, int Row, uint PC, [CallerMemberName] string CalledFrom = "")
 			{
-				return SetRegApplyPrefix2(this.Indices[Column, Row], GetPrefixIndex(Column, Row));
+				return SetRegApplyPrefix2(this.Indices[Column, Row], GetPrefixIndex(Column, Row), PC, CalledFrom);
 			}
 
-			public AstNodeStm SetMatrix(Func<int, int, AstNodeExpr> Generator)
+			public AstNodeStm SetMatrix(Func<int, int, AstNodeExpr> Generator, uint PC, [CallerMemberName] string CalledFrom = "")
 			{
 				var Statements = new List<AstNodeStm>();
 				
@@ -451,7 +459,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				for (int Row = 0; Row < VectorSize; Row++)
 				for (int Column = 0; Column < VectorSize; Column++)
 				{
-					Statements.Add(Set2(Column, Row));
+					Statements.Add(Set2(Column, Row, PC, CalledFrom));
 				}
 
 				return ast.Statements(Statements);

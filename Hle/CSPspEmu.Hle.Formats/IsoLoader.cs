@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using CSPspEmu.Hle.Vfs.Iso;
+using System;
 
 namespace CSPspEmu.Hle.Formats
 {
@@ -21,7 +22,7 @@ namespace CSPspEmu.Hle.Formats
 				case FormatDetector.SubType.Iso:
 					break;
 				default:
-					throw (new InvalidDataException("Can't set an ISO for '" + DetectedFormat + "'"));
+					throw (new InvalidDataException(String.Format("Can't set an ISO for '{0}' path '{1}'", DetectedFormat, IsoFile)));
 			}
 
 			return new IsoFile(IsoFileStream, IsoFile);

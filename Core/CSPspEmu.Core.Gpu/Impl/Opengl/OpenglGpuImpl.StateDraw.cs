@@ -26,7 +26,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				PrepareState_Colors_2D(GpuState);
 				GL.glDisable(GL.GL_STENCIL_TEST);
 				GL.glDisable(GL.GL_CULL_FACE);
-				GL.glDepthRangef(0, 1);
+				GL.DepthRange(0, 1);
 				GL.glDisable(GL.GL_DEPTH_TEST);
 				//GL.glDisable(EnableCap.Lighting);
 			}
@@ -120,8 +120,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private void PrepareState_Depth(GpuStateStruct* GpuState)
 		{
-			GL.glDepthRangef(GpuState->DepthTestState.RangeNear, GpuState->DepthTestState.RangeFar);
-			//GL.DepthRange(GpuState->DepthTestState.RangeNear, GpuState->DepthTestState.RangeFar);
+			GL.DepthRange(GpuState->DepthTestState.RangeNear, GpuState->DepthTestState.RangeFar);
 		}
 
 		private void PrepareState_DepthTest(GpuStateStruct* GpuState)
@@ -260,20 +259,6 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private void PrepareState_Blend(GpuStateStruct* GpuState)
 		{
-			//if (GpuState->ColorTestState.Enabled)
-			//{
-			//	GL.EnableDisable(GL.GL_BLEND, true);
-			//	GL.glBlendEquation(GL.GL_FUNC_ADD);
-			//	GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-			//	GL.glBlendColor(0, 0, 0, 0);
-			//
-			//	return;
-			//}
-			//else
-			//{
-			//	GL.EnableDisable(GL.GL_BLEND, false);
-			//}
-
 			var BlendingState = &GpuState->BlendingState;
 			if (!GL.EnableDisable(GL.GL_BLEND, BlendingState->Enabled))
 			{

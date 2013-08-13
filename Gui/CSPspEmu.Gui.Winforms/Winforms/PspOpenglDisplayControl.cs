@@ -29,11 +29,25 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 			this.Context.MakeCurrent();
 		}
 
-		protected override void OnPaint(PaintEventArgs e)
+		private void PspOpenglDisplayControl_Load(object sender, EventArgs e)
 		{
-			this.Top = PspDisplayForm.Singleton.MainMenuStripHeight;
-			this.Size = new System.Drawing.Size(PspDisplayForm.Singleton.ClientSize.Width, PspDisplayForm.Singleton.ClientSize.Height - this.Top);
-			DisplayOpengl.DrawVram();
+
+		}
+
+		protected override void OnDrawFrame()
+		{
+			var Size = new System.Drawing.Size(PspDisplayForm.Singleton.ClientSize.Width, PspDisplayForm.Singleton.ClientSize.Height - this.Top);
+			var Top = PspDisplayForm.Singleton.MainMenuStripHeight;
+			if (this.Top != Top) this.Top = Top;
+			if (this.Size != Size) this.Size = Size;
+			try
+			{
+				DisplayOpengl.DrawVram();
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLineColored(ConsoleColor.Red, "OnDrawFrame: {0}", Exception);
+			}
 		}
 
 		private void InitializeComponent()
@@ -47,11 +61,6 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 			this.Size = new System.Drawing.Size(480, 272);
 			this.Load += new System.EventHandler(this.PspOpenglDisplayControl_Load);
 			this.ResumeLayout(false);
-		}
-
-		private void PspOpenglDisplayControl_Load(object sender, EventArgs e)
-		{
-
 		}
 
 		bool IGuiWindowInfo.EnableRefreshing

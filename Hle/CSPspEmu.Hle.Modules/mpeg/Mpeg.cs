@@ -151,9 +151,17 @@ namespace CSPspEmu.Hle.Modules.mpeg
 
 		public void WriteData(void* DataPointer, int DataLength)
 		{
-			var Data = PointerUtils.PointerToByteArray((byte*)DataPointer, DataLength);
-			if (DumpStreams) FileUtils.CreateAndAppendStream(@"c:\isos\psp\out\mpeg.stream", new MemoryStream(Data));
-			MpegStream.WriteBytes(Data);
+			Console.Out.WriteLineColored(ConsoleColor.Cyan, "{0}: {1}", new IntPtr(DataPointer), DataLength);
+			try
+			{
+				var Data = PointerUtils.PointerToByteArray((byte*)DataPointer, DataLength);
+				if (DumpStreams) FileUtils.CreateAndAppendStream(@"c:\isos\psp\out\mpeg.stream", new MemoryStream(Data));
+				MpegStream.WriteBytes(Data);
+			}
+			catch (Exception Exception)
+			{
+				Console.Error.WriteLineColored(ConsoleColor.Red, "{0}", Exception);
+			}
 		}
 
 		public bool HasData { get {

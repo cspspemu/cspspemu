@@ -81,7 +81,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		public void OP_ATST()
 		{
 			GpuState->AlphaTestState.Function = (TestFunctionEnum)Param8(0);
-			GpuState->AlphaTestState.Value = (float)Param8(8) / 255.0f;
+			GpuState->AlphaTestState.Value = Param8(8);
 			GpuState->AlphaTestState.Mask = Param8(16);
 		}
 

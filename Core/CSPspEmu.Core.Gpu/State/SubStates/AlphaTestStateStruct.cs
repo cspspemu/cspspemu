@@ -18,7 +18,7 @@ namespace CSPspEmu.Core.Gpu.State.SubStates
 		/// <summary>
 		/// 
 		/// </summary>
-		public float Value;
+		public byte Value;
 
 		/// <summary>
 		/// 0xFF

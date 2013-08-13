@@ -349,7 +349,7 @@ namespace CSPspEmu.Hle.Modules.utility
 			/// <summary>
 			/// The message to display (may contain embedded linefeeds)
 			/// </summary>
-			public fixed byte FixedMessageRaw[512];
+			private fixed byte FixedMessageRaw[512];
 
 			/// <summary>
 			/// 

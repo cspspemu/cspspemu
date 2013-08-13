@@ -50,8 +50,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
 				GL.glEnable(GL.GL_DEPTH_TEST);
 				GL.glDepthFunc(GL.GL_ALWAYS);
 				GL.glDepthMask(true);
-				GL.glDepthRangef(0, 0);
-				//GL.DepthRange((double)-1, (double)0);
+
+				GL.DepthRange(0, 0);
 
 				//glDepthRange(0.0, 1.0); // Original value
 			}

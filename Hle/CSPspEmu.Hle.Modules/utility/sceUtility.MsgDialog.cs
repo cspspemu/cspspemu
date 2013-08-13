@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CSharpPlatform.UI;
+using System;
 
 namespace CSPspEmu.Hle.Modules.utility
 {
@@ -14,11 +15,22 @@ namespace CSPspEmu.Hle.Modules.utility
 		public int sceUtilityMsgDialogInitStart(pspUtilityMsgDialogParams* Params)
 		{
 			var Message = Params->Message;
-			Console.Error.WriteLine(Message);
-			
-			
-			Params->ButtonPressed = pspUtilityMsgDialogPressed.PSP_UTILITY_MSGDIALOG_RESULT_YES;
-			CurrentDialogStep = DialogStepEnum.SUCCESS;
+			var IsError = (Params->Mode == pspUtilityMsgDialogMode.PSP_UTILITY_MSGDIALOG_MODE_ERROR);
+			var DialogType = IsError ? Dialog.Type.Error : Dialog.Type.Message;
+
+			CurrentDialogStep = DialogStepEnum.PROCESSING;
+
+			Dialog.ShowDialog((Result) =>
+			{
+				switch (Result)
+				{
+					case Dialog.Result.Yes: Params->ButtonPressed = pspUtilityMsgDialogPressed.PSP_UTILITY_MSGDIALOG_RESULT_YES; break;
+					case Dialog.Result.No: Params->ButtonPressed = pspUtilityMsgDialogPressed.PSP_UTILITY_MSGDIALOG_RESULT_NO; break;
+					case Dialog.Result.Back: Params->ButtonPressed = pspUtilityMsgDialogPressed.PSP_UTILITY_MSGDIALOG_RESULT_BACK; break;
+				}
+				CurrentDialogStep = DialogStepEnum.SUCCESS;
+			}, Message, DialogType);
+
 			//throw(new NotImplementedException());
 			return 0;
 		}
@@ -38,12 +50,12 @@ namespace CSPspEmu.Hle.Modules.utility
 		/// <summary>
 		/// Refresh the GUI for a message dialog currently active
 		/// </summary>
-		/// <param name="n">Unknown, pass 1</param>
+		/// <param name="Value">Unknown, pass 1</param>
 		[HlePspFunction(NID = 0x95FC253B, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		public void sceUtilityMsgDialogUpdate(int n)
+		//[HlePspNotImplemented]
+		public void sceUtilityMsgDialogUpdate(int Value)
 		{
-			throw (new NotImplementedException());
+			//throw (new NotImplementedException());
 		}
 
 		/// <summary>
