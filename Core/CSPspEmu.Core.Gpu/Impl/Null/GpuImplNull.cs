@@ -12,7 +12,7 @@ namespace CSPspEmu.Core.Gpu
 		{
 		}
 
-		public override void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
+		public override void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, ushort VertexCount)
 		{
 		}
 

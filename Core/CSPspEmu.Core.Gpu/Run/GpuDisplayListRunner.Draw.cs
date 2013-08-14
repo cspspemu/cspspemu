@@ -346,12 +346,12 @@ namespace CSPspEmu.Core.Gpu.Run
 			if (PrimCount == 0)
 			{
 				GpuDisplayList.GpuProcessor.GpuImpl.BeforeDraw(GpuDisplayList.GpuStateStructPointer);
-				GpuDisplayList.GpuProcessor.GpuImpl.PrimStart(GlobalGpuState, GpuDisplayList.GpuStateStructPointer);
+				GpuDisplayList.GpuProcessor.GpuImpl.PrimStart(GlobalGpuState, GpuDisplayList.GpuStateStructPointer, PrimitiveType);
 			}
 
-			GpuDisplayList.GpuProcessor.GpuImpl.Prim(GlobalGpuState, GpuDisplayList.GpuStateStructPointer, PrimitiveType, VertexCount);
+			GpuDisplayList.GpuProcessor.GpuImpl.Prim(GlobalGpuState, GpuDisplayList.GpuStateStructPointer, VertexCount);
 
-			if (NextInstruction.OpCode == GpuOpCodes.PRIM)
+			if (NextInstruction.OpCode == GpuOpCodes.PRIM && ((GuPrimitiveType)BitUtils.Extract(NextInstruction.Params, 16, 3) == PrimitiveType))
 			{
 				//Console.WriteLine();
 				PrimCount++;

@@ -29,9 +29,9 @@ namespace CSPspEmu.Core.Gpu
 		public abstract void InitSynchronizedOnce();
 		public abstract void StopSynchronized();
 
-		public virtual void PrimStart(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState) { }
+		public virtual void PrimStart(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType) { }
 		public virtual void PrimEnd(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState) { }
-		public abstract void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount);
+		public abstract void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, ushort VertexCount);
 		public abstract void Finish(GpuStateStruct* GpuState);
 		public abstract void End(GpuStateStruct* GpuState);
 		public abstract void Sync(GpuStateStruct* LastGpuState);

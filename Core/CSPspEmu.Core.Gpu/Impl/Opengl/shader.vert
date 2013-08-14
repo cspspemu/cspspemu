@@ -2,6 +2,7 @@
 uniform mat4 matrixTexture;
 uniform mat4 matrixBones[8];
 uniform int weightCount;
+uniform bool hasReversedNormal;
 
 attribute vec4 vertexTexCoords;
 attribute vec4 vertexColor;
@@ -57,6 +58,7 @@ vec4 performSkinning(vec4 In) {
 }
 
 void main() {
+	if (hasReversedNormal) vertexNormal.xyz = -vertexNormal.xyz;
 	gl_Position = matrixWorldViewProjection * performSkinning(vertexPosition);
 	v_normal = performSkinning(vertexNormal);
 	v_color = vertexColor;

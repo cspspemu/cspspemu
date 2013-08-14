@@ -87,8 +87,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		//public static object GpuLock = new object();
 
 
-		private int VertexInfoIndex = 0;
-		private VertexInfo[] VertexInfoList = new VertexInfo[1024];
+		private int VerticesPos = 0;
+		private VertexInfo[] VerticesList = new VertexInfo[1024];
+		private int IndicesPos = 0;
+		private uint[] IndicesList = new uint[1024];
 		private Matrix4f WorldViewProjectionMatrix = default(Matrix4f);
 		private Matrix4f TextureMatrix = default(Matrix4f);
 
@@ -104,6 +106,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			public GLUniform hasPerVertexColor;
 			public GLUniform hasTexture;
+			public GLUniform hasReversedNormal;
 			public GLUniform clearingMode;
 
 			public GLUniform texture0;
@@ -220,9 +223,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private void DrawVertices(GLGeometry Type)
 		{
-			Shader.Draw(Type, 0, VertexInfoIndex, () =>
+			ShaderInfo.hasReversedNormal.Set(VertexType.ReversedNormal);
+
+			Shader.Draw(Type, IndicesPos, IndicesList, () =>
 			{
-				VertexBuffer.SetData(this.VertexInfoList, 0, VertexInfoIndex);
+				VertexBuffer.SetData(this.VerticesList, 0, VerticesPos);
 				
 				if (VertexType.HasPosition)
 				{
@@ -257,15 +262,24 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private void ResetVertex()
 		{
-			VertexInfoIndex = 0;
+			VerticesPos = 0;
+			IndicesPos = 0;
 		}
 
-		private void PutVertices(ref VertexTypeStruct VertexType, params VertexInfo[] _VertexInfoList)
+		private void PutVertices(params VertexInfo[] _VertexInfoList)
 		{
-			foreach (var VertexInfo in _VertexInfoList)
-			{
-				PutVertex(ref VertexType, VertexInfo);
-			}
+			foreach (var VertexInfo in _VertexInfoList) PutVertex(VertexInfo);
+		}
+
+		private void PutVertexIndexRelative(int Offset)
+		{
+			PutVertexIndex(VerticesPos + Offset);
+		}
+
+		private void PutVertexIndex(int VertexIndex)
+		{
+			if (IndicesPos >= IndicesList.Length) IndicesList = IndicesList.ResizedCopy(VerticesPos * 2);
+			IndicesList[IndicesPos++] = (uint)VertexIndex;
 		}
 
 		/// <summary>
@@ -273,18 +287,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// </summary>
 		/// <param name="_VertexInfo"></param>
 		/// <param name="VertexType"></param>
-		private void PutVertex(ref VertexTypeStruct VertexType, VertexInfo _VertexInfo)
+		private void PutVertex(VertexInfo VertexInfo)
 		{
-			//var VertexInfo = VertexUtils.PerformSkinning(ref VertexType, GpuState, _VertexInfo);
-			var VertexInfo = _VertexInfo;
 			_CapturePutVertex(ref VertexInfo);
-			if (VertexType.ReversedNormal) VertexInfo.Normal = -VertexInfo.Normal;
-			if (VertexInfoIndex >= VertexInfoList.Length)
-			{
-				VertexInfoList = VertexInfoList.ResizedCopy(VertexInfoList.Length * 2);
-			}
-			VertexInfoList[VertexInfoIndex++] = VertexInfo;
-			new List<int>();
+	
+			if (VerticesPos >= VerticesList.Length) VerticesList = VerticesList.ResizedCopy(VerticesPos * 2);
+			PutVertexIndex(VerticesPos);
+			VerticesList[VerticesPos++] = VertexInfo;
 		}
 
 		private void ReadVertex_Void(int Index, out VertexInfo VertexInfo)
@@ -430,15 +439,18 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		bool DoPrimStart = false;
 		VertexTypeStruct CachedVertexType;
+		GuPrimitiveType PrimitiveType;
 
-		public override unsafe void PrimStart(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState)
+		public override unsafe void PrimStart(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType)
 		{
+			this.PrimitiveType = PrimitiveType;
 			DoPrimStart = true;
+			ResetVertex();
 		}
 
 		public override void PrimEnd(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState)
 		{
-
+			DrawVertices(ConvertGLGeometry(PrimitiveType));
 		}
 
 		/// <summary>
@@ -448,7 +460,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <param name="GpuState"></param>
 		/// <param name="PrimitiveType"></param>
 		/// <param name="VertexCount"></param>
-		public override unsafe void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType, ushort VertexCount)
+		public override unsafe void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, ushort VertexCount)
 		{
 			this.GpuState = GpuState;
 			VertexType = GpuState->VertexState.Type;
@@ -570,43 +582,51 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 			_CapturePrimitive(PrimitiveType, GpuState->GetAddressRelativeToBaseOffset(GpuState->VertexAddress), VertexCount, ref VertexType, () =>
 			{
-				ResetVertex();
+				// Continuation
+				if (IndicesPos > 0)
 				{
-					if (PrimitiveType == GuPrimitiveType.Sprites)
+					switch (PrimitiveType)
 					{
-						GL.glDisable(GL.GL_CULL_FACE);
-						var OldV3 = default(VertexInfo);
-						for (int n = 0; n < VertexCount; n += 2)
-						{
-							VertexInfo V0, V1, V2, V3;
-
-							ReadVertex(n + 0, out V0);
-							ReadVertex(n + 1, out V3);
-
-							VertexUtils.GenerateTriangleStripFromSpriteVertices(ref V0, out V1, out V2, ref V3);
-
-							if (n > 0)
-							{
-								PutVertex(ref VertexType, OldV3);
-								PutVertex(ref VertexType, V0);
-							}
-
-							PutVertices(ref VertexType, V0, V1, V2, V3);
-							OldV3 = V3;
-						}
-					}
-					else
-					{
-						VertexInfo VertexInfo;
-						//Console.Error.WriteLine("{0} : {1} : {2}", BeginMode, VertexCount, VertexType.Index);
-						for (int n = 0; n < VertexCount; n++)
-						{
-							ReadVertex(n, out VertexInfo);
-							PutVertex(ref VertexType, VertexInfo);
-						}
+						// Degenerate.
+						case GuPrimitiveType.TriangleStrip:
+						case GuPrimitiveType.Sprites:
+							PutVertexIndexRelative(-1);
+							PutVertexIndexRelative(0);
+							break;
 					}
 				}
-				DrawVertices(ConvertGLGeometry(PrimitiveType));
+
+				if (PrimitiveType == GuPrimitiveType.Sprites)
+				{
+					GL.glDisable(GL.GL_CULL_FACE);
+					for (int n = 0; n < VertexCount; n += 2)
+					{
+						VertexInfo V0, V1, V2, V3;
+
+						ReadVertex(n + 0, out V0);
+						ReadVertex(n + 1, out V3);
+
+						VertexUtils.GenerateTriangleStripFromSpriteVertices(ref V0, out V1, out V2, ref V3);
+
+						if (n > 0)
+						{
+							PutVertexIndexRelative(-1);
+							PutVertexIndexRelative(0);
+						}
+
+						PutVertices(V0, V1, V2, V3);
+					}
+				}
+				else
+				{
+					VertexInfo VertexInfo;
+					//Console.Error.WriteLine("{0} : {1} : {2}", BeginMode, VertexCount, VertexType.Index);
+					for (int n = 0; n < VertexCount; n++)
+					{
+						ReadVertex(n, out VertexInfo);
+						PutVertex(VertexInfo);
+					}
+				}
 			});
 		}
 

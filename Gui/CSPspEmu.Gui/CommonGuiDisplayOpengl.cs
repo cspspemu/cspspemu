@@ -309,7 +309,7 @@ namespace CSPspEmu.Gui
 				//Console.Out.WriteLineColored(ConsoleColor.Red, "{0}", Tex.Texture);
 				if (Tex != null && Tex.Texture != 0)
 				{
-					Shader.Draw(GLGeometry.GL_TRIANGLE_STRIP, 0, 4, () =>
+					Shader.Draw(GLGeometry.GL_TRIANGLE_STRIP, 4, () =>
 					{
 						var TextureRect = CSharpPlatform.RectangleF.FromCoords(0, 0, (float)PspDisplay.CurrentInfo.Width / 512f, (float)PspDisplay.CurrentInfo.Height / 272f);
 						if (TextureVerticalFlip) TextureRect = TextureRect.VFlip();
