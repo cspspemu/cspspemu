@@ -4,46 +4,6 @@ namespace CSPspEmu.Core.Gpu
 {
 	public unsafe class GpuImplNull : GpuImpl
 	{
-		public override void InitSynchronizedOnce()
-		{
-		}
-
-		public override void StopSynchronized()
-		{
-		}
-
-		public override void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, ushort VertexCount)
-		{
-		}
-
-		public override void Finish(GpuStateStruct* GpuState)
-		{
-		}
-
-		public override void End(GpuStateStruct* GpuState)
-		{
-		}
-
-		public override void AddedDisplayList()
-		{
-		}
-
-		public override void SetCurrent()
-		{
-		}
-
-		public override void UnsetCurrent()
-		{
-		}
-
-		public override void Sync(GpuStateStruct* GpuState)
-		{
-		}
-
-		public override void BeforeDraw(GpuStateStruct* GpuState)
-		{
-		}
-
 		public override PluginInfo PluginInfo
 		{
 			get

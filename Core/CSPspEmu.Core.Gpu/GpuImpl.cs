@@ -26,17 +26,17 @@ namespace CSPspEmu.Core.Gpu
 			}
 		}
 
-		public abstract void InitSynchronizedOnce();
-		public abstract void StopSynchronized();
+		public virtual void InitSynchronizedOnce() { }
+		public virtual void StopSynchronized() { }
 
 		public virtual void PrimStart(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType) { }
-		public virtual void PrimEnd(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState) { }
-		public abstract void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, ushort VertexCount);
-		public abstract void Finish(GpuStateStruct* GpuState);
-		public abstract void End(GpuStateStruct* GpuState);
-		public abstract void Sync(GpuStateStruct* LastGpuState);
+		public virtual void PrimEnd() { }
+		public virtual void Prim(ushort VertexCount) { }
+		public virtual void Finish(GpuStateStruct* GpuState) { }
+		public virtual void End(GpuStateStruct* GpuState) { }
+		public virtual void Sync(GpuStateStruct* LastGpuState) { }
 
-		public abstract void BeforeDraw(GpuStateStruct* GpuState);
+		public virtual void BeforeDraw(GpuStateStruct* GpuState) { }
 
 		public virtual void InvalidateCache(uint Address, int Size)
 		{
@@ -49,7 +49,7 @@ namespace CSPspEmu.Core.Gpu
 		{
 		}
 
-		public abstract void AddedDisplayList();
+		public virtual void AddedDisplayList() { }
 
 		public virtual void StartCapture()
 		{
@@ -64,8 +64,8 @@ namespace CSPspEmu.Core.Gpu
 			Console.Error.WriteLine("GpuImpl.Transfer Not Implemented!! : {0}", GpuState->TextureTransferState.ToStringDefault());
 		}
 
-		public abstract void SetCurrent();
-		public abstract void UnsetCurrent();
+		public virtual void SetCurrent() { }
+		public virtual void UnsetCurrent() { }
 
 		public virtual void DrawCurvedSurface(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuStateStruct, VertexInfo[,] Patch, int UCount, int VCount)
 		{

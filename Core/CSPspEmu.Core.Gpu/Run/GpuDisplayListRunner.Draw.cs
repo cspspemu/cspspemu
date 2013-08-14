@@ -349,7 +349,10 @@ namespace CSPspEmu.Core.Gpu.Run
 				GpuDisplayList.GpuProcessor.GpuImpl.PrimStart(GlobalGpuState, GpuDisplayList.GpuStateStructPointer, PrimitiveType);
 			}
 
-			GpuDisplayList.GpuProcessor.GpuImpl.Prim(GlobalGpuState, GpuDisplayList.GpuStateStructPointer, VertexCount);
+			if (VertexCount > 0)
+			{
+				GpuDisplayList.GpuProcessor.GpuImpl.Prim(VertexCount);
+			}
 
 			if (NextInstruction.OpCode == GpuOpCodes.PRIM && ((GuPrimitiveType)BitUtils.Extract(NextInstruction.Params, 16, 3) == PrimitiveType))
 			{
@@ -361,7 +364,7 @@ namespace CSPspEmu.Core.Gpu.Run
 				//Console.WriteLine("{0:X8}", PC);
 
 				PrimCount = 0;
-				GpuDisplayList.GpuProcessor.GpuImpl.PrimEnd(GlobalGpuState, GpuDisplayList.GpuStateStructPointer);
+				GpuDisplayList.GpuProcessor.GpuImpl.PrimEnd();
 			}
 #else
 			GpuDisplayList.GpuProcessor.GpuImpl.BeforeDraw(GpuDisplayList.GpuStateStructPointer);

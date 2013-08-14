@@ -483,6 +483,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		public override unsafe void PrimStart(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType)
 		{
+			this.GpuState = GpuState;
 			this.PrimitiveType = PrimitiveType;
 			DoPrimStart = true;
 			ResetVertex();
@@ -494,7 +495,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			ResetVertex();
 		}
 
-		public override void PrimEnd(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState)
+		public override void PrimEnd()
 		{
 			EndVertex();
 		}
@@ -506,9 +507,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		/// <param name="GpuState"></param>
 		/// <param name="PrimitiveType"></param>
 		/// <param name="VertexCount"></param>
-		public override unsafe void Prim(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, ushort VertexCount)
+		public override unsafe void Prim(ushort VertexCount)
 		{
-			this.GpuState = GpuState;
 			VertexType = GpuState->VertexState.Type;
 
 			if (DoPrimStart || (VertexType != CachedVertexType))
@@ -636,8 +636,11 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 						// Degenerate.
 						case GuPrimitiveType.TriangleStrip:
 						case GuPrimitiveType.Sprites:
-							PutVertexIndexRelative(-1);
-							PutVertexIndexRelative(0);
+							if (VertexCount > 0)
+							{
+								PutVertexIndexRelative(-1);
+								PutVertexIndexRelative(0);
+							}
 							break;
 						// Can't degenerate, flush.
 						default:

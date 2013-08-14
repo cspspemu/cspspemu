@@ -57,10 +57,14 @@ vec4 performSkinning(vec4 In) {
 	return Out;
 }
 
+vec4 prepareNormal(vec4 normal) {
+	return hasReversedNormal ? -normal : normal;
+}
+
 void main() {
-	if (hasReversedNormal) vertexNormal.xyz = -vertexNormal.xyz;
+	
 	gl_Position = matrixWorldViewProjection * performSkinning(vertexPosition);
-	v_normal = performSkinning(vertexNormal);
+	v_normal = performSkinning(prepareNormal(vertexNormal));
 	v_color = vertexColor;
 	v_texCoords = (matrixTexture * vertexTexCoords).xy;
 }
