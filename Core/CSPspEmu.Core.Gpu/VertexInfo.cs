@@ -19,6 +19,47 @@ namespace CSPspEmu.Core.Gpu
 		}
 	}
 
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
+	public unsafe struct VertexInfoVector3f
+	{
+		public float X, Y, Z;
+
+		public VertexInfoVector3f(Vector4f Vector4f)
+		{
+			this.X = Vector4f.X;
+			this.Y = Vector4f.Y;
+			this.Z = Vector4f.Z;
+		}
+	}
+
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
+	public unsafe struct VertexInfoColor
+	{
+		public float R, G, B, A;
+
+		public VertexInfoColor(Vector4f Vector4f)
+		{
+			this.R = Vector4f.X;
+			this.G = Vector4f.Y;
+			this.B = Vector4f.Z;
+			this.A = Vector4f.W;
+		}
+	}
+
+	[StructLayout(LayoutKind.Sequential, Pack = 1)]
+	public unsafe struct VertexInfoWeights
+	{
+		public fixed float W[8];
+
+		public unsafe VertexInfoWeights(VertexInfo VertexInfo)
+		{
+			fixed (float* WPtr = W)
+			{
+				for (int n = 0; n < 8; n++) WPtr[n] = VertexInfo.Weights[n];
+			}
+		}
+	}
+
 	/// <summary>
 	/// Information about a vertex.
 	/// </summary>
