@@ -76,7 +76,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 			var TextureOpengl = Item.TextureOpengl;
 			var Texture = Item.TextureOpengl.Texture;
 			TextureView.Image = new Bitmap(Texture.Width, Texture.Height).SetChannelsDataInterleaved(
-				Item.TextureOpengl.Texture.GetData(),
+				Item.TextureOpengl.Texture.GetDataFromCached(),
 				BitmapChannelList.RGBA
 			);
 			TextureView.Size = new System.Drawing.Size(Texture.Width, Texture.Height);

@@ -13,7 +13,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 {
 	unsafe public class GLControl : UserControl
 	{
-		protected IOpenglContext Context;
+		protected IGLContext Context;
 
 		public GLControl()
 		{
@@ -24,7 +24,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 			base.OnHandleCreated(e);
 			if (!DesignMode)
 			{
-				this.Context = OpenglContextFactory.CreateFromWindowHandle(this.Handle);
+				this.Context = GLContextFactory.CreateFromWindowHandle(this.Handle);
 				this.Context.MakeCurrent();
 			}
 		}
@@ -62,7 +62,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 
 		virtual protected void OnDrawFrame()
 		{
-			GL.glClearColor(0.5f, 0, 1, 1);
+			GL.glClearColor(0, 0, 0, 1);
 			GL.glClear(GL.GL_COLOR_BUFFER_BIT);
 			if (RenderFrame != null) RenderFrame();
 			Context.SwapBuffers();

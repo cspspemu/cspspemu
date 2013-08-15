@@ -56,45 +56,36 @@ void main() {
 			//int alphaInt = int(gl_FragColor.a * 255.0);
 			int alphaInt = int(texColor.a * 255.0);
 			if (alphaMask == 0xFF) {
-				switch (alphaFunction) {
-					case GU_NEVER   : discard;
-					case GU_EQUAL   : if (!(alphaInt == alphaValue)) { discard; return; } break;
-					case GU_NOTEQUAL: if (!(alphaInt != alphaValue)) { discard; return; } break;
-					case GU_LESS    : if (!(alphaInt <  alphaValue)) { discard; return; } break;
-					case GU_LEQUAL  : if (!(alphaInt <= alphaValue)) { discard; return; } break;
-					case GU_GREATER : if (!(alphaInt >  alphaValue)) { discard; return; } break;
-					case GU_GEQUAL  : if (!(alphaInt >= alphaValue)) { discard; return; } break;
-				}
+				if (alphaFunction == GU_NEVER   ) { discard; }
+				else if (alphaFunction == GU_EQUAL   ) { if (!(alphaInt == alphaValue)) { discard; return; } }
+				else if (alphaFunction == GU_NOTEQUAL) { if (!(alphaInt != alphaValue)) { discard; return; } }
+				else if (alphaFunction == GU_LESS    ) { if (!(alphaInt <  alphaValue)) { discard; return; } }
+				else if (alphaFunction == GU_LEQUAL  ) { if (!(alphaInt <= alphaValue)) { discard; return; } }
+				else if (alphaFunction == GU_GREATER ) { if (!(alphaInt >  alphaValue)) { discard; return; } }
+				else if (alphaFunction == GU_GEQUAL  ) { if (!(alphaInt >= alphaValue)) { discard; return; } }
 			}
 		}
 
-		switch (tfx) {
-			case GU_TFX_MODULATE:
+		if (tfx == GU_TFX_MODULATE) {
+			gl_FragColor.rgb = texColor.rgb * gl_FragColor.rgb;
+			gl_FragColor.a = (tcc == GU_TCC_RGBA) ? (gl_FragColor.a * texColor.a) : texColor.a;
+		} else if (tfx == GU_TFX_DECAL) {
+			if (tcc == GU_TCC_RGB) {
+				gl_FragColor.rgba = texColor.rgba;
+			} else {
 				gl_FragColor.rgb = texColor.rgb * gl_FragColor.rgb;
-				gl_FragColor.a = (tcc == GU_TCC_RGBA) ? (gl_FragColor.a * texColor.a) : texColor.a;
-				break;
-			case GU_TFX_DECAL:
-				if (tcc == GU_TCC_RGB) {
-					gl_FragColor.rgba = texColor.rgba;
-				} else {
-					gl_FragColor.rgb = texColor.rgb * gl_FragColor.rgb;
-					gl_FragColor.a = texColor.a;
-				}
-				break;
-			case GU_TFX_BLEND:
-				gl_FragColor.rgba = mix(texColor, gl_FragColor, 0.5);
-				break;
-			case GU_TFX_REPLACE:
-				gl_FragColor.rgb = texColor.rgb;
-				gl_FragColor.a = (tcc == GU_TCC_RGB) ? gl_FragColor.a : texColor.a;
-				break;
-			case GU_TFX_ADD:
-				gl_FragColor.rgb += texColor.rgb;
-				gl_FragColor.a = (tcc == GU_TCC_RGB) ? gl_FragColor.a : (texColor.a * gl_FragColor.a);
-				break;
-			default:
-				gl_FragColor = vec4(1, 0, 1, 1);
-				break;
+				gl_FragColor.a = texColor.a;
+			}
+		} else if (tfx == GU_TFX_BLEND) {
+			gl_FragColor.rgba = mix(texColor, gl_FragColor, 0.5);
+		} else if (tfx == GU_TFX_REPLACE) {
+			gl_FragColor.rgb = texColor.rgb;
+			gl_FragColor.a = (tcc == GU_TCC_RGB) ? gl_FragColor.a : texColor.a;
+		} else if (tfx == GU_TFX_ADD) {
+			gl_FragColor.rgb += texColor.rgb;
+			gl_FragColor.a = (tcc == GU_TCC_RGB) ? gl_FragColor.a : (texColor.a * gl_FragColor.a);
+		} else {
+			gl_FragColor = vec4(1, 0, 1, 1);
 		}
 	}
 

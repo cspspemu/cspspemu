@@ -26,7 +26,7 @@ using System.Diagnostics.Contracts;
 
 namespace Imager.Filters
 {
-	internal static class libXBR
+	public static class libXBR
 	{
 		/// <summary>
 		/// This is the XBR2x by Hyllian (see http://board.byuu.org/viewtopic.php?f=10&t=2248)

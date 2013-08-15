@@ -10,6 +10,7 @@ using CSPspEmu.Core.Gpu.Impl.Opengl.Modules;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Types;
 using CSPspEmu.Core.Utils;
+using CSPspEmu.Gui.SMAA;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -71,56 +72,47 @@ namespace CSPspEmu.Gui
 			this.IGuiWindowInfo = IGuiWindowInfo;
 		}
 
-		private GLTexture GetTexOpengl()
+		private void GetTexOpengl(Action<TexturePair> Action)
 		{
 			//Console.WriteLine("OpenglGpuImpl.FrameBufferTexture: {0}, {1}, {2}", OpenglGpuImpl.FrameBufferTexture, GL.IsTexture(OpenglGpuImpl.FrameBufferTexture), GL.IsTexture(2));
 			var OpenglGpuImpl = (GpuProcessor.GpuImpl as OpenglGpuImpl);
-			if (OpenglGpuImpl != null)
+			if (OpenglGpuImpl == null)
 			{
-				var DrawBuffer = OpenglGpuImpl.RenderbufferManager.GetDrawBufferTexture(new DrawBufferKey()
-				{
-					Address = PspDisplay.CurrentInfo.FrameAddress,
-					//Width = PspDisplayForm.Singleton.PspDisplay.CurrentInfo.Width,
-					//Height = PspDisplayForm.Singleton.PspDisplay.CurrentInfo.Height
-				});
+				Action(new TexturePair() { Color = GLTexture.Wrap(0), Depth = GLTexture.Wrap(0) });
+				return;
+			}
+
+			OpenglGpuImpl.RenderbufferManager.GetDrawBufferTextureAndLock(new DrawBufferKey()
+			{
+				Address = PspDisplay.CurrentInfo.FrameAddress,
+				//Width = PspDisplayForm.Singleton.PspDisplay.CurrentInfo.Width,
+				//Height = PspDisplayForm.Singleton.PspDisplay.CurrentInfo.Height
+			}, (DrawBuffer) =>
+			{
 
 				if (DrawBuffer == null)
 				{
-					return null;
+					Action(null);
+					return;
 				}
 				else
 				{
-					//DrawBuffer.WaitUnbinded();
-					//var Texture = (uint)DrawBuffer.RenderTarget.TextureColor.Texture;
-					var Texture = (uint)DrawBuffer.RenderTarget.TextureColorBuffered.Texture;
-
-					//return GLTexture.Wrap(Texture);
-
-					if (GL.glIsTexture(Texture))
+					var RenderTarget = DrawBuffer.RenderTarget;
+					if (GL.glIsTexture(RenderTarget.TextureColor.Texture))
 					{
 						TextureVerticalFlip = false;
-						//Console.Out.WriteLineColored(ConsoleColor.Red, "Texture: {0}", Texture);
-
-						//var Data = new byte[512 * 2 * 272 * 2 * 4];
-						//fixed (byte* DataPtr = Data)
-						//{
-						//	GL.glBindTexture(GL.GL_TEXTURE_2D, Texture);
-						//	GL.glGetTexImage(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, GL.GL_RGBA, DataPtr);
-						//}
-						//File.WriteAllBytes(@"c:\temp\lol2.bin", Data);
-						return GLTexture.Wrap(Texture);
+						Action(new TexturePair() { Color = RenderTarget.TextureColor, Depth = RenderTarget.TextureDepth });
+						return;
 					}
 					else
 					{
 						Console.WriteLine("Not shared contexts");
 					}
 				}
-			}
-
-			return GLTexture.Wrap(0);
+			});
 		}
 
-		private GLTexture GetTexVram()
+		private void GetTexVram(Action<TexturePair> Action)
 		{
 			if (TexVram == null)
 			{
@@ -244,19 +236,29 @@ namespace CSPspEmu.Gui
 					Console.Error.WriteLine(Exception);
 				}
 			}
-			return TexVram;
+
+			Action(new TexturePair() { Color = TexVram, Depth = GLTexture.Wrap(0) });
+			return;
 		}
 
-		private GLTexture GetTex()
+		public class TexturePair
+		{
+			public GLTexture Color;
+			public GLTexture Depth;
+		}
+
+		private void GetTex(Action<TexturePair> Action)
 		{
 			//BindTexVram(); return;
 
 			if (!PspDisplay.CurrentInfo.PlayingVideo && GpuProcessor.UsingGe)
 			{
-				return GetTexOpengl();
+				GetTexOpengl(Action);
+				return;
 			}
 			
-			return GetTexVram();
+			GetTexVram(Action);
+			return;
 		}
 
 		GLShader Shader;
@@ -270,9 +272,12 @@ namespace CSPspEmu.Gui
 			public GLUniform texture;
 		}
 		ShaderInfoClass ShaderInfo = new ShaderInfoClass();
+		Smaa Smaa;
 
 		private void Initialize()
 		{
+			Smaa = new Smaa();
+
 			Shader = new GLShader(
 				"attribute vec4 position; attribute vec4 texCoords; varying vec2 v_texCoord; void main() { gl_Position = position; v_texCoord = texCoords.xy; }",
 				"uniform sampler2D texture; varying vec2 v_texCoord; void main() { gl_FragColor = texture2D(texture, v_texCoord); }"
@@ -287,7 +292,7 @@ namespace CSPspEmu.Gui
 
 		//GLTexture TestTexture;
 
-		public void DrawVram()
+		public void DrawVram(bool EnableSmaa)
 		{
 			if (Shader == null) Initialize();
 
@@ -295,7 +300,6 @@ namespace CSPspEmu.Gui
 			//int RectHeight = 272;
 			var Rectangle = IGuiWindowInfo.ClientRectangle;
 
-			GL.glViewport(Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
 			GL.glClearColor(0, 0, 0, 1);
 			GL.glClear(GL.GL_COLOR_BUFFER_BIT);
 			//IGuiWindowInfo.SwapBuffers();
@@ -305,21 +309,34 @@ namespace CSPspEmu.Gui
 				(PspDisplay.CurrentInfo.Enabled || PspDisplay.CurrentInfo.PlayingVideo)
 			)
 			{
-				var Tex = GetTex();
-				//Console.Out.WriteLineColored(ConsoleColor.Red, "{0}", Tex.Texture);
-				if (Tex != null && Tex.Texture != 0)
+				GetTex((Tex) =>
 				{
-					Shader.Draw(GLGeometry.GL_TRIANGLE_STRIP, 4, () =>
+					//Console.Out.WriteLineColored(ConsoleColor.Red, "{0}", Tex.Texture);
+					if (Tex != null && Tex.Color.Texture != 0)
 					{
-						var TextureRect = CSharpPlatform.RectangleF.FromCoords(0, 0, (float)PspDisplay.CurrentInfo.Width / 512f, (float)PspDisplay.CurrentInfo.Height / 272f);
-						if (TextureVerticalFlip) TextureRect = TextureRect.VFlip();
-						TexCoordsBuffer = GLBuffer.Create().SetData(TextureRect.GetFloat2TriangleStripCoords());
+						var TexColor = Tex.Color;
+						var TexDepth = Tex.Depth;
 
-						ShaderInfo.texture.Set(GLTextureUnit.CreateAtIndex(0).SetFiltering(GLScaleFilter.Nearest).SetWrap(GLWrap.ClampToEdge).SetTexture(Tex));
-						ShaderInfo.position.SetData<float>(VertexBuffer, 2);
-						ShaderInfo.texCoords.SetData<float>(TexCoordsBuffer, 2);
-					});
-				}
+						if (EnableSmaa)
+						{
+							TexColor = Smaa.Process(TexColor, TexDepth);
+						}
+
+						GL.glViewport(Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
+
+						Shader.Draw(GLGeometry.GL_TRIANGLE_STRIP, 4, () =>
+						{
+							var TextureRect = CSharpPlatform.RectangleF.FromCoords(0, 0, (float)PspDisplay.CurrentInfo.Width / 512f, (float)PspDisplay.CurrentInfo.Height / 272f);
+							if (TextureVerticalFlip) TextureRect = TextureRect.VFlip();
+							TexCoordsBuffer = GLBuffer.Create().SetData(TextureRect.GetFloat2TriangleStripCoords());
+
+							ShaderInfo.texture.Set(GLTextureUnit.CreateAtIndex(0).SetFiltering(GLScaleFilter.Nearest).SetWrap(GLWrap.ClampToEdge).SetTexture(TexColor));
+							//ShaderInfo.texture.Set(GLTextureUnit.CreateAtIndex(0).SetFiltering(GLScaleFilter.Nearest).SetWrap(GLWrap.ClampToEdge).SetTexture(TexDepth));
+							ShaderInfo.position.SetData<float>(VertexBuffer, 2);
+							ShaderInfo.texCoords.SetData<float>(TexCoordsBuffer, 2);
+						});
+					}
+				});
 			}
 
 			IGuiWindowInfo.SwapBuffers();

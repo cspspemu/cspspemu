@@ -115,10 +115,7 @@ namespace CSPspEmu.Gui.Winforms
 
 			this.Controls.Add(this.GLControl);
 
-			//GLControl.add
-			UtilsFrameLimitingMenu.Checked = DisplayConfig.VerticalSynchronization;
-			UtilsAstOptimizationsMenu.Checked = StoredConfig.EnableAstOptimizations;
-			UtilsUseFastmemMenu.Checked = StoredConfig.UseFastMemory;
+			UpdateCheckboxes();
 
 			Debug.WriteLine(String.Format("Now: {0}", DateTime.UtcNow));
 			Debug.WriteLine(String.Format("LastCheckedTime: {0}", StoredConfig.LastCheckedTime));
@@ -1073,6 +1070,20 @@ namespace CSPspEmu.Gui.Winforms
 			{
 				InjectContext.NewInstance<TextureViewerForm>().ShowDialog();
 			});
+		}
+
+		private void enableSMAAToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			StoredConfig.EnableSmaa = !StoredConfig.EnableSmaa;
+			UpdateCheckboxes();
+		}
+
+		private void UpdateCheckboxes()
+		{
+			UtilsEnableSmaaMenu.Checked = StoredConfig.EnableSmaa;
+			UtilsFrameLimitingMenu.Checked = DisplayConfig.VerticalSynchronization;
+			UtilsAstOptimizationsMenu.Checked = StoredConfig.EnableAstOptimizations;
+			UtilsUseFastmemMenu.Checked = StoredConfig.UseFastMemory;
 		}
 	}
 }

@@ -66,16 +66,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GuiConfig.cs" />
-    <Compile Include="HQ2X\RGBA.cs" />
-    <Compile Include="HQ2X\ColorAlphaLerp.cs" />
-    <Compile Include="HQ2X\ColorAlphaThreshold.cs" />
-    <Compile Include="HQ2X\ColorOnlyLerp.cs" />
-    <Compile Include="HQ2X\ColorOnlyThreshold.cs" />
-    <Compile Include="HQ2X\ColorSimpleAlphaLerp.cs" />
-    <Compile Include="HQ2X\ColorSimpleAlphaThreshold.cs" />
-    <Compile Include="HQ2X\Engine.cs" />
-    <Compile Include="HQ2X\ILerp.cs" />
-    <Compile Include="HQ2X\IThreshold.cs" />
     <Compile Include="Winforms\AboutForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -132,12 +122,6 @@
     <Compile Include="Winforms\TextureViewerForm.Designer.cs">
       <DependentUpon>TextureViewerForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="XBR\cImage.cs" />
-    <Compile Include="XBR\cRGBCache.cs" />
-    <Compile Include="XBR\Image.Bitmaps.cs" />
-    <Compile Include="XBR\libXBR2x.cs" />
-    <Compile Include="XBR\OutOfBoundsMode.cs" />
-    <Compile Include="XBR\sPixel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Winforms\AboutForm.resx">

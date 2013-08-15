@@ -252,7 +252,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		private void DrawVertices(GLGeometry Type)
 		{
-			ShaderInfo.hasReversedNormal.Set(VertexType.ReversedNormal);
+			ShaderInfo.hasReversedNormal.NoWarning().Set(VertexType.ReversedNormal);
 
 			Shader.Draw(Type, IndicesList.Buffer, IndicesList.Length, () =>
 			{
@@ -277,7 +277,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 				if (VertexType.HasNormal)
 				{
 					VerticesNormalBuffer.SetData(this.VerticesNormal.Buffer, 0, this.VerticesNormal.Length);
-					ShaderInfo.vertexNormal.SetData<float>(VerticesNormalBuffer, 4, 0, sizeof(VertexInfoVector3f), false);
+					ShaderInfo.vertexNormal.NoWarning().SetData<float>(VerticesNormalBuffer, 4, 0, sizeof(VertexInfoVector3f), false);
 				}
 
 				if (VertexType.HasWeight)

@@ -21,6 +21,7 @@ using System.Runtime.InteropServices;
 using CSharpPlatform.GL.Impl;
 using System.Windows;
 using System.Drawing;
+using CSPspEmu.Gui.SMAA;
 
 namespace CSPspEmu
 {
@@ -52,6 +53,29 @@ namespace CSPspEmu
 			Environment.Exit(0);
 		}
 
+		static private GLTexture GLTextureCreateFromBitmap(Bitmap Bitmap)
+		{
+			return GLTexture.Create()
+				.SetFormat(TextureFormat.RGBA)
+				.SetSize(Bitmap.Width, Bitmap.Height)
+				.SetData(Bitmap.GetChannelsDataInterleaved(BitmapChannelList.RGBA))
+			;
+		}
+
+		static private void _MainData()
+		{
+			var Context = GLContextFactory.CreateWindowless().MakeCurrent();
+			var BitmapIn = new Bitmap(Image.FromFile(@"C:\temp\test.png"));
+			var Smaa = new Smaa();
+			var TextureIn = GLTextureCreateFromBitmap(BitmapIn);
+			var TextureOut = Smaa.Process(TextureIn, null);
+
+			new Bitmap(BitmapIn.Width, BitmapIn.Height).SetChannelsDataInterleaved(TextureOut.GetDataFromGpu(), BitmapChannelList.RGBA).Save(@"c:\temp\test.out.png");
+
+			File.WriteAllBytes(@"c:\temp\test.out.bin", TextureOut.GetDataFromGpu());
+			Environment.Exit(0);
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -63,6 +87,7 @@ namespace CSPspEmu
 		[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
 		unsafe static void Main(string[] Arguments)
 		{
+			//Console.WriteLine(GL.GetConstantString(GL.GL_TEXTURE_2D));
 			//_MainData();
 			//_MainData2();
 			
@@ -71,34 +96,6 @@ namespace CSPspEmu
 				MessageBox.Show(".NET 4.5 required", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
 				return;
 			}
-#if false
-			var Test = new byte[4 * 1024 * 1024];
-			Console.WriteLine(Logger.Measure(() =>
-			{
-				for (int n = 0; n < 32; n++) PointerUtils.Memset(Test, 0x7F, Test.Length);
-			}));
-
-			Console.WriteLine(Logger.Measure(() =>
-			{
-				for (int n = 0; n < 32; n++) PointerUtils.MemsetSlow(Test, 0x7F, Test.Length);
-			}));
-#endif
-#if false
-			Console.WriteLine("SIMD Test: {0}", Logger.Measure(() =>
-			{
-				for (int n = 0; n < 2000000; n++)
-				{
-					var Test = default(Vector4f);
-					Test += new Vector4f(1, 1, 1, 1);
-					Test += new Vector4f(1, 1, 1, 1);
-					Test += new Vector4f(1, 1, 1, 1);
-					Test += new Vector4f(1, 1, 1, 1);
-					Test += new Vector4f(1, 1, 1, 1);
-					Test += new Vector4f(1, 1, 1, 1);
-				}
-			}));
-			//SimdRuntime.IsMethodAccelerated(typeof(Vector4f), "op_Add");
-#endif
 
 			// Add the event handler for handling UI thread exceptions to the event.
 			Application.ThreadException += new ThreadExceptionEventHandler(Form1_UIThreadException);

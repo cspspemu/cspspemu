@@ -82,7 +82,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
 				if (Binded)
 				{
 					//GL.Flush();
-					GLRenderTarget.Default.Bind();
+					GLRenderTargetScreen.Default.Bind();
 					Binded = false;
 					UnbindedEvent.Set();
 				}
@@ -109,6 +109,22 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
 				Unbind();
 				OpenglGpuImpl.OnScaleViewport -= UpdateTextures_External;
 				RenderTarget.Dispose();
+			}
+
+			internal void WaitUnlocked()
+			{
+				Lock();
+				Unlock();
+			}
+
+			internal void Lock()
+			{
+				Monitor.Enter(this);
+			}
+
+			internal void Unlock()
+			{
+				Monitor.Exit(this);
 			}
 		}
 
@@ -152,7 +168,30 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
 
 		public DrawBufferValue GetDrawBufferTexture(DrawBufferKey Key)
 		{
-			return DrawBufferTextures.GetOrDefault(Key, null);
+			var Value = DrawBufferTextures.GetOrDefault(Key, null);
+			if (Value != null) Value.WaitUnlocked();
+			return Value;
+		}
+
+		public void GetDrawBufferTextureAndLock(DrawBufferKey Key, Action<DrawBufferValue> Action)
+		{
+			var RenderBuffer = GetDrawBufferTexture(Key);
+			if (RenderBuffer != null)
+			{
+				RenderBuffer.Lock();
+				try
+				{
+					Action(RenderBuffer);
+				}
+				finally
+				{
+					RenderBuffer.Unlock();
+				}
+			}
+			else
+			{
+				Action(null);
+			}
 		}
 
 		public DrawBufferValue GetOrCreateDrawBufferTexture(DrawBufferKey Key)

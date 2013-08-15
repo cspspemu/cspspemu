@@ -186,6 +186,10 @@
 			<translation lang="pt">&amp;Tamanho da janela</translation>
 			<translation lang="fr">&amp;Affichage</translation>
 		</text>
+		<text id="UtilsEnableSmaaMenu">
+			<translation lang="en">&amp;Enable &amp;SMAA</translation>
+			<translation lang="es">&amp;Habilitar &amp;SMAA</translation>
+		</text>
 		<text id="UtilsRenderScaleMenu">
 			<translation lang="en">&amp;Render scale</translation>
 			<translation lang="es">&amp;Escalado de renderización</translation>

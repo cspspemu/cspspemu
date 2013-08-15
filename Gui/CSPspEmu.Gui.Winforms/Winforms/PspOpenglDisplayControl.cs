@@ -42,7 +42,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 			if (this.Size != Size) this.Size = Size;
 			try
 			{
-				DisplayOpengl.DrawVram();
+				DisplayOpengl.DrawVram(PspDisplayForm.Singleton.StoredConfig.EnableSmaa);
 			}
 			catch (Exception Exception)
 			{

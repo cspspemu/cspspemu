@@ -34,6 +34,8 @@ namespace CSPspEmu.Core
 	{
 		public static Logger Logger = Logger.GetLogger("Config");
 
+		public bool EnableSmaa = false;
+
 		/// <summary>
 		/// 
 		/// </summary>
