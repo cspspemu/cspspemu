@@ -1085,5 +1085,13 @@ namespace CSPspEmu.Gui.Winforms
 			UtilsAstOptimizationsMenu.Checked = StoredConfig.EnableAstOptimizations;
 			UtilsUseFastmemMenu.Checked = StoredConfig.UseFastMemory;
 		}
+
+		private void cWCheatEditorToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			PauseResume(() =>
+			{
+				InjectContext.NewInstance<CheatsForm>().ShowDialog();
+			});
+		}
 	}
 }

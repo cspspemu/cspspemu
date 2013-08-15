@@ -57,6 +57,10 @@
 			<translation lang="en">&amp;Texture Editor...</translation>
 			<translation lang="es">&amp;Editor de texturas...</translation>
 		</text>
+		<text id="DebugCWCheatEditorMenu">
+			<translation lang="en">&amp;CWCheat Editor...</translation>
+			<translation lang="es">&amp;Editor de CWCheat...</translation>
+		</text>
 		<text id="FileExitMenu">
 			<translation lang="en">&amp;Exit</translation>
 			<translation lang="es">&amp;Salir</translation>

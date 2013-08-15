@@ -42,6 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="cheats\CWCheatEntry.cs" />
+    <Compile Include="cheats\CWCheatPlugin.cs" />
+    <Compile Include="cheats\LoadFileMessage.cs" />
     <Compile Include="CommonGuiDisplayOpengl.cs" />
     <Compile Include="CommonGuiInput.cs" />
     <Compile Include="HQ2X\ColorAlphaLerp.cs" />

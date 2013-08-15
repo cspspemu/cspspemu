@@ -319,7 +319,10 @@ namespace CSPspEmu.Gui
 
 						if (EnableSmaa)
 						{
-							TexColor = Smaa.Process(TexColor, TexDepth);
+							if (TexDepth.Texture != 0)
+							{
+								TexColor = Smaa.Process(TexColor, TexDepth);
+							}
 						}
 
 						GL.glViewport(Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);

@@ -78,6 +78,12 @@
     <Compile Include="Winforms\ButtonMappingForm.Designer.cs">
       <DependentUpon>ButtonMappingForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Winforms\CheatsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Winforms\CheatsForm.Designer.cs">
+      <DependentUpon>CheatsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Winforms\FunctionViewerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -129,6 +135,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Winforms\ButtonMappingForm.resx">
       <DependentUpon>ButtonMappingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Winforms\CheatsForm.resx">
+      <DependentUpon>CheatsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Winforms\FunctionViewerForm.resx">
       <DependentUpon>FunctionViewerForm.cs</DependentUpon>
