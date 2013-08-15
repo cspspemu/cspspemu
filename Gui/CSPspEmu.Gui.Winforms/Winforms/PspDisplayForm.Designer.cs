@@ -74,6 +74,8 @@
 			this.toolStripMenuItem12 = new System.Windows.Forms.ToolStripSeparator();
 			this.DebugShowThreadInfoMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem15 = new System.Windows.Forms.ToolStripSeparator();
+			this.DebugCWCheatEditorMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem13 = new System.Windows.Forms.ToolStripSeparator();
 			this.DebugFunctionViewer = new System.Windows.Forms.ToolStripMenuItem();
 			this.DebugTextureViewer = new System.Windows.Forms.ToolStripMenuItem();
 			this.HelpMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -89,7 +91,7 @@
 			this.HelpReportAnIssueMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripSeparator();
 			this.HelpAboutMenu = new System.Windows.Forms.ToolStripMenuItem();
-			this.DebugCWCheatEditorMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.UtilsScaleTexturesMenu = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -168,6 +170,7 @@
             this.UtilsDisplayMenu,
             this.UtilsRenderScaleMenu,
             this.UtilsEnableSmaaMenu,
+            this.UtilsScaleTexturesMenu,
             this.toolStripMenuItem2,
             this.UtilsLanguageMenu,
             this.UtilsConfigureControllerMenu,
@@ -404,9 +407,10 @@
             this.toolStripMenuItem12,
             this.DebugShowThreadInfoMenu,
             this.toolStripMenuItem15,
+            this.DebugCWCheatEditorMenu,
+            this.toolStripMenuItem13,
             this.DebugFunctionViewer,
-            this.DebugTextureViewer,
-            this.DebugCWCheatEditorMenu});
+            this.DebugTextureViewer});
 			this.DebugMenu.Name = "DebugMenu";
 			this.DebugMenu.Size = new System.Drawing.Size(54, 20);
 			this.DebugMenu.Text = "&Debug";
@@ -472,6 +476,18 @@
 			// 
 			this.toolStripMenuItem15.Name = "toolStripMenuItem15";
 			this.toolStripMenuItem15.Size = new System.Drawing.Size(232, 6);
+			// 
+			// DebugCWCheatEditorMenu
+			// 
+			this.DebugCWCheatEditorMenu.Name = "DebugCWCheatEditorMenu";
+			this.DebugCWCheatEditorMenu.Size = new System.Drawing.Size(235, 22);
+			this.DebugCWCheatEditorMenu.Text = "&CWCheat editor...";
+			this.DebugCWCheatEditorMenu.Click += new System.EventHandler(this.cWCheatEditorToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem13
+			// 
+			this.toolStripMenuItem13.Name = "toolStripMenuItem13";
+			this.toolStripMenuItem13.Size = new System.Drawing.Size(232, 6);
 			// 
 			// DebugFunctionViewer
 			// 
@@ -593,12 +609,12 @@
 			this.HelpAboutMenu.Text = "&About...";
 			this.HelpAboutMenu.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
-			// DebugCWCheatEditorMenu
+			// UtilsScaleTexturesMenu
 			// 
-			this.DebugCWCheatEditorMenu.Name = "DebugCWCheatEditorMenu";
-			this.DebugCWCheatEditorMenu.Size = new System.Drawing.Size(235, 22);
-			this.DebugCWCheatEditorMenu.Text = "&CWCheat editor...";
-			this.DebugCWCheatEditorMenu.Click += new System.EventHandler(this.cWCheatEditorToolStripMenuItem_Click);
+			this.UtilsScaleTexturesMenu.Name = "UtilsScaleTexturesMenu";
+			this.UtilsScaleTexturesMenu.Size = new System.Drawing.Size(306, 22);
+			this.UtilsScaleTexturesMenu.Text = "&Scale Textures HQ2X";
+			this.UtilsScaleTexturesMenu.Click += new System.EventHandler(this.UtilsScaleTexturesMenu_Click);
 			// 
 			// PspDisplayForm
 			// 
@@ -685,5 +701,7 @@
 		private System.Windows.Forms.ToolStripMenuItem DebugTextureViewer;
 		private System.Windows.Forms.ToolStripMenuItem UtilsEnableSmaaMenu;
 		private System.Windows.Forms.ToolStripMenuItem DebugCWCheatEditorMenu;
+		private System.Windows.Forms.ToolStripSeparator toolStripMenuItem13;
+		private System.Windows.Forms.ToolStripMenuItem UtilsScaleTexturesMenu;
 	}
 }

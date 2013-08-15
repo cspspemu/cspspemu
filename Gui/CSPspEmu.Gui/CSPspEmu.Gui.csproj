@@ -60,6 +60,7 @@
     <Compile Include="IGuiExternalInterface.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SMAA\Smaa.cs" />
+    <Compile Include="texture\TextureHookPlugin.cs" />
     <Compile Include="XBR\cImage.cs" />
     <Compile Include="XBR\cRGBCache.cs" />
     <Compile Include="XBR\Image.Bitmaps.cs" />

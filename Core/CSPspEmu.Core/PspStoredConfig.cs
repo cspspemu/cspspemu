@@ -81,6 +81,11 @@ namespace CSPspEmu.Core
 		/// </summary>
 		public string IsosPath = null;
 
+		/// <summary>
+		/// 
+		/// </summary>
+		public bool ScaleTextures = false;
+
 		#region Serializing
 		private static XmlSerializer Serializer;
 

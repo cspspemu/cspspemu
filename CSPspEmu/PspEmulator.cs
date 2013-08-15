@@ -29,6 +29,7 @@ using System.Globalization;
 using System.Diagnostics;
 using CSPspEmu.cheats;
 using CSPspEmu.Inject;
+using CSPspEmu.Gui.texture;
 
 namespace CSPspEmu
 {
@@ -63,6 +64,9 @@ namespace CSPspEmu
 
 		[Inject]
 		CWCheatPlugin CWCheatPlugin;
+
+		[Inject]
+		TextureHookPlugin TextureHookPlugin;
 
 		public InjectContext InjectContext
 		{

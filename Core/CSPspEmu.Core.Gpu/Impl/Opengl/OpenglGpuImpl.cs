@@ -166,10 +166,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
 		ShaderInfoClass ShaderInfo = new ShaderInfoClass();
 
+		[Inject]
+		InjectContext InjectContext;
+
 		void IInjectInitialize.Initialize()
 		{
 			this.RenderbufferManager = new RenderbufferManager(this);
-			this.TextureCache = new TextureCacheOpengl(this.Memory, this);
+			this.TextureCache = new TextureCacheOpengl(this.Memory, this, InjectContext);
 			this.VertexReader = new VertexReader();
 		}
 

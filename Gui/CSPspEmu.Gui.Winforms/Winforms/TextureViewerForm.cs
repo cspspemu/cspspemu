@@ -1,6 +1,8 @@
 ﻿using CSharpUtils;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Gpu.Impl.Opengl;
+using CSPspEmu.Core.Types;
+using CSPspEmu.Gui.texture;
 using HQ2x;
 using Imager;
 using Imager.Filters;
@@ -127,13 +129,17 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 		private void LoadButton_Click(object sender, EventArgs e)
 		{
 			var Item = (TextureElement)TextureList.SelectedItem;
+
+			var TextureHookPlugin = PspDisplayForm.Singleton.IGuiExternalInterface.InjectContext.GetInstance<TextureHookPlugin>();
+			
 			var OpenFileDialog = new OpenFileDialog();
 			OpenFileDialog.FileName = Item.ToString();
 			OpenFileDialog.Filter = "Png Image (.png)|*.png";
 			if (OpenFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				var Bitmap = new Bitmap(Image.FromFile(OpenFileDialog.FileName));
-				Item.TextureOpengl.SetData(Bitmap.GetChannelsDataInterleaved(BitmapChannelList.RGBA), Bitmap.Width, Bitmap.Height);
+				Item.TextureOpengl.SetData(Bitmap.GetChannelsDataInterleaved(BitmapChannelList.RGBA).CastToStructArray<OutputPixel>(), Bitmap.Width, Bitmap.Height);
+				TextureHookPlugin.AddMapping(Item.TextureOpengl.TextureHash, OpenFileDialog.FileName);
 				UpdateTexture();
 			}
 		}
@@ -154,7 +160,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 			{
 				OutBitmap = (new Engine(new ColorAlphaLerp(), new ColorAlphaThreshold(32, 32, 32, 32))).Process(InBitmap);
 			}
-			Item.TextureOpengl.SetData(OutBitmap.GetChannelsDataInterleaved(BitmapChannelList.RGBA), OutBitmap.Width, OutBitmap.Height);
+			Item.TextureOpengl.SetData(OutBitmap.GetChannelsDataInterleaved(BitmapChannelList.RGBA).CastToStructArray<OutputPixel>(), OutBitmap.Width, OutBitmap.Height);
 			UpdateTexture();
 			TextureList.Focus();
 		}

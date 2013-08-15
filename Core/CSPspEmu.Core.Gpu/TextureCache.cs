@@ -9,6 +9,8 @@ using CSPspEmu.Core.Gpu.State.SubStates;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Types;
 using CSPspEmu.Core.Utils;
+using CSPspEmu.Inject;
+using CSPspEmu.Core.Gpu.Impl.Opengl;
 
 namespace CSPspEmu.Core.Gpu
 {
@@ -61,14 +63,11 @@ namespace CSPspEmu.Core.Gpu
 		public Texture<TGpuImpl> Load(string FileName)
 		{
 			var Bitmap = new Bitmap(Image.FromFile(FileName));
-			Bitmap.LockBitsUnlock(System.Drawing.Imaging.PixelFormat.Format32bppArgb, (BitmapData) =>
-			{
-				this.SetData((OutputPixel *)BitmapData.Scan0, BitmapData.Width, BitmapData.Height);
-			});
+			this.SetData(Bitmap.GetChannelsDataInterleaved(BitmapChannelList.ARGB).CastToStructArray<OutputPixel>(), Bitmap.Width, Bitmap.Height);
 			return this;
 		}
 
-		public abstract bool SetData(OutputPixel* Pixels, int TextureWidth, int TextureHeight);
+		public abstract bool SetData(OutputPixel[] Pixels, int TextureWidth, int TextureHeight);
 		public abstract void Bind();
 		public abstract void Dispose();
 
@@ -111,10 +110,13 @@ namespace CSPspEmu.Core.Gpu
 		private byte[] SwizzlingBuffer = new byte[4 * 1024 * 1024];
 		private OutputPixel[] DecodedTextureBuffer = new OutputPixel[1024 * 1024];
 
-		public TextureCache(PspMemory PspMemory, TGpuImpl GpuImpl)
+		MessageBus MessageBus;
+
+		public TextureCache(PspMemory PspMemory, TGpuImpl GpuImpl, InjectContext InjectContext)
 		{
 			this.PspMemory = PspMemory;
 			this.GpuImpl = GpuImpl;
+			MessageBus = InjectContext.GetInstance<MessageBus>();
 		}
 
 		TTexture InvalidTexture;
@@ -175,7 +177,7 @@ namespace CSPspEmu.Core.Gpu
 
 				//Console.WriteLine(TextureFormat);
 
-
+				// INVALID TEXTURE
 				if (!PspMemory.IsRangeValid(TextureAddress, TextureDataSize) || TextureDataSize > 2048 * 2048 * 4)
 				{
 					Console.Error.WriteLineColored(ConsoleColor.DarkRed, "UPDATE_TEXTURE(TEX={0},CLUT={1}:{2}:{3}:{4}:0x{5:X},SIZE={6}x{7},{8},Swizzled={9})", TextureFormat, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask, BufferWidth, Height, BufferWidth, Swizzled);
@@ -185,17 +187,18 @@ namespace CSPspEmu.Core.Gpu
 						InvalidTexture = new TTexture();
 						InvalidTexture.Init(GpuImpl);
 
-						int ITWidth = 2, ITHeight = 2;
-						int ITWidthHeight = ITWidth * ITHeight;
-						fixed (OutputPixel* Data = new OutputPixel[ITWidthHeight])
+						int InvalidTextureWidth = 2, InvalidTextureHeight = 2;
+						int InvalidTextureSize = InvalidTextureWidth * InvalidTextureHeight;
+						var Data = new OutputPixel[InvalidTextureSize];
+						fixed (OutputPixel* DataPtr = Data)
 						{
 							var Color1 = OutputPixel.FromRGBA(0xFF, 0x00, 0x00, 0xFF);
 							var Color2 = OutputPixel.FromRGBA(0x00, 0x00, 0xFF, 0xFF);
-							for (int n = 0; n < ITWidthHeight; n++)
+							for (int n = 0; n < InvalidTextureSize; n++)
 							{
-								Data[n] = ((n & 1) != 0) ? Color1 : Color2;
+								DataPtr[n] = ((n & 1) != 0) ? Color1 : Color2;
 							}
-							InvalidTexture.SetData(Data, ITWidth, ITHeight);
+							InvalidTexture.SetData(Data, InvalidTextureWidth, InvalidTextureHeight);
 						}
 					}
 					return InvalidTexture;
@@ -313,41 +316,11 @@ namespace CSPspEmu.Core.Gpu
 									}
 								}
 							}
-							
-#if DEBUG_TEXTURE_CACHE
-							var Bitmap = new Bitmap(BufferWidth, Height);
-							BitmapUtils.TransferChannelsDataInterleaved(
-								Bitmap.GetFullRectangle(),
-								Bitmap,
-								(byte*)TexturePixelsPointer,
-								BitmapUtils.Direction.FromDataToBitmap,
-								BitmapChannel.Red,
-								BitmapChannel.Green,
-								BitmapChannel.Blue,
-								BitmapChannel.Alpha
-							);
-							Bitmap.Save(TextureName + ".png");
-#endif
 
-							var Result = Texture.SetData(TexturePixelsPointer, TextureWidth, TextureHeight);
-#if DEBUG_TEXTURE_CACHE
-							if (!Result || Texture.TextureId == 0)
-							{
-								var Bitmap2 = new Bitmap(BufferWidth, Height);
-								BitmapUtils.TransferChannelsDataInterleaved(
-									Bitmap2.GetFullRectangle(),
-									Bitmap2,
-									(byte*)TexturePixelsPointer,
-									BitmapUtils.Direction.FromDataToBitmap,
-									BitmapChannel.Red,
-									BitmapChannel.Green,
-									BitmapChannel.Blue,
-									BitmapChannel.Alpha
-								);
-								string TextureName2 = @"C:\projects\csharp\cspspemu\__invalid_texture_" + TextureCacheKey.TextureHash + "_" + TextureCacheKey.ClutHash + "_" + TextureFormat + "_" + ClutFormat + "_" + BufferWidth + "x" + Height;
-								Bitmap.Save(TextureName2 + ".png");
-							}
-#endif
+							var TextureInfo = new TextureHookInfo() { TextureCacheKey = TextureCacheKey, Data = DecodedTextureBuffer, Width = TextureWidth, Height = TextureHeight };
+							MessageBus.Dispatch(TextureInfo);
+
+							var Result = Texture.SetData(TextureInfo.Data, TextureInfo.Width, TextureInfo.Height);
 						}
 					}
 					if (Cache.ContainsKey(Hash1))

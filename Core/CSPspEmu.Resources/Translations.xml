@@ -286,6 +286,10 @@
 			<translation lang="pt">Permitir processamento de &amp;Mpeg (ainda instável)</translation>
 			<translation lang="fr">Activer le traitement du &amp;Mpeg (Encore instable)</translation>
 		</text>
+		<text id="UtilsScaleTexturesMenu">
+			<translation lang="en">Scale &amp;Textures (HQ2X)</translation>
+			<translation lang="es">Escalar &amp;texturas (HQ2X)</translation>
+		</text>
 		<text id="RunMenu">
 			<translation lang="en">&amp;Run</translation>
 			<translation lang="es">&amp;Ejecución</translation>
