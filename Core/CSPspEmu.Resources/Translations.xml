@@ -52,14 +52,17 @@
 		<text id="DebugFunctionViewer">
 			<translation lang="en">&amp;Function Viewer...</translation>
 			<translation lang="es">&amp;Visor de funciones...</translation>
+			<translation lang="fr">&amp;Viewer de fonction</translation>
 		</text>
 		<text id="DebugTextureViewer">
 			<translation lang="en">&amp;Texture Editor...</translation>
 			<translation lang="es">&amp;Editor de texturas...</translation>
+			<translation lang="fr">&amp;Editeur de textures</translation>
 		</text>
 		<text id="DebugCWCheatEditorMenu">
 			<translation lang="en">&amp;CWCheat Editor...</translation>
 			<translation lang="es">&amp;Editor de CWCheat...</translation>
+			<translation lang="fr">&amp;Editeur de CWCheat</translation>
 		</text>
 		<text id="FileExitMenu">
 			<translation lang="en">&amp;Exit</translation>
@@ -193,6 +196,7 @@
 		<text id="UtilsEnableSmaaMenu">
 			<translation lang="en">&amp;Enable &amp;SMAA</translation>
 			<translation lang="es">&amp;Habilitar &amp;SMAA</translation>
+			<translation lang="fr">&amp;Activer SMAA</translation>
 		</text>
 		<text id="UtilsRenderScaleMenu">
 			<translation lang="en">&amp;Render scale</translation>
@@ -237,6 +241,7 @@
 		<text id="UtilsAstOptimizationsMenu">
 			<translation lang="en">Enable &amp;Ast optimizations</translation>
 			<translation lang="es">Habilitar optimizaciones de &amp;Ast</translation>
+			<translation lang="fr">Activer Ast optimisations</translation>
 		</text>
 		<text id="UtilsFrameLimitingMenu">
 			<translation lang="en">Frame Limiting</translation>
@@ -289,6 +294,7 @@
 		<text id="UtilsScaleTexturesMenu">
 			<translation lang="en">Scale &amp;Textures (HQ2X)</translation>
 			<translation lang="es">Escalar &amp;texturas (HQ2X)</translation>
+			<translation lang="fr">Echelle des textures (HQ2X) </translation>
 		</text>
 		<text id="RunMenu">
 			<translation lang="en">&amp;Run</translation>
