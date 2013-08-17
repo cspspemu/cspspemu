@@ -221,30 +221,50 @@ namespace CSPspEmu.Hle.Modules.sc_sascore
 		}
 
 		/// <summary>
-		/// Pauses a set of voice channels for that SasCore.
+		/// Set or reset the pause parameter for the voices.
 		/// </summary>
 		/// <param name="SasCorePointer">SasCore</param>
-		/// <param name="voice_bits">Voice Bit Set</param>
-		/// <returns>0 on success.</returns>
+		/// <param name="VoiceBits">a bitfield with bit 0 for voice 0, bit 1 for voice 1... Only the bits with 1 are processed.</param>
+		/// <param name="SetPause"> when 0: reset the pause flag for all the voices having a bit 1 in the voice_bit field  when non-0: set the pause flag for all the voices having a bit 1 in the voice_bit field</param>
+		/// <returns>0 on success. ERROR_SAS_NOT_INIT if an invalid sasCore handle is provided</returns>
 		[HlePspFunction(NID = 0x787D04D5, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int __sceSasSetPause(uint SasCorePointer, uint voice_bits)
+		public int __sceSasSetPause(uint SasCorePointer, uint VoiceBits, bool SetPause)
 		{
-			//throw(new NotImplementedException());
+			var SasCore = GetSasCore(SasCorePointer);
+			uint Out = 0;
+			foreach (var Voice in SasCore.Voices)
+			{
+				if ((VoiceBits & (1 << Voice.Index)) != 0)
+				{
+					Voice.Paused = SetPause;
+				}
+			}
 			return 0;
 		}
 
 		/// <summary>
-		/// 
+		/// Get the pause flag for all the voices.
 		/// </summary>
-		/// <param name="SasCorePointer"></param>
-		/// <returns></returns>
+		/// <param name="SasCorePointer">sasCore handle</param>
+		/// <returns>
+		/// bitfield with bit 0 for voice 0, bit 1 for voice 1...
+		/// bit=0, corresponding voice is not paused
+		/// bit=1, corresponding voice is paused
+		/// ERROR_SAS_NOT_INIT if an invalid sasCore handle is provided
+		/// </returns>
 		[HlePspFunction(NID = 0x2C8E6AB3, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public int __sceSasGetPauseFlag(uint SasCorePointer)
 		{
-			//throw(new NotImplementedException());
-			return 0;
+			//return unchecked((int)0xFFFFFFFF);
+			var SasCore = GetSasCore(SasCorePointer);
+			uint Out = 0;
+			foreach (var Voice in SasCore.Voices)
+			{
+				if (Voice.Paused) Out |= (uint)(1 << Voice.Index);
+			}
+			return (int)Out;
 		}
 
 		/// <summary>

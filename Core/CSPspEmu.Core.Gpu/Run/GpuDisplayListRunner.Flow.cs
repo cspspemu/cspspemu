@@ -127,6 +127,8 @@ namespace CSPspEmu.Core.Gpu.Run
 			var Signal = Extract(0, 16);
 			var Behaviour = (SignalBehavior)Extract(16, 8);
 
+			Console.Out.WriteLineColored(ConsoleColor.Green, "OP_SIGNAL: {0}, {1}", Signal, Behaviour);
+
 			switch (Behaviour)
 			{
 				case SignalBehavior.PSP_GE_SIGNAL_NONE:

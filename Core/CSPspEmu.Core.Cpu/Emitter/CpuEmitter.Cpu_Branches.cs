@@ -1,6 +1,4 @@
-﻿#define ENABLE_NATIVE_CALLS
-
-using System;
+﻿using System;
 using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Nodes;
 
@@ -22,11 +20,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 					BranchFlag(),
 					ast.StatementsInline(
 						ast.AssignGPR(31, BranchPC + 8),
-#if ENABLE_NATIVE_CALLS
 						CallFixedAddress(BranchPC)
-#else
-						ast.GotoAlways(BranchLabel)
-#endif
 					)
 				);
 			}
@@ -133,11 +127,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			return ast.StatementsInline(
 				_link(),
-#if ENABLE_NATIVE_CALLS
 				ast.MethodCacheInfoCallDynamicPC(Address, TailCall: false)
-#else
-				JumpToAddress(Address)
-#endif
 			);
 		}
 
@@ -163,11 +153,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			return ast.StatementsInline(
 				_link(),
-#if ENABLE_NATIVE_CALLS
 				ast.Statement(ast.MethodCacheInfoCallStaticPC(CpuProcessor, Address))
-#else
-				JumpToFixedAddress(Address)
-#endif
 			);
 		}
 
@@ -178,15 +164,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 
 		private AstNodeStm ReturnFromFunction(AstNodeExpr AstNodeExpr)
 		{
-#if ENABLE_NATIVE_CALLS
 			return ast.StatementsInline(
 				ast.AssignPC(ast.GPR(31)),
 				ast.GetTickCall((BranchCount > 0) ? true : false),
 				ast.Return()
 			);
-#else
-			return JumpToAddress(AstNodeExpr);
-#endif
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////

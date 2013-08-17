@@ -25,7 +25,7 @@ namespace CSPspEmu.Hle.Managers
 
 		public void ScheduleCallback(HleCallback HleCallback)
 		{
-			Console.WriteLine("ScheduleCallback!");
+			Console.WriteLine("ScheduleCallback! {0}", HleCallback);
 			lock (this)
 			{
 				this.ScheduledCallbacks.Enqueue(HleCallback);

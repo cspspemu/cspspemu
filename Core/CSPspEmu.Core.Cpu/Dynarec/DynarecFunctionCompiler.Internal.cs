@@ -1,8 +1,6 @@
 ﻿//#define DEBUG_TRACE_INSTRUCTIONS
 //#define DISABLE_JUMP_GOTO
 
-//#define ENABLE_NATIVE_CALLS
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -113,6 +111,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
 				Nodes = ast.Statements(
 					ast.Comment(String.Format("Function {0:X8}-{1:X8}. Entry: {2:X8}", MinPC, MaxPC, EntryPC)),
+					//ast.DebugWrite(String.Format("Dynarec:PC:{0:X8}", EntryPC)),
 					//ast.Comment("Returns immediately when argument CpuThreadState is null, so we can call it on the generation thread to do prelinking."),
 					ast.If(
 						ast.Binary(ast.CpuThreadState, "==", ast.Null<CpuThreadState>()),
@@ -247,10 +246,6 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 							if (BranchInfo.HasFlag(DynarecBranchAnalyzer.JumpFlags.AndLink))
 							{
 								// Just a function call. Continue analyzing.
-//#if !ENABLE_NATIVE_CALLS
-//								EndOfBranchFound = true;
-//								continue;
-//#endif
 							}
 							else
 							{

@@ -313,7 +313,13 @@ namespace CSPspEmu.Hle
 
 			//Console.WriteLine("Thread:{0}:{1}", this, Thread.CurrentThread.Name);
 
-			this.SetStatus(Status.Ready);
+			lock (HleThreadManager.ChangeStatusActions)
+			{
+				HleThreadManager.ChangeStatusActions.Enqueue(() =>
+				{
+					SetStatus(Status.Ready);
+				});
+			}
 
 			//this.CurrentStatus.pree
 			//if (CurrentWaitType != WaitType.Timer && CurrentWaitType != WaitType.Display)

@@ -100,7 +100,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 		private Thread Thread;
 		private Dictionary<uint, DynarecFunction> Functions = new Dictionary<uint, DynarecFunction>();
 		private HashSet<uint> ExploringPCs = new HashSet<uint>();
-		private MessageBus<uint> ExploreQueue = new MessageBus<uint>();
+		private ThreadMessageBus<uint> ExploreQueue = new ThreadMessageBus<uint>();
 		private CpuProcessor CpuProcessor;
 		private MethodCache MethodCache;
 
@@ -260,22 +260,35 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 
 		public DynarecFunction GetDynarecFunctionForPC(uint PC)
 		{
-			this.AddPCNow(PC);
-			//Console.WriteLine("+++++++++++++++++++++++++++++: {0:X8}", PC);
-			while (true)
+			lock (this)
 			{
-				lock (this)
+				if (!this.Functions.ContainsKey(PC))
 				{
-					if (this.Functions.ContainsKey(PC))
-					{
-						//Console.WriteLine("-----------------------------");
-						return this.Functions[PC];
-					}
+					this.Functions[PC] = CpuProcessor.DynarecFunctionCompiler.CreateFunction(new InstructionStreamReader(new PspMemoryStream(CpuProcessor.Memory)), PC);
 				}
-				CompletedFunction.WaitOne();
-				//Console.WriteLine("*****************************");
+				return this.Functions[PC];
 			}
 		}
+
+		//public DynarecFunction GetDynarecFunctionForPC(uint PC)
+		//{
+		//	//var DynarecFunction = CpuProcessor.DynarecFunctionCompiler.CreateFunction(new InstructionStreamReader(new PspMemoryStream(Memory)), PC);
+		//
+		//	//Console.WriteLine("+++++++++++++++++++++++++++++: {0:X8}", PC);
+		//	while (true)
+		//	{
+		//		lock (this)
+		//		{
+		//			if (this.Functions.ContainsKey(PC))
+		//			{
+		//				//Console.WriteLine("-----------------------------");
+		//				return this.Functions[PC];
+		//			}
+		//		}
+		//		CompletedFunction.WaitOne();
+		//		//Console.WriteLine("*****************************");
+		//	}
+		//}
 	}
 
 }

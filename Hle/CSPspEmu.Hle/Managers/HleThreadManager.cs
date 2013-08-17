@@ -199,6 +199,8 @@ namespace CSPspEmu.Hle.Managers
 			return PreemptiveScheduler.Current;
 		}
 
+		internal Queue<Action> ChangeStatusActions = new Queue<Action>();
+
 		public void StepNext(Action DoBeforeSelectingNext)
 		{
 			//HleInterruptManager.EnableDisable(() => {
@@ -206,6 +208,7 @@ namespace CSPspEmu.Hle.Managers
 
 			// Select the thread with the lowest PriorityValue
 			var NextThread = CalculateNext();
+
 #if DEBUG_THREADS
 			if (NextThread != null)
 			{
@@ -222,6 +225,25 @@ namespace CSPspEmu.Hle.Managers
 
 			ExecuteQueuedInterrupts();
 			ExecuteQueuedCallbacks();
+
+			lock (ChangeStatusActions)
+			{
+				if (ChangeStatusActions.Count > 0)
+				{
+					while (ChangeStatusActions.Count > 0)
+					{
+						var Action = ChangeStatusActions.Dequeue();
+						if (Action != null) Action();
+					}
+
+					NextThread = CalculateNext();
+					//if (NextThread == null)
+					//{
+					//	StepNext(DoBeforeSelectingNext);
+					//	return;
+					//}
+				}
+			}
 
 			// No thread found.
 			if (NextThread == null)

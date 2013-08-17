@@ -158,15 +158,17 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Signal">The value to test for.</param>
 		/// <returns>Less than 0 on error</returns>
 		[HlePspFunction(NID = 0x58B1F937, FirmwareVersion = 150)]
+		//[HlePspNotImplemented]
 		public int sceKernelPollSema(CpuThreadState CpuThreadState, SemaphoreId SemaphoreId, int Signal)
 		{
 			var Semaphore = GetSemaphoreById(SemaphoreId);
 			if (Signal <= 0) throw(new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_COUNT));
-			if (Semaphore.CurrentCount - Signal < 0)
+			if (Signal > Semaphore.CurrentCount)
 			{
 				//ThreadManager.Reschedule();
-				CpuThreadState.Yield();
+				//CpuThreadState.Yield();
 				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_SEMA_ZERO));
+				//return 0;
 			}
 			Semaphore.IncrementCount(-Signal);
 			//throw(new NotImplementedException());

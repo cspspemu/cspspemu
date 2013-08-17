@@ -7,6 +7,7 @@ using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Interop;
+using CSPspEmu.Core.Cpu.Dynarec;
 
 namespace CSPspEmu.Hle
 {
@@ -45,11 +46,9 @@ namespace CSPspEmu.Hle
 			var CurrentFakeHleThread = HleThreadManager.CurrentOrAny;
 			CurrentFakeHleThread.CpuThreadState.CopyRegistersFrom(HleThreadManager.CurrentOrAny.CpuThreadState);
 			SetArgumentsToCpuThreadState(CurrentFakeHleThread.CpuThreadState, Function, Arguments);
-			{
-				//CurrentFakeHleThread.CpuThreadState.RA = HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK;
-				//CurrentFakeHleThread.CpuThreadState.ExecuteAT(CurrentFakeHleThread.CpuThreadState.PC);
-				CurrentFakeHleThread.CpuThreadState.ExecuteFunctionAndReturn(CurrentFakeHleThread.CpuThreadState.PC);
-			}
+			Console.Out.WriteLineColored(ConsoleColor.Magenta, "ExecuteFunctionNow: 0x{0:X8}", Function);
+			CurrentFakeHleThread.CpuThreadState.ExecuteFunctionAndReturn(CurrentFakeHleThread.CpuThreadState.PC);
+			Console.Out.WriteLineColored(ConsoleColor.Magenta, "... {0}", (uint)CurrentFakeHleThread.CpuThreadState.GPR2);
 			return (uint)CurrentFakeHleThread.CpuThreadState.GPR2;
 		}
 

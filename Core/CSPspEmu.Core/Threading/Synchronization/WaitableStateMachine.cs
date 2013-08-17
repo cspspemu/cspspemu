@@ -39,6 +39,20 @@ namespace CSPspEmu.Core.Threading.Synchronization
 			}
 		}
 
+		public void SetTemporalValue(TEnum value, Action Action)
+		{
+			var OldValue = this._Value;
+			SetValue(value);
+			try
+			{
+				Action();
+			}
+			finally
+			{
+				SetValue(OldValue);
+			}
+		}
+
 		private void _ValueWasUpdated()
 		{
 			if (Debug) Console.WriteLine("WaitableStateMachine::ValueWasUpdated: " + Value);

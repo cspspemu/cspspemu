@@ -85,7 +85,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		{
 			if (GpuDisplayList.GpuProcessor.GpuConfig.NoticeUnimplementedGpuCommands)
 			{
-				Console.WriteLine("Unimplemented GpuOpCode: {0} : {1:X}", OpCode, Params24);
+				Console.Error.WriteLineColored(ConsoleColor.Red, "Unimplemented GpuOpCode: {0} : {1:X}", OpCode, Params24);
 			}
 		}
 

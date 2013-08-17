@@ -359,10 +359,6 @@ namespace CSPspEmu.Hle.Modules.threadman
 		{
 			var CurrentThread = ThreadManager.Current;
 
-			// TODO: Simply reschedules!
-			//if (DelayInMicroseconds < 1000) DelayInMicroseconds = 1000;
-			//DelayInMicroseconds = 100000;
-
 			CurrentThread.SetWaitAndPrepareWakeUp(HleThread.WaitType.Timer, String.Format("sceKernelDelayThread({0}, {1})", DelayInMicroseconds, HandleCallbacks), null, WakeUpCallback =>
 			{
 				PspRtc.RegisterTimerInOnce(TimeSpanUtils.FromMicroseconds(DelayInMicroseconds), () =>
@@ -624,8 +620,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// </param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x27E22EC2, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
-		[PspUntested]
+		//[HlePspNotImplemented]
+		//[PspUntested]
 		public int sceKernelResumeDispatchThread(HleThreadManager.SCE_KERNEL_DISPATCHTHREAD_STATE State)
 		{
 			ThreadManager.DispatchingThreads = State;
@@ -637,7 +633,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// </summary>
 		/// <returns>The current state of the dispatch thread, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x3AD58B8C, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		//[PspUntested]
 		public HleThreadManager.SCE_KERNEL_DISPATCHTHREAD_STATE sceKernelSuspendDispatchThread()
 		{
