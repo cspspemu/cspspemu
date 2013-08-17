@@ -447,5 +447,13 @@
 			<translation lang="pt">e-COS</translation>
 			<translation lang="fr">kalidor</translation>
 		</text>
+		<text id="CreditsUrls">
+			<translation lang="en">http://pspemu.soywiz.com/</translation>
+			<translation lang="es">http://pspemu.soywiz.com/</translation>
+			<translation lang="it">https://github.com/gambe</translation>
+			<translation lang="ja">https://github.com/lioncash</translation>
+			<translation lang="pt">https://github.com/e-COS</translation>
+			<translation lang="fr">http://kalidor.blogspot.fr/</translation>
+		</text>
 	</category>
 </translations>

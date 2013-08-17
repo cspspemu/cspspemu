@@ -219,6 +219,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
 		{
 			if (CachedBindAddress != GpuState->DrawBufferState.Address)
 			{
+				GL.glFlush();
+				GL.glFinish();
+
 				CachedBindAddress = GpuState->DrawBufferState.Address;
 				var Key = new DrawBufferKey()
 				{
