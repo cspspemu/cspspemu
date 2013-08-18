@@ -62,6 +62,14 @@ varying vec4 v_normal;
 varying vec2 v_texCoords;
 varying vec2 v_backtexCoords;
 
+ivec4 convertToByte(vec4 v) {
+	return ivec4(v * 255.0);
+}
+
+vec4 convertToFloat(ivec4 v) {
+	return vec4(v) / 255.0;
+}
+
 void main() {
 
 	if (hasPerVertexColor) {
@@ -112,53 +120,46 @@ void main() {
 	}
 
 	if (lopEnabled) {
-		vec4 s = gl_FragColor;
-		vec4 d = texture2D(backtex, v_backtexCoords);
+		ivec4 s = convertToByte(gl_FragColor);
+		ivec4 d = convertToByte(texture2D(backtex, v_backtexCoords));
+		ivec4 o;
 
 		// http://www.opengl.org/sdk/docs/man/xhtml/glLogicOp.xml
 		if (lop == GU_CLEAR) {                           // GL_CLEAR	 0
-			gl_FragColor = vec4(0, 0, 0, 1);
+			o = ivec4(0, 0, 0, 0);
 		} else if (lop == GU_AND) {                      // GL_AND	 s & d
-			gl_FragColor = d + s;
+			o = s & d;
 		} else if (lop == GU_AND_REVERSE) {              // GL_AND_REVERSE	 s & ~d
-			// Not implemented
-			gl_FragColor = vec4(1, 1, 0, 1);
+			o = s & ~d;
 		} else if (lop == GU_COPY) {                     // GL_COPY	 s
-			gl_FragColor = s;
+			o = s;
 		} else if (lop == GU_AND_INVERTED) {             // GL_AND_INVERTED	 ~s & d
-			// Not implemented
-			gl_FragColor = vec4(1, 1, 0, 1);
+			o = ~s & d;
 		} else if (lop == GU_NOOP) {                     // GL_NOOP	 d
-			//gl_FragColor = d;
-			discard;
+			o = d;
 		} else if (lop == GU_XOR) {                      // GL_XOR	 s ^ d
-			// Not implemented
-			gl_FragColor = vec4(1, 1, 0, 1);
+			o = s ^ d;
 		} else if (lop == GU_OR) {                       // GL_OR	 s | d
-			// Not implemented
-			gl_FragColor = vec4(1, 1, 0, 1);
+			o = s | d;
 		} else if (lop == GU_NOR) {                      // GL_NOR	 ~(s | d)
-			// Not implemented
-			gl_FragColor = vec4(1, 1, 0, 1);
+			o = ~(s | d);
 		} else if (lop == GU_EQUIV) {                    // GL_EQUIV	 ~(s ^ d)
-			// Not implemented
-			gl_FragColor = vec4(1, 1, 0, 1);
+			o = ~(s ^ d);
 		} else if (lop == GU_INVERTED) {                 // GL_INVERT	 ~d
-			gl_FragColor.rgb = vec3(1, 1, 1) - d.rgb;
+			o = ~d;
 		} else if (lop == GU_OR_REVERSE) {               // GL_OR_REVERSE	 s | ~d
-			// Not implemented
-			gl_FragColor = vec4(1, 1, 0, 1);
+			o = s | ~d;
 		} else if (lop == GU_COPY_INVERTED) {            // GL_COPY_INVERTED	 ~s
-			gl_FragColor.rgb = vec3(1, 1, 1) - s.rgb;
+			o = ~s;
 		} else if (lop == GU_OR_INVERTED) {              // GL_OR_INVERTED	 ~s | d
-			// Not implemented
-			gl_FragColor = vec4(1, 1, 0, 1);
+			o = ~s | d;
 		} else if (lop == GU_NAND) {                     // GL_NAND	 ~(s & d)
-			// Not implemented
-			gl_FragColor = vec4(1, 1, 0, 1);
+			o = ~(s & d);
 		} else if (lop == GU_SET) {                      // GL_SET	 1
-			gl_FragColor = vec4(1, 1, 1, 1);
+			o = ivec4(0xFF, 0xFF, 0xFF, 0xFF);
 		}
+
+		gl_FragColor = convertToFloat(o);
 	}
 
 	//if (colorTest) {
