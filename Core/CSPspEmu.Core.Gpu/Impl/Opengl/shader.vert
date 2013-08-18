@@ -22,6 +22,7 @@ attribute float vertexWeight7;
 
 varying vec4 v_color;
 varying vec2 v_texCoords;
+varying vec2 v_backtexCoords;
 varying vec4 v_normal;
 
 #define DO_WEIGHT(n) 
@@ -64,6 +65,7 @@ vec4 prepareNormal(vec4 normal) {
 void main() {
 	
 	gl_Position = matrixWorldViewProjection * performSkinning(vertexPosition);
+	v_backtexCoords = (gl_Position.xy + vec2(1.0, 1.0)) / 2.0;
 	v_normal = performSkinning(prepareNormal(vertexNormal));
 	v_color = vertexColor;
 	v_texCoords = (matrixTexture * vertexTexCoords).xy;

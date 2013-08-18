@@ -483,6 +483,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 		bool DoPrimStart = false;
 		VertexTypeStruct CachedVertexType;
 		GuPrimitiveType PrimitiveType;
+		GLRenderTarget LogicOpsRenderTarget;
 
 		public override unsafe void PrimStart(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType)
 		{
@@ -490,17 +491,37 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 			this.PrimitiveType = PrimitiveType;
 			DoPrimStart = true;
 			ResetVertex();
+
+
+			if (Shader != null)
+			{
+				Shader.GetUniform("lopEnabled").Set(GpuState->LogicalOperationState.Enabled);
+
+				if (GpuState->LogicalOperationState.Enabled)
+				{
+					if (LogicOpsRenderTarget == null)
+					{
+						LogicOpsRenderTarget = GLRenderTarget.Create(512, 272, RenderTargetLayers.Color);
+					}
+					GLRenderTarget.CopyFromTo(GLRenderTarget.Current, LogicOpsRenderTarget);
+					Shader.GetUniform("backtex").Set(GLTextureUnit.CreateAtIndex(1).SetFiltering(GLScaleFilter.Linear).SetWrap(GLWrap.ClampToEdge).SetTexture(LogicOpsRenderTarget.TextureColor));
+
+					Shader.GetUniform("lop").Set((int)GpuState->LogicalOperationState.Operation);
+
+					//new Bitmap(512, 272).SetChannelsDataInterleaved(LogicOpsRenderTarget.ReadPixels(), BitmapChannelList.RGBA).Save(@"c:\temp\test.png");
+				}
+			}
+		}
+
+		public override void PrimEnd()
+		{
+			EndVertex();
 		}
 
 		private void EndVertex()
 		{
 			DrawVertices(ConvertGLGeometry(PrimitiveType));
 			ResetVertex();
-		}
-
-		public override void PrimEnd()
-		{
-			EndVertex();
 		}
 
 		/// <summary>

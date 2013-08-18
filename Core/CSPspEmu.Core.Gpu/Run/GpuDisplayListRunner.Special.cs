@@ -95,6 +95,10 @@ namespace CSPspEmu.Core.Gpu.Run
 
 		// void drawRegion(int x, int y, int width, int height)
 		// void sceGuDispBuffer(int width, int height, void* dispbp, int dispbw)
+
+		// void sceGuDispBuffer(int width, int height, void* dispbp, int dispbw)
+		//drawRegion(0,0,gu_draw_buffer.width,gu_draw_buffer.height);
+		//sceDisplaySetMode(0,gu_draw_buffer.width,gu_draw_buffer.height);
 		//[GpuOpCodesNotImplemented]
 		public void OP_REGION1()
 		{
@@ -109,8 +113,8 @@ namespace CSPspEmu.Core.Gpu.Run
 		{
 			var X2 = (short)BitUtils.Extract(Params24, 0, 10);
 			var Y2 = (short)BitUtils.Extract(Params24, 10, 10);
-			GpuState->Viewport.RegionBottomRight.X = X2;
-			GpuState->Viewport.RegionBottomRight.Y = Y2;
+			GpuState->Viewport.RegionBottomRight.X = (short)(X2 + 1);
+			GpuState->Viewport.RegionBottomRight.Y = (short)(Y2 + 1);
 		}
 
 		/**
@@ -195,6 +199,21 @@ namespace CSPspEmu.Core.Gpu.Run
 			//Console.Error.WriteLine("OP_ZPOS: {0}", GpuState->Viewport.Position.Z);
 			//gpu.state.viewport.pz = command.extractFixedFloat!(0, 16);
 		}
+
+		/**
+		 * Set virtual coordinate offset
+		 *
+		 * The PSP has a virtual coordinate-space of 4096x4096, this controls where rendering is performed
+		 * 
+		 * @par Example: Center the virtual coordinate range
+		 * @code
+		 * sceGuOffset(2048-(480/2),2048-(480/2));
+		 * @endcode
+		 *
+		 * @param x - Offset (0-4095)
+		 * @param y - Offset (0-4095)
+		 */
+		//void sceGuOffset(unsigned int x, unsigned int y); // OP_OFFSETX + OP_OFFSETY
 
 		//[GpuOpCodesNotImplemented]
 		public void OP_OFFSETX()
@@ -285,20 +304,5 @@ namespace CSPspEmu.Core.Gpu.Run
 			GpuState->LogicalOperationState.Operation = (LogicalOperationEnum)Param8(0);
 			//gpu.state.logicalOperation.operation = command.extractEnum!(LogicalOperation);
 		}
-
-		/**
-		 * Set virtual coordinate offset
-		 *
-		 * The PSP has a virtual coordinate-space of 4096x4096, this controls where rendering is performed
-		 * 
-		 * @par Example: Center the virtual coordinate range
-		 * @code
-		 * sceGuOffset(2048-(480/2),2048-(480/2));
-		 * @endcode
-		 *
-		 * @param x - Offset (0-4095)
-		 * @param y - Offset (0-4095)
-		 */
-		//void sceGuOffset(unsigned int x, unsigned int y); // OP_OFFSETX + OP_OFFSETY
 	}
 }
