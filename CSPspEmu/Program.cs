@@ -22,6 +22,7 @@ using CSharpPlatform.GL.Impl;
 using System.Windows;
 using System.Drawing;
 using CSPspEmu.Gui.SMAA;
+using CSPspEmu.Gui.XBR.Shader;
 
 namespace CSPspEmu
 {
@@ -65,14 +66,23 @@ namespace CSPspEmu
 		static private void _MainData()
 		{
 			var Context = GLContextFactory.CreateWindowless().MakeCurrent();
-			var BitmapIn = new Bitmap(Image.FromFile(@"C:\temp\test.png"));
-			var Smaa = new Smaa();
-			var TextureIn = GLTextureCreateFromBitmap(BitmapIn);
-			var TextureOut = Smaa.Process(TextureIn, null);
+			//var BitmapIn = new Bitmap(Image.FromFile(@"C:\temp\1.png"));
+			var BitmapIn = new Bitmap(Image.FromFile(@"C:\temp\in.png"));
 
-			new Bitmap(BitmapIn.Width, BitmapIn.Height).SetChannelsDataInterleaved(TextureOut.GetDataFromGpu(), BitmapChannelList.RGBA).Save(@"c:\temp\test.out.png");
+			Console.WriteLine("{0}", String.Join("\n", Assembly.GetExecutingAssembly().GetManifestResourceNames()));
 
-			File.WriteAllBytes(@"c:\temp\test.out.bin", TextureOut.GetDataFromGpu());
+			var TextureOut = new XBRShader().Process(GLTextureCreateFromBitmap(BitmapIn));
+
+			new Bitmap(TextureOut.Width, TextureOut.Height).SetChannelsDataInterleaved(TextureOut.GetDataFromGpu(), BitmapChannelList.RGBA).Save(@"c:\temp\out.png");
+
+			//var Smaa = new Smaa();
+			//var TextureIn = GLTextureCreateFromBitmap(BitmapIn);
+			//var TextureOut = Smaa.Process(TextureIn, null);
+			//
+			//new Bitmap(TextureOut.Width, TextureOut.Height).SetChannelsDataInterleaved(TextureOut.GetDataFromGpu(), BitmapChannelList.RGBA).Save(@"c:\temp\test.out.png");
+			//
+			//File.WriteAllBytes(@"c:\temp\test.out.bin", TextureOut.GetDataFromGpu());
+
 			Environment.Exit(0);
 		}
 

@@ -64,6 +64,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			if (TotalInstructions >= _DynarecConfig.InstructionCountToDisableOptimizations) DisableOptimizations = true;
 
 			if (Platform.IsMono) DisableOptimizations = false;
+			if (_DynarecConfig.ForceJitOptimizationsOnEvenLargeFunctions) DisableOptimizations = false;
 
 			try
 			{

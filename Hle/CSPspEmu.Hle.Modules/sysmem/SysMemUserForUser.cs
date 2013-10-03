@@ -5,6 +5,7 @@ using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Managers;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core;
+using CSharpUtils;
 
 namespace CSPspEmu.Hle.Modules.sysmem
 {
@@ -155,7 +156,8 @@ namespace CSPspEmu.Hle.Modules.sysmem
 			//foreach (var Partition in MemoryManager.RootPartition.ChildPartitions) Console.WriteLine(Partition);
 			//return 24 * 1024 * 1024;
 
-			return MemoryManager.GetPartition(MemoryPartitions.User).MaxFreeSize - 0x40000;
+			//return (MemoryManager.GetPartition(MemoryPartitions.User).MaxFreeSize - 0x40000) & ~15;
+			return (MemoryManager.GetPartition(MemoryPartitions.User).MaxFreeSize) & ~15;
 		}
 
 		/// <summary>
@@ -176,6 +178,8 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		[HlePspFunction(NID = 0x9D9A5BA1, FirmwareVersion = 150)]
 		public uint sceKernelGetBlockHeadAddr(int BlockId)
 		{
+			if (BlockId == 0) return 0;
+			if (!MemoryManager.MemoryPartitionsUid.Contains(BlockId)) return 0;
 			return MemoryManager.MemoryPartitionsUid.Get(BlockId).Low;
 		}
 
@@ -191,6 +195,13 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		[HlePspFunction(NID = 0x237DBD4F, FirmwareVersion = 150)]
 		public int sceKernelAllocPartitionMemory(MemoryPartitions PartitionId, string Name, HleMemoryManager.BlockTypeEnum Type, int Size, /* void* */uint Address)
 		{
+			if ((int)PartitionId <= 0 || (int)PartitionId == 7 || (int)PartitionId >= 10) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_ARGUMENT));
+			if (Size <= 0) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_FAILED_ALLOC_MEMBLOCK));
+
+			//Console.Error.WriteLineColored(ConsoleColor.Yellow, "sceKernelAllocPartitionMemory: {0}, {1}, {2}, {3}, {4}", PartitionId, MemoryManager.GetPartition(PartitionId).MaxFreeSize, Name, Type, Size);
+			
+			if (Name == null) throw (new SceKernelException(SceKernelErrors.ERROR_ERROR));
+
 			MemoryPartition MemoryPartition;
 			int Alignment = 1;
 			switch (Type)
@@ -200,74 +211,44 @@ namespace CSPspEmu.Hle.Modules.sysmem
 					Alignment = (int)Address;
 					break;
 			}
-			if (Type == HleMemoryManager.BlockTypeEnum.Low || Type == HleMemoryManager.BlockTypeEnum.LowAligned)
+
+			if ((Alignment == 0) || !MathUtils.IsPowerOfTwo((uint)Alignment))
 			{
-				try
+				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_ALIGNMENT_SIZE));
+			}
+
+			try
+			{
+				switch (Type)
 				{
-					MemoryPartition = MemoryManager.GetPartition(PartitionId).Allocate(
-						Size,
-						MemoryPartition.Anchor.Low,
-						Alignment: Alignment,
-						Name: Name
-					);
-				}
-				catch (MemoryPartitionNoMemoryException MemoryPartitionNoMemoryException)
-				{
-					//Console.Error.WriteLine(InvalidOperationException);
-					Console.Error.WriteLine(MemoryPartitionNoMemoryException);
-					throw(new SceKernelException(SceKernelErrors.ERROR_KERNEL_NO_MEMORY));
+					case HleMemoryManager.BlockTypeEnum.Low:
+					case HleMemoryManager.BlockTypeEnum.LowAligned:
+						MemoryPartition = MemoryManager.GetPartition(PartitionId).Allocate(Size, MemoryPartition.Anchor.Low, Alignment: Alignment, Name: Name );
+						break;
+					case HleMemoryManager.BlockTypeEnum.High:
+					case HleMemoryManager.BlockTypeEnum.HighAligned:
+						MemoryPartition = MemoryManager.GetPartition(PartitionId).Allocate(Size, MemoryPartition.Anchor.High, Alignment: Alignment, Name: Name);
+						break;
+					case HleMemoryManager.BlockTypeEnum.Address:
+						if (Address == 0) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_FAILED_ALLOC_MEMBLOCK));
+						MemoryPartition = MemoryManager.GetPartition(PartitionId).Allocate(Size, MemoryPartition.Anchor.Low, Position: Address, Alignment: Alignment, Name: Name);
+						break;
+					default:
+						Console.Error.WriteLineColored(ConsoleColor.Red, "Not Implemented sceKernelAllocPartitionMemory with Type='" + Type + "'");
+						throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MEMBLOCK_ALLOC_TYPE));
 				}
 			}
-			else
+			catch (MemoryPartitionNoMemoryException MemoryPartitionNoMemoryException)
 			{
-				//throw (new NotImplementedException());
-				Console.WriteLine("Not Implemented sceKernelAllocPartitionMemory with Type='" + Type + "'");
-				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_MEMBLOCK_ALLOC_TYPE));
-				//return SceKernelErrors.ERROR_KERNEL_ILLEGAL_MEMBLOCK_ALLOC_TYPE;
+				//Console.Error.WriteLine(InvalidOperationException);
+				Console.Error.WriteLine(MemoryPartitionNoMemoryException);
+				throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_NO_MEMORY));
 			}
+
+			//Console.Error.WriteLineColored(ConsoleColor.Cyan, "  sceKernelAllocPartitionMemory: {0}", MemoryPartition);
 
 			return (int)MemoryManager.MemoryPartitionsUid.Create(MemoryPartition);
-
-			/*
-			throw(new NotImplementedException());
-			const uint ERROR_KERNEL_ILLEGAL_MEMBLOCK_ALLOC_TYPE = 0x800200d8;
-			const uint ERROR_KERNEL_FAILED_ALLOC_MEMBLOCK       = 0x800200d9;
-
-			try {
-				MemorySegment memorySegment;
-			
-				Logger.log(Logger.Level.INFO, "SysMemUserForUser", "sceKernelAllocPartitionMemory(%d:'%s':%s:%d,0x%08X)", PartitionId, Name, std.conv.to!string(Type), Size, Address);
-				//Logger.log(Logger.Level.INFO, "SysMemUserForUser", "sceKernelAllocPartitionMemory(%d:'%s':%d:%d)", partitionid, name, (type), size);
-			
-				int alignment = 1;
-				if ((Type == PspSysMemBlockTypes.PSP_SMEM_Low_Aligned) || (Type == PspSysMemBlockTypes.PSP_SMEM_High_Aligned)) {
-					alignment = Address;
-				}
-	
-				switch (Type) {
-					default: return ERROR_KERNEL_ILLEGAL_MEMBLOCK_ALLOC_TYPE;
-					case PspSysMemBlockTypes.PSP_SMEM_Low_Aligned:
-					case PspSysMemBlockTypes.PSP_SMEM_Low : memorySegment = pspMemorySegment[PartitionId].allocByLow (Size, dupStr(Name), 0, alignment); break;
-					case PspSysMemBlockTypes.PSP_SMEM_High_Aligned:
-					case PspSysMemBlockTypes.PSP_SMEM_High: memorySegment = pspMemorySegment[PartitionId].allocByHigh(Size, dupStr(Name), alignment); break;
-					case PspSysMemBlockTypes.PSP_SMEM_Addr: memorySegment = pspMemorySegment[PartitionId].allocByAddr(Address, Size, dupStr(Name)); break;
-				}
-	
-				if (memorySegment is null) return ERROR_KERNEL_FAILED_ALLOC_MEMBLOCK;
-			
-				SceUID sceUid = uniqueIdFactory.add(memorySegment);
-			
-				Logger.log(Logger.Level.INFO, "SysMemUserForUser", "sceKernelAllocPartitionMemory(%d:'%s':%s:%d) :: (%d) -> %s", PartitionId, Name, std.conv.to!string(Type), Size, sceUid, memorySegment.block);
-				//Logger.log(Logger.Level.INFO, "SysMemUserForUser", "sceKernelAllocPartitionMemory(%d:'%s':%d:%d) :: (%d) -> %s", partitionid, name, (type), size, sceUid, memorySegment.block);
-
-				return sceUid;
-			}
-			catch (Exception Exception)
-			{
-				//logError("ERROR: %s", o);
-				return ERROR_KERNEL_FAILED_ALLOC_MEMBLOCK;
-			}
-			*/
+			//return MemoryPartition;
 		}
 
 
@@ -280,6 +261,8 @@ namespace CSPspEmu.Hle.Modules.sysmem
 		//[HlePspNotImplemented]
 		public int sceKernelFreePartitionMemory(int BlockId)
 		{
+			if (BlockId == 0) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_UNKNOWN_UID));
+			if (!MemoryManager.MemoryPartitionsUid.Contains(BlockId)) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_UNKNOWN_UID));
 			var MemoryPartition = MemoryManager.MemoryPartitionsUid.Get(BlockId);
 			//Console.Error.WriteLine(MemoryPartition.ParentPartition.ChildPartitions.Where(Partition => Partition));
 			//Console.Error.WriteLine(":[1]:" + sceKernelTotalFreeMemSize());

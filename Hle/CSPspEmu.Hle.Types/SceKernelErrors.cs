@@ -41,6 +41,9 @@
 
 		ERROR_OK = unchecked((int)0x00000000),
 
+		ERROR_ERROR = unchecked((int)0x80020001),
+		ERROR_NOTIMP = unchecked((int)0x80020002),
+
 		ERROR_ALREADY = unchecked((int)0x80000020),
 		ERROR_BUSY = unchecked((int)0x80000021),
 		ERROR_OUT_OF_MEMORY = unchecked((int)0x80000022),

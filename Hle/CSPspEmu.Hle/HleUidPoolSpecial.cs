@@ -8,10 +8,20 @@ namespace CSPspEmu.Hle.Managers
 	{
 		protected TKey LastId = default(TKey);
 		protected Dictionary<TKey, TType> Items = new Dictionary<TKey, TType>();
-		public SceKernelErrors OnKeyNotFoundError = (SceKernelErrors)(-1);
+		protected SceKernelErrors OnKeyNotFoundError = unchecked((SceKernelErrors)(0xDEAD0017));
 
 		public HleUidPoolSpecial()
 		{
+			//if (!typeof(TType).Implements(typeof(IHleUidPoolClass)))
+			//{
+			//	throw (new Exception(String.Format("HleUidPoolSpecial: {0} not implements {1}", typeof(TType), typeof(IHleUidPoolClass))));
+			//}
+
+			var Attribute = typeof(TType).GetAttribute<HleUidPoolClassAttribute>().FirstOrDefault();
+			if (Attribute != null)
+			{
+				this.OnKeyNotFoundError = Attribute.NotFoundError;
+			}
 			this.LastId = (TKey)(object)1;
 		}
 

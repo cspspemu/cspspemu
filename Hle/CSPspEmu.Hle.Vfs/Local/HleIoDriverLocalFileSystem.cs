@@ -60,11 +60,11 @@ namespace CSPspEmu.Hle.Vfs.Local
 			var RealFileName = GetFullNormalizedAndSanitizedPath(FileName);
 			FileMode FileMode = FileMode.Open;
 			FileAccess FileAccess = 0;
-			bool Append = (Flags & HleIoFlags.Append) != 0;
-			bool Read = (Flags & HleIoFlags.Read) != 0;
-			bool Write = (Flags & HleIoFlags.Write) != 0;
-			bool Truncate = (Flags & HleIoFlags.Truncate) != 0;
-			bool Create = (Flags & HleIoFlags.Create) != 0;
+			bool Append = Flags.HasFlag(HleIoFlags.Append);
+			bool Read = Flags.HasFlag(HleIoFlags.Read);
+			bool Write = Flags.HasFlag(HleIoFlags.Write);
+			bool Truncate = Flags.HasFlag(HleIoFlags.Truncate);
+			bool Create = Flags.HasFlag(HleIoFlags.Create);
 
 			if (Read) FileAccess |= FileAccess.Read;
 			if (Write) FileAccess |= FileAccess.Write;
@@ -184,25 +184,17 @@ namespace CSPspEmu.Hle.Vfs.Local
 		public unsafe int IoDopen(HleIoDrvFileArg HleIoDrvFileArg, string Name)
 		{
 			var RealFileName = GetFullNormalizedAndSanitizedPath(Name);
-			try
-			{
-				//Console.Error.WriteLine("'{0}'", RealFileName);
-				var Items = new List<HleIoDirent>();
+			//Console.Error.WriteLine("'{0}'", RealFileName);
+			var Items = new List<HleIoDirent>();
 
-				Items.Add(CreateFakeDirectoryHleIoDirent("."));
-				Items.Add(CreateFakeDirectoryHleIoDirent(".."));
-				Items.AddRange(new DirectoryInfo(RealFileName).EnumerateFiles().Select(Item => ConvertFileSystemInfoToHleIoDirent(Item)));
-				Items.AddRange(new DirectoryInfo(RealFileName).EnumerateDirectories().Select(Item => ConvertFileSystemInfoToHleIoDirent(Item)));
+			Items.Add(CreateFakeDirectoryHleIoDirent(RealFileName, "."));
+			Items.Add(CreateFakeDirectoryHleIoDirent(RealFileName, ".."));
+			Items.AddRange(new DirectoryInfo(RealFileName).EnumerateFiles().Select(Item => ConvertFileSystemInfoToHleIoDirent(Item)));
+			Items.AddRange(new DirectoryInfo(RealFileName).EnumerateDirectories().Select(Item => ConvertFileSystemInfoToHleIoDirent(Item)));
 
-				//HleIoDrvFileArg.FileArgument = new DisposableDummy<DirectoryEnumerator<HleIoDirent>>(new DirectoryEnumerator<HleIoDirent>(Items.ToArray()));
-				HleIoDrvFileArg.FileArgument = new DirectoryEnumerator<HleIoDirent>(Items.ToArray());
-				return 0;
-			}
-			catch (DirectoryNotFoundException DirectoryNotFoundException)
-			{
-				Console.WriteLine(DirectoryNotFoundException);
-				return -1;
-			}
+			//HleIoDrvFileArg.FileArgument = new DisposableDummy<DirectoryEnumerator<HleIoDirent>>(new DirectoryEnumerator<HleIoDirent>(Items.ToArray()));
+			HleIoDrvFileArg.FileArgument = new DirectoryEnumerator<HleIoDirent>(Items.ToArray());
+			return 0;
 		}
 
 		public unsafe int IoDclose(HleIoDrvFileArg HleIoDrvFileArg)
@@ -211,15 +203,11 @@ namespace CSPspEmu.Hle.Vfs.Local
 			return 0;
 		}
 
-		public unsafe static HleIoDirent CreateFakeDirectoryHleIoDirent(string Name)
+		public unsafe static HleIoDirent CreateFakeDirectoryHleIoDirent(string RealFileName, string Name)
 		{
-			var HleIoDirent = default(HleIoDirent);
-			HleIoDirent.Name = Name;
-			HleIoDirent.Stat.Size = 0;
-			HleIoDirent.Stat.Mode = SceMode.Directory | (SceMode)Convert.ToInt32("777", 8);
-			HleIoDirent.Stat.Attributes = IOFileModes.Directory;
-			HleIoDirent.Stat.DeviceDependentData0 = 10;
-			return HleIoDirent;
+			var Ret = ConvertFileSystemInfoToHleIoDirent(new DirectoryInfo(RealFileName + "\\" + Name));
+			Ret.Name = Name;
+			return Ret;
 		}
 
 		public unsafe static HleIoDirent ConvertFileSystemInfoToHleIoDirent(FileSystemInfo FileSystemInfo)
@@ -230,19 +218,21 @@ namespace CSPspEmu.Hle.Vfs.Local
 			{
 				if (DirectoryInfo != null)
 				{
-					HleIoDirent.Stat.Size = 0;
-					HleIoDirent.Stat.Mode = SceMode.Directory | (SceMode)Convert.ToInt32("777", 8);
+					HleIoDirent.Stat.Size = 4096;
+					HleIoDirent.Stat.Mode = (SceMode)4605;
 					HleIoDirent.Stat.Attributes = IOFileModes.Directory;
-					HleIoDirent.Name = FileSystemInfo.Name;
 				}
 				else
 				{
 					HleIoDirent.Stat.Size = FileInfo.Length;
-					HleIoDirent.Stat.Mode = SceMode.File | (SceMode)Convert.ToInt32("777", 8);
-					//HleIoDirent.Stat.Attributes = IOFileModes.File | IOFileModes.CanRead | IOFileModes.CanWrite | IOFileModes.CanExecute;
+					HleIoDirent.Stat.Mode = (SceMode)8628;
 					HleIoDirent.Stat.Attributes = IOFileModes.File;
-					HleIoDirent.Name = FileSystemInfo.Name.ToUpper();
 				}
+				HleIoDirent.Name = FileSystemInfo.Name.ToLower();
+
+				HleIoDirent.Stat.TimeCreation = ScePspDateTime.FromDateTime(FileSystemInfo.CreationTime);
+				HleIoDirent.Stat.TimeLastAccess = ScePspDateTime.FromDateTime(FileSystemInfo.LastAccessTime);
+				HleIoDirent.Stat.TimeLastModification = ScePspDateTime.FromDateTime(FileSystemInfo.LastWriteTime);
 
 				HleIoDirent.Stat.DeviceDependentData0 = 10;
 			}

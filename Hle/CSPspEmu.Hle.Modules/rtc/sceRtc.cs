@@ -4,6 +4,7 @@ using CSPspEmu.Core;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Hle.Attributes;
 using CSPspEmu.Hle.Vfs;
+using CSharpUtils;
 
 namespace CSPspEmu.Hle.Modules.rtc
 {
@@ -21,8 +22,7 @@ namespace CSPspEmu.Hle.Modules.rtc
 		//[HlePspNotImplemented]
 		public uint sceRtcGetTickResolution()
 		{
-			//return (uint)(TimeSpan.FromSeconds(1).TotalMilliseconds * 1000);
-			return 1000 * 1000;
+			return (uint)TimeSpan.FromSeconds(1).GetTotalMicroseconds();
 		}
 
 		/// <summary>
@@ -36,20 +36,6 @@ namespace CSPspEmu.Hle.Modules.rtc
 		public int sceRtcGetTime_t(ref ScePspDateTime DateTime, out uint UnixTime)
 		{
 			UnixTime = (uint)DateTime.ToUnixTimestamp();
-			return 0;
-		}
-
-
-		/// <summary>
-		/// Convert a UTC-based tickcount into a local time tick count
-		/// </summary>
-		/// <param name="TickUTC">pointer to u64 tick in UTC time</param>
-		/// <param name="TickLocal">pointer to u64 to receive tick in local time</param>
-		/// <returns>0 on success, less than 0 on error</returns>
-		[HlePspFunction(NID = 0x34885E0D, FirmwareVersion = 150)]
-		public int sceRtcConvertUtcToLocalTime(ulong* TickUTC, ulong* TickLocal)
-		{
-			*TickLocal = *TickUTC;
 			return 0;
 		}
 
@@ -132,9 +118,9 @@ namespace CSPspEmu.Hle.Modules.rtc
 		///		Less than 0 on error
 		/// </returns>
 		[HlePspFunction(NID = 0x44F45E05, FirmwareVersion = 150)]
-		public int sceRtcTickAddTicks(long* dstPtr, long* srcPtr, long value)
+		public int sceRtcTickAddTicks(out long dstPtr, ref long srcPtr, long value)
 		{
-			*dstPtr = (long)((long)*srcPtr + value);
+			dstPtr = srcPtr + value;
 			return 0;
 		}
 
@@ -146,9 +132,9 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <param name="value">Number of ms to add</param>
 		/// <returns>0 on success, less than 0 on error</returns>
 		[HlePspFunction(NID = 0x26D25A5D, FirmwareVersion = 150)]
-		public int sceRtcTickAddMicroseconds(long* dstPtr, long* srcPtr, long value)
+		public int sceRtcTickAddMicroseconds(out long dstPtr, ref long srcPtr, long value)
 		{
-			return sceRtcTickAddTicks(dstPtr, srcPtr, value);
+			return sceRtcTickAddTicks(out dstPtr, ref srcPtr, value);
 		}
 
 		/// <summary>
@@ -253,11 +239,11 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// </returns>
 		[HlePspFunction(NID = 0x6FF40ACC, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceRtcGetTick(ScePspDateTime* Date, ulong* Tick)
+		public int sceRtcGetTick(ref ScePspDateTime Date, out ulong Tick)
 		{
 			try
 			{
-				*Tick = (ulong)Date->ToDateTime().GetTotalNanoseconds();
+				Tick = (ulong)Date.ToDateTime().GetTotalMicroseconds();
 				return 0;
 			}
 			catch (Exception)
@@ -394,7 +380,7 @@ namespace CSPspEmu.Hle.Modules.rtc
 		/// <returns>0 when both ticks are equal, &lt; 0 when tick1 &lt; tick2, &gt; 0 when tick1 &gt; tick2</returns>
 		[HlePspFunction(NID = 0x9ED0AE87, FirmwareVersion = 150)]
 		[PspUntested]
-		public int sceRtcCompareTick(ulong* Tick1, ulong* Tick2)
+		public int sceRtcCompareTick(ref ulong Tick1, ref ulong Tick2)
 		{
 			if (Tick1 < Tick2) return -1;
 			if (Tick1 > Tick2) return 1;
@@ -462,10 +448,17 @@ namespace CSPspEmu.Hle.Modules.rtc
 			return 0;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="date"></param>
+		/// <param name="?"></param>
+		/// <returns></returns>
 		[HlePspFunction(NID = 0x3A807CC8, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceRtcSetTime_t()
+		public int sceRtcSetTime_t(out ScePspDateTime date, uint time)
 		{
+			date = ScePspDateTime.FromDateTime(DateTimeRange.ConvertFromUnixTimestamp(time));
 			return 0;
 		}
 
@@ -551,10 +544,38 @@ namespace CSPspEmu.Hle.Modules.rtc
 			return 0;
 		}
 
+		[Inject]
+		HleConfig HleConfig;
+
+		private long GetUTCOffsetInTicks()
+		{
+			return TimeSpan.FromHours(HleConfig.Timezone).GetTotalMicroseconds();
+		}
+
+		/// <summary>
+		/// Convert a local time based tickcount into a UTC-based tick count
+		/// </summary>
+		/// <param name="TickLocal">pointer to u64 tick in local time</param>
+		/// <param name="TickUTC">pointer to u64 to receive tick in UTC based time</param>
+		/// <returns>0 on success, &lt; 0 on error</returns>
 		[HlePspFunction(NID = 0x779242A2, FirmwareVersion = 150)]
 		[HlePspNotImplemented]
-		public int sceRtcConvertLocalTimeToUTC()
+		public int sceRtcConvertLocalTimeToUTC(ref long TickLocal, out long TickUTC)
 		{
+			TickUTC = TickLocal + GetUTCOffsetInTicks();
+			return 0;
+		}
+
+		/// <summary>
+		/// Convert a UTC-based tickcount into a local time tick count
+		/// </summary>
+		/// <param name="TickUTC">pointer to u64 tick in UTC time</param>
+		/// <param name="TickLocal">pointer to u64 to receive tick in local time</param>
+		/// <returns>0 on success, less than 0 on error</returns>
+		[HlePspFunction(NID = 0x34885E0D, FirmwareVersion = 150)]
+		public int sceRtcConvertUtcToLocalTime(ref long TickUTC, out long TickLocal)
+		{
+			TickLocal = TickUTC - GetUTCOffsetInTicks();
 			return 0;
 		}
 

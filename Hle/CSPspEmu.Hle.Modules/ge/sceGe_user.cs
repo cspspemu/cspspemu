@@ -46,7 +46,7 @@ namespace CSPspEmu.Hle.Modules.ge
 		/// </summary>
 		/// <returns>A pointer to the base of VRAM.</returns>
 		[HlePspFunction(NID = 0xE47E40E4, FirmwareVersion = 150)]
-		[HlePspNotImplemented]
+		//[HlePspNotImplemented]
 		public uint sceGeEdramGetAddr()
 		{
 			return PspMemory.FrameBufferSegment.Low;

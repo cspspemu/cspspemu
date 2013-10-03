@@ -9,7 +9,7 @@ namespace CSPspEmu.Hle.Managers
 		Kernel1 = 1,
 		User = 2,
 		VolatilePartition = 3,
-		UserStacks = 12,
+		UserStacks = 6,
 	}
 
 	public class HleMemoryManager : IInjectInitialize
@@ -17,7 +17,7 @@ namespace CSPspEmu.Hle.Managers
 		/// <summary>
 		/// Specifies the type of allocation used for memory blocks.
 		/// </summary>
-		public enum BlockTypeEnum : uint
+		public enum BlockTypeEnum : int
 		{
 			/// <summary>
 			/// Allocate from the lowest available address.
@@ -65,20 +65,15 @@ namespace CSPspEmu.Hle.Managers
 
 		void IInjectInitialize.Initialize()
 		{
-#if true
-			MemoryPartitionsUid.Set(0, new MemoryPartition(InjectContext, Low: 0x88000000, High: 0x88300000, Allocated: false, Name: "Kernel Partition 1")); // 3MB
-			MemoryPartitionsUid.Set(1, new MemoryPartition(InjectContext, Low: 0x88300000, High: 0x88400000, Allocated: false, Name: "Kernel Partition 2")); // 1MB
+			MemoryPartitionsUid.Set((int)MemoryPartitions.Kernel0, new MemoryPartition(InjectContext, Low: 0x88000000, High: 0x88300000, Allocated: false, Name: "Kernel Partition 1")); // 3MB
+			//MemoryPartitionsUid.Set((int)MemoryPartitions.Kernel1, new MemoryPartition(InjectContext, Low: 0x88300000, High: 0x88400000, Allocated: false, Name: "Kernel Partition 2")); // 1MB
 
-			MemoryPartitionsUid.Set(2, new MemoryPartition(InjectContext, Low: 0x08800000, High: PspMemory.MainSegment.High, Allocated: false, Name: "User Partition")); // 24MB
-			MemoryPartitionsUid.Set(12, new MemoryPartition(InjectContext, Low: 0x08800000, High: 0x0B000000, Allocated: false, Name: "User Stacks Partition")); // 24MB
-			MemoryPartitionsUid.Set(3, new MemoryPartition(InjectContext, Low: 0x08400000, High: 0x08800000, Allocated: false, Name: "Volatile Partition")); // 4MB
-			MemoryPartitionsUid.Set(4, new MemoryPartition(InjectContext, Low: 0x8A000000, High: 0x8BC00000, Allocated: false, Name: "UMD Cache Partition")); // 28MB
-			MemoryPartitionsUid.Set(5, new MemoryPartition(InjectContext, Low: 0x8BC00000, High: 0x8C000000, Allocated: false, Name: "ME Partition")); // 4MB
-#else
-				MemoryPartitionsUid.Set(0, new MemoryPartition(Low: 0x88000000, High: 0x88300000, Allocated: false, Name: "Kernel Partition 1")); // 3MB
-				MemoryPartitionsUid.Set(1, new MemoryPartition(Low: 0x88300000, High: 0x88400000, Allocated: false, Name: "Kernel Partition 2")); // 1MB
-				MemoryPartitionsUid.Set(2, new MemoryPartition(Low: 0x08800000, High: 0x0B000000, Allocated: false, Name: "User Partition")); // 48MB
-#endif
+			MemoryPartitionsUid.Set((int)MemoryPartitions.User, new MemoryPartition(InjectContext, Low: 0x08800000, High: PspMemory.MainSegment.High, Allocated: false, Name: "User Partition")); // 24MB
+			MemoryPartitionsUid.Set((int)MemoryPartitions.UserStacks, new MemoryPartition(InjectContext, Low: 0x08800000, High: 0x0B000000, Allocated: false, Name: "User Stacks Partition")); // 24MB
+			
+			MemoryPartitionsUid.Set(5, new MemoryPartition(InjectContext, Low: 0x08400000, High: 0x08800000, Allocated: false, Name: "Volatile Partition")); // 4MB
+			//MemoryPartitionsUid.Set(4, new MemoryPartition(InjectContext, Low: 0x8A000000, High: 0x8BC00000, Allocated: false, Name: "UMD Cache Partition")); // 28MB
+			//MemoryPartitionsUid.Set(6, new MemoryPartition(InjectContext, Low: 0x8BC00000, High: 0x8C000000, Allocated: false, Name: "ME Partition")); // 4MB
 		}
 	}
 }

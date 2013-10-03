@@ -89,6 +89,9 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 
 				try
 				{
+					//Console.Error.WriteLineColored(ConsoleColor.Blue, "{0}", FileName);
+					//Console.Error.WriteLineColored(ConsoleColor.Blue, "{0}", Flags);
+					//Console.Error.WriteLineColored(ConsoleColor.Blue, "{0}", (int)Flags);
 					return (int)HleInterop.ExecuteFunctionNow(
 						PspIoDrvFuncs->IoOpen,
 						PspIoDrvFileArgPartition.Low,

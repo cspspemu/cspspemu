@@ -106,14 +106,14 @@ namespace CSPspEmu.Hle
 		public Action WakeUpCallback;
 		public List<Action> WakeUpList = new List<Action>();
 
-		public bool HasAllStatus(Status Has)
+		public bool HasAllStatus(Status HasStatus)
 		{
-			return (CurrentStatus & Has) == Has;
+			return (CurrentStatus & HasStatus) == HasStatus;
 		}
 
-		public bool HasAnyStatus(Status Has)
+		public bool HasAnyStatus(Status HasStatus)
 		{
-			return (CurrentStatus & Has) != 0;
+			return (CurrentStatus & HasStatus) != 0;
 		}
 
 		private void StatusUpdated()
@@ -454,33 +454,41 @@ namespace CSPspEmu.Hle
 		{
 			/// <summary>
 			/// This is the current thread and is running right now.
+			/// THREADSTATUS_RUNNING
 			/// </summary>
 			Running = 1,
 
 			/// <summary>
 			/// The thread is not running right now, but it will be scheduled.
+			/// THREADSTATUS_READY
 			/// </summary>
 			Ready = 2,
 
 			/// <summary>
 			/// The thread is waiting for a event.
+			/// THREADSTATUS_WAIT
 			/// </summary>
 			Waiting = 4,
 
 			/// <summary>
 			/// ?
+			/// THREADSTATUS_SUSPEND
 			/// </summary>
 			Suspend = 8,
 
 			/// <summary>
 			/// ?
+			/// THREADSTATUS_DORMANT
 			/// </summary>
 			Stopped = 16,
 
 			/// <summary>
 			/// ?
+			/// THREADSTATUS_DEAD
 			/// </summary>
 			Killed = 32,
+
+			WaitingSuspended = Waiting | Suspend,
 		}
 	}
 

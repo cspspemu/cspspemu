@@ -49,6 +49,8 @@ namespace CSPspEmu.Core.Cpu
 		//public const bool DisableDotNetJitOptimizations = true;
 		public const bool DisableDotNetJitOptimizations = false;
 
+		public const bool ForceJitOptimizationsOnEvenLargeFunctions = true;
+
 		//public const int InstructionCountToDisableOptimizations = 500;
 		//public const int InstructionCountToDisableOptimizations = 200;
 		public const int InstructionCountToDisableOptimizations = 100;

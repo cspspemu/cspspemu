@@ -27,9 +27,11 @@ namespace CSPspEmu.Hle.Modules.iofilemgr
 			}
 			catch (DirectoryNotFoundException)
 			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND));
 			}
 			catch (FileNotFoundException)
 			{
+				throw (new SceKernelException(SceKernelErrors.ERROR_ERRNO_FILE_NOT_FOUND));
 			}
 			catch (InvalidOperationException InvalidOperationException)
 			{

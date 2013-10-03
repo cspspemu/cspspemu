@@ -32,6 +32,14 @@ namespace CSPspEmu.Hle.Modules.mediaman
 			return 0;
 		}
 
+		private void _DispatchCallback()
+		{
+			foreach (var Callback in RegisteredCallbacks.Values)
+			{
+				CallbackManager.ScheduleCallback(Callback);
+			}
+		}
+
 		/// <summary>
 		/// Register a callback for the UMD drive
 		/// This function schedules a call to the callback with the current UMD status.
@@ -52,12 +60,11 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		public int sceUmdRegisterUMDCallBack(int CallbackId)
 		{
 			var Callback = CallbackManager.Callbacks.Get(CallbackId);
+
 			RegisteredCallbacks[CallbackId] = HleCallback.Create(
 				"sceUmdRegisterUMDCallBack", Callback.Function,
 				1, (int)(PspUmdState.PSP_UMD_READABLE | PspUmdState.PSP_UMD_READY | PspUmdState.PSP_UMD_PRESENT), Callback.Arguments[0]
 			);
-
-			CallbackManager.ScheduleCallback(RegisteredCallbacks[CallbackId]);
 
 			return 0;
 			//throw(new NotImplementedException());
@@ -154,6 +161,7 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		//[HlePspNotImplemented]
 		public int sceUmdActivate(int Mode, string Drive)
 		{
+			_DispatchCallback();
 			return 0;
 		}
 
@@ -167,11 +175,8 @@ namespace CSPspEmu.Hle.Modules.mediaman
 		[HlePspNotImplemented]
 		public int sceUmdDeactivate(int Mode, string Drive)
 		{
+			_DispatchCallback();
 			return 0;
-			//throw (new NotImplementedException());
-			/*
-			unimplemented_notice();
-			*/
 		}
 
 		/// <summary>

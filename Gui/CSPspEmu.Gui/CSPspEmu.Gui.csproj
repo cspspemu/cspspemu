@@ -66,6 +66,7 @@
     <Compile Include="XBR\Image.Bitmaps.cs" />
     <Compile Include="XBR\libXBR2x.cs" />
     <Compile Include="XBR\OutOfBoundsMode.cs" />
+    <Compile Include="XBR\Shader\XBRShader.cs" />
     <Compile Include="XBR\sPixel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +125,13 @@
   <ItemGroup>
     <EmbeddedResource Include="SMAA\smaa_area.raw" />
     <EmbeddedResource Include="SMAA\smaa_search.raw" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="XBR\Shader\Shader_2xBR.frag" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="XBR\Shader\shader1.frag" />
+    <None Include="XBR\Shader\shader2.frag" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

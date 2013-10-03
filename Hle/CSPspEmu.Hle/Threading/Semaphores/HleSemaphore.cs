@@ -7,7 +7,8 @@ using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Threading.Semaphores
 {
-	public unsafe class HleSemaphore : IDisposable
+	[HleUidPoolClass(NotFoundError = SceKernelErrors.ERROR_KERNEL_NOT_FOUND_SEMAPHORE)]
+	public unsafe class HleSemaphore : IHleUidPoolClass, IDisposable
 	{
 		public class WaitingSemaphoreThread
 		{

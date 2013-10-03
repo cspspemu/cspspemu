@@ -15,9 +15,10 @@ namespace CSPspEmu.Hle
 		}
 	}
 
-	unsafe public class MemoryPartition : IDisposable
+	[HleUidPoolClass(NotFoundError = SceKernelErrors.ERROR_KERNEL_ILLEGAL_PARTITION_ID, FirstItem = 1)]
+	unsafe public class MemoryPartition : IHleUidPoolClass, IDisposable
 	{
-		public enum Anchor
+		public enum Anchor : int
 		{
 			Low = 1,
 			High = 2,
@@ -68,7 +69,7 @@ namespace CSPspEmu.Hle
 				return ChildPartitions
 					.Where(Partition => !Partition.Allocated)
 					.OrderByDescending(Partition => Partition.Size)
-					.First()
+					.FirstOrDefault(new MemoryPartition(InjectContext, 0, 0))
 					.Size
 				;
 			}
@@ -212,6 +213,8 @@ namespace CSPspEmu.Hle
 
 				var AcceptablePartitions = _ChildPartitions.Where(Partition => !Partition.Allocated && Partition.Size >= SizeCheck);
 
+				//Console.Error.WriteLine("{0}, {1}", AcceptablePartitions.Count(), AcceptablePartitions.First().Size);
+
 				switch (AllocateAnchor)
 				{
 					default:
@@ -257,8 +260,8 @@ namespace CSPspEmu.Hle
 						_ChildPartitions.Add(new MemoryPartition(InjectContext, (uint)(OldFreePartition.Low + Size), OldFreePartition.High, false, ParentPartition: this, Name: "<Free>"));
 						break;
 					case Anchor.High:
-						_ChildPartitions.Add(NewPartiton = new MemoryPartition(InjectContext, OldFreePartition.Low, (uint)(OldFreePartition.High - Size), true, ParentPartition: this, Name: Name));
-						_ChildPartitions.Add(new MemoryPartition(InjectContext, (uint)(OldFreePartition.High - Size), OldFreePartition.High, false, ParentPartition: this, Name: "<Free>"));
+						_ChildPartitions.Add(NewPartiton = new MemoryPartition(InjectContext, (uint)(OldFreePartition.High - Size), OldFreePartition.High, true, ParentPartition: this, Name: Name));
+						_ChildPartitions.Add(new MemoryPartition(InjectContext, OldFreePartition.Low, (uint)(OldFreePartition.High - Size), false, ParentPartition: this, Name: "<Free>"));
 						break;
 					case Anchor.Set:
 						_ChildPartitions.Add(new MemoryPartition(InjectContext, OldFreePartition.Low, Position, false, ParentPartition: this, Name: "<Free>"));
@@ -319,18 +322,20 @@ namespace CSPspEmu.Hle
 			if ((_ChildPartitions != null) && _ChildPartitions.Count > 0)
 			{
 				return String.Format(
-					"MemoryPartition(Low={0:X}, High={1:X}, Allocated={2}, Name='{3}', ChildPartitions=[{4}])",
+					"MemoryPartition(Low={0:X}, High={1:X}, Allocated={2}, Name='{3}', Size={4}, ChildPartitions=[{5}])",
 					Low, High, Allocated,
 					Name,
+					Size,
 					String.Join(",", _ChildPartitions)
 				);
 			}
 			else
 			{
 				return String.Format(
-					"MemoryPartition(Low={0:X}, High={1:X}, Allocated={2}, Name='{3}')",
+					"MemoryPartition(Low={0:X}, High={1:X}, Allocated={2}, Name='{3}', Size={4})",
 					Low, High, Allocated,
-					Name
+					Name,
+					Size
 				);
 			}
 		}

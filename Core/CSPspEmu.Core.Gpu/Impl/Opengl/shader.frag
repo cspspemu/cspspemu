@@ -1,37 +1,39 @@
-﻿#define GU_TFX_MODULATE	0
-#define GU_TFX_DECAL	1
-#define GU_TFX_BLEND	2
-#define GU_TFX_REPLACE	3
-#define GU_TFX_ADD		4
+﻿#extension GL_EXT_gpu_shader4 : enable
 
-#define GU_TCC_RGB		(0)
-#define GU_TCC_RGBA		(1)
+#define GU_TFX_MODULATE  0
+#define GU_TFX_DECAL     1
+#define GU_TFX_BLEND     2
+#define GU_TFX_REPLACE   3
+#define GU_TFX_ADD       4
+					    
+#define GU_TCC_RGB       0
+#define GU_TCC_RGBA      1
+					    
+#define GU_NEVER         0
+#define GU_ALWAYS        1
+#define GU_EQUAL         2
+#define GU_NOTEQUAL      3
+#define GU_LESS          4
+#define GU_LEQUAL        5
+#define GU_GREATER       6
+#define GU_GEQUAL        7
 
-#define GU_NEVER    0
-#define GU_ALWAYS   1
-#define GU_EQUAL    2
-#define GU_NOTEQUAL 3
-#define GU_LESS     4
-#define GU_LEQUAL   5
-#define GU_GREATER  6
-#define GU_GEQUAL   7
-
-#define GU_CLEAR		(0)
-#define GU_AND			(1)
-#define GU_AND_REVERSE		(2)
-#define GU_COPY			(3)
-#define GU_AND_INVERTED		(4)
-#define GU_NOOP			(5)
-#define GU_XOR			(6)
-#define GU_OR			(7)
-#define GU_NOR			(8)
-#define GU_EQUIV		(9)
-#define GU_INVERTED		(10)
-#define GU_OR_REVERSE		(11)
-#define GU_COPY_INVERTED	(12)
-#define GU_OR_INVERTED		(13)
-#define GU_NAND			(14)
-#define GU_SET			(15)
+#define GU_CLEAR         0
+#define GU_AND           1
+#define GU_AND_REVERSE   2
+#define GU_COPY          3
+#define GU_AND_INVERTED  4
+#define GU_NOOP          5
+#define GU_XOR           6
+#define GU_OR            7
+#define GU_NOR           8
+#define GU_EQUIV         9
+#define GU_INVERTED      10
+#define GU_OR_REVERSE    11
+#define GU_COPY_INVERTED 12
+#define GU_OR_INVERTED   13
+#define GU_NAND          14
+#define GU_SET           15
 
 uniform vec4 uniformColor;
 uniform vec4 TEC; // TextureEnviromentColor, Cc, sceGuTexEnvColor()
@@ -84,16 +86,14 @@ void main() {
 		if (alphaTest) {
 			//int alphaInt = int(gl_FragColor.a * 255.0) & alphaMask;
 			//int alphaInt = int(gl_FragColor.a * 255.0);
-			int alphaInt = int(texColor.a * 255.0);
-			if (alphaMask == 0xFF) {
-				if (alphaFunction == GU_NEVER   ) { discard; }
-				else if (alphaFunction == GU_EQUAL   ) { if (!(alphaInt == alphaValue)) { discard; return; } }
-				else if (alphaFunction == GU_NOTEQUAL) { if (!(alphaInt != alphaValue)) { discard; return; } }
-				else if (alphaFunction == GU_LESS    ) { if (!(alphaInt <  alphaValue)) { discard; return; } }
-				else if (alphaFunction == GU_LEQUAL  ) { if (!(alphaInt <= alphaValue)) { discard; return; } }
-				else if (alphaFunction == GU_GREATER ) { if (!(alphaInt >  alphaValue)) { discard; return; } }
-				else if (alphaFunction == GU_GEQUAL  ) { if (!(alphaInt >= alphaValue)) { discard; return; } }
-			}
+			int alphaInt = int(texColor.a * 255.0) & alphaMask;
+			if (alphaFunction == GU_NEVER   ) { discard; }
+			else if (alphaFunction == GU_EQUAL   ) { if (!(alphaInt == alphaValue)) { discard; return; } }
+			else if (alphaFunction == GU_NOTEQUAL) { if (!(alphaInt != alphaValue)) { discard; return; } }
+			else if (alphaFunction == GU_LESS    ) { if (!(alphaInt <  alphaValue)) { discard; return; } }
+			else if (alphaFunction == GU_LEQUAL  ) { if (!(alphaInt <= alphaValue)) { discard; return; } }
+			else if (alphaFunction == GU_GREATER ) { if (!(alphaInt >  alphaValue)) { discard; return; } }
+			else if (alphaFunction == GU_GEQUAL  ) { if (!(alphaInt >= alphaValue)) { discard; return; } }
 		}
 
 		if (tfx == GU_TFX_MODULATE) {
@@ -122,42 +122,25 @@ void main() {
 	if (lopEnabled) {
 		ivec4 s = convertToByte(gl_FragColor);
 		ivec4 d = convertToByte(texture2D(backtex, v_backtexCoords));
-		ivec4 o;
+		ivec4 o = ivec4(0x77);
 
 		// http://www.opengl.org/sdk/docs/man/xhtml/glLogicOp.xml
-		if (lop == GU_CLEAR) {                           // GL_CLEAR	 0
-			o = ivec4(0, 0, 0, 0);
-		} else if (lop == GU_AND) {                      // GL_AND	 s & d
-			o = s & d;
-		} else if (lop == GU_AND_REVERSE) {              // GL_AND_REVERSE	 s & ~d
-			o = s & ~d;
-		} else if (lop == GU_COPY) {                     // GL_COPY	 s
-			o = s;
-		} else if (lop == GU_AND_INVERTED) {             // GL_AND_INVERTED	 ~s & d
-			o = ~s & d;
-		} else if (lop == GU_NOOP) {                     // GL_NOOP	 d
-			o = d;
-		} else if (lop == GU_XOR) {                      // GL_XOR	 s ^ d
-			o = s ^ d;
-		} else if (lop == GU_OR) {                       // GL_OR	 s | d
-			o = s | d;
-		} else if (lop == GU_NOR) {                      // GL_NOR	 ~(s | d)
-			o = ~(s | d);
-		} else if (lop == GU_EQUIV) {                    // GL_EQUIV	 ~(s ^ d)
-			o = ~(s ^ d);
-		} else if (lop == GU_INVERTED) {                 // GL_INVERT	 ~d
-			o = ~d;
-		} else if (lop == GU_OR_REVERSE) {               // GL_OR_REVERSE	 s | ~d
-			o = s | ~d;
-		} else if (lop == GU_COPY_INVERTED) {            // GL_COPY_INVERTED	 ~s
-			o = ~s;
-		} else if (lop == GU_OR_INVERTED) {              // GL_OR_INVERTED	 ~s | d
-			o = ~s | d;
-		} else if (lop == GU_NAND) {                     // GL_NAND	 ~(s & d)
-			o = ~(s & d);
-		} else if (lop == GU_SET) {                      // GL_SET	 1
-			o = ivec4(0xFF, 0xFF, 0xFF, 0xFF);
-		}
+		     if (lop == GU_CLEAR        ) o = ivec4(0x00);
+		else if (lop == GU_AND          ) o = s & d;
+		else if (lop == GU_AND_REVERSE  ) o = s & ~d;
+		else if (lop == GU_COPY         ) o = s;
+		else if (lop == GU_AND_INVERTED ) o = ~s & d;
+		else if (lop == GU_NOOP         ) o = d;
+		else if (lop == GU_XOR          ) o = s ^ d;
+		else if (lop == GU_OR           ) o = s | d;
+		else if (lop == GU_NOR          ) o = ~(s | d);
+		else if (lop == GU_EQUIV        ) o = ~(s ^ d);
+		else if (lop == GU_INVERTED     ) o = ~d;
+		else if (lop == GU_OR_REVERSE   ) o = s | ~d;
+		else if (lop == GU_COPY_INVERTED) o = ~s;
+		else if (lop == GU_OR_INVERTED  ) o = ~s | d;
+		else if (lop == GU_NAND         ) o = ~(s & d);
+		else if (lop == GU_SET          ) o = ivec4(0xFF);
 
 		gl_FragColor = convertToFloat(o);
 	}

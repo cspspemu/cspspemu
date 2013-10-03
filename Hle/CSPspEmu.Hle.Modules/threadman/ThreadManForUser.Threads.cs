@@ -656,8 +656,12 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[HlePspNotImplemented]
 		public uint sceKernelTerminateThread(int ThreadId)
 		{
+			if (ThreadId == 0 || ThreadId == ThreadManager.Current.Id) throw(new SceKernelException(SceKernelErrors.ERROR_KERNEL_ILLEGAL_THREAD));
+			//SCE_KERNEL_ERROR_THREAD_TERMINATED
 			var Thread = GetThreadById(ThreadId);
-			ThreadManager.TerminateThread(Thread);
+			Thread.Info.ExitStatus = unchecked((int)0x800201ac);
+			Thread.SetStatus(HleThread.Status.Suspend);
+			//aThreadManager.TerminateThread(Thread);
 			return 0;
 		}
 

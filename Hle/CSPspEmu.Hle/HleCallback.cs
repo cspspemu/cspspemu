@@ -3,7 +3,7 @@ using CSPspEmu.Core.Cpu;
 
 namespace CSPspEmu.Hle
 {
-	public sealed class HleCallback : IDisposable
+	public sealed class HleCallback : IHleUidPoolClass, IDisposable
 	{
 		public string Name { get; private set; }
 		public uint Function { get; private set; }
