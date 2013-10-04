@@ -75,17 +75,6 @@
     <Compile Include="GpuProcessorEnums.cs" />
     <Compile Include="IGpuConnector.cs" />
     <Compile Include="Impl\Null\GpuImplNull.cs" />
-    <Compile Include="Impl\Opengl\Modules\OpenglGpuImplClear.cs" />
-    <Compile Include="Impl\Opengl\Modules\OpenglGpuImplCommon.cs" />
-    <Compile Include="Impl\Opengl\Modules\OpenglGpuImplMatrix.cs" />
-    <Compile Include="Impl\Opengl\Modules\RenderbufferManager.cs" />
-    <Compile Include="Impl\Opengl\OpenglGpuImpl.cs" />
-    <Compile Include="Impl\Opengl\OpenglGpuImpl.Init.cs" />
-    <Compile Include="Impl\Opengl\OpenglGpuImpl.StateDraw.cs" />
-    <Compile Include="Impl\Opengl\OpenglGpuImpl.Transfer.cs" />
-    <Compile Include="Impl\Opengl\TextureCacheOpengl.cs" />
-    <Compile Include="Impl\Opengl\Utils\OpenglGpuImplConversionTables.cs" />
-    <Compile Include="Impl\Opengl\Utils\VertexUtils.cs" />
     <Compile Include="MessagePipe.cs" />
     <Compile Include="PspGeCallbackData.cs" />
     <Compile Include="Run\GpuDisplayListRunner.BoundingBox.cs" />
@@ -134,6 +123,7 @@
     <Compile Include="State\SubStates\TextureTransferStateStruct.cs" />
     <Compile Include="State\SubStates\VertexStateStruct.cs" />
     <Compile Include="TextureCache.cs" />
+    <Compile Include="TextureHookInfo.cs" />
     <Compile Include="VertexInfo.cs" />
     <Compile Include="VertexReading\VertexReader.cs" />
   </ItemGroup>
@@ -177,12 +167,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Run\GpuDisplayListRunner.Transfer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Impl\Opengl\shader.frag" />
-    <EmbeddedResource Include="Impl\Opengl\shader.vert">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

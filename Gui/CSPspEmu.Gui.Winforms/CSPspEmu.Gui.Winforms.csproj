@@ -97,9 +97,6 @@
     <Compile Include="Winforms\GameListComponent.Designer.cs">
       <DependentUpon>GameListComponent.cs</DependentUpon>
     </Compile>
-    <Compile Include="Winforms\GLControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Winforms\IPspDisplayControl.cs" />
     <Compile Include="Winforms\ProgressForm.cs">
       <SubType>Form</SubType>
@@ -144,9 +141,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Winforms\GameListComponent.resx">
       <DependentUpon>GameListComponent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Winforms\GLControl.resx">
-      <DependentUpon>GLControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Winforms\ProgressForm.resx">
       <DependentUpon>ProgressForm.cs</DependentUpon>

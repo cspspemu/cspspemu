@@ -11,7 +11,6 @@ using CSPspEmu.Core.Controller;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Gpu;
-using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Utils;
 using CSPspEmu.Gui.Winforms;

@@ -10,7 +10,6 @@ using CSharpUtils;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Audio;
 using CSPspEmu.Core.Gpu;
-using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle;
 using CSPspEmu.Hle.Managers;

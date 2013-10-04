@@ -4,7 +4,6 @@ using CSPspEmu.Core.Audio.Impl.Openal;
 using CSPspEmu.Core.Audio.Impl.WaveOut;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Gpu;
-using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle;
 using CSPspEmu.Hle.Managers;
@@ -43,7 +42,7 @@ namespace CSPspEmu.Runner
 			{
 				// GPU
 				PspPluginImpl.SelectWorkingPlugin<GpuImpl>(_InjectContext,
-#if false
+#if true
 					typeof(GpuImplNull)
 #else
 					typeof(OpenglGpuImpl),
@@ -57,6 +56,7 @@ namespace CSPspEmu.Runner
 
 				var AudioPlugins = new List<Type>();
 
+				/*
 				AudioPlugins.Add(typeof(PspAudioOpenalImpl));
 
 				if (Platform.OS == OS.Windows)
@@ -67,13 +67,15 @@ namespace CSPspEmu.Runner
 				{
 					AudioPlugins.Add(typeof(AudioAlsaImpl));
 				}
+				*/
 				AudioPlugins.Add(typeof(AudioImplNull));
 
 				PspPluginImpl.SelectWorkingPlugin<PspAudioImpl>(_InjectContext, AudioPlugins.ToArray());
 			}
 			else
 			{
-				_InjectContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
+				//_InjectContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
+				_InjectContext.SetInstanceType<GpuImpl, GpuImplNull>();
 				_InjectContext.SetInstanceType<PspAudioImpl, AudioImplNull>();
 			}
 

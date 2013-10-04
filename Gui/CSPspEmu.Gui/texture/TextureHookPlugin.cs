@@ -1,6 +1,6 @@
 ﻿using CSharpUtils;
 using CSPspEmu.Core;
-using CSPspEmu.Core.Gpu.Impl.Opengl;
+using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Types;
 using CSPspEmu.Inject;
 using HQ2x;

@@ -24,7 +24,6 @@ using CSPspEmu.Hle.Loader;
 using CSPspEmu.Core.Components.Display;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Hle;
-using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Gui.Winforms.Winforms;
 using System.Threading.Tasks;
 using CSharpPlatform.GL.Impl;
@@ -55,7 +54,7 @@ namespace CSPspEmu.Gui.Winforms
 		internal bool EnableRefreshing = true;
 
 		GameListComponent GameListComponent;
-		GLControl GLControl;
+		PspOpenglDisplayControl GLControl;
 		Thread GuiThread;
 		CommonGuiInput CommonGuiInput;
 

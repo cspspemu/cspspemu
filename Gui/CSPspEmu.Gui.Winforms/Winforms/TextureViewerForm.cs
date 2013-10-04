@@ -1,6 +1,5 @@
 ﻿using CSharpUtils;
 using CSPspEmu.Core.Gpu;
-using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Core.Types;
 using CSPspEmu.Gui.texture;
 using HQ2x;
@@ -20,6 +19,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 {
 	public partial class TextureViewerForm : Form
 	{
+#if false
 		public TextureViewerForm()
 		{
 			InitializeComponent();
@@ -27,16 +27,17 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 
 		public class TextureElement
 		{
-			public TextureOpengl TextureOpengl;
+			public object TextureOpengl;
 
-			public TextureElement(TextureOpengl TextureOpengl)
+			public TextureElement(object TextureOpengl)
 			{
 				this.TextureOpengl = TextureOpengl;
 			}
 
 			public override string ToString()
 			{
-				return String.Format("{0:X16}", this.TextureOpengl.TextureHash);
+				//return String.Format("{0:X16}", this.TextureOpengl.TextureHash);
+				return String.Format("Unsupported");
 			}
 		}
 
@@ -164,5 +165,6 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 			UpdateTexture();
 			TextureList.Focus();
 		}
+#endif
 	}
 }

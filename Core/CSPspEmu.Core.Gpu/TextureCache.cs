@@ -10,7 +10,6 @@ using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Types;
 using CSPspEmu.Core.Utils;
 using CSPspEmu.Inject;
-using CSPspEmu.Core.Gpu.Impl.Opengl;
 
 namespace CSPspEmu.Core.Gpu
 {

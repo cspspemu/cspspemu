@@ -5,8 +5,6 @@ using CSharpUtils;
 using CSPspEmu.Core;
 using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Gpu;
-using CSPspEmu.Core.Gpu.Impl.Opengl;
-using CSPspEmu.Core.Gpu.Impl.Opengl.Modules;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Types;
 using CSPspEmu.Core.Utils;
@@ -47,6 +45,7 @@ namespace CSPspEmu.Gui
 		public byte B, G, R, A;
 	}
 
+#if false
 	unsafe public class CommonGuiDisplayOpengl
 	{
 		IGuiExternalInterface IGuiExternalInterface;
@@ -345,4 +344,5 @@ namespace CSPspEmu.Gui
 			IGuiWindowInfo.SwapBuffers();
 		}
 	}
+#endif
 }

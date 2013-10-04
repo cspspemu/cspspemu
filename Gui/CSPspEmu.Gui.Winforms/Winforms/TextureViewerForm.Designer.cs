@@ -73,7 +73,7 @@
 			this.TextureList.Name = "TextureList";
 			this.TextureList.Size = new System.Drawing.Size(154, 540);
 			this.TextureList.TabIndex = 1;
-			this.TextureList.SelectedIndexChanged += new System.EventHandler(this.TextureList_SelectedIndexChanged);
+			//this.TextureList.SelectedIndexChanged += new System.EventHandler(this.TextureList_SelectedIndexChanged);
 			// 
 			// TextureViewContainer
 			// 
@@ -137,7 +137,7 @@
 			this.SaveButton.TabIndex = 0;
 			this.SaveButton.Text = "&Save...";
 			this.SaveButton.UseVisualStyleBackColor = true;
-			this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
+			//this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
 			// 
 			// LoadButton
 			// 
@@ -147,7 +147,7 @@
 			this.LoadButton.TabIndex = 1;
 			this.LoadButton.Text = "&Load...";
 			this.LoadButton.UseVisualStyleBackColor = true;
-			this.LoadButton.Click += new System.EventHandler(this.LoadButton_Click);
+			//this.LoadButton.Click += new System.EventHandler(this.LoadButton_Click);
 			// 
 			// button1
 			// 
@@ -157,7 +157,7 @@
 			this.button1.TabIndex = 2;
 			this.button1.Text = "HQ2X";
 			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click);
+			//this.button1.Click += new System.EventHandler(this.button1_Click);
 			// 
 			// TextureViewerForm
 			// 
@@ -169,7 +169,7 @@
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "TextureViewerForm";
-			this.Load += new System.EventHandler(this.TextureViewerForm_Load);
+			//this.Load += new System.EventHandler(this.TextureViewerForm_Load);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.TextureViewContainer.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.TextureView)).EndInit();
