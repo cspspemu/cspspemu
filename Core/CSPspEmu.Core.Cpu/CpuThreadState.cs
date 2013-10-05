@@ -559,5 +559,19 @@ namespace CSPspEmu.Core.Cpu
 		{
 			return CpuProcessor.MethodCache.GetForPC(PC).CallDelegate;
 		}
+
+		static public int test = 0;
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		static public void AggressiveInliningMethod()
+		{
+			test++;
+		}
+
+		[MethodImpl(MethodImplOptions.NoInlining)]
+		static public void NoInliningMethod()
+		{
+			test++;
+		}
 	}
 }

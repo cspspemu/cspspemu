@@ -433,6 +433,12 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 						Nodes.AddStatement(ast.AssignPC(PC));
 					}
 
+					if (PC == 0x880A830)
+					{
+						Nodes.AddStatement(ast.Statement(ast.CallStatic((Action)CpuThreadState.AggressiveInliningMethod)));
+						//Nodes.AddStatement(ast.Statement(ast.CallStatic((Action)CpuThreadState.NoInliningMethod)));
+					}
+
 					Nodes.AddStatement(_GetAstCpuInstructionAT(PC));
 
 					return Nodes;
