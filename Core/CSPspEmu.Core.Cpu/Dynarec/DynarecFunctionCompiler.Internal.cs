@@ -117,6 +117,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 						ast.Binary(ast.CpuThreadState, "==", ast.Null<CpuThreadState>()),
 						ast.Return()
 					),
+					//ast.Statement(ast.CallInstance(ast.Argument<CpuThreadState>(0, "CpuThreadState"), (Action<uint>)CpuThreadState.Methods._DumpRegistersCpu, EntryPC)),
 					Nodes
 				);
 

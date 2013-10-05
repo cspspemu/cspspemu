@@ -394,6 +394,19 @@ namespace CSPspEmu.Core.Cpu
 			DumpRegisters(Console.Out);
 		}
 
+		StreamWriter DebugFile;
+
+		public void _DumpRegistersCpu(uint PC)
+		{
+			if (DebugFile == null)
+			{
+				DebugFile = new StreamWriter(File.Open("trace.txt", FileMode.Create, FileAccess.Write, FileShare.ReadWrite));
+			}
+			
+			DumpRegistersCpu(DebugFile);
+			DebugFile.Flush();
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>

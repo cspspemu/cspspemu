@@ -8,8 +8,8 @@ namespace CSPspEmu.Core.Cpu
 {
 	public class _DynarecConfig
 	{
-		//public const bool UpdatePCEveryInstruction = true;
-		public const bool UpdatePCEveryInstruction = false;
+		public const bool UpdatePCEveryInstruction = true;
+		//public const bool UpdatePCEveryInstruction = false;
 
 		public const bool FunctionCallWithStaticReferences = true;
 		//public const bool FunctionCallWithStaticReferences = false;
