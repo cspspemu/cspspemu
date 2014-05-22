@@ -68,7 +68,7 @@ namespace CSPspEmu.Core.Cpu
 
 		public uint IMM8 { get { return get(16, 8); } set { set(16, 8, value); } }
 		public uint IMM5 { get { return get(16, 5); } set { set(16, 5, value); } }
-		public uint IMM3 { get { return get(16, 3); } set { set(16, 3, value); } }
+		public uint IMM3 { get { return get(18, 3); } set { set(18, 3, value); } }
 		public uint IMM7 { get { return get(0, 7); } set { set(0, 7, value); } }
 		public uint IMM4 { get { return get(0, 4); } set { set(0, 4, value); } }
 		public uint VT1 { get { return get(0, 1); } set { set(0, 1, value); } }
