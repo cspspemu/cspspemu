@@ -13,42 +13,42 @@ namespace CSPspEmuLLETest
 	{
 		DebugPspMemory Memory;
 		Kirk Kirk;
-		uint KirkSource;
-		uint KirkDestination;
-		uint KirkCommand;
-		uint KirkResult;
+		uint _kirkSource;
+		uint _kirkDestination;
+		uint _kirkCommand;
+		uint _kirkResult;
 
-		public LleKirk(DebugPspMemory Memory)
+		public LleKirk(DebugPspMemory memory)
 		{
-			this.Memory = Memory;
+			this.Memory = memory;
 			Kirk = new Kirk();
 			Kirk.kirk_init();
 		}
 
-		public void Transfer(Dma.Direction Direction, int Size, DmaEnum Address, ref uint Value)
+		public void Transfer(Dma.Direction direction, int size, DmaEnum address, ref uint value)
 		{
-			switch (Address)
+			switch (address)
 			{
 				case DmaEnum.KIRK_PATTERN:
-					Value = 1;
+					value = 1;
 					break;
 				case DmaEnum.KIRK_COMMAND:
-					TransferUtils.Transfer(Direction, ref KirkCommand, ref Value);
+					TransferUtils.Transfer(direction, ref _kirkCommand, ref value);
 					break;
 				case DmaEnum.KIRK_RESULT:
-					TransferUtils.Transfer(Direction, ref KirkResult, ref Value);
+					TransferUtils.Transfer(direction, ref _kirkResult, ref value);
 					break;
 				case DmaEnum.KIRK_SOURCE_ADDRESS:
-					TransferUtils.Transfer(Direction, ref KirkSource, ref Value);
+					TransferUtils.Transfer(direction, ref _kirkSource, ref value);
 					break;
 				case DmaEnum.KIRK_DESTINATION_ADDRESS:
-					TransferUtils.Transfer(Direction, ref KirkDestination, ref Value);
+					TransferUtils.Transfer(direction, ref _kirkDestination, ref value);
 					break;
 				case DmaEnum.KIRK_START:
-					if (KirkCommand != 1) throw(new NotImplementedException());
+					if (_kirkCommand != 1) throw(new NotImplementedException());
 
-					var SourcePtr = (byte *)Memory.PspAddressToPointerSafe(KirkSource);
-					var DestinationPtr = (byte*)Memory.PspAddressToPointerSafe(KirkDestination);
+					var sourcePtr = (byte *)Memory.PspAddressToPointerSafe(_kirkSource);
+					var destinationPtr = (byte*)Memory.PspAddressToPointerSafe(_kirkDestination);
 
 					//var Out = new byte[10000];
 
@@ -56,7 +56,7 @@ namespace CSPspEmuLLETest
 					{
 						//DestinationPtr = OutPtr;
 						Console.WriteLine("Input:");
-						ArrayUtils.HexDump(PointerUtils.PointerToByteArray(SourcePtr, 0x200));
+						ArrayUtils.HexDump(PointerUtils.PointerToByteArray(sourcePtr, 0x200));
 
 						/*
 						try
@@ -71,14 +71,14 @@ namespace CSPspEmuLLETest
 						}
 						*/
 
-						this.KirkResult = (uint)Kirk.sceUtilsBufferCopyWithRange(DestinationPtr, -1, SourcePtr, -1, 1);
+						this._kirkResult = (uint)Kirk.sceUtilsBufferCopyWithRange(destinationPtr, -1, sourcePtr, -1, 1);
 
 						Console.WriteLine("Output:");
-						ArrayUtils.HexDump(PointerUtils.PointerToByteArray(DestinationPtr, 0x200));
-						Console.WriteLine("LOADADDR:{0:X8}", ((uint*)DestinationPtr)[0]);
-						Console.WriteLine("BLOCKSIZE:{0:X8}", ((uint*)DestinationPtr)[1]);
-						Console.WriteLine("ENTRY:{0:X8}", ((uint*)DestinationPtr)[2]);
-						Console.WriteLine("CHECKSUM:{0:X8}", ((uint*)DestinationPtr)[3]);
+						ArrayUtils.HexDump(PointerUtils.PointerToByteArray(destinationPtr, 0x200));
+						Console.WriteLine("LOADADDR:{0:X8}", ((uint*)destinationPtr)[0]);
+						Console.WriteLine("BLOCKSIZE:{0:X8}", ((uint*)destinationPtr)[1]);
+						Console.WriteLine("ENTRY:{0:X8}", ((uint*)destinationPtr)[2]);
+						Console.WriteLine("CHECKSUM:{0:X8}", ((uint*)destinationPtr)[3]);
 					}
 
 					//Thread.Sleep(4);

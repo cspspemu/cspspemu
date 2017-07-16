@@ -1,11 +1,11 @@
 ﻿namespace CSPspEmuLLETest
 {
-	public class LLEState
+	public class LleState
 	{
 		public LlePspCpu Cpu;
 		public LlePspCpu Me;
-		public LleGPIO GPIO;
-		public LleNAND NAND;
+		public LleGpio Gpio;
+		public LleNand Nand;
 		public LleKirk LleKirk;
 		public DebugPspMemory Memory;
 	}

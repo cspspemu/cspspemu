@@ -7,17 +7,17 @@ namespace CSPspEmuLLETest
 {
 	public class LlePspCpu : LlePspComponent
 	{
-		string Name;
+		string _name;
 		//CachedGetMethodCache CachedGetMethodCache;
 		CpuThreadState CpuThreadState;
 		uint EntryPoint;
 
-		public LlePspCpu(string Name, InjectContext InjectContext, CpuProcessor CpuProcessor, uint EntryPoint = 0x1fc00000)
+		public LlePspCpu(string name, InjectContext injectContext, CpuProcessor cpuProcessor, uint entryPoint = 0x1fc00000)
 		{
-			this.Name = Name;
+			_name = name;
 			//this.CachedGetMethodCache = PspEmulatorContext.GetInstance<CachedGetMethodCache>();
-			this.CpuThreadState = new CpuThreadState(CpuProcessor);
-			this.EntryPoint = EntryPoint;
+			CpuThreadState = new CpuThreadState(cpuProcessor);
+			EntryPoint = entryPoint;
 		}
 
 		public override void Main()
@@ -31,7 +31,7 @@ namespace CSPspEmuLLETest
 				{
 					while (Running)
 					{
-						var PC = CpuThreadState.PC & PspMemory.MemoryMask;
+						var pc = CpuThreadState.PC & PspMemory.MemoryMask;
 						//Console.WriteLine("PC:{0:X8} - {1:X8}", PC, CpuThreadState.PC);
 						
 						//var Func = CachedGetMethodCache.GetDelegateAt(PC);
@@ -56,15 +56,15 @@ namespace CSPspEmuLLETest
 						//throw(new PspMemory.InvalidAddressException(""));
 					}
 				}
-				catch (Exception Exception)
+				catch (Exception e)
 				{
 					CpuThreadState.DumpRegisters();
 					Console.WriteLine("----------------------------------------------------");
-					Console.Error.WriteLine(Exception.Message);
+					Console.Error.WriteLine(e.Message);
 					Console.WriteLine("----------------------------------------------------");
 					Console.WriteLine("at {0:X8}", CpuThreadState.PC);
 					Console.WriteLine("----------------------------------------------------");
-					Console.Error.WriteLine(Exception);
+					Console.Error.WriteLine(e);
 					Console.WriteLine("----------------------------------------------------");
 					Console.WriteLine("at {0:X8}", CpuThreadState.PC);
 					Console.ReadKey();

@@ -13,13 +13,13 @@ namespace CSPspEmuLLETest
 	/// 
 	/// </summary>
 	/// <seealso cref="http://hitmen.c02.at/files/yapspd/psp_doc/chap8.html#sec8.6"/>
-	public class LleNAND : ILleDma
+	public class LleNand : ILleDma
 	{
 		[Flags]
 		public enum EnumControlRegister : uint
 		{
-			CalculateECCWhenWritting = (1 << 17),
-			CalculateECCWhenReading = (1 << 16),
+			CalculateEccWhenWritting = (1 << 17),
+			CalculateEccWhenReading = (1 << 16),
 		}
 
 		public enum EnumCommands : uint
@@ -34,19 +34,19 @@ namespace CSPspEmuLLETest
 			Ready = (1 << 0), // 1 - READY | 0 - BUSY
 		}
 
-		EnumControlRegister ControlRegister;
-		EnumStatus Status;
-		uint Command;
+		EnumControlRegister _controlRegister;
+		EnumStatus _status;
+		uint _command;
 
 		/// <summary>
 		/// Physical page to access
 		/// </summary>
-		uint Address;
+		uint _address;
 
 		/// <summary>
 		/// 
 		/// </summary>
-		uint DmaAddress;
+		uint _dmaAddress;
 
 		/// <summary>
 		/// 
@@ -55,9 +55,9 @@ namespace CSPspEmuLLETest
 
 		public byte[] NandBlock;
 
-		public LleNAND(Stream NandStream)
+		public LleNand(Stream nandStream)
 		{
-			this.NandStream = NandStream;
+			NandStream = nandStream;
 		}
 		
 
@@ -66,63 +66,63 @@ namespace CSPspEmuLLETest
 			Console.WriteLine("Reset NAND controller to default state?");
 		}
 
-		public void Transfer(Dma.Direction Direction, int Size, DmaEnum Address, ref uint Value)
+		public void Transfer(Dma.Direction direction, int size, DmaEnum address, ref uint value)
 		{
 			// Reading sector
-			if ((Address >= DmaEnum.NAND__DATA_PAGE_START) && (Address < DmaEnum.NAND__DATA_PAGE_END))
+			if ((address >= DmaEnum.NAND__DATA_PAGE_START) && (address < DmaEnum.NAND__DATA_PAGE_END))
 			{
-				var Offset = (int)(Address - DmaEnum.NAND__DATA_PAGE_START);
+				var offset = (int)(address - DmaEnum.NAND__DATA_PAGE_START);
 				//Console.WriteLine("{0:X8}", (uint)Address);
 				//Console.WriteLine("Transfer {0} / {1} [{2}]", Offset, Size, NandBlock.Length);
-				TransferUtils.TransferToArray(Direction, NandBlock, Offset, Size, ref Value);
+				TransferUtils.TransferToArray(direction, NandBlock, offset, size, ref value);
 				return;
 			}
 
-			if ((Address >= DmaEnum.NAND__DATA_SPARE_BUF0_REG) && (Address < DmaEnum.NAND__DATA_EXTRA_END))
+			if ((address >= DmaEnum.NAND__DATA_SPARE_BUF0_REG) && (address < DmaEnum.NAND__DATA_EXTRA_END))
 			{
-				var Offset = (int)(Address - DmaEnum.NAND__DATA_SPARE_BUF0_REG);
-				TransferUtils.TransferToArray(Direction, NandBlock, 512 + Offset + 4, Size, ref Value);
+				var offset = (int)(address - DmaEnum.NAND__DATA_SPARE_BUF0_REG);
+				TransferUtils.TransferToArray(direction, NandBlock, 512 + offset + 4, size, ref value);
 				return;
 			}
 
-			switch (Address) 
+			switch (address) 
 			{
-				case DmaEnum.NAND__CONTROL: TransferUtils.Transfer(Direction, ref ControlRegister, ref Value); break;
+				case DmaEnum.NAND__CONTROL: TransferUtils.Transfer(direction, ref _controlRegister, ref value); break;
 				case DmaEnum.NAND__STATUS:
-					TransferUtils.Transfer(Direction, ref Status, ref Value);
+					TransferUtils.Transfer(direction, ref _status, ref value);
 					//Thread.Sleep(200);
 					break;
 				case DmaEnum.NAND__COMMAND:
-					TransferUtils.Transfer(Direction, ref Command, ref Value);
+					TransferUtils.Transfer(direction, ref _command, ref value);
 
 					// Reset
-					if (Direction == Dma.Direction.Write)
+					if (direction == Dma.Direction.Write)
 					{
-						switch ((EnumCommands)Value)
+						switch ((EnumCommands)value)
 						{
 							case EnumCommands.Reset:
-								Status = EnumStatus.Ready;
+								_status = EnumStatus.Ready;
 								break;
 						}
 					}
 				break;
-				case DmaEnum.NAND__ADDRESS: TransferUtils.Transfer(Direction, ref Address, ref Value); break;
+				case DmaEnum.NAND__ADDRESS: TransferUtils.Transfer(direction, ref address, ref value); break;
 				case DmaEnum.NAND__RESET:
-					if (Direction == Dma.Direction.Write)
+					if (direction == Dma.Direction.Write)
 					{
 						Reset();
 					}
 				break;
-				case DmaEnum.NAND__DMA_ADDRESS: TransferUtils.Transfer(Direction, ref DmaAddress, ref Value); break;
+				case DmaEnum.NAND__DMA_ADDRESS: TransferUtils.Transfer(direction, ref _dmaAddress, ref value); break;
 				case DmaEnum.NAND__DMA_CONTROL:
-					if (Direction == Dma.Direction.Write)
+					if (direction == Dma.Direction.Write)
 					{
-						if (Value == 0x301)
+						if (value == 0x301)
 						{
 							//0x20000/2/512*(512+16)
-							NandStream.Position = ((DmaAddress / 2 / 512) * (512 + 16));
+							NandStream.Position = ((_dmaAddress / 2 / 512) * (512 + 16));
 							NandBlock = NandStream.ReadBytes(512 + 16);
-							Console.WriteLine("Read from NAND: 0x{0:X8}", DmaAddress);
+							Console.WriteLine("Read from NAND: 0x{0:X8}", _dmaAddress);
 							ArrayUtils.HexDump(NandBlock);
 							
 							//Thread.Sleep(TimeSpan.FromSeconds(0.5));
@@ -131,11 +131,11 @@ namespace CSPspEmuLLETest
 					}
 					else
 					{
-						Value = 0;
+						value = 0;
 					}
 					break;
 				case DmaEnum.NAND__DMA_ERROR:
-					Value = 0;
+					value = 0;
 					break;
 			}
 		}

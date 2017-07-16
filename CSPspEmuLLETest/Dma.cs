@@ -18,48 +18,48 @@ namespace CSPspEmuLLETest
 		}
 
 		public CpuThreadState CpuThreadState;
-		public LLEState LLEState;
+		public LleState LleState;
 		//0xBC100004
 
-		public Dma(CpuThreadState CpuThreadState)
+		public Dma(CpuThreadState cpuThreadState)
 		{
-			this.CpuThreadState = CpuThreadState;
+			this.CpuThreadState = cpuThreadState;
 		}
 
 		bool LogDMAReads = true;
 
-		private string GetRegisterName(uint Address)
+		private string GetRegisterName(uint address)
 		{
-			string Reg = "";
-			var DmaAddress = (DmaEnum)Address;
+			var reg = "";
+			var dmaAddress = (DmaEnum)address;
 
-			if ((DmaAddress >= DmaEnum.NAND__DATA_PAGE_START) && (DmaAddress < DmaEnum.NAND__DATA_PAGE_END))
+			if ((dmaAddress >= DmaEnum.NAND__DATA_PAGE_START) && (dmaAddress < DmaEnum.NAND__DATA_PAGE_END))
 			{
-				return String.Format("NAND__DATA_PAGE[{0}]", DmaAddress - DmaEnum.NAND__DATA_PAGE_START);
+				return String.Format("NAND__DATA_PAGE[{0}]", dmaAddress - DmaEnum.NAND__DATA_PAGE_START);
 			}
 
-			if (Enum.IsDefined(typeof(DmaEnum), Address))
+			if (Enum.IsDefined(typeof(DmaEnum), address))
 			{
-				Reg = String.Format("{0}({1:X8})", (DmaEnum)Address, (uint)Address);
+				reg = String.Format("{0}({1:X8})", (DmaEnum)address, (uint)address);
 			}
 			else
 			{
-				Reg = String.Format("Unknown({0:X8})", (uint)Address);
+				reg = String.Format("Unknown({0:X8})", (uint)address);
 			}
 
-			return Reg;
+			return reg;
 		}
 
-		public void LogDMA(Dma.Direction Direction, int Size, uint Address, ref uint Value)
+		public void LogDma(Dma.Direction direction, int size, uint address, ref uint value)
 		{
-			var DmaAddress = (DmaEnum)Address;
-			if ((DmaAddress >= DmaEnum.NAND__DATA_PAGE_START) && (DmaAddress < DmaEnum.NAND__DATA_PAGE_END)) return;
-			Console.WriteLine("PC({0:X8}) {1}: {2} : 0x{3:X8}", CpuThreadState.PC, Direction, GetRegisterName(Address), Value);
+			var dmaAddress = (DmaEnum)address;
+			if ((dmaAddress >= DmaEnum.NAND__DATA_PAGE_START) && (dmaAddress < DmaEnum.NAND__DATA_PAGE_END)) return;
+			Console.WriteLine("PC({0:X8}) {1}: {2} : 0x{3:X8}", CpuThreadState.PC, direction, GetRegisterName(address), value);
 		}
 
-		byte[] Test = new byte[0x1000];
+		byte[] _test = new byte[0x1000];
 
-		public void TransferDMA(Dma.Direction Direction, int Size, DmaEnum Address, ref uint Value)
+		public void TransferDma(Dma.Direction direction, int size, DmaEnum address, ref uint value)
 		{
 			if (false) { }
 			/*
@@ -68,13 +68,13 @@ namespace CSPspEmuLLETest
 				TransferUtils.TransferToArray(Direction, Test, (int)(Address - 0x1FD00000), Size, ref Value);
 			}
 			*/
-			else if (Address >= DmaEnum.GPIO && Address <= DmaEnum.GPIO__PORT_CLEAR) { LLEState.GPIO.Transfer(Direction, Size, (DmaEnum)Address, ref Value); return; }
-			else if (Address >= DmaEnum.NAND__CONTROL && Address <= DmaEnum.NAND__READDATA) { LLEState.NAND.Transfer(Direction, Size, (DmaEnum)Address, ref Value); return; }
-			else if (Address >= DmaEnum.NAND__DATA_PAGE_START && Address <= DmaEnum.NAND__DATA_EXTRA_END) { LLEState.NAND.Transfer(Direction, Size, (DmaEnum)Address, ref Value); return; }
-			else if (Address >= DmaEnum.KIRK_SIGNATURE && Address <= DmaEnum.KIRK_UNK_50) { LLEState.LleKirk.Transfer(Direction, Size, (DmaEnum)Address, ref Value); return; }
+			else if (address >= DmaEnum.GPIO && address <= DmaEnum.GPIO__PORT_CLEAR) { LleState.Gpio.Transfer(direction, size, (DmaEnum)address, ref value); return; }
+			else if (address >= DmaEnum.NAND__CONTROL && address <= DmaEnum.NAND__READDATA) { LleState.Nand.Transfer(direction, size, (DmaEnum)address, ref value); return; }
+			else if (address >= DmaEnum.NAND__DATA_PAGE_START && address <= DmaEnum.NAND__DATA_EXTRA_END) { LleState.Nand.Transfer(direction, size, (DmaEnum)address, ref value); return; }
+			else if (address >= DmaEnum.KIRK_SIGNATURE && address <= DmaEnum.KIRK_UNK_50) { LleState.LleKirk.Transfer(direction, size, (DmaEnum)address, ref value); return; }
 			else
 			{
-				Console.WriteLine("Unprocessed LLEState.Memory:{0}", LLEState.Memory.MountedPreIpl);
+				Console.WriteLine("Unprocessed LLEState.Memory:{0}", LleState.Memory.MountedPreIpl);
 				//Thread.Sleep(100);
 			}
 		}
@@ -82,34 +82,34 @@ namespace CSPspEmuLLETest
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="Size"></param>
-		/// <param name="Address"></param>
+		/// <param name="size"></param>
+		/// <param name="address"></param>
 		/// <returns></returns>
-		public uint ReadDMA(int Size, uint Address)
+		public uint ReadDma(int size, uint address)
 		{
-			uint Value = 0;
+			uint value = 0;
 
-			TransferDMA(Direction.Read, Size, (DmaEnum)Address, ref Value);
-			LogDMA(Direction.Read, Size, Address, ref Value);
+			TransferDma(Direction.Read, size, (DmaEnum)address, ref value);
+			LogDma(Direction.Read, size, address, ref value);
 
-			return Value;
+			return value;
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="Size"></param>
-		/// <param name="Address"></param>
-		/// <param name="Value"></param>
-		public void WriteDMA(int Size, uint Address, uint Value)
+		/// <param name="size"></param>
+		/// <param name="address"></param>
+		/// <param name="value"></param>
+		public void WriteDma(int size, uint address, uint value)
 		{
-			LogDMA(Direction.Write, Size, Address, ref Value);
-			TransferDMA(Direction.Write, Size, (DmaEnum)Address, ref Value);
+			LogDma(Direction.Write, size, address, ref value);
+			TransferDma(Direction.Write, size, (DmaEnum)address, ref value);
 
-			switch ((DmaEnum)Address)
+			switch ((DmaEnum)address)
 			{
 				case DmaEnum.SystemConfig__RESET_ENABLE:
-					LLEState.Memory.MountedPreIpl = false;
+					LleState.Memory.MountedPreIpl = false;
 					/*
 					if ((Value & 2) != 0) // ME
 					{

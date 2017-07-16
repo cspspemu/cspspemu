@@ -1,8 +1,8 @@
 ﻿namespace CSPspEmuLLETest
 {
-	public class LleGPIO : ILleDma
+	public class LleGpio : ILleDma
 	{
-		public void Transfer(Dma.Direction Direction, int Size, DmaEnum Address, ref uint Value)
+		public void Transfer(Dma.Direction direction, int size, DmaEnum address, ref uint value)
 		{
 		}
 	}

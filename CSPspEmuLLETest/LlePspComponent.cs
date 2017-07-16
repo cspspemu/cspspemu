@@ -5,7 +5,7 @@ namespace CSPspEmuLLETest
 	public abstract class LlePspComponent
 	{
 		protected AutoResetEvent StartEvent = new AutoResetEvent(false);
-		protected bool Running = false;
+		protected bool Running;
 		protected Thread Thread;
 
 		public LlePspComponent()

@@ -1,47 +1,45 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CSPspEmuLLETest;
 
-static public class TransferUtils
+namespace CSPspEmuLLETest
 {
-	static public void Transfer<T>(Dma.Direction Direction, ref T DeviceValue, ref uint MemoryValue)
+	static public class TransferUtils
 	{
-		if (Direction == Dma.Direction.Read)
+		static public void Transfer<T>(Dma.Direction direction, ref T deviceValue, ref uint memoryValue)
 		{
-			MemoryValue = (uint)(object)DeviceValue;
+			if (direction == Dma.Direction.Read)
+			{
+				memoryValue = (uint)(object)deviceValue;
+			}
+			else
+			{
+				deviceValue = (T)(object)memoryValue;
+			}
 		}
-		else
-		{
-			DeviceValue = (T)(object)MemoryValue;
-		}
-	}
 
-	static public void TransferToArray(Dma.Direction Direction, byte[] Array, int Offset, int Size, ref uint MemoryValue)
-	{
-		if (Direction == Dma.Direction.Read)
+		static public void TransferToArray(Dma.Direction direction, byte[] array, int offset, int size, ref uint memoryValue)
 		{
-			switch (Size)
+			if (direction == Dma.Direction.Read)
 			{
-				case 4: MemoryValue = BitConverter.ToUInt32(Array, Offset); break;
-				case 2: MemoryValue = BitConverter.ToUInt16(Array, Offset); break;
-				case 1: MemoryValue = Array[Offset]; break;
-				default: throw (new NotImplementedException());
+				switch (size)
+				{
+					case 4: memoryValue = BitConverter.ToUInt32(array, offset); break;
+					case 2: memoryValue = BitConverter.ToUInt16(array, offset); break;
+					case 1: memoryValue = array[offset]; break;
+					default: throw new NotImplementedException();
+				}
 			}
-		}
-		else
-		{
-			byte[] Bytes;
-			switch (Size)
+			else
 			{
-				case 4: Bytes = BitConverter.GetBytes((uint)MemoryValue); break;
-				case 2: Bytes = BitConverter.GetBytes((ushort)MemoryValue); break;
-				case 1: Bytes = BitConverter.GetBytes((byte)MemoryValue); break;
-				default: throw (new NotImplementedException());
+				byte[] bytes;
+				switch (size)
+				{
+					case 4: bytes = BitConverter.GetBytes(memoryValue); break;
+					case 2: bytes = BitConverter.GetBytes((ushort)memoryValue); break;
+					case 1: bytes = BitConverter.GetBytes((byte)memoryValue); break;
+					default: throw new NotImplementedException();
+				}
+				Buffer.BlockCopy(bytes, 0, array, offset, size);
 			}
-			Buffer.BlockCopy(Bytes, 0, Array, Offset, Size);
 		}
 	}
 }

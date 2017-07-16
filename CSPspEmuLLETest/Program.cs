@@ -27,48 +27,48 @@ namespace CSPspEmuLLETest
 		}
 
 		[Inject]
-		DebugPspMemory PspMemory;
+		protected DebugPspMemory PspMemory;
 
 		[Inject]
-		CpuProcessor CpuProcessor;
+		protected CpuProcessor CpuProcessor;
 
 		[Inject]
-		InjectContext InjectContext;
+		protected InjectContext InjectContext;
 
 		public Program()
 		{
-			var InjectContext = new InjectContext();
+			var injectContext = new InjectContext();
 			{
-				InjectContext.SetInstanceType<PspMemory, DebugPspMemory>();
-				InjectContext.SetInstanceType<DebugPspMemory, DebugPspMemory>();
+				injectContext.SetInstanceType<PspMemory, DebugPspMemory>();
+				injectContext.SetInstanceType<DebugPspMemory, DebugPspMemory>();
 			}
-			InjectContext.InjectDependencesTo(this);
+			injectContext.InjectDependencesTo(this);
 		}
 
 		public void Run()
 		{
-			var CpuThreadState = new CpuThreadState(CpuProcessor);
-			var Dma = new Dma(CpuThreadState);
+			var cpuThreadState = new CpuThreadState(CpuProcessor);
+			var dma = new Dma(cpuThreadState);
 		
 			Console.SetWindowSize(120, 60);
 			Console.SetBufferSize(120, 8000);
 
-			var NandStream = File.OpenRead(NandPath);
-			var IplReader = new IplReader(new NandReader(NandStream));
-			var Info = IplReader.LoadIplToMemory(new PspMemoryStream(PspMemory));
-			uint StartPC = Info.EntryFunction;
+			var nandStream = File.OpenRead(NandPath);
+			var iplReader = new IplReader(new NandReader(nandStream));
+			var info = iplReader.LoadIplToMemory(new PspMemoryStream(PspMemory));
+			var startPc = info.EntryFunction;
 
-			var LLEState = new LLEState();
+			var lleState = new LleState();
 
-			Dma.LLEState = LLEState;
-			LLEState.GPIO = new LleGPIO();
-			LLEState.NAND = new LleNAND(NandStream);
-			LLEState.Cpu = new LlePspCpu("CPU", InjectContext, CpuProcessor, StartPC);
-			LLEState.Me = new LlePspCpu("ME", InjectContext, CpuProcessor, StartPC);
-			LLEState.LleKirk = new LleKirk(PspMemory);
-			LLEState.Memory = PspMemory;
+			dma.LleState = lleState;
+			lleState.Gpio = new LleGpio();
+			lleState.Nand = new LleNand(nandStream);
+			lleState.Cpu = new LlePspCpu("CPU", InjectContext, CpuProcessor, startPc);
+			lleState.Me = new LlePspCpu("ME", InjectContext, CpuProcessor, startPc);
+			lleState.LleKirk = new LleKirk(PspMemory);
+			lleState.Memory = PspMemory;
 
-			LLEState.Cpu.Start();
+			lleState.Cpu.Start();
 
 			while (true) Thread.Sleep(int.MaxValue);
 		}
