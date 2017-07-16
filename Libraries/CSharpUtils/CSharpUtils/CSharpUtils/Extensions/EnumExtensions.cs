@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace CSharpUtils.Extensions
 {
-    static public class EnumExtensions
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class EnumExtensions
     {
         //static public bool HasFlagGeneric<TType>(this TType This, TType Value) where TType : Enum
         //{

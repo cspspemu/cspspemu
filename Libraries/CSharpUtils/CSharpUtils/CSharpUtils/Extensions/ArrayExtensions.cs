@@ -3,128 +3,207 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
-unsafe static public class ArrayExtensions
+/// <summary>
+/// 
+/// </summary>
+public static unsafe class ArrayExtensions
 {
-    static public T[] Concat<T>(this T[] Left, T[] Right)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static T[] Concat<T>(this T[] left, T[] right)
     {
         if (typeof(T) == typeof(byte[]))
         {
-            return (T[]) (object) ConcatBytes((byte[]) (object) Left, (byte[]) (object) Right);
+            return (T[]) (object) ConcatBytes((byte[]) (object) left, (byte[]) (object) right);
         }
 
-        var Return = new T[Left.Length + Right.Length];
-        Left.CopyTo(Return, 0);
-        Right.CopyTo(Return, Left.Length);
+        var Return = new T[left.Length + right.Length];
+        left.CopyTo(Return, 0);
+        right.CopyTo(Return, left.Length);
         return Return;
     }
 
-    static public TTo[] CastToStructArray<TTo>(this byte[] Array)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="array"></param>
+    /// <typeparam name="TTo"></typeparam>
+    /// <returns></returns>
+    public static TTo[] CastToStructArray<TTo>(this byte[] array)
     {
-        return Array.CastToStructArray<byte, TTo>();
+        return array.CastToStructArray<byte, TTo>();
     }
 
-    static public TTo[] CastToStructArray<TFrom, TTo>(this TFrom[] Input)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="input"></param>
+    /// <typeparam name="TFrom"></typeparam>
+    /// <typeparam name="TTo"></typeparam>
+    /// <returns></returns>
+    public static TTo[] CastToStructArray<TFrom, TTo>(this TFrom[] input)
     {
-        int TotalBytes = (Marshal.SizeOf(typeof(TFrom)) * Input.Length);
-        var Output = new TTo[TotalBytes / Marshal.SizeOf(typeof(TTo))];
-        var InputHandle = GCHandle.Alloc(Input, GCHandleType.Pinned);
-        var OutputHandle = GCHandle.Alloc(Output, GCHandleType.Pinned);
+        var totalBytes = (Marshal.SizeOf(typeof(TFrom)) * input.Length);
+        var output = new TTo[totalBytes / Marshal.SizeOf(typeof(TTo))];
+        var inputHandle = GCHandle.Alloc(input, GCHandleType.Pinned);
+        var outputHandle = GCHandle.Alloc(output, GCHandleType.Pinned);
         try
         {
             PointerUtils.Memcpy(
-                (byte*) OutputHandle.AddrOfPinnedObject().ToPointer(),
-                (byte*) InputHandle.AddrOfPinnedObject().ToPointer(),
-                TotalBytes
+                (byte*) outputHandle.AddrOfPinnedObject().ToPointer(),
+                (byte*) inputHandle.AddrOfPinnedObject().ToPointer(),
+                totalBytes
             );
         }
         finally
         {
-            InputHandle.Free();
-            OutputHandle.Free();
+            inputHandle.Free();
+            outputHandle.Free();
         }
-        return Output;
+        return output;
     }
 
-    static public byte[] ConcatBytes(params byte[][] Arrays)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="arrays"></param>
+    /// <returns></returns>
+    public static byte[] ConcatBytes(params byte[][] arrays)
     {
-        var Return = new byte[Arrays.Sum(Item => Item.Length)];
-        var Offset = 0;
-        foreach (var Array in Arrays)
+        var @return = new byte[arrays.Sum(item => item.Length)];
+        var offset = 0;
+        foreach (var array in arrays)
         {
-            Buffer.BlockCopy(Array, 0, Return, Offset, Array.Length);
-            Offset += Array.Length;
+            Buffer.BlockCopy(array, 0, @return, offset, array.Length);
+            offset += array.Length;
         }
+        return @return;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="first"></param>
+    /// <param name="others"></param>
+    /// <returns></returns>
+    public static byte[] ConcatBytes(this byte[] first, params byte[][] others)
+    {
+        return ConcatBytes(new[] {first}.Union(others).ToArray());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="This"></param>
+    /// <param name="newSize"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static T[] ResizedCopy<T>(this T[] This, int newSize)
+    {
+        var that = new T[newSize];
+        Array.Copy(This, that, Math.Min(This.Length, newSize));
+        return that;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <param name="rightOffset"></param>
+    /// <param name="rightLength"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static T[] Concat<T>(this T[] left, T[] right, int rightOffset, int rightLength)
+    {
+        var Return = new T[left.Length + rightLength];
+        Array.Copy(left, 0, Return, 0, left.Length);
+        Array.Copy(right, rightOffset, Return, left.Length, rightLength);
         return Return;
     }
 
-    static public byte[] ConcatBytes(this byte[] First, params byte[][] Others)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="this"></param>
+    /// <param name="low"></param>
+    /// <param name="high"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static T[] SliceWithBounds<T>(this T[] @this, int low, int high)
     {
-        return ConcatBytes(new[] {First}.Union(Others).ToArray());
-    }
-
-    static public T[] ResizedCopy<T>(this T[] This, int NewSize)
-    {
-        var That = new T[NewSize];
-        Array.Copy(This, That, Math.Min(This.Length, NewSize));
-        return That;
-    }
-
-    static public T[] Concat<T>(this T[] Left, T[] Right, int RightOffset, int RightLength)
-    {
-        var Return = new T[Left.Length + RightLength];
-        Array.Copy(Left, 0, Return, 0, Left.Length);
-        Array.Copy(Right, RightOffset, Return, Left.Length, RightLength);
-        return Return;
-    }
-
-    static public T[] SliceWithBounds<T>(this T[] This, int Low, int High)
-    {
-        if (High < 0)
+        if (high < 0)
         {
-            return This.Slice(Low, This.Length + High - Low);
+            return @this.Slice(low, @this.Length + high - low);
         }
         else
         {
-            return This.Slice(Low, High - Low);
+            return @this.Slice(low, high - low);
         }
     }
 
-    static public T[] Slice<T>(this T[] This, int Start, int Length)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="This"></param>
+    /// <param name="start"></param>
+    /// <param name="length"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static T[] Slice<T>(this T[] This, int start, int length)
     {
-        if (Start < 0) Start = This.Length - Start;
-        Start = Math.Min(Math.Max(0, Start), This.Length);
-        Length = Math.Min(This.Length - Start, Length);
-        var Return = new T[Length];
-        Array.Copy(This, Start, Return, 0, Length);
+        if (start < 0) start = This.Length - start;
+        start = Math.Min(Math.Max(0, start), This.Length);
+        length = Math.Min(This.Length - start, length);
+        var Return = new T[length];
+        Array.Copy(This, start, Return, 0, length);
         return Return;
     }
 
-    static public T[] Slice<T>(this T[] This, int Start)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="this"></param>
+    /// <param name="start"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static T[] Slice<T>(this T[] @this, int start)
     {
-        return This.Slice(Start, This.Length - Start);
+        return @this.Slice(start, @this.Length - start);
     }
 
-    static public IEnumerable<T[]> Split<T>(this T[] This, int ChunkSize)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="this"></param>
+    /// <param name="chunkSize"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static IEnumerable<T[]> Split<T>(this T[] @this, int chunkSize)
     {
-        int CompleteChunksCount = This.Length / ChunkSize;
-        int PartialChunkSize = This.Length % ChunkSize;
-        int Offset = 0;
-        for (int n = 0; n < CompleteChunksCount; n++)
+        var completeChunksCount = @this.Length / chunkSize;
+        var partialChunkSize = @this.Length % chunkSize;
+        var offset = 0;
+        for (var n = 0; n < completeChunksCount; n++)
         {
-            var Chunk = new T[PartialChunkSize];
-            Array.Copy(This, Offset, Chunk, 0, CompleteChunksCount);
-            Offset += CompleteChunksCount;
-            yield return Chunk;
+            var chunk = new T[partialChunkSize];
+            Array.Copy(@this, offset, chunk, 0, completeChunksCount);
+            offset += completeChunksCount;
+            yield return chunk;
         }
-        if (PartialChunkSize > 0)
-        {
-            var Chunk = new T[PartialChunkSize];
-            Array.Copy(This, Offset, Chunk, 0, PartialChunkSize);
-            Offset += PartialChunkSize;
-            //Chunk.CopyTo);
-            yield return Chunk;
-        }
+        
+        if (partialChunkSize <= 0) yield break;
+        
+        var chunk2 = new T[partialChunkSize];
+        Array.Copy(@this, offset, chunk2, 0, partialChunkSize);
+        offset += partialChunkSize;
+        //Chunk.CopyTo);
+        yield return chunk2;
     }
 }

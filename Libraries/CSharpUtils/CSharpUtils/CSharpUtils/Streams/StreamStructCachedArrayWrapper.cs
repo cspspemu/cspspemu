@@ -8,39 +8,45 @@ using CSharpUtils.Threading;
 
 namespace CSharpUtils.Streams
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TType"></typeparam>
     public class StreamStructCachedArrayWrapper<TType> : IArray<TType> where TType : struct
     {
-        List<TType> CachedValues = new List<TType>();
-        int NumberOfItemsToBuffer;
-        Stream Stream;
-        static Type StructType = typeof(TType);
-        static int StructSize = Marshal.SizeOf(StructType);
+        readonly List<TType> _cachedValues = new List<TType>();
+        readonly int _numberOfItemsToBuffer;
+        readonly Stream _stream;
+        static readonly Type StructType = typeof(TType);
+        private static readonly int StructSize = Marshal.SizeOf(StructType);
 
-        public StreamStructCachedArrayWrapper(int NumberOfItemsToBuffer, Stream Stream)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="numberOfItemsToBuffer"></param>
+        /// <param name="stream"></param>
+        public StreamStructCachedArrayWrapper(int numberOfItemsToBuffer, Stream stream)
         {
-            this.NumberOfItemsToBuffer = NumberOfItemsToBuffer;
-            this.Stream = Stream;
-            this.CustomThreadPool = new CustomThreadPool(1);
+            _numberOfItemsToBuffer = numberOfItemsToBuffer;
+            _stream = stream;
+            CustomThreadPool = new CustomThreadPool(1);
         }
 
-        private int BufferedItemsCount
-        {
-            get { return CachedValues.Count; }
-        }
+        private int BufferedItemsCount => _cachedValues.Count;
 
-        private void SecureUpToItem(int MaxItem)
+        private void SecureUpToItem(int maxItem)
         {
-            MaxItem = Math.Min(MaxItem, Length);
-            int ItemsToRead = MaxItem - BufferedItemsCount;
+            maxItem = Math.Min(maxItem, Length);
+            var itemsToRead = maxItem - BufferedItemsCount;
 
             //Console.WriteLine("SecureUpToItem: {0}, {1}, {2}", MaxItem, BufferedItemsCount, ItemsToRead);
 
-            if (ItemsToRead > 0)
+            if (itemsToRead > 0)
             {
                 try
                 {
-                    int DataLength = ItemsToRead * StructSize;
-                    var Data = new byte[DataLength];
+                    var dataLength = itemsToRead * StructSize;
+                    var data = new byte[dataLength];
 
                     /*
                     Stream.BeginRead(Data, 0, DataLength, (AsyncState) =>
@@ -51,29 +57,29 @@ namespace CSharpUtils.Streams
                     */
                     CustomThreadPool.AddTask(0, () =>
                     {
-                        int Readed = Stream.Read(Data, 0, DataLength);
-                        CachedValues.AddRange(PointerUtils.ByteArrayToArray<TType>(Data));
+                        var readed = _stream.Read(data, 0, dataLength);
+                        _cachedValues.AddRange(PointerUtils.ByteArrayToArray<TType>(data));
                     });
                 }
-                catch (Exception Exception)
+                catch (Exception exception)
                 {
-                    Console.Error.WriteLine(Exception);
+                    Console.Error.WriteLine(exception);
                 }
             }
         }
 
-        private void SecureUpToItem(int Offset, int NumberOfItemsToBuffer)
+        private void SecureUpToItem(int offset, int numberOfItemsToBuffer)
         {
-            if (BufferedItemsCount - Offset < NumberOfItemsToBuffer / 2)
+            if (BufferedItemsCount - offset < numberOfItemsToBuffer / 2)
             {
                 while (true)
                 {
-                    if (BufferedItemsCount - Offset < NumberOfItemsToBuffer / 2)
+                    if (BufferedItemsCount - offset < numberOfItemsToBuffer / 2)
                     {
-                        SecureUpToItem(BufferedItemsCount + NumberOfItemsToBuffer);
+                        SecureUpToItem(BufferedItemsCount + numberOfItemsToBuffer);
                     }
 
-                    if (Offset >= BufferedItemsCount)
+                    if (offset >= BufferedItemsCount)
                     {
                         Thread.Sleep(1);
                     }
@@ -86,40 +92,57 @@ namespace CSharpUtils.Streams
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<TType> GetEnumerator()
         {
-            for (int n = 0; n < Length; n++) yield return this[n];
+            for (var n = 0; n < Length; n++) yield return this[n];
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            for (int n = 0; n < Length; n++) yield return this[n];
+            for (var n = 0; n < Length; n++) yield return this[n];
         }
 
-        public TType this[int Index]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <exception cref="IndexOutOfRangeException"></exception>
+        /// <exception cref="NotImplementedException"></exception>
+        public TType this[int index]
         {
             get
             {
-                if (Index < 0 || Index >= Length)
+                if (index < 0 || index >= Length)
                     throw(new IndexOutOfRangeException(String.Format("Invalid Index {0}. Must be in range {1}-{2}",
-                        Index, 00, Length)));
-                SecureUpToItem(Index, NumberOfItemsToBuffer);
-                return CachedValues[Index];
+                        index, 00, Length)));
+                SecureUpToItem(index, _numberOfItemsToBuffer);
+                return _cachedValues[index];
             }
-            set { throw new NotImplementedException(); }
+            set => throw new NotImplementedException();
         }
 
-        public int Length
-        {
-            get { return (int) (Stream.Length / StructSize); }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Length => (int) (_stream.Length / StructSize);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public TType[] GetArray()
         {
             SecureUpToItem(Length);
-            return CachedValues.ToArray();
+            return _cachedValues.ToArray();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public CustomThreadPool CustomThreadPool { get; set; }
     }
 }

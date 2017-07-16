@@ -1,4 +1,5 @@
 ﻿using System;
+using CSharpUtils.Extensions;
 using CSharpUtils.Streams;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

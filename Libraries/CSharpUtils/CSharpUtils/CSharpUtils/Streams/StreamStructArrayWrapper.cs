@@ -7,63 +7,79 @@ using CSharpUtils.Arrays;
 
 namespace CSharpUtils.Streams
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TType"></typeparam>
     public class StreamStructArrayWrapper<TType> : IArray<TType> where TType : struct
     {
         Stream Stream;
-        static Type StructType = typeof(TType);
-        static int StructSize = Marshal.SizeOf(StructType);
+        static readonly Type StructType = typeof(TType);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public readonly int StructSize = Marshal.SizeOf(StructType);
+
+        /// <summary>
+        /// 
+        /// </summary>
         public StreamStructArrayWrapper()
         {
-            this.Stream = null;
+            Stream = null;
         }
 
-        public StreamStructArrayWrapper(Stream Stream)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stream"></param>
+        public StreamStructArrayWrapper(Stream stream)
         {
-            this.Stream = Stream;
+            Stream = stream;
         }
 
-        private void SeekToIndex(int Index)
+        private void SeekToIndex(int index)
         {
-            Stream.Position = Index * StructSize;
+            Stream.Position = index * StructSize;
         }
 
-        public TType this[int Index]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        public TType this[int index]
         {
             get
             {
-                SeekToIndex(Index);
+                SeekToIndex(index);
                 return Stream.ReadStruct<TType>();
             }
             set
             {
-                SeekToIndex(Index);
+                SeekToIndex(index);
                 Stream.WriteStruct(value);
             }
         }
 
-        public int Length
-        {
-            get
-            {
-                if (Stream == null) return 0;
-                return (int) (Stream.Length / StructSize);
-            }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Length => Stream == null ? 0 : (int) (Stream.Length / StructSize);
 
         IEnumerator<TType> IEnumerable<TType>.GetEnumerator()
         {
-            for (int n = 0; n < Length; n++) yield return this[n];
+            for (var n = 0; n < Length; n++) yield return this[n];
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            for (int n = 0; n < Length; n++) yield return this[n];
+            for (var n = 0; n < Length; n++) yield return this[n];
         }
 
-        public TType[] GetArray()
-        {
-            return this.ToArray();
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public TType[] GetArray() => this.ToArray();
     }
 }

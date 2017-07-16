@@ -1,26 +1,50 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Xml.Serialization;
 
-public static class SerializationExtensions
+namespace CSharpUtils.Extensions
 {
-    public static String ToJson<T>(this T Object, bool SingleQuotes = false)
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class SerializationExtensions
     {
-        return CSharpUtils.Json.JSON.Encode(Object, SingleQuotes);
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Object"></param>
+        /// <param name="singleQuotes"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static string ToJson<T>(this T Object, bool singleQuotes = false)
+        {
+            return Json.Json.Encode(Object, singleQuotes);
+        }
 
-    public static String ToXmlString<T>(this T Struct)
-    {
-        var Serializer = new XmlSerializer(typeof(T));
-        var StringWriter = new StringWriter();
-        Serializer.Serialize(StringWriter, Struct);
-        return StringWriter.ToString();
-        //return Str
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Struct"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static string ToXmlString<T>(this T Struct)
+        {
+            var serializer = new XmlSerializer(typeof(T));
+            var stringWriter = new StringWriter();
+            serializer.Serialize(stringWriter, Struct);
+            return stringWriter.ToString();
+            //return Str
+        }
 
-    public static T FromXmlString<T>(this String XmlString)
-    {
-        var Serializer = new XmlSerializer(typeof(T));
-        return (T) Serializer.Deserialize(new StringReader(XmlString));
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="xmlString"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T FromXmlString<T>(this string xmlString)
+        {
+            var serializer = new XmlSerializer(typeof(T));
+            return (T) serializer.Deserialize(new StringReader(xmlString));
+        }
     }
 }

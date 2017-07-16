@@ -6,6 +6,7 @@ using CSPspEmu.Resources;
 using System.Drawing;
 using System.Linq;
 using System.Collections.Generic;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Gui.Winforms
 {

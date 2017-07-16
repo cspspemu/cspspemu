@@ -2,16 +2,49 @@
 
 namespace CSharpUtils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public struct DateTimeRange
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public enum PrecisionType
         {
+            /// <summary>
+            /// 
+            /// </summary>
             Ticks,
+
+            /// <summary>
+            /// 
+            /// </summary>
             Seconds,
+
+            /// <summary>
+            /// 
+            /// </summary>
             Minutes,
+
+            /// <summary>
+            /// 
+            /// </summary>
             Hours,
+
+            /// <summary>
+            /// 
+            /// </summary>
             Days,
+
+            /// <summary>
+            /// 
+            /// </summary>
             Months,
+
+            /// <summary>
+            /// 
+            /// </summary>
             Years,
             /*
             Seconds = 1,
@@ -23,189 +56,234 @@ namespace CSharpUtils
                 * */
         }
 
-        private bool WasUpdated;
-        private DateTime _Time, _TimeStart, _TimeEnd;
-        private PrecisionType _Precision;
+        private bool _wasUpdated;
+        private DateTime _time, _timeStart, _timeEnd;
+        private PrecisionType _precision;
 
-        static DateTimeRange FromUnixTimestamp(long UnixTimestamp, PrecisionType Precision = PrecisionType.Seconds)
+        private static DateTimeRange FromUnixTimestamp(long unixTimestamp,
+            PrecisionType precision = PrecisionType.Seconds)
         {
-            return new DateTimeRange(ConvertFromUnixTimestamp(UnixTimestamp), Precision);
+            return new DateTimeRange(ConvertFromUnixTimestamp(unixTimestamp), precision);
         }
 
-        public static implicit operator DateTimeRange(long UnixTimestamp)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="unixTimestamp"></param>
+        /// <returns></returns>
+        public static implicit operator DateTimeRange(long unixTimestamp)
         {
-            return FromUnixTimestamp(UnixTimestamp, PrecisionType.Seconds);
+            return FromUnixTimestamp(unixTimestamp);
         }
 
-        public DateTimeRange(DateTime Time, PrecisionType Precision = PrecisionType.Ticks)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="time"></param>
+        /// <param name="precision"></param>
+        public DateTimeRange(DateTime time, PrecisionType precision = PrecisionType.Ticks)
         {
-            this._Time = Time;
-            this._Precision = Precision;
-            this.WasUpdated = true;
-            this._TimeStart = DateTime.MinValue;
-            this._TimeEnd = DateTime.MaxValue;
+            _time = time;
+            _precision = precision;
+            _wasUpdated = true;
+            _timeStart = DateTime.MinValue;
+            _timeEnd = DateTime.MaxValue;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public DateTime Time
         {
             set
             {
-                _Time = value;
-                WasUpdated = true;
+                _time = value;
+                _wasUpdated = true;
             }
-            get { return _Time; }
+            get => _time;
         }
 
-        public DateTime TimeStart
-        {
-            get
-            {
-                CheckUpdateTimeStartEnd();
-                return _TimeStart;
-            }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime TimeStart => CheckUpdateTimeStartEnd()._timeStart;
 
-        public DateTime TimeEnd
-        {
-            get
-            {
-                CheckUpdateTimeStartEnd();
-                return _TimeEnd;
-            }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public DateTime TimeEnd => CheckUpdateTimeStartEnd()._timeEnd;
 
-        public long UnixTimestamp
-        {
-            get { return ConvertToUnixTimestamp(Time); }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public long UnixTimestamp => ConvertToUnixTimestamp(Time);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="timestamp"></param>
+        /// <returns></returns>
         public static DateTime ConvertFromUnixTimestamp(long timestamp)
         {
-            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             return origin.AddSeconds(timestamp);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
         public static long ConvertToUnixTimestamp(DateTime date)
         {
-            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            TimeSpan diff = date - origin;
+            var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            var diff = date - origin;
             return (long) Math.Floor(diff.TotalSeconds);
         }
 
-        public bool Contains(DateTime PreciseTime)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="preciseTime"></param>
+        /// <returns></returns>
+        public bool Contains(DateTime preciseTime)
         {
-            return (PreciseTime >= TimeStart) && (PreciseTime < TimeEnd);
+            return preciseTime >= TimeStart && (preciseTime < TimeEnd);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
         public bool Contains(DateTimeRange that)
         {
             return Contains(that.TimeStart) && Contains(that.TimeEnd - new TimeSpan(1));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public PrecisionType Precision
         {
             set
             {
-                _Precision = value;
-                WasUpdated = true;
+                _precision = value;
+                _wasUpdated = true;
             }
-            get { return _Precision; }
+            get => _precision;
         }
 
-        public static implicit operator DateTime(DateTimeRange that)
-        {
-            return that.Time;
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator DateTime(DateTimeRange that) => that.Time;
 
-        public static implicit operator DateTimeRange(DateTime that)
-        {
-            return new DateTimeRange(that);
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator DateTimeRange(DateTime that) => new DateTimeRange(that);
 
-        public static bool operator ==(DateTimeRange a, DateTimeRange b)
-        {
-            return a.Contains(b) || b.Contains(a);
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static bool operator ==(DateTimeRange a, DateTimeRange b) => a.Contains(b) || b.Contains(a);
 
-        public static bool operator !=(DateTimeRange a, DateTimeRange b)
-        {
-            return !(a == b);
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static bool operator !=(DateTimeRange a, DateTimeRange b) => !(a == b);
 
-        public override int GetHashCode()
-        {
-            return TimeStart.GetHashCode() ^ Precision.GetHashCode();
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode() => TimeStart.GetHashCode() ^ Precision.GetHashCode();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
         public override bool Equals(object that)
         {
-            if (that is DateTimeRange)
-            {
-                return ((DateTimeRange) this == (DateTimeRange) that);
-            }
-            else if (that is DateTime)
-            {
-                return this.Contains((DateTime) that);
-            }
-            {
-                return false;
-            }
+            if (that is DateTimeRange) return (this == (DateTimeRange) that);
+            if (that is DateTime) return Contains((DateTime) that);
+            return false;
         }
 
-        private void CheckUpdateTimeStartEnd()
+        private DateTimeRange CheckUpdateTimeStartEnd()
         {
-            if (WasUpdated)
+            if (_wasUpdated)
             {
-                WasUpdated = false;
-                ModifiedTimeRange(_Time, _Precision, out _TimeStart, out _TimeEnd);
+                _wasUpdated = false;
+                ModifiedTimeRange(_time, _precision, out _timeStart, out _timeEnd);
             }
+            return this;
         }
 
-        public static void ModifiedTimeRange(DateTime Time, PrecisionType Precision, out DateTime ModifiedTimeStart,
-            out DateTime ModifiedTimeEnd)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="time"></param>
+        /// <param name="precision"></param>
+        /// <param name="modifiedTimeStart"></param>
+        /// <param name="modifiedTimeEnd"></param>
+        public static void ModifiedTimeRange(DateTime time, PrecisionType precision, out DateTime modifiedTimeStart,
+            out DateTime modifiedTimeEnd)
         {
-            switch (Precision)
+            switch (precision)
             {
                 case PrecisionType.Ticks:
-                    ModifiedTimeEnd = ModifiedTimeStart = new DateTime(Time.Ticks);
+                    modifiedTimeEnd = modifiedTimeStart = new DateTime(time.Ticks);
                     break;
                 case PrecisionType.Seconds:
-                    ModifiedTimeStart = new DateTime(Time.Year, Time.Month, Time.Day, Time.Hour, Time.Minute,
-                        Time.Second + 0);
-                    ModifiedTimeEnd = new DateTime(Time.Year, Time.Month, Time.Day, Time.Hour, Time.Minute,
-                        Time.Second + 1);
+                    modifiedTimeStart = new DateTime(time.Year, time.Month, time.Day, time.Hour, time.Minute,
+                        time.Second + 0);
+                    modifiedTimeEnd = new DateTime(time.Year, time.Month, time.Day, time.Hour, time.Minute,
+                        time.Second + 1);
                     break;
                 case PrecisionType.Minutes:
-                    ModifiedTimeStart = new DateTime(Time.Year, Time.Month, Time.Day, Time.Hour, Time.Minute + 0, 0);
-                    ModifiedTimeEnd = new DateTime(Time.Year, Time.Month, Time.Day, Time.Hour, Time.Minute + 1, 0);
+                    modifiedTimeStart = new DateTime(time.Year, time.Month, time.Day, time.Hour, time.Minute + 0, 0);
+                    modifiedTimeEnd = new DateTime(time.Year, time.Month, time.Day, time.Hour, time.Minute + 1, 0);
                     break;
                 case PrecisionType.Hours:
-                    ModifiedTimeStart = new DateTime(Time.Year, Time.Month, Time.Day, Time.Hour + 0, 0, 0);
-                    ModifiedTimeEnd = new DateTime(Time.Year, Time.Month, Time.Day, Time.Hour + 1, 0, 0);
+                    modifiedTimeStart = new DateTime(time.Year, time.Month, time.Day, time.Hour + 0, 0, 0);
+                    modifiedTimeEnd = new DateTime(time.Year, time.Month, time.Day, time.Hour + 1, 0, 0);
                     break;
                 case PrecisionType.Days:
-                    ModifiedTimeStart = new DateTime(Time.Year, Time.Month, Time.Day + 0);
-                    ModifiedTimeEnd = new DateTime(Time.Year, Time.Month, Time.Day + 1);
+                    modifiedTimeStart = new DateTime(time.Year, time.Month, time.Day + 0);
+                    modifiedTimeEnd = new DateTime(time.Year, time.Month, time.Day + 1);
                     break;
                 case PrecisionType.Months:
-                    ModifiedTimeStart = new DateTime(Time.Year, Time.Month + 0, 0);
-                    ModifiedTimeEnd = new DateTime(Time.Year, Time.Month + 1, 0);
+                    modifiedTimeStart = new DateTime(time.Year, time.Month + 0, 0);
+                    modifiedTimeEnd = new DateTime(time.Year, time.Month + 1, 0);
                     break;
                 case PrecisionType.Years:
-                    ModifiedTimeStart = new DateTime(Time.Year + 0, 0, 0);
-                    ModifiedTimeEnd = new DateTime(Time.Year + 1, 0, 0);
+                    modifiedTimeStart = new DateTime(time.Year + 0, 0, 0);
+                    modifiedTimeEnd = new DateTime(time.Year + 1, 0, 0);
                     break;
                 default:
-                    ModifiedTimeStart = DateTime.MinValue;
-                    ModifiedTimeEnd = DateTime.MaxValue;
+                    modifiedTimeStart = DateTime.MinValue;
+                    modifiedTimeEnd = DateTime.MaxValue;
                     break;
             }
         }
 
-        public override string ToString()
-        {
-            return "DateTimeRange(TimeStart=" + this.TimeStart + ", TimeEnd=" + this.TimeEnd + ", Time=" + this.Time +
-                   ", Precision=" + this.Precision + ")";
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => $"DateTimeRange(TimeStart={TimeStart}, TimeEnd={TimeEnd}, Time={Time}, Precision={Precision})";
     }
 }

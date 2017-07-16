@@ -4,6 +4,7 @@ using System.Linq;
 using CSharpUtils;
 using CSPspEmu.Core.Memory;
 using System.Runtime.InteropServices;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle
 {

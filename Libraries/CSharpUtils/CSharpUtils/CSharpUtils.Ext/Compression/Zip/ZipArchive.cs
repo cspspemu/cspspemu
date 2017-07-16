@@ -5,6 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text;
 using System.Runtime.InteropServices;
+using CSharpUtils.Extensions;
 using CSharpUtils.Streams;
 
 namespace CSharpUtils.Compression.Zip

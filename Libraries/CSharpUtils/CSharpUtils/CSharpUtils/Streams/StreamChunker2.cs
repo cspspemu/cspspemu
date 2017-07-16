@@ -4,25 +4,36 @@ using System.IO;
 
 namespace CSharpUtils.Streams
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class StreamChunker2
     {
-        protected static int FindSequence(byte[] Array, byte[] SequenceToFind, int Start = 0,
-            int EndIndex = int.MaxValue)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="sequenceToFind"></param>
+        /// <param name="start"></param>
+        /// <param name="endIndex"></param>
+        /// <returns></returns>
+        protected static int FindSequence(byte[] array, byte[] sequenceToFind, int start = 0,
+            int endIndex = int.MaxValue)
         {
-            int ArrayUpTo = Math.Min(EndIndex, Array.Length) - SequenceToFind.Length;
-            int SequenceToFindLength = SequenceToFind.Length;
-            for (int n = Start; n < ArrayUpTo; n++)
+            var arrayUpTo = Math.Min(endIndex, array.Length) - sequenceToFind.Length;
+            var sequenceToFindLength = sequenceToFind.Length;
+            for (var n = start; n < arrayUpTo; n++)
             {
-                bool Found = true;
-                for (int m = 0; m < SequenceToFindLength; m++)
+                var found = true;
+                for (var m = 0; m < sequenceToFindLength; m++)
                 {
-                    if (SequenceToFind[m] != Array[n + m])
+                    if (sequenceToFind[m] != array[n + m])
                     {
-                        Found = false;
+                        found = false;
                         break;
                     }
                 }
-                if (Found)
+                if (found)
                 {
                     return n;
                 }
@@ -30,54 +41,59 @@ namespace CSharpUtils.Streams
             return -1;
         }
 
-        public static List<byte[]> SplitInChunks(Stream InputStream, byte[] Separator)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inputStream"></param>
+        /// <param name="separator"></param>
+        /// <returns></returns>
+        public static List<byte[]> SplitInChunks(Stream inputStream, byte[] separator)
         {
-            var List = new List<byte[]>();
-            Split(InputStream, Separator, delegate(byte[] Chunk) { List.Add(Chunk); });
-            return List;
+            var list = new List<byte[]>();
+            Split(inputStream, separator, delegate(byte[] chunk) { list.Add(chunk); });
+            return list;
         }
 
-        public static void Split(Stream InputStream, byte[] Separator, Action<byte[]> ChunkHandler)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inputStream"></param>
+        /// <param name="separator"></param>
+        /// <param name="chunkHandler"></param>
+        public static void Split(Stream inputStream, byte[] separator, Action<byte[]> chunkHandler)
         {
-            byte[] Buffer = new byte[4096];
+            //var buffer = new byte[4096];
+            var tempDoubleBuffer = new byte[separator.Length * 2];
+            var chunk = new MemoryStream();
+            var startIndex = separator.Length;
+            var skipChunkStart = 0;
 
-            byte[] TempDoubleBuffer = new byte[Separator.Length * 2];
-
-            MemoryStream Chunk = new MemoryStream();
-
-            int StartIndex = Separator.Length;
-            int SkipChunkStart = 0;
-
-            while (!InputStream.Eof())
+            while (!inputStream.Eof())
             {
-                Array.Copy(TempDoubleBuffer, Separator.Length, TempDoubleBuffer, 0, Separator.Length);
-                int TempDoubleBufferReaded = InputStream.Read(TempDoubleBuffer, Separator.Length, Separator.Length);
-
-                int EndIndex = Separator.Length + TempDoubleBufferReaded;
-
-                Chunk.Write(TempDoubleBuffer, Separator.Length, TempDoubleBufferReaded);
-
-                int FoundIndex = FindSequence(TempDoubleBuffer, Separator, StartIndex, EndIndex);
-                if (FoundIndex != -1)
+                Array.Copy(tempDoubleBuffer, separator.Length, tempDoubleBuffer, 0, separator.Length);
+                var tempDoubleBufferReaded = inputStream.Read(tempDoubleBuffer, separator.Length, separator.Length);
+                var endIndex = separator.Length + tempDoubleBufferReaded;
+                chunk.Write(tempDoubleBuffer, separator.Length, tempDoubleBufferReaded);
+                var foundIndex = FindSequence(tempDoubleBuffer, separator, startIndex, endIndex);
+                if (foundIndex != -1)
                 {
-                    int BytesToRemoveFromChunk = EndIndex - FoundIndex;
-                    int RealChunkSize = (int) (Chunk.Length - BytesToRemoveFromChunk);
+                    var bytesToRemoveFromChunk = endIndex - foundIndex;
+                    var realChunkSize = (int) (chunk.Length - bytesToRemoveFromChunk);
+                    var newChunk = new MemoryStream();
 
-                    MemoryStream NewChunk = new MemoryStream();
+                    newChunk.WriteBytes(chunk.ReadChunk(realChunkSize, bytesToRemoveFromChunk));
+                    chunkHandler(chunk.ReadChunk(skipChunkStart, realChunkSize - skipChunkStart));
 
-                    NewChunk.WriteBytes(Chunk.ReadChunk(RealChunkSize, BytesToRemoveFromChunk));
-                    ChunkHandler(Chunk.ReadChunk(SkipChunkStart, RealChunkSize - SkipChunkStart));
+                    skipChunkStart = separator.Length;
 
-                    SkipChunkStart = Separator.Length;
-
-                    Chunk = NewChunk;
+                    chunk = newChunk;
                 }
-                StartIndex = 0;
+                startIndex = 0;
             }
 
-            if (Chunk.Length > 0)
+            if (chunk.Length > 0)
             {
-                ChunkHandler(Chunk.ReadChunk(SkipChunkStart, (int) Chunk.Length - SkipChunkStart));
+                chunkHandler(chunk.ReadChunk(skipChunkStart, (int) chunk.Length - skipChunkStart));
             }
         }
     }

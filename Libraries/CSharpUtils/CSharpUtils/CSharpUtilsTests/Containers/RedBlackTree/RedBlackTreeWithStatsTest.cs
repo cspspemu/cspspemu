@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using CSharpUtils.Containers.RedBlackTree;
+using CSharpUtils.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CSharpUtilsTests

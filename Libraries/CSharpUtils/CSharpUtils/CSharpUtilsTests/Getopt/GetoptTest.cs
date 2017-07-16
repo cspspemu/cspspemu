@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CSharpUtils.Extensions;
 using CSharpUtils.Getopt;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

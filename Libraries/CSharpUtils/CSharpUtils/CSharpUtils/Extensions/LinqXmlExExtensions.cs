@@ -4,24 +4,41 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 
-public static class LinqXmlExExtensions
+namespace CSharpUtils.Extensions
 {
-    public static String ToStringFull(this XDocument That)
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class LinqXmlExExtensions
     {
-        return That.ToStringFull(Encoding.UTF8);
-    }
-
-    public static String ToStringFull(this XDocument That, Encoding Encoding)
-    {
-        var VersionXmlStream = new MemoryStream();
-        var VersionXmlWriter = XmlWriter.Create(VersionXmlStream, new XmlWriterSettings()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static string ToStringFull(this XDocument that)
         {
-            Encoding = Encoding,
-            Indent = true,
-        });
-        That.WriteTo(VersionXmlWriter);
-        VersionXmlWriter.Flush();
+            return that.ToStringFull(Encoding.UTF8);
+        }
 
-        return Encoding.GetString(VersionXmlStream.ToArray());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <param name="encoding"></param>
+        /// <returns></returns>
+        public static string ToStringFull(this XDocument that, Encoding encoding)
+        {
+            var versionXmlStream = new MemoryStream();
+            var versionXmlWriter = XmlWriter.Create(versionXmlStream, new XmlWriterSettings()
+            {
+                Encoding = encoding,
+                Indent = true,
+            });
+            that.WriteTo(versionXmlWriter);
+            versionXmlWriter.Flush();
+
+            return encoding.GetString(versionXmlStream.ToArray());
+        }
     }
 }

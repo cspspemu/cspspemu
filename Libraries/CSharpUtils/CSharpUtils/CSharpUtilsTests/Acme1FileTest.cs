@@ -1,8 +1,9 @@
 ﻿using System.IO;
 using System.Text;
 using System.Linq;
+using CSharpUtils.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CSharpUtils.Misc;
+using CSharpUtils.Misc.Acme1;
 
 namespace CSharpUtilsTests
 {

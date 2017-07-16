@@ -3,17 +3,25 @@ using System.IO;
 
 namespace CSharpUtils.Streams
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class SerializerUtils
     {
-        public static MemoryStream SerializeToMemoryStream(Action<Stream> Serializer)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serializer"></param>
+        /// <returns></returns>
+        public static MemoryStream SerializeToMemoryStream(Action<Stream> serializer)
         {
-            var Stream = new MemoryStream();
-            Stream.PreservePositionAndLock(() =>
+            var stream = new MemoryStream();
+            stream.PreservePositionAndLock(() =>
             {
-                Serializer(Stream);
-                Stream.Flush();
+                serializer(stream);
+                stream.Flush();
             });
-            return Stream;
+            return stream;
         }
     }
 }

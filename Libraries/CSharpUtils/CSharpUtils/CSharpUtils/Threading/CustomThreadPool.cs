@@ -4,51 +4,62 @@ using System.Threading;
 
 namespace CSharpUtils.Threading
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class CustomThreadPool
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public class WorkerThread
         {
-            private bool Running;
-            private AutoResetEvent MoreTasksEvent;
-            private Thread Thread;
+            private bool _running;
+            private readonly AutoResetEvent _moreTasksEvent;
             private Queue<Action> Tasks;
             internal long LoopIterCount;
 
+            /// <summary>
+            /// 
+            /// </summary>
             public WorkerThread()
             {
-                this.Running = true;
-                this.LoopIterCount = 0;
-                this.MoreTasksEvent = new AutoResetEvent(false);
-                this.Tasks = new Queue<Action>();
-                this.Thread = new Thread(ThreadBody);
-                this.Thread.IsBackground = true;
-                this.Thread.Start();
+                _running = true;
+                LoopIterCount = 0;
+                _moreTasksEvent = new AutoResetEvent(false);
+                Tasks = new Queue<Action>();
+                var thread = new Thread(ThreadBody);
+                thread.IsBackground = true;
+                thread.Start();
             }
 
-            internal void AddTask(Action Task)
+            internal void AddTask(Action task)
             {
-                this.Tasks.Enqueue(Task);
-                this.MoreTasksEvent.Set();
+                Tasks.Enqueue(task);
+                _moreTasksEvent.Set();
             }
 
             internal void Stop()
             {
-                AddTask(() => { this.Running = false; });
+                AddTask(() => { _running = false; });
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
             protected void ThreadBody()
             {
                 Console.WriteLine("CustomThreadPool.ThreadBody.Start()");
                 try
                 {
-                    this.LoopIterCount = 0;
-                    while (this.Running)
+                    LoopIterCount = 0;
+                    while (_running)
                     {
-                        this.MoreTasksEvent.WaitOne();
-                        this.LoopIterCount++;
-                        while (this.Tasks.Count > 0)
+                        _moreTasksEvent.WaitOne();
+                        LoopIterCount++;
+                        while (Tasks.Count > 0)
                         {
-                            this.Tasks.Dequeue()();
+                            Tasks.Dequeue()();
                         }
                     }
                 }
@@ -61,30 +72,47 @@ namespace CSharpUtils.Threading
 
         internal WorkerThread[] WorkerThreads;
 
-        public CustomThreadPool(int NumberOfThreads)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="numberOfThreads"></param>
+        public CustomThreadPool(int numberOfThreads)
         {
-            WorkerThreads = new WorkerThread[NumberOfThreads];
-            for (int n = 0; n < NumberOfThreads; n++)
+            WorkerThreads = new WorkerThread[numberOfThreads];
+            for (int n = 0; n < numberOfThreads; n++)
             {
                 WorkerThreads[n] = new WorkerThread();
             }
         }
 
-        public long GetLoopIterCount(int ThreadAffinity)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="threadAffinity"></param>
+        /// <returns></returns>
+        public long GetLoopIterCount(int threadAffinity)
         {
-            return this.WorkerThreads[ThreadAffinity % WorkerThreads.Length].LoopIterCount;
+            return WorkerThreads[threadAffinity % WorkerThreads.Length].LoopIterCount;
         }
 
-        public void AddTask(int ThreadAffinity, Action Task)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="threadAffinity"></param>
+        /// <param name="task"></param>
+        public void AddTask(int threadAffinity, Action task)
         {
-            this.WorkerThreads[ThreadAffinity % WorkerThreads.Length].AddTask(Task);
+            WorkerThreads[threadAffinity % WorkerThreads.Length].AddTask(task);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Stop()
         {
-            foreach (var WorkerThread in WorkerThreads)
+            foreach (var workerThread in WorkerThreads)
             {
-                WorkerThread.Stop();
+                workerThread.Stop();
             }
         }
     }

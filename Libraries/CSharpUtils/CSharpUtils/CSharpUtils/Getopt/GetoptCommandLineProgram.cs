@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using CSharpUtils.Getopt;
+using CSharpUtils.Extensions;
 
 namespace CSharpUtils.Getopt
 {
     /// <summary>
     /// 
     /// </summary>
-    abstract public class GetoptCommandLineProgram
+    public abstract class GetoptCommandLineProgram
     {
         /// <summary>
         /// 
@@ -83,10 +82,10 @@ namespace CSharpUtils.Getopt
             /// <summary>
             /// 
             /// </summary>
-            /// <param name="Aliases"></param>
-            public CommandAttribute(params string[] Aliases)
+            /// <param name="aliases"></param>
+            public CommandAttribute(params string[] aliases)
             {
-                this.Aliases = Aliases;
+                Aliases = aliases;
             }
         }
 
@@ -99,15 +98,15 @@ namespace CSharpUtils.Getopt
             /// <summary>
             /// 
             /// </summary>
-            public object[] Values { get; private set; }
+            public object[] Values { get; }
 
             /// <summary>
             /// 
             /// </summary>
-            /// <param name="Values"></param>
-            public ValuesAttribute(params object[] Values)
+            /// <param name="values"></param>
+            public ValuesAttribute(params object[] values)
             {
-                this.Values = Values;
+                Values = values;
             }
         }
 
@@ -126,10 +125,10 @@ namespace CSharpUtils.Getopt
             /// <summary>
             /// 
             /// </summary>
-            /// <param name="Description"></param>
-            public DescriptionAttribute(string Description)
+            /// <param name="description"></param>
+            public DescriptionAttribute(string description)
             {
-                this.Description = Description;
+                Description = description;
             }
         }
 
@@ -147,10 +146,10 @@ namespace CSharpUtils.Getopt
             /// <summary>
             /// 
             /// </summary>
-            /// <param name="Example"></param>
-            public ExampleAttribute(string Example)
+            /// <param name="example"></param>
+            public ExampleAttribute(string example)
             {
-                this.Example = Example;
+                Example = example;
             }
         }
 
@@ -163,8 +162,8 @@ namespace CSharpUtils.Getopt
             /// <summary>
             /// 
             /// </summary>
-            /// <param name="Switches"></param>
-            public CommandDefaultAttribute(params string[] Switches)
+            /// <param name="switches"></param>
+            public CommandDefaultAttribute(params string[] switches)
             {
             }
         }
@@ -182,54 +181,54 @@ namespace CSharpUtils.Getopt
         [Description("Shows this help")]
         virtual protected void ShowHelp()
         {
-            var CurrentAssembly = Assembly.GetEntryAssembly();
-            var VersionInfo = FileVersionInfo.GetVersionInfo(CurrentAssembly.Location);
+            var currentAssembly = Assembly.GetEntryAssembly();
+            var versionInfo = FileVersionInfo.GetVersionInfo(currentAssembly.Location);
 
             Console.WriteLine(
                 "{0} - {1} - {2} - {3} - {4}",
-                VersionInfo.FileDescription,
-                String.Join(".", VersionInfo.FileVersion.Split('.').Take(2)),
-                VersionInfo.Comments,
-                VersionInfo.CompanyName,
-                VersionInfo.LegalCopyright
+                versionInfo.FileDescription,
+                String.Join(".", versionInfo.FileVersion.Split('.').Take(2)),
+                versionInfo.Comments,
+                versionInfo.CompanyName,
+                versionInfo.LegalCopyright
             );
 
             Console.WriteLine();
 
             Console.WriteLine("Commands:");
-            foreach (var CommandEntry in CommandEntries)
+            foreach (var commandEntry in CommandEntries)
             {
                 Console.Write("   ");
-                Console.Write("{0}", CommandEntry.Aliases.Take(1).ToStringArray(", "));
-                if (CommandEntry.MethodInfo != null)
+                Console.Write("{0}", commandEntry.Aliases.Take(1).ToStringArray(", "));
+                if (commandEntry.MethodInfo != null)
                 {
-                    if (CommandEntry.MethodInfo.GetParameters().Length > 0)
+                    if (commandEntry.MethodInfo.GetParameters().Length > 0)
                     {
-                        Console.Write(" <{0}>", CommandEntry.MethodInfo.GetParameters().Select(Item =>
+                        Console.Write(" <{0}>", commandEntry.MethodInfo.GetParameters().Select(item =>
                         {
-                            string Ret = Item.Name;
-                            if (Item.IsOptional) Ret = "[" + Ret + "]";
-                            return Ret;
+                            var ret = item.Name;
+                            if (item.IsOptional) ret = "[" + ret + "]";
+                            return ret;
                         }).ToStringArray(", "));
                     }
                 }
-                if (CommandEntry.Values.Length > 0)
+                if (commandEntry.Values.Length > 0)
                 {
-                    Console.Write(" [{0}]", CommandEntry.Values.ToStringArray("|"));
+                    Console.Write(" [{0}]", commandEntry.Values.ToStringArray("|"));
                 }
 
                 Console.Write(" - ");
-                Console.Write("{0}", CommandEntry.Description);
+                Console.Write("{0}", commandEntry.Description);
                 Console.WriteLine();
             }
             Console.WriteLine();
 
             Console.WriteLine("Examples:");
-            foreach (var CommandAttribute in CommandEntries)
+            foreach (var commandAttribute in CommandEntries)
             {
-                foreach (var Example in CommandAttribute.Examples)
+                foreach (var example in commandAttribute.Examples)
                 {
-                    Console.WriteLine("   {0}.exe {1}", CurrentAssembly.GetName().Name, Example);
+                    Console.WriteLine("   {0}.exe {1}", currentAssembly.GetName().Name, example);
                 }
             }
         }
@@ -237,72 +236,72 @@ namespace CSharpUtils.Getopt
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="SwitchDefaultAttribute"></param>
-        /// <param name="Method"></param>
-        private void BindDefaultMethod(CommandDefaultAttribute SwitchDefaultAttribute, MethodInfo Method)
+        /// <param name="switchDefaultAttribute"></param>
+        /// <param name="method"></param>
+        private void BindDefaultMethod(CommandDefaultAttribute switchDefaultAttribute, MethodInfo method)
         {
-            Getopt.AddDefaultRule(() => { Method.Invoke(this, new object[] { }); });
+            Getopt.AddDefaultRule(() => { method.Invoke(this, new object[] { }); });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="CommandEntry"></param>
-        private void BindMethod(CommandEntry CommandEntry)
+        /// <param name="commandEntry"></param>
+        private void BindMethod(CommandEntry commandEntry)
         {
-            var Method = CommandEntry.MethodInfo;
+            var method = commandEntry.MethodInfo;
 
-            Getopt.AddRule(CommandEntry.Aliases, () =>
+            Getopt.AddRule(commandEntry.Aliases, () =>
             {
-                var Parameters = Method.GetParameters();
-                var ParametersData = new List<object>();
+                var parameters = method.GetParameters();
+                var parametersData = new List<object>();
 
-                foreach (var Parameter in Parameters)
+                foreach (var parameter in parameters)
                 {
                     if (Getopt.HasMore)
                     {
-                        var ParameterData = Getopt.DequeueNext();
-                        if (Parameter.ParameterType == typeof(string))
+                        var parameterData = Getopt.DequeueNext();
+                        if (parameter.ParameterType == typeof(string))
                         {
-                            ParametersData.Add((string) ParameterData);
+                            parametersData.Add(parameterData);
                         }
-                        else if (Parameter.ParameterType == typeof(int))
+                        else if (parameter.ParameterType == typeof(int))
                         {
-                            ParametersData.Add(int.Parse(ParameterData));
+                            parametersData.Add(int.Parse(parameterData));
                         }
                         else
                         {
-                            throw(new NotImplementedException("Not supported parameter type " + Parameter.ParameterType)
-                            );
+                            throw new NotImplementedException(
+                                "Not supported parameter type " + parameter.ParameterType);
                         }
                     }
                     else
                     {
-                        ParametersData.Add(null);
+                        parametersData.Add(null);
                     }
                 }
 
-                Method.Invoke(this, ParametersData.ToArray());
+                method.Invoke(this, parametersData.ToArray());
             });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="CommandEntry"></param>
-        private void BindField(CommandEntry CommandEntry)
+        /// <param name="commandEntry"></param>
+        private void BindField(CommandEntry commandEntry)
         {
-            var Field = CommandEntry.FieldInfo;
+            var field = commandEntry.FieldInfo;
 
-            Getopt.AddRule(CommandEntry.Aliases, () =>
+            Getopt.AddRule(commandEntry.Aliases, () =>
             {
-                if (Field.FieldType == typeof(bool))
+                if (field.FieldType == typeof(bool))
                 {
-                    Field.SetValue(this, true);
+                    field.SetValue(this, true);
                 }
                 else
                 {
-                    throw (new NotImplementedException("Not supported field type " + Field.FieldType));
+                    throw (new NotImplementedException("Not supported field type " + field.FieldType));
                 }
             });
         }
@@ -322,47 +321,46 @@ namespace CSharpUtils.Getopt
 
             CommandEntries = new List<CommandEntry>();
 
-            foreach (var Member in this.GetType()
+            foreach (var member in GetType()
                 .GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
             {
-                var DescriptionAttribute = Member.GetSingleAttribute<DescriptionAttribute>();
-                var ValuesAttribute = Member.GetSingleAttribute<ValuesAttribute>();
+                var descriptionAttribute = member.GetSingleAttribute<DescriptionAttribute>();
+                var valuesAttribute = member.GetSingleAttribute<ValuesAttribute>();
 
-                var CommandDefaultAttribute = Member.GetSingleAttribute<CommandDefaultAttribute>();
-                if (CommandDefaultAttribute != null)
+                var commandDefaultAttribute = member.GetSingleAttribute<CommandDefaultAttribute>();
+                if (commandDefaultAttribute != null)
                 {
-                    if (Member is MethodInfo)
+                    if (member is MethodInfo)
                     {
-                        BindDefaultMethod(CommandDefaultAttribute, Member as MethodInfo);
+                        BindDefaultMethod(commandDefaultAttribute, member as MethodInfo);
                     }
                 }
 
-                var CommandAttribute = Member.GetSingleAttribute<CommandAttribute>();
-                if (CommandAttribute != null)
+                var commandAttribute = member.GetSingleAttribute<CommandAttribute>();
+                if (commandAttribute == null) continue;
+
+                var commandEntry = new CommandEntry()
                 {
-                    var CommandEntry = new CommandEntry()
-                    {
-                        Aliases = CommandAttribute.Aliases,
-                        MemberInfo = Member,
-                        Examples = Member.GetAttribute<ExampleAttribute>().Select(Item => Item.Example).ToArray(),
-                        Description = (DescriptionAttribute != null) ? DescriptionAttribute.Description : "",
-                        Values = (ValuesAttribute != null) ? ValuesAttribute.Values : new object[0],
-                    };
+                    Aliases = commandAttribute.Aliases,
+                    MemberInfo = member,
+                    Examples = member.GetAttribute<ExampleAttribute>().Select(item => item.Example).ToArray(),
+                    Description = (descriptionAttribute != null) ? descriptionAttribute.Description : "",
+                    Values = (valuesAttribute != null) ? valuesAttribute.Values : new object[0],
+                };
 
-                    CommandEntries.Add(CommandEntry);
+                CommandEntries.Add(commandEntry);
 
-                    if (Member is MethodInfo)
-                    {
-                        BindMethod(CommandEntry);
-                    }
-                    else if (Member is FieldInfo)
-                    {
-                        BindField(CommandEntry);
-                    }
-                    else
-                    {
-                        throw(new NotImplementedException("Don't know how to handle type " + Member.GetType()));
-                    }
+                if (member is MethodInfo)
+                {
+                    BindMethod(commandEntry);
+                }
+                else if (member is FieldInfo)
+                {
+                    BindField(commandEntry);
+                }
+                else
+                {
+                    throw(new NotImplementedException("Don't know how to handle type " + member.GetType()));
                 }
             }
 
@@ -370,15 +368,15 @@ namespace CSharpUtils.Getopt
             {
                 Getopt.Process();
             }
-            catch (TargetInvocationException TargetInvocationException)
+            catch (TargetInvocationException targetInvocationException)
             {
-                Console.Error.WriteLine(TargetInvocationException.InnerException);
+                Console.Error.WriteLine(targetInvocationException.InnerException);
                 Environment.Exit(-1);
             }
-            catch (Exception Exception)
+            catch (Exception exception)
             {
                 //Console.Error.WriteLine(Exception.Message);
-                Console.Error.WriteLine(Exception);
+                Console.Error.WriteLine(exception);
                 Environment.Exit(-2);
             }
 

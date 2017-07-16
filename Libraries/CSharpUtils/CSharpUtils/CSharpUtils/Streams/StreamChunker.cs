@@ -3,110 +3,152 @@ using System.IO;
 
 namespace CSharpUtils.Streams
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class StreamChunker
     {
-        Stream InputStream;
-        byte[] TempBuffer;
-        ProduceConsumeBuffer<byte> Buffer;
+        /// <summary>
+        /// 
+        /// </summary>
+        public readonly Stream InputStream;
 
-        public bool Eof
-        {
-            get { return (Buffer.ConsumeRemaining == 0) && (InputStream.Eof()); }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public readonly byte[] TempBuffer;
 
-        public void MakeBytesAvailable(int NumberOfBytes)
+        private readonly ProduceConsumeBuffer<byte> _buffer;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Eof => (_buffer.ConsumeRemaining == 0) && (InputStream.Eof());
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="numberOfBytes"></param>
+        /// <exception cref="Exception"></exception>
+        public void MakeBytesAvailable(int numberOfBytes)
         {
-            int BytesToRead = NumberOfBytes - this.Buffer.ConsumeRemaining;
-            if (BytesToRead > TempBuffer.Length)
+            var bytesToRead = numberOfBytes - _buffer.ConsumeRemaining;
+            if (bytesToRead > TempBuffer.Length)
                 throw (new Exception(
-                    "Can't Peek More Bytes Than BufferSize. " + BytesToRead + " > " + TempBuffer.Length));
-            if (BytesToRead > 0)
+                    "Can't Peek More Bytes Than BufferSize. " + bytesToRead + " > " + TempBuffer.Length));
+            if (bytesToRead > 0)
             {
-                this.Buffer.Produce(TempBuffer, 0, InputStream.Read(TempBuffer, 0, BytesToRead));
+                _buffer.Produce(TempBuffer, 0, InputStream.Read(TempBuffer, 0, bytesToRead));
             }
         }
 
-        public byte[] PeekBytes(int NumberOfBytes)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="numberOfBytes"></param>
+        /// <returns></returns>
+        public byte[] PeekBytes(int numberOfBytes)
         {
-            MakeBytesAvailable(NumberOfBytes);
-            return Buffer.ConsumePeek(NumberOfBytes);
+            MakeBytesAvailable(numberOfBytes);
+            return _buffer.ConsumePeek(numberOfBytes);
         }
 
-        public void SkipBytes(int NumberOfBytes)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="numberOfBytes"></param>
+        public void SkipBytes(int numberOfBytes)
         {
-            Buffer.Consume(NumberOfBytes);
+            _buffer.Consume(numberOfBytes);
         }
 
-        public StreamChunker(Stream InputStream, int BufferSize = 4096)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inputStream"></param>
+        /// <param name="bufferSize"></param>
+        public StreamChunker(Stream inputStream, int bufferSize = 4096)
         {
-            this.InputStream = InputStream;
-            this.TempBuffer = new byte[BufferSize];
-            this.Buffer = new ProduceConsumeBuffer<byte>();
+            InputStream = inputStream;
+            TempBuffer = new byte[bufferSize];
+            _buffer = new ProduceConsumeBuffer<byte>();
         }
 
-        public long SkipUpToSequence(byte[] Sequence, long MaxReaded = long.MaxValue)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sequence"></param>
+        /// <param name="maxReaded"></param>
+        /// <returns></returns>
+        public long SkipUpToSequence(byte[] sequence, long maxReaded = long.MaxValue)
         {
-            return CopyUpToSequence(null, Sequence, MaxReaded);
+            return CopyUpToSequence(null, sequence, maxReaded);
         }
 
-        public byte[] GetUpToSequence(byte[] Sequence, long MaxReaded = long.MaxValue)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sequence"></param>
+        /// <param name="maxReaded"></param>
+        /// <returns></returns>
+        public byte[] GetUpToSequence(byte[] sequence, long maxReaded = long.MaxValue)
         {
-            var MemoryStream = new MemoryStream();
-            CopyUpToSequence(MemoryStream, Sequence, MaxReaded);
-            return MemoryStream.ToArray();
+            var memoryStream = new MemoryStream();
+            CopyUpToSequence(memoryStream, sequence, maxReaded);
+            return memoryStream.ToArray();
         }
 
-        public long CopyUpToSequence(Stream OutputStream, byte[] Sequence, long MaxReaded = long.MaxValue)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="outputStream"></param>
+        /// <param name="sequence"></param>
+        /// <param name="maxReaded"></param>
+        /// <returns></returns>
+        public long CopyUpToSequence(Stream outputStream, byte[] sequence, long maxReaded = long.MaxValue)
         {
-            int TempBufferReaded;
-            byte[] ConsumedBytes;
-            long TotalCopied = 0;
+            long totalCopied = 0;
 
-            Action<int> Consume = delegate(int Length)
+            void Consume(int length)
             {
-                if (Length > 0)
-                {
-                    ConsumedBytes = this.Buffer.Consume(Length);
-                    if (OutputStream != null)
-                    {
-                        OutputStream.Write(ConsumedBytes, 0, ConsumedBytes.Length);
-                    }
-                    TotalCopied += ConsumedBytes.Length;
-                }
-            };
+                if (length <= 0) return;
+                var consumedBytes = _buffer.Consume(length);
+                outputStream?.Write(consumedBytes, 0, consumedBytes.Length);
+                totalCopied += consumedBytes.Length;
+            }
 
             while (true)
             {
-                TempBufferReaded = InputStream.Read(TempBuffer, 0,
-                    (int) Math.Min(TempBuffer.Length, MaxReaded - TotalCopied));
-                if (TempBufferReaded > 0)
+                var tempBufferReaded = InputStream.Read(TempBuffer, 0,
+                    (int) Math.Min(TempBuffer.Length, maxReaded - totalCopied));
+                if (tempBufferReaded > 0)
                 {
-                    this.Buffer.Produce(TempBuffer, 0, TempBufferReaded);
+                    _buffer.Produce(TempBuffer, 0, tempBufferReaded);
                 }
 
-                if (this.Buffer.ConsumeRemaining <= Sequence.Length) break;
+                if (_buffer.ConsumeRemaining <= sequence.Length) break;
 
-                int FoundIndex = this.Buffer.IndexOf(Sequence);
+                var foundIndex = _buffer.IndexOf(sequence);
 
                 // Not Found
-                if (FoundIndex == -1)
+                if (foundIndex == -1)
                 {
-                    Consume(this.Buffer.ConsumeRemaining - Sequence.Length);
+                    Consume(_buffer.ConsumeRemaining - sequence.Length);
                 }
                 // Found!
                 else
                 {
-                    Consume(FoundIndex);
+                    Consume(foundIndex);
                     // Remove Sequence.
-                    this.Buffer.Consume(Sequence.Length);
+                    _buffer.Consume(sequence.Length);
 
-                    return TotalCopied;
+                    return totalCopied;
                 }
             }
 
-            Consume(this.Buffer.ConsumeRemaining);
+            Consume(_buffer.ConsumeRemaining);
 
-            return TotalCopied;
+            return totalCopied;
         }
     }
 }

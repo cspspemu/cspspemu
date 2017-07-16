@@ -3,57 +3,85 @@ using System.IO;
 
 namespace CSharpUtils.Streams
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ZeroStream : Stream
     {
-        protected long _Size;
-        protected long _Position;
+        protected long Size;
+        private long _position;
         protected byte ValueToRepeat;
 
-        public ZeroStream(long Size, byte ValueToRepeat = 0x00)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="size"></param>
+        /// <param name="valueToRepeat"></param>
+        public ZeroStream(long size, byte valueToRepeat = 0x00)
         {
-            this._Size = Size;
-            this.Position = 0;
-            this.ValueToRepeat = ValueToRepeat;
+            Size = size;
+            _position = 0;
+            ValueToRepeat = valueToRepeat;
         }
 
-        public override bool CanRead
-        {
-            get { return false; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public override bool CanRead => false;
 
-        public override bool CanSeek
-        {
-            get { return true; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public override bool CanSeek => true;
 
-        public override bool CanWrite
-        {
-            get { return false; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public override bool CanWrite => false;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override void Flush()
         {
         }
 
-        public override long Length
-        {
-            get { return _Size; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public override long Length => Size;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override long Position
         {
-            get { return _Position; }
-            set { _Position = value; }
+            get => _position;
+            set => _position = value;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            int Readed = Math.Min(count, (int) (Length - Position));
-            for (int n = 0; n < count; n++) buffer[offset + n] = this.ValueToRepeat;
-            Position += Readed;
-            return Readed;
+            var readed = Math.Min(count, (int) (Length - Position));
+            for (var n = 0; n < count; n++) buffer[offset + n] = ValueToRepeat;
+            Position += readed;
+            return readed;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <param name="origin"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public override long Seek(long offset, SeekOrigin origin)
         {
             switch (origin)
@@ -72,11 +100,22 @@ namespace CSharpUtils.Streams
             return Position;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
         public override void SetLength(long value)
         {
-            _Size = value;
+            Size = value;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <exception cref="NotImplementedException"></exception>
         public override void Write(byte[] buffer, int offset, int count)
         {
             throw new NotImplementedException();

@@ -2,104 +2,132 @@
 using System;
 using System.IO;
 
-static public class TextWriterExtensions
+/// <summary>
+/// 
+/// </summary>
+public static class TextWriterExtensions
 {
-    public static void WriteLineColored(this TextWriter TextWriter, ConsoleColor ConsoleColor, string Format,
-        params Object[] Args)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="textWriter"></param>
+    /// <param name="consoleColor"></param>
+    /// <param name="format"></param>
+    /// <param name="args"></param>
+    public static void WriteLineColored(this TextWriter textWriter, ConsoleColor consoleColor, string format,
+        params object[] args)
     {
-        ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor, () => { TextWriter.WriteLine(Format, Args); });
+        ConsoleUtils.SaveRestoreConsoleColor(consoleColor, () => { textWriter.WriteLine(format, args); });
     }
 }
 
 namespace CSharpUtils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ConsoleUtils
     {
-        public static void SaveRestoreConsoleColor(ConsoleColor Color, Action Action)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="action"></param>
+        public static void SaveRestoreConsoleColor(ConsoleColor color, Action action)
         {
             SaveRestoreConsoleState(() =>
             {
-                Console.ForegroundColor = Color;
-                Action();
+                Console.ForegroundColor = color;
+                action();
             });
         }
 
-        public static void SaveRestoreConsoleState(Action Action)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
+        public static void SaveRestoreConsoleState(Action action)
         {
             lock (Console.Out)
             {
-                var BackBackgroundColor = Console.BackgroundColor;
-                var BackForegroundColor = Console.ForegroundColor;
+                var backBackgroundColor = Console.BackgroundColor;
+                var backForegroundColor = Console.ForegroundColor;
                 try
                 {
-                    Action();
+                    action();
                 }
                 finally
                 {
-                    Console.BackgroundColor = BackBackgroundColor;
-                    Console.ForegroundColor = BackForegroundColor;
+                    Console.BackgroundColor = backBackgroundColor;
+                    Console.ForegroundColor = backForegroundColor;
                 }
             }
         }
 
-        public static String CaptureError(Action Action, bool Capture = true)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="capture"></param>
+        /// <returns></returns>
+        public static string CaptureError(Action action, bool capture = true)
         {
-            if (Capture)
+            if (!capture)
             {
-                var OldOut = Console.Error;
-                var StringWriter = new StringWriter();
-                try
-                {
-                    Console.SetError(StringWriter);
-                    Action();
-                }
-                finally
-                {
-                    Console.SetError(OldOut);
-                }
-                try
-                {
-                    return StringWriter.ToString();
-                }
-                catch
-                {
-                    return "";
-                }
+                action();
+                return "";
             }
-            else
+            var oldOut = Console.Error;
+            var stringWriter = new StringWriter();
+            try
             {
-                Action();
+                Console.SetError(stringWriter);
+                action();
+            }
+            finally
+            {
+                Console.SetError(oldOut);
+            }
+            try
+            {
+                return stringWriter.ToString();
+            }
+            catch
+            {
                 return "";
             }
         }
 
-        public static String CaptureOutput(Action Action, bool Capture = true)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="capture"></param>
+        /// <returns></returns>
+        public static string CaptureOutput(Action action, bool capture = true)
         {
-            if (Capture)
+            if (!capture)
             {
-                var OldOut = Console.Out;
-                var StringWriter = new StringWriter();
-                try
-                {
-                    Console.SetOut(StringWriter);
-                    Action();
-                }
-                finally
-                {
-                    Console.SetOut(OldOut);
-                }
-                try
-                {
-                    return StringWriter.ToString();
-                }
-                catch
-                {
-                    return "";
-                }
+                action();
+                return "";
             }
-            else
+            var oldOut = Console.Out;
+            var stringWriter = new StringWriter();
+            try
             {
-                Action();
+                Console.SetOut(stringWriter);
+                action();
+            }
+            finally
+            {
+                Console.SetOut(oldOut);
+            }
+            try
+            {
+                return stringWriter.ToString();
+            }
+            catch
+            {
                 return "";
             }
         }

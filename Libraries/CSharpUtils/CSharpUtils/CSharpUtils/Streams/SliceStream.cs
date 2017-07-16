@@ -35,94 +35,81 @@ namespace CSharpUtils.Streams
         //public long SliceLength { get { return ThisLength; } }
         //public long SliceBoundHigh { get { return ThisStart + ThisLength; } }
 
-        public long SliceLength
-        {
-            get { return ThisLength; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public long SliceLength => ThisLength;
 
         /// <summary>
         /// 
         /// </summary>
 
-        public long SliceLow
-        {
-            get { return ThisStart; }
-        }
+        public long SliceLow => ThisStart;
 
         /// <summary>
         /// 
         /// </summary>
 
-        public long SliceHigh
-        {
-            get { return ThisStart + ThisLength; }
-        }
+        public long SliceHigh => ThisStart + ThisLength;
 
         /// <summary>
         /// Creates a SliceStream specifying a start offset and a length.
         /// </summary>
-        /// <param name="BaseStream">Base Stream</param>
-        /// <param name="ThisStart">Starting Offset</param>
-        /// <param name="ThisLength">Length of the Slice</param>
-        /// <param name="CanWrite">Determines if the Stream will be writtable.</param>
+        /// <param name="baseStream">Base Stream</param>
+        /// <param name="thisStart">Starting Offset</param>
+        /// <param name="thisLength">Length of the Slice</param>
+        /// <param name="canWrite">Determines if the Stream will be writtable.</param>
         /// <returns>A SliceStream</returns>
-        static public SliceStream CreateWithLength(Stream BaseStream, long ThisStart = 0, long ThisLength = -1,
-            bool? CanWrite = null)
+        static public SliceStream CreateWithLength(Stream baseStream, long thisStart = 0, long thisLength = -1,
+            bool? canWrite = null)
         {
-            return new SliceStream(BaseStream, ThisStart, ThisLength, CanWrite);
+            return new SliceStream(baseStream, thisStart, thisLength, canWrite);
         }
 
         /// <summary>
         /// Creates a SliceStream specifying a start offset and a end offset.
         /// </summary>
-        /// <param name="BaseStream">Parent Stream</param>
-        /// <param name="ThisStart">Starting Offset</param>
-        /// <param name="ThisLength">Length of the Slice</param>
-        /// <param name="CanWrite">Determines if the Stream will be writtable.</param>
+        /// <param name="baseStream">Parent Stream</param>
+        /// <param name="lowerBound"></param>
+        /// <param name="upperBound"></param>
+        /// <param name="canWrite">Determines if the Stream will be writtable.</param>
         /// <returns>A SliceStream</returns>
-        static public SliceStream CreateWithBounds(Stream BaseStream, long LowerBound, long UpperBound,
-            bool? CanWrite = null)
+        static public SliceStream CreateWithBounds(Stream baseStream, long lowerBound, long upperBound,
+            bool? canWrite = null)
         {
-            return new SliceStream(BaseStream, LowerBound, UpperBound - LowerBound, CanWrite);
+            return new SliceStream(baseStream, lowerBound, upperBound - lowerBound, canWrite);
         }
 
         /// <summary>
         /// Creates a SliceStream specifying a start offset and a length.
-        /// 
         /// Please use CreateWithLength or CreateWithBounds to initialite the object.
         /// </summary>
-        /// <param name="BaseStream">Base Stream</param>
-        /// <param name="ThisStart">Starting Offset</param>
-        /// <param name="ThisLength">Length of the Slice</param>
-        /// <param name="CanWrite">Determines if the Stream will be writtable.</param>
+        /// <param name="baseStream">Base Stream</param>
+        /// <param name="thisStart">Starting Offset</param>
+        /// <param name="thisLength">Length of the Slice</param>
+        /// <param name="canWrite">Determines if the Stream will be writtable.</param>
+        /// <param name="allowSliceOutsideHigh"></param>
         /// <returns>A SliceStream</returns>
-        protected SliceStream(Stream BaseStream, long ThisStart = 0, long ThisLength = -1, bool? CanWrite = null,
-            bool AllowSliceOutsideHigh = true)
-            : base(BaseStream, CloseParent: false)
+        protected SliceStream(
+            Stream baseStream,
+            long thisStart = 0,
+            long thisLength = -1,
+            bool? canWrite = null,
+            bool allowSliceOutsideHigh = true)
+            : base(baseStream)
         {
-            if (!BaseStream.CanSeek) throw(new NotImplementedException("ParentStream must be seekable"));
+            if (!baseStream.CanSeek) throw(new NotImplementedException("ParentStream must be seekable"));
 
-            this.ThisPosition = 0;
-            this.ThisStart = ThisStart;
-            this.ThisLength = (ThisLength == -1) ? (BaseStream.Length - ThisStart) : ThisLength;
+            ThisPosition = 0;
+            ThisStart = thisStart;
+            ThisLength = (thisLength == -1) ? (baseStream.Length - thisStart) : thisLength;
 
-            bool ErrorCreating = false;
-
-            if ((SliceHigh < SliceLow) || (SliceLow < 0) || (SliceHigh < 0))
-            {
-                ErrorCreating = true;
-            }
-
-            if (!AllowSliceOutsideHigh && ((SliceLow > BaseStream.Length) || (SliceHigh > BaseStream.Length)))
-            {
-                ErrorCreating = true;
-            }
-
-            if (ErrorCreating)
+            if ((SliceHigh < SliceLow) || (SliceLow < 0) || (SliceHigh < 0) || !allowSliceOutsideHigh &&
+                ((SliceLow > baseStream.Length) || (SliceHigh > baseStream.Length)))
             {
                 throw (new InvalidOperationException(String.Format(
-                    "Trying to SliceStream Parent(Length={0}) Slice({1}-{2})", BaseStream.Length, ThisStart,
-                    ThisLength)));
+                    "Trying to SliceStream Parent(Length={0}) Slice({1}-{2})", baseStream.Length, thisStart,
+                    thisLength)));
             }
         }
 
@@ -130,10 +117,7 @@ namespace CSharpUtils.Streams
         /// Gets the length of the SliceStream.
         /// </summary>
 
-        public override long Length
-        {
-            get { return ThisLength; }
-        }
+        public override long Length => ThisLength;
 
         /// <summary>
         /// Gets or sets the current cursor for this SliceStream.
@@ -141,7 +125,7 @@ namespace CSharpUtils.Streams
 
         public override long Position
         {
-            get { return ThisPosition; }
+            get => ThisPosition;
             set
             {
                 if (value < 0) value = 0;
@@ -188,7 +172,7 @@ namespace CSharpUtils.Streams
         {
             lock (ParentStream)
             {
-                var ParentStreamPositionToRestore = ParentStream.Position;
+                var parentStreamPositionToRestore = ParentStream.Position;
                 ParentStream.Position = ThisStart + Position;
                 if (Position + count > Length)
                 {
@@ -202,7 +186,7 @@ namespace CSharpUtils.Streams
                 finally
                 {
                     Seek(count, SeekOrigin.Current);
-                    ParentStream.Position = ParentStreamPositionToRestore;
+                    ParentStream.Position = parentStreamPositionToRestore;
                 }
             }
         }
@@ -219,7 +203,7 @@ namespace CSharpUtils.Streams
         {
             lock (ParentStream)
             {
-                var ParentStreamPositionToRestore = ParentStream.Position;
+                var parentStreamPositionToRestore = ParentStream.Position;
                 ParentStream.Position = ThisStart + Position;
                 if (Position + count > Length)
                 {
@@ -235,7 +219,7 @@ namespace CSharpUtils.Streams
                 finally
                 {
                     Seek(count, SeekOrigin.Current);
-                    ParentStream.Position = ParentStreamPositionToRestore;
+                    ParentStream.Position = parentStreamPositionToRestore;
                 }
             }
         }

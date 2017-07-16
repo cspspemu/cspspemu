@@ -6,6 +6,7 @@ using CSharpUtils;
 using CSharpUtils.Compression;
 using System.Collections.Generic;
 using CSharpUtils.Ext.Compression.Lz;
+using CSharpUtils.Extensions;
 
 namespace CSharpUtilsTests.Compression
 {

@@ -5,58 +5,71 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace CSharpUtils.Misc
+namespace CSharpUtils.Misc.Acme1
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Acme1File : IEnumerable<Acme1File.Entry>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public class Entry
         {
+            /// <summary>
+            /// 
+            /// </summary>
             public int Id;
-            public String Text;
+
+            /// <summary>
+            /// 
+            /// </summary>
+            public string Text;
         }
 
-        Dictionary<int, Entry> Entries = new Dictionary<int, Entry>();
+        readonly Dictionary<int, Entry> _entries = new Dictionary<int, Entry>();
 
-        public Acme1File()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="encoding"></param>
+        public void Load(Stream stream, Encoding encoding)
         {
-        }
-
-        public void Load(Stream Stream, Encoding Encoding)
-        {
-            Entries.Clear();
-            var AllContent = Stream.ReadAllContentsAsString(Encoding, true).TrimStart();
-            var Parts = AllContent.Split(new string[] {"## POINTER "}, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var Part in Parts)
+            _entries.Clear();
+            var allContent = stream.ReadAllContentsAsString(encoding).TrimStart();
+            var parts = allContent.Split(new[] {"## POINTER "}, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var part in parts)
             {
                 //Console.WriteLine(Part.EscapeString());
 
-                var Subparts = Part.Split(new string[] {"\r\n", "\r", "\n"}, 2, StringSplitOptions.None);
-                var InfoMatch = Regex.Match(Subparts[0], @"(\d+).*$", RegexOptions.Compiled | RegexOptions.Multiline);
-                var Text = Subparts[1].TrimEnd();
-                var Id = ConvertEx.FlexibleToInt(InfoMatch.Groups[1].Value);
+                var subparts = part.Split(new[] {"\r\n", "\r", "\n"}, 2, StringSplitOptions.None);
+                var infoMatch = Regex.Match(subparts[0], @"(\d+).*$", RegexOptions.Compiled | RegexOptions.Multiline);
+                var text = subparts[1].TrimEnd();
+                var id = ConvertEx.FlexibleToInt(infoMatch.Groups[1].Value);
 
-                Entries[Id] = new Entry()
+                _entries[id] = new Entry()
                 {
-                    Id = Id,
-                    Text = Text,
+                    Id = id,
+                    Text = text,
                 };
                 //Console.WriteLine(Subparts.ToStringArray().EscapeString());
             }
         }
 
-        public Entry this[int Index]
-        {
-            get { return Entries[Index]; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        public Entry this[int index] => _entries[index];
 
-        public IEnumerator<Acme1File.Entry> GetEnumerator()
-        {
-            return Entries.Values.GetEnumerator();
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<Entry> GetEnumerator() => _entries.Values.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return Entries.Values.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => _entries.Values.GetEnumerator();
     }
 }

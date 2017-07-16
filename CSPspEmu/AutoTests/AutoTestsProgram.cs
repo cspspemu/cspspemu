@@ -165,7 +165,7 @@ namespace CSPspEmu.AutoTests
                             outputString = testOutput.ReadAllContentsAsString();
                         }
                     },
-                    Capture: capture
+                    capture: capture
                 );
 
                 //var HleOutputHandlerMock = (HleOutputHandlerMock)PspEmulatorContext.GetInstance<HleOutputHandler>();
@@ -260,7 +260,7 @@ namespace CSPspEmu.AutoTests
             else
             {
                 ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () => { Console.WriteLine("Error"); });
-                result.Print(AvoidKeep: true);
+                result.Print(avoidKeep: true);
             }
 
             File.WriteAllText(

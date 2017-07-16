@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Diagnostics;
+using CSharpUtils.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CSharpUtilsTests

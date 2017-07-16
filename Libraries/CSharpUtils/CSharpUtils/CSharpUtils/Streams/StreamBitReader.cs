@@ -2,46 +2,65 @@
 
 namespace CSharpUtils.Streams
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class StreamBitReader
     {
         protected Stream Stream;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int ByteAvailableBits;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public uint ByteData;
 
-        public StreamBitReader(Stream Stream)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stream"></param>
+        public StreamBitReader(Stream stream)
         {
-            this.Stream = Stream;
+            Stream = stream;
         }
 
-        public uint ReadBits(int Count)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public uint ReadBits(int count)
         {
             if (ByteAvailableBits == 0)
             {
                 PrepareData();
             }
 
-            if (Count > ByteAvailableBits)
+            if (count > ByteAvailableBits)
             {
-                var LeftBits = Count - ByteAvailableBits;
-                var CurrentData = ReadBits(ByteAvailableBits);
-                var LeftData = ReadBits(LeftBits);
-                return (CurrentData << LeftBits) | LeftData;
+                var leftBits = count - ByteAvailableBits;
+                var currentData = ReadBits(ByteAvailableBits);
+                var leftData = ReadBits(leftBits);
+                return (currentData << leftBits) | leftData;
             }
-            else
+            try
             {
-                try
-                {
-                    return (uint) (ByteData & ((1 << Count) - 1));
-                }
-                finally
-                {
-                    ByteAvailableBits -= Count;
-                    ByteData >>= Count;
-                }
+                return (uint) (ByteData & ((1 << count) - 1));
+            }
+            finally
+            {
+                ByteAvailableBits -= count;
+                ByteData >>= count;
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected void PrepareData()
         {
             ByteData = (uint) Stream.ReadByte();

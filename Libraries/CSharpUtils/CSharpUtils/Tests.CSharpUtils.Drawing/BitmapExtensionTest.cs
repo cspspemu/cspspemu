@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CSharpUtilsTests

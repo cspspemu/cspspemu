@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace CSharpUtils.Getopt
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class Getopt
     {
         /// <summary>
@@ -19,79 +22,71 @@ namespace CSharpUtils.Getopt
         /// <summary>
         /// 
         /// </summary>
-        private Action DefaultAction;
+        private Action _defaultAction;
 
         /// <summary>
         /// 
         /// </summary>
-        public string[] SopportedSwitches = new[] {"/", "-", "--"};
+        public string[] SopportedSwitches = {"/", "-", "--"};
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="_Items"></param>
-        public Getopt(string[] _Items)
+        /// <param name="items"></param>
+        public Getopt(IEnumerable<string> items)
         {
-            this.Items = new Queue<string>(_Items);
-            this.Actions = new Dictionary<string, Action<string, string>>();
+            Items = new Queue<string>(items);
+            Actions = new Dictionary<string, Action<string, string>>();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public bool HasMore
-        {
-            get { return Items.Count > 0; }
-        }
+        public bool HasMore => Items.Count > 0;
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public string DequeueNext()
-        {
-            return this.Items.Dequeue();
-        }
-
-        public string[] DequeueAllNext()
-        {
-            return this.Items.ToArray();
-        }
+        public string DequeueNext() => Items.Dequeue();
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Action"></param>
-        public void AddDefaultRule(Action Action)
-        {
-            this.DefaultAction = Action;
-        }
+        /// <returns></returns>
+        public string[] DequeueAllNext() => Items.ToArray();
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Name"></param>
-        /// <param name="Value"></param>
-        public unsafe void AddRule(string Name, ref bool Value)
+        /// <param name="action"></param>
+        public void AddDefaultRule(Action action) => _defaultAction = action;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        public unsafe void AddRule(string name, ref bool value)
         {
-            fixed (bool* ptr = &Value)
+            fixed (bool* ptr = &value)
             {
-                bool* ptr2 = ptr;
-                AddRule<bool>(Name, (bool _Value) => { *ptr2 = _Value; });
+                var ptr2 = ptr;
+                AddRule(name, (bool vv) => { *ptr2 = vv; });
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Name"></param>
-        /// <param name="Value"></param>
-        public unsafe void AddRule(string Name, ref int Value)
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        public unsafe void AddRule(string name, ref int value)
         {
-            fixed (int* ptr = &Value)
+            fixed (int* ptr = &value)
             {
-                int* ptr2 = ptr;
-                AddRule<int>(Name, (int _Value) => { *ptr2 = _Value; });
+                var ptr2 = ptr;
+                AddRule(name, (int vv) => { *ptr2 = vv; });
             }
         }
 
@@ -99,66 +94,66 @@ namespace CSharpUtils.Getopt
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="Name"></param>
-        /// <param name="Action"></param>
-        public void AddRule<T>(string Name, Action<T> Action)
+        /// <param name="name"></param>
+        /// <param name="action"></param>
+        public void AddRule<T>(string name, Action<T> action)
         {
-            AddRule<T>(new string[] {Name}, Action);
+            AddRule(new[] {name}, action);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Name"></param>
-        /// <param name="Action"></param>
-        public void AddRule(string Name, Action Action)
+        /// <param name="name"></param>
+        /// <param name="action"></param>
+        public void AddRule(string name, Action action)
         {
-            AddRule(new string[] {Name}, Action);
+            AddRule(new[] {name}, action);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Names"></param>
-        /// <param name="Action"></param>
-        public void AddRule(string[] Names, Action Action)
+        /// <param name="names"></param>
+        /// <param name="action"></param>
+        public void AddRule(string[] names, Action action)
         {
-            Action<string, string> FormalAction;
-            FormalAction = (Current, Arg) => { (Action as Action)(); };
-
-            foreach (var Name in Names)
+            void Action(string current, string arg)
             {
-                this.Actions.Add(Name, FormalAction);
+                action();
+            }
+
+            foreach (var name in names)
+            {
+                Actions.Add(name, Action);
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Action"></param>
-        public void AddRule(Action<string> Action)
+        /// <param name="action"></param>
+        public void AddRule(Action<string> action)
         {
-            Action<string, string> FormalAction;
-            FormalAction = (Current, Arg) => { Action(Current); };
-            this.Actions.Add("", FormalAction);
+            Actions.Add("", (current, arg) => { action(current); });
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="TType"></typeparam>
-        /// <param name="Name"></param>
-        /// <param name="Action"></param>
+        /// <param name="name"></param>
+        /// <param name="action"></param>
         /// <returns></returns>
-        public static TType CheckArgument<TType>(string Name, Func<TType> Action)
+        public static TType CheckArgument<TType>(string name, Func<TType> action)
         {
             try
             {
-                return Action();
+                return action();
             }
             catch (Exception)
             {
-                throw (new Exception(String.Format("Argument {0} requires a {1}", Name, typeof(TType))));
+                throw (new Exception(String.Format("Argument {0} requires a {1}", name, typeof(TType))));
             }
         }
 
@@ -166,56 +161,64 @@ namespace CSharpUtils.Getopt
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="Names"></param>
-        /// <param name="Action"></param>
-        public void AddRule<T>(string[] Names, Action<T> Action)
+        /// <param name="names"></param>
+        /// <param name="action"></param>
+        public void AddRule<T>(string[] names, Action<T> action)
         {
-            Action<string, string> FormalAction;
-            var Type = typeof(T);
+            Action<string, string> formalAction;
+            var type = typeof(T);
 
-            if (Type == typeof(bool))
+            if (type == typeof(bool))
             {
-                FormalAction = (Current, Arg) => { (Action as Action<Boolean>)(true); };
-            }
-            else if (Type == typeof(int))
-            {
-                FormalAction = (Current, Arg) =>
+                formalAction = (current, arg) =>
                 {
-                    var Argument = CheckArgument(Current, () => int.Parse(Arg != null ? Arg : DequeueNext()));
-                    (Action as Action<int>)(Argument);
+                    // ReSharper disable once PossibleNullReferenceException
+                    (action as Action<bool>)(true);
                 };
             }
-            else if (Type == typeof(float))
+            else if (type == typeof(int))
             {
-                FormalAction = (Current, Arg) =>
+                formalAction = (current, arg) =>
                 {
-                    var Argument = CheckArgument(Current, () => float.Parse(Arg != null ? Arg : DequeueNext()));
-                    (Action as Action<float>)(Argument);
+                    var argument = CheckArgument(current, () => int.Parse(arg != null ? arg : DequeueNext()));
+                    // ReSharper disable once PossibleNullReferenceException
+                    (action as Action<int>)(argument);
                 };
             }
-            else if (Type == typeof(double))
+            else if (type == typeof(float))
             {
-                FormalAction = (Current, Arg) =>
+                formalAction = (current, arg) =>
                 {
-                    var Argument = CheckArgument(Current, () => double.Parse(Arg != null ? Arg : DequeueNext()));
-                    (Action as Action<double>)(Argument);
+                    var argument = CheckArgument(current, () => float.Parse(arg != null ? arg : DequeueNext()));
+                    // ReSharper disable once PossibleNullReferenceException
+                    (action as Action<float>)(argument);
                 };
             }
-            else if (Type == typeof(string))
+            else if (type == typeof(double))
             {
-                FormalAction = (Current, Arg) =>
+                formalAction = (current, arg) =>
                 {
-                    var Argument = CheckArgument(Current, () => Arg != null ? Arg : DequeueNext());
-                    (Action as Action<string>)(Argument);
+                    var argument = CheckArgument(current, () => double.Parse(arg != null ? arg : DequeueNext()));
+                    // ReSharper disable once PossibleNullReferenceException
+                    (action as Action<double>)(argument);
+                };
+            }
+            else if (type == typeof(string))
+            {
+                formalAction = (current, arg) =>
+                {
+                    var argument = CheckArgument(current, () => arg != null ? arg : DequeueNext());
+                    // ReSharper disable once PossibleNullReferenceException
+                    (action as Action<string>)(argument);
                 };
             }
             else
             {
-                throw (new Exception("Unknown Type : " + typeof(T).Name));
+                throw new Exception("Unknown Type : " + typeof(T).Name);
             }
-            foreach (var Name in Names)
+            foreach (var name in names)
             {
-                this.Actions.Add(Name, FormalAction);
+                Actions.Add(name, formalAction);
             }
             //foreach ()
         }
@@ -225,46 +228,46 @@ namespace CSharpUtils.Getopt
         /// </summary>
         public void Process()
         {
-            bool ExecutedAnyAction = false;
+            var executedAnyAction = false;
 
             while (HasMore)
             {
-                var CurrentRaw = DequeueNext();
-                string Arg = null;
-                var Current = CurrentRaw;
+                var currentRaw = DequeueNext();
+                string arg = null;
+                var current = currentRaw;
 
-                int EqualsOffset = CurrentRaw.IndexOf('=');
-                if (EqualsOffset >= 0)
+                var equalsOffset = currentRaw.IndexOf('=');
+                if (equalsOffset >= 0)
                 {
-                    Current = CurrentRaw.Substring(0, EqualsOffset);
-                    Arg = CurrentRaw.Substring(EqualsOffset + 1);
+                    current = currentRaw.Substring(0, equalsOffset);
+                    arg = currentRaw.Substring(equalsOffset + 1);
                 }
 
-                if (SopportedSwitches.Any((v) => Current.StartsWith(v)))
+                if (SopportedSwitches.Any((v) => current.StartsWith(v)))
                 {
-                    if (this.Actions.ContainsKey(Current))
+                    if (Actions.ContainsKey(current))
                     {
-                        this.Actions[Current](Current, Arg);
-                        ExecutedAnyAction = true;
+                        Actions[current](current, arg);
+                        executedAnyAction = true;
                     }
                     else
                     {
-                        throw (new Exception("Unknown parameter '" + Current + "'"));
+                        throw (new Exception("Unknown parameter '" + current + "'"));
                     }
                 }
                 else
                 {
-                    if (this.Actions.ContainsKey(""))
+                    if (Actions.ContainsKey(""))
                     {
-                        this.Actions[""](Current, Arg);
-                        ExecutedAnyAction = true;
+                        Actions[""](current, arg);
+                        executedAnyAction = true;
                     }
                 }
             }
 
-            if (!ExecutedAnyAction && DefaultAction != null)
+            if (!executedAnyAction)
             {
-                DefaultAction();
+                _defaultAction?.Invoke();
             }
         }
     }

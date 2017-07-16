@@ -1,38 +1,62 @@
 ﻿using System.Collections.Generic;
 
-public static class LinkedListExtensions
+namespace CSharpUtils.Extensions
 {
-    public static int GetCountLock<T>(this LinkedList<T> List)
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class LinkedListExtensions
     {
-        lock (List) return List.Count;
-    }
-
-    public static T RemoveFirstAndGet<T>(this LinkedList<T> List)
-    {
-        lock (List)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="list"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static int GetCountLock<T>(this LinkedList<T> list)
         {
-            try
+            lock (list) return list.Count;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="list"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T RemoveFirstAndGet<T>(this LinkedList<T> list)
+        {
+            lock (list)
             {
-                return List.First.Value;
-            }
-            finally
-            {
-                List.RemoveFirst();
+                try
+                {
+                    return list.First.Value;
+                }
+                finally
+                {
+                    list.RemoveFirst();
+                }
             }
         }
-    }
 
-    public static T RemoveLastAndGet<T>(this LinkedList<T> List)
-    {
-        lock (List)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="list"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T RemoveLastAndGet<T>(this LinkedList<T> list)
         {
-            try
+            lock (list)
             {
-                return List.Last.Value;
-            }
-            finally
-            {
-                List.RemoveLast();
+                try
+                {
+                    return list.Last.Value;
+                }
+                finally
+                {
+                    list.RemoveLast();
+                }
             }
         }
     }

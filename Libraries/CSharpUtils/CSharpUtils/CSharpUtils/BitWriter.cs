@@ -11,68 +11,82 @@ namespace CSharpUtils
     /// </summary>
     public class BitWriter
     {
-        uint data = 0;
-        int dataLength = 0;
+        uint _data;
+        int _dataLength;
         Stream stream;
 
-        internal Stream BaseStream
-        {
-            get { return stream; }
-        }
+        internal Stream BaseStream => stream;
+        internal int BitsToAligment => (32 - _dataLength) % 8;
 
-        internal int BitsToAligment
-        {
-            get { return (32 - dataLength) % 8; }
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stream"></param>
         public BitWriter(Stream stream)
         {
             this.stream = stream;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
         public void WriteBit(bool value)
         {
-            WriteLSB(value ? 1 : 0, 1);
+            WriteLsb(value ? 1 : 0, 1);
         }
 
-        public void WriteLSB(int value, int length)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="length"></param>
+        public void WriteLsb(int value, int length)
         {
             Debug.Assert(value < 1 << length, "value does not fit in length");
 
-            uint currentData = data | checked((uint) value << dataLength);
-            int currentLength = dataLength + length;
+            var currentData = _data | checked((uint) value << _dataLength);
+            var currentLength = _dataLength + length;
             while (currentLength >= 8)
             {
                 BaseStream.WriteByte((byte) currentData);
                 currentData >>= 8;
                 currentLength -= 8;
             }
-            data = currentData;
-            dataLength = currentLength;
+            _data = currentData;
+            _dataLength = currentLength;
         }
 
-        public void WriteMSB(int value, int length)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="length"></param>
+        public void WriteMsb(int value, int length)
         {
             Debug.Assert(value < 1 << length, "value does not fit in length");
 
-            int reversed = 0;
-            for (int i = length - 1; i >= 0; i--)
+            var reversed = 0;
+            for (var i = length - 1; i >= 0; i--)
             {
                 reversed <<= 1;
                 reversed |= value & 1;
                 value >>= 1;
             }
-            WriteLSB(reversed, length);
+            WriteLsb(reversed, length);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Align()
         {
-            if (dataLength > 0)
+            if (_dataLength > 0)
             {
-                BaseStream.WriteByte((byte) data);
+                BaseStream.WriteByte((byte) _data);
 
-                data = 0;
-                dataLength = 0;
+                _data = 0;
+                _dataLength = 0;
             }
         }
     }

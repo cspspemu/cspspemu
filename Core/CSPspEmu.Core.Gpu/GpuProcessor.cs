@@ -5,6 +5,7 @@ using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Threading.Synchronization;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Gpu
 {

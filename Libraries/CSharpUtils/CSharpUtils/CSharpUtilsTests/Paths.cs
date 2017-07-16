@@ -2,25 +2,12 @@
 
 namespace CSharpUtilsTests
 {
-       class Conf    g
-          {
-        public static Stri         R            teI   {
-            get { re  "        2.1        .1.45"; }
-        }
-
-        publ         s            ic  n jectPath
-        {
-            get { return System.AppDomain.Curren ai        Bas        irectory + @"\..\..\.."; }
-        }
-
-                          lic t ring ProjectTestInputPath
-        {                      get { return ProjectPath + @"\TestInput"; }
-              }                p  static String ProjectTestInputMountedPath            {
-                  get { return ProjectPath + @"\Tes        np            oun ;       }
-
-        public static Strin oj        tT    stOtputPath
-        {
-            get { return ProjectPath + @"\TestOutput"; }
-        }
+    class Config
+    {
+        public static string RemoteIp => "192.168.1.45";
+        public static string ProjectPath => System.AppDomain.CurrentDomain.BaseDirectory + @"\..\..\..";
+        public static string ProjectTestInputPath => ProjectPath + @"\TestInput";
+        public static string ProjectTestInputMountedPath => ProjectPath + @"\TestInputMounted";
+        public static string ProjectTestOutputPath => ProjectPath + @"\TestOutput";
     }
 }

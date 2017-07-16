@@ -1,28 +1,40 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
 
 namespace CSharpUtils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class ConvertEx
     {
-        public static int FlexibleToInt(String String)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="String"></param>
+        /// <returns></returns>
+        public static int FlexibleToInt(string String)
         {
-            var Regex = new Regex(@"^\d*", RegexOptions.Compiled);
-            String Selected = Regex.Match(String).Groups[0].Value;
-            int Value = 0;
-            int.TryParse(Selected, out Value);
-            return Value;
+            var regex = new Regex(@"^\d*", RegexOptions.Compiled);
+            var selected = regex.Match(String).Groups[0].Value;
+            int value;
+            int.TryParse(selected, out value);
+            return value;
         }
 
-        public static String GetString(this byte[] Bytes, Encoding Encoding)
-        {
-            return Encoding.GetString(Bytes);
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <param name="encoding"></param>
+        /// <returns></returns>
+        public static string GetString(this byte[] bytes, Encoding encoding) => encoding.GetString(bytes);
 
-        public static String GetString(this byte[] Bytes)
-        {
-            return Bytes.GetString(Encoding.ASCII);
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        public static string GetString(this byte[] bytes) => bytes.GetString(Encoding.ASCII);
     }
 }

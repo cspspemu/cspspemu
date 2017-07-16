@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text;
+using CSharpUtils.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CSharpUtilsTests

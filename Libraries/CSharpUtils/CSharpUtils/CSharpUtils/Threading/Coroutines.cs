@@ -6,6 +6,9 @@ using System.Threading;
 
 namespace CSharpUtils.Threading
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class CoroutinePool : IDisposable
     {
         internal Coroutine CurrentCoroutine;
@@ -13,37 +16,50 @@ namespace CSharpUtils.Threading
         internal AutoResetEvent CallerContinueEvent = new AutoResetEvent(false);
         internal Thread CallerThread;
 
-        public Coroutine CreateCoroutine(String Name, Action Action)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public Coroutine CreateCoroutine(string name, Action action)
         {
-            return new Coroutine(Name, this, Action);
+            return new Coroutine(name, this, action);
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void YieldInPool()
         {
-            this.CurrentCoroutine.YieldInPool();
+            CurrentCoroutine.YieldInPool();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
-            foreach (var Coroutine in Coroutines.ToArray()) Coroutine.Dispose();
+            foreach (var coroutine in Coroutines.ToArray()) coroutine.Dispose();
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class Coroutine : IDisposable
     {
         internal CoroutinePool Pool;
         internal AutoResetEvent CoroutineContinueEvent = new AutoResetEvent(false);
         internal Thread Thread;
-        private string _Name;
 
-        public string Name
-        {
-            set { _Name = value; }
-            get { return _Name; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Name { set; get; }
 
-        Exception RethrowException = null;
+        Exception _rethrowException;
 
 
         private void CoroutineContinueEvent_WaitOne()
@@ -63,11 +79,11 @@ namespace CSharpUtils.Threading
         {
         }
 
-        bool MustStart = false;
+        bool _mustStart;
 
-        internal Coroutine(String Name, CoroutinePool Pool, Action Action)
+        internal Coroutine(string name, CoroutinePool pool, Action action)
         {
-            this.Pool = Pool;
+            Pool = pool;
             IsAlive = true;
             Thread = new Thread(() =>
             {
@@ -75,36 +91,40 @@ namespace CSharpUtils.Threading
                 try
                 {
                     CoroutineContinueEvent_WaitOne();
-                    Action();
+                    action();
                 }
                 catch (InterruptException)
                 {
                 }
-                catch (Exception Exception)
+                catch (Exception e)
                 {
-                    RethrowException = Exception;
+                    _rethrowException = e;
                 }
                 finally
                 {
                     Console.WriteLine("Coroutine.End()");
                     IsAlive = false;
-                    Pool.CallerContinueEvent.Set();
+                    pool.CallerContinueEvent.Set();
                 }
             })
             {
                 CurrentCulture = new CultureInfo("en-US"),
                 IsBackground = true,
             };
-            this.Name = Name;
-            this.MustStart = true;
+            Name = name;
+            _mustStart = true;
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <exception cref="GreenThreadException"></exception>
         public void ExecuteStep()
         {
-            if (this.MustStart)
+            if (_mustStart)
             {
-                this.MustStart = false;
+                _mustStart = false;
                 Thread.Name = "Coroutine-" + Name;
                 Thread.Start();
             }
@@ -118,22 +138,27 @@ namespace CSharpUtils.Threading
                 CoroutineContinueEvent.Set();
                 PoolCallerContinueEvent_WaitOne();
             }
-            if (RethrowException != null)
+
+            if (_rethrowException != null)
             {
                 try
                 {
                     //StackTraceUtils.PreserveStackTrace(RethrowException);
-                    throw (new GreenThreadException("GreenThread Exception", RethrowException));
+                    throw (new GreenThreadException("GreenThread Exception", _rethrowException));
                     //throw (RethrowException);
                 }
                 finally
                 {
-                    RethrowException = null;
+                    _rethrowException = null;
                 }
             }
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <exception cref="InvalidOperationException"></exception>
         public void YieldInPool()
         {
             //Debug.WriteLine("YieldInPool");
@@ -172,13 +197,19 @@ namespace CSharpUtils.Threading
             CoroutineContinueEvent_WaitOne();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsAlive { get; private set; }
 
-        public bool IsCurrentlyActive
-        {
-            get { return Pool.CurrentCoroutine == this; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsCurrentlyActive => Pool.CurrentCoroutine == this;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
             IsAlive = false;

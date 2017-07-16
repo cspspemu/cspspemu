@@ -1,5 +1,8 @@
 ﻿namespace CSharpUtils.Factory
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Factory
     {
         /// <summary>

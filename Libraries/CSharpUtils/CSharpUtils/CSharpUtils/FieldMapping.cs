@@ -3,21 +3,38 @@ using System.Linq;
 
 namespace CSharpUtils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class FieldMapping : Attribute
     {
-        public String ThisField;
-        public String ConfigurationField;
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ThisField;
 
-        public static Object ObjectFieldGet(Object Object, String FieldName)
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ConfigurationField;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Object"></param>
+        /// <param name="fieldName"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public static object ObjectFieldGet(object Object, string fieldName)
         {
             //Console.WriteLine("(" + Object.GetType() + ").(" + FieldName + ")");
             try
             {
-                var Field = Object.GetType().GetField(FieldName);
-                if (Field != null) return Field.GetValue(Object);
-                var Property = Object.GetType().GetProperty(FieldName);
-                if (Property != null) return Property.GetValue(Object, null);
-                throw(new NotImplementedException());
+                var field = Object.GetType().GetField(fieldName);
+                if (field != null) return field.GetValue(Object);
+                var property = Object.GetType().GetProperty(fieldName);
+                if (property != null) return property.GetValue(Object, null);
+                throw new NotImplementedException();
             }
             catch (Exception e)
             {
@@ -26,35 +43,44 @@ namespace CSharpUtils
             }
         }
 
-        public static Object ConvertTo(Object Object, Type ToType)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Object"></param>
+        /// <param name="toType"></param>
+        /// <returns></returns>
+        public static object ConvertTo(object Object, Type toType)
         {
-            if (ToType.IsEnum)
+            if (toType.IsEnum)
             {
-                Object = Enum.ToObject(ToType, Object);
+                Object = Enum.ToObject(toType, Object);
             }
-            return Convert.ChangeType(Object, ToType);
+            return Convert.ChangeType(Object, toType);
         }
 
-        public static void ObjectFieldSet(Object Object, String FieldName, Object Value)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Object"></param>
+        /// <param name="fieldName"></param>
+        /// <param name="value"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public static void ObjectFieldSet(object Object, string fieldName, object value)
         {
             //Console.WriteLine("(" + Object + ").(" + FieldName + ")=" + Value);
             try
             {
-                var Field = Object.GetType().GetField(FieldName);
+                var field = Object.GetType().GetField(fieldName);
                 //Enum.ToObject(
 
-                if (Field != null)
+                if (field != null)
                 {
-                    Field.SetValue(Object, ConvertTo(Value, Field.FieldType));
+                    field.SetValue(Object, ConvertTo(value, field.FieldType));
                     return;
                 }
-                var Property = Object.GetType().GetProperty(FieldName);
-                if (Property != null)
-                {
-                    Property.SetValue(Object, ConvertTo(Value, Property.PropertyType), null);
-                    return;
-                }
-                throw (new NotImplementedException());
+
+                var property = Object.GetType().GetProperty(fieldName) ?? throw new NotImplementedException();
+                property.SetValue(Object, ConvertTo(value, property.PropertyType), null);
             }
             catch (Exception e)
             {
@@ -62,38 +88,48 @@ namespace CSharpUtils
             }
         }
 
-        public static void ObjectToConfiguration(Object Source, Object Configuration)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="configuration"></param>
+        public static void ObjectToConfiguration(object source, object configuration)
         {
-            foreach (var SourceMember in Source.GetType().GetFields())
+            foreach (var sourceMember in source.GetType().GetFields())
             {
-                foreach (var FieldMappingAttribute in SourceMember.GetCustomAttributes(typeof(FieldMapping), true)
+                foreach (var fieldMappingAttribute in sourceMember.GetCustomAttributes(typeof(FieldMapping), true)
                     .Cast<FieldMapping>())
                 {
                     ObjectFieldSet(
-                        Configuration,
-                        FieldMappingAttribute.ConfigurationField,
+                        configuration,
+                        fieldMappingAttribute.ConfigurationField,
                         ObjectFieldGet(
-                            ObjectFieldGet(Source, SourceMember.Name),
-                            FieldMappingAttribute.ThisField
+                            ObjectFieldGet(source, sourceMember.Name),
+                            fieldMappingAttribute.ThisField
                         )
                     );
                 }
             }
         }
 
-        public static void ConfigurationToObject(Object Configuration, Object Destination)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <param name="destination"></param>
+        public static void ConfigurationToObject(object configuration, object destination)
         {
-            foreach (var DestinationMember in Destination.GetType().GetFields())
+            foreach (var destinationMember in destination.GetType().GetFields())
             {
-                foreach (var FieldMappingAttribute in DestinationMember.GetCustomAttributes(typeof(FieldMapping), true)
+                foreach (var fieldMappingAttribute in destinationMember.GetCustomAttributes(typeof(FieldMapping), true)
                     .Cast<FieldMapping>())
                 {
                     ObjectFieldSet(
-                        ObjectFieldGet(Destination, DestinationMember.Name),
-                        FieldMappingAttribute.ThisField,
+                        ObjectFieldGet(destination, destinationMember.Name),
+                        fieldMappingAttribute.ThisField,
                         ObjectFieldGet(
-                            Configuration,
-                            FieldMappingAttribute.ConfigurationField
+                            configuration,
+                            fieldMappingAttribute.ConfigurationField
                         )
                     );
                 }

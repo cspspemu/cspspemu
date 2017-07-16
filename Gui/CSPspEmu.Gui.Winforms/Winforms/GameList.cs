@@ -10,6 +10,7 @@ using CSPspEmu.Hle.Formats;
 using CSPspEmu.Hle.Vfs.Iso;
 using System.ComponentModel;
 using System.Drawing.Imaging;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Gui.Winforms
 {

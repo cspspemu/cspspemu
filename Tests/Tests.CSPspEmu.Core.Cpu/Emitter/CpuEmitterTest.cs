@@ -12,6 +12,7 @@ using CSharpUtils.Factory;
 using System.Threading;
 using CSPspEmu.Core.Cpu.Dynarec;
 using System.Globalization;
+using CSharpUtils.Extensions;
 using CSPspEmu.Core.Cpu.VFpu;
 using Tests.CSPspEmu.Core.Cpu.Cpu;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

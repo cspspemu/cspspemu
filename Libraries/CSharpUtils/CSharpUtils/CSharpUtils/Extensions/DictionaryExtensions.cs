@@ -1,30 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public static class DictionaryExtensions
+namespace CSharpUtils.Extensions
 {
-    public static TValue GetOrCreate<TKey, TValue>(this Dictionary<TKey, TValue> This, TKey Key, Func<TValue> Allocator)
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class DictionaryExtensions
     {
-        TValue Item;
-        if (!This.TryGetValue(Key, out Item))
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="This"></param>
+        /// <param name="key"></param>
+        /// <param name="allocator"></param>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <returns></returns>
+        public static TValue GetOrCreate<TKey, TValue>(this Dictionary<TKey, TValue> This, TKey key, Func<TValue> allocator)
         {
-            return This[Key] = Allocator();
+            return !This.TryGetValue(key, out TValue item) ? (This[key] = allocator()) : item;
         }
-        return Item;
-    }
 
-    public static TValue GetOrCreate<TKey, TValue>(this Dictionary<TKey, TValue> This, TKey Key) where TValue : new()
-    {
-        return This.GetOrCreate(Key, () => { return new TValue(); });
-    }
-
-    public static TValue GetOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> This, TKey Key, TValue DefaultValue)
-    {
-        TValue Item;
-        if (This.TryGetValue(Key, out Item))
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="This"></param>
+        /// <param name="key"></param>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <returns></returns>
+        public static TValue GetOrCreate<TKey, TValue>(this Dictionary<TKey, TValue> This, TKey key) where TValue : new()
         {
-            return Item;
+            return This.GetOrCreate(key, () => new TValue());
         }
-        return DefaultValue;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="This"></param>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <returns></returns>
+        public static TValue GetOrDefault<TKey, TValue>(this Dictionary<TKey, TValue> This, TKey key, TValue defaultValue)
+        {
+            return This.TryGetValue(key, out TValue item) ? item : defaultValue;
+        }
     }
 }

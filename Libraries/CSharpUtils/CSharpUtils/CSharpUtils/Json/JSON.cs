@@ -4,91 +4,114 @@ using System.Globalization;
 
 namespace CSharpUtils.Json
 {
-    public class JSON
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Json
     {
-        public static object Decode(string Format)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="format"></param>
+        /// <returns></returns>
+        public static object Decode(string format)
         {
-            return Parse(Format);
+            return Parse(format);
         }
 
-        public static string Encode(object ObjectToEncode, bool SingleQuotes = false)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="objectToEncode"></param>
+        /// <param name="singleQuotes"></param>
+        /// <returns></returns>
+        public static string Encode(object objectToEncode, bool singleQuotes = false)
         {
-            return Stringify(ObjectToEncode, SingleQuotes);
+            return Stringify(objectToEncode, singleQuotes);
         }
 
-        public static object Parse(string Format)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="format"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public static object Parse(string format)
         {
             throw (new NotImplementedException());
         }
 
-        public static string Stringify(object ObjectToEncode, bool SingleQuotes = false)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="objectToEncode"></param>
+        /// <param name="singleQuotes"></param>
+        /// <returns></returns>
+        public static string Stringify(object objectToEncode, bool singleQuotes = false)
         {
-            if (ObjectToEncode == null)
+            if (objectToEncode == null)
             {
                 return "null";
             }
 
-            if (ObjectToEncode is string)
+            if (objectToEncode is string)
             {
-                var Quote = SingleQuotes ? '\'' : '"';
-                return Quote + Escape(ObjectToEncode as string) + Quote;
+                var quote = singleQuotes ? '\'' : '"';
+                return quote + Escape(objectToEncode as string) + quote;
             }
 
-            if (ObjectToEncode is bool)
+            if (objectToEncode is bool)
             {
-                return (((bool) ObjectToEncode) == true) ? "true" : "false";
+                return (bool) objectToEncode ? "true" : "false";
             }
 
-            if (ObjectToEncode is IDictionary)
+            if (objectToEncode is IDictionary)
             {
-                var Dict = ObjectToEncode as IDictionary;
-                var Str = "";
-                foreach (var Key in Dict.Keys)
+                var dict = objectToEncode as IDictionary;
+                var str = "";
+                foreach (var key in dict.Keys)
                 {
-                    var Value = Dict[Key];
-                    if (Str.Length > 0) Str += ",";
-                    Str += Stringify(Key.ToString(), SingleQuotes) + ":" + Stringify(Value, SingleQuotes);
+                    var value = dict[key];
+                    if (str.Length > 0) str += ",";
+                    str += Stringify(key.ToString(), singleQuotes) + ":" + Stringify(value, singleQuotes);
                 }
-                return "{" + Str + "}";
+                return "{" + str + "}";
             }
 
-            if (ObjectToEncode is IEnumerable)
+            if (objectToEncode is IEnumerable)
             {
-                var List = ObjectToEncode as IEnumerable;
-                var Str = "";
-                foreach (var Item in List)
+                var list = objectToEncode as IEnumerable;
+                var str = "";
+                foreach (var item in list)
                 {
-                    if (Str.Length > 0) Str += ",";
-                    Str += Stringify(Item, SingleQuotes);
+                    if (str.Length > 0) str += ",";
+                    str += Stringify(item, singleQuotes);
                 }
-                return "[" + Str + "]";
+                return "[" + str + "]";
             }
 
-            var IJsonSerializable = ObjectToEncode as IJsonSerializable;
-            if (IJsonSerializable != null)
+            var jsonSerializable = objectToEncode as IJsonSerializable;
+            if (jsonSerializable != null)
             {
-                return IJsonSerializable.ToJson();
+                return jsonSerializable.ToJson();
             }
 
-            double NumericResult;
-            string NumericStr = Convert.ToString(ObjectToEncode, CultureInfo.InvariantCulture.NumberFormat);
-            if (Double.TryParse(NumericStr, out NumericResult))
-            {
-                return NumericStr;
-            }
-            else
-            {
-                //throw (new NotImplementedException("Don't know how to encode '" + ObjectToEncode + "'."));
-                return Stringify(ObjectToEncode.ToString(), SingleQuotes);
-            }
+            double numericResult;
+            var numericStr = Convert.ToString(objectToEncode, CultureInfo.InvariantCulture.NumberFormat);
+            return Double.TryParse(numericStr, out numericResult) ? numericStr : Stringify(objectToEncode.ToString(), singleQuotes);
         }
 
-        protected static string Escape(string StringToEscape)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stringToEscape"></param>
+        /// <returns></returns>
+        protected static string Escape(string stringToEscape)
         {
-            var Ret = "";
-            foreach (var C in StringToEscape)
+            var ret = "";
+            foreach (var c in stringToEscape)
             {
-                switch (C)
+                switch (c)
                 {
                     case '/':
                     case '\"':
@@ -98,21 +121,21 @@ namespace CSharpUtils.Json
                     case '\n':
                     case '\r':
                     case '\t':
-                        Ret += '\\' + C;
+                        ret += '\\' + c;
                         break;
                     default:
-                        if (C > 255)
+                        if (c > 255)
                         {
-                            Ret += "\\u" + Convert.ToString(C, 16).PadLeft(4, '0');
+                            ret += "\\u" + Convert.ToString(c, 16).PadLeft(4, '0');
                         }
                         else
                         {
-                            Ret += C;
+                            ret += c;
                         }
                         break;
                 }
             }
-            return Ret;
+            return ret;
         }
     }
 }

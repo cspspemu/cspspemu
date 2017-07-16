@@ -9,8 +9,12 @@ using System.Threading;
 using CSharpUtils.Streams;
 using System.Diagnostics;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 
-static public class StreamExtensions
+/// <summary>
+/// 
+/// </summary>
+public static class StreamExtensions
 {
     /// <summary>
     /// 

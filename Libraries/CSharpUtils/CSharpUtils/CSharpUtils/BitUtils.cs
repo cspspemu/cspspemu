@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime;
-using System.Runtime.CompilerServices;
 
 namespace CSharpUtils
 {
@@ -13,184 +12,165 @@ namespace CSharpUtils
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Size"></param>
+        /// <param name="size"></param>
         /// <returns></returns>
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static uint CreateMask(int Size)
-        {
-            return (Size == 0) ? 0 : (uint) ((1 << Size) - 1);
-        }
+        public static uint CreateMask(int size) => (size == 0) ? 0 : (uint) ((1 << size) - 1);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Value"></param>
-        /// <param name="Offset"> </param>
-        /// <param name="Count"> </param>
-        /// <param name="ValueToInsert"> </param>
+        /// <param name="value"></param>
+        /// <param name="offset"> </param>
+        /// <param name="count"> </param>
+        /// <param name="valueToInsert"> </param>
         /// <returns></returns>
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static void Insert(ref uint Value, int Offset, int Count, uint ValueToInsert)
-        {
-            Value = Insert(Value, Offset, Count, ValueToInsert);
-        }
+        public static void Insert(ref uint value, int offset, int count, uint valueToInsert) =>
+            value = Insert(value, offset, count, valueToInsert);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="InitialValue"> </param>
-        /// <param name="Offset"> </param>
-        /// <param name="Count"> </param>
-        /// <param name="ValueToInsert"> </param>
+        /// <param name="initialValue"> </param>
+        /// <param name="offset"> </param>
+        /// <param name="count"> </param>
+        /// <param name="valueToInsert"> </param>
         /// <returns></returns>
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static uint Insert(uint InitialValue, int Offset, int Count, uint ValueToInsert)
-        {
-            return InsertWithMask(InitialValue, Offset, CreateMask(Count), ValueToInsert);
-        }
+        public static uint Insert(uint initialValue, int offset, int count, uint valueToInsert) =>
+            InsertWithMask(initialValue, offset, CreateMask(count), valueToInsert);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="initialValue"> </param>
+        /// <param name="offset"> </param>
+        /// <param name="count"> </param>
+        /// <param name="valueToInsert"> </param>
+        /// <param name="maxValue"></param>
+        /// <returns></returns>
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+        public static void
+            InsertScaled(ref uint initialValue, int offset, int count, uint valueToInsert, uint maxValue) =>
+            initialValue = InsertScaled(initialValue, offset, count, valueToInsert, maxValue);
+
+        /// <summary>
+        /// </summary>
+        /// <param name="initialValue"> </param>
+        /// <param name="offset"> </param>
+        /// <param name="count"> </param>
+        /// <param name="valueToInsert"> </param>
+        /// <param name="maxValue"></param>
+        /// <returns></returns>
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+        public static uint InsertScaled(uint initialValue, int offset, int count, uint valueToInsert, uint maxValue) =>
+            InsertWithMask(initialValue, offset, CreateMask(count),
+                valueToInsert * CreateMask(count) / maxValue);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="InitialValue"> </param>
-        /// <param name="Offset"> </param>
-        /// <param name="Count"> </param>
-        /// <param name="ValueToInsert"> </param>
+        /// <param name="initialValue"></param>
+        /// <param name="offset"></param>
+        /// <param name="mask"></param>
+        /// <param name="valueToInsert"></param>
         /// <returns></returns>
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static void InsertScaled(ref uint InitialValue, int Offset, int Count, uint ValueToInsert, uint MaxValue)
-        {
-            InitialValue = InsertScaled(InitialValue, Offset, Count, ValueToInsert, MaxValue);
-        }
+        private static uint InsertWithMask(uint initialValue, int offset, uint mask, uint valueToInsert) =>
+            ((initialValue & ~(mask << offset)) | ((valueToInsert & mask) << offset));
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="InitialValue"> </param>
-        /// <param name="Offset"> </param>
-        /// <param name="Count"> </param>
-        /// <param name="ValueToInsert"> </param>
+        /// <param name="initialValue"> </param>
+        /// <param name="offset"> </param>
+        /// <param name="count"> </param>
         /// <returns></returns>
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static uint InsertScaled(uint InitialValue, int Offset, int Count, uint ValueToInsert, uint MaxValue)
-        {
-            return InsertWithMask(InitialValue, Offset, CreateMask(Count),
-                ValueToInsert * CreateMask(Count) / MaxValue);
-        }
+        public static uint Extract(uint initialValue, int offset, int count) =>
+            (initialValue >> offset) & CreateMask(count);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="InitialValue"></param>
-        /// <param name="Offset"></param>
-        /// <param name="Mask"></param>
-        /// <param name="ValueToInsert"></param>
+        /// <param name="initialValue"> </param>
+        /// <param name="offset"> </param>
+        /// <param name="count"> </param>
+        /// <param name="scale"> </param>
         /// <returns></returns>
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        private static uint InsertWithMask(uint InitialValue, int Offset, uint Mask, uint ValueToInsert)
-        {
-            return ((InitialValue & ~(Mask << Offset)) | ((ValueToInsert & Mask) << Offset));
-        }
+        public static uint ExtractScaled(uint initialValue, int offset, int count, int scale) =>
+            (uint) ((Extract(initialValue, offset, count) * scale) / CreateMask(count));
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="InitialValue"> </param>
-        /// <param name="Offset"> </param>
-        /// <param name="Count"> </param>
+        /// <param name="initialValue"> </param>
+        /// <param name="offset"> </param>
         /// <returns></returns>
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static uint Extract(uint InitialValue, int Offset, int Count)
-        {
-            return (uint) ((InitialValue >> Offset) & CreateMask(Count));
-        }
+        public static bool ExtractBool(uint initialValue, int offset) => Extract(initialValue, offset, 1) != 0;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="InitialValue"> </param>
-        /// <param name="Offset"> </param>
-        /// <param name="Count"> </param>
-        /// <param name="Scale"> </param>
+        /// <param name="initialValue"> </param>
+        /// <param name="offset"> </param>
+        /// <param name="count"> </param>
         /// <returns></returns>
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static uint ExtractScaled(uint InitialValue, int Offset, int Count, int Scale)
+        public static int ExtractSigned(uint initialValue, int offset, int count)
         {
-            return (uint) ((Extract(InitialValue, Offset, Count) * Scale) / CreateMask(Count));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="InitialValue"> </param>
-        /// <param name="Offset"> </param>
-        /// <returns></returns>
-        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static bool ExtractBool(uint InitialValue, int Offset)
-        {
-            return Extract(InitialValue, Offset, 1) != 0;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="InitialValue"> </param>
-        /// <param name="Offset"> </param>
-        /// <param name="Count"> </param>
-        /// <returns></returns>
-        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static int ExtractSigned(uint InitialValue, int Offset, int Count)
-        {
-            var Mask = CreateMask(Count);
-            uint SignBit = (uint) (1 << (Offset + (Count - 1)));
-            uint _Value = (uint) ((InitialValue >> Offset) & Mask);
-            if ((_Value & SignBit) != 0)
+            var mask = CreateMask(count);
+            var signBit = (uint) (1 << (offset + (count - 1)));
+            var value = (initialValue >> offset) & mask;
+            if ((value & signBit) != 0)
             {
-                _Value |= ~Mask;
+                value |= ~mask;
             }
-            return (int) _Value;
+            return (int) value;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Value"> </param>
-        /// <param name="Offset"> </param>
-        /// <param name="Count"> </param>
-        /// <param name="Scale"> </param>
+        /// <param name="value"> </param>
+        /// <param name="offset"> </param>
+        /// <param name="count"> </param>
+        /// <param name="scale"> </param>
         /// <returns></returns>
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float ExtractUnsignedScaled(uint Value, int Offset, int Count, float Scale = 1.0f)
+        public static float ExtractUnsignedScaled(uint value, int offset, int count, float scale = 1.0f)
         {
-            return ((float) Extract(Value, Offset, Count) / (float) CreateMask(Count)) * Scale;
+            return ((float) Extract(value, offset, count) / CreateMask(count)) * scale;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Arrays"></param>
+        /// <param name="arrays"></param>
         /// <returns></returns>
-        public static byte[] XorBytes(params byte[][] Arrays)
+        public static byte[] XorBytes(params byte[][] arrays)
         {
-            int Length = Arrays[0].Length;
-            foreach (var Array in Arrays)
-                if (Array.Length != Length) throw(new InvalidOperationException("Arrays sizes must match"));
-            var Bytes = new byte[Length];
-            foreach (var Array in Arrays)
+            var length = arrays[0].Length;
+            foreach (var array in arrays)
+                if (array.Length != length) throw(new InvalidOperationException("Arrays sizes must match"));
+            var bytes = new byte[length];
+            foreach (var array in arrays)
             {
-                for (int n = 0; n < Length; n++) Bytes[n] ^= Array[n];
+                for (var n = 0; n < length; n++) bytes[n] ^= array[n];
             }
-            return Bytes;
+            return bytes;
         }
 
         static readonly int[] MultiplyDeBruijnBitPosition =
@@ -205,9 +185,6 @@ namespace CSharpUtils
         /// <param name="v"></param>
         /// <returns></returns>
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-        public static int GetFirstBit1(uint v)
-        {
-            return MultiplyDeBruijnBitPosition[((uint) ((v & -v) * 0x077CB531U)) >> 27];
-        }
+        public static int GetFirstBit1(uint v) => MultiplyDeBruijnBitPosition[((uint) ((v & -v) * 0x077CB531U)) >> 27];
     }
 }

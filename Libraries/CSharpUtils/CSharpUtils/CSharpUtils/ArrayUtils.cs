@@ -4,27 +4,49 @@ using System.Runtime.InteropServices;
 
 namespace CSharpUtils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class ArrayUtils
     {
-        public static IEnumerable<int> Range(int From, int To)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public static IEnumerable<int> Range(int @from, int to)
         {
-            for (int n = From; n < To; n++)
+            for (var n = @from; n < to; n++)
             {
                 yield return n;
             }
         }
 
-        public static IEnumerable<int> Range(int To)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public static IEnumerable<int> Range(int to)
         {
-            return Range(0, To);
+            return Range(0, to);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="length"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public static unsafe T[] CreateArray<T>(void* source, int length)
         {
             var type = typeof(T);
             var sizeInBytes = Marshal.SizeOf(typeof(T));
 
-            T[] output = new T[length];
+            var output = new T[length];
 
             if (type.IsPrimitive)
             {
@@ -49,45 +71,50 @@ namespace CSharpUtils
                         type));
                 }
 
-                IntPtr sourcePtr = new IntPtr(source);
+                //var sourcePtr = new IntPtr(source);
 
-                for (int i = 0; i < length; i++)
+                for (var i = 0; i < length; i++)
                 {
-                    IntPtr p = new IntPtr((byte*) source + i * sizeInBytes);
+                    var p = new IntPtr((byte*) source + i * sizeInBytes);
 
-                    output[i] = (T) System.Runtime.InteropServices.Marshal.PtrToStructure(p, typeof(T));
+                    output[i] = (T) Marshal.PtrToStructure(p, typeof(T));
                 }
             }
             else
             {
-                throw new InvalidOperationException(string.Format("{0} is not supported", type));
+                throw new InvalidOperationException($"{type} is not supported");
             }
 
             return output;
         }
 
-        public static void HexDump(byte[] Data, int MaxSize = -1)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="maxSize"></param>
+        public static void HexDump(byte[] data, int maxSize = -1)
         {
-            if (MaxSize == -1) MaxSize = Data.Length;
-            int Offset = 0;
+            if (maxSize == -1) maxSize = data.Length;
+            var offset = 0;
 
             Console.WriteLine("");
-            while (Offset < MaxSize)
+            while (offset < maxSize)
             {
-                int RowCount = Math.Min(MaxSize - Offset, 16);
+                var rowCount = Math.Min(maxSize - offset, 16);
 
-                for (int n = 0; n < RowCount; n++)
+                for (var n = 0; n < rowCount; n++)
                 {
-                    Console.Write("%02X ".Sprintf(Data[Offset + n]));
+                    Console.Write("%02X ".Sprintf(data[offset + n]));
                 }
-                for (int n = 0; n < RowCount; n++)
+                for (var n = 0; n < rowCount; n++)
                 {
-                    char c = ((char) Data[Offset + n]);
+                    var c = ((char) data[offset + n]);
                     Console.Write("{0}", char.IsControl(c) ? '?' : c);
                 }
 
                 Console.WriteLine("");
-                Offset += RowCount;
+                offset += rowCount;
             }
         }
     }

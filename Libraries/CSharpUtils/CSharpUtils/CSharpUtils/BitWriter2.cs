@@ -1,104 +1,123 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSharpUtils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class BitWriter2
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public enum Direction
         {
         }
 
         Stream Stream;
-        uint CurrentValue;
-        int ByteCapacity = 1;
+        uint _currentValue;
+        readonly int _byteCapacity;
 
-        int BitsCapacity
-        {
-            get { return ByteCapacity * 8; }
-        }
+        int BitsCapacity => _byteCapacity * 8;
 
-        int LeftBits;
+        int _leftBits;
 
-        int CurrentBits
-        {
-            get { return BitsCapacity - LeftBits; }
-        }
+        int CurrentBits => BitsCapacity - _leftBits;
 
         bool LSB;
 
-        public BitWriter2(Stream Stream, int ByteCapacity = 1, bool LSB = false)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="byteCapacity"></param>
+        /// <param name="lsb"></param>
+        public BitWriter2(Stream stream, int byteCapacity = 1, bool lsb = false)
         {
-            this.Stream = Stream;
-            this.ByteCapacity = ByteCapacity;
-            this.LSB = LSB;
+            Stream = stream;
+            _byteCapacity = byteCapacity;
+            LSB = lsb;
             ResetValue();
         }
 
         private void ResetValue()
         {
-            CurrentValue = 0;
-            LeftBits = BitsCapacity;
+            _currentValue = 0;
+            _leftBits = BitsCapacity;
         }
 
-        public BitWriter2 WriteBits(int Count, int Value)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public BitWriter2 WriteBits(int count, int value)
         {
-            WriteBits(Count, (uint) Value);
+            WriteBits(count, (uint) value);
             return this;
         }
 
-        public BitWriter2 WriteBits(int Count, uint Value)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public BitWriter2 WriteBits(int count, uint value)
         {
-            if (Count > LeftBits)
+            if (count > _leftBits)
             {
-                int Bits1 = LeftBits;
-                int Bits2 = Count - LeftBits;
-                WriteBits(Bits1, Value >> (Count - Bits1));
-                WriteBits(Bits2, Value);
+                var bits1 = _leftBits;
+                var bits2 = count - _leftBits;
+                WriteBits(bits1, value >> (count - bits1));
+                WriteBits(bits2, value);
                 return this;
             }
 
             if (LSB)
             {
-                CurrentValue |= (uint) ((Value & BitUtils.CreateMask(Count)) << (CurrentBits));
+                _currentValue |= (value & BitUtils.CreateMask(count)) << (CurrentBits);
             }
             else
             {
-                CurrentValue |= (uint) ((Value & BitUtils.CreateMask(Count)) << (LeftBits - Count));
+                _currentValue |= (value & BitUtils.CreateMask(count)) << (_leftBits - count);
             }
-            LeftBits -= Count;
+            _leftBits -= count;
 
-            if (LeftBits == 0)
+            if (_leftBits != 0) return this;
+            
+            //Console.WriteLine("Writting: {0:X" + (ByteCapacity * 2) + "}", CurrentValue);
+            switch (_byteCapacity)
             {
-                //Console.WriteLine("Writting: {0:X" + (ByteCapacity * 2) + "}", CurrentValue);
-                switch (ByteCapacity)
-                {
-                    case 1:
-                        Stream.WriteByte((byte) CurrentValue);
-                        break;
-                    case 2:
-                        Stream.WriteStruct((ushort) CurrentValue);
-                        break;
-                    case 4:
-                        Stream.WriteStruct((uint) CurrentValue);
-                        break;
-                        throw(new InvalidOperationException());
-                }
-                ResetValue();
+                case 1:
+                    Stream.WriteByte((byte) _currentValue);
+                    break;
+                case 2:
+                    Stream.WriteStruct((ushort) _currentValue);
+                    break;
+                case 4:
+                    // ReSharper disable once RedundantCast
+                    Stream.WriteStruct((uint) _currentValue);
+                    break;
+                default:
+                    throw(new InvalidOperationException());
             }
+            ResetValue();
 
             return this;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Align()
         {
             if (CurrentBits > 0)
             {
-                WriteBits(LeftBits, 0);
+                WriteBits(_leftBits, 0);
             }
         }
     }

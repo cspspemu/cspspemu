@@ -8,6 +8,7 @@ using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Threading.Synchronization;
 using CSharpUtils;
 using System.Runtime.InteropServices;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Gpu
 {

@@ -28,12 +28,12 @@ namespace CSharpUtils.Streams
             /// <summary>
             /// 
             /// </summary>
-            /// <param name="Position"></param>
-            /// <param name="Stream"></param>
-            public StreamEntry(long Position, Stream Stream)
+            /// <param name="position"></param>
+            /// <param name="stream"></param>
+            public StreamEntry(long position, Stream stream)
             {
-                this.Position = Position;
-                this.Stream = Stream;
+                this.Position = position;
+                this.Stream = stream;
             }
 
             /// <summary>
@@ -55,19 +55,15 @@ namespace CSharpUtils.Streams
         }
 
         private List<StreamEntry> _StreamEntries;
-        private long _Position;
-        private Stream _CurrentStream = null;
-        private long _CurrentStreamPosition = 0;
-        private long _CurrentStreamLow = 0;
-        private long _CurrentStreamHigh = 0;
+        private Stream _currentStream;
+        private long _currentStreamPosition;
+        private long _currentStreamLow;
+        private long _currentStreamHigh;
 
         /// <summary>
         /// 
         /// </summary>
-        public IEnumerable<StreamEntry> StreamEntries
-        {
-            get { return _StreamEntries.AsReadOnly(); }
-        }
+        public IEnumerable<StreamEntry> StreamEntries => _StreamEntries.AsReadOnly();
 
         /// <summary>
         /// 
@@ -75,21 +71,21 @@ namespace CSharpUtils.Streams
         public MapStream()
         {
             _StreamEntries = new List<StreamEntry>();
-            _CurrentStream = null;
-            _CurrentStreamPosition = 0;
-            _CurrentStreamLow = 0;
-            _CurrentStreamHigh = 0;
+            _currentStream = null;
+            _currentStreamPosition = 0;
+            _currentStreamLow = 0;
+            _currentStreamHigh = 0;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Offset"></param>
-        /// <param name="Stream"></param>
+        /// <param name="offset"></param>
+        /// <param name="stream"></param>
         /// <returns></returns>
-        public MapStream Map(long Offset, Stream Stream)
+        public MapStream Map(long offset, Stream stream)
         {
-            _StreamEntries.Add(new StreamEntry(Offset, Stream));
+            _StreamEntries.Add(new StreamEntry(offset, stream));
             return this;
         }
 
@@ -97,47 +93,38 @@ namespace CSharpUtils.Streams
         /// Function that writtes all the mappings into another stream.
         /// Useful for patching a file or memory.
         /// </summary>
-        /// <param name="TargetStream">Stream to write the mapped contents to</param>
-        public void WriteSegmentsToStream(Stream TargetStream)
+        /// <param name="targetStream">Stream to write the mapped contents to</param>
+        public void WriteSegmentsToStream(Stream targetStream)
         {
-            foreach (var StreamEntry in _StreamEntries)
+            foreach (var streamEntry in _StreamEntries)
             {
-                var SourceSliceStream = StreamEntry.Stream.SliceWithLength(0, StreamEntry.Length);
-                var TargetSliceStream = TargetStream.SliceWithLength(StreamEntry.Position, StreamEntry.Length);
-                SourceSliceStream.CopyToFast(TargetSliceStream);
+                var sourceSliceStream = streamEntry.Stream.SliceWithLength(0, streamEntry.Length);
+                var targetSliceStream = targetStream.SliceWithLength(streamEntry.Position, streamEntry.Length);
+                sourceSliceStream.CopyToFast(targetSliceStream);
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public override bool CanRead
-        {
-            get { return true; }
-        }
+        public override bool CanRead => true;
 
         /// <summary>
         /// 
         /// </summary>
-        public override bool CanSeek
-        {
-            get { return true; }
-        }
+        public override bool CanSeek => true;
 
         /// <summary>
         /// 
         /// </summary>
-        public override bool CanWrite
-        {
-            get { return false; }
-        }
+        public override bool CanWrite => false;
 
         /// <summary>
         /// 
         /// </summary>
         public override void Flush()
         {
-            foreach (var StreamEntry in _StreamEntries) StreamEntry.Stream.Flush();
+            foreach (var streamEntry in _StreamEntries) streamEntry.Stream.Flush();
         }
 
         /// <summary>
@@ -145,17 +132,13 @@ namespace CSharpUtils.Streams
         /// </summary>
         public override long Length
         {
-            get { return _StreamEntries.Max(StreamEntry => StreamEntry.Position + StreamEntry.Length); }
+            get { return _StreamEntries.Max(streamEntry => streamEntry.Position + streamEntry.Length); }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public override long Position
-        {
-            get { return _Position; }
-            set { _Position = value; }
-        }
+        public override long Position { get; set; }
 
         /// <summary>
         /// 
@@ -163,29 +146,29 @@ namespace CSharpUtils.Streams
         private void _PrepareCurrentStream()
         {
             // Cached!
-            if ((Position >= _CurrentStreamLow) && (Position < _CurrentStreamHigh))
+            if (Position >= _currentStreamLow && Position < _currentStreamHigh)
             {
-                _CurrentStreamPosition = Position - _CurrentStreamLow;
+                _currentStreamPosition = Position - _currentStreamLow;
             }
             // Not Cached!
             else
             {
-                foreach (var StreamEntry in _StreamEntries)
+                foreach (var streamEntry in _StreamEntries)
                 {
-                    if ((Position >= StreamEntry.Position) && (Position < StreamEntry.Position + StreamEntry.Length))
+                    if ((Position >= streamEntry.Position) && (Position < streamEntry.Position + streamEntry.Length))
                     {
-                        _CurrentStream = StreamEntry.Stream;
-                        _CurrentStreamLow = StreamEntry.Position;
-                        _CurrentStreamHigh = StreamEntry.Position + StreamEntry.Length;
-                        _CurrentStreamPosition = Position - StreamEntry.Position;
+                        _currentStream = streamEntry.Stream;
+                        _currentStreamLow = streamEntry.Position;
+                        _currentStreamHigh = streamEntry.Position + streamEntry.Length;
+                        _currentStreamPosition = Position - streamEntry.Position;
                         return;
                     }
                 }
 
-                _CurrentStream = null;
-                _CurrentStreamPosition = 0;
-                _CurrentStreamLow = 0;
-                _CurrentStreamHigh = 0;
+                _currentStream = null;
+                _currentStreamPosition = 0;
+                _currentStreamLow = 0;
+                _currentStreamHigh = 0;
 
                 //_Position
             }
@@ -195,89 +178,80 @@ namespace CSharpUtils.Streams
         /// 
         /// </summary>
         /// <returns></returns>
-        private long GetAvailableBytesOnCurrentStream()
-        {
-            return _CurrentStream.Length - _CurrentStreamPosition;
-        }
+        private long GetAvailableBytesOnCurrentStream() => _currentStream.Length - _currentStreamPosition;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Buffer"></param>
-        /// <param name="Offset"></param>
-        /// <param name="Count"></param>
-        /// <param name="Method"></param>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <param name="method"></param>
         /// <returns></returns>
-        private long _Transfer(byte[] Buffer, long Offset, long Count, Func<byte[], long, long, long> Method)
+        private long _Transfer(byte[] buffer, long offset, long count, Func<byte[], long, long, long> method)
         {
-            if (Count == 0) return 0;
+            if (count == 0) return 0;
 
             _PrepareCurrentStream();
-            if (_CurrentStream == null)
-                throw (new InvalidOperationException(String.Format("Invalid/Unmapped MapStream position {0}", Position))
-                );
+            if (_currentStream == null)
+                throw new InvalidOperationException($"Invalid/Unmapped MapStream position {Position}");
 
-            var AvailableCount = GetAvailableBytesOnCurrentStream();
+            var availableCount = GetAvailableBytesOnCurrentStream();
 
-            if (Count > AvailableCount)
+            if (count > availableCount)
             {
                 // Read from current Stream.
-                var Readed1 = _Transfer(Buffer, Offset, AvailableCount, Method);
+                var readed1 = _Transfer(buffer, offset, availableCount, method);
 
-                if (Readed1 == 0)
+                if (readed1 == 0)
                 {
                     return 0;
                 }
-                else
-                {
-                    // Try to read from the next Stream.
-                    var Readed2 = _Transfer(Buffer, Offset + AvailableCount, Count - AvailableCount, Method);
+                // Try to read from the next Stream.
+                var readed2 = _Transfer(buffer, offset + availableCount, count - availableCount, method);
 
-                    return Readed1 + Readed2;
-                }
+                return readed1 + readed2;
             }
-            else
+
+            long actualReaded = 0;
+
+            //_PrepareCurrentStream();
+            _currentStream.PreservePositionAndLock(() =>
             {
-                long ActualReaded = 0;
+                _currentStream.Position = _currentStreamPosition;
+                actualReaded = method(buffer, offset, count);
+            });
 
-                //_PrepareCurrentStream();
-                _CurrentStream.PreservePositionAndLock(() =>
-                {
-                    _CurrentStream.Position = _CurrentStreamPosition;
-                    ActualReaded = Method(Buffer, Offset, Count);
-                });
+            Position += actualReaded;
 
-                Position += ActualReaded;
-
-                return ActualReaded;
-            }
+            return actualReaded;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Buffer"></param>
-        /// <param name="Offset"></param>
-        /// <param name="Count"></param>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
         /// <returns></returns>
-        public override int Read(byte[] Buffer, int Offset, int Count)
+        public override int Read(byte[] buffer, int offset, int count)
         {
-            return (int) _Transfer(Buffer, Offset, Count,
-                (_Buffer, _Offset, _Count) => { return _CurrentStream.Read(_Buffer, (int) _Offset, (int) _Count); });
+            return (int) _Transfer(buffer, offset, count,
+                (buf, off, cnt) => _currentStream.Read(buf, (int) off, (int) cnt));
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Buffer"></param>
-        /// <param name="Offset"></param>
-        /// <param name="Count"></param>
-        public override void Write(byte[] Buffer, int Offset, int Count)
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        public override void Write(byte[] buffer, int offset, int count)
         {
-            _Transfer(Buffer, Offset, Count, (_Buffer, _Offset, _Count) =>
+            _Transfer(buffer, offset, count, (buf, off, cnt) =>
             {
-                _CurrentStream.Write(_Buffer, (int) _Offset, (int) _Count);
-                return _Count;
+                _currentStream.Write(buf, (int) off, (int) cnt);
+                return cnt;
             });
         }
 
@@ -314,87 +288,87 @@ namespace CSharpUtils.Streams
         }
     }
 
-    public sealed partial class MapStream : Stream
+    public sealed partial class MapStream
     {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="TargetStream"></param>
-        public void Serialize(Stream TargetStream)
+        /// <param name="targetStream"></param>
+        public void Serialize(Stream targetStream)
         {
             // Magic
-            TargetStream.WriteString("MAPS");
+            targetStream.WriteString("MAPS");
 
             // Version
-            TargetStream.WriteVariableUlongBit8Extends(1);
+            targetStream.WriteVariableUlongBit8Extends(1);
 
             // ListEntryCount
-            TargetStream.WriteVariableUlongBit8Extends((ulong) _StreamEntries.Count);
+            targetStream.WriteVariableUlongBit8Extends((ulong) _StreamEntries.Count);
 
             //ulong FileOffset = 0;
 
             // EntryHeaders
-            foreach (var StreamEntry in _StreamEntries)
+            foreach (var streamEntry in _StreamEntries)
             {
                 // EntryFileOffset
                 //TargetStream.WriteVariableUlongBit8Extends(FileOffset);
 
                 // EntryMapOffset
-                TargetStream.WriteVariableUlongBit8Extends((ulong) StreamEntry.Position);
+                targetStream.WriteVariableUlongBit8Extends((ulong) streamEntry.Position);
 
                 // EntryLength
-                TargetStream.WriteVariableUlongBit8Extends((ulong) StreamEntry.Length);
+                targetStream.WriteVariableUlongBit8Extends((ulong) streamEntry.Length);
             }
 
             // EntryContents
-            foreach (var StreamEntry in _StreamEntries)
+            foreach (var streamEntry in _StreamEntries)
             {
-                StreamEntry.Stream.SliceWithLength(0, StreamEntry.Length).CopyToFast(TargetStream);
+                streamEntry.Stream.SliceWithLength(0, streamEntry.Length).CopyToFast(targetStream);
             }
 
-            TargetStream.Flush();
+            targetStream.Flush();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="TargetStream"></param>
+        /// <param name="targetStream"></param>
         /// <returns></returns>
-        public static MapStream Unserialize(Stream TargetStream)
+        public static MapStream Unserialize(Stream targetStream)
         {
-            if (TargetStream.ReadString(4) != "MAPS")
+            if (targetStream.ReadString(4) != "MAPS")
                 throw (new InvalidDataException("Not a MapStream serialized stream"));
 
-            var Version = TargetStream.ReadVariableUlongBit8Extends();
-            var MapStream = new MapStream();
+            var version = targetStream.ReadVariableUlongBit8Extends();
+            var mapStream = new MapStream();
 
-            switch (Version)
+            switch (version)
             {
                 case 1:
-                    var EntryCount = (int) TargetStream.ReadVariableUlongBit8Extends();
-                    var Entries = new Tuple<ulong, ulong>[EntryCount];
-                    for (int n = 0; n < EntryCount; n++)
+                    var entryCount = (int) targetStream.ReadVariableUlongBit8Extends();
+                    var entries = new Tuple<ulong, ulong>[entryCount];
+                    for (var n = 0; n < entryCount; n++)
                     {
                         //var EntryFileOffset = TargetStream.ReadVariableUlongBit8Extends();
-                        var EntryMapOffset = TargetStream.ReadVariableUlongBit8Extends();
-                        var EntryLength = TargetStream.ReadVariableUlongBit8Extends();
-                        Entries[n] = new Tuple<ulong, ulong>(EntryMapOffset, EntryLength);
+                        var entryMapOffset = targetStream.ReadVariableUlongBit8Extends();
+                        var entryLength = targetStream.ReadVariableUlongBit8Extends();
+                        entries[n] = new Tuple<ulong, ulong>(entryMapOffset, entryLength);
                     }
 
-                    foreach (var Entry in Entries)
+                    foreach (var entry in entries)
                     {
-                        var EntryMapOffset = Entry.Item1;
-                        var EntryLength = Entry.Item2;
-                        var EntryStream = TargetStream.ReadStream((long) EntryLength);
-                        MapStream.Map((long) EntryMapOffset, EntryStream);
+                        var entryMapOffset = entry.Item1;
+                        var entryLength = entry.Item2;
+                        var entryStream = targetStream.ReadStream((long) entryLength);
+                        mapStream.Map((long) entryMapOffset, entryStream);
                     }
 
                     break;
                 default:
-                    throw (new InvalidDataException("Unsupported MapStream serialized stream version " + Version));
+                    throw (new InvalidDataException("Unsupported MapStream serialized stream version " + version));
             }
 
-            return MapStream;
+            return mapStream;
         }
     }
 }

@@ -12,21 +12,15 @@ namespace CSharpUtils
     /// </summary>
     public class BitReader
     {
-        uint readData = 0;
-        int startPosition = 0;
-        int endPosition = 0;
+        uint _readData;
+        int _startPosition;
+        int _endPosition;
 
-        internal int InBuffer
-        {
-            get { return endPosition - startPosition; }
-        }
+        internal int InBuffer => _endPosition - _startPosition;
 
         private Stream stream;
 
-        internal Stream BaseStream
-        {
-            get { return stream; }
-        }
+        internal Stream BaseStream => stream;
 
         internal BitReader(Stream stream)
         {
@@ -35,49 +29,49 @@ namespace CSharpUtils
 
         void EnsureData(int bitCount)
         {
-            int readBits = bitCount - InBuffer;
+            var readBits = bitCount - InBuffer;
             while (readBits > 0)
             {
-                int b = BaseStream.ReadByte();
+                var b = BaseStream.ReadByte();
 
                 if (b < 0) throw new Exception("Unexpected end of stream");
 
-                readData |= checked((uint) b << endPosition);
-                endPosition += 8;
+                _readData |= checked((uint) b << _endPosition);
+                _endPosition += 8;
                 readBits -= 8;
             }
         }
 
         internal bool ReadBit()
         {
-            return ReadLSB(1) > 0;
+            return ReadLsb(1) > 0;
         }
 
-        internal int ReadLSB(int bitCount)
+        internal int ReadLsb(int bitCount)
         {
             EnsureData(bitCount);
 
-            int result = (int) (readData >> startPosition) & ((1 << bitCount) - 1);
-            startPosition += bitCount;
-            if (endPosition == startPosition)
+            var result = (int) (_readData >> _startPosition) & ((1 << bitCount) - 1);
+            _startPosition += bitCount;
+            if (_endPosition == _startPosition)
             {
-                endPosition = startPosition = 0;
-                readData = 0;
+                _endPosition = _startPosition = 0;
+                _readData = 0;
             }
-            else if (startPosition >= 8)
+            else if (_startPosition >= 8)
             {
-                readData >>= startPosition;
-                endPosition -= startPosition;
-                startPosition = 0;
+                _readData >>= _startPosition;
+                _endPosition -= _startPosition;
+                _startPosition = 0;
             }
 
             return result;
         }
 
-        internal int ReadMSB(int bitCount)
+        internal int ReadMsb(int bitCount)
         {
-            int result = 0;
-            for (int i = 0; i < bitCount; i++)
+            var result = 0;
+            for (var i = 0; i < bitCount; i++)
             {
                 result <<= 1;
                 if (ReadBit()) result |= 1;
@@ -88,8 +82,8 @@ namespace CSharpUtils
 
         internal void Align()
         {
-            endPosition = startPosition = 0;
-            readData = 0;
+            _endPosition = _startPosition = 0;
+            _readData = 0;
         }
     }
 }

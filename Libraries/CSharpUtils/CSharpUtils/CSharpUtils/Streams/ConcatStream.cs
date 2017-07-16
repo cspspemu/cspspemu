@@ -3,58 +3,79 @@ using System.IO;
 
 namespace CSharpUtils.Streams
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ConcatStream : Stream
     {
         Stream Stream1;
         Stream Stream2;
-        long _Position;
+        long _position;
 
-        public ConcatStream(Stream Stream1, Stream Stream2)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stream1"></param>
+        /// <param name="stream2"></param>
+        public ConcatStream(Stream stream1, Stream stream2)
         {
-            this.Stream1 = Stream1;
-            this.Stream2 = Stream2;
+            Stream1 = stream1;
+            Stream2 = stream2;
         }
 
-        public override bool CanRead
-        {
-            get { return true; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public override bool CanRead => true;
 
-        public override bool CanSeek
-        {
-            get { return true; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public override bool CanSeek => true;
 
-        public override bool CanWrite
-        {
-            get { return false; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public override bool CanWrite => false;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override void Flush()
         {
         }
 
-        public override long Length
-        {
-            get { return Stream1.Length + Stream2.Length; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public override long Length => Stream1.Length + Stream2.Length;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override long Position
         {
-            get { return _Position; }
-            set { _Position = Math.Min(value, Length); }
+            get => _position;
+            set => _position = Math.Min(value, Length);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            int readed = 0;
+            var readed = 0;
 
             // Just the second stream.
-            if (Position >= this.Stream1.Length)
+            if (Position >= Stream1.Length)
             {
                 Stream2.PreservePositionAndLock(() =>
                 {
-                    Stream2.Position = Position - this.Stream1.Length;
+                    Stream2.Position = Position - Stream1.Length;
                     readed += Stream2.Read(buffer, offset + readed, count);
                 });
 
@@ -63,9 +84,9 @@ namespace CSharpUtils.Streams
             // On the first stream, and maybe a part of the second.
             else
             {
-                if (Position + count > this.Stream1.Length)
+                if (Position + count > Stream1.Length)
                 {
-                    int count1 = (int) (this.Stream1.Length - Position);
+                    var count1 = (int) (Stream1.Length - Position);
                     readed += Read(buffer, offset + readed, count1);
                     readed += Read(buffer, offset + readed, count - count1);
                 }
@@ -84,6 +105,12 @@ namespace CSharpUtils.Streams
             return readed;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <param name="origin"></param>
+        /// <returns></returns>
         public override long Seek(long offset, SeekOrigin origin)
         {
             switch (origin)
@@ -101,11 +128,23 @@ namespace CSharpUtils.Streams
             return Position;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <exception cref="NotImplementedException"></exception>
         public override void SetLength(long value)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <exception cref="NotImplementedException"></exception>
         public override void Write(byte[] buffer, int offset, int count)
         {
             throw new NotImplementedException();

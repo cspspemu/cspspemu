@@ -1,29 +1,40 @@
 ﻿using System;
 
-public static class DateTimeExtensions
+namespace CSharpUtils.Extensions
 {
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="DateTime"></param>
-    /// <returns></returns>
-    public static long GetTotalNanoseconds(this DateTime DateTime)
+    public static class DateTimeExtensions
     {
-        return DateTime.Ticks * 10;
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
+        public static long GetTotalNanoseconds(this DateTime dateTime)
+        {
+            return dateTime.Ticks * 10;
+        }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="DateTime"></param>
-    /// <returns></returns>
-    public static long GetTotalMicroseconds(this DateTime DateTime)
-    {
-        return DateTime.Ticks / 10;
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
+        public static long GetTotalMicroseconds(this DateTime dateTime)
+        {
+            return dateTime.Ticks / 10;
+        }
 
-    public static DateTime FromMicroseconds(long Microseconds)
-    {
-        return new DateTime(Microseconds * 10);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="microseconds"></param>
+        /// <returns></returns>
+        public static DateTime FromMicroseconds(long microseconds)
+        {
+            return new DateTime(microseconds * 10);
+        }
     }
 }

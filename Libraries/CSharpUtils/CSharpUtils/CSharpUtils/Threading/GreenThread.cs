@@ -194,8 +194,14 @@ namespace CSharpUtils.Threading
 		}
 	}
 #else
+    /// <summary>
+    /// 
+    /// </summary>
     public class GreenThread : IDisposable
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public class StopException : Exception
         {
         }
@@ -207,22 +213,25 @@ namespace CSharpUtils.Threading
         protected Semaphore ParentSemaphore;
         protected Semaphore ThisSemaphore;
         protected static ThreadLocal<GreenThread> ThisGreenThreadList = new ThreadLocal<GreenThread>();
-        public static int GreenThreadLastId = 0;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public static int GreenThreadLastId;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public static Thread MonitorThread;
 
-        private Exception RethrowException;
+        private Exception _rethrowException;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool Running { get; protected set; }
+
         protected bool Kill;
-
-        public GreenThread()
-        {
-        }
-
-        ~GreenThread()
-        {
-        }
 
         void ThisSemaphoreWaitOrParentThreadStopped()
         {
@@ -249,10 +258,14 @@ namespace CSharpUtils.Threading
             }
         }
 
-        public void InitAndStartStopped(Action Action)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
+        public void InitAndStartStopped(Action action)
         {
-            this.Action = Action;
-            this.ParentThread = Thread.CurrentThread;
+            Action = action;
+            ParentThread = Thread.CurrentThread;
 
             ParentSemaphore = new Semaphore(1, 1);
             ParentSemaphore.WaitOne();
@@ -262,7 +275,7 @@ namespace CSharpUtils.Threading
 
             var This = this;
 
-            this.CurrentThread = new Thread(() =>
+            CurrentThread = new Thread(() =>
             {
                 Console.WriteLine("GreenThread.Start()");
                 ThisGreenThreadList.Value = This;
@@ -270,15 +283,15 @@ namespace CSharpUtils.Threading
                 try
                 {
                     Running = true;
-                    Action();
+                    action();
                 }
                 catch (StopException)
                 {
                 }
 #if !DO_NOT_PROPAGATE_EXCEPTIONS
-                catch (Exception Exception)
+                catch (Exception e)
                 {
-                    RethrowException = Exception;
+                    _rethrowException = e;
                 }
 #endif
                 finally
@@ -290,6 +303,7 @@ namespace CSharpUtils.Threading
                     }
                     catch
                     {
+                        // ignored
                     }
                     Console.WriteLine("GreenThread.End()");
                 }
@@ -297,9 +311,9 @@ namespace CSharpUtils.Threading
                 //Console.WriteLine("GreenThread.Running: {0}", Running);
             });
 
-            this.CurrentThread.Name = "GreenThread-" + GreenThreadLastId++;
+            CurrentThread.Name = "GreenThread-" + GreenThreadLastId++;
 
-            this.CurrentThread.Start();
+            CurrentThread.Start();
         }
 
         /// <summary>
@@ -316,17 +330,17 @@ namespace CSharpUtils.Threading
             }
             //ThisSemaphoreWaitOrParentThreadStopped();
             ParentSemaphore.WaitOne();
-            if (RethrowException != null)
+            if (_rethrowException != null)
             {
                 try
                 {
                     //StackTraceUtils.PreserveStackTrace(RethrowException);
-                    throw (new GreenThreadException("GreenThread Exception", RethrowException));
+                    throw (new GreenThreadException("GreenThread Exception", _rethrowException));
                     //throw (RethrowException);
                 }
                 finally
                 {
-                    RethrowException = null;
+                    _rethrowException = null;
                 }
             }
         }
@@ -339,19 +353,19 @@ namespace CSharpUtils.Threading
         {
             if (ThisGreenThreadList.IsValueCreated)
             {
-                var GreenThread = ThisGreenThreadList.Value;
-                if (GreenThread.Running)
+                var greenThread = ThisGreenThreadList.Value;
+                if (greenThread.Running)
                 {
                     try
                     {
-                        GreenThread.Running = false;
+                        greenThread.Running = false;
 
-                        GreenThread.ParentSemaphore.Release();
-                        GreenThread.ThisSemaphoreWaitOrParentThreadStopped();
+                        greenThread.ParentSemaphore.Release();
+                        greenThread.ThisSemaphoreWaitOrParentThreadStopped();
                     }
                     finally
                     {
-                        GreenThread.Running = true;
+                        greenThread.Running = true;
                     }
                 }
                 else
@@ -361,11 +375,18 @@ namespace CSharpUtils.Threading
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
         public static void StopAll()
         {
             throw(new NotImplementedException());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Stop()
         {
             Kill = true;
@@ -373,19 +394,22 @@ namespace CSharpUtils.Threading
             //CurrentThread.Abort();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
             Stop();
             //Stop();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string Name
         {
-            get { return CurrentThread.Name; }
-            set
-            {
-                //CurrentThread.Name = Name;
-            }
+            set => CurrentThread.Name = value;
+            get => CurrentThread.Name;
         }
     }
 #endif

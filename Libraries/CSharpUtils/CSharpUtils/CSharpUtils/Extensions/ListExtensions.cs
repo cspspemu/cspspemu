@@ -1,77 +1,116 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public static class ListExtensions
+namespace CSharpUtils.Extensions
 {
-    public static int BoundIndex<T>(this List<T> SortedAndNonRepeatedItems, T Item, int LowerIndex, int HigherIndex)
-        where T : IComparable
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class ListExtensions
     {
-        //Console.WriteLine("[{0}, {1}]", LowerIndex, HigherIndex);
-        int Index = LowerIndex;
-        int MinIndex = LowerIndex;
-        int MaxIndex = HigherIndex;
-        int MaxIterations = 100;
-        while (HigherIndex > LowerIndex)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sortedAndNonRepeatedItems"></param>
+        /// <param name="item"></param>
+        /// <param name="lowerIndex"></param>
+        /// <param name="higherIndex"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static int BoundIndex<T>(this List<T> sortedAndNonRepeatedItems, T item, int lowerIndex, int higherIndex)
+            where T : IComparable
         {
-            if (HigherIndex - LowerIndex <= 2)
+            //Console.WriteLine("[{0}, {1}]", LowerIndex, HigherIndex);
+            var index = lowerIndex;
+            //var minIndex = lowerIndex;
+            //var maxIndex = higherIndex;
+            var maxIterations = 100;
+            while (higherIndex > lowerIndex)
             {
-                LowerIndex++;
-            }
-            Index = LowerIndex + (HigherIndex - LowerIndex) / 2;
-            int Sign = SortedAndNonRepeatedItems[Index].CompareTo(Item);
-            //Console.WriteLine(String.Format("Index: {0} [{1} - {2}] : {3}", Index, LowerIndex, HigherIndex, Sign));
+                if (higherIndex - lowerIndex <= 2)
+                {
+                    lowerIndex++;
+                }
+                index = lowerIndex + (higherIndex - lowerIndex) / 2;
+                var sign = sortedAndNonRepeatedItems[index].CompareTo(item);
+                //Console.WriteLine(String.Format("Index: {0} [{1} - {2}] : {3}", Index, LowerIndex, HigherIndex, Sign));
 
-            if (Sign < 0)
-            {
-                LowerIndex = Index;
+                if (sign < 0)
+                {
+                    lowerIndex = index;
+                }
+                else if (sign > 0)
+                {
+                    higherIndex = index;
+                }
+                else
+                {
+                    break;
+                }
+                if (maxIterations-- <= 0)
+                {
+                    throw(new Exception("Internal Error!"));
+                }
             }
-            else if (Sign > 0)
+
+            return index;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sortedAndNonRepeatedItems"></param>
+        /// <param name="item"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static int BoundIndex<T>(this List<T> sortedAndNonRepeatedItems, T item) where T : IComparable
+        {
+            return sortedAndNonRepeatedItems.BoundIndex(item, 0, sortedAndNonRepeatedItems.Count - 1);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sortedAndNonRepeatedItems"></param>
+        /// <param name="item"></param>
+        /// <param name="including"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static IEnumerable<T> LowerBound<T>(this List<T> sortedAndNonRepeatedItems, T item, bool including = true)
+            where T : IComparable
+        {
+            var index = Math.Min(sortedAndNonRepeatedItems.BoundIndex(item) + 1, sortedAndNonRepeatedItems.Count - 1);
+            var compareValue = including ? 1 : 0;
+            for (; index >= 0; index--)
             {
-                HigherIndex = Index;
-            }
-            else
-            {
-                break;
-            }
-            if (MaxIterations-- <= 0)
-            {
-                throw(new Exception("Internal Error!"));
+                //Console.WriteLine(Index);
+                if (sortedAndNonRepeatedItems[index].CompareTo(item) < compareValue)
+                {
+                    yield return sortedAndNonRepeatedItems[index];
+                }
             }
         }
 
-        return Index;
-    }
-
-    public static int BoundIndex<T>(this List<T> SortedAndNonRepeatedItems, T Item) where T : IComparable
-    {
-        return SortedAndNonRepeatedItems.BoundIndex(Item, 0, SortedAndNonRepeatedItems.Count - 1);
-    }
-
-    public static IEnumerable<T> LowerBound<T>(this List<T> SortedAndNonRepeatedItems, T Item, bool Including = true)
-        where T : IComparable
-    {
-        int Index = Math.Min(SortedAndNonRepeatedItems.BoundIndex(Item) + 1, SortedAndNonRepeatedItems.Count - 1);
-        int CompareValue = Including ? 1 : 0;
-        for (; Index >= 0; Index--)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sortedAndNonRepeatedItems"></param>
+        /// <param name="item"></param>
+        /// <param name="including"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static IEnumerable<T> UpperBound<T>(this List<T> sortedAndNonRepeatedItems, T item, bool including = true)
+            where T : IComparable
         {
-            //Console.WriteLine(Index);
-            if (SortedAndNonRepeatedItems[Index].CompareTo(Item) < CompareValue)
+            var index = Math.Max(sortedAndNonRepeatedItems.BoundIndex(item) - 1, 0);
+            var compareValue = including ? -1 : 0;
+            for (; index < sortedAndNonRepeatedItems.Count; index++)
             {
-                yield return SortedAndNonRepeatedItems[Index];
-            }
-        }
-    }
-
-    public static IEnumerable<T> UpperBound<T>(this List<T> SortedAndNonRepeatedItems, T Item, bool Including = true)
-        where T : IComparable
-    {
-        int Index = Math.Max(SortedAndNonRepeatedItems.BoundIndex(Item) - 1, 0);
-        int CompareValue = Including ? -1 : 0;
-        for (; Index < SortedAndNonRepeatedItems.Count; Index++)
-        {
-            if (SortedAndNonRepeatedItems[Index].CompareTo(Item) > CompareValue)
-            {
-                yield return SortedAndNonRepeatedItems[Index];
+                if (sortedAndNonRepeatedItems[index].CompareTo(item) > compareValue)
+                {
+                    yield return sortedAndNonRepeatedItems[index];
+                }
             }
         }
     }

@@ -2,9 +2,17 @@
 
 namespace CSharpUtils.Threading
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class GreenThreadException : Exception
     {
-        public GreenThreadException(string Name, Exception InnerException) : base(Name, InnerException)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="innerException"></param>
+        public GreenThreadException(string name, Exception innerException) : base(name, innerException)
         {
         }
     }

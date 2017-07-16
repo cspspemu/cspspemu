@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace CSharpUtils.Factory
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class MockeableFactory : Factory
     {
         Dictionary<Type, Type> MockedTypes = new Dictionary<Type, Type>();
@@ -10,11 +13,11 @@ namespace CSharpUtils.Factory
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="TypeToMock"></param>
-        /// <param name="MockedType"></param>
-        public void MockType(Type TypeToMock, Type MockedType)
+        /// <param name="typeToMock"></param>
+        /// <param name="mockedType"></param>
+        public void MockType(Type typeToMock, Type mockedType)
         {
-            MockedTypes[TypeToMock] = MockedType;
+            MockedTypes[typeToMock] = mockedType;
         }
 
         /// <summary>

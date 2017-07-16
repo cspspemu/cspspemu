@@ -19,12 +19,12 @@ namespace CSharpUtils.Threading
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Item"></param>
-        public void AddFirst(T Item)
+        /// <param name="item"></param>
+        public void AddFirst(T item)
         {
             lock (this)
             {
-                Queue.AddFirst(Item);
+                Queue.AddFirst(item);
                 HasItems.Set();
             }
         }
@@ -32,12 +32,12 @@ namespace CSharpUtils.Threading
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Item"></param>
-        public void AddLast(T Item)
+        /// <param name="item"></param>
+        public void AddLast(T item)
         {
             lock (this)
             {
-                Queue.AddLast(Item);
+                Queue.AddLast(item);
                 HasItems.Set();
             }
         }
@@ -48,13 +48,13 @@ namespace CSharpUtils.Threading
         /// <returns></returns>
         public T ReadOne()
         {
-            HasItems.WaitOne();
             lock (this)
             {
-                var Item = Queue.First.Value;
+                HasItems.WaitOne();
+                var item = Queue.First.Value;
                 Queue.RemoveFirst();
                 if (Queue.Count == 0) HasItems.Reset();
-                return Item;
+                return item;
             }
         }
     }
