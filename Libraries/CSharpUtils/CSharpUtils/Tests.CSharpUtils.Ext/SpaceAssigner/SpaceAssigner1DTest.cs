@@ -87,13 +87,15 @@ namespace CSharpUtilsTests
         }
 
         [Test]
-        [ExpectedException(typeof(Exception))]
         public void AllocateNotEnoughSpaceTest()
         {
-            SpaceAssigner1D.AddAvailable(new SpaceAssigner1D.Space(0, 10));
-            SpaceAssigner1D.AddAvailable(new SpaceAssigner1D.Space(10, 20));
-            SpaceAssigner1D.AddAvailable(new SpaceAssigner1D.Space(21, 100));
-            var Space1 = SpaceAssigner1D.Allocate(200);
+            Assert.Throws<Exception>(() =>
+            {
+                SpaceAssigner1D.AddAvailable(new SpaceAssigner1D.Space(0, 10));
+                SpaceAssigner1D.AddAvailable(new SpaceAssigner1D.Space(10, 20));
+                SpaceAssigner1D.AddAvailable(new SpaceAssigner1D.Space(21, 100));
+                var Space1 = SpaceAssigner1D.Allocate(200);
+            });
         }
     }
 }
