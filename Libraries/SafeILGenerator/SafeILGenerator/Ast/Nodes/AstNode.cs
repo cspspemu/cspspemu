@@ -1,41 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace SafeILGenerator.Ast.Nodes
 {
-	public delegate AstNode TransformNodesDelegate(AstNode AstNode);
+	public delegate AstNode TransformNodesDelegate(AstNode astNode);
 
-	static public class TransformNodesDelegateExtensions
+	public static class TransformNodesDelegateExtensions
 	{
-		static public void Ref<T>(this TransformNodesDelegate Transformer, ref T Node) where T : AstNode
+		public static void Ref<T>(this TransformNodesDelegate transformer, ref T node) where T : AstNode
 		{
-			Node = (T)Transformer(Node);
+			node = (T)transformer(node);
 		}
 
-		static public void Ref<T>(this TransformNodesDelegate Transformer, ref List<T> Nodes) where T : AstNode
+		public static void Ref<T>(this TransformNodesDelegate transformer, ref List<T> nodes) where T : AstNode
 		{
-			var NewNodes = new List<T>();
-			foreach (var Node in Nodes)
+			var newNodes = new List<T>();
+			foreach (var node in nodes)
 			{
-				var NewNode = (T)Transformer(Node);
-				if (NewNode != null) NewNodes.Add(NewNode);
+				var newNode = (T)transformer(node);
+				if (newNode != null) newNodes.Add(newNode);
 			}
-			Nodes = NewNodes;
+			nodes = newNodes;
 
 		}
 
-		static public void Ref<T>(this TransformNodesDelegate Transformer, ref T[] Nodes) where T : AstNode
+		public static void Ref<T>(this TransformNodesDelegate transformer, ref T[] nodes) where T : AstNode
 		{
-			var NewNodes = new List<T>();
-			foreach (var Node in Nodes)
+			var newNodes = new List<T>();
+			foreach (var node in nodes)
 			{
-				var NewNode = (T)Transformer(Node);
-				if (NewNode != null) NewNodes.Add(NewNode);
+				var newNode = (T)transformer(node);
+				if (newNode != null) newNodes.Add(newNode);
 			}
-			Nodes = NewNodes.ToArray();
+			nodes = newNodes.ToArray();
 			
 		}
 	}
@@ -43,19 +39,19 @@ namespace SafeILGenerator.Ast.Nodes
 	public abstract class AstNode
 	{
 		public AstNode Parent;
-		public abstract void TransformNodes(TransformNodesDelegate Transformer);
-		public virtual Dictionary<string, string> Info { get { return null; } }
+		public abstract void TransformNodes(TransformNodesDelegate transformer);
+		public virtual Dictionary<string, string> Info => null;
 
 		public IEnumerable<AstNode> Descendant
 		{
 			get
 			{
-				foreach (var Child in Childs)
+				foreach (var child in Childs)
 				{
-					yield return Child;
-					foreach (var GrandChild in Child.Descendant)
+					yield return child;
+					foreach (var grandChild in child.Descendant)
 					{
-						yield return GrandChild;
+						yield return grandChild;
 					}
 				}
 			}
@@ -65,9 +61,9 @@ namespace SafeILGenerator.Ast.Nodes
 		{
 			get
 			{
-				var List = new List<AstNode>();
-				TransformNodes((Node) => { List.Add(Node); return Node; });
-				return List;
+				var list = new List<AstNode>();
+				TransformNodes(node => { list.Add(node); return node; });
+				return list;
 			}
 		}
 	}

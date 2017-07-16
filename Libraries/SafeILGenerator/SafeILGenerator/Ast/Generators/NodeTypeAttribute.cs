@@ -10,9 +10,9 @@ namespace SafeILGenerator.Ast.Generators
 	{
 		public Type Type { get; set; }
 
-		public NodeTypeAttribute(Type Type)
+		public NodeTypeAttribute(Type type)
 		{
-			this.Type = Type;
+			Type = type;
 		}
 	}
 }

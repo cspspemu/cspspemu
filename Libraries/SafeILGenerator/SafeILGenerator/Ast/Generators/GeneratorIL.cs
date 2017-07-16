@@ -14,77 +14,77 @@ namespace SafeILGenerator.Ast.Generators
 	public class GeneratorIL : Generator<GeneratorIL>
 	{
 		protected MethodInfo MethodInfo;
-		protected ILGenerator ILGenerator;
+		protected ILGenerator IlGenerator;
 		protected bool GenerateLines;
 		protected List<string> Lines = new List<string>();
-		private Dictionary<AstLocal, LocalBuilder> _LocalBuilderCache = new Dictionary<AstLocal, LocalBuilder>();
-		private Dictionary<AstLabel, Label> _LabelCache = new Dictionary<AstLabel, Label>();
-		private Stack<AstNodeExpr> PlaceholderStack = new Stack<AstNodeExpr>();
-		private int SwitchVarCount = 0;
+		private Dictionary<AstLocal, LocalBuilder> _localBuilderCache = new Dictionary<AstLocal, LocalBuilder>();
+		private Dictionary<AstLabel, Label> _labelCache = new Dictionary<AstLabel, Label>();
+		private Stack<AstNodeExpr> _placeholderStack = new Stack<AstNodeExpr>();
+		private int _switchVarCount = 0;
 
 		public GeneratorIL() : base()
 		{
 		}
 
 		//LocalBuilder
-		private LocalBuilder _GetLocalBuilderFromAstLocal(AstLocal AstLocal)
+		private LocalBuilder _GetLocalBuilderFromAstLocal(AstLocal astLocal)
 		{
 			//AstLocal.Create
-			if (!_LocalBuilderCache.ContainsKey(AstLocal))
+			if (!_localBuilderCache.ContainsKey(astLocal))
 			{
-				var LocalBuilder = ILGenerator.DeclareLocal(AstLocal.Type);
-				_LocalBuilderCache[AstLocal] = LocalBuilder;
+				var localBuilder = IlGenerator.DeclareLocal(astLocal.Type);
+				_localBuilderCache[astLocal] = localBuilder;
 				if (!(MethodInfo is DynamicMethod))
 				{
 					//LocalBuilder.SetLocalSymInfo(AstLocal.Name);
 				}
 			}
-			return _LocalBuilderCache[AstLocal];
+			return _localBuilderCache[astLocal];
 		}
 
-		private Label _GetLabelFromAstLabel(AstLabel AstLabel)
+		private Label _GetLabelFromAstLabel(AstLabel astLabel)
 		{
-			if (!_LabelCache.ContainsKey(AstLabel))
+			if (!_labelCache.ContainsKey(astLabel))
 			{
-				_LabelCache[AstLabel] = ILGenerator.DefineLabel();
+				_labelCache[astLabel] = IlGenerator.DefineLabel();
 			}
-			return _LabelCache[AstLabel];
+			return _labelCache[astLabel];
 		}
 
-		public GeneratorIL Init(MethodInfo MethodInfo, ILGenerator ILGenerator, bool GenerateLines = false)
+		public GeneratorIL Init(MethodInfo methodInfo, ILGenerator ilGenerator, bool generateLines = false)
 		{
-			this.MethodInfo = MethodInfo;
-			this.ILGenerator = ILGenerator;
-			this.GenerateLines = GenerateLines;
+			this.MethodInfo = methodInfo;
+			this.IlGenerator = ilGenerator;
+			this.GenerateLines = generateLines;
 			return this;
 		}
 
 		public override GeneratorIL Reset()
 		{
-			this._LocalBuilderCache = new Dictionary<AstLocal, LocalBuilder>();
-			this._LabelCache = new Dictionary<AstLabel, Label>();
-			this.PlaceholderStack = new Stack<AstNodeExpr>();
+			this._localBuilderCache = new Dictionary<AstLocal, LocalBuilder>();
+			this._labelCache = new Dictionary<AstLabel, Label>();
+			this._placeholderStack = new Stack<AstNodeExpr>();
 			this.Lines = new List<string>();
-			this.SwitchVarCount = 0;
+			this._switchVarCount = 0;
 			return base.Reset();
 		}
 
-		public string GenerateToString(MethodInfo MethodInfo, AstNode AstNode)
+		public string GenerateToString(MethodInfo methodInfo, AstNode astNode)
 		{
-			return String.Join("\n", GenerateToStringList(MethodInfo, AstNode));
+			return String.Join("\n", GenerateToStringList(methodInfo, astNode));
 		}
 
-		public string[] GenerateToStringList(MethodInfo MethodInfo, AstNode AstNode)
+		public string[] GenerateToStringList(MethodInfo methodInfo, AstNode astNode)
 		{
-			var ILGenerator = new DynamicMethod("test", MethodInfo.ReturnType, MethodInfo.GetParameters().Select(Param => Param.ParameterType).ToArray()).GetILGenerator();
-			this.Init(MethodInfo, ILGenerator, GenerateLines: true).GenerateRoot(AstNode);
-			return this.Lines.ToArray();
+			var ilGenerator = new DynamicMethod("test", methodInfo.ReturnType, methodInfo.GetParameters().Select(param => param.ParameterType).ToArray()).GetILGenerator();
+			Init(methodInfo, ilGenerator, generateLines: true).GenerateRoot(astNode);
+			return Lines.ToArray();
 		}
 
-		public string GenerateToString<TDelegate>(AstNode AstNode)
+		public string GenerateToString<TDelegate>(AstNode astNode)
 		{
-			var MethodInfo = typeof(TDelegate).GetMethod("Invoke");
-			return GenerateToString(MethodInfo, AstNode);
+			var methodInfo = typeof(TDelegate).GetMethod("Invoke");
+			return GenerateToString(methodInfo, astNode);
 		}
 
 		//static public TDelegate GenerateDelegate<TGenerator, TDelegate>(string MethodName, AstNode AstNode) where TGenerator : GeneratorIL, new()
@@ -92,35 +92,35 @@ namespace SafeILGenerator.Ast.Generators
 		//	return new TGenerator()._GenerateDelegate<TDelegate>(MethodName, AstNode);
 		//}
 
-		public TDelegate GenerateDelegate<TDelegate>(string MethodName, AstNode AstNode)
+		public TDelegate GenerateDelegate<TDelegate>(string methodName, AstNode astNode)
 		{
-			var MethodInfo = typeof(TDelegate).GetMethod("Invoke");
-			var DynamicMethod = new DynamicMethod(
-				MethodName,
-				MethodInfo.ReturnType,
-				MethodInfo.GetParameters().Select(Parameter => Parameter.ParameterType).ToArray(),
+			var methodInfo = typeof(TDelegate).GetMethod("Invoke");
+			var dynamicMethod = new DynamicMethod(
+				methodName,
+				methodInfo.ReturnType,
+				methodInfo.GetParameters().Select(parameter => parameter.ParameterType).ToArray(),
 				Assembly.GetExecutingAssembly().ManifestModule
 			);
-			var ILGenerator = DynamicMethod.GetILGenerator();
-			this.Reset();
-			this.Init(DynamicMethod, ILGenerator, GenerateLines: false);
-			this.Generate(AstNode);
-			return (TDelegate)(object)DynamicMethod.CreateDelegate(typeof(TDelegate));
+			var ilGenerator = dynamicMethod.GetILGenerator();
+			Reset();
+			Init(dynamicMethod, ilGenerator, generateLines: false);
+			Generate(astNode);
+			return (TDelegate)(object)dynamicMethod.CreateDelegate(typeof(TDelegate));
 		}
 
-		protected void EmitHook(OpCode OpCode, object Param)
+		protected void EmitHook(OpCode opCode, object param)
 		{
 			if (GenerateLines)
 			{
-				Lines.Add(String.Format("  {0} {1}", OpCode, Param));
+				Lines.Add(String.Format("  {0} {1}", opCode, param));
 			}
 		}
 
-		protected void EmitComment(string Text)
+		protected void EmitComment(string text)
 		{
 			if (GenerateLines)
 			{
-				Lines.Add(String.Format("; {0}", Text));
+				Lines.Add(String.Format("; {0}", text));
 			}
 		}
 
@@ -128,56 +128,56 @@ namespace SafeILGenerator.Ast.Generators
 		{
 		}
 
-		protected void MarkLabelHook(AstLabel Label)
+		protected void MarkLabelHook(AstLabel label)
 		{
 			if (GenerateLines)
 			{
-				Lines.Add(String.Format("Label_{0}:;", Label.Name));
+				Lines.Add(String.Format("Label_{0}:;", label.Name));
 			}
 		}
 
-		protected AstLabel DefineLabel(string Name) { DefineLabelHook(); return AstLabel.CreateLabel(Name); }
-		protected void MarkLabel(AstLabel Label) { MarkLabelHook(Label); if (ILGenerator != null) ILGenerator.MarkLabel(_GetLabelFromAstLabel(Label)); }
+		protected AstLabel DefineLabel(string name) { DefineLabelHook(); return AstLabel.CreateLabel(name); }
+		protected void MarkLabel(AstLabel label) { MarkLabelHook(label); if (IlGenerator != null) IlGenerator.MarkLabel(_GetLabelFromAstLabel(label)); }
 
-		protected void Emit(OpCode OpCode) { EmitHook(OpCode, null); if (ILGenerator != null) ILGenerator.Emit(OpCode); }
-		protected void Emit(OpCode OpCode, int Value) { EmitHook(OpCode, Value); if (ILGenerator != null) ILGenerator.Emit(OpCode, Value); }
-		protected void Emit(OpCode OpCode, long Value) { EmitHook(OpCode, Value); if (ILGenerator != null) ILGenerator.Emit(OpCode, Value); }
-		protected void Emit(OpCode OpCode, float Value) { EmitHook(OpCode, Value); if (ILGenerator != null) ILGenerator.Emit(OpCode, Value); }
-		protected void Emit(OpCode OpCode, double Value) { EmitHook(OpCode, Value); if (ILGenerator != null) ILGenerator.Emit(OpCode, Value); }
-		protected void Emit(OpCode OpCode, string Value) { EmitHook(OpCode, Value); if (ILGenerator != null) ILGenerator.Emit(OpCode, Value); }
-		protected void Emit(OpCode OpCode, LocalBuilder Value) { EmitHook(OpCode, Value); if (ILGenerator != null) ILGenerator.Emit(OpCode, Value); }
-		protected void Emit(OpCode OpCode, MethodInfo Value) { EmitHook(OpCode, Value); if (ILGenerator != null) ILGenerator.Emit(OpCode, Value); }
-		protected void Emit(OpCode OpCode, ConstructorInfo Value) { EmitHook(OpCode, Value); if (ILGenerator != null) ILGenerator.Emit(OpCode, Value); }
-		protected void Emit(OpCode OpCode, FieldInfo Value) { EmitHook(OpCode, Value); if (ILGenerator != null) ILGenerator.Emit(OpCode, Value); }
-		protected void Emit(OpCode OpCode, Type Value) { EmitHook(OpCode, Value); if (ILGenerator != null) ILGenerator.Emit(OpCode, Value); }
-		protected void Emit(OpCode OpCode, AstLabel Value) { EmitHook(OpCode, Value); if (ILGenerator != null) ILGenerator.Emit(OpCode, _GetLabelFromAstLabel(Value)); }
-		protected void Emit(OpCode OpCode, params AstLabel[] Value) { EmitHook(OpCode, Value); if (ILGenerator != null) ILGenerator.Emit(OpCode, Value.Select(Item => _GetLabelFromAstLabel(Item)).ToArray()); }
+		protected void Emit(OpCode opCode) { EmitHook(opCode, null); if (IlGenerator != null) IlGenerator.Emit(opCode); }
+		protected void Emit(OpCode opCode, int value) { EmitHook(opCode, value); if (IlGenerator != null) IlGenerator.Emit(opCode, value); }
+		protected void Emit(OpCode opCode, long value) { EmitHook(opCode, value); if (IlGenerator != null) IlGenerator.Emit(opCode, value); }
+		protected void Emit(OpCode opCode, float value) { EmitHook(opCode, value); if (IlGenerator != null) IlGenerator.Emit(opCode, value); }
+		protected void Emit(OpCode opCode, double value) { EmitHook(opCode, value); if (IlGenerator != null) IlGenerator.Emit(opCode, value); }
+		protected void Emit(OpCode opCode, string value) { EmitHook(opCode, value); if (IlGenerator != null) IlGenerator.Emit(opCode, value); }
+		protected void Emit(OpCode opCode, LocalBuilder value) { EmitHook(opCode, value); if (IlGenerator != null) IlGenerator.Emit(opCode, value); }
+		protected void Emit(OpCode opCode, MethodInfo value) { EmitHook(opCode, value); if (IlGenerator != null) IlGenerator.Emit(opCode, value); }
+		protected void Emit(OpCode opCode, ConstructorInfo value) { EmitHook(opCode, value); if (IlGenerator != null) IlGenerator.Emit(opCode, value); }
+		protected void Emit(OpCode opCode, FieldInfo value) { EmitHook(opCode, value); if (IlGenerator != null) IlGenerator.Emit(opCode, value); }
+		protected void Emit(OpCode opCode, Type value) { EmitHook(opCode, value); if (IlGenerator != null) IlGenerator.Emit(opCode, value); }
+		protected void Emit(OpCode opCode, AstLabel value) { EmitHook(opCode, value); if (IlGenerator != null) IlGenerator.Emit(opCode, _GetLabelFromAstLabel(value)); }
+		protected void Emit(OpCode opCode, params AstLabel[] value) { EmitHook(opCode, value); if (IlGenerator != null) IlGenerator.Emit(opCode, value.Select(Item => _GetLabelFromAstLabel(Item)).ToArray()); }
 
 		protected virtual void _Generate(AstNodeExprNull Null)
 		{
 			Emit(OpCodes.Ldnull);
 		}
 
-		protected virtual void _Generate(AstNodeExprImm Item)
+		protected virtual void _Generate(AstNodeExprImm item)
 		{
-			var ItemType = AstUtils.GetSignedType(Item.Type);
-			var ItemValue = Item.Value;
+			var itemType = AstUtils.GetSignedType(item.Type);
+			var itemValue = item.Value;
 
-			if (ItemType.IsEnum)
+			if (itemType.IsEnum)
 			{
-				ItemType = ItemType.GetEnumUnderlyingType();
-				ItemValue = AstUtils.CastType(ItemValue, ItemType);
+				itemType = itemType.GetEnumUnderlyingType();
+				itemValue = AstUtils.CastType(itemValue, itemType);
 			}
 
 			if (
-				ItemType == typeof(int)
-				|| ItemType == typeof(sbyte)
-				|| ItemType == typeof(short)
-				|| ItemType == typeof(bool)
+				itemType == typeof(int)
+				|| itemType == typeof(sbyte)
+				|| itemType == typeof(short)
+				|| itemType == typeof(bool)
 			)
 			{
-				var Value = (int)Convert.ToInt64(ItemValue);
-				switch (Value)
+				var value = (int)Convert.ToInt64(itemValue);
+				switch (value)
 				{
 					case -1: Emit(OpCodes.Ldc_I4_M1); break;
 					case 0: Emit(OpCodes.Ldc_I4_0); break;
@@ -189,14 +189,14 @@ namespace SafeILGenerator.Ast.Generators
 					case 6: Emit(OpCodes.Ldc_I4_6); break;
 					case 7: Emit(OpCodes.Ldc_I4_7); break;
 					case 8: Emit(OpCodes.Ldc_I4_8); break;
-					default: Emit(OpCodes.Ldc_I4, Value); break;
+					default: Emit(OpCodes.Ldc_I4, value); break;
 				}
 			}
-			else if (ItemType == typeof(long) || ItemType == typeof(ulong))
+			else if (itemType == typeof(long) || itemType == typeof(ulong))
 			{
-				Emit(OpCodes.Ldc_I8, Convert.ToInt64(ItemValue));
+				Emit(OpCodes.Ldc_I8, Convert.ToInt64(itemValue));
 			}
-			else if (ItemType == typeof(IntPtr))
+			else if (itemType == typeof(IntPtr))
 			{
 #if false
 				Emit(OpCodes.Ldc_I8, ((IntPtr)Item.Value).ToInt64());
@@ -204,89 +204,89 @@ namespace SafeILGenerator.Ast.Generators
 #else
 				if (Environment.Is64BitProcess)
 				{
-					Emit(OpCodes.Ldc_I8, ((IntPtr)Item.Value).ToInt64());
+					Emit(OpCodes.Ldc_I8, ((IntPtr)item.Value).ToInt64());
 					Emit(OpCodes.Conv_I);
 				}
 				else
 				{
-					Emit(OpCodes.Ldc_I4, ((IntPtr)Item.Value).ToInt32());
+					Emit(OpCodes.Ldc_I4, ((IntPtr)item.Value).ToInt32());
 					Emit(OpCodes.Conv_I);
 				}
 #endif
 			}
-			else if (ItemType == typeof(float))
+			else if (itemType == typeof(float))
 			{
-				Emit(OpCodes.Ldc_R4, (float)Item.Value);
+				Emit(OpCodes.Ldc_R4, (float)item.Value);
 			}
-			else if (Item.Value == null)
+			else if (item.Value == null)
 			{
 				Emit(OpCodes.Ldnull);
 			}
-			else if (ItemType == typeof(string))
+			else if (itemType == typeof(string))
 			{
-				Emit(OpCodes.Ldstr, (string)Item.Value);
+				Emit(OpCodes.Ldstr, (string)item.Value);
 			}
-			else if (ItemType == typeof(Type))
+			else if (itemType == typeof(Type))
 			{
-				Emit(OpCodes.Ldtoken, (Type)Item.Value);
+				Emit(OpCodes.Ldtoken, (Type)item.Value);
 				Emit(OpCodes.Call, ((Func<RuntimeTypeHandle, Type>)Type.GetTypeFromHandle).Method);
 				//IL_0005: call class [mscorlib]System.Type [mscorlib]System.Type::GetTypeFromHandle(valuetype [mscorlib]System.RuntimeTypeHandle)
 			}
 			else
 			{
-				throw (new NotImplementedException(String.Format("Can't handle immediate type {0}", ItemType)));
+				throw (new NotImplementedException(String.Format("Can't handle immediate type {0}", itemType)));
 			}
 		}
 
-		protected virtual void _Generate(AstNodeStmComment Comment)
+		protected virtual void _Generate(AstNodeStmComment comment)
 		{
-			EmitComment(Comment.CommentText);
+			EmitComment(comment.CommentText);
 		}
 
-		protected virtual void _Generate(AstNodeStmContainer Container)
+		protected virtual void _Generate(AstNodeStmContainer container)
 		{
-			foreach (var Node in Container.Nodes)
+			foreach (var node in container.Nodes)
 			{
-				Generate(Node);
+				Generate(node);
 			}
 		}
 
-		protected virtual void _Generate(AstNodeExprArgument Argument)
+		protected virtual void _Generate(AstNodeExprArgument argument)
 		{
-			int ArgumentIndex = Argument.AstArgument.Index;
-			switch (ArgumentIndex)
+			var argumentIndex = argument.AstArgument.Index;
+			switch (argumentIndex)
 			{
 				case 0: Emit(OpCodes.Ldarg_0); break;
 				case 1: Emit(OpCodes.Ldarg_1); break;
 				case 2: Emit(OpCodes.Ldarg_2); break;
 				case 3: Emit(OpCodes.Ldarg_3); break;
-				default: Emit(OpCodes.Ldarg, ArgumentIndex); break;
+				default: Emit(OpCodes.Ldarg, argumentIndex); break;
 			}
 		}
 
-		protected virtual void _Generate(AstNodeExprLocal Local)
+		protected virtual void _Generate(AstNodeExprLocal local)
 		{
-			var LocalBuilder = _GetLocalBuilderFromAstLocal(Local.AstLocal);
+			var localBuilder = _GetLocalBuilderFromAstLocal(local.AstLocal);
 
-			switch (LocalBuilder.LocalIndex)
+			switch (localBuilder.LocalIndex)
 			{
 				case 0: Emit(OpCodes.Ldloc_0); break;
 				case 1: Emit(OpCodes.Ldloc_1); break;
 				case 2: Emit(OpCodes.Ldloc_2); break;
 				case 3: Emit(OpCodes.Ldloc_3); break;
-				default: Emit(OpCodes.Ldloc, LocalBuilder); break;
+				default: Emit(OpCodes.Ldloc, localBuilder); break;
 			}
 		}
 
-		protected virtual void _Generate(AstNodeExprPropertyAccess PropertyAccess)
+		protected virtual void _Generate(AstNodeExprPropertyAccess propertyAccess)
 		{
-			Generate(PropertyAccess.Instance);
-			Emit(OpCodes.Callvirt, PropertyAccess.Property.GetMethod);
+			Generate(propertyAccess.Instance);
+			Emit(OpCodes.Callvirt, propertyAccess.Property.GetMethod);
 		}
 
-		protected virtual void _Generate(AstNodeExprFieldAccess FieldAccess)
+		protected virtual void _Generate(AstNodeExprFieldAccess fieldAccess)
 		{
-			Generate(FieldAccess.Instance);
+			Generate(fieldAccess.Instance);
 			//Console.WriteLine("{0}", FieldAccess.Field);
 			//if (FieldAccess.Field.FieldType.IsValueType)
 			//{
@@ -294,334 +294,333 @@ namespace SafeILGenerator.Ast.Generators
 			//}
 			//else
 			{
-				Emit(OpCodes.Ldfld, FieldAccess.Field);
+				Emit(OpCodes.Ldfld, fieldAccess.Field);
 			}
 		}
 
-		protected virtual void _Generate(AstNodeExprStaticFieldAccess FieldAccess)
+		protected virtual void _Generate(AstNodeExprStaticFieldAccess fieldAccess)
 		{
-			Emit(OpCodes.Ldsfld, FieldAccess.Field);
+			Emit(OpCodes.Ldsfld, fieldAccess.Field);
 		}
 
-		protected virtual void _Generate(AstNodeExprArrayAccess ArrayAccess)
+		protected virtual void _Generate(AstNodeExprArrayAccess arrayAccess)
 		{
-			Generate(ArrayAccess.ArrayInstance);
-			Generate(ArrayAccess.Index);
+			Generate(arrayAccess.ArrayInstance);
+			Generate(arrayAccess.Index);
 
 			if (false) { }
 
-			else if (ArrayAccess.ElementType == typeof(byte)) Emit(OpCodes.Ldelem_U1);
-			else if (ArrayAccess.ElementType == typeof(ushort)) Emit(OpCodes.Ldelem_U2);
-			else if (ArrayAccess.ElementType == typeof(uint)) Emit(OpCodes.Ldelem_U4);
-			else if (ArrayAccess.ElementType == typeof(ulong)) Emit(OpCodes.Ldelem_I8);
+			else if (arrayAccess.ElementType == typeof(byte)) Emit(OpCodes.Ldelem_U1);
+			else if (arrayAccess.ElementType == typeof(ushort)) Emit(OpCodes.Ldelem_U2);
+			else if (arrayAccess.ElementType == typeof(uint)) Emit(OpCodes.Ldelem_U4);
+			else if (arrayAccess.ElementType == typeof(ulong)) Emit(OpCodes.Ldelem_I8);
 
-			else if (ArrayAccess.ElementType == typeof(sbyte)) Emit(OpCodes.Ldelem_I1);
-			else if (ArrayAccess.ElementType == typeof(short)) Emit(OpCodes.Ldelem_I2);
-			else if (ArrayAccess.ElementType == typeof(int)) Emit(OpCodes.Ldelem_I4);
-			else if (ArrayAccess.ElementType == typeof(long)) Emit(OpCodes.Ldelem_I8);
+			else if (arrayAccess.ElementType == typeof(sbyte)) Emit(OpCodes.Ldelem_I1);
+			else if (arrayAccess.ElementType == typeof(short)) Emit(OpCodes.Ldelem_I2);
+			else if (arrayAccess.ElementType == typeof(int)) Emit(OpCodes.Ldelem_I4);
+			else if (arrayAccess.ElementType == typeof(long)) Emit(OpCodes.Ldelem_I8);
 
-			else if (ArrayAccess.ElementType.IsPointer) Emit(OpCodes.Ldelem_I);
+			else if (arrayAccess.ElementType.IsPointer) Emit(OpCodes.Ldelem_I);
 
 			else Emit(OpCodes.Ldelem_Ref);
 		}
 
-		protected virtual void _Generate(AstNodeExprIndirect Indirect)
+		protected virtual void _Generate(AstNodeExprIndirect indirect)
 		{
-			Generate(Indirect.PointerExpression);
-			var PointerType = Indirect.PointerExpression.Type.GetElementType();
+			Generate(indirect.PointerExpression);
+			var pointerType = indirect.PointerExpression.Type.GetElementType();
 
-			if (false) { }
+			if (pointerType == typeof(byte)) Emit(OpCodes.Ldind_U1);
+			else if (pointerType == typeof(ushort)) Emit(OpCodes.Ldind_U2);
+			else if (pointerType == typeof(uint)) Emit(OpCodes.Ldind_U4);
+			else if (pointerType == typeof(ulong)) Emit(OpCodes.Ldind_I8);
 
-			else if (PointerType == typeof(byte)) Emit(OpCodes.Ldind_U1);
-			else if (PointerType == typeof(ushort)) Emit(OpCodes.Ldind_U2);
-			else if (PointerType == typeof(uint)) Emit(OpCodes.Ldind_U4);
-			else if (PointerType == typeof(ulong)) Emit(OpCodes.Ldind_I8);
+			else if (pointerType == typeof(sbyte)) Emit(OpCodes.Ldind_I1);
+			else if (pointerType == typeof(short)) Emit(OpCodes.Ldind_I2);
+			else if (pointerType == typeof(int)) Emit(OpCodes.Ldind_I4);
+			else if (pointerType == typeof(long)) Emit(OpCodes.Ldind_I8);
 
-			else if (PointerType == typeof(sbyte)) Emit(OpCodes.Ldind_I1);
-			else if (PointerType == typeof(short)) Emit(OpCodes.Ldind_I2);
-			else if (PointerType == typeof(int)) Emit(OpCodes.Ldind_I4);
-			else if (PointerType == typeof(long)) Emit(OpCodes.Ldind_I8);
-
-			else if (PointerType == typeof(float)) Emit(OpCodes.Ldind_R4);
-			else if (PointerType == typeof(double)) Emit(OpCodes.Ldind_R8);
+			else if (pointerType == typeof(float)) Emit(OpCodes.Ldind_R4);
+			else if (pointerType == typeof(double)) Emit(OpCodes.Ldind_R8);
 
 			else throw (new NotImplementedException("Can't load indirect value"));
 		}
 
-		protected virtual void _Generate(AstNodeExprGetAddress GetAddress)
+		protected virtual void _Generate(AstNodeExprGetAddress getAddress)
 		{
-			var AstNodeExprFieldAccess = (GetAddress.Expression as AstNodeExprFieldAccess);
-			var AstNodeExprArgument = (GetAddress.Expression as AstNodeExprArgument);
+			var astNodeExprFieldAccess = (getAddress.Expression as AstNodeExprFieldAccess);
+			var astNodeExprArgument = (getAddress.Expression as AstNodeExprArgument);
 
-			if (AstNodeExprFieldAccess != null)
+			if (astNodeExprFieldAccess != null)
 			{
-				Generate(AstNodeExprFieldAccess.Instance);
-				Emit(OpCodes.Ldflda, AstNodeExprFieldAccess.Field);
+				Generate(astNodeExprFieldAccess.Instance);
+				Emit(OpCodes.Ldflda, astNodeExprFieldAccess.Field);
 			}
-			else if (AstNodeExprArgument != null)
+			else if (astNodeExprArgument != null)
 			{
-				Emit(OpCodes.Ldarga, AstNodeExprArgument.AstArgument.Index);
+				Emit(OpCodes.Ldarga, astNodeExprArgument.AstArgument.Index);
 			}
 			else
 			{
-				throw (new NotImplementedException("Can't implement AstNodeExprGetAddress for '" + GetAddress.Expression.GetType() + "'"));
+				throw (new NotImplementedException("Can't implement AstNodeExprGetAddress for '" + getAddress.Expression.GetType() + "'"));
 			}
 		}
 
-		protected virtual void _Generate(AstNodeExprSetGetLValuePlaceholder Placeholder)
+		protected virtual void _Generate(AstNodeExprSetGetLValuePlaceholder placeholder)
 		{
-			var AstExpr = PlaceholderStack.Pop();
-			if (AstExpr.Type != Placeholder.Type) throw (new Exception("Invalid Expression for placeholder " + AstExpr.Type + " != " + Placeholder.Type + "."));
-			Generate(AstExpr);
+			var astExpr = _placeholderStack.Pop();
+			if (astExpr.Type != placeholder.Type) throw (new Exception("Invalid Expression for placeholder " + astExpr.Type + " != " + placeholder.Type + "."));
+			Generate(astExpr);
 		}
 
-		protected virtual void _Generate(AstNodeExprSetGetLValue SetGetLValue)
+		protected virtual void _Generate(AstNodeExprSetGetLValue setGetLValue)
 		{
-			Generate(SetGetLValue.GetExpression);
+			Generate(setGetLValue.GetExpression);
 		}
 
-		protected virtual void _Generate(AstNodeStmAssign Assign)
+		// @TODO: Rewrite using C# 7 features
+		protected virtual void _Generate(AstNodeStmAssign assign)
 		{
 			//Assign.Local.LocalBuilder.LocalIndex
-			var AstNodeExprLocal = (Assign.LValue as AstNodeExprLocal);
-			var AstNodeExprArgument = (Assign.LValue as AstNodeExprArgument);
-			var AstNodeExprFieldAccess = (Assign.LValue as AstNodeExprFieldAccess);
-			var AstNodeExprStaticFieldAccess = (Assign.LValue as AstNodeExprStaticFieldAccess);
-			var AstNodeExprIndirect = (Assign.LValue as AstNodeExprIndirect);
-			var AstNodeExprArrayAccess = (Assign.LValue as AstNodeExprArrayAccess);
-			var AstNodeExprPropertyAccess = (Assign.LValue as AstNodeExprPropertyAccess);
-			var AstNodeExprSetGetLValue = (Assign.LValue as AstNodeExprSetGetLValue);
+			var astNodeExprLocal = assign.LValue as AstNodeExprLocal;
+			var astNodeExprArgument = assign.LValue as AstNodeExprArgument;
+			var astNodeExprFieldAccess = assign.LValue as AstNodeExprFieldAccess;
+			var astNodeExprStaticFieldAccess = assign.LValue as AstNodeExprStaticFieldAccess;
+			var astNodeExprIndirect = assign.LValue as AstNodeExprIndirect;
+			var astNodeExprArrayAccess = assign.LValue as AstNodeExprArrayAccess;
+			var astNodeExprPropertyAccess = assign.LValue as AstNodeExprPropertyAccess;
+			var astNodeExprSetGetLValue = assign.LValue as AstNodeExprSetGetLValue;
 			
 
-			if (AstNodeExprLocal != null)
+			if (astNodeExprLocal != null)
 			{
-				Generate(Assign.Value);
-				Emit(OpCodes.Stloc, _GetLocalBuilderFromAstLocal(AstNodeExprLocal.AstLocal));
+				Generate(assign.Value);
+				Emit(OpCodes.Stloc, _GetLocalBuilderFromAstLocal(astNodeExprLocal.AstLocal));
 			}
-			else if (AstNodeExprArgument != null)
+			else if (astNodeExprArgument != null)
 			{
-				Generate(Assign.Value);
-				Emit(OpCodes.Starg, AstNodeExprArgument.AstArgument.Index);
+				Generate(assign.Value);
+				Emit(OpCodes.Starg, astNodeExprArgument.AstArgument.Index);
 			}
-			else if (AstNodeExprFieldAccess != null)
+			else if (astNodeExprFieldAccess != null)
 			{
-				Generate(AstNodeExprFieldAccess.Instance);
-				Generate(Assign.Value);
-				Emit(OpCodes.Stfld, AstNodeExprFieldAccess.Field);
+				Generate(astNodeExprFieldAccess.Instance);
+				Generate(assign.Value);
+				Emit(OpCodes.Stfld, astNodeExprFieldAccess.Field);
 			}
-			else if (AstNodeExprStaticFieldAccess != null)
+			else if (astNodeExprStaticFieldAccess != null)
 			{
-				Generate(Assign.Value);
-				Emit(OpCodes.Stsfld, AstNodeExprStaticFieldAccess.Field);
+				Generate(assign.Value);
+				Emit(OpCodes.Stsfld, astNodeExprStaticFieldAccess.Field);
 			}
-			else if (AstNodeExprArrayAccess != null)
+			else if (astNodeExprArrayAccess != null)
 			{
-				Generate(AstNodeExprArrayAccess.ArrayInstance);
-				Generate(AstNodeExprArrayAccess.Index);
-				Generate(Assign.Value);
-				Emit(OpCodes.Stelem, AstNodeExprArrayAccess.ArrayInstance.Type.GetElementType());
+				Generate(astNodeExprArrayAccess.ArrayInstance);
+				Generate(astNodeExprArrayAccess.Index);
+				Generate(assign.Value);
+				Emit(OpCodes.Stelem, astNodeExprArrayAccess.ArrayInstance.Type.GetElementType());
 			}
-			else if (AstNodeExprIndirect != null)
+			else if (astNodeExprIndirect != null)
 			{
-				var PointerType = AstUtils.GetSignedType(AstNodeExprIndirect.PointerExpression.Type.GetElementType());
+				var pointerType = AstUtils.GetSignedType(astNodeExprIndirect.PointerExpression.Type.GetElementType());
 
-				Generate(AstNodeExprIndirect.PointerExpression);
-				Generate(Assign.Value);
+				Generate(astNodeExprIndirect.PointerExpression);
+				Generate(assign.Value);
 
-				if (PointerType == typeof(sbyte)) Emit(OpCodes.Stind_I1);
-				else if (PointerType == typeof(short)) Emit(OpCodes.Stind_I2);
-				else if (PointerType == typeof(int)) Emit(OpCodes.Stind_I4);
-				else if (PointerType == typeof(long)) Emit(OpCodes.Stind_I8);
-				else if (PointerType == typeof(float)) Emit(OpCodes.Stind_R4);
-				else if (PointerType == typeof(double)) Emit(OpCodes.Stind_R8);
-				else if (PointerType == typeof(bool)) Emit(OpCodes.Stind_I1);
+				if (pointerType == typeof(sbyte)) Emit(OpCodes.Stind_I1);
+				else if (pointerType == typeof(short)) Emit(OpCodes.Stind_I2);
+				else if (pointerType == typeof(int)) Emit(OpCodes.Stind_I4);
+				else if (pointerType == typeof(long)) Emit(OpCodes.Stind_I8);
+				else if (pointerType == typeof(float)) Emit(OpCodes.Stind_R4);
+				else if (pointerType == typeof(double)) Emit(OpCodes.Stind_R8);
+				else if (pointerType == typeof(bool)) Emit(OpCodes.Stind_I1);
 				else throw (new NotImplementedException("Can't store indirect value"));
 			}
-			else if (AstNodeExprPropertyAccess != null)
+			else if (astNodeExprPropertyAccess != null)
 			{
-				Generate(AstNodeExprPropertyAccess.Instance);
-				Generate(Assign.Value);
-				Emit(OpCodes.Callvirt, AstNodeExprPropertyAccess.Property.SetMethod);
+				Generate(astNodeExprPropertyAccess.Instance);
+				Generate(assign.Value);
+				Emit(OpCodes.Callvirt, astNodeExprPropertyAccess.Property.SetMethod);
 			}
-			else if (AstNodeExprSetGetLValue != null)
+			else if (astNodeExprSetGetLValue != null)
 			{
-				PlaceholderStack.Push(Assign.Value);
-				Generate(AstNodeExprSetGetLValue.SetExpression);
-				if (AstNodeExprSetGetLValue.SetExpression.Type != typeof(void))
+				_placeholderStack.Push(assign.Value);
+				Generate(astNodeExprSetGetLValue.SetExpression);
+				if (astNodeExprSetGetLValue.SetExpression.Type != typeof(void))
 				{
 					Emit(OpCodes.Pop);
 				}
 			}
 			else
 			{
-				throw (new NotImplementedException("Not implemented AstNodeStmAssign LValue: " + Assign.LValue.GetType()));
+				throw (new NotImplementedException("Not implemented AstNodeStmAssign LValue: " + assign.LValue.GetType()));
 			}
 			//Assign.Local
 		}
 
 		protected virtual void _Generate(AstNodeStmReturn Return)
 		{
-			var ExpressionType = (Return.Expression != null) ? Return.Expression.Type : typeof(void);
+			var expressionType = (Return.Expression != null) ? Return.Expression.Type : typeof(void);
 
-			if (ExpressionType != MethodInfo.ReturnType)
+			if (expressionType != MethodInfo.ReturnType)
 			{
-				throw (new Exception(String.Format("Return type mismatch {0} != {1}", ExpressionType, MethodInfo.ReturnType)));
+				throw (new Exception(String.Format("Return type mismatch {0} != {1}", expressionType, MethodInfo.ReturnType)));
 			}
 
 			if (Return.Expression != null) Generate(Return.Expression);
 			Emit(OpCodes.Ret);
 		}
 
-		protected virtual void _Generate(AstNodeExprCallTailCall Call)
+		protected virtual void _Generate(AstNodeExprCallTailCall call)
 		{
-			Generate(Call.Call);
+			Generate(call.Call);
 			Emit(OpCodes.Ret);
 		}
 
-		protected virtual void _Generate(AstNodeExprCallStatic Call)
+		protected virtual void _Generate(AstNodeExprCallStatic call)
 		{
-			if (Call.MethodInfo.CallingConvention.HasFlag(CallingConventions.HasThis))
+			if (call.MethodInfo.CallingConvention.HasFlag(CallingConventions.HasThis))
 			{
-				throw (new Exception("CallString calling convention shouldn't have this '" + Call.MethodInfo + "'"));
+				throw (new Exception("CallString calling convention shouldn't have this '" + call.MethodInfo + "'"));
 			}
-			switch (Call.MethodInfo.CallingConvention & CallingConventions.Any)
+			switch (call.MethodInfo.CallingConvention & CallingConventions.Any)
 			{
 				case CallingConventions.Standard:
-					foreach (var Parameter in Call.Parameters) Generate(Parameter);
-					if (Call.IsTail) Emit(OpCodes.Tailcall);
-					Emit(OpCodes.Call, Call.MethodInfo);
+					foreach (var parameter in call.Parameters) Generate(parameter);
+					if (call.IsTail) Emit(OpCodes.Tailcall);
+					Emit(OpCodes.Call, call.MethodInfo);
 					break;
 				default:
-					throw (new Exception(String.Format("Can't handle calling convention {0}", Call.MethodInfo.CallingConvention)));
+					throw (new Exception(String.Format("Can't handle calling convention {0}", call.MethodInfo.CallingConvention)));
 			}
 			
 		}
 
-		protected virtual void _Generate(AstNodeExprCallDelegate Call)
+		protected virtual void _Generate(AstNodeExprCallDelegate call)
 		{
-			_Generate((AstNodeExprCallInstance)Call);
+			_Generate((AstNodeExprCallInstance)call);
 		}
 
-		protected virtual void _Generate(AstNodeExprCallInstance Call)
+		protected virtual void _Generate(AstNodeExprCallInstance call)
 		{
-			if (!Call.MethodInfo.CallingConvention.HasFlag(CallingConventions.HasThis))
+			if (!call.MethodInfo.CallingConvention.HasFlag(CallingConventions.HasThis))
 			{
 				throw(new Exception("CallInstance calling convention should have this"));
 			}
-			switch (Call.MethodInfo.CallingConvention & CallingConventions.Any)
+			switch (call.MethodInfo.CallingConvention & CallingConventions.Any)
 			{
 				case CallingConventions.Standard:
-					Generate(Call.Instance);
-					foreach (var Parameter in Call.Parameters) Generate(Parameter);
-					if (Call.IsTail) Emit(OpCodes.Tailcall);
-					Emit(OpCodes.Callvirt, Call.MethodInfo);
+					Generate(call.Instance);
+					foreach (var parameter in call.Parameters) Generate(parameter);
+					if (call.IsTail) Emit(OpCodes.Tailcall);
+					Emit(OpCodes.Callvirt, call.MethodInfo);
 					break;
 				default:
-					throw (new Exception(String.Format("Can't handle calling convention {0}", Call.MethodInfo.CallingConvention)));
+					throw (new Exception($"Can't handle calling convention {call.MethodInfo.CallingConvention}"));
 			}
 		}
 
-		protected virtual void _GenerateCastToType(Type CastedType)
+		protected virtual void _GenerateCastToType(Type castedType)
 		{
 			if (false) { }
-			else if (CastedType == typeof(sbyte)) Emit(OpCodes.Conv_I1);
-			else if (CastedType == typeof(short)) Emit(OpCodes.Conv_I2);
-			else if (CastedType == typeof(int)) Emit(OpCodes.Conv_I4);
-			else if (CastedType == typeof(long)) Emit(OpCodes.Conv_I8);
+			else if (castedType == typeof(sbyte)) Emit(OpCodes.Conv_I1);
+			else if (castedType == typeof(short)) Emit(OpCodes.Conv_I2);
+			else if (castedType == typeof(int)) Emit(OpCodes.Conv_I4);
+			else if (castedType == typeof(long)) Emit(OpCodes.Conv_I8);
 
-			else if (CastedType == typeof(byte)) Emit(OpCodes.Conv_U1);
-			else if (CastedType == typeof(ushort)) Emit(OpCodes.Conv_U2);
-			else if (CastedType == typeof(uint)) Emit(OpCodes.Conv_U4);
-			else if (CastedType == typeof(ulong)) Emit(OpCodes.Conv_U8);
+			else if (castedType == typeof(byte)) Emit(OpCodes.Conv_U1);
+			else if (castedType == typeof(ushort)) Emit(OpCodes.Conv_U2);
+			else if (castedType == typeof(uint)) Emit(OpCodes.Conv_U4);
+			else if (castedType == typeof(ulong)) Emit(OpCodes.Conv_U8);
 
-			else if (CastedType == typeof(float)) Emit(OpCodes.Conv_R4);
-			else if (CastedType == typeof(double)) Emit(OpCodes.Conv_R8);
+			else if (castedType == typeof(float)) Emit(OpCodes.Conv_R4);
+			else if (castedType == typeof(double)) Emit(OpCodes.Conv_R8);
 
-            else if (CastedType == typeof(bool)) Emit(OpCodes.Conv_I1);
+            else if (castedType == typeof(bool)) Emit(OpCodes.Conv_I1);
 
-			else if (CastedType.IsPointer) Emit(OpCodes.Conv_I);
-			else if (CastedType.IsByRef) Emit(OpCodes.Conv_I);
+			else if (castedType.IsPointer) Emit(OpCodes.Conv_I);
+			else if (castedType.IsByRef) Emit(OpCodes.Conv_I);
 
-			else if (CastedType.IsPrimitive)
+			else if (castedType.IsPrimitive)
 			{
 				throw (new NotImplementedException("Not implemented cast other primitives"));
 			}
 
-			else if (CastedType.IsEnum)
+			else if (castedType.IsEnum)
 			{
-				_GenerateCastToType(CastedType.GetEnumUnderlyingType());
+				_GenerateCastToType(castedType.GetEnumUnderlyingType());
 				//throw (new NotImplementedException("Not implemented cast other primitives"));
 			}
 
 			else
 			{
-				Emit(OpCodes.Castclass, CastedType);
+				Emit(OpCodes.Castclass, castedType);
 				//throw (new NotImplementedException("Not implemented cast class"));
 			}
 		}
 
-		protected virtual void _Generate(AstNodeExprCast Cast)
+		protected virtual void _Generate(AstNodeExprCast cast)
 		{
-			var CastedType = Cast.CastedType;
+			var castedType = cast.CastedType;
 
-			Generate(Cast.Expr);
+			Generate(cast.Expr);
 
-			if (Cast.Explicit)
+			if (cast.Explicit)
 			{
-				_GenerateCastToType(CastedType);
+				_GenerateCastToType(castedType);
 			}
 		}
 
-		protected virtual void _Generate(AstNodeExprTerop Terop)
+		protected virtual void _Generate(AstNodeExprTerop terop)
 		{
-			if (Terop.True.Type != Terop.False.Type) throw (new InvalidOperationException(String.Format("AstNodeExprTerop '?:' types must match {0} != {1}", Terop.True.Type, Terop.False.Type)));
-			var TernaryType = Terop.True.Type;
-			var TernaryTempAstLocal = AstLocal.Create(TernaryType);
+			if (terop.True.Type != terop.False.Type) throw (new InvalidOperationException(String.Format("AstNodeExprTerop '?:' types must match {0} != {1}", terop.True.Type, terop.False.Type)));
+			var ternaryType = terop.True.Type;
+			var ternaryTempAstLocal = AstLocal.Create(ternaryType);
 
 			Generate(new AstNodeStmIfElse(
-				Terop.Cond,
-				new AstNodeStmAssign(new AstNodeExprLocal(TernaryTempAstLocal), Terop.True),
-				new AstNodeStmAssign(new AstNodeExprLocal(TernaryTempAstLocal), Terop.False)
+				terop.Cond,
+				new AstNodeStmAssign(new AstNodeExprLocal(ternaryTempAstLocal), terop.True),
+				new AstNodeStmAssign(new AstNodeExprLocal(ternaryTempAstLocal), terop.False)
 			));
 
-			Generate(new AstNodeExprLocal(TernaryTempAstLocal));
+			Generate(new AstNodeExprLocal(ternaryTempAstLocal));
 		}
 
-		protected virtual void _Generate(AstNodeStmIfElse IfElse)
+		protected virtual void _Generate(AstNodeStmIfElse ifElse)
 		{
-			var AfterIfLabel = DefineLabel("AfterIf");
+			var afterIfLabel = DefineLabel("AfterIf");
 
-			Generate(IfElse.Condition);
-			Emit(OpCodes.Brfalse, AfterIfLabel);
-			Generate(IfElse.True);
+			Generate(ifElse.Condition);
+			Emit(OpCodes.Brfalse, afterIfLabel);
+			Generate(ifElse.True);
 
-			if (IfElse.False != null)
+			if (ifElse.False != null)
 			{
-				var AfterElseLabel = DefineLabel("AfterElse");
-				Emit(OpCodes.Br, AfterElseLabel);
+				var afterElseLabel = DefineLabel("AfterElse");
+				Emit(OpCodes.Br, afterElseLabel);
 
-				MarkLabel(AfterIfLabel);
+				MarkLabel(afterIfLabel);
 
-				Generate(IfElse.False);
+				Generate(ifElse.False);
 
-				MarkLabel(AfterElseLabel);
+				MarkLabel(afterElseLabel);
 			}
 			else
 			{
-				MarkLabel(AfterIfLabel);
+				MarkLabel(afterIfLabel);
 			}
 		}
 
-		protected virtual void _Generate(AstNodeExprBinop Item)
+		protected virtual void _Generate(AstNodeExprBinop item)
 		{
-			var LeftType = Item.LeftNode.Type;
-			var RightType = Item.RightNode.Type;
+			var leftType = item.LeftNode.Type;
+			//var rightType = item.RightNode.Type;
 
 			//if (LeftType != RightType) throw(new Exception(String.Format("BinaryOp Type mismatch ({0}) != ({1})", LeftType, RightType)));
 
 			//Item.GetType().GenericTypeArguments[0]
-			this.Generate(Item.LeftNode);
-			this.Generate(Item.RightNode);
+			Generate(item.LeftNode);
+			Generate(item.RightNode);
 
 			//switch (Item.Operator)
 			//{
@@ -634,48 +633,48 @@ namespace SafeILGenerator.Ast.Generators
 			//		break;
 			//}
 
-			switch (Item.Operator)
+			switch (item.Operator)
 			{
-				case "+" : Emit(AstUtils.IsTypeSigned(LeftType) ? OpCodes.Add : OpCodes.Add); break;
-				case "-" : Emit(AstUtils.IsTypeSigned(LeftType) ? OpCodes.Sub : OpCodes.Sub); break;
-				case "*" : Emit(AstUtils.IsTypeSigned(LeftType) ? OpCodes.Mul : OpCodes.Mul); break;
-				case "/" : Emit(AstUtils.IsTypeSigned(LeftType) ? OpCodes.Div : OpCodes.Div_Un); break;
-				case "%" : Emit(AstUtils.IsTypeSigned(LeftType) ? OpCodes.Rem : OpCodes.Rem_Un); break;
+				case "+" : Emit(OpCodes.Add); break;
+				case "-" : Emit(OpCodes.Sub); break;
+				case "*" : Emit(OpCodes.Mul); break;
+				case "/" : Emit(AstUtils.IsTypeSigned(leftType) ? OpCodes.Div : OpCodes.Div_Un); break;
+				case "%" : Emit(AstUtils.IsTypeSigned(leftType) ? OpCodes.Rem : OpCodes.Rem_Un); break;
 				case "==": Emit(OpCodes.Ceq); break;
 				case "!=": Emit(OpCodes.Ceq); Emit(OpCodes.Ldc_I4_0); Emit(OpCodes.Ceq); break;
-				case "<" : Emit(AstUtils.IsTypeSigned(LeftType) ? OpCodes.Clt : OpCodes.Clt_Un); break;
-				case ">" : Emit(AstUtils.IsTypeSigned(LeftType) ? OpCodes.Cgt : OpCodes.Cgt_Un); break;
-				case "<=": Emit(AstUtils.IsTypeSigned(LeftType) ? OpCodes.Cgt : OpCodes.Cgt_Un); Emit(OpCodes.Ldc_I4_0); Emit(OpCodes.Ceq); break;
-				case ">=": Emit(AstUtils.IsTypeSigned(LeftType) ? OpCodes.Clt : OpCodes.Clt_Un); Emit(OpCodes.Ldc_I4_0); Emit(OpCodes.Ceq); break;
+				case "<" : Emit(AstUtils.IsTypeSigned(leftType) ? OpCodes.Clt : OpCodes.Clt_Un); break;
+				case ">" : Emit(AstUtils.IsTypeSigned(leftType) ? OpCodes.Cgt : OpCodes.Cgt_Un); break;
+				case "<=": Emit(AstUtils.IsTypeSigned(leftType) ? OpCodes.Cgt : OpCodes.Cgt_Un); Emit(OpCodes.Ldc_I4_0); Emit(OpCodes.Ceq); break;
+				case ">=": Emit(AstUtils.IsTypeSigned(leftType) ? OpCodes.Clt : OpCodes.Clt_Un); Emit(OpCodes.Ldc_I4_0); Emit(OpCodes.Ceq); break;
 				case "&":
 				case "&&": Emit(OpCodes.And); break;
 				case "|":
 				case "||": Emit(OpCodes.Or); break;
 				case "^" : Emit(OpCodes.Xor); break;
 				case "<<": Emit(OpCodes.Shl); break;
-				case ">>": Emit(AstUtils.IsTypeSigned(LeftType) ? OpCodes.Shr : OpCodes.Shr_Un); break;
-				default: throw(new NotImplementedException(String.Format("Not implemented operator '{0}'", Item.Operator)));
+				case ">>": Emit(AstUtils.IsTypeSigned(leftType) ? OpCodes.Shr : OpCodes.Shr_Un); break;
+				default: throw(new NotImplementedException($"Not implemented operator '{item.Operator}'"));
 			}
 		}
 
-		protected virtual void _Generate(AstNodeStmExpr Stat)
+		protected virtual void _Generate(AstNodeStmExpr stat)
 		{
-			var ExpressionType = Stat.AstNodeExpr.Type;
-			Generate(Stat.AstNodeExpr);
+			var expressionType = stat.AstNodeExpr.Type;
+			Generate(stat.AstNodeExpr);
 
-			if (ExpressionType != typeof(void))
+			if (expressionType != typeof(void))
 			{
 				Emit(OpCodes.Pop);
 			}
 		}
 
-		protected virtual void _Generate(AstNodeStmEmpty Empty)
+		protected virtual void _Generate(AstNodeStmEmpty empty)
 		{
 		}
 
-		protected virtual void _Generate(AstNodeStmLabel Label)
+		protected virtual void _Generate(AstNodeStmLabel label)
 		{
-			MarkLabel(Label.AstLabel);
+			MarkLabel(label.AstLabel);
 		}
 
 		protected virtual void _Generate(AstNodeStmGotoIfTrue Goto)
@@ -695,63 +694,64 @@ namespace SafeILGenerator.Ast.Generators
 			Emit(OpCodes.Br, Goto.AstLabel);
 		}
 
-		protected virtual void _Generate(AstNodeExprUnop Item)
+		protected virtual void _Generate(AstNodeExprUnop item)
 		{
-			var RightType = Item.RightNode.Type;
+			//var rightType = item.RightNode.Type;
 
-			this.Generate(Item.RightNode);
+			Generate(item.RightNode);
 
-			switch (Item.Operator)
+			switch (item.Operator)
 			{
 				case "~": Emit(OpCodes.Not); break;
 				case "+": break;
 				case "-": Emit(OpCodes.Neg); break;
 				case "!": Emit(OpCodes.Ldc_I4_0); Emit(OpCodes.Ceq); break;
-				default: throw(new NotImplementedException(String.Format("Not implemented operator '{0}'", Item.Operator)));
+				default: throw(new NotImplementedException($"Not implemented operator '{item.Operator}'"));
 			}
 		}
 
 		protected virtual void _Generate(AstNodeStmSwitch Switch)
 		{
-			var AllCaseValues = Switch.Cases.Select(Case => Case.CaseValue);
-			if (AllCaseValues.Count() != AllCaseValues.Distinct().Count())
+			var allCaseValues = Switch.Cases.Select(Case => Case.CaseValue);
+			var caseValues = allCaseValues as IList<object> ?? allCaseValues.ToList();
+			if (caseValues.Count != caseValues.Distinct().Count())
 			{
 				throw(new Exception("Repeated case in switch!"));
 			}
 
 			// Check types and unique values.
 
-			var EndCasesLabel = AstLabel.CreateLabel("EndCasesLabel");
-			var DefaultLabel = AstLabel.CreateLabel("DefaultLabel");
+			var endCasesLabel = AstLabel.CreateLabel("EndCasesLabel");
+			var defaultLabel = AstLabel.CreateLabel("DefaultLabel");
 
 			if (Switch.Cases.Length > 0)
 			{
-				var CommonType = Switch.Cases.First().CaseValue.GetType();
-				if (!Switch.Cases.All(Case => Case.CaseValue.GetType() == CommonType))
+				var commonType = Switch.Cases.First().CaseValue.GetType();
+				if (Switch.Cases.Any(Case => Case.CaseValue.GetType() != commonType))
 				{
 					throw(new Exception("All cases should have the same type"));
 				}
 
-				bool DoneSpecialized = false;
+				var doneSpecialized = false;
 
 				// Specialized constant-time integer switch (if possible)
-				if (AstUtils.IsIntegerType(CommonType))
+				if (AstUtils.IsIntegerType(commonType))
 				{
-					var CommonMin = Switch.Cases.Min(Case => AstUtils.CastType<long>(Case.CaseValue));
-					var CommonMax = Switch.Cases.Max(Case => AstUtils.CastType<long>(Case.CaseValue));
-					var CasesLength = (CommonMax - CommonMin) + 1;
+					var commonMin = Switch.Cases.Min(Case => AstUtils.CastType<long>(Case.CaseValue));
+					var commonMax = Switch.Cases.Max(Case => AstUtils.CastType<long>(Case.CaseValue));
+					var casesLength = (commonMax - commonMin) + 1;
 
 					// No processing tables greater than 4096 elements.
-					if (CasesLength <= 4096)
+					if (casesLength <= 4096)
 					{
-						var Labels = new AstLabel[CasesLength];
-						for (int n = 0; n < CasesLength; n++) Labels[n] = DefaultLabel;
+						var labels = new AstLabel[casesLength];
+						for (var n = 0; n < casesLength; n++) labels[n] = defaultLabel;
 
 						foreach (var Case in Switch.Cases)
 						{
-							long RealValue = AstUtils.CastType<long>(Case.CaseValue);
-							long Offset = RealValue - CommonMin;
-							Labels[Offset] = AstLabel.CreateLabel("Case_" + RealValue);
+							var realValue = AstUtils.CastType<long>(Case.CaseValue);
+							var offset = realValue - commonMin;
+							labels[offset] = AstLabel.CreateLabel("Case_" + realValue);
 						}
 
 						/*
@@ -762,21 +762,21 @@ namespace SafeILGenerator.Ast.Generators
 						//Generate(new AstNodeExprLocal(SwitchVarLocal));
 						*/
 
-						Generate(Switch.SwitchValue - new AstNodeExprCast(CommonType, CommonMin));
-						Emit(OpCodes.Switch, Labels);
-						Generate(new AstNodeStmGotoAlways(DefaultLabel));
+						Generate(Switch.SwitchValue - new AstNodeExprCast(commonType, commonMin));
+						Emit(OpCodes.Switch, labels);
+						Generate(new AstNodeStmGotoAlways(defaultLabel));
 						foreach (var Case in Switch.Cases)
 						{
-							long RealValue = AstUtils.CastType<long>(Case.CaseValue);
-							long Offset = RealValue - CommonMin;
-							Generate(new AstNodeStmLabel(Labels[Offset]));
+							var realValue = AstUtils.CastType<long>(Case.CaseValue);
+							var offset = realValue - commonMin;
+							Generate(new AstNodeStmLabel(labels[offset]));
 							{
 								Generate(Case.Code);
 							}
-							Generate(new AstNodeStmGotoAlways(EndCasesLabel));
+							Generate(new AstNodeStmGotoAlways(endCasesLabel));
 						}
 
-						DoneSpecialized = true;
+						doneSpecialized = true;
 					}
 					else
 					{
@@ -787,63 +787,63 @@ namespace SafeILGenerator.Ast.Generators
 
 				}
 				// Specialized switch for strings (checking length, then hash, then contents)
-				else if (CommonType == typeof(string))
+				else if (commonType == typeof(string))
 				{
 					// TODO!
 				}
 				
 				// Generic if/else
-				if (!DoneSpecialized)
+				if (!doneSpecialized)
 				{
-					var SwitchVarLocal = AstLocal.Create(AllCaseValues.First().GetType(), "SwitchVarLocal" + SwitchVarCount++);
-					Generate(new AstNodeStmAssign(new AstNodeExprLocal(SwitchVarLocal), Switch.SwitchValue));
+					var switchVarLocal = AstLocal.Create(caseValues.First().GetType(), "SwitchVarLocal" + _switchVarCount++);
+					Generate(new AstNodeStmAssign(new AstNodeExprLocal(switchVarLocal), Switch.SwitchValue));
 					//Switch.Cases
 					foreach (var Case in Switch.Cases)
 					{
-						var LabelSkipThisCase = AstLabel.CreateLabel("LabelCase" + Case.CaseValue);
-						Generate(new AstNodeStmGotoIfFalse(LabelSkipThisCase, new AstNodeExprBinop(new AstNodeExprLocal(SwitchVarLocal), "==", new AstNodeExprImm(Case.CaseValue))));
+						var labelSkipThisCase = AstLabel.CreateLabel("LabelCase" + Case.CaseValue);
+						Generate(new AstNodeStmGotoIfFalse(labelSkipThisCase, new AstNodeExprBinop(new AstNodeExprLocal(switchVarLocal), "==", new AstNodeExprImm(Case.CaseValue))));
 						Generate(Case.Code);
-						Generate(new AstNodeStmGotoAlways(EndCasesLabel));
-						Generate(new AstNodeStmLabel(LabelSkipThisCase));
+						Generate(new AstNodeStmGotoAlways(endCasesLabel));
+						Generate(new AstNodeStmLabel(labelSkipThisCase));
 					}
 				}
 			}
 
-			Generate(new AstNodeStmLabel(DefaultLabel));
+			Generate(new AstNodeStmLabel(defaultLabel));
 			if (Switch.CaseDefault != null)
 			{
 				Generate(Switch.CaseDefault.Code);
 			}
 
-			Generate(new AstNodeStmLabel(EndCasesLabel));
+			Generate(new AstNodeStmLabel(endCasesLabel));
 		}
 
-		protected virtual void _Generate(AstNodeExprNewArray NewArray)
+		protected virtual void _Generate(AstNodeExprNewArray newArray)
 		{
-			var TempArrayLocal = AstLocal.Create(NewArray.Type, "$TempArray");
-			Generate(new AstNodeExprImm(NewArray.Length));
-			Emit(OpCodes.Newarr, NewArray.ElementType);
-			Emit(OpCodes.Stloc, _GetLocalBuilderFromAstLocal(TempArrayLocal));
-			for (int n = 0; n < NewArray.Length; n++)
+			var tempArrayLocal = AstLocal.Create(newArray.Type, "$TempArray");
+			Generate(new AstNodeExprImm(newArray.Length));
+			Emit(OpCodes.Newarr, newArray.ElementType);
+			Emit(OpCodes.Stloc, _GetLocalBuilderFromAstLocal(tempArrayLocal));
+			for (var n = 0; n < newArray.Length; n++)
 			{
-				Generate(new AstNodeStmAssign(new AstNodeExprArrayAccess(new AstNodeExprLocal(TempArrayLocal), n), NewArray.Values[n]));
+				Generate(new AstNodeStmAssign(new AstNodeExprArrayAccess(new AstNodeExprLocal(tempArrayLocal), n), newArray.Values[n]));
 			}
-			Generate(new AstNodeExprLocal(TempArrayLocal));
+			Generate(new AstNodeExprLocal(tempArrayLocal));
 		}
 
-		protected virtual void _Generate(AstNodeExprNew AstNodeExprNew)
+		protected virtual void _Generate(AstNodeExprNew astNodeExprNew)
 		{
-			var Constructor = AstNodeExprNew.Type.GetConstructor(AstNodeExprNew.Params.Select(Param => Param.Type).ToArray());
-			foreach (var Param in AstNodeExprNew.Params)
+			var constructor = astNodeExprNew.Type.GetConstructor(astNodeExprNew.Params.Select(param => param.Type).ToArray());
+			foreach (var param in astNodeExprNew.Params)
 			{
-				Generate(Param);
+				Generate(param);
 			}
-			Emit(OpCodes.Newobj, Constructor);
+			Emit(OpCodes.Newobj, constructor);
 		}
 
-		protected virtual void _Generate(AstNodeStmThrow AstNodeStmThrow)
+		protected virtual void _Generate(AstNodeStmThrow astNodeStmThrow)
 		{
-			Generate(AstNodeStmThrow.AstNodeExpr);
+			Generate(astNodeStmThrow.AstNodeExpr);
 			Emit(OpCodes.Throw);
 		}
 	}
