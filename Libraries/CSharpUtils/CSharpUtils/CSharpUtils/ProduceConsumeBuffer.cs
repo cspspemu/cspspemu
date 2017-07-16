@@ -4,88 +4,124 @@ using System.IO;
 
 namespace CSharpUtils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class ProduceConsumerBufferStream : Stream
     {
-        private MemoryStream MemoryStream;
+        private MemoryStream _memoryStream;
+        private long _consumePosition;
+        private long _totalProducePosition = 0;
+        private long _totalConsumePosition;
 
-        private long ConsumePosition = 0;
-        private long TotalProducePosition = 0;
-        private long TotalConsumePosition = 0;
-
+        /// <summary>
+        /// 
+        /// </summary>
         public ProduceConsumerBufferStream()
         {
-            this.MemoryStream = new MemoryStream();
+            _memoryStream = new MemoryStream();
         }
 
-        public override bool CanRead
-        {
-            get { return true; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public override bool CanRead => true;
 
-        public override bool CanSeek
-        {
-            get { return false; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public override bool CanSeek => false;
 
-        public override bool CanWrite
-        {
-            get { return true; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public override bool CanWrite => true;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override void Flush()
         {
         }
 
-        public override long Length
-        {
-            get { return MemoryStream.Length; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public override long Length => _memoryStream.Length;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override long Position
         {
-            get { return ConsumePosition; }
-            set { throw new NotImplementedException(); }
+            get => _consumePosition;
+            set => throw new NotImplementedException();
         }
 
         private void TryReduceMemorySize()
         {
-            if (ReadTransactionStack.Count == 0)
+            if (_readTransactionStack.Count == 0)
             {
-                if (ConsumePosition >= 512 * 1024 || ConsumePosition >= Length / 2)
+                if (_consumePosition >= 512 * 1024 || _consumePosition >= Length / 2)
                 {
-                    var NewMemoryStream = new MemoryStream();
-                    this.MemoryStream.SliceWithLength(ConsumePosition).CopyToFast(NewMemoryStream);
-                    ConsumePosition = 0;
-                    this.MemoryStream = NewMemoryStream;
+                    var newMemoryStream = new MemoryStream();
+                    _memoryStream.SliceWithLength(_consumePosition).CopyToFast(newMemoryStream);
+                    _consumePosition = 0;
+                    _memoryStream = newMemoryStream;
                 }
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            MemoryStream.Position = ConsumePosition;
-            int Readed = MemoryStream.Read(buffer, offset, count);
-            ConsumePosition = MemoryStream.Position;
-            TotalConsumePosition += Readed;
+            _memoryStream.Position = _consumePosition;
+            var readed = _memoryStream.Read(buffer, offset, count);
+            _consumePosition = _memoryStream.Position;
+            _totalConsumePosition += readed;
             TryReduceMemorySize();
-            return Readed;
+            return readed;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <param name="origin"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public override long Seek(long offset, SeekOrigin origin)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <exception cref="NotImplementedException"></exception>
         public override void SetLength(long value)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            MemoryStream.Position = MemoryStream.Length;
-            MemoryStream.Write(buffer, offset, count);
-            TotalProducePosition += count;
+            _memoryStream.Position = _memoryStream.Length;
+            _memoryStream.Write(buffer, offset, count);
+            _totalProducePosition += count;
         }
 
         internal class ReadTransactionState
@@ -94,27 +130,36 @@ namespace CSharpUtils
             internal long TotalConsumePosition;
         }
 
-        private readonly Stack<ReadTransactionState> ReadTransactionStack = new Stack<ReadTransactionState>();
+        private readonly Stack<ReadTransactionState> _readTransactionStack = new Stack<ReadTransactionState>();
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void ReadTransactionBegin()
         {
-            ReadTransactionStack.Push(new ReadTransactionState()
+            _readTransactionStack.Push(new ReadTransactionState()
             {
-                ConsumePosition = this.ConsumePosition,
-                TotalConsumePosition = this.TotalConsumePosition,
+                ConsumePosition = _consumePosition,
+                TotalConsumePosition = _totalConsumePosition,
             });
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void ReadTransactionCommit()
         {
-            ReadTransactionStack.Pop();
+            _readTransactionStack.Pop();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void ReadTransactionRevert()
         {
-            var ReadTransactionState = ReadTransactionStack.Pop();
-            this.ConsumePosition = ReadTransactionState.ConsumePosition;
-            this.TotalConsumePosition = ReadTransactionState.TotalConsumePosition;
+            var readTransactionState = _readTransactionStack.Pop();
+            _consumePosition = readTransactionState.ConsumePosition;
+            _totalConsumePosition = readTransactionState.TotalConsumePosition;
         }
     }
 
@@ -124,72 +169,121 @@ namespace CSharpUtils
     /// <typeparam name="T"></typeparam>
     public class ProduceConsumeBuffer<T>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public T[] Items = new T[0];
+
+        /// <summary>
+        /// 
+        /// </summary>
         public long TotalConsumed { get; private set; }
 
-        public void Produce(T[] NewBytes)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="newBytes"></param>
+        public void Produce(T[] newBytes)
         {
-            Produce(NewBytes, 0, NewBytes.Length);
+            Produce(newBytes, 0, newBytes.Length);
         }
 
-        public void Produce(T[] NewBytes, int Offset, int Length)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="newBytes"></param>
+        /// <param name="offset"></param>
+        /// <param name="length"></param>
+        public void Produce(T[] newBytes, int offset, int length)
         {
-            Items = Items.Concat(NewBytes, Offset, Length);
+            Items = Items.Concat(newBytes, offset, length);
         }
 
-        public int ConsumeRemaining
+        /// <summary>
+        /// 
+        /// </summary>
+        public int ConsumeRemaining => Items.Length;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public T[] ConsumePeek(int length)
         {
-            get { return Items.Length; }
+            length = Math.Min(length, ConsumeRemaining);
+            return Items.Slice(0, length);
         }
 
-        public T[] ConsumePeek(int Length)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public ArraySegment<T> ConsumePeekArraySegment(int length)
         {
-            Length = Math.Min(Length, ConsumeRemaining);
-            return Items.Slice(0, Length);
+            return new ArraySegment<T>(Items, 0, length);
         }
 
-        public ArraySegment<T> ConsumePeekArraySegment(int Length)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public int Consume(T[] buffer, int offset, int length)
         {
-            return new ArraySegment<T>(Items, 0, Length);
+            length = Math.Min(length, ConsumeRemaining);
+            Array.Copy(Items, 0, buffer, offset, length);
+            Items = Items.Slice(length);
+            TotalConsumed += length;
+            return length;
         }
 
-        public int Consume(T[] Buffer, int Offset, int Length)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public T[] Consume(int length)
         {
-            Length = Math.Min(Length, ConsumeRemaining);
-            Array.Copy(Items, 0, Buffer, Offset, Length);
-            Items = Items.Slice(Length);
-            TotalConsumed += Length;
-            return Length;
-        }
-
-        public T[] Consume(int Length)
-        {
-            Length = Math.Min(Length, ConsumeRemaining);
-            var Return = ConsumePeek(Length);
-            Items = Items.Slice(Length);
-            TotalConsumed += Length;
+            length = Math.Min(length, ConsumeRemaining);
+            var Return = ConsumePeek(length);
+            Items = Items.Slice(length);
+            TotalConsumed += length;
             return Return;
         }
 
-        public int IndexOf(T Item)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public int IndexOf(T item)
         {
-            return Array.IndexOf(Items, Item);
+            return Array.IndexOf(Items, item);
         }
 
-        public int IndexOf(T[] Sequence)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sequence"></param>
+        /// <returns></returns>
+        public int IndexOf(T[] sequence)
         {
-            for (int n = 0; n <= Items.Length - Sequence.Length; n++)
+            for (var n = 0; n <= Items.Length - sequence.Length; n++)
             {
-                bool Found = true;
-                for (int m = 0; m < Sequence.Length; m++)
+                var found = true;
+                for (var m = 0; m < sequence.Length; m++)
                 {
-                    if (!Items[n + m].Equals(Sequence[m]))
+                    if (!Items[n + m].Equals(sequence[m]))
                     {
-                        Found = false;
+                        found = false;
                         break;
                     }
                 }
-                if (Found)
+                if (found)
                 {
                     return n;
                 }

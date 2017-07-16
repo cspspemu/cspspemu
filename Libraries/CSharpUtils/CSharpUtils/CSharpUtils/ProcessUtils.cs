@@ -3,38 +3,54 @@ using System.Diagnostics;
 
 namespace CSharpUtils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ProcessUtils
     {
-        public static ProcessResult ExecuteCommand(string Command, string Arguments, string WorkingDirectory = ".")
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="arguments"></param>
+        /// <param name="workingDirectory"></param>
+        /// <returns></returns>
+        public static ProcessResult ExecuteCommand(string command, string arguments, string workingDirectory = ".")
         {
             var proc = new Process();
             proc.EnableRaisingEvents = false;
-            proc.StartInfo.FileName = Command;
-            proc.StartInfo.Arguments = Arguments;
+            proc.StartInfo.FileName = command;
+            proc.StartInfo.Arguments = arguments;
             proc.StartInfo.CreateNoWindow = true;
             proc.StartInfo.ErrorDialog = false;
-            proc.StartInfo.WorkingDirectory = WorkingDirectory;
+            proc.StartInfo.WorkingDirectory = workingDirectory;
             proc.StartInfo.UseShellExecute = false;
             proc.StartInfo.RedirectStandardError = true;
             proc.StartInfo.RedirectStandardInput = true;
             proc.StartInfo.RedirectStandardOutput = true;
             proc.Start();
 
-            var OutputString = proc.StandardOutput.ReadToEnd();
-            var ErrorString = proc.StandardError.ReadToEnd();
+            var outputString = proc.StandardOutput.ReadToEnd();
+            var errorString = proc.StandardError.ReadToEnd();
             proc.WaitForExit();
-            var ExitCode = proc.ExitCode;
+            var exitCode = proc.ExitCode;
 
             return new ProcessResult()
             {
-                OutputString = OutputString,
-                ErrorString = ErrorString,
-                ExitCode = ExitCode,
+                OutputString = outputString,
+                ErrorString = errorString,
+                ExitCode = exitCode,
             };
             //proc.WaitForExit();
         }
 
-        public static ProcessResult RunProgramInBackgroundAsRoot(string ApplicationPath, string ApplicationArguments)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="applicationPath"></param>
+        /// <param name="applicationArguments"></param>
+        /// <returns></returns>
+        public static ProcessResult RunProgramInBackgroundAsRoot(string applicationPath, string applicationArguments)
         {
             // This snippet needs the "System.Diagnostics"
             // library
@@ -47,13 +63,13 @@ namespace CSharpUtils
             //Console.WriteLine(ExecutablePath);
 
             // Create a new process object
-            Process ProcessObj = new Process();
+            var processObj = new Process();
 
-            ProcessObj.StartInfo = new ProcessStartInfo()
+            processObj.StartInfo = new ProcessStartInfo()
             {
                 // StartInfo contains the startup information of the new process
-                FileName = ApplicationPath,
-                Arguments = ApplicationArguments,
+                FileName = applicationPath,
+                Arguments = applicationArguments,
 
                 UseShellExecute = true,
                 Verb = "runas",
@@ -65,45 +81,63 @@ namespace CSharpUtils
                 RedirectStandardOutput = false,
             };
 
-            string OutputString = "";
-            string ErrorString = "";
-            Exception Exception = null;
+            var OutputString = "";
+            var ErrorString = "";
+            Exception exception = null;
             // Wait that the process exits
             try
             {
                 // Start the process
-                ProcessObj.Start();
+                processObj.Start();
 
                 //OutputString = ProcessObj.StandardOutput.ReadToEnd();
                 //ErrorString = ProcessObj.StandardError.ReadToEnd();
-                ProcessObj.WaitForExit();
+                processObj.WaitForExit();
             }
-            catch (Exception _Exception)
+            catch (Exception ex2)
             {
-                Exception = _Exception;
-                Console.WriteLine(Exception);
+                exception = ex2;
+                Console.WriteLine(exception);
             }
 
             return new ProcessResult()
             {
                 OutputString = OutputString,
                 ErrorString = ErrorString,
-                Exception = Exception,
-                ExitCode = ProcessObj.ExitCode,
+                Exception = exception,
+                ExitCode = processObj.ExitCode,
             };
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class ProcessResult
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public string OutputString;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string ErrorString;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public int ExitCode;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public Exception Exception;
 
-        public bool Success
-        {
-            get { return Exception == null && ExitCode == 0; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Success => Exception == null && ExitCode == 0;
     }
 }

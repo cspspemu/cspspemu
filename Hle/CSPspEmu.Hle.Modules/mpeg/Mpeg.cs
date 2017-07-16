@@ -390,14 +390,14 @@ namespace CSPspEmu.Hle.Modules.mpeg
 
         public ulong PresentationTimestamp
         {
-            get { return StructUtils.GetULongFrom2UInt(ref PresentationTimestampLow, ref PresentationTimestampHigh); }
-            set { StructUtils.ConvertULongTo2UInt(value, ref PresentationTimestampLow, ref PresentationTimestampHigh); }
+            get { return StructUtils.GetULongFrom2UInt(PresentationTimestampLow, PresentationTimestampHigh); }
+            set { StructUtils.ConvertULongTo2UInt(value, out PresentationTimestampLow, out PresentationTimestampHigh); }
         }
 
         public ulong DecodeTimestamp
         {
-            get { return StructUtils.GetULongFrom2UInt(ref DecodeTimestampLow, ref DecodeTimestampHigh); }
-            set { StructUtils.ConvertULongTo2UInt(value, ref DecodeTimestampLow, ref DecodeTimestampHigh); }
+            get { return StructUtils.GetULongFrom2UInt(DecodeTimestampLow, DecodeTimestampHigh); }
+            set { StructUtils.ConvertULongTo2UInt(value, out DecodeTimestampLow, out DecodeTimestampHigh); }
         }
 
         /// <summary>

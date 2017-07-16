@@ -6,11 +6,20 @@ using System.Threading.Tasks;
 
 namespace CSharpUtils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Iterators
     {
-        static public IEnumerable<int> IntRange(int From, int To)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        public static IEnumerable<int> IntRange(int @from, int to)
         {
-            for (int n = From; n <= To; n++)
+            for (var n = @from; n <= to; n++)
             {
                 yield return n;
             }

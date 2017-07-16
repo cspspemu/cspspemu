@@ -7,13 +7,20 @@ using System.Threading.Tasks;
 
 namespace CSharpUtils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ThreadUtils
     {
-        static public void SleepUntilUtc(DateTime Until)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="until"></param>
+        public static void SleepUntilUtc(DateTime until)
         {
-            var Duration = Until - DateTime.UtcNow;
-            if (Duration.TotalSeconds < 0) return;
-            Thread.Sleep(Duration);
+            var duration = until - DateTime.UtcNow;
+            if (duration.TotalSeconds < 0) return;
+            Thread.Sleep(duration);
         }
     }
 }

@@ -3,23 +3,43 @@ using System.Collections.Generic;
 
 namespace CSharpUtils
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TSource"></typeparam>
+    /// <typeparam name="TResult"></typeparam>
     public class LinqEqualityComparer<TSource, TResult> : IEqualityComparer<TSource>
     {
-        Func<TSource, TResult> Select;
+        readonly Func<TSource, TResult> _select;
 
-        public LinqEqualityComparer(Func<TSource, TResult> Select)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="select"></param>
+        public LinqEqualityComparer(Func<TSource, TResult> @select)
         {
-            this.Select = Select;
+            _select = @select;
         }
 
-        public bool Equals(TSource Left, TSource Right)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public bool Equals(TSource left, TSource right)
         {
-            return Select(Left).Equals(Select(Right));
+            return _select(left).Equals(_select(right));
         }
 
-        public int GetHashCode(TSource Item)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public int GetHashCode(TSource item)
         {
-            return Select(Item).GetHashCode();
+            return _select(item).GetHashCode();
         }
     }
 }

@@ -1,147 +1,209 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace CSharpUtils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     unsafe public class ByteRingBufferWrapper
     {
-        private byte* DataPointer;
-        private int DataLength;
-        private long ReadPosition = 0;
-        private long WritePosition = 0;
+        private byte* _dataPointer;
+        private int _dataLength;
+        private long _readPosition;
+        private long _writePosition;
 
         private ByteRingBufferWrapper()
         {
+            _readPosition = 0;
         }
 
-        static public ByteRingBufferWrapper FromPointer(byte* Pointer, int DataLength)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pointer"></param>
+        /// <param name="dataLength"></param>
+        /// <returns></returns>
+        public static ByteRingBufferWrapper FromPointer(byte* pointer, int dataLength)
         {
-            return new ByteRingBufferWrapper()
+            return new ByteRingBufferWrapper
             {
-                DataPointer = Pointer,
-                DataLength = DataLength,
+                _dataPointer = pointer,
+                _dataLength = dataLength,
             };
         }
 
-        public int Capacity
-        {
-            get { return this.DataLength; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Capacity => _dataLength;
 
-        public long ReadAvailable
-        {
-            get { return WritePosition - ReadPosition; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public long ReadAvailable => _writePosition - _readPosition;
 
-        public long WriteAvailable
-        {
-            get { return Capacity - ReadAvailable; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public long WriteAvailable => Capacity - ReadAvailable;
 
-        public void Write(byte Item)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <exception cref="OverflowException"></exception>
+        public void Write(byte item)
         {
             if (WriteAvailable <= 0) throw (new OverflowException("RingBuffer is full"));
-            this.DataPointer[WritePosition++ % Capacity] = Item;
+            _dataPointer[_writePosition++ % Capacity] = item;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="OverflowException"></exception>
         public byte Read()
         {
             if (ReadAvailable <= 0) throw (new OverflowException("RingBuffer is empty"));
-            return this.DataPointer[ReadPosition++ % Capacity];
+            return _dataPointer[_readPosition++ % Capacity];
         }
 
-        public int Write(byte[] TransferData, int Offset = 0, int Length = -1)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="transferData"></param>
+        /// <param name="offset"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public int Write(byte[] transferData, int offset = 0, int length = -1)
         {
-            if (Length == -1) Length = DataLength - Offset;
-            Length = Math.Min(Length, (int) this.WriteAvailable);
-            int Transferred = 0;
-            while (Length-- > 0)
+            if (length == -1) length = _dataLength - offset;
+            length = Math.Min(length, (int) WriteAvailable);
+            var transferred = 0;
+            while (length-- > 0)
             {
-                Write(TransferData[Offset++]);
-                Transferred++;
+                Write(transferData[offset++]);
+                transferred++;
             }
-            return Transferred;
+            return transferred;
         }
 
-        public int Read(byte[] TransferData, int Offset = 0, int Length = -1)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="transferData"></param>
+        /// <param name="offset"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public int Read(byte[] transferData, int offset = 0, int length = -1)
         {
-            if (Length == -1) Length = DataLength - Offset;
-            Length = Math.Min(Length, (int) this.ReadAvailable);
-            int Transferred = 0;
-            while (Length-- > 0)
+            if (length == -1) length = _dataLength - offset;
+            length = Math.Min(length, (int) ReadAvailable);
+            var transferred = 0;
+            while (length-- > 0)
             {
-                TransferData[Offset++] = Read();
-                Transferred++;
+                transferData[offset++] = Read();
+                transferred++;
             }
-            return Transferred;
+            return transferred;
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class RingBuffer<T>
     {
         private T[] Data;
-        private long ReadPosition = 0;
-        private long WritePosition = 0;
+        private long _readPosition;
+        private long _writePosition;
 
-        public RingBuffer(int Capacity)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="capacity"></param>
+        public RingBuffer(int capacity)
         {
-            this.Data = new T[Capacity];
+            Data = new T[capacity];
         }
 
-        public int Capacity
-        {
-            get { return this.Data.Length; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Capacity => Data.Length;
 
-        public long ReadAvailable
-        {
-            get { return WritePosition - ReadPosition; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public long ReadAvailable => _writePosition - _readPosition;
 
-        public long WriteAvailable
-        {
-            get { return Capacity - ReadAvailable; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public long WriteAvailable => Capacity - ReadAvailable;
 
-        public void Write(T Item)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <exception cref="OverflowException"></exception>
+        public void Write(T item)
         {
             if (WriteAvailable <= 0) throw (new OverflowException("RingBuffer is full"));
-            this.Data[WritePosition++ % Capacity] = Item;
+            Data[_writePosition++ % Capacity] = item;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="OverflowException"></exception>
         public T Read()
         {
             if (ReadAvailable <= 0) throw (new OverflowException("RingBuffer is empty"));
-            return this.Data[ReadPosition++ % Capacity];
+            return Data[_readPosition++ % Capacity];
         }
 
-        public int Write(T[] TransferData, int Offset = 0, int Length = -1)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="transferData"></param>
+        /// <param name="offset"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public int Write(T[] transferData, int offset = 0, int length = -1)
         {
-            if (Length == -1) Length = Data.Length - Offset;
-            Length = Math.Min(Length, (int) this.WriteAvailable);
-            int Transferred = 0;
-            while (Length-- > 0)
+            if (length == -1) length = Data.Length - offset;
+            length = Math.Min(length, (int) WriteAvailable);
+            var transferred = 0;
+            while (length-- > 0)
             {
-                Write(TransferData[Offset++]);
-                Transferred++;
+                Write(transferData[offset++]);
+                transferred++;
             }
-            return Transferred;
+            return transferred;
         }
 
-        public int Read(T[] TransferData, int Offset = 0, int Length = -1)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="transferData"></param>
+        /// <param name="offset"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public int Read(T[] transferData, int offset = 0, int length = -1)
         {
-            if (Length == -1) Length = Data.Length - Offset;
-            Length = Math.Min(Length, (int) this.ReadAvailable);
-            int Transferred = 0;
-            while (Length-- > 0)
+            if (length == -1) length = Data.Length - offset;
+            length = Math.Min(length, (int) ReadAvailable);
+            var transferred = 0;
+            while (length-- > 0)
             {
-                TransferData[Offset++] = Read();
-                Transferred++;
+                transferData[offset++] = Read();
+                transferred++;
             }
-            return Transferred;
+            return transferred;
         }
     }
 }

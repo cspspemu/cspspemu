@@ -3,44 +3,48 @@ using System.Timers;
 
 namespace CSharpUtils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class TimeSpanUtils
     {
-        public static TimeSpan FromMicroseconds(long Microseconds)
-        {
-            return TimeSpan.FromMilliseconds((double) Microseconds / (double) 1000.0);
-        }
-
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Action"></param>
-        public static void InfiniteLoopDetector(string Description, Action Action, Action LoopAction = null)
+        /// <param name="microseconds"></param>
+        /// <returns></returns>
+        public static TimeSpan FromMicroseconds(long microseconds)
         {
-            using (var Timer = new Timer(4.0 * 1000))
+            return TimeSpan.FromMilliseconds((double) microseconds / (double) 1000.0);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="description"></param>
+        /// <param name="action"></param>
+        /// <param name="loopAction"></param>
+        public static void InfiniteLoopDetector(string description, Action action, Action loopAction = null)
+        {
+            using (var timer = new Timer(4.0 * 1000))
             {
-                bool Cancel = false;
-                Timer.Elapsed += (sender, e) =>
+                bool[] cancel = {false};
+                timer.Elapsed += (sender, e) =>
                 {
-                    if (!Cancel)
-                    {
-                        Console.WriteLine("InfiniteLoop Detected! : {0} : {1}", Description, e.SignalTime);
-                        if (LoopAction != null)
-                        {
-                            LoopAction();
-                        }
-                    }
+                    if (cancel[0]) return;
+                    Console.WriteLine("InfiniteLoop Detected! : {0} : {1}", description, e.SignalTime);
+                    loopAction?.Invoke();
                 };
-                Timer.AutoReset = false;
-                Timer.Start();
+                timer.AutoReset = false;
+                timer.Start();
                 try
                 {
-                    Action();
+                    action();
                 }
                 finally
                 {
-                    Cancel = true;
-                    Timer.Enabled = false;
-                    Timer.Stop();
+                    cancel[0] = true;
+                    timer.Enabled = false;
+                    timer.Stop();
                 }
             }
         }

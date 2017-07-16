@@ -3,8 +3,15 @@ using System.Runtime.Serialization;
 
 namespace CSharpUtils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class StackTraceUtils
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
         public static void PreserveStackTrace(Exception e)
         {
             var ctx = new StreamingContext(StreamingContextStates.CrossAppDomain);

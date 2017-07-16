@@ -4,27 +4,46 @@ using System.Xml.Serialization;
 
 namespace CSharpUtils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class XmlSerializerUtils
     {
-        public static TType FromFile<TType>(String FileName)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <typeparam name="TType"></typeparam>
+        /// <returns></returns>
+        public static TType FromFile<TType>(string fileName)
         {
-            var XmlSerializer = new XmlSerializer(typeof(TType));
+            var xmlSerializer = new XmlSerializer(typeof(TType));
 
-            using (var XmlFile = File.OpenRead(FileName))
+            using (var xmlFile = File.OpenRead(fileName))
             {
-                return (TType) XmlSerializer.Deserialize(XmlFile);
+                return (TType) xmlSerializer.Deserialize(xmlFile);
             }
         }
 
-        public static void ToFile<TType>(String FileName, TType Object)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="Object"></param>
+        /// <typeparam name="TType"></typeparam>
+        public static void ToFile<TType>(string fileName, TType Object)
         {
-            var XmlSerializer = new XmlSerializer(typeof(TType));
+            var xmlSerializer = new XmlSerializer(typeof(TType));
 
-            Directory.CreateDirectory(new FileInfo(FileName).DirectoryName);
-
-            using (var XmlFile = File.Open(FileName, FileMode.Create))
+            var directoryName = new FileInfo(fileName).DirectoryName;
+            if (directoryName != null)
             {
-                XmlSerializer.Serialize(XmlFile, Object);
+                Directory.CreateDirectory(directoryName);
+            }
+
+            using (var xmlFile = File.Open(fileName, FileMode.Create))
+            {
+                xmlSerializer.Serialize(xmlFile, Object);
             }
         }
     }

@@ -3,9 +3,18 @@ using System.Collections.Generic;
 
 namespace CSharpUtils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class TypeUtils
     {
-        public static IEnumerable<Type> GetTypesExtending(Type BaseType)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="baseType"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public static IEnumerable<Type> GetTypesExtending(Type baseType)
         {
             throw(new NotImplementedException());
             /*

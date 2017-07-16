@@ -2,184 +2,292 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
+using static System.String;
 
 namespace CSharpUtils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class Logger
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public enum Level
         {
+            /// <summary>
+            /// 
+            /// </summary>
             Notice,
+
+            /// <summary>
+            /// 
+            /// </summary>
             Info,
+
+            /// <summary>
+            /// 
+            /// </summary>
             Warning,
+
+            /// <summary>
+            /// 
+            /// </summary>
             Unimplemented,
+
+            /// <summary>
+            /// 
+            /// </summary>
             Error,
+
+            /// <summary>
+            /// 
+            /// </summary>
             Fatal,
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string Name { get; private set; }
-        private bool Enabled;
+
+        //private bool Enabled = true;
+        private bool Enabled = false;
+
         private static readonly Dictionary<string, Logger> Loggers = new Dictionary<string, Logger>();
 
         internal Logger()
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public static Logger CreateAnonymousLogger()
         {
             return new Logger();
         }
 
-        public static Logger GetLogger(string Name)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static Logger GetLogger(string name)
         {
             lock (Loggers)
             {
-                if (!Loggers.ContainsKey(Name))
+                if (!Loggers.ContainsKey(name))
                 {
-                    Loggers[Name] = new Logger()
+                    Loggers[name] = new Logger()
                     {
-                        Name = Name,
+                        Name = name,
                     };
                 }
 
-                return Loggers[Name];
+                return Loggers[name];
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public static event Action<string, Level, string, StackFrame> OnGlobalLog;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public event Action<Level, string, StackFrame> OnLog;
 
-        private Logger Log(Level Level, object Format, params object[] Params)
+        private Logger Log(Level level, object format, params object[] Params)
         {
             if (Enabled || OnGlobalLog != null)
             {
-                StackTrace stackTrace = new StackTrace();
-                StackFrame StackFrame = null;
-                foreach (var Frame in stackTrace.GetFrames())
-                {
-                    if (Frame.GetMethod().DeclaringType != typeof(Logger))
+                var stackTrace = new StackTrace();
+                StackFrame stackFrame = null;
+                var stackFrames = stackTrace.GetFrames();
+                if (stackFrames != null)
+                    foreach (var frame in stackFrames)
                     {
-                        StackFrame = Frame;
-                        break;
+                        if (frame.GetMethod().DeclaringType != typeof(Logger))
+                        {
+                            stackFrame = frame;
+                            break;
+                        }
                     }
-                }
 
                 if (Enabled)
                 {
-                    if (OnLog != null) OnLog(Level, String.Format(Format.ToString(), Params), StackFrame);
+                    OnLog?.Invoke(level, Format(format.ToString(), Params), stackFrame);
                 }
 
-                if (OnGlobalLog != null)
-                {
-                    OnGlobalLog(Name, Level, String.Format(Format.ToString(), Params), StackFrame);
-                }
+                OnGlobalLog?.Invoke(Name, level, Format(format.ToString(), Params), stackFrame);
             }
 
             return this;
         }
 
-        public Logger Notice(object Format, params object[] Params)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="Params"></param>
+        /// <returns></returns>
+        public Logger Notice(object format, params object[] Params)
         {
-            return Log(Level.Notice, Format, Params);
+            return Log(Level.Notice, format, Params);
         }
 
-        public Logger Info(object Format, params object[] Params)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="Params"></param>
+        /// <returns></returns>
+        public Logger Info(object format, params object[] Params)
         {
-            return Log(Level.Info, Format, Params);
+            return Log(Level.Info, format, Params);
         }
 
-        public Logger Warning(object Format, params object[] Params)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="Params"></param>
+        /// <returns></returns>
+        public Logger Warning(object format, params object[] Params)
         {
-            return Log(Level.Warning, Format, Params);
+            return Log(Level.Warning, format, Params);
         }
 
-        public Logger Unimplemented(object Format, params object[] Params)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="Params"></param>
+        /// <returns></returns>
+        public Logger Unimplemented(object format, params object[] Params)
         {
-            return Log(Level.Unimplemented, Format, Params);
+            return Log(Level.Unimplemented, format, Params);
         }
 
-        public Logger Error(object Format, params object[] Params)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="Params"></param>
+        /// <returns></returns>
+        public Logger Error(object format, params object[] Params)
         {
-            return Log(Level.Error, Format, Params);
+            return Log(Level.Error, format, Params);
         }
 
-        public Logger Fatal(object Format, params object[] Params)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="Params"></param>
+        /// <returns></returns>
+        public Logger Fatal(object format, params object[] Params)
         {
-            return Log(Level.Fatal, Format, Params);
+            return Log(Level.Fatal, format, Params);
         }
 
-        public static TimeSpan Measure(Action Action)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public static TimeSpan Measure(Action action)
         {
-            var Start = DateTime.UtcNow;
-            Action();
-            var End = DateTime.UtcNow;
-            return End - Start;
+            var start = DateTime.UtcNow;
+            action();
+            var end = DateTime.UtcNow;
+            return end - start;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public class Stopwatch
         {
             protected List<DateTime> DateTimeList = new List<DateTime>();
             protected DateTime LastDateTime;
 
+            /// <summary>
+            /// 
+            /// </summary>
             public Stopwatch()
             {
                 Start();
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
             public Stopwatch Start()
             {
                 LastDateTime = DateTime.UtcNow;
                 return this;
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
             public TimeSpan Tick()
             {
-                var Now = DateTime.UtcNow;
-                DateTimeList.Add(Now);
+                var now = DateTime.UtcNow;
+                DateTimeList.Add(now);
                 try
                 {
-                    return Now - LastDateTime;
+                    return now - LastDateTime;
                 }
                 finally
                 {
-                    LastDateTime = Now;
+                    LastDateTime = now;
                 }
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
             public override string ToString()
             {
-                var TimeSpans = new List<TimeSpan>();
-                for (int n = 1; n < DateTimeList.Count; n++)
+                var timeSpans = new List<TimeSpan>();
+                for (var n = 1; n < DateTimeList.Count; n++)
                 {
-                    TimeSpans.Add(DateTimeList[n] - DateTimeList[n - 1]);
+                    timeSpans.Add(DateTimeList[n] - DateTimeList[n - 1]);
                 }
 
-                return String.Format(
-                    "Logger.Stopwatch({0})",
-                    String.Join(",", TimeSpans.Select(Item => String.Format(
-                        "{0} ms",
-                        (int) Item.TotalMilliseconds
-                    )))
-                );
+                return
+                    $"Logger.Stopwatch({Join(",", timeSpans.Select(item => $"{(int) item.TotalMilliseconds} ms"))})";
             }
         }
 
-        public void TryCatch(Action Action)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
+        public void TryCatch(Action action)
         {
             if (Debugger.IsAttached)
             {
-                Action();
+                action();
             }
             else
             {
                 try
                 {
-                    Action();
+                    action();
                 }
-                catch (Exception Exception)
+                catch (Exception e)
                 {
-                    this.Error(Exception);
+                    Error(e);
                 }
             }
         }

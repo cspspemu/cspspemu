@@ -6,35 +6,35 @@ namespace CSharpUtils
 {
     class TimeSampler
     {
-        Dictionary<DateTime, double> Samples = new Dictionary<DateTime, double>();
+        readonly Dictionary<DateTime, double> _samples = new Dictionary<DateTime, double>();
 
-        public static TimeSpan Measure(Action Action)
+        public static TimeSpan Measure(Action action)
         {
-            var Start = DateTime.UtcNow;
-            Action();
-            var End = DateTime.UtcNow;
-            return End - Start;
+            var start = DateTime.UtcNow;
+            action();
+            var end = DateTime.UtcNow;
+            return end - start;
         }
 
-        public void AddAt(DateTime DateTime, double Sample)
+        public void AddAt(DateTime dateTime, double sample)
         {
-            Samples[DateTime] = Sample;
+            _samples[dateTime] = sample;
         }
 
-        public void AddNow(double Sample)
+        public void AddNow(double sample)
         {
-            AddAt(DateTime.UtcNow, Sample);
+            AddAt(DateTime.UtcNow, sample);
         }
 
-        public double GetInterpolatedSampleAt(DateTime Time)
+        public double GetInterpolatedSampleAt(DateTime time)
         {
             throw(new NotImplementedException());
         }
 
-        public DateTime GetNearestDateTimeAt(DateTime Time)
+        public DateTime GetNearestDateTimeAt(DateTime time)
         {
-            return Samples
-                    .OrderBy(Item => (Time - Item.Key).Duration())
+            return _samples
+                    .OrderBy(item => (time - item.Key).Duration())
                     .First()
                     .Key
                 ;
@@ -61,37 +61,37 @@ namespace CSharpUtils
             ;
         }*/
 
-        public double GetSampleAt(DateTime Time)
+        public double GetSampleAt(DateTime time)
         {
-            return Samples[Time];
+            return _samples[time];
         }
 
-        public double GetIncrementPerSecond(TimeSpan TimeSpan, DateTime DateTimeNow)
+        public double GetIncrementPerSecond(TimeSpan timeSpan, DateTime dateTimeNow)
         {
             //var Time1 = GetLowerDateTimeAt(DateTimeNow - TimeSpan);
             //var Time2 = GetLowerDateTimeAt(DateTimeNow);
-            var Time1 = GetNearestDateTimeAt(DateTimeNow - TimeSpan);
-            var Time2 = GetNearestDateTimeAt(DateTimeNow);
+            var time1 = GetNearestDateTimeAt(dateTimeNow - timeSpan);
+            var time2 = GetNearestDateTimeAt(dateTimeNow);
 
-            var Sample1 = GetSampleAt(Time1);
-            var Sample2 = GetSampleAt(Time2);
+            var sample1 = GetSampleAt(time1);
+            var sample2 = GetSampleAt(time2);
 
-            return (Sample2 - Sample1) / (Time2 - Time1).TotalSeconds;
+            return (sample2 - sample1) / (time2 - time1).TotalSeconds;
         }
 
-        public double GetIncrementPerSecond(TimeSpan TimeSpan)
+        public double GetIncrementPerSecond(TimeSpan timeSpan)
         {
-            return GetIncrementPerSecond(TimeSpan, DateTime.UtcNow);
+            return GetIncrementPerSecond(timeSpan, DateTime.UtcNow);
         }
 
-        public static double Difference(double A, double B)
+        public static double Difference(double a, double b)
         {
-            return (B - A);
+            return b - a;
         }
 
-        public static double Interpolate(double A, double B, double Step)
+        public static double Interpolate(double a, double b, double step)
         {
-            return Difference(B, A) * Step + A;
+            return Difference(b, a) * step + a;
         }
     }
 }

@@ -2,37 +2,40 @@
 
 namespace CSharpUtils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class LanguageUtils
     {
         /// <summary>
         /// Swaps the value of two references.
         /// </summary>
         /// <typeparam name="TType"></typeparam>
-        /// <param name="Left"></param>
-        /// <param name="Right"></param>
-        public static void Swap<TType>(ref TType Left, ref TType Right)
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        public static void Swap<TType>(ref TType left, ref TType right)
         {
-            TType Temp = Left;
-            Left = Right;
-            Right = Temp;
+            var temp = left;
+            left = right;
+            right = temp;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <typeparam name="TType"></typeparam>
-        /// <param name="Left"></param>
-        /// <param name="Right"></param>
-        /// <param name="CopyToLeft"></param>
-        public static void Transfer<TType>(ref TType Left, ref TType Right, bool CopyToLeft)
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <param name="copyToLeft"></param>
+        public static void Transfer<TType>(ref TType left, ref TType right, bool copyToLeft)
         {
-            if (CopyToLeft)
+            if (copyToLeft)
             {
-                Left = Right;
+                left = right;
             }
             else
             {
-                Right = Left;
+                right = left;
             }
         }
 
@@ -40,35 +43,44 @@ namespace CSharpUtils
         /// Changes the value of a reference just while the execution of the LocalScope delegate.
         /// </summary>
         /// <typeparam name="TType"></typeparam>
-        /// <param name="Variable"></param>
-        /// <param name="LocalValue"></param>
-        /// <param name="LocalScope"></param>
-        public static void LocalSet<TType>(ref TType Variable, TType LocalValue, Action LocalScope)
+        /// <param name="variable"></param>
+        /// <param name="localValue"></param>
+        /// <param name="localScope"></param>
+        public static void LocalSet<TType>(ref TType variable, TType localValue, Action localScope)
         {
-            var OldValue = Variable;
-            Variable = LocalValue;
+            var oldValue = variable;
+            // @TODO: A resharper bug?
+            // ReSharper disable once RedundantAssignment
+            variable = localValue;
             try
             {
-                LocalScope();
+                localScope();
             }
             finally
             {
-                Variable = OldValue;
+                variable = oldValue;
             }
         }
 
-        public static void PropertyLocalSet(object Object, string PropertyName, object LocalValue, Action LocalScope)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Object"></param>
+        /// <param name="propertyName"></param>
+        /// <param name="localValue"></param>
+        /// <param name="localScope"></param>
+        public static void PropertyLocalSet(object Object, string propertyName, object localValue, Action localScope)
         {
-            var Property = Object.GetType().GetProperty(PropertyName);
-            var OldValue = Property.GetValue(Object);
-            Property.SetValue(Object, LocalValue);
+            var property = Object.GetType().GetProperty(propertyName);
+            var oldValue = property?.GetValue(Object);
+            property?.SetValue(Object, localValue);
             try
             {
-                LocalScope();
+                localScope();
             }
             finally
             {
-                Property.SetValue(Object, OldValue);
+                property?.SetValue(Object, oldValue);
             }
         }
     }

@@ -10,42 +10,70 @@ namespace CSharpUtils
     [Obsolete(message: "Use System.Lazy", error: false)]
     public class LazyHolder<T>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public Func<T> Getter;
-        protected bool _Setted = false;
-        protected T _Value;
+        
+        protected bool Setted;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public T _Value;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public T Value
         {
             get
             {
-                if (!_Setted)
+                if (!Setted)
                 {
                     _Value = Getter();
-                    _Setted = true;
+                    Setted = true;
                 }
                 return _Value;
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Invalidate()
         {
-            _Setted = false;
+            Setted = false;
             //_Value = default(T);
         }
 
-        public LazyHolder(Func<T> Getter)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="getter"></param>
+        public LazyHolder(Func<T> getter)
         {
-            this.Getter = Getter;
+            Getter = getter;
         }
 
-        public static LazyHolder<T> Create(Func<T> Getter)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="getter"></param>
+        /// <returns></returns>
+        public static LazyHolder<T> Create(Func<T> getter)
         {
-            return new LazyHolder<T>(Getter);
+            return new LazyHolder<T>(getter);
         }
 
-        public static implicit operator T(LazyHolder<T> LazyHolder)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="lazyHolder"></param>
+        /// <returns></returns>
+        public static implicit operator T(LazyHolder<T> lazyHolder)
         {
-            return LazyHolder.Value;
+            return lazyHolder.Value;
         }
     }
 }

@@ -1,43 +1,54 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSharpUtils
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Hashing
     {
-        public static string GetMd5Hash(Stream Stream, Action<long, long> ProgressAction = null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="progressAction"></param>
+        /// <returns></returns>
+        public static string GetMd5Hash(Stream stream, Action<long, long> progressAction = null)
         {
-            if (ProgressAction == null) ProgressAction = (Current, Total) => { };
+            if (progressAction == null) progressAction = (current, total) => { };
 
-            const int MinBufferSize = 1 * 1024; // 1 KB
-            const int MaxBufferSize = 1 * 1024 * 1024; // 1 MB
+            const int minBufferSize = 1 * 1024; // 1 KB
+            const int maxBufferSize = 1 * 1024 * 1024; // 1 MB
 
-            byte[] Temp = new byte[Math.Max(MinBufferSize, Math.Min(MaxBufferSize, Stream.Length))];
+            var temp = new byte[Math.Max(minBufferSize, Math.Min(maxBufferSize, stream.Length))];
             var md5 = MD5.Create();
 
-            while (!Stream.Eof())
+            while (!stream.Eof())
             {
-                int Readed = Stream.Read(Temp, 0, Temp.Length);
-                md5.TransformBlock(Temp, 0, Readed, Temp, 0);
-                ProgressAction(Stream.Position, Stream.Length);
+                var readed = stream.Read(temp, 0, temp.Length);
+                md5.TransformBlock(temp, 0, readed, temp, 0);
+                progressAction(stream.Position, stream.Length);
             }
 
-            md5.TransformFinalBlock(Temp, 0, 0);
+            md5.TransformFinalBlock(temp, 0, 0);
             //Md5.TransformBlock
             //return String.Join("", MD5.Create().ComputeHash(Stream).Select(Byte => Byte.ToString("x2").ToLower()));
             return BitConverter.ToString(md5.Hash).Replace("-", "").ToLower();
         }
 
-        public static string GetMd5Hash(string Path, Action<long, long> ProgressAction = null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="progressAction"></param>
+        /// <returns></returns>
+        public static string GetMd5Hash(string path, Action<long, long> progressAction = null)
         {
-            using (var Stream = File.OpenRead(Path))
+            using (var stream = File.OpenRead(path))
             {
-                return GetMd5Hash(Stream, ProgressAction);
+                return GetMd5Hash(stream, progressAction);
             }
         }
     }

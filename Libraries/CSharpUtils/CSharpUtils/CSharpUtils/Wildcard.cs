@@ -39,7 +39,18 @@ namespace CSharpUtils
         public static string WildcardToRegex(string pattern) =>
             "^" + Regex.Escape(pattern).Replace("\\*", ".*").Replace("\\?", ".") + "$";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static implicit operator Wildcard(string input) => new Wildcard(input);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static implicit operator String(Wildcard input) => input.wildcardPattern;
     }
 }
