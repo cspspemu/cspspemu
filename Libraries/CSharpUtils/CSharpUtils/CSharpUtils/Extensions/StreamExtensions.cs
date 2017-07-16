@@ -799,7 +799,7 @@ static public class StreamExtensions
 	/// <returns></returns>
 	public static Stream CopyToFile(this Stream Stream, String FileName)
 	{
-		try { Directory.CreateDirectory(Path.GetDirectoryName(FileName)); } catch { }
+		try { Directory.CreateDirectory(Path.GetDirectoryName(FileName)); } catch (Exception e) { Console.WriteLine(e); }
 		using (var OutputFile = File.Open(FileName, FileMode.Create, FileAccess.Write))
 		{
 			Stream.CopyToFast(OutputFile);

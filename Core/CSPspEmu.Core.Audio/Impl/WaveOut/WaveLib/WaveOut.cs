@@ -51,8 +51,9 @@ namespace WaveLib
 					WaveOutBuffer buf = (WaveOutBuffer)h.Target;
 					buf.OnCompleted();
 				}
-				catch
+				catch (Exception e)
 				{
+					Console.WriteLine(e);
 				}
 			}
 		}

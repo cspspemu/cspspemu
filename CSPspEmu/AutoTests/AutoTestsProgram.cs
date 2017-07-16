@@ -329,7 +329,7 @@ namespace CSPspEmu.AutoTests
 				{
 					//PspAutoTestsFolder + @"\make.bat"
 					// FileNameBase
-					try { File.Delete(FileNameExecutable); } catch { }
+					try { File.Delete(FileNameExecutable); } catch (Exception e) { Console.WriteLine(e); }
 					var Output = ExecuteBat(PspAutoTestsFolder + @"\build.bat", FileNameBase);
 					if (!string.IsNullOrEmpty((Output)))
 					{

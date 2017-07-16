@@ -93,8 +93,14 @@ namespace CSPspEmu.Runner.Components.Cpu
 			string MemoryStickRootFolder = ApplicationPaths.MemoryStickRootFolder;
 			//Console.Error.WriteLine(MemoryStickRootFolder);
 			//Console.ReadKey();
-			try { Directory.CreateDirectory(MemoryStickRootFolder); }
-			catch { }
+			try
+			{
+				Directory.CreateDirectory(MemoryStickRootFolder);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+			}
 			/*
 			*/
 

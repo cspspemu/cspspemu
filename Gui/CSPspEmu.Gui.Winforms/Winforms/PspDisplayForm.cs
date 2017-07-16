@@ -926,7 +926,7 @@ namespace CSPspEmu.Gui.Winforms
 		{
 			//Console.WriteLine("PATH: {0}", Path);
 			var RecentFiles = StoredConfig.RecentFiles;
-			try { RecentFiles.Remove(Path); } catch { }
+			try { RecentFiles.Remove(Path); } catch (Exception e) { Console.WriteLine(e); }
 			RecentFiles.Insert(0, Path);
 			while (RecentFiles.Count > 9) RecentFiles.RemoveAt(RecentFiles.Count - 1);
 			StoredConfig.Save();

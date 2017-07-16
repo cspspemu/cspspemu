@@ -80,7 +80,7 @@ namespace CSPspEmu.Gui.Winforms
 						//Serializer.Serialize(Console.Out, Entry);
 
 						var Hash = GetHash(IsoFile);
-						try { Directory.CreateDirectory(CacheFolder + "/cspspemu_iso_cache"); } catch { } 
+						try { Directory.CreateDirectory(CacheFolder + "/cspspemu_iso_cache"); } catch (Exception e) { Console.WriteLine(e); } 
 						var CacheFile = CacheFolder + "/cspspemu_iso_cache/cspspemu_iso_cache_" + Hash + ".xml";
 
 						GameEntry Entry;

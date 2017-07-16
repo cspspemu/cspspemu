@@ -440,7 +440,7 @@ namespace CSPspEmu.Hle.Loader
 			{
 				String ModuleExportName = "";
 
-				try { ModuleExportName = ElfLoader.MemoryStream.ReadStringzAt(ModuleExport.Name); } catch { }
+				try { ModuleExportName = ElfLoader.MemoryStream.ReadStringzAt(ModuleExport.Name); } catch (Exception e) { Console.WriteLine(e); }
 
 				Console.WriteLine("  * Export: '{0}'", ModuleExportName);
 
@@ -524,7 +524,7 @@ namespace CSPspEmu.Hle.Loader
 			foreach (var ModuleImport in ModuleImports)
 			{
 				String ModuleImportName = "INVALID";
-				try { ModuleImportName = ElfLoader.MemoryStream.ReadStringzAt(ModuleImport.Name); } catch { }
+				try { ModuleImportName = ElfLoader.MemoryStream.ReadStringzAt(ModuleImport.Name); } catch (Exception e) { Console.WriteLine(e); }
 
 				var HleModuleImports = new HleModuleImports();
 				HleModuleImports.Name = ModuleImportName;

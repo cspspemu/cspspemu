@@ -43,7 +43,7 @@ namespace CSharpUtils
 		{
 			if (!_AppendStreams.Contains(Path))
 			{
-				try { File.Delete(Path); } catch { }
+				try { File.Delete(Path); } catch (Exception e) { Console.WriteLine(e); }
 				_AppendStreams.Add(Path);
 			}
 
