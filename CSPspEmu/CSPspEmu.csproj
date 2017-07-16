@@ -243,7 +243,9 @@
     <PostBuildEvent>REM "$(SolutionDir)\merge.bat" $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
+    <!--
     <PreBuildEvent>"$(SolutionDir)\update_version_current.bat" $(ConfigurationName)</PreBuildEvent>
+    -->
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
