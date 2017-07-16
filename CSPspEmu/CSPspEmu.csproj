@@ -177,7 +177,7 @@
       <Project>{DC02A203-30F2-4613-950B-1529FD55AC81}</Project>
       <Name>CSPspEmu.Utils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\libraries\csharpplatform\CSharpPlatform\CSharpPlatform.csproj">
+    <ProjectReference Include="..\Libraries\csharpplatform\CSharpPlatform\CSharpPlatform.csproj">
       <Project>{B4B107B5-030B-451C-8532-13B2306692C3}</Project>
       <Name>CSharpPlatform</Name>
     </ProjectReference>

@@ -34,7 +34,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpUtils.Drawing", "Libr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeILGenerator", "Libraries\SafeILGenerator\SafeILGenerator\SafeILGenerator.csproj", "{9A93C7E4-09DA-46CF-B7DD-6BB09681D5AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpPlatform", "libraries\csharpplatform\CSharpPlatform\CSharpPlatform.csproj", "{B4B107B5-030B-451C-8532-13B2306692C3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpPlatform", "Libraries\csharpplatform\CSharpPlatform\CSharpPlatform.csproj", "{B4B107B5-030B-451C-8532-13B2306692C3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Emulator", "Emulator", "{38DD7C09-AE2E-48DD-A6A9-535AB51D3644}"
 EndProject

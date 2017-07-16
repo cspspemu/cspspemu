@@ -118,7 +118,7 @@
     <Compile Include="_DynarecConfig.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\libraries\csharpplatform\CSharpPlatform\CSharpPlatform.csproj">
+    <ProjectReference Include="..\..\Libraries\csharpplatform\CSharpPlatform\CSharpPlatform.csproj">
       <Project>{b4b107b5-030b-451c-8532-13b2306692c3}</Project>
       <Name>CSharpPlatform</Name>
     </ProjectReference>
