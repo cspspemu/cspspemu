@@ -48,9 +48,9 @@ namespace CSPspEmu
 			return Type.GetType("System.Reflection.ReflectionContext", false) != null;
 		}
 
-		static void RunTests(bool RunTestsViewOut, string[] Arguments, int Timeout)
+		static void RunTests(bool runTestsViewOut, string[] arguments, int timeout)
 		{
-			AutoTestsProgram.Main(RunTestsViewOut, Arguments.ToArray(), Timeout);
+			AutoTestsProgram.Main(runTestsViewOut, arguments.ToArray(), timeout);
 			Environment.Exit(0);
 		}
 

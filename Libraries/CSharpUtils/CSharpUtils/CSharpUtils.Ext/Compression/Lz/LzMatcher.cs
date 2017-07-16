@@ -9,10 +9,10 @@ namespace CSharpUtils.Compression.Lz
 {
 	unsafe public class LzMatcher
 	{
-		public int MaxOffset { get; private set; }
-		public int MinSize { get; private set; }
-		public int MaxSize { get; private set; }
-		public bool AllowOverlapping { get; private set; }
+		public int MaxOffset { get; }
+		public int MinSize { get; }
+		public int MaxSize { get; }
+		public bool AllowOverlapping { get; }
 		byte[] Data;
 		Dictionary<int, LinkedList<int>> Waypoints = new Dictionary<int, LinkedList<int>>();
 		LinkedList<int> Hashes = new LinkedList<int>();
