@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace CSharpPlatform.Library
 {
-	public interface IDynamicLibrary : IDisposable
-	{
-		IntPtr GetMethod(string Name);
-	}
+    public interface IDynamicLibrary : IDisposable
+    {
+        IntPtr GetMethod(string Name);
+    }
 }

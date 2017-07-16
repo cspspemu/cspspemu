@@ -22,31 +22,28 @@ namespace CSharpUtils
 
         internal int BitsToAligment
         {
-            get
-            {
-                return (32 - dataLength) % 8;
-            }
+            get { return (32 - dataLength) % 8; }
         }
 
-		public BitWriter(Stream stream)
+        public BitWriter(Stream stream)
         {
             this.stream = stream;
         }
 
-		public void WriteBit(bool value)
+        public void WriteBit(bool value)
         {
             WriteLSB(value ? 1 : 0, 1);
         }
 
-		public void WriteLSB(int value, int length)
+        public void WriteLSB(int value, int length)
         {
             Debug.Assert(value < 1 << length, "value does not fit in length");
 
-            uint currentData = data | checked((uint)value << dataLength);
+            uint currentData = data | checked((uint) value << dataLength);
             int currentLength = dataLength + length;
             while (currentLength >= 8)
             {
-                BaseStream.WriteByte((byte)currentData);
+                BaseStream.WriteByte((byte) currentData);
                 currentData >>= 8;
                 currentLength -= 8;
             }
@@ -54,7 +51,7 @@ namespace CSharpUtils
             dataLength = currentLength;
         }
 
-		public void WriteMSB(int value, int length)
+        public void WriteMSB(int value, int length)
         {
             Debug.Assert(value < 1 << length, "value does not fit in length");
 
@@ -72,7 +69,7 @@ namespace CSharpUtils
         {
             if (dataLength > 0)
             {
-                BaseStream.WriteByte((byte)data);
+                BaseStream.WriteByte((byte) data);
 
                 data = 0;
                 dataLength = 0;

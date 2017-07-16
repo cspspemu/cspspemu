@@ -42,19 +42,13 @@ namespace CSharpUtils.Streams
 
         public override long Position
         {
-            get
-            {
-                return _Position;
-            }
-            set
-            {
-                _Position = value;
-            }
+            get { return _Position; }
+            set { _Position = value; }
         }
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            int Readed = Math.Min(count, (int)(Length - Position));
+            int Readed = Math.Min(count, (int) (Length - Position));
             for (int n = 0; n < count; n++) buffer[offset + n] = this.ValueToRepeat;
             Position += Readed;
             return Readed;
@@ -64,9 +58,15 @@ namespace CSharpUtils.Streams
         {
             switch (origin)
             {
-                case SeekOrigin.Begin: Position = offset; break;
-                case SeekOrigin.Current: Position = Position + offset; break;
-                case SeekOrigin.End: Position = Length + offset;  break;
+                case SeekOrigin.Begin:
+                    Position = offset;
+                    break;
+                case SeekOrigin.Current:
+                    Position = Position + offset;
+                    break;
+                case SeekOrigin.End:
+                    Position = Length + offset;
+                    break;
                 default: throw(new NotImplementedException());
             }
             return Position;

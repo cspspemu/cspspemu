@@ -20,11 +20,7 @@ namespace CSharpUtils
         /// Initializes a wildcard with the given search pattern.
         /// </summary>
         /// <param name="pattern">The wildcard pattern to match.</param>
-        public Wildcard(string pattern)
-            : base(WildcardToRegex(pattern))
-        {
-            this.wildcardPattern = pattern;
-        }
+        public Wildcard(string pattern) : base(WildcardToRegex(pattern)) => wildcardPattern = pattern;
 
         /// <summary>
         /// Initializes a wildcard with the given search pattern and options.
@@ -32,30 +28,18 @@ namespace CSharpUtils
         /// <param name="pattern">The wildcard pattern to match.</param>
         /// <param name="options">A combination of one or more
         /// <see cref="RegexOptions"/>.</param>
-        public Wildcard(string pattern, RegexOptions options)
-            : base(WildcardToRegex(pattern), options)
-        {
-            this.wildcardPattern = pattern;
-        }
+        public Wildcard(string pattern, RegexOptions options) : base(WildcardToRegex(pattern), options) =>
+            wildcardPattern = pattern;
 
         /// <summary>
         /// Converts a wildcard to a regex.
         /// </summary>
         /// <param name="pattern">The wildcard pattern to convert.</param>
         /// <returns>A regex equivalent of the given wildcard.</returns>
-        public static string WildcardToRegex(string pattern)
-        {
-            return "^" + Regex.Escape(pattern).Replace("\\*", ".*").Replace("\\?", ".") + "$";
-        }
+        public static string WildcardToRegex(string pattern) =>
+            "^" + Regex.Escape(pattern).Replace("\\*", ".*").Replace("\\?", ".") + "$";
 
-        public static implicit operator Wildcard(String Input)
-        {
-            return new Wildcard(Input);
-        }
-
-        static public implicit operator String(Wildcard Input)
-        {
-            return Input.wildcardPattern;
-        }
+        public static implicit operator Wildcard(string input) => new Wildcard(input);
+        public static implicit operator String(Wildcard input) => input.wildcardPattern;
     }
 }

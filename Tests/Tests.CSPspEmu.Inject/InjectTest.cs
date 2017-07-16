@@ -3,62 +3,79 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.CSPspEmu.Inject
 {
-	[TestClass]
-	public class InjectTest
-	{
-		public class Test : IInjectInitialize
-		{
-			[Inject]
-			protected InjectContext _InjectContext1 { get; private set; }
-			protected InjectContext _InjectContext2;
-			protected InjectContext _InjectContext3;
+    [TestClass]
+    public class InjectTest
+    {
+        public class Test : IInjectInitialize
+        {
+            [Inject]
+            protected InjectContext _InjectContext1 { get; private set; }
 
-			public InjectContext InjectContext1 { get { return _InjectContext1; } }
-			public InjectContext InjectContext2 { get { return _InjectContext2; } }
-			public InjectContext InjectContext3 { get { return _InjectContext3; } }
+            protected InjectContext _InjectContext2;
+            protected InjectContext _InjectContext3;
 
-			private Test()
-			{
-			}
+            public InjectContext InjectContext1
+            {
+                get { return _InjectContext1; }
+            }
 
-			void IInjectInitialize.Initialize()
-			{
-				_InjectContext2 = _InjectContext1;
-			}
-		}
+            public InjectContext InjectContext2
+            {
+                get { return _InjectContext2; }
+            }
 
-		public class Test2
-		{
-			[Inject]
-			protected InjectContext _InjectContext1;
-		}
+            public InjectContext InjectContext3
+            {
+                get { return _InjectContext3; }
+            }
 
-		public class Test3 : Test2
-		{
-			[Inject]
-			InjectContext _InjectContext2;
+            private Test()
+            {
+            }
 
-			public InjectContext InjectContext1 { get { return _InjectContext1; } }
-			public InjectContext InjectContext2 { get { return _InjectContext2; } }
-		}
+            void IInjectInitialize.Initialize()
+            {
+                _InjectContext2 = _InjectContext1;
+            }
+        }
 
-		[TestMethod]
-		public void TestInjection()
-		{
-			var Context = new InjectContext();
-			var Test = Context.GetInstance<Test>();
-			Assert.AreEqual(Context, Test.InjectContext1);
-			Assert.AreEqual(Context, Test.InjectContext2);
-			Assert.AreEqual(null, Test.InjectContext3);
-		}
+        public class Test2
+        {
+            [Inject] protected InjectContext _InjectContext1;
+        }
 
-		[TestMethod]
-		public void TestInjectionExtended()
-		{
-			var Context = new InjectContext();
-			var Test = Context.GetInstance<Test3>();
-			Assert.AreEqual(Context, Test.InjectContext1);
-			Assert.AreEqual(Context, Test.InjectContext2);
-		}
-	}
+        public class Test3 : Test2
+        {
+            [Inject] InjectContext _InjectContext2;
+
+            public InjectContext InjectContext1
+            {
+                get { return _InjectContext1; }
+            }
+
+            public InjectContext InjectContext2
+            {
+                get { return _InjectContext2; }
+            }
+        }
+
+        [TestMethod]
+        public void TestInjection()
+        {
+            var Context = new InjectContext();
+            var Test = Context.GetInstance<Test>();
+            Assert.AreEqual(Context, Test.InjectContext1);
+            Assert.AreEqual(Context, Test.InjectContext2);
+            Assert.AreEqual(null, Test.InjectContext3);
+        }
+
+        [TestMethod]
+        public void TestInjectionExtended()
+        {
+            var Context = new InjectContext();
+            var Test = Context.GetInstance<Test3>();
+            Assert.AreEqual(Context, Test.InjectContext1);
+            Assert.AreEqual(Context, Test.InjectContext2);
+        }
+    }
 }

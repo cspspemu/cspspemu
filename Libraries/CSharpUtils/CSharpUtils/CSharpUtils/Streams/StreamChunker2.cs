@@ -4,81 +4,81 @@ using System.IO;
 
 namespace CSharpUtils.Streams
 {
-	public class StreamChunker2
-	{
-		protected static int FindSequence(byte[] Array, byte[] SequenceToFind, int Start = 0, int EndIndex = int.MaxValue)
-		{
-			int ArrayUpTo = Math.Min(EndIndex, Array.Length) - SequenceToFind.Length;
-			int SequenceToFindLength = SequenceToFind.Length;
-			for (int n = Start; n < ArrayUpTo; n++)
-			{
-				bool Found = true;
-				for (int m = 0; m < SequenceToFindLength; m++)
-				{
-					if (SequenceToFind[m] != Array[n + m])
-					{
-						Found = false;
-						break;
-					}
-				}
-				if (Found)
-				{
-					return n;
-				}
-			}
-			return -1;
-		}
+    public class StreamChunker2
+    {
+        protected static int FindSequence(byte[] Array, byte[] SequenceToFind, int Start = 0,
+            int EndIndex = int.MaxValue)
+        {
+            int ArrayUpTo = Math.Min(EndIndex, Array.Length) - SequenceToFind.Length;
+            int SequenceToFindLength = SequenceToFind.Length;
+            for (int n = Start; n < ArrayUpTo; n++)
+            {
+                bool Found = true;
+                for (int m = 0; m < SequenceToFindLength; m++)
+                {
+                    if (SequenceToFind[m] != Array[n + m])
+                    {
+                        Found = false;
+                        break;
+                    }
+                }
+                if (Found)
+                {
+                    return n;
+                }
+            }
+            return -1;
+        }
 
-		public static List<byte[]> SplitInChunks(Stream InputStream, byte[] Separator)
-		{
-			var List = new List<byte[]>();
-			Split(InputStream, Separator, delegate(byte[] Chunk)
-			{
-				List.Add(Chunk);
-			});
-			return List;
-		}
+        public static List<byte[]> SplitInChunks(Stream InputStream, byte[] Separator)
+        {
+            var List = new List<byte[]>();
+            Split(InputStream, Separator, delegate(byte[] Chunk) { List.Add(Chunk); });
+            return List;
+        }
 
-		public static void Split(Stream InputStream, byte[] Separator, Action<byte[]> ChunkHandler) {
-			byte[] Buffer = new byte[4096];
+        public static void Split(Stream InputStream, byte[] Separator, Action<byte[]> ChunkHandler)
+        {
+            byte[] Buffer = new byte[4096];
 
-			byte[] TempDoubleBuffer = new byte[Separator.Length * 2];
+            byte[] TempDoubleBuffer = new byte[Separator.Length * 2];
 
-			MemoryStream Chunk = new MemoryStream();
+            MemoryStream Chunk = new MemoryStream();
 
-			int StartIndex = Separator.Length;
-			int SkipChunkStart = 0;
-			
-			while (!InputStream.Eof()) {
-				Array.Copy(TempDoubleBuffer, Separator.Length, TempDoubleBuffer, 0, Separator.Length);
-				int TempDoubleBufferReaded = InputStream.Read(TempDoubleBuffer, Separator.Length, Separator.Length);
+            int StartIndex = Separator.Length;
+            int SkipChunkStart = 0;
 
-				int EndIndex = Separator.Length + TempDoubleBufferReaded;
+            while (!InputStream.Eof())
+            {
+                Array.Copy(TempDoubleBuffer, Separator.Length, TempDoubleBuffer, 0, Separator.Length);
+                int TempDoubleBufferReaded = InputStream.Read(TempDoubleBuffer, Separator.Length, Separator.Length);
 
-				Chunk.Write(TempDoubleBuffer, Separator.Length, TempDoubleBufferReaded);
+                int EndIndex = Separator.Length + TempDoubleBufferReaded;
 
-				int FoundIndex = FindSequence(TempDoubleBuffer, Separator, StartIndex, EndIndex);
-				if (FoundIndex != -1)
-				{
-					int BytesToRemoveFromChunk = EndIndex - FoundIndex;
-					int RealChunkSize = (int)(Chunk.Length - BytesToRemoveFromChunk);
+                Chunk.Write(TempDoubleBuffer, Separator.Length, TempDoubleBufferReaded);
 
-					MemoryStream NewChunk = new MemoryStream();
+                int FoundIndex = FindSequence(TempDoubleBuffer, Separator, StartIndex, EndIndex);
+                if (FoundIndex != -1)
+                {
+                    int BytesToRemoveFromChunk = EndIndex - FoundIndex;
+                    int RealChunkSize = (int) (Chunk.Length - BytesToRemoveFromChunk);
 
-					NewChunk.WriteBytes(Chunk.ReadChunk(RealChunkSize, BytesToRemoveFromChunk));
-					ChunkHandler(Chunk.ReadChunk(SkipChunkStart, RealChunkSize - SkipChunkStart));
+                    MemoryStream NewChunk = new MemoryStream();
 
-					SkipChunkStart = Separator.Length;
+                    NewChunk.WriteBytes(Chunk.ReadChunk(RealChunkSize, BytesToRemoveFromChunk));
+                    ChunkHandler(Chunk.ReadChunk(SkipChunkStart, RealChunkSize - SkipChunkStart));
 
-					Chunk = NewChunk;
-				}
-				StartIndex = 0;
-			}
+                    SkipChunkStart = Separator.Length;
 
-			if (Chunk.Length > 0)
-			{
-				ChunkHandler(Chunk.ReadChunk(SkipChunkStart, (int)Chunk.Length - SkipChunkStart));
-			}
-		}
-	}
+                    Chunk = NewChunk;
+                }
+                StartIndex = 0;
+            }
+
+            if (Chunk.Length > 0)
+            {
+                ChunkHandler(Chunk.ReadChunk(SkipChunkStart, (int) Chunk.Length - SkipChunkStart));
+            }
+        }
+    }
 }

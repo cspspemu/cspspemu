@@ -10,7 +10,7 @@ namespace CSharpUtils
     /// Helper class for writing bit values, bit blocks in LSB and MSB bits formats.
     /// Doesn't read bytes ahead -- reads next byte if necessary.
     /// </summary>
-	public class BitReader
+    public class BitReader
     {
         uint readData = 0;
         int startPosition = 0;
@@ -18,10 +18,7 @@ namespace CSharpUtils
 
         internal int InBuffer
         {
-            get
-            {
-                return endPosition - startPosition;
-            }
+            get { return endPosition - startPosition; }
         }
 
         private Stream stream;
@@ -45,7 +42,7 @@ namespace CSharpUtils
 
                 if (b < 0) throw new Exception("Unexpected end of stream");
 
-                readData |= checked((uint)b << endPosition);
+                readData |= checked((uint) b << endPosition);
                 endPosition += 8;
                 readBits -= 8;
             }
@@ -60,7 +57,7 @@ namespace CSharpUtils
         {
             EnsureData(bitCount);
 
-            int result = (int)(readData >> startPosition) & ((1 << bitCount) - 1);
+            int result = (int) (readData >> startPosition) & ((1 << bitCount) - 1);
             startPosition += bitCount;
             if (endPosition == startPosition)
             {

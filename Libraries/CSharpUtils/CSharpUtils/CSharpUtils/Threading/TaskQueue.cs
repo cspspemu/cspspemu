@@ -6,127 +6,127 @@ using System.Threading;
 
 namespace CSharpUtils.Threading
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public sealed class TaskQueue
-	{
-		/// <summary>
-		/// 
-		/// </summary>
-		public readonly AutoResetEvent EnqueuedEvent;
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class TaskQueue
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public readonly AutoResetEvent EnqueuedEvent;
 
-		/// <summary>
-		/// 
-		/// </summary>
-		private Queue<Action> Tasks = new Queue<Action>();
+        /// <summary>
+        /// 
+        /// </summary>
+        private Queue<Action> Tasks = new Queue<Action>();
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public TaskQueue()
-		{
-			EnqueuedEvent = new AutoResetEvent(false);
-		}
+        /// <summary>
+        /// 
+        /// </summary>
+        public TaskQueue()
+        {
+            EnqueuedEvent = new AutoResetEvent(false);
+        }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public void WaitAndHandleEnqueued()
-		{
-			//Console.WriteLine("WaitEnqueued");
-			WaitEnqueued();
-			//Console.WriteLine("HandleEnqueued");
-			HandleEnqueued();
-		}
+        /// <summary>
+        /// 
+        /// </summary>
+        public void WaitAndHandleEnqueued()
+        {
+            //Console.WriteLine("WaitEnqueued");
+            WaitEnqueued();
+            //Console.WriteLine("HandleEnqueued");
+            HandleEnqueued();
+        }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public void WaitEnqueued()
-		{
-			int TasksCount;
-			lock (Tasks) TasksCount = Tasks.Count;
+        /// <summary>
+        /// 
+        /// </summary>
+        public void WaitEnqueued()
+        {
+            int TasksCount;
+            lock (Tasks) TasksCount = Tasks.Count;
 
-			if (TasksCount == 0)
-			{
-				EnqueuedEvent.WaitOne();
-			}
-		}
+            if (TasksCount == 0)
+            {
+                EnqueuedEvent.WaitOne();
+            }
+        }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public void HandleEnqueued()
-		{
-			while (true)
-			{
-				Action Action;
+        /// <summary>
+        /// 
+        /// </summary>
+        public void HandleEnqueued()
+        {
+            while (true)
+            {
+                Action Action;
 
-				lock (Tasks)
-				{
-					if (Tasks.Count == 0) break;
-					Action = Tasks.Dequeue();
-				}
+                lock (Tasks)
+                {
+                    if (Tasks.Count == 0) break;
+                    Action = Tasks.Dequeue();
+                }
 
-				Action();
-			}
-		}
+                Action();
+            }
+        }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="Action"></param>
-		public void EnqueueWithoutWaiting(Action Action)
-		{
-			lock (Tasks)
-			{
-				Tasks.Enqueue(Action);
-				EnqueuedEvent.Set();
-			}
-		}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Action"></param>
+        public void EnqueueWithoutWaiting(Action Action)
+        {
+            lock (Tasks)
+            {
+                Tasks.Enqueue(Action);
+                EnqueuedEvent.Set();
+            }
+        }
 
-		public void EnqueueAndWaitStarted(Action Action)
-		{
-			var Event = new AutoResetEvent(false);
+        public void EnqueueAndWaitStarted(Action Action)
+        {
+            var Event = new AutoResetEvent(false);
 
-			EnqueueWithoutWaiting(() =>
-			{
-				Event.Set();
-				Action();
-			});
+            EnqueueWithoutWaiting(() =>
+            {
+                Event.Set();
+                Action();
+            });
 
-			Event.WaitOne();
-		}
+            Event.WaitOne();
+        }
 
-		public void EnqueueAndWaitStarted(Action Action, TimeSpan Timeout, Action ActionTimeout = null)
-		{
-			var Event = new AutoResetEvent(false);
-		
-			EnqueueWithoutWaiting(() =>
-			{
-				Event.Set();
-				Action();
-			});
-				
-			if (!Event.WaitOne(Timeout))
-			{
-				Console.WriteLine("Timeout!");
-				if (ActionTimeout != null) ActionTimeout();
-			}
-		}
+        public void EnqueueAndWaitStarted(Action Action, TimeSpan Timeout, Action ActionTimeout = null)
+        {
+            var Event = new AutoResetEvent(false);
 
-		public void EnqueueAndWaitCompleted(Action Action)
-		{
-			var Event = new AutoResetEvent(false);
+            EnqueueWithoutWaiting(() =>
+            {
+                Event.Set();
+                Action();
+            });
 
-			EnqueueWithoutWaiting(() =>
-			{
-				Action();
-				Event.Set();
-			});
+            if (!Event.WaitOne(Timeout))
+            {
+                Console.WriteLine("Timeout!");
+                if (ActionTimeout != null) ActionTimeout();
+            }
+        }
 
-			Event.WaitOne();
-		}
-	}
+        public void EnqueueAndWaitCompleted(Action Action)
+        {
+            var Event = new AutoResetEvent(false);
+
+            EnqueueWithoutWaiting(() =>
+            {
+                Action();
+                Event.Set();
+            });
+
+            Event.WaitOne();
+        }
+    }
 }

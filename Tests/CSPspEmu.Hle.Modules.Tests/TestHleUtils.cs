@@ -16,16 +16,17 @@ using System.Text;
 [InjectMap(typeof(IInterruptManager), typeof(HleInterruptManager))]
 public class TestHleUtils
 {
-	class CpuConnector : ICpuConnector
-	{
-		public void Yield(CpuThreadState CpuThreadState)
-		{
-		}
-	}
-	static public InjectContext CreateInjectContext(object Bootstrap)
-	{
-		var _InjectContext = InjectContext.Bootstrap(new TestHleUtils());
-		_InjectContext.InjectDependencesTo(Bootstrap);
-		return _InjectContext;
-	}
+    class CpuConnector : ICpuConnector
+    {
+        public void Yield(CpuThreadState CpuThreadState)
+        {
+        }
+    }
+
+    static public InjectContext CreateInjectContext(object Bootstrap)
+    {
+        var _InjectContext = InjectContext.Bootstrap(new TestHleUtils());
+        _InjectContext.InjectDependencesTo(Bootstrap);
+        return _InjectContext;
+    }
 }

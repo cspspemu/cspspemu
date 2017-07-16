@@ -1,7 +1,7 @@
 ﻿namespace CSharpUtils.Json
 {
-	public interface IJsonSerializable
-	{
-		string ToJson();
-	}
+    public interface IJsonSerializable
+    {
+        string ToJson();
+    }
 }

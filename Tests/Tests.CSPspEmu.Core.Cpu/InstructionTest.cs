@@ -4,12 +4,12 @@ using System;
 
 namespace CSPspEmu.Core.Tests
 {
-	[TestClass]
-	public class InstructionTest
-	{
-		[TestMethod]
-		public void InstructionConstructorTest()
-		{
-		}
-	}
+    [TestClass]
+    public class InstructionTest
+    {
+        [TestMethod]
+        public void InstructionConstructorTest()
+        {
+        }
+    }
 }

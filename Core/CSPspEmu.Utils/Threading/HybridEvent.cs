@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Utils.Threading
 {
-	class HybridEvent
-	{
-	}
+    class HybridEvent
+    {
+    }
 }

@@ -37,15 +37,15 @@ public static class BinaryReaderWriterExtensions
 
     public static void WriteEndian(this BinaryWriter BinaryWriter, ushort Value, Endianness Endian)
     {
-        BinaryWriter.Write((byte)((Value >> 8) & 0xFF));
-        BinaryWriter.Write((byte)((Value >> 0) & 0xFF));
+        BinaryWriter.Write((byte) ((Value >> 8) & 0xFF));
+        BinaryWriter.Write((byte) ((Value >> 0) & 0xFF));
     }
 
     public static void WriteEndian(this BinaryWriter BinaryWriter, uint Value, Endianness Endian)
     {
-        BinaryWriter.Write((byte)((Value >> 24) & 0xFF));
-        BinaryWriter.Write((byte)((Value >> 16) & 0xFF));
-        BinaryWriter.Write((byte)((Value >> 8) & 0xFF));
-        BinaryWriter.Write((byte)((Value >> 0) & 0xFF));
+        BinaryWriter.Write((byte) ((Value >> 24) & 0xFF));
+        BinaryWriter.Write((byte) ((Value >> 16) & 0xFF));
+        BinaryWriter.Write((byte) ((Value >> 8) & 0xFF));
+        BinaryWriter.Write((byte) ((Value >> 0) & 0xFF));
     }
 }

@@ -11,11 +11,11 @@ namespace CSharpUtilsTests
         MemoryStream BaseStream;
         SliceStream SliceStream;
 
-       [TestInitialize]
+        [TestInitialize]
         public void InitializeTest()
         {
             BaseStream = new MemoryStream();
-            for (var n = 0; n < 16; n++) BaseStream.WriteByte((byte)n);
+            for (var n = 0; n < 16; n++) BaseStream.WriteByte((byte) n);
             BaseStream.Position = 0;
 
             SliceStream = SliceStream.CreateWithBounds(BaseStream, 2, 6);
@@ -51,7 +51,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual(3, Readed);
             Readed = SliceStream.Read(Buffer, 0, 8);
             Assert.AreEqual(0, Readed);
-            CollectionAssert.AreEqual(new byte[] { 3, 4, 5 }, Buffer.Take(3).ToArray());
+            CollectionAssert.AreEqual(new byte[] {3, 4, 5}, Buffer.Take(3).ToArray());
         }
 
         [TestMethod]

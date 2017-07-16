@@ -8,13 +8,13 @@ using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Modules.Tests
 {
-	[TestClass]
-	public class BaseModuleTest
-	{
-		[TestInitialize]
-		public void SetUp()
-		{
-			TestHleUtils.CreateInjectContext(this);
-		}
-	}
+    [TestClass]
+    public class BaseModuleTest
+    {
+        [TestInitialize]
+        public void SetUp()
+        {
+            TestHleUtils.CreateInjectContext(this);
+        }
+    }
 }

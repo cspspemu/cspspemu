@@ -11,236 +11,237 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SafeILGenerator.Tests.Ast.Generators
 {
-	[TestClass]
-	public unsafe class GeneratorILTest
-	{
-		static private AstGenerator ast = AstGenerator.Instance;
-		private GeneratorIL GeneratorIL = new GeneratorIL();
+    [TestClass]
+    public unsafe class GeneratorILTest
+    {
+        static private AstGenerator ast = AstGenerator.Instance;
+        private GeneratorIL GeneratorIL = new GeneratorIL();
 
-		static public void TestAstSetGetLValue_Set(int Index, int Value)
-		{
-			Console.WriteLine("Set: {0}, {1}", Index, Value);
-		}
+        static public void TestAstSetGetLValue_Set(int Index, int Value)
+        {
+            Console.WriteLine("Set: {0}, {1}", Index, Value);
+        }
 
-		static public int TestAstSetGetLValue_Get(int Index)
-		{
-			Console.WriteLine("Get: {0}", Index);
-			return 999;
-		}
+        static public int TestAstSetGetLValue_Get(int Index)
+        {
+            Console.WriteLine("Get: {0}", Index);
+            return 999;
+        }
 
-		[TestMethod]
-		public void TestAstSetGetLValue()
-		{
-			var AstIndex = ast.Immediate(777);
-			var AstSetGet = ast.SetGetLValue(
-				ast.CallStatic((Action<int, int>)TestAstSetGetLValue_Set, AstIndex, ast.SetGetLValuePlaceholder<int>()),
-				ast.CallStatic((Func<int, int>)TestAstSetGetLValue_Get, AstIndex)
-			);
-			var AstFunc = ast.Statements(
-				ast.Assign(AstSetGet, 11),
-				ast.Assign(AstSetGet, 12),
-				ast.Assign(AstSetGet, AstSetGet + 3),
-				ast.Return()
-			);
+        [TestMethod]
+        public void TestAstSetGetLValue()
+        {
+            var AstIndex = ast.Immediate(777);
+            var AstSetGet = ast.SetGetLValue(
+                ast.CallStatic((Action<int, int>) TestAstSetGetLValue_Set, AstIndex,
+                    ast.SetGetLValuePlaceholder<int>()),
+                ast.CallStatic((Func<int, int>) TestAstSetGetLValue_Get, AstIndex)
+            );
+            var AstFunc = ast.Statements(
+                ast.Assign(AstSetGet, 11),
+                ast.Assign(AstSetGet, 12),
+                ast.Assign(AstSetGet, AstSetGet + 3),
+                ast.Return()
+            );
 
-			//Console.WriteLine(GeneratorIL.GenerateToString<Action>(AstFunc));
+            //Console.WriteLine(GeneratorIL.GenerateToString<Action>(AstFunc));
 
-			var RealOutput = TestUtils.CaptureOutput(() =>
-			{
-				GeneratorIL.GenerateDelegate<Action>("Test", AstFunc)();
-			});
+            var RealOutput = TestUtils.CaptureOutput(() =>
+            {
+                GeneratorIL.GenerateDelegate<Action>("Test", AstFunc)();
+            });
 
-			var ExpectedOutput = String.Join("\r\n", new[] {
-				"Set: 777, 11",
-				"Set: 777, 12",
-				"Get: 777",
-				"Set: 777, 1002",
-			});
+            var ExpectedOutput = String.Join("\r\n", new[]
+            {
+                "Set: 777, 11",
+                "Set: 777, 12",
+                "Get: 777",
+                "Set: 777, 1002",
+            });
 
-			Assert.AreEqual(ExpectedOutput.Trim(), RealOutput.Trim());
-		}
+            Assert.AreEqual(ExpectedOutput.Trim(), RealOutput.Trim());
+        }
 
-		[TestMethod]
-		public void TestSimpleReturn()
-		{
-			var Func = GeneratorIL.GenerateDelegate<Func<int>>("Test", ast.Return(777));
+        [TestMethod]
+        public void TestSimpleReturn()
+        {
+            var Func = GeneratorIL.GenerateDelegate<Func<int>>("Test", ast.Return(777));
 
-			Assert.AreEqual(777, Func());
-		}
+            Assert.AreEqual(777, Func());
+        }
 
-		[TestMethod]
-		public void TestSimpleCall()
-		{
-			var Func = GeneratorIL.GenerateDelegate<Func<int>>("Test", ast.Return(ast.CallStatic((Func<int, int>)GetTestValue, 10)));
+        [TestMethod]
+        public void TestSimpleCall()
+        {
+            var Func = GeneratorIL.GenerateDelegate<Func<int>>("Test",
+                ast.Return(ast.CallStatic((Func<int, int>) GetTestValue, 10)));
 
-			Assert.AreEqual(3330, Func());
-		}
+            Assert.AreEqual(3330, Func());
+        }
 
-		[TestMethod]
-		public void TestSimpleLocal()
-		{
-			var TestLocal = AstLocal.Create<int>("TestLocal");
-			var Func = GeneratorIL.GenerateDelegate<Func<int>>("Test", new AstNodeStmContainer(
-				new AstNodeStmAssign(
-					new AstNodeExprLocal(TestLocal),
-					new AstNodeExprImm(123)
-				),
-				new AstNodeStmReturn(
-					new AstNodeExprLocal(TestLocal)
-				)
-			));
+        [TestMethod]
+        public void TestSimpleLocal()
+        {
+            var TestLocal = AstLocal.Create<int>("TestLocal");
+            var Func = GeneratorIL.GenerateDelegate<Func<int>>("Test", new AstNodeStmContainer(
+                new AstNodeStmAssign(
+                    new AstNodeExprLocal(TestLocal),
+                    new AstNodeExprImm(123)
+                ),
+                new AstNodeStmReturn(
+                    new AstNodeExprLocal(TestLocal)
+                )
+            ));
 
-			Assert.AreEqual(123, Func());
-		}
+            Assert.AreEqual(123, Func());
+        }
 
-		[TestMethod]
-		public void TestImmediateType()
-		{
-			var Func = GeneratorIL.GenerateDelegate<Func<Type>>("Test", ast.Statements(ast.Return(ast.Immediate(typeof(int)))));
-			Assert.AreEqual(typeof(int).ToString(), Func().ToString());
-		}
+        [TestMethod]
+        public void TestImmediateType()
+        {
+            var Func = GeneratorIL.GenerateDelegate<Func<Type>>("Test",
+                ast.Statements(ast.Return(ast.Immediate(typeof(int)))));
+            Assert.AreEqual(typeof(int).ToString(), Func().ToString());
+        }
 
-		[TestMethod]
-		public void TestReinterpret()
-		{
-			var TestArgument = ast.Argument<float>(0, "Input");
-			var Ast = ast.Statements(
-				ast.Return(
-					ast.Reinterpret<int>(TestArgument)
-				)
-			);
+        [TestMethod]
+        public void TestReinterpret()
+        {
+            var TestArgument = ast.Argument<float>(0, "Input");
+            var Ast = ast.Statements(
+                ast.Return(
+                    ast.Reinterpret<int>(TestArgument)
+                )
+            );
 
-			var Func = GeneratorIL.GenerateDelegate<Func<float, int>>("Test", Ast);
-			int b = 1234567;
-			float a = 0;
-			*(int*)&a = b;
-			Assert.AreEqual(b, Func(a));
-		}
+            var Func = GeneratorIL.GenerateDelegate<Func<float, int>>("Test", Ast);
+            int b = 1234567;
+            float a = 0;
+            *(int*) &a = b;
+            Assert.AreEqual(b, Func(a));
+        }
 
-		static public Type testReturnType()
-		{
-			return typeof(int);
-		}
+        static public Type testReturnType()
+        {
+            return typeof(int);
+        }
 
-		[TestMethod]
-		public void TestFieldAccess()
-		{
-			var TestArgument = ast.Argument<TestClass>(0, "Test");
-			var Func = GeneratorIL.GenerateDelegate<Func<TestClass, int>>("Test", ast.Statements(
-				ast.Assign(
-					ast.FieldAccess(TestArgument, "Test"),
-					ast.Immediate(456)
-				),
-				ast.Return(
-					ast.FieldAccess(TestArgument, "Test")
-				)
-			));
+        [TestMethod]
+        public void TestFieldAccess()
+        {
+            var TestArgument = ast.Argument<TestClass>(0, "Test");
+            var Func = GeneratorIL.GenerateDelegate<Func<TestClass, int>>("Test", ast.Statements(
+                ast.Assign(
+                    ast.FieldAccess(TestArgument, "Test"),
+                    ast.Immediate(456)
+                ),
+                ast.Return(
+                    ast.FieldAccess(TestArgument, "Test")
+                )
+            ));
 
-			Assert.AreEqual(456, Func(new TestClass()));
-		}
+            Assert.AreEqual(456, Func(new TestClass()));
+        }
 
-		delegate void ActionPointerDelegate(void* Pointer);
+        delegate void ActionPointerDelegate(void* Pointer);
 
-		[TestMethod]
-		public void TestPointerWrite()
-		{
-			var Func = GeneratorIL.GenerateDelegate<ActionPointerDelegate>("Test", ast.Statements(
-				ast.Assign(
-				ast.Indirect(ast.Cast(typeof(int*), ast.Argument(typeof(int*), 0, "Ptr"))),
-					ast.Immediate(456)
-				),
-				ast.Return()
-			));
+        [TestMethod]
+        public void TestPointerWrite()
+        {
+            var Func = GeneratorIL.GenerateDelegate<ActionPointerDelegate>("Test", ast.Statements(
+                ast.Assign(
+                    ast.Indirect(ast.Cast(typeof(int*), ast.Argument(typeof(int*), 0, "Ptr"))),
+                    ast.Immediate(456)
+                ),
+                ast.Return()
+            ));
 
-			var Data = new int[1];
-			fixed (int* DataPtr = Data)
-			{
-				Func(DataPtr);
-			}
+            var Data = new int[1];
+            fixed (int* DataPtr = Data)
+            {
+                Func(DataPtr);
+            }
 
-			Assert.AreEqual(456, Data[0]);
-		}
+            Assert.AreEqual(456, Data[0]);
+        }
 
-		[TestMethod]
+        [TestMethod]
         public void TestPointerWrite_bool()
         {
-			var Func = GeneratorIL.GenerateDelegate<ActionPointerDelegate>("Test", ast.Statements(
+            var Func = GeneratorIL.GenerateDelegate<ActionPointerDelegate>("Test", ast.Statements(
                 ast.Assign(
-                ast.Indirect(ast.Cast(typeof(bool*), ast.Argument(typeof(bool*), 0, "Ptr"))),
+                    ast.Indirect(ast.Cast(typeof(bool*), ast.Argument(typeof(bool*), 0, "Ptr"))),
                     ast.Immediate(true)
                 ),
                 ast.Return()
             ));
 
-			foreach (var FillValue in new bool[] { false, true })
-			{
-				var Data = new bool[8];
-				for (int n = 0; n < Data.Length; n++) Data[n] = FillValue;
-				Data[0] = false;
+            foreach (var FillValue in new bool[] {false, true})
+            {
+                var Data = new bool[8];
+                for (int n = 0; n < Data.Length; n++) Data[n] = FillValue;
+                Data[0] = false;
 
-				fixed (bool* DataPtr = Data)
-				{
-					Func(DataPtr);
-				}
+                fixed (bool* DataPtr = Data)
+                {
+                    Func(DataPtr);
+                }
 
-				Assert.AreEqual(true, Data[0]);
-				for (int n = 1; n < 8; n++) Assert.AreEqual(FillValue, Data[n]);
-			}
+                Assert.AreEqual(true, Data[0]);
+                for (int n = 1; n < 8; n++) Assert.AreEqual(FillValue, Data[n]);
+            }
         }
 
-		[TestMethod]
-		public void TestWriteLineLoadString()
-		{
-			var Ast = ast.Statements(
-				ast.Statement(ast.CallStatic((Action<string>)Console.WriteLine, ast.Argument<string>(0))),
-				ast.Statement(ast.CallStatic((Action<string>)Console.WriteLine, "Goodbye World!")),
-				ast.Return()
-			);
+        [TestMethod]
+        public void TestWriteLineLoadString()
+        {
+            var Ast = ast.Statements(
+                ast.Statement(ast.CallStatic((Action<string>) Console.WriteLine, ast.Argument<string>(0))),
+                ast.Statement(ast.CallStatic((Action<string>) Console.WriteLine, "Goodbye World!")),
+                ast.Return()
+            );
 
-			var GeneratorIL = new GeneratorIL();
-			var Method = GeneratorIL.GenerateDelegate<Action<string>>("TestWriteLine", Ast);
+            var GeneratorIL = new GeneratorIL();
+            var Method = GeneratorIL.GenerateDelegate<Action<string>>("TestWriteLine", Ast);
 
-			Console.WriteLine(new GeneratorCSharp().GenerateRoot(Ast).ToString());
-			Console.WriteLine("{0}", new GeneratorIL().GenerateToString(Method.Method, Ast));
+            Console.WriteLine(new GeneratorCSharp().GenerateRoot(Ast).ToString());
+            Console.WriteLine("{0}", new GeneratorIL().GenerateToString(Method.Method, Ast));
 
-			var Output = AstStringUtils.CaptureOutput(() =>
-			{
-				Method("Hello World!");
-			});
+            var Output = AstStringUtils.CaptureOutput(() => { Method("Hello World!"); });
 
-			Assert.AreEqual("Hello World!" + Environment.NewLine + "Goodbye World!" + Environment.NewLine, Output);
-		}
+            Assert.AreEqual("Hello World!" + Environment.NewLine + "Goodbye World!" + Environment.NewLine, Output);
+        }
 
-		[TestMethod]
-		public void TestAstSwitch()
-		{
-			var Argument = AstArgument.Create<int>(0, "Value");
-			var Ast = ast.Statements(
-				ast.Switch(
-					ast.Argument(Argument),
-					ast.Default(ast.Return("-")),
-					ast.Case(1, ast.Return("One")),
-					ast.Case(3, ast.Return("Three"))
-				),
-				ast.Return("Invalid!")
-			);
-			var GeneratorIL = new GeneratorIL();
-			var Method = GeneratorIL.GenerateDelegate<Func<int, string>>("TestSwitch", Ast);
-			Assert.AreEqual("-", Method(0));
-			Assert.AreEqual("One", Method(1));
-			Assert.AreEqual("-", Method(2));
-			Assert.AreEqual("Three", Method(3));
-			Assert.AreEqual("-", Method(4));
-		}
+        [TestMethod]
+        public void TestAstSwitch()
+        {
+            var Argument = AstArgument.Create<int>(0, "Value");
+            var Ast = ast.Statements(
+                ast.Switch(
+                    ast.Argument(Argument),
+                    ast.Default(ast.Return("-")),
+                    ast.Case(1, ast.Return("One")),
+                    ast.Case(3, ast.Return("Three"))
+                ),
+                ast.Return("Invalid!")
+            );
+            var GeneratorIL = new GeneratorIL();
+            var Method = GeneratorIL.GenerateDelegate<Func<int, string>>("TestSwitch", Ast);
+            Assert.AreEqual("-", Method(0));
+            Assert.AreEqual("One", Method(1));
+            Assert.AreEqual("-", Method(2));
+            Assert.AreEqual("Three", Method(3));
+            Assert.AreEqual("-", Method(4));
+        }
 
-		public class TestClass
-		{
-			public int Test;
-		}
+        public class TestClass
+        {
+            public int Test;
+        }
 
-		static public int GetTestValue(int Value)
-		{
-			return 333 * Value;
-		}
-	}
+        static public int GetTestValue(int Value)
+        {
+            return 333 * Value;
+        }
+    }
 }

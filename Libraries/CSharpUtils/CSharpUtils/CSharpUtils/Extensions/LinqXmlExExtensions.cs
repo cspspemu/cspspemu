@@ -6,23 +6,22 @@ using System.Xml.Linq;
 
 public static class LinqXmlExExtensions
 {
-	public static String ToStringFull(this XDocument That)
-	{
-		return That.ToStringFull(Encoding.UTF8);
-	}
+    public static String ToStringFull(this XDocument That)
+    {
+        return That.ToStringFull(Encoding.UTF8);
+    }
 
-	public static String ToStringFull(this XDocument That, Encoding Encoding)
-	{
-		var VersionXmlStream = new MemoryStream();
-		var VersionXmlWriter = XmlWriter.Create(VersionXmlStream, new XmlWriterSettings()
-		{
-			Encoding = Encoding,
-			Indent = true,
-		});
-		That.WriteTo(VersionXmlWriter);
-		VersionXmlWriter.Flush();
+    public static String ToStringFull(this XDocument That, Encoding Encoding)
+    {
+        var VersionXmlStream = new MemoryStream();
+        var VersionXmlWriter = XmlWriter.Create(VersionXmlStream, new XmlWriterSettings()
+        {
+            Encoding = Encoding,
+            Indent = true,
+        });
+        That.WriteTo(VersionXmlWriter);
+        VersionXmlWriter.Flush();
 
-		return Encoding.GetString(VersionXmlStream.ToArray());
-	}
-		
+        return Encoding.GetString(VersionXmlStream.ToArray());
+    }
 }

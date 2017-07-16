@@ -6,5 +6,4 @@ using System.Text;
 
 namespace CSPspEmu.Hle.Vfs
 {
-
 }

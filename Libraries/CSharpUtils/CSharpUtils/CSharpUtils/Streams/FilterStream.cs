@@ -38,14 +38,8 @@ namespace CSharpUtils.Streams
 
         public override long Position
         {
-            get
-            {
-                return ParentStream.Position;
-            }
-            set
-            {
-                ParentStream.Position = value;
-            }
+            get { return ParentStream.Position; }
+            set { ParentStream.Position = value; }
         }
 
         public override int Read(byte[] buffer, int offset, int count)

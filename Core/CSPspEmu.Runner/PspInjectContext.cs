@@ -16,68 +16,68 @@ using System.Text;
 
 namespace CSPspEmu.Runner
 {
-	public class PspInjectContext
-	{
-		static public InjectContext CreateInjectContext(PspStoredConfig StoredConfig, bool Test)
-		{
-			var _InjectContext = new InjectContext();
-			_InjectContext.SetInstance<PspStoredConfig>(StoredConfig);
-			_InjectContext.GetInstance<HleConfig>().HleModulesDll = typeof(HleModulesRoot).Assembly;
-			_InjectContext.SetInstanceType<ICpuConnector, HleThreadManager>();
-			_InjectContext.SetInstanceType<IGpuConnector, HleThreadManager>();
-			_InjectContext.SetInstanceType<IInterruptManager, HleInterruptManager>();
+    public class PspInjectContext
+    {
+        static public InjectContext CreateInjectContext(PspStoredConfig StoredConfig, bool Test)
+        {
+            var _InjectContext = new InjectContext();
+            _InjectContext.SetInstance<PspStoredConfig>(StoredConfig);
+            _InjectContext.GetInstance<HleConfig>().HleModulesDll = typeof(HleModulesRoot).Assembly;
+            _InjectContext.SetInstanceType<ICpuConnector, HleThreadManager>();
+            _InjectContext.SetInstanceType<IGpuConnector, HleThreadManager>();
+            _InjectContext.SetInstanceType<IInterruptManager, HleInterruptManager>();
 
-			// Memory
+            // Memory
 #if true // Disabled because crashes on x86
-			if (StoredConfig.UseFastMemory)
-			{
-				_InjectContext.SetInstanceType<PspMemory, FastPspMemory>();
-			}
-			else
+            if (StoredConfig.UseFastMemory)
+            {
+                _InjectContext.SetInstanceType<PspMemory, FastPspMemory>();
+            }
+            else
 #endif
-			{
-				_InjectContext.SetInstanceType<PspMemory, NormalPspMemory>();
-			}
+            {
+                _InjectContext.SetInstanceType<PspMemory, NormalPspMemory>();
+            }
 
-			if (!Test)
-			{
-				// GPU
-				PspPluginImpl.SelectWorkingPlugin<GpuImpl>(_InjectContext,
+            if (!Test)
+            {
+                // GPU
+                PspPluginImpl.SelectWorkingPlugin<GpuImpl>(_InjectContext,
 #if false
 					typeof(GpuImplNull)
 #else
-					typeof(OpenglGpuImpl),
-					//typeof(GpuImplOpenglEs),
-					//typeof(GpuImplSoft),
-					typeof(GpuImplNull)
+                    typeof(OpenglGpuImpl),
+                    //typeof(GpuImplOpenglEs),
+                    //typeof(GpuImplSoft),
+                    typeof(GpuImplNull)
 #endif
-				);
+                );
 
-				// AUDIO
+                // AUDIO
 
-				var AudioPlugins = new List<Type>();
+                var AudioPlugins = new List<Type>();
 
-				AudioPlugins.Add(typeof(PspAudioOpenalImpl));
+                AudioPlugins.Add(typeof(PspAudioOpenalImpl));
 
-				if (Platform.OS == OS.Windows)
-				{
-					AudioPlugins.Add(typeof(PspAudioWaveOutImpl));
-				}
-				if (Platform.OS == OS.Linux)
-				{
-					AudioPlugins.Add(typeof(AudioAlsaImpl));
-				}
-				AudioPlugins.Add(typeof(AudioImplNull));
+                if (Platform.OS == OS.Windows)
+                {
+                    AudioPlugins.Add(typeof(PspAudioWaveOutImpl));
+                }
+                if (Platform.OS == OS.Linux)
+                {
+                    AudioPlugins.Add(typeof(AudioAlsaImpl));
+                }
+                AudioPlugins.Add(typeof(AudioImplNull));
 
-				PspPluginImpl.SelectWorkingPlugin<PspAudioImpl>(_InjectContext, AudioPlugins.ToArray());
-			}
-			else
-			{
-				_InjectContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
-				_InjectContext.SetInstanceType<PspAudioImpl, AudioImplNull>();
-			}
+                PspPluginImpl.SelectWorkingPlugin<PspAudioImpl>(_InjectContext, AudioPlugins.ToArray());
+            }
+            else
+            {
+                _InjectContext.SetInstanceType<GpuImpl, OpenglGpuImpl>();
+                _InjectContext.SetInstanceType<PspAudioImpl, AudioImplNull>();
+            }
 
-			return _InjectContext;
-		}
-	}
+            return _InjectContext;
+        }
+    }
 }

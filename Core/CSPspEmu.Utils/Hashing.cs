@@ -4,60 +4,59 @@ using CSharpUtils;
 
 namespace CSPspEmu.Core
 {
-	public static unsafe class Hashing
-	{
-		private static Logger Logger = Logger.GetLogger("Hashing");
+    public static unsafe class Hashing
+    {
+        private static Logger Logger = Logger.GetLogger("Hashing");
 
-		[HandleProcessCorruptedStateExceptions]
-		public static ulong FastHash(byte* Pointer, int Count, ulong StartHash = 0)
-		{
-			if (Pointer == null)
-			{
-				return StartHash;
-			}
+        [HandleProcessCorruptedStateExceptions]
+        public static ulong FastHash(byte* Pointer, int Count, ulong StartHash = 0)
+        {
+            if (Pointer == null)
+            {
+                return StartHash;
+            }
 
-			if (Count > 4 * 2048 * 2048)
-			{
-				Logger.Error("FastHash too big count!");
-				return StartHash;
-			}
+            if (Count > 4 * 2048 * 2048)
+            {
+                Logger.Error("FastHash too big count!");
+                return StartHash;
+            }
 
-			try
-			{
-				return FastHash_64(Pointer, Count, StartHash);
-			}
-			catch (NullReferenceException NullReferenceException)
-			{
-				Logger.Error(NullReferenceException);
-			}
-			catch (AccessViolationException AccessViolationException)
-			{
-				Logger.Error(AccessViolationException);
-			}
+            try
+            {
+                return FastHash_64(Pointer, Count, StartHash);
+            }
+            catch (NullReferenceException NullReferenceException)
+            {
+                Logger.Error(NullReferenceException);
+            }
+            catch (AccessViolationException AccessViolationException)
+            {
+                Logger.Error(AccessViolationException);
+            }
 
-			return StartHash;
+            return StartHash;
+        }
 
-		}
+        [HandleProcessCorruptedStateExceptions]
+        private static ulong FastHash_64(byte* Pointer, int Count, ulong StartHash = 0)
+        {
+            var Hash = StartHash;
 
-		[HandleProcessCorruptedStateExceptions]
-		private static ulong FastHash_64(byte* Pointer, int Count, ulong StartHash = 0)
-		{
-			var Hash = StartHash;
+            while (Count >= 8)
+            {
+                Hash += (*(ulong*) Pointer) + (ulong) (Count << 31);
+                Pointer += 8;
+                Count -= 8;
+            }
 
-			while (Count >= 8)
-			{
-				Hash += (*(ulong*)Pointer) + (ulong)(Count << 31);
-				Pointer += 8;
-				Count -= 8;
-			}
+            while (Count >= 1)
+            {
+                Hash += *Pointer++;
+                Count--;
+            }
 
-			while (Count >= 1)
-			{
-				Hash += *Pointer++;
-				Count--;
-			}
-
-			return Hash;
-		}
-	}
+            return Hash;
+        }
+    }
 }

@@ -9,70 +9,72 @@ using CSPspEmu.Runner.Components.Gpu;
 
 namespace CSPspEmu.Runner
 {
-	public unsafe class PspRunner : IRunnableComponent, IInjectInitialize
-	{
-		[Inject]
-		public CpuComponentThread CpuComponentThread { get; protected set; }
-		
-		[Inject]
-		public GpuComponentThread GpuComponentThread { get; protected set; }
+    public unsafe class PspRunner : IRunnableComponent, IInjectInitialize
+    {
+        [Inject]
+        public CpuComponentThread CpuComponentThread { get; protected set; }
 
-		[Inject]
-		public AudioComponentThread AudioComponentThread { get; protected set; }
-		
-		[Inject]
-		public DisplayComponentThread DisplayComponentThread { get; protected set; }
+        [Inject]
+        public GpuComponentThread GpuComponentThread { get; protected set; }
 
-		protected List<IRunnableComponent> RunnableComponentList = new List<IRunnableComponent>();
+        [Inject]
+        public AudioComponentThread AudioComponentThread { get; protected set; }
 
-		public bool Paused { get; protected set; }
+        [Inject]
+        public DisplayComponentThread DisplayComponentThread { get; protected set; }
 
-		private PspRunner()
-		{
-		}
+        protected List<IRunnableComponent> RunnableComponentList = new List<IRunnableComponent>();
 
-		void IInjectInitialize.Initialize()
-		{
-			RunnableComponentList.Add(CpuComponentThread);
-			RunnableComponentList.Add(GpuComponentThread);
-			RunnableComponentList.Add(AudioComponentThread);
-			RunnableComponentList.Add(DisplayComponentThread);
-		}
+        public bool Paused { get; protected set; }
 
-		public void StartSynchronized()
-		{
-			RunnableComponentList.ForEach((RunnableComponent) =>
-				RunnableComponent.StartSynchronized()
-			);
-		}
+        private PspRunner()
+        {
+        }
 
-		public void StopSynchronized()
-		{
-			Console.WriteLine("Stopping!");
-			RunnableComponentList.ForEach((RunnableComponent) =>
-				RunnableComponent.StopSynchronized()
-			);
-			Console.WriteLine("Stopped!");
-		}
+        void IInjectInitialize.Initialize()
+        {
+            RunnableComponentList.Add(CpuComponentThread);
+            RunnableComponentList.Add(GpuComponentThread);
+            RunnableComponentList.Add(AudioComponentThread);
+            RunnableComponentList.Add(DisplayComponentThread);
+        }
 
-		public void PauseSynchronized()
-		{
-			RunnableComponentList.ForEach((RunnableComponent) => {
-				Console.Write("Pausing {0}...", RunnableComponent);
-				RunnableComponent.PauseSynchronized();
-				Console.WriteLine("Ok");
-			});
-			Paused = true;
-		}
+        public void StartSynchronized()
+        {
+            RunnableComponentList.ForEach((RunnableComponent) =>
+                RunnableComponent.StartSynchronized()
+            );
+        }
 
-		public void ResumeSynchronized()
-		{
-			RunnableComponentList.ForEach((RunnableComponent) => {
-				Console.Write("Resuming {0}...", RunnableComponent);
-				RunnableComponent.ResumeSynchronized();
-				Console.WriteLine("Ok");
-			});
-			Paused = false;
-		}
-	}
+        public void StopSynchronized()
+        {
+            Console.WriteLine("Stopping!");
+            RunnableComponentList.ForEach((RunnableComponent) =>
+                RunnableComponent.StopSynchronized()
+            );
+            Console.WriteLine("Stopped!");
+        }
+
+        public void PauseSynchronized()
+        {
+            RunnableComponentList.ForEach((RunnableComponent) =>
+            {
+                Console.Write("Pausing {0}...", RunnableComponent);
+                RunnableComponent.PauseSynchronized();
+                Console.WriteLine("Ok");
+            });
+            Paused = true;
+        }
+
+        public void ResumeSynchronized()
+        {
+            RunnableComponentList.ForEach((RunnableComponent) =>
+            {
+                Console.Write("Resuming {0}...", RunnableComponent);
+                RunnableComponent.ResumeSynchronized();
+                Console.WriteLine("Ok");
+            });
+            Paused = false;
+        }
+    }
 }

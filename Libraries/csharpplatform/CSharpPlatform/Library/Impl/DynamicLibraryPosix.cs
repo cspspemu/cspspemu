@@ -7,48 +7,49 @@ using System.Threading.Tasks;
 
 namespace CSharpPlatform.Library
 {
-	public class DynamicLibraryPosix : IDynamicLibrary
-	{
-		string LibraryName;
-		private IntPtr LibraryHandle;
+    public class DynamicLibraryPosix : IDynamicLibrary
+    {
+        string LibraryName;
+        private IntPtr LibraryHandle;
 
-		public DynamicLibraryPosix(string LibraryName)
-		{
-			this.LibraryName = LibraryName;
-			this.LibraryHandle = dlopen(LibraryName, RTLD_NOW);
-			if (this.LibraryHandle == IntPtr.Zero)
-			{
-				throw(new InvalidOperationException(String.Format("Can't find library '{0}' : {1}", LibraryName, dlerror())));
-			}
-			//Console.WriteLine(this.LibraryHandle);
-		}
+        public DynamicLibraryPosix(string LibraryName)
+        {
+            this.LibraryName = LibraryName;
+            this.LibraryHandle = dlopen(LibraryName, RTLD_NOW);
+            if (this.LibraryHandle == IntPtr.Zero)
+            {
+                throw(new InvalidOperationException(String.Format("Can't find library '{0}' : {1}", LibraryName,
+                    dlerror())));
+            }
+            //Console.WriteLine(this.LibraryHandle);
+        }
 
-		public IntPtr GetMethod(string Name)
-		{
-			return dlsym(this.LibraryHandle, Name);
-		}
+        public IntPtr GetMethod(string Name)
+        {
+            return dlsym(this.LibraryHandle, Name);
+        }
 
-		public void Dispose()
-		{
-			//if (this.dlHandle != IntPtr.Zero)
-			//{
-			//	dlclose(this.dlHandle);
-			//	this.dlHandle = IntPtr.Zero;
-			//}
-		}
+        public void Dispose()
+        {
+            //if (this.dlHandle != IntPtr.Zero)
+            //{
+            //	dlclose(this.dlHandle);
+            //	this.dlHandle = IntPtr.Zero;
+            //}
+        }
 
-		const int RTLD_NOW = 2;
+        const int RTLD_NOW = 2;
 
-		[DllImport("libdl.so")]
-		private static extern IntPtr dlopen(String fileName, int flags);
+        [DllImport("libdl.so")]
+        private static extern IntPtr dlopen(String fileName, int flags);
 
-		[DllImport("libdl.so")]
-		private static extern IntPtr dlsym(IntPtr handle, String symbol);
+        [DllImport("libdl.so")]
+        private static extern IntPtr dlsym(IntPtr handle, String symbol);
 
-		[DllImport("libdl.so")]
-		private static extern int dlclose(IntPtr handle);
+        [DllImport("libdl.so")]
+        private static extern int dlclose(IntPtr handle);
 
-		[DllImport("libdl.so")]
-		private static extern string dlerror();
-	}
+        [DllImport("libdl.so")]
+        private static extern string dlerror();
+    }
 }

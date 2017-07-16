@@ -7,113 +7,108 @@ using CSharpUtils;
 
 namespace CSPspEmu.Runner.Components
 {
-	public abstract class ComponentThread : IRunnableComponent
-	{
-		static Logger Logger = Logger.GetLogger("ComponentThread");
+    public abstract class ComponentThread : IRunnableComponent
+    {
+        static Logger Logger = Logger.GetLogger("ComponentThread");
 
-		protected AutoResetEvent RunningUpdatedEvent = new AutoResetEvent(false);
-		public bool Running = true;
+        protected AutoResetEvent RunningUpdatedEvent = new AutoResetEvent(false);
+        public bool Running = true;
 
-		protected Thread ComponentThreadThread;
-		protected AutoResetEvent StopCompleteEvent = new AutoResetEvent(false);
-		protected AutoResetEvent PauseEvent = new AutoResetEvent(false);
-		protected AutoResetEvent ResumeEvent = new AutoResetEvent(false);
+        protected Thread ComponentThreadThread;
+        protected AutoResetEvent StopCompleteEvent = new AutoResetEvent(false);
+        protected AutoResetEvent PauseEvent = new AutoResetEvent(false);
+        protected AutoResetEvent ResumeEvent = new AutoResetEvent(false);
 
-		public readonly TaskQueue ThreadTaskQueue = new TaskQueue();
-		protected abstract String ThreadName { get; }
+        public readonly TaskQueue ThreadTaskQueue = new TaskQueue();
+        protected abstract String ThreadName { get; }
 
-		protected ComponentThread()
-		{
-		}
+        protected ComponentThread()
+        {
+        }
 
-		public void StartSynchronized()
-		{
-			Console.WriteLine("Component {0} StartSynchronized!", this);
-			var ElapsedTime = Logger.Measure(() =>
-			{
-				ComponentThreadThread = new Thread(() =>
-				{
-					Thread.CurrentThread.CurrentCulture = new CultureInfo(GlobalConfig.ThreadCultureName);
-					try
-					{
-						Main();
-					}
-					finally
-					{
-						Running = false;
-						RunningUpdatedEvent.Set();
-						StopCompleteEvent.Set();
-						Console.WriteLine("Component {0} Stopped!", this);
-					}
-				})
-				{
-					Name = this.ThreadName,
-					IsBackground = true,
-				};
-				ComponentThreadThread.Start();
-				ThreadTaskQueue.EnqueueAndWaitCompleted(() =>
-				{
-				});
-			});
-			//Logger.Notice("Component {0} Started! StartedTime({1})", this, ElapsedTime.TotalSeconds);
-			Console.WriteLine("Component {0} Started! StartedTime({1})", this, ElapsedTime.TotalSeconds);
-		}
+        public void StartSynchronized()
+        {
+            Console.WriteLine("Component {0} StartSynchronized!", this);
+            var ElapsedTime = Logger.Measure(() =>
+            {
+                ComponentThreadThread = new Thread(() =>
+                {
+                    Thread.CurrentThread.CurrentCulture = new CultureInfo(GlobalConfig.ThreadCultureName);
+                    try
+                    {
+                        Main();
+                    }
+                    finally
+                    {
+                        Running = false;
+                        RunningUpdatedEvent.Set();
+                        StopCompleteEvent.Set();
+                        Console.WriteLine("Component {0} Stopped!", this);
+                    }
+                })
+                {
+                    Name = this.ThreadName,
+                    IsBackground = true,
+                };
+                ComponentThreadThread.Start();
+                ThreadTaskQueue.EnqueueAndWaitCompleted(() => { });
+            });
+            //Logger.Notice("Component {0} Started! StartedTime({1})", this, ElapsedTime.TotalSeconds);
+            Console.WriteLine("Component {0} Started! StartedTime({1})", this, ElapsedTime.TotalSeconds);
+        }
 
-		public void StopSynchronized()
-		{
-			Logger.Notice("Component {0} StopSynchronized...", this);
-			var ElapsedTime = Logger.Measure(() =>
-			{
-				if (Running)
-				{
-					StopCompleteEvent.Reset();
-					{
-						Running = false;
-						RunningUpdatedEvent.Set();
-					}
-					if (!StopCompleteEvent.WaitOne(1000))
-					{
-						Logger.Error("Error stopping {0}", this);
-						ComponentThreadThread.Abort();
-					}
-				}
-			});
-			Logger.Notice("Stopped! {0}", ElapsedTime);
-		}
+        public void StopSynchronized()
+        {
+            Logger.Notice("Component {0} StopSynchronized...", this);
+            var ElapsedTime = Logger.Measure(() =>
+            {
+                if (Running)
+                {
+                    StopCompleteEvent.Reset();
+                    {
+                        Running = false;
+                        RunningUpdatedEvent.Set();
+                    }
+                    if (!StopCompleteEvent.WaitOne(1000))
+                    {
+                        Logger.Error("Error stopping {0}", this);
+                        ComponentThreadThread.Abort();
+                    }
+                }
+            });
+            Logger.Notice("Stopped! {0}", ElapsedTime);
+        }
 
-		public void PauseSynchronized()
-		{
-			Logger.Notice("Component {0} PauseSynchronized!", this);
+        public void PauseSynchronized()
+        {
+            Logger.Notice("Component {0} PauseSynchronized!", this);
 
-			//Console.WriteLine("[1]");
+            //Console.WriteLine("[1]");
 
-			ThreadTaskQueue.EnqueueAndWaitStarted(() =>
-			{
-				//int MaxCounts = 200;
-				//Console.WriteLine("[2]");
-				while (!PauseEvent.WaitOne(TimeSpan.FromMilliseconds(10)))
-				{
-					//Console.WriteLine("[3]");
-					if (!Running) break;
-					//if (MaxCounts-- < 0)
-					//{
-					//	Console.Error.WriteLine("Infinite loop detected!");
-					//	break;
-					//}
-				}
-			}, TimeSpan.FromSeconds(2), () =>
-			{
-				Console.WriteLine("Timed Out!");
-			});
-		}
+            ThreadTaskQueue.EnqueueAndWaitStarted(() =>
+            {
+                //int MaxCounts = 200;
+                //Console.WriteLine("[2]");
+                while (!PauseEvent.WaitOne(TimeSpan.FromMilliseconds(10)))
+                {
+                    //Console.WriteLine("[3]");
+                    if (!Running) break;
+                    //if (MaxCounts-- < 0)
+                    //{
+                    //	Console.Error.WriteLine("Infinite loop detected!");
+                    //	break;
+                    //}
+                }
+            }, TimeSpan.FromSeconds(2), () => { Console.WriteLine("Timed Out!"); });
+        }
 
-		public void ResumeSynchronized()
-		{
-			Logger.Notice("Component {0} ResumeSynchronized!", this);
+        public void ResumeSynchronized()
+        {
+            Logger.Notice("Component {0} ResumeSynchronized!", this);
 
-			PauseEvent.Set();
-		}
+            PauseEvent.Set();
+        }
 
-		protected abstract void Main();
-	}
+        protected abstract void Main();
+    }
 }

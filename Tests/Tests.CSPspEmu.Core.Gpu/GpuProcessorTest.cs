@@ -8,23 +8,23 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CSPspEmu.Core.Tests.Gpu
 {
-	[TestClass]
-	public class GpuProcessorTest
-	{
-		//PspMemory Memory;
-		//GpuProcessor Gpu;
+    [TestClass]
+    public class GpuProcessorTest
+    {
+        //PspMemory Memory;
+        //GpuProcessor Gpu;
 
-		[TestInitialize]
-		public void SetUp()
-		{
-			//Memory = new LazyPspMemory();
-			//Gpu = new GpuProcessor(Memory);
-		}
+        [TestInitialize]
+        public void SetUp()
+        {
+            //Memory = new LazyPspMemory();
+            //Gpu = new GpuProcessor(Memory);
+        }
 
-		[TestMethod]
-		public void TestGpuProcessor()
-		{
-			//GpuDisplayList GpuDisplayList = Gpu.CreateDisplayList();
-		}
-	}
+        [TestMethod]
+        public void TestGpuProcessor()
+        {
+            //GpuDisplayList GpuDisplayList = Gpu.CreateDisplayList();
+        }
+    }
 }

@@ -10,16 +10,16 @@ using CSharpUtils;
 
 namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 {
-	/// <summary>
-	/// Read_Weights();
-	/// Read_TextureCoordinates();
-	/// Read_Color();
-	/// Read_Normal();
-	/// Read_Position();
-	/// </summary>
-	[TestClass]
-	public unsafe class VertexReaderDynarecTest
-	{
+    /// <summary>
+    /// Read_Weights();
+    /// Read_TextureCoordinates();
+    /// Read_Color();
+    /// Read_Normal();
+    /// Read_Position();
+    /// </summary>
+    [TestClass]
+    public unsafe class VertexReaderDynarecTest
+    {
 #if false
 		VertexInfo[] VertexInfoList = new VertexInfo[16];
 		VertexReaderDelegate ReadVertices;
@@ -147,8 +147,10 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 
 		VertexType3[] VertexType3List = new[]
 		{
-			new VertexType3() { Color = (ushort)ColorFormats.RGBA_4444.Encode(0xFF, 0x7F, 0x3C, 0xA0), Position = new Vector3(1.0f, 2.0f, 3.0f) },
-			new VertexType3() { Color = (ushort)ColorFormats.RGBA_4444.Encode(0x11, 0x22, 0x33, 0x44), Position = new Vector3(4.0f, 5.0f, 6.0f) },
+			new VertexType3() { Color = (ushort)ColorFormats.RGBA_4444.Encode(0xFF, 0x7F, 0x3C, 0xA0), Position =
+new Vector3(1.0f, 2.0f, 3.0f) },
+			new VertexType3() { Color = (ushort)ColorFormats.RGBA_4444.Encode(0x11, 0x22, 0x33, 0x44), Position =
+new Vector3(4.0f, 5.0f, 6.0f) },
 		};
 
 		[TestMethod]
@@ -168,5 +170,5 @@ namespace CSPspEmu.Core.Tests.Gpu.VertexReading
 			);
 		}
 #endif
-	}
+    }
 }

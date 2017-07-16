@@ -5,5 +5,5 @@ using System.Text;
 
 public interface IInjectInitialize
 {
-	void Initialize();
+    void Initialize();
 }

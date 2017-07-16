@@ -4,27 +4,27 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CSharpUtilsTests
 {
-	[TestClass]
-	public class SpaceAssigner1DTest
-	{
+    [TestClass]
+    public class SpaceAssigner1DTest
+    {
         SpaceAssigner1D SpaceAssigner1D;
 
-		[TestInitialize]
-		public void TestInitialize()
-		{
+        [TestInitialize]
+        public void TestInitialize()
+        {
             this.SpaceAssigner1D = new SpaceAssigner1D();
-		}
+        }
 
-		[TestMethod]
-		public void CombineContiguousTest()
-		{
+        [TestMethod]
+        public void CombineContiguousTest()
+        {
             SpaceAssigner1D.AddAvailable(new SpaceAssigner1D.Space(0, 100));
             SpaceAssigner1D.AddAvailable(new SpaceAssigner1D.Space(100, 200));
             SpaceAssigner1D.AddAvailable(new SpaceAssigner1D.Space(-100, 0));
 
             Assert.AreEqual("SpaceAssigner1D(Space(Min=-100, Max=200))", SpaceAssigner1D.ToString());
-		}
-    
+        }
+
         [TestMethod]
         public void CombineContiguous2Test()
         {

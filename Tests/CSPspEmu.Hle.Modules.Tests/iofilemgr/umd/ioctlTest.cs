@@ -13,65 +13,64 @@ using CSPspEmu.Hle.Formats;
 
 namespace CSPspEmu.Hle.Modules.Tests.iofilemgr.umd
 {
-	[TestClass]
-	public unsafe class ioctlTest : BaseModuleTest, IInjectInitialize
-	{
-		[Inject]
-		IoFileMgrForUser IoFileMgrForUser = null;
+    [TestClass]
+    public unsafe class ioctlTest : BaseModuleTest, IInjectInitialize
+    {
+        [Inject] IoFileMgrForUser IoFileMgrForUser = null;
 
-		[Inject]
-		HleIoManager HleIoManager = null;
+        [Inject] HleIoManager HleIoManager = null;
 
-		SceUID BootBinFileHandle;
+        SceUID BootBinFileHandle;
 
-		void IInjectInitialize.Initialize()
-		{
-			var Iso = IsoLoader.GetIso("../../../pspautotests/input/iotest.iso");
-			var Umd = new HleIoDriverIso(Iso);
-			HleIoManager.SetDriver("disc:", Umd);
-			HleIoManager.Chdir("disc0:/PSP_GAME/USRDIR");
-			BootBinFileHandle = IoFileMgrForUser.sceIoOpen("disc0:/PSP_GAME/SYSDIR/BOOT.BIN", HleIoFlags.Read, SceMode.All);
-		}
+        void IInjectInitialize.Initialize()
+        {
+            var Iso = IsoLoader.GetIso("../../../pspautotests/input/iotest.iso");
+            var Umd = new HleIoDriverIso(Iso);
+            HleIoManager.SetDriver("disc:", Umd);
+            HleIoManager.Chdir("disc0:/PSP_GAME/USRDIR");
+            BootBinFileHandle =
+                IoFileMgrForUser.sceIoOpen("disc0:/PSP_GAME/SYSDIR/BOOT.BIN", HleIoFlags.Read, SceMode.All);
+        }
 
-		[TestMethod]
-		public void GetPrimaryVolumeDescriptorTest()
-		{
-			var PrimaryVolumeDescriptor = default(PrimaryVolumeDescriptor);
-			var result = IoFileMgrForUser.sceIoIoctl(
-				FileHandle: BootBinFileHandle,
-				Command: (uint)HleIoDriverIso.UmdCommandEnum.GetPrimaryVolumeDescriptor,
-				InputPointer: null,
-				InputLength: 0,
-				OutputPointer: (byte*)&PrimaryVolumeDescriptor,
-				OutputLength: sizeof(PrimaryVolumeDescriptor)
-			);
+        [TestMethod]
+        public void GetPrimaryVolumeDescriptorTest()
+        {
+            var PrimaryVolumeDescriptor = default(PrimaryVolumeDescriptor);
+            var result = IoFileMgrForUser.sceIoIoctl(
+                FileHandle: BootBinFileHandle,
+                Command: (uint) HleIoDriverIso.UmdCommandEnum.GetPrimaryVolumeDescriptor,
+                InputPointer: null,
+                InputLength: 0,
+                OutputPointer: (byte*) &PrimaryVolumeDescriptor,
+                OutputLength: sizeof(PrimaryVolumeDescriptor)
+            );
 
-			Assert.AreEqual(0, result, "Expected no error");
-			Assert.AreEqual(
-				"CD001",
-				PrimaryVolumeDescriptor.VolumeDescriptorHeader.IdString
-			);
-			Assert.AreEqual(
-				VolumeDescriptorHeader.TypeEnum.PrimaryVolumeDescriptor,
-				PrimaryVolumeDescriptor.VolumeDescriptorHeader.Type
-			);
-		}
+            Assert.AreEqual(0, result, "Expected no error");
+            Assert.AreEqual(
+                "CD001",
+                PrimaryVolumeDescriptor.VolumeDescriptorHeader.IdString
+            );
+            Assert.AreEqual(
+                VolumeDescriptorHeader.TypeEnum.PrimaryVolumeDescriptor,
+                PrimaryVolumeDescriptor.VolumeDescriptorHeader.Type
+            );
+        }
 
-		[TestMethod]
-		public void GetSectorSizeTest()
-		{
-			uint SectorSize;
+        [TestMethod]
+        public void GetSectorSizeTest()
+        {
+            uint SectorSize;
 
-			var result = IoFileMgrForUser.sceIoIoctl(
-				FileHandle: BootBinFileHandle,
-				Command: (uint)HleIoDriverIso.UmdCommandEnum.GetSectorSize,
-				InputPointer: null,
-				InputLength: 0,
-				OutputPointer: (byte*)&SectorSize,
-				OutputLength: sizeof(uint)
-			);
+            var result = IoFileMgrForUser.sceIoIoctl(
+                FileHandle: BootBinFileHandle,
+                Command: (uint) HleIoDriverIso.UmdCommandEnum.GetSectorSize,
+                InputPointer: null,
+                InputLength: 0,
+                OutputPointer: (byte*) &SectorSize,
+                OutputLength: sizeof(uint)
+            );
 
-			Assert.AreEqual(IsoFile.SectorSize, SectorSize);
-		}
-	}
+            Assert.AreEqual(IsoFile.SectorSize, SectorSize);
+        }
+    }
 }

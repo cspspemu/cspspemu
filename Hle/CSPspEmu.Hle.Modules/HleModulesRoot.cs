@@ -1,6 +1,6 @@
 ﻿namespace CSPspEmu.Hle.Modules
 {
-	public class HleModulesRoot
-	{
-	}
+    public class HleModulesRoot
+    {
+    }
 }

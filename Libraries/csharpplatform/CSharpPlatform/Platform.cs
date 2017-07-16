@@ -5,115 +5,126 @@ using System.Security;
 
 namespace CSPspEmu.Core
 {
-	public enum OS
-	{
-		Windows,
-		Linux,
-		Mac,
-		Android,
-		IOS,
-	}
+    public enum OS
+    {
+        Windows,
+        Linux,
+        Mac,
+        Android,
+        IOS,
+    }
 
-	public enum Architecture
-	{
-		x64,
-		x86,
-		arm,
-		mips,
-	}
+    public enum Architecture
+    {
+        x64,
+        x86,
+        arm,
+        mips,
+    }
 
-	public static unsafe class Platform
-	{
-		static Logger Logger = Logger.GetLogger("Platform");
+    public static unsafe class Platform
+    {
+        static Logger Logger = Logger.GetLogger("Platform");
 
-		public static bool IsWindows { get { return OS == OS.Windows; } }
-		public static bool IsPosix { get { return !IsWindows; } }
+        public static bool IsWindows
+        {
+            get { return OS == OS.Windows; }
+        }
 
-		public static OS OS;
+        public static bool IsPosix
+        {
+            get { return !IsWindows; }
+        }
 
-		public static bool Is64Bit { get { return Environment.Is64BitProcess; } }
-		public static bool Is32Bit { get { return !Environment.Is64BitProcess; } }
+        public static OS OS;
 
-		private static string _Architecture;
+        public static bool Is64Bit
+        {
+            get { return Environment.Is64BitProcess; }
+        }
 
-		public static Architecture Architecture
-		{
-			get
-			{
-				if (_Architecture == null)
-				{
-					//Environment.OSVersion
-					if (OS == OS.Windows)
-					{
-						_Architecture = Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE");
-					}
-					else
-					{
-						try
-						{
-							var Result = ProcessUtils.ExecuteCommand("uname", "-m");
-							_Architecture = Result.OutputString;
-							//_Architecture = Environment.GetEnvironmentVariable("HOSTTYPE");
-							//_Architecture = Environment.GetEnvironmentVariable("MACHTYPE");
-						}
-						catch (Exception Exception)
-						{
-							Logger.Error(Exception);
-							_Architecture = "Can't get arch";
-						}
-					}
-				}
-				switch (_Architecture)
-				{
-					case "AMD64": return Architecture.x64;
-				}
-				return (Architecture)Enum.Parse(typeof(Architecture), _Architecture);
-			}
-		}
+        public static bool Is32Bit
+        {
+            get { return !Environment.Is64BitProcess; }
+        }
 
-		static Platform()
-		{
-			IsMono = (Type.GetType("Mono.Runtime") != null);
+        private static string _Architecture;
 
-			switch (Environment.OSVersion.Platform)
-			{
-				case PlatformID.Win32NT:
-				case PlatformID.Win32Windows:
-				case PlatformID.WinCE:
-				case PlatformID.Win32S:
-					OS = OS.Windows;
-					break;
-				case PlatformID.MacOSX:
-					OS = OS.Mac;
-					break;
-				case PlatformID.Unix:
-					OS = OS.Linux;
-					break;
-				default:
-					throw (new PlatformNotSupportedException());
-			}
+        public static Architecture Architecture
+        {
+            get
+            {
+                if (_Architecture == null)
+                {
+                    //Environment.OSVersion
+                    if (OS == OS.Windows)
+                    {
+                        _Architecture = Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE");
+                    }
+                    else
+                    {
+                        try
+                        {
+                            var Result = ProcessUtils.ExecuteCommand("uname", "-m");
+                            _Architecture = Result.OutputString;
+                            //_Architecture = Environment.GetEnvironmentVariable("HOSTTYPE");
+                            //_Architecture = Environment.GetEnvironmentVariable("MACHTYPE");
+                        }
+                        catch (Exception Exception)
+                        {
+                            Logger.Error(Exception);
+                            _Architecture = "Can't get arch";
+                        }
+                    }
+                }
+                switch (_Architecture)
+                {
+                    case "AMD64": return Architecture.x64;
+                }
+                return (Architecture) Enum.Parse(typeof(Architecture), _Architecture);
+            }
+        }
 
-			UnixStart = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-		}
+        static Platform()
+        {
+            IsMono = (Type.GetType("Mono.Runtime") != null);
 
-		public struct TimeSpec
-		{
-			public long sec;
-			public long usec;
+            switch (Environment.OSVersion.Platform)
+            {
+                case PlatformID.Win32NT:
+                case PlatformID.Win32Windows:
+                case PlatformID.WinCE:
+                case PlatformID.Win32S:
+                    OS = OS.Windows;
+                    break;
+                case PlatformID.MacOSX:
+                    OS = OS.Mac;
+                    break;
+                case PlatformID.Unix:
+                    OS = OS.Linux;
+                    break;
+                default:
+                    throw (new PlatformNotSupportedException());
+            }
 
-			public long total_usec
-			{
-				get
-				{
-					return (long)usec + (long)sec * 1000 * 1000;
-				}
-			}
-		}
+            UnixStart = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        }
 
-		private class InternalUnix
-		{
-			[DllImport("libc")]
-			internal static extern int* __errno_location();
+        public struct TimeSpec
+        {
+            public long sec;
+            public long usec;
+
+            public long total_usec
+            {
+                get { return (long) usec + (long) sec * 1000 * 1000; }
+            }
+        }
+
+        private class InternalUnix
+        {
+            [DllImport("libc")]
+            internal static extern int* __errno_location();
 
 #if false
 			[DllImport("libc")]
@@ -122,102 +133,106 @@ namespace CSPspEmu.Core
 			[return: MarshalAs(UnmanagedType.LPStr)]
 			internal static extern string strerror(int errno);
 #else
-			[DllImport("libc", EntryPoint = "strerror")]
-			private static extern IntPtr _strerror(int errno);
-			public static string strerror(int errno) { return Marshal.PtrToStringAnsi(_strerror(errno)); }
+            [DllImport("libc", EntryPoint = "strerror")]
+            private static extern IntPtr _strerror(int errno);
+            public static string strerror(int errno)
+            {
+                return Marshal.PtrToStringAnsi(_strerror(errno));
+            }
 #endif
 
-			public static int errno()
-			{
-				return *InternalUnix.__errno_location();
-			}
+            public static int errno()
+            {
+                return *InternalUnix.__errno_location();
+            }
 
-			public static void reset_errno()
-			{
-				*InternalUnix.__errno_location() = 0;
-			}
+            public static void reset_errno()
+            {
+                *InternalUnix.__errno_location() = 0;
+            }
 
-			[DllImport("libc", EntryPoint = "mmap")]
-			//internal static extern void* mmap(void* addr, uint len, uint prot, uint flags, uint off_t);
-			internal static extern void* mmap(void* addr, uint len, uint prot, uint flags, int fildes, uint off);
+            [DllImport("libc", EntryPoint = "mmap")]
+            //internal static extern void* mmap(void* addr, uint len, uint prot, uint flags, uint off_t);
+            internal static extern void* mmap(void* addr, uint len, uint prot, uint flags, int fildes, uint off);
 
-			[DllImport("libc", EntryPoint = "munmap")]
-			internal static extern int munmap(void* addr, uint len);
+            [DllImport("libc", EntryPoint = "munmap")]
+            internal static extern int munmap(void* addr, uint len);
 
-			[DllImport("libc", EntryPoint = "mprotect")]
-			internal static extern int mprotect(void* start, ulong len, uint prot);
-		}
+            [DllImport("libc", EntryPoint = "mprotect")]
+            internal static extern int mprotect(void* start, ulong len, uint prot);
+        }
 
-		private class InternalWindows
-		{
-			[DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-			internal static extern byte* VirtualAlloc(void* lpAddress, uint dwSize, uint flAllocationType, uint flProtect);
+        private class InternalWindows
+        {
+            [DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+            internal static extern byte* VirtualAlloc(void* lpAddress, uint dwSize, uint flAllocationType,
+                uint flProtect);
 
-			[DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-			internal static extern bool VirtualFree(void* lpAddress, uint dwSize, uint dwFreeType);
+            [DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+            internal static extern bool VirtualFree(void* lpAddress, uint dwSize, uint dwFreeType);
 
-			[DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-			internal static extern uint GetLastError();
+            [DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+            internal static extern uint GetLastError();
 
-			[DllImport("Kernel32.dll")]
-			internal static extern IntPtr GetConsoleWindow();
+            [DllImport("Kernel32.dll")]
+            internal static extern IntPtr GetConsoleWindow();
 
-			[DllImport("user32.dll")]
-			internal static extern Boolean ShowWindow(IntPtr hWnd, Int32 nCmdShow);
-		}
+            [DllImport("user32.dll")]
+            internal static extern Boolean ShowWindow(IntPtr hWnd, Int32 nCmdShow);
+        }
 
-		const uint MEM_RESERVE = 0x2000;
-		const uint MEM_COMMIT = 0x1000;
-		const uint PAGE_READWRITE = 0x04;
-		const uint PAGE_GUARD = 0x100;
+        const uint MEM_RESERVE = 0x2000;
+        const uint MEM_COMMIT = 0x1000;
+        const uint PAGE_READWRITE = 0x04;
+        const uint PAGE_GUARD = 0x100;
 
-		const uint MEM_DECOMMIT = 0x4000;
-		const uint MEM_RELEASE = 0x8000;
+        const uint MEM_DECOMMIT = 0x4000;
+        const uint MEM_RELEASE = 0x8000;
 
-		/*
-		const uint MAP_ANON = 1;
-		const uint MAP_ANONYMOUS = 1;
-		const uint MAP_FILE = 2;
-		const uint MAP_PRIVATE = 4;
-		const uint MAP_SHARED = 8;
-		const uint MAP_FIXED = 0x10;
-		*/
+        /*
+        const uint MAP_ANON = 1;
+        const uint MAP_ANONYMOUS = 1;
+        const uint MAP_FILE = 2;
+        const uint MAP_PRIVATE = 4;
+        const uint MAP_SHARED = 8;
+        const uint MAP_FIXED = 0x10;
+        */
 
-		const uint PROT_NONE = 0;
-		const uint PROT_READ = 1;
-		const uint PROT_WRITE = 2;
-		const uint PROT_EXEC = 4;
+        const uint PROT_NONE = 0;
+        const uint PROT_READ = 1;
+        const uint PROT_WRITE = 2;
+        const uint PROT_EXEC = 4;
 
-		const uint MAP_SHARED	= 0x01;		// Share changes
-		const uint MAP_PRIVATE = 0x02;		// Changes are private
+        const uint MAP_SHARED = 0x01; // Share changes
+        const uint MAP_PRIVATE = 0x02; // Changes are private
 
-		// #elif defined(__i386__) || defined(__s390__) || defined(__x86_64__)
+        // #elif defined(__i386__) || defined(__s390__) || defined(__x86_64__)
 
-		const uint MAP_FIXED = 0x10; // Interpret addr exactly
-		const uint MAP_ANONYMOUS= 	0x20	; // don't use a file
-		const uint MAP_GROWSDOWN= 	0x0100	; // stack-like segment
-		const uint MAP_DENYWRITE= 	0x0800	; // ETXTBSY
-		const uint MAP_EXECUTABLE= 	0x1000	; // mark it as an executable
-		const uint MAP_LOCKED	= 0x2000	; // pages are locked
-		const uint MAP_NORESERVE = 0x4000;	  //  don't check for reservations
+        const uint MAP_FIXED = 0x10; // Interpret addr exactly
+        const uint MAP_ANONYMOUS = 0x20; // don't use a file
+        const uint MAP_GROWSDOWN = 0x0100; // stack-like segment
+        const uint MAP_DENYWRITE = 0x0800; // ETXTBSY
+        const uint MAP_EXECUTABLE = 0x1000; // mark it as an executable
+        const uint MAP_LOCKED = 0x2000; // pages are locked
+        const uint MAP_NORESERVE = 0x4000; //  don't check for reservations
 
-		// const int MAP_FIXED	0x10		/* Interpret addr exactly */
-		// const int MAP_ANONYMOUS	0x20		/* don't use a file */
-		// const int MAP_GROWSDOWN	0x0100		/* stack-like segment */
-		// const int MAP_DENYWRITE	0x0800		/* ETXTBSY */
-		// const int MAP_EXECUTABLE	0x1000		/* mark it as an executable */
-		// const int MAP_LOCKED	0x2000		/* pages are locked */
-		// const int MAP_NORESERVE	0x4000		/* don't check for reservations */
-		// const int MS_ASYNC	1		/* sync memory asynchronously */
-		// const int MS_INVALIDATE	2		/* invalidate the caches */
-		// const int MS_SYNC		4		/* synchronous memory sync */
-		// const int MCL_CURRENT	1		/* lock all current mappings */
-		// const int MCL_FUTURE	2		/* lock all future mappings */
-		// const int MADV_NORMAL	0x0		/* default page-in behavior */
-		// const int MADV_RANDOM	0x1		/* page-in minimum required */
-		// const int MADV_SEQUENTIAL	0x2		/* read-ahead aggressively */
-		// const int MADV_WILLNEED	0x3		/* pre-fault pages */
-		// const int MADV_DONTNEED	0x4		/* discard these pages */
+        // const int MAP_FIXED	0x10		/* Interpret addr exactly */
+        // const int MAP_ANONYMOUS	0x20		/* don't use a file */
+        // const int MAP_GROWSDOWN	0x0100		/* stack-like segment */
+        // const int MAP_DENYWRITE	0x0800		/* ETXTBSY */
+        // const int MAP_EXECUTABLE	0x1000		/* mark it as an executable */
+        // const int MAP_LOCKED	0x2000		/* pages are locked */
+        // const int MAP_NORESERVE	0x4000		/* don't check for reservations */
+        // const int MS_ASYNC	1		/* sync memory asynchronously */
+        // const int MS_INVALIDATE	2		/* invalidate the caches */
+        // const int MS_SYNC		4		/* synchronous memory sync */
+        // const int MCL_CURRENT	1		/* lock all current mappings */
+        // const int MCL_FUTURE	2		/* lock all future mappings */
+        // const int MADV_NORMAL	0x0		/* default page-in behavior */
+        // const int MADV_RANDOM	0x1		/* page-in minimum required */
+        // const int MADV_SEQUENTIAL	0x2		/* read-ahead aggressively */
+        // const int MADV_WILLNEED	0x3		/* pre-fault pages */
+        // const int MADV_DONTNEED	0x4		/* discard these pages */
 
 #if false
 		const int EGENERIC      (_SIGN 99)  /* generic error */
@@ -263,76 +278,84 @@ namespace CSPspEmu.Core
 		const int ELOOP         (_SIGN 40)  /* too many levels of symlinks detected */
 #endif
 
-		public static void Free(void* Address, uint Size)
-		{
-			switch (OS)
-			{
-				case OS.Windows: InternalWindows.VirtualFree(Address, 0, MEM_RELEASE); break;
-				default: InternalUnix.munmap(Address, Size); break;
-			}
-		}
+        public static void Free(void* Address, uint Size)
+        {
+            switch (OS)
+            {
+                case OS.Windows:
+                    InternalWindows.VirtualFree(Address, 0, MEM_RELEASE);
+                    break;
+                default:
+                    InternalUnix.munmap(Address, Size);
+                    break;
+            }
+        }
 
-		public static void* AllocRange(byte* Address, uint Size)
-		{
-			return _AllocRange(Address, Size, Guard: false);
-		}
+        public static void* AllocRange(byte* Address, uint Size)
+        {
+            return _AllocRange(Address, Size, Guard: false);
+        }
 
-		public static void* AllocRangeGuard(byte* Low, byte* High)
-		{
-			if (High < Low) throw(new Exception("Invalid High"));
-			return _AllocRange(Low, (uint)(High - Low), Guard: true);
-		}
+        public static void* AllocRangeGuard(byte* Low, byte* High)
+        {
+            if (High < Low) throw(new Exception("Invalid High"));
+            return _AllocRange(Low, (uint) (High - Low), Guard: true);
+        }
 
-		private static void* _AllocRange(void* Address, uint Size, bool Guard)
-		{
-			switch (OS)
-			{
-				case OS.Windows:
-					{
-						byte* Pointer;
-						if (Guard)
-						{
-							Pointer = InternalWindows.VirtualAlloc(Address, Size, MEM_RESERVE, PAGE_GUARD);
-						}
-						else
-						{
-							Pointer = InternalWindows.VirtualAlloc(Address, Size, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-						}
+        private static void* _AllocRange(void* Address, uint Size, bool Guard)
+        {
+            switch (OS)
+            {
+                case OS.Windows:
+                {
+                    byte* Pointer;
+                    if (Guard)
+                    {
+                        Pointer = InternalWindows.VirtualAlloc(Address, Size, MEM_RESERVE, PAGE_GUARD);
+                    }
+                    else
+                    {
+                        Pointer = InternalWindows.VirtualAlloc(Address, Size, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+                    }
 
-						if (Pointer != null)
-						{
-							if ((void*)Pointer != (void*)Address)
-							{
-								throw (new Exception(String.Format("Not allocated the desired address! Expected {0:X}, Allocated: {1:X}", new IntPtr(Address), new IntPtr(Pointer))));
-							}
-							PointerUtils.Memset(Pointer, 0, (int)Size);
-						}
-						return Pointer;
-					}
-				default:
-					{
-						int errno;
+                    if (Pointer != null)
+                    {
+                        if ((void*) Pointer != (void*) Address)
+                        {
+                            throw (new Exception(String.Format(
+                                "Not allocated the desired address! Expected {0:X}, Allocated: {1:X}",
+                                new IntPtr(Address), new IntPtr(Pointer))));
+                        }
+                        PointerUtils.Memset(Pointer, 0, (int) Size);
+                    }
+                    return Pointer;
+                }
+                default:
+                {
+                    int errno;
 
-						InternalUnix.reset_errno();
-						void* AllocatedAddress = InternalUnix.mmap(
-							Address,
-							Size,
-							PROT_READ | PROT_WRITE,
-							MAP_SHARED | MAP_ANONYMOUS | MAP_FIXED,
-							-1,
-							0
-						);
-						errno = InternalUnix.errno();
-						if (errno != 0) Console.Error.WriteLine("mmap errno: {0} : {1}", errno, InternalUnix.strerror(errno));
+                    InternalUnix.reset_errno();
+                    void* AllocatedAddress = InternalUnix.mmap(
+                        Address,
+                        Size,
+                        PROT_READ | PROT_WRITE,
+                        MAP_SHARED | MAP_ANONYMOUS | MAP_FIXED,
+                        -1,
+                        0
+                    );
+                    errno = InternalUnix.errno();
+                    if (errno != 0)
+                        Console.Error.WriteLine("mmap errno: {0} : {1}", errno, InternalUnix.strerror(errno));
 
-						if (AllocatedAddress == (void*)-1) AllocatedAddress = null;
+                    if (AllocatedAddress == (void*) -1) AllocatedAddress = null;
 
 
-						if (AllocatedAddress != Address)
-						{
-							Console.WriteLine("Alloc pointer mismatch! {0}, {1}", new IntPtr(AllocatedAddress), new IntPtr(Address));
-							//Console.ReadKey();
-						}
+                    if (AllocatedAddress != Address)
+                    {
+                        Console.WriteLine("Alloc pointer mismatch! {0}, {1}", new IntPtr(AllocatedAddress),
+                            new IntPtr(Address));
+                        //Console.ReadKey();
+                    }
 
 #if false
 						InternalUnix.reset_errno();
@@ -342,55 +365,55 @@ namespace CSPspEmu.Core
 						if (result3 != 0) Console.Error.WriteLine("mprotect result3: {0}", result3);
 #endif
 
-						return AllocatedAddress;
-					}
-			}
-			throw (new NotImplementedException());
-		}
+                    return AllocatedAddress;
+                }
+            }
+            throw (new NotImplementedException());
+        }
 
-		public static DateTime UnixStart;
+        public static DateTime UnixStart;
 
-		public static long CurrentUnixMicroseconds
-		{
-			get { return (DateTime.UtcNow - UnixStart).Ticks / (TimeSpan.TicksPerMillisecond / 1000); }
-		}
+        public static long CurrentUnixMicroseconds
+        {
+            get { return (DateTime.UtcNow - UnixStart).Ticks / (TimeSpan.TicksPerMillisecond / 1000); }
+        }
 
-		private const Int32 SW_HIDE = 0;
+        private const Int32 SW_HIDE = 0;
 
-		public static void HideConsole()
-		{
-			IntPtr hwnd = InternalWindows.GetConsoleWindow();
-			InternalWindows.ShowWindow(hwnd, SW_HIDE);
-		}
+        public static void HideConsole()
+        {
+            IntPtr hwnd = InternalWindows.GetConsoleWindow();
+            InternalWindows.ShowWindow(hwnd, SW_HIDE);
+        }
 
-		public static bool IsMono { get; private set; }
+        public static bool IsMono { get; private set; }
 
-		[DllImport("libc")]
-		static extern int uname(IntPtr buf);
+        [DllImport("libc")]
+        static extern int uname(IntPtr buf);
 
-		static bool IsRunningOnMac()
-		{
-			IntPtr buf = IntPtr.Zero;
-			try
-			{
-				buf = Marshal.AllocHGlobal(8192);
-				// This is a hacktastic way of getting sysname from uname ()
-				if (uname(buf) == 0)
-				{
-					string os = Marshal.PtrToStringAnsi(buf);
-					if (os == "Darwin")
-						return true;
-				}
-			}
-			catch
-			{
-			}
-			finally
-			{
-				if (buf != IntPtr.Zero)
-					Marshal.FreeHGlobal(buf);
-			}
-			return false;
-		}
-	}
+        static bool IsRunningOnMac()
+        {
+            IntPtr buf = IntPtr.Zero;
+            try
+            {
+                buf = Marshal.AllocHGlobal(8192);
+                // This is a hacktastic way of getting sysname from uname ()
+                if (uname(buf) == 0)
+                {
+                    string os = Marshal.PtrToStringAnsi(buf);
+                    if (os == "Darwin")
+                        return true;
+                }
+            }
+            catch
+            {
+            }
+            finally
+            {
+                if (buf != IntPtr.Zero)
+                    Marshal.FreeHGlobal(buf);
+            }
+            return false;
+        }
+    }
 }
