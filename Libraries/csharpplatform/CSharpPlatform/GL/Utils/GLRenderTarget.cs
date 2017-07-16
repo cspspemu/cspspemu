@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSharpPlatform.GL.Utils
 {
@@ -13,10 +9,10 @@ namespace CSharpPlatform.GL.Utils
         Color = (1 << 0),
         Depth = (1 << 1),
         Stencil = (1 << 2),
-        All = Color | Depth | Stencil,
+        All = Color | Depth | Stencil
     }
 
-    unsafe public class GLRenderTarget : IDisposable
+    public unsafe class GLRenderTarget : IDisposable
     {
         [ThreadStatic] public static GLRenderTarget Current = GLRenderTargetScreen.Default;
 
@@ -28,12 +24,12 @@ namespace CSharpPlatform.GL.Utils
         private int _Height;
         public RenderTargetLayers RenderTargetLayers { get; private set; }
 
-        virtual public int Width
+        public virtual int Width
         {
             get { return _Width; }
         }
 
-        virtual public int Height
+        public virtual int Height
         {
             get { return _Height; }
         }
@@ -47,7 +43,7 @@ namespace CSharpPlatform.GL.Utils
         /// </summary>
         /// <param name="From"></param>
         /// <param name="To"></param>
-        static public void CopyFromTo(GLRenderTarget From, GLRenderTarget To)
+        public static void CopyFromTo(GLRenderTarget From, GLRenderTarget To)
         {
             Contract.Assert(From != null);
             Contract.Assert(To != null);
@@ -77,13 +73,13 @@ namespace CSharpPlatform.GL.Utils
         {
             if (Width == 0 || Height == 0)
                 throw(new Exception(String.Format("Invalid GLRenderTarget size: {0}x{1}", Width, Height)));
-            this._Width = Width;
-            this._Height = Height;
+            _Width = Width;
+            _Height = Height;
             this.RenderTargetLayers = RenderTargetLayers;
             Initialize();
         }
 
-        static public GLRenderTarget Create(int Width, int Height,
+        public static GLRenderTarget Create(int Width, int Height,
             RenderTargetLayers RenderTargetLayers = RenderTargetLayers.All)
         {
             return new GLRenderTarget(Width, Height, RenderTargetLayers);
@@ -94,11 +90,11 @@ namespace CSharpPlatform.GL.Utils
             fixed (uint* FrameBufferPtr = &FrameBufferId)
             {
                 GL.glGenFramebuffers(1, FrameBufferPtr);
-                if ((RenderTargetLayers & Utils.RenderTargetLayers.Color) != 0)
+                if ((RenderTargetLayers & RenderTargetLayers.Color) != 0)
                     TextureColor = GLTexture.Create().SetFormat(TextureFormat.RGBA).SetSize(_Width, _Height);
-                if ((RenderTargetLayers & Utils.RenderTargetLayers.Depth) != 0)
+                if ((RenderTargetLayers & RenderTargetLayers.Depth) != 0)
                     TextureDepth = GLTexture.Create().SetFormat(TextureFormat.DEPTH).SetSize(_Width, _Height);
-                if ((RenderTargetLayers & Utils.RenderTargetLayers.Stencil) != 0)
+                if ((RenderTargetLayers & RenderTargetLayers.Stencil) != 0)
                     RenderBufferStencil = new GLRenderBuffer(_Width, _Height, GL.GL_STENCIL_INDEX8);
             }
         }
@@ -108,15 +104,15 @@ namespace CSharpPlatform.GL.Utils
             fixed (uint* FrameBufferPtr = &FrameBufferId)
             {
                 GL.glDeleteFramebuffers(1, FrameBufferPtr);
-                if ((RenderTargetLayers & Utils.RenderTargetLayers.Color) != 0)
+                if ((RenderTargetLayers & RenderTargetLayers.Color) != 0)
                 {
                     TextureColor.Dispose();
                 }
-                if ((RenderTargetLayers & Utils.RenderTargetLayers.Depth) != 0)
+                if ((RenderTargetLayers & RenderTargetLayers.Depth) != 0)
                 {
                     TextureDepth.Dispose();
                 }
-                if ((RenderTargetLayers & Utils.RenderTargetLayers.Stencil) != 0)
+                if ((RenderTargetLayers & RenderTargetLayers.Stencil) != 0)
                 {
                     RenderBufferStencil.Dispose();
                 }
@@ -141,19 +137,19 @@ namespace CSharpPlatform.GL.Utils
             }
         }
 
-        virtual protected void BindBuffers()
+        protected virtual void BindBuffers()
         {
-            if ((RenderTargetLayers & Utils.RenderTargetLayers.Color) != 0)
+            if ((RenderTargetLayers & RenderTargetLayers.Color) != 0)
             {
                 GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_COLOR_ATTACHMENT0, GL.GL_TEXTURE_2D,
                     TextureColor.Texture, 0);
             }
-            if ((RenderTargetLayers & Utils.RenderTargetLayers.Depth) != 0)
+            if ((RenderTargetLayers & RenderTargetLayers.Depth) != 0)
             {
                 GL.glFramebufferTexture2D(GL.GL_FRAMEBUFFER, GL.GL_DEPTH_ATTACHMENT, GL.GL_TEXTURE_2D,
                     TextureDepth.Texture, 0);
             }
-            if ((RenderTargetLayers & Utils.RenderTargetLayers.Stencil) != 0)
+            if ((RenderTargetLayers & RenderTargetLayers.Stencil) != 0)
             {
                 //GL.glFramebufferRenderbuffer(GL.GL_FRAMEBUFFER, GL.GL_STENCIL_ATTACHMENT, GL.GL_RENDERBUFFER, RenderBufferStencil.Index);
             }
@@ -196,10 +192,10 @@ namespace CSharpPlatform.GL.Utils
 
         public override string ToString()
         {
-            return String.Format("GLRenderTarget({0}, Size({1}x{2}))", this.FrameBufferId, this.Width, this.Height);
+            return String.Format("GLRenderTarget({0}, Size({1}x{2}))", FrameBufferId, Width, Height);
         }
 
-        unsafe public class GLRenderBuffer : IDisposable
+        public class GLRenderBuffer : IDisposable
         {
             public readonly int Width, Height;
 
@@ -232,9 +228,9 @@ namespace CSharpPlatform.GL.Utils
         }
     }
 
-    unsafe public class GLRenderTargetScreen : GLRenderTarget
+    public class GLRenderTargetScreen : GLRenderTarget
     {
-        static public GLRenderTargetScreen Default
+        public static GLRenderTargetScreen Default
         {
             get { return new GLRenderTargetScreen(); }
         }
@@ -249,9 +245,9 @@ namespace CSharpPlatform.GL.Utils
             get { return 64; }
         }
 
-        protected GLRenderTargetScreen() : base()
+        protected GLRenderTargetScreen()
         {
-            this.FrameBufferId = 0;
+            FrameBufferId = 0;
         }
 
         protected override void BindBuffers()

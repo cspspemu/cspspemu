@@ -124,43 +124,43 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
         public class ShaderInfoClass
         {
-            public GLUniform matrixWorldViewProjection;
-            public GLUniform matrixTexture;
-            public GLUniform matrixBones;
+            public GlUniform matrixWorldViewProjection;
+            public GlUniform matrixTexture;
+            public GlUniform matrixBones;
 
-            public GLUniform hasPerVertexColor;
-            public GLUniform hasTexture;
-            public GLUniform hasReversedNormal;
-            public GLUniform clearingMode;
+            public GlUniform hasPerVertexColor;
+            public GlUniform hasTexture;
+            public GlUniform hasReversedNormal;
+            public GlUniform clearingMode;
 
-            public GLUniform texture0;
-            public GLUniform uniformColor;
+            public GlUniform texture0;
+            public GlUniform uniformColor;
 
-            public GLUniform colorTest;
+            public GlUniform colorTest;
 
-            public GLUniform alphaTest;
-            public GLUniform alphaFunction;
-            public GLUniform alphaValue;
-            public GLUniform alphaMask;
+            public GlUniform alphaTest;
+            public GlUniform alphaFunction;
+            public GlUniform alphaValue;
+            public GlUniform alphaMask;
 
-            public GLUniform weightCount;
+            public GlUniform weightCount;
 
-            public GLUniform tfx;
-            public GLUniform tcc;
+            public GlUniform tfx;
+            public GlUniform tcc;
 
-            public GLAttribute vertexPosition;
-            public GLAttribute vertexTexCoords;
-            public GLAttribute vertexColor;
-            public GLAttribute vertexNormal;
+            public GlAttribute vertexPosition;
+            public GlAttribute vertexTexCoords;
+            public GlAttribute vertexColor;
+            public GlAttribute vertexNormal;
 
-            public GLAttribute vertexWeight0;
-            public GLAttribute vertexWeight1;
-            public GLAttribute vertexWeight2;
-            public GLAttribute vertexWeight3;
-            public GLAttribute vertexWeight4;
-            public GLAttribute vertexWeight5;
-            public GLAttribute vertexWeight6;
-            public GLAttribute vertexWeight7;
+            public GlAttribute vertexWeight0;
+            public GlAttribute vertexWeight1;
+            public GlAttribute vertexWeight2;
+            public GlAttribute vertexWeight3;
+            public GlAttribute vertexWeight4;
+            public GlAttribute vertexWeight5;
+            public GlAttribute vertexWeight6;
+            public GlAttribute vertexWeight7;
         }
 
         ShaderInfoClass ShaderInfo = new ShaderInfoClass();

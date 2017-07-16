@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CSharpPlatform.GL.Utils
+﻿namespace CSharpPlatform.GL.Utils
 {
     //unsafe public delegate void CallbackFloatPointer(float* Values);
     //

@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CSharpPlatform.GL.Utils
+﻿namespace CSharpPlatform.GL.Utils
 {
-    public enum GLWrap : int
+    public enum GLWrap
     {
         ClampToEdge = GL.GL_CLAMP_TO_EDGE,
         MirroredRepeat = GL.GL_MIRRORED_REPEAT,
-        Repeat = GL.GL_REPEAT,
+        Repeat = GL.GL_REPEAT
     }
 
-    public enum GLScaleFilter : int
+    public enum GLScaleFilter
     {
         Linear = GL.GL_LINEAR,
-        Nearest = GL.GL_NEAREST,
+        Nearest = GL.GL_NEAREST
     }
 
     public class GLTextureUnit
@@ -38,12 +32,12 @@ namespace CSharpPlatform.GL.Utils
             return this;
         }
 
-        static public GLTextureUnit Create()
+        public static GLTextureUnit Create()
         {
             return new GLTextureUnit();
         }
 
-        static public GLTextureUnit CreateAtIndex(int Index)
+        public static GLTextureUnit CreateAtIndex(int Index)
         {
             return Create().SetIndex(Index);
         }
@@ -80,7 +74,7 @@ namespace CSharpPlatform.GL.Utils
 
         public GLTextureUnit MakeCurrent()
         {
-            GL.glActiveTexture(GL.GL_TEXTURE0 + this.Index);
+            GL.glActiveTexture(GL.GL_TEXTURE0 + Index);
             if (GLTexture != null) GLTexture.Bind();
             GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, (int) Min);
             GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, (int) Mag);

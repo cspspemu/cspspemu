@@ -1,31 +1,27 @@
-﻿using CSharpPlatform.Library;
-using CSPspEmu.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+using CSharpPlatform.Library;
+using CSPspEmu.Core;
 
 namespace CSharpPlatform.GL
 {
-    class DynamicLibraryGL : IDynamicLibrary
+    class DynamicLibraryGl : IDynamicLibrary
     {
-        public IntPtr GetMethod(string Name)
+        public IntPtr GetMethod(string name)
         {
             IntPtr Return;
             switch (Platform.OS)
             {
                 case OS.Windows:
-                    Return = wglGetProcAddress(Name);
+                    Return = wglGetProcAddress(name);
                     break;
                 default:
-                    Return = glxGetProcAddress(Name);
+                    Return = glxGetProcAddress(name);
                     break;
             }
             if (Return == IntPtr.Zero)
             {
-                Console.WriteLine("Can't find '{0}' : {1:X8}", Name, Marshal.GetLastWin32Error());
+                Console.WriteLine("Can't find '{0}' : {1:X8}", name, Marshal.GetLastWin32Error());
             }
             return Return;
         }

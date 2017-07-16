@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using CSharpUtils.Extensions;
 
 namespace CSharpPlatform.GL.Utils
 {
-    public enum GLValueType : int
+    public enum GLValueType
     {
         GL_BYTE = 0x1400,
         GL_UNSIGNED_BYTE = 0x1401,
@@ -34,7 +32,7 @@ namespace CSharpPlatform.GL.Utils
         GL_FLOAT_MAT3 = 0x8B5B,
         GL_FLOAT_MAT4 = 0x8B5C,
         GL_SAMPLER_2D = 0x8B5E,
-        GL_SAMPLER_CUBE = 0x8B60,
+        GL_SAMPLER_CUBE = 0x8B60
     }
 
     public enum GLGeometry
@@ -45,10 +43,10 @@ namespace CSharpPlatform.GL.Utils
         GL_LINE_STRIP = 0x0003,
         GL_TRIANGLES = 0x0004,
         GL_TRIANGLE_STRIP = 0x0005,
-        GL_TRIANGLE_FAN = 0x0006,
+        GL_TRIANGLE_FAN = 0x0006
     }
 
-    unsafe public class GLShader : IDisposable
+    public unsafe class GLShader : IDisposable
     {
         uint Program;
         uint VertexShader;
@@ -99,15 +97,15 @@ namespace CSharpPlatform.GL.Utils
             Link();
         }
 
-        public GLAttribute GetAttribute(string Name)
+        public GlAttribute GetAttribute(string Name)
         {
-            return this._Attributes.GetOrDefault(Name, new GLAttribute(this, Name, -1, 0, GLValueType.GL_BYTE));
+            return _Attributes.GetOrDefault(Name, new GlAttribute(this, Name, -1, 0, GLValueType.GL_BYTE));
         }
 
-        public GLUniform GetUniform(string Name)
+        public GlUniform GetUniform(string Name)
         {
-            if (this._Uniforms.ContainsKey(Name + "[0]")) Name = Name + "[0]";
-            return this._Uniforms.GetOrDefault(Name, new GLUniform(this, Name, -1, 0, GLValueType.GL_BYTE));
+            if (_Uniforms.ContainsKey(Name + "[0]")) Name = Name + "[0]";
+            return _Uniforms.GetOrDefault(Name, new GlUniform(this, Name, -1, 0, GLValueType.GL_BYTE));
         }
 
         private void Link()
@@ -127,15 +125,15 @@ namespace CSharpPlatform.GL.Utils
             GetAllAttributes();
         }
 
-        private readonly Dictionary<string, GLUniform> _Uniforms = new Dictionary<string, GLUniform>();
-        private readonly Dictionary<string, GLAttribute> _Attributes = new Dictionary<string, GLAttribute>();
+        private readonly Dictionary<string, GlUniform> _Uniforms = new Dictionary<string, GlUniform>();
+        private readonly Dictionary<string, GlAttribute> _Attributes = new Dictionary<string, GlAttribute>();
 
-        public IEnumerable<GLUniform> Uniforms
+        public IEnumerable<GlUniform> Uniforms
         {
             get { return _Uniforms.Values; }
         }
 
-        public IEnumerable<GLAttribute> Attributes
+        public IEnumerable<GlAttribute> Attributes
         {
             get { return _Attributes.Values; }
         }
@@ -154,7 +152,7 @@ namespace CSharpPlatform.GL.Utils
                 NameTemp[name_len] = 0;
                 var Name = Marshal.PtrToStringAnsi(new IntPtr(NameTemp));
                 int location = GL.glGetUniformLocation(Program, Name);
-                _Uniforms[Name] = new GLUniform(this, Name, location, num, (GLValueType) type);
+                _Uniforms[Name] = new GlUniform(this, Name, location, num, (GLValueType) type);
                 //Console.WriteLine(Uniforms[Name]);
             }
         }
@@ -173,7 +171,7 @@ namespace CSharpPlatform.GL.Utils
                 NameTemp[name_len] = 0;
                 var Name = Marshal.PtrToStringAnsi(new IntPtr(NameTemp));
                 int location = GL.glGetAttribLocation(Program, Name);
-                _Attributes[Name] = new GLAttribute(this, Name, location, num, (GLValueType) type);
+                _Attributes[Name] = new GlAttribute(this, Name, location, num, (GLValueType) type);
                 //Console.WriteLine(Attributes[Name]);
             }
         }
@@ -204,7 +202,7 @@ namespace CSharpPlatform.GL.Utils
             GL.CheckError();
         }
 
-        static private void ShaderSource(uint Shader, string Source)
+        private static void ShaderSource(uint Shader, string Source)
         {
             var SourceBytes = new UTF8Encoding(false, true).GetBytes(Source);
             var SourceLength = SourceBytes.Length;
@@ -215,7 +213,7 @@ namespace CSharpPlatform.GL.Utils
             }
         }
 
-        static private string GetShaderInfoLog(uint Shader)
+        private static string GetShaderInfoLog(uint Shader)
         {
             int Length;
             var Data = new byte[1024];
@@ -226,7 +224,7 @@ namespace CSharpPlatform.GL.Utils
             }
         }
 
-        static private string GetProgramInfoLog(uint Program)
+        private static string GetProgramInfoLog(uint Program)
         {
             int Length;
             var Data = new byte[1024];
@@ -258,21 +256,21 @@ namespace CSharpPlatform.GL.Utils
             SetDataCallback();
             fixed (uint* IndicesPtr = &Indices[IndicesOffset])
             {
-                GL.glDrawElements((int) Geometry, Count, GL.GL_UNSIGNED_INT, (void*) IndicesPtr);
+                GL.glDrawElements((int) Geometry, Count, GL.GL_UNSIGNED_INT, IndicesPtr);
             }
         }
 
-        public unsafe void BindUniformsAndAttributes(object Object)
+        public void BindUniformsAndAttributes(object Object)
         {
             foreach (var Field in Object.GetType().GetFields())
             {
-                if (Field.FieldType == typeof(GLAttribute))
+                if (Field.FieldType == typeof(GlAttribute))
                 {
-                    Field.SetValue(Object, this.GetAttribute(Field.Name));
+                    Field.SetValue(Object, GetAttribute(Field.Name));
                 }
-                else if (Field.FieldType == typeof(GLUniform))
+                else if (Field.FieldType == typeof(GlUniform))
                 {
-                    Field.SetValue(Object, this.GetUniform(Field.Name));
+                    Field.SetValue(Object, GetUniform(Field.Name));
                 }
             }
         }

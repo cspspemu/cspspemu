@@ -24,7 +24,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
         /// <summary>
         /// 
         /// </summary>
-        public static IGLContext OpenglContext;
+        public static IGlContext OpenglContext;
 
         /// <summary>
         /// 
@@ -71,7 +71,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                 {
                     Thread.CurrentThread.CurrentCulture = new CultureInfo(GlobalConfig.ThreadCultureName);
 
-                    OpenglContext = GLContextFactory.CreateWindowless();
+                    OpenglContext = GlContextFactory.CreateWindowless();
                     OpenglContext.MakeCurrent();
 
                     Console.Out.WriteLineColored(ConsoleColor.White, "## OpenGL Context Version: {0}",

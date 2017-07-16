@@ -288,9 +288,9 @@ namespace CSPspEmu.Gui
         //GLTexture TestTexture;
         public class ShaderInfoClass
         {
-            public GLAttribute position;
-            public GLAttribute texCoords;
-            public GLUniform texture;
+            public GlAttribute position;
+            public GlAttribute texCoords;
+            public GlUniform texture;
         }
 
         ShaderInfoClass ShaderInfo = new ShaderInfoClass();

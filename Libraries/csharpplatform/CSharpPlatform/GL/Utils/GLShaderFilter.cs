@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSharpPlatform.GL.Utils
 {
@@ -23,7 +19,7 @@ namespace CSharpPlatform.GL.Utils
             get { return (RenderTarget != null) ? RenderTarget.Height : 0; }
         }
 
-        static public string DefaultVertexShader = @"
+        public static string DefaultVertexShader = @"
 			attribute vec4 a_position;
 			attribute vec4 a_texcoords;
 			varying vec2 v_texcoords;
@@ -37,23 +33,23 @@ namespace CSharpPlatform.GL.Utils
         {
             this.Shader = Shader;
             SetSize(Width, Height);
-            this.PositionBuffer = GLBuffer.Create().SetData<float>(new float[]
+            PositionBuffer = GLBuffer.Create().SetData(new[]
             {
                 -1f, -1f,
                 +1f, -1f,
                 -1f, +1f,
-                +1f, +1f,
+                +1f, +1f
             });
-            this.TexcoordsBuffer = GLBuffer.Create().SetData<float>(new float[]
+            TexcoordsBuffer = GLBuffer.Create().SetData(new[]
             {
                 0f, 0f,
                 1f, 0f,
                 0f, 1f,
-                1f, 1f,
+                1f, 1f
             });
         }
 
-        static public GLShaderFilter Create(int Width, int Height, GLShader Shader)
+        public static GLShaderFilter Create(int Width, int Height, GLShader Shader)
         {
             return new GLShaderFilter(Width, Height, Shader);
         }
@@ -70,7 +66,7 @@ namespace CSharpPlatform.GL.Utils
                 Shader.GetAttribute("a_texcoords").NoWarning().SetData<float>(TexcoordsBuffer, 2);
                 Shader.GetUniform("u_textureSize").NoWarning().Set(new Vector4f(Width, Height, 0, 0));
                 Shader.GetUniform("u_pixelSize").NoWarning()
-                    .Set(new Vector4f(1.0f / (float) Width, 1.0f / (float) Height, 0, 0));
+                    .Set(new Vector4f(1.0f / Width, 1.0f / Height, 0, 0));
                 Shader.Draw(GLGeometry.GL_TRIANGLE_STRIP, 4, () => { Action(Shader); });
             });
             return RenderTarget.TextureColor;
@@ -81,8 +77,8 @@ namespace CSharpPlatform.GL.Utils
             if (Width != this.Width || Height != this.Height)
             {
                 //Console.WriteLine("{0}x{1}", Width, Height);
-                if (this.RenderTarget != null) this.RenderTarget.Dispose();
-                this.RenderTarget = GLRenderTarget.Create(Width, Height, RenderTargetLayers.Color);
+                if (RenderTarget != null) RenderTarget.Dispose();
+                RenderTarget = GLRenderTarget.Create(Width, Height, RenderTargetLayers.Color);
                 //this.RenderTarget = GLRenderTarget.Create(Width, Height);
             }
 
@@ -91,9 +87,9 @@ namespace CSharpPlatform.GL.Utils
 
         public void Dispose()
         {
-            this.RenderTarget.Dispose();
-            this.PositionBuffer.Dispose();
-            this.TexcoordsBuffer.Dispose();
+            RenderTarget.Dispose();
+            PositionBuffer.Dispose();
+            TexcoordsBuffer.Dispose();
         }
     }
 }

@@ -68,7 +68,7 @@ namespace CSPspEmu
 
         static private void _MainData()
         {
-            var Context = GLContextFactory.CreateWindowless().MakeCurrent();
+            var Context = GlContextFactory.CreateWindowless().MakeCurrent();
             //var BitmapIn = new Bitmap(Image.FromFile(@"C:\temp\1.png"));
             var BitmapIn = new Bitmap(Image.FromFile(@"C:\temp\in.png"));
 

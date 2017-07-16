@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSharpPlatform.GL.Impl.Linux
 {
-    unsafe public class LinuxGLContext : IGLContext
+    public unsafe class LinuxGLContext : IGlContext
     {
-        static private Object Lock = new Object();
-        static public IntPtr DefaultDisplay;
+        private static Object Lock = new Object();
+        public static IntPtr DefaultDisplay;
 
-        static public int DefaultScreen;
+        public static int DefaultScreen;
 
         //static public IntPtr DefaultRootWindow;
-        static private IntPtr SharedContext;
+        private static IntPtr SharedContext;
 
         private IntPtr Display;
         private int Screen;
@@ -47,14 +44,14 @@ namespace CSharpPlatform.GL.Impl.Linux
         public static extern void XMapWindow(IntPtr display, IntPtr window);
 
         [DllImport("libX11")]
-        public extern static int XInitThreads();
+        public static extern int XInitThreads();
 
         [DllImport("libX11")]
         public static extern IntPtr XGetVisualInfo(IntPtr display, IntPtr vinfo_mask, ref XVisualInfo template,
             out int nitems);
 
 
-        public static IGLContext FromWindowHandle(IntPtr WindowHandle)
+        public static IGlContext FromWindowHandle(IntPtr WindowHandle)
         {
             lock (Lock)
             {
@@ -91,7 +88,7 @@ namespace CSharpPlatform.GL.Impl.Linux
             visualAttributes.AddRange(new[] {(int) GLXAttribute.DEPTH_SIZE, 24});
             visualAttributes.AddRange(new[] {(int) GLXAttribute.STENCIL_SIZE, 8});
             visualAttributes.AddRange(new[] {(int) GLXAttribute.DOUBLEBUFFER, 1});
-            visualAttributes.AddRange(new[] {(int) 0, 0});
+            visualAttributes.AddRange(new[] {0, 0});
 #endif
 
             Console.WriteLine("++++++++++++++++++++++++");
@@ -104,8 +101,8 @@ namespace CSharpPlatform.GL.Impl.Linux
                 //DefaultRootWindow = IntPtr.Zero;
             }
 
-            this.Display = DefaultDisplay;
-            this.Screen = DefaultScreen;
+            Display = DefaultDisplay;
+            Screen = DefaultScreen;
 
             //Console.WriteLine("{0}", GLX.ChooseVisual(Display, Screen, visualAttributes.ToArray()));
 
@@ -175,7 +172,7 @@ namespace CSharpPlatform.GL.Impl.Linux
             //var Info = (XVisualInfo*)GLX.ChooseVisual(Display, Screen, visualAttributes.ToArray()).ToPointer();
 
             //GLX.glXCreateContextAttribsARB(
-            this.Context = GLX.glXCreateContext(this.Display, &info, SharedContext, false);
+            Context = GLX.glXCreateContext(Display, &info, SharedContext, false);
             GL.CheckError();
 
             // Just for >= 3.0
@@ -205,7 +202,7 @@ namespace CSharpPlatform.GL.Impl.Linux
 
             if (SharedContext == IntPtr.Zero)
             {
-                SharedContext = this.Context;
+                SharedContext = Context;
             }
 
             MakeCurrent();
@@ -225,15 +222,15 @@ namespace CSharpPlatform.GL.Impl.Linux
             Console.Out.WriteLineColored(ConsoleColor.Yellow, "Renderer:{0}", GL.GetString(GL.GL_RENDERER));
         }
 
-        unsafe public delegate IntPtr CreateContextAttribsARB(IntPtr display, IntPtr fbconfig, IntPtr share_context,
+        public delegate IntPtr CreateContextAttribsARB(IntPtr display, IntPtr fbconfig, IntPtr share_context,
             bool direct, int* attribs);
 
         public GLContextSize Size
         {
-            get { return new GLContextSize() {Width = 0, Height = 0}; }
+            get { return new GLContextSize {Width = 0, Height = 0}; }
         }
 
-        public IGLContext MakeCurrent()
+        public IGlContext MakeCurrent()
         {
             if (!GLX.glXMakeCurrent(Display, WindowHandle, Context))
             {
@@ -243,14 +240,14 @@ namespace CSharpPlatform.GL.Impl.Linux
             return this;
         }
 
-        public IGLContext ReleaseCurrent()
+        public IGlContext ReleaseCurrent()
         {
             GLX.glXMakeCurrent(Display, IntPtr.Zero, IntPtr.Zero);
             GL.CheckError();
             return this;
         }
 
-        public IGLContext SwapBuffers()
+        public IGlContext SwapBuffers()
         {
             GLX.glXSwapBuffers(Display, WindowHandle);
             return this;
@@ -351,7 +348,7 @@ namespace CSharpPlatform.GL.Impl.Linux
         CWBackingStore = (1L << 6),
         CWBackingPlanes = (1L << 7),
         CWBackingPixel = (1L << 8),
-        CWOverrideRedirect = (1L << 9),
+        CWOverrideRedirect = (1L << 9)
 
         //CWY    = (1<<1),
         //CWWidth    = (1<<2),
@@ -396,6 +393,6 @@ namespace CSharpPlatform.GL.Impl.Linux
         Blue = 0x40,
         ColormapSize = 0x80,
         BitsPerRGB = 0x100,
-        All = 0x1FF,
+        All = 0x1FF
     }
 }

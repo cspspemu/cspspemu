@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSharpPlatform.GL.Utils
 {
-    unsafe public class GLBuffer : IDisposable
+    public unsafe class GLBuffer : IDisposable
     {
         uint Buffer;
 
@@ -16,7 +12,7 @@ namespace CSharpPlatform.GL.Utils
             Initialize();
         }
 
-        static public GLBuffer Create()
+        public static GLBuffer Create()
         {
             return new GLBuffer();
         }

@@ -15,7 +15,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
 {
     unsafe public class GLControl : UserControl
     {
-        protected IGLContext Context;
+        protected IGlContext Context;
 
         public GLControl()
         {
@@ -26,7 +26,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
             base.OnHandleCreated(e);
             if (!DesignMode)
             {
-                this.Context = GLContextFactory.CreateFromWindowHandle(this.Handle);
+                this.Context = GlContextFactory.CreateFromWindowHandle(this.Handle);
                 this.Context.MakeCurrent();
             }
         }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 using EGLBoolean = System.Int32;
 using EGLenum = System.Int32;
 using EGLint = System.Int32;
@@ -19,7 +14,7 @@ using EGLNativeWindowType = System.IntPtr;
 
 namespace CSharpPlatform.GL.Impl.Android
 {
-    unsafe public class EGL
+    public unsafe class EGL
     {
         const string Library = "libEGL.so";
 
@@ -30,11 +25,11 @@ namespace CSharpPlatform.GL.Impl.Android
         public const int EGL_VERSION_1_4 = 1;
         public const int EGL_FALSE = 0;
         public const int EGL_TRUE = 1;
-        public const EGLNativeDisplayType EGL_DEFAULT_DISPLAY = ((EGLNativeDisplayType) 0);
-        public const EGLContext EGL_NO_CONTEXT = ((EGLContext) 0);
-        public const EGLDisplay EGL_NO_DISPLAY = ((EGLDisplay) 0);
-        public const EGLSurface EGL_NO_SURFACE = ((EGLSurface) 0);
-        public const int EGL_DONT_CARE = unchecked((EGLint) (-1));
+        public const EGLNativeDisplayType EGL_DEFAULT_DISPLAY = 0;
+        public const EGLContext EGL_NO_CONTEXT = 0;
+        public const EGLDisplay EGL_NO_DISPLAY = 0;
+        public const EGLSurface EGL_NO_SURFACE = 0;
+        public const int EGL_DONT_CARE = unchecked(-1);
         public const int EGL_SUCCESS = 0x3000;
         public const int EGL_NOT_INITIALIZED = 0x3001;
         public const int EGL_BAD_ACCESS = 0x3002;
@@ -131,7 +126,7 @@ namespace CSharpPlatform.GL.Impl.Android
         public const int EGL_VG_ALPHA_FORMAT_NONPRE = 0x308B;
         public const int EGL_VG_ALPHA_FORMAT_PRE = 0x308C;
         public const int EGL_DISPLAY_SCALING = 10000;
-        public const int EGL_UNKNOWN = unchecked((EGLint) (-1));
+        public const int EGL_UNKNOWN = unchecked(-1);
         public const int EGL_BUFFER_PRESERVED = 0x3094;
         public const int EGL_BUFFER_DESTROYED = 0x3095;
         public const int EGL_OPENVG_IMAGE = 0x3096;
@@ -153,117 +148,117 @@ namespace CSharpPlatform.GL.Impl.Android
         public const int EGL_ALPHA_FORMAT_PRE = EGL_VG_ALPHA_FORMAT_PRE;
 
         [DllImport(Library)]
-        static public extern EGLint eglGetError();
+        public static extern EGLint eglGetError();
 
         [DllImport(Library)]
-        static public extern EGLDisplay eglGetDisplay(EGLNativeDisplayType display_id);
+        public static extern EGLDisplay eglGetDisplay(EGLNativeDisplayType display_id);
 
         [DllImport(Library)]
-        static public extern EGLBoolean eglInitialize(EGLDisplay dpy, EGLint* major, EGLint* minor);
+        public static extern EGLBoolean eglInitialize(EGLDisplay dpy, EGLint* major, EGLint* minor);
 
         [DllImport(Library)]
-        static public extern EGLBoolean eglTerminate(EGLDisplay dpy);
+        public static extern EGLBoolean eglTerminate(EGLDisplay dpy);
 
         [DllImport(Library)]
-        static public extern byte* eglQueryString(EGLDisplay dpy, EGLint name);
+        public static extern byte* eglQueryString(EGLDisplay dpy, EGLint name);
 
         [DllImport(Library)]
-        static public extern EGLBoolean eglGetConfigs(EGLDisplay dpy, EGLConfig* configs, EGLint config_size,
+        public static extern EGLBoolean eglGetConfigs(EGLDisplay dpy, EGLConfig* configs, EGLint config_size,
             EGLint* num_config);
 
         [DllImport(Library)]
-        static public extern EGLBoolean eglChooseConfig(EGLDisplay dpy, EGLint* attrib_list, EGLConfig* configs,
+        public static extern EGLBoolean eglChooseConfig(EGLDisplay dpy, EGLint* attrib_list, EGLConfig* configs,
             EGLint config_size, EGLint* num_config);
 
         [DllImport(Library)]
-        static public extern EGLBoolean eglGetConfigAttrib(EGLDisplay dpy, EGLConfig config, EGLint attribute,
+        public static extern EGLBoolean eglGetConfigAttrib(EGLDisplay dpy, EGLConfig config, EGLint attribute,
             EGLint* value);
 
         [DllImport(Library)]
-        static public extern EGLSurface eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config,
+        public static extern EGLSurface eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config,
             EGLNativeWindowType win, EGLint* attrib_list);
 
         [DllImport(Library)]
-        static public extern EGLSurface eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config, EGLint* attrib_list);
+        public static extern EGLSurface eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config, EGLint* attrib_list);
 
         [DllImport(Library)]
-        static public extern EGLSurface eglCreatePixmapSurface(EGLDisplay dpy, EGLConfig config,
+        public static extern EGLSurface eglCreatePixmapSurface(EGLDisplay dpy, EGLConfig config,
             EGLNativePixmapType pixmap, EGLint* attrib_list);
 
         [DllImport(Library)]
-        static public extern EGLBoolean eglDestroySurface(EGLDisplay dpy, EGLSurface surface);
+        public static extern EGLBoolean eglDestroySurface(EGLDisplay dpy, EGLSurface surface);
 
         [DllImport(Library)]
-        static public extern EGLBoolean eglQuerySurface(EGLDisplay dpy, EGLSurface surface, EGLint attribute,
+        public static extern EGLBoolean eglQuerySurface(EGLDisplay dpy, EGLSurface surface, EGLint attribute,
             EGLint* value);
 
         [DllImport(Library)]
-        static public extern EGLBoolean eglBindAPI(EGLenum api);
+        public static extern EGLBoolean eglBindAPI(EGLenum api);
 
         [DllImport(Library)]
-        static public extern EGLenum eglQueryAPI();
+        public static extern EGLenum eglQueryAPI();
 
         [DllImport(Library)]
-        static public extern EGLBoolean eglWaitClient();
+        public static extern EGLBoolean eglWaitClient();
 
         [DllImport(Library)]
-        static public extern EGLBoolean eglReleaseThread();
+        public static extern EGLBoolean eglReleaseThread();
 
         [DllImport(Library)]
-        static public extern EGLSurface eglCreatePbufferFromClientBuffer(EGLDisplay dpy, EGLenum buftype,
+        public static extern EGLSurface eglCreatePbufferFromClientBuffer(EGLDisplay dpy, EGLenum buftype,
             EGLClientBuffer buffer, EGLConfig config, EGLint* attrib_list);
 
         [DllImport(Library)]
-        static public extern EGLBoolean eglSurfaceAttrib(EGLDisplay dpy, EGLSurface surface, EGLint attribute,
+        public static extern EGLBoolean eglSurfaceAttrib(EGLDisplay dpy, EGLSurface surface, EGLint attribute,
             EGLint value);
 
         [DllImport(Library)]
-        static public extern EGLBoolean eglBindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint buffer);
+        public static extern EGLBoolean eglBindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint buffer);
 
         [DllImport(Library)]
-        static public extern EGLBoolean eglReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLint buffer);
+        public static extern EGLBoolean eglReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLint buffer);
 
         [DllImport(Library)]
-        static public extern EGLBoolean eglSwapInterval(EGLDisplay dpy, EGLint interval);
+        public static extern EGLBoolean eglSwapInterval(EGLDisplay dpy, EGLint interval);
 
         [DllImport(Library)]
-        static public extern EGLContext eglCreateContext(EGLDisplay dpy, EGLConfig config, EGLContext share_context,
+        public static extern EGLContext eglCreateContext(EGLDisplay dpy, EGLConfig config, EGLContext share_context,
             EGLint* attrib_list);
 
         [DllImport(Library)]
-        static public extern EGLBoolean eglDestroyContext(EGLDisplay dpy, EGLContext ctx);
+        public static extern EGLBoolean eglDestroyContext(EGLDisplay dpy, EGLContext ctx);
 
         [DllImport(Library)]
-        static public extern EGLBoolean
+        public static extern EGLBoolean
             eglMakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface read, EGLContext ctx);
 
         [DllImport(Library)]
-        static public extern EGLContext eglGetCurrentContext();
+        public static extern EGLContext eglGetCurrentContext();
 
         [DllImport(Library)]
-        static public extern EGLSurface eglGetCurrentSurface(EGLint readdraw);
+        public static extern EGLSurface eglGetCurrentSurface(EGLint readdraw);
 
         [DllImport(Library)]
-        static public extern EGLDisplay eglGetCurrentDisplay();
+        public static extern EGLDisplay eglGetCurrentDisplay();
 
         [DllImport(Library)]
-        static public extern EGLBoolean
+        public static extern EGLBoolean
             eglQueryContext(EGLDisplay dpy, EGLContext ctx, EGLint attribute, EGLint* value);
 
         [DllImport(Library)]
-        static public extern EGLBoolean eglWaitGL();
+        public static extern EGLBoolean eglWaitGL();
 
         [DllImport(Library)]
-        static public extern EGLBoolean eglWaitNative(EGLint engine);
+        public static extern EGLBoolean eglWaitNative(EGLint engine);
 
         [DllImport(Library)]
-        static public extern EGLBoolean eglSwapBuffers(EGLDisplay dpy, EGLSurface surface);
+        public static extern EGLBoolean eglSwapBuffers(EGLDisplay dpy, EGLSurface surface);
 
         [DllImport(Library)]
-        static public extern EGLBoolean eglCopyBuffers(EGLDisplay dpy, EGLSurface surface, EGLNativePixmapType target);
+        public static extern EGLBoolean eglCopyBuffers(EGLDisplay dpy, EGLSurface surface, EGLNativePixmapType target);
 
         [DllImport(Library)]
-        static public extern IntPtr eglGetProcAddress(string procname);
+        public static extern EGLNativePixmapType eglGetProcAddress(string procname);
 
         //typedef void (*__eglMustCastToProperFunctionPointerType)(void);
     }

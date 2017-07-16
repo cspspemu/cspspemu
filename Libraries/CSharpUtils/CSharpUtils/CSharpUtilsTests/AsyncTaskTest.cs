@@ -2,8 +2,6 @@
 using System.Threading;
 using CSharpUtils;
 using NUnit.Framework;
-using NUnit.Framework;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace CSharpUtilsTests
 {

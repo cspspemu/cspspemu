@@ -5,7 +5,6 @@ using CSharpUtils.Extensions;
 using NUnit.Framework;
 using CSharpUtils.Misc.Acme1;
 using NUnit.Framework;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace CSharpUtilsTests
 {

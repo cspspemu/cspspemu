@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSharpPlatform.GL.Impl.Linux
 {
@@ -12,7 +8,7 @@ namespace CSharpPlatform.GL.Impl.Linux
         public IntPtr Handle;
     }
 
-    unsafe public class GLX
+    public unsafe class GLX
     {
         const string Library = "libGL.so.1";
 
@@ -77,12 +73,9 @@ namespace CSharpPlatform.GL.Impl.Linux
 
         public static IntPtr ChooseVisual(IntPtr dpy, int screen, int[] attriblist)
         {
-            unsafe
+            fixed (int* attriblist_ptr = attriblist)
             {
-                fixed (int* attriblist_ptr = attriblist)
-                {
-                    return glXChooseVisual(dpy, screen, attriblist_ptr);
-                }
+                return glXChooseVisual(dpy, screen, attriblist_ptr);
             }
         }
     }
@@ -108,7 +101,7 @@ namespace CSharpPlatform.GL.Impl.Linux
         }
     }
 
-    public enum GLXAttribute : int
+    public enum GLXAttribute
     {
         TRANSPARENT_BLUE_VALUE_EXT = 0x27,
         GRAY_SCALE = 0x8006,
@@ -224,46 +217,46 @@ namespace CSharpPlatform.GL.Impl.Linux
         WIDTH = 0x801D,
         LEVEL = 3,
         CONFIG_CAVEAT = 0x20,
-        RENDER_TYPE_SGIX = 0x8011,
+        RENDER_TYPE_SGIX = 0x8011
     }
 
-    public enum GLXHyperpipeAttrib : int
+    public enum GLXHyperpipeAttrib
     {
         PIPE_RECT_LIMITS_SGIX = 0x00000002,
         PIPE_RECT_SGIX = 0x00000001,
         HYPERPIPE_STEREO_SGIX = 0x00000003,
-        HYPERPIPE_PIXEL_AVERAGE_SGIX = 0x00000004,
+        HYPERPIPE_PIXEL_AVERAGE_SGIX = 0x00000004
     }
 
-    public enum GLXStringName : int
+    public enum GLXStringName
     {
         EXTENSIONS = 0x3,
         VERSION = 0x2,
-        VENDOR = 0x1,
+        VENDOR = 0x1
     }
 
-    public enum GLXEventMask : int
+    public enum GLXEventMask
     {
         PBUFFER_CLOBBER_MASK = 0x08000000,
-        BUFFER_CLOBBER_MASK_SGIX = 0x08000000,
+        BUFFER_CLOBBER_MASK_SGIX = 0x08000000
     }
 
-    public enum GLXRenderTypeMask : int
+    public enum GLXRenderTypeMask
     {
         COLOR_INDEX_BIT_SGIX = 0x00000002,
         RGBA_BIT = 0x00000001,
         RGBA_FLOAT_BIT_ARB = 0x00000004,
         RGBA_BIT_SGIX = 0x00000001,
-        COLOR_INDEX_BIT = 0x00000002,
+        COLOR_INDEX_BIT = 0x00000002
     }
 
-    public enum GLXHyperpipeTypeMask : int
+    public enum GLXHyperpipeTypeMask
     {
         HYPERPIPE_RENDER_PIPE_SGIX = 0x00000002,
-        HYPERPIPE_DISPLAY_PIPE_SGIX = 0x00000001,
+        HYPERPIPE_DISPLAY_PIPE_SGIX = 0x00000001
     }
 
-    public enum GLXPbufferClobberMask : int
+    public enum GLXPbufferClobberMask
     {
         ACCUM_BUFFER_BIT_SGIX = 0x00000080,
         FRONT_LEFT_BUFFER_BIT = 0x00000001,
@@ -281,15 +274,15 @@ namespace CSharpPlatform.GL.Impl.Linux
         DEPTH_BUFFER_BIT = 0x00000020,
         FRONT_LEFT_BUFFER_BIT_SGIX = 0x00000001,
         BACK_LEFT_BUFFER_BIT = 0x00000004,
-        FRONT_RIGHT_BUFFER_BIT = 0x00000002,
+        FRONT_RIGHT_BUFFER_BIT = 0x00000002
     }
 
-    public enum GLXHyperpipeMisc : int
+    public enum GLXHyperpipeMisc
     {
-        HYPERPIPE_PIPE_NAME_LENGTH_SGIX = 80,
+        HYPERPIPE_PIPE_NAME_LENGTH_SGIX = 80
     }
 
-    public enum GLXErrorCode : int
+    public enum GLXErrorCode
     {
         BAD_CONTEXT = 5,
         NO_EXTENSION = 3,
@@ -299,26 +292,26 @@ namespace CSharpPlatform.GL.Impl.Linux
         BAD_VALUE = 6,
         BAD_ATTRIBUTE = 2,
         BAD_VISUAL = 4,
-        BAD_HYPERPIPE_CONFIG_SGIX = 91,
+        BAD_HYPERPIPE_CONFIG_SGIX = 91
     }
 
-    public enum GLXSyncType : int
+    public enum GLXSyncType
     {
         SYNC_SWAP_SGIX = 0x00000001,
-        SYNC_FRAME_SGIX = 0x00000000,
+        SYNC_FRAME_SGIX = 0x00000000
     }
 
-    public enum GLXDrawableTypeMask : int
+    public enum GLXDrawableTypeMask
     {
         WINDOW_BIT = 0x00000001,
         PIXMAP_BIT = 0x00000002,
         PBUFFER_BIT_SGIX = 0x00000004,
         PBUFFER_BIT = 0x00000004,
         WINDOW_BIT_SGIX = 0x00000001,
-        PIXMAP_BIT_SGIX = 0x00000002,
+        PIXMAP_BIT_SGIX = 0x00000002
     }
 
-    public enum ArbCreateContext : int
+    public enum ArbCreateContext
     {
         DebugBit = 0x0001,
         ForwardCompatibleBit = 0x0002,
@@ -326,10 +319,10 @@ namespace CSharpPlatform.GL.Impl.Linux
         MinorVersion = 0x2092,
         LayerPlane = 0x2093,
         Flags = 0x2094,
-        ErrorInvalidVersion = 0x2095,
+        ErrorInvalidVersion = 0x2095
     }
 
-    public enum ErrorCode : int
+    public enum ErrorCode
     {
         NO_ERROR = 0,
         BAD_SCREEN = 1, /* screen # is bad */
@@ -338,6 +331,6 @@ namespace CSharpPlatform.GL.Impl.Linux
         BAD_VISUAL = 4, /* visual # not known by GLX */
         BAD_CONTEXT = 5, /* returned only by import_context EXT? */
         BAD_VALUE = 6, /* returned only by glXSwapIntervalSGI? */
-        BAD_ENUM = 7, /* unused? */
+        BAD_ENUM = 7 /* unused? */
     }
 }

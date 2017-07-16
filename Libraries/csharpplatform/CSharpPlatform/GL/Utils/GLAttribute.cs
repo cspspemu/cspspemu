@@ -1,34 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSharpPlatform.GL.Utils
 {
-    abstract unsafe public class GLUniformAttribute<T>
+    public abstract class GlUniformAttribute<T>
     {
         protected GLShader Shader;
         protected string Name;
         protected int Location;
-        public int ArrayLength { get; private set; }
+        public int ArrayLength { get; }
         protected GLValueType ValueType;
 
-        public unsafe GLUniformAttribute(GLShader Shader, string Name, int Location, int ArrayLength,
-            GLValueType ValueType)
+        protected GlUniformAttribute(GLShader shader, string name, int location, int arrayLength,
+            GLValueType valueType)
         {
-            this.Shader = Shader;
-            this.Name = Name;
-            this.Location = Location;
-            this.ArrayLength = ArrayLength;
-            this.ValueType = ValueType;
+            Shader = shader;
+            Name = name;
+            Location = location;
+            ArrayLength = arrayLength;
+            ValueType = valueType;
         }
 
-        public bool IsAvailable
-        {
-            get { return this.Location >= 0; }
-        }
+        public bool IsAvailable => Location >= 0;
 
         [DebuggerHidden]
         protected void PrepareUsing()
@@ -41,155 +34,131 @@ namespace CSharpPlatform.GL.Utils
 
         protected bool CheckValid()
         {
-            if (!IsValid)
-            {
-                if (ShowWarnings)
-                {
-                    Console.WriteLine("WARNING: Trying to set value to undefined {0}: {1}, {2}", typeof(T).Name, Name,
-                        ShowWarnings);
-                    throw(new Exception("INVALID!"));
-                }
-                return false;
-            }
-            return true;
+            if (IsValid) return true;
+            if (!ShowWarnings) return false;
+            Console.WriteLine("WARNING: Trying to set value to undefined {0}: {1}, {2}", typeof(T).Name, Name,
+                ShowWarnings);
+            throw(new Exception("INVALID!"));
         }
 
-        public bool IsValid
-        {
-            get { return Location != -1; }
-        }
+        public bool IsValid => Location != -1;
 
         public T NoWarning()
         {
-            this.ShowWarnings = false;
+            ShowWarnings = false;
             return (T) (object) this;
         }
     }
 
 
-    sealed unsafe public class GLUniform : GLUniformAttribute<GLUniform>
+    public sealed unsafe class GlUniform : GlUniformAttribute<GlUniform>
     {
-        public unsafe GLUniform(GLShader Shader, string Name, int Location, int ArrayLength, GLValueType ValueType)
-            : base(Shader, Name, Location, ArrayLength, ValueType)
+        public GlUniform(GLShader shader, string name, int location, int arrayLength, GLValueType valueType)
+            : base(shader, name, location, arrayLength, valueType)
         {
         }
 
         [DebuggerHidden]
-        public void Set(bool Value)
+        public void Set(bool value)
         {
             if (!CheckValid()) return;
-            Set(Value ? 1 : 0);
+            Set(value ? 1 : 0);
         }
 
         [DebuggerHidden]
-        public void Set(int Value)
+        public void Set(int value)
         {
             if (!CheckValid()) return;
             PrepareUsing();
-            GL.glUniform1i(Location, Value);
+            GL.glUniform1i(Location, value);
         }
 
         [DebuggerHidden]
-        public void Set(GLTextureUnit GLTextureUnit)
+        public void Set(GLTextureUnit glTextureUnit)
         {
             if (!CheckValid()) return;
-            GLTextureUnit.MakeCurrent();
-            if (this.ValueType != GLValueType.GL_SAMPLER_2D)
-                throw(new Exception(String.Format("Trying to bind a TextureUnit to something not a Sampler2D : {0}",
-                    ValueType)));
-            Set(GLTextureUnit.Index);
+            glTextureUnit.MakeCurrent();
+            if (ValueType != GLValueType.GL_SAMPLER_2D)
+                throw(new Exception($"Trying to bind a TextureUnit to something not a Sampler2D : {ValueType}"));
+            Set(glTextureUnit.Index);
         }
 
         [DebuggerHidden]
-        public unsafe void Set(Vector4f Vector)
+        public void Set(Vector4f vector)
         {
             if (!CheckValid()) return;
-            Set(new[] {Vector});
+            Set(new[] {vector});
         }
 
         [DebuggerHidden]
-        public void Set(Vector4f[] Vectors)
+        public void Set(Vector4f[] vectors)
         {
             if (!CheckValid()) return;
-            if (this.ValueType != GLValueType.GL_FLOAT_VEC4)
+            if (ValueType != GLValueType.GL_FLOAT_VEC4)
                 throw (new InvalidOperationException("this.ValueType != GLValueType.GL_FLOAT_VEC4"));
-            if (this.ArrayLength != Vectors.Length)
+            if (ArrayLength != vectors.Length)
                 throw (new InvalidOperationException("this.ArrayLength != Vectors.Length"));
             PrepareUsing();
-            Vectors[0].FixValues((Pointer) => { GL.glUniform4fv(Location, Vectors.Length, Pointer); });
+            vectors[0].FixValues(pointer => { GL.glUniform4fv(Location, vectors.Length, pointer); });
         }
 
         [DebuggerHidden]
-        public void Set(Matrix4f Matrix)
+        public void Set(Matrix4f matrix)
         {
             if (!CheckValid()) return;
-            Set(new[] {Matrix});
+            Set(new[] {matrix});
         }
 
         [DebuggerHidden]
-        public void Set(Matrix4f[] Matrices)
+        public void Set(Matrix4f[] matrices)
         {
             if (!CheckValid()) return;
-            if (this.ValueType != GLValueType.GL_FLOAT_MAT4)
+            if (ValueType != GLValueType.GL_FLOAT_MAT4)
                 throw (new InvalidOperationException("this.ValueType != GLValueType.GL_FLOAT_MAT4"));
-            if (this.ArrayLength != Matrices.Length)
+            if (ArrayLength != matrices.Length)
                 throw (new InvalidOperationException("this.ArrayLength != Matrices.Length"));
             PrepareUsing();
-            Matrices[0].FixValues((Pointer) => { GL.glUniformMatrix4fv(Location, Matrices.Length, false, Pointer); });
+            matrices[0].FixValues(pointer => { GL.glUniformMatrix4fv(Location, matrices.Length, false, pointer); });
         }
 
-        public override string ToString()
-        {
-            return String.Format("GLUniform('{0}'({1}), {2}[{3}])", Name, Location, ValueType, ArrayLength);
-        }
+        public override string ToString() => $"GLUniform('{Name}'({Location}), {ValueType}[{ArrayLength}])";
     }
 
-    sealed unsafe public class GLAttribute : GLUniformAttribute<GLAttribute>
+    public sealed unsafe class GlAttribute : GlUniformAttribute<GlAttribute>
     {
-        public unsafe GLAttribute(GLShader Shader, string Name, int Location, int ArrayLength, GLValueType ValueType)
-            : base(Shader, Name, Location, ArrayLength, ValueType)
+        public GlAttribute(GLShader shader, string name, int location, int arrayLength, GLValueType valueType)
+            : base(shader, name, location, arrayLength, valueType)
         {
         }
 
-        private void Enable()
-        {
-            GL.glEnableVertexAttribArray((uint) Location);
-        }
+        private void Enable() => GL.glEnableVertexAttribArray((uint) Location);
+        private void Disable() => GL.glDisableVertexAttribArray((uint) Location);
+        public void UnsetData() => Disable();
 
-        private void Disable()
-        {
-            GL.glDisableVertexAttribArray((uint) Location);
-        }
-
-        public void UnsetData()
-        {
-            Disable();
-        }
-
-        public void SetData<TType>(GLBuffer Buffer, int ElementSize = 4, int Offset = 0, int Stride = 0,
-            bool Normalize = false)
+        public void SetData<TType>(GLBuffer buffer, int elementSize = 4, int offset = 0, int stride = 0,
+            bool normalize = false)
         {
             if (!CheckValid()) return;
             PrepareUsing();
-            int GlType = GL.GL_FLOAT;
-            var Type = typeof(TType);
-            if (Type == typeof(float)) GlType = GL.GL_FLOAT;
-            else if (Type == typeof(short)) GlType = GL.GL_SHORT;
-            else if (Type == typeof(ushort)) GlType = GL.GL_UNSIGNED_SHORT;
-            else if (Type == typeof(sbyte)) GlType = GL.GL_BYTE;
-            else if (Type == typeof(byte)) GlType = GL.GL_UNSIGNED_BYTE;
-            else throw(new Exception("Invalid type " + Type));
+            int glType;
+            var type = typeof(TType);
+            if (type == typeof(float)) glType = GL.GL_FLOAT;
+            else if (type == typeof(short)) glType = GL.GL_SHORT;
+            else if (type == typeof(ushort)) glType = GL.GL_UNSIGNED_SHORT;
+            else if (type == typeof(sbyte)) glType = GL.GL_BYTE;
+            else if (type == typeof(byte)) glType = GL.GL_UNSIGNED_BYTE;
+            else throw(new Exception("Invalid type " + type));
 
-            Buffer.Bind();
+            buffer.Bind();
             GL.glVertexAttribPointer(
                 (uint) Location,
-                ElementSize,
-                GlType,
-                Normalize,
-                Stride,
-                (void*) Offset
+                elementSize,
+                glType,
+                normalize,
+                stride,
+                (void*) offset
             );
-            Buffer.Unbind();
+            buffer.Unbind();
             Enable();
         }
 
@@ -219,9 +188,6 @@ namespace CSharpPlatform.GL.Utils
         //	}
         //}
 
-        public override string ToString()
-        {
-            return String.Format("GLAttribute('{0}'({1}), {2}[{3}])", Name, Location, ValueType, ArrayLength);
-        }
+        public override string ToString() => $"GLAttribute('{Name}'({Location}), {ValueType}[{ArrayLength}])";
     }
 }

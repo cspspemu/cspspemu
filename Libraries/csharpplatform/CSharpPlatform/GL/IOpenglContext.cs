@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CSharpPlatform.GL.Impl;
 
-namespace CSharpPlatform.GL.Impl
+namespace CSharpPlatform.GL
 {
-    public interface IGLContext : IDisposable
+    public interface IGlContext : IDisposable
     {
         GLContextSize Size { get; }
-        IGLContext MakeCurrent();
-        IGLContext ReleaseCurrent();
-        IGLContext SwapBuffers();
+        IGlContext MakeCurrent();
+        IGlContext ReleaseCurrent();
+        IGlContext SwapBuffers();
     }
 }

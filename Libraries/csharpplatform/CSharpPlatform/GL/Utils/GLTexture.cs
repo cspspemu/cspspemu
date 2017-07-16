@@ -1,10 +1,5 @@
-﻿using CSharpUtils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSharpPlatform.GL.Utils
 {
@@ -16,17 +11,17 @@ namespace CSharpPlatform.GL.Utils
         STENCIL = 3,
         RG = 4,
         R = 5,
-        RGB = 6,
+        RGB = 6
     }
 
-    unsafe public class GLTexture : IDisposable
+    public unsafe class GLTexture : IDisposable
     {
         private bool CapturedAndMustDispose;
         private uint _Texture;
         public int Width { get; private set; }
         public int Height { get; private set; }
         private TextureFormat TextureFormat = TextureFormat.RGBA;
-        private byte[] Data = null;
+        private byte[] Data;
 
         public uint Texture
         {
@@ -36,7 +31,7 @@ namespace CSharpPlatform.GL.Utils
         private GLTexture(uint _Texture)
         {
             this._Texture = _Texture;
-            this.CapturedAndMustDispose = false;
+            CapturedAndMustDispose = false;
             Bind();
         }
 
@@ -45,7 +40,7 @@ namespace CSharpPlatform.GL.Utils
             Initialize();
         }
 
-        static public GLTexture Create()
+        public static GLTexture Create()
         {
             return new GLTexture();
         }
@@ -59,7 +54,7 @@ namespace CSharpPlatform.GL.Utils
         private void Initialize()
         {
             fixed (uint* TexturePtr = &_Texture) GL.glGenTextures(1, TexturePtr);
-            this.CapturedAndMustDispose = true;
+            CapturedAndMustDispose = true;
             Bind();
         }
 
@@ -81,11 +76,11 @@ namespace CSharpPlatform.GL.Utils
         {
             //GL.glGetIntegerv(GL.GL_TEXTURE_BINDING_2D, 
             //GL.glEnable(GL.GL_TEXTURE_2D);
-            GL.glBindTexture(GL.GL_TEXTURE_2D, this._Texture);
+            GL.glBindTexture(GL.GL_TEXTURE_2D, _Texture);
             return this;
         }
 
-        static public void Unbind()
+        public static void Unbind()
         {
             //GL.glDisable(GL.GL_TEXTURE_2D);
         }
@@ -107,9 +102,9 @@ namespace CSharpPlatform.GL.Utils
 
         public GLTexture SetData(void* Pointer)
         {
-            var Size = this.Width * this.Height * 4;
-            this.Data = new byte[Size];
-            Marshal.Copy(new IntPtr(Pointer), this.Data, 0, Size);
+            var Size = Width * Height * 4;
+            Data = new byte[Size];
+            Marshal.Copy(new IntPtr(Pointer), Data, 0, Size);
             _SetTexture();
             return this;
         }
@@ -120,10 +115,10 @@ namespace CSharpPlatform.GL.Utils
             try
             {
                 int Size = SetData.Length * Marshal.SizeOf(typeof(T));
-                this.Data = new byte[Size];
+                Data = new byte[Size];
                 Marshal.Copy(
                     SetDataHandle.AddrOfPinnedObject(),
-                    this.Data,
+                    Data,
                     0,
                     Size
                 );
@@ -150,7 +145,7 @@ namespace CSharpPlatform.GL.Utils
 
         private void _SetTexture()
         {
-            if (TextureFormat == Utils.TextureFormat.UNSET) return;
+            if (TextureFormat == TextureFormat.UNSET) return;
             if (Width == 0 || Height == 0) return;
 
             Bind();
@@ -160,30 +155,30 @@ namespace CSharpPlatform.GL.Utils
             //GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_TEXTURE_WRAP_S);
             //GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_TEXTURE_WRAP_T);
 
-            fixed (byte* DataPtr = this.Data)
+            fixed (byte* DataPtr = Data)
             {
                 //Console.WriteLine("{0}:{1}: {2}x{3}: {4}", Texture, TextureFormat, Width, Height, new IntPtr(DataPtr));
                 //if (this.Data != null) Console.WriteLine(String.Join(",", this.Data));
                 switch (TextureFormat)
                 {
                     case TextureFormat.RGBA:
-                        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, 4, this.Width, this.Height, 0, GetOpenglFormat(),
+                        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, 4, Width, Height, 0, GetOpenglFormat(),
                             GL.GL_UNSIGNED_BYTE, DataPtr);
                         break;
                     case TextureFormat.RGB:
-                        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, this.Width, this.Height, 0, GetOpenglFormat(),
+                        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, 3, Width, Height, 0, GetOpenglFormat(),
                             GL.GL_UNSIGNED_BYTE, DataPtr);
                         break;
                     case TextureFormat.RG:
-                        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, 0x822B /*GL.GL_RG8*/, this.Width, this.Height, 0,
+                        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, 0x822B /*GL.GL_RG8*/, Width, Height, 0,
                             GetOpenglFormat(), GL.GL_UNSIGNED_BYTE, DataPtr);
                         break;
                     case TextureFormat.R:
-                        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL_R8, this.Width, this.Height, 0, GetOpenglFormat(),
+                        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL_R8, Width, Height, 0, GetOpenglFormat(),
                             GL.GL_UNSIGNED_BYTE, DataPtr);
                         break;
                     case TextureFormat.DEPTH:
-                        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_DEPTH_COMPONENT, this.Width, this.Height, 0,
+                        GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_DEPTH_COMPONENT, Width, Height, 0,
                             GetOpenglFormat(), GL.GL_UNSIGNED_SHORT, DataPtr);
                         break;
                     //case TextureFormat.STENCIL: GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_DEPTH_COMPONENT, this.Width, this.Height, 0, GL.GL_DEPTH_COMPONENT, GL.GL_UNSIGNED_SHORT, DataPtr); break;
@@ -208,7 +203,7 @@ namespace CSharpPlatform.GL.Utils
 
         public void Dispose()
         {
-            if (this.CapturedAndMustDispose)
+            if (CapturedAndMustDispose)
             {
                 fixed (uint* TexturePtr = &_Texture) GL.glDeleteTextures(1, TexturePtr);
             }
@@ -217,7 +212,7 @@ namespace CSharpPlatform.GL.Utils
 
         public byte[] GetDataFromCached()
         {
-            return this.Data;
+            return Data;
         }
 
         public byte[] GetDataFromGpu()
