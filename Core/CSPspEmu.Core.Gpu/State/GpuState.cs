@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using CSharpPlatform;
 using CSharpUtils;
 using CSharpUtils.Extensions;
 using CSPspEmu.Core.Memory;
@@ -11,48 +12,22 @@ namespace CSPspEmu.Core.Gpu.State
     {
     }
 
-    /*
-    public class GlobalGpuState
-    {
-        public uint GetAddressRelativeToBase(uint RelativeAddress)
-        {
-            return (uint)(this.Base | RelativeAddress);
-        }
-
-        public uint GetAddressRelativeToBaseOffset(uint RelativeAddress)
-        {
-            return (uint)((this.Base | RelativeAddress) + this.BaseOffset);
-        }
-
-        public uint Base;
-        public uint BaseOffset;
-    }
-    */
-
     [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 2048)]
     public unsafe struct GpuStateStruct
     {
         public uint BaseAddress;
         public uint BaseOffset;
 
-        public uint GetAddressRelativeToBase(uint RelativeAddress)
-        {
-            return (uint) (this.BaseAddress | RelativeAddress);
-        }
+        public uint GetAddressRelativeToBase(uint relativeAddress) => BaseAddress | relativeAddress;
 
-        public uint GetAddressRelativeToBaseOffset(uint RelativeAddress)
-        {
-            return (uint) ((this.BaseAddress | RelativeAddress) + this.BaseOffset);
-        }
-
+        public uint GetAddressRelativeToBaseOffset(uint relativeAddress) =>
+            (BaseAddress | relativeAddress) + BaseOffset;
 
         public uint VertexAddress;
         public uint IndexAddress;
         public bool ToggleUpdateState;
 
-        /// <summary>
-        /// When set, this will changes the Draw behaviour.
-        /// </summary>
+        /// <summary>When set, this will changes the Draw behaviour.</summary>
         public bool ClearingMode;
 
         public ScreenBufferStateStruct DrawBufferState;
@@ -62,9 +37,7 @@ namespace CSPspEmu.Core.Gpu.State
         public ViewportStruct Viewport;
         public PointS Offset;
 
-        /// <summary>
-        /// A set of flags related to the clearing mode. Generally which buffers to clear.
-        /// </summary>
+        /// <summary>A set of flags related to the clearing mode. Generally which buffers to clear.</summary>
         public ClearBufferSet ClearFlags;
 
         // Sub States.
@@ -90,32 +63,12 @@ namespace CSPspEmu.Core.Gpu.State
         public PatchStateStruct PatchState;
 
         // State.
-        public ColorStruct FixColorSource, FixColorDestination;
+        public ColorStruct FixColorSource;
 
+        public ColorStruct FixColorDestination;
         public TextureMappingStateStruct TextureMappingState;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public ShadingModelEnum ShadeModel;
-
         public fixed sbyte DitherMatrix[16];
-
-        /*
-        public static void Init(GpuStateStruct* GpuState)
-        {
-            PointerUtils.Memset((byte*)GpuState, 0, sizeof(GpuStateStruct));
-
-            GpuState->SkinningState.BoneMatrix0.Init();
-            GpuState->SkinningState.BoneMatrix1.Init();
-            GpuState->SkinningState.BoneMatrix2.Init();
-            GpuState->SkinningState.BoneMatrix3.Init();
-            GpuState->SkinningState.BoneMatrix4.Init();
-            GpuState->SkinningState.BoneMatrix5.Init();
-            GpuState->SkinningState.BoneMatrix6.Init();
-            GpuState->SkinningState.BoneMatrix7.Init();
-        }
-        */
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -128,24 +81,16 @@ namespace CSPspEmu.Core.Gpu.State
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct AlphaTestStateStruct
     {
-        /// <summary>
-        /// Alpha Test Enable (GL_ALPHA_TEST) glAlphaFunc(GL_GREATER, 0.03f);
-        /// </summary>
+        /// <summary>Alpha Test Enable (GL_ALPHA_TEST) glAlphaFunc(GL_GREATER, 0.03f);</summary>
         public bool Enabled;
 
-        /// <summary>
-        /// TestFunction.GU_ALWAYS
-        /// </summary>
+        /// <summary>TestFunction.GU_ALWAYS</summary>
         public TestFunctionEnum Function;
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary />
         public byte Value;
 
-        /// <summary>
-        /// 0xFF
-        /// </summary>
+        /// <summary>0xFF</summary>
         public byte Mask;
     }
 
@@ -162,53 +107,19 @@ namespace CSPspEmu.Core.Gpu.State
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct BlendingStateStruct
     {
-        /// <summary>
-        /// 
-        /// </summary>
         public bool Enabled;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public BlendingOpEnum Equation;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public GuBlendingFactorSource FunctionSource;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public GuBlendingFactorDestination FunctionDestination;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public ColorfStruct FixColorSource;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public ColorfStruct FixColorDestination;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public OutputPixel ColorMask;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct ClipPlaneStateStruct
     {
-        /// <summary>
-        /// Clip Plane Enable (GL_CLIP_PLANE0)
-        /// </summary>
         public bool Enabled;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public GpuRectStruct Scissor;
     }
 
@@ -227,147 +138,52 @@ namespace CSPspEmu.Core.Gpu.State
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct ColorTestStateStruct
     {
-        /// <summary>
-        /// 
-        /// </summary>
         public bool Enabled;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public OutputPixel Ref;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public OutputPixel Mask;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public ColorTestFunctionEnum Function;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct DepthTestStateStruct
     {
-        /// <summary>
-        /// depth (Z) Test Enable (GL_DEPTH_TEST)
-        /// </summary>
         public bool Enabled;
-
-        /// <summary>
-        /// TestFunction.GU_ALWAYS
-        /// </summary>
         public TestFunctionEnum Function;
-
-        /// <summary>
-        /// 0.0 - 1.0
-        /// </summary>
         public float RangeNear;
-
-        /// <summary>
-        /// 0.0 - 1.0
-        /// </summary>
         public float RangeFar;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public ushort Mask;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct DitheringStateStruct
     {
-        /// <summary>
-        /// 
-        /// </summary>
         public bool Enabled;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct FogStateStruct
     {
-        /// <summary>
-        /// FOG Enable (GL_FOG)
-        /// </summary>
         public bool Enabled;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public ColorfStruct Color;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public float Dist;
-
-        /// <summary />
         public float End;
-
-        /// <summary>Default Value: 0.1</summary>
         public float Density;
-
-        /// <summary />
         public int Mode;
-
-        /// <summary />
         public int Hint;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct LightingStateStruct
     {
-        /// <summary>
-        /// Lighting Enable (GL_LIGHTING)
-        /// </summary>
         public bool Enabled;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public ColorfStruct AmbientModelColor;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public ColorfStruct DiffuseModelColor;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public ColorfStruct SpecularModelColor;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public ColorfStruct EmissiveModelColor;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public ColorfStruct AmbientLightColor;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public float SpecularPower;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public LightStateStruct Light0, Light1, Light2, Light3;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public LightComponentsSet MaterialColorComponents;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public LightModelEnum LightModel;
     }
 
@@ -379,145 +195,52 @@ namespace CSPspEmu.Core.Gpu.State
         public float Quadratic;
     }
 
-    public struct Vector4fRef
-    {
-        public float X, Y, Z, W;
-    }
-
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct LightStateStruct
     {
-        /// <summary>
-        /// 
-        /// </summary>
         public bool Enabled;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public LightTypeEnum Type;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public LightModelEnum Kind;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public Vector4fRef Position;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public Vector4fRef SpotDirection;
-
-        /// <summary>
-        /// 
-        /// </summary>
+        public Vector4f Position;
+        public Vector4f SpotDirection;
         public AttenuationStruct Attenuation;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public float SpotExponent;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public float SpotCutoff;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public ColorfStruct AmbientColor;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public ColorfStruct DiffuseColor;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public ColorfStruct SpecularColor;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct LineSmoothStateStruct
     {
-        /// <summary>
-        /// 
-        /// </summary>
         public bool Enabled;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct LogicalOperationStateStruct
     {
-        /// <summary>
-        /// Logical Operation Enable (GL_COLOR_LOGIC_OP)
-        /// </summary>
         public bool Enabled;
-
-        /// <summary>
-        /// LogicalOperation.GU_COPY
-        /// </summary>
         public LogicalOperationEnum Operation;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct MorphingStateStruct
     {
-        /// <summary>
-        /// 
-        /// </summary>
         public float MorphWeight0;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public float MorphWeight1;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public float MorphWeight2;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public float MorphWeight3;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public float MorphWeight4;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public float MorphWeight5;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public float MorphWeight6;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public float MorphWeight7;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct PatchCullingStateStruct
     {
-        /// <summary>
-        /// 
-        /// </summary>
         public bool Enabled;
-
         public bool FaceFlag;
     }
 
@@ -533,36 +256,7 @@ namespace CSPspEmu.Core.Gpu.State
         public uint LoadAddress;
         public uint StoreAddress;
 
-        public uint Address
-        {
-            get { return 0x04000000 | ((uint) HighAddress << 24) | LowAddress; }
-        }
-
-        //uint Width = 512;
-        //PspDisplay.PixelFormats Format = PspDisplay.PixelFormats.RGBA_8888;
-        /*
-        union {
-            uint _address;
-            struct { mixin(bitfields!(
-                uint, "lowAddress" , 24,
-                uint, "highAddress", 8
-            )); }
-        }
-        uint address(uint _address) { return this._address = _address; }
-        uint address() { return (0x04_000000 | this._address); }
-        uint addressEnd() { return address + width * 272 * pixelSize; }
-        uint pixelSize() { return PixelFormatSizeMul[format]; }
-        ubyte[] row(void* ptr, int row) {
-            int rowsize = PixelFormatSize(format, width);
-            return ((cast(ubyte *)ptr) + rowsize * row)[0..rowsize];
-        }
-        bool isAnyAddressInBuffer(uint[] ptrList) {
-            foreach (ptr; ptrList) {
-                if ((ptr >= address) && (ptr < addressEnd)) return true;
-            }
-            return false;
-        }
-        */
+        public uint Address => 0x04000000 | ((uint) HighAddress << 24) | LowAddress;
 
         public int BytesPerPixel
         {
@@ -600,83 +294,25 @@ namespace CSPspEmu.Core.Gpu.State
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct StencilStateStruct
     {
-        /// <summary>
-        /// Stencil Test Enable (GL_STENCIL_TEST)
-        /// </summary>
         public bool Enabled;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public TestFunctionEnum Function;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public byte FunctionRef;
-
-        /// <summary>
-        /// 0xFF
-        /// </summary>
         public byte FunctionMask;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public StencilOperationEnum OperationFail;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public StencilOperationEnum OperationZFail;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public StencilOperationEnum OperationZPass;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct TextureMappingStateStruct
     {
-        /// <summary>
-        /// Texture Mapping Enable (GL_TEXTURE_2D)
-        /// </summary>
         public bool Enabled;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public GpuMatrix4x4Struct Matrix;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public ColorbStruct TextureEnviromentColor;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public TextureStateStruct TextureState;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public ClutStateStruct UploadedClutState;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public ClutStateStruct ClutState;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public TextureMapMode TextureMapMode;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public TextureProjectionMapMode TextureProjectionMapMode;
 
         public short ShadeU;
@@ -719,9 +355,6 @@ namespace CSPspEmu.Core.Gpu.State
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct TextureStateStruct
     {
-        /// <summary>
-        /// Mimaps
-        /// </summary>
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct MipmapState
         {
@@ -774,7 +407,6 @@ namespace CSPspEmu.Core.Gpu.State
         /// MipmapState list
         /// </summary>
         public MipmapState Mipmap0;
-
         public MipmapState Mipmap1;
         public MipmapState Mipmap2;
         public MipmapState Mipmap3;
@@ -825,21 +457,6 @@ namespace CSPspEmu.Core.Gpu.State
 
         /// <summary />
         public TextureColorComponent ColorComponent;
-
-        /*
-        public int mipmapRealWidth(int mipmap = 0) { return PixelFormatSize(format, mipmaps[mipmap].buffer_width); }
-        public int mipmapTotalSize(int mipmap = 0) { return mipmapRealWidth(mipmap) * mipmaps[mipmap].height; }
-
-        public string hash() { return cast(string)TA(this); }
-        //string toString() { return std.string.format("TextureState(addr=%08X, size(%dx%d), bwidth=%d, format=%d, swizzled=%d)", address, width, height, buffer_width, format, swizzled); }
-
-        public int address() { return mipmaps->address; }
-        public int buffer_width() { return mipmaps->buffer_width; }
-        public int width() { return mipmaps->width; }
-        public int height() { return mipmaps->height; }
-        public bool hasPalette() { return (format >= PixelFormats.GU_PSM_T4 && format <= PixelFormats.GU_PSM_T32); }
-        public uint paletteRequiredComponents() { return hasPalette ? (1 << (4 + (format - PixelFormats.GU_PSM_T4))) : 0; }
-        */
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -850,7 +467,6 @@ namespace CSPspEmu.Core.Gpu.State
             BIT_16 = 0,
             BIT_32 = 1
         }
-        //enum TexelSize { BIT_32 = 0, BIT_16 = 1 }
 
         public int BytesPerPixel => (TexelSize == TexelSizeEnum.BIT_16) ? 2 : 4;
         public int SourceLineWidthInBytes => (int) (SourceLineWidth * BytesPerPixel);
@@ -1019,38 +635,6 @@ namespace CSPspEmu.Core.Gpu.State
             return Size;
         }
 
-        /*
-                vertexSize = 0;
-                vertexSize += size_mapping[weight] * skinningWeightCount;
-                vertexSize = (vertexSize + size_padding[texture]) & ~size_padding[texture];
-
-                textureOffset = vertexSize;
-                vertexSize += size_mapping[texture] * 2;
-                vertexSize = (vertexSize + color_size_padding[color]) & ~color_size_padding[color];
-
-                colorOffset = vertexSize;
-                vertexSize += color_size_mapping[color];
-                vertexSize = (vertexSize + size_padding[normal]) & ~size_padding[normal];
-
-                normalOffset = vertexSize;
-                vertexSize += size_mapping[normal] * 3;
-                vertexSize = (vertexSize + size_padding[position]) & ~size_padding[position];
-
-                positionOffset = vertexSize;
-                vertexSize += size_mapping[position] * 3;
-
-                oneVertexSize = vertexSize;
-                vertexSize *= morphingVertexCount;
-
-                alignmentSize = Math.max(size_mapping[weight],
-                        Math.max(color_size_mapping[color],
-                        Math.max(size_mapping[normal],
-                        Math.max(size_mapping[texture],
-                        size_mapping[position]))));
-                vertexSize = (vertexSize + alignmentSize - 1) & ~(alignmentSize - 1);
-                oneVertexSize = (oneVertexSize + alignmentSize - 1) & ~(alignmentSize - 1);
-         */
-
         public int GetVertexSetMorphSize()
         {
             return GetVertexSize() * MorphingVertexCount;
@@ -1065,29 +649,338 @@ namespace CSPspEmu.Core.Gpu.State
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct VertexStateStruct
     {
-        /// <summary>
-        /// 
-        /// </summary>
         public GpuMatrix4x4Struct ProjectionMatrix;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public GpuMatrix4x3Struct WorldMatrix;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public GpuMatrix4x3Struct ViewMatrix;
-
-        /// <summary>
-        /// 
-        /// </summary>
         public TransformModeEnum TransformMode;
+        public VertexTypeStruct Type;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public class GpuState
+    {
+        public GpuStateStruct Value;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct PointI
+    {
+        public uint X, Y;
+
+        public override string ToString()
+        {
+            return this.ToStringDefault();
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct PointS
+    {
+        public short X, Y;
+
+        public override string ToString()
+        {
+            return this.ToStringDefault();
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct ViewportStruct
+    {
+        public Vector4f Position;
+        public Vector4f Scale;
+        public PointS RegionTopLeft;
+        public PointS RegionBottomRight;
+
+        public PointS RegionSize => new PointS()
+        {
+            X = (short) (RegionBottomRight.X - RegionTopLeft.X + 1),
+            Y = (short) (RegionBottomRight.Y - RegionTopLeft.Y + 1),
+        };
+
+        public override string ToString() => this.ToStringDefault();
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct ColorStruct
+    {
+        public byte iRed, iGreen, iBlue, iAlpha;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct ColorbStruct
+    {
+        public byte Red, Green, Blue, Alpha;
+
+        public void SetRGB_A1(uint Params24)
+        {
+            Alpha = 0xFF;
+        }
+
+        public void SetRGB(uint Params24)
+        {
+            Red = (byte) ((Params24 >> 0) & 0xFF);
+            Green = (byte) ((Params24 >> 8) & 0xFF);
+            Blue = (byte) ((Params24 >> 16) & 0xFF);
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct ColorfStruct
+    {
+        public float Red, Green, Blue, Alpha;
+
+        public void SetRGB_A1(uint params24)
+        {
+            SetRGB(params24);
+            Alpha = 1.0f;
+        }
+
+        public void SetRGB(uint params24)
+        {
+            //Console.WriteLine(Params24);
+            Red = ((params24 >> 0) & 0xFF) / 255.0f;
+            Green = ((params24 >> 8) & 0xFF) / 255.0f;
+            Blue = ((params24 >> 16) & 0xFF) / 255.0f;
+        }
+
+        public void SetA(uint params24)
+        {
+            Alpha = ((params24 >> 0) & 0xFF) / 255.0f;
+        }
+
+        public override string ToString()
+        {
+            return $"Colorf(R={Red}, G={Green}, B={Blue}, A={Alpha})";
+        }
+
+        public bool IsColorf(float r, float g, float b)
+        {
+            return r == this.Red && g == this.Green && b == this.Blue;
+        }
+
+        public static ColorfStruct operator +(ColorfStruct Left, ColorfStruct Right) => new ColorfStruct()
+        {
+            Red = Left.Red + Right.Red,
+            Green = Left.Green + Right.Green,
+            Blue = Left.Blue + Right.Blue,
+            Alpha = Left.Alpha + Right.Alpha,
+        };
+
+
+        public Vector4f ToVector4f() => new Vector4f(Red, Green, Blue, Alpha);
+    }
+
+    public enum TransformModeEnum : byte
+    {
+        Normal = 0,
+        Raw = 1,
+    }
+
+    public enum GuPrimitiveType : byte
+    {
+        Points = 0,
+        Lines = 1,
+        LineStrip = 2,
+        Triangles = 3,
+        TriangleStrip = 4,
+        TriangleFan = 5,
+        Sprites = 6,
+        ContinuePreviousPrim = 7,
+    }
+
+    public enum TextureColorComponent : byte
+    {
+        Rgb = 0, // GU_TCC_RGB
+        Rgba = 1, // GU_TCC_RGBA
+    }
+
+    public enum TextureEffect : byte
+    {
+        Modulate = 0, // GU_TFX_MODULATE
+        Decal = 1, // GU_TFX_DECAL
+        Blend = 2, // GU_TFX_BLEND
+        Replace = 3, // GU_TFX_REPLACE
+        Add = 4, // GU_TFX_ADD
+    }
+
+    public enum TextureFilter : byte
+    {
+        Nearest = 0,
+        Linear = 1,
+
+        NearestMipmapNearest = 4,
+        LinearMipmapNearest = 5,
+        NearestMipmapLinear = 6,
+        LinearMipmapLinear = 7,
+    }
+
+    public enum WrapMode : byte
+    {
+        Repeat = 0,
+        Clamp = 1,
+    }
+
+    public enum LogicalOperationEnum : byte
+    {
+        Clear = 0,
+        And = 1,
+        AndReverse = 2,
+        Copy = 3,
+        AndInverted = 4,
+        Noop = 5,
+        Xor = 6,
+        Or = 7,
+        NotOr = 8,
+        Equiv = 9,
+        Inverted = 10,
+        OrReverse = 11,
+        CopyInverted = 12,
+        OrInverted = 13,
+        NotAnd = 14,
+        Set = 15
+    }
+
+    public enum StencilOperationEnum : byte
+    {
+        Keep = 0,
+        Zero = 1,
+        Replace = 2,
+        Invert = 3,
+        Increment = 4,
+        Decrement = 5,
+    }
+
+    public enum ShadingModelEnum : byte
+    {
+        Flat = 0,
+        Smooth = 1,
+    }
+
+    [Flags]
+    public enum ClearBufferSet : byte
+    {
+        ColorBuffer = 1,
+        StencilBuffer = 2,
+        DepthBuffer = 4,
+        FastClear = 16
+    }
+
+    public enum BlendingOpEnum : byte
+    {
+        Add = 0,
+        Substract = 1,
+        ReverseSubstract = 2,
+        Min = 3,
+        Max = 4,
+        Abs = 5,
+    }
+
+    public enum GuBlendingFactorSource : byte
+    {
+        // Source
+        GU_SRC_COLOR = 0,
+        GU_ONE_MINUS_SRC_COLOR = 1,
+        GU_SRC_ALPHA = 2,
+        GU_ONE_MINUS_SRC_ALPHA = 3,
+
+        // Both?
+        GU_FIX = 10
+    }
+
+    public enum GuBlendingFactorDestination : byte
+    {
+        // Dest
+        GU_DST_COLOR = 0,
+        GU_ONE_MINUS_DST_COLOR = 1,
+        GU_DST_ALPHA = 4,
+        GU_ONE_MINUS_DST_ALPHA = 5,
+
+        // Both?
+        GU_FIX = 10
+    }
+
+    public enum TestFunctionEnum : byte
+    {
+        Never = 0,
+        Always = 1,
+        Equal = 2,
+        NotEqual = 3,
+        Less = 4,
+        LessOrEqual = 5,
+        Greater = 6,
+        GreaterOrEqual = 7,
+    }
+
+    public enum FrontFaceDirectionEnum : byte
+    {
+        CounterClockWise = 0,
+        ClockWise = 1
+    }
+
+    public enum ColorTestFunctionEnum : byte
+    {
+        GU_NEVER,
+        GU_ALWAYS,
+        GU_EQUAL,
+        GU_NOTEQUAL,
+    }
+
+    [Flags]
+    public enum LightComponentsSet : byte
+    {
+        Ambient = 1,
+        Diffuse = 2,
+        Specular = 4,
+        AmbientAndDiffuse = Ambient | Diffuse,
+        DiffuseAndSpecular = Diffuse | Specular,
+        UnknownLightComponent = 8,
+    }
+
+    public enum LightTypeEnum : byte
+    {
+        Directional = 0,
+        PointLight = 1,
+        SpotLight = 2,
+    }
+
+    public enum LightModelEnum : byte
+    {
+        SingleColor = 0,
+        SeparateSpecularColor = 1,
+    }
+
+    public enum TextureMapMode : byte
+    {
+        GU_TEXTURE_COORDS = 0,
+        GU_TEXTURE_MATRIX = 1,
+        GU_ENVIRONMENT_MAP = 2,
+    }
+
+    public enum TextureProjectionMapMode : byte
+    {
+        /// <summary>
+        /// TMAP_TEXTURE_PROJECTION_MODE_POSITION
+        /// 3 texture components
+        /// </summary>
+        GU_POSITION = 0,
 
         /// <summary>
-        /// here because of transform2d
+        /// TMAP_TEXTURE_PROJECTION_MODE_TEXTURE_COORDINATES
+        /// 2 texture components
         /// </summary>
-        public VertexTypeStruct Type;
+        GU_UV = 1,
+
+        /// <summary>
+        /// TMAP_TEXTURE_PROJECTION_MODE_NORMALIZED_NORMAL
+        /// 3 texture components
+        /// </summary>
+        GU_NORMALIZED_NORMAL = 2,
+
+        /// <summary>
+        /// TMAP_TEXTURE_PROJECTION_MODE_NORMAL
+        /// 3 texture components
+        /// </summary>
+        GU_NORMAL = 3,
     }
 }
