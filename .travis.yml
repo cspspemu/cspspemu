@@ -3,7 +3,7 @@ solution: CSPspEmu-2012.sln
 dist: trusty
 install:
   - nuget restore CSPspEmu-2012.sln
-  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+  - nuget install NUnit.ConsoleRunner -Version 3.7.0 -OutputDirectory testrunner
 script:
   - xbuild /p:Configuration=Release CSPspEmu-2012.sln
-  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./Libraries/CSharpUtils/CSharpUtils/CSharpUtilsTests/bin/Debug/CSharpUtilsTests.dll
+  - mono ./testrunner/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe ./Libraries/CSharpUtils/CSharpUtils/CSharpUtilsTests/bin/Debug/CSharpUtilsTests.dll

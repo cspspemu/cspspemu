@@ -60,3 +60,4 @@ obj
 /*.DS_Store
 /testrunner
 Thumbs.db
+TestResult.xml
