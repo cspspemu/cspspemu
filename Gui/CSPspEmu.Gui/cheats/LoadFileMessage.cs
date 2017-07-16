@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu
 {
-	public class LoadFileMessage
-	{
-		public string FileName;
-	}
+    public class LoadFileMessage
+    {
+        public string FileName;
+    }
 }

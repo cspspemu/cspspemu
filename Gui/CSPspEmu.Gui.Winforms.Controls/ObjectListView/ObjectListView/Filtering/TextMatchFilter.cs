@@ -35,16 +35,16 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Drawing;
 
-namespace BrightIdeasSoftware {
-
+namespace BrightIdeasSoftware
+{
     /// <summary>
     /// Instances of this class include only those rows of the listview
     /// that match one or more given strings.
     /// </summary>
     /// <remarks>This class can match strings by prefix, regex, or simple containment.
     /// There are factory methods for each of these matching strategies.</remarks>
-    public class TextMatchFilter : AbstractModelFilter {
-
+    public class TextMatchFilter : AbstractModelFilter
+    {
         #region Life and death
 
         /// <summary>
@@ -55,7 +55,8 @@ namespace BrightIdeasSoftware {
         /// <param name="texts"></param>
         /// <returns></returns>
         /// <remarks>Any string that is not a valid regex expression will be ignored.</remarks>
-        public static TextMatchFilter Regex(ObjectListView olv, params string[] texts) {
+        public static TextMatchFilter Regex(ObjectListView olv, params string[] texts)
+        {
             TextMatchFilter filter = new TextMatchFilter(olv);
             filter.RegexStrings = texts;
             return filter;
@@ -67,7 +68,8 @@ namespace BrightIdeasSoftware {
         /// <param name="olv"></param>
         /// <param name="texts"></param>
         /// <returns></returns>
-        public static TextMatchFilter Prefix(ObjectListView olv, params string[] texts) {
+        public static TextMatchFilter Prefix(ObjectListView olv, params string[] texts)
+        {
             TextMatchFilter filter = new TextMatchFilter(olv);
             filter.PrefixStrings = texts;
             return filter;
@@ -79,7 +81,8 @@ namespace BrightIdeasSoftware {
         /// <param name="olv"></param>
         /// <param name="texts"></param>
         /// <returns></returns>
-        public static TextMatchFilter Contains(ObjectListView olv, params string[] texts) {
+        public static TextMatchFilter Contains(ObjectListView olv, params string[] texts)
+        {
             TextMatchFilter filter = new TextMatchFilter(olv);
             filter.ContainsStrings = texts;
             return filter;
@@ -89,7 +92,8 @@ namespace BrightIdeasSoftware {
         /// Create a TextFilter
         /// </summary>
         /// <param name="olv"></param>
-        public TextMatchFilter(ObjectListView olv) {
+        public TextMatchFilter(ObjectListView olv)
+        {
             this.ListView = olv;
         }
 
@@ -98,9 +102,10 @@ namespace BrightIdeasSoftware {
         /// </summary>
         /// <param name="olv"></param>
         /// <param name="text"></param>
-        public TextMatchFilter(ObjectListView olv, string text) {
+        public TextMatchFilter(ObjectListView olv, string text)
+        {
             this.ListView = olv;
-            this.ContainsStrings = new string[] { text };
+            this.ContainsStrings = new string[] {text};
         }
 
         /// <summary>
@@ -109,9 +114,10 @@ namespace BrightIdeasSoftware {
         /// <param name="olv"></param>
         /// <param name="text"></param>
         /// <param name="comparison"></param>
-        public TextMatchFilter(ObjectListView olv, string text, StringComparison comparison) {
+        public TextMatchFilter(ObjectListView olv, string text, StringComparison comparison)
+        {
             this.ListView = olv;
-            this.ContainsStrings = new string[] { text };
+            this.ContainsStrings = new string[] {text};
             this.StringComparison = comparison;
         }
 
@@ -122,10 +128,12 @@ namespace BrightIdeasSoftware {
         /// <summary>
         /// Which columns will be used for the comparisons? If this is null, all columns will be used
         /// </summary>
-        public OLVColumn[] Columns {
+        public OLVColumn[] Columns
+        {
             get { return columns; }
             set { columns = value; }
         }
+
         private OLVColumn[] columns;
 
         /// <summary>
@@ -133,14 +141,18 @@ namespace BrightIdeasSoftware {
         /// contains matching. Setting this replaces all previous texts
         /// of any kind.
         /// </summary>
-        public IEnumerable<string> ContainsStrings {
-            get {
+        public IEnumerable<string> ContainsStrings
+        {
+            get
+            {
                 foreach (TextMatchingStrategy component in this.MatchingStrategies)
                     yield return component.Text;
             }
-            set {
+            set
+            {
                 this.MatchingStrategies = new List<TextMatchingStrategy>();
-                if (value != null) {
+                if (value != null)
+                {
                     foreach (string text in value)
                         this.MatchingStrategies.Add(new TextContainsMatchingStrategy(this, text));
                 }
@@ -150,10 +162,9 @@ namespace BrightIdeasSoftware {
         /// <summary>
         /// Gets whether or not this filter has any search criteria
         /// </summary>
-        public bool HasComponents {
-            get {
-                return this.MatchingStrategies.Count > 0;
-            }
+        public bool HasComponents
+        {
+            get { return this.MatchingStrategies.Count > 0; }
         }
 
         /// <summary>
@@ -163,10 +174,12 @@ namespace BrightIdeasSoftware {
         /// You cannot really rebase a filter after it is created, so do not change this value.
         /// It is included so that it can be set in an object initializer.
         /// </remarks>
-        public ObjectListView ListView {
+        public ObjectListView ListView
+        {
             get { return listView; }
             set { listView = value; }
         }
+
         private ObjectListView listView;
 
         /// <summary>
@@ -174,14 +187,18 @@ namespace BrightIdeasSoftware {
         /// prefix matching. Setting this replaces all previous texts
         /// of any kind.
         /// </summary>
-        public IEnumerable<string> PrefixStrings {
-            get {
+        public IEnumerable<string> PrefixStrings
+        {
+            get
+            {
                 foreach (TextMatchingStrategy component in this.MatchingStrategies)
                     yield return component.Text;
             }
-            set {
+            set
+            {
                 this.MatchingStrategies = new List<TextMatchingStrategy>();
-                if (value != null) {
+                if (value != null)
+                {
                     foreach (string text in value)
                         this.MatchingStrategies.Add(new TextBeginsMatchingStrategy(this, text));
                 }
@@ -196,10 +213,14 @@ namespace BrightIdeasSoftware {
         /// If this is not set specifically, the appropriate options are chosen to match the
         /// StringComparison setting (culture invariant, case sensitive).
         /// </remarks>
-        public RegexOptions RegexOptions {
-            get {
-                if (!regexOptions.HasValue) {
-                    switch (this.StringComparison) {
+        public RegexOptions RegexOptions
+        {
+            get
+            {
+                if (!regexOptions.HasValue)
+                {
+                    switch (this.StringComparison)
+                    {
                         case StringComparison.CurrentCulture:
                             regexOptions = RegexOptions.None;
                             break;
@@ -221,10 +242,9 @@ namespace BrightIdeasSoftware {
                 }
                 return regexOptions.Value;
             }
-            set {
-                regexOptions = value;
-            }
+            set { regexOptions = value; }
         }
+
         private RegexOptions? regexOptions;
 
         /// <summary>
@@ -232,14 +252,18 @@ namespace BrightIdeasSoftware {
         /// regex pattern matching. Setting this replaces all previous texts
         /// of any kind.
         /// </summary>
-        public IEnumerable<string> RegexStrings {
-            get {
+        public IEnumerable<string> RegexStrings
+        {
+            get
+            {
                 foreach (TextMatchingStrategy component in this.MatchingStrategies)
                     yield return component.Text;
             }
-            set {
+            set
+            {
                 this.MatchingStrategies = new List<TextMatchingStrategy>();
-                if (value != null) {
+                if (value != null)
+                {
                     foreach (string text in value)
                         this.MatchingStrategies.Add(new TextRegexMatchingStrategy(this, text));
                 }
@@ -249,10 +273,12 @@ namespace BrightIdeasSoftware {
         /// <summary>
         /// Gets or  sets how the filter will match text
         /// </summary>
-        public StringComparison StringComparison {
+        public StringComparison StringComparison
+        {
             get { return this.stringComparison; }
             set { this.stringComparison = value; }
         }
+
         private StringComparison stringComparison = StringComparison.InvariantCultureIgnoreCase;
 
         #endregion
@@ -263,11 +289,15 @@ namespace BrightIdeasSoftware {
         /// Loop over the columns that are being considering by the filter
         /// </summary>
         /// <returns></returns>
-        protected IEnumerable<OLVColumn> IterateColumns() {
-            if (this.Columns == null) {
+        protected IEnumerable<OLVColumn> IterateColumns()
+        {
+            if (this.Columns == null)
+            {
                 foreach (OLVColumn column in this.ListView.Columns)
                     yield return column;
-            } else {
+            }
+            else
+            {
                 foreach (OLVColumn column in this.Columns)
                     yield return column;
             }
@@ -282,14 +312,18 @@ namespace BrightIdeasSoftware {
         /// </summary>
         /// <param name="modelObject"></param>
         /// <returns></returns>
-        public override bool Filter(object modelObject) {
+        public override bool Filter(object modelObject)
+        {
             if (this.ListView == null || !this.HasComponents)
                 return true;
 
-            foreach (OLVColumn column in this.IterateColumns()) {
-                if (column.IsVisible && column.Searchable) {
+            foreach (OLVColumn column in this.IterateColumns())
+            {
+                if (column.IsVisible && column.Searchable)
+                {
                     string cellText = column.GetStringValue(modelObject);
-                    foreach (TextMatchingStrategy filter in this.MatchingStrategies) {
+                    foreach (TextMatchingStrategy filter in this.MatchingStrategies)
+                    {
                         if (String.IsNullOrEmpty(filter.Text) || filter.MatchesText(cellText))
                             return true;
                     }
@@ -306,11 +340,13 @@ namespace BrightIdeasSoftware {
         /// the string should be highlighted</remarks>
         /// <param name="cellText"></param>
         /// <returns>A list of character ranges indicating the matched substrings</returns>
-        public IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText) {
+        public IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText)
+        {
             List<CharacterRange> ranges = new List<CharacterRange>();
 
-            foreach (TextMatchingStrategy filter in this.MatchingStrategies) {
-                 if (!String.IsNullOrEmpty(filter.Text))
+            foreach (TextMatchingStrategy filter in this.MatchingStrategies)
+            {
+                if (!String.IsNullOrEmpty(filter.Text))
                     ranges.AddRange(filter.FindAllMatchedRanges(cellText));
             }
 
@@ -322,12 +358,15 @@ namespace BrightIdeasSoftware {
         /// </summary>
         /// <param name="column"></param>
         /// <returns></returns>
-        public bool IsIncluded(OLVColumn column) {
-            if (this.Columns == null) {
+        public bool IsIncluded(OLVColumn column)
+        {
+            if (this.Columns == null)
+            {
                 return column.ListView == this.ListView;
             }
 
-            foreach (OLVColumn x in this.Columns) {
+            foreach (OLVColumn x in this.Columns)
+            {
                 if (x == column)
                     return true;
             }
@@ -348,31 +387,36 @@ namespace BrightIdeasSoftware {
         /// <summary>
         /// Base class for the various types of string matching that TextMatchFilter provides
         /// </summary>
-        abstract protected class TextMatchingStrategy {
-
+        abstract protected class TextMatchingStrategy
+        {
             /// <summary>
             /// Gets how the filter will match text
             /// </summary>
-            public StringComparison StringComparison {
+            public StringComparison StringComparison
+            {
                 get { return this.TextFilter.StringComparison; }
             }
 
             /// <summary>
             /// Gets the text filter to which this component belongs
             /// </summary>
-            public TextMatchFilter TextFilter {
+            public TextMatchFilter TextFilter
+            {
                 get { return textFilter; }
                 set { textFilter = value; }
             }
+
             private TextMatchFilter textFilter;
 
             /// <summary>
             /// Gets or sets the text that will be matched
             /// </summary>
-            public string Text {
+            public string Text
+            {
                 get { return this.text; }
                 set { this.text = value; }
             }
+
             private string text;
 
             /// <summary>
@@ -403,14 +447,15 @@ namespace BrightIdeasSoftware {
         /// <summary>
         /// This component provides text contains matching strategy.
         /// </summary>
-        protected class TextContainsMatchingStrategy : TextMatchingStrategy {
-
+        protected class TextContainsMatchingStrategy : TextMatchingStrategy
+        {
             /// <summary>
             /// Create a text contains strategy
             /// </summary>
             /// <param name="filter"></param>
             /// <param name="text"></param>
-            public TextContainsMatchingStrategy(TextMatchFilter filter, string text) {
+            public TextContainsMatchingStrategy(TextMatchFilter filter, string text)
+            {
                 this.TextFilter = filter;
                 this.Text = text;
             }
@@ -423,7 +468,8 @@ namespace BrightIdeasSoftware {
             /// </remarks>
             /// <param name="cellText">The text of the cell we want to search</param>
             /// <returns>Return true if the given cellText matches our strategy</returns>
-            public override bool MatchesText(string cellText) {
+            public override bool MatchesText(string cellText)
+            {
                 return cellText.IndexOf(this.Text, this.StringComparison) != -1;
             }
 
@@ -439,11 +485,13 @@ namespace BrightIdeasSoftware {
             /// </remarks>
             /// <param name="cellText">The text of the cell we want to search</param>
             /// <returns>A list of character ranges indicating the matched substrings</returns>
-            public override IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText) {
+            public override IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText)
+            {
                 List<CharacterRange> ranges = new List<CharacterRange>();
 
                 int matchIndex = cellText.IndexOf(this.Text, this.StringComparison);
-                while (matchIndex != -1) {
+                while (matchIndex != -1)
+                {
                     ranges.Add(new CharacterRange(matchIndex, this.Text.Length));
                     matchIndex = cellText.IndexOf(this.Text, matchIndex + this.Text.Length, this.StringComparison);
                 }
@@ -455,14 +503,15 @@ namespace BrightIdeasSoftware {
         /// <summary>
         /// This component provides text begins with matching strategy.
         /// </summary>
-        protected class TextBeginsMatchingStrategy : TextMatchingStrategy {
-
+        protected class TextBeginsMatchingStrategy : TextMatchingStrategy
+        {
             /// <summary>
             /// Create a text begins strategy
             /// </summary>
             /// <param name="filter"></param>
             /// <param name="text"></param>
-            public TextBeginsMatchingStrategy(TextMatchFilter filter, string text) {
+            public TextBeginsMatchingStrategy(TextMatchFilter filter, string text)
+            {
                 this.TextFilter = filter;
                 this.Text = text;
             }
@@ -475,7 +524,8 @@ namespace BrightIdeasSoftware {
             /// </remarks>
             /// <param name="cellText">The text of the cell we want to search</param>
             /// <returns>Return true if the given cellText matches our strategy</returns>
-            public override bool MatchesText(string cellText) {
+            public override bool MatchesText(string cellText)
+            {
                 return cellText.StartsWith(this.Text, this.StringComparison);
             }
 
@@ -491,7 +541,8 @@ namespace BrightIdeasSoftware {
             /// </remarks>
             /// <param name="cellText">The text of the cell we want to search</param>
             /// <returns>A list of character ranges indicating the matched substrings</returns>
-            public override IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText) {
+            public override IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText)
+            {
                 List<CharacterRange> ranges = new List<CharacterRange>();
 
                 if (cellText.StartsWith(this.Text, this.StringComparison))
@@ -499,20 +550,20 @@ namespace BrightIdeasSoftware {
 
                 return ranges;
             }
-
         }
 
         /// <summary>
         /// This component provides regex matching strategy.
         /// </summary>
-        protected class TextRegexMatchingStrategy : TextMatchingStrategy {
-
+        protected class TextRegexMatchingStrategy : TextMatchingStrategy
+        {
             /// <summary>
             /// Creates a regex strategy
             /// </summary>
             /// <param name="filter"></param>
             /// <param name="text"></param>
-            public TextRegexMatchingStrategy(TextMatchFilter filter, string text) {
+            public TextRegexMatchingStrategy(TextMatchFilter filter, string text)
+            {
                 this.TextFilter = filter;
                 this.Text = text;
             }
@@ -520,10 +571,9 @@ namespace BrightIdeasSoftware {
             /// <summary>
             /// Gets or sets the options that will be used when compiling the regular expression.
             /// </summary>
-            public RegexOptions RegexOptions {
-                get {
-                    return this.TextFilter.RegexOptions;
-                }
+            public RegexOptions RegexOptions
+            {
+                get { return this.TextFilter.RegexOptions; }
             }
 
             /// <summary>
@@ -533,32 +583,36 @@ namespace BrightIdeasSoftware {
             /// If Text fails to compile as a regular expression, this will return a Regex object
             /// that will match all strings.
             /// </remarks>
-            protected Regex Regex {
-                get {
-                    if (this.regex == null) {
-                        try {
+            protected Regex Regex
+            {
+                get
+                {
+                    if (this.regex == null)
+                    {
+                        try
+                        {
                             this.regex = new Regex(this.Text, this.RegexOptions);
                         }
-                        catch (ArgumentException) {
+                        catch (ArgumentException)
+                        {
                             this.regex = TextRegexMatchingStrategy.InvalidRegexMarker;
                         }
                     }
                     return this.regex;
                 }
-                set {
-                    this.regex = value;
-                }
+                set { this.regex = value; }
             }
+
             private Regex regex;
 
             /// <summary>
             /// Gets whether or not our current regular expression is a valid regex
             /// </summary>
-            protected bool IsRegexInvalid {
-                get {
-                    return this.Regex == TextRegexMatchingStrategy.InvalidRegexMarker;
-                }
+            protected bool IsRegexInvalid
+            {
+                get { return this.Regex == TextRegexMatchingStrategy.InvalidRegexMarker; }
             }
+
             static private Regex InvalidRegexMarker = new Regex(".*");
 
             /// <summary>
@@ -569,7 +623,8 @@ namespace BrightIdeasSoftware {
             /// </remarks>
             /// <param name="cellText">The text of the cell we want to search</param>
             /// <returns>Return true if the given cellText matches our strategy</returns>
-            public override bool MatchesText(string cellText) {
+            public override bool MatchesText(string cellText)
+            {
                 if (this.IsRegexInvalid)
                     return true;
                 return this.Regex.Match(cellText).Success;
@@ -587,11 +642,14 @@ namespace BrightIdeasSoftware {
             /// </remarks>
             /// <param name="cellText">The text of the cell we want to search</param>
             /// <returns>A list of character ranges indicating the matched substrings</returns>
-            public override IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText) {
+            public override IEnumerable<CharacterRange> FindAllMatchedRanges(string cellText)
+            {
                 List<CharacterRange> ranges = new List<CharacterRange>();
 
-                if (!this.IsRegexInvalid) {
-                    foreach (Match match in this.Regex.Matches(cellText)) {
+                if (!this.IsRegexInvalid)
+                {
+                    foreach (Match match in this.Regex.Matches(cellText))
+                    {
                         if (match.Length > 0)
                             ranges.Add(new CharacterRange(match.Index, match.Length));
                     }

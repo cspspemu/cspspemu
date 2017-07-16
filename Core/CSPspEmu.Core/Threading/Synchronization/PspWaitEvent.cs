@@ -3,21 +3,21 @@ using System.Collections.Generic;
 
 namespace CSPspEmu.Core.Threading.Synchronization
 {
-	public class PspWaitEvent
-	{
-		protected Queue<Action> Notifications = new Queue<Action>();
+    public class PspWaitEvent
+    {
+        protected Queue<Action> Notifications = new Queue<Action>();
 
-		public void Signal()
-		{
-			while (Notifications.Count > 0)
-			{
-				Notifications.Dequeue()();
-			}
-		}
+        public void Signal()
+        {
+            while (Notifications.Count > 0)
+            {
+                Notifications.Dequeue()();
+            }
+        }
 
-		public void CallbackOnStateOnce(Action Callback)
-		{
-			Notifications.Enqueue(Callback);
-		}
-	}
+        public void CallbackOnStateOnce(Action Callback)
+        {
+            Notifications.Enqueue(Callback);
+        }
+    }
 }

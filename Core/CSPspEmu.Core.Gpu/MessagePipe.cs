@@ -4,52 +4,53 @@ using System.Threading;
 
 namespace CSPspEmu.Core.Gpu
 {
-	public class MessagePipe<TMessage>
-	{
-		AutoResetEvent HasPendingMessages = new AutoResetEvent(false);
-		Queue<TMessage> Messages = new Queue<TMessage>();
-		//object CheckingAvailableMessagess = new object();
+    public class MessagePipe<TMessage>
+    {
+        AutoResetEvent HasPendingMessages = new AutoResetEvent(false);
 
-		public void Send(TMessage Message)
-		{
-			lock (Messages)
-			{
-				Messages.Enqueue(Message);
-			}
+        Queue<TMessage> Messages = new Queue<TMessage>();
+        //object CheckingAvailableMessagess = new object();
 
-			HasPendingMessages.Set();
-		}
+        public void Send(TMessage Message)
+        {
+            lock (Messages)
+            {
+                Messages.Enqueue(Message);
+            }
 
-		public int MessageCount
-		{
-			get
-			{
-				lock (Messages)
-				{
-					return Messages.Count;
-				}
-			}
-		}
+            HasPendingMessages.Set();
+        }
 
-		protected void WaitOne()
-		{
-			while (MessageCount == 0)
-			{
-				HasPendingMessages.WaitOne(1);
-			}
-		}
+        public int MessageCount
+        {
+            get
+            {
+                lock (Messages)
+                {
+                    return Messages.Count;
+                }
+            }
+        }
 
-		public void Receive(Action<TMessage> Callback)
-		{
-			WaitOne();
+        protected void WaitOne()
+        {
+            while (MessageCount == 0)
+            {
+                HasPendingMessages.WaitOne(1);
+            }
+        }
 
-			lock (Messages)
-			{
-				while (Messages.Count > 0)
-				{
-					Callback(Messages.Dequeue());
-				}
-			}
-		}
-	}
+        public void Receive(Action<TMessage> Callback)
+        {
+            WaitOne();
+
+            lock (Messages)
+            {
+                while (Messages.Count > 0)
+                {
+                    Callback(Messages.Dequeue());
+                }
+            }
+        }
+    }
 }

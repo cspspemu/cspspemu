@@ -1,4 +1,6 @@
 ﻿namespace CSPspEmu.Hle.Threading.Semaphores
 {
-	public enum SemaphoreId : int { }
+    public enum SemaphoreId : int
+    {
+    }
 }

@@ -7,137 +7,134 @@ using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Core.Cpu
 {
-	/// <summary>
-	/// CpuState shareed by all CpuThreadState
-	/// </summary>
+    /// <summary>
+    /// CpuState shareed by all CpuThreadState
+    /// </summary>
     public sealed class CpuProcessor
-	{
-		public readonly Dictionary<string, uint> GlobalInstructionStats = new Dictionary<string, uint>();
+    {
+        public readonly Dictionary<string, uint> GlobalInstructionStats = new Dictionary<string, uint>();
 
-		[Inject]
-		public InjectContext InjectContext;
+        [Inject] public InjectContext InjectContext;
 
-		[Inject]
-		public CpuConfig CpuConfig;
+        [Inject] public CpuConfig CpuConfig;
 
-		[Inject]
-		public PspMemory Memory;
+        [Inject] public PspMemory Memory;
 
-		[Inject]
-		public ICpuConnector CpuConnector;
+        [Inject] public ICpuConnector CpuConnector;
 
-		[Inject]
-		public DynarecFunctionCompiler DynarecFunctionCompiler;
+        [Inject] public DynarecFunctionCompiler DynarecFunctionCompiler;
 
-		[Inject]
-		public IInterruptManager IInterruptManager;
+        [Inject] public IInterruptManager IInterruptManager;
 
-		[Inject]
-		public MethodCache MethodCache;
+        [Inject] public MethodCache MethodCache;
 
-		public Dictionary<uint, NativeSyscallInfo> RegisteredNativeSyscallMethods = new Dictionary<uint, NativeSyscallInfo>();
-		private Dictionary<int, Action<CpuThreadState, int>> RegisteredNativeSyscalls = new Dictionary<int,Action<CpuThreadState,int>>();
-		public HashSet<uint> NativeBreakpoints = new HashSet<uint>();
+        public Dictionary<uint, NativeSyscallInfo> RegisteredNativeSyscallMethods =
+            new Dictionary<uint, NativeSyscallInfo>();
 
-		public event Action DebugCurrentThreadEvent;
-		public bool DebugFunctionCreation;
+        private Dictionary<int, Action<CpuThreadState, int>> RegisteredNativeSyscalls =
+            new Dictionary<int, Action<CpuThreadState, int>>();
 
-		public volatile bool InterruptEnabled = true;
-		public volatile bool InterruptFlag = false;
+        public HashSet<uint> NativeBreakpoints = new HashSet<uint>();
 
-		public void ExecuteInterrupt(CpuThreadState CpuThreadState)
-		{
-			if (InterruptEnabled && InterruptFlag)
-			{
-				IInterruptManager.Interrupt(CpuThreadState);
-			}
-		}
+        public event Action DebugCurrentThreadEvent;
+        public bool DebugFunctionCreation;
 
-		private CpuProcessor()
-		{
-		}
+        public volatile bool InterruptEnabled = true;
+        public volatile bool InterruptFlag = false;
 
-		public CpuProcessor RegisterNativeSyscall(int Code, Action Callback)
-		{
-			return RegisterNativeSyscall(Code, (_Code, _Processor) => Callback());
-		}
+        public void ExecuteInterrupt(CpuThreadState CpuThreadState)
+        {
+            if (InterruptEnabled && InterruptFlag)
+            {
+                IInterruptManager.Interrupt(CpuThreadState);
+            }
+        }
 
-		public CpuProcessor RegisterNativeSyscall(int Code, Action<CpuThreadState, int> Callback)
-		{
-			RegisteredNativeSyscalls[Code] = Callback;
-			return this;
-		}
+        private CpuProcessor()
+        {
+        }
 
-		public Action<CpuThreadState, int> GetSyscall(int Code)
-		{
-			Action<CpuThreadState, int> Callback;
-			if (RegisteredNativeSyscalls.TryGetValue(Code, out Callback))
-			{
-				return Callback;
-			}
-			else
-			{
-				return null;
-			}
-		}
+        public CpuProcessor RegisterNativeSyscall(int Code, Action Callback)
+        {
+            return RegisterNativeSyscall(Code, (_Code, _Processor) => Callback());
+        }
 
-		public void Syscall(int Code, CpuThreadState CpuThreadState)
-		{
-			Action<CpuThreadState, int> Callback;
-			if ((Callback = GetSyscall(Code)) != null)
-			{
-				Callback(CpuThreadState, Code);
-			}
-			else
-			{
-				Console.WriteLine("Undefined syscall: {0:X6} at 0x{1:X8}", Code, CpuThreadState.PC);
-			}
-		}
+        public CpuProcessor RegisterNativeSyscall(int Code, Action<CpuThreadState, int> Callback)
+        {
+            RegisteredNativeSyscalls[Code] = Callback;
+            return this;
+        }
 
-		public void sceKernelDcacheWritebackInvalidateAll()
-		{
-		}
+        public Action<CpuThreadState, int> GetSyscall(int Code)
+        {
+            Action<CpuThreadState, int> Callback;
+            if (RegisteredNativeSyscalls.TryGetValue(Code, out Callback))
+            {
+                return Callback;
+            }
+            else
+            {
+                return null;
+            }
+        }
 
-		public void sceKernelDcacheWritebackRange(uint Address, int Size)
-		{
-		}
+        public void Syscall(int Code, CpuThreadState CpuThreadState)
+        {
+            Action<CpuThreadState, int> Callback;
+            if ((Callback = GetSyscall(Code)) != null)
+            {
+                Callback(CpuThreadState, Code);
+            }
+            else
+            {
+                Console.WriteLine("Undefined syscall: {0:X6} at 0x{1:X8}", Code, CpuThreadState.PC);
+            }
+        }
 
-		public void sceKernelDcacheWritebackInvalidateRange(uint Address, int Size)
-		{
-		}
+        public void sceKernelDcacheWritebackInvalidateAll()
+        {
+        }
 
-		public void sceKernelDcacheInvalidateRange(uint Address, int Size)
-		{
-		}
+        public void sceKernelDcacheWritebackRange(uint Address, int Size)
+        {
+        }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
-		public void sceKernelDcacheWritebackAll()
-		{
-		}
+        public void sceKernelDcacheWritebackInvalidateRange(uint Address, int Size)
+        {
+        }
 
-		public void sceKernelIcacheInvalidateAll()
-		{
-			MethodCache.FlushAll();
-		}
+        public void sceKernelDcacheInvalidateRange(uint Address, int Size)
+        {
+        }
 
-		public void sceKernelIcacheInvalidateRange(uint Address, uint Size)
-		{
-			MethodCache.FlushRange(Address, Address + Size);
-		}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public void sceKernelDcacheWritebackAll()
+        {
+        }
 
-		public static void DebugCurrentThread(CpuThreadState CpuThreadState)
-		{
-			var CpuProcessor = CpuThreadState.CpuProcessor;
-			Console.Error.WriteLine("*******************************************");
-			Console.Error.WriteLine("* DebugCurrentThread **********************");
-			Console.Error.WriteLine("*******************************************");
-			CpuProcessor.DebugCurrentThreadEvent();
-			Console.Error.WriteLine("*******************************************");
-			CpuThreadState.DumpRegisters();
-			Console.Error.WriteLine("*******************************************");
-		}
-	}
+        public void sceKernelIcacheInvalidateAll()
+        {
+            MethodCache.FlushAll();
+        }
+
+        public void sceKernelIcacheInvalidateRange(uint Address, uint Size)
+        {
+            MethodCache.FlushRange(Address, Address + Size);
+        }
+
+        public static void DebugCurrentThread(CpuThreadState CpuThreadState)
+        {
+            var CpuProcessor = CpuThreadState.CpuProcessor;
+            Console.Error.WriteLine("*******************************************");
+            Console.Error.WriteLine("* DebugCurrentThread **********************");
+            Console.Error.WriteLine("*******************************************");
+            CpuProcessor.DebugCurrentThreadEvent();
+            Console.Error.WriteLine("*******************************************");
+            CpuThreadState.DumpRegisters();
+            Console.Error.WriteLine("*******************************************");
+        }
+    }
 }

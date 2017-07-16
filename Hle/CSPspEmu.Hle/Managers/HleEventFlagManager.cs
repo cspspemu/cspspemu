@@ -3,10 +3,13 @@ using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle.Managers
 {
-	public enum EventFlagId : int { }
+    public enum EventFlagId : int
+    {
+    }
 
-	public class HleEventFlagManager
-	{
-		public HleUidPoolSpecial<HleEventFlag, EventFlagId> EventFlags = new HleUidPoolSpecial<HleEventFlag, EventFlagId>();
-	}
+    public class HleEventFlagManager
+    {
+        public HleUidPoolSpecial<HleEventFlag, EventFlagId> EventFlags =
+            new HleUidPoolSpecial<HleEventFlag, EventFlagId>();
+    }
 }

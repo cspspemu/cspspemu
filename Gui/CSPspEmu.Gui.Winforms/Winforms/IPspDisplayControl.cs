@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu.Gui.Winforms.Winforms
 {
-	public interface IPspDisplayControl
-	{
-	}
+    public interface IPspDisplayControl
+    {
+    }
 }

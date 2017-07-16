@@ -30,12 +30,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 
-namespace BrightIdeasSoftware {
-
+namespace BrightIdeasSoftware
+{
     /// <summary>
     /// An indication of where a hit was within ObjectListView cell
     /// </summary>
-    public enum HitTestLocation {
+    public enum HitTestLocation
+    {
         /// <summary>
         /// Nowhere
         /// </summary>
@@ -83,7 +84,8 @@ namespace BrightIdeasSoftware {
     }
 
     [Flags]
-    public enum HitTestLocationEx {
+    public enum HitTestLocationEx
+    {
         LVHT_NOWHERE = 0x00000001,
         LVHT_ONITEMICON = 0x00000002,
         LVHT_ONITEMLABEL = 0x00000004,
@@ -101,8 +103,12 @@ namespace BrightIdeasSoftware {
         LVHT_EX_GROUP_BACKGROUND = -2147483648, // 0x80000000
         LVHT_EX_GROUP_STATEICON = 0x01000000,
         LVHT_EX_GROUP_SUBSETLINK = 0x02000000,
-        LVHT_EX_GROUP = (LVHT_EX_GROUP_BACKGROUND | LVHT_EX_GROUP_COLLAPSE | LVHT_EX_GROUP_FOOTER | LVHT_EX_GROUP_HEADER | LVHT_EX_GROUP_STATEICON | LVHT_EX_GROUP_SUBSETLINK),
-        LVHT_EX_GROUP_MINUS_FOOTER_AND_BKGRD = (LVHT_EX_GROUP_COLLAPSE | LVHT_EX_GROUP_HEADER | LVHT_EX_GROUP_STATEICON | LVHT_EX_GROUP_SUBSETLINK),
+
+        LVHT_EX_GROUP = (LVHT_EX_GROUP_BACKGROUND | LVHT_EX_GROUP_COLLAPSE | LVHT_EX_GROUP_FOOTER |
+                         LVHT_EX_GROUP_HEADER | LVHT_EX_GROUP_STATEICON | LVHT_EX_GROUP_SUBSETLINK),
+
+        LVHT_EX_GROUP_MINUS_FOOTER_AND_BKGRD = (LVHT_EX_GROUP_COLLAPSE | LVHT_EX_GROUP_HEADER |
+                                                LVHT_EX_GROUP_STATEICON | LVHT_EX_GROUP_SUBSETLINK),
         LVHT_EX_ONCONTENTS = 0x04000000, // On item AND not on the background
         LVHT_EX_FOOTER = 0x08000000,
     }
@@ -113,19 +119,21 @@ namespace BrightIdeasSoftware {
     /// </summary>
     /// <remarks>Custom renderers can use HitTestLocation.UserDefined and the UserData
     /// object to store more specific locations for use during event handlers.</remarks>
-    public class OlvListViewHitTestInfo {
-
+    public class OlvListViewHitTestInfo
+    {
         /// <summary>
         /// Create a OlvListViewHitTestInfo
         /// </summary>
-        public OlvListViewHitTestInfo(OLVListItem olvListItem, OLVListSubItem subItem, int flags, OLVGroup group) {
+        public OlvListViewHitTestInfo(OLVListItem olvListItem, OLVListSubItem subItem, int flags, OLVGroup group)
+        {
             this.item = olvListItem;
             this.subItem = subItem;
             this.location = ConvertNativeFlagsToDotNetLocation(olvListItem, flags);
-            this.HitTestLocationEx = (HitTestLocationEx)flags;
+            this.HitTestLocationEx = (HitTestLocationEx) flags;
             this.Group = group;
 
-            switch (location) {
+            switch (location)
+            {
                 case ListViewHitTestLocations.StateImage:
                     this.HitTestLocation = HitTestLocation.CheckBox;
                     break;
@@ -136,7 +144,8 @@ namespace BrightIdeasSoftware {
                     this.HitTestLocation = HitTestLocation.Text;
                     break;
                 default:
-                    if ((this.HitTestLocationEx & HitTestLocationEx.LVHT_EX_GROUP_COLLAPSE) == HitTestLocationEx.LVHT_EX_GROUP_COLLAPSE)
+                    if ((this.HitTestLocationEx & HitTestLocationEx.LVHT_EX_GROUP_COLLAPSE) ==
+                        HitTestLocationEx.LVHT_EX_GROUP_COLLAPSE)
                         this.HitTestLocation = HitTestLocation.GroupExpander;
                     else if ((this.HitTestLocationEx & HitTestLocationEx.LVHT_EX_GROUP_MINUS_FOOTER_AND_BKGRD) != 0)
                         this.HitTestLocation = HitTestLocation.Group;
@@ -158,10 +167,10 @@ namespace BrightIdeasSoftware {
             // (if we hit an item) or to AboveClientAream if nothing was hit.
 
             if ((8 & flags) == 8)
-                return (ListViewHitTestLocations)(0xf7 & flags | (hitItem == null ? 0x100 : 0x200));
+                return (ListViewHitTestLocations) (0xf7 & flags | (hitItem == null ? 0x100 : 0x200));
 
             // Mask off the LVHT_EX_XXXX values since ListViewHitTestLocations doesn't have them
-            return (ListViewHitTestLocations)(flags & 0xffff);
+            return (ListViewHitTestLocations) (flags & 0xffff);
         }
 
         #region Public fields
@@ -193,61 +202,70 @@ namespace BrightIdeasSoftware {
         /// <summary>
         /// Gets the item that was hit
         /// </summary>
-        public OLVListItem Item {
+        public OLVListItem Item
+        {
             get { return item; }
             internal set { item = value; }
         }
+
         private OLVListItem item;
 
         /// <summary>
         /// Gets the subitem that was hit
         /// </summary>
-        public OLVListSubItem SubItem {
+        public OLVListSubItem SubItem
+        {
             get { return subItem; }
             internal set { subItem = value; }
         }
+
         private OLVListSubItem subItem;
 
         /// <summary>
         /// Gets the part of the subitem that was hit
         /// </summary>
-        public ListViewHitTestLocations Location {
+        public ListViewHitTestLocations Location
+        {
             get { return location; }
             internal set { location = value; }
         }
+
         private ListViewHitTestLocations location;
 
         /// <summary>
         /// Gets the ObjectListView that was tested
         /// </summary>
-        public ObjectListView ListView {
-            get { return this.Item == null ? null : (ObjectListView)this.Item.ListView; }
+        public ObjectListView ListView
+        {
+            get { return this.Item == null ? null : (ObjectListView) this.Item.ListView; }
         }
 
         /// <summary>
         /// Gets the model object that was hit
         /// </summary>
-        public Object RowObject {
-            get {
-                return this.Item == null ? null : this.Item.RowObject;
-            }
+        public Object RowObject
+        {
+            get { return this.Item == null ? null : this.Item.RowObject; }
         }
 
         /// <summary>
         /// Gets the index of the row under the hit point or -1
         /// </summary>
-        public int RowIndex {
+        public int RowIndex
+        {
             get { return this.Item == null ? -1 : this.Item.Index; }
         }
 
         /// <summary>
         /// Gets the index of the column under the hit point
         /// </summary>
-        public int ColumnIndex {
-            get {
+        public int ColumnIndex
+        {
+            get
+            {
                 if (this.Item == null || this.SubItem == null)
                     return -1;
-                
+
                 return this.Item.SubItems.IndexOf(this.SubItem);
             }
         }
@@ -255,8 +273,10 @@ namespace BrightIdeasSoftware {
         /// <summary>
         /// Gets the column that was hit
         /// </summary>
-        public OLVColumn Column {
-            get {
+        public OLVColumn Column
+        {
+            get
+            {
                 int index = this.ColumnIndex;
                 return index < 0 ? null : this.ListView.GetColumn(index);
             }
@@ -266,7 +286,9 @@ namespace BrightIdeasSoftware {
 
         public override string ToString()
         {
-            return string.Format("HitTestLocation: {0}, HitTestLocationEx: {1}, Item: {2}, SubItem: {3}, Location: {4}, Group: {5}", this.HitTestLocation, this.HitTestLocationEx, this.item, this.subItem, this.location, this.Group);
+            return string.Format(
+                "HitTestLocation: {0}, HitTestLocationEx: {1}, Item: {2}, SubItem: {3}, Location: {4}, Group: {5}",
+                this.HitTestLocation, this.HitTestLocationEx, this.item, this.subItem, this.location, this.Group);
         }
     }
 }

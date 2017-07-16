@@ -2,57 +2,55 @@
 
 namespace CSPspEmu.Core.Rtc
 {
-	public class PspVirtualTimer
-	{
-		protected PspRtc PspRtc;
+    public class PspVirtualTimer
+    {
+        protected PspRtc PspRtc;
 
-		protected DateTime _DateTime;
+        protected DateTime _DateTime;
 
-		public DateTime DateTime
-		{
-			set
-			{
-				lock (PspRtc.Timers)
-				{
-					lock (this)
-					{
-						this._DateTime = value;
-						if (!OnList)
-						{
-							PspRtc.Timers.AddLast(this);
-							OnList = true;
-						}
-					}
-				}
-			}
-			get
-			{
-				return _DateTime;
-			}
-		}
-		public bool OnList;
+        public DateTime DateTime
+        {
+            set
+            {
+                lock (PspRtc.Timers)
+                {
+                    lock (this)
+                    {
+                        this._DateTime = value;
+                        if (!OnList)
+                        {
+                            PspRtc.Timers.AddLast(this);
+                            OnList = true;
+                        }
+                    }
+                }
+            }
+            get { return _DateTime; }
+        }
 
-		internal Action Callback;
-		public bool Enabled;
+        public bool OnList;
 
-		internal PspVirtualTimer(PspRtc PspRtc)
-		{
-			this.PspRtc = PspRtc;
-		}
+        internal Action Callback;
+        public bool Enabled;
 
-		public void SetIn(TimeSpan TimeSpan)
-		{
-			this.DateTime = DateTime.UtcNow + TimeSpan;
-		}
+        internal PspVirtualTimer(PspRtc PspRtc)
+        {
+            this.PspRtc = PspRtc;
+        }
 
-		public void SetAt(DateTime DateTime)
-		{
-			this.DateTime = DateTime;
-		}
+        public void SetIn(TimeSpan TimeSpan)
+        {
+            this.DateTime = DateTime.UtcNow + TimeSpan;
+        }
 
-		public override string ToString()
-		{
-			return this.ToStringDefault();
-		}
-	}
+        public void SetAt(DateTime DateTime)
+        {
+            this.DateTime = DateTime;
+        }
+
+        public override string ToString()
+        {
+            return this.ToStringDefault();
+        }
+    }
 }

@@ -2,7 +2,7 @@
 
 namespace CSPspEmu.Hle.Managers
 {
-	public class HleUidPool<TType> : HleUidPoolSpecial<TType, int> where TType : IDisposable
-	{
-	}
+    public class HleUidPool<TType> : HleUidPoolSpecial<TType, int> where TType : IDisposable
+    {
+    }
 }

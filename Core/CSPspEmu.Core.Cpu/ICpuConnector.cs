@@ -5,8 +5,8 @@ using System.Text;
 
 namespace CSPspEmu.Core.Cpu
 {
-	public interface ICpuConnector
-	{
-		void Yield(CpuThreadState CpuThreadState);
-	}
+    public interface ICpuConnector
+    {
+        void Yield(CpuThreadState CpuThreadState);
+    }
 }

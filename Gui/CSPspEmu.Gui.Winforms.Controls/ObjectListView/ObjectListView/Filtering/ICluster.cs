@@ -29,13 +29,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BrightIdeasSoftware {
-
+namespace BrightIdeasSoftware
+{
     /// <summary>
     /// A cluster is a like collection of objects that can be usefully filtered
     /// as whole using the filtering UI provided by the ObjectListView.
     /// </summary>
-    public interface ICluster : IComparable {
+    public interface ICluster : IComparable
+    {
         /// <summary>
         /// Gets or sets how many items belong to this cluster
         /// </summary>

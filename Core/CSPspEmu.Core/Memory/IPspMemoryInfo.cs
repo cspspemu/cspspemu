@@ -5,8 +5,8 @@ using System.Text;
 
 namespace CSPspEmu.Core.Memory
 {
-	public interface IPspMemoryInfo
-	{
-		bool IsAddressValid(uint Address);
-	}
+    public interface IPspMemoryInfo
+    {
+        bool IsAddressValid(uint Address);
+    }
 }

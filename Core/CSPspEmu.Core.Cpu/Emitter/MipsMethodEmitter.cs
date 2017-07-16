@@ -1,5 +1,6 @@
 ﻿//#define DEBUG_GENERATE_IL
 //#define DEBUG_GENERATE_IL_CSHARP
+
 #define USE_DYNAMIC_METHOD
 
 using System;
@@ -15,40 +16,40 @@ using SafeILGenerator.Utils;
 
 namespace CSPspEmu.Core.Cpu.Emitter
 {
-	/// <summary>
-	/// <see cref="http://www.mrc.uidaho.edu/mrc/people/jff/digital/MIPSir.html"/>
-	/// </summary>
-	public unsafe sealed class MipsMethodEmitter
-	{
-		private uint PC;
-		private CpuProcessor Processor;
+    /// <summary>
+    /// <see cref="http://www.mrc.uidaho.edu/mrc/people/jff/digital/MIPSir.html"/>
+    /// </summary>
+    public unsafe sealed class MipsMethodEmitter
+    {
+        private uint PC;
+        private CpuProcessor Processor;
 
-		private static readonly AstMipsGenerator ast = AstMipsGenerator.Instance;
+        private static readonly AstMipsGenerator ast = AstMipsGenerator.Instance;
 
-		//public readonly Dictionary<string, uint> InstructionStats = new Dictionary<string, uint>();
+        //public readonly Dictionary<string, uint> InstructionStats = new Dictionary<string, uint>();
 
-		public MipsMethodEmitter(CpuProcessor Processor, uint PC, bool DoDebug = false, bool DoLog = false)
-		{
-			this.Processor = Processor;
-			this.PC = PC;
-		}
+        public MipsMethodEmitter(CpuProcessor Processor, uint PC, bool DoDebug = false, bool DoLog = false)
+        {
+            this.Processor = Processor;
+            this.PC = PC;
+        }
 
-		public class Result
-		{
-			public TimeSpan TimeOptimize;
-			public TimeSpan TimeGenerateIL;
-			public TimeSpan TimeCreateDelegate;
-			public Action<CpuThreadState> Delegate;
-			public bool DisableOptimizations;
-		}
+        public class Result
+        {
+            public TimeSpan TimeOptimize;
+            public TimeSpan TimeGenerateIL;
+            public TimeSpan TimeCreateDelegate;
+            public Action<CpuThreadState> Delegate;
+            public bool DisableOptimizations;
+        }
 
-		public Result CreateDelegate(AstNodeStm AstNodeStm, int TotalInstructions)
-		{
-			var Time0 = DateTime.UtcNow;
+        public Result CreateDelegate(AstNodeStm AstNodeStm, int TotalInstructions)
+        {
+            var Time0 = DateTime.UtcNow;
 
-			AstNodeStm = AstOptimizerPsp.GlobalOptimize(Processor, ast.Statements(AstNodeStm, ast.Return()));
+            AstNodeStm = AstOptimizerPsp.GlobalOptimize(Processor, ast.Statements(AstNodeStm, ast.Return()));
 
-			var Time1 = DateTime.UtcNow;
+            var Time1 = DateTime.UtcNow;
 
 #if DEBUG_GENERATE_IL
 			Console.WriteLine("{0}", GeneratorIL.GenerateToString<GeneratorILPsp>(DynamicMethod, AstNodeStm));
@@ -57,32 +58,32 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			Console.WriteLine("{0}", AstNodeExtensions.ToCSharpString(AstNodeStm).Replace("CpuThreadState.", ""));
 #endif
 
-			Action<CpuThreadState> Delegate;
-			var Time2 = Time1;
+            Action<CpuThreadState> Delegate;
+            var Time2 = Time1;
 
-			bool DisableOptimizations = _DynarecConfig.DisableDotNetJitOptimizations;
-			if (TotalInstructions >= _DynarecConfig.InstructionCountToDisableOptimizations) DisableOptimizations = true;
+            bool DisableOptimizations = _DynarecConfig.DisableDotNetJitOptimizations;
+            if (TotalInstructions >= _DynarecConfig.InstructionCountToDisableOptimizations) DisableOptimizations = true;
 
-			if (Platform.IsMono) DisableOptimizations = false;
-			if (_DynarecConfig.ForceJitOptimizationsOnEvenLargeFunctions) DisableOptimizations = false;
+            if (Platform.IsMono) DisableOptimizations = false;
+            if (_DynarecConfig.ForceJitOptimizationsOnEvenLargeFunctions) DisableOptimizations = false;
 
-			try
-			{
-				Delegate = MethodCreator.CreateDynamicMethod<Action<CpuThreadState>>(
-				//Delegate = MethodCreator.CreateMethodInClass<Action<CpuThreadState>>(
-					Assembly.GetExecutingAssembly().ManifestModule,
-					String.Format("DynamicMethod_0x{0:X}", this.PC),
-					DisableOptimizations,
-					(DynamicMethod) =>
-					{
-						AstNodeStm.GenerateIL(DynamicMethod);
-						Time2 = DateTime.UtcNow;
-					}
-				);
-			}
-			catch (InvalidProgramException InvalidProgramException)
-			{
-				Console.Error.WriteLine("Invalid Delegate:");
+            try
+            {
+                Delegate = MethodCreator.CreateDynamicMethod<Action<CpuThreadState>>(
+                    //Delegate = MethodCreator.CreateMethodInClass<Action<CpuThreadState>>(
+                    Assembly.GetExecutingAssembly().ManifestModule,
+                    String.Format("DynamicMethod_0x{0:X}", this.PC),
+                    DisableOptimizations,
+                    (DynamicMethod) =>
+                    {
+                        AstNodeStm.GenerateIL(DynamicMethod);
+                        Time2 = DateTime.UtcNow;
+                    }
+                );
+            }
+            catch (InvalidProgramException InvalidProgramException)
+            {
+                Console.Error.WriteLine("Invalid Delegate:");
 #if LOG_TRACE
 				Console.WriteLine("Invalid Delegate:");
 				foreach (var Line in SafeILGenerator.GetEmittedInstructions())
@@ -97,19 +98,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
 					}
 				}
 #endif
-				throw (InvalidProgramException);
-			}
+                throw (InvalidProgramException);
+            }
 
-			var Time3 = DateTime.UtcNow;
+            var Time3 = DateTime.UtcNow;
 
-			return new Result()
-			{
-				Delegate = Delegate,
-				DisableOptimizations = DisableOptimizations,
-				TimeOptimize = Time1 - Time0,
-				TimeGenerateIL = Time2 - Time1,
-				TimeCreateDelegate = Time3 - Time2,
-			};
-		}
-	}
+            return new Result()
+            {
+                Delegate = Delegate,
+                DisableOptimizations = DisableOptimizations,
+                TimeOptimize = Time1 - Time0,
+                TimeGenerateIL = Time2 - Time1,
+                TimeCreateDelegate = Time3 - Time2,
+            };
+        }
+    }
 }

@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu.Core.Cpu.VFpu
 {
-	public enum VfpuRegisterType
-	{
-		Cell, Vector, Matrix
-	}
+    public enum VfpuRegisterType
+    {
+        Cell,
+        Vector,
+        Matrix
+    }
 }

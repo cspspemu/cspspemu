@@ -86,7 +86,8 @@ namespace BrightIdeasSoftware
         /// <param name="olv">The ObjectListView that is being overlaid</param>
         /// <param name="g">The Graphics onto the given OLV</param>
         /// <param name="r">The content area of the OLV</param>
-        public virtual void Draw(ObjectListView olv, Graphics g, Rectangle r) {
+        public virtual void Draw(ObjectListView olv, Graphics g, Rectangle r)
+        {
         }
 
         #endregion
@@ -100,15 +101,17 @@ namespace BrightIdeasSoftware
          Description("How transparent should this overlay be"),
          DefaultValue(128),
          NotifyParentProperty(true)]
-        public int Transparency {
+        public int Transparency
+        {
             get { return this.transparency; }
             set { this.transparency = Math.Min(255, Math.Max(0, value)); }
         }
+
         private int transparency = 128;
 
         #endregion
     }
-    
+
     /// <summary>
     /// An overlay that will draw an image over the top of the ObjectListView
     /// </summary>
@@ -118,7 +121,8 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Create an ImageOverlay
         /// </summary>
-        public ImageOverlay() {
+        public ImageOverlay()
+        {
             this.Alignment = System.Drawing.ContentAlignment.BottomRight;
         }
 
@@ -131,10 +135,12 @@ namespace BrightIdeasSoftware
          Description("The horizontal inset by which the position of the overlay will be adjusted"),
          DefaultValue(20),
          NotifyParentProperty(true)]
-        public int InsetX {
+        public int InsetX
+        {
             get { return this.insetX; }
             set { this.insetX = Math.Max(0, value); }
         }
+
         private int insetX = 20;
 
         /// <summary>
@@ -144,10 +150,12 @@ namespace BrightIdeasSoftware
          Description("Gets or sets the vertical inset by which the position of the overlay will be adjusted"),
          DefaultValue(20),
          NotifyParentProperty(true)]
-        public int InsetY {
+        public int InsetY
+        {
             get { return this.insetY; }
             set { this.insetY = Math.Max(0, value); }
         }
+
         private int insetY = 20;
 
         #endregion
@@ -160,7 +168,8 @@ namespace BrightIdeasSoftware
         /// <param name="olv">The ObjectListView being decorated</param>
         /// <param name="g">The Graphics used for drawing</param>
         /// <param name="r">The bounds of the rendering</param>
-        public virtual void Draw(ObjectListView olv, Graphics g, Rectangle r) {
+        public virtual void Draw(ObjectListView olv, Graphics g, Rectangle r)
+        {
             Rectangle insetRect = r;
             insetRect.Inflate(-this.InsetX, -this.InsetY);
 
@@ -180,7 +189,8 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Create a TextOverlay
         /// </summary>
-        public TextOverlay() {
+        public TextOverlay()
+        {
             this.Alignment = System.Drawing.ContentAlignment.BottomRight;
         }
 
@@ -193,10 +203,12 @@ namespace BrightIdeasSoftware
          Description("The horizontal inset by which the position of the overlay will be adjusted"),
          DefaultValue(20),
          NotifyParentProperty(true)]
-        public int InsetX {
+        public int InsetX
+        {
             get { return this.insetX; }
             set { this.insetX = Math.Max(0, value); }
         }
+
         private int insetX = 20;
 
         /// <summary>
@@ -206,10 +218,12 @@ namespace BrightIdeasSoftware
          Description("Gets or sets the vertical inset by which the position of the overlay will be adjusted"),
          DefaultValue(20),
          NotifyParentProperty(true)]
-        public int InsetY {
+        public int InsetY
+        {
             get { return this.insetY; }
             set { this.insetY = Math.Max(0, value); }
         }
+
         private int insetY = 20;
 
         /// <summary>
@@ -218,9 +232,11 @@ namespace BrightIdeasSoftware
         [Browsable(false),
          Obsolete("Use CornerRounding instead", false),
          DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public bool RoundCorneredBorder {
+        public bool RoundCorneredBorder
+        {
             get { return this.CornerRounding > 0; }
-            set {
+            set
+            {
                 if (value)
                     this.CornerRounding = 16.0f;
                 else
@@ -238,7 +254,8 @@ namespace BrightIdeasSoftware
         /// <param name="olv">The ObjectListView being decorated</param>
         /// <param name="g">The Graphics used for drawing</param>
         /// <param name="r">The bounds of the rendering</param>
-        public virtual void Draw(ObjectListView olv, Graphics g, Rectangle r) {
+        public virtual void Draw(ObjectListView olv, Graphics g, Rectangle r)
+        {
             if (String.IsNullOrEmpty(this.Text))
                 return;
 
@@ -259,7 +276,8 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Create a BillboardOverlay
         /// </summary>
-        public BillboardOverlay() {
+        public BillboardOverlay()
+        {
             this.Transparency = 255;
             this.BackColor = Color.PeachPuff;
             this.TextColor = Color.Black;
@@ -270,10 +288,12 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Gets or sets where should the top left of the billboard be placed
         /// </summary>
-        public Point Location {
+        public Point Location
+        {
             get { return this.location; }
             set { this.location = value; }
         }
+
         private Point location;
 
         /// <summary>
@@ -282,7 +302,8 @@ namespace BrightIdeasSoftware
         /// <param name="olv">The ObjectListView being decorated</param>
         /// <param name="g">The Graphics used for drawing</param>
         /// <param name="r">The bounds of the rendering</param>
-        public override void Draw(ObjectListView olv, Graphics g, Rectangle r) {
+        public override void Draw(ObjectListView olv, Graphics g, Rectangle r)
+        {
             if (String.IsNullOrEmpty(this.Text))
                 return;
 

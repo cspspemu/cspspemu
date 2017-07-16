@@ -5,8 +5,8 @@ using System.Text;
 
 namespace CSPspEmu.Core.Cpu
 {
-	public interface IInterruptManager
-	{
-		void Interrupt(CpuThreadState CpuThreadState);
-	}
+    public interface IInterruptManager
+    {
+        void Interrupt(CpuThreadState CpuThreadState);
+    }
 }

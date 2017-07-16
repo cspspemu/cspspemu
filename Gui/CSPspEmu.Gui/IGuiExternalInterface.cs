@@ -2,25 +2,26 @@
 
 namespace CSPspEmu.Core
 {
-	public interface IGuiExternalInterface
-	{
-		InjectContext InjectContext { get; }
+    public interface IGuiExternalInterface
+    {
+        InjectContext InjectContext { get; }
 
-		// Load Methods
-		void LoadFile(string FileName);
+        // Load Methods
+        void LoadFile(string FileName);
 
-		// Running Methods
-		void Pause();
-		void Resume();
-		void PauseResume(Action Action);
-		bool IsPaused();
+        // Running Methods
+        void Pause();
 
-		// Debug
-		void ShowDebugInformation();
+        void Resume();
+        void PauseResume(Action Action);
+        bool IsPaused();
 
-		PluginInfo GetAudioPluginInfo();
-		PluginInfo GetGpuPluginInfo();
+        // Debug
+        void ShowDebugInformation();
 
-		void CaptureGpuFrame();
-	}
+        PluginInfo GetAudioPluginInfo();
+        PluginInfo GetGpuPluginInfo();
+
+        void CaptureGpuFrame();
+    }
 }

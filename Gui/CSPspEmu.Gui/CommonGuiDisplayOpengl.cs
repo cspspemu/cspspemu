@@ -22,333 +22,360 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu.Gui
 {
-	public class GuiRectangle
-	{
-		public int X, Y, Width, Height;
+    public class GuiRectangle
+    {
+        public int X, Y, Width, Height;
 
-		public GuiRectangle(int x, int y, int width, int height)
-		{
-			this.X = x;
-			this.Y = y;
-			this.Width = width;
-			this.Height = height;
-		}
-	}
+        public GuiRectangle(int x, int y, int width, int height)
+        {
+            this.X = x;
+            this.Y = y;
+            this.Width = width;
+            this.Height = height;
+        }
+    }
 
-	public interface IGuiWindowInfo
-	{
-		bool EnableRefreshing { get; }
-		void SwapBuffers();
-		GuiRectangle ClientRectangle { get; }
-	}
+    public interface IGuiWindowInfo
+    {
+        bool EnableRefreshing { get; }
+        void SwapBuffers();
+        GuiRectangle ClientRectangle { get; }
+    }
 
-	public struct BGRA
-	{
-		public byte B, G, R, A;
-	}
+    public struct BGRA
+    {
+        public byte B, G, R, A;
+    }
 
-	unsafe public class CommonGuiDisplayOpengl
-	{
-		IGuiExternalInterface IGuiExternalInterface;
-		IGuiWindowInfo IGuiWindowInfo;
+    unsafe public class CommonGuiDisplayOpengl
+    {
+        IGuiExternalInterface IGuiExternalInterface;
+        IGuiWindowInfo IGuiWindowInfo;
 
-		internal InjectContext InjectContext { get { return IGuiExternalInterface.InjectContext; } }
+        internal InjectContext InjectContext
+        {
+            get { return IGuiExternalInterface.InjectContext; }
+        }
 
-		internal GpuProcessor GpuProcessor { get { return InjectContext.GetInstance<GpuProcessor>(); } }
-		internal PspDisplay PspDisplay { get { return InjectContext.GetInstance<PspDisplay>(); } }
-		internal PspMemory Memory { get { return InjectContext.GetInstance<PspMemory>(); } }
+        internal GpuProcessor GpuProcessor
+        {
+            get { return InjectContext.GetInstance<GpuProcessor>(); }
+        }
 
-		GLTexture TexVram;
-		public Bitmap Buffer = new Bitmap(512, 272);
-		public Graphics BufferGraphics;
-		ulong LastHash = unchecked((ulong)-1);
-		OutputPixel[] BitmapDataDecode = new OutputPixel[512 * 512];
-		byte* OldFrameBuffer = (byte*)-1;
-		bool TextureVerticalFlip;
+        internal PspDisplay PspDisplay
+        {
+            get { return InjectContext.GetInstance<PspDisplay>(); }
+        }
 
-		public CommonGuiDisplayOpengl(IGuiExternalInterface IGuiExternalInterface, IGuiWindowInfo IGuiWindowInfo)
-		{
-			this.IGuiExternalInterface = IGuiExternalInterface;
-			this.IGuiWindowInfo = IGuiWindowInfo;
-		}
+        internal PspMemory Memory
+        {
+            get { return InjectContext.GetInstance<PspMemory>(); }
+        }
 
-		private void GetTexOpengl(Action<TexturePair> Action)
-		{
-			//Console.WriteLine("OpenglGpuImpl.FrameBufferTexture: {0}, {1}, {2}", OpenglGpuImpl.FrameBufferTexture, GL.IsTexture(OpenglGpuImpl.FrameBufferTexture), GL.IsTexture(2));
-			var OpenglGpuImpl = (GpuProcessor.GpuImpl as OpenglGpuImpl);
-			if (OpenglGpuImpl == null)
-			{
-				Action(new TexturePair() { Color = GLTexture.Wrap(0), Depth = GLTexture.Wrap(0) });
-				return;
-			}
+        GLTexture TexVram;
+        public Bitmap Buffer = new Bitmap(512, 272);
+        public Graphics BufferGraphics;
+        ulong LastHash = unchecked((ulong) -1);
+        OutputPixel[] BitmapDataDecode = new OutputPixel[512 * 512];
+        byte* OldFrameBuffer = (byte*) -1;
+        bool TextureVerticalFlip;
 
-			OpenglGpuImpl.RenderbufferManager.GetDrawBufferTextureAndLock(new DrawBufferKey()
-			{
-				Address = PspDisplay.CurrentInfo.FrameAddress,
-				//Width = PspDisplayForm.Singleton.PspDisplay.CurrentInfo.Width,
-				//Height = PspDisplayForm.Singleton.PspDisplay.CurrentInfo.Height
-			}, (DrawBuffer) =>
-			{
+        public CommonGuiDisplayOpengl(IGuiExternalInterface IGuiExternalInterface, IGuiWindowInfo IGuiWindowInfo)
+        {
+            this.IGuiExternalInterface = IGuiExternalInterface;
+            this.IGuiWindowInfo = IGuiWindowInfo;
+        }
 
-				if (DrawBuffer == null)
-				{
-					Action(null);
-					return;
-				}
-				else
-				{
-					var RenderTarget = DrawBuffer.RenderTarget;
-					if (GL.glIsTexture(RenderTarget.TextureColor.Texture))
-					{
-						TextureVerticalFlip = false;
-						Action(new TexturePair() { Color = RenderTarget.TextureColor, Depth = RenderTarget.TextureDepth });
-						return;
-					}
-					else
-					{
-						Console.WriteLine("Not shared contexts");
-					}
-				}
-			});
-		}
+        private void GetTexOpengl(Action<TexturePair> Action)
+        {
+            //Console.WriteLine("OpenglGpuImpl.FrameBufferTexture: {0}, {1}, {2}", OpenglGpuImpl.FrameBufferTexture, GL.IsTexture(OpenglGpuImpl.FrameBufferTexture), GL.IsTexture(2));
+            var OpenglGpuImpl = (GpuProcessor.GpuImpl as OpenglGpuImpl);
+            if (OpenglGpuImpl == null)
+            {
+                Action(new TexturePair() {Color = GLTexture.Wrap(0), Depth = GLTexture.Wrap(0)});
+                return;
+            }
 
-		private void GetTexVram(Action<TexturePair> Action)
-		{
-			if (TexVram == null)
-			{
-				TexVram = GLTexture.Create().SetFormat(TextureFormat.RGBA).SetSize(1, 1);
-			}
+            OpenglGpuImpl.RenderbufferManager.GetDrawBufferTextureAndLock(new DrawBufferKey()
+            {
+                Address = PspDisplay.CurrentInfo.FrameAddress,
+                //Width = PspDisplayForm.Singleton.PspDisplay.CurrentInfo.Width,
+                //Height = PspDisplayForm.Singleton.PspDisplay.CurrentInfo.Height
+            }, (DrawBuffer) =>
+            {
+                if (DrawBuffer == null)
+                {
+                    Action(null);
+                    return;
+                }
+                else
+                {
+                    var RenderTarget = DrawBuffer.RenderTarget;
+                    if (GL.glIsTexture(RenderTarget.TextureColor.Texture))
+                    {
+                        TextureVerticalFlip = false;
+                        Action(new TexturePair()
+                        {
+                            Color = RenderTarget.TextureColor,
+                            Depth = RenderTarget.TextureDepth
+                        });
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not shared contexts");
+                    }
+                }
+            });
+        }
 
-			//Console.WriteLine(TexVram);
+        private void GetTexVram(Action<TexturePair> Action)
+        {
+            if (TexVram == null)
+            {
+                TexVram = GLTexture.Create().SetFormat(TextureFormat.RGBA).SetSize(1, 1);
+            }
 
-			TexVram.Bind();
+            //Console.WriteLine(TexVram);
 
-			if (BufferGraphics == null)
-			{
-				BufferGraphics = Graphics.FromImage(Buffer);
-				//BufferGraphics.Clear(Color.Red);
-				BufferGraphics.Clear(Color.Black);
-			}
+            TexVram.Bind();
 
-			//if (PspDisplayForm.Singleton.WindowState == FormWindowState.Minimized)
-			//{
-			//	return;
-			//}
-			//
-			//if (!PspDisplayForm.Singleton.EnableRefreshing)
-			//{
-			//	return;
-			//}
+            if (BufferGraphics == null)
+            {
+                BufferGraphics = Graphics.FromImage(Buffer);
+                //BufferGraphics.Clear(Color.Red);
+                BufferGraphics.Clear(Color.Black);
+            }
 
-			if (IGuiWindowInfo.EnableRefreshing)
-			{
-				try
-				{
-					int Width = 512;
-					int Height = 272;
-					var FrameAddress = PspDisplay.CurrentInfo.FrameAddress;
-					byte* FrameBuffer = null;
-					byte* DepthBuffer = null;
-					try
-					{
-						FrameBuffer = (byte*)Memory.PspAddressToPointerSafe(
-							FrameAddress,
-							PixelFormatDecoder.GetPixelsSize(PspDisplay.CurrentInfo.PixelFormat, Width * Height)
-						);
-					}
-					catch (Exception Exception)
-					{
-						Console.Error.WriteLine(Exception);
-					}
+            //if (PspDisplayForm.Singleton.WindowState == FormWindowState.Minimized)
+            //{
+            //	return;
+            //}
+            //
+            //if (!PspDisplayForm.Singleton.EnableRefreshing)
+            //{
+            //	return;
+            //}
 
-					//Console.Error.WriteLine("FrameBuffer == 0x{0:X}!!", (long)FrameBuffer);
+            if (IGuiWindowInfo.EnableRefreshing)
+            {
+                try
+                {
+                    int Width = 512;
+                    int Height = 272;
+                    var FrameAddress = PspDisplay.CurrentInfo.FrameAddress;
+                    byte* FrameBuffer = null;
+                    byte* DepthBuffer = null;
+                    try
+                    {
+                        FrameBuffer = (byte*) Memory.PspAddressToPointerSafe(
+                            FrameAddress,
+                            PixelFormatDecoder.GetPixelsSize(PspDisplay.CurrentInfo.PixelFormat, Width * Height)
+                        );
+                    }
+                    catch (Exception Exception)
+                    {
+                        Console.Error.WriteLine(Exception);
+                    }
 
-					if (FrameBuffer == null)
-					{
-						//Console.Error.WriteLine("FrameBuffer == null!!");
-					}
+                    //Console.Error.WriteLine("FrameBuffer == 0x{0:X}!!", (long)FrameBuffer);
 
-					//Console.WriteLine("{0:X}", Address);
+                    if (FrameBuffer == null)
+                    {
+                        //Console.Error.WriteLine("FrameBuffer == null!!");
+                    }
 
-					var Hash = PixelFormatDecoder.Hash(
-						PspDisplay.CurrentInfo.PixelFormat,
-						(void*)FrameBuffer,
-						Width, Height
-					);
+                    //Console.WriteLine("{0:X}", Address);
 
-					if (Hash != LastHash)
-					{
-						LastHash = Hash;
-						Buffer.LockBitsUnlock(System.Drawing.Imaging.PixelFormat.Format32bppArgb, (BitmapData) =>
-						{
-							var Count = Width * Height;
-							fixed (OutputPixel* BitmapDataDecodePtr = BitmapDataDecode)
-							{
-								var BitmapDataPtr = (BGRA*)BitmapData.Scan0.ToPointer();
+                    var Hash = PixelFormatDecoder.Hash(
+                        PspDisplay.CurrentInfo.PixelFormat,
+                        (void*) FrameBuffer,
+                        Width, Height
+                    );
 
-								//var LastRow = (FrameBuffer + 512 * 260 * 4 + 4 * 10);
-								//Console.WriteLine("{0},{1},{2},{3}", LastRow[0], LastRow[1], LastRow[2], LastRow[3]);
+                    if (Hash != LastHash)
+                    {
+                        LastHash = Hash;
+                        Buffer.LockBitsUnlock(System.Drawing.Imaging.PixelFormat.Format32bppArgb, (BitmapData) =>
+                        {
+                            var Count = Width * Height;
+                            fixed (OutputPixel* BitmapDataDecodePtr = BitmapDataDecode)
+                            {
+                                var BitmapDataPtr = (BGRA*) BitmapData.Scan0.ToPointer();
 
-								if (FrameBuffer == null)
-								{
-									if (OldFrameBuffer != null)
-									{
-										Console.Error.WriteLine("FrameBuffer == null");
-									}
-								}
-								else if (BitmapDataPtr == null)
-								{
-									Console.Error.WriteLine("BitmapDataPtr == null");
-								}
-								else
-								{
-									PixelFormatDecoder.Decode(
-										PspDisplay.CurrentInfo.PixelFormat,
-										(void*)FrameBuffer,
-										BitmapDataDecodePtr,
-										Width, Height
-									);
-								}
+                                //var LastRow = (FrameBuffer + 512 * 260 * 4 + 4 * 10);
+                                //Console.WriteLine("{0},{1},{2},{3}", LastRow[0], LastRow[1], LastRow[2], LastRow[3]);
 
-								// Converts the decoded data to Window's format.
-								for (int n = 0; n < Count; n++)
-								{
-									BitmapDataPtr[n].R = BitmapDataDecodePtr[n].B;
-									BitmapDataPtr[n].G = BitmapDataDecodePtr[n].G;
-									BitmapDataPtr[n].B = BitmapDataDecodePtr[n].R;
-									BitmapDataPtr[n].A = 0xFF;
-								}
+                                if (FrameBuffer == null)
+                                {
+                                    if (OldFrameBuffer != null)
+                                    {
+                                        Console.Error.WriteLine("FrameBuffer == null");
+                                    }
+                                }
+                                else if (BitmapDataPtr == null)
+                                {
+                                    Console.Error.WriteLine("BitmapDataPtr == null");
+                                }
+                                else
+                                {
+                                    PixelFormatDecoder.Decode(
+                                        PspDisplay.CurrentInfo.PixelFormat,
+                                        (void*) FrameBuffer,
+                                        BitmapDataDecodePtr,
+                                        Width, Height
+                                    );
+                                }
 
-								OldFrameBuffer = FrameBuffer;
+                                // Converts the decoded data to Window's format.
+                                for (int n = 0; n < Count; n++)
+                                {
+                                    BitmapDataPtr[n].R = BitmapDataDecodePtr[n].B;
+                                    BitmapDataPtr[n].G = BitmapDataDecodePtr[n].G;
+                                    BitmapDataPtr[n].B = BitmapDataDecodePtr[n].R;
+                                    BitmapDataPtr[n].A = 0xFF;
+                                }
 
-								GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, 512, 272, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, BitmapDataPtr);
-								TextureVerticalFlip = true;
-							}
-						});
-					}
-					//else
-					{
-						//Console.WriteLine("Display not updated!");
-					}
-				}
-				catch (Exception Exception)
-				{
-					Console.Error.WriteLine(Exception);
-				}
-			}
+                                OldFrameBuffer = FrameBuffer;
 
-			Action(new TexturePair() { Color = TexVram, Depth = GLTexture.Wrap(0) });
-			return;
-		}
+                                GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, 512, 272, 0, GL.GL_RGBA,
+                                    GL.GL_UNSIGNED_BYTE, BitmapDataPtr);
+                                TextureVerticalFlip = true;
+                            }
+                        });
+                    }
+                    //else
+                    {
+                        //Console.WriteLine("Display not updated!");
+                    }
+                }
+                catch (Exception Exception)
+                {
+                    Console.Error.WriteLine(Exception);
+                }
+            }
 
-		public class TexturePair
-		{
-			public GLTexture Color;
-			public GLTexture Depth;
-		}
+            Action(new TexturePair() {Color = TexVram, Depth = GLTexture.Wrap(0)});
+            return;
+        }
 
-		private void GetTex(Action<TexturePair> Action)
-		{
-			//BindTexVram(); return;
+        public class TexturePair
+        {
+            public GLTexture Color;
+            public GLTexture Depth;
+        }
 
-			if (!PspDisplay.CurrentInfo.PlayingVideo && GpuProcessor.UsingGe)
-			{
-				GetTexOpengl(Action);
-				return;
-			}
-			
-			GetTexVram(Action);
-			return;
-		}
+        private void GetTex(Action<TexturePair> Action)
+        {
+            //BindTexVram(); return;
 
-		GLShader Shader;
-		GLBuffer VertexBuffer;
-		GLBuffer TexCoordsBuffer;
-		//GLTexture TestTexture;
-		public class ShaderInfoClass
-		{
-			public GLAttribute position;
-			public GLAttribute texCoords;
-			public GLUniform texture;
-		}
-		ShaderInfoClass ShaderInfo = new ShaderInfoClass();
-		Smaa Smaa;
+            if (!PspDisplay.CurrentInfo.PlayingVideo && GpuProcessor.UsingGe)
+            {
+                GetTexOpengl(Action);
+                return;
+            }
 
-		private void Initialize()
-		{
-			Smaa = new Smaa();
+            GetTexVram(Action);
+            return;
+        }
 
-			var prefix = @"
+        GLShader Shader;
+        GLBuffer VertexBuffer;
+
+        GLBuffer TexCoordsBuffer;
+
+        //GLTexture TestTexture;
+        public class ShaderInfoClass
+        {
+            public GLAttribute position;
+            public GLAttribute texCoords;
+            public GLUniform texture;
+        }
+
+        ShaderInfoClass ShaderInfo = new ShaderInfoClass();
+        Smaa Smaa;
+
+        private void Initialize()
+        {
+            Smaa = new Smaa();
+
+            var prefix = @"
 				#ifndef GL_ES
 				#version 330
 				#endif
 			";
 
-			Shader = new GLShader(
-				prefix + "attribute vec4 position; attribute vec4 texCoords; varying vec2 v_texCoord; void main() { gl_Position = position; v_texCoord = texCoords.xy; }",
-				prefix + "uniform sampler2D texture; varying vec2 v_texCoord; void main() { gl_FragColor = texture2D(texture, v_texCoord); }"
-			);
+            Shader = new GLShader(
+                prefix +
+                "attribute vec4 position; attribute vec4 texCoords; varying vec2 v_texCoord; void main() { gl_Position = position; v_texCoord = texCoords.xy; }",
+                prefix +
+                "uniform sampler2D texture; varying vec2 v_texCoord; void main() { gl_FragColor = texture2D(texture, v_texCoord); }"
+            );
 
-			VertexBuffer = GLBuffer.Create().SetData(CSharpPlatform.RectangleF.FromCoords(-1, -1, +1, +1).GetFloat2TriangleStripCoords());
-			
-			Shader.BindUniformsAndAttributes(ShaderInfo);
+            VertexBuffer = GLBuffer.Create()
+                .SetData(CSharpPlatform.RectangleF.FromCoords(-1, -1, +1, +1).GetFloat2TriangleStripCoords());
 
-			// TestTexture = GLTexture.Create().SetFormat(TextureFormat.RGBA).SetSize(2, 2).SetData(new uint[] { 0xFF0000FF, 0xFF00FFFF, 0xFFFF00FF, 0xFFFFFFFF });
-		}
+            Shader.BindUniformsAndAttributes(ShaderInfo);
 
-		//GLTexture TestTexture;
+            // TestTexture = GLTexture.Create().SetFormat(TextureFormat.RGBA).SetSize(2, 2).SetData(new uint[] { 0xFF0000FF, 0xFF00FFFF, 0xFFFF00FF, 0xFFFFFFFF });
+        }
 
-		public void DrawVram(bool EnableSmaa)
-		{
-			if (Shader == null) Initialize();
+        //GLTexture TestTexture;
 
-			//int RectWidth = 512;
-			//int RectHeight = 272;
-			var Rectangle = IGuiWindowInfo.ClientRectangle;
+        public void DrawVram(bool EnableSmaa)
+        {
+            if (Shader == null) Initialize();
 
-			GL.glClearColor(0, 0, 0, 1);
-			GL.glClear(GL.GL_COLOR_BUFFER_BIT);
-			//IGuiWindowInfo.SwapBuffers();
-			//return;
+            //int RectWidth = 512;
+            //int RectHeight = 272;
+            var Rectangle = IGuiWindowInfo.ClientRectangle;
 
-			if (
-				(PspDisplay.CurrentInfo.Enabled || PspDisplay.CurrentInfo.PlayingVideo)
-			)
-			{
-				GetTex((Tex) =>
-				{
-					//Console.Out.WriteLineColored(ConsoleColor.Red, "{0}", Tex.Texture);
-					if (Tex != null && Tex.Color.Texture != 0)
-					{
-						var TexColor = Tex.Color;
-						var TexDepth = Tex.Depth;
+            GL.glClearColor(0, 0, 0, 1);
+            GL.glClear(GL.GL_COLOR_BUFFER_BIT);
+            //IGuiWindowInfo.SwapBuffers();
+            //return;
 
-						if (EnableSmaa)
-						{
-							if (TexDepth.Texture != 0)
-							{
-								TexColor = Smaa.Process(TexColor, TexDepth);
-							}
-						}
+            if (
+                (PspDisplay.CurrentInfo.Enabled || PspDisplay.CurrentInfo.PlayingVideo)
+            )
+            {
+                GetTex((Tex) =>
+                {
+                    //Console.Out.WriteLineColored(ConsoleColor.Red, "{0}", Tex.Texture);
+                    if (Tex != null && Tex.Color.Texture != 0)
+                    {
+                        var TexColor = Tex.Color;
+                        var TexDepth = Tex.Depth;
 
-						GL.glViewport(Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
+                        if (EnableSmaa)
+                        {
+                            if (TexDepth.Texture != 0)
+                            {
+                                TexColor = Smaa.Process(TexColor, TexDepth);
+                            }
+                        }
 
-						Shader.Draw(GLGeometry.GL_TRIANGLE_STRIP, 4, () =>
-						{
-							var TextureRect = CSharpPlatform.RectangleF.FromCoords(0, 0, (float)PspDisplay.CurrentInfo.Width / 512f, (float)PspDisplay.CurrentInfo.Height / 272f);
-							if (TextureVerticalFlip) TextureRect = TextureRect.VFlip();
-							TexCoordsBuffer = GLBuffer.Create().SetData(TextureRect.GetFloat2TriangleStripCoords());
+                        GL.glViewport(Rectangle.X, Rectangle.Y, Rectangle.Width, Rectangle.Height);
 
-							ShaderInfo.texture.Set(GLTextureUnit.CreateAtIndex(0).SetFiltering(GLScaleFilter.Nearest).SetWrap(GLWrap.ClampToEdge).SetTexture(TexColor));
-							//ShaderInfo.texture.Set(GLTextureUnit.CreateAtIndex(0).SetFiltering(GLScaleFilter.Nearest).SetWrap(GLWrap.ClampToEdge).SetTexture(TexDepth));
-							ShaderInfo.position.SetData<float>(VertexBuffer, 2);
-							ShaderInfo.texCoords.SetData<float>(TexCoordsBuffer, 2);
-						});
-					}
-				});
-			}
+                        Shader.Draw(GLGeometry.GL_TRIANGLE_STRIP, 4, () =>
+                        {
+                            var TextureRect = CSharpPlatform.RectangleF.FromCoords(0, 0,
+                                (float) PspDisplay.CurrentInfo.Width / 512f,
+                                (float) PspDisplay.CurrentInfo.Height / 272f);
+                            if (TextureVerticalFlip) TextureRect = TextureRect.VFlip();
+                            TexCoordsBuffer = GLBuffer.Create().SetData(TextureRect.GetFloat2TriangleStripCoords());
 
-			IGuiWindowInfo.SwapBuffers();
-		}
-	}
+                            ShaderInfo.texture.Set(GLTextureUnit.CreateAtIndex(0).SetFiltering(GLScaleFilter.Nearest)
+                                .SetWrap(GLWrap.ClampToEdge).SetTexture(TexColor));
+                            //ShaderInfo.texture.Set(GLTextureUnit.CreateAtIndex(0).SetFiltering(GLScaleFilter.Nearest).SetWrap(GLWrap.ClampToEdge).SetTexture(TexDepth));
+                            ShaderInfo.position.SetData<float>(VertexBuffer, 2);
+                            ShaderInfo.texCoords.SetData<float>(TexCoordsBuffer, 2);
+                        });
+                    }
+                });
+            }
+
+            IGuiWindowInfo.SwapBuffers();
+        }
+    }
 }

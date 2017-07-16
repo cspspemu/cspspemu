@@ -10,150 +10,182 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu.Gui
 {
-	[Flags]
-	public enum PspCtrlAnalog
-	{
-		None = 0,
-		Left = (1 << 0),
-		Right = (1 << 1),
-		Up = (1 << 2),
-		Down = (1 << 3),
-	}
+    [Flags]
+    public enum PspCtrlAnalog
+    {
+        None = 0,
+        Left = (1 << 0),
+        Right = (1 << 1),
+        Up = (1 << 2),
+        Down = (1 << 3),
+    }
 
-	public class CommonGuiInput
-	{
-		/// <summary>
-		/// 
-		/// </summary>
-		internal SceCtrlData SceCtrlData;
+    public class CommonGuiInput
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        internal SceCtrlData SceCtrlData;
 
-		IGuiExternalInterface IGuiExternalInterface;
+        IGuiExternalInterface IGuiExternalInterface;
 
-		PspStoredConfig StoredConfig { get { return IGuiExternalInterface.InjectContext.GetInstance<PspStoredConfig>(); } }
-		PspController PspController { get { return IGuiExternalInterface.InjectContext.GetInstance<PspController>(); } }
+        PspStoredConfig StoredConfig
+        {
+            get { return IGuiExternalInterface.InjectContext.GetInstance<PspStoredConfig>(); }
+        }
 
-		public CommonGuiInput(IGuiExternalInterface IGuiExternalInterface)
-		{
-			this.IGuiExternalInterface = IGuiExternalInterface;
-		}
+        PspController PspController
+        {
+            get { return IGuiExternalInterface.InjectContext.GetInstance<PspController>(); }
+        }
 
-		//float AnalogX, AnalogY;
-		bool AnalogUp = false;
-		bool AnalogDown = false;
-		bool AnalogLeft = false;
-		bool AnalogRight = false;
+        public CommonGuiInput(IGuiExternalInterface IGuiExternalInterface)
+        {
+            this.IGuiExternalInterface = IGuiExternalInterface;
+        }
 
-		private Dictionary<string, PspCtrlButtons> KeyMap = new Dictionary<string, PspCtrlButtons>();
-		private Dictionary<string, PspCtrlAnalog> AnalogKeyMap = new Dictionary<string, PspCtrlAnalog>();
-		float AnalogX = 0.0f, AnalogY = 0.0f;
+        //float AnalogX, AnalogY;
+        bool AnalogUp = false;
 
-		public string NormalizeKeyName(string Key)
-		{
-			return Key.ToUpperInvariant();
-		}
+        bool AnalogDown = false;
+        bool AnalogLeft = false;
+        bool AnalogRight = false;
 
-		public void ReLoadControllerConfig()
-		{
-			var ControllerConfig = StoredConfig.ControllerConfig;
+        private Dictionary<string, PspCtrlButtons> KeyMap = new Dictionary<string, PspCtrlButtons>();
+        private Dictionary<string, PspCtrlAnalog> AnalogKeyMap = new Dictionary<string, PspCtrlAnalog>();
+        float AnalogX = 0.0f, AnalogY = 0.0f;
 
-			AnalogKeyMap = new Dictionary<string, PspCtrlAnalog>();
-			{
-				AnalogKeyMap[NormalizeKeyName(ControllerConfig.AnalogLeft)] = PspCtrlAnalog.Left;
-				AnalogKeyMap[NormalizeKeyName(ControllerConfig.AnalogRight)] = PspCtrlAnalog.Right;
-				AnalogKeyMap[NormalizeKeyName(ControllerConfig.AnalogUp)] = PspCtrlAnalog.Up;
-				AnalogKeyMap[NormalizeKeyName(ControllerConfig.AnalogDown)] = PspCtrlAnalog.Down;
-			}
+        public string NormalizeKeyName(string Key)
+        {
+            return Key.ToUpperInvariant();
+        }
 
-			KeyMap = new Dictionary<string, PspCtrlButtons>();
-			{
-				KeyMap[NormalizeKeyName(ControllerConfig.DigitalLeft)] = PspCtrlButtons.Left;
-				KeyMap[NormalizeKeyName(ControllerConfig.DigitalRight)] = PspCtrlButtons.Right;
-				KeyMap[NormalizeKeyName(ControllerConfig.DigitalUp)] = PspCtrlButtons.Up;
-				KeyMap[NormalizeKeyName(ControllerConfig.DigitalDown)] = PspCtrlButtons.Down;
+        public void ReLoadControllerConfig()
+        {
+            var ControllerConfig = StoredConfig.ControllerConfig;
 
-				KeyMap[NormalizeKeyName(ControllerConfig.TriangleButton)] = PspCtrlButtons.Triangle;
-				KeyMap[NormalizeKeyName(ControllerConfig.CrossButton)] = PspCtrlButtons.Cross;
-				KeyMap[NormalizeKeyName(ControllerConfig.SquareButton)] = PspCtrlButtons.Square;
-				KeyMap[NormalizeKeyName(ControllerConfig.CircleButton)] = PspCtrlButtons.Circle;
+            AnalogKeyMap = new Dictionary<string, PspCtrlAnalog>();
+            {
+                AnalogKeyMap[NormalizeKeyName(ControllerConfig.AnalogLeft)] = PspCtrlAnalog.Left;
+                AnalogKeyMap[NormalizeKeyName(ControllerConfig.AnalogRight)] = PspCtrlAnalog.Right;
+                AnalogKeyMap[NormalizeKeyName(ControllerConfig.AnalogUp)] = PspCtrlAnalog.Up;
+                AnalogKeyMap[NormalizeKeyName(ControllerConfig.AnalogDown)] = PspCtrlAnalog.Down;
+            }
 
-				KeyMap[NormalizeKeyName(ControllerConfig.StartButton)] = PspCtrlButtons.Start;
-				KeyMap[NormalizeKeyName(ControllerConfig.SelectButton)] = PspCtrlButtons.Select;
+            KeyMap = new Dictionary<string, PspCtrlButtons>();
+            {
+                KeyMap[NormalizeKeyName(ControllerConfig.DigitalLeft)] = PspCtrlButtons.Left;
+                KeyMap[NormalizeKeyName(ControllerConfig.DigitalRight)] = PspCtrlButtons.Right;
+                KeyMap[NormalizeKeyName(ControllerConfig.DigitalUp)] = PspCtrlButtons.Up;
+                KeyMap[NormalizeKeyName(ControllerConfig.DigitalDown)] = PspCtrlButtons.Down;
 
-				KeyMap[NormalizeKeyName(ControllerConfig.LeftTriggerButton)] = PspCtrlButtons.LeftTrigger;
-				KeyMap[NormalizeKeyName(ControllerConfig.RightTriggerButton)] = PspCtrlButtons.RightTrigger;
-			}
+                KeyMap[NormalizeKeyName(ControllerConfig.TriangleButton)] = PspCtrlButtons.Triangle;
+                KeyMap[NormalizeKeyName(ControllerConfig.CrossButton)] = PspCtrlButtons.Cross;
+                KeyMap[NormalizeKeyName(ControllerConfig.SquareButton)] = PspCtrlButtons.Square;
+                KeyMap[NormalizeKeyName(ControllerConfig.CircleButton)] = PspCtrlButtons.Circle;
 
-			Console.WriteLine("KeyMapping:");
+                KeyMap[NormalizeKeyName(ControllerConfig.StartButton)] = PspCtrlButtons.Start;
+                KeyMap[NormalizeKeyName(ControllerConfig.SelectButton)] = PspCtrlButtons.Select;
 
-			foreach (var Map in AnalogKeyMap)
-			{
-				Console.WriteLine("  '{0}' -> PspCtrlAnalog.{1}", Map.Key, Map.Value);
-			}
+                KeyMap[NormalizeKeyName(ControllerConfig.LeftTriggerButton)] = PspCtrlButtons.LeftTrigger;
+                KeyMap[NormalizeKeyName(ControllerConfig.RightTriggerButton)] = PspCtrlButtons.RightTrigger;
+            }
 
-			foreach (var Map in KeyMap)
-			{
-				Console.WriteLine("  '{0}' -> PspCtrlButtons.{1}", Map.Key, Map.Value);
-			}
-		}
+            Console.WriteLine("KeyMapping:");
 
-		private PspCtrlButtons GetButtonsFromKeys(string Key)
-		{
-			return KeyMap.GetOrDefault(Key, PspCtrlButtons.None);
-		}
+            foreach (var Map in AnalogKeyMap)
+            {
+                Console.WriteLine("  '{0}' -> PspCtrlAnalog.{1}", Map.Key, Map.Value);
+            }
 
-		private void TryUpdateAnalog(string Key, bool Press)
-		{
-			switch (AnalogKeyMap.GetOrDefault(Key, PspCtrlAnalog.None))
-			{
-				case PspCtrlAnalog.Up: AnalogUp = Press; break;
-				case PspCtrlAnalog.Down: AnalogDown = Press; break;
-				case PspCtrlAnalog.Left: AnalogLeft = Press; break;
-				case PspCtrlAnalog.Right: AnalogRight = Press; break;
-			}
-		}
+            foreach (var Map in KeyMap)
+            {
+                Console.WriteLine("  '{0}' -> PspCtrlButtons.{1}", Map.Key, Map.Value);
+            }
+        }
 
-		public void SendControllerFrame()
-		{
-			SceCtrlData.X = 0;
-			SceCtrlData.Y = 0;
+        private PspCtrlButtons GetButtonsFromKeys(string Key)
+        {
+            return KeyMap.GetOrDefault(Key, PspCtrlButtons.None);
+        }
 
-			bool AnalogXUpdated = false;
-			bool AnalogYUpdated = false;
-			if (AnalogUp) { AnalogY -= 0.4f; AnalogYUpdated = true; }
-			if (AnalogDown) { AnalogY += 0.4f; AnalogYUpdated = true; }
-			if (AnalogLeft) { AnalogX -= 0.4f; AnalogXUpdated = true; }
-			if (AnalogRight) { AnalogX += 0.4f; AnalogXUpdated = true; }
-			if (!AnalogXUpdated) AnalogX /= 2.0f;
-			if (!AnalogYUpdated) AnalogY /= 2.0f;
+        private void TryUpdateAnalog(string Key, bool Press)
+        {
+            switch (AnalogKeyMap.GetOrDefault(Key, PspCtrlAnalog.None))
+            {
+                case PspCtrlAnalog.Up:
+                    AnalogUp = Press;
+                    break;
+                case PspCtrlAnalog.Down:
+                    AnalogDown = Press;
+                    break;
+                case PspCtrlAnalog.Left:
+                    AnalogLeft = Press;
+                    break;
+                case PspCtrlAnalog.Right:
+                    AnalogRight = Press;
+                    break;
+            }
+        }
 
-			AnalogX = MathFloat.Clamp(AnalogX, -1.0f, 1.0f);
-			AnalogY = MathFloat.Clamp(AnalogY, -1.0f, 1.0f);
+        public void SendControllerFrame()
+        {
+            SceCtrlData.X = 0;
+            SceCtrlData.Y = 0;
 
-			//Console.WriteLine("{0}, {1}", AnalogX, AnalogY);
+            bool AnalogXUpdated = false;
+            bool AnalogYUpdated = false;
+            if (AnalogUp)
+            {
+                AnalogY -= 0.4f;
+                AnalogYUpdated = true;
+            }
+            if (AnalogDown)
+            {
+                AnalogY += 0.4f;
+                AnalogYUpdated = true;
+            }
+            if (AnalogLeft)
+            {
+                AnalogX -= 0.4f;
+                AnalogXUpdated = true;
+            }
+            if (AnalogRight)
+            {
+                AnalogX += 0.4f;
+                AnalogXUpdated = true;
+            }
+            if (!AnalogXUpdated) AnalogX /= 2.0f;
+            if (!AnalogYUpdated) AnalogY /= 2.0f;
 
-			SceCtrlData.X = AnalogX;
-			SceCtrlData.Y = AnalogY;
+            AnalogX = MathFloat.Clamp(AnalogX, -1.0f, 1.0f);
+            AnalogY = MathFloat.Clamp(AnalogY, -1.0f, 1.0f);
 
-			PspController.InsertSceCtrlData(SceCtrlData);
-			//Console.WriteLine("CommonGuiInput.SendControllerFrame()");
-		}
+            //Console.WriteLine("{0}, {1}", AnalogX, AnalogY);
 
-		public void KeyPress(string Key)
-		{
-			Key = NormalizeKeyName(Key);
-			TryUpdateAnalog(Key, true);
-			var Buttons = GetButtonsFromKeys(Key);
-			//Console.WriteLine("KeyPress: {0}, {1}", Key, Buttons);
-			SceCtrlData.UpdateButtons(Buttons, true);
-		}
+            SceCtrlData.X = AnalogX;
+            SceCtrlData.Y = AnalogY;
 
-		public void KeyRelease(string Key)
-		{
-			Key = NormalizeKeyName(Key);
-			TryUpdateAnalog(Key, false);
-			var Buttons = GetButtonsFromKeys(Key);
-			//Console.WriteLine("KeyRelease: {0}, {1}", Key, Buttons);
-			SceCtrlData.UpdateButtons(Buttons, false);
-		}
-	}
+            PspController.InsertSceCtrlData(SceCtrlData);
+            //Console.WriteLine("CommonGuiInput.SendControllerFrame()");
+        }
+
+        public void KeyPress(string Key)
+        {
+            Key = NormalizeKeyName(Key);
+            TryUpdateAnalog(Key, true);
+            var Buttons = GetButtonsFromKeys(Key);
+            //Console.WriteLine("KeyPress: {0}, {1}", Key, Buttons);
+            SceCtrlData.UpdateButtons(Buttons, true);
+        }
+
+        public void KeyRelease(string Key)
+        {
+            Key = NormalizeKeyName(Key);
+            TryUpdateAnalog(Key, false);
+            var Buttons = GetButtonsFromKeys(Key);
+            //Console.WriteLine("KeyRelease: {0}, {1}", Key, Buttons);
+            SceCtrlData.UpdateButtons(Buttons, false);
+        }
+    }
 }

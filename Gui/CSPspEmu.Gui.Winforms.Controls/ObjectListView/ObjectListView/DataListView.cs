@@ -43,7 +43,6 @@ using System.Windows.Forms;
 
 namespace BrightIdeasSoftware
 {
-
     /// <summary>
     /// A DataListView is a ListView that can be bound to a datasource (which would normally be a DataTable or DataView).
     /// </summary>
@@ -80,7 +79,8 @@ namespace BrightIdeasSoftware
         [Category("Data"),
          Description("Should the control automatically generate columns from the DataSource"),
          DefaultValue(true)]
-        public bool AutoGenerateColumns {
+        public bool AutoGenerateColumns
+        {
             get { return this.Adapter.AutoGenerateColumns; }
             set { this.Adapter.AutoGenerateColumns = value; }
         }
@@ -111,7 +111,7 @@ namespace BrightIdeasSoftware
         /// <see cref="ObjectListView.Reset()"/>.</para>
         /// </remarks>
         [Category("Data"),
-        TypeConverter("System.Windows.Forms.Design.DataSourceConverter, System.Design")]
+         TypeConverter("System.Windows.Forms.Design.DataSourceConverter, System.Design")]
         public virtual Object DataSource
         {
             get { return this.Adapter.DataSource; }
@@ -139,13 +139,16 @@ namespace BrightIdeasSoftware
         /// Gets or sets the DataSourceAdaptor that does the bulk of the work needed
         /// for data binding.
         /// </summary>
-        protected DataSourceAdapter Adapter {
-            get {
+        protected DataSourceAdapter Adapter
+        {
+            get
+            {
                 Debug.Assert(adapter != null, "Data adapter should not be null");
-                return adapter; 
+                return adapter;
             }
             set { adapter = value; }
         }
+
         private DataSourceAdapter adapter;
 
         #endregion

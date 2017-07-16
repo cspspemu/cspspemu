@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CSPspEmu.Hle
 {
-	public class HleLibrary
-	{
-	}
+    public class HleLibrary
+    {
+    }
 }

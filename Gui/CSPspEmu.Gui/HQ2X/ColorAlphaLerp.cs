@@ -13,7 +13,7 @@ namespace HQ2x
 {
     public class ColorAlphaLerp : ILerp
     {
-		public BGRA Lerp(BGRA color1, int factor1, BGRA color2, int factor2, BGRA color3, int factor3)
+        public BGRA Lerp(BGRA color1, int factor1, BGRA color2, int factor2, BGRA color3, int factor3)
         {
             int alphaFactor1 = factor1;
             int alphaFactor2 = factor2;
@@ -29,12 +29,12 @@ namespace HQ2x
             if (factor1 == 0 && factor2 == 0 && factor3 == 0)
                 return color1;
 
-			return BGRA.FromArgb(
+            return BGRA.FromArgb(
                 LerpChannel(color1.A, alphaFactor1, color2.A, alphaFactor2, color3.A, alphaFactor3),
                 LerpChannel(color1.R, factor1, color2.R, factor2, color3.R, factor3),
                 LerpChannel(color1.G, factor1, color2.G, factor2, color3.G, factor3),
                 LerpChannel(color1.B, factor1, color2.B, factor2, color3.B, factor3)
-                );
+            );
         }
 
         private int LerpChannel(byte value1, int factor1, byte value2, int factor2, byte value3, int factor3)

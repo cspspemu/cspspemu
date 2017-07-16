@@ -10,121 +10,142 @@ using CSharpUtils;
 
 namespace CSPspEmu.Hle
 {
-	public unsafe partial class HleModuleHost : HleModule
-	{
-		static readonly public HleModuleHost Methods = new HleModuleHost();
+    public unsafe partial class HleModuleHost : HleModule
+    {
+        static readonly public HleModuleHost Methods = new HleModuleHost();
 
-		private Dictionary<uint, HleFunctionEntry> _EntriesByNID = null;
-		private Dictionary<string, HleFunctionEntry> _EntriesByName = null;
+        private Dictionary<uint, HleFunctionEntry> _EntriesByNID = null;
+        private Dictionary<string, HleFunctionEntry> _EntriesByName = null;
 
-		public string ModuleLocation;
-		public Dictionary<uint, HleFunctionEntry> EntriesByNID { get { InitializeOnce(); return _EntriesByNID; } }
-		public Dictionary<string, HleFunctionEntry> EntriesByName { get { InitializeOnce(); return _EntriesByName; } }
-		public string Name { get { return this.GetType().Name; } }
+        public string ModuleLocation;
 
-		[Inject]
-		protected PspMemory Memory;
+        public Dictionary<uint, HleFunctionEntry> EntriesByNID
+        {
+            get
+            {
+                InitializeOnce();
+                return _EntriesByNID;
+            }
+        }
 
-		[Inject]
-		protected InjectContext InjectContext;
+        public Dictionary<string, HleFunctionEntry> EntriesByName
+        {
+            get
+            {
+                InitializeOnce();
+                return _EntriesByName;
+            }
+        }
 
-		protected HleModuleHost()
-		{
-			this.ModuleLocation = "flash0:/kd/" + this.GetType().Namespace.Split('.').Last() + ".prx";
-			//Initialize();
-		}
+        public string Name
+        {
+            get { return this.GetType().Name; }
+        }
 
-		private void InitializeOnce()
-		{
-			if (_EntriesByNID == null) _Initialize();
-			ModuleInitializeOnce();
-		}
+        [Inject] protected PspMemory Memory;
 
-		protected virtual void ModuleInitializeOnce()
-		{
-		}
+        [Inject] protected InjectContext InjectContext;
 
-		protected virtual void ModuleInitialize()
-		{
-		}
+        protected HleModuleHost()
+        {
+            this.ModuleLocation = "flash0:/kd/" + this.GetType().Namespace.Split('.').Last() + ".prx";
+            //Initialize();
+        }
 
-		protected virtual void ModuleDeinitialize()
-		{
-		}
+        private void InitializeOnce()
+        {
+            if (_EntriesByNID == null) _Initialize();
+            ModuleInitializeOnce();
+        }
 
-		private void _Initialize()
-		{
-			_EntriesByNID = new Dictionary<uint, HleFunctionEntry>();
-			_EntriesByName = new Dictionary<string, HleFunctionEntry>();
+        protected virtual void ModuleInitializeOnce()
+        {
+        }
 
-			//this.PspEmulatorContext = PspEmulatorContext;
-			//PspEmulatorContext.InjectDependencesTo(this);
+        protected virtual void ModuleInitialize()
+        {
+        }
 
-			//Console.WriteLine(this.ModuleLocation);
-			//Console.ReadKey();
+        protected virtual void ModuleDeinitialize()
+        {
+        }
 
-			//try
-			{
-				foreach (
-					var MethodInfo in
-					new MethodInfo[0]
-					.Concat(this.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance))
-					//.Concat(this.GetType().GetMethods(BindingFlags.NonPublic))
-					//.Concat(this.GetType().GetMethods(BindingFlags.Public))
-				)
-				{
-					var Attributes = MethodInfo.GetCustomAttributes(typeof(HlePspFunctionAttribute), true).Cast<HlePspFunctionAttribute>();
-					if (Attributes.Any())
-					{
-						if (!MethodInfo.IsPublic)
-						{
-							throw(new InvalidProgramException("Method " + MethodInfo + " is not public"));
-						}
-						var Delegate = CreateDelegateForMethodInfo(MethodInfo, Attributes.First());
-						foreach (var Attribute in Attributes)
-						{
-							_EntriesByNID[Attribute.NID] = new HleFunctionEntry()
-							{
-								NID = Attribute.NID,
-								Name = MethodInfo.Name,
-								Description = "",
-								Delegate = Delegate,
-								Module = this,
-								ModuleName = this.Name,
-							};
-						}
-						_EntriesByName[MethodInfo.Name] = _EntriesByNID[Attributes.First().NID];
-					}
-					else
-					{
-						//Console.WriteLine("HleModuleHost: NO: {0}", MethodInfo.Name);
-					}
-				}
-			}
-			//catch (Exception Exception)
-			//{
-			//	Console.WriteLine(Exception);
-			//	throw (Exception);
-			//}
+        private void _Initialize()
+        {
+            _EntriesByNID = new Dictionary<uint, HleFunctionEntry>();
+            _EntriesByName = new Dictionary<string, HleFunctionEntry>();
 
-			ModuleInitialize();
-		}
+            //this.PspEmulatorContext = PspEmulatorContext;
+            //PspEmulatorContext.InjectDependencesTo(this);
 
-		public static string StringFromAddress(CpuThreadState CpuThreadState, uint Address)
-		{
-			if (Address == 0) return null;
-			return PointerUtils.PtrToString((byte*)CpuThreadState.GetMemoryPtr(Address), Encoding.UTF8);
-		}
+            //Console.WriteLine(this.ModuleLocation);
+            //Console.ReadKey();
 
-		private struct ParamInfo
-		{
-			public enum RegisterTypeEnum
-			{
-				Gpr, Fpr,
-			}
-			public RegisterTypeEnum RegisterType;
-			public int RegisterIndex;
-			public ParameterInfo ParameterInfo;
-		}
-	}
+            //try
+            {
+                foreach (
+                    var MethodInfo in
+                    new MethodInfo[0]
+                        .Concat(this.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance))
+                    //.Concat(this.GetType().GetMethods(BindingFlags.NonPublic))
+                    //.Concat(this.GetType().GetMethods(BindingFlags.Public))
+                )
+                {
+                    var Attributes = MethodInfo.GetCustomAttributes(typeof(HlePspFunctionAttribute), true)
+                        .Cast<HlePspFunctionAttribute>();
+                    if (Attributes.Any())
+                    {
+                        if (!MethodInfo.IsPublic)
+                        {
+                            throw(new InvalidProgramException("Method " + MethodInfo + " is not public"));
+                        }
+                        var Delegate = CreateDelegateForMethodInfo(MethodInfo, Attributes.First());
+                        foreach (var Attribute in Attributes)
+                        {
+                            _EntriesByNID[Attribute.NID] = new HleFunctionEntry()
+                            {
+                                NID = Attribute.NID,
+                                Name = MethodInfo.Name,
+                                Description = "",
+                                Delegate = Delegate,
+                                Module = this,
+                                ModuleName = this.Name,
+                            };
+                        }
+                        _EntriesByName[MethodInfo.Name] = _EntriesByNID[Attributes.First().NID];
+                    }
+                    else
+                    {
+                        //Console.WriteLine("HleModuleHost: NO: {0}", MethodInfo.Name);
+                    }
+                }
+            }
+            //catch (Exception Exception)
+            //{
+            //	Console.WriteLine(Exception);
+            //	throw (Exception);
+            //}
+
+            ModuleInitialize();
+        }
+
+        public static string StringFromAddress(CpuThreadState CpuThreadState, uint Address)
+        {
+            if (Address == 0) return null;
+            return PointerUtils.PtrToString((byte*) CpuThreadState.GetMemoryPtr(Address), Encoding.UTF8);
+        }
+
+        private struct ParamInfo
+        {
+            public enum RegisterTypeEnum
+            {
+                Gpr,
+                Fpr,
+            }
+
+            public RegisterTypeEnum RegisterType;
+            public int RegisterIndex;
+            public ParameterInfo ParameterInfo;
+        }
+    }
 }

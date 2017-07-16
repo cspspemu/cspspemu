@@ -31,8 +31,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace BrightIdeasSoftware {
-
+namespace BrightIdeasSoftware
+{
     #region Delegate declarations
 
     /// <summary>
@@ -97,7 +97,8 @@ namespace BrightIdeasSoftware {
     /// <summary>
     /// This delegate will be used to own draw header column.
     /// </summary>
-    public delegate bool HeaderDrawingDelegate(Graphics g, Rectangle r, int columnIndex, OLVColumn column, bool isPressed, HeaderStateStyle stateStyle);
+    public delegate bool HeaderDrawingDelegate(Graphics g, Rectangle r, int columnIndex, OLVColumn column,
+        bool isPressed, HeaderStateStyle stateStyle);
 
     /// <summary>
     /// This delegate is called when a group has been created but not yet made

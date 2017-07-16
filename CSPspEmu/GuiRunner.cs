@@ -9,31 +9,32 @@ using System.Windows.Forms;
 
 namespace CSPspEmu
 {
-	class GuiRunner
-	{
-		private PspEmulator PspEmulator;
+    class GuiRunner
+    {
+        private PspEmulator PspEmulator;
 
-		public GuiRunner(PspEmulator pspEmulator)
-		{
-			this.PspEmulator = pspEmulator;
-		}
+        public GuiRunner(PspEmulator pspEmulator)
+        {
+            this.PspEmulator = pspEmulator;
+        }
 
-		public void Start()
-		{
+        public void Start()
+        {
 #if false
 			if (Platform.IsMono) { StartGtkSharp(); return; }
 #endif
-			StartWinforms(); return;
-		}
+            StartWinforms();
+            return;
+        }
 
-		private void StartWinforms()
-		{
-			PspDisplayForm.RunStart(PspEmulator);
-		}
+        private void StartWinforms()
+        {
+            PspDisplayForm.RunStart(PspEmulator);
+        }
 
-		private void StartGtkSharp()
-		{
-			//GtkProgram.RunStart(PspEmulator);
-		}
-	}
+        private void StartGtkSharp()
+        {
+            //GtkProgram.RunStart(PspEmulator);
+        }
+    }
 }

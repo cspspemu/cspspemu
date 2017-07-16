@@ -5,11 +5,11 @@ using System.Text;
 
 namespace CSPspEmu.Core
 {
-	static public class GlobalConfig
-	{
-		/// <summary>
-		/// 
-		/// </summary>
-		public static readonly string ThreadCultureName = "en-US";
-	}
+    static public class GlobalConfig
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly string ThreadCultureName = "en-US";
+    }
 }

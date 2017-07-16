@@ -86,8 +86,9 @@ namespace BrightIdeasSoftware
         /// also be used to navigate relations between lists.</para>
         /// </remarks>
         [Category("Data"),
-        TypeConverter("System.Windows.Forms.Design.DataSourceConverter, System.Design")]
-        public virtual Object DataSource {
+         TypeConverter("System.Windows.Forms.Design.DataSourceConverter, System.Design")]
+        public virtual Object DataSource
+        {
             get { return this.Adapter.DataSource; }
             set { this.Adapter.DataSource = value; }
         }
@@ -99,7 +100,8 @@ namespace BrightIdeasSoftware
         [Category("Data"),
          Editor("System.Windows.Forms.Design.DataMemberListEditor, System.Design", typeof(UITypeEditor)),
          DefaultValue("")]
-        public virtual string DataMember {
+        public virtual string DataMember
+        {
             get { return this.Adapter.DataMember; }
             set { this.Adapter.DataMember = value; }
         }
@@ -118,7 +120,8 @@ namespace BrightIdeasSoftware
         [Category("Data"),
          Description("The name of the property/column that holds the key of a row"),
          DefaultValue(null)]
-        public virtual string KeyAspectName {
+        public virtual string KeyAspectName
+        {
             get { return this.Adapter.KeyAspectName; }
             set { this.Adapter.KeyAspectName = value; }
         }
@@ -141,7 +144,8 @@ namespace BrightIdeasSoftware
         [Category("Data"),
          Description("The name of the property/column that holds the key of the parent of a row"),
          DefaultValue(null)]
-        public virtual string ParentKeyAspectName {
+        public virtual string ParentKeyAspectName
+        {
             get { return this.Adapter.ParentKeyAspectName; }
             set { this.Adapter.ParentKeyAspectName = value; }
         }
@@ -165,8 +169,9 @@ namespace BrightIdeasSoftware
         /// has in the parent id column), the list will be empty.</para>
         /// </remarks>
         [Browsable(false),
-        DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual object RootKeyValue {
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public virtual object RootKeyValue
+        {
             get { return this.Adapter.RootKeyValue; }
             set { this.Adapter.RootKeyValue = value; }
         }
@@ -182,9 +187,10 @@ namespace BrightIdeasSoftware
         /// you will have set it yourself.
         /// </remarks>
         [Category("Data"),
-        Description("The parent id value that identifies a row as a root object"),
-        DefaultValue(null)]
-        public virtual string RootKeyValueString {
+         Description("The parent id value that identifies a row as a root object"),
+         DefaultValue(null)]
+        public virtual string RootKeyValueString
+        {
             get { return Convert.ToString(this.Adapter.RootKeyValue); }
             set { this.Adapter.RootKeyValue = value; }
         }
@@ -198,7 +204,8 @@ namespace BrightIdeasSoftware
         [Category("Data"),
          Description("Should the keys columns (id and parent id) be shown to the user?"),
          DefaultValue(true)]
-        public virtual bool ShowKeyColumns {
+        public virtual bool ShowKeyColumns
+        {
             get { return this.Adapter.ShowKeyColumns; }
             set { this.Adapter.ShowKeyColumns = value; }
         }
@@ -211,14 +218,17 @@ namespace BrightIdeasSoftware
         /// Gets or sets the DataSourceAdaptor that does the bulk of the work needed
         /// for data binding.
         /// </summary>
-        protected TreeDataSourceAdapter Adapter {
-            get {
+        protected TreeDataSourceAdapter Adapter
+        {
+            get
+            {
                 if (this.adapter == null)
                     this.adapter = new TreeDataSourceAdapter(this);
                 return adapter;
             }
             set { adapter = value; }
         }
+
         private TreeDataSourceAdapter adapter;
 
         #endregion

@@ -3,120 +3,121 @@ using System.Runtime.InteropServices;
 
 namespace CSPspEmu.Core.Gpu.State
 {
-	public class GlobalGpuState
-	{
-	}
+    public class GlobalGpuState
+    {
+    }
 
-	/*
-	public class GlobalGpuState
-	{
-		public uint GetAddressRelativeToBase(uint RelativeAddress)
-		{
-			return (uint)(this.Base | RelativeAddress);
-		}
+    /*
+    public class GlobalGpuState
+    {
+        public uint GetAddressRelativeToBase(uint RelativeAddress)
+        {
+            return (uint)(this.Base | RelativeAddress);
+        }
 
-		public uint GetAddressRelativeToBaseOffset(uint RelativeAddress)
-		{
-			return (uint)((this.Base | RelativeAddress) + this.BaseOffset);
-		}
+        public uint GetAddressRelativeToBaseOffset(uint RelativeAddress)
+        {
+            return (uint)((this.Base | RelativeAddress) + this.BaseOffset);
+        }
 
-		public uint Base;
-		public uint BaseOffset;
-	}
-	*/
+        public uint Base;
+        public uint BaseOffset;
+    }
+    */
 
-	[StructLayout(LayoutKind.Sequential, Pack = 1, Size = 2048)]
-	public unsafe struct GpuStateStruct
-	{
-		public uint BaseAddress;
-		public uint BaseOffset;
+    [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 2048)]
+    public unsafe struct GpuStateStruct
+    {
+        public uint BaseAddress;
+        public uint BaseOffset;
 
-		public uint GetAddressRelativeToBase(uint RelativeAddress)
-		{
-			return (uint)(this.BaseAddress | RelativeAddress);
-		}
+        public uint GetAddressRelativeToBase(uint RelativeAddress)
+        {
+            return (uint) (this.BaseAddress | RelativeAddress);
+        }
 
-		public uint GetAddressRelativeToBaseOffset(uint RelativeAddress)
-		{
-			return (uint)((this.BaseAddress | RelativeAddress) + this.BaseOffset);
-		}
+        public uint GetAddressRelativeToBaseOffset(uint RelativeAddress)
+        {
+            return (uint) ((this.BaseAddress | RelativeAddress) + this.BaseOffset);
+        }
 
 
-		public uint VertexAddress;
-		public uint IndexAddress;
-		public bool ToggleUpdateState;
-		/// <summary>
-		/// When set, this will changes the Draw behaviour.
-		/// </summary>
-		public bool ClearingMode;
+        public uint VertexAddress;
+        public uint IndexAddress;
+        public bool ToggleUpdateState;
 
-		public ScreenBufferStateStruct DrawBufferState;
-		public ScreenBufferStateStruct DepthBufferState;
-		public TextureTransferStateStruct TextureTransferState;
+        /// <summary>
+        /// When set, this will changes the Draw behaviour.
+        /// </summary>
+        public bool ClearingMode;
 
-		public ViewportStruct Viewport;
-		public PointS Offset;
+        public ScreenBufferStateStruct DrawBufferState;
+        public ScreenBufferStateStruct DepthBufferState;
+        public TextureTransferStateStruct TextureTransferState;
 
-		/// <summary>
-		/// A set of flags related to the clearing mode. Generally which buffers to clear.
-		/// </summary>
-		public ClearBufferSet ClearFlags;
+        public ViewportStruct Viewport;
+        public PointS Offset;
 
-		// Sub States.
-		public VertexStateStruct VertexState;
+        /// <summary>
+        /// A set of flags related to the clearing mode. Generally which buffers to clear.
+        /// </summary>
+        public ClearBufferSet ClearFlags;
 
-		public BackfaceCullingStateStruct BackfaceCullingState;
+        // Sub States.
+        public VertexStateStruct VertexState;
 
-		public FogStateStruct FogState;
-		public BlendingStateStruct BlendingState;
-		public StencilStateStruct StencilState;
-		public AlphaTestStateStruct AlphaTestState;
-		public LogicalOperationStateStruct LogicalOperationState;
-		public DepthTestStateStruct DepthTestState;
-		public LightingStateStruct LightingState;
-		public MorphingStateStruct MorphingState;
-		public DitheringStateStruct DitheringState;
-		public LineSmoothStateStruct LineSmoothState;
-		public ClipPlaneStateStruct ClipPlaneState;
-		public PatchCullingStateStruct PatchCullingState;
-		public SkinningStateStruct SkinningState;
-		public ColorTestStateStruct ColorTestState;
+        public BackfaceCullingStateStruct BackfaceCullingState;
 
-		public PatchStateStruct PatchState;
+        public FogStateStruct FogState;
+        public BlendingStateStruct BlendingState;
+        public StencilStateStruct StencilState;
+        public AlphaTestStateStruct AlphaTestState;
+        public LogicalOperationStateStruct LogicalOperationState;
+        public DepthTestStateStruct DepthTestState;
+        public LightingStateStruct LightingState;
+        public MorphingStateStruct MorphingState;
+        public DitheringStateStruct DitheringState;
+        public LineSmoothStateStruct LineSmoothState;
+        public ClipPlaneStateStruct ClipPlaneState;
+        public PatchCullingStateStruct PatchCullingState;
+        public SkinningStateStruct SkinningState;
+        public ColorTestStateStruct ColorTestState;
 
-		// State.
-		public ColorStruct FixColorSource, FixColorDestination;
+        public PatchStateStruct PatchState;
 
-		public TextureMappingStateStruct TextureMappingState;
+        // State.
+        public ColorStruct FixColorSource, FixColorDestination;
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public ShadingModelEnum ShadeModel;
+        public TextureMappingStateStruct TextureMappingState;
 
-		public fixed sbyte DitherMatrix[16];
+        /// <summary>
+        /// 
+        /// </summary>
+        public ShadingModelEnum ShadeModel;
 
-		/*
-		public static void Init(GpuStateStruct* GpuState)
-		{
-			PointerUtils.Memset((byte*)GpuState, 0, sizeof(GpuStateStruct));
+        public fixed sbyte DitherMatrix[16];
 
-			GpuState->SkinningState.BoneMatrix0.Init();
-			GpuState->SkinningState.BoneMatrix1.Init();
-			GpuState->SkinningState.BoneMatrix2.Init();
-			GpuState->SkinningState.BoneMatrix3.Init();
-			GpuState->SkinningState.BoneMatrix4.Init();
-			GpuState->SkinningState.BoneMatrix5.Init();
-			GpuState->SkinningState.BoneMatrix6.Init();
-			GpuState->SkinningState.BoneMatrix7.Init();
-		}
-		*/
-	}
+        /*
+        public static void Init(GpuStateStruct* GpuState)
+        {
+            PointerUtils.Memset((byte*)GpuState, 0, sizeof(GpuStateStruct));
 
-	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	public struct PatchStateStruct
-	{
-		public byte DivS;
-		public byte DivT;
-	}
+            GpuState->SkinningState.BoneMatrix0.Init();
+            GpuState->SkinningState.BoneMatrix1.Init();
+            GpuState->SkinningState.BoneMatrix2.Init();
+            GpuState->SkinningState.BoneMatrix3.Init();
+            GpuState->SkinningState.BoneMatrix4.Init();
+            GpuState->SkinningState.BoneMatrix5.Init();
+            GpuState->SkinningState.BoneMatrix6.Init();
+            GpuState->SkinningState.BoneMatrix7.Init();
+        }
+        */
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public struct PatchStateStruct
+    {
+        public byte DivS;
+        public byte DivT;
+    }
 }

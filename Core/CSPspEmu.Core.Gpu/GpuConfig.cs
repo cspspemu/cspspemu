@@ -5,8 +5,8 @@ using System.Text;
 
 namespace CSPspEmu.Core.Gpu
 {
-	public class GpuConfig
-	{
-		public bool NoticeUnimplementedGpuCommands = true;
-	}
+    public class GpuConfig
+    {
+        public bool NoticeUnimplementedGpuCommands = true;
+    }
 }

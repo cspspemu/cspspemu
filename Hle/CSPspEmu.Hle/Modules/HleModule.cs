@@ -3,10 +3,10 @@ using CSPspEmu.Core;
 
 namespace CSPspEmu.Hle
 {
-	public class HleModule : IDisposable
-	{
-		public virtual void Dispose()
-		{
-		}
-	}
+    public class HleModule : IDisposable
+    {
+        public virtual void Dispose()
+        {
+        }
+    }
 }

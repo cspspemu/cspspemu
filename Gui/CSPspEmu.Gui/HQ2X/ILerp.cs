@@ -13,6 +13,6 @@ namespace HQ2x
 {
     public interface ILerp
     {
-		BGRA Lerp(BGRA colour1, int factor1, BGRA colour2, int factor2, BGRA colour3, int factor3);
+        BGRA Lerp(BGRA colour1, int factor1, BGRA colour2, int factor2, BGRA colour3, int factor3);
     }
 }

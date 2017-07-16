@@ -2,379 +2,392 @@
 
 namespace CSPspEmu.Hle.Formats
 {
-	public unsafe class Elf : IFormatDetector
-	{
-		public struct HeaderStruct
-		{
-			public enum MagicEnum : uint
-			{
-				ExpectedValue = 0x464C457F
-			}
+    public unsafe class Elf : IFormatDetector
+    {
+        public struct HeaderStruct
+        {
+            public enum MagicEnum : uint
+            {
+                ExpectedValue = 0x464C457F
+            }
 
-			public enum TypeEnum : ushort
-			{
-				Executable = 0x0002,
-				Prx = 0xFFA0,
-			}
-			public enum MachineEnum : ushort
-			{
-				ALLEGREX = 8,
-			}
+            public enum TypeEnum : ushort
+            {
+                Executable = 0x0002,
+                Prx = 0xFFA0,
+            }
 
-			// e_ident 16 bytes.
+            public enum MachineEnum : ushort
+            {
+                ALLEGREX = 8,
+            }
 
-			/// <summary>
-			/// Magic identifying the file : [0x7F, 'E', 'L', 'F']
-			/// </summary>
-			public MagicEnum Magic;
+            // e_ident 16 bytes.
 
-			/// <summary>
-			/// ?
-			/// </summary>
-			public byte Class;
+            /// <summary>
+            /// Magic identifying the file : [0x7F, 'E', 'L', 'F']
+            /// </summary>
+            public MagicEnum Magic;
 
-			/// <summary>
-			/// ?
-			/// </summary>
-			public byte Data;
+            /// <summary>
+            /// ?
+            /// </summary>
+            public byte Class;
 
-			/// <summary>
-			/// ?
-			/// </summary>
-			public byte IdVersion;
+            /// <summary>
+            /// ?
+            /// </summary>
+            public byte Data;
 
-			/// <summary>
-			/// Padding
-			/// </summary>
-			public fixed byte Padding[9];
+            /// <summary>
+            /// ?
+            /// </summary>
+            public byte IdVersion;
 
-			/// <summary>
-			/// Identifies object file type
-			/// </summary>
-			public TypeEnum Type;
+            /// <summary>
+            /// Padding
+            /// </summary>
+            public fixed byte Padding[9];
 
-			/// <summary>
-			/// Architecture build  = Machine.ALLEGREX
-			/// </summary>
-			public MachineEnum Machine;
+            /// <summary>
+            /// Identifies object file type
+            /// </summary>
+            public TypeEnum Type;
 
-			/// <summary>
-			/// Object file version
-			/// </summary>
-			public uint Version;
+            /// <summary>
+            /// Architecture build  = Machine.ALLEGREX
+            /// </summary>
+            public MachineEnum Machine;
 
-			/// <summary>
-			/// Virtual address of code entry. Module EntryPoint (PC)
-			/// </summary>
-			public uint EntryPoint;
+            /// <summary>
+            /// Object file version
+            /// </summary>
+            public uint Version;
 
-			/// <summary>
-			/// Program header table's file offset in bytes
-			/// </summary>
-			public uint ProgramHeaderOffset;
+            /// <summary>
+            /// Virtual address of code entry. Module EntryPoint (PC)
+            /// </summary>
+            public uint EntryPoint;
 
-			/// <summary>
-			/// Section header table's file offset in bytes
-			/// </summary>
-			public uint SectionHeaderOffset;
+            /// <summary>
+            /// Program header table's file offset in bytes
+            /// </summary>
+            public uint ProgramHeaderOffset;
 
-			/// <summary>
-			/// Processor specific flags
-			/// </summary>
-			public uint Flags;
+            /// <summary>
+            /// Section header table's file offset in bytes
+            /// </summary>
+            public uint SectionHeaderOffset;
 
-			/// <summary>
-			/// ELF header size in bytes
-			/// </summary>
-			public ushort ElfHeaderSize;
+            /// <summary>
+            /// Processor specific flags
+            /// </summary>
+            public uint Flags;
 
-			// Program Header.
+            /// <summary>
+            /// ELF header size in bytes
+            /// </summary>
+            public ushort ElfHeaderSize;
 
-			/// <summary>
-			/// Program header size (all the same size)
-			/// </summary>
-			public ushort ProgramHeaderEntrySize;
+            // Program Header.
 
-			/// <summary>
-			/// Number of program headers
-			/// </summary>
-			public ushort ProgramHeaderCount;
+            /// <summary>
+            /// Program header size (all the same size)
+            /// </summary>
+            public ushort ProgramHeaderEntrySize;
 
-			// Section Header.
-			/// <summary>
-			/// Section header size (all the same size)
-			/// </summary>
-			public ushort SectionHeaderEntrySize;
+            /// <summary>
+            /// Number of program headers
+            /// </summary>
+            public ushort ProgramHeaderCount;
 
-			/// <summary>
-			/// Number of section headers
-			/// </summary>
-			public ushort SectionHeaderCount;
+            // Section Header.
+            /// <summary>
+            /// Section header size (all the same size)
+            /// </summary>
+            public ushort SectionHeaderEntrySize;
 
-			/// <summary>
-			/// Section header table index of the entry associated with the section name string table
-			/// </summary>
-			public ushort SectionHeaderStringTable;
-		}
+            /// <summary>
+            /// Number of section headers
+            /// </summary>
+            public ushort SectionHeaderCount;
 
-		public struct ProgramHeader
-		{
-			public enum TypeEnum : uint
-			{
-				NoLoad = 0,
-				Load = 1,
-				Reloc1 = 0x700000A0,
-				Reloc2 = 0x700000A1,
-			}
+            /// <summary>
+            /// Section header table index of the entry associated with the section name string table
+            /// </summary>
+            public ushort SectionHeaderStringTable;
+        }
 
-			[Flags]
-			public enum FlagsSet : uint
-			{
-				Executable = 0x1,
-				// Note: demo PRX's were found to be not writable
-				Writable = 0x2,
-				Readable = 0x4,
-			}
+        public struct ProgramHeader
+        {
+            public enum TypeEnum : uint
+            {
+                NoLoad = 0,
+                Load = 1,
+                Reloc1 = 0x700000A0,
+                Reloc2 = 0x700000A1,
+            }
 
-			/// <summary>
-			/// Type of segment (p_type)
-			/// </summary>
-			public TypeEnum Type;
+            [Flags]
+            public enum FlagsSet : uint
+            {
+                Executable = 0x1,
 
-			/// <summary>
-			/// Offset for segment's first byte in file (p_offset)
-			/// </summary>
-			public uint Offset;
+                // Note: demo PRX's were found to be not writable
+                Writable = 0x2,
+                Readable = 0x4,
+            }
 
-			/// <summary>
-			/// Virtual address for segment (p_vaddr)
-			/// </summary>
-			public uint VirtualAddress;
+            /// <summary>
+            /// Type of segment (p_type)
+            /// </summary>
+            public TypeEnum Type;
 
-			/// <summary>
-			/// Physical address for segment (p_paddr)
-			/// </summary>
-			public uint PsysicalAddress;
+            /// <summary>
+            /// Offset for segment's first byte in file (p_offset)
+            /// </summary>
+            public uint Offset;
 
-			/// <summary>
-			/// Segment image size in file (p_filesz)
-			/// </summary>
-			public uint FileSize;
+            /// <summary>
+            /// Virtual address for segment (p_vaddr)
+            /// </summary>
+            public uint VirtualAddress;
 
-			/// <summary>
-			/// Segment image size in memory (p_memsz)
-			/// </summary>
-			public uint MemorySize;
+            /// <summary>
+            /// Physical address for segment (p_paddr)
+            /// </summary>
+            public uint PsysicalAddress;
 
-			/// <summary>
-			/// Flags Bits (p_flags)
-			/// </summary>
-			public FlagsSet Flags;
+            /// <summary>
+            /// Segment image size in file (p_filesz)
+            /// </summary>
+            public uint FileSize;
 
-			/// <summary>
-			/// Alignment (p_align)
-			/// </summary>
-			public uint Alignment;
-		}
+            /// <summary>
+            /// Segment image size in memory (p_memsz)
+            /// </summary>
+            public uint MemorySize;
 
-		/// <summary>
-		/// ELF Section Header
-		/// </summary>
-		public struct SectionHeader
-		{
-			public enum TypeEnum : uint
-			{
-				Null = 0,
-				ProgramBits = 1,
-				SYMTAB = 2,
-				STRTAB = 3,
-				RELA = 4,
-				HASH = 5,
-				DYNAMIC = 6,
-				NOTE = 7,
-				NoBits = 8,
-				Relocation = 9,
-				SHLIB = 10,
-				DYNSYM = 11,
+            /// <summary>
+            /// Flags Bits (p_flags)
+            /// </summary>
+            public FlagsSet Flags;
 
-				LOPROC = 0x70000000, HIPROC = 0x7FFFFFFF,
-				LOUSER = 0x80000000, HIUSER = 0xFFFFFFFF,
+            /// <summary>
+            /// Alignment (p_align)
+            /// </summary>
+            public uint Alignment;
+        }
 
-				PrxRelocation = (LOPROC | 0xA0),
-				PrxRelocation_FW5 = (LOPROC | 0xA1),
-			}
+        /// <summary>
+        /// ELF Section Header
+        /// </summary>
+        public struct SectionHeader
+        {
+            public enum TypeEnum : uint
+            {
+                Null = 0,
+                ProgramBits = 1,
+                SYMTAB = 2,
+                STRTAB = 3,
+                RELA = 4,
+                HASH = 5,
+                DYNAMIC = 6,
+                NOTE = 7,
+                NoBits = 8,
+                Relocation = 9,
+                SHLIB = 10,
+                DYNSYM = 11,
 
-			public enum FlagsSet : uint
-			{
-				None = 0,
-				Write = 1,
-				Allocate = 2,
-				Execute = 4
-			}
+                LOPROC = 0x70000000,
+                HIPROC = 0x7FFFFFFF,
+                LOUSER = 0x80000000,
+                HIUSER = 0xFFFFFFFF,
 
-			/// <summary>
-			/// Position relative to .shstrtab of a stringz with the name.
-			/// </summary>
-			public uint Name;
+                PrxRelocation = (LOPROC | 0xA0),
+                PrxRelocation_FW5 = (LOPROC | 0xA1),
+            }
 
-			/// <summary>
-			/// Type of this section header.
-			/// </summary>
-			public TypeEnum Type;
+            public enum FlagsSet : uint
+            {
+                None = 0,
+                Write = 1,
+                Allocate = 2,
+                Execute = 4
+            }
 
-			/// <summary>
-			/// Flags associated to this section header.
-			/// </summary>
-			public FlagsSet Flags;
+            /// <summary>
+            /// Position relative to .shstrtab of a stringz with the name.
+            /// </summary>
+            public uint Name;
 
-			/// <summary>
-			/// Memory address where it should be stored.
-			/// </summary>
-			public uint Address;
+            /// <summary>
+            /// Type of this section header.
+            /// </summary>
+            public TypeEnum Type;
 
-			/// <summary>
-			/// File position where is the data related to this section header.
-			/// </summary>
-			public uint Offset;
+            /// <summary>
+            /// Flags associated to this section header.
+            /// </summary>
+            public FlagsSet Flags;
 
-			/// <summary>
-			/// Size of the section header.
-			/// </summary>
-			public int Size;
+            /// <summary>
+            /// Memory address where it should be stored.
+            /// </summary>
+            public uint Address;
 
-			/// <summary>
-			/// ?
-			/// </summary>
-			public uint Link;
+            /// <summary>
+            /// File position where is the data related to this section header.
+            /// </summary>
+            public uint Offset;
 
-			/// <summary>
-			/// ?
-			/// </summary>
-			public uint Info;
+            /// <summary>
+            /// Size of the section header.
+            /// </summary>
+            public int Size;
 
-			/// <summary>
-			/// ?
-			/// </summary>
-			public uint AddressAlign;
+            /// <summary>
+            /// ?
+            /// </summary>
+            public uint Link;
 
-			/// <summary>
-			/// ?
-			/// </summary>
-			public uint EntitySize;
+            /// <summary>
+            /// ?
+            /// </summary>
+            public uint Info;
 
-			public override string ToString()
-			{
-				return this.ToStringDefault();
-			}
-		}
+            /// <summary>
+            /// ?
+            /// </summary>
+            public uint AddressAlign;
 
-		public struct Reloc
-		{
-			public enum TypeEnum : byte
-			{
-				None = 0,
-				Mips16 = 1,
-				Mips32 = 2,
-				MipsRel32 = 3,
-				Mips26 = 4,
-				MipsHi16 = 5,
-				MipsLo16 = 6,
-				MipsGpRel16 = 7,
-				MipsLiteral = 8,
-				MipsGot16 = 9,
-				MipsPc16 = 10,
-				MipsCall16 = 11,
-				MipsGpRel32 = 12,
-				StopRelocation = 0xFF,
-			}
+            /// <summary>
+            /// ?
+            /// </summary>
+            public uint EntitySize;
 
-			/// <summary>
-			/// Address relative to OffsetBase where is the pointer to relocate. (r_offset)
-			/// </summary>
-			public uint PointerAddress;
+            public override string ToString()
+            {
+                return this.ToStringDefault();
+            }
+        }
 
-			/// <summary>
-			/// Packed data containing AddressBase, OffsetBase and Type. (r_info)
-			/// </summary>
-			public uint Info;
+        public struct Reloc
+        {
+            public enum TypeEnum : byte
+            {
+                None = 0,
+                Mips16 = 1,
+                Mips32 = 2,
+                MipsRel32 = 3,
+                Mips26 = 4,
+                MipsHi16 = 5,
+                MipsLo16 = 6,
+                MipsGpRel16 = 7,
+                MipsLiteral = 8,
+                MipsGot16 = 9,
+                MipsPc16 = 10,
+                MipsCall16 = 11,
+                MipsGpRel32 = 12,
+                StopRelocation = 0xFF,
+            }
 
-			/// <summary>
-			/// Program Header Index where is located the referenced data (pointee) (ADDR_BASE)
-			/// </summary>
-			public uint PointeeSectionHeaderBase { get { return (Info >> 16) & 0xFF; } }
+            /// <summary>
+            /// Address relative to OffsetBase where is the pointer to relocate. (r_offset)
+            /// </summary>
+            public uint PointerAddress;
 
-			/// <summary>
-			/// Program Header Index where is located the data to relocation (pointer) (OFS_BASE)
-			/// </summary>
-			public uint PointerSectionHeaderBase { get { return (Info >> 8) & 0xFF; } }
+            /// <summary>
+            /// Packed data containing AddressBase, OffsetBase and Type. (r_info)
+            /// </summary>
+            public uint Info;
 
-			/// <summary>
-			/// Type of relocation (R_TYPE)
-			/// </summary>
-			public TypeEnum Type { get { return (TypeEnum)((Info >> 0) & 0xFF); } }
+            /// <summary>
+            /// Program Header Index where is located the referenced data (pointee) (ADDR_BASE)
+            /// </summary>
+            public uint PointeeSectionHeaderBase
+            {
+                get { return (Info >> 16) & 0xFF; }
+            }
 
-			public override string ToString()
-			{
-				return this.ToStringDefault();
-			}
-		}
+            /// <summary>
+            /// Program Header Index where is located the data to relocation (pointer) (OFS_BASE)
+            /// </summary>
+            public uint PointerSectionHeaderBase
+            {
+                get { return (Info >> 8) & 0xFF; }
+            }
 
-		public struct Symbol
-		{
-			public enum TypeEnum : byte
-			{
-				NoType = 0,
-				Object = 1,
-				Function = 2,
-				Section = 3,
-				File = 4,
-				LoProc = 13,
-				HiProc = 15,
-			}
+            /// <summary>
+            /// Type of relocation (R_TYPE)
+            /// </summary>
+            public TypeEnum Type
+            {
+                get { return (TypeEnum) ((Info >> 0) & 0xFF); }
+            }
 
-			public enum BindEnum : byte
-			{
-				Local = 0,
-				Global = 1,
-				Weak = 2,
-				LoProc = 13,
-				HiProc = 15,
-			}
+            public override string ToString()
+            {
+                return this.ToStringDefault();
+            }
+        }
 
-			/// <summary>
-			/// ?
-			/// </summary>
-			public String Name;
+        public struct Symbol
+        {
+            public enum TypeEnum : byte
+            {
+                NoType = 0,
+                Object = 1,
+                Function = 2,
+                Section = 3,
+                File = 4,
+                LoProc = 13,
+                HiProc = 15,
+            }
 
-			/// <summary>
-			/// ?
-			/// </summary>
-			public uint Value;
+            public enum BindEnum : byte
+            {
+                Local = 0,
+                Global = 1,
+                Weak = 2,
+                LoProc = 13,
+                HiProc = 15,
+            }
 
-			/// <summary>
-			/// ?
-			/// </summary>
-			public uint Size;
+            /// <summary>
+            /// ?
+            /// </summary>
+            public String Name;
 
-			/// <summary>
-			/// ?
-			/// </summary>
-			public TypeEnum Type;
+            /// <summary>
+            /// ?
+            /// </summary>
+            public uint Value;
 
-			/// <summary>
-			/// ?
-			/// </summary>
-			public BindEnum Bind;
+            /// <summary>
+            /// ?
+            /// </summary>
+            public uint Size;
 
-			/// <summary>
-			/// ?
-			/// </summary>
-			public byte Other;
+            /// <summary>
+            /// ?
+            /// </summary>
+            public TypeEnum Type;
 
-			/// <summary>
-			/// ?
-			/// </summary>
-			public ushort Index;
-		}
-	}
+            /// <summary>
+            /// ?
+            /// </summary>
+            public BindEnum Bind;
+
+            /// <summary>
+            /// ?
+            /// </summary>
+            public byte Other;
+
+            /// <summary>
+            /// ?
+            /// </summary>
+            public ushort Index;
+        }
+    }
 }

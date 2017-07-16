@@ -30,8 +30,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Collections;
 
-namespace BrightIdeasSoftware {
-
+namespace BrightIdeasSoftware
+{
     /// <summary>
     /// A simple-minded implementation of a Dictionary that can handle null as a key.
     /// </summary>
@@ -39,13 +39,16 @@ namespace BrightIdeasSoftware {
     /// <typeparam name="TValue">The type of the values to be stored</typeparam>
     /// <remarks>This is not a full implementation and is only meant to handle
     /// collecting groups by their keys, since groups can have null as a key value.</remarks>
-    internal class NullableDictionary<TKey, TValue> : Dictionary<TKey, TValue> {
+    internal class NullableDictionary<TKey, TValue> : Dictionary<TKey, TValue>
+    {
         private bool hasNullKey;
         private TValue nullValue;
 
-        new public TValue this[TKey key] {
-            get {
-                if (key != null) 
+        new public TValue this[TKey key]
+        {
+            get
+            {
+                if (key != null)
                     return base[key];
 
                 if (this.hasNullKey)
@@ -53,21 +56,27 @@ namespace BrightIdeasSoftware {
 
                 throw new KeyNotFoundException();
             }
-            set {
-                if (key == null) {
+            set
+            {
+                if (key == null)
+                {
                     this.hasNullKey = true;
                     this.nullValue = value;
-                } else
+                }
+                else
                     base[key] = value;
             }
         }
 
-        new public bool ContainsKey(TKey key) {
+        new public bool ContainsKey(TKey key)
+        {
             return key == null ? this.hasNullKey : base.ContainsKey(key);
         }
 
-        new public IList Keys {
-            get {
+        new public IList Keys
+        {
+            get
+            {
                 ArrayList list = new ArrayList(base.Keys);
                 if (this.hasNullKey)
                     list.Add(null);
@@ -75,8 +84,10 @@ namespace BrightIdeasSoftware {
             }
         }
 
-        new public IList<TValue> Values {
-            get {
+        new public IList<TValue> Values
+        {
+            get
+            {
                 List<TValue> list = new List<TValue>(base.Values);
                 if (this.hasNullKey)
                     list.Add(this.nullValue);

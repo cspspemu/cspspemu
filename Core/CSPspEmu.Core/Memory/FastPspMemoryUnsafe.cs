@@ -5,179 +5,189 @@ using System.Runtime.CompilerServices;
 
 namespace CSPspEmu.Core.Memory
 {
-	public unsafe sealed class FastPspMemoryUnsafe : PspMemory
-	{
-		override public bool HasFixedGlobalAddress { get { return true; } }
-		override public IntPtr FixedGlobalAddress { get { return new IntPtr(_Base); } }
+    public unsafe sealed class FastPspMemoryUnsafe : PspMemory
+    {
+        override public bool HasFixedGlobalAddress
+        {
+            get { return true; }
+        }
 
-		//public readonly byte* Base = (byte*)0x50000000;
-		//public readonly byte* Base = (byte*)0x40000000;
-		public static byte* _Base = null;
-		public static byte* StaticNullPtr;
-		public static byte* StaticScratchPadPtr;
-		public static byte* StaticFrameBufferPtr;
-		public static byte* StaticMainPtr;
+        override public IntPtr FixedGlobalAddress
+        {
+            get { return new IntPtr(_Base); }
+        }
 
-		////[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		//public byte* Base { get { return _Base; } }
+        //public readonly byte* Base = (byte*)0x50000000;
+        //public readonly byte* Base = (byte*)0x40000000;
+        public static byte* _Base = null;
 
-		/*
-		// to RESERVE memory in Linux, use mmap with a private, anonymous, non-accessible mapping.
-		// The following line reserves 1gb of ram starting at 0x10000000.
+        public static byte* StaticNullPtr;
+        public static byte* StaticScratchPadPtr;
+        public static byte* StaticFrameBufferPtr;
+        public static byte* StaticMainPtr;
 
-		void* result = mmap((void*)0x10000000, 0x40000000, PROT_NONE, MAP_PRIVATE | MAP_ANON, -1, 0);
+        ////[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //public byte* Base { get { return _Base; } }
 
-		// to COMMIT memory in Linux, use mprotect on the range of memory you'd like to commit, and
-		// grant the memory READ and/or WRITE access.
-		// The following line commits 1mb of the buffer.  It will return -1 on out of memory errors.
+        /*
+        // to RESERVE memory in Linux, use mmap with a private, anonymous, non-accessible mapping.
+        // The following line reserves 1gb of ram starting at 0x10000000.
 
-		int result3 = mprotect((void*)0x10000000, 0x100000, PROT_READ | PROT_WRITE);
-		*/
+        void* result = mmap((void*)0x10000000, 0x40000000, PROT_NONE, MAP_PRIVATE | MAP_ANON, -1, 0);
 
-		public FastPspMemoryUnsafe()
-		{
-			AllocMemoryOnce();
-		}
+        // to COMMIT memory in Linux, use mprotect on the range of memory you'd like to commit, and
+        // grant the memory READ and/or WRITE access.
+        // The following line commits 1mb of the buffer.  It will return -1 on out of memory errors.
 
-		~FastPspMemoryUnsafe()
-		{
-			Dispose();
-			//FreeMemory();
-		}
+        int result3 = mprotect((void*)0x10000000, 0x100000, PROT_READ | PROT_WRITE);
+        */
 
-		private static bool AlreadyInitialized = false;
+        public FastPspMemoryUnsafe()
+        {
+            AllocMemoryOnce();
+        }
 
-		private void AllocMemoryOnce()
-		{
-			if (!AlreadyInitialized)
-			{
-				AlreadyInitialized = true;
+        ~FastPspMemoryUnsafe()
+        {
+            Dispose();
+            //FreeMemory();
+        }
 
-				//Logger.Info("FastPspMemory.AllocMemory");
+        private static bool AlreadyInitialized = false;
 
-				ulong[] TryBases;
-				if (Platform.Is32Bit)
-				{
-					if (Platform.OS == OS.Windows)
-					{
-						TryBases = new ulong[] { 0x31000000, 0x40000000, 0x50000000 };
-					}
-					else
-					{
-						//Logger.Error("Using mmap on linux x86 is known to cause problems");
-						TryBases = new ulong[] { 0xE1000000, 0x31008008, 0x40008000, 0x50008000, 0x31000000, 0x40000000, 0x50000000 };
-					}
-				}
-				else
-				{
-					if (Platform.OS == OS.Windows)
-					{
-						TryBases = new ulong[] { 0xE7000000, 0xE1000000, 0x0012340080000000, 0x00123400A0000000 };
-					}
-					else
-					{
-						TryBases = new ulong[] { 0x2300000000, 0x31000000, 0x40000000, 0x50000000, 0xE1000000 };
-					}
-				}
+        private void AllocMemoryOnce()
+        {
+            if (!AlreadyInitialized)
+            {
+                AlreadyInitialized = true;
 
-				uint ScratchPadAllocSize = ScratchPadSize * 0x10;
-				uint FrameBufferAllocSize = FrameBufferSize;
-				uint MainAllocSize = MainSize;
+                //Logger.Info("FastPspMemory.AllocMemory");
 
-				foreach (var TryBase in TryBases)
-				{
-					_Base = (byte*)TryBase;
-					Console.WriteLine("FastPspMemory.AllocMemoryOnce: Trying Base ... 0x{0:X}", TryBase);
+                ulong[] TryBases;
+                if (Platform.Is32Bit)
+                {
+                    if (Platform.OS == OS.Windows)
+                    {
+                        TryBases = new ulong[] {0x31000000, 0x40000000, 0x50000000};
+                    }
+                    else
+                    {
+                        //Logger.Error("Using mmap on linux x86 is known to cause problems");
+                        TryBases = new ulong[]
+                            {0xE1000000, 0x31008008, 0x40008000, 0x50008000, 0x31000000, 0x40000000, 0x50000000};
+                    }
+                }
+                else
+                {
+                    if (Platform.OS == OS.Windows)
+                    {
+                        TryBases = new ulong[] {0xE7000000, 0xE1000000, 0x0012340080000000, 0x00123400A0000000};
+                    }
+                    else
+                    {
+                        TryBases = new ulong[] {0x2300000000, 0x31000000, 0x40000000, 0x50000000, 0xE1000000};
+                    }
+                }
 
-					StaticNullPtr = _Base;
-					Platform.AllocRangeGuard(_Base, _Base + ScratchPadOffset);
-					StaticScratchPadPtr = (byte*)Platform.AllocRange(_Base + ScratchPadOffset, ScratchPadAllocSize);
-					Platform.AllocRangeGuard(_Base + ScratchPadOffset + ScratchPadAllocSize, _Base + FrameBufferOffset);
-					StaticFrameBufferPtr = (byte*)Platform.AllocRange(_Base + FrameBufferOffset, FrameBufferAllocSize);
-					Platform.AllocRangeGuard(_Base + FrameBufferOffset + FrameBufferAllocSize, _Base + MainOffset);
-					StaticMainPtr = (byte*)Platform.AllocRange(_Base + MainOffset, MainAllocSize);
+                uint ScratchPadAllocSize = ScratchPadSize * 0x10;
+                uint FrameBufferAllocSize = FrameBufferSize;
+                uint MainAllocSize = MainSize;
 
-					if (StaticScratchPadPtr != null && StaticFrameBufferPtr != null && StaticMainPtr != null)
-					{
-						Console.WriteLine("FastPspMemory.AllocMemoryOnce: Found Suitable Base ... 0x{0:X}", TryBase);
-						break;
-					}
-					else
-					{
-						if (StaticScratchPadPtr != null) Platform.Free(StaticScratchPadPtr, ScratchPadAllocSize);
-						if (StaticFrameBufferPtr != null) Platform.Free(StaticFrameBufferPtr, FrameBufferAllocSize);
-						if (StaticMainPtr != null) Platform.Free(StaticMainPtr, MainAllocSize);
-					}
-				}
+                foreach (var TryBase in TryBases)
+                {
+                    _Base = (byte*) TryBase;
+                    Console.WriteLine("FastPspMemory.AllocMemoryOnce: Trying Base ... 0x{0:X}", TryBase);
 
-				if (_Base == null || StaticScratchPadPtr == null || StaticFrameBufferPtr == null || StaticMainPtr == null)
-				{
-					//Logger.Fatal("Can't allocate virtual memory!");
-					Debug.Fail("Can't allocate virtual memory!");
-					throw (new InvalidOperationException("Can't allocate virtual memory!"));
-				}
-			}
+                    StaticNullPtr = _Base;
+                    Platform.AllocRangeGuard(_Base, _Base + ScratchPadOffset);
+                    StaticScratchPadPtr = (byte*) Platform.AllocRange(_Base + ScratchPadOffset, ScratchPadAllocSize);
+                    Platform.AllocRangeGuard(_Base + ScratchPadOffset + ScratchPadAllocSize, _Base + FrameBufferOffset);
+                    StaticFrameBufferPtr = (byte*) Platform.AllocRange(_Base + FrameBufferOffset, FrameBufferAllocSize);
+                    Platform.AllocRangeGuard(_Base + FrameBufferOffset + FrameBufferAllocSize, _Base + MainOffset);
+                    StaticMainPtr = (byte*) Platform.AllocRange(_Base + MainOffset, MainAllocSize);
 
-			NullPtr = StaticNullPtr;
-			ScratchPadPtr = StaticScratchPadPtr;
-			FrameBufferPtr = StaticFrameBufferPtr;
-			MainPtr = StaticMainPtr;
-		}
+                    if (StaticScratchPadPtr != null && StaticFrameBufferPtr != null && StaticMainPtr != null)
+                    {
+                        Console.WriteLine("FastPspMemory.AllocMemoryOnce: Found Suitable Base ... 0x{0:X}", TryBase);
+                        break;
+                    }
+                    else
+                    {
+                        if (StaticScratchPadPtr != null) Platform.Free(StaticScratchPadPtr, ScratchPadAllocSize);
+                        if (StaticFrameBufferPtr != null) Platform.Free(StaticFrameBufferPtr, FrameBufferAllocSize);
+                        if (StaticMainPtr != null) Platform.Free(StaticMainPtr, MainAllocSize);
+                    }
+                }
 
-		/*
-		private void AllocMemory()
-		{
-			Logger.Info("FastPspMemory.AllocMemory");
-			ScratchPadPtr = VirtualAlloc(Base + ScratchPadOffset, ScratchPadSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-			FrameBufferPtr = VirtualAlloc(Base + FrameBufferOffset, FrameBufferSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-			MainPtr = VirtualAlloc(Base + MainOffset, MainSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-			if (ScratchPadPtr == null || FrameBufferPtr == null || MainPtr == null)
-			{
-				Logger.Fatal("Can't allocate virtual memory!");
-				throw (new InvalidOperationException());
-			}
-		}
+                if (_Base == null || StaticScratchPadPtr == null || StaticFrameBufferPtr == null ||
+                    StaticMainPtr == null)
+                {
+                    //Logger.Fatal("Can't allocate virtual memory!");
+                    Debug.Fail("Can't allocate virtual memory!");
+                    throw (new InvalidOperationException("Can't allocate virtual memory!"));
+                }
+            }
 
-		private void FreeMemory()
-		{
-			Logger.Info("FastPspMemory.FreeMemory");
-			if (ScratchPadPtr != null)
-			{
-				if (!VirtualFree(ScratchPadPtr, ScratchPadSize, MEM_DECOMMIT | MEM_RELEASE))
-				{
-				}
-				if (!VirtualFree(FrameBufferPtr, FrameBufferSize, MEM_DECOMMIT | MEM_RELEASE))
-				{
-				}
-				if (!VirtualFree(MainPtr, MainSize, MEM_DECOMMIT | MEM_RELEASE))
-				{
-				}
-				ScratchPadPtr = null;
-				FrameBufferPtr = null;
-				MainPtr = null;
-			}
-		}
-		*/
+            NullPtr = StaticNullPtr;
+            ScratchPadPtr = StaticScratchPadPtr;
+            FrameBufferPtr = StaticFrameBufferPtr;
+            MainPtr = StaticMainPtr;
+        }
 
-		public override uint PointerToPspAddressUnsafe(void* Pointer)
-		{
-			if (Pointer == null) return 0;
-			return (uint)((byte*)Pointer - _Base);
-		}
+        /*
+        private void AllocMemory()
+        {
+            Logger.Info("FastPspMemory.AllocMemory");
+            ScratchPadPtr = VirtualAlloc(Base + ScratchPadOffset, ScratchPadSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+            FrameBufferPtr = VirtualAlloc(Base + FrameBufferOffset, FrameBufferSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+            MainPtr = VirtualAlloc(Base + MainOffset, MainSize, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+            if (ScratchPadPtr == null || FrameBufferPtr == null || MainPtr == null)
+            {
+                Logger.Fatal("Can't allocate virtual memory!");
+                throw (new InvalidOperationException());
+            }
+        }
 
-		public override void* PspAddressToPointerUnsafe(uint _Address)
-		{
-			var Address = (_Address & FastPspMemory.FastMemoryMask);
-			//Console.WriteLine("Base: 0x{0:X} ; Address: 0x{1:X}", (ulong)Base, Address);
-			if (Address == 0) return null;
+        private void FreeMemory()
+        {
+            Logger.Info("FastPspMemory.FreeMemory");
+            if (ScratchPadPtr != null)
+            {
+                if (!VirtualFree(ScratchPadPtr, ScratchPadSize, MEM_DECOMMIT | MEM_RELEASE))
+                {
+                }
+                if (!VirtualFree(FrameBufferPtr, FrameBufferSize, MEM_DECOMMIT | MEM_RELEASE))
+                {
+                }
+                if (!VirtualFree(MainPtr, MainSize, MEM_DECOMMIT | MEM_RELEASE))
+                {
+                }
+                ScratchPadPtr = null;
+                FrameBufferPtr = null;
+                MainPtr = null;
+            }
+        }
+        */
+
+        public override uint PointerToPspAddressUnsafe(void* Pointer)
+        {
+            if (Pointer == null) return 0;
+            return (uint) ((byte*) Pointer - _Base);
+        }
+
+        public override void* PspAddressToPointerUnsafe(uint _Address)
+        {
+            var Address = (_Address & FastPspMemory.FastMemoryMask);
+            //Console.WriteLine("Base: 0x{0:X} ; Address: 0x{1:X}", (ulong)Base, Address);
+            if (Address == 0) return null;
 #if false
 			if (_Base == null) throw(new InvalidProgramException("Base is null"));
 #endif
-			return _Base + Address;
-		}
+            return _Base + Address;
+        }
 
-		public override void Dispose()
-		{
-		}
-	}
+        public override void Dispose()
+        {
+        }
+    }
 }

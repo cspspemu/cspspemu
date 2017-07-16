@@ -7,83 +7,78 @@ using System.Runtime.InteropServices;
 namespace CSPspEmu.Hle.Formats
 {
     public class Pbp : IFormatDetector
-	{
-		public enum Types
-		{
-			ParamSfo = 0,
-			Icon0Png,
-			Icon1Pmf,
-			Pic0Png,
-			Pic1Png,
-			Snd0At3,
-			PspData,
-			PsarData,
-		}
-		public static readonly String[] Names = new[] { "param.sfo", "icon0.png", "icon1.pmf", "pic0.png", "pic1.png", "snd0.at3", "psp.data", "psar.data" };
+    {
+        public enum Types
+        {
+            ParamSfo = 0,
+            Icon0Png,
+            Icon1Pmf,
+            Pic0Png,
+            Pic1Png,
+            Snd0At3,
+            PspData,
+            PsarData,
+        }
 
-		public struct HeaderStruct
-		{
-			public enum MagicEnum : uint
-			{
-				ExpectedValue = 0x50425000
-			}
+        public static readonly String[] Names = new[]
+            {"param.sfo", "icon0.png", "icon1.pmf", "pic0.png", "pic1.png", "snd0.at3", "psp.data", "psar.data"};
 
-			public MagicEnum Magic;
-			public uint Version;
+        public struct HeaderStruct
+        {
+            public enum MagicEnum : uint
+            {
+                ExpectedValue = 0x50425000
+            }
 
-			[MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = 8)]
-			public uint[] Offsets;
-		}
+            public MagicEnum Magic;
+            public uint Version;
 
-		protected Stream Stream;
-		protected HeaderStruct Header;
-		protected Dictionary<String, Stream> Files;
+            [MarshalAsAttribute(UnmanagedType.ByValArray, SizeConst = 8)] public uint[] Offsets;
+        }
 
-		public Pbp Load(Stream Stream)
-		{
-			this.Stream = Stream;
-			this.Header = Stream.ReadStruct<HeaderStruct>();
-			this.Files = new Dictionary<string, Stream>();
+        protected Stream Stream;
+        protected HeaderStruct Header;
+        protected Dictionary<String, Stream> Files;
 
-			if (Header.Magic != HeaderStruct.MagicEnum.ExpectedValue)
-			{
-				throw(new Exception("Not a PBP file"));
-			}
+        public Pbp Load(Stream Stream)
+        {
+            this.Stream = Stream;
+            this.Header = Stream.ReadStruct<HeaderStruct>();
+            this.Files = new Dictionary<string, Stream>();
 
-			var Offsets = Header.Offsets.Concat(new[] { (uint)Stream.Length }).ToArray();
+            if (Header.Magic != HeaderStruct.MagicEnum.ExpectedValue)
+            {
+                throw(new Exception("Not a PBP file"));
+            }
 
-			for (int n = 0; n < 8; n++)
-			{
-				Files[Names[n]] = Stream.SliceWithBounds(Offsets[n + 0], Offsets[n + 1]);
-			}
+            var Offsets = Header.Offsets.Concat(new[] {(uint) Stream.Length}).ToArray();
 
-			return this;
-		}
+            for (int n = 0; n < 8; n++)
+            {
+                Files[Names[n]] = Stream.SliceWithBounds(Offsets[n + 0], Offsets[n + 1]);
+            }
 
-		public bool ContainsKey(Types Type)
-		{
-			return Files.ContainsKey(Names[(int)Type]);
-		}
+            return this;
+        }
 
-		public bool ContainsKey(String Key)
-		{
-			return Files.ContainsKey(Key);
-		}
+        public bool ContainsKey(Types Type)
+        {
+            return Files.ContainsKey(Names[(int) Type]);
+        }
 
-		public Stream this[Types Type]
-		{
-			get
-			{
-				return Files[Names[(int)Type]];
-			}
-		}
+        public bool ContainsKey(String Key)
+        {
+            return Files.ContainsKey(Key);
+        }
 
-		public Stream this[String Key]
-		{
-			get
-			{
-				return Files[Key];
-			}
-		}
-	}
+        public Stream this[Types Type]
+        {
+            get { return Files[Names[(int) Type]]; }
+        }
+
+        public Stream this[String Key]
+        {
+            get { return Files[Key]; }
+        }
+    }
 }

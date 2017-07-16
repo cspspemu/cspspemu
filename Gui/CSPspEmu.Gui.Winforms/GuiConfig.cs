@@ -5,21 +5,21 @@ using System.Text;
 
 namespace CSPspEmu.Gui.Winforms
 {
-	public class GuiConfig
-	{
-		/// <summary>
-		/// 
-		/// </summary>
-		public bool AutoLoad = false;
+    public class GuiConfig
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool AutoLoad = false;
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public bool ShowMenus = true;
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool ShowMenus = true;
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public int DefaultDisplayScale = 1;
-	}
+        /// <summary>
+        /// 
+        /// </summary>
+        public int DefaultDisplayScale = 1;
+    }
 }

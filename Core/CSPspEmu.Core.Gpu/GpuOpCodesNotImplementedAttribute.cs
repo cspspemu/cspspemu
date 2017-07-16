@@ -2,8 +2,8 @@
 
 namespace CSPspEmu.Core.Gpu
 {
-	[AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
-	public sealed class GpuOpCodesNotImplementedAttribute : Attribute
-	{
-	}
+    [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
+    public sealed class GpuOpCodesNotImplementedAttribute : Attribute
+    {
+    }
 }

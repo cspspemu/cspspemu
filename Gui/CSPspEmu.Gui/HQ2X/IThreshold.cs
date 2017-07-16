@@ -13,6 +13,6 @@ namespace HQ2x
 {
     public interface IThreshold
     {
-		bool Similar(BGRA color1, BGRA color2);
+        bool Similar(BGRA color1, BGRA color2);
     }
 }

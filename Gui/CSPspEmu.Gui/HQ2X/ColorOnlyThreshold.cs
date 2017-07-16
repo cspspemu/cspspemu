@@ -15,10 +15,10 @@ namespace HQ2x
     {
         private static int[,] s_Matrix = new int[3, 3]
         {
-			{19595, 38470, 7471},
-			{-9642, -18931, 28574},
-			{40304, -33750, -6554},
-		};
+            {19595, 38470, 7471},
+            {-9642, -18931, 28574},
+            {40304, -33750, -6554},
+        };
 
         private int[] m_Thresholds = new int[3];
 
@@ -29,7 +29,7 @@ namespace HQ2x
             m_Thresholds[2] = vThreshold * 65536;
         }
 
-		public bool Similar(BGRA color1, BGRA color2)
+        public bool Similar(BGRA color1, BGRA color2)
         {
             // Quick exit if same:
             if (color1 == color2)

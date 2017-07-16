@@ -145,7 +145,8 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Make a default TreeListView
         /// </summary>
-        public TreeListView() {
+        public TreeListView()
+        {
             this.TreeModel = new Tree(this);
             this.OwnerDraw = true;
             this.View = View.Details;
@@ -164,8 +165,9 @@ namespace BrightIdeasSoftware
         /// This is the delegate that will be used to decide if a model object can be expanded.
         /// </summary>
         [Browsable(false),
-        DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual CanExpandGetterDelegate CanExpandGetter {
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public virtual CanExpandGetterDelegate CanExpandGetter
+        {
             get { return this.TreeModel.CanExpandGetter; }
             set { this.TreeModel.CanExpandGetter = value; }
         }
@@ -174,10 +176,9 @@ namespace BrightIdeasSoftware
         /// Gets whether or not this listview is capabale of showing groups
         /// </summary>
         [Browsable(false)]
-        public override bool CanShowGroups {
-            get {
-                return false;
-            }
+        public override bool CanShowGroups
+        {
+            get { return false; }
         }
 
         /// <summary>
@@ -186,8 +187,9 @@ namespace BrightIdeasSoftware
         /// <remarks>This delegate will only be called if the CanExpand delegate has 
         /// returned true for the model object.</remarks>
         [Browsable(false),
-        DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual ChildrenGetterDelegate ChildrenGetter {
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public virtual ChildrenGetterDelegate ChildrenGetter
+        {
             get { return this.TreeModel.ChildrenGetter; }
             set { this.TreeModel.ChildrenGetter = value; }
         }
@@ -203,14 +205,15 @@ namespace BrightIdeasSoftware
         /// </para>
         /// </remarks>
         [Browsable(false),
-        DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public IEnumerable ExpandedObjects {
-            get {
-                return this.TreeModel.mapObjectToExpanded.Keys;
-            }
-            set {
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public IEnumerable ExpandedObjects
+        {
+            get { return this.TreeModel.mapObjectToExpanded.Keys; }
+            set
+            {
                 this.TreeModel.mapObjectToExpanded.Clear();
-                if (value != null) {
+                if (value != null)
+                {
                     foreach (object x in value)
                         this.TreeModel.SetModelExpanded(x, true);
                 }
@@ -222,28 +225,30 @@ namespace BrightIdeasSoftware
         /// TreeListViews do not currently support whole list filters.
         /// </summary>
         [Browsable(false),
-        DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public override IListFilter ListFilter {
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public override IListFilter ListFilter
+        {
             get { return null; }
-            set {
-                System.Diagnostics.Debug.Assert(value == null, "TreeListView do not support ListFilters");
-            }
+            set { System.Diagnostics.Debug.Assert(value == null, "TreeListView do not support ListFilters"); }
         }
 
         /// <summary>
         /// Gets or sets the collection of root objects of the tree
         /// </summary>
         [Browsable(false),
-        DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public override IEnumerable Objects {
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public override IEnumerable Objects
+        {
             get { return this.Roots; }
             set { this.Roots = value; }
         }
 
         [Browsable(false),
-        DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public override IEnumerable ObjectsForClustering {
-            get {
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public override IEnumerable ObjectsForClustering
+        {
+            get
+            {
                 for (int i = 0; i < this.TreeModel.GetObjectCount(); i++)
                     yield return this.TreeModel.GetNthObject(i);
             }
@@ -256,10 +261,12 @@ namespace BrightIdeasSoftware
         [Category("ObjectListView"),
          Description("Should the parent of an expand subtree be scrolled to the top revealing the children?"),
          DefaultValue(true)]
-        public bool RevealAfterExpand {
+        public bool RevealAfterExpand
+        {
             get { return revealAfterExpand; }
             set { revealAfterExpand = value; }
         }
+
         private bool revealAfterExpand = true;
 
         /// <summary>
@@ -268,10 +275,12 @@ namespace BrightIdeasSoftware
         /// <remarks>Setting this does <b>NOT</b> reset the state of the control.
         /// In particular, it does not collapse branches.</remarks>
         [Browsable(false),
-        DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual IEnumerable Roots {
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public virtual IEnumerable Roots
+        {
             get { return this.TreeModel.RootObjects; }
-            set {
+            set
+            {
                 this.TreeColumnRenderer = this.TreeColumnRenderer;
                 this.TreeModel.RootObjects = value ?? new ArrayList();
                 this.UpdateVirtualListSize();
@@ -282,12 +291,15 @@ namespace BrightIdeasSoftware
         /// Make sure that at least one column is displaying a tree. 
         /// If no columns is showing the tree, make column 0 do it.
         /// </summary>
-        protected virtual void EnsureTreeRendererPresent(TreeRenderer renderer) {
-            if (this.Columns.Count == 0) 
+        protected virtual void EnsureTreeRendererPresent(TreeRenderer renderer)
+        {
+            if (this.Columns.Count == 0)
                 return;
 
-            foreach (OLVColumn col in this.Columns) {
-                if (col.Renderer is TreeRenderer) {
+            foreach (OLVColumn col in this.Columns)
+            {
+                if (col.Renderer is TreeRenderer)
+                {
                     col.Renderer = renderer;
                     return;
                 }
@@ -307,14 +319,17 @@ namespace BrightIdeasSoftware
         /// for that column will be replaced. If no column is rendering the tree,
         /// column 0 will be given this renderer.</remarks>
         [Browsable(false),
-        DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual TreeRenderer TreeColumnRenderer {
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public virtual TreeRenderer TreeColumnRenderer
+        {
             get { return treeRenderer ?? (treeRenderer = new TreeRenderer()); }
-            set {
+            set
+            {
                 treeRenderer = value ?? new TreeRenderer();
                 EnsureTreeRendererPresent(treeRenderer);
             }
         }
+
         private TreeRenderer treeRenderer;
 
         /// <summary>
@@ -324,21 +339,25 @@ namespace BrightIdeasSoftware
         /// branch are being fetched. If the children of the branch have already been cached, 
         /// the cursor will not change.</remarks>
         [Category("ObjectListView"),
-        Description("Should a wait cursor be shown when a branch is being expaned?"),
-        DefaultValue(true)]
-        public virtual bool UseWaitCursorWhenExpanding {
+         Description("Should a wait cursor be shown when a branch is being expaned?"),
+         DefaultValue(true)]
+        public virtual bool UseWaitCursorWhenExpanding
+        {
             get { return useWaitCursorWhenExpanding; }
             set { useWaitCursorWhenExpanding = value; }
         }
+
         private bool useWaitCursorWhenExpanding = true;
 
         /// <summary>
         /// The model that is used to manage the tree structure
         /// </summary>
-        protected Tree TreeModel {
+        protected Tree TreeModel
+        {
             get { return this.treeModel; }
-            set { this.treeModel = value; } 
+            set { this.treeModel = value; }
         }
+
         private Tree treeModel;
 
         //------------------------------------------------------------------------------------------
@@ -349,7 +368,8 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public virtual bool IsExpanded(Object model) {
+        public virtual bool IsExpanded(Object model)
+        {
             Branch br = this.TreeModel.GetBranch(model);
             return (br != null && br.IsExpanded);
         }
@@ -361,12 +381,14 @@ namespace BrightIdeasSoftware
         /// Collapse the subtree underneath the given model
         /// </summary>
         /// <param name="model"></param>
-        public virtual void Collapse(Object model) {
+        public virtual void Collapse(Object model)
+        {
             if (this.GetItemCount() == 0)
                 return;
             IList selection = this.SelectedObjects;
             int index = this.TreeModel.Collapse(model);
-            if (index >= 0) {
+            if (index >= 0)
+            {
                 this.UpdateVirtualListSize();
                 this.SelectedObjects = selection;
                 this.RedrawItems(index, this.GetItemCount() - 1, false);
@@ -376,12 +398,14 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Collapse all subtrees within this control
         /// </summary>
-        public virtual void CollapseAll() {
+        public virtual void CollapseAll()
+        {
             if (this.GetItemCount() == 0)
                 return;
             IList selection = this.SelectedObjects;
             int index = this.TreeModel.CollapseAll();
-            if (index >= 0) {
+            if (index >= 0)
+            {
                 this.UpdateVirtualListSize();
                 this.SelectedObjects = selection;
                 this.RedrawItems(index, this.GetItemCount() - 1, false);
@@ -392,10 +416,12 @@ namespace BrightIdeasSoftware
         /// Remove all items from this list
         /// </summary>
         /// <remark>This method can safely be called from background threads.</remark>
-        public override void ClearObjects() {
+        public override void ClearObjects()
+        {
             if (this.InvokeRequired)
                 this.Invoke(new MethodInvoker(this.ClearObjects));
-            else {
+            else
+            {
                 this.DiscardAllState();
             }
         }
@@ -403,7 +429,8 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Collapse all roots and forget everything we know about all models
         /// </summary>
-        public virtual void DiscardAllState() {
+        public virtual void DiscardAllState()
+        {
             this.CheckStateMap.Clear();
             this.RebuildAll(false);
         }
@@ -412,7 +439,8 @@ namespace BrightIdeasSoftware
         /// Completely rebuild the tree structure
         /// </summary>
         /// <param name="preserveState">If true, the control will try to preserve selection and expansion</param>
-        public virtual void RebuildAll(bool preserveState) {
+        public virtual void RebuildAll(bool preserveState)
+        {
             int previousTopItemIndex = preserveState ? this.TopItemIndex : -1;
 
             this.RebuildAll(
@@ -430,13 +458,15 @@ namespace BrightIdeasSoftware
         /// <param name="selected">If not null, this list of objects will be selected after the tree is rebuilt</param>
         /// <param name="expanded">If not null, this collection of objects will be expanded after the tree is rebuilt</param>
         /// <param name="checkedObjects">If not null, this collection of objects will be checked after the tree is rebuilt</param>
-        protected virtual void RebuildAll(IList selected, IEnumerable expanded, IList checkedObjects) {
+        protected virtual void RebuildAll(IList selected, IEnumerable expanded, IList checkedObjects)
+        {
             // Remember the bits of info we don't want to forget (anyone ever see Memento?)
             IEnumerable roots = this.Roots;
             CanExpandGetterDelegate canExpand = this.CanExpandGetter;
             ChildrenGetterDelegate childrenGetter = this.ChildrenGetter;
 
-            try {
+            try
+            {
                 this.BeginUpdate();
 
                 // Give ourselves a new data structure
@@ -454,7 +484,8 @@ namespace BrightIdeasSoftware
                 if (checkedObjects != null)
                     this.CheckedObjects = checkedObjects;
             }
-            finally {
+            finally
+            {
                 this.EndUpdate();
             }
         }
@@ -463,7 +494,8 @@ namespace BrightIdeasSoftware
         /// Expand the subtree underneath the given model object
         /// </summary>
         /// <param name="model"></param>
-        public virtual void Expand(Object model) {
+        public virtual void Expand(Object model)
+        {
             if (this.GetItemCount() == 0)
                 return;
 
@@ -482,22 +514,28 @@ namespace BrightIdeasSoftware
             // Redraw the items that were changed by the expand operation
             this.RedrawItems(index, this.GetItemCount() - 1, false);
 
-            if (this.RevealAfterExpand && index > 0) {
+            if (this.RevealAfterExpand && index > 0)
+            {
                 // TODO: This should be a separate method
                 this.BeginUpdate();
-                try {
+                try
+                {
                     int countPerPage = NativeMethods.GetCountPerPage(this);
                     int descedentCount = this.TreeModel.GetVisibleDescendentCount(model);
                     // If all of the descendents can be shown in the window, make sure that last one is visible.
                     // If all the descendents can't fit into the window, move the model to the top of the window
                     // (which will show as many of the descendents as possible)
-                    if (descedentCount < countPerPage) {
+                    if (descedentCount < countPerPage)
+                    {
                         this.EnsureVisible(index + descedentCount);
-                    } else {
+                    }
+                    else
+                    {
                         this.TopItemIndex = index;
                     }
                 }
-                finally {
+                finally
+                {
                     this.EndUpdate();
                 }
             }
@@ -507,12 +545,14 @@ namespace BrightIdeasSoftware
         /// Expand all the branches within this tree recursively.
         /// </summary>
         /// <remarks>Be careful: this method could take a long time for large trees.</remarks>
-        public virtual void ExpandAll() {
+        public virtual void ExpandAll()
+        {
             if (this.GetItemCount() == 0)
                 return;
             IList selection = this.SelectedObjects;
             int index = this.TreeModel.ExpandAll();
-            if (index >= 0) {
+            if (index >= 0)
+            {
                 this.UpdateVirtualListSize();
                 this.SelectedObjects = selection;
                 this.RedrawItems(index, this.GetItemCount() - 1, false);
@@ -522,9 +562,11 @@ namespace BrightIdeasSoftware
         /// <summary>
         /// Update the rows that are showing the given objects
         /// </summary>
-        public override void RefreshObjects(IList modelObjects) {
-            if (this.InvokeRequired) {
-                this.Invoke((MethodInvoker)delegate { this.RefreshObjects(modelObjects); });
+        public override void RefreshObjects(IList modelObjects)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke((MethodInvoker) delegate { this.RefreshObjects(modelObjects); });
                 return;
             }
             // There is no point in refreshing anything if the list is empty
@@ -536,8 +578,10 @@ namespace BrightIdeasSoftware
 
             // Refresh each object, remembering where the first update occured
             int firstChange = Int32.MaxValue;
-            foreach (Object model in modelObjects) {
-                if (model != null) {
+            foreach (Object model in modelObjects)
+            {
+                if (model != null)
+                {
                     int index = this.TreeModel.RebuildChildren(model);
                     if (index >= 0)
                         firstChange = Math.Min(firstChange, index);
@@ -560,19 +604,25 @@ namespace BrightIdeasSoftware
         /// Toggle the expanded state of the branch at the given model object
         /// </summary>
         /// <param name="model"></param>
-        public virtual void ToggleExpansion(Object model) {
+        public virtual void ToggleExpansion(Object model)
+        {
             OLVListItem item = this.ModelToItem(model);
-            if (this.IsExpanded(model)) {
+            if (this.IsExpanded(model))
+            {
                 TreeBranchCollapsingEventArgs args = new TreeBranchCollapsingEventArgs(model, item);
                 this.OnCollapsing(args);
-                if (!args.Canceled) {
+                if (!args.Canceled)
+                {
                     this.Collapse(model);
                     this.OnCollapsed(new TreeBranchCollapsedEventArgs(model, item));
                 }
-            } else {
+            }
+            else
+            {
                 TreeBranchExpandingEventArgs args = new TreeBranchExpandingEventArgs(model, item);
                 this.OnExpanding(args);
-                if (!args.Canceled) {
+                if (!args.Canceled)
+                {
                     this.Expand(model);
                     this.OnExpanded(new TreeBranchExpandedEventArgs(model, item));
                 }
@@ -588,7 +638,8 @@ namespace BrightIdeasSoftware
         /// <param name="model"></param>
         /// <returns></returns>
         /// <remarks>The given model must have already been seen in the tree.</remarks>
-        public virtual Object GetParent(Object model) {
+        public virtual Object GetParent(Object model)
+        {
             Branch br = this.TreeModel.GetBranch(model);
             if (br == null || br.ParentBranch == null)
                 return null;
@@ -603,11 +654,12 @@ namespace BrightIdeasSoftware
         /// <param name="model"></param>
         /// <remarks>The given model must have already been seen in the tree and
         /// must be expandable</remarks>
-        public virtual IEnumerable GetChildren(Object model) {
+        public virtual IEnumerable GetChildren(Object model)
+        {
             Branch br = this.TreeModel.GetBranch(model);
             if (br == null || !br.CanExpand)
                 return new ArrayList();
-            
+
             if (!br.IsExpanded)
                 br.Expand();
 
@@ -632,6 +684,7 @@ namespace BrightIdeasSoftware
         public delegate IEnumerable ChildrenGetterDelegate(Object model);
 
         //------------------------------------------------------------------------------------------
+
         #region Implementation
 
         /// <summary>
@@ -639,9 +692,11 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="hti"></param>
         /// <returns></returns>
-        protected override bool ProcessLButtonDown(OlvListViewHitTestInfo hti) {
+        protected override bool ProcessLButtonDown(OlvListViewHitTestInfo hti)
+        {
             // Did they click in the expander?
-            if (hti.HitTestLocation == HitTestLocation.ExpandButton) {
+            if (hti.HitTestLocation == HitTestLocation.ExpandButton)
+            {
                 this.PossibleFinishCellEditing();
                 this.ToggleExpansion(hti.RowObject);
                 return true;
@@ -656,7 +711,8 @@ namespace BrightIdeasSoftware
         /// <param name="itemIndex">The index of the row that is needed</param>
         /// <returns>An OLVListItem</returns>
         /// <remarks>This differs from the base method by also setting up the IndentCount property.</remarks>
-        public override OLVListItem MakeListViewItem(int itemIndex) {
+        public override OLVListItem MakeListViewItem(int itemIndex)
+        {
             OLVListItem olvItem = base.MakeListViewItem(itemIndex);
             Branch br = this.TreeModel.GetBranch(olvItem.RowObject);
             if (br != null)
@@ -667,6 +723,7 @@ namespace BrightIdeasSoftware
         #endregion
 
         //------------------------------------------------------------------------------------------
+
         #region Event handlers
 
         /// <summary>
@@ -674,11 +731,12 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="keyData"></param>
         /// <returns></returns>
-        protected override bool IsInputKey(Keys keyData) {
+        protected override bool IsInputKey(Keys keyData)
+        {
             // We want to handle Left and Right keys within the control
-            if (((keyData & Keys.KeyCode) == Keys.Left) || ((keyData & Keys.KeyCode) == Keys.Right)) 
+            if (((keyData & Keys.KeyCode) == Keys.Left) || ((keyData & Keys.KeyCode) == Keys.Right))
                 return true;
-            
+
             return base.IsInputKey(keyData);
         }
 
@@ -687,9 +745,11 @@ namespace BrightIdeasSoftware
         /// </summary>
         /// <param name="e"></param>
         /// <returns>Was the key press handled?</returns>
-        protected override void OnKeyDown(KeyEventArgs e) {
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
             OLVListItem focused = this.FocusedItem as OLVListItem;
-            if (focused == null) {
+            if (focused == null)
+            {
                 base.OnKeyDown(e);
                 return;
             }
@@ -697,13 +757,15 @@ namespace BrightIdeasSoftware
             Object modelObject = focused.RowObject;
             Branch br = this.TreeModel.GetBranch(modelObject);
 
-            switch (e.KeyCode) {
+            switch (e.KeyCode)
+            {
                 case Keys.Left:
                     // If the branch is expanded, collapse it. If it's collapsed,
                     // select the parent of the branch.
                     if (br.IsExpanded)
                         this.Collapse(modelObject);
-                    else {
+                    else
+                    {
                         if (br.ParentBranch != null && br.ParentBranch.Model != null)
                             this.SelectObject(br.ParentBranch.Model, true);
                     }
@@ -713,11 +775,14 @@ namespace BrightIdeasSoftware
                 case Keys.Right:
                     // If the branch is expanded, select the first child.
                     // If it isn't expanded and can be, expand it.
-                    if (br.IsExpanded) {
+                    if (br.IsExpanded)
+                    {
                         List<Branch> filtered = br.FilteredChildBranches;
                         if (filtered.Count > 0)
                             this.SelectObject(filtered[0].Model, true);
-                    } else {
+                    }
+                    else
+                    {
                         if (br.CanExpand)
                             this.Expand(modelObject);
                     }
@@ -743,7 +808,8 @@ namespace BrightIdeasSoftware
             /// Create a Tree
             /// </summary>
             /// <param name="treeView"></param>
-            public Tree(TreeListView treeView) {
+            public Tree(TreeListView treeView)
+            {
                 this.treeView = treeView;
                 this.trunk = new Branch(null, this, null);
                 this.trunk.IsExpanded = true;
@@ -755,10 +821,12 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// This is the delegate that will be used to decide if a model object can be expanded.
             /// </summary>
-            public CanExpandGetterDelegate CanExpandGetter {
+            public CanExpandGetterDelegate CanExpandGetter
+            {
                 get { return canExpandGetter; }
                 set { canExpandGetter = value; }
             }
+
             private CanExpandGetterDelegate canExpandGetter;
 
             /// <summary>
@@ -766,18 +834,22 @@ namespace BrightIdeasSoftware
             /// </summary>
             /// <remarks>This delegate will only be called if the CanExpand delegate has 
             /// returned true for the model object.</remarks>
-            public ChildrenGetterDelegate ChildrenGetter {
+            public ChildrenGetterDelegate ChildrenGetter
+            {
                 get { return childrenGetter; }
                 set { childrenGetter = value; }
             }
+
             private ChildrenGetterDelegate childrenGetter;
 
             /// <summary>
             /// Get or return the top level model objects in the tree
             /// </summary>
-            public IEnumerable RootObjects {
+            public IEnumerable RootObjects
+            {
                 get { return this.trunk.Children; }
-                set {
+                set
+                {
                     this.trunk.Children = value;
                     foreach (Branch br in this.trunk.ChildBranches)
                         br.RefreshChildren();
@@ -788,7 +860,8 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// What tree view is this Tree the model for?
             /// </summary>
-            public TreeListView TreeView {
+            public TreeListView TreeView
+            {
                 get { return this.treeView; }
             }
 
@@ -801,13 +874,15 @@ namespace BrightIdeasSoftware
             /// <param name="model">The model to be collapsed. If the model isn't in the tree,
             /// or if it is already collapsed, the command does nothing.</param>
             /// <returns>The index of the model in flat list version of the tree</returns>
-            public virtual int Collapse(Object model) {
+            public virtual int Collapse(Object model)
+            {
                 Branch br = this.GetBranch(model);
                 if (br == null || !br.IsExpanded)
                     return -1;
 
                 // Remember that the branch is collapsed, even if it's currently not visible
-                if (!br.Visible) {
+                if (!br.Visible)
+                {
                     br.Collapse();
                     return -1;
                 }
@@ -826,8 +901,10 @@ namespace BrightIdeasSoftware
             /// Collapse all branches in this tree
             /// </summary>
             /// <returns>Return the index of the first root that was not collapsed</returns>
-            public virtual int CollapseAll() {
-                foreach (Branch br in this.trunk.ChildBranches) {
+            public virtual int CollapseAll()
+            {
+                foreach (Branch br in this.trunk.ChildBranches)
+                {
                     if (br.IsExpanded)
                         br.Collapse();
                 }
@@ -844,13 +921,15 @@ namespace BrightIdeasSoftware
             /// If the model isn't in the tree,
             /// if it cannot be expanded or if it is already expanded, the command does nothing.
             /// </remarks>
-            public virtual int Expand(Object model) {
+            public virtual int Expand(Object model)
+            {
                 Branch br = this.GetBranch(model);
                 if (br == null || !br.CanExpand || br.IsExpanded)
                     return -1;
 
                 // Remember that the branch is expanded, even if it's currently not visible
-                if (!br.Visible) {
+                if (!br.Visible)
+                {
                     br.Expand();
                     return -1;
                 }
@@ -864,7 +943,8 @@ namespace BrightIdeasSoftware
             /// Expand all branches in this tree
             /// </summary>
             /// <returns>Return the index of the first branch that was expanded</returns>
-            public virtual int ExpandAll() {
+            public virtual int ExpandAll()
+            {
                 this.trunk.ExpandAll();
                 this.Sort(this.lastSortColumn, this.lastSortOrder);
                 return 0;
@@ -876,7 +956,8 @@ namespace BrightIdeasSoftware
             /// <param name="model">The model whose branches is to be returned</param>
             /// <returns>The branch that represents the given model, or null if the model
             /// isn't in the tree.</returns>
-            public virtual Branch GetBranch(object model) {
+            public virtual Branch GetBranch(object model)
+            {
                 if (model == null)
                     return null;
 
@@ -890,7 +971,8 @@ namespace BrightIdeasSoftware
             /// </summary>
             /// <param name="model">The model whose descendent count is to be returned</param>
             /// <returns>The number of visible descendents. 0 if the model doesn't exist or is collapsed</returns>
-            public virtual int GetVisibleDescendentCount(object model) {
+            public virtual int GetVisibleDescendentCount(object model)
+            {
                 Branch br = this.GetBranch(model);
                 if (br == null || !br.IsExpanded)
                     return 0;
@@ -903,7 +985,8 @@ namespace BrightIdeasSoftware
             /// </summary>
             /// <param name="model"></param>
             /// <returns>The index of the model in flat list version of the tree</returns>
-            public virtual int RebuildChildren(Object model) {
+            public virtual int RebuildChildren(Object model)
+            {
                 Branch br = this.GetBranch(model);
                 if (br == null || !br.Visible)
                     return -1;
@@ -915,7 +998,8 @@ namespace BrightIdeasSoftware
                 int index = this.GetObjectIndex(model);
                 if (count > 0)
                     this.objectList.RemoveRange(index + 1, count);
-                if (br.CanExpand && br.IsExpanded) {
+                if (br.CanExpand && br.IsExpanded)
+                {
                     br.FetchChildren();
                     this.InsertChildren(br, index + 1);
                 }
@@ -930,7 +1014,8 @@ namespace BrightIdeasSoftware
             /// </summary>
             /// <param name="model"></param>
             /// <returns></returns>
-            internal bool IsModelExpanded(object model) {
+            internal bool IsModelExpanded(object model)
+            {
                 // Special case: model == null is the container for the roots. This is always expanded
                 if (model == null)
                     return true;
@@ -944,7 +1029,8 @@ namespace BrightIdeasSoftware
             /// </summary>
             /// <param name="model"></param>
             /// <param name="isExpanded"></param>
-            internal void SetModelExpanded(object model, bool isExpanded) {
+            internal void SetModelExpanded(object model, bool isExpanded)
+            {
                 if (model == null) return;
 
                 if (isExpanded)
@@ -958,7 +1044,8 @@ namespace BrightIdeasSoftware
             /// </summary>
             /// <param name="br">The branch whose children should be inserted</param>
             /// <param name="index">The index where the children should be inserted</param>
-            protected virtual void InsertChildren(Branch br, int index) {
+            protected virtual void InsertChildren(Branch br, int index)
+            {
                 // Expand the branch
                 br.Expand();
                 br.Sort(this.GetBranchComparer());
@@ -971,10 +1058,12 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Rebuild our flat internal list of objects.
             /// </summary>
-            protected virtual void RebuildList() {
+            protected virtual void RebuildList()
+            {
                 this.objectList = ArrayList.Adapter(this.trunk.Flatten());
                 List<Branch> filtered = this.trunk.FilteredChildBranches;
-                if (filtered.Count > 0) {
+                if (filtered.Count > 0)
+                {
                     filtered[0].IsFirstBranch = true;
                     filtered[0].IsOnlyBranch = (filtered.Count == 1);
                 }
@@ -986,7 +1075,8 @@ namespace BrightIdeasSoftware
             /// in the filteredObjectList array.
             /// </summary>
             /// <param name="startIndex"></param>
-            protected virtual void RebuildObjectMap(int startIndex) {
+            protected virtual void RebuildObjectMap(int startIndex)
+            {
                 if (startIndex == 0)
                     this.mapObjectToIndex.Clear();
                 for (int i = startIndex; i < this.objectList.Count; i++)
@@ -999,7 +1089,8 @@ namespace BrightIdeasSoftware
             /// <param name="parent"></param>
             /// <param name="model"></param>
             /// <returns></returns>
-            internal Branch MakeBranch(Branch parent, object model) {
+            internal Branch MakeBranch(Branch parent, object model)
+            {
                 Branch br = new Branch(parent, this, model);
 
                 // Remember that the given branch is part of this tree.
@@ -1016,7 +1107,8 @@ namespace BrightIdeasSoftware
             /// </summary>
             /// <param name="n"></param>
             /// <returns></returns>
-            public virtual object GetNthObject(int n) {
+            public virtual object GetNthObject(int n)
+            {
                 return this.objectList[n];
             }
 
@@ -1024,7 +1116,8 @@ namespace BrightIdeasSoftware
             /// 
             /// </summary>
             /// <returns></returns>
-            public virtual int GetObjectCount() {
+            public virtual int GetObjectCount()
+            {
                 return this.trunk.NumberVisibleDescendents;
             }
 
@@ -1033,7 +1126,8 @@ namespace BrightIdeasSoftware
             /// </summary>
             /// <param name="model"></param>
             /// <returns></returns>
-            public virtual int GetObjectIndex(object model) {
+            public virtual int GetObjectIndex(object model)
+            {
                 int index;
 
                 if (model != null && this.mapObjectToIndex.TryGetValue(model, out index))
@@ -1047,7 +1141,8 @@ namespace BrightIdeasSoftware
             /// </summary>
             /// <param name="first"></param>
             /// <param name="last"></param>
-            public virtual void PrepareCache(int first, int last) {
+            public virtual void PrepareCache(int first, int last)
+            {
             }
 
             /// <summary>
@@ -1058,7 +1153,8 @@ namespace BrightIdeasSoftware
             /// <param name="last"></param>
             /// <param name="column"></param>
             /// <returns></returns>
-            public virtual int SearchText(string value, int first, int last, OLVColumn column) {
+            public virtual int SearchText(string value, int first, int last, OLVColumn column)
+            {
                 return AbstractVirtualListDataSource.DefaultSearchText(value, first, last, column, this);
             }
 
@@ -1067,7 +1163,8 @@ namespace BrightIdeasSoftware
             /// </summary>
             /// <param name="column"></param>
             /// <param name="order"></param>
-            public virtual void Sort(OLVColumn column, SortOrder order) {
+            public virtual void Sort(OLVColumn column, SortOrder order)
+            {
                 this.lastSortColumn = column;
                 this.lastSortOrder = order;
 
@@ -1086,7 +1183,8 @@ namespace BrightIdeasSoftware
             /// 
             /// </summary>
             /// <returns></returns>
-            protected virtual BranchComparer GetBranchComparer() {
+            protected virtual BranchComparer GetBranchComparer()
+            {
                 if (this.lastSortColumn == null)
                     return null;
                 else
@@ -1098,7 +1196,8 @@ namespace BrightIdeasSoftware
             /// Add the given collection of objects to the roots of this tree
             /// </summary>
             /// <param name="modelObjects"></param>
-            public virtual void AddObjects(ICollection modelObjects) {
+            public virtual void AddObjects(ICollection modelObjects)
+            {
                 ArrayList newRoots = new ArrayList();
                 foreach (Object x in this.treeView.Roots)
                     newRoots.Add(x);
@@ -1112,11 +1211,13 @@ namespace BrightIdeasSoftware
             /// Any objects that is not already in the roots collection is ignored.
             /// </summary>
             /// <param name="modelObjects"></param>
-            public virtual void RemoveObjects(ICollection modelObjects) {
+            public virtual void RemoveObjects(ICollection modelObjects)
+            {
                 ArrayList newRoots = new ArrayList();
                 foreach (Object x in this.treeView.Roots)
                     newRoots.Add(x);
-                foreach (Object x in modelObjects) {
+                foreach (Object x in modelObjects)
+                {
                     newRoots.Remove(x);
                     this.mapObjectToIndex.Remove(x);
                 }
@@ -1127,7 +1228,8 @@ namespace BrightIdeasSoftware
             /// Set the roots of this tree to be the given collection
             /// </summary>
             /// <param name="collection"></param>
-            public virtual void SetObjects(IEnumerable collection) {
+            public virtual void SetObjects(IEnumerable collection)
+            {
                 // We interpret a SetObjects() call as setting the roots of the tree
                 this.treeView.Roots = collection;
             }
@@ -1141,7 +1243,8 @@ namespace BrightIdeasSoftware
             /// </summary>
             /// <param name="modelFilter"></param>
             /// <param name="listFilter"></param>
-            public void ApplyFilters(IModelFilter modelFilter, IListFilter listFilter) {
+            public void ApplyFilters(IModelFilter modelFilter, IListFilter listFilter)
+            {
                 this.modelFilter = modelFilter;
                 this.listFilter = listFilter;
                 this.RebuildList();
@@ -1150,10 +1253,9 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Is this list currently being filtered?
             /// </summary>
-            internal bool IsFiltering {
-                get {
-                    return this.treeView.UseFiltering && (this.modelFilter != null || this.listFilter != null);
-                }
+            internal bool IsFiltering
+            {
+                get { return this.treeView.UseFiltering && (this.modelFilter != null || this.listFilter != null); }
             }
 
             /// <summary>
@@ -1161,7 +1263,8 @@ namespace BrightIdeasSoftware
             /// </summary>
             /// <param name="model">The model to consider</param>
             /// <returns>True if it will be included</returns>
-            internal bool IncludeModel(object model) {
+            internal bool IncludeModel(object model)
+            {
                 if (!this.treeView.UseFiltering)
                     return true;
 
@@ -1189,6 +1292,7 @@ namespace BrightIdeasSoftware
             /// 
             /// </summary>
             protected IModelFilter modelFilter;
+
             /// <summary>
             /// 
             /// </summary>
@@ -1230,7 +1334,8 @@ namespace BrightIdeasSoftware
             /// <param name="parent"></param>
             /// <param name="tree"></param>
             /// <param name="model"></param>
-            public Branch(Branch parent, Tree tree, Object model) {
+            public Branch(Branch parent, Tree tree, Object model)
+            {
                 this.ParentBranch = parent;
                 this.Tree = tree;
                 this.Model = model;
@@ -1246,8 +1351,10 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Get the ancestor branches of this branch, with the 'oldest' ancestor first.
             /// </summary>
-            public virtual IList<Branch> Ancestors {
-                get {
+            public virtual IList<Branch> Ancestors
+            {
+                get
+                {
                     List<Branch> ancestors = new List<Branch>();
                     if (this.ParentBranch != null)
                         this.ParentBranch.PushAncestors(ancestors);
@@ -1255,9 +1362,11 @@ namespace BrightIdeasSoftware
                 }
             }
 
-            private void PushAncestors(IList<Branch> list) {
+            private void PushAncestors(IList<Branch> list)
+            {
                 // This is designed to ignore the trunk (which has no parent)
-                if (this.ParentBranch != null) {
+                if (this.ParentBranch != null)
+                {
                     this.ParentBranch.PushAncestors(list);
                     list.Add(this);
                 }
@@ -1266,8 +1375,10 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Can this branch be expanded?
             /// </summary>
-            public virtual bool CanExpand {
-                get {
+            public virtual bool CanExpand
+            {
+                get
+                {
                     if (this.Tree.CanExpandGetter == null || this.Model == null)
                         return false;
                     else
@@ -1278,30 +1389,36 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Gets or sets our children
             /// </summary>
-            public List<Branch> ChildBranches {
+            public List<Branch> ChildBranches
+            {
                 get { return this.childBranches; }
                 set { this.childBranches = value; }
             }
+
             private List<Branch> childBranches = new List<Branch>();
 
             /// <summary>
             /// Get/set the model objects that are beneath this branch
             /// </summary>
-            public virtual IEnumerable Children {
-                get {
+            public virtual IEnumerable Children
+            {
+                get
+                {
                     ArrayList children = new ArrayList();
                     foreach (Branch x in this.ChildBranches)
                         children.Add(x.Model);
                     return children;
                 }
-                set {
+                set
+                {
                     this.ChildBranches.Clear();
                     foreach (Object x in value)
                         this.AddChild(x);
                 }
             }
 
-            private void AddChild(object model) {
+            private void AddChild(object model)
+            {
                 Branch br = this.Tree.GetBranch(model);
                 if (br == null)
                     br = this.Tree.MakeBranch(this, model);
@@ -1313,8 +1430,10 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Gets a list of all the branches that survive filtering
             /// </summary>
-            public List<Branch> FilteredChildBranches {
-                get {
+            public List<Branch> FilteredChildBranches
+            {
+                get
+                {
                     if (!this.IsExpanded)
                         return new List<Branch>();
 
@@ -1322,10 +1441,12 @@ namespace BrightIdeasSoftware
                         return this.ChildBranches;
 
                     List<Branch> filtered = new List<Branch>();
-                    foreach (Branch b in this.ChildBranches) {
+                    foreach (Branch b in this.ChildBranches)
+                    {
                         if (this.Tree.IncludeModel(b.Model))
                             filtered.Add(b);
-                        else {
+                        else
+                        {
                             // Also include this branch if it has any filtered branches (yes, its recursive)
                             if (b.FilteredChildBranches.Count > 0)
                                 filtered.Add(b);
@@ -1338,7 +1459,8 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Gets or set whether this branch is expanded
             /// </summary>
-            public bool IsExpanded {
+            public bool IsExpanded
+            {
                 get { return this.Tree.IsModelExpanded(this.Model); }
                 set { this.Tree.SetModelExpanded(this.Model, value); }
             }
@@ -1346,11 +1468,11 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Return true if this branch is the first branch of the entire tree
             /// </summary>
-            public virtual bool IsFirstBranch {
-                get {
-                    return ((this.flags & Branch.BranchFlags.FirstBranch) != 0);
-                }
-                set {
+            public virtual bool IsFirstBranch
+            {
+                get { return ((this.flags & Branch.BranchFlags.FirstBranch) != 0); }
+                set
+                {
                     if (value)
                         this.flags |= Branch.BranchFlags.FirstBranch;
                     else
@@ -1361,11 +1483,11 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Return true if this branch is the last child of its parent
             /// </summary>
-            public virtual bool IsLastChild {
-                get {
-                    return ((this.flags & Branch.BranchFlags.LastChild) != 0);
-                }
-                set {
+            public virtual bool IsLastChild
+            {
+                get { return ((this.flags & Branch.BranchFlags.LastChild) != 0); }
+                set
+                {
                     if (value)
                         this.flags |= Branch.BranchFlags.LastChild;
                     else
@@ -1376,11 +1498,11 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Return true if this branch is the only top level branch
             /// </summary>
-            public virtual bool IsOnlyBranch {
-                get {
-                    return ((this.flags & Branch.BranchFlags.OnlyBranch) != 0);
-                }
-                set {
+            public virtual bool IsOnlyBranch
+            {
+                get { return ((this.flags & Branch.BranchFlags.OnlyBranch) != 0); }
+                set
+                {
                     if (value)
                         this.flags |= Branch.BranchFlags.OnlyBranch;
                     else
@@ -1391,8 +1513,10 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Gets the depth level of this branch
             /// </summary>
-            public int Level {
-                get {
+            public int Level
+            {
+                get
+                {
                     if (this.ParentBranch == null)
                         return 0;
                     else
@@ -1403,18 +1527,22 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Gets or sets which model is represented by this branch
             /// </summary>
-            public Object Model {
+            public Object Model
+            {
                 get { return model; }
                 set { model = value; }
             }
+
             private Object model;
 
             /// <summary>
             /// Return the number of descendents of this branch that are currently visible
             /// </summary>
             /// <returns></returns>
-            public virtual int NumberVisibleDescendents {
-                get {
+            public virtual int NumberVisibleDescendents
+            {
+                get
+                {
                     if (!this.IsExpanded)
                         return 0;
 
@@ -1429,19 +1557,23 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Gets or sets our parent branch
             /// </summary>
-            public Branch ParentBranch {
+            public Branch ParentBranch
+            {
                 get { return parentBranch; }
                 set { parentBranch = value; }
             }
+
             private Branch parentBranch;
 
             /// <summary>
             /// Gets or sets our overall tree
             /// </summary>
-            public Tree Tree {
+            public Tree Tree
+            {
                 get { return tree; }
                 set { tree = value; }
             }
+
             private Tree tree;
 
             /// <summary>
@@ -1449,8 +1581,10 @@ namespace BrightIdeasSoftware
             /// if it has no parent (i.e. it's a root), or its parent
             /// is visible and expanded.
             /// </summary>
-            public virtual bool Visible {
-                get {
+            public virtual bool Visible
+            {
+                get
+                {
                     if (this.ParentBranch == null)
                         return true;
                     else
@@ -1468,7 +1602,8 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Clear any cached information that this branch is holding
             /// </summary>
-            public virtual void ClearCachedInfo() {
+            public virtual void ClearCachedInfo()
+            {
                 this.Children = new ArrayList();
                 this.alreadyHasChildren = false;
             }
@@ -1476,15 +1611,18 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Collapse this branch
             /// </summary>
-            public virtual void Collapse() {
+            public virtual void Collapse()
+            {
                 this.IsExpanded = false;
             }
 
             /// <summary>
             /// Expand this branch
             /// </summary>
-            public virtual void Expand() {
-                if (this.CanExpand) {
+            public virtual void Expand()
+            {
+                if (this.CanExpand)
+                {
                     this.IsExpanded = true;
                     this.FetchChildren();
                 }
@@ -1493,7 +1631,8 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Expand this branch recursively
             /// </summary>
-            public virtual void ExpandAll() {
+            public virtual void ExpandAll()
+            {
                 this.Expand();
                 foreach (Branch br in this.ChildBranches)
                     br.ExpandAll();
@@ -1503,7 +1642,8 @@ namespace BrightIdeasSoftware
             /// Fetch the children of this branch.
             /// </summary>
             /// <remarks>This should only be called when CanExpand is true.</remarks>
-            public virtual void FetchChildren() {
+            public virtual void FetchChildren()
+            {
                 if (this.alreadyHasChildren)
                     return;
 
@@ -1512,16 +1652,21 @@ namespace BrightIdeasSoftware
                 if (this.Tree.ChildrenGetter == null)
                     return;
 
-                if (this.Tree.TreeView.UseWaitCursorWhenExpanding) {
+                if (this.Tree.TreeView.UseWaitCursorWhenExpanding)
+                {
                     Cursor previous = Cursor.Current;
-                    try {
+                    try
+                    {
                         Cursor.Current = Cursors.WaitCursor;
                         this.Children = this.Tree.ChildrenGetter(this.Model);
                     }
-                    finally {
+                    finally
+                    {
                         Cursor.Current = previous;
                     }
-                } else {
+                }
+                else
+                {
                     this.Children = this.Tree.ChildrenGetter(this.Model);
                 }
             }
@@ -1530,7 +1675,8 @@ namespace BrightIdeasSoftware
             /// Collapse the visible descendents of this branch into list of model objects
             /// </summary>
             /// <returns></returns>
-            public virtual IList Flatten() {
+            public virtual IList Flatten()
+            {
                 ArrayList flatList = new ArrayList();
                 if (this.IsExpanded)
                     this.FlattenOnto(flatList);
@@ -1542,9 +1688,11 @@ namespace BrightIdeasSoftware
             /// </summary>
             /// <param name="flatList"></param>
             /// <remarks>The branch itself is <b>not</b> included in the list.</remarks>
-            public virtual void FlattenOnto(IList flatList) {
+            public virtual void FlattenOnto(IList flatList)
+            {
                 Branch lastBranch = null;
-                foreach (Branch br in this.FilteredChildBranches) {
+                foreach (Branch br in this.FilteredChildBranches)
+                {
                     lastBranch = br;
                     br.IsLastChild = false;
                     flatList.Add(br.Model);
@@ -1558,8 +1706,10 @@ namespace BrightIdeasSoftware
             /// <summary>
             /// Force a refresh of all children recursively
             /// </summary>
-            public virtual void RefreshChildren() {
-                if (this.IsExpanded && this.CanExpand) {
+            public virtual void RefreshChildren()
+            {
+                if (this.IsExpanded && this.CanExpand)
+                {
                     this.FetchChildren();
                     foreach (Branch br in this.ChildBranches)
                         br.RefreshChildren();
@@ -1571,7 +1721,8 @@ namespace BrightIdeasSoftware
             /// to the given comparer.
             /// </summary>
             /// <param name="comparer">The comparer that orders the branches</param>
-            public virtual void Sort(BranchComparer comparer) {
+            public virtual void Sort(BranchComparer comparer)
+            {
                 if (this.ChildBranches.Count == 0)
                     return;
 
@@ -1601,7 +1752,8 @@ namespace BrightIdeasSoftware
             /// Create a BranchComparer
             /// </summary>
             /// <param name="actualComparer"></param>
-            public BranchComparer(IComparer actualComparer) {
+            public BranchComparer(IComparer actualComparer)
+            {
                 this.actualComparer = actualComparer;
             }
 
@@ -1611,12 +1763,12 @@ namespace BrightIdeasSoftware
             /// <param name="x"></param>
             /// <param name="y"></param>
             /// <returns></returns>
-            public int Compare(Branch x, Branch y) {
+            public int Compare(Branch x, Branch y)
+            {
                 return this.actualComparer.Compare(x.Model, y.Model);
             }
 
             private IComparer actualComparer;
         }
-
     }
 }

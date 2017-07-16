@@ -5,17 +5,17 @@ using System.Text;
 
 namespace CSPspEmu.Core.Memory
 {
-	public class DefaultMemoryInfo : IPspMemoryInfo
-	{
-		static public DefaultMemoryInfo Instance = new DefaultMemoryInfo();
+    public class DefaultMemoryInfo : IPspMemoryInfo
+    {
+        static public DefaultMemoryInfo Instance = new DefaultMemoryInfo();
 
-		private DefaultMemoryInfo()
-		{
-		}
+        private DefaultMemoryInfo()
+        {
+        }
 
-		public bool IsAddressValid(uint Address)
-		{
-			return PspMemory.IsAddressValid(Address);
-		}
-	}
+        public bool IsAddressValid(uint Address)
+        {
+            return PspMemory.IsAddressValid(Address);
+        }
+    }
 }

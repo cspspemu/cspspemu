@@ -12,62 +12,66 @@ using System.Threading.Tasks;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-	unsafe public class TextureHookInfo
-	{
-		public int Width;
-		public int Height;
-		public OutputPixel[] Data;
-		public TextureCacheKey TextureCacheKey;
-	}
+    unsafe public class TextureHookInfo
+    {
+        public int Width;
+        public int Height;
+        public OutputPixel[] Data;
+        public TextureCacheKey TextureCacheKey;
+    }
 
-	public unsafe class TextureOpengl : Texture<OpenglGpuImpl>
-	{
-		public GLTexture Texture;
-		public int TextureId { get { return (int)Texture.Texture; } }
+    public unsafe class TextureOpengl : Texture<OpenglGpuImpl>
+    {
+        public GLTexture Texture;
 
-		protected override void Init()
-		{
-			Texture = GLTexture.Create();
-		}
+        public int TextureId
+        {
+            get { return (int) Texture.Texture; }
+        }
 
-		public override bool SetData(OutputPixel[] Pixels, int TextureWidth, int TextureHeight)
-		{
-			this.Width = TextureWidth;
-			this.Height = TextureHeight;
+        protected override void Init()
+        {
+            Texture = GLTexture.Create();
+        }
 
-			Bind();
-			Texture.SetFormat(TextureFormat.RGBA).SetSize(TextureWidth, TextureHeight).SetData(Pixels);
+        public override bool SetData(OutputPixel[] Pixels, int TextureWidth, int TextureHeight)
+        {
+            this.Width = TextureWidth;
+            this.Height = TextureHeight;
 
-			return true;
-		}
+            Bind();
+            Texture.SetFormat(TextureFormat.RGBA).SetSize(TextureWidth, TextureHeight).SetData(Pixels);
 
-		//public void SetData(byte[] Data, int Width, int Height)
-		//{
-		//	fixed (byte* DataPtr = Data)
-		//	{
-		//		SetData((OutputPixel*)DataPtr, Width, Height);
-		//	}
-		//}
+            return true;
+        }
 
-		public override void Bind()
-		{
-			Texture.Bind();
-		}
+        //public void SetData(byte[] Data, int Width, int Height)
+        //{
+        //	fixed (byte* DataPtr = Data)
+        //	{
+        //		SetData((OutputPixel*)DataPtr, Width, Height);
+        //	}
+        //}
 
-		public override void Dispose()
-		{
-			if (TextureId != 0)
-			{
-				Texture.Dispose();
-			}
-		}
-	}
+        public override void Bind()
+        {
+            Texture.Bind();
+        }
 
-	public class TextureCacheOpengl : TextureCache<OpenglGpuImpl, TextureOpengl>
-	{
-		public TextureCacheOpengl(PspMemory PspMemory, OpenglGpuImpl GpuImpl, InjectContext InjectContext)
-			: base (PspMemory, GpuImpl, InjectContext)
-		{
-		}
-	}
+        public override void Dispose()
+        {
+            if (TextureId != 0)
+            {
+                Texture.Dispose();
+            }
+        }
+    }
+
+    public class TextureCacheOpengl : TextureCache<OpenglGpuImpl, TextureOpengl>
+    {
+        public TextureCacheOpengl(PspMemory PspMemory, OpenglGpuImpl GpuImpl, InjectContext InjectContext)
+            : base(PspMemory, GpuImpl, InjectContext)
+        {
+        }
+    }
 }

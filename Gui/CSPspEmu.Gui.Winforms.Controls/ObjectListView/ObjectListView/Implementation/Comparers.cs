@@ -84,7 +84,7 @@ namespace BrightIdeasSoftware
         /// <returns>An ordering indication: -1, 0, 1</returns>
         public int Compare(object x, object y)
         {
-            return this.Compare((OLVListItem)x, (OLVListItem)y);
+            return this.Compare((OLVListItem) x, (OLVListItem) y);
         }
 
         /// <summary>
@@ -105,12 +105,15 @@ namespace BrightIdeasSoftware
             // Handle nulls. Null values come last
             bool xIsNull = (x1 == null || x1 == System.DBNull.Value);
             bool yIsNull = (y1 == null || y1 == System.DBNull.Value);
-            if (xIsNull || yIsNull) {
+            if (xIsNull || yIsNull)
+            {
                 if (xIsNull && yIsNull)
                     result = 0;
                 else
                     result = (xIsNull ? -1 : 1);
-            } else {
+            }
+            else
+            {
                 result = this.CompareValues(x1, y1);
             }
 
@@ -135,8 +138,9 @@ namespace BrightIdeasSoftware
             // Force case insensitive compares on strings
             String xAsString = x as String;
             if (xAsString != null)
-                return String.Compare(xAsString, (String)y, StringComparison.CurrentCultureIgnoreCase);
-            else {
+                return String.Compare(xAsString, (String) y, StringComparison.CurrentCultureIgnoreCase);
+            else
+            {
                 IComparable comparable = x as IComparable;
                 if (comparable != null)
                     return comparable.CompareTo(y);
@@ -161,7 +165,8 @@ namespace BrightIdeasSoftware
         /// Create a group comparer
         /// </summary>
         /// <param name="order">The ordering for column values</param>
-        public OLVGroupComparer(SortOrder order) {
+        public OLVGroupComparer(SortOrder order)
+        {
             this.sortOrder = order;
         }
 
@@ -172,7 +177,8 @@ namespace BrightIdeasSoftware
         /// <param name="x">group1</param>
         /// <param name="y">group2</param>
         /// <returns>An ordering indication: -1, 0, 1</returns>
-        public int Compare(OLVGroup x, OLVGroup y) {
+        public int Compare(OLVGroup x, OLVGroup y)
+        {
             // If we can compare the sort values, do that.
             // Otherwise do a case insensitive compare on the group header.
             int result;
@@ -239,12 +245,15 @@ namespace BrightIdeasSoftware
             // Handle nulls. Null values come last
             bool xIsNull = (x1 == null || x1 == System.DBNull.Value);
             bool yIsNull = (y1 == null || y1 == System.DBNull.Value);
-            if (xIsNull || yIsNull) {
+            if (xIsNull || yIsNull)
+            {
                 if (xIsNull && yIsNull)
                     result = 0;
                 else
                     result = (xIsNull ? -1 : 1);
-            } else {
+            }
+            else
+            {
                 result = this.CompareValues(x1, y1);
             }
 
@@ -269,8 +278,9 @@ namespace BrightIdeasSoftware
             // Force case insensitive compares on strings
             String xStr = x as String;
             if (xStr != null)
-                return String.Compare(xStr, (String)y, StringComparison.CurrentCultureIgnoreCase);
-            else {
+                return String.Compare(xStr, (String) y, StringComparison.CurrentCultureIgnoreCase);
+            else
+            {
                 IComparable comparable = x as IComparable;
                 if (comparable != null)
                     return comparable.CompareTo(y);
@@ -287,5 +297,4 @@ namespace BrightIdeasSoftware
 
         #endregion
     }
-
 }

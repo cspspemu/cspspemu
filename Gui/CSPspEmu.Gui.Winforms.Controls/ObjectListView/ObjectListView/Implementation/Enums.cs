@@ -29,13 +29,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace BrightIdeasSoftware {
-
-    public partial class ObjectListView {
+namespace BrightIdeasSoftware
+{
+    public partial class ObjectListView
+    {
         /// <summary>
         /// How does a user indicate that they want to edit cells?
         /// </summary>
-        public enum CellEditActivateMode {
+        public enum CellEditActivateMode
+        {
             /// <summary>
             /// This list cannot be edited. F2 does nothing.
             /// </summary>
@@ -63,7 +65,8 @@ namespace BrightIdeasSoftware {
         /// <summary>
         /// These values specify how column selection will be presented to the user
         /// </summary>
-        public enum ColumnSelectBehaviour {
+        public enum ColumnSelectBehaviour
+        {
             /// <summary>
             /// No column selection will be presented 
             /// </summary>
