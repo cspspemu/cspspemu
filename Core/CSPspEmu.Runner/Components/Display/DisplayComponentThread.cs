@@ -15,35 +15,35 @@ namespace CSPspEmu.Runner.Components.Display
 		[Inject]
 		private PspDisplay PspDisplay;
 
-		protected override string ThreadName { get { return "DisplayThread"; } }
+		protected override string ThreadName => "DisplayThread";
 
 		protected override void Main()
 		{
 			Console.WriteLine("DisplayComponentThread.Start()");
 			try
 			{
-				var VSyncTimeIncrement = TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.VsyncRow)));
+				var vSyncTimeIncrement = TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.VsyncRow)));
 				//var VSyncTimeIncrement = TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.VsyncRow / 2))); // HACK to give more time to render!
-				var EndTimeIncrement = TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.NumberOfRows)));
-				var VBlankInterruptHandler = HleInterruptManager.GetInterruptHandler(PspInterrupts.PSP_VBLANK_INT);
+				var endTimeIncrement = TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.NumberOfRows)));
+				var vBlankInterruptHandler = HleInterruptManager.GetInterruptHandler(PspInterrupts.PSP_VBLANK_INT);
 				while (true)
 				{
 					//Console.WriteLine("[1]");
-					var StartTime = DateTime.UtcNow;
-					var VSyncTime = StartTime + VSyncTimeIncrement;
-					var EndTime = StartTime + EndTimeIncrement;
+					var startTime = DateTime.UtcNow;
+					var vSyncTime = startTime + vSyncTimeIncrement;
+					var endTime = startTime + endTimeIncrement;
 
 					ThreadTaskQueue.HandleEnqueued();
 					if (!Running) return;
 
 					// Draw time
 					PspDisplay.TriggerDrawStart();
-					ThreadUtils.SleepUntilUtc(VSyncTime);
+					ThreadUtils.SleepUntilUtc(vSyncTime);
 
 					// VBlank time
 					PspDisplay.TriggerVBlankStart();
-					VBlankInterruptHandler.Trigger();
-					ThreadUtils.SleepUntilUtc(EndTime);
+					vBlankInterruptHandler.Trigger();
+					ThreadUtils.SleepUntilUtc(endTime);
 					PspDisplay.TriggerVBlankEnd();
 				}
 			}

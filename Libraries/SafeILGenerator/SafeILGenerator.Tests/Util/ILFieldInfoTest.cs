@@ -14,7 +14,7 @@ namespace SafeILGenerator.Tests.Util
 		{
 			Assert.AreEqual(
 				typeof(ILFieldInfoTest).GetField("Test"),
-				ILFieldInfo.GetFieldInfo(() => Test)
+				IlFieldInfo.GetFieldInfo(() => Test)
 			);
 		}
 	}
