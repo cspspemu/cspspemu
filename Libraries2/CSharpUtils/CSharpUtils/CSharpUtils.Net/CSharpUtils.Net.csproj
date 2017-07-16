@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{27186199-B389-422A-B11F-91A18954D617}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CSharpUtils.Net</RootNamespace>
+    <AssemblyName>CSharpUtils.Net</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Debug\CSharpUtils.Net.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Net\DiffieHellman\DHKeyGeneration.cs" />
+    <Compile Include="Net\DiffieHellman\DHParameters.cs" />
+    <Compile Include="Net\DiffieHellman\DiffieHellman.cs" />
+    <Compile Include="Net\DiffieHellman\DiffieHellmanManaged.cs" />
+    <Compile Include="Net\DiffieHellman\mono\BigInteger.cs" />
+    <Compile Include="Net\DiffieHellman\mono\ConfidenceFactor.cs" />
+    <Compile Include="Net\DiffieHellman\mono\MiniParser.cs" />
+    <Compile Include="Net\DiffieHellman\mono\NextPrimeFinder.cs" />
+    <Compile Include="Net\DiffieHellman\mono\PrimalityTests.cs" />
+    <Compile Include="Net\DiffieHellman\mono\PrimeGeneratorBase.cs" />
+    <Compile Include="Net\DiffieHellman\mono\SecurityParser.cs" />
+    <Compile Include="Net\DiffieHellman\mono\SequentialSearchPrimeGeneratorBase.cs" />
+    <Compile Include="Net\DiffieHellman\TestApp.cs" />
+    <Compile Include="Net\FTP.cs" />
+    <Compile Include="Net\FtpClient.cs" />
+    <Compile Include="Net\NetworkUtilities.cs" />
+    <Compile Include="Net\Security\Certificates\Certificate.cs" />
+    <Compile Include="Net\Security\Certificates\CertificateChain.cs" />
+    <Compile Include="Net\Security\Certificates\CertificateException.cs" />
+    <Compile Include="Net\Security\Certificates\CertificateStore.cs" />
+    <Compile Include="Net\Security\Certificates\CertificateStoreCollection.cs" />
+    <Compile Include="Net\Security\Certificates\CertificateStructures.cs" />
+    <Compile Include="Net\Security\Certificates\CertificateVerificationResult.cs" />
+    <Compile Include="Net\Security\Certificates\DistinguishedName.cs" />
+    <Compile Include="Net\Security\Certificates\DistinguishedNameCollection.cs" />
+    <Compile Include="Net\Security\Cryptography\ARCFourManaged.cs" />
+    <Compile Include="Net\Security\Cryptography\ARCFourManagedTransform.cs" />
+    <Compile Include="Net\Security\Cryptography\CryptographyStructures.cs" />
+    <Compile Include="Net\Security\Cryptography\DataProtectionCryptoServiceProvider.cs" />
+    <Compile Include="Net\Security\Cryptography\HMAC.cs" />
+    <Compile Include="Net\Security\Cryptography\MD2.cs" />
+    <Compile Include="Net\Security\Cryptography\MD2CryptoServiceProvider.cs" />
+    <Compile Include="Net\Security\Cryptography\MD4.cs" />
+    <Compile Include="Net\Security\Cryptography\MD4CryptoServiceProvider.cs" />
+    <Compile Include="Net\Security\Cryptography\RC4.cs" />
+    <Compile Include="Net\Security\Cryptography\RC4CryptoServiceProvider.cs" />
+    <Compile Include="Net\Security\Cryptography\RC4UnmanagedTransform.cs" />
+    <Compile Include="Net\Security\Cryptography\RijndaelCryptoServiceProvider.cs" />
+    <Compile Include="Net\Security\Cryptography\RijndaelUnmanagedTransform.cs" />
+    <Compile Include="Net\Security\Cryptography\RIPEMD160.cs" />
+    <Compile Include="Net\Security\Cryptography\RIPEMD160Managed.cs" />
+    <Compile Include="Net\Security\Cryptography\SymmetricKey.cs" />
+    <Compile Include="Net\Security\SecurityConstants.cs" />
+    <Compile Include="Net\Security\SecurityException.cs" />
+    <Compile Include="Net\Security\SecurityStructures.cs" />
+    <Compile Include="Net\Security\Ssl\AsyncResult.cs" />
+    <Compile Include="Net\Security\Ssl\RequestEventArgs.cs" />
+    <Compile Include="Net\Security\Ssl\SecureNetworkStream.cs" />
+    <Compile Include="Net\Security\Ssl\SecureSocket.cs" />
+    <Compile Include="Net\Security\Ssl\SecureTcpClient.cs" />
+    <Compile Include="Net\Security\Ssl\SecureTcpListener.cs" />
+    <Compile Include="Net\Security\Ssl\SecurityOptions.cs" />
+    <Compile Include="Net\Security\Ssl\Shared\CipherSuites.cs" />
+    <Compile Include="Net\Security\Ssl\Shared\ClientHandshakeLayer.cs" />
+    <Compile Include="Net\Security\Ssl\Shared\CloneableHash.cs" />
+    <Compile Include="Net\Security\Ssl\Shared\CompatibilityLayer.cs" />
+    <Compile Include="Net\Security\Ssl\Shared\CompressionAlgorithm.cs" />
+    <Compile Include="Net\Security\Ssl\Shared\HandshakeLayer.cs" />
+    <Compile Include="Net\Security\Ssl\Shared\HandshakeMessage.cs" />
+    <Compile Include="Net\Security\Ssl\Shared\MD5SHA1CryptoServiceProvider.cs" />
+    <Compile Include="Net\Security\Ssl\Shared\RecordLayer.cs" />
+    <Compile Include="Net\Security\Ssl\Shared\RecordMessage.cs" />
+    <Compile Include="Net\Security\Ssl\Shared\RSAKeyTransform.cs" />
+    <Compile Include="Net\Security\Ssl\Shared\ServerHandshakeLayer.cs" />
+    <Compile Include="Net\Security\Ssl\Shared\SocketController.cs" />
+    <Compile Include="Net\Security\Ssl\Shared\SslException.cs" />
+    <Compile Include="Net\Security\Ssl\Shared\SslTypes.cs" />
+    <Compile Include="Net\Security\Ssl\Shared\TransferItem.cs" />
+    <Compile Include="Net\Security\Ssl\Shared\XBuffer.cs" />
+    <Compile Include="Net\Security\Ssl\Ssl3\Ssl3CipherSuites.cs" />
+    <Compile Include="Net\Security\Ssl\Ssl3\Ssl3ClientHandshakeLayer.cs" />
+    <Compile Include="Net\Security\Ssl\Ssl3\Ssl3DeriveBytes.cs" />
+    <Compile Include="Net\Security\Ssl\Ssl3\Ssl3HandshakeMac.cs" />
+    <Compile Include="Net\Security\Ssl\Ssl3\Ssl3RecordMAC.cs" />
+    <Compile Include="Net\Security\Ssl\Ssl3\Ssl3ServerHandshakeLayer.cs" />
+    <Compile Include="Net\Security\Ssl\SslStructures.cs" />
+    <Compile Include="Net\Security\Ssl\Tls1\ExpansionDeriveBytes.cs" />
+    <Compile Include="Net\Security\Ssl\Tls1\PseudoRandomDeriveBytes.cs" />
+    <Compile Include="Net\Security\Ssl\Tls1\Tls1CipherSuites.cs" />
+    <Compile Include="Net\Security\Ssl\Tls1\Tls1ClientHandshakeLayer.cs" />
+    <Compile Include="Net\Security\Ssl\Tls1\Tls1ServerHandshakeLayer.cs" />
+    <Compile Include="Net\Security\Ssl\VerifyEventArgs.cs" />
+    <Compile Include="Net\Security\Ssl\VirtualSocket.cs" />
+    <Compile Include="Net\Security\SspiProvider.cs" />
+    <Compile Include="Net\SharpSSH\ExecTest.cs" />
+    <Compile Include="Net\SharpSSH\FileInputStream.cs" />
+    <Compile Include="Net\SharpSSH\FileOutputStream.cs" />
+    <Compile Include="Net\SharpSSH\InputStream.cs" />
+    <Compile Include="Net\SharpSSH\InputStreamWrapper.cs" />
+    <Compile Include="Net\SharpSSH\ITransferProtocol.cs" />
+    <Compile Include="Net\SharpSSH\jsch\Buffer.cs" />
+    <Compile Include="Net\SharpSSH\jsch\Channel.cs" />
+    <Compile Include="Net\SharpSSH\jsch\Channel.old.cs" />
+    <Compile Include="Net\SharpSSH\jsch\ChannelDirectTCPIP.cs" />
+    <Compile Include="Net\SharpSSH\jsch\ChannelExec.cs" />
+    <Compile Include="Net\SharpSSH\jsch\ChannelForwardedTCPIP.cs" />
+    <Compile Include="Net\SharpSSH\jsch\ChannelSession.cs" />
+    <Compile Include="Net\SharpSSH\jsch\ChannelSftp.Commands.cs" />
+    <Compile Include="Net\SharpSSH\jsch\ChannelSftp.cs" />
+    <Compile Include="Net\SharpSSH\jsch\ChannelSftpStreamGet.cs" />
+    <Compile Include="Net\SharpSSH\jsch\ChannelSftpStreamPut.cs" />
+    <Compile Include="Net\SharpSSH\jsch\ChannelShell.cs" />
+    <Compile Include="Net\SharpSSH\jsch\ChannelSubsystem.cs" />
+    <Compile Include="Net\SharpSSH\jsch\ChannelX11.cs" />
+    <Compile Include="Net\SharpSSH\jsch\Cipher.cs" />
+    <Compile Include="Net\SharpSSH\jsch\Compression.cs" />
+    <Compile Include="Net\SharpSSH\jsch\DH.cs" />
+    <Compile Include="Net\SharpSSH\jsch\DHG1.cs" />
+    <Compile Include="Net\SharpSSH\jsch\DHGEX.cs" />
+    <Compile Include="Net\SharpSSH\jsch\ForwardedTCPIPDaemon.cs" />
+    <Compile Include="Net\SharpSSH\jsch\HASH.cs" />
+    <Compile Include="Net\SharpSSH\jsch\HostKey.cs" />
+    <Compile Include="Net\SharpSSH\jsch\HostKeyRepository.cs" />
+    <Compile Include="Net\SharpSSH\jsch\Identity.cs" />
+    <Compile Include="Net\SharpSSH\jsch\IdentityFile.cs" />
+    <Compile Include="Net\SharpSSH\jsch\IO.cs" />
+    <Compile Include="Net\SharpSSH\jsch\jce\AES128CBC.cs" />
+    <Compile Include="Net\SharpSSH\jsch\jce\BlowfishCBC.cs" />
+    <Compile Include="Net\SharpSSH\jsch\jce\DH.cs" />
+    <Compile Include="Net\SharpSSH\jsch\jce\HMACMD5.cs" />
+    <Compile Include="Net\SharpSSH\jsch\jce\HMACMD596.cs" />
+    <Compile Include="Net\SharpSSH\jsch\jce\HMACSHA1.cs" />
+    <Compile Include="Net\SharpSSH\jsch\jce\HMACSHA196.cs" />
+    <Compile Include="Net\SharpSSH\jsch\jce\KeyPairGenDSA.cs" />
+    <Compile Include="Net\SharpSSH\jsch\jce\KeyPairGenRSA.cs" />
+    <Compile Include="Net\SharpSSH\jsch\jce\MD5.cs" />
+    <Compile Include="Net\SharpSSH\jsch\jce\Random.cs" />
+    <Compile Include="Net\SharpSSH\jsch\jce\SHA1.cs" />
+    <Compile Include="Net\SharpSSH\jsch\jce\SignatureDSA.cs" />
+    <Compile Include="Net\SharpSSH\jsch\jce\SignatureRSA.cs" />
+    <Compile Include="Net\SharpSSH\jsch\jce\TripleDESCBC.cs" />
+    <Compile Include="Net\SharpSSH\jsch\JSch.cs" />
+    <Compile Include="Net\SharpSSH\jsch\JSchAuthCancelException.cs" />
+    <Compile Include="Net\SharpSSH\jsch\JSchException.cs" />
+    <Compile Include="Net\SharpSSH\jsch\JSchPartialAuthException.cs" />
+    <Compile Include="Net\SharpSSH\jsch\KeyExchange.cs" />
+    <Compile Include="Net\SharpSSH\jsch\KeyPair.cs" />
+    <Compile Include="Net\SharpSSH\jsch\KeyPairDSA.cs" />
+    <Compile Include="Net\SharpSSH\jsch\KeyPairGenDSA.cs" />
+    <Compile Include="Net\SharpSSH\jsch\KeyPairGenRSA.cs" />
+    <Compile Include="Net\SharpSSH\jsch\KeyPairRSA.cs" />
+    <Compile Include="Net\SharpSSH\jsch\KnownHosts.cs" />
+    <Compile Include="Net\SharpSSH\jsch\MAC.cs" />
+    <Compile Include="Net\SharpSSH\jsch\Packet.cs" />
+    <Compile Include="Net\SharpSSH\jsch\PortWatcher.cs" />
+    <Compile Include="Net\SharpSSH\jsch\Proxy.cs" />
+    <Compile Include="Net\SharpSSH\jsch\ProxyHTTP.cs" />
+    <Compile Include="Net\SharpSSH\jsch\Random.cs" />
+    <Compile Include="Net\SharpSSH\jsch\Request.cs" />
+    <Compile Include="Net\SharpSSH\jsch\RequestExec.cs" />
+    <Compile Include="Net\SharpSSH\jsch\RequestPtyReq.cs" />
+    <Compile Include="Net\SharpSSH\jsch\RequestSftp.cs" />
+    <Compile Include="Net\SharpSSH\jsch\RequestShell.cs" />
+    <Compile Include="Net\SharpSSH\jsch\RequestSignal.cs" />
+    <Compile Include="Net\SharpSSH\jsch\RequestSubsystem.cs" />
+    <Compile Include="Net\SharpSSH\jsch\RequestWindowChange.cs" />
+    <Compile Include="Net\SharpSSH\jsch\RequestX11.cs" />
+    <Compile Include="Net\SharpSSH\jsch\ServerSocketFactory.cs" />
+    <Compile Include="Net\SharpSSH\jsch\Session.cs" />
+    <Compile Include="Net\SharpSSH\jsch\SftpATTRS.cs" />
+    <Compile Include="Net\SharpSSH\jsch\SftpException.cs" />
+    <Compile Include="Net\SharpSSH\jsch\SftpProgressMonitor.cs" />
+    <Compile Include="Net\SharpSSH\jsch\SignatureDSA.cs" />
+    <Compile Include="Net\SharpSSH\jsch\SignatureRSA.cs" />
+    <Compile Include="Net\SharpSSH\jsch\SocketFactory.cs" />
+    <Compile Include="Net\SharpSSH\jsch\UIKeyboardInteractive.cs" />
+    <Compile Include="Net\SharpSSH\jsch\UserAuth.cs" />
+    <Compile Include="Net\SharpSSH\jsch\UserAuthKeyboardInteractive.cs" />
+    <Compile Include="Net\SharpSSH\jsch\UserAuthNone.cs" />
+    <Compile Include="Net\SharpSSH\jsch\UserAuthPassword.cs" />
+    <Compile Include="Net\SharpSSH\jsch\UserAuthPublicKey.cs" />
+    <Compile Include="Net\SharpSSH\jsch\UserInfo.cs" />
+    <Compile Include="Net\SharpSSH\jsch\Util.cs" />
+    <Compile Include="Net\SharpSSH\JStream.cs" />
+    <Compile Include="Net\SharpSSH\OutputStream.cs" />
+    <Compile Include="Net\SharpSSH\Runnable.cs" />
+    <Compile Include="Net\SharpSSH\Scp.cs" />
+    <Compile Include="Net\SharpSSH\SecureShell.cs" />
+    <Compile Include="Net\SharpSSH\Sftp.cs" />
+    <Compile Include="Net\SharpSSH\SshBase.cs" />
+    <Compile Include="Net\SharpSSH\SshExe.cs" />
+    <Compile Include="Net\SharpSSH\SshHelper.cs" />
+    <Compile Include="Net\SharpSSH\SshShell.cs" />
+    <Compile Include="Net\SharpSSH\SshStream.cs" />
+    <Compile Include="Net\SharpSSH\SshTransferException.cs" />
+    <Compile Include="Net\SharpSSH\SshTransferProtocolBase.cs" />
+    <Compile Include="Net\SharpSSH\Streams\CombinedStream.cs" />
+    <Compile Include="Net\SharpSSH\Streams\InputStream.cs" />
+    <Compile Include="Net\SharpSSH\Streams\OutputStream.cs" />
+    <Compile Include="Net\SharpSSH\Streams\PipedInputStream.cs" />
+    <Compile Include="Net\SharpSSH\Streams\PipedOutputStream.cs" />
+    <Compile Include="Net\SharpSSH\Streams\PipedStream.cs" />
+    <Compile Include="Net\SharpSSH\Streams\ProtectedConsoleStream.cs" />
+    <Compile Include="Net\TcpTestServer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Streams\SocketStream.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Net\DiffieHellman\license.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CSharpUtils\CSharpUtils.csproj">
+      <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
+      <Name>CSharpUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

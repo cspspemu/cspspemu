@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D0A13475-C3AD-4542-98D8-74C321483F1B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CSharpUtils.Web</RootNamespace>
+    <AssemblyName>CSharpUtils.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\CSharpUtils.Web.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Fastcgi\FascgiRequestInputStream.cs" />
+    <Compile Include="Fastcgi\FascgiResponseOutputStream.cs" />
+    <Compile Include="Fastcgi\Fastcgi.cs" />
+    <Compile Include="Fastcgi\FastcgiHandler.cs" />
+    <Compile Include="Fastcgi\FastcgiPacketReader.cs" />
+    <Compile Include="Fastcgi\FastcgiPacketWriter.cs" />
+    <Compile Include="Fastcgi\FastcgiPipeSocket.cs" />
+    <Compile Include="Fastcgi\FastcgiPipeStream.cs" />
+    <Compile Include="Fastcgi\FastcgiRequest.cs" />
+    <Compile Include="Fastcgi\FastcgiServer.cs" />
+    <Compile Include="Fastcgi\Http\FastcgiHttpServer.cs" />
+    <Compile Include="Fastcgi\Http\HttpFile.cs" />
+    <Compile Include="Fastcgi\Http\HttpRequest.cs" />
+    <Compile Include="Fastcgi\Http\UrlsHandler.cs" />
+    <Compile Include="Fastcgi\IFastcgiPipe.cs" />
+    <Compile Include="Http\HttpHeader.cs" />
+    <Compile Include="Http\HttpHeaderList.cs" />
+    <Compile Include="Http\HttpUtils.cs" />
+    <Compile Include="Http\MultipartDecoder.cs" />
+    <Compile Include="Http\Server\HttpServer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scgi\ScgiServer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CSharpUtils\CSharpUtils.csproj">
+      <Project>{746FADF2-D613-4FFD-8551-2181ADAE3CD1}</Project>
+      <Name>CSharpUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

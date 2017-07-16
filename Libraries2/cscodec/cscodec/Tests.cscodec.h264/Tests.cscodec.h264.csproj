@@ -1,0 +1,290 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2CA6538E-AF25-465D-B79E-7DA5D320AE62}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Tests.cscodec.h264</RootNamespace>
+    <AssemblyName>Tests.cscodec.h264</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+  <ItemGroup>
+    <Compile Include="Test_h264_conformance.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\cscodec.h264\cscodec.h264.csproj">
+      <Project>{e8791c5d-f790-404c-b661-d509844dbbff}</Project>
+      <Name>cscodec.h264</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\cscodec\cscodec.csproj">
+      <Project>{351dcb00-efcf-435a-9c72-9a7e1d5950b0}</Project>
+      <Name>cscodec</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="README.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fixtures\h264-bsf-mp4toannexb" />
+    <None Include="fixtures\h264-conformance-aud_mw_e" />
+    <None Include="fixtures\h264-conformance-ba1_ft_c" />
+    <None Include="fixtures\h264-conformance-ba1_sony_d" />
+    <None Include="fixtures\h264-conformance-ba2_sony_f" />
+    <None Include="fixtures\h264-conformance-ba3_sva_c" />
+    <None Include="fixtures\h264-conformance-bamq1_jvc_c" />
+    <None Include="fixtures\h264-conformance-bamq2_jvc_c" />
+    <None Include="fixtures\h264-conformance-banm_mw_d" />
+    <None Include="fixtures\h264-conformance-basqp1_sony_c" />
+    <None Include="fixtures\h264-conformance-ba_mw_d" />
+    <None Include="fixtures\h264-conformance-caba1_sony_d" />
+    <None Include="fixtures\h264-conformance-caba1_sva_b" />
+    <None Include="fixtures\h264-conformance-caba2_sony_e" />
+    <None Include="fixtures\h264-conformance-caba2_sva_b" />
+    <None Include="fixtures\h264-conformance-caba3_sony_c" />
+    <None Include="fixtures\h264-conformance-caba3_sva_b" />
+    <None Include="fixtures\h264-conformance-caba3_toshiba_e" />
+    <None Include="fixtures\h264-conformance-cabaci3_sony_b" />
+    <None Include="fixtures\h264-conformance-cabac_mot_fld0_full" />
+    <None Include="fixtures\h264-conformance-cabac_mot_frm0_full" />
+    <None Include="fixtures\h264-conformance-cabac_mot_mbaff0_full" />
+    <None Include="fixtures\h264-conformance-cabac_mot_picaff0_full" />
+    <None Include="fixtures\h264-conformance-cabast3_sony_e" />
+    <None Include="fixtures\h264-conformance-cabastbr3_sony_b" />
+    <None Include="fixtures\h264-conformance-cabref3_sand_d" />
+    <None Include="fixtures\h264-conformance-cacqp3_sony_d" />
+    <None Include="fixtures\h264-conformance-cafi1_sva_c" />
+    <None Include="fixtures\h264-conformance-cama1_sony_c" />
+    <None Include="fixtures\h264-conformance-cama1_toshiba_b" />
+    <None Include="fixtures\h264-conformance-cama1_vtc_c" />
+    <None Include="fixtures\h264-conformance-cama2_vtc_b" />
+    <None Include="fixtures\h264-conformance-cama3_sand_e" />
+    <None Include="fixtures\h264-conformance-cama3_vtc_b" />
+    <None Include="fixtures\h264-conformance-camaci3_sony_c" />
+    <None Include="fixtures\h264-conformance-camanl1_toshiba_b" />
+    <None Include="fixtures\h264-conformance-camanl2_toshiba_b" />
+    <None Include="fixtures\h264-conformance-camanl3_sand_e" />
+    <None Include="fixtures\h264-conformance-camasl3_sony_b" />
+    <None Include="fixtures\h264-conformance-camp_mot_mbaff_l30" />
+    <None Include="fixtures\h264-conformance-camp_mot_mbaff_l31" />
+    <None Include="fixtures\h264-conformance-canl1_sony_e" />
+    <None Include="fixtures\h264-conformance-canl1_sva_b" />
+    <None Include="fixtures\h264-conformance-canl1_toshiba_g" />
+    <None Include="fixtures\h264-conformance-canl2_sony_e" />
+    <None Include="fixtures\h264-conformance-canl2_sva_b" />
+    <None Include="fixtures\h264-conformance-canl3_sony_c" />
+    <None Include="fixtures\h264-conformance-canl3_sva_b" />
+    <None Include="fixtures\h264-conformance-canl4_sva_b" />
+    <None Include="fixtures\h264-conformance-canlma2_sony_c" />
+    <None Include="fixtures\h264-conformance-canlma3_sony_c" />
+    <None Include="fixtures\h264-conformance-capa1_toshiba_b" />
+    <None Include="fixtures\h264-conformance-capama3_sand_f" />
+    <None Include="fixtures\h264-conformance-capcm1_sand_e" />
+    <None Include="fixtures\h264-conformance-capcmnl1_sand_e" />
+    <None Include="fixtures\h264-conformance-capm3_sony_d" />
+    <None Include="fixtures\h264-conformance-caqp1_sony_b" />
+    <None Include="fixtures\h264-conformance-cavlc_mot_fld0_full_b" />
+    <None Include="fixtures\h264-conformance-cavlc_mot_frm0_full_b" />
+    <None Include="fixtures\h264-conformance-cavlc_mot_mbaff0_full_b" />
+    <None Include="fixtures\h264-conformance-cavlc_mot_picaff0_full_b" />
+    <None Include="fixtures\h264-conformance-cawp1_toshiba_e" />
+    <None Include="fixtures\h264-conformance-cawp5_toshiba_e" />
+    <None Include="fixtures\h264-conformance-ci1_ft_b" />
+    <None Include="fixtures\h264-conformance-ci_mw_d" />
+    <None Include="fixtures\h264-conformance-cvbs3_sony_c" />
+    <None Include="fixtures\h264-conformance-cvcanlma2_sony_c" />
+    <None Include="fixtures\h264-conformance-cvfi1_sony_d" />
+    <None Include="fixtures\h264-conformance-cvfi1_sva_c" />
+    <None Include="fixtures\h264-conformance-cvfi2_sony_h" />
+    <None Include="fixtures\h264-conformance-cvfi2_sva_c" />
+    <None Include="fixtures\h264-conformance-cvma1_sony_d" />
+    <None Include="fixtures\h264-conformance-cvma1_toshiba_b" />
+    <None Include="fixtures\h264-conformance-cvmanl1_toshiba_b" />
+    <None Include="fixtures\h264-conformance-cvmanl2_toshiba_b" />
+    <None Include="fixtures\h264-conformance-cvmapaqp3_sony_e" />
+    <None Include="fixtures\h264-conformance-cvmaqp2_sony_g" />
+    <None Include="fixtures\h264-conformance-cvmaqp3_sony_d" />
+    <None Include="fixtures\h264-conformance-cvmp_mot_fld_l30_b" />
+    <None Include="fixtures\h264-conformance-cvmp_mot_frm_l31_b" />
+    <None Include="fixtures\h264-conformance-cvnlfi1_sony_c" />
+    <None Include="fixtures\h264-conformance-cvnlfi2_sony_h" />
+    <None Include="fixtures\h264-conformance-cvpa1_toshiba_b" />
+    <None Include="fixtures\h264-conformance-cvpcmnl1_sva_c" />
+    <None Include="fixtures\h264-conformance-cvpcmnl2_sva_c" />
+    <None Include="fixtures\h264-conformance-cvwp1_toshiba_e" />
+    <None Include="fixtures\h264-conformance-cvwp2_toshiba_e" />
+    <None Include="fixtures\h264-conformance-cvwp3_toshiba_e" />
+    <None Include="fixtures\h264-conformance-cvwp5_toshiba_e" />
+    <None Include="fixtures\h264-conformance-fi1_sony_e" />
+    <None Include="fixtures\h264-conformance-frext-alphaconformanceg" />
+    <None Include="fixtures\h264-conformance-frext-bcrm_freh10" />
+    <None Include="fixtures\h264-conformance-frext-brcm_freh11" />
+    <None Include="fixtures\h264-conformance-frext-brcm_freh3" />
+    <None Include="fixtures\h264-conformance-frext-brcm_freh4" />
+    <None Include="fixtures\h264-conformance-frext-brcm_freh5" />
+    <None Include="fixtures\h264-conformance-frext-brcm_freh8" />
+    <None Include="fixtures\h264-conformance-frext-brcm_freh9" />
+    <None Include="fixtures\h264-conformance-frext-freh12_b" />
+    <None Include="fixtures\h264-conformance-frext-freh1_b" />
+    <None Include="fixtures\h264-conformance-frext-freh2_b" />
+    <None Include="fixtures\h264-conformance-frext-freh6" />
+    <None Include="fixtures\h264-conformance-frext-freh7_b" />
+    <None Include="fixtures\h264-conformance-frext-frext01_jvc_d" />
+    <None Include="fixtures\h264-conformance-frext-frext02_jvc_c" />
+    <None Include="fixtures\h264-conformance-frext-frext1_panasonic_c" />
+    <None Include="fixtures\h264-conformance-frext-frext2_panasonic_b" />
+    <None Include="fixtures\h264-conformance-frext-frext3_panasonic_d" />
+    <None Include="fixtures\h264-conformance-frext-frext4_panasonic_a" />
+    <None Include="fixtures\h264-conformance-frext-frext_mmco4_sony_b" />
+    <None Include="fixtures\h264-conformance-frext-hcaff1_hhi_b" />
+    <None Include="fixtures\h264-conformance-frext-hcafr1_hhi_c" />
+    <None Include="fixtures\h264-conformance-frext-hcafr2_hhi_a" />
+    <None Include="fixtures\h264-conformance-frext-hcafr3_hhi_a" />
+    <None Include="fixtures\h264-conformance-frext-hcafr4_hhi_a" />
+    <None Include="fixtures\h264-conformance-frext-hcamff1_hhi_b" />
+    <None Include="fixtures\h264-conformance-frext-hi422fr10_sony_b" />
+    <None Include="fixtures\h264-conformance-frext-hi422fr13_sony_b" />
+    <None Include="fixtures\h264-conformance-frext-hi422fr1_sony_a" />
+    <None Include="fixtures\h264-conformance-frext-hi422fr6_sony_a" />
+    <None Include="fixtures\h264-conformance-frext-hpcadq_brcm_b" />
+    <None Include="fixtures\h264-conformance-frext-hpcaflnl_bcrm_c" />
+    <None Include="fixtures\h264-conformance-frext-hpcafl_bcrm_c" />
+    <None Include="fixtures\h264-conformance-frext-hpcalq_brcm_b" />
+    <None Include="fixtures\h264-conformance-frext-hpcamapalq_bcrm_b" />
+    <None Include="fixtures\h264-conformance-frext-hpcamolq_brcm_b" />
+    <None Include="fixtures\h264-conformance-frext-hpcanl_brcm_c" />
+    <None Include="fixtures\h264-conformance-frext-hpcaq2lq_brcm_b" />
+    <None Include="fixtures\h264-conformance-frext-hpca_brcm_c" />
+    <None Include="fixtures\h264-conformance-frext-hpcvflnl_bcrm_a" />
+    <None Include="fixtures\h264-conformance-frext-hpcvfl_bcrm_a" />
+    <None Include="fixtures\h264-conformance-frext-hpcvmolq_brcm_b" />
+    <None Include="fixtures\h264-conformance-frext-hpcvnl_brcm_a" />
+    <None Include="fixtures\h264-conformance-frext-hpcv_brcm_a" />
+    <None Include="fixtures\h264-conformance-frext-pph10i1_panasonic_a" />
+    <None Include="fixtures\h264-conformance-frext-pph10i2_panasonic_a" />
+    <None Include="fixtures\h264-conformance-frext-pph10i3_panasonic_a" />
+    <None Include="fixtures\h264-conformance-frext-pph10i4_panasonic_a" />
+    <None Include="fixtures\h264-conformance-frext-pph10i5_panasonic_a" />
+    <None Include="fixtures\h264-conformance-frext-pph10i6_panasonic_a" />
+    <None Include="fixtures\h264-conformance-frext-pph10i7_panasonic_a" />
+    <None Include="fixtures\h264-conformance-frext-pph422i1_panasonic_a" />
+    <None Include="fixtures\h264-conformance-frext-pph422i2_panasonic_a" />
+    <None Include="fixtures\h264-conformance-frext-pph422i3_panasonic_a" />
+    <None Include="fixtures\h264-conformance-frext-pph422i4_panasonic_a" />
+    <None Include="fixtures\h264-conformance-frext-pph422i5_panasonic_a" />
+    <None Include="fixtures\h264-conformance-frext-pph422i6_panasonic_a" />
+    <None Include="fixtures\h264-conformance-frext-pph422i7_panasonic_a" />
+    <None Include="fixtures\h264-conformance-hcbp2_hhi_a" />
+    <None Include="fixtures\h264-conformance-hcmp1_hhi_a" />
+    <None Include="fixtures\h264-conformance-ls_sva_d" />
+    <None Include="fixtures\h264-conformance-midr_mw_d" />
+    <None Include="fixtures\h264-conformance-mps_mw_a" />
+    <None Include="fixtures\h264-conformance-mr1_bt_a" />
+    <None Include="fixtures\h264-conformance-mr1_mw_a" />
+    <None Include="fixtures\h264-conformance-mr2_mw_a" />
+    <None Include="fixtures\h264-conformance-mr2_tandberg_e" />
+    <None Include="fixtures\h264-conformance-mr3_tandberg_b" />
+    <None Include="fixtures\h264-conformance-mr4_tandberg_c" />
+    <None Include="fixtures\h264-conformance-mr5_tandberg_c" />
+    <None Include="fixtures\h264-conformance-mr6_bt_b" />
+    <None Include="fixtures\h264-conformance-mr7_bt_b" />
+    <None Include="fixtures\h264-conformance-mr8_bt_b" />
+    <None Include="fixtures\h264-conformance-mr9_bt_b" />
+    <None Include="fixtures\h264-conformance-mv1_brcm_d" />
+    <None Include="fixtures\h264-conformance-nl1_sony_d" />
+    <None Include="fixtures\h264-conformance-nl2_sony_h" />
+    <None Include="fixtures\h264-conformance-nl3_sva_e" />
+    <None Include="fixtures\h264-conformance-nlmq1_jvc_c" />
+    <None Include="fixtures\h264-conformance-nlmq2_jvc_c" />
+    <None Include="fixtures\h264-conformance-nrf_mw_e" />
+    <None Include="fixtures\h264-conformance-sharp_mp_field_1_b" />
+    <None Include="fixtures\h264-conformance-sharp_mp_field_2_b" />
+    <None Include="fixtures\h264-conformance-sharp_mp_field_3_b" />
+    <None Include="fixtures\h264-conformance-sharp_mp_paff_1r2" />
+    <None Include="fixtures\h264-conformance-sharp_mp_paff_2r" />
+    <None Include="fixtures\h264-conformance-sl1_sva_b" />
+    <None Include="fixtures\h264-conformance-sva_ba1_b" />
+    <None Include="fixtures\h264-conformance-sva_ba2_d" />
+    <None Include="fixtures\h264-conformance-sva_base_b" />
+    <None Include="fixtures\h264-conformance-sva_cl1_e" />
+    <None Include="fixtures\h264-conformance-sva_fm1_e" />
+    <None Include="fixtures\h264-conformance-sva_nl1_b" />
+    <None Include="fixtures\h264-conformance-sva_nl2_e" />
+    <None Include="fixtures\h264-extreme-plane-pred" />
+    <None Include="fixtures\h264-interlace-crop" />
+    <None Include="fixtures\h264-lossless" />
+  </ItemGroup>
+  <Choose>
+    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
+      <ItemGroup>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+          <Private>False</Private>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

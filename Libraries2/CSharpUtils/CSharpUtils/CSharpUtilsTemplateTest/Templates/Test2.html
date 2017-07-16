@@ -1,0 +1,4 @@
+﻿{% extends 'Base.html' %}
+Hello {{ User }} {{ ((1) + 2) * 2 + 3 * 4 + 1 + Value }}
+{% if Value %}true{% else %}false{% endif %}
+{% block MyBlock %}MyBlock Text{% if 1 %}Test{% endif %}{% endblock %}

@@ -1,4 +1,6 @@
 
+/packages
+.idea
 bin
 obj
 /TestResults
