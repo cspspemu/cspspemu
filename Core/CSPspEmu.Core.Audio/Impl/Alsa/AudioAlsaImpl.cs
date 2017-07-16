@@ -47,7 +47,7 @@ namespace CSPspEmu.Core.Audio
 						//int period_time = (SndOutPacketSize * 1000) / (SampleRate / 1000);
 						//int buffer_time = period_time * NumBuffers;
 
-						Assert("snd_pcm_open", Alsa.snd_pcm_open(playback_handle_ptr, Device, Alsa.snd_pcm_stream_t.SND_PCM_LB_OPEN_PLAYBACK, 0));
+						Assert("snd_pcm_open", Alsa.snd_pcm_open(playback_handle_ptr, Device, Alsa.SndPcmStreamT.SND_PCM_LB_OPEN_PLAYBACK, 0));
 						Assert("snd_pcm_hw_params_malloc", Alsa.snd_pcm_hw_params_malloc(hw_params_ptr));
 						Assert("snd_pcm_hw_params_any", Alsa.snd_pcm_hw_params_any(playback_handle, hw_params));
 						Assert("snd_pcm_hw_params_set_access", Alsa.snd_pcm_hw_params_set_access(playback_handle, hw_params, Alsa.snd_pcm_access.SND_PCM_ACCESS_RW_INTERLEAVED));
@@ -131,7 +131,7 @@ namespace CSPspEmu.Core.Audio
 					if (Platform.IsPosix)
 					{
 						IntPtr temp_playback_handle = IntPtr.Zero;
-						var Result = Alsa.snd_pcm_open(&temp_playback_handle, Device, Alsa.snd_pcm_stream_t.SND_PCM_LB_OPEN_PLAYBACK, 0);
+						var Result = Alsa.snd_pcm_open(&temp_playback_handle, Device, Alsa.SndPcmStreamT.SND_PCM_LB_OPEN_PLAYBACK, 0);
 						if (Result >= 0)
 						{
 							Alsa.snd_pcm_close(temp_playback_handle);

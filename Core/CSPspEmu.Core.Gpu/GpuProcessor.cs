@@ -101,7 +101,7 @@ namespace CSPspEmu.Core.Gpu
 		/// <summary>
 		/// 
 		/// </summary>
-		public readonly WaitableStateMachine<Status2Enum> Status2 = new WaitableStateMachine<Status2Enum>(Status2Enum.Completed, Debug: false);
+		public readonly WaitableStateMachine<Status2Enum> Status2 = new WaitableStateMachine<Status2Enum>(Status2Enum.Completed, debug: false);
 
 		/// <summary>
 		/// 

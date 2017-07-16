@@ -13,9 +13,9 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			public string[] GroupNames;
 		}
 
-		static public string MatchFormatRegex(string Format)
+		static public string MatchFormatRegex(string format)
 		{
-			switch (Format)
+			switch (format)
 			{
 				case "%vr": return @"\[[c|s|\s|0|\-|,]*\]";
 				case "%vi": case "%i": return @"[+\-]?[\w_]+";
@@ -34,56 +34,56 @@ namespace CSPspEmu.Core.Cpu.Assembler
 			}
 		}
 
-		static private MatcherResult _MatcherToRegexUncached(string Pattern)
+		static private MatcherResult _MatcherToRegexUncached(string pattern)
 		{
-			Regex Regex1 = new Regex(@"(\s+|%\w+)", RegexOptions.Compiled | RegexOptions.ECMAScript);
-			var GroupNames = new List<string>();
-			Pattern = Regex.Escape(Pattern);
-			Pattern = Pattern.Replace(@"\ ", " ");
-			Pattern = Regex1.Replace(Pattern, (Match) =>
+			var regex1 = new Regex(@"(\s+|%\w+)", RegexOptions.Compiled | RegexOptions.ECMAScript);
+			var groupNames = new List<string>();
+			pattern = Regex.Escape(pattern);
+			pattern = pattern.Replace(@"\ ", " ");
+			pattern = regex1.Replace(pattern, (match) =>
 			{
-				if (Match.Value[0] == '%')
+				if (match.Value[0] == '%')
 				{
-					GroupNames.Add(Match.Value);
-					return @"\s*(" + MatchFormatRegex(Match.Value) + @")\s*";
+					groupNames.Add(match.Value);
+					return @"\s*(" + MatchFormatRegex(match.Value) + @")\s*";
 				}
 				else
 				{
 					return @"\s*";
 				}
 			});
-			Pattern = @"^\s*" + Pattern + @"\s*$";
+			pattern = @"^\s*" + pattern + @"\s*$";
 			return new MatcherResult()
 			{
-				Regex = new Regex(Pattern),
-				RegexString = Pattern,
-				GroupNames = GroupNames.ToArray(),
+				Regex = new Regex(pattern),
+				RegexString = pattern,
+				GroupNames = groupNames.ToArray(),
 			};
 		}
 
-		static public MatcherResult MatcherToRegex(string Pattern)
+		static public MatcherResult MatcherToRegex(string pattern)
 		{
-			if (!MatcherToRegexCache.ContainsKey(Pattern))
+			if (!MatcherToRegexCache.ContainsKey(pattern))
 			{
-				MatcherToRegexCache[Pattern] = _MatcherToRegexUncached(Pattern);
+				MatcherToRegexCache[pattern] = _MatcherToRegexUncached(pattern);
 			}
-			return MatcherToRegexCache[Pattern];
+			return MatcherToRegexCache[pattern];
 		}
 
 		static Dictionary<string, MatcherResult> MatcherToRegexCache = new Dictionary<string, MatcherResult>();
 
-		static public SortedDictionary<string, string> Matcher(string Pattern, string Text)
+		static public SortedDictionary<string, string> Matcher(string pattern, string text)
 		{
-			var Info = MatcherToRegex(Pattern);
-			var Match = Info.Regex.Match(Text);
-			if (Match == Match.Empty) throw(new Exception(String.Format("Pattern '{0}';'{1}' doesn't match '{2}'", Pattern, Info.RegexString, Text)));
-			var Output = new SortedDictionary<string, string>();
-			for (int n = 0; n < Info.GroupNames.Length; n++)
+			var info = MatcherToRegex(pattern);
+			var match = info.Regex.Match(text);
+			if (match == Match.Empty) throw(new Exception($"Pattern '{pattern}';'{info.RegexString}' doesn't match '{text}'"));
+			var output = new SortedDictionary<string, string>();
+			for (var n = 0; n < info.GroupNames.Length; n++)
 			{
-				Output.Add(Info.GroupNames[n], Match.Groups[n + 1].Value);
+				output.Add(info.GroupNames[n], match.Groups[n + 1].Value);
 				//Console.WriteLine("{0} -> {1}", Info.GroupNames[n], Match.Groups[n + 1].Value);
 			}
-			return Output;
+			return output;
 		}
 	}
 }

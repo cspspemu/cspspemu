@@ -13,9 +13,9 @@ namespace CSPspEmu.Core.Memory
 		{
 		}
 
-		public bool IsAddressValid(uint Address)
+		public bool IsAddressValid(uint address)
 		{
-			return PspMemory.IsAddressValid(Address);
+			return PspMemory.IsAddressValid(address);
 		}
 	}
 }

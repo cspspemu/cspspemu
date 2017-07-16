@@ -4,18 +4,18 @@ namespace CSPspEmu.Core
 {
 	public static class PspGlobalConfiguration
 	{
-		private static string _CurrentVersion;
-		private static int? _CurrentVersionNumeric;
+		private static string _currentVersion;
+		private static int? _currentVersionNumeric;
 
 		public static string CurrentVersion
 		{
 			get
 			{
-				if (_CurrentVersion == null)
+				if (_currentVersion == null)
 				{
-					_CurrentVersion = Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.References.version_current.txt").ReadAllContentsAsString();
+					_currentVersion = Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.References.version_current.txt").ReadAllContentsAsString();
 				}
-				return _CurrentVersion;
+				return _currentVersion;
 			}
 		}
 
@@ -25,11 +25,11 @@ namespace CSPspEmu.Core
 			{
 				try
 				{
-					if (!_CurrentVersionNumeric.HasValue)
+					if (!_currentVersionNumeric.HasValue)
 					{
-						_CurrentVersionNumeric = int.Parse(Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.References.version_current_numeric.txt").ReadAllContentsAsString());
+						_currentVersionNumeric = int.Parse(Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.References.version_current_numeric.txt").ReadAllContentsAsString());
 					}
-					return _CurrentVersionNumeric.Value;
+					return _currentVersionNumeric.Value;
 				}
 				catch
 				{
@@ -38,17 +38,17 @@ namespace CSPspEmu.Core
 			}
 		}
 
-		private static string _GitRevision;
+		private static string _gitRevision;
 
 		public static string GitRevision
 		{
 			get
 			{
-				if (_GitRevision == null)
+				if (_gitRevision == null)
 				{
-					_GitRevision = Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.References.git_revision.txt").ReadAllContentsAsString();
+					_gitRevision = Assembly.GetEntryAssembly().GetManifestResourceStream("CSPspEmu.References.git_revision.txt").ReadAllContentsAsString();
 				}
-				return _GitRevision;
+				return _gitRevision;
 			}
 		}
 	}

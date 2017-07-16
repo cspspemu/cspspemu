@@ -8,9 +8,9 @@ namespace CSPspEmu.Core.Memory
 		protected uint _Position;
 		public PspMemory Memory { get; protected set; }
 
-		public PspMemoryStream(PspMemory Memory)
+		public PspMemoryStream(PspMemory memory)
 		{
-			this.Memory = Memory;
+			this.Memory = memory;
 		}
 
 		public override bool CanRead { get { return true; } }
@@ -21,10 +21,7 @@ namespace CSPspEmu.Core.Memory
 		{
 		}
 
-		public override long Length
-		{
-			get { return unchecked(0xFFFFFFF0); }
-		}
+		public override long Length => unchecked(0xFFFFFFF0);
 
 		public override long Position
 		{

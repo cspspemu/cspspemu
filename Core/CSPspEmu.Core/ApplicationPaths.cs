@@ -14,37 +14,38 @@ namespace CSPspEmu.Core
 			}
 		}
 
-		private static string _MemoryStickRootFolder;
+		private static string _memoryStickRootFolder;
 
 		public static string MemoryStickRootFolder
 		{
 			get
 			{
-				if (_MemoryStickRootFolder == null)
+				if (_memoryStickRootFolder == null)
 				{
-					_MemoryStickRootFolder = Path.GetDirectoryName(Application.ExecutablePath) + "/ms";
-					if (_MemoryStickRootFolder.Replace('\\', '/').EndsWith("CSPspEmu/bin/Debug/ms"))
+					_memoryStickRootFolder = Path.GetDirectoryName(Application.ExecutablePath) + "/ms";
+					if (_memoryStickRootFolder.Replace('\\', '/').EndsWith("CSPspEmu/bin/Debug/ms"))
 					{
-						_MemoryStickRootFolder = Path.GetFullPath(MemoryStickRootFolder + "/../../../../ms");
+						_memoryStickRootFolder = Path.GetFullPath(MemoryStickRootFolder + "/../../../../ms");
 					}
-					else if (_MemoryStickRootFolder.Replace('\\', '/').EndsWith("CSPspEmu/bin/Release/ms"))
+					else if (_memoryStickRootFolder.Replace('\\', '/').EndsWith("CSPspEmu/bin/Release/ms"))
 					{
-						_MemoryStickRootFolder = Path.GetFullPath(MemoryStickRootFolder + "/../../../../ms");
+						_memoryStickRootFolder = Path.GetFullPath(MemoryStickRootFolder + "/../../../../ms");
 					}
-					else if (_MemoryStickRootFolder.Replace('\\', '/').EndsWith("CSPspEmu/bin/RunTests/ms"))
+					else if (_memoryStickRootFolder.Replace('\\', '/').EndsWith("CSPspEmu/bin/RunTests/ms"))
 					{
-						_MemoryStickRootFolder = Path.GetFullPath(MemoryStickRootFolder + "/../../../../ms");
+						_memoryStickRootFolder = Path.GetFullPath(MemoryStickRootFolder + "/../../../../ms");
 					}
 					
 					try
 					{
-						Directory.CreateDirectory(_MemoryStickRootFolder);
+						Directory.CreateDirectory(_memoryStickRootFolder);
 					}
 					catch
 					{
+						// ignored
 					}
 				}
-				return _MemoryStickRootFolder;
+				return _memoryStickRootFolder;
 			}
 		}
 	}

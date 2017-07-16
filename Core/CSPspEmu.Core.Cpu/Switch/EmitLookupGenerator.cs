@@ -13,78 +13,78 @@ namespace CSPspEmu.Core.Cpu.Table
 	{
 		static private AstGenerator ast = AstGenerator.Instance;
 
-		public static Func<uint, TRetType> GenerateInfoDelegate<TType, TRetType>(Func<uint, TType, TRetType> Callback, TType Instance)
+		public static Func<uint, TRetType> GenerateInfoDelegate<TType, TRetType>(Func<uint, TType, TRetType> callback, TType instance)
 		{
-			return Value =>
+			return value =>
 			{
-				return Callback(Value, Instance);
+				return callback(value, instance);
 			};
 		}
 
-		static private string DefaultNameConverter(string Name)
+		static private string DefaultNameConverter(string name)
 		{
-			if (Name == "Default") return "unknown";
-			if (Name == "break") return "_break";
-			return Name.Replace('.', '_');
+			if (name == "Default") return "unknown";
+			if (name == "break") return "_break";
+			return name.Replace('.', '_');
 		}
 
-		public static Action<uint, TType> GenerateSwitchDelegate<TType>(string Name, IEnumerable<InstructionInfo> InstructionInfoList, Func<String, String> NameConverter = null)
+		public static Action<uint, TType> GenerateSwitchDelegate<TType>(string name, IEnumerable<InstructionInfo> instructionInfoList, Func<string, string> nameConverter = null)
 		{
-			if (NameConverter == null) NameConverter = DefaultNameConverter;
+			if (nameConverter == null) nameConverter = DefaultNameConverter;
 
-			return GenerateSwitch<Action<uint, TType>>(Name, InstructionInfoList, (InstructionInfo) =>
+			return GenerateSwitch<Action<uint, TType>>(name, instructionInfoList, (instructionInfo) =>
 			{
-				var InstructionInfoName = NameConverter((InstructionInfo != null) ? InstructionInfo.Name : "Default");
-				var MethodInfo = typeof(TType).GetMethod(InstructionInfoName);
-				if (MethodInfo == null) throw (new Exception("Cannot find method '" + InstructionInfoName + "' on type '" + typeof(TType).Name + "'"));
+				var instructionInfoName = nameConverter((instructionInfo != null) ? instructionInfo.Name : "Default");
+				var methodInfo = typeof(TType).GetMethod(instructionInfoName);
+				if (methodInfo == null) throw (new Exception("Cannot find method '" + instructionInfoName + "' on type '" + typeof(TType).Name + "'"));
 				
 				//Console.WriteLine("MethodInfo: {0}", MethodInfo);
 				//Console.WriteLine("Argument(1): {0}", typeof(TType));
 
-				if (MethodInfo.IsStatic)
+				if (methodInfo.IsStatic)
 				{
-					return ast.Statement(ast.CallStatic(MethodInfo, ast.Argument<TType>(1)));
+					return ast.Statement(ast.CallStatic(methodInfo, ast.Argument<TType>(1)));
 				}
 				else
 				{
-					return ast.Statement(ast.CallInstance(ast.Argument<TType>(1), MethodInfo));
+					return ast.Statement(ast.CallInstance(ast.Argument<TType>(1), methodInfo));
 				}
 			});
 		}
 
-		public static Func<uint, TType, TRetType> GenerateSwitchDelegateReturn<TType, TRetType>(string Name, IEnumerable<InstructionInfo> InstructionInfoList, Func<String, String> NameConverter = null, bool ThrowOnUnexistent = true)
+		public static Func<uint, TType, TRetType> GenerateSwitchDelegateReturn<TType, TRetType>(string name, IEnumerable<InstructionInfo> instructionInfoList, Func<string, string> nameConverter = null, bool throwOnUnexistent = true)
 		{
-			if (NameConverter == null) NameConverter = DefaultNameConverter;
+			if (nameConverter == null) nameConverter = DefaultNameConverter;
 
-			return GenerateSwitch<Func<uint, TType, TRetType>>(Name, InstructionInfoList, (InstructionInfo) =>
+			return GenerateSwitch<Func<uint, TType, TRetType>>(name, instructionInfoList, (instructionInfo) =>
 			{
-				var InstructionInfoName = NameConverter((InstructionInfo != null) ? InstructionInfo.Name : "Default");
-				var MethodInfo = typeof(TType).GetMethod(InstructionInfoName);
+				var instructionInfoName = nameConverter((instructionInfo != null) ? instructionInfo.Name : "Default");
+				var methodInfo = typeof(TType).GetMethod(instructionInfoName);
 
-				if (MethodInfo == null && !ThrowOnUnexistent)
+				if (methodInfo == null && !throwOnUnexistent)
 				{
-					MethodInfo = typeof(TType).GetMethod("unhandled");
+					methodInfo = typeof(TType).GetMethod("unhandled");
 				}
 
-				if (MethodInfo == null)
+				if (methodInfo == null)
 				{
-					throw (new Exception("Cannot find method '" + InstructionInfoName + "' on type '" + typeof(TType).Name + "'"));
+					throw (new Exception("Cannot find method '" + instructionInfoName + "' on type '" + typeof(TType).Name + "'"));
 				}
 
-				if (MethodInfo.ReturnType == typeof(TRetType))
+				if (methodInfo.ReturnType == typeof(TRetType))
 				{
-					if (MethodInfo.IsStatic)
+					if (methodInfo.IsStatic)
 					{
-						return ast.Return(ast.CallStatic(MethodInfo, ast.Argument<TType>(1)));
+						return ast.Return(ast.CallStatic(methodInfo, ast.Argument<TType>(1)));
 					}
 					else
 					{
-						return ast.Return(ast.CallInstance(ast.Argument<TType>(1), MethodInfo));
+						return ast.Return(ast.CallInstance(ast.Argument<TType>(1), methodInfo));
 					}
 				}
 				else
 				{
-					throw (new Exception(String.Format("Invalid method: '{0}' should return '{1}'", MethodInfo, typeof(TRetType))));
+					throw (new Exception(String.Format("Invalid method: '{0}' should return '{1}'", methodInfo, typeof(TRetType))));
 				}
 			});
 		}
@@ -93,38 +93,38 @@ namespace CSPspEmu.Core.Cpu.Table
 		/// 
 		/// </summary>
 		/// <typeparam name="TType"></typeparam>
-		/// <param name="Name"></param>
-		/// <param name="InstructionInfoList"></param>
-		/// <param name="GenerateCallDelegate"></param>
+		/// <param name="name"></param>
+		/// <param name="instructionInfoList"></param>
+		/// <param name="generateCallDelegate"></param>
 		/// <returns></returns>
-		public static TType GenerateSwitch<TType>(string Name, IEnumerable<InstructionInfo> InstructionInfoList, Func<InstructionInfo, AstNodeStm> GenerateCallDelegate)
+		public static TType GenerateSwitch<TType>(string name, IEnumerable<InstructionInfo> instructionInfoList, Func<InstructionInfo, AstNodeStm> generateCallDelegate)
 		{
 			//Console.WriteLine(GenerateSwitchCode(InstructionInfoList, GenerateCallDelegate).Optimize(null).ToCSharpString());
 			//Console.WriteLine(GenerateSwitchCode(InstructionInfoList, GenerateCallDelegate).Optimize(null).ToILString<TType>());
-			return GenerateSwitchCode(InstructionInfoList, GenerateCallDelegate).GenerateDelegate<TType>("EmitLookupGenerator.GenerateSwitch::" + Name);
+			return GenerateSwitchCode(instructionInfoList, generateCallDelegate).GenerateDelegate<TType>("EmitLookupGenerator.GenerateSwitch::" + name);
 		}
 
 		/// <summary>
 		/// Generates an assembly code that will decode an integer with a set of InstructionInfo.
 		/// </summary>
-		/// <param name="SafeILGenerator"></param>
-		/// <param name="InstructionInfoList"></param>
-		/// <param name="GenerateCallDelegate"></param>
-		/// <param name="Level"></param>
-		public static AstNodeStm GenerateSwitchCode(IEnumerable<InstructionInfo> InstructionInfoList, Func<InstructionInfo, AstNodeStm> GenerateCallDelegate, int Level = 0)
+		/// <param name="instructionInfoList"></param>
+		/// <param name="generateCallDelegate"></param>
+		/// <param name="level"></param>
+		public static AstNodeStm GenerateSwitchCode(IEnumerable<InstructionInfo> instructionInfoList, Func<InstructionInfo, AstNodeStm> generateCallDelegate, int level = 0)
 		{
 			//var ILGenerator = SafeILGenerator._UnsafeGetILGenerator();
-			var CommonMask = InstructionInfoList.Aggregate(0xFFFFFFFF, (Base, InstructionInfo) => Base & InstructionInfo.Mask);
-			var MaskGroups = InstructionInfoList.GroupBy((InstructionInfo) => InstructionInfo.Value & CommonMask);
+			var instructionInfos = instructionInfoList as InstructionInfo[] ?? instructionInfoList.ToArray();
+			var commonMask = instructionInfos.Aggregate(0xFFFFFFFF, (Base, instructionInfo) => Base & instructionInfo.Mask);
+			var maskGroups = instructionInfos.GroupBy((instructionInfo) => instructionInfo.Value & commonMask).ToArray();
 			
 #if false
 			int ShiftOffset = 0;
 			var CommonMaskShifted = CommonMask >> ShiftOffset;
 			uint MinValue = 0;
 #else
-			int ShiftOffset = BitUtils.GetFirstBit1(CommonMask);
-			var CommonMaskShifted = CommonMask >> ShiftOffset;
-			uint MinValue = MaskGroups.Select(MaskGroup => (uint)((MaskGroup.First().Value >> ShiftOffset) & CommonMaskShifted)).Min();
+			var shiftOffset = BitUtils.GetFirstBit1(commonMask);
+			var commonMaskShifted = commonMask >> shiftOffset;
+			var minValue = maskGroups.Select(maskGroup => (maskGroup.First().Value >> shiftOffset) & commonMaskShifted).Min();
 #endif
 
 			//var MaskGroupsCount = MaskGroups.Count();
@@ -134,14 +134,14 @@ namespace CSPspEmu.Core.Cpu.Table
 
 			return ast.Statements(
 				ast.Switch(
-					ast.Binary(ast.Binary(ast.Binary(ast.Argument<uint>(0), ">>", ShiftOffset), "&", (uint)CommonMaskShifted), "-", MinValue),
-					ast.Default(GenerateCallDelegate(null)),
-					MaskGroups.Select(MaskGroup => 
+					ast.Binary(ast.Binary(ast.Binary(ast.Argument<uint>(0), ">>", shiftOffset), "&", commonMaskShifted), "-", minValue),
+					ast.Default(generateCallDelegate(null)),
+					maskGroups.Select(maskGroup => 
 						ast.Case(
-							(uint)((MaskGroup.First().Value >> ShiftOffset) & CommonMaskShifted) - MinValue,
-							(MaskGroup.Count() > 1)
-							? GenerateSwitchCode(MaskGroup, GenerateCallDelegate, Level + 1)
-							: GenerateCallDelegate(MaskGroup.First())
+							((maskGroup.First().Value >> shiftOffset) & commonMaskShifted) - minValue,
+							(maskGroup.Count() > 1)
+							? GenerateSwitchCode(maskGroup, generateCallDelegate, level + 1)
+							: generateCallDelegate(maskGroup.First())
 						)
 					).ToArray()
 				),

@@ -104,48 +104,49 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 		private CpuProcessor CpuProcessor;
 		private MethodCache MethodCache;
 
-		public MethodCompilerThread(CpuProcessor CpuProcessor, MethodCache MethodCache)
+		public MethodCompilerThread(CpuProcessor cpuProcessor, MethodCache methodCache)
 		{
-			this.CpuProcessor = CpuProcessor;
-			this.MethodCache = MethodCache;
+			this.CpuProcessor = cpuProcessor;
+			this.MethodCache = methodCache;
 			this.Thread = new Thread(Main)
 			{
-				IsBackground = true
+				Name = "MethodCache.MethodCompilerThread",
+				IsBackground = true,
 			};
 			this.Thread.Start();
 		}
 
-		private bool _ShouldAdd(uint PC)
+		private bool _ShouldAdd(uint pc)
 		{
-			return !Functions.ContainsKey(PC) && !ExploringPCs.Contains(PC);
+			return !Functions.ContainsKey(pc) && !ExploringPCs.Contains(pc);
 		}
 
-		private void _AddedPC(uint PC)
+		private void _AddedPC(uint pc)
 		{
 			//Console.WriteLine("Enqueing: {0:X8}", PC);
-			ExploringPCs.Add(PC);
+			ExploringPCs.Add(pc);
 		}
 
-		public void AddPCNow(uint PC)
+		public void AddPCNow(uint pc)
 		{
 			lock (this)
 			{
-				if (_ShouldAdd(PC))
+				if (_ShouldAdd(pc))
 				{
-					_AddedPC(PC);
-					ExploreQueue.AddFirst(PC);
+					_AddedPC(pc);
+					ExploreQueue.AddFirst(pc);
 				}
 			}
 		}
 
-		public void AddPCLater(uint PC)
+		public void AddPCLater(uint pc)
 		{
 			lock (this)
 			{
-				if (_ShouldAdd(PC))
+				if (_ShouldAdd(pc))
 				{
-					_AddedPC(PC);
-					ExploreQueue.AddLast(PC);
+					_AddedPC(pc);
+					ExploreQueue.AddLast(pc);
 				}
 			}
 		}
@@ -159,10 +160,10 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 			{
 				while (true)
 				{
-					var PC = ExploreQueue.ReadOne();
+					var pc = ExploreQueue.ReadOne();
 					//Console.Write("Compiling {0:X8}...", PC);
-					var DynarecFunction = _GenerateForPC(PC);
-					lock (this) this.Functions[PC] = DynarecFunction;
+					var dynarecFunction = _GenerateForPC(pc);
+					lock (this) this.Functions[pc] = dynarecFunction;
 					//Console.WriteLine("Ok");
 					CompletedFunction.Set();
 				}
@@ -173,67 +174,67 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 			}
 		}
 
-		private DynarecFunction _GenerateForPC(uint PC)
+		private DynarecFunction _GenerateForPC(uint pc)
 		{
-			var Memory = CpuProcessor.Memory;
+			var memory = CpuProcessor.Memory;
 			if (_DynarecConfig.DebugFunctionCreation)
 			{
-				Console.Write("PC=0x{0:X8}...", PC);
+				Console.Write("PC=0x{0:X8}...", pc);
 			}
 			//var Stopwatch = new Logger.Stopwatch();
-			var Time0 = DateTime.UtcNow;
+			var time0 = DateTime.UtcNow;
 
-			var DynarecFunction = CpuProcessor.DynarecFunctionCompiler.CreateFunction(new InstructionStreamReader(new PspMemoryStream(Memory)), PC);
-			if (DynarecFunction.EntryPC != PC) throw (new Exception("Unexpected error"));
+			var dynarecFunction = CpuProcessor.DynarecFunctionCompiler.CreateFunction(new InstructionStreamReader(new PspMemoryStream(memory)), pc);
+			if (dynarecFunction.EntryPC != pc) throw (new Exception("Unexpected error"));
 
 			if (_DynarecConfig.AllowCreatingUsedFunctionsInBackground)
 			{
-				foreach (var CallingPC in DynarecFunction.CallingPCs)
+				foreach (var callingPc in dynarecFunction.CallingPCs)
 				{
-					if (PspMemory.IsAddressValid(CallingPC))
+					if (PspMemory.IsAddressValid(callingPc))
 					{
-						AddPCLater(CallingPC);
+						AddPCLater(callingPc);
 					}
 				}
 			}
 
-			var Time1 = DateTime.UtcNow;
+			var time1 = DateTime.UtcNow;
 
 			if (_DynarecConfig.ImmediateLinking)
 			{
 				try
 				{
-					if (Platform.IsMono) Marshal.Prelink(DynarecFunction.Delegate.Method);
-					DynarecFunction.Delegate(null);
+					if (Platform.IsMono) Marshal.Prelink(dynarecFunction.Delegate.Method);
+					dynarecFunction.Delegate(null);
 				}
-				catch (InvalidProgramException InvalidProgramException)
+				catch (InvalidProgramException invalidProgramException)
 				{
 					Console.Error.WriteLine("Invalid delegate:");
-					Console.Error.WriteLine(DynarecFunction.AstNode.ToCSharpString());
-					Console.Error.WriteLine(DynarecFunction.AstNode.ToILString<Action<CpuThreadState>>());
-					throw (InvalidProgramException);
+					Console.Error.WriteLine(dynarecFunction.AstNode.ToCSharpString());
+					Console.Error.WriteLine(dynarecFunction.AstNode.ToIlString<Action<CpuThreadState>>());
+					throw;
 				}
 			}
 
-			var Time2 = DateTime.UtcNow;
+			var time2 = DateTime.UtcNow;
 
-			DynarecFunction.TimeLinking = Time2 - Time1;
-			var TimeAstGeneration = Time1 - Time0;
+			dynarecFunction.TimeLinking = time2 - time1;
+			var TimeAstGeneration = time1 - time0;
 
 			if (_DynarecConfig.DebugFunctionCreation)
 			{
-				ConsoleUtils.SaveRestoreConsoleColor(((TimeAstGeneration + DynarecFunction.TimeLinking).TotalMilliseconds > 10) ? ConsoleColor.Red : ConsoleColor.Gray, () =>
+				ConsoleUtils.SaveRestoreConsoleColor(((TimeAstGeneration + dynarecFunction.TimeLinking).TotalMilliseconds > 10) ? ConsoleColor.Red : ConsoleColor.Gray, () =>
 				{
 					Console.WriteLine(
 						"({0}): (analyze: {1}, generateAST: {2}, optimize: {3}, generateIL: {4}, createDelegate: {5}, link: {6}): ({1}, {2}, {3}, {4}, {5}, {6}) : {7} ms",
-						(DynarecFunction.MaxPC - DynarecFunction.MinPC) / 4,
-						(int)DynarecFunction.TimeAnalyzeBranches.TotalMilliseconds,
-						(int)DynarecFunction.TimeGenerateAst.TotalMilliseconds,
-						(int)DynarecFunction.TimeOptimize.TotalMilliseconds,
-						(int)DynarecFunction.TimeGenerateIL.TotalMilliseconds,
-						(int)DynarecFunction.TimeCreateDelegate.TotalMilliseconds,
-						(int)DynarecFunction.TimeLinking.TotalMilliseconds,
-						(int)(TimeAstGeneration + DynarecFunction.TimeLinking).TotalMilliseconds
+						(dynarecFunction.MaxPC - dynarecFunction.MinPC) / 4,
+						(int)dynarecFunction.TimeAnalyzeBranches.TotalMilliseconds,
+						(int)dynarecFunction.TimeGenerateAst.TotalMilliseconds,
+						(int)dynarecFunction.TimeOptimize.TotalMilliseconds,
+						(int)dynarecFunction.TimeGenerateIL.TotalMilliseconds,
+						(int)dynarecFunction.TimeCreateDelegate.TotalMilliseconds,
+						(int)dynarecFunction.TimeLinking.TotalMilliseconds,
+						(int)(TimeAstGeneration + dynarecFunction.TimeLinking).TotalMilliseconds
 					);
 				});
 			}
@@ -255,18 +256,18 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 			//	Console.WriteLine("-------------------------------------");
 			//}
 
-			return DynarecFunction;
+			return dynarecFunction;
 		}
 
-		public DynarecFunction GetDynarecFunctionForPC(uint PC)
+		public DynarecFunction GetDynarecFunctionForPC(uint pc)
 		{
 			lock (this)
 			{
-				if (!this.Functions.ContainsKey(PC))
+				if (!Functions.ContainsKey(pc))
 				{
-					this.Functions[PC] = CpuProcessor.DynarecFunctionCompiler.CreateFunction(new InstructionStreamReader(new PspMemoryStream(CpuProcessor.Memory)), PC);
+					Functions[pc] = CpuProcessor.DynarecFunctionCompiler.CreateFunction(new InstructionStreamReader(new PspMemoryStream(CpuProcessor.Memory)), pc);
 				}
-				return this.Functions[PC];
+				return Functions[pc];
 			}
 		}
 

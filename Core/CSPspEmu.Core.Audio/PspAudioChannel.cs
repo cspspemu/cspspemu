@@ -101,44 +101,44 @@ namespace CSPspEmu.Core.Audio
 			}
 		}
 
-		private short[] Samples = new short[0];
-		private short[] StereoSamplesBuffer = new short[0];
+		private short[] _samples = new short[0];
+		private short[] _stereoSamplesBuffer = new short[0];
 
 		public int VolumeLeft = PspAudio.MaxVolume;
 		public int VolumeRight = PspAudio.MaxVolume;
 
 		public void Release()
 		{
-			this.IsReserved = false;
-			this.VolumeLeft = PspAudio.MaxVolume;
-			this.VolumeRight = PspAudio.MaxVolume;
+			IsReserved = false;
+			VolumeLeft = PspAudio.MaxVolume;
+			VolumeRight = PspAudio.MaxVolume;
 		}
 
 		public void Updated()
 		{
 			if (SampleCount < 1) throw(new InvalidOperationException("SampleCount < 1"));
 			if (NumberOfChannels < 1) throw (new InvalidOperationException("NumberOfChannels < 1"));
-			this.Samples = new short[SampleCount * NumberOfChannels];
-			this.StereoSamplesBuffer = new short[SampleCount * 2];
-			this.VolumeLeft = PspAudio.MaxVolume;
-			this.VolumeRight = PspAudio.MaxVolume;
+			_samples = new short[SampleCount * NumberOfChannels];
+			_stereoSamplesBuffer = new short[SampleCount * 2];
+			VolumeLeft = PspAudio.MaxVolume;
+			VolumeRight = PspAudio.MaxVolume;
 		}
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		/// <param name="PspAudio"></param>
-		public PspAudioChannel(PspAudio PspAudio)
+		/// <param name="pspAudio"></param>
+		public PspAudioChannel(PspAudio pspAudio)
 		{
-			this.PspAudio = PspAudio;
+			this.PspAudio = pspAudio;
 		}
 
 		/// <summary>
 		/// Read 'Count' number of samples
 		/// </summary>
-		/// <param name="Count">Number of samples to read</param>
+		/// <param name="count">Number of samples to read</param>
 		/// <returns></returns>
-		public short[] Read(int Count)
+		public short[] Read(int count)
 		{
 			lock (this)
 			{
@@ -150,11 +150,11 @@ namespace CSPspEmu.Core.Audio
 					Buffer.Consume(Readed, 0, ReadCount);
 					return Readed;
 					*/
-					return Buffer.Consume(Math.Min(Buffer.ConsumeRemaining, Count));
+					return Buffer.Consume(Math.Min(Buffer.ConsumeRemaining, count));
 				}
 				finally
 				{
-					foreach (var Event in BufferEvents.Where(ExpectedConsumed => Buffer.TotalConsumed >= ExpectedConsumed.Item1).ToArray())
+					foreach (var Event in BufferEvents.Where(expectedConsumed => Buffer.TotalConsumed >= expectedConsumed.Item1).ToArray())
 					{
 						BufferEvents.Remove(Event);
 						Event.Item2();
@@ -167,38 +167,38 @@ namespace CSPspEmu.Core.Audio
 		/// Converts a buffer containing mono samples
 		/// into a buffer containing of stereo samples
 		/// </summary>
-		/// <param name="MonoSamples">Buffer that contains mono samples.</param>
+		/// <param name="monoSamples">Buffer that contains mono samples.</param>
 		/// <returns>A buffer that contains stereo samples.</returns>
-		private short[] MonoToStereo(short[] MonoSamples)
+		private short[] MonoToStereo(short[] monoSamples)
 		{
-			var StereoSamples = StereoSamplesBuffer;
-			for (int n = 0; n < MonoSamples.Length; n++)
+			var stereoSamples = _stereoSamplesBuffer;
+			for (var n = 0; n < monoSamples.Length; n++)
 			{
-				StereoSamples[n * 2 + 0] = MonoSamples[n];
-				StereoSamples[n * 2 + 1] = MonoSamples[n];
+				stereoSamples[n * 2 + 0] = monoSamples[n];
+				stereoSamples[n * 2 + 1] = monoSamples[n];
 			}
-			return StereoSamples;
+			return stereoSamples;
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="Samples"></param>
-		/// <param name="ActionCallbackOnReaded"></param>
-		public void Write(short[] Samples, Action ActionCallbackOnReaded)
+		/// <param name="samples"></param>
+		/// <param name="actionCallbackOnReaded"></param>
+		public void Write(short[] samples, Action actionCallbackOnReaded)
 		{
-			if (Samples == null) throw (new InvalidOperationException("short[] Samples is null"));
+			if (samples == null) throw (new InvalidOperationException("short[] Samples is null"));
 
-			short[] StereoSamples;
+			short[] stereoSamples;
 
 			switch (Format)
 			{
 				case Audio.PspAudio.FormatEnum.Mono:
-					StereoSamples = MonoToStereo(Samples);
+					stereoSamples = MonoToStereo(samples);
 					break;
 				default:
 				case Audio.PspAudio.FormatEnum.Stereo:
-					StereoSamples = Samples;
+					stereoSamples = samples;
 					break;
 			}
 
@@ -209,68 +209,63 @@ namespace CSPspEmu.Core.Audio
 					Task.Run(() =>
 					{
 						Thread.Sleep(1);
-						ActionCallbackOnReaded();
+						actionCallbackOnReaded();
 					});
 				}
 				else
 				{
-					BufferEvents.Add(new Tuple<long, Action>(Buffer.TotalConsumed + StereoSamples.Length, ActionCallbackOnReaded));
+					BufferEvents.Add(new Tuple<long, Action>(Buffer.TotalConsumed + stereoSamples.Length, actionCallbackOnReaded));
 				}
 				//Console.WriteLine(Format);
-				Buffer.Produce(StereoSamples);
+				Buffer.Produce(stereoSamples);
 			}
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="SamplePointer"></param>
-		/// <param name="VolumeLeft"></param>
-		/// <param name="VolumeRight"></param>
-		/// <param name="ActionCallbackOnReaded"></param>
-		public void Write(short* SamplePointer, int VolumeLeft, int VolumeRight, Action ActionCallbackOnReaded)
+		/// <param name="samplePointer"></param>
+		/// <param name="volumeLeft"></param>
+		/// <param name="volumeRight"></param>
+		/// <param name="actionCallbackOnReaded"></param>
+		public void Write(short* samplePointer, int volumeLeft, int volumeRight, Action actionCallbackOnReaded)
 		{
 			//Console.WriteLine("{0}", this.Frequency);
-			VolumeLeft = VolumeLeft * this.VolumeLeft / PspAudio.MaxVolume;
-			VolumeRight = VolumeRight * this.VolumeRight / PspAudio.MaxVolume;
+			volumeLeft = volumeLeft * this.VolumeLeft / PspAudio.MaxVolume;
+			volumeRight = volumeRight * this.VolumeRight / PspAudio.MaxVolume;
 
-			if (SamplePointer != null)
+			if (samplePointer != null)
 			{
 				if (NumberOfChannels == 1)
 				{
-					int Volume = (VolumeLeft + VolumeRight) / 2;
-					for (int n = 0; n < Samples.Length; n++)
+					var volume = (volumeLeft + volumeRight) / 2;
+					for (var n = 0; n < _samples.Length; n++)
 					{
-						Samples[n + 0] = (short)(((int)SamplePointer[n + 0] * Volume) / PspAudio.MaxVolume);
+						_samples[n + 0] = (short)(samplePointer[n + 0] * volume / PspAudio.MaxVolume);
 					}
 				}
 				else
 				{
-					for (int n = 0; n < Samples.Length; n += 2)
+					for (var n = 0; n < _samples.Length; n += 2)
 					{
-						Samples[n + 0] = (short)(((int)SamplePointer[n + 0] * VolumeLeft) / PspAudio.MaxVolume);
-						Samples[n + 1] = (short)(((int)SamplePointer[n + 1] * VolumeRight) / PspAudio.MaxVolume);
+						_samples[n + 0] = (short)((samplePointer[n + 0] * volumeLeft) / PspAudio.MaxVolume);
+						_samples[n + 1] = (short)((samplePointer[n + 1] * volumeRight) / PspAudio.MaxVolume);
 					}
 				}
 			}
 
-			Write(Samples, ActionCallbackOnReaded);
+			Write(_samples, actionCallbackOnReaded);
 		}
 
 		/// <summary>
 		/// Available channels that can be read.
 		/// </summary>
-		public int AvailableChannelsForRead
-		{
-			get
-			{
-				return Buffer.ConsumeRemaining;
-			}
-		}
+		public int AvailableChannelsForRead => Buffer.ConsumeRemaining;
 
 		public override string ToString()
 		{
-			return String.Format("AudioChannel(Index={0},Frequency={1},Format={2},Channels={3},SampleCount={4})", Index, Frequency, Format, NumberOfChannels, SampleCount);
+			return
+				$"AudioChannel(Index={Index},Frequency={Frequency},Format={Format},Channels={NumberOfChannels},SampleCount={SampleCount})";
 		}
 	}
 	public class InvalidAudioFormatException : Exception

@@ -15,9 +15,9 @@ namespace CSPspEmu.Core.Threading.Synchronization
 			}
 		}
 
-		public void CallbackOnStateOnce(Action Callback)
+		public void CallbackOnStateOnce(Action callback)
 		{
-			Notifications.Enqueue(Callback);
+			Notifications.Enqueue(callback);
 		}
 	}
 }

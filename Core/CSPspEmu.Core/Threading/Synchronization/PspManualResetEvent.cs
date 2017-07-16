@@ -2,8 +2,8 @@
 {
 	public class PspManualResetEvent : PspResetEvent
 	{
-		public PspManualResetEvent(bool InitialValue)
-			: base(InitialValue, AutoReset: false)
+		public PspManualResetEvent(bool initialValue)
+			: base(initialValue, autoReset: false)
 		{
 		}
 	}

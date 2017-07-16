@@ -217,7 +217,11 @@ namespace CSPspEmu.Hle.Modules.pspnet
 
 			public void Start()
 			{
-				(this.MainThread = new Thread(ThreadMain) { IsBackground = true }).Start();
+				(this.MainThread = new Thread(ThreadMain)
+				{
+					Name = "sceNetAdhocMatching",
+					IsBackground = true,
+				}).Start();
 			}
 
 			Thread MainThread;
@@ -226,8 +230,8 @@ namespace CSPspEmu.Hle.Modules.pspnet
 
 			public void ThreadMain()
 			{
-				(HelloThread = new Thread(() => { while (true) { SendHello(); Thread.Sleep(HelloDelay / 1000); } }) { IsBackground = true }).Start();
-				(PingThread = new Thread(() => { while (true) { SendPing(); Thread.Sleep(PingDelay / 1000); } }) { IsBackground = true }).Start();
+				(HelloThread = new Thread(() => { while (true) { SendHello(); Thread.Sleep(HelloDelay / 1000); } }) { Name = "sceNetAdhocMatching.HelloThread", IsBackground = true }).Start();
+				(PingThread = new Thread(() => { while (true) { SendPing(); Thread.Sleep(PingDelay / 1000); } }) { Name = "sceNetAdhocMatching.PingThread", IsBackground = true }).Start();
 
 				var Socket = new Socket(SocketType.Dgram, ProtocolType.Udp);
 				Socket.ExclusiveAddressUse = false;

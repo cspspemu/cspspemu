@@ -143,7 +143,7 @@ namespace CSPspEmu.Gui.Winforms
 					case "IL":
 						if (Node != null)
 						{
-							OutString = Node.ToILString<Action<CpuThreadState>>();
+							OutString = Node.ToIlString<Action<CpuThreadState>>();
 						}
 						break;
 					case "Ast":
@@ -216,7 +216,7 @@ namespace CSPspEmu.Gui.Winforms
 					if (Entry.AstTree != null)
 					{
 						var MethodBuilder = TypeBuilder.DefineMethod("Method_" + Entry.Name, MethodAttributes.Public | MethodAttributes.Static, typeof(void), new[] { typeof(CpuThreadState) });
-						Entry.AstTree.GenerateIL(MethodBuilder, MethodBuilder.GetILGenerator());
+						Entry.AstTree.GenerateIl(MethodBuilder, MethodBuilder.GetILGenerator());
 						//MethodBuilder.CreateDelegate(typeof(Action<CpuThreadState>));
 					}
 

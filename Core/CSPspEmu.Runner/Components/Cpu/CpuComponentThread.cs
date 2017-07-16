@@ -34,120 +34,114 @@ using CSPspEmu.Hle.Vfs.Emulator;
 
 namespace CSPspEmu.Runner.Components.Cpu
 {
-	public unsafe sealed class CpuComponentThread : ComponentThread, IInjectInitialize
-	{
-		static Logger Logger = Logger.GetLogger("CpuComponentThread");
+    public unsafe sealed class CpuComponentThread : ComponentThread, IInjectInitialize
+    {
+        static Logger Logger = Logger.GetLogger("CpuComponentThread");
 
-		protected override string ThreadName { get { return "CpuThread"; } }
+        protected override string ThreadName => "CpuThread";
 
-		[Inject]
-		public CpuProcessor CpuProcessor;
+        [Inject] public CpuProcessor CpuProcessor;
 
-		[Inject]
-		public PspRtc PspRtc;
-		
-		[Inject]
-		public HleThreadManager HleThreadManager;
-		
-		[Inject]
-		public PspMemory PspMemory;
+        [Inject] public PspRtc PspRtc;
 
-		[Inject]
-		public ElfPspLoader Loader;
+        [Inject] public HleThreadManager HleThreadManager;
 
-		[Inject]
-		public HleMemoryManager MemoryManager;
+        [Inject] public PspMemory PspMemory;
 
-		[Inject]
-		public HleCallbackManager HleCallbackManager;
+        [Inject] public ElfPspLoader Loader;
 
-		[Inject]
-		public HleModuleManager ModuleManager;
+        [Inject] public HleMemoryManager MemoryManager;
 
-		[Inject]
-		public HleIoManager HleIoManager;
+        [Inject] public HleCallbackManager HleCallbackManager;
 
-		[Inject]
-		public ThreadManForUser ThreadManForUser;
+        [Inject] public HleModuleManager ModuleManager;
 
-		[Inject]
-		HleIoDriverEmulator HleIoDriverEmulator;
+        [Inject] public HleIoManager HleIoManager;
 
-		[Inject]
-		ElfConfig ElfConfig;
+        [Inject] public ThreadManForUser ThreadManForUser;
 
-		[Inject]
-		HleConfig HleConfig;
+        [Inject] public HleIoDriverEmulator HleIoDriverEmulator;
 
-		public HleIoDriverMountable MemoryStickMountable;
+        [Inject] public ElfConfig ElfConfig;
 
-		public AutoResetEvent StoppedEndedEvent = new AutoResetEvent(false);
+        [Inject] public HleConfig HleConfig;
 
-		void IInjectInitialize.Initialize()
-		{
-			RegisterDevices();
-		}
+        public HleIoDriverMountable MemoryStickMountable;
 
-		void RegisterDevices()
-		{
-			string MemoryStickRootFolder = ApplicationPaths.MemoryStickRootFolder;
-			//Console.Error.WriteLine(MemoryStickRootFolder);
-			//Console.ReadKey();
-			try { Directory.CreateDirectory(MemoryStickRootFolder); }
-			catch { }
-			/*
-			*/
+        public AutoResetEvent StoppedEndedEvent = new AutoResetEvent(false);
 
-			MemoryStickMountable = new HleIoDriverMountable();
-			MemoryStickMountable.Mount("/", new HleIoDriverLocalFileSystem(MemoryStickRootFolder));
-			var MemoryStick = new HleIoDriverMemoryStick(PspMemory, HleCallbackManager, MemoryStickMountable);
-			//var MemoryStick = new HleIoDriverMemoryStick(new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
+        void IInjectInitialize.Initialize()
+        {
+            RegisterDevices();
+        }
 
-			// http://forums.ps2dev.org/viewtopic.php?t=5680
-			HleIoManager.SetDriver("host:", MemoryStick);
-			HleIoManager.SetDriver("ms:", MemoryStick);
-			HleIoManager.SetDriver("fatms:", MemoryStick);
-			HleIoManager.SetDriver("fatmsOem:", MemoryStick);
-			HleIoManager.SetDriver("mscmhc:", MemoryStick);
+        void RegisterDevices()
+        {
+            var memoryStickRootFolder = ApplicationPaths.MemoryStickRootFolder;
+            //Console.Error.WriteLine(MemoryStickRootFolder);
+            //Console.ReadKey();
+            try
+            {
+                Directory.CreateDirectory(memoryStickRootFolder);
+            }
+            catch
+            {
+                // ignored
+            }
+            /*
+            */
 
-			HleIoManager.SetDriver("msstor:", new ReadonlyHleIoDriver(MemoryStick));
-			HleIoManager.SetDriver("msstor0p:", new ReadonlyHleIoDriver(MemoryStick));
+            MemoryStickMountable = new HleIoDriverMountable();
+            MemoryStickMountable.Mount("/", new HleIoDriverLocalFileSystem(memoryStickRootFolder));
+            var memoryStick = new HleIoDriverMemoryStick(PspMemory, HleCallbackManager, MemoryStickMountable);
+            //var MemoryStick = new HleIoDriverMemoryStick(new HleIoDriverLocalFileSystem(VirtualDirectory).AsReadonlyHleIoDriver());
 
-			HleIoManager.SetDriver("disc:", MemoryStick);
-			HleIoManager.SetDriver("umd:", MemoryStick);
+            // http://forums.ps2dev.org/viewtopic.php?t=5680
+            HleIoManager.SetDriver("host:", memoryStick);
+            HleIoManager.SetDriver("ms:", memoryStick);
+            HleIoManager.SetDriver("fatms:", memoryStick);
+            HleIoManager.SetDriver("fatmsOem:", memoryStick);
+            HleIoManager.SetDriver("mscmhc:", memoryStick);
 
-			HleIoManager.SetDriver("emulator:", HleIoDriverEmulator);
-			HleIoManager.SetDriver("kemulator:", HleIoDriverEmulator);
+            HleIoManager.SetDriver("msstor:", new ReadonlyHleIoDriver(memoryStick));
+            HleIoManager.SetDriver("msstor0p:", new ReadonlyHleIoDriver(memoryStick));
 
-			HleIoManager.SetDriver("flash:", new HleIoDriverZip(new ZipArchive(ResourceArchive.GetFlash0ZipFileStream())));
-		}
+            HleIoManager.SetDriver("disc:", memoryStick);
+            HleIoManager.SetDriver("umd:", memoryStick);
 
-		public IsoFile SetIso(string IsoFile)
-		{
-			//"../../../TestInput/cube.iso"
-			var Iso = IsoLoader.GetIso(IsoFile);
-			var Umd = new HleIoDriverIso(Iso);
-			HleIoManager.SetDriver("disc:", Umd);
-			HleIoManager.SetDriver("umd:", Umd);
-			//HleIoManager.SetDriver("host:", Umd);
-			HleIoManager.SetDriver(":", Umd);
-			HleIoManager.Chdir("disc0:/PSP_GAME/USRDIR");
-			return Iso;
-		}
+            HleIoManager.SetDriver("emulator:", HleIoDriverEmulator);
+            HleIoManager.SetDriver("kemulator:", HleIoDriverEmulator);
 
-		void SetVirtualFolder(string VirtualDirectory)
-		{
-			MemoryStickMountable.Mount(
-				"/PSP/GAME/virtual",
-				new HleIoDriverLocalFileSystem(VirtualDirectory)
-					//.AsReadonlyHleIoDriver()
-			);
-		}
+            HleIoManager.SetDriver("flash:",
+                new HleIoDriverZip(new ZipArchive(ResourceArchive.GetFlash0ZipFileStream())));
+        }
 
-		void RegisterSyscalls()
-		{
-			new MipsAssembler(new PspMemoryStream(PspMemory)).Assemble(
-				@"
+        public IsoFile SetIso(string isoFile)
+        {
+            //"../../../TestInput/cube.iso"
+            var iso = IsoLoader.GetIso(isoFile);
+            var umd = new HleIoDriverIso(iso);
+            HleIoManager.SetDriver("disc:", umd);
+            HleIoManager.SetDriver("umd:", umd);
+            //HleIoManager.SetDriver("host:", Umd);
+            HleIoManager.SetDriver(":", umd);
+            HleIoManager.Chdir("disc0:/PSP_GAME/USRDIR");
+            return iso;
+        }
+
+        void SetVirtualFolder(string virtualDirectory)
+        {
+            MemoryStickMountable.Mount(
+                "/PSP/GAME/virtual",
+                new HleIoDriverLocalFileSystem(virtualDirectory)
+                //.AsReadonlyHleIoDriver()
+            );
+        }
+
+        void RegisterSyscalls()
+        {
+            new MipsAssembler(new PspMemoryStream(PspMemory)).Assemble(
+                @"
 					.code CODE_PTR_EXIT_THREAD
 						syscall CODE_PTR_EXIT_THREAD_SYSCALL
 						jr r31
@@ -157,353 +151,358 @@ namespace CSPspEmu.Runner.Components.Cpu
 						jr r31
 						nop
 				"
-				.Replace("CODE_PTR_EXIT_THREAD_SYSCALL", String.Format("0x{0:X}", HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD_SYSCALL))
-				.Replace("CODE_PTR_FINALIZE_CALLBACK_SYSCALL", String.Format("0x{0:X}", HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK_SYSCALL))
+                    .Replace("CODE_PTR_EXIT_THREAD_SYSCALL", $"0x{HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD_SYSCALL:X}")
+                    .Replace("CODE_PTR_FINALIZE_CALLBACK_SYSCALL", $"0x{HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK_SYSCALL:X}")
+                    .Replace("CODE_PTR_EXIT_THREAD", $"0x{HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD:X}")
+                    .Replace("CODE_PTR_FINALIZE_CALLBACK", $"0x{HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK:X}")
+            );
 
-				.Replace("CODE_PTR_EXIT_THREAD", String.Format("0x{0:X}", HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD))
-				.Replace("CODE_PTR_FINALIZE_CALLBACK", String.Format("0x{0:X}", HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK))
-			);
+            //var ThreadManForUser = ModuleManager.GetModule<ThreadManForUser>();
 
-			//var ThreadManForUser = ModuleManager.GetModule<ThreadManForUser>();
+            RegisterModuleSyscall<ThreadManForUser>(0x206D, "sceKernelCreateThread");
+            RegisterModuleSyscall<ThreadManForUser>(0x206F, "sceKernelStartThread");
+            RegisterModuleSyscall<ThreadManForUser>(0x2071, "sceKernelExitDeleteThread");
 
-			RegisterModuleSyscall<ThreadManForUser>(0x206D, "sceKernelCreateThread");
-			RegisterModuleSyscall<ThreadManForUser>(0x206F, "sceKernelStartThread");
-			RegisterModuleSyscall<ThreadManForUser>(0x2071, "sceKernelExitDeleteThread");
+            RegisterModuleSyscall<UtilsForUser>(0x20BF, "sceKernelUtilsMt19937Init");
+            RegisterModuleSyscall<UtilsForUser>(0x20C0, "sceKernelUtilsMt19937UInt");
 
-			RegisterModuleSyscall<UtilsForUser>(0x20BF, "sceKernelUtilsMt19937Init");
-			RegisterModuleSyscall<UtilsForUser>(0x20C0, "sceKernelUtilsMt19937UInt");
+            RegisterModuleSyscall<sceDisplay>(0x213A, "sceDisplaySetMode");
+            RegisterModuleSyscall<sceDisplay>(0x2147, "sceDisplayWaitVblankStart");
+            RegisterModuleSyscall<sceDisplay>(0x213F, "sceDisplaySetFrameBuf");
 
-			RegisterModuleSyscall<sceDisplay>(0x213A, "sceDisplaySetMode");
-			RegisterModuleSyscall<sceDisplay>(0x2147, "sceDisplayWaitVblankStart");
-			RegisterModuleSyscall<sceDisplay>(0x213F, "sceDisplaySetFrameBuf");
+            RegisterModuleSyscall<LoadExecForUser>(0x20EB, "sceKernelExitGame");
 
-			RegisterModuleSyscall<LoadExecForUser>(0x20EB, "sceKernelExitGame");
+            RegisterModuleSyscall<sceCtrl>(0x2150, "sceCtrlPeekBufferPositive");
 
-			RegisterModuleSyscall<sceCtrl>(0x2150, "sceCtrlPeekBufferPositive");
+            RegisterModuleSyscall<Emulator>(0x1010, "emitInt");
+            RegisterModuleSyscall<Emulator>(0x1011, "emitFloat");
+            RegisterModuleSyscall<Emulator>(0x1012, "emitString");
+            RegisterModuleSyscall<Emulator>(0x1013, "emitMemoryBlock");
+            RegisterModuleSyscall<Emulator>(0x1014, "emitHex");
+            RegisterModuleSyscall<Emulator>(0x1015, "emitUInt");
+            RegisterModuleSyscall<Emulator>(0x1016, "emitLong");
+            RegisterModuleSyscall<Emulator>(0x1017, "testArguments");
+            //RegisterModuleSyscall<Emulator>(0x7777, "waitThreadForever");
+            RegisterModuleSyscall<ThreadManForUser>(HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD_SYSCALL,
+                (Func<CpuThreadState, int>) new ThreadManForUser()._hle_sceKernelExitDeleteThread);
+            RegisterModuleSyscall<Emulator>(HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK_SYSCALL,
+                (Action<CpuThreadState>) new Emulator().finalizeCallback);
+        }
 
-			RegisterModuleSyscall<Emulator>(0x1010, "emitInt");
-			RegisterModuleSyscall<Emulator>(0x1011, "emitFloat");
-			RegisterModuleSyscall<Emulator>(0x1012, "emitString");
-			RegisterModuleSyscall<Emulator>(0x1013, "emitMemoryBlock");
-			RegisterModuleSyscall<Emulator>(0x1014, "emitHex");
-			RegisterModuleSyscall<Emulator>(0x1015, "emitUInt");
-			RegisterModuleSyscall<Emulator>(0x1016, "emitLong");
-			RegisterModuleSyscall<Emulator>(0x1017, "testArguments");
-			//RegisterModuleSyscall<Emulator>(0x7777, "waitThreadForever");
-			RegisterModuleSyscall<ThreadManForUser>(HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD_SYSCALL, (Func<CpuThreadState, int>)new ThreadManForUser()._hle_sceKernelExitDeleteThread);
-			RegisterModuleSyscall<Emulator>(HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK_SYSCALL, (Action<CpuThreadState>)new Emulator().finalizeCallback);
-		}
+        void RegisterModuleSyscall<TType>(int syscallCode, Delegate Delegate) where TType : HleModuleHost
+        {
+            RegisterModuleSyscall<TType>(syscallCode, Delegate.Method.Name);
+        }
 
-		void RegisterModuleSyscall<TType>(int SyscallCode, Delegate Delegate) where TType : HleModuleHost
-		{
-			RegisterModuleSyscall<TType>(SyscallCode, Delegate.Method.Name);
-		}
+        void RegisterModuleSyscall<TType>(int syscallCode, string functionName) where TType : HleModuleHost
+        {
+            var Delegate = ModuleManager.GetModuleDelegate<TType>(functionName);
+            CpuProcessor.RegisterNativeSyscall(syscallCode, (cpuThreadState, code) => { Delegate(cpuThreadState); });
+        }
 
-		void RegisterModuleSyscall<TType>(int SyscallCode, string FunctionName) where TType : HleModuleHost
-		{
-			var Delegate = ModuleManager.GetModuleDelegate<TType>(FunctionName);
-			CpuProcessor.RegisterNativeSyscall(SyscallCode, (CpuThreadState, Code) =>
-			{
-				Delegate(CpuThreadState);
-			});
-		}
+        public void _LoadFile(String fileName)
+        {
+            //GC.Collect();
+            SetVirtualFolder(Path.GetDirectoryName(fileName));
 
-		public void _LoadFile(String FileName)
-		{
-			//GC.Collect();
-			SetVirtualFolder(Path.GetDirectoryName(FileName));
+            var memoryStream = new PspMemoryStream(PspMemory);
 
-			var MemoryStream = new PspMemoryStream(PspMemory);
+            var arguments = new[]
+            {
+                "ms0:/PSP/GAME/virtual/EBOOT.PBP",
+            };
 
-			var Arguments = new[] {
-				"ms0:/PSP/GAME/virtual/EBOOT.PBP",
-			};
+            Stream loadStream = File.OpenRead(fileName);
+            //using ()
+            {
+                var elfLoadStreamTry = new List<Stream>();
+                //Stream ElfLoadStream = null;
 
-			Stream LoadStream = File.OpenRead(FileName);
-			//using ()
-			{
-				List<Stream> ElfLoadStreamTry = new List<Stream>();
-				//Stream ElfLoadStream = null;
+                var format = new FormatDetector().DetectSubType(loadStream);
+                string title = null;
+                switch (format)
+                {
+                    case FormatDetector.SubType.Pbp:
+                    {
+                        var pbp = new Pbp().Load(loadStream);
+                        elfLoadStreamTry.Add(pbp[Pbp.Types.PspData]);
+                        Logger.TryCatch(() =>
+                        {
+                            var paramSfo = new Psf().Load(pbp[Pbp.Types.ParamSfo]);
 
-				var Format = new FormatDetector().DetectSubType(LoadStream);
-				String Title = null;
-				switch (Format)
-				{
-					case FormatDetector.SubType.Pbp:
-						{
-							var Pbp = new Pbp().Load(LoadStream);
-							ElfLoadStreamTry.Add(Pbp[Pbp.Types.PspData]);
-							Logger.TryCatch(() =>
-							{
-								var ParamSfo = new Psf().Load(Pbp[Pbp.Types.ParamSfo]);
-								
-								if (ParamSfo.EntryDictionary.ContainsKey("TITLE"))
-								{
-									Title = (String)ParamSfo.EntryDictionary["TITLE"];
-								}
+                            if (paramSfo.EntryDictionary.ContainsKey("TITLE"))
+                            {
+                                title = (string) paramSfo.EntryDictionary["TITLE"];
+                            }
 
-								if (ParamSfo.EntryDictionary.ContainsKey("PSP_SYSTEM_VER"))
-								{
-									HleConfig.FirmwareVersion = ParamSfo.EntryDictionary["PSP_SYSTEM_VER"].ToString();
-								}
-							});
-						}
-						break;
-					case FormatDetector.SubType.Elf:
-						ElfLoadStreamTry.Add(LoadStream);
-						break;
-					case FormatDetector.SubType.Dax:
-					case FormatDetector.SubType.Cso:
-					case FormatDetector.SubType.Iso:
-						{
-							Arguments[0] = "disc0:/PSP/GAME/SYSDIR/EBOOT.BIN";
+                            if (paramSfo.EntryDictionary.ContainsKey("PSP_SYSTEM_VER"))
+                            {
+                                HleConfig.FirmwareVersion = paramSfo.EntryDictionary["PSP_SYSTEM_VER"].ToString();
+                            }
+                        });
+                    }
+                        break;
+                    case FormatDetector.SubType.Elf:
+                        elfLoadStreamTry.Add(loadStream);
+                        break;
+                    case FormatDetector.SubType.Dax:
+                    case FormatDetector.SubType.Cso:
+                    case FormatDetector.SubType.Iso:
+                    {
+                        arguments[0] = "disc0:/PSP/GAME/SYSDIR/EBOOT.BIN";
 
-							var Iso = SetIso(FileName);
-							Logger.TryCatch(() =>
-							{
-								var ParamSfo = new Psf().Load(Iso.Root.Locate("/PSP_GAME/PARAM.SFO").Open());
-								Title = (String)ParamSfo.EntryDictionary["TITLE"];
-							});
+                        var iso = SetIso(fileName);
+                        Logger.TryCatch(() =>
+                        {
+                            var paramSfo = new Psf().Load(iso.Root.Locate("/PSP_GAME/PARAM.SFO").Open());
+                            title = (string) paramSfo.EntryDictionary["TITLE"];
+                        });
 
-							var FilesToTry = new[] {
-								"/PSP_GAME/SYSDIR/BOOT.BIN",
-								"/PSP_GAME/SYSDIR/EBOOT.BIN",
-								"/PSP_GAME/SYSDIR/EBOOT.OLD",
-							};
+                        var filesToTry = new[]
+                        {
+                            "/PSP_GAME/SYSDIR/BOOT.BIN",
+                            "/PSP_GAME/SYSDIR/EBOOT.BIN",
+                            "/PSP_GAME/SYSDIR/EBOOT.OLD",
+                        };
 
-							foreach (var FileToTry in FilesToTry)
-							{
-								try
-								{
-									ElfLoadStreamTry.Add(Iso.Root.Locate(FileToTry).Open());
-								}
-								catch
-								{
-								}
-								//if (ElfLoadStream.Length != 0) break;
-							}
+                        foreach (var fileToTry in filesToTry)
+                        {
+                            try
+                            {
+                                elfLoadStreamTry.Add(iso.Root.Locate(fileToTry).Open());
+                            }
+                            catch
+                            {
+                                // ignored
+                            }
+                            //if (ElfLoadStream.Length != 0) break;
+                        }
 
-							/*
-							if (ElfLoadStream.Length == 0)
-							{
-								throw (new Exception(String.Format("{0} files are empty", String.Join(", ", FilesToTry))));
-							}
-							*/
-						}
-						break;
-					default:
-						throw (new NotImplementedException("Can't load format '" + Format + "'"));
-				}
+                        /*
+                        if (ElfLoadStream.Length == 0)
+                        {
+                            throw (new Exception(String.Format("{0} files are empty", String.Join(", ", FilesToTry))));
+                        }
+                        */
+                    }
+                        break;
+                    default:
+                        throw (new NotImplementedException("Can't load format '" + format + "'"));
+                }
 
-				Exception LoadException = null;
-				HleModuleGuest HleModuleGuest = null;
+                Exception loadException = null;
+                HleModuleGuest hleModuleGuest = null;
 
-				foreach (var ElfLoadStream in ElfLoadStreamTry)
-				{
-					try
-					{
-						LoadException = null;
+                foreach (var elfLoadStream in elfLoadStreamTry)
+                {
+                    try
+                    {
+                        loadException = null;
 
-						if (ElfLoadStream.Length < 256) throw(new InvalidProgramException("File too short"));
+                        if (elfLoadStream.Length < 256) throw(new InvalidProgramException("File too short"));
 
-						HleModuleGuest = Loader.LoadModule(
-							ElfLoadStream,
-							MemoryStream,
-							MemoryManager.GetPartition(MemoryPartitions.User),
-							ModuleManager,
-							Title,
-							ModuleName: FileName,
-							IsMainModule: true
-						);
+                        hleModuleGuest = Loader.LoadModule(
+                            elfLoadStream,
+                            memoryStream,
+                            MemoryManager.GetPartition(MemoryPartitions.User),
+                            ModuleManager,
+                            title,
+                            ModuleName: fileName,
+                            IsMainModule: true
+                        );
 
-						LoadException = null;
+                        loadException = null;
 
-						break;
-					}
-					catch (InvalidProgramException Exception)
-					{
-						LoadException = Exception;
-					}
-				}
+                        break;
+                    }
+                    catch (InvalidProgramException exception)
+                    {
+                        loadException = exception;
+                    }
+                }
 
-				if (LoadException != null) throw (LoadException);
+                if (loadException != null) throw (loadException);
 
-				RegisterSyscalls();
+                RegisterSyscalls();
 
-				uint StartArgumentAddress = 0x08000100;
-				uint EndArgumentAddress = StartArgumentAddress;
+                uint StartArgumentAddress = 0x08000100;
+                uint endArgumentAddress = StartArgumentAddress;
 
-				var ArgumentsChunk = Arguments
-					.Select(Argument => Encoding.UTF8.GetBytes(Argument + "\0"))
-					.Aggregate(new byte[] { }, (Accumulate, Chunk) => (byte[])Accumulate.Concat(Chunk))
-				;
+                var argumentsChunk = arguments
+                        .Select(argument => Encoding.UTF8.GetBytes(argument + "\0"))
+                        .Aggregate(new byte[] { }, (accumulate, chunk) => (byte[]) accumulate.Concat(chunk))
+                    ;
 
-				var ReservedSyscallsPartition = MemoryManager.GetPartition(MemoryPartitions.Kernel0).Allocate(
-					0x100,
-					Name: "ReservedSyscallsPartition"
-				);
-				var ArgumentsPartition = MemoryManager.GetPartition(MemoryPartitions.Kernel0).Allocate(
-					ArgumentsChunk.Length,
-					Name: "ArgumentsPartition"
-				);
-				PspMemory.WriteBytes(ArgumentsPartition.Low, ArgumentsChunk);
+                var reservedSyscallsPartition = MemoryManager.GetPartition(MemoryPartitions.Kernel0).Allocate(
+                    0x100,
+                    Name: "ReservedSyscallsPartition"
+                );
+                var argumentsPartition = MemoryManager.GetPartition(MemoryPartitions.Kernel0).Allocate(
+                    argumentsChunk.Length,
+                    Name: "ArgumentsPartition"
+                );
+                PspMemory.WriteBytes(argumentsPartition.Low, argumentsChunk);
 
-				Debug.Assert(ThreadManForUser != null);
+                Debug.Assert(ThreadManForUser != null);
 
-				// @TODO: Use Module Manager
+                // @TODO: Use Module Manager
 
-				//var MainThread = ThreadManager.Create();
-				//var CpuThreadState = MainThread.CpuThreadState;
-				var CurrentCpuThreadState = new CpuThreadState(CpuProcessor);
-				{
-					//CpuThreadState.PC = Loader.InitInfo.PC;
-					CurrentCpuThreadState.GP = HleModuleGuest.InitInfo.GP;
-					CurrentCpuThreadState.CallerModule = HleModuleGuest;
+                //var MainThread = ThreadManager.Create();
+                //var CpuThreadState = MainThread.CpuThreadState;
+                var currentCpuThreadState = new CpuThreadState(CpuProcessor);
+                {
+                    //CpuThreadState.PC = Loader.InitInfo.PC;
+                    currentCpuThreadState.GP = hleModuleGuest.InitInfo.GP;
+                    currentCpuThreadState.CallerModule = hleModuleGuest;
 
-					int ThreadId = (int)ThreadManForUser.sceKernelCreateThread(CurrentCpuThreadState, "<EntryPoint>", HleModuleGuest.InitInfo.PC, 10, 0x1000, PspThreadAttributes.ClearStack, null);
+                    int threadId = (int) ThreadManForUser.sceKernelCreateThread(currentCpuThreadState, "<EntryPoint>",
+                        hleModuleGuest.InitInfo.PC, 10, 0x1000, PspThreadAttributes.ClearStack, null);
 
-					//var Thread = HleThreadManager.GetThreadById(ThreadId);
-					ThreadManForUser._sceKernelStartThread(CurrentCpuThreadState, ThreadId, ArgumentsPartition.Size, ArgumentsPartition.Low);
-					//Console.WriteLine("RA: 0x{0:X}", CurrentCpuThreadState.RA);
-				}
-				CurrentCpuThreadState.DumpRegisters();
-				MemoryManager.GetPartition(MemoryPartitions.User).Dump();
-				//ModuleManager.LoadedGuestModules.Add(HleModuleGuest);
-					
-				//MainThread.CurrentStatus = HleThread.Status.Ready;
-			}
-		}
+                    //var Thread = HleThreadManager.GetThreadById(ThreadId);
+                    ThreadManForUser._sceKernelStartThread(currentCpuThreadState, threadId, argumentsPartition.Size,
+                        argumentsPartition.Low);
+                    //Console.WriteLine("RA: 0x{0:X}", CurrentCpuThreadState.RA);
+                }
+                currentCpuThreadState.DumpRegisters();
+                MemoryManager.GetPartition(MemoryPartitions.User).Dump();
+                //ModuleManager.LoadedGuestModules.Add(HleModuleGuest);
 
-		private void Main_Ended()
-		{
-			StoppedEndedEvent.Set();
+                //MainThread.CurrentStatus = HleThread.Status.Ready;
+            }
+        }
 
-			// Completed execution. Wait for stopping.
-			while (true)
-			{
-				ThreadTaskQueue.HandleEnqueued();
-				if (!Running) return;
-				Thread.Sleep(1);
-			}
-		}
+        private void Main_Ended()
+        {
+            StoppedEndedEvent.Set();
 
-		protected override void Main()
-		{
-			while (Running)
-			{
+            // Completed execution. Wait for stopping.
+            while (true)
+            {
+                ThreadTaskQueue.HandleEnqueued();
+                if (!Running) return;
+                Thread.Sleep(1);
+            }
+        }
+
+        protected override void Main()
+        {
+            while (Running)
+            {
 #if !DO_NOT_PROPAGATE_EXCEPTIONS
-				try
+                try
 #endif
-				{
-					// HACK! TODO: Update PspRtc every 2 thread switchings.
-					// Note: It should update the RTC after selecting the next thread to run.
-					// But currently is is not possible since updating the RTC and waking up
-					// threads has secondary effects that I have to consideer first.
-					bool TickAlternate = false;
+                {
+                    // HACK! TODO: Update PspRtc every 2 thread switchings.
+                    // Note: It should update the RTC after selecting the next thread to run.
+                    // But currently is is not possible since updating the RTC and waking up
+                    // threads has secondary effects that I have to consideer first.
+                    var tickAlternate = false;
 
-					//PspRtc.Update();
-					while (true)
-					{
-						ThreadTaskQueue.HandleEnqueued();
-						if (!Running) return;
+                    //PspRtc.Update();
+                    while (true)
+                    {
+                        ThreadTaskQueue.HandleEnqueued();
+                        if (!Running) return;
 
-						if (!TickAlternate) PspRtc.Update();
-						TickAlternate = !TickAlternate;
+                        if (!tickAlternate) PspRtc.Update();
+                        tickAlternate = !tickAlternate;
 
-						HleThreadManager.StepNext(DoBeforeSelectingNext : () =>
-						{
-							//PspRtc.Update();
-						});
-					}
-				}
+                        HleThreadManager.StepNext(DoBeforeSelectingNext: () =>
+                        {
+                            //PspRtc.Update();
+                        });
+                    }
+                }
 #if !DO_NOT_PROPAGATE_EXCEPTIONS
-				catch (Exception Exception)
-				{
-					if (Exception is SceKernelSelfStopUnloadModuleException || Exception.InnerException is SceKernelSelfStopUnloadModuleException)
-					{
-						Console.WriteLine("SceKernelSelfStopUnloadModuleException");
-						Main_Ended();
-						return;
-					}
+                catch (Exception exception)
+                {
+                    if (exception is SceKernelSelfStopUnloadModuleException ||
+                        exception.InnerException is SceKernelSelfStopUnloadModuleException)
+                    {
+                        Console.WriteLine("SceKernelSelfStopUnloadModuleException");
+                        Main_Ended();
+                        return;
+                    }
 
-					var ErrorOut = Console.Error;
+                    var errorOut = Console.Error;
 
-					ConsoleUtils.SaveRestoreConsoleState(() =>
-					{
-						Console.ForegroundColor = ConsoleColor.Red;
+                    ConsoleUtils.SaveRestoreConsoleState(() =>
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
 
-						try
-						{
-							ErrorOut.WriteLine("Error on thread {0}", HleThreadManager.Current);
-							try
-							{
-								ErrorOut.WriteLine(Exception);
-							}
-							catch
-							{
-							}
+                        try
+                        {
+                            errorOut.WriteLine("Error on thread {0}", HleThreadManager.Current);
+                            try
+                            {
+                                errorOut.WriteLine(exception);
+                            }
+                            catch
+                            {
+                                // ignored
+                            }
 
-							HleThreadManager.Current.CpuThreadState.DumpRegisters(ErrorOut);
+                            HleThreadManager.Current.CpuThreadState.DumpRegisters(errorOut);
 
-							ErrorOut.WriteLine(
-								"Last registered PC = 0x{0:X}, RA = 0x{1:X}, RelocatedBaseAddress=0x{2:X}, UnrelocatedPC=0x{3:X}",
-								HleThreadManager.Current.CpuThreadState.PC,
-								HleThreadManager.Current.CpuThreadState.RA,
-								ElfConfig.RelocatedBaseAddress,
-								HleThreadManager.Current.CpuThreadState.PC - ElfConfig.RelocatedBaseAddress
-							);
+                            errorOut.WriteLine(
+                                "Last registered PC = 0x{0:X}, RA = 0x{1:X}, RelocatedBaseAddress=0x{2:X}, UnrelocatedPC=0x{3:X}",
+                                HleThreadManager.Current.CpuThreadState.PC,
+                                HleThreadManager.Current.CpuThreadState.RA,
+                                ElfConfig.RelocatedBaseAddress,
+                                HleThreadManager.Current.CpuThreadState.PC - ElfConfig.RelocatedBaseAddress
+                            );
 
-							ErrorOut.WriteLine("Last called syscalls: ");
-							foreach (var CalledCallback in ModuleManager.LastCalledCallbacks.Reverse())
-							{
-								ErrorOut.WriteLine("  {0}", CalledCallback);
-							}
+                            errorOut.WriteLine("Last called syscalls: ");
+                            foreach (var calledCallback in ModuleManager.LastCalledCallbacks.Reverse())
+                            {
+                                errorOut.WriteLine("  {0}", calledCallback);
+                            }
 
-							foreach (var Thread in HleThreadManager.Threads)
-							{
-								ErrorOut.WriteLine("{0}", Thread.ToExtendedString());
-								ErrorOut.WriteLine(
-									"Last valid PC: 0x{0:X} :, 0x{1:X}",
-									Thread.CpuThreadState.LastValidPC,
-									Thread.CpuThreadState.LastValidPC - ElfConfig.RelocatedBaseAddress
-								);
-								Thread.DumpStack(ErrorOut);
-							}
+                            foreach (var thread in HleThreadManager.Threads)
+                            {
+                                errorOut.WriteLine("{0}", thread.ToExtendedString());
+                                errorOut.WriteLine(
+                                    "Last valid PC: 0x{0:X} :, 0x{1:X}",
+                                    thread.CpuThreadState.LastValidPC,
+                                    thread.CpuThreadState.LastValidPC - ElfConfig.RelocatedBaseAddress
+                                );
+                                thread.DumpStack(errorOut);
+                            }
 
-							ErrorOut.WriteLine(
-								"Executable had relocation: {0}. RelocationAddress: 0x{1:X}",
-								ElfConfig.InfoExeHasRelocation,
-								ElfConfig.RelocatedBaseAddress
-							);
+                            errorOut.WriteLine(
+                                "Executable had relocation: {0}. RelocationAddress: 0x{1:X}",
+                                ElfConfig.InfoExeHasRelocation,
+                                ElfConfig.RelocatedBaseAddress
+                            );
 
-							ErrorOut.WriteLine("");
-							ErrorOut.WriteLine("Error on thread {0}", HleThreadManager.Current);
-							ErrorOut.WriteLine(Exception);
-							
-							//ErrorOut.WriteLine("Saved a memory dump to 'error_memorydump.bin'", HleThreadManager.Current);
-							//MemoryManager.Memory.Dump("error_memorydump.bin");
-						}
-						catch (Exception Exception2)
-						{
-							Console.WriteLine("{0}", Exception2);
-						}
-					});
+                            errorOut.WriteLine("");
+                            errorOut.WriteLine("Error on thread {0}", HleThreadManager.Current);
+                            errorOut.WriteLine(exception);
 
-					Main_Ended();
-				}
+                            //ErrorOut.WriteLine("Saved a memory dump to 'error_memorydump.bin'", HleThreadManager.Current);
+                            //MemoryManager.Memory.Dump("error_memorydump.bin");
+                        }
+                        catch (Exception exception2)
+                        {
+                            Console.WriteLine("{0}", exception2);
+                        }
+                    });
+
+                    Main_Ended();
+                }
 #endif
-			}
-		}
+            }
+        }
 
-		public void DumpThreads()
-		{
-			var ErrorOut = Console.Out;
-			foreach (var Thread in HleThreadManager.Threads.ToArray())
-			{
-				ErrorOut.WriteLine("{0}", Thread);
-				Thread.DumpStack(ErrorOut);
-			}
-			//throw new NotImplementedException();
-		}
-	}
+        public void DumpThreads()
+        {
+            var errorOut = Console.Out;
+            foreach (var thread in HleThreadManager.Threads.ToArray())
+            {
+                errorOut.WriteLine("{0}", thread);
+                thread.DumpStack(errorOut);
+            }
+            //throw new NotImplementedException();
+        }
+    }
 }

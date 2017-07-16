@@ -173,7 +173,7 @@ namespace CSPspEmu.Hle.Modules.display
 		[HlePspNotImplemented(Notice = false)]
 		public int sceDisplayGetAccumulatedHcount()
 		{
-			return (int)(sceDisplayGetCurrentHcount() + sceDisplayGetVcount() * PspDisplay.hCountPerVblank);
+			return (int)(sceDisplayGetCurrentHcount() + sceDisplayGetVcount() * PspDisplay.HCountPerVblank);
 		}
 
 		/// <summary>

@@ -133,12 +133,9 @@ namespace WaveLib
 		private BufferDoneEventHandler m_DoneProc;
 		private bool m_Finished;
 
-		private WaveNative.WaveDelegate m_BufferProc = new WaveNative.WaveDelegate(WaveInBuffer.WaveInProc);
+		private WaveNative.WaveDelegate m_BufferProc = WaveInBuffer.WaveInProc;
 
-		public static int DeviceCount
-		{
-			get { return WaveNative.waveInGetNumDevs(); }
-		}
+		public static int DeviceCount => WaveNative.waveInGetNumDevs();
 
 		public WaveInRecorder(int device, WaveFormat format, int bufferSize, int bufferCount, BufferDoneEventHandler doneProc)
 		{
@@ -151,8 +148,11 @@ namespace WaveLib
 				m_CurrentBuffer.Record();
 			}
 			WaveInHelper.Try(WaveNative.waveInStart(m_WaveIn));
-			m_Thread = new Thread(new ThreadStart(ThreadProc));
-			m_Thread.IsBackground = true;
+			m_Thread = new Thread(ThreadProc)
+			{
+				Name = "WaveIn",
+				IsBackground = true,
+			};
 			m_Thread.Start();
 		}
 		
@@ -206,42 +206,39 @@ namespace WaveLib
         private void AllocateBuffers(int bufferSize, int bufferCount)
 		{
 			FreeBuffers();
-			if (bufferCount > 0)
+			if (bufferCount <= 0) return;
+			
+			m_Buffers = new WaveInBuffer(m_WaveIn, bufferSize);
+			var prev = m_Buffers;
+			try
 			{
-				m_Buffers = new WaveInBuffer(m_WaveIn, bufferSize);
-				WaveInBuffer Prev = m_Buffers;
-				try
+				for (var i = 1; i < bufferCount; i++)
 				{
-					for (int i = 1; i < bufferCount; i++)
-					{
-						WaveInBuffer Buf = new WaveInBuffer(m_WaveIn, bufferSize);
-						Prev.NextBuffer = Buf;
-						Prev = Buf;
-					}
+					var buf = new WaveInBuffer(m_WaveIn, bufferSize);
+					prev.NextBuffer = buf;
+					prev = buf;
 				}
-				finally
-				{
-					Prev.NextBuffer = m_Buffers;
-				}
+			}
+			finally
+			{
+				prev.NextBuffer = m_Buffers;
 			}
 		}
 		
         private void FreeBuffers()
 		{
 			m_CurrentBuffer = null;
-			if (m_Buffers != null)
-			{
-				WaveInBuffer First = m_Buffers;
-				m_Buffers = null;
+			if (m_Buffers == null) return;
+			var first = m_Buffers;
+			m_Buffers = null;
 
-				WaveInBuffer Current = First;
-				do
-				{
-					WaveInBuffer Next = Current.NextBuffer;
-					Current.Dispose();
-					Current = Next;
-				} while(Current != First);
-			}
+			var current = first;
+			do
+			{
+				var next = current.NextBuffer;
+				current.Dispose();
+				current = next;
+			} while(current != first);
 		}
 		
         private void Advance()
@@ -257,11 +254,11 @@ namespace WaveLib
 		
         private void WaitForAllBuffers()
 		{
-			WaveInBuffer Buf = m_Buffers;
-			while (Buf.NextBuffer != m_Buffers)
+			var buf = m_Buffers;
+			while (buf.NextBuffer != m_Buffers)
 			{
-				Buf.WaitFor();
-				Buf = Buf.NextBuffer;
+				buf.WaitFor();
+				buf = buf.NextBuffer;
 			}
 		}
 	}

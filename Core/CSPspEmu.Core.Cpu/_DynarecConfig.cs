@@ -29,7 +29,7 @@ namespace CSPspEmu.Core.Cpu
 		public const bool BranchFlagAsLocal = true;
 
 		//public const bool DebugFunctionCreation = true;
-		public const bool DebugFunctionCreation = false;
+		public static bool DebugFunctionCreation = false;
 		
 		//public const bool EnableGpuSignalsCallback = true;
 		//public const bool EnableGpuFinishCallback = true;
@@ -41,9 +41,11 @@ namespace CSPspEmu.Core.Cpu
 		public const bool EnableRenderTarget = true;
 
 		//public const bool ImmediateLinking = false;
-		public const bool ImmediateLinking = true;
+		//public const bool ImmediateLinking = true;
+		public static bool ImmediateLinking = true;
 
-		public const bool AllowCreatingUsedFunctionsInBackground = false;
+		public static bool AllowCreatingUsedFunctionsInBackground = false;
+		//public const bool AllowCreatingUsedFunctionsInBackground = false;
 		//public const bool AllowCreatingUsedFunctionsInBackground = true; // Cause sometimes "System.InvalidProgramException: Common Language Runtime detectó un programa no válido."
 
 		//public const bool DisableDotNetJitOptimizations = true;

@@ -17,34 +17,34 @@ namespace CSPspEmu.Core
 		//public abstract void Start();
 
 		/// <summary>
-		/// 
 		/// </summary>
 		/// <typeparam name="TType"></typeparam>
-		/// <param name="AvailablePluginImplementations"></param>
-		public static void SelectWorkingPlugin<TType>(InjectContext InjectContext, params Type[] AvailablePluginImplementations) where TType : PspPluginImpl
+		/// <param name="injectContext"></param>
+		/// <param name="availablePluginImplementations"></param>
+		public static void SelectWorkingPlugin<TType>(InjectContext injectContext, params Type[] availablePluginImplementations) where TType : PspPluginImpl
 		{
-			foreach (var ImplementationType in AvailablePluginImplementations)
+			foreach (var implementationType in availablePluginImplementations)
 			{
-				bool IsWorking = false;
+				bool isWorking = false;
 
 				try
 				{
-					IsWorking = ((PspPluginImpl)InjectContext.GetInstance(ImplementationType)).IsWorking;
+					isWorking = ((PspPluginImpl)injectContext.GetInstance(implementationType)).IsWorking;
 				}
-				catch (Exception Exception)
+				catch (Exception exception)
 				{
-					Console.Error.WriteLine(Exception);
+					Console.Error.WriteLine(exception);
 				}
 
-				if (IsWorking)
+				if (isWorking)
 				{
 					// Found a working implementation
-					InjectContext.SetInstanceType<TType>(ImplementationType);
+					injectContext.SetInstanceType<TType>(implementationType);
 					return;
 				}
 			}
 
-			throw (new Exception("Can't find working type for '" + AvailablePluginImplementations + "'"));
+			throw (new Exception("Can't find working type for '" + availablePluginImplementations + "'"));
 			//return null;
 		}
 	}

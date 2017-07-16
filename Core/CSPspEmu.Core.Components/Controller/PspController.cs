@@ -33,22 +33,22 @@ namespace CSPspEmu.Core.Controller
 			}
 		}
 
-		public void InsertSceCtrlData(SceCtrlData SceCtrlData)
+		public void InsertSceCtrlData(SceCtrlData sceCtrlData)
 		{
 			lock (this)
 			{
-				SceCtrlData.TimeStamp = LastTimestamp++;
-				SceCtrlDataBuffer.Add(SceCtrlData);
+				sceCtrlData.TimeStamp = LastTimestamp++;
+				SceCtrlDataBuffer.Add(sceCtrlData);
 				if (SceCtrlDataBuffer.Count > MaxStoredFrames) SceCtrlDataBuffer.RemoveAt(0);
 			}
 			LatchSamplingCount++;
 		}
 
-		public SceCtrlData GetSceCtrlDataAt(int Index)
+		public SceCtrlData GetSceCtrlDataAt(int index)
 		{
 			lock (this)
 			{
-				return SceCtrlDataBuffer[SceCtrlDataBuffer.Count - Index - 1];
+				return SceCtrlDataBuffer[SceCtrlDataBuffer.Count - index - 1];
 			}
 		}
 	}

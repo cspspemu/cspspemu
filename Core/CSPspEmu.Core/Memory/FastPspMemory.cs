@@ -9,7 +9,7 @@ namespace CSPspEmu.Core.Memory
 	public unsafe sealed class FastPspMemory : PspMemory
 	{
 		override public bool HasFixedGlobalAddress { get { return true; } }
-		override public IntPtr FixedGlobalAddress { get { return new IntPtr(_Base); } }
+		override public IntPtr FixedGlobalAddress { get { return new IntPtr(Base); } }
 
 		//public const uint FastMemorySize = 0x0A000000;
 		//public const uint FastMemoryMask = 0x1FFFFFFF;
@@ -17,7 +17,7 @@ namespace CSPspEmu.Core.Memory
 		public const uint FastMemorySize = FastMemoryMask + 1;
 		
 
-		public static byte* _Base = null;
+		public static byte* Base = null;
 
 		public FastPspMemory()
 		{
@@ -30,40 +30,40 @@ namespace CSPspEmu.Core.Memory
 			//FreeMemory();
 		}
 
-		private static bool AlreadyInitialized = false;
+		private static bool _alreadyInitialized = false;
 
 		private void AllocMemoryOnce()
 		{
-			if (!AlreadyInitialized)
+			if (!_alreadyInitialized)
 			{
-				AlreadyInitialized = true;
+				_alreadyInitialized = true;
 
-				_Base = (byte *)Marshal.AllocHGlobal((int)FastMemorySize).ToPointer();
+				Base = (byte *)Marshal.AllocHGlobal((int)FastMemorySize).ToPointer();
 
 				//Console.WriteLine("*****************************");
 			}
 
-			NullPtr = _Base;
-			ScratchPadPtr = _Base + ScratchPadOffset;
-			FrameBufferPtr = _Base + FrameBufferOffset;
-			MainPtr = _Base + MainOffset;
+			NullPtr = Base;
+			ScratchPadPtr = Base + ScratchPadOffset;
+			FrameBufferPtr = Base + FrameBufferOffset;
+			MainPtr = Base + MainOffset;
 		}
 
-		public override uint PointerToPspAddressUnsafe(void* Pointer)
+		public override uint PointerToPspAddressUnsafe(void* pointer)
 		{
-			if (Pointer == null) return 0;
-			return (uint)((byte*)Pointer - _Base);
+			if (pointer == null) return 0;
+			return (uint)((byte*)pointer - Base);
 		}
 
-		public override void* PspAddressToPointerUnsafe(uint _Address)
+		public override void* PspAddressToPointerUnsafe(uint address)
 		{
-			var Address = (_Address & FastPspMemory.FastMemoryMask);
+			var finalAddress = (address & FastPspMemory.FastMemoryMask);
 			//Console.WriteLine("Base: 0x{0:X} ; Address: 0x{1:X}", (ulong)Base, Address);
-			if (Address == 0) return null;
+			if (finalAddress == 0) return null;
 #if false
 			if (_Base == null) throw(new InvalidProgramException("Base is null"));
 #endif
-			return _Base + Address;
+			return Base + finalAddress;
 		}
 
 		public override void Dispose()

@@ -112,7 +112,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			if (_DynarecConfig.EnableTailCalling)
 			{
-				return ast.MethodCacheInfoCallDynamicPC(Address, TailCall: true);
+				return ast.MethodCacheInfoCallDynamicPC(Address, tailCall: true);
 			}
 			else
 			{
@@ -127,7 +127,7 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			return ast.StatementsInline(
 				_link(),
-				ast.MethodCacheInfoCallDynamicPC(Address, TailCall: false)
+				ast.MethodCacheInfoCallDynamicPC(Address, tailCall: false)
 			);
 		}
 

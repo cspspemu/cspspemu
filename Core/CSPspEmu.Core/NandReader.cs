@@ -13,19 +13,19 @@ namespace CSPspEmu.Core
 	{
 		private Stream Stream;
 
-		public NandReader(Stream Stream)
+		public NandReader(Stream stream)
 		{
-			this.Stream = Stream;
+			Stream = stream;
 		}
 
-		public byte[] ReadPage(int Index)
+		public byte[] ReadPage(int index)
 		{
 			try
 			{
-				Stream.Position = BytesPerRawPage * Index;
-				var Bytes = Stream.ReadBytes(BytesPerPage);
+				Stream.Position = BytesPerRawPage * index;
+				var bytes = Stream.ReadBytes(BytesPerPage);
 				//ArrayUtils.HexDump(Bytes);
-				return Bytes;
+				return bytes;
 			}
 			catch (Exception)
 			{
@@ -33,9 +33,9 @@ namespace CSPspEmu.Core
 			}
 		}
 
-		public byte[] ReadRawPage(int Index)
+		public byte[] ReadRawPage(int index)
 		{
-			Stream.Position = BytesPerRawPage * Index;
+			Stream.Position = BytesPerRawPage * index;
 			return Stream.ReadBytes(BytesPerRawPage);
 		}
 
@@ -46,38 +46,23 @@ namespace CSPspEmu.Core
 
 		public const int BytesPerBlock = BytesPerPage * PagesPerBlock;
 
-		public override bool CanRead
-		{
-			get { return Stream.CanRead; }
-		}
-
-		public override bool CanSeek
-		{
-			get { return Stream.CanSeek; }
-		}
-
-		public override bool CanWrite
-		{
-			get { return Stream.CanWrite; }
-		}
-
+		public override bool CanRead => Stream.CanRead;
+		public override bool CanSeek => Stream.CanSeek;
+		public override bool CanWrite => Stream.CanWrite;
 		public override void Flush()
 		{
 			Stream.Flush();
 		}
 
-		public override long Length
-		{
-			get { return (Stream.Length / BytesPerRawPage) * BytesPerPage; }
-		}
+		public override long Length => (Stream.Length / BytesPerRawPage) * BytesPerPage;
 
 		public override long Position
 		{
 			get; set;
 		}
 
-		int LastPageIndex = -1;
-		byte[] LastPageData;
+		int _lastPageIndex = -1;
+		byte[] _lastPageData;
 
 		public override int Read(byte[] buffer, int offset, int count)
 		{
@@ -86,27 +71,27 @@ namespace CSPspEmu.Core
 				return 0;
 			}
 
-			var PageOffset = (int)(Position % BytesPerPage);
-			var ToRead = (BytesPerPage - PageOffset);
+			var pageOffset = (int)(Position % BytesPerPage);
+			var toRead = (BytesPerPage - pageOffset);
 
-			if (count > ToRead)
+			if (count > toRead)
 			{
-				int Read1 = Read(buffer, offset, ToRead);
-				int Read2 = Read(buffer, offset + ToRead, count - ToRead);
-				return Read1 + Read2;
+				int read1 = Read(buffer, offset, toRead);
+				int read2 = Read(buffer, offset + toRead, count - toRead);
+				return read1 + read2;
 			}
 
-			var PageIndex = (int)(Position / BytesPerPage);
+			var pageIndex = (int)(Position / BytesPerPage);
 
-			if (PageIndex != LastPageIndex)
+			if (pageIndex != _lastPageIndex)
 			{
-				LastPageIndex = PageIndex;
-				LastPageData = ReadPage(PageIndex);
+				_lastPageIndex = pageIndex;
+				_lastPageData = ReadPage(pageIndex);
 			}
 
-			byte[] PageData = LastPageData;
+			byte[] pageData = _lastPageData;
 
-			Array.Copy(PageData, PageOffset, buffer, offset, count);
+			Array.Copy(pageData, pageOffset, buffer, offset, count);
 			
 			Position += count;
 

@@ -8,16 +8,13 @@ namespace CSPspEmu.Core.Audio
 		/// <summary>
 		/// Called periodically on a thread.
 		/// </summary>
-		public abstract void Update(Action<short[]> ReadStream);
+		public abstract void Update(Action<short[]> readStream);
 
 		/// <summary>
 		/// 
 		/// </summary>
 		public abstract void StopSynchronized();
 
-		/// <summary>
-		/// 
-		/// </summary>
 		//public void __TestAudio()
 		//{
 		//	int m = 0;

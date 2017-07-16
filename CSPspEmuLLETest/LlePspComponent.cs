@@ -10,8 +10,11 @@ namespace CSPspEmuLLETest
 
 		public LlePspComponent()
 		{
-			Thread = new Thread(Main);
-			Thread.IsBackground = true;
+			Thread = new Thread(Main)
+			{
+				Name = "LlePspComponent",
+				IsBackground = true,
+			};
 			Thread.Start();
 		}
 

@@ -94,17 +94,17 @@ namespace CSPspEmu.Core.Audio
 		/// <returns></returns>
 		public PspAudioChannel GetFreeChannel()
 		{
-			if (!Channels.Any(Channel => Channel.Available)) throw(new NoChannelsAvailableException());
-			return Channels.Reverse().First(Channel => Channel.Available);
+			if (!Channels.Any(channel => channel.Available)) throw(new NoChannelsAvailableException());
+			return Channels.Reverse().First(channel => channel.Available);
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="ChannelId"></param>
-		private void CheckChannelId(int ChannelId)
+		/// <param name="channelId"></param>
+		private void CheckChannelId(int channelId)
 		{
-			if (ChannelId < 0 || ChannelId >= Channels.Length)
+			if (channelId < 0 || channelId >= Channels.Length)
 			{
 				throw(new InvalidChannelException());
 			}
@@ -113,22 +113,22 @@ namespace CSPspEmu.Core.Audio
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="ChannelId"></param>
-		/// <param name="CanAlloc"></param>
+		/// <param name="channelId"></param>
+		/// <param name="canAlloc"></param>
 		/// <returns></returns>
-		public PspAudioChannel GetChannel(int ChannelId, bool CanAlloc = false)
+		public PspAudioChannel GetChannel(int channelId, bool canAlloc = false)
 		{
-			PspAudioChannel Channel;
-			if (CanAlloc && ChannelId < 0)
+			PspAudioChannel channel;
+			if (canAlloc && channelId < 0)
 			{
-				Channel = GetFreeChannel();
+				channel = GetFreeChannel();
 			}
 			else
 			{
-				CheckChannelId(ChannelId);
-				Channel = Channels[ChannelId];
+				CheckChannelId(channelId);
+				channel = Channels[channelId];
 			}
-			return Channel;
+			return channel;
 		}
 
 		/// <summary>
@@ -136,43 +136,41 @@ namespace CSPspEmu.Core.Audio
 		/// </summary>
 		public void Update()
 		{
-			PspAudioImpl.Update((MixedSamples) =>
+			PspAudioImpl.Update((mixedSamples) =>
 			{
-				var RequiredSamples = MixedSamples.Length;
-				fixed (short* MixedSamplesPtr = MixedSamples)
+				var requiredSamples = mixedSamples.Length;
+				fixed (short* mixedSamplesPtr = mixedSamples)
 				{
-					var MixedSamplesDenormalized = stackalloc int[RequiredSamples];
+					var mixedSamplesDenormalized = stackalloc int[requiredSamples];
 
-					foreach (var Channel in Channels)
+					foreach (var channel in Channels)
 					{
-						var ChannelSamples = Channel.Read(RequiredSamples);
+						var channelSamples = channel.Read(requiredSamples);
 
-						fixed (short* ChannelSamplesPtr = ChannelSamples)
+						fixed (short* channelSamplesPtr = channelSamples)
 						{
-							for (int n = 0; n < ChannelSamples.Length; n++)
+							for (var n = 0; n < channelSamples.Length; n++)
 							{
-								MixedSamplesDenormalized[n] += ChannelSamplesPtr[n];
+								mixedSamplesDenormalized[n] += channelSamplesPtr[n];
 							}
 						}
 					}
 
-					for (int n = 0; n < RequiredSamples; n++)
+					for (int n = 0; n < requiredSamples; n++)
 					{
-						MixedSamplesPtr[n] = StereoShortSoundSample.Clamp(MixedSamplesDenormalized[n]);
+						mixedSamplesPtr[n] = StereoShortSoundSample.Clamp(mixedSamplesDenormalized[n]);
 					}
 				}
 			});
 		}
 
-		private bool Disposed = false;
+		private bool _disposed = false;
 
 		public void StopSynchronized()
 		{
-			if (!Disposed)
-			{
-				Disposed = true;
-				PspAudioImpl.StopSynchronized();
-			}
+			if (_disposed) return;
+			_disposed = true;
+			PspAudioImpl.StopSynchronized();
 		}
 
 		void IDisposable.Dispose()

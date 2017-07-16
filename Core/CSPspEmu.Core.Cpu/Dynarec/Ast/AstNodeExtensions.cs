@@ -12,50 +12,50 @@ using System.Threading.Tasks;
 
 public static class AstNodeExtensions
 {
-	static public readonly GeneratorILPsp _GeneratorILPsp = new GeneratorILPsp();
-	static public readonly GeneratorCSharpPsp _GeneratorCSharpPsp = new GeneratorCSharpPsp();
+	public static readonly GeneratorILPsp GeneratorIlPsp = new GeneratorILPsp();
+	public static readonly GeneratorCSharpPsp GeneratorCSharpPsp = new GeneratorCSharpPsp();
 
-	static public AstNodeStm Optimize(this AstNodeStm AstNodeStm, CpuProcessor CpuProcessor)
+	public static AstNodeStm Optimize(this AstNodeStm astNodeStm, CpuProcessor cpuProcessor)
 	{
-		return AstOptimizerPsp.GlobalOptimize(CpuProcessor, AstNodeStm);
+		return AstOptimizerPsp.GlobalOptimize(cpuProcessor, astNodeStm);
 	}
 
-	static public TType GenerateDelegate<TType>(this AstNodeStm AstNodeStm, string MethodName)
+	public static TType GenerateDelegate<TType>(this AstNodeStm astNodeStm, string methodName)
 	{
-		return _GeneratorILPsp.GenerateDelegate<TType>(MethodName, AstNodeStm);
+		return GeneratorIlPsp.GenerateDelegate<TType>(methodName, astNodeStm);
 	}
 
-	static public void GenerateIL(this AstNodeStm AstNodeStm, MethodInfo MethodInfo, ILGenerator ILGenerator)
+	public static void GenerateIl(this AstNodeStm astNodeStm, MethodInfo methodInfo, ILGenerator ilGenerator)
 	{
-		_GeneratorILPsp.Init(MethodInfo, ILGenerator).Reset().GenerateRoot(AstNodeStm);
+		GeneratorIlPsp.Init(methodInfo, ilGenerator).Reset().GenerateRoot(astNodeStm);
 	}
 
-	static public void GenerateIL(this AstNodeStm AstNodeStm, MethodInfo DynamicMethod)
+	public static void GenerateIl(this AstNodeStm astNodeStm, MethodInfo dynamicMethod)
 	{
-		ILGenerator ILGenerator = null;
-		if (DynamicMethod is DynamicMethod) ILGenerator = ((DynamicMethod)DynamicMethod).GetILGenerator();
-		if (DynamicMethod is MethodBuilder) ILGenerator = ((MethodBuilder)DynamicMethod).GetILGenerator();
-		if (ILGenerator == null) throw(new InvalidOperationException("Not a DynamicMethod/MethodBuilder"));
-		GenerateIL(AstNodeStm, DynamicMethod, ILGenerator);
+		ILGenerator ilGenerator = null;
+		if (dynamicMethod is DynamicMethod) ilGenerator = ((DynamicMethod)dynamicMethod).GetILGenerator();
+		if (dynamicMethod is MethodBuilder) ilGenerator = ((MethodBuilder)dynamicMethod).GetILGenerator();
+		if (ilGenerator == null) throw(new InvalidOperationException("Not a DynamicMethod/MethodBuilder"));
+		GenerateIl(astNodeStm, dynamicMethod, ilGenerator);
 	}
 
-	static public void GenerateIL(this AstNodeStm AstNodeStm, MethodBuilder DynamicMethod)
+	public static void GenerateIl(this AstNodeStm astNodeStm, MethodBuilder dynamicMethod)
 	{
-		GenerateIL(AstNodeStm, DynamicMethod, DynamicMethod.GetILGenerator());
+		GenerateIl(astNodeStm, dynamicMethod, dynamicMethod.GetILGenerator());
 	}
 
-	static public string ToILString<TDelegate>(this AstNodeStm AstNodeStm)
+	public static string ToIlString<TDelegate>(this AstNodeStm astNodeStm)
 	{
-		return AstNodeExtensions.ToILString(AstNodeStm, typeof(TDelegate).GetMethod("Invoke"));
+		return AstNodeExtensions.ToIlString(astNodeStm, typeof(TDelegate).GetMethod("Invoke"));
 	}
 
-	static public string ToILString(this AstNodeStm AstNodeStm, MethodInfo MethodInfo)
+	public static string ToIlString(this AstNodeStm astNodeStm, MethodInfo methodInfo)
 	{
-		return _GeneratorILPsp.Reset().GenerateToString(MethodInfo, AstNodeStm);
+		return GeneratorIlPsp.Reset().GenerateToString(methodInfo, astNodeStm);
 	}
 
-	static public string ToCSharpString(this AstNode AstNode)
+	public static string ToCSharpString(this AstNode astNode)
 	{
-		return _GeneratorCSharpPsp.GenerateRoot(AstNode).ToString();
+		return GeneratorCSharpPsp.GenerateRoot(astNode).ToString();
 	}
 }

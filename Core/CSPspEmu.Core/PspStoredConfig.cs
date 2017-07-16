@@ -59,7 +59,7 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
-		public bool UseFastMemory = true;
+		public bool UseFastMemory = false;
 
 		/// <summary>
 		/// 
@@ -87,7 +87,7 @@ namespace CSPspEmu.Core
 		public bool ScaleTextures = false;
 
 		#region Serializing
-		private static XmlSerializer Serializer;
+		private static XmlSerializer _serializer;
 
 		private PspStoredConfig()
 		{
@@ -109,19 +109,19 @@ namespace CSPspEmu.Core
 			{
 				try
 				{
-					if (Serializer == null)
+					if (_serializer == null)
 					{
-						Serializer = XmlSerializer.FromTypes(new[] { typeof(PspStoredConfig) })[0];
+						_serializer = XmlSerializer.FromTypes(new[] { typeof(PspStoredConfig) })[0];
 					}
 
-					using (var Stream = File.OpenRead(ConfigFilePath))
+					using (var stream = File.OpenRead(ConfigFilePath))
 					{
-						return (PspStoredConfig)Serializer.Deserialize(Stream);
+						return (PspStoredConfig)_serializer.Deserialize(stream);
 					}
 				}
-				catch (Exception Exception)
+				catch (Exception exception)
 				{
-					Logger.Error(Exception);
+					Logger.Error(exception);
 					return new PspStoredConfig();
 				}
 			}
@@ -133,15 +133,15 @@ namespace CSPspEmu.Core
 			{
 				lock (Lock)
 				{
-					using (var Stream = File.Open(ConfigFilePath, FileMode.Create, FileAccess.Write))
+					using (var stream = File.Open(ConfigFilePath, FileMode.Create, FileAccess.Write))
 					{
-						Serializer.Serialize(Stream, this);
+						_serializer.Serialize(stream, this);
 					}
 				}
 			}
-			catch (Exception Exception)
+			catch (Exception exception)
 			{
-				Logger.Error(Exception);
+				Logger.Error(exception);
 			}
 		}
 		#endregion

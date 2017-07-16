@@ -150,77 +150,78 @@ namespace CSPspEmu.Hle.Formats.Archive
 		}
 
 		protected Dictionary<string, ZipEntry> Entries;
-		private bool CaseInsensitive;
+		private bool _caseInsensitive;
 
 		public ZipArchive()
 		{
 		}
 
-		public ZipArchive(String FileName, bool CaseInsensitive = true)
+		public ZipArchive(string fileName, bool caseInsensitive = true)
 		{
-			Load(FileName, CaseInsensitive);
+			Load(fileName, caseInsensitive);
 		}
 
-		public ZipArchive(Stream Stream, bool CaseInsensitive = true)
+		public ZipArchive(Stream stream, bool caseInsensitive = true)
 		{
-			Load(Stream, CaseInsensitive);
+			Load(stream, caseInsensitive);
 		}
 
-		public ZipArchive Load(string FileName, bool CaseInsensitive = true)
+		public ZipArchive Load(string fileName, bool caseInsensitive = true)
 		{
-			return Load(File.Open(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), CaseInsensitive);
+			return Load(File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite), caseInsensitive);
 		}
 
-		public String NormalizePath(string FileName)
+		public String NormalizePath(string fileName)
 		{
-			var Return = '/' + FileName.Replace('\\', '/').Trim('/');
-			if (CaseInsensitive) Return = Return.ToLower();
+			var Return = '/' + fileName.Replace('\\', '/').Trim('/');
+			if (_caseInsensitive) Return = Return.ToLower();
 			return Return;
 		}
 
-		public ZipArchive Load(Stream Stream, bool CaseInsensitive = true)
+		public ZipArchive Load(Stream stream, bool caseInsensitive = true)
 		{
-			this.CaseInsensitive = CaseInsensitive;
+			_caseInsensitive = caseInsensitive;
 			Entries = new Dictionary<string, ZipEntry>();
-			while (!Stream.Eof())
+			while (!stream.Eof())
 			{
-				var LocalFileHeader = Stream.ReadStruct<LocalFileHeader>();
-				if (Stream.Eof()) break;
-				if (LocalFileHeader.Magic != LocalFileHeader.ExpectedMagic)
+				var localFileHeader = stream.ReadStruct<LocalFileHeader>();
+				if (stream.Eof()) break;
+				if (localFileHeader.Magic != LocalFileHeader.ExpectedMagic)
 				{
 					//Console.Error.WriteLine("0x{0:X}", LocalFileHeader.Magic);
 					break;
 				}
-				var FileName = Stream.ReadString(LocalFileHeader.FileNameLength);
-				var Extra = Stream.ReadBytes(LocalFileHeader.ExtraLength);
+				var fileName = stream.ReadString(localFileHeader.FileNameLength);
+				var extra = stream.ReadBytes(localFileHeader.ExtraLength);
 				//Console.Error.WriteLine(LocalFileHeader.CompressedSize);
-				var CompressedStream = Stream.ReadStream(LocalFileHeader.CompressedSize);
+				var compressedStream = stream.ReadStream(localFileHeader.CompressedSize);
 
-				Entries.Add(NormalizePath(FileName), new ZipEntry()
+				Entries.Add(NormalizePath(fileName), new ZipEntry()
 				{
 					Zip = this,
-					LocalFileHeader = LocalFileHeader,
-					FileName = FileName,
-					CompressedStream = CompressedStream,
+					LocalFileHeader = localFileHeader,
+					FileName = fileName,
+					CompressedStream = compressedStream,
 				});
 			}
 
 			return this;
 		}
 
-		public ZipEntry this[String FileName]
+		public ZipEntry this[string fileName]
 		{
 			get
 			{
-				return Entries[NormalizePath(FileName)];
+				if (fileName == null) throw new ArgumentNullException(nameof(fileName));
+				return Entries[NormalizePath(fileName)];
 			}
 		}
 
 		public IEnumerator<ZipArchive.ZipEntry> GetEnumerator()
 		{
-			foreach (var Entry in Entries)
+			foreach (var entry in Entries)
 			{
-				yield return Entry.Value;
+				yield return entry.Value;
 			}
 		}
 

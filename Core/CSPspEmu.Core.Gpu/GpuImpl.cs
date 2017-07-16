@@ -9,7 +9,7 @@ namespace CSPspEmu.Core.Gpu
 		[Inject]
 		protected PspStoredConfig PspStoredConfig;
 
-		protected int _ScaleViewport = 2;
+		protected int _scaleViewport = 2;
 
 		internal event Action<int> OnScaleViewport;
 
@@ -18,34 +18,34 @@ namespace CSPspEmu.Core.Gpu
 			set
 			{
 				if (OnScaleViewport != null) OnScaleViewport(value);
-				this._ScaleViewport = value;
+				_scaleViewport = value;
 			}
 			get
 			{
-				return _ScaleViewport;
+				return _scaleViewport;
 			}
 		}
 
 		public virtual void InitSynchronizedOnce() { }
 		public virtual void StopSynchronized() { }
 
-		public virtual void PrimStart(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuState, GuPrimitiveType PrimitiveType) { }
+		public virtual void PrimStart(GlobalGpuState globalGpuState, GpuStateStruct* gpuState, GuPrimitiveType primitiveType) { }
 		public virtual void PrimEnd() { }
-		public virtual void Prim(ushort VertexCount) { }
-		public virtual void Finish(GpuStateStruct* GpuState) { }
-		public virtual void End(GpuStateStruct* GpuState) { }
-		public virtual void Sync(GpuStateStruct* LastGpuState) { }
+		public virtual void Prim(ushort vertexCount) { }
+		public virtual void Finish(GpuStateStruct* gpuState) { }
+		public virtual void End(GpuStateStruct* gpuState) { }
+		public virtual void Sync(GpuStateStruct* lastGpuState) { }
 
-		public virtual void BeforeDraw(GpuStateStruct* GpuState) { }
+		public virtual void BeforeDraw(GpuStateStruct* gpuState) { }
 
-		public virtual void InvalidateCache(uint Address, int Size)
+		public virtual void InvalidateCache(uint address, int size)
 		{
 		}
 
-		public virtual void TextureFlush(GpuStateStruct* GpuState)
+		public virtual void TextureFlush(GpuStateStruct* gpuState)
 		{
 		}
-		public virtual void TextureSync(GpuStateStruct* GpuState)
+		public virtual void TextureSync(GpuStateStruct* gpuState)
 		{
 		}
 
@@ -59,20 +59,20 @@ namespace CSPspEmu.Core.Gpu
 		{
 		}
 
-		public virtual void Transfer(GpuStateStruct* GpuState)
+		public virtual void Transfer(GpuStateStruct* gpuState)
 		{
-			Console.Error.WriteLine("GpuImpl.Transfer Not Implemented!! : {0}", GpuState->TextureTransferState.ToStringDefault());
+			Console.Error.WriteLine("GpuImpl.Transfer Not Implemented!! : {0}", gpuState->TextureTransferState.ToStringDefault());
 		}
 
 		public virtual void SetCurrent() { }
 		public virtual void UnsetCurrent() { }
 
-		public virtual void DrawCurvedSurface(GlobalGpuState GlobalGpuState, GpuStateStruct* GpuStateStruct, VertexInfo[,] Patch, int UCount, int VCount)
+		public virtual void DrawCurvedSurface(GlobalGpuState globalGpuState, GpuStateStruct* gpuStateStruct, VertexInfo[,] patch, int uCount, int vCount)
 		{
 			Console.Error.WriteLine("GpuImpl.DrawCurvedSurface Not Implemented!!");
 		}
 
-		public virtual void DrawVideo(uint FrameBufferAddress, OutputPixel* OutputPixel, int Width, int Height)
+		public virtual void DrawVideo(uint frameBufferAddress, OutputPixel* outputPixel, int width, int height)
 		{
 		}
 	}

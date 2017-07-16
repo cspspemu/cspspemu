@@ -95,7 +95,7 @@ namespace CSPspEmu.Core.Gpu.Run
 		public void OP_FINISH()
 		{
 			GpuDisplayList.GpuProcessor.GpuImpl.Finish(GpuDisplayList.GpuStateStructPointer);
-			GpuDisplayList.DoFinish(PC, Params24, ExecuteNow: true);
+			GpuDisplayList.DoFinish(PC, Params24, executeNow: true);
 		}
 
 		//[GpuOpCodesNotImplemented]
@@ -146,7 +146,7 @@ namespace CSPspEmu.Core.Gpu.Run
 					throw(new NotImplementedException(String.Format("Not implemented {0}", Behaviour)));
 			}
 
-			GpuDisplayList.DoSignal(PC, Signal, Behaviour, ExecuteNow: true);
+			GpuDisplayList.DoSignal(PC, Signal, Behaviour, executeNow: true);
 		}
 	}
 }

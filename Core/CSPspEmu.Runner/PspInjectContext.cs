@@ -57,7 +57,7 @@ namespace CSPspEmu.Runner
 
 				var AudioPlugins = new List<Type>();
 
-				AudioPlugins.Add(typeof(PspAudioOpenalImpl));
+				//AudioPlugins.Add(typeof(PspAudioOpenalImpl));
 
 				if (Platform.OS == OS.Windows)
 				{

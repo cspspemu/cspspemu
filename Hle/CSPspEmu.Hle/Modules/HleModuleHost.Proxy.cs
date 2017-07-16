@@ -263,9 +263,9 @@ namespace CSPspEmu.Hle
 								ast.MemoryGetPointer(
 									CpuProcessor.Memory,
 									RegisterReader.Read<uint>(ParameterInfo),
-									Safe: true,
-									ErrorDescription: "Invalid Pointer for Argument '" + ParameterType.Name + " " + ParameterInfo.Name + "'",
-									InvalidAddress: InvalidAddressAsEnum
+									safe: true,
+									errorDescription: "Invalid Pointer for Argument '" + ParameterType.Name + " " + ParameterInfo.Name + "'",
+									invalidAddress: InvalidAddressAsEnum
 								)
 							)
 						);
@@ -363,7 +363,7 @@ namespace CSPspEmu.Hle
 				)
 			);
 
-			var Delegate = AstNodeExtensions._GeneratorILPsp.GenerateDelegate<Action<CpuThreadState>>(
+			var Delegate = AstNodeExtensions.GeneratorIlPsp.GenerateDelegate<Action<CpuThreadState>>(
 				String.Format("Proxy_{0}_{1}", this.GetType().Name, MethodInfo.Name),
 				AstNodes
 			);
@@ -448,7 +448,7 @@ namespace CSPspEmu.Hle
 					Console.WriteLine("CALLING: {0}", MethodInfo);
 					Console.WriteLine("{0}", (new GeneratorCSharp()).GenerateRoot(AstNodes).ToString());
 
-					foreach (var Line in AstNodeExtensions._GeneratorILPsp.GenerateToStringList(MethodInfo, AstNodes))
+					foreach (var Line in AstNodeExtensions.GeneratorIlPsp.GenerateToStringList(MethodInfo, AstNodes))
 					{
 						Console.WriteLine(Line);
 					}

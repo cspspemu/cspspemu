@@ -18,9 +18,6 @@ namespace CSPspEmu.Core
 		/// 
 		/// </summary>
 		/// <returns></returns>
-		public override string ToString()
-		{
-			return String.Format("Plugin. Name: {0}, Version: {1}", Name, Version);
-		}
+		public override string ToString() => $"Plugin. Name: {Name}, Version: {Version}";
 	}
 }

@@ -6,47 +6,47 @@ namespace CSPspEmu.Core.Threading.Synchronization
 {
 	public abstract class PspResetEvent
 	{
-		private bool Value;
-		private bool AutoReset;
+		private bool _value;
+		private readonly bool _autoReset;
 		private Queue<Action> Actions = new Queue<Action>();
 
-		protected PspResetEvent(bool InitialValue, bool AutoReset)
+		protected PspResetEvent(bool initialValue, bool autoReset)
 		{
-			this.Value = InitialValue;
-			this.AutoReset = AutoReset;
+			_value = initialValue;
+			_autoReset = autoReset;
 		}
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void Set()
 		{
-			Value = true;
+			_value = true;
 			if (Actions.Count > 0) Reset();
 			while (Actions.Count > 0)
 			{
-				var Action = Actions.Dequeue();
-				Action();
+				var action = Actions.Dequeue();
+				action();
 			}
-			if (AutoReset) Reset();
+			if (_autoReset) Reset();
 		}
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void Reset()
 		{
-			Value = false;
+			_value = false;
 		}
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
-		public void CallbackOnSet(Action Action)
+		public void CallbackOnSet(Action action)
 		{
-			bool CurrentValue = this.Value;
-			if (CurrentValue)
+			var currentValue = _value;
+			if (currentValue)
 			{
-				Action();
-				if (AutoReset) Reset();
+				action();
+				if (_autoReset) Reset();
 			}
 			else
 			{
-				Actions.Enqueue(Action);
+				Actions.Enqueue(action);
 			}
 		}
 	}

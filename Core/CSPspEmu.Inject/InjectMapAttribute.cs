@@ -9,9 +9,9 @@ public class InjectMapAttribute : Attribute
 	public Type From { get; set; }
 	public Type To { get; set; }
 
-	public InjectMapAttribute(Type From, Type To)
+	public InjectMapAttribute(Type @from, Type to)
 	{
-		this.From = From;
-		this.To = To;
+		this.From = @from;
+		this.To = to;
 	}
 }

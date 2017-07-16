@@ -1,105 +1,104 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace CSPspEmu.Core.Threading.Synchronization
 {
 	public sealed class WaitableStateMachine<TEnum>
 	{
-		private TEnum _Value;
+		private TEnum _value;
 		private AutoResetEvent ValueUpdatedEvent = new AutoResetEvent(false);
 		private bool Debug = false;
-		private readonly Dictionary<TEnum, List<Action>> Notifications = new Dictionary<TEnum, List<Action>>();
+		private readonly Dictionary<TEnum, List<Action>> _notifications = new Dictionary<TEnum, List<Action>>();
 
-		public WaitableStateMachine(bool Debug = false)
+		public WaitableStateMachine(bool debug = false)
 		{
-			this.Debug = Debug;
+			Debug = debug;
 		}
 
-		public WaitableStateMachine(TEnum InitialValue, bool Debug = false)
+		public WaitableStateMachine(TEnum initialValue, bool debug = false)
 		{
-			this.SetValue(InitialValue);
-			this.Debug = Debug;
+			SetValue(initialValue);
+			Debug = debug;
 		}
 
-		public TEnum Value {
-			get
-			{
-				return _Value;
-			}
-		}
+		public TEnum Value => _value;
 
 		public void SetValue(TEnum value)
 		{
-			lock (Notifications)
+			lock (_notifications)
 			{
 				if (Debug) Console.WriteLine("WaitableStateMachine::SetValue({0})", value);
-				this._Value = value;
-				this._ValueWasUpdated();
+				_value = value;
+				_ValueWasUpdated();
 			}
 		}
 
-		public void SetTemporalValue(TEnum value, Action Action)
+		public void SetTemporalValue(TEnum value, Action action)
 		{
-			var OldValue = this._Value;
+			var oldValue = _value;
 			SetValue(value);
 			try
 			{
-				Action();
+				action();
 			}
 			finally
 			{
-				SetValue(OldValue);
+				SetValue(oldValue);
 			}
 		}
 
 		private void _ValueWasUpdated()
 		{
 			if (Debug) Console.WriteLine("WaitableStateMachine::ValueWasUpdated: " + Value);
-			if (Notifications.ContainsKey(Value))
+			if (_notifications.ContainsKey(Value))
 			{
 				if (Debug) Console.WriteLine("  Contains");
-				foreach (var Callback in Notifications[Value])
+				foreach (var callback in _notifications[Value])
 				{
 					if (Debug) Console.WriteLine("    Callback");
-					Callback();
+					callback();
 				}
-				Notifications[Value] = new List<Action>();
+				_notifications[Value] = new List<Action>();
 			}
 
 			ValueUpdatedEvent.Set();
 		}
 
-		public void CallbackOnStateOnce(TEnum ExpectedValue, Action Callback)
+		public void CallbackOnStateOnce(TEnum expectedValue, Action callback)
 		{
-			lock (Notifications)
+			lock (_notifications)
 			{
-				if (Debug) Console.WriteLine(String.Format("CallbackOnStateOnce({0}, Callback). Current: {1}", ExpectedValue, Value));
+				if (Debug) Console.WriteLine($"CallbackOnStateOnce({expectedValue}, Callback). Current: {Value}");
 
-				if (Value.Equals(ExpectedValue))
+				if (Value.Equals(expectedValue))
 				{
-					Callback();
+					callback();
 				}
 				else
 				{
-					if (!Notifications.ContainsKey(ExpectedValue)) Notifications[ExpectedValue] = new List<Action>();
-					Notifications[ExpectedValue].Add(Callback);
+					if (!_notifications.ContainsKey(expectedValue)) _notifications[expectedValue] = new List<Action>();
+					_notifications[expectedValue].Add(callback);
 				}
 			}
 		}
 
-		public void WaitForAnyState(params TEnum[] ExpectedValues)
+		public void WaitForAnyState(params TEnum[] expectedValues)
 		{
 			while (true)
 			{
-				foreach (var ExpectedValue in ExpectedValues) if (Value.Equals(ExpectedValue)) return;
+				if (expectedValues.Contains(Value))
+				{
+					return;
+				}
 				ValueUpdatedEvent.WaitOne();
 			}
 		}
 
-		public void WaitForState(TEnum ExpectedValue)
+		public void WaitForState(TEnum expectedValue)
 		{
-			WaitForAnyState(ExpectedValue);
+			WaitForAnyState(expectedValue);
 		}
 	}
 }

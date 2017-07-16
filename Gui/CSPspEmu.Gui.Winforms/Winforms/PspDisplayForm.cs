@@ -560,8 +560,11 @@ namespace CSPspEmu.Gui.Winforms
 				{
 					OpenFileReal(FilePath);
 				});
-			});
-			BackgroundThread.IsBackground = true;
+			})
+			{
+				Name = "OpenFileRealOnNewThreadLock",
+				IsBackground = true,
+			};
 			BackgroundThread.Start();
 		}
 

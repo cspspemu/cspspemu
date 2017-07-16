@@ -9,10 +9,10 @@ namespace CSPspEmu.Core.Cpu.Dynarec.Ast
 		{
 		}
 
-		protected void _Generate(AstNodeStmPspInstruction PspInstruction)
+		protected void _Generate(AstNodeStmPspInstruction pspInstruction)
 		{
-			EmitComment(String.Format("0x{0:X8}: {1}", PspInstruction.DisassembledResult.InstructionPC, PspInstruction.DisassembledResult.ToString()));
-			Generate(PspInstruction.Statement);
+			EmitComment(String.Format("0x{0:X8}: {1}", pspInstruction.DisassembledResult.InstructionPc, pspInstruction.DisassembledResult.ToString()));
+			Generate(pspInstruction.Statement);
 		}
 	}
 }

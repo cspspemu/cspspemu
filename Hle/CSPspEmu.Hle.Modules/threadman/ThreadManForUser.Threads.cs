@@ -18,11 +18,11 @@ namespace CSPspEmu.Hle.Modules.threadman
 		[Inject]
 		public HleMemoryManager MemoryManager;
 
-		private HleThread GetThreadById(int ThreadId)
+		private HleThread GetThreadById(int threadId)
 		{
-			HleThread HleThread = ThreadManager.GetThreadById(ThreadId);
-			if (HleThread == null) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_NOT_FOUND_THREAD));
-			return HleThread;
+			var hleThread = ThreadManager.GetThreadById(threadId);
+			if (hleThread == null) throw (new SceKernelException(SceKernelErrors.ERROR_KERNEL_NOT_FOUND_THREAD));
+			return hleThread;
 		}
 
 		/// <summary>
@@ -32,8 +32,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// SceUID thid;
 		/// thid = sceKernelCreateThread("my_thread", threadFunc, 0x18, 0x10000, 0, NULL);
 		/// </example>
-		/// <param name="CpuThreadState"> </param>
-		/// <param name="Name">An arbitrary thread name.</param>
+		/// <param name="cpuThreadState"> </param>
+		/// <param name="name">An arbitrary thread name.</param>
 		/// <param name="EntryPoint">The thread function to run when started.</param>
 		/// <param name="InitPriority">The initial priority of the thread. Less if higher priority.</param>
 		/// <param name="StackSize">The size of the initial stack.</param>
@@ -41,7 +41,8 @@ namespace CSPspEmu.Hle.Modules.threadman
 		/// <param name="Option">Additional options specified by ::SceKernelThreadOptParam.</param>
 		/// <returns>UID of the created thread, or an error code.</returns>
 		[HlePspFunction(NID = 0x446D8DE6, FirmwareVersion = 150)]
-		public uint sceKernelCreateThread(CpuThreadState CpuThreadState, string Name, uint /*SceKernelThreadEntry*/ EntryPoint, int InitPriority, int StackSize, PspThreadAttributes Attribute, SceKernelThreadOptParam* Option)
+		// ReSharper disable once InconsistentNaming
+		public uint sceKernelCreateThread(CpuThreadState cpuThreadState, string name, uint /*SceKernelThreadEntry*/ EntryPoint, int InitPriority, int StackSize, PspThreadAttributes Attribute, SceKernelThreadOptParam* Option)
 		{
 			// 512 byte min. (required for interrupts)
 			StackSize = Math.Max(StackSize, 0x200);
@@ -49,7 +50,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 			StackSize = (int)MathUtils.NextAligned(StackSize, 0x100);
 
 			var Thread = ThreadManager.Create();
-			Thread.Name = Name;
+			Thread.Name = name;
 			Thread.Info.PriorityCurrent = InitPriority;
 			Thread.Info.PriorityInitially = InitPriority;
 			
@@ -58,7 +59,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 #endif
 
 			Thread.Attribute = Attribute;
-			Thread.GP = CpuThreadState.GP;
+			Thread.GP = cpuThreadState.GP;
 			Thread.Info.EntryPoint = (SceKernelThreadEntry)EntryPoint;
 
 			//var ThreadStackPartition = MemoryManager.GetPartition(MemoryPartitions.User);
@@ -69,7 +70,7 @@ namespace CSPspEmu.Hle.Modules.threadman
 				StackSize,
 				MemoryPartition.Anchor.High,
 				Alignment: 0x100,
-				Name: "<Stack> : " + Name
+				Name: "<Stack> : " + name
 			);
 
 			if (!Thread.Attribute.HasFlag(PspThreadAttributes.NoFillStack))
@@ -95,20 +96,20 @@ namespace CSPspEmu.Hle.Modules.threadman
 			//Thread.CpuThreadState.RA = (uint)0;
 
 
-			uint StackLow = Thread.Stack.Low;
-			uint SP = Thread.Stack.High - 0x200;
-			uint K0 = Thread.Stack.High - 0x100;
+			uint stackLow = Thread.Stack.Low;
+			uint sp = Thread.Stack.High - 0x200;
+			uint k0 = Thread.Stack.High - 0x100;
 
-			CpuThreadState.CpuProcessor.Memory.WriteStruct(StackLow, Thread.Id);
-			CpuThreadState.CpuProcessor.Memory.WriteRepeated1(0x00, K0, 0x100);
-			CpuThreadState.CpuProcessor.Memory.WriteStruct(K0 + 0xC0, StackLow);
-			CpuThreadState.CpuProcessor.Memory.WriteStruct(K0 + 0xCA, Thread.Id);
-			CpuThreadState.CpuProcessor.Memory.WriteStruct(K0 + 0xF8, 0xFFFFFFFF);
-			CpuThreadState.CpuProcessor.Memory.WriteStruct(K0 + 0xFC, 0xFFFFFFFF);
+			cpuThreadState.CpuProcessor.Memory.WriteStruct(stackLow, Thread.Id);
+			cpuThreadState.CpuProcessor.Memory.WriteRepeated1(0x00, k0, 0x100);
+			cpuThreadState.CpuProcessor.Memory.WriteStruct(k0 + 0xC0, stackLow);
+			cpuThreadState.CpuProcessor.Memory.WriteStruct(k0 + 0xCA, Thread.Id);
+			cpuThreadState.CpuProcessor.Memory.WriteStruct(k0 + 0xF8, 0xFFFFFFFF);
+			cpuThreadState.CpuProcessor.Memory.WriteStruct(k0 + 0xFC, 0xFFFFFFFF);
 
-			Thread.CpuThreadState.SP = SP;
+			Thread.CpuThreadState.SP = sp;
 			//ThreadToStart.CpuThreadState.FP = 0xDEADBEEF;
-			Thread.CpuThreadState.K0 = K0;
+			Thread.CpuThreadState.K0 = k0;
 
 			//Console.WriteLine("STACK: {0:X}", Thread.CpuThreadState.SP);
 

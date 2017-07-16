@@ -7,12 +7,12 @@ namespace CSPspEmu.Core.Memory
 {
 	public unsafe sealed class FastPspMemoryUnsafe : PspMemory
 	{
-		override public bool HasFixedGlobalAddress { get { return true; } }
-		override public IntPtr FixedGlobalAddress { get { return new IntPtr(_Base); } }
+		override public bool HasFixedGlobalAddress => true;
+		override public IntPtr FixedGlobalAddress => new IntPtr(Base);
 
 		//public readonly byte* Base = (byte*)0x50000000;
 		//public readonly byte* Base = (byte*)0x40000000;
-		public static byte* _Base = null;
+		public static byte* Base = null;
 		public static byte* StaticNullPtr;
 		public static byte* StaticScratchPadPtr;
 		public static byte* StaticFrameBufferPtr;
@@ -45,38 +45,38 @@ namespace CSPspEmu.Core.Memory
 			//FreeMemory();
 		}
 
-		private static bool AlreadyInitialized = false;
+		private static bool _alreadyInitialized = false;
 
 		private void AllocMemoryOnce()
 		{
-			if (!AlreadyInitialized)
+			if (!_alreadyInitialized)
 			{
-				AlreadyInitialized = true;
+				_alreadyInitialized = true;
 
 				//Logger.Info("FastPspMemory.AllocMemory");
 
-				ulong[] TryBases;
+				ulong[] tryBases;
 				if (Platform.Is32Bit)
 				{
 					if (Platform.OS == OS.Windows)
 					{
-						TryBases = new ulong[] { 0x31000000, 0x40000000, 0x50000000 };
+						tryBases = new ulong[] { 0x31000000, 0x40000000, 0x50000000 };
 					}
 					else
 					{
 						//Logger.Error("Using mmap on linux x86 is known to cause problems");
-						TryBases = new ulong[] { 0xE1000000, 0x31008008, 0x40008000, 0x50008000, 0x31000000, 0x40000000, 0x50000000 };
+						tryBases = new ulong[] { 0xE1000000, 0x31008008, 0x40008000, 0x50008000, 0x31000000, 0x40000000, 0x50000000 };
 					}
 				}
 				else
 				{
 					if (Platform.OS == OS.Windows)
 					{
-						TryBases = new ulong[] { 0xE7000000, 0xE1000000, 0x0012340080000000, 0x00123400A0000000 };
+						tryBases = new ulong[] { 0xE7000000, 0xE1000000, 0x0012340080000000, 0x00123400A0000000 };
 					}
 					else
 					{
-						TryBases = new ulong[] { 0x2300000000, 0x31000000, 0x40000000, 0x50000000, 0xE1000000 };
+						tryBases = new ulong[] { 0x2300000000, 0x31000000, 0x40000000, 0x50000000, 0xE1000000 };
 					}
 				}
 
@@ -84,22 +84,22 @@ namespace CSPspEmu.Core.Memory
 				uint FrameBufferAllocSize = FrameBufferSize;
 				uint MainAllocSize = MainSize;
 
-				foreach (var TryBase in TryBases)
+				foreach (var tryBase in tryBases)
 				{
-					_Base = (byte*)TryBase;
-					Console.WriteLine("FastPspMemory.AllocMemoryOnce: Trying Base ... 0x{0:X}", TryBase);
+					Base = (byte*)tryBase;
+					Console.WriteLine("FastPspMemory.AllocMemoryOnce: Trying Base ... 0x{0:X}", tryBase);
 
-					StaticNullPtr = _Base;
-					Platform.AllocRangeGuard(_Base, _Base + ScratchPadOffset);
-					StaticScratchPadPtr = (byte*)Platform.AllocRange(_Base + ScratchPadOffset, ScratchPadAllocSize);
-					Platform.AllocRangeGuard(_Base + ScratchPadOffset + ScratchPadAllocSize, _Base + FrameBufferOffset);
-					StaticFrameBufferPtr = (byte*)Platform.AllocRange(_Base + FrameBufferOffset, FrameBufferAllocSize);
-					Platform.AllocRangeGuard(_Base + FrameBufferOffset + FrameBufferAllocSize, _Base + MainOffset);
-					StaticMainPtr = (byte*)Platform.AllocRange(_Base + MainOffset, MainAllocSize);
+					StaticNullPtr = Base;
+					Platform.AllocRangeGuard(Base, Base + ScratchPadOffset);
+					StaticScratchPadPtr = (byte*)Platform.AllocRange(Base + ScratchPadOffset, ScratchPadAllocSize);
+					Platform.AllocRangeGuard(Base + ScratchPadOffset + ScratchPadAllocSize, Base + FrameBufferOffset);
+					StaticFrameBufferPtr = (byte*)Platform.AllocRange(Base + FrameBufferOffset, FrameBufferAllocSize);
+					Platform.AllocRangeGuard(Base + FrameBufferOffset + FrameBufferAllocSize, Base + MainOffset);
+					StaticMainPtr = (byte*)Platform.AllocRange(Base + MainOffset, MainAllocSize);
 
 					if (StaticScratchPadPtr != null && StaticFrameBufferPtr != null && StaticMainPtr != null)
 					{
-						Console.WriteLine("FastPspMemory.AllocMemoryOnce: Found Suitable Base ... 0x{0:X}", TryBase);
+						Console.WriteLine("FastPspMemory.AllocMemoryOnce: Found Suitable Base ... 0x{0:X}", tryBase);
 						break;
 					}
 					else
@@ -110,7 +110,7 @@ namespace CSPspEmu.Core.Memory
 					}
 				}
 
-				if (_Base == null || StaticScratchPadPtr == null || StaticFrameBufferPtr == null || StaticMainPtr == null)
+				if (Base == null || StaticScratchPadPtr == null || StaticFrameBufferPtr == null || StaticMainPtr == null)
 				{
 					//Logger.Fatal("Can't allocate virtual memory!");
 					Debug.Fail("Can't allocate virtual memory!");
@@ -159,21 +159,21 @@ namespace CSPspEmu.Core.Memory
 		}
 		*/
 
-		public override uint PointerToPspAddressUnsafe(void* Pointer)
+		public override uint PointerToPspAddressUnsafe(void* pointer)
 		{
-			if (Pointer == null) return 0;
-			return (uint)((byte*)Pointer - _Base);
+			if (pointer == null) return 0;
+			return (uint)((byte*)pointer - Base);
 		}
 
-		public override void* PspAddressToPointerUnsafe(uint _Address)
+		public override void* PspAddressToPointerUnsafe(uint address)
 		{
-			var Address = (_Address & FastPspMemory.FastMemoryMask);
+			var finalAddress = (address & FastPspMemory.FastMemoryMask);
 			//Console.WriteLine("Base: 0x{0:X} ; Address: 0x{1:X}", (ulong)Base, Address);
-			if (Address == 0) return null;
+			if (finalAddress == 0) return null;
 #if false
 			if (_Base == null) throw(new InvalidProgramException("Base is null"));
 #endif
-			return _Base + Address;
+			return Base + finalAddress;
 		}
 
 		public override void Dispose()

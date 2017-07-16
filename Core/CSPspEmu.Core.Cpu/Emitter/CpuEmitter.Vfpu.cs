@@ -21,10 +21,10 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		/// </summary>
 		public AstNodeStm vrot()
 		{
-			uint imm5 = Instruction.IMM5;
+			var imm5 = Instruction.IMM5;
 			var CosIndex = BitUtils.Extract(imm5, 0, 2);
 			var SinIndex = BitUtils.Extract(imm5, 2, 2);
-			bool NegateSin = BitUtils.ExtractBool(imm5, 4);
+			var NegateSin = BitUtils.ExtractBool(imm5, 4);
 
 			var Dest = VEC_VD;
 			var Src = CEL_VS;

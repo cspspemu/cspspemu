@@ -23,10 +23,10 @@ namespace CSPspEmu.Core
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="NandReader"></param>
-		public IplReader(NandReader NandReader)
+		/// <param name="nandReader"></param>
+		public IplReader(NandReader nandReader)
 		{
-			this.Stream = NandReader.SliceWithLength();
+			Stream = nandReader.SliceWithLength();
 		}
 
 		/// <summary>
@@ -35,15 +35,15 @@ namespace CSPspEmu.Core
 		/// <returns></returns>
 		public MemoryStream GetIplData()
 		{
-			var MemoryStream = new MemoryStream();
-			foreach (var BlockOffset in GetIplOffsets().ToArray())
+			var memoryStream = new MemoryStream();
+			foreach (var blockOffset in GetIplOffsets().ToArray())
 			{
 				//Console.WriteLine(BlockOffset);
-				Stream.Position = NandReader.BytesPerBlock * BlockOffset;
-				MemoryStream.WriteBytes(Stream.ReadBytes(NandReader.BytesPerBlock));
+				Stream.Position = NandReader.BytesPerBlock * blockOffset;
+				memoryStream.WriteBytes(Stream.ReadBytes(NandReader.BytesPerBlock));
 			}
-			MemoryStream.Position = 0;
-			return MemoryStream;
+			memoryStream.Position = 0;
+			return memoryStream;
 		}
 
 		[StructLayout(LayoutKind.Sequential, Size = 0xF60)]
@@ -61,58 +61,58 @@ namespace CSPspEmu.Core
 			public uint EntryFunction;
 		}
 
-		public IplInfo LoadIplToMemory(Stream OutputStream)
+		public IplInfo LoadIplToMemory(Stream outputStream)
 		{
-			return DecryptIplToMemory(GetIplData().ToArray().Skip(0x4000).ToArray(), OutputStream, ToMemoryAddress: true);
+			return DecryptIplToMemory(GetIplData().ToArray().Skip(0x4000).ToArray(), outputStream, toMemoryAddress: true);
 		}
 
-		public void WriteIplToFile(Stream StreamOut)
+		public void WriteIplToFile(Stream streamOut)
 		{
-			DecryptIplToMemory(GetIplData().ToArray().Skip(0x4000).ToArray(), StreamOut, ToMemoryAddress: false);
+			DecryptIplToMemory(GetIplData().ToArray().Skip(0x4000).ToArray(), streamOut, toMemoryAddress: false);
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="IplData"></param>
-		/// <param name="OutputStream"></param>
-		/// <param name="ToMemoryAddress"></param>
+		/// <param name="iplData"></param>
+		/// <param name="outputStream"></param>
+		/// <param name="toMemoryAddress"></param>
 		/// <returns></returns>
-		public static IplInfo DecryptIplToMemory(byte[] IplData, Stream OutputStream, bool ToMemoryAddress = true)
+		public static IplInfo DecryptIplToMemory(byte[] iplData, Stream outputStream, bool toMemoryAddress = true)
 		{
-			var buffer = new byte[0x1000];
-			var IplInfo = default(IplInfo);
+			var bufferBytes = new byte[0x1000];
+			var iplInfo = default(IplInfo);
 
 			//ArrayUtils.HexDump(IplData);
 
-			fixed (byte* IplPtr = IplData)
-			fixed (byte* bufferPtr = buffer)
+			fixed (byte* ipl = iplData)
+			fixed (byte* buffer = bufferBytes)
 			{
-				for (int n = 0; n < IplData.Length; n += 0x1000)
+				for (var n = 0; n < iplData.Length; n += 0x1000)
 				{
-					var Ptr = IplPtr + n;
+					var ptr = ipl + n;
 
-					var Header = *(Kirk.AES128CMACHeader*)Ptr;
+					var header = *(Kirk.AES128CMACHeader*)ptr;
 					//Console.WriteLine(Header.DataSize);
-					var Kirk = new Kirk();
-					Kirk.kirk_init();
-					Kirk.kirk_CMD1(bufferPtr, Ptr, 0x1000, do_check: false);
-					var IplBlock = *(IplBlock*)bufferPtr;
+					var kirk = new Kirk();
+					kirk.kirk_init();
+					kirk.kirk_CMD1(buffer, ptr, 0x1000, do_check: false);
+					var iplBlock = *(IplBlock*)buffer;
 					//Console.WriteLine(IplBlock.ToStringDefault());
-					if (ToMemoryAddress)
+					if (toMemoryAddress)
 					{
-						OutputStream.Position = IplBlock.LoadAddress;
-						Console.WriteLine("IplBlock.LoadAddress: 0x{0:X8}", IplBlock.LoadAddress);
+						outputStream.Position = iplBlock.LoadAddress;
+						Console.WriteLine("IplBlock.LoadAddress: 0x{0:X8}", iplBlock.LoadAddress);
 					}
-					OutputStream.WriteBytes(PointerUtils.PointerToByteArray(&IplBlock.BlockData, (int)IplBlock.BlockSize));
-					if (IplBlock.EntryFunction != 0)
+					outputStream.WriteBytes(PointerUtils.PointerToByteArray(&iplBlock.BlockData, (int)iplBlock.BlockSize));
+					if (iplBlock.EntryFunction != 0)
 					{
-						IplInfo.EntryFunction = IplBlock.EntryFunction;
+						iplInfo.EntryFunction = iplBlock.EntryFunction;
 					}
 				}
 			}
 
-			return IplInfo;
+			return iplInfo;
 		}
 
 		/// <summary>
@@ -121,12 +121,12 @@ namespace CSPspEmu.Core
 		/// <returns></returns>
 		public IEnumerable<ushort> GetIplOffsets()
 		{
-			var Stream = this.Stream.SliceWithLength(NandReader.BytesPerBlock * 4);
+			var stream = Stream.SliceWithLength(NandReader.BytesPerBlock * 4);
 			while (true)
 			{
-				var Result = Stream.ReadStruct<ushort>();
-				if (Result == 0) break;
-				yield return Result;
+				var result = stream.ReadStruct<ushort>();
+				if (result == 0) break;
+				yield return result;
 			}
 		}
 	}

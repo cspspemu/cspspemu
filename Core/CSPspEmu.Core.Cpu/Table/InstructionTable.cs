@@ -18,44 +18,30 @@ namespace CSPspEmu.Core.Cpu.Table
 		private const InstructionType INSTR_TYPE_JUMP = InstructionType.Jump;
 		private const InstructionType INSTR_TYPE_SYSCALL = InstructionType.Syscall;
 
-		private static InstructionInfo ID(String Name, String BinaryEncoding, String AsmEncoding, AddressType AddressType, InstructionType InstructionType)
+		private static InstructionInfo ID(string Name, string BinaryEncoding, string AsmEncoding, AddressType AddressType, InstructionType InstructionType)
 		{
 			return new InstructionInfo() { Name = Name, BinaryEncoding = BinaryEncoding, AsmEncoding = AsmEncoding, AddressType = AddressType, InstructionType = InstructionType };
 		}
 
-		private static String VM(string BinaryEncoding)
+		private static string VM(string binaryEncoding)
 		{
-			return BinaryEncoding;
+			return binaryEncoding;
 		}
 
-		public static IEnumerable<InstructionInfo> ALL
-		{
-			get
-			{
-				return new InstructionInfo[] { }
-					.Union(InstructionTable.ALU)
-					.Union(InstructionTable.BCU)
-					.Union(InstructionTable.BCU)
-					.Union(InstructionTable.COP0)
-					.Union(InstructionTable.FPU)
-					.Union(InstructionTable.LSU)
-					.Union(InstructionTable.SPECIAL)
-					.Union(InstructionTable.VFPU)
-					.Union(InstructionTable.VFPU_BRANCH)
-				;
-			}
-		}
+		public static IEnumerable<InstructionInfo> ALL => new InstructionInfo[] { }
+			.Union(InstructionTable.ALU)
+			.Union(InstructionTable.BCU)
+			.Union(InstructionTable.BCU)
+			.Union(InstructionTable.COP0)
+			.Union(InstructionTable.FPU)
+			.Union(InstructionTable.LSU)
+			.Union(InstructionTable.SPECIAL)
+			.Union(InstructionTable.VFPU)
+			.Union(InstructionTable.VFPU_BRANCH);
 
-		public static IEnumerable<InstructionInfo> ALL_BRANCHES
-		{
-			get
-			{
-				return new InstructionInfo[] { }
-					.Union(BCU)
-					.Union(VFPU_BRANCH)
-				;
-			}
-		}
+		public static IEnumerable<InstructionInfo> ALL_BRANCHES => new InstructionInfo[] { }
+			.Union(BCU)
+			.Union(VFPU_BRANCH);
 
 		public static InstructionInfo Unknown = ID("unknwon", VM("111111:11111:11111:11111:11111:111111"), "", ADDR_TYPE_NONE, 0);
 
@@ -66,7 +52,7 @@ namespace CSPspEmu.Core.Cpu.Table
 			{
 				if (_ALU == null)
 				{
-					_ALU = new InstructionInfo[] {
+					_ALU = new[] {
 					// Arithmetic operations.
 					ID("add",    VM("000000:rs:rt:rd:00000:100000"), "%d, %s, %t", ADDR_TYPE_NONE, 0),
 					ID("addu",   VM("000000:rs:rt:rd:00000:100001"), "%d, %s, %t", ADDR_TYPE_NONE, 0),
@@ -214,7 +200,7 @@ namespace CSPspEmu.Core.Cpu.Table
 			get {
 				if (_LSU == null)
 				{
-					_LSU = new InstructionInfo[] {
+					_LSU = new[] {
 						// Load Byte/Half word/Word (Left/Right/Unsigned).
 						ID("lb",   VM("100000:rs:rt:imm16"), "%t, %i(%s)", ADDR_TYPE_NONE, 0),
 						ID("lh",   VM("100001:rs:rt:imm16"), "%t, %i(%s)", ADDR_TYPE_NONE, 0),
@@ -311,7 +297,7 @@ namespace CSPspEmu.Core.Cpu.Table
 			{
 				if (_SPECIAL == null)
 				{
-					_SPECIAL = new InstructionInfo[] {
+					_SPECIAL = new[] {
 						// Syscall
 						ID("syscall",     VM("000000:imm20:001100" ), "%C",     ADDR_TYPE_NONE, INSTR_TYPE_SYSCALL),
 

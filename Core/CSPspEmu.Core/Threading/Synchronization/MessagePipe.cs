@@ -7,22 +7,18 @@ namespace CSPspEmu.Core.Threading.Synchronization
 {
 	public class MessagePipe<TMessage>
 	{
-		public class WaitableMessage<TMessage>
+		public class WaitableMessage
 		{
 			public TMessage Message;
 			public AutoResetEvent Event = new AutoResetEvent(false);
 		}
 
-		LinkedList<WaitableMessage<TMessage>> MessageQueue = new LinkedList<WaitableMessage<TMessage>>();
+		LinkedList<WaitableMessage> MessageQueue = new LinkedList<WaitableMessage>();
 		AutoResetEvent MessageEvent = new AutoResetEvent(false);
 
-		public MessagePipe()
+		public void Receive(Action<TMessage> handler)
 		{
-		}
-
-		public void Receive(Action<TMessage> Handler)
-		{
-			WaitableMessage<TMessage> WaitableMessage;
+			WaitableMessage waitableMessage;
 			while (true)
 			{
 				lock (MessageQueue)
@@ -33,52 +29,52 @@ namespace CSPspEmu.Core.Threading.Synchronization
 			}
 			lock (MessageQueue)
 			{
-				WaitableMessage = MessageQueue.First();
+				waitableMessage = MessageQueue.First();
 				MessageQueue.RemoveFirst();
 			}
-			Handler(WaitableMessage.Message);
-			WaitableMessage.Event.Set();
+			handler(waitableMessage.Message);
+			waitableMessage.Event.Set();
 		}
 
-		private WaitableMessage<TMessage> Push(TMessage Message, bool Last)
+		private WaitableMessage Push(TMessage message, bool last)
 		{
-			var WaitableMessage = new WaitableMessage<TMessage>()
+			var waitableMessage = new WaitableMessage()
 			{
-				Message = Message,
+				Message = message,
 			};
 			lock (MessageQueue)
 			{
-				if (Last)
+				if (last)
 				{
-					MessageQueue.AddLast(WaitableMessage);
+					MessageQueue.AddLast(waitableMessage);
 				}
 				else
 				{
-					MessageQueue.AddFirst(WaitableMessage);
+					MessageQueue.AddFirst(waitableMessage);
 				}
 			}
 			MessageEvent.Set();
-			return WaitableMessage;
+			return waitableMessage;
 		}
 
-		public WaitableMessage<TMessage> PushLast(TMessage Message)
+		public WaitableMessage PushLast(TMessage message)
 		{
-			return Push(Message, Last: true);
+			return Push(message, last: true);
 		}
 
-		public WaitableMessage<TMessage> PushFirst(TMessage Message)
+		public WaitableMessage PushFirst(TMessage message)
 		{
-			return Push(Message, Last: false);
+			return Push(message, last: false);
 		}
 
-		public void PushLastAndWait(TMessage Message)
+		public void PushLastAndWait(TMessage message)
 		{
-			PushLast(Message).Event.WaitOne();
+			PushLast(message).Event.WaitOne();
 		}
 
-		public void PushFirstAndWait(TMessage Message)
+		public void PushFirstAndWait(TMessage message)
 		{
-			PushFirst(Message).Event.WaitOne();
+			PushFirst(message).Event.WaitOne();
 		}
 	}
 }

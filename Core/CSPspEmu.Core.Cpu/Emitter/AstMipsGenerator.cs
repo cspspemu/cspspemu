@@ -26,20 +26,20 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		static public readonly new AstMipsGenerator Instance = new AstMipsGenerator();
 		static private readonly AstMipsGenerator ast = Instance;
 
-		public AstNodeExprCallDelegate MethodCacheInfoCallStaticPC(CpuProcessor CpuProcessor, uint PC)
+		public AstNodeExprCallDelegate MethodCacheInfoCallStaticPC(CpuProcessor cpuProcessor, uint pc)
 		{
 			if (_DynarecConfig.FunctionCallWithStaticReferences)
 			{
-				var MethodCacheInfo = CpuProcessor.MethodCache.GetForPC(PC);
+				var MethodCacheInfo = cpuProcessor.MethodCache.GetForPC(pc);
 				return ast.CallDelegate(ast.StaticFieldAccess(MethodCacheInfo.StaticField.FieldInfo), ast.CpuThreadState);
 			}
 			else
 			{
-				return ast.CallDelegate(ast.CallInstance(ast.CpuThreadState, (Func<uint, Action<CpuThreadState>>)CpuThreadStateMethods.GetFuncAtPC, PC), ast.CpuThreadState);
+				return ast.CallDelegate(ast.CallInstance(ast.CpuThreadState, (Func<uint, Action<CpuThreadState>>)CpuThreadStateMethods.GetFuncAtPC, pc), ast.CpuThreadState);
 			}
 		}
 
-		public AstNodeStm MethodCacheInfoCallDynamicPC(AstNodeExpr PC, bool TailCall)
+		public AstNodeStm MethodCacheInfoCallDynamicPC(AstNodeExpr pc, bool tailCall)
 		{
 			//if (_DynarecConfig.FunctionCallWithStaticReferences)
 			//{
@@ -55,15 +55,15 @@ namespace CSPspEmu.Core.Cpu.Emitter
 	
 				var Call = (AstNodeExpr)ast.CallDelegate(LocalCachedFunction, ast.CpuThreadState);
 				var CallStm = (AstNodeStm)ast.Statement(Call);
-				if (TailCall) CallStm = ast.Statements(ast.Statement(ast.TailCall(Call as AstNodeExprCall)), ast.Return());
+				if (tailCall) CallStm = ast.Statements(ast.Statement(ast.TailCall(Call as AstNodeExprCall)), ast.Return());
 
 				return ast.Statements(
-					ast.Assign(LocalCalculatePC, PC),
+					ast.Assign(LocalCalculatePC, pc),
 					ast.If
 						(ast.Binary(LocalCachedPC, "!=", LocalCalculatePC),
 						ast.Statements(
 							ast.Assign(LocalCachedPC, LocalCalculatePC),
-							ast.Assign(LocalCachedFunction, ast.CallInstance(ast.CpuThreadState, (Func<uint, Action<CpuThreadState>>)CpuThreadStateMethods.GetFuncAtPC, PC))
+							ast.Assign(LocalCachedFunction, ast.CallInstance(ast.CpuThreadState, (Func<uint, Action<CpuThreadState>>)CpuThreadStateMethods.GetFuncAtPC, pc))
 						)
 					),
 					CallStm
@@ -117,22 +117,22 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		{
 			return _GPR_Cache[Index];
 		}
-		public AstNodeExprLValue FPR(int Index) { return REG("FPR" + Index); }
+		public AstNodeExprLValue FPR(int index) { return REG("FPR" + index); }
 		public AstNodeExprLValue HI_LO() { return ast.PropertyAccess(ast.CpuThreadState, "HI_LO"); }
-		public AstNodeExprLValue FPR_I(int Index) { return ast.Indirect(ast.Cast(typeof(int*), ast.GetAddress(REG("FPR" + Index)), Explicit: false)); }
-		public AstNodeExprLValue GPR_F(int Index) { return ast.Indirect(ast.Cast(typeof(float*), ast.GetAddress(RefGPRIndex(Index)), Explicit: false)); }
+		public AstNodeExprLValue FPR_I(int index) { return ast.Indirect(ast.Cast(typeof(int*), ast.GetAddress(REG("FPR" + index)), Explicit: false)); }
+		public AstNodeExprLValue GPR_F(int index) { return ast.Indirect(ast.Cast(typeof(float*), ast.GetAddress(RefGPRIndex(index)), Explicit: false)); }
 
-		public AstNodeStm AssignFPR_F(int Index, AstNodeExpr Expr) { return ast.Assign(ast.FPR(Index), Expr); }
-		public AstNodeStm AssignFPR_I(int Index, AstNodeExpr Expr) { return ast.Assign(ast.FPR_I(Index), Expr); }
-		private AstNodeStm AssignREG(string RegName, AstNodeExpr Expr) { return ast.Assign(ast.REG(RegName), Expr); }
-		public AstNodeStm AssignPC(AstNodeExpr Expr) { return ast.Assign(ast.PC(), Expr); }
-		public AstNodeStm AssignHI(AstNodeExpr Expr) { return ast.Assign(ast.HI(), Expr); }
-		public AstNodeStm AssignLO(AstNodeExpr Expr) { return ast.Assign(ast.LO(), Expr); }
-		public AstNodeStm AssignIC(AstNodeExpr Expr) { return ast.Assign(ast.IC(), Expr); }
-		public AstNodeStm AssignC0R(int Index, AstNodeExpr Expr) { return ast.Assign(ast.C0R(Index), Expr); }
-		public AstNodeStm AssignHILO(AstNodeExpr Expr) { return ast.Assign(HI_LO(), ast.Cast<long>(Expr)); }
-		public AstNodeStm AssignGPR(int Index, AstNodeExpr Expr) { if (Index == 0) return new AstNodeStmEmpty(); return ast.Assign(GPR(Index), ast.Cast<uint>(Expr, false)); }
-		public AstNodeStm AssignGPR_F(int Index, AstNodeExpr Expr) { if (Index == 0) return new AstNodeStmEmpty(); return ast.Assign(GPR_F(Index), ast.Cast<float>(Expr, false)); }
+		public AstNodeStm AssignFPR_F(int index, AstNodeExpr expr) { return ast.Assign(ast.FPR(index), expr); }
+		public AstNodeStm AssignFPR_I(int index, AstNodeExpr expr) { return ast.Assign(ast.FPR_I(index), expr); }
+		private AstNodeStm AssignREG(string regName, AstNodeExpr expr) { return ast.Assign(ast.REG(regName), expr); }
+		public AstNodeStm AssignPC(AstNodeExpr expr) { return ast.Assign(ast.PC(), expr); }
+		public AstNodeStm AssignHI(AstNodeExpr expr) { return ast.Assign(ast.HI(), expr); }
+		public AstNodeStm AssignLO(AstNodeExpr expr) { return ast.Assign(ast.LO(), expr); }
+		public AstNodeStm AssignIC(AstNodeExpr expr) { return ast.Assign(ast.IC(), expr); }
+		public AstNodeStm AssignC0R(int index, AstNodeExpr expr) { return ast.Assign(ast.C0R(index), expr); }
+		public AstNodeStm AssignHILO(AstNodeExpr expr) { return ast.Assign(HI_LO(), ast.Cast<long>(expr)); }
+		public AstNodeStm AssignGPR(int index, AstNodeExpr expr) { if (index == 0) return new AstNodeStmEmpty(); return ast.Assign(GPR(index), ast.Cast<uint>(expr, false)); }
+		public AstNodeStm AssignGPR_F(int index, AstNodeExpr expr) { if (index == 0) return new AstNodeStmEmpty(); return ast.Assign(GPR_F(index), ast.Cast<float>(expr, false)); }
 		//public AstNodeStm AssignREG(string RegName, AstNodeExpr Expr) { return ast.Assign(REG(RegName), Expr); }
 		//public AstNodeStm AssignGPR(int Index, AstNodeExpr Expr) { if (Index == 0) return new AstNodeStmEmpty(); return ast.Assign(GPR(Index), ast.Cast<uint>(Expr)); }
 
@@ -145,74 +145,74 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		public AstNodeExprLValue PrefixDestination() { return ast.FieldAccess(ast.CpuThreadState, ILFieldInfo.GetFieldInfo(() => CpuThreadStateMethods.PrefixSource)); }
 		public AstNodeExprLValue PrefixDestinationEnabled() { return ast.FieldAccess(PrefixDestination(), ILFieldInfo.GetFieldInfo(() => CpuThreadStateMethods.PrefixDestination.Enabled)); }
 
-		public AstNodeExprLValue VCC(int Index)
+		public AstNodeExprLValue VCC(int index)
 		{
-			return REG("VFR_CC_" + Index);
+			return REG("VFR_CC_" + index);
 		}
 
-		public AstNodeExprLValue VFR(int Index)
+		public AstNodeExprLValue VFR(int index)
 		{
-			return ast.REG("VFR" + Index);
+			return ast.REG("VFR" + index);
 		}
 
 
-		public AstNodeStm AssignVCC(int Index, AstNodeExpr Expr)
+		public AstNodeStm AssignVCC(int index, AstNodeExpr expr)
 		{
-			return ast.Assign(VCC(Index), Expr);
+			return ast.Assign(VCC(index), expr);
 		}
 
 		public AstNodeExprLValue IC() { return REG("IC"); }
 		public AstNodeExprLValue PC() { return REG("PC"); }
 		public AstNodeExprLValue HI() { return REG("HI"); }
 		public AstNodeExprLValue LO() { return REG("LO"); }
-		public AstNodeExprLValue C0R(int Index) { return REG("C0R" + Index); }
-		public AstNodeExprLValue GPR(int Index) { if (Index == 0) throw (new Exception("Can't get reference to GPR0")); return RefGPRIndex(Index); }
-		public AstNodeExprLValue GPR_l(int Index) { return ast.Indirect(ast.Cast(typeof(long*), ast.GetAddress(GPR(Index)))); }
-		public AstNodeExpr GPR_f(int Index) { if (Index == 0) return ast.Immediate((float)0); return ast.Reinterpret<float>(GPR(Index)); }
-		public AstNodeExpr GPR_s(int Index) { if (Index == 0) return ast.Immediate((int)0); return ast.Cast<int>(GPR(Index), Explicit: false); }
-		public AstNodeExpr GPR_sl(int Index) { return ast.Cast<long>(GPR_s(Index)); }
-		public AstNodeExpr GPR_u(int Index) { if (Index == 0) return ast.Immediate((uint)0); return GPR(Index); }
-		public AstNodeExpr GPR_ul(int Index) { return ast.Cast<ulong>(GPR_u(Index)); }
-		public AstNodeExpr GPR<TType>(int Index)  { return GPR(typeof(TType), Index); }
-		public AstNodeExpr GPR(Type Type, int Index)
+		public AstNodeExprLValue C0R(int index) { return REG("C0R" + index); }
+		public AstNodeExprLValue GPR(int index) { if (index == 0) throw (new Exception("Can't get reference to GPR0")); return RefGPRIndex(index); }
+		public AstNodeExprLValue GPR_l(int index) { return ast.Indirect(ast.Cast(typeof(long*), ast.GetAddress(GPR(index)))); }
+		public AstNodeExpr GPR_f(int index) { if (index == 0) return ast.Immediate((float)0); return ast.Reinterpret<float>(GPR(index)); }
+		public AstNodeExpr GPR_s(int index) { if (index == 0) return ast.Immediate((int)0); return ast.Cast<int>(GPR(index), Explicit: false); }
+		public AstNodeExpr GPR_sl(int index) { return ast.Cast<long>(GPR_s(index)); }
+		public AstNodeExpr GPR_u(int index) { if (index == 0) return ast.Immediate((uint)0); return GPR(index); }
+		public AstNodeExpr GPR_ul(int index) { return ast.Cast<ulong>(GPR_u(index)); }
+		public AstNodeExpr GPR<TType>(int index)  { return GPR(typeof(TType), index); }
+		public AstNodeExpr GPR(Type type, int index)
 		{
-			if (Type == typeof(int)) return GPR_s(Index);
-			if (Type == typeof(uint)) return GPR_u(Index);
-			if (Type == typeof(long)) return GPR_sl(Index);
-			if (Type == typeof(ulong)) return GPR_ul(Index);
-			throw (new NotImplementedException("Invalid GPR type " + Type + "!"));
+			if (type == typeof(int)) return GPR_s(index);
+			if (type == typeof(uint)) return GPR_u(index);
+			if (type == typeof(long)) return GPR_sl(index);
+			if (type == typeof(ulong)) return GPR_ul(index);
+			throw (new NotImplementedException("Invalid GPR type " + type + "!"));
 		}
 		public AstNodeExpr HILO_sl() { return HI_LO(); }
 		public AstNodeExpr HILO_ul() { return ast.Cast<ulong>(HILO_sl()); }
 
-		private delegate void* AddressToPointerWithErrorFunc(uint Address, string ErrorDescription, bool CanBeNull, InvalidAddressAsEnum Invalid);
-		private delegate void* AddressToPointerFunc(uint Address);
+		private delegate void* AddressToPointerWithErrorFunc(uint address, string errorDescription, bool canBeNull, InvalidAddressAsEnum invalid);
+		private delegate void* AddressToPointerFunc(uint address);
 
-		public AstNodeExpr MemoryGetPointer(PspMemory Memory, AstNodeExpr Address, bool Safe, string ErrorDescription = "ERROR", InvalidAddressAsEnum InvalidAddress = InvalidAddressAsEnum.Exception)
+		public AstNodeExpr MemoryGetPointer(PspMemory memory, AstNodeExpr address, bool safe, string errorDescription = "ERROR", InvalidAddressAsEnum invalidAddress = InvalidAddressAsEnum.Exception)
 		{
-			if (Safe)
+			if (safe)
 			{
 				return ast.CallInstance(
 					ast.CpuThreadState,
 					(AddressToPointerWithErrorFunc)CSPspEmu.Core.Cpu.CpuThreadState.Methods.GetMemoryPtrSafeWithError,
-					ast.Cast<uint>(Address),
-					ErrorDescription,
+					ast.Cast<uint>(address),
+					errorDescription,
 					true,
-					ast.Immediate(InvalidAddress)
+					ast.Immediate(invalidAddress)
 				);
 			}
 			else
 			{
-				if (_DynarecConfig.AllowFastMemory && Memory.HasFixedGlobalAddress)
+				if (_DynarecConfig.AllowFastMemory && memory.HasFixedGlobalAddress)
 				{
 					if (_DynarecConfig.EnableFastPspMemoryUtilsGetFastMemoryReader)
 					{
-						return ast.CallStatic(FastPspMemoryUtils.GetFastMemoryReader(Memory.FixedGlobalAddress), Address);
+						return ast.CallStatic(FastPspMemoryUtils.GetFastMemoryReader(memory.FixedGlobalAddress), address);
 					}
 					else
 					{
-						var AddressMasked = ast.Binary(Address, "&", ast.Immediate(FastPspMemory.FastMemoryMask));
-						return ast.Immediate(Memory.FixedGlobalAddress) + AddressMasked;
+						var AddressMasked = ast.Binary(address, "&", ast.Immediate(FastPspMemory.FastMemoryMask));
+						return ast.Immediate(memory.FixedGlobalAddress) + AddressMasked;
 					}
 				}
 				else
@@ -220,54 +220,54 @@ namespace CSPspEmu.Core.Cpu.Emitter
 					return ast.CallInstance(
 						ast.CpuThreadState,
 						(AddressToPointerFunc)CSPspEmu.Core.Cpu.CpuThreadState.Methods.GetMemoryPtr,
-						Address
+						address
 					);
 				}
 			}
 		}
 
-		public AstNodeExpr MemoryGetPointer(PspMemory Memory, AstNodeExpr Address)
+		public AstNodeExpr MemoryGetPointer(PspMemory memory, AstNodeExpr address)
 		{
-			return MemoryGetPointer(Memory, Address, false);
+			return MemoryGetPointer(memory, address, false);
 		}
 
-		public AstNodeExprLValue MemoryGetPointerRef(Type Type, PspMemory Memory, AstNodeExpr Address)
+		public AstNodeExprLValue MemoryGetPointerRef(Type type, PspMemory memory, AstNodeExpr address)
 		{
-			return ast.Indirect(ast.Cast(Type.MakePointerType(), MemoryGetPointer(Memory, Address), false));
+			return ast.Indirect(ast.Cast(type.MakePointerType(), MemoryGetPointer(memory, address), false));
 		}
 
-		public AstNodeExprLValue MemoryGetPointerRef<TType>(PspMemory Memory, AstNodeExpr Address)
+		public AstNodeExprLValue MemoryGetPointerRef<TType>(PspMemory memory, AstNodeExpr address)
 		{
-			return MemoryGetPointerRef(typeof(TType), Memory, Address);
+			return MemoryGetPointerRef(typeof(TType), memory, address);
 		}
 
-		public AstNodeStm MemorySetValue(Type Type, PspMemory Memory, AstNodeExpr Address, AstNodeExpr Value)
+		public AstNodeStm MemorySetValue(Type type, PspMemory memory, AstNodeExpr address, AstNodeExpr value)
 		{
 			return ast.Assign(
-				MemoryGetPointerRef(Type, Memory, Address),
-				ast.Cast(Type, Value, false)
+				MemoryGetPointerRef(type, memory, address),
+				ast.Cast(type, value, false)
 			);
 		}
 
-		public AstNodeStm MemorySetValue<T>(PspMemory Memory, AstNodeExpr Address, AstNodeExpr Value)
+		public AstNodeStm MemorySetValue<T>(PspMemory memory, AstNodeExpr address, AstNodeExpr value)
 		{
-			return MemorySetValue(typeof(T), Memory, Address, Value);
+			return MemorySetValue(typeof(T), memory, address, value);
 		}
 
-		public AstNodeExpr MemoryGetValue(Type Type, PspMemory Memory, AstNodeExpr Address)
+		public AstNodeExpr MemoryGetValue(Type type, PspMemory memory, AstNodeExpr address)
 		{
-			return MemoryGetPointerRef(Type, Memory, Address);
+			return MemoryGetPointerRef(type, memory, address);
 		}
 
-		public AstNodeExpr MemoryGetValue<T>(PspMemory Memory, AstNodeExpr Address)
+		public AstNodeExpr MemoryGetValue<T>(PspMemory memory, AstNodeExpr address)
 		{
-			return MemoryGetValue(typeof(T), Memory, Address);
+			return MemoryGetValue(typeof(T), memory, address);
 		}
 
-		public AstNodeStm GetTickCall(bool Mandatory)
+		public AstNodeStm GetTickCall(bool mandatory)
 		{
-			Mandatory = true;
-			if (Mandatory || _DynarecConfig.EmitCallTick)
+			mandatory = true;
+			if (mandatory || _DynarecConfig.EmitCallTick)
 			{
 				return ast.Statement(ast.CallInstance(ast.CpuThreadState, (Action)CSPspEmu.Core.Cpu.CpuThreadState.Methods.Tick));
 			}
@@ -277,19 +277,19 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			}
 		}
 
-		static public void ErrorWriteLine(string Line)
+		static public void ErrorWriteLine(string line)
 		{
-			Console.Error.WriteLine(Line);
+			Console.Error.WriteLine(line);
 		}
 
 		public AstNodeStm NotImplemented(
-			[CallerMemberName]string sourceMemberName = "",
-			[CallerFilePath]string sourceFilePath = "",
-			[CallerLineNumber]int sourceLineNo = 0)
+			[CallerMemberName] string sourceMemberName = "",
+			[CallerFilePath] string sourceFilePath = "",
+			[CallerLineNumber] int sourceLineNo = 0)
 		{
-			var Description = String.Format("('{0}') : {1}:{2}", sourceMemberName, Path.GetFileName(sourceFilePath), sourceLineNo);
+			var description = $"('{sourceMemberName}') : {Path.GetFileName(sourceFilePath)}:{sourceLineNo}";
 			//throw(new NotImplementedException(String.Format("AstNotImplemented: {0}", Description)));
-			return ast.Statement(ast.CallStatic((Action<string>)ErrorWriteLine, "AstNotImplemented: " + Description));
+			return ast.Statement(ast.CallStatic((Action<string>)ErrorWriteLine, "AstNotImplemented: " + description));
 		}
 	}
 }

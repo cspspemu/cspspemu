@@ -23,14 +23,14 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		private uint PC;
 		private CpuProcessor Processor;
 
-		private static readonly AstMipsGenerator ast = AstMipsGenerator.Instance;
+		private static readonly AstMipsGenerator Ast = AstMipsGenerator.Instance;
 
 		//public readonly Dictionary<string, uint> InstructionStats = new Dictionary<string, uint>();
 
-		public MipsMethodEmitter(CpuProcessor Processor, uint PC, bool DoDebug = false, bool DoLog = false)
+		public MipsMethodEmitter(CpuProcessor processor, uint pc, bool doDebug = false, bool doLog = false)
 		{
-			this.Processor = Processor;
-			this.PC = PC;
+			this.Processor = processor;
+			this.PC = pc;
 		}
 
 		public class Result
@@ -42,13 +42,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 			public bool DisableOptimizations;
 		}
 
-		public Result CreateDelegate(AstNodeStm AstNodeStm, int TotalInstructions)
+		public Result CreateDelegate(AstNodeStm astNodeStm, int totalInstructions)
 		{
-			var Time0 = DateTime.UtcNow;
+			var time0 = DateTime.UtcNow;
 
-			AstNodeStm = AstOptimizerPsp.GlobalOptimize(Processor, ast.Statements(AstNodeStm, ast.Return()));
+			astNodeStm = AstOptimizerPsp.GlobalOptimize(Processor, Ast.Statements(astNodeStm, Ast.Return()));
 
-			var Time1 = DateTime.UtcNow;
+			var time1 = DateTime.UtcNow;
 
 #if DEBUG_GENERATE_IL
 			Console.WriteLine("{0}", GeneratorIL.GenerateToString<GeneratorILPsp>(DynamicMethod, AstNodeStm));
@@ -58,13 +58,13 @@ namespace CSPspEmu.Core.Cpu.Emitter
 #endif
 
 			Action<CpuThreadState> Delegate;
-			var Time2 = Time1;
+			var time2 = time1;
 
-			bool DisableOptimizations = _DynarecConfig.DisableDotNetJitOptimizations;
-			if (TotalInstructions >= _DynarecConfig.InstructionCountToDisableOptimizations) DisableOptimizations = true;
+			var disableOptimizations = _DynarecConfig.DisableDotNetJitOptimizations;
+			if (totalInstructions >= _DynarecConfig.InstructionCountToDisableOptimizations) disableOptimizations = true;
 
-			if (Platform.IsMono) DisableOptimizations = false;
-			if (_DynarecConfig.ForceJitOptimizationsOnEvenLargeFunctions) DisableOptimizations = false;
+			if (Platform.IsMono) disableOptimizations = false;
+			if (_DynarecConfig.ForceJitOptimizationsOnEvenLargeFunctions) disableOptimizations = false;
 
 			try
 			{
@@ -72,11 +72,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				//Delegate = MethodCreator.CreateMethodInClass<Action<CpuThreadState>>(
 					Assembly.GetExecutingAssembly().ManifestModule,
 					String.Format("DynamicMethod_0x{0:X}", this.PC),
-					DisableOptimizations,
+					disableOptimizations,
 					(DynamicMethod) =>
 					{
-						AstNodeStm.GenerateIL(DynamicMethod);
-						Time2 = DateTime.UtcNow;
+						astNodeStm.GenerateIl(DynamicMethod);
+						time2 = DateTime.UtcNow;
 					}
 				);
 			}
@@ -97,18 +97,18 @@ namespace CSPspEmu.Core.Cpu.Emitter
 					}
 				}
 #endif
-				throw (InvalidProgramException);
+				throw;
 			}
 
-			var Time3 = DateTime.UtcNow;
+			var time3 = DateTime.UtcNow;
 
 			return new Result()
 			{
 				Delegate = Delegate,
-				DisableOptimizations = DisableOptimizations,
-				TimeOptimize = Time1 - Time0,
-				TimeGenerateIL = Time2 - Time1,
-				TimeCreateDelegate = Time3 - Time2,
+				DisableOptimizations = disableOptimizations,
+				TimeOptimize = time1 - time0,
+				TimeGenerateIL = time2 - time1,
+				TimeCreateDelegate = time3 - time2,
 			};
 		}
 	}

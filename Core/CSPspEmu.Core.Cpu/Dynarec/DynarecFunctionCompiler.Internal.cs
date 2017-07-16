@@ -311,7 +311,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 
 			private AstNodeStm ProcessGeneratedInstruction(MipsDisassembler.Result Disasm, AstNodeStm AstNodeStm)
 			{
-				var PC = Disasm.InstructionPC;
+				var PC = Disasm.InstructionPc;
 				return ast.Statements(
 #if DEBUG_TRACE_INSTRUCTIONS
 					ast.DebugWrite(String.Format("0x{0:X8}: {1}", PC, Disasm)),
@@ -503,7 +503,7 @@ namespace CSPspEmu.Core.Cpu.Dynarec
 #if !DISABLE_JUMP_GOTO
 							var JumpInstruction2 = CpuEmitter.LoadAT(PC + 0);
 							var JumpDisasm = MipsDisassembler.Disassemble(PC + 0, JumpInstruction2);
-							var JumpJumpPC = JumpDisasm.Instruction.GetJumpAddress(Memory, JumpDisasm.InstructionPC);
+							var JumpJumpPC = JumpDisasm.Instruction.GetJumpAddress(Memory, JumpDisasm.InstructionPc);
 							
 							// An internal jump.
 							if (

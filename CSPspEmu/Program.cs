@@ -97,6 +97,7 @@ namespace CSPspEmu
 		[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
 		unsafe static void Main(string[] Arguments)
 		{
+			Thread.CurrentThread.Name = "MainThread";
 			//Console.WriteLine(GL.GetConstantString(GL.GL_TEXTURE_2D));
 			//_MainData();
 			//_MainData2();
@@ -323,15 +324,15 @@ namespace CSPspEmu
 			Console.WriteLine("ImageRuntimeVersion: {0}", Assembly.GetExecutingAssembly().ImageRuntimeVersion);
 
 #if !RELEASE
-			try
-			{
-				Console.OutputEncoding = Encoding.UTF8;
-				Console.SetWindowSize(160, 60);
-				Console.SetBufferSize(160, 2000);
-			}
-			catch
-			{
-			}
+			//try
+			//{
+			//	Console.OutputEncoding = Encoding.UTF8;
+			//	Console.SetWindowSize(160, 60);
+			//	Console.SetBufferSize(160, 2000);
+			//}
+			//catch
+			//{
+			//}
 #endif
 
 			/*

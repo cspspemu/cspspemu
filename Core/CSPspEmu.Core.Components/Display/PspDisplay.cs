@@ -16,17 +16,17 @@ namespace CSPspEmu.Core.Display
 		public const double PixelsInARow             = 525;
 		public const double VsyncRow                 = 272;
 		public const double NumberOfRows             = 286;
-		public const float hCountPerVblank = 285.72f;
+		public const float HCountPerVblank = 285.72f;
 
 
 		public const double HorizontalSyncHertz = (ProcessedPixelsPerSecond * CyclesPerPixel) / PixelsInARow;
 		public const double VerticalSyncHertz = HorizontalSyncHertz / NumberOfRows;
 
 		[Inject]
-		PspRtc PspRtc;
+		public PspRtc PspRtc;
 
 		[Inject]
-		PspMemory Memory;
+		public PspMemory Memory;
 
 		private PspDisplay()
 		{
@@ -62,39 +62,33 @@ namespace CSPspEmu.Core.Display
 			public int Width;
 			public int Height;
 
-			public int BufferWidthHeightCount
-			{
-				get
-				{
-					return BufferWidth * Height;
-				}
-			}
+			public int BufferWidthHeightCount => BufferWidth * Height;
 		}
 
-		private DateTime StartDrawTime;
+		private DateTime _startDrawTime;
 
 		static public event Action DrawEvent;
 		public void TriggerDrawStart()
 		{
-			StartDrawTime = DateTime.UtcNow;
+			_startDrawTime = DateTime.UtcNow;
 			if (DrawEvent != null) DrawEvent();
 		}
 
 		public int GetHCount()
 		{
-			var ElaspedTime = DateTime.UtcNow - StartDrawTime;
-			return (int)(ElaspedTime.TotalSeconds / (1 / HorizontalSyncHertz));
+			var elaspedTime = DateTime.UtcNow - _startDrawTime;
+			return (int)(elaspedTime.TotalSeconds / (1 / HorizontalSyncHertz));
 		}
 
 		static public event Action VBlankCallback;
 
-		public void VBlankCallbackOnce(Action Callback)
+		public void VBlankCallbackOnce(Action callback)
 		{
 			Action Callback2 = null;
 			Callback2  = () =>
 			{
 				VBlankCallback -= Callback2;
-				Callback();
+				callback();
 			};
 			VBlankCallback += Callback2;
 		}
@@ -116,18 +110,18 @@ namespace CSPspEmu.Core.Display
 		public PspWaitEvent VBlankEvent = new PspWaitEvent();
 		public event Action VBlankEventCall;
 
-		private int _VblankCount = 0;
+		private int _vblankCount = 0;
 
 		public int VblankCount
 		{
 			set
 			{
-				_VblankCount = value;
+				_vblankCount = value;
 			}
 			get
 			{
 				//this.HlePspRtc.Elapsed
-				return _VblankCount;
+				return _vblankCount;
 			}
 		}
 

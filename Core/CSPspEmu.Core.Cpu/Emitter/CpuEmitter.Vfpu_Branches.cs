@@ -52,43 +52,43 @@ namespace CSPspEmu.Core.Cpu.Emitter
 				ast.AssignVCC(2, true),
 				ast.AssignVCC(3, true),
 
-				_List(VectorSize, (Index) =>
+				_List(VectorSize, (index) =>
 				{
-					AstNodeExpr Expr;
+					AstNodeExpr expr;
 					//bool UsedForAggregate;
 
-					var Left = VEC_VS[Index];
-					var Right = VEC_VT[Index];
+					var left = VEC_VS[index];
+					var right = VEC_VT[index];
 					switch (Cond2)
 					{
-						case ConditionEnum.VC_FL: Expr = ast.Immediate(false); break;
-						case ConditionEnum.VC_EQ: Expr = ast.Binary(Left, "==", Right); break;
-						case ConditionEnum.VC_LT: Expr = ast.Binary(Left, "<", Right); break;
+						case ConditionEnum.VC_FL: expr = ast.Immediate(false); break;
+						case ConditionEnum.VC_EQ: expr = ast.Binary(left, "==", right); break;
+						case ConditionEnum.VC_LT: expr = ast.Binary(left, "<", right); break;
 						//case ConditionEnum.VC_LE: Expr = ast.Binary(Left, "<=", Right); break;
-						case ConditionEnum.VC_LE: Expr = ast.CallStatic((Func<float, float, bool>)MathFloat.IsLessOrEqualsThan, Left, Right); break;
+						case ConditionEnum.VC_LE: expr = ast.CallStatic((Func<float, float, bool>)MathFloat.IsLessOrEqualsThan, left, right); break;
 
-						case ConditionEnum.VC_TR: Expr = ast.Immediate(true); break;
-						case ConditionEnum.VC_NE: Expr = ast.Binary(Left, "!=", Right); break;
+						case ConditionEnum.VC_TR: expr = ast.Immediate(true); break;
+						case ConditionEnum.VC_NE: expr = ast.Binary(left, "!=", right); break;
 						//case ConditionEnum.VC_GE: Expr = ast.Binary(Left, ">=", Right); break;
-						case ConditionEnum.VC_GE: Expr = ast.CallStatic((Func<float, float, bool>)MathFloat.IsGreatOrEqualsThan, Left, Right); break;
-						case ConditionEnum.VC_GT: Expr = ast.Binary(Left, ">", Right); break;
+						case ConditionEnum.VC_GE: expr = ast.CallStatic((Func<float, float, bool>)MathFloat.IsGreatOrEqualsThan, left, right); break;
+						case ConditionEnum.VC_GT: expr = ast.Binary(left, ">", right); break;
 
-						case ConditionEnum.VC_EZ: Expr = ast.Binary(ast.Binary(Left, "==", 0.0f), "||", ast.Binary(Left, "==", -0.0f)); break;
-						case ConditionEnum.VC_EN: Expr = ast.CallStatic((Func<float, bool>)MathFloat.IsNan, Left); break;
-						case ConditionEnum.VC_EI: Expr = ast.CallStatic((Func<float, bool>)MathFloat.IsInfinity, Left); break;
-						case ConditionEnum.VC_ES: Expr = ast.CallStatic((Func<float, bool>)MathFloat.IsNanOrInfinity, Left); break;   // Tekken Dark Resurrection
+						case ConditionEnum.VC_EZ: expr = ast.Binary(ast.Binary(left, "==", 0.0f), "||", ast.Binary(left, "==", -0.0f)); break;
+						case ConditionEnum.VC_EN: expr = ast.CallStatic((Func<float, bool>)MathFloat.IsNan, left); break;
+						case ConditionEnum.VC_EI: expr = ast.CallStatic((Func<float, bool>)MathFloat.IsInfinity, left); break;
+						case ConditionEnum.VC_ES: expr = ast.CallStatic((Func<float, bool>)MathFloat.IsNanOrInfinity, left); break;   // Tekken Dark Resurrection
 
-						case ConditionEnum.VC_NZ: Expr = ast.Binary(Left, "!=", 0f); break;
-						case ConditionEnum.VC_NN: Expr = ast.Unary("!", ast.CallStatic((Func<float, bool>)MathFloat.IsNan, Left)); break;
-						case ConditionEnum.VC_NI: Expr = ast.Unary("!", ast.CallStatic((Func<float, bool>)MathFloat.IsInfinity, Left)); break;
-						case ConditionEnum.VC_NS: Expr = ast.Unary("!", ast.CallStatic((Func<float, bool>)MathFloat.IsNanOrInfinity, Left)); break;
+						case ConditionEnum.VC_NZ: expr = ast.Binary(left, "!=", 0f); break;
+						case ConditionEnum.VC_NN: expr = ast.Unary("!", ast.CallStatic((Func<float, bool>)MathFloat.IsNan, left)); break;
+						case ConditionEnum.VC_NI: expr = ast.Unary("!", ast.CallStatic((Func<float, bool>)MathFloat.IsInfinity, left)); break;
+						case ConditionEnum.VC_NS: expr = ast.Unary("!", ast.CallStatic((Func<float, bool>)MathFloat.IsNanOrInfinity, left)); break;
 
 						default: throw (new InvalidOperationException());
 					}
 
 					var Statements = new List<AstNodeStm>();
-					Statements.Add(ast.Assign(Local_CC_TEMP, Expr));
-					Statements.Add(ast.AssignVCC(Index, Local_CC_TEMP));
+					Statements.Add(ast.Assign(Local_CC_TEMP, expr));
+					Statements.Add(ast.AssignVCC(index, Local_CC_TEMP));
 					Statements.Add(ast.Assign(Local_CC_OR, ast.Binary(Local_CC_OR, "||", Local_CC_TEMP)));
 					Statements.Add(ast.Assign(Local_CC_AND, ast.Binary(Local_CC_AND, "&&", Local_CC_TEMP)));
 

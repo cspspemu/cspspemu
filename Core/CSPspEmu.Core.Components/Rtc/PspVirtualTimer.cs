@@ -6,7 +6,7 @@ namespace CSPspEmu.Core.Rtc
 	{
 		protected PspRtc PspRtc;
 
-		protected DateTime _DateTime;
+		public DateTime _DateTime;
 
 		public DateTime DateTime
 		{
@@ -16,7 +16,7 @@ namespace CSPspEmu.Core.Rtc
 				{
 					lock (this)
 					{
-						this._DateTime = value;
+						_DateTime = value;
 						if (!OnList)
 						{
 							PspRtc.Timers.AddLast(this);
@@ -35,19 +35,19 @@ namespace CSPspEmu.Core.Rtc
 		internal Action Callback;
 		public bool Enabled;
 
-		internal PspVirtualTimer(PspRtc PspRtc)
+		internal PspVirtualTimer(PspRtc pspRtc)
 		{
-			this.PspRtc = PspRtc;
+			PspRtc = pspRtc;
 		}
 
-		public void SetIn(TimeSpan TimeSpan)
+		public void SetIn(TimeSpan timeSpan)
 		{
-			this.DateTime = DateTime.UtcNow + TimeSpan;
+			DateTime = DateTime.UtcNow + timeSpan;
 		}
 
-		public void SetAt(DateTime DateTime)
+		public void SetAt(DateTime dateTime)
 		{
-			this.DateTime = DateTime;
+			DateTime = dateTime;
 		}
 
 		public override string ToString()

@@ -24,9 +24,9 @@ namespace CSPspEmu.Core.Memory
 			}
 		}
 
-		public PspPointer(uint Address)
+		public PspPointer(uint address)
 		{
-			this.Address = Address;
+			Address = address;
 		}
 
 		public static implicit operator uint(PspPointer<TType> that)
@@ -36,7 +36,7 @@ namespace CSPspEmu.Core.Memory
 
 		public static implicit operator PspPointer<TType>(uint that)
 		{
-			return new PspPointer()
+			return new PspPointer
 			{
 				Address = that,
 			};
@@ -47,18 +47,18 @@ namespace CSPspEmu.Core.Memory
 			return String.Format("PspPointer(0x{0:X})", Address);
 		}
 
-		public bool IsNull { get { return Address == 0; } }
+		public bool IsNull => Address == 0;
 
-		public unsafe void* GetPointer(PspMemory pspMemory)
+		public void* GetPointer(PspMemory pspMemory)
 		{
 			return pspMemory.PspPointerToPointerSafe(this, Marshal.SizeOf(typeof(TType)));
 		}
 
-		public unsafe void* GetPointerNotNull(PspMemory pspMemory)
+		public void* GetPointerNotNull(PspMemory pspMemory)
 		{
-			var Pointer = this.GetPointer(pspMemory);
-			if (Pointer == null) throw (new NullReferenceException(String.Format("Pointer for {0} can't be null", typeof(TType))));
-			return Pointer;
+			var pointer = GetPointer(pspMemory);
+			if (pointer == null) throw (new NullReferenceException(String.Format("Pointer for {0} can't be null", typeof(TType))));
+			return pointer;
 		}
 
 		public static implicit operator PspPointer<TType>(PspPointer that)
@@ -93,9 +93,9 @@ namespace CSPspEmu.Core.Memory
 			}
 		}
 
-		public PspPointer(uint Address)
+		public PspPointer(uint address)
 		{
-			this.Address = Address;
+			Address = address;
 		}
 
 		public static implicit operator uint(PspPointer that)
@@ -116,23 +116,23 @@ namespace CSPspEmu.Core.Memory
 			return String.Format("PspPointer(0x{0:X})", Address);
 		}
 
-		public bool IsNull { get { return Address == 0; } }
+		public bool IsNull => Address == 0;
 
-		public unsafe void* GetPointer(PspMemory PspMemory, int Size)
+		public void* GetPointer(PspMemory pspMemory, int size)
 		{
-			return PspMemory.PspPointerToPointerSafe(this, Size);
+			return pspMemory.PspPointerToPointerSafe(this, size);
 		}
 
-		public unsafe void* GetPointer<TType>(PspMemory PspMemory)
+		public void* GetPointer<TType>(PspMemory pspMemory)
 		{
-			return PspMemory.PspPointerToPointerSafe(this, Marshal.SizeOf(typeof(TType)));
+			return pspMemory.PspPointerToPointerSafe(this, Marshal.SizeOf(typeof(TType)));
 		}
 
-		public unsafe void* GetPointerNotNull<TType>(PspMemory PspMemory)
+		public void* GetPointerNotNull<TType>(PspMemory pspMemory)
 		{
-			var Pointer = this.GetPointer<TType>(PspMemory);
-			if (Pointer == null) throw(new NullReferenceException(String.Format("Pointer for {0} can't be null", typeof(TType))));
-			return Pointer;
+			var pointer = GetPointer<TType>(pspMemory);
+			if (pointer == null) throw(new NullReferenceException(String.Format("Pointer for {0} can't be null", typeof(TType))));
+			return pointer;
 		}
 
 		/*
