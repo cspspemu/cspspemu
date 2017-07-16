@@ -139,11 +139,11 @@ namespace CSPspEmu.Core.Cpu.Emitter
 		static readonly private CpuThreadState CpuThreadStateMethods = CSPspEmu.Core.Cpu.CpuThreadState.Methods;
 		static readonly private Type CpuThreadStateType = typeof(CSPspEmu.Core.Cpu.CpuThreadState);
 
-		public AstNodeExprLValue PrefixSource() { return ast.FieldAccess(ast.CpuThreadState, ILFieldInfo.GetFieldInfo(() => CpuThreadStateMethods.PrefixSource)); }
-		public AstNodeExprLValue PrefixSourceEnabled() { return ast.FieldAccess(PrefixSource(), ILFieldInfo.GetFieldInfo(() => CpuThreadStateMethods.PrefixSource.Enabled)); }
+		public AstNodeExprLValue PrefixSource() { return ast.FieldAccess(ast.CpuThreadState, IlFieldInfo.GetFieldInfo(() => CpuThreadStateMethods.PrefixSource)); }
+		public AstNodeExprLValue PrefixSourceEnabled() { return ast.FieldAccess(PrefixSource(), IlFieldInfo.GetFieldInfo(() => CpuThreadStateMethods.PrefixSource.Enabled)); }
 
-		public AstNodeExprLValue PrefixDestination() { return ast.FieldAccess(ast.CpuThreadState, ILFieldInfo.GetFieldInfo(() => CpuThreadStateMethods.PrefixSource)); }
-		public AstNodeExprLValue PrefixDestinationEnabled() { return ast.FieldAccess(PrefixDestination(), ILFieldInfo.GetFieldInfo(() => CpuThreadStateMethods.PrefixDestination.Enabled)); }
+		public AstNodeExprLValue PrefixDestination() { return ast.FieldAccess(ast.CpuThreadState, IlFieldInfo.GetFieldInfo(() => CpuThreadStateMethods.PrefixSource)); }
+		public AstNodeExprLValue PrefixDestinationEnabled() { return ast.FieldAccess(PrefixDestination(), IlFieldInfo.GetFieldInfo(() => CpuThreadStateMethods.PrefixDestination.Enabled)); }
 
 		public AstNodeExprLValue VCC(int Index)
 		{

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast.Generators
 {
-	public sealed class NodeTypeAttribute : Attribute
-	{
-		public Type Type { get; set; }
+    public sealed class NodeTypeAttribute : Attribute
+    {
+        public Type Type { get; set; }
 
-		public NodeTypeAttribute(Type type)
-		{
-			Type = type;
-		}
-	}
+        public NodeTypeAttribute(Type type)
+        {
+            Type = type;
+        }
+    }
 }

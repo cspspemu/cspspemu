@@ -1,72 +1,81 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SafeILGenerator.Utils
 {
-	public class MethodCreator
-	{
-		static public TDelegate CreateDynamicMethod<TDelegate>(Module Module, string Name, bool DisableOptimizations, Action<MethodInfo> CreateMethod)
-		{
-			if (DisableOptimizations) Module = null;
-			if (Module == null) Module = Assembly.GetExecutingAssembly().ManifestModule;
-			var DelegateType = typeof(TDelegate).GetMethod("Invoke");
-			var DynamicMethod = new DynamicMethod(
-				Name,
-				DelegateType.ReturnType,
-				DelegateType.GetParameters().Select(Parameter => Parameter.ParameterType).ToArray(),
-				Module,
-				true
-				//skipVisibility: false
-			);
-			CreateMethod(DynamicMethod);
-			return (TDelegate)(object)DynamicMethod.CreateDelegate(typeof(TDelegate));
-		}
+    public class MethodCreator
+    {
+        public static TDelegate CreateDynamicMethod<TDelegate>(Module module, string name, bool disableOptimizations,
+            Action<MethodInfo> createMethod)
+        {
+            if (disableOptimizations) module = null;
+            if (module == null) module = Assembly.GetExecutingAssembly().ManifestModule;
+            var delegateType = typeof(TDelegate).GetMethod("Invoke");
+            var dynamicMethod = new DynamicMethod(
+                name,
+                delegateType.ReturnType,
+                delegateType.GetParameters().Select(parameter => parameter.ParameterType).ToArray(),
+                module,
+                true
+                //skipVisibility: false
+            );
+            createMethod(dynamicMethod);
+            return (TDelegate) (object) dynamicMethod.CreateDelegate(typeof(TDelegate));
+        }
 
-		static public TDelegate CreateMethodInClass<TDelegate>(Module Module, string Name, bool DisableOptimizations, Action<MethodInfo> CreateMethod)
-		{
-			var DelegateType = typeof(TDelegate).GetMethod("Invoke");
-			var DllName = "_DynamicDll.dll";
-			var DynamicAssemblyName = "DynamicAssembly";
-			var DynamicModuleName = "DynamicModule";
-			var DynamicMethodName = Name;
+        public static TDelegate CreateMethodInClass<TDelegate>(Module module, string name, bool disableOptimizations,
+            Action<MethodInfo> createMethod)
+        {
+            var delegateType = typeof(TDelegate).GetMethod("Invoke");
+            const string dllName = "_DynamicDll.dll";
+            var dynamicAssemblyName = "DynamicAssembly";
+            const string dynamicModuleName = "DynamicModule";
+            var dynamicMethodName = name;
 
-			var _Assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(
-				new AssemblyName(DynamicAssemblyName),
-				AssemblyBuilderAccess.RunAndCollect,
-				DllName
-			);
-			var _Module = _Assembly.DefineDynamicModule(DynamicModuleName);
-			var _Type = _Module.DefineType("DynamicType");
-			var Method = _Type.DefineMethod(
-				DynamicMethodName,
-				MethodAttributes.Static | MethodAttributes.Public,
-				DelegateType.ReturnType,
-				DelegateType.GetParameters().Select(Parameter => Parameter.ParameterType).ToArray()
-			);
+            var assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(
+                new AssemblyName(dynamicAssemblyName),
+                AssemblyBuilderAccess.RunAndCollect,
+                dllName
+            );
+            var mmodule = assembly.DefineDynamicModule(dynamicModuleName);
+            var type = mmodule.DefineType("DynamicType");
+            var method = type.DefineMethod(
+                dynamicMethodName,
+                MethodAttributes.Static | MethodAttributes.Public,
+                delegateType.ReturnType,
+                delegateType.GetParameters().Select(parameter => parameter.ParameterType).ToArray()
+            );
 
-			if (DisableOptimizations)
-			{
-				Method.SetCustomAttribute(new CustomAttributeBuilder(typeof(MethodImplAttribute).GetConstructor(new Type[] { typeof(MethodImplOptions) }), new object[] { MethodImplOptions.NoOptimization | MethodImplOptions.NoInlining }));
-			}
-			else
-			{
-				Method.SetCustomAttribute(new CustomAttributeBuilder(typeof(MethodImplAttribute).GetConstructor(new Type[] { typeof(MethodImplOptions) }), new object[] { }));
-			}
+            if (disableOptimizations)
+            {
+                method.SetCustomAttribute(new CustomAttributeBuilder(
+                    typeof(MethodImplAttribute).GetConstructor(new[] {typeof(MethodImplOptions)}) ??
+                    throw new Exception(),
+                    new object[] {MethodImplOptions.NoOptimization | MethodImplOptions.NoInlining})
+                );
+            }
+            else
+            {
+                method.SetCustomAttribute(new CustomAttributeBuilder(
+                    typeof(MethodImplAttribute).GetConstructor(new[] {typeof(MethodImplOptions)}) ??
+                    throw new Exception(),
+                    new object[] { })
+                );
+            }
 
-			Method.SetCustomAttribute(new CustomAttributeBuilder(typeof(TargetedPatchingOptOutAttribute).GetConstructor(new Type[] { typeof(string) }), new object[] { "Performance critical to inline across NGen image boundaries" }));
+            method.SetCustomAttribute(new CustomAttributeBuilder(
+                typeof(TargetedPatchingOptOutAttribute).GetConstructor(new[] {typeof(string)}) ?? throw new Exception(),
+                new object[] {"Performance critical to inline across NGen image boundaries"}));
 
-			CreateMethod(Method);
-			var CreatedType = _Type.CreateType();
-			var RuntimeMethod = CreatedType.GetMethod(DynamicMethodName);
+            createMethod(method);
+            var createdType = type.CreateType();
+            var runtimeMethod = createdType.GetMethod(dynamicMethodName);
 
-			return (TDelegate)(object)RuntimeMethod.CreateDelegate(typeof(TDelegate));
-		}
-	}
+            return (TDelegate) (object) runtimeMethod.CreateDelegate(typeof(TDelegate));
+        }
+    }
 }

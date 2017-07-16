@@ -7,42 +7,33 @@ using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast.Nodes
 {
-	public class AstNodeExprPropertyAccess : AstNodeExprLValue
-	{
-		public AstNodeExpr Instance;
-		public PropertyInfo Property;
+    public class AstNodeExprPropertyAccess : AstNodeExprLValue
+    {
+        public AstNodeExpr Instance;
+        public PropertyInfo Property;
 
-		public AstNodeExprPropertyAccess(AstNodeExpr Instance, string PropertyName)
-			: this(Instance, Instance.Type.GetProperty(PropertyName), PropertyName)
-		{
-		}
+        public AstNodeExprPropertyAccess(AstNodeExpr instance, string propertyName)
+            : this(instance, instance.Type.GetProperty(propertyName), propertyName)
+        {
+        }
 
-		public AstNodeExprPropertyAccess(AstNodeExpr Instance, PropertyInfo Property, string PropertyName = null)
-		{
-			if (Property == null) throw (new Exception(String.Format("Property can't be null '{0}'", PropertyName)));
-			this.Instance = Instance;
-			this.Property = Property;
-		}
+        public AstNodeExprPropertyAccess(AstNodeExpr instance, PropertyInfo property, string propertyName = null)
+        {
+            if (property == null) throw (new Exception($"Property can't be null '{propertyName}'"));
+            Instance = instance;
+            Property = property;
+        }
 
-		protected override Type UncachedType
-		{
-			get { return Property.PropertyType; }
-		}
+        protected override Type UncachedType => Property.PropertyType;
 
-		public override void TransformNodes(TransformNodesDelegate Transformer)
-		{
-			Transformer.Ref(ref Instance);
-		}
+        public override void TransformNodes(TransformNodesDelegate transformer)
+        {
+            transformer.Ref(ref Instance);
+        }
 
-		public override Dictionary<string, string> Info
-		{
-			get
-			{
-				return new Dictionary<string, string>()
-				{
-					{ "Field", Property.Name },
-				};
-			}
-		}
-	}
+        public override Dictionary<string, string> Info => new Dictionary<string, string>
+        {
+            {"Field", Property.Name},
+        };
+    }
 }

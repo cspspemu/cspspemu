@@ -6,86 +6,68 @@ using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast.Nodes
 {
-	public class AstNodeExprImm : AstNodeExpr
-	{
-		public Type Type;
-		public object Value;
+    public class AstNodeExprImm : AstNodeExpr
+    {
+        public new Type Type;
+        public object Value;
 
-		public AstNodeExprImm(object Value, Type Type = null)
-		{
-			this.Value = Value;
-			//if (Value is RuntimeTypeHandle) throw (new NotImplementedException("Value is RuntimeTypeHandle"));
+        public AstNodeExprImm(object value, Type type = null)
+        {
+            Value = value;
+            //if (Value is RuntimeTypeHandle) throw (new NotImplementedException("Value is RuntimeTypeHandle"));
 
-			if (Type == null && Value != null)
-			{
-				if (Value is Type)
-				{
-					Type = typeof(Type);
-				}
-				else
-				{
-					Type = Value.GetType();
-				}
-			}
+            if (type == null && value != null)
+            {
+                if (value is Type)
+                {
+                    type = typeof(Type);
+                }
+                else
+                {
+                    type = value.GetType();
+                }
+            }
 
-			if (Type == null) Type = typeof(object);
+            if (type == null) type = typeof(object);
 
-			this.Type = Type;
-		}
+            Type = type;
+        }
 
-		public override void TransformNodes(TransformNodesDelegate Transformer)
-		{
-		}
+        public override void TransformNodes(TransformNodesDelegate transformer)
+        {
+        }
 
-		protected override Type UncachedType
-		{
-			get { return this.Type; }
-		}
+        protected override Type UncachedType => Type;
 
-		public static implicit operator AstNodeExprImm(int Value)
-		{
-			return new AstNodeExprImm(Value);
-		}
+        public static implicit operator AstNodeExprImm(int value)
+        {
+            return new AstNodeExprImm(value);
+        }
 
-		public override Dictionary<string, string> Info
-		{
-			get
-			{
-				return new Dictionary<string, string>()
-				{
-					{ "Value", String.Format("{0}", Value) },
-				};
-			}
-		}
-	}
+        public override Dictionary<string, string> Info => new Dictionary<string, string>()
+        {
+            {"Value", $"{Value}"},
+        };
+    }
 
-	public class AstNodeExprNull : AstNodeExpr
-	{
-		public readonly Type Type;
+    public class AstNodeExprNull : AstNodeExpr
+    {
+        public readonly Type Type;
 
-		public AstNodeExprNull(Type Type)
-		{
-			this.Type = Type;
-		}
+        public AstNodeExprNull(Type type)
+        {
+            Type = type;
+        }
 
-		public override void TransformNodes(TransformNodesDelegate Transformer)
-		{
-		}
+        public override void TransformNodes(TransformNodesDelegate transformer)
+        {
+        }
 
-		protected override Type UncachedType
-		{
-			get { return this.Type; }
-		}
+        protected override Type UncachedType => Type;
 
-		public override Dictionary<string, string> Info
-		{
-			get
-			{
-				return new Dictionary<string, string>()
-				{
-					{ "Type", String.Format("{0}", Type.Name) },
-				};
-			}
-		}
-	}
+        public override Dictionary<string, string> Info => new Dictionary<string, string>
+        {
+            {"Type", $"{Type.Name}"},
+        };
+    }
 }

@@ -1,28 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast.Nodes
 {
-	public class AstNodeStmAssign : AstNodeStm
-	{
-		public AstNodeExprLValue LValue;
-		public AstNodeExpr Value;
+    public class AstNodeStmAssign : AstNodeStm
+    {
+        public AstNodeExprLValue LeftValue;
+        public AstNodeExpr Value;
 
-		public AstNodeStmAssign(AstNodeExprLValue LValue, AstNodeExpr Value)
-		{
-			if (LValue.Type != Value.Type) throw (new Exception(String.Format("Local.Type({0}) != Value.Type({1})", LValue.Type, Value.Type)));
+        public AstNodeStmAssign(AstNodeExprLValue leftValue, AstNodeExpr value)
+        {
+            if (leftValue.Type != value.Type)
+                throw (new Exception($"Local.Type({leftValue.Type}) != Value.Type({value.Type})"));
 
-			this.LValue = LValue;
-			this.Value = Value;
-		}
+            LeftValue = leftValue;
+            Value = value;
+        }
 
-		public override void TransformNodes(TransformNodesDelegate Transformer)
-		{
-			Transformer.Ref(ref LValue);
-			Transformer.Ref(ref Value);
-		}
-	}
+        public override void TransformNodes(TransformNodesDelegate transformer)
+        {
+            transformer.Ref(ref LeftValue);
+            transformer.Ref(ref Value);
+        }
+    }
 }

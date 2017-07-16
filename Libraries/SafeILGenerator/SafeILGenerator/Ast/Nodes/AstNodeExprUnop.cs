@@ -6,39 +6,27 @@ using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast.Nodes
 {
-	public class AstNodeExprUnop : AstNodeExpr
-	{
-		public string Operator;
-		public AstNodeExpr RightNode;
+    public class AstNodeExprUnop : AstNodeExpr
+    {
+        public string Operator;
+        public AstNodeExpr RightNode;
 
-		public AstNodeExprUnop(string Operator, AstNodeExpr RightNode)
-		{
-			this.Operator = Operator;
-			this.RightNode = RightNode;
-		}
+        public AstNodeExprUnop(string op, AstNodeExpr rightNode)
+        {
+            Operator = op;
+            RightNode = rightNode;
+        }
 
-		public override void TransformNodes(TransformNodesDelegate Transformer)
-		{
-			Transformer.Ref(ref RightNode);
-		}
+        public override void TransformNodes(TransformNodesDelegate transformer)
+        {
+            transformer.Ref(ref RightNode);
+        }
 
-		protected override Type UncachedType
-		{
-			get
-			{
-				return RightNode.Type;
-			}
-		}
+        protected override Type UncachedType => RightNode.Type;
 
-		public override Dictionary<string, string> Info
-		{
-			get
-			{
-				return new Dictionary<string, string>()
-				{
-					{ "Operator", Operator },
-				};
-			}
-		}
-	}
+        public override Dictionary<string, string> Info => new Dictionary<string, string>
+        {
+            {"Operator", Operator},
+        };
+    }
 }

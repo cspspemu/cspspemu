@@ -1,39 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast.Nodes
 {
-	public class AstNodeExprArrayAccess : AstNodeExprLValue
-	{
-		public AstNodeExpr ArrayInstance;
-		public AstNodeExpr Index;
+    public class AstNodeExprArrayAccess : AstNodeExprLValue
+    {
+        public AstNodeExpr ArrayInstance;
+        public AstNodeExpr Index;
 
-		public AstNodeExprArrayAccess(AstNodeExpr ArrayInstance, AstNodeExpr Index)
-		{
-			this.ArrayInstance = ArrayInstance;
-			this.Index = Index;
-		}
+        public AstNodeExprArrayAccess(AstNodeExpr arrayInstance, AstNodeExpr index)
+        {
+            ArrayInstance = arrayInstance;
+            Index = index;
+        }
 
-		public Type ElementType
-		{
-			get
-			{
-				return ArrayInstance.Type;
-			}
-		}
+        public Type ElementType => ArrayInstance.Type;
 
-		protected override Type UncachedType
-		{
-			get { return ArrayInstance.Type.GetElementType(); }
-		}
+        protected override Type UncachedType => ArrayInstance.Type.GetElementType();
 
-		public override void TransformNodes(TransformNodesDelegate Transformer)
-		{
-			Transformer.Ref(ref ArrayInstance);
-			Transformer.Ref(ref Index);
-		}
-	}
+        public override void TransformNodes(TransformNodesDelegate transformer)
+        {
+            transformer.Ref(ref ArrayInstance);
+            transformer.Ref(ref Index);
+        }
+    }
 }

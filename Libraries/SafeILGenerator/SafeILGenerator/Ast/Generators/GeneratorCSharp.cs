@@ -42,8 +42,8 @@ namespace SafeILGenerator.Ast.Generators
             if (type == null) type = value?.GetType() ?? typeof(Object);
             if (value == null) return "null";
             if (value is bool) return value.ToString().ToLower();
-            if (value is IntPtr)return $"0x{((IntPtr) value).ToInt64():X}";
-            if (value is string)return $"{AstStringUtils.ToLiteral(value as string)}";
+            if (value is IntPtr) return $"0x{((IntPtr) value).ToInt64():X}";
+            if (value is string) return $"{AstStringUtils.ToLiteral(value as string)}";
             if (AstUtils.IsTypeSigned(type)) return value.ToString();
             if (Convert.ToInt64(value) > 9) return String.Format("0x{0:X}", value);
             return value.ToString();
@@ -211,7 +211,7 @@ namespace SafeILGenerator.Ast.Generators
 
         protected virtual void _Generate(AstNodeStmAssign assign)
         {
-            var astNodeExprSetGetLValue = assign.LValue as AstNodeExprSetGetLValue;
+            var astNodeExprSetGetLValue = assign.LeftValue as AstNodeExprSetGetLValue;
 
             if (astNodeExprSetGetLValue != null)
             {
@@ -221,7 +221,7 @@ namespace SafeILGenerator.Ast.Generators
             }
             else
             {
-                Generate(assign.LValue);
+                Generate(assign.LeftValue);
                 Output.Write(" = ");
                 Generate(assign.Value);
                 Output.Write(";");

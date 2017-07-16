@@ -1,30 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast.Nodes
 {
-	public class AstNodeExprNew : AstNodeExpr
-	{
-		public Type ClassType;
-		public AstNodeExpr[] Params;
+    public class AstNodeExprNew : AstNodeExpr
+    {
+        public Type ClassType;
+        public AstNodeExpr[] Params;
 
-		public AstNodeExprNew(Type ClassType, params AstNodeExpr[] Params)
-		{
-			this.ClassType = ClassType;
-			this.Params = Params;
-		}
+        public AstNodeExprNew(Type classType, params AstNodeExpr[] @params)
+        {
+            ClassType = classType;
+            Params = @params;
+        }
 
-		protected override Type UncachedType
-		{
-			get { return this.ClassType; }
-		}
+        protected override Type UncachedType => ClassType;
 
-		public override void TransformNodes(TransformNodesDelegate Transformer)
-		{
-			Transformer.Ref(ref this.Params);
-		}
-	}
+        public override void TransformNodes(TransformNodesDelegate transformer)
+        {
+            transformer.Ref(ref Params);
+        }
+    }
 }

@@ -1,325 +1,163 @@
-﻿using SafeILGenerator.Ast;
-using SafeILGenerator.Ast.Nodes;
-using SafeILGenerator.Utils;
+﻿using SafeILGenerator.Ast.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast
 {
-	public class AstGenerator
-	{
-		protected AstGenerator()
-		{
-		}
+    public class AstGenerator
+    {
+        protected AstGenerator()
+        {
+        }
 
-		static public readonly AstGenerator Instance = new AstGenerator();
+        public static readonly AstGenerator Instance = new AstGenerator();
 
-		public AstNodeStmComment Comment(string Comment)
-		{
-			return new AstNodeStmComment(Comment);
-		}
+        public AstNodeStmComment Comment(string comment) => new AstNodeStmComment(comment);
 
-		public AstNodeExprArgument Argument(Type Type, int Index, string Name = null)
-		{
-			return new AstNodeExprArgument(new AstArgument(Index, Type, Name));
-		}
+        public AstNodeExprArgument Argument(Type type, int index, string name = null) =>
+            new AstNodeExprArgument(new AstArgument(index, type, name));
 
-		public AstNodeExprArgument Argument<T>(int Index, string Name = null)
-		{
-			return Argument(typeof(T), Index, Name);
-		}
+        public AstNodeExprArgument Argument<T>(int index, string name = null) => Argument(typeof(T), index, name);
+        public AstNodeExprArgument Argument(AstArgument astArgument) => new AstNodeExprArgument(astArgument);
+        public AstNodeExprLocal Local(AstLocal astLocal) => new AstNodeExprLocal(astLocal);
+        public AstNodeStmGoto GotoAlways(AstLabel astLabel) => new AstNodeStmGotoAlways(astLabel);
 
-		public AstNodeExprArgument Argument(AstArgument AstArgument)
-		{
-			return new AstNodeExprArgument(AstArgument);
-		}
+        public AstNodeStmGotoIfTrue GotoIfTrue(AstLabel astLabel, AstNodeExpr condition) =>
+            new AstNodeStmGotoIfTrue(astLabel, condition);
 
-		public AstNodeExprLocal Local(AstLocal AstLocal)
-		{
-			return new AstNodeExprLocal(AstLocal);
-		}
+        public AstNodeStmGotoIfFalse GotoIfFalse(AstLabel astLabel, AstNodeExpr condition) =>
+            new AstNodeStmGotoIfFalse(astLabel, condition);
 
-		public AstNodeStmGoto GotoAlways(AstLabel AstLabel)
-		{
-			return new AstNodeStmGotoAlways(AstLabel);
-		}
+        public AstNodeStmLabel Label(AstLabel astLabel) => new AstNodeStmLabel(astLabel);
 
-		public AstNodeStmGotoIfTrue GotoIfTrue(AstLabel AstLabel, AstNodeExpr Condition)
-		{
-			return new AstNodeStmGotoIfTrue(AstLabel, Condition);
-		}
+        public AstNodeExprFieldAccess FieldAccess(AstNodeExpr instance, FieldInfo fieldInfo, string fieldName = "") =>
+            new AstNodeExprFieldAccess(instance, fieldInfo, fieldName);
 
-		public AstNodeStmGotoIfFalse GotoIfFalse(AstLabel AstLabel, AstNodeExpr Condition)
-		{
-			return new AstNodeStmGotoIfFalse(AstLabel, Condition);
-		}
+        public AstNodeExprFieldAccess FieldAccess(AstNodeExpr instance, string fieldName) =>
+            new AstNodeExprFieldAccess(instance, fieldName);
 
-		public AstNodeStmLabel Label(AstLabel AstLabel)
-		{
-			return new AstNodeStmLabel(AstLabel);
-		}
+        public AstNodeExprLValue FieldPropertyAccess(AstNodeExpr instance, string fieldPropertyName)
+        {
+            if (instance.Type.GetField(fieldPropertyName) != null) return FieldAccess(instance, fieldPropertyName);
+            if (instance.Type.GetProperty(fieldPropertyName) != null)
+                return PropertyAccess(instance, fieldPropertyName);
+            throw (new InvalidOperationException(String.Format("Can't find Field/Property '{0}' for type '{1}'",
+                fieldPropertyName, instance.Type)));
+        }
 
-		public AstNodeExprFieldAccess FieldAccess(AstNodeExpr Instance, FieldInfo FieldInfo, string FieldName = "")
-		{
-			return new AstNodeExprFieldAccess(Instance, FieldInfo, FieldName);
-		}
+        public AstNodeExprPropertyAccess PropertyAccess(AstNodeExpr instance, PropertyInfo propertyInfo) =>
+            new AstNodeExprPropertyAccess(instance, propertyInfo);
 
-		public AstNodeExprFieldAccess FieldAccess(AstNodeExpr Instance, string FieldName)
-		{
-			return new AstNodeExprFieldAccess(Instance, FieldName);
-		}
+        public AstNodeExprPropertyAccess PropertyAccess(AstNodeExpr instance, string propertyName) =>
+            new AstNodeExprPropertyAccess(instance, propertyName);
 
-		public AstNodeExprLValue FieldPropertyAccess(AstNodeExpr Instance, string FieldPropertyName)
-		{
-			if (Instance.Type.GetField(FieldPropertyName) != null) return FieldAccess(Instance, FieldPropertyName);
-			if (Instance.Type.GetProperty(FieldPropertyName) != null) return PropertyAccess(Instance, FieldPropertyName);
-			throw (new InvalidOperationException(String.Format("Can't find Field/Property '{0}' for type '{1}'", FieldPropertyName, Instance.Type)));
-		}
+        public AstNodeExprArrayAccess ArrayAccess(AstNodeExpr instance, AstNodeExpr index) =>
+            new AstNodeExprArrayAccess(instance, index);
 
-		public AstNodeExprPropertyAccess PropertyAccess(AstNodeExpr Instance, PropertyInfo PropertyInfo)
-		{
-			return new AstNodeExprPropertyAccess(Instance, PropertyInfo);
-		}
+        public AstNodeExprImm Immediate<TType>(TType value) => new AstNodeExprImm(value, typeof(TType));
+        public AstNodeExprImm Immediate(object value) => new AstNodeExprImm(value);
+        public AstNodeExprNull Null<TType>() => new AstNodeExprNull(typeof(TType));
 
-		public AstNodeExprPropertyAccess PropertyAccess(AstNodeExpr Instance, string PropertyName)
-		{
-			return new AstNodeExprPropertyAccess(Instance, PropertyName);
-		}
+        //public AstNodeExprStaticFieldAccess ImmediateObject<TType>(ILInstanceHolderPool<TType> Pool, TType Value)
+        //{
+        //	return new AstNodeExprImm(Value);
+        //}
 
-		public AstNodeExprArrayAccess ArrayAccess(AstNodeExpr Instance, AstNodeExpr Index)
-		{
-			return new AstNodeExprArrayAccess(Instance, Index);
-		}
+        public AstNodeExprCallTailCall TailCall(AstNodeExprCall call) => new AstNodeExprCallTailCall(call);
 
-		public AstNodeExprImm Immediate<TType>(TType Value)
-		{
-			return new AstNodeExprImm(Value, typeof(TType));
-		}
+        public AstNodeExprCallStatic CallStatic(Delegate Delegate, params AstNodeExpr[] parameters) =>
+            new AstNodeExprCallStatic(Delegate, parameters);
 
-		public AstNodeExprImm Immediate(object Value)
-		{
-			return new AstNodeExprImm(Value);
-		}
+        public AstNodeExprCallStatic CallStatic(MethodInfo methodInfo, params AstNodeExpr[] parameters) =>
+            new AstNodeExprCallStatic(methodInfo, parameters);
 
-		public AstNodeExprNull Null<TType>()
-		{
-			return new AstNodeExprNull(typeof(TType));
-		}
+        public AstNodeExprCallInstance CallInstance(AstNodeExpr instance, Delegate Delegate,
+            params AstNodeExpr[] parameters) => new AstNodeExprCallInstance(instance, Delegate, parameters);
 
-		//public AstNodeExprStaticFieldAccess ImmediateObject<TType>(ILInstanceHolderPool<TType> Pool, TType Value)
-		//{
-		//	return new AstNodeExprImm(Value);
-		//}
+        public AstNodeExprCallDelegate CallDelegate(AstNodeExpr instance, params AstNodeExpr[] parameters) =>
+            new AstNodeExprCallDelegate(instance, parameters);
 
-		public AstNodeExprCallTailCall TailCall(AstNodeExprCall Call)
-		{
-			return new AstNodeExprCallTailCall(Call);
-		}
+        public AstNodeExprCallInstance CallInstance(AstNodeExpr instance, MethodInfo methodInfo,
+            params AstNodeExpr[] parameters) => new AstNodeExprCallInstance(instance, methodInfo, parameters);
 
-		public AstNodeExprCallStatic CallStatic(Delegate Delegate, params AstNodeExpr[] Parameters)
-		{
-			return new AstNodeExprCallStatic(Delegate, Parameters);
-		}
+        public AstNodeExprUnop Unary(string Operator, AstNodeExpr right) => new AstNodeExprUnop(Operator, right);
 
-		public AstNodeExprCallStatic CallStatic(MethodInfo MethodInfo, params AstNodeExpr[] Parameters)
-		{
-			return new AstNodeExprCallStatic(MethodInfo, Parameters);
-		}
+        public AstNodeExprBinop Binary(AstNodeExpr left, string Operator, AstNodeExpr right) =>
+            new AstNodeExprBinop(left, Operator, right);
 
-		public AstNodeExprCallInstance CallInstance(AstNodeExpr Instance, Delegate Delegate, params AstNodeExpr[] Parameters)
-		{
-			return new AstNodeExprCallInstance(Instance, Delegate, Parameters);
-		}
+        public AstNodeExprTerop Ternary(AstNodeExpr condition, AstNodeExpr True, AstNodeExpr False) =>
+            new AstNodeExprTerop(condition, True, False);
 
-		public AstNodeExprCallDelegate CallDelegate(AstNodeExpr Instance, params AstNodeExpr[] Parameters)
-		{
-			return new AstNodeExprCallDelegate(Instance, Parameters);
-		}
+        public AstNodeStmIfElse If(AstNodeExpr condition, AstNodeStm True) => new AstNodeStmIfElse(condition, True);
 
-		public AstNodeExprCallInstance CallInstance(AstNodeExpr Instance, MethodInfo MethodInfo, params AstNodeExpr[] Parameters)
-		{
-			return new AstNodeExprCallInstance(Instance, MethodInfo, Parameters);
-		}
+        public AstNodeStmIfElse IfElse(AstNodeExpr condition, AstNodeStm True, AstNodeStm False) =>
+            new AstNodeStmIfElse(condition, True, False);
 
-		public AstNodeExprUnop Unary(string Operator, AstNodeExpr Right)
-		{
-			return new AstNodeExprUnop(Operator, Right);
-		}
+        public AstNodeStmContainer Statements(IEnumerable<AstNodeStm> statements) =>
+            new AstNodeStmContainer(statements.ToArray());
 
-		public AstNodeExprBinop Binary(AstNodeExpr Left, string Operator, AstNodeExpr Right)
-		{
-			return new AstNodeExprBinop(Left, Operator, Right);
-		}
+        public AstNodeStmContainer Statements(params AstNodeStm[] statements) => new AstNodeStmContainer(statements);
 
-		public AstNodeExprTerop Ternary(AstNodeExpr Condition, AstNodeExpr True, AstNodeExpr False)
-		{
-			return new AstNodeExprTerop(Condition, True, False);
-		}
+        public AstNodeStmContainer StatementsInline(IEnumerable<AstNodeStm> statements) =>
+            new AstNodeStmContainer(true, statements.ToArray());
 
-		public AstNodeStmIfElse If(AstNodeExpr Condition, AstNodeStm True)
-		{
-			return new AstNodeStmIfElse(Condition, True);
-		}
+        public AstNodeStmContainer StatementsInline(params AstNodeStm[] statements) =>
+            new AstNodeStmContainer(true, statements);
 
-		public AstNodeStmIfElse IfElse(AstNodeExpr Condition, AstNodeStm True, AstNodeStm False)
-		{
-			return new AstNodeStmIfElse(Condition, True, False);
-		}
+        public AstNodeStmEmpty Statement() => new AstNodeStmEmpty();
+        public AstNodeStmExpr Statement(AstNodeExpr expr) => new AstNodeStmExpr(expr);
+        public AstNodeStmReturn Return(AstNodeExpr expr = null) => new AstNodeStmReturn(expr);
+        public AstNodeStmAssign Assign(AstNodeExprLValue left, AstNodeExpr expr) => new AstNodeStmAssign(left, expr);
 
-		public AstNodeStmContainer Statements(IEnumerable<AstNodeStm> Statements)
-		{
-			return new AstNodeStmContainer(Statements.ToArray());
-		}
+        public AstNodeExprCast Cast(Type type, AstNodeExpr expr, bool Explicit = true) =>
+            new AstNodeExprCast(type, expr, Explicit);
 
-		public AstNodeStmContainer Statements(params AstNodeStm[] Statements)
-		{
-			return new AstNodeStmContainer(Statements);
-		}
+        public AstNodeExprCast Cast<T>(AstNodeExpr expr, bool Explicit = true) => Cast(typeof(T), expr, Explicit);
+        public AstNodeExprGetAddress GetAddress(AstNodeExprLValue expr) => new AstNodeExprGetAddress(expr);
+        public AstNodeExprLValue Reinterpret<TType>(AstNodeExprLValue value) => Reinterpret(typeof(TType), value);
 
-		public AstNodeStmContainer StatementsInline(IEnumerable<AstNodeStm> Statements)
-		{
-			return new AstNodeStmContainer(true, Statements.ToArray());
-		}
+        public AstNodeExprLValue Reinterpret(Type type, AstNodeExprLValue value) =>
+            Indirect(Cast(type.MakePointerType(), GetAddress(value), Explicit: false));
 
-		public AstNodeStmContainer StatementsInline(params AstNodeStm[] Statements)
-		{
-			return new AstNodeStmContainer(true, Statements);
-		}
+        public AstNodeExprIndirect Indirect(AstNodeExpr pointerExpr) => new AstNodeExprIndirect(pointerExpr);
+        public AstNodeStm DebugWrite(string text) => Statement(CallStatic((Action<string>) Console.WriteLine, text));
+        public AstNodeExprLValue StaticFieldAccess(FieldInfo fieldInfo) => new AstNodeExprStaticFieldAccess(fieldInfo);
 
-		public AstNodeStmEmpty Statement()
-		{
-			return new AstNodeStmEmpty();
-		}
+        public AstNodeExprLValue StaticFieldAccess<T>(Expression<Func<T>> expression) =>
+            StaticFieldAccess(_fieldof(expression));
 
-		public AstNodeStmExpr Statement(AstNodeExpr Expr)
-		{
-			return new AstNodeStmExpr(Expr);
-		}
+        private static FieldInfo _fieldof<T>(Expression<Func<T>> expression) =>
+            (FieldInfo) ((MemberExpression) expression.Body).Member;
 
-		public AstNodeStmReturn Return(AstNodeExpr Expr = null)
-		{
-			return new AstNodeStmReturn(Expr);
-		}
+        public AstNodeCase Case(object value, AstNodeStm code) => new AstNodeCase(value, code);
+        public AstNodeCaseDefault Default(AstNodeStm code) => new AstNodeCaseDefault(code);
 
-		public AstNodeStmAssign Assign(AstNodeExprLValue Left, AstNodeExpr Expr)
-		{
-			return new AstNodeStmAssign(Left, Expr);
-		}
+        public AstNodeStmSwitch Switch(AstNodeExpr valueToCheck, params AstNodeCase[] cases) =>
+            new AstNodeStmSwitch(valueToCheck, cases);
 
-		public AstNodeExprCast Cast(Type Type, AstNodeExpr Expr, bool Explicit = true)
-		{
-			return new AstNodeExprCast(Type, Expr, Explicit);
-		}
+        public AstNodeStmSwitch
+            Switch(AstNodeExpr valueToCheck, AstNodeCaseDefault Default, params AstNodeCase[] cases) =>
+            new AstNodeStmSwitch(valueToCheck, cases, Default);
 
-		public AstNodeExprCast Cast<T>(AstNodeExpr Expr, bool Explicit = true)
-		{
-			return Cast(typeof(T), Expr, Explicit);
-		}
+        public AstNodeExprNewArray NewArray(Type type, params AstNodeExpr[] elements) =>
+            new AstNodeExprNewArray(type, elements);
 
-		public AstNodeExprGetAddress GetAddress(AstNodeExprLValue Expr)
-		{
-			return new AstNodeExprGetAddress(Expr);
-		}
+        public AstNodeExprNewArray NewArray<TType>(params AstNodeExpr[] elements) => NewArray(typeof(TType), elements);
+        public AstNodeExprNew New(Type type, params AstNodeExpr[] Params) => new AstNodeExprNew(type, Params);
+        public AstNodeExprNew New<TType>(params AstNodeExpr[] Params) => New(typeof(TType), Params);
 
-		public AstNodeExprLValue Reinterpret<TType>(AstNodeExprLValue Value)
-		{
-			return Reinterpret(typeof(TType), Value);
-		}
+        public AstNodeExprSetGetLValuePlaceholder SetGetLValuePlaceholder<TType>() =>
+            SetGetLValuePlaceholder(typeof(TType));
 
-		public AstNodeExprLValue Reinterpret(Type Type, AstNodeExprLValue Value)
-		{
-			return Indirect(Cast(Type.MakePointerType(), GetAddress(Value), Explicit: false));
-		}
+        public AstNodeExprSetGetLValuePlaceholder SetGetLValuePlaceholder(Type type) =>
+            new AstNodeExprSetGetLValuePlaceholder(type);
 
-		public AstNodeExprIndirect Indirect(AstNodeExpr PointerExpr)
-		{
-			return new AstNodeExprIndirect(PointerExpr);
-		}
+        public AstNodeExprSetGetLValue SetGetLValue(AstNodeExpr setExpression, AstNodeExpr getExpression) =>
+            new AstNodeExprSetGetLValue(setExpression, getExpression);
 
-		public AstNodeStm DebugWrite(string Text)
-		{
-			return Statement(CallStatic((Action<string>)Console.WriteLine, Text));
-		}
-
-		public AstNodeExprLValue StaticFieldAccess(FieldInfo FieldInfo)
-		{
-			return new AstNodeExprStaticFieldAccess(FieldInfo);
-		}
-
-		public AstNodeExprLValue StaticFieldAccess<T>(Expression<Func<T>> Expression)
-		{
-			return StaticFieldAccess(_fieldof(Expression));
-		}
-
-		private static FieldInfo _fieldof<T>(Expression<Func<T>> expression)
-		{
-			MemberExpression body = (MemberExpression)expression.Body;
-			return (FieldInfo)body.Member;
-		}
-
-		public AstNodeCase Case(object Value, AstNodeStm Code)
-		{
-			return new AstNodeCase(Value, Code);
-		}
-
-		public AstNodeCaseDefault Default(AstNodeStm Code)
-		{
-			return new AstNodeCaseDefault(Code);
-		}
-
-		public AstNodeStmSwitch Switch(AstNodeExpr ValueToCheck, params AstNodeCase[] Cases)
-		{
-			return new AstNodeStmSwitch(ValueToCheck, Cases);
-		}
-
-		public AstNodeStmSwitch Switch(AstNodeExpr ValueToCheck, AstNodeCaseDefault Default, params AstNodeCase[] Cases)
-		{
-			return new AstNodeStmSwitch(ValueToCheck, Cases, Default);
-		}
-
-		public AstNodeExprNewArray NewArray(Type Type, params AstNodeExpr[] Elements)
-		{
-			return new AstNodeExprNewArray(Type, Elements);
-		}
-
-		public AstNodeExprNewArray NewArray<TType>(params AstNodeExpr[] Elements)
-		{
-			return NewArray(typeof(TType), Elements);
-		}
-
-		public AstNodeExprNew New(Type Type, params AstNodeExpr[] Params)
-		{
-			return new AstNodeExprNew(Type, Params);
-		}
-
-		public AstNodeExprNew New<TType>(params AstNodeExpr[] Params)
-		{
-			return New(typeof(TType), Params);
-		}
-
-		public AstNodeExprSetGetLValuePlaceholder SetGetLValuePlaceholder<TType>()
-		{
-			return SetGetLValuePlaceholder(typeof(TType));
-		}
-
-		public AstNodeExprSetGetLValuePlaceholder SetGetLValuePlaceholder(Type Type)
-		{
-			return new AstNodeExprSetGetLValuePlaceholder(Type);
-		}
-
-		public AstNodeExprSetGetLValue SetGetLValue(AstNodeExpr SetExpression, AstNodeExpr GetExpression)
-		{
-			return new AstNodeExprSetGetLValue(SetExpression, GetExpression);
-		}
-
-		public AstNodeStm Throw(AstNodeExpr Expression)
-		{
-			return new AstNodeStmThrow(Expression);
-		}
-	}
+        public AstNodeStm Throw(AstNodeExpr expression) => new AstNodeStmThrow(expression);
+    }
 }

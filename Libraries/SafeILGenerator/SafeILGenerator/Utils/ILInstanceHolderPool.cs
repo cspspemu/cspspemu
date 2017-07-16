@@ -13,180 +13,140 @@ using System.Threading.Tasks;
 
 namespace SafeILGenerator.Utils
 {
-	public class ILInstanceHolderPoolItem<TType>
-	{
-		private ILInstanceHolderPoolItem Item;
-		public int Index { get { return Item.Index; } }
-		public FieldInfo FieldInfo { get { return Item.FieldInfo; } }
+    public class ILInstanceHolderPoolItem<TType>
+    {
+        private IlInstanceHolderPoolItem Item;
+        public int Index => Item.Index;
+        public FieldInfo FieldInfo => Item.FieldInfo;
 
-		public ILInstanceHolderPoolItem(ILInstanceHolderPoolItem Item)
-		{
-			this.Item = Item;
-		}
+        public ILInstanceHolderPoolItem(IlInstanceHolderPoolItem item)
+        {
+            Item = item;
+        }
 
-		public TType Value
-		{
-			//[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-			set
-			{
-				Item.Value = value;
-			}
-			//[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-			get
-			{
-				return (TType)Item.Value;
-			}
-		}
+        public TType Value
+        {
+            //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+            [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+            set { Item.Value = value; }
+            //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+            [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+            get { return (TType) Item.Value; }
+        }
 
-		public void Free()
-		{
-			Item.Free();
-		}
+        public void Free() => Item.Free();
 
-		public AstNodeExprStaticFieldAccess AstFieldAccess
-		{
-			get
-			{
-				return Item.GetAstFieldAccess();
-			}
-		}
+        public AstNodeExprStaticFieldAccess AstFieldAccess => Item.GetAstFieldAccess();
 
-		//public AstNodeExprStaticFieldAccess GetAstFieldAccess()
-		//{
-		//	return Item.GetAstFieldAccess();
-		//}
-	}
+        //public AstNodeExprStaticFieldAccess GetAstFieldAccess()
+        //{
+        //	return Item.GetAstFieldAccess();
+        //}
+    }
 
-	public class ILInstanceHolderPoolItem : IDisposable
-	{
-		private readonly ILInstanceHolderPool Parent;
-		public readonly int Index;
-		internal bool Allocated;
-		public readonly FieldInfo FieldInfo;
+    public class IlInstanceHolderPoolItem : IDisposable
+    {
+        private readonly IlInstanceHolderPool _parent;
+        public readonly int Index;
+        internal bool Allocated;
+        public readonly FieldInfo FieldInfo;
 
-		public ILInstanceHolderPoolItem(ILInstanceHolderPool Parent, int Index, FieldInfo FieldInfo)
-		{
-			this.Parent = Parent;
-			this.Index = Index;
-			this.FieldInfo = FieldInfo;
-		}
+        public IlInstanceHolderPoolItem(IlInstanceHolderPool parent, int index, FieldInfo fieldInfo)
+        {
+            _parent = parent;
+            Index = index;
+            FieldInfo = fieldInfo;
+        }
 
-		public object Value
-		{
-			//[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-			set
-			{
-				FieldInfo.SetValue(null, value);
-			}
-			//[MethodImpl(MethodImplOptions.AggressiveInlining)]
-			[TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
-			get
-			{
-				return FieldInfo.GetValue(null);
-			}
-		}
+        public object Value
+        {
+            //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+            [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+            set { FieldInfo.SetValue(null, value); }
+            //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+            [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
+            get { return FieldInfo.GetValue(null); }
+        }
 
-		public void Free()
-		{
-			if (Allocated)
-			{
-				Allocated = false;
-				Parent.Free(this);
-			}
-		}
+        public void Free()
+        {
+            if (!Allocated) return;
+            Allocated = false;
+            _parent.Free(this);
+        }
 
-		public AstNodeExprStaticFieldAccess GetAstFieldAccess()
-		{
-			if (FieldInfo == null) throw (new Exception("FieldInfo == null"));
-			return new AstNodeExprStaticFieldAccess(FieldInfo);
-		}
+        public AstNodeExprStaticFieldAccess GetAstFieldAccess()
+        {
+            if (FieldInfo == null) throw (new Exception("FieldInfo == null"));
+            return new AstNodeExprStaticFieldAccess(FieldInfo);
+        }
 
-		void IDisposable.Dispose()
-		{
-			Free();
-		}
-	}
+        void IDisposable.Dispose()
+        {
+            Free();
+        }
+    }
 
-	public class ILInstanceHolderPool
-	{
-		private static AstGenerator ast = AstGenerator.Instance;
+    public class IlInstanceHolderPool
+    {
+        //private static AstGenerator _ast = AstGenerator.Instance;
 
-		public readonly Type ItemType;
-		private ILInstanceHolderPoolItem[] FieldInfos;
-		private LinkedList<int> FreeItems = new LinkedList<int>();
-		private Type HolderType;
-		private static int Autoincrement = 0;
-		public readonly int CapacityCount;
+        public readonly Type ItemType;
+        private IlInstanceHolderPoolItem[] FieldInfos;
+        private LinkedList<int> FreeItems = new LinkedList<int>();
+        private static int _autoincrement;
+        public readonly int CapacityCount;
 
-		public int FreeCount
-		{
-			get
-			{
-				return FreeItems.Count;
-			}
-		}
+        public int FreeCount => FreeItems.Count;
+        public bool HasAvailable => FreeCount > 0;
 
-		public bool HasAvailable
-		{
-			get
-			{
-				return FreeCount > 0;
-			}
-		}
+        public IlInstanceHolderPoolItem Alloc()
+        {
+            var item = FieldInfos[FreeItems.First.Value];
+            FreeItems.RemoveFirst();
+            item.Allocated = true;
+            item.Value = null;
+            return item;
+        }
 
-		public ILInstanceHolderPoolItem Alloc()
-		{
-			var Item = FieldInfos[FreeItems.First.Value];
-			FreeItems.RemoveFirst();
-			Item.Allocated = true;
-			Item.Value = null;
-			return Item;
-		}
+        internal void Free(IlInstanceHolderPoolItem item) => FreeItems.AddLast(item.Index);
 
-		internal void Free(ILInstanceHolderPoolItem Item)
-		{
-			FreeItems.AddLast(Item.Index);
-		}
+        private static string DllName = "Temp.dll";
+        private static readonly ModuleBuilder ModuleBuilder;
 
-		private static string DllName = "Temp.dll";
-		private static AssemblyBuilder AssemblyBuilder;
-		private static ModuleBuilder ModuleBuilder;
+        static IlInstanceHolderPool()
+        {
+            var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(
+                new AssemblyName("DynamicAssembly" + _autoincrement++),
+                AssemblyBuilderAccess.RunAndCollect,
+                DllName
+            );
+            ModuleBuilder = assemblyBuilder.DefineDynamicModule(assemblyBuilder.GetName().Name, DllName, false);
+        }
 
-		static ILInstanceHolderPool()
-		{
-			AssemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(
-				new AssemblyName("DynamicAssembly" + Autoincrement++),
-				AssemblyBuilderAccess.RunAndCollect,
-				DllName
-			);
-			ModuleBuilder = AssemblyBuilder.DefineDynamicModule(AssemblyBuilder.GetName().Name, DllName, false);
-		}
+        public IlInstanceHolderPool(Type itemType, int count, string typeName = null)
+        {
+            ItemType = itemType;
+            CapacityCount = count;
+            if (typeName == null) typeName = "DynamicType" + _autoincrement++;
+            var typeBuilder = ModuleBuilder.DefineType(typeName,
+                TypeAttributes.Sealed | TypeAttributes.Public | TypeAttributes.Class);
+            FieldInfos = new IlInstanceHolderPoolItem[count];
+            var names = new string[count];
+            for (var n = 0; n < count; n++)
+            {
+                names[n] = $"V{n}";
+                typeBuilder.DefineField(names[n], itemType, FieldAttributes.Public | FieldAttributes.Static);
+            }
 
-		public ILInstanceHolderPool(Type ItemType, int Count, string TypeName = null)
-		{
-			this.ItemType = ItemType;
-			this.CapacityCount = Count;
-			if (TypeName == null) TypeName = "DynamicType" + Autoincrement++;
-			var TypeBuilder = ModuleBuilder.DefineType(TypeName, TypeAttributes.Sealed | TypeAttributes.Public | TypeAttributes.Class);
-			FieldInfos = new ILInstanceHolderPoolItem[Count];
-			var Names = new string[Count];
-			for (int n = 0; n < Count; n++)
-			{
-				Names[n] = String.Format("V{0}", n);
-				TypeBuilder.DefineField(Names[n], ItemType, FieldAttributes.Public | FieldAttributes.Static);
-			}
+            var holderType = typeBuilder.CreateType();
 
-			HolderType = TypeBuilder.CreateType();
-
-			var Fields = HolderType.GetFields();
-			for (int n = 0; n < Count; n++)
-			{
-				FieldInfos[n] = new ILInstanceHolderPoolItem(this, n, Fields[n]);
-				FreeItems.AddLast(n);
-			}
-		}
-	}
+            var fields = holderType.GetFields();
+            for (var n = 0; n < count; n++)
+            {
+                FieldInfos[n] = new IlInstanceHolderPoolItem(this, n, fields[n]);
+                FreeItems.AddLast(n);
+            }
+        }
+    }
 }

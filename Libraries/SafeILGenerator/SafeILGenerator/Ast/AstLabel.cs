@@ -7,28 +7,28 @@ using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast
 {
-	public class AstLabel
-	{
-		public string Name;
+    public class AstLabel
+    {
+        public string Name;
 
-		protected AstLabel(string Name)
-		{
-			this.Name = Name;
-		}
+        protected AstLabel(string name)
+        {
+            Name = name;
+        }
 
-		static public AstLabel CreateLabel(string Name = "<Unknown>")
-		{
-			return new AstLabel(Name);
-		}
+        public static AstLabel CreateLabel(string name = "<Unknown>")
+        {
+            return new AstLabel(name);
+        }
 
-		//static public AstLabel CreateNewLabelFromILGenerator(ILGenerator ILGenerator, string Name = "<Unknown>")
-		//{
-		//	return new AstLabel((ILGenerator != null) ? ILGenerator.DefineLabel() : default(Label), Name);
-		//}
+        //static public AstLabel CreateNewLabelFromILGenerator(ILGenerator ILGenerator, string Name = "<Unknown>")
+        //{
+        //	return new AstLabel((ILGenerator != null) ? ILGenerator.DefineLabel() : default(Label), Name);
+        //}
 
-		public override string ToString()
-		{
-			return String.Format("AstLabel({0})", Name);
-		}
-	}
+        public override string ToString()
+        {
+            return $"AstLabel({Name})";
+        }
+    }
 }

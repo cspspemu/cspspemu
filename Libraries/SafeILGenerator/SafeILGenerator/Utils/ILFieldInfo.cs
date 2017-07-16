@@ -8,22 +8,24 @@ using System.Threading.Tasks;
 
 namespace SafeILGenerator.Utils
 {
-	public class ILFieldInfo
-	{
-		static private FieldInfo GetFieldInfo(Expression Expression)
-		{
-			switch (Expression.NodeType)
-			{
-				case ExpressionType.Lambda: return GetFieldInfo((Expression as LambdaExpression).Body);
-				case ExpressionType.MemberAccess:
-					return (FieldInfo)(Expression as MemberExpression).Member;
-			}
-			throw (new NotImplementedException("NodeType: " + Expression.NodeType));
-		}
+    public class IlFieldInfo
+    {
+        private static FieldInfo GetFieldInfo(Expression expression)
+        {
+            while (true)
+            {
+                switch (expression)
+                {
+                    case LambdaExpression expr:
+                        expression = expr.Body;
+                        continue;
+                    case MemberExpression expr:
+                        return (FieldInfo) expr.Member;
+                }
+                throw new NotImplementedException("NodeType: " + expression.NodeType);
+            }
+        }
 
-		static public FieldInfo GetFieldInfo<T>(Expression<Func<T>> Field)
-		{
-			return GetFieldInfo(Field as Expression);
-		}
-	}
+        public static FieldInfo GetFieldInfo<T>(Expression<Func<T>> field) => GetFieldInfo(field as Expression);
+    }
 }

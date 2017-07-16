@@ -8,60 +8,60 @@ using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast.Serializers
 {
-	public class AstSerializer
-	{
-		static public string Serialize(AstNode Node)
-		{
-			var Parameters = new List<string>();
-			foreach (var Child in Node.Childs)
-			{
-				Parameters.Add(Serialize(Child));
-			}
-			return Node.GetType().Name + "(" + String.Join(", ", Parameters) + ")";
-		}
+    public class AstSerializer
+    {
+        public static string Serialize(AstNode node)
+        {
+            var parameters = new List<string>();
+            foreach (var child in node.Childs)
+            {
+                parameters.Add(Serialize(child));
+            }
+            return node.GetType().Name + "(" + string.Join(", ", parameters) + ")";
+        }
 
-		static public string SerializeAsXml(AstNode Node, bool Spaces = true)
-		{
-			var Out = new IndentedStringBuilder();
-			SerializeAsXml(Node, Out, Spaces);
-			return Out.ToString();
-		}
+        public static string SerializeAsXml(AstNode node, bool spaces = true)
+        {
+            var Out = new IndentedStringBuilder();
+            SerializeAsXml(node, Out, spaces);
+            return Out.ToString();
+        }
 
-		static private void SerializeAsXml(AstNode Node, IndentedStringBuilder Out, bool Spaces)
-		{
-			var NodeName = Node.GetType().Name;
-			Out.Write("<" + NodeName);
-			var Parameters = Node.Info;
-			if (Parameters != null)
-			{
-				foreach (var Pair in Parameters)
-				{
-					Out.Write(String.Format(" {0}=\"{1}\"", Pair.Key, Pair.Value));
-				}
-			}
-			if (Node.Childs.Count() > 0)
-			{
-				Out.Write(">");
-				if (Spaces) Out.WriteNewLine();
-				if (Spaces)
-				{
-					Out.Indent(() =>
-					{
-						foreach (var Child in Node.Childs) SerializeAsXml(Child, Out, Spaces);
-					});
-				}
-				else
-				{
-					foreach (var Child in Node.Childs) SerializeAsXml(Child, Out, Spaces);
-				}
-				Out.Write("</" + NodeName + ">");
-				if (Spaces) Out.WriteNewLine();
-			}
-			else
-			{
-				Out.Write(" />");
-				if (Spaces) Out.WriteNewLine();
-			}
-		}
-	}
+        private static void SerializeAsXml(AstNode node, IndentedStringBuilder Out, bool spaces)
+        {
+            var nodeName = node.GetType().Name;
+            Out.Write("<" + nodeName);
+            var parameters = node.Info;
+            if (parameters != null)
+            {
+                foreach (var pair in parameters)
+                {
+                    Out.Write($" {pair.Key}=\"{pair.Value}\"");
+                }
+            }
+            if (node.Childs.Any())
+            {
+                Out.Write(">");
+                if (spaces) Out.WriteNewLine();
+                if (spaces)
+                {
+                    Out.Indent(() =>
+                    {
+                        foreach (var child in node.Childs) SerializeAsXml(child, Out, spaces);
+                    });
+                }
+                else
+                {
+                    foreach (var child in node.Childs) SerializeAsXml(child, Out, spaces);
+                }
+                Out.Write("</" + nodeName + ">");
+                if (spaces) Out.WriteNewLine();
+            }
+            else
+            {
+                Out.Write(" />");
+                if (spaces) Out.WriteNewLine();
+            }
+        }
+    }
 }

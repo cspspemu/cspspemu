@@ -32,14 +32,14 @@ namespace CSPspEmu.Hle
 		[Inject]
 		internal HleConfig HleConfig;
 
-		private ILInstanceHolderPoolItem _ThisILInstanceHolder = null;
-		private ILInstanceHolderPoolItem ThisILInstanceHolder
+		private IlInstanceHolderPoolItem _ThisILInstanceHolder = null;
+		private IlInstanceHolderPoolItem ThisILInstanceHolder
 		{
 			get
 			{
 				if (_ThisILInstanceHolder == null)
 				{
-					this._ThisILInstanceHolder = ILInstanceHolder.Alloc(this.GetType(), this);
+					this._ThisILInstanceHolder = IlInstanceHolder.Alloc(this.GetType(), this);
 				}
 				return _ThisILInstanceHolder;
 			}

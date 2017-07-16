@@ -7,43 +7,36 @@ using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast.Nodes
 {
-	public class AstNodeExprCallInstance : AstNodeExprCall
-	{
-		public AstNodeExpr Instance;
+    public class AstNodeExprCallInstance : AstNodeExprCall
+    {
+        public AstNodeExpr Instance;
 
-		public AstNodeExprCallInstance(AstNodeExpr Instance, Delegate Delegate, params AstNodeExpr[] Parameters)
-			: this(Instance, Delegate.Method, Parameters)
-		{
-			
-		}
+        public AstNodeExprCallInstance(AstNodeExpr instance, Delegate mydelegate, params AstNodeExpr[] parameters)
+            : this(instance, mydelegate.Method, parameters)
+        {
+        }
 
-		public AstNodeExprCallInstance(AstNodeExpr Instance, MethodInfo MethodInfo, params AstNodeExpr[] Parameters)
-			: base(MethodInfo, Parameters)
-		{
-			this.Instance = Instance;
-		}
+        public AstNodeExprCallInstance(AstNodeExpr instance, MethodInfo methodInfo, params AstNodeExpr[] parameters)
+            : base(methodInfo, parameters)
+        {
+            this.Instance = instance;
+        }
 
-		public override void TransformNodes(TransformNodesDelegate Transformer)
-		{
-			Transformer.Ref(ref Instance);
-			base.TransformNodes(Transformer);
-		}
-	}
+        public override void TransformNodes(TransformNodesDelegate transformer)
+        {
+            transformer.Ref(ref Instance);
+            base.TransformNodes(transformer);
+        }
+    }
 
-	public class AstNodeExprCallDelegate : AstNodeExprCallInstance
-	{
-		private static MethodInfo GetInvoke(Type Type)
-		{
-			var MethodInfo = Type.GetMethod("Invoke");
-			if (MethodInfo == null) throw(new Exception(String.Format("Can't get Invoke method for Type {0}", Type)));
-			return MethodInfo;
-		}
+    public class AstNodeExprCallDelegate : AstNodeExprCallInstance
+    {
+        private static MethodInfo GetInvoke(Type type) =>
+            type.GetMethod("Invoke") ?? throw new Exception($"Can't get Invoke method for Type {type}");
 
-		public AstNodeExprCallDelegate(AstNodeExpr Object, params AstNodeExpr[] Parameters)
-			: base(Object, GetInvoke(Object.Type), Parameters)
-		{
-
-		}
-	}
-
+        public AstNodeExprCallDelegate(AstNodeExpr Object, params AstNodeExpr[] parameters)
+            : base(Object, GetInvoke(Object.Type), parameters)
+        {
+        }
+    }
 }

@@ -6,27 +6,27 @@ using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast.Nodes
 {
-	public class AstNodeExprIndirect : AstNodeExprLValue
-	{
-		public AstNodeExpr PointerExpression;
+    public class AstNodeExprIndirect : AstNodeExprLValue
+    {
+        public AstNodeExpr PointerExpression;
 
-		public AstNodeExprIndirect(AstNodeExpr AstNodeExpr)
-		{
-			this.PointerExpression = AstNodeExpr;
-		}
+        public AstNodeExprIndirect(AstNodeExpr astNodeExpr)
+        {
+            PointerExpression = astNodeExpr;
+        }
 
-		protected override Type UncachedType
-		{
-			get
-			{
-				if (!PointerExpression.Type.IsPointer) throw(new Exception("Not a pointer"));
-				return PointerExpression.Type.GetElementType();
-			}
-		}
+        protected override Type UncachedType
+        {
+            get
+            {
+                if (!PointerExpression.Type.IsPointer) throw(new Exception("Not a pointer"));
+                return PointerExpression.Type.GetElementType();
+            }
+        }
 
-		public override void TransformNodes(TransformNodesDelegate Transformer)
-		{
-			Transformer.Ref(ref PointerExpression);
-		}
-	}
+        public override void TransformNodes(TransformNodesDelegate transformer)
+        {
+            transformer.Ref(ref PointerExpression);
+        }
+    }
 }

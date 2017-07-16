@@ -6,33 +6,24 @@ using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast.Nodes
 {
-	public class AstNodeExprLocal : AstNodeExprLValue
-	{
-		public readonly AstLocal AstLocal;
+    public class AstNodeExprLocal : AstNodeExprLValue
+    {
+        public readonly AstLocal AstLocal;
 
-		public AstNodeExprLocal(AstLocal AstLocal)
-		{
-			this.AstLocal = AstLocal;
-		}
+        public AstNodeExprLocal(AstLocal astLocal)
+        {
+            this.AstLocal = astLocal;
+        }
 
-		protected override Type UncachedType
-		{
-			get { return AstLocal.Type; }
-		}
+        protected override Type UncachedType => AstLocal.Type;
 
-		public override void TransformNodes(TransformNodesDelegate Transformer)
-		{
-		}
+        public override void TransformNodes(TransformNodesDelegate transformer)
+        {
+        }
 
-		public override Dictionary<string, string> Info
-		{
-			get
-			{
-				return new Dictionary<string, string>()
-				{
-					{ "Local", AstLocal.Name },
-				};
-			}
-		}
-	}
+        public override Dictionary<string, string> Info => new Dictionary<string, string>
+        {
+            {"Local", AstLocal.Name},
+        };
+    }
 }

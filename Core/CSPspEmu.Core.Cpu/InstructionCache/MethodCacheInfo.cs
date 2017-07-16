@@ -88,7 +88,7 @@ namespace CSPspEmu.Core.Cpu.InstructionCache
 		{
 			this.MethodCache = MethodCache;
 			this.FunctionDelegate = DelegateGeneratorForPC;
-			this.StaticField = ILInstanceHolder.TAlloc<Action<CpuThreadState>>(DelegateGeneratorForPC);
+			this.StaticField = IlInstanceHolder.TAlloc<Action<CpuThreadState>>(DelegateGeneratorForPC);
 			this.PC = PC;
 		}
 

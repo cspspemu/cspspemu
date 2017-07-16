@@ -8,33 +8,33 @@ using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast
 {
-	public class AstArgument
-	{
-		public readonly int Index;
-		public readonly Type Type;
-		public readonly string Name;
+    public class AstArgument
+    {
+        public readonly int Index;
+        public readonly Type Type;
+        public readonly string Name;
 
-		public AstArgument(int Index, Type Type, string Name = null)
-		{
-			this.Index = Index;
-			this.Type = Type;
-			this.Name = (Name == null) ? ("@ARG(" + Index + ")") : Name;
-		}
+        public AstArgument(int index, Type type, string name = null)
+        {
+            Index = index;
+            Type = type;
+            Name = name ?? ("@ARG(" + index + ")");
+        }
 
-		static public AstArgument Create(Type Type, int Index, string Name = null)
-		{
-			return new AstArgument(Index, Type, Name);
-		}
+        public static AstArgument Create(Type type, int index, string name = null)
+        {
+            return new AstArgument(index, type, name);
+        }
 
-		static public AstArgument Create<TType>(int Index, string Name = null)
-		{
-			return Create(typeof(TType), Index, Name);
-		}
+        public static AstArgument Create<TType>(int index, string name = null)
+        {
+            return Create(typeof(TType), index, name);
+        }
 
-		static public AstArgument Create(MethodInfo MethodInfo, int Index, string Name = null)
-		{
-			if (Name == null) Name = MethodInfo.GetParameters()[Index].Name;
-			return new AstArgument(Index, MethodInfo.GetParameters()[Index].ParameterType, Name);
-		}
-	}
+        public static AstArgument Create(MethodInfo methodInfo, int index, string name = null)
+        {
+            if (name == null) name = methodInfo.GetParameters()[index].Name;
+            return new AstArgument(index, methodInfo.GetParameters()[index].ParameterType, name);
+        }
+    }
 }

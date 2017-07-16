@@ -1,29 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast.Nodes
 {
-	public class AstNodeStmSwitch : AstNodeStm
-	{
-		public AstNodeExpr SwitchValue;
-		public AstNodeCase[] Cases;
-		public AstNodeCaseDefault CaseDefault;
+    public class AstNodeStmSwitch : AstNodeStm
+    {
+        public AstNodeExpr SwitchValue;
+        public AstNodeCase[] Cases;
+        public AstNodeCaseDefault CaseDefault;
 
-		public AstNodeStmSwitch(AstNodeExpr SwitchValue, IEnumerable<AstNodeCase> Cases, AstNodeCaseDefault CaseDefault = null)
-		{
-			this.SwitchValue = SwitchValue;
-			this.Cases = Cases.ToArray();
-			this.CaseDefault = CaseDefault;
-		}
+        public AstNodeStmSwitch(AstNodeExpr switchValue, IEnumerable<AstNodeCase> cases,
+            AstNodeCaseDefault caseDefault = null)
+        {
+            SwitchValue = switchValue;
+            Cases = cases.ToArray();
+            CaseDefault = caseDefault;
+        }
 
-		public override void TransformNodes(TransformNodesDelegate Transformer)
-		{
-			Transformer.Ref(ref SwitchValue);
-			Transformer.Ref(ref Cases);
-			if (CaseDefault != null) Transformer.Ref(ref CaseDefault);
-		}
-	}
+        public override void TransformNodes(TransformNodesDelegate transformer)
+        {
+            transformer.Ref(ref SwitchValue);
+            transformer.Ref(ref Cases);
+            if (CaseDefault != null) transformer.Ref(ref CaseDefault);
+        }
+    }
 }

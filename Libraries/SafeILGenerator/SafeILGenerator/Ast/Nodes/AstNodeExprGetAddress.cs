@@ -6,23 +6,20 @@ using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast.Nodes
 {
-	public class AstNodeExprGetAddress : AstNodeExprLValue
-	{
-		public AstNodeExprLValue Expression;
+    public class AstNodeExprGetAddress : AstNodeExprLValue
+    {
+        public AstNodeExprLValue Expression;
 
-		public AstNodeExprGetAddress(AstNodeExprLValue Expression)
-		{
-			this.Expression = Expression;
-		}
+        public AstNodeExprGetAddress(AstNodeExprLValue expression)
+        {
+            Expression = expression;
+        }
 
-		protected override Type UncachedType
-		{
-			get { return Expression.Type.MakePointerType(); }
-		}
+        protected override Type UncachedType => Expression.Type.MakePointerType();
 
-		public override void TransformNodes(TransformNodesDelegate Transformer)
-		{
-			Transformer.Ref(ref Expression);
-		}
-	}
+        public override void TransformNodes(TransformNodesDelegate transformer)
+        {
+            transformer.Ref(ref Expression);
+        }
+    }
 }

@@ -7,25 +7,25 @@ using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast
 {
-	sealed public class AstLocal
-	{
-		public readonly string Name;
-		public readonly Type Type;
+    sealed public class AstLocal
+    {
+        public readonly string Name;
+        public readonly Type Type;
 
-		private AstLocal(Type Type, string Name)
-		{
-			this.Name = Name;
-			this.Type = Type;
-		}
+        private AstLocal(Type type, string name)
+        {
+            Name = name;
+            Type = type;
+        }
 
-		static public AstLocal Create(Type Type, string Name = "<Unknown>")
-		{
-			return new AstLocal(Type, Name);
-		}
+        public static AstLocal Create(Type type, string name = "<Unknown>")
+        {
+            return new AstLocal(type, name);
+        }
 
-		static public AstLocal Create<TType>(string Name = "<Unknown>")
-		{
-			return Create(typeof(TType), Name);
-		}
-	}
+        public static AstLocal Create<TType>(string name = "<Unknown>")
+        {
+            return Create(typeof(TType), name);
+        }
+    }
 }

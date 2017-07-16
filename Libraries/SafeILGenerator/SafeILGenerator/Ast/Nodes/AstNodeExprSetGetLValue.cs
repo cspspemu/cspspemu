@@ -1,51 +1,41 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast.Nodes
 {
-	public class AstNodeExprSetGetLValuePlaceholder : AstNodeExpr
-	{
-		private Type Type;
+    public class AstNodeExprSetGetLValuePlaceholder : AstNodeExpr
+    {
+        private new Type Type;
 
-		public AstNodeExprSetGetLValuePlaceholder(Type Type)
-		{
-			this.Type = Type;
-		}
+        public AstNodeExprSetGetLValuePlaceholder(Type type)
+        {
+            Type = type;
+        }
 
-		protected override Type UncachedType
-		{
-			get { return Type; }
-		}
+        protected override Type UncachedType => Type;
 
-		public override void TransformNodes(TransformNodesDelegate Transformer)
-		{
-			//throw new NotImplementedException();
-		}
-	}
+        public override void TransformNodes(TransformNodesDelegate transformer)
+        {
+            //throw new NotImplementedException();
+        }
+    }
 
-	public class AstNodeExprSetGetLValue : AstNodeExprLValue
-	{
-		public AstNodeExpr SetExpression;
-		public AstNodeExpr GetExpression;
+    public class AstNodeExprSetGetLValue : AstNodeExprLValue
+    {
+        public AstNodeExpr SetExpression;
+        public AstNodeExpr GetExpression;
 
-		public AstNodeExprSetGetLValue(AstNodeExpr SetExpression, AstNodeExpr GetExpression)
-		{
-			this.SetExpression = SetExpression;
-			this.GetExpression = GetExpression;
-		}
+        public AstNodeExprSetGetLValue(AstNodeExpr setExpression, AstNodeExpr getExpression)
+        {
+            SetExpression = setExpression;
+            GetExpression = getExpression;
+        }
 
-		protected override Type UncachedType
-		{
-			get { return GetExpression.Type; }
-		}
+        protected override Type UncachedType => GetExpression.Type;
 
-		public override void TransformNodes(TransformNodesDelegate Transformer)
-		{
-			Transformer.Ref(ref SetExpression);
-			Transformer.Ref(ref GetExpression);
-		}
-	}
+        public override void TransformNodes(TransformNodesDelegate transformer)
+        {
+            transformer.Ref(ref SetExpression);
+            transformer.Ref(ref GetExpression);
+        }
+    }
 }

@@ -1,33 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace SafeILGenerator.Ast.Nodes
 {
-	public class AstNodeStmLabel : AstNodeStm
-	{
-		public readonly AstLabel AstLabel;
+    public class AstNodeStmLabel : AstNodeStm
+    {
+        public readonly AstLabel AstLabel;
 
-		public AstNodeStmLabel(AstLabel AstLabel)
-		{
-			this.AstLabel = AstLabel;
-		}
+        public AstNodeStmLabel(AstLabel astLabel)
+        {
+            AstLabel = astLabel;
+        }
 
-		public override void TransformNodes(TransformNodesDelegate Transformer)
-		{
-		}
+        public override void TransformNodes(TransformNodesDelegate transformer)
+        {
+        }
 
-		public override Dictionary<string, string> Info
-		{
-			get
-			{
-				return new Dictionary<string, string>()
-				{
-					{ "Label", AstLabel.Name },
-				};
-			}
-		}
-	}
+        public override Dictionary<string, string> Info => new Dictionary<string, string>
+        {
+            {"Label", AstLabel.Name},
+        };
+    }
 }

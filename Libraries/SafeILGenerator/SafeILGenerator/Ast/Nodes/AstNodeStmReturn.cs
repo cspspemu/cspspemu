@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace SafeILGenerator.Ast.Nodes
 {
-	public class AstNodeStmReturn : AstNodeStm
-	{
-		public AstNodeExpr Expression;
+    public class AstNodeStmReturn : AstNodeStm
+    {
+        public AstNodeExpr Expression;
 
-		public AstNodeStmReturn(AstNodeExpr Expression = null)
-		{
-			this.Expression = Expression;
-		}
+        public AstNodeStmReturn(AstNodeExpr expression = null)
+        {
+            Expression = expression;
+        }
 
-		public override void TransformNodes(TransformNodesDelegate Transformer)
-		{
-			if (Expression != null)
-			{
-				Transformer.Ref(ref Expression);
-			}
-		}
-	}
+        public override void TransformNodes(TransformNodesDelegate transformer)
+        {
+            if (Expression != null)
+            {
+                transformer.Ref(ref Expression);
+            }
+        }
+    }
 }
