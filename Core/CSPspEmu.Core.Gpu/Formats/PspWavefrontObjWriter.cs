@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using CSPspEmu.Core.Gpu.State;
-using CSharpPlatform.GL.Utils;
 using CSharpPlatform;
 
 namespace CSPspEmu.Core.Gpu.Formats
@@ -10,36 +9,28 @@ namespace CSPspEmu.Core.Gpu.Formats
     {
         WavefrontObjWriter WavefrontObjWriter;
 
-        public PspWavefrontObjWriter(WavefrontObjWriter WavefrontObjWriter)
-        {
-            this.WavefrontObjWriter = WavefrontObjWriter;
-        }
+        public PspWavefrontObjWriter(WavefrontObjWriter wavefrontObjWriter) => WavefrontObjWriter = wavefrontObjWriter;
+        public void End() => WavefrontObjWriter.End();
 
-        public void End()
-        {
-            this.WavefrontObjWriter.End();
-        }
-
-        State.GuPrimitiveType CurrentPrimitiveType;
+        GuPrimitiveType _currentPrimitiveType;
         List<int> PrimitiveIndices = new List<int>();
-        Matrix4f ModelMatrix;
-        GpuStateStruct* GpuState;
-        State.VertexTypeStruct VertexType;
+        Matrix4F _modelMatrix = default(Matrix4F);
+        GpuStateStruct* _gpuState;
+        VertexTypeStruct _vertexType;
 
-        public void StartPrimitive(GpuStateStruct* GpuState, State.GuPrimitiveType PrimitiveType, uint VertexAddress,
-            int VertexCount, ref State.VertexTypeStruct VertexType)
+        public void StartPrimitive(GpuStateStruct* gpuState, GuPrimitiveType primitiveType, uint vertexAddress,
+            int vertexCount, ref VertexTypeStruct vertexType)
         {
-            this.GpuState = GpuState;
-            this.VertexType = VertexType;
-            var ViewMatrix = GpuState->VertexState.ViewMatrix.Matrix4;
-            var WorldMatrix = GpuState->VertexState.WorldMatrix.Matrix4;
-            ModelMatrix.Multiply(ViewMatrix);
-            ModelMatrix.Multiply(WorldMatrix);
+            _gpuState = gpuState;
+            _vertexType = vertexType;
+            var viewMatrix = gpuState->VertexState.ViewMatrix.Matrix4;
+            var worldMatrix = gpuState->VertexState.WorldMatrix.Matrix4;
+            _modelMatrix.Multiply(viewMatrix);
+            _modelMatrix.Multiply(worldMatrix);
 
-            this.CurrentPrimitiveType = PrimitiveType;
-            WavefrontObjWriter.StartComment("Start: " + this.CurrentPrimitiveType + " : VertexAddress: 0x" +
-                                            String.Format("{0:X}", VertexAddress) + " : " + VertexCount + " : " +
-                                            this.VertexType);
+            _currentPrimitiveType = primitiveType;
+            WavefrontObjWriter.StartComment(
+                $"Start: {_currentPrimitiveType} : VertexAddress: 0x{vertexAddress:X} : {vertexCount} : {this._vertexType}");
             PrimitiveIndices.Clear();
 
             //throw new NotImplementedException();
@@ -51,47 +42,45 @@ namespace CSPspEmu.Core.Gpu.Formats
             */
         }
 
-        public void PutVertex(ref VertexInfo VertexInfo)
+        public void PutVertex(ref VertexInfo vertexInfo)
         {
             //GpuState.VertexState.ViewMatrix.Matrix
-            if (!GpuState->ClearingMode)
+            if (_gpuState->ClearingMode) return;
+            var vector = vertexInfo.Position.ToVector3();
+            if (!_vertexType.Transform2D)
             {
-                var Vector = VertexInfo.Position.ToVector3();
-                if (!VertexType.Transform2D)
-                {
-                    //Vector = GLVector3.Transform(Vector, ModelMatrix);
-                }
-
-                PrimitiveIndices.Add(WavefrontObjWriter.AddVertex(Vector));
+                //Vector = GLVector3.Transform(Vector, ModelMatrix);
             }
+
+            PrimitiveIndices.Add(WavefrontObjWriter.AddVertex(vector));
             //throw new NotImplementedException();
         }
 
         public void EndPrimitive()
         {
-            switch (this.CurrentPrimitiveType)
+            switch (_currentPrimitiveType)
             {
-                case State.GuPrimitiveType.Sprites:
+                case GuPrimitiveType.Sprites:
                     WavefrontObjWriter.AddFaces(4, PrimitiveIndices);
                     break;
-                case State.GuPrimitiveType.Triangles:
+                case GuPrimitiveType.Triangles:
                     WavefrontObjWriter.AddFaces(3, PrimitiveIndices);
                     break;
-                case State.GuPrimitiveType.TriangleStrip:
+                case GuPrimitiveType.TriangleStrip:
                 {
-                    var Indices = PrimitiveIndices.ToArray();
-                    int TriangleCount = Indices.Length - 2;
-                    for (int n = 0; n < TriangleCount; n++)
+                    var indices = PrimitiveIndices.ToArray();
+                    var triangleCount = indices.Length - 2;
+                    for (var n = 0; n < triangleCount; n++)
                     {
-                        WavefrontObjWriter.AddFace(Indices[n + 0], Indices[n + 1], Indices[n + 2]);
+                        WavefrontObjWriter.AddFace(indices[n + 0], indices[n + 1], indices[n + 2]);
                     }
                 }
                     break;
                 default:
-                    WavefrontObjWriter.StartComment("Can't handle primitive type: " + this.CurrentPrimitiveType);
+                    WavefrontObjWriter.StartComment("Can't handle primitive type: " + _currentPrimitiveType);
                     break;
             }
-            WavefrontObjWriter.StartComment("End: " + this.CurrentPrimitiveType);
+            WavefrontObjWriter.StartComment("End: " + _currentPrimitiveType);
             //throw new NotImplementedException();
         }
     }

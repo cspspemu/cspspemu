@@ -1,15 +1,10 @@
 ﻿using CSharpPlatform.GL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl.Utils
 {
-    static internal class OpenglGpuImplConversionTables
+    internal static class OpenglGpuImplConversionTables
     {
-        static internal readonly int[] StencilOperationTranslate =
+        internal static readonly int[] StencilOperationTranslate =
         {
             GL.GL_KEEP,
             GL.GL_ZERO,
@@ -19,7 +14,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Utils
             GL.GL_DECR,
         };
 
-        static internal readonly int[] StencilFunctionTranslate =
+        internal static readonly int[] StencilFunctionTranslate =
         {
             GL.GL_NEVER,
             GL.GL_ALWAYS,
@@ -31,7 +26,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Utils
             GL.GL_GEQUAL,
         };
 
-        static internal readonly int[] DepthFunctionTranslate =
+        internal static readonly int[] DepthFunctionTranslate =
         {
             GL.GL_NEVER,
             GL.GL_ALWAYS,
@@ -43,7 +38,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Utils
             GL.GL_GEQUAL,
         };
 
-        static internal readonly int[] BlendEquationTranslate =
+        internal static readonly int[] BlendEquationTranslate =
         {
             GL.GL_FUNC_ADD,
             GL.GL_FUNC_SUBTRACT,
@@ -53,7 +48,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Utils
             GL.GL_FUNC_ADD, // ABS
         };
 
-        static internal readonly int[] BlendFuncSrcTranslate =
+        internal static readonly int[] BlendFuncSrcTranslate =
         {
             GL.GL_SRC_COLOR, // 0 GU_SRC_COLOR,
             GL.GL_ONE_MINUS_SRC_COLOR, // 1 GU_ONE_MINUS_SRC_COLOR,
@@ -68,7 +63,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Utils
             GL.GL_SRC_ALPHA, // 10 GU_FIX
         };
 
-        static internal readonly int[] BlendFuncDstTranslate =
+        internal static readonly int[] BlendFuncDstTranslate =
         {
             GL.GL_DST_COLOR, // 0 GU_DST_COLOR,
             GL.GL_ONE_MINUS_DST_COLOR, // 1 GU_ONE_MINUS_DST_COLOR,

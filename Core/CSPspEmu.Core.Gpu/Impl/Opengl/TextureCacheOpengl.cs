@@ -1,18 +1,10 @@
-﻿using CSharpPlatform.GL;
-using CSharpPlatform.GL.Utils;
-using CSharpUtils;
+﻿using CSharpPlatform.GL.Utils;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Types;
-using CSPspEmu.Inject;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
-    unsafe public class TextureHookInfo
+    public class TextureHookInfo
     {
         public int Width;
         public int Height;
@@ -20,27 +12,24 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
         public TextureCacheKey TextureCacheKey;
     }
 
-    public unsafe class TextureOpengl : Texture<OpenglGpuImpl>
+    public class TextureOpengl : Texture<OpenglGpuImpl>
     {
         public GLTexture Texture;
 
-        public int TextureId
-        {
-            get { return (int) Texture.Texture; }
-        }
+        public int TextureId => (int) Texture.Texture;
 
         protected override void Init()
         {
             Texture = GLTexture.Create();
         }
 
-        public override bool SetData(OutputPixel[] Pixels, int TextureWidth, int TextureHeight)
+        public override bool SetData(OutputPixel[] pixels, int textureWidth, int textureHeight)
         {
-            this.Width = TextureWidth;
-            this.Height = TextureHeight;
+            Width = textureWidth;
+            Height = textureHeight;
 
             Bind();
-            Texture.SetFormat(TextureFormat.RGBA).SetSize(TextureWidth, TextureHeight).SetData(Pixels);
+            Texture.SetFormat(TextureFormat.RGBA).SetSize(textureWidth, textureHeight).SetData(pixels);
 
             return true;
         }
@@ -69,8 +58,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
     public class TextureCacheOpengl : TextureCache<OpenglGpuImpl, TextureOpengl>
     {
-        public TextureCacheOpengl(PspMemory PspMemory, OpenglGpuImpl GpuImpl, InjectContext InjectContext)
-            : base(PspMemory, GpuImpl, InjectContext)
+        public TextureCacheOpengl(PspMemory pspMemory, OpenglGpuImpl gpuImpl, InjectContext injectContext)
+            : base(pspMemory, gpuImpl, injectContext)
         {
         }
     }

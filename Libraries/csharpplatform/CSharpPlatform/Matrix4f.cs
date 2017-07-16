@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace CSharpPlatform
 {
-    unsafe public delegate void CallbackFloatPointer(float* Values);
+    public unsafe delegate void CallbackFloatPointer(float* values);
 
-    unsafe public struct Matrix4f
+    public unsafe struct Matrix4F
     {
         public Vector4f Row0, Row1, Row2, Row3;
 
@@ -17,143 +17,121 @@ namespace CSharpPlatform
             return Vector4f.Create(Row0[n], Row1[n], Row2[n], Row3[n]);
         }
 
-        static public Matrix4f Create(params Vector4f[] Rows)
+        public static Matrix4F Create(params Vector4f[] rows)
         {
-            var Matrix = default(Matrix4f);
-            for (int Row = 0; Row < 4; Row++)
+            var matrix = default(Matrix4F);
+            for (var row = 0; row < 4; row++)
             {
-                (&Matrix.Row0)[Row] = Rows[Row];
+                (&matrix.Row0)[row] = rows[row];
             }
-            return Matrix;
+            return matrix;
         }
 
-        static public Matrix4f Create(params float[] Values)
+        public static Matrix4F Create(params float[] values)
         {
-            var Matrix = default(Matrix4f);
-            int n = 0;
-            for (int Row = 0; Row < 4; Row++)
+            var matrix = default(Matrix4F);
+            var n = 0;
+            for (var row = 0; row < 4; row++)
             {
-                for (int Column = 0; Column < 4; Column++)
+                for (var column = 0; column < 4; column++)
                 {
-                    (&Matrix.Row0)[Row][Column] = Values[n++];
+                    (&matrix.Row0)[row][column] = values[n++];
                 }
             }
-            return Matrix;
+            return matrix;
         }
 
-        static public Matrix4f Identity
-        {
-            get
-            {
-                return Matrix4f.Create(
-                    1, 0, 0, 0,
-                    0, 1, 0, 0,
-                    0, 0, 1, 0,
-                    0, 0, 0, 1
-                );
-            }
-        }
+        public static Matrix4F Identity => Matrix4F.Create(
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1
+        );
 
-        static public Matrix4f Ortho(float left, float right, float bottom, float top, float near, float far)
+        public static Matrix4F Ortho(float left, float right, float bottom, float top, float near, float far)
         {
-            var Matrix = default(Matrix4f);
-            float rml = right - left;
-            float fmn = far - near;
-            float tmb = top - bottom;
-            float _1over_rml;
-            float _1over_fmn;
-            float _1over_tmb;
+            var matrix = default(Matrix4F);
+            var rml = right - left;
+            var fmn = far - near;
+            var tmb = top - bottom;
 
+            // ReSharper disable CompareOfFloatsByEqualityOperator
             if (rml == 0.0 || fmn == 0.0 || tmb == 0.0)
-            {
-                throw(new Exception("Invalid matrix"));
-            }
+                throw new Exception("Invalid matrix");
 
-            _1over_rml = 1.0f / rml;
-            _1over_fmn = 1.0f / fmn;
-            _1over_tmb = 1.0f / tmb;
+            var _1OverRml = 1.0f / rml;
+            var _1OverFmn = 1.0f / fmn;
+            var _1OverTmb = 1.0f / tmb;
 
-            Matrix.Row0 = Vector4f.Create(2.0f * _1over_rml, 0, 0, 0);
-            Matrix.Row1 = Vector4f.Create(0, 2.0f * _1over_tmb, 0, 0);
-            Matrix.Row2 = Vector4f.Create(0, 0, -2.0f * _1over_fmn, 0);
-            Matrix.Row3 = Vector4f.Create(
-                -(right + left) * _1over_rml,
-                -(top + bottom) * _1over_tmb,
-                -(far + near) * _1over_fmn,
+            matrix.Row0 = Vector4f.Create(2.0f * _1OverRml, 0, 0, 0);
+            matrix.Row1 = Vector4f.Create(0, 2.0f * _1OverTmb, 0, 0);
+            matrix.Row2 = Vector4f.Create(0, 0, -2.0f * _1OverFmn, 0);
+            matrix.Row3 = Vector4f.Create(
+                -(right + left) * _1OverRml,
+                -(top + bottom) * _1OverTmb,
+                -(far + near) * _1OverFmn,
                 1.0f
             );
 
-            return Matrix;
+            return matrix;
         }
 
-        public float this[int Column, int Row]
+        public float this[int column, int row]
         {
             get
             {
-                fixed (Vector4f* RowsPtr = &Row0) return RowsPtr[Row][Column];
+                fixed (Vector4f* rowsPtr = &Row0) return rowsPtr[row][column];
             }
             set
             {
-                fixed (Vector4f* RowsPtr = &Row0) RowsPtr[Row][Column] = value;
+                fixed (Vector4f* rowsPtr = &Row0) rowsPtr[row][column] = value;
             }
         }
 
-        public Matrix4f Multiply(Matrix4f that)
+        public Matrix4F Multiply(Matrix4F that)
         {
             return StaticMultiply(this, that);
         }
 
-        static public Matrix4f StaticMultiply(Matrix4f Left, Matrix4f Right)
+        public static Matrix4F StaticMultiply(Matrix4F left, Matrix4F right)
         {
-            var New = Matrix4f.Identity;
-            for (int Column = 0; Column < 4; Column++)
+            var New = Identity;
+            for (var column = 0; column < 4; column++)
             {
-                for (int Row = 0; Row < 4; Row++)
+                for (var row = 0; row < 4; row++)
                 {
-                    float Dot = 0;
-                    for (int Index = 0; Index < 4; Index++) Dot += Left[Index, Row] * Right[Column, Index];
-                    New[Column, Row] = Dot;
+                    float dot = 0;
+                    for (var index = 0; index < 4; index++) dot += left[index, row] * right[column, index];
+                    New[column, row] = dot;
                 }
             }
             return New;
         }
 
-        public Matrix4f Transpose()
-        {
-            return Matrix4f.Create(Column(0), Column(1), Column(2), Column(3));
-        }
+        public Matrix4F Transpose() => Create(Column(0), Column(1), Column(2), Column(3));
 
-        public Matrix4f Translate(float X, float Y, float Z)
-        {
-            return StaticMultiply(this, Matrix4f.Create(
-                1, 0, 0, X,
-                0, 1, 0, Y,
-                0, 0, 1, Z,
-                0, 0, 0, 1
-            ));
-        }
+        public Matrix4F Translate(float x, float y, float z) => StaticMultiply(this, Matrix4F.Create(
+            1, 0, 0, x,
+            0, 1, 0, y,
+            0, 0, 1, z,
+            0, 0, 0, 1
+        ));
 
-        public Matrix4f Scale(float X, float Y, float Z)
-        {
-            return StaticMultiply(this, Matrix4f.Create(
-                X, 0, 0, 0,
-                0, Y, 0, 0,
-                0, 0, Z, 0,
-                0, 0, 0, 1
-            ));
-        }
+        public Matrix4F Scale(float x, float y, float z) => StaticMultiply(this, Matrix4F.Create(
+            x, 0, 0, 0,
+            0, y, 0, 0,
+            0, 0, z, 0,
+            0, 0, 0, 1
+        ));
 
-        public void FixValues(CallbackFloatPointer Callback)
+        public void FixValues(CallbackFloatPointer callback)
         {
-            fixed (Vector4f* RowPtr = &this.Row0)
+            fixed (Vector4f* rowPtr = &Row0)
             {
-                Callback((float*) RowPtr);
+                callback((float*) rowPtr);
             }
         }
 
-        public override string ToString()
-        {
-            return String.Format("Matrix4(\n  {0}\n  {1}\n  {2}\n  {3}\n)", Row0, Row1, Row2, Row3);
-        }
+        public override string ToString() => $"Matrix4(\n  {Row0}\n  {Row1}\n  {Row2}\n  {Row3}\n)";
     }
 }

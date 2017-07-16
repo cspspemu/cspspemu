@@ -1,24 +1,13 @@
-﻿using CSPspEmu.Core.Gpu.State;
-
-namespace CSPspEmu.Core.Gpu
+﻿namespace CSPspEmu.Core.Gpu.Impl.Null
 {
-    public unsafe class GpuImplNull : GpuImpl
+    public class GpuImplNull : GpuImpl
     {
-        public override PluginInfo PluginInfo
+        public override PluginInfo PluginInfo => new PluginInfo
         {
-            get
-            {
-                return new PluginInfo()
-                {
-                    Name = "Null",
-                    Version = "1.0",
-                };
-            }
-        }
+            Name = "Null",
+            Version = "1.0",
+        };
 
-        public override bool IsWorking
-        {
-            get { return true; }
-        }
+        public override bool IsWorking => true;
     }
 }

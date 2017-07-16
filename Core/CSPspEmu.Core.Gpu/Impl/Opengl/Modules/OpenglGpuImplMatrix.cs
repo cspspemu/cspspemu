@@ -10,19 +10,19 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
 {
     internal unsafe class OpenglGpuImplMatrix
     {
-        static internal void PrepareStateMatrix(GpuStateStruct* GpuState, ref Matrix4f WorldViewProjectionMatrix)
+        internal static void PrepareStateMatrix(GpuStateStruct* gpuState, out Matrix4F worldViewProjectionMatrix)
         {
             // DRAW BEGIN COMMON
             {
-                if (GpuState->VertexState.Type.Transform2D)
+                if (gpuState->VertexState.Type.Transform2D)
                     //if (true)
                 {
-                    WorldViewProjectionMatrix = Matrix4f.Ortho(0, 512, 272, 0, 0, -0xFFFF);
+                    worldViewProjectionMatrix = Matrix4F.Ortho(0, 512, 272, 0, 0, -0xFFFF);
                     //WorldViewProjectionMatrix = Matrix4f.Ortho(0, 480, 272, 0, 0, -0xFFFF);
                 }
                 else
                 {
-                    if (float.IsNaN(GpuState->VertexState.WorldMatrix.Values[0]))
+                    if (float.IsNaN(gpuState->VertexState.WorldMatrix.Values[0]))
                     {
                         //Console.Error.WriteLine("Invalid WorldMatrix");
                         //Console.Error.WriteLine("Projection:");
@@ -33,14 +33,14 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
                         //GpuState->VertexState.WorldMatrix.Dump();
                     }
 
-                    GpuState->VertexState.ViewMatrix.SetLastColumn();
-                    GpuState->VertexState.WorldMatrix.SetLastColumn();
+                    gpuState->VertexState.ViewMatrix.SetLastColumn();
+                    gpuState->VertexState.WorldMatrix.SetLastColumn();
 
-                    WorldViewProjectionMatrix =
-                        Matrix4f.Identity
-                            .Multiply(GpuState->VertexState.WorldMatrix.Matrix4)
-                            .Multiply(GpuState->VertexState.ViewMatrix.Matrix4)
-                            .Multiply(GpuState->VertexState.ProjectionMatrix.Matrix4)
+                    worldViewProjectionMatrix =
+                        Matrix4F.Identity
+                            .Multiply(gpuState->VertexState.WorldMatrix.Matrix4)
+                            .Multiply(gpuState->VertexState.ViewMatrix.Matrix4)
+                            .Multiply(gpuState->VertexState.ProjectionMatrix.Matrix4)
                         ;
                 }
             }

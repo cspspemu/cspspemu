@@ -23,6 +23,7 @@ using CSharpUtils.Extensions;
 using CSPspEmu.Hle.Modules.iofilemgr;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Core.Cpu;
+using CSPspEmu.Core.Gpu.Impl.Null;
 using CSPspEmu.Hle.Modules;
 
 namespace CSPspEmu.AutoTests

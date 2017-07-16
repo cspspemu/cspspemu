@@ -8,7 +8,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 {
     public sealed unsafe partial class OpenglGpuImpl
     {
-        private void TransferToFrameBuffer(GpuStateStruct* GpuState)
+        private void TransferToFrameBuffer(GpuStateStruct* gpuState)
         {
             Console.WriteLine("TransferToFrameBuffer Not Implemented");
             //var TextureTransferState = GpuState->TextureTransferState;
@@ -43,39 +43,39 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             //GL.PixelStore(PixelStoreParameter.UnpackSkipRows, 0);
         }
 
-        private void TransferGeneric(GpuStateStruct* GpuState)
+        private void TransferGeneric(GpuStateStruct* gpuState)
         {
             Console.WriteLine("TransferGeneric Not Implemented");
-            var TextureTransferState = GpuState->TextureTransferState;
+            var textureTransferState = gpuState->TextureTransferState;
 
-            var SourceX = TextureTransferState.SourceX;
-            var SourceY = TextureTransferState.SourceY;
-            var DestinationX = TextureTransferState.DestinationX;
-            var DestinationY = TextureTransferState.DestinationY;
-            var BytesPerPixel = TextureTransferState.BytesPerPixel;
+            var sourceX = textureTransferState.SourceX;
+            var sourceY = textureTransferState.SourceY;
+            var destinationX = textureTransferState.DestinationX;
+            var destinationY = textureTransferState.DestinationY;
+            var bytesPerPixel = textureTransferState.BytesPerPixel;
 
-            var SourceTotalBytes = TextureTransferState.SourceLineWidth * TextureTransferState.Height * BytesPerPixel;
-            var DestinationTotalBytes =
-                TextureTransferState.DestinationLineWidth * TextureTransferState.Height * BytesPerPixel;
+            var sourceTotalBytes = textureTransferState.SourceLineWidth * textureTransferState.Height * bytesPerPixel;
+            var destinationTotalBytes =
+                textureTransferState.DestinationLineWidth * textureTransferState.Height * bytesPerPixel;
 
-            var SourcePointer =
-                (byte*) Memory.PspAddressToPointerSafe(TextureTransferState.SourceAddress.Address, SourceTotalBytes);
-            var DestinationPointer =
-                (byte*) Memory.PspAddressToPointerSafe(TextureTransferState.DestinationAddress.Address,
-                    DestinationTotalBytes);
+            var sourcePointer =
+                (byte*) Memory.PspAddressToPointerSafe(textureTransferState.SourceAddress.Address, sourceTotalBytes);
+            var destinationPointer =
+                (byte*) Memory.PspAddressToPointerSafe(textureTransferState.DestinationAddress.Address,
+                    destinationTotalBytes);
 
-            for (uint y = 0; y < TextureTransferState.Height; y++)
+            for (uint y = 0; y < textureTransferState.Height; y++)
             {
-                var RowSourceOffset = (uint) (
-                    (TextureTransferState.SourceLineWidth * (y + SourceY)) + SourceX
+                var rowSourceOffset = (uint) (
+                    (textureTransferState.SourceLineWidth * (y + sourceY)) + sourceX
                 );
-                var RowDestinationOffset = (uint) (
-                    (TextureTransferState.DestinationLineWidth * (y + DestinationY)) + DestinationX
+                var rowDestinationOffset = (uint) (
+                    (textureTransferState.DestinationLineWidth * (y + destinationY)) + destinationX
                 );
                 PointerUtils.Memcpy(
-                    DestinationPointer + RowDestinationOffset * BytesPerPixel,
-                    SourcePointer + RowSourceOffset * BytesPerPixel,
-                    TextureTransferState.Width * BytesPerPixel
+                    destinationPointer + rowDestinationOffset * bytesPerPixel,
+                    sourcePointer + rowSourceOffset * bytesPerPixel,
+                    textureTransferState.Width * bytesPerPixel
                 );
             }
 
@@ -107,25 +107,25 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             */
         }
 
-        public override void Transfer(GpuStateStruct* GpuState)
+        public override void Transfer(GpuStateStruct* gpuState)
         {
             Console.WriteLine("Transfer Not Implemented");
             //return;
-            var TextureTransferState = GpuState->TextureTransferState;
+            var textureTransferState = gpuState->TextureTransferState;
 
             if (
-                (TextureTransferState.DestinationAddress.Address == GpuState->DrawBufferState.Address) &&
-                (TextureTransferState.DestinationLineWidth == GpuState->DrawBufferState.Width) &&
-                (TextureTransferState.BytesPerPixel == GpuState->DrawBufferState.BytesPerPixel)
+                (textureTransferState.DestinationAddress.Address == gpuState->DrawBufferState.Address) &&
+                (textureTransferState.DestinationLineWidth == gpuState->DrawBufferState.Width) &&
+                (textureTransferState.BytesPerPixel == gpuState->DrawBufferState.BytesPerPixel)
             )
             {
                 //Console.Error.WriteLine("Writting to DrawBuffer");
-                TransferToFrameBuffer(GpuState);
+                TransferToFrameBuffer(gpuState);
             }
             else
             {
                 Console.Error.WriteLine("NOT Writting to DrawBuffer");
-                TransferGeneric(GpuState);
+                TransferGeneric(gpuState);
                 /*
                 base.Transfer(GpuStateStruct);
                 PrepareWrite(GpuStateStruct);
@@ -136,7 +136,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                 */
             }
             Console.Error.WriteLine("GpuImpl.Transfer Not Implemented!! : {0}",
-                GpuState->TextureTransferState.ToStringDefault());
+                gpuState->TextureTransferState.ToStringDefault());
         }
 
         /*

@@ -29,9 +29,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
         /// <summary>
         /// 
         /// </summary>
-        public static bool AlreadyInitialized = false;
+        public static bool AlreadyInitialized;
 
-        public bool IsCurrentWindow = false;
+        public bool IsCurrentWindow;
 
         public override void SetCurrent()
         {
@@ -48,9 +48,9 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             IsCurrentWindow = false;
         }
 
-        public static string GlGetString(int Name)
+        public static string GlGetString(int name)
         {
-            return Marshal.PtrToStringAnsi(new IntPtr(GL.glGetString(Name)));
+            return Marshal.PtrToStringAnsi(new IntPtr(GL.glGetString(name)));
         }
 
         /// <summary>
@@ -66,8 +66,8 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
             if (!AlreadyInitialized)
             {
                 AlreadyInitialized = true;
-                AutoResetEvent CompletedEvent = new AutoResetEvent(false);
-                var CThread = new Thread(() =>
+                var completedEvent = new AutoResetEvent(false);
+                new Thread(() =>
                 {
                     Thread.CurrentThread.CurrentCulture = new CultureInfo(GlobalConfig.ThreadCultureName);
 
@@ -91,7 +91,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
 
                     OpenglContext.ReleaseCurrent();
 
-                    CompletedEvent.Set();
+                    completedEvent.Set();
                     Console.WriteLine("OpenglGpuImpl.Init.Start()");
                     try
                     {
@@ -105,11 +105,13 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl
                     {
                         Console.WriteLine("OpenglGpuImpl.Init.End()");
                     }
-                });
-                CThread.Name = "GpuImplEventHandling";
-                CThread.IsBackground = true;
-                CThread.Start();
-                CompletedEvent.WaitOne();
+                })
+                {
+                    Name = "GpuImplEventHandling",
+                    IsBackground = true
+                }.Start();
+                
+                completedEvent.WaitOne();
             }
         }
 

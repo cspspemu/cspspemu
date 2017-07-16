@@ -13,82 +13,74 @@ namespace CSPspEmu.Core.Gpu.Formats
     /// <seealso cref="http://en.wikipedia.org/wiki/Wavefront_.obj_file"/>
     public class WavefrontObjWriter
     {
-        private int VertexIndex = 1;
-        private Stream Stream;
-        private StreamWriter StreamWriter;
-        private StringWriter VertexWriter;
-        private StringWriter ContentWriter;
+        private int _vertexIndex = 1;
+        private Stream _stream;
+        private StreamWriter _streamWriter;
+        private StringWriter _vertexWriter;
+        private StringWriter _contentWriter;
 
-        public WavefrontObjWriter(string FileName)
+        public WavefrontObjWriter(string fileName)
         {
-            Stream = File.Open(FileName, FileMode.Create, FileAccess.Write);
-            StreamWriter = new StreamWriter(Stream);
-            VertexWriter = new StringWriter();
-            ContentWriter = new StringWriter();
+            _stream = File.Open(fileName, FileMode.Create, FileAccess.Write);
+            _streamWriter = new StreamWriter(_stream);
+            _vertexWriter = new StringWriter();
+            _contentWriter = new StringWriter();
         }
 
         public void End()
         {
             _EndVertices();
-            StreamWriter.Write(VertexWriter.ToString());
-            StreamWriter.Write(ContentWriter.ToString());
-            StreamWriter.Flush();
-            Stream.Flush();
-            Stream.Dispose();
-            Stream = null;
-            StreamWriter = null;
+            _streamWriter.Write(_vertexWriter.ToString());
+            _streamWriter.Write(_contentWriter.ToString());
+            _streamWriter.Flush();
+            _stream.Flush();
+            _stream.Dispose();
+            _stream = null;
+            _streamWriter = null;
             //throw new NotImplementedException();
         }
 
-        private void WriteLine(string Line)
-        {
-            ContentWriter.WriteLine(Line);
-        }
+        private void WriteLine(string line) => _contentWriter.WriteLine(line);
 
-        private void WriteVerticeLine(string Line)
-        {
-            VertexWriter.WriteLine(Line);
-        }
+        private void WriteVerticeLine(string line) => _vertexWriter.WriteLine(line);
 
         List<Vector4f> Vertices = new List<Vector4f>();
         Dictionary<Vector4f, int> VerticesIndices = new Dictionary<Vector4f, int>();
 
         private void _EndVertices()
         {
-            float Normalize = 0.0f;
-            foreach (var Vertex in Vertices)
+            var normalize = 0.0f;
+            foreach (var vertex in Vertices)
             {
-                if (!float.IsNaN(Vertex.X) && !float.IsNaN(Vertex.Y) && !float.IsNaN(Vertex.Z))
-                {
-                    Normalize = Math.Max(Normalize, Math.Abs(Vertex.X));
-                    Normalize = Math.Max(Normalize, Math.Abs(Vertex.Y));
-                    Normalize = Math.Max(Normalize, Math.Abs(Vertex.Z));
-                }
+                if (float.IsNaN(vertex.X) || float.IsNaN(vertex.Y) || float.IsNaN(vertex.Z)) continue;
+                normalize = Math.Max(normalize, Math.Abs(vertex.X));
+                normalize = Math.Max(normalize, Math.Abs(vertex.Y));
+                normalize = Math.Max(normalize, Math.Abs(vertex.Z));
             }
 
-            Normalize /= 64;
+            normalize /= 64;
 
-            var NormalizeRecp = (1.0f / Normalize);
+            var normalizeRecp = (1.0f / normalize);
 
-            foreach (var Vertex in Vertices)
+            foreach (var vertex in Vertices)
             {
-                var NormalizedVertex = Vertex * NormalizeRecp;
-                WriteVerticeLine("v " + NormalizedVertex.X + " " + NormalizedVertex.Y + " " + NormalizedVertex.Z);
+                var normalizedVertex = vertex * normalizeRecp;
+                WriteVerticeLine($"v {normalizedVertex.X} {normalizedVertex.Y} {normalizedVertex.Z}");
             }
         }
 
-        public int AddVertex(Vector4f Position)
+        public int AddVertex(Vector4f position)
         {
-            WriteLine("# v " + Position.X + " " + Position.Y + " " + Position.Z + " ");
+            WriteLine($"# v {position.X} {position.Y} {position.Z} ");
 
-            if (!VerticesIndices.ContainsKey(Position))
+            if (!VerticesIndices.ContainsKey(position))
             {
                 //WriteVerticeLine("v " + Position.X + " " + Position.Y + " " + Position.Z);
-                Vertices.Add(Position);
-                VerticesIndices[Position] = VertexIndex;
-                return VertexIndex++;
+                Vertices.Add(position);
+                VerticesIndices[position] = _vertexIndex;
+                return _vertexIndex++;
             }
-            return VerticesIndices[Position];
+            return VerticesIndices[position];
         }
 
         /*
@@ -99,29 +91,16 @@ namespace CSPspEmu.Core.Gpu.Formats
         }
         */
 
-        public void AddFace(params int[] Indices)
-        {
-            WriteLine("f " + String.Join(" ", Indices));
-        }
+        public void AddFace(params int[] indices) => WriteLine($"f {String.Join(" ", indices)}");
+        public void StartComment(string text) => WriteLine($"# {text}");
+        public void StartObject(string name) => WriteLine("o " + name);
 
-        public void StartComment(string Text)
+        public void AddTriangleStrip(VertexInfo[] vertices)
         {
-            WriteLine("# " + Text);
-        }
-
-        public void StartObject(string Name)
-        {
-            WriteLine("o " + Name);
-        }
-
-        public void AddTriangleStrip(VertexInfo[] Vertices)
-        {
-            List<int> Indices = new List<int>();
-            foreach (var Vertex in Vertices)
-            {
-                Indices.Add(AddVertex(Vertex.Position.ToVector3()));
-            }
-            AddFace(Indices.ToArray());
+            var indices = new List<int>();
+            foreach (var vertex in vertices)
+                indices.Add(AddVertex(vertex.Position.ToVector3()));
+            AddFace(indices.ToArray());
         }
 
         /*
@@ -132,17 +111,15 @@ namespace CSPspEmu.Core.Gpu.Formats
         }
         */
 
-        public void AddFaces(int NumberOfVerticesPerFace, params int[] VerticesIndices)
+        public void AddFaces(int numberOfVerticesPerFace, params int[] verticesIndices)
         {
-            for (int n = 0; n < VerticesIndices.Length; n += NumberOfVerticesPerFace)
+            for (int n = 0; n < verticesIndices.Length; n += numberOfVerticesPerFace)
             {
-                AddFace(VerticesIndices.Skip(n).Take(NumberOfVerticesPerFace).ToArray());
+                AddFace(verticesIndices.Skip(n).Take(numberOfVerticesPerFace).ToArray());
             }
         }
 
-        public void AddFaces(int NumberOfVerticesPerFace, IEnumerable<int> VerticesIndices)
-        {
-            AddFaces(NumberOfVerticesPerFace, VerticesIndices.ToArray());
-        }
+        public void AddFaces(int numberOfVerticesPerFace, IEnumerable<int> verticesIndices) =>
+            AddFaces(numberOfVerticesPerFace, verticesIndices.ToArray());
     }
 }

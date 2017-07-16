@@ -38,7 +38,8 @@ namespace CSPspEmu.Core.Cpu
         public const bool EnableGpuFinishCallback = false;
 
         //public const bool EnableRenderTarget = false;
-        public const bool EnableRenderTarget = true;
+        //public const bool EnableRenderTarget = true;
+        public static bool EnableRenderTarget = true;
 
         //public const bool ImmediateLinking = false;
         public const bool ImmediateLinking = true;

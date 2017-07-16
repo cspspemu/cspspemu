@@ -10,9 +10,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
 {
     internal unsafe class OpenglGpuImplCommon
     {
-        static public void PrepareStateCommon(GpuStateStruct* GpuState, int ScaleViewport)
+        public static void PrepareStateCommon(GpuStateStruct* gpuState, int scaleViewport)
         {
-            var Viewport = GpuState->Viewport;
+            // ReSharper disable once UnusedVariable
+            var viewport = gpuState->Viewport;
             //ViewportStruct(
             //  Position=Vector3f(X=2048,Y=2048,Z=0.9999847),
             //  Scale=Vector3f(X=480,Y=-272,Z=-32768),

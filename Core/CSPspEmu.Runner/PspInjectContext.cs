@@ -11,6 +11,7 @@ using CSPspEmu.Hle.Managers;
 using CSPspEmu.Hle.Modules;
 using System;
 using System.Collections.Generic;
+using CSPspEmu.Core.Gpu.Impl.Null;
 
 namespace CSPspEmu.Runner
 {

@@ -80,13 +80,13 @@ namespace CSPspEmu.Core.Gpu.State
             }
         }
 
-        public Matrix4f Matrix4
+        public Matrix4F Matrix4
         {
             get
             {
                 fixed (float* ValuesPtr = Values)
                 {
-                    var Matrix4 = Matrix4f.Create(
+                    var Matrix4 = Matrix4F.Create(
                         ValuesPtr[0], ValuesPtr[1], ValuesPtr[2], ValuesPtr[3],
                         ValuesPtr[4], ValuesPtr[5], ValuesPtr[6], ValuesPtr[7],
                         ValuesPtr[8], ValuesPtr[9], ValuesPtr[10], ValuesPtr[11],
@@ -175,13 +175,13 @@ namespace CSPspEmu.Core.Gpu.State
             }
         }
 
-        public Matrix4f Matrix4
+        public Matrix4F Matrix4
         {
             get
             {
                 fixed (float* ValuesPtr = Values)
                 {
-                    var Matrix4 = Matrix4f.Create(
+                    var Matrix4 = Matrix4F.Create(
 #if false
 						ValuesPtr[0], ValuesPtr[1], ValuesPtr[2], ValuesPtr[3],
 						ValuesPtr[4], ValuesPtr[5], ValuesPtr[6], ValuesPtr[7],

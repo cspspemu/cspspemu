@@ -1,16 +1,11 @@
 ﻿using CSharpPlatform.GL;
 using CSPspEmu.Core.Gpu.State;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
 {
-    unsafe internal class OpenglGpuImplClear
+    internal unsafe class OpenglGpuImplClear
     {
-        internal static void PrepareStateClear(GpuStateStruct* GpuState)
+        internal static void PrepareStateClear(GpuStateStruct* gpuState)
         {
             bool ccolorMask = false, calphaMask = false;
 
@@ -27,12 +22,12 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
             GL.glDisable(GL.GL_CULL_FACE);
             GL.glDepthMask(false);
 
-            if (GpuState->ClearFlags.HasFlag(ClearBufferSet.ColorBuffer))
+            if (gpuState->ClearFlags.HasFlag(ClearBufferSet.ColorBuffer))
             {
                 ccolorMask = true;
             }
 
-            if (GL.EnableDisable(GL.GL_STENCIL_TEST, GpuState->ClearFlags.HasFlag(ClearBufferSet.StencilBuffer)))
+            if (GL.EnableDisable(GL.GL_STENCIL_TEST, gpuState->ClearFlags.HasFlag(ClearBufferSet.StencilBuffer)))
             {
                 calphaMask = true;
                 // Sets to 0x00 the stencil.
@@ -45,7 +40,7 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
 
             //int i; glGetIntegerv(GL_STENCIL_BITS, &i); writefln("GL_STENCIL_BITS: %d", i);
 
-            if (GpuState->ClearFlags.HasFlag(ClearBufferSet.DepthBuffer))
+            if (gpuState->ClearFlags.HasFlag(ClearBufferSet.DepthBuffer))
             {
                 GL.glEnable(GL.GL_DEPTH_TEST);
                 GL.glDepthFunc(GL.GL_ALWAYS);

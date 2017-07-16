@@ -103,14 +103,14 @@ namespace CSharpPlatform.GL.Utils
         }
 
         [DebuggerHidden]
-        public void Set(Matrix4f matrix)
+        public void Set(Matrix4F matrix)
         {
             if (!CheckValid()) return;
             Set(new[] {matrix});
         }
 
         [DebuggerHidden]
-        public void Set(Matrix4f[] matrices)
+        public void Set(Matrix4F[] matrices)
         {
             if (!CheckValid()) return;
             if (ValueType != GLValueType.GL_FLOAT_MAT4)

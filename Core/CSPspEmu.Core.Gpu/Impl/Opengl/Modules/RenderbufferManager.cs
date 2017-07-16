@@ -5,10 +5,7 @@ using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Types;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
@@ -28,42 +25,42 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
         //static int ScreenWidth = 480 * 2;
         //static int ScreenHeight = 272 * 2;
 
-        unsafe public class DrawBufferValue : IDisposable
+        public class DrawBufferValue : IDisposable
         {
             public DrawBufferKey DrawBufferKey;
             public GLRenderTarget RenderTarget;
             public int Width, Height;
             private OpenglGpuImpl OpenglGpuImpl;
-            private int CurrentScaleViewport;
-            private bool MustUpdateRenderTarget = false;
-            private int MustUpdateRenderTarget_ScaleViewport = 0;
+            private int _currentScaleViewport;
+            private bool _mustUpdateRenderTarget = false;
+            private int _mustUpdateRenderTargetScaleViewport = 0;
 
-            public DrawBufferValue(OpenglGpuImpl OpenglGpuImpl, DrawBufferKey DrawBufferKey)
+            public DrawBufferValue(OpenglGpuImpl openglGpuImpl, DrawBufferKey drawBufferKey)
             {
-                this.OpenglGpuImpl = OpenglGpuImpl;
-                this.DrawBufferKey = DrawBufferKey;
+                OpenglGpuImpl = openglGpuImpl;
+                DrawBufferKey = drawBufferKey;
 
-                OpenglGpuImpl.OnScaleViewport += UpdateTextures_External;
-                UpdateTextures(OpenglGpuImpl.ScaleViewport);
+                openglGpuImpl.OnScaleViewport += UpdateTextures_External;
+                UpdateTextures(openglGpuImpl.ScaleViewport);
             }
 
-            private void UpdateTextures_External(int ScaleViewport)
+            private void UpdateTextures_External(int scaleViewport)
             {
-                MustUpdateRenderTarget = true;
-                MustUpdateRenderTarget_ScaleViewport = ScaleViewport;
+                _mustUpdateRenderTarget = true;
+                _mustUpdateRenderTargetScaleViewport = scaleViewport;
             }
 
-            private void UpdateTextures(int ScaleViewport)
+            private void UpdateTextures(int scaleViewport)
             {
-                if (CurrentScaleViewport == ScaleViewport) return;
-                CurrentScaleViewport = ScaleViewport;
-                MustUpdateRenderTarget = false;
+                if (_currentScaleViewport == scaleViewport) return;
+                _currentScaleViewport = scaleViewport;
+                _mustUpdateRenderTarget = false;
 
                 if (RenderTarget != null) RenderTarget.Dispose();
 
                 RenderTarget = GLRenderTarget.Create(
-                    Width = 512 * ScaleViewport,
-                    Height = 272 * ScaleViewport
+                    Width = 512 * scaleViewport,
+                    Height = 272 * scaleViewport
                 );
                 //Console.WriteLine(OpenglContextFactory.Current);
                 //Console.WriteLine(RenderTarget);
@@ -91,10 +88,10 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
 
             public void Bind()
             {
-                if (MustUpdateRenderTarget)
+                if (_mustUpdateRenderTarget)
                 {
                     Unbind();
-                    UpdateTextures(MustUpdateRenderTarget_ScaleViewport);
+                    UpdateTextures(_mustUpdateRenderTargetScaleViewport);
                 }
                 if (!Binded)
                 {
@@ -129,30 +126,30 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
             }
         }
 
-        private readonly Dictionary<DrawBufferKey, DrawBufferValue> DrawBufferTextures =
+        private readonly Dictionary<DrawBufferKey, DrawBufferValue> _drawBufferTextures =
             new Dictionary<DrawBufferKey, DrawBufferValue>();
 
-        public GLTexture TextureCacheGetAndBind(GpuStateStruct* GpuState)
+        public GLTexture TextureCacheGetAndBind(GpuStateStruct* gpuState)
         {
             if (_DynarecConfig.EnableRenderTarget)
             {
-                var TextureMappingState = &GpuState->TextureMappingState;
-                var ClutState = &TextureMappingState->ClutState;
-                var TextureState = &TextureMappingState->TextureState;
-                var Key = new DrawBufferKey()
+                var textureMappingState = &gpuState->TextureMappingState;
+                var clutState = &textureMappingState->ClutState;
+                var textureState = &textureMappingState->TextureState;
+                var key = new DrawBufferKey()
                 {
-                    Address = TextureState->Mipmap0.Address,
+                    Address = textureState->Mipmap0.Address,
                 };
 
-                if (DrawBufferTextures.ContainsKey(Key))
+                if (_drawBufferTextures.ContainsKey(key))
                 {
-                    return GetOrCreateDrawBufferTexture(Key).RenderTarget.TextureColor.Bind();
+                    return GetOrCreateDrawBufferTexture(key).RenderTarget.TextureColor.Bind();
                 }
             }
 
-            var CurrentTexture = OpenglGpuImpl.TextureCache.Get(GpuState);
-            CurrentTexture.Bind();
-            return CurrentTexture.Texture;
+            var currentTexture = OpenglGpuImpl.TextureCache.Get(gpuState);
+            currentTexture.Bind();
+            return currentTexture.Texture;
         }
 
         //public int GetDrawTexture(DrawBufferKey Key)
@@ -163,79 +160,77 @@ namespace CSPspEmu.Core.Gpu.Impl.Opengl.Modules
 
         OpenglGpuImpl OpenglGpuImpl;
 
-        public RenderbufferManager(OpenglGpuImpl OpenglGpuImpl)
+        public RenderbufferManager(OpenglGpuImpl openglGpuImpl)
         {
-            this.OpenglGpuImpl = OpenglGpuImpl;
+            OpenglGpuImpl = openglGpuImpl;
         }
 
-        public DrawBufferValue GetDrawBufferTexture(DrawBufferKey Key)
+        public DrawBufferValue GetDrawBufferTexture(DrawBufferKey key)
         {
-            var Value = DrawBufferTextures.GetOrDefault(Key, null);
-            if (Value != null) Value.WaitUnlocked();
-            return Value;
+            var value = _drawBufferTextures.GetOrDefault(key, null);
+            value?.WaitUnlocked();
+            return value;
         }
 
-        public void GetDrawBufferTextureAndLock(DrawBufferKey Key, Action<DrawBufferValue> Action)
+        public void GetDrawBufferTextureAndLock(DrawBufferKey key, Action<DrawBufferValue> action)
         {
-            var RenderBuffer = GetDrawBufferTexture(Key);
-            if (RenderBuffer != null)
+            var renderBuffer = GetDrawBufferTexture(key);
+            if (renderBuffer != null)
             {
-                RenderBuffer.Lock();
+                renderBuffer.Lock();
                 try
                 {
-                    Action(RenderBuffer);
+                    action(renderBuffer);
                 }
                 finally
                 {
-                    RenderBuffer.Unlock();
+                    renderBuffer.Unlock();
                 }
             }
             else
             {
-                Action(null);
+                action(null);
             }
         }
 
-        public DrawBufferValue GetOrCreateDrawBufferTexture(DrawBufferKey Key)
+        public DrawBufferValue GetOrCreateDrawBufferTexture(DrawBufferKey key)
         {
-            if (!DrawBufferTextures.ContainsKey(Key)) DrawBufferTextures[Key] = new DrawBufferValue(OpenglGpuImpl, Key);
-            return GetDrawBufferTexture(Key);
+            if (!_drawBufferTextures.ContainsKey(key))
+                _drawBufferTextures[key] = new DrawBufferValue(OpenglGpuImpl, key);
+            return GetDrawBufferTexture(key);
         }
 
-        public void DrawVideo(uint FrameBufferAddress, OutputPixel* OutputPixel, int Width, int Height)
+        public void DrawVideo(uint frameBufferAddress, OutputPixel* outputPixel, int width, int height)
         {
-            var DrawBuffer = GetOrCreateDrawBufferTexture(new DrawBufferKey()
+            var drawBuffer = GetOrCreateDrawBufferTexture(new DrawBufferKey()
             {
-                Address = FrameBufferAddress,
+                Address = frameBufferAddress,
             });
-            DrawBuffer.Bind();
+            drawBuffer.Bind();
             //GL.DrawPixels(Width, Height, PixelFormat.Bgra, PixelType.UnsignedInt8888Reversed, new IntPtr(OutputPixel));
-            DrawBuffer.Unbind();
-            Console.WriteLine("DrawVideo: {0:X8}, {1}x{2}", FrameBufferAddress, Width, Height);
+            drawBuffer.Unbind();
+            Console.WriteLine("DrawVideo: {0:X8}, {1}x{2}", frameBufferAddress, width, height);
         }
 
-        private uint CachedBindAddress;
+        private uint _cachedBindAddress;
         public DrawBufferValue CurrentDrawBuffer { get; private set; }
 
-        public void BindCurrentDrawBufferTexture(GpuStateStruct* GpuState)
+        public void BindCurrentDrawBufferTexture(GpuStateStruct* gpuState)
         {
-            if (CachedBindAddress != GpuState->DrawBufferState.Address)
+            if (_cachedBindAddress != gpuState->DrawBufferState.Address)
             {
                 GL.glFlush();
                 GL.glFinish();
 
-                CachedBindAddress = GpuState->DrawBufferState.Address;
-                var Key = new DrawBufferKey()
+                _cachedBindAddress = gpuState->DrawBufferState.Address;
+                var key = new DrawBufferKey()
                 {
-                    Address = GpuState->DrawBufferState.Address,
+                    Address = gpuState->DrawBufferState.Address,
                     //Width = (int)GpuState->DrawBufferState.Width,
                     //Height = (int)272,
                 };
-                if (CurrentDrawBuffer != null)
-                {
-                    CurrentDrawBuffer.Unbind();
-                }
-                CurrentDrawBuffer = GetOrCreateDrawBufferTexture(Key);
+                CurrentDrawBuffer?.Unbind();
+                CurrentDrawBuffer = GetOrCreateDrawBufferTexture(key);
                 CurrentDrawBuffer.Bind();
             }
         }
