@@ -13,9 +13,9 @@ namespace CSPspEmu
 	{
 		private PspEmulator PspEmulator;
 
-		public GuiRunner(PspEmulator PspEmulator)
+		public GuiRunner(PspEmulator pspEmulator)
 		{
-			this.PspEmulator = PspEmulator;
+			this.PspEmulator = pspEmulator;
 		}
 
 		public void Start()

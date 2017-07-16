@@ -27,15 +27,15 @@ namespace CSPspEmu.AutoTests
 {
 	public class AutoTestsProgram
 	{
-		static TimeSpan TimeoutTime = TimeSpan.FromMilliseconds(0);
+		static TimeSpan _timeoutTime = TimeSpan.FromMilliseconds(0);
 
 		public class HleOutputHandlerMock : HleOutputHandler
 		{
 			public String OutputString = "";
 
-			public override void Output(string OutputString)
+			public override void Output(string outputString)
 			{
-				this.OutputString += OutputString;
+				this.OutputString += outputString;
 			}
 		}
 
@@ -43,10 +43,10 @@ namespace CSPspEmu.AutoTests
 		//CpuConfig CpuConfig;
 		//
 		[Inject]
-		HleConfig HleConfig;
+		public HleConfig HleConfig;
 
 		[Inject]
-		PspStoredConfig StoredConfig;
+		public PspStoredConfig StoredConfig;
 
 		public AutoTestsProgram()
 		{
@@ -55,63 +55,63 @@ namespace CSPspEmu.AutoTests
 
 		public void Init()
 		{
-			foreach (var _FileName in new[] {
+			foreach (var fileName in new[] {
 					Path.GetDirectoryName(typeof(AutoTestsProgram).Assembly.Location) + @"\CSPspEmu.Hle.Modules.dll",
 					Application.ExecutablePath,
 				})
 			{
-				if (File.Exists(_FileName))
+				if (File.Exists(fileName))
 				{
-					HleConfig.HleModulesDll = Assembly.LoadFile(_FileName);
+					HleConfig.HleModulesDll = Assembly.LoadFile(fileName);
 					break;
 				}
 			}
 		}
 
-		protected string RunExecutableAndGetOutput(bool RunTestsViewOut, string PspAutoTestsFolder, string FileName, out string CapturedOutput, string FileNameBase)
+		protected string RunExecutableAndGetOutput(bool runTestsViewOut, string pspAutoTestsFolder, string fileName, out string capturedOutput, string fileNameBase)
 		{
-			var OutputString = "";
+			var outputString = "";
 
-			IHleIoDriver HostDriver = null;
+			IHleIoDriver hostDriver = null;
 
 			//Console.WriteLine(FileNameBase);
 
-			InjectContext _InjectContext = null;
+			InjectContext injectContext = null;
 			{
 				//var Capture = false;
-				var Capture = !RunTestsViewOut;
-				CapturedOutput = ConsoleUtils.CaptureOutput(() =>
+				var capture = !runTestsViewOut;
+				capturedOutput = ConsoleUtils.CaptureOutput(() =>
 				{
-					_InjectContext = PspInjectContext.CreateInjectContext(StoredConfig, Test: true);
-					_InjectContext.SetInstanceType<HleOutputHandler, HleOutputHandlerMock>();
+					injectContext = PspInjectContext.CreateInjectContext(StoredConfig, Test: true);
+					injectContext.SetInstanceType<HleOutputHandler, HleOutputHandlerMock>();
 
-					var CpuConfig = _InjectContext.GetInstance<CpuConfig>();
-					var HleConfig = _InjectContext.GetInstance<HleConfig>();
-					CpuConfig.DebugSyscalls = false;
-					CpuConfig.ShowInstructionStats = false;
-					HleConfig.TraceLastSyscalls = false;
-					HleConfig.DebugSyscalls = false;
+					var cpuConfig = injectContext.GetInstance<CpuConfig>();
+					var hleConfig = injectContext.GetInstance<HleConfig>();
+					cpuConfig.DebugSyscalls = false;
+					cpuConfig.ShowInstructionStats = false;
+					hleConfig.TraceLastSyscalls = false;
+					hleConfig.DebugSyscalls = false;
 
 					//Console.Error.WriteLine("[1]");
 
-					var Start = DateTime.UtcNow;
-					_InjectContext.GetInstance<HleModuleManager>();
-					var End = DateTime.UtcNow;
-					Console.WriteLine(End - Start);
+					var start = DateTime.UtcNow;
+					injectContext.GetInstance<HleModuleManager>();
+					var end = DateTime.UtcNow;
+					Console.WriteLine(end - start);
 
 					//Console.Error.WriteLine("[a]");
 
 					// GPU -> NULL
 					//PspEmulatorContext.SetInstanceType<GpuImpl>(typeof(GpuImplOpenglEs));
-					_InjectContext.SetInstanceType<GpuImpl>(typeof(GpuImplNull));
+					injectContext.SetInstanceType<GpuImpl>(typeof(GpuImplNull));
 
-					var GpuImpl = _InjectContext.GetInstance<GpuImpl>();
+					var gpuImpl = injectContext.GetInstance<GpuImpl>();
 					//GpuImpl.InitSynchronizedOnce();
 
 					//Console.Error.WriteLine("[b]");
 
-					var PspRunner = _InjectContext.GetInstance<PspRunner>();
-					PspRunner.StartSynchronized();
+					var pspRunner = injectContext.GetInstance<PspRunner>();
+					pspRunner.StartSynchronized();
 
 					//Console.Error.WriteLine("[c]");
 
@@ -119,19 +119,19 @@ namespace CSPspEmu.AutoTests
 						try
 						{
 							//PspRunner.CpuComponentThread.SetIso(PspAutoTestsFolder + "/../input/test.cso");
-							PspRunner.CpuComponentThread.SetIso(PspAutoTestsFolder + "/../input/cube.cso");
+							pspRunner.CpuComponentThread.SetIso(pspAutoTestsFolder + "/../input/cube.cso");
 							//Console.Error.WriteLine("[2]");
 
-							var HleIoManager = _InjectContext.GetInstance<HleIoManager>();
-							HostDriver = HleIoManager.GetDriver("host:");
+							var hleIoManager = injectContext.GetInstance<HleIoManager>();
+							hostDriver = hleIoManager.GetDriver("host:");
 
-							try { HostDriver.IoRemove(null, "/__testoutput.txt"); } catch { }
-							try { HostDriver.IoRemove(null, "/__testerror.txt"); } catch { }
+							try { hostDriver.IoRemove(null, "/__testoutput.txt"); } catch (Exception e) { Console.WriteLine(e); }
+							try { hostDriver.IoRemove(null, "/__testerror.txt"); } catch (Exception e) { Console.WriteLine(e); }
 
-							_InjectContext.GetInstance<PspHleRunningConfig>().FileNameBase = FileNameBase;
-							PspRunner.CpuComponentThread._LoadFile(FileName);
+							injectContext.GetInstance<PspHleRunningConfig>().FileNameBase = fileNameBase;
+							pspRunner.CpuComponentThread._LoadFile(fileName);
 							//Console.Error.WriteLine("[3]");
-							if (!PspRunner.CpuComponentThread.StoppedEndedEvent.WaitOne(TimeoutTime))
+							if (!pspRunner.CpuComponentThread.StoppedEndedEvent.WaitOne(_timeoutTime))
 							{
 								ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Red, () =>
 								{
@@ -139,108 +139,108 @@ namespace CSPspEmu.AutoTests
 								});
 							}
 						}
-						catch (Exception Exception)
+						catch (Exception e)
 						{
-							Console.Error.WriteLine(Exception);
+							Console.Error.WriteLine(e);
 						}
 					}
 
-					PspRunner.StopSynchronized();
+					pspRunner.StopSynchronized();
 					GC.Collect();
 
-					using (var test_output = HostDriver.OpenRead("/__testoutput.txt"))
+					using (var testOutput = hostDriver.OpenRead("/__testoutput.txt"))
 					{
-						OutputString = test_output.ReadAllContentsAsString();
+						outputString = testOutput.ReadAllContentsAsString();
 					}
 				},
-				Capture: Capture
+				Capture: capture
 				);
 
 				//var HleOutputHandlerMock = (HleOutputHandlerMock)PspEmulatorContext.GetInstance<HleOutputHandler>();
 				//OutputString = HleOutputHandlerMock.OutputString;
 			}
-			_InjectContext.Dispose();
+			injectContext.Dispose();
 
-			return OutputString;
+			return outputString;
 		}
 
-		protected void RunFile(bool RunTestsViewOut, string PspAutoTestsFolder, string FileNameExecutable, string FileNameExpected, string FileNameBase)
+		protected void RunFile(bool runTestsViewOut, string pspAutoTestsFolder, string fileNameExecutable, string fileNameExpected, string fileNameBase)
 		{
 			ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.DarkCyan, () =>
 			{
-				Console.Write("{0}...", FileNameExecutable);
+				Console.Write("{0}...", fileNameExecutable);
 			});
-			var ExpectedOutput = File.ReadAllText(FileNameExpected, Encoding.ASCII);
-			var RealOutput = "";
-			string CapturedOutput = "";
+			var expectedOutput = File.ReadAllText(fileNameExpected, Encoding.ASCII);
+			var realOutput = "";
+			var capturedOutput = "";
 
 			// Execute.
 			{
-				RealOutput = RunExecutableAndGetOutput(RunTestsViewOut, PspAutoTestsFolder, FileNameExecutable, out CapturedOutput, FileNameBase);
+				realOutput = RunExecutableAndGetOutput(runTestsViewOut, pspAutoTestsFolder, fileNameExecutable, out capturedOutput, fileNameBase);
 			}
 
-			var ExpectedOutputLines = ExpectedOutput.Trim().Replace("\r\n", "\n").Split('\n');
-			var RealOutputLines = RealOutput.Trim().Replace("\r\n", "\n").Split('\n');
-			var Result = Diff.DiffTextProcessed(ExpectedOutputLines, RealOutputLines);
+			var expectedOutputLines = expectedOutput.Trim().Replace("\r\n", "\n").Split('\n');
+			var realOutputLines = realOutput.Trim().Replace("\r\n", "\n").Split('\n');
+			var result = Diff.DiffTextProcessed(expectedOutputLines, realOutputLines);
 
 			File.WriteAllText(
-				Path.ChangeExtension(FileNameExpected, ".lastoutput"),
-				RealOutput
+				Path.ChangeExtension(fileNameExpected, ".lastoutput"),
+				realOutput
 			);
 
 			File.WriteAllText(
-				Path.ChangeExtension(FileNameExpected, ".lastdebug"),
-				CapturedOutput
+				Path.ChangeExtension(fileNameExpected, ".lastdebug"),
+				capturedOutput
 			);
 
-			bool HadAnError = false;
-			for (int n = 0; n < 10; n++)
+			var hadAnError = false;
+			for (var n = 0; n < 10; n++)
 			{
-				var ImageReferenceFile = String.Format("{0}.reference.{1}.png", FileNameBase, n);
-				var ImageOutputFile = String.Format("{0}.lastoutput.{1}.png", FileNameBase, n);
-				if (File.Exists(ImageReferenceFile))
+				var imageReferenceFile = String.Format("{0}.reference.{1}.png", fileNameBase, n);
+				var imageOutputFile = String.Format("{0}.lastoutput.{1}.png", fileNameBase, n);
+				if (File.Exists(imageReferenceFile))
 				{
-					if (File.Exists(ImageOutputFile))
+					if (File.Exists(imageOutputFile))
 					{
-						var ReferenceBitmap = new Bitmap(ImageReferenceFile);
-						var OutputBitmap = new Bitmap(ImageOutputFile);
-						if (ReferenceBitmap.Size == OutputBitmap.Size)
+						var referenceBitmap = new Bitmap(imageReferenceFile);
+						var outputBitmap = new Bitmap(imageOutputFile);
+						if (referenceBitmap.Size == outputBitmap.Size)
 						{
-							var CompareResult = BitmapUtils.CompareBitmaps(ReferenceBitmap, OutputBitmap, 0.01);
+							var compareResult = BitmapUtils.CompareBitmaps(referenceBitmap, outputBitmap, 0.01);
 
-							if (CompareResult.Equal)
+							if (compareResult.Equal)
 							{
 								Console.Error.WriteLine(
 									"Files '{0}:{1}' and '{2}:{3}' have different contents {4}/{5} different pixels {6}%",
-									ImageReferenceFile, ReferenceBitmap.Size, ImageOutputFile, OutputBitmap.Size,
-									CompareResult.DifferentPixelCount, CompareResult.TotalPixelCount, CompareResult.PixelTotalDifferencePercentage
+									imageReferenceFile, referenceBitmap.Size, imageOutputFile, outputBitmap.Size,
+									compareResult.DifferentPixelCount, compareResult.TotalPixelCount, compareResult.PixelTotalDifferencePercentage
 								);
-								HadAnError |= true;
+								hadAnError = true;
 							}
 						}
 						else
 						{
 							Console.Error.WriteLine(
 								"Files '{0}:{1}' and '{2}:{3}' have different sizes",
-								ImageReferenceFile, ReferenceBitmap.Size, ImageOutputFile, OutputBitmap.Size
+								imageReferenceFile, referenceBitmap.Size, imageOutputFile, outputBitmap.Size
 							);
-							HadAnError |= true;
+							hadAnError = true;
 						}
 					}
 					else
 					{
 						Console.Error.WriteLine(
 							"File '{0}' exists, but not exists '{1}'",
-							ImageReferenceFile, ImageOutputFile
+							imageReferenceFile, imageOutputFile
 						);
-						HadAnError |= true;
+						hadAnError = true;
 					}
 				}
 			}
 
-			if (!Result.Items.All(Item => Item.Action == Diff.ProcessedItem.ActionEnum.Keep)) HadAnError |= true;
+			if (result.Items.Any(item => item.Action != Diff.ProcessedItem.ActionEnum.Keep)) hadAnError = true;
 
-			if (!HadAnError)
+			if (!hadAnError)
 			{
 				ConsoleUtils.SaveRestoreConsoleColor(ConsoleColor.Green, () =>
 				{
@@ -253,79 +253,79 @@ namespace CSPspEmu.AutoTests
 				{
 					Console.WriteLine("Error");
 				});
-				Result.Print(AvoidKeep: true);
+				result.Print(AvoidKeep: true);
 			}
 
 			File.WriteAllText(
-				Path.ChangeExtension(FileNameExpected, ".lastdiff"),
-				Result.ToString()
+				Path.ChangeExtension(fileNameExpected, ".lastdiff"),
+				result.ToString()
 			);
 		}
 
-		protected string ExecuteBat(string ExecutableFileName, string Arguments, double TimeoutSeconds = -1)
+		protected string ExecuteBat(string executableFileName, string arguments, double timeoutSeconds = -1)
 		{
-			var Process = new System.Diagnostics.Process(); // Declare New Process
+			var process = new Process(); // Declare New Process
 			//proc.StartInfo.FileName = fileName;
 			//proc.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
 			//proc.StartInfo.CreateNoWindow = true;
 
-			Process.StartInfo.FileName = ExecutableFileName;
-			Process.StartInfo.Arguments = Arguments;
-			Process.StartInfo.RedirectStandardError = true;
-			Process.StartInfo.RedirectStandardOutput = true;
-			Process.StartInfo.UseShellExecute = false;
+			process.StartInfo.FileName = executableFileName;
+			process.StartInfo.Arguments = arguments;
+			process.StartInfo.RedirectStandardError = true;
+			process.StartInfo.RedirectStandardOutput = true;
+			process.StartInfo.UseShellExecute = false;
 
-			Process.Start();
+			process.Start();
 
 
-			if (TimeoutSeconds < 0)
+			if (timeoutSeconds < 0)
 			{
-				Process.WaitForExit();
+				process.WaitForExit();
 			}
 			else
 			{
-				Process.WaitForExit((int)TimeSpan.FromSeconds(TimeoutSeconds).TotalMilliseconds);
+				process.WaitForExit((int)TimeSpan.FromSeconds(timeoutSeconds).TotalMilliseconds);
 			}
 
-			var ErrorMessage = Process.StandardError.ReadToEnd();
-			Process.WaitForExit();
+			var errorMessage = process.StandardError.ReadToEnd();
+			process.WaitForExit();
 
-			var OutputMessage = Process.StandardOutput.ReadToEnd();
-			Process.WaitForExit();
+			var outputMessage = process.StandardOutput.ReadToEnd();
+			process.WaitForExit();
 
-			Process.Start();
-			Process.WaitForExit();
+			process.Start();
+			process.WaitForExit();
 
-			return ErrorMessage + OutputMessage;
+			return errorMessage + outputMessage;
 		}
 
-		protected void Run(bool RunTestsViewOut, string PspAutoTestsFolder, string WildCardFilter)
+		protected void Run(bool runTestsViewOut, string pspAutoTestsFolder, string wildCardFilter)
 		{
-			foreach (var FileNameExpected in Directory.GetFiles(PspAutoTestsFolder, "*.expected", SearchOption.AllDirectories))
+			foreach (var fileNameExpected in Directory.GetFiles(pspAutoTestsFolder, "*.expected", SearchOption.AllDirectories))
 			{
-				var FileNameBaseBase = Path.GetFileNameWithoutExtension(FileNameExpected);
-				var FileNameBase = Path.GetDirectoryName(FileNameExpected) + @"\" + FileNameBaseBase;
-				var FileNameExecutable = FileNameBase + ".prx";
-				var FileNameSourceCode = FileNameBase + ".c";
+				var fileNameBaseBase = Path.GetFileNameWithoutExtension(fileNameExpected);
+				var fileNameBase = Path.GetDirectoryName(fileNameExpected) + @"\" + fileNameBaseBase;
+				var fileNameExecutable = fileNameBase + ".prx";
+				var fileNameSourceCode = fileNameBase + ".c";
 
-				var MatchName = FileNameBase.Substr(PspAutoTestsFolder.Length).Replace("\\", "/");
+				var matchName = fileNameBase.Substr(pspAutoTestsFolder.Length).Replace("\\", "/");
 
 				//Console.WriteLine(MatchName + " ~ " + Wildcard.WildcardToRegex(WildCardFilter));
-				if (!new Regex(Wildcard.WildcardToRegex(WildCardFilter)).IsMatch(MatchName))
+				if (!new Regex(Wildcard.WildcardToRegex(wildCardFilter)).IsMatch(matchName))
 				{
 					continue;
 				}
 
-				bool Recompile = false;
+				var recompile = false;
 				//bool Recompile = true;
 
-				if (File.GetLastWriteTime(FileNameExecutable) != File.GetLastWriteTime(FileNameSourceCode))
+				if (File.GetLastWriteTime(fileNameExecutable) != File.GetLastWriteTime(fileNameSourceCode))
 				{
-					Recompile = true;
+					recompile = true;
 				}
 
 #if ENABLE_RECOMPILE
-				if (Recompile)
+				if (recompile)
 				{
 					//PspAutoTestsFolder + @"\make.bat"
 					// FileNameBase
@@ -347,44 +347,44 @@ namespace CSPspEmu.AutoTests
 				}
 #endif
 
-				if (File.Exists(FileNameExecutable))
+				if (File.Exists(fileNameExecutable))
 				{
-					RunFile(RunTestsViewOut, PspAutoTestsFolder, FileNameExecutable, FileNameExpected, FileNameBase);
+					RunFile(runTestsViewOut, pspAutoTestsFolder, fileNameExecutable, fileNameExpected, fileNameBase);
 				}
 				else
 				{
-					Console.WriteLine("Can't find executable for '{0}' '{1}'", FileNameExpected, FileNameExecutable);
+					Console.WriteLine("Can't find executable for '{0}' '{1}'", fileNameExpected, fileNameExecutable);
 				}
 			}
 		}
 
-		private void InternalMain(bool RunTestsViewOut, String[] Arguments)
+		private void InternalMain(bool runTestsViewOut, String[] arguments)
 		{
-			var BasePath = Path.GetDirectoryName(Application.ExecutablePath);
-			string PspAutoTestsFolder = "";
+			var basePath = Path.GetDirectoryName(Application.ExecutablePath);
+			var pspAutoTestsFolder = "";
 
-			foreach (var TryName in new[] { "pspautotests/tests", "../../../pspautotests/tests" })
+			foreach (var tryName in new[] { "pspautotests/tests", "../../../pspautotests/tests" })
 			{
-				if (Directory.Exists(BasePath + "/" + TryName))
+				if (Directory.Exists(basePath + "/" + tryName))
 				{
-					PspAutoTestsFolder = new DirectoryInfo(BasePath + "/" + TryName).FullName;
+					pspAutoTestsFolder = new DirectoryInfo(basePath + "/" + tryName).FullName;
 					break;
 				}
 			}
 
-			if (string.IsNullOrEmpty(PspAutoTestsFolder))
+			if (string.IsNullOrEmpty(pspAutoTestsFolder))
 			{
 				Console.Error.WriteLine("Can't find 'pspautotests/tests' folder.");
 				Console.ReadKey();
 			}
 
-			Console.WriteLine(PspAutoTestsFolder);
+			Console.WriteLine(pspAutoTestsFolder);
 
-			var WildCardFilter = "*";
+			var wildCardFilter = "*";
 
-			if (Arguments.Length > 0)
+			if (arguments.Length > 0)
 			{
-				WildCardFilter =  Arguments[0];
+				wildCardFilter =  arguments[0];
 			}
 
 			//Console.WriteLine(String.Join(" ", Arguments));
@@ -395,18 +395,19 @@ namespace CSPspEmu.AutoTests
 					Console.SetWindowSize(160, 60);
 					Console.SetBufferSize(160, 2000);
 				}
-				catch
+				catch (Exception e)
 				{
+					Console.WriteLine(e);
 				}
 			}
 
-			if (WildCardFilter.Length > 0)
+			if (wildCardFilter.Length > 0)
 			{
-				WildCardFilter = "*" + WildCardFilter + "*";
+				wildCardFilter = "*" + wildCardFilter + "*";
 			}
 
 			Init();
-			Run(RunTestsViewOut, PspAutoTestsFolder, WildCardFilter);
+			Run(runTestsViewOut, pspAutoTestsFolder, wildCardFilter);
 			if (Debugger.IsAttached)
 			{
 				Console.WriteLine("Done");
@@ -414,10 +415,10 @@ namespace CSPspEmu.AutoTests
 			}
 		}
 
-		public static void Main(bool RunTestsViewOut, String[] Arguments, int Timeout)
+		public static void Main(bool runTestsViewOut, String[] arguments, int timeout)
 		{
-			AutoTestsProgram.TimeoutTime = TimeSpan.FromSeconds(Timeout);
-			new AutoTestsProgram().InternalMain(RunTestsViewOut, Arguments);
+			AutoTestsProgram._timeoutTime = TimeSpan.FromSeconds(timeout);
+			new AutoTestsProgram().InternalMain(runTestsViewOut, arguments);
 		}			
 	}
 }

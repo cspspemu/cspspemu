@@ -92,10 +92,10 @@ namespace CSPspEmu
 		/// <see cref="http://en.wikipedia.org/wiki/Common_Intermediate_Language"/>
 		/// <see cref="http://en.wikipedia.org/wiki/List_of_CIL_instructions"/>
 		/// <see cref="http://www.microsoft.com/downloads/details.aspx?FamilyID=22914587-b4ad-4eae-87cf-b14ae6a939b0&displaylang=en" />
-		/// <param name="Arguments"></param>
+		/// <param name="arguments"></param>
 		[STAThread]
 		[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
-		unsafe static void Main(string[] Arguments)
+		static void Main(string[] arguments)
 		{
 			//Console.WriteLine(GL.GetConstantString(GL.GL_TEXTURE_2D));
 			//_MainData();
@@ -117,12 +117,12 @@ namespace CSPspEmu
 			// Add the event handler for handling non-UI thread exceptions to the event. 
 			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
-			Logger.OnGlobalLog += (LogName, Level, Text, StackFrame) =>
+			Logger.OnGlobalLog += (logName, level, text, stackFrame) =>
 			{
-				if (Level >= Logger.Level.Info)
+				if (level >= Logger.Level.Info)
 				{
-					var Method = StackFrame.GetMethod();
-					Console.WriteLine("{0} : {1} : {2}.{3} : {4}", LogName, Level, (Method.DeclaringType != null) ? Method.DeclaringType.Name : null, Method.Name, Text);
+					var method = stackFrame.GetMethod();
+					Console.WriteLine("{0} : {1} : {2}.{3} : {4}", logName, level, (method.DeclaringType != null) ? method.DeclaringType.Name : null, method.Name, text);
 				}
 			};
 
@@ -135,13 +135,13 @@ namespace CSPspEmu
 			RunTests(Arguments);
 #endif
 
-			string FileToLoad = null;
-			bool RunTestsViewOut = false;
-			int RunTestsTimeout = 60;
+			string fileToLoad = null;
+			bool runTestsViewOut = false;
+			int runTestsTimeout = 60;
 
-			var Getopt = new Getopt(Arguments);
+			var getopt = new Getopt(arguments);
 			{
-				Getopt.AddRule(new[] { "/help", "/?", "-h", "--help", "-?" }, () =>
+				getopt.AddRule(new[] { "/help", "/?", "-h", "--help", "-?" }, () =>
 				{
 					Console.WriteLine("Soywiz's Psp Emulator - {0} - r{1} - {2}", PspGlobalConfiguration.CurrentVersion, PspGlobalConfiguration.CurrentVersionNumeric, PspGlobalConfiguration.GitRevision);
 					Console.WriteLine("");
@@ -162,71 +162,72 @@ namespace CSPspEmu
 					Console.WriteLine("");
 					Environment.Exit(0);
 				});
-				Getopt.AddRule("/version", () =>
+				getopt.AddRule("/version", () =>
 				{
 					Console.Write("{0}", PspGlobalConfiguration.CurrentVersion);
 					Environment.Exit(0);
 				});
-				Getopt.AddRule("/version2", () =>
+				getopt.AddRule("/version2", () =>
 				{
 					Console.Write("{0}", PspGlobalConfiguration.CurrentVersionNumeric);
 					Environment.Exit(0);
 				});
-				Getopt.AddRule("/isoconvert", () =>
+				getopt.AddRule("/isoconvert", () =>
 				{
-					var IsoInPath = Getopt.DequeueNext();
-					var IsoOutPath = Getopt.DequeueNext();
+					var isoInPath = getopt.DequeueNext();
+					var isoOutPath = getopt.DequeueNext();
 
-					if (Path.GetExtension(IsoOutPath) != ".iso")
+					if (Path.GetExtension(isoOutPath) != ".iso")
 					{
 						Console.WriteLine("Just support outputing .iso files");
 						Environment.Exit(-1);
 					}
 
-					var IsoInFile = IsoLoader.GetIso(IsoInPath);
-					var Stopwatch = new Stopwatch();
-					Stopwatch.Start();
-					Console.Write("{0} -> {1}...", IsoInPath, IsoOutPath);
-					IsoInFile.Stream.Slice().CopyToFile(IsoOutPath);
-					Console.WriteLine("Ok ({0})", Stopwatch.Elapsed);
+					var isoInFile = IsoLoader.GetIso(isoInPath);
+					var stopwatch = new Stopwatch();
+					stopwatch.Start();
+					Console.Write("{0} -> {1}...", isoInPath, isoOutPath);
+					isoInFile.Stream.Slice().CopyToFile(isoOutPath);
+					Console.WriteLine("Ok ({0})", stopwatch.Elapsed);
 					Environment.Exit(0);
 				});
-				Getopt.AddRule("/isolist", () =>
+				getopt.AddRule("/isolist", () =>
 				{
-					var IsoPath = Getopt.DequeueNext();
-					var IsoFile = IsoLoader.GetIso(IsoPath);
-					var IsoFileSystem = new HleIoDriverIso(IsoFile);
-					foreach (var FileName in IsoFileSystem.ListDirRecursive("/"))
+					var isoPath = getopt.DequeueNext();
+					var isoFile = IsoLoader.GetIso(isoPath);
+					var isoFileSystem = new HleIoDriverIso(isoFile);
+					foreach (var fileName in isoFileSystem.ListDirRecursive("/"))
 					{
-						var Stat = IsoFileSystem.GetStat(FileName);
-						Console.WriteLine("{0} : {1}", FileName, Stat.Size);
+						var stat = isoFileSystem.GetStat(fileName);
+						Console.WriteLine("{0} : {1}", fileName, stat.Size);
 					}
 					//Console.Write("{0}", PspGlobalConfiguration.CurrentVersionNumeric);
 					Environment.Exit(0);
 				});
-				Getopt.AddRule("/isoextract", () =>
+				getopt.AddRule("/isoextract", () =>
 				{
-					var IsoPath = Getopt.DequeueNext();
-					var OutputPath = Getopt.DequeueNext();
-					var IsoFile = IsoLoader.GetIso(IsoPath);
-					var IsoFileSystem = new HleIoDriverIso(IsoFile);
-					foreach (var FileName in IsoFileSystem.ListDirRecursive("/"))
+					var isoPath = getopt.DequeueNext();
+					var outputPath = getopt.DequeueNext();
+					var isoFile = IsoLoader.GetIso(isoPath);
+					var isoFileSystem = new HleIoDriverIso(isoFile);
+					foreach (var fileName in isoFileSystem.ListDirRecursive("/"))
 					{
-						var Stat = IsoFileSystem.GetStat(FileName);
-						var OutputFileName = OutputPath + "/" + FileName;
-						Console.Write("{0} : {1}...", FileName, Stat.Size);
+						var stat = isoFileSystem.GetStat(fileName);
+						var outputFileName = outputPath + "/" + fileName;
+						Console.Write("{0} : {1}...", fileName, stat.Size);
 
-						if (!Stat.Attributes.HasFlag(Hle.Vfs.IOFileModes.Directory))
+						if (!stat.Attributes.HasFlag(Hle.Vfs.IOFileModes.Directory))
 						{
-							var ParentDirectory = Directory.GetParent(OutputFileName).FullName;
+							var parentDirectory = Directory.GetParent(outputFileName).FullName;
 							//Console.WriteLine(ParentDirectory);
-							try { Directory.CreateDirectory(ParentDirectory); }
-							catch
+							try { Directory.CreateDirectory(parentDirectory); }
+							catch (Exception e)
 							{
+								Console.WriteLine(e);
 							}
-							using (var InputStream = IsoFileSystem.OpenRead(FileName))
+							using (var inputStream = isoFileSystem.OpenRead(fileName))
 							{
-								InputStream.CopyToFile(OutputFileName);
+								inputStream.CopyToFile(outputFileName);
 							}
 						}
 						Console.WriteLine("Ok");
@@ -234,14 +235,14 @@ namespace CSPspEmu
 					//Console.Write("{0}", PspGlobalConfiguration.CurrentVersionNumeric);
 					Environment.Exit(0);
 				});
-				Getopt.AddRule("/decrypt", (string EncryptedFile) =>
+				getopt.AddRule("/decrypt", (string encryptedFile) =>
 				{
 					try
 					{
-						using (var EncryptedStream = File.OpenRead(EncryptedFile))
+						using (var EncryptedStream = File.OpenRead(encryptedFile))
 						{
-							var DecryptedFile = String.Format("{0}.decrypted", EncryptedFile);
-							Console.Write("'{0}' -> '{1}'...", EncryptedFile, DecryptedFile);
+							var DecryptedFile = String.Format("{0}.decrypted", encryptedFile);
+							Console.Write("'{0}' -> '{1}'...", encryptedFile, DecryptedFile);
 
 							var EncryptedData = EncryptedStream.ReadAll();
 							var DecryptedData = new EncryptedPrx().Decrypt(EncryptedData);
@@ -256,68 +257,70 @@ namespace CSPspEmu
 						Environment.Exit(-1);
 					}
 				});
-				Getopt.AddRule("/gitrevision", () =>
+				getopt.AddRule("/gitrevision", () =>
 				{
 					Console.Write("{0}", PspGlobalConfiguration.GitRevision);
 					Environment.Exit(0);
 				});
-				Getopt.AddRule("/associate", () =>
+				getopt.AddRule("/associate", () =>
 				{
 					try
 					{
-						Registry.ClassesRoot.CreateSubKey(".pbp").SetValue(null, "cspspemu.executable");
-						Registry.ClassesRoot.CreateSubKey(".elf").SetValue(null, "cspspemu.executable");
-						Registry.ClassesRoot.CreateSubKey(".prx").SetValue(null, "cspspemu.executable");
-						Registry.ClassesRoot.CreateSubKey(".cso").SetValue(null, "cspspemu.executable");
-						Registry.ClassesRoot.CreateSubKey(".dax").SetValue(null, "cspspemu.executable");
+						var classesRoot = Registry.ClassesRoot;
+						
+						classesRoot.CreateSubKey(".pbp")?.SetValue(null, "cspspemu.executable");
+						classesRoot.CreateSubKey(".elf")?.SetValue(null, "cspspemu.executable");
+						classesRoot.CreateSubKey(".prx")?.SetValue(null, "cspspemu.executable");
+						classesRoot.CreateSubKey(".cso")?.SetValue(null, "cspspemu.executable");
+						classesRoot.CreateSubKey(".dax")?.SetValue(null, "cspspemu.executable");
 
-						var Reg = Registry.ClassesRoot.CreateSubKey("cspspemu.executable");
-						Reg.SetValue(null, "PSP executable file (.elf, .pbp, .cso, .prx, .dax)");
-						Reg.SetValue("DefaultIcon", @"""" + ApplicationPaths.ExecutablePath + @""",0");
-						Reg.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command").SetValue(null, @"""" + ApplicationPaths.ExecutablePath + @""" ""%1""");
+						var reg = classesRoot.CreateSubKey("cspspemu.executable");
+						reg?.SetValue(null, "PSP executable file (.elf, .pbp, .cso, .prx, .dax)");
+						reg?.SetValue("DefaultIcon", @"""" + ApplicationPaths.ExecutablePath + @""",0");
+						reg?.CreateSubKey("shell")?.CreateSubKey("open")?.CreateSubKey("command")?.SetValue(null, @"""" + ApplicationPaths.ExecutablePath + @""" ""%1""");
 
 						Environment.Exit(0);
 					}
-					catch (Exception Exception)
+					catch (Exception e)
 					{
-						Console.Error.WriteLine(Exception);
+						Console.Error.WriteLine(e);
 						Environment.Exit(-1);
 					}
 				});
-				Getopt.AddRule("/viewout", () =>
+				getopt.AddRule("/viewout", () =>
 				{
-					RunTestsViewOut = true;
+					runTestsViewOut = true;
 				});
-				Getopt.AddRule("/timeout", (int seconds) =>
+				getopt.AddRule("/timeout", (int seconds) =>
 				{
-					RunTestsTimeout = seconds;
+					runTestsTimeout = seconds;
 				});
-				Getopt.AddRule("/tests", () =>
+				getopt.AddRule("/tests", () =>
 				{
-					RunTests(RunTestsViewOut, Getopt.DequeueAllNext(), RunTestsTimeout);
+					RunTests(runTestsViewOut, getopt.DequeueAllNext(), runTestsTimeout);
 				});
-				Getopt.AddRule((Name) =>
+				getopt.AddRule(name =>
 				{
-					FileToLoad = Name;
+					fileToLoad = name;
 				});
 			}
 			try
 			{
-				Getopt.Process();
+				getopt.Process();
 			}
-			catch (Exception Exception)
+			catch (Exception e)
 			{
-				Console.Error.WriteLine(Exception);
+				Console.Error.WriteLine(e);
 				Environment.Exit(-1);
 			}
 
 			Logger.Info("Running ... plat:{0} ... int*:{1}", Environment.Is64BitProcess ? "64bit" : "32bit", sizeof(int*));
 			{
-				var MonoRuntimeType = Type.GetType("Mono.Runtime");
-				if (MonoRuntimeType != null)
+				var monoRuntimeType = Type.GetType("Mono.Runtime");
+				if (monoRuntimeType != null)
 				{
-					var GetDisplayNameMethod = MonoRuntimeType.GetMethod("GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static);
-					if (GetDisplayNameMethod != null) Console.WriteLine("Mono: {0}", GetDisplayNameMethod.Invoke(null, null));
+					var getDisplayNameMethod = monoRuntimeType.GetMethod("GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static);
+					if (getDisplayNameMethod != null) Console.WriteLine("Mono: {0}", getDisplayNameMethod.Invoke(null, null));
 				}
 			}
 			Console.WriteLine("ImageRuntimeVersion: {0}", Assembly.GetExecutingAssembly().ImageRuntimeVersion);
@@ -329,8 +332,9 @@ namespace CSPspEmu
 				Console.SetWindowSize(160, 60);
 				Console.SetBufferSize(160, 2000);
 			}
-			catch
+			catch (Exception e)
 			{
+				Console.WriteLine(e);
 			}
 #endif
 
@@ -366,35 +370,35 @@ namespace CSPspEmu
 			}
 			*/
 
-			using (var PspEmulator = new PspEmulator())
+			using (var pspEmulator = new PspEmulator())
 			{
 				//PspEmulator.UseFastMemory = true;
-				var CodeBase = Assembly.GetExecutingAssembly().Location;
-				var Base = Path.GetDirectoryName(CodeBase) + @"\" + Path.GetFileNameWithoutExtension(CodeBase);
-				foreach (var TryExtension in new[] { "iso", "cso", "elf", "pbp" })
+				var codeBase = Assembly.GetExecutingAssembly().Location;
+				var Base = Path.GetDirectoryName(codeBase) + @"\" + Path.GetFileNameWithoutExtension(codeBase);
+				foreach (var tryExtension in new[] { "iso", "cso", "elf", "pbp" })
 				{
-					var TryIsoFile = Base + "." + TryExtension;
+					var tryIsoFile = Base + "." + tryExtension;
 
 					//Console.WriteLine(TryIsoFile);
 					//Console.ReadKey();
 
-					if (File.Exists(TryIsoFile))
+					if (File.Exists(tryIsoFile))
 					{
 						Platform.HideConsole();
 
-						PspEmulator.StartAndLoad(TryIsoFile, TraceSyscalls: false, ShowMenus: false);
+						pspEmulator.StartAndLoad(tryIsoFile, TraceSyscalls: false, ShowMenus: false);
 						return;
 					}
 				}
 
-				if (FileToLoad != null)
+				if (fileToLoad != null)
 				{
-					PspEmulator.StartAndLoad(FileToLoad, TraceSyscalls: false);
+					pspEmulator.StartAndLoad(fileToLoad, TraceSyscalls: false);
 				}
 				else
 				{
 					//StartWithoutArguments(PspEmulator);
-					PspEmulator.Start();
+					pspEmulator.Start();
 				}
 			}
 		}
