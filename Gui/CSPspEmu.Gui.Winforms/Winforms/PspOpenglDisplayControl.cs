@@ -1,7 +1,6 @@
 ﻿using CSharpUtils;
 using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Core.Types;
-using CSPspEmu.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

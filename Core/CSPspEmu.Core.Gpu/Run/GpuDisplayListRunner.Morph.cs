@@ -22,49 +22,33 @@
         }));
         */
 
-        private void _OP_MW(int Index)
+        private void _OP_MW(int index)
         {
-            (&GpuState->MorphingState.MorphWeight0)[Index] = Float1;
+            (&GpuState->MorphingState.MorphWeight0)[index] = Float1;
         }
 
-        public void OP_MW0()
-        {
-            _OP_MW(0);
-        }
+        // ReSharper disable once UnusedMember.Global
+        public void OP_MW0() => _OP_MW(0);
 
-        public void OP_MW1()
-        {
-            _OP_MW(1);
-        }
+        // ReSharper disable once UnusedMember.Global
+        public void OP_MW1() => _OP_MW(1);
 
-        public void OP_MW2()
-        {
-            _OP_MW(2);
-        }
+        // ReSharper disable once UnusedMember.Global
+        public void OP_MW2() => _OP_MW(2);
 
-        public void OP_MW3()
-        {
-            _OP_MW(3);
-        }
+        // ReSharper disable once UnusedMember.Global
+        public void OP_MW3() => _OP_MW(3);
 
-        public void OP_MW4()
-        {
-            _OP_MW(4);
-        }
+        // ReSharper disable once UnusedMember.Global
+        public void OP_MW4() => _OP_MW(4);
 
-        public void OP_MW5()
-        {
-            _OP_MW(5);
-        }
+        // ReSharper disable once UnusedMember.Global
+        public void OP_MW5() => _OP_MW(5);
 
-        public void OP_MW6()
-        {
-            _OP_MW(6);
-        }
+        // ReSharper disable once UnusedMember.Global
+        public void OP_MW6() => _OP_MW(6);
 
-        public void OP_MW7()
-        {
-            _OP_MW(7);
-        }
+        // ReSharper disable once UnusedMember.Global
+        public void OP_MW7() => _OP_MW(7);
     }
 }

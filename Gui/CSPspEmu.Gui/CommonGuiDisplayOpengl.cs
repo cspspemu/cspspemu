@@ -9,7 +9,6 @@ using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Core.Gpu.Impl.Opengl.Modules;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Types;
-using CSPspEmu.Core.Utils;
 using CSPspEmu.Gui.SMAA;
 using System;
 using System.Collections.Generic;
@@ -20,6 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CSharpUtils.Drawing.Extensions;
+using CSPspEmu.Utils.Utils;
 
 namespace CSPspEmu.Gui
 {

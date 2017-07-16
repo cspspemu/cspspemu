@@ -3,8 +3,8 @@
 using System;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Types;
-using CSPspEmu.Core.Utils;
 using CSharpUtils;
+using CSPspEmu.Utils.Utils;
 
 namespace CSPspEmu.Core.Gpu
 {

@@ -9,9 +9,9 @@ namespace CSPspEmu.Runner.Components.Display
 {
     public sealed class DisplayComponentThread : ComponentThread
     {
-        [Inject] private HleInterruptManager HleInterruptManager;
+        [Inject] private HleInterruptManager _hleInterruptManager;
 
-        [Inject] private PspDisplay PspDisplay;
+        [Inject] private PspDisplay _pspDisplay;
 
         protected override string ThreadName => "DisplayThread";
 
@@ -25,7 +25,7 @@ namespace CSPspEmu.Runner.Components.Display
                 //var VSyncTimeIncrement = TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double)(PspDisplay.VsyncRow / 2))); // HACK to give more time to render!
                 var endTimeIncrement =
                     TimeSpan.FromSeconds(1.0 / (PspDisplay.HorizontalSyncHertz / (double) (PspDisplay.NumberOfRows)));
-                var vBlankInterruptHandler = HleInterruptManager.GetInterruptHandler(PspInterrupts.PSP_VBLANK_INT);
+                var vBlankInterruptHandler = _hleInterruptManager.GetInterruptHandler(PspInterrupts.PSP_VBLANK_INT);
                 while (true)
                 {
                     //Console.WriteLine("[1]");
@@ -37,14 +37,14 @@ namespace CSPspEmu.Runner.Components.Display
                     if (!Running) return;
 
                     // Draw time
-                    PspDisplay.TriggerDrawStart();
+                    _pspDisplay.TriggerDrawStart();
                     ThreadUtils.SleepUntilUtc(vSyncTime);
 
                     // VBlank time
-                    PspDisplay.TriggerVBlankStart();
+                    _pspDisplay.TriggerVBlankStart();
                     vBlankInterruptHandler.Trigger();
                     ThreadUtils.SleepUntilUtc(endTime);
-                    PspDisplay.TriggerVBlankEnd();
+                    _pspDisplay.TriggerVBlankEnd();
                 }
             }
             finally

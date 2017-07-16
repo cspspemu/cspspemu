@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using CSPspEmu.Core;
 using CSPspEmu.Runner.Components;
 using CSPspEmu.Runner.Components.Audio;
 using CSPspEmu.Runner.Components.Cpu;
@@ -9,7 +8,7 @@ using CSPspEmu.Runner.Components.Gpu;
 
 namespace CSPspEmu.Runner
 {
-    public unsafe class PspRunner : IRunnableComponent, IInjectInitialize
+    public class PspRunner : IRunnableComponent, IInjectInitialize
     {
         [Inject]
         public CpuComponentThread CpuComponentThread { get; protected set; }
@@ -41,26 +40,26 @@ namespace CSPspEmu.Runner
 
         public void StartSynchronized()
         {
-            RunnableComponentList.ForEach((RunnableComponent) =>
-                RunnableComponent.StartSynchronized()
+            RunnableComponentList.ForEach(runnableComponent =>
+                runnableComponent.StartSynchronized()
             );
         }
 
         public void StopSynchronized()
         {
             Console.WriteLine("Stopping!");
-            RunnableComponentList.ForEach((RunnableComponent) =>
-                RunnableComponent.StopSynchronized()
+            RunnableComponentList.ForEach(runnableComponent =>
+                runnableComponent.StopSynchronized()
             );
             Console.WriteLine("Stopped!");
         }
 
         public void PauseSynchronized()
         {
-            RunnableComponentList.ForEach((RunnableComponent) =>
+            RunnableComponentList.ForEach(runnableComponent =>
             {
-                Console.Write("Pausing {0}...", RunnableComponent);
-                RunnableComponent.PauseSynchronized();
+                Console.Write("Pausing {0}...", runnableComponent);
+                runnableComponent.PauseSynchronized();
                 Console.WriteLine("Ok");
             });
             Paused = true;
@@ -68,10 +67,10 @@ namespace CSPspEmu.Runner
 
         public void ResumeSynchronized()
         {
-            RunnableComponentList.ForEach((RunnableComponent) =>
+            RunnableComponentList.ForEach(runnableComponent =>
             {
-                Console.Write("Resuming {0}...", RunnableComponent);
-                RunnableComponent.ResumeSynchronized();
+                Console.Write("Resuming {0}...", runnableComponent);
+                runnableComponent.ResumeSynchronized();
                 Console.WriteLine("Ok");
             });
             Paused = false;

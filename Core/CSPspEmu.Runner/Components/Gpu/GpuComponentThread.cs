@@ -7,10 +7,7 @@ namespace CSPspEmu.Runner.Components.Gpu
 {
     public sealed class GpuComponentThread : ComponentThread
     {
-        protected override string ThreadName
-        {
-            get { return "CpuThread"; }
-        }
+        protected override string ThreadName => "CpuThread";
 
         [Inject] private GpuProcessor GpuProcessor;
 

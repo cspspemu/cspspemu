@@ -16,7 +16,6 @@ using CSPspEmu.Core;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Controller;
 using CSPspEmu.Core.Display;
-using CSPspEmu.Core.Utils;
 using CSPspEmu.Resources;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Types;

@@ -7,12 +7,10 @@ namespace CSPspEmu.Runner.Components.Audio
 {
     public sealed class AudioComponentThread : ComponentThread
     {
+        // ReSharper disable once InconsistentNaming
         [Inject] private PspAudio PspAudio;
 
-        protected override string ThreadName
-        {
-            get { return "AudioThread"; }
-        }
+        protected override string ThreadName => "AudioThread";
 
         protected override void Main()
         {

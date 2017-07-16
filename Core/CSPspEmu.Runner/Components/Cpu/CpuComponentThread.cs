@@ -152,13 +152,13 @@ namespace CSPspEmu.Runner.Components.Cpu
 						nop
 				"
                     .Replace("CODE_PTR_EXIT_THREAD_SYSCALL",
-                        string.Format("0x{0:X}", HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD_SYSCALL))
+                        $"0x{HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD_SYSCALL:X}")
                     .Replace("CODE_PTR_FINALIZE_CALLBACK_SYSCALL",
-                        string.Format("0x{0:X}", HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK_SYSCALL))
+                        $"0x{HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK_SYSCALL:X}")
                     .Replace("CODE_PTR_EXIT_THREAD",
-                        string.Format("0x{0:X}", HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD))
+                        $"0x{HleEmulatorSpecialAddresses.CODE_PTR_EXIT_THREAD:X}")
                     .Replace("CODE_PTR_FINALIZE_CALLBACK",
-                        string.Format("0x{0:X}", HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK))
+                        $"0x{HleEmulatorSpecialAddresses.CODE_PTR_FINALIZE_CALLBACK:X}")
             );
 
             //var ThreadManForUser = ModuleManager.GetModule<ThreadManForUser>();
@@ -325,7 +325,7 @@ namespace CSPspEmu.Runner.Components.Cpu
                     }
                 }
 
-                if (loadException != null) throw (loadException);
+                if (loadException != null) throw loadException;
 
                 RegisterSyscalls();
 

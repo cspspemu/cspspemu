@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -8,105 +9,82 @@ namespace CSPspEmu.Utils
     {
         internal class ArrayArgumentReader : IArgumentReader
         {
-            int ArgumentIndex = 0;
-            object[] Arguments;
-
-            public ArrayArgumentReader(object[] Arguments)
-            {
-                this.Arguments = Arguments;
-            }
-
-            int IArgumentReader.LoadInteger()
-            {
-                return (int) long.Parse(Arguments[ArgumentIndex++].ToString());
-            }
-
-            long IArgumentReader.LoadLong()
-            {
-                return (long) long.Parse(Arguments[ArgumentIndex++].ToString());
-            }
-
-            string IArgumentReader.LoadString()
-            {
-                return (string) Arguments[ArgumentIndex++];
-            }
-
-            float IArgumentReader.LoadFloat()
-            {
-                return float.Parse(Arguments[ArgumentIndex++].ToString());
-            }
+            int _argumentIndex = 0;
+            readonly object[] _arguments;
+            public ArrayArgumentReader(object[] arguments) => _arguments = arguments;
+            int IArgumentReader.LoadInteger() => (int) long.Parse(_arguments[_argumentIndex++].ToString());
+            long IArgumentReader.LoadLong() => long.Parse(_arguments[_argumentIndex++].ToString());
+            string IArgumentReader.LoadString() => (string) _arguments[_argumentIndex++];
+            float IArgumentReader.LoadFloat() => float.Parse(_arguments[_argumentIndex++].ToString());
         }
 
-        public static string Sprintf(string Format, params object[] Arguments)
-        {
-            return Sprintf(Format, new ArrayArgumentReader(Arguments));
-        }
+        public static string Sprintf(string format, params object[] arguments) => Sprintf(format, new ArrayArgumentReader(arguments));
 
         static Regex FormatRegex = new Regex(@"%(‘.|0|\x20)?(-)?(\d+)?(\.\d+)?(%|b|c|d|u|f|o|s|x|X)",
             RegexOptions.ECMAScript | RegexOptions.Compiled);
 
-        public static string Sprintf(string Format, IArgumentReader Arguments)
+        public static string Sprintf(string format, IArgumentReader arguments)
         {
-            var FormatReader = new StringReader(Format);
-            return FormatRegex.Replace(Format, (Match) =>
+            //var formatReader = new StringReader(format);
+            return FormatRegex.Replace(format, (match) =>
             {
-                var pPad = Match.Groups[1].Value;
-                var pJustify = Match.Groups[2].Value;
-                var pMinLength = Match.Groups[3].Value;
-                var pPrecision = Match.Groups[4].Value;
-                var pType = Match.Groups[5].Value;
+                var pPad = match.Groups[1].Value;
+                var pJustify = match.Groups[2].Value;
+                var pMinLength = match.Groups[3].Value;
+                var pPrecision = match.Groups[4].Value;
+                var pType = match.Groups[5].Value;
 
                 //Console.WriteLine("Match: pPad='{0}', pJustify='{1}', pMinLength='{2}', pPrecision='{3}', pType='{4}'", pPad, pJustify, pMinLength, pPrecision, pType);
 
-                string Value = "";
-                char PadChar = (pPad.Length > 0) ? pPad[0] : ' ';
-                bool Justify = (pJustify.Length > 0) ? true : false;
-                int MinLength = (pMinLength.Length > 0) ? int.Parse(pMinLength) : 0;
+                string value;
+                var padChar = pPad.Length > 0 ? pPad[0] : ' ';
+                var justify = pJustify.Length > 0;
+                var minLength = (pMinLength.Length > 0) ? int.Parse(pMinLength) : 0;
 
                 switch (pType)
                 {
                     case "%":
-                        Value = "%";
+                        value = "%";
                         break;
                     case "b":
-                        Value = Convert.ToString(Arguments.LoadInteger(), 2);
+                        value = Convert.ToString(arguments.LoadInteger(), 2);
                         break;
                     case "c":
-                        Value = "" + (char) Arguments.LoadInteger();
+                        value = "" + (char) arguments.LoadInteger();
                         break;
                     case "d":
-                        Value = Convert.ToString((int) Arguments.LoadInteger(), 10);
+                        value = Convert.ToString(arguments.LoadInteger(), 10);
                         break;
                     case "u":
-                        Value = Convert.ToString((uint) Arguments.LoadInteger(), 10);
+                        value = Convert.ToString((uint) arguments.LoadInteger(), 10);
                         break;
                     case "f":
-                        Value = Convert.ToString(Arguments.LoadFloat());
+                        value = Convert.ToString(arguments.LoadFloat(), CultureInfo.DefaultThreadCurrentCulture);
                         break;
                     case "o":
-                        Value = Convert.ToString((uint) Arguments.LoadInteger(), 8);
+                        value = Convert.ToString((uint) arguments.LoadInteger(), 8);
                         break;
                     case "s":
-                        Value = Arguments.LoadString();
+                        value = arguments.LoadString();
                         break;
                     case "x":
                     case "X":
-                        Value = Convert.ToString((uint) Arguments.LoadInteger(), 16);
-                        Value = (pType == "x") ? Value.ToLowerInvariant() : Value.ToUpperInvariant();
+                        value = Convert.ToString((uint) arguments.LoadInteger(), 16);
+                        value = (pType == "x") ? value.ToLowerInvariant() : value.ToUpperInvariant();
                         break;
                     default:
                         throw(new NotImplementedException());
                 }
 
-                if (Value.Length < MinLength)
+                if (value.Length < minLength)
                 {
-                    Value = Justify
-                            ? Value.PadRight(MinLength, PadChar)
-                            : Value.PadLeft(MinLength, PadChar)
+                    value = justify
+                            ? value.PadRight(minLength, padChar)
+                            : value.PadLeft(minLength, padChar)
                         ;
                 }
 
-                return Value;
+                return value;
             });
         }
     }

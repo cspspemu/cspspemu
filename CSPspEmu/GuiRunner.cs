@@ -1,21 +1,14 @@
-﻿using CSPspEmu.Core;
-using CSPspEmu.Gui.Winforms;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using CSPspEmu.Gui.Winforms;
 
 namespace CSPspEmu
 {
     class GuiRunner
     {
-        private PspEmulator PspEmulator;
+        private readonly PspEmulator _pspEmulator;
 
         public GuiRunner(PspEmulator pspEmulator)
         {
-            this.PspEmulator = pspEmulator;
+            _pspEmulator = pspEmulator;
         }
 
         public void Start()
@@ -24,12 +17,11 @@ namespace CSPspEmu
 			if (Platform.IsMono) { StartGtkSharp(); return; }
 #endif
             StartWinforms();
-            return;
         }
 
         private void StartWinforms()
         {
-            PspDisplayForm.RunStart(PspEmulator);
+            PspDisplayForm.RunStart(_pspEmulator);
         }
 
         private void StartGtkSharp()

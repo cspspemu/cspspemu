@@ -17,7 +17,6 @@ using CSPspEmu.Core.Memory;
 //using Cloo;
 //using Cloo.Bindings;
 using CSPspEmu.Core.Gpu.Formats;
-using CSPspEmu.Core.Utils;
 using CSPspEmu.Core.Types;
 using CSharpPlatform;
 using CSPspEmu.Core.Gpu.State.SubStates;

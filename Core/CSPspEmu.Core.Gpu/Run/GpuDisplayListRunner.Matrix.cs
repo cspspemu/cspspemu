@@ -1,9 +1,8 @@
 ﻿using CSPspEmu.Core.Gpu.State.SubStates;
-using System;
 
 namespace CSPspEmu.Core.Gpu.Run
 {
-    public unsafe sealed partial class GpuDisplayListRunner
+    public sealed unsafe partial class GpuDisplayListRunner
     {
         /**
          * Set transform matrices
@@ -19,23 +18,27 @@ namespace CSPspEmu.Core.Gpu.Run
          **/
         // void sceGuSetMatrix(int type, const ScePspFMatrix4* matrix);
 
+        // ReSharper disable once UnusedMember.Global
         public void OP_VMS()
         {
-            uint StartIndex = Params24;
-            GpuDisplayList.GpuStateStructPointer->VertexState.ViewMatrix.Reset(StartIndex);
+            var startIndex = Params24;
+            GpuDisplayList.GpuStateStructPointer->VertexState.ViewMatrix.Reset(startIndex);
         }
 
+        // ReSharper disable once UnusedMember.Global
         public void OP_VIEW()
         {
             GpuDisplayList.GpuStateStructPointer->VertexState.ViewMatrix.Write(Float1);
         }
 
+        // ReSharper disable once UnusedMember.Global
         public void OP_WMS()
         {
-            uint StartIndex = Params24;
-            GpuDisplayList.GpuStateStructPointer->VertexState.WorldMatrix.Reset(StartIndex);
+            var startIndex = Params24;
+            GpuDisplayList.GpuStateStructPointer->VertexState.WorldMatrix.Reset(startIndex);
         }
 
+        // ReSharper disable once UnusedMember.Global
         public void OP_WORLD()
         {
             //Console.WriteLine("{0:X}, {1}", Params24, Float1);
@@ -43,22 +46,21 @@ namespace CSPspEmu.Core.Gpu.Run
             GpuDisplayList.GpuStateStructPointer->VertexState.WorldMatrix.Write(Float1);
         }
 
+        // ReSharper disable once UnusedMember.Global
         public void OP_PMS()
         {
-            uint StartIndex = Params24;
-            GpuDisplayList.GpuStateStructPointer->VertexState.ProjectionMatrix.Reset(StartIndex);
+            var startIndex = Params24;
+            GpuDisplayList.GpuStateStructPointer->VertexState.ProjectionMatrix.Reset(startIndex);
         }
 
+        // ReSharper disable once UnusedMember.Global
         public void OP_PROJ()
         {
             //Console.WriteLine("PROJ: 0x{0:X}, {1}", Params24, Float1);
             GpuDisplayList.GpuStateStructPointer->VertexState.ProjectionMatrix.Write(Float1);
         }
 
-        private SkinningStateStruct* SkinningState
-        {
-            get { return &GpuDisplayList.GpuStateStructPointer->SkinningState; }
-        }
+        private SkinningStateStruct* SkinningState => &GpuDisplayList.GpuStateStructPointer->SkinningState;
 
         /**
           * Specify skinning matrix entry
@@ -76,6 +78,7 @@ namespace CSPspEmu.Core.Gpu.Run
         //void sceGuBoneMatrix(unsigned int index, const ScePspFMatrix4* matrix);
         // @TODO : @FIX: @HACK : it defines the position in the matrixes not the index of the matrix. So we will do a hack there until fixed.
         // http://svn.ps2dev.org/filedetails.php?repname=psp&path=%2Ftrunk%2Fpspsdk%2Fsrc%2Fgu%2FsceGuBoneMatrix.c
+        // ReSharper disable once UnusedMember.Global
         public void OP_BOFS()
         {
             SkinningState->CurrentBoneIndex = (int) Params24;
@@ -85,6 +88,7 @@ namespace CSPspEmu.Core.Gpu.Run
             //BoneMatrices[SkinningState->CurrentBoneMatrixIndex].Reset(StartIndex);
         }
 
+        // ReSharper disable once UnusedMember.Global
         public void OP_BONE()
         {
             var BoneMatrices = &SkinningState->BoneMatrix0;

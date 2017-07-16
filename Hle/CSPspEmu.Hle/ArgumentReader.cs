@@ -1,5 +1,6 @@
 ﻿using CSharpUtils;
 using CSPspEmu.Core.Cpu;
+using CSPspEmu.Utils;
 
 namespace CSPspEmu
 {

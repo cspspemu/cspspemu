@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using CSharpUtils;
 using CSharpUtils.Drawing;
 using CSharpUtils.Drawing.Extensions;
 using CSPspEmu.Core.Types;
 
-namespace CSPspEmu.Core.Utils
+namespace CSPspEmu.Utils.Utils
 {
     public unsafe class PspBitmap
     {
@@ -18,97 +17,97 @@ namespace CSPspEmu.Core.Utils
         public byte* Address;
         public ColorFormat ColorFormat;
 
-        public PspBitmap(GuPixelFormats PixelFormat, int Width, int Height, byte* Address, int BytesPerLine = -1)
+        public PspBitmap(GuPixelFormats pixelFormat, int width, int height, byte* address, int bytesPerLine = -1)
         {
-            this.GuPixelFormat = PixelFormat;
-            this.Width = Width;
-            this.Height = Height;
-            this.Address = Address;
-            this.BitsPerPixel = PixelFormatDecoder.GetPixelsBits(PixelFormat);
-            this.ColorFormat = PixelFormatDecoder.ColorFormatFromPixelFormat(PixelFormat);
-            if (BytesPerLine < 0)
+            GuPixelFormat = pixelFormat;
+            Width = width;
+            Height = height;
+            Address = address;
+            BitsPerPixel = PixelFormatDecoder.GetPixelsBits(pixelFormat);
+            ColorFormat = PixelFormatDecoder.ColorFormatFromPixelFormat(pixelFormat);
+            if (bytesPerLine < 0)
             {
-                this.BytesPerLine = PixelFormatDecoder.GetPixelsSize(GuPixelFormat, Width);
+                BytesPerLine = PixelFormatDecoder.GetPixelsSize(GuPixelFormat, width);
             }
             else
             {
-                this.BytesPerLine = BytesPerLine;
+                BytesPerLine = bytesPerLine;
             }
         }
 
-        public bool IsValidPosition(int X, int Y)
+        public bool IsValidPosition(int x, int y)
         {
-            return ((X >= 0) && (Y >= 0) && (X < Width) && (Y < Height));
+            return ((x >= 0) && (y >= 0) && (x < Width) && (y < Height));
         }
 
-        private int GetOffset(int X, int Y)
+        private int GetOffset(int x, int y)
         {
-            return Y * BytesPerLine + PixelFormatDecoder.GetPixelsSize(GuPixelFormat, X);
+            return y * BytesPerLine + PixelFormatDecoder.GetPixelsSize(GuPixelFormat, x);
         }
 
-        public void SetPixel(int X, int Y, OutputPixel Color)
+        public void SetPixel(int x, int y, OutputPixel color)
         {
-            if (!IsValidPosition(X, Y)) return;
+            if (!IsValidPosition(x, y)) return;
             //var Position = PixelFormatDecoder.GetPixelsSize(GuPixelFormat, Y * Width + X);
-            var Position = GetOffset(X, Y);
-            uint Value = this.ColorFormat.Encode(Color);
-            switch (this.BitsPerPixel)
+            var position = GetOffset(x, y);
+            var value = ColorFormat.Encode(color);
+            switch (BitsPerPixel)
             {
                 case 16:
-                    *(ushort*) (Address + Position) = (ushort) Value;
+                    *(ushort*) (Address + position) = (ushort) value;
                     break;
                 case 32:
-                    *(uint*) (Address + Position) = (uint) Value;
+                    *(uint*) (Address + position) = value;
                     break;
                 default: throw(new NotImplementedException());
             }
         }
 
-        public OutputPixel GetPixel(int X, int Y)
+        public OutputPixel GetPixel(int x, int y)
         {
-            if (!IsValidPosition(X, Y)) return new OutputPixel();
-            uint Value;
-            var Position = GetOffset(X, Y);
-            switch (this.BitsPerPixel)
+            if (!IsValidPosition(x, y)) return new OutputPixel();
+            uint value;
+            var position = GetOffset(x, y);
+            switch (BitsPerPixel)
             {
                 case 16:
-                    Value = *(ushort*) (Address + Position);
+                    value = *(ushort*) (Address + position);
                     break;
                 case 32:
-                    Value = *(uint*) (Address + Position);
+                    value = *(uint*) (Address + position);
                     break;
                 default: throw (new NotImplementedException());
             }
             //var OutputPixel = default(OutputPixel);
-            return this.ColorFormat.Decode(Value);
+            return ColorFormat.Decode(value);
         }
 
         public Bitmap ToBitmap()
         {
-            var Bitmap = new Bitmap(Width, Height, PixelFormat.Format24bppRgb);
-            Bitmap.LockBitsUnlock(PixelFormat.Format32bppArgb, (BitmapData) =>
+            var bitmap = new Bitmap(Width, Height, PixelFormat.Format24bppRgb);
+            bitmap.LockBitsUnlock(PixelFormat.Format32bppArgb, (bitmapData) =>
             {
-                int Count = Width * Height;
-                var Output = (OutputPixel*) BitmapData.Scan0;
+                var count = Width * Height;
+                var output = (OutputPixel*) bitmapData.Scan0;
                 PixelFormatDecoder.Decode(
                     GuPixelFormat,
                     Address,
-                    Output,
+                    output,
                     Width,
                     Height,
-                    IgnoreAlpha: true
+                    ignoreAlpha: true
                 );
 
-                for (int n = 0; n < Count; n++)
+                for (var n = 0; n < count; n++)
                 {
-                    var Color = Output[n];
-                    Output[n].R = Color.B;
-                    Output[n].G = Color.G;
-                    Output[n].B = Color.R;
-                    Output[n].A = 0xFF;
+                    var color = output[n];
+                    output[n].R = color.B;
+                    output[n].G = color.G;
+                    output[n].B = color.R;
+                    output[n].A = 0xFF;
                 }
             });
-            return Bitmap;
+            return bitmap;
         }
     }
 }

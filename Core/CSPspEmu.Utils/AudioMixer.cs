@@ -1,4 +1,4 @@
-﻿namespace CSPspEmu.Core.Audio
+﻿namespace CSPspEmu.Utils
 {
     public class AudioMixer
     {

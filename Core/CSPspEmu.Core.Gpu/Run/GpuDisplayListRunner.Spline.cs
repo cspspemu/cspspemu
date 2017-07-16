@@ -1,6 +1,6 @@
 ﻿namespace CSPspEmu.Core.Gpu.Run
 {
-    public unsafe sealed partial class GpuDisplayListRunner
+    public sealed unsafe partial class GpuDisplayListRunner
     {
         /**
           * Draw bezier surface
@@ -32,6 +32,7 @@
 
         //void sceGuDrawSpline(int vtype, int ucount, int vcount, int uedge, int vedge, const void* indices, const void* vertices);
 
+        // ReSharper disable once UnusedMember.Global
         public void OP_PSUB()
         {
             GpuState->PatchState.DivS = Param8(0);
@@ -39,12 +40,14 @@
         }
 
         [GpuOpCodesNotImplemented]
+        // ReSharper disable once UnusedMember.Global
         public void OP_PPRIM()
         {
             //gpu.state.patch.type = command.extract!(PatchPrimitiveType, 0);
         }
 
         [GpuOpCodesNotImplemented]
+        // ReSharper disable once UnusedMember.Global
         public void OP_SPLINE()
         {
             /*
@@ -56,6 +59,7 @@
             */
         }
 
+        // ReSharper disable once UnusedMember.Global
         public void OP_PFACE()
         {
             GpuState->PatchCullingState.FaceFlag = (Params24 != 0);

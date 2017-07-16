@@ -1,21 +1,20 @@
-﻿using CSharpUtils;
-using CSharpUtils.Drawing;
+﻿using CSharpUtils.Drawing;
 using CSPspEmu.Core.Types;
 
-namespace CSPspEmu.Core.Utils
+namespace CSPspEmu.Utils.Utils
 {
     public static class ColorFormatExtensions
     {
-        public static uint Encode(this ColorFormat ColorFormat, OutputPixel OutputPixel)
+        public static uint Encode(this ColorFormat colorFormat, OutputPixel outputPixel)
         {
-            return ColorFormat.Encode(OutputPixel.R, OutputPixel.G, OutputPixel.B, OutputPixel.A);
+            return colorFormat.Encode(outputPixel.R, outputPixel.G, outputPixel.B, outputPixel.A);
         }
 
-        public static OutputPixel Decode(this ColorFormat ColorFormat, uint Value)
+        public static OutputPixel Decode(this ColorFormat colorFormat, uint value)
         {
-            var OutputPixel = default(OutputPixel);
-            ColorFormat.Decode(Value, out OutputPixel.R, out OutputPixel.G, out OutputPixel.B, out OutputPixel.A);
-            return OutputPixel;
+            var outputPixel = default(OutputPixel);
+            colorFormat.Decode(value, out outputPixel.R, out outputPixel.G, out outputPixel.B, out outputPixel.A);
+            return outputPixel;
         }
     }
 }

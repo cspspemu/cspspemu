@@ -31,7 +31,7 @@ namespace CSPspEmu
 {
     unsafe class Program
     {
-        static Logger Logger = Logger.GetLogger("Program");
+        public static readonly Logger Logger = Logger.GetLogger("Program");
 
         private static void Form1_UIThreadException(object sender, ThreadExceptionEventArgs e)
         {
@@ -57,27 +57,27 @@ namespace CSPspEmu
             Environment.Exit(0);
         }
 
-        static private GLTexture GLTextureCreateFromBitmap(Bitmap Bitmap)
+        private static GLTexture GlTextureCreateFromBitmap(Bitmap bitmap)
         {
             return GLTexture.Create()
                     .SetFormat(TextureFormat.RGBA)
-                    .SetSize(Bitmap.Width, Bitmap.Height)
-                    .SetData(Bitmap.GetChannelsDataInterleaved(BitmapChannelList.Rgba))
+                    .SetSize(bitmap.Width, bitmap.Height)
+                    .SetData(bitmap.GetChannelsDataInterleaved(BitmapChannelList.Rgba))
                 ;
         }
 
-        static private void _MainData()
+        private static void _MainData()
         {
-            var Context = GlContextFactory.CreateWindowless().MakeCurrent();
+            var context = GlContextFactory.CreateWindowless().MakeCurrent();
             //var BitmapIn = new Bitmap(Image.FromFile(@"C:\temp\1.png"));
-            var BitmapIn = new Bitmap(Image.FromFile(@"C:\temp\in.png"));
+            var bitmapIn = new Bitmap(Image.FromFile(@"C:\temp\in.png"));
 
             Console.WriteLine("{0}", String.Join("\n", Assembly.GetExecutingAssembly().GetManifestResourceNames()));
 
-            var TextureOut = new XBRShader().Process(GLTextureCreateFromBitmap(BitmapIn));
+            var textureOut = new XBRShader().Process(GlTextureCreateFromBitmap(bitmapIn));
 
-            new Bitmap(TextureOut.Width, TextureOut.Height)
-                .SetChannelsDataInterleaved(TextureOut.GetDataFromGpu(), BitmapChannelList.Rgba)
+            new Bitmap(textureOut.Width, textureOut.Height)
+                .SetChannelsDataInterleaved(textureOut.GetDataFromGpu(), BitmapChannelList.Rgba)
                 .Save(@"c:\temp\out.png");
 
             //var Smaa = new Smaa();
@@ -253,21 +253,21 @@ namespace CSPspEmu
                 {
                     try
                     {
-                        using (var EncryptedStream = File.OpenRead(encryptedFile))
+                        using (var encryptedStream = File.OpenRead(encryptedFile))
                         {
-                            var DecryptedFile = String.Format("{0}.decrypted", encryptedFile);
-                            Console.Write("'{0}' -> '{1}'...", encryptedFile, DecryptedFile);
+                            var decryptedFile = String.Format("{0}.decrypted", encryptedFile);
+                            Console.Write("'{0}' -> '{1}'...", encryptedFile, decryptedFile);
 
-                            var EncryptedData = EncryptedStream.ReadAll();
-                            var DecryptedData = new EncryptedPrx().Decrypt(EncryptedData);
-                            File.WriteAllBytes(DecryptedFile, DecryptedData);
+                            var encryptedData = encryptedStream.ReadAll();
+                            var decryptedData = new EncryptedPrx().Decrypt(encryptedData);
+                            File.WriteAllBytes(decryptedFile, decryptedData);
                             Console.WriteLine("Ok");
                             Environment.Exit(0);
                         }
                     }
-                    catch (Exception Exception)
+                    catch (Exception exception)
                     {
-                        Console.Error.WriteLine(Exception);
+                        Console.Error.WriteLine(exception);
                         Environment.Exit(-1);
                     }
                 });

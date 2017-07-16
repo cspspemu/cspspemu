@@ -11,9 +11,10 @@ using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Gpu.State.SubStates;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Types;
-using CSPspEmu.Core.Utils;
 using CSPspEmu.Inject;
 using CSPspEmu.Core.Gpu.Impl.Opengl;
+using CSPspEmu.Utils.Utils;
+using Hashing = CSPspEmu.Utils.Hashing;
 
 namespace CSPspEmu.Core.Gpu
 {
@@ -285,7 +286,7 @@ namespace CSPspEmu.Core.Gpu
                                         TextureFormat, (void*) SwizzlingBufferPointer, TexturePixelsPointer,
                                         BufferWidth, Height,
                                         ClutPointer, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask,
-                                        StrideWidth: PixelFormatDecoder.GetPixelsSize(TextureFormat, TextureWidth)
+                                        strideWidth: PixelFormatDecoder.GetPixelsSize(TextureFormat, TextureWidth)
                                     );
                                 }
                             }
@@ -294,7 +295,7 @@ namespace CSPspEmu.Core.Gpu
                                 PixelFormatDecoder.Decode(
                                     TextureFormat, (void*) TexturePointer, TexturePixelsPointer, BufferWidth, Height,
                                     ClutPointer, ClutFormat, ClutCount, ClutStart, ClutShift, ClutMask,
-                                    StrideWidth: PixelFormatDecoder.GetPixelsSize(TextureFormat, TextureWidth)
+                                    strideWidth: PixelFormatDecoder.GetPixelsSize(TextureFormat, TextureWidth)
                                 );
                             }
 

@@ -3,9 +3,9 @@ using System.Drawing;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Core.Threading.Synchronization;
-using CSPspEmu.Core.Utils;
 using CSPspEmu.Core.Types;
 using System.Collections.Generic;
+using CSPspEmu.Utils.Utils;
 
 namespace CSPspEmu.Core.Display
 {

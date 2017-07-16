@@ -2,7 +2,7 @@
 
 namespace CSPspEmu.Core.Gpu.Run
 {
-    public unsafe sealed partial class GpuDisplayListRunner
+    public sealed unsafe partial class GpuDisplayListRunner
     {
         /**
          * Image transfer using the GE
@@ -47,6 +47,7 @@ namespace CSPspEmu.Core.Gpu.Run
         /// <summary>
         /// TRansfer X Source Buffer Pointer
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void OP_TRXSBP()
         {
             GpuState->TextureTransferState.SourceAddress.Low24 = Params24;
@@ -55,6 +56,7 @@ namespace CSPspEmu.Core.Gpu.Run
         /// <summary>
         /// TRansfer X Source Width
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void OP_TRXSBW()
         {
             GpuState->TextureTransferState.SourceAddress.High8 = Params24 << 8;
@@ -66,6 +68,7 @@ namespace CSPspEmu.Core.Gpu.Run
         /// <summary>
         /// TRansfer X Source POSition
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void OP_TRXSPOS()
         {
             GpuState->TextureTransferState.SourceX = (ushort) Extract(10 * 0, 10);
@@ -75,6 +78,7 @@ namespace CSPspEmu.Core.Gpu.Run
         /// <summary>
         /// // TRansfer X Destination Buffer Pointer
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void OP_TRXDBP()
         {
             GpuState->TextureTransferState.DestinationAddress.Low24 = Params24;
@@ -83,17 +87,20 @@ namespace CSPspEmu.Core.Gpu.Run
         /// <summary>
         /// TRansfer X Destination Width
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void OP_TRXDBW()
         {
-            GpuState->TextureTransferState.DestinationAddress.High8 = Params24 << 8;
-            GpuState->TextureTransferState.DestinationLineWidth = (ushort) Extract(0, 16);
-            GpuState->TextureTransferState.DestinationX = 0;
-            GpuState->TextureTransferState.DestinationY = 0;
+            ref var textureTransferStateStruct = ref GpuState->TextureTransferState;
+            textureTransferStateStruct.DestinationAddress.High8 = Params24 << 8;
+            textureTransferStateStruct.DestinationLineWidth = (ushort) Extract(0, 16);
+            textureTransferStateStruct.DestinationX = 0;
+            textureTransferStateStruct.DestinationY = 0;
         }
 
         /// <summary>
         /// TRansfer X Destination POSition
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void OP_TRXDPOS()
         {
             GpuState->TextureTransferState.DestinationX = (ushort) Extract(10 * 0, 10);
@@ -103,6 +110,7 @@ namespace CSPspEmu.Core.Gpu.Run
         /// <summary>
         /// TRansfer X SIZE
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void OP_TRXSIZE()
         {
             GpuState->TextureTransferState.Width = (ushort) (Extract(10 * 0, 10) + 1);
@@ -112,6 +120,7 @@ namespace CSPspEmu.Core.Gpu.Run
         /// <summary>
         /// TRansfer X KICKTRansfer X KICK
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void OP_TRXKICK()
         {
             GpuState->TextureTransferState.TexelSize = (TextureTransferStateStruct.TexelSizeEnum) Extract(0, 1);

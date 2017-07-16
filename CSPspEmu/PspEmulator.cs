@@ -13,7 +13,6 @@ using CSPspEmu.Core.Display;
 using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Core.Memory;
-using CSPspEmu.Core.Utils;
 using CSPspEmu.Gui.Winforms;
 using CSPspEmu.Runner;
 using CSPspEmu.Core.Audio.Impl.WaveOut;
@@ -231,7 +230,7 @@ namespace CSPspEmu
 
             lock (this)
             {
-                _InjectContext = PspInjectContext.CreateInjectContext(StoredConfig, Test: false);
+                _InjectContext = PspInjectContext.CreateInjectContext(StoredConfig, test: false);
                 _InjectContext.SetInstanceType<IGuiExternalInterface, PspEmulator>();
 
                 _InjectContext.InjectDependencesTo(this);

@@ -27,6 +27,7 @@ namespace CSPspEmu.Core.Gpu.Run
          **/
         // void sceGuDrawBuffer(int psm, void* fbp, int fbw);
 
+        // ReSharper disable once UnusedMember.Global
         public void OP_NOP()
         {
         }
@@ -34,6 +35,7 @@ namespace CSPspEmu.Core.Gpu.Run
         /// <summary>
         /// Base Address Register
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void OP_BASE()
         {
             //GlobalGpuState.Base = ((Params24 << 8) & 0xff000000);
@@ -43,6 +45,7 @@ namespace CSPspEmu.Core.Gpu.Run
         /// <summary>
         /// 
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void OP_OFFSET_ADDR()
         {
             //GlobalGpuState.BaseOffset = (Params24 << 8);
@@ -53,6 +56,7 @@ namespace CSPspEmu.Core.Gpu.Run
         /// 
         /// </summary>
         [GpuOpCodesNotImplemented]
+        // ReSharper disable once UnusedMember.Global
         public void OP_ORIGIN_ADDR()
         {
             GpuState->BaseOffset = PC;
@@ -61,6 +65,7 @@ namespace CSPspEmu.Core.Gpu.Run
         /// <summary>
         /// Frame Buffer Pointer
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void OP_FBP()
         {
             GpuState->DrawBufferState.LowAddress = Params24;
@@ -69,6 +74,7 @@ namespace CSPspEmu.Core.Gpu.Run
         /// <summary>
         /// Frame Buffer Width
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void OP_FBW()
         {
             GpuState->DrawBufferState.HighAddress = Param8(16);
@@ -88,6 +94,7 @@ namespace CSPspEmu.Core.Gpu.Run
         /// <summary>
         /// frame buffer Pixel Storage Mode
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void OP_PSM()
         {
             GpuState->DrawBufferState.Format = (GuPixelFormats) Param8(0);
@@ -100,21 +107,23 @@ namespace CSPspEmu.Core.Gpu.Run
         //drawRegion(0,0,gu_draw_buffer.width,gu_draw_buffer.height);
         //sceDisplaySetMode(0,gu_draw_buffer.width,gu_draw_buffer.height);
         //[GpuOpCodesNotImplemented]
+        // ReSharper disable once UnusedMember.Global
         public void OP_REGION1()
         {
-            var X1 = (short) BitUtils.Extract(Params24, 0, 10);
-            var Y1 = (short) BitUtils.Extract(Params24, 10, 10);
-            GpuState->Viewport.RegionTopLeft.X = X1;
-            GpuState->Viewport.RegionTopLeft.Y = Y1;
+            var x1 = (short) BitUtils.Extract(Params24, 0, 10);
+            var y1 = (short) BitUtils.Extract(Params24, 10, 10);
+            GpuState->Viewport.RegionTopLeft.X = x1;
+            GpuState->Viewport.RegionTopLeft.Y = y1;
         }
 
         //[GpuOpCodesNotImplemented]
+        // ReSharper disable once UnusedMember.Global
         public void OP_REGION2()
         {
-            var X2 = (short) BitUtils.Extract(Params24, 0, 10);
-            var Y2 = (short) BitUtils.Extract(Params24, 10, 10);
-            GpuState->Viewport.RegionBottomRight.X = (short) (X2 + 1);
-            GpuState->Viewport.RegionBottomRight.Y = (short) (Y2 + 1);
+            var x2 = (short) BitUtils.Extract(Params24, 0, 10);
+            var y2 = (short) BitUtils.Extract(Params24, 10, 10);
+            GpuState->Viewport.RegionBottomRight.X = (short) (x2 + 1);
+            GpuState->Viewport.RegionBottomRight.Y = (short) (y2 + 1);
         }
 
         /**
@@ -132,6 +141,7 @@ namespace CSPspEmu.Core.Gpu.Run
         /// <summary>
         /// SCISSOR start (1)
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void OP_SCISSOR1()
         {
             GpuState->ClipPlaneState.Scissor.Left = (short) BitUtils.Extract(Params24, 0, 10);
@@ -141,6 +151,7 @@ namespace CSPspEmu.Core.Gpu.Run
         /// <summary>
         /// SCISSOR end (2)
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void OP_SCISSOR2()
         {
             GpuState->ClipPlaneState.Scissor.Right = (short) BitUtils.Extract(Params24, 0, 10);
@@ -166,30 +177,35 @@ namespace CSPspEmu.Core.Gpu.Run
         // sendCommandf(69,(float)cx);
         // sendCommandf(70,(float)cy);
 
+        // ReSharper disable once UnusedMember.Global
         public void OP_XSCALE()
         {
             GpuState->Viewport.Scale.X = Float1 * 2;
             //Console.Error.WriteLine("OP_XSCALE: {0}", GpuState->Viewport.Scale.X);
         }
 
+        // ReSharper disable once UnusedMember.Global
         public void OP_YSCALE()
         {
             GpuState->Viewport.Scale.Y = -Float1 * 2;
             //Console.Error.WriteLine("OP_YSCALE: {0}", GpuState->Viewport.Scale.Y);
         }
 
+        // ReSharper disable once UnusedMember.Global
         public void OP_ZSCALE()
         {
             GpuState->Viewport.Scale.Z = Float1;
             //gpu.state.viewport.sz = command.extractFixedFloat!(0, 16);
         }
 
+        // ReSharper disable once UnusedMember.Global
         public void OP_XPOS()
         {
             GpuState->Viewport.Position.X = Float1;
             //Console.Error.WriteLine("OP_XPOS: {0}", GpuState->Viewport.Position.X);
         }
 
+        // ReSharper disable once UnusedMember.Global
         public void OP_YPOS()
         {
             GpuState->Viewport.Position.Y = Float1;
@@ -197,6 +213,7 @@ namespace CSPspEmu.Core.Gpu.Run
         }
 
         //[GpuOpCodesNotImplemented]
+        // ReSharper disable once UnusedMember.Global
         public void OP_ZPOS()
         {
             GpuState->Viewport.Position.Z = BitUtils.ExtractUnsignedScaled(Params24, 0, 16, 1.0f);
@@ -220,6 +237,7 @@ namespace CSPspEmu.Core.Gpu.Run
         //void sceGuOffset(unsigned int x, unsigned int y); // OP_OFFSETX + OP_OFFSETY
 
         //[GpuOpCodesNotImplemented]
+        // ReSharper disable once UnusedMember.Global
         public void OP_OFFSETX()
         {
             GpuState->Offset.X = (short) BitUtils.Extract(Params24, 0, 4);
@@ -228,6 +246,7 @@ namespace CSPspEmu.Core.Gpu.Run
         }
 
         //[GpuOpCodesNotImplemented]
+        // ReSharper disable once UnusedMember.Global
         public void OP_OFFSETY()
         {
             GpuState->Offset.Y = (short) BitUtils.Extract(Params24, 0, 4);
@@ -246,6 +265,7 @@ namespace CSPspEmu.Core.Gpu.Run
          * @param order - Which order to use
          **/
         // void sceGuFrontFace(int order); // OP_FFACE
+        // ReSharper disable once UnusedMember.Global
         public void OP_FFACE()
         {
             GpuState->BackfaceCullingState.FrontFaceDirection = (FrontFaceDirectionEnum) Params24;
@@ -263,12 +283,14 @@ namespace CSPspEmu.Core.Gpu.Run
         **/
         // void sceGuShadeModel(int mode); // OP_SHADE
         //[GpuOpCodesNotImplemented]
+        // ReSharper disable once UnusedMember.Global
         public void OP_SHADE()
         {
             GpuState->ShadeModel = (ShadingModelEnum) Params24;
         }
 
         // Logical Operation Enable (GL_COLOR_LOGIC_OP)
+        // ReSharper disable once UnusedMember.Global
         public void OP_LOE()
         {
             GpuState->LogicalOperationState.Enabled = Bool1;
@@ -304,6 +326,7 @@ namespace CSPspEmu.Core.Gpu.Run
         /// <summary>
         /// Logical Operation
         /// </summary>
+        // ReSharper disable once UnusedMember.Global
         public void OP_LOP()
         {
             GpuState->LogicalOperationState.Operation = (LogicalOperationEnum) Param8(0);

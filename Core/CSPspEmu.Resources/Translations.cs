@@ -10,77 +10,83 @@ namespace CSPspEmu.Resources
 {
     public class Translations
     {
-        private static Dictionary<string, Dictionary<string, Dictionary<string, string>>> Dictionary;
-        private static SortedSet<string> _AvailableLanguages;
+        private static Dictionary<string, Dictionary<string, Dictionary<string, string>>> _dictionary;
+        private static SortedSet<string> _availableLanguages;
 
         public static SortedSet<string> AvailableLanguages
         {
             get
             {
-                if (Dictionary == null) Parse();
-                return _AvailableLanguages;
+                if (_dictionary == null) Parse();
+                return _availableLanguages;
             }
         }
 
-        public static string DefaultLanguage = null;
+        public static string DefaultLanguage;
 
         private static void Parse()
         {
-            Dictionary = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
-            _AvailableLanguages = new SortedSet<string>();
+            _dictionary = new Dictionary<string, Dictionary<string, Dictionary<string, string>>>();
+            _availableLanguages = new SortedSet<string>();
 
             try
             {
-                var Document = new XmlDocument();
-                Document.LoadXml(ResourceArchive.GetTranslationsStream().ReadAllContentsAsString());
-                foreach (var CategoryNode in Document.SelectNodes("/translations/category").Cast<XmlNode>())
+                var document = new XmlDocument();
+                document.LoadXml(ResourceArchive.GetTranslationsStream().ReadAllContentsAsString());
+                foreach (var categoryNode in
+                    document.SelectNodes("/translations/category")?.Cast<XmlNode>() ?? new XmlNode[0]
+                )
                 {
-                    var CategoryId = CategoryNode.Attributes["id"].Value;
-                    if (!Dictionary.ContainsKey(CategoryId))
-                        Dictionary[CategoryId] = new Dictionary<string, Dictionary<string, string>>();
-                    foreach (var TextNode in CategoryNode.SelectNodes("text").Cast<XmlNode>())
+                    var categoryId = categoryNode?.Attributes?["id"]?.Value ?? "";
+                    if (!_dictionary.ContainsKey(categoryId))
+                        _dictionary[categoryId] = new Dictionary<string, Dictionary<string, string>>();
+
+                    foreach (var textNode in categoryNode?.SelectNodes("text")?.Cast<XmlNode>() ?? new XmlNode[0])
                     {
-                        var TextId = TextNode.Attributes["id"].Value;
-                        if (!Dictionary[CategoryId].ContainsKey(TextId))
-                            Dictionary[CategoryId][TextId] = new Dictionary<string, string>();
-                        foreach (var TranslationNode in TextNode.SelectNodes("translation").Cast<XmlNode>())
+                        var textId = textNode?.Attributes?["id"]?.Value ?? "";
+
+                        if (!_dictionary[categoryId].ContainsKey(textId))
+                            _dictionary[categoryId][textId] = new Dictionary<string, string>();
+
+                        foreach (var translationNode in textNode?.SelectNodes("translation")?.Cast<XmlNode>() ??
+                                                        new XmlNode[0])
                         {
-                            var LangId = TranslationNode.Attributes["lang"].Value;
-                            var Text = TranslationNode.InnerText;
+                            var langId = translationNode?.Attributes["lang"].Value;
+                            var text = translationNode.InnerText;
                             if (DefaultLanguage == null)
                             {
-                                DefaultLanguage = LangId;
+                                DefaultLanguage = langId;
                             }
-                            if (LangId != "xx")
+                            if (langId != "xx")
                             {
-                                AvailableLanguages.Add(LangId);
+                                AvailableLanguages.Add(langId);
                             }
                             //Console.WriteLine("{0}.{1}.{2} = {3}", CategoryId, TextId, LangId, Text);
-                            Dictionary[CategoryId][TextId][LangId] = Text;
+                            _dictionary[categoryId][textId][langId] = text;
                         }
                     }
                 }
             }
-            catch (Exception Exception)
+            catch (Exception exception)
             {
-                Console.Error.WriteLine(Exception);
+                Console.Error.WriteLine(exception);
             }
         }
 
-        private static Dictionary<string, Image> FlagCache = new Dictionary<string, Image>();
+        private static readonly Dictionary<string, Image> FlagCache = new Dictionary<string, Image>();
 
-        public static Image GetLangFlagImage(string LangId)
+        public static Image GetLangFlagImage(string langId)
         {
             try
             {
-                if (!FlagCache.ContainsKey(LangId))
+                if (!FlagCache.ContainsKey(langId))
                 {
-                    var BitmapStream =
+                    var bitmapStream =
                         typeof(Translations).Assembly.GetManifestResourceStream(
-                            "CSPspEmu.Resources.Images.Languages." + LangId + ".png");
-                    FlagCache[LangId] = Image.FromStream(BitmapStream);
+                            "CSPspEmu.Resources.Images.Languages." + langId + ".png");
+                    if (bitmapStream != null) FlagCache[langId] = Image.FromStream(bitmapStream);
                 }
-                return FlagCache[LangId];
+                return FlagCache[langId];
             }
             catch
             {
@@ -88,41 +94,33 @@ namespace CSPspEmu.Resources
             }
         }
 
-        public static string GetString(string CategoryId, string TextId, string LangId = null)
+        public static string GetString(string categoryId, string textId, string langId = null)
         {
-            if (Dictionary == null) Parse();
-            if (LangId == null) LangId = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+            if (_dictionary == null) Parse();
+            if (_dictionary == null) throw new NullReferenceException();
+            if (langId == null) langId = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
 
-            Dictionary<string, Dictionary<string, string>> Category = null;
-            Dictionary<string, string> CategoryText = null;
+            Dictionary<string, string> categoryText = null;
 
             try
             {
-                Category = Dictionary[CategoryId];
-                CategoryText = Category[TextId];
-                if (CategoryText.ContainsKey("xx")) return CategoryText["xx"];
-                return CategoryText[LangId];
+                var category = _dictionary[categoryId];
+                categoryText = category[textId];
+                return categoryText.ContainsKey("xx") ? categoryText["xx"] : categoryText[langId];
             }
-            catch (Exception Exception)
+            catch (Exception exception)
             {
-                Console.Error.WriteLine("Can't find key '{0}.{1}.{2}'", CategoryId, TextId, LangId);
-                Console.Error.WriteLine(Exception);
-                try
-                {
-                    return CategoryText[DefaultLanguage];
-                }
-                catch
-                {
-                    return String.Format("{0}.{1}", CategoryId, TextId);
-                }
+                Console.Error.WriteLine("Can't find key '{0}.{1}.{2}'", categoryId, textId, langId);
+                Console.Error.WriteLine(exception);
+                return categoryText?[DefaultLanguage] ?? $"{categoryId}.{textId}";
             }
         }
 
-        public static string GetString(string CategoryId, string TextId, CultureInfo CultureInfo)
+        public static string GetString(string categoryId, string textId, CultureInfo cultureInfo)
         {
-            var LangId = CultureInfo.TwoLetterISOLanguageName;
+            var langId = cultureInfo.TwoLetterISOLanguageName;
 
-            return GetString(CategoryId, TextId, LangId);
+            return GetString(categoryId, textId, langId);
         }
     }
 }

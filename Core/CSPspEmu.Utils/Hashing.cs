@@ -2,61 +2,61 @@
 using System.Runtime.ExceptionServices;
 using CSharpUtils;
 
-namespace CSPspEmu.Core
+namespace CSPspEmu.Utils
 {
     public static unsafe class Hashing
     {
         private static Logger Logger = Logger.GetLogger("Hashing");
 
         [HandleProcessCorruptedStateExceptions]
-        public static ulong FastHash(byte* Pointer, int Count, ulong StartHash = 0)
+        public static ulong FastHash(byte* pointer, int count, ulong startHash = 0)
         {
-            if (Pointer == null)
+            if (pointer == null)
             {
-                return StartHash;
+                return startHash;
             }
 
-            if (Count > 4 * 2048 * 2048)
+            if (count > 4 * 2048 * 2048)
             {
                 Logger.Error("FastHash too big count!");
-                return StartHash;
+                return startHash;
             }
 
             try
             {
-                return FastHash_64(Pointer, Count, StartHash);
+                return FastHash_64(pointer, count, startHash);
             }
-            catch (NullReferenceException NullReferenceException)
+            catch (NullReferenceException nullReferenceException)
             {
-                Logger.Error(NullReferenceException);
+                Logger.Error(nullReferenceException);
             }
-            catch (AccessViolationException AccessViolationException)
+            catch (AccessViolationException accessViolationException)
             {
-                Logger.Error(AccessViolationException);
+                Logger.Error(accessViolationException);
             }
 
-            return StartHash;
+            return startHash;
         }
 
         [HandleProcessCorruptedStateExceptions]
-        private static ulong FastHash_64(byte* Pointer, int Count, ulong StartHash = 0)
+        private static ulong FastHash_64(byte* pointer, int count, ulong startHash = 0)
         {
-            var Hash = StartHash;
+            var hash = startHash;
 
-            while (Count >= 8)
+            while (count >= 8)
             {
-                Hash += (*(ulong*) Pointer) + (ulong) (Count << 31);
-                Pointer += 8;
-                Count -= 8;
+                hash += (*(ulong*) pointer) + (ulong) (count << 31);
+                pointer += 8;
+                count -= 8;
             }
 
-            while (Count >= 1)
+            while (count >= 1)
             {
-                Hash += *Pointer++;
-                Count--;
+                hash += *pointer++;
+                count--;
             }
 
-            return Hash;
+            return hash;
         }
     }
 }

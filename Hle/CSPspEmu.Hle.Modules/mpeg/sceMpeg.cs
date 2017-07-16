@@ -53,9 +53,9 @@ namespace CSPspEmu.Hle.Modules.mpeg
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Mpeg"></param>
+        /// <param name="mpeg"></param>
         /// <returns></returns>
-        private Mpeg GetMpeg(SceMpegPointer* Mpeg)
+        private Mpeg GetMpeg(SceMpegPointer* mpeg)
         {
             if (__SingleInstance == null) __SingleInstance = new Mpeg(InjectContext);
             return __SingleInstance;
@@ -64,11 +64,11 @@ namespace CSPspEmu.Hle.Modules.mpeg
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="SceMpeg"></param>
+        /// <param name="sceMpeg"></param>
         /// <returns></returns>
-        public SceMpeg* GetSceMpegData(SceMpegPointer* SceMpeg)
+        public SceMpeg* GetSceMpegData(SceMpegPointer* sceMpeg)
         {
-            return SceMpeg->GetSceMpeg(Memory);
+            return sceMpeg->GetSceMpeg(Memory);
         }
 
         /// <summary>
@@ -95,12 +95,12 @@ namespace CSPspEmu.Hle.Modules.mpeg
         /// <summary>
         /// sceMpegQueryMemSize
         /// </summary>
-        /// <param name="Mode">Unknown, set to 0</param>
+        /// <param name="mode">Unknown, set to 0</param>
         /// <returns>
         ///		Less than 0 if error else decoder data size.
         /// </returns>
         [HlePspFunction(NID = 0xC132E22F, FirmwareVersion = 150)]
-        public int sceMpegQueryMemSize(int Mode)
+        public int sceMpegQueryMemSize(int mode)
         {
             return sizeof(SceMpeg);
         }
@@ -108,68 +108,66 @@ namespace CSPspEmu.Hle.Modules.mpeg
         /// <summary>
         /// sceMpegCreate
         /// </summary>
-        /// <param name="SceMpegPointer">Will be filled</param>
-        /// <param name="MpegData">Pointer to allocated memory of size = sceMpegQueryMemSize()</param>
-        /// <param name="MpegSize">Size of data, should be = sceMpegQueryMemSize()</param>
-        /// <param name="SceMpegRingbuffer">A ringbuffer</param>
-        /// <param name="FrameWidth">Display buffer width, set to 512 if writing to framebuffer</param>
-        /// <param name="Mode">Unknown, set to 0</param>
-        /// <param name="DdrTop">Unknown, set to 0</param>
+        /// <param name="sceMpegPointer">Will be filled</param>
+        /// <param name="mpegData">Pointer to allocated memory of size = sceMpegQueryMemSize()</param>
+        /// <param name="mpegSize">Size of data, should be = sceMpegQueryMemSize()</param>
+        /// <param name="sceMpegRingbuffer">A ringbuffer</param>
+        /// <param name="frameWidth">Display buffer width, set to 512 if writing to framebuffer</param>
+        /// <param name="mode">Unknown, set to 0</param>
+        /// <param name="ddrTop">Unknown, set to 0</param>
         /// <returns>0 if successful.</returns>
         [HlePspFunction(NID = 0xD8C5F121, FirmwareVersion = 150)]
         [HlePspNotImplemented]
-        public int sceMpegCreate(SceMpegPointer* SceMpegPointer, void* MpegData, int MpegSize,
-            SceMpegRingbuffer* SceMpegRingbuffer, int FrameWidth, int Mode, int DdrTop)
+        public int sceMpegCreate(SceMpegPointer* sceMpegPointer, void* mpegData, int mpegSize,
+            SceMpegRingbuffer* sceMpegRingbuffer, int frameWidth, int mode, int ddrTop)
         {
             //return -1;
 
-            var Mpeg = GetMpeg(SceMpegPointer);
+            var mpeg = GetMpeg(sceMpegPointer);
 
-            if (MpegSize < sceMpegQueryMemSize(0))
+            if (mpegSize < sceMpegQueryMemSize(0))
             {
                 throw (new SceKernelException(SceKernelErrors.ERROR_MPEG_NO_MEMORY));
             }
 
             // Update the ring buffer struct.
-            if (SceMpegRingbuffer->PacketSize == 0)
+            if (sceMpegRingbuffer->PacketSize == 0)
             {
-                SceMpegRingbuffer->PacketsAvailable = 0;
+                sceMpegRingbuffer->PacketsAvailable = 0;
             }
             else
             {
-                SceMpegRingbuffer->PacketsAvailable =
-                    (int) ((SceMpegRingbuffer->DataEnd.Address - SceMpegRingbuffer->Data.Address) /
-                           SceMpegRingbuffer->PacketSize);
+                sceMpegRingbuffer->PacketsAvailable =
+                    (int) ((sceMpegRingbuffer->DataEnd.Address - sceMpegRingbuffer->Data.Address) /
+                           sceMpegRingbuffer->PacketSize);
             }
 
-            SceMpegRingbuffer->SceMpeg = Memory.PointerToPspPointer(SceMpegPointer);
+            sceMpegRingbuffer->SceMpeg = Memory.PointerToPspPointer(sceMpegPointer);
 
-            SceMpeg* SceMpegData = (SceMpeg*) &((byte*) MpegData)[0x30];
+            SceMpeg* sceMpegData = (SceMpeg*) (((byte*) mpegData) + 0x30);
 
-            SceMpegPointer->SceMpeg = Memory.PointerToPspPointer(SceMpegData);
+            sceMpegPointer->SceMpeg = Memory.PointerToPspPointer(sceMpegData);
 
-            PointerUtils.StoreStringOnPtr("LIBMPEG", Encoding.UTF8, SceMpegData->MagicBytes);
-            PointerUtils.StoreStringOnPtr("001", Encoding.UTF8, SceMpegData->VersionBytes);
-            SceMpegData->Pad = -1;
-            SceMpegData->RingBufferAddress = Memory.PointerToPspPointer(SceMpegRingbuffer);
-            SceMpegData->RingBufferAddressDataUpper = SceMpegRingbuffer->DataEnd;
-            SceMpegData->FrameWidth = FrameWidth;
-            SceMpegData->SceMpegAvcMode.Mode = -1;
-            SceMpegData->SceMpegAvcMode.PixelFormat = GuPixelFormats.RGBA_8888;
-            SceMpegData->VideoFrameCount = 0;
-            SceMpegData->AudioFrameCount = 0;
+            PointerUtils.StoreStringOnPtr("LIBMPEG", Encoding.UTF8, sceMpegData->MagicBytes);
+            PointerUtils.StoreStringOnPtr("001", Encoding.UTF8, sceMpegData->VersionBytes);
+            sceMpegData->Pad = -1;
+            sceMpegData->RingBufferAddress = Memory.PointerToPspPointer(sceMpegRingbuffer);
+            sceMpegData->RingBufferAddressDataUpper = sceMpegRingbuffer->DataEnd;
+            sceMpegData->FrameWidth = frameWidth;
+            sceMpegData->SceMpegAvcMode.Mode = -1;
+            sceMpegData->SceMpegAvcMode.PixelFormat = GuPixelFormats.RGBA_8888;
+            sceMpegData->VideoFrameCount = 0;
+            sceMpegData->AudioFrameCount = 0;
 
-            SceMpegRingbuffer->PacketsTotal = 0;
+            sceMpegRingbuffer->PacketsTotal = 0;
 
-            Mpeg.ReadPackets = (int NumPackets) =>
-            {
-                return (int) HleInterop.ExecuteFunctionNow(SceMpegRingbuffer->Callback, SceMpegRingbuffer->Data,
-                    NumPackets, SceMpegRingbuffer->CallbackParameter);
-            };
+            mpeg.ReadPackets = numPackets => (int) HleInterop.ExecuteFunctionNow(sceMpegRingbuffer->Callback,
+                sceMpegRingbuffer->Data,
+                numPackets, sceMpegRingbuffer->CallbackParameter);
 
-            Mpeg._Mpeg = SceMpegPointer;
-            Mpeg.Data = SceMpegData;
-            Mpeg.Create();
+            mpeg._Mpeg = sceMpegPointer;
+            mpeg.Data = sceMpegData;
+            mpeg.Create();
 
             return 0;
         }
@@ -177,11 +175,11 @@ namespace CSPspEmu.Hle.Modules.mpeg
         /// <summary>
         /// sceMpegDelete
         /// </summary>
-        /// <param name="SceMpegPointer">SceMpeg handle</param>
+        /// <param name="sceMpegPointer">SceMpeg handle</param>
         [HlePspFunction(NID = 0x606A4649, FirmwareVersion = 150)]
-        public int sceMpegDelete(SceMpegPointer* SceMpegPointer)
+        public int sceMpegDelete(SceMpegPointer* sceMpegPointer)
         {
-            GetMpeg(SceMpegPointer).Delete();
+            GetMpeg(sceMpegPointer).Delete();
 
             return 0;
         }
@@ -189,30 +187,30 @@ namespace CSPspEmu.Hle.Modules.mpeg
         /// <summary>
         /// Initializes a Mpeg Access Unit from an ElementaryStreamBuffer.
         /// </summary>
-        /// <param name="Mpeg">SceMpeg handle</param>
-        /// <param name="ElementaryStreamBuffer">Prevously allocated Es buffer</param>
-        /// <param name="MpegAccessUnit">Will contain pointer to Au</param>
+        /// <param name="sceMpegPointer"></param>
+        /// <param name="elementaryStreamBuffer">Prevously allocated Es buffer</param>
+        /// <param name="mpegAccessUnit">Will contain pointer to Au</param>
         /// <returns>0 if successful.</returns>
         /// <seealso cref="http://en.wikipedia.org/wiki/Presentation_and_access_units"/>
         [HlePspFunction(NID = 0x167AFD9E, FirmwareVersion = 150)]
         [HlePspNotImplemented]
-        public int sceMpegInitAu(SceMpegPointer* SceMpegPointer, int ElementaryStreamBuffer,
-            out SceMpegAu MpegAccessUnit)
+        public int sceMpegInitAu(SceMpegPointer* sceMpegPointer, int elementaryStreamBuffer,
+            out SceMpegAu mpegAccessUnit)
         {
-            var Mpeg = GetMpeg(SceMpegPointer);
-            MpegAccessUnit = default(SceMpegAu);
-            MpegAccessUnit.EsBuffer = ElementaryStreamBuffer;
+            var mpeg = GetMpeg(sceMpegPointer);
+            mpegAccessUnit = default(SceMpegAu);
+            mpegAccessUnit.EsBuffer = elementaryStreamBuffer;
 
-            if (ElementaryStreamBuffer >= 1 && ElementaryStreamBuffer <= AbvEsBufAllocated.Length &&
-                AbvEsBufAllocated[ElementaryStreamBuffer - 1])
+            if (elementaryStreamBuffer >= 1 && elementaryStreamBuffer <= AbvEsBufAllocated.Length &&
+                AbvEsBufAllocated[elementaryStreamBuffer - 1])
             {
-                MpegAccessUnit.AuSize = MPEG_AVC_ES_SIZE;
-                Mpeg.AvcAu.SceMpegAu = MpegAccessUnit;
+                mpegAccessUnit.AuSize = MPEG_AVC_ES_SIZE;
+                mpeg.AvcAu.SceMpegAu = mpegAccessUnit;
             }
             else
             {
-                MpegAccessUnit.AuSize = MPEG_ATRAC_ES_SIZE;
-                Mpeg.AtracAu.SceMpegAu = MpegAccessUnit;
+                mpegAccessUnit.AuSize = MPEG_ATRAC_ES_SIZE;
+                mpeg.AtracAu.SceMpegAu = mpegAccessUnit;
             }
 
             return 0;
@@ -222,43 +220,43 @@ namespace CSPspEmu.Hle.Modules.mpeg
         /// <summary>
         /// sceMpegRingbufferQueryMemSize
         /// </summary>
-        /// <param name="NumberOfPackets">Number of packets in the ringbuffer</param>
+        /// <param name="numberOfPackets">Number of packets in the ringbuffer</param>
         /// <returns>Less than 0 if error, else ringbuffer data size.</returns>
         [HlePspFunction(NID = 0xD7A29F46, FirmwareVersion = 150)]
         //[HlePspNotImplemented]
-        public int sceMpegRingbufferQueryMemSize(int NumberOfPackets)
+        public int sceMpegRingbufferQueryMemSize(int numberOfPackets)
         {
-            return (RingBufferPacketSize + 0x68) * NumberOfPackets;
+            return (RingBufferPacketSize + 0x68) * numberOfPackets;
         }
 
         /// <summary>
         /// sceMpegRingbufferConstruct
         /// </summary>
-        /// <param name="Ringbuffer">Pointer to a sceMpegRingbuffer struct</param>
-        /// <param name="Packets">Number of packets in the ringbuffer</param>
-        /// <param name="Data">Pointer to allocated memory</param>
-        /// <param name="Size">Size of allocated memory, shoud be sceMpegRingbufferQueryMemSize(iPackets)</param>
-        /// <param name="Callback">Ringbuffer callback</param>
-        /// <param name="CallbackParam">Param passed to callback</param>
+        /// <param name="ringbuffer">Pointer to a sceMpegRingbuffer struct</param>
+        /// <param name="packets">Number of packets in the ringbuffer</param>
+        /// <param name="data">Pointer to allocated memory</param>
+        /// <param name="size">Size of allocated memory, shoud be sceMpegRingbufferQueryMemSize(iPackets)</param>
+        /// <param name="callback">Ringbuffer callback</param>
+        /// <param name="callbackParam">Param passed to callback</param>
         /// <returns>0 if successful.</returns>
         [HlePspFunction(NID = 0x37295ED8, FirmwareVersion = 150)]
         //[HlePspNotImplemented]
-        public int sceMpegRingbufferConstruct(SceMpegRingbuffer* Ringbuffer, int Packets, PspPointer Data, int Size,
-            PspPointer Callback, PspPointer CallbackParam)
+        public int sceMpegRingbufferConstruct(SceMpegRingbuffer* ringbuffer, int packets, PspPointer data, int size,
+            PspPointer callback, PspPointer callbackParam)
         {
-            Ringbuffer->PacketsTotal = Packets;
-            Ringbuffer->PacketsRead = 0;
-            Ringbuffer->PacketsWritten = 0;
-            Ringbuffer->PacketsAvailable = 0; // set later
-            Ringbuffer->PacketSize = RingBufferPacketSize;
-            Ringbuffer->Data = Data;
-            Ringbuffer->DataEnd = (uint) (Data + Ringbuffer->PacketsTotal * Ringbuffer->PacketSize);
-            Ringbuffer->Callback = Callback;
-            Ringbuffer->CallbackParameter = CallbackParam;
-            Ringbuffer->SemaId = -1;
-            Ringbuffer->SceMpeg = 0;
+            ringbuffer->PacketsTotal = packets;
+            ringbuffer->PacketsRead = 0;
+            ringbuffer->PacketsWritten = 0;
+            ringbuffer->PacketsAvailable = 0; // set later
+            ringbuffer->PacketSize = RingBufferPacketSize;
+            ringbuffer->Data = data;
+            ringbuffer->DataEnd = (uint) (data + ringbuffer->PacketsTotal * ringbuffer->PacketSize);
+            ringbuffer->Callback = callback;
+            ringbuffer->CallbackParameter = callbackParam;
+            ringbuffer->SemaId = -1;
+            ringbuffer->SceMpeg = 0;
 
-            if (Ringbuffer->DataEnd > Ringbuffer->Data + Size)
+            if (ringbuffer->DataEnd > ringbuffer->Data + size)
             {
                 throw (new InvalidOperationException());
             }
@@ -269,57 +267,57 @@ namespace CSPspEmu.Hle.Modules.mpeg
         /// <summary>
         /// sceMpegRingbufferDestruct
         /// </summary>
-        /// <param name="Ringbuffer">Pointer to a sceMpegRingbuffer struct</param>
+        /// <param name="ringbuffer">Pointer to a sceMpegRingbuffer struct</param>
         [HlePspFunction(NID = 0x13407F13, FirmwareVersion = 150)]
         //[HlePspNotImplemented]
-        public int sceMpegRingbufferDestruct(SceMpegRingbuffer* Ringbuffer)
+        public int sceMpegRingbufferDestruct(SceMpegRingbuffer* ringbuffer)
         {
-            Ringbuffer->PacketsAvailable = Ringbuffer->PacketsTotal;
-            Ringbuffer->PacketsRead = 0;
-            Ringbuffer->PacketsWritten = 0;
+            ringbuffer->PacketsAvailable = ringbuffer->PacketsTotal;
+            ringbuffer->PacketsRead = 0;
+            ringbuffer->PacketsWritten = 0;
             return 0;
         }
 
         /// <summary>
         /// sceMpegQueryMemSize
         /// </summary>
-        /// <param name="Ringbuffer">Pointer to a sceMpegRingbuffer struct</param>
+        /// <param name="ringbuffer">Pointer to a sceMpegRingbuffer struct</param>
         /// <returns>
         ///		Less than 0 if error, else number of free packets in the ringbuffer.
         /// </returns>
         [HlePspFunction(NID = 0xB5F6DC87, FirmwareVersion = 150)]
         //[HlePspNotImplemented]
-        public int sceMpegRingbufferAvailableSize(SceMpegRingbuffer* Ringbuffer)
+        public int sceMpegRingbufferAvailableSize(SceMpegRingbuffer* ringbuffer)
         {
-            return Ringbuffer->PacketsAvailable;
+            return ringbuffer->PacketsAvailable;
         }
 
         /// <summary>
         /// sceMpegRingbufferPut
         /// </summary>
-        /// <param name="Ringbuffer">Pointer to a sceMpegRingbuffer struct</param>
-        /// <param name="NumPackets">Num packets to put into the ringbuffer</param>
-        /// <param name="Available">Free packets in the ringbuffer, should be sceMpegRingbufferAvailableSize()</param>
+        /// <param name="ringbuffer">Pointer to a sceMpegRingbuffer struct</param>
+        /// <param name="numPackets">Num packets to put into the ringbuffer</param>
+        /// <param name="available">Free packets in the ringbuffer, should be sceMpegRingbufferAvailableSize()</param>
         /// <returns>
         ///		Less than 0 if error, else number of packets.
         /// </returns>
         [HlePspFunction(NID = 0xB240A59E, FirmwareVersion = 150)]
         //[HlePspNotImplemented]
-        public int sceMpegRingbufferPut(SceMpegRingbuffer* Ringbuffer, int NumPackets, int Available)
+        public int sceMpegRingbufferPut(SceMpegRingbuffer* ringbuffer, int numPackets, int available)
         {
-            if (NumPackets < 0) return 0;
+            if (numPackets < 0) return 0;
 
-            NumPackets = Math.Min(Available, NumPackets);
+            numPackets = Math.Min(available, numPackets);
 
-            var SceMpegPointer = (SceMpegPointer*) Ringbuffer->SceMpeg.GetPointer<SceMpegPointer>(Memory);
-            var Mpeg = GetMpeg(SceMpegPointer);
-            var SceMpeg = SceMpegPointer->GetSceMpeg(Memory);
-            var MpegStreamPackets = (int) MathUtils.RequiredBlocks(SceMpeg->StreamSize, Ringbuffer->PacketSize);
-            var RemainingPackets = Math.Max(0, MpegStreamPackets - Ringbuffer->PacketsRead);
+            var sceMpegPointer = (SceMpegPointer*) ringbuffer->SceMpeg.GetPointer<SceMpegPointer>(Memory);
+            var mpeg = GetMpeg(sceMpegPointer);
+            var sceMpeg = sceMpegPointer->GetSceMpeg(Memory);
+            var mpegStreamPackets = (int) MathUtils.RequiredBlocks(sceMpeg->StreamSize, ringbuffer->PacketSize);
+            var remainingPackets = Math.Max(0, mpegStreamPackets - ringbuffer->PacketsRead);
 
-            var PacketsAdded = Mpeg.ReadPackets(NumPackets);
-            var DataLength = (int) (PacketsAdded * Ringbuffer->PacketSize);
-            Mpeg.WriteData(Ringbuffer->Data.GetPointer(Memory, DataLength), DataLength);
+            var packetsAdded = mpeg.ReadPackets(numPackets);
+            var dataLength = (int) (packetsAdded * ringbuffer->PacketSize);
+            mpeg.WriteData(ringbuffer->Data.GetPointer(Memory, dataLength), dataLength);
 
             //
             //NumPackets = Math.Min(NumPackets, RemainingPackets);
@@ -348,7 +346,7 @@ namespace CSPspEmu.Hle.Modules.mpeg
             ////Ringbuffer->PacketsFree -= NumPackets;
             ////Ringbuffer->PacketsWritten += NumPackets;
 
-            return PacketsAdded;
+            return packetsAdded;
         }
 
         public class StreamInfo : IDisposable
@@ -366,13 +364,13 @@ namespace CSPspEmu.Hle.Modules.mpeg
         /// <summary>
         /// sceMpegUnRegistStream
         /// </summary>
-        /// <param name="Mpeg">SceMpeg handle</param>
-        /// <param name="StreamInfoId">Pointer to stream</param>
+        /// <param name="mpeg">SceMpeg handle</param>
+        /// <param name="streamInfoId">Pointer to stream</param>
         [HlePspFunction(NID = 0x591A4AA2, FirmwareVersion = 150)]
         [HlePspNotImplemented]
-        public void sceMpegUnRegistStream(SceMpegPointer* Mpeg, int StreamInfoId)
+        public void sceMpegUnRegistStream(SceMpegPointer* mpeg, int streamInfoId)
         {
-            RegisteredStreams.Remove(StreamInfoId);
+            RegisteredStreams.Remove(streamInfoId);
             //throw(new NotImplementedException());
         }
 
@@ -380,18 +378,18 @@ namespace CSPspEmu.Hle.Modules.mpeg
         /// sceMpegRegistStream
         /// </summary>
         /// <param name="Mpeg">SceMpeg handle</param>
-        /// <param name="StreamId">Stream ID, 0 for video, 1 for audio</param>
-        /// <param name="StreamIndex">Unknown, set to 0</param>
+        /// <param name="streamId">Stream ID, 0 for video, 1 for audio</param>
+        /// <param name="streamIndex">Unknown, set to 0</param>
         /// <returns>The ID, 0 on error.</returns>
         [HlePspFunction(NID = 0x42560F23, FirmwareVersion = 150)]
         [HlePspNotImplemented]
         //public SceMpegStream* sceMpegRegistStream(SceMpeg* Mpeg, int iStreamID, int iUnk)
-        public int sceMpegRegistStream(SceMpegPointer* Mpeg, StreamId StreamId, int StreamIndex)
+        public int sceMpegRegistStream(SceMpegPointer* Mpeg, StreamId streamId, int streamIndex)
         {
-            var StreamInfoId = RegisteredStreams.Create(new StreamInfo()
+            var streamInfoId = RegisteredStreams.Create(new StreamInfo()
             {
-                StreamId = StreamId,
-                StreamIndex = StreamIndex,
+                StreamId = streamId,
+                StreamIndex = streamIndex,
             });
             //Console.WriteLine(iStreamID);
             //return 0;
@@ -399,44 +397,44 @@ namespace CSPspEmu.Hle.Modules.mpeg
             //var SceMpegData = GetSceMpegData(Mpeg);
 
             //throw(new NotImplementedException());
-            return StreamInfoId;
+            return streamInfoId;
         }
 
         /// <summary>
         /// sceMpegQueryStreamOffset
         /// </summary>
-        /// <param name="MpegPointer">SceMpeg handle</param>
-        /// <param name="PmfHeader">Pointer to file header</param>
-        /// <param name="Offset">Will contain the stream offset in bytes, usually 2048</param>
+        /// <param name="mpegPointer">SceMpeg handle</param>
+        /// <param name="pmfHeader">Pointer to file header</param>
+        /// <param name="offset">Will contain the stream offset in bytes, usually 2048</param>
         /// <returns>0 if successful.</returns>
         [HlePspFunction(NID = 0x21FF80E4, FirmwareVersion = 150)]
         [HlePspNotImplemented]
-        public int sceMpegQueryStreamOffset(SceMpegPointer* MpegPointer, byte* PmfHeader, out uint Offset)
+        public int sceMpegQueryStreamOffset(SceMpegPointer* mpegPointer, byte* pmfHeader, out uint offset)
         {
-            var Pmf = new Pmf().Load(new MemoryStream(PointerUtils.PointerToByteArray(PmfHeader, 2048)));
+            var pmf = new Pmf().Load(new MemoryStream(PointerUtils.PointerToByteArray(pmfHeader, 2048)));
 
-            var Mpeg = GetMpeg(MpegPointer);
-            var SceMpeg = MpegPointer->GetSceMpeg(Memory);
+            var mpeg = GetMpeg(mpegPointer);
+            var sceMpeg = mpegPointer->GetSceMpeg(Memory);
 
-            Mpeg.ParsePmfHeader(PmfHeader);
-            SceMpeg->StreamSize = (int) (uint) Pmf.Header.StreamSize;
+            mpeg.ParsePmfHeader(pmfHeader);
+            sceMpeg->StreamSize = (int) (uint) pmf.Header.StreamSize;
 
-            Offset = (uint) Pmf.Header.StreamOffset;
+            offset = pmf.Header.StreamOffset;
             return 0;
         }
 
         /// <summary>
         /// sceMpegQueryStreamSize
         /// </summary>
-        /// <param name="PmfHeader">Pointer to file header</param>
-        /// <param name="Size">Will contain stream size in bytes</param>
+        /// <param name="pmfHeader">Pointer to file header</param>
+        /// <param name="size">Will contain stream size in bytes</param>
         /// <returns>0 if successful.</returns>
         [HlePspFunction(NID = 0x611E9E11, FirmwareVersion = 150)]
         [HlePspNotImplemented]
-        public int sceMpegQueryStreamSize(byte* PmfHeader, out uint Size)
+        public int sceMpegQueryStreamSize(byte* pmfHeader, out uint size)
         {
-            var Pmf = new Pmf().Load(new MemoryStream(PointerUtils.PointerToByteArray(PmfHeader, 2048)));
-            Size = Pmf.Header.StreamSize;
+            var pmf = new Pmf().Load(new MemoryStream(PointerUtils.PointerToByteArray(pmfHeader, 2048)));
+            size = pmf.Header.StreamSize;
             //*Size = 0;
             return 0;
         }
@@ -445,14 +443,14 @@ namespace CSPspEmu.Hle.Modules.mpeg
         /// <summary>
         /// sceMpegFlushAllStreams
         /// </summary>
-        /// <param name="Mpeg"></param>
+        /// <param name="sceMpegPointer"></param>
         /// <returns>0 if successful.</returns>
         [HlePspFunction(NID = 0x707B7629, FirmwareVersion = 150)]
         [HlePspNotImplemented]
-        public int sceMpegFlushAllStream(SceMpegPointer* SceMpegPointer)
+        public int sceMpegFlushAllStream(SceMpegPointer* sceMpegPointer)
         {
-            var Mpeg = GetMpeg(SceMpegPointer);
-            Mpeg.FlushAllStream();
+            var mpeg = GetMpeg(sceMpegPointer);
+            mpeg.FlushAllStream();
             //throw(new NotImplementedException());
             return 0;
         }

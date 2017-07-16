@@ -8,7 +8,6 @@ using CSPspEmu.Core.Gpu;
 using CSPspEmu.Core.Gpu.Impl.Opengl;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Types;
-using CSPspEmu.Core.Utils;
 using CSPspEmu.Hle.Formats.video;
 using System;
 using System.Collections.Generic;
@@ -20,6 +19,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CSharpUtils.Drawing.Extensions;
 using CSharpUtils.Extensions;
+using CSPspEmu.Utils.Utils;
 
 namespace CSPspEmu.Hle.Modules.mpeg
 {

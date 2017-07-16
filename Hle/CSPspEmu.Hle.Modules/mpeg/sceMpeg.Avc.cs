@@ -1,6 +1,5 @@
 ﻿using cscodec.h264.player;
 using CSPspEmu.Core.Memory;
-using CSPspEmu.Core.Utils;
 using System;
 
 namespace CSPspEmu.Hle.Modules.mpeg

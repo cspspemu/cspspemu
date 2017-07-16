@@ -4,9 +4,9 @@
     {
         protected bool Parallel;
 
-        public HybridThreadManager(bool Parallel = true)
+        public HybridThreadManager(bool parallel = true)
         {
-            this.Parallel = Parallel;
+            this.Parallel = parallel;
         }
     }
 }

@@ -3,9 +3,9 @@ using CSharpUtils;
 using CSharpUtils.Drawing;
 using CSPspEmu.Core.Types;
 
-namespace CSPspEmu.Core.Utils
+namespace CSPspEmu.Utils.Utils
 {
-    public unsafe sealed class PixelFormatDecoder
+    public sealed unsafe class PixelFormatDecoder
     {
         internal PixelFormatDecoder()
         {
@@ -44,40 +44,40 @@ namespace CSPspEmu.Core.Utils
             1, 1, 1
         };
 
-        public static int GetPixelsBits(GuPixelFormats PixelFormat)
+        public static int GetPixelsBits(GuPixelFormats pixelFormat)
         {
-            return (int) (Sizes[(int) PixelFormat] * 8);
+            return (int) (Sizes[(int) pixelFormat] * 8);
         }
 
-        public static int GetPixelsSize(GuPixelFormats PixelFormat, int PixelCount)
+        public static int GetPixelsSize(GuPixelFormats pixelFormat, int pixelCount)
         {
-            return (int) (Sizes[(int) PixelFormat] * PixelCount);
+            return (int) (Sizes[(int) pixelFormat] * pixelCount);
         }
 
-        void* _Input;
-        byte* InputByte;
-        ushort* InputShort;
-        uint* InputInt;
-        OutputPixel* Output;
-        int Width;
-        int Height;
-        void* Palette;
-        GuPixelFormats PaletteType;
-        int PaletteCount;
-        int PaletteStart;
-        int PaletteShift;
-        int PaletteMask;
-        int StrideWidth;
+        void* _input;
+        byte* _inputByte;
+        ushort* _inputShort;
+        uint* _inputInt;
+        OutputPixel* _output;
+        int _width;
+        int _height;
+        void* _palette;
+        GuPixelFormats _paletteType;
+        int _paletteCount;
+        int _paletteStart;
+        int _paletteShift;
+        int _paletteMask;
+        int _strideWidth;
 
-        public static ColorFormat ColorFormatFromPixelFormat(GuPixelFormats PixelFormat)
+        public static ColorFormat ColorFormatFromPixelFormat(GuPixelFormats pixelFormat)
         {
-            switch (PixelFormat)
+            switch (pixelFormat)
             {
                 case GuPixelFormats.RGBA_8888: return ColorFormats.Rgba8888;
                 case GuPixelFormats.RGBA_5551: return ColorFormats.Rgba5551;
                 case GuPixelFormats.RGBA_5650: return ColorFormats.Rgba5650;
                 case GuPixelFormats.RGBA_4444: return ColorFormats.Rgba4444;
-                default: throw(new NotImplementedException("Not implemented " + PixelFormat));
+                default: throw(new NotImplementedException("Not implemented " + pixelFormat));
             }
         }
 
@@ -93,154 +93,156 @@ namespace CSPspEmu.Core.Utils
         }
         */
 
-        public static void Decode(GuPixelFormats PixelFormat, void* Input, OutputPixel* Output, int Width, int Height,
-            void* Palette = null, GuPixelFormats PaletteType = GuPixelFormats.NONE, int PaletteCount = 0,
-            int PaletteStart = 0, int PaletteShift = 0, int PaletteMask = 0xFF, int StrideWidth = -1,
-            bool IgnoreAlpha = false)
+        public static void Decode(GuPixelFormats pixelFormat, void* input, OutputPixel* output, int width, int height,
+            void* palette = null, GuPixelFormats paletteType = GuPixelFormats.NONE, int paletteCount = 0,
+            int paletteStart = 0, int paletteShift = 0, int paletteMask = 0xFF, int strideWidth = -1,
+            bool ignoreAlpha = false)
         {
-            if (StrideWidth == -1) StrideWidth = GetPixelsSize(PixelFormat, Width);
-            var PixelFormatInt = (int) PixelFormat;
-            var PixelFormatDecoder = new PixelFormatDecoder()
+            if (strideWidth == -1) strideWidth = GetPixelsSize(pixelFormat, width);
+            var pixelFormatInt = (int) pixelFormat;
+            var pixelFormatDecoder = new PixelFormatDecoder()
             {
-                _Input = Input,
-                InputByte = (byte*) Input,
-                InputShort = (ushort*) Input,
-                InputInt = (uint*) Input,
-                Output = Output,
-                StrideWidth = StrideWidth,
-                Width = Width,
-                Height = Height,
-                Palette = Palette,
-                PaletteType = PaletteType,
-                PaletteCount = PaletteCount,
-                PaletteStart = PaletteStart,
-                PaletteShift = PaletteShift,
-                PaletteMask = PaletteMask,
+                _input = input,
+                _inputByte = (byte*) input,
+                _inputShort = (ushort*) input,
+                _inputInt = (uint*) input,
+                _output = output,
+                _strideWidth = strideWidth,
+                _width = width,
+                _height = height,
+                _palette = palette,
+                _paletteType = paletteType,
+                _paletteCount = paletteCount,
+                _paletteStart = paletteStart,
+                _paletteShift = paletteShift,
+                _paletteMask = paletteMask,
             };
             //Console.WriteLine(PixelFormat);
-            switch (PixelFormat)
+            switch (pixelFormat)
             {
                 case GuPixelFormats.RGBA_5650:
-                    PixelFormatDecoder.Decode_RGBA_5650();
+                    pixelFormatDecoder.Decode_RGBA_5650();
                     break;
                 case GuPixelFormats.RGBA_5551:
-                    PixelFormatDecoder.Decode_RGBA_5551();
+                    pixelFormatDecoder.Decode_RGBA_5551();
                     break;
                 case GuPixelFormats.RGBA_4444:
-                    PixelFormatDecoder.Decode_RGBA_4444();
+                    pixelFormatDecoder.Decode_RGBA_4444();
                     break;
                 case GuPixelFormats.RGBA_8888:
-                    PixelFormatDecoder.Decode_RGBA_8888();
+                    pixelFormatDecoder.Decode_RGBA_8888();
                     break;
                 case GuPixelFormats.PALETTE_T4:
-                    PixelFormatDecoder.Decode_PALETTE_T4();
+                    pixelFormatDecoder.Decode_PALETTE_T4();
                     break;
                 case GuPixelFormats.PALETTE_T8:
-                    PixelFormatDecoder.Decode_PALETTE_T8();
+                    pixelFormatDecoder.Decode_PALETTE_T8();
                     break;
                 case GuPixelFormats.PALETTE_T16:
-                    PixelFormatDecoder.Decode_PALETTE_T16();
+                    pixelFormatDecoder.Decode_PALETTE_T16();
                     break;
                 case GuPixelFormats.PALETTE_T32:
-                    PixelFormatDecoder.Decode_PALETTE_T32();
+                    pixelFormatDecoder.Decode_PALETTE_T32();
                     break;
                 case GuPixelFormats.COMPRESSED_DXT1:
-                    PixelFormatDecoder.Decode_COMPRESSED_DXT1();
+                    pixelFormatDecoder.Decode_COMPRESSED_DXT1();
                     break;
                 case GuPixelFormats.COMPRESSED_DXT3:
-                    PixelFormatDecoder.Decode_COMPRESSED_DXT3();
+                    pixelFormatDecoder.Decode_COMPRESSED_DXT3();
                     break;
                 case GuPixelFormats.COMPRESSED_DXT5:
-                    PixelFormatDecoder.Decode_COMPRESSED_DXT5();
+                    pixelFormatDecoder.Decode_COMPRESSED_DXT5();
                     break;
                 default: throw(new InvalidOperationException());
             }
-            if (IgnoreAlpha)
+            if (ignoreAlpha)
             {
-                for (int y = 0, n = 0; y < Height; y++) for (int x = 0; x < Width; x++, n++) Output[n].A = 0xFF;
+                for (int y = 0, n = 0; y < height; y++) for (int x = 0; x < width; x++, n++) output[n].A = 0xFF;
             }
             //DecoderCallbackTable[PixelFormatInt](Input, Output, PixelCount, Width, Palette, PaletteType, PaletteCount, PaletteStart, PaletteShift, PaletteMask);
         }
 
-        private unsafe void _Decode_Unimplemented()
+        private void _Decode_Unimplemented()
         {
-            for (int y = 0, n = 0; y < Height; y++)
+            for (int y = 0, n = 0; y < _height; y++)
             {
-                for (int x = 0; x < Width; x++, n++)
+                for (int x = 0; x < _width; x++, n++)
                 {
-                    OutputPixel OutputPixel;
-                    OutputPixel.R = 0xFF;
-                    OutputPixel.G = (byte) (((n & 1) == 0) ? 0xFF : 0x00);
-                    OutputPixel.B = 0x00;
-                    OutputPixel.A = 0xFF;
-                    Output[n] = OutputPixel;
+                    OutputPixel outputPixel;
+                    outputPixel.R = 0xFF;
+                    outputPixel.G = (byte) (((n & 1) == 0) ? 0xFF : 0x00);
+                    outputPixel.B = 0x00;
+                    outputPixel.A = 0xFF;
+                    _output[n] = outputPixel;
                 }
             }
         }
 
-        private unsafe void Decode_COMPRESSED_DXT5()
+        private void Decode_COMPRESSED_DXT5()
         {
             //Console.Error.WriteLine("Not Implemented: Decode_COMPRESSED_DXT5");
             //throw new NotImplementedException();
 
             //_Decode_Unimplemented();
 
-            var Colors = new OutputPixel[4];
+            var colors = new OutputPixel[4];
 
-            for (int y = 0, ni = 0; y < Height; y += 4)
+            var ni = 0;
+            for (var y = 0; y < _height; y += 4)
             {
-                for (int x = 0; x < Width; x += 4, ni++)
+                for (var x = 0; x < _width; x += 4, ni++)
                 {
-                    var Block = ((Dxt5Block*) InputByte)[ni];
-                    Colors[0] = Decode_RGBA_5650_Pixel(Block.Color0)
-                        .Transform((R, G, B, A) => OutputPixel.FromRGBA(B, G, R, A));
-                    Colors[1] = Decode_RGBA_5650_Pixel(Block.Color1)
-                        .Transform((R, G, B, A) => OutputPixel.FromRGBA(B, G, R, A));
-                    Colors[2] = OutputPixel.OperationPerComponent(Colors[0], Colors[1],
-                        (a, b) => { return (byte) (((a * 2) / 3) + ((b * 1) / 3)); });
-                    Colors[3] = OutputPixel.OperationPerComponent(Colors[0], Colors[1],
-                        (a, b) => { return (byte) (((a * 1) / 3) + ((b * 2) / 3)); });
+                    var block = ((Dxt5Block*) _inputByte)[ni];
+                    colors[0] = Decode_RGBA_5650_Pixel(block.Color0)
+                        .Transform((r, g, b, a) => OutputPixel.FromRGBA(b, g, r, a));
+                    colors[1] = Decode_RGBA_5650_Pixel(block.Color1)
+                        .Transform((r, g, b, a) => OutputPixel.FromRGBA(b, g, r, a));
+                    colors[2] = OutputPixel.OperationPerComponent(colors[0], colors[1],
+                        (a, b) => (byte) (((a * 2) / 3) + ((b * 1) / 3)));
+                    colors[3] = OutputPixel.OperationPerComponent(colors[0], colors[1],
+                        (a, b) => (byte) (((a * 1) / 3) + ((b * 2) / 3)));
 
                     // Create Alpha Lookup
-                    var AlphaLookup = new byte[8];
-                    var Alphas = (ushort) (Block.Alpha >> 48);
-                    var Alpha0 = (byte) ((Alphas >> 0) & 0xFF);
-                    var Alpha1 = (byte) ((Alphas >> 8) & 0xFF);
+                    var alphaLookup = new byte[8];
+                    var alphas = (ushort) (block.Alpha >> 48);
+                    var alpha0 = (byte) ((alphas >> 0) & 0xFF);
+                    var alpha1 = (byte) ((alphas >> 8) & 0xFF);
 
-                    AlphaLookup[0] = Alpha0;
-                    AlphaLookup[1] = Alpha1;
-                    if (Alpha0 > Alpha1)
+                    alphaLookup[0] = alpha0;
+                    alphaLookup[1] = alpha1;
+                    if (alpha0 > alpha1)
                     {
-                        AlphaLookup[2] = (byte) ((6 * Alpha0 + Alpha1) / 7);
-                        AlphaLookup[3] = (byte) ((5 * Alpha0 + 2 * Alpha1) / 7);
-                        AlphaLookup[4] = (byte) ((4 * Alpha0 + 3 * Alpha1) / 7);
-                        AlphaLookup[5] = (byte) ((3 * Alpha0 + 4 * Alpha1) / 7);
-                        AlphaLookup[6] = (byte) ((2 * Alpha0 + 5 * Alpha1) / 7);
-                        AlphaLookup[7] = (byte) ((Alpha0 + 6 * Alpha1) / 7);
+                        alphaLookup[2] = (byte) ((6 * alpha0 + alpha1) / 7);
+                        alphaLookup[3] = (byte) ((5 * alpha0 + 2 * alpha1) / 7);
+                        alphaLookup[4] = (byte) ((4 * alpha0 + 3 * alpha1) / 7);
+                        alphaLookup[5] = (byte) ((3 * alpha0 + 4 * alpha1) / 7);
+                        alphaLookup[6] = (byte) ((2 * alpha0 + 5 * alpha1) / 7);
+                        alphaLookup[7] = (byte) ((alpha0 + 6 * alpha1) / 7);
                     }
                     else
                     {
-                        AlphaLookup[2] = (byte) ((4 * Alpha0 + Alpha1) / 5);
-                        AlphaLookup[3] = (byte) ((3 * Alpha0 + 2 * Alpha1) / 5);
-                        AlphaLookup[4] = (byte) ((2 * Alpha0 + 3 * Alpha1) / 5);
-                        AlphaLookup[5] = (byte) ((Alpha0 + 4 * Alpha1) / 5);
-                        AlphaLookup[6] = (byte) (0x00);
-                        AlphaLookup[7] = (byte) (0xFF);
+                        alphaLookup[2] = (byte) ((4 * alpha0 + alpha1) / 5);
+                        alphaLookup[3] = (byte) ((3 * alpha0 + 2 * alpha1) / 5);
+                        alphaLookup[4] = (byte) ((2 * alpha0 + 3 * alpha1) / 5);
+                        alphaLookup[5] = (byte) ((alpha0 + 4 * alpha1) / 5);
+                        alphaLookup[6] = (byte) (0x00);
+                        alphaLookup[7] = (byte) (0xFF);
                     }
 
-                    for (int y2 = 0, no = 0; y2 < 4; y2++)
+                    var no = 0;
+                    for (var y2 = 0; y2 < 4; y2++)
                     {
-                        for (int x2 = 0; x2 < 4; x2++, no++)
+                        for (var x2 = 0; x2 < 4; x2++, no++)
                         {
-                            var Alpha = AlphaLookup[((Block.Alpha >> (3 * no)) & 0x7)];
-                            var Color = ((Block.ColorLookup >> (2 * no)) & 0x3);
+                            var alpha = alphaLookup[((block.Alpha >> (3 * no)) & 0x7)];
+                            var color = ((block.ColorLookup >> (2 * no)) & 0x3);
 
-                            int rx = (x + x2);
-                            int ry = (y + y2);
-                            int n = ry * Width + rx;
+                            var rx = x + x2;
+                            var ry = y + y2;
+                            var n = ry * _width + rx;
 
-                            Output[n] = Colors[Color];
-                            Output[n].A = Alpha;
+                            _output[n] = colors[color];
+                            _output[n].A = alpha;
                         }
                     }
                 }
@@ -256,331 +258,312 @@ namespace CSPspEmu.Core.Utils
         /// DXT3 it is interpreted as not having been premultiplied by alpha. Typically DXT2/3 are well suited to images
         /// with sharp alpha transitions, between translucent and opaque areas.
         /// </summary>
-        private unsafe void Decode_COMPRESSED_DXT3()
+        private void Decode_COMPRESSED_DXT3()
         {
-            var Colors = new OutputPixel[4];
+            var colors = new OutputPixel[4];
 
-            for (int y = 0, ni = 0; y < Height; y += 4)
+            var ni = 0;
+            for (var y = 0; y < _height; y += 4)
             {
-                for (int x = 0; x < Width; x += 4, ni++)
+                for (var x = 0; x < _width; x += 4, ni++)
                 {
-                    var Block = ((Dxt3Block*) InputByte)[ni];
-                    Colors[0] = Decode_RGBA_5650_Pixel(Block.Color0)
-                        .Transform((R, G, B, A) => OutputPixel.FromRGBA(B, G, R, A));
-                    Colors[1] = Decode_RGBA_5650_Pixel(Block.Color1)
-                        .Transform((R, G, B, A) => OutputPixel.FromRGBA(B, G, R, A));
-                    Colors[2] = OutputPixel.OperationPerComponent(Colors[0], Colors[1],
-                        (a, b) => { return (byte) (((a * 2) / 3) + ((b * 1) / 3)); });
-                    Colors[3] = OutputPixel.OperationPerComponent(Colors[0], Colors[1],
-                        (a, b) => { return (byte) (((a * 1) / 3) + ((b * 2) / 3)); });
+                    var block = ((Dxt3Block*) _inputByte)[ni];
+                    colors[0] = Decode_RGBA_5650_Pixel(block.Color0)
+                        .Transform((r, g, b, a) => OutputPixel.FromRGBA(b, g, r, a));
+                    colors[1] = Decode_RGBA_5650_Pixel(block.Color1)
+                        .Transform((r, g, b, a) => OutputPixel.FromRGBA(b, g, r, a));
+                    colors[2] = OutputPixel.OperationPerComponent(colors[0], colors[1],
+                        (a, b) => (byte) (((a * 2) / 3) + ((b * 1) / 3)));
+                    colors[3] = OutputPixel.OperationPerComponent(colors[0], colors[1],
+                        (a, b) => (byte) (((a * 1) / 3) + ((b * 2) / 3)));
 
-                    for (int y2 = 0, no = 0; y2 < 4; y2++)
+                    var no = 0;
+                    for (var y2 = 0; y2 < 4; y2++)
                     {
-                        for (int x2 = 0; x2 < 4; x2++, no++)
+                        for (var x2 = 0; x2 < 4; x2++, no++)
                         {
-                            var Alpha = ((Block.Alpha >> (4 * no)) & 0xF);
-                            var Color = ((Block.ColorLookup >> (2 * no)) & 0x3);
+                            var alpha = (block.Alpha >> (4 * no)) & 0xF;
+                            var color = (block.ColorLookup >> (2 * no)) & 0x3;
 
-                            int rx = (x + x2);
-                            int ry = (y + y2);
-                            int n = ry * Width + rx;
+                            var rx = (x + x2);
+                            var ry = (y + y2);
+                            var n = ry * _width + rx;
 
-                            Output[n] = Colors[Color];
-                            Output[n].A = (byte) ((Alpha * 0xFF) / 0xF);
+                            _output[n] = colors[color];
+                            _output[n].A = (byte) ((alpha * 0xFF) / 0xF);
                         }
                     }
                 }
             }
         }
 
-        private unsafe void Decode_COMPRESSED_DXT1()
+        private void Decode_COMPRESSED_DXT1()
         {
-            var Colors = new OutputPixel[4];
+            var colors = new OutputPixel[4];
 
-            for (int y = 0, ni = 0; y < Height; y += 4)
+            for (int y = 0, ni = 0; y < _height; y += 4)
             {
-                for (int x = 0; x < Width; x += 4, ni++)
+                for (int x = 0; x < _width; x += 4, ni++)
                 {
-                    var Block = ((Dxt1Block*) InputByte)[ni];
+                    var block = ((Dxt1Block*) _inputByte)[ni];
 
-                    Colors[0] = Decode_RGBA_5650_Pixel(Block.Color0)
-                        .Transform((R, G, B, A) => OutputPixel.FromRGBA(B, G, R, A));
-                    Colors[1] = Decode_RGBA_5650_Pixel(Block.Color1)
-                        .Transform((R, G, B, A) => OutputPixel.FromRGBA(B, G, R, A));
+                    colors[0] = Decode_RGBA_5650_Pixel(block.Color0)
+                        .Transform((r, g, b, a) => OutputPixel.FromRGBA(b, g, r, a));
+                    colors[1] = Decode_RGBA_5650_Pixel(block.Color1)
+                        .Transform((r, g, b, a) => OutputPixel.FromRGBA(b, g, r, a));
 
-                    if (Block.Color0 > Block.Color1)
+                    if (block.Color0 > block.Color1)
                     {
-                        Colors[2] = OutputPixel.OperationPerComponent(Colors[0], Colors[1],
-                            (a, b) => { return (byte) (((a * 2) / 3) + ((b * 1) / 3)); });
-                        Colors[3] = OutputPixel.OperationPerComponent(Colors[0], Colors[1],
-                            (a, b) => { return (byte) (((a * 1) / 3) + ((b * 2) / 3)); });
+                        colors[2] = OutputPixel.OperationPerComponent(colors[0], colors[1],
+                            (a, b) => (byte) (((a * 2) / 3) + ((b * 1) / 3)));
+                        colors[3] = OutputPixel.OperationPerComponent(colors[0], colors[1],
+                            (a, b) => (byte) (((a * 1) / 3) + ((b * 2) / 3)));
                     }
                     else
                     {
-                        Colors[2] = OutputPixel.OperationPerComponent(Colors[0], Colors[1],
-                            (a, b) => { return (byte) (((a * 1) / 2) + ((b * 1) / 2)); });
-                        Colors[3] = OutputPixel.FromRGBA(0, 0, 0, 0);
+                        colors[2] = OutputPixel.OperationPerComponent(colors[0], colors[1],
+                            (a, b) => (byte) (((a * 1) / 2) + ((b * 1) / 2)));
+                        colors[3] = OutputPixel.FromRGBA(0, 0, 0, 0);
                     }
 
-                    for (int y2 = 0, no = 0; y2 < 4; y2++)
+                    var no = 0;
+                    for (var y2 = 0; y2 < 4; y2++)
                     {
-                        for (int x2 = 0; x2 < 4; x2++, no++)
+                        for (var x2 = 0; x2 < 4; x2++, no++)
                         {
-                            var Color = ((Block.ColorLookup >> (2 * no)) & 0x3);
+                            var color = ((block.ColorLookup >> (2 * no)) & 0x3);
 
-                            int rx = (x + x2);
-                            int ry = (y + y2);
-                            int n = ry * Width + rx;
+                            var rx = (x + x2);
+                            var ry = (y + y2);
+                            var n = ry * _width + rx;
 
-                            Output[n] = Colors[Color];
+                            _output[n] = colors[color];
                         }
                     }
                 }
             }
         }
 
-        private unsafe void Decode_PALETTE_T32()
+        private void Decode_PALETTE_T32() => throw new NotImplementedException("Decode_PALETTE_T32");
+
+        private void Decode_PALETTE_T16() => throw new NotImplementedException("Decode_PALETTE_T16");
+
+        private void Decode_PALETTE_T8()
         {
-            throw new NotImplementedException("Decode_PALETTE_T32");
-        }
+            var input = (byte*) _input;
 
-        private unsafe void Decode_PALETTE_T16()
-        {
-            throw new NotImplementedException("Decode_PALETTE_T16");
-        }
+            var paletteSize = 256;
+            var palettePixels = new OutputPixel[paletteSize];
+            var translate = new int[paletteSize];
 
-        private unsafe void Decode_PALETTE_T8()
-        {
-            var Input = (byte*) _Input;
-
-            int PaletteSize = 256;
-            OutputPixel[] PalettePixels = new OutputPixel[PaletteSize];
-            var Translate = new int[PaletteSize];
-
-            if (Palette == null || PaletteType == GuPixelFormats.NONE)
+            if (_palette == null || _paletteType == GuPixelFormats.NONE)
             {
-                for (int y = 0, n = 0; y < Height; y++)
+                var n = 0;
+                for (var y = 0; y < _height; y++)
                 {
-                    var InputRow = (byte*) &InputByte[y * StrideWidth];
-                    for (int x = 0; x < Width; x++, n++)
+                    var inputRow = &_inputByte[y * _strideWidth];
+                    for (var x = 0; x < _width; x++, n++)
                     {
-                        Output[n] = PalettePixels[0];
+                        // @TODO: This is probably wrong!
+                        _output[n] = palettePixels[inputRow[x]];
                     }
                 }
             }
             else
             {
-                fixed (OutputPixel* PalettePixelsPtr = PalettePixels)
+                fixed (OutputPixel* palettePixelsPtr = palettePixels)
                 {
-                    Decode(PaletteType, Palette, PalettePixelsPtr, PalettePixels.Length, 1);
+                    Decode(_paletteType, _palette, palettePixelsPtr, palettePixels.Length, 1);
                     //Decode(PaletteType, Palette, PalettePixelsPtr, PaletteCount);
                 }
-                for (int n = 0; n < PaletteSize; n++)
+                for (int n = 0; n < paletteSize; n++)
                 {
-                    Translate[n] = ((PaletteStart + n) >> PaletteShift) & PaletteMask;
+                    translate[n] = ((_paletteStart + n) >> _paletteShift) & _paletteMask;
                 }
 
-                for (int y = 0, n = 0; y < Height; y++)
+                for (int y = 0, n = 0; y < _height; y++)
                 {
-                    var InputRow = (byte*) &InputByte[y * StrideWidth];
-                    for (int x = 0; x < Width; x++, n++)
+                    var inputRow = &_inputByte[y * _strideWidth];
+                    for (var x = 0; x < _width; x++, n++)
                     {
-                        byte Value = InputRow[x];
-                        Output[n] = PalettePixels[Translate[(Value >> 0) & 0xFF]];
+                        var value = inputRow[x];
+                        _output[n] = palettePixels[translate[(value >> 0) & 0xFF]];
                     }
                 }
             }
         }
 
-        private unsafe void Decode_PALETTE_T4()
+        private void Decode_PALETTE_T4()
         {
-            var Input = (byte*) _Input;
-
-            if (Palette == null || PaletteType == GuPixelFormats.NONE)
+            if (_palette == null || _paletteType == GuPixelFormats.NONE)
             {
                 Console.WriteLine("Palette required!");
                 return;
             }
 
-            OutputPixel[] PalettePixels;
-            int PaletteSize = 256;
-            PalettePixels = new OutputPixel[PaletteSize];
-            var Translate = new int[PaletteSize];
-            fixed (OutputPixel* PalettePixelsPtr = PalettePixels)
+            const int paletteSize = 256;
+            var palettePixels = new OutputPixel[paletteSize];
+            var translate = new int[paletteSize];
+            fixed (OutputPixel* palettePixelsPtr = palettePixels)
             {
-                Decode(PaletteType, Palette, PalettePixelsPtr, PalettePixels.Length, 1);
+                Decode(_paletteType, _palette, palettePixelsPtr, palettePixels.Length, 1);
                 //Decode(PaletteType, Palette, PalettePixelsPtr, PaletteCount);
             }
             //Console.WriteLine(PalettePixels.Length);
-            for (int n = 0; n < 16; n++)
+            for (var n = 0; n < 16; n++)
             {
-                Translate[n] = ((PaletteStart + n) >> PaletteShift) & PaletteMask;
+                translate[n] = ((_paletteStart + n) >> _paletteShift) & _paletteMask;
                 //Console.WriteLine(PalettePixels[Translate[n]]);
             }
 
-            for (int y = 0, n = 0; y < Height; y++)
+            for (int y = 0, n = 0; y < _height; y++)
             {
-                var InputRow = (byte*) &InputByte[y * StrideWidth];
-                for (int x = 0; x < Width / 2; x++, n++)
+                var inputRow = &_inputByte[y * _strideWidth];
+                for (var x = 0; x < _width / 2; x++, n++)
                 {
-                    byte Value = InputRow[x];
-                    Output[n * 2 + 0] = PalettePixels[Translate[(Value >> 0) & 0xF]];
-                    Output[n * 2 + 1] = PalettePixels[Translate[(Value >> 4) & 0xF]];
+                    var value = inputRow[x];
+                    _output[n * 2 + 0] = palettePixels[translate[(value >> 0) & 0xF]];
+                    _output[n * 2 + 1] = palettePixels[translate[(value >> 4) & 0xF]];
                 }
             }
         }
 
-        private unsafe void _Decode_RGBA_XXXX_uint(Func<uint, OutputPixel> DecodePixel)
+        private void _Decode_RGBA_XXXX_uint(Func<uint, OutputPixel> decodePixel)
         {
-            var Input = (uint*) _Input;
+            var input = (uint*) _input;
 
-            for (int y = 0, n = 0; y < Height; y++)
+            for (int y = 0, n = 0; y < _height; y++)
             {
-                var InputRow = (uint*) &InputByte[y * StrideWidth];
-                for (int x = 0; x < Width; x++, n++)
+                var inputRow = (uint*) &_inputByte[y * _strideWidth];
+                for (var x = 0; x < _width; x++, n++)
                 {
-                    Output[n] = DecodePixel(InputRow[x]);
+                    _output[n] = decodePixel(inputRow[x]);
                 }
             }
         }
 
-        private unsafe void _Decode_RGBA_XXXX_ushort(Func<ushort, OutputPixel> DecodePixel)
+        private void _Decode_RGBA_XXXX_ushort(Func<ushort, OutputPixel> decodePixel)
         {
-            var Input = (uint*) _Input;
+            //var input = (uint*) _input;
 
-            for (int y = 0, n = 0; y < Height; y++)
+            for (int y = 0, n = 0; y < _height; y++)
             {
-                var InputRow = (ushort*) &InputByte[y * StrideWidth];
-                for (int x = 0; x < Width; x++, n++)
+                var inputRow = (ushort*) &_inputByte[y * _strideWidth];
+                for (var x = 0; x < _width; x++, n++)
                 {
-                    Output[n] = DecodePixel(InputRow[x]);
+                    _output[n] = decodePixel(inputRow[x]);
                 }
             }
         }
 
-        private unsafe void Decode_RGBA_8888()
-        {
-            _Decode_RGBA_XXXX_uint(Decode_RGBA_8888_Pixel);
-        }
+        private void Decode_RGBA_8888() => _Decode_RGBA_XXXX_uint(Decode_RGBA_8888_Pixel);
+        private void Decode_RGBA_4444() => _Decode_RGBA_XXXX_ushort(Decode_RGBA_4444_Pixel);
+        private void Decode_RGBA_5551() => _Decode_RGBA_XXXX_ushort(Decode_RGBA_5551_Pixel);
+        private void Decode_RGBA_5650() => _Decode_RGBA_XXXX_ushort(Decode_RGBA_5650_Pixel);
 
-        private unsafe void Decode_RGBA_4444()
-        {
-            _Decode_RGBA_XXXX_ushort(Decode_RGBA_4444_Pixel);
-        }
-
-        private unsafe void Decode_RGBA_5551()
-        {
-            _Decode_RGBA_XXXX_ushort(Decode_RGBA_5551_Pixel);
-        }
-
-        private unsafe void Decode_RGBA_5650()
-        {
-            _Decode_RGBA_XXXX_ushort(Decode_RGBA_5650_Pixel);
-        }
-
-        public static unsafe ushort Encode_RGBA_4444_Pixel(OutputPixel Pixel)
+        public static ushort Encode_RGBA_4444_Pixel(OutputPixel pixel)
         {
             uint Out = 0;
-            BitUtils.InsertScaled(ref Out, 0, 4, Pixel.R, 255);
-            BitUtils.InsertScaled(ref Out, 4, 4, Pixel.G, 255);
-            BitUtils.InsertScaled(ref Out, 8, 4, Pixel.B, 255);
-            BitUtils.InsertScaled(ref Out, 12, 4, Pixel.A, 255);
+            BitUtils.InsertScaled(ref Out, 0, 4, pixel.R, 255);
+            BitUtils.InsertScaled(ref Out, 4, 4, pixel.G, 255);
+            BitUtils.InsertScaled(ref Out, 8, 4, pixel.B, 255);
+            BitUtils.InsertScaled(ref Out, 12, 4, pixel.A, 255);
             return (ushort) Out;
         }
 
-        public static unsafe ushort Encode_RGBA_5551_Pixel(OutputPixel Pixel)
+        public static ushort Encode_RGBA_5551_Pixel(OutputPixel pixel)
         {
             uint Out = 0;
-            BitUtils.InsertScaled(ref Out, 0, 5, Pixel.R, 255);
-            BitUtils.InsertScaled(ref Out, 5, 5, Pixel.G, 255);
-            BitUtils.InsertScaled(ref Out, 10, 5, Pixel.B, 255);
-            BitUtils.InsertScaled(ref Out, 15, 1, Pixel.A, 255);
+            BitUtils.InsertScaled(ref Out, 0, 5, pixel.R, 255);
+            BitUtils.InsertScaled(ref Out, 5, 5, pixel.G, 255);
+            BitUtils.InsertScaled(ref Out, 10, 5, pixel.B, 255);
+            BitUtils.InsertScaled(ref Out, 15, 1, pixel.A, 255);
             return (ushort) Out;
         }
 
-        public static unsafe ushort Encode_RGBA_5650_Pixel(OutputPixel Pixel)
+        public static ushort Encode_RGBA_5650_Pixel(OutputPixel pixel)
         {
             uint Out = 0;
-            BitUtils.InsertScaled(ref Out, 0, 5, Pixel.R, 255);
-            BitUtils.InsertScaled(ref Out, 5, 6, Pixel.G, 255);
-            BitUtils.InsertScaled(ref Out, 11, 5, Pixel.B, 255);
+            BitUtils.InsertScaled(ref Out, 0, 5, pixel.R, 255);
+            BitUtils.InsertScaled(ref Out, 5, 6, pixel.G, 255);
+            BitUtils.InsertScaled(ref Out, 11, 5, pixel.B, 255);
             return (ushort) Out;
         }
 
-        public static unsafe uint Encode_RGBA_8888_Pixel(OutputPixel Pixel)
+        public static uint Encode_RGBA_8888_Pixel(OutputPixel pixel)
         {
-            return *(uint*) &Pixel;
+            return *(uint*) &pixel;
         }
 
-        public static unsafe OutputPixel Decode_RGBA_4444_Pixel(ushort Value)
+        public static OutputPixel Decode_RGBA_4444_Pixel(ushort value)
         {
-            return new OutputPixel()
+            return new OutputPixel
             {
-                R = (byte) BitUtils.ExtractScaled(Value, 0, 4, 255),
-                G = (byte) BitUtils.ExtractScaled(Value, 4, 4, 255),
-                B = (byte) BitUtils.ExtractScaled(Value, 8, 4, 255),
-                A = (byte) BitUtils.ExtractScaled(Value, 12, 4, 255),
+                R = (byte) BitUtils.ExtractScaled(value, 0, 4, 255),
+                G = (byte) BitUtils.ExtractScaled(value, 4, 4, 255),
+                B = (byte) BitUtils.ExtractScaled(value, 8, 4, 255),
+                A = (byte) BitUtils.ExtractScaled(value, 12, 4, 255),
             };
         }
 
-        public static unsafe OutputPixel Decode_RGBA_5551_Pixel(ushort Value)
+        public static OutputPixel Decode_RGBA_5551_Pixel(ushort value)
         {
-            return new OutputPixel()
+            return new OutputPixel
             {
-                R = (byte) BitUtils.ExtractScaled(Value, 0, 5, 255),
-                G = (byte) BitUtils.ExtractScaled(Value, 5, 5, 255),
-                B = (byte) BitUtils.ExtractScaled(Value, 10, 5, 255),
-                A = (byte) BitUtils.ExtractScaled(Value, 15, 1, 255),
+                R = (byte) BitUtils.ExtractScaled(value, 0, 5, 255),
+                G = (byte) BitUtils.ExtractScaled(value, 5, 5, 255),
+                B = (byte) BitUtils.ExtractScaled(value, 10, 5, 255),
+                A = (byte) BitUtils.ExtractScaled(value, 15, 1, 255),
             };
         }
 
-        public static unsafe OutputPixel Decode_RGBA_5650_Pixel(ushort Value)
+        public static OutputPixel Decode_RGBA_5650_Pixel(ushort value)
         {
-            return new OutputPixel()
+            return new OutputPixel
             {
-                R = (byte) BitUtils.ExtractScaled(Value, 0, 5, 255),
-                G = (byte) BitUtils.ExtractScaled(Value, 5, 6, 255),
-                B = (byte) BitUtils.ExtractScaled(Value, 11, 5, 255),
+                R = (byte) BitUtils.ExtractScaled(value, 0, 5, 255),
+                G = (byte) BitUtils.ExtractScaled(value, 5, 6, 255),
+                B = (byte) BitUtils.ExtractScaled(value, 11, 5, 255),
                 A = 0xFF,
             };
         }
 
-        public static unsafe OutputPixel Decode_RGBA_8888_Pixel(uint Value)
+        public static OutputPixel Decode_RGBA_8888_Pixel(uint value)
         {
-            return *(OutputPixel*) &Value;
+            return *(OutputPixel*) &value;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Input"></param>
-        /// <param name="Output"></param>
-        /// <param name="RowWidth">Width of the texture. In bytes? In pixels? Maybe bytes?</param>
-        /// <param name="TextureHeight">Height of the texture</param>
-        public static unsafe void Unswizzle(byte[] Input, byte[] Output, int RowWidth, int TextureHeight)
+        /// <param name="input"></param>
+        /// <param name="output"></param>
+        /// <param name="rowWidth">Width of the texture. In bytes? In pixels? Maybe bytes?</param>
+        /// <param name="textureHeight">Height of the texture</param>
+        public static void Unswizzle(byte[] input, byte[] output, int rowWidth, int textureHeight)
         {
-            fixed (void* InputPtr = Input)
-            fixed (void* OutputPtr = Output)
+            fixed (void* inputPtr = input)
+            fixed (void* outputPtr = output)
             {
-                Unswizzle(InputPtr, OutputPtr, RowWidth, TextureHeight);
+                Unswizzle(inputPtr, outputPtr, rowWidth, textureHeight);
             }
         }
 
-        public static unsafe void Unswizzle(void* Input, void* Output, int RowWidth, int TextureHeight)
+        public static void Unswizzle(void* input, void* output, int rowWidth, int textureHeight)
         {
-            int pitch = (RowWidth - 16) / 4;
-            int bxc = RowWidth / 16;
-            int byc = TextureHeight / 8;
+            var pitch = (rowWidth - 16) / 4;
+            var bxc = rowWidth / 16;
+            var byc = textureHeight / 8;
 
-            var src = (uint*) Input;
-            var ydest = (byte*) Output;
-            for (int by = 0; by < byc; by++)
+            var src = (uint*) input;
+            var ydest = (byte*) output;
+            for (var by = 0; by < byc; by++)
             {
                 var xdest = ydest;
-                for (int bx = 0; bx < bxc; bx++)
+                for (var bx = 0; bx < bxc; bx++)
                 {
                     var dest = (uint*) xdest;
-                    for (int n = 0; n < 8; n++, dest += pitch)
+                    for (var n = 0; n < 8; n++, dest += pitch)
                     {
                         *(dest++) = *(src++);
                         *(dest++) = *(src++);
@@ -589,75 +572,75 @@ namespace CSPspEmu.Core.Utils
                     }
                     xdest += 16;
                 }
-                ydest += RowWidth * 8;
+                ydest += rowWidth * 8;
             }
         }
 
-        public static unsafe void UnswizzleInline(void* Data, int RowWidth, int TextureHeight)
+        public static void UnswizzleInline(void* data, int rowWidth, int textureHeight)
         {
-            var Temp = new byte[RowWidth * TextureHeight];
-            fixed (void* TempPointer = Temp)
+            var temp = new byte[rowWidth * textureHeight];
+            fixed (void* tempPointer = temp)
             {
-                Unswizzle(Data, TempPointer, RowWidth, TextureHeight);
+                Unswizzle(data, tempPointer, rowWidth, textureHeight);
             }
-            PointerUtils.Memcpy((byte*) Data, Temp, RowWidth * TextureHeight);
+            PointerUtils.Memcpy((byte*) data, temp, rowWidth * textureHeight);
         }
 
-        public static unsafe void UnswizzleInline(GuPixelFormats Format, void* Data, int Width, int Height)
+        public static void UnswizzleInline(GuPixelFormats format, void* data, int width, int height)
         {
-            UnswizzleInline(Data, GetPixelsSize(Format, Width), Height);
+            UnswizzleInline(data, GetPixelsSize(format, width), height);
         }
 
-        public static unsafe ulong Hash(GuPixelFormats PixelFormat, void* Input, int Width, int Height)
+        public static ulong Hash(GuPixelFormats pixelFormat, void* input, int width, int height)
         {
-            int TotalBytes = GetPixelsSize(PixelFormat, Width * Height);
+            var totalBytes = GetPixelsSize(pixelFormat, width * height);
 
-            return Hashing.FastHash((byte*) Input, TotalBytes, (ulong) ((int) PixelFormat * Width * Height));
+            return Hashing.FastHash((byte*) input, totalBytes, (ulong) ((int) pixelFormat * width * height));
         }
 
-        public static void Encode(GuPixelFormats GuPixelFormat, OutputPixel* Input, byte* _Output, int Count)
+        public static void Encode(GuPixelFormats guPixelFormat, OutputPixel* input, byte* output, int count)
         {
-            switch (GuPixelFormat)
+            switch (guPixelFormat)
             {
                 case GuPixelFormats.RGBA_8888:
                 {
-                    var Output = (uint*) _Output;
-                    for (int n = 0; n < Count; n++) *Output++ = Encode_RGBA_8888_Pixel(*Input++);
+                    var o = (uint*) output;
+                    for (var n = 0; n < count; n++) *o++ = Encode_RGBA_8888_Pixel(*input++);
                 }
                     break;
                 case GuPixelFormats.RGBA_5551:
                 {
-                    var Output = (ushort*) _Output;
-                    for (int n = 0; n < Count; n++) *Output++ = Encode_RGBA_5551_Pixel(*Input++);
+                    var o = (ushort*) output;
+                    for (var n = 0; n < count; n++) *o++ = Encode_RGBA_5551_Pixel(*input++);
                 }
                     break;
                 case GuPixelFormats.RGBA_5650:
                 {
-                    var Output = (ushort*) _Output;
-                    for (int n = 0; n < Count; n++) *Output++ = Encode_RGBA_5650_Pixel(*Input++);
+                    var o = (ushort*) output;
+                    for (var n = 0; n < count; n++) *o++ = Encode_RGBA_5650_Pixel(*input++);
                 }
                     break;
                 case GuPixelFormats.RGBA_4444:
                 {
-                    var Output = (ushort*) _Output;
-                    for (int n = 0; n < Count; n++) *Output++ = Encode_RGBA_4444_Pixel(*Input++);
+                    var o = (ushort*) output;
+                    for (var n = 0; n < count; n++) *o++ = Encode_RGBA_4444_Pixel(*input++);
                 }
                     break;
                 default:
-                    throw(new NotImplementedException("Not implemented " + GuPixelFormat));
+                    throw new NotImplementedException("Not implemented " + guPixelFormat);
             }
         }
 
-        public static void Encode(GuPixelFormats GuPixelFormat, OutputPixel* Input, byte* Output, int BufferWidth,
-            int Width, int Height)
+        public static void Encode(GuPixelFormats guPixelFormat, OutputPixel* input, byte* output, int bufferWidth,
+            int width, int height)
         {
-            var IncOut = GetPixelsSize(GuPixelFormat, BufferWidth);
+            var incOut = GetPixelsSize(guPixelFormat, bufferWidth);
 
-            for (int y = 0; y < Height; y++)
+            for (var y = 0; y < height; y++)
             {
-                Encode(GuPixelFormat, Input, Output, Width);
-                Input += Width;
-                Output += IncOut;
+                Encode(guPixelFormat, input, output, width);
+                input += width;
+                output += incOut;
             }
         }
     }

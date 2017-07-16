@@ -1,4 +1,4 @@
-﻿namespace CSPspEmu
+﻿namespace CSPspEmu.Utils
 {
     public interface IArgumentReader
     {

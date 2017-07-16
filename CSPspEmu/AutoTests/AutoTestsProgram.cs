@@ -84,7 +84,7 @@ namespace CSPspEmu.AutoTests
                 var capture = !runTestsViewOut;
                 capturedOutput = ConsoleUtils.CaptureOutput(() =>
                     {
-                        injectContext = PspInjectContext.CreateInjectContext(StoredConfig, Test: true);
+                        injectContext = PspInjectContext.CreateInjectContext(StoredConfig, test: true);
                         injectContext.SetInstanceType<HleOutputHandler, HleOutputHandlerMock>();
 
                         var cpuConfig = injectContext.GetInstance<CpuConfig>();

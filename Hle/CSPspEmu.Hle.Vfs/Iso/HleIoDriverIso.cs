@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using CSharpUtils;
 using CSharpUtils.Extensions;
-using CSPspEmu.Core.Utils;
 using CSPspEmu.Hle.Formats;
 
 namespace CSPspEmu.Hle.Vfs.Iso
