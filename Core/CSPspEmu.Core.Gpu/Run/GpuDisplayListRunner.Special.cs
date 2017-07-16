@@ -1,6 +1,6 @@
 ﻿using CSharpUtils;
 using CSPspEmu.Core.Gpu.State;
-using CSPspEmu.Core.Gpu.State.SubStates;
+
 using CSPspEmu.Core.Types;
 
 namespace CSPspEmu.Core.Gpu.Run

@@ -2,7 +2,7 @@
 
 using System;
 using CSPspEmu.Core.Gpu.State;
-using CSPspEmu.Core.Gpu.State.SubStates;
+
 using CSharpPlatform.GL;
 using CSPspEmu.Core.Gpu.Impl.Opengl.Utils;
 using CSharpPlatform;

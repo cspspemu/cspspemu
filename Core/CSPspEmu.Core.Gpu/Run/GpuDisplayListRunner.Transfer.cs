@@ -1,4 +1,4 @@
-﻿using CSPspEmu.Core.Gpu.State.SubStates;
+﻿using CSPspEmu.Core.Gpu.State;
 
 namespace CSPspEmu.Core.Gpu.Run
 {

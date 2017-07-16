@@ -19,7 +19,7 @@ using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Gpu.Formats;
 using CSPspEmu.Core.Types;
 using CSharpPlatform;
-using CSPspEmu.Core.Gpu.State.SubStates;
+
 using System.Collections.Generic;
 using CSPspEmu.Core.Cpu;
 using System.Threading;

@@ -1,6 +1,6 @@
 ﻿using System;
 using CSPspEmu.Core.Gpu.State;
-using CSPspEmu.Core.Gpu.State.SubStates;
+
 using CSharpUtils;
 using CSPspEmu.Core.Types;
 
