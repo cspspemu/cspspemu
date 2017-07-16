@@ -52,10 +52,12 @@ namespace CSPspEmu.Core.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(Exception))]
         public void MatcherNoMatchTest()
         {
-            MipsAssembler.Matcher("add %s, %t", "add 1, 2, 3");
+            Assert.Throws<Exception>(() =>
+            {
+                MipsAssembler.Matcher("add %s, %t", "add 1, 2, 3");
+            });
         }
     }
 }

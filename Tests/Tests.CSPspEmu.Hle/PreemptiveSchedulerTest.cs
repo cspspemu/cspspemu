@@ -31,10 +31,12 @@ namespace CSPspEmu.Tests.Hle
         PreemptiveItem PreemptiveItem4 = new PreemptiveItem() {Name = "4", Priority = 8, Ready = true};
 
         [Test]
-        [ExpectedException(typeof(Exception))]
         public void TestNextWithoutItems()
         {
-            Scheduler.Next();
+            Assert.Throws<Exception>(() =>
+            {
+                Scheduler.Next();
+            });
         }
 
         [Test]

@@ -33,11 +33,13 @@ namespace CSPspEmu.Core.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(MemoryPartitionNoMemoryException))]
         public void AllocateTooBigTest()
         {
-            PartitionRoot.Allocate(0x100);
-            PartitionRoot.Allocate(0x001);
+            Assert.Throws<MemoryPartitionNoMemoryException>(() =>
+            {
+                PartitionRoot.Allocate(0x100);
+                PartitionRoot.Allocate(0x001);
+            });
         }
 
         [Test]
