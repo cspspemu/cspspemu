@@ -200,17 +200,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\version_current.txt">
-      <Link>References\version_current.txt</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\git_revision.txt">
-      <Link>References\git_revision.txt</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\version_current_numeric.txt">
-      <Link>References\version_current_numeric.txt</Link>
-    </EmbeddedResource>
     <Content Include="..\version_last.txt">
       <Link>References\version_last.txt</Link>
     </Content>
