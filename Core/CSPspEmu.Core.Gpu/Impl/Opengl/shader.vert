@@ -1,4 +1,8 @@
-﻿uniform mat4 matrixWorldViewProjection;
+﻿#ifndef GL_ES
+#version 330
+#endif
+
+uniform mat4 matrixWorldViewProjection;
 uniform mat4 matrixTexture;
 uniform mat4 matrixBones[8];
 uniform int weightCount;

@@ -278,9 +278,15 @@ namespace CSPspEmu.Gui
 		{
 			Smaa = new Smaa();
 
+			var prefix = @"
+				#ifndef GL_ES
+				#version 330
+				#endif
+			";
+
 			Shader = new GLShader(
-				"attribute vec4 position; attribute vec4 texCoords; varying vec2 v_texCoord; void main() { gl_Position = position; v_texCoord = texCoords.xy; }",
-				"uniform sampler2D texture; varying vec2 v_texCoord; void main() { gl_FragColor = texture2D(texture, v_texCoord); }"
+				prefix + "attribute vec4 position; attribute vec4 texCoords; varying vec2 v_texCoord; void main() { gl_Position = position; v_texCoord = texCoords.xy; }",
+				prefix + "uniform sampler2D texture; varying vec2 v_texCoord; void main() { gl_FragColor = texture2D(texture, v_texCoord); }"
 			);
 
 			VertexBuffer = GLBuffer.Create().SetData(CSharpPlatform.RectangleF.FromCoords(-1, -1, +1, +1).GetFloat2TriangleStripCoords());

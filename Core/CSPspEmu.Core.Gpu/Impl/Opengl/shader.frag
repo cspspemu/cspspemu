@@ -1,4 +1,8 @@
-﻿#extension GL_EXT_gpu_shader4 : enable
+﻿#ifndef GL_ES
+#version 330
+#endif
+
+#extension GL_EXT_gpu_shader4 : enable
 
 #define GU_TFX_MODULATE  0
 #define GU_TFX_DECAL     1
