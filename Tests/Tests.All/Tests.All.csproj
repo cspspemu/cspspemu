@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0E23A702-61B1-4A5E-AA05-479977356821}</ProjectGuid>
+    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Tests.All</RootNamespace>
+    <AssemblyName>Tests.All</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="nunit.framework, Version=3.5.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb">
+      <HintPath>..\..\packages\NUnit.3.5.0\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Tests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\CSharpUtils\CSharpUtils\CSharpUtilsTests\Tests.CSharpUtils.csproj">
+      <Project>{1ed2f70f-882e-4e15-8604-afa2e00f3a17}</Project>
+      <Name>Tests.CSharpUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\CSharpUtils\CSharpUtils\CSharpUtilsTests\Tests.CSharpUtils.csproj">
+      <Project>{1ed2f70f-882e-4e15-8604-afa2e00f3a17}</Project>
+      <Name>Tests.CSharpUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\CSharpUtils\CSharpUtils\Tests.CSharpUtils.Drawing\Tests.CSharpUtils.Drawing.csproj">
+      <Project>{3df178f4-4f8e-493b-bd93-75b4c6e4660b}</Project>
+      <Name>Tests.CSharpUtils.Drawing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\CSharpUtils\CSharpUtils\Tests.CSharpUtils.Ext\Tests.CSharpUtils.Ext.csproj">
+      <Project>{be842ba8-54ef-4ef6-943d-667b2aa7d731}</Project>
+      <Name>Tests.CSharpUtils.Ext</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\SafeILGenerator\SafeILGenerator.Tests\Tests.SafeILGenerator.csproj">
+      <Project>{84686e6d-3496-4934-a021-79fa6b7e7420}</Project>
+      <Name>Tests.SafeILGenerator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CSPspEmu.Hle.Modules.Tests\Tests.CSPspEmu.Hle.Modules.csproj">
+      <Project>{32300c4a-932a-4e50-8cde-ef31550cd739}</Project>
+      <Name>Tests.CSPspEmu.Hle.Modules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tests.CSPspEmu.Core.Components\Tests.CSPspEmu.Core.Components.csproj">
+      <Project>{f57cb80d-082a-4101-9d49-ae2e5c8d0b3f}</Project>
+      <Name>Tests.CSPspEmu.Core.Components</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tests.CSPspEmu.Core.Cpu\Tests.CSPspEmu.Core.Cpu.csproj">
+      <Project>{0dfdb697-8c09-48ed-a561-c6610799e4d7}</Project>
+      <Name>Tests.CSPspEmu.Core.Cpu</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tests.CSPspEmu.Core.Gpu\Tests.CSPspEmu.Core.Gpu.csproj">
+      <Project>{83bc2e9e-f96c-44b0-b735-4c048f3f2530}</Project>
+      <Name>Tests.CSPspEmu.Core.Gpu</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tests.CSPspEmu.Hle\Tests.CSPspEmu.Hle.csproj">
+      <Project>{d302e160-f421-4dd6-baae-304891ddefa2}</Project>
+      <Name>Tests.CSPspEmu.Hle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tests.CSPspEmu.Inject\Tests.CSPspEmu.Inject.csproj">
+      <Project>{cea61acf-06a3-4121-88b2-9097fd6ef9c7}</Project>
+      <Name>Tests.CSPspEmu.Inject</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -342,7 +342,6 @@ namespace CSharpUtils.Extensions
         public static int CountStringzBytes(this Stream stream, int toRead = -1, bool alignTo4 = false,
             int alignPosition = 0, bool keepStreamPosition = true)
         {
-            if (alignTo4) throw new NotImplementedException();
             if (keepStreamPosition) stream = stream.SliceWithLength(stream.Position);
             if (stream.Eof()) return 0;
             var continueReading = false;

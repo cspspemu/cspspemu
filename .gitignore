@@ -58,5 +58,6 @@ obj
 /Sandbox/MaiAT3PlusDecoder/*.ll.DS_Store
 /Sandbox/MaiAT3PlusDecoder/*.ll
 /*.DS_Store
-
+/testrunner
 Thumbs.db
+TestResult.xml

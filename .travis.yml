@@ -1,2 +1,9 @@
 language: csharp
 solution: CSPspEmu-2012.sln
+dist: trusty
+install:
+  - nuget restore CSPspEmu-2012.sln
+  - nuget install NUnit.ConsoleRunner -Version 3.7.0 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=Release CSPspEmu-2012.sln
+  - mono ./testrunner/NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe @nunit.args
