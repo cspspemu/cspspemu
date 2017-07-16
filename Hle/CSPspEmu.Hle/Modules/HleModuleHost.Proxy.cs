@@ -14,6 +14,7 @@ using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Generators;
 using System.Runtime.InteropServices;
 using System.Reflection.Emit;
+using CSharpUtils.Extensions;
 using SafeILGenerator.Ast.Optimizers;
 using CSPspEmu.Core.Cpu.Dynarec;
 using CSPspEmu.Core.Cpu.Dynarec.Ast;

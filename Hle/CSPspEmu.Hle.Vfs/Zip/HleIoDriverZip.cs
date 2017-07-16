@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using CSharpUtils.Extensions;
 using CSPspEmu.Hle.Formats.Archive;
 
 namespace CSPspEmu.Hle.Vfs.Zip

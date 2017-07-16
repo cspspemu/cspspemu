@@ -1,9 +1,7 @@
-﻿using CSharpUtils.Compression.Lz;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Text;
 using CSharpUtils;
-using CSharpUtils.Compression;
 using System.Collections.Generic;
 using CSharpUtils.Ext.Compression.Lz;
 using CSharpUtils.Extensions;

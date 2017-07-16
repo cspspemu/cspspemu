@@ -6,272 +6,349 @@ namespace CSharpUtils.Drawing
     /// <summary>
     /// 
     /// </summary>
-    public struct RGBA
+    public struct Rgba
     {
         /// <summary>
         /// 
         /// </summary>
         public byte R, G, B, A;
 
-        public RGBA(byte R, byte G, byte B, byte A)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        /// <param name="a"></param>
+        public Rgba(byte r, byte g, byte b, byte a)
         {
-            this.A = A;
-            this.R = R;
-            this.G = G;
-            this.B = B;
+            A = a;
+            R = r;
+            G = g;
+            B = b;
         }
 
-        public static implicit operator RGBA(ARGB_Rev Col)
-        {
-            return new RGBA(Col.R, Col.G, Col.B, Col.A);
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="col"></param>
+        /// <returns></returns>
+        public static implicit operator Rgba(ArgbRev col) => new Rgba(col.R, col.G, col.B, col.A);
 
-        public static implicit operator ARGB_Rev(RGBA Col)
-        {
-            return new ARGB_Rev(Col.A, Col.R, Col.G, Col.B);
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="col"></param>
+        /// <returns></returns>
+        public static implicit operator ArgbRev(Rgba col) => new ArgbRev(col.A, col.R, col.G, col.B);
     }
 
-    public struct RGBA32
+    /// <summary>
+    /// 
+    /// </summary>
+    public struct Rgba32
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public int R, G, B, A;
 
-        public RGBA32(int R, int G, int B, int A)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        /// <param name="a"></param>
+        public Rgba32(int r, int g, int b, int a)
         {
-            this.A = A;
-            this.R = R;
-            this.G = G;
-            this.B = B;
+            A = a;
+            R = r;
+            G = g;
+            B = b;
         }
 
-        public static RGBA32 operator +(RGBA32 Accum, ARGB_Rev In)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="accum"></param>
+        /// <param name="In"></param>
+        /// <returns></returns>
+        public static Rgba32 operator +(Rgba32 accum, ArgbRev In)
         {
-            return new RGBA32()
+            return new Rgba32()
             {
-                R = Accum.R + In.R,
-                G = Accum.G + In.G,
-                B = Accum.B + In.B,
-                A = Accum.A + In.A,
+                R = accum.R + In.R,
+                G = accum.G + In.G,
+                B = accum.B + In.B,
+                A = accum.A + In.A,
             };
         }
 
-        public static RGBA32 operator *(RGBA32 Accum, int Value)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="accum"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Rgba32 operator *(Rgba32 accum, int value)
         {
-            return new RGBA32()
+            return new Rgba32
             {
-                R = Accum.R * Value,
-                G = Accum.G * Value,
-                B = Accum.B * Value,
-                A = Accum.A * Value,
+                R = accum.R * value,
+                G = accum.G * value,
+                B = accum.B * value,
+                A = accum.A * value,
             };
         }
 
-        public static RGBA32 operator /(RGBA32 Accum, int Value)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="accum"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Rgba32 operator /(Rgba32 accum, int value)
         {
-            if (Value == 0)
+            if (value == 0)
             {
-                return new RGBA32(0, 0, 0, 0);
+                return new Rgba32(0, 0, 0, 0);
             }
-            else
+            return new Rgba32()
             {
-                return new RGBA32()
-                {
-                    R = Accum.R / Value,
-                    G = Accum.G / Value,
-                    B = Accum.B / Value,
-                    A = Accum.A / Value,
-                };
-            }
+                R = accum.R / value,
+                G = accum.G / value,
+                B = accum.B / value,
+                A = accum.A / value,
+            };
         }
 
-        public static implicit operator RGBA32(ARGB_Rev Col)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="col"></param>
+        /// <returns></returns>
+        public static implicit operator Rgba32(ArgbRev col)
         {
-            return new RGBA32() {R = Col.R, G = Col.G, B = Col.B, A = Col.A};
+            return new Rgba32 {R = col.R, G = col.G, B = col.B, A = col.A};
         }
 
-        public static implicit operator ARGB_Rev(RGBA32 Col)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="col"></param>
+        /// <returns></returns>
+        public static implicit operator ArgbRev(Rgba32 col)
         {
-            var A = (byte) MathUtils.FastClamp(Col.A, 0x00, 0xFF);
-            var R = (byte) MathUtils.FastClamp(Col.R, 0x00, 0xFF);
-            var G = (byte) MathUtils.FastClamp(Col.G, 0x00, 0xFF);
-            var B = (byte) MathUtils.FastClamp(Col.B, 0x00, 0xFF);
-            return new ARGB_Rev(A, R, G, B);
+            var a = (byte) MathUtils.FastClamp(col.A, 0x00, 0xFF);
+            var r = (byte) MathUtils.FastClamp(col.R, 0x00, 0xFF);
+            var g = (byte) MathUtils.FastClamp(col.G, 0x00, 0xFF);
+            var b = (byte) MathUtils.FastClamp(col.B, 0x00, 0xFF);
+            return new ArgbRev(a, r, g, b);
         }
     }
 
-    public struct RGBAFloat
+    /// <summary>
+    /// 
+    /// </summary>
+    public struct RgbaFloat
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public float R, G, B, A;
     }
 
     /// <summary>
     /// 
     /// </summary>
-    public struct ARGB_Rev
+    public struct ArgbRev
     {
         /// <summary>
         /// 
         /// </summary>
         public byte B, G, R, A;
 
-        public float Bf
-        {
-            get { return B / 255f; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public float Bf => B / 255f;
 
-        public float Gf
-        {
-            get { return G / 255f; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public float Gf => G / 255f;
 
-        public float Rf
-        {
-            get { return R / 255f; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public float Rf => R / 255f;
 
-        public float Af
-        {
-            get { return A / 255f; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public float Af => A / 255f;
 
-        public ARGB_Rev(int A, int R, int G, int B)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        public ArgbRev(int a, int r, int g, int b)
         {
-            this.A = (byte) MathUtils.FastClamp(A, 0, 255);
-            this.R = (byte) MathUtils.FastClamp(R, 0, 255);
-            this.G = (byte) MathUtils.FastClamp(G, 0, 255);
-            this.B = (byte) MathUtils.FastClamp(B, 0, 255);
-        }
-
-        public ARGB_Rev(byte A, byte R, byte G, byte B)
-        {
-            this.A = A;
-            this.R = R;
-            this.G = G;
-            this.B = B;
+            A = (byte) MathUtils.FastClamp(a, 0, 255);
+            R = (byte) MathUtils.FastClamp(r, 0, 255);
+            G = (byte) MathUtils.FastClamp(g, 0, 255);
+            B = (byte) MathUtils.FastClamp(b, 0, 255);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Color1"></param>
-        /// <param name="Color2"></param>
-        /// <param name="Offset"></param>
-        /// <returns></returns>
-        public static ARGB_Rev Interpolate(ARGB_Rev Color1, ARGB_Rev Color2, float Offset)
+        /// <param name="a"></param>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        public ArgbRev(byte a, byte r, byte g, byte b)
         {
-            var Offset1A = MathUtils.FastClamp(Offset, 0, 1);
-            var Offset2A = 1 - Offset1A;
+            A = a;
+            R = r;
+            G = g;
+            B = b;
+        }
 
-            var Offset1C = Offset1A * (Color1.Af);
-            var Offset2C = Offset2A * (Color2.Af);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="color1"></param>
+        /// <param name="color2"></param>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        public static ArgbRev Interpolate(ArgbRev color1, ArgbRev color2, float offset)
+        {
+            var offset1A = MathUtils.FastClamp(offset, 0, 1);
+            var offset2A = 1 - offset1A;
 
-            MathUtils.NormalizeSum(ref Offset1C, ref Offset2C);
+            var offset1C = offset1A * (color1.Af);
+            var offset2C = offset2A * (color2.Af);
 
-            return new ARGB_Rev(
-                (int) (Color1.A * Offset1A + Color2.A * Offset2A),
-                (int) (Color1.R * Offset1C + Color2.R * Offset2C),
-                (int) (Color1.G * Offset1C + Color2.G * Offset2C),
-                (int) (Color1.B * Offset1C + Color2.B * Offset2C)
+            MathUtils.NormalizeSum(ref offset1C, ref offset2C);
+
+            return new ArgbRev(
+                (int) (color1.A * offset1A + color2.A * offset2A),
+                (int) (color1.R * offset1C + color2.R * offset2C),
+                (int) (color1.G * offset1C + color2.G * offset2C),
+                (int) (color1.B * offset1C + color2.B * offset2C)
             );
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Color1"></param>
-        /// <param name="Color2"></param>
-        /// <param name="Offset"></param>
+        /// <param name="color1"></param>
+        /// <param name="color2"></param>
+        /// <param name="offset"></param>
         /// <returns></returns>
-        public static ARGB_Rev Mix(ARGB_Rev Color1, ARGB_Rev Color2, float Offset = 0.5f)
+        public static ArgbRev Mix(ArgbRev color1, ArgbRev color2, float offset = 0.5f)
         {
-            var Offset1A = MathUtils.FastClamp(Offset, 0, 1);
-            var Offset2A = 1 - Offset1A;
+            var offset1A = MathUtils.FastClamp(offset, 0, 1);
+            var offset2A = 1 - offset1A;
 
-            var Offset1C = Offset1A * (Color1.Af);
-            var Offset2C = Offset2A * (Color2.Af);
+            var offset1C = offset1A * (color1.Af);
+            var offset2C = offset2A * (color2.Af);
 
-            MathUtils.NormalizeSum(ref Offset1C, ref Offset2C);
+            MathUtils.NormalizeSum(ref offset1C, ref offset2C);
 
-            return new ARGB_Rev(
-                (int) (Color1.A + Color2.A),
-                (int) (Color1.R * Offset1C + Color2.R * Offset2C),
-                (int) (Color1.G * Offset1C + Color2.G * Offset2C),
-                (int) (Color1.B * Offset1C + Color2.B * Offset2C)
+            return new ArgbRev(
+                color1.A + color2.A,
+                (int) (color1.R * offset1C + color2.R * offset2C),
+                (int) (color1.G * offset1C + color2.G * offset2C),
+                (int) (color1.B * offset1C + color2.B * offset2C)
             );
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Color1"></param>
-        /// <param name="Color2"></param>
+        /// <param name="color1"></param>
+        /// <param name="color2"></param>
         /// <returns></returns>
-        public static int DistanceRGB(ARGB_Rev Color1, ARGB_Rev Color2)
+        public static int DistanceRgb(ArgbRev color1, ArgbRev color2)
         {
-            var R = Math.Abs(Color1.R - Color2.R);
-            var G = Math.Abs(Color1.G - Color2.G);
-            var B = Math.Abs(Color1.B - Color2.B);
-            return (R * R) + (G * G) + (B * B);
+            var r = Math.Abs(color1.R - color2.R);
+            var g = Math.Abs(color1.G - color2.G);
+            var b = Math.Abs(color1.B - color2.B);
+            return (r * r) + (g * g) + (b * b);
         }
 
-        public static implicit operator ARGB_Rev(string Col)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="col"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public static implicit operator ArgbRev(string col)
         {
-            if (Col.StartsWith("#"))
+            if (!col.StartsWith("#")) throw(new NotImplementedException());
+            col = col.Substring(1);
+
+            byte r, g, b, a = 0xFF;
+
+            if (col.Length >= 6)
             {
-                Col = Col.Substring(1);
-
-                byte R, G, B, A = 0xFF;
-
-                if (Col.Length >= 6)
+                r = (byte) ((Convert.ToInt32(col.Substr(0, 2), 16) * 255) / 255);
+                g = (byte) ((Convert.ToInt32(col.Substr(2, 2), 16) * 255) / 255);
+                b = (byte) ((Convert.ToInt32(col.Substr(4, 2), 16) * 255) / 255);
+                if (col.Length >= 8)
                 {
-                    R = (byte) ((Convert.ToInt32(Col.Substr(0, 2), 16) * 255) / 255);
-                    G = (byte) ((Convert.ToInt32(Col.Substr(2, 2), 16) * 255) / 255);
-                    B = (byte) ((Convert.ToInt32(Col.Substr(4, 2), 16) * 255) / 255);
-                    if (Col.Length >= 8)
-                    {
-                        A = (byte) ((Convert.ToInt32(Col.Substr(6, 2), 16) * 255) / 255);
-                    }
+                    a = (byte) ((Convert.ToInt32(col.Substr(6, 2), 16) * 255) / 255);
                 }
-                else if (Col.Length >= 3)
-                {
-                    R = (byte) ((Convert.ToInt32(Col.Substr(0, 1), 16) * 255) / 15);
-                    G = (byte) ((Convert.ToInt32(Col.Substr(1, 1), 16) * 255) / 15);
-                    B = (byte) ((Convert.ToInt32(Col.Substr(2, 1), 16) * 255) / 15);
-                    if (Col.Length >= 4)
-                    {
-                        A = (byte) ((Convert.ToInt32(Col.Substr(3, 1), 16) * 255) / 15);
-                    }
-                }
-                else
-                {
-                    throw(new NotImplementedException());
-                }
-
-                return new ARGB_Rev(A, R, G, B);
             }
-            throw(new NotImplementedException());
+            else if (col.Length >= 3)
+            {
+                r = (byte) ((Convert.ToInt32(col.Substr(0, 1), 16) * 255) / 15);
+                g = (byte) ((Convert.ToInt32(col.Substr(1, 1), 16) * 255) / 15);
+                b = (byte) ((Convert.ToInt32(col.Substr(2, 1), 16) * 255) / 15);
+                if (col.Length >= 4)
+                {
+                    a = (byte) ((Convert.ToInt32(col.Substr(3, 1), 16) * 255) / 15);
+                }
+            }
+            else
+            {
+                throw(new NotImplementedException());
+            }
+
+            return new ArgbRev(a, r, g, b);
         }
 
-        public static implicit operator ARGB_Rev(Color Col)
-        {
-            return new ARGB_Rev() {R = Col.R, G = Col.G, B = Col.B, A = Col.A};
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="col"></param>
+        /// <returns></returns>
+        public static implicit operator ArgbRev(Color col) => new ArgbRev() {R = col.R, G = col.G, B = col.B, A = col.A};
 
-        public static implicit operator Color(ARGB_Rev Col)
-        {
-            return Color.FromArgb(Col.A, Col.R, Col.G, Col.B);
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="col"></param>
+        /// <returns></returns>
+        public static implicit operator Color(ArgbRev col) => Color.FromArgb(col.A, col.R, col.G, col.B);
 
-        public override string ToString()
-        {
-            return String.Format("#{0:X2}{1:X2}{2:X2}{3:X2}", R, G, B, A);
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => $"#{R:X2}{G:X2}{B:X2}{A:X2}";
     }
 
     /// <summary>
     /// 
     /// </summary>
-    public struct ARGB
+    public struct Argb
     {
         /// <summary>
         /// 

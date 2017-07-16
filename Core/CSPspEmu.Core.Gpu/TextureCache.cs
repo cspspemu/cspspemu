@@ -4,6 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using CSharpUtils;
+using CSharpUtils.Drawing;
+using CSharpUtils.Drawing.Extensions;
+using CSharpUtils.Extensions;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Gpu.State.SubStates;
 using CSPspEmu.Core.Memory;
@@ -66,7 +69,7 @@ namespace CSPspEmu.Core.Gpu
         public Texture<TGpuImpl> Load(string FileName)
         {
             var Bitmap = new Bitmap(Image.FromFile(FileName));
-            this.SetData(Bitmap.GetChannelsDataInterleaved(BitmapChannelList.ARGB).CastToStructArray<OutputPixel>(),
+            this.SetData(Bitmap.GetChannelsDataInterleaved(BitmapChannelList.Argb).CastToStructArray<OutputPixel>(),
                 Bitmap.Width, Bitmap.Height);
             return this;
         }

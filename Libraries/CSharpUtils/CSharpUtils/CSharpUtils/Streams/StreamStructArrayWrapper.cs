@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using CSharpUtils.Arrays;
+using CSharpUtils.Extensions;
 
 namespace CSharpUtils.Streams
 {

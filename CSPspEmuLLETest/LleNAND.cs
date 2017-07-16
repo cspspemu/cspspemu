@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmuLLETest
 {

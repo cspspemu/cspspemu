@@ -48,7 +48,7 @@ namespace CSPspEmu.Hle.Modules.pspnet
             /// <summary>
             /// 
             /// </summary>
-            public ushort_be sin_port;
+            public UshortBe sin_port;
 
             /// <summary>
             /// 

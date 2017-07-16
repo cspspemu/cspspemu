@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Hle.Managers;

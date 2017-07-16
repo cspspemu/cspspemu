@@ -29,6 +29,7 @@ using CSPspEmu.Gui.Winforms.Winforms;
 using System.Threading.Tasks;
 using CSharpPlatform.GL.Impl;
 using System.Runtime.InteropServices;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Gui.Winforms
 {
@@ -905,7 +906,7 @@ namespace CSPspEmu.Gui.Winforms
                 {
                     var ToolStripMenuItem = (ToolStripMenuItem) Field.GetValue(this);
                     var Translation = Translations.GetString("menus", ToolStripMenuItem.Name);
-                    var FinalText = ((Translation != null) ? Translation : ToolStripMenuItem.Text);
+                    var FinalText = Translation ?? ToolStripMenuItem.Text;
                     if (Platform.IsMono) FinalText = FinalText.Replace("&", "");
                     ToolStripMenuItem.Text = FinalText;
                 }

@@ -1,58 +1,65 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CSharpUtils.SpaceAssigner;
+using CSharpUtils.Ext.SpaceAssigner;
+using CSharpUtils.Extensions;
 using CSharpUtils.Streams;
 
-public static class StreamExtensionsExt
+namespace CSharpUtils.Ext.Extensions
 {
     /// <summary>
     /// 
     /// </summary>
-    /// <remarks>Presumes it is ordered.</remarks>
-    /// <param name="Spaces"></param>
-    /// <param name="Thresold"></param>
-    /// <returns></returns>
-    public static SpaceAssigner1D.Space[] JoinWithThresold(this SpaceAssigner1D.Space[] Spaces, int Thresold = 32)
+    public static class StreamExtensionsExt
     {
-        var NewSpaces = new Stack<SpaceAssigner1D.Space>();
-        NewSpaces.Push(Spaces[0]);
-        for (int n = 1; n < Spaces.Length; n++)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <remarks>Presumes it is ordered.</remarks>
+        /// <param name="spaces"></param>
+        /// <param name="thresold"></param>
+        /// <returns></returns>
+        public static SpaceAssigner1D.Space[] JoinWithThresold(this SpaceAssigner1D.Space[] spaces, int thresold = 32)
         {
-            var PrevSpace = NewSpaces.Pop();
-            var CurrentSpace = Spaces[n];
-
-            //Console.WriteLine("{0} - {1}", PrevSpace, CurrentSpace);
-
-            if (CurrentSpace.Min - PrevSpace.Max <= Thresold)
+            var newSpaces = new Stack<SpaceAssigner1D.Space>();
+            newSpaces.Push(spaces[0]);
+            for (var n = 1; n < spaces.Length; n++)
             {
-                NewSpaces.Push(new SpaceAssigner1D.Space(PrevSpace.Min, CurrentSpace.Max));
+                var prevSpace = newSpaces.Pop();
+                var currentSpace = spaces[n];
+
+                //Console.WriteLine("{0} - {1}", PrevSpace, CurrentSpace);
+
+                if (currentSpace.Min - prevSpace.Max <= thresold)
+                {
+                    newSpaces.Push(new SpaceAssigner1D.Space(prevSpace.Min, currentSpace.Max));
+                }
+                else
+                {
+                    newSpaces.Push(prevSpace);
+                    newSpaces.Push(currentSpace);
+                }
             }
-            else
-            {
-                NewSpaces.Push(PrevSpace);
-                NewSpaces.Push(CurrentSpace);
-            }
+
+            return newSpaces.Reverse().ToArray();
         }
 
-        return NewSpaces.Reverse().ToArray();
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="Stream"></param>
-    /// <param name="Spaces"></param>
-    /// <returns></returns>
-    public static MapStream ConvertSpacesToMapStream(this Stream Stream, SpaceAssigner1D.Space[] Spaces)
-    {
-        var MapStream = new MapStream();
-
-        foreach (var Space in Spaces)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="spaces"></param>
+        /// <returns></returns>
+        public static MapStream ConvertSpacesToMapStream(this Stream stream, SpaceAssigner1D.Space[] spaces)
         {
-            MapStream.Map(Space.Min, Stream.SliceWithBounds(Space.Min, Space.Max));
-        }
+            var mapStream = new MapStream();
 
-        return MapStream;
+            foreach (var space in spaces)
+            {
+                mapStream.Map(space.Min, stream.SliceWithBounds(space.Min, space.Max));
+            }
+
+            return mapStream;
+        }
     }
 }

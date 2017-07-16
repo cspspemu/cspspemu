@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using CountType = System.Int32;
-using System.Collections;
 
 namespace CSharpUtils.Containers.RedBlackTree
 {
     public partial class RedBlackTreeWithStats<TElement>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public class Range : IEnumerable<TElement>, ICloneable /*, IOrderedQueryable<TElement>*/
         {
             internal RedBlackTreeWithStats<TElement> ParentTree;
@@ -15,43 +18,54 @@ namespace CSharpUtils.Containers.RedBlackTree
             internal CountType RangeStartPosition;
             internal CountType RangeEndPosition;
 
-            internal Node RangeLastNode
-            {
-                get { return RangeEndNode.PreviousNode; }
-            }
+            internal Node RangeLastNode => RangeEndNode.PreviousNode;
 
-            public CountType GetItemPosition(CountType LocalIndex)
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="localIndex"></param>
+            /// <returns></returns>
+            public CountType GetItemPosition(CountType localIndex)
             {
-                if (this.RangeStartPosition == -1)
+                if (RangeStartPosition == -1)
                 {
-                    return ParentTree.GetNodePosition(RangeStartNode) + LocalIndex;
+                    return ParentTree.GetNodePosition(RangeStartNode) + localIndex;
                 }
-                return this.RangeStartPosition + LocalIndex;
+                return RangeStartPosition + localIndex;
             }
 
-            internal Range(RedBlackTreeWithStats<TElement> ParentTree, Node RangeStartNode, Node RangeEndNode,
-                CountType RangeStartPosition = -1, CountType RangeEndPosition = -1)
+            internal Range(RedBlackTreeWithStats<TElement> parentTree, Node rangeStartNode, Node rangeEndNode,
+                CountType rangeStartPosition = -1, CountType rangeEndPosition = -1)
             {
-                this.ParentTree = ParentTree;
-                if (RangeStartNode == null) RangeStartNode = ParentTree.LocateNodeAtPosition(RangeStartPosition);
-                if (RangeEndNode == null) RangeEndNode = ParentTree.LocateNodeAtPosition(RangeEndPosition);
-                if (RangeStartNode == null || RangeEndNode == null)
+                ParentTree = parentTree;
+                if (rangeStartNode == null) rangeStartNode = parentTree.LocateNodeAtPosition(rangeStartPosition);
+                if (rangeEndNode == null) rangeEndNode = parentTree.LocateNodeAtPosition(rangeEndPosition);
+                if (rangeStartNode == null || rangeEndNode == null)
                 {
-                    RangeStartNode = RangeEndNode = ParentTree.BaseRootNode;
-                    RangeStartPosition = -1;
-                    RangeEndPosition = -1;
+                    rangeStartNode = rangeEndNode = parentTree.BaseRootNode;
+                    rangeStartPosition = -1;
+                    rangeEndPosition = -1;
                 }
-                this.RangeStartNode = RangeStartNode;
-                this.RangeEndNode = RangeEndNode;
-                this.RangeStartPosition = RangeStartPosition;
-                this.RangeEndPosition = RangeEndPosition;
+                RangeStartNode = rangeStartNode;
+                RangeEndNode = rangeEndNode;
+                RangeStartPosition = rangeStartPosition;
+                RangeEndPosition = rangeEndPosition;
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
             public Range Clone()
             {
                 return new Range(ParentTree, RangeStartNode, RangeEndNode, RangeStartPosition, RangeEndPosition);
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="limitCount"></param>
+            /// <returns></returns>
             public Range Limit(CountType limitCount)
             {
                 Assert(limitCount >= 0);
@@ -63,13 +77,14 @@ namespace CSharpUtils.Containers.RedBlackTree
                         limitCount = RangeEndPosition - RangeStartPosition;
                     }
                 }
-                else
-                {
-                    // Unsecure.
-                }
                 return LimitUnchecked(limitCount);
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="limitCount"></param>
+            /// <returns></returns>
             public Range LimitUnchecked(CountType limitCount)
             {
                 Assert(limitCount >= 0);
@@ -81,35 +96,56 @@ namespace CSharpUtils.Containers.RedBlackTree
                 );
             }
 
-            public Range SkipTake(CountType SkipCount, CountType TakeCount)
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="skipCount"></param>
+            /// <param name="takeCount"></param>
+            /// <returns></returns>
+            public Range SkipTake(CountType skipCount, CountType takeCount)
             {
-                return Skip(SkipCount).Take(TakeCount);
+                return Skip(skipCount).Take(takeCount);
             }
 
-            public Range Skip(CountType SkipCount)
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="skipCount"></param>
+            /// <returns></returns>
+            public Range Skip(CountType skipCount)
             {
-                return SkipUnchecked(SkipCount);
+                return SkipUnchecked(skipCount);
             }
 
-            public Range Take(CountType SkipCount)
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="skipCount"></param>
+            /// <returns></returns>
+            public Range Take(CountType skipCount)
             {
-                return Limit(SkipCount);
+                return Limit(skipCount);
             }
 
-            public Range SkipUnchecked(CountType SkipCount)
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="skipCount"></param>
+            /// <returns></returns>
+            public Range SkipUnchecked(CountType skipCount)
             {
                 return new Range(
                     ParentTree,
                     null, RangeEndNode,
-                    GetItemPosition(SkipCount), RangeEndPosition
+                    GetItemPosition(skipCount), RangeEndPosition
                 );
             }
 
-            bool IsEmpty
-            {
-                get { return (RangeStartNode == RangeEndNode); }
-            }
+            bool IsEmpty => (RangeStartNode == RangeEndNode);
 
+            /// <summary>
+            /// 
+            /// </summary>
             public CountType Count
             {
                 get
@@ -138,17 +174,28 @@ namespace CSharpUtils.Containers.RedBlackTree
                 return this;
             }
 
-            public Range Slice(CountType StartIndex, CountType EndIndex)
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="startIndex"></param>
+            /// <param name="endIndex"></param>
+            /// <returns></returns>
+            public Range Slice(CountType startIndex, CountType endIndex)
             {
                 return new Range(
                     ParentTree,
                     null,
                     null,
-                    GetItemPosition(StartIndex),
-                    GetItemPosition(EndIndex)
+                    GetItemPosition(startIndex),
+                    GetItemPosition(endIndex)
                 );
             }
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="start"></param>
+            /// <returns></returns>
             public Range Slice(CountType start)
             {
                 return new Range(
@@ -160,43 +207,43 @@ namespace CSharpUtils.Containers.RedBlackTree
                 );
             }
 
-            public Node this[CountType Index]
-            {
-                get { return ParentTree.LocateNodeAtPosition(GetItemPosition(Index)); }
-            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="index"></param>
+            public Node this[CountType index] => ParentTree.LocateNodeAtPosition(GetItemPosition(index));
 
-            TElement FrontElement
-            {
-                get { return RangeStartNode.Value; }
-            }
+            TElement FrontElement => RangeStartNode.Value;
 
-            TElement BackElement
-            {
-                get { return RangeLastNode.Value; }
-            }
+            TElement BackElement => RangeLastNode.Value;
 
             IEnumerator<TElement> IEnumerable<TElement>.GetEnumerator()
             {
-                for (var CurrentNode = RangeStartNode; CurrentNode != RangeEndNode; CurrentNode = CurrentNode.NextNode)
+                for (var currentNode = RangeStartNode; currentNode != RangeEndNode; currentNode = currentNode.NextNode)
                 {
-                    yield return CurrentNode.Value;
+                    yield return currentNode.Value;
                 }
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                for (Node CurrentNode = RangeStartNode; CurrentNode != RangeEndNode; CurrentNode = CurrentNode.NextNode)
+                for (var currentNode = RangeStartNode; currentNode != RangeEndNode; currentNode = currentNode.NextNode)
                 {
-                    yield return CurrentNode.Value;
+                    yield return currentNode.Value;
                 }
             }
 
-            public bool Contains(TElement Item)
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="item"></param>
+            /// <returns></returns>
+            public bool Contains(TElement item)
             {
                 if (IsEmpty) return false;
-                if (ParentTree.Comparer.Compare(Item, RangeStartNode.Value) < 0) return false;
-                if (ParentTree.Comparer.Compare(Item, RangeLastNode.Value) > 0) return false;
-                return ParentTree.Contains(Item);
+                if (ParentTree.Comparer.Compare(item, RangeStartNode.Value) < 0) return false;
+                if (ParentTree.Comparer.Compare(item, RangeLastNode.Value) > 0) return false;
+                return ParentTree.Contains(item);
             }
 
             object ICloneable.Clone()

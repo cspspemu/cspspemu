@@ -408,9 +408,12 @@ namespace CSharpUtils.Threading
         /// </summary>
         public string Name
         {
-            set => CurrentThread.Name = value;
-            get => CurrentThread.Name;
-        }
+	        set
+	        {
+		        //CurrentThread.Name = value;
+	        }
+	        get => CurrentThread.Name;
+	    }
     }
 #endif
 }

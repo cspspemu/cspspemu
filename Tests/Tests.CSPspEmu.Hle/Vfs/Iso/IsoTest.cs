@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using CSharpUtils.Extensions;
 using CSPspEmu.Hle.Formats;
 using CSPspEmu.Hle.Vfs.Iso;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

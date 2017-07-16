@@ -7,6 +7,7 @@ using System.Text;
 using System.IO;
 using CSPspEmu.Hle.Formats;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 using CSPspEmu.Core.Memory;
 
 namespace CSPspEmu.Hle.Loader

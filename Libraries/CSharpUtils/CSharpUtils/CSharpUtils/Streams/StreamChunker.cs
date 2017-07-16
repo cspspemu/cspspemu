@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using CSharpUtils.Extensions;
 
 namespace CSharpUtils.Streams
 {

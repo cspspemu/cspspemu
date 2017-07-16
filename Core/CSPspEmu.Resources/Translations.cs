@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Xml;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Resources
 {

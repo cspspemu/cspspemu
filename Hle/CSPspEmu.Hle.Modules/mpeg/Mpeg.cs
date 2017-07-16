@@ -18,6 +18,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using CSharpUtils.Drawing.Extensions;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Modules.mpeg
 {

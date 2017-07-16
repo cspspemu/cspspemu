@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Formats.audio.At3.Sample
 {
@@ -44,7 +45,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3.Sample
 					return -1;
 				}
 				Stream.Skip(0x28);
-				bztmp = Stream.ReadStruct<ushort_be>();
+				bztmp = Stream.ReadStruct<UshortBe>();
 				Stream.Skip(fmt_size - 0x2c);
 
 				//search the data chunk
@@ -61,7 +62,7 @@ namespace CSPspEmu.Hle.Formats.audio.At3.Sample
 				Stream.Skip(0x22);
 
 				Console.WriteLine("{0:X}", Stream.Position);
-				bztmp = (ushort)Stream.ReadStruct<ushort_be>();
+				bztmp = (ushort)Stream.ReadStruct<UshortBe>();
 				Stream.Skip(0x3c);
 			}
 			int blocksz = bztmp & 0x3FF;

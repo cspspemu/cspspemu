@@ -1,9 +1,10 @@
 ﻿//#define DEBUG_ANALYZER
 
 using System.IO;
-using CSharpUtils.SpaceAssigner;
+using CSharpUtils.Ext.SpaceAssigner;
+using CSharpUtils.Streams;
 
-namespace CSharpUtils.Streams
+namespace CSharpUtils.Ext.Streams
 {
     /// <summary>
     /// 
@@ -13,37 +14,31 @@ namespace CSharpUtils.Streams
         /// <summary>
         /// 
         /// </summary>
-        protected SpaceAssigner1D _ReadUsage = new SpaceAssigner1D();
+        private readonly SpaceAssigner1D _readUsage = new SpaceAssigner1D();
 
         /// <summary>
         /// 
         /// </summary>
-        protected SpaceAssigner1D _WriteUsage = new SpaceAssigner1D();
+        private readonly SpaceAssigner1D _writeUsage = new SpaceAssigner1D();
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="BaseStream"></param>
-        public ProxyStreamReadWriteAnalyzer(Stream BaseStream)
-            : base(BaseStream)
+        /// <param name="baseStream"></param>
+        public ProxyStreamReadWriteAnalyzer(Stream baseStream)
+            : base(baseStream)
         {
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public SpaceAssigner1D.Space[] ReadUsage
-        {
-            get { return _ReadUsage.GetAvailableSpaces(); }
-        }
+        public SpaceAssigner1D.Space[] ReadUsage => _readUsage.GetAvailableSpaces();
 
         /// <summary>
         /// 
         /// </summary>
-        public SpaceAssigner1D.Space[] WriteUsage
-        {
-            get { return _WriteUsage.GetAvailableSpaces(); }
-        }
+        public SpaceAssigner1D.Space[] WriteUsage => _writeUsage.GetAvailableSpaces();
 
         /// <summary>
         /// 
@@ -68,7 +63,7 @@ namespace CSharpUtils.Streams
         /// <returns></returns>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            var Start = Position;
+            var start = Position;
 
             try
             {
@@ -79,7 +74,7 @@ namespace CSharpUtils.Streams
             }
             finally
             {
-                _ReadUsage.AddAvailableWithBounds(Start, Position);
+                _readUsage.AddAvailableWithBounds(start, Position);
             }
         }
 
@@ -91,7 +86,7 @@ namespace CSharpUtils.Streams
         /// <param name="count"></param>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            var Start = Position;
+            var start = Position;
 
             try
             {
@@ -102,7 +97,7 @@ namespace CSharpUtils.Streams
             }
             finally
             {
-                _WriteUsage.AddAvailableWithBounds(Start, Position);
+                _writeUsage.AddAvailableWithBounds(start, Position);
             }
         }
     }

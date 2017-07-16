@@ -11,6 +11,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CSharpUtils.Drawing;
+using CSharpUtils.Drawing.Extensions;
 
 namespace CSPspEmu.Gui.texture
 {
@@ -86,7 +88,7 @@ namespace CSPspEmu.Gui.texture
                 {
                     var InBitmap =
                         new Bitmap(TextureInfo.Width, TextureInfo.Height).SetChannelsDataInterleaved(
-                            TextureInfo.Data.CastToStructArray<OutputPixel, byte>(), BitmapChannelList.RGBA);
+                            TextureInfo.Data.CastToStructArray<OutputPixel, byte>(), BitmapChannelList.Rgba);
                     OutBitmap =
                         (new Engine(new ColorAlphaLerp(), new ColorAlphaThreshold(32, 32, 32, 32))).Process(InBitmap);
                 }
@@ -94,7 +96,7 @@ namespace CSPspEmu.Gui.texture
 
             if (OutBitmap != null)
             {
-                TextureInfo.Data = OutBitmap.GetChannelsDataInterleaved(BitmapChannelList.RGBA)
+                TextureInfo.Data = OutBitmap.GetChannelsDataInterleaved(BitmapChannelList.Rgba)
                     .CastToStructArray<byte, OutputPixel>();
                 TextureInfo.Width = OutBitmap.Width;
                 TextureInfo.Height = OutBitmap.Height;

@@ -1,5 +1,5 @@
 ﻿using System;
-using CSharpUtils.SpaceAssigner;
+using CSharpUtils.Ext.SpaceAssigner;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CSharpUtilsTests

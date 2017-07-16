@@ -15,6 +15,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CSharpUtils.Drawing;
+using CSharpUtils.Drawing.Extensions;
 
 namespace CSPspEmu.Gui.Winforms.Winforms
 {
@@ -79,7 +81,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
             var Texture = Item.TextureOpengl.Texture;
             TextureView.Image = new Bitmap(Texture.Width, Texture.Height).SetChannelsDataInterleaved(
                 Item.TextureOpengl.Texture.GetDataFromCached(),
-                BitmapChannelList.RGBA
+                BitmapChannelList.Rgba
             );
             TextureView.Size = new System.Drawing.Size(Texture.Width, Texture.Height);
 
@@ -140,7 +142,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
             {
                 var Bitmap = new Bitmap(Image.FromFile(OpenFileDialog.FileName));
                 Item.TextureOpengl.SetData(
-                    Bitmap.GetChannelsDataInterleaved(BitmapChannelList.RGBA).CastToStructArray<OutputPixel>(),
+                    Bitmap.GetChannelsDataInterleaved(BitmapChannelList.Rgba).CastToStructArray<OutputPixel>(),
                     Bitmap.Width, Bitmap.Height);
                 TextureHookPlugin.AddMapping(Item.TextureOpengl.TextureHash, OpenFileDialog.FileName);
                 UpdateTexture();
@@ -165,7 +167,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
                     (new Engine(new ColorAlphaLerp(), new ColorAlphaThreshold(32, 32, 32, 32))).Process(InBitmap);
             }
             Item.TextureOpengl.SetData(
-                OutBitmap.GetChannelsDataInterleaved(BitmapChannelList.RGBA).CastToStructArray<OutputPixel>(),
+                OutBitmap.GetChannelsDataInterleaved(BitmapChannelList.Rgba).CastToStructArray<OutputPixel>(),
                 OutBitmap.Width, OutBitmap.Height);
             UpdateTexture();
             TextureList.Focus();

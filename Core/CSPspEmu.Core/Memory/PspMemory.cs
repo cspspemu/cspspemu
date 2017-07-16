@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using CSharpUtils;
 using System.Runtime.InteropServices;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Memory
 {

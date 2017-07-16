@@ -1,70 +1,104 @@
 ﻿using System;
-using System.Drawing.Imaging;
 using System.Drawing;
+using System.Drawing.Imaging;
+using CSharpUtils.Drawing.Extensions;
 
-namespace CSharpUtils
+namespace CSharpUtils.Drawing
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class BitmapUtils
     {
-        public static BitmapChannel[] RGB
+        /// <summary>
+        /// 
+        /// </summary>
+        public static BitmapChannel[] Rgb => new[]
         {
-            get
-            {
-                return new BitmapChannel[]
-                {
-                    BitmapChannel.Red,
-                    BitmapChannel.Green,
-                    BitmapChannel.Blue,
-                };
-            }
-        }
+            BitmapChannel.Red,
+            BitmapChannel.Green,
+            BitmapChannel.Blue,
+        };
 
+        /// <summary>
+        /// 
+        /// </summary>
         public struct CompareResult
         {
+            /// <summary>
+            /// 
+            /// </summary>
             public bool Equal;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public int PixelTotalDifference;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public int DifferentPixelCount;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public int TotalPixelCount;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public double PixelTotalDifferencePercentage;
         }
 
-        public static CompareResult CompareBitmaps(Bitmap ReferenceBitmap, Bitmap OutputBitmap, double Threshold = 0.01)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="referenceBitmap"></param>
+        /// <param name="outputBitmap"></param>
+        /// <param name="threshold"></param>
+        /// <returns></returns>
+        public static CompareResult CompareBitmaps(Bitmap referenceBitmap, Bitmap outputBitmap, double threshold = 0.01)
         {
-            var CompareResult = default(CompareResult);
+            var compareResult = default(CompareResult);
 
-            if (ReferenceBitmap.Size == OutputBitmap.Size)
+            if (referenceBitmap.Size != outputBitmap.Size) return compareResult;
+
+            compareResult.PixelTotalDifference = 0;
+            compareResult.DifferentPixelCount = 0;
+            compareResult.TotalPixelCount = 0;
+            for (var y = 0; y < referenceBitmap.Height; y++)
             {
-                CompareResult.PixelTotalDifference = 0;
-                CompareResult.DifferentPixelCount = 0;
-                CompareResult.TotalPixelCount = 0;
-                for (int y = 0; y < ReferenceBitmap.Height; y++)
+                for (var x = 0; x < referenceBitmap.Width; x++)
                 {
-                    for (int x = 0; x < ReferenceBitmap.Width; x++)
+                    var colorReference = referenceBitmap.GetPixel(x, y);
+                    var colorOutput = outputBitmap.GetPixel(x, y);
+                    var difference3 = (
+                        Math.Abs(colorOutput.R - colorReference.R) +
+                        Math.Abs(colorOutput.G - colorReference.G) +
+                        Math.Abs(colorOutput.B - colorReference.B)
+                    );
+                    compareResult.PixelTotalDifference += difference3;
+                    if (difference3 > 6)
                     {
-                        Color ColorReference = ReferenceBitmap.GetPixel(x, y);
-                        Color ColorOutput = OutputBitmap.GetPixel(x, y);
-                        int Difference3 = (
-                            Math.Abs((int) ColorOutput.R - (int) ColorReference.R) +
-                            Math.Abs((int) ColorOutput.G - (int) ColorReference.G) +
-                            Math.Abs((int) ColorOutput.B - (int) ColorReference.B)
-                        );
-                        CompareResult.PixelTotalDifference += Difference3;
-                        if (Difference3 > 6)
-                        {
-                            CompareResult.DifferentPixelCount++;
-                        }
-                        CompareResult.TotalPixelCount++;
+                        compareResult.DifferentPixelCount++;
                     }
+                    compareResult.TotalPixelCount++;
                 }
-
-                var PixelTotalDifferencePercentage = (double) CompareResult.DifferentPixelCount * 100 /
-                                                     (double) CompareResult.TotalPixelCount;
-                CompareResult.Equal = (PixelTotalDifferencePercentage < Threshold);
             }
 
-            return CompareResult;
+            var pixelTotalDifferencePercentage = (double) compareResult.DifferentPixelCount * 100 /
+                                                 compareResult.TotalPixelCount;
+            compareResult.Equal = (pixelTotalDifferencePercentage < threshold);
+
+            return compareResult;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nColors"></param>
+        /// <returns></returns>
         public static ColorPalette GetColorPalette(int nColors)
         {
             // Assume monochrome image.
@@ -86,95 +120,136 @@ namespace CSharpUtils
             return palette; // Send the palette back
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public enum Direction
         {
+            /// <summary>
+            /// 
+            /// </summary>
             FromBitmapToData = 0,
+
+            /// <summary>
+            /// 
+            /// </summary>
             FromDataToBitmap = 1,
         }
 
-        public static void TransferChannelsDataLinear(Bitmap Bitmap, byte[] NewData, Direction Direction,
-            params BitmapChannel[] Channels)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="newData"></param>
+        /// <param name="direction"></param>
+        /// <param name="channels"></param>
+        public static void TransferChannelsDataLinear(Bitmap bitmap, byte[] newData, Direction direction,
+            params BitmapChannel[] channels)
         {
-            TransferChannelsDataLinear(Bitmap.GetFullRectangle(), Bitmap, NewData, Direction, Channels);
+            TransferChannelsDataLinear(bitmap.GetFullRectangle(), bitmap, newData, direction, channels);
         }
 
-        public unsafe static void TransferChannelsDataLinear(Bitmap Bitmap, byte* NewDataPtr, Direction Direction,
-            params BitmapChannel[] Channels)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="newDataPtr"></param>
+        /// <param name="direction"></param>
+        /// <param name="channels"></param>
+        public static unsafe void TransferChannelsDataLinear(Bitmap bitmap, byte* newDataPtr, Direction direction,
+            params BitmapChannel[] channels)
         {
-            TransferChannelsDataLinear(Bitmap.GetFullRectangle(), Bitmap, NewDataPtr, Direction, Channels);
+            TransferChannelsDataLinear(bitmap.GetFullRectangle(), bitmap, newDataPtr, direction, channels);
         }
 
-        public unsafe static void TransferChannelsDataLinear(Rectangle Rectangle, Bitmap Bitmap, byte[] NewData,
-            Direction Direction, params BitmapChannel[] Channels)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rectangle"></param>
+        /// <param name="bitmap"></param>
+        /// <param name="newData"></param>
+        /// <param name="direction"></param>
+        /// <param name="channels"></param>
+        public static unsafe void TransferChannelsDataLinear(Rectangle rectangle, Bitmap bitmap, byte[] newData,
+            Direction direction, params BitmapChannel[] channels)
         {
-            fixed (byte* NewDataPtr = &NewData[0])
+            fixed (byte* newDataPtr = &newData[0])
             {
-                TransferChannelsDataLinear(Rectangle, Bitmap, NewDataPtr, Direction, Channels);
+                TransferChannelsDataLinear(rectangle, bitmap, newDataPtr, direction, channels);
             }
         }
 
-        public unsafe static void TransferChannelsDataLinear(Rectangle Rectangle, Bitmap Bitmap, byte* NewDataPtr,
-            Direction Direction, params BitmapChannel[] Channels)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rectangle"></param>
+        /// <param name="bitmap"></param>
+        /// <param name="newDataPtr"></param>
+        /// <param name="direction"></param>
+        /// <param name="channels"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        public static unsafe void TransferChannelsDataLinear(Rectangle rectangle, Bitmap bitmap, byte* newDataPtr,
+            Direction direction, params BitmapChannel[] channels)
         {
-            int WidthHeight = Bitmap.Width * Bitmap.Height;
-            var FullRectangle = Bitmap.GetFullRectangle();
-            if (!FullRectangle.Contains(Rectangle.Location))
+            var widthHeight = bitmap.Width * bitmap.Height;
+            var fullRectangle = bitmap.GetFullRectangle();
+            if (!fullRectangle.Contains(rectangle.Location))
                 throw (new InvalidOperationException("TransferChannelsDataLinear"));
-            if (!FullRectangle.Contains(Rectangle.Location + Rectangle.Size - new Size(1, 1)))
+            if (!fullRectangle.Contains(rectangle.Location + rectangle.Size - new Size(1, 1)))
                 throw (new InvalidOperationException("TransferChannelsDataLinear"));
 
-            int NumberOfChannels = 1;
-            foreach (var Channel in Channels)
+            var numberOfChannels = 1;
+            foreach (var channel in channels)
             {
-                if (Channel != BitmapChannel.Indexed)
+                if (channel != BitmapChannel.Indexed)
                 {
-                    NumberOfChannels = 4;
+                    numberOfChannels = 4;
                     break;
                 }
             }
 
-            Bitmap.LockBitsUnlock((NumberOfChannels == 1) ? PixelFormat.Format8bppIndexed : PixelFormat.Format32bppArgb,
-                (BitmapData) =>
+            bitmap.LockBitsUnlock((numberOfChannels == 1) ? PixelFormat.Format8bppIndexed : PixelFormat.Format32bppArgb,
+                bitmapData =>
                 {
-                    byte* BitmapDataScan0 = (byte*) BitmapData.Scan0.ToPointer();
-                    int Width = Bitmap.Width;
-                    int Height = Bitmap.Height;
-                    int Stride = BitmapData.Stride;
-                    if (NumberOfChannels == 1)
+                    var bitmapDataScan0 = (byte*) bitmapData.Scan0.ToPointer();
+                    var width = bitmap.Width;
+                    var height = bitmap.Height;
+                    var stride = bitmapData.Stride;
+                    if (numberOfChannels == 1)
                     {
-                        Stride = Width;
+                        stride = width;
                     }
 
-                    int RectangleTop = Rectangle.Top;
-                    int RectangleBottom = Rectangle.Bottom;
-                    int RectangleLeft = Rectangle.Left;
-                    int RectangleRight = Rectangle.Right;
+                    var rectangleTop = rectangle.Top;
+                    var rectangleBottom = rectangle.Bottom;
+                    var rectangleLeft = rectangle.Left;
+                    var rectangleRight = rectangle.Right;
 
-                    byte* OutputPtrStart = NewDataPtr;
+                    var outputPtrStart = newDataPtr;
                     {
-                        byte* OutputPtr = OutputPtrStart;
-                        foreach (var Channel in Channels)
+                        var outputPtr = outputPtrStart;
+                        foreach (var channel in channels)
                         {
-                            for (int y = RectangleTop; y < RectangleBottom; y++)
+                            for (var y = rectangleTop; y < rectangleBottom; y++)
                             {
-                                byte* InputPtr = BitmapDataScan0 + Stride * y;
-                                if (NumberOfChannels != 1)
+                                var inputPtr = bitmapDataScan0 + stride * y;
+                                if (numberOfChannels != 1)
                                 {
-                                    InputPtr = InputPtr + (int) Channel;
+                                    inputPtr = inputPtr + (int) channel;
                                 }
-                                InputPtr += NumberOfChannels * RectangleLeft;
-                                for (int x = RectangleLeft; x < RectangleRight; x++)
+                                inputPtr += numberOfChannels * rectangleLeft;
+                                for (var x = rectangleLeft; x < rectangleRight; x++)
                                 {
-                                    if (Direction == Direction.FromBitmapToData)
+                                    if (direction == Direction.FromBitmapToData)
                                     {
-                                        *OutputPtr = *InputPtr;
+                                        *outputPtr = *inputPtr;
                                     }
                                     else
                                     {
-                                        *InputPtr = *OutputPtr;
+                                        *inputPtr = *outputPtr;
                                     }
-                                    OutputPtr++;
-                                    InputPtr += NumberOfChannels;
+                                    outputPtr++;
+                                    inputPtr += numberOfChannels;
                                 }
                             }
                         }
@@ -182,44 +257,52 @@ namespace CSharpUtils
                 });
         }
 
-        public static unsafe void TransferChannelsDataInterleaved(Rectangle Rectangle, Bitmap Bitmap, byte* NewDataPtr,
-            Direction Direction, params BitmapChannel[] Channels)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rectangle"></param>
+        /// <param name="bitmap"></param>
+        /// <param name="newDataPtr"></param>
+        /// <param name="direction"></param>
+        /// <param name="channels"></param>
+        public static unsafe void TransferChannelsDataInterleaved(Rectangle rectangle, Bitmap bitmap, byte* newDataPtr,
+            Direction direction, params BitmapChannel[] channels)
         {
-            int NumberOfChannels = 1;
-            foreach (var Channel in Channels)
+            var numberOfChannels = 1;
+            foreach (var channel in channels)
             {
-                if (Channel != BitmapChannel.Indexed)
+                if (channel != BitmapChannel.Indexed)
                 {
-                    NumberOfChannels = 4;
+                    numberOfChannels = 4;
                     break;
                 }
             }
 
-            Bitmap.LockBitsUnlock(Rectangle,
-                (NumberOfChannels == 1) ? PixelFormat.Format8bppIndexed : PixelFormat.Format32bppArgb, (BitmapData) =>
+            bitmap.LockBitsUnlock(rectangle,
+                (numberOfChannels == 1) ? PixelFormat.Format8bppIndexed : PixelFormat.Format32bppArgb, bitmapData =>
                 {
-                    for (int y = 0; y < BitmapData.Height; y++)
+                    for (var y = 0; y < bitmapData.Height; y++)
                     {
-                        byte* BitmapPtr = ((byte*) BitmapData.Scan0.ToPointer()) + BitmapData.Stride * y;
-                        byte* DataPtr = NewDataPtr + (NumberOfChannels * BitmapData.Width) * y;
-                        int z = 0;
-                        for (int x = 0; x < BitmapData.Width; x++)
+                        var bitmapPtr = ((byte*) bitmapData.Scan0.ToPointer()) + bitmapData.Stride * y;
+                        var dataPtr = newDataPtr + (numberOfChannels * bitmapData.Width) * y;
+                        var z = 0;
+                        for (var x = 0; x < bitmapData.Width; x++)
                         {
-                            for (int c = 0; c < NumberOfChannels; c++)
+                            for (var c = 0; c < numberOfChannels; c++)
                             {
-                                byte* DataPtrPtr = &DataPtr[z + c];
-                                byte* BitmapPtrPtr = &BitmapPtr[z + (int) Channels[c]];
+                                var dataPtrPtr = &dataPtr[z + c];
+                                var bitmapPtrPtr = &bitmapPtr[z + (int) channels[c]];
 
-                                if (Direction == BitmapUtils.Direction.FromBitmapToData)
+                                if (direction == Direction.FromBitmapToData)
                                 {
-                                    *DataPtrPtr = *BitmapPtrPtr;
+                                    *dataPtrPtr = *bitmapPtrPtr;
                                 }
                                 else
                                 {
-                                    *BitmapPtrPtr = *DataPtrPtr;
+                                    *bitmapPtrPtr = *dataPtrPtr;
                                 }
                             }
-                            z += NumberOfChannels;
+                            z += numberOfChannels;
                         }
                     }
                 });

@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using CSharpUtils.Endian;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Formats.video
 {
@@ -23,12 +24,12 @@ namespace CSPspEmu.Hle.Formats.video
 			/// <summary>
 			/// 0008 - 
 			/// </summary>
-			public uint_be StreamOffset;
+			public UintBe StreamOffset;
 
 			/// <summary>
 			/// 000C - 
 			/// </summary>
-			public uint_be StreamSize;
+			public UintBe StreamSize;
 
 			/*
 			/// <summary>
@@ -44,8 +45,8 @@ namespace CSPspEmu.Hle.Formats.video
 
 		public struct InfoHeaderStruct
 		{
-			public uint48_be FirstTimestamp;
-			public uint48_be LastTimestamp;
+			public Uint48Be FirstTimestamp;
+			public Uint48Be LastTimestamp;
 			public fixed byte Unknown1[0x10 + 0x10 + 0xE];
 			public byte _WidthShifted;
 			public byte _HeightShifted;
@@ -77,7 +78,7 @@ namespace CSPspEmu.Hle.Formats.video
 
 		public Chunk ReadChunk(Stream Stream)
 		{
-			var ChunkSize = (uint)Stream.ReadStruct<uint_be>();
+			var ChunkSize = (uint)Stream.ReadStruct<UintBe>();
 			//var ChunkType = (ushort)Stream.ReadStruct<ushort_be>();
 			var ChunkStream = Stream.ReadStream(ChunkSize);
 			return new Chunk()

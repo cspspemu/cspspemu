@@ -2,6 +2,8 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using CSharpUtils;
+using CSharpUtils.Drawing;
+using CSharpUtils.Drawing.Extensions;
 using CSPspEmu.Core.Types;
 
 namespace CSPspEmu.Core.Utils

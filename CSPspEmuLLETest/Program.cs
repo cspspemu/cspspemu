@@ -69,7 +69,7 @@ namespace CSPspEmuLLETest
 
         static void Main(string[] args)
         {
-            new Program().Run();
+            //new Program().Run();
 
 
             //DebugPspMemory.Write4(0xBFC00FFC, 0x20040420);

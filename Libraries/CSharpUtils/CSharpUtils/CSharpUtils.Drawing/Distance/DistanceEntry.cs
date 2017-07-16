@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CSharpUtils.Drawing.Distance
 {
@@ -18,69 +15,63 @@ namespace CSharpUtils.Drawing.Distance
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="DistanceX"></param>
-        /// <param name="DistanceY"></param>
-        public DistanceEntry(int DistanceX, int DistanceY)
+        /// <param name="distanceX"></param>
+        /// <param name="distanceY"></param>
+        public DistanceEntry(int distanceX, int distanceY)
         {
-            this.DistanceX = DistanceX;
-            this.DistanceY = DistanceY;
+            DistanceX = distanceX;
+            DistanceY = distanceY;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="NewDistance"></param>
-        public void SetDistanceIfLower(DistanceEntry NewDistance)
+        /// <param name="newDistance"></param>
+        public void SetDistanceIfLower(DistanceEntry newDistance)
         {
-            if (NewDistance < this)
+            if (newDistance < this)
             {
-                this.DistanceX = NewDistance.DistanceX;
-                this.DistanceY = NewDistance.DistanceY;
+                DistanceX = newDistance.DistanceX;
+                DistanceY = newDistance.DistanceY;
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Left"></param>
-        /// <param name="Right"></param>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
         /// <returns></returns>
-        static public bool operator <(DistanceEntry Left, DistanceEntry Right)
+        public static bool operator <(DistanceEntry left, DistanceEntry right)
         {
-            return Left.DistanceRank < Right.DistanceRank;
+            return left.DistanceRank < right.DistanceRank;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Left"></param>
-        /// <param name="Right"></param>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
         /// <returns></returns>
-        static public bool operator >(DistanceEntry Left, DistanceEntry Right)
+        public static bool operator >(DistanceEntry left, DistanceEntry right)
         {
-            return Left.DistanceRank > Right.DistanceRank;
+            return left.DistanceRank > right.DistanceRank;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public int DistanceRank
-        {
-            get { return DistanceX * DistanceX + DistanceY * DistanceY; }
-        }
+        public int DistanceRank => DistanceX * DistanceX + DistanceY * DistanceY;
 
         /// <summary>
         /// 
         /// </summary>
-        public double Distance
-        {
-            get { return Math.Sqrt((double) DistanceRank); }
-        }
+        public double Distance => Math.Sqrt(DistanceRank);
 
         /// <summary>
         /// 
         /// </summary>
-        static public string Hex = "0123456789ABCDEF";
+        public static string Hex = "0123456789ABCDEF";
 
         /// <summary>
         /// 
@@ -88,17 +79,14 @@ namespace CSharpUtils.Drawing.Distance
         /// <returns></returns>
         public char GetChar()
         {
-            int Pos = (int) Distance;
-            return Hex[Math.Min(Pos, Hex.Length - 1)];
+            var pos = (int) Distance;
+            return Hex[Math.Min(pos, Hex.Length - 1)];
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
-        {
-            return String.Format("D({0},{1})", DistanceX, DistanceY);
-        }
+        public override string ToString() => $"D({DistanceX},{DistanceY})";
     }
 }

@@ -8,6 +8,7 @@ using CSPspEmu.Core.Cpu;
 using CSharpUtils;
 using CSPspEmu.Core;
 using System.Runtime.InteropServices;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Loader
 {

@@ -1,79 +1,119 @@
 ﻿using System;
 using System.IO;
 
-namespace CSharpUtils.Streams
+namespace CSharpUtils.Ext.Streams
 {
-    public unsafe sealed class PointerStream : Stream
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed unsafe class PointerStream : Stream
     {
-        private byte* StartPointer;
-        private byte* EndPointer;
-        private byte* CurrentPointer;
+        private readonly byte* _startPointer;
+        private readonly byte* _endPointer;
+        private byte* _currentPointer;
 
-        public PointerStream(byte* Pointer, long MaxLength = 32 * 1024 * 1024)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pointer"></param>
+        /// <param name="maxLength"></param>
+        public PointerStream(byte* pointer, long maxLength = 32 * 1024 * 1024)
         {
-            this.StartPointer = Pointer;
-            this.CurrentPointer = Pointer;
-            this.EndPointer = this.StartPointer + MaxLength;
+            _startPointer = pointer;
+            _currentPointer = pointer;
+            _endPointer = _startPointer + maxLength;
         }
 
-        public override bool CanRead
-        {
-            get { return true; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public override bool CanRead => true;
 
-        public override bool CanSeek
-        {
-            get { return false; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public override bool CanSeek => false;
 
-        public override bool CanWrite
-        {
-            get { return true; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public override bool CanWrite => true;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public override void Flush()
         {
         }
 
-        public override long Length
-        {
-            get { return EndPointer - StartPointer; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public override long Length => _endPointer - _startPointer;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
         public override long Position
         {
-            get { return CurrentPointer - StartPointer; }
-            set { throw new NotImplementedException(); }
+            get => _currentPointer - _startPointer;
+            set => throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public override int Read(byte[] buffer, int offset, int count)
         {
             int readed = 0;
             while (count-- > 0)
             {
-                if (CurrentPointer >= EndPointer) break;
-                buffer[offset++] = *CurrentPointer++;
+                if (_currentPointer >= _endPointer) break;
+                buffer[offset++] = *_currentPointer++;
                 readed++;
             }
             return readed;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <param name="origin"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public override long Seek(long offset, SeekOrigin origin)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <exception cref="NotImplementedException"></exception>
         public override void SetLength(long value)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="count"></param>
         public override void Write(byte[] buffer, int offset, int count)
         {
             while (count-- > 0)
             {
-                if (CurrentPointer >= EndPointer) break;
-                *CurrentPointer++ = buffer[offset++];
+                if (_currentPointer >= _endPointer) break;
+                *_currentPointer++ = buffer[offset++];
             }
         }
     }

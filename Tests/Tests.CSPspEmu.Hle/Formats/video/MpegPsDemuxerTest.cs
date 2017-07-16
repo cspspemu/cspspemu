@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Tests
 {

@@ -1,61 +1,114 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using CSharpUtils.Ext.Extensions;
+using CSharpUtils.Extensions;
 
-namespace CSharpUtils.Compression
+namespace CSharpUtils.Ext.Compression
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Huffman
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public class Node
         {
+            /// <summary>
+            /// 
+            /// </summary>
             public int Index;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public bool Unused;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public uint UsageCount;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public bool HasChilds;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public Node Parent;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public Node LeftChild;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public Node RightChild;
 
             // Used for fast encoding.
+            /// <summary>
+            /// 
+            /// </summary>
             public int EncodeBitsValue;
 
+            /// <summary>
+            /// 
+            /// </summary>
             public int EncodeBitsCount;
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
             public override string ToString()
             {
-                return String.Format(
-                    "(Index={0}, Unused={1}, UsageCount={2}, HasChilds={3}, Parent={4}, Left={5}, Right={6})",
-                    Index,
-                    Unused, UsageCount, HasChilds, (Parent != null) ? Parent.Index : -1,
-                    (LeftChild != null) ? LeftChild.Index : -1, (RightChild != null) ? RightChild.Index : -1
-                );
+                return
+                    $"(Index={Index}, Unused={Unused}, UsageCount={UsageCount}, HasChilds={HasChilds}, Parent={Parent?.Index ?? -1}, Left={LeftChild?.Index ?? -1}, Right={RightChild?.Index ?? -1})";
             }
         }
 
-        public static Node[] BuildTable(uint[] UsageTable)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="usageTable"></param>
+        /// <returns></returns>
+        public static Node[] BuildTable(uint[] usageTable)
         {
-            Node[] Nodes = new Node[UsageTable.Length * 2 - 1];
-            int NodesCount = BuildTable(UsageTable, Nodes);
-            Node[] NodesSliced = new Node[NodesCount];
-            Array.Copy(Nodes, NodesSliced, NodesCount);
-            return NodesSliced;
+            var nodes = new Node[usageTable.Length * 2 - 1];
+            var nodesCount = BuildTable(usageTable, nodes);
+            var nodesSliced = new Node[nodesCount];
+            Array.Copy(nodes, nodesSliced, nodesCount);
+            return nodesSliced;
         }
 
-        public static int BuildTable(uint[] UsageTable, Node[] EncodingTable)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="usageTable"></param>
+        /// <param name="encodingTable"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static int BuildTable(uint[] usageTable, Node[] encodingTable)
         {
-            uint SumOfInputTable = 0;
+            uint sumOfInputTable = 0;
 
             //Console.WriteLine(table1.ToStringArray(", "));
 
             {
                 // Verified.
-                for (int n = 0; n < UsageTable.Length; n++)
+                for (int n = 0; n < usageTable.Length; n++)
                 {
-                    EncodingTable[n] = new Node()
+                    encodingTable[n] = new Node()
                     {
                         Index = n,
-                        Unused = (UsageTable[n] > 0),
-                        UsageCount = UsageTable[n],
+                        Unused = (usageTable[n] > 0),
+                        UsageCount = usageTable[n],
                         HasChilds = false,
                         Parent = null,
                         LeftChild = null,
@@ -65,20 +118,20 @@ namespace CSharpUtils.Compression
                     //Nodes[n].LeftChild = Nodes[n];
                     //Nodes[n].RightChild = Nodes[n];
 
-                    SumOfInputTable += UsageTable[n];
+                    sumOfInputTable += usageTable[n];
                 }
 
-                if (SumOfInputTable == 0)
+                if (sumOfInputTable == 0)
                 {
-                    throw (new Exception("All elements on EncodingTable are 0"));
+                    throw new Exception("All elements on EncodingTable are 0");
                 }
             }
 
             {
                 // Verified.
-                for (int n = UsageTable.Length; n < EncodingTable.Length; n++)
+                for (var n = usageTable.Length; n < encodingTable.Length; n++)
                 {
-                    EncodingTable[n] = new Node()
+                    encodingTable[n] = new Node()
                     {
                         Index = n,
                         Unused = false,
@@ -93,161 +146,192 @@ namespace CSharpUtils.Compression
                 //std.file.write("table_out", cast(ubyte[])cast(void[])*(&table2[0..table2.length]));
             }
 
-            int CurrentNodeIndex = 0x100;
-            Node Left, Right;
+            var currentNodeIndex = 0x100;
 
             while (true)
             {
-                uint ParentUsageCount = 0;
+                uint parentUsageCount = 0;
 
-                Left = EncodingTable.Where(Node => Node.Unused).LocateMin(Node => Node.UsageCount);
+                var left = encodingTable.Where(it => it.Unused).LocateMin(it => it.UsageCount);
 
-                if (Left != null)
+                if (left != null)
                 {
-                    Left.Unused = false;
-                    Left.Parent = EncodingTable[CurrentNodeIndex];
-                    ParentUsageCount += Left.UsageCount;
+                    left.Unused = false;
+                    left.Parent = encodingTable[currentNodeIndex];
+                    parentUsageCount += left.UsageCount;
                 }
 
-                Right = EncodingTable.Where(Node => Node.Unused).LocateMin(Node => Node.UsageCount);
+                var right = encodingTable.Where(it => it.Unused).LocateMin(it => it.UsageCount);
 
-                if (Right != null)
+                if (right != null)
                 {
-                    Right.Unused = false;
-                    Right.Parent = EncodingTable[CurrentNodeIndex];
-                    ParentUsageCount += Right.UsageCount;
+                    right.Unused = false;
+                    right.Parent = encodingTable[currentNodeIndex];
+                    parentUsageCount += right.UsageCount;
                 }
 
                 Node node;
 
-                EncodingTable[CurrentNodeIndex] = node = new Node()
+                encodingTable[currentNodeIndex] = node = new Node()
                 {
-                    Index = CurrentNodeIndex,
+                    Index = currentNodeIndex,
                     Unused = true,
-                    UsageCount = ParentUsageCount,
+                    UsageCount = parentUsageCount,
                     HasChilds = true,
                     Parent = null,
-                    LeftChild = Left,
-                    RightChild = Right,
+                    LeftChild = left,
+                    RightChild = right,
                 };
 
-                CurrentNodeIndex++;
+                currentNodeIndex++;
 
-                if (node.UsageCount == SumOfInputTable) break;
+                if (node.UsageCount == sumOfInputTable) break;
             }
 
-            SetEncodingRecursive(EncodingTable[CurrentNodeIndex - 1]);
+            SetEncodingRecursive(encodingTable[currentNodeIndex - 1]);
 
-            return CurrentNodeIndex;
+            return currentNodeIndex;
         }
 
-        private static void SetEncodingRecursive(Node Node, int EncodeBitsCount = 0, int EncodeBitsValue = 0)
+        private static void SetEncodingRecursive(Node node, int encodeBitsCount = 0, int encodeBitsValue = 0)
         {
-            if (Node == null) return;
-            Node.EncodeBitsCount = EncodeBitsCount;
-            Node.EncodeBitsValue = EncodeBitsValue;
-            SetEncodingRecursive(Node.LeftChild, EncodeBitsCount + 1, (EncodeBitsValue << 1) | 0);
-            SetEncodingRecursive(Node.RightChild, EncodeBitsCount + 1, (EncodeBitsValue << 1) | 1);
+            if (node == null) return;
+            node.EncodeBitsCount = encodeBitsCount;
+            node.EncodeBitsValue = encodeBitsValue;
+            SetEncodingRecursive(node.LeftChild, encodeBitsCount + 1, (encodeBitsValue << 1) | 0);
+            SetEncodingRecursive(node.RightChild, encodeBitsCount + 1, (encodeBitsValue << 1) | 1);
         }
 
-        public static uint[] CalculateUsageTable(byte[] Data)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static uint[] CalculateUsageTable(byte[] data)
         {
-            var UsageTable = new uint[256];
-            foreach (var Value in Data)
+            var usageTable = new uint[256];
+            foreach (var value in data)
             {
-                UsageTable[Value]++;
+                usageTable[value]++;
             }
-            return UsageTable;
+            return usageTable;
         }
 
-        public static Stream Compress(Stream Input, Node[] EncodingTable)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="encodingTable"></param>
+        /// <returns></returns>
+        public static Stream Compress(Stream input, Node[] encodingTable)
         {
-            Stream Output = new MemoryStream();
-            Compress(Input, Output, EncodingTable);
-            Output.Position = 0;
-            return Output;
+            var output = new MemoryStream();
+            Compress(input, output, encodingTable);
+            output.Position = 0;
+            return output;
         }
 
-        public static void Compress(Stream Input, Stream Output, Node[] EncodingTable)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="output"></param>
+        /// <param name="encodingTable"></param>
+        /// <exception cref="Exception"></exception>
+        public static void Compress(Stream input, Stream output, Node[] encodingTable)
         {
-            byte CurrentByte = 0;
-            byte Mask = 0x80;
+            byte currentByte = 0;
+            byte mask = 0x80;
 
-            while (!Input.Eof())
+            while (!input.Eof())
             {
-                var Symbol = Input.ReadByte();
-                var Node = EncodingTable[Symbol];
-                var NodeEncodingBitsCount = Node.EncodeBitsCount;
-                var NodeEncodeBitsValue = Node.EncodeBitsValue;
+                var symbol = input.ReadByte();
+                var node = encodingTable[symbol];
+                var nodeEncodingBitsCount = node.EncodeBitsCount;
+                var nodeEncodeBitsValue = node.EncodeBitsValue;
 
-                if (Node.EncodeBitsCount == 0)
-                    throw (new Exception(String.Format("Symbol '{0}' not found on EncodingTable", Symbol)));
+                if (node.EncodeBitsCount == 0)
+                    throw (new Exception($"Symbol '{symbol}' not found on EncodingTable"));
 
                 //Console.WriteLine("Encode: {0}, {1}, {2}", Symbol, NodeEncodingBitsCount, NodeEncodeBitsValue);
 
-                for (; NodeEncodingBitsCount > 0; NodeEncodingBitsCount--)
+                for (; nodeEncodingBitsCount > 0; nodeEncodingBitsCount--)
                 {
-                    if ((NodeEncodeBitsValue & (1 << (NodeEncodingBitsCount - 1))) != 0)
+                    if ((nodeEncodeBitsValue & (1 << (nodeEncodingBitsCount - 1))) != 0)
                     {
-                        CurrentByte |= Mask;
+                        currentByte |= mask;
                     }
 
-                    Mask >>= 1;
+                    mask >>= 1;
 
-                    if (Mask == 0)
+                    if (mask == 0)
                     {
-                        Output.WriteByte(CurrentByte);
-                        Mask = 0x80;
-                        CurrentByte = 0;
+                        output.WriteByte(currentByte);
+                        mask = 0x80;
+                        currentByte = 0;
                     }
                 }
             }
 
             // Write Remaining Bits.
-            if (Mask != 0x80)
+            if (mask != 0x80)
             {
-                Output.WriteByte(CurrentByte);
+                output.WriteByte(currentByte);
             }
         }
 
 
-        public static Stream Uncompress(Stream Input, uint OutputLength, Node[] EncodingTable)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="outputLength"></param>
+        /// <param name="encodingTable"></param>
+        /// <returns></returns>
+        public static Stream Uncompress(Stream input, uint outputLength, Node[] encodingTable)
         {
-            Stream Output = new MemoryStream();
-            Uncompress(Input, Output, OutputLength, EncodingTable);
-            return Output;
+            var output = new MemoryStream();
+            Uncompress(input, output, outputLength, encodingTable);
+            return output;
         }
 
-        public static void Uncompress(Stream Input, Stream Output, uint OutputLength, Node[] EncodingTable)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="output"></param>
+        /// <param name="outputLength"></param>
+        /// <param name="encodingTable"></param>
+        public static void Uncompress(Stream input, Stream output, uint outputLength, Node[] encodingTable)
         {
-            byte Mask = 0;
-            byte CurrentByte = 0;
+            byte mask = 0;
+            byte currentByte = 0;
 
-            for (int n = 0; n < OutputLength; n++)
+            for (var n = 0; n < outputLength; n++)
             {
-                var CurrentNode = EncodingTable[EncodingTable.Length - 1];
+                var currentNode = encodingTable[encodingTable.Length - 1];
 
-                while (CurrentNode.HasChilds)
+                while (currentNode.HasChilds)
                 {
                     // Need another byte.
-                    if (Mask == 0)
+                    if (mask == 0)
                     {
-                        CurrentByte = (byte) Input.ReadByte();
-                        Mask = 0x80;
+                        currentByte = (byte) input.ReadByte();
+                        mask = 0x80;
                     }
 
-                    CurrentNode = ((CurrentByte & Mask) == 0)
-                            ? CurrentNode.LeftChild
-                            : CurrentNode.RightChild
+                    currentNode = ((currentByte & mask) == 0)
+                            ? currentNode.LeftChild
+                            : currentNode.RightChild
                         ;
 
-                    Mask >>= 1;
+                    mask >>= 1;
                 }
 
-                Output.WriteByte((byte) CurrentNode.Index);
+                output.WriteByte((byte) currentNode.Index);
             }
 
-            Output.Position = 0;
+            output.Position = 0;
         }
     }
 }

@@ -1,87 +1,112 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSharpUtils;
-using System.IO;
 
-namespace CSharpUtils.Compression.Lz
+namespace CSharpUtils.Ext.Compression.Lz
 {
-    unsafe public class LzMatcher
+    /// <summary>
+    /// 
+    /// </summary>
+    public unsafe class LzMatcher
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public int MaxOffset { get; }
-        public int MinSize { get; }
-        public int MaxSize { get; }
-        public bool AllowOverlapping { get; }
-        byte[] Data;
-        Dictionary<int, LinkedList<int>> Waypoints = new Dictionary<int, LinkedList<int>>();
-        LinkedList<int> Hashes = new LinkedList<int>();
-        private int _Offset;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public int MinSize { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int MaxSize { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool AllowOverlapping { get; }
+
+        byte[] Data;
+        readonly Dictionary<int, LinkedList<int>> _waypoints = new Dictionary<int, LinkedList<int>>();
+        readonly LinkedList<int> _hashes = new LinkedList<int>();
+        private int _offset;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public int Offset
         {
-            get { return _Offset; }
+            get => _offset;
             set
             {
-                Waypoints.Clear();
-                Hashes.Clear();
-                _Offset = Math.Max(value - MaxOffset, 0);
+                _waypoints.Clear();
+                _hashes.Clear();
+                _offset = Math.Max(value - MaxOffset, 0);
                 Skip(Math.Min(MaxOffset, value));
             }
         }
 
-        enum Overlapping
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="offset"></param>
+        /// <param name="maxOffset"></param>
+        /// <param name="minSize"></param>
+        /// <param name="maxSize"></param>
+        /// <param name="allowOverlapping"></param>
+        public LzMatcher(byte[] data, int offset = 0, int maxOffset = 0x1000, int minSize = 3, int maxSize = 0x12,
+            bool allowOverlapping = true)
         {
-            NO = 0,
-            YES = 1,
-        }
-
-        public LzMatcher(byte[] Data, int Offset = 0, int MaxOffset = 0x1000, int MinSize = 3, int MaxSize = 0x12,
-            bool AllowOverlapping = true)
-        {
-            this.Data = Data;
-            this.MaxOffset = MaxOffset;
-            this.MinSize = MinSize;
-            this.MaxSize = MaxSize;
+            Data = data;
+            MaxOffset = maxOffset;
+            MinSize = minSize;
+            MaxSize = maxSize;
             //if (!AllowOverlapping) throw (new NotImplementedException("!AllowOverlapping"));
-            this.AllowOverlapping = AllowOverlapping;
-            this.Offset = Offset;
+            AllowOverlapping = allowOverlapping;
+            Offset = offset;
         }
 
-        public int Length
-        {
-            get { return Data.Length; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Length => Data.Length;
 
-        int GetOffsetHash(int Offset)
+        int GetOffsetHash(int offset)
         {
-            fixed (byte* Ptr = &this.Data[Offset])
+            fixed (byte* ptr = &Data[offset])
             {
-                return PointerUtils.FastHash(Ptr, MinSize);
+                return PointerUtils.FastHash(ptr, MinSize);
             }
         }
 
-        public void Skip(int SkipCount = 1)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="skipCount"></param>
+        public void Skip(int skipCount = 1)
         {
-            if (SkipCount != 1)
+            if (skipCount != 1)
             {
-                while (SkipCount-- > 0) Skip(1);
+                while (skipCount-- > 0) Skip();
                 return;
             }
 
-            var Hash = GetOffsetHash(_Offset);
-            Hashes.AddLast(Hash);
-            if (!Waypoints.ContainsKey(Hash)) Waypoints[Hash] = new LinkedList<int>();
-            Waypoints[Hash].AddLast(_Offset);
+            var hash = GetOffsetHash(_offset);
+            _hashes.AddLast(hash);
+            if (!_waypoints.ContainsKey(hash)) _waypoints[hash] = new LinkedList<int>();
+            _waypoints[hash].AddLast(_offset);
 
-            if (Hashes.Count > MaxOffset)
+            if (_hashes.Count > MaxOffset)
             {
-                var FirstHash = Hashes.First.Value;
-                Hashes.RemoveFirst();
-                Waypoints[FirstHash].RemoveFirst();
+                var firstHash = _hashes.First.Value;
+                _hashes.RemoveFirst();
+                _waypoints[firstHash].RemoveFirst();
             }
 
-            _Offset++;
+            _offset++;
         }
 
         /// <summary>
@@ -107,41 +132,49 @@ namespace CSharpUtils.Compression.Lz
             /// </summary>
             public int Size;
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
             public override string ToString()
             {
-                return String.Format("LzMatcher.FindSequenceResult(Offset={0}, Size={1})", Offset, Size);
+                return $"LzMatcher.FindSequenceResult(Offset={Offset}, Size={Size})";
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public FindSequenceResult FindMaxSequence()
         {
-            var FindSequenceResult = new FindSequenceResult()
+            var findSequenceResult = new FindSequenceResult
             {
                 Offset = 0,
-                Size = 0,
+                Size = 0
             };
 
-            if ((Data.Length - _Offset) >= MinSize)
+            if ((Data.Length - _offset) >= MinSize)
             {
-                fixed (byte* DataPtr = this.Data)
+                fixed (byte* dataPtr = Data)
                 {
-                    var Hash = GetOffsetHash(_Offset);
-                    if (Waypoints.ContainsKey(Hash))
+                
+                    var hash = GetOffsetHash(_offset);
+                    if (!_waypoints.ContainsKey(hash)) return findSequenceResult;
+                    //var Node = Waypoints[Hash].Last;
+                    foreach (var compareOffset in _waypoints[hash])
                     {
-                        //var Node = Waypoints[Hash].Last;
-                        foreach (var CompareOffset in Waypoints[Hash])
-                        {
-                            int LocalMaxSize = Math.Min((Data.Length - _Offset), MaxSize);
+                        var localMaxSize = Math.Min((Data.Length - _offset), MaxSize);
 
-                            //if (!AllowOverlapping && (CompareOffset + LocalMaxSize > _Offset)) continue;
+                        //if (!AllowOverlapping && (CompareOffset + LocalMaxSize > _Offset)) continue;
 
-                            int MatchedLength = PointerUtils.FindLargestMatch(
-                                &DataPtr[CompareOffset],
-                                &DataPtr[_Offset],
-                                LocalMaxSize
-                            );
+                        var matchedLength = PointerUtils.FindLargestMatch(
+                            &dataPtr[compareOffset],
+                            &dataPtr[_offset],
+                            localMaxSize
+                        );
 
-                            /*
+                        /*
                             var Hash1 = PointerUtils.FastHash(&DataPtr[CompareOffset], MinSize);
                             var Hash2 = PointerUtils.FastHash(&DataPtr[_Offset], MinSize);
                             for (int n = 0; n < MinSize; n++)
@@ -152,30 +185,28 @@ namespace CSharpUtils.Compression.Lz
                             Console.WriteLine("{0}, {1}, {2}, {3}: {4:X8}, {5:X8}, {6:X8}", MatchedLength, MinSize, MaxSize, LocalMaxSize, Hash, Hash1, Hash2);
                             */
 
-                            //Console.WriteLine("{0}, {1}, {2}", CompareOffset - _Offset, MatchedLength, CompareOffset - _Offset + MatchedLength);
+                        //Console.WriteLine("{0}, {1}, {2}", CompareOffset - _Offset, MatchedLength, CompareOffset - _Offset + MatchedLength);
 
-                            if (!AllowOverlapping && (CompareOffset - _Offset + MatchedLength) > 0)
-                            {
-                                MatchedLength = _Offset - CompareOffset;
-                                //continue;
-                            }
-
-                            if (MatchedLength >= MinSize)
-                            {
-                                if (FindSequenceResult.Size < MatchedLength)
-                                {
-                                    FindSequenceResult.Size = MatchedLength;
-                                    FindSequenceResult.Offset = CompareOffset;
-                                }
-
-                                if (MatchedLength == MaxSize) break;
-                            }
+                        if (!AllowOverlapping && (compareOffset - _offset + matchedLength) > 0)
+                        {
+                            matchedLength = _offset - compareOffset;
+                            //continue;
                         }
+
+                        if (matchedLength < MinSize) continue;
+                        
+                        if (findSequenceResult.Size < matchedLength)
+                        {
+                            findSequenceResult.Size = matchedLength;
+                            findSequenceResult.Offset = compareOffset;
+                        }
+
+                        if (matchedLength == MaxSize) break;
                     }
                 }
             }
 
-            return FindSequenceResult;
+            return findSequenceResult;
         }
     }
 }

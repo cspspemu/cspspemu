@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Threading.EventFlags
 {

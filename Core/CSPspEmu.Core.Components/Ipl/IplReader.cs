@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 using CSPspEmu.Core.Crypto;
 
 namespace CSPspEmu.Core

@@ -1,30 +1,45 @@
 ﻿using System.IO;
+using CSharpUtils.Extensions;
 using CSharpUtils.Streams;
 
-namespace CSharpUtils.SpaceAssigner
+namespace CSharpUtils.Ext.SpaceAssigner
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class SpaceAssigner1DUniqueAllocatorStream : SpaceAssigner1DUniqueAllocator
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public Stream Stream;
 
-        public SpaceAssigner1DUniqueAllocatorStream(SpaceAssigner1D SpaceAssigner, Stream Stream)
-            : base(SpaceAssigner)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="spaceAssigner"></param>
+        /// <param name="stream"></param>
+        public SpaceAssigner1DUniqueAllocatorStream(SpaceAssigner1D spaceAssigner, Stream stream)
+            : base(spaceAssigner)
         {
-            this.Stream = Stream;
+            Stream = stream;
             OnAllocate += SpaceAssigner1DUniqueAllocatorStream_OnAllocate;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void FillSpacesWithZeroes()
         {
-            foreach (var Space in SpaceAssigner.GetAvailableSpaces())
+            foreach (var space in SpaceAssigner.GetAvailableSpaces())
             {
-                Stream.SliceWithBounds(Space.Min, Space.Max).FillStreamWithByte(0x00);
+                Stream.SliceWithBounds(space.Min, space.Max).FillStreamWithByte(0x00);
             }
         }
 
-        void SpaceAssigner1DUniqueAllocatorStream_OnAllocate(byte[] Bytes, SpaceAssigner1D.Space Space)
+        private void SpaceAssigner1DUniqueAllocatorStream_OnAllocate(byte[] bytes, SpaceAssigner1D.Space space)
         {
-            SliceStream.CreateWithBounds(this.Stream, Space.Min, Space.Max).WriteBytes(Bytes);
+            SliceStream.CreateWithBounds(Stream, space.Min, space.Max).WriteBytes(bytes);
         }
     }
 }

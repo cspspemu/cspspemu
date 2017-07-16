@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using CSharpUtils.Extensions;
 
 namespace CSharpUtils.Misc.Acme1
 {

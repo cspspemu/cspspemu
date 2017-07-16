@@ -2,6 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Formats.video
 {

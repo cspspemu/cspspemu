@@ -1,4 +1,5 @@
 ﻿using CSharpUtils;
+using CSharpUtils.Drawing;
 using CSPspEmu.Core.Types;
 
 namespace CSPspEmu.Core.Utils

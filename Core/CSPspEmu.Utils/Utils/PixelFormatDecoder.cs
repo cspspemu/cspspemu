@@ -1,5 +1,6 @@
 ﻿using System;
 using CSharpUtils;
+using CSharpUtils.Drawing;
 using CSPspEmu.Core.Types;
 
 namespace CSPspEmu.Core.Utils
@@ -72,10 +73,10 @@ namespace CSPspEmu.Core.Utils
         {
             switch (PixelFormat)
             {
-                case GuPixelFormats.RGBA_8888: return ColorFormats.RGBA_8888;
-                case GuPixelFormats.RGBA_5551: return ColorFormats.RGBA_5551;
-                case GuPixelFormats.RGBA_5650: return ColorFormats.RGBA_5650;
-                case GuPixelFormats.RGBA_4444: return ColorFormats.RGBA_4444;
+                case GuPixelFormats.RGBA_8888: return ColorFormats.Rgba8888;
+                case GuPixelFormats.RGBA_5551: return ColorFormats.Rgba5551;
+                case GuPixelFormats.RGBA_5650: return ColorFormats.Rgba5650;
+                case GuPixelFormats.RGBA_4444: return ColorFormats.Rgba4444;
                 default: throw(new NotImplementedException("Not implemented " + PixelFormat));
             }
         }

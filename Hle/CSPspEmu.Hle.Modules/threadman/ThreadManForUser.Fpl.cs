@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CSharpUtils.Extensions;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Hle.Managers;
 

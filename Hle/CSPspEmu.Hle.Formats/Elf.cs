@@ -1,4 +1,5 @@
 ﻿using System;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Formats
 {

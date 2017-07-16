@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using CSharpPlatform;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Gpu.State
 {

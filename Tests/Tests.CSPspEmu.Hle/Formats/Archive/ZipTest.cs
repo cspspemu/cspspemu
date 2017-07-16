@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CSPspEmu.Hle.Formats.Archive;
 using CSPspEmu.Resources;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Tests.Hle.Formats.Archive
 {
@@ -30,7 +31,7 @@ namespace CSPspEmu.Core.Tests.Hle.Formats.Archive
             Zip.Load("../../../TestInput/UncompressedZip.zip");
             var ExpectedString =
                 "ffmpeg -i test.pmf -vcodec copy -an test.h264\nffmpeg -i test.pmf -acodec copy -vn test.ac3p";
-            var ResultString = Zip["demux.bat"].OpenUncompressedStream().ReadAllContentsAsString(FromStart: false);
+            var ResultString = Zip["demux.bat"].OpenUncompressedStream().ReadAllContentsAsString(fromStart: false);
             Assert.AreEqual(ExpectedString, ResultString);
         }
 

@@ -21,6 +21,9 @@ using System.Runtime.InteropServices;
 using CSharpPlatform.GL.Impl;
 using System.Windows;
 using System.Drawing;
+using CSharpUtils.Drawing;
+using CSharpUtils.Drawing.Extensions;
+using CSharpUtils.Extensions;
 using CSPspEmu.Gui.SMAA;
 using CSPspEmu.Gui.XBR.Shader;
 
@@ -59,7 +62,7 @@ namespace CSPspEmu
             return GLTexture.Create()
                     .SetFormat(TextureFormat.RGBA)
                     .SetSize(Bitmap.Width, Bitmap.Height)
-                    .SetData(Bitmap.GetChannelsDataInterleaved(BitmapChannelList.RGBA))
+                    .SetData(Bitmap.GetChannelsDataInterleaved(BitmapChannelList.Rgba))
                 ;
         }
 
@@ -74,7 +77,7 @@ namespace CSPspEmu
             var TextureOut = new XBRShader().Process(GLTextureCreateFromBitmap(BitmapIn));
 
             new Bitmap(TextureOut.Width, TextureOut.Height)
-                .SetChannelsDataInterleaved(TextureOut.GetDataFromGpu(), BitmapChannelList.RGBA)
+                .SetChannelsDataInterleaved(TextureOut.GetDataFromGpu(), BitmapChannelList.Rgba)
                 .Save(@"c:\temp\out.png");
 
             //var Smaa = new Smaa();

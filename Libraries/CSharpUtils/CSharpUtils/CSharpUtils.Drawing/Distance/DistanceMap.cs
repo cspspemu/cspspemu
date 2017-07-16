@@ -1,220 +1,227 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Drawing.Imaging;
+using CSharpUtils.Drawing.Extensions;
 
 namespace CSharpUtils.Drawing.Distance
 {
     /// <summary>
     /// 
     /// </summary>
-    unsafe public class DistanceMap
+    public unsafe class DistanceMap
     {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Bitmap"></param>
-        /// <param name="AlphaThresold"></param>
+        /// <param name="bitmap"></param>
+        /// <param name="alphaThresold"></param>
         /// <returns></returns>
-        static public bool[,] GetMask(Bitmap Bitmap, byte AlphaThresold = 1)
+        public static bool[,] GetMask(Bitmap bitmap, byte alphaThresold = 1)
         {
-            var Width = Bitmap.Width;
-            var Height = Bitmap.Height;
-            var Mask = new bool[Bitmap.Width, Bitmap.Height];
-            Bitmap.LockBitsUnlock(System.Drawing.Imaging.PixelFormat.Format32bppArgb, (BitmapData) =>
+            var width = bitmap.Width;
+            var height = bitmap.Height;
+            var mask = new bool[bitmap.Width, bitmap.Height];
+            bitmap.LockBitsUnlock(PixelFormat.Format32bppArgb, bitmapData =>
             {
-                for (int y = 0; y < Height; y++)
+                for (var y = 0; y < height; y++)
                 {
-                    var Ptr = ((byte*) BitmapData.Scan0.ToPointer()) + BitmapData.Stride * y;
-                    Ptr += 3;
-                    for (int x = 0; x < Width; x++)
+                    var ptr = ((byte*) bitmapData.Scan0.ToPointer()) + bitmapData.Stride * y;
+                    ptr += 3;
+                    for (var x = 0; x < width; x++)
                     {
-                        Mask[x, y] = (*Ptr >= AlphaThresold);
-                        Ptr += 4;
+                        mask[x, y] = (*ptr >= alphaThresold);
+                        ptr += 4;
                         //Console.Write(Mask[x, y] ? 1 : 0);
                     }
                     //Console.WriteLine("");
                 }
             });
-            return Mask;
+            return mask;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="From"></param>
-        /// <param name="To"></param>
-        /// <param name="Step"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="step"></param>
         /// <returns></returns>
-        static public IEnumerable<int> Range(int From, int To, int Step = 1)
+        public static IEnumerable<int> Range(int @from, int to, int step = 1)
         {
-            if (From < To)
+            if (@from < to)
             {
-                for (int n = From; n <= To; n += Step)
-                {
-                    yield return n;
-                }
+                for (var n = @from; n <= to; n += step) yield return n;
             }
             else
             {
-                for (int n = From; n >= To; n -= Step)
-                {
-                    yield return n;
-                }
+                for (var n = @from; n >= to; n -= step) yield return n;
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Mask"></param>
+        /// <param name="mask"></param>
         /// <returns></returns>
-        static public DistanceEntry[,] GetDistanceMap(bool[,] Mask)
+        public static DistanceEntry[,] GetDistanceMap(bool[,] mask)
         {
-            int Width = Mask.GetLength(0);
-            int Height = Mask.GetLength(1);
-            var DistanceMap = new DistanceEntry[Width, Height];
-            var Row = new DistanceEntry[Width];
+            var width = mask.GetLength(0);
+            var height = mask.GetLength(1);
+            var distanceMap = new DistanceEntry[width, height];
+            var row = new DistanceEntry[width];
 
-            for (int y = 0; y < Height; y++)
+            for (var y = 0; y < height; y++)
             {
-                for (int x = 0; x < Width; x++)
+                for (var x = 0; x < width; x++)
                 {
-                    DistanceMap[x, y] = new DistanceEntry(1000, 1000);
+                    distanceMap[x, y] = new DistanceEntry(1000, 1000);
                 }
             }
 
-            var Pass1 = Range(0, Height - 1);
-            var Pass2 = Range(Height - 1, 0);
+            var pass1 = Range(0, height - 1);
+            var pass2 = Range(height - 1, 0);
 
-            foreach (var PassIterator in new[] {Pass1, Pass2})
+            foreach (var passIterator in new[] {pass1, pass2})
                 //foreach (var PassIterator in new[] { Pass1 })
             {
-                for (int n = 0; n < Row.Length; n++) Row[n] = new DistanceEntry(1000, 1000);
+                for (var n = 0; n < row.Length; n++) row[n] = new DistanceEntry(1000, 1000);
 
                 //for (int y = 0; y < Height; y++)
-                foreach (var y in PassIterator)
+                foreach (var y in passIterator)
                 {
-                    for (int x = 0; x < Width; x++)
+                    for (var x = 0; x < width; x++)
                     {
-                        if (Mask[x, y])
-                        {
-                            // Inner
-                            Row[x] = new DistanceEntry(0, 0);
+                        if (!mask[x, y]) continue;
+                        
+                        // Inner
+                        row[x] = new DistanceEntry(0, 0);
 
-                            // Left edge
-                            if (x > 0 && !Mask[x - 1, y])
+                        // Left edge
+                        if (x > 0 && !mask[x - 1, y])
+                        {
+                            int distanceX = 0, DistanceY = 0;
+                            for (int x2 = x - 1; x2 >= 0; x2--)
                             {
-                                int DistanceX = 0, DistanceY = 0;
-                                for (int x2 = x - 1; x2 >= 0; x2--)
-                                {
-                                    if (Mask[x2, y]) break;
-                                    DistanceX--;
-                                    Row[x2].SetDistanceIfLower(new DistanceEntry(DistanceX, DistanceY));
-                                }
-                            }
-                            // Right edge
-                            if (x < Width - 1 && !Mask[x + 1, y])
-                            {
-                                int DistanceX = 0, DistanceY = 0;
-                                for (int x2 = x + 1; x2 < Width; x2++)
-                                {
-                                    if (Mask[x2, y]) break;
-                                    DistanceX++;
-                                    Row[x2].SetDistanceIfLower(new DistanceEntry(DistanceX, DistanceY));
-                                }
+                                if (mask[x2, y]) break;
+                                distanceX--;
+                                row[x2].SetDistanceIfLower(new DistanceEntry(distanceX, DistanceY));
                             }
                         }
-                        else
+                        // Right edge
+                        if (x < width - 1 && !mask[x + 1, y])
                         {
-                            //Row[x].SetDistanceIfLower(new DistanceEntry(1000, 1000));
+                            int distanceX = 0, DistanceY = 0;
+                            for (int x2 = x + 1; x2 < width; x2++)
+                            {
+                                if (mask[x2, y]) break;
+                                distanceX++;
+                                row[x2].SetDistanceIfLower(new DistanceEntry(distanceX, DistanceY));
+                            }
                         }
                     }
-                    for (int x = 0; x < Width; x++)
+                    for (var x = 0; x < width; x++)
                     {
-                        DistanceMap[x, y].SetDistanceIfLower(Row[x]);
-                        Row[x] = DistanceMap[x, y];
+                        distanceMap[x, y].SetDistanceIfLower(row[x]);
+                        row[x] = distanceMap[x, y];
                         //Console.Write("{0}", Row[x].GetChar());
                     }
 #if true
-                    for (int x = Width - 2; x >= 0; x--)
+                    for (var x = width - 2; x >= 0; x--)
                     {
-                        var Right = DistanceMap[x + 1, y];
-                        DistanceMap[x, y].SetDistanceIfLower(new DistanceEntry(Right.DistanceX - 1, Right.DistanceY));
-                        Row[x] = DistanceMap[x, y];
+                        var right = distanceMap[x + 1, y];
+                        distanceMap[x, y].SetDistanceIfLower(new DistanceEntry(right.DistanceX - 1, right.DistanceY));
+                        row[x] = distanceMap[x, y];
                     }
-                    for (int x = 1; x < Width; x++)
+                    for (var x = 1; x < width; x++)
                     {
-                        var Right = DistanceMap[x - 1, y];
-                        DistanceMap[x, y].SetDistanceIfLower(new DistanceEntry(Right.DistanceX + 1, Right.DistanceY));
-                        Row[x] = DistanceMap[x, y];
+                        var right = distanceMap[x - 1, y];
+                        distanceMap[x, y].SetDistanceIfLower(new DistanceEntry(right.DistanceX + 1, right.DistanceY));
+                        row[x] = distanceMap[x, y];
                     }
 #endif
                     //Console.WriteLine("");
 
-                    for (int x = 0; x < Width; x++)
+                    for (int x = 0; x < width; x++)
                     {
-                        Row[x].DistanceY++;
+                        row[x].DistanceY++;
                         //Console.Write("{0}", Row[x].GetChar());
                     }
                 }
             }
 
-            return DistanceMap;
+            return distanceMap;
         }
 
-        static public void DrawGlow(Bitmap Bitmap, DistanceEntry[,] _DistanceMap, float GlowDistance,
-            ARGB_Rev GlowColor, float Min, float Max = 1.0f)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="distanceMap"></param>
+        /// <param name="glowDistance"></param>
+        /// <param name="glowColor"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        public static void DrawGlow(Bitmap bitmap, DistanceEntry[,] distanceMap, float glowDistance,
+            ArgbRev glowColor, float min, float max = 1.0f)
         {
-            DistanceMap.DrawGlow(Bitmap, _DistanceMap, GlowDistance, GlowColor,
-                (f) => { return MathUtils.SmoothStep(Min, Max, f); });
+            DrawGlow(bitmap, distanceMap, glowDistance, glowColor,
+                f => MathUtils.SmoothStep(min, max, f));
         }
 
-        static public void DrawGlow(Bitmap Bitmap, DistanceEntry[,] _DistanceMap, float GlowDistance,
-            ARGB_Rev GlowColor, Func<float, float> Function = null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="distanceMap"></param>
+        /// <param name="glowDistance"></param>
+        /// <param name="glowColor"></param>
+        /// <param name="function"></param>
+        public static void DrawGlow(Bitmap bitmap, DistanceEntry[,] distanceMap, float glowDistance,
+            ArgbRev glowColor, Func<float, float> function = null)
         {
-            var TransparentColor = (ARGB_Rev) "#00000000";
+            var transparentColor = (ArgbRev) "#00000000";
 
-            if (Function == null) Function = (v) => v;
+            if (function == null) function = v => v;
 
-            Bitmap.Shader((color, x, y) =>
+            bitmap.Shader((color, x, y) =>
             {
-                var Dist = (float) _DistanceMap[x, y].Distance;
-                if (Dist == 0 && color.A == 0xFF) return color;
-                if (Dist > GlowDistance) return new ARGB_Rev(0, 0, 0, 0);
-                var GenColor = ARGB_Rev.Interpolate(GlowColor, TransparentColor, 1 - Function(Dist / GlowDistance));
-                return (Dist == 0) ? ARGB_Rev.Mix(color, GenColor) : GenColor;
+                var dist = (float) distanceMap[x, y].Distance;
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (dist == 0f && color.A == 0xFF) return color;
+                if (dist > glowDistance) return new ArgbRev(0, 0, 0, 0);
+                var genColor = ArgbRev.Interpolate(glowColor, transparentColor, 1 - function(dist / glowDistance));
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                return (dist == 0) ? ArgbRev.Mix(color, genColor) : genColor;
             });
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="DistanceMap"></param>
+        /// <param name="distanceMap"></param>
         /// <returns></returns>
-        static public Bitmap BitmapFromDistanceMap(DistanceEntry[,] DistanceMap)
+        public static Bitmap BitmapFromDistanceMap(DistanceEntry[,] distanceMap)
         {
-            var Bitmap = new Bitmap(DistanceMap.GetLength(0), DistanceMap.GetLength(1));
-            var Width = Bitmap.Width;
-            var Height = Bitmap.Height;
-            Bitmap.LockBitsUnlock(System.Drawing.Imaging.PixelFormat.Format32bppArgb, (BitmapData) =>
+            var bitmap = new Bitmap(distanceMap.GetLength(0), distanceMap.GetLength(1));
+            var width = bitmap.Width;
+            var height = bitmap.Height;
+            bitmap.LockBitsUnlock(PixelFormat.Format32bppArgb, bitmapData =>
             {
-                for (int y = 0; y < Height; y++)
+                for (var y = 0; y < height; y++)
                 {
-                    var Ptr = ((byte*) BitmapData.Scan0.ToPointer()) + BitmapData.Stride * y;
-                    for (int x = 0; x < Width; x++)
+                    var ptr = ((byte*) bitmapData.Scan0.ToPointer()) + bitmapData.Stride * y;
+                    for (var x = 0; x < width; x++)
                     {
-                        byte Distance = (byte) MathUtils.FastClamp((int) (DistanceMap[x, y].Distance * 4), 0, 255);
-                        *Ptr++ = Distance;
-                        *Ptr++ = Distance;
-                        *Ptr++ = Distance;
-                        *Ptr++ = 0xFF;
+                        var distance = (byte) MathUtils.FastClamp((int) (distanceMap[x, y].Distance * 4), 0, 255);
+                        *ptr++ = distance;
+                        *ptr++ = distance;
+                        *ptr++ = distance;
+                        *ptr++ = 0xFF;
                     }
                 }
             });
-            return Bitmap;
+            return bitmap;
         }
 
         /*

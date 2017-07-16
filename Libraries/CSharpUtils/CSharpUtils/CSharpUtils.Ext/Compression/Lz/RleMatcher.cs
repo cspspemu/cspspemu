@@ -1,60 +1,77 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CSharpUtils.Ext.Compression.Lz
+﻿namespace CSharpUtils.Ext.Compression.Lz
 {
-    sealed public class RleMatcher
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class RleMatcher
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public byte Byte;
-        public int Length = 0;
-        private byte[] Data;
-        private int _Offset;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Length;
+
+        private byte[] Data;
+        private int _offset;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public int Offset
         {
-            get { return _Offset; }
+            get => _offset;
             set
             {
                 Length = 0;
-                _Offset = value;
+                _offset = value;
                 Skip(0);
             }
         }
 
-        public RleMatcher(byte[] Data, int Offset = 0)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="offset"></param>
+        public RleMatcher(byte[] data, int offset = 0)
         {
-            this.Data = Data;
-            this.Offset = Offset;
+            Data = data;
+            Offset = offset;
         }
 
-        unsafe public void Skip(int Skip = 1)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="skip"></param>
+        public unsafe void Skip(int skip = 1)
         {
-            _Offset += Skip;
+            _offset += skip;
 
-            if (_Offset >= Data.Length)
+            if (_offset >= Data.Length)
             {
                 Length = 0;
                 return;
             }
 
-            if (Skip >= Length)
+            if (skip >= Length)
             {
-                Byte = Data[_Offset];
+                Byte = Data[_offset];
                 Length = 0;
 
-                fixed (byte* Start = &Data[_Offset])
-                fixed (byte* End = &Data[Data.Length - 1])
+                fixed (byte* start = &Data[_offset])
+                fixed (byte* end = &Data[Data.Length - 1])
                 {
-                    int MaxLen = (int) (End - Start);
-                    Length = PointerUtils.FindLargestMatchByte(Start, Start[0], MaxLen);
+                    var maxLen = (int) (end - start);
+                    Length = PointerUtils.FindLargestMatchByte(start, start[0], maxLen);
                 }
             }
             else
             {
-                Length -= Skip;
+                Length -= skip;
             }
         }
     }

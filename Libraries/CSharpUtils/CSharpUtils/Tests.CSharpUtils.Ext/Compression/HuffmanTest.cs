@@ -1,7 +1,8 @@
 ﻿using System.IO;
 using System.Text;
+using CSharpUtils.Ext.Compression;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CSharpUtils.Compression;
+using CSharpUtils.Extensions;
 
 namespace CSharpUtilsTest
 {

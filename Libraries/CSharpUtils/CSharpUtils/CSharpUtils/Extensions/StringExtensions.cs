@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CSharpUtils;
 using System.Text.RegularExpressions;
+using CSharpUtils;
 
 public static class StringExtensions
 {
@@ -17,7 +17,7 @@ public static class StringExtensions
     public static String RegexReplace(this String String, string RegexString, Func<GroupCollection, string> ActionMatch)
     {
         var Regex = new Regex(RegexString, RegexOptions.None);
-        return Regex.Replace(String, (Match) => { return ActionMatch(Match.Groups); });
+        return Regex.Replace(String, Match => { return ActionMatch(Match.Groups); });
     }
 
     /// <summary>
@@ -132,8 +132,8 @@ public static class StringExtensions
 
     public static long ConvertToLong(object Value)
     {
-        if (Value is int) return (long) (uint) Convert.ToInt32(Value);
-        if (Value is uint) return (long) (uint) Convert.ToUInt32(Value);
+        if (Value is int) return (uint) Convert.ToInt32(Value);
+        if (Value is uint) return Convert.ToUInt32(Value);
         try
         {
             return Convert.ToInt64(Value);

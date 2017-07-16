@@ -1,4 +1,5 @@
 ﻿using System;
+using CSharpUtils.Extensions;
 using CSPspEmu.Core.Gpu.State;
 using CSPspEmu.Core.Types;
 

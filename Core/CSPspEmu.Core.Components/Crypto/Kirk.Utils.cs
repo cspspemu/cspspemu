@@ -2,6 +2,7 @@
 using System.IO;
 using System.Security.Cryptography;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Crypto
 {
@@ -55,7 +56,7 @@ namespace CSPspEmu.Core.Crypto
                 var Encryptor = AES.CreateEncryptor(Key, IV);
 
                 return new CryptoStream(new MemoryStream(Input), Encryptor, CryptoStreamMode.Read).ReadAll(
-                    Dispose: true);
+                    dispose: true);
             }
         }
 

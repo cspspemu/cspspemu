@@ -1,4 +1,6 @@
-﻿namespace CSPspEmu.Core.Gpu
+﻿using CSharpUtils.Extensions;
+
+namespace CSPspEmu.Core.Gpu
 {
     /// <summary>
     /// alias void function(int id, void *arg) PspGeCallback;

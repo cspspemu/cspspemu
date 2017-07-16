@@ -4,21 +4,36 @@ using System.Linq.Expressions;
 
 namespace CSharpUtils.Containers.RedBlackTree
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TQElement"></typeparam>
     public class RedBlackTreeWithStatsQueryProvider<TQElement> : IQueryProvider
     {
-        RedBlackTreeWithStats<TQElement>.Range Range;
+        RedBlackTreeWithStats<TQElement>.Range _range;
 
-        public RedBlackTreeWithStatsQueryProvider(RedBlackTreeWithStats<TQElement>.Range Range)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="range"></param>
+        public RedBlackTreeWithStatsQueryProvider(RedBlackTreeWithStats<TQElement>.Range range)
         {
-            this.Range = Range;
+            _range = range;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <typeparam name="TElement"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
         {
-            var MethodCallExpression = (expression as MethodCallExpression);
-            if (MethodCallExpression != null)
+            var methodCallExpression = (expression as MethodCallExpression);
+            if (methodCallExpression != null)
             {
-                switch (MethodCallExpression.Method.Name)
+                switch (methodCallExpression.Method.Name)
                 {
                     case "Skip":
                         /*
@@ -38,16 +53,35 @@ namespace CSharpUtils.Containers.RedBlackTree
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public IQueryable CreateQuery(Expression expression)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <typeparam name="TResult"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public TResult Execute<TResult>(Expression expression)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public object Execute(Expression expression)
         {
             throw new NotImplementedException();

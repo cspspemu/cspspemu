@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -30,10 +29,10 @@ namespace CSharpUtils.Extensions
         public static string ToStringFull(this XDocument that, Encoding encoding)
         {
             var versionXmlStream = new MemoryStream();
-            var versionXmlWriter = XmlWriter.Create(versionXmlStream, new XmlWriterSettings()
+            var versionXmlWriter = XmlWriter.Create(versionXmlStream, new XmlWriterSettings
             {
                 Encoding = encoding,
-                Indent = true,
+                Indent = true
             });
             that.WriteTo(versionXmlWriter);
             versionXmlWriter.Flush();

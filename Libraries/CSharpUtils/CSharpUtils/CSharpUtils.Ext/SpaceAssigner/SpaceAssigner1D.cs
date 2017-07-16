@@ -1,249 +1,316 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Diagnostics;
 
-namespace CSharpUtils.SpaceAssigner
+namespace CSharpUtils.Ext.SpaceAssigner
 {
     // http://www.yoda.arachsys.com/csharp/genericoperators.html
     // http://www.lambda-computing.com/publications/articles/generics2/
+    /// <summary>
+    /// 
+    /// </summary>
     public class SpaceAssigner1D
     {
         // Immutable.
+        /// <summary>
+        /// 
+        /// </summary>
         public class Space : IComparable, IComparable<Space>, IEqualityComparer<Space>, IEquatable<Space>
         {
+            /// <summary>
+            /// 
+            /// </summary>
             public readonly long Min;
+            /// <summary>
+            /// 
+            /// </summary>
             public readonly long Max;
 
-            public long Length
-            {
-                get { return Max - Min; }
-            }
+            /// <summary>
+            /// 
+            /// </summary>
+            public long Length => Max - Min;
 
-            public Space(long Min, long Max)
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="min"></param>
+            /// <param name="max"></param>
+            /// <exception cref="Exception"></exception>
+            public Space(long min, long max)
             {
-                this.Min = Min;
-                this.Max = Max;
-                if (Min > Max)
-                    throw(new Exception(String.Format("Space(Min={0}, Max={1}). Min is bigger than Max!!", Min, Max)));
+                Min = min;
+                Max = max;
+                if (min > max)
+                    throw(new Exception(String.Format("Space(Min={0}, Max={1}). Min is bigger than Max!!", min, max)));
                 //Debug.Assert(Min <= Max);
             }
 
-            public bool Contains(long Value)
-            {
-                return (Value >= Min) && (Value < Max);
-            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="value"></param>
+            /// <returns></returns>
+            public bool Contains(long value) => (value >= Min) && (value < Max);
 
-            public static bool Intersects(Space a, Space b)
-            {
-                //return !((a.Max < b.Min) || (b.Max < a.Min));
-                return (a.Max > b.Min) && (b.Max > a.Min);
-            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="a"></param>
+            /// <param name="b"></param>
+            /// <returns></returns>
+            public static bool Intersects(Space a, Space b) => (a.Max > b.Min) && (b.Max > a.Min);
 
-            public bool Intersects(Space that)
-            {
-                return Intersects(this, that);
-            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="that"></param>
+            /// <returns></returns>
+            public bool Intersects(Space that) => Intersects(this, that);
 
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="a"></param>
+            /// <param name="b"></param>
+            /// <returns></returns>
             public static Space Intersection(Space a, Space b)
             {
-                if (Intersects(a, b))
-                {
-                    var Min = b.Contains(a.Min) ? a.Min : b.Min;
-                    var Max = b.Contains(a.Max) ? a.Max : b.Max;
-                    return new Space(Min, Max);
-                }
-                return null;
+                if (!Intersects(a, b)) return null;
+                var min = b.Contains(a.Min) ? a.Min : b.Min;
+                var max = b.Contains(a.Max) ? a.Max : b.Max;
+                return new Space(min, max);
                 //return new Space(0, 0);
                 //return !((a.To < b.From) || (b.To < a.From));
             }
 
-            public Space Intersection(Space that)
-            {
-                return Intersection(this, that);
-                //return !((a.To < b.From) || (b.To < a.From));
-            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="that"></param>
+            /// <returns></returns>
+            public Space Intersection(Space that) => Intersection(this, that);
 
-            public static Space[] operator -(Space BaseSpace, Space SpaceToSubstract)
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="baseSpace"></param>
+            /// <param name="spaceToSubstract"></param>
+            /// <returns></returns>
+            public static Space[] operator -(Space baseSpace, Space spaceToSubstract)
             {
-                Space Left = null, Right = null;
+                Space left = null, right = null;
 
-                Space Intersect = Intersection(BaseSpace, SpaceToSubstract);
+                var intersect = Intersection(baseSpace, spaceToSubstract);
 
                 //if (((SpaceToSubstract as Object) != null) && SpaceToSubstract.Length > 0)
-                if (SpaceToSubstract != null && SpaceToSubstract.Length > 0)
+                if (spaceToSubstract != null && spaceToSubstract.Length > 0)
                 {
-                    if (Intersect == null)
+                    if (intersect == null)
                     {
                         // No intersection (Nothing subtracted).
-                        Left = BaseSpace;
+                        left = baseSpace;
                     }
                     else
                     {
-                        if (BaseSpace.Min < Intersect.Min)
+                        if (baseSpace.Min < intersect.Min)
                         {
                             // Some space will left after substraction at the left side.
-                            Left = new Space(BaseSpace.Min, Intersect.Min);
+                            left = new Space(baseSpace.Min, intersect.Min);
                         }
 
-                        if (BaseSpace.Max > Intersect.Max)
+                        if (baseSpace.Max > intersect.Max)
                         {
                             // Some space will left after substraction at the right side.
-                            Right = new Space(Intersect.Max, BaseSpace.Max);
+                            right = new Space(intersect.Max, baseSpace.Max);
                         }
                     }
                 }
                 else
                 {
-                    Left = BaseSpace;
+                    left = baseSpace;
                 }
 
-                return new Space[] {Left, Right}.Where(Space => (Space != null) && (Space.Length > 0)).ToArray();
+                return new[] {left, right}.Where(space => (space != null) && (space.Length > 0)).ToArray();
             }
 
-            public override string ToString()
-            {
-                return "Space(Min=" + Min + ", Max=" + Max + ")";
-            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
+            public override string ToString() => $"Space(Min={Min}, Max={Max})";
 
-            public int CompareTo(Space that)
-            {
-                /*if (that == null)
-                {
-                    return (this.Length == 0) ? 0 : -1;
-                }*/
-                return (this.Min.CompareTo(that.Min) != 0) ? this.Max.CompareTo(that.Max) : 0;
-            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="that"></param>
+            /// <returns></returns>
+            public int CompareTo(Space that) => (Min.CompareTo(that.Min) != 0) ? Max.CompareTo(that.Max) : 0;
 
-            public static bool operator ==(Space Space1, Space Space2)
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="space1"></param>
+            /// <param name="space2"></param>
+            /// <returns></returns>
+            public static bool operator ==(Space space1, Space space2)
             {
                 //return (Space1.Min == Space2.Min) && (Space1.Max == Space2.Max);
-                if ((Space1 as Object) == null) return ((Space2 as Object) == null);
-                if ((Space2 as Object) == null) return false;
-                return Space1.CompareTo(Space2) == 0;
+                if ((space1 as object) == null) return ((space2 as object) == null);
+                if ((space2 as object) == null) return false;
+                return space1.CompareTo(space2) == 0;
             }
 
-            public static bool operator !=(Space Space1, Space Space2)
-            {
-                return !(Space1 == Space2);
-            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="space1"></param>
+            /// <param name="space2"></param>
+            /// <returns></returns>
+            public static bool operator !=(Space space1, Space space2) => !(space1 == space2);
 
-            public bool Equals(Space x, Space y)
-            {
-                return x.CompareTo(y) == 0;
-            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="x"></param>
+            /// <param name="y"></param>
+            /// <returns></returns>
+            public bool Equals(Space x, Space y) => x.CompareTo(y) == 0;
 
-            public int GetHashCode(Space obj)
-            {
-                return (int) obj.Min ^ (int) obj.Max;
-            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="obj"></param>
+            /// <returns></returns>
+            public int GetHashCode(Space obj) => (int) obj.Min ^ (int) obj.Max;
 
-            public bool Equals(Space that)
-            {
-                return (this.CompareTo(that) == 0);
-            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="that"></param>
+            /// <returns></returns>
+            public bool Equals(Space that) => (CompareTo(that) == 0);
 
-            public override bool Equals(object obj)
-            {
-                return this.Equals(obj as Space);
-            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="obj"></param>
+            /// <returns></returns>
+            public override bool Equals(object obj) => Equals(obj as Space);
 
-            public int CompareTo(object obj)
-            {
-                return this.CompareTo(obj as Space);
-            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="obj"></param>
+            /// <returns></returns>
+            public int CompareTo(object obj) => CompareTo(obj as Space);
 
-            public override int GetHashCode()
-            {
-                return (int) (Min ^ Max);
-            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <returns></returns>
+            public override int GetHashCode() => (int) (Min ^ Max);
         }
 
         protected SortedSet<Space> AvailableSpaces;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public SpaceAssigner1D()
         {
             AvailableSpaces = new SortedSet<Space>();
         }
 
-        public Space[] GetAvailableSpaces()
-        {
-            return AvailableSpaces.ToArray();
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public Space[] GetAvailableSpaces() => AvailableSpaces.ToArray();
 
-        public Space Intersection(Space Space)
-        {
-            throw(new NotImplementedException());
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="space"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public Space Intersection(Space space) => throw new NotImplementedException();
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected void PerformCombine()
         {
-            bool Found;
+            bool found;
             if (AvailableSpaces.Count >= 2)
             {
                 do
                 {
-                    Found = false;
+                    found = false;
 
-                    var PreviousSpace = AvailableSpaces.ElementAt(0);
+                    var previousSpace = AvailableSpaces.ElementAt(0);
 
-                    foreach (var CurrentSpace in AvailableSpaces.Skip(1))
+                    foreach (var currentSpace in AvailableSpaces.Skip(1))
                     {
                         // Contiguous.
-                        if (PreviousSpace.Max == CurrentSpace.Min)
+                        if (previousSpace.Max == currentSpace.Min)
                         {
-                            AvailableSpaces.Remove(PreviousSpace);
-                            AvailableSpaces.Remove(CurrentSpace);
-                            AvailableSpaces.Add(new Space(PreviousSpace.Min, CurrentSpace.Max));
-                            Found = true;
+                            AvailableSpaces.Remove(previousSpace);
+                            AvailableSpaces.Remove(currentSpace);
+                            AvailableSpaces.Add(new Space(previousSpace.Min, currentSpace.Max));
+                            found = true;
                             break;
                         }
 
-                        PreviousSpace = CurrentSpace;
+                        previousSpace = currentSpace;
                     }
-                } while (Found);
+                } while (found);
             }
 
             do
             {
-                Found = false;
+                found = false;
                 // Remove empty spaces.
-                foreach (var Space in AvailableSpaces.Where(Space => (Space.Length == 0)))
+                foreach (var space in AvailableSpaces.Where(space => (space.Length == 0)))
                 {
-                    AvailableSpaces.Remove(Space);
-                    Found = true;
+                    AvailableSpaces.Remove(space);
+                    found = true;
                     break;
                 }
-            } while (Found);
+            } while (found);
         }
 
-        public SpaceAssigner1D Substract(Space SpaceToSubstract)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="spaceToSubstract"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public SpaceAssigner1D Substract(Space spaceToSubstract)
         {
             bool Continue;
-            int MaxSteps = AvailableSpaces.Count + 10;
+            var maxSteps = AvailableSpaces.Count + 10;
             do
             {
                 //Console.WriteLine(this);
                 Continue = false;
                 if (AvailableSpaces.Count > 0)
                 {
-                    foreach (var Space in AvailableSpaces)
+                    foreach (var space in AvailableSpaces)
                     {
-                        if (SpaceToSubstract.Intersects(Space))
+                        if (!spaceToSubstract.Intersects(space)) continue;
+                        //Console.WriteLine("Intersects: " + SpaceToSubstract + " (*) " + Space);
+                        var leftSpaces = space - spaceToSubstract;
+                        AvailableSpaces.Remove(space);
+                        foreach (var leftSpace in leftSpaces)
                         {
-                            //Console.WriteLine("Intersects: " + SpaceToSubstract + " (*) " + Space);
-                            var LeftSpaces = Space - SpaceToSubstract;
-                            AvailableSpaces.Remove(Space);
-                            foreach (var LeftSpace in LeftSpaces)
-                            {
-                                AvailableSpaces.Add(LeftSpace);
-                            }
-                            Continue = true;
-                            break;
+                            AvailableSpaces.Add(leftSpace);
                         }
+                        Continue = true;
+                        break;
                     }
                 }
-                if (MaxSteps-- <= 0) throw(new Exception("Infinite loop detected"));
+                if (maxSteps-- <= 0) throw(new Exception("Infinite loop detected"));
             } while (Continue);
 
             PerformCombine();
@@ -251,11 +318,16 @@ namespace CSharpUtils.SpaceAssigner
             return this;
         }
 
-        public bool Intersects(Space SpaceToCheckIfIntersects)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="spaceToCheckIfIntersects"></param>
+        /// <returns></returns>
+        public bool Intersects(Space spaceToCheckIfIntersects)
         {
-            foreach (var Space in AvailableSpaces)
+            foreach (var space in AvailableSpaces)
             {
-                if (SpaceToCheckIfIntersects.Intersects(Space))
+                if (spaceToCheckIfIntersects.Intersects(space))
                 {
                     return true;
                 }
@@ -263,87 +335,106 @@ namespace CSharpUtils.SpaceAssigner
             return false;
         }
 
-        public SpaceAssigner1D AddAvailable(Space SpaceToAdd)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="spaceToAdd"></param>
+        /// <returns></returns>
+        public SpaceAssigner1D AddAvailable(Space spaceToAdd)
         {
-            if (this.Intersects(SpaceToAdd))
+            if (Intersects(spaceToAdd))
             {
                 //throw (new NotImplementedException("Overlapping not implemented yet!"));
-                this.Substract(SpaceToAdd);
+                Substract(spaceToAdd);
             }
 
-            AvailableSpaces.Add(SpaceToAdd);
+            AvailableSpaces.Add(spaceToAdd);
             PerformCombine();
 
             return this;
         }
 
-        public SpaceAssigner1D AddAvailableWithBounds(long Min, long Max)
-        {
-            return AddAvailable(new Space(Min, Max));
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public SpaceAssigner1D AddAvailableWithBounds(long min, long max) => AddAvailable(new Space(min, max));
 
-        public SpaceAssigner1D AddAvailableWithLength(long Min, long Length)
-        {
-            return AddAvailableWithBounds(Min, Min + Length);
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public SpaceAssigner1D AddAvailableWithLength(long min, long length) => AddAvailableWithBounds(min, min + length);
 
-        public SpaceAssigner1D AddAllPositiveAvailable()
-        {
-            return AddAvailable(new Space(0, long.MaxValue));
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public SpaceAssigner1D AddAllPositiveAvailable() => AddAvailable(new Space(0, long.MaxValue));
 
         /**
          * Finds an Available Space Chunk that has a length greater or equals to
          * the specified one.
          */
-        public Space Allocate(long RequiredLength)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="requiredLength"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public Space Allocate(long requiredLength)
         {
-            Space FoundSpace = null;
+            Space foundSpace = null;
 
-            foreach (var Space in AvailableSpaces)
+            foreach (var space in AvailableSpaces)
             {
-                if (Space.Length >= RequiredLength)
+                if (space.Length >= requiredLength)
                 {
-                    FoundSpace = Space;
+                    foundSpace = space;
                     // Greedy. First found, first used.
                     break;
                 }
             }
 
-            if (FoundSpace == null)
+            if (foundSpace == null)
             {
-                throw(new Exception("Can't allocate a space of length " + RequiredLength + "."));
+                throw(new Exception("Can't allocate a space of length " + requiredLength + "."));
             }
 
-            AvailableSpaces.Remove(FoundSpace);
-            var SpaceLeft = new Space(FoundSpace.Min, FoundSpace.Min + RequiredLength);
-            var SpaceRight = new Space(FoundSpace.Min + RequiredLength, FoundSpace.Max);
-            AvailableSpaces.Add(SpaceRight);
+            AvailableSpaces.Remove(foundSpace);
+            var spaceLeft = new Space(foundSpace.Min, foundSpace.Min + requiredLength);
+            var spaceRight = new Space(foundSpace.Min + requiredLength, foundSpace.Max);
+            AvailableSpaces.Add(spaceRight);
 
             PerformCombine();
 
-            return SpaceLeft;
+            return spaceLeft;
         }
 
         /// <summary>
         /// @TODO In order to avoid a greedy behaviour, Allocate[] should have the code and
         ///       Allocate should use this function with a single item.
         /// </summary>
-        /// <param name="RequiredLengths"></param>
+        /// <param name="requiredLengths"></param>
         /// <returns></returns>
-        public Space[] Allocate(long[] RequiredLengths)
+        public Space[] Allocate(long[] requiredLengths)
         {
-            var Spaces = new Space[RequiredLengths.Length];
-            for (int n = 0; n < RequiredLengths.Length; n++)
+            var spaces = new Space[requiredLengths.Length];
+            for (var n = 0; n < requiredLengths.Length; n++)
             {
-                Spaces[n] = Allocate(RequiredLengths[n]);
+                spaces[n] = Allocate(requiredLengths[n]);
             }
-            return Spaces;
+            return spaces;
         }
 
-        public override string ToString()
-        {
-            return "SpaceAssigner1D(" + String.Join(",", AvailableSpaces) + ")";
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => $"SpaceAssigner1D({string.Join(",", AvailableSpaces)})";
     }
 }

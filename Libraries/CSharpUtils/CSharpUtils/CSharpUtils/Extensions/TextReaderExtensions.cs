@@ -1,14 +1,30 @@
 ﻿using System.IO;
 
-public static class TextReaderExtensions
+namespace CSharpUtils.Extensions
 {
-    public static bool HasMore(this TextReader TextReader)
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class TextReaderExtensions
     {
-        return TextReader.Peek() >= 0;
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="textReader"></param>
+        /// <returns></returns>
+        public static bool HasMore(this TextReader textReader)
+        {
+            return textReader.Peek() >= 0;
+        }
 
-    public static char ReadChar(this TextReader TextReader)
-    {
-        return (char) TextReader.Read();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="textReader"></param>
+        /// <returns></returns>
+        public static char ReadChar(this TextReader textReader)
+        {
+            return (char) textReader.Read();
+        }
     }
 }

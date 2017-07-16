@@ -8,6 +8,7 @@ using CSharpUtils;
 using System.Security.Cryptography;
 using System.Runtime.InteropServices;
 using System.IO;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Crypto
 {

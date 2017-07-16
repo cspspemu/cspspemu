@@ -1,52 +1,100 @@
-﻿namespace CSharpUtils
+﻿namespace CSharpUtils.Drawing
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public struct ColorFormat
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public struct Component
         {
+            /// <summary>
+            /// 
+            /// </summary>
             public int Offset;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public int Size;
 
-            public uint Mask
-            {
-                get { return (uint) ((1 << Size) - 1); }
-            }
+            /// <summary>
+            /// 
+            /// </summary>
+            public uint Mask => (uint) ((1 << Size) - 1);
 
-            public void Insert(ref uint Base, uint Value)
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Base"></param>
+            /// <param name="value"></param>
+            public void Insert(ref uint Base, uint value)
             {
-                var MaskValue = this.Mask;
+                var maskValue = Mask;
 
                 Base =
                     (Base & ~(Mask << Offset))
-                    | ((Value & MaskValue) << Offset)
+                    | ((value & maskValue) << Offset)
                     ;
             }
 
-            public void InsertFromByte(ref uint Base, byte Value)
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Base"></param>
+            /// <param name="value"></param>
+            public void InsertFromByte(ref uint Base, byte value)
             {
-                Insert(ref Base, (uint) (Value * Mask / 255));
+                Insert(ref Base, value * Mask / 255);
             }
 
-            public uint Extract(uint Value)
-            {
-                return (Value >> Offset) & Mask;
-            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="value"></param>
+            /// <returns></returns>
+            public uint Extract(uint value) => (value >> Offset) & Mask;
 
-            public byte ExtractToByte(uint Value)
-            {
-                return (byte) ((Extract(Value) * 255) / Mask);
-            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="value"></param>
+            /// <returns></returns>
+            public byte ExtractToByte(uint value) => (byte) ((Extract(value) * 255) / Mask);
 
-            public float ExtractToFloat(uint Value)
-            {
-                return (float) Extract(Value) / (float) Mask;
-            }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="value"></param>
+            /// <returns></returns>
+            public float ExtractToFloat(uint value) => Extract(value) / (float) Mask;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int TotalBytes;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public Component Red;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public Component Green;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public Component Blue;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public Component Alpha;
 
         /*
@@ -64,9 +112,12 @@
         }
         */
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int[] Offsets
         {
-            get { return new[] {Red.Offset, Green.Offset, Blue.Offset, Alpha.Offset}; }
+            get => new[] {Red.Offset, Green.Offset, Blue.Offset, Alpha.Offset};
             set
             {
                 Red.Offset = value[0];
@@ -76,9 +127,12 @@
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int[] Sizes
         {
-            get { return new[] {Red.Size, Green.Size, Blue.Size, Alpha.Size}; }
+            get => new[] {Red.Size, Green.Size, Blue.Size, Alpha.Size};
             set
             {
                 Red.Size = value[0];
@@ -88,22 +142,38 @@
             }
         }
 
-        public uint Encode(byte R, byte G, byte B, byte A)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        public uint Encode(byte r, byte g, byte b, byte a)
         {
-            uint Result = 0;
-            Red.InsertFromByte(ref Result, R);
-            Green.InsertFromByte(ref Result, G);
-            Blue.InsertFromByte(ref Result, B);
-            Alpha.InsertFromByte(ref Result, A);
-            return Result;
+            var result = 0U;
+            Red.InsertFromByte(ref result, r);
+            Green.InsertFromByte(ref result, g);
+            Blue.InsertFromByte(ref result, b);
+            Alpha.InsertFromByte(ref result, a);
+            return result;
         }
 
-        public void Decode(uint Data, out byte R, out byte G, out byte B, out byte A)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        /// <param name="a"></param>
+        public void Decode(uint data, out byte r, out byte g, out byte b, out byte a)
         {
-            R = Red.ExtractToByte(Data);
-            G = Green.ExtractToByte(Data);
-            B = Blue.ExtractToByte(Data);
-            A = Alpha.ExtractToByte(Data);
+            r = Red.ExtractToByte(data);
+            g = Green.ExtractToByte(data);
+            b = Blue.ExtractToByte(data);
+            a = Alpha.ExtractToByte(data);
         }
     }
 }

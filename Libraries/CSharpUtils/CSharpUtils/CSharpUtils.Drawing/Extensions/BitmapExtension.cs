@@ -3,235 +3,347 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
-using CSharpUtils;
-using CSharpUtils.Drawing;
 
-/// <summary>
-/// 
-/// </summary>
-public class BitmapChannelTransfer
+namespace CSharpUtils.Drawing.Extensions
 {
     /// <summary>
     /// 
     /// </summary>
-    public Bitmap Bitmap;
+    public class BitmapChannelTransfer
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public Bitmap Bitmap;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public BitmapChannel From;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public BitmapChannel To;
+    }
 
     /// <summary>
     /// 
     /// </summary>
-    public BitmapChannel From;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public BitmapChannel To;
-}
-
-/// <summary>
-/// 
-/// </summary>
-public static class BitmapExtension
-{
-    public static void SetPalette(this Bitmap Bitmap, IEnumerable<Color> Colors)
+    public static class BitmapExtension
     {
-        ColorPalette Palette = BitmapUtils.GetColorPalette(Colors.Count());
-
-        int n = 0;
-        foreach (var Color in Colors)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="colors"></param>
+        public static void SetPalette(this Bitmap bitmap, IEnumerable<Color> colors)
         {
-            Palette.Entries[n++] = Color;
-        }
+            var colorsList = colors as Color[] ?? colors.ToArray();
+            var palette = BitmapUtils.GetColorPalette(colorsList.Count());
 
-        Bitmap.Palette = Palette;
-    }
-
-    public static byte[] GetIndexedDataLinear(this Bitmap Bitmap)
-    {
-        return Bitmap.GetChannelsDataLinear(BitmapChannel.Indexed);
-    }
-
-    public static byte[] GetIndexedDataLinear(this Bitmap Bitmap, Rectangle Rectangle)
-    {
-        return Bitmap.GetChannelsDataLinear(Rectangle, BitmapChannel.Indexed);
-    }
-
-    public static void SetIndexedDataLinear(this Bitmap Bitmap, byte[] NewData)
-    {
-        Bitmap.SetChannelsDataLinear(NewData, BitmapChannel.Indexed);
-    }
-
-    public static void SetIndexedDataLinear(this Bitmap Bitmap, Rectangle Rectangle, byte[] NewData)
-    {
-        Bitmap.SetChannelsDataLinear(NewData, Rectangle, BitmapChannel.Indexed);
-    }
-
-    public static byte[] GetChannelsDataLinear(this Bitmap Bitmap, params BitmapChannel[] Channels)
-    {
-        return Bitmap.GetChannelsDataLinear(Bitmap.GetFullRectangle(), Channels);
-    }
-
-    public static byte[] GetChannelsDataLinear(this Bitmap Bitmap, Rectangle Rectangle, params BitmapChannel[] Channels)
-    {
-        var NewData = new byte[Rectangle.Width * Rectangle.Height * Channels.Length];
-        BitmapUtils.TransferChannelsDataLinear(Rectangle, Bitmap, NewData, BitmapUtils.Direction.FromBitmapToData,
-            Channels);
-        return NewData;
-    }
-
-    public static Bitmap Duplicate(this Bitmap Bitmap)
-    {
-        return new Bitmap(Bitmap, Bitmap.Size);
-    }
-
-    public static Bitmap SetChannelsDataLinear(this Bitmap Bitmap,
-        params BitmapChannelTransfer[] BitmapChannelTransfers)
-    {
-        foreach (var BitmapChannelTransfer in BitmapChannelTransfers)
-        {
-            Bitmap.SetChannelsDataLinear(BitmapChannelTransfer.Bitmap.GetChannelsDataLinear(BitmapChannelTransfer.From),
-                BitmapChannelTransfer.To);
-        }
-        return Bitmap;
-    }
-
-    public static Bitmap SetChannelsDataLinear(this Bitmap Bitmap, byte[] NewData, params BitmapChannel[] Channels)
-    {
-        Bitmap.SetChannelsDataLinear(NewData, Bitmap.GetFullRectangle(), Channels);
-        return Bitmap;
-    }
-
-    public static Bitmap SetChannelsDataLinear(this Bitmap Bitmap, byte[] NewData, Rectangle Rectangle,
-        params BitmapChannel[] Channels)
-    {
-        BitmapUtils.TransferChannelsDataLinear(Rectangle, Bitmap, NewData, BitmapUtils.Direction.FromDataToBitmap,
-            Channels);
-        return Bitmap;
-    }
-
-    public unsafe static byte[] GetChannelsDataInterleaved(this Bitmap Bitmap, params BitmapChannel[] Channels)
-    {
-        int NChannels = Channels.Length;
-        int PixelCount = Bitmap.Width * Bitmap.Height;
-        int BufferSize = PixelCount * NChannels;
-        var Buffer = new byte[BufferSize];
-        Bitmap.LockBitsUnlock(PixelFormat.Format32bppArgb, (BitmapData) =>
-        {
-            var StartPtr = ((byte*) BitmapData.Scan0.ToPointer());
-            fixed (byte* StartBufferPtr = &Buffer[0])
+            var n = 0;
+            foreach (var color in colorsList)
             {
-                int CurrentChannel = 0;
-                foreach (var Channel in Channels)
+                palette.Entries[n++] = color;
+            }
+
+            bitmap.Palette = palette;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <returns></returns>
+        public static byte[] GetIndexedDataLinear(this Bitmap bitmap) =>
+            bitmap.GetChannelsDataLinear(BitmapChannel.Indexed);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="rectangle"></param>
+        /// <returns></returns>
+        public static byte[] GetIndexedDataLinear(this Bitmap bitmap, Rectangle rectangle) =>
+            bitmap.GetChannelsDataLinear(rectangle, BitmapChannel.Indexed);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="newData"></param>
+        public static void SetIndexedDataLinear(this Bitmap bitmap, byte[] newData) =>
+            bitmap.SetChannelsDataLinear(newData, BitmapChannel.Indexed);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="rectangle"></param>
+        /// <param name="newData"></param>
+        public static void SetIndexedDataLinear(this Bitmap bitmap, Rectangle rectangle, byte[] newData) =>
+            bitmap.SetChannelsDataLinear(newData, rectangle, BitmapChannel.Indexed);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="channels"></param>
+        /// <returns></returns>
+        public static byte[] GetChannelsDataLinear(this Bitmap bitmap, params BitmapChannel[] channels) =>
+            bitmap.GetChannelsDataLinear(bitmap.GetFullRectangle(), channels);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="rectangle"></param>
+        /// <param name="channels"></param>
+        /// <returns></returns>
+        public static byte[] GetChannelsDataLinear(this Bitmap bitmap, Rectangle rectangle,
+            params BitmapChannel[] channels)
+        {
+            var newData = new byte[rectangle.Width * rectangle.Height * channels.Length];
+            BitmapUtils.TransferChannelsDataLinear(rectangle, bitmap, newData, BitmapUtils.Direction.FromBitmapToData,
+                channels);
+            return newData;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <returns></returns>
+        public static Bitmap Duplicate(this Bitmap bitmap) => new Bitmap(bitmap, bitmap.Size);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="bitmapChannelTransfers"></param>
+        /// <returns></returns>
+        public static Bitmap SetChannelsDataLinear(this Bitmap bitmap,
+            params BitmapChannelTransfer[] bitmapChannelTransfers)
+        {
+            foreach (var bitmapChannelTransfer in bitmapChannelTransfers)
+            {
+                bitmap.SetChannelsDataLinear(
+                    bitmapChannelTransfer.Bitmap.GetChannelsDataLinear(bitmapChannelTransfer.From),
+                    bitmapChannelTransfer.To);
+            }
+            return bitmap;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="newData"></param>
+        /// <param name="channels"></param>
+        /// <returns></returns>
+        public static Bitmap SetChannelsDataLinear(this Bitmap bitmap, byte[] newData, params BitmapChannel[] channels)
+        {
+            bitmap.SetChannelsDataLinear(newData, bitmap.GetFullRectangle(), channels);
+            return bitmap;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="newData"></param>
+        /// <param name="rectangle"></param>
+        /// <param name="channels"></param>
+        /// <returns></returns>
+        public static Bitmap SetChannelsDataLinear(this Bitmap bitmap, byte[] newData, Rectangle rectangle,
+            params BitmapChannel[] channels)
+        {
+            BitmapUtils.TransferChannelsDataLinear(rectangle, bitmap, newData, BitmapUtils.Direction.FromDataToBitmap,
+                channels);
+            return bitmap;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="channels"></param>
+        /// <returns></returns>
+        public static unsafe byte[] GetChannelsDataInterleaved(this Bitmap bitmap, params BitmapChannel[] channels)
+        {
+            var nChannels = channels.Length;
+            var pixelCount = bitmap.Width * bitmap.Height;
+            var bufferSize = pixelCount * nChannels;
+            var buffer = new byte[bufferSize];
+            bitmap.LockBitsUnlock(PixelFormat.Format32bppArgb, bitmapData =>
+            {
+                var startPtr = ((byte*) bitmapData.Scan0.ToPointer());
+                fixed (byte* startBufferPtr = &buffer[0])
                 {
-                    var Ptr = StartPtr + (int) Channel;
-                    var BufferPtr = StartBufferPtr + CurrentChannel;
-                    for (int n = CurrentChannel; n < BufferSize; n += NChannels, BufferPtr += NChannels, Ptr += 4)
+                    var currentChannel = 0;
+                    foreach (var channel in channels)
                     {
-                        *BufferPtr = *Ptr;
+                        var ptr = startPtr + (int) channel;
+                        var bufferPtr = startBufferPtr + currentChannel;
+                        for (var n = currentChannel; n < bufferSize; n += nChannels, bufferPtr += nChannels, ptr += 4)
+                        {
+                            *bufferPtr = *ptr;
+                        }
+                        currentChannel++;
                     }
-                    CurrentChannel++;
                 }
-            }
-        });
-        return Buffer;
-    }
+            });
+            return buffer;
+        }
 
-    public unsafe static Bitmap SetChannelsDataInterleaved(this Bitmap Bitmap, byte[] Buffer,
-        params BitmapChannel[] Channels)
-    {
-        int NChannels = Channels.Length;
-        int PixelCount = Bitmap.Width * Bitmap.Height;
-        int BufferSize = PixelCount * NChannels;
-        Bitmap.LockBitsUnlock(PixelFormat.Format32bppArgb, (BitmapData) =>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="buffer"></param>
+        /// <param name="channels"></param>
+        /// <returns></returns>
+        public static unsafe Bitmap SetChannelsDataInterleaved(this Bitmap bitmap, byte[] buffer,
+            params BitmapChannel[] channels)
         {
-            var StartPtr = ((byte*) BitmapData.Scan0.ToPointer());
-            fixed (byte* StartBufferPtr = &Buffer[0])
+            var nChannels = channels.Length;
+            var pixelCount = bitmap.Width * bitmap.Height;
+            var bufferSize = pixelCount * nChannels;
+            bitmap.LockBitsUnlock(PixelFormat.Format32bppArgb, bitmapData =>
             {
-                int CurrentChannel = 0;
-                foreach (var Channel in Channels)
+                var startPtr = ((byte*) bitmapData.Scan0.ToPointer());
+                fixed (byte* startBufferPtr = &buffer[0])
                 {
-                    var Ptr = StartPtr + (int) Channel;
-                    var BufferPtr = StartBufferPtr + CurrentChannel;
-                    for (int n = CurrentChannel; n < BufferSize; n += NChannels, BufferPtr += NChannels, Ptr += 4)
+                    var currentChannel = 0;
+                    foreach (var channel in channels)
                     {
-                        *Ptr = *BufferPtr;
+                        var ptr = startPtr + (int) channel;
+                        var bufferPtr = startBufferPtr + currentChannel;
+                        for (var n = currentChannel; n < bufferSize; n += nChannels, bufferPtr += nChannels, ptr += 4)
+                        {
+                            *ptr = *bufferPtr;
+                        }
+                        currentChannel++;
                     }
-                    CurrentChannel++;
                 }
-            }
-        });
-        return Bitmap;
-    }
-
-    public static void LockBitsUnlock(this Bitmap Bitmap, Rectangle Rectangle, PixelFormat PixelFormat,
-        Action<BitmapData> Callback)
-    {
-        var BitmapData = Bitmap.LockBits(Rectangle, ImageLockMode.ReadWrite, PixelFormat);
-
-        try
-        {
-            Callback(BitmapData);
+            });
+            return bitmap;
         }
-        finally
-        {
-            Bitmap.UnlockBits(BitmapData);
-        }
-    }
 
-    public static void LockBitsUnlock(this Bitmap Bitmap, PixelFormat PixelFormat, Action<BitmapData> Callback)
-    {
-        Bitmap.LockBitsUnlock(new Rectangle(0, 0, Bitmap.Width, Bitmap.Height), PixelFormat, Callback);
-    }
-
-    public static void ForEach(this Bitmap Bitmap, Action<Color, int, int> Delegate)
-    {
-        int Width = Bitmap.Width, Height = Bitmap.Height;
-        for (int y = 0; y < Height; y++)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="rectangle"></param>
+        /// <param name="pixelFormat"></param>
+        /// <param name="callback"></param>
+        public static void LockBitsUnlock(this Bitmap bitmap, Rectangle rectangle, PixelFormat pixelFormat,
+            Action<BitmapData> callback)
         {
-            for (int x = 0; x < Width; x++)
+            var bitmapData = bitmap.LockBits(rectangle, ImageLockMode.ReadWrite, pixelFormat);
+
+            try
             {
-                Delegate(Bitmap.GetPixel(x, y), x, y);
+                callback(bitmapData);
+            }
+            finally
+            {
+                bitmap.UnlockBits(bitmapData);
             }
         }
-    }
 
-    unsafe public static void Shader(this Bitmap Bitmap, Func<ARGB_Rev, int, int, ARGB_Rev> Delegate)
-    {
-        int Width = Bitmap.Width, Height = Bitmap.Height;
-        Bitmap.LockBitsUnlock(System.Drawing.Imaging.PixelFormat.Format32bppArgb, (BitmapData) =>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="pixelFormat"></param>
+        /// <param name="callback"></param>
+        public static void LockBitsUnlock(this Bitmap bitmap, PixelFormat pixelFormat, Action<BitmapData> callback)
         {
-            for (int y = 0; y < Height; y++)
+            bitmap.LockBitsUnlock(new Rectangle(0, 0, bitmap.Width, bitmap.Height), pixelFormat, callback);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="Delegate"></param>
+        public static void ForEach(this Bitmap bitmap, Action<Color, int, int> Delegate)
+        {
+            int width = bitmap.Width;
+            int height = bitmap.Height;
+            for (var y = 0; y < height; y++)
             {
-                var Ptr = (ARGB_Rev*) (((byte*) BitmapData.Scan0.ToPointer()) + BitmapData.Stride * y);
-                for (int x = 0; x < Width; x++)
+                for (var x = 0; x < width; x++)
                 {
-                    *Ptr = Delegate(*Ptr, x, y);
-                    Ptr++;
+                    Delegate(bitmap.GetPixel(x, y), x, y);
                 }
             }
-        });
-    }
+        }
 
-    public static IEnumerable<Color> Colors(this Bitmap Bitmap)
-    {
-        int Width = Bitmap.Width, Height = Bitmap.Height;
-        for (int y = 0; y < Height; y++)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="Delegate"></param>
+        public static unsafe void Shader(this Bitmap bitmap, Func<ArgbRev, int, int, ArgbRev> Delegate)
         {
-            for (int x = 0; x < Width; x++)
+            var width = bitmap.Width;
+            var height = bitmap.Height;
+            bitmap.LockBitsUnlock(PixelFormat.Format32bppArgb, bitmapData =>
             {
-                yield return Bitmap.GetPixel(x, y);
+                for (var y = 0; y < height; y++)
+                {
+                    var ptr = (ArgbRev*) (((byte*) bitmapData.Scan0.ToPointer()) + bitmapData.Stride * y);
+                    for (var x = 0; x < width; x++)
+                    {
+                        *ptr = Delegate(*ptr, x, y);
+                        ptr++;
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <returns></returns>
+        public static IEnumerable<Color> Colors(this Bitmap bitmap)
+        {
+            var width = bitmap.Width;
+            var height = bitmap.Height;
+            for (var y = 0; y < height; y++)
+            {
+                for (var x = 0; x < width; x++)
+                {
+                    yield return bitmap.GetPixel(x, y);
+                }
             }
         }
-    }
 
-    public static Rectangle GetFullRectangle(this Bitmap Bitmap)
-    {
-        return new Rectangle(0, 0, Bitmap.Width, Bitmap.Height);
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <returns></returns>
+        public static Rectangle GetFullRectangle(this Bitmap bitmap)
+        {
+            return new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+        }
 
-    public static Bitmap ConvertToFormat(this Bitmap OldBitmap, PixelFormat NewPixelFormat)
-    {
-        var NewBitmap = new Bitmap(OldBitmap.Width, OldBitmap.Height, NewPixelFormat);
-        Graphics.FromImage(NewBitmap).DrawImage(OldBitmap, Point.Empty);
-        return NewBitmap;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="oldBitmap"></param>
+        /// <param name="newPixelFormat"></param>
+        /// <returns></returns>
+        public static Bitmap ConvertToFormat(this Bitmap oldBitmap, PixelFormat newPixelFormat)
+        {
+            var newBitmap = new Bitmap(oldBitmap.Width, oldBitmap.Height, newPixelFormat);
+            Graphics.FromImage(newBitmap).DrawImage(oldBitmap, Point.Empty);
+            return newBitmap;
+        }
     }
 }

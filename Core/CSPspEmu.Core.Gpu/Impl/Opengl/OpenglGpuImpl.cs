@@ -29,6 +29,7 @@ using CSharpPlatform.GL.Utils;
 using System.Runtime.InteropServices;
 using CSharpPlatform.GL.Impl;
 using System.IO;
+using CSharpUtils.Extensions;
 using CSPspEmu.Core.Gpu.Impl.Opengl.Utils;
 using CSPspEmu.Core.Gpu.Impl.Opengl.Modules;
 

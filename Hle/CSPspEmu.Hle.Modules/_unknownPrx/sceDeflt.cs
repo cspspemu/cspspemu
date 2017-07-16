@@ -2,6 +2,8 @@
 using System.IO;
 using CSPspEmu.Hle.Attributes;
 using CSharpUtils;
+using CSharpUtils.Ext;
+using CSharpUtils.Ext.Streams;
 using CSharpUtils.Streams;
 
 namespace CSPspEmu.Hle.Modules._unknownPrx

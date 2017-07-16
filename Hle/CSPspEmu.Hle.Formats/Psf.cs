@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Formats
 {

@@ -1,22 +1,56 @@
-﻿namespace CSharpUtils
+﻿namespace CSharpUtils.Drawing
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class BitmapChannelList
     {
-        static public readonly BitmapChannel[] RGBA = new[]
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly BitmapChannel[] Rgba =
             {BitmapChannel.Red, BitmapChannel.Green, BitmapChannel.Blue, BitmapChannel.Alpha};
 
-        static public readonly BitmapChannel[] ARGB = new[]
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly BitmapChannel[] Argb =
             {BitmapChannel.Alpha, BitmapChannel.Red, BitmapChannel.Green, BitmapChannel.Blue};
 
-        static public readonly BitmapChannel[] RGB = new[] {BitmapChannel.Red, BitmapChannel.Green, BitmapChannel.Blue};
+        /// <summary>
+        /// 
+        /// </summary>
+        public static readonly BitmapChannel[] Rgb = {BitmapChannel.Red, BitmapChannel.Green, BitmapChannel.Blue};
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public enum BitmapChannel
     {
+        /// <summary>
+        /// 
+        /// </summary>
         Indexed = -1,
+
+        /// <summary>
+        /// 
+        /// </summary>
         Blue = 0,
+
+        /// <summary>
+        /// 
+        /// </summary>
         Green = 1,
+
+        /// <summary>
+        /// 
+        /// </summary>
         Red = 2,
+
+        /// <summary>
+        /// 
+        /// </summary>
         Alpha = 3,
     }
 }

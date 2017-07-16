@@ -1,9 +1,20 @@
 ﻿using System;
 
-public static class TimeSpanExtensions
+namespace CSharpUtils.Extensions
 {
-    public static long GetTotalMicroseconds(this TimeSpan TimeSpan)
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class TimeSpanExtensions
     {
-        return (long) TimeSpan.Ticks / (TimeSpan.TicksPerMillisecond / 1000);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="timeSpan"></param>
+        /// <returns></returns>
+        public static long GetTotalMicroseconds(this TimeSpan timeSpan)
+        {
+            return timeSpan.Ticks / (TimeSpan.TicksPerMillisecond / 1000);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using CSharpUtils.Extensions;
+﻿using CSharpUtils.Ext.Streams;
+using CSharpUtils.Extensions;
 using CSharpUtils.Streams;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

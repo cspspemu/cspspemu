@@ -1,18 +1,23 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using CountType = System.Int32;
 using System.Threading;
+using CountType = System.Int32;
 
 namespace CSharpUtils.Containers.RedBlackTree
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TElement"></typeparam>
     public partial class
         RedBlackTreeWithStats<TElement> : ICollection<TElement>, ICloneable //, IOrderedQueryable<TElement>
     {
-        internal Node BaseRootNode = null;
-        CountType _Length = 0;
-        IComparer<TElement> Comparer = null;
+        internal Node BaseRootNode;
+        CountType _length;
+        IComparer<TElement> Comparer;
         bool AllowDuplicates = false;
-        bool _Concurrent;
+        bool _concurrent;
 
         /// <summary>
         /// Max number of elements that the collection will have.
@@ -23,39 +28,47 @@ namespace CSharpUtils.Containers.RedBlackTree
 
         bool Concurrent
         {
-            get { return _Concurrent; }
             set
             {
-                if (value == true) throw(new NotImplementedException());
-                _Concurrent = value;
+                if (value) throw new NotImplementedException();
+                _concurrent = value;
             }
         }
 
         ReaderWriterLock ReaderWriterLock = new ReaderWriterLock();
         //const bool AllowDuplicates = false;
 
-        public RedBlackTreeWithStats(IComparer<TElement> Comparer, bool Concurrent = false)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="comparer"></param>
+        /// <param name="concurrent"></param>
+        public RedBlackTreeWithStats(IComparer<TElement> comparer, bool concurrent = false)
         {
-            this.Comparer = Comparer;
-            this.Concurrent = Concurrent;
+            Comparer = comparer;
+            Concurrent = concurrent;
             //this.allowDuplicates = false;
             _setup();
         }
 
-        public RedBlackTreeWithStats(bool Concurrent = false)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="concurrent"></param>
+        public RedBlackTreeWithStats(bool concurrent = false)
         {
-            this.Comparer = Comparer<TElement>.Default;
-            this.Concurrent = Concurrent;
+            Comparer = Comparer<TElement>.Default;
+            Concurrent = concurrent;
             //this.allowDuplicates = false;
             _setup();
         }
 
-        internal RedBlackTreeWithStats(IComparer<TElement> Comparer, Node _end, int _length, bool Concurrent = false)
+        internal RedBlackTreeWithStats(IComparer<TElement> comparer, Node end, int length, bool concurrent = false)
         {
-            this.Comparer = Comparer;
-            this.BaseRootNode = _end;
-            this._Length = _length;
-            this.Concurrent = Concurrent;
+            Comparer = comparer;
+            BaseRootNode = end;
+            _length = length;
+            Concurrent = concurrent;
         }
 
         private void _setup()
@@ -76,29 +89,26 @@ namespace CSharpUtils.Containers.RedBlackTree
             return node;
         }
 
-        bool _less(TElement A, TElement B)
-        {
-            return Comparer.Compare(A, B) < 0;
-        }
+        private bool _less(TElement a, TElement b) => Comparer.Compare(a, b) < 0;
 
         private void ConcurrentAcquireWriterLock()
         {
-            if (this._Concurrent) ReaderWriterLock.AcquireWriterLock(Int32.MaxValue);
+            if (_concurrent) ReaderWriterLock.AcquireWriterLock(int.MaxValue);
         }
 
         private void ConcurrentReleaseWriterLock()
         {
-            if (this._Concurrent) ReaderWriterLock.ReleaseWriterLock();
+            if (_concurrent) ReaderWriterLock.ReleaseWriterLock();
         }
 
         private void ConcurrentAcquireReaderLock()
         {
-            if (this._Concurrent) ReaderWriterLock.AcquireReaderLock(Int32.MaxValue);
+            if (_concurrent) ReaderWriterLock.AcquireReaderLock(int.MaxValue);
         }
 
         private void ConcurrentReleaseReaderLock()
         {
-            if (this._Concurrent) ReaderWriterLock.ReleaseReaderLock();
+            if (_concurrent) ReaderWriterLock.ReleaseReaderLock();
         }
 
         private Node NonConcurrentAdd(TElement n)
@@ -107,25 +117,25 @@ namespace CSharpUtils.Containers.RedBlackTree
             return NonConcurrentAdd(n, out added);
         }
 
-        private Node NonConcurrentAdd(TElement ElementToAdd, out bool Added)
+        private Node NonConcurrentAdd(TElement elementToAdd, out bool added)
         {
             //bool added = false;
             //var Node = ReaderWriterLock.WriterLock<Node>(() =>
-            Node result = null;
-            Added = true;
+            Node result;
+            added = true;
 
             if (RealRootNode == null)
             {
-                RealRootNode = result = Allocate(ElementToAdd);
+                RealRootNode = result = Allocate(elementToAdd);
             }
             else
             {
-                Node newParent = RealRootNode;
+                var newParent = RealRootNode;
                 Node nxt;
 
                 while (true)
                 {
-                    if (_less(ElementToAdd, newParent.Value))
+                    if (_less(elementToAdd, newParent.Value))
                     {
                         nxt = newParent.LeftNode;
                         if (nxt == null)
@@ -133,7 +143,7 @@ namespace CSharpUtils.Containers.RedBlackTree
                             //
                             // add to right of new parent
                             //
-                            newParent.LeftNode = result = Allocate(ElementToAdd);
+                            newParent.LeftNode = result = Allocate(elementToAdd);
                             break;
                         }
                     }
@@ -141,10 +151,10 @@ namespace CSharpUtils.Containers.RedBlackTree
                     {
                         if (!AllowDuplicates)
                         {
-                            if (!_less(newParent.Value, ElementToAdd))
+                            if (!_less(newParent.Value, elementToAdd))
                             {
                                 result = newParent;
-                                Added = false;
+                                added = false;
                                 break;
                             }
                         }
@@ -155,7 +165,7 @@ namespace CSharpUtils.Containers.RedBlackTree
                             //
                             // add to right of new parent
                             //
-                            newParent.RightNode = result = Allocate(ElementToAdd);
+                            newParent.RightNode = result = Allocate(elementToAdd);
                             break;
                         }
                     }
@@ -170,25 +180,25 @@ namespace CSharpUtils.Containers.RedBlackTree
                 {
                     result.UpdateCurrentAndAncestors(+1);
                     result.SetColor(BaseRootNode);
-                    _Length++;
+                    _length++;
                     return result;
                 }
                 else
                 {
-                    if (Added)
+                    if (added)
                     {
                         result.UpdateCurrentAndAncestors(+1);
                         result.SetColor(BaseRootNode);
                     }
-                    _Length++;
+                    _length++;
                     return result;
                 }
             }
             finally
             {
-                if (Added && this.CappedToNumberOfElements >= 0)
+                if (added && CappedToNumberOfElements >= 0)
                 {
-                    if (this.Count > this.CappedToNumberOfElements)
+                    if (Count > CappedToNumberOfElements)
                     {
                         RemoveBack();
                     }
@@ -198,6 +208,11 @@ namespace CSharpUtils.Containers.RedBlackTree
 
 
         // find a node based on an element value
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         public Node NonConcurrentFindNodeFromElement(TElement e)
         {
             if (AllowDuplicates)
@@ -248,31 +263,33 @@ namespace CSharpUtils.Containers.RedBlackTree
             }
         }
 
-        public bool IsEmpty
-        {
-            get { return RealRootNode == null; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsEmpty => RealRootNode == null;
 
         internal Node RealRootNode
         {
-            get { return BaseRootNode.LeftNode; }
-            set { BaseRootNode.LeftNode = value; }
+            get => BaseRootNode.LeftNode;
+            set => BaseRootNode.LeftNode = value;
         }
 
-        public TElement FrontElement
-        {
-            get { return BaseRootNode.LeftMostNode.Value; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public TElement FrontElement => BaseRootNode.LeftMostNode.Value;
 
-        public TElement BackElement
-        {
-            get { return BaseRootNode.PreviousNode.Value; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public TElement BackElement => BaseRootNode.PreviousNode.Value;
 
-        public bool Contains(TElement V)
-        {
-            return NonConcurrentFindNodeFromElement(V) != null;
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public bool Contains(TElement v) => NonConcurrentFindNodeFromElement(v) != null;
 
         #region Methods to insert elements
 
@@ -294,13 +311,16 @@ namespace CSharpUtils.Containers.RedBlackTree
 
         #region Methods to remove elements
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Clear()
         {
             ConcurrentAcquireWriterLock();
             try
             {
                 BaseRootNode.LeftNode = null;
-                _Length = 0;
+                _length = 0;
             }
             finally
             {
@@ -308,51 +328,62 @@ namespace CSharpUtils.Containers.RedBlackTree
             }
         }
 
-        internal Node RemoveNode(Node NodeToRemove)
+        internal Node RemoveNode(Node nodeToRemove)
         {
-            if (NodeToRemove == null) return null;
+            if (nodeToRemove == null) return null;
             ConcurrentAcquireWriterLock();
-            Node RemovedNode = null;
+            Node removedNode;
             try
             {
-                RemovedNode = NodeToRemove.NonSynchronizedRemove(BaseRootNode);
-                _Length--;
+                removedNode = nodeToRemove.NonSynchronizedRemove(BaseRootNode);
+                _length--;
             }
             finally
             {
                 ConcurrentReleaseWriterLock();
             }
-            return RemovedNode;
+            return removedNode;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void RemoveFront()
         {
             RemoveNode(BaseRootNode.LeftMostNode);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public TElement RemoveBack()
         {
-            var LastNode = BaseRootNode.PreviousNode;
-            RemoveNode(LastNode);
-            return LastNode.Value;
+            var lastNode = BaseRootNode.PreviousNode;
+            RemoveNode(lastNode);
+            return lastNode.Value;
         }
 
-        public void Remove(IEnumerable<TElement> Elements)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="elements"></param>
+        public void Remove(IEnumerable<TElement> elements)
         {
-            foreach (var Element in Elements)
+            foreach (var element in elements)
             {
-                Remove(Element);
+                Remove(element);
             }
         }
 
         /// <summary>
         /// Removes an element from the tree.
         /// </summary>
-        /// <param name="Item"></param>
+        /// <param name="item"></param>
         /// <returns>Returns if an element was removed or not</returns>
-        public bool Remove(TElement Item)
+        public bool Remove(TElement item)
         {
-            return (RemoveNode(NonConcurrentFindNodeFromElement(Item)) != null);
+            return (RemoveNode(NonConcurrentFindNodeFromElement(item)) != null);
         }
 
         #endregion
@@ -399,15 +430,19 @@ namespace CSharpUtils.Containers.RedBlackTree
             return result;
         }
 
-        public Range UpperBound(TElement e)
-        {
-            return new Range(this, FindFirstGreaterNode(e), BaseRootNode);
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public Range UpperBound(TElement e) => new Range(this, FindFirstGreaterNode(e), BaseRootNode);
 
-        public Range LowerBound(TElement e)
-        {
-            return new Range(this, BaseRootNode.LeftMostNode, FindFirstGreaterEqualNode(e));
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public Range LowerBound(TElement e) => new Range(this, BaseRootNode.LeftMostNode, FindFirstGreaterEqualNode(e));
 
         Range EqualRange(TElement e)
         {
@@ -422,31 +457,33 @@ namespace CSharpUtils.Containers.RedBlackTree
             {
                 return new Range(this, beg, FindFirstGreaterNode(e));
             }
-            else
-            {
-                // no sense in doing a full search, no duplicates are allowed,
-                // so we just get the next node.
-                return new Range(this, beg, beg.NextNode);
-            }
+            // no sense in doing a full search, no duplicates are allowed,
+            // so we just get the next node.
+            return new Range(this, beg, beg.NextNode);
         }
 
         //auto _equals(Node a, Node b) { return !_less(a, b) && !_less(b, a); }
         //auto _lessOrEquals(Node a, Node b) { return _less(a, b) || _equals(a, b); }
 
-        public CountType CountLesserThanNode(Node Node)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public CountType CountLesserThanNode(Node node)
         {
-            if (Node == null) return -1;
-            if (Node.ParentNode == null) return Node.ChildCountLeft;
+            if (node == null) return -1;
+            if (node.ParentNode == null) return node.ChildCountLeft;
 
             //auto prev = node;
-            var it = Node;
+            var it = node;
             CountType count = 0;
             while (true)
             {
                 if (it.ParentNode == null) break;
                 //writefln("+%d+1", it.childCountLeft);
                 //if (it.value <= node.value) {
-                if (!_less(Node.Value, it.Value))
+                if (!_less(node.Value, it.Value))
                 {
                     count += it.ChildCountLeft + 1;
                 }
@@ -456,13 +493,6 @@ namespace CSharpUtils.Containers.RedBlackTree
                     //writefln("it is null");
                     break;
                 }
-                else
-                {
-                    //writefln("less(%s, %s) : %d", it.value, node.value, it.value < node.value);
-
-                    //if (_less(it, node)) break;
-                    //if (it.value >= node.value) break;
-                }
                 //_less
                 //if (it._right != prev) break;
                 //prev = it;
@@ -470,19 +500,23 @@ namespace CSharpUtils.Containers.RedBlackTree
             return count - 1;
         }
 
-        public CountType GetNodePosition(Node Node)
-        {
-            return CountLesserThanNode(Node);
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public CountType GetNodePosition(Node node) => CountLesserThanNode(node);
 
-        public CountType GetItemPosition(TElement Element)
-        {
-            return CountLesserThanNode(NonConcurrentFindNodeFromElement(Element));
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public CountType GetItemPosition(TElement element) => CountLesserThanNode(NonConcurrentFindNodeFromElement(element));
 
-        internal Node LocateNodeAtPosition(CountType PositionToFind)
+        internal Node LocateNodeAtPosition(CountType positionToFind)
         {
-            if (PositionToFind < 0) throw(new Exception("Negative locateNodeAt"));
+            if (positionToFind < 0) throw(new Exception("Negative locateNodeAt"));
             Node current = BaseRootNode;
             CountType currentPosition = BaseRootNode.ChildCountLeft;
 
@@ -494,9 +528,9 @@ namespace CSharpUtils.Containers.RedBlackTree
                 //writefln("%s : %d", current, currentPosition);
 
                 //CountType currentPositionExpected = getNodePosition(current);
-                if (currentPosition == PositionToFind) return current;
+                if (currentPosition == positionToFind) return current;
 
-                if (PositionToFind < currentPosition)
+                if (positionToFind < currentPosition)
                 {
                     //currentPosition += current.childCountLeft;
                     current = current.LeftNode;
@@ -515,6 +549,9 @@ namespace CSharpUtils.Containers.RedBlackTree
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Range All
         {
             get
@@ -524,10 +561,10 @@ namespace CSharpUtils.Containers.RedBlackTree
                 {
                     return new Range(
                         this,
-                        (RealRootNode != null) ? RealRootNode.LeftMostNode : null,
+                        RealRootNode?.LeftMostNode,
                         BaseRootNode,
                         0,
-                        _Length
+                        _length
                     );
                 }
                 finally
@@ -542,57 +579,69 @@ namespace CSharpUtils.Containers.RedBlackTree
             return RealRootNode.DebugValidateStatsNodeSubtree();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void PrintTree()
         {
             RealRootNode.PrintTree();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void DebugValidateTree()
         {
-            int InternalLength = _Length;
-            int CalculatedLength = DebugValidateStatsNodeSubtree();
-            Assert(CalculatedLength == InternalLength);
+            var internalLength = _length;
+            var calculatedLength = DebugValidateStatsNodeSubtree();
+            Assert(calculatedLength == internalLength);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
         public void Add(TElement item)
         {
             Insert(item);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="arrayIndex"></param>
+        /// <exception cref="NotImplementedException"></exception>
         public void CopyTo(TElement[] array, CountType arrayIndex)
         {
             throw new NotImplementedException();
         }
 
-        public CountType Count
-        {
-            get { return _Length; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public CountType Count => _length;
 
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsReadOnly => false;
 
-        public IEnumerator<TElement> GetEnumerator()
-        {
-            return (All as IEnumerable<TElement>).GetEnumerator();
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<TElement> GetEnumerator() => (All as IEnumerable<TElement>).GetEnumerator();
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return (All as IEnumerable<TElement>).GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => (All as IEnumerable<TElement>).GetEnumerator();
 
-        public RedBlackTreeWithStats<TElement> Clone()
-        {
-            return new RedBlackTreeWithStats<TElement>(Comparer, BaseRootNode.Clone(), _Length);
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public RedBlackTreeWithStats<TElement> Clone() => new RedBlackTreeWithStats<TElement>(Comparer, BaseRootNode.Clone(), _length);
 
-        object ICloneable.Clone()
-        {
-            return new RedBlackTreeWithStats<TElement>(Comparer, BaseRootNode.Clone(), _Length);
-        }
+        object ICloneable.Clone() => new RedBlackTreeWithStats<TElement>(Comparer, BaseRootNode.Clone(), _length);
 
         //private readonly Expression _expression;
         //private readonly RedBlackTreeWithStatsQueryProvider _provider;

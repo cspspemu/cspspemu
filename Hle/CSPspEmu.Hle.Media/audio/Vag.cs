@@ -302,9 +302,9 @@ namespace CSPspEmu.Hle.Formats.audio
 		{
 			public uint Magic;
 
-			public uint_be VagVersion;
-			public uint_be DataSize;
-			public uint_be SampleRate;
+			public UintBe VagVersion;
+			public UintBe DataSize;
+			public UintBe SampleRate;
 
 			public fixed byte Name[16];
 		}

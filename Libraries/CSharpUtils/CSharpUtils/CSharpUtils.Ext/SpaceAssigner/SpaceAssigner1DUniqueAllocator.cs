@@ -2,50 +2,79 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CSharpUtils.SpaceAssigner
+namespace CSharpUtils.Ext.SpaceAssigner
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class SpaceAssigner1DUniqueAllocator
     {
         protected SpaceAssigner1D SpaceAssigner;
         protected Dictionary<byte[], SpaceAssigner1D.Space> AllocatedSpaces;
+        /// <summary>
+        /// 
+        /// </summary>
         public event Action<byte[], SpaceAssigner1D.Space> OnAllocate;
 
-        public SpaceAssigner1DUniqueAllocator(SpaceAssigner1D SpaceAssigner)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="spaceAssigner"></param>
+        public SpaceAssigner1DUniqueAllocator(SpaceAssigner1D spaceAssigner)
         {
-            this.SpaceAssigner = SpaceAssigner;
-            this.AllocatedSpaces = new Dictionary<byte[], SpaceAssigner1D.Space>(new ArrayEqualityComparer<byte>());
+            SpaceAssigner = spaceAssigner;
+            AllocatedSpaces = new Dictionary<byte[], SpaceAssigner1D.Space>(new ArrayEqualityComparer<byte>());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public SpaceAssigner1D.Space AllocateUnique(byte[] data)
         {
             if (!AllocatedSpaces.ContainsKey(data))
             {
-                var AllocatedSpace = SpaceAssigner.Allocate(data.Length);
-                if (OnAllocate != null) OnAllocate(data, AllocatedSpace);
-                AllocatedSpaces[data] = AllocatedSpace;
+                var allocatedSpace = SpaceAssigner.Allocate(data.Length);
+                OnAllocate?.Invoke(data, allocatedSpace);
+                AllocatedSpaces[data] = allocatedSpace;
             }
             return AllocatedSpaces[data];
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public SpaceAssigner1D.Space[] AllocateUnique(byte[][] data)
         {
             /// @TODO Has to use data.Distinct() and the Allocate[] function in order
             ///       to be able to avoid a greedy behaviour.
 
-            var Spaces = new SpaceAssigner1D.Space[data.Length];
-            for (int n = 0; n < data.Length; n++)
+            var spaces = new SpaceAssigner1D.Space[data.Length];
+            for (var n = 0; n < data.Length; n++)
             {
-                Spaces[n] = AllocateUnique(data[n]);
+                spaces[n] = AllocateUnique(data[n]);
             }
-            return Spaces;
+            return spaces;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Encoding Encoding;
 
-        public SpaceAssigner1D.Space AllocateUnique(String String, Encoding Encoding = null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="String"></param>
+        /// <param name="encoding"></param>
+        /// <returns></returns>
+        public SpaceAssigner1D.Space AllocateUnique(String String, Encoding encoding = null)
         {
-            if (Encoding == null) Encoding = this.Encoding;
-            return AllocateUnique(String.GetStringzBytes(Encoding));
+            if (encoding == null) encoding = this.Encoding;
+            return AllocateUnique(String.GetStringzBytes(encoding));
         }
     }
 }

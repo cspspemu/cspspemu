@@ -18,6 +18,8 @@ using CSPspEmu.Runner;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.Drawing;
+using CSharpUtils.Drawing;
+using CSharpUtils.Extensions;
 using CSPspEmu.Hle.Modules.iofilemgr;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Core.Cpu;

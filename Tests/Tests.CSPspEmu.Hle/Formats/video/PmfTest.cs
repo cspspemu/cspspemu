@@ -8,6 +8,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Drawing;
 using System.IO;
+using CSharpUtils.Drawing;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Tests
 {
@@ -81,7 +83,7 @@ namespace CSPspEmu.Core.Tests
 
                 for (int n = 0; n < 1000; n++, frame++)
                 {
-                    var FrameSize = (*(ushort_be*) &At3Ptr[2] & 0x3FF) * 8 + 8;
+                    var FrameSize = (*(UshortBe*) &At3Ptr[2] & 0x3FF) * 8 + 8;
                     At3Ptr += 8;
                     //Console.WriteLine(FrameSize);
 

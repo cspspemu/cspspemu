@@ -1,15 +1,31 @@
 ﻿using System.Drawing;
-using CSharpUtils;
 
-public static class ColorExtensions
+namespace CSharpUtils.Drawing.Extensions
 {
-    public static ushort Encode565(this Color Color)
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class ColorExtensions
     {
-        return (ushort) Color.Encode(ColorFormats.RGBA_5650);
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public static ushort Encode565(this Color color)
+        {
+            return (ushort) color.Encode(ColorFormats.Rgba5650);
+        }
 
-    public static uint Encode(this Color Color, ColorFormat Format)
-    {
-        return Format.Encode(Color.R, Color.G, Color.B, Color.A);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="format"></param>
+        /// <returns></returns>
+        public static uint Encode(this Color color, ColorFormat format)
+        {
+            return format.Encode(color.R, color.G, color.B, color.A);
+        }
     }
 }

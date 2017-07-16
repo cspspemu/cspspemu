@@ -1,6 +1,7 @@
 ﻿using System.IO;
+using CSharpUtils.Ext.Extensions;
+using CSharpUtils.Ext.SpaceAssigner;
 using CSharpUtils.Extensions;
-using CSharpUtils.SpaceAssigner;
 using CSharpUtils.Streams;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -21,7 +22,7 @@ namespace CSharpUtilsTests.Extensions
                 new SpaceAssigner1D.Space(84, 99),
             };
 
-            var JoinedSpaces = Spaces.JoinWithThresold(Thresold: 4);
+            var JoinedSpaces = Spaces.JoinWithThresold(thresold: 4);
             Assert.AreEqual("Space(Min=0, Max=16),Space(Min=60, Max=99)", JoinedSpaces.ToStringArray());
         }
 

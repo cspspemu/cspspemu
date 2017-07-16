@@ -1,8 +1,8 @@
-﻿using CSharpUtils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using CSharpUtils;
 
 /// <summary>
 /// 
@@ -142,10 +142,7 @@ public static unsafe class ArrayExtensions
         {
             return @this.Slice(low, @this.Length + high - low);
         }
-        else
-        {
-            return @this.Slice(low, high - low);
-        }
+        return @this.Slice(low, high - low);
     }
 
     /// <summary>

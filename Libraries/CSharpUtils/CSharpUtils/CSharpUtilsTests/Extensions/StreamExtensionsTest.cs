@@ -113,12 +113,12 @@ namespace CSharpUtilsTests.Extensions
             Assert.AreEqual(6, Stream3.CountStringzBytes());
             Assert.AreEqual(6, Stream4.CountStringzBytes());
 
-            Assert.AreEqual(6, Stream1.CountStringzBytes(AlignTo4: true));
-            Assert.AreEqual(7, Stream2.CountStringzBytes(AlignTo4: true));
-            Assert.AreEqual(8, Stream3.CountStringzBytes(AlignTo4: true));
+            Assert.AreEqual(6, Stream1.CountStringzBytes(alignTo4: true));
+            Assert.AreEqual(7, Stream2.CountStringzBytes(alignTo4: true));
+            Assert.AreEqual(8, Stream3.CountStringzBytes(alignTo4: true));
 
             // FIXME! Use Virtual Position to know when it is aligned.
-            Assert.AreEqual(8, Stream4.CountStringzBytes(AlignTo4: true));
+            Assert.AreEqual(8, Stream4.CountStringzBytes(alignTo4: true));
         }
     }
 }

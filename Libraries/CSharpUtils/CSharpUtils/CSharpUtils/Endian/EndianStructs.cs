@@ -2,263 +2,345 @@
 
 namespace CSharpUtils.Endian
 {
-    public struct ulong_be
+    /// <summary>
+    /// 
+    /// </summary>
+    public struct UlongBe
     {
-        private ulong _InternalValue;
+        private ulong _internalValue;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ulong NativeValue
         {
-            set { _InternalValue = MathUtils.ByteSwap(value); }
-            get { return MathUtils.ByteSwap(_InternalValue); }
+            set => _internalValue = MathUtils.ByteSwap(value);
+            get => MathUtils.ByteSwap(_internalValue);
         }
 
-        public static implicit operator ulong(ulong_be that)
-        {
-            return that.NativeValue;
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator ulong(UlongBe that) => that.NativeValue;
 
-        public static implicit operator ulong_be(ulong that)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator UlongBe(ulong that) => new UlongBe()
         {
-            return new ulong_be()
-            {
-                NativeValue = that,
-            };
-        }
+            NativeValue = that,
+        };
 
-        public override string ToString()
-        {
-            return NativeValue.ToString();
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => NativeValue.ToString();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 2)]
-    public struct uint48_be
+    public struct Uint48Be
     {
         private ushort _InternalValueHigh;
         private uint _InternalValueLow;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ulong NativeValue
         {
             set
             {
-                var Value = MathUtils.ByteSwap(value);
-                _InternalValueLow = (uint) (Value >> 0);
-                _InternalValueHigh = (ushort) (Value >> 32);
+                var v = MathUtils.ByteSwap(value);
+                _InternalValueLow = (uint) (v >> 0);
+                _InternalValueHigh = (ushort) (v >> 32);
             }
             get
             {
-                var Value = ((ulong) _InternalValueLow << 32) | ((ulong) _InternalValueHigh << 16);
-                return MathUtils.ByteSwap(Value);
+                var value = ((ulong) _InternalValueLow << 32) | ((ulong) _InternalValueHigh << 16);
+                return MathUtils.ByteSwap(value);
             }
         }
 
-        public static implicit operator ulong(uint48_be that)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator ulong(Uint48Be that)
         {
             return that.NativeValue;
         }
 
-        public static implicit operator uint48_be(ulong that)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator Uint48Be(ulong that)
         {
-            return new uint48_be()
+            return new Uint48Be()
             {
                 NativeValue = that,
             };
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return NativeValue.ToString();
         }
     }
 
-    public struct uint_be
+    /// <summary>
+    /// 
+    /// </summary>
+    public struct UintBe
     {
-        private uint _InternalValue;
+        private uint _internalValue;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public uint NativeValue
         {
-            set { _InternalValue = MathUtils.ByteSwap(value); }
-            get { return MathUtils.ByteSwap(_InternalValue); }
+            set => _internalValue = MathUtils.ByteSwap(value);
+            get => MathUtils.ByteSwap(_internalValue);
         }
 
-        public static implicit operator uint(uint_be that)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator uint(UintBe that)
         {
             return that.NativeValue;
         }
 
-        public static implicit operator uint_be(uint that)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator UintBe(uint that) => new UintBe
         {
-            return new uint_be()
-            {
-                NativeValue = that,
-            };
-        }
+            NativeValue = that,
+        };
 
-        public static implicit operator uint_be(uint_le that)
-        {
-            return (uint) that;
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator UintBe(UintLe that) => (uint) that;
 
-        public override string ToString()
-        {
-            return NativeValue.ToString();
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => NativeValue.ToString();
     }
 
-    public struct ushort_be
+    /// <summary>
+    /// 
+    /// </summary>
+    public struct UshortBe
     {
-        private ushort _InternalValue;
+        private ushort _internalValue;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ushort NativeValue
         {
-            set { _InternalValue = MathUtils.ByteSwap(value); }
-            get { return MathUtils.ByteSwap(_InternalValue); }
+            set => _internalValue = MathUtils.ByteSwap(value);
+            get => MathUtils.ByteSwap(_internalValue);
         }
 
-        public static implicit operator ushort(ushort_be that)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator ushort(UshortBe that) => that.NativeValue;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator UshortBe(ushort that) => new UshortBe
+        {
+            NativeValue = that,
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator UshortBe(UshortLe that) => (ushort) that;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => NativeValue.ToString();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public byte Low => (byte) (NativeValue >> 0);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public byte High => (byte) (NativeValue >> 8);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public struct UintLe
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public uint NativeValue { set; get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator uint(UintLe that) => that.NativeValue;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator UintLe(uint that) => new UintLe
+        {
+            NativeValue = that,
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator UintLe(UintBe that) => (uint) that;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => NativeValue.ToString();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public struct UshortLe
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public ushort NativeValue { set; get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator uint(UshortLe that)
         {
             return that.NativeValue;
         }
 
-        public static implicit operator ushort_be(ushort that)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator UshortLe(ushort that)
         {
-            return new ushort_be()
+            return new UshortLe()
             {
                 NativeValue = that,
             };
         }
 
-        public static implicit operator ushort_be(ushort_le that)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator UshortLe(UshortBe that)
         {
             return (ushort) that;
         }
 
-        public override string ToString()
-        {
-            return NativeValue.ToString();
-        }
-
-        public byte Low
-        {
-            get { return (byte) (NativeValue >> 0); }
-        }
-
-        public byte High
-        {
-            get { return (byte) (NativeValue >> 8); }
-        }
-    }
-
-    public struct uint_le
-    {
-        private uint _InternalValue;
-
-        public uint NativeValue
-        {
-            set
-            {
-                //_InternalValue = MathUtils.ByteSwap(value);
-                _InternalValue = value;
-            }
-            get
-            {
-                //return MathUtils.ByteSwap(_InternalValue);
-                return _InternalValue;
-            }
-        }
-
-        public static implicit operator uint(uint_le that)
-        {
-            return that.NativeValue;
-        }
-
-        public static implicit operator uint_le(uint that)
-        {
-            return new uint_le()
-            {
-                NativeValue = that,
-            };
-        }
-
-        public static implicit operator uint_le(uint_be that)
-        {
-            return (uint) that;
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return NativeValue.ToString();
         }
     }
 
-    public struct ushort_le
+    /// <summary>
+    /// 
+    /// </summary>
+    public struct FloatBe
     {
-        private ushort _InternalValue;
+        private float _internalValue;
 
-        public ushort NativeValue
-        {
-            set
-            {
-                //_InternalValue = MathUtils.ByteSwap(value);
-                _InternalValue = value;
-            }
-            get
-            {
-                //return MathUtils.ByteSwap(_InternalValue);
-                return _InternalValue;
-            }
-        }
-
-        public static implicit operator uint(ushort_le that)
-        {
-            return that.NativeValue;
-        }
-
-        public static implicit operator ushort_le(ushort that)
-        {
-            return new ushort_le()
-            {
-                NativeValue = that,
-            };
-        }
-
-        public static implicit operator ushort_le(ushort_be that)
-        {
-            return (ushort) that;
-        }
-
-        public override string ToString()
-        {
-            return NativeValue.ToString();
-        }
-    }
-
-    public struct float_be
-    {
-        private float _InternalValue;
-
+        /// <summary>
+        /// 
+        /// </summary>
         public float NativeValue
         {
-            set { _InternalValue = MathUtils.ByteSwap(value); }
-            get { return MathUtils.ByteSwap(_InternalValue); }
+            set => _internalValue = MathUtils.ByteSwap(value);
+            get => MathUtils.ByteSwap(_internalValue);
         }
 
-        public static implicit operator float(float_be that)
-        {
-            return that.NativeValue;
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator float(FloatBe that) => that.NativeValue;
 
-        public static implicit operator float_be(float that)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="that"></param>
+        /// <returns></returns>
+        public static implicit operator FloatBe(float that) => new FloatBe
         {
-            return new float_be()
-            {
-                NativeValue = that,
-            };
-        }
+            NativeValue = that,
+        };
 
-        public override string ToString()
-        {
-            return NativeValue.ToString();
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        // ReSharper disable once SpecifyACultureInStringConversionExplicitly
+        public override string ToString() => NativeValue.ToString();
     }
 }

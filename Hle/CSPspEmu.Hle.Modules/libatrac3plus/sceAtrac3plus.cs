@@ -15,6 +15,7 @@ using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Hle.Formats.audio.At3;
 using System.Runtime.InteropServices;
+using CSharpUtils.Extensions;
 using CSharpUtils.Streams;
 
 namespace CSPspEmu.Hle.Modules.libatrac3plus
@@ -38,15 +39,15 @@ namespace CSPspEmu.Hle.Modules.libatrac3plus
 
         public struct OMAHeader
         {
-            public uint_be Magic;
-            public ushort_be StructSize;
-            public ushort_be Unknown0;
-            public uint_be Unknown1;
-            public uint_be Unknown2;
-            public uint_be Unknown3;
-            public uint_be Unknown4;
-            public uint_be Unknown5;
-            public uint_be Unknown6;
+            public UintBe Magic;
+            public UshortBe StructSize;
+            public UshortBe Unknown0;
+            public UintBe Unknown1;
+            public UintBe Unknown2;
+            public UintBe Unknown3;
+            public UintBe Unknown4;
+            public UintBe Unknown5;
+            public UintBe Unknown6;
 
             // Must set from AT3.
             public uint OmaInfo;
@@ -269,12 +270,12 @@ new ArrayWrapper<StereoShortSoundSample>(PointerUtils.ByteArrayToArray<StereoSho
                 /// <summary>
                 /// 
                 /// </summary>
-                [FieldOffset(0x0028)] private ushort_be _Unk2;
+                [FieldOffset(0x0028)] private UshortBe _Unk2;
 
                 /// <summary>
                 /// 
                 /// </summary>
-                [FieldOffset(0x002A)] private ushort_be _BlockSize;
+                [FieldOffset(0x002A)] private UshortBe _BlockSize;
 
                 /// <summary>
                 /// 

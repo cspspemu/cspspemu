@@ -2,20 +2,46 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public static class TypeExtensions
+namespace CSharpUtils.Extensions
 {
-    public static T GetCustomAttribute<T>(this Type Type, bool inherit) // if (T is Attribute)
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class TypeExtensions
     {
-        return Type.GetCustomAttributes<T>(inherit).FirstOrDefault();
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="inherit"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T GetCustomAttribute<T>(this Type type, bool inherit) // if (T is Attribute)
+        {
+            return type.GetCustomAttributes<T>(inherit).FirstOrDefault();
+        }
 
-    public static IEnumerable<T> GetCustomAttributes<T>(this Type Type, bool inherit) // if (T is Attribute)
-    {
-        return Type.GetCustomAttributes(typeof(T), inherit).Cast<T>();
-    }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="inherit"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static IEnumerable<T> GetCustomAttributes<T>(this Type type, bool inherit) // if (T is Attribute)
+        {
+            return type.GetCustomAttributes(typeof(T), inherit).Cast<T>();
+        }
 
-    public static bool Implements(this Type Type, Type Interface)
-    {
-        return Type.GetInterfaces().Contains(Interface);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="Interface"></param>
+        /// <returns></returns>
+        public static bool Implements(this Type type, Type Interface)
+        {
+            return type.GetInterfaces().Contains(Interface);
+        }
     }
 }

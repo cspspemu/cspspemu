@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using CSharpUtils.Extensions;
 using CSPspEmu.Hle.Vfs;
 using CSPspEmu.Core;
 

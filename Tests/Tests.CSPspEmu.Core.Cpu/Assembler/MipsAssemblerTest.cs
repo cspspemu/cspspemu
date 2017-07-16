@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CSharpUtils.Streams;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CSPspEmu.Core.Tests

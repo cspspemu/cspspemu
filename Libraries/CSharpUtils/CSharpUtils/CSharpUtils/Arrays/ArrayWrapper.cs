@@ -2,55 +2,79 @@
 
 namespace CSharpUtils.Arrays
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TType"></typeparam>
     public class ArrayWrapper<TType> : IArray<TType>
     {
-        TType[] Array;
+        readonly TType[] _array;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ArrayWrapper()
         {
-            this.Array = new TType[0];
+            _array = new TType[0];
         }
 
-        public ArrayWrapper(TType[] Array)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="array"></param>
+        public ArrayWrapper(TType[] array)
         {
-            this.Array = Array;
+            _array = array;
         }
 
-        public TType this[int Index]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        public TType this[int index]
         {
-            get { return Array[Index]; }
-            set { Array[Index] = value; }
+            get => _array[index];
+            set => _array[index] = value;
         }
 
-        public static implicit operator TType[](ArrayWrapper<TType> ArrayWrapper)
-        {
-            return ArrayWrapper.Array;
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="arrayWrapper"></param>
+        /// <returns></returns>
+        public static implicit operator TType[](ArrayWrapper<TType> arrayWrapper) => arrayWrapper._array;
 
-        public static implicit operator ArrayWrapper<TType>(TType[] Array)
-        {
-            return new ArrayWrapper<TType>(Array);
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="array"></param>
+        /// <returns></returns>
+        public static implicit operator ArrayWrapper<TType>(TType[] array) => new ArrayWrapper<TType>(array);
 
-        public int Length
-        {
-            get { return Array.Length; }
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Length => _array.Length;
 
 
-        public TType[] GetArray()
-        {
-            return Array;
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public TType[] GetArray() => _array;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<TType> GetEnumerator()
         {
-            for (int n = 0; n < Length; n++) yield return this[n];
+            for (var n = 0; n < Length; n++) yield return this[n];
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            for (int n = 0; n < Length; n++) yield return this[n];
+            for (var n = 0; n < Length; n++) yield return this[n];
         }
     }
 }

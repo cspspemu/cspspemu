@@ -1,70 +1,93 @@
-﻿using CSharpUtils.Compression.Lz;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace CSharpUtils.Ext.Compression.Lz
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Matcher
     {
-        static public void HandleLz(byte[] Input, int StartPosition, int MinLzLength, int MaxLzLength,
-            int MaxLzDistance, bool AllowOverlapping, Action<int, byte> ByteCallback, Action<int, int, int> LzCallback)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="startPosition"></param>
+        /// <param name="minLzLength"></param>
+        /// <param name="maxLzLength"></param>
+        /// <param name="maxLzDistance"></param>
+        /// <param name="allowOverlapping"></param>
+        /// <param name="byteCallback"></param>
+        /// <param name="lzCallback"></param>
+        public static void HandleLz(byte[] input, int startPosition, int minLzLength, int maxLzLength,
+            int maxLzDistance, bool allowOverlapping, Action<int, byte> byteCallback, Action<int, int, int> lzCallback)
         {
-            HandleLzRle(Input, StartPosition, MinLzLength, MaxLzLength, MaxLzDistance, 0, 0, AllowOverlapping,
-                ByteCallback, LzCallback, null);
+            HandleLzRle(input, startPosition, minLzLength, maxLzLength, maxLzDistance, 0, 0, allowOverlapping,
+                byteCallback, lzCallback, null);
         }
 
-        static public void HandleLzRle(byte[] Input, int StartPosition, int MinLzLength, int MaxLzLength,
-            int MaxLzDistance, int MinRleLength, int MaxRleLength, bool AllowOverlapping,
-            Action<int, byte> ByteCallback, Action<int, int, int> LzCallback, Action<int, byte, int> RleCallback)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="startPosition"></param>
+        /// <param name="minLzLength"></param>
+        /// <param name="maxLzLength"></param>
+        /// <param name="maxLzDistance"></param>
+        /// <param name="minRleLength"></param>
+        /// <param name="maxRleLength"></param>
+        /// <param name="allowOverlapping"></param>
+        /// <param name="byteCallback"></param>
+        /// <param name="lzCallback"></param>
+        /// <param name="rleCallback"></param>
+        public static void HandleLzRle(byte[] input, int startPosition, int minLzLength, int maxLzLength,
+            int maxLzDistance, int minRleLength, int maxRleLength, bool allowOverlapping,
+            Action<int, byte> byteCallback, Action<int, int, int> lzCallback, Action<int, byte, int> rleCallback)
         {
-            bool UseRle = (RleCallback != null) && (MaxRleLength > 0);
+            var useRle = (rleCallback != null) && (maxRleLength > 0);
 
-            var LzMatcher = new LzMatcher(Input, StartPosition, MaxLzDistance, MinLzLength, MaxLzLength,
-                AllowOverlapping);
-            var RleMatcher = UseRle ? new RleMatcher(Input, StartPosition) : null;
+            var lzMatcher = new LzMatcher(input, startPosition, maxLzDistance, minLzLength, maxLzLength,
+                allowOverlapping);
+            var rleMatcher = useRle ? new RleMatcher(input, startPosition) : null;
 
-            for (int n = StartPosition; n < Input.Length;)
+            for (var n = startPosition; n < input.Length;)
             {
                 //Console.WriteLine("{0}", n);
-                var Result = LzMatcher.FindMaxSequence();
+                var result = lzMatcher.FindMaxSequence();
 
-                int RleLength = -1;
+                var rleLength = -1;
 
-                if (UseRle)
+                if (useRle)
                 {
-                    RleLength = RleMatcher.Length;
-                    if (RleLength < MinRleLength) RleLength = 0;
-                    if (RleLength > MaxRleLength) RleLength = MaxRleLength;
+                    rleLength = rleMatcher.Length;
+                    if (rleLength < minRleLength) rleLength = 0;
+                    if (rleLength > maxRleLength) rleLength = maxRleLength;
                 }
 
-                if (Result.Found && (!UseRle || (Result.Size > RleLength)))
+                if (result.Found && (!useRle || (result.Size > rleLength)))
                 {
                     //Console.WriteLine("RLE: {0}", RleLength);
-                    LzCallback(n, Result.Offset - n, Result.Size);
-                    n += Result.Size;
-                    LzMatcher.Skip(Result.Size);
+                    lzCallback(n, result.Offset - n, result.Size);
+                    n += result.Size;
+                    lzMatcher.Skip(result.Size);
                     //Console.WriteLine(Result.Size);
-                    if (UseRle) RleMatcher.Skip(Result.Size);
+                    if (useRle) rleMatcher.Skip(result.Size);
                     continue;
                 }
 
-                if (UseRle && (RleLength >= MinRleLength))
+                if (useRle && (rleLength >= minRleLength))
                 {
-                    RleCallback(n, Input[n], RleLength);
-                    n += RleLength;
+                    rleCallback(n, input[n], rleLength);
+                    n += rleLength;
                     //Console.WriteLine(RleLength);
-                    LzMatcher.Skip(RleLength);
-                    RleMatcher.Skip(RleLength);
+                    lzMatcher.Skip(rleLength);
+                    rleMatcher.Skip(rleLength);
                     continue;
                 }
 
-                ByteCallback(n, Input[n]);
+                byteCallback(n, input[n]);
                 n += 1;
-                LzMatcher.Skip(1);
-                if (UseRle) RleMatcher.Skip(1);
+                lzMatcher.Skip();
+                if (useRle) rleMatcher.Skip();
             }
         }
     }

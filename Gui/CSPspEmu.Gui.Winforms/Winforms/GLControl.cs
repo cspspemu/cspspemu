@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CSharpUtils.Drawing;
+using CSharpUtils.Drawing.Extensions;
 
 namespace CSPspEmu.Gui.Winforms.Winforms
 {
@@ -96,7 +98,7 @@ namespace CSPspEmu.Gui.Winforms.Winforms
             {
                 GL.glReadPixels(0, 0, Width, Height, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, DataPtr);
             }
-            var Bitmap = new Bitmap(Width, Height).SetChannelsDataInterleaved(Data, BitmapChannelList.RGBA);
+            var Bitmap = new Bitmap(Width, Height).SetChannelsDataInterleaved(Data, BitmapChannelList.Rgba);
             Bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
             return Bitmap;
         }

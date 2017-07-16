@@ -5,6 +5,7 @@ using System.Text;
 using CSharpUtils.Streams;
 using CSPspEmu.Core.Audio;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Formats.audio
 {

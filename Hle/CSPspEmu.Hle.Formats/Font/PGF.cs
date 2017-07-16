@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Formats.Font
 {
@@ -168,18 +169,18 @@ namespace CSPspEmu.Hle.Formats.Font
                 this.HeaderExtraRevision3 = FileStream.ReadStruct<HeaderRevision3Struct>();
             }
 
-            FileStream.ReadStructVector(ref DimensionTable, Header.TableDimLength);
-            FileStream.ReadStructVector(ref XAdjustTable, Header.TableXAdjustLength);
-            FileStream.ReadStructVector(ref YAdjustTable, Header.TableYAdjustLength);
-            FileStream.ReadStructVector(ref AdvanceTable, Header.TableAdvanceLength);
+            FileStream.ReadStructVector(out DimensionTable, Header.TableDimLength);
+            FileStream.ReadStructVector(out XAdjustTable, Header.TableXAdjustLength);
+            FileStream.ReadStructVector(out YAdjustTable, Header.TableYAdjustLength);
+            FileStream.ReadStructVector(out AdvanceTable, Header.TableAdvanceLength);
 
             PackedShadowCharMap =
                 FileStream.ReadBytes(BitsToBytesHighAligned(Header.TableShadowMapLength * Header.TableShadowMapBpe));
 
             if (Header.Revision == 3)
             {
-                FileStream.ReadStructVector(ref CharmapCompressionTable1, HeaderExtraRevision3.TableCompCharMapLength1);
-                FileStream.ReadStructVector(ref CharmapCompressionTable2, HeaderExtraRevision3.TableCompCharMapLength2);
+                FileStream.ReadStructVector(out CharmapCompressionTable1, HeaderExtraRevision3.TableCompCharMapLength1);
+                FileStream.ReadStructVector(out CharmapCompressionTable2, HeaderExtraRevision3.TableCompCharMapLength2);
             }
 
             PackedCharMap =

@@ -2,6 +2,7 @@
 using CSharpUtils;
 using System.IO;
 using System.Linq;
+using CSharpUtils.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CSharpUtilsTests

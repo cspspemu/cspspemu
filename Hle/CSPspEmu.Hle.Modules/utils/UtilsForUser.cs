@@ -7,6 +7,7 @@ using CSPspEmu.Core.Rtc;
 using CSPspEmu.Core;
 using System.Security.Cryptography;
 using CSharpUtils;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Modules.utils
 {

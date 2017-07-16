@@ -1,123 +1,131 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 
-public static class StructExtensions
+namespace CSharpUtils.Extensions
 {
-    public static string
-        ToStringDefault<T>(this T Struct, bool SimplifyBool = false, Type StructType = null) //where T : struct
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class StructExtensions
     {
-        if (StructType == null) StructType = typeof(T);
-
-        var Ret = "";
-
-        //Console.WriteLine("{0}", StructType);
-
-        if (StructType.IsArray)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Struct"></param>
+        /// <param name="simplifyBool"></param>
+        /// <param name="structType"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static string
+            ToStringDefault<T>(this T Struct, bool simplifyBool = false, Type structType = null) //where T : struct
         {
-            var ElementType = StructType.GetElementType();
-            foreach (var Item in Struct as Array)
+            if (structType == null) structType = typeof(T);
+
+            var ret = "";
+
+            //Console.WriteLine("{0}", StructType);
+
+            if (structType.IsArray && Struct is Array)
             {
-                if (Ret.Length > 0) Ret += ", ";
-                Ret += Item.ToStringDefault(SimplifyBool, ElementType);
-            }
-            return "[" + Ret + "]";
-        }
-        else if (StructType == typeof(string))
-        {
-            return "\"" + (Struct as String).EscapeString() + "\"";
-        }
-        else if (StructType.IsEnum)
-        {
-            // @TODO: Check Flags
-            return Enum.GetName(StructType, Struct);
-        }
-        else if (StructType.IsPrimitive)
-        {
-            if (StructType == typeof(uint))
-            {
-                return String.Format("0x{0:X}", Struct);
-            }
-
-            return String.Format("{0}", Struct);
-        }
-        else if (StructType.IsClass || StructType.IsValueType)
-        {
-            Ret += StructType.Name;
-            Ret += "(";
-            var MemberCount = 0;
-            bool AddedItem = false;
-
-            //FieldInfo fi;
-            //PropertyInfo pi;
-            foreach (var MemberInfo in StructType.GetMembers())
-            {
-                bool ValueSet = false;
-                object Value = null;
-
-                try
+                var elementType = structType.GetElementType();
+                foreach (var item in Struct as Array)
                 {
-                    if (MemberInfo is FieldInfo)
-                    {
-                        ValueSet = true;
-                        Value = (MemberInfo as FieldInfo).GetValue(Struct);
-                    }
-                    else if (MemberInfo is PropertyInfo)
-                    {
-                        ValueSet = true;
-                        Value = (MemberInfo as PropertyInfo).GetValue(Struct, null);
-                    }
+                    if (ret.Length > 0) ret += ", ";
+                    ret += item.ToStringDefault(simplifyBool, elementType);
                 }
-                catch
+                return "[" + ret + "]";
+            }
+            if (structType == typeof(string))
+            {
+                return "\"" + (Struct as String).EscapeString() + "\"";
+            }
+            if (structType.IsEnum)
+            {
+                // @TODO: Check Flags
+                return Enum.GetName(structType, Struct);
+            }
+            if (structType.IsPrimitive)
+            {
+                if (structType == typeof(uint))
                 {
-                    ValueSet = false;
-                    Value = null;
+                    return $"0x{Struct:X}";
                 }
 
-                if (ValueSet)
-                {
-                    if (AddedItem)
-                    {
-                        Ret += ",";
-                        AddedItem = false;
-                    }
+                return $"{Struct}";
+            }
+            if (structType.IsClass || structType.IsValueType)
+            {
+                ret += structType.Name;
+                ret += "(";
+                var addedItem = false;
 
-                    if (SimplifyBool && (Value is bool))
+                //FieldInfo fi;
+                //PropertyInfo pi;
+                foreach (var memberInfo in structType.GetMembers())
+                {
+                    var valueSet = false;
+                    object value = null;
+
+                    try
                     {
-                        if (((bool) Value) == true)
+                        if (memberInfo is FieldInfo)
                         {
-                            Ret += MemberInfo.Name;
-                            MemberCount++;
-                            AddedItem = true;
+                            valueSet = true;
+                            value = (memberInfo as FieldInfo).GetValue(Struct);
+                        }
+                        else if (memberInfo is PropertyInfo)
+                        {
+                            valueSet = true;
+                            value = (memberInfo as PropertyInfo).GetValue(Struct, null);
                         }
                     }
-                    else
+                    catch
                     {
-                        Ret += MemberInfo.Name;
-                        Ret += "=";
+                        valueSet = false;
+                        value = null;
+                    }
 
-                        var ValueType = Value.GetType();
-
-                        if (Value is uint)
+                    if (valueSet)
+                    {
+                        if (addedItem)
                         {
-                            Ret += String.Format("0x{0:X}", Value);
+                            ret += ",";
+                            addedItem = false;
+                        }
+
+                        if (simplifyBool && (value is bool))
+                        {
+                            if (((bool) value))
+                            {
+                                ret += memberInfo.Name;
+                                //MemberCount++;
+                                addedItem = true;
+                            }
                         }
                         else
                         {
-                            Ret += Value.ToStringDefault(SimplifyBool, ValueType);
+                            ret += memberInfo.Name;
+                            ret += "=";
+
+                            var valueType = value.GetType();
+
+                            if (value is uint)
+                            {
+                                ret += $"0x{value:X}";
+                            }
+                            else
+                            {
+                                ret += value.ToStringDefault(simplifyBool, valueType);
+                            }
+                            //MemberCount++;
+                            addedItem = true;
                         }
-                        MemberCount++;
-                        AddedItem = true;
                     }
                 }
+                ret += ")";
+                return ret;
             }
-            Ret += ")";
-            return Ret;
-        }
-        else
-        {
-            return StructType.ToString();
+            return structType.ToString();
         }
     }
 }

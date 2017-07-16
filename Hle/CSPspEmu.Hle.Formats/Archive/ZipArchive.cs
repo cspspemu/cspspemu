@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
+using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Hle.Formats.Archive
 {
@@ -132,7 +133,7 @@ namespace CSPspEmu.Hle.Formats.Archive
                         //return new System.IO.Compression.DeflateStream(CompressedStream.SliceWithLength(0), CompressionMode.Decompress);
                         return new MemoryStream(
                             (new System.IO.Compression.DeflateStream(CompressedStream.SliceWithLength(0),
-                                CompressionMode.Decompress)).ReadAll(FromStart: false));
+                                CompressionMode.Decompress)).ReadAll(fromStart: false));
                     case CompressionMethods.Stored:
                         return CompressedStream.SliceWithLength(0);
                     default:
