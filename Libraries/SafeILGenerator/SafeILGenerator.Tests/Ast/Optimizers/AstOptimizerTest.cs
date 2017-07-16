@@ -8,16 +8,16 @@ using System.Xml.Serialization;
 using System.Text;
 using System.IO;
 using SafeILGenerator.Ast.Serializers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace SafeILGenerator.Tests.Ast.Optimizers
 {
-    [TestClass]
+    [TestFixture]
     public class AstOptimizerTest
     {
         static private AstGenerator ast = AstGenerator.Instance;
 
-        [TestMethod]
+        [Test]
         public void TestCalculateImmediates()
         {
             var Node = (AstNode) ((ast.Immediate(0) + ast.Immediate(2)) * ast.Immediate(3));
@@ -26,7 +26,7 @@ namespace SafeILGenerator.Tests.Ast.Optimizers
             Assert.AreEqual("6", new GeneratorCSharp().GenerateRoot(Node).ToString());
         }
 
-        [TestMethod]
+        [Test]
         public void TestAdd0()
         {
             var Node = (AstNode) ((ast.Argument<int>(0, "Arg") + ast.Immediate(0)) * ast.Immediate(3));
@@ -35,7 +35,7 @@ namespace SafeILGenerator.Tests.Ast.Optimizers
             Assert.AreEqual("(Arg * 3)", new GeneratorCSharp().GenerateRoot(Node).ToString());
         }
 
-        [TestMethod]
+        [Test]
         public void TestTripleCast()
         {
             var Node = (AstNode) ast.Cast<int>(ast.Cast<uint>(ast.Immediate((int) 7)));
@@ -44,7 +44,7 @@ namespace SafeILGenerator.Tests.Ast.Optimizers
             Assert.AreEqual("7", new GeneratorCSharp().GenerateRoot(Node).ToString());
         }
 
-        [TestMethod]
+        [Test]
         public void TestCastToImmediate()
         {
             var Node = (AstNode) ast.Cast<uint>(ast.Immediate((int) 7));
@@ -53,7 +53,7 @@ namespace SafeILGenerator.Tests.Ast.Optimizers
             Assert.AreEqual("7", new GeneratorCSharp().GenerateRoot(Node).ToString());
         }
 
-        [TestMethod]
+        [Test]
         public void TestCastSignExtend()
         {
             var Node = (AstNode) ast.Cast<uint>(ast.Cast<sbyte>(ast.Argument<int>(0, "Arg")));
@@ -62,7 +62,7 @@ namespace SafeILGenerator.Tests.Ast.Optimizers
             Assert.AreEqual("((UInt32)((SByte)Arg))", new GeneratorCSharp().GenerateRoot(Node).ToString());
         }
 
-        [TestMethod]
+        [Test]
         public void TestCastSignExtend2()
         {
             var Node = (AstNode) ast.Cast<sbyte>(ast.Cast<uint>(ast.Argument<int>(0, "Arg")));
@@ -71,7 +71,7 @@ namespace SafeILGenerator.Tests.Ast.Optimizers
             Assert.AreEqual("((SByte)Arg)", new GeneratorCSharp().GenerateRoot(Node).ToString());
         }
 
-        [TestMethod]
+        [Test]
         public void TestZeroMinusNumber()
         {
             var Node = (AstNode) ast.Binary(ast.Immediate(0), "-", ast.Argument<int>(0, "Arg"));
@@ -80,7 +80,7 @@ namespace SafeILGenerator.Tests.Ast.Optimizers
             Assert.AreEqual("(-Arg)", new GeneratorCSharp().GenerateRoot(Node).ToString());
         }
 
-        [TestMethod]
+        [Test]
         public void TestAddNegated()
         {
             var Node = (AstNode) ast.Binary(ast.Immediate(1), "+", -ast.Argument<int>(0, "Arg"));
@@ -89,7 +89,7 @@ namespace SafeILGenerator.Tests.Ast.Optimizers
             Assert.AreEqual("(1 - Arg)", new GeneratorCSharp().GenerateRoot(Node).ToString());
         }
 
-        [TestMethod]
+        [Test]
         public void TestCompactStmContainer()
         {
             var Node = (AstNode) ast.Statements(
@@ -114,7 +114,7 @@ namespace SafeILGenerator.Tests.Ast.Optimizers
             );
         }
 
-        [TestMethod]
+        [Test]
         public void TestCompactStmContainer2()
         {
             var Node = (AstNode) ast.Statements(

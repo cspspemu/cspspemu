@@ -1,13 +1,13 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using CSharpUtils.Ext.Compression.Lz;
 
 namespace Tests.CSharpUtils.Ext.Compression
 {
-    [TestClass]
+    [TestFixture]
     public class RleMatcherTest
     {
-        [TestMethod]
+        [Test]
         public void TestMatchEmpty()
         {
             var RleMatcher = new RleMatcher(new byte[] { });
@@ -16,7 +16,7 @@ namespace Tests.CSharpUtils.Ext.Compression
             Assert.AreEqual(0, RleMatcher.Length);
         }
 
-        [TestMethod]
+        [Test]
         public void TestMatch3()
         {
             var RleMatcher = new RleMatcher(new byte[] {1, 1, 1});

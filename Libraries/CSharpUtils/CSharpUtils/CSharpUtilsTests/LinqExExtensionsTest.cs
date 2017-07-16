@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using CSharpUtils.Extensions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSharpUtilsTests
 {
-    [TestClass]
+    [TestFixture]
     public class LinqExExtensionsTest
     {
         public struct TestStruct
@@ -25,7 +25,7 @@ namespace CSharpUtilsTests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void OrderByNaturalTest()
         {
             var Items = new TestStruct[]

@@ -1,9 +1,9 @@
 ﻿using CSharpUtils.Extensions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSharpUtilsTests
 {
-    [TestClass]
+    [TestFixture]
     public class StructExtensionsTest
     {
         public struct TestStruct
@@ -14,7 +14,7 @@ namespace CSharpUtilsTests
             public string Field4;
         }
 
-        [TestMethod]
+        [Test]
         public void ToStringDefaultTest()
         {
             Assert.AreEqual(
@@ -29,7 +29,7 @@ namespace CSharpUtilsTests
             );
         }
 
-        [TestMethod]
+        [Test]
         public void ToStringDefaultTestArray()
         {
             Assert.AreEqual(
@@ -38,7 +38,7 @@ namespace CSharpUtilsTests
             );
         }
 
-        [TestMethod]
+        [Test]
         public void ToStringDefaultTestString()
         {
             Assert.AreEqual(

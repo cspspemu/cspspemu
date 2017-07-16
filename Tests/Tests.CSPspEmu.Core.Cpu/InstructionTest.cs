@@ -1,13 +1,13 @@
 ﻿using CSPspEmu.Core.Cpu.Table;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 
 namespace CSPspEmu.Core.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class InstructionTest
     {
-        [TestMethod]
+        [Test]
         public void InstructionConstructorTest()
         {
         }

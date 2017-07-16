@@ -3,21 +3,21 @@ using CSharpUtils;
 using System.IO;
 using System.Linq;
 using CSharpUtils.Extensions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSharpUtilsTests
 {
-    [TestClass]
+    [TestFixture]
     public class HashingTest
     {
-        [TestMethod]
+        [Test]
         public void TestSmallMd5()
         {
             var Stream = new MemoryStream(new[] {'H', 'e', 'l', 'l', 'o'}.Select(Item => (byte) Item).ToArray());
             Assert.AreEqual("8b1a9953c4611296a827abf8c47804d7", Hashing.GetMd5Hash(Stream));
         }
 
-        [TestMethod]
+        [Test]
         public void TestBigMd5()
         {
             var Stream = new MemoryStream();

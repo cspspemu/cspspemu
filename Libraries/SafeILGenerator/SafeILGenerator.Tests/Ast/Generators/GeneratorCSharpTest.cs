@@ -4,17 +4,17 @@ using SafeILGenerator.Ast.Nodes;
 using SafeILGenerator.Ast;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace SafeILGenerator.Tests.Ast.Generators
 {
-    [TestClass]
+    [TestFixture]
     public class GeneratorCSharpTest
     {
         GeneratorCSharp GeneratorCSharp;
         static private readonly AstGenerator ast = AstGenerator.Instance;
 
-        [TestInitialize]
+        [SetUp]
         public void SetUp()
         {
             GeneratorCSharp = new GeneratorCSharp();
@@ -29,7 +29,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
             return 0;
         }
 
-        [TestMethod]
+        [Test]
         public void TestAstSetGetLValue()
         {
             var AstIndex = ast.Immediate(777);
@@ -47,14 +47,14 @@ namespace SafeILGenerator.Tests.Ast.Generators
                 GeneratorCSharp.Reset().GenerateRoot(ast.Assign(AstSetGet, AstSetGet + 1)).ToString());
         }
 
-        [TestMethod]
+        [Test]
         public void TestAstExpression()
         {
             ;
             Assert.AreEqual("(3 + 5)", GeneratorCSharp.GenerateRoot(ast.Binary(3, "+", 5)).ToString());
         }
 
-        [TestMethod]
+        [Test]
         public void TestAstIf()
         {
             GeneratorCSharp.GenerateRoot(new AstNodeStmIfElse(new AstNodeExprImm(true), new AstNodeStmReturn(),
@@ -62,7 +62,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
             Assert.AreEqual("if (true) return; else return;", GeneratorCSharp.ToString());
         }
 
-        [TestMethod]
+        [Test]
         public void TestSimpleCall()
         {
             GeneratorCSharp.GenerateRoot(
@@ -77,7 +77,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
             Assert.AreEqual("return GeneratorCSharpTest.GetTestValue(10);", GeneratorCSharp.ToString());
         }
 
-        [TestMethod]
+        [Test]
         public void TestAstSwitch()
         {
             var Local = AstLocal.Create<int>("Local");

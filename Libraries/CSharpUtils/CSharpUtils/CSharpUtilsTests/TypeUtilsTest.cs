@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 
 namespace CSharpUtilsTests
 {
-    [TestClass]
+    [TestFixture]
     public class TypeUtilsTest
     {
         public class MyType
@@ -17,7 +17,7 @@ namespace CSharpUtilsTests
         {
         }
 
-        [TestMethod]
+        [Test]
         public void GetTypesExtendingTest()
         {
             /*

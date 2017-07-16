@@ -7,11 +7,11 @@ using SafeILGenerator.Ast.Nodes;
 using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Utils;
 using System.Diagnostics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace SafeILGenerator.Tests.Ast.Generators
 {
-    [TestClass]
+    [TestFixture]
     public unsafe class GeneratorILTest
     {
         static private AstGenerator ast = AstGenerator.Instance;
@@ -28,7 +28,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
             return 999;
         }
 
-        [TestMethod]
+        [Test]
         public void TestAstSetGetLValue()
         {
             var AstIndex = ast.Immediate(777);
@@ -62,7 +62,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
             Assert.AreEqual(ExpectedOutput.Trim(), RealOutput.Trim());
         }
 
-        [TestMethod]
+        [Test]
         public void TestSimpleReturn()
         {
             var Func = GeneratorIL.GenerateDelegate<Func<int>>("Test", ast.Return(777));
@@ -70,7 +70,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
             Assert.AreEqual(777, Func());
         }
 
-        [TestMethod]
+        [Test]
         public void TestSimpleCall()
         {
             var Func = GeneratorIL.GenerateDelegate<Func<int>>("Test",
@@ -79,7 +79,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
             Assert.AreEqual(3330, Func());
         }
 
-        [TestMethod]
+        [Test]
         public void TestSimpleLocal()
         {
             var TestLocal = AstLocal.Create<int>("TestLocal");
@@ -96,7 +96,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
             Assert.AreEqual(123, Func());
         }
 
-        [TestMethod]
+        [Test]
         public void TestImmediateType()
         {
             var Func = GeneratorIL.GenerateDelegate<Func<Type>>("Test",
@@ -104,7 +104,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
             Assert.AreEqual(typeof(int).ToString(), Func().ToString());
         }
 
-        [TestMethod]
+        [Test]
         public void TestReinterpret()
         {
             var TestArgument = ast.Argument<float>(0, "Input");
@@ -126,7 +126,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
             return typeof(int);
         }
 
-        [TestMethod]
+        [Test]
         public void TestFieldAccess()
         {
             var TestArgument = ast.Argument<TestClass>(0, "Test");
@@ -145,7 +145,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
 
         delegate void ActionPointerDelegate(void* Pointer);
 
-        [TestMethod]
+        [Test]
         public void TestPointerWrite()
         {
             var Func = GeneratorIL.GenerateDelegate<ActionPointerDelegate>("Test", ast.Statements(
@@ -165,7 +165,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
             Assert.AreEqual(456, Data[0]);
         }
 
-        [TestMethod]
+        [Test]
         public void TestPointerWrite_bool()
         {
             var Func = GeneratorIL.GenerateDelegate<ActionPointerDelegate>("Test", ast.Statements(
@@ -192,7 +192,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
             }
         }
 
-        [TestMethod]
+        [Test]
         public void TestWriteLineLoadString()
         {
             var Ast = ast.Statements(
@@ -212,7 +212,7 @@ namespace SafeILGenerator.Tests.Ast.Generators
             Assert.AreEqual("Hello World!" + Environment.NewLine + "Goodbye World!" + Environment.NewLine, Output);
         }
 
-        [TestMethod]
+        [Test]
         public void TestAstSwitch()
         {
             var Argument = AstArgument.Create<int>(0, "Value");

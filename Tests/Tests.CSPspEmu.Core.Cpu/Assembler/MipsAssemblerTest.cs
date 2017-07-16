@@ -6,21 +6,21 @@ using System.Linq;
 using CSharpUtils.Streams;
 using CSharpUtils;
 using CSharpUtils.Extensions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSPspEmu.Core.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class MipsAssemblerTest
     {
-        [TestMethod]
+        [Test]
         public void AssembleLineTest()
         {
             var MipsAssembler = new MipsAssembler(new MemoryStream());
             Assert.AreEqual((uint) 0x00020820, (uint) MipsAssembler.AssembleInstruction("add r1, r0, r2").Value);
         }
 
-        [TestMethod]
+        [Test]
         public void AssembleTest()
         {
             var MemoryStream = new MemoryStream();
@@ -41,7 +41,7 @@ namespace CSPspEmu.Core.Tests
             Assert.AreEqual((uint) 0x03E71822, BinaryReader.ReadUInt32());
         }
 
-        [TestMethod]
+        [Test]
         public void MatchFormatTest()
         {
             var Parts = MipsAssembler.Matcher("%d, %s, %t", "  r1,  r2,   r3  ");
@@ -51,7 +51,7 @@ namespace CSPspEmu.Core.Tests
             Assert.AreEqual("r3", Parts["%t"]);
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException(typeof(Exception))]
         public void MatcherNoMatchTest()
         {

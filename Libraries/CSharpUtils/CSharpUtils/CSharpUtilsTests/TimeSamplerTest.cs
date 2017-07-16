@@ -1,13 +1,13 @@
 ﻿using System;
 using CSharpUtils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSharpUtilsTests
 {
-    [TestClass]
+    [TestFixture]
     public class TimeSamplerTest
     {
-        [TestMethod]
+        [Test]
         public void GetLastIncrementTest()
         {
             var TimeSampler = new TimeSampler();

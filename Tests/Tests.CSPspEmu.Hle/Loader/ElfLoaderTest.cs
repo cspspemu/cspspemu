@@ -1,5 +1,5 @@
 ﻿using CSPspEmu.Hle.Loader;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using System.IO;
 using CSPspEmu.Core.Memory;
@@ -11,10 +11,10 @@ using CSPspEmu.Hle.Managers;
 
 namespace CSPspEmu.Core.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class ElfLoaderTest
     {
-        [TestMethod]
+        [Test]
         public void ElfLoaderConstructorTest()
         {
             var InjectContext = new InjectContext();

@@ -1,11 +1,11 @@
 ﻿using CSPspEmu.Core.Cpu.Table;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
 namespace CSPspEmu.Core.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class EmitLookupGeneratorTest
     {
         public class HandlerClass
@@ -33,7 +33,7 @@ namespace CSPspEmu.Core.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GenerateSwitchDelegateTest()
         {
             var EmitLookupGenerator = new EmitLookupGenerator();

@@ -1,14 +1,14 @@
 ﻿using System.IO;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using CSharpUtils.Streams;
 
 namespace CSharpUtilsTests.Streams
 {
-    [TestClass]
+    [TestFixture]
     public class StreamChunkerTest
     {
-        [TestMethod]
+        [Test]
         public void TestMethod1()
         {
             var InputStream = new MemoryStream(Encoding.UTF8.GetBytes("A-//-BCD::E"));

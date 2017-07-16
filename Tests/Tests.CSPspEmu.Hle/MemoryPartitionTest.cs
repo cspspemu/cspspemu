@@ -1,24 +1,24 @@
 ﻿using CSPspEmu.Hle;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using CSharpUtils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSPspEmu.Core.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class MemoryPartitionTest
     {
         InjectContext InjectContext;
         protected MemoryPartition PartitionRoot;
 
-        [TestInitialize]
+        [SetUp]
         public void SetUp()
         {
             PartitionRoot = new MemoryPartition(InjectContext, 0x000, 0x100);
         }
 
-        [TestMethod]
+        [Test]
         public void Allocate1Test()
         {
             var Partition1 = PartitionRoot.Allocate(0x0FF);
@@ -32,7 +32,7 @@ namespace CSPspEmu.Core.Tests
             );
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException(typeof(MemoryPartitionNoMemoryException))]
         public void AllocateTooBigTest()
         {
@@ -40,7 +40,7 @@ namespace CSPspEmu.Core.Tests
             PartitionRoot.Allocate(0x001);
         }
 
-        [TestMethod]
+        [Test]
         public void AllocateFreeNormalizeTest()
         {
             var Partition1 = PartitionRoot.Allocate(0x040, MemoryPartition.Anchor.Low);
@@ -59,7 +59,7 @@ namespace CSPspEmu.Core.Tests
             );
         }
 
-        [TestMethod]
+        [Test]
         public void AllocateFixedPositionTest()
         {
             var Partition1 = PartitionRoot.AllocateLowSize(0x60, 0x40);
@@ -73,13 +73,13 @@ namespace CSPspEmu.Core.Tests
             );
         }
 
-        [TestMethod]
+        [Test]
         public void MathUtilsPrevAlignedTest()
         {
             Assert.AreEqual(0x200, (int) MathUtils.PrevAligned(0x260, 0x100));
         }
 
-        [TestMethod]
+        [Test]
         public void AllocateAlignedStackOnNonAlignedSegmentTest()
         {
             PartitionRoot = new MemoryPartition(InjectContext, 0x000, 0x260);

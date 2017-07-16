@@ -90,6 +90,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Hle.Media", "Hle\C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSPspEmu.Gui", "Gui\CSPspEmu.Gui\CSPspEmu.Gui.csproj", "{EE3EB2A5-24C3-440E-8AC7-0C70FA753E89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.CSPspEmu.Hle2", "Tests\Tests.CSPspEmu.Hle2\Tests.CSPspEmu.Hle2.csproj", "{3628B495-4652-4207-A9CE-811DC3FAD9AD}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = CSPspEmu-2012.vsmdi
@@ -499,6 +501,18 @@ Global
 		{EE3EB2A5-24C3-440E-8AC7-0C70FA753E89}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{EE3EB2A5-24C3-440E-8AC7-0C70FA753E89}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{EE3EB2A5-24C3-440E-8AC7-0C70FA753E89}.Release|x86.ActiveCfg = Release|Any CPU
+		{3628B495-4652-4207-A9CE-811DC3FAD9AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3628B495-4652-4207-A9CE-811DC3FAD9AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3628B495-4652-4207-A9CE-811DC3FAD9AD}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{3628B495-4652-4207-A9CE-811DC3FAD9AD}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{3628B495-4652-4207-A9CE-811DC3FAD9AD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3628B495-4652-4207-A9CE-811DC3FAD9AD}.Debug|x86.Build.0 = Debug|Any CPU
+		{3628B495-4652-4207-A9CE-811DC3FAD9AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3628B495-4652-4207-A9CE-811DC3FAD9AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3628B495-4652-4207-A9CE-811DC3FAD9AD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{3628B495-4652-4207-A9CE-811DC3FAD9AD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{3628B495-4652-4207-A9CE-811DC3FAD9AD}.Release|x86.ActiveCfg = Release|Any CPU
+		{3628B495-4652-4207-A9CE-811DC3FAD9AD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -541,6 +555,7 @@ Global
 		{4056A286-E040-450F-BAD8-DE8E6B9B57B8} = {6D2F3817-98B8-4AB6-8A2A-8D5F35E3116C}
 		{550E4F4E-704E-48EB-8392-C1EB229348CF} = {6D2F3817-98B8-4AB6-8A2A-8D5F35E3116C}
 		{EE3EB2A5-24C3-440E-8AC7-0C70FA753E89} = {6D2F3817-98B8-4AB6-8A2A-8D5F35E3116C}
+		{3628B495-4652-4207-A9CE-811DC3FAD9AD} = {62C51087-397E-4594-A604-762D348BA89D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = d38aaf0d-8be1-4b81-a305-6434120ed494

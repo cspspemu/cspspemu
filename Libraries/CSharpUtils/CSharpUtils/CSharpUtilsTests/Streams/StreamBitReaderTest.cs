@@ -1,13 +1,13 @@
 ﻿using CSharpUtils.Streams;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System.IO;
 
 namespace CSharpUtilsTests
 {
-    [TestClass]
+    [TestFixture]
     public class StreamBitReaderTest
     {
-        [TestMethod]
+        [Test]
         public void ReadBitsTest()
         {
             var Stream = new MemoryStream(new byte[]

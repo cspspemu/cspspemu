@@ -1,10 +1,10 @@
 ﻿using System;
 using CSharpUtils.Factory;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSharpUtilsTests
 {
-    [TestClass]
+    [TestFixture]
     public class MockeableFactoryTest
     {
         class A
@@ -23,7 +23,7 @@ namespace CSharpUtilsTests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void MockTypeTest()
         {
             var MockeableFactory = new MockeableFactory();

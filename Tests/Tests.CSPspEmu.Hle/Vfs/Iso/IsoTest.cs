@@ -2,14 +2,14 @@
 using CSharpUtils.Extensions;
 using CSPspEmu.Hle.Formats;
 using CSPspEmu.Hle.Vfs.Iso;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSPspEmu.Core.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class IsoTest
     {
-        [TestMethod]
+        [Test]
         public void IsoConstructorTest()
         {
             var CsoName = "../../../TestInput/test.cso";

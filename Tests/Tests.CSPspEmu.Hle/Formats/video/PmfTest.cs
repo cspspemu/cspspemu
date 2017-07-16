@@ -4,7 +4,7 @@ using CSharpUtils;
 using CSharpUtils.Endian;
 using CSPspEmu.Hle.Formats.audio.At3;
 using CSPspEmu.Hle.Formats.video;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using System.Drawing;
 using System.IO;
@@ -13,10 +13,10 @@ using CSharpUtils.Extensions;
 
 namespace CSPspEmu.Core.Tests
 {
-    [TestClass]
+    [TestFixture]
     unsafe public class PmfTest
     {
-        [TestMethod]
+        [Test]
         public void LoadTest()
         {
             var Pmf = new Pmf();

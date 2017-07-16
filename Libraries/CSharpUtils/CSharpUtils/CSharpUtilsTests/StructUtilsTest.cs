@@ -1,10 +1,10 @@
 ﻿using System;
 using CSharpUtils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSharpUtilsTests
 {
-    [TestClass]
+    [TestFixture]
     public class StructUtilsTest
     {
         struct TestShorts
@@ -17,7 +17,7 @@ namespace CSharpUtilsTests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void BytesToStructArrayTest()
         {
             var Data = new byte[]

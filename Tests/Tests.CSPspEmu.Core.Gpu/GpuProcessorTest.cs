@@ -4,24 +4,24 @@ using System.Collections.Generic;
 using System.Linq;
 using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Gpu;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSPspEmu.Core.Tests.Gpu
 {
-    [TestClass]
+    [TestFixture]
     public class GpuProcessorTest
     {
         //PspMemory Memory;
         //GpuProcessor Gpu;
 
-        [TestInitialize]
+        [SetUp]
         public void SetUp()
         {
             //Memory = new LazyPspMemory();
             //Gpu = new GpuProcessor(Memory);
         }
 
-        [TestMethod]
+        [Test]
         public void TestGpuProcessor()
         {
             //GpuDisplayList GpuDisplayList = Gpu.CreateDisplayList();

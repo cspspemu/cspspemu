@@ -1,12 +1,12 @@
 ﻿using CSharpUtils.Ext.SpaceAssigner;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSharpUtilsTests
 {
-    [TestClass]
+    [TestFixture]
     public class SpaceAssigner1D_SpaceTest
     {
-        [TestMethod]
+        [Test]
         public void IntersectionInnerTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
@@ -16,7 +16,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual(Space1.Intersection(Space2), Space2.Intersection(Space1));
         }
 
-        [TestMethod]
+        [Test]
         public void IntersectionNoneTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
@@ -26,7 +26,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual(Space1.Intersection(Space2), Space2.Intersection(Space1));
         }
 
-        [TestMethod]
+        [Test]
         public void IntersectionExactTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
@@ -37,7 +37,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual(Space1.Intersection(Space2), Space2.Intersection(Space1));
         }
 
-        [TestMethod]
+        [Test]
         public void IntersectionLeftTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
@@ -47,7 +47,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual(Space1.Intersection(Space2), Space2.Intersection(Space1));
         }
 
-        [TestMethod]
+        [Test]
         public void IntersectionRightTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
@@ -57,7 +57,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual(Space1.Intersection(Space2), Space2.Intersection(Space1));
         }
 
-        [TestMethod]
+        [Test]
         public void SubstractInsideTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
@@ -69,7 +69,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual(new SpaceAssigner1D.Space(+2, +3), Spaces[1]);
         }
 
-        [TestMethod]
+        [Test]
         public void SubstractExactTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
@@ -77,7 +77,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual(0, Spaces.Length);
         }
 
-        [TestMethod]
+        [Test]
         public void SubstractNoneOutsideTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
@@ -86,7 +86,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual(Space1, Spaces[0]);
         }
 
-        [TestMethod]
+        [Test]
         public void SubstractNoneInsideTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
@@ -95,7 +95,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual(Space1, Spaces[0]);
         }
 
-        [TestMethod]
+        [Test]
         public void SubstractLeftExactTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
@@ -104,7 +104,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual(new SpaceAssigner1D.Space(0, 3), Spaces[0]);
         }
 
-        [TestMethod]
+        [Test]
         public void SubstractLeftTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);
@@ -113,7 +113,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual(new SpaceAssigner1D.Space(0, 3), Spaces[0]);
         }
 
-        [TestMethod]
+        [Test]
         public void SubstractRightTest()
         {
             var Space1 = new SpaceAssigner1D.Space(-3, +3);

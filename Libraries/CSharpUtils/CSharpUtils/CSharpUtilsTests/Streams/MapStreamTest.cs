@@ -2,14 +2,14 @@
 using System.IO;
 using CSharpUtils.Extensions;
 using CSharpUtils.Streams;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSharpUtilsTests.Streams
 {
-    [TestClass]
+    [TestFixture]
     public class MapStreamTest
     {
-        [TestMethod]
+        [Test]
         public void TestRead()
         {
             var Stream1 = new ZeroStream(5, 0x11);
@@ -36,7 +36,7 @@ namespace CSharpUtilsTests.Streams
             CollectionAssert.AreEqual(new byte[] {0x11, 0x11, 0x11, 0x11, 0x11, 0x22, 0x22, 0x22}, Readed4);
         }
 
-        [TestMethod]
+        [Test]
         public void TestLongRead()
         {
             var Position = (long) 5197762560L;
@@ -53,14 +53,14 @@ namespace CSharpUtilsTests.Streams
             CollectionAssert.AreEqual(Array, MapStream2.ReadBytes(5));
         }
 
-        [TestMethod]
+        [Test]
         public void TestReadUnmapped0()
         {
             var MapStream = new MapStream();
             MapStream.Read(new byte[1], 0, 0);
         }
 
-        [TestMethod]
+        [Test]
         public void TestReadUnmapped1()
         {
             try

@@ -1,12 +1,12 @@
 ﻿using CSharpUtils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSharpUtilsTests
 {
-    [TestClass]
+    [TestFixture]
     public class ProduceConsumeBufferTest
     {
-        [TestMethod]
+        [Test]
         public void ProduceTest()
         {
             var Buffer = new ProduceConsumeBuffer<int>();
@@ -14,7 +14,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual(Buffer.IndexOf(-2), 2);
         }
 
-        [TestMethod]
+        [Test]
         public void ConsumeTest()
         {
             var Buffer = new ProduceConsumeBuffer<int>();

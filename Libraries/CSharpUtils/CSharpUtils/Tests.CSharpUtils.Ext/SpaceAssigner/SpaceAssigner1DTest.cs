@@ -1,21 +1,21 @@
 ﻿using System;
 using CSharpUtils.Ext.SpaceAssigner;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSharpUtilsTests
 {
-    [TestClass]
+    [TestFixture]
     public class SpaceAssigner1DTest
     {
         SpaceAssigner1D SpaceAssigner1D;
 
-        [TestInitialize]
+        [SetUp]
         public void TestInitialize()
         {
             this.SpaceAssigner1D = new SpaceAssigner1D();
         }
 
-        [TestMethod]
+        [Test]
         public void CombineContiguousTest()
         {
             SpaceAssigner1D.AddAvailable(new SpaceAssigner1D.Space(0, 100));
@@ -25,7 +25,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual("SpaceAssigner1D(Space(Min=-100, Max=200))", SpaceAssigner1D.ToString());
         }
 
-        [TestMethod]
+        [Test]
         public void CombineContiguous2Test()
         {
             SpaceAssigner1D.AddAvailable(new SpaceAssigner1D.Space(4, 5));
@@ -38,7 +38,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual("SpaceAssigner1D(Space(Min=-1, Max=2),Space(Min=3, Max=5))", SpaceAssigner1D.ToString());
         }
 
-        [TestMethod]
+        [Test]
         public void CombineContiguousDisorderedTest()
         {
             SpaceAssigner1D.AddAvailable(new SpaceAssigner1D.Space(3, 4));
@@ -53,7 +53,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual("SpaceAssigner1D(Space(Min=-5, Max=6))", SpaceAssigner1D.ToString());
         }
 
-        [TestMethod]
+        [Test]
         public void SubstractTest()
         {
             SpaceAssigner1D.AddAvailable(new SpaceAssigner1D.Space(-7, -4));
@@ -71,7 +71,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual("SpaceAssigner1D(Space(Min=-7, Max=-5),Space(Min=6, Max=8))", SpaceAssigner1D.ToString());
         }
 
-        [TestMethod]
+        [Test]
         public void AllocateTest()
         {
             SpaceAssigner1D.AddAvailable(new SpaceAssigner1D.Space(-7, 0));
@@ -86,7 +86,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual("SpaceAssigner1D()", SpaceAssigner1D.ToString());
         }
 
-        [TestMethod]
+        [Test]
         [ExpectedException(typeof(Exception))]
         public void AllocateNotEnoughSpaceTest()
         {

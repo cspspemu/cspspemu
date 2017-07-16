@@ -7,14 +7,14 @@ using CSPspEmu.Core.Memory;
 using CSPspEmu.Core.Cpu.Dynarec;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Cpu.Assembler;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSPspEmu.Tests.Cpu.Dynarec
 {
-    [TestClass]
+    [TestFixture]
     public class DynarecFunctionCompilerTaskTest
     {
-        [TestMethod]
+        [Test]
         public void TestMethod1()
         {
             Assert.Inconclusive();

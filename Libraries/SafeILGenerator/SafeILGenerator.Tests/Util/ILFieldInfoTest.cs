@@ -1,15 +1,15 @@
 ﻿using System;
 using SafeILGenerator.Utils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace SafeILGenerator.Tests.Util
 {
-    [TestClass]
+    [TestFixture]
     public class ILFieldInfoTest
     {
         public int Test;
 
-        [TestMethod]
+        [Test]
         public void TestGetFieldInfo()
         {
             Assert.AreEqual(

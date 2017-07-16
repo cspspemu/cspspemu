@@ -1,14 +1,14 @@
 ﻿using System;
 using CSharpUtils.Extensions;
 using CSharpUtils.Streams;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSharpUtilsTests
 {
-    [TestClass]
+    [TestFixture]
     public class ConsumerMemoryStreamTest
     {
-        [TestMethod]
+        [Test]
         public void WriteTest()
         {
             var Stream = new ConsumerMemoryStream();

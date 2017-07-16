@@ -1,14 +1,14 @@
 ﻿using CSPspEmu.Hle.Formats;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using System.IO;
 
 namespace CSPspEmu.Core.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class PbpTest
     {
-        [TestMethod]
+        [Test]
         public void LoadTest()
         {
             var Pbp = new Pbp();

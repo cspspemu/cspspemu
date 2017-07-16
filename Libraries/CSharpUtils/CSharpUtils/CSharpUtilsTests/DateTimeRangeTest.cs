@@ -1,13 +1,13 @@
 ﻿using System;
 using CSharpUtils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSharpUtilsTests
 {
-    [TestClass]
+    [TestFixture]
     public class DateTimeRangeTest
     {
-        [TestMethod]
+        [Test]
         public void EqualSamePrecisionHourTest()
         {
             var d1 = new DateTimeRange(new DateTime(2011, 4, 4, 10, 34, 10), DateTimeRange.PrecisionType.Hours);
@@ -16,7 +16,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual(d2, d1);
         }
 
-        [TestMethod]
+        [Test]
         public void EqualDifferentPrecisionHourMinuteTest()
         {
             var d1 = new DateTimeRange(new DateTime(2011, 4, 4, 10, 34, 10), DateTimeRange.PrecisionType.Minutes);
@@ -25,7 +25,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual(d2, d1);
         }
 
-        [TestMethod]
+        [Test]
         public void NotEqualSamePrecisionHourTest()
         {
             var d1 = new DateTimeRange(new DateTime(2011, 4, 4, 10, 34, 10), DateTimeRange.PrecisionType.Hours);

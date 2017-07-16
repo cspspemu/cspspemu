@@ -1,13 +1,13 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using CSharpPlatform;
 
 namespace Tests.CSharpPlatform
 {
-    [TestClass]
+    [TestFixture]
     public class UnitTest1
     {
-        [TestMethod]
+        [Test]
         unsafe public void TestMatrix()
         {
             Console.WriteLine(Matrix4f.Identity.Translate(2, 2, 0));

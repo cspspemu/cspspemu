@@ -1,26 +1,26 @@
 ﻿using System.IO;
 using System.Linq;
 using CSharpUtils.Streams;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using CSharpUtils;
 using System;
 using System.Collections;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSharpUtilsTests
 {
-    [TestClass]
+    [TestFixture]
     public class RingBufferTest
     {
         RingBuffer<byte> RingBuffer;
 
-        [TestInitialize]
+        [SetUp]
         public void InitializeTest()
         {
             RingBuffer = new RingBuffer<byte>(32);
         }
 
-        [TestMethod]
+        [Test]
         public void TestInitialState()
         {
             Assert.AreEqual(32, RingBuffer.Capacity);
@@ -28,14 +28,16 @@ namespace CSharpUtilsTests
             Assert.AreEqual(0, RingBuffer.ReadAvailable);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(OverflowException))]
+        [Test]
         public void ReadEmpty()
         {
-            RingBuffer.Read();
+            Assert.Throws<OverflowException>(() =>
+            {
+                RingBuffer.Read();
+            });
         }
 
-        [TestMethod]
+        [Test]
         public void WriteReadSingle()
         {
             Assert.AreEqual(32, RingBuffer.Capacity);
@@ -51,17 +53,19 @@ namespace CSharpUtilsTests
             Assert.AreEqual(1, RingBuffer.Read());
         }
 
-        [TestMethod]
+        [Test]
         public void WriteFull()
         {
             foreach (var n in Enumerable.Range(0, RingBuffer.Capacity)) RingBuffer.Write(0);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(OverflowException))]
+        [Test]
         public void WriteFullPlus1()
         {
-            foreach (var n in Enumerable.Range(0, RingBuffer.Capacity + 1)) RingBuffer.Write(0);
+            Assert.Throws<OverflowException>(() =>
+            {
+                foreach (var n in Enumerable.Range(0, RingBuffer.Capacity + 1)) RingBuffer.Write(0);
+            });
         }
     }
 }

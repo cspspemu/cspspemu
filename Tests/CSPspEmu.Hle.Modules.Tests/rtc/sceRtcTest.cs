@@ -2,17 +2,17 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using CSPspEmu.Core;
 using CSPspEmu.Hle.Modules.rtc;
 using CSPspEmu.Core.Rtc;
 using CSPspEmu.Hle.Vfs;
 using CSharpUtils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSPspEmu.Hle.Modules.Tests.rtc
 {
-    [TestClass]
+    [TestFixture]
     [InjectMap(typeof(PspRtc), typeof(PspRtcMock))]
     public class sceRtcTest : BaseModuleTest
     {
@@ -58,13 +58,13 @@ namespace CSPspEmu.Hle.Modules.Tests.rtc
             }
         }
 
-        [TestInitialize]
+        [SetUp]
         public void TestInitialize()
         {
             ResetTimes();
         }
 
-        [TestMethod]
+        [Test]
         public void Test_sceRtcGetDayOfWeek()
         {
             Assert.AreEqual((int) PspDaysOfWeek.Monday, 1);
@@ -73,7 +73,7 @@ namespace CSPspEmu.Hle.Modules.Tests.rtc
             Assert.AreEqual(PspDaysOfWeek.Tuesday, sceRtc.sceRtcGetDayOfWeek(2012, 5, 1));
         }
 
-        [TestMethod]
+        [Test]
         public void Test_sceRtcGetCurrentClock()
         {
             ScePspDateTime ScePspDateTime;
@@ -88,7 +88,7 @@ namespace CSPspEmu.Hle.Modules.Tests.rtc
             Assert.AreEqual(FakedMillisecond, (int) ScePspDateTime.Microsecond / 1000);
         }
 
-        [TestMethod]
+        [Test]
         public void Test_timeIsIncreasing()
         {
             DateTime PrevDateTime = DateTimeRange.ConvertFromUnixTimestamp(0);

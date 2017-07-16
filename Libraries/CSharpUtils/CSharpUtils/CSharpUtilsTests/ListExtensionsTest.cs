@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using CSharpUtils.Extensions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSharpUtilsTests
 {
-    [TestClass]
+    [TestFixture]
     public class ListExtensionsTest
     {
-        [TestMethod]
+        [Test]
         public void LowerBoundTest()
         {
             var Items = new List<Int32>(new int[] {10, 20, 30, 40, 50, 60, 70, 80, 90, 100});
@@ -21,7 +21,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual("80,90,100", Items.UpperBound(70, false).ToStringArray());
         }
 
-        [TestMethod]
+        [Test]
         public void LowerBoundEmptyTest()
         {
             var Items0 = new List<Int32>(new int[] { });
@@ -29,7 +29,7 @@ namespace CSharpUtilsTests
             Assert.AreEqual("", Items0.UpperBound(65).ToStringArray());
         }
 
-        [TestMethod]
+        [Test]
         public void LowerBoundOneTest()
         {
             var Items1 = new List<Int32>(new int[] {1});

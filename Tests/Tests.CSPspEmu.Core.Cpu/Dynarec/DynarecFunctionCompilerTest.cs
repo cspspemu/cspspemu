@@ -8,14 +8,14 @@ using CSPspEmu.Core.Cpu.Assembler;
 using CSPspEmu.Core.Cpu;
 using CSPspEmu.Core.Memory;
 using Tests.CSPspEmu.Core.Cpu.Cpu;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSPspEmu.Tests.Cpu.Dynarec
 {
-    [TestClass]
+    [TestFixture]
     public class DynarecFunctionCompilerTest
     {
-        [TestMethod]
+        [Test]
         public void TestMethod1()
         {
             var CpuProcessor = CpuUtils.CreateCpuProcessor();

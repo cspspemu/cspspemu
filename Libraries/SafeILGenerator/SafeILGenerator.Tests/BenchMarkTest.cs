@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using SafeILGenerator.Ast;
 using SafeILGenerator.Ast.Generators;
 
 namespace SafeILGenerator.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class BenchMarkTest
     {
         static private AstGenerator ast = AstGenerator.Instance;
 
-        [TestMethod]
+        [Test]
         public void TestBenchmark()
         {
             var GeneratorCSharp = new GeneratorCSharp();

@@ -1,17 +1,17 @@
 ﻿using System.IO;
 using System.Linq;
 using CSharpUtils.Streams;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace CSharpUtilsTests
 {
-    [TestClass]
+    [TestFixture]
     public class SliceStreamTest
     {
         MemoryStream BaseStream;
         SliceStream SliceStream;
 
-        [TestInitialize]
+        [SetUp]
         public void InitializeTest()
         {
             BaseStream = new MemoryStream();
@@ -21,13 +21,13 @@ namespace CSharpUtilsTests
             SliceStream = SliceStream.CreateWithBounds(BaseStream, 2, 6);
         }
 
-        [TestMethod]
+        [Test]
         public void SliceStreamStartsAtCursor0Test()
         {
             Assert.AreEqual(0, SliceStream.Position);
         }
 
-        [TestMethod]
+        [Test]
         public void SeekDoNotChangeParentCursorTest()
         {
             SliceStream.Position = 1;
@@ -35,14 +35,14 @@ namespace CSharpUtilsTests
             Assert.AreEqual(1, SliceStream.Position);
         }
 
-        [TestMethod]
+        [Test]
         public void SeekInsideBoundsTest()
         {
             SliceStream.Position = 11;
             Assert.AreEqual(4, SliceStream.Position);
         }
 
-        [TestMethod]
+        [Test]
         public void ReadSliceSuccessTest()
         {
             var Buffer = new byte[8];
@@ -54,7 +54,7 @@ namespace CSharpUtilsTests
             CollectionAssert.AreEqual(new byte[] {3, 4, 5}, Buffer.Take(3).ToArray());
         }
 
-        [TestMethod]
+        [Test]
         public void ReadDoNotChangeParentCursorTest()
         {
             SliceStream.Position = 2;
